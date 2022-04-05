@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
 #include "database.h"
 #include "directn.h"
@@ -19,6 +20,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "ghost.h"
+#include "god-abil.h"
 #include "hints.h"
 #include "item-status-flag-type.h"
 #include "jobs.h"
@@ -39,7 +41,9 @@
 static noise_grid _noise_grid;
 static void _actor_apply_noise(actor *act,
                                const coord_def &apparent_source,
-                               int noise_intensity_millis);
+                               int noise_intensity_millis,
+                               const noise_t &noise,
+                               int noise_travel_distance);
 
 /// By default, what databse lookup key corresponds to each shout type?
 static const map<shout_type, string> default_msg_keys = {
@@ -64,7 +68,6 @@ static const map<shout_type, string> default_msg_keys = {
     { S_CHERUB,         "__CHERUB" },
     { S_SQUEAL,         "__SQUEAL" },
     { S_LOUD_ROAR,      "__LOUD_ROAR" },
-    { S_RUSTLE,         "__RUSTLE" },
 };
 
 /**
@@ -118,7 +121,7 @@ void monster_consider_shouting(monster &mon)
  */
 bool monster_attempt_shout(monster &mon)
 {
-    if (mon.cannot_act() || mon.asleep() || mon.has_ench(ENCH_DUMB))
+    if (mon.cannot_move() || mon.asleep() || mon.has_ench(ENCH_DUMB))
         return false;
 
     const shout_type shout = mons_shouts(mon.type, false);
@@ -264,7 +267,7 @@ void monster_shout(monster* mons, int shout)
 bool check_awaken(monster* mons, int stealth)
 {
     // Usually redundant because we iterate over player LOS,
-    // but e.g. for passive_t::xray_vision.
+    // but e.g. for you.xray_vision.
     if (!mons->see_cell(you.pos()))
         return false;
 
@@ -334,10 +337,8 @@ bool check_awaken(monster* mons, int stealth)
     return false;
 }
 
-void item_noise(const item_def &item, actor &act, string msg, int loudness)
+void item_noise(const item_def &item, string msg, int loudness)
 {
-    // TODO: messaging for cases where act != you. (This doesn't come up right
-    // now.)
     if (is_unrandom_artefact(item))
     {
         // "Your Singing Sword" sounds disrespectful
@@ -399,12 +400,11 @@ void item_noise(const item_def &item, actor &act, string msg, int loudness)
     msg = replace_all(msg, "@player_god@",
                       you_worship(GOD_NO_GOD) ? "atheism"
                       : god_name(you.religion, coinflip()));
-    msg = replace_all(msg, "@player_genus@",
-                species::name(you.species, species::SPNAME_GENUS));
+    msg = replace_all(msg, "@player_genus@", species_name(you.species, SPNAME_GENUS));
     msg = replace_all(msg, "@a_player_genus@",
-                article_a(species::name(you.species, species::SPNAME_GENUS)));
+                          article_a(species_name(you.species, SPNAME_GENUS)));
     msg = replace_all(msg, "@player_genus_plural@",
-                pluralise(species::name(you.species, species::SPNAME_GENUS)));
+                      pluralise(species_name(you.species, SPNAME_GENUS)));
 
     msg = maybe_pick_random_substring(msg);
     msg = maybe_capitalise_substring(msg);
@@ -412,7 +412,7 @@ void item_noise(const item_def &item, actor &act, string msg, int loudness)
     mprf(channel, "%s", msg.c_str());
 
     if (channel != MSGCH_TALK_VISUAL)
-        noisy(loudness, act.pos());
+        noisy(loudness, you.pos());
 }
 
 // TODO: Let artefacts besides weapons generate noise.
@@ -439,7 +439,7 @@ void noisy_equipment()
     if (msg.empty())
         msg = getSpeakString("noisy weapon");
 
-    item_noise(*weapon, you, msg, 20);
+    item_noise(*weapon, msg, 20);
 }
 
 // Berserking monsters cannot be ordered around.
@@ -465,8 +465,8 @@ static void _set_friendly_foes(bool allow_patrol = false)
             mi->behaviour = BEH_SEEK;
             mi->patrol_point = coord_def(0, 0);
         }
-        mi->foe = (allow_patrol && mi->is_patrolling() ? int{MHITNOT}
-                                                       : you.pet_target);
+        mi->foe = (allow_patrol && mi->is_patrolling() ? MHITNOT
+                                                         : you.pet_target);
     }
 }
 
@@ -501,10 +501,10 @@ static void _set_allies_withdraw(const coord_def &target)
         mi->patrol_point = rally_point;
         mi->foe = MHITNOT;
 
-        mi->props.erase(LAST_POS_KEY);
-        mi->props.erase(IDLE_POINT_KEY);
-        mi->props.erase(IDLE_DEADLINE_KEY);
-        mi->props.erase(BLOCKED_DEADLINE_KEY);
+        mi->props.erase("last_pos");
+        mi->props.erase("idle_point");
+        mi->props.erase("idle_deadline");
+        mi->props.erase("blocked_deadline");
     }
 }
 
@@ -521,7 +521,7 @@ static int _issue_orders_prompt()
     if (!you.cannot_speak())
     {
         string cap_shout = you.shout_verb(false);
-        cap_shout[0] = toupper_safe(cap_shout[0]);
+        cap_shout[0] = toupper(cap_shout[0]);
         mprf(" t - %s!", cap_shout.c_str());
     }
 
@@ -530,7 +530,7 @@ static int _issue_orders_prompt()
         string previous;
         if (_can_target_prev())
         {
-            const monster* target = &env.mons[you.prev_targ];
+            const monster* target = &menv[you.prev_targ];
             if (target->alive() && you.can_see(*target))
                 previous = "   p - Attack previous target.";
         }
@@ -793,13 +793,10 @@ bool noisy(int original_loudness, const coord_def& where,
         ambient < 0 ? original_loudness + random2avg(abs(ambient), 3)
                     : original_loudness - random2avg(abs(ambient), 3);
 
-    const int adj_loudness = you.has_mutation(MUT_NOISE_DAMPENING)
-                && you.see_cell(where) ? div_rand_round(loudness, 2) : loudness;
-
     dprf(DIAG_NOISE, "Noise %d (orig: %d; ambient: %d) at pos(%d,%d)",
-         adj_loudness, original_loudness, ambient, where.x, where.y);
+         loudness, original_loudness, ambient, where.x, where.y);
 
-    if (adj_loudness <= 0)
+    if (loudness <= 0)
         return false;
 
     // If the origin is silenced there is no noise, unless we're
@@ -809,19 +806,17 @@ bool noisy(int original_loudness, const coord_def& where,
 
     // [ds] Reduce noise propagation for Sprint.
     const int scaled_loudness =
-        crawl_state.game_is_sprint()? max(1, div_rand_round(adj_loudness, 2))
-                                    : adj_loudness;
+        crawl_state.game_is_sprint()? max(1, div_rand_round(loudness, 2))
+                                    : loudness;
 
-    // The multiplier converts to milli-auns which are used internally
-    // by noise propagation.
+    // The multiplier converts to milli-auns which are used internally by noise propagation.
     const int multiplier = 1000;
 
     // Add +1 to scaled_loudness so that all squares adjacent to a
     // sound of loudness 1 will hear the sound.
-    const string noise_msg(msg ? msg : "");
+    const string noise_msg(msg? msg : "");
     _noise_grid.register_noise(
-        noise_t(where, noise_msg, (scaled_loudness + 1) * multiplier, who,
-                fake_noise));
+        noise_t(where, noise_msg, (scaled_loudness + 1) * multiplier, who));
 
     // Some users of noisy() want an immediate answer to whether the
     // player heard the noise. The deferred noise system also means
@@ -852,6 +847,79 @@ bool fake_noisy(int loudness, const coord_def& where)
     return noisy(loudness, where, nullptr, MID_NOBODY, true);
 }
 
+void check_monsters_sense(sense_type sense, int range, const coord_def& where)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (grid_distance(mi->pos(), where) > range)
+            continue;
+
+        switch (sense)
+        {
+        case SENSE_SMELL_BLOOD:
+            if (!mons_class_flag(mi->type, M_BLOOD_SCENT))
+                break;
+
+            // Let sleeping hounds lie.
+            if (mi->asleep()
+                && mons_species(mi->type) != MONS_VAMPIRE)
+            {
+                // 33% chance of sleeping on
+                // 33% of being disturbed (start BEH_WANDER)
+                // 33% of being alerted   (start BEH_SEEK)
+                if (!one_chance_in(3))
+                {
+                    if (coinflip())
+                    {
+                        dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
+                             mi->name(DESC_A, true).c_str(),
+                             mi->pos().x, mi->pos().y);
+                        behaviour_event(*mi, ME_DISTURB, 0, where);
+                    }
+                    break;
+                }
+            }
+            dprf(DIAG_NOISE, "alerting %s (%d, %d)",
+                            mi->name(DESC_A, true).c_str(),
+                            mi->pos().x, mi->pos().y);
+            behaviour_event(*mi, ME_ALERT, 0, where);
+            break;
+
+        case SENSE_WEB_VIBRATION:
+            if (!mons_class_flag(mi->type, M_WEB_SENSE))
+                break;
+
+            if (!one_chance_in(4))
+            {
+                if (coinflip())
+                {
+                    dprf(DIAG_NOISE, "disturbing %s (%d, %d)",
+                         mi->name(DESC_A, true).c_str(),
+                         mi->pos().x, mi->pos().y);
+                    behaviour_event(*mi, ME_DISTURB, 0, where);
+                }
+                else
+                {
+                    dprf(DIAG_NOISE, "alerting %s (%d, %d)",
+                         mi->name(DESC_A, true).c_str(),
+                         mi->pos().x, mi->pos().y);
+                    behaviour_event(*mi, ME_ALERT, 0, where);
+                }
+            }
+            break;
+        }
+    }
+}
+
+void blood_smell(int strength, const coord_def& where)
+{
+    const int range = strength;
+    dprf("blood stain at (%d, %d), range of smell = %d",
+         where.x, where.y, range);
+
+    check_monsters_sense(SENSE_SMELL_BLOOD, range, where);
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // noise machinery
 
@@ -859,7 +927,7 @@ bool fake_noisy(int loudness, const coord_def& where)
 // Permarock walls are assumed to completely kill noise.
 static int _noise_attenuation_millis(const coord_def &pos)
 {
-    const dungeon_feature_type feat = env.grid(pos);
+    const dungeon_feature_type feat = grd(pos);
 
     if (feat_is_permarock(feat))
         return NOISE_ATTENUATION_COMPLETE;
@@ -964,7 +1032,7 @@ void noise_grid::propagate_noise()
         const vector<coord_def> &perimeter(noise_perimeter[circ_index]);
         vector<coord_def> &next_perimeter(noise_perimeter[!circ_index]);
         ++travel_distance;
-        for (const coord_def &p : perimeter)
+        for (const coord_def p : perimeter)
         {
             const noise_cell &cell(cells(p));
 
@@ -972,7 +1040,8 @@ void noise_grid::propagate_noise()
             {
                 apply_noise_effects(p,
                                     cell.noise_intensity_millis,
-                                    noises[cell.noise_id]);
+                                    noises[cell.noise_id],
+                                    travel_distance - 1);
 
                 const int attenuation = _noise_attenuation_millis(p);
                 // If the base noise attenuation kills the noise, go no farther:
@@ -988,7 +1057,8 @@ void noise_grid::propagate_noise()
                             {
                                 const coord_def next_position(p.x + xi,
                                                               p.y + yi);
-                                if (in_bounds(next_position))
+                                if (in_bounds(next_position)
+                                    && !silenced(next_position))
                                 {
                                     if (propagate_noise_to_neighbour(
                                             attenuation,
@@ -1056,12 +1126,9 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
 
 void noise_grid::apply_noise_effects(const coord_def &pos,
                                      int noise_intensity_millis,
-                                     const noise_t &noise)
+                                     const noise_t &noise,
+                                     int noise_travel_distance)
 {
-    // Real noises don't have any effect in silenced squares.
-    if (silenced(pos) && !noise.fake_noise)
-        return;
-
     if (you.pos() == pos)
     {
         // The bizarre arrangement of those code into two functions that each
@@ -1070,7 +1137,8 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
         // because the type is correct here.
 
         _actor_apply_noise(&you, noise.noise_source,
-                           noise_intensity_millis);
+                           noise_intensity_millis, noise,
+                           noise_travel_distance);
 
         // The next bit stores noise heard at the player's position for
         // display in the HUD. A more interesting (and much more complicated)
@@ -1097,7 +1165,8 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
             const coord_def perceived_position =
                 noise_perceived_position(mons, pos, noise);
             _actor_apply_noise(mons, perceived_position,
-                               noise_intensity_millis);
+                               noise_intensity_millis, noise,
+                               noise_travel_distance);
             ++affected_actor_count;
         }
     }
@@ -1114,15 +1183,15 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
 //  - If the cells cannot see each other, calculate a noise source as follows:
 //
 //    Calculate a noise centroid between the noise source and the observer,
-//    weighted to the noise source if the noise has travelled in a straight line,
+//    weighted to the noise source if the noise has traveled in a straight line,
 //    weighted toward the observer the more the noise has deviated from a
 //    straight line.
 //
-//    Fuzz the centroid by the extra distance the noise has travelled over
+//    Fuzz the centroid by the extra distance the noise has traveled over
 //    the straight line distance. This is where the observer will think the
 //    noise originated.
 //
-//    Thus, if the noise has travelled in a straight line, the observer
+//    Thus, if the noise has traveled in a straight line, the observer
 //    will know the exact origin, 100% of the time, even if the
 //    observer is all the way across the level.
 coord_def noise_grid::noise_perceived_position(actor *act,
@@ -1174,7 +1243,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 #ifdef DEBUG_NOISE_PROPAGATION
     dprf(DIAG_NOISE, "[NOISE] Noise perceived by %s at (%d,%d) "
          "centroid (%d,%d) source (%d,%d) "
-         "heard at (%d,%d), distance: %d (travelled %d)",
+         "heard at (%d,%d), distance: %d (traveled %d)",
          act->name(DESC_PLAIN, true).c_str(),
          final_perceived_point.x, final_perceived_point.y,
          noise_centroid.x, noise_centroid.y,
@@ -1269,7 +1338,7 @@ void noise_grid::write_noise_grid(FILE *outf) const
             if (you.pos() == coord_def(x, y))
                 write_cell(outf, p, '@');
             else
-                write_cell(outf, p, get_feature_def(env.grid[x][y]).symbol());
+                write_cell(outf, p, get_feature_def(grd[x][y]).symbol());
         }
         fprintf(outf, "<br>\n");
     }
@@ -1290,11 +1359,13 @@ void noise_grid::dump_noise_grid(const string &filename) const
 
 static void _actor_apply_noise(actor *act,
                                const coord_def &apparent_source,
-                               int noise_intensity_millis)
+                               int noise_intensity_millis,
+                               const noise_t &noise,
+                               int noise_travel_distance)
 {
 #ifdef DEBUG_NOISE_PROPAGATION
     dprf(DIAG_NOISE, "[NOISE] Actor %s (%d,%d) perceives noise (%d) "
-         "from (%d,%d), real source (%d,%d), distance: %d, noise travelled: %d",
+         "from (%d,%d), real source (%d,%d), distance: %d, noise traveled: %d",
          act->name(DESC_PLAIN, true).c_str(),
          act->pos().x, act->pos().y,
          noise_intensity_millis,
@@ -1322,7 +1393,7 @@ static void _actor_apply_noise(actor *act,
         // linear from p(0) = 100 to p(R) = 10. This replaces a version that
         // was 100% from 0 to 3, and 0% outward.
         //
-        // behaviour around the old breakpoint for R=8: p(3) = 66, p(4) = 55.
+        // behavior around the old breakpoint for R=8: p(3) = 66, p(4) = 55.
 
         const int player_distance = grid_distance(apparent_source, you.pos());
         const int alert_prob = max(player_distance * -90 / LOS_RADIUS + 100, 0);

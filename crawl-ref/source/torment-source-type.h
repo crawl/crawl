@@ -11,5 +11,4 @@ enum torment_source_type
     TORMENT_KIKUBAAQUDGHA = -7,   // Kikubaaqudgha effect
     TORMENT_MISCAST       = -8,
     TORMENT_AGONY         = -9,   // SPELL_AGONY
-    TORMENT_CARD_PAIN    = -10, // for pain card
 };

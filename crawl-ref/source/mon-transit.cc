@@ -13,15 +13,12 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "dungeon.h"
-#include "god-abil.h"
 #include "god-companions.h"
 #include "god-passive.h" // passive_t::convert_orcs
 #include "items.h"
 #include "libutil.h" // map_find
 #include "mon-place.h"
-#include "mpr.h"
 #include "religion.h"
-#include "tag-version.h"
 #include "timed-effects.h"
 
 #define MAX_LOST 100
@@ -147,20 +144,13 @@ void place_followers()
 static monster* _place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
-
-    // Duel targets have to arrive next to the player.
-    bool near_player = f.mons.props.exists(OKAWARU_DUEL_CURRENT_KEY)
-                       || f.mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY);
-
-    if (monster* mons = f.place(near_player))
+    if (monster* mons = f.place(false))
     {
         // Figure out how many turns we need to update the monster
         int turns = (you.elapsed_time - f.transit_start_time)/10;
 
         //Unflag as summoned or else monster will be ignored in update_monster
         mons->flags &= ~MF_JUST_SUMMONED;
-        // Don't keep chasing forever.
-        mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
         return update_monster(*mons, turns);
     }
     else
@@ -175,14 +165,8 @@ static void _level_place_lost_monsters(m_transit_list &m)
 
         // Monsters transiting to the Abyss have a 50% chance of being
         // placed, otherwise a 100% chance.
-        // Always place monsters that are chasing the player after abandoning
-        // a duel, even in the Abyss.
-        if (player_in_branch(BRANCH_ABYSS)
-            && !mon->mons.props.exists(OKAWARU_DUEL_ABANDONED_KEY)
-            && coinflip())
-        {
+        if (player_in_branch(BRANCH_ABYSS) && coinflip())
             continue;
-        }
 
         if (monster* new_mon =_place_lost_monster(*mon))
         {
@@ -248,7 +232,7 @@ void follower::load_mons_items()
 {
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
         if (mons.inv[i] != NON_ITEM)
-            items[i] = env.item[ mons.inv[i] ];
+            items[i] = mitm[ mons.inv[i] ];
         else
             items[i].clear();
 }
@@ -305,7 +289,7 @@ void follower::restore_mons_items(monster& m)
             if (islot == NON_ITEM)
                 continue;
 
-            item_def &it = env.item[islot];
+            item_def &it = mitm[islot];
             it = items[i];
             it.set_holding_monster(m);
         }
@@ -352,7 +336,7 @@ static bool _mons_can_follow_player_from(const monster &mons,
     // (though they'll be ignored for transit), so any adjacent real
     // follower can follow through. (jpeg)
     if (within_level && !mons_class_can_use_transporter(mons.type)
-        || !within_level && !mons_can_use_stairs(mons, env.grid(from)))
+        || !within_level && !mons_can_use_stairs(mons, grd(from)))
     {
         if (_is_religious_follower(mons))
             return true;
@@ -383,6 +367,8 @@ static bool _tag_follower_at(const coord_def &pos, const coord_def &from,
     fol->patrol_point.reset();
     fol->travel_path.clear();
     fol->travel_target = MTRAV_NONE;
+
+    fol->clear_clinging();
 
     dprf("%s is marked for following.", fol->name(DESC_THE, true).c_str());
     return true;
@@ -422,22 +408,20 @@ void handle_followers(const coord_def &from,
     vector<coord_def> places[2];
     int place_set = 0;
 
-    bool visited[GXM][GYM];
-    memset(&visited, 0, sizeof(visited));
-
     places[place_set].push_back(from);
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     while (!places[place_set].empty())
     {
-        for (const coord_def &p : places[place_set])
+        for (const coord_def p : places[place_set])
         {
             for (adjacent_iterator ai(p); ai; ++ai)
             {
                 if ((*ai - from).rdist() > radius
-                    || visited[ai->x][ai->y])
+                    || travel_point_distance[ai->x][ai->y])
                 {
                     continue;
                 }
-                visited[ai->x][ai->y] = true;
+                travel_point_distance[ai->x][ai->y] = 1;
 
                 bool real_follower = false;
                 if (handler(*ai, from, real_follower))

@@ -8,12 +8,12 @@
 #include "mon-poly.h"
 
 #include "artefact.h"
-#include "art-enum.h"
 #include "attitude-change.h"
 #include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "exclude.h"
 #include "fineff.h"
 #include "god-conduct.h"
 #include "hints.h"
@@ -33,6 +33,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "traps.h"
+#include "view.h"
 #include "xom.h"
 
 bool feature_mimic_at(const coord_def &c)
@@ -61,37 +62,54 @@ void monster_drop_things(monster* mons,
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
     {
         int item = mons->inv[i];
-        if (item == NON_ITEM || !suitable(env.item[item]))
-            continue;
 
-        if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
+        if (item != NON_ITEM && suitable(mitm[item]))
         {
-            item_was_destroyed(env.item[item]);
-            destroy_item(item);
+            const bool summoned_item =
+                testbits(mitm[item].flags, ISFLAG_SUMMONED);
+            if (summoned_item)
+            {
+                item_was_destroyed(mitm[item]);
+                destroy_item(item);
+            }
+            else
+            {
+                if (mark_item_origins && mitm[item].defined())
+                    origin_set_monster(mitm[item], mons);
+
+                mitm[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
+
+                if (mitm[item].props.exists("autoinscribe"))
+                {
+                    add_inscription(mitm[item],
+                        mitm[item].props["autoinscribe"].get_string());
+                    mitm[item].props.erase("autoinscribe");
+                }
+
+                // Unrands held by fixed monsters would give awfully redundant
+                // messages ("Cerebov hits you with the Sword of Cerebov."),
+                // thus delay identification until drop/death.
+                autoid_unrand(mitm[item]);
+
+                // If a monster is swimming, the items are ALREADY
+                // underwater.
+                move_item_to_grid(&item, mons->pos(), mons->swimming());
+            }
+
             mons->inv[i] = NON_ITEM;
-            continue;
         }
-
-        if (mark_item_origins && env.item[item].defined())
-            origin_set_monster(env.item[item], mons);
-
-        env.item[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
-
-        if (env.item[item].props.exists("autoinscribe"))
-        {
-            add_inscription(env.item[item],
-                env.item[item].props["autoinscribe"].get_string());
-            env.item[item].props.erase("autoinscribe");
-        }
-
-        // If a monster is swimming, the items are ALREADY underwater.
-        move_item_to_grid(&item, mons->pos(), mons->swimming());
-        mons->inv[i] = NON_ITEM;
     }
 }
 
-static bool _valid_type_morph(const monster* mons, monster_type new_mclass)
+static bool _valid_morph(monster* mons, monster_type new_mclass)
 {
+    const dungeon_feature_type current_tile = grd(mons->pos());
+
+    monster_type old_mclass = mons->type;
+    if (mons_class_is_zombified(old_mclass))
+        old_mclass = mons->base_monster;
+    // don't force spectral shapeshifters to become natural|undead mons only
+
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
     if ((new_mclass == MONS_GLOWING_SHAPESHIFTER
@@ -102,24 +120,32 @@ static bool _valid_type_morph(const monster* mons, monster_type new_mclass)
         return false;
     }
 
+    // [hm] Lower base draconian chances since there are nine of them,
+    // and they shouldn't each count for a full chance.
+    if (mons_genus(new_mclass) == MONS_DRACONIAN
+        && new_mclass != MONS_DRACONIAN
+        && !one_chance_in(9))
+    {
+        return false;
+    }
+
     // Various inappropriate polymorph targets.
-    if (   new_mclass == MONS_PROGRAM_BUG
-        || new_mclass == MONS_NO_MONSTER
+    if ( !(mons_class_holiness(new_mclass) & mons_class_holiness(old_mclass))
+        // normally holiness just needs to overlap, but we don't want
+        // shapeshifters to become demons
+        || mons->is_shapeshifter() && !(mons_class_holiness(new_mclass) & MH_NATURAL)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
         || mons_class_flag(new_mclass, M_CANT_SPAWN)  // no dummy monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || !mons_class_gives_xp(new_mclass)           // no tentacle parts or
                                                       // harmless things
-        || !(mons_class_holiness(new_mclass) & mons_class_holiness(mons->type))
-        // normally holiness just needs to overlap, but we don't want
-        // shapeshifters to become demons
-        || mons->is_shapeshifter() && !(mons_class_holiness(new_mclass) & MH_NATURAL)
         || !mons_class_is_threatening(new_mclass)
+        || new_mclass == MONS_PROGRAM_BUG
 
         // 'morph targets are _always_ "base" classes, not derived ones.
         || new_mclass != mons_species(new_mclass)
-        || new_mclass == mons_species(mons->type)
+        || new_mclass == mons_species(old_mclass)
         // They act as separate polymorph classes on their own.
         || mons_class_is_zombified(new_mclass)
 
@@ -140,27 +166,8 @@ static bool _valid_type_morph(const monster* mons, monster_type new_mclass)
         return false;
     }
 
-    return true;
-}
-
-
-
-static bool _valid_morph(monster* mons, monster_type new_mclass)
-{
-    if (!_valid_type_morph(mons, new_mclass))
-        return false;
-
-    // [hm] Lower base draconian chances since there are nine of them,
-    // and they shouldn't each count for a full chance.
-    if (mons_genus(new_mclass) == MONS_DRACONIAN
-        && new_mclass != MONS_DRACONIAN
-        && !one_chance_in(9))
-    {
-        return false;
-    }
-
     // Determine if the monster is happy on current tile.
-    return monster_habitable_grid(new_mclass, env.grid(mons->pos()));
+    return monster_habitable_grid(new_mclass, current_tile);
 }
 
 static bool _is_poly_power_unsuitable(poly_power_type power,
@@ -184,7 +191,8 @@ static bool _is_poly_power_unsuitable(poly_power_type power,
 static bool _jiyva_slime_target(monster_type targetc)
 {
     return you_worship(GOD_JIYVA)
-           && (targetc == MONS_ENDOPLASM
+           && (targetc == MONS_DEATH_OOZE
+              || targetc == MONS_OOZE
               || targetc == MONS_JELLY
               || targetc == MONS_SLIME_CREATURE
               || targetc == MONS_ACID_BLOB
@@ -204,8 +212,8 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // Remove replacement tile, since it probably doesn't work for the
     // new monster.
-    mons->props.erase(MONSTER_TILE_NAME_KEY);
-    mons->props.erase(MONSTER_TILE_KEY);
+    mons->props.erase("monster_tile_name");
+    mons->props.erase("monster_tile");
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
@@ -228,7 +236,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     }
 
     // Inform listeners that the original monster is gone.
-    fire_monster_death_event(mons, KILL_MISC, true);
+    fire_monster_death_event(mons, KILL_MISC, NON_MONSTER, true);
 
     // the actual polymorphing:
     auto flags =
@@ -279,7 +287,17 @@ void change_monster_type(monster* mons, monster_type targetc)
             name = name.substr(0, the_pos);
     }
 
-    const god_type old_god        = mons->god;
+    const monster_type real_targetc =
+        (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER)) ? MONS_GLOWING_SHAPESHIFTER :
+        (mons->has_ench(ENCH_SHAPESHIFTER))         ? MONS_SHAPESHIFTER
+                                                    : targetc;
+
+    const god_type god =
+        player_will_anger_monster(real_targetc) ? GOD_NO_GOD : mons->god;
+
+    if (god == GOD_NO_GOD)
+        flags &= ~MF_GOD_GIFT;
+
     const int  old_hp             = mons->hit_points;
     const int  old_hp_max         = mons->max_hit_points;
     const bool old_mon_caught     = mons->caught();
@@ -289,12 +307,12 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
-        const monster_type type = mons_is_draconian_job(mons->type)
-                                ? draconian_subspecies(*mons)
+        const monster_type type = mons_is_job(mons->type)
+                                ? draco_or_demonspawn_subspecies(*mons)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
         if (mons->mons_species() == MONS_HYDRA)
-            mons->props[OLD_HEADS_KEY].get_int() = mons->num_heads;
+            mons->props["old_heads"].get_int() = mons->num_heads;
     }
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
@@ -323,22 +341,22 @@ void change_monster_type(monster* mons, monster_type targetc)
     }
 
     mons->mname = name;
-    mons->props[NO_ANNOTATE_KEY] = slimified && old_mon_unique;
-    mons->props.erase(DBNAME_KEY);
+    mons->props["no_annotate"] = slimified && old_mon_unique;
+    mons->props.erase("dbname");
 
     // Forget seen spells, since they are likely to have changed.
     mons->props.erase(SEEN_SPELLS_KEY);
 
     mons->flags = flags;
-    // Line above might clear melee flags; restore.
+    // Line above might clear melee and/or spell flags; restore.
     mons->bind_melee_flags();
+    mons->bind_spell_flags();
 
     // Forget various speech/shout Lua functions.
-    mons->props.erase(SPEECH_PREFIX_KEY);
+    mons->props.erase("speech_prefix");
 
     // Make sure we have a god if we've been polymorphed into a priest.
-    mons->god = (mons->is_priest() && old_god == GOD_NO_GOD) ? GOD_NAMELESS
-                                                             : old_god;
+    mons->god = (mons->is_priest() && god == GOD_NO_GOD) ? GOD_NAMELESS : god;
 
     mons->add_ench(abj);
     mons->add_ench(fabj);
@@ -355,7 +373,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // Allows for handling of submerged monsters which polymorph into
     // monsters that can't submerge on this square.
     if (mons->has_ench(ENCH_SUBMERGED)
-        && !monster_can_submerge(mons, env.grid(mons->pos())))
+        && !monster_can_submerge(mons, grd(mons->pos())))
     {
         mons->del_ench(ENCH_SUBMERGED);
     }
@@ -386,9 +404,6 @@ void change_monster_type(monster* mons, monster_type targetc)
         if (could_see && shifter.ench != ENCH_NONE)
             discover_shifter(*mons);
     }
-    // generate a new polymorph set
-    mons->props.erase(POLY_SET_KEY);
-    init_poly_set(mons);
 
     if (old_mon_caught)
         check_net_will_hold_monster(mons);
@@ -400,114 +415,8 @@ void change_monster_type(monster* mons, monster_type targetc)
     // evaporating and reforming justifies this behaviour.
     mons->stop_constricting_all();
     mons->stop_being_constricted();
-    mons->clear_far_engulf(true);
-}
 
-// Is the new monster able to live in *any* habitat that the original
-// monster could?
-// NOTE: this doesn't check for item-based flight, so if we
-// poly an item-using flying monster into a non-item-using,
-// non-flying monster, they could be in trouble. Not much way
-// around this and it's a very very niche case.
-// Also assumes the monster is not a derived (zombie etc) monster.
-static bool _habitat_matches(bool orig_flies, habitat_type orig_hab,
-                             monster_type new_type)
-{
-    if (monster_class_flies(new_type))
-        return true;
-    if (orig_flies)
-        return false;
-
-    const habitat_type new_hab = mons_habitat_type(new_type, new_type, false);
-    switch (orig_hab)
-    {
-        case HT_AMPHIBIOUS:
-        case HT_AMPHIBIOUS_LAVA:
-            return new_hab == orig_hab;
-        case HT_WATER:
-            return new_hab == orig_hab || new_hab == HT_AMPHIBIOUS;
-        case HT_LAVA:
-            return new_hab == orig_hab || new_hab == HT_AMPHIBIOUS_LAVA;
-        case HT_LAND:
-            return new_hab == orig_hab
-                || new_hab == HT_AMPHIBIOUS
-                || new_hab == HT_AMPHIBIOUS_LAVA;
-        case NUM_HABITATS:
-            break;
-    }
-    return false; // should never happen
-}
-
-void init_poly_set(monster *mons)
-{
-    rng::subgenerator poly_rng;
-
-    if (mons->props.exists(POLY_SET_KEY))
-        return;
-
-    const int orig_tier = mons_demon_tier(mons->type);
-    if (orig_tier == -1)
-    {
-        // panlords & hell lords get poly immunity. why? unclear to me
-        // TODO: allow polying panlords into other random panlords, ha
-        return;
-    }
-
-    const int orig_hd = mons_power(mons->type);
-    const bool orig_flies = monster_inherently_flies(*mons);
-    const habitat_type orig_hab
-        = mons_habitat_type(mons->type, mons_base_type(*mons), false);
-
-    map<monster_type, int> weights;
-    for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
-    {
-        if (invalid_monster_type(mt))
-            continue; // no polying into bugs
-
-        const monster_type species = mons_species(mt);
-        if (weights.find(species) != weights.end())
-            continue; // already saw this one
-        if (!_valid_type_morph(mons, species))
-            continue; // no polying into statues, same species, etc
-
-        if (!_habitat_matches(orig_flies, orig_hab, species))
-            continue;
-
-        // OK, we're good. Let's look at weights.
-        const int new_tier = mons_demon_tier(species);
-        const int new_hd = mons_power(species);
-        // make HD upgrades less likely.
-        const int hd_delta = abs(orig_hd - new_hd) * (new_hd > orig_hd ? 2 : 1);
-        const int tier_delta = abs(orig_tier - new_tier);
-        const int total_delta = hd_delta + tier_delta;
-        const int max_delta = 8;
-        if (total_delta > max_delta)
-            continue;
-        // halve weight for each HD of difference and each demon tier level apart
-        const int weight = 1 << (max_delta - total_delta) ;
-        weights[species] = weight;
-    }
-
-    CrawlVector &set = mons->props[POLY_SET_KEY];
-    for (int i = 0; i < 3; i++)
-    {
-        if (weights.size() <= 0)
-            return; // can't choose any more
-        const monster_type *chosen = random_choose_weighted<map<monster_type,int>>(weights);
-        ASSERT(chosen);
-        set.push_back(*chosen);
-        weights.erase(*chosen);
-    }
-}
-
-static monster_type _poly_from_set(monster *mons)
-{
-    if (!mons->props.exists(POLY_SET_KEY))
-        return MONS_NO_MONSTER;
-    const CrawlVector &set = mons->props[POLY_SET_KEY];
-    if (set.size() <= 0)
-        return MONS_NO_MONSTER;
-    return (monster_type)set[random2(set.size())].get_int();
+    mons->check_clinging(false);
 }
 
 // If targetc == RANDOM_MONSTER, then relpower indicates the desired
@@ -515,7 +424,8 @@ static monster_type _poly_from_set(monster *mons)
 // Relaxation still takes effect when needed, no matter what relpower
 // says.
 bool monster_polymorph(monster* mons, monster_type targetc,
-                       poly_power_type power)
+                       poly_power_type power,
+                       bool force_beh)
 {
     // Don't attempt to polymorph a monster that is busy using the stairs.
     if (mons->flags & MF_TAKING_STAIRS)
@@ -566,9 +476,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                                                         target_power, relax)));
     }
 
-    if (targetc == RANDOM_POLYMORPH_MONSTER)
-        targetc = _poly_from_set(mons);
-
     bool could_see = you.can_see(*mons);
     bool need_note = could_see && mons_is_notable(*mons);
     string old_name_a = mons->full_name(DESC_A);
@@ -594,7 +501,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         targetc = target_types[random2(target_types.size())];
     }
 
-    if (power != PPT_SLIME && !_valid_morph(mons, targetc))
+    if (!_valid_morph(mons, targetc))
         return simple_monster_message(*mons, " looks momentarily different.");
 
     change_monster_type(mons, targetc);
@@ -642,6 +549,9 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             mons->flags |= MF_SEEN;
     }
 
+    if (!force_beh)
+        player_angers_monster(mons);
+
     // Xom likes watching monsters being polymorphed.
     if (can_see)
     {
@@ -670,7 +580,7 @@ void slimify_monster(monster* mon)
     const int x = mon->get_hit_dice() + random_choose(1, -1) * random2(5);
 
     if (x < 3)
-        target = MONS_ENDOPLASM;
+        target = MONS_OOZE;
     else if (x >= 3 && x < 5)
         target = MONS_JELLY;
     else if (x >= 5 && x <= 11)
@@ -683,11 +593,14 @@ void slimify_monster(monster* mon)
             target = MONS_AZURE_JELLY;
     }
 
-    if (feat_is_water(env.grid(mon->pos()))) // Pick something amphibious.
+    if (feat_is_water(grd(mon->pos()))) // Pick something amphibious.
         target = (x < 7) ? MONS_JELLY : MONS_SLIME_CREATURE;
 
+    if (mon->holiness() & MH_UNDEAD)
+        target = MONS_DEATH_OOZE;
+
     // Bail out if jellies can't live here.
-    if (!monster_habitable_grid(target, env.grid(mon->pos())))
+    if (!monster_habitable_grid(target, grd(mon->pos())))
     {
         simple_monster_message(*mon, " quivers momentarily.");
         return;
@@ -696,9 +609,9 @@ void slimify_monster(monster* mon)
     record_monster_defeat(mon, KILL_SLIMIFIED);
     remove_unique_annotation(mon);
 
-    monster_polymorph(mon, target, PPT_SLIME);
+    monster_polymorph(mon, target);
 
-    mon->attitude = ATT_GOOD_NEUTRAL;
+    mon->attitude = ATT_STRICT_NEUTRAL;
 
     mons_make_god_gift(*mon, GOD_JIYVA);
 
@@ -711,10 +624,17 @@ void slimify_monster(monster* mon)
 
 void seen_monster(monster* mons)
 {
+    // If the monster is in the auto_exclude list, automatically
+    // set an exclusion.
+    set_auto_exclude(mons);
     set_unique_annotation(mons);
 
     // id equipment (do this every time we see them, it may have changed)
     view_monster_equipment(mons);
+
+    item_def* weapon = mons->weapon();
+    if (weapon && is_range_weapon(*weapon))
+        mons->flags |= MF_SEEN_RANGED;
 
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;
@@ -737,13 +657,6 @@ void seen_monster(monster* mons)
                                  short_ghost_description(mons, true).c_str());
         }
         take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));
-    }
-
-    if (player_equip_unrand(UNRAND_WYRMBANE))
-    {
-        const item_def *wyrmbane = you.weapon();
-        if (wyrmbane && mons->dragon_level() > wyrmbane->plus)
-            mprf("<green>Wyrmbane glows as a worthy foe approaches.</green>");
     }
 
     // attempt any god conversions on first sight

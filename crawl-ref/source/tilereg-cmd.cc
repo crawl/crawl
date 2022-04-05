@@ -5,9 +5,11 @@
 #include "tilereg-cmd.h"
 
 #include "ability.h"
+#include "areas.h"
 #include "cio.h"
 #include "command.h"
 #include "describe.h"
+#include "enum.h"
 #include "env.h"
 #include "items.h"
 #include "libutil.h"
@@ -16,10 +18,11 @@
 #include "religion.h"
 #include "spl-cast.h"
 #include "stringutil.h"
-#include "rltiles/tiledef-icons.h"
+#include "terrain.h"
+#include "tiledef-icons.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
-#include "viewmap.h"
+#include "viewgeom.h"
 
 CommandRegion::CommandRegion(const TileRegionInit &init,
                              const command_type commands[],
@@ -54,13 +57,13 @@ void CommandRegion::draw_tag()
     draw_desc(get_command_description(cmd, true).c_str());
 }
 
-int CommandRegion::handle_mouse(wm_mouse_event &event)
+int CommandRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
         return 0;
 
-    if (event.button == wm_mouse_event::LEFT)
+    if (event.button == MouseEvent::LEFT)
     {
         const command_type cmd = (command_type) m_items[item_idx].idx;
         m_last_clicked_item = item_idx;
@@ -71,11 +74,12 @@ int CommandRegion::handle_mouse(wm_mouse_event &event)
             tiles.deactivate_tab();
         }
 
+        // this is a really horrid way to preserve the interface in viewmap.cc
+        // which expects a keypress rather than a command :(
         if (tiles.get_map_display())
-            process_map_command(cmd);
-        else
-            process_command(cmd);
+            return command_to_key(cmd);
 
+        process_command(cmd);
         return CK_MOUSE_CMD;
     }
     return 0;
@@ -169,34 +173,50 @@ void CommandRegion::pack_buffers()
     }
 }
 
-bool tile_command_not_applicable(const command_type cmd, bool safe)
+static bool _command_not_applicable(const command_type cmd, bool safe)
 {
-    // in the level map, only the map pan commands work
-    const bool map_cmd = context_for_command(cmd) == KMC_LEVELMAP;
-    if (tiles.get_map_display() != map_cmd)
-        return true;
-
     switch (cmd)
     {
     case CMD_REST:
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
-    case CMD_MEMORISE_SPELL:
         return !safe;
     case CMD_DISPLAY_RELIGION:
         return you_worship(GOD_NO_GOD);
     case CMD_USE_ABILITY:
         return your_talents(false).empty();
+    case CMD_BUTCHER:
+        // this logic is enormously simplistic compared to food.cc
+        for (stack_iterator si(you.pos(), true); si; ++si)
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+                return false;
+        if (you.species == SP_VAMPIRE)
+            return false;
+        return true;
     case CMD_CAST_SPELL:
-        return !you.spell_no || !can_cast_spells(true);
+        return can_cast_spells(true);
+    case CMD_DISPLAY_MAP:
+        return tiles.get_map_display();
+    case CMD_MAP_GOTO_TARGET:
+    case CMD_MAP_ADD_WAYPOINT:
+    case CMD_MAP_EXCLUDE_AREA:
+    case CMD_MAP_CLEAR_EXCLUDES:
+    case CMD_MAP_NEXT_LEVEL:
+    case CMD_MAP_PREV_LEVEL:
+    case CMD_MAP_GOTO_LEVEL:
+    case CMD_MAP_FIND_UPSTAIR:
+    case CMD_MAP_FIND_DOWNSTAIR:
+    case CMD_MAP_FIND_YOU:
+    case CMD_MAP_FIND_PORTAL:
+    case CMD_MAP_FIND_TRAP:
+    case CMD_MAP_FIND_ALTAR:
+    case CMD_MAP_FIND_EXCLUDED:
+    case CMD_MAP_FIND_WAYPOINT:
+    case CMD_MAP_FIND_STASH:
+        return !tiles.get_map_display();
     default:
         return false;
     }
-}
-
-bool tile_command_not_applicable(const command_type cmd)
-{
-    return tile_command_not_applicable(cmd, i_feel_safe(false));
 }
 
 void CommandRegion::update()
@@ -211,19 +231,14 @@ void CommandRegion::update()
 
     for (int idx = 0; idx < n_common_commands; ++idx)
     {
-        command_type cmd = _common_commands[idx];
-
-        // hackily toggle between display map and exit map display depending
-        // on whether we are in map mode
-        if (cmd == CMD_DISPLAY_MAP && tiles.get_map_display())
-            cmd = CMD_MAP_EXIT_MAP;
+        const command_type cmd = _common_commands[idx];
 
         InventoryTile desc;
         desc.tile = tileidx_command(cmd);
         desc.idx  = cmd;
 
         // Auto-explore while monsters around etc.
-        if (tile_command_not_applicable(cmd, safe))
+        if (_command_not_applicable(cmd, safe))
             desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);

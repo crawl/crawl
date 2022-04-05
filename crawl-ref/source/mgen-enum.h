@@ -1,7 +1,5 @@
 #pragma once
 
-#include "enum.h"
-
 enum band_type
 {
     BAND_NO_BAND                = 0,
@@ -9,7 +7,6 @@ enum band_type
     BAND_ORCS,
     BAND_ORC_WARRIOR,
     BAND_ORC_KNIGHT,
-    BAND_ORC_WARLORD,
     BAND_KILLER_BEES,
     BAND_CAUSTIC_SHRIKE,
     BAND_SHARD_SHRIKE,
@@ -24,8 +21,8 @@ enum band_type
     BAND_GNOLLS,
     BAND_WIGHTS,
     BAND_CENTAURS,
-    BAND_CENTAUR_WARRIORS,
     BAND_YAKTAURS,
+    BAND_INSUBSTANTIAL_WISPS,
     BAND_OGRE_MAGE,
     BAND_OGRE_MAGE_EXTERN,
     BAND_DEATH_YAKS,
@@ -90,6 +87,10 @@ enum band_type
     BAND_NAGA_SHARPSHOOTER,
     BAND_SALAMANDERS,
     BAND_SALAMANDER_ELITES,
+    BAND_MONSTROUS_DEMONSPAWN,
+    BAND_GELID_DEMONSPAWN,
+    BAND_INFERNAL_DEMONSPAWN,
+    BAND_TORTUROUS_DEMONSPAWN,
     BAND_BLOOD_SAINT,
     BAND_WARMONGER,
     BAND_CORRUPTER,
@@ -107,18 +108,10 @@ enum band_type
     BAND_JOSEPHINE,
     BAND_HOWLER_MONKEY,
     BAND_MELIAI,
-    BAND_IRON_GOLEMS,
+    BAND_ANCIENT_CHAMPIONS,
     BAND_SALTLINGS,
     BAND_DANCING_WEAPONS,
     BAND_MOLTEN_GARGOYLES,
-    BAND_GOLEMS,
-    BAND_LINDWURMS,
-    BAND_DIRE_ELEPHANTS,
-    BAND_SIMULACRA,
-    BAND_SPECTRALS,
-    BAND_BONE_DRAGONS,
-    BAND_MIXED_SPIDERS,
-    BAND_ORANGE_DEMONS,
     NUM_BANDS                   // always last
 };
 
@@ -135,7 +128,6 @@ enum proximity_type   // proximity to player to create monster
     PROX_CLOSE_TO_PLAYER,
     PROX_AWAY_FROM_PLAYER,
     PROX_AWAY_FROM_STAIRS,
-    PROX_AWAY_FROM_ENTRANCE,
 };
 
 enum mgen_flag
@@ -148,7 +140,7 @@ enum mgen_flag
     MG_PATROLLING   = 0x010,
     MG_BAND_MINION  = 0x020,
     MG_DONT_COME    = 0x040, ///< suppress the "comes into view" spam
-                   // 0x080, ///< was MG_DONT_CAP
+    MG_DONT_CAP     = 0x080, ///< don't automatically apply the summon cap to this monster
     MG_FORBID_BANDS = 0x100, ///< override MG_PERMIT_BANDS
     MG_NO_OOD       = 0x200, ///< don't choose out-of-depth random monsters
 };

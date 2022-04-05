@@ -3,28 +3,14 @@ define(["jquery", "comm", "client", "./ui", "./enums", "./cell_renderer",
 function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     "use strict";
 
-    var describe_scale = 2.0;
-
     function fmt_body_txt(txt)
     {
         return txt
-            // preserve all leading spaces
-            .split("\n")
-            .map(function (s) { return s.replace(/^\s+/, function (m)
-                    {
-                        // TODO: or mark as preformatted? something else?
-                        return m.replace(/\s/g, "&nbsp;");
-                    }).trim();
-                })
-            .join("\n")
-            // convert double linebreaks into paragraph markers
             .split("\n\n")
-            .map(function (s) { return "<p>" + s + "</p>"; })
+            .map(function (s) { return "<p>"+s.trim()+"</p>"; })
             .filter(function (s) { return s !== "<p></p>"; })
             .join("")
-            // replace single linebreaks with manual linebreaks
-            .split("\n")
-            .join("<br>");
+            .split("\n").join("<br>");
     }
 
     function _fmt_spellset_html(desc)
@@ -39,13 +25,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function _fmt_spells_list(root, spellset, colour)
     {
         var $container = root.find("#spellset_placeholder");
-        // XX this container only seems to be added if there are spells, do
-        // we actually need to remove it again?
-        if ($container.length === 0 && spellset.length !== 0)
-        {
-            root.prepend("<div class='fg4'>Buggy spellset!</div>");
-            return;
-        }
         $container.attr("id", "").addClass("menu_contents spellset");
         if (spellset.length === 0)
         {
@@ -53,8 +32,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             return;
         }
         $.each(spellset, function (i, book) {
-            if (book.label.trim())
-                $container.append(book.label);
+            $container.append(book.label);
             var $list = $("<ol>");
             $.each(book.spells, function (i, spell) {
                 var $item = $("<li class=selectable>");
@@ -70,10 +48,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 var label = " " + letter + " - "+spell.title;
                 $item.append("<span>" + label + "</span>");
 
-                if (spell.effect !== undefined)
-                    $item.append("<span>" + util.formatted_string_to_html(spell.effect) + " </span>");
+                if (spell.hex_chance !== undefined)
+                    $item.append("<span>("+spell.hex_chance+") </span>");
                 if (spell.range_string !== undefined)
-                    $item.append("<span>" + util.formatted_string_to_html(spell.range_string) + " </span>");
+                    $item.append("<span>" + util.formatted_string_to_html(spell.range_string) +" </span>");
 
                 $list.append($item);
                 if (colour)
@@ -137,12 +115,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         if (desc.tile)
         {
             var renderer = new cr.DungeonCellRenderer();
-            util.init_canvas(canvas[0],
-                renderer.cell_width * describe_scale,
-                renderer.cell_height * describe_scale);
+            util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
             renderer.init(canvas[0]);
-            renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0,
-                desc.tile.ymax, false, describe_scale);
+            renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0, desc.tile.ymax, false);
         }
         else
             canvas.remove();
@@ -158,83 +133,22 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             var $feat = $feat_tmpl.clone().removeClass("hidden").addClass("describe-feature-feat");
             $feat.find(".header > span").html(feat.title);
             if (feat.body != feat.title)
-            {
-                var text = feat.body;
-                if (feat.quote)
-                     text += "\n\n" + feat.quote;
-                $feat.find(".body").html(util.formatted_string_to_html(text));
-            }
+                $feat.find(".body").html(feat.body);
             else
                 $feat.find(".body").remove();
 
             var canvas = $feat.find(".header > canvas");
             var renderer = new cr.DungeonCellRenderer();
-            util.init_canvas(canvas[0],
-                renderer.cell_width * describe_scale,
-                renderer.cell_height * describe_scale);
+            util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
             renderer.init(canvas[0]);
-            renderer.draw_from_texture(feat.tile.t, 0, 0, feat.tile.tex, 0, 0,
-                feat.tile.ymax, false, describe_scale);
+            renderer.draw_from_texture(feat.tile.t, 0, 0, feat.tile.tex, 0, 0, feat.tile.ymax, false);
             $popup.append($feat);
         });
-        if (desc.actions)
-        {
-            $popup.append("<div class=actions></div>");
-            $popup.find(".actions").html(clickify_actions(desc.actions));
-        }
-
         var s = scroller($popup[0]);
         $popup.on("keydown keypress", function (event) {
-            var key = String.fromCharCode(event.which);
-            if (key != "<" && key != ">") // XX not always
-                scroller_handle_key(s, event);
+            scroller_handle_key(s, event);
         });
         return $popup;
-    }
-
-    // Given some string like "e(v)oke", produce a span with the `data-hotkey`
-    // attribute set on that span. This auto-enables clicking. This will
-    // handle both a final period, and a sequence of prefix words that do not
-    // have a hotkey marked in them.
-    // TODO: it might be more robust to produce structured info on the server
-    // side...
-    function clickify_action(action_text)
-    {
-        var suffix = "";
-        var prefix = "";
-        // makes some assumptions about how this is joined...see describe.cc
-        // _actions_desc.
-        if (action_text.endsWith(".")) // could be more elegant...
-        {
-            suffix = ".";
-            action_text = action_text.slice(0, -1);
-        }
-        if (action_text.startsWith("or "))
-        {
-            prefix = "or ";
-            action_text = action_text.substr(3);
-        }
-        var hotkeys = action_text.match(/\(.\)/); // very inclusive for the key name
-        var data_attr = ""
-        if (hotkeys)
-            data_attr = " data-hotkey='" + hotkeys[0][1] + "'";
-        return prefix
-            + "<span" + data_attr + ">" + action_text + "</span>"
-            + suffix;
-    }
-
-    // Turn a list of actions like that found in the describe item popup into
-    // clickable links.
-    function clickify_actions(actions_text)
-    {
-        // assumes that the list is joined via ", ", including the final
-        // element. (I.e. this will break without the Oxford comma.)
-        var words = actions_text.split(", ");
-        var linkized = [];
-        words.forEach(function(w) {
-            linkized.push(clickify_action(w));
-        });
-        return linkized.join(", ");
     }
 
     function describe_item(desc)
@@ -248,21 +162,18 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $popup.on("keydown keypress", function (event) {
             scroller_handle_key(s, event);
         });
-        if (desc.actions)
-            $popup.find(".actions").html(clickify_actions(desc.actions));
+        if (desc.actions !== "")
+            $popup.find(".actions").html(desc.actions);
         else
             $popup.find(".actions").remove();
 
         var canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas(canvas[0],
-            renderer.cell_width * describe_scale,
-            renderer.cell_height * describe_scale);
+        util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
         renderer.init(canvas[0]);
 
         desc.tiles.forEach(function (tile) {
-            renderer.draw_from_texture(tile.t, 0, 0, tile.tex, 0, 0, tile.ymax,
-                false, describe_scale);
+            renderer.draw_from_texture(tile.t, 0, 0, tile.tex, 0, 0, tile.ymax, false);
         });
 
         return $popup;
@@ -291,12 +202,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         var canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas(canvas[0],
-            renderer.cell_width * describe_scale,
-            renderer.cell_height * describe_scale);
+        util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
         renderer.init(canvas[0]);
-        renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0,
-            desc.tile.ymax, false, describe_scale);
+        renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0, desc.tile.ymax, false);
 
         return $popup;
     }
@@ -313,12 +221,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
             var canvas = $card.find(".header > canvas");
             var renderer = new cr.DungeonCellRenderer();
-            util.init_canvas(canvas[0],
-                renderer.cell_width * describe_scale,
-                renderer.cell_height * describe_scale);
+            util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
             renderer.init(canvas[0]);
-            renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false,
-                describe_scale);
+            renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false);
             $popup.append($card);
         });
         var s = scroller($popup[0]);
@@ -341,11 +246,11 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         });
         paneset_cycle($body);
 
-        if (desc.vampire_alive !== undefined)
+        if (desc.vampire !== undefined)
         {
             var css = ".vamp-attrs th:nth-child(%d) { background: #111; }";
             css += " .vamp-attrs td:nth-child(%d) { color: white; background: #111; }";
-            css = css.replace(/%d/g, desc.vampire_alive ? 2 : 3);
+            css = css.replace(/%d/g, desc.vampire + 1);
             $vamp.children("style").html(css);
             var vs = scroller($vamp[0]);
             $popup.on("keydown keypress", function (event) {
@@ -394,13 +299,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         var canvas = $popup.find(".header > canvas")[0];
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas(canvas,
-            renderer.cell_width * describe_scale,
-            renderer.cell_height * describe_scale);
+        util.init_canvas(canvas, renderer.cell_width, renderer.cell_height);
         renderer.init(canvas);
         renderer.draw_from_texture(desc.tile.t, 0, 0,
-                                   desc.tile.tex, 0, 0, 0, false,
-                                   describe_scale);
+                                   desc.tile.tex, 0, 0, 0, false);
 
         var $body = $popup.children(".body");
         var $footer = $popup.find(".footer > .paneset");
@@ -408,14 +310,19 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         if (!desc.is_altar)
             $footer.find('.join-keyhelp').remove();
-        else
-            $footer.find('.join-keyhelp').append(desc.service_fee)
 
         $panes.eq(0).find(".desc").html(desc.description);
         $panes.eq(0).find(".god-favour td.title")
                     .addClass("fg"+desc.colour).html(desc.title);
         $panes.eq(0).find(".god-favour td.favour")
                     .addClass("fg"+desc.colour).html(desc.favour);
+        if (desc.bondage)
+        {
+            $panes.eq(0).find(".god-favour")
+                .after("<div class=tbl>"
+                        + util.formatted_string_to_html(desc.bondage)
+                        + "</div>");
+        }
         var powers_list = desc.powers_list.split("\n").slice(3, -1);
         var $powers = $panes.eq(0).find(".god-powers");
         var re = /^(<[a-z]*>)?(.*\.) *( \(.*\))?$/;
@@ -453,9 +360,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
 
         $popup.on("keydown keypress", function (event) {
-            var enter = event.which == 13, space = event.which == 32;
-            if (enter || space)
-                return;
             var s = scroller($panes.filter(".current")[0]);
             scroller_handle_key(s, event);
         });
@@ -510,9 +414,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
         var $canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas($canvas[0],
-            renderer.cell_width * describe_scale,
-            renderer.cell_height * describe_scale);
+        util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
         renderer.init($canvas[0]);
 
         if ((desc.fg_idx >= main.MAIN_MAX) && desc.doll)
@@ -533,7 +435,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     yofs += desc.mcache[mind][2];
                 }
                 renderer.draw_player(doll_part[0],
-                        0, 0, xofs, yofs, doll_part[1], describe_scale);
+                        0, 0, xofs, yofs, doll_part[1]);
             });
         }
 
@@ -543,8 +445,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 if (mcache_part) {
                     var yofs = Math.max(0, player.get_tile_info(mcache_part[0]).h - 32);
                     renderer.draw_player(mcache_part[0],
-                            0, 0, mcache_part[1], mcache_part[2]+yofs,
-                            undefined, describe_scale);
+                            0, 0, mcache_part[1], mcache_part[2]+yofs);
                 }
             });
         }
@@ -552,13 +453,13 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         {
             renderer.draw_foreground(0, 0, { t: {
                 fg: { value: desc.fg_idx }, bg: 0,
-            }}, describe_scale);
+            }});
         }
 
         renderer.draw_foreground(0, 0, { t: {
             fg: enums.prepare_fg_flags(desc.flag),
             bg: 0,
-        }}, describe_scale);
+        }});
 
         for (var i = 0; i < $panes.length; i++)
             scroller($panes.eq(i)[0]);
@@ -610,12 +511,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         var t = gui.STARTUP_STONESOUP, tex = enums.texture.GUI;
         var $canvas = $popup.find(".header > canvas");
         var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas($canvas[0],
-            renderer.cell_width * describe_scale,
-            renderer.cell_height * describe_scale);
+        util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
         renderer.init($canvas[0]);
-        renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false,
-            describe_scale);
+        renderer.draw_from_texture(t, 0, 0, tex, 0, 0, 0, false);
 
         return $popup;
     }
@@ -691,14 +589,10 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function scroller_scroll_page(scroller, dir)
     {
-        var line_height = scroller_line_height(scroller);
+        // var line_height = scroller_line_height(scroller);
         var contents = $(scroller.scrollElement);
-        // XX this is a bit weird, maybe context[0] is the wrong thing to use?
-        // The -24 is to compensate for the top/bottom shades. In practice, the
-        // top line ends up a bit in the shade in long docs, possibly it should
-        // be adjusted for.
-        var page_shift = contents[0].getBoundingClientRect().height - 24;
-        page_shift = Math.floor(page_shift / line_height) * line_height;
+        var page_shift = contents[0].getBoundingClientRect().height;
+        // page_shift = Math.floor(page_shift / line_height) * line_height;
         contents[0].scrollTop += page_shift * dir;
         update_server_scroll();
     }
@@ -811,169 +705,15 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var $popup = $(".templates > .msgwin-get-line").clone();
         $popup.children(".header").html(util.formatted_string_to_html(msg.prompt));
+        $popup.children(".body")[0].textContent = msg.text;
         return $popup;
     }
-
-    function focus_button($button)
+    function msgwin_get_line_update(msg)
     {
-        var $popup = $button.closest(".newgame-choice");
-        var menu_id = $button.closest("[menu_id]").attr("menu_id");
-        $popup.find(".button.selected").removeClass("selected");
-        $button.addClass("selected");
-        var $scr = $button.closest(".simplebar-scroll-content");
-        if ($scr.length === 1)
-        {
-            var br = $button[0].getBoundingClientRect();
-            var gr = $scr.parent()[0].getBoundingClientRect();
-            var delta = br.top < gr.top ? br.top - gr.top :
-                    br.bottom > gr.bottom ? br.bottom - gr.bottom : 0;
-            $scr[0].scrollTop += delta;
-        }
-
-        var $descriptions = $popup.find(".descriptions");
-        paneset_cycle($descriptions, $button.attr("data-description-index"));
-        comm.send_message("outer_menu_focus", {
-            hotkey: ui.utf8_from_key_value($button.attr("data-hotkey")),
-            menu_id: menu_id,
-        });
-    }
-
-    function newgame_choice(msg)
-    {
-        var $popup = $(".templates > .newgame-choice").clone();
-        if (msg.doll)
-        {
-            var $canvas = $("<canvas>");
-            var $title = $("<span>");
-            var $prompt = $("<div class=header>");
-            $popup.children(".header").append($canvas).append($title).after($prompt);
-            $title.html(util.formatted_string_to_html(msg.title));
-            $prompt.html(util.formatted_string_to_html(msg.prompt));
-            var renderer = new cr.DungeonCellRenderer();
-            util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
-            renderer.init($canvas[0]);
-            $.each(msg.doll, function (i, doll_part) {
-                renderer.draw_player(doll_part[0], 0, 0, 0, 0, doll_part[1]);
-            });
-        }
-        else
-            $popup.children(".header").html(util.formatted_string_to_html(msg.title));
-        var renderer = new cr.DungeonCellRenderer();
-        var $descriptions = $popup.find(".descriptions");
-
-        function build_item_grid(data, $container, fat)
-        {
-            $container.attr("menu_id", data.menu_id);
-            $.each(data.buttons, function (i, button) {
-                var $button = $("<div class=button>");
-                if ((button.tile || []).length > 0 || fat)
-                {
-                    var $canvas = $("<canvas class='glyph-mode-hidden'>");
-                    util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
-                    renderer.init($canvas[0]);
-
-                    $.each(button.tile || [], function (_, tile) {
-                        renderer.draw_from_texture(tile.t, 0, 0, tile.tex, 0, 0, tile.ymax, false);
-                    });
-                    $button.append($canvas);
-                }
-                $.each(button.labels || [button.label], function (i, label) {
-                    var $lbl = $(util.formatted_string_to_html(label)).css("flex-grow", "1");
-                    $button.append($lbl);
-                });
-                $button.attr("style", "grid-row:"+(button.y+1)+"; grid-column:"+(button.x+1)+";");
-                $descriptions.append("<span class='pane'> " + button.description + "</span>");
-                $button.attr("data-description-index", $descriptions.children().length - 1);
-                $button.attr("data-hotkey", ui.key_value_from_utf8(button.hotkey));
-                $button.addClass("hlc-" + button.highlight_colour);
-                $container.append($button);
-
-                $button.on('hover', function () { focus_button($(this)) });
-            });
-            $.each(data.labels, function (i, button) {
-                var $button = $("<div class=label>");
-                $button.append(util.formatted_string_to_html(button.label));
-                $button.attr("style", "grid-row:"+(button.y+1)+"; grid-column:"+(button.x+1)+";");
-                $container.append($button);
-            });
-        }
-
-        var $main = $popup.find(".main-items");
-        build_item_grid(msg["main-items"], $main, true);
-        build_item_grid(msg["sub-items"], $popup.find(".sub-items"));
-        scroller($main.parent()[0]);
-
-        return $popup;
-    }
-
-    function newgame_choice_update(msg)
-    {
-        if (!client.is_watching() && msg.from_client)
-            return;
         var $popup = ui.top_popup();
-        if (!$popup || !$popup.hasClass("newgame-choice"))
+        if (!$popup.hasClass("msgwin-get-line"))
             return;
-        var hotkey = ui.key_value_from_utf8(msg.button_focus);
-        focus_button($popup.find("[data-hotkey='"+hotkey+"']"));
-    }
-
-    function newgame_random_combo(msg)
-    {
-        var $popup = $(".templates > .describe-generic").clone();
-        $popup.find(".header > span").html(util.formatted_string_to_html(msg.prompt));
-        $popup.find(".body").html("Do you want to play this combination? [Y/n/q]");
-
-        var $canvas = $popup.find(".header > canvas");
-        var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas($canvas[0], renderer.cell_width, renderer.cell_height);
-        renderer.init($canvas[0]);
-        $.each(msg.doll, function (i, doll_part) {
-            renderer.draw_player(doll_part[0], 0, 0, 0, 0, doll_part[1]);
-        });
-
-        return $popup;
-    }
-
-    function game_over(desc)
-    {
-        var $popup = $(".templates > .game-over").clone();
-        $popup.find(".header > span").html(desc.title);
-        $popup.children(".body").html(fmt_body_txt(util.formatted_string_to_html(desc.body)));
-        var s = scroller($popup.children(".body")[0]);
-        $popup.on("keydown keypress", function (event) {
-            scroller_handle_key(s, event);
-        });
-
-        var canvas = $popup.find(".header > canvas");
-        var renderer = new cr.DungeonCellRenderer();
-        util.init_canvas(canvas[0], renderer.cell_width, renderer.cell_height);
-        renderer.init(canvas[0]);
-        renderer.draw_from_texture(desc.tile.t, 0, 0, desc.tile.tex, 0, 0, desc.tile.ymax, false);
-
-        return $popup;
-    }
-
-    function seed_selection(desc)
-    {
-        var $popup = $(".templates > .seed-selection").clone();
-        $popup.find(".header").html(desc.title);
-        $popup.find(".body-text").html(desc.body);
-        $popup.find(".footer").html(desc.footer);
-        if (!desc.show_pregen_toggle)
-            $popup.find(".pregen-toggle").remove();
-        scroller($popup.find(".body")[0]);
-
-        var $input = $popup.find("input[type=text]");
-        var input_val = $input.val();
-        $input.on("input change", function (event) {
-            var valid_seed = $input.val().match(/^\d*$/);
-            if (valid_seed)
-                input_val = $input.val();
-            else
-                $input.val(input_val);
-        });
-
-        return $popup;
+        $popup.children(".body")[0].textContent = msg.text;
     }
 
     var ui_handlers = {
@@ -988,11 +728,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         "version" : version,
         "formatted-scroller" : formatted_scroller,
         "progress-bar" : progress_bar,
-        "seed-selection" : seed_selection,
         "msgwin-get-line" : msgwin_get_line,
-        "newgame-choice": newgame_choice,
-        "newgame-random-combo": newgame_random_combo,
-        "game-over" : game_over,
     };
 
     function register_ui_handlers(dict)
@@ -1002,19 +738,9 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function recv_ui_push(msg)
     {
-        var popup = null
         var handler = ui_handlers[msg.type];
-        try
-        {
-            popup = handler
-                ? handler(msg)
-                : $("<div>Unhandled UI type " + msg.type + "</div>");
-        }
-        catch (err)
-        {
-            popup = $("<div>Buggy UI of type " + msg.type + "</div>");
-        }
-        ui.show_popup(popup, msg["ui-centred"], msg.generation_id);
+        var popup = handler ? handler(msg) : $("<div>Unhandled UI type "+msg.type+"</div>");
+        ui.show_popup(popup, msg["ui-centred"]);
     }
 
     function recv_ui_pop(msg)
@@ -1037,8 +763,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             "describe-god" : describe_god_update,
             "describe-monster" : describe_monster_update,
             "formatted-scroller" : formatted_scroller_update,
+            "msgwin-get-line" : msgwin_get_line_update,
             "progress-bar" : progress_bar_update,
-            "newgame-choice" : newgame_choice_update,
         };
         var handler = ui_handlers[msg.type];
         if (handler)

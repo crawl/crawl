@@ -5,10 +5,6 @@
 
 #pragma once
 
-#include "item-def.h"
-#include "killer-type.h"
-#include "tag-version.h"
-
 #define ORIG_MONSTER_KEY "orig_monster_key"
 #define ELVEN_ENERGIZE_KEY "elven_twin_energize"
 #define ELVEN_IS_ENERGIZED_KEY "elven_twin_is_energized"
@@ -16,9 +12,6 @@
 #define OLD_DUVESSA_ENERGIZE_KEY "duvessa_berserk"
 #define OLD_DOWAN_ENERGIZE_KEY "dowan_upgrade"
 #endif
-
-class actor;
-class monster;
 
 #define MONSTER_DIES_LUA_KEY "monster_dies_lua_key"
 
@@ -30,6 +23,7 @@ class monster;
 
 #define SAME_ATTITUDE(x) ((x)->friendly()       ? BEH_FRIENDLY :   \
                           (x)->good_neutral()   ? BEH_GOOD_NEUTRAL : \
+                          (x)->strict_neutral() ? BEH_STRICT_NEUTRAL :  \
                           (x)->neutral()        ? BEH_NEUTRAL           \
                                                 : BEH_HOSTILE)
 
@@ -45,15 +39,15 @@ item_def* monster_die(monster& mons, killer_type killer,
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                        int killer_index);
 
-bool mons_will_goldify(const monster &mons);
-
-item_def* place_monster_corpse(const monster& mons, bool force = false);
+item_def* place_monster_corpse(const monster& mons, bool silent,
+                                                    bool force = false);
 
 void monster_cleanup(monster* mons);
+void setup_spore_explosion(bolt & beam, const monster& origin);
 void record_monster_defeat(const monster* mons, killer_type killer);
 void unawaken_vines(const monster* mons, bool quiet);
 int mummy_curse_power(monster_type type);
-void fire_monster_death_event(monster* mons, killer_type killer, bool polymorph);
+void fire_monster_death_event(monster* mons, killer_type killer, int i, bool polymorph);
 void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false);
 void end_flayed_effect(monster* ghost);
 

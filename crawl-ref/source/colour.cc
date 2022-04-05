@@ -5,7 +5,6 @@
 #include <cmath>
 #include <memory>
 #include <utility>
-#include <unordered_map>
 
 #include "areas.h"
 #include "branch.h"
@@ -13,23 +12,25 @@
 #include "dgn-height.h"
 #include "options.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "tiles-build-specific.h"
 #include "libutil.h" // map_find
 
-static FixedVector<unique_ptr<base_colour_calc>, NUM_COLOURS> element_colours;
+static FixedVector<unique_ptr<element_colour_calc>, NUM_COLOURS> element_colours;
 // Values point into element_colours.
-static unordered_map<string, base_colour_calc*> element_colours_str;
+static map<string, element_colour_calc*> element_colours_str;
 
 typedef vector< pair<int, int> > random_colour_map;
 typedef int (*randomized_element_colour_calculator)(int, const coord_def&,
                                                     random_colour_map);
 
-struct random_element_colour_calc : public base_colour_calc
+static int _randomized_element_colour(int, const coord_def&, random_colour_map);
+
+struct random_element_colour_calc : public element_colour_calc
 {
     random_element_colour_calc(element_type _type, string _name,
                                vector< pair<int, int> > _rand_vals)
-        : base_colour_calc(_type, _name), rand_vals(_rand_vals)
+        : element_colour_calc(_type, _name, (element_colour_calculator)_randomized_element_colour),
+          rand_vals(_rand_vals)
     {
         rand_max = 0;
         for (const auto &pair : rand_vals)
@@ -43,7 +44,7 @@ protected:
     random_colour_map rand_vals;
 };
 
-int base_colour_calc::rand(bool non_random)
+int element_colour_calc::rand(bool non_random)
 {
     return non_random ? 0 : ui_random(rand_max);
 }
@@ -53,14 +54,17 @@ int element_colour_calc::get(const coord_def& loc, bool non_random)
     return (*calc)(rand(non_random), loc);
 }
 
-int random_element_colour_calc::get(const coord_def& /*loc*/, bool non_random)
+int random_element_colour_calc::get(const coord_def& loc, bool non_random)
 {
-    const auto max_val = rand(non_random);
-    int accum = 0;
-    for (const auto &entry : rand_vals)
-        if ((accum += entry.first) > max_val)
-            return entry.second;
-    return BLACK;
+    // casting function pointers from other function pointers is guaranteed
+    // to be safe, but calling them on pointers not of their type isn't, so
+    // assert here to be safe - add to this assert if something different is
+    // needed
+    ASSERT((randomized_element_colour_calculator)calc ==
+                _randomized_element_colour);
+    randomized_element_colour_calculator real_calc =
+        (randomized_element_colour_calculator)calc;
+    return (*real_calc)(rand(non_random), loc, rand_vals);
 }
 
 colour_t random_colour(bool ui_rand)
@@ -119,6 +123,17 @@ static bool _is_element_colour(int col)
     col = col & 0x007f;
     ASSERT(col < NUM_COLOURS);
     return col >= ETC_FIRE;
+}
+
+static int _randomized_element_colour(int rand, const coord_def&,
+                                      random_colour_map rand_vals)
+{
+    int accum = 0;
+    for (const auto &entry : rand_vals)
+        if ((accum += entry.first) > rand)
+            return entry.second;
+
+    return BLACK;
 }
 
 static int _etc_floor(int, const coord_def& loc)
@@ -252,16 +267,11 @@ static int _etc_tree(int, const coord_def& loc)
     h += loc.y;
     h+=h<<10; h^=h>>6;
     h+=h<<3; h^=h>>11; h+=h<<15;
-    return (h>>30) ? GREEN : LIGHTGREEN;
+    return (h>>30) ? GREEN :
+        player_in_branch(BRANCH_SWAMP) ? BROWN : LIGHTGREEN; // Swamp trees are mangroves.
 }
 
-static int _etc_mangrove(int, const coord_def& loc)
-{
-    const int col = _etc_tree(0, loc);
-    return col == LIGHTGREEN ? BROWN : col;
-}
-
-bool get_vortex_phase(const coord_def& loc)
+bool get_tornado_phase(const coord_def& loc)
 {
     coord_def center = get_cloud_originator(loc);
     if (center.origin())
@@ -276,19 +286,19 @@ bool get_vortex_phase(const coord_def& loc)
     }
 }
 
-static int _etc_vortex(int, const coord_def& loc)
+static int _etc_tornado(int, const coord_def& loc)
 {
-    const bool phase = get_vortex_phase(loc);
-    switch (env.grid(loc))
+    const bool phase = get_tornado_phase(loc);
+    switch (grd(loc))
     {
     case DNGN_LAVA:
-        return phase ? LIGHTRED : one_chance_in(3) ? MAGENTA : RED;
-    case DNGN_SHALLOW_WATER: // XX color overlap between this and land, how annoying is it?
+        return phase ? LIGHTRED : RED;
+    case DNGN_SHALLOW_WATER:
         return phase ? LIGHTCYAN : CYAN;
     case DNGN_DEEP_WATER:
-        return phase ? BLUE : coinflip() ? LIGHTBLUE : DARKGREY;
+        return phase ? LIGHTBLUE : BLUE;
     default:
-        return phase ? WHITE : one_chance_in(3) ? LIGHTCYAN : LIGHTGREY;
+        return phase ? WHITE : LIGHTGREY;
     }
 }
 
@@ -348,7 +358,7 @@ static int _etc_random(int, const coord_def&)
     return random_colour(true);
 }
 
-void add_element_colour(base_colour_calc *colour)
+void add_element_colour(element_colour_calc *colour)
 {
     // or else lookups won't work: we strip high bits (because of colflags)
     ASSERT(colour->type < 128);
@@ -586,10 +596,7 @@ void init_element_colours()
                             ETC_TREE, "tree", _etc_tree
                        ));
     add_element_colour(new element_colour_calc(
-                            ETC_MANGROVE, "mangrove", _etc_mangrove
-                       ));
-    add_element_colour(new element_colour_calc(
-                            ETC_VORTEX, "vortex", _etc_vortex
+                            ETC_TORNADO, "tornado", _etc_tornado
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_LIQUEFIED, "liquefied", _etc_liquefied
@@ -635,12 +642,6 @@ void init_element_colours()
                             { {40, LIGHTRED},
                               {40, YELLOW},
                               {10, WHITE},
-                            }));
-    add_element_colour(new random_element_colour_calc(
-                            ETC_CANDLES, "candles",
-                            { {40,  RED},
-                              {40,  YELLOW},
-                              {40,  WHITE},
                             }));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
@@ -768,7 +769,7 @@ int str_to_colour(const string &str, int default_colour, bool accept_number,
     if (ret == NUM_TERM_COLOURS && accept_elemental)
     {
         // Maybe we have an element colour attribute.
-        if (base_colour_calc **calc = map_find(element_colours_str, str))
+        if (element_colour_calc **calc = map_find(element_colours_str, str))
         {
             ASSERT(*calc);
             ret = (*calc)->type;
@@ -788,6 +789,106 @@ int str_to_colour(const string &str, int default_colour, bool accept_number,
     return (ret == NUM_TERM_COLOURS) ? default_colour : ret;
 }
 
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
+static unsigned short _dos_reverse_brand(unsigned short colour)
+{
+    if (Options.dos_use_background_intensity)
+    {
+        // If the console treats the intensity bit on background colours
+        // correctly, we can do a very simple colour invert.
+
+        // Special casery for shadows.
+        if (colour == BLACK)
+            colour = (DARKGREY << 4);
+        else
+            colour = (colour & 0xF) << 4;
+    }
+    else
+    {
+        // If we're on a console that takes its DOSness very seriously the
+        // background high-intensity bit is actually a blink bit. Blinking is
+        // evil, so we strip the background high-intensity bit. This, sadly,
+        // limits us to 7 background colours.
+
+        // Strip off high-intensity bit. Special case DARKGREY, since it's the
+        // high-intensity counterpart of black, and we don't want black on
+        // black.
+        //
+        // We *could* set the foreground colour to WHITE if the background
+        // intensity bit is set, but I think we've carried the
+        // angry-fruit-salad theme far enough already.
+
+        if (colour == DARKGREY)
+            colour |= (LIGHTGREY << 4);
+        else if (colour == BLACK)
+            colour = LIGHTGREY << 4;
+        else
+        {
+            // Zap out any existing background colour, and the high
+            // intensity bit.
+            colour  &= 7;
+
+            // And swap the foreground colour over to the background
+            // colour, leaving the foreground black.
+            colour <<= 4;
+        }
+    }
+
+    return colour;
+}
+
+static unsigned short _dos_hilite_brand(unsigned short colour,
+                                        unsigned short hilite)
+{
+    if (!hilite)
+        return colour;
+
+    if (colour == hilite)
+        colour = 0;
+
+    colour |= (hilite << 4);
+    return colour;
+}
+
+static unsigned short _dos_brand(unsigned short colour, unsigned brand)
+{
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
+        return colour;
+
+    colour &= 0xFF;
+
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+        return _dos_hilite_brand(colour, (brand & CHATTR_COLMASK) >> 8);
+    else
+        return _dos_reverse_brand(colour);
+}
+#endif
+
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
+static unsigned _colflag2brand(int colflag)
+{
+    switch (colflag)
+    {
+    case COLFLAG_ITEM_HEAP:
+        return Options.heap_brand;
+    case COLFLAG_FRIENDLY_MONSTER:
+        return Options.friend_brand;
+    case COLFLAG_NEUTRAL_MONSTER:
+        return Options.neutral_brand;
+    case COLFLAG_WILLSTAB:
+        return Options.stab_brand;
+    case COLFLAG_MAYSTAB:
+        return Options.may_stab_brand;
+    case COLFLAG_FEATURE_ITEM:
+        return Options.feature_item_brand;
+    case COLFLAG_TRAP_ITEM:
+        return Options.trap_item_brand;
+    default:
+        return CHATTR_NORMAL;
+    }
+}
+#endif
+
 unsigned real_colour(unsigned raw_colour, const coord_def& loc)
 {
     // This order is important - is_element_colour() doesn't want to see the
@@ -798,6 +899,14 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     // Evaluate any elemental colours to guarantee vanilla colour is returned
     if (_is_element_colour(raw_colour))
         raw_colour = colflags | element_colour(raw_colour, false, loc);
+
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
+    if (colflags)
+    {
+        unsigned brand = _colflag2brand(colflags);
+        raw_colour = _dos_brand(raw_colour & 0xFF, brand);
+    }
+#endif
 
     return raw_colour;
 }

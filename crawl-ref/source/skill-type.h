@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tag-version.h"
-
 // [dshaligram] If you add a new skill, update skills.cc, specifically
 // the skills[] array and skill_display_order[]. New skills must go at the
 // end of the list or in the unused skill numbers. NEVER rearrange this enum or
@@ -18,7 +16,6 @@ enum skill_type
     SK_MACES_FLAILS,
     SK_POLEARMS,
     SK_STAVES,
-    SK_LAST_MELEE_WEAPON = SK_STAVES,
     SK_SLINGS,
     SK_BOWS,
     SK_CROSSBOWS,
@@ -40,9 +37,7 @@ enum skill_type
     SK_CONJURATIONS,
     SK_FIRST_MAGIC_SCHOOL = SK_CONJURATIONS, // not SK_FIRST_MAGIC as no Spc
     SK_HEXES,
-#if TAG_MAJOR_VERSION == 34
     SK_CHARMS,
-#endif
     SK_SUMMONINGS,
     SK_NECROMANCY,
     SK_TRANSLOCATIONS,

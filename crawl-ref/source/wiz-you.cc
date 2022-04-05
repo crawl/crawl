@@ -12,6 +12,7 @@
 
 #include "abyss.h"
 #include "dbg-util.h"
+#include "food.h"
 #include "god-abil.h"
 #include "god-wrath.h"
 #include "item-use.h"
@@ -21,8 +22,8 @@
 #include "message.h"
 #include "misc.h" // frombool
 #include "mutation.h"
+#include "ng-setup.h"
 #include "output.h"
-#include "playable.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
@@ -33,34 +34,40 @@
 #include "state.h"
 #include "status.h"
 #include "stringutil.h"
-#include "tag-version.h"
-#include "timed-effects.h" // zot clock
 #include "transform.h"
-#include "ui.h"
 #include "unicode.h"
+#include "unwind.h"
 #include "view.h"
 #include "xom.h"
 
 #ifdef WIZARD
 
-job_type find_job_from_string(const string &str)
+job_type find_job_from_string(const string &job)
 {
-    const string spec = lowercase_string(str);
+    string spec = lowercase_string(job);
 
-    job_type partial_match = JOB_UNKNOWN;
+    job_type j = JOB_UNKNOWN;
 
-    for (const auto job : playable_jobs())
+    for (int i = 0; i < NUM_JOBS; ++i)
     {
-        const auto name = lowercase_string(get_job_name(job));
-        const auto pos = name.find(spec);
+        const job_type ji = static_cast<job_type>(i);
+        const string name = lowercase_string(get_job_name(ji));
 
-        if (pos == 0)
-            return job;  // We prefer prefixes over partial matches.
-        else if (pos != string::npos)
-            partial_match = job;
+        string::size_type pos = name.find(spec);
+        if (pos != string::npos)
+        {
+            if (pos == 0)
+            {
+                // We prefer prefixes over partial matches.
+                j = ji;
+                break;
+            }
+            else
+                j = ji;
+        }
     }
 
-    return partial_match;
+    return j;
 }
 
 static xom_event_type _find_xom_event_from_string(const string &event_name)
@@ -95,11 +102,7 @@ void wizard_suppress()
 {
     you.wizard = false;
     you.suppress_wizard = true;
-#ifdef USE_TILE_LOCAL
-    tiles.layout_statcol();
-#endif
     redraw_screen();
-    update_screen();
 }
 
 void wizard_change_job_to(job_type job)
@@ -121,9 +124,9 @@ void wizard_change_species()
         return;
     }
 
-    const species_type sp = species::from_str_loose(specs);
+    const species_type sp = find_species_from_string(specs);
 
-    // Means from_str_loose couldn't interpret `specs`.
+    // Means find_species_from_string couldn't interpret `specs`.
     if (sp == SP_UNKNOWN)
     {
         mpr("That species isn't available.");
@@ -191,7 +194,7 @@ void wizard_memorise_spec_spell()
     }
 
     if (get_spell_flags(static_cast<spell_type>(spell)) & spflag::monster)
-        mpr("Spell is monster-only - unpredictable behaviour may result.");
+        mpr("Spell is monster-only - unpredictable behavior may result.");
     if (!learn_spell(static_cast<spell_type>(spell), true))
         crawl_state.cancel_cmd_repeat();
 }
@@ -202,42 +205,76 @@ void wizard_heal(bool super_heal)
     {
         mpr("Super healing.");
         // Clear more stuff.
-        undrain_hp(9999);
+        unrot_hp(9999);
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
+        you.attribute[ATTR_XP_DRAIN] = 0;
         you.duration[DUR_PETRIFIED] = 0;
         you.duration[DUR_PETRIFYING] = 0;
         you.duration[DUR_CORROSION] = 0;
         you.duration[DUR_DOOM_HOWL] = 0;
         you.duration[DUR_WEAK] = 0;
         you.duration[DUR_NO_HOP] = 0;
-        you.duration[DUR_LOCKED_DOWN] = 0;
-        you.props[CORROSION_KEY] = 0;
+        you.props["corrosion_amount"] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
-        you.duration[DUR_BLINKBOLT_COOLDOWN] = 0;
         delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
-        decr_zot_clock();
         you.redraw_stats = true;
     }
     else
         mpr("Healing.");
 
     // Clear most status ailments.
-    you.duration[DUR_SICKNESS]  = 0;
+    you.disease = 0;
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_POISONING] = 0;
     you.duration[DUR_EXHAUSTED] = 0;
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
+    set_hunger(HUNGER_VERY_FULL + 100, true);
     you.redraw_hit_points = true;
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 
     for (int stat = 0; stat < NUM_STATS; stat++)
         you.duration[stat_zero_duration(static_cast<stat_type> (stat))] = 0;
+}
+
+void wizard_set_hunger_state()
+{
+    string hunger_prompt = "Set hunger state to ";
+    if (you.species != SP_VAMPIRE && you.species != SP_GHOUL)
+        hunger_prompt += "f(A)inting, ";
+    hunger_prompt += "s(T)arving, (N)ear starving, (H)ungry";
+    if (you.species == SP_GHOUL)
+        hunger_prompt += " or (S)atiated";
+    else
+        hunger_prompt += ", (S)atiated, (F)ull or (E)ngorged";
+    hunger_prompt += "? ";
+
+    mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
+
+    const int c = toalower(getchk());
+
+    // Values taken from food.cc.
+    switch (c)
+    {
+    case 'a': you.hunger = HUNGER_FAINTING / 2; break;
+    case 't': you.hunger = (HUNGER_STARVING + HUNGER_FAINTING) / 2; break;
+    case 'n': you.hunger = 1100;  break;
+    case 'h': you.hunger = 2300;  break;
+    case 's': you.hunger = 4900;  break;
+    case 'f': you.hunger = 7900;  break;
+    case 'e': you.hunger = HUNGER_MAXIMUM; break;
+    default:  canned_msg(MSG_OK); break;
+    }
+
+    food_change();
+
+    if (you.species == SP_GHOUL && you.hunger_state >= HS_SATIATED)
+        mpr("Ghouls can never be full or above!");
 }
 
 void wizard_set_piety_to(int newpiety, bool force)
@@ -365,8 +402,6 @@ void wizard_exercise_skill()
 
     if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
-    else if (is_removed_skill(skill))
-        mpr("That skill was removed.");
     else
     {
         mpr("Exercising...");
@@ -378,11 +413,6 @@ void wizard_set_skill_level(skill_type skill)
 {
     if (skill == SK_NONE)
         skill = debug_prompt_for_skill("Which skill (by name)? ");
-
-    if (is_removed_skill(skill)){
-        mpr("That skill was removed.");
-        return;
-    }
 
     if (skill == SK_NONE)
     {
@@ -727,7 +757,7 @@ static void reset_ds_muts_from_schedule(int xl)
                 // there. delete_mutation won't delete mutations otherwise.
                 // This step doesn't affect temporary mutations.
                 you.innate_mutation[mut]--;
-                delete_mutation(mut, "level change", false, true, false);
+                delete_mutation(mut, "level change", false, true, false, false);
             }
             if (you.innate_mutation[mut] < innate_levels)
                 perma_mutate(mut, innate_levels - you.innate_mutation[mut], "level change");
@@ -765,7 +795,7 @@ static void debug_uptick_xl(int newxl, bool train)
 static void debug_downtick_xl(int newxl)
 {
     set_hp(you.hp_max);
-    // boost maxhp so we don't die if heavily drained
+    // boost maxhp so we don't die if heavily rotted
     you.hp_max_adj_perm += 1000;
     you.experience = exp_needed(newxl);
     level_change();
@@ -812,7 +842,7 @@ void wizard_set_xl(bool change_skills)
 
 void set_xl(const int newxl, const bool train, const bool silent)
 {
-    msg::suppress mx(silent);
+    no_messages mx(silent);
 
     if (newxl < you.experience_level)
         debug_downtick_xl(newxl);
@@ -834,28 +864,15 @@ void wizard_get_god_gift()
         return;
     }
 
-    if (you_worship(GOD_ASHENZARI))
-    {
-        ashenzari_offer_new_curse();
-        return;
-    }
-
-    if (you_worship(GOD_YREDELEMNUL))
-    {
-        give_yred_bonus_zombies(min(piety_rank() + 1, NUM_PIETY_STARS));
-        return;
-    }
-
     if (!do_god_gift(true))
         mpr("Nothing happens.");
 }
 
 void wizard_toggle_xray_vision()
 {
-    you.wizard_vision = !you.wizard_vision;
-    mprf("X-ray vision %s.", you.wizard_vision ? "enabled" : "disabled");
+    you.xray_vision = !you.xray_vision;
+    mprf("X-ray vision %s.", you.xray_vision ? "enabled" : "disabled");
     viewwindow(true);
-    update_screen();
 }
 
 void wizard_freeze_time()
@@ -954,9 +971,9 @@ void wizard_transform()
 
 void wizard_join_religion()
 {
-    if (you.has_mutation(MUT_FORLORN))
+    if (you.species == SP_DEMIGOD)
     {
-        mpr("Not even in wizmode may divine creatures worship a god!");
+        mpr("Not even in wizmode may Demigods worship a god!");
         return;
     }
     god_type god = choose_god();
@@ -1010,22 +1027,5 @@ void wizard_xom_acts()
 
     dprf("Okay, Xom is doing '%s'.", xom_effect_to_name(event).c_str());
     xom_take_action(event, severity);
-}
-
-void wizard_set_zot_clock()
-{
-    const int max_zot_clock = MAX_ZOT_CLOCK / BASELINE_DELAY;
-
-    string prompt = make_stringf("Enter new Zot clock value "
-                                 "(current = %d, from 0 to %d): ",
-                                 turns_until_zot(), max_zot_clock);
-    int turns_left = prompt_for_int(prompt.c_str(), true);
-
-    if (turns_left == -1)
-        canned_msg(MSG_OK);
-    else if (turns_left > max_zot_clock)
-        mprf("Zot clock should be between 0 and %d", max_zot_clock);
-    else
-        set_turns_until_zot(turns_left);
 }
 #endif

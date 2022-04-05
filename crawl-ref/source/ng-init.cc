@@ -8,7 +8,6 @@
 
 #include "AppHdr.h"
 
-#include "mpr.h"
 #include "ng-init.h"
 
 #include "branch.h"
@@ -18,12 +17,11 @@
 #include "item-name.h"
 #include "libutil.h"
 #include "maps.h"
-#include "ng-init-branches.h"
 #include "random.h"
 #include "religion.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "unicode.h"
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -74,16 +72,40 @@ void initialise_branch_depths()
         ASSERT(b->id == branch);
     }
 
-    initialise_brentry();
+    for (branch_iterator it; it; ++it)
+    {
+        if (!branch_is_unfinished(it->id) && it->parent_branch != NUM_BRANCHES)
+        {
+            brentry[it->id] = level_id(it->parent_branch,
+                                       random_range(it->mindepth,
+                                                    it->maxdepth));
+        }
+    }
+
+    // You will get one of Shoals/Swamp and one of Spider/Snake.
+    // This way you get one "water" branch and one "poison" branch.
+    vector<branch_type> disabled_branch;
+    disabled_branch.push_back(random_choose(BRANCH_SWAMP, BRANCH_SHOALS));
+    disabled_branch.push_back(random_choose(BRANCH_SNAKE, BRANCH_SPIDER));
+
+    for (branch_type disabled : disabled_branch)
+    {
+        dprf("Disabling branch: %s", branches[disabled].shortname);
+        brentry[disabled].clear();
+    }
+
+    for (branch_iterator it; it; ++it)
+        brdepth[it->id] = it->numlevels;
 }
+
+#define MAX_OVERFLOW_LEVEL 9
 
 static void _use_overflow_temple(vector<god_type> temple_gods)
 {
     CrawlVector &overflow_temples
         = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
 
-    const unsigned int level = random_range(MIN_OVERFLOW_LEVEL,
-                                            MAX_OVERFLOW_LEVEL);
+    const unsigned int level = random_range(2, MAX_OVERFLOW_LEVEL);
 
     // List of overflow temples on this level.
     CrawlVector &level_temples = overflow_temples[level - 1].get_vector();
@@ -120,7 +142,7 @@ void initialise_temples()
         if (main_temple->has_tag("temple_variable"))
         {
             vector<int> sizes;
-            for (const auto &tag : main_temple->get_tags())
+            for (auto &tag : main_temple->get_tags())
             {
                 if (starts_with(tag, "temple_altars_"))
                 {
@@ -146,22 +168,7 @@ void initialise_temples()
 
         // Without all this find_glyph() returns 0.
         string err;
-        int tries = 2;
-        while (tries-- > 0)
-        {
-            try
-            {
-                main_temple->load();
-                break;
-            }
-            catch (map_load_exception &mload)
-            {
-                mprf(MSGCH_ERROR, "Failed to load map, reloading all maps (%s).",
-                     mload.what());
-                reread_maps();
-            }
-        }
-
+        main_temple->load();
         main_temple->reinit();
         err = main_temple->run_lua(true);
 
@@ -261,97 +268,58 @@ void initialise_temples()
             overflow_weights[i] = 0;
     }
 
-    // Check for temple_overflow vaults that specify certain gods.
-    mapref_vector maps;
-    // the >1 range is based on previous code; 1-altar temple_overflow maps
-    // are placed by the next part, though their weight is not used here. There
-    // are currently no such vaults with more than 3 altars, but there's not
-    // much cost to checking a few higher.
-    for (int num = 2; num <= 5; num++)
+    // Try to find combinations of overflow gods that have specialised
+    // overflow vaults.
+multi_overflow:
+    for (unsigned int i = 1, size = 1 << overflow_gods.size();
+         i <= size; i++)
     {
-        mapref_vector num_maps = find_maps_for_tag(
-            make_stringf("temple_overflow_%d", num));
-        maps.insert(maps.end(), num_maps.begin(), num_maps.end());
-    }
+        unsigned int num = count_bits(i);
 
-    for (const map_def *map : maps)
-    {
-        if (overflow_gods.size() < 2)
-            break;
-        unsigned int num = 0;
+        // TODO: possibly make this place single-god vaults too?
+        // XXX: upper limit on num here because this code gets really
+        // slow otherwise.
+        if (num <= 1 || num > 3)
+            continue;
+
         vector<god_type> this_temple_gods;
-        for (const auto &tag : map->get_tags())
+        vector<god_type> new_overflow_gods;
+
+        string tags = make_stringf("temple_overflow_%d", num);
+        for (unsigned int j = 0; j < overflow_gods.size(); j++)
         {
-            if (!starts_with(tag, "temple_overflow_"))
-                continue;
-            string temple_tag = tag_without_prefix(tag, "temple_overflow_");
-            if (temple_tag.empty())
+            if (i & (1 << j))
             {
-                mprf(MSGCH_ERROR, "Malformed temple tag '%s' in map %s",
-                    tag.c_str(), map->name.c_str());
-                continue;
+                string name = replace_all(god_name(overflow_gods[j]), " ", "_");
+                lowercase(name);
+                tags = tags + " temple_overflow_" + name;
+                this_temple_gods.push_back(overflow_gods[j]);
             }
-            int test_num;
-            if (parse_int(temple_tag.c_str(), test_num) && test_num > 0)
-                num = test_num;
             else
-            {
-                replace(temple_tag.begin(), temple_tag.end(), '_', ' ');
-                god_type this_god = str_to_god(temple_tag);
-                if (this_god == GOD_NO_GOD)
-                {
-                    mprf(MSGCH_ERROR, "Malformed temple tag '%s' in map %s",
-                        tag.c_str(), map->name.c_str());
-                    continue;
-                }
-                this_temple_gods.push_back(this_god);
-            }
-            if (num == 0)
-            {
-                if (this_temple_gods.size() > 0)
-                {
-                    mprf(MSGCH_ERROR,
-                        "Map %s has temple_overflow_god tags but no count tag",
-                        map->name.c_str());
-                }
-                continue;
-            }
+                new_overflow_gods.push_back(overflow_gods[j]);
         }
-        // there is one vault that currently triggers this, where it allows
-        // one of two specified gods on a particular altar. This code won't
-        // handle (or error) on that case right now.
-        if (num != this_temple_gods.size())
+
+        mapref_vector maps = find_maps_for_tag(tags);
+        if (maps.empty())
             continue;
 
-        // does this temple place only gods that we need to place?
-        bool ok = true;
-        for (auto god : this_temple_gods)
-            if (count(overflow_gods.begin(), overflow_gods.end(), god) == 0)
-            {
-                ok = false;
-                break;
-            }
-        if (!ok)
-            continue;
-        // finally: this overflow vault will place a subset of our current
-        // overflow list. Do we actually place it?
-        // TODO: The weight calculation here is kind of odd, though based on
-        // what it is directly replacing. It should sum all compatible
-        // maps first. But, the end result of this choice isn't a map anyways...
-        // More generally, I wonder if this list should be shuffled before this
-        // step, so that it's not prioritizing smaller vaults?
-        int chance = map->weight(level_id(BRANCH_DUNGEON,
-                                           MAX_OVERFLOW_LEVEL));
-        if (x_chance_in_y(chance, overflow_weights[num] + chance))
+        if (overflow_weights[num] > 0)
         {
-            vector<god_type> new_overflow_gods;
-            for (auto god : overflow_gods)
-                if (count(this_temple_gods.begin(), this_temple_gods.end(), god) == 0)
-                    new_overflow_gods.push_back(god);
-            _use_overflow_temple(this_temple_gods);
-
-            overflow_gods = new_overflow_gods;
+            int chance = 0;
+            for (auto map : maps)
+            {
+                chance += map->weight(level_id(BRANCH_DUNGEON,
+                                               MAX_OVERFLOW_LEVEL));
+            }
+            if (!x_chance_in_y(chance, overflow_weights[num] + chance))
+                continue;
         }
+
+        _use_overflow_temple(this_temple_gods);
+
+        overflow_gods = new_overflow_gods;
+
+        goto multi_overflow;
     }
 
     // NOTE: The overflow temples don't have to contain only one
@@ -388,10 +356,64 @@ void initialise_temples()
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
+static int _get_random_porridge_desc()
+{
+    return PDESCQ(PDQ_GLUGGY, one_chance_in(3) ? PDC_BROWN
+                                               : PDC_WHITE);
+}
+
+static int _get_random_coagulated_blood_desc()
+{
+    potion_description_qualifier_type qualifier = PDQ_NONE;
+    while (true)
+    {
+        switch (random2(4))
+        {
+        case 0:
+            qualifier = PDQ_GLUGGY;
+            break;
+        case 1:
+            qualifier = PDQ_LUMPY;
+            break;
+        case 2:
+            qualifier = PDQ_SEDIMENTED;
+            break;
+        case 3:
+            qualifier = PDQ_VISCOUS;
+            break;
+        }
+        potion_description_colour_type colour = (coinflip() ? PDC_RED
+                                                            : PDC_BROWN);
+
+        uint32_t desc = PDESCQ(qualifier, colour);
+
+        if (you.item_description[IDESC_POTIONS][POT_BLOOD] != desc)
+            return desc;
+    }
+}
+#endif
+
+static int _get_random_blood_desc()
+{
+    return PDESCQ(random_choose_weighted(2, PDQ_NONE,
+                                         1, PDQ_VISCOUS,
+                                         1, PDQ_SEDIMENTED), PDC_RED);
+}
+
 void initialise_item_descriptions()
 {
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
+
+    you.item_description[IDESC_POTIONS][POT_BLOOD]
+        = _get_random_blood_desc();
+#if TAG_MAJOR_VERSION == 34
+    you.item_description[IDESC_POTIONS][POT_BLOOD_COAGULATED]
+        = _get_random_coagulated_blood_desc();
+    you.item_description[IDESC_POTIONS][POT_PORRIDGE]
+        = _get_random_porridge_desc();
+#endif
 
     // The order here must match that of IDESC in describe.h
     const int max_item_number[6] = { NUM_WANDS,
@@ -479,6 +501,6 @@ void initialise_item_descriptions()
 
 void fix_up_jiyva_name()
 {
-    you.jiyva_second_name = make_name(rng::get_uint32(), MNAME_JIYVA);
+    you.jiyva_second_name = make_name(get_uint32(), MNAME_JIYVA);
     ASSERT(you.jiyva_second_name[0] == 'J');
 }

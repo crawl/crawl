@@ -24,8 +24,8 @@ ENDMAP
 NAME: david_orc_1_choice
 TAGS: orc_entry
 MONS: orc, warg / orc priest / orc warrior, orc warrior / orc
-ITEM: % / scroll of teleportation ident:type / scroll of identify ident:type
-ITEM: % / w:2 * / scroll of blinking ident:type / scroll of fear ident:type
+ITEM: % / scroll of teleportation / scroll of remove curse / scroll of identify
+ITEM: % / w:2 * / scroll of blinking / scroll of fear
 SHUFFLE: %1
 ORIENT: float
 KFEAT: O = enter_orcish_mines
@@ -189,13 +189,12 @@ ORIENT:  float
 MONS:    orc, orc priest / orc wizard
 MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
-KITEM:   1 = gold w:5 / nothing / animal skin / \
-             potion of degeneration ident:type w:20 / \
-             potion of haste ident:type w:2 / \
-             potion of might ident:type w:2
+KITEM:   1 = ration w:5 / nothing / animal skin / \
+             potion of degeneration w:20 / potion of haste w:2 / \
+             potion of might w:2
 KFEAT:   1 = 1
-ITEM:    club, potion of degeneration ident:type, gold w:5
-ITEM:    gold w:2 / nothing, potion of degeneration ident:type
+ITEM:    club, potion of degeneration ident:type, ration w:5
+ITEM:    ration w:2 / nothing, potion of degeneration ident:type
 SHUFFLE: defO
 KFEAT:   O = enter_orcish_mines
 MAP
@@ -386,7 +385,7 @@ ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
 MONS:   ogre zombie / troll zombie w:3
-MONS:   shadow / phantom / w:1 wraith
+MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest / nothing
 : else
@@ -425,7 +424,7 @@ ORIENT: float
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
 MONS:   ogre zombie / troll zombie w:3 / two-headed ogre zombie w:1
-MONS:   shadow / phantom / w:1 wraith
+MONS:   hungry ghost / phantom / w:1 wraith
 : if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest
 : else
@@ -528,7 +527,7 @@ NAME:   kennysheep_orc_monster_closet_entryway
 TAGS:   orc_entry
 KFEAT:  O = enter_orcish_mines
 MONS:   gnoll / gnoll sergeant / orc warrior / orc w:15 /\
-                kobold brigand / ogre
+                big kobold / ogre
 MONS:   troll
 MAP
 xxxxxxx
@@ -681,8 +680,8 @@ MONS:    patrolling orc warlord
 MONS:    patrolling orc sorcerer
 MONS:    patrolling orc high priest
 MONS:    deep elf knight / deep elf archer
-MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:20
-MONS:    deep elf pyromancer / deep elf zephyrmancer / nothing w:40
+MONS:    deep elf mage / nothing
+MONS:    deep elf mage / nothing w:20
 ITEM:    good_item scimitar / good_item chain mail
 SUBST:   = : +x
 MAP
@@ -874,7 +873,7 @@ TAGS:    no_item_gen no_monster_gen transparent
 DEPTH:   Orc
 KMONS:   1 = orc high priest / orc sorcerer
 KMONS:   2 = orc knight
-KMONS:   3 = orc warrior / orc ; arbalest . spear | hand axe | mace
+KMONS:   3 = orc warrior / orc ; arbalest . bolt . spear | hand axe | mace
 KMONS:   4 = orc priest / orc / nothing
 KMONS:   5 = orc wizard / nothing
 KMONS:   6 = ogre / two-headed ogre / troll / deep troll / ogre mage / nothing
@@ -904,10 +903,10 @@ NAME:   mines_bat_river
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 DEPTH:  Orc
 MONS:   bat
-MONS:   generate_awake orc ; shortbow ego:flaming | shortbow ego:freezing | shortbow ego:vorpal
+MONS:   generate_awake orc ; shortbow ego:flaming | shortbow ego:freezing | shortbow ego:vorpal . arrow q:10
 NSUBST: . = 2:2 / 2:c
 NSUBST: c = *: 2 .
-# There were arrows here. They're gone now. Sorry
+KITEM:  d = arrow q:1
 NSUBST: b = 3:1 / 10:d / 4:e / *: .:20 1:1 d:2 e:2
 : dgn.delayed_decay(_G, 'e', 'bat corpse')
 SHUFFLE: ABC
@@ -938,10 +937,10 @@ ENDMAP
 NAME:   rock_pile
 TAGS:   no_item_gen no_monster_gen transparent
 DEPTH:  Orc
-MONS:   orc ; hunting sling, boulder beetle
+MONS:   orc ; hunting sling . stone q:30
 KITEM:  d = w:3 stone / w:1 large rock q:1
 SUBST:  a = .:4 b
-NSUBST: b = 1:2 / 5:1 / *:d
+NSUBST: b = 6:1 / *:d
 SUBST:  1 = 1 .
 MAP
      . .
@@ -1120,7 +1119,7 @@ TAGS: no_item_gen no_trap_gen luniq_orc_cave
 DEPTH: Orc
 SUBST: B = b'
 NSUBST: ' = d / '
-KITEM: d = nothing w:49 / crystal plate armour w:1
+KITEM: d = nothing w:48 / crystal ball of energy w:1 / crystal plate armour w:1
 MAP
  xxxxxxxx
 xx....xxxx
@@ -1478,10 +1477,10 @@ NAME:    st_orc_rangers
 TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup transparent
 PLACE:   Orc:$
 ORIENT:  float
-MONS:    orc warrior w:1 ; arbalest . halberd | war axe | morningstar /\
-         orc w:10 ; arbalest . trident | hand axe | mace
-MONS:    orc warrior ; arbalest . glaive | broad axe | battleaxe | great mace
-MONS:    orc knight ; arbalest . glaive | broad axe | great mace
+MONS:    orc warrior w:1 ; arbalest . bolt . halberd | war axe | morningstar /\
+         orc w:10 ; arbalest . bolt . trident | hand axe | mace
+MONS:    orc warrior ; arbalest . bolt . glaive | broad axe | battleaxe | great mace
+MONS:    orc knight ; arbalest . bolt . glaive | broad axe | great mace
 MONS:    orc warrior
 MONS:    centaur w:20 / centaur warrior w:1 / nothing w:21
 SUBST:   3 = 23
@@ -1721,7 +1720,7 @@ MONS: nothing w:20 / fungus
 SUBST: . = ..4
 NSUBST: 3 = 5:3 / 1:I / 4:P / *:.
 SUBST: P = .4
-: if is_validating() or dgn.persist.grunt_orc_gardens_store == nil then
+: if is_validating() then
 KFEAT: A = any shop
 : else
 : kfeat("A = " .. dgn.persist.grunt_orc_gardens_store)
@@ -1978,11 +1977,13 @@ ORIENT: float
 MONS: orc / nothing w:5, orc warrior / nothing w:5
 MONS: orc priest / nothing w:5, common demon / nothing w:5
 MONS: orc knight
-MONS: demonspawn / nothing w:5
+# non-monstrous demonspawn only (1/3 chance of none)
+MONS: gelid demonspawn / infernal demonspawn / \
+      torturous demonspawn / nothing w:15
 MONS: orc high priest / orc sorcerer
 SHUFFLE: BC
-KFEAT: A = w:20 general shop / distillery shop / scroll shop
-KFEAT: B = book shop / jewellery shop
+KFEAT: A = general shop / food shop / distillery shop / scroll shop
+KFEAT: B = book shop / gadget shop
 KFEAT: C = antique weapon shop / antique armour shop
 KFEAT: P = enter_pandemonium
 TILE:  c = wall_stone_dark
@@ -1995,19 +1996,19 @@ MAP
          ccc..ccc232ccc
         ccc..ccc.c2c.ccc
        ccc..ccc...c...ccc
-      ccc..ccc...ccc...ccc
+      ccc..ccc.4.ccc...ccc
      ccc..ccc.4.cc7cc.4.ccc
     ccc.1......cc75.cc.4.ccc
    ccc.1.1c.3.cc..c..cc...ccc
   ccc123c32..cc..ccc.3cc.c.ccc
  cccA2c1211.cc6.cB7cc32.2.27ccc
-ccc5.11.c1.cc77.76.Pcc.c....5ccc
+ccc5.11.c1.cc77.766Pcc.c....5ccc
  cccA2c1211.cc6.cC7cc32.2.27ccc
   ccc123c32..cc..ccc.3cc.c.ccc
    ccc.1.1c.3.cc..c..cc...ccc
     ccc.1......cc75.cc.4.ccc
      ccc..ccc.4.cc7cc.4.ccc
-      ccc..ccc...ccc...ccc
+      ccc..ccc.4.ccc...ccc
        ccc..ccc...c...ccc
         ccc..ccc.c2c.ccc
          ccc..ccc232ccc
@@ -2027,7 +2028,7 @@ KMONS:  4 = Erolcha / ogre mage, ogre mage
 KMONS:  5 = Nergalle / orc sorcerer, orc sorcerer
 NSUBST: . = 8:1 / 16:2 / 8:3
 KFEAT:  A = distillery shop / scroll shop
-KFEAT:  B = book shop / jewellery shop
+KFEAT:  B = book shop / gadget shop
 KFEAT:  C = antique weapon shop / antique armour shop
 NSUBST: Y = 1:A / 1:B / 1:C / 1:ABC / *:I
 KFEAT:  ' = floor

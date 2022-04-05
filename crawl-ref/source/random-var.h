@@ -1,9 +1,5 @@
 #pragma once
 
-#include <vector>
-
-using std::vector;
-
 typedef int (*weight_func)(int val);
 
 /*
@@ -23,7 +19,7 @@ public:
     random_var(int s, int e, weight_func w_ = nullptr);
     random_var(int s, int e, vector<int> ws);
 
-    random_var& operator=(const random_var&) = default;
+    const random_var& operator=(const random_var& other);
 
     int weight(int val) const;
     int roll() const;        // evaluate the random variable

@@ -10,7 +10,8 @@ msc += $danger:drains you
 msc += $danger:feel drained
 msc += $danger:strangely .*stable
 msc += $danger:curare-tipped.*hits you
-msc += $danger:Space warps( horribly)? around you
+msc += $danger:Space warps.* around you
+msc += $danger:Space bends around you
 msc += $danger:sense of stasis
 msc += $danger:clumsily bash
 msc += $danger:goes berserk!
@@ -27,6 +28,7 @@ msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance
 msc += $danger:cause instant excommunication
 msc += $danger:corrodes you
+msc += $danger:rotting away
 
 # Less urgent, but still significant messages
 #
@@ -60,10 +62,9 @@ msc += $warning:settles down
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
-msc += $warning:This .* contains the .* runes? of Zot
-msc += $warning:guards? the .* runes? of Zot
-msc += $warning:rune of Zot may be found here
-msc += $warning:Beware\, you cannot shaft yourself on this level
+msc += $warning:This .* contains the .* runes? of Zot.
+msc += $warning:They guard the .* runes? of Zot.
+msc += $warning:Beware, you cannot shaft yourself on this level.
 
 # Unimportant messages and combat clutter
 #
@@ -90,7 +91,7 @@ msc += mute:Uskayaw will no longer force your foes to share their pain\.
 
 force_more_message += You have reached level
 force_more_message += Your scales start
-force_more_message += You (fall|are sucked) into a shaft
+force_more_message += You fall through a shaft
 force_more_message += You fall into the water!
 force_more_message += You fall into the lava!
 force_more_message += You focus on prolonging your flight
@@ -99,17 +100,11 @@ force_more_message += breaks free of your control
 force_more_message += doesn't seem very happy
 force_more_message += You rejoin the land of the living
 force_more_message += You cannot cast spells when silenced
+force_more_message += You don't have the energy to cast that spell
 force_more_message += This is a scroll of acquirement
 
-## Zot is coming!
-force_more_message += You have lingered too long
-force_more_message += Zot draws nearer
-force_more_message += Zot has nearly found you
-force_more_message += Zot already knows
-force_more_message += Zot's attention fixes on you
-
 ## Reduce chance of draining because flight or form runs out:
-force_more_message += ^Careful!
+force_more_message += Careful!
 
 # Announcements of timed portal vaults:
 force_more_message += interdimensional caravan
@@ -131,7 +126,7 @@ force_more_message += You have lost your religion
 force_more_message += is wielding.*distortion
 # dancing weapons require special handling...
 force_more_message += there is a.*distortion
-force_more_message += of distortion comes into view
+force_more_message += of distortion comes into view.
 
 # Banishment
 force_more_message += You are cast into the Abyss
@@ -168,7 +163,6 @@ force_more_message += believes you are ready to make a new sacrifice
 force_more_message += may now remember your ancestor
 force_more_message += deals you some cards
 force_more_message += finds you have enough cards
-force_more_message += partake of a vision and a curse
 
 # Show passwall message while still in the starting position
 force_more_message += You finish merging with the rock

@@ -7,30 +7,33 @@ CRAWL_SRC=$(CRAWL_BASE)/source
 ZIP_QUALIFIER :=
 ZIP_ARCH :=
 
-ifdef BUILD_OLD_UNIVERSAL
-ZIP_ARCH := -universal
-endif
-
 ifdef BUILD_UNIVERSAL
-CRAWL_BIN=crawl-universal
 ZIP_ARCH := -universal
-else
-CRAWL_BIN=crawl
 endif
 
-# XX why doesn't this check for TILES?
 APP_NAME := Dungeon Crawl Stone Soup
 ifneq (,$(findstring tiles,$(MAKECMDGOALS)))
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Tiles
 TILE_APP := y
+ifdef RELEASE
 ZIP_QUALIFIER := -tiles
 else
+ZIP_QUALIFIER := _tiles
+endif
+EXECUTABLE_PATH := $(CRAWL_SRC)/crawl
+else
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Console
+EXECUTABLE_PATH := crawl
+ifdef RELEASE
 ZIP_QUALIFIER := -console
 endif
-EXECUTABLE_PATH := $(CRAWL_SRC)/$(CRAWL_BIN)
+endif
 
-ZIP_NAME = stone_soup-$(SRC_VERSION)$(ZIP_QUALIFIER)-macosx$(ZIP_ARCH).zip
+ifdef RELEASE
+ZIP_NAME = stone_soup-$(SRC_VERSION)$(ZIP_QUALIFIER)-macosx.zip
+else
+ZIP_NAME = crawl$(ZIP_QUALIFIER)_osx-$(SRC_VERSION).zip
+endif
 
 STAGING_DIR := $(CRAWL_SRC)/build/app-bundle-stage
 ZIPPED_APP_DIR := $(CRAWL_SRC)/mac-app-zips
@@ -63,10 +66,7 @@ assemble-app-bundle: create-bundle-directory copy-executable copy-resources \
 zip-app-bundle:
 	rm -f $(ZIPPED_APP_DIR)/$(ZIP_NAME)
 	cd $(STAGING_DIR) && \
-		zip -9r $(ZIPPED_APP_DIR)/$(ZIP_NAME) $(BUNDLE_NAME).app
-	cd $(STAGING_DIR) && \
-		if which advzip >/dev/null;then advzip -z3 $(ZIPPED_APP_DIR)/$(ZIP_NAME);fi
-	ln -sf $(ZIPPED_APP_DIR)/$(ZIP_NAME) $(ZIPPED_APP_DIR)/latest.zip
+		zip -r $(ZIPPED_APP_DIR)/$(ZIP_NAME) $(BUNDLE_NAME).app
 
 create-bundle-directory: $(BUNDLE_DIRNAME)
 
@@ -77,19 +77,16 @@ $(BUNDLE_DIRNAME):
 # real executable from Contents/Resources, so an extra copy for the wrapper+
 # real thing.
 copy-executable:
-ifdef TILE_APP
 	cp $(EXECUTABLE_PATH) $(BUNDLE_DIRNAME)/Contents/MacOS/$(BUNDLE_NAME)
-else
-	# normalize the binary name for universal vs non-universal builds
-	cp $(EXECUTABLE_PATH) $(RESOURCES)/crawl
-	cp ./crawl $(BUNDLE_DIRNAME)/Contents/MacOS/$(BUNDLE_NAME)
+ifndef TILE_APP
+	cp $(CRAWL_SRC)/crawl $(RESOURCES)
 endif
 
 copy-resources:
 ifdef TILE_APP
 	cp -r $(CRAWL_SRC)/contrib/fonts $(BUNDLE_DIRNAME)/Contents/MacOS/contrib
 endif
-	cp $(CRAWL_SRC)/dat/tiles/stone_soup_icon.icns $(RESOURCES)/Crawl.icns
+	cp $(CRAWL_SRC)/mac/Crawl.icns $(RESOURCES)
 	cp -r $(CRAWL_BASE)/settings $(RESOURCES)
 	cp -r $(CRAWL_SRC)/dat $(RESOURCES)
 	cp -r $(CRAWL_BASE)/docs $(RESOURCES)

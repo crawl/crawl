@@ -7,8 +7,6 @@
 
 #include "god-wrath.h"
 
-#include <cmath>
-#include <queue>
 #include <sstream>
 
 #include "areas.h"
@@ -16,26 +14,27 @@
 #include "attitude-change.h"
 #include "cleansing-flame-source-type.h"
 #include "coordit.h"
-#include "corpse.h"
 #include "database.h"
-#include "death-curse.h"
 #include "decks.h"
+#include "english.h"
 #include "env.h"
+#include "evoke.h"
+#include "food.h"
 #include "ghost.h"
 #include "god-abil.h"
 #include "god-passive.h" // shadow_monster
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "items.h"
-#include "losglobal.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-pick.h"
 #include "mon-place.h"
-#include "mon-tentacle.h"
+#include "mon-poly.h"
 #include "mutation.h"
 #include "notes.h"
 #include "player-stats.h"
@@ -45,15 +44,14 @@
 #include "shout.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
+#include "spl-miscast.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "terrain.h"
-#include "traps.h" // is_valid_shaft_level
 #include "transform.h"
 #include "view.h"
 #include "xom.h"
@@ -79,8 +77,8 @@ static const char *_god_wrath_adjectives[] =
     "displeasure",      // Elyvilon
     "touch",            // Lugonu
     "wrath",            // Beogh
-    "all-consuming vengeance",  // Jiyva
-    "enmity",           // Fedhas Madash
+    "vengeance",        // Jiyva
+    "enmity",           // Fedhas Madhash
     "meddling",         // Cheibriados
     "doom",             // Ashenzari (unused)
     "darkness",         // Dithmenos
@@ -93,7 +91,6 @@ static const char *_god_wrath_adjectives[] =
     "fury",             // Uskayaw
     "memory",           // Hepliaklqana (unused)
     "rancor",           // Wu Jian
-    "fiery vengeance",  // Ignis
 };
 COMPILE_CHECK(ARRAYSZ(_god_wrath_adjectives) == NUM_GODS);
 
@@ -149,7 +146,7 @@ static bool _yred_random_zombified_hostile()
     return create_monster(temp, false);
 }
 
-static const vector<pop_entry> _okawaru_servants =
+static const pop_entry _okawaru_servants[] =
 { // warriors
   {  1,  3,   3, FALL, MONS_ORC },
   {  1,  3,   3, FALL, MONS_GNOLL },
@@ -175,6 +172,7 @@ static const vector<pop_entry> _okawaru_servants =
   { 13, 27,   1, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
   { 13, 27,   1, FLAT, RANDOM_BASE_DRACONIAN },
   { 15, 27,   2, FLAT, MONS_TITAN },
+  { 0,0,0,FLAT,MONS_0 }
 };
 
 static bool _okawaru_random_servant()
@@ -291,7 +289,7 @@ static void _zin_remove_good_mutations()
         // Ensure that only good mutations are removed.
         if (i <= random2(10)
             && delete_mutation(RANDOM_GOOD_MUTATION, _god_wrath_name(god),
-                               failMsg, false, true))
+                               failMsg, false, true, true))
         {
             success = true;
         }
@@ -308,8 +306,11 @@ static bool _zin_retribution()
     // preaching/creeping doom theme
     const god_type god = GOD_ZIN;
 
+    int punishment = random2(8);
+
     // If not mutated, do something else instead.
-    const int punishment = you.how_mutated() ? random2(6) : random2(4);
+    if (punishment > 7 && !you.how_mutated())
+        punishment = random2(6);
 
     switch (punishment)
     {
@@ -330,12 +331,17 @@ static bool _zin_retribution()
             return false;
         }
         break;
-    case 3: // noisiness
+    case 3:
+    case 4: // famine
+        simple_god_message(" sends a famine down upon you!", god);
+        make_hungry(you.hunger / 2, false);
+        break;
+    case 5: // noisiness
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
         noisy(25, you.pos()); // same as scroll of noise
         break;
-    case 4:
-    case 5: // remove good mutations
+    case 6:
+    case 7: // remove good mutations
         _zin_remove_good_mutations();
         break;
     }
@@ -354,34 +360,33 @@ static bool _cheibriados_retribution()
 
     // Determine the level of wrath
     int wrath_type = 0;
-    if (wrath_value < 2)
-        wrath_type = 0;
-    else if (wrath_value < 4)
-        wrath_type = 1;
-    else if (wrath_value < 8)
-        wrath_type = 2;
-    else if (wrath_value < 16)
-        wrath_type = 3;
-    else
-        wrath_type = 4;
+    if (wrath_value < 2)       { wrath_type = 0; }
+    else if (wrath_value < 4)  { wrath_type = 1; }
+    else if (wrath_value < 8)  { wrath_type = 2; }
+    else if (wrath_value < 16) { wrath_type = 3; }
+    else                       { wrath_type = 4; }
 
     // Strip away extra speed
     dec_haste_player(10000);
 
     switch (wrath_type)
     {
-    // Very high tension wrath.
-    // Add noise then start sleeping and slow the player with 2/3 chance.
+    // Very high tension wrath
     case 4:
-        simple_god_message(" strikes the hour.", god);
-        noisy(40, you.pos());
-        dec_penance(god, 1); // and fall-through.
+        simple_god_message(" adjusts the clock.", god);
+        MiscastEffect(&you, nullptr, {miscast_source::god, god},
+                      spschool::random,
+                      5 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
+        if (one_chance_in(3))
+            break;
+        else
+            dec_penance(god, 1); // and fall-through.
     // High tension wrath
-    // Sleep the player and slow the player with 50% chance.
     case 3:
         mpr("You lose track of time.");
         you.put_to_sleep(nullptr, 30 + random2(20));
-        if (one_chance_in(wrath_type - 1))
+        if (coinflip())
             break;
         else
             dec_penance(god, 1); // and fall-through.
@@ -393,11 +398,14 @@ static bool _cheibriados_retribution()
             slow_player(100);
         }
         break;
-    // Low/no tension; lose stats.
+    // Low/no tension
     case 1:
     case 0:
         mpr("Time shudders.");
-        lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
+        MiscastEffect(&you, nullptr, {miscast_source::god, god},
+                      spschool::random,
+                      5 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
         break;
 
     default:
@@ -407,11 +415,9 @@ static bool _cheibriados_retribution()
     return true;
 }
 
-static void _spell_retribution(monster* avatar, spell_type spell, god_type god,
-                               const char* message = nullptr)
+static void _spell_retribution(monster* avatar, spell_type spell, god_type god)
 {
-    simple_god_message(message ? message : " rains destruction down upon you!",
-                       god);
+    simple_god_message(" rains destruction down upon you!", god);
     bolt beam;
     beam.source = you.pos();
     beam.target = you.pos();
@@ -469,10 +475,6 @@ static spell_type _makhleb_destruction_type()
  */
 static monster* get_avatar(god_type god)
 {
-    // TODO: it would be better to abstract the fake monster code from both
-    // this and shadow monster and possibly use different monster types --
-    // doing it this way makes it easier for bugs where the two are conflated
-    // to creep in
     monster* avatar = shadow_monster(false);
     if (!avatar)
         return nullptr;
@@ -609,31 +611,6 @@ static bool _makhleb_retribution()
         return _makhleb_summon_servants();
 }
 
-static int _count_corpses_in_los(vector<stack_iterator> *positions)
-{
-    int count = 0;
-
-    for (radius_iterator rad(you.pos(), LOS_NO_TRANS, true); rad;
-         ++rad)
-    {
-        if (actor_at(*rad))
-            continue;
-
-        for (stack_iterator stack_it(*rad); stack_it; ++stack_it)
-        {
-            if (stack_it->is_type(OBJ_CORPSES, CORPSE_BODY))
-            {
-                if (positions)
-                    positions->push_back(stack_it);
-                count++;
-                break;
-            }
-        }
-    }
-
-    return count;
-}
-
 static bool _kikubaaqudgha_retribution()
 {
     // death/necromancy theme
@@ -642,37 +619,41 @@ static bool _kikubaaqudgha_retribution()
     god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
                                : "Kikubaaqudgha's malice focuses upon you.");
 
-    if (!_count_corpses_in_los(nullptr) || random2(you.experience_level) > 4)
+    if (!count_corpses_in_los(nullptr) || random2(you.experience_level) > 4)
     {
         // Either zombies, or corpse rot + skeletons.
         kiku_receive_corpses(you.experience_level * 4);
 
         if (coinflip())
-            corpse_rot();
+            corpse_rot(nullptr);
     }
 
     if (x_chance_in_y(you.experience_level, 27))
     {
-        // torment, or 3 death curses of maximum power
-        if (!you.res_torment())
+        // torment, or 3 necromancy miscasts
+        if (!player_res_torment(false))
             torment(nullptr, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
             for (int i = 0; i < 3; ++i)
             {
-                death_curse(you, nullptr,
-                            _god_wrath_name(god), you.experience_level);
+                MiscastEffect(&you, nullptr, {miscast_source::god, god},
+                              spschool::necromancy,
+                              2 + div_rand_round(you.experience_level, 9),
+                              random2avg(88, 3), _god_wrath_name(god));
             }
         }
     }
     else if (random2(you.experience_level) >= 4)
     {
-        // death curse, 25% chance of additional curse
-        const int num_curses = one_chance_in(4) ? 2 : 1;
-        for (int i = 0; i < num_curses; i++)
+        // necromancy miscast, 25% chance of additional miscast
+        const int num_miscasts = one_chance_in(4) ? 2 : 1;
+        for (int i = 0; i < num_miscasts; i++)
         {
-                death_curse(you, nullptr,
-                            _god_wrath_name(god), you.experience_level);
+            MiscastEffect(&you, nullptr, {miscast_source::god, god},
+                          spschool::necromancy,
+                          2 + div_rand_round(you.experience_level, 9),
+                          random2avg(88, 3), _god_wrath_name(god));
         }
     }
 
@@ -691,7 +672,7 @@ static bool _yredelemnul_retribution()
 
     if (coinflip())
     {
-        if (you_worship(god) && coinflip() && yred_reclaim_souls())
+        if (you_worship(god) && coinflip() && yred_slaves_abandon_you())
             ;
         else
         {
@@ -703,12 +684,13 @@ static bool _yredelemnul_retribution()
                 if (one_chance_in(you.experience_level))
                 {
                     if (_yred_random_zombified_hostile())
-                        ++count;
+                        count++;
                 }
                 else
                 {
-                    if (yred_random_servant(0, true))
-                        ++count;
+                    const int num = yred_random_servants(0, true);
+                    if (num >= 0)
+                        count += num;
                     else
                         ++how_many;
                 }
@@ -721,18 +703,11 @@ static bool _yredelemnul_retribution()
     }
     else
     {
-        monster* avatar = get_avatar(god);
-        // can't be const because mons_cast() doesn't accept const monster*
-
-        if (avatar == nullptr)
-        {
-            simple_god_message(" has no time to deal with you just now.", god);
-            return false;
-        }
-
-        _spell_retribution(avatar, SPELL_BOLT_OF_DRAINING, god,
-                           "'s anger turns toward you for a moment.");
-        _reset_avatar(*avatar);
+        simple_god_message("'s anger turns toward you for a moment.", god);
+        MiscastEffect(&you, nullptr, {miscast_source::god, god},
+                      spschool::necromancy,
+                      2 + div_rand_round(you.experience_level, 9),
+                      random2avg(88, 3), _god_wrath_name(god));
     }
 
     return true;
@@ -749,7 +724,7 @@ static bool _trog_retribution()
         int points = 3 + you.experience_level * 3;
 
         {
-            msg::suppress msg;
+            no_messages msg;
 
             while (points > 0)
             {
@@ -788,6 +763,9 @@ static bool _trog_retribution()
         switch (random2(6))
         {
         case 0:
+            you.rot(nullptr, 3 + random2(3));
+            break;
+
         case 1:
         case 2:
             lose_stat(STAT_STR, 1 + random2(you.strength() / 5));
@@ -815,21 +793,14 @@ static bool _trog_retribution()
     }
     else
     {
-        // A fireball is magic when used by a mortal but just a manifestation
-        // of pure rage when used by a god. --ebering
-
-        monster* avatar = get_avatar(god);
-        // can't be const because mons_cast() doesn't accept const monster*
-
-        if (avatar == nullptr)
-        {
-            simple_god_message(" has no time to deal with you just now.", god);
-            return false; // not a very dazzling divine experience...
-        }
-
-        _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, " hurls fiery rage upon you!");
-        _reset_avatar(*avatar);
+        //jmf: returned Trog's old Fire damage
+        // -- actually, this function partially exists to remove that,
+        //    we'll leave this effect in, but we'll remove the wild
+        //    fire magic. -- bwr
+        mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
+        MiscastEffect(&you, nullptr, {miscast_source::god, god}, spschool::fire,
+                      8 + you.experience_level, random2avg(98, 3),
+                      _god_wrath_name(god));
     }
 
     return true;
@@ -982,7 +953,7 @@ static bool _sif_muna_retribution()
     case 8:
         if (you.magic_points > 0)
         {
-            drain_mp(you.magic_points);
+            dec_mp(you.magic_points);
             canned_msg(MSG_MAGIC_DRAIN);
         }
         break;
@@ -1001,7 +972,7 @@ static bool _sif_muna_retribution()
 /**
  * Perform translocation-flavored Lugonu retribution.
  *
- * 25% banishment; 50% teleport near monsters.
+ * 50% chance of tloc miscasts; failing that, 50% chance of teleports/blinks.
  */
 static void _lugonu_transloc_retribution()
 {
@@ -1009,14 +980,19 @@ static void _lugonu_transloc_retribution()
 
     if (coinflip())
     {
-        // Give extra opportunities for embarrassing teleports.
-        simple_god_message("'s wrath scatters you!", god);
-        you_teleport_now(false, true, "Space warps around you!");
+        simple_god_message("'s wrath finds you!", god);
+        MiscastEffect(&you, nullptr, {miscast_source::god, god},
+                      spschool::translocation, 9, 90, "Lugonu's touch");
     }
     else if (coinflip())
     {
-        simple_god_message(" draws you home!", god);
-        you.banish(nullptr, "Lugonu's touch", you.get_experience_level(), true);
+        // Give extra opportunities for embarrassing teleports.
+        simple_god_message("'s wrath finds you!", god);
+        mpr("Space warps around you!");
+        if (!one_chance_in(3))
+            you_teleport_now();
+        else
+            uncontrolled_blink();
     }
 }
 
@@ -1117,7 +1093,8 @@ static spell_type _vehumet_wrath_type()
             return random_choose(SPELL_MEPHITIC_CLOUD,
                                  SPELL_STONE_ARROW);
         case 4:
-            return random_choose(SPELL_STICKY_FLAME,
+            return random_choose(SPELL_ISKENDERUNS_MYSTIC_BLAST,
+                                 SPELL_STICKY_FLAME,
                                  SPELL_THROW_ICICLE,
                                  SPELL_ENERGY_BOLT);
         case 5:
@@ -1258,15 +1235,15 @@ static void _jiyva_summon_slimes()
     const monster_type slimes[] =
     {
         MONS_FLOATING_EYE,
+        MONS_EYE_OF_DRAINING,
         MONS_EYE_OF_DEVASTATION,
         MONS_GREAT_ORB_OF_EYES,
         MONS_SHINING_EYE,
         MONS_GLOWING_ORANGE_BRAIN,
         MONS_JELLY,
-        MONS_ROCKSLIME,
-        MONS_QUICKSILVER_OOZE,
         MONS_ACID_BLOB,
         MONS_AZURE_JELLY,
+        MONS_DEATH_OOZE,
         MONS_SLIME_CREATURE,
     };
 
@@ -1313,302 +1290,17 @@ static bool _jiyva_retribution()
 
 /**
  * Let Fedhas call down the enmity of nature upon the player!
- * Equal chance corrosive bolt, primal wave (a throwback to rain),
- * or thorn volley
  */
-static void _fedhas_nature_retribution()
+static void _fedhas_elemental_miscast()
 {
     const god_type god = GOD_FEDHAS;
+    simple_god_message(" invokes the elements against you.", god);
 
-    monster* avatar = get_avatar(god);
-    // can't be const because mons_cast() doesn't accept const monster*
-
-    if (avatar == nullptr)
-    {
-        simple_god_message(" has no time to deal with you just now.", god);
-        return;
-    }
-
-    spell_type spell = random_choose(SPELL_CORROSIVE_BOLT,
-                                     SPELL_PRIMAL_WAVE,
-                                     SPELL_THORN_VOLLEY);
-
-    _spell_retribution(avatar, spell, god, " invokes nature against you.");
-    _reset_avatar(*avatar);
-}
-
-// Collect lists of points that are within LOS (under the given env map),
-// unoccupied, and not solid (walls/statues).
-static void _collect_radius_points(vector<vector<coord_def> > &radius_points,
-                                   const coord_def &origin, los_type los)
-{
-    radius_points.clear();
-    radius_points.resize(LOS_RADIUS);
-
-    // Just want to associate a point with a distance here for convenience.
-    typedef pair<coord_def, int> coord_dist;
-
-    // Using a priority queue because squares don't make very good circles at
-    // larger radii. We will visit points in order of increasing euclidean
-    // distance from the origin (not path distance). We want a min queue
-    // based on the distance, so we use greater_second as the comparator.
-    priority_queue<coord_dist, vector<coord_dist>,
-                   greater_second<coord_dist> > fringe;
-
-    fringe.push(coord_dist(origin, 0));
-
-    set<int> visited_indices;
-
-    int current_r = 1;
-    int current_thresh = current_r * (current_r + 1);
-
-    int max_distance = LOS_RADIUS * LOS_RADIUS + 1;
-
-    while (!fringe.empty())
-    {
-        coord_dist current = fringe.top();
-        // We're done here once we hit a point that is farther away from the
-        // origin than our maximum permissible radius.
-        if (current.second > max_distance)
-            break;
-
-        fringe.pop();
-
-        int idx = current.first.x + current.first.y * X_WIDTH;
-        if (!visited_indices.insert(idx).second)
-            continue;
-
-        while (current.second > current_thresh)
-        {
-            current_r++;
-            current_thresh = current_r * (current_r + 1);
-        }
-
-        // We don't include radius 0. This is also a good place to check if
-        // the squares are already occupied since we want to search past
-        // occupied squares but don't want to consider them valid targets.
-        if (current.second && !actor_at(current.first))
-            radius_points[current_r - 1].push_back(current.first);
-
-        for (adjacent_iterator i(current.first); i; ++i)
-        {
-            coord_dist temp(*i, current.second);
-
-            // If the grid is out of LOS, skip it.
-            if (!cell_see_cell(origin, temp.first, los))
-                continue;
-
-            coord_def local = temp.first - origin;
-
-            temp.second = local.abs();
-
-            idx = temp.first.x + temp.first.y * X_WIDTH;
-
-            if (!visited_indices.count(idx)
-                && in_bounds(temp.first)
-                && !cell_is_solid(temp.first))
-            {
-                fringe.push(temp);
-            }
-        }
-
-    }
-}
-
-// Basically we want to break a circle into n_arcs equal sized arcs and find
-// out which arc the input point pos falls on.
-static int _arc_decomposition(const coord_def & pos, int n_arcs)
-{
-    float theta = atan2((float)pos.y, (float)pos.x);
-
-    if (pos.x == 0 && pos.y != 0)
-        theta = pos.y > 0 ? PI / 2 : -PI / 2;
-
-    if (theta < 0)
-        theta += 2 * PI;
-
-    float arc_angle = 2 * PI / n_arcs;
-
-    theta += arc_angle / 2.0f;
-
-    if (theta >= 2 * PI)
-        theta -= 2 * PI;
-
-    return static_cast<int> (theta / arc_angle);
-}
-
-static int _place_ring(vector<coord_def> &ring_points,
-                       const coord_def &origin, mgen_data prototype,
-                       int n_arcs, int arc_occupancy, int &seen_count)
-{
-    shuffle_array(ring_points);
-
-    int target_amount = ring_points.size();
-    int spawned_count = 0;
-    seen_count = 0;
-
-    vector<int> arc_counts(n_arcs, arc_occupancy);
-
-    for (unsigned i = 0;
-         spawned_count < target_amount && i < ring_points.size();
-         i++)
-    {
-        int direction = _arc_decomposition(ring_points.at(i)
-                                           - origin, n_arcs);
-
-        if (arc_counts[direction]-- <= 0)
-            continue;
-
-        prototype.pos = ring_points.at(i);
-
-        if (create_monster(prototype, false))
-        {
-            spawned_count++;
-            if (you.see_cell(ring_points.at(i)))
-                seen_count++;
-        }
-    }
-
-    return spawned_count;
-}
-
-template<typename T>
-static bool less_second(const T & left, const T & right)
-{
-    return left.second < right.second;
-}
-
-typedef pair<coord_def, int> point_distance;
-
-// Find the distance from origin to each of the targets, those results
-// are stored in distances (which is the same size as targets). Exclusion
-// is a set of points which are considered disconnected for the search.
-static void _path_distance(const coord_def& origin,
-                           const vector<coord_def>& targets,
-                           set<int> exclusion,
-                           vector<int>& distances)
-{
-    queue<point_distance> fringe;
-    fringe.push(point_distance(origin,0));
-    distances.clear();
-    distances.resize(targets.size(), INT_MAX);
-
-    while (!fringe.empty())
-    {
-        point_distance current = fringe.front();
-        fringe.pop();
-
-        // did we hit a target?
-        for (unsigned i = 0; i < targets.size(); ++i)
-        {
-            if (current.first == targets[i])
-            {
-                distances[i] = current.second;
-                break;
-            }
-        }
-
-        for (adjacent_iterator adj_it(current.first); adj_it; ++adj_it)
-        {
-            int idx = adj_it->x + adj_it->y * X_WIDTH;
-            if (you.see_cell(*adj_it)
-                && !feat_is_solid(env.grid(*adj_it))
-                && *adj_it != you.pos()
-                && exclusion.insert(idx).second)
-            {
-                monster* temp = monster_at(*adj_it);
-                if (!temp || (temp->attitude == ATT_HOSTILE
-                              && !temp->is_stationary()))
-                {
-                    fringe.push(point_distance(*adj_it, current.second+1));
-                }
-            }
-        }
-    }
-}
-
-// Find the minimum distance from each point of origin to one of the targets
-// The distance is stored in 'distances', which is the same size as origins.
-static void _point_point_distance(const vector<coord_def>& origins,
-                                  const vector<coord_def>& targets,
-                                  vector<int>& distances)
-{
-    distances.clear();
-    distances.resize(origins.size(), INT_MAX);
-
-    // Consider all points of origin as blocked (you can search outward
-    // from one, but you can't form a path across a different one).
-    set<int> base_exclusions;
-    for (coord_def c : origins)
-    {
-        int idx = c.x + c.y * X_WIDTH;
-        base_exclusions.insert(idx);
-    }
-
-    vector<int> current_distances;
-    for (unsigned i = 0; i < origins.size(); ++i)
-    {
-        // Find the distance from the point of origin to each of the targets.
-        _path_distance(origins[i], targets, base_exclusions,
-                       current_distances);
-
-        // Find the smallest of those distances
-        int min_dist = current_distances[0];
-        for (unsigned j = 1; j < current_distances.size(); ++j)
-            if (current_distances[j] < min_dist)
-                min_dist = current_distances[j];
-
-        distances[i] = min_dist;
-    }
-}
-
-// So the idea is we want to decide which adjacent tiles are in the most
-// 'danger' We claim danger is proportional to the minimum distances from the
-// point to a (hostile) monster. This function carries out at most 7 searches
-// to calculate the distances in question.
-static bool _prioritise_adjacent(const coord_def &target,
-                                 vector<coord_def>& candidates)
-{
-    radius_iterator los_it(target, LOS_NO_TRANS, true);
-
-    vector<coord_def> mons_positions;
-    // collect hostile monster positions in LOS
-    for (; los_it; ++los_it)
-    {
-        monster* hostile = monster_at(*los_it);
-
-        if (hostile && hostile->attitude == ATT_HOSTILE
-            && you.can_see(*hostile))
-        {
-            mons_positions.push_back(hostile->pos());
-        }
-    }
-
-    if (mons_positions.empty())
-    {
-        shuffle_array(candidates);
-        return true;
-    }
-
-    vector<int> distances;
-
-    _point_point_distance(candidates, mons_positions, distances);
-
-    vector<point_distance> possible_moves(candidates.size());
-
-    for (unsigned i = 0; i < possible_moves.size(); ++i)
-    {
-        possible_moves[i].first  = candidates[i];
-        possible_moves[i].second = distances[i];
-    }
-
-    sort(possible_moves.begin(), possible_moves.end(),
-              less_second<point_distance>);
-
-    for (unsigned i = 0; i < candidates.size(); ++i)
-        candidates[i] = possible_moves[i].first;
-
-    return true;
+    const spschool stype = random_choose(spschool::ice, spschool::fire,
+                                         spschool::earth, spschool::air);
+    MiscastEffect(&you, nullptr, {miscast_source::god, god}, stype,
+                  5 + you.experience_level, random2avg(88, 3),
+                  _god_wrath_name(god));
 }
 
 /**
@@ -1624,7 +1316,7 @@ static bool _fedhas_summon_plants()
     // We are going to spawn some oklobs but first we need to find
     // out a little about the situation.
     vector<vector<coord_def> > radius_points;
-    _collect_radius_points(radius_points, you.pos(), LOS_NO_TRANS);
+    collect_radius_points(radius_points, you.pos(), LOS_NO_TRANS);
 
     int max_idx = 3;
     unsigned max_points = radius_points[max_idx].size();
@@ -1648,16 +1340,22 @@ static bool _fedhas_summon_plants()
 
         temp.cls = MONS_PLANT;
 
-        _place_ring(radius_points[0], you.pos(), temp, 1,
-                radius_points[0].size(), seen_count);
+        place_ring(radius_points[0],
+                   you.pos(),
+                   temp,
+                   1, radius_points[0].size(),
+                   seen_count);
 
         if (seen_count > 0)
             success = true;
 
         temp.cls = MONS_OKLOB_PLANT;
 
-        _place_ring(radius_points[max_idx], you.pos(), temp,
-                random_range(3, 8), 1, seen_count);
+        place_ring(radius_points[max_idx],
+                   you.pos(),
+                   temp,
+                   random_range(3, 8), 1,
+                   seen_count);
 
         if (seen_count > 0)
             success = true;
@@ -1668,7 +1366,7 @@ static bool _fedhas_summon_plants()
     {
         unsigned target_count = random_range(2, 8);
         if (target_count < radius_points[0].size())
-            _prioritise_adjacent(you.pos(), radius_points[0]);
+            prioritise_adjacent(you.pos(), radius_points[0]);
         else
             target_count = radius_points[0].size();
 
@@ -1693,59 +1391,10 @@ static bool _fedhas_summon_plants()
     return true;
 }
 
-static int _fedhas_corpse_spores(beh_type attitude)
-{
-    vector<stack_iterator> positions;
-    int count = _count_corpses_in_los(&positions);
-    ASSERT(attitude != BEH_FRIENDLY || count > 0);
-
-    if (count == 0)
-        return count;
-
-    for (const stack_iterator &si : positions)
-    {
-        count++;
-
-        if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE_SPORE,
-                                               attitude,
-                                               si->pos,
-                                               MHITNOT,
-                                               MG_FORCE_PLACE,
-                                               GOD_FEDHAS)
-                                            .set_summoned(&you, 0, 0)))
-        {
-            plant->flags |= MF_NO_REWARD;
-
-            if (attitude == BEH_FRIENDLY)
-            {
-                plant->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-                mons_make_god_gift(*plant, GOD_FEDHAS);
-
-                plant->behaviour = BEH_WANDER;
-                plant->foe = MHITNOT;
-            }
-        }
-
-        if (mons_skeleton(si->mon_type))
-            turn_corpse_into_skeleton(*si);
-        else
-        {
-            item_was_destroyed(*si);
-            destroy_item(si->index());
-        }
-    }
-
-    viewwindow(false);
-    update_screen();
-
-    return count;
-}
-
 /**
  * Call down the wrath of Fedhas upon the player!
  *
- * Plants and plant/nature themed attacks.
+ * Plants and elemental miscasts.
  *
  * @return Whether to take further divine wrath actions afterward.
  */
@@ -1762,7 +1411,7 @@ static bool _fedhas_retribution()
     case 0:
         // Try and spawn some hostile ballistomycete spores, if none are created
         // fall through to the elemental miscast effects.
-        if (_fedhas_corpse_spores(BEH_HOSTILE))
+        if (fedhas_corpse_spores(BEH_HOSTILE))
         {
             simple_god_message(" produces spores.", god);
             return true;
@@ -1770,7 +1419,7 @@ static bool _fedhas_retribution()
 
     case 1:
     default:
-        _fedhas_nature_retribution();
+        _fedhas_elemental_miscast();
         return true;
 
     case 2:
@@ -1841,7 +1490,7 @@ static bool _dithmenos_retribution()
     return true;
 }
 
-static const vector<pop_entry> pop_qazlal_wrath =
+static const pop_entry pop_qazlal_wrath[] =
 {
   {  0, 12, 25, SEMI, MONS_AIR_ELEMENTAL },
   {  4, 12, 50, FLAT, MONS_WIND_DRAKE },
@@ -1860,8 +1509,10 @@ static const vector<pop_entry> pop_qazlal_wrath =
 
   {  0, 12, 25, SEMI, MONS_EARTH_ELEMENTAL },
   {  2, 10, 50, FLAT, MONS_BASILISK },
-  {  4, 14, 30, FLAT, MONS_BOULDER_BEETLE },
+  {  4, 14, 30, FLAT, MONS_CATOBLEPAS },
   { 18, 27, 50, RISE, MONS_IRON_DRAGON },
+
+  { 0,0,0,FLAT,MONS_0 }
 };
 
 /**
@@ -2014,127 +1665,6 @@ static bool _wu_jian_retribution()
     return true;
 }
 
-static void _summon_ignis_elementals()
-{
-    const god_type god = GOD_IGNIS;
-    const int how_many = random_range(2, 3);
-    bool success = false;
-    for (int i = 0; i < how_many; i++)
-        if (create_monster(_wrath_mon_data(MONS_FIRE_ELEMENTAL, god), false))
-            success = true;
-
-    if (success)
-    {
-        const string msg = getSpeakString("Ignis elemental wrath");
-        god_speaks(god, msg.c_str());
-    }
-    else
-        simple_god_message("' divine wrath fails to arrive.", god);
-}
-
-static bool _ignis_shaft()
-{
-    // Would it be interesting if ignis could shaft you into other branches,
-    // e.g. d -> orc, orc -> elf..?
-    if (!you.shaftable())
-        return false;
-    simple_god_message(" burns the ground from beneath your feet!", GOD_IGNIS);
-    ASSERT(you.do_shaft());
-    return true;
-}
-
-/**
- *  Finds the highest HD monster in sight that would make a suitable vessel
- *  for Ignis's vengeance.
-*/
-static monster* _ignis_champion_target()
-{
-    monster* best_mon = nullptr;
-    // Never pick monsters that are incredibly weak. That's just sad.
-    int min_xl = you.get_experience_level() / 2;
-    int seen = 0;
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS, true); ri; ++ri)
-    {
-        monster* mon = monster_at(*ri);
-        // Some of these cases are redundant. TODO: cleanup
-        if (!mon
-            || mons_is_firewood(*mon)
-            || !mons_can_use_stairs(*mon, DNGN_STONE_STAIRS_DOWN_I)
-            || mons_is_tentacle_or_tentacle_segment(mon->type)
-            || mon->is_stationary()
-            || mons_is_conjured(mon->type)
-            || mon->is_perm_summoned()
-            || mon->wont_attack()
-            // no stealing another god's pals :P
-            || mon->is_priest())
-        {
-            continue;
-        }
-
-        // Don't anoint monsters with no melee attacks or with an
-        // existing attack flavour.
-        const mon_attack_def atk = mons_attack_spec(*mon, 0, true);
-        if (atk.type == AT_NONE || atk.flavour != AF_PLAIN)
-            continue;
-
-        // Don't pick something weaker than a different mon we've already seen.
-        const int hd = mon->get_experience_level();
-        if (hd < min_xl)
-            continue;
-
-        // Is this the new strongest thing we've seen? If so, reset the
-        // HD floor & the seen count.
-        if (hd > min_xl)
-        {
-            min_xl = hd;
-            seen = 0;
-        }
-
-        // Reservoir sampling among monsters of this HD.
-        ++seen;
-        if (one_chance_in(seen))
-            best_mon = mon;
-    }
-
-    return best_mon;
-}
-
-static bool _ignis_champion()
-{
-    monster *mon = _ignis_champion_target();
-    if (!mon)
-        return false;
-    // Message ordering is a bit touchy here.
-    // First, we say what we're doing. TODO: more fun messages
-    simple_god_message(make_stringf(" anoints %s as an instrument of vengeance!",
-                                    mon->name(DESC_THE).c_str()).c_str(), GOD_IGNIS);
-    // Then, we add the ench. This makes it visible if it wasn't, since it's both
-    // confusing and unfun for players otherwise.
-    mon->add_ench(mon_enchant(ENCH_FIRE_CHAMPION, 1));
-    // Then we fire off update_monsters_in_view() to make the next messages make more
-    // sense. This triggers 'comes into view' if needed.
-    update_monsters_in_view();
-    // Then we explain what 'fire champion' does, for those who don't go through xv
-    // with a fine-toothed comb afterward.
-    simple_monster_message(*mon, " is coated in flames, covering ground quickly"
-                                 " and attacking fiercely!");
-    // Then we alert it last. It's just reacting, after all.
-    behaviour_event(mon, ME_ALERT, &you);
-    // Assign blame (so we can look up funny deaths)
-    mons_add_blame(mon, "anointed by " + god_name(GOD_IGNIS));
-    return true;
-}
-
-static bool _ignis_retribution()
-{
-    if (one_chance_in(3) && _ignis_shaft())
-        return true;
-    if (coinflip() && _ignis_champion())
-        return true;
-    _summon_ignis_elementals();
-    return true;
-}
-
 static bool _uskayaw_retribution()
 {
     const god_type god = GOD_USKAYAW;
@@ -2221,7 +1751,6 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
     case GOD_USKAYAW:       do_more = _uskayaw_retribution(); break;
     case GOD_WU_JIAN:       do_more = _wu_jian_retribution(); break;
-    case GOD_IGNIS:         do_more = _ignis_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_ELYVILON:

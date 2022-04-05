@@ -5,29 +5,17 @@
 
 #pragma once
 
-#include <vector>
-
-#include "item-prop-enum.h"
 #include "job-type.h"
 #include "species-type.h"
 
-using std::vector;
-
-class UINewGameMenu;
+class MenuFreeform;
 struct menu_letter;
 struct newgame_def;
-
-string newgame_char_description(const newgame_def& ng);
 
 void choose_tutorial_character(newgame_def& ng_choice);
 
 bool choose_game(newgame_def& ng, newgame_def& choice,
                  const newgame_def& defaults);
-
-weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
-                                            species_type species);
-
-string newgame_random_name();
 
 /*
  * A structure for grouping backgrounds by category.
@@ -41,7 +29,7 @@ struct job_group
 
     /// A method to attach the group to a freeform.
     void attach(const newgame_def& ng, const newgame_def& defaults,
-                UINewGameMenu* menu, menu_letter &letter);
+                MenuFreeform* menu, menu_letter &letter);
 };
 
 struct species_group
@@ -53,5 +41,5 @@ struct species_group
 
     /// A method to attach the group to a freeform.
     void attach(const newgame_def& ng, const newgame_def& defaults,
-                UINewGameMenu* menu, menu_letter &letter);
+                MenuFreeform* menu, menu_letter &letter);
 };

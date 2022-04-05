@@ -16,7 +16,6 @@
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
 
 #define DAMNATION_BOLT_KEY "damnation_bolt"
-#define EMBRACE_ARMOUR_KEY "embrace_armour"
 
 struct bolt;
 
@@ -29,9 +28,9 @@ enum unrand_flag_type
     UNRAND_FLAG_EVIL             = 0x08,
     UNRAND_FLAG_UNCLEAN          = 0x10,
     UNRAND_FLAG_CHAOTIC          = 0x20,
-                              // = 0x40,  // was UNRAND_FLAG_CORPSE_VIOLATING
+    UNRAND_FLAG_CORPSE_VIOLATING = 0x40,
     UNRAND_FLAG_NOGEN            = 0x80,
-                              // =0x100,  // was UNRAND_FLAG_RANDAPP
+    UNRAND_FLAG_RANDAPP          =0x100,
     UNRAND_FLAG_UNIDED           =0x200,
     UNRAND_FLAG_SKIP_EGO         =0x400,
     // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
@@ -50,14 +49,9 @@ struct unrandart_entry
     const char *unid_name;   // un-id'd name of unrandart
     const char *type_name;   // custom item type
     const char *inscrip;     // extra inscription
-    const char *dbrand;      // description of extra brand
-    const char *descrip;     // description of extra power
 
     object_class_type base_type;
     uint8_t           sub_type;
-    object_class_type fallback_base_type;
-    uint8_t           fallback_sub_type;
-    int               fallback_brand;
     short             plus;
     short             plus2;
     colour_t          colour;
@@ -74,6 +68,7 @@ struct unrandart_entry
                           actor* defender, bool mondied, int damage);
     setup_missile_type (*launch)(item_def* item, bolt* beam,
                                  string* ammo_name, bool* returning);
+    bool (*evoke_func)(item_def *item, bool* did_work, bool* unevokable);
 };
 
 bool is_known_artefact(const item_def &item);
@@ -81,6 +76,7 @@ bool is_artefact(const item_def &item);
 bool is_random_artefact(const item_def &item);
 bool is_unrandom_artefact(const item_def &item, int which = 0);
 bool is_special_unrandom_artefact(const item_def &item);
+bool is_randapp_artefact(const item_def &item);
 void autoid_unrand(item_def &item);
 
 void artefact_fixup_props(item_def &item);
@@ -97,31 +93,33 @@ void set_artefact_name(item_def &item, const string &name);
 string make_artefact_name(const item_def &item, bool appearance = false);
 string replace_name_parts(const string &name_in, const item_def& item);
 
-int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level,
-                        bool in_abyss);
+int find_okay_unrandart(uint8_t aclass, uint8_t atype = OBJ_RANDOM,
+                        bool in_abyss = false);
 
 typedef FixedVector< int, ART_PROPERTIES >  artefact_properties_t;
 typedef FixedVector< bool, ART_PROPERTIES > artefact_known_props_t;
 
-void artefact_desc_properties(const item_def         &item,
-                              artefact_properties_t  &proprt,
+void artefact_desc_properties(const item_def        &item,
+                              artefact_properties_t &proprt,
                               artefact_known_props_t &known);
 
-void artefact_known_properties(const item_def        &item,
-                              artefact_known_props_t &known);
+void artefact_properties(const item_def       &item,
+                         artefact_properties_t &proprt,
+                         artefact_known_props_t &known);
 
 void artefact_properties(const item_def &item,
-                              artefact_properties_t  &proprt);
+                         artefact_properties_t &proprt);
+
+int artefact_property(const item_def &item, artefact_prop_type prop,
+                      bool &known);
 
 int artefact_property(const item_def &item, artefact_prop_type prop);
 
-bool artefact_property_known(const item_def &item, artefact_prop_type prop);
 int artefact_known_property(const item_def &item, artefact_prop_type prop);
 
 void artefact_learn_prop(item_def &item, artefact_prop_type prop);
 
 bool make_item_randart(item_def &item, bool force_mundane = false);
-void make_ashenzari_randart(item_def &item);
 bool make_item_unrandart(item_def &item, int unrand_index);
 void setup_unrandart(item_def &item, bool creating = true);
 
@@ -136,14 +134,12 @@ void artefact_set_property(item_def           &item,
                            artefact_prop_type  prop,
                            int                 val);
 
-/// Type for the value of an artefact property
 enum artp_value_type
 {
-    ARTP_VAL_BOOL,  ///< bool (e.g. Fly)
-    ARTP_VAL_POS,   ///< Positive integer (e.g. x% chance to get angry)
-    ARTP_VAL_BRAND, ///< Brand (e.g. flaming, vorpal).
-                    ///      See \ref brand_type in item-prop-enum.h
-    ARTP_VAL_ANY,   ///< int (e.g. dex-4, AC+4, SH+8)
+    ARTP_VAL_BOOL,
+    ARTP_VAL_POS,
+    ARTP_VAL_BRAND,
+    ARTP_VAL_ANY,
 };
 artp_value_type artp_potential_value_types(artefact_prop_type prop);
 
@@ -152,6 +148,5 @@ bool artp_potentially_good(artefact_prop_type prop);
 bool artp_potentially_bad(artefact_prop_type prop);
 
 int get_unrandart_num(const char *name);
-int extant_unrandart_by_exact_name(string name);
 
 void unrand_reacts();

@@ -551,7 +551,7 @@ TILE:   c = WALL_STONE_SMOOTH
 TILE:   ' = FLOOR_PEBBLE_BROWN
 TILE:   t = DNGN_TREE_YELLOW w:5 / DNGN_TREE_LIGHTRED w:5 / DNGN_TREE_RED / DNGN_TREE_DEAD: 3
 COLOUR: . = brown
-COLOUR: t = lightred / red w:5 / yellow w:5 / brown
+COLOUR: t = red w:5 / yellow w:5 / brown
 COLOUR: ' = darkgrey
 SUBST:  'd = .
 : temple_compat_setup(_G)
@@ -713,7 +713,7 @@ ENDMAP
 NAME:  minmay_temple_bridge_a_8
 TAGS:  no_pool_fixup
 SUBST: A : TUV
-: if not is_validating() and crawl.one_chance_in(10) then
+: if crawl.one_chance_in(10) then
 SUBST: w = l
 :   set_border_fill_type("endless_lava")
 : else
@@ -759,7 +759,7 @@ ENDMAP
 NAME:  minmay_temple_bridge_b_8
 TAGS:  no_pool_fixup
 SUBST: A : TUV
-: if not is_validating() and crawl.one_chance_in(10) then
+: if crawl.one_chance_in(10) then
 SUBST: w = l
 :   set_border_fill_type("endless_lava")
 : else
@@ -805,7 +805,7 @@ ENDMAP
 NAME:  minmay_temple_bridge_c_8
 TAGS:  no_pool_fixup
 SUBST: A : TUV
-: if not is_validating() and crawl.one_chance_in(10) then
+: if crawl.one_chance_in(10) then
 SUBST: w = l
 :   set_border_fill_type("endless_lava")
 : else
@@ -851,7 +851,7 @@ ENDMAP
 NAME:  minmay_temple_bridge_d_8
 TAGS:  no_pool_fixup
 SUBST: A : TUV
-: if not is_validating() and crawl.one_chance_in(10) then
+: if crawl.one_chance_in(10) then
 SUBST:  w = l
 :   set_border_fill_type("endless_lava")
 : else

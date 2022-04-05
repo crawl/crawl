@@ -44,6 +44,13 @@ death berserker unberserked
 
 Не забывайте впадать в ярость берсерка во время боев с опасными врагами. Это
 рискованно, но делает вас быстрее и крепче.
+{{
+    if you.hunger() < 3 then
+        return "Это состояние недоступно, если вы очень голодны или даже " ..
+               "хуже, так что будьте всегда сыты, на тот случай, если вам " ..
+               "понадобится ваша ярость."
+    end
+}}
 %%%%
 death ranger melee
 
@@ -140,7 +147,7 @@ finished random 2
 finished random 3
 
 Вы можете попросить других игроков о помощи на IRC (Internet Relay Chat) канале
-<w>#crawl</w> на Libera (<w>irc.libera.chat</w>).
+<w>##crawl</w> на freenode (<w>irc.freenode.net</w>).
 %%%%
 dissection reminder
 

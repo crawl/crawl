@@ -6,13 +6,9 @@
 
 #pragma once
 
-#include "actor.h"
 #include "beh-type.h"
-#include "mgen-data.h"
 #include "mon-util.h"
-#include "monster.h"
-
-struct bolt;
+#include "mgen-data.h"
 
 class final_effect
 {
@@ -20,7 +16,7 @@ public:
     virtual ~final_effect() {}
 
     virtual bool mergeable(const final_effect &a) const = 0;
-    virtual void merge(const final_effect &)
+    virtual void merge(const final_effect &a)
     {
     }
 
@@ -56,25 +52,6 @@ public:
 protected:
     mirror_damage_fineff(const actor *attack, const actor *defend, int dam)
         : final_effect(attack, defend, coord_def()), damage(dam)
-    {
-    }
-    int damage;
-};
-
-class anguish_fineff : public final_effect
-{
-public:
-    bool mergeable(const final_effect &a) const override;
-    void merge(const final_effect &a) override;
-    void fire() override;
-
-    static void schedule(const actor *attack, int dam)
-    {
-        final_effect::schedule(new anguish_fineff(attack, dam));
-    }
-protected:
-    anguish_fineff(const actor *attack, int dam)
-        : final_effect(attack, nullptr, coord_def()), damage(dam)
     {
     }
     int damage;
@@ -122,13 +99,13 @@ public:
     bool mergeable(const final_effect &a) const override;
     void fire() override;
 
-    static void schedule(const actor *blinker, const actor *other = nullptr)
+    static void schedule(const actor *blinker)
     {
-        final_effect::schedule(new blink_fineff(blinker, other));
+        final_effect::schedule(new blink_fineff(blinker));
     }
 protected:
-    blink_fineff(const actor *blinker, const actor *o)
-        : final_effect(o, blinker, coord_def())
+    blink_fineff(const actor *blinker)
+        : final_effect(0, blinker, coord_def())
     {
     }
 };
@@ -263,34 +240,6 @@ protected:
     mon_attitude_type attitude;
 };
 
-class explosion_fineff : public final_effect
-{
-public:
-    // One explosion at a time, please.
-    bool mergeable(const final_effect &) const override { return false; }
-    void fire() override;
-
-    static void schedule(bolt &beam, string boom, string sanct,
-                         bool inner_flame, const actor* flame_agent)
-    {
-        final_effect::schedule(new explosion_fineff(beam, boom, sanct,
-                                                    inner_flame, flame_agent));
-    }
-protected:
-    explosion_fineff(const bolt &beem, string boom, string sanct,
-                     bool flame, const actor* agent)
-        : final_effect(0, 0, coord_def()), beam(beem),
-          boom_message(boom), sanctuary_message(sanct),
-          inner_flame(flame), flame_agent(agent)
-    {
-    }
-    bolt beam;
-    string boom_message;
-    string sanctuary_message;
-    bool inner_flame;
-    const actor* flame_agent;
-};
-
 // A fineff that triggers a daction; otherwise the daction
 // occurs immediately (and then later) -- this might actually
 // be too soon in some cases.
@@ -352,55 +301,29 @@ class bennu_revive_fineff : public final_effect
 {
 public:
     // Each trigger is from the death of a different bennu---no merging.
-    bool mergeable(const final_effect &) const override { return false; }
+    bool mergeable(const final_effect &a) const override { return false; }
     void fire() override;
 
     static void schedule(coord_def pos, int revives, beh_type attitude,
-                         unsigned short foe, bool duel)
+                         unsigned short foe)
     {
-        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe, duel));
+        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe));
     }
 protected:
     bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
-                        unsigned short _foe, bool _duel)
-        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe),
-          duel(_duel)
+                        unsigned short _foe)
+        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe)
     {
     }
     int revives;
     beh_type attitude;
     unsigned short foe;
-    bool duel;
-};
-
-class avoided_death_fineff : public final_effect
-{
-public:
-    // Each trigger is from the death of a different monster---no merging.
-    bool mergeable(const final_effect &) const override { return false; }
-    void fire() override;
-
-    static void schedule(monster * mons)
-    {
-        // pretend to be dead until our revival, to prevent
-        // sequencing errors from inadvertently making us change alignment
-        const int realhp = mons->hit_points;
-        mons->hit_points = -realhp;
-        mons->flags |= MF_PENDING_REVIVAL;
-        final_effect::schedule(new avoided_death_fineff(mons, realhp));
-    }
-protected:
-    avoided_death_fineff(const actor * _def, int _hp)
-        : final_effect(0, _def, coord_def()), hp(_hp)
-    {
-    }
-    int hp;
 };
 
 class infestation_death_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &) const override { return false; }
+    bool mergeable(const final_effect &a) const override { return false; }
     void fire() override;
 
     static void schedule(coord_def pos, const string &name)
@@ -418,7 +341,7 @@ protected:
 class make_derived_undead_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &) const override { return false; }
+    bool mergeable(const final_effect &a) const override { return false; }
     void fire() override;
 
     static void schedule(coord_def pos, mgen_data mg, int xl,
@@ -442,7 +365,7 @@ protected:
 class mummy_death_curse_fineff : public final_effect
 {
 public:
-    bool mergeable(const final_effect &) const override { return false; }
+    bool mergeable(const final_effect &a) const override { return false; }
     void fire() override;
 
     static void schedule(const actor * attack, string name, killer_type killer, int pow)
@@ -451,50 +374,12 @@ public:
     }
 protected:
     mummy_death_curse_fineff(const actor * attack, string _name, killer_type _killer, int _pow)
-        : final_effect(fixup_attacker(attack), 0, coord_def()), name(_name),
-          killer(_killer), pow(_pow)
+        : final_effect(attack, 0, coord_def()), name(_name), killer(_killer), pow(_pow)
     {
     }
-    const actor *fixup_attacker(const actor *a);
-
     string name;
     killer_type killer;
     int pow;
-};
-
-class summon_dismissal_fineff : public final_effect
-{
-public:
-    bool mergeable(const final_effect &fe) const override;
-    void merge(const final_effect &) override;
-    void fire() override;
-
-    static void schedule(const actor * _defender)
-    {
-        final_effect::schedule(new summon_dismissal_fineff(_defender));
-    }
-protected:
-    summon_dismissal_fineff(const actor * _defender)
-        : final_effect(0, _defender, coord_def())
-    {
-    }
-};
-
-class spectral_weapon_fineff : public final_effect
-{
-public:
-    bool mergeable(const final_effect &) const override { return false; };
-    void fire() override;
-
-    static void schedule(const actor &attack, const actor &defend)
-    {
-        final_effect::schedule(new spectral_weapon_fineff(attack, defend));
-    }
-protected:
-    spectral_weapon_fineff(const actor &attack, const actor &defend)
-        : final_effect(&attack, &defend, coord_def())
-    {
-    }
 };
 
 void fire_final_effects();

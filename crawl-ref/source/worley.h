@@ -49,7 +49,7 @@
             hit point minus this value. The DERIVATIVE of F is the unit
             normalized version of this vector.
    <ID>    The output 32 bit ID number which labels the feature point. This
-            is useful for domain partitions, especially for colouring flagstone
+            is useful for domain partitions, especially for coloring flagstone
             patterns.
 
    This implementation is tuned for speed in a way that any order > 5
@@ -58,9 +58,6 @@
    density in the source code, at the expense of slower
    computation. The book lists the details of this tuning.  */
 #pragma once
-
-#include <cstdint>
-
 namespace worley
 {
 struct noise_datum

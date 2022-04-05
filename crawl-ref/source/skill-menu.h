@@ -5,32 +5,31 @@
 
 #pragma once
 
-#include <vector>
-
 #include "enum.h"
 #include "menu.h"
-#include "precision-menu.h"
 #include "skills.h"
-
-using std::vector;
 
 // Skill Menu
 
 enum skill_menu_flags
 {
-    SKMF_EXPERIENCE        = 1<<0,
-    SKMF_SPECIAL           = SKMF_EXPERIENCE,
+    //Ashenzari transfer knowledge ability.
+    SKMF_RESKILL_FROM      = 1<<0,
+    SKMF_RESKILL_TO        = 1<<1,
+    SKMF_RESKILLING        = SKMF_RESKILL_FROM | SKMF_RESKILL_TO,
+    SKMF_EXPERIENCE        = 1<<2,
+    SKMF_SPECIAL           = SKMF_RESKILLING | SKMF_EXPERIENCE,
 
-    SKMF_MANUAL            = 1<<1,
-    SKMF_ENHANCED          = 1<<2,
-    SKMF_REDUCED           = 1<<3,
+    SKMF_MANUAL            = 1<<3,
+    SKMF_ENHANCED          = 1<<4,
+    SKMF_REDUCED           = 1<<5,
     SKMF_CHANGED           = SKMF_ENHANCED | SKMF_REDUCED,
 
-    SKMF_SKILL_ICONS       = 1<<4,
-    SKMF_APTITUDE          = 1<<5,
-    SKMF_SIMPLE            = 1<<6, // Simple mode for tutorial and hint mode.
-    SKMF_HELP              = 1<<7,
-    SKMF_SET_TARGET        = 1<<8,
+    SKMF_SKILL_ICONS       = 1<<6,
+    SKMF_APTITUDE          = 1<<7,
+    SKMF_SIMPLE            = 1<<8, // Simple mode for tutorial and hint mode.
+    SKMF_HELP              = 1<<9,
+    SKMF_SET_TARGET        = 1<<10,
 };
 
 // these need to both be negative, because positive ids are used by the
@@ -60,7 +59,7 @@ class SkillTextTileItem : public TextTileItem
 public:
     SkillTextTileItem() {};
 protected:
-    bool handle_mouse(const wm_mouse_event& me) override;
+    bool handle_mouse(const MouseEvent& me) override;
 };
 #endif
 
@@ -104,6 +103,7 @@ private:
     void set_new_level();
     void set_points();
     void set_progress();
+    void set_reskill_progress();
     void set_title();
     void set_training();
     void set_targets();
@@ -156,7 +156,7 @@ public:
     void clear_targets();
     void set_target_mode();
     void cancel_set_target();
-    int read_skill_target(skill_type sk);
+    int read_skill_target(skill_type sk, int keyn);
     void select(skill_type sk, int keyn);
     void toggle(skill_menu_switch sw);
 

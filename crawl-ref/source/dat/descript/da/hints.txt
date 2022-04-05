@@ -45,6 +45,13 @@ death berserker unberserked
 
 Glem ikke at gå bersærk, når du kæmper mod særligt vanskelige fjender. Det er
 risikabelt, men det gør dig hurtigere og stærkere.
+{{
+    if you.hunger() < 3 then
+        return "Du kan ikke gå bersærk, mens du er meget sulten eller " ..
+               "værre, så sørg for at spise dig mæt hele tiden, hvis du nu " ..
+               "skulle få brug for at gå bersærk."
+    end
+}}
 %%%%
 death ranger melee
 
@@ -146,7 +153,7 @@ brokker sig, hvis det ikke kan nogen af de filer.
 finished random 3
 
 Du kan spørge andre Crawl-spillere til råds i IRC-kanalen (Internet Relay Chat)
-<w>#crawl</w> på Libera-serveren (<w>irc.libera.chat</w>).
+<w>##crawl</w> på freenode-serveren (<w>irc.freenode.net</w>).
 %%%%
 dissection reminder
 

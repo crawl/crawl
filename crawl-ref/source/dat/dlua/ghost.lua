@@ -1,51 +1,92 @@
-------------------------------------------------------------------------------
--- ghost.lua
--- Functions for ghost vaults.
-------------------------------------------------------------------------------
-
 crawl_require("dlua/dungeon.lua")
 
 -- Integer value from 0 to 100 giving the chance that a ghost-allowing level
 -- will attempt to place a ghost vault.
 _GHOST_CHANCE_PERCENT = 10
 
---[[
-This function should be called by every ghost vault. It sets the common tags
-needed for ghost vaults and sets the common ghost chance for vaults not placing
-in Vaults branch. Vaults placing in the Vaults branch need to have the tag
-`vaults_ghost`, which is not set by this function. See the ghost vault
-guidelines in docs/develop/levels/guidelines.md.
+-- Common setup we want regardless of the branch of the ghost vault.
+function ghost_setup_common(e)
+     e.tags("allow_dup luniq_player_ghost")
+     e.tags("no_tele_into no_trap_gen no_monster_gen")
+end
 
-@bool[opt=false] vaults_setup If true, this vault will place in the Vaults
-    branch, so add the `vaults_ghost` tag and replace all `c` glyphs with `x`.
-@bool[opt=true] set_chance If true, set the ghost vault chance. Only vaults
-    that place exclusively in the Vaults branch should set this to false, as
-    they should not set a CHANCE and only use the `vaults_ghost` tag.
-]]
-function ghost_setup(e, vaults_setup, set_chance)
-    if set_chance == nil then
-        set_chance = true
-    end
+-- For vaults that want more control over their tags, use this function to
+-- properly set the common chance value and tag.
+function set_ghost_chance(e)
+    e.tags("chance_player_ghost")
+    e.chance(math.floor(_GHOST_CHANCE_PERCENT / 100 * 10000))
+end
 
-    -- Tags common to all ghost vaults.
-    e.tags("luniq_player_ghost no_tele_into no_trap_gen no_monster_gen")
+-- This function should be called in every ghost vault that doesn't place in
+-- the Vaults branch. It sets the minimal tags we want as well as the common
+-- ghost chance. If you want your vault to be less common, use a WEIGHT
+-- statement; don't set a difference CHANCE from the one here.
+function ghost_setup(e)
+    ghost_setup_common(e)
 
-    -- We must set the `vaults_ghost` tag unconditionally so that the vault is
-    -- available for selection by that tag. The `c` substitution is only done
-    -- if we're actually placing the vault in the Vaults branch.
-    if vaults_setup then
-        e.tags("vaults_ghost")
-        if you.in_branch("Vaults") then
-            e.subst("c = x")
+    set_ghost_chance(e)
+end
+
+-- Every Vaults room that places a ghost should call this function.
+function vaults_ghost_setup(e)
+    ghost_setup_common(e)
+
+    -- Vaults branch layout expects vaults_ghost as a tag selector.
+    e.tags("vaults_ghost")
+end
+
+-- Make an item definition that will randomly choose from combinations of the
+-- given tables of weighted item types and optional egos.
+--
+-- @param items     A table with weapon names as keys and weights as values.
+-- @param egos      An optional table with ego names as keys and weights as
+--                  values.
+-- @param args      An optional string of arguments to use on every item entry.
+--                  Should not have leading or trailing whitespace.
+-- @param separator An optional separator to use between the item entries.
+--                  Defaults to '/', which is appropriate for ITEM statements.
+--                  Use '|' if making item statements for use with MONS.
+-- @returns A string containing the item definition.
+function random_item_def(items, egos, args, separator)
+    args = args ~= nil and " " .. args or ""
+    separator = separator ~= nil and separator or '/'
+    local item_def
+    items_list = util.sorted_weight_table(items)
+
+    for i, item_pair in ipairs(items_list) do
+        iname = item_pair[1]
+        iweight = item_pair[2]
+        -- If we have egos, define an item spec with all item+ego
+        -- combinations, each with weight scaled by item rarity and ego
+        -- rarity.
+        if egos ~= nil then
+            egos_list = util.sorted_weight_table(egos)
+            for j, ego_pair in ipairs(egos_list) do
+                ename = ego_pair[1]
+                eweight = ego_pair[2]
+                if (not iname:find("demon") or ename ~= "holy_wrath")
+                   and (not iname:find("quick blade") or ename ~= "speed") then
+                    def = iname .. args .. " ego:" .. ename .. " w:" ..
+                          math.floor(iweight * eweight)
+                    if item_def == nil then
+                         item_def = def
+                    else
+                         item_def = item_def .. " " .. separator .. " " .. def
+                    end
+                end
+            end
+        -- No egos, so define item spec with all item combinations, each with
+        -- weight scaled by item rarity.
+        else
+            def = iname .. args .. " w:" .. iweight
+            if item_def == nil then
+                 item_def = def
+            else
+                 item_def = item_def .. " " .. separator .. " " .. def
+            end
         end
     end
-
-    if set_chance then
-        e.tags("chance_player_ghost")
-        -- Ensure we don't use CHANCE in Vaults.
-        e.depth_chance("Vaults", 0)
-        e.chance(math.floor(_GHOST_CHANCE_PERCENT / 100 * 10000))
-    end
+    return item_def
 end
 
 -- Basic loot scale for extra loot for lone ghosts. Takes none_glyph to use
@@ -101,31 +142,18 @@ end
 -- auxiliary armour item, or a jewellery item. The latter two can be good_item
 -- and then randart with increasing depth.
 --
--- This function is used by the more challenging ghost vaults that place many
--- additional monsters as a way to make attempting the vault more worthwhile.
---
--- @tparam table e environment
--- @tparam string kglyphs If nil, use 'd' and 'e' item slots. Otherwise, define
---                        KITEMs on the two characters supplied in kglyphs.
-function ghost_good_loot(e, kglyphs)
-
-    local item1fn, item2fn
-    if kglyphs == nil then
-        item1fn = e.item
-        item2fn = e.item
-    else
-        item1fn = function(def) e.kitem(kglyphs:sub(1, 1) .. " = " .. def) end
-        item2fn = function(def) e.kitem(kglyphs:sub(2, 2) .. " = " .. def) end
-    end
-
+-- This function is mostly used by the more challenging ghost vaults that place
+-- many additional monsters as a way to make attempting the vault more
+-- worthwhile.
+function ghost_good_loot(e)
     -- Possible loot items.
-    local jewellery = "any jewellery"
-    local good_jewellery = "any jewellery good_item"
-    local randart_jewellery = "any jewellery randart"
-    local aux = dgn.aux_armour
+    jewellery = "any jewellery"
+    good_jewellery = "any jewellery good_item"
+    randart_jewellery = "any jewellery randart"
+    aux = dgn.aux_armour
 
-    local first_item = true
-    local second_item = false
+    first_item = true
+    second_item = false
     if you.in_branch("D") then
         if you.depth() < 9 then
             first_item = false
@@ -194,29 +222,27 @@ function ghost_good_loot(e, kglyphs)
     end
 
     -- Define loot tables of potential item defs.
-    local first_loot = {
-                   {name = "scrolls", def = dgn.loot_scrolls, weight = 20},
+    first_loot = { {name = "scrolls", def = dgn.loot_scrolls, weight = 20},
                    {name = "potions", def = dgn.loot_potions, weight = 20},
                    {name = "aux", def = aux, weight = 10},
                    {name = "jewellery", def = jewellery, weight = 10},
                    {name = "manual", def = "any manual", weight = 5} }
-    local second_loot = {
-                    {name = "scrolls", def = dgn.loot_scrolls, weight = 10},
+    second_loot = { {name = "scrolls", def = dgn.loot_scrolls, weight = 10},
                     {name = "potions", def = dgn.loot_potions, weight = 10} }
 
     -- If we're upgrading the first item , choose a class, define the item
     -- slot, otherwise the slot becomes the usual '|*' definition.
     if first_item then
         chosen = util.random_weighted_from("weight", first_loot)
-        item1fn(chosen["def"])
+        e.item(chosen["def"])
     else
-        item1fn("superb_item / star_item")
+        e.item("superb_item / star_item")
     end
     if second_item then
         chosen = util.random_weighted_from("weight", second_loot)
-        item2fn(chosen["def"])
+        e.item(chosen["def"])
     else
-        item2fn("superb_item / star_item")
+        e.item("superb_item / star_item")
     end
 end
 
@@ -286,10 +312,11 @@ function setup_xom_dancing_weapon(e)
         quality = crawl.coinflip() and "good_item"
                   or crawl.coinflip() and "randart"
                   or ""
-
-        -- if variability has already generated, this will end up with a
-        -- chaos branded great mace as a backup.
-        variability = crawl.one_chance_in(100) and "mace of Variability"
+        -- do  this check independently of global state so that the effect
+        -- on the rng is the same either way
+        local can_try_variability = crawl.one_chance_in(100)
+        variability = not you.unrands("mace of Variability")
+                      and can_try_variability and "mace of Variability"
     end
 
     -- Make one weapons table with each weapon getting weight by class.
@@ -306,16 +333,36 @@ function setup_xom_dancing_weapon(e)
 
     -- Generate a dancing weapon based on the table that always has chaos ego.
     weapon_def = variability
-                 or dgn.random_item_def(weapons, "chaos", quality, "|")
+                 or random_item_def(weapons, {["chaos"] = 1}, quality, "|")
     e.mons("dancing weapon; " .. weapon_def)
 end
+
+-- Some melee weapons sets for warrior monsters. Loosely based on the orc
+-- warrior and knight sets, but including a couple more types and some of the
+-- high-end weapons at reasonable weights.
+ghost_warrior_weap = {
+    ["short sword"] = 5, ["rapier"] = 10, ["long sword"] = 10,
+    ["scimitar"] = 5, ["great sword"] = 10, ["hand axe"] = 5, ["war axe"] = 10,
+    ["broad axe"] = 5, ["battleaxe"] = 10, ["spear"] = 5, ["trident"] = 10,
+    ["halberd"] = 10, ["glaive"] = 5, ["whip"] = 5, ["mace"] = 10,
+    ["flail"] = 10, ["morningstar"] = 5, ["dire flail"] = 10,
+    ["great mace"] = 5, ["quarterstaff"] = 10
+}
+ghost_knight_weap = {
+    ["scimitar"] = 15, ["demon blade"] = 5, ["double sword"] = 5,
+    ["great sword"] = 15, ["triple sword"] = 5, ["war axe"] = 5,
+    ["broad axe"] = 10, ["battleaxe"] = 15, ["executioner's axe"] = 5,
+    ["demon trident"] = 5, ["glaive"] = 10, ["bardiche"] = 5,
+    ["morningstar"] = 10, ["demon whip"] = 5, ["eveningstar"] = 5,
+    ["dire flail"] = 10, ["great mace"] = 10, ["lajatang"] = 5
+}
 
 -- Set up equipment for the fancier orc warriors, knights, and warlord in
 -- biasface_ghost_orc_armoury and biasface_vaults_ghost_orc_armoury.
 function setup_armoury_orcs(e)
     weapon_quality = crawl.coinflip() and "randart" or "good_item"
-    warrior_def = dgn.monster_weapon("warrior", nil, weapon_quality)
-    knight_def = dgn.monster_weapon("knight", nil, weapon_quality)
+    warrior_def = random_item_def(ghost_warrior_weap, nil, weapon_quality, '|')
+    knight_def = random_item_def(ghost_knight_weap, nil, weapon_quality, '|')
     e.kmons("D = orc warrior ; " .. warrior_def .. " . chain mail good_item " ..
             "    | chain mail randart | plate armour good_item" ..
             "    | plate armour randart")
@@ -326,6 +373,6 @@ function setup_armoury_orcs(e)
             " . chain mail good_item " ..
             "    | chain mail randart | plate armour good_item " ..
             "    | plate armour randart " ..
-            " . kite shield good_item w:4 | kite shield randart w:2 " ..
-            "    | tower shield good_item w:2 | tower shield randart w:1")
+            " . shield good_item w:4 | shield randart w:2 " ..
+            "    | large shield good_item w:2 | large shield randart w:1")
 end

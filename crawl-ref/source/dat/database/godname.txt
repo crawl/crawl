@@ -73,15 +73,11 @@ Pakellas the Inventive
 %%%%
 Uskayaw lastname
 
-Uskayaw the Reveller
+Uskayaw the Reveler
 %%%%
 Hepliaklqana lastname
 
 Hepliaklqana the Forgotten
-%%%%
-Ignis lastname
-
-Ignis, the Dying Flame
 %%%%
 Wu Jian lastname
 

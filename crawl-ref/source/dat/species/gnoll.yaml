@@ -1,7 +1,7 @@
 enum: SP_GNOLL
 monster: MONS_GNOLL
 name: "Gnoll"
-difficulty: Simple
+difficulty: Intermediate
 difficulty_priority: 10
 aptitudes:
   xp: 0
@@ -27,6 +27,7 @@ aptitudes:
   spellcasting: 8
   conjurations: 6
   hexes: 6
+  charms: 6
   summoning: 6
   necromancy: 6
   translocations: 6
@@ -38,17 +39,19 @@ aptitudes:
   poison_magic: 6
   invocations: 9
   evocations: 8
-str: 7
-int: 7
-dex: 7
+str: 10
+int: 10
+dex: 10
 levelup_stat_frequency: 4
 mutations:
   1:
     MUT_STRONG_NOSE: 1
     MUT_FANGS: 1
-    MUT_DISTRIBUTED_TRAINING: 1
+fake_mutations:
+  - long: Your experience applies equally to all skills.
+    short: distributed training
 recommended_jobs:
-  - JOB_CINDER_ACOLYTE
+  - JOB_SKALD
   - JOB_WARPER
   - JOB_ARCANE_MARKSMAN
   - JOB_TRANSMUTER

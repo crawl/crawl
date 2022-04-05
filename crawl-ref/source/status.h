@@ -14,13 +14,18 @@ enum status_type
     STATUS_BEHELD,
     STATUS_CONTAMINATION,
     STATUS_NET,
-    STATUS_ALIVE_STATE,
+    STATUS_HUNGER,
     STATUS_REGENERATION,
+    STATUS_ROT,
     STATUS_DIG,
+    STATUS_SICK,
     STATUS_SPEED,
     STATUS_STR_ZERO,
     STATUS_INT_ZERO,
     STATUS_DEX_ZERO,
+#if TAG_MAJOR_VERSION == 34
+    STATUS_FIREBALL,
+#endif
     STATUS_BACKLIT,
     STATUS_UMBRA,
     STATUS_CONSTRICTED,
@@ -28,30 +33,30 @@ enum status_type
     STATUS_AUGMENTED,
     STATUS_TERRAIN,
     STATUS_SILENCE,
+#if TAG_MAJOR_VERSION == 34
+    STATUS_NO_CTELE,
+#endif
     STATUS_BEOGH,
     STATUS_RECALL,
     STATUS_LIQUEFIED,
     STATUS_DRAINED,
     STATUS_RAY,
+    STATUS_ELIXIR,
     STATUS_INVISIBLE,
+    STATUS_MAGIC_SAPPED,
+#if TAG_MAJOR_VERSION == 34
+    STATUS_GOLDEN,
+#endif
     STATUS_BRIBE,
     STATUS_CLOUD,
+    STATUS_BONE_ARMOUR,
     STATUS_ORB,
+    STATUS_DIVINE_ENERGY,
     STATUS_STILL_WINDS,
     STATUS_MISSILES,
     STATUS_SERPENTS_LASH,
     STATUS_HEAVENLY_STORM,
-    STATUS_ZOT,
-    STATUS_CURL,
-    STATUS_MAXWELLS,
-    STATUS_DUEL,
-    STATUS_NO_SCROLL,
-    STATUS_RF_ZERO,
-    STATUS_CORROSION,
-    STATUS_NO_POTIONS,
-    STATUS_LOWERED_WL,
-    STATUS_FLAME_WAVE,
-    STATUS_LAST_STATUS = STATUS_FLAME_WAVE
+    STATUS_LAST_STATUS = STATUS_HEAVENLY_STORM
 };
 
 struct status_info
@@ -79,7 +84,7 @@ void init_duration_index();
 bool duration_decrements_normally(duration_type dur);
 const char *duration_end_message(duration_type dur);
 void duration_end_effect(duration_type dur);
-const char *duration_expire_message(duration_type dur);
-int duration_expire_offset(duration_type dur);
+const char *duration_mid_message(duration_type dur);
+int duration_mid_offset(duration_type dur);
 int duration_expire_point(duration_type dur);
-msg_channel_type duration_expire_chan(duration_type dur);
+msg_channel_type duration_mid_chan(duration_type dur);

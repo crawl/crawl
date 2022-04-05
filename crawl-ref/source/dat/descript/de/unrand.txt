@@ -48,6 +48,10 @@ Verhängnis, da sie potentielle Beute warnten. Sie sind nun ausgestorben, und
 dieses wertvolle Relikt ist einer der letzten Beweise dafür, dass sie jemals
 existiert haben.
 %%%%
+demon blade "Bloodbane"
+
+Es trägt die Blutflecken eines unmenschlichen Verrückten.
+%%%%
 scimitar of Flaming Death
 
 Heißes Teil !
@@ -122,7 +126,7 @@ storm bow
 Dieser Bogen hat die Farbe von dunklen Regenwolken, und den Geruch kaltem
 Ozons.
 %%%%
-tower shield of Ignorance
+large shield of Ignorance
 
 „Ein offener Geist ist wie eine Festung mit unverschlossenen und unbewachten
 Toren.“
@@ -136,7 +140,7 @@ cloak of the Thief
 Es erlaubt seinem Träger, das Diebeshandwerk überragend auszuführen, und kann
 aktiviert werden, um dicke Rauchwolken zur schnellen Flucht auszustoßen.
 %%%%
-tower shield "Bullseye"
+large shield "Bullseye"
 
 Nur für den Fall, dass du Probleme hattest, getroffen zu werden.
 %%%%

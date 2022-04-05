@@ -7,13 +7,9 @@
 
 #include <list>
 #include <map>
-#include <vector>
 
 #include "monster.h"
 #include "mon-transit.h"
-#include "tag-version.h"
-
-using std::vector;
 
 struct companion
 {
@@ -30,7 +26,7 @@ extern map<mid_t, companion> companion_list;
 void init_companions();
 void add_companion(monster* mons);
 void remove_companion(monster* mons);
-void remove_bound_soul_companion();
+void remove_enslaved_soul_companion();
 void remove_all_companions(god_type god);
 void move_companion_to(const monster* mons, const level_id lid);
 

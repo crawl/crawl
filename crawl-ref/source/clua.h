@@ -11,11 +11,8 @@ extern "C" {
 #include <map>
 #include <set>
 #include <string>
-#include <vector>
 
 #include "maybe-bool.h"
-
-using std::vector;
 
 class CLua;
 
@@ -147,9 +144,6 @@ public:
 
     void print_stack();
 
-    /* Add the libaries and globals currently used by clua and dlua */
-    void init_libraries();
-
 public:
     string error;
 
@@ -168,7 +162,7 @@ public:
 
     long memory_used;
 
-    static const int MAX_THROTTLE_SLEEPS = 15;
+    static const int MAX_THROTTLE_SLEEPS = 100;
 
 private:
     lua_State *_state;
@@ -181,6 +175,8 @@ private:
 private:
     void init_lua();
     void set_error(int err, lua_State *ls = nullptr);
+    void load_cmacro();
+    void load_chooks();
     void init_throttle();
 
     static void _getregistry(lua_State *, const char *name);

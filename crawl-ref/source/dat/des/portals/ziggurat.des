@@ -67,9 +67,9 @@ ENDMAP
 NAME:    enter_ziggurat_c
 TAGS:    zig_entry no_trap_gen transparent
 KFEAT:   O = enter_ziggurat no_mimic
-MONS:    lich / ancient lich / dread lich
+MONS:    lich / ancient lich
 MONS:    angel / daeva
-MONS:    eye of devastation / floating eye / \
+MONS:    eye of draining / eye of devastation / floating eye / \
          great orb of eyes / shining eye
 KPROP:   1Om = no_tele_into
 SHUFFLE: 123x
@@ -92,9 +92,9 @@ ENDMAP
 NAME:    enter_ziggurat_d
 TAGS:    zig_entry no_trap_gen transparent
 KFEAT:   O = enter_ziggurat no_mimic
-MONS:    lich / ancient lich / dread lich
+MONS:    lich / ancient lich
 MONS:    angel / daeva
-MONS:    eye of devastation / floating eye / \
+MONS:    eye of draining / eye of devastation / floating eye / \
          great orb of eyes / shining eye
 KPROP:   1On; = no_tele_into
 SHUFFLE: 123x
@@ -219,10 +219,10 @@ TAGS: ziggurat_pillar centered unrand no_exits
 # This is evil. Monster sets are: summoners (1), smites (2), harmless (3).
 # This pillar has tactical implications: you will have to stay away from it,
 # and teleports are more risky.
-MONS: dread lich / shadow demon / curse skull / \
-      ironbound convoker / demonspawn corrupter / deep elf demonologist
-MONS: eye of devastation / floating eye / ghost moth / demonspawn black sun / \
-      torpor snail
+MONS: ancient lich / shadow demon / curse skull / \
+      ironbrand convoker / corrupter / deep elf demonologist
+MONS: eye of draining / eye of devastation / \
+      floating eye / ghost moth / black sun / torpor snail
 MONS: plant
 : if you.depth() > 21 then
 SUBST: 3 = 12222
@@ -351,7 +351,7 @@ ENDMAP
 NAME:   ziggurat_pillar_centre_dead_trees
 TAGS:   ziggurat_pillar centered unrand no_exits
 SUBST:  T = t.
-COLOUR: t = w:5 lightgrey / brown
+COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
 TILE:   t = DNGN_TREE_DEAD
 MAP
  TTT
@@ -408,21 +408,19 @@ TAGS:    ziggurat_pillar centered generate_awake unrand no_exits
 DEPTH:   Zig:10-
 WEIGHT:  5
 MONS:    lost soul, rakshasa
-KFEAT:   ~ = permanent teleport trap
-KFEAT:   a = iron_grate
-SHUFFLE: xbcv
-SUBST:   9 : 00.
+KFEAT:   ~ = known permanent teleport trap
+SUBST:   9 : 00., x : bcvx, X : bcnv
 : if you.depth() > 18 then
 SUBST:   0 : 0112
 : end
 MAP
-  xax
- ax0xa
+  xxx
+ Xx0xX
 xx9.9xx
-a0.~.0a
+x0.~.0x
 xx9.9xx
- ax0xa
-  xax
+ Xx0xX
+  xxx
 ENDMAP
 
 NAME:  ziggurat_pillar_centre_dispersal

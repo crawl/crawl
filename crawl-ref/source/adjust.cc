@@ -52,7 +52,7 @@ void adjust_item(int from_slot)
     if (from_slot == -1)
     {
         from_slot = prompt_invent_item("Adjust which item?",
-                                       menu_type::invlist, OSEL_ANY);
+                                       menu_type::invlist, -1);
         if (prompt_failed(from_slot))
             return;
 
@@ -61,7 +61,7 @@ void adjust_item(int from_slot)
 
     const int to_slot = prompt_invent_item("Adjust to which letter? ",
                                            menu_type::invlist,
-                                           OSEL_ANY, OPER_ANY,
+                                           -1, OPER_ANY,
                                            invprompt_flag::unthings_ok
                                             | invprompt_flag::manual_list);
     if (to_slot == PROMPT_ABORT
@@ -73,7 +73,7 @@ void adjust_item(int from_slot)
 
     swap_inv_slots(from_slot, to_slot, true);
     you.wield_change = true;
-    quiver::set_needs_redraw();
+    you.redraw_quiver = true;
 }
 
 static void _adjust_spell()
@@ -189,12 +189,6 @@ static void _adjust_ability()
 
 void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 {
-    int new_quiver = -1;
-    if (you.quiver_action.item_is_quivered(from_slot))
-        new_quiver = to_slot;
-    else if (you.quiver_action.item_is_quivered(to_slot))
-        new_quiver = from_slot;
-
     // Swap items.
     item_def tmp = you.inv[to_slot];
     you.inv[to_slot]   = you.inv[from_slot];
@@ -216,10 +210,6 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
             you.equip[i] = from_slot;
     }
 
-    if (new_quiver >= 0)
-        you.quiver_action.replace(quiver::slot_to_action(new_quiver, true));
-    you.m_quiver_history.maybe_swap(from_slot, to_slot);
-
     if (verbose)
     {
         mprf_nocap("%s", you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str());
@@ -231,10 +221,10 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
     {
         you.wield_change = true;
-        quiver::on_weapon_changed();
+        you.m_quiver.on_weapon_changed();
     }
     else // just to make sure
-        quiver::set_needs_redraw();
+        you.redraw_quiver = true;
 
     // Swap the moved items in last_pickup if they're there.
     if (!you.last_pickup.empty())
@@ -249,6 +239,4 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
         if (to_count > 0)
             last_pickup[from_slot] = to_count;
     }
-    if (you.last_unequip == from_slot)
-        you.last_unequip = to_slot;
 }

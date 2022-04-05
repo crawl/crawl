@@ -14,7 +14,7 @@
 #include "command.h"
 #include "dungeon.h"
 #include "end.h"
-#include "initfile.h"
+#include "food.h"
 #include "item-name.h"
 #include "item-status-flag-type.h"
 #include "items.h"
@@ -22,13 +22,12 @@
 #include "los.h"
 #include "macro.h"
 #include "maps.h"
-#include "menu.h"
 #include "message.h"
+#include "misc.h"
 #include "mgen-data.h"
 #include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-tentacle.h"
-#include "newgame-def.h"
 #include "ng-init.h"
 #include "spl-miscast.h"
 #include "state.h"
@@ -39,7 +38,6 @@
  #include "tileview.h"
 #endif
 #include "unicode.h"
-#include "unique-creature-list-type.h"
 #include "version.h"
 #include "view.h"
 #include "ui.h"
@@ -48,129 +46,18 @@ using namespace ui;
 
 #define ARENA_VERBOSE
 
-namespace msg
-{
-    // wrap a message tee around a file ptr, which can be null.
-    // for a more general purpose application you'd want this to handle opening
-    // and closing the file too, but that would require some restructuring of the
-    // arena.
-    class arena_tee : tee
-    {
-    public:
-        arena_tee(FILE **_file) : tee(), file(_file) { }
-
-        ~arena_tee()
-        {
-            if (*file)
-                fflush(*file);
-        }
-
-        void append(const string &s, msg_channel_type ch = MSGCH_PLAIN)
-        {
-            if (Options.arena_dump_msgs && *file)
-            {
-                if (!s.size())
-                    return;
-                string prefix;
-                switch (ch)
-                {
-                    case MSGCH_DIAGNOSTICS:
-                        prefix = "DIAG: ";
-                        if (Options.arena_dump_msgs_all)
-                            break;
-                        return;
-
-                    // Ignore messages generated while the user examines
-                    // the arnea.
-                    case MSGCH_PROMPT:
-                    case MSGCH_MONSTER_TARGET:
-                    case MSGCH_FLOOR_ITEMS:
-                    case MSGCH_EXAMINE:
-                    case MSGCH_EXAMINE_FILTER:
-                        return;
-
-                    // If a monster-damage message ends with '!' it's a
-                    // death message, otherwise it's an examination message
-                    // and should be skipped.
-                    case MSGCH_MONSTER_DAMAGE:
-                        if (s[s.size() - 1] != '!')
-                            return;
-                        break;
-
-                    case MSGCH_ERROR: prefix = "ERROR: "; break;
-                    case MSGCH_WARN: prefix = "WARN: "; break;
-                    case MSGCH_SOUND: prefix = "SOUND: "; break;
-
-                    case MSGCH_TALK_VISUAL:
-                    case MSGCH_TALK: prefix = "TALK: "; break;
-                    default: break;
-                }
-                formatted_string fs = formatted_string::parse_string(s);
-                fprintf(*file, "%s%s", prefix.c_str(), fs.tostring().c_str());
-                fflush(*file);
-            }
-        }
-
-    private:
-        FILE **file;
-    };
-}
-
 extern void world_reacts();
-
-static void _results_popup(string msg, bool error=false)
-{
-    // TODO: shared code here with end.cc
-    linebreak_string(msg, 79);
-
-#ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
-    tiles.set_ui_state(UI_CRT);
-#endif
-
-    if (error)
-    {
-        msg = string("Arena error:\n\n<lightred>")
-                       + replace_all(msg, "<", "<<");
-        msg += "</lightred>";
-    }
-    else
-        msg = string("Arena results:\n\n") + msg;
-
-    msg += "\n\n<cyan>Hit any key to continue, "
-                 "ctrl-p for the full log.</cyan>";
-
-    auto prompt_ui = make_shared<Text>(
-            formatted_string::parse_string(msg));
-    bool done = false;
-    prompt_ui->on_hotkey_event([&](const KeyEvent& ev) {
-        if (ev.key() == CONTROL('P'))
-            replay_messages();
-        else
-            done = true;
-        return done;
-    });
-
-    mouse_control mc(MOUSE_MODE_MORE);
-    auto popup = make_shared<ui::Popup>(prompt_ui);
-    ui::run_layout(move(popup), done);
-}
 
 namespace arena
 {
-    static bool skipped_arena_ui = true; // whether this is an interactive session
     static void write_error(const string &error);
 
     struct arena_error : public runtime_error
     {
-        explicit arena_error(const string &msg, bool _fatal=true)
-            : runtime_error(msg), fatal(_fatal) {}
-        explicit arena_error(const char *msg, bool _fatal=true)
-            : runtime_error(msg), fatal(_fatal) {}
-        bool fatal;
+        explicit arena_error(const string &msg) : runtime_error(msg) {}
+        explicit arena_error(const char *msg) : runtime_error(msg) {}
     };
 #define arena_error_f(...) arena_error(make_stringf(__VA_ARGS__))
-#define arena_error_nonfatal_f(...) arena_error(make_stringf(__VA_ARGS__), false)
 
     // A faction is just a big list of monsters. Monsters will be dropped
     // around the appropriate marker.
@@ -256,7 +143,6 @@ namespace arena
 
     static FILE *file = nullptr;
     static level_id place(BRANCH_DEPTHS, 1);
-    static string arena_log;
 
     static void adjust_spells(monster* mons, bool no_summons, bool no_animate)
     {
@@ -294,7 +180,7 @@ namespace arena
 
         for (int iidx : items)
         {
-            item_def &item = env.item[iidx];
+            item_def &item = mitm[iidx];
             fprintf(file, "        %s\n",
                     item.name(DESC_PLAIN, false, true).c_str());
         }
@@ -316,13 +202,14 @@ namespace arena
                 if (!in_bounds(loc))
                     break;
 
-                const monster* mon = dgn_place_monster(spec, loc, false, true, false);
+                const monster* mon = dgn_place_monster(spec,
+                                                       loc, false, true, false);
                 if (!mon)
                 {
                     game_ended_with_error(
                         make_stringf(
-                            "Failed to create monster at (%d,%d) env.grid: %s",
-                            loc.x, loc.y, dungeon_feature_name(env.grid(loc))));
+                            "Failed to create monster at (%d,%d) grd: %s",
+                            loc.x, loc.y, dungeon_feature_name(grd(loc))));
                 }
                 list_eq(mon);
                 to_respawn[mon->mindex()] = i;
@@ -360,7 +247,7 @@ namespace arena
 
         for (int x = 0; x < GXM; ++x)
             for (int y = 0; y < GYM; ++y)
-                env.grid[x][y] = DNGN_ROCK_WALL;
+                grd[x][y] = DNGN_ROCK_WALL;
 
         unwind_bool gen(crawl_state.generating_level, true);
 
@@ -423,7 +310,7 @@ namespace arena
         {
             const string err = fact.members.add_mons(monster, false);
             if (!err.empty())
-                throw arena_error(err, false);
+                throw arena_error(err);
         }
     }
 
@@ -447,10 +334,7 @@ namespace arena
         summon_throttle = strip_number_tag(spec, "summon_throttle:");
 
         if (real_summons && respawn)
-        {
-            throw arena_error("Can't set real_summons and respawn at same time.",
-                                    false);
-        }
+            throw arena_error("Can't set real_summons and respawn at same time.");
 
         if (summon_throttle <= 0)
             summon_throttle = INT_MAX;
@@ -484,7 +368,7 @@ namespace arena
             }
             catch (const bad_level_id &err)
             {
-                throw arena_error_nonfatal_f("Bad place '%s': %s",
+                throw arena_error_f("Bad place '%s': %s",
                                     arena_place.c_str(),
                                     err.what());
             }
@@ -501,8 +385,7 @@ namespace arena
 
         if (factions.size() != 2)
         {
-            throw arena_error_nonfatal_f(
-                                "Expected arena monster spec \"xxx v yyy\", "
+            throw arena_error_f("Expected arena monster spec \"xxx v yyy\", "
                                 "but got \"%s\"", spec.c_str());
         }
 
@@ -513,7 +396,7 @@ namespace arena
         }
         catch (const arena_error &err)
         {
-            throw arena_error_nonfatal_f("Bad monster spec \"%s\": %s",
+            throw arena_error_f("Bad monster spec \"%s\": %s",
                                 spec.c_str(),
                                 err.what());
         }
@@ -533,7 +416,8 @@ namespace arena
         for (int i = 0; i < MAX_MONSTERS; i++)
             to_respawn[i] = -1;
 
-        unwind_var<unique_creature_list> uniq(you.unique_creatures);
+        unwind_var< FixedBitVector<NUM_MONSTERS> >
+            uniq(you.unique_creatures);
 
         place_a = dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I);
         place_b = dgn_find_feature_marker(DNGN_STONE_STAIRS_DOWN_I);
@@ -613,12 +497,6 @@ namespace arena
         for (int i = 0; i < NUM_STATS; ++i)
             you.base_stats[i] = 20;
 
-        // XXX: now that you.species is valid, do a layout.
-        // This is necessary to ensure that the stat window is positioned.
-#ifdef USE_TILE
-        tiles.resize();
-#endif
-
         show_fight_banner();
     }
 
@@ -631,7 +509,7 @@ namespace arena
     /// @throws arena_error if the specification was invalid.
     static void setup_fight()
     {
-        //msg::suppress mx;
+        //no_messages mx;
         parse_monster_spec();
         setup_level();
 
@@ -709,6 +587,59 @@ namespace arena
         return faction_a.active_members > 0 && faction_b.active_members > 0;
     }
 
+    static void dump_messages()
+    {
+        if (!Options.arena_dump_msgs || file == nullptr)
+            return;
+
+        vector<string> messages;
+        vector<msg_channel_type> channels;
+        get_recent_messages(messages, channels);
+
+        for (unsigned int i = 0; i < messages.size(); i++)
+        {
+            string msg  = messages[i];
+            int         chan = channels[i];
+
+            string prefix;
+            switch (chan)
+            {
+                case MSGCH_DIAGNOSTICS:
+                    prefix = "DIAG: ";
+                    if (Options.arena_dump_msgs_all)
+                        break;
+                    continue;
+
+                // Ignore messages generated while the user examines
+                // the arnea.
+                case MSGCH_PROMPT:
+                case MSGCH_MONSTER_TARGET:
+                case MSGCH_FLOOR_ITEMS:
+                case MSGCH_EXAMINE:
+                case MSGCH_EXAMINE_FILTER:
+                    continue;
+
+                // If a monster-damage message ends with '!' it's a
+                // death message, otherwise it's an examination message
+                // and should be skipped.
+                case MSGCH_MONSTER_DAMAGE:
+                    if (msg[msg.length() - 1] != '!')
+                        continue;
+                    break;
+
+                case MSGCH_ERROR: prefix = "ERROR: "; break;
+                case MSGCH_WARN: prefix = "WARN: "; break;
+                case MSGCH_SOUND: prefix = "SOUND: "; break;
+
+                case MSGCH_TALK_VISUAL:
+                case MSGCH_TALK: prefix = "TALK: "; break;
+            }
+            msg = prefix + msg;
+
+            fprintf(file, "%s\n", msg.c_str());
+        }
+    }
+
     // Try to prevent random luck from letting one spawner fill up the
     // arena with so many monsters that the other spawner can never get
     // back on even footing.
@@ -726,14 +657,14 @@ namespace arena
 
         for (int idx : a_spawners)
         {
-            env.mons[idx].speed_increment *= faction_b.active_members;
-            env.mons[idx].speed_increment /= faction_a.active_members;
+            menv[idx].speed_increment *= faction_b.active_members;
+            menv[idx].speed_increment /= faction_a.active_members;
         }
 
         for (int idx : b_spawners)
         {
-            env.mons[idx].speed_increment *= faction_a.active_members;
-            env.mons[idx].speed_increment /= faction_b.active_members;
+            menv[idx].speed_increment *= faction_a.active_members;
+            menv[idx].speed_increment /= faction_b.active_members;
         }
     }
 
@@ -747,12 +678,9 @@ namespace arena
             if (mon->type == MONS_TEST_SPAWNER)
                 continue;
 
-            if (!mon->alive())
-                continue;
-
-            miscast_effect(**mon, *mon, {miscast_source::wizard},
-                           spschool::random, random_range(1, 9),
-                           random_range(1, 100), "arena miscast");
+            MiscastEffect(*mon, *mon, {miscast_source::wizard},
+                          spschool::random, random_range(1, 3), "arena miscast",
+                          nothing_happens::NEVER);
         }
     }
 
@@ -860,9 +788,7 @@ namespace arena
     static void do_fight()
     {
         viewwindow();
-        update_screen();
         clear_messages(true);
-
         {
             cursor_control coff(false);
             while (fight_is_on() && !contest_cancelled)
@@ -876,25 +802,27 @@ namespace arena
                     count_foes();
 
                 you.time_taken = 10;
+                // Make sure we don't starve.
+                you.hunger = HUNGER_MAXIMUM;
                 //report_foes();
                 world_reacts();
                 do_miscasts();
                 do_respawn(faction_a);
                 do_respawn(faction_b);
                 balance_spawners();
-                ui::delay(Options.view_delay);
+                ui_delay(Options.view_delay);
                 clear_messages();
+                dump_messages();
                 ASSERT(you.pet_target == MHITNOT);
             }
             viewwindow();
-            update_screen();
         }
 
         if (contest_cancelled)
         {
-            mpr("Cancelled contest at user request");
-            ui::delay(Options.view_delay);
+            mpr("Canceled contest at user request");
             clear_messages();
+            dump_messages();
             return;
         }
 
@@ -969,6 +897,7 @@ namespace arena
             mprf(msg.c_str(),
                  faction_a.won ? faction_a.desc.c_str()
                                : faction_b.desc.c_str());
+        dump_messages();
     }
 
     static void global_setup(const string& arena_teams)
@@ -982,16 +911,35 @@ namespace arena
         memset(banned_glyphs, 0, sizeof(banned_glyphs));
         arena_type = "";
         place = level_id(BRANCH_DEPTHS, 1);
-        arena_log = "";
 
         // [ds] Turning off view_lock crashes arena.
         Options.view_lock_x = Options.view_lock_y = true;
 
         teams = arena_teams;
         // Set various options from the arena spec's tags
-        parse_monster_spec(); // may throw an arena_error
+        try
+        {
+            parse_monster_spec();
+        }
+        catch (const arena_error &error)
+        {
+            write_error(error.what());
+            game_ended_with_error(error.what());
+        }
 
-        crawl_view.init_geometry();
+        if (file != nullptr)
+            end(0, false, "Results file already open");
+        file = fopen("arena.result", "w");
+
+        if (file != nullptr)
+        {
+            string spec = find_monster_spec();
+            fprintf(file, "%s\n", spec.c_str());
+
+            if (Options.arena_dump_msgs || Options.arena_list_eq)
+                fprintf(file, "========================================\n");
+        }
+
         expand_mlist(5);
 
         for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
@@ -1010,7 +958,6 @@ namespace arena
             fclose(file);
 
         file = nullptr;
-        arena_log = "";
     }
 
     static void write_results()
@@ -1051,13 +998,12 @@ namespace arena
             virtual void _allocate_region() override {
                 show_fight_banner();
                 viewwindow();
-                update_screen();
                 display_message_window();
             };
-            virtual bool on_event(const Event& ev) override {
-                if (ev.type() != Event::Type::KeyDown)
+            virtual bool on_event(const wm_event& ev) override {
+                if (ev.type != WME_KEYDOWN)
                     return false;
-                handle_keypress(static_cast<const KeyEvent&>(ev).key());
+                handle_keypress(ev.key.keysym.sym);
                 ASSERT(crawl_state.game_is_arena());
                 ASSERT(!crawl_state.arena_suspended);
                 return true;
@@ -1077,29 +1023,22 @@ namespace arena
             {
                 write_error(error.what());
                 game_ended_with_error(error.what());
-                continue;
             }
             do_fight();
 
             if (trials_done < total_trials)
-                ui::delay(Options.view_delay * 5);
+                ui_delay(Options.view_delay * 5);
         }
         while (!contest_cancelled && trials_done < total_trials);
 
-        ui::delay(Options.view_delay * 5);
-
         if (total_trials > 0)
         {
-            string outcome = make_stringf(
-                "Final score: %s (%d); %s (%d) [%d ties]",
+            mprf("Final score: %s (%d); %s (%d) [%d ties]",
                  faction_a.desc.c_str(), team_a_wins,
                  faction_b.desc.c_str(), trials_done - team_a_wins - ties,
                  ties);
-            mpr(outcome);
-            if (!skipped_arena_ui)
-                _results_popup(outcome);
         }
-
+        ui_delay(Options.view_delay * 5);
         ui::pop_layout();
 
         write_results();
@@ -1158,8 +1097,6 @@ bool arena_veto_random_monster(monster_type type)
 bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
                               const coord_def& pos)
 {
-    UNUSED(pos);
-
     // If the first band member makes it past the summon throttle cut,
     // let all of the rest of its band in too regardless of the summon
     // throttle.
@@ -1391,8 +1328,8 @@ int arena_cull_items()
 
     for (int i = 0; i < MAX_ITEMS; i++)
     {
-        // All items in env.item[] are valid when we're called.
-        const item_def &item(env.item[i]);
+        // All items in mitm[] are valid when we're called.
+        const item_def &item(mitm[i]);
 
         // We want floor items.
         if (!in_bounds(item.pos))
@@ -1411,7 +1348,7 @@ int arena_cull_items()
 
     for (int idx : items)
     {
-        const item_def &item(env.item[idx]);
+        const item_def &item(mitm[idx]);
 
         // If the drop time is 0 then this is probably thrown ammo.
         if (arena::item_drop_times[idx] == 0)
@@ -1422,7 +1359,7 @@ int arena_cull_items()
             // Arrows/needles/etc on the floor is just clutter.
             if (item.base_type != OBJ_MISSILES
                || item.sub_type == MI_JAVELIN
-               || item.sub_type == MI_BOOMERANG
+               || item.sub_type == MI_TOMAHAWK
                || item.sub_type == MI_THROWING_NET)
             {
                 ammo.push_back(idx);
@@ -1474,104 +1411,19 @@ static void _init_arena()
     initialise_item_descriptions();
 }
 
-static void _choose_arena_teams(newgame_def& choice,
-                                const string &default_arena_teams)
+NORETURN void run_arena(const string& teams)
 {
-#ifdef USE_TILE_WEB
-    tiles_crt_popup show_as_popup;
-#endif
+    _init_arena();
 
-    if (!choice.arena_teams.empty())
-        return;
-    arena::skipped_arena_ui = false;
-    clear_message_store();
-
-    auto vbox = make_shared<Box>(ui::Widget::VERT);
-    vbox->add_child(make_shared<Text>("Enter your choice of teams:\n "));
-    vbox->set_cross_alignment(Widget::Align::STRETCH);
-    auto teams_input = make_shared<ui::TextEntry>();
-    teams_input->set_sync_id("teams");
-    teams_input->set_text(default_arena_teams);
-    vbox->add_child(teams_input);
-    formatted_string prompt;
-    prompt.cprintf("\nExamples:\n");
-    prompt.cprintf("  Sigmund v Jessica\n");
-    prompt.cprintf("  99 orc v the Royal Jelly\n");
-    prompt.cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming");
-    vbox->add_child(make_shared<Text>(move(prompt)));
-
-    auto popup = make_shared<ui::Popup>(move(vbox));
-
-    bool done = false, cancel = false;
-    popup->on_hotkey_event([&](const KeyEvent& ev) {
-        return done = (ev.key() == CK_ENTER);
-    });
-    popup->on_keydown_event([&](const KeyEvent& ev) {
-        return done = cancel = key_is_escape(ev.key());
-    });
-
-    ui::run_layout(move(popup), done, teams_input);
-
-    if (cancel || crawl_state.seen_hups)
-    {
-        arena::global_shutdown();
-        game_ended(crawl_state.bypassed_startup_menu
-                    ? game_exit::death : game_exit::abort);
-    }
-    choice.arena_teams = teams_input->get_text();
-    if (choice.arena_teams.empty())
-        choice.arena_teams = default_arena_teams;
-}
-
-NORETURN void run_arena(const newgame_def& choice, const string &default_arena_teams)
-{
-    ASSERT(crawl_state.game_is_arena());
-
-    newgame_def arena_choice = choice;
-    string last_teams = default_arena_teams;
-    if (arena::file != nullptr)
-        end(0, false, "Results file already open");
-    // would be more elegant if arena_tee handled file open/close, but
-    // that would need a bunch of refactoring of how the file is handled here.
-    arena::file = fopen("arena.result", "w");
-    msg::arena_tee log(&arena::file);
-
-    do
-    {
-        try
-        {
-            _choose_arena_teams(arena_choice, last_teams);
-            write_newgame_options_file(arena_choice);
-            _init_arena();
-
-            ASSERT(!crawl_state.arena_suspended);
+    ASSERT(!crawl_state.arena_suspended);
 
 #ifdef WIZARD
-            // The player has wizard powers for the duration of the arena.
-            unwind_bool wiz(you.wizard, true);
+    // The player has wizard powers for the duration of the arena.
+    unwind_bool wiz(you.wizard, true);
 #endif
 
-            arena::global_setup(arena_choice.arena_teams);
-            arena::simulate();
-            arena::global_shutdown();
-            game_ended(game_exit::death); // there is only death in the arena
-        }
-        catch (const arena::arena_error &error)
-        {
-            if (error.fatal || arena::skipped_arena_ui)
-            {
-                arena::write_error(error.what());
-                game_ended_with_error(error.what());
-            }
-            else
-            {
-                mprf(MSGCH_ERROR, "%s", error.what());
-                _results_popup(error.what(), true);
-                last_teams = arena_choice.arena_teams;
-                arena_choice.arena_teams = "";
-                // fallthrough
-            }
-        }
-    }
-    while (true);
+    arena::global_setup(teams);
+    arena::simulate();
+    arena::global_shutdown();
+    game_ended(game_exit::death); // there is only death in the arena
 }

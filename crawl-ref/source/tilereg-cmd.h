@@ -15,8 +15,7 @@ static const command_type ct_system_commands[] =
     CMD_DISPLAY_CHARACTER_STATUS, CMD_DISPLAY_KNOWN_OBJECTS,
 
     // meta commands
-    CMD_SAVE_GAME_NOW, CMD_DISPLAY_COMMANDS, CMD_GAME_MENU,
-    CMD_LOOKUP_HELP,
+    CMD_SAVE_GAME_NOW, CMD_EDIT_PLAYER_TILE, CMD_DISPLAY_COMMANDS,
 };
 
 static const command_type ct_map_commands[] =
@@ -50,6 +49,7 @@ static const command_type ct_action_commands[] =
 {
     CMD_EXPLORE,
     CMD_REST, CMD_WAIT,
+    CMD_BUTCHER,
     CMD_DISPLAY_INVENTORY, CMD_DROP,
     CMD_CAST_SPELL, CMD_USE_ABILITY,
     CMD_DISPLAY_SKILLS, CMD_MEMORISE_SPELL,
@@ -60,9 +60,6 @@ static const command_type ct_action_commands[] =
 #endif
 };
 
-bool tile_command_not_applicable(const command_type cmd, bool safe);
-bool tile_command_not_applicable(const command_type cmd);
-
 class CommandRegion : public GridRegion
 {
 public:
@@ -72,7 +69,7 @@ public:
     int n_common_commands;
 
     virtual void update() override;
-    virtual int handle_mouse(wm_mouse_event &event) override;
+    virtual int handle_mouse(MouseEvent &event) override;
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_tab_tip_text(string &tip, bool active) override;
     virtual bool update_alt_text(string &alt) override;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rltiles/tiledef-player.h"
+#include "tiledef-player.h"
 
 enum tile_player_flags
 {

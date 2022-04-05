@@ -234,12 +234,12 @@ geoelf.rooms.shape.MIRRORINGS =
 --
 --
 -- The shape function produces a 2D array for the room indexed
---  with the room centre at [0][0] (you can do that in LUA).
+--  with the room center at [0][0] (you can do that in LUA).
 --  The meaning of the values in the array are as follows:
 --    -> UNCHANGED: leave the existing glyhps alone
 --    -> ROOM_OPEN: leave the corridor type on the floor if any,
 --                  otherwise use geoelf.glyphs.FLOOR
---    -> ROOM_BORDER: perform border substitution
+--    -> ROOM_BORDER: perform border substituion
 --    -> ROOM_OUTLINE: turns plantlike things and features into
 --                     floor, everything else stays the same
 --      -> We need this to avoid having features against the
@@ -252,7 +252,7 @@ geoelf.rooms.shape.MIRRORINGS =
 --    -> GLASS_FEATURE: as FEATURE, but an image on a glass wall
 --    -> Anything else is a glyph for the map
 --      -> Using glyphs that are not in the lookup table will
---         cause nil values next time the cell is analysed
+--         cause nil values next time the cell is analyzed
 --
 -- The array also has a size field, which is the maximum index
 --  (positive or negative). All elements in the square defined
@@ -304,7 +304,7 @@ function geoelf.rooms.draw (e, room_data, corridor_data, index,
   if (shape == geoelf.rooms.shape.SQUARE) then
     room_glyphs = geoelf.rooms.square(radius, fancy)
   elseif (shape == geoelf.rooms.shape.DIAMOND) then
-    room_glyphs = geoelf.rooms.diamond(radius, fancy)
+    room_glyphs = geoelf.rooms.diamond(radius, radius)
   elseif (shape == geoelf.rooms.shape.CROSS) then
     local indent = math.min(crawl.random2(radius - 2) + 2, radius - 1)
     room_glyphs = geoelf.rooms.cross(radius, indent, fancy)

@@ -17,7 +17,6 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <unordered_set>
 
 #include "dlua.h"
 #include "enum.h"
@@ -41,10 +40,6 @@
 #define RANDBK_SPELLS_KEY "randbook_spells"
 #define RANDBK_SLVLS_KEY "randbook_slevels"
 #define RANDBK_NSPELLS_KEY "randbook_num_spells"
-
-#ifdef DEBUG_TAG_PROFILING
-void tag_profile_out();
-#endif
 
 class mon_enchant;
 extern const char *traversable_glyphs;
@@ -636,7 +631,7 @@ private:
     item_spec pick_item(item_spec_slot &slot);
     bool parse_corpse_spec(item_spec &result, string s);
     bool monster_corpse_is_valid(monster_type *, const string &name,
-                                 bool skeleton);
+                                 bool corpse, bool skeleton, bool chunk);
 
 private:
     vector<item_spec_slot> items;
@@ -735,6 +730,7 @@ private:
 private:
     mons_spec mons_by_name(string name) const;
     mons_spec drac_monspec(string name) const;
+    mons_spec demonspawn_monspec(string name) const;
     mons_spec soh_monspec(string name) const;
     void get_zombie_type(string s, mons_spec &spec) const;
     mons_spec get_hydra_spec(const string &name) const;
@@ -1153,13 +1149,13 @@ public:
 
     ::map<dungeon_feature_type, string> feat_renames;
     vector<subvault_place> subvault_places;
-    string          file;
 
 private:
-    unordered_set<string>     tags;
+    set<string>     tags;
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;
     mutable long    cache_offset;
+    string          file;
     string          cache_name;
 
     typedef Matrix<bool> subvault_mask;
@@ -1167,14 +1163,6 @@ private:
 
     // True if this map is in the process of being validated.
     bool validating_map_flag;
-
-    // values cached from tags -- adding to this is only recommended if you've
-    // actually done the profiling...
-    // These are the top three worst tags, which jointly amount to about 3-4%
-    // of levelgen time if not cached.
-    bool cache_minivault;
-    bool cache_overwritable;
-    bool cache_extra;
 
 public:
     map_def();
@@ -1185,7 +1173,6 @@ public:
     string describe() const;
     void init();
     void reinit();
-    void reload_epilogue();
 
     void load();
     void strip();
@@ -1207,7 +1194,7 @@ public:
     void write_maplines(writer &) const;
 
     void read_index(reader&);
-    void read_full(reader&);
+    void read_full(reader&, bool check_cache_version);
     void read_maplines(reader&);
 
     void set_file(const string &s);
@@ -1260,22 +1247,10 @@ public:
 
     bool is_minivault() const;
     bool is_overwritable_layout() const;
-    bool is_extra_vault() const;
-    bool has_tag(const string &tagwanted) const;
+    bool has_tag(const string &tagswanted) const;
+    bool has_tag(const set<string> &tagswanted) const;
     bool has_tag_prefix(const string &tag) const;
     bool has_tag_suffix(const string &suffix) const;
-
-    template <typename TagIterator>
-    bool has_all_tags(TagIterator begin, TagIterator end) const
-    {
-        if (tags.empty() || begin == end) // legacy behaviour for empty case
-            return false;
-        for ( ; begin != end; ++begin)
-            if (!has_tag(*begin))
-                return false;
-        return true;
-    }
-    bool has_all_tags(const string &tagswanted) const;
 
     template <typename TagIterator>
     bool has_any_tag(TagIterator begin, TagIterator end) const
@@ -1286,8 +1261,7 @@ public:
         return false;
     }
 
-    const vector<string> get_tags() const;
-    const unordered_set<string> get_tags_unsorted() const;
+    const set<string> get_tags() const;
     void add_tags(const string &tag);
     void set_tags(const string &tag);
     bool remove_tags(const string &tag);
@@ -1340,7 +1314,6 @@ private:
     string apply_subvault(string_spec &);
     string validate_map_placeable();
     bool has_exit() const;
-    void update_cached_tags();
 };
 
 const int CHANCE_ROLL = 10000;

@@ -114,7 +114,7 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
     var attitude_classes = [
         "hostile",
         "neutral",
-        "good_neutral", // was strict_neutral
+        "strict_neutral",
         "good_neutral",
         "friendly"
     ];
@@ -168,16 +168,10 @@ function ($, map_knowledge, cr, dungeon_renderer, options, util) {
 
             renderer.set_cell_size(dungeon_renderer.cell_width,
                                    dungeon_renderer.cell_height);
-            if (options.get("tile_display_mode") != "tiles")
+            for (var key in dungeon_renderer)
             {
-                for (var key in dungeon_renderer)
-                {
-                    // dungeon_renderer.ui_state is also required so the glyph
-                    // size returned by the renderer.glyph_mode_font_name()
-                    // correctly reflects the 'tile_map_scale'
-                    if (key.match(/^glyph_mode/) || key == "ui_state")
-                        renderer[key] = dungeon_renderer[key];
-                }
+                if (key.match(/^glyph_mode/))
+                    renderer[key] = dungeon_renderer[key];
             }
             var w = renderer.cell_width;
             var displayed_monsters = Math.min(monsters.length, 6);

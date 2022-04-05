@@ -5,12 +5,8 @@
 
 #pragma once
 
-#include <vector>
-
 #include "terrain.h"
 #include "travel.h"
-
-using std::vector;
 
 template <typename fgrd, typename bound_check>
 class flood_find : public travel_pathfind
@@ -113,8 +109,6 @@ bool flood_find<fgrd, bound_check>::path_flood(
     const coord_def &c,
     const coord_def &dc)
 {
-    UNUSED(c); // XXX: why is this parameter unused?
-
     if (!bcheck(dc))
     {
         if (want_exit)

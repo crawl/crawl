@@ -1,9 +1,3 @@
-html, body, #loader {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
 body {
     background: black;
     color: white;
@@ -19,16 +13,8 @@ body {
     display: inline-block;
 }
 
-#lobby {
-    padding: 8px;
-}
-
 #lobby_body {
     text-align: center;
-}
-
-#account_restricted {
-    margin: 8px;
 }
 
 #prompt {
@@ -103,15 +89,6 @@ body {
 #player_list th.place {
     width: 3em;
 }
-#player_list th.turn {
-    width: 3em;
-}
-#player_list th.dur {
-    width: 4em;
-}
-#player_list.no_game_times .turn, #player_list.no_game_times .dur {
-    display: none;
-}
 
 #player_list th.idle_time {
     width: 3em;
@@ -137,24 +114,6 @@ body {
 }
 #player_list .new_milestone {
     position: relative;
-}
-
-#play_now {
-    padding-top: 10px;
-}
-
-#admin_panel {
-    border: 1px solid lightgray;
-    padding: 10px;
-}
-
-#admin_panel_button {
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-
-#admin_panel #announcement_text {
-    width: 60%;
 }
 
 .floating_dialog {
@@ -210,14 +169,6 @@ body {
 
 #reset_pw_submit {
     float: right;
-}
-
-#change_cur_password,#change_new_password,#change_repeat_password {
-    float: right;
-}
-
-#chpw_form label {
-    float: left;
 }
 
 .text {

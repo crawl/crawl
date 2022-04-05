@@ -2,7 +2,6 @@
 
 #include "enum.h"
 #include "mon-info.h"
-#include "tag-version.h"
 #include "trap-type.h"
 
 #define MAP_MAGIC_MAPPED_FLAG   0x01
@@ -21,10 +20,11 @@
 #define MAP_BLOODY            0x1000
 #define MAP_CORRODING         0x2000
 #define MAP_INVISIBLE_UPDATE  0x4000 // Used for invis redraws by show_init()
-#define MAP_ICY               0x8000
 
 /* these flags require more space to serialize: put infrequently used ones there */
 #define MAP_EXCLUDED_STAIRS  0x10000
+#define MAP_MOLDY            0x20000
+#define MAP_GLOWING_MOLDY    0x40000
 #define MAP_SANCTUARY_1      0x80000
 #define MAP_SANCTUARY_2     0x100000
 #define MAP_WITHHELD        0x200000
@@ -76,7 +76,7 @@ struct map_cell
         if (_mons)
             _mons = new monster_info(*_mons);
         if (_item)
-            _item = new item_def(*_item);
+            _item = new item_info(*_item);
     }
 
     ~map_cell()
@@ -105,18 +105,8 @@ struct map_cell
         if (_mons)
             _mons = new monster_info(*_mons);
         if (_item)
-            _item = new item_def(*_item);
+            _item = new item_info(*_item);
         return *this;
-    }
-
-    bool operator ==(const map_cell &other) const
-    {
-        return memcmp(this, &other, sizeof(map_cell)) == 0;
-    }
-
-    bool operator !=(const map_cell &other) const
-    {
-        return memcmp(this, &other, sizeof(map_cell)) != 0;
     }
 
     void clear()
@@ -154,7 +144,7 @@ struct map_cell
         _trap = tr;
     }
 
-    item_def* item() const
+    item_info* item() const
     {
         return _item;
     }
@@ -171,10 +161,10 @@ struct map_cell
         return ret;
     }
 
-    void set_item(const item_def& ii, bool more_items)
+    void set_item(const item_info& ii, bool more_items)
     {
         clear_item();
-        _item = new item_def(ii);
+        _item = new item_info(ii);
         if (more_items)
             flags |= MAP_MORE_ITEMS;
     }
@@ -318,6 +308,6 @@ private:
     colour_t _feat_colour;
     trap_type _trap:8;
     cloud_info* _cloud;
-    item_def* _item;
+    item_info* _item;
     monster_info* _mons;
 };

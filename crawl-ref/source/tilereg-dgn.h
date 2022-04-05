@@ -28,7 +28,7 @@ public:
 
     virtual void render() override;
     virtual void clear() override;
-    virtual int handle_mouse(wm_mouse_event &event) override;
+    virtual int handle_mouse(MouseEvent &event) override;
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_alt_text(string &alt) override;
     virtual void on_resize() override;
@@ -43,6 +43,10 @@ public:
                       const coord_def &gc);
 
     const coord_def &get_cursor() const { return m_cursor[CURSOR_MOUSE]; }
+
+    void add_overlay(const coord_def &gc, int idx);
+    void clear_overlays();
+    void zoom(bool in);
 
     int tile_iw, tile_ih;
 
@@ -64,6 +68,13 @@ protected:
 
     DungeonCellBuffer m_buf_dngn;
     ShapeBuffer m_buf_flash;
+
+    struct tile_overlay
+    {
+        coord_def gc;
+        tileidx_t idx;
+    };
+    vector<tile_overlay> m_overlays;
 };
 
 #endif

@@ -10,12 +10,8 @@
 #include "enum.h"
 #include "player.h"
 
+#define HYDRA_FORM_HEADS_KEY "hydra_form_heads"
 #define MAX_HYDRA_HEADS 20
-
-#define APPENDAGE_KEY "beastly_appendages"
-#define APPENDAGE_LEVEL 2
-
-#define AIRFORM_POWER_KEY "airform_power"
 
 enum form_capability
 {
@@ -127,7 +123,6 @@ public:
     bool res_rot() const;
     bool res_acid() const;
     bool res_sticky_flame() const;
-    bool res_miasma() const;
     bool res_petrify() const;
 
     /**
@@ -152,9 +147,6 @@ public:
     bool player_can_swim() const;
 
     string player_prayer_action() const;
-    string melding_description() const;
-
-    vector<string> get_fakemuts(bool terse) const;
 
 public:
     /// Status light ("Foo"); "" for none
@@ -174,7 +166,7 @@ public:
     /** A bitfield representing a union of (1 << equipment_type) values for
      * equipment types that are unusable in this form.
      */
-    const int blocked_slots; // XX check enum size at compile time?
+    const int blocked_slots;
     /// size of the form
     const size_type size;
     /// 10 * multiplier to hp/mhp (that is, 10 is base, 15 is 1.5x, etc)
@@ -194,6 +186,8 @@ public:
 
     /// has blood (used for sublimation and bloodsplatters)
     const form_capability can_bleed;
+    /// see player::is_unbreathing
+    const bool breathes;
     /// "Used to mark forms which keep most form-based mutations."
     const bool keeps_mutations;
     // ugh
@@ -257,8 +251,6 @@ private:
 
     /// See Form::get_equivalent_mons().
     const monster_type equivalent_mons;
-
-    vector<pair<string,string>> fakemuts;
 };
 const Form* get_form(transformation form = you.form);
 
@@ -299,7 +291,7 @@ void unmeld_one_equip(equipment_type eq);
 
 monster_type transform_mons();
 string blade_parts(bool terse = false);
-void set_airform_power(int pow);
+void set_hydra_form_heads(int heads);
 const char* transform_name(transformation form = you.form);
 
 int form_hp_mod();
@@ -308,6 +300,3 @@ void emergency_untransform();
 void merfolk_check_swimming(bool stepped = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
-void vampire_update_transformations();
-int form_base_movespeed(transformation tran);
-bool draconian_dragon_exception();

@@ -1482,7 +1482,7 @@ TAGS: vaults_room
 NSUBST: s = 1:S / *:.
 KITEM: i = any
 KMONS: S = vault sentinel
-KFEAT: i = alarm trap / .
+KFEAT: i = known alarm trap / .
 MAP
 xxsxsxx
 xi...ix
@@ -1634,14 +1634,15 @@ ENDMAP
 NAME: nicolae_vaults_yaktaur_gun_rack
 TAGS: vaults_room no_monster_gen no_item_gen
 MONS: yaktaur w:8 / yaktaur band w:4 / yaktaur captain w:2 / yaktaur captain band w:1
+KITEM: b = bolt w:3 / bolt good_item w:2
 KITEM: c = arbalest w:8 / arbalest good_item w:1 / triple crossbow w:1
 MAP
 xxxxxxx
-xc.c.cx
+xcccccx
 x......
 x.1....
 x......
-x.c.c.x
+xbbbbbx
 xxxxxxx
 ENDMAP
 

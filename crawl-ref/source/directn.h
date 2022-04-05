@@ -5,17 +5,12 @@
 
 #pragma once
 
-#include <vector>
-
 #include "command-type.h"
 #include "enum.h"
 #include "mon-info.h"
 #include "targ-mode-type.h"
 #include "targeting-type.h"
 #include "trap-type.h"
-#include "view.h"
-
-using std::vector;
 
 struct describe_info;
 
@@ -40,7 +35,9 @@ public:
     targeting_behaviour(bool just_looking = false);
     virtual ~targeting_behaviour();
 
-    virtual command_type get_command(int key);
+    // Returns a keystroke for the prompt.
+    virtual int get_key();
+    virtual command_type get_command(int key = -1);
 
     // Should we force a redraw?
     virtual bool should_redraw() const { return false; }
@@ -48,11 +45,7 @@ public:
     virtual void clear_redraw()  { return; }
 
     // Update the prompt shown at top.
-    virtual void update_top_prompt(string*) {}
-
-    virtual bool targeted() { return true; }
-
-    virtual string get_error() { return ""; }
+    virtual void update_top_prompt(string* p_top_prompt) {}
 
     // Add relevant descriptions to the target status.
     virtual vector<string> get_monster_desc(const monster_info& mi);
@@ -61,8 +54,30 @@ private:
 
 public:
     bool just_looking;
+    bool compass;
     desc_filter get_desc_func; // Function to add relevant descriptions
-    maybe_bool needs_path;
+};
+
+// output from direction() function:
+class dist
+{
+public:
+    dist();
+
+    bool isMe() const;
+
+    // modify target as if the player is confused.
+    void confusion_fuzz(int range = 6);
+
+    bool isValid;       // valid target chosen?
+    bool isTarget;      // target (true), or direction (false)?
+    bool isEndpoint;    // Does the player want the attack to stop at target?
+    bool isCancel;      // user cancelled (usually <ESC> key)
+    bool choseRay;      // user wants a specific beam
+
+    coord_def target;   // target x,y or logical extension of beam to map edge
+    coord_def delta;    // delta x and y if direction - always -1,0,1
+    ray_def ray;        // ray chosen if necessary
 };
 
 struct direction_chooser_args
@@ -73,9 +88,7 @@ struct direction_chooser_args
     int range;
     bool just_looking;
     bool needs_path;
-    bool prefer_farthest;
     bool unrestricted; // for wizmode
-    bool allow_shift_dir;
     confirm_prompt_type self;
     const char *target_prefix;
     string top_prompt;
@@ -92,53 +105,31 @@ struct direction_chooser_args
         range(-1),
         just_looking(false),
         needs_path(true),
-        prefer_farthest(false),
         unrestricted(false),
-        allow_shift_dir(true),
         self(confirm_prompt_type::prompt),
         target_prefix(nullptr),
         behaviour(nullptr),
         show_floor_desc(false),
         show_boring_feats(true),
         get_desc_func(nullptr),
-        default_place(0, 0)
-    { }
-
+        default_place(0, 0) {}
 };
-
-class direction_chooser;
-
-class direction_chooser_renderer : public view_renderer
-{
-public:
-    direction_chooser_renderer(direction_chooser &directn) : m_directn(directn) {}
-    void render(crawl_view_buffer& vbuf);
-private:
-    direction_chooser &m_directn;
-};
-
-class UIDirectionChooserView;
 
 class direction_chooser
 {
-    friend class direction_chooser_renderer;
-    friend class UIDirectionChooserView;
 public:
     direction_chooser(dist& moves, const direction_chooser_args& args);
-    bool noninteractive();
     bool choose_direction();
-    string target_description() const;
 
 private:
-    void update_validity();
-
     bool targets_objects() const;
     bool targets_enemies() const;
+    bool choose_compass();      // Used when we only need to choose a direction
+
+    bool do_main_loop();
 
     // Return the location where targeting should start.
     coord_def find_default_target() const;
-
-    bool process_command(command_type command);
 
     void handle_mlist_cycle_command(command_type key_command);
     void handle_wizard_command(command_type key_command, bool* loop_done);
@@ -238,8 +229,8 @@ private:
     void finalize_moves();
     void do_redraws();
 
-    void draw_beam(crawl_view_buffer &vbuf);
-    void highlight_summoner(crawl_view_buffer &vbuf);
+    void draw_beam();
+    void highlight_summoner();
     coord_def find_summoner();
 
     // Whether the current target is you.
@@ -248,7 +239,6 @@ private:
     // Whether the current target is valid.
     bool move_is_ok() const;
 
-    void full_describe();
     void describe_target();
     void show_help();
 
@@ -258,8 +248,6 @@ private:
     targ_mode_type mode;        // Hostiles or friendlies?
     int range;                  // Max range to consider
     bool just_looking;
-    bool prefer_farthest;       // Prefer to target the farthest monster.
-    bool allow_shift_dir;       // Allow aiming in cardinal directions.
     confirm_prompt_type self;   // What do when aiming at yourself
     const char *target_prefix;  // A string displayed before describing target
     string top_prompt;          // Shown at the top of the message window
@@ -275,21 +263,24 @@ private:
     bool have_beam;             // Is the currently stored beam valid?
     coord_def objfind_pos, monsfind_pos; // Cycling memory
 
+    bool valid_shadow_step;     // If shadow-stepping, do we currently have a
+                                // monster target with a valid landing
+                                // position?
+
     // What we need to redraw.
     bool need_viewport_redraw;
     bool need_cursor_redraw;
     bool need_text_redraw;
     bool need_all_redraw;       // All of the above.
 
+    bool show_items_once;       // Should we show items this time?
+
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
 
-    direction_chooser_renderer renderer;
-
     bool unrestricted;
 public:
-    bool force_cancel;
-    // TODO: fix the weird behaviour that led to this hack
+    // TODO: fix the weird behavior that led to this hack
     bool needs_path;            // Determine a ray while we're at it?
 };
 
@@ -306,7 +297,7 @@ void direction(dist &moves, const direction_chooser_args& args);
 
 string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
-bool full_describe_square(const coord_def &c, bool cleanup = true);
+void full_describe_square(const coord_def &c, bool cleanup = true);
 void get_square_desc(const coord_def &c, describe_info &inf);
 
 void describe_floor();
@@ -317,22 +308,18 @@ string get_monster_equipment_desc(const monster_info& mi,
                                   bool print_attitude = false);
 
 string feature_description_at(const coord_def& where, bool covering = false,
-                              description_level_type dtype = DESC_A);
+                              description_level_type dtype = DESC_A,
+                              bool add_stop = true);
 string raw_feature_description(const coord_def& where);
 string feature_description(dungeon_feature_type grid,
                            trap_type trap = NUM_TRAPS,
                            const string & cover_desc = "",
-                           description_level_type dtype = DESC_A);
+                           description_level_type dtype = DESC_A,
+                           bool add_stop = true);
 
 vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
 void full_describe_view();
 void do_look_around(const coord_def &whence = coord_def(0, 0));
-bool get_look_position(coord_def *c);
-
-#ifdef USE_TILE
-bool targeting_mouse_select(const coord_def &gc);
-bool targeting_mouse_move(const coord_def &gc);
-#endif
 
 extern const struct coord_def Compass[9];

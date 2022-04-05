@@ -14,9 +14,9 @@
 __BUGGY
 
 # This line should never get displayed to the user, even if
-# monster_shout() in shout.cc detects buggy behaviour,
+# monster_shout() in shout.cc detects buggy behavior,
 # so showing this line would itself be a bug.
-SOUND:You hear doubly buggy behaviour!
+SOUND:You hear doubly buggy behavior!
 %%%%
 __SHOUT
 
@@ -190,14 +190,6 @@ __LOUD_ROAR seen
 
 SOUND:@The_monster@ roars deafeningly!
 %%%%
-__RUSTLE unseen
-
-SOUND:You hear a loud rustle.
-%%%%
-__RUSTLE seen
-
-SOUND:@The_monster@'s pages rustle loudly.
-%%%%
 ############################################
 # End of default shouts
 ############################################
@@ -267,6 +259,10 @@ Earth Elementalist player ghost
 
 @player ghost@
 %%%%
+Skald player ghost
+
+@player ghost@
+%%%%
 Venom Mage player ghost
 
 @player ghost@
@@ -297,6 +293,10 @@ Wanderer player ghost
 '&'
 
 @__DEMON_TAUNT@
+%%%%
+'a'
+
+VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
 %%%%
 'cap-G'
 

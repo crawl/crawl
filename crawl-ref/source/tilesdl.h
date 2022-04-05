@@ -7,13 +7,9 @@
 
 #ifdef USE_TILE_LOCAL
 
-#include <vector>
-
 #include "cursor-type.h"
 #include "text-tag-type.h"
 #include "tilereg.h"
-
-using std::vector;
 
 #ifndef PROPORTIONAL_FONT
 # error PROPORTIONAL_FONT not defined
@@ -25,6 +21,7 @@ using std::vector;
 class Popup;
 class Region;
 class CRTRegion;
+class CRTRegionSingleSelect;
 class MenuRegion;
 class TileRegion;
 class DungeonRegion;
@@ -68,76 +65,18 @@ enum tiles_key_mod
 
 struct HiDPIState
 {
-    constexpr HiDPIState(int device_density, int logical_density,
-                                     int _game_scale) :
-        device(device_density), game_scale(_game_scale),
-        logical(apply_game_scale(logical_density))
-    {
-    };
+    HiDPIState(int device_density, int logical_density);
+    int logical_to_device(int n) const;
+    int device_to_logical(int n, bool round=true) const;
+    float scale_to_logical() const;
+    float scale_to_device() const;
+    bool update(int ndevice, int nlogical);
 
-    /**
-     * Calculate the device pixels given the logical pixels; the two may be
-     * different on high-DPI devices (such as retina displays).
-     *
-     * @param n a value in logical pixels
-     * @return the result in device pixels. May be the same, if the device isn't
-     *          high-DPI.
-     */
-    constexpr int logical_to_device(int n) const
-    {
-        return n * device / logical;
-    };
-
-    /**
-     * Calculate logical pixels given device pixels; the two may be
-     * different on high-DPI devices (such as retina displays).
-     *
-     * @param n a value in device pixels
-     * @param round whether to round (or truncate); defaults to true. Rounding is
-     *        safer, as truncating may lead to underestimating dimensions.
-     * @return the result in logical pixels. May be the same, if the device isn't
-     *          high-DPI.
-     */
-    constexpr int device_to_logical(int n, bool round=true) const
-    {
-        return (n * logical + (round ?  device - 1 : 0)) / device;
-    };
-
-
-    /*
-     * Return a float multiplier such that device * multiplier = logical.
-     * for high-dpi displays, will be fractional.
-     */
-    constexpr float scale_to_logical() const
-    {
-        return static_cast<float>(logical) / static_cast<float>(device);
-    };
-
-    /*
-     * Return a float multiplier such that logical * multiplier = device.
-     */
-    constexpr float scale_to_device() const
-    {
-        return static_cast<float>(device) / static_cast<float>(logical);
-    };
-
-    bool update(int ndevice, int nlogical, int ngame_scale);
-
-    constexpr int get_device() const { return device; };
-    constexpr int get_logical() const { return logical; };
-
-    /**
-     * Apply the game scale to some dimension n. This is necessary for things
-     * like mouse movements, which are expressed in raw logical pixels.
-     */
-    constexpr int apply_game_scale(int n) const
-    {
-        return game_scale == 1 ? n : n / game_scale;
-    };
+    int get_device() const { return device; };
+    int get_logical() const { return logical; };
 
 private:
     int device;
-    int game_scale;
     int logical;
 };
 
@@ -168,6 +107,8 @@ public:
     int get_number_of_cols();
     bool is_using_small_layout();
     void zoom_dungeon(bool in);
+    bool zoom_to_minimap();
+    bool zoom_from_minimap();
 
     void deactivate_tab();
 
@@ -182,7 +123,6 @@ public:
     void redraw();
     bool update_dpi();
 
-    void maybe_redraw_screen();
     void render_current_regions();
 
     void place_cursor(cursor_type type, const coord_def &gc);
@@ -195,6 +135,9 @@ public:
 
     const coord_def &get_cursor() const;
 
+    void add_overlay(const coord_def &gc, tileidx_t idx);
+    void clear_overlays();
+
     void draw_doll_edit();
 
     void set_map_display(const bool display);
@@ -204,27 +147,22 @@ public:
     bool is_fullscreen() { return m_fullscreen; }
 
     bool fonts_initialized();
-
-    FontWrapper* get_crt_font() const { return m_crt_font; }
-    FontWrapper* get_msg_font() const { return m_msg_font; }
-    FontWrapper* get_stat_font() const { return m_stat_font; }
-    FontWrapper* get_tip_font() const { return m_tip_font; }
-    FontWrapper* get_lbl_font() const { return m_lbl_font; }
-
+    FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
+    CRTRegion* get_crt() { return m_region_crt; }
     const ImageManager* get_image_manager() { return m_image; }
     int to_lines(int num_tiles, int tile_height = TILE_Y);
-
-    int handle_mouse(wm_mouse_event &event);
-
 protected:
     void reconfigure_fonts();
-    FontWrapper* load_font(const char *font_file, int font_size,
+    int load_font(const char *font_file, int font_size,
                   bool default_on_fail);
+    int handle_mouse(MouseEvent &event);
 
     bool m_map_mode_enabled;
 
     // screen pixel dimensions
     coord_def m_windowsz;
+    // screen pixels per view cell
+    coord_def m_viewsc;
 
     bool m_fullscreen;
     bool m_need_redraw;
@@ -284,11 +222,10 @@ protected:
         FontWrapper *font;
     };
     vector<font_info> m_fonts;
-    FontWrapper* m_crt_font = nullptr;
-    FontWrapper* m_msg_font = nullptr;
-    FontWrapper* m_stat_font = nullptr;
-    FontWrapper* m_tip_font = nullptr;
-    FontWrapper* m_lbl_font = nullptr;
+    int m_crt_font;
+    int m_msg_font;
+    int m_tip_font;
+    int m_lbl_font;
 
     int m_tab_margin;
     int m_stat_col;
@@ -308,11 +245,10 @@ protected:
 
     // Mouse state.
     coord_def m_mouse;
+    unsigned int m_last_tick_moved;
     unsigned int m_last_tick_redraw;
 
     string m_tooltip;
-    bool m_show_tooltip = false;
-    unsigned int m_tooltip_timer_id = 0;
 
     int m_screen_width;
     int m_screen_height;

@@ -1,7 +1,21 @@
 %%%%
+Full status
+
+You have eaten a lot.
+%%%%
+Very Full status
+
+You have eaten almost all you can for now.
+%%%%
+Engorged status
+
+You can't eat any more for now.
+%%%%
 Fast status
 
-All of your actions are 50% faster.
+All of your actions are 50% faster. This causes magical contamination over
+time, and may cause dangerous levels of contamination if you were already
+contaminated before gaining this status.
 %%%%
 Invis status
 
@@ -21,56 +35,81 @@ teleportation.
 %%%%
 Fly status
 
-You are flying above the ground, and are able to cross water and lava or fight
-above shallow water without penalties. Most types of flight will time out – be
-careful what you are above when that happens!
+You fly above the ground, and are able to cross water and lava or fight above
+shallow water without penalties. Most types of flight will time out – be sure
+you're not above deadly liquids when that happens!
 %%%%
 Agi status
 
-You are unnaturally agile, and gain a bonus to your evasion.
+You are unnaturally agile. This provides bonuses to your dexterity, evasion,
+and stealth.
 %%%%
 Brill status
 
-You are unnaturally smart, and gain a bonus to the power of your spells as well
-as halving their mana cost (rounding up).
+You are unnaturally smart. This provides bonuses to your intelligence,
+spellcasting success, and spellpower.
 %%%%
 Might status
 
-You are unnaturally mighty, doing significantly more damage in physical combat.
+You are unnaturally strong. This provides bonuses to your strength and damage
+in physical combat.
 %%%%
 Regen status
 
 You regenerate health at an unnaturally fast rate. This is only shown for
 temporary regeneration.
 %%%%
--Regen status
-
-Your health has stopped regenerating due to the presence of nearby monsters.
-%%%%
 RMsl status
 
-You repel missiles, improving your chance to evade them.
+You repel missiles, improving your chance to evade them. This effect, if
+provided by a spell, has a chance to expire with every projectile it repels;
+it otherwise lasts indefinitely.
+%%%%
+DMsl status
+
+You deflect missiles, greatly improving your chance to evade them. This effect,
+if provided by a spell, has a chance to expire with every projectile it
+deflects; it otherwise lasts indefinitely.
 %%%%
 Touch status
 
-Your attacks deal no damage, but have a chance of confusing monsters that they
-hit.
+Your unarmed attacks no longer deal damage, but have a chance of confusing
+monsters that they hit.
 %%%%
-Will++ status
+MR++ status
 
-Your willpower is much stronger, protecting against many magical effects.
+You are much more resistant to hostile enchantments.
 %%%%
 Berserk status
 
-You are hasted, deal increased damage in combat, and have increased health, but
-are unable to make most actions other than moving and attacking. The status
-will wear off very quickly unless you are attacking monsters, and when it
-expires you will be slowed and unable to berserk again for a short duration.
+You are hasted, deal increased damage in combat, and have increased HP, but are
+unable to make most actions other than moving and attacking. The status will
+wear off very quickly unless you are attacking monsters, and when it expires
+you will be slowed and unable to berserk again for a short duration, and may be
+paralysed temporarily as well.
 %%%%
--Berserk status
+Hungry status
 
-You are recovering from your berserk rage, and are unable to berserk again for
-a short duration.
+You are hungry. Most species can eat chunks of corpses only if hungry.
+%%%%
+Very Hungry status
+
+You are even hungrier than usual.
+%%%%
+Near Starving status
+
+You are in desperate need of food.
+%%%%
+Starving status
+
+You are starving; death is not far away. While starving, your combat abilities
+are impaired and you are unable to cast spells or use many evoked or divine
+abilities.
+%%%%
+Fainting status
+
+You are beyond starving, and are likely to lose consciousness and die at any
+moment.
 %%%%
 Pois status
 
@@ -92,9 +131,10 @@ is only a warning, and no mutation or loss of stealth will occur from it.
 %%%%
 Drain status
 
-Your maximum hit points have been temporarily drained by negative energy. This
-status will not wear off by waiting, but will gradually expire as you gain
-experience.
+Your skills have been drained by negative energy, and are less effective.
+This status will not wear off by waiting, but will expire as you gain
+experience. This status has multiple levels, and you can see how much you have
+been drained by looking at the skills screen.
 %%%%
 Breath status
 
@@ -147,11 +187,6 @@ or by breaking line of sight with them.
 
 You are prevented from teleporting or blinking.
 %%%%
--Move status
-
-You are prevented from moving, blinking, or teleporting. (You can still take
-other actions.)
-%%%%
 Mark status
 
 Your location is marked due to the effects of a trap or a spell, and monsters
@@ -176,7 +211,8 @@ without taking damage.
 %%%%
 Sick status
 
-You have been sickened, and your health will no longer regenerate.
+You have been sickened, and your health will no longer regenerate. Sickness can
+be cured immediately by potions of curing.
 %%%%
 Vertigo status
 
@@ -185,7 +221,7 @@ spellcasting success rate.
 %%%%
 Corr status
 
-You are corroded, reducing your damage in physical combat and your armour by an
+You are corroded, reducing your damage in physical combat and your AC by an
 amount depending on the severity of the corrosion.
 %%%%
 Flay status
@@ -196,7 +232,7 @@ lost to the flaying.
 %%%%
 Weak status
 
-Your melee attacks do 25% less damage.
+Your physical attacks do less damage.
 %%%%
 Frozen status
 
@@ -204,18 +240,15 @@ You are covered in ice, and your movement speed is reduced.
 %%%%
 Sap status
 
-Your magic is sapped. Casting a spell will cause you to lose access to your
-magic, briefly preventing you from casting any further spells.
-%%%%
--Cast status
-
-You are unable to cast spells.
+Your magic is sapped. Each time you cast a spell, there is a chance of the
+severity of the effect increasing, which causes your spellcasting success rate
+to fall.
 %%%%
 Brainless status
 
 Your intelligence has fallen to 0. You are slowed, cannot cast or memorise
-spells, and cannot read scrolls. The status will persist for a short while even
-after recovering your intelligence.
+spells, and will usually fail when attempting to read scrolls. The status will
+persist for a short while even after recovering your intelligence.
 %%%%
 Clumsy status
 
@@ -225,24 +258,30 @@ while even after recovering your dexterity.
 %%%%
 Collapse status
 
-Your strength has fallen to 0. You are slowed, and you do not regenerate health
-while monsters are visible. The status will persist for a short while even after
+Your strength has fallen to 0. You are slowed, and your health regeneration is
+greatly reduced. The status will persist for a short while even after
 recovering your strength.
 %%%%
 DChan status
 
-You are channelling the dead, causing any living creatures killed in your
+You are channeling the dead, causing any living creatures killed in your
 vicinity to be raised as spectral servants.
 %%%%
 Vit status
 
 You are divinely vitalised, providing protection from poison, confusion,
-petrification, and sickness, and increasing and sustaining your strength,
-intelligence and dexterity.
+petrification, rotting and sickness, and increasing and sustaining your
+strength, intelligence and dexterity.
 %%%%
-Will/2 status
+RoF status
 
-Your willpower is weaker, making you vulnerable to many magical effects.
+You are surrounded by a ring of flame clouds, increasing the power of your fire
+magic and giving protection from fire but also making you much more susceptible
+to cold.
+%%%%
+MR/2 status
+
+You are more vulnerable to hostile enchantments.
 %%%%
 Stone status
 
@@ -277,11 +316,6 @@ You are temporarily invulnerable to harm, but are brought close to death in the
 process and cannot be affected by healing while the effect is active. After the
 spell expires, it cannot be immediately recast.
 %%%%
--DDoor status
-
-You are still close to death's doorway, and cannot recast Death's Door for a
-short duration.
-%%%%
 Quad status
 
 QUAD DAMAGE!
@@ -295,15 +329,13 @@ hampers your stealth.
 Engulf status
 
 {{
-    local desc = "You are engulfed by an adjacent creature"
+    local desc = "You are engulfed in water"
 
     if not you.res_drowning() then
         desc = desc .. " and are unable to breathe. You will take increasing"
                        .. " damage from asphyxiation every turn until you"
                        .. " escape. This makes reading scrolls, casting"
-                       .. " spells, and invoking divine abilities impossible."
-                       .. " Moving away from the engulfing creature will end"
-                       .. " the effect"
+                       .. " spells, and invoking divine abilities impossible"
     else
         desc = desc .. " but suffer no negative effects"
     end
@@ -315,15 +347,19 @@ Stealth status
 
 Your stealth is greatly increased.
 %%%%
-Vortex status
+Mirror status
 
-You are in the eye of a mighty ice storm. After the vortex fades, it cannot be
-called forth again for a short time.
+You are reflecting any damage taken to your attackers, reducing piety depending
+on the amount of damage dealt.
 %%%%
--Vortex status
+Scry status
 
-You are surrounded by unstable winds, and cannot recast Polar Vortex for a short
-duration.
+You have astral vision, allowing you to see through walls.
+%%%%
+Tornado status
+
+You are in the eye of a mighty hurricane. After the tornado fades, it cannot be
+called forth again for a short time.
 %%%%
 Liquid status
 
@@ -338,24 +374,39 @@ Finesse status
 
 Your combat speed is greatly increased.
 %%%%
-Duel status
+Prot status
 
-You are duelling a foe in Okawaru's Arena, and will be returned whence you came
-if you are victorious.
+You are beseeching Elyvilon to save your life. If you are mortally wounded, the
+Healer may undo the killing blow. Killing others while asking for divine
+protection will cause penance.
+%%%%
+Dark status
+
+You are dimming the dungeon around you, reducing the range of vision.
+%%%%
+Shroud status
+
+You are bending space around yourself, providing protection from some attacks
+in melee.
 %%%%
 Disjoin status
 
 You are destabilizing space around yourself, causing nearby monsters to be
 randomly blinked away from you.
 %%%%
+Infus status
+
+Your melee attacks are infused with magical energy, and will drain your
+reserves of magic to deal additional damage whenever an enemy is hit.
+%%%%
 Slay status
 
-You have the blood of a were-beast, healing you and providing bonuses to
-your ranged and melee attacks which increase every time you slay a foe.
+You are singing a Song of Slaying, providing bonuses to your ranged and melee
+attacks which increase every time you slay a foe in combat.
 %%%%
 Toxic status
 
-You are radiating toxic energy, and will continuously inflict poison on all
+You are radiating toxic energy, and will continously inflict poison on all
 nearby creatures.
 %%%%
 Recite status
@@ -363,11 +414,6 @@ Recite status
 You are reciting Zin's laws to nearby monsters, with a range of effects
 depending on the target. After finishing a recitation, it cannot be repeated
 for a short time.
-%%%%
--Recite status
-
-You have recently finished reciting Zin's laws, and cannot recite again for a
-short duration.
 %%%%
 rF- status
 
@@ -393,10 +439,10 @@ You are calling forth mighty dragons to attack your foes. Each dragon which
 answers the call will drain your magical energy. After the call ends, it cannot
 be issued again for a short time.
 %%%%
--Dragoncall status
+Abj status
 
-You have recently called forth dragons, and cannot recast Dragon's Call for a
-short duration.
+You are reducing the remaining duration of any nearby hostile summoned
+creatures.
 %%%%
 -Potion status
 
@@ -453,7 +499,12 @@ You are unable to cast spells.
 %%%%
 Channel status
 
-You are channelling magical energy.
+You are channeling magical energy.
+%%%%
++Cast status
+
+You may cast spells with insufficient reserves of magic, but doing so will
+cause you to briefly lose access to your magic after the spell is cast.
 %%%%
 Spider status
 
@@ -475,8 +526,8 @@ Statue status
 
 You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
-Your stone body is immune to poison and miasma, and gains resistance to
-electricity and negative energy.
+Your stone body is insulated from electricity and gains resistance to poison,
+rotting and negative energy.
 
 Any equipped body armour, gloves and boots are melded.
 %%%%
@@ -524,21 +575,11 @@ less evasive.
 
 Any equipped weapons and armour are melded.
 %%%%
-Storm status
-
-You have been transformed into a lightning-filled tempest. Your melee attacks
-are strengthened and electrified, and strike all adjacent foes. You gain flight,
-increased evasion, immunity to poison and miasma, and resistance to electricity.
-You gain the ability to launch yourself at foes as a lightning bolt.
-
-Any equipped weapons and armour are melded.
-%%%%
 Lich status
 
 You have been transformed into a lich. You are resistant to cold and hostile
-enchantments and completely immune to poison, negative energy and torment for
-the duration of the transformation.
-
+enchantments and completely immune to poison, rotting, negative energy and
+torment, and require no food at all for the duration of the transformation.
 Your necromancy spells are increased in power, and you gain a draining melee
 attack. However, you are also vulnerable to holy damage and Dispel Undead,
 and are unable to consume potions.
@@ -582,15 +623,16 @@ Tree status
 
 You have been transformed into a tree and are rooted to the ground, unable to
 move or teleport. You have minimal evasion but increased health and natural
-armour, and are resistant to poison and immune to torment.
+armour, and are resistant to poison and immune to negative energy.
 
 Any equipped cloak, helmet, gloves, boots and body armour are melded.
 %%%%
 Wisp status
 
-You have been transformed into an insubstantial wisp of gas. You are highly
-evasive and are resistant to fire, cold, electricity and acid, and immune to
-poison, and negative energy.
+You have been transformed into an insubstantial wisp of gas. You move quickly
+and are highly evasive, and you occasionally blink at random. You are resistant
+to fire, cold, electricity and acid, and immune to poison, rotting and
+negative energy.
 
 Any equipped weapons, armour and jewellery are melded, and you are unable to
 cast spells. The effectiveness of your melee attacks while in this form is based
@@ -610,17 +652,26 @@ experience level instead of on Unarmed Combat skill.
 Shadow status
 
 You have been transformed into a swirling mass of dark shadows. You are
-permanently invisible and are immune to poison, draining, and torment. All
-incoming damage is halved, you bleed smoke on any incoming attack, and you have
-infinite willpower. However, your ability to deal damage in melee and with
-ranged attacks is halved, your spellcasting power is greatly hampered, and your
-maximum health is further drained when taking damage.
+permanently invisible and are immune to poison, draining, torment, and hostile
+enchantments. All incoming damage is halved, and you bleed smoke on any
+incoming attack. However, your ability to deal damage in melee and with ranged
+attacks is halved, your spellcasting power is greatly hampered, and your skills
+are further drained when taking damage.
+%%%%
+Hydra status
+
+You have been transformed into an amphibious, many-headed hydra. Your multiple
+heads strike in all directions when attacking, and edible foes that are slain
+are instantly consumed for nutrition and health. You are naturally robust, and
+resistant to poison.
+
+Any equipped weapons and armour are melded.
 %%%%
 Orb status
 
 You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
-translocation magic. Teleportation will take longer, and Passage of Golubria
-portals will be less accurately positioned and expire more quickly.
+translocation magic. Teleportation will take longer, all blinks will become
+uncontrolled, and Passage of Golubria will completely fail to work.
 %%%%
 -Hop status
 
@@ -630,32 +681,22 @@ casting spells, are fine.)
 %%%%
 Ray status
 
-You are currently channelling a ray of searing magical energy. Pressing
-<w>.</w> or <w>s</w> to wait in place will maintain and intensify the ray, at
-the cost of 1 MP per turn. Any other action, including recasting the spell,
-will end it.
-%%%%
-Ray+ status
+You are currently channeling a ray of searing magical energy. Pressing . will
+maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
+including recasting the spell, will end it.
 
-<Ray status>
-%%%%
-Ray++ status
-
-<Ray status>
+# XXX: also cover Ray+, Ray++?
 %%%%
 Lash status
 
 You are moving at supernatural speed, causing movement actions to become
-instant. Any martial attacks made while moving in this way deal increased
-damage and never miss.
+instant. Any martial attacks made while moving in this way are increased in
+effectiveness.
 %%%%
-Heavenly status
+Hevn status
 
-You are surrounded by a storm of heavenly clouds. While the storm rages, your
-evasion and combat accuracy and damage are substantially increased, and
-striking enemies with martial attacks increases this bonus. The storm weakens
-over time and fades away once the bonus reaches zero. The heavenly clouds
-prevent invisibility, and obscure the vision of those outside the storm.
+Heavenly clouds are boosting your damage and precision. Performing martial
+attacks against multiple enemies prevents the storm from settling.
 %%%%
 SlowM status
 
@@ -663,7 +704,7 @@ Your movement is slowed on this liquid ground.
 %%%%
 Alive status
 
-You are full of blood, and regenerate health quickly.
+You can't drink any more for now.
 %%%%
 Aug status
 
@@ -672,14 +713,12 @@ You receive spellcasting and slaying bonuses that scale with your health.
 Beogh status
 
 You can swear fealty to Beogh, the god of cave orcs, through a nearby priest.
-To do so, press <white>Y</white> on the <white>a</white>bility menu.
 %%%%
 Bloodless status
 
-Your body is entirely devoid of blood, reducing your maximum health and
-preventing you from regenerating health when monsters are visible. You are
-immune to poison and negative energy, significantly resist cold, and resist
-torment.
+Your body is entirely devoid of blood. You are are immune to poison and
+negative energy, significantly resist cold, resist torment, and do not
+heal.
 %%%%
 Bribe status
 
@@ -710,9 +749,25 @@ Lava status
 
 You are currently flying over lava.
 %%%%
+Near Bloodless status
+
+Your body is almost entirely devoid of blood. You resist poison and
+cold, significantly resist negative engergy, have a slow metabolism, and
+heal slowly.
+%%%%
 Recall status
 
 You are recalling your allies.
+%%%%
+Thirsty status
+
+You are thirsty. You resist poison and cold, significantly resist
+negative engergy, have a slow metabolism, and heal slowly.
+%%%%
+Very Thirsty status
+
+You are very thirsty. You resist poison and cold, significantly resist
+negative engergy, have a slow metabolism, and heal slowly.
 %%%%
 Water status
 {{
@@ -728,79 +783,7 @@ Water status
     return "You are currently " .. verb .. " " .. feat .. "."
 }}
 %%%%
-Attr status
+-Wiz status
 
-Enemies are magically translocated toward you. (This won't wake them up.)
-%%%%
-Zot status
-
-You have spent too much time in one branch, allowing the malevolent power of Zot
-to notice you. If you spend the indicated number of turns in the branch without
-descending to a new floor, Zot will find and consume you.
-%%%%
-Zot count status
-
-If you spend the indicated number of turns in this branch without descending to
-a new floor, Zot will find and consume you.
-%%%%
-Curl status
-
-After being struck by an attack, you reflexively curled up, protecting yourself
-against subsequent strikes. You are now emerging from that defensive curl and
-will receive no further protection until after you are struck again.
-%%%%
-rF0 status
-
-The wrath of Ignis prevents you from resisting fire.
-%%%%
--Blink status
-
-You are unstable and cannot cast Blink or activate evoked blink abilities
-for a short period of time. Powerful sources of translocation magic such as
-scrolls of blinking ignore this limitation, as do external sources of blinking
-outside of your control.
-%%%%
--Bbolt status
-
-You are recovering from becoming lightning, and are unable to blinkbolt again
-for a short duration.
-%%%%
-Charge- status
-
-You are currently channeling electrical charge. Pressing <w>.</w> or <w>s</w>
-to wait in place will maintain and continue this process until it discharges.
-Any other action, including recasting the spell, will dissipate the charge
-harmlessly.
-%%%%
-Charge/ status
-
-<Charge- status>
-%%%%
-Charge\ status
-
-<Charge- status>
-%%%%
-Charge| status
-
-<Charge- status>
-%%%%
-Wave status
-
-You are currently channeling waves of flames. Pressing <w>.</w> or <w>s</w>
-to wait in place will maintain and intensify the waves, at the cost of 1 MP per
-turn. Any other action, including recasting the spell, will end it.
-%%%%
-Wave+ status
-
-<Wave status>
-%%%%
-Ramparts
-
-You are encasing nearby walls in ice. The ice will crack and fall away if you
-move to a new position.
-%%%%
-Bog
-
-You are creating a toxic bog in the nearby area. You cannot sustain this
-transformation in areas out of your line of sight.
+Your control over your magic has been sapped.
 %%%%

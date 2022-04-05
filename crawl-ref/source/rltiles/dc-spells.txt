@@ -2,13 +2,14 @@
 airstrike AIRSTRIKE
 chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
+deflect_missiles DEFLECT_MISSILES
 lightning_bolt LIGHTNING_BOLT
-maxwells MAXWELLS_COUPLING
 repel_missiles REPEL_MISSILES
 shock SHOCK
 silence SILENCE
 static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
+tornado TORNADO
 
 %sdir gui/spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
@@ -34,19 +35,21 @@ statue_form STATUE_FORM
 stone_arrow STONE_ARROW
 
 %sdir gui/spells/enchantment
-anguish ANGUISH
 berserker_rage BERSERKER_RAGE
 cause_fear CAUSE_FEAR
 confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
+darkness DARKNESS
 discord DISCORD
-enfeeble ENFEEBLE
-charming CHARMING
+enslavement ENSLAVEMENT
 haste HASTE
+infusion INFUSION
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
 slow SLOW
+song_of_slaying SONG_OF_SLAYING
+spectral_weapon SPECTRAL_WEAPON
 tukimas_dance TUKIMAS_DANCE
 violent_unravelling VIOLENT_UNRAVELLING
 
@@ -58,14 +61,11 @@ fire_storm FIRE_STORM
 fireball FIREBALL
 flame_tongue FLAME_TONGUE
 ignite_poison IGNITE_POISON
+ring_of_flames RING_OF_FLAMES
 sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
 inner_flame INNER_FLAME
 ignition IGNITION
-starburst STARBURST
-foxfire FOXFIRE
-scorch SCORCH
-flame_wave FLAME_WAVE
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
@@ -79,9 +79,6 @@ metabolic_englaciation METABOLIC_ENGLACIATION
 ozocubus_armour OZOCUBUS_ARMOUR
 ozocubus_refrigeration OZOCUBUS_REFRIGERATION
 throw_frost THROW_FROST
-frozen_ramparts FROZEN_RAMPARTS
-hailstorm HAILSTORM
-polar_vortex POLAR_VORTEX
 
 %sdir gui/spells/necromancy
 agony AGONY
@@ -97,6 +94,7 @@ excruciating_wounds EXCRUCIATING_WOUNDS
 haunt HAUNT
 necromutation NECROMUTATION
 pain PAIN
+regeneration REGENERATION
 simulacrum SIMULACRUM
 sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT
@@ -114,7 +112,6 @@ spider_form SPIDER_FORM
 sting STING
 venom_bolt VENOM_BOLT
 poisonous_vapours POISONOUS_VAPOURS
-noxious_bog NOXIOUS_BOG
 
 %sdir gui/spells/summoning
 mass_abjuration MASS_ABJURATION
@@ -122,6 +119,8 @@ call_canine_familiar CALL_CANINE_FAMILIAR
 call_imp CALL_IMP
 malign_gateway MALIGN_GATEWAY
 recall RECALL
+sticks_to_snakes STICKS_TO_SNAKES
+summon_butterflies SUMMON_BUTTERFLIES
 summon_demon SUMMON_DEMON
 summon_dragon SUMMON_DRAGON
 summon_greater_demon SUMMON_GREATER_DEMON
@@ -132,38 +131,38 @@ summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammal SUMMON_SMALL_MAMMAL
 summon_lightning_spire SUMMON_LIGHTNING_SPIRE
 summon_guardian_golem SUMMON_GUARDIAN_GOLEM
-animate_armour ANIMATE_ARMOUR
 summon_forest SUMMON_FOREST
 monstrous_menagerie MONSTROUS_MENAGERIE
 summon_mana_viper SUMMON_MANA_VIPER
 spellforged_servitor SPELLFORGED_SERVITOR
-summon_cactus_giant SUMMON_CACTUS_GIANT
 
 %sdir gui/spells/translocation
 apportation APPORTATION
 beckoning BECKONING
 blink BLINK
+controlled_blink CONTROLLED_BLINK
 disjunction DISJUNCTION
 dispersal DISPERSAL
 passage_of_golubria PASSAGE_OF_GOLUBRIA
 portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
+shroud_of_golubria SHROUD_OF_GOLUBRIA
 gravitas GRAVITAS
-manifold_assault MANIFOLD_ASSAULT
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS
 beastly_appendage BEASTLY_APPENDAGE
 irradiate IRRADIATE
-storm_form STORM_FORM
+hydra_form HYDRA_FORM
 dragon_form DRAGON_FORM
-wereblood WEREBLOOD
 
 # item-based spells
 %sdir gui/spells/misc
 paralyse PARALYSE
 bolt_thunder THUNDERBOLT
 cloud_cone CLOUD_CONE
+bolt_random RANDOM_BOLT
+scattershot SCATTERSHOT
 bolt_corrosive CORROSIVE_BOLT
 iceblast ICEBLAST
 bolt_energy ENERGY_BOLT
@@ -173,13 +172,10 @@ bolt_energy ENERGY_BOLT
 %sdir gui/spells/monster
 generic GENERIC_MONSTER_SPELL
 air_elementals AIR_ELEMENTALS
-awaken_vines AWAKEN_VINES
 blink_other BLINK_OTHER
 brain_feed BRAIN_FEED
-call_down_damnation CALL_DOWN_DAMNATION
 cantrip CANTRIP
 cold_breath COLD_BREATH
-create_tentacles CREATE_TENTACLES
 earth_elementals EARTH_ELEMENTALS
 fake_mara_summon FAKE_MARA_SUMMON
 fake_rakshasa_summon FAKE_RAKSHASA_SUMMON
@@ -188,6 +184,7 @@ fire_elementals FIRE_ELEMENTALS
 ghostly_fireball GHOSTLY_FIREBALL
 grasping_roots GRASPING_ROOTS
 haste_other HASTE_OTHER
+call_down_damnation CALL_DOWN_DAMNATION
 ink_cloud INK_CLOUD
 iron_elementals IRON_ELEMENTALS
 malmutate MALMUTATE
@@ -201,28 +198,23 @@ phantom_mirror PHANTOM_MIRROR
 polymorph POLYMORPH
 porkalator PORKALATOR
 quicksilver_bolt QUICKSILVER_BOLT
-seal_doors SEAL_DOORS
-sentinel_mark SENTINEL_MARK
+# Remove when TAG_MAJOR_VERSION > 34
 sleep SLEEP
 spectral_cloud SPECTRAL_CLOUD
 spit_acid SPIT_ACID
 spit_poison SPIT_POISON
-sporulate SPORULATE
-sprint SPRINT
 steam_ball STEAM_BALL
 sticky_flame_range STICKY_FLAME_RANGE
-strip_willpower STRIP_WILLPOWER
 summon_drakes SUMMON_DRAKES
 summon_eyeballs SUMMON_EYEBALLS
 summon_hell_beast SUMMON_HELL_BEAST
 summon_minor_demon SUMMON_MINOR_DEMON
 summon_mushrooms SUMMON_MUSHROOMS
-summon_scorpions SUMMON_SCORPIONS
-summon_spectral_orcs SUMMON_SPECTRAL_ORCS
 summon_ufetubus SUMMON_UFETUBUS
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
-wall_of_brambles WALL_OF_BRAMBLES
+teleport TELEPORT
+twisted_resurrection TWISTED_RESURRECTION
 water_elementals WATER_ELEMENTALS
 %back none
 
@@ -235,7 +227,7 @@ hurl_damnation HURL_DAMNATION
 beogh_smite SMITING
 elyvilon_heal_other HEAL_OTHER
 elyvilon_lesser_healing MINOR_HEALING
-elyvilon_heal_self MAJOR_HEALING
+elyvilon_greater_healing MAJOR_HEALING
 makhleb_major_destruction MAJOR_DESTRUCTION
 lugonu_banish BANISHMENT
 trog_hand TROGS_HAND

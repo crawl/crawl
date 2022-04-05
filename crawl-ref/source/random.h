@@ -5,74 +5,37 @@
 #include <map>
 #include <vector>
 
-#include "debug.h"
-#include "fixedvector.h"
 #include "hash.h"
 #include "rng-type.h"
-#include "pcg.h"
+
+class rng_generator
+{
+public:
+    rng_generator(rng_type g);
+    rng_generator(branch_type b);
+    ~rng_generator();
+private:
+    rng_type previous;
+};
 
 class CrawlVector;
+CrawlVector generators_to_vector();
+void load_generators(const CrawlVector &v);
+vector<uint64_t> get_rng_states();
 
-namespace rng
-{
-    class generator
-    {
-    public:
-        generator(rng_type g);
-        generator(branch_type b);
-        ~generator();
-    private:
-        rng_type previous;
-    };
+void seed_rng();
+void seed_rng(uint64_t seed);
+void seed_rng(uint64_t[], int);
+void reset_rng();
 
-    class subgenerator
-    {
-    public:
-        subgenerator();
-        subgenerator(uint64_t seed);
-        subgenerator(uint64_t seed, uint64_t sequence);
-        ~subgenerator();
-    private:
-        PcgRNG current;
-        PcgRNG *previous;
-        rng_type previous_main;
-    };
-
-    rng_type get_branch_generator(const branch_type b);
-    CrawlVector generators_to_vector();
-    void load_generators(const CrawlVector &v);
-    vector<uint64_t> get_states();
-    PcgRNG *get_generator(rng_type r);
-    PcgRNG &current_generator();
-
-    void seed();
-    void seed(uint64_t seed);
-    void seed(uint64_t[], int);
-    void reset();
-
-    uint32_t get_uint32(rng_type generator);
-    uint64_t get_uint64(rng_type generator);
-    uint32_t get_uint32();
-    uint64_t get_uint64();
-    uint32_t peek_uint32();
-    uint64_t peek_uint64();
-
-    class ASSERT_stable
-    {
-    public:
-        ASSERT_stable() : initial_peek(peek_uint64()) { }
-        ~ASSERT_stable()
-        {
-            ASSERT(peek_uint64() == initial_peek);
-        }
-
-    private:
-        uint64_t initial_peek;
-    };
-}
-
+uint32_t get_uint32(rng_type generator);
+uint64_t get_uint64(rng_type generator);
+uint32_t get_uint32();
+uint64_t get_uint64();
+uint32_t peek_uint32();
 bool coinflip();
 int div_rand_round(int num, int den);
+int rand_round(double x);
 int div_round_up(int num, int den);
 bool one_chance_in(int a_million);
 bool x_chance_in_y(int x, int y);
@@ -86,6 +49,7 @@ double random_real();
 
 int random2avg(int max, int rolls);
 int biased_random2(int max, int n);
+int random2limit(int max, int limit);
 int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale = 100);
 bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
@@ -194,7 +158,7 @@ int random_choose_weighted(const FixedVector<T, SIZE>& choices)
 }
 
 template <typename T>
-T random_choose_weighted(int, T curr)
+T random_choose_weighted(int cweight, T curr)
 {
     return curr;
 }
@@ -220,7 +184,7 @@ struct dice_def
 
 constexpr dice_def CONVENIENT_NONZERO_DAMAGE{42, 1};
 
-dice_def calc_dice(int num_dice, int max_damage, bool random = true);
+dice_def calc_dice(int num_dice, int max_damage);
 
 // I must be a random-access iterator.
 template <typename I>

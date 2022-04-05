@@ -5,7 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "mpr.h"
 #include "randbook.h"
 
 #include <functional>
@@ -13,6 +12,7 @@
 #include "artefact.h"
 #include "database.h"
 #include "english.h"
+#include "god-item.h"
 #include "item-name.h"
 #include "item-status-flag-type.h"
 #include "items.h"
@@ -27,7 +27,7 @@ static string _gen_randbook_owner(god_type god, spschool disc1,
                                   const vector<spell_type> &spells);
 
 /// How many spells should be in a random theme book?
-int theme_book_size() { return random2avg(4, 3) + 2; }
+int theme_book_size() { return random2avg(7, 3) + 2; }
 
 /// A discipline chooser that only ever returns the given discipline.
 function<spschool()> forced_book_theme(spschool theme)
@@ -93,6 +93,22 @@ spschool matching_book_theme(const vector<spell_type> &forced_spells)
     return *discipline;
 }
 
+/// Is the given spell found in rarebooks?
+static bool _is_rare_spell(spell_type spell)
+{
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+    {
+        const book_type book = static_cast<book_type>(i);
+        if (is_rare_book(book))
+            for (spell_type rare_spell : spellbook_template(book))
+                if (rare_spell == spell)
+                    return true;
+    }
+
+    return false;
+}
+
+
 /**
  * Can we include the given spell in our spellbook?
  *
@@ -102,9 +118,13 @@ spschool matching_book_theme(const vector<spell_type> &forced_spells)
  */
 static bool _agent_spell_filter(int agent, spell_type spell)
 {
-    // Only use actual player spells.
-    if (!is_player_book_spell(spell))
+    // Only use spells available in books you might find lying about
+    // the dungeon; rarebook spells are restricted to Sif-made books.
+    if (spell_rarity(spell) == -1
+        && (agent != GOD_SIF_MUNA || !_is_rare_spell(spell)))
+    {
         return false;
+    }
 
     // Don't include spells a god dislikes, if this is an acquirement
     // or a god gift.
@@ -355,6 +375,33 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
                             int &god_discard, int &uncastable_discard,
                             bool avoid_known = false)
 {
+    // For randarts handed out by Sif Muna, spells contained in the
+    // special books are fair game.
+    // We store them in an extra vector that (once sorted) can later
+    // be checked for each spell with a rarity -1 (i.e. not normally
+    // appearing randomly).
+    vector<spell_type> special_spells;
+    if (god == GOD_SIF_MUNA)
+    {
+        for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+        {
+            const book_type book = static_cast<book_type>(i);
+            if (is_rare_book(book))
+            {
+                for (spell_type spell : spellbook_template(book))
+                {
+                    if (spell_rarity(spell) != -1)
+                        continue;
+
+                    special_spells.push_back(spell);
+                }
+            }
+        }
+
+        sort(special_spells.begin(), special_spells.end());
+    }
+
+    int specnum = 0;
     for (int i = 0; i < NUM_SPELLS; ++i)
     {
         const spell_type spell = (spell_type) i;
@@ -362,9 +409,21 @@ static void _get_spell_list(vector<spell_type> &spells, int level,
         if (!is_valid_spell(spell))
             continue;
 
-        // Only use actual player spells.
-        if (!is_player_book_spell(spell))
-            continue;
+        // Only use spells available in books you might find lying about
+        // the dungeon.
+        if (spell_rarity(spell) == -1)
+        {
+            bool skip_spell = true;
+            while ((unsigned int) specnum < special_spells.size()
+                   && spell == special_spells[specnum])
+            {
+                specnum++;
+                skip_spell = false;
+            }
+
+            if (skip_spell)
+                continue;
+        }
 
         if (avoid_known && you.spell_library[spell])
             continue;
@@ -488,33 +547,15 @@ static string _gen_randlevel_name(int level, god_type god)
     return apostrophised_owner + bookname;
 }
 
-void _set_book_spell_list(item_def &book, vector<spell_type> spells)
-{
-    ASSERT(!spells.empty());
-    sort(begin(spells), end(spells), _compare_spells);
-    spells.resize(RANDBOOK_SIZE, SPELL_NO_SPELL);
-
-    CrawlHashTable &props = book.props;
-    props.erase(SPELL_LIST_KEY);
-    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
-
-    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
-    spell_vec.set_max_size(RANDBOOK_SIZE);
-
-    for (int i = 0; i < RANDBOOK_SIZE; i++)
-        spell_vec[i].get_int() = spells[i];
-}
-
 /**
  * Turn the given book into a randomly-generated spellbook ("randbook"),
  * containing only spells of a given level.
  *
  * @param book[out]    The book in question.
  * @param level        The level of the spells. If -1, choose a level randomly.
- * @param god            Is this a gift from Sif Muna?
  * @return             Whether the book was successfully transformed.
  */
-bool make_book_level_randart(item_def &book, int level, bool sif)
+bool make_book_level_randart(item_def &book, int level)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -532,14 +573,11 @@ bool make_book_level_randart(item_def &book, int level, bool sif)
         level = random_range(1, max_level);
     }
     ASSERT_RANGE(level, 0 + 1, 9 + 1);
+
     // Book level:       1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
     // Number of spells: 5 | 5 | 5 | 6 | 6 | 6 | 4 | 2 | 1
     int num_spells = max(1, min(5 + (level - 1)/3,
                                 18 - 2*level));
-    // Sif Muna retains the old randbook sizes.
-    // Other level randbooks shrink to modern book sizes.
-    if (!sif)
-        num_spells = max(1, div_rand_round(num_spells * 3, 5));
     ASSERT_RANGE(num_spells, 0 + 1, RANDBOOK_SIZE + 1);
 
     book.sub_type = BOOK_RANDART_LEVEL;
@@ -600,7 +638,9 @@ bool make_book_level_randart(item_def &book, int level, bool sif)
     vector<bool> avoid_memorised(spells.size(), !completely_random);
     vector<bool> avoid_seen(spells.size(), !completely_random);
 
-    vector<spell_type> chosen_spells(RANDBOOK_SIZE, SPELL_NO_SPELL);
+    spell_type chosen_spells[RANDBOOK_SIZE];
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        chosen_spells[i] = SPELL_NO_SPELL;
 
     int book_pos = 0;
     while (book_pos < num_spells)
@@ -628,11 +668,20 @@ bool make_book_level_randart(item_def &book, int level, bool sif)
         }
 
         spell_used[spell_pos]     = true;
-        chosen_spells.push_back(spell);
-        book_pos++;
+        chosen_spells[book_pos++] = spell;
     }
+    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
+    ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
-    _set_book_spell_list(book, chosen_spells);
+    CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
+    spell_vec.set_max_size(RANDBOOK_SIZE);
+
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        spell_vec[i].get_int() = chosen_spells[i];
 
     const string name = _gen_randlevel_name(level, god);
     set_artefact_name(book, replace_name_parts(name, book));
@@ -653,7 +702,19 @@ void init_book_theme_randart(item_def &book, vector<spell_type> spells)
 {
     book.sub_type = BOOK_RANDART_THEME;
     _make_book_randart(book);
-    _set_book_spell_list(book, move(spells));
+
+    spells.resize(RANDBOOK_SIZE, SPELL_NO_SPELL);
+    sort(spells.begin(), spells.end(), _compare_spells);
+    ASSERT(spells[0] != SPELL_NO_SPELL);
+
+    CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
+    spell_vec.set_max_size(RANDBOOK_SIZE);
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        spell_vec[i].get_int() = spells[i];
 }
 
 /**
@@ -901,6 +962,92 @@ void make_book_roxanne_special(item_def *book)
                       forced_book_theme(disc), 5, "Roxanne");
 }
 
+void make_book_kiku_gift(item_def &book, bool first)
+{
+    book.sub_type = BOOK_RANDART_THEME;
+    _make_book_randart(book);
+
+    spell_type chosen_spells[RANDBOOK_SIZE];
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        chosen_spells[i] = SPELL_NO_SPELL;
+
+    // Each book should guarantee the player at least one corpse-using
+    // spell, to complement Receive Corpses.
+    if (first)
+    {
+        bool can_bleed = you.species != SP_GARGOYLE
+            && you.species != SP_GHOUL
+            && you.species != SP_MUMMY;
+        bool can_regen = you.species != SP_DEEP_DWARF
+            && you.species != SP_MUMMY;
+
+        chosen_spells[0] = SPELL_PAIN;
+        chosen_spells[1] = SPELL_CORPSE_ROT;
+        chosen_spells[2] = SPELL_ANIMATE_SKELETON;
+        if (can_bleed) // Replace one of the corpse-using spells
+            chosen_spells[random_range(1, 2)] = SPELL_SUBLIMATION_OF_BLOOD;
+
+        chosen_spells[3] = (!can_regen || coinflip())
+            ? SPELL_VAMPIRIC_DRAINING : SPELL_REGENERATION;
+    }
+    else
+    {
+        chosen_spells[0] = coinflip() ? SPELL_ANIMATE_DEAD : SPELL_SIMULACRUM;
+        chosen_spells[1] = (you.species == SP_FELID || coinflip())
+            ? SPELL_BORGNJORS_VILE_CLUTCH : SPELL_EXCRUCIATING_WOUNDS;
+        chosen_spells[2] = random_choose(SPELL_BOLT_OF_DRAINING,
+                                         SPELL_AGONY,
+                                         SPELL_DEATH_CHANNEL);
+
+        spell_type extra_spell;
+        do
+        {
+            extra_spell = random_choose(SPELL_ANIMATE_DEAD,
+                                        SPELL_AGONY,
+                                        SPELL_BORGNJORS_VILE_CLUTCH,
+                                        SPELL_EXCRUCIATING_WOUNDS,
+                                        SPELL_BOLT_OF_DRAINING,
+                                        SPELL_SIMULACRUM,
+                                        SPELL_DEATH_CHANNEL);
+            if (you.species == SP_FELID
+                && extra_spell == SPELL_EXCRUCIATING_WOUNDS)
+            {
+                extra_spell = SPELL_NO_SPELL;
+            }
+
+            for (int i = 0; i < 3; i++)
+                if (extra_spell == chosen_spells[i])
+                    extra_spell = SPELL_NO_SPELL;
+        }
+        while (extra_spell == SPELL_NO_SPELL);
+
+        chosen_spells[3] = extra_spell;
+        chosen_spells[4] = SPELL_DISPEL_UNDEAD;
+    }
+
+    sort(chosen_spells, chosen_spells + RANDBOOK_SIZE, _compare_spells);
+
+    CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(RANDBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
+    spell_vec.set_max_size(RANDBOOK_SIZE);
+
+    for (int i = 0; i < RANDBOOK_SIZE; i++)
+        spell_vec[i].get_int() = chosen_spells[i];
+
+    string name = "Kikubaaqudgha's ";
+    book.props[BOOK_TITLED_KEY].get_bool() = true;
+    name += getRandNameString("book_name") + " ";
+    string type_name = getRandNameString("Necromancy");
+    if (type_name.empty())
+        name += "Necromancy";
+    else
+        name += type_name;
+    set_artefact_name(book, name);
+}
+
 /// Does the given acq source generate books totally randomly?
 static bool _completely_random_books(int agent)
 {
@@ -1040,13 +1187,10 @@ static void _choose_themed_randbook_spells(weighted_spells &possible_spells,
     for (int i = 0; i < size; ++i)
     {
         const spell_type *spell = random_choose_weighted(possible_spells);
-        if (!spell)
-            break;
+        ASSERT(spell);
         spells.push_back(*spell);
         possible_spells[*spell] = 0; // don't choose the same one twice!
     }
-    // `size` is guaranteed to be >0 by an ASSERT in the calling function
-    ASSERT(spells.size() > 0);
 }
 
 /**

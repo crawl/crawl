@@ -10,9 +10,8 @@
 
 #include <algorithm>
 #include <chrono>
-#include <vector>
 
-using std::vector;
+string weird_glowing_colour();
 
 void swap_with_monster(monster *mon_to_swap);
 
@@ -30,13 +29,12 @@ const string maybe_to_string(const maybe_bool mb);
 
 struct counted_monster_list
 {
-    counted_monster_list() { };
-    counted_monster_list(vector<monster *> ms);
     typedef pair<const monster* ,int> counted_monster;
     typedef vector<counted_monster> counted_list;
     counted_list list;
     void add(const monster* mons);
     int count();
     bool empty() { return list.empty(); }
-    string describe(description_level_type desc = DESC_THE);
+    string describe(description_level_type desc = DESC_THE,
+                    bool force_article = false);
 };

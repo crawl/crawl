@@ -388,15 +388,6 @@ slime_stone1
 slime_stone2
 slime_stone3
 
-rock_wall_crypt0 ROCK_WALL_CRYPT
-%weight 2
-rock_wall_crypt1
-%weight 3
-rock_wall_crypt2
-%weight 2
-rock_wall_crypt3
-
-%weight 10
 tomb0 WALL_TOMB
 tomb1
 tomb2
@@ -425,40 +416,6 @@ vault_stone12
 vault_stone13
 vault_stone14
 vault_stone15
-
-# ssssssss
-%weight 10
-wall_stone_spider0 STONE_WALL_SPIDER
-%weight 5
-wall_stone_spider1
-%weight 1
-wall_stone_spider2
-wall_stone_spider3
-
-# sss (more snakeishly)
-%weight 10
-wall_stone_snake0 STONE_WALL_SNAKE
-%weight 3
-wall_stone_snake1
-wall_stone_snake2
-wall_stone_snake3
-
-# sss (like the tide rolling over sand)
-%weight 2
-wall_stone_shoals0 STONE_WALL_SHOALS
-wall_stone_shoals1
-%weight 4
-wall_stone_shoals2
-wall_stone_shoals3
-%weight 10
-wall_stone_shoals4
-
-wall_oozing0 WALL_OOZING
-wall_oozing1
-%weight 4
-wall_oozing2
-wall_oozing3
-%weight 10
 
 zot_blue0 WALL_ZOT WALL_ZOT_BLUE
 zot_blue1
@@ -721,13 +678,11 @@ volcanic_wall4
 volcanic_wall5
 volcanic_wall6
 
-wall_moon0 WALL_MOON
-wall_moon1
-wall_moon2
-wall_moon3
-wall_moon4
-wall_moon5
-wall_moon6
+%variation WALL_VOLCANIC blue
+%hue 0 240
+%lum -10 240
+%repeat WALL_VOLCANIC WALL_VOLCANIC_BLUE
+%resetcol
 
 %weight 5
 crystal_wall00 WALL_CRYSTAL_SQUARES
@@ -797,13 +752,6 @@ stone_dark0 WALL_STONE_DARK
 stone_dark1
 stone_dark2
 stone_dark3
-
-stone_mossy0 WALL_STONE_MOSSY
-stone_mossy1
-%weight 3
-stone_mossy2
-stone_mossy3
-%weight 10
 
 # For the Doroklohe WizLab
 stone_black_marked0 WALL_STONE_BLACK_MARKED
@@ -1398,20 +1346,9 @@ metal_wall_red7
 metal_wall_red8
 %resetcol
 
-%variation DNGN_METAL_WALL lightblue
-%hue 240 210
-%lum 240 5
-%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTBLUE
-%resetcol
-
 %variation DNGN_METAL_WALL green
 %hue 240 140
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_GREEN
-%resetcol
-
-%variation DNGN_METAL_WALL lightgreen
-%hue 240 180
-%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTGREEN
 %resetcol
 
 %variation DNGN_METAL_WALL cyan
@@ -1419,30 +1356,14 @@ metal_wall_red8
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_CYAN
 %resetcol
 
-%variation DNGN_METAL_WALL lightcyan
-%hue 240 180
-%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTCYAN
-%resetcol
-
 %variation DNGN_METAL_WALL red
 %hue 240 0
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_RED
 %resetcol
 
-%variation DNGN_METAL_WALL lightred
-%hue 240 0
-%lum 240 5
-%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTRED
-%resetcol
-
 %variation DNGN_METAL_WALL magenta
 %hue 240 270
 %repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_MAGENTA
-%resetcol
-
-%variation DNGN_METAL_WALL lightmagenta
-%hue 240 290
-%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_LIGHTMAGENTA
 %resetcol
 
 %variation DNGN_METAL_WALL brown
@@ -1811,11 +1732,6 @@ shadow_ne_darker
 shadow_e_darker
 shadow_w_top_darker
 shadow_e_top_darker
-
-icy_wall_overlay0 DNGN_WALL_ICY_WALL_OVERLAY
-icy_wall_overlay1
-icy_wall_overlay2
-icy_wall_overlay3
 
 %sdir dngn/vaults
 brick_dark_leak WALL_BRICK_DARK_LEAK

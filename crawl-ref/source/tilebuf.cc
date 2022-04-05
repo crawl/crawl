@@ -184,7 +184,7 @@ static unsigned char _get_alpha(float lerp, int alpha_top, int alpha_bottom)
 }
 
 void ColouredTileBuffer::add(tileidx_t idx, int x, int y, int z,
-                             int ox,  int oy, int /*ymin*/, int ymax,
+                             int ox,  int oy, int ymin, int ymax,
                              int alpha_top, int alpha_bottom)
 {
     float pos_sx = x;
@@ -254,12 +254,9 @@ void SubmergedTileBuffer::add_masked(tileidx_t idx, int x, int y, int z,
                                     int alpha_above, int alpha_below,
                                     int water_level)
 {
-    if (!water_level)
-        water_level = m_water_level;
-    m_below_water.add(idx, x, y, z, ox, oy, water_level, ymax, alpha_above,
-                      alpha_below);
-    m_above_water.add(idx, x, y, z, ox, oy, -1, water_level, alpha_above,
-                      alpha_above);
+    if (!water_level) water_level = m_water_level;
+    m_below_water.add(idx, x, y, z, ox, oy, water_level, ymax, alpha_above, alpha_below);
+    m_above_water.add(idx, x, y, z, ox, oy, -1, water_level, alpha_above, alpha_above);
 }
 
 // Adds a tile with a specified alpha value
@@ -305,7 +302,7 @@ void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
 /////////////////////////////////////////////////////////////////////////////
 // LineBuffer
 
-LineBuffer::LineBuffer() : VertBuffer(false, true, nullptr)
+LineBuffer::LineBuffer() : VertBuffer(false, true, nullptr, GLW_LINES)
 {
     m_state.array_colour = true;
 }
@@ -321,13 +318,13 @@ void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
 void LineBuffer::add_square(float sx, float sy, float ex, float ey,
                             const VColour &col)
 {
-    const float dx = 1, dy = 1; // line thickness
-    const float tx = 1, ty = 1; // shift used to prevent corner overlap
-
-    add(sx-dx, sy-ty, ex-dx, sy, col);
-    add(ex-tx, sy-dy, ex, ey-dy, col);
-    add(ex, ey-ty, sx, ey, col);
-    add(sx-tx, ey, sx, sy, col);
+    GLW_3VF scale;
+    glmanager->get_transform(nullptr, &scale);
+    float dx = 1.0/scale.x, dy = 1.0/scale.y;
+    add(sx-dx, sy, ex-dx, sy, col);
+    add(ex, sy-dy, ex, ey-dy, col);
+    add(ex, ey, sx, ey, col);
+    add(sx, ey, sx, sy, col);
 }
 
 #endif

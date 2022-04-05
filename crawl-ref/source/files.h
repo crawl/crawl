@@ -11,8 +11,6 @@
 #include <string>
 #include <vector>
 
-#include "maybe-bool.h"
-
 struct player_save_info;
 
 enum load_mode_type
@@ -21,6 +19,7 @@ enum load_mode_type
     LOAD_RESTART_GAME,          // loaded savefile
     LOAD_ENTER_LEVEL,           // entered a level normally
     LOAD_VISITOR,               // Visitor pattern to see all levels
+    LOAD_GENERATE,              // Generating the level only
 };
 
 /// Exception indicating that a dangerous path was supplied.
@@ -51,7 +50,6 @@ vector<string> get_dir_files_recursive(const string &dirname,
                                        int recursion_depth = -1,
                                        bool include_directories = false);
 
-maybe_bool validate_data_dir(const string &d);
 void validate_basedirs();
 string datafile_path(string basename, bool croak_on_fail = true,
                      bool test_base_path = false,
@@ -70,8 +68,6 @@ bool check_mkdir(const string &what, string *dir, bool silent = false);
 // Find saved games for all game types.
 vector<player_save_info> find_all_saved_characters();
 
-NORETURN void print_save_json(const char *name);
-
 string get_save_filename(const string &name);
 string get_savedir_filename(const string &name);
 string savedir_versioned_path(const string &subdirs = "");
@@ -84,23 +80,17 @@ vector<string> get_title_files();
 
 class level_id;
 
-void trackers_init_new_level();
+void trackers_init_new_level(bool transit);
 
-void update_portal_entrances();
-void reset_portal_entrances();
-bool generate_level(const level_id &l);
-bool pregen_dungeon(const level_id &stopping_point);
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level);
 void delete_level(const level_id &level);
-void save_level(const level_id& lid);
 
 void save_game(bool leave_game, const char *bye = nullptr);
 
 // Save game without exiting (used when changing levels).
 void save_game_state();
 
-void write_save_version(writer &file, save_version version);
 save_version get_save_version(reader &file);
 
 bool save_exists(const string& filename);
@@ -132,7 +122,7 @@ save_version read_ghost_header(reader &inf);
 
 FILE *lk_open(const char *mode, const string &file);
 FILE *lk_open_exclusive(const string &file);
-void lk_close(FILE *handle);
+void lk_close(FILE *handle, const string &file);
 
 // file locking stuff
 bool lock_file_handle(FILE *handle, bool write);

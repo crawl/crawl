@@ -39,6 +39,10 @@ CMD_CAST_SPELL verbose
 
 Kasta en trollformel
 %%%%
+CMD_BUTCHER
+
+Slakta ett lik
+%%%%
 CMD_MEMORISE_SPELL
 
 Memorera en trollformel

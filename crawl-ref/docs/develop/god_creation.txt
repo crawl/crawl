@@ -9,7 +9,7 @@ unique ones in.
 
 Today, we will add in Ralph, Demon Prince of Apathy to the Crawl pantheon.
 He's not known for doing much, or caring much about his followers.
-He does so little, his followers reach similar levels of apathy because
+He does so little, his followers reace similar levels of apathy because
 he can't be bothered to stop his divine power from transferring. His
 followers, in turn, become so apathetic that even those attacking them
 with bloodlust in their hearts get bored and look elsewhere.
@@ -98,8 +98,8 @@ We also have a mandatory update to godconduct.cc, to add an entry to
 divine_peeves() and divine_likes() so that we can define out what our
 deity does or doesn't like. About half the gods use an empty set, and
 the others have at least one special thing they don't like. This is
-where you set the behaviours for piety gain/loss and penance, and most of
-the behaviours you'll likely want are already implemented. Ralph will use
+where you set the behaviors for piety gain/loss and penance, and most of
+the behaviors you'll likely want are already implemented. Ralph will use
 the empty default sets. Once again, these are ordered in the god_type
 enum order:
 
@@ -121,7 +121,7 @@ enum order:
                     " forgives your inadvertent attack on a neutral, just this once."
                 } },
                 { DID_ATTACK_IN_SANCTUARY, {
-                    "you attack monsters in a sanctuary", false,
+                    "you attack monters in a sanctuary", false,
                     1, 1
                 } },
                 { DID_UNCLEAN, {
@@ -187,7 +187,7 @@ altar, the only way to worship your deity is through the faded altar
 roulette. Altars are a feature_def type, which is explained in feature.h,
 but altars are so common, they get a shortcut method. Colours are defined
 in the "VColour str_to_tile_colour(string colour)" function in colour.cc,
-so check there if you want to use a colour and aren't sure if it exists
+so check there if you want to use a color and aren't sure if it exists
 or not. That's all we care about for now, so let's make a new one:
 
         ALTAR(DNGN_ALTAR_USKAYAW, "hide-covered altar of Uskayaw", "altar_uskayaw", ETC_INCARNADINE),
@@ -239,7 +239,7 @@ Also in religion.cc are the basic functions we'll need to handle our god's
 full name, excommunication/desertion penalties, and decaying piety and
 wrath timers. Ralph doesn't have either of those last 2, but we'll show
 you where they get handled, and you'll more than likely be happy to copy
-an existing entry for your new deity in most cases. You may also want to
+an existing entry for your new deity in mose cases. You may also want to
 update the divine_retribution() function to handle the things your god
 does when angry.
 
@@ -281,7 +281,7 @@ does when angry.
 
 For most deities, godwrath.cc will be necessary. The upside is that for
 gods with wrath, adding this is very free-form. You need to add in a line
-like this to divine_retribution() to handle wrath occurring:
+like this to divine_retribution() to handle wrath occuring:
 
         bool divine_retribution(god_type god, bool no_bonus, bool force)
         {
@@ -423,6 +423,6 @@ Summary:
     - religion.cc for declaring your deities powers, full name, and
       abandonment punishment.
     - use you_worship(GOD_NAME_HERE), you.piety, and piety_breakpoint(star_count)
-      elsewhere in code for conditional behaviour based on piety levels.
-    - update /dat/descipt/gods.txt with the flavour text entries for your new god.
+      elsewhere in code for conditional behavior based on piety levels.
+    - update /dat/descipt/gods.txt with the flavor text entries for your new god.
       There should be 3 of them, and separate them with 4 %'s and the title on the next line.

@@ -68,7 +68,7 @@ bool is_known_branch_id(branch_type branch);
 bool is_unknown_stair(const coord_def &p);
 bool is_unknown_transporter(const coord_def &p);
 
-void fill_travel_point_distance(const coord_def& youpos,
+void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
                      vector<coord_def>* coords = nullptr);
 
 bool is_stair_exclusion(const coord_def &p);
@@ -267,7 +267,7 @@ public:
     dungeon_feature_type grid; // Grid feature of the stair.
     level_pos destination;  // The level and the position on the level this
                             // stair leads to. This may be a guess.
-    int       distance;     // The distance travelled to reach this stair.
+    int       distance;     // The distance traveled to reach this stair.
     bool      guessed_pos;  // true if we're not sure that 'destination' is
                             // correct.
     stair_type type;
@@ -449,7 +449,6 @@ public:
     void set_level_excludes();
 
     void add_waypoint(int x = -1, int y = -1);
-    void set_waypoint(int waynum, int x, int y);
     void delete_waypoint();
     uint8_t is_waypoint(const level_pos &lp) const;
     void list_waypoints() const;
@@ -501,12 +500,20 @@ public:
     // position) and destination.
     void set_src_dst(const coord_def &src, const coord_def &dst);
 
-    // Set feature vector to use; if non-nullptr, also sets annotate_map to
-    // true.
+    // Request that the point distance array be annotated with magic numbers for
+    // excludes and waypoints.
+    void set_annotate_map(bool annotate);
+
+    // Sets the travel_distance_grid_t to use instead of travel_point_distance.
+    void set_distance_grid(travel_distance_grid_t distgrid);
+
+    // Set feature vector to use; if non-nullptr, also sets annotate_map to true.
     void set_feature_vector(vector<coord_def> *features);
 
     // Extract features without pathfinding
     void get_features();
+
+    const set<coord_def> get_unreachables() const;
 
     // The next square to go to to move towards the travel destination. Return
     // value is undefined if pathfind was not called with RMODE_TRAVEL.
@@ -516,13 +523,19 @@ public:
     // pathfind was not called with RMODE_EXPLORE or RMODE_EXPLORE_GREEDY.
     const coord_def explore_target() const;
 
+    // Nearest greed-inducing square. Return value is undefined if
+    // pathfind was not called with RMODE_EXPLORE_GREEDY.
+    const coord_def greedy_square() const;
+
+    // Nearest unexplored territory. Return value is undefined if
+    // pathfind was not called with RMODE_EXPLORE or
+    // RMODE_EXPLORE_GREEDY.
+    const coord_def unexplored_square() const;
+
     inline void set_ignore_danger()
     {
         ignore_danger = true;
     }
-
-    // Determine if the level is fully explored, when called after pathfind().
-    int explore_status();
 
 protected:
     bool is_greed_inducing_square(const coord_def &c) const;
@@ -593,10 +606,14 @@ protected:
 
     travel_distance_col *point_distance;
 
+    // How many points are we currently considering? We start off with just one
+    // point, and spread outwards like a flood-filler.
+    int points;
+
     // How many points we'll consider next iteration.
     int next_iter_points;
 
-    // How far we've travelled from (start_x, start_y), in moves (a diagonal move
+    // How far we've traveled from (start_x, start_y), in moves (a diagonal move
     // is no longer than an orthogonal move).
     int traveled_distance;
 
@@ -619,7 +636,6 @@ void do_interlevel_travel();
 // Travel from a mouse click. Take one step if not safe. Attack if adjacent.
 // If force is true, then the player will attack empty squares/open doors.
 #ifdef USE_TILE
-bool click_travel_safe(const coord_def &gc);
 int click_travel(const coord_def &gc, bool force);
 #endif
 

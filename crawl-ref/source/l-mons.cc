@@ -9,17 +9,14 @@
 #include "cluautil.h"
 #include "database.h"
 #include "dlua.h"
-#include "items.h"
 #include "libutil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-pick.h"
 #include "mon-speak.h"
 #include "monster.h"
 #include "mon-util.h"
 #include "stringutil.h"
-#include "tag-version.h"
 
 #define WRAPPED_MONSTER(ls, name)                                       \
     MonsterWrap *___mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE); \
@@ -39,10 +36,11 @@ void push_monster(lua_State *ls, monster* mons)
 }
 
 #define MDEF(name)                                                      \
-    static int l_mons_##name(lua_State *ls, monster* mons)             \
+    static int l_mons_##name(lua_State *ls, monster* mons,             \
+                             const char *attr)                         \
 
 #define MDEFN(name, closure)                    \
-    static int l_mons_##name(lua_State *ls, monster* mons) \
+    static int l_mons_##name(lua_State *ls, monster* mons, const char *attrs) \
     {                                                                   \
     lua_pushlightuserdata(ls, mons);                                    \
     lua_pushcclosure(ls, l_mons_##closure, 1);                          \
@@ -117,19 +115,6 @@ MDEF(energy)
 {
     // XXX: fix this after speed_increment clean up
     PLUARET(number, (mons->speed_increment - 79));
-}
-
-MDEF(in_local_population)
-{
-    // TODO: should this be in moninf? need a mons for the native check...
-    // The nativity check is because there are various cases where monsters are
-    // not in the population tables, but should be considered native, e.g.
-    // vault gaurds in vaults, orb guardians in zot 5
-    PLUARET(boolean,
-        mons_is_native_in_branch(*mons, you.where_are_you)
-     || monster_in_population(you.where_are_you, mons->type)
-     || monster_in_population(you.where_are_you, mons->mons_species(false))
-     || monster_in_population(you.where_are_you, mons->mons_species(true)));
 }
 
 LUAFN(l_mons_add_energy)
@@ -221,23 +206,6 @@ MDEF(muse)
         PLUARET(string, _monuse_to_str(me->gmon_use));
     return 0;
 }
-
-static int l_mons_get_inventory(lua_State *ls)
-{
-    monster* mons = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
-    lua_newtable(ls);
-    int index = 0;
-    for (mon_inv_iterator ii(*mons); ii; ++ii)
-    {
-        if (ii->defined())
-        {
-            clua_push_item(ls, &*ii);
-            lua_rawseti(ls, -2, ++index);
-        }
-    }
-    return 1;
-}
-MDEFN(inventory, get_inventory)
 
 static int l_mons_do_dismiss(lua_State *ls)
 {
@@ -506,22 +474,10 @@ static int l_mons_do_speak(lua_State *ls)
 
 MDEFN(speak, do_speak)
 
-static int l_mons_do_get_info(lua_State *ls)
-{
-    // for a non-dlua version, see monster.get_monster_at
-    ASSERT_DLUA;
-    monster* m = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
-    monster_info mi(m);
-    lua_push_moninf(ls, &mi);
-    return 1;
-}
-
-MDEFN(get_info, do_get_info)
-
 struct MonsAccessor
 {
     const char *attribute;
-    int (*accessor)(lua_State *ls, monster* mons);
+    int (*accessor)(lua_State *ls, monster* mons, const char *attr);
 };
 
 static MonsAccessor mons_attrs[] =
@@ -565,11 +521,8 @@ static MonsAccessor mons_attrs[] =
     { "add_ench",        l_mons_add_ench        },
     { "del_ench",        l_mons_del_ench        },
     { "you_can_see",     l_mons_you_can_see     },
-    { "get_inventory",   l_mons_inventory       },
-    { "in_local_population", l_mons_in_local_population },
 
-    { "speak",           l_mons_speak           },
-    { "get_info",        l_mons_get_info        }
+    { "speak",           l_mons_speak           }
 };
 
 static int monster_get(lua_State *ls)
@@ -582,7 +535,7 @@ static int monster_get(lua_State *ls)
 
     for (const MonsAccessor &ma : mons_attrs)
         if (!strcmp(attr, ma.attribute))
-            return ma.accessor(ls, mons);
+            return ma.accessor(ls, mons, attr);
 
     return 0;
 }

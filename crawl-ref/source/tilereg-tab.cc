@@ -2,7 +2,6 @@
 
 #ifdef USE_TILE_LOCAL
 
-#include "options.h"
 #include "tilereg-tab.h"
 
 #include "command-type.h"
@@ -12,7 +11,7 @@
 #include "macro.h"
 #include "state.h"
 #include "stringutil.h"
-#include "rltiles/tiledef-gui.h"
+#include "tiledef-gui.h"
 #include "tiles-build-specific.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
@@ -84,8 +83,7 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     inf.enabled = true;
     m_tabs.push_back(inf);
 
-    tileidx_t actual_tile_tab = (cmd==CMD_NO_CMD) ? tile_tab
-                                                  : tileidx_t{TILEG_TAB_BLANK};
+    tileidx_t actual_tile_tab = (cmd==CMD_NO_CMD) ? tile_tab : TILEG_TAB_BLANK;
     const tile_info &tinf = tile_gui_info(actual_tile_tab);
     ox = max((int)tinf.width, ox);
 
@@ -336,7 +334,7 @@ void TabbedRegion::on_resize()
     }
 }
 
-int TabbedRegion::get_mouseover_tab(wm_mouse_event &event) const
+int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
 {
     int x = event.px - sx;
     int y = event.py - sy;
@@ -347,9 +345,8 @@ int TabbedRegion::get_mouseover_tab(wm_mouse_event &event) const
         // x = ... only works because we have offset all the way over to the right and
         //         it's just the margin (ox) that's visible
         x = ((sx+ox)-event.px)*32/dx;
+        y = y*32/dy;
     }
-
-    y = y*32/dy;
 
     if (x < 0 || x > ox || y < 0 || y > wy)
         return -1;
@@ -361,7 +358,7 @@ int TabbedRegion::get_mouseover_tab(wm_mouse_event &event) const
     return -1;
 }
 
-int TabbedRegion::handle_mouse(wm_mouse_event &event)
+int TabbedRegion::handle_mouse(MouseEvent &event)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
         && !tiles.get_map_display())
@@ -379,7 +376,7 @@ int TabbedRegion::handle_mouse(wm_mouse_event &event)
 
     if (m_mouse_tab != -1)
     {
-        if (event.event == wm_mouse_event::PRESS)
+        if (event.event == MouseEvent::PRESS)
         {
             if (m_tabs[m_mouse_tab].cmd == CMD_NO_CMD)
             {
@@ -398,7 +395,7 @@ int TabbedRegion::handle_mouse(wm_mouse_event &event)
     return get_tab_region(active_tab())->handle_mouse(event);
 }
 
-bool TabbedRegion::update_tab_tip_text(string &/*tip*/, bool /*active*/)
+bool TabbedRegion::update_tab_tip_text(string &tip, bool active)
 {
     return false;
 }
@@ -432,8 +429,7 @@ int TabbedRegion::find_tab(string tab_name) const
     string pluralised_name = pluralise(tab_name);
     for (int i = 0, size = m_tabs.size(); i < size; ++i)
     {
-        if (m_tabs[i].reg == nullptr)
-            continue;
+        if (m_tabs[i].reg == nullptr) continue;
 
         string reg_name = lowercase_string(m_tabs[i].reg->name());
         if (tab_name == reg_name || pluralised_name == reg_name)

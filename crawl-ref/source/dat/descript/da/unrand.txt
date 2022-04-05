@@ -61,6 +61,10 @@ livlige farver deres undergang, fordi de advarede eventuelt bytte. De er nu
 uddøde, og dette skattede relikvie er et af de sidste beviser på, at de
 overhovedet har eksisteret.
 %%%%
+demon blade "Bloodbane"
+
+Den bærer en umenneskelig galnings blodige besmittelse.
+%%%%
 scimitar of Flaming Death
 
 Brandvarm!
@@ -173,7 +177,7 @@ storm bow
 
 Denne bue har samme farve som mørke regnvejrsskyer og lugter af våd ozon.
 %%%%
-tower shield of Ignorance
+large shield of Ignorance
 
 »Et åbent sind er som en fæstning, hvor portene står åbne og murene er
 ubevogtede.«
@@ -187,7 +191,7 @@ cloak of the Thief
 Den lader bæreren brillere i tyveriets kunst og kan udløse tykke røgskyer, når
 den vækkes, så det bliver lettere at tage flugten.
 %%%%
-tower shield "Bullseye"
+large shield "Bullseye"
 
 Bare hvis du nu havde svært ved at blive ramt.
 %%%%
@@ -208,6 +212,12 @@ En pragtfuld, flagrende kåbe af pels og silke.
 cloak of Flash
 
 En vibrerende kappe.
+%%%%
+boots of the Assassin
+
+Et par bløde støvler, som er omhyggeligt formgivet af Snigmordernes Lav. De gør
+bæreren mere opmærksom på potentielle ofre og bedre til at få øje på svagheder
+hos uopmærksomme ofre.
 %%%%
 Lear's hauberk
 

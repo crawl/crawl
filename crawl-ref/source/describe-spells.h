@@ -6,14 +6,11 @@
 #pragma once
 
 #include <map>
-#include <vector>
 
 #include "enum.h"
 #include "format.h"
 #include "menu.h"
 #include "mon-info.h"
-
-using std::vector;
 
 /// What's in a given spellbook?
 struct spellbook_contents
@@ -38,4 +35,3 @@ void write_spellset(const spellset &spells,
                        const item_def* const source_item,
                        const monster_info *mon_owner = nullptr);
 string describe_item_spells(const item_def &item);
-string terse_spell_list(const item_def &item);

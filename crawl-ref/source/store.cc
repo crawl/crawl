@@ -13,7 +13,6 @@
 #include "dlua.h"
 #include "monster.h"
 #include "stringutil.h"
-#include "tag-version.h"
 
 // These tend to be called from tight loops, and C++ method calls don't
 // get optimized away except for LTO -fwhole-program builds, so merely
@@ -430,18 +429,13 @@ store_val_type CrawlStoreValue::get_type() const
 // Read/write from/to savefile
 void CrawlStoreValue::write(writer &th) const
 {
-    auto _type = type;
-    ASSERT(_type != SV_NONE || (flags & SFLAG_UNSET));
-    ASSERT(!(flags & SFLAG_UNSET) || _type == SV_NONE);
-    // if the string is too long to save using the regular way, write it with
-    // a 4 byte length. SV_STR_LONG is for saving/loading only.
-    if (_type == SV_STR && static_cast<string*>(val.ptr)->length() > SHRT_MAX)
-        _type = SV_STR_LONG;
+    ASSERT(type != SV_NONE || (flags & SFLAG_UNSET));
+    ASSERT(!(flags & SFLAG_UNSET) || type == SV_NONE);
 
-    marshallByte(th,  (char) _type);
+    marshallByte(th,  (char) type);
     marshallByte(th, (char) flags);
 
-    switch (_type)
+    switch (type)
     {
     case SV_BOOL:
         marshallBoolean(th, val.boolean);
@@ -471,13 +465,6 @@ void CrawlStoreValue::write(writer &th) const
     {
         string* str = static_cast<string*>(val.ptr);
         marshallString(th, *str);
-        break;
-    }
-
-    case SV_STR_LONG:
-    {
-        string* str = static_cast<string*>(val.ptr);
-        marshallString4(th, *str);
         break;
     }
 
@@ -588,15 +575,6 @@ void CrawlStoreValue::read(reader &th)
         break;
     }
 
-    case SV_STR_LONG:
-    {
-        val.ptr = (void*) new string();
-        unmarshallString4(th, *static_cast<string *>(val.ptr));
-        // SV_STR_LONG is used only for saving
-        type = SV_STR;
-        break;
-    }
-
     case SV_COORD:
     {
         const coord_def coord = unmarshallCoord(th);
@@ -672,7 +650,6 @@ void CrawlStoreValue::read(reader &th)
         break;
 
     case NUM_STORE_VAL_TYPES:
-    default:
         die("unknown stored value type");
     }
 }
@@ -685,14 +662,15 @@ CrawlHashTable &CrawlStoreValue::new_table()
 ////////////////////////////////////////////////////////////////
 // Setup a new vector with the given flags and/or type; assert if
 // a vector already exists.
-CrawlVector &CrawlStoreValue::new_vector(store_flags _flags)
+CrawlVector &CrawlStoreValue::new_vector(store_flags _flags,
+                                         vec_size max_size)
 {
-    UNUSED(_flags); // XXX: is ignoring the parameter _flags intentional?
-    return new_vector(SV_NONE, flags);
+    return new_vector(SV_NONE, flags, max_size);
 }
 
 CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
-                                         store_flags _flags)
+                                         store_flags _flags,
+                                         vec_size _max_size)
 {
 #ifdef DEBUG
     CrawlVector* old_vec = static_cast<CrawlVector*>(val.ptr);
@@ -1286,7 +1264,6 @@ void CrawlHashTable::assert_validity() const
         ASSERT(key == trimmed);
 
         ASSERT(val.type != SV_NONE);
-        ASSERT(val.type != SV_STR_LONG);
         ASSERT(!(val.flags & SFLAG_UNSET));
 
         switch (val.type)
@@ -1609,12 +1586,14 @@ bool CrawlVector::empty() const
     return vec.empty();
 }
 
-void CrawlVector::pop_back()
+CrawlStoreValue& CrawlVector::pop_back()
 {
     ASSERT_VALIDITY();
     ASSERT(!vec.empty());
 
+    CrawlStoreValue& val = vec[vec.size() - 1];
     vec.pop_back();
+    return val;
 }
 
 void CrawlVector::push_back(CrawlStoreValue val)

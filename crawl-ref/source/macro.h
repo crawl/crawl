@@ -6,13 +6,10 @@
 #pragma once
 
 #include <deque>
-#include <vector>
 
 #include "command-type.h"
 #include "enum.h"
 #include "KeymapContext.h"
-
-using std::vector;
 
 class key_recorder;
 typedef deque<int> keyseq;
@@ -40,7 +37,8 @@ private:
     vector<bool> prev_pause_status;
 };
 
-int getchm(KeymapContext context = KMC_DEFAULT);
+int getchm(int (*rgetch)() = nullptr);       // keymaps applied (ie for prompts)
+int getchm(KeymapContext context, int (*rgetch)() = nullptr);
 
 int get_ch();
 
@@ -48,8 +46,7 @@ int getch_with_command_macros();  // keymaps and macros (ie for commands)
 
 void flush_input_buffer(int reason);
 
-void macro_quick_add();
-void macro_menu();
+void macro_add_query();
 void macro_init();
 void macro_save();
 
@@ -59,6 +56,7 @@ void macro_userfn(const char *keys, const char *registryname);
 
 // Add macro-expanded keys to the end or start of the keyboard buffer.
 void macro_sendkeys_end_add_expanded(int key);
+void macro_sendkeys_end_add_cmd(command_type cmd);
 
 // [ds] Unless you know what you're doing, prefer macro_sendkeys_add_expanded
 // to direct calls to macro_buf_add for pre-expanded key sequences.
@@ -83,21 +81,6 @@ string get_userfunction(int key);
 void add_key_recorder(key_recorder* recorder);
 void remove_key_recorder(key_recorder* recorder);
 
-class key_recorder_raii
-{
-public:
-    key_recorder_raii(key_recorder* recorder) : m_recorder(recorder)
-    {
-        add_key_recorder(m_recorder);
-    }
-    ~key_recorder_raii()
-    {
-        remove_key_recorder(m_recorder);
-    }
-private:
-    key_recorder *m_recorder;
-};
-
 bool is_processing_macro();
 bool has_pending_input();
 
@@ -111,10 +94,7 @@ void init_keybindings();
 command_type name_to_command(string name);
 string  command_to_name(command_type cmd);
 
-bool keycode_is_printable(int keycode);
-string keycode_to_name(int keycode, bool shorten = true);
 string keyseq_to_str(const keyseq &seq);
-keyseq parse_keyseq(string s);
 
 command_type  key_to_command(int key, KeymapContext context);
 int           command_to_key(command_type cmd);

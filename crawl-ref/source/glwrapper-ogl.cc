@@ -292,10 +292,8 @@ void OGLStateManager::reset_transform()
 
 void OGLStateManager::get_transform(GLW_3VF *trans, GLW_3VF *scale)
 {
-    if (trans)
-        *trans = current_transform.trans;
-    if (scale)
-        *scale = current_transform.scale;
+    if (trans) *trans = current_transform.trans;
+    if (scale) *scale = current_transform.scale;
 }
 
 int OGLStateManager::logical_to_device(int n) const
@@ -398,11 +396,9 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
 #ifndef USE_GLES
     if (mip_opt == MIPMAP_CREATE)
     {
-        // TODO: should min react to Options.tile_filter_scaling?
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                         GL_LINEAR_MIPMAP_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                        Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height,
                           texture_format, format, pixels);
     }
@@ -428,13 +424,13 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     }
 }
 
-void OGLStateManager::reset_view_for_redraw()
+void OGLStateManager::reset_view_for_redraw(float x, float y)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glTranslatef(0.0f, 0.0f, 1.0f);
+    glTranslatef(x, y , 1.0f);
     glDebug("glTranslatef");
 }
 
@@ -534,25 +530,14 @@ void OGLStateManager::fixup_gl_state()
 }
 #endif
 
-bool OGLStateManager::glDebug(const char* msg) const
+void OGLStateManager::glDebug(const char* msg)
 {
-#if defined(__ANDROID__) || defined(DEBUG_DIAGNOSTICS)
+#ifdef __ANDROID__
     int e = glGetError();
     if (e > 0)
-    {
-# ifdef __ANDROID__
-        __android_log_print(ANDROID_LOG_INFO, "Crawl.gl", "ERROR %x: %s", e, msg);
-# else
-        fprintf(stderr, "OGLStateManager ERROR %x: %s\n", e, msg);
-# endif
-        return true;
-    }
-#else
-    UNUSED(msg);
+        __android_log_print(ANDROID_LOG_INFO, "Crawl.gl", "ERROR %x: %s",e,msg);
 #endif
-    return false;
 }
-
 /////////////////////////////////////////////////////////////////////////////
 // OGLShapeBuffer
 
@@ -727,23 +712,19 @@ void OGLShapeBuffer::clear()
     m_colour_buffer.clear();
 }
 
-bool OGLShapeBuffer::glDebug(const char* msg) const
+void OGLShapeBuffer::glDebug(const char* msg)
 {
-#if defined(__ANDROID__) || defined(DEBUG_DIAGNOSTICS)
+#ifdef __ANDROID__
     int e = glGetError();
     if (e > 0)
-    {
-# ifdef __ANDROID__
-        __android_log_print(ANDROID_LOG_INFO, "Crawl.gl", "ERROR %x: %s", e, msg);
-# else
-        fprintf(stderr, "OGLShapeBuffer ERROR %x: %s\n", e, msg);
-# endif
-        return true;
-    }
+        __android_log_print(ANDROID_LOG_INFO, "Crawl.gl", "ERROR %x: %s",e,msg);
 #else
-    UNUSED(msg);
+#ifdef DEBUG_DIAGNOSTICS
+    int e = glGetError();
+    if (e > 0)
+        printf("ERROR %x: %s\n",e,msg);
 #endif
-    return false;
+#endif
 }
 
 #endif // USE_GL

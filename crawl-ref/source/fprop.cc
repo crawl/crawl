@@ -10,7 +10,6 @@
 #include "coord.h"
 #include "env.h"
 #include "libutil.h"
-#include "terrain.h"
 
 bool is_sanctuary(const coord_def& p)
 {
@@ -28,14 +27,26 @@ bool is_bloodcovered(const coord_def& p)
     return testbits(env.pgrid(p), FPROP_BLOODY);
 }
 
-bool is_icecovered(const coord_def& p)
-{
-    return feat_is_wall(env.grid(p)) && testbits(env.pgrid(p), FPROP_ICY);
-}
-
 bool is_tide_immune(const coord_def &p)
 {
     return bool(env.pgrid(p) & FPROP_NO_TIDE);
+}
+
+bool is_moldy(const coord_def & p)
+{
+    return env.pgrid(p) & FPROP_MOLD
+           || env.pgrid(p) & FPROP_GLOW_MOLD;
+}
+
+bool glowing_mold(const coord_def & p)
+{
+    return bool(env.pgrid(p) & FPROP_GLOW_MOLD);
+}
+
+void remove_mold(const coord_def & p)
+{
+    env.pgrid(p) &= ~FPROP_MOLD;
+    env.pgrid(p) &= ~FPROP_GLOW_MOLD;
 }
 
 feature_property_type str_to_fprop(const string &str)
@@ -44,21 +55,23 @@ feature_property_type str_to_fprop(const string &str)
         return FPROP_BLOODY;
     if (str == "highlight")
         return FPROP_HIGHLIGHT;
+    if (str == "mold")
+        return FPROP_MOLD;
     if (str == "no_cloud_gen")
         return FPROP_NO_CLOUD_GEN;
     if (str == "no_tele_into")
         return FPROP_NO_TELE_INTO;
     if (str == "no_tide")
         return FPROP_NO_TIDE;
+    if (str == "no_submerge")
+        return FPROP_NO_SUBMERGE;
     if (str == "no_jiyva")
         return FPROP_NO_JIYVA;
 
     return FPROP_NONE;
 }
 
-#ifdef USE_TILE
 char blood_rotation(const coord_def & p)
 {
     return (env.pgrid(p) & FPROP_BLOOD_EAST).flags >> 16;
 }
-#endif

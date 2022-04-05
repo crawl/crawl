@@ -1,9 +1,6 @@
-define(["jquery", "comm", "client", "./options", "./focus-trap"],
-function ($, comm, client, options, focus_trap) {
+define(["jquery", "comm", "client", "./options"],
+function ($, comm, client, options) {
     "use strict";
-
-    // Touch event duration
-    var touchstart = 0;
 
     function wrap_popup(elem, ephemeral)
     {
@@ -19,129 +16,7 @@ function ($, comm, client, options, focus_trap) {
         return wrapper.find(".ui-popup-inner").children();
     }
 
-    function maybe_prevent_server_from_handling_key(ev)
-    {
-        var $focused = $(document.activeElement);
-        if (!$focused.is("[data-sync-id]"))
-            return;
-        if ($focused.is("input[type=text]"))
-            ev.stopPropagation();
-        // stop server handling checkbox/button space/enter key events
-        var checkbox = $focused.is("input[type=checkbox]");
-        var button = $focused.is("input[type=button], button");
-        var enter = ev.which == 13;
-        var space = ev.which == 32;
-        if ((checkbox || button) && (enter || space))
-            ev.stopPropagation();
-    }
-
-    function popup_keydown_handler(ev)
-    {
-        var wrapper = $("#ui-stack").children().last();
-        var focused = document.activeElement != document.body ?
-                document.activeElement : null;
-
-        // bail if inside a (legacy) input dialog (from line_reader)
-        if ($(focused).closest("#input_dialog").length === 1)
-            return;
-        // or if outside the ui stack (probably the chat dialog)
-        if ($(focused).closest("#ui-stack").length !== 1)
-            return;
-
-        if (ev.key == "Escape" && focused)
-        {
-            document.activeElement.blur();
-            ev.stopPropagation();
-        }
-
-        if (ev.key == "Tab")
-        {
-            if (focused)
-            {
-                ev.stopPropagation();
-                return;
-            }
-
-            var focusable = wrapper[0].querySelectorAll(
-                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-            if (focusable.length == 0)
-                return;
-            var first = focusable[0];
-            var last = focusable[focusable.length-1];
-            (ev.shiftKey ? last : first).focus();
-            ev.preventDefault();
-            ev.stopPropagation();
-        }
-        ui_hotkey_handler(ev);
-        maybe_prevent_server_from_handling_key(ev);
-    }
-
-    function popup_keypress_handler(ev)
-    {
-        maybe_prevent_server_from_handling_key(ev);
-    }
-
-    function target_outside_game(ev)
-    {
-
-        // I think this is for filtering clicks to the chat window, which is
-        // supposed to work even with a popup in place
-        return ($(ev.target).closest("#game").length !== 1
-            // Also allow zooming and scrolling on mobile browsers
-            || ev.type === 'touchstart');
-    }
-
-    function popup_clickoutside_handler(ev)
-    {
-        // this simulates the focus-trap click outside to deactivate code,
-        // since for crawl we really need to send a "close popup" message
-        // to the server rather than do it in the client.
-        // TODO this lets through clicks that are in the popup's margin?
-        // using parent() doesn't help with this issue because the space is
-        // still in the border of ui-popup-outer. Maybe this is ok...
-        if (!target_outside_game(ev) && !top_popup()[0].contains(ev.target))
-        {
-            comm.send_message("key", { keycode: 27 });
-            if (ev.type == "touchend")
-            {
-                // head off a `click` event, hopefully
-                ev.preventDefault();
-                return;
-            }
-        }
-        // otherwise, ignore -- focus-trap checkPointerDown should get it
-        // next.
-    }
-
-    function popup_touchstart_handler(ev)
-    {
-        touchstart = Date.now();
-    }
-
-    function popup_touchend_handler(ev)
-    {
-        if (Date.now() - 500 < touchstart)
-            popup_clickoutside_handler(ev);
-    }
-
-    function context_disable(ev)
-    {
-        // never disable the context menu for text input
-        if (!$(ev.target).is(':input'))
-            ev.preventDefault();
-    }
-
-    function disable_contextmenu()
-    {
-        document.addEventListener("contextmenu", context_disable, true);
-    }
-
-    function undisable_contextmenu()
-    {
-        document.removeEventListener("contextmenu", context_disable, true);
-    }
-
-    function show_popup(id, centred, generation_id)
+    function show_popup(id, centred)
     {
         var $ui_stack = $("#ui-stack");
         var elem = $(id);
@@ -151,56 +26,10 @@ function ($, comm, client, options, focus_trap) {
         console.assert(elem.length === 1, "no popup to show");
         var wrapper = wrap_popup(elem, ephemeral);
         wrapper.toggleClass("centred", centred == true);
-        wrapper.attr("data-generation-id", generation_id);
         $("#ui-stack").append(wrapper);
         wrapper.stop(true, true).fadeIn(100, function () {
-            if (client.is_watching())
-                return;
-            wrapper[0].focus_trap = focus_trap(elem[0], {
-                escapeDeactivates: false, // explicitly handled
-                clickOutsideDeactivates: false, // explicitly handled
-                fallbackFocus: document.body,
-                onActivate: function () {
-                    if ($("#ui-stack").children().length == 1) {
-                        document.addEventListener("keydown",
-                            popup_keydown_handler, true);
-                        document.addEventListener("keypress",
-                            popup_keypress_handler, true);
-                        if (options.get("tile_web_mouse_control"))
-                        {
-                            document.addEventListener("mousedown",
-                                popup_clickoutside_handler, true);
-                            document.addEventListener("touchstart",
-                                popup_touchstart_handler, true);
-                            document.addEventListener("touchend",
-                                popup_touchend_handler, true);
-                        }
-                        disable_contextmenu();
-                    }
-                },
-                onDeactivate: function () {
-                    if ($("#ui-stack").children().length == 1) {
-                        document.removeEventListener("keydown",
-                            popup_keydown_handler, true);
-                        document.removeEventListener("keypress",
-                            popup_keypress_handler, true);
-                        if (options.get("tile_web_mouse_control"))
-                        {
-                            document.removeEventListener("mousedown",
-                                popup_clickoutside_handler, true);
-                            document.removeEventListener("touchstart",
-                                popup_touchstart_handler, true);
-                            document.removeEventListener("touchend",
-                                popup_touchend_handler, true);
-                        }
-                        undisable_contextmenu();
-                    }
-                },
-                allowOutsideClick: target_outside_game,
-            }).activate();
-        }).css("display","");
-        if (client.is_watching())
-            wrapper.find("input, button").attr("disabled", true);
+            elem.focus();
+        });
         if (elem.find(".paneset").length > 0)
             ui_resize_handler();
     }
@@ -214,8 +43,6 @@ function ($, comm, client, options, focus_trap) {
         var elem = unwrap_popup(wrapper).blur();
         if (!wrapper.data("ephemeral"))
             elem.detach().addClass("hidden").appendTo("body");
-        if (wrapper[0].focus_trap)
-            wrapper[0].focus_trap.deactivate();
         wrapper.remove();
 
         if (show_below === false)
@@ -228,7 +55,7 @@ function ($, comm, client, options, focus_trap) {
             elem = unwrap_popup(wrapper);
             wrapper.stop(true, true).fadeIn(100, function () {
                 elem.focus();
-            }).css("display","");
+            });
         }
     }
 
@@ -281,105 +108,6 @@ function ($, comm, client, options, focus_trap) {
         }
     }
 
-    function utf8_from_key_value(key)
-    {
-        if (key.length === 1)
-            return key.charCodeAt(0);
-        else switch (key) {
-            case "Tab": return 9;
-            case "Enter": return 13;
-            case "Escape": return 27;
-            default: return 0;
-        }
-    }
-
-    function key_value_from_utf8(num)
-    {
-        switch (num) {
-            case 9: return "Tab";
-            case 13: return "Enter";
-            case 27: return "Escape";
-            default: return String.fromCharCode(num);
-        }
-    }
-
-    function ui_hotkey_handler(ev) {
-        if (ev.type === "click") {
-            var key_value = $(ev.currentTarget).attr("data-hotkey");
-            var keycode = utf8_from_key_value(key_value);
-            if (keycode)
-                comm.send_message("key", { keycode: keycode });
-        } else if (ev.type == "keydown") {
-            var $elem = $("#ui-stack [data-hotkey=\""+event.key+"\"]");
-            if ($elem.length === 1) {
-                $elem.click();
-                ev.preventDefault();
-                ev.stopPropagation();
-            }
-        }
-    }
-
-    function ui_input_handler(ev) {
-        // this check is intended to fix a race condition when starting the
-        // game: don't send any state info to the server until we have
-        // received some. I'm not sure if it is really the right solution...
-        if (!has_received_ui_state)
-            return;
-        var state_msg = {};
-        sync_save_state(ev.target, state_msg);
-        send_state_sync(ev.target, state_msg);
-    }
-
-    function ui_focus_handler(ev) {
-        if (ev.type === "focusin") {
-            var $elem = $(ev.target);
-            if ($elem.closest(".ui-popup[data-generation-id]").length == 0)
-                return;
-            if (!$elem.is("[data-sync-id]"))
-            {
-                console.warn("tabbed to non-syncable element: ", $elem[0]);
-                return;
-            }
-            send_state_sync($elem, { has_focus: true });
-        } else if (ev.type === "focusout") {
-            if (!ev.relatedTarget && top_popup())
-                send_state_sync(top_popup(), { has_focus: true });
-        }
-    }
-
-    var MO = new MutationObserver(function(mutations) {
-        mutations.forEach(function(record) {
-            var $chat = $(record.target);
-            if ($chat.css("display") === "none")
-                $chat[0].focus_trap.deactivate();
-        });
-    });
-
-    function ui_chat_focus_handler(ev) {
-        if ($("#chat").hasClass("focus-trap"))
-            return;
-
-        var $chat = $("#chat");
-        $chat[0].focus_trap = focus_trap($chat[0], {
-            escapeDeactivates: true, // n.b. this apparently isn't doing
-                                     // anything, over and above escape simply
-                                     // hiding the chat div
-            onActivate: function () {
-                $chat.addClass("focus-trap");
-                /* detect chat.js calling hide() via style attribute */
-                MO.observe($chat[0], {
-                    attributes : true,
-                    attributeFilter : ['style'],
-                });
-            },
-            onDeactivate: function () {
-                $chat.removeClass("focus-trap");
-            },
-            returnFocusOnDeactivate: false,
-            clickOutsideDeactivates: true,
-        }).activate();
-    }
-
     options.add_listener(function ()
     {
         var size = options.get("tile_font_crt_size");
@@ -396,120 +124,18 @@ function ($, comm, client, options, focus_trap) {
                 options.get("tile_display_mode"));
     });
 
-    var has_received_ui_state = false;
     $(document).off("game_init.ui")
         .on("game_init.ui", function () {
-        has_received_ui_state = false;
         $(document).off("game_keydown.ui game_keypress.ui")
             .on("game_keydown.ui", ui_key_handler)
-            .on("game_keypress.ui", ui_key_handler)
-            .off("click.ui", "[data-hotkey]")
-            .on("click.ui", "[data-hotkey]", ui_hotkey_handler)
-            .off("input.ui focus.ui", "[data-sync-id]")
-            .on("input.ui focus.ui", "[data-sync-id]", ui_input_handler)
-            .off("focusin.ui focusout.ui")
-            .on("focusin.ui focusout.ui", ui_focus_handler)
-            .off("focusin.ui", "#chat_input")
-            .on("focusin.ui", "#chat_input",  ui_chat_focus_handler);
+            .on("game_keypress.ui", ui_key_handler);
         $(window).off("resize.ui").on("resize.ui", ui_resize_handler);
-    });
-
-    function sync_save_state(elem, state)
-    {
-        switch (elem.type)
-        {
-            case "text":
-                state.text = elem.value;
-                return;
-            case "checkbox":
-                state.checked = elem.checked;
-                return;
-        }
-    }
-
-    function sync_load_state(elem, state)
-    {
-        switch (elem.type)
-        {
-            case "text":
-                elem.value = state.text;
-                break;
-            case "checkbox":
-                elem.checked = state.checked;
-                break;
-            default:
-                return;
-        }
-    }
-
-    var receiving_ui_state = false;
-
-    function send_state_sync(elem, state)
-    {
-        if (receiving_ui_state)
-            return;
-        // TODO: remove the existence check once enough time has passed for
-        // browser caches to expire
-        if (client.in_game && !client.in_game() || client.is_watching())
-            return;
-        var $target_popup = $(elem).closest("[data-generation-id]");
-        if ($target_popup[0] != top_popup().closest("[data-generation-id]")[0])
-            return;
-        state.generation_id = +$target_popup.attr("data-generation-id");
-        state.widget_id = $(elem).attr("data-sync-id") || null;
-        comm.send_message("ui_state_sync", state);
-    }
-
-    function sync_focus_state(elem)
-    {
-        if (client.is_watching())
-            top_popup().find(".style-focused").removeClass("style-focused");
-        if (elem)
-        {
-            elem.focus();
-            if (client.is_watching())
-                $(elem).addClass("style-focused");
-        }
-        else
-            document.activeElement.blur();
-    }
-
-    comm.register_handlers({
-        "ui-state-sync": function (msg) {
-            has_received_ui_state = true;
-            if (msg.from_webtiles && !client.is_watching())
-                return;
-            var popup = top_popup();
-            if (!popup)
-                return;
-            var generation_id = +popup.closest("[data-generation-id]")
-                    .attr("data-generation-id");
-            if (generation_id != msg.generation_id)
-                return;
-            var elem = msg.widget_id != "" ?
-                    popup.find('[data-sync-id='+msg.widget_id+']')[0] : null;
-            try {
-                receiving_ui_state = true;
-                if (msg.has_focus)
-                    sync_focus_state(elem);
-                else if (elem)
-                    sync_load_state(elem, msg);
-            } finally {
-                receiving_ui_state = false;
-            }
-        },
     });
 
     return {
         show_popup: show_popup,
         hide_popup: hide_popup,
         top_popup: top_popup,
-        disable_contextmenu: disable_contextmenu,
-        undisable_contextmenu: undisable_contextmenu,
-        target_outside_game: target_outside_game,
         hide_all_popups: hide_all_popups,
-        utf8_from_key_value: utf8_from_key_value,
-        key_value_from_utf8: key_value_from_utf8,
-        sync_focus_state: sync_focus_state,
     };
 });

@@ -18,6 +18,7 @@
 #include "areas.h"
 #include "arena.h"
 #include "beam.h"
+#include "bloodspatter.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -26,31 +27,41 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "exclude.h"
+#include "fight.h"
 #include "fprop.h"
-#include "god-abil.h"
 #include "item-prop.h"
+#include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
 #include "mgen-data.h"
+#include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-poly.h"
+#include "mon-project.h"
+#include "mon-speak.h"
+#include "mon-tentacle.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-damage.h"
+#include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
 #include "target.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "viewchar.h"
 #include "view.h"
 
 static bool _slime_split_merge(monster* thing);
@@ -76,20 +87,7 @@ void draconian_change_colour(monster* drac)
         if (!(slot.flags & MON_SPELL_BREATH))
             drac->spells.push_back(slot);
 
-    drac->spells.push_back(drac_breath(draconian_subspecies(*drac)));
-}
-
-void boris_covet_orb(monster* boris)
-{
-    if (boris->type != MONS_BORIS || !player_has_orb())
-        return;
-
-    if (boris->observable())
-        simple_monster_message(*boris, " is empowered by the presence of the orb!");
-
-    boris->add_ench(mon_enchant(ENCH_HASTE, 1, boris, INFINITE_DURATION));
-    boris->add_ench(mon_enchant(ENCH_EMPOWERED_SPELLS, 1, boris,
-                    INFINITE_DURATION));
+    drac->spells.push_back(drac_breath(draco_or_demonspawn_subspecies(*drac)));
 }
 
 bool ugly_thing_mutate(monster& ugly, bool force)
@@ -228,8 +226,8 @@ static monster* _do_split(monster* thing, const coord_def & target)
     new_slime->flags = thing->flags;
     new_slime->props = thing->props;
     new_slime->summoner = thing->summoner;
-    if (thing->props.exists(BLAME_KEY))
-        new_slime->props[BLAME_KEY] = thing->props[BLAME_KEY].get_vector();
+    if (thing->props.exists("blame"))
+        new_slime->props["blame"] = thing->props["blame"].get_vector();
 
     int split_off = thing->blob_size / 2;
     float max_per_blob = thing->max_hit_points / float(thing->blob_size);
@@ -275,13 +273,147 @@ static void _lose_turn(monster* mons, bool has_gone)
         mons->speed_increment -= entry->energy_usage.move;
 }
 
+// Merge a crawling corpse/macabre mass into another corpse/mass or an
+// abomination.
+static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
+{
+    const int orighd = merge_to->get_experience_level();
+    int addhd = crawlie->get_experience_level();
+
+    // Abomination is fully healed.
+    if (merge_to->type == MONS_ABOMINATION_LARGE
+        && merge_to->max_hit_points == merge_to->hit_points)
+    {
+        return false;
+    }
+
+    // Need twice as many HD past 15.
+    if (orighd > 15)
+        addhd = (1 + addhd)/2;
+    else if (orighd + addhd > 15)
+        addhd = (15 - orighd) + (1 + addhd - (15 - orighd))/2;
+
+    int newhd = orighd + addhd;
+    monster_type new_type;
+    int hp, mhp;
+
+    if (newhd < 6)
+    {
+        // Not big enough for an abomination yet.
+        new_type = MONS_MACABRE_MASS;
+        mhp = merge_to->max_hit_points + crawlie->max_hit_points;
+        hp = merge_to->hit_points += crawlie->hit_points;
+    }
+    else
+    {
+        // Need 11 HD and 3 corpses for a large abomination.
+        if (newhd < 11
+            || (crawlie->type == MONS_CRAWLING_CORPSE
+                && merge_to->type == MONS_CRAWLING_CORPSE))
+        {
+            new_type = MONS_ABOMINATION_SMALL;
+            newhd = min(newhd, 15);
+        }
+        else
+        {
+            new_type = MONS_ABOMINATION_LARGE;
+            newhd = min(newhd, 30);
+        }
+
+        // Recompute in case we limited newhd.
+        addhd = newhd - orighd;
+
+        if (merge_to->type == MONS_ABOMINATION_SMALL)
+        {
+            // Adding to an existing abomination.
+            const int hp_gain = hit_points(addhd * 45); // 4.5 avg hp/hd
+            mhp = merge_to->max_hit_points + hp_gain;
+            hp = merge_to->hit_points + hp_gain;
+            hp += hp/10;
+        }
+        else if (merge_to->type == MONS_ABOMINATION_LARGE)
+        {
+            // Healing an existing abomination.
+            mhp = merge_to->max_hit_points;
+            hp = merge_to->hit_points;
+            if (mhp <= hp + mhp/10)
+                hp = mhp;
+            else
+                hp += mhp/10;
+        }
+        else
+        {
+            // Making a new abomination.
+            hp = mhp = hit_points(newhd * 45); // 4.5 avg hp/hd
+        }
+    }
+
+    const monster_type old_type = merge_to->type;
+    const string old_name = merge_to->name(DESC_A);
+
+    // Change the monster's type if we need to.
+    if (new_type != old_type)
+        change_monster_type(merge_to, new_type);
+
+    // Combine enchantment durations (weighted by original HD).
+    merge_to->set_hit_dice(orighd);
+    merge_ench_durations(*crawlie, *merge_to, true);
+
+    init_abomination(*merge_to, newhd);
+    merge_to->max_hit_points = mhp;
+    merge_to->hit_points = hp;
+
+    // TODO: probably should be more careful about which flags.
+    merge_to->flags |= crawlie->flags;
+
+    _lose_turn(merge_to, merge_to->mindex() < crawlie->mindex());
+
+    behaviour_event(merge_to, ME_EVAL);
+
+    // Messaging.
+    if (you.can_see(*merge_to))
+    {
+        const bool changed = new_type != old_type;
+        if (you.can_see(*crawlie))
+        {
+            if (crawlie->type == old_type)
+            {
+                mprf("Two %s merge%s%s.",
+                     pluralise_monster(crawlie->name(DESC_PLAIN)).c_str(),
+                     changed ? " to form " : "",
+                     changed ? merge_to->name(DESC_A).c_str() : "");
+            }
+            else
+            {
+                mprf("%s merges with %s%s%s.",
+                     crawlie->name(DESC_A).c_str(),
+                     old_name.c_str(),
+                     changed ? " to form " : "",
+                     changed ? merge_to->name(DESC_A).c_str() : "");
+            }
+        }
+        else if (changed)
+        {
+            mprf("%s suddenly becomes %s.",
+                 uppercase_first(old_name).c_str(),
+                 merge_to->name(DESC_A).c_str());
+        }
+        else
+            mprf("%s twists grotesquely.", merge_to->name(DESC_A).c_str());
+    }
+    else if (you.can_see(*crawlie))
+        mprf("%s suddenly disappears!", crawlie->name(DESC_A).c_str());
+
+    // Now kill the other monster.
+    monster_die(*crawlie, KILL_DISMISSED, NON_MONSTER, true);
+
+    return true;
+}
+
 // Actually merge two slime creatures, pooling their hp, etc.
 // initial_slime is the one that gets killed off by this process.
 static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 {
-    const string old_name = merge_to->name(DESC_A);
-    const bool merge_to_was_visible = you.can_see(*merge_to);
-
     // Combine enchantment durations.
     merge_ench_durations(*initial_slime, *merge_to);
 
@@ -293,14 +425,6 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
     // passed on if the merged slime subsequently splits. Hopefully
     // this won't do anything weird.
     merge_to->flags |= initial_slime->flags;
-
-    // Transfer duel status over to the merge target.
-    if (initial_slime->props.exists(OKAWARU_DUEL_CURRENT_KEY))
-    {
-        initial_slime->props.erase(OKAWARU_DUEL_CURRENT_KEY);
-        merge_to->props[OKAWARU_DUEL_TARGET_KEY] = true;
-        merge_to->props[OKAWARU_DUEL_CURRENT_KEY] = true;
-    }
 
     // Merging costs the combined slime some energy. The idea is that if 2
     // slimes merge you can gain a space by moving away the turn after (maybe
@@ -317,36 +441,24 @@ static void _do_merge_slimes(monster* initial_slime, monster* merge_to)
 
     behaviour_event(merge_to, ME_EVAL);
 
-    // Messaging cases:
-    // 1. MT & I were both visible & still are
-    // 2. MT was visible, I wasn't but now both are
-    // 3. MT was visible, I wasn't and now both aren't
-    // 4. MT wasn't visible, I was and now both are
-    // 5. MT and I weren't visible & still aren't
-    if (merge_to_was_visible)
+    // Messaging.
+    if (you.can_see(*merge_to))
     {
-        if (you.can_see(*merge_to))
+        if (you.can_see(*initial_slime))
         {
-            // cases 1 and 2
             mprf("Two slime creatures merge to form %s.",
                  merge_to->name(DESC_A).c_str());
         }
         else
         {
-            // case 3
-            mprf("Something merges into %s, and it vanishes!",
-                 old_name.c_str());
+            mprf("A slime creature suddenly becomes %s.",
+                 merge_to->name(DESC_A).c_str());
         }
 
         flash_view_delay(UA_MONSTER, LIGHTGREEN, 150);
     }
     else if (you.can_see(*initial_slime))
-    {
-        // case 4
-        mprf("%s merges with something you can't see.",
-             initial_slime->name(DESC_A).c_str());
-    }
-    // case 5 (no-op)
+        mpr("A slime creature suddenly disappears!");
 
     // Have to 'kill' the slime doing the merging.
     monster_die(*initial_slime, KILL_DISMISSED, NON_MONSTER, true);
@@ -396,7 +508,7 @@ static bool _slime_merge(monster* thing)
         // Don't merge if there is an open square that reduces distance
         // to target, even if we found a possible slime to merge with.
         if (!actor_at(*ai)
-            && mons_class_can_pass(MONS_SLIME_CREATURE, env.grid(*ai)))
+            && mons_class_can_pass(MONS_SLIME_CREATURE, grd(*ai)))
         {
             return false;
         }
@@ -431,6 +543,43 @@ static bool _slime_merge(monster* thing)
     }
 
     // No adjacent slime creatures we could merge with.
+    return false;
+}
+
+static bool _crawlie_is_mergeable(monster *mons)
+{
+    if (!mons)
+        return false;
+
+    switch (mons->type)
+    {
+    case MONS_ABOMINATION_SMALL:
+    case MONS_ABOMINATION_LARGE:
+    case MONS_CRAWLING_CORPSE:
+    case MONS_MACABRE_MASS:
+        break;
+    default:
+        return false;
+    }
+
+    return !(mons->is_shapeshifter() || _disabled_merge(mons));
+}
+
+static bool _crawling_corpse_merge(monster *crawlie)
+{
+    if (!crawlie || _disabled_merge(crawlie))
+        return false;
+
+    // Check for adjacent crawlies
+    for (fair_adjacent_iterator ai(crawlie->pos()); ai; ++ai)
+    {
+        monster * const mon = monster_at(*ai);
+        // If there is a crawlie we can merge with, try to do so.
+        if (_crawlie_is_mergeable(mon) && _do_merge_crawlies(crawlie, mon))
+            return true;
+    }
+
+    // No adjacent crawlies.
     return false;
 }
 
@@ -530,7 +679,7 @@ bool slime_creature_polymorph(monster& slime, poly_power_type power)
         }
     }
 
-    return monster_polymorph(&slime, RANDOM_POLYMORPH_MONSTER, power);
+    return monster_polymorph(&slime, RANDOM_MONSTER, power);
 }
 
 static bool _starcursed_split(monster* mon)
@@ -733,7 +882,7 @@ bool lost_soul_revive(monster& mons, killer_type killer)
             remove_unique_annotation(&mons);
         }
 
-        targeter_radius hitfunc(*mi, LOS_SOLID);
+        targeter_los hitfunc(*mi, LOS_SOLID);
         flash_view_delay(UA_MONSTER, GREEN, 200, &hitfunc);
 
         mons.heal(mons.max_hit_points);
@@ -766,8 +915,7 @@ bool lost_soul_revive(monster& mons, killer_type killer)
             }
         }
 
-        if (mi->alive())
-            monster_die(**mi, KILL_MISC, -1, true);
+        monster_die(**mi, KILL_MISC, -1, true);
 
         return true;
     }
@@ -795,7 +943,7 @@ void treant_release_fauna(monster& mons)
 
         if (fauna)
         {
-            fauna->props[BAND_LEADER_KEY].get_int() = mons.mid;
+            fauna->props["band_leader"].get_int() = mons.mid;
 
             // Give released fauna the same summon duration as their 'parent'
             if (abj.ench != ENCH_NONE)
@@ -813,44 +961,6 @@ void treant_release_fauna(monster& mons)
     }
 }
 
-static bool _adj_to_tree(coord_def p)
-{
-    for (adjacent_iterator ai(p); ai; ++ai)
-        if (feat_is_tree(env.grid(*ai)))
-            return true;
-    return false;
-}
-
-static coord_def _find_nearer_tree(coord_def cur_loc, coord_def target)
-{
-    coord_def p = {0, 0};
-    int seen = 0;
-    // don't bother teleporting to something that's at the same distance
-    // from the target as you already are
-    int closest = grid_distance(cur_loc, target) - 1;
-    for (distance_iterator di(target); di; ++di)
-    {
-        const int dist = grid_distance(target, *di);
-        if (dist > closest)
-            break;
-
-        if (!cell_see_cell(target, *di, LOS_NO_TRANS) // there might be a better iterator
-            || !_adj_to_tree(*di)
-            || !monster_habitable_grid(MONS_ELEIONOMA, env.grid(*di)))
-        {
-            continue;
-        }
-        // XXX: also check for dangerous clouds?
-
-        closest = dist;
-
-        seen++;
-        if (x_chance_in_y(1, seen))
-            p = *di;
-    }
-    return p;
-}
-
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
                                    spell_type spell_cast)
 {
@@ -862,13 +972,14 @@ bool mon_special_ability(monster* mons)
     bool used = false;
 
     const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
-                                  ? draconian_subspecies(*mons)
+                                  ? draco_or_demonspawn_subspecies(*mons)
                                   : mons->type;
 
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep() || mons->submerged())
          && mons->type != MONS_SLIME_CREATURE
-         && mons->type != MONS_LOST_SOUL)
+         && mons->type != MONS_LOST_SOUL
+         && !_crawlie_is_mergeable(mons))
     {
         return false;
     }
@@ -890,6 +1001,13 @@ bool mon_special_ability(monster* mons)
             return true;
         break;
 
+    case MONS_CRAWLING_CORPSE:
+    case MONS_MACABRE_MASS:
+        used = _crawling_corpse_merge(mons);
+        if (!mons->alive())
+            return true;
+        break;
+
     case MONS_BALL_LIGHTNING:
         if (is_sanctuary(mons->pos()))
             break;
@@ -904,48 +1022,11 @@ bool mon_special_ability(monster* mons)
 
         for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
         {
-            if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
-                || grid_distance(mons->pos(), targ->pos()) > 2
-                || !you.see_cell(targ->pos()))
-            {
+            if (mons_aligned(mons, *targ) || grid_distance(mons->pos(), targ->pos()) > 2)
                 continue;
-            }
 
             if (!cell_is_solid(targ->pos()))
             {
-                mons->suicide();
-                used = true;
-                break;
-            }
-        }
-        break;
-
-    case MONS_FOXFIRE:
-        if (is_sanctuary(mons->pos()))
-            break;
-
-        if (mons->attitude == ATT_HOSTILE
-            && grid_distance(you.pos(), mons->pos()) == 1)
-        {
-            foxfire_attack(mons, &you);
-            check_place_cloud(CLOUD_FLAME, mons->pos(), 2, mons);
-            mons->suicide();
-            used = true;
-            break;
-        }
-
-        for (monster_near_iterator targ(mons, LOS_NO_TRANS); targ; ++targ)
-        {
-            if (mons_aligned(mons, *targ) || mons_is_firewood(**targ)
-                || grid_distance(mons->pos(), targ->pos()) > 1
-                || !you.see_cell(targ->pos()))
-            {
-                continue;
-            }
-
-            if (!cell_is_solid(targ->pos()))
-            {
-                foxfire_attack(mons, *targ);
                 mons->suicide();
                 used = true;
                 break;
@@ -989,8 +1070,8 @@ bool mon_special_ability(monster* mons)
     {
         // If we would try to move into a briar (that we might have just created
         // defensively), let's see if we can shoot our foe through it instead
-        if (actor_at(mons->pos() + mons->props[MMOV_KEY].get_coord())
-            && actor_at(mons->pos() + mons->props[MMOV_KEY].get_coord())->type == MONS_BRIAR_PATCH
+        if (actor_at(mons->pos() + mons->props["mmov"].get_coord())
+            && actor_at(mons->pos() + mons->props["mmov"].get_coord())->type == MONS_BRIAR_PATCH
             && !one_chance_in(3))
         {
             actor *foe = mons->get_foe();
@@ -1012,7 +1093,7 @@ bool mon_special_ability(monster* mons)
         // Otherwise, if our foe is approaching us, we might want to raise a
         // defensive wall of brambles (use the number of brambles in the area
         // as some indication if we've already done this, and shouldn't repeat)
-        else if (mons->props[FOE_APPROACHING_KEY].get_bool() == true
+        else if (mons->props["foe_approaching"].get_bool() == true
                  && !mons_is_confused(*mons)
                  && coinflip())
         {
@@ -1037,48 +1118,24 @@ bool mon_special_ability(monster* mons)
 
     case MONS_WATER_NYMPH:
     {
-        if (!one_chance_in(5))
-            break;
-
-        actor *foe = mons->get_foe();
-        if (!foe || !mons->can_see(*foe) || feat_is_water(env.grid(foe->pos())))
-            break;
-
-        const coord_def targ = foe->pos();
-        coord_def spot;
-        if (!find_habitable_spot_near(targ, MONS_ELECTRIC_EEL, 3, false, spot)
-            || targ.distance_from(spot) >= targ.distance_from(mons->pos()))
+        if (one_chance_in(5))
         {
-            break;
+            actor *foe = mons->get_foe();
+            if (foe && !feat_is_water(grd(foe->pos())))
+            {
+                coord_def spot;
+                if (find_habitable_spot_near(foe->pos(), MONS_ELECTRIC_EEL, 3, false, spot)
+                    && foe->pos().distance_from(spot)
+                     < foe->pos().distance_from(mons->pos()))
+                {
+                    if (mons->move_to_pos(spot))
+                    {
+                        simple_monster_message(*mons, " flows with the water.");
+                        used = true;
+                    }
+                }
+            }
         }
-
-        if (mons->move_to_pos(spot))
-        {
-            simple_monster_message(*mons, " flows with the water.");
-            used = true;
-        }
-    }
-    break;
-
-    case MONS_ELEIONOMA:
-    {
-        if (!one_chance_in(3))
-            break;
-
-        actor *foe = mons->get_foe();
-        if (!foe || !mons->can_see(*foe))
-            break;
-
-        const int dist = grid_distance(foe->pos(), mons->pos());
-        if (dist < 3)
-            break;
-
-        const coord_def target = _find_nearer_tree(mons->pos(), foe->pos());
-        if (target.origin() || !mons->move_to_pos(target))
-            break;
-
-        simple_monster_message(*mons, " flows through the trees.");
-        used = true;
     }
     break;
 
@@ -1095,7 +1152,7 @@ bool mon_special_ability(monster* mons)
     break;
 
     case MONS_GUARDIAN_GOLEM:
-        if (mons->hit_points * 2 < mons->max_hit_points
+        if (mons->hit_points * 2 < mons->max_hit_points && one_chance_in(4)
              && !mons->has_ench(ENCH_INNER_FLAME))
         {
             simple_monster_message(*mons, " overheats!");

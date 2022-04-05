@@ -10,7 +10,7 @@
 -- {ego} for identified branded items.
 -- { <skill> } - the relevant weapon skill for weapons.
 -- { <num>-handed } - the handedness of the weapon for weapons.
--- { <class> } - item class: gold, weapon, missile, wand, carrion,
+-- { <class> } - item class: gold, weapon, missile, wand, carrion, food,
 --               scroll, jewellery, potion, book, magical staff, orb, misc,
 --               <armourtype> armour
 -- { <ego> } - short item ego description: rC+, rPois, SInv, freeze etc.
@@ -83,21 +83,20 @@ function ch_stash_search_annotate_item(it)
       end
       annot = annot .. "} "
     else
-      if it.ego_type_terse == "Fly" then
-        annot = annot .. "{flight} "
-      end
       annot = annot .. "{" .. it.ego_type_terse .. "} "
     end
   end
 
   if it.class(true) == "magical staff" and not it.artefact then
-    annot = annot .. "{weapon} "
     local props = {
       ["air"] = "rElec",
       ["cold"] = "rC+",
       ["death"] = "rN+",
+      ["energy"] = "channel",
       ["fire"] = "rF+",
-      ["poison"] = "rPois"
+      ["poison"] = "rPois",
+      ["power"] = "MP+",
+      ["wizardry"] = "Wiz"
     }
     if props[it.subtype()] then
       annot = annot .. "{" .. props[it.subtype()] .. "} "
@@ -109,7 +108,7 @@ function ch_stash_search_annotate_item(it)
       ["troll"] = "Regen+",
       ["steam"] = "rSteam",
       ["acid"] = "rCorr",
-      ["quicksilver"] = "Will+",
+      ["quicksilver"] = "MR+",
       ["swamp"] = "rPois",
       ["fire"] = "rF++ rC-",
       ["ice"] = "rC++ rF-",
@@ -122,6 +121,10 @@ function ch_stash_search_annotate_item(it)
     if props[t] then
       annot = annot .. "{" .. props[t] .. "} "
     end
+  end
+
+  if it.class(true) == "potion" and it.is_preferred_food then
+    annot = annot .. "{food} "
   end
 
   if it.class(true) == "armour" then
@@ -139,13 +142,10 @@ function ch_stash_search_annotate_item(it)
 
   if it.class(true) == "armour" then
       annot = annot .. " {" .. it.subtype() .. " armor}"
-      if it.subtype() ~= "body" then
-          annot = annot .. " {auxiliary armor} {auxiliary armour}"
-      end
   end
 
   local resistances = {
-    ["Will+"] = "willpower",
+    ["MR+"] = "magic",
     ["rC+"] = "cold",
     ["rCorr"] = "corrosion",
     ["rElec"] = "electricity",
@@ -158,11 +158,6 @@ function ch_stash_search_annotate_item(it)
     if annot:find(inscription, 1, true) then
       annot = annot .. " {resist " .. res .. "} {" .. res .. " resistance}"
     end
-  end
-
-  -- Tag Willpower items as MR for back-compat.
-  if annot:find("Will+", 1, true) then
-    annot = annot .. " {MR} {resist magic} {magic resistance}"
   end
 
   return annot

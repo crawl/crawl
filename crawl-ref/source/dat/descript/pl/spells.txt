@@ -91,11 +91,6 @@ Ten czar uwalnia ogromne elektryczne wyładowanie które przepływa od celu do
 celu. Jeśli jednak cele nie są wystarczająco blisko siebie, piorun ten zamiast
 tego pójdzie w ziemię.
 %%%%
-Charm spell
-
-Ten czar, jeśli nie zostanie odparty, tymczasowo przejmuje kontrolę nad wybraną
-istotą.
-%%%%
 Confuse spell
 
 Ten czar, jeśli nie zostanie odparty, powoduje tymczasowe zaćmienie umysłu u
@@ -128,6 +123,12 @@ wydzielając chmury nekromanckiej miazmy, wysoce niezdrowej dla wszelkich istot
 Cure Poison spell
 
 Ten czar leczy truciznę z ciała rzucającego.
+%%%%
+Darkness spell
+
+Ten czar przyciemnia światło, zmniejszając zasięg wzroku. Brzegi tego efektu są
+bardzo stopniowe, tak więc nie wzbudza to alarmu u niezbyt uważnych
+przeciwników.
 %%%%
 Death Channel spell
 
@@ -165,6 +166,11 @@ Ten czar tymczasowo nadaje rzucającemu postać wielkiego ognistego smoka, dają
 kły, pazury, nieludzko twardą skórę jak i zdolność ziania ogniem. Jeśli
 rzucający jest smokowcem, smok zamiast tego zachowa kolor jak i typ oddechu
 (np. biali smokowcy zmieniają się w lodowe smoki i zioną chłodem).
+%%%%
+Enslavement spell
+
+Ten czar, jeśli nie zostanie odparty, tymczasowo przejmuje kontrolę nad wybraną
+istotą.
 %%%%
 Fire Brand spell
 
@@ -399,6 +405,14 @@ Shock spell
 
 Ten czar ciska małą dawkę elektryczności, zdolną do odbijania się od ścian.
 %%%%
+Shroud of Golubria spell
+
+Ten czar zakrzywia przestrzeń, tworząc osłonę wokół ciała rzucającego,
+zatrzymując ciosy. Nie daje to żadnej ochrony przed pociskami, jako że
+poruszają się one zbyt szybko aby ten czar mógł je odchylić. Ta osłona jest
+bardzo niestabilna, i ma tendencję do zawodzenia, zwłaszcza wobec mocniejszych
+ataków.
+%%%%
 Simulacrum spell
 
 Ten czar zmienia kawałek mięsa w ręku rzucającego do stworzenia lodowej
@@ -454,6 +468,10 @@ Ten czar zmienia skórę rzucającego w kamień, o twardości zależnej od
 umiejętności w Magii Ziemi. Działa to tylko na mniej więcej normalne żywe
 ciało, i koliduje z większością przemian. Z jednym wyjątkiem: w formie statuy,
 ten czar jest bardziej efektywny.
+%%%%
+Summon Butterflies spell
+
+Ten czar przyzywa rój kolorowych motyli. Piękne, ale czy przydatne?
 %%%%
 Summon Horrible Things spell
 

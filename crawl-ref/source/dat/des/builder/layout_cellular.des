@@ -104,14 +104,13 @@
 #       not overlap properly. Some other render modes would be
 #       good.
 #
-# TODO: A lower minimum value for the non-Dis minimum size in
-#       grid_opts would be ideal, but this causes a noticeable
-#       delay when the level is generated. Can this be optimized
-#       to remove that delay?
+# TODO: This layout is sometimes very slow (several seconds) to
+#       generate.  If this can be fixed, add it in at weights
+#       2 (Lair), 5 (Zot), 10 (Pan)
 #
 NAME:   layout_cellular_growth
 DEPTH:  Lair, Zot, Pan
-WEIGHT: 2 (Lair), 5 (Zot), 10 (Pan)
+WEIGHT: 0
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_passages
 {{
@@ -126,12 +125,12 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
     maximum_size = crawl.random_range(5,8),
     -- TODO: Having a minimum size of 1 looks great but is really slow until the
     -- border counting is optimised, it also requires a higher number of seeds/iters than normal
-    minimum_size = doors and crawl.random_range(4,5) or crawl.random_range(3,4),
+    minimum_size = doors and crawl.random_range(4,5) or crawl.random_range(2,4),
     subdivide_initial_chance = 90,
     subdivide_level_multiplier = .9,
   }
 
-  local bounds = omnigrid.padded_bounds(2,10)
+  local bounds = padded_bounds(2,10)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   -- Begin with a number of "seed" cells that will grow to form structures
@@ -248,7 +247,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
   -- Make the borders less bad and sometimes some central wall regions.
   -- Customise a little in different branches. Small chance for
   -- individual buildings to have different materials.
-  local gxm,gym = dgn.builder_bounds()
+  local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = 'x' }
 
   local open = not crawl.one_chance_in(4)
@@ -263,14 +262,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_passages
     subdivide_level_multiplier = .9,
   }
 
-  local maxbounds = {
-    x1 = 1,
-    y1 = 1,
-    x2 = gxm - 2,
-    y2 = gym - 2,
-  }
-
-  local bounds = omnigrid.padded_bounds(2,8,maxbounds)
+  local bounds = padded_bounds(2,8)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   -- Seed a number of buildings
@@ -374,7 +366,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
     subdivide_level_multiplier = .9,
   }
 
-  local bounds = omnigrid.padded_bounds(2,8)
+  local bounds = padded_bounds(2,8)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
   local doors = crawl.one_chance_in(3)
   local corners = false
@@ -576,13 +568,13 @@ TAGS:   no_rotate no_vmirror no_hmirror
   end
 
   local material_pairs = {
-    { outer = 'n', inner = 'L', weight = 5 },
-    { outer = 'n', inner = 'y', weight = 5 },
-    { outer = 'n', inner = 'z', weight = 5 },
-    { outer = 'W', inner = 'z', weight = 2 },
-    { outer = 'l', inner = 'L', weight = 1 },
-    { outer = '1', inner = 'z', weight = 1 },
-    { outer = '1', inner = 'y', weight = 1 },
+    { outer = 'n', inner = 'l', weight = 5 },
+    { outer = 'n', inner = 'W', weight = 5 },
+    { outer = 'n', inner = 'w', weight = 5 },
+    { outer = 'W', inner = 'w', weight = 2 },
+    { outer = 'l', inner = 'l', weight = 1 },
+    { outer = '1', inner = 'w', weight = 1 },
+    { outer = '1', inner = 'W', weight = 1 },
     { outer = 'w', inner = 't', weight = 1 },
     { outer = 'W', inner = 't', weight = 1 },
     { outer = 'b', inner = 'b', weight = 1 },
@@ -667,16 +659,6 @@ TAGS:   no_rotate no_vmirror no_hmirror
       end
     end
   end
-  -- mark all inner lava/water features as no_tele_into. This is overkill,
-  -- in case some rooms are accessible (e.g. with out material plants).
-  -- As far as I can tell doors never place for these blocks, so that's not
-  -- an issue. Also mark shallow water as opaque, to avoid vetoes on
-  -- connectivity.
-  kprop("Lyz = no_tele_into")
-  kmask("y = opaque")
-  kfeat("L = l")
-  kfeat("y = W")
-  kfeat("z = w")
 
   -- This shouldn't be needed once everything is working properly
   zonify.map_fill_zones(_G, 1, 'x')

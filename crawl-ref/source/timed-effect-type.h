@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tag-version.h"
-
 enum timed_effect_type
 {
     TIMER_CORPSES,
@@ -16,12 +14,10 @@ enum timed_effect_type
     TIMER_GOD_EFFECTS,
 #if TAG_MAJOR_VERSION == 34
     TIMER_SCREAM,
+#endif
     TIMER_FOOD_ROT,
-#endif
     TIMER_PRACTICE,
-#if TAG_MAJOR_VERSION == 34
     TIMER_LABYRINTH,
-#endif
     TIMER_ABYSS_SPEED,
     TIMER_JIYVA,
     TIMER_EVOLUTION,

@@ -152,6 +152,51 @@ static void _gift_weapon_to_orc(monster* orc, int weapon_type)
 }
 
 /**
+ * Attempt to give a follower appropriate ammo.
+ *
+ * @param[in] orc               The orc to give ammo to.
+ * @param[in] initial_gift      Whether this is starting ammo or a restock.
+ * (Give more ammo when restocking than initially.)
+ */
+void gift_ammo_to_orc(monster* orc, bool initial_gift)
+{
+    const item_def* launcher = orc->launcher();
+
+    item_def ammo;
+    ammo.base_type = OBJ_MISSILES;
+
+    if (!launcher)
+        ammo.sub_type = MI_TOMAHAWK;
+    else
+        ammo.sub_type = fires_ammo_type(*launcher);
+
+    if (ammo.sub_type == MI_STONE)
+        ammo.sub_type = MI_SLING_BULLET; // ugly special case
+
+    // XXX: should beogh be gifting needles?
+    // if not, we'd need special checks in player gifting, etc... better to
+    // go along for now.
+    if (ammo.sub_type == MI_NEEDLE)
+        ammo.brand = SPMSL_POISONED;
+
+    ammo.quantity = 30 + random2(10);
+    if (initial_gift || !launcher)
+        ammo.quantity /= 2;
+
+    const item_def* old_ammo = orc->missiles();
+    // don't give a drop message - it'd come before the bless message
+    if (old_ammo && !items_stack(*old_ammo, ammo) &&
+        !orc->drop_item(MSLOT_MISSILE, false))
+    {
+        return; // can't force them to drop the ammo, for some reason?
+    }
+
+    set_ident_flags(ammo, ISFLAG_IDENT_MASK);
+
+    give_specific_item(orc, ammo);
+}
+
+/**
  * Attempt to bless a follower's melee weapon.
  *
  * @param[in] mon      The follower whose weapon should be blessed.
@@ -171,12 +216,18 @@ static string _beogh_bless_melee_weapon(monster* mon)
     {
         blessed = true;
     }
-    // Enchant it. (Lower odds at high weapon enchantment.)
+    // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
     if (!x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)
         && enchant_weapon(wpn, true))
     {
         set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
         blessed = true;
+    }
+    if (wpn.cursed())
+    {
+        do_uncurse_item(wpn);
+        if (!blessed)
+            return "uncursed armament";
     }
 
     if (!blessed)
@@ -190,7 +241,7 @@ static string _beogh_bless_melee_weapon(monster* mon)
 }
 
 /**
- * Attempt to give a follower a ranged weapon.
+ * Attempt to give a follower a ranged weapon/ammo.
  *
  * @param[in] mon      The follower who should be blessed.
  * @return             The type of blessing given; may be empty.
@@ -211,42 +262,46 @@ static string _beogh_bless_ranged_weapon(monster* mon)
         {
            blessed = true;
         }
-        // Enchant it. (Lower odds at high weapon enchantment.)
+        // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
         if (!x_chance_in_y(launcher.plus, MAX_WPN_ENCHANT)
             && enchant_weapon(launcher, true))
         {
             set_ident_flags(launcher, ISFLAG_KNOW_PLUSES);
             blessed = true;
         }
+        if (launcher.cursed())
+        {
+            do_uncurse_item(launcher);
+            if (!blessed)
+                return "uncursed armament";
+        }
 
+        // Otherwise gift ammunition.
         if (!blessed)
         {
-            dprf("Couldn't bless follower's weapon!");
-            return "";
-        }
+            gift_ammo_to_orc(mon);
+            if (mon->missiles() != nullptr)
+                return "ammunition";
 
-        item_set_appearance(launcher);
-        return "superior armament";
+            dprf("Couldn't give ammo to follower!");
+            return ""; // ?
+        }
+        else
+        {
+            item_set_appearance(launcher);
+            return "superior armament";
+        }
     }
 
-    // If they have a shield but no launcher, give boomerangs.
+    // If they have a shield but no launcher, give tomahawks.
     if (mon->shield() != nullptr)
     {
-        item_def ammo;
-        ammo.base_type = OBJ_MISSILES;
-        ammo.sub_type = MI_BOOMERANG;
-        ammo.quantity = random_range(2, 4);
+        gift_ammo_to_orc(mon);
+        if (mon->missiles() != nullptr)
+            return "ranged armament";
 
-        const item_def* old_ammo = mon->missiles();
-        // don't give a drop message - it'd come before the bless message
-        if (old_ammo && !items_stack(*old_ammo, ammo) &&
-            !mon->drop_item(MSLOT_MISSILE, false))
-        {
-            dprf("Couldn't give ammo to follower!");
-            return ""; // can't force them to drop the ammo, for some reason?
-        }
-        give_specific_item(mon, ammo);
-        return "ranged armament";
+        dprf("Couldn't give ammo to follower!");
+        return ""; // ?
     }
 
     // No launcher, no shield: give them a crossbow & some ammo.
@@ -257,6 +312,9 @@ static string _beogh_bless_ranged_weapon(monster* mon)
         return ""; // ?
     }
 
+    gift_ammo_to_orc(mon, true);
+    if (mon->missiles() == nullptr)
+        dprf("Couldn't give initial ammo to follower");
     return "ranged armament";
 }
 
@@ -279,6 +337,18 @@ static string _beogh_bless_weapon(monster* mon)
         return ""; // ?
     }
 
+    const item_def* launch_ptr = mon->launcher();
+    const item_def* ammo_ptr = mon->missiles();
+    if (launch_ptr != nullptr && ammo_ptr == nullptr)
+    {
+        gift_ammo_to_orc(mon);
+        if (mon->missiles() != nullptr)
+            return "ammunition";
+
+        dprf("Couldn't give ammo to follower!");
+        return ""; // ?
+    }
+
     if (coinflip())
         return _beogh_bless_melee_weapon(mon);
     return _beogh_bless_ranged_weapon(mon);
@@ -286,17 +356,16 @@ static string _beogh_bless_weapon(monster* mon)
 
 static void _upgrade_shield(item_def &sh)
 {
-    // Promote from buckler up through tower shield.
+    // Promote from buckler up through large shield.
     if (sh.sub_type >= ARM_FIRST_SHIELD && sh.sub_type < ARM_LAST_SHIELD)
         sh.sub_type++;
 }
 
 static void _upgrade_body_armour(item_def &arm)
 {
-    const auto type = static_cast<armour_type>(arm.sub_type);
-
     // Promote from robe up through plate.
-    if (type >= ARM_FIRST_MUNDANE_BODY && type < ARM_LAST_MUNDANE_BODY
+    if (arm.sub_type >= ARM_FIRST_MUNDANE_BODY
+        && arm.sub_type < ARM_LAST_MUNDANE_BODY
         // These are supposed to be robe-only.
         && arm.brand != SPARM_ARCHMAGI
         && arm.brand != SPARM_RESISTANCE)
@@ -319,7 +388,7 @@ static void _gift_armour_to_orc(monster* orc, bool shield = false)
     item_def armour;
     armour.base_type = OBJ_ARMOUR;
     if (shield)
-        armour.sub_type = highlevel ? ARM_KITE_SHIELD : ARM_BUCKLER;
+        armour.sub_type = highlevel ? ARM_SHIELD : ARM_BUCKLER;
     else
         armour.sub_type = highlevel ? ARM_SCALE_MAIL : ARM_RING_MAIL;
     armour.quantity = 1;
@@ -367,7 +436,7 @@ static string _beogh_bless_armour(monster* mon)
         return "";
     }
 
-    item_def& arm(env.item[slot]);
+    item_def& arm(mitm[slot]);
 
     const int old_subtype = arm.sub_type;
     // 50% chance of improving armour/shield type
@@ -488,7 +557,6 @@ static bool _tso_blessing_friendliness(monster* mon)
 
 static void _beogh_reinf_callback(const mgen_data &mg, monster *&mon, int placed)
 {
-    UNUSED(placed);
     ASSERT(mg.god == GOD_BEOGH);
 
     // Beogh tries a second time to place reinforcements.
@@ -612,6 +680,10 @@ static void _display_god_blessing(monster* follower, god_type god,
     simple_god_message(make_stringf(" blesses %s with %s.",
                                     whom.c_str(), blessing.c_str()).c_str(),
                        god);
+
+#ifndef USE_TILE_LOCAL
+    flash_monster_colour(follower, god_colour(god), 200);
+#endif
 }
 
 /**
@@ -619,29 +691,16 @@ static void _display_god_blessing(monster* follower, god_type god,
  *
  * If no follower is specified, there is a chance of sending reinforcements.
  *
- * @param[in] follower        The follower to try to bless.
- * @param[in] force           Whether to check follower validity.
- * @param[in] allow_upgrades  If true, allows persistent gifts (reinforcements,
- *                            weapons, armour, class upgrades). If false, only
- *                            allows healing.
+ * @param[in] follower      The follower to try to bless.
+ * @param[in] force         Whether to check follower validity.
  * @return Whether a blessing occurred.
  */
-static bool _beogh_bless_follower(monster* follower, bool force,
-                                  bool allow_upgrades)
+static bool _beogh_bless_follower(monster* follower, bool force)
 {
     if (!follower)
     {
-        // No new pals in the Abyss.
-        if (!allow_upgrades)
-            return false;
-
         // 1/20 chance of spawning a palband
         if (!one_chance_in(5))
-            return false;
-
-        // Don't gift orcs if Toxic radiance is up, to avoid the player being
-        // penanced through no fault of their own.
-        if (you.duration[DUR_TOXIC_RADIANCE])
             return false;
 
         // If no follower was found, attempt to send
@@ -661,30 +720,27 @@ static bool _beogh_bless_follower(monster* follower, bool force,
 
     string blessing = "";
 
-    if (allow_upgrades)
+    // 10% chance of blessing to priesthood.
+    if (force || one_chance_in(10))
     {
-        // 10% chance of blessing to priesthood.
-        if (force || one_chance_in(10))
-        {
-            if (_beogh_blessing_priesthood(follower))
-                blessing = "priesthood";
-            else
-                dprf("Couldn't promote monster to priesthood");
-        }
-
-        // ~15% chance of blessing armament (assume that most priest buffs fail)
-        if (blessing.empty() && mons_genus(follower->type) == MONS_ORC
-            && (force || one_chance_in(7)))
-        {
-            blessing = coinflip() ? _beogh_bless_weapon(follower)
-                                  : _beogh_bless_armour(follower);
-        }
-
-        // If they got a good blessing (priesthood or equipment), maybe give
-        // them a name.
-        if (!blessing.empty())
-            give_monster_proper_name(*follower);
+        if (_beogh_blessing_priesthood(follower))
+            blessing = "priesthood";
+        else
+            dprf("Couldn't promote monster to priesthood");
     }
+
+    // ~15% chance of blessing armament (assume that most priest buffs fail)
+    if (blessing.empty() && mons_genus(follower->type) == MONS_ORC
+        && (force || one_chance_in(7)))
+    {
+        blessing = coinflip() ? _beogh_bless_weapon(follower)
+                              : _beogh_bless_armour(follower);
+    }
+
+    // If they got a good blessing (priesthood or equipment), maybe give them
+    // a name.
+    if (!blessing.empty())
+        give_monster_proper_name(*follower);
 
     // ~85% chance of trying to heal.
     if (blessing.empty())
@@ -769,8 +825,9 @@ static bool _is_friendly_follower(const monster& mon)
 // one, bless a random follower within sight of the player, if any, or
 // any follower on the level.
 // Blessing can be enforced with a wizard mode command.
-bool bless_follower(monster* follower, god_type god, bool force,
-                    bool allow_upgrades)
+bool bless_follower(monster* follower,
+                    god_type god,
+                    bool force)
 {
     // most blessings fail, tragically...
     if (!force && !one_chance_in(4))
@@ -796,11 +853,8 @@ bool bless_follower(monster* follower, god_type god, bool force,
 
     switch (god)
     {
-        case GOD_BEOGH:
-            return _beogh_bless_follower(follower, force, allow_upgrades);
-        case GOD_SHINING_ONE:
-            return _tso_bless_follower(follower, force);
-        default:
-            return false; // XXX: print something here?
+        case GOD_BEOGH: return _beogh_bless_follower(follower, force);
+        case GOD_SHINING_ONE:   return _tso_bless_follower(follower, force);
+        default: return false; // XXX: print something here?
     }
 }

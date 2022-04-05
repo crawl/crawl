@@ -4,6 +4,13 @@ death berserker unberserked
 Nie zapominaj o używaniu trybu berserk kiedy walczysz z wymagającymi
 przeciwnikami. Używanie go jest ryzykowne, ale stajesz się szybszy i
 silniejszy.
+{{
+    if you.hunger() < 3 then
+        return "Włączenie berserka jest niemożliwe, jeśli jesteś głodny, " ..
+               "upewnij się, że zawsze jesteś najedzony na wszelki wypadek " ..
+               "you need to berserk."
+    end
+}}
 %%%%
 death ranger melee
 
@@ -50,6 +57,6 @@ jeśli żaden plik nie zostanie znaleziony.
 %%%%
 finished random 3
 
-Możesz poprosić o pomoc innych graczy na <w>#crawl</w> kanale IRC na Libera
-(<w>irc.libera.chat</w>).
+Możesz poprosić o pomoc innych graczy na <w>##crawl</w> kanale IRC na freenode
+(<w>irc.freenode.net</w>).
 %%%%

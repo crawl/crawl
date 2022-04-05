@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
-CRAWL=${CRAWL:-timeout 655 ./crawl -seed 1 -no-save -name test -wizard -no-throttle -extra-opt-first "tile_skip_title=true"}
+
+CRAWL=${CRAWL:-timeout 655 ./crawl -seed 1 -no-save -name test -wizard -no-throttle}
 
 run_one()
 {

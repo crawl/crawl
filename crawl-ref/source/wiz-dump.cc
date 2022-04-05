@@ -25,7 +25,6 @@
 #include "religion.h"
 #include "skills.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "unicode.h"
 #include "wiz-you.h"
 
@@ -69,10 +68,14 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return AMU_REGENERATION;
 #endif
 
-#if TAG_MAJOR_VERSION == 34
+    if (s == "+Rage")
+        return AMU_RAGE;
+    if (s == "Harm")
+        return AMU_HARM;
+    if (s == "Gourm")
+        return AMU_THE_GOURMAND;
     if (s == "Inacc")
         return AMU_INACCURACY;
-#endif
     if (s == "Spirit")
         return AMU_GUARDIAN_SPIRIT;
     if (s == "Faith")
@@ -88,19 +91,15 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_FIRE;
     if (s == "Ice")
         return RING_ICE;
-#if TAG_MAJOR_VERSION == 34
     if (s == "+/*Tele")
         return RING_TELEPORTATION;
-#endif
     if (s == "Wiz")
         return RING_WIZARDRY;
     if (s == "SInv")
         return RING_SEE_INVISIBLE;
-#if TAG_MAJOR_VERSION == 34
     if (s == "Noisy" || s == "Stlth-")
         return RING_ATTENTION;
-#endif
-    if (s == "Fly")
+    if (s == "+Fly")
         return RING_FLIGHT;
     if (s == "rPois")
         return RING_POISON_RESISTANCE;
@@ -119,12 +118,10 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
         return RING_INTELLIGENCE;
     if (s.substr(0, 2) == "EV")
         return RING_EVASION;
-#if TAG_MAJOR_VERSION == 34
     if (s.substr(0, 5) == "Stlth")
         return RING_STEALTH;
-#endif
-    if (s.substr(0, 2) == "WL")
-        return RING_WILLPOWER;
+    if (s.substr(0, 2) == "MR")
+        return RING_PROTECTION_FROM_MAGIC;
 
     if (s.substr(0, 2) == "rF")
         return RING_PROTECTION_FROM_FIRE;
@@ -372,7 +369,7 @@ bool chardump_parser::_check_stats1(const vector<string> &tokens)
 {
     size_t size = tokens.size();
     // Health: 248/248    AC: 44    Str: 35    XL:     26   Next: 58%
-    if (size <= 7 || (tokens[0] != "HP" && tokens[0] != "HP:"&& tokens[0] != "Health:"))
+    if (size <= 7 || (tokens[0] != "HP" && tokens[0] != "Health:"))
         return false;
 
     bool found = false;
@@ -399,7 +396,7 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
 {
     size_t size = tokens.size();
     // Magic:  36/36      EV: 31    Int: 17    God:    Cheibriados [****..]
-    if (size <= 7 || (tokens[0] != "MP" && tokens[0] != "MP:" && tokens[0] != "Magic:"))
+    if (size <= 8 || (tokens[0] != "MP" && tokens[0] != "Magic:"))
         return false;
 
     bool found = false;
@@ -426,8 +423,6 @@ bool chardump_parser::_check_stats2(const vector<string> &tokens)
                 join_religion(god);
             }
 
-            if (god == GOD_GOZAG)
-                continue;
             string piety = tokens[k+2];
             int piety_levels = std::count(piety.begin(), piety.end(), '*');
             wizard_set_piety_to(piety_levels > 0
@@ -481,7 +476,7 @@ bool chardump_parser::_check_char(const vector<string> &tokens)
                 race = tokens[k-3].substr(1) + " " + tokens[k-2];
             string role = tokens[k-1].substr(0, tokens[k-1].length() - 1);
 
-            const species_type sp = species::from_str_loose(race);
+            const species_type sp = find_species_from_string(race);
             if (sp == SP_UNKNOWN)
             {
                 mprf("Unknown species: %s", race.c_str());
@@ -530,7 +525,7 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         offset = 9;
     else if (tokens[0] == "Gourm") // older dump files
         offset = 5;
-    else if (tokens[0] == "WL")
+    else if (tokens[0] == "MR")
         offset = 5;
     else if (tokens[0] == "Stlth")
         offset = 5;
@@ -554,7 +549,7 @@ bool chardump_parser::_check_equipment(const vector<string> &tokens)
         int mitm_slot = get_mitm_slot();
         if (mitm_slot != NON_ITEM)
         {
-            env.item[mitm_slot] = item;
+            mitm[mitm_slot] = item;
             move_item_to_grid(&mitm_slot, you.pos());
         }
     }
@@ -612,7 +607,7 @@ bool chardump_parser::_parse_from_file(const string &full_filename)
     if (seen_skills)
     {
         init_skill_order();
-        init_can_currently_train();
+        init_can_train();
         init_train();
         init_training();
     }

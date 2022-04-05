@@ -127,7 +127,7 @@ coord_def dgn_island_plan::pick_island_spot()
         c = dgn_random_point_in_margin(level_border_depth * 2);
 
         bool collides = false;
-        for (const coord_def &island : islands)
+        for (const coord_def island : islands)
         {
             const coord_def dist = island - c;
             if (dist.abs() < island_separation_dist2)
@@ -146,10 +146,8 @@ coord_def dgn_island_plan::pick_island_spot()
 void dgn_island_plan::build_island()
 {
     const coord_def c = pick_island_spot();
-    const int npoints = resolve_range(n_island_centre_delta_points);
-    const int radius = resolve_range(island_centre_radius_range);
-    dgn_island_centred_at(c, npoints,
-                          radius,
+    dgn_island_centred_at(c, resolve_range(n_island_centre_delta_points),
+                          resolve_range(island_centre_radius_range),
                           island_centre_point_height_increment,
                           level_border_depth,
                           x_chance_in_y(atoll_roll, 100));
@@ -163,11 +161,9 @@ void dgn_island_plan::build_island()
             dgn_random_point_from(c, addition_offset, level_border_depth);
         if (!offsetC.origin())
         {
-            const int extra_npoints = resolve_range(n_island_aux_delta_points);
-            const int extra_radius = resolve_range(island_aux_radius_range);
             dgn_island_centred_at(
-                offsetC, extra_npoints,
-                extra_radius,
+                offsetC, resolve_range(n_island_aux_delta_points),
+                resolve_range(island_aux_radius_range),
                 island_aux_point_height_increment,
                 level_border_depth,
                 x_chance_in_y(atoll_roll, 100));

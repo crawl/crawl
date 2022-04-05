@@ -27,7 +27,7 @@ function gauntlet_arena_custom_extra_items(nsubst)
     gauntlet_arena_extra_items_nsubst = nsubst
 end
 
--- Set the extra item placement in arenas to the default behaviour. See
+-- Set the extra item placement in arenas to the default behavior. See
 -- gauntlet_arena_item_setup() for details on this default.
 function gauntlet_arena_default_extra_items()
     gauntlet_arena_extra_items_nsubst = nil
@@ -160,25 +160,17 @@ function gauntlet_arena_item_setup(e, custom_loot)
     -- easilly apply any custom replacement for those extra items.
     e.nsubst("d = d / X")
 
-    -- Redefine these item class glyphs to use no_pickup
-    e.kitem("* = star_item no_pickup")
-    e.kitem("| = superb_item no_pickup")
-    e.kitem("% = any no_pickup")
-    e.kitem("$ = gold no_pickup")
-
     -- Define item slot 'd' and first subst.
     local first_subst = "e*"
     if custom_loot then
-        e.item(custom_loot .. " no_pickup")
+        e.item(custom_loot)
         first_subst = "d"
     else
         e.item("nothing")
     end
 
     -- Define item slot 'e'
-    local scrolls = dgn.loot_scrolls:gsub("scroll of", "no_pickup scroll of")
-    local potions = dgn.loot_potions:gsub("potion of", "no_pickup potion of")
-    e.item(scrolls .. " / " .. potions)
+    e.item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
     -- Set exactly one loot item.
     e.subst("d = " .. first_subst)
 
@@ -187,27 +179,22 @@ function gauntlet_arena_item_setup(e, custom_loot)
         extra_nsubst = gauntlet_arena_extra_items_nsubst
     end
 
-    local good_aux = dgn.good_aux_armour:gsub("/", "no_pickup /")
-                           .. " no_pickup"
-    local randart_aux = dgn.randart_aux_armour:gsub("/", "no_pickup /")
-                           .. " no_pickup"
     if gauntlet_arena_tier == 1 then
-        -- Item slots 'f' and 'g' for tier 1.
-        e.item(good_aux)
-        e.item("any jewellery good_item no_pickup")
+       -- Item slots 'f' and 'g' for tier 1.
+        e.item(dgn.good_aux_armour)
+        e.item("any jewellery good_item")
 
         if extra_nsubst == nil then
             extra_nsubst = "fg|*|* / ."
         end
     else
-        -- Item slots 'f' and 'g' for tier 2.
+       -- Item slots 'f' and 'g' for tier 2.
         if crawl.one_chance_in(3) then
-            e.item(randart_aux)
+            e.item(dgn.randart_aux_armour)
         else
-            e.item(good_aux)
+            e.item(dgn.good_aux_armour)
         end
-        e.item("any jewellery good_item w:20 no_pickup " ..
-               "/ any jewellery randart no_pickup")
+        e.item("any jewellery good_item w:20 / any jewellery randart")
 
         if extra_nsubst == nil then
             extra_nsubst = "fg / |* / ."
@@ -310,7 +297,7 @@ end
 --            Exactly one of this item will always place in the arena.
 tier1_gauntlet_arenas = {
   {
-    first  = {mons = "cane toad simulacrum / wyvern simulacrum " ..
+    first  = {mons = "spiny frog simulacrum / wyvern simulacrum " ..
                       "/ hornet simulacrum", min = 1, max = 1},
     second = {mons = "simulacrum place:D:12", min = 2, max = 4},
     liquid = "water",
@@ -326,6 +313,10 @@ tier1_gauntlet_arenas = {
     third  = {mons = "jelly", min = 1, max = 3},
     liquid = "water",
     plant  = "demonic",
+  },
+  {
+    first  = {mons = "death ooze", min = 1, max = 1},
+    plant  = "withered",
   },
   {
     first  = {mons = "sixfirhy", min = 1, max = 1},
@@ -388,6 +379,10 @@ tier1_gauntlet_arenas = {
   {
     first  = {mons = "flying skull band", min = 1, max = 1},
     plant  = "withered",
+  },
+  {
+    first  = {mons = "queen ant", min = 1, max = 1},
+    second = {mons = "soldier ant", min = 3, max = 6},
   },
   {
     second = {mons = "hornet", min = 2, max = 3},
@@ -501,7 +496,8 @@ tier2_gauntlet_arenas = {
     plant  = "demonic",
   },
   {
-    first = {mons = "quicksilver ooze", min = 1, max = 1},
+    second = {mons = "death ooze", min = 1, max = 1},
+    third  = {mons = "jelly w:5 / slime creature", min = 2, max = 4},
     liquid = "water",
   },
   {

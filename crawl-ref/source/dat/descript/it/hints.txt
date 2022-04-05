@@ -45,6 +45,13 @@ death berserker unberserked
 
 Non scordarti di infuriarti quando combatti contro nemici particolarmente
 difficili. È rischioso, ma ti fa più forte e resistente.
+{{
+    if you.hunger() < 3 then
+        return "Infuriarsi è impossibile se si è molto affamati o peggio, " ..
+               "quindi tenta di essere sempre nutrito, in caso qualcosa " ..
+               "vada male, devi infuriarti."
+    end
+}}
 %%%%
 death ranger melee
 
@@ -140,7 +147,7 @@ Crawl darà problemi se non potrà trovare uno di questi due files.
 finished random 3
 
 Puoi chiedere aiuto e consigli agli altri giocatori di Crawl sul canale di IRC
-(Internet Relay Chat) <w>#crawl</w> sul Libera (<w>irc.libera.chat</w>).
+(Internet Relay Chat) <w>##crawl</w> sul freenode (<w>irc.freenode.net</w>).
 %%%%
 dissection reminder
 

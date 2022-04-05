@@ -19,8 +19,8 @@ enum class passive_t
     none = 0,
 
     /// The god prefers that items be cursed: acquirement grants cursed items,
-    /// enchant scrolls and miscasts preserve curse status, and identify
-    /// allows selecting a subset of items to uncurse.
+    /// enchant scrolls and miscasts preserve curse status, and remove curse
+    /// allows selecting a subset of items.
     want_curses,
 
     /// You detect the presence of portals.
@@ -46,9 +46,6 @@ enum class passive_t
 
     /// You have innate clarity.
     clarity,
-
-    /// You have astral sight.
-    xray_vision,
 
     /// You get a boost to skills from cursed slots.
     bondage_skill_boost,
@@ -80,14 +77,11 @@ enum class passive_t
     /// Fewer creatures spawn in the Abyss, and it morphs less quickly.
     slow_abyss,
 
-    /// The Zot clock runs more slowly.
-    slow_zot,
-
     /// Your attributes are boosted.
     stat_boost,
 
-    /// Poison affects you more slowly.
-    slow_poison,
+    /// Hunger, poison, and disease affect you more slowly.
+    slow_metabolism,
 
     /// You have an umbra.
     umbra,
@@ -118,9 +112,6 @@ enum class passive_t
 
     /// Chance to nullify a deadly blow, dependent on piety.
     protect_from_harm,
-
-    /// Strong chance to nullify a deadly blow, with a timeout.
-    lifesaving,
 
     /// Divine halo around the player, size increases with piety.
     halo,
@@ -156,6 +147,9 @@ enum class passive_t
     /// Torment resistance, piety dependent.
     resist_torment,
 
+    /// Protection against miscasts. Piety dependent.
+    miscast_protection,
+
     /// Protection against necromancy miscasts and mummy death curses.
     miscast_protection_necromancy,
 
@@ -183,11 +177,20 @@ enum class passive_t
     /// Slimes and eye monsters are neutral towards you
     neutral_slimes,
 
+    /// Items consumed by your fellow slimes feed you
+    slime_feed,
+
     /// You are immune to slime covered walls
     slime_wall_immune,
 
     /// Jiyva protects you from corrosion
     resist_corrosion,
+
+    /// Items consumed by your fellow slimes restores your mana reserve
+    slime_mp,
+
+    /// Items consumed by your fellow slimes restores your health
+    slime_hp,
 
     /// Jiyva summons jellies to protect you
     jellies_army,
@@ -195,8 +198,8 @@ enum class passive_t
     /// Jiyva allows jellies to eats off-level and seen items.
     jelly_eating,
 
-    /// Piety-scaled healing & mpreg
-    jelly_regen,
+    /// Jiyva adjusts your stats as needed.
+    fluid_stats,
 
     // You have a chance to spawn slimes when hit hard
     spawn_slimes_on_hit,
@@ -207,7 +210,7 @@ enum class passive_t
     /// You have a chance to gain mana when you kill
     mp_on_kill,
 
-    /// You are less likely to miscast destructive spells
+    /// You are less likely to miscat destructive spells
     spells_success,
 
     /// You can cast destructive spells farther
@@ -253,18 +256,6 @@ enum class passive_t
     wu_jian_lunge,
     wu_jian_whirlwind,
     wu_jian_wall_jump,
-
-    /// Okawaru prevents gaining any allies
-    no_allies,
-
-    // rF+
-    resist_fire,
-
-    // Yredelemnul reaping
-    reaping,
-
-    // Immunity to spectral mist clouds
-    r_spectral_mist,
 };
 
 enum ru_interference
@@ -274,26 +265,27 @@ enum ru_interference
     DO_REDIRECT_ATTACK
 };
 
-bool god_gives_passive(god_type god, passive_t passive);
 bool have_passive(passive_t passive);
 bool will_have_passive(passive_t passive);
 int rank_for_passive(passive_t passive);
 int chei_stat_boost(int piety = you.piety);
 void jiyva_eat_offlevel_items();
-int ash_scry_radius();
-void ash_check_bondage();
+void ash_init_bondage(player *y);
+void ash_check_bondage(bool msg = true);
+string ash_describe_bondage(int flags, bool level);
 bool god_id_item(item_def& item, bool silent = true);
 int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
 int ash_skill_boost(skill_type sk, int scale);
 bool ash_has_skill_boost(skill_type sk);
-void gozag_detect_level_gold(bool count);
+map<skill_type, int8_t> ash_get_boosted_skills(eq_type type);
+int gozag_gold_in_los(actor* whom);
 int qazlal_sh_boost(int piety = you.piety);
 int tso_sh_boost();
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
-bool does_ru_wanna_redirect(const monster &mon);
+bool does_ru_wanna_redirect(monster* mon);
 ru_interference get_ru_attack_interference_level();
 monster* shadow_monster(bool equip = true);
 void shadow_monster_reset(monster *mon);
@@ -303,13 +295,10 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 void uskayaw_prepares_audience();
 void uskayaw_bonds_audience();
 
-void wu_jian_heaven_tick();
-void wu_jian_decrement_heavenly_storm();
-void wu_jian_end_heavenly_storm();
-void wu_jian_wall_jump_effects();
+void wu_jian_wall_jump_effects(const coord_def& old_pos);
 bool wu_jian_has_momentum(wu_jian_attack_type);
+void wu_jian_heaven_tick();
 bool wu_jian_post_move_effects(bool did_wall_jump,
                                const coord_def& initial_position);
-bool wu_jian_move_triggers_attacks(coord_def new_pos);
-
-void okawaru_handle_duel();
+void wu_jian_end_of_turn_effects();
+void end_heavenly_storm();

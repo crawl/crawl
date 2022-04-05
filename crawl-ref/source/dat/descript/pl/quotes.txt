@@ -28,6 +28,11 @@ Temple
  Klasztorów dziewięć i gdzieniegdzie domki.”
     -Ignacy Krasicki, „Monachomachia”, 1778
 %%%%
+amulet of the gourmand
+
+„Widok biesiadnika wzmógł apetyt Łakomczuchy.”
+    -„Kajko i Kokosz: Rozprawa z Dajmiechem”, Janusz Christa
+%%%%
 buckler
 
 „Stateczność jego tarcz i puklerz mocny,
@@ -65,6 +70,18 @@ horn of Geryon
  I zagrał: róg jak wicher wirowatym dechem,
  Niesie w puszczę muzykę i podwaja echem.”
     -Adam Mickiewicz, „Pan Tadeusz”
+%%%%
+insubstantial wisp
+
+„Dotknij teraz mych czarów
+ Wichrze czarci tańcu
+ Oto płoną błędne ognie
+ Oto bóstwa lasów i gór
+ Których nie przebłagam
+ Ich sny srebrzą się ponad jeziorami
+ Gdzie słyszałem drzewa krzyczące w nocy
+ Wyją błagając o zemstę po raz, po raz, po raz...”
+    Mastiphal, „Nad jeziorami myśli nieśmiertelnej”
 %%%%
 mad acolyte of Lugonu
 

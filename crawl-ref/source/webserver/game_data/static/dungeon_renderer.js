@@ -1,7 +1,5 @@
-define(["jquery", "comm", "./cell_renderer", "./map_knowledge", "./options",
-    "./tileinfo-dngn", "./util", "./view_data", "./enums", "./mouse_control"],
-function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
-    mouse_control) {
+define(["jquery", "./cell_renderer", "./map_knowledge", "./options", "./tileinfo-dngn", "./util", "./view_data", "./enums"],
+function ($, cr, map_knowledge, options, dngn, util, view_data, enums) {
     "use strict";
     var global_anim_counter = 0;
 
@@ -53,8 +51,6 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
 
         this.view = { x: 0, y: 0 };
         this.view_center = { x: 0, y: 0 };
-        this.ui_state = -1;
-        this.last_sent_cursor = { x: 0, y: 0 };
     }
 
     DungeonViewRenderer.prototype = new cr.DungeonCellRenderer();
@@ -104,21 +100,8 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
 
                 view_data.place_cursor(enums.CURSOR_MOUSE, loc);
 
-                if (game.can_target())
-                {
-                    // XX refactor into mouse_control.js?
-                    if (loc.x != this.last_sent_cursor.x
-                        || loc.y != this.last_sent_cursor.y)
-                    {
-                        this.last_sent_cursor = {x: loc.x, y: loc.y};
-                        comm.send_message("target_cursor",
-                                                    this.last_sent_cursor);
-                    }
-                }
-
                 if (ev.type === "mousemove")
                 {
-
                     if (this.tooltip_timeout)
                         clearTimeout(this.tooltip_timeout);
 
@@ -253,32 +236,24 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
         fit_to: function(width, height, min_diameter)
         {
             var ratio = window.devicePixelRatio;
-            var scale;
-            if (this.ui_state == enums.ui.VIEW_MAP)
-                scale = options.get("tile_map_scale");
-            else
-                scale = options.get("tile_viewport_scale");
-            var tile_size = Math.floor(options.get("tile_cell_pixels")
-                                * scale / 100);
             var cell_size = {
-                w: Math.floor(tile_size * ratio),
-                h: Math.floor(tile_size * ratio)
+                w: Math.floor(options.get("tile_cell_pixels") * ratio),
+                h: Math.floor(options.get("tile_cell_pixels") * ratio)
             };
 
             if (options.get("tile_display_mode") == "glyphs")
             {
-                this.glyph_mode_update_font_metrics();
-                this.set_cell_size(this.glyph_mode_font_width,
-                                    this.glyph_mode_line_height);
+                this.ctx.font = this.glyph_mode_font_name();
+                var metrics = this.ctx.measureText("@");
+                this.set_cell_size(metrics.width + 2, this.glyph_mode_font_size + 2);
             }
             else if ((min_diameter * cell_size.w / ratio > width)
                 || (min_diameter * cell_size.h / ratio > height))
             {
-                // scale down if necessary, so that los is in view
-                var rescale = Math.min(width * ratio / (min_diameter * cell_size.w),
+                var scale = Math.min(width * ratio / (min_diameter * cell_size.w),
                                      height * ratio / (min_diameter * cell_size.h));
-                this.set_cell_size(Math.floor(cell_size.w * rescale),
-                                   Math.floor(cell_size.h * rescale));
+                this.set_cell_size(Math.floor(cell_size.w * scale),
+                                   Math.floor(cell_size.h * scale));
             }
             else
                 this.set_cell_size(cell_size.w, cell_size.h);
@@ -352,6 +327,14 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
             }
         },
 
+        draw_overlay: function(idx, x, y)
+        {
+            if (this.in_view(x, y))
+                this.draw_main(idx,
+                               (x - this.view.x) * this.cell_width,
+                               (y - this.view.y) * this.cell_height);
+        },
+
         // This is mostly here so that it can inherit cell size
         new_renderer: function(tiles)
         {
@@ -365,18 +348,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
             renderer.draw_tiles(tiles);
 
             return renderer;
-        },
-
-        set_ui_state: function(s)
-        {
-            this.ui_state = s;
-        },
-
-        update_mouse_mode: function (m)
-        {
-            if (!game.can_target())
-                this.last_sent_cursor = { x: 0, y: 0 };
-        },
+        }
     });
 
     var renderer = new DungeonViewRenderer();

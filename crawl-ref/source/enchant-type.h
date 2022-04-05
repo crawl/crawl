@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tag-version.h"
-
 // This list must match the enchant_names array in mon-ench.cc
 // Enchantments that imply other enchantments should come first
 // to avoid timeout message confusion. Currently:
@@ -44,15 +42,15 @@ enum enchant_type
 #endif
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
-    ENCH_LOWERED_WL,
+    ENCH_LOWERED_MR,
     ENCH_SOUL_RIPE,
     ENCH_SLOWLY_DYING,
 #if TAG_MAJOR_VERSION == 34
     ENCH_EAT_ITEMS,
 #endif
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
-#if TAG_MAJOR_VERSION == 34
     ENCH_SPORE_PRODUCTION,
+#if TAG_MAJOR_VERSION == 34
     ENCH_SLOUCH,
 #endif
     ENCH_SWIFT,
@@ -72,12 +70,12 @@ enum enchant_type
     ENCH_PREPARING_RESURRECT,
 #endif
     ENCH_REGENERATION,
-    ENCH_STRONG_WILLED,
+    ENCH_RAISED_MR,
     ENCH_MIRROR_DAMAGE,
 #if TAG_MAJOR_VERSION == 34
     ENCH_MAGIC_ARMOUR,
-    ENCH_FEAR_INSPIRING,
 #endif
+    ENCH_FEAR_INSPIRING,
     ENCH_PORTAL_PACIFIED,
 #if TAG_MAJOR_VERSION == 34
     ENCH_WITHDRAWN,
@@ -86,7 +84,7 @@ enum enchant_type
     ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
-    ENCH_POLAR_VORTEX,
+    ENCH_TORNADO,
     ENCH_FAKE_ABJURATION,
     ENCH_DAZED,          // Dazed - less chance of acting each turn.
     ENCH_MUTE,           // Silenced.
@@ -102,11 +100,9 @@ enum enchant_type
     ENCH_BREATH_WEAPON,  // timer for breathweapon/similar spam
 #if TAG_MAJOR_VERSION == 34
     ENCH_DEATHS_DOOR,
-#endif
     ENCH_ROLLING,        // Boulder Beetle in ball form
-#if TAG_MAJOR_VERSION == 34
-    ENCH_OZOCUBUS_ARMOUR,
 #endif
+    ENCH_OZOCUBUS_ARMOUR,
     ENCH_WRETCHED,       // An abstract placeholder for monster mutations
     ENCH_SCREAMED,       // Starcursed scream timer
     ENCH_WORD_OF_RECALL, // Chanting word of recall
@@ -132,16 +128,14 @@ enum enchant_type
     ENCH_GRASPING_ROOTS,
     ENCH_SPELL_CHARGED,
     ENCH_FIRE_VULN,
-    ENCH_POLAR_VORTEX_COOLDOWN,
+    ENCH_TORNADO_COOLDOWN,
     ENCH_MERFOLK_AVATAR_SONG,
     ENCH_BARBS,
 #if TAG_MAJOR_VERSION == 34
     ENCH_BUILDING_CHARGE,
 #endif
     ENCH_POISON_VULN,
-#if TAG_MAJOR_VERSION == 34
     ENCH_ICEMAIL,
-#endif
     ENCH_AGILE,
     ENCH_FROZEN,
 #if TAG_MAJOR_VERSION == 34
@@ -152,9 +146,7 @@ enum enchant_type
     ENCH_GRAND_AVATAR,
 #endif
     ENCH_SAP_MAGIC,
-#if TAG_MAJOR_VERSION == 34
     ENCH_SHROUD,
-#endif
     ENCH_PHANTOM_MIRROR,
     ENCH_NEUTRAL_BRIBED,
     ENCH_FRIENDLY_BRIBED,
@@ -162,15 +154,15 @@ enum enchant_type
     ENCH_GOLD_LUST,
     ENCH_DRAINED,
     ENCH_REPEL_MISSILES,
-#if TAG_MAJOR_VERSION == 34
     ENCH_DEFLECT_MISSILES,
+#if TAG_MAJOR_VERSION == 34
     ENCH_NEGATIVE_VULN,
     ENCH_CONDENSATION_SHIELD,
 #endif
     ENCH_RESISTANCE,
     ENCH_HEXED,
-#if TAG_MAJOR_VERSION == 34
     ENCH_BONE_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     ENCH_CHANT_FIRE_STORM, // chanting the fire storm spell
     ENCH_CHANT_WORD_OF_ENTROPY, // chanting word of entropy
 #endif
@@ -183,24 +175,10 @@ enum enchant_type
     ENCH_INFESTATION,
     ENCH_STILL_WINDS,
     ENCH_RING_OF_THUNDER,
-#if TAG_MAJOR_VERSION == 34
     ENCH_WHIRLWIND_PINNED,
     ENCH_VORTEX,
     ENCH_VORTEX_COOLDOWN,
-#endif
     ENCH_VILE_CLUTCH,
-    ENCH_WATERLOGGED,
-    ENCH_RING_OF_FLAMES,
-    ENCH_RING_OF_CHAOS,
-    ENCH_RING_OF_MUTATION,
-    ENCH_RING_OF_FOG,
-    ENCH_RING_OF_ICE,
-    ENCH_RING_OF_DRAINING,
-    ENCH_RING_OF_ACID,
-    ENCH_RING_OF_MIASMA,
-    ENCH_CONCENTRATE_VENOM,
-    ENCH_FIRE_CHAMPION,
-    ENCH_ANGUISH,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

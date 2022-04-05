@@ -3,15 +3,10 @@
 #ifdef USE_TILE_LOCAL
 #ifdef USE_GL
 
-#include <vector>
-
 #include "glwrapper.h"
 #ifdef __ANDROID__
 #include <GLES/gl.h>
 #endif
-
-using std::vector;
-
 class OGLStateManager : public GLStateManager
 {
 public:
@@ -20,7 +15,7 @@ public:
     // State Manipulation
     virtual void set(const GLState& state) override;
     virtual void pixelstore_unpack_alignment(unsigned int bpp) override;
-    virtual void reset_view_for_redraw() override;
+    virtual void reset_view_for_redraw(float x, float y) override;
     virtual void reset_view_for_resize(const coord_def &m_windowsz,
                                        const coord_def &m_drawablesz) override;
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) override;
@@ -49,7 +44,7 @@ protected:
     int m_window_height;
 
 private:
-    bool glDebug(const char* msg) const;
+    void glDebug(const char* msg);
 };
 
 class OGLShapeBuffer : public GLShapeBuffer
@@ -80,7 +75,7 @@ protected:
     vector<unsigned short int> m_ind_buffer;
 
 private:
-    bool glDebug(const char* msg) const;
+    void glDebug(const char* msg);
 };
 
 struct HiDPIState;

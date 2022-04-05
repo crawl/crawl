@@ -10,9 +10,7 @@
 #if defined(UNIX)
 #include <unistd.h>
 #include <sys/param.h>
-#ifndef __HAIKU__
         #define BACKTRACE_SUPPORTED
-#endif
 #endif
 
 #ifdef USE_UNIX_SIGNALS
@@ -142,7 +140,7 @@ void crash_signal_handler(int sig_num)
         if (file == nullptr)
             file = stderr;
 
-        write_stack_trace(file);
+        write_stack_trace(file, 0);
 
         if (file != stderr)
             fclose(file);
@@ -298,7 +296,7 @@ string crash_signal_info()
 }
 
 #if defined(BACKTRACE_SUPPORTED)
-void write_stack_trace(FILE* file)
+void write_stack_trace(FILE* file, int ignore_count)
 {
     void* frames[50];
 
@@ -384,7 +382,7 @@ void write_stack_trace(FILE* file)
     free(symbols);
 }
 #else // BACKTRACE_SUPPORTED
-void write_stack_trace(FILE* file)
+void write_stack_trace(FILE* file, int ignore_count)
 {
     const char* msg = "Unable to get stack trace on this platform.\n";
     fprintf(stderr, "%s", msg);
@@ -420,15 +418,14 @@ void call_gdb(FILE *file)
 
             const char* argv[] =
             {
-                "nice",
-                GDB_PATH,
+                "gdb",
                 "-batch",
                 "-ex", "show version", // Too bad -iex needs gdb >=7.5 (jessie)
                 "-ex", attach_cmd,
                 "-ex", "bt full",
                 0
             };
-            execv("/usr/bin/nice", (char* const*)argv);
+            execv("/usr/bin/gdb", (char* const*)argv);
             printf("Failed to start gdb: %s\n", strerror(errno));
             fflush(stdout);
             _exit(0);
@@ -437,8 +434,6 @@ void call_gdb(FILE *file)
     default:
         waitpid(gdb, 0, 0);
     }
-#else
-    UNUSED(file);
 #endif
 }
 

@@ -2,17 +2,12 @@
 #ifdef USE_TILE
 #include "tilecell.h"
 
-#include "colour.h"
+#include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
-#include "level-state-type.h"
 #include "terrain.h"
-#include "tile-flags.h"
-#include "rltiles/tiledef-dngn.h"
-#include "rltiles/tiledef-main.h"
-#include "tag-version.h"
-#include "viewgeom.h"
+#include "tiledef-dngn.h"
 
 void packed_cell::clear()
 {
@@ -20,7 +15,6 @@ void packed_cell::clear()
     fg = 0;
     bg = 0;
     cloud = 0;
-    map_knowledge.clear();
 
     flv.floor_idx = 0;
     flv.wall_idx = 0;
@@ -34,6 +28,8 @@ void packed_cell::clear()
     is_bloody        = false;
     is_silenced      = false;
     halo             = HALO_NONE;
+    is_moldy         = false;
+    glowing_mold     = false;
     is_sanctuary     = false;
     is_liquefied     = false;
     mangrove_water = false;
@@ -53,11 +49,12 @@ bool packed_cell::operator ==(const packed_cell &other) const
     if (fg != other.fg) return false;
     if (bg != other.bg) return false;
     if (cloud != other.cloud) return false;
-    if (map_knowledge != other.map_knowledge) return false;
 
     if (is_bloody != other.is_bloody) return false;
     if (is_silenced != other.is_silenced) return false;
     if (halo != other.halo) return false;
+    if (is_moldy != other.is_moldy) return false;
+    if (glowing_mold != other.glowing_mold) return false;
     if (is_sanctuary != other.is_sanctuary) return false;
     if (is_liquefied != other.is_liquefied) return false;
     if (mangrove_water != other.mangrove_water) return false;
@@ -85,12 +82,12 @@ enum wave_type
     WV_DEEP,
 };
 
-static void _add_overlay(int tileidx, packed_cell& cell)
+static void _add_overlay(int tileidx, packed_cell *cell)
 {
-    cell.dngn_overlay[cell.num_dngn_overlay++] = tileidx;
+    cell->dngn_overlay[cell->num_dngn_overlay++] = tileidx;
 }
 
-typedef bool (*map_predicate) (const coord_def&, crawl_view_buffer& vbuf);
+typedef bool (*map_predicate) (const coord_def&);
 
 static coord_def overlay_directions[] =
 {
@@ -104,21 +101,16 @@ static coord_def overlay_directions[] =
     coord_def(-1, 1)
 };
 
-static void _add_directional_overlays(const coord_def& gc, crawl_view_buffer& vbuf,
+static void _add_directional_overlays(const coord_def& gc, packed_cell* cell,
                                       tileidx_t tile, map_predicate pred,
                                       uint8_t tile_mask = 0xFF)
 {
-    auto& cell = vbuf(gc).tile;
-
     uint8_t dir_mask = 0;
 
     for (int i = 0; i < 8; ++i)
     {
-        if (!pred(gc + overlay_directions[i], vbuf)
-            || feat_is_wall(cell.map_knowledge.feat()))
-        {
+        if (!pred(gc + overlay_directions[i]))
             continue;
-        }
 
         if (i > 3)
         {
@@ -146,18 +138,11 @@ static void _add_directional_overlays(const coord_def& gc, crawl_view_buffer& vb
     }
 }
 
-static bool _feat_has_ink(coord_def gc, crawl_view_buffer& vbuf)
+static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
 {
-    return vbuf(gc).tile.map_knowledge.cloud() == CLOUD_INK;
-}
-
-static void _pack_shoal_waves(const coord_def &gc, crawl_view_buffer& vbuf)
-{
-    auto& cell = vbuf(gc).tile;
-
     // Add wave tiles on floor adjacent to shallow water.
-    const auto feat = cell.map_knowledge.feat();
-    const bool feat_has_ink = _feat_has_ink(gc, vbuf);
+    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    const bool feat_has_ink = (cloud_type_at(coord_def(gc)) == CLOUD_INK);
 
     if (feat == DNGN_DEEP_WATER && feat_has_ink)
     {
@@ -180,17 +165,13 @@ static void _pack_shoal_waves(const coord_def &gc, crawl_view_buffer& vbuf)
 
     for (adjacent_iterator ri(gc, true); ri; ++ri)
     {
-        if (ri->x < 0 || ri->x >= vbuf.size().x || ri->y < 0 || ri->y >= vbuf.size().y)
-            continue;
-        const map_cell& adj_knowledge = vbuf(*ri).tile.map_knowledge;
-        if (!adj_knowledge.seen() && !adj_knowledge.mapped())
+        if (!env.map_knowledge(*ri).seen() && !env.map_knowledge(*ri).mapped())
             continue;
 
-        const bool ink = _feat_has_ink(*ri, vbuf);
-        const auto adj_feat = adj_knowledge.feat();
+        const bool ink = (cloud_type_at(coord_def(*ri)) == CLOUD_INK);
 
         wave_type wt = WV_NONE;
-        if (adj_feat == DNGN_SHALLOW_WATER)
+        if (env.map_knowledge(*ri).feat() == DNGN_SHALLOW_WATER)
         {
             // Adjacent shallow water is only interesting for
             // floor cells.
@@ -200,7 +181,7 @@ static void _pack_shoal_waves(const coord_def &gc, crawl_view_buffer& vbuf)
             if (feat != DNGN_SHALLOW_WATER)
                 wt = WV_SHALLOW;
         }
-        else if (adj_feat == DNGN_DEEP_WATER)
+        else if (env.map_knowledge(*ri).feat() == DNGN_DEEP_WATER)
             wt = WV_DEEP;
         else
             continue;
@@ -345,75 +326,93 @@ static void _pack_shoal_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     }
 }
 
-static dungeon_feature_type _safe_feat(coord_def gc, crawl_view_buffer& vbuf)
+static dungeon_feature_type _safe_feat(coord_def gc)
 {
-    if (gc.x < 0 || gc.x >= vbuf.size().x || gc.y < 0 || gc.y >= vbuf.size().y)
+    if (!map_bounds(gc))
         return DNGN_UNSEEN;
 
-    return vbuf(gc).tile.map_knowledge.feat();
+    return env.map_knowledge(gc).feat();
 }
 
-static bool _is_seen_land(coord_def gc, crawl_view_buffer& vbuf)
+static bool _feat_is_mangrove(dungeon_feature_type feat)
 {
-    const auto feat = _safe_feat(gc, vbuf);
+    return feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP);
+}
+
+static bool _is_seen_land(coord_def gc)
+{
+    const dungeon_feature_type feat = _safe_feat(gc);
 
     return feat != DNGN_UNSEEN && !feat_is_water(feat) && !feat_is_lava(feat)
-           && feat != DNGN_MANGROVE;
+           && !_feat_is_mangrove(feat);
 }
 
-static bool _is_seen_shallow(coord_def gc, crawl_view_buffer& vbuf)
+static bool _is_seen_shallow(coord_def gc)
 {
-    const auto feat = _safe_feat(gc, vbuf);
+    const dungeon_feature_type feat = _safe_feat(gc);
 
-    if (!vbuf(gc).tile.map_knowledge.seen())
-        return false;
-
-    return feat == DNGN_SHALLOW_WATER || feat == DNGN_MANGROVE;
+    return feat == DNGN_SHALLOW_WATER || _feat_is_mangrove(feat);
 }
 
-static tileidx_t _base_wave_tile(colour_t colour)
+static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
 {
-    switch (colour)
-    {
-        case BLACK: return TILE_DNGN_WAVE_N;
-        case GREEN: return TILE_MURKY_WAVE_N;
-        default: die("no %s deep water wave tiles", colour_to_str(colour).c_str());
-    }
-}
-
-static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
-{
-    auto& cell = vbuf(gc).tile;
     // Any tile on water with an adjacent solid tile will get an extra
     // bit of shoreline.
-    auto feat = cell.map_knowledge.feat();
-    auto colour = cell.map_knowledge.feat_colour();
+    dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
-    // Treat mangroves as though they were shallow water.
-    if (cell.mangrove_water && feat == DNGN_MANGROVE)
+    // Treat trees in Swamp as though they were shallow water.
+    if (cell->mangrove_water && feat == DNGN_TREE)
         feat = DNGN_SHALLOW_WATER;
 
     if (!feat_is_water(feat) && !feat_is_lava(feat))
         return;
 
-    if (feat == DNGN_DEEP_WATER && (colour == BLACK || colour == GREEN))
+    if (feat == DNGN_DEEP_WATER && !env.grid_colours(gc))
     {
-        // +7 and -- reverse the iteration order
-        int tile = _base_wave_tile(colour) + 7;
-        for (adjacent_iterator ai(gc); ai; ++ai, --tile)
-        {
-            if (ai->x < 0 || ai->x >= vbuf.size().x || ai->y < 0 || ai->y >= vbuf.size().y)
-                continue;
-            if (_is_seen_shallow(*ai, vbuf))
-                _add_overlay(tile, cell);
-        }
+        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
+            _add_overlay(TILE_DNGN_WAVE_N, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1)))
+            _add_overlay(TILE_DNGN_WAVE_NE, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y)))
+            _add_overlay(TILE_DNGN_WAVE_E, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1)))
+            _add_overlay(TILE_DNGN_WAVE_SE, cell);
+        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1)))
+            _add_overlay(TILE_DNGN_WAVE_S, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1)))
+            _add_overlay(TILE_DNGN_WAVE_SW, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y)))
+            _add_overlay(TILE_DNGN_WAVE_W, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1)))
+            _add_overlay(TILE_DNGN_WAVE_NW, cell);
     }
 
-    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1), vbuf);
-    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y), vbuf);
-    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y), vbuf);
+    // Sewer water
+    if (feat == DNGN_DEEP_WATER && env.grid_colours(gc) == GREEN)
+    {
+        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
+            _add_overlay(TILE_MURKY_WAVE_N, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1)))
+            _add_overlay(TILE_MURKY_WAVE_NE, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y)))
+            _add_overlay(TILE_MURKY_WAVE_E, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1)))
+            _add_overlay(TILE_MURKY_WAVE_SE, cell);
+        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1)))
+            _add_overlay(TILE_MURKY_WAVE_S, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1)))
+            _add_overlay(TILE_MURKY_WAVE_SW, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y)))
+            _add_overlay(TILE_MURKY_WAVE_W, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1)))
+            _add_overlay(TILE_MURKY_WAVE_NW, cell);
+    }
 
-    if (north || west || east && (colour == BLACK || colour == LIGHTGREEN))
+    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
+    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
+    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
+
+    if (north || west || east && (!env.grid_colours(gc) || env.grid_colours(gc) == LIGHTGREEN))
     {
         if (north)
             _add_overlay(TILE_SHORE_N, cell);
@@ -428,107 +427,79 @@ static void _pack_default_waves(const coord_def &gc, crawl_view_buffer& vbuf)
     }
 }
 
-static bool _is_seen_wall(coord_def gc, crawl_view_buffer& vbuf)
+static bool _is_seen_wall(coord_def gc)
 {
-    const auto feat = _safe_feat(gc, vbuf);
+    const dungeon_feature_type feat = _safe_feat(gc);
     return (feat_is_opaque(feat) || feat_is_wall(feat))
-           && !feat_is_tree(feat) && feat != DNGN_UNSEEN;
+           && feat != DNGN_TREE && feat != DNGN_UNSEEN;
 }
 
-static void _pack_wall_shadows(const coord_def &gc, crawl_view_buffer& vbuf,
+static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell,
                                tileidx_t tile)
 {
-    if (_is_seen_wall(gc, vbuf) || _safe_feat(gc, vbuf) == DNGN_GRATE)
+    if (_is_seen_wall(gc) || _safe_feat(gc) == DNGN_GRATE)
         return;
-
-    auto& cell = vbuf(gc).tile;
 
     bool ne = 0;
     bool nw = 0;
     int offset;
 
     // orthogonals
-    if (_is_seen_wall(coord_def(gc.x - 1, gc.y), vbuf))
+    if (_is_seen_wall(coord_def(gc.x - 1, gc.y)))
     {
-        offset = _is_seen_wall(coord_def(gc.x - 1, gc.y - 1), vbuf) ? 0 : 5;
+        offset = _is_seen_wall(coord_def(gc.x - 1, gc.y - 1)) ? 0 : 5;
         _add_overlay(tile + offset, cell);
         nw = 1;
     }
-    if (_is_seen_wall(coord_def(gc.x, gc.y - 1), vbuf))
+    if (_is_seen_wall(coord_def(gc.x, gc.y - 1)))
     {
         _add_overlay(tile + 2, cell);
         ne = 1;
         nw = 1;
     }
-    if (_is_seen_wall(coord_def(gc.x + 1, gc.y), vbuf))
+    if (_is_seen_wall(coord_def(gc.x + 1, gc.y)))
     {
-        offset = _is_seen_wall(coord_def(gc.x + 1, gc.y - 1), vbuf) ? 4 : 6;
+        offset = _is_seen_wall(coord_def(gc.x + 1, gc.y - 1)) ? 4 : 6;
         _add_overlay(tile + offset, cell);
         ne = 1;
     }
 
     // corners
-    if (nw == 0 && _is_seen_wall(coord_def(gc.x - 1, gc.y - 1), vbuf))
+    if (nw == 0 && _is_seen_wall(coord_def(gc.x - 1, gc.y - 1)))
         _add_overlay(tile + 1, cell);
-    if (ne == 0 && _is_seen_wall(coord_def(gc.x + 1, gc.y - 1), vbuf))
+    if (ne == 0 && _is_seen_wall(coord_def(gc.x + 1, gc.y - 1)))
         _add_overlay(tile + 3, cell);
 }
 
-static bool _is_seen_slimy_wall(const coord_def& gc, crawl_view_buffer &vbuf)
+static bool _is_seen_slimy_wall(const coord_def& gc)
 {
-    const auto feat = _safe_feat(gc, vbuf);
+    const dungeon_feature_type feat = _safe_feat(gc);
 
     return feat == DNGN_SLIMY_WALL;
 }
 
-static bool _is_seen_icy_wall(const coord_def& gc, crawl_view_buffer &vbuf)
+void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
 {
-    if (gc.x < 0 || gc.x >= vbuf.size().x || gc.y < 0 || gc.y >= vbuf.size().y)
-        return false;
-
-    return feat_is_wall(vbuf(gc).tile.map_knowledge.feat())
-           && vbuf(gc).tile.map_knowledge.flags & MAP_ICY;
-}
-
-void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf)
-{
-    auto& cell = vbuf(gc).tile;
-
-    if (cell.map_knowledge.feat() == DNGN_UNSEEN)
+    if (env.map_knowledge(gc).feat() == DNGN_UNSEEN)
         return; // Don't put overlays on unseen tiles
 
     if (player_in_branch(BRANCH_SHOALS))
-        _pack_shoal_waves(gc, vbuf);
+        _pack_shoal_waves(gc, cell);
     else
-        _pack_default_waves(gc, vbuf);
+        _pack_default_waves(gc, cell);
 
-    if (env.level_state & LSTATE_SLIMY_WALL
-        && cell.map_knowledge.feat() != DNGN_SLIMY_WALL)
+    if (player_in_branch(BRANCH_SLIME) &&
+        env.map_knowledge(gc).feat() != DNGN_SLIMY_WALL)
     {
-        _add_directional_overlays(gc, vbuf, TILE_SLIME_OVERLAY,
+        _add_directional_overlays(gc, cell, TILE_SLIME_OVERLAY,
                                   _is_seen_slimy_wall);
-    }
-    else if (env.level_state & LSTATE_ICY_WALL
-             && cell.map_knowledge.flags & MAP_ICY)
-    {
-        if (feat_is_wall(cell.map_knowledge.feat()))
-        {
-            const int count = tile_dngn_count(TILE_DNGN_WALL_ICY_WALL_OVERLAY);
-            _add_overlay(TILE_DNGN_WALL_ICY_WALL_OVERLAY
-                    + (gc.y * GXM + gc.x) % count, cell);
-        }
-        else
-        {
-            _add_directional_overlays(gc, vbuf, TILE_ICE_OVERLAY,
-                                      _is_seen_icy_wall);
-        }
     }
     else
     {
         tileidx_t shadow_tile = TILE_DNGN_WALL_SHADOW;
         if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_DEPTHS))
             shadow_tile = TILE_DNGN_WALL_SHADOW_DARK;
-        _pack_wall_shadows(gc, vbuf, shadow_tile);
+        _pack_wall_shadows(gc, cell, shadow_tile);
     }
 }
 #endif //TILECELL.CC

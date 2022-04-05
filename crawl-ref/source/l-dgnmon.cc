@@ -6,13 +6,12 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
+#include "coord.h"
 #include "dungeon.h"
 #include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-place.h"
-#include "mpr.h"
 #include "stringutil.h"
-#include "tag-version.h"
 
 #define MONSLIST_METATABLE "crawldgn.monster_list"
 
@@ -31,7 +30,7 @@ static mons_list _lua_get_mlist(lua_State *ls, int ndx)
     {
         mons_list **mlist =
         clua_get_userdata<mons_list*>(ls, MONSLIST_METATABLE, ndx);
-        if (mlist && *mlist)
+        if (mlist)
             return **mlist;
 
         luaL_argerror(ls, ndx, "Expected monster list object or string");
@@ -64,11 +63,6 @@ static int dgn_set_random_mon_list(lua_State *ls)
     {
         map_def **_map =
         clua_get_userdata<map_def*>(ls, MAP_METATABLE, 1);
-        if (!_map || !*_map)
-        {
-            luaL_error(ls, "Invalid map object");
-            return 0;
-        }
         map = *_map;
     }
 

@@ -6,14 +6,11 @@
 #pragma once
 
 #include <memory>
-#include <vector>
 
 #include "command-type.h"
 #include "enum.h"
 #include "god-type.h"
 #include "terrain-change-type.h"
-
-using std::vector;
 
 class  actor;
 struct coord_def;
@@ -62,7 +59,6 @@ bool feat_is_trap(dungeon_feature_type feat);
 command_type feat_stair_direction(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
 bool feat_is_tree(dungeon_feature_type feat);
-bool feat_is_flammable(dungeon_feature_type feat);
 bool feat_is_metal(dungeon_feature_type feat);
 
 bool feat_is_stair(dungeon_feature_type feat);
@@ -81,7 +77,6 @@ dungeon_feature_type altar_for_god(god_type god);
 
 bool feat_is_altar(dungeon_feature_type feat);
 bool feat_is_player_altar(dungeon_feature_type grid);
-bool feat_is_hell_subbranch_exit(dungeon_feature_type feat);
 
 bool feat_is_branch_entrance(dungeon_feature_type feat);
 bool feat_is_branch_exit(dungeon_feature_type feat);
@@ -96,17 +91,15 @@ bool feat_is_critical(dungeon_feature_type feat);
 bool feat_is_valid_border(dungeon_feature_type feat);
 bool feat_is_mimicable(dungeon_feature_type feat, bool strict = true);
 bool feat_is_shaftable(dungeon_feature_type feat);
-bool feat_suppress_blood(dungeon_feature_type feat);
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
 
 void find_connected_identical(const coord_def& d, set<coord_def>& out, bool known_only = false);
+coord_def get_random_stair();
 
 bool slime_wall_neighbour(const coord_def& c);
 int count_adjacent_slime_walls(const coord_def &pos);
 void slime_wall_damage(actor* act, int delay);
-
-int count_adjacent_icy_walls(const coord_def &pos);
 
 void get_door_description(int door_size, const char** adjective,
                           const char** noun);
@@ -147,13 +140,15 @@ vector<string> dungeon_feature_matches(const string &name);
 const char *dungeon_feature_name(dungeon_feature_type rfeat);
 void destroy_wall(const coord_def& p);
 void set_terrain_changed(const coord_def c);
+bool cell_is_clingable(const coord_def pos);
+bool cell_can_cling_to(const coord_def& from, const coord_def to);
 bool cell_triggers_conduct(const coord_def pos);
 bool is_boring_terrain(dungeon_feature_type feat);
 
 dungeon_feature_type orig_terrain(coord_def pos);
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type = TERRAIN_CHANGE_GENERIC,
-                         int mid = MID_NOBODY);
+                         const monster* mon = nullptr);
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype);
 bool is_temp_terrain(coord_def pos);
 
@@ -168,6 +163,3 @@ coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* exclude
 
 void dgn_close_door(const coord_def &dest);
 void dgn_open_door(const coord_def &dest);
-void dgn_break_door(const coord_def &dest);
-
-void ice_wall_damage(monster &victim, int delay);

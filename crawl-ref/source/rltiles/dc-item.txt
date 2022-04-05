@@ -14,11 +14,6 @@
 ##### Artefacts (fixed and unrandart)
 %include dc-unrand.txt
 
-urand_wyrmbane1 UNRAND_WYRMBANE1
-urand_wyrmbane2 UNRAND_WYRMBANE2
-urand_wyrmbane3 UNRAND_WYRMBANE3
-urand_wyrmbane4 UNRAND_WYRMBANE4
-
 #####NORMAL
 %sdir item/weapon
 %rim 0
@@ -186,53 +181,48 @@ i-flaming BRAND_FLAMING BRAND_WEP_FIRST
 i-freezing BRAND_FREEZING
 i-holy_wrath BRAND_HOLY_WRATH
 i-electrocution BRAND_ELECTROCUTION
-# start TAG_MAJOR_VERSION == 34
+# Remove _slaying brands when TAG_MAJOR_VERSION > 34
 i-confusion BRAND_ORC_SLAYING
 i-confusion BRAND_DRAGON_SLAYING
-# end TAG_MAJOR_VERSION
+# End removals
 i-venom BRAND_VENOM
 i-protection BRAND_PROTECTION
 i-draining BRAND_DRAINING
 i-speed BRAND_SPEED
 i-vorpal BRAND_VORPAL
-# start TAG_MAJOR_VERSION == 34
+# Remove the BRAND_FLAME and BRAND_FROST lines (but not the tiles, which are
+# still used for melee weapons) when TAG_MAJOR_VERSION > 34
 i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
-# end TAG_MAJOR_VERSION
 i-vampirism BRAND_VAMPIRISM
 i-pain BRAND_PAIN
 %rim 1
 i-antimagic BRAND_ANTIMAGIC
 %rim 0
 i-distortion BRAND_DISTORTION
-# start TAG_MAJOR_VERSION == 34
+# Remove confusion when TAG_MAJOR_VERSION > 34
 i-confusion BRAND_REACHING
+# Remove returning when TAG_MAJOR_VERSION > 34
 i-returning BRAND_RETURNING
-# end TAG_MAJOR_VERSION
 i-chaos BRAND_CHAOS
-# start TAG_MAJOR_VERSION == 34
+# Remove evasion when TAG_MAJOR_VERSION > 34
 i-evasion BRAND_EVASION
+# Move i-confusion down to missile-only brands when TAG_MAJOR_VERSION > 34
 i-confusion BRAND_CONFUSION
-# end TAG_MAJOR_VERSION
 i-penetration BRAND_PENETRATION
-i-reaping BRAND_REAPING
-i-spectral BRAND_SPECTRAL BRAND_WEP_LAST
+i-reaping BRAND_REAPING BRAND_WEP_LAST
 # missile-only brands, order doesn't matter
 i-dispersal BRAND_DISPERSAL
 i-explosion BRAND_EXPLOSION
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
 i-electrocution BRAND_ELECTRIC
-# start TAG_MAJOR_VERSION == 34
+# Remove sickness and slowing when TAG_MAJOR_VERSION > 34
 i-sickness BRAND_SICKNESS
 i-slowing BRAND_SLOWING
 i-paralysis BRAND_PARALYSIS
-# end TAG_MAJOR_VERSION
 i-frenzy BRAND_FRENZY
-# start TAG_MAJOR_VERSION == 34
 i-sleep BRAND_SLEEP
-# end TAG_MAJOR_VERSION
-i-blinding BRAND_BLINDING
 %rim 1
 %sdir item/weapon/ranged
 
@@ -288,32 +278,34 @@ effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
 
 %rim 0
-boomerang1 MI_BOOMERANG
-boomerang2
-silver_boomerang MI_BOOMERANG_SILVER
-# flying boomerangs
-effect/boomerang0 MI_BOOMERANG0
-effect/boomerang1 MI_BOOMERANG1
-effect/boomerang2 MI_BOOMERANG2
-effect/boomerang3 MI_BOOMERANG3
+tomahawk1 MI_TOMAHAWK
+tomahawk2
+steel_tomahawk MI_TOMAHAWK_STEEL
+silver_tomahawk MI_TOMAHAWK_SILVER
+# flying tomahawks
+effect/tomahawk0 MI_TOMAHAWK0
+effect/tomahawk1 MI_TOMAHAWK1
+effect/tomahawk2 MI_TOMAHAWK2
+effect/tomahawk3 MI_TOMAHAWK3
+effect/tomahawk4 MI_TOMAHAWK4
+effect/tomahawk5 MI_TOMAHAWK5
+effect/tomahawk6 MI_TOMAHAWK6
+effect/tomahawk7 MI_TOMAHAWK7
 
 %rim 1
-dart1 MI_DART
-dart2
-dart-a MI_DART_BLINDING
-dart-c MI_DART_CURARE
-dart-d MI_DART_FRENZY
-dart-p MI_DART_POISONED
-
+needle1 MI_NEEDLE
+needle2
+needle-p MI_NEEDLE_P
+needle-c MI_NEEDLE_CURARE
 # flying needles
-effect/needle0 MI_DART0
-effect/needle1 MI_DART1
-effect/needle2 MI_DART2
-effect/needle3 MI_DART3
-effect/needle4 MI_DART4
-effect/needle5 MI_DART5
-effect/needle6 MI_DART6
-effect/needle7 MI_DART7
+effect/needle0 MI_NEEDLE0
+effect/needle1 MI_NEEDLE1
+effect/needle2 MI_NEEDLE2
+effect/needle3 MI_NEEDLE3
+effect/needle4 MI_NEEDLE4
+effect/needle5 MI_NEEDLE5
+effect/needle6 MI_NEEDLE6
+effect/needle7 MI_NEEDLE7
 
 %rim 0
 javelin1 MI_JAVELIN
@@ -387,13 +379,13 @@ animal_skin2
 animal_skin3
 
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
-fire_dragon_armour ARM_FIRE_DRAGON_ARMOUR
+red_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
-steam_dragon_armour ARM_STEAM_DRAGON_ARMOUR
+silver_dragon_scale_mail ARM_STEAM_DRAGON_ARMOUR
 acid_dragon_armour ARM_ACID_DRAGON_ARMOUR
-quicksilver_dragon_armour ARM_QUICKSILVER_DRAGON_ARMOUR
-storm_dragon_armour ARM_STORM_DRAGON_ARMOUR
-shadow_dragon_armour ARM_SHADOW_DRAGON_ARMOUR
+quicksilver_dragon_scale_mail ARM_QUICKSILVER_DRAGON_ARMOUR
+blue_dragon_scale_mail ARM_STORM_DRAGON_ARMOUR
+shadow_dragon_scale_mail ARM_SHADOW_DRAGON_ARMOUR
 gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
@@ -414,22 +406,17 @@ scarf2_3
 scarf3
 
 %sdir item/armour/bardings
-naga_barding_blue ARM_BARDING
+naga_barding_blue ARM_NAGA_BARDING
 naga_barding_metal
 naga_barding_magenta
 naga_barding_red
-# start TAG_MAJOR_VERSION == 34
 centaur_barding_blue ARM_CENTAUR_BARDING
 centaur_barding_metal
 centaur_barding_magenta
 centaur_barding_red
-# end TAG_MAJOR_VERSION
 
 %sdir item/armour/shields
-
 %rim 0
-orb ARM_ORB
-
 buckler1 ARM_BUCKLER
 buckler2
 buckler3
@@ -437,36 +424,31 @@ buckler3
 
 buckler_spriggan ARM_BUCKLER_SPRIGGAN
 
-kite_shield1 ARM_KITE_SHIELD
-kite_shield2
-kite_shield3
+shield1 ARM_SHIELD
+shield2
+shield3
 
-tower_shield1 ARM_TOWER_SHIELD
-tower_shield2
-tower_shield3
+large_shield1 ARM_LARGE_SHIELD
+large_shield2
+large_shield3
 
-kite_shield_dd KITE_SHIELD_DEEP_DWARF
-kite_shield_dd_scion KITE_SHIELD_DEEP_DWARF_SCION
-tower_shield_dd_dk TOWER_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+shield_dd SHIELD_DEEP_DWARF
+shield_dd_scion SHIELD_DEEP_DWARF_SCION
+lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
 %rim 0
-kite_shield_donald KITE_SHIELD_DONALD
-tower_shield_louise TOWER_SHIELD_LOUISE
+shield_donald SHIELD_DONALD
+lshield_louise LSHIELD_LOUISE
 %rim 1
 
 %sdir item/armour/headgear
 #####ARM_HELMET
 elven_leather_helm THELM_CAP
 cap_jester THELM_CAP_JESTER
-hat_explorer THELM_HAT_EXPLORER
-hat_explorer2 THELM_HAT_EXPLORER2
 
 %rim 0
-hat1 THELM_HAT THELM_HAT_FIRST
-hat_archer THELM_ARCHER THELM_HAT_LAST
-hat2 THELM_HAT_EGO_FIRST
-hat_archer2 THELM_ARCHER2 THELM_HAT_EGO_LAST
-hat3 THELM_HAT_ART_FIRST
-wizard_hat THELM_HAT_ART_LAST
+hat1 THELM_HAT
+hat2
+hat3
 
 helmet1 THELM_HELM THELM_FIRST
 helmet2
@@ -491,24 +473,17 @@ glove5
 
 ###### BOOTS
 %rim 1
-boots1 ARM_BOOTS ARM_BOOTS_FIRST
-boots2 ARM_BOOTS_LAST
-boots_ego1 ARM_BOOTS_EGO_FIRST
-boots_ego2 ARM_BOOTS_EGO_LAST
-boots_art1 ARM_BOOTS_ART_FIRST
-boots_art2 ARM_BOOTS_ART_LAST
+boots1_brown ARM_BOOTS
+boots2_jackboots
+boots3_stripe
+boots4_green
 
 ### Armour brands
 # The order of armour brands must be identical to the one defined
 # in item-prop-enum.h.
 %sdir item/armour/brands
-# start TAG_MAJOR_VERSION == 34
 i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
 i-fire-res BRAND_ARM_FIRE_RESISTANCE
-# end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-fire-res BRAND_ARM_FIRE_RESISTANCE BRAND_ARM_FIRST
-# end TAG_MAJOR_VERSION
 i-cold-res BRAND_ARM_COLD_RESISTANCE
 i-poison-res BRAND_ARM_POISON_RESISTANCE
 i-see-invis BRAND_ARM_SEE_INVISIBLE
@@ -526,28 +501,15 @@ i-stealth BRAND_ARM_STEALTH
 i-resistance BRAND_ARM_RESISTANCE
 i-positive-energy BRAND_ARM_POSITIVE_ENERGY
 i-archmagi BRAND_ARM_ARCHMAGI
+# Remove preservation when TAG_MAJOR_VERSION > 34
 i-preservation BRAND_ARM_PRESERVATION
 i-reflection BRAND_ARM_REFLECTION
 i-spirit BRAND_ARM_SPIRIT_SHIELD
-i-hurling BRAND_ARM_HURLING
-# start TAG_MAJOR_VERSION == 34
+i-archery BRAND_ARM_ARCHERY
+# Remove jumping when TAG_MAJOR_VERSION > 34
 i-jumping BRAND_ARM_JUMPING
-# end TAG_MAJOR_VERSION
 i-repulsion BRAND_ARM_REPULSION
-# start TAG_MAJOR_VERSION == 34
-i-cloud-immune BRAND_ARM_CLOUD_IMMUNE
-# end TAG_MAJOR_VERSION
-i-harm BRAND_ARM_HARM
-i-shadows BRAND_ARM_SHADOWS
-%rim 0
-i-lunging BRAND_ARM_LUNGING
-i-infusion BRAND_ARM_INFUSION
-i-light BRAND_ARM_LIGHT
-i-rage BRAND_ARM_RAGE
-i-mayhem BRAND_ARM_MAYHEM
-i-guile BRAND_ARM_GUILE
-i-energy BRAND_ARM_ENERGY BRAND_ARM_LAST
-%rim 1
+i-cloud-immune BRAND_ARM_CLOUD_IMMUNE BRAND_ARM_LAST
 
 ###########OBJ_WANDS
 %sdir item/wand
@@ -568,43 +530,32 @@ gem_plastic
 
 %sdir item/wand
 #### These must be in the same order as the enum in item-prop-enum.h!
+# Remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-flame WAND_FLAME WAND_ID_FIRST
-# start TAG_MAJOR_VERSION == 34
 i-flame WAND_REMOVEME
 i-slowing WAND_REMOVEME9
 i-hasting WAND_REMOVEME7
 i-flame WAND_REMOVEME2
 i-heal_wounds WAND_REMOVEME6
-# end TAG_MAJOR_VERSION
 i-paralysis WAND_PARALYSIS
-# start TAG_MAJOR_VERSION == 34
 i-flame WAND_REMOVEME3
 i-flame WAND_REMOVEME4
 i-confusion WAND_REMOVEME10
 i-flame WAND_REMOVEME5
-# end TAG_MAJOR_VERSION
 i-digging WAND_DIGGING
 i-iceblast WAND_ICEBLAST
-# start TAG_MAJOR_VERSION == 34
 i-teleportation WAND_REMOVEME8
 i-lightning WAND_REMOVEME11
-# end TAG_MAJOR_VERSION
 i-polymorph WAND_POLYMORPH
-i-charming WAND_CHARMING
+i-enslavement WAND_ENSLAVEMENT
 i-acid WAND_ACID
-# start TAG_MAJOR_VERSION == 34
-i-random_effects WAND_REMOVEME14
+i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION
-i-clouds WAND_REMOVEME13
-i-scattershot WAND_REMOVEME12 WAND_ID_LAST
-# end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
-# end TAG_MAJOR_VERSION
+i-clouds WAND_CLOUDS
+i-scattershot WAND_SCATTERSHOT WAND_ID_LAST
 
-################# Skeletons
+#################OBJ_FOOD
 %sdir item/food
-# start TAG_MAJOR_VERSION == 34
 bread_ration FOOD_RATION UNSEEN_FOOD FOOD_RATION_FIRST FOOD_RATION_INVENTORY
 meat_ration
 cheese
@@ -623,7 +574,6 @@ pear
 snozzcumber
 strawberry FOOD_FRUIT_LAST
 fruit FOOD_FRUIT_INVENTORY FOOD_RATION_LAST
-# end TAG_MAJOR_VERSION
 
 %rim 0
 bone_humanoid1 FOOD_BONE_HUMANOID
@@ -634,8 +584,6 @@ bone1 FOOD_BONE
 bone2
 bone3
 bone4
-
-# start TAG_MAJOR_VERSION == 34
 %rim 1
 chunk FOOD_CHUNK
 %back chunk
@@ -646,7 +594,6 @@ chunk_brands/i-inedible FOOD_CHUNK_INEDIBLE
 chunk_brands/i-decay FOOD_ROTTING
 chunk_brands/i-forbidden FOOD_FORBIDDEN
 chunk_brands/i-inedible FOOD_INEDIBLE
-# end TAG_MAJOR_VERSION
 
 #################OBJ_UNKNOWN_I
 ##################OBJ_SCROLLS
@@ -663,10 +610,8 @@ i-teleportation SCR_TELEPORTATION
 i-fear SCR_FEAR
 %back scroll-grey
 i-noise SCR_NOISE
-# start TAG_MAJOR_VERSION == 34
 %back scroll-yellow
 i-remove_curse SCR_REMOVE_CURSE
-# end TAG_MAJOR_VERSION
 # aka scroll of summoning
 %back scroll-brown
 i-unholy_creation SCR_UNHOLY_CREATION
@@ -676,12 +621,11 @@ i-enchant_armour SCR_ENCHANT_ARMOUR
 %back scroll-red
 i-torment SCR_TORMENT
 %back scroll-grey
-# start TAG_MAJOR_VERSION == 34
 i-random_uselessness SCR_RANDOM_USELESSNESS
 %back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
 i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
-# end TAG_MAJOR_VERSION
 i-immolation SCR_IMMOLATION
 %back scroll-purple
 i-blinking SCR_BLINKING
@@ -692,28 +636,24 @@ i-fog SCR_FOG
 %back scroll-cyan
 i-acquirement SCR_ACQUIREMENT
 %back scroll-green
-# start TAG_MAJOR_VERSION == 34
+# Remove enchant weapon II when TAG_MAJOR_VERSION > 34
 i-enchant-weapon SCR_ENCHANT_WEAPON_II
-# end TAG_MAJOR_VERSION
 i-brand-weapon SCR_BRAND_WEAPON
-# start TAG_MAJOR_VERSION == 34
+# Remove recharging when TAG_MAJOR_VERSION > 34
 i-recharging SCR_RECHARGING
+# Remove enchant weapon III when TAG_MAJOR_VERSION > 34
 i-enchant-weapon SCR_ENCHANT_WEAPON_III
-# end TAG_MAJOR_VERSION
 %back scroll-red
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY
 %back scroll-red
 i-silence SCR_SILENCE
 %back scroll-yellow
-# start TAG_MAJOR_VERSION == 34
 i-amnesia SCR_AMNESIA
 %back scroll-grey
+#### Remove curse foo when TAG_MAJOR_VERSION > 34
+# Don't forget to update SCR_ID_LAST
 i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
-# end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-amnesia SCR_AMNESIA SCR_ID_LAST
-# end TAG_MAJOR_VERSION
 %back none
 
 ##################OBJ_JEWELLERY
@@ -771,13 +711,9 @@ snake
 ###########icons
 %sdir item/ring
 #### These must be in the same order as the enum in item-prop-enum.h!
-# start TAG_MAJOR_VERSION == 34
+# Remove regeneration when TAG_MAJOR_VERSION > 34 (and mark protection as 1st)
 i-protection RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
-# end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-protection RING_PROTECTION RING_ID_FIRST
-# end TAG_MAJOR_VERSION
 i-r-fire RING_PROTECTION_FROM_FIRE
 i-r-poison RING_POISON_RESISTANCE
 i-r-cold RING_PROTECTION_FROM_COLD
@@ -785,14 +721,11 @@ i-str RING_STRENGTH
 i-slaying RING_SLAYING
 i-see-invis RING_SEE_INVISIBLE
 i-r-corrosion RING_RESIST_CORROSION
-# start TAG_MAJOR_VERSION == 34
 i-attention RING_ATTENTION
 i-teleport RING_TELEPORTATION
-# end TAG_MAJOR_VERSION
 i-evasion RING_EVASION
-# start TAG_MAJOR_VERSION == 34
+# Remove sustat when TAG_MAJOR_VERSION > 34
 i-s-attr RING_SUSTAIN_ATTRIBUTES
-# end TAG_MAJOR_VERSION
 i-stealth RING_STEALTH
 i-dex RING_DEXTERITY
 i-int RING_INTELLIGENCE
@@ -800,15 +733,11 @@ i-wizardry RING_WIZARDRY
 i-magical-power RING_MAGICAL_POWER
 i-flight RING_FLIGHT
 i-life-protection RING_LIFE_PROTECTION
-i-r-magic RING_WILLPOWER
+i-r-magic RING_PROTECTION_FROM_MAGIC
 i-fire RING_FIRE
-# start TAG_MAJOR_VERSION == 34
 i-ice RING_ICE
+# remove teleport control when TAG_MAJOR_VERSION > 34 and mark ice as last
 i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
-# end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-ice RING_ICE RING_ID_LAST
-# end TAG_MAJOR_VERSION
 
 ############amulets
 %sdir item/amulet
@@ -856,21 +785,15 @@ sun
 ###########icons
 %sdir item/amulet
 # These must be in the same order as the enum in item-prop-enum.h!
-# start TAG_MAJOR_VERSION == 34
+# remove REMOVEMEs when TAG_MAJOR_VERSION > 34
 i-rage AMU_RAGE AMU_ID_FIRST
 i-harm AMU_HARM
 i-acrobat AMU_ACROBAT
-# end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-acrobat AMU_ACROBAT AMU_ID_FIRST
-# end TAG_MAJOR_VERSION
 i-m-regeneration AMU_MANA_REGENERATION
-# start TAG_MAJOR_VERSION == 34
 i-gourmand AMU_THE_GOURMAND
 i-rage AMU_REMOVEME1
 i-rage AMU_REMOVEME2
 i-inaccuracy AMU_INACCURACY
-# end TAG_MAJOR_VERSION
 i-rage AMU_NOTHING
 i-spirit AMU_GUARDIAN_SPIRIT
 i-faith AMU_FAITH
@@ -911,52 +834,40 @@ i-heal-wounds POT_HEAL_WOUNDS
 i-haste POT_HASTE
 i-might POT_MIGHT
 i-brilliance POT_BRILLIANCE
-i-attraction POT_ATTRACTION
-# start TAG_MAJOR_VERSION == 34
+i-agility POT_AGILITY
+# please remove these 3 when TAG_MAJOR_VERSION is bumped
 i-gain-strength POT_REMOVEME2
 i-gain-dexterity POT_REMOVEME3
 i-gain-intelligence POT_REMOVEME4
-# end TAG_MAJOR_VERSION
 i-flight POT_FLIGHT
-# start TAG_MAJOR_VERSION == 34
+# please remove POT_POISON when TAG_MAJOR_VERSION is bumped
 i-poison POT_POISON
 i-slowing POT_SLOWING
-# end TAG_MAJOR_VERSION
 i-cancel POT_CANCELLATION
 i-ambrosia POT_AMBROSIA
 i-invisibility POT_INVISIBILITY
-# start TAG_MAJOR_VERSION == 34
+# Remove porridge when TAG_MAJOR_VERSION > 34
 i-porridge POT_PORRIDGE
-# end TAG_MAJOR_VERSION
 i-degeneration POT_DEGENERATION
-# start TAG_MAJOR_VERSION == 34
+# please remove these 2 when TAG_MAJOR_VERSION is bumped
 i-decay POT_REMOVEME5
 i-confusion POT_REMOVE_ME
-# end TAG_MAJOR_VERSION
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
-# start TAG_MAJOR_VERSION == 34
+# remove these 2 when TAG_MAJOR_VERSION is bumped
 i-restore-abilities POT_REMOVEME6
 i-strong-poison POT_REMOVEME7
-# end TAG_MAJOR_VERSION
 i-berserk-rage POT_BERSERK_RAGE
-# start TAG_MAJOR_VERSION == 34
+# please remove POT_CURE_MUTATION when TAG_MAJOR_VERSION is bumped
 i-cure-mutation POT_REMOVEME8
-# end TAG_MAJOR_VERSION
 i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
-# start TAG_MAJOR_VERSION == 34
 i-blood POT_BLOOD
+# Remove coagulated blood when TAG_MAJOR_VERSION > 34
 i-coagulated-blood POT_BLOOD_COAGULATED
-# start TAG_MAJOR_VERSION == 34
 i-lignify POT_LIGNIFY
-i-good-mutation POT_REMOVEME9
-# (corresponds to POT_DUMMY_AGILITY)
-i-attraction POT_REMOVEME10 POT_ID_LAST
-# end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-lignify POT_LIGNIFY POT_ID_LAST
-# end TAG_MAJOR_VERSION
+# Remove beneficial mutation and update POT_ID_LAST when TAG_MAJOR_VERSION > 34
+i-good-mutation POT_REMOVEME9 POT_ID_LAST
 %back none
 %rim 1
 
@@ -1020,36 +931,24 @@ staff08
 staff09
 
 # These must be in the same order as the enum in item-prop-enum.h!
-# start TAG_MAJOR_VERSION == 34
 i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
 i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
-# end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-staff_fire STAFF_FIRE STAFF_ID_FIRST
-# end TAG_MAJOR_VERSION
 i-staff_cold STAFF_COLD
 i-staff_poison STAFF_POISON
-# start TAG_MAJOR_VERSION == 34
 i-staff_energy STAFF_ENERGY
-# end TAG_MAJOR_VERSION
 i-staff_death STAFF_DEATH
 i-staff_conjuration STAFF_CONJURATION
-# start TAG_MAJOR_VERSION == 34
+# Remove when TAG_MAJOR_VERSION > 34
 i-staff_enchantment STAFF_ENCHANTMENT
 i-staff_summoning STAFF_SUMMONING
-# end TAG_MAJOR_VERSION
 i-staff_air STAFF_AIR
-# start TAG_MAJOR_VERSION == 34
+# Remove channeling and update STAFF_ID_LAST when TAG_MAJOR_VERSION > 34
 i-staff_earth STAFF_EARTH
 %rim 0
 i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
-# end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-staff_earth STAFF_EARTH STAFF_ID_LAST
-# end TAG_MAJOR_VERSION
 
-# start TAG_MAJOR_VERSION == 34
+# Remove rods TAG_MAJOR_VERSION > 34
 %sdir item/rod
 rod00 ROD
 rod01
@@ -1075,7 +974,6 @@ error ROD_SHADOWS
 error ROD_IRON
 error ROD_VENOM ROD_ID_LAST
 %rim 1
-# end TAG_MAJOR_VERSION
 
 #OBJ_ORBS
 %sdir item/misc
@@ -1084,7 +982,6 @@ misc_orb2
 uncollected_orb UNCOLLECTED_ORB
 
 #OBJ_MISCELLANY
-# start TAG_MAJOR_VERSION == 34
 misc_bottle MISC_BOTTLED_EFREET
 %rim 0
 misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY UNSEEN_MISC
@@ -1092,36 +989,23 @@ misc_fan MISC_FAN_OF_GALES
 misc_fan_inert MISC_FAN_OF_GALES_INERT
 misc_lamp MISC_LAMP_OF_FIRE
 misc_lamp_inert MISC_LAMP_OF_FIRE_INERT
+# Remove stone when TAG_MAJOR_VERSION > 34
 misc_stone MISC_STONE_OF_TREMORS
 misc_stone_inert MISC_STONE_OF_TREMORS_INERT
-# end TAG_MAJOR_VERSION
 misc_phial MISC_PHIAL_OF_FLOODS
 misc_phial_inert MISC_PHIAL_OF_FLOODS_INERT
 misc_lightning_rod MISC_LIGHTNING_ROD
 misc_lightning_rod_inert MISC_LIGHTNING_ROD_INERT
-misc_tremorstones MISC_TIN_OF_TREMORSTONES
-misc_vane MISC_CONDENSER_VANE
-misc_vane_inert MISC_CONDENSER_VANE_INERT
 %rim 1
-# start TAG_MAJOR_VERSION == 34
+# Remove when TAG_MAJOR_VERSION > 34
 misc_lantern MISC_LANTERN_OF_SHADOWS
-# end TAG_MAJOR_VERSION
 misc_horn MISC_HORN_OF_GERYON
 misc_box MISC_BOX_OF_BEASTS
 %rim 0
-# start TAG_MAJOR_VERSION == 34
 misc_sack MISC_SACK_OF_SPIDERS
-# end TAG_MAJOR_VERSION
 misc_phantom_mirror MISC_PHANTOM_MIRROR
 misc_zigfig MISC_ZIGGURAT
 misc_quad MISC_QUAD_DAMAGE
-misc_pawn MISC_CHESSPIECE_FIRST
-misc_rook
-misc_knight
-misc_bishop
-misc_queen
-misc_king
-misc_thimble MISC_CHESSPIECE_LAST
 %sdir item/misc/runes
 generic MISC_RUNE_OF_ZOT
 rune_tartarus RUNE_TARTARUS

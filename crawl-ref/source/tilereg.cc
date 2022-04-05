@@ -67,12 +67,12 @@ void Region::place(int _sx, int _sy)
     recalculate();
 }
 
-int Region::grid_width_to_pixels(int x) const
+const int Region::grid_width_to_pixels(int x) const
 {
     return x * dx;
 }
 
-int Region::grid_height_to_pixels(int y) const
+const int Region::grid_height_to_pixels(int y) const
 {
     return y * dy;
 }

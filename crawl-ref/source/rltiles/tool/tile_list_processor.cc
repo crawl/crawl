@@ -39,29 +39,10 @@ tile_list_processor::~tile_list_processor()
         delete m_texture;
 }
 
-bool tile_list_processor::load_image_from_tile(tile &img, string filename)
-{
-    if (filename.substr(0, 5) != "enum:")
-        return false;
-    const string enumname = filename.substr(5);
-
-    int idx = m_page.find(enumname);
-    if (idx == -1)
-        return false;
-
-    img.copy(*m_page.m_tiles[idx]);
-    for (int i = 0; i < MAX_COLOUR; ++i)
-        img.add_variation(i, -1);
-    return true;
-}
-
 bool tile_list_processor::load_image(tile &img, const char *filename,
                                      bool background)
 {
     assert(filename);
-
-    if (load_image_from_tile(img, filename))
-        return true;
 
     char temp[1024];
 
@@ -209,7 +190,7 @@ static int str_to_colour(string colour)
         return 0;
 
     for (unsigned int c = 0; c < colour.size(); c++)
-        colour[c] = toalower(colour[c]);
+        colour[c] = tolower(colour[c]);
 
     for (int i = 0; i < 16; ++i)
     {
@@ -347,25 +328,6 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 }
                 m_back.push_back(img);
             }
-        }
-        else if (strcmp(arg, "blank") == 0)
-        {
-            // reset m_compose to a blank tile with the specified dimensions.
-            // This fills the tile with black, but applies recolour, so you
-            // can use %pal to change the color.
-            if (!m_composing)
-            {
-                fprintf(stderr, "Error (%s:%d): %%blank requires %%compose.\n",
-                        list_file, line);
-                return false;
-            }
-
-            CHECK_ARG(2);
-            const int width = atoi(m_args[1]);
-            const int height = atoi(m_args[2]);
-            m_compose.resize(width, height);
-            m_compose.fill(tile_colour::black);
-            recolour(m_compose);
         }
         else if (strcmp(arg, "compose") == 0)
         {
@@ -618,8 +580,6 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         else if (strcmp(arg, "pal") == 0)
         {
             // rgb (optional a) = rgb (optional a)
-            // If only one rgb(a) sequence is supplied, it is used for the
-            // second colour, and the first colour is black.
             tile_colour cols[2]  = { tile_colour::black, tile_colour::black };
             int col_idx = 0;
             int comp_idx = 0;
@@ -658,13 +618,6 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     col_idx++;
                     comp_idx = 0;
                 }
-            }
-            if (col_idx == 0)
-            {
-                // only one color supplied: use it as cols[1]. This makes it
-                // easy to color a blank with %pal.
-                cols[1] = cols[0];
-                cols[0] = tile_colour::black;
             }
 
             m_palette.push_back(palette_entry(cols[0], cols[1]));
@@ -941,8 +894,8 @@ bool tile_list_processor::write_data(bool image, bool code)
     string ucname = m_name;
     for (unsigned int i = 0; i < m_name.size(); i++)
     {
-        lcname[i] = toalower(m_name[i]);
-        ucname[i] = toaupper(m_name[i]);
+        lcname[i] = tolower(m_name[i]);
+        ucname[i] = toupper(m_name[i]);
     }
     string max = m_prefix;
     max += "_";
@@ -1031,7 +984,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             {
                 if (old_enum_name.empty())
                 {
-                    fprintf(fp, "    %s_%s_FILLER_%u%s,\n", m_prefix.c_str(),
+                    fprintf(fp, "    %s_%s_FILLER_%d%s,\n", m_prefix.c_str(),
                             ucname.c_str(), i, start_val.c_str());
                 }
                 else
@@ -1102,7 +1055,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             max_enum += "_MAX";
 
             for (char& c : max_enum)
-                c = toaupper(c);
+                c = toupper(c);
 
             fprintf(fp, "    %s_%s_MAX = %s\n};\n\n", m_prefix.c_str(), ucname.c_str(), max_enum.c_str());
         }
@@ -1159,7 +1112,6 @@ bool tile_list_processor::write_data(bool image, bool code)
 
         fprintf(fp, "// This file has been automatically generated.\n\n");
         fprintf(fp, "#include \"AppHdr.h\"\n");
-        fprintf(fp, "#include \"libutil.h\"\n");
         fprintf(fp, "#include \"tiledef-%s.h\"\n\n", lcname.c_str());
 
         fprintf(fp, "static unsigned int _tile_%s_count[%s - %s] =\n{\n",
@@ -1191,7 +1143,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "static int _tile_%s_probs[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_probs.size(); i++)
-            fprintf(fp, "    %u,\n", m_page.m_probs[i]);
+            fprintf(fp, "    %d,\n", m_page.m_probs[i]);
         fprintf(fp, "};\n\n");
 
         fprintf(fp, "int tile_%s_probs(tileidx_t idx)\n{\n",
@@ -1205,7 +1157,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "static int _tile_%s_dominoes[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_domino.size(); i++)
-            fprintf(fp, "    %u,\n", m_page.m_domino[i]);
+            fprintf(fp, "    %d,\n", m_page.m_domino[i]);
         fprintf(fp, "};\n\n");
 
         fprintf(fp, "int tile_%s_dominoes(tileidx_t idx)\n{\n",
@@ -1226,7 +1178,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             if (m_page.m_tiles[i]->enumcount() == 0)
             {
                 if (old_enum_name.empty())
-                    fprintf(fp, "    \"%s_FILLER_%u\",\n", ucname.c_str(), i);
+                    fprintf(fp, "    \"%s_FILLER_%d\",\n", ucname.c_str(), i);
                 else
                 {
                     fprintf(fp, "    \"%s_%d\",\n", old_enum_name.c_str(),
@@ -1285,7 +1237,7 @@ bool tile_list_processor::write_data(bool image, bool code)
                     lcname.c_str(), ctg_max.c_str());
 
             for (unsigned int i = 0; i < m_categories.size(); i++)
-                fprintf(fp, "    %d+%s,\n", part_min[i], m_start_value.c_str());
+                fprintf(fp, "    %u+%s,\n", part_min[i], m_start_value.c_str());
 
             fprintf(fp, "};\n\n");
         }
@@ -1306,7 +1258,7 @@ bool tile_list_processor::write_data(bool image, bool code)
 
                 string lcenum = enumname;
                 for (unsigned int c = 0; c < enumname.size(); c++)
-                    lcenum[c] = toalower(enumname[c]);
+                    lcenum[c] = tolower(enumname[c]);
 
                 table.insert(sort_map::value_type(lcenum, i));
             }
@@ -1330,7 +1282,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             "\n"
             "    string lc = str;\n"
             "    for (unsigned int i = 0; i < lc.size(); i++)\n"
-            "        lc[i] = toalower(lc[i]);\n"
+            "        lc[i] = tolower(lc[i]);\n"
             "\n"
             "    int num_pairs = sizeof(%s_name_pairs) / sizeof(%s_name_pairs[0]);\n"
             "    bool result = binary_search<const char *, tileidx_t>(\n"
@@ -1364,7 +1316,7 @@ bool tile_list_processor::write_data(bool image, bool code)
                     continue;
 
                 fprintf(fp,
-                    "    _colour_pair(tile_variation(%u + %s, %d), %d + %s),\n",
+                    "    _colour_pair(tile_variation(%d + %s, %d), %d + %s),\n",
                     i, m_start_value.c_str(), c, var, m_start_value.c_str());
             }
         }
@@ -1419,7 +1371,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             max_enum += "_MAX";
 
             for (char& c : max_enum)
-                c = toaupper(c);
+                c = toupper(c);
 
             uc_max_enum.push_back(max_enum);
 
@@ -1520,7 +1472,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             {
                 string lcenum = m_page.m_tiles[i]->enumname(0);
                 for (unsigned int c = 0; c < lcenum.size(); c++)
-                    lcenum[c] = toalower(lcenum[c]);
+                    lcenum[c] = tolower(lcenum[c]);
 
                 if (i == 0 || m_page.m_counts[i] == 1)
                     fprintf(fp, "<td>%s</td>", lcenum.c_str());
@@ -1649,7 +1601,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             {
                 if (old_enum_name.empty())
                 {
-                    fprintf(fp, "exports.%s_FILLER_%u = val++;\n",
+                    fprintf(fp, "exports.%s_FILLER_%d = val++;\n",
                             ucname.c_str(), i);
                 }
                 else
@@ -1752,7 +1704,7 @@ bool tile_list_processor::write_data(bool image, bool code)
                 max_enum += "_MAX";
 
                 for (char& c : max_enum)
-                    c = toaupper(c);
+                    c = toupper(c);
 
                 fprintf(fp, "exports.%s_MAX = window.%s_%s_MAX = %s.%s;\n\n",
                         ucname.c_str(), m_prefix.c_str(), ucname.c_str()
@@ -1767,7 +1719,7 @@ bool tile_list_processor::write_data(bool image, bool code)
                 string max_enum = abstract.first;
                 max_enum += "_MAX";
                 for (char& c : max_enum)
-                    c = toaupper(c);
+                    c = toupper(c);
 
                 max_enum = abstract.first + "." + max_enum;
 

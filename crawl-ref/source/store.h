@@ -49,8 +49,7 @@ enum store_val_type
     SV_MONST,
     SV_LUA,
     SV_INT64,
-    NUM_STORE_VAL_TYPES,
-    SV_STR_LONG, // this is a save-only type
+    NUM_STORE_VAL_TYPES
 };
 
 enum store_flag_type
@@ -116,8 +115,10 @@ public:
 
     CrawlHashTable &new_table();
 
-    CrawlVector &new_vector(store_flags flags);
-    CrawlVector &new_vector(store_val_type type, store_flags flags = 0);
+    CrawlVector &new_vector(store_flags flags,
+                            vec_size max_size = VEC_MAX_SIZE);
+    CrawlVector &new_vector(store_val_type type, store_flags flags = 0,
+                            vec_size max_size = VEC_MAX_SIZE);
 
     bool           &get_bool();
     char           &get_byte();
@@ -334,7 +335,7 @@ public:
 
     // NOTE: push_back() and insert() have val passed by value rather
     // than by reference so that conversion constructors will work.
-    void             pop_back();
+    CrawlStoreValue& pop_back();
     void             push_back(CrawlStoreValue val);
     void insert(const vec_size index, CrawlStoreValue val);
 

@@ -45,6 +45,10 @@ jejich pestré zbarvení stalo zkázou, protože jím odstrašovali potenciáln�
 kořist. Dnes jsou již vyhynulí, a tento vzácný pozůstatek je jedním z
 posledních důkazů jejich existence.
 %%%%
+demon blade "Bloodbane"
+
+Je poskvrněna krví nelidského šílence.
+%%%%
 scimitar of Flaming Death
 
 Kouř!
@@ -125,7 +129,7 @@ storm bow
 Tento luk má barvu temných, bouřkových mraků, a line se z něj zápach vlhkého
 ozónu.
 %%%%
-tower shield of Ignorance
+large shield of Ignorance
 
 „Otevřená mysl je jako pevnost jejíž brány jsou neblokované a nehlídané.“
 %%%%
@@ -137,7 +141,7 @@ cloak of the Thief
 
 Umožňuje jeho nositeli, aby vynikl v umění krádeže.
 %%%%
-tower shield "Bullseye"
+large shield "Bullseye"
 
 Jen kdybys náhodou měl problém se trefit.
 %%%%

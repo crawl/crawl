@@ -18,11 +18,11 @@
 ######################################################
 _jewellery_animal_
 
-Death Scarab
-
 Firefly
 
 Scarab
+
+Death Scarab
 
 w:5
 Magpie
@@ -32,17 +32,11 @@ Raven
 %%%%
 _jewellery_special_name_
 
-Attitude
-
 Disaster
 
 Ephemeral Luck
 
-False Pretenses
-
-Finality
-
-Lady Luck
+Wishful Thinking
 
 Moodiness
 
@@ -50,40 +44,40 @@ Reimbursement
 
 the Tempest
 
+Finality
+
+Attitude
+
+Lady Luck
+
 Temptation
 
-Wishful Thinking
+False Pretenses
 
 # FIXME: should appear on amulets only
 Yendor
 %%%%
-_suspicion_no_conflict_name_
-
-Doubts
-
-Incredulity
-
-Jealousy
-
-Mistrust
-
-Paranoia
-
-Scepticism
+_suspicion_name_
 
 Secrets
 
-Suspected Treachery
-
 Suspicion
 
+Mistrust
+
+Jealousy
+
+Incredulity
+
+Doubts
+
+Suspected Treachery
+
+Scepticism
+
 Trepidation
-%%%%
-_suspicion_name_
 
-@_suspicion_no_conflict_name_@
-
-w:2
+w:20
 @_conflict_name_@
 %%%%
 ######################################################
@@ -93,46 +87,36 @@ w:2
 divine_esteem
 
 # good
-Approval
-
-Benevolence
-
-Delight
-
 Esteem
 
 Favour
 
-w:5
-Felicitations
-
-Generosity
-
-Grace
-
 Hope
-
-Inspiration
-
-Pride
 
 Regard
 
-w:5
-Respect
+Approval
+
+Delight
+
+Pride
+
+Generosity
 
 Supremacy
+
+Benevolence
 
 Whim
 
 # bad
-Castigation
-
-Condemnation
-
 Displeasure
 
 Envy
+
+Castigation
+
+Condemnation
 
 Reproof
 
@@ -144,59 +128,48 @@ _xom_esteem_
 # chosen 20% of the time
 w:40
 @divine_esteem@
-Absentmindedness
-
-Amusement
-
-Attic
-
-Bemusement
-
-Best Wishes
-
-Capriciousness
 
 Entertainment
 
-Fair Game
+Best Wishes
 
-Flight of Fancy
-
-Full Attention
-
-Malicious Joy
-
-Passing Interest
-
-Recklessness
+Amusement
 
 Ringing Laughter
 
-Sleight of Hands
+Bemusement
 
-Wantonness
+Passing Interest
+
+Full Attention
 
 Whimsicality
 
+Capriciousness
+
+Sleight of Hands
+
+Flight of Fancy
+
+Absentmindedness
+
+Malicious Joy
+
+Fair Game
+
+Wantonness
+
+Recklessness
 %%%%
 _time_name_
-Autumn
-
-Dawn
 
 Day
 
-Eternal Night
-
-Eternity
-
 Midnight
 
-Midsummer
+Twilight
 
-Midwinter
-
-Noon
+Dawn
 
 w:5
 Spring
@@ -210,32 +183,41 @@ Summer
 w:5
 Summertime
 
-Tomorrow
-
-Twilight
+Autumn
 
 Winter
 
-Yesterday
+Midsummer
 
-the Distant Future
-
-the Equinox
-
-the Evening
-
-the Everdark
-
-the Harvest
-
-the Morning
-
-the Past
-
-the Present
+Midwinter
 
 the Solstice
 
+the Harvest
+
+Eternal Night
+
+Eternity
+
+Noon
+
+the Present
+
+the Morning
+
+the Evening
+
+the Equinox
+
+the Everdark
+
+the Distant Future
+
+the Past
+
+Yesterday
+
+Tomorrow
 %%%%
 _sky_colour_name_
 
@@ -252,31 +234,32 @@ Purple
 Red
 %%%%
 _sky_or_light_
+
+the Sun
+
+the Moon
+
+Light
+
 Darkness
 
 Dim Light
 
-Light
-
-Starshine
+the Shining Light
 
 Sunlight
 
-the Endless Expanse
+Starshine
+
+the Sky
 
 the Gloaming
 
 the Heavens
 
-the Moon
-
-the Shining Light
-
 the Skies Above
 
-the Sky
-
-the Sun
+the Endless Expanse
 
 the @_sky_colour_name_@ Skies
 %%%%
@@ -290,103 +273,98 @@ w:5
 @_vice_name_@
 %%%%
 _virtue_name_
+
+Virtue
+
+Truth
+
+Honesty
+
 Benevolence
 
-Charity
-
-Compassion
-
 Devotion
-
-Discretion
-
-Generosity
 
 Generosity
 
 Grace
 
-Honesty
+Temperance
 
 Hospitality
 
-Kindness
-
-Modesty
+Charity
 
 Patience
 
-Temperance
+Modesty
 
-Thoughtfulness
-
-Truth
-
-Understanding
-
-Virtue
-
-Wariness
+Discretion
 
 Wisdom
 
+Wariness
+
+Thoughtfulness
+
+Kindness
+
+Generosity
+
+Compassion
+
+Understanding
 %%%%
 _vice_name_
 
 # some of the deadly sins
-Gluttony
-
-Greed
-
-Lust
-
-Pride
-
 Sloth
 
 Vanity
 
+Gluttony
+
+Pride
+
+Greed
+
 # general immorality
-Amorality
-
-Cowardice
-
-Dishonesty
-
-Dishonour
-
-Foolhardiness
-
-Immorality
-
-Impatience
-
-Lies
-
-Moral Flaws
-
-Past Mistakes
-
-Recklessness
-
 Sin
-
-Spite
-
-Untruth
-
-Youthful Indiscretion
 
 the Original Sin
 
+Lies
+
+Dishonesty
+
+Cowardice
+
+Dishonour
+
+Impatience
+
+Immorality
+
+Amorality
+
+Untruth
+
+Spite
+
+Youthful Indiscretion
+
+Foolhardiness
+
+Recklessness
+
+Past Mistakes
+
+Moral Flaws
 %%%%
 _destiny_name_
 
 Causality
 
 Destiny
-
-Doom
 
 Fate
 
@@ -395,6 +373,8 @@ Karma
 Kismet
 
 Wyrd
+
+Doom
 
 %%%%
 _number_or_qualifier_
@@ -455,44 +435,18 @@ a Billion
 # vague numbers
 the
 
-the Assorted
+the Many
 
 the Countless
 
-the Manifold
+the Assorted
 
-the Many
+the Manifold
 
 the Several
 
 # other qualifiers
-the Aged
-
-the Ageless
-
-the Ancient
-
-the Battered
-
-the Bouncing
-
-the Bruised
-
-the Crushed
-
-the Curious
-
-the Disturbing
-
-the Endless
-
-the Exiled
-
-the Final
-
-the First
-
-the Foremost
+the Lost
 
 the Forgotten
 
@@ -500,732 +454,181 @@ the Forsaken
 
 the Hidden
 
-the Illusory
-
-the Immovable
-
-the Inquisitive
-
-the Insatiable
-
-the Invisible
-
-the Jolly
-
 the Last
 
 the Lonely
 
-the Lost
+the Jolly
 
-the Lumpy
+the Ancient
 
-the Modern
+the Exiled
 
-the Neverending
-
-the Peculiar
-
-the Postmodern
+the Illusory
 
 the Pure
 
-the Secret
-
-the Sneaky
+the Peculiar
 
 the Special
 
-the Thirsty
+the First
 
-the Thoughtful
+the Neverending
 
-the Tired
+the Endless
 
-the Unstoppable
+the Lumpy
 
-the Vanishing
+the Disturbing
+
+the Secret
 
 the Wary
 
+the Crushed
+
+the Battered
+
+the Bruised
+
+the Unstoppable
+
+the Immovable
+
+the Foremost
+
+the Curious
+
+the Insatiable
+
+the Bouncing
+
+the Thirsty
+
+the Tired
+
+the Ageless
+
+the Aged
+
+the Inquisitive
+
+the Thoughtful
+
 the Well-Known
+
+the Sneaky
+
+the Final
+
+the Modern
+
+the Postmodern
+
+the Invisible
+
+the Vanishing
 
 %%%%
 _thing_names_
-Allies
-
-Artisans
-
-Artists
-
-Beasts
-
-Beds
-
-Beggars
-
-Blessings
-
-Bones
-
-Bounties
-
-Brambles
-
-w:5
-Cities
-
-Coins
-
-Continents
-
-Curses
-
-Dances
-
-Deaths
-
-Defenders
-
-Demons
-
-Dreams
-
-Ears
-
-Emperors
-
-Eyes
-
-Friends
-
-Friars
-
-Geomancers
-
-Ghosts
-
-Gods
-
-Heavens
-
-Hells
-
-Hosts
-
-Interlopers
-
-Invaders
-
-Knaves
-
-w:25
-Knives
-
-Leylines
-
-Lies
-
-Lives
-
-Loafs
-
-Lovers
-
-Mice
-
-Moons
-
-Mouths
-
-Mystics
-
-w:5
-Nightcaps
-
-Nightingales
-
-Nightmares
-
-Nights
-
-Olives
-
-Orbs
-
-People
-
-Persimmons
-
-Places
-
-Planets
-
-Portals
-
-Priests
-
-Princes
-
-Prophets
-
-Queens
-
-Quests
-
-Realms
-
-Runes
-
-Scars
-
-Seas
-
-Seers
-
-Servitors
-
-Ships
-
-Shrikes
-
-Songs
-
-Souls
-
-Spines
-
-Spirits
-
-w:5
-Spreadsheets
-
-Stars
-
-Stories
 
 Suns
 
-Tables
+Moons
 
-Tales
+Stars
 
-Teeth
+Planets
 
-Thickets
+Hells
 
-w:5
-Things
+Lives
 
-w:5
-Towns
+Deaths
 
-Tusks
+Curses
 
-Ultimatums
+Blessings
 
-Underlurkers
+Gods
 
-w:5
-Villages
+Spirits
 
-Violins
+Ghosts
 
-Visionaries
-
-Visions
+Demons
 
 Wars
+
+Mice
+
+Eyes
+
+Nights
+
+Orbs
+
+Runes
+
+Seas
+
+Places
+
+Realms
 
 Wishes
 
 Wonders
 
-Xalams
+Beds
 
-Xenops
+Beggars
 
-Xeniums
+Cities
 
-w:5
-Xenophobes
+Dances
+
+Lies
+
+Ships
+
+Songs
+
+Souls
+
+Tales
+
+Friends
+
+Allies
+
+People
+
+Lovers
+
+Dreams
+
+Scars
+
+Coins
+
+Continents
+
+Princes
+
+Queens
+
+Emperors
 
 Yaks
 
-Youths
+Shrikes
 
-Ziggurats
-%%%%
-_verbing_
+Stories
 
-w:5
-Ageing
+Tables
 
 w:5
-Baking
-
-Bedazzling
-
-Bespelling
-
-Blushing
-
-w:5
-Breathing
-
-Brewing
-
-Building
-
-Burning
-
-w:5
-Bursting
-
-Changing
-
-Charming
-
-Chewing
-
-Conjuring
-
-Crafting
-
-Cursing
-
-Dancing
-
-Destroying
-
-Devouring
-
-Disbelieving
-
-w:5
-Dripping
-
-Enchanting
-
-Enfolding
-
-Feeding
-
-Flying
-
-Forging
-
-Fortifying
-
-Freezing
-
-Gazing
-
-w:5
-Glimmering
-
-w:5
-Glowing
-
-Gnashing
-
-Grinning
-
-Growing
-
-Hammering
-
-Healing
-
-Holding
-
-Howling
-
-w:5
-Hugging
-
-Hungering
-
-Hurling
-
-Hurting
-
-Hurtling
-
-Imbibing
-
-Inviting
-
-Jumping
-
-Kissing
-
-Keeping
-
-Leaping
-
-Loving
-
-Lusting
-
-w:1
-Malding
-
-Mauling
-
-Mashing
-
-Muttering
-
-Nurturing
-
-Protecting
-
-Rescuing
-
-Riding
-
-Scorching
-
-Screaming
-
-Sharing
-
-Sheltering
-
-Shifting
-
-Shimmering
-
-Shouting
-
-Shrinking
-
-Singing
-
-Smoking
-
-Stopping
-
-Summoning
-
-Supporting
-
-Teaching
-
-Telling
-
-Thieving
-
-Threshing
-
-Transmuting
-
-Twisting
-
-Uplifting
-
-Usurping
-
-Winnowing
-
-Witching
-
-Wizarding
-
-Writhing
-
-# the three classic D&D damage types:
-w:5
-Bashing
-
-w:5
-Slashing
-
-w:5
-Piercing
-%%%%
-_adjective_
-Blue
-
-Green
-
-Red
-
-w:5
-Amorous
-
-Antique
-
-Arcadian
-
-w:5
-Avant Garde
-
-Baleful
-
-Barnacled
-
-Beastly
-
-Bedazzled
-
-Bellicose
-
-Beloved
-
-Bequeathed
-
-Bespelled
-
-Bright
-
-Burning
-
-Bursted
-
-w:5
-Burnt
-
-Carved
-
-Caustic
-
-Clean
-
-Cleverly Designed
-
-Charmed
-
-w:5
-Charred
-
-Contumacious
-
-Damp
-
-Decaying
-
-Deeply Unsettling
-
-Delicate
-
-Delightful
-
-Demonic
-
-Divine
-
-Doomed
-
-Dowdy
-
-Dull
-
-Durable
-
-Enormous
-
-Ethereal
-
-Exceptional
-
-Extremely Toothy
-
-Eye-covered
-
-Fabulous
-
-Fae
-
-Feral
-
-Ferocious
-
-Festooned
-
-Filigreed
-
-Floral
-
-Freezing
-
-Fresh
-
-w:5
-Futuristic
-
-Fuzzy
-
-Ghostly
-
-Glamorous
-
-Golden
-
-Grand
-
-Grim
-
-Hairy
-
-Haunted
-
-Histrionic
-
-Impish
-
-Indestructible
-
-Intense
-
-Irksome
-
-Jocular
-
-Lachrymose
-
-Living
-
-Majestic
-
-Meager
-
-w:5
-Modern
-
-Mordant
-
-Narrow
-
-Nice
-
-Noxious
-
-Oily
-
-Ornamental
-
-Painted
-
-Parsimonious
-
-Powerful
-
-Puckish
-
-Quiescent
-
-Quick
-
-Reasonable
-
-Resonant
-
-Rotten
-
-Sandy
-
-Scuffed
-
-Sharp
-
-Shrieking
-
-w:5
-Silly
-
-Slimy
-
-Solemn
-
-Soft
-
-Squeaky
-
-Stained
-
-Sufficient
-
-Tentacled
-
-Terrible
-
-Toothy
-
-Tortured
-
-Transparent
-
-Ubiquitous
-
-Unbearable
-
-Verdant
-
-Viny
-
-Voracious
-
-Weak
-
-Wicked
-
-Wonderful
-
-Zealous
-%%%%
-_fruit_name_
-
-Orange
-
-Banana
-
-Pear
-
-Apple
-
-Apricot
-
-Tomato
-
-Peach
-
-Plum
-
-Rambutan
-
-Lychee
-
-Mango
-
-Watermelon
-
-Coconut
-
-Breadfruit
-
-Eggfruit
-
-Dragonfruit
-
-Guava
-
-Mangosteen
-
-Tangerine
-
-Cherry
-
-Grape
-
-Sultana
-
-Fig
-
-Date
-
-Lemon
-
-Lime
+Spreadsheets
 %%%%

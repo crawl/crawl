@@ -5,7 +5,6 @@
 #include "attack.h"
 #include "fight.h"
 #include "random-var.h"
-#include "tag-version.h"
 
 enum unarmed_attack_type
 {
@@ -15,7 +14,6 @@ enum unarmed_attack_type
     UNAT_HEADBUTT,
     UNAT_PECK,
     UNAT_TAILSLAP,
-    UNAT_TOUCH,
     UNAT_PUNCH,
     UNAT_BITE,
     UNAT_PSEUDOPODS,
@@ -24,8 +22,6 @@ enum unarmed_attack_type
     UNAT_LAST_ATTACK = UNAT_TENTACLES,
     NUM_UNARMED_ATTACKS,
 };
-
-const int UC_FORM_TO_HIT_BONUS = 5;
 
 class melee_attack : public attack
 {
@@ -37,8 +33,6 @@ public:
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     bool         is_riposte;      // long blade retaliation attack
-    bool         is_projected;    // projected weapon spell attack
-    int          roll_dist;       // palentonga rolling charge distance
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
@@ -46,13 +40,14 @@ public:
 public:
     melee_attack(actor *attacker, actor *defender,
                  int attack_num = -1, int effective_attack_num = -1,
-                 bool is_cleaving = false);
+                 bool is_cleaving = false,
+                 coord_def attack_pos = coord_def(0, 0));
 
     // Applies attack damage and other effects.
     bool attack();
-    int calc_to_hit(bool random) override;
-    int post_roll_to_hit_modifiers(int mhit, bool random,
-                                   bool aux = false) override;
+
+    // To-hit is a function of attacker/defender, inherited from attack
+    int calc_to_hit(bool random = true) override;
 
     static void chaos_affect_actor(actor *victim);
 
@@ -70,9 +65,8 @@ private:
     bool using_weapon() const override;
     int weapon_damage() override;
     int calc_mon_to_hit_base() override;
-    int apply_damage_modifiers(int damage) override;
+    int apply_damage_modifiers(int damage, int damage_max) override;
     int calc_damage() override;
-    bool apply_damage_brand(const char *what = nullptr) override;
 
     /* Attack effects */
     void check_autoberserk();
@@ -81,7 +75,7 @@ private:
     void rot_defender(int amount);
 
     bool consider_decapitation(int damage_done, int damage_type = -1);
-    bool attack_chops_heads(int damage_done, int damage_type);
+    bool attack_chops_heads(int damage_done, int damage_type, int wpn_brand);
     void decapitate(int dam_type);
 
     /* Axe cleaving */
@@ -101,15 +95,8 @@ private:
     void do_passive_heat();
 #endif
     void emit_foul_stench();
-
-    /* Divine Effect */
-    void do_fiery_armour_burn();
-
     /* Race Effects */
     void do_minotaur_retaliation();
-
-    /* Item Effects */
-    void do_starlight();
 
     /* Brand / Attack Effects */
     bool do_knockback(bool trample = true);
@@ -132,7 +119,6 @@ private:
     void mons_do_eyeball_confusion();
     void mons_do_tendril_disarm();
     void apply_black_mark_effects();
-    void do_ooze_engulf();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
@@ -143,27 +129,27 @@ private:
     bool player_aux_apply(unarmed_attack_type atk);
 
     int  player_apply_misc_modifiers(int damage) override;
-    int  player_apply_final_multipliers(int damage, bool aux = false) override;
+    int  player_apply_final_multipliers(int damage) override;
 
     void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();
     void attacker_sustain_passive_damage();
     int  staff_damage(skill_type skill);
-    bool apply_staff_damage();
+    void apply_staff_damage();
     void player_stab_check() override;
     bool player_good_stab() override;
     void player_announce_aux_hit();
+    string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _defender_die();
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
+    int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK);
     bool _player_vampire_draws_blood(const monster* mon, const int damage,
                                      bool needs_bite_msg = false);
     bool _vamp_wants_blood_from_monster(const monster* mon);
 
     bool can_reach();
 };
-
-string aux_attack_desc(mutation_type mut);

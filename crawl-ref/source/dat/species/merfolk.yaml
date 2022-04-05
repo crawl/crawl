@@ -12,10 +12,10 @@ aptitudes:
   mr: 3
   fighting: 1
   short_blades: 2
-  long_blades: 2
+  long_blades: 1
   axes: -2
   maces_and_flails: -2
-  polearms: 3
+  polearms: 4
   staves: -2
   slings: -2
   bows: -2
@@ -26,6 +26,7 @@ aptitudes:
   unarmed_combat: 1
   spellcasting: -1
   conjurations: -2
+  charms: 1
   necromancy: -2
   translocations: -2
   transmutations: 3
@@ -40,13 +41,17 @@ str: 8
 int: 7
 dex: 9
 levelup_stat_frequency: 5
-mutations:
-  1:
-    MUT_MERTAIL: 1
-    MUT_NIMBLE_SWIMMER: 2
+fake_mutations:
+  - long: You revert to your normal form in water
+    short: change form in water
+  - long: You are very nimble and swift while swimming.
+    short: swift swim
+  - long: You are very stealthy in the water. (Stealth+)
+    short: stealthy swim
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_BERSERKER
+  - JOB_SKALD
   - JOB_TRANSMUTER
   - JOB_SUMMONER
   - JOB_ICE_ELEMENTALIST
@@ -54,6 +59,4 @@ recommended_jobs:
 recommended_weapons:
   - SK_POLEARMS
   - SK_LONG_BLADES
-# start TAG_MAJOR_VERSION == 34
 create_enum: false
-# end TAG_MAJOR_VERSION

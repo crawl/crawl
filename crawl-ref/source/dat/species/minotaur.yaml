@@ -27,6 +27,7 @@ aptitudes:
   spellcasting: -4
   conjurations: -3
   hexes: -4
+  charms: -4
   summoning: -3
   necromancy: -3
   translocations: -3
@@ -47,7 +48,9 @@ levelup_stats:
 mutations:
   1:
     MUT_HORNS: 2
-    MUT_REFLEXIVE_HEADBUTT: 1
+fake_mutations:
+  - long: You reflexively headbutt those who attack you in melee.
+    short: retaliatory headbutt
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_GLADIATOR
@@ -55,6 +58,4 @@ recommended_jobs:
   - JOB_HUNTER
   - JOB_BERSERKER
   - JOB_ABYSSAL_KNIGHT
-# start TAG_MAJOR_VERSION == 34
 create_enum: false
-# end TAG_MAJOR_VERSION

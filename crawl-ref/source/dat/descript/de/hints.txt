@@ -47,6 +47,13 @@ death berserker unberserked
 
 Vergiss nicht die Berserkerwut zu nutzen wenn du gegen besonders schwierige
 Gegner kämpfst. Das ist zwar riskant, macht dich aber schneller und kräftiger.
+{{
+    if you.hunger() < 3 then
+        return "Berserkerwut ist nicht möglich wenn du sehr hungrig oder " ..
+               "krank bist, deswegen solltest du jederzeit Satt sein, nur " ..
+               "für den Fall das du in Raserei verfallen musst."
+    end
+}}
 %%%%
 death ranger melee
 
@@ -151,8 +158,8 @@ Dateien nicht finden kann.
 finished random 3
 
 Um Rat und Hilfe fragst du am besten andere Crawl-Spieler auf dem
-<w>#crawl</w> IRC (Internet Relay Chat) Kanal auf Libera
-(<w>irc.libera.chat</w>).
+<w>##crawl</w> IRC (Internet Relay Chat) Kanal auf freenode
+(<w>irc.freenode.net</w>).
 %%%%
 dissection reminder
 

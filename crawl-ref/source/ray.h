@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "coord-def.h"
 #include "fixedarray.h"
 #include "geom2d.h"
 

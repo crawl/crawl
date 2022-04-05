@@ -28,6 +28,7 @@ aptitudes:
   spellcasting: -1
   conjurations: -3
   hexes: 4
+  charms: 1
   necromancy: 1
   translocations: -2
   transmutations: 1
@@ -47,12 +48,10 @@ mutations:
   1:
     MUT_FANGS: 3
     MUT_ACUTE_VISION: 1
-    MUT_VAMPIRISM: 1
-  3:
-    MUT_VAMPIRISM: 1 # batform
+    MUT_UNBREATHING: 1
 recommended_jobs:
   - JOB_GLADIATOR
-  - JOB_BRIGAND
+  - JOB_ASSASSIN
   - JOB_ENCHANTER
   - JOB_NECROMANCER
   - JOB_EARTH_ELEMENTALIST
@@ -64,6 +63,4 @@ recommended_weapons:
   - SK_BOWS
   - SK_CROSSBOWS
   - SK_SLINGS
-# start TAG_MAJOR_VERSION == 34
 create_enum: false
-# end TAG_MAJOR_VERSION

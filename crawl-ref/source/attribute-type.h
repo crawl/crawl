@@ -1,7 +1,5 @@
 #pragma once
 
-#include "tag-version.h"
-
 enum attribute_type
 {
 #if TAG_MAJOR_VERSION == 34
@@ -32,17 +30,15 @@ enum attribute_type
     ATTR_NOISES,
     ATTR_SHADOWS,              // Lantern of shadows effect.
     ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
+#endif
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Spell/potion of invis is in effect.
-#endif
-    ATTR_PERM_FLIGHT,          // Cache for flight from equipment
+    ATTR_PERM_FLIGHT,          // Tengu flight or boots of flying are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
-#if TAG_MAJOR_VERSION == 34
-    ATTR_UNUSED3,            // old Beastly Appendage
-#endif
+    ATTR_APPENDAGE,            // eq slot of Beastly Appendage
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
-    ATTR_EVOL_XP,              // XP needed for next [d]evolution mutation
+    ATTR_EVOL_XP,              // XP gained since last evolved mutation
     ATTR_LIFE_GAINED,          // XL when a felid gained a life.
     ATTR_TEMP_MUTATIONS,       // Number of temporary mutations the player has.
     ATTR_TEMP_MUT_XP,          // Amount of XP remaining before some temp muts
@@ -53,9 +49,7 @@ enum attribute_type
     ATTR_EVOKER_XP,            // How much xp remaining until next evoker charge
 #endif
     ATTR_SEEN_BEOGH,           // Did an orc priest already offer conversion?
-#if TAG_MAJOR_VERSION == 34
     ATTR_XP_DRAIN,             // Severity of current skill drain
-#endif
     ATTR_SEARING_RAY,          // Are we currently firing a searing ray?
     ATTR_RECITE_TYPE,          // Recitation type.
     ATTR_RECITE_SEED,          // Recite text seed.
@@ -69,8 +63,8 @@ enum attribute_type
     ATTR_BARBS_POW,            // How badly we are currently skewered
 #if TAG_MAJOR_VERSION == 34
     ATTR_REPEL_MISSILES,       // Repel missiles active
-    ATTR_DEFLECT_MISSILES,     // Deflect missiles active
 #endif
+    ATTR_DEFLECT_MISSILES,     // Deflect missiles active
     ATTR_PORTAL_PROJECTILE,    // Accuracy bonus during portal projectile
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
@@ -88,22 +82,17 @@ enum attribute_type
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
 #endif
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
-#if TAG_MAJOR_VERSION == 34
     ATTR_BONE_ARMOUR,          // Current amount of bony armour (from the spell)
     ATTR_LAST_FLIGHT_STATUS,   // Whether SPARM_FLIGHT should be restored after form change
     ATTR_GOZAG_FIRST_POTION,   // Gozag's free first usage of Potion Petition.
-#endif
     ATTR_STAT_LOSS_XP,         // Unmodified XP needed for stat recovery.
 #if TAG_MAJOR_VERSION == 34
     ATTR_SURGE_REMOVED,        // Was surge power applied to next evocation.
     ATTR_PAKELLAS_EXTRA_MP,    // MP to be collected to get a !magic from P
-    ATTR_DIVINE_ENERGY,        // Divine energy from Sif to cast with no MP.
 #endif
+    ATTR_DIVINE_ENERGY,        // Divine energy from Sif to cast with no MP.
     ATTR_SERPENTS_LASH,        // Remaining instant movement actions.
-#if TAG_MAJOR_VERSION == 34
     ATTR_HEAVENLY_STORM,       // Strength of Heavenly Storm slaying.
     ATTR_WALL_JUMP_READY,      // Ready to perform a wall jump.
-#endif
-    ATTR_DEATHS_DOOR_HP,       // How much HP we should have under Death's Door
     NUM_ATTRIBUTES
 };

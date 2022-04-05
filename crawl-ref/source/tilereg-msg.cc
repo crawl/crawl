@@ -18,7 +18,7 @@ MessageRegion::MessageRegion(FontWrapper *font_arg) :
 {
 }
 
-int MessageRegion::handle_mouse(wm_mouse_event &event)
+int MessageRegion::handle_mouse(MouseEvent &event)
 {
     if (m_overlay)
         return 0;
@@ -29,7 +29,7 @@ int MessageRegion::handle_mouse(wm_mouse_event &event)
     if (!inside(event.px, event.py))
         return 0;
 
-    if (event.event != wm_mouse_event::PRESS || event.button != wm_mouse_event::LEFT)
+    if (event.event != MouseEvent::PRESS || event.button != MouseEvent::LEFT)
         return 0;
 
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
@@ -47,10 +47,9 @@ bool MessageRegion::update_tip_text(string& tip)
     return true;
 }
 
-void MessageRegion::set_overlay(bool is_overlay, const VColour &col)
+void MessageRegion::set_overlay(bool is_overlay)
 {
     m_overlay = is_overlay;
-    m_overlay_col = col;
 }
 
 void MessageRegion::render()
@@ -67,12 +66,13 @@ void MessageRegion::render()
         coord_def min_pos(sx, sy);
         coord_def max_pos(ex, ey);
         // these hover strings never use the last line
-        formatted_string text = m_font->split(formatted_string::parse_string(m_alt_text),
-                ex-sx-2*ox, ey-sy-2*oy-m_font->char_height());
+        string text = m_font->split(formatted_string(m_alt_text),
+                ex-sx-2*ox, ey-sy-2*oy-m_font->char_height()).tostring();
         if (ends_with(text, ".."))
-            text = text.substr_bytes(0, text.tostring().find_last_of('\n')) + "\n...";
+            text = text.substr(0, text.find_last_of('\n')) + "\n...";
 
-        m_font->render_string(sx + ox, sy + oy, text);
+        m_font->render_string(sx + ox, sy + oy, text.c_str(),
+                              min_pos, max_pos, WHITE, false);
         return;
     }
 
@@ -113,7 +113,8 @@ void MessageRegion::render()
             glmanager->reset_transform();
 
             ShapeBuffer buff;
-            buff.add(sx, sy, ex, sy + height, m_overlay_col);
+            VColour col(100, 100, 100, 100);
+            buff.add(sx, sy, ex, sy + height, col);
             buff.draw();
         }
     }

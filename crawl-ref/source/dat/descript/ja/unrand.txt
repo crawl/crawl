@@ -58,6 +58,10 @@ faerie dragon scales
 彼らは既に地上から姿を消してしまっており、
 この貴重な遺品は彼らがかつてこの世に息づいていたことの最後の証だ。
 %%%%
+demon blade "Bloodbane"
+
+これは残忍な狂戦士の血塗られた痕跡を幾らか孕んでいる。
+%%%%
 scimitar of Flaming Death
 
 煙たい！
@@ -167,7 +171,7 @@ storm bow
 
 この弓は暗い雨雲の色をしており、オゾンの臭いを放っている。
 %%%%
-tower shield of Ignorance
+large shield of Ignorance
 
 広い心というものは扉が開け放たれ、守備されていない要塞のようなものだ。
 %%%%
@@ -180,7 +184,7 @@ cloak of the Thief
 これは着用者を盗みの技巧に於いて卓越した存在とする。これは迅速な逃走を助ける、
 濃密な煙幕を放つことを可能にする。
 %%%%
-tower shield "Bullseye"
+large shield "Bullseye"
 
 もし敵の攻撃でお困りでしたらどうぞ。
 %%%%
@@ -200,6 +204,12 @@ robe of Misfortune
 cloak of Flash
 
 振動しているクロークだ。
+%%%%
+boots of the Assassin
+
+暗殺者ギルドによって特別にあつらえられた柔らかなブーツだ。
+これらは着用者が獲物を見つけることを容易にし、
+不注意な敵に攻撃する際に弱点を突きやすくする。
 %%%%
 Lear's hauberk
 

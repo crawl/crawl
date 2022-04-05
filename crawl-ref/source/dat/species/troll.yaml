@@ -27,6 +27,7 @@ aptitudes:
   spellcasting: -5
   conjurations: -3
   hexes: -4
+  charms: -4
   summoning: -3
   necromancy: -2
   translocations: -3
@@ -47,13 +48,16 @@ levelup_stats:
   - str
 mutations:
   1:
-    MUT_TOUGH_SKIN: 1
+    MUT_TOUGH_SKIN: 3
     MUT_REGENERATION: 1
     MUT_CLAWS: 3
+    MUT_GOURMAND: 1
+    MUT_FAST_METABOLISM: 3
     MUT_SHAGGY_FUR: 1
 recommended_jobs:
   - JOB_FIGHTER
-  - JOB_GLADIATOR
+  - JOB_MONK
+  - JOB_HUNTER
   - JOB_BERSERKER
   - JOB_WARPER
   - JOB_EARTH_ELEMENTALIST
@@ -61,6 +65,4 @@ recommended_jobs:
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_UNARMED_COMBAT
-# start TAG_MAJOR_VERSION == 34
 create_enum: false
-# end TAG_MAJOR_VERSION

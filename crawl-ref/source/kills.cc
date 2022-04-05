@@ -20,9 +20,9 @@
 #include "mon-info.h"
 #include "monster.h"
 #include "options.h"
+#include "place.h"
 #include "stringutil.h"
 #include "tags.h"
-#include "tag-version.h"
 #include "travel.h"
 #include "unwind.h"
 #include "viewchar.h"
@@ -30,7 +30,9 @@
 #define KILLS_MAJOR_VERSION 4
 #define KILLS_MINOR_VERSION 1
 
+#ifdef CLUA_BINDINGS
 static void kill_lua_filltable(vector<kill_exp> &v);
+#endif
 
 ///////////////////////////////////////////////////////////////////////////
 // KillMaster
@@ -60,8 +62,9 @@ bool KillMaster::empty() const
 
 void KillMaster::save(writer& outf) const
 {
-    const auto version = save_version(KILLS_MAJOR_VERSION, KILLS_MINOR_VERSION);
-    write_save_version(outf, version);
+    // Write the version of the kills file
+    marshallByte(outf, KILLS_MAJOR_VERSION);
+    marshallByte(outf, KILLS_MINOR_VERSION);
 
     for (int i = 0; i < KC_NCATEGORIES; ++i)
         categorized_kills[i].save(outf);
@@ -69,9 +72,8 @@ void KillMaster::save(writer& outf) const
 
 void KillMaster::load(reader& inf)
 {
-    const auto version = get_save_version(inf);
-    const auto major = version.major, minor = version.minor;
-
+    int major = unmarshallByte(inf),
+        minor = unmarshallByte(inf);
     if (major != KILLS_MAJOR_VERSION
         || (minor != KILLS_MINOR_VERSION && minor > 0))
     {
@@ -157,11 +159,13 @@ string KillMaster::kill_info() const
         grandt = buf;
     }
 
+#ifdef CLUA_BINDINGS
     bool custom = false;
     unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
     // Call the kill dump Lua function with null a, to tell it we're done.
     if (!clua.callfn("c_kill_list", "ss>b", nullptr, grandt.c_str(), &custom)
         || !custom)
+#endif
     {
         // We can sum up ourselves, if Lua doesn't want to.
         if (categories > 1)
@@ -181,6 +185,7 @@ void KillMaster::add_kill_info(string &killtext,
                                const char *category,
                                bool separator) const
 {
+#ifdef CLUA_BINDINGS
     // Set a pointer to killtext as a Lua global
     lua_pushlightuserdata(clua.state(), &killtext);
     clua.setregistry("cr_skill");
@@ -199,12 +204,15 @@ void KillMaster::add_kill_info(string &killtext,
     unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
     if (!clua.callfn("c_kill_list", 3, 1)
         || !lua_isboolean(clua, -1) || !lua_toboolean(clua, -1))
+#endif
     {
+#ifdef CLUA_BINDINGS
         if (!clua.error.empty())
         {
             killtext += "Lua error:\n";
             killtext += clua.error + "\n\n";
         }
+#endif
         if (separator)
             killtext += "\n";
 
@@ -220,7 +228,9 @@ void KillMaster::add_kill_info(string &killtext,
         killtext += make_stringf("%d creature%s vanquished.\n",
                                  count, count == 1 ? "" : "s");
     }
+#ifdef CLUA_BINDINGS
     lua_pop(clua, 1);
+#endif
 }
 
 int KillMaster::num_kills(const monster* mon, kill_category cat) const
@@ -522,8 +532,7 @@ string kill_def::info(const kill_monster_desc &md) const
 string kill_def::append_places(const kill_monster_desc &md,
                                const string &name) const
 {
-    if (Options.dump_kill_places == KDO_NO_PLACES)
-        return name;
+    if (Options.dump_kill_places == KDO_NO_PLACES) return name;
 
     size_t nplaces = places.size();
     if (nplaces == 1 || mons_is_unique(md.monnum)
@@ -646,7 +655,6 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
 #endif
             modifier = M_SIMULACRUM;
             break;
-        case MONS_BOUND_SOUL:
         case MONS_SPECTRAL_THING:
             modifier = M_SPECTRE;
             break;
@@ -659,14 +667,12 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
         modifier = M_SHAPESHIFTER;
 }
 
-// TODO: de-duplicate with the monster * version?
 kill_monster_desc::kill_monster_desc(const monster_info& mon)
 {
     monnum = mon.type;
     modifier = M_NORMAL;
     switch (mon.type)
     {
-        case MONS_ZOMBIE:
 #if TAG_MAJOR_VERSION == 34
         case MONS_ZOMBIE_LARGE: case MONS_ZOMBIE_SMALL:
 #endif
@@ -684,7 +690,6 @@ kill_monster_desc::kill_monster_desc(const monster_info& mon)
 #endif
             modifier = M_SIMULACRUM;
             break;
-        case MONS_BOUND_SOUL:
         case MONS_SPECTRAL_THING:
             modifier = M_SPECTRE;
             break;
@@ -987,6 +992,7 @@ void cluaopen_kills(lua_State *ls)
     luaL_openlib(ls, "kills", kill_lib, 0);
 }
 
+#ifdef CLUA_BINDINGS
 static void kill_lua_filltable(vector<kill_exp> &v)
 {
     lua_State *ls = clua.state();
@@ -997,3 +1003,4 @@ static void kill_lua_filltable(vector<kill_exp> &v)
         lua_rawseti(ls, -2, i + 1);
     }
 }
+#endif

@@ -46,6 +46,7 @@
 #include "nearby-danger.h"
 #include "notes.h"
 #include "output.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "prompt.h"
@@ -53,6 +54,7 @@
 #include "shout.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
+#include "spl-miscast.h"
 #include "spl-monench.h"
 #include "spl-transloc.h"
 #include "stairs.h"
@@ -60,12 +62,12 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "unwind.h"
 #include "viewchar.h"
 #include "view.h"
 
@@ -92,6 +94,7 @@ static bool _action_is_bad(xom_event_type action)
 // selected.
 static const vector<spell_type> _xom_random_spells =
 {
+    SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_CALL_CANINE_FAMILIAR,
     SPELL_OLGREBS_TOXIC_RADIANCE,
@@ -99,9 +102,10 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
     SPELL_INTOXICATE,
+    SPELL_RING_OF_FLAMES,
+    SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_STATUE_FORM,
-    SPELL_SUMMON_CACTUS,
     SPELL_DISPERSAL,
     SPELL_ENGLACIATION,
     SPELL_DEATH_CHANNEL,
@@ -439,13 +443,13 @@ static int _exploration_estimate(bool seen_only = false)
         }
 
         bool open = true;
-        if (cell_is_solid(pos) && !feat_is_closed_door(env.grid(pos)))
+        if (cell_is_solid(pos) && !feat_is_closed_door(grd(pos)))
         {
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)
             {
-                if (map_bounds(*ai) && (!feat_is_opaque(env.grid(*ai))
-                                        || feat_is_closed_door(env.grid(*ai))))
+                if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
+                                        || feat_is_closed_door(grd(*ai))))
                 {
                     open = true;
                     break;
@@ -474,7 +478,7 @@ static bool _teleportation_check()
     if (crawl_state.game_is_sprint())
         return false;
 
-    return !you.no_tele();
+    return !you.no_tele(false, false);
 }
 
 static bool _transformation_check(const spell_type spell)
@@ -494,11 +498,11 @@ static bool _transformation_check(const spell_type spell)
     case SPELL_ICE_FORM:
         tran = transformation::ice_beast;
         break;
+    case SPELL_HYDRA_FORM:
+        tran = transformation::hydra;
+        break;
     case SPELL_DRAGON_FORM:
         tran = transformation::dragon;
-        break;
-    case SPELL_STORM_FORM:
-        tran = transformation::storm;
         break;
     case SPELL_NECROMUTATION:
         tran = transformation::lich;
@@ -614,7 +618,7 @@ static void _try_brand_switch(const int item_index)
     if (item_index == NON_ITEM)
         return;
 
-    item_def &item(env.item[item_index]);
+    item_def &item(mitm[item_index]);
 
     if (item.base_type != OBJ_WEAPONS)
         return;
@@ -629,9 +633,6 @@ static void _try_brand_switch(const int item_index)
     if (get_weapon_brand(item) == SPWPN_NORMAL)
         return;
 
-    // TODO: shared code with _do_chaos_upgrade
-    mprf("%s erupts in a glittering mayhem of colour.",
-                            item.name(DESC_THE, false, false, false).c_str());
     if (is_random_artefact(item))
         artefact_set_property(item, ARTP_BRAND, SPWPN_CHAOS);
     else
@@ -649,14 +650,12 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         god_speaks(GOD_XOM, "\"No, never mind.\"");
         return;
     }
-    else if (base == OBJ_ARMOUR && subtype == ARM_ORB && one_chance_in(4))
-        god_speaks(GOD_XOM, _get_xom_speech("orb gift").c_str());
 
     _try_brand_switch(thing_created);
 
     static char gift_buf[100];
     snprintf(gift_buf, sizeof(gift_buf), "god gift: %s",
-             env.item[thing_created].name(DESC_PLAIN).c_str());
+             mitm[thing_created].name(DESC_PLAIN).c_str());
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, gift_buf), true);
 
     canned_msg(MSG_SOMETHING_APPEARS);
@@ -676,14 +675,14 @@ static void _xom_acquirement(int /*sever*/)
     const object_class_type types[] =
     {
         OBJ_WEAPONS, OBJ_ARMOUR, OBJ_JEWELLERY,  OBJ_BOOKS,
-        OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_GOLD,
+        OBJ_STAVES,  OBJ_WANDS,  OBJ_MISCELLANY, OBJ_FOOD,  OBJ_GOLD,
         OBJ_MISSILES
     };
     const object_class_type force_class = RANDOM_ELEMENT(types);
 
-    const int item_index = acquirement_create_item(force_class, GOD_XOM,
-            false, you.pos());
-    if (item_index == NON_ITEM)
+    int item_index = NON_ITEM;
+    if (!acquirement(force_class, GOD_XOM, false, &item_index)
+        || item_index == NON_ITEM)
     {
         god_speaks(GOD_XOM, "\"No, never mind.\"");
         return;
@@ -692,7 +691,7 @@ static void _xom_acquirement(int /*sever*/)
     _try_brand_switch(item_index);
 
     const string note = make_stringf("god gift: %s",
-                                     env.item[item_index].name(DESC_PLAIN).c_str());
+                                     mitm[item_index].name(DESC_PLAIN).c_str());
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, note), true);
 
     stop_running();
@@ -716,10 +715,11 @@ static bool _choose_mutatable_monster(const monster& mon)
 static bool _choose_enchantable_monster(const monster& mon)
 {
     return mon.alive() && !mon.wont_attack()
-           && !mons_invuln_will(mon);
+           && !mons_immune_magic(mon);
 }
 
-static bool _is_chaos_upgradeable(const item_def &item)
+static bool _is_chaos_upgradeable(const item_def &item,
+                                  const monster* mon)
 {
     // Since Xom is a god, he is capable of changing randarts, but not
     // other artefacts.
@@ -768,8 +768,21 @@ static bool _is_chaos_upgradeable(const item_def &item)
         if (get_ammo_brand(item) == SPMSL_NORMAL)
             return true;
     }
-    else if (get_weapon_brand(item) == SPWPN_NORMAL)
-        return true;
+    else
+    {
+        // If the weapon is a launcher, and the monster is either out
+        // of ammo or is carrying javelins, then don't bother upgrading
+        // the launcher.
+        if (is_range_weapon(item)
+            && (mon->inv[MSLOT_MISSILE] == NON_ITEM
+                || !has_launcher(mitm[mon->inv[MSLOT_MISSILE]])))
+        {
+            return false;
+        }
+
+        if (get_weapon_brand(item) == SPWPN_NORMAL)
+            return true;
+    }
 
     return false;
 }
@@ -817,14 +830,14 @@ static bool _choose_chaos_upgrade(const monster& mon)
 
         if (midx == NON_ITEM)
             continue;
-        const item_def &item(env.item[midx]);
+        const item_def &item(mitm[midx]);
 
         // The monster already has a chaos weapon. Give the upgrade to
         // a different monster.
         if (is_chaotic_item(item))
             return false;
 
-        if (_is_chaos_upgradeable(item))
+        if (_is_chaos_upgradeable(item, &mon))
         {
             if (item.base_type != OBJ_MISSILES)
                 return true;
@@ -832,7 +845,7 @@ static bool _choose_chaos_upgrade(const monster& mon)
             // If, for some weird reason, a monster is carrying a bow
             // and javelins, then branding the javelins is okay, since
             // they won't be fired by the bow.
-            if (!special_launcher || is_throwable(&mon, item))
+            if (!special_launcher || !has_launcher(item))
                 return true;
         }
 
@@ -863,11 +876,18 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     {
         seen = true;
 
-        const description_level_type desc = mon->friendly() ? DESC_YOUR
-                                                            : DESC_THE;
-        mprf("%s %s erupts in a glittering mayhem of colour.",
-            apostrophise(mon->name(desc)).c_str(),
-            item.name(DESC_PLAIN, false, false, false).c_str());
+        description_level_type desc = mon->friendly() ? DESC_YOUR :
+                                                        DESC_THE;
+        string msg = apostrophise(mon->name(desc));
+
+        msg += " ";
+
+        msg += item.name(DESC_PLAIN, false, false, false);
+
+        msg += " is briefly surrounded by a scintillating aura of "
+               "random colours.";
+
+        mpr(msg);
     }
 
     const int brand = (item.base_type == OBJ_WEAPONS) ? (int) SPWPN_CHAOS
@@ -920,7 +940,7 @@ static monster_type _xom_random_demon(int sever)
 static bool _player_is_dead()
 {
     return you.hp <= 0
-        || is_feat_dangerous(env.grid(you.pos()))
+        || is_feat_dangerous(grd(you.pos()))
         || you.did_escape_death();
 }
 
@@ -947,6 +967,7 @@ static void _xom_do_potion(int /*sever*/)
                                      10, POT_MAGIC,
                                      10, POT_HASTE,
                                      10, POT_MIGHT,
+                                     10, POT_AGILITY,
                                      10, POT_BRILLIANCE,
                                      10, POT_INVISIBILITY,
                                      5,  POT_BERSERK_RAGE,
@@ -954,29 +975,28 @@ static void _xom_do_potion(int /*sever*/)
     }
     while (!get_potion_effect(pot)->can_quaff()); // ugh
 
-    // Experience uses default power, other potions get bonus power.
-    // Curing, heal wounds, magic and berserk rage ignore power.
-    const int pow = pot == POT_EXPERIENCE ? 40 : 150;
-
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
+
+    if (pot == POT_INVISIBILITY)
+        you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
 
     _note_potion_effect(pot);
 
-    get_potion_effect(pot)->effect(true, pow);
+    get_potion_effect(pot)->effect(true, 150);
 
     level_change(); // need this for !xp - see mantis #3245
 }
 
 static void _confuse_monster(monster* mons, int sever)
 {
-    if (mons->clarity())
+    if (mons->check_clarity(false))
         return;
     if (mons->holiness() & (MH_NONLIVING | MH_PLANT))
         return;
 
     const bool was_confused = mons->confused();
     if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-          &env.mons[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
+          &menv[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
     {
         if (was_confused)
             simple_monster_message(*mons, " looks rather more confused.");
@@ -1251,7 +1271,7 @@ static int _xom_random_stickable(const int HD)
     {
         WPN_CLUB,    WPN_SPEAR,      WPN_TRIDENT,      WPN_HALBERD,
         WPN_SCYTHE,  WPN_GLAIVE,     WPN_QUARTERSTAFF,
-        WPN_SHORTBOW,   WPN_LONGBOW,      WPN_GIANT_CLUB,
+        WPN_BLOWGUN, WPN_SHORTBOW,   WPN_LONGBOW,      WPN_GIANT_CLUB,
         WPN_GIANT_SPIKED_CLUB
     };
 
@@ -1280,7 +1300,7 @@ static bool _hostile_snake(monster& mon)
 //  * HD influences the enchantment and type of the weapon.
 //  * Weapon is not guaranteed to be useful.
 //  * Weapon will never be branded.
-static void _xom_snakes_to_sticks(int /*sever*/)
+static void _xom_snakes_to_sticks(int sever)
 {
     bool action = false;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1296,11 +1316,12 @@ static void _xom_snakes_to_sticks(int /*sever*/)
             action = true;
         }
 
-        const object_class_type base_type = coinflip() ? OBJ_MISSILES
-                                                       : OBJ_WEAPONS;
+        const object_class_type base_type = x_chance_in_y(3,5) ? OBJ_MISSILES
+                                                               : OBJ_WEAPONS;
 
         const int sub_type =
-            (base_type == OBJ_MISSILES ? MI_JAVELIN
+            (base_type == OBJ_MISSILES ?
+             (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
              : _xom_random_stickable(mi->get_experience_level()));
 
         int item_slot = items(false, base_type, sub_type,
@@ -1310,7 +1331,7 @@ static void _xom_snakes_to_sticks(int /*sever*/)
         if (item_slot == NON_ITEM)
             continue;
 
-        item_def &item(env.item[item_slot]);
+        item_def &item(mitm[item_slot]);
 
         // Always limit the quantity to 1.
         item.quantity = 1;
@@ -1342,7 +1363,7 @@ static monster* _find_monster_with_animateable_weapon()
         if (mweap == NON_ITEM)
             continue;
 
-        const item_def weapon = env.item[mweap];
+        const item_def weapon = mitm[mweap];
 
         if (weapon.base_type == OBJ_WEAPONS
             && !(weapon.flags & ISFLAG_SUMMONED)
@@ -1390,13 +1411,13 @@ static void _xom_animate_monster_weapon(int sever)
 
     mprf("%s %s dances into the air!",
          apostrophise(mon->name(DESC_THE)).c_str(),
-         env.item[wpn].name(DESC_PLAIN).c_str());
+         mitm[wpn].name(DESC_PLAIN).c_str());
 
     destroy_item(dancing->inv[MSLOT_WEAPON]);
 
     dancing->inv[MSLOT_WEAPON] = wpn;
-    env.item[wpn].set_holding_monster(*dancing);
-    dancing->colour = env.item[wpn].get_colour();
+    mitm[wpn].set_holding_monster(*dancing);
+    dancing->colour = mitm[wpn].get_colour();
 }
 
 static void _xom_give_mutations(bool good)
@@ -1468,9 +1489,12 @@ static vector<coord_def> _xom_scenery_candidates()
     vector<coord_def> candidates;
     vector<coord_def> closed_doors;
     vector<coord_def> open_doors;
-    for (vision_iterator ri(you); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
-        dungeon_feature_type feat = env.grid(*ri);
+        if (!you.see_cell(*ri))
+            continue;
+
+        dungeon_feature_type feat = grd(*ri);
         if (feat_is_fountain(feat))
             candidates.push_back(*ri);
         else if (feat_is_closed_door(feat))
@@ -1487,7 +1511,7 @@ static vector<coord_def> _xom_scenery_candidates()
             }
         }
         else if (feat_is_open_door(feat) && !actor_at(*ri)
-                 && env.igrid(*ri) == NON_ITEM)
+                 && igrd(*ri) == NON_ITEM)
         {
             // Check whether this door is already included in a gate.
             if (find(begin(open_doors), end(open_doors), *ri)
@@ -1500,7 +1524,7 @@ static vector<coord_def> _xom_scenery_candidates()
                 bool is_blocked = false;
                 for (auto dc : all_door)
                 {
-                    if (actor_at(dc) || env.igrid(dc) != NON_ITEM)
+                    if (actor_at(dc) || igrd(dc) != NON_ITEM)
                     {
                         is_blocked = true;
                         break;
@@ -1537,9 +1561,9 @@ static void _xom_place_altars()
     {
         if ((random_near_space(&you, you.pos(), place, false)
              || random_near_space(&you, you.pos(), place, true))
-            && env.grid(place) == DNGN_FLOOR)
+            && grd(place) == DNGN_FLOOR)
         {
-            env.grid(place) = DNGN_ALTAR_XOM;
+            grd(place) = DNGN_ALTAR_XOM;
             success = true;
         }
     }
@@ -1552,27 +1576,6 @@ static void _xom_place_altars()
     }
 }
 
-static void _xom_summon_butterflies()
-{
-    bool success = false;
-    const int how_many = random_range(10, 20);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        mgen_data mg(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
-                     MG_FORCE_BEH);
-        mg.set_summoned(&you, 3, MON_SUMM_AID, GOD_XOM);
-        if (create_monster(mg))
-            success = true;
-    }
-
-    if (success)
-    {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
-                       "scenery: summon butterflies"), true);
-        god_speaks(GOD_XOM, _get_xom_speech("scenery").c_str());
-    }
-}
 /// Mess with nearby terrain features, more-or-less harmlessly.
 static void _xom_change_scenery(int /*sever*/)
 {
@@ -1580,10 +1583,7 @@ static void _xom_change_scenery(int /*sever*/)
 
     if (candidates.empty())
     {
-        if (coinflip())
-            _xom_place_altars();
-        else
-            _xom_summon_butterflies();
+        _xom_place_altars();
         return;
     }
 
@@ -1592,7 +1592,7 @@ static void _xom_change_scenery(int /*sever*/)
     int doors_close     = 0;
     for (coord_def pos : candidates)
     {
-        switch (env.grid(pos))
+        switch (grd(pos))
         {
         case DNGN_CLOSED_DOOR:
         case DNGN_CLOSED_CLEAR_DOOR:
@@ -1615,7 +1615,7 @@ static void _xom_change_scenery(int /*sever*/)
             if (x_chance_in_y(fountains_blood, 3))
                 continue;
 
-            env.grid(pos) = DNGN_FOUNTAIN_BLOOD;
+            grd(pos) = DNGN_FOUNTAIN_BLOOD;
             set_terrain_changed(pos);
             if (you.see_cell(pos))
                 fountains_blood++;
@@ -1772,7 +1772,7 @@ static void _xom_enchant_monster(bool helpful)
             BEAM_PETRIFY,
             BEAM_SLOW,
             BEAM_PARALYSIS,
-            BEAM_CHARM,
+            BEAM_ENSLAVE,
         };
         ench = RANDOM_ELEMENT(enchantments);
     }
@@ -1840,7 +1840,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
 
     FixedBitVector<NUM_FEATURES> in_view;
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-        in_view.set(env.grid(*ri));
+        in_view.set(grd(*ri));
 
     if (in_view[DNGN_LAVA])
         messages.emplace_back("The lava spits out sparks!");
@@ -1898,14 +1898,14 @@ static void _xom_pseudo_miscast(int /*sever*/)
                               "the other side.");
     }
 
-    const dungeon_feature_type feat = env.grid(you.pos());
+    const dungeon_feature_type feat = grd(you.pos());
 
     if (!feat_is_solid(feat) && feat_stair_direction(feat) == CMD_NO_CMD
         && !feat_is_trap(feat) && feat != DNGN_STONE_ARCH
         && !feat_is_open_door(feat) && feat != DNGN_ABANDONED_SHOP)
     {
         const string feat_name = feature_description_at(you.pos(), false,
-                                                        DESC_THE);
+                                                        DESC_THE, false);
 
         if (you.airborne())
         {
@@ -1955,8 +1955,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     //////////////////////////////////////////////
     // Body, player species, transformations, etc.
 
-    if (starts_with(species::skin_name(you.species), "bandage")
-        && you_can_wear(EQ_BODY_ARMOUR, true))
+    if (you.species == SP_MUMMY && you_can_wear(EQ_BODY_ARMOUR, true))
     {
         messages.emplace_back("You briefly get tangled in your bandages.");
         if (!you.airborne() && !you.swimming())
@@ -1980,7 +1979,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
         messages.push_back(str);
     }
 
-    if (species::has_hair(you.species))
+    if (species_has_hair(you.species))
     {
         messages.emplace_back("Your eyebrows briefly feel incredibly bushy.");
         messages.emplace_back("Your eyebrows wriggle.");
@@ -2113,9 +2112,140 @@ static void _xom_pseudo_miscast(int /*sever*/)
         mpr(messages[random2(messages.size())]);
 }
 
+static void _get_hand_type(string &hand, bool &can_plural)
+{
+    hand       = "";
+    can_plural = true;
+
+    vector<string> hand_vec;
+    vector<bool>   plural_vec;
+    bool           plural;
+
+    hand_vec.push_back(you.hand_name(false, &plural));
+    plural_vec.push_back(plural);
+
+    if (you.species != SP_NAGA || form_changed_physiology())
+    {
+        if (item_def* item = you.slot_item(EQ_BOOTS))
+        {
+            hand_vec.emplace_back(item->name(DESC_BASENAME, false, false, false));
+            plural = false; // "pair of boots" is singular
+        }
+        else
+            hand_vec.push_back(you.foot_name(false, &plural));
+        plural_vec.push_back(plural);
+    }
+
+    if (you.form == transformation::spider)
+    {
+        hand_vec.emplace_back("mandible");
+        plural_vec.push_back(true);
+    }
+    else if (you.species != SP_MUMMY && you.species != SP_OCTOPODE
+             && !you.get_mutation_level(MUT_BEAK)
+          || form_changed_physiology())
+    {
+        hand_vec.emplace_back("nose");
+        plural_vec.push_back(false);
+    }
+
+    if (you.form == transformation::bat
+        || you.species != SP_MUMMY && you.species != SP_OCTOPODE
+           && !form_changed_physiology())
+    {
+        hand_vec.emplace_back("ear");
+        plural_vec.push_back(true);
+    }
+
+    if (!form_changed_physiology()
+        && you.species != SP_FELID && you.species != SP_OCTOPODE)
+    {
+        hand_vec.emplace_back("elbow");
+        plural_vec.push_back(true);
+    }
+
+    ASSERT(hand_vec.size() == plural_vec.size());
+    ASSERT(!hand_vec.empty());
+
+    const unsigned int choice = random2(hand_vec.size());
+
+    hand       = hand_vec[choice];
+    can_plural = plural_vec[choice];
+}
+
+static void _xom_miscast(const int max_level, const bool nasty)
+{
+    ASSERT_RANGE(max_level, 0, 4);
+
+    const char* speeches[4] =
+    {
+        XOM_SPEECH("zero miscast effect"),
+        XOM_SPEECH("minor miscast effect"),
+        XOM_SPEECH("medium miscast effect"),
+        XOM_SPEECH("major miscast effect"),
+    };
+
+    const char* causes[4] =
+    {
+        "the mischief of Xom",
+        "the capriciousness of Xom",
+        "the capriciousness of Xom",
+        "the severe capriciousness of Xom"
+    };
+
+    const char* speech_str = speeches[max_level];
+    const char* cause_str  = causes[max_level];
+
+    const int level = (nasty ? 1 + random2(max_level)
+                             : random2(max_level + 1));
+
+    // Take a note.
+    const char* levels[4] = { "harmless", "mild", "medium", "severe" };
+    const auto school = spschools_type::exponent(random2(SPSCHOOL_LAST_EXPONENT + 1));
+    string desc = make_stringf("%s %s miscast", levels[level],
+                               spelltype_short_name(school));
+#ifdef NOTE_DEBUG_XOM
+    if (nasty)
+        desc += " (Xom was nasty)";
+#endif
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc), true);
+
+    string hand_str;
+    bool   can_plural;
+
+    _get_hand_type(hand_str, can_plural);
+
+    // If Xom's not being nasty, then prevent spell miscasts from
+    // killing the player.
+    const int lethality_margin  = nasty ? 0 : random_range(1, 4);
+
+    god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
+
+    MiscastEffect(&you, nullptr, {miscast_source::god, GOD_XOM},
+                  (spschool)school, level, cause_str, nothing_happens::DEFAULT,
+                  lethality_margin, hand_str, can_plural);
+}
+
 static bool _miscast_is_nasty(int sever)
 {
     return sever >= 5 && _xom_feels_nasty();
+}
+
+static void _xom_harmless_miscast(int sever)
+{
+    _xom_miscast(0, _miscast_is_nasty(sever));
+}
+static void _xom_minor_miscast(int sever)
+{
+    _xom_miscast(1, _miscast_is_nasty(sever));
+}
+static void _xom_major_miscast(int sever)
+{
+    _xom_miscast(2, _miscast_is_nasty(sever));
+}
+static void _xom_critical_miscast(int sever)
+{
+    _xom_miscast(3, _miscast_is_nasty(sever));
 }
 
 static void _xom_chaos_upgrade(int /*sever*/)
@@ -2133,7 +2263,7 @@ static void _xom_chaos_upgrade(int /*sever*/)
     for (int i = 0; i < 3 && !rc; ++i)
     {
         item_def* const item = mon->mslot_item(slots[i]);
-        if (item && _is_chaos_upgradeable(*item))
+        if (item && _is_chaos_upgradeable(*item, mon))
         {
             _do_chaos_upgrade(*item, mon);
             rc = true;
@@ -2185,7 +2315,7 @@ static bool _valid_floor_grid(coord_def pos)
     if (!in_bounds(pos))
         return false;
 
-    return env.grid(pos) == DNGN_FLOOR;
+    return grd(pos) == DNGN_FLOOR;
 }
 
 bool move_stair(coord_def stair_pos, bool away, bool allow_under)
@@ -2193,7 +2323,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     if (!allow_under)
         ASSERT(stair_pos != you.pos());
 
-    dungeon_feature_type feat = env.grid(stair_pos);
+    dungeon_feature_type feat = grd(stair_pos);
     ASSERT(feat_stair_direction(feat) != CMD_NO_CMD);
 
     coord_def begin, towards;
@@ -2214,7 +2344,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
             {
                 int adj_count = 0;
                 for (adjacent_iterator ai(stair_pos); ai; ++ai)
-                    if (env.grid(*ai) == DNGN_FLOOR
+                    if (grd(*ai) == DNGN_FLOOR
                         && (tries || _valid_floor_grid(*ai + *ai - stair_pos))
                         && one_chance_in(++adj_count))
                     {
@@ -2298,7 +2428,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     if (!in_bounds(ray.pos()) || ray.pos() == you.pos())
         ray.regress();
 
-    while (!you.see_cell(ray.pos()) || env.grid(ray.pos()) != DNGN_FLOOR)
+    while (!you.see_cell(ray.pos()) || grd(ray.pos()) != DNGN_FLOOR)
     {
         ray.regress();
         if (!in_bounds(ray.pos()) || ray.pos() == you.pos()
@@ -2311,7 +2441,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     ASSERT(stair_pos != ray.pos());
 
-    string stair_str = feature_description_at(stair_pos, false, DESC_THE);
+    string stair_str = feature_description_at(stair_pos, false, DESC_THE, false);
 
     mprf("%s slides %s you!", stair_str.c_str(),
          away ? "away from" : "towards");
@@ -2335,7 +2465,6 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     // Clear out "missile trails"
     viewwindow();
-    update_screen();
 
     if (!swap_features(stair_pos, ray.pos(), false, false))
     {
@@ -2355,7 +2484,7 @@ static vector<coord_def> _nearby_stairs()
         if (!cell_see_cell(you.pos(), *ri, LOS_SOLID_SEE))
             continue;
 
-        dungeon_feature_type feat = env.grid(*ri);
+        dungeon_feature_type feat = grd(*ri);
         if (feat_stair_direction(feat) != CMD_NO_CMD
             && feat != DNGN_ENTER_SHOP)
         {
@@ -2376,7 +2505,7 @@ static void _xom_repel_stairs(bool unclimbable)
 
     bool real_stairs = false;
     for (auto loc : stairs_avail)
-        if (feat_is_staircase(env.grid(loc)))
+        if (feat_is_staircase(grd(loc)))
             real_stairs = true;
 
     // Don't mention staircases if there aren't any nearby.
@@ -2386,7 +2515,7 @@ static void _xom_repel_stairs(bool unclimbable)
         string feat_name;
         if (!real_stairs)
         {
-            if (feat_is_escape_hatch(env.grid(stairs_avail[0])))
+            if (feat_is_escape_hatch(grd(stairs_avail[0])))
                 feat_name = "escape hatch";
             else
                 feat_name = "gate";
@@ -2518,7 +2647,7 @@ static void _xom_summon_hostiles(int sever)
         // Limit number of demons by experience level.
         if (!you.penance[GOD_XOM])
         {
-            const int maxdemons = ((you.experience_level / 2) + 1);
+            const int maxdemons = (you.experience_level / 2);
             if (numdemons > maxdemons)
                 numdemons = maxdemons;
         }
@@ -2715,7 +2844,7 @@ static void _handle_accidental_death(const int orig_hp,
 
     string speech_type = XOM_SPEECH("accidental homicide");
 
-    const dungeon_feature_type feat = env.grid(you.pos());
+    const dungeon_feature_type feat = grd(you.pos());
 
     switch (you.escaped_death_cause)
     {
@@ -2831,7 +2960,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (tension > random2(5) && x_chance_in_y(7, sever)
-        && !you.allies_forbidden())
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         return XOM_GOOD_SINGLE_ALLY;
     }
@@ -2845,13 +2974,13 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return XOM_GOOD_SNAKES;
 
     if (tension > random2(10) && x_chance_in_y(10, sever)
-        && !you.allies_forbidden())
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         return XOM_GOOD_ALLIES;
     }
     if (tension > random2(8) && x_chance_in_y(11, sever)
         && _find_monster_with_animateable_weapon()
-        && !you.allies_forbidden())
+        && !you.get_mutation_level(MUT_NO_LOVE))
     {
         return XOM_GOOD_ANIMATE_MON_WPN;
     }
@@ -2941,7 +3070,13 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
     const bool nasty = _miscast_is_nasty(sever);
 
     if (!nasty && x_chance_in_y(3, sever))
-        return XOM_BAD_MISCAST_PSEUDO;
+    {
+        return one_chance_in(3) ? XOM_BAD_MISCAST_PSEUDO
+                                : XOM_BAD_MISCAST_HARMLESS;
+    }
+
+    if (!nasty && x_chance_in_y(4, sever))
+        return XOM_BAD_MISCAST_MINOR;
 
     // Sometimes do noise out of combat.
     if ((tension > 0 || coinflip()) && x_chance_in_y(6, sever))
@@ -2965,6 +3100,8 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
         return XOM_BAD_SWAP_MONSTERS;
     }
 
+    if (x_chance_in_y(12, sever))
+        return XOM_BAD_MISCAST_MAJOR;
     if (x_chance_in_y(14, sever) && mon_nearby(_choose_chaos_upgrade))
         return XOM_BAD_CHAOS_UPGRADE;
     if (x_chance_in_y(15, sever) && !player_in_branch(BRANCH_ABYSS)
@@ -2986,8 +3123,8 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
         && !you.duration[DUR_REPEL_STAIRS_CLIMB])
     {
         if (one_chance_in(5)
-            || feat_stair_direction(env.grid(you.pos())) != CMD_NO_CMD
-                && env.grid(you.pos()) != DNGN_ENTER_SHOP)
+            || feat_stair_direction(grd(you.pos())) != CMD_NO_CMD
+                && grd(you.pos()) != DNGN_ENTER_SHOP)
         {
             return XOM_BAD_CLIMB_STAIRS;
         }
@@ -3000,6 +3137,8 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
     }
     if (x_chance_in_y(19, sever))
         return XOM_BAD_SUMMON_HOSTILES;
+    if (x_chance_in_y(20, sever))
+        return XOM_BAD_MISCAST_CRITICAL;
 
     if (x_chance_in_y(21, sever))
     {
@@ -3010,8 +3149,7 @@ static xom_event_type _xom_choose_bad_action(int sever, int tension)
             if (player_prot_life() < 3)
                 return XOM_BAD_DRAINING;
             // else choose something else
-        }
-        else if (!you.res_torment())
+        } else if (!player_res_torment(false))
             return XOM_BAD_TORMENT;
         // else choose something else
     }
@@ -3047,7 +3185,7 @@ xom_event_type xom_choose_action(bool niceness, int sever, int tension)
         // escape death from deep water or lava.
         ASSERT(you.wizard);
         ASSERT(!you.did_escape_death());
-        if (is_feat_dangerous(env.grid(you.pos())))
+        if (is_feat_dangerous(grd(you.pos())))
             mprf(MSGCH_DIAGNOSTICS, "Player is standing in deadly terrain, skipping Xom act.");
         else
             mprf(MSGCH_DIAGNOSTICS, "Player is already dead, skipping Xom act.");
@@ -3276,7 +3414,8 @@ void xom_death_message(const kill_method_type killed_by)
     // All others just get ignored by Xom.
 }
 
-static int _death_is_worth_saving(const kill_method_type killed_by)
+static int _death_is_worth_saving(const kill_method_type killed_by,
+                                  const char *aux)
 {
     switch (killed_by)
     {
@@ -3290,7 +3429,6 @@ static int _death_is_worth_saving(const kill_method_type killed_by)
     case KILLED_BY_WATER:
     case KILLED_BY_DRAINING:
     case KILLED_BY_STARVATION:
-    case KILLED_BY_ZOT:
     case KILLED_BY_ROTTING:
 
     // Don't protect the player from these.
@@ -3324,9 +3462,10 @@ static string _get_death_type_keyword(const kill_method_type killed_by)
  * and an additional chance based on tension that he will refuse to
  * save you.
  * @param death_type  The type of death that occurred.
+ * @param aux         Additional string describing this death.
  * @return            True if Xom saves your life, false otherwise.
  */
-bool xom_saves_your_life(const kill_method_type death_type)
+bool xom_saves_your_life(const kill_method_type death_type, const char *aux)
 {
     if (!you_worship(GOD_XOM) || _xom_feels_nasty())
         return false;
@@ -3339,7 +3478,7 @@ bool xom_saves_your_life(const kill_method_type death_type)
     if (!one_chance_in(20))
         return false;
 
-    if (!_death_is_worth_saving(death_type))
+    if (!_death_is_worth_saving(death_type, aux))
         return false;
 
     // In addition, the chance depends on the current tension and Xom's mood.
@@ -3410,7 +3549,6 @@ static void _xom_good_teleport(int /*sever*/)
     {
         count++;
         you_teleport_now();
-        maybe_update_stashes();
         more();
         if (one_chance_in(10) || count >= 7 + random2(5))
             break;
@@ -3432,7 +3570,7 @@ static void _xom_good_teleport(int /*sever*/)
  * teleportation to a few random areas, stopping if either
  * an area is dangerous to you or randomly.
  */
-static void _xom_bad_teleport(int /*sever*/)
+static void _xom_bad_teleport(int sever)
 {
     god_speaks(GOD_XOM,
                _get_xom_speech("teleportation journey").c_str());
@@ -3441,7 +3579,6 @@ static void _xom_bad_teleport(int /*sever*/)
     do
     {
         you_teleport_now();
-        maybe_update_stashes();
         more();
         if (count++ >= 7 + random2(5))
             break;
@@ -3522,6 +3659,12 @@ static const map<xom_event_type, xom_event> xom_events = {
     { XOM_GOOD_CLEAVING, { "cleaving", _xom_cleaving }},
 
     { XOM_BAD_MISCAST_PSEUDO, { "pseudo-miscast", _xom_pseudo_miscast, 10}},
+    { XOM_BAD_MISCAST_HARMLESS, { "harmless miscast",
+                                    _xom_harmless_miscast, 10}},
+    { XOM_BAD_MISCAST_MINOR, { "minor miscast", _xom_minor_miscast, 10}},
+    { XOM_BAD_MISCAST_MAJOR, { "major miscast", _xom_major_miscast, 20}},
+    { XOM_BAD_MISCAST_CRITICAL, { "critical miscast",
+                                    _xom_critical_miscast, 45}},
     { XOM_BAD_NOISE, { "noise", _xom_noise, 10 }},
     { XOM_BAD_ENCHANT_MONSTER, { "bad enchant monster",
                                  _xom_bad_enchant_monster, 10}},
@@ -3597,8 +3740,7 @@ void validate_xom_events()
                 fails += make_stringf("'%s' badness %d outside 10-50 range.\n",
                                       event->name, event->badness_10x);
             }
-        }
-        else if (event->badness_10x)
+        } else if (event->badness_10x)
         {
             fails += make_stringf("'%s' is not bad, but has badness!\n",
                                   event->name);
@@ -3665,7 +3807,7 @@ void debug_xom_effects()
     const int tension       = get_tension(GOD_XOM);
 
     fprintf(ostat, "---- STARTING XOM DEBUG TESTING ----\n");
-    fprintf(ostat, "%s\n", dump_overview_screen().c_str());
+    fprintf(ostat, "%s\n", dump_overview_screen(false).c_str());
     fprintf(ostat, "%s\n", screenshot().c_str());
     fprintf(ostat, "%s\n", _list_exploration_estimate().c_str());
     fprintf(ostat, "%s\n", mpr_monster_list().c_str());

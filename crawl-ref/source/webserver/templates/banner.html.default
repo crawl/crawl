@@ -1,4 +1,0 @@
-Welcome to WebTiles!
-{% if username %}
-<br>Hello, {{ username }}!
-{% end %}

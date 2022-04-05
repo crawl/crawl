@@ -5,14 +5,10 @@
 
 #pragma once
 
-#include <vector>
-
 #include "dungeon.h"
 #include "enum.h"
 #include "fixedvector.h"
 #include "worley.h"
-
-using std::vector;
 
 dungeon_feature_type sanitize_feature(dungeon_feature_type feature,
         bool strict = false);
@@ -38,7 +34,7 @@ class ProceduralSample
         // depth 1000, it will get checked at depth 1000. Then it will get
         // pushed back into the terrain queue with the new depth estimate.
         // If you overestimate the time between shifts, this will introduce
-        // bad behaviour when a game is loaded. [bh]
+        // bad behavior when a game is loaded. [bh]
         uint32_t cp;
         map_mask_type m;
 };

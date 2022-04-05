@@ -45,6 +45,10 @@ Sfortunatamente, i loro vividi colori furono la loro disgrazia, poiché
 allertavano le potenziali prede. Adesso sono estinti, e questo prezioso
 artefatto è una delle ultime prove della loro passata esistenza.
 %%%%
+demon blade "Bloodbane"
+
+Porta la macchia di un inumano folle.
+%%%%
 scimitar of Flaming Death
 
 Fumo!
@@ -129,7 +133,7 @@ storm bow
 
 Quest'arco ha il colore delle nere nubi da pioggia, e l'odore di ozono bagnato.
 %%%%
-tower shield of Ignorance
+large shield of Ignorance
 
 «Una mente aperta è come una fortezza con i suoi cancello spalancati e
 sguarniti.»
@@ -144,7 +148,7 @@ Permette al suo indossatore di eccellere nelle arti del furto, e può essere
 evocata per rilasciare delle dense nuvole di fumo per aiutare una fuga
 affrettata.
 %%%%
-tower shield "Bullseye"
+large shield "Bullseye"
 
 Giusto in caso avessi problemi a farti colpire.
 %%%%

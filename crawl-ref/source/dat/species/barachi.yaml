@@ -6,7 +6,7 @@ genus: "Frog"
 difficulty: Advanced
 difficulty_priority: 30
 species_flags:
-  - SPF_NO_HAIR
+  - hairless
 aptitudes:
   xp: 0
   hp: 0
@@ -24,6 +24,7 @@ aptitudes:
   unarmed_combat: 1
   conjurations: 1
   hexes: 1
+  charms: 1
   summoning: 2
   necromancy: -1
   translocations: 1
@@ -43,16 +44,17 @@ mutations:
   1:
     MUT_SLOW: 1
     MUT_HOP: 1
-    MUT_DAYSTALKER: 1
   13:
     MUT_HOP: 1
+fake_mutations:
+  - long: Shadows flee at your approach. (+LOS)
+    short: +LOS
+  - long: You can swim through water.
+    short: swims
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER
-  - JOB_WARPER
-  - JOB_ARCANE_MARKSMAN
+  - JOB_SKALD
   - JOB_SUMMONER
   - JOB_ICE_ELEMENTALIST
-# start TAG_MAJOR_VERSION == 34
 create_enum: false
-# end TAG_MAJOR_VERSION

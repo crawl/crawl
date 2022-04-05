@@ -4,7 +4,6 @@
 
 #include <climits>
 
-#include "cio.h"
 #include "colour.h"
 #include "lang-fake.h"
 #include "libutil.h"
@@ -35,9 +34,6 @@ formatted_string::formatted_string(const string &s, int init_colour)
  */
 int formatted_string::get_colour(const string &tag)
 {
-    if (starts_with(tag, "bg:"))
-        return get_colour(tag.substr(3));
-
     if (tag == "h")
         return YELLOW;
 
@@ -80,17 +76,12 @@ formatted_string formatted_string::parse_string(const string &s,
 {
     // main_colour will usually be LIGHTGREY (default).
     vector<int> colour_stack(1, main_colour);
-    // background will not change anything by default
-    vector<int> bg_stack(1, BLACK);
 
     formatted_string fs;
 
-    parse_string1(s, fs, colour_stack, bg_stack);
+    parse_string1(s, fs, colour_stack);
     if (colour_stack.back() != colour_stack.front())
         fs.textcolour(colour_stack.front()); // XXX: this does nothing
-    // if the bg colours are unbalanced, reset to black
-    if (bg_stack.back() != bg_stack.front())
-        fs.textbackground(bg_stack.back());
     return fs;
 }
 
@@ -101,7 +92,6 @@ void formatted_string::parse_string_to_multiple(const string &s,
                                                 int wrap_col)
 {
     vector<int> colour_stack(1, LIGHTGREY);
-    vector<int> bg_stack(1, BLACK);
 
     vector<string> lines = split_string("\n", s, false, true);
     if (wrap_col > 0)
@@ -121,27 +111,16 @@ void formatted_string::parse_string_to_multiple(const string &s,
     {
         out.emplace_back();
         formatted_string& fs = out.back();
-        // apply initial colors or the colors leftover on the stack from
-        // previous lines. Only apply background in case there was an explicit
-        // bg tag from previous lines.
         fs.textcolour(colour_stack.back());
-        if (bg_stack.size() > 1)
-            fs.textbackground(bg_stack.back());
-        parse_string1(line, fs, colour_stack, bg_stack);
-        // if the colour strings are unbalanced at this point, reset the
-        // colors at the end of the line, and then re-apply them to the next
-        // line (if there is one) on the next cycle of this loop
+        parse_string1(line, fs, colour_stack);
         if (colour_stack.back() != colour_stack.front())
             fs.textcolour(colour_stack.front()); // XXX: this does nothing
-        if (bg_stack.back() != bg_stack.front())
-            fs.textbackground(bg_stack.front());
     }
 }
 
 // Helper for the other parse_ methods.
 void formatted_string::parse_string1(const string &s, formatted_string &fs,
-                                     vector<int> &colour_stack,
-                                     vector<int> &bg_stack)
+                                     vector<int> &colour_stack)
 {
     // FIXME: This is a lame mess, just good enough for the task on hand
     // (keyboard help).
@@ -153,11 +132,9 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
     for (tag = 0; tag < length; ++tag)
     {
         bool revert_colour = false;
-        bool bg = false;
         string::size_type endpos = string::npos;
 
         // Break string up if it gets too big.
-        // XX why is 999 "too big"???
         if (currs.size() >= 999)
         {
             // Break the string at the end of a line, if possible, so
@@ -191,7 +168,6 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             continue;
         }
 
-        // trying to parse a color tag below here
         endpos = s.find('>', tag + 1);
         // No closing >?
         if (endpos == string::npos)
@@ -201,8 +177,6 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
         }
 
         string tagtext = s.substr(tag + 1, endpos - tag - 1);
-
-        // invalid tag: `<>` or `</>`. Just ignore.
         if (tagtext.empty() || tagtext == "/")
         {
             currs += s[tag];
@@ -216,47 +190,40 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
             tag++;
         }
 
-        if (starts_with(tagtext, "bg:"))
-            bg = true;
-
         if (!currs.empty())
         {
             fs.cprintf(currs);
             currs.clear();
         }
 
-        auto &cur_stack = bg ? bg_stack : colour_stack;
-        const int colour = get_colour(tagtext);
-
         if (revert_colour)
         {
-            if (cur_stack.size() > 1 && colour == cur_stack.back())
-                cur_stack.pop_back();
+            const int endcolour = get_colour(tagtext);
+
+            if (colour_stack.size() > 1 && endcolour == colour_stack.back())
+                colour_stack.pop_back();
             else
             {
                 // If this was the only tag, or the colour didn't match
                 // the one we are popping, display the tag as a warning.
-                // applies to both background and foreground
                 fs.textcolour(LIGHTRED);
                 fs.cprintf("</%s>", tagtext.c_str());
             }
         }
         else
         {
+            const int colour = get_colour(tagtext);
             if (colour == -1)
             {
                 fs.textcolour(LIGHTRED);
                 fs.cprintf("<%s>", tagtext.c_str());
             }
             else
-                cur_stack.push_back(colour);
+                colour_stack.push_back(colour);
         }
 
         // fs.cprintf("%d%d", colour_stack.size(), colour_stack.back());
-        if (bg)
-            fs.textbackground(bg_stack.back());
-        else
-            fs.textcolour(colour_stack.back());
+        fs.textcolour(colour_stack.back());
 
         tag += tagtext.length() + 1;
     }
@@ -269,21 +236,54 @@ formatted_string::operator string() const
 {
     string s;
     for (const fs_op &op : ops)
-        if (op.type == FSOP_TEXT)
+        if (op == FSOP_TEXT)
             s += op.text;
 
+    return s;
+}
+
+static void _replace_all_in_string(string& s, const string& search,
+                                   const string& replace)
+{
+    string::size_type pos = 0;
+    while ((pos = s.find(search, pos)) != string::npos)
+    {
+        s.replace(pos, search.size(), replace);
+        pos += replace.size();
+    }
+}
+
+string formatted_string::html_dump() const
+{
+    string s;
+    for (const fs_op &op : ops)
+    {
+        string tmp;
+        switch (op.type)
+        {
+        case FSOP_TEXT:
+            tmp = op.text;
+            // (very) crude HTMLification
+            _replace_all_in_string(tmp, "&", "&amp;");
+            _replace_all_in_string(tmp, " ", "&nbsp;");
+            _replace_all_in_string(tmp, "<", "&lt;");
+            _replace_all_in_string(tmp, ">", "&gt;");
+            _replace_all_in_string(tmp, "\n", "<br>");
+            s += tmp;
+            break;
+        case FSOP_COLOUR:
+            s += "<font color=";
+            s += colour_to_str(op.x);
+            s += ">";
+            break;
+        }
+    }
     return s;
 }
 
 bool formatted_string::operator < (const formatted_string &other) const
 {
     return string(*this) < string(other);
-}
-
-bool formatted_string::operator == (const formatted_string &other) const
-{
-    // May produce false negative in some cases, e.g. duplicated colour ops
-    return ops == other.ops;
 }
 
 const formatted_string &
@@ -293,19 +293,12 @@ formatted_string::operator += (const formatted_string &other)
     return *this;
 }
 
-const formatted_string &
-formatted_string::operator += (const string& other)
-{
-    ops.emplace_back(other);
-    return *this;
-}
-
 int formatted_string::width() const
 {
     // Just add up the individual string lengths.
     int len = 0;
     for (const fs_op &op : ops)
-        if (op.type == FSOP_TEXT)
+        if (op == FSOP_TEXT)
             len += strwidth(op.text);
     return len;
 }
@@ -326,7 +319,7 @@ char &formatted_string::operator [] (size_t idx)
     int size = ops.size();
     for (int i = 0; i < size; ++i)
     {
-        if (ops[i].type != FSOP_TEXT)
+        if (ops[i] != FSOP_TEXT)
             continue;
 
         size_t len = ops[i].text.length();
@@ -348,7 +341,7 @@ string formatted_string::tostring(int s, int e) const
 
     for (int i = s; i <= e && i < size; ++i)
     {
-        if (ops[i].type == FSOP_TEXT)
+        if (ops[i] == FSOP_TEXT)
             st += ops[i].text;
     }
     return st;
@@ -360,9 +353,7 @@ string formatted_string::to_colour_string() const
     const int size = ops.size();
     for (int i = 0; i < size; ++i)
     {
-        switch (ops[i].type)
-        {
-        case FSOP_TEXT:
+        if (ops[i] == FSOP_TEXT)
         {
             // gotta double up those '<' chars ...
             size_t start = st.size();
@@ -377,19 +368,12 @@ string formatted_string::to_colour_string() const
                 st.insert(left_angle, "<");
                 start = left_angle + 2;
             }
-            break;
         }
-        // apparently don't write any closing tags (which the parser can handle)
-        case FSOP_COLOUR:
+        else if (ops[i] == FSOP_COLOUR)
+        {
             st += "<";
-            st += colour_to_str(ops[i].colour);
+            st += colour_to_str(ops[i].x);
             st += ">";
-            break;
-        case FSOP_BG:
-            st += "<bg:";
-            st += colour_to_str(ops[i].colour);
-            st += ">";
-            break;
         }
     }
 
@@ -415,12 +399,12 @@ int formatted_string::find_last_colour() const
     {
         for (int i = ops.size() - 1; i >= 0; --i)
             if (ops[i].type == FSOP_COLOUR)
-                return ops[i].colour;
+                return ops[i].x;
     }
     return LIGHTGREY;
 }
 
-formatted_string formatted_string::chop(int length, bool pad) const
+formatted_string formatted_string::chop(int length) const
 {
     formatted_string result;
     for (const fs_op& op : ops)
@@ -439,8 +423,6 @@ formatted_string formatted_string::chop(int length, bool pad) const
         else
             result.ops.push_back(op);
     }
-    if (pad && length > 0)
-        result += string(length, ' ');
 
     return result;
 }
@@ -507,7 +489,6 @@ void formatted_string::del_char()
 
 void formatted_string::add_glyph(cglyph_t g)
 {
-    // cglyph_t does not affect background colour
     const int last_col = find_last_colour();
     textcolour(g.col);
     cprintf("%s", stringize_glyph(g.ch).c_str());
@@ -516,18 +497,10 @@ void formatted_string::add_glyph(cglyph_t g)
 
 void formatted_string::textcolour(int colour)
 {
-    if (!ops.empty() && ops.back().type == FSOP_COLOUR)
+    if (!ops.empty() && ops[ ops.size() - 1 ].type == FSOP_COLOUR)
         ops.pop_back();
 
     ops.emplace_back(colour);
-}
-
-void formatted_string::textbackground(int colour)
-{
-    if (!ops.empty() && ops.back().type == FSOP_BG)
-        ops.pop_back();
-
-    ops.emplace_back(colour, false);
 }
 
 void formatted_string::clear()
@@ -555,23 +528,16 @@ void formatted_string::cprintf(const string &s)
 
 void formatted_string::fs_op::display() const
 {
-    // see also FTFontWrapper::store
     switch (type)
     {
     case FSOP_COLOUR:
 #ifndef USE_TILE_LOCAL
-        if (colour < NUM_TERM_COLOURS)
+        if (x < NUM_TERM_COLOURS)
 #endif
-            ::textcolour(colour);
-        break;
-    case FSOP_BG:
-#ifndef USE_TILE_LOCAL
-        if (colour < NUM_TERM_COLOURS)
-#endif
-            ::textbackground(colour);
+            ::textcolour(x);
         break;
     case FSOP_TEXT:
-        wrapcprintf("%s", text.c_str());
+        ::cprintf("%s", text.c_str());
         break;
     }
 }
@@ -622,4 +588,55 @@ int count_linebreaks(const formatted_string& fs)
         }
     }
     return count;
+}
+
+/**
+ * How long are the <colour> tags in the string?
+ *
+ * This function assumes that every character making up the tag is one char
+ * long. This shouldn't break as long as nobody uses non-ASCII characters
+ * in the tag. It also can't handle nested tags, but that shouldn't be an issue.
+ *
+ * @param s the string with the tags.
+ * @return the length of the tags, including the angle brackets.
+ */
+int tagged_string_tag_length(const string& s)
+{
+    int len = 0;
+    bool in_tag = false;
+    char prev_char = '\0';
+    for (char ch : s)
+    {
+        if (in_tag)
+        {
+            if (ch == '<' && prev_char == '<') // "<<" sequence
+            {
+                in_tag = false;
+                len--; // Correct for len being incremented last time
+            }
+            else if (ch == '>')
+                in_tag = false;
+        }
+        else if (ch == '<')
+            in_tag = true;
+
+        if (in_tag)
+            len++;
+        prev_char = ch;
+    }
+
+    ASSERT(len >= 0);
+    return len;
+}
+
+/**
+ * How long will this string be when printed?
+ *
+ * @param string str
+ * @return how much the user will see -- counting combining characters together,
+ *         not including <colour> tags, etc.
+ */
+int printed_width(const string& str)
+{
+    return strwidth(str) - tagged_string_tag_length(str);
 }

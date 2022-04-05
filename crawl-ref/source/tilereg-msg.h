@@ -8,9 +8,9 @@ class MessageRegion : public TextRegion
 public:
     MessageRegion(FontWrapper *font_arg);
 
-    void set_overlay(bool is_overlay, const VColour &col);
+    void set_overlay(bool is_overlay);
 
-    virtual int handle_mouse(wm_mouse_event &event) override;
+    virtual int handle_mouse(MouseEvent &event) override;
     virtual void render() override;
     virtual bool update_tip_text(string &tip) override;
 
@@ -18,7 +18,6 @@ public:
 protected:
     string m_alt_text;
     bool m_overlay;
-    VColour m_overlay_col;
 };
 
 #endif

@@ -30,23 +30,19 @@ public:
                                   bool drop_shadow = false) = 0;
 
     // render text + background box
-    virtual void render_tooltip(unsigned int x, unsigned int y,
-                               const formatted_string &text,
-                               const coord_def &min_pos,
-                               const coord_def &max_pos) = 0;
-
     virtual void render_string(unsigned int x, unsigned int y,
-                               const formatted_string &text) = 0;
-
-    virtual void render_hover_string(unsigned int x, unsigned int y,
-                               const formatted_string &text) = 0;
+                               const char *text, const coord_def &min_pos,
+                               const coord_def &max_pos,
+                               unsigned char font_colour,
+                               bool drop_shadow = false,
+                               unsigned char box_alpha = 0,
+                               unsigned char box_colour = 0,
+                               unsigned int outline = 0,
+                               bool tooltip = false) = 0;
 
     // FontBuffer helper functions
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const string &s, const VColour &c) = 0;
-    virtual void store(FontBuffer &buf, float &x, float &y,
-                       const string &s,
-                       const VColour &fg, const VColour &bg) = 0;
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs) = 0;
     virtual void store(FontBuffer &buf, float &x, float &y, char32_t c,

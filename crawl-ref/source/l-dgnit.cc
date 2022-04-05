@@ -6,6 +6,7 @@
 #include "l-libs.h"
 
 #include "cluautil.h"
+#include "coord.h"
 #include "dungeon.h"
 #include "item-status-flag-type.h"
 #include "items.h"
@@ -31,7 +32,7 @@ static item_list _lua_get_ilist(lua_State *ls, int ndx)
     {
         item_list **ilist =
             clua_get_userdata<item_list*>(ls, ITEMLIST_METATABLE, ndx);
-        if (ilist && *ilist)
+        if (ilist)
             return **ilist;
 
         luaL_argerror(ls, ndx, "Expected item list object or string");
@@ -49,7 +50,7 @@ static int dgn_item_from_index(lua_State *ls)
 {
     const int index = luaL_safe_checkint(ls, 1);
 
-    item_def *item = &env.item[index];
+    item_def *item = &mitm[index];
 
     if (item->defined())
         clua_push_item(ls, item);
@@ -64,13 +65,6 @@ static int dgn_items_at(lua_State *ls)
     COORDS(c, 1, 2);
     lua_push_floor_items(ls, env.igrid(c));
     return 1;
-}
-
-static int dgn_shop_inventory_at(lua_State *ls)
-{
-    // TODO: this could probably be done in a way that didn't need to be dlua.
-    COORDS(s, 1, 2);
-    return lua_push_shop_items_at(ls, s);
 }
 
 static int _dgn_item_spec(lua_State *ls)
@@ -254,7 +248,6 @@ const struct luaL_reg dgn_item_dlib[] =
 {
     { "item_from_index", dgn_item_from_index },
     { "items_at", dgn_items_at },
-    { "shop_inventory_at", dgn_shop_inventory_at },
     { "create_item", dgn_create_item },
     { "item_property_remove", dgn_item_property_remove },
     { "item_property_set", dgn_item_property_set },

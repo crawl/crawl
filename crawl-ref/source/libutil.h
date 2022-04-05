@@ -7,19 +7,10 @@
 
 #include <cctype>
 #include <map>
-#include <memory>
 #include <string>
 #include <vector>
-#include <unordered_set>
 
-#include "defines.h"
-#include "coord-def.h"
-#include "description-level-type.h"
 #include "enum.h"
-
-using std::string;
-using std::unique_ptr;
-using std::vector;
 
 bool key_is_escape(int key);
 
@@ -71,27 +62,6 @@ static inline int toalower(int c)
     return isaupper(c) ? c + 'a' - 'A' : c;
 }
 
-static inline char32_t toaupper(char32_t c)
-{
-    return isalower(c) ? c + 'A' - 'a' : c;
-}
-
-// Same thing with signed int, so we can pass though -1 undisturbed.
-static inline int toaupper(int c)
-{
-    return isalower(c) ? c + 'A' - 'a' : c;
-}
-
-template<typename T> inline T tolower_safe(T c)
-{
-    return isaupper(c) ? toalower(c) : tolower(c);
-}
-
-template<typename T> inline T toupper_safe(T c)
-{
-    return isalower(c) ? toaupper(c) : toupper(c);
-}
-
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(const string &a, const string &b);
 
@@ -104,7 +74,7 @@ int strip_number_tag(string &s, const string &tagprefix);
 vector<string> strip_multiple_tag_prefix(string &s, const string &tagprefix);
 string strip_tag_prefix(string &s, const string &tagprefix);
 const string tag_without_prefix(const string &s, const string &tagprefix);
-unordered_set<string> parse_tags(const string &tags);
+set<string> parse_tags(const string &tags);
 bool parse_int(const char *s, int &i);
 
 // String 'descriptions'

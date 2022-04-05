@@ -1,20 +1,14 @@
 #pragma once
 
-#include <vector>
-
-#include "externs.h"
 #include "god-type.h"
 #include "spl-cast.h"
-
-using std::vector;
-
-class actor;
 
 spret cast_sublimation_of_blood(int pow, bool fail);
 spret cast_death_channel(int pow, god_type god, bool fail);
 
 enum class recall_t
 {
+    spell,
     yred,
     beogh,
 };
@@ -38,12 +32,13 @@ struct passwall_path
     vector <coord_def> possible_dests() const;
 };
 
+spret cast_recall(bool fail);
 void start_recall(recall_t type);
 void recall_orders(monster *mons);
 bool try_recall(mid_t mid);
 void do_recall(int time);
 void end_recall();
 
-bool passwall_simplified_check(const actor &act);
 spret cast_passwall(const coord_def& delta, int pow, bool fail);
-spret cast_intoxicate(int pow, bool fail, bool tracer = false);
+spret cast_intoxicate(int pow, bool fail);
+spret cast_darkness(int pow, bool fail);

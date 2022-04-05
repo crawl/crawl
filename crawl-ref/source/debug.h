@@ -5,9 +5,6 @@
 
 #pragma once
 
-#include "debug-defines.h"
-#include "macros.h"
-
 // Synch with ANSI definitions.
 #if !(defined(DEBUG) ^ defined(NDEBUG))
 #error DEBUG and NDEBUG are out of sync!

@@ -2,13 +2,9 @@
 
 #pragma once
 
-#include <vector>
-
-using std::vector;
-
 // [ds] The old noise system was pretty simple: noise level (loudness) ==
 // distance covered. Since the new system considers terrain when propagating
-// sound, using the same noise attenuation of 1 unit per square travelled would
+// sound, using the same noise attenuation of 1 unit per square traveled would
 // mean greatly reduced sound propagation on average.
 //
 // To compensate for sound being blocked by walls and doors, I've lowered the
@@ -41,19 +37,16 @@ struct noise_t
 
     mid_t noise_producer_mid;
 
-    bool fake_noise;
-
     noise_t(coord_def _noise_source = coord_def(),
             string _noise_player_msg = "",
             int _noise_intensity_millis = 0,
             mid_t _noise_producer_mid = MID_NOBODY,
-            bool _fake_noise = false)
+            uint16_t _flags = 0)
         : noise_source(_noise_source),
           noise_player_msg(_noise_player_msg),
           noise_intensity_millis(_noise_intensity_millis),
           noise_id(-1),
-          noise_producer_mid(_noise_producer_mid),
-          fake_noise(_fake_noise)
+          noise_producer_mid(_noise_producer_mid)
     {
     }
 
@@ -134,7 +127,8 @@ private:
                                       const coord_def &next_position);
     void apply_noise_effects(const coord_def &pos,
                              int noise_intensity_millis,
-                             const noise_t &noise);
+                             const noise_t &noise,
+                             int noise_travel_distance);
 
     coord_def noise_perceived_position(actor *act,
                                        const coord_def &affected_position,

@@ -23,6 +23,16 @@ bool tile_colour::operator!=(const tile_colour &rhs) const
     return r != rhs.r || g != rhs.g || b != rhs.b || a != rhs.a;
 }
 
+const tile_colour &tile_colour::operator=(const tile_colour &rhs)
+{
+    r = rhs.r;
+    g = rhs.g;
+    b = rhs.b;
+    a = rhs.a;
+
+    return *this;
+}
+
 unsigned char &tile_colour::operator[](int idx)
 {
     assert(idx >= 0 && idx <= 4);
@@ -251,16 +261,12 @@ bool write_png(const char *filename, tile_colour *pixels,
     png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
                                                   nullptr, nullptr, nullptr);
     if (!png_ptr)
-    {
-        fclose(fp);
         return false;
-    }
 
     png_infop info_ptr = png_create_info_struct(png_ptr);
     if (!info_ptr)
     {
         png_destroy_write_struct(&png_ptr, (png_infopp)nullptr);
-        fclose(fp);
         return false;
     }
 

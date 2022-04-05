@@ -20,7 +20,6 @@
 #include "dlua.h"
 #include "message.h"
 #include "options.h"
-#include "state.h"
 
 static int _incomplete(lua_State *ls, int status)
 {
@@ -44,7 +43,7 @@ static int _pushline(lua_State *ls, int firstline)
     char *b = buffer;
     size_t l;
     string prompt = firstline ? "> " : ". ";
-    if (crawl_state.seen_hups || msgwin_get_line_autohist(prompt, buffer, sizeof(buffer)))
+    if (msgwin_get_line_autohist(prompt, buffer, sizeof(buffer)))
         return 0;
     l = strlen(b);
 
@@ -64,7 +63,7 @@ static int _loadline(lua_State *ls)
     int status;
     lua_settop(ls, 0);
 
-    if (crawl_state.seen_hups || !_pushline(ls, 1))
+    if (!_pushline(ls, 1))
         return -1;  /* no input */
 
     // repeat until gets a complete line
@@ -113,7 +112,7 @@ static void _run_dlua_interpreter(lua_State *ls)
 
     int status;
     mpr("[Hit ESC to exit interpreter.]");
-    while (!crawl_state.seen_hups && (status = _loadline(ls)) != -1)
+    while ((status = _loadline(ls)) != -1)
     {
         if (status == 0)
             status = _docall(ls);

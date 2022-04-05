@@ -8,9 +8,14 @@
 
 #pragma once
 
-#include "tag-version.h"
-
 #define HERD_COMFORT_RANGE 6
+
+enum corpse_effect_type
+{
+    CE_NOCORPSE,
+    CE_CLEAN,
+    CE_NOXIOUS,
+};
 
 // TODO: Unify this and a player_equivalent (if applicable)
 // and move into attack.h
@@ -72,12 +77,10 @@ enum attack_flavour
     AF_DRAIN_INT,
     AF_DRAIN_DEX,
     AF_DRAIN_STAT,
-    AF_DRAIN,
+    AF_DRAIN_XP,
     AF_ELEC,
     AF_FIRE,
-#if TAG_MAJOR_VERSION == 34
     AF_HUNGER,
-#endif
     AF_MUTATE,
     AF_POISON_PARALYSE,
     AF_POISON,
@@ -91,8 +94,8 @@ enum attack_flavour
     AF_POISON_INT,
     AF_POISON_DEX,
     AF_POISON_STAT,
-    AF_ROT,
 #endif
+    AF_ROT,
     AF_VAMPIRIC,
 #if TAG_MAJOR_VERSION == 34
     AF_KLOWN,
@@ -126,20 +129,13 @@ enum attack_flavour
 #endif
     AF_CORRODE,
     AF_SCARAB,
-#if TAG_MAJOR_VERSION == 34
     AF_KITE,  // Hops backwards if attacking with a polearm.
-#endif
     AF_SWOOP, // Swoops in to perform a melee attack if far away.
     AF_TRAMPLE, // Trampling effect.
     AF_WEAKNESS,
 #if TAG_MAJOR_VERSION == 34
     AF_MIASMATA,
 #endif
-    AF_REACH_TONGUE,
-    AF_BLINK_WITH,
-    AF_SEAR,
-    AF_BARBS,
-    AF_SPIDER,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -209,7 +205,7 @@ enum mon_resist_flags
     MR_RES_FIRE          = 1 << 6,
     MR_RES_COLD          = 1 << 9,
     MR_RES_NEG           = 1 << 12,
-    MR_RES_MIASMA        = 1 << 15,
+    MR_RES_ROTTING       = 1 << 15,
     MR_RES_ACID          = 1 << 18,
 
     MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
@@ -223,13 +219,11 @@ enum mon_resist_flags
     // unused 1 << 25,
 #endif
     MR_RES_STICKY_FLAME  = 1 << 26,
-    MR_RES_VORTEX        = 1 << 27,
+    MR_RES_TORNADO       = 1 << 27,
     MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
-#if TAG_MAJOR_VERSION == 34
     MR_VUL_WATER         = 1 << 29,
-#endif
     MR_VUL_ELEC          = mrd(MR_RES_ELEC, -1),
     MR_VUL_POISON        = mrd(MR_RES_POISON, -1),
     MR_VUL_FIRE          = mrd(MR_RES_FIRE, -1),
@@ -259,7 +253,6 @@ enum shout_type
     S_CHERUB,               // for cherubs
     S_SQUEAL,               // pigs
     S_LOUD_ROAR,            // dragons, &c. loud!
-    S_RUSTLE,               // books
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

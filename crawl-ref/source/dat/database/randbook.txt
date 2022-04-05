@@ -424,6 +424,31 @@ Blows and Bruises
 w:1
 Damage Dealing
 %%%%
+Charms
+
+Enhancements
+
+Talismans
+
+Good Luck
+
+Protection
+
+w:3
+Self-Knowledge
+
+w:3
+Self-Improvement
+
+Aid
+
+Augmentations
+
+w:1
+Benedictions
+
+Boosts
+%%%%
 Fire
 
 Fire
@@ -545,9 +570,11 @@ Companions
 
 the Escort
 
-w:3
+w:1
 Illusion
 
+w:2
+Slavery
 %%%%
 Translocation
 
@@ -622,6 +649,16 @@ Excruciating
 
 w:5
 Lethal
+%%%%
+Charms adj
+
+Helpful
+
+Lucky
+
+Assistive
+
+Boosting
 %%%%
 Hexes adj
 
@@ -775,9 +812,9 @@ Dispater
 %%%%
 Conjuration Earth owner
 
-Lehudib
+Lee
 
-__NONE
+Lehudib
 %%%%
 highlevel Conjuration Fire owner
 
@@ -785,6 +822,7 @@ Asmodeus
 
 Cerebov
 
+w:5
 __NONE
 %%%%
 highlevel Conjuration Necromancy owner
@@ -799,6 +837,7 @@ Asmodeus
 
 Dispater
 
+w:5
 __NONE
 %%%%
 Earth Transmutation owner
@@ -831,12 +870,6 @@ Cigotuvi
 
 __NONE
 %%%%
-Poison Transmutation owner
-
-Eringya
-
-__NONE
-%%%%
 # Single spell schools.
 highlevel Conjuration owner
 
@@ -850,22 +883,25 @@ Cerebov
 
 Lom Lobon
 
-w:20
+Lehudib
+
+w:30
 @Conjuration owner@
 %%%%
 Conjuration owner
 
+w:2
+Lee
+
 Lehudib
 
 Iskenderun
-
-__NONE
 %%%%
 highlevel Earth owner
 
 Dispater
 
-w:40
+w:30
 @Earth owner@
 %%%%
 Earth owner
@@ -873,8 +909,6 @@ Earth owner
 Lehudib
 
 Lee
-
-Leda
 
 Roxanne
 
@@ -894,19 +928,13 @@ Ozocubu
 
 __NONE
 %%%%
-Air owner
-
-Maxwell
-
-__NONE
-%%%%
 highlevel Necromancy owner
 
 Ereshkigal
 
 Gloorx Vloq
 
-w:30
+w:40
 @Necromancy owner@
 %%%%
 Necromancy owner
@@ -916,14 +944,11 @@ Borgnjor
 Cigotuvi
 
 Khufu
-
-__NONE
 %%%%
 highlevel Poison owner
 
 Gloorx Vloq
 
-w:30
 @Poison owner@
 %%%%
 Poison owner
@@ -931,8 +956,6 @@ Poison owner
 Olgreb
 
 Alistair
-
-Eringya
 
 __NONE
 %%%%
@@ -944,26 +967,11 @@ Dispater
 
 Mnoleg
 
-@Summoning owner@
-%%%%
-Summoning owner
-
-Mara
-
 __NONE
 %%%%
 highlevel Translocation owner
 
 Lom Lobon
-
-w:20
-@Translocation owner@
-%%%%
-Translocation owner
-
-Gell
-
-Golubria
 
 __NONE
 %%%%
@@ -972,16 +980,6 @@ Transmutation owner
 Cigotuvi
 
 Roxanne
-
-Eringya
-
-__NONE
-%%%%
-Hexes owner
-
-Yara
-
-Tukima
 
 __NONE
 %%%%

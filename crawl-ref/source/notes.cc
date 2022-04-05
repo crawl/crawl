@@ -22,14 +22,11 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "unicode.h"
-#include "view.h"
 
 #define NOTES_VERSION_NUMBER 1002
 
 vector<Note> note_list;
-int last_screen_turn = -1;
 
 static bool _is_highest_skill(int skill)
 {
@@ -94,7 +91,6 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_PERM_MUTATION
         || note.type == NOTE_GET_ITEM
         || note.type == NOTE_ID_ITEM
-        || note.type == NOTE_ACQUIRE_ITEM
         || note.type == NOTE_BUY_ITEM
         || note.type == NOTE_DONATE_MONEY
         || note.type == NOTE_SEEN_MONSTER
@@ -262,9 +258,6 @@ string Note::describe(bool when, bool where, bool what) const
         case NOTE_GET_ITEM:
             result << "Got " << name;
             break;
-        case NOTE_ACQUIRE_ITEM:
-            result << "Acquired " << name;
-            break;
         case NOTE_BUY_ITEM:
             result << "Bought " << name << " for " << first << " gold piece"
                    << (first == 1 ? "" : "s");
@@ -421,7 +414,7 @@ void Note::check_milestone() const
             string branch = place.describe(true, false);
 
             if (starts_with(branch, "The "))
-                branch[0] = tolower_safe(branch[0]);
+                branch[0] = tolower(branch[0]);
 
             if (dep == 1)
             {
@@ -433,7 +426,7 @@ void Note::check_milestone() const
             {
                 string level = place.describe(true, true);
                 if (starts_with(level, "Level "))
-                    level[0] = tolower_safe(level[0]);
+                    level[0] = tolower(level[0]);
 
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig" : "br.end",
                                "reached " + level + ".");
@@ -451,7 +444,6 @@ void Note::save(writer& outf) const
     marshallInt(outf, second);
     marshallString4(outf, name);
     marshallString4(outf, desc);
-    marshallString(outf, screen);
 }
 
 void Note::load(reader& inf)
@@ -468,13 +460,6 @@ void Note::load(reader& inf)
     second = unmarshallInt(inf);
     unmarshallString4(inf, name);
     unmarshallString4(inf, desc);
-#if TAG_MAJOR_VERSION == 34
-    if (inf.getMinorVersion() >= TAG_MINOR_MORGUE_SCREENSHOTS)
-        screen = unmarshallString(inf);
-#else
-    screen = unmarshallString(inf);
-#endif
-
 }
 
 static bool notes_active = false;
@@ -528,11 +513,5 @@ void make_user_note()
         return;
     Note unote(NOTE_USER_NOTE);
     unote.name = buf;
-    // Only one screenshot a turn allowed
-    if (last_screen_turn != unote.turn)
-    {
-        last_screen_turn = unote.turn;
-        unote.screen = screenshot();
-    }
     take_note(unote);
 }

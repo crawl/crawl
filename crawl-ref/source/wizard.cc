@@ -3,7 +3,6 @@
  * @brief Wizard mode command handling.
 **/
 #include "AppHdr.h"
-#include "options.h"
 
 #ifdef WIZARD
 
@@ -34,7 +33,6 @@
 #include "spl-transloc.h" // wizard_blink
 #include "stairs.h" // down_stairs
 #include "state.h"
-#include "traps.h" // do_trap_effects
 #include "wizard-option-type.h"
 #include "wiz-dgn.h"
 #include "wiz-dump.h"
@@ -57,7 +55,7 @@ static void _do_wizard_command(int wiz_command)
         return;
     }
 
-    case 'a': acquirement_menu(); break;
+    case 'a': acquirement(OBJ_RANDOM, AQ_WIZMODE); break;
     case 'A': wizard_set_all_skills(); break;
     case CONTROL('A'):
         if (player_in_branch(BRANCH_ABYSS))
@@ -76,13 +74,14 @@ static void _do_wizard_command(int wiz_command)
         break;
 
     case 'c': wizard_draw_card(); break;
+    case 'C': wizard_uncurse_item(); break;
     case CONTROL('C'): die("Intentional crash");
 
     case 'd': wizard_level_travel(true); break;
     case 'D': wizard_detect_creatures(); break;
     case CONTROL('D'): wizard_edit_durations(); break;
 
-    case 'e': do_trap_effects(); break;
+    case 'e': wizard_set_hunger_state(); break;
     case 'E': wizard_freeze_time(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
 
@@ -116,13 +115,13 @@ static void _do_wizard_command(int wiz_command)
 
     case 'l': wizard_set_xl(); break;
     case 'L': debug_place_map(false); break;
-    case CONTROL('L'): debug_show_builder_logs(); break;
+    // case CONTROL('L'): break;
 
     case 'M':
     case 'm': wizard_create_spec_monster_name(); break;
     // case CONTROL('M'): break; // XXX do not use, menu command
 
-    case 'n': wizard_set_zot_clock(); break;
+    // case 'n': break;
     // case 'N': break;
     // case CONTROL('N'): break;
 
@@ -211,8 +210,7 @@ static void _do_wizard_command(int wiz_command)
         break;
 
     case '\\': debug_make_shop(); break;
-    case '|': wizard_create_all_artefacts(true); break;
-    case CONTROL('\\'): wizard_create_all_artefacts(false); break;
+    case '|': wizard_create_all_artefacts(); break;
 
     case ';': wizard_list_levels(); break;
     case ':': wizard_list_branches(); break;
@@ -271,11 +269,7 @@ void handle_wizard_command()
         mprf(MSGCH_WARN, "Re-activating wizard mode.");
         you.wizard = true;
         you.suppress_wizard = false;
-#ifdef USE_TILE_LOCAL
-        tiles.layout_statcol();
-#endif
         redraw_screen();
-        update_screen();
         if (crawl_state.cmd_repeat_start)
         {
             crawl_state.cancel_cmd_repeat("Can't repeat re-activating wizard "
@@ -307,11 +301,7 @@ void handle_wizard_command()
 
         you.wizard = true;
         save_game(false);
-#ifdef USE_TILE_LOCAL
-        tiles.layout_statcol();
-#endif
         redraw_screen();
-        update_screen();
 
         if (crawl_state.cmd_repeat_start)
         {
@@ -326,7 +316,7 @@ void handle_wizard_command()
         cursor_control con(true);
         wiz_command = getchm();
         if (wiz_command == '*')
-            wiz_command = CONTROL(toupper_safe(getchm()));
+            wiz_command = CONTROL(toupper(getchm()));
     }
 
     if (crawl_state.cmd_repeat_start)
@@ -376,8 +366,6 @@ void enter_explore_mode()
     else if (!you.explore)
     {
         mprf(MSGCH_WARN, "WARNING: ABOUT TO ENTER EXPLORE MODE!");
-        mpr("In explore mode, death is optional.");
-        mpr("Once you set a character to explore mode, you can't switch back.");
 
 #ifndef SCORE_WIZARD_CHARACTERS
         mprf(MSGCH_WARN, "If you continue, your game will not be scored!");
@@ -398,7 +386,6 @@ void enter_explore_mode()
         you.explore = true;
         save_game(false);
         redraw_screen();
-        update_screen();
 
         if (crawl_state.cmd_repeat_start)
         {
@@ -431,42 +418,32 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>#</w>      load character from a dump file\n"
                        "<w>&</w>      list all divine followers\n"
                        "<w>=</w>      show info about skill points\n"
-                       "<w>n</w>      set Zot clock to a value\n"
                        "\n"
-                       "<yellow>Dungeon features</yellow>\n"
+                       "<yellow>Create level features</yellow>\n"
+                       "<w>L</w>      place a vault by name\n"
                        "<w>T</w>      make a trap\n"
                        "<w>,</w>/<w>.</w>    create up/down staircase\n"
                        "<w>(</w>      turn cell into feature\n"
                        "<w>\\</w>      make a shop\n"
+                       "<w>K</w> mark all vaults as unused\n"
                        "\n"
-                       "<yellow>Builder debugging</yellow>\n"
-                       "<w>L</w>      place a vault by name\n"
-                       "<w>P</w>      create a level based on a vault\n"
-                       "<w>Ctrl-R</w> regenerate current level\n"
+                       "<yellow>Other level related commands</yellow>\n"
                        "<w>Ctrl-A</w> generate new Abyss area\n"
-                       "<w>K</w>      mark all vaults as unused\n"
+                       "<w>b</w>      controlled blink\n"
+                       "<w>B</w>      controlled teleport\n"
+                       "<w>Ctrl-B</w> banish yourself to the Abyss\n"
+                       "<w>R</w>      change monster spawn rate\n"
+                       "<w>Ctrl-S</w> change Abyss speed\n"
+                       "<w>u</w>/<w>d</w>    shift up/down one level\n"
+                       "<w>~</w>      go to a specific level\n"
                        "<w>:</w>      find branches and overflow\n"
                        "       temples in the dungeon\n"
                        "<w>;</w>      list known levels and counters\n"
-                       "<w>Ctrl-E</w> dump level builder information\n"
-#ifdef DEBUG
-                       // might be present in any save, but only generated
-                       // in debug builds; hide this for regular wizmode so as
-                       // to not confuse non-devs. The command will still work.
-                       "<w>Ctrl-L</w> show builder logs for level\n"
-#endif
-                       "\n"
-                       "<yellow>Other level related commands</yellow>\n"
                        "<w>{</w>      magic mapping\n"
-                       "<w>b</w>      controlled blink\n"
-                       "<w>B</w>      controlled teleport\n"
-                       "<w>~</w>      go to a specific level\n"
-                       "<w>u</w>/<w>d</w>    shift up/down one level\n"
-                       "<w>e</w>      trigger explore traps\n"
-                       "<w>Ctrl-B</w> banish yourself to the Abyss\n"
-                       "<w>Ctrl-S</w> change Abyss speed\n"
-                       "<w>R</w>      change monster spawn rate\n"
-                       "<w>Ctrl-W</w> change Shoals' tide speed\n",
+                       "<w>Ctrl-W</w> change Shoals' tide speed\n"
+                       "<w>Ctrl-E</w> dump level builder information\n"
+                       "<w>Ctrl-R</w> regenerate current level\n"
+                       "<w>P</w>      create a level based on a vault\n",
                        true);
 
     cols.add_formatted(1,
@@ -476,6 +453,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-G</w> save/load ghost (bones file)\n"
 #endif
                        "<w>h</w>/<w>H</w>    heal yourself (super-Heal)\n"
+                       "<w>e</w>      set hunger state\n"
                        "<w>X</w>      make Xom do something now\n"
                        "<w>z</w>      cast spell by number/name\n"
                        "<w>!</w>      memorise spell\n"
@@ -493,6 +471,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "\n"
                        "<yellow>Item related commands</yellow>\n"
                        "<w>a</w>      acquirement\n"
+                       "<w>C</w>      (un)curse item\n"
                        "<w>i</w>/<w>I</w>    identify/unidentify inventory\n"
                        "<w>y</w>/<w>Y</w>    id/unid item types+level items\n"
                        "<w>o</w>/<w>%</w>    create an object\n"
@@ -501,7 +480,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-V</w> show gold value of an item\n"
                        "<w>-</w>      get a god gift\n"
                        "<w>|</w>      create all unrand artefacts\n"
-                       "<w>Ctrl-\\</w> create all unrands / fallbacks\n"
                        "<w>+</w>      make randart from item\n"
                        "<w>'</w>      list items\n"
                        "<w>J</w>      Jiyva off-level sacrifice\n"
@@ -530,10 +508,7 @@ int list_wizard_commands(bool do_redraw_screen)
 
     int key = show_keyhelp_menu(cols.formatted_lines());
     if (do_redraw_screen)
-    {
         redraw_screen();
-        update_screen();
-    }
     return key;
 }
 #endif // defined(WIZARD)

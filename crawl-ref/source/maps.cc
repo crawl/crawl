@@ -12,7 +12,7 @@
 #include <cstring>
 #include <sys/param.h>
 #include <sys/types.h>
-#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
+#ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
 
@@ -29,7 +29,6 @@
 #include "state.h"
 #include "stringutil.h"
 #include "syscalls.h"
-#include "tag-version.h"
 #include "terrain.h"
 
 #ifndef BYTE_ORDER
@@ -83,15 +82,6 @@ dgn_map_parameters::dgn_map_parameters(const string_vector &parameters)
     map_parameters = parameters;
 }
 
-static bool _debug_ignore_depth = false;
-
-// This is useful only in very unusual debugging cases; see e.g. the
-// placement.lua placement testing script
-void dgn_ignore_depth(bool b)
-{
-    _debug_ignore_depth = b;
-}
-
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************* */
 
 // Remember (!!!) - if a member of the monster array isn't specified
@@ -140,17 +130,7 @@ static map_section_type _write_vault(map_def &mdef,
             break;
 
         if (!_resolve_map(place.map))
-        {
-            // for most fatal errors, there's no point in trying again. (This
-            // isn't 100% true, e.g. an error in an itemspec that's hidden
-            // behind a random roll may fix itself. But it's true enough that
-            // it's better on average to consider this map bugged and move
-            // on to another one in normal generation.)
-            if (crawl_state.last_builder_error_fatal)
-                break;
-            else
-                continue;
-        }
+            continue;
 
         // Must set size here, or minivaults will not be placed correctly.
         place.size = place.map.size();
@@ -188,9 +168,7 @@ static bool _resolve_map_lua(map_def &map)
         if (crawl_state.map_stat_gen)
             mapstat_report_error(map, err);
 #endif
-        crawl_state.last_builder_error = err;
-        crawl_state.last_builder_error_fatal = true;
-        mprf(MSGCH_ERROR, "Fatal lua error: %s", err.c_str());
+        mprf(MSGCH_ERROR, "Lua error: %s", err.c_str());
         return false;
     }
 
@@ -198,19 +176,13 @@ static bool _resolve_map_lua(map_def &map)
     err = map.resolve();
     if (!err.empty())
     {
-        crawl_state.last_builder_error = err;
-        crawl_state.last_builder_error_fatal = true;
-        mprf(MSGCH_ERROR, "Map resolution error: %s", err.c_str());
+        mprf(MSGCH_ERROR, "Error: %s", err.c_str());
         return false;
     }
 
-    // this is non-fatal: maps use validation to enforce basic placement
-    // constraints, and a failure here should mean retrying
     if (!map.test_lua_validate(false))
     {
-        crawl_state.last_builder_error = make_stringf(
-            "Lua validation for map %s failed.", map.name.c_str());
-        dprf("%s", crawl_state.last_builder_error.c_str());
+        dprf("Lua validation for map %s failed.", map.name.c_str());
         return false;
     }
 
@@ -393,7 +365,7 @@ static bool _may_overwrite_feature(const coord_def p,
     if (Vault_Placement_Mask && player_in_branch(BRANCH_ABYSS))
         return true;
 
-    const dungeon_feature_type grid = env.grid(p);
+    const dungeon_feature_type grid = grd(p);
 
     // Deep water grids may be overwritten if water_ok == true.
     if (grid == DNGN_DEEP_WATER)
@@ -452,15 +424,6 @@ static bool _map_safe_vault_place(const map_def &map,
     const bool vault_can_replace_portals =
         map.has_tag("replace_portal");
 
-    // respect smaller builder levels
-    if (c.x < (GXM - dgn_builder_x()) / 2
-        || c.x + size.x - 1 > (GXM + dgn_builder_x()) / 2
-        || c.y < (GYM - dgn_builder_y()) / 2
-        || c.y + size.y - 1 > (GYM + dgn_builder_y()) / 2)
-    {
-        return false;
-    }
-
     const vector<string> &lines = map.map.get_lines();
     for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)
     {
@@ -484,7 +447,7 @@ static bool _map_safe_vault_place(const map_def &map,
                     return false;
             }
         }
-        else if (env.grid(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO
+        else if (grd(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO
                                        || _is_transporter_place(cp))
         {
             // Don't place overwrite_floor_cell vaults on anything but floor or
@@ -501,7 +464,7 @@ static bool _map_safe_vault_place(const map_def &map,
             return false;
 
         // Don't overwrite monsters or items, either!
-        if (monster_at(cp) || env.igrid(cp) != NON_ITEM)
+        if (monster_at(cp) || igrd(cp) != NON_ITEM)
             return false;
 
         // If in Slime, don't let stairs end up next to minivaults,
@@ -510,7 +473,7 @@ static bool _map_safe_vault_place(const map_def &map,
         {
             for (adjacent_iterator ai(cp); ai; ++ai)
             {
-                if (map_bounds(*ai) && feat_is_stair(env.grid(*ai)))
+                if (map_bounds(*ai) && feat_is_stair(grd(*ai)))
                     return false;
             }
         }
@@ -557,8 +520,8 @@ coord_def find_portal_place(const vault_placement *place, bool check_place)
             if ((!check_place
                   || place && map_place_valid(place->map, v1, place->size))
                 && (!place || _connected_minivault_place(v1, *place))
-                && !feat_is_gate(env.grid(v1))
-                && !feat_is_branch_entrance(env.grid(v1)))
+                && !feat_is_gate(grd(v1))
+                && !feat_is_branch_entrance(grd(v1)))
             {
                 candidates.push_back(v1);
             }
@@ -728,10 +691,10 @@ static bool _map_matches_layout_type(const map_def &map)
 
 static bool _map_matches_species(const map_def &map)
 {
-    if (!species::is_valid(you.species))
+    if (you.species < 0 || you.species >= NUM_SPECIES)
         return true;
     return !map.has_tag("no_species_"
-           + lowercase_string(species::get_abbrev(you.species)));
+           + lowercase_string(get_species_abbrev(you.species)));
 }
 
 const map_def *find_map_by_name(const string &name)
@@ -767,14 +730,12 @@ mapref_vector find_maps_for_tag(const string &tag,
 {
     mapref_vector maps;
     level_id place = level_id::current();
-    unordered_set<string> tag_set = parse_tags(tag);
 
     for (const map_def &mapdef : vdefs)
     {
-        if (mapdef.has_all_tags(tag_set.begin(), tag_set.end())
+        if (mapdef.has_tag(tag)
             && !mapdef.has_tag("dummy")
-            && (!check_depth || _debug_ignore_depth
-                || !mapdef.has_depth()
+            && (!check_depth || !mapdef.has_depth()
                 || mapdef.is_usable_in(place))
             && (!check_used || !mapdef.map_already_used()))
         {
@@ -843,8 +804,7 @@ private:
                  bool _mini, maybe_bool _extra, bool _check_depth)
         : ignore_chance(false), preserve_dummy(false),
           sel(_typ), place(_pl), tag(_tag),
-          mini(_mini), extra(_extra),
-          check_depth(_check_depth),
+          mini(_mini), extra(_extra), check_depth(_check_depth),
           check_layout((sel == DEPTH || sel == DEPTH_AND_CHANCE)
                     && place == level_id::current())
     {
@@ -866,14 +826,6 @@ public:
     const bool check_layout;
 };
 
-static bool _overflow_range(level_id place)
-{
-    // Intentionally not checked for the minimum, this is to exclude
-    // depth selection for overflow temples as mini vaults before the
-    // MAX_OVERFLOW_LEVEL
-    return place.branch == BRANCH_DUNGEON && place.depth <= MAX_OVERFLOW_LEVEL;
-}
-
 bool map_selector::depth_selectable(const map_def &mapdef) const
 {
     return mapdef.is_usable_in(place)
@@ -884,8 +836,7 @@ bool map_selector::depth_selectable(const map_def &mapdef) const
            && !mapdef.has_tag("place_unique")
            && !mapdef.has_tag("tutorial")
            && (!mapdef.has_tag_prefix("temple_")
-               || !_overflow_range(place)
-                  && mapdef.has_tag_prefix("uniq_altar_"))
+               || mapdef.has_tag_prefix("uniq_altar_"))
            && _map_matches_species(mapdef)
            && (!check_layout || _map_matches_layout_type(mapdef));
 }
@@ -909,7 +860,7 @@ bool map_selector::accept(const map_def &mapdef) const
             return false;
         }
         return mapdef.is_minivault() == mini
-               && _is_extra_compatible(extra, mapdef.is_extra_vault())
+               && _is_extra_compatible(extra, mapdef.has_tag("extra"))
                && mapdef.place.is_usable_in(place)
                && _map_matches_layout_type(mapdef)
                && !mapdef.map_already_used();
@@ -918,7 +869,7 @@ bool map_selector::accept(const map_def &mapdef) const
     {
         const map_chance chance(mapdef.chance(place));
         return mapdef.is_minivault() == mini
-               && _is_extra_compatible(extra, mapdef.is_extra_vault())
+               && _is_extra_compatible(extra, mapdef.has_tag("extra"))
                && (!chance.valid() || mapdef.has_tag("dummy"))
                && depth_selectable(mapdef)
                && !mapdef.map_already_used();
@@ -931,13 +882,13 @@ bool map_selector::accept(const map_def &mapdef) const
         return chance.valid()
                && !mapdef.has_tag("dummy")
                && depth_selectable(mapdef)
-               && _is_extra_compatible(extra, mapdef.is_extra_vault())
+               && _is_extra_compatible(extra, mapdef.has_tag("extra"))
                && !mapdef.map_already_used();
     }
 
     case TAG:
-        return mapdef.has_all_tags(tag) // allow multiple tags, for temple overflow vaults
-               && (!check_depth || _debug_ignore_depth
+        return mapdef.has_tag(tag)
+               && (!check_depth
                    || !mapdef.has_depth()
                    || mapdef.is_usable_in(place))
                && _map_matches_species(mapdef)
@@ -973,8 +924,6 @@ void map_selector::announce(const map_def *vault) const
                  sel == TAG ? tag.c_str() : place.describe().c_str());
         }
     }
-#else
-    UNUSED(vault);
 #endif
 }
 
@@ -1283,8 +1232,8 @@ static bool verify_file_version(const string &file, time_t mtime)
     try
     {
         reader inf(fp);
-        const auto version = get_save_version(inf);
-        const auto major = version.major, minor = version.minor;
+        const uint8_t major = unmarshallUByte(inf);
+        const uint8_t minor = unmarshallUByte(inf);
         const int8_t word = unmarshallByte(inf);
         const int64_t t = unmarshallSigned(inf);
         fclose(fp);
@@ -1317,8 +1266,8 @@ static bool _load_map_index(const string& cache, const string &base,
     if (FILE *fp = fopen_u((base + ".lux").c_str(), "rb"))
     {
         reader inf(fp, TAG_MINOR_VERSION);
-        const auto version = get_save_version(inf);
-        const auto major = version.major, minor = version.minor;
+        uint8_t major = unmarshallUByte(inf);
+        uint8_t minor = unmarshallUByte(inf);
         int8_t word = unmarshallByte(inf);
         int64_t t = unmarshallSigned(inf);
         if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
@@ -1339,8 +1288,8 @@ static bool _load_map_index(const string& cache, const string &base,
 
     reader inf(fp, TAG_MINOR_VERSION);
     // Re-check version, might have been modified in the meantime.
-    const auto version = get_save_version(inf);
-    const auto major = version.major, minor = version.minor;
+    uint8_t major = unmarshallUByte(inf);
+    uint8_t minor = unmarshallUByte(inf);
     int8_t word = unmarshallByte(inf);
     int64_t t = unmarshallSigned(inf);
     if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION
@@ -1406,7 +1355,8 @@ static void _write_map_prelude(const string &filebase, time_t mtime)
 
     FILE *fp = fopen_u(luafile.c_str(), "wb");
     writer outf(luafile, fp);
-    write_save_version(outf, save_version::current());
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
     marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     lc_global_prelude.write(outf);
@@ -1422,7 +1372,8 @@ static void _write_map_full(const string &filebase, size_t vs, size_t ve,
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
     writer outf(cfile, fp);
-    write_save_version(outf, save_version::current());
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
     marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     for (size_t i = vs; i < ve; ++i)
@@ -1439,7 +1390,8 @@ static void _write_map_index(const string &filebase, size_t vs, size_t ve,
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
     writer outf(cfile, fp);
-    write_save_version(outf, save_version::current());
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
     marshallByte(outf, WORD_LEN);
     marshallSigned(outf, mtime);
     marshallShort(outf, ve > vs? ve - vs : 0);
@@ -1616,7 +1568,7 @@ static weighted_map_names _find_random_vaults(
     map_selector sel = map_selector::by_depth(place, wantmini, MB_MAYBE);
     sel.preserve_dummy = true;
 
-    msg::suppress mx;
+    no_messages mx;
     vault_indices filtered = _eligible_maps_for_selector(sel);
 
     for (int i = 0; i < 10000; ++i)

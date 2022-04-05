@@ -9,7 +9,6 @@
 
 #include "defines.h"
 #include "enum.h"
-#include "externs.h"
 #include "mon-mst.h"
 
 struct mon_spellbook
@@ -18,6 +17,8 @@ struct mon_spellbook
     vector<mon_spell_slot> spells;
 };
 
-mon_spellbook_type get_spellbook(const monster_info &mon);
-vector<mon_spell_slot> get_unique_spells(const monster_info &mon,
+typedef vector<vector<mon_spell_slot>> unique_books;
+
+vector<mon_spellbook_type> get_spellbooks(const monster_info &mon);
+unique_books get_unique_spells(const monster_info &mon,
                                mon_spell_slot_flags flags = MON_SPELL_NO_FLAGS);

@@ -195,19 +195,7 @@ example, don't use lua's `math.rand`, or C stdlib's `rand`.
 Try to avoid vault design elements that will lead to variable .des caches; any
 random choices made here will be outside of levelgen rng, and potentially
 set at the time the player first opens crawl. Especially try to avoid
-determining a set of tags for a map randomly using lua `tags` calls. If you
-must randomize tags, wrap your conditionals in a validating check. For lua,
-this usually looks like:
-
-    if not e.is_validating() and crawl.one_chance_in(25) then
-        e.tags("no_monster_gen")
-    end
-
-and for conditionalizing the TAGS field in a .des file, this looks like:
-
-    : if not is_validating() and crawl.coinflip() then
-    TAGS:    no_pool_fixup
-    : end
+determining a set of tags for a map randomly using lua `tags` calls.
 
 ## 4. Dealing with seed divergence
 
@@ -256,9 +244,9 @@ have found involve things where C++ or stdlib behavior is undefined and
 different compilers or build options (or OSs, perhaps) lead to different
 choices. The biggest example is the ordering of random calls in arithmetic
 expressions, discussed in section 4.1, so this is definitely the first thing
-to look for. The #crawl-dev population on Libera IRC in aggregate has pretty
-detailed knowledge of the C++ specs, so if you aren't sure whether somethig in
-particular is defined, this is a good place to ask.
+to look for. The ##crawl-dev population in aggregate has pretty detailed
+knowledge of the C++ specs, so if you aren't sure whether somethig in particular
+is defined, this is a good place to ask.
 
 Before opening the VM, however, if what you are seeing is a difference between
 your device and Travis CI results - keep in mind that Travis runs its tests

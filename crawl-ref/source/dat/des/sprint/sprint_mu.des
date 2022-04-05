@@ -161,13 +161,15 @@ ENDMAP
 # Entry 1, Forest
 NAME: sprint_mu_entry_forest
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
-MONS: patrolling endoplasm / patrolling rat
+MONS: patrolling ooze / patrolling rat
 MONS: patrolling rat w:20 / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
+ ration w:20, \
+ scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
  potion of mutation
@@ -192,13 +194,15 @@ ENDMAP
 # Entry 2, Cave
 NAME: sprint_mu_entry_cave
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
-MONS: patrolling endoplasm / patrolling rat
+MONS: patrolling ooze / patrolling rat
 MONS: patrolling rat w:20 / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
+ ration w:20, \
+ scroll of remove curse ident:all q:2 / scroll of remove curse q:1 / any scroll, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
  scroll of torment / scroll of holy word / scroll of immolation, \
  potion of mutation
@@ -228,7 +232,7 @@ TAGS: sprint_mu_temple no_rotate no_hmirror no_vmirror
 KFEAT: E = altar_elyvilon
 KFEAT: 1 = altar_the_shining_one
 KFEAT: Z = altar_zin
-KMONS: e = patrolling deep elf pyromancer ; long sword ego:holy_wrath
+KMONS: e = patrolling deep elf mage ; long sword ego:holy_wrath
 KITEM: e = potion of curing / potion of heal wounds
 KFEAT: B = altar_beogh
 KFEAT: O = altar_okawaru
@@ -270,6 +274,7 @@ KFEAT: l = altar_lugonu
 KFEAT: J = altar_jiyva
 KMONS: m = shadow
 KMONS: j = patrolling jelly
+KITEM: * = ration
 COLOUR: # = yellow
 KFEAT: # = closed_door
 : lua_marker('#', props_marker {
@@ -289,7 +294,7 @@ x...xxxxxx+
 x.f.xJlxm..
 x...xNGx...
 x+xxxXHx...
-x.s5xMCx...
+x.s5xMCx..*
 xVSKxQF+..j
 ENDMAP
 
@@ -409,15 +414,14 @@ ENDMAP
 # Elf 1, gauntlet
 NAME: sprint_mu_elf_gauntlet
 TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror
-MONS: deep elf knight / deep elf pyromancer w:15 / deep elf zephyrmancer w:15
+MONS: deep elf knight / deep elf mage w:30
 MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
       deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
-      w:2 deep elf pyromancer ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
-      w:2 deep elf zephyrmancer ; robe ego:poison_resistance | robe ego:cold_resistance | robe
+      w:5 deep elf mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
       deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf blademaster ; chain mail ego:cold_resistance /\
-      deep elf master archer ; chain mail ego:poison_resistance . longbow
+      deep elf master archer ; chain mail ego:poison_resistance . longbow . q:30 arrow
 NSUBST: $ = 1:b / 1:s / *:|
 : acq_on_sight(_G, 'b', {"book","book","wand"})
 : acq_on_sight(_G, 's', {"magical staff","jewellery","jewellery"})
@@ -447,10 +451,12 @@ ENDMAP
 NAME: sprint_mu_hive_nellie
 TAGS: sprint_mu_hive no_rotate no_hmirror no_vmirror
 KMONS: 1 = killer bee
+KITEM: 1 = ration / nothing w:20
 KMONS: 2 = queen bee
+KITEM: 2 = ration
 KMONS: 3 = generate_awake Nellie
 KITEM: 3 = demonic rune of zot
-: acq_on_sight(_G, '3', {"misc","wand"})
+: acq_on_sight(_G, '3', {"food","misc","wand"})
 NSUBST: 1 = 1:2 / *:1
 COLOUR: # = yellow
 KFEAT: # = closed_door
@@ -485,7 +491,7 @@ KMONS: P = plant / w:1 ballistomycete spore
 KMONS: p = plant
 KMONS: 1 = patrolling wandering mushroom
 KMONS: 2 = komodo dragon
-KMONS: 3 = cane toad
+KMONS: 3 = spiny frog
 KMONS: 4 = rime drake
 KMONS: 5 = swamp drake
 KMONS: v = blink frog
@@ -507,14 +513,16 @@ KMONS: g = tyrant leech
 KMONS: A = lindwurm
 KMONS: h = redback
 KMONS: i = hydra
-KMONS: j = patrolling spriggan ; q:5 dart ego:atropa | q:5 dart ego:datura
+KMONS: j = patrolling spriggan ; blowgun . q:5 needle ego:sleep | \
+ q:5 needle ego:paralysis | q:5 needle ego:frenzy
 KMONS: k = patrolling spriggan druid
 KMONS: q = electric eel
-KFEAT: q = shallow_water
+KFEAT: q = deep_water
 KMONS: r = hydra simulacrum / fire dragon simulacrum / polar bear simulacrum /\
  wolf simulacrum / black mamba simulacrum
 KITEM: r = any, any, any, any, any, superb_item / w:1 wand of acid /\
- w:1 wand of mindburst
+ w:1 wand of disintegration
+KITEM: % = ration
 KFEAT: _ = altar_fedhas
 KMONS: s = patrolling Urug
 KMONS: u = death drake
@@ -540,11 +548,11 @@ X.6px!!"!"!!!!tttttttx23tttttttttttttttttt
 X.68x!!!"!!!!!tttttttxxx+ttttttttttttttttt
 Xxx+xxxx+xxxxxxxtttttttthxx..xxWWWWWw.icrr
 X...........a...tttttg..xxhxx.xWWWWw..icrr
-Xx=mxxxxxxxxxxxx+ttttt.xxAxxhxx+WWWwwxxcc+
-X...xWp.b........ttttt..x.xx...xWq......*.
+Xx=mxxxxxxxxxxxx+ttttt.xxAxxhxx+WWqwwxxcc+
+X...xWp.b........ttttt..x.xx...xWw......*.
 X...=WW.fbxxxxxxxxttttt.xx.xx.sxw..=xxxccc
 Xee.mWWW..bf....dpptttt.xx.xxxxx...x....jk
-Xee.xWWWWpfbpp...dptttg....xxu.....xttt._j
+Xee.xWWWWpfbpp...dptttg....xxu.....xttt%_j
 ENDMAP
 
 ##############################################################################
@@ -558,7 +566,6 @@ SHUFFLE: 234
 SUBST: 4 = 45
 KFEAT: M = slimy_wall
 KFEAT: _ = altar_jiyva
-KITEM: _ = wand of digging ident:type
 KITEM: ! = slimy rune of zot
 SUBST: $ = ||*
 COLOUR: # = yellow
@@ -600,8 +607,8 @@ KMONS: 8 = anaconda
 SUBST: 5 = 5..
 SUBST: 5 = 5678
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop
-KFEAT: C = distillery shop / scroll shop
+KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: C = distillery shop / food shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 KITEM: $ = serpentine rune of zot
 COLOUR: #c = yellow
@@ -639,8 +646,8 @@ TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror
 MONS: Polyphemus, dream sheep, sea snake, Ilsuiw, merfolk javelineer
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop
-KFEAT: C = distillery shop / scroll shop
+KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: C = distillery shop / food shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 MARKER: X = lua:portal_desc { desc="open sea?" }
 COLOUR: X = blue
@@ -684,8 +691,8 @@ SUBST: p = 34.
 NSUBST: w = 2:? / *:w
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop
-KFEAT: C = distillery shop / scroll shop
+KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: C = distillery shop / food shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 MARKER: X = lua:portal_desc { desc="open sea?" }
 COLOUR: X = blue
@@ -758,8 +765,8 @@ SUBST: . = ...W
 SUBST: W = WWWW......p2
 KFEAT: ! = deep_water
 KFEAT: A = antique armour shop / antique weapon shop
-KFEAT: B = book shop / jewellery shop
-KFEAT: C = distillery shop / scroll shop
+KFEAT: B = book shop / jewellery shop / gadget shop
+KFEAT: C = distillery shop / food shop / scroll shop
 NSUBST: * = 1:A / 1:B / 1:C
 KITEM: $ = decaying rune of zot
 COLOUR: # = yellow
@@ -807,36 +814,36 @@ SUBST: P = PPPPPPPPP.
 : if d2rnd == 0 then
 KMONS: a = patrolling Sigmund hd:15 hp:100 \
  spells:bolt_of_fire.16.wizard;confuse.16.wizard;invisibility.16.wizard;\
-        force_lance.16.wizard \
+        iskenderun's_mystic_blast.16.wizard \
  ; scythe ego:distortion
 KMONS: b = patrolling Edmund hp:150 ; great mace ego:freezing \
- . dart ego:curare q:7
+ . blowgun . needle ego:curare q:7
 : elseif d2rnd == 1 then
 KMONS: a = patrolling Dowan hd:15 hp:100 \
  spells:bolt_of_cold.11.wizard;corona.11.wizard;blink_range.11.wizard;\
         bolt_of_fire.11.wizard;;haste_other.11.wizard;minor_healing.11.wizard \
  ; morningstar ego:distortion
 KMONS: b = patrolling Duvessa hp:150 ; great sword ego:freezing \
- . dart ego:curare q:7
+ . blowgun . needle ego:curare q:7
 : elseif d2rnd == 2 then
 KMONS: a = patrolling Harold hd:15 hp:100 \
  spells:poison_arrow.16.wizard;teleport_other.16.wizard;\
         minor_healing.16.wizard;slow.16.wizard \
  ; dire flail ego:distortion
 KMONS: b = patrolling Joseph hd:5 hp:150 ; quarterstaff ego:freezing \
- . dart ego:curare q:7
+ . blowgun . needle ego:curare q:7
 : else
 KMONS: a = patrolling Donald ; war axe ego:holy_wrath . scale mail \
- . kite shield ego:reflection
+ . shield ego:reflection
 KMONS: b = patrolling Frances ; war axe ego:holy_wrath \
- . dart ego:curare q:7
-: end
-KITEM: & = scroll of acquirement q:1 ident:all, \
+ . blowgun . needle ego:curare q:7
+:end
+KITEM: & = lamp of fire, scroll of acquirement q:1 ident:all, \
  scroll of acquirement q:1 ident:all / w:15 scroll of torment ident:all, \
  scroll of acquirement q:1 ident:all / w:25 scroll of torment ident:all
 NSUBST: L = 1:& / *:l
 KMONS: A = patrolling Azrael
-KITEM: " = any weapon, any armour, any wand, gold
+KITEM: " = any weapon, any armour, any wand, gold, ration
 
 MARKER:  ! = lua:fog_machine { \
                 pow_max = 15, delay_min = 100, delay_max = 150, \
@@ -851,12 +858,14 @@ SUBST: G : GtTUVY
 SUBST: Y : TUY
 KFEAT: i = antique weapon shop
 KFEAT: d = antique armour shop
+KFEAT: e = gadget shop
 KFEAT: f = book shop
+KFEAT: g = food shop
 KFEAT: h = jewellery shop
 KFEAT: j = distillery shop
 KFEAT: k = scroll shop
 KFEAT: * = any shop
-NSUBST: * = 1:i / 1:d / 1:f / 1:g / 1:h / 1:j / 1:k / *:*
+NSUBST: * = 1:i / 1:d / 1:e / 1:f / 1:g / 1:h / 1:j / 1:k / *:*
 COLOUR: Z = shimmer_blue
 KFEAT:  Z = closed_door
 MARKER: Z = lua:props_marker({ \
@@ -910,22 +919,24 @@ MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
       great mace ego:pain | great sword ego:venom .\
       chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
       scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
-      plate armour ego:fire_resistance . tower shield ego:reflection |\
-      kite shield ego:protection | tower shield ego:positive_energy
+      plate armour ego:fire_resistance . large shield ego:reflection |\
+      shield ego:protection | large shield ego:positive_energy
 MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
       titan / fire giant / frost giant
 MONS: skeletal warrior
 KMONS: 8 = obsidian statue
 KMONS: f = butterfly
-KMONS: U = Sojobo ; morningstar ego:vorpal . tower shield ego:reflection / \
-           Frederick ; trident ego:freezing . tower shield ego:reflection
+KMONS: U = Sojobo ; morningstar ego:vorpal . large shield ego:reflection / \
+           Frederick ; trident ego:freezing . large shield ego:reflection
 KMONS: C = generate_awake Chuck
-KMONS: k = yaktaur captain ; arbalest ego:chaos
+KMONS: k = yaktaur captain ; arbalest ego:chaos . bolt
 KMONS: b = bush
 KMONS: D = fire dragon
 NSUBST: $ = 1:1 / *:|
 NSUBST: D = 1:D / *:*
 NSUBST: a = 1:+ / *:v
+KFEAT: - = spear trap
+NSUBST: - = 3:- / *:.
 MARKER:  ! = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \
                 size = 2, size_buildup_amnt = 29, \
@@ -994,9 +1005,9 @@ vvvvvvv.+..v......v
       v.v..v......v
       v.+..v......v
       v.v..v......v
-      v.v..a......v
-      ~.v..v......v
-      v.vD.v......v
+      v.v..a.....-v
+      ~.v..v....--v
+      v.vD.v...---v
       vvvvvvvvvvv^v
 ENDMAP
 
@@ -1037,8 +1048,8 @@ KMONS: 7 = patrolling simulacrum
 SUBST: 1 = 1122334455667
 KITEM: 1234567 = star_item / nothing
 KFEAT: ^ = zot trap
-KFEAT: - = net trap
-NSUBST: ~ = 2:^ / 2:- / *:.
+KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
+NSUBST: ~ = 1:^ / 10:- / *:.
 SUBST: ! = +
 
 MAP
@@ -1059,6 +1070,8 @@ MONS: patrolling iron golem, patrolling necromancer
 MONS: patrolling hell knight, patrolling skeletal warrior
 KMONS: 5 = lich
 KITEM: 5 = star_item, star_item, star_item, star_item, star_item, star_item
+KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
+NSUBST: . = 6:- / *:.
 
 MAP
 vvvvvvvvvvvvvvvvv.v
@@ -1075,6 +1088,9 @@ ENDMAP
 NAME: sprint_mu_crypt_lich
 TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror
 MONS: ancient lich, skeletal warrior
+KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
+NSUBST: . = 10:- / *:.
+SUBST: : = .
 
 MAP
 ccccccccccccccccc.c
@@ -1083,7 +1099,7 @@ c**.mmm.....22.+..c
 c**.........22.+..c
 c||............c..c
 cccccccccccccccc..c
-c.................c
+c:::::::::::::::::c
 ENDMAP
 
 ##############################################################################
@@ -1092,9 +1108,9 @@ ENDMAP
 # Tomb 1, spiral
 NAME: sprint_mu_tomb_spiral
 TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror
-MONS: patrolling royal mummy, patrolling mummy priest
+MONS: patrolling greater mummy, patrolling mummy priest
 MONS: patrolling guardian mummy, patrolling sphinx
-KFEAT: - = net trap / zot trap / floor w:40
+KFEAT: - = needle trap / net trap / blade trap / bolt trap / spear trap / zot trap
 SUBST: . = -----.................332
 KITEM: $ = golden rune of zot
 KITEM: ? = scroll of acquirement ident:all q:5
@@ -1150,7 +1166,7 @@ KMONS: 2 = patrolling mara
 KMONS: 3 = molten gargoyle
 KMONS: 4 = patrolling titanic slime creature
 KMONS: 5 = mummy priest
-KMONS: f = skeletal warrior ; longbow ego:flaming
+KMONS: f = skeletal warrior ; longbow ego:flaming . arrow q:30
 KMONS: 6 = shadow wraith
 KMONS: g = ball lightning / ballistomycete spore
 KMONS: 7 = patrolling storm dragon
@@ -1170,12 +1186,12 @@ KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
  titan zombie
 KMONS: s = boris
 KMONS: t = col:white generate_awake statue name:pristine name_adjective \
-           hp:100 tile:mons_statue_crossbow ; javelin ego:silver
+           hp:100 tile:mons_statue_crossbow ; arbalest . bolt q:50 ego:silver
 KMONS: u = Mennas
 KMONS: y = generate_awake roxanne
 KMONS: z = oklob plant
-KFEAT: ! = armour shop / distillery shop
-KITEM: $ = wand of mindburst w:2 / potion of curing / star_item
+KFEAT: ! = gadget shop / armour shop / distillery shop / food shop
+KITEM: $ = any food / wand of disintegration w:2 / potion of curing / star_item
 KMONS: C = patrolling ice devil
 KMONS: D = patrolling hell beast
 KMONS: E = patrolling sun demon
@@ -1184,20 +1200,20 @@ KMONS: G = iron troll simulacrum hd:20
 KMONS: I = patrolling vault guard / patrolling orc knight / patrolling draconian knight /\
  patrolling deep elf knight
 KITEM: % = quad damage
-KFEAT: % = zot trap
+KFEAT: % = known zot trap
 KFEAT: J = deep_water
 SUBST: J = Jh
 KFEAT: h = deep_water
 KMONS: h = electric eel
 KMONS: K = executioner
-KMONS: M = patrolling yaktaur ; boomerang ego:dispersal q:10
+KMONS: M = patrolling yaktaur ; longbow . arrow ego:dispersal q:10
 KMONS: N = patrolling nessos
 KFEAT: ^ = net trap
 KFEAT: " = floor
 COLOUR: " = yellow
 MARKER: L = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 2, size_buildup_amnt = 2, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
 COLOUR: # = red
@@ -1229,11 +1245,11 @@ v......v+v+nv..v.v.v.v.v.v.v.v.
 v.I.I..v.+..+..+v.vqv.vqv.vqv.v
 v..I...v.vvvv..v.v.v.v.v.v.v.v.
 v.I.I..+.vKvvvvvvvvXXXXXXXXXXXX
-v......vvv.v.L.....X...o+AAAAX.
+v......vvv.v..L....X...o+AAAAX.
 v.bnb..v...v.......X....XAAAAX.
 v.b%n..+...+.......+....XAAAAX.
 v.bbb..v...v.....MMX....XAAAAX.
-v......vvv+v.L...MNX....XAAAAX.
+v......vvv+v.....MNX....XAAAAX.
 vvvvvvvv$..vvvvvvvvXijkmXAAAA+.
 ENDMAP
 
@@ -1266,6 +1282,9 @@ KITEM: * = superb_item, superb_item, superb_item
 KITEM: ? = star_item, star_item, scroll of enchant armour ident:all q:4
 : acq_on_sight(_G, '$', {"armour","armour"})
 KITEM: % = iron rune of zot
+KFEAT: ^ = blade trap
+NSUBST: ^ = 1:. / *:^
+SUBST: . = ......^
 COLOUR: # = cyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
@@ -1304,7 +1323,7 @@ KITEM: ? = superb_item, superb_item, scroll of enchant weapon ident:all q:6
 : acq_on_sight(_G, '!', {"weapon","weapon"})
 MARKER:  G = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \
-                size = 2, size_buildup_amnt = 10, \
+                size = 2, size_buildup_amnt = 29, \
                 size_buildup_time = 1000, cloud_type = "flame" }
 COLOUR: #vG = red
 KFEAT: # = closed_door
@@ -1335,7 +1354,7 @@ ENDMAP
 # Cocytus 1, islands
 NAME: sprint_mu_cocytus_islands
 TAGS: sprint_mu_cocytus no_rotate no_hmirror no_vmirror
-KMONS: 1 = patrolling Antaeus ; tower shield ego:reflection
+KMONS: 1 = patrolling Antaeus ; large shield ego:reflection
 KMONS: 2 = patrolling ice fiend
 KMONS: 3 = kraken simulacrum
 KFEAT: 3 = deep_water
@@ -1351,7 +1370,7 @@ KITEM: 1 = icy rune of zot
 KITEM: 2 = superb_item, star_item
 KMONS: ! = patrolling ice fiend
 KITEM: ! = potion of resistance ident:all q:3, \
-           potion of attraction ident:all q:3, potion of haste ident:all q:5
+           potion of agility ident:all q:3, potion of haste ident:all q:5
 COLOUR: #c = lightcyan
 KFEAT: # = closed_door
 MARKER: # = lua:props_marker({ \
@@ -1385,15 +1404,15 @@ KMONS: 1 = patrolling Khufu / patrolling Murray / patrolling Ereshkigal
 KMONS: 2 = patrolling guardian mummy
 KMONS: 3 = patrolling quasit
 KMONS: 4 = patrolling shadow
-KMONS: 5 = patrolling royal mummy
+KMONS: 5 = patrolling greater mummy
 KMONS: 6 = orange crystal statue
 KMONS: 7 = ghost moth
 KMONS: & = gloorx vloq
 NSUBST: & = 1:& / 1:.
 KITEM: 1 = bone rune of zot
-KMONS: % = patrolling royal mummy
+KMONS: % = patrolling greater mummy
 KITEM: % = superb_item, superb_item, star_item, star_item, any, any
-KMONS: ? = patrolling royal mummy
+KMONS: ? = patrolling greater mummy
 KITEM: ? = potion of curing ident:all q:2, potion of heal wounds ident:all q:8
 COLOUR: # = darkgrey
 COLOUR: c = lightgrey
@@ -1442,7 +1461,7 @@ MONS: Tiamat, yellow draconian stormcaller / yellow draconian shifter
 MONS: white draconian scorcher
 MARKER: i = lua:fog_machine { \
         pow_max = 10, delay_min = 100, delay_max = 150, \
-        size = 2, size_buildup_amnt = 7, \
+        size = 2, size_buildup_amnt = 15, \
         size_buildup_time = 1000, cloud_type = "freezing vapour" }
 MONS: patrolling storm dragon / patrolling electric golem
 MONS: red draconian stormcaller
@@ -1492,13 +1511,13 @@ MARKER: # = lua:props_marker({ \
         door_description_suffix=" to the Realm of Zot", \
         door_description_noun="gate", \
         veto_reason="You need three runes to open the Realm of Zot!", \
-        veto_destroy="veto" \
+        veto_shatter="veto", veto_dig="veto" \
         })
 MARKER: # = lua:lock_door {}
 MARKER: # = lua:restrict_door {}
 MARKER: ~ = lua:props_marker({ \
         door_description_prefix="magically reinforced ", \
-        veto_destroy="veto", door_restrict="veto" \
+        veto_shatter="veto", veto_dig="veto", door_restrict="veto" \
         })
 KPROP: X#kpq+^ag78yL45il%3x21*To$. = no_tele_into
 MAP

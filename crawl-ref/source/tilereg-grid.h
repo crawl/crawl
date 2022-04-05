@@ -1,12 +1,8 @@
 #ifdef USE_TILE_LOCAL
 #pragma once
 
-#include <vector>
-
 #include "tiledgnbuf.h"
 #include "tilereg.h"
-
-using std::vector;
 
 class InventoryTile
 {
@@ -15,7 +11,7 @@ public:
 
     // tile index
     tileidx_t tile;
-    // env.item/you.inv idx (depends on flag & TILEI_FLAG_FLOOR)
+    // mitm/you.inv idx (depends on flag & TILEI_FLAG_FLOOR)
     int idx;
     // quantity of this item (0-999 valid, >999 shows as 999, <0 shows nothing)
     short quantity;
@@ -51,7 +47,7 @@ protected:
 
     // Place the cursor and set idx with the index into m_items of the click.
     // If click was invalid, return false.
-    bool place_cursor(wm_mouse_event &event, unsigned int &idx);
+    bool place_cursor(MouseEvent &event, unsigned int &idx);
     unsigned int cursor_index() const;
     int add_quad_char(char c, int x, int y, int ox, int oy);
     void draw_number(int x, int y, int number);

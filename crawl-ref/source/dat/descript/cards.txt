@@ -22,12 +22,12 @@ Exile card
 The card depicts ceaseless hands from a yawning portal overcoming a panicked
 figure.
 
-Drawing this card can banish nearby creatures to the abyss, with more being banished
-at higher power levels. It will never banish the user.
+Drawing this card will banish one or more nearby creatures to the Abyss,
+possibly including the user.
 %%%%
 the Shaft card
 
-The card depicts a traveller plummeting into a chasm that has opened beneath
+The card depicts a traveler plummeting into a chasm that has opened beneath
 them.
 
 Drawing this card will create a shaft beneath the user, and possibly beneath
@@ -37,14 +37,15 @@ the Elixir card
 
 The card depicts a smug smile formed out of nine chalices.
 
-Drawing this card rapidly restores the user's health and magic.
+Drawing this card rapidly restores the user's health or magic, or both at high power
+levels. It will also heal their allies.
 %%%%
 the Cloud card
 
 The card depicts an iron gate enshrouded in mist.
 
-Drawing this card enshrouds the user's foes in rings of sight-blocking clouds.
-The duration of clouds produced will improve with card power.
+Drawing this card imprisons the user's foes in rings of clouds. The type of clouds
+produced will improve with card power.
 %%%%
 # Destruction
 Vitriol card
@@ -110,11 +111,12 @@ vast room.
 Drawing this card will summon a dancing weapon. Its quality, brand, and
 friendliness are all affected by card power.
 %%%%
-the Swarm card
+Foxfire card
 
-The card depicts a bear surrounded by a swarm of bees. It hums ominously.
+The card depicts a swamp at night, suffused with an eerie glow.
 
-Drawing this card will summon bees.
+Drawing this card will summon forth flying swarms. Some of their members may
+be hostile.
 %%%%
 the Rangers card
 
@@ -163,6 +165,14 @@ Torment card
 The card depicts a screaming figure being tortured on the rack.
 
 Drawing this card will cause agonising injury to the user.
+%%%%
+# cards for wizmode testing (&c)
+the Stairs card
+
+The card depicts water flowing down a set of stairs.
+
+Drawing this card makes staircases slide towards or away from the user. It is a
+bug if one ever finds it in a deck.
 %%%%
 # buggy cards
 a buggy card

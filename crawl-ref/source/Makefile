@@ -47,7 +47,6 @@
 #    USE_ICC       -- set to use Intel's compiler
 #    LTO           -- set for better optimization but slower compilation,
 #                     requires gcc4.6+
-#    NO_TRY_LLD    -- if set don't try to detect a working lld linker
 #    NO_TRY_GOLD   -- if set don't try to detect a working gold linker
 #    NOASSERTS     -- set to disable assertion checks (ignored in debug mode)
 #    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
@@ -66,20 +65,6 @@
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
 #    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
 #
-# For various mac build tricks oriented at release builds see the various
-# mac-app-* targets as well as the crawl-universal target. (For normal dev
-# circumstances, none of this is needed.)
-#
-# There are a number of #defines that may be useful for downstream packaging
-# or custom server setups. See AppHdr.h for more details. Of note:
-#
-#    VERSIONED_CACHE_DIR -- use a cache dir per version, rather than a shared
-#                           cache dir across versions. This may be useful for
-#                           reproducible builds, since the shared cache
-#                           directory makes use of mtimes.
-#
-# To set defines from the command line while building, use EXTERNAL_DEFINES.
-# E.g.: make EXTERNAL_DEFINES="-DVERSIONED_CACHE_DIR"
 #
 # Requirements:
 #    For tile builds, you need pkg-config.
@@ -88,12 +73,7 @@
 #    them; you can also ask for a package with convenience libraries instead --
 #    we'll try to provide them somewhere in the near future.
 
-# allow overriding GAME at the command line, intended for downstream packaging
-# processes. Not supported for MSYS2/cygwin builds, and will be overridden for
-# mac universal builds. This does not count as a change in build flags.
-ifndef GAME
-	GAME = crawl
-endif
+GAME = crawl
 
 # Disable GNU Make implicit rules and variables. Leaving them enabled will slow
 # down MinGW and Cygwin builds by a very VERY noticeable degree. Besides, we have
@@ -102,12 +82,9 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
-        clean-catch2 clean-plug-and-play-tests \
-		clean-coverage clean-coverage-full \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows-installer docs greet api api-dev android FORCE \
-        monster catch2-tests plug-and-play-tests \
-        crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7 clean-mac
+        build-windows package-windows docs greet api api-dev android FORCE \
+	monster
 
 include Makefile.obj
 
@@ -139,20 +116,8 @@ ifdef FORCE_SSE
 CFOTHERS += -mfpmath=sse -msse2
 endif
 
-CFWARN :=
+CFWARN := 
 CFWARN_L := -Wall -Wformat-security -Wundef
-
-# Exceptions:
-#  -Wmissing-field-initializers: need c++14 to set default struct fields
-#  -Wimplicit-fallthrough: need c++17 for [[fallthrough]]
-#  -Wtype-limits: mostly complains about ASSERT_RANGE, and _Pragma is buggy on
-#      old g++ anyway: re-enable when we bump the minimum g++ version
-#  -Wuninitialized: added later in this makefile, conditional on NO_OPTIMIZE
-CFWARN_L += -Wextra \
-	    -Wno-missing-field-initializers \
-	    -Wno-implicit-fallthrough \
-	    -Wno-type-limits \
-	    -Wno-uninitialized \
 
 DEFINES := $(EXTERNAL_DEFINES)
 
@@ -171,7 +136,6 @@ RM = rm -f
 COPY = cp
 COPY_R = cp -r
 STRIP = strip -s
-SED = sed
 WINDRES = windres
 CHMOD = chmod 2>/dev/null
 CHOWN = chown 2>/dev/null
@@ -183,11 +147,6 @@ DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
 DOXYGEN_HTML_GEN = html/
-# Prefer python3, if available
-PYTHON = python
-ifneq (, $(shell which python3 2>&1))
-	PYTHON = python3
-endif
 
 export AR
 export RANLIB
@@ -205,6 +164,10 @@ export uname_S
 #
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 uname_M := $(shell sh -c 'uname -m 2>/dev/null || echo not')
+uname_O := $(shell sh -c 'uname -o 2>/dev/null || echo not')
+uname_R := $(shell sh -c 'uname -r 2>/dev/null || echo not')
+uname_P := $(shell sh -c 'uname -p 2>/dev/null || echo not')
+uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 
 HOST := $(shell sh -c 'cc -dumpmachine || echo unknown')
 ARCH := $(HOST)
@@ -245,6 +208,7 @@ ifdef msys
 	GAME = crawl.exe
 	bin_prefix = .
 	WIN32 = Yes
+	NO_RDYNAMIC = YesPlease
 	NO_NCURSES = YesPlease
 	NEED_LIBW32C = YesPlease
 	BUILD_PCRE = YesPlease
@@ -265,64 +229,50 @@ ifdef msys
 	endif
 endif
 ifeq ($(uname_S),Darwin)
-ifdef MAC_TARGET
-	# for reasons I really cannot figure out, setting GAME later (when the
-	# other MAC_TARGET checks are done) really does not work.
-	GAME = crawl-$(MAC_TARGET)
-endif
-
 	STRIP := strip -x
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
+	NO_PKGCONFIG = Yes
+	BUILD_SQLITE = YesPlease
+	BUILD_ZLIB = YesPlease
 	ifdef TILES
-		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework CoreAudio -framework ForceFeedback -framework Carbon -framework IOKit -framework OpenGL -framework AudioToolbox -framework CoreVideo contrib/install/$(ARCH)/lib/libSDL2main.a
+		BUILD_FREETYPE = YesPlease
+		BUILD_SDL2 = YesPlease
+		BUILD_SDL2IMAGE = YesPlease
+		ifdef SOUND
+			ifndef WIN32 
+				BUILD_SDL2MIXER = YesPlease
+			endif
+		endif
+		BUILD_LIBPNG = YesPlease
 		COPY_FONTS = yes
 	endif
-	ifndef FORCE_PKGCONFIG
-		NO_PKGCONFIG = Yes
-		# is any of this stuff actually needed if NO_PKGCONFIG is set?
-		BUILD_SQLITE = YesPlease
-		BUILD_ZLIB = YesPlease
-		ifdef TILES
-			EXTRA_LIBS += contrib/install/$(ARCH)/lib/libSDL2main.a
-			BUILD_FREETYPE = YesPlease
-			BUILD_SDL2 = YesPlease
-			BUILD_SDL2IMAGE = YesPlease
-			ifdef SOUND
-				ifndef WIN32
-					BUILD_SDL2MIXER = YesPlease
-				endif
-			endif
-			BUILD_LIBPNG = YesPlease
-		endif
-	endif
+endif
+ifdef USE_ICC
+	NO_RDYNAMIC := YesPlease
 endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
+	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
 	# newlib doesn't provide Posix functions with c++11
 	STDFLAG = -std=gnu++11
 endif
 
 ifdef BUILD_ALL
-	ifdef TILES
-		BUILD_FREETYPE = YesPlease
-		BUILD_SDL2 = YesPlease
-		BUILD_SDL2IMAGE = YesPlease
-		BUILD_LIBPNG = YesPlease
-	endif
-	ifdef WEBTILES
-		BUILD_LIBPNG = YesPlease
-	endif
-
+	BUILD_FREETYPE = YesPlease
 	BUILD_PCRE = YesPlease
+	BUILD_SDL2 = YesPlease
+	BUILD_SDL2IMAGE = YesPlease
 	ifdef SOUND
-		ifndef WIN32
+		ifndef WIN32 
 			BUILD_SDL2MIXER = YesPlease
 		endif
 	endif
 	BUILD_SQLITE = YesPlease
 	BUILD_LUA = YesPlease
+	BUILD_LIBPNG = YesPlease
 	BUILD_ZLIB = YesPlease
 endif
 
@@ -342,6 +292,28 @@ else
 LIBLUA := contrib/install/$(ARCH)/lib/liblua.a
 endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
+
+ifndef CROSSHOST
+	# FreeBSD keeps all of its userland includes in /usr/local so
+	# look there
+	ifeq ($(uname_S),FreeBSD)
+		SQLITE_INCLUDE_DIR := /usr/local/include
+	else
+		SQLITE_INCLUDE_DIR := /usr/include
+	endif
+else
+	# This is totally wrong, works only with some old-style setups, and
+	# on some architectures of Debian/new FHS multiarch -- excluding, for
+	# example, i386.  Fortunately, i386 is rarely cross-compiled to.
+	# There's no support for /usr/local/ too, without thorough handholding.
+	# It's still an improvement over Crawl 0.8 which had no cross-compiling
+	# to non-win32 at all.
+	#
+	# Needs to be replaced by compile checks.  Guessing the paths is fragile,
+	# while the compiler knows them already.
+	SQLITE_INCLUDE_DIR := /usr/$(ARCH)/include
+endif
+SQLITE_LIB := -lsqlite3
 
 #
 # Set up the TILES variant
@@ -382,9 +354,7 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 else
 ifndef ANDROID
-ifneq ($(uname_S),Haiku)
 EXTRA_LIBS += -pthread
-endif
 endif
 endif
 
@@ -394,6 +364,12 @@ OBJECTS += libw32c.o
 else
 OBJECTS += libunix.o
 endif
+endif
+
+# To get stack trace symbols.
+# Note that MinGW doesn't support -rdynamic.
+ifndef NO_RDYNAMIC
+LDFLAGS += -rdynamic
 endif
 
 ifdef USE_MERGE_BASE
@@ -444,40 +420,22 @@ endif
 
 INCLUDES_L += -Iutil -I.
 
-
 ifdef APPLE_PLATFORM
 
-ifdef MAC_TARGET
-	# support mac cross-compiling. As of Apr 2021 on OS X 11, some example
-	# values for this that seem to work include:
-	#   x86_64-apple-macos10.7
-	#   x86_64-apple-macos10.12
-	#   arm64-apple-macos11
-	# leave MACOSX_MIN_VERSION unset, or there will be many warnings
-	CFLAGS_ARCH := -target $(MAC_TARGET)
-	# couldn't get setting GAME here to work?
+ifdef BUILD_UNIVERSAL
+# [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
+CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
+CFLAGS_DEPCC_ARCH := -arch i386
+NO_INLINE_DEPGEN := YesPlease
 else
-ifdef BUILD_OLD_UNIVERSAL
-	# XX can be removed?
-	# [ds] 10.4 SDK g++-4.0 + x86_64 runs into SDL compile issues.
-	CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
-	CFLAGS_DEPCC_ARCH := -arch i386
-	NO_INLINE_DEPGEN := YesPlease
-else
-	CFLAGS_ARCH := -arch $(uname_M)
-	MACOSX_MIN_VERSION=10.7
-endif
+CFLAGS_ARCH := -arch $(uname_M)
 endif
 
-# only set this when no -target is passed
-ifdef MACOSX_MIN_VERSION
-	CFLAGS_ARCH += -mmacosx-version-min=$(MACOSX_MIN_VERSION)
-	CFLAGS_DEPCC_ARCH += -mmacosx-version-min=$(MACOSX_MIN_VERSION)
-endif
-CC = $(GCC) $(CFLAGS_ARCH)
-CXX = $(GXX) $(CFLAGS_ARCH) -stdlib=libc++
-DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH))
-DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -stdlib=libc++
+MACOSX_MIN_VERSION=10.7
+CC = $(GCC) $(CFLAGS_ARCH) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+CXX = $(GXX) $(CFLAGS_ARCH) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+DEPCC = $(GCC) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -mmacosx-version-min=$(MACOSX_MIN_VERSION)
+DEPCXX = $(GXX) $(or $(CFLAGS_DEPCC_ARCH),$(CFLAGS_ARCH)) -stdlib=libc++ -mmacosx-version-min=$(MACOSX_MIN_VERSION)
 
 ifdef USE_ICC
 CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
@@ -589,12 +547,6 @@ ifdef LTO
   endif
 endif
 
-# To get stack trace symbols.
-# Note that Msys, MinGW, ICC, and Cygwin don't support -rdynamic.
-ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -rdynamic 2>&1))
-  LDFLAGS += -rdynamic
-endif
-
 # Okay, we have to assume we're on something else that
 # uses standard UNIX-like methods for finding libs.
 #
@@ -636,14 +588,20 @@ ifndef LUA_PACKAGE
     ifneq ($(USE_LUAJIT),)
       ifeq ($(shell $(PKGCONFIG) luajit --exists || echo no),)
         LUA_PACKAGE = luajit
+      else
+        BUILD_LUA = yes
       endif
     else
       ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
         ifneq ($(shell $(PKGCONFIG) lua-5.1 --exists || echo no),)
           ifneq ($(shell $(PKGCONFIG) lua51 --exists || echo no),)
-            ifeq ($(shell $(PKGCONFIG) lua --exists || echo no),)
+            ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
+              BUILD_LUA = yes
+            else
               ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
                 LUA_PACKAGE = lua
+              else
+                BUILD_LUA = yes
               endif
             endif
           else
@@ -658,10 +616,6 @@ ifndef LUA_PACKAGE
     endif
   endif
 endif
-ifndef LUA_PACKAGE
-  BUILD_LUA = yes
-endif
-
 ifndef BUILD_LUA
   ifndef LUA_PACKAGE
     LUA_PACKAGE = lua5.1
@@ -676,17 +630,14 @@ DEFINES_L += -DUSE_LUAJIT
 endif
 
 ifndef BUILD_SQLITE
-  ifdef NO_PKGCONFIG
+  ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+    # INCLUDES_L += -isystem $(SQLITE_INCLUDE_DIR)
+    LIBS += $(SQLITE_LIB)
+    ifneq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+      DEFINES_L += -DANCIENT_SQLITE
+    endif
+  else
     BUILD_SQLITE = yes
-  endif
-endif
-ifndef BUILD_SQLITE
- ifneq ($(shell $(PKGCONFIG) sqlite3 --exists || echo no),)
-   BUILD_SQLITE = yes
- else
-   INCLUDES_L += $(shell $(PKGCONFIG) sqlite3 --cflags-only-I | sed -e 's/-I/-isystem /')
-   CFLAGS_L += $(shell $(PKGCONFIG) sqlite3 --cflags-only-other)
-   LIBS += $(shell $(PKGCONFIG) sqlite3 --libs)
   endif
 endif
 
@@ -698,6 +649,7 @@ endif
 endif #ANDROID
 
 RLTILES = rltiles
+INCLUDES_L += -I$(RLTILES)
 
 ifdef WEBTILES
 DEFINES_L += -DUSE_TILE
@@ -748,7 +700,7 @@ SDL2_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sd
 endif
 
 ifdef SOUND
-ifndef WIN32
+ifndef WIN32 
 LIBS += -lSDL2_mixer
 endif
 endif
@@ -811,7 +763,6 @@ ifneq (,$(filter debug,$(MAKECMDGOALS)))
 	FULLDEBUG=YesPlease
 	DEBUG=YesPlease
 	NO_OPTIMIZE=YesPlease
-	COVERAGE=YesPlease
 endif
 
 # Debug-Lite
@@ -819,7 +770,6 @@ endif
 ifneq (,$(filter debug-lite,$(MAKECMDGOALS)))
 	DEBUG=YesPlease
 	NO_OPTIMIZE=YesPlease
-	COVERAGE=YesPlease
 endif
 
 # Profile
@@ -827,26 +777,10 @@ endif
 ifneq (,$(filter profile,$(MAKECMDGOALS)))
 	FULLDEBUG=YesPlease
 	DEBUG=YesPlease
-	COVERAGE=YesPlease
-endif
-
-# Unit tests
-ifneq (,$(filter catch2-tests,$(MAKECMDGOALS)))
-	COVERAGE=YesPlease
 endif
 
 ifdef HURRY
 	NO_OPTIMIZE=YesPlease
-endif
-
-ifdef COVERAGE
-    # GCC
-    ifeq ($(shell $(GXX) -v 2>&1|grep clang),)
-		CFOPTIMIZE_L = -fprofile-arcs -ftest-coverage
-    else
-    # Clang
-		CFOPTIMIZE_L = -fprofile-instr-generate -fcoverage-mapping
-    endif
 endif
 
 ifdef FULLDEBUG
@@ -1047,8 +981,9 @@ ifndef NO_PKGCONFIG
   NC_CFLAGS := $(subst -I,-isystem ,$(shell $(PKGCONFIG) --cflags $(NCURSESLIB) 2>/dev/null || echo "$(NC_CFLAGS)"))
 endif
 
-ifndef TILES
 CFOTHERS_L += $(NC_CFLAGS)
+
+ifndef TILES
 LIBS += $(NC_LIBS)
 endif
 
@@ -1056,7 +991,7 @@ endif
 
 ifdef BUILD_PCRE
 DEFINES += -DREGEX_PCRE
-else
+else 
   ifdef USE_PCRE
   DEFINES += -DREGEX_PCRE
   LIBS += -lpcre
@@ -1074,21 +1009,10 @@ CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
 endif
 
-LINKER_LDFLAG=
-ifndef NO_TRY_LLD
-ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-ld=lld 2>&1))
- LINKER_LDFLAG = -fuse-ld=lld
-endif
-endif
-ifeq ($(LINKER_LDFLAG),)
 ifndef NO_TRY_GOLD
 ifeq (,$(shell echo 'int main(){return 1;}'|$(GXX) -x c++ - -o /dev/null -fuse-ld=gold 2>&1))
-  LINKER_LDFLAG = -fuse-ld=gold
+  LDFLAGS += -fuse-ld=gold
 endif
-endif
-endif
-ifneq ($(LINKER_LDFLAG),)
-LDFLAGS += $(LINKER_LDFLAG)
 endif
 
 LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L) $(EXTERNAL_LDFLAGS)
@@ -1113,18 +1037,17 @@ endif
 
 ifneq ($(findstring s,$(MAKEFLAGS)),s)
 ifndef V
-        QUIET_CC          = @echo '   ' CC $@;
-        QUIET_CXX         = @echo '   ' CXX $@;
-        QUIET_PCH         = @echo '   ' PCH $@;
-        QUIET_LINK        = @echo '   ' LINK $@;
-        QUIET_GEN         = @echo '   ' GEN $@;
-        QUIET_COPY        = @echo '   ' COPY $@;
-        QUIET_DEPEND      = @echo '   ' DEPEND $@;
-        QUIET_WINDRES     = @echo '   ' WINDRES $@;
-        QUIET_HOSTCC      = @echo '   ' HOSTCC $@;
-        QUIET_PNGCRUSH    = @echo '   ' $(PNGCRUSH_LABEL) $@;
-        QUIET_ADVPNG      = @echo '   ' ADVPNG $@;
-        QUIET_PYTHON      = @echo '   ' PYTHON $@;
+        QUIET_CC       = @echo '   ' CC $@;
+        QUIET_CXX      = @echo '   ' CXX $@;
+        QUIET_PCH      = @echo '   ' PCH $@;
+        QUIET_LINK     = @echo '   ' LINK $@;
+        QUIET_GEN      = @echo '   ' GEN $@;
+        QUIET_COPY     = @echo '   ' COPY $@;
+        QUIET_DEPEND   = @echo '   ' DEPEND $@;
+        QUIET_WINDRES  = @echo '   ' WINDRES $@;
+        QUIET_HOSTCC   = @echo '   ' HOSTCC $@;
+        QUIET_PNGCRUSH = @echo '   ' $(PNGCRUSH_LABEL) $@;
+        QUIET_ADVPNG   = @echo '   ' ADVPNG $@;
         export V
 endif
 endif
@@ -1207,20 +1130,6 @@ INCLUDES_L += -isystem contrib/install/$(ARCH)/include
 LIBS += -Lcontrib/install/$(ARCH)/lib
 endif
 
-ifdef APPLE_PLATFORM
-# workaround: mac clang hardcodes (as far as I can tell) `-I /usr/local/include`
-# into the include path. Homebrew also installs into this directory. So a user
-# that has homebrew installed will get includes from there rather than contribs,
-# leading to build failures. This workaround relies on that if both -I and
-# -isystem are defined for the same path, then the -I version is ignored, which
-# effectively demotes this include path below the contrib -isystem paths.
-# TODO: it's not clear to me that using -isystem for contribs is at all the
-# right thing to do, since they are libraries we control, aren't actually
-# system libraries, and always take lower precedence than any -I that might be
-# caused by environment variables.
-INCLUDES_L += -isystem /usr/local/include
-endif
-
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 
 
@@ -1237,23 +1146,22 @@ RLTILES_CFLAGS := $(ALL_CFLAGS) -Wno-tautological-compare
 
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
-GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt $(DOC_BASE)/quickstart.txt
+GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/aptitudes-wide.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
 # Headers that need to exist before attempting to compile cc files
-GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h
+GENERATED_HEADERS := art-enum.h config.h mon-mst.h species-type.h job-type.h
 # All other generated files will be created later
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
-                   cmd-name.h species-data.h aptitudes.h species-groups.h
+                   cmd-name.h species-data.h aptitudes.h species-groups.h \
+                   job-data.h job-groups.h
 
 LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
-MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|$(SED) -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
+MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
 RECENT_TAG    := $(shell git describe --abbrev=0 --tags $(MERGE_BASE))
-WINARCH := $(shell $(GXX) -dumpmachine | grep -q x64_64 && echo win64 || echo win32)
 
 export SRC_VERSION
-export WINARCH
 
 # Update .ver file if SRC_VERSION has changed
 .ver: FORCE
@@ -1267,7 +1175,7 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 greet:
 	@if [ ! -e $(GAME) ]; then\
 		printf '  * %s\n' "If you experience any problems building Crawl, please take a second look"\
-		                  "at INSTALL.md: the solution to your problem just might be in there!";\
+		                  "at INSTALL.txt: the solution to your problem just might be in there!";\
 	fi
 
 docs: $(GENERATED_DOCS)
@@ -1289,12 +1197,7 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             psiweapon_kiku white_noise_entering_the_dungeon \
             white_noise_grabbing_the_orb pooryurik_knight \
             psiweapon_roxanne baconkid_gastronok baconkid_mnoleg \
-            peileppe_bloax_eye baconkid_duvessa_dowan ploomutoo_ijyb \
-            froggy_thunder_fist_nikola froggy_rune_and_run_failed_on_dis \
-            froggy_natasha_and_boris froggy_jiyva_felid \
-            froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
-            e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu \
-            kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust
+            peileppe_bloax_eye baconkid_duvessa_dowan
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
@@ -1317,21 +1220,6 @@ endif
 
 GAME_OBJS=$(OBJECTS) main.o $(EXTRA_OBJECTS)
 MONSTER_OBJS=$(OBJECTS) util/monster/monster-main.o $(EXTRA_OBJECTS)
-CATCH2_TEST_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) catch2-tests/test_main.o $(EXTRA_OBJECTS)
-
-
-ifneq (,$(filter plug-and-play-tests,$(MAKECMDGOALS)))
-    ifeq ("$(wildcard catch2-tests/test_plug_and_play.cc)","")
-$(info  ----------------------------------------------------------------)
-$(info  ERROR: 'catch2-tests_files/test_plug_and_play.cc' is not present)
-$(info  you must create a catch2-tests_files/test_plug_and_play.cc file)
-$(info  in order to use the 'make plug-and-play-tests' option. See )
-$(info  'docs/develop/test_plug_and_play_cc.txt' for more details.)
-$(info  ----------------------------------------------------------------)
-$(error See above ^ ^ ^ ^ ^ ^ ^)
-
-    endif
-endif
 
 # There might not have been any goals passed on the commandline, so...
 GOALS = $(or $(MAKECMDGOALS),$(.DEFAULT_GOAL))
@@ -1390,8 +1278,7 @@ DEPS := $(ALL_OBJECTS:.o=.d)
 # That rebuild will overwrite the stopgap .d file with a good one for
 # the next build.
 ifndef NEED_REBUILD
-  VALID_DEPS := $(shell checkdep () { \
-                          x_d="$$1"; \
+  VALID_DEPS := $(shell for x_d in $(DEPS); do \
                           x="$${x_d%%.d}"; x_cc="$${x}.cc"; x_o="$${x}.o"; \
                           if [ "$$x_cc" -ot "$$x_d" \
                                -a "$$x_d" -nt .cflags ]; \
@@ -1400,9 +1287,6 @@ ifndef NEED_REBUILD
                               || echo "$$x_o: FORCE" > "$$x_d"; \
                             echo "$$x_d"; \
                           fi; \
-                        }; \
-                        for x_d in $(DEPS); do \
-                          checkdep "$$x_d" & \
                         done)
 endif
 -include $(VALID_DEPS)
@@ -1431,11 +1315,6 @@ $(DOC_BASE)/aptitudes-wide.txt: $(DOC_TEMPLATES)/apt-tmpl-wide.txt species-data.
 
 $(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
 	$(QUIET_GEN)./util/FAQ2html.pl $< $@
-
-# Generate a .txt version because some servers need it
-# TODO: actually render this
-$(DOC_BASE)/quickstart.txt: $(DOC_BASE)/quickstart.md
-	$(QUIET_COPY)$(COPY) $< $@
 
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.rst util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
@@ -1537,14 +1416,13 @@ endif
 	mkdir -p $(datadir_fp)/dat/dist_bones
 	$(COPY) dat/dist_bones/* $(datadir_fp)/dat/dist_bones/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
-	$(COPY) ../docs/*.md $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
 	$(COPY) ../docs/license/*.txt $(datadir_fp)/docs/license/
 	$(COPY) ../CREDITS.txt $(datadir_fp)/docs/
 	$(COPY_R) ../settings/* $(datadir_fp)/settings/
 ifeq ($(GAME),crawl.exe)
-	$(SED) -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -or -iname '*.des'`
+	sed -i 's/$$/\r/' `find $(datadir_fp) -iname '*.txt' -o -iname '*.des'`
 endif
 ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
@@ -1594,8 +1472,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 endif
 
-clean: clean-rltiles clean-webserver clean-android clean-monster clean-catch2 \
-       clean-plug-and-play-tests clean-coverage-full clean-mac
+clean: clean-rltiles clean-webserver clean-android clean-monster
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1646,33 +1523,6 @@ install-monster: monster
 	if [ -f ~/source/announcements.log ]; then \
 	  echo 'Monster database of master branch on crawl.develz.org updated to: $(VERSION)' >>~/source/announcements.log;\
 	fi
-
-catch2-tests-executable: $(CATCH2_TEST_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
-	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(CATCH2_TEST_OBJECTS) -o catch2-tests-executable $(LIBS)
-
-CATCH2_PNP_OBJECTS = $(OBJECTS) catch2-tests/test_plug_and_play.o \
-                     catch2-tests/test_main.o $(EXTRA_OBJECTS)
-
-plug-and-play-tests: $(CATCH2_PNP_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
-	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(CATCH2_PNP_OBJECTS) -o $@ $(LIBS)
-
-catch2-tests: catch2-tests-executable
-	./catch2-tests-executable
-
-clean-coverage-full: clean-coverage
-	find . -type f -name '*.gcno' -delete
-
-clean-coverage:
-	$(RM) default.profraw default.profdata coverage.info coverage.profdata
-	find . -type f \( -name '*.gcda' -or -name '*.gcov' \) -delete
-	$(RM) -r coverage-html-report
-
-clean-catch2:
-	$(RM) catch2-tests-executable catch2-tests-executable.exe
-
-clean-plug-and-play-tests:
-	$(RM) plug-and-play-tests plug-and-play-tests.exe
-
 debug: all
 debug-lite: all
 profile: all
@@ -1706,21 +1556,6 @@ ifdef PCH
 CC_DEP := AppHdr.h.gch
 endif
 
-#
-# Header build rule: order before regular .o rule for backwards compatibility
-# with gnu make <3.82.
-#
-
-%.h.o: %.h | $(GENERATED_HEADERS)
-ifdef NO_INLINE_DEPGEN
-	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(STDFLAG) $(ALL_CFLAGS) -MT $*.o $< > $*.d
-endif
-	$(QUIET_CXX)$(CXX) $(STDFLAG) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -x c++-header -c $< -o $@
-ifndef NO_INLINE_DEPGEN
-	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
-endif
-
-
 # Plain old compilation
 #
 
@@ -1749,18 +1584,11 @@ ifndef NO_INLINE_DEPGEN
 	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
 endif
 
-icon.o: util/crawl.rc dat/tiles/stone_soup_icon.ico .cflags
+icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
 config.h: util/configure .cflags
 	${QUIET_GEN}util/configure "$(CXX)" $(STDFLAG) $(ALL_CFLAGS)
-
-#
-# Header build tests.
-#
-
-.PHONY: header-build-tests
-header-build-tests: $(HEADER_OBJECTS)
 
 #
 # Contribs
@@ -1787,7 +1615,7 @@ art-enum.h rltiles/dc-unrand.txt rltiles/tiledef-unrand.cc: art-data.h
 mon-mst.h: mon-spell.h util/gen-mst.pl
 	$(QUIET_GEN)util/gen-mst.pl
 
-cmd-name.h: command-type.h util/cmd-name.pl
+cmd-name.h: enum.h util/cmd-name.pl
 	$(QUIET_GEN)util/cmd-name.pl
 
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
@@ -1796,19 +1624,32 @@ dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 mi-enum.h: mon-info.h util/gen-mi-enum
 	$(QUIET_GEN)util/gen-mi-enum
 
-# species-gen.py creates multiple files at once. Ensure Make doesn't run it once
-# per target file by adding all the files into a single dependency chain.
-# Ref: https://stackoverflow.com/q/2973445
+# species-gen.py and job-gen.py create multiple files at once. Ensure Make
+# doesn't run them once per target file. https://stackoverflow.com/q/2973445
 species-data.h: dat/species/*.yaml util/species-gen.py util/species-gen/*.txt
-	$(QUIET_PYTHON)$(PYTHON) util/species-gen.py dat/species/ util/species-gen/ species-data.h aptitudes.h species-groups.h species-type.h
+	$(QUIET_GEN)util/species-gen.py dat/species/ util/species-gen/ species-data.h aptitudes.h species-groups.h species-type.h
+
 # no-op
 aptitudes.h: species-data.h
 	$(QUIET_GEN)
+
 # no-op
 species-groups.h: aptitudes.h
 	$(QUIET_GEN)
+
 # no-op
 species-type.h: species-groups.h
+	$(QUIET_GEN)
+
+job-data.h: dat/jobs/*.yaml util/job-gen.py util/job-gen/*.txt
+	$(QUIET_GEN)util/job-gen.py dat/jobs/ util/job-gen/ job-data.h job-groups.h job-type.h
+
+# no-op
+job-groups.h: job-data.h
+	$(QUIET_GEN)
+
+# no-op
+job-type.h: job-groups.h
 	$(QUIET_GEN)
 
 $(RLTILES)/dc-unrand.txt: art-data.h
@@ -1903,7 +1744,7 @@ package-tarball-nodeps: source
 	cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib --exclude simplebar.js $(PKG_SRC_DIR)
 
 package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
-	$(RM) -r build-win
+	rm -rf build
 
 removeold:
 	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
@@ -1914,13 +1755,13 @@ removeold:
 #
 
 # You need to have NSIS installed.
-package-windows-installer:
+package-windows:
 ifneq (x$(SRC_VERSION),x$(shell cat build-win/version.txt 2>/dev/null))
 	+$(MAKE) build-windows
 endif
-	makensis -NOCD -DVERSION=$(SRC_VERSION) -DWINARCH="$(WINARCH)" util/crawl.nsi
-	ln -sf "stone_soup-$(SRC_VERSION)-$(WINARCH)-installer.exe" "stone_soup-latest-$(WINARCH)-installer.exe"
-	$(RM) -r build-win
+	if $(GXX) -dumpmachine|grep -q x86_64; \
+	  then WINARCH=win64; else WINARCH=win32; fi; \
+	makensis -NOCD -DVERSION=$(SRC_VERSION) -DWINARCH="$$WINARCH" util/crawl.nsi
 
 build-windows:
 ifneq ($(GAME),crawl.exe)
@@ -1935,7 +1776,7 @@ endif
 	echo $(SRC_VERSION) >build-win/version.txt
 
 ZIP_DOCS=../../LICENSE
-package-windows-tiles:
+package-windows-zips:
 ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false
 endif
@@ -1943,60 +1784,16 @@ endif
 	+$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) FORCE_SSE=y install
 	cp -p $(ZIP_DOCS) build-win/stone_soup-tiles-$(MAJOR_VERSION)/
 	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-win32.zip *
-	if which advzip >/dev/null;then advzip -z3 stone_soup-$(SRC_VERSION)-tiles-win32.zip;fi
-	ln -sf stone_soup-$(SRC_VERSION)-tiles-win32.zip stone_soup-latest-tiles-win32.zip
-	$(RM) -r build-win
-
-package-windows-console:
-ifneq ($(GAME),crawl.exe)
-	@echo "This is only for Windows; please specify CROSSHOST.";false
-endif
-	+$(MAKE) clean
-	+$(MAKE) DESTDIR=build-win/stone_soup-console-$(MAJOR_VERSION) FORCE_SSE=y install
-	cp -p $(ZIP_DOCS) build-win/stone_soup-console-$(MAJOR_VERSION)/
-	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-console-win32.zip *
-	if which advzip >/dev/null;then advzip -z3 stone_soup-$(SRC_VERSION)-console-win32.zip;fi
-	ln -sf stone_soup-$(SRC_VERSION)-console-win32.zip stone_soup-latest-console-win32.zip
-	$(RM) -r build-win
-
-package-windows-zips: package-windows-tiles package-windows-console
+	rm -rf build-win
+	+$(MAKE) DESTDIR=build-win/stone_soup-$(MAJOR_VERSION) FORCE_SSE=y install
+	cp -p $(ZIP_DOCS) build-win/stone_soup-$(MAJOR_VERSION)/
+	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-win32.zip *
+	rm -rf build-win
+	if which advzip >/dev/null;then advzip -z4 stone_soup-$(SRC_VERSION)*-win32.zip;fi
 
 #############################################################################
 # Building Mac app bundles
 #
-# apple silicon universal builds: just brute-force this with submake commands.
-# I couldn't see a cleaner way to do this within the Makefile structure,
-# relative to my current knowledge of how this can be done: it requires
-# building binaries for each target and then merging them with the `lipo`
-# utility.
-
-# XX parameterise these in some less dumb way
-# these two targets rely heavily on passing flags to submakes
-crawl-x86_64-apple-macos10.7:
-ifeq ($(MAC_TARGET),)
-	+$(MAKE) MAC_TARGET=x86_64-apple-macos10.7
-endif
-
-crawl-arm64-apple-macos11:
-ifeq ($(MAC_TARGET),)
-	+$(MAKE) MAC_TARGET=arm64-apple-macos11
-endif
-
-crawl-universal:
-	# do these via submake so that -jn doesn't create havoc
-	+$(MAKE) crawl-arm64-apple-macos11
-	+$(MAKE) crawl-x86_64-apple-macos10.7
-	lipo -create -output crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7
-
-clean-mac:
-	$(RM) crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7
-
-# XX is there a way to make these just respect TILES=y and have only 2 targets?
-mac-app-tiles-universal: crawl-universal
-	+$(MAKE) -j1 -C mac -f Makefile.app-bundle tiles BUILD_UNIVERSAL=y
-
-mac-app-console-universal: crawl-universal
-	+$(MAKE) -j1 -C mac -f Makefile.app-bundle BUILD_UNIVERSAL=y
 
 mac-app-tiles: all
 	+$(MAKE) -j1 -C mac -f Makefile.app-bundle tiles

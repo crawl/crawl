@@ -25,6 +25,3 @@ struct game_ended_condition : public exception
     game_exit exit_reason;
     string message;
 };
-
-// Available for catch2-tests
-void delete_files();

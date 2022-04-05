@@ -12,7 +12,6 @@
 #include "env.h"
 #include "fprop.h"
 #include "losglobal.h"
-#include "mpr.h"
 #include "religion.h"
 #include "shout.h"
 #include "terrain.h"
@@ -38,18 +37,18 @@ static bool _allow_bleeding_on_square(const coord_def& where,
         return false;
 
     // No spattering into lava or water.
-    if (feat_is_lava(env.grid(where)) || feat_is_water(env.grid(where)))
+    if (feat_is_lava(grd(where)) || feat_is_water(grd(where)))
         return false;
 
     // No spattering into fountains (other than blood).
-    if (env.grid(where) == DNGN_FOUNTAIN_BLUE
-        || env.grid(where) == DNGN_FOUNTAIN_SPARKLING)
+    if (grd(where) == DNGN_FOUNTAIN_BLUE
+        || grd(where) == DNGN_FOUNTAIN_SPARKLING)
     {
         return false;
     }
 
     // The good gods like to keep their altars pristine.
-    if (is_good_god(feat_altar_god(env.grid(where))))
+    if (is_good_god(feat_altar_god(grd(where))))
         return false;
 
     return true;
@@ -121,18 +120,19 @@ static void _orient_wall_blood(const coord_def& where, coord_def from,
 
 static void _maybe_bloodify_square(const coord_def& where, int amount,
                                    bool spatter = false,
+                                   bool smell_alert = true,
                                    const coord_def& from = INVALID_COORD,
                                    const bool old_blood = false)
 {
     if (amount < 1)
         return;
 
-    int ignite_blood = you.get_mutation_level(MUT_IGNITE_BLOOD);
+    bool ignite_blood = you.get_mutation_level(MUT_IGNITE_BLOOD)
+                        && you.see_cell(where);
 
-    bool may_bleed = _allow_bleeding_on_square(where,
-                        ignite_blood > 0 && you.see_cell(where));
+    bool may_bleed = _allow_bleeding_on_square(where, ignite_blood);
 
-    if (ignite_blood && you.see_cell(where))
+    if (ignite_blood)
         amount *= 2;
 
     if (x_chance_in_y(amount, 20))
@@ -144,33 +144,38 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
             env.pgrid(where) |= FPROP_BLOODY;
             _orient_wall_blood(where, from, old_blood);
 
-            // Don't apply penance for involuntary cloud placement.
-            if (x_chance_in_y(ignite_blood, 3)
-                && you.see_cell(where)
+            if (ignite_blood
                 && !cell_is_solid(where)
                 && !cloud_at(where))
             {
-                int dur = 2 + ignite_blood + random2(2 * ignite_blood);
-                place_cloud(CLOUD_FIRE, where, dur, &you, -1, -1,
-                            false);
+                place_cloud(CLOUD_FIRE, where, 5 + random2(6), &you);
             }
         }
+
+        // The blood spilled can be detected via blood scent even if the
+        // spot it would fall is prevented from becoming bloodied (for
+        // example, because it is water)
+        if (smell_alert && in_bounds(where))
+            blood_smell(12, where);
 
         if (spatter)
         {
             // Smaller chance of spattering surrounding squares.
             for (adjacent_iterator ai(where); ai; ++ai)
-                _maybe_bloodify_square(*ai, amount/15, false, from, old_blood);
+            {
+                _maybe_bloodify_square(*ai, amount/15, false, true, from,
+                                       old_blood);
+            }
         }
     }
 }
 
-// Colour ground (and possibly adjacent squares) red. "damage" depends on damage
-// taken (or hitpoints, if damage higher), or, for butchering, on the number of
-// chunks possible to get out of a corpse.
+// Currently flavour only: colour ground (and possibly adjacent squares) red.
+// "damage" depends on damage taken (or hitpoints, if damage higher),
+// or, for sacrifices, on the number of chunks possible to get out of a corpse.
 void bleed_onto_floor(const coord_def& where, monster_type montype,
-                      int damage, bool spatter, const coord_def& from,
-                      const bool old_blood)
+                      int damage, bool spatter, bool smell_alert,
+                      const coord_def& from, const bool old_blood)
 {
     ASSERT_IN_BOUNDS(where);
 
@@ -185,7 +190,8 @@ void bleed_onto_floor(const coord_def& where, monster_type montype,
             return;
     }
 
-    _maybe_bloodify_square(where, damage, spatter, from, old_blood);
+    _maybe_bloodify_square(where, damage, spatter, smell_alert, from,
+                           old_blood);
 }
 
 void blood_spray(const coord_def& origin, monster_type montype, int level)
@@ -207,7 +213,7 @@ void blood_spray(const coord_def& origin, monster_type montype, int level)
 
             if (in_bounds(bloody) && cell_see_cell(origin, bloody, LOS_SOLID))
             {
-                bleed_onto_floor(bloody, montype, 99, false, origin);
+                bleed_onto_floor(bloody, montype, 99, false, true, origin);
                 break;
             }
         }

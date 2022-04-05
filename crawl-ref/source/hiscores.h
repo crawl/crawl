@@ -5,15 +5,8 @@
 
 #pragma once
 
-#include <vector>
-
 #include "god-type.h"
-#ifdef USE_TILE_WEB
-#include "json-wrapper.h"
-#endif
 #include "score-format-type.h"
-
-using std::vector;
 
 class scorefile_entry;
 
@@ -23,7 +16,8 @@ void logfile_new_entry(const scorefile_entry &se);
 
 void hiscores_read_to_memory();
 
-string hiscores_print_list(int display_count, int format, int newest_entry, int& start_out);
+string hiscores_print_list(int display_count = -1, int format = SCORE_TERSE,
+                         int newest_entry = -1);
 void hiscores_print_all(int display_count = -1, int format = SCORE_TERSE);
 void show_hiscore_table();
 
@@ -34,11 +28,8 @@ string hiscores_format_single_long(const scorefile_entry &se,
 void mark_milestone(const string &type, const string &milestone,
                     const string &origin_level = "", time_t t = 0);
 
-void update_whereis(const char *status = "active");
-
-#if defined(USE_TILE_WEB)
-void sync_last_milestone();
-void update_whereis_chargen(string name);
+#ifdef DGL_WHEREIS
+string xlog_status_line();
 #endif
 
 class xlog_fields
@@ -49,9 +40,6 @@ public:
 
     void init(const string &line);
     string xlog_line() const;
-#ifdef USE_TILE_WEB
-    JsonWrapper xlog_json() const;
-#endif
 
     void add_field(const string &key, PRINTF(2, ));
 
@@ -103,8 +91,8 @@ private:
     string      mapdesc;            // DESC: of the vault the player is in.
     string      killer_map;         // the vault (if any) that placed the killer
     int         final_hp;           // actual current HPs (probably <= 0)
-    int         final_max_hp;       // net HPs after drain
-    int         final_max_max_hp;   // gross HPs before drain
+    int         final_max_hp;       // net HPs after rot
+    int         final_max_max_hp;   // gross HPs before rot
     int         final_mp;           // actual current MP
     int         final_max_mp;       // max MP
     int         final_base_max_mp;  // max MP ignoring equipped items
@@ -144,8 +132,6 @@ private:
 
     int         scrolls_used;       // Number of scrolls used.
     int         potions_used;       // Number of potions used.
-    string      seed;               // Game seed: use string here for simplicity
-                                    // even though the seed is really uint64_t
 
     mutable unique_ptr<xlog_fields> fields;
 

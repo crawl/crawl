@@ -4,8 +4,6 @@
     Contains all the properties and methods common to monsters and players.
 */
 
-#pragma once
-
 /** \var CrawlHashTable actor::props
     \brief Properties hash table.
 

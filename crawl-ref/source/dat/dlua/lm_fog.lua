@@ -33,7 +33,7 @@
 -- pow_max: The maximum power of each cloud; must be provided.
 -- pow_rolls: The number of rolls of [pow_min, pow_max], with the average
 --     value uses; increasing the values makes the average value more likely
---     and extreme values less likely. Defaults to 3.
+--     and extreme values less likely. Defaults to 1.
 -- delay, delay_min and delay_max: The delay between laying down one cloud
 --     and the next.  10 is equal to normal-speed player turn. Either
 --     delay or delay_max and delay_min must be provided. Providing just
@@ -114,7 +114,6 @@ function FogMachine:new(pars)
   m.buildup_turns      = 0
 
   local tick_pars = {}
-  -- this allows params <= 0, but that value here is min'd to 1 in lm_trig.lua
   tick_pars.delay_min = pars.delay_min or pars.delay or 1
   tick_pars.delay_max = pars.delay_max or pars.delay
   tick_pars.type      = "turn"
@@ -183,8 +182,7 @@ function FogMachine:do_trigger(triggerer, marker, ev)
     if (self.buildup_turns > self.size_buildup_time) then
       self.buildup_turns = self.size_buildup_time
     end
-  -- arg1 is true iff we're loading a save, meaning we shouldn't reset countdowns.
-  elseif triggerer.type == "entered_level" and ev:arg1() ~= 1 then
+  elseif triggerer.type == "entered_level" then
     local et = dgn.dgn_event_type("turn")
     for _, trig_idx in ipairs(self.dgn_trigs_by_type[et]) do
       local trig = self.triggerers[trig_idx]
@@ -207,8 +205,7 @@ end
 function FogMachine:on_trigger(triggerer, marker, ev)
   if triggerer.type == 'turn' then
     self:do_fog(dgn.point(marker:pos()))
-  -- arg1 is true iff we're loading a save, meaning we shouldn't generate fog.
-  elseif triggerer.type == "entered_level" and ev:arg1() ~= 1 then
+  elseif triggerer.type == 'entered_level' then
     for i = 1, self.start_clouds do
       self:do_fog(dgn.point(marker:pos()))
     end

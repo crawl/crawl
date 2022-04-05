@@ -175,16 +175,28 @@ diezmará la resiliencia de aquellos que puedan sentirlo.
 
 Kikubaaqudgha puede elegir entre protegerte de ello... o no.
 %%%%
-Recall Undead Harvest ability
+Animate Remains ability
+
+Reanimas a un cadáver o esqueleto y lo conviertes en tu seguidor. Date cuenta
+de que los zombies y los esqueletos no pueden dejar el nivel donde fueron
+creados.
+%%%%
+Recall Undead Slaves ability
 
 Llama a tus seguidores no muertos desde cualquier lugar de la mazmorra hasta ti
+%%%%
+Animate Dead ability
+
+Reanimas a todos los cadáveres o esqueletos y los conviertes en tus seguidores.
+Date cuenta de que los zombies y los esqueletos no pueden dejar el nivel donde
+fueron creados.
 %%%%
 Drain Life ability
 
 Sanas puntos de vida absorbiendo la fuerza vital de los monstruos alrededor de
 ti.
 %%%%
-Bind Soul ability
+Enslave Soul ability
 
 Marcas el alma de un monstruo vivo y con inteligencia como lista para ser
 tomada. Cuando el monstruo marcado muera, su alma será tuya.
@@ -196,6 +208,10 @@ esclavizar un alma cada vez. Además, la duración de la marca es dependiente de
 nivel de Invocaciones.
 
 Las almas esclavizadas pueden seguirte más allá del nivel donde fueron creadas.
+%%%%
+Animate Remains or Dead ability
+
+Si lees esta descripción, ha ocurrido un error en el programa.
 %%%%
 Heroism ability
 
@@ -393,6 +409,20 @@ siguiente ser vivo o no-muerto golpeado en una baba neutral.
 Cure Bad Mutation ability
 
 Se elimina una mutación perjudicial al azar.
+%%%%
+Scrying ability
+
+Ganas visión astral para ver a través de los muros. Esto no es suficiente para
+permitirte apuntar hechizos o habilidades, incluso aquellos que funcionarían a
+través del vidrio.
+%%%%
+Transfer Knowledge ability
+
+Sacrifica una parte de una de tus capacidades para mejorar otra.
+%%%%
+End Transfer Knowledge ability
+
+Cancelas una transferencia de capacidades.
 %%%%
 Renounce Religion ability
 

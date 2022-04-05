@@ -7,7 +7,7 @@
 
 #ifdef USE_TILE
 
-#include "rltiles/tiledef_defines.h"
+#include "tiledef_defines.h"
 
 struct dolls_data;
 struct item_def;

@@ -10,9 +10,6 @@ function ($, comm, client, enums, util, options, ui) {
 
     function input_cleanup()
     {
-        document.removeEventListener("mousedown", input_mouse_control, true);
-        if (options.get("tile_web_mouse_control"))
-            ui.undisable_contextmenu();
         input_data = null;
     }
 
@@ -21,38 +18,8 @@ function ($, comm, client, enums, util, options, ui) {
         assert(input_data);
         if (input_data.type == "messages")
             return $("#messages .game_message input");
-        else if (input_data.type == "seed-selection")
-            return $(".seed-selection .seed-input input");
         else  //"generic"
             return $("#input_dialog input");
-    }
-
-    function input_mouse_control(ev)
-    {
-        // XX there's some dead space right under the message pane that this
-        // gets which is a bit unintuitive
-        if (ui.target_outside_game(ev)) // allow chat clicks
-            return;
-        if (options.get("tile_web_mouse_control") && ev.which == 3
-            && !$(ev.target).is(':input'))
-        {
-            // abort text input on right click outside of the input itself
-            comm.send_message("key", { keycode: 27 });
-            ev.preventDefault();
-        }
-        else
-        {
-            // Otherwise, refocus input. With mouse control off, this always
-            // happens.
-
-            // manually deactivate a chat focus trap. This is needed because the
-            // preventDefault below prevents auto-disabling, but without
-            // preventDefault, default focus handlers kick in.
-            if ($("#chat").hasClass("focus-trap"))
-                $("#chat")[0].focus_trap.deactivate();
-            find_input().focus();
-            ev.preventDefault();
-        }
     }
 
     function display_input()
@@ -86,18 +53,6 @@ function ($, comm, client, enums, util, options, ui) {
             $("#text_cursor").remove();
             prompt = $("#messages .game_message").last();
             prompt.append(input);
-            document.addEventListener("mousedown", input_mouse_control, true);
-            if (options.get("tile_web_mouse_control"))
-                ui.disable_contextmenu();
-        }
-        else if (input_data.type == "seed-selection")
-        {
-            // n.b. called from ui-layouts.js, not from client
-            var input_div = $(".seed-selection .seed-input").last();
-            if (prompt)
-                input_div.append($("<span>").append(prompt));
-            // TODO: what is this class?
-            input_div.append($("<span class='input_dialog_box'>").append(input));
         }
         else // "generic"
         {
@@ -136,11 +91,7 @@ function ($, comm, client, enums, util, options, ui) {
                 comm.send_message("key", { keycode: 11 });
             }
             comm.send_message("input", { text: text });
-            // seed-selection handles this on its own, because there is first
-            // a validation step -- the input loop only terminates on abort
-            // or if there is an actual number to be found.
-            if (input_data.type != "seed-selection")
-                close_input();
+            close_input();
         }
 
         input.keydown(function (ev) {
@@ -212,24 +163,6 @@ function ($, comm, client, enums, util, options, ui) {
                     return false;
                 }
             }
-            else if (input_data.type == "seed-selection")
-            {
-                var ch = String.fromCharCode(ev.which);
-                if (ch == "-"     // clear input
-                    || ch == "?"  // help
-                    || ch == "d") // daily seed
-                {
-                    comm.send_message("key", { keycode: ev.which });
-                    ev.preventDefault();
-                    return false;
-                }
-                // mimic keyfunc on crawl side: prevent non-numbers
-                if ("0123456789".indexOf(ch) == -1)
-                {
-                    ev.preventDefault();
-                    return false;
-                }
-            }
         });
     }
 
@@ -277,11 +210,8 @@ function ($, comm, client, enums, util, options, ui) {
             if (input)
             {
                 input.blur();
-                if (input_data.type == "messages"
-                    || input_data.type == "seed-selection")
-                {
+                if (input_data.type == "messages")
                     input.remove();
-                }
                 else // "generic"
                     ui.hide_popup();
             }
@@ -290,24 +220,9 @@ function ($, comm, client, enums, util, options, ui) {
         input_cleanup();
     }
 
-    function update_input(msg)
-    {
-        if (input_data)
-        {
-            var input = find_input();
-            if (input)
-            {
-                input.val(msg.input_text);
-                if (msg.select)
-                    input.select();
-            }
-        }
-    }
-
     comm.register_handlers({
         "init_input": init_input,
-        "close_input": close_input,
-        "update_input": update_input
+        "close_input": close_input
     });
 
 

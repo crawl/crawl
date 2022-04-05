@@ -18,13 +18,14 @@ aptitudes:
   slings: 2
   bows: 2
   armour: -3
-  dodging: 3
+  dodging: 4
   stealth: 5
   shields: -3
   unarmed_combat: -2
   spellcasting: 2
   conjurations: -3
   hexes: 2
+  charms: 4
   summoning: -2
   necromancy: -1
   translocations: 4
@@ -37,7 +38,7 @@ aptitudes:
 size: little
 str: 4
 int: 9
-dex: 10
+dex: 11
 levelup_stat_frequency: 5
 levelup_stats:
   - int
@@ -45,9 +46,11 @@ levelup_stats:
 mutations:
   1:
     MUT_FAST: 3
+    MUT_HERBIVOROUS: 1
     MUT_ACUTE_VISION: 1
+    MUT_SLOW_METABOLISM: 2
 recommended_jobs:
-  - JOB_BRIGAND
+  - JOB_ASSASSIN
   - JOB_ARTIFICER
   - JOB_ABYSSAL_KNIGHT
   - JOB_WARPER
@@ -58,6 +61,4 @@ recommended_jobs:
 recommended_weapons:
   - SK_SHORT_BLADES
   - SK_SLINGS
-# start TAG_MAJOR_VERSION == 34
 create_enum: false
-# end TAG_MAJOR_VERSION

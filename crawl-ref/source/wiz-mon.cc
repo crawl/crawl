@@ -14,7 +14,6 @@
 #include "areas.h"
 #include "cloud.h"
 #include "colour.h"
-#include "command.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "directn.h"
@@ -43,6 +42,7 @@
 #include "state.h"
 #include "stringutil.h"
 #include "terrain.h"
+#include "unwind.h"
 #include "view.h"
 #include "viewmap.h"
 
@@ -53,16 +53,10 @@
 void wizard_create_spec_monster_name()
 {
     char specs[1024];
-    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec) (? for help): ");
+    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec): ");
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
-        return;
-    }
-
-    if (!strcmp(specs, "?"))
-    {
-        show_specific_help("wiz-monster");
         return;
     }
 
@@ -128,14 +122,14 @@ void wizard_create_spec_monster_name()
     // ghost's stats, brand or level, among other things.
     if (mspec.type == MONS_PLAYER_GHOST)
     {
-        unsigned short idx = env.mgrid(place);
+        unsigned short idx = mgrd(place);
 
-        if (idx >= MAX_MONSTERS || env.mons[idx].type != MONS_PLAYER_GHOST)
+        if (idx >= MAX_MONSTERS || menv[idx].type != MONS_PLAYER_GHOST)
         {
             for (idx = 0; idx < MAX_MONSTERS; idx++)
             {
-                if (env.mons[idx].type == MONS_PLAYER_GHOST
-                    && env.mons[idx].alive())
+                if (menv[idx].type == MONS_PLAYER_GHOST
+                    && menv[idx].alive())
                 {
                     break;
                 }
@@ -149,18 +143,18 @@ void wizard_create_spec_monster_name()
             return;
         }
 
-        monster    &mon = env.mons[idx];
+        monster    &mon = menv[idx];
         ghost_demon ghost;
 
-        ghost.name = random_choose("John Doe", "Jane Doe", "Jay Doe");
+        ghost.name = "John Doe";
 
         char input_str[80];
         msgwin_get_line("Make player ghost which species? (case-sensitive) ",
                         input_str, sizeof(input_str));
 
-        species_type sp_id = species::from_abbrev(input_str);
+        species_type sp_id = get_species_by_abbrev(input_str);
         if (sp_id == SP_UNKNOWN)
-            sp_id = species::from_str(input_str);
+            sp_id = str_to_species(input_str);
         if (sp_id == SP_UNKNOWN)
         {
             mpr("No such species, making it Human.");
@@ -192,8 +186,8 @@ void wizard_create_spec_monster_name()
 
 static bool _sort_monster_list(int a, int b)
 {
-    const monster* m1 = &env.mons[a];
-    const monster* m2 = &env.mons[b];
+    const monster* m1 = &menv[a];
+    const monster* m2 = &menv[b];
 
     if (m1->alive() != m2->alive())
         return m1->alive();
@@ -239,7 +233,7 @@ void debug_list_monsters()
         if (invalid_monster_index(idx))
             continue;
 
-        const monster* mi(&env.mons[idx]);
+        const monster* mi(&menv[idx]);
         if (!mi->alive())
             continue;
 
@@ -410,14 +404,14 @@ void debug_stethoscope(int mon)
 
         if (!monster_at(stethpos))
         {
-            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", env.igrid(stethpos));
+            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", igrd(stethpos));
             return;
         }
 
-        i = env.mgrid(stethpos);
+        i = mgrd(stethpos);
     }
 
-    monster& mons(env.mons[i]);
+    monster& mons(menv[i]);
 
     // Print type of monster.
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
@@ -426,12 +420,13 @@ void debug_stethoscope(int mon)
          ((mons.attitude == ATT_HOSTILE)        ? "hostile" :
           (mons.attitude == ATT_FRIENDLY)       ? "friendly" :
           (mons.attitude == ATT_NEUTRAL)        ? "neutral" :
-          (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral"
+          (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral":
+          (mons.attitude == ATT_STRICT_NEUTRAL) ? "strictly neutral"
                                                 : "unknown alignment"));
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d(%d) WL=%d XP=%d SP=%d "
+         "HD=%d/%d (%u) HP=%d/%d AC=%d(%d) EV=%d(%d) MR=%d XP=%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.get_hit_dice(),
          mons.get_experience_level(),
@@ -439,7 +434,7 @@ void debug_stethoscope(int mon)
          mons.hit_points, mons.max_hit_points,
          mons.base_armour_class(), mons.armour_class(),
          mons.base_evasion(), mons.evasion(),
-         mons.willpower(),
+         mons.res_magic(),
          exper_value(mons),
          mons.speed, mons.speed_increment,
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
@@ -475,8 +470,8 @@ void debug_stethoscope(int mon)
          mons.behaviour,
          mons.foe == MHITYOU                      ? "you"
          : mons.foe == MHITNOT                    ? "none"
-         : env.mons[mons.foe].type == MONS_NO_MONSTER ? "unassigned monster"
-         : env.mons[mons.foe].name(DESC_PLAIN, true).c_str(),
+         : menv[mons.foe].type == MONS_NO_MONSTER ? "unassigned monster"
+         : menv[mons.foe].name(DESC_PLAIN, true).c_str(),
          mons.foe,
          mons.foe_memory,
          mons.target.x, mons.target.y,
@@ -490,7 +485,7 @@ void debug_stethoscope(int mon)
 
     // Print resistances.
     mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d "
-                            "acid=%d sticky=%s miasma=%s",
+                            "acid=%d sticky=%s rot=%s",
          mons.res_fire(),
          mons.res_cold(),
          mons.res_elec(),
@@ -498,7 +493,7 @@ void debug_stethoscope(int mon)
          mons.res_negative_energy(),
          mons.res_acid(),
          mons.res_sticky_flame() ? "yes" : "no",
-         mons.res_miasma() ? "yes" : "no");
+         mons.res_rotting() ? "yes" : "no");
 
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
@@ -537,8 +532,8 @@ void debug_stethoscope(int mon)
                 { MON_SPELL_MAGICAL,    "M" },
                 { MON_SPELL_WIZARD,     "W" },
                 { MON_SPELL_PRIEST,     "P" },
-                { MON_SPELL_VOCAL,      "V" },
                 { MON_SPELL_BREATH,     "br" },
+                { MON_SPELL_NO_SILENT,  "ns" },
                 { MON_SPELL_INSTANT,    "in" },
                 { MON_SPELL_NOISY,      "noi" },
             };
@@ -714,7 +709,7 @@ void wizard_give_monster_item(monster* mon)
     }
 
     int player_slot = prompt_invent_item("Give which item to monster?",
-                                          menu_type::drop, OSEL_ANY);
+                                          menu_type::drop, -1);
 
     if (prompt_failed(player_slot))
         return;
@@ -747,9 +742,9 @@ void wizard_give_monster_item(monster* mon)
 
 static void _move_player(const coord_def& where)
 {
-    if (!you.can_pass_through_feat(env.grid(where)))
+    if (!you.can_pass_through_feat(grd(where)))
     {
-        env.grid(where) = DNGN_FLOOR;
+        grd(where) = DNGN_FLOOR;
         set_terrain_changed(where);
     }
     move_player_to_grid(where, false);
@@ -770,16 +765,16 @@ static void _move_monster(const coord_def& where, int idx1)
     if (!moves.isValid || !in_bounds(moves.target))
         return;
 
-    monster* mon1 = &env.mons[idx1];
+    monster* mon1 = &menv[idx1];
 
-    const int idx2 = env.mgrid(moves.target);
+    const int idx2 = mgrd(moves.target);
     monster* mon2 = monster_at(moves.target);
 
     mon1->moveto(moves.target);
-    env.mgrid(moves.target) = idx1;
+    mgrd(moves.target) = idx1;
     mon1->check_redraw(moves.target);
 
-    env.mgrid(where) = idx2;
+    mgrd(where) = idx2;
 
     if (mon2 != nullptr)
     {
@@ -808,7 +803,7 @@ void wizard_move_player_or_monster(const coord_def& where)
 
     already_moving = true;
 
-    int idx = env.mgrid(where);
+    int idx = mgrd(where);
 
     if (idx == NON_MONSTER)
     {
@@ -930,7 +925,7 @@ void wizard_polymorph_monster(monster* mon)
         return;
     }
 
-    monster_polymorph(mon, type, PPT_SAME);
+    monster_polymorph(mon, type, PPT_SAME, true);
 
     if (!mon->alive())
     {
@@ -970,17 +965,16 @@ void debug_pathfind(int idx)
 #endif
     coord_def dest;
     level_pos ldest;
-    bool chose = show_map(ldest, false, false);
+    bool chose = show_map(ldest, false, true, false);
     dest = ldest.pos;
     redraw_screen();
-    update_screen();
     if (!chose)
     {
         canned_msg(MSG_OK);
         return;
     }
 
-    monster& mon = env.mons[idx];
+    monster& mon = menv[idx];
     mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
          mon.pos().x, mon.pos().y, dest.x, dest.y);
     monster_pathfind mp;
@@ -1018,7 +1012,6 @@ static void _miscast_screen_update()
 
     you.redraw_status_lights = true;
     print_stats();
-    update_screen();
 
 #ifndef USE_TILE_LOCAL
     update_monster_pane();
@@ -1033,7 +1026,7 @@ void debug_miscast(int target_index)
     if (target_index == NON_MONSTER)
         target = &you;
     else
-        target = &env.mons[target_index];
+        target = &menv[target_index];
 
     if (!target->alive())
     {
@@ -1049,8 +1042,8 @@ void debug_miscast(int target_index)
         return;
     }
 
-    spell_type spell  = spell_by_name(specs, true);
-    spschool school   = school_by_name(specs);
+    spell_type         spell  = spell_by_name(specs, true);
+    spschool school = school_by_name(specs);
 
     // Prefer exact matches for school name over partial matches for
     // spell name.
@@ -1091,9 +1084,9 @@ void debug_miscast(int target_index)
         mprf("Miscasting school %s.", spelltype_long_name(school));
 
     if (spell != SPELL_NO_SPELL)
-        mprf(MSGCH_PROMPT, "Enter fail: ");
+        mprf(MSGCH_PROMPT, "Enter spell_power,raw_spell_failure: ");
     else
-        mprf(MSGCH_PROMPT, "Enter level, fail: ");
+        mprf(MSGCH_PROMPT, "Enter miscast_level or spell_power,raw_spell_failure: ");
 
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
@@ -1101,15 +1094,15 @@ void debug_miscast(int target_index)
         return;
     }
 
-    int level = -1, fail = -1;
+    int level = -1, pow = -1, fail = -1;
 
     if (strchr(specs, ','))
     {
         vector<string> nums = split_string(",", specs);
-        level  = atoi(nums[0].c_str());
+        pow  = atoi(nums[0].c_str());
         fail = atoi(nums[1].c_str());
 
-        if (level <= 0 || fail <= 0)
+        if (pow <= 0 || fail <= 0)
         {
             canned_msg(MSG_OK);
             return;
@@ -1119,7 +1112,7 @@ void debug_miscast(int target_index)
     {
         if (spell != SPELL_NO_SPELL)
         {
-            mpr("Can only enter spell level for schools, not spells.");
+            mpr("Can only enter fixed miscast level for schools, not spells.");
             return;
         }
 
@@ -1129,9 +1122,9 @@ void debug_miscast(int target_index)
             canned_msg(MSG_OK);
             return;
         }
-        else if (level > 9)
+        else if (level > 3)
         {
-            mpr("Spell level can be at most 9.");
+            mpr("Miscast level can be at most 3.");
             return;
         }
     }
@@ -1145,6 +1138,42 @@ void debug_miscast(int target_index)
         return;
     }
 
+    // Suppress "nothing happens" message for monster miscasts which are
+    // only harmless messages, since a large number of those are missing
+    // monster messages.
+    nothing_happens nothing = nothing_happens::DEFAULT;
+    if (target_index != NON_MONSTER && level == 0)
+        nothing = nothing_happens::NEVER;
+
+    MiscastEffect *miscast;
+
+    if (spell != SPELL_NO_SPELL)
+    {
+        miscast = new MiscastEffect(target, target, {miscast_source::wizard},
+                                    spell, pow, fail, "", nothing);
+    }
+    else
+    {
+        if (level != -1)
+        {
+            miscast = new MiscastEffect(target, target,
+                                        {miscast_source::wizard}, school, level,
+                                        "wizard testing miscast", nothing);
+        }
+        else
+        {
+            miscast = new MiscastEffect(target, target,
+                                        {miscast_source::wizard}, school, pow,
+                                        fail, "wizard testing miscast",
+                                        nothing);
+        }
+    }
+    // Merely creating the miscast object causes one miscast effect to
+    // happen.
+    repeats--;
+    if (level != 0)
+        _miscast_screen_update();
+
     while (target->alive() && repeats-- > 0)
     {
         if (kbhit())
@@ -1154,16 +1183,12 @@ void debug_miscast(int target_index)
             break;
         }
 
-        if (spell != SPELL_NO_SPELL)
-            miscast_effect(spell, fail);
-        else
-        {
-            miscast_effect(*target, target, {miscast_source::wizard}, school,
-                           level, fail, "testing miscast");
-        }
-
-        _miscast_screen_update();
+        miscast->do_miscast();
+        if (level != 0)
+            _miscast_screen_update();
     }
+
+    delete miscast;
 }
 
 #ifdef DEBUG_BONES

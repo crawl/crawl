@@ -30,6 +30,7 @@
 **/
 static bool _orb_noise(const coord_def& where, int loudness)
 {
+    // XXX: Fake noisy doesn't work. Oops.
     fake_noisy(loudness, where);
 
     if (silenced(where))
@@ -76,12 +77,14 @@ void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, con
 
 /**
  * Is the Orb interfering with translocations?
- * @return True if the player is carrying the Orb or if the player is in Zot.
- *         Returns false otherwise.
+ * @param temp If true, consider temporary conditions.
+ * @return True if the player is carrying the Orb or, if we're considering
+ *         temporary conditions, if the player is in Zot. Returns false
+ *         otherwise.
  */
-bool orb_limits_translocation()
+bool orb_limits_translocation(bool temp)
 {
-    return player_in_branch(BRANCH_ZOT) || player_has_orb();
+    return temp && player_in_branch(BRANCH_ZOT) || player_has_orb();
 }
 
 void start_orb_run(game_chapter chapter, const char* message)

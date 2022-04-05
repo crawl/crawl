@@ -5,10 +5,6 @@
 
 #pragma once
 
-#include "monster-type.h"
-
-class monster;
-
 bool mons_is_tentacle_head(monster_type mc);
 bool mons_is_child_tentacle(monster_type mc);
 bool mons_is_child_tentacle_segment(monster_type mc);

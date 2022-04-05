@@ -59,6 +59,10 @@ faerie dragon scales
 가죽 때문에 요정 용은 멸종해버리고 말았다. 이 소중한 유물은, 요정 용이
 존재했었다는 것을 증명하기 위한 마지막 증거물일지도 모른다.
 %%%%
+demon blade "Bloodbane"
+
+귀신들린 검이다. 착용자는 피를 보고자 하는 광기에 휩싸이게 된다.
+%%%%
 scimitar of Flaming Death
 
 검에서 연기가 난다!
@@ -174,7 +178,7 @@ storm bow
 어두운 비구름 색의 이 활에서는, 번개가 친 곳에서 맡을 수 있는 오존 특유의
 냄새가 난다.
 %%%%
-tower shield of Ignorance
+large shield of Ignorance
 
 “그렇게 개방적인 사고방식은, 마치 빗장도 수비병도 없는 요새와도 같으니라.”
 %%%%
@@ -186,7 +190,7 @@ cloak of the Thief
 
 이 망토는 착용자에게 예술적으로 탁월한 도둑질 능력을 선사한다.
 %%%%
-tower shield "Bullseye"
+large shield "Bullseye"
 
 적에게 얻어맞을 경우를 위한, 완벽한 대비책.
 %%%%
@@ -206,6 +210,12 @@ robe of Misfortune
 cloak of Flash
 
 희미하게 진동이 느껴지는 망토다.
+%%%%
+boots of the Assassin
+
+암살자 조합에서 특별히 제작한 푹신한 장화이다. 이 장화는 착용자가 적을 더욱 잘
+파악하게 하여, 당신을 알아차리지 못한 적들의 약점을 찾아 공격하는 데 도움을
+준다.
 %%%%
 Lear's hauberk
 

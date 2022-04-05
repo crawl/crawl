@@ -85,6 +85,10 @@ Malheureusement, leurs couleurs vives firent leur perte, car elles alertaient
 leurs proies potentielles. Ils sont maintenant presque tous éteints, et cette
 précieuse relique est l'une des dernières preuves de leur existence.
 %%%%
+demon blade "Bloodbane"
+
+Elle porte la soif sanglante d'un fou inhumain.
+%%%%
 scimitar of Flaming Death
 
 Ça fume !
@@ -246,7 +250,7 @@ storm bow
 Cet arc a la couleur des nuages noirs chargés de pluie et l'odeur de l'ozone
 humide.
 %%%%
-tower shield of Ignorance
+large shield of Ignorance
 
 « Un esprit ouvert est comme une forteresse aux portes non verrouillées et sans
 garde. »
@@ -260,7 +264,7 @@ cloak of the Thief
 Elle permet à son porteur d'exceller dans l'art du vol, et peut être évoqué
 pour libérer d’épais nuages de fumée, fort utiles en cas de fuite.
 %%%%
-tower shield "Bullseye"
+large shield "Bullseye"
 
 Juste au cas où vous auriez du mal à vous faire toucher.
 %%%%
@@ -280,6 +284,12 @@ Une splendide robe souple, faite de fourrure et de soie.
 cloak of Flash
 
 Une cape vibrante.
+%%%%
+boots of the Assassin
+
+Des bottes souples, conçue spécialement par la Guilde des Assassins. Elles
+permettent au porteur de sentir la présence de victimes potentielles et le rend
+plus à même de trouver les points faibles de ses victimes.
 %%%%
 Lear's hauberk
 

@@ -11,8 +11,8 @@
 #include "arena.h"
 #include "artefact.h"
 #include "coordit.h"
+#include "directn.h"
 #include "env.h"
-#include "god-abil.h"
 #include "items.h"
 #include "message.h"
 #include "mgen-data.h"
@@ -24,6 +24,7 @@
 #include "stringutil.h"
 #include "terrain.h"
 #include "transform.h"
+#include "unwind.h"
 #include "view.h"
 
 static string _monster_clone_id_for(monster* mons)
@@ -99,7 +100,6 @@ static void _mons_summon_monster_illusion(monster* caster,
                        "woven by " + caster->name(DESC_THE));
         if (!clone->has_ench(ENCH_ABJ))
             clone->mark_summoned(6, true, MON_SUMM_CLONE);
-        clone->add_ench(ENCH_PHANTOM_MIRROR);
         clone->summoner = caster->mid;
 
         // Discard unsuitable enchantments.
@@ -205,7 +205,6 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
             _init_player_illusion_properties(
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
-            clone->add_ench(ENCH_PHANTOM_MIRROR);
         }
         else if (card_power >= 0)
             mpr("You see a puff of smoke.");
@@ -238,7 +237,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
         {
             if (in_bounds(*ai)
                 && !actor_at(*ai)
-                && monster_habitable_grid(mon, env.grid(*ai)))
+                && monster_habitable_grid(mon, grd(*ai)))
             {
                 square_found = true;
                 break;
@@ -278,7 +277,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious)
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
                     mon_attitude_type mon_att)
 {
-    // Is there an open slot in env.mons?
+    // Is there an open slot in menv?
     monster* mons = get_free_monster();
     coord_def pos(0, 0);
 
@@ -289,7 +288,7 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     {
         if (in_bounds(*ai)
             && !actor_at(*ai)
-            && monster_habitable_grid(orig, env.grid(*ai)))
+            && monster_habitable_grid(orig, grd(*ai)))
         {
             pos = *ai;
         }
@@ -306,26 +305,12 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     mons->attitude = mon_att;
 
     // The monster copy constructor doesn't copy constriction, so no need to
-    // worry about that. We do need to worry about the enchantments associated
-    // with direct constriction, though.
-    if (mons->has_ench(ENCH_VILE_CLUTCH))
-        mons->del_ench(ENCH_VILE_CLUTCH);
-
-    if (mons->has_ench(ENCH_GRASPING_ROOTS))
-        mons->del_ench(ENCH_GRASPING_ROOTS);
+    // worry about that.
 
     // Don't copy death triggers - phantom royal jellies should not open the
     // Slime vaults on death.
     if (mons->props.exists(MONSTER_DIES_LUA_KEY))
         mons->props.erase(MONSTER_DIES_LUA_KEY);
-
-    // Clear all duel-related keys from clones.
-    if (mons->props.exists(OKAWARU_DUEL_TARGET_KEY))
-    {
-        mons->props.erase(OKAWARU_DUEL_TARGET_KEY);
-        mons->props.erase(OKAWARU_DUEL_CURRENT_KEY);
-        mons->props.erase(OKAWARU_DUEL_ABANDONED_KEY);
-    }
 
     // Duplicate objects, or unequip them if they can't be duplicated.
     for (mon_inv_iterator ii(*mons); ii; ++ii)
@@ -335,14 +320,14 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
         const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
-            mons->unequip(env.item[old_index], false, true);
+            mons->unequip(mitm[old_index], false, true);
             mons->inv[ii.slot()] = NON_ITEM;
             continue;
         }
 
         mons->inv[ii.slot()] = new_index;
-        env.item[new_index] = env.item[old_index];
-        env.item[new_index].set_holding_monster(*mons);
+        mitm[new_index] = mitm[old_index];
+        mitm[new_index].set_holding_monster(*mons);
     }
 
     bool _obvious;
@@ -361,7 +346,6 @@ monster* clone_mons(const monster* orig, bool quiet, bool* obvious,
     {
         handle_seen_interrupt(mons);
         viewwindow();
-        update_screen();
     }
 
     if (crawl_state.game_is_arena())

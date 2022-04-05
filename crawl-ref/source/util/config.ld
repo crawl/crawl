@@ -20,6 +20,7 @@ file = {
 "../l-dgntil.cc",
 "../l-feat.cc",
 "../l-file.cc",
+"../l-food.cc",
 "../l-global.cc",
 "../l-item.cc",
 "../dat/dlua/iter.lua",

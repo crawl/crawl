@@ -7,24 +7,18 @@
 #include <sys/stat.h>
 
 #include "files.h"
-#include "jobs.h"
-#include "makeitem.h"
 #include "mon-info.h"
-#include "newgame.h"
-#include "ng-setup.h"
 #include "options.h"
 #include "syscalls.h"
 #include "tile-player-flag-cut.h"
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
 #endif
-#include "rltiles/tiledef-player.h"
-#include "tag-version.h"
+#include "tiledef-player.h"
 #include "tilemcache.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
 #include "transform.h"
-#include "unwind.h"
 
 dolls_data::dolls_data()
 {
@@ -292,14 +286,10 @@ void fill_doll_equipment(dolls_data &result)
         tileidx_t ch;
         switch (you.species)
         {
-#if TAG_MAJOR_VERSION == 34
-        case SP_CENTAUR:
-#endif
-        case SP_PALENTONGA: ch = TILEP_TRAN_STATUE_PALENTONGA;  break;
+        case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
         case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
-        case SP_DJINNI:  ch = TILEP_TRAN_STATUE_DJINN;    break;
         default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
@@ -307,37 +297,13 @@ void fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_HAIR]    = 0;
         result.parts[TILEP_PART_LEG]     = 0;
         break;
-    case transformation::storm:
-        switch (you.species)
-        {
-        case SP_FELID:    ch = TILEP_TRAN_STORM_FELID;       break;
-        case SP_OCTOPODE: ch = TILEP_TRAN_STORM_OCTOPODE;    break;
-        default:          ch = TILEP_TRAN_STORM_HUMANOID;    break;
-        }
-        result.parts[TILEP_PART_BASE]    = ch;
-        result.parts[TILEP_PART_HELM]    = 0;
-        result.parts[TILEP_PART_DRCHEAD] = 0;
-        result.parts[TILEP_PART_DRCWING] = 0;
-        result.parts[TILEP_PART_HAIR]    = 0;
-        result.parts[TILEP_PART_BEARD]   = 0;
-        result.parts[TILEP_PART_LEG]     = 0;
-        result.parts[TILEP_PART_BOOTS]   = 0;
-        result.parts[TILEP_PART_BODY]    = 0;
-        result.parts[TILEP_PART_ARM]     = 0;
-        result.parts[TILEP_PART_CLOAK]   = 0;
-        result.parts[TILEP_PART_SHADOW]  = 0;
-        break;
     case transformation::lich:
         switch (you.species)
         {
-#if TAG_MAJOR_VERSION == 34
-        case SP_CENTAUR:
-#endif
-        case SP_PALENTONGA: ch = TILEP_TRAN_LICH_PALENTONGA;  break;
+        case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
         case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
-        case SP_DJINNI:  ch = TILEP_TRAN_LICH_DJINN;    break;
         default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
         }
         result.parts[TILEP_PART_BASE]    = ch;
@@ -383,8 +349,7 @@ void fill_doll_equipment(dolls_data &result)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_OP;
-            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
-                     || Options.tile_use_monster == MONS_NATASHA)
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
                 result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND_FE;
             else result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
         }
@@ -401,8 +366,7 @@ void fill_doll_equipment(dolls_data &result)
         {
             if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
                 result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_OP;
-            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID)
-                     || Options.tile_use_monster == MONS_NATASHA)
+            else if (is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
                 result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND_FE;
             else result.parts[TILEP_PART_HAND2] = TILEP_HAND1_BLADEHAND;
         }
@@ -452,8 +416,6 @@ void fill_doll_equipment(dolls_data &result)
                     result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT;
                 }
             }
-            else if (species::is_draconian(you.species))
-                result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_DRAC;
             else
                 switch (you.get_mutation_level(MUT_HORNS))
                 {
@@ -512,7 +474,7 @@ void fill_doll_equipment(dolls_data &result)
             (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
     }
     // Draconian head/wings.
-    if (species::is_draconian(you.species))
+    if (species_is_draconian(you.species))
     {
         tileidx_t base = 0;
         tileidx_t head = 0;
@@ -533,36 +495,6 @@ void fill_doll_equipment(dolls_data &result)
     for (int i = 0; i < TILEP_PART_MAX; i++)
         if (result.parts[i] == TILEP_SHOW_EQUIP)
             result.parts[i] = 0;
-}
-
-void fill_doll_for_newgame(dolls_data &result, const newgame_def& ng)
-{
-    for (int j = 0; j < TILEP_PART_MAX; j++)
-        result.parts[j] = TILEP_SHOW_EQUIP;
-
-    unwind_var<player> unwind_you(you);
-    you = player();
-
-    // The following is part of the new game setup code from _setup_generic()
-    you.your_name  = ng.name;
-    you.species    = ng.species;
-    you.char_class = ng.job;
-    you.chr_class_name = get_job_name(you.char_class);
-
-    species_stat_init(you.species);
-    update_vision_range();
-    job_stat_init(you.char_class);
-    give_basic_mutations(you.species);
-    give_items_skills(ng);
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        auto &item = you.inv[i];
-        if (item.defined())
-            item_colour(item);
-    }
-
-    fill_doll_equipment(result);
 }
 
 // Writes equipment information into per-character doll file.
@@ -614,17 +546,6 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         p_order[6] = TILEP_PART_LEG;
     }
 
-    // Draw scarves above other clothing.
-    if (doll.parts[TILEP_PART_CLOAK] >= TILEP_CLOAK_SCARF_FIRST_NORM)
-    {
-        p_order[4] = p_order[5];
-        p_order[5] = p_order[6];
-        p_order[6] = p_order[7];
-        p_order[7] = p_order[8];
-        p_order[8] = p_order[9];
-        p_order[9] = TILEP_PART_CLOAK;
-    }
-
     // Special case bardings from being cut off.
     const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
                                         TILEP_BASE_NAGA);
@@ -636,14 +557,14 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_PALENTONGA);
+    const bool is_cent = is_player_tile(doll.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_CENTAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
         || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
-        flags[TILEP_PART_BOOTS] = is_ptng ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
     // Set up mcache data based on equipment. We don't need this lookup if both
@@ -654,16 +575,16 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     if (Options.tile_use_monster != MONS_0)
     {
         monster_info minfo(MONS_PLAYER, MONS_PLAYER);
-        minfo.props[MONSTER_TILE_KEY] = short(doll.parts[TILEP_PART_BASE]);
+        minfo.props["monster_tile"] = short(doll.parts[TILEP_PART_BASE]);
         item_def *item;
         if (you.slot_item(EQ_WEAPON))
         {
-            item = new item_def(get_item_known_info(*you.slot_item(EQ_WEAPON)));
+            item = new item_def(get_item_info(*you.slot_item(EQ_WEAPON)));
             minfo.inv[MSLOT_WEAPON].reset(item);
         }
         if (you.slot_item(EQ_SHIELD))
         {
-            item = new item_def(get_item_known_info(*you.slot_item(EQ_SHIELD)));
+            item = new item_def(get_item_info(*you.slot_item(EQ_SHIELD)));
             minfo.inv[MSLOT_SHIELD].reset(item);
         }
         tileidx_t mcache_idx = mcache.register_monster(minfo);

@@ -6,6 +6,7 @@
 
 #include "cio.h"
 #include "command.h"
+#include "food.h"
 #include "libutil.h"
 #include "nearby-danger.h"
 #include "player.h"
@@ -85,11 +86,11 @@ void MapRegion::pack_buffers()
 
     float pos_sx = (m_win_start.x - m_min_gx);
     float pos_sy = (m_win_start.y - m_min_gy);
-    float pos_ex = (m_win_end.x - m_min_gx);
-    float pos_ey = (m_win_end.y - m_min_gy);
+    float pos_ex = (m_win_end.x - m_min_gx) - 1 / (float)dx;
+    float pos_ey = (m_win_end.y - m_min_gy) - 1 / (float)dy;
 
-    set_transform(true);
-    m_buf_lines.add_square(pos_sx*dx, pos_sy*dy, pos_ex*dx + 1, pos_ey*dy + 1,
+    set_transform();
+    m_buf_lines.add_square(pos_sx, pos_sy, pos_ex, pos_ey,
                            Options.tile_window_col);
 }
 
@@ -110,7 +111,6 @@ void MapRegion::render()
     set_transform();
     glmanager->set_scissor(sx, sy, wx, wy);
     m_buf_map.draw();
-    set_transform(true);
     m_buf_lines.draw();
     glmanager->reset_scissor();
 }
@@ -194,7 +194,7 @@ void MapRegion::clear()
     m_buf_lines.clear();
 }
 
-int MapRegion::handle_mouse(wm_mouse_event &event)
+int MapRegion::handle_mouse(MouseEvent &event)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
         && !tiles.get_map_display())
@@ -221,21 +221,21 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
 
     switch (event.event)
     {
-    case wm_mouse_event::MOVE:
+    case MouseEvent::MOVE:
         if (m_far_view)
             tiles.load_dungeon(gc);
         return 0;
 #ifdef TOUCH_UI
-    case wm_mouse_event::WHEEL:
+    case MouseEvent::WHEEL:
         // ctrl-rolley-wheel on the minimap (this ensures busting out of minimap when zooming in again on very small layouts)
         if (event.mod & TILES_MOD_CTRL)
         {
-            tiles.zoom_dungeon(event.button == wm_mouse_event::SCROLL_UP);
+            tiles.zoom_dungeon(event.button == MouseEvent::SCROLL_UP);
             return CK_NO_KEY; // prevents this being handled by the dungeon underneath too(!)
         }
         return 0;
-    case wm_mouse_event::PRESS:
-        if (event.button == wm_mouse_event::LEFT)
+    case MouseEvent::PRESS:
+        if (event.button == MouseEvent::LEFT)
         {
             m_far_view = true;
             tiles.load_dungeon(gc);
@@ -247,13 +247,13 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
             }
         }
         return 0;
-    case wm_mouse_event::RELEASE:
-        if (event.button == wm_mouse_event::LEFT && m_far_view)
+    case MouseEvent::RELEASE:
+        if (event.button == MouseEvent::LEFT && m_far_view)
             m_far_view = false;
         return 0;
 #else
-    case wm_mouse_event::PRESS:
-        if (event.button == wm_mouse_event::LEFT)
+    case MouseEvent::PRESS:
+        if (event.button == MouseEvent::LEFT)
         {
             if (event.mod & TILES_MOD_SHIFT)
             {
@@ -261,7 +261,7 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
                 do_explore_cmd();
                 return CK_MOUSE_CMD;
             }
-            else if (!tiles.get_map_display())
+            else
             {
                 const int cmd = click_travel(gc, event.mod & TILES_MOD_CTRL);
                 if (cmd != CK_MOUSE_CMD)
@@ -270,7 +270,7 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
                 return CK_MOUSE_CMD;
             }
         }
-        else if (event.button == wm_mouse_event::RIGHT)
+        else if (event.button == MouseEvent::RIGHT)
         {
             m_far_view = true;
             tiles.load_dungeon(gc);
@@ -282,8 +282,8 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
             }
         }
         return 0;
-    case wm_mouse_event::RELEASE:
-        if (event.button == wm_mouse_event::RIGHT && m_far_view)
+    case MouseEvent::RELEASE:
+        if (event.button == MouseEvent::RIGHT && m_far_view)
             m_far_view = false;
         return 0;
 #endif
@@ -301,8 +301,11 @@ bool MapRegion::update_tip_text(string& tip)
     tip = "[L-Click] Enable map mode";
 #else
     tip = "[L-Click] Travel / [R-Click] View";
-    if (i_feel_safe())
+    if ((you.hunger_state > HS_STARVING || you_min_hunger())
+        && i_feel_safe())
+    {
         tip += "\n[Shift + L-Click] Autoexplore";
+    }
 #endif
     return true;
 }

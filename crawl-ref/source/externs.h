@@ -17,7 +17,6 @@
 #include <set>
 #include <stdexcept>
 #include <string>
-#include <sstream>
 #include <vector>
 
 #include "bitary.h"
@@ -25,6 +24,7 @@
 #include "dungeon-feature-type.h"
 #include "enum.h"
 #include "spell-type.h"
+#include "monster-type.h"
 #include "branch-type.h"
 #include "fixedarray.h"
 #include "kill-category.h"
@@ -38,15 +38,7 @@
 #include "shop-type.h"
 #include "cloud-type.h"
 #include "store.h"
-#include "rltiles/tiledef_defines.h"
-#include "tag-version.h"
-
-#include "coord-def.h"
-#include "item-def.h"
-#include "level-id.h"
-#include "monster-type.h"
-
-#include "ray.h"
+#include "tiledef_defines.h"
 
 struct tile_flavour
 {
@@ -90,7 +82,187 @@ class level_id;
 class map_marker;
 class actor;
 class player;
+class monster;
 class ghost_demon;
+
+typedef pair<coord_def, int> coord_weight;
+
+// Constexpr sign.
+template <typename Z> static constexpr Z sgn(Z x)
+{
+    return x < 0 ? -1 : (x > 0 ? 1 : 0);
+}
+
+// Constexpr absolute value.
+template <typename Z> static constexpr Z abs_ce(Z x)
+{
+    return x < 0 ? -x : x;
+}
+
+struct coord_def
+{
+    int         x;
+    int         y;
+
+    constexpr coord_def(int x_in, int y_in) : x(x_in), y(y_in) { }
+    constexpr coord_def() : coord_def(0,0) { }
+
+    void set(int xi, int yi)
+    {
+        x = xi;
+        y = yi;
+    }
+
+    void reset()
+    {
+        set(0, 0);
+    }
+
+    constexpr int distance_from(const coord_def &b) const
+    {
+        return (b - *this).rdist();
+    }
+
+    constexpr bool operator == (const coord_def &other) const
+    {
+        return x == other.x && y == other.y;
+    }
+
+    constexpr bool operator != (const coord_def &other) const
+    {
+        return !operator == (other);
+    }
+
+    constexpr bool operator <  (const coord_def &other) const
+    {
+        return x < other.x || (x == other.x && y < other.y);
+    }
+
+    constexpr bool operator >  (const coord_def &other) const
+    {
+        return x > other.x || (x == other.x && y > other.y);
+    }
+
+    const coord_def &operator += (const coord_def &other)
+    {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
+
+    const coord_def &operator += (int offset)
+    {
+        x += offset;
+        y += offset;
+        return *this;
+    }
+
+    const coord_def &operator -= (const coord_def &other)
+    {
+        x -= other.x;
+        y -= other.y;
+        return *this;
+    }
+
+    const coord_def &operator -= (int offset)
+    {
+        x -= offset;
+        y -= offset;
+        return *this;
+    }
+
+    const coord_def &operator /= (int div)
+    {
+        x /= div;
+        y /= div;
+        return *this;
+    }
+
+    const coord_def &operator *= (int mul)
+    {
+        x *= mul;
+        y *= mul;
+        return *this;
+    }
+
+    constexpr coord_def operator + (const coord_def &other) const
+    {
+        return { x + other.x, y + other.y };
+    }
+
+    constexpr coord_def operator + (int other) const
+    {
+        return *this + coord_def(other, other);
+    }
+
+    constexpr coord_def operator - (const coord_def &other) const
+    {
+        return { x - other.x, y - other.y };
+    }
+
+    constexpr coord_def operator -() const
+    {
+        return { -x, -y };
+    }
+
+    constexpr coord_def operator - (int other) const
+    {
+        return *this - coord_def(other, other);
+    }
+
+    constexpr coord_def operator / (int div) const
+    {
+        return { x / div, y / div };
+    }
+
+    constexpr coord_def operator * (int mul) const
+    {
+        return { x * mul, y * mul };
+    }
+
+    constexpr coord_def sgn() const
+    {
+        return coord_def(::sgn(x), ::sgn(y));
+    }
+
+    constexpr int abs() const
+    {
+        return x * x + y * y;
+    }
+
+    constexpr int rdist() const
+    {
+        // Replace with max(abs_ce(x), abs_ce(y) when we require C++14.
+        return abs_ce(x) > abs_ce(y) ? abs_ce(x) : abs_ce(y);
+    }
+
+    constexpr bool origin() const
+    {
+        return !x && !y;
+    }
+
+    constexpr bool zero() const
+    {
+        return origin();
+    }
+
+    constexpr bool equals(const int xi, const int yi) const
+    {
+        return *this == coord_def(xi, yi);
+    }
+};
+
+namespace std {
+    template <>
+    struct hash<coord_def>
+    {
+        constexpr size_t operator()(const coord_def& c) const
+        {
+            // lazy assumption: no coordinate will ever be bigger than 2^16
+            return (c.x << 16) + c.y;
+        }
+    };
+}
 
 constexpr coord_def INVALID_COORD {-1, -1};
 constexpr coord_def NO_CURSOR { INVALID_COORD };
@@ -147,6 +319,63 @@ DEF_ENUM_INC(monster_type);
 DEF_ENUM_INC(spell_type);
 DEF_ENUM_INC(skill_type);
 
+struct cloud_struct
+{
+    coord_def     pos;
+    cloud_type    type;
+    int           decay;
+    uint8_t       spread_rate;
+    kill_category whose;
+    killer_type   killer;
+    mid_t         source;
+    int           excl_rad;
+
+    cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
+                     whose(KC_OTHER), killer(KILL_NONE), excl_rad(-1)
+    {
+    }
+    cloud_struct(coord_def p, cloud_type c, int d, int spread, kill_category kc,
+                 killer_type kt, mid_t src, int excl);
+
+    bool defined() const { return type != CLOUD_NONE; }
+    bool temporary() const { return excl_rad == -1; }
+    int exclusion_radius() const { return excl_rad; }
+
+    actor *agent() const;
+    void set_whose(kill_category _whose);
+    void set_killer(killer_type _killer);
+
+    string cloud_name(bool terse = false) const;
+    void announce_actor_engulfed(const actor *engulfee,
+                                 bool beneficial = false) const;
+
+    static kill_category killer_to_whose(killer_type killer);
+    static killer_type   whose_to_killer(kill_category whose);
+};
+
+struct shop_struct
+{
+    coord_def           pos;
+    uint8_t             greed;
+    shop_type           type;
+    uint8_t             level;
+    string              shop_name;
+    string              shop_type_name;
+    string              shop_suffix_name;
+
+    FixedVector<uint8_t, 3> keeper_name;
+
+    vector<item_def> stock;
+#if TAG_MAJOR_VERSION == 34
+    uint8_t num; // used in a save compat hack
+#endif
+
+    shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
+                     shop_name(""), shop_type_name(""), shop_suffix_name("") { }
+
+    bool defined() const { return type != SHOP_UNASSIGNED; }
+};
+
 /// Exception indicating a bad level_id, level_range, or depth_range.
 struct bad_level_id : public runtime_error
 {
@@ -160,6 +389,300 @@ struct bad_level_id : public runtime_error
  */
 #define bad_level_id_f(...) bad_level_id(make_stringf(__VA_ARGS__))
 
+// Identifies a level. Should never include virtual methods or
+// dynamically allocated memory (see code to push level_id onto Lua
+// stack in l-dgn.cc)
+class level_id
+{
+public:
+    branch_type branch;     // The branch in which the level is.
+    int depth;              // What depth (in this branch - starting from 1)
+
+public:
+    // Returns the level_id of the current level.
+    static level_id current();
+
+    // Returns the level_id of the level that the stair/portal/whatever at
+    // 'pos' on the current level leads to.
+    static level_id get_next_level_id(const coord_def &pos);
+
+    // Important that if run after this, ::valid() is false.
+    level_id()
+        : branch(BRANCH_DUNGEON), depth(-1)
+    {
+    }
+    level_id(branch_type br, int dep = 1)
+        : branch(br), depth(dep)
+    {
+    }
+
+    /// @throws bad_level_id if s could not be parsed.
+    static level_id parse_level_id(const string &s);
+#if TAG_MAJOR_VERSION == 34
+    static level_id from_packed_place(const unsigned short place);
+#endif
+
+    string describe(bool long_name = false, bool with_number = true) const;
+
+    void clear()
+    {
+        branch = BRANCH_DUNGEON;
+        depth  = -1;
+    }
+
+    // Returns the absolute depth in the dungeon for the level_id;
+    // non-dungeon branches (specifically Abyss and Pan) will return
+    // depths suitable for use in monster and item generation.
+    int absdepth() const;
+
+    bool is_valid() const
+    {
+        return branch < NUM_BRANCHES && depth > 0;
+    }
+
+    bool operator == (const level_id &id) const
+    {
+        return branch == id.branch && depth == id.depth;
+    }
+
+    bool operator != (const level_id &id) const
+    {
+        return !operator == (id);
+    }
+
+    bool operator <(const level_id &id) const
+    {
+        return branch < id.branch || (branch==id.branch && depth < id.depth);
+    }
+
+    void save(writer&) const;
+    void load(reader&);
+};
+
+// A position on a particular level.
+struct level_pos
+{
+    level_id      id;
+    coord_def     pos;      // The grid coordinates on this level.
+
+    level_pos() : id(), pos()
+    {
+        pos.x = pos.y = -1;
+    }
+
+    level_pos(const level_id &lid, const coord_def &coord)
+        : id(lid), pos(coord)
+    {
+    }
+
+    level_pos(const level_id &lid)
+        : id(lid), pos()
+    {
+        pos.x = pos.y = -1;
+    }
+
+    // Returns the level_pos of where the player is standing.
+    static level_pos current();
+
+    bool operator == (const level_pos &lp) const
+    {
+        return id == lp.id && pos == lp.pos;
+    }
+
+    bool operator != (const level_pos &lp) const
+    {
+        return id != lp.id || pos != lp.pos;
+    }
+
+    bool operator <  (const level_pos &lp) const
+    {
+        return id < lp.id || (id == lp.id && pos < lp.pos);
+    }
+
+    bool is_valid() const
+    {
+        return id.depth > -1 && pos.x != -1 && pos.y != -1;
+    }
+
+    bool is_on(const level_id _id)
+    {
+        return id == _id;
+    }
+
+    void clear()
+    {
+        id.clear();
+        pos = coord_def(-1, -1);
+    }
+
+    void save(writer&) const;
+    void load(reader&);
+};
+
+class monster;
+
+// We are not 64 bits clean here yet since many places still pass (or store!)
+// it as 32 bits or, worse, longs. I considered setting this as uint32_t,
+// however, since free bits are exhausted, it's very likely we'll have to
+// extend this in the future, so this should be easier than undoing the change.
+typedef uint32_t iflags_t;
+
+struct item_def
+{
+    object_class_type base_type; ///< basic class (eg OBJ_WEAPON)
+    uint8_t        sub_type;       ///< type within that class (eg WPN_DAGGER)
+#pragma pack(push,2)
+    union
+    {
+        // These must all be the same size!
+        short plus;                 ///< + to hit/dam (weapons)
+        monster_type mon_type:16;   ///< corpse/chunk monster type
+        skill_type skill:16;        ///< the skill provided by a manual
+        short charges;              ///< # of charges held by a wand, etc
+        short net_durability;       ///< damage dealt to a net
+        short tithe_state;          ///< tithe state of a stack of gold
+    };
+    union
+    {
+        // These must all be the same size!
+        short plus2;        ///< legacy/generic name for this union
+        short net_placed;   ///< is this throwing net trapping something?
+        short skill_points; ///< # of skill points a manual gives
+        short stash_freshness; ///< where stash.cc stores corpse freshness
+    };
+#pragma pack(pop)
+    union
+    {
+        // These must all be the same size!
+        int special;            ///< legacy/generic name
+        int unrand_idx;         ///< unrandart index (for get_unrand_entry)
+        uint32_t subtype_rnd;   ///< appearance of un-ID'd items, by subtype.
+                                /// jewellery, scroll, staff, wand, potions
+                                // see comment in item_colour()
+        int brand;              ///< weapon and armour brands
+        int freshness;          ///< remaining time until a corpse rots
+    };
+    uint8_t        rnd;            ///< random number, used for tile choice,
+                                   /// randart colours, and other per-item
+                                   /// random cosmetics. 0 = uninitialized
+    short          quantity;       ///< number of items
+    iflags_t       flags;          ///< item status flags
+
+    /// The location of the item. Items in player inventory are indicated by
+    /// pos (-1, -1), items in monster inventory by (-2, -2), and items
+    /// in shops by (0, y) for y >= 5.
+    coord_def pos;
+    /// For floor items, index in the mitm array of the next item in the
+    /// pile. NON_ITEM for the last item in a pile. For items in player
+    /// inventory, instead the index into you.inv. For items in monster
+    /// inventory, equal to NON_ITEM + 1 + mindex. For items in shops,
+    /// equal to ITEM_IN_SHOP.
+    short  link;
+    /// Inventory letter of the item. For items in player inventory, equal
+    /// to index_to_letter(link). For other items, equal to the slot letter
+    /// the item had when it was last in player inventory.
+    short  slot;
+
+    level_id orig_place;
+    short    orig_monnum;
+
+    string inscription;
+
+    CrawlHashTable props;
+
+public:
+    item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
+                 special(0), rnd(0), quantity(0), flags(0),
+                 pos(), link(NON_ITEM), slot(0), orig_place(),
+                 orig_monnum(0), inscription()
+    {
+    }
+
+    string name(description_level_type descrip, bool terse = false,
+                bool ident = false, bool with_inscription = true,
+                bool quantity_in_words = false,
+                iflags_t ignore_flags = 0x0) const;
+    bool has_spells() const;
+    bool cursed() const;
+    colour_t get_colour() const;
+
+    bool is_type(int base, int sub) const
+    {
+        return base_type == base && sub_type == sub;
+    }
+
+    /**
+     * Find the index of an item in the mitm array. Results are undefined
+     * if this item is not in the array!
+     *
+     * @pre The item is actually in the mitm array.
+     * @return  The index of this item in the mitm array, between
+     *          0 and MAX_ITEMS-1.
+     */
+    int  index() const;
+
+    int  armour_rating() const;
+
+    bool launched_by(const item_def &launcher) const;
+
+    void clear()
+    {
+        *this = item_def();
+    }
+
+    /**
+     * Sets this item as being held by a given monster.
+     *
+     * @param mon The monster. Must be in menv!
+     */
+    void set_holding_monster(const monster& mon);
+
+    /**
+     * Get the monster holding this item.
+     *
+     * @return A pointer to the monster holding this item, null if none.
+     */
+    monster* holding_monster() const;
+
+    /** Is this item being held by a monster? */
+    bool held_by_monster() const;
+
+    bool defined() const;
+    bool appearance_initialized() const;
+    bool is_valid(bool info = false) const;
+
+    /** Should this item be preserved as far as possible? */
+    bool is_critical() const;
+
+    /** Is this item of a type that should not be generated enchanted? */
+    bool is_mundane() const;
+
+private:
+    string name_aux(description_level_type desc, bool terse, bool ident,
+                    bool with_inscription, iflags_t ignore_flags) const;
+
+    colour_t randart_colour() const;
+
+    colour_t ring_colour() const;
+    colour_t amulet_colour() const;
+
+    colour_t rune_colour() const;
+
+    colour_t weapon_colour() const;
+    colour_t missile_colour() const;
+    colour_t armour_colour() const;
+    colour_t wand_colour() const;
+    colour_t food_colour() const;
+    colour_t jewellery_colour() const;
+    colour_t potion_colour() const;
+    colour_t book_colour() const;
+    colour_t miscellany_colour() const;
+    colour_t corpse_colour() const;
+};
+
+typedef item_def item_info;
+item_info get_item_info(const item_def& info);
+
 class runrest
 {
 public:
@@ -172,7 +695,6 @@ public:
     coord_def pos;
     int travel_speed;
     int direction;
-    int turns_passed;
 
     FixedVector<run_check_dir,3> run_check; // array of grids to check
 
@@ -218,48 +740,44 @@ enum mon_spell_slot_flag
     MON_SPELL_NO_FLAGS  = 0,
     MON_SPELL_EMERGENCY   = 1 <<  0, // only use this spell slot in emergencies
     MON_SPELL_NATURAL     = 1 <<  1, // physiological, not really a spell
-    MON_SPELL_MAGICAL     = 1 <<  2, // magical ability, affected by AM
-    MON_SPELL_VOCAL       = 1 <<  3, // natural ability, but affected by silence
-    MON_SPELL_WIZARD      = 1 <<  4, // real spell, affected by AM and silence
-    MON_SPELL_PRIEST      = 1 <<  5, // divine ability, affected by silence
+    MON_SPELL_MAGICAL     = 1 <<  2, // a generic magical ability
+#if TAG_MAJOR_VERSION == 34
+    MON_SPELL_DEMONIC     = 1 <<  3, // merged with magical abilities
+#endif
+    MON_SPELL_WIZARD      = 1 <<  4, // a real spell, affected by AM and silence
+    MON_SPELL_PRIEST      = 1 <<  5,
 
     MON_SPELL_FIRST_CATEGORY = MON_SPELL_NATURAL,
     MON_SPELL_LAST_CATEGORY  = MON_SPELL_PRIEST,
 
     MON_SPELL_BREATH      = 1 <<  6, // sets a breath timer, requires it to be 0
-#if TAG_MAJOR_VERSION == 34
     MON_SPELL_NO_SILENT   = 1 <<  7, // can't be used while silenced/mute/etc.
-#endif
 
     MON_SPELL_INSTANT     = 1 <<  8, // allows another action on the same turn
     MON_SPELL_NOISY       = 1 <<  9, // makes noise despite being innate
 
     MON_SPELL_SHORT_RANGE = 1 << 10, // only use at short distances
     MON_SPELL_LONG_RANGE  = 1 << 11, // only use at long distances
-    MON_SPELL_EVOKE       = 1 << 12, // a spell from an evoked item
 
-    MON_SPELL_LAST_FLAG = MON_SPELL_EVOKE,
+    MON_SPELL_LAST_FLAG = MON_SPELL_LONG_RANGE,
 };
-DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag, 12);
+DEF_BITFIELD(mon_spell_slot_flags, mon_spell_slot_flag, 11);
 const int MON_SPELL_LAST_EXPONENT = mon_spell_slot_flags::last_exponent;
 COMPILE_CHECK(mon_spell_slot_flags::exponent(MON_SPELL_LAST_EXPONENT)
               == MON_SPELL_LAST_FLAG);
 
 constexpr mon_spell_slot_flags MON_SPELL_TYPE_MASK
     = MON_SPELL_NATURAL | MON_SPELL_MAGICAL | MON_SPELL_WIZARD
-      | MON_SPELL_PRIEST | MON_SPELL_VOCAL;
+    | MON_SPELL_PRIEST;
 
-// Doesn't make noise when cast (unless flagged with MON_SPELL_NOISY).
 constexpr mon_spell_slot_flags MON_SPELL_INNATE_MASK
     = MON_SPELL_NATURAL | MON_SPELL_MAGICAL;
 
-// Affected by antimagic.
 constexpr mon_spell_slot_flags MON_SPELL_ANTIMAGIC_MASK
     = MON_SPELL_MAGICAL | MON_SPELL_WIZARD;
 
-// Affected by silence.
 constexpr mon_spell_slot_flags MON_SPELL_SILENCE_MASK
-    = MON_SPELL_WIZARD  | MON_SPELL_PRIEST  | MON_SPELL_VOCAL;
+    = MON_SPELL_WIZARD  | MON_SPELL_PRIEST  | MON_SPELL_NO_SILENT;
 
 struct mon_spell_slot
 {
@@ -281,6 +799,54 @@ struct mon_spell_slot
 };
 
 typedef vector<mon_spell_slot> monster_spells;
+
+class reader;
+class writer;
+class map_markers
+{
+public:
+    map_markers();
+    map_markers(const map_markers &);
+    map_markers &operator = (const map_markers &);
+    ~map_markers();
+
+    bool need_activate() const { return have_inactive_markers; }
+    void clear_need_activate();
+    void init_all();
+    void activate_all(bool verbose = true);
+    void activate_markers_at(coord_def p);
+    void add(map_marker *marker);
+    void remove(map_marker *marker);
+    void remove_markers_at(const coord_def &c, map_marker_type type = MAT_ANY);
+    map_marker *find(const coord_def &c, map_marker_type type = MAT_ANY);
+    map_marker *find(map_marker_type type);
+    void move(const coord_def &from, const coord_def &to);
+    void move_marker(map_marker *marker, const coord_def &to);
+    vector<map_marker*> get_all(map_marker_type type = MAT_ANY);
+    vector<map_marker*> get_all(const string &key, const string &val = "");
+    vector<map_marker*> get_markers_at(const coord_def &c);
+    string property_at(const coord_def &c, map_marker_type type,
+                       const string &key);
+    string property_at(const coord_def &c, map_marker_type type,
+                       const char *key)
+    { return property_at(c, type, string(key)); }
+    void clear();
+
+    void write(writer &) const;
+    void read(reader &);
+
+private:
+    typedef multimap<coord_def, map_marker *> dgn_marker_map;
+    typedef pair<coord_def, map_marker *> dgn_pos_marker;
+
+    void init_from(const map_markers &);
+    void unlink_marker(const map_marker *);
+    void check_empty();
+
+private:
+    dgn_marker_map markers;
+    bool have_inactive_markers;
+};
 
 class InvEntry;
 typedef int (*item_sort_fn)(const InvEntry *a, const InvEntry *b);
@@ -331,43 +897,3 @@ struct cglyph_t
 };
 
 typedef FixedArray<bool, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
-
-namespace quiver
-{
-    struct action_cycler;
-}
-
-// input and output to targeting actions
-// TODO: rename, move to its own .h, remove camel case
-// For the exact details of interactive vs non-interactive targeting, see
-// dist::needs_targeting() in directn.cc.
-class dist
-{
-public:
-    dist();
-
-    bool isMe() const;
-    bool needs_targeting() const;
-
-    bool isValid;       // output: valid target chosen?
-    bool isTarget;      // output: target (true), or direction (false)?
-    bool isEndpoint;    // input: Does the player want the attack to stop at target?
-    bool isCancel;      // output: user cancelled (usually <ESC> key)
-    bool choseRay;      // output: user wants a specific beam
-    bool interactive;   // input and output: if true, forces an interactive targeter.
-                        // behavior when false depends on `target` and `find_target`.
-                        // on output, whether an interactive targeter was chosen.
-
-    coord_def target;   // input and output: target x,y or logical extension of beam to map edge
-    coord_def delta;    // input and output: delta x and y if direction - always -1,0,1
-    ray_def ray;        // output: ray chosen if necessary
-    bool find_target;   // input: use the targeter to find a target, possibly by modifying `target`.
-                        // requests non-interactive mode, but does not override `interactive`.
-    const quiver::action_cycler *fire_context;
-                            // input: if triggered from the action system, what the
-                            // quiver was that triggered it. May be nullptr.
-                            // sort of ugly to have this here...
-    int cmd_result;     // output: a resulting command. See quiver::action_cycler::target for
-                        // which commands may be handled and how. This is an `int` for include
-                        // order reasons, unfortunately
-};

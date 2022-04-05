@@ -47,7 +47,7 @@ struct wm_keyboard_event
     wm_keysym keysym;
 };
 
-struct wm_mouse_event
+struct MouseEvent
 {
     enum mouse_event_type
     {
@@ -113,7 +113,7 @@ struct wm_event
     unsigned char type;
     wm_active_event active;
     wm_keyboard_event key;
-    wm_mouse_event mouse_event;
+    MouseEvent mouse_event;
     wm_resize_event resize;
     wm_expose_event expose;
     wm_quit_event quit;
@@ -150,7 +150,7 @@ public:
     // Environment state functions
     virtual void set_window_title(const char *title) = 0;
     virtual bool set_window_icon(const char* icon_name) = 0;
-    virtual unsigned char get_mod_state() const = 0;
+    virtual tiles_key_mod get_mod_state() const = 0;
     virtual void set_mod_state(tiles_key_mod mod) = 0;
     virtual void set_mouse_cursor(mouse_cursor_type id) = 0;
     virtual unsigned short get_mouse_state(int *x, int *y) const = 0;
@@ -160,13 +160,14 @@ public:
     // System time functions
     virtual unsigned int set_timer(unsigned int interval,
                                    wm_timer_callback callback) = 0;
-    virtual void remove_timer(unsigned int& timer_id) = 0;
+    virtual void remove_timer(unsigned int timer_id) = 0;
     virtual unsigned int get_ticks() const = 0;
     virtual void delay(unsigned int ms) = 0;
 
     // Event functions
+    virtual int raise_custom_event() = 0;
     virtual int wait_event(wm_event *event, int timeout) = 0;
-    virtual bool next_event_is(wm_event_type type) = 0;
+    virtual unsigned int get_event_count(wm_event_type type) = 0;
     virtual void show_keyboard() = 0;
 
     // Display functions

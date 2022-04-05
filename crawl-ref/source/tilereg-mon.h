@@ -1,11 +1,7 @@
 #ifdef USE_TILE_LOCAL
 #pragma once
 
-#include <vector>
-
 #include "tilereg-grid.h"
-
-using std::vector;
 
 struct monster_info;
 class MonsterRegion : public GridRegion
@@ -14,7 +10,7 @@ public:
     MonsterRegion(const TileRegionInit &init);
 
     virtual void update() override;
-    virtual int handle_mouse(wm_mouse_event &event) override;
+    virtual int handle_mouse(MouseEvent &event) override;
     virtual bool update_tip_text(string &tip) override;
     virtual bool update_tab_tip_text(string &tip, bool active) override;
     virtual bool update_alt_text(string &alt) override;

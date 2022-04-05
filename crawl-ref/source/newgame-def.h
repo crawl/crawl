@@ -1,43 +1,15 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "game-type.h"
 #include "item-prop-enum.h"
 #include "job-type.h"
 #include "species-type.h"
-
-using std::string;
-using std::vector;
 
 // Either a character definition, with real species, job, and
 // weapon, book, wand as appropriate.
 // Or a character choice, with possibly random/viable entries.
 struct newgame_def
 {
-    bool operator==(const newgame_def& other) const
-    {
-        // values relevant for serialization
-        return name == other.name
-            && type == other.type
-            && seed == other.seed
-            && pregenerate == other.pregenerate
-            && map == other.map
-            && arena_teams == other.arena_teams
-            && species == other.species
-            && job == other.job
-            && weapon == other.weapon
-            && fully_random == other.fully_random;
-    }
-
-    bool operator!=(const newgame_def& other) const
-    {
-        return !(*this == other);
-    }
-
-    void write_prefs(FILE *f) const;
-
     string name;
     game_type type;
     string filename;

@@ -7,7 +7,6 @@ species = mu
 background = ar
 restart_after_game = false
 show_more = false
-pregen_dungeon = false
 #message_colour = mute:.*
 
 : bot_start = true

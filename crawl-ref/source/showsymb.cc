@@ -19,7 +19,6 @@
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "terrain.h"
 #include "travel.h"
 #include "viewchar.h"
@@ -55,7 +54,12 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = fdef.seen_colour();
 
         if (colour)
+        {
+            // Show trails even out of LOS.
+            if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
+                colour |= COLFLAG_REVERSE;
             return colour;
+        }
     }
     else if (!feat_is_solid(feat)
              && (cell.flags & (MAP_SANCTUARY_1 | MAP_SANCTUARY_2)))
@@ -74,15 +78,13 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     }
     else if (cell.flags & MAP_BLOODY && !norecolour)
         colour = RED;
-    else if (cell.flags & MAP_CORRODING && feat == DNGN_FLOOR)
-        colour = LIGHTGREEN;
-    else if (cell.flags & MAP_ICY
-             && (feat_is_wall(feat) || feat == DNGN_FLOOR))
+    else if (cell.flags & MAP_MOLDY && !norecolour)
+        colour = (cell.flags & MAP_GLOWING_MOLDY) ? LIGHTRED : LIGHTGREEN;
+    else if (cell.flags & MAP_CORRODING && !norecolour
+             && !feat_is_wall(feat) && !feat_is_lava(feat)
+             && !feat_is_water(feat))
     {
-        if (feat_is_wall(feat))
-            colour = ETC_ICE;
-        else
-            colour = LIGHTCYAN;
+        colour = LIGHTGREEN;
     }
     else if (cell.feat_colour() && !no_vault_recolour)
         colour = cell.feat_colour();
@@ -139,6 +141,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 #endif
     }
 
+    if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
+        colour |= COLFLAG_REVERSE;
+
     return colour;
 }
 
@@ -186,8 +191,10 @@ static int _get_mons_colour(const monster_info& mi)
     if (stype != mi.type && mi.type != MONS_SENSED)
         col = mons_class_colour(stype);
 
+#if TAG_MAJOR_VERSION == 34
     if (mi.is(MB_ROLLING))
         col = ETC_BONE;
+#endif
 
     if (mi.is(MB_BERSERK))
         col = RED;
@@ -202,24 +209,24 @@ static int _get_mons_colour(const monster_info& mi)
         col |= COLFLAG_FRIENDLY_MONSTER;
     else if (mi.attitude != ATT_HOSTILE)
         col |= COLFLAG_NEUTRAL_MONSTER;
-    else if (Options.stab_highlight != CHATTR_NORMAL
+    else if (Options.stab_brand != CHATTR_NORMAL
              && mi.is(MB_STABBABLE))
     {
         col |= COLFLAG_WILLSTAB;
     }
-    else if (Options.may_stab_highlight != CHATTR_NORMAL
+    else if (Options.may_stab_brand != CHATTR_NORMAL
              && mi.is(MB_DISTRACTED))
     {
         col |= COLFLAG_MAYSTAB;
     }
     else if (mons_class_is_stationary(mi.type))
     {
-        if (Options.feature_item_highlight != CHATTR_NORMAL
-            && feat_stair_direction(env.grid(mi.pos)) != CMD_NO_CMD)
+        if (Options.feature_item_brand != CHATTR_NORMAL
+            && feat_stair_direction(grd(mi.pos)) != CMD_NO_CMD)
         {
             col |= COLFLAG_FEATURE_ITEM;
         }
-        else if (Options.heap_highlight != CHATTR_NORMAL
+        else if (Options.heap_brand != CHATTR_NORMAL
                  && you.visible_igrd(mi.pos) != NON_ITEM
                  && !crawl_state.game_is_arena())
         {
@@ -227,7 +234,7 @@ static int _get_mons_colour(const monster_info& mi)
         }
     }
 
-    // Backlit monsters are fuzzy and override colours, but not highlights.
+    // Backlit monsters are fuzzy and override colours, but not brands.
     if (!crawl_state.game_is_arena()
         && !you.can_see_invisible()
         && mi.is(MB_INVISIBLE)
@@ -249,15 +256,8 @@ static cglyph_t _get_item_override(const item_def &item)
     if (Options.item_glyph_overrides.empty())
         return g;
 
-    // use qualname for gold so that pile quantity doesn't affect caching.
-    // Could extend this to missiles, but in that case I can actually imagine
-    // someone writing annotation code that relies on a count.
-    // TODO: the caching here avoids the regex penalty, but annotation and
-    // item.name themselves are quite heavy when called a lot, so some better
-    // caching might be in order. (Or more efficient calls to this function.)
     string name = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item)
-                + " {" + item_prefix(item, false) + "} "
-                + item.name(item.base_type == OBJ_GOLD ? DESC_QUALNAME : DESC_PLAIN);
+                + " {" + item_prefix(item, false) + "} " + item.name(DESC_PLAIN);
 
     {
         // Check the cache...
@@ -502,20 +502,20 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
 
         if (cell.item())
         {
-            if (Options.feature_item_highlight
+            if (Options.feature_item_brand
                 && (feat_is_critical(cell.feat())
                     || feat_is_solid(cell.feat())))
             {
                 g.col |= COLFLAG_FEATURE_ITEM;
             }
-            else if (Options.trap_item_highlight && feat_is_trap(cell.feat()))
+            else if (Options.trap_item_brand && feat_is_trap(cell.feat()))
                 g.col |= COLFLAG_TRAP_ITEM;
         }
         break;
 
     case SH_ITEM:
     {
-        const item_def* eitem = cell.item();
+        const item_info* eitem = cell.item();
         ASSERT(eitem);
         show = *eitem;
 
@@ -539,23 +539,10 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         return g;
     }
 
-    if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
-    {
-        const feature_def& fd = get_feature_def(DNGN_TRAVEL_TRAIL);
-
-        if (fd.symbol())
-            g.ch = fd.symbol();
-        if (fd.colour() != COLOUR_UNDEF)
-            g.col = fd.colour();
-
-        g.col |= COLFLAG_REVERSE;
-    }
-
     if (!g.ch)
     {
         const feature_def &fdef = get_feature_def(show);
-        g.ch = !cell.seen() || cell.flags & MAP_EMPHASIZE ? fdef.magic_symbol()
-                                                          : fdef.symbol();
+        g.ch = cell.seen() ? fdef.symbol() : fdef.magic_symbol();
     }
 
     if (g.col)

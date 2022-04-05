@@ -10,14 +10,12 @@
 #include "artefact.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "format.h"
 #include "item-name.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "options.h"
 #include "religion.h"
-#include "scroller.h"
 #include "shopping.h"
 #include "skills.h"
 #include "spl-util.h"
@@ -119,29 +117,6 @@ void debug_dump_levgen()
     mpr("");
 }
 
-void debug_show_builder_logs()
-{
-    if (!you.props.exists(DEBUG_BUILDER_LOGS_KEY))
-    {
-        mprf("This save was not generated on a build that stores logs.");
-        return;
-    }
-    const string cur_level = level_id::current().describe();
-    CrawlHashTable &log_table = you.props[DEBUG_BUILDER_LOGS_KEY].get_table();
-    if (!log_table.exists(cur_level)
-        || log_table[cur_level].get_string().size() == 0)
-    {
-        mprf("No builder logs are saved for %s.", cur_level.c_str());
-        return;
-    }
-    string props_text = log_table[cur_level].get_string();
-    auto log = formatted_string::parse_string(trim_string_right(props_text));
-    formatted_scroller log_scroller;
-    log_scroller.set_more();
-    log_scroller.add_formatted_string(log, false);
-    log_scroller.show();
-}
-
 string debug_coord_str(const coord_def &pos)
 {
     return make_stringf("(%d, %d)%s", pos.x, pos.y,
@@ -233,7 +208,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     else if (mon->foe == midx)
         fprintf(stderr, "self");
     else
-        fprintf(stderr, "%s", debug_mon_str(&env.mons[mon->foe]).c_str());
+        fprintf(stderr, "%s", debug_mon_str(&menv[mon->foe]).c_str());
 
     fprintf(stderr, "\n");
 
@@ -259,7 +234,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
     }
     else if (in_bounds(mon->target))
     {
-        target = env.mgrid(mon->target);
+        target = mgrd(mon->target);
 
         if (target == NON_MONSTER)
             fprintf(stderr, "nothing");
@@ -270,7 +245,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         else if (invalid_monster_index(target))
             fprintf(stderr, "invalid monster index %d", target);
         else
-            fprintf(stderr, "%s", debug_mon_str(&env.mons[target]).c_str());
+            fprintf(stderr, "%s", debug_mon_str(&menv[target]).c_str());
     }
     else
         fprintf(stderr, "<OoB>");
@@ -316,7 +291,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
             fprintf(stderr, "invalid item index %d\n", idx);
             continue;
         }
-        const item_def &item(env.item[idx]);
+        const item_def &item(mitm[idx]);
 
         if (!item.defined())
         {
@@ -377,18 +352,18 @@ void debug_dump_mon(const monster* mon, bool recurse)
         return;
 
     if (!invalid_monster_index(mon->foe) && mon->foe != midx
-        && !invalid_monster_type(env.mons[mon->foe].type))
+        && !invalid_monster_type(menv[mon->foe].type))
     {
         fprintf(stderr, "Foe:\n");
-        debug_dump_mon(&env.mons[mon->foe], false);
+        debug_dump_mon(&menv[mon->foe], false);
     }
 
     if (!invalid_monster_index(target) && target != midx
         && target != mon->foe
-        && !invalid_monster_type(env.mons[target].type))
+        && !invalid_monster_type(menv[target].type))
     {
         fprintf(stderr, "Target:\n");
-        debug_dump_mon(&env.mons[target], false);
+        debug_dump_mon(&menv[target], false);
     }
 }
 
@@ -497,7 +472,7 @@ void debug_list_vacant_keys()
     {
         check(base, string(1, base));
 
-        char lower = tolower_safe(base);
+        char lower = tolower(base);
         check(lower, string(1, lower));
 
         char ctrl = CONTROL(base);

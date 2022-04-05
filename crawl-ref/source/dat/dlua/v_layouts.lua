@@ -27,6 +27,7 @@ crawl_require("dlua/v_debug.lua")
 crawl_require("dlua/v_paint.lua")
 crawl_require("dlua/v_rooms.lua")
 crawl_require("dlua/v_shapes.lua")
+crawl_require("dlua/ghost.lua")
 
 _VAULTS_DEBUG = false
 
@@ -67,16 +68,13 @@ function vaults_default_options()
       { generator = "tagged", tag = "vaults_empty", weight = 40 },
       { generator = "tagged", tag = "vaults_hard", weight = 10, max_rooms = 1 },
       { generator = "tagged", tag = "vaults_entry_crypt", weight = (you.where() == dgn.level_name(dgn.br_entrance("Crypt"))) and 25 or 0, max_rooms = 1 },
-      -- Create tagged generators to represent ghost vaults and Wizlab and
-      -- Desolation portal entry vaults. The weights should be 0 since these
-      -- generators are only chosen through a chance rolls.
+      -- Create a tagged generator to represent ghost vaults. The weight should
+      -- be 0 since this generator is only chosen through a specific ghost
+      -- chance roll.
       { generator = "tagged", tag = "vaults_ghost", weight = 0, max_rooms = 1 },
-      { generator = "tagged", tag = "vaults_wizlab", weight = 0, max_rooms = 1 },
-      { generator = "tagged", tag = "vaults_desolation", weight = 0, max_rooms = 1 },
--- start TAG_MAJOR_VERSION == 34
+      -- Remove the Forest and Blade entries when TAG_MAJOR_VERSION > 34
       { generator = "tagged", tag = "vaults_entry_forest", weight = (you.where() == dgn.level_name(dgn.br_entrance("Forest"))) and 25 or 0, max_rooms = 1 },
       { generator = "tagged", tag = "vaults_entry_blade", weight = (you.where() == dgn.level_name(dgn.br_entrance("Blade"))) and 25 or 0, max_rooms = 1 },
--- end TAG_MAJOR_VERSION
     },
 
     -- Weightings for types of wall to use across the whole layout

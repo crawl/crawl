@@ -110,12 +110,16 @@ draconian_red_m
 draconian_white_f DRACONIAN_WHITE
 draconian_white_m DRACONIAN_LAST
 
-palentonga_red_f PALENTONGA
-palentonga_red_m
-palentonga_f
-palentonga_m
-palentonga_green_f
-palentonga_green_m
+centaur_lightgrey_f CENTAUR
+centaur_lightgrey_m
+centaur_darkgrey_f
+centaur_darkgrey_m
+centaur_darkbrown_f
+centaur_darkbrown_m
+centaur_brown_f
+centaur_brown_m
+centaur_lightbrown_f
+centaur_lightbrown_m
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN
@@ -237,7 +241,6 @@ mesh_black MESH_BLACK
 mesh_white MESH_WHITE
 mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
-seven_league_boots SEVEN_LEAGUE_BOOTS
 
 ## Mutations
 hooves HOOVES
@@ -518,7 +521,6 @@ capt_cutlass CAPT_CUTLASS
 arc_blade ARC_BLADE
 gyre GYRE
 thermic_engine THERMIC_ENGINE
-throatcutter THROATCUTTER
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
@@ -544,7 +546,6 @@ asmodeus ASMODEUS
 dispater DISPATER
 olgreb OLGREB
 order ORDER
-battle_staff BATTLE_STAFF
 ## axes
 axe_trog AXE_TROG
 arga ARGA
@@ -558,12 +559,11 @@ sniper SNIPER
 crossbow_fire FIERY_DEVIL
 zephyr ZEPHYR
 sceptre_of_torment SCEPTRE_OF_TORMENT
-# start TAG_MAJOR_VERSION == 34
+## Remove these unrand entries when TAG_MAJOR_VERSION > 34
 botono BOTONO
 chilly_death CHILLY_DEATH
 crystal_spear CRYSTAL_SPEAR
 flaming_death FLAMING_DEATH
-# end TAG_MAJOR_VERSION
 
 %sdir player/hand1
 # blades
@@ -710,8 +710,8 @@ staff_ring_blue STAFF_RING_BLUE
 staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
 
-# start TAG_MAJOR_VERSION == 34
 ## rods
+# Remove when TAG_MAJOR_VERSION > 34
 # These 10 rods correspond to the same order as item/rod/
 rod_ruby ROD_FIRST
 rod_brown
@@ -723,7 +723,6 @@ rod_moon
 rod_magenta
 rod_forked
 rod_aries
-# end TAG_MAJOR_VERSION
 
 ## axes
 axe_small AXE_SMALL
@@ -814,66 +813,61 @@ buckler_rb BUCKLER_RB
 buckler_green BUCKLER_GREEN
 buckler_spiral BUCKLER_SPIRAL BUCKLER_LAST_NORM
 
-kite_shield_knight_blue KITE_SHIELD_KNIGHT_BLUE KITE_SHIELD_FIRST_NORM
-kite_shield_knight_gray KITE_SHIELD_KNIGHT_GRAY
-kite_shield_knight_rw KITE_SHIELD_KNIGHT_RW
-kite_shield_kite1 KITE_SHIELD_KITE1
-kite_shield_kite2 KITE_SHIELD_KITE2
-kite_shield_kite3 KITE_SHIELD_KITE3
-kite_shield_kite4 KITE_SHIELD_KITE4 KITE_SHIELD_LAST_NORM
+shield_knight_blue SHIELD_KNIGHT_BLUE SHIELD_FIRST_NORM
+shield_knight_gray SHIELD_KNIGHT_GRAY
+shield_knight_rw SHIELD_KNIGHT_RW
+shield_kite1 SHIELD_KITE1
+shield_kite2 SHIELD_KITE2
+shield_kite3 SHIELD_KITE3
+shield_kite4 SHIELD_KITE4 SHIELD_LAST_NORM
 
-tower_shield_long_red TOWER_SHIELD_LONG_RED TOWER_SHIELD_FIRST_NORM
-tower_shield_gold TOWER_SHIELD_GOLD
-tower_shield_green TOWER_SHIELD_GREEN
-tower_shield_quartered TOWER_SHIELD_QUARTERED
-tower_shield_teal TOWER_SHIELD_TEAL
-tower_shield_spiral TOWER_SHIELD_SPIRAL TOWER_SHIELD_LAST_NORM
-
-## orbs
-orb1 ORB1 ORB_FIRST
-orb2 ORB2
-orb3 ORB3 ORB_LAST
+lshield_long_red LARGE_SHIELD_LONG_RED LSHIELD_FIRST_NORM
+lshield_gold LARGE_SHIELD_GOLD
+lshield_green LARGE_SHIELD_GREEN
+lshield_quartered LARGE_SHIELD_QUARTERED
+lshield_teal LARGE_SHIELD_TEAL
+lshield_spiral LARGE_SHIELD_SPIRAL LSHIELD_LAST_NORM
 
 ##unrand (or unique) shields
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
 
-kite_shield_donald KITE_SHIELD_DONALD
-kite_shield_bullseye KITE_SHIELD_BULLSEYE
-kite_shield_gong KITE_SHIELD_GONG
-kite_shield_of_resistance KITE_SHIELD_OF_RESISTANCE
+shield_donald SHIELD_DONALD
+shield_bullseye SHIELD_BULLSEYE
+shield_gong SHIELD_GONG
+shield_of_resistance SHIELD_OF_RESISTANCE
 
-tower_shield_of_ignorance TOWER_SHIELD_OF_IGNORANCE
-tower_shield_louise TOWER_SHIELD_LOUISE
+lshield_of_ignorance LARGE_SHIELD_OF_IGNORANCE
+lshield_louise LSHIELD_LOUISE
 
 %sdir player/hand2/doll_only
 
-kite_shield_middle_round KITE_SHIELD_MIDDLE_ROUND
-kite_shield_skull KITE_SHIELD_SKULL
-kite_shield_round_white KITE_SHIELD_ROUND_WHITE
+shield_middle_round SHIELD_MIDDLE_ROUND
+shield_skull SHIELD_SKULL
+shield_round_white SHIELD_ROUND_WHITE
 boromir BOROMIR
-kite_shield_round1 KITE_SHIELD_ROUND1
-kite_shield_round2 KITE_SHIELD_ROUND2
-kite_shield_round3 KITE_SHIELD_ROUND3
-kite_shield_round4 KITE_SHIELD_ROUND4
-kite_shield_round5 KITE_SHIELD_ROUND5
-kite_shield_round6 KITE_SHIELD_ROUND6
-kite_shield_round7 KITE_SHIELD_ROUND7
+shield_round1 SHIELD_ROUND1
+shield_round2 SHIELD_ROUND2
+shield_round3 SHIELD_ROUND3
+shield_round4 SHIELD_ROUND4
+shield_round5 SHIELD_ROUND5
+shield_round6 SHIELD_ROUND6
+shield_round7 SHIELD_ROUND7
 
-kite_shield_middle_unicorn KITE_SHIELD_MIDDLE_UNICORN
-kite_shield_middle_gray KITE_SHIELD_MIDDLE_GRAY
-kite_shield_diamond_yellow KITE_SHIELD_DIAMOND_YELLOW
-kite_shield_middle_brown KITE_SHIELD_MIDDLE_BROWN
-kite_shield_middle_black KITE_SHIELD_MIDDLE_BLACK
-kite_shield_middle_cyan KITE_SHIELD_MIDDLE_CYAN
-kite_shield_middle_ethn KITE_SHIELD_MIDDLE_ETHN
-kite_shield_long_cross KITE_SHIELD_LONG_CROSS
-kite_shield_shaman KITE_SHIELD_SHAMAN
-gil-galad KITE_SHIELD_GILGALAD
+shield_middle_unicorn SHIELD_MIDDLE_UNICORN
+shield_middle_gray SHIELD_MIDDLE_GRAY
+shield_diamond_yellow SHIELD_DIAMOND_YELLOW
+shield_middle_brown SHIELD_MIDDLE_BROWN
+shield_middle_black SHIELD_MIDDLE_BLACK
+shield_middle_cyan SHIELD_MIDDLE_CYAN
+shield_middle_ethn SHIELD_MIDDLE_ETHN
+shield_long_cross SHIELD_LONG_CROSS
+shield_shaman SHIELD_SHAMAN
+gil-galad SHIELD_GILGALAD
 
-kite_shield_dd KITE_SHIELD_DEEP_DWARF
-kite_shield_dd_scion KITE_SHIELD_DEEP_DWARF_SCION
-tower_shield_dd_dk TOWER_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+shield_dd SHIELD_DEEP_DWARF
+shield_dd_scion SHIELD_DEEP_DWARF_SCION
+lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
 
 ## books
 %sdir player/hand2/misc
@@ -1059,10 +1053,6 @@ turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
-hat_archer ARCHER
-hat_archer2 ARCHER2
-hat_explorer EXPLORER
-hat_explorer2 EXPLORER2
 
 ## Mutations
 horns1 HORNS1
@@ -1079,7 +1069,6 @@ cat7
 cat8
 cat9
 cat10
-draconian1 HORNS_DRAC
 %sdir player/head
 
 ## Doll editor tiles, but not randomly picked
@@ -1155,7 +1144,6 @@ hood_white2 HOOD_WHITE2
 hood_ybrown HOOD_YBROWN
 hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
-hood_purple HOOD_PURPLE
 %end_ctg
 
 # draconian wings and heads, need same order as draconians

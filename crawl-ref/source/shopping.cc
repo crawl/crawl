@@ -13,32 +13,36 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "butcher.h"
 #include "cio.h"
 #include "colour.h"
+#include "decks.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "english.h"
 #include "env.h"
 #include "files.h"
+#include "food.h"
 #include "invent.h"
 #include "item-name.h"
 #include "item-prop.h"
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "macro.h"
 #include "menu.h"
 #include "message.h"
 #include "notes.h"
-#include "options.h"
 #include "output.h"
+#include "place.h"
 #include "player.h"
 #include "prompt.h"
+#include "rot.h"
 #include "spl-book.h"
 #include "stash.h"
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
 #endif
@@ -77,33 +81,33 @@ int artefact_value(const item_def &item)
     // Brands are already accounted for via existing ego checks
 
     // This should probably be more complex... but this isn't so bad:
-    ret += 6 * prop[ARTP_AC]
-           + 6 * prop[ARTP_EVASION]
-           + 4 * prop[ARTP_SHIELDING]
-           + 6 * prop[ARTP_SLAYING]
-           + 3 * prop[ARTP_STRENGTH]
-           + 3 * prop[ARTP_INTELLIGENCE]
-           + 3 * prop[ARTP_DEXTERITY]
-           + 4 * prop[ARTP_HP]
-           + 3 * prop[ARTP_MAGICAL_POWER];
+    ret += 6 * prop[ ARTP_AC ]
+            + 6 * prop[ ARTP_EVASION ]
+            + 4 * prop[ ARTP_SHIELDING ]
+            + 6 * prop[ ARTP_SLAYING ]
+            + 3 * prop[ ARTP_STRENGTH ]
+            + 3 * prop[ ARTP_INTELLIGENCE ]
+            + 3 * prop[ ARTP_DEXTERITY ]
+            + 4 * prop[ ARTP_HP ]
+            + 3 * prop[ ARTP_MAGICAL_POWER ];
 
     // These resistances have meaningful levels
-    if (prop[ARTP_FIRE] > 0)
-        ret += 5 + 5 * (prop[ARTP_FIRE] * prop[ARTP_FIRE]);
-    else if (prop[ARTP_FIRE] < 0)
+    if (prop[ ARTP_FIRE ] > 0)
+        ret += 5 + 5 * (prop[ ARTP_FIRE ] * prop[ ARTP_FIRE ]);
+    else if (prop[ ARTP_FIRE ] < 0)
         ret -= 10;
 
-    if (prop[ARTP_COLD] > 0)
-        ret += 5 + 5 * (prop[ARTP_COLD] * prop[ARTP_COLD]);
-    else if (prop[ARTP_COLD] < 0)
+    if (prop[ ARTP_COLD ] > 0)
+        ret += 5 + 5 * (prop[ ARTP_COLD ] * prop[ ARTP_COLD ]);
+    else if (prop[ ARTP_COLD ] < 0)
         ret -= 10;
 
-    if (prop[ARTP_WILLPOWER] > 0)
-        ret += 4 + 4 * prop[ARTP_WILLPOWER];
-    else if (prop[ARTP_WILLPOWER] < 0)
+    if (prop[ ARTP_MAGIC_RESISTANCE ] > 0)
+        ret += 4 + 4 * prop[ ARTP_MAGIC_RESISTANCE ];
+    else if (prop[ ARTP_MAGIC_RESISTANCE ] < 0)
         ret -= 6;
 
-    if (prop[ARTP_NEGATIVE_ENERGY] > 0)
+    if (prop[ ARTP_NEGATIVE_ENERGY ] > 0)
         ret += 3 + 3 * (prop[ARTP_NEGATIVE_ENERGY] * prop[ARTP_NEGATIVE_ENERGY]);
 
     // Discount Stlth-, charge for Stlth+
@@ -113,71 +117,71 @@ int artefact_value(const item_def &item)
         ret += 2 * prop[ARTP_STEALTH];
 
     // only one meaningful level:
-    if (prop[ARTP_POISON])
+    if (prop[ ARTP_POISON ])
         ret += 6;
 
     // only one meaningful level (hard to get):
-    if (prop[ARTP_ELECTRICITY])
+    if (prop[ ARTP_ELECTRICITY ])
         ret += 10;
 
     // only one meaningful level (hard to get):
-    if (prop[ARTP_RCORR])
+    if (prop[ ARTP_RCORR ])
         ret += 8;
 
     // only one meaningful level (hard to get):
-    if (prop[ARTP_RMUT])
+    if (prop[ ARTP_RMUT ])
         ret += 8;
 
-    if (prop[ARTP_SEE_INVISIBLE])
+    if (prop[ ARTP_SEE_INVISIBLE ])
         ret += 6;
 
     // abilities:
-    if (prop[ARTP_FLY])
+    if (prop[ ARTP_FLY ])
         ret += 3;
 
-    if (prop[ARTP_BLINK])
+    if (prop[ ARTP_BLINK ])
         ret += 10;
 
-    if (prop[ARTP_INVISIBLE])
+    if (prop[ ARTP_BERSERK ])
+        ret += 5;
+
+    if (prop[ ARTP_INVISIBLE ])
         ret += 10;
 
-    if (prop[ARTP_ANGRY])
+    if (prop[ ARTP_ANGRY ])
         ret -= 3;
 
-    if (prop[ARTP_CAUSE_TELEPORTATION])
+    if (prop[ ARTP_CAUSE_TELEPORTATION ])
         ret -= 3;
 
-    if (prop[ARTP_NOISE])
+    if (prop[ ARTP_NOISE ])
         ret -= 5;
 
-    if (prop[ARTP_PREVENT_TELEPORTATION])
+    if (prop[ ARTP_PREVENT_TELEPORTATION ])
         ret -= 8;
 
-    if (prop[ARTP_PREVENT_SPELLCASTING])
+    if (prop[ ARTP_PREVENT_SPELLCASTING ])
         ret -= 10;
 
-    if (prop[ARTP_CONTAM])
+    if (prop[ ARTP_CONTAM ])
         ret -= 8;
 
-    if (prop[ARTP_CORRODE])
+    if (prop[ ARTP_CORRODE ])
         ret -= 8;
 
-    if (prop[ARTP_DRAIN])
+    if (prop[ ARTP_DRAIN ])
         ret -= 8;
 
-    if (prop[ARTP_SLOW])
+    if (prop[ ARTP_SLOW ])
         ret -= 8;
 
-    if (prop[ARTP_FRAGILE])
+    if (prop[ ARTP_FRAGILE ])
         ret -= 8;
 
-    if (prop[ARTP_RMSL])
+    if (prop[ ARTP_RMSL ])
         ret += 20;
 
-    if (prop[ARTP_CLARITY])
-        ret += 20;
-
-    if (prop[ARTP_ARCHMAGI])
+    if (prop[ ARTP_CLARITY ])
         ret += 20;
 
     return (ret > 0) ? ret : 0;
@@ -224,7 +228,6 @@ unsigned int item_value(item_def item, bool ident)
             case SPWPN_PAIN:
             case SPWPN_ACID: // Unrand-only.
             case SPWPN_PENETRATION: // Unrand-only.
-            case SPWPN_SPECTRAL:
                 valued *= 25;
                 break;
 
@@ -270,6 +273,9 @@ unsigned int item_value(item_def item, bool ident)
             valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
 
+        if (item_known_cursed(item))
+            valued -= 30;
+
         break;
 
     case OBJ_MISSILES:          // ammunition
@@ -289,13 +295,10 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SPMSL_CURARE:
-            case SPMSL_BLINDING:
-            case SPMSL_SILVER:
-#if TAG_MAJOR_VERSION == 34
             case SPMSL_PARALYSIS:
             case SPMSL_PENETRATION:
+            case SPMSL_SILVER:
             case SPMSL_STEEL:
-#endif
             case SPMSL_DISPERSAL:
                 valued *= 30;
                 break;
@@ -303,16 +306,16 @@ unsigned int item_value(item_def item, bool ident)
 #if TAG_MAJOR_VERSION == 34
             case SPMSL_FLAME:
             case SPMSL_FROST:
+#endif
             case SPMSL_SLEEP:
             case SPMSL_CONFUSION:
                 valued *= 25;
                 break;
-#endif
 
-            case SPMSL_POISONED:
-#if TAG_MAJOR_VERSION == 34
-            case SPMSL_RETURNING:
             case SPMSL_EXPLODING:
+            case SPMSL_POISONED:
+            case SPMSL_RETURNING:
+#if TAG_MAJOR_VERSION == 34
             case SPMSL_SLOW:
             case SPMSL_SICKNESS:
 #endif
@@ -333,6 +336,7 @@ unsigned int item_value(item_def item, bool ident)
             const int sparm = get_armour_ego_type(item);
             switch (sparm)
             {
+            case SPARM_RUNNING:
             case SPARM_ARCHMAGI:
             case SPARM_RESISTANCE:
                 valued += 250;
@@ -347,16 +351,10 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_STEALTH:
             case SPARM_STRENGTH:
             case SPARM_INVISIBILITY:
-            case SPARM_WILLPOWER:
+            case SPARM_MAGIC_RESISTANCE:
             case SPARM_PROTECTION:
-            case SPARM_HURLING:
+            case SPARM_ARCHERY:
             case SPARM_REPULSION:
-            case SPARM_PRESERVATION:
-            case SPARM_SHADOWS:
-            case SPARM_RAMPAGING:
-            case SPARM_INFUSION:
-            case SPARM_LIGHT:
-            case SPARM_ENERGY:
                 valued += 50;
                 break;
 
@@ -364,10 +362,6 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_POISON_RESISTANCE:
             case SPARM_REFLECTION:
             case SPARM_SPIRIT_SHIELD:
-            case SPARM_HARM:
-            case SPARM_RAGE:
-            case SPARM_MAYHEM:
-            case SPARM_GUILE:
                 valued += 20;
                 break;
 
@@ -395,6 +389,9 @@ unsigned int item_value(item_def item, bool ident)
             valued += 30; // un-id'd "glowing" - arbitrary added cost
         }
 
+        if (item_known_cursed(item))
+            valued -= 30;
+
         break;
 
     case OBJ_WANDS:
@@ -408,6 +405,12 @@ unsigned int item_value(item_def item, bool ident)
             bool good = false;
             switch (item.sub_type)
             {
+            case WAND_CLOUDS:
+            case WAND_SCATTERSHOT:
+                valued += 120;
+                good = true;
+                break;
+
             case WAND_ACID:
             case WAND_DIGGING:
                 valued += 80;
@@ -415,18 +418,19 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case WAND_ICEBLAST:
-            case WAND_MINDBURST:
+            case WAND_DISINTEGRATION:
                 valued += 40;
                 good = true;
                 break;
 
-            case WAND_CHARMING:
+            case WAND_ENSLAVEMENT:
             case WAND_POLYMORPH:
             case WAND_PARALYSIS:
                 valued += 20;
                 break;
 
             case WAND_FLAME:
+            case WAND_RANDOM_EFFECTS:
                 valued += 10;
                 break;
 
@@ -437,10 +441,8 @@ unsigned int item_value(item_def item, bool ident)
 
             if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
-                if (good)
-                    valued += (valued * item.plus) / 4;
-                else
-                    valued += (valued * item.plus) / 2;
+                if (good) valued += (valued * item.plus) / 4;
+                else      valued += (valued * item.plus) / 2;
             }
         }
         break;
@@ -455,6 +457,19 @@ unsigned int item_value(item_def item, bool ident)
             case POT_EXPERIENCE:
                 valued += 500;
                 break;
+
+#if TAG_MAJOR_VERSION == 34
+            case POT_GAIN_DEXTERITY:
+            case POT_GAIN_INTELLIGENCE:
+            case POT_GAIN_STRENGTH:
+            case POT_BENEFICIAL_MUTATION:
+                valued += 350;
+                break;
+
+            case POT_CURE_MUTATION:
+                valued += 250;
+                break;
+#endif
 
             case POT_RESISTANCE:
             case POT_HASTE:
@@ -471,29 +486,60 @@ unsigned int item_value(item_def item, bool ident)
 
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
+#if TAG_MAJOR_VERSION == 34
+            case POT_RESTORE_ABILITIES:
+#endif
                 valued += 50;
                 break;
 
             case POT_MIGHT:
+            case POT_AGILITY:
             case POT_BRILLIANCE:
                 valued += 40;
                 break;
 
             case POT_CURING:
             case POT_LIGNIFY:
-            case POT_ATTRACTION:
             case POT_FLIGHT:
                 valued += 30;
                 break;
 
+#if TAG_MAJOR_VERSION == 34
+            case POT_POISON:
+            case POT_STRONG_POISON:
+            case POT_PORRIDGE:
+            case POT_SLOWING:
+            case POT_DECAY:
+#endif
+            case POT_BLOOD:
             case POT_DEGENERATION:
                 valued += 10;
                 break;
 
-            CASE_REMOVED_POTIONS(item.sub_type)
+#if TAG_MAJOR_VERSION == 34
+            case POT_BLOOD_COAGULATED:
+                valued += 5;
+                break;
+#endif
             }
         }
         break;
+
+    case OBJ_FOOD:
+        switch (item.sub_type)
+        {
+        case FOOD_RATION:
+            valued = 50;
+            break;
+
+        case FOOD_CHUNK:
+        default:
+            break;
+        }
+        break;
+
+    case OBJ_CORPSES:
+        valued = max_corpse_chunks(item.mon_type) * 5;
 
     case OBJ_SCROLLS:
         if (!item_type_known(item))
@@ -531,6 +577,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 35;
                 break;
 
+            case SCR_REMOVE_CURSE:
             case SCR_TELEPORTATION:
                 valued += 30;
                 break;
@@ -546,6 +593,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SCR_NOISE:
+            case SCR_RANDOM_USELESSNESS:
                 valued += 10;
                 break;
             }
@@ -553,12 +601,22 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_JEWELLERY:
+        if (item_known_cursed(item))
+            valued -= 30;
+
         if (!item_type_known(item))
             valued += 50;
         else
         {
             // Variable-strength rings.
-            if (jewellery_type_has_plusses(item.sub_type))
+            if (item_ident(item, ISFLAG_KNOW_PLUSES)
+                && (item.sub_type == RING_PROTECTION
+                    || item.sub_type == RING_STRENGTH
+                    || item.sub_type == RING_EVASION
+                    || item.sub_type == RING_DEXTERITY
+                    || item.sub_type == RING_INTELLIGENCE
+                    || item.sub_type == RING_SLAYING
+                    || item.sub_type == AMU_REFLECTION))
             {
                 // Formula: price = kn(n+1) / 2, where k depends on the subtype,
                 // n is the power. (The base variable is equal to 2n.)
@@ -579,6 +637,7 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_STRENGTH:
                 case RING_DEXTERITY:
                 case RING_INTELLIGENCE:
+                case AMU_REFLECTION:
                     coefficient = 30;
                     break;
                 default:
@@ -595,15 +654,17 @@ unsigned int item_value(item_def item, bool ident)
                 switch (item.sub_type)
                 {
                 case AMU_FAITH:
+                case AMU_RAGE:
                     valued += 400;
                     break;
 
                 case RING_WIZARDRY:
                 case AMU_REGENERATION:
                 case AMU_GUARDIAN_SPIRIT:
+                case AMU_THE_GOURMAND:
+                case AMU_HARM:
                 case AMU_MANA_REGENERATION:
                 case AMU_ACROBAT:
-                case AMU_REFLECTION:
                     valued += 300;
                     break;
 
@@ -611,7 +672,7 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_ICE:
                 case RING_PROTECTION_FROM_COLD:
                 case RING_PROTECTION_FROM_FIRE:
-                case RING_WILLPOWER:
+                case RING_PROTECTION_FROM_MAGIC:
                     valued += 250;
                     break;
 
@@ -631,9 +692,16 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 150;
                     break;
 
+                case RING_ATTENTION:
+                case RING_TELEPORTATION:
                 case AMU_NOTHING:
                     valued += 75;
                     break;
+
+                case AMU_INACCURACY:
+                    valued -= 300;
+                    break;
+                    // got to do delusion!
                 }
             }
 
@@ -660,19 +728,22 @@ unsigned int item_value(item_def item, bool ident)
             valued += 5000;
             break;
 
+        case MISC_FAN_OF_GALES:
         case MISC_PHIAL_OF_FLOODS:
-        case MISC_TIN_OF_TREMORSTONES:
-        case MISC_BOX_OF_BEASTS:
-        case MISC_CONDENSER_VANE:
-        case MISC_PHANTOM_MIRROR:
+        case MISC_LAMP_OF_FIRE:
+        case MISC_LIGHTNING_ROD:
             valued += 400;
             break;
 
-        case MISC_LIGHTNING_ROD:
+        case MISC_PHANTOM_MIRROR:
             valued += 300;
             break;
 
-        case MISC_XOMS_CHESSBOARD:
+        case MISC_BOX_OF_BEASTS:
+        case MISC_SACK_OF_SPIDERS:
+            valued += 200;
+            break;
+
         default:
             valued += 200;
         }
@@ -680,20 +751,40 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_BOOKS:
     {
-        valued = 0;
+        valued = 150;
         const book_type book = static_cast<book_type>(item.sub_type);
-        if (book == BOOK_MANUAL)
-            return 800;
 #if TAG_MAJOR_VERSION == 34
         if (book == BOOK_BUGGY_DESTRUCTION)
             break;
 #endif
-        int levels = 0;
-        const vector<spell_type> spells = spells_in_book(item);
-        for (spell_type spell : spells)
-            levels += spell_difficulty(spell);
-        // Level 9 spells are worth 4x level 1 spells.
-        valued += levels * 20 + spells.size() * 20;
+
+        if (item_type_known(item))
+        {
+            double rarity = 0;
+            if (is_random_artefact(item))
+            {
+                const vector<spell_type>& spells = spells_in_book(item);
+
+                int rarest = 0;
+                for (spell_type spell : spells)
+                {
+                    rarity += spell_rarity(spell);
+                    if (spell_rarity(spell) > rarest)
+                        rarest = spell_rarity(spell);
+                }
+                rarity += rarest * 2;
+                rarity /= spells.size();
+
+                // Surcharge for large books.
+                if (spells.size() > 6)
+                    rarity *= spells.size() / 6;
+
+            }
+            else
+                rarity = book_rarity(book);
+
+            valued += (int)(rarity * 50.0);
+        }
         break;
     }
 
@@ -729,11 +820,17 @@ bool is_worthless_consumable(const item_def &item)
         switch (item.sub_type)
         {
         // Blood potions are worthless because they are easy to make.
+        case POT_BLOOD:
+#if TAG_MAJOR_VERSION == 34
+        case POT_BLOOD_COAGULATED:
+        case POT_SLOWING:
+        case POT_DECAY:
+        case POT_POISON:
+#endif
         case POT_DEGENERATION:
             return true;
         default:
             return false;
-        CASE_REMOVED_POTIONS(item.sub_type)
         }
     case OBJ_SCROLLS:
         switch (item.sub_type)
@@ -744,6 +841,7 @@ bool is_worthless_consumable(const item_def &item)
         case SCR_CURSE_JEWELLERY:
 #endif
         case SCR_NOISE:
+        case SCR_RANDOM_USELESSNESS:
             return true;
         default:
             return false;
@@ -805,12 +903,12 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
 
     origin_purchased(item);
 
-    if (shoptype_identifies_stock(shop.type)
-        || item_type_is_equipment(item.base_type))
+    if (shoptype_identifies_stock(shop.type))
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
-        identify_item(item);
+        set_ident_type(item, true);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
     // Shopkeepers will place goods you can't carry outside the shop.
@@ -823,18 +921,32 @@ static bool _purchase(shop_struct& shop, const level_pos& pos, int index)
     return true;
 }
 
+static string _hyphenated_letters(int how_many, char first)
+{
+    string s = "<w>";
+    s += first;
+    s += "</w>";
+    if (how_many > 1)
+    {
+        s += "-<w>";
+        s += first + how_many - 1;
+        s += "</w>";
+    }
+    return s;
+}
+
 enum shopping_order
 {
-    ORDER_TYPE,
-    ORDER_DEFAULT = ORDER_TYPE,
+    ORDER_DEFAULT,
     ORDER_PRICE,
     ORDER_ALPHABETICAL,
+    ORDER_TYPE,
     NUM_ORDERS
 };
 
 static const char * const shopping_order_names[NUM_ORDERS] =
 {
-    "type", "price", "name"
+    "default", "price", "name", "type"
 };
 
 static shopping_order operator++(shopping_order &x)
@@ -873,8 +985,9 @@ class ShopEntry : public InvEntry
 {
     ShopMenu& menu;
 
-    string get_text() const override
+    string get_text(bool need_cursor = false) const override
     {
+        need_cursor = need_cursor && show_cursor;
         const int cost = item_price(*item, menu.shop);
         const int total_cost = menu.selected_cost();
         const bool on_list = shopping_list.is_on_list(*item, &menu.pos);
@@ -896,10 +1009,12 @@ class ShopEntry : public InvEntry
         const string keystr = colour_to_str(keycol);
         const string itemstr =
             colour_to_str(menu_colour(text, item_prefix(*item), tag));
-        return make_stringf(" <%s>%c %c </%s><%s>%4d gold   %s%s</%s>",
+        return make_stringf(" <%s>%c%c%c%c</%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
+                            need_cursor ? '[' : ' ',
                             selected() ? '+' : on_list ? '$' : '-',
+                            need_cursor ? ']' : ' ',
                             keystr.c_str(),
                             itemstr.c_str(),
                             cost,
@@ -924,10 +1039,9 @@ public:
     }
 };
 
-// XX why is this MF_QUIET_SELECT?
 ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase)
     : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
-                | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
+               | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING),
       shop(_shop),
       pos(_pos),
       can_purchase(_can_purchase)
@@ -938,7 +1052,6 @@ ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase
     set_tag("shop");
 
     init_entries();
-    resort();
 
     update_help();
 
@@ -999,25 +1112,25 @@ void ShopMenu::update_help()
         //You have 0 gold pieces.
         //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
         //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
-#if defined(USE_TILE_LOCAL) && !defined(TOUCH_UI)
+#if defined(USE_TILE) && !defined(TOUCH_UI)
         "[<w>Esc</w>/<w>R-Click</w>] exit  "
 #else
         //               "/R-Click"
         "[<w>Esc</w>] exit          "
 #endif
-        "%s  %s %s\n"
-        "[<w>/</w>] sort (%s)%s  %s  %s put item on shopping list",
+        "%s  [%s] %s\n"
+        "[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list",
         !can_purchase ? " " " "  "  " "       "  "          " :
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
                                      "[<w>!</w>] buy|<w>examine</w> items",
-        hyphenated_hotkey_letters(item_count(), 'a').c_str(),
+        _hyphenated_letters(item_count(), 'a').c_str(),
         menu_action == ACT_EXECUTE ? "select item for purchase" : "examine item",
         shopping_order_names[order],
         // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
         !can_purchase ? " " "     "  "               " :
                         "[<w>Enter</w>] make purchase",
-        hyphenated_hotkey_letters(item_count(), 'A').c_str())));
+        _hyphenated_letters(item_count(), 'A').c_str())));
 }
 
 void ShopMenu::purchase_selected()
@@ -1055,11 +1168,10 @@ void ShopMenu::purchase_selected()
         return;
     }
     more = formatted_string::parse_string(make_stringf(
-               "<%s>Purchase items%s for %d gold? (%s/N)</%s>\n",
+               "<%s>Purchase items%s for %d gold? (y/N)</%s>\n",
                col.c_str(),
                buying_from_list ? " in shopping list" : "",
                cost,
-               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
                col.c_str()));
     more += old_more;
     update_more();
@@ -1110,7 +1222,7 @@ void ShopMenu::purchase_selected()
 
     // Since the old ShopEntrys may now point to past the end of shop.stock (or
     // just the wrong place in general) nuke the whole thing and start over.
-    clear();
+    deleteAll(items);
     init_entries();
     resort();
 
@@ -1139,27 +1251,13 @@ void ShopMenu::resort()
 {
     switch (order)
     {
-    case ORDER_TYPE:
-    {
-        const bool id = shoptype_identifies_stock(shop.type);
-        // Using a map to sort reduces the number of item->name() calls.
-        multimap<const string, MenuEntry *> list;
-        for (const auto entry : items)
-        {
-            const auto item = dynamic_cast<ShopEntry*>(entry)->item;
-            if (is_known_artefact(*item))
-                list.insert({item->name(DESC_QUALNAME, false, id), entry});
-            else
-            {
-                list.insert({item->name(DESC_DBNAME, false, id) + " "
-                     + item->name(DESC_PLAIN, false, id), entry});
-            }
-        }
-        items.clear();
-        for (auto &entry : list)
-            items.push_back(entry.second);
+    case ORDER_DEFAULT:
+        sort(begin(items), end(items),
+             [](MenuEntry* a, MenuEntry* b)
+             {
+                 return a->data < b->data;
+             });
         break;
-    }
     case ORDER_PRICE:
         sort(begin(items), end(items),
              [this](MenuEntry* a, MenuEntry* b)
@@ -1175,6 +1273,18 @@ void ShopMenu::resort()
                  const bool id = shoptype_identifies_stock(shop.type);
                  return dynamic_cast<ShopEntry*>(a)->item->name(DESC_PLAIN, false, id)
                         < dynamic_cast<ShopEntry*>(b)->item->name(DESC_PLAIN, false, id);
+             });
+        break;
+    case ORDER_TYPE:
+        sort(begin(items), end(items),
+             [](MenuEntry* a, MenuEntry* b) -> bool
+             {
+                 const auto ai = dynamic_cast<ShopEntry*>(a)->item;
+                 const auto bi = dynamic_cast<ShopEntry*>(b)->item;
+                 if (ai->base_type == bi->base_type)
+                     return ai->sub_type < bi->sub_type;
+                 else
+                     return ai->base_type < bi->base_type;
              });
         break;
     case NUM_ORDERS:
@@ -1200,6 +1310,7 @@ bool ShopMenu::process_key(int keyin)
             update_more();
         }
         return true;
+    case ' ':
     case CK_MOUSE_CLICK:
     case CK_ENTER:
         if (can_purchase)
@@ -1241,20 +1352,24 @@ bool ShopMenu::process_key(int keyin)
     if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size()
         && menu_action == ACT_EXAMINE)
     {
-        // A hack to make the description more useful.
-        // The default copy constructor is non-const for item_def,
-        // so we need this violation of const hygene to tweak the flags
-        // to make the description more useful. The flags are copied by
-        // value by the default copy constructor so this is safe.
         item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
             items[letter_to_index(keyin)])->item));
-        if (shoptype_identifies_stock(shop.type))
+        // A hack to make the description more useful.
+        // In theory, the user could kill the process at this
+        // point and end up with valid ID for the item.
+        // That's not very useful, though, because it doesn't set
+        // type-ID and once you can access the item (by buying it)
+        // you have its full ID anyway. Worst case, it won't get
+        // noted when you buy it.
         {
-            item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
-                           | ISFLAG_NOTED_GET);
+            unwind_var<iflags_t> old_flags(item.flags);
+            if (shoptype_identifies_stock(shop.type))
+            {
+                item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
+                               | ISFLAG_NOTED_GET);
+            }
+            describe_item(item);
         }
-        describe_item_popup(item);
-
         return true;
     }
     else if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
@@ -1324,7 +1439,6 @@ void shop()
     if (shop.stock.empty())
         destroy_shop_at(you.pos());
     redraw_screen();
-    update_screen();
     if (menu.bought_something)
         mprf("Thank you for shopping at %s!", shopname.c_str());
     if (any_on_list)
@@ -1342,14 +1456,14 @@ void destroy_shop_at(coord_def p)
     if (shop_at(p))
     {
         env.shop.erase(p);
-        env.grid(p) = DNGN_ABANDONED_SHOP;
+        grd(p) = DNGN_ABANDONED_SHOP;
         unnotice_feature(level_pos(level_id::current(), p));
     }
 }
 
 shop_struct *shop_at(const coord_def& where)
 {
-    if (env.grid(where) != DNGN_ENTER_SHOP)
+    if (grd(where) != DNGN_ENTER_SHOP)
         return nullptr;
 
     auto it = env.shop.find(where);
@@ -1374,14 +1488,12 @@ string shop_type_name(shop_type type)
             return "Armour";
         case SHOP_JEWELLERY:
             return "Jewellery";
-        case SHOP_BOOK:
-            return "Book";
-#if TAG_MAJOR_VERSION == 34
         case SHOP_EVOKABLES:
             return "Gadget";
+        case SHOP_BOOK:
+            return "Book";
         case SHOP_FOOD:
-            return "Removed Food";
-#endif
+            return "Food";
         case SHOP_SCROLL:
             return "Magic Scroll";
         case SHOP_GENERAL_ANTIQUE:
@@ -1478,13 +1590,9 @@ static const char *shop_types[] =
     "antique armour",
     "antiques",
     "jewellery",
-#if TAG_MAJOR_VERSION == 34
-    "removed gadget",
-#endif
+    "gadget",
     "book",
-#if TAG_MAJOR_VERSION == 34
-    "removed food",
-#endif
+    "food",
     "distillery",
     "scroll",
     "general",
@@ -1497,10 +1605,6 @@ static const char *shop_types[] =
  */
 shop_type str_to_shoptype(const string &s)
 {
-#if TAG_MAJOR_VERSION == 34
-    if (s == "removed gadget" || s == "removed food")
-        return SHOP_UNASSIGNED;
-#endif
     if (s == "random" || s == "any")
         return SHOP_RANDOM;
 
@@ -1691,8 +1795,14 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
         break;
     case OBJ_MISCELLANY:
         // ... and a few of these.
-        if (!is_xp_evoker(item))
-            return 0;
+        switch (item.sub_type)
+        {
+            case MISC_CRYSTAL_BALL_OF_ENERGY:
+                break;
+            default:
+                if (!is_xp_evoker(item))
+                    return 0;
+        }
         break;
     default:
         return 0;
@@ -2052,45 +2162,8 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 class ShoppingListMenu : public Menu
 {
 public:
-    ShoppingListMenu()
-        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
-            | MF_INIT_HOVER) {}
+    ShoppingListMenu() : Menu(MF_MULTISELECT | MF_ALLOW_FORMATTING) {}
     bool view_only {false};
-
-    string get_keyhelp(bool) const override
-    {
-        string s = make_stringf("<yellow>You have %d gold pieces</yellow>\n", you.gold);
-
-        if (view_only)
-            s += "<lightgrey>Choose to examine item  ";
-        else
-        {
-            s += "<lightgrey>[<w>!</w>] ";
-            switch (menu_action)
-            {
-            case ACT_EXECUTE:
-                s += "<w>travel</w>|examine|delete";
-                break;
-            case ACT_EXAMINE:
-                s += "travel|<w>examine</w>|delete";
-                break;
-            default:
-                s += "travel|examine|<w>delete</w>";
-                break;
-            }
-
-            s += " items    ";
-        }
-        if (items.size() > 0)
-        {
-            // could be dropped if there's ever more interesting hotkeys
-            s += hyphenated_hotkey_letters(items.size(), 'a')
-                    + " choose item</lightgray>";
-        }
-        return pad_more_with(s, "<lightgrey>[<w>Esc</w>] exit</lightgrey>");
-    }
-
-    friend class ShoppingList;
 
 protected:
     virtual formatted_string calc_title() override;
@@ -2102,11 +2175,34 @@ formatted_string ShoppingListMenu::calc_title()
     const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
 
     fs.textcolour(title->colour);
-    fs.cprintf("Shopping list: %d %s%s, total cost %d gold pieces",
+    fs.cprintf("%d %s%s, total %d gold",
                 title->quantity, title->text.c_str(),
                 title->quantity > 1 ? "s" : "",
                 total_cost);
 
+    string s = "<lightgrey>  [<w>a-z</w>] ";
+
+    if (view_only)
+    {
+        fs += formatted_string::parse_string(s + "<w>examine</w>");
+        return fs;
+    }
+
+    switch (menu_action)
+    {
+    case ACT_EXECUTE:
+        s += "<w>travel</w>|examine|delete";
+        break;
+    case ACT_EXAMINE:
+        s += "travel|<w>examine</w>|delete";
+        break;
+    default:
+        s += "travel|examine|<w>delete</w>";
+        break;
+    }
+
+    s += "  [<w>?</w>/<w>!</w>] change action</lightgrey>";
+    fs += formatted_string::parse_string(s);
     return fs;
 }
 
@@ -2156,10 +2252,12 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
 
+#ifdef USE_TILE
             vector<tile_def> item_tiles;
             get_tiles_for_item(item, item_tiles, true);
             for (const auto &tile : item_tiles)
                 me->add_tile(tile);
+#endif
 
             if (col != -1)
                 me->colour = col;
@@ -2188,6 +2286,12 @@ void ShoppingList::display(bool view_only)
     mtitle->quantity = list->size();
     shopmenu.set_title(mtitle);
 
+    string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
+    shopmenu.set_more(formatted_string::parse_string(more_str));
+
+    shopmenu.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
+                        | MF_ALLOW_FORMATTING);
+
     fill_out_menu(shopmenu);
 
     shopmenu.on_single_selection =
@@ -2205,7 +2309,7 @@ void ShoppingList::display(bool view_only)
             if (cost > you.gold)
             {
                 string prompt =
-                   make_stringf("Travel to: %s\nYou cannot afford this item; travel there "
+                   make_stringf("You cannot afford %s; travel there "
                                 "anyway? (y/N)",
                                 describe_thing(*thing, DESC_A).c_str());
                 clrscr();
@@ -2222,7 +2326,7 @@ void ShoppingList::display(bool view_only)
             if (is_item)
             {
                 const item_def &item = get_thing_item(*thing);
-                describe_item_popup(item);
+                describe_item(const_cast<item_def&>(item));
             }
             else // not an item, so we only stored a description.
             {
@@ -2256,7 +2360,6 @@ void ShoppingList::display(bool view_only)
 
             shopmenu.clear();
             fill_out_menu(shopmenu);
-            shopmenu.update_more();
             shopmenu.update_menu(true);
         }
         else
@@ -2266,7 +2369,6 @@ void ShoppingList::display(bool view_only)
 
     shopmenu.show();
     redraw_screen();
-    update_screen();
 }
 
 static bool _compare_shopping_things(const CrawlStoreValue& a,
@@ -2436,8 +2538,9 @@ string ShoppingList::describe_thing(const CrawlHashTable& thing,
     return desc;
 }
 
-// Item name without inscription.
+// Item name without curse-status or inscription.
 string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
-    return item.name(DESC_PLAIN, false, ident, false, false);
+    return item.name(DESC_PLAIN, false, ident, false, false,
+                     ISFLAG_KNOW_CURSE);
 }

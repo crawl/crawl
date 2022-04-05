@@ -15,7 +15,6 @@
 static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
                                       size_t sz, void *ud)
 {
-    UNUSED(ls);
     ostringstream &out = *static_cast<ostringstream*>(ud);
     out.write(static_cast<const char *>(p), sz);
     return 0;
@@ -283,8 +282,6 @@ static void _dlua_register_constants(CLua &lua)
 void init_dungeon_lua()
 {
     lua_stack_cleaner clean(dlua);
-
-    dlua.init_libraries();
 
     dluaopen_colour(dlua);
     dluaopen_crawl(dlua);

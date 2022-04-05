@@ -54,8 +54,6 @@ public:
     void _assert_validity() const
     {
 #ifndef USE_TILE_LOCAL
-        ASSERT(viewp.x >= 1);
-        ASSERT(viewp.y >= 1);
         // Check that all the panes fit in the view.
         ASSERT((viewp+viewsz - termp).x <= termsz.x);
         ASSERT((viewp+viewsz - termp).y <= termsz.y);
@@ -70,7 +68,7 @@ public:
         ASSERT((mlistp+mlistsz-termp).y <= termsz.y);
 #endif
     }
-public:
+ public:
     const coord_def termp, termsz;
     coord_def viewp, viewsz;
     coord_def hudp;
@@ -256,27 +254,15 @@ bool crawl_view_buffer::empty() const
     return m_size.x * m_size.y <= 0;
 }
 
-crawl_view_buffer::crawl_view_buffer(const crawl_view_buffer &rhs)
-    : crawl_view_buffer(rhs.m_size)
+const crawl_view_buffer &crawl_view_buffer::operator = (const crawl_view_buffer &rhs)
 {
+    resize(rhs.m_size);
     if (rhs.m_buffer)
     {
         size_t count = m_size.x * m_size.y;
         copy(rhs.m_buffer, rhs.m_buffer+count, m_buffer);
     }
-}
-
-const crawl_view_buffer &crawl_view_buffer::operator = (crawl_view_buffer rhs)
-{
-    swap(m_size, rhs.m_size);
-    swap(m_buffer, rhs.m_buffer);
     return *this;
-}
-
-void crawl_view_buffer::fill(const screen_cell_t& value)
-{
-    for (int i = 0; i < m_size.x * m_size.y; ++i)
-        m_buffer[i] = value;
 }
 
 void crawl_view_buffer::clear()
@@ -297,7 +283,7 @@ crawl_view_geometry::crawl_view_geometry()
       msgp(1, viewp.y + viewsz.y), msgsz(80, 7),
       mlistp(hudp.x, hudp.y + hudsz.y),
       mlistsz(hudsz.x, msgp.y - mlistp.y),
-      vgrdc(), viewhalfsz(), glos1(), glos2(),
+      vbuf(), vgrdc(), viewhalfsz(), glos1(), glos2(),
       vlos1(), vlos2(), mousep(), last_player_pos()
 {
 }
@@ -305,6 +291,7 @@ crawl_view_geometry::crawl_view_geometry()
 void crawl_view_geometry::init_view()
 {
     viewhalfsz = viewsz / 2;
+    vbuf.resize(viewsz);
     if (!crawl_state.game_is_arena())
         set_player_at(you.pos(), true);
     else
@@ -355,10 +342,10 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
         else if (c.y + LOS_RADIUS > vgrdc.y + viewhalfsz.y - ymarg)
             vgrdc.y = c.y + LOS_RADIUS - viewhalfsz.y + ymarg;
 
-        if (vgrdc != oldc && Options.centre_on_scroll)
+        if (vgrdc != oldc && Options.center_on_scroll)
             vgrdc = c;
 
-        if (!Options.centre_on_scroll && Options.symmetric_scroll
+        if (!Options.center_on_scroll && Options.symmetric_scroll
             && !Options.view_lock_x
             && !Options.view_lock_y
             && (c - last_player_pos).abs() == 2
@@ -382,23 +369,6 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def(get_number_of_cols(), get_number_of_lines());
-
-    // currently, webtiles has weird interactions with this logic (I think
-    // because of extra resize calls). But this is basically safe because
-    // dgamelaunch wraps terminal size and prevents smallterm.
-#ifndef USE_TILE_LOCAL
-    const bool smallterm = termsz.x < MIN_COLS || termsz.y < MIN_LINES;
-    crawl_state.smallterm = smallterm;
-    if (crawl_state.need_save)
-    {
-        // if the game has already started, just fake the terminal size.
-        // this can cause weird glitches, would be more elegant to actually
-        // crop this. (But is it worth it?) crawl_state.smallterm should mostly
-        // prevent drawing if this comes into play.
-        termsz.x = max(termsz.x, MIN_COLS);
-        termsz.y = max(termsz.y, MIN_LINES);
-    }
-#endif
     hudsz  = coord_def(HUD_WIDTH, HUD_HEIGHT);
 
     const _inline_layout lay_inline(termsz, hudsz);
@@ -407,7 +377,7 @@ void crawl_view_geometry::init_geometry()
 #ifndef USE_TILE_LOCAL
     if (!crawl_state.need_save)
     {
-        if (smallterm)
+        if (termsz.x < MIN_COLS || termsz.y < MIN_LINES)
         {
             end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
                 termsz.x, termsz.y, MIN_COLS, MIN_LINES);
@@ -431,10 +401,6 @@ void crawl_view_geometry::init_geometry()
     {
         winner = &lay_mlist;
     }
-#ifndef USE_TILE_LOCAL
-    // I don't know why this crashes on local tiles
-    ASSERT(winner->valid);
-#endif
 
     msgp    = winner->msgp;
     msgsz   = winner->msgsz;

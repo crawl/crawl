@@ -15,11 +15,11 @@
 #include "spl-util.h"
 #include "stringutil.h"
 #include "tile-inventory-flags.h"
-#include "rltiles/tiledef-icons.h"
-#include "rltiles/tiledef-main.h"
+#include "tiledef-icons.h"
+#include "tiledef-main.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
-#include "tilereg-cmd.h"
+#include "viewgeom.h"
 
 SpellRegion::SpellRegion(const TileRegionInit &init) : GridRegion(init)
 {
@@ -53,17 +53,14 @@ void SpellRegion::draw_tag()
     draw_desc(desc.c_str());
 }
 
-int SpellRegion::handle_mouse(wm_mouse_event &event)
+int SpellRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
-    if (!place_cursor(event, item_idx)
-        || tile_command_not_applicable(CMD_CAST_SPELL, true))
-    {
+    if (!place_cursor(event, item_idx))
         return 0;
-    }
 
     const spell_type spell = (spell_type) m_items[item_idx].idx;
-    if (event.button == wm_mouse_event::LEFT)
+    if (event.button == MouseEvent::LEFT)
     {
         // close tab again if using small layout
         if (tiles.is_using_small_layout())
@@ -71,15 +68,14 @@ int SpellRegion::handle_mouse(wm_mouse_event &event)
 
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
-        if (cast_a_spell(false, spell) == spret::abort)
+        if (!cast_a_spell(false, spell))
             flush_input_buffer(FLUSH_ON_FAILURE);
         return CK_MOUSE_CMD;
     }
-    else if (spell != NUM_SPELLS && event.button == wm_mouse_event::RIGHT)
+    else if (spell != NUM_SPELLS && event.button == MouseEvent::RIGHT)
     {
         describe_spell(spell);
         redraw_screen();
-        update_screen();
         return CK_MOUSE_CMD;
     }
     return 0;
@@ -212,8 +208,10 @@ void SpellRegion::update()
         desc.idx      = (int) spell;
         desc.quantity = spell_mana(spell);
 
-        if (tile_command_not_applicable(CMD_CAST_SPELL, true)
-            || spell_is_useless(spell, true, true))
+        if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK)
+             && you.no_tele(false, false, true)
+            || spell_is_useless(spell, true, true)
+            || spell_mana(spell) > you.magic_points)
         {
             desc.flag |= TILEI_FLAG_INVALID;
         }

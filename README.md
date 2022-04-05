@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/crawl/crawl/workflows/Build/badge.svg)](https://github.com/crawl/crawl/actions/)
+[![Build Status](https://travis-ci.org/crawl/crawl.svg?branch=master)](https://travis-ci.org/crawl/crawl)
 
 # Dungeon Crawl Stone Soup
 
@@ -16,7 +16,7 @@ Dungeon Crawl Stone Soup is a game of dungeon exploration, combat and magic, inv
 If you'd like to dive in immediately, we suggest one of:
 
 * Start a game and pick a tutorial (select tutorial in the game menu),
-* Read [quickstart.md](crawl-ref/docs/quickstart.md) (in the [docs/](crawl-ref/docs/) directory), or
+* Read [quickstart.txt](crawl-ref/docs/quickstart.txt) (in the [docs/](crawl-ref/docs/) directory), or
 * For the studious, [read Crawl's full manual](crawl-ref/docs/crawl_manual.rst).
 
 There is also an ingame list of frequently asked questions which you can access by typing
@@ -32,13 +32,11 @@ Both classical ASCII and tiles (GUI) versions of Crawl are available to [downloa
 
 ## Community
 
-* Our official homepage: [crawl.develz.org](https://crawl.develz.org/)
-  * Online webtiles play
-  * Offline downloads
-  * A community forum
-* The official [/r/dcss subreddit](https://www.reddit.com/r/dcss/)
-* [/r/roguelikes Discord](https://discord.gg/S5F2H32)
-* IRC: #crawl on Libera (or #crawl-dev to chat development)
+### Web
+Our official homepage is [https://crawl.develz.org](https://crawl.develz.org/). You can find online play, offline downloads, a community forum and the development bug tracker/wiki.
+
+### IRC
+Chat with fellow crawlers in [##crawl on irc.freenode.net](https://webchat.freenode.net/?channels=##crawl), or talk development in [##crawl-dev](https://webchat.freenode.net/?channels=##crawl-dev).
 
 ## How you can help
 
@@ -50,20 +48,15 @@ the [contributor's guide](crawl-ref/docs/develop/contribution-process.md).
 
 At any time, there will be bugs -- finding and reporting them is a great help.
 Many of the online servers host the regularly updated development version. Bugs
-should be reported to [our github issue
-tracker](https://github.com/crawl/crawl/issues). Thoughtful ideas on how to
-improve interface or gameplay are welcome, but it's often best to
-[discuss](#community) changes before opening an issue or pull request.
+should be reported to [our bug tracker](https://crawl.develz.org/mantis/). Besides pointing out bugs, new ideas on how to improve interface or gameplay are welcome. These can be added to [the development wiki](https://crawl.develz.org/wiki/).
 
 ### Map making
-Crawl creates levels by combining many hand-made (but often randomised) maps,
-known as *vaults*. Making them is fun and easy. It's best to start with simple
-entry vaults: see [simple.des](crawl-ref/source/dat/des/arrival/simple.des) for
-examples. You can also read [the level-design manual](crawl-ref/docs/develop/levels/introduction.txt) for more help.
+Crawl creates levels by combining many hand-made (but often randomised) maps, known as *vaults*. Making them is fun and
+easy. It's best to start with simple entry vaults: see [simple.des](crawl-ref/source/dat/des/arrival/simple.des) for examples. You can also read [the level-design manual](crawl-ref/docs/develop/levels/introduction.txt) for more help.
 
-If you're ambitious, you can create new vaults for anywhere in the game. If
-you've made some vaults, you can test them on your own system (no compiling
-needed) and submit them via a github pull request. See the [contributor's guide](crawl-ref/docs/develop/contribution-process.md) for details.
+If you're ambitious, you can create new vaults for anywhere in the game. If you've
+made some vaults, you can test them on your own system (no compiling needed) and
+submit them to [our bug tracker](https://crawl.develz.org/mantis/).
 
 ### Monster Speech & Item Descriptions
 Monster speech provides a lot of flavour. Just like vaults, varied speech depends
@@ -76,26 +69,22 @@ them in [dat/descript/](crawl-ref/source/dat/descript/). The following conventio
 * Citations are okay, but try to stay away from the most generic ones.
 
 ### Tiles
-We're always open to improvements to existing tiles or variants of often-used
-tiles (eg floor tiles). If you want to give this a shot, please [contact us](#community). In case you drew some tiles of your own, you can simply share
-them with a developer or submit them via a github pull request. See the
-[contributor's guide](crawl-ref/docs/develop/contribution-process.md) for
-details.
+We're always open to improvements to existing tiles or variants of often-used tiles (eg floor tiles). If you want to give this a shot, please [contact us](#community) via forums or IRC. In case you drew some tiles of your own, you can submit them to [our bug tracker](https://crawl.develz.org/mantis/).
 
 ### Patches
 For developers (both existing & aspiring!), you can download/fork the source code and write patches. Bug fixes as well as new features are very much welcome.
 
 For large changes, it's always a good idea to [talk with the dev team](#community) first, to see if any plans already exist and if your suggestion is likely to be accepted.
 
-Please be sure to read [docs/develop/coding_conventions.md](crawl-ref/docs/develop/coding_conventions.md) too.
+Please be sure to read [docs/develop/coding_conventions.txt](crawl-ref/docs/develop/coding_conventions.txt) too.
 
 ## License and history information
 
-Crawl is licensed as GPLv2+. See [LICENSE](LICENSE) for the full text.
+Crawl is licensed as GPLv2+. See [licence.txt](crawl-ref/licence.txt) for the full text.
 
-Crawl is a descendant of Linley's Dungeon Crawl. The final alpha of Linley's Dungeon Crawl (v4.1) was released by Brent Ross in 2005. Since 2006, the Dungeon Crawl Stone Soup team has continued development. [CREDITS.txt](crawl-ref/CREDITS.txt) contains a full list of contributors.
+Crawl is a descendant of Linley's Dungeon Crawl. Development of the main branch stalled at version 4.0.0b26, with a final alpha of 4.1 being released by Brent Ross in 2005. Since 2006, the Dungeon Crawl Stone Soup team has continued development. [CREDITS.txt](crawl-ref/CREDITS.txt) contains a full list of contributors.
 
-Crawl uses the following open source packages; thanks to their developers:
+Crawl gladly uses the following open source packages; thanks to their developers:
 
 * The Lua scripting language, for in-game functionality and user macros ([license](crawl-ref/docs/license/lualicense.txt)).
 * The PCRE library, for regular expressions ([license](crawl-ref/docs/license/pcre_license.txt)).

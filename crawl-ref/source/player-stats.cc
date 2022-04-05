@@ -10,25 +10,27 @@
 #include "files.h"
 #include "god-passive.h"
 #include "hints.h"
+#include "item-status-flag-type.h"
+#include "item-use.h"
 #include "libutil.h"
 #include "macro.h"
 #ifdef TOUCH_UI
 #include "menu.h"
 #endif
 #include "message.h"
+#include "misc.h"
 #include "monster.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
-#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "religion.h"
 #include "stat-type.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #ifdef TOUCH_UI
-#include "rltiles/tiledef-gui.h"
+#include "tiledef-gui.h"
 #include "tilepick.h"
 #endif
 #include "transform.h"
@@ -103,28 +105,21 @@ static void _handle_stat_change(stat_type stat);
  */
 bool attribute_increase()
 {
-    const bool need_caps = Options.easy_confirm != easy_confirm_type::all;
-
-    const int statgain = you.has_mutation(MUT_DIVINE_ATTRS) ? 4 : 2;
-
     const string stat_gain_message = make_stringf("Your experience leads to a%s "
                                                   "increase in your attributes!",
-                                                  (statgain > 2) ?
+                                                  you.species == SP_DEMIGOD ?
                                                   " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
     learned_something_new(HINT_CHOOSE_STAT);
     Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE);
     MenuEntry * const status = new MenuEntry("", MEL_SUBTITLE);
-    MenuEntry * const s_me = new MenuEntry("Strength", MEL_ITEM, 1,
-                                                        need_caps ? 'S' : 's');
-    s_me->add_tile(tile_def(TILEG_FIGHTING_ON));
-    MenuEntry * const i_me = new MenuEntry("Intelligence", MEL_ITEM, 1,
-                                                        need_caps ? 'I' : 'i');
-    i_me->add_tile(tile_def(TILEG_SPELLCASTING_ON));
-    MenuEntry * const d_me = new MenuEntry("Dexterity", MEL_ITEM, 1,
-                                                        need_caps ? 'D' : 'd');
-    d_me->add_tile(tile_def(TILEG_DODGING_ON));
+    MenuEntry * const s_me = new MenuEntry("Strength", MEL_ITEM, 1, 'S');
+    s_me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
+    MenuEntry * const i_me = new MenuEntry("Intelligence", MEL_ITEM, 1, 'I');
+    i_me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
+    MenuEntry * const d_me = new MenuEntry("Dexterity", MEL_ITEM, 1, 'D');
+    d_me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
 
     pop.set_title(new MenuEntry("Increase Attributes", MEL_TITLE));
     pop.add_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
@@ -144,11 +139,11 @@ bool attribute_increase()
              innate_stat(STAT_INT),
              innate_stat(STAT_DEX));
     }
-    mprf(MSGCH_PROMPT, need_caps
-        ? "Increase (S)trength, (I)ntelligence, or (D)exterity? "
-        : "Increase (s)trength, (i)ntelligence, or (d)exterity? ");
+    mprf(MSGCH_PROMPT, "Increase (S)trength, (I)ntelligence, or (D)exterity? ");
 #endif
     mouse_control mc(MOUSE_MODE_PROMPT);
+
+    const int statgain = you.species == SP_DEMIGOD ? 2 : 1;
 
     bool tried_lua = false;
     int keyin;
@@ -161,7 +156,7 @@ bool attribute_increase()
         {
             string result;
             clua.fnreturns(">s", &result);
-            keyin = toupper_safe(result[0]);
+            keyin = toupper(result[0]);
         }
         else
         {
@@ -170,16 +165,10 @@ bool attribute_increase()
             keyin = pop.getkey();
 #else
             while ((keyin = getchm()) == CK_REDRAW)
-            {
                 redraw_screen();
-                update_screen();
-            }
 #endif
         }
         tried_lua = true;
-
-        if (!need_caps)
-            keyin = toupper_safe(keyin);
 
         switch (keyin)
         {
@@ -220,6 +209,98 @@ bool attribute_increase()
             status->text = "Please choose an option below"; // too naggy?
 #endif
         }
+    }
+}
+
+/*
+ * Have Jiyva increase a player stat by one and decrease a different stat by
+ * one.
+ *
+ * This considers armour evp and skills to determine which stats to change. A
+ * target stat vector is created based on these factors, which is then fuzzed,
+ * and then a shuffle of the player's stat points that doesn't increase the l^2
+ * distance to the target vector is chosen.
+*/
+void jiyva_stat_action()
+{
+    int cur_stat[NUM_STATS];
+    int stat_total = 0;
+    int target_stat[NUM_STATS];
+    for (int x = 0; x < NUM_STATS; ++x)
+    {
+        cur_stat[x] = you.stat(static_cast<stat_type>(x), false);
+        stat_total += cur_stat[x];
+    }
+
+    int evp = you.unadjusted_body_armour_penalty();
+    target_stat[STAT_STR] = max(9, evp);
+    target_stat[STAT_INT] = 9;
+    target_stat[STAT_DEX] = 9;
+    int remaining = stat_total - 18 - target_stat[0];
+
+    // Divide up the remaining stat points between Int and either Str or Dex,
+    // based on skills.
+    if (remaining > 0)
+    {
+        int magic_weights = 0;
+        int other_weights = 0;
+        for (skill_type sk = SK_FIRST_SKILL; sk < NUM_SKILLS; ++sk)
+        {
+            int weight = you.skills[sk];
+
+            if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
+                magic_weights += weight;
+            else
+                other_weights += weight;
+        }
+        // We give pure Int weighting if the player is sufficiently
+        // focused on magic skills.
+        other_weights = max(other_weights - magic_weights / 2, 0);
+
+        // Now scale appropriately and apply the Int weighting
+        magic_weights = div_rand_round(remaining * magic_weights,
+                                       magic_weights + other_weights);
+        other_weights = remaining - magic_weights;
+        target_stat[STAT_INT] += magic_weights;
+
+        // Heavy armour weights towards Str, Dodging skill towards Dex.
+        int str_weight = 10 * evp;
+        int dex_weight = 10 + you.skill(SK_DODGING, 10);
+
+        // Now apply the Str and Dex weighting.
+        const int str_adj = div_rand_round(other_weights * str_weight,
+                                           str_weight + dex_weight);
+        target_stat[STAT_STR] += str_adj;
+        target_stat[STAT_DEX] += (other_weights - str_adj);
+    }
+    // Add a little fuzz to the target.
+    for (int x = 0; x < NUM_STATS; ++x)
+        target_stat[x] += random2(5) - 2;
+    int choices = 0;
+    int stat_up_choice = 0;
+    int stat_down_choice = 0;
+    // Choose a random stat shuffle that doesn't increase the l^2 distance to
+    // the (fuzzed) target.
+    for (int gain = 0; gain < NUM_STATS; ++gain)
+        for (int lose = 0; lose < NUM_STATS; ++lose)
+        {
+            if (gain != lose && cur_stat[lose] > 1
+                && target_stat[gain] - cur_stat[gain] > target_stat[lose] - cur_stat[lose]
+                && cur_stat[gain] < MAX_STAT_VALUE && you.base_stats[lose] > 1)
+            {
+                choices++;
+                if (one_chance_in(choices))
+                {
+                    stat_up_choice = gain;
+                    stat_down_choice = lose;
+                }
+            }
+        }
+    if (choices)
+    {
+        simple_god_message("'s power touches on your attributes.");
+        modify_stat(static_cast<stat_type>(stat_up_choice), 1, false);
+        modify_stat(static_cast<stat_type>(stat_down_choice), -1, false);
     }
 }
 
@@ -304,6 +385,9 @@ static int _strength_modifier(bool innate_only)
 
     if (!innate_only)
     {
+        if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
+            result += 5;
+
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
 
@@ -339,6 +423,9 @@ static int _int_modifier(bool innate_only)
 
     if (!innate_only)
     {
+        if (you.duration[DUR_BRILLIANCE])
+            result += 5;
+
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
 
@@ -357,7 +444,6 @@ static int _int_modifier(bool innate_only)
     // mutations
     result += 2 * (_mut_level(MUT_CLEVER, innate_only)
                    - _mut_level(MUT_DOPEY, innate_only));
-    result += 2 * _mut_level(MUT_BIG_BRAIN, innate_only);
 
     return result;
 }
@@ -368,6 +454,9 @@ static int _dex_modifier(bool innate_only)
 
     if (!innate_only)
     {
+        if (you.duration[DUR_AGILITY])
+            result += 5;
+
         if (you.duration[DUR_DIVINE_STAMINA])
             result += you.attribute[ATTR_DIVINE_STAMINA];
 

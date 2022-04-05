@@ -85,13 +85,11 @@ static skill_type _equipped_skill()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = quiver::get_secondary_action()->get_item();
 
-    if (iweap && is_weapon(*iweap))
+    if (iweap && iweap->base_type == OBJ_WEAPONS)
         return item_attack_skill(*iweap);
 
-    // TODO: could generalize this to handle non-ammo actions in fsim?
-    if (!iweap && missile >= 0 && you.inv[missile].base_type == OBJ_MISSILES)
+    if (!iweap && you.m_quiver.get_fire_item() != -1)
         return SK_THROWING;
 
     return SK_UNARMED_COMBAT;
@@ -101,7 +99,7 @@ static string _equipped_weapon_name()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = quiver::get_secondary_action()->get_item();
+    const int missile = you.m_quiver.get_fire_item();
 
     if (iweap)
     {
@@ -112,11 +110,8 @@ static string _equipped_weapon_name()
         return "Wielding: " + item_buf;
     }
 
-    if (missile != -1 && you.inv[missile].defined()
-                && you.inv[missile].base_type == OBJ_MISSILES)
-    {
+    if (missile != -1)
         return "Quivering: " + you.inv[missile].name(DESC_PLAIN);
-    }
 
     return "Unarmed";
 }
@@ -147,7 +142,7 @@ static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 {
     fprintf(o, "%s: %s %s vs. %s (%d rounds) (%s)\n",
             defend ? "Defense" : "Attack",
-            species::name(you.species).c_str(),
+            species_name(you.species).c_str(),
             get_job_name(you.char_class),
             mon.name(DESC_PLAIN, true).c_str(),
             iter_limit,
@@ -157,7 +152,7 @@ static void _write_matchup(FILE * o, monster &mon, bool defend, int iter_limit)
 static void _write_you(FILE * o)
 {
     fprintf(o, "%s %s: XL %d   Str %d   Int %d   Dex %d\n",
-            species::name(you.species).c_str(),
+            species_name(you.species).c_str(),
             get_job_name(you.char_class),
             you.experience_level,
             you.strength(),
@@ -223,7 +218,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
     {
         if (!_equip_weapon(weapon, abort))
         {
-            int item = create_item_named("mundane ident:all " + weapon,
+            int item = create_item_named("mundane not_cursed ident:all " + weapon,
                                          you.pos(), &error);
             if (item == NON_ITEM)
                 return false;
@@ -252,15 +247,14 @@ static bool _fsim_kit_equip(const string &kit, string &error)
 
             if (you.inv[i].name(DESC_PLAIN).find(missile) != string::npos)
             {
-                you.quiver_action.set_from_slot(i);
-                quiver::set_needs_redraw();
+                quiver_item(i);
+                you.redraw_quiver = true;
                 break;
             }
         }
     }
 
     redraw_screen();
-    update_screen();
     return true;
 }
 
@@ -340,7 +334,6 @@ static monster* _init_fsim()
     mon->behaviour = BEH_SEEK;
 
     redraw_screen();
-    update_screen();
 
     return mon;
 }
@@ -364,15 +357,15 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     const coord_def you_start_pos = you.pos();
 
     unwind_var<int> mon_hp(mon.hit_points, mon.max_hit_points);
-    unwind_var<int> mon_heads(mon.num_heads, mon.num_heads);
     // 999 is arbitrary
     unwind_var<int> max_hp_override(you.hp_max, 999);
     unwind_var<int> hp_override(you.hp, you.hp_max);
+    unwind_var<int> hunger(you.hunger, you.hunger);
     bool did_hit = false;
 
     const int weapon = you.equip[EQ_WEAPON];
     const item_def *iweap = weapon != -1 ? &you.inv[weapon] : nullptr;
-    const int missile = quiver::get_secondary_action()->get_item();
+    const int missile = you.m_quiver.get_fire_item();
 
     mon.shield_blocks = 0;
     you.shield_blocks = 0;
@@ -382,11 +375,9 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
     {
         // first, ranged weapons. note: this includes
         // being empty-handed but having a missile quivered
-        // TODO: handle non-missile quivered items?
-        if (missile != -1 && you.inv[missile].base_type == OBJ_MISSILES
-            && (iweap && iweap->base_type == OBJ_WEAPONS &&
-                    is_range_weapon(*iweap)
-                || !iweap && missile != -1))
+        if ((iweap && iweap->base_type == OBJ_WEAPONS &&
+                    is_range_weapon(*iweap))
+            || (!iweap && missile != -1))
         {
             ranged_attack attk(&you, &mon, &you.inv[missile], false);
             attk.simu = true;
@@ -455,7 +446,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     crawl_state.disables.set(DIS_AFFLICTIONS);
 
     {
-        msg::suppress mx;
+        no_messages mx;
 
         for (int i = 0; i < iter_limit; i++)
             _do_one_fsim_round(mon, fdata, defend);
@@ -617,7 +608,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
         fflush(o);
 
         // kill the loop if the user hits escape
-        if (kbhit() && getch_ck() == 27)
+        if (kbhit() && getchk() == 27)
         {
             mpr("Cancelling simulation.\n");
             fprintf(o, "Simulation cancelled!\n\n");
@@ -682,7 +673,7 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
             fflush(o);
 
             // kill the loop if the user hits escape
-            if (kbhit() && getch_ck() == 27)
+            if (kbhit() && getchk() == 27)
             {
                 mpr("Cancelling simulation.\n");
                 fprintf(o, "\nSimulation cancelled!\n\n");
@@ -722,7 +713,7 @@ void wizard_fight_sim(bool double_scale)
     {
         mprf(MSGCH_PROMPT, "(A)ttack or (D)efense?");
 
-        switch (toalower(getch_ck()))
+        switch (toalower(getchk()))
         {
         case 'a':
         case 'A':

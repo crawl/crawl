@@ -3,6 +3,7 @@
 #include "mon-movetarget.h"
 
 #include "act-iter.h"
+#include "branch.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
@@ -54,6 +55,10 @@ static void _mark_neighbours_target_unreachable(monster* mon)
 
         // Monsters of differing habitats might prefer different routes.
         if (mons_primary_habitat(*m) != habit)
+            continue;
+
+        // Wall clinging monsters use different pathfinding.
+        if (mon->can_cling_to_walls() != m->can_cling_to_walls())
             continue;
 
         // A flying monster has an advantage over a non-flying one.
@@ -151,9 +156,13 @@ bool try_pathfind(monster* mon)
 
     // If the target is "unreachable" (the monster already tried,
     // and failed, to find a path), there's a chance of trying again.
-    // Retreating monsters retry every turn.
-    if (target_is_unreachable(mon) && !one_chance_in(12))
+    // The chance is higher for wall clinging monsters to help them avoid
+    // shallow water. Retreating monsters retry every turn.
+    if (target_is_unreachable(mon) && !one_chance_in(12)
+        && !(mon->can_cling_to_walls() && one_chance_in(4)))
+    {
         return false;
+    }
 
 #ifdef DEBUG_PATHFIND
     mprf("%s: Target out of reach! What now?",
@@ -196,7 +205,7 @@ bool try_pathfind(monster* mon)
 #endif
     const int range = mon->friendly() ? 1000 : mons_tracking_range(mon);
 
-    if (dist > range)
+    if (range > 0 && dist > range)
     {
         mon->travel_target = MTRAV_UNREACHABLE;
 #ifdef DEBUG_PATHFIND
@@ -212,7 +221,8 @@ bool try_pathfind(monster* mon)
          targpos.x, targpos.y, range);
 #endif
     monster_pathfind mp;
-    mp.set_range(range);
+    if (range > 0)
+        mp.set_range(range);
 
     if (mp.init_pathfind(mon, targpos))
     {
@@ -234,7 +244,7 @@ bool try_pathfind(monster* mon)
 static bool _is_level_exit(const coord_def& pos)
 {
     // All types of stairs.
-    if (feat_is_stair(env.grid(pos)))
+    if (feat_is_stair(grd(pos)))
         return true;
 
     // Teleportation and shaft traps.
@@ -277,17 +287,17 @@ static int _merfolk_avatar_water_score(coord_def p, bool& deep)
 
     for (adjacent_iterator ai(p); ai; ++ai)
     {
-        if (env.grid(*ai) == DNGN_SHALLOW_WATER)
+        if (grd(*ai) == DNGN_SHALLOW_WATER)
         {
             score++;
             near_floor = true;
         }
-        else if (env.grid(*ai) == DNGN_DEEP_WATER)
+        else if (grd(*ai) == DNGN_DEEP_WATER)
         {
             score++;
             deep = true;
         }
-        else if (feat_has_solid_floor(env.grid(*ai)))
+        else if (feat_has_solid_floor(grd(*ai)))
             near_floor = true;
     }
 
@@ -300,7 +310,7 @@ static int _merfolk_avatar_water_score(coord_def p, bool& deep)
         score += 6;
 
     // Slightly prefer standing in deep water, if possible
-    if (env.grid(p) == DNGN_DEEP_WATER)
+    if (grd(p) == DNGN_DEEP_WATER)
         score++;
 
     return score;
@@ -324,7 +334,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
     // If our current location is good enough, don't bother moving towards
     // some other spot which might be somewhat better
     if (_merfolk_avatar_water_score(mon->pos(), deep) >= 12 && deep
-        && env.grid(mon->pos()) == DNGN_DEEP_WATER)
+        && grd(mon->pos()) == DNGN_DEEP_WATER)
     {
         mon->firing_pos = mon->pos();
         return true;
@@ -353,7 +363,7 @@ bool find_merfolk_avatar_water_target(monster* mon)
         int best_num = 0;
         for (radius_iterator ri(mon->pos(), LOS_NO_TRANS); ri; ++ri)
         {
-            if (!feat_is_water(env.grid(*ri)))
+            if (!feat_is_water(grd(*ri)))
                 continue;
 
             const int dist = grid_distance(mon->pos(), *ri);
@@ -591,7 +601,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     for (radius_iterator ri(mon->patrol_point, you.current_vision, C_SQUARE, true);
          ri; ++ri)
     {
-        if (!in_bounds(*ri) || !mon->can_pass_through_feat(env.grid(*ri)))
+        if (!in_bounds(*ri) || !mon->can_pass_through_feat(grd(*ri)))
             continue;
 
         // Don't bother moving to squares (currently) occupied by a
@@ -741,11 +751,11 @@ void set_random_target(monster* mon)
 static monster * _active_band_leader(monster * mon)
 {
     // Not a band member
-    if (!mon->props.exists(BAND_LEADER_KEY))
+    if (!mon->props.exists("band_leader"))
         return nullptr;
 
     // Try to find our fearless leader.
-    unsigned leader_mid = mon->props[BAND_LEADER_KEY].get_int();
+    unsigned leader_mid = mon->props["band_leader"].get_int();
 
     return monster_by_mid(leader_mid);
 }
@@ -914,14 +924,9 @@ static bool _band_ok(monster * mon)
 
 void check_wander_target(monster* mon, bool isPacified)
 {
-    const monster *band_leader = _active_band_leader(mon);
     // default wander behaviour
     if (mon->pos() == mon->target
-            // for batty bands, we want the logic in _band_ok to take
-            // precedence; this keeps band-related pathing from taking to
-            // much cpu in extreme cases (like a lost band leader).
-            // TODO: does this lead to weird effects?
-        || mons_is_batty(*mon) && !band_leader
+        || mons_is_batty(*mon)
         || (!isPacified && !mons_is_avatar(mon->type) && one_chance_in(20))
         || herd_monster(*mon) && !_herd_ok(mon)
         || !_band_ok(mon))
@@ -939,8 +944,11 @@ void check_wander_target(monster* mon, bool isPacified)
         if (need_target && herd_monster(*mon))
             need_target = _herd_wander_target(mon);
 
-        if (need_target && band_leader != nullptr)
+        if (need_target
+            && _active_band_leader(mon) != nullptr)
+        {
             need_target = _band_wander_target(mon);
+        }
 
         // XXX: This is really dumb wander behaviour... instead of
         // changing the goal square every turn, better would be to
@@ -1023,12 +1031,16 @@ static bool _can_safely_go_through(const monster * mon, const coord_def p)
 {
     ASSERT(map_bounds(p));
 
-    if (!monster_habitable_grid(mon, env.grid(p)))
+    if (!monster_habitable_grid(mon, grd(p)))
         return false;
 
     // Stupid monsters don't pathfind around shallow water
-    if (mon->floundering_at(p) && (mons_intel(*mon) >= I_HUMAN))
+    // except the clinging ones.
+    if (mon->floundering_at(p)
+        && (mons_intel(*mon) >= I_HUMAN || mon->can_cling_to_walls()))
+    {
         return false;
+    }
 
     return true;
 }

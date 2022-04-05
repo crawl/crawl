@@ -12,8 +12,8 @@ You can view existing files to get a sense of the format, it's quite straightfor
 
 | key  | type | required | description |
 | ---- | ---- | -------- | ----------- |
-| enum | `string` | **Yes** | Set the species enum. Must match the pattern `SP_[A-Z_]+`. |
-| monster | `string` | **Yes** | Species' corresponding monster. Must match the pattern `MONS_[A-Z_]+`. |
+| enum | `string` | **Yes** | Set the species enum. Must match the pattern `SP_[A-Z]+`. |
+| monster | `string` | **Yes** | Species' corresponding monster. Must match the pattern `MONS_[A-Z]+`. |
 | name | `string` | **Yes** | Species name, like 'Deep Dwarf' or 'Felid'. Required. Must be unique. |
 | short_name | `string` | No | Two letter species code. Must be unique (excepting special cases like Draconian sub-species). Defaults to the first two letters of the name. |
 | adjective | `string` | No | Species adjective, like 'Dwarven' or 'Feline'. Defaults to `$name`. |
@@ -23,7 +23,7 @@ You can view existing files to get a sense of the format, it's quite straightfor
 | species_flags | `array of strings` | No | Set a few species flags. Defaults to none. The available flags are: <!-- raw html is the only way to embed multi-line content in a markdown table eek --><ul><li> **hairless** - Species lacks hair (ensures they don't get hair-raising messages).</li><li>**small_torso** - Species' torso is a size smaller than their species size (eg Centaur, Naga). Allows for example large species to use medium armour.</li><li>**elven**, **orcish**, **draconian** - Marks the species as part of a particular racial family. Has various obscure effects.</li></ul> |
 | aptitudes | `map` | **Yes** | The available keys are:<ul><li>**xp**: `(int)` xp aptitude for the species. Required.</li><li>**hp**: `(int)` hp aptitude for the species. Required.</li><li>**mp_mod**: `(int)` starting mp modifier for the species. Required.</li><li>**mr**: `(int)` Magic Resistance gained per XL. Required.</li><li>All other species aptitudes can be specified here. For example: `fighting: 1`. If not specified, the aptitude defaults to 0. For skills the species cannot train, use `false`.</li></ul>
 | can_swim | `boolean` | No | If true, the monster can move in deep water. Defaults to false. |
-| undead | `str` | No | Undead type. Controls many things about how the species works, but most notably base resists and hunger. Defaults to US_ALIVE. The available settings are:<ul><li>**US_ALIVE** - Not undead</li><li>**US_UNDEAD** - Ghouls, Mummies</li><li>**US_SEMI_UNDEAD** - Vampires</li></ul> |
+| undead | `str` | No | Undead type. Controls many things about how the species works, but most notably base resists and hunger. Defaults to US_ALIVE. The available settings are:<ul><li>**US_ALIVE** - Not undead</li><li>**US_HUNGRY_DEAD** - Ghouls</li><li>**US_UNDEAD** - Mummies</li><li>**US_SEMI_UNDEAD** - Vampires</li></ul> |
 | size | `str` | No | Species size. The available sizes are: tiny, little, small, medium, large, big, giant. Defaults to medium. |
 | str | `int` | **Yes** | Starting strength. Note: starting stats are modified by the background player chooses. |
 | int | `int` | **Yes** | Starting intelligence. |
@@ -44,4 +44,4 @@ You probably don't need or want to use these.
 | key  | type | required | description |
 | ---- | ---- | -------- | ----------- |
 | TAG_MAJOR_VERSION | `int` | No | Wrap the species in `#if TAG_MAJOR_VERSION == [...]` to deprecate it. See existing deprecated species for examples. |
-| create_enum | `boolean` | No | Set `false` if the species has a hardcoded enum in species-type.h. New species should use the default value. Defaults to `true`. |
+| create_enum | `boolean` | No | Set `true` if the species already has an enum in species-type.h. Any new species should not set this (and will fail to compile if you try). Defaults to `false`. |

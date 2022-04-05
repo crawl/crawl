@@ -7,20 +7,23 @@
 
 #include "state.h"
 
-#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
+#ifndef TARGET_OS_WINDOWS
 #include <unistd.h>
 #endif
 
 #include "dbg-util.h"
 #include "delay.h"
 #include "directn.h"
+#include "exclude.h"
 #include "hints.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "misc.h"
 #include "monster.h"
 #include "player.h"
 #include "religion.h"
+#include "scroller.h"
 #include "showsymb.h"
 #include "unwind.h"
 
@@ -32,9 +35,6 @@ game_state::game_state()
       io_inited(false),
       need_save(false), game_started(false), saving_game(false),
       updating_scores(false),
-#ifndef USE_TILE_LOCAL
-      smallterm(false),
-#endif
       seen_hups(0), map_stat_gen(false), map_stat_dump_disconnect(false),
       obj_stat_gen(false), type(GAME_TYPE_NORMAL),
       last_type(GAME_TYPE_UNSPECIFIED), last_game_exit(game_exit::unknown),
@@ -51,28 +51,24 @@ game_state::game_state()
       show_more_prompt(true), terminal_resize_handler(nullptr),
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),
       prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),
-      cmd_repeat_started_unsafe(false),
-      lua_calls_no_turn(0), lua_script_killed(false),
-      lua_ready_throttled(false),
+      cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
       stat_gain_prompt(false), simulating_xp_gain(false),
       level_annotation_shown(false),
       viewport_monster_hp(false), viewport_weapons(false),
       tiles_disabled(false),
       title_screen(true),
       invisible_targeting(false),
-      player_moving(false),
       darken_range(nullptr), unsaved_macros(false), disables(),
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),
-      last_builder_error_fatal(false),
       mon_act(nullptr)
 {
     reset_cmd_repeat();
     reset_cmd_again();
-#ifndef UNIX
+#ifdef TARGET_OS_WINDOWS
     no_gdb = "Non-UNIX Platform -> not running gdb.";
 #else
-    no_gdb = access(GDB_PATH, 1) ? "gdb not executable." : 0;
+    no_gdb = access("/usr/bin/gdb", 1) ? "/usr/bin/gdb not executable." : 0;
 #endif
 }
 
@@ -88,7 +84,6 @@ void game_state::reset_game()
     need_save = false;
     type = GAME_TYPE_UNSPECIFIED;
     updating_scores = false;
-    clear_mon_acting();
     reset_cmd_repeat();
     reset_cmd_again();
 }
@@ -208,6 +203,7 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
 
     switch (ai)
     {
+    case activity_interrupt::hungry:
     case activity_interrupt::teleport:
     case activity_interrupt::force:
     case activity_interrupt::hp_loss:
@@ -239,6 +235,7 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
         if (at.context == SC_NEWLY_SEEN)
         {
             monster_info mi(mon);
+            set_auto_exclude(mon);
 
             mprf(MSGCH_WARN, "%s comes into view.",
                  get_monster_equipment_desc(mi, DESC_WEAPON).c_str());
@@ -622,20 +619,6 @@ string game_state::game_type_name_for(game_type _type)
     case NUM_GAME_TYPE:
         return "Unknown";
     }
-}
-
-bool game_state::seed_is_known() const
-{
-#ifdef DGAMELAUNCH
-    return player_is_dead()
-# ifdef WIZARD
-        || you.wizard
-# endif
-        || type == GAME_TYPE_CUSTOM_SEED;
-#else
-    //offline: it's visible to do what you want with it.
-    return true;
-#endif
 }
 
 string game_state::game_savedir_path() const

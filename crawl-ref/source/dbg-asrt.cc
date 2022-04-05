@@ -36,7 +36,7 @@
 #include "travel.h"
 #include "version.h"
 #include "view.h"
-
+#
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW)
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
@@ -131,14 +131,14 @@ static void _dump_player(FILE *file)
         && !in_bounds(you.pos()) && you.hp > 0 && you.hp_max > 0
         && you.strength() > 0 && you.intel() > 0 && you.dex() > 0)
     {
-        // Arena mode can change behaviour of the rest of the code and/or lead
+        // Arena mode can change behavior of the rest of the code and/or lead
         // to asserts.
         crawl_state.type            = GAME_TYPE_NORMAL;
         crawl_state.arena_suspended = false;
         return;
     }
 
-    // Arena mode can change behaviour of the rest of the code and/or lead
+    // Arena mode can change behavior of the rest of the code and/or lead
     // to asserts.
     crawl_state.arena_suspended = false;
 
@@ -146,7 +146,7 @@ static void _dump_player(FILE *file)
     fprintf(file, "{{{{{{{{{{{\n");
 
     fprintf(file, "Name:    [%s]\n", you.your_name.c_str());
-    fprintf(file, "Species: %s\n", species::name(you.species).c_str());
+    fprintf(file, "Species: %s\n", species_name(you.species).c_str());
     fprintf(file, "Job:     %s\n\n", get_job_name(you.char_class));
 
     fprintf(file, "HP: %d/%d; mods: %d/%d\n", you.hp, you.hp_max,
@@ -187,7 +187,7 @@ static void _dump_player(FILE *file)
     {
         fprintf(file, "Delayed (%u):\n",
                 (unsigned int)you.delay_queue.size());
-        for (const auto &delay : you.delay_queue)
+        for (const auto delay : you.delay_queue)
         {
             fprintf(file, "    type:     %s", delay->name());
             fprintf(file, "\n");
@@ -197,8 +197,7 @@ static void _dump_player(FILE *file)
     }
 
     fprintf(file, "Skills (mode: %s)\n", you.auto_training ? "auto" : "manual");
-    fprintf(file, "Name            | can_currently_train | train | training |"
-                  " level | points | progress\n");
+    fprintf(file, "Name            | can_train | train | training | level | points | progress\n");
     for (size_t i = 0; i < NUM_SKILLS; ++i)
     {
         const skill_type sk = skill_type(i);
@@ -211,9 +210,9 @@ static void _dump_player(FILE *file)
         if (sk >= 0 && you.skills[sk] < 27)
             needed_max = skill_exp_needed(you.skills[sk] + 1, sk);
 
-        fprintf(file, "%-16s|          %c          |   %u   |   %3u    |   %2d  | %6d | %d/%d\n",
+        fprintf(file, "%-16s|     %c     |   %u   |   %3u    |   %2d  | %6d | %d/%d\n",
                 skill_name(sk),
-                you.can_currently_train[sk] ? 'X' : ' ',
+                you.can_train[sk] ? 'X' : ' ',
                 you.train[sk],
                 you.training[sk],
                 you.skills[sk],
@@ -393,13 +392,13 @@ static void _dump_player(FILE *file)
     if (in_bounds(you.pos()) && monster_at(you.pos()))
     {
         fprintf(file, "Standing on same square as: ");
-        const unsigned short midx = env.mgrid(you.pos());
+        const unsigned short midx = mgrd(you.pos());
 
         if (invalid_monster_index(midx))
             fprintf(file, "invalid monster index %d\n", (int) midx);
         else
         {
-            const monster* mon = &env.mons[midx];
+            const monster* mon = &menv[midx];
             fprintf(file, "%s:\n", debug_mon_str(mon).c_str());
             debug_dump_mon(mon, true);
         }
@@ -564,13 +563,6 @@ static void _dump_ver_stuff(FILE* file)
 #else
     fprintf(file, "Tiles: no\n\n");
 #endif
-    if (you.fully_seeded)
-    {
-        fprintf(file, "Seed: %" PRIu64 ", deterministic pregen: %d\n",
-            crawl_state.seed, (int) you.deterministic_levelgen);
-    }
-    if (Version::history_size() > 1)
-        fprintf(file, "Version history:\n%s\n\n", Version::history().c_str());
 }
 
 static void _dump_command_line(FILE *file)
@@ -611,7 +603,7 @@ void do_crash_dump()
         _dump_ver_stuff(stderr);
 
         fprintf(stderr, "%s\n\n", crash_signal_info().c_str());
-        write_stack_trace(stderr);
+        write_stack_trace(stderr, 0);
         call_gdb(stderr);
 
         return;
@@ -640,15 +632,13 @@ void do_crash_dump()
     // This message is parsed by the WebTiles server.
     fprintf(stderr,
             "\n\nWe crashed! This is likely due to a bug in Crawl. "
-            "\nPlease submit a bug report at https://github.com/crawl/crawl/issues or at"
-            "\nhttps://crawl.develz.org/mantis/ and include:"
+            "\nPlease submit a bug report at https://crawl.develz.org/mantis/ "
+            "and include:"
             "\n- The crash report: %s"
             "\n- Your save file: %s"
             "\n- A description of what you were doing when this crash occurred.\n\n",
             name, get_savedir_filename(you.your_name).c_str());
     errno = 0;
-    // TODO: this freopen of stderr persists into a recursive crash, making it
-    // hard to directly log in webtiles...
     FILE* file = crawl_state.test ? stderr : freopen(name, "a+", stderr);
 
     // The errno values are only relevant when the function in
@@ -681,7 +671,7 @@ void do_crash_dump()
     // might themselves cause crashes.
     if (!signal_info.empty())
         fprintf(file, "%s\n\n", signal_info.c_str());
-    write_stack_trace(file);
+    write_stack_trace(file, 0);
     fprintf(file, "\n");
 
     call_gdb(file);
@@ -785,7 +775,6 @@ void do_crash_dump()
 
 NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
 {
-    UNUSED(assert);
 // FIXME: this needs a way to get the SDL_window in windowmanager-sdl.cc
 #if 0
 #if defined(USE_TILE_LOCAL) && defined(TARGET_OS_WINDOWS)
@@ -807,6 +796,12 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
     OutputDebugString(mesg);
     if (IsDebuggerPresent())
         DebugBreak();
+#endif
+
+#if defined(TARGET_OS_MACOSX)
+// raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
+    int* p = nullptr;           // but this gives us a stack crawl...
+    *p = 0;
 #endif
 
     // MSVCRT's abort() give's a funny message ...

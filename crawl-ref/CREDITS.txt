@@ -30,24 +30,20 @@
     Enne Walker
 
 * The administrators of public crawl servers, both present:
-    Jan Anders Bremer (underhound.eu)
+    John Boyle (crawl.berotato.org)
     Rax E. Dillon (crawl.akrasiac.org)
-    dplusplus (lazy-life.ddo.jp)
-    floraline (crawl.kelbi.org)
     Wongi Hong (webzook.net / kr.dobrazupa.org)
     Alex Jurkiewicz (crawl.project357.org)
+    Neil Moore (crawl.s-z.org)
     Marc H. Thoben (crawl.develz.org)
-    Namanix (crawl.xtahua.com)
-    ZureaL (cbro.berotato.org)
+    dplusplus (lazy-life.ddo.jp)
+    floraline (crawl.kelbi.org)
   and past:
     Jan Anders Bremer (crawl.lantea.net)
-    John Boyle (crawl.berotato.org)
-    joosa (rl.heh.fi)
-    Medar, Zkyp (crawl.xtahua.com)
     Aleksi Miikkael Luukkonen (crawl.lantea.net)
-    Neil Moore (crawl.s-z.org)
-    phunktion (crawl.somatika.net)
+    joosa (rl.heh.fi)
     sd1989 (kr.dobrazupa.org)
+    phunktion (crawl.somatika.net)
     ZiBuDo (crawl.jorgrun.rocks)
 
 * The members of various usability testing teams from the department of
@@ -75,10 +71,6 @@
 
 * Members of the Dungeon Crawl community who have contributed to Dungeon
   Crawl Stone Soup:
-    Eugene Abramchuk
-    achuah
-    Santiago Acosta
-    AdamPG
     Brent Adams
     Mike Adams
     Aj Adamson
@@ -86,13 +78,10 @@
     Alcon
     Brandon Allbery
     Warwick Allison
-    aMcNicky
     AndSDev
-    Antern
     Austin Appleby
     araganzar
     argonaut
-    ArmiesAndCastles
     Juha Arpiainen
     Arxale
     John 'Poor Yurik' Attea
@@ -100,7 +89,6 @@
     Steve 'nfogravity' Balady
     Max Bane
     G. Bailey
-    Alexei Barnes
     Beargit
     Bill Beher
     Alexander Beisig
@@ -109,17 +97,14 @@
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
-    Elliott Bernstein
     Bloax
     Terje Bø
     Erik Inge Bolsø
     bones
     Peter Borgmann
     Matthew Boeh
-    Clare Boothby
     Mike Boutin
     John Boyle
-    Josh Braden
     Daniel Mark Brownrigg
     Andre Bubel
     Trent W. Buck
@@ -130,65 +115,45 @@
     Edgar Carballo
     Cedor
     Cerol
-    Marcelo Cerri
-    Zachary Chandler
     Rahul Chandra
-    Joe Childers
     Thom Chiovoloni
     Anthony Chuah
     Henry Cipolla
-    CollinJ
     Nicholas Connelly
     Tom Conrad
     Vitor 'Baconkid' Costa
-    RJ Cunningham
     Aaron Curtis
     Simon Curtis
-    cut1less
-    Matthew Daley
-    David Damerell
     Paul Dejean
     Denzi
-    Ed Dewey
-    dicedlemming
     Lothar Dierkes
-    dilly
     Doesnty
     Mark 'Palyth' Donahue
     Kevin Donnelly
     drachereborn
-    DreamDust
     Mike Drinen
     DrKe
     Kieron Dunbar
     Russell Dunk
-    Ebonnov
     John 'Elwin' Edwards
     elliott
     Micha Elsner
     Carl-Oscar Erneholm
     Erich Erstu
-    Higor Eurípedes
     Christopher Evenstar
-    Robert Faulk
     Floodkiller
     floraline
     Brett Foster
     Kyle Fox
-    Perry Fraser
     freepotion
     Chris Galardi
     GenericPseudonym
     Ge0ff
     Joshua Gelbard
-    Peter Gerlagh
     Benoît Giannangeli
-    Gittourarmy
     Ben Goetter
     Aaron Golden
     Ed Gonzalez
-    Gopall
-    Goratrix
     Rob Grant
     John Greenberg
     GreyKnight
@@ -205,7 +170,6 @@
     Chris Honey
     Sylvia 'Onia' Hörnke
     Benoit Hudson
-    Hurricos
     Iainuki
     ICC
     Icy Lich
@@ -214,9 +178,7 @@
     Matthew Ince
     Mitsuhiro Itakura
     Jeekaroose
-    Nick Johnstone
     Mikko Juola
-    Zhang Kai
     Kurt Kartaltepe
     Dominic Kempf
     Dominic 'dk' Kexel
@@ -225,9 +187,7 @@
     Kornel Kisielewicz
     Vesa Kivimäki
     Daniel Klein
-    klorpa
     Jon Knapp
-    Quinten Konyn
     Ilkka Koskela
     infiniplex
     Vambola Kotkas
@@ -235,44 +195,33 @@
     Ryan Kusnery
     Jukka Kuusisto
     Lorenzo Lami
-    Christopher Landry
     Lantier
     Maciej Lapinski
-    Nikolai Lavsky
     Lamil Lerran
     Jordan Lewis
     Sami Liedes
     Dom 'Bodrick' Light
-    Lightli
-    Kiëd Llaentenn
     Mark Lodato
     Matthew Ludivico
     Rob Lund
-    Sebastian Łużyński
     Lynn
     Michael Lynn
     Peter McLarnan
     Lain I. W. Madreisz
     Johannes Maier
     Markus Maier
+    MainiacJoe
     Arien Malec
     Paul Maloney
     Pablo Mansanet
     Wille Mäntylä
-    István Markó
-    Gabriel Marks
     Jean Martel
     James 'Eronarn' Meickle
     Jacob Meigs
     mgdelmonte
-    Midn8
     mikee
-    Nathan Mills
     Andrew Minton
-    Mintice
-    Byrel Mitchell
     Yer Mivvaggah
-    Monkooky
     Shawn M Moore
     Muffindrake
     Akinori Musha
@@ -281,67 +230,50 @@
     nagdon
     Naruni
     neofelis
-    nirrattner
+    nicolae
+    Nikolai Lavsky
     Jonathon Nooner
     NormalPerson7
-    Michael Nowack
     Erkki Nurmi
     Mattias Nyberg
     nyra
     Dylan O'Donnell
-    Heinrich Ody
     Chris Oelmueller
     John Olender
     Aaron Olowin
     Andrew O'Neill
-    Oneirical
-    Justin Clark Ong
     Yuuma Oohara
     Julian Ospald
     Malwyn P
     palyth
     panicbit
-    Anders Papitto
     William Parker
     Pedro
     Pekkekke
     Arlen Phillips
     pikaro
     Lemuel Pitkin
-    Paul Pollack
     Poroing
     Iago Porto
-    Alexander Posch
-    Brian Power
     psywombats
     pubby
-    Ashley Elizabeth Raine
-    randomMesh
     Edward Randtke
     Derek Ray
     RealzHS
     Terence Reeves
     Tobias Rehbein
     Remsleep
-    Chris Rendle-Short
     Ryan Riegel
-    riverfiend
     RjY
-    rmcneive
     Andy Roche
     rockygargoyle
     Will Rogers
     Nate Rook
     David Rose
-    runrin
     Risto Saarelma
     Sebastian Salman
-    Petri Salminen
     Sandman25
-    Sastreii
     Brett Scarborough
-    Roderick Schertler
-    sdynet
     Roman Sêk
     Brennan Shacklett
     ShadyAmish
@@ -350,7 +282,6 @@
     Aditya Shevade
     Alexandra Shields
     Robert Shimmin
-    Shummie
     Sigurd
     Edgar Simo
     Alex Smith
@@ -365,10 +296,8 @@
     Jan 'heftig' Steffens
     Stenella
     Timothy Stiles
-    John Stilley
     Johan Strandell
     Ben Striegel
-    Cebolla Sunbeam
     Derrick Sund
     Pavel 'Curio' Svinarchuk
     Tanner Swett
@@ -378,26 +307,18 @@
     Chris Terenzi
     Jared 'Twinge' Tinney
     Matt Titus
-    Jonathan Klabunde Tomer
     Tommy
-    Sean VanMeter
     Mikko Vepsäläinen
-    vla22
     WanderingBlade
-    Richard Wardin
     waylon531
     Steven Wheeler
-    WhiteShark
     Thomas Willem
     Evan Williams
-    Mara Williamson
     Jeremey Wilson
-    wjchen
     ximxim
     Yelve Yakut
     Edward Z. Yang
     Yermak
-    Andrew G. York
     Rob Young
     Zannick
     Zooko
@@ -413,7 +334,7 @@ The Dungeon Crawl Stone Soup development team is:
     Corin Buchanan-Howland
     James Bulgin
     Robert Burnham
-    Kate Campbell
+    Chris Campbell
     Matthew Cline
     Florian Diebold
     Rax E. Dillon
@@ -421,7 +342,6 @@ The Dungeon Crawl Stone Soup development team is:
     Michael Gagno
     gammafunk
     Shayne Halvorson
-    hellmonk
     Brendan Hickey
     Aidan Holm
     Pete Hurst
@@ -439,14 +359,12 @@ The Dungeon Crawl Stone Soup development team is:
     Neil Middleton
     Seve Monahan
     Neil Moore
-    nicolae
     Steven Noonan
     Stefan O'Rear
     Charles Otto
     Aaron Pixton
     David Ploog
     Sage
-    Sastreii
     Marc H. Thoben
     Chris West
     Samuel Wilson

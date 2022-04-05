@@ -38,7 +38,6 @@
 #include "tiles-build-specific.h"
 #include "unicode.h"
 #include "view.h"
-#include "ui.h"
 
 static struct termios def_term;
 static struct termios game_term;
@@ -74,15 +73,13 @@ static COLOURS BG_COL = BLACK;
 /** @brief The default background @em colour. */
 static COLOURS BG_COL_DEFAULT = BLACK;
 
-struct curses_style
-{
-    attr_t attr;
-    short color_pair;
-};
-
 /**
  * @brief Get curses attributes for the current internal color combination.
  *
+ * @param attr
+ *  The destination for the resulting character attributes.
+ * @param color_pair
+ *  The destination for the resulting color pair index.
  * @param fg
  *  The internal colour for the foreground.
  * @param bg
@@ -90,51 +87,53 @@ struct curses_style
  * @param adjust_background
  *  Determines which color in the pair is adjusted if adjustment is necessary.
  *  True chooses the background, while false chooses the foreground.
- *
- *  @return
- *   Returns the character attributes and colour pair index.
  */
-static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background = false);
+static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
+    bool adjust_background = false);
 
 /**
  * @brief Change the foreground colour and returns the resulting curses info.
  *
+ * @param attr
+ *  The destination for the resulting character attributes.
+ * @param color_pair
+ *  The destination for the resulting color pair index.
  * @param col
- *  An internal color with attached highlight.
- *
- *  @return
- *   Returns the character attributes and colour pair index.
+ *  An internal color with attached brand.
  */
-static curses_style curs_attr_bg(int col);
+static void curs_attr_bg(attr_t &attr, short &color_pair, int col);
 
 /**
  * @brief Change the background colour and returns the resulting curses info.
  *
+ * @param attr
+ *  The destination for the resulting character attributes.
+ * @param color_pair
+ *  The destination for the resulting color pair index.
  * @param col
- *  An internal color with attached highlight.
- *
- *  @return
- *   Returns the character attributes and colour pair index.
+ *  An internal color with attached brand.
  */
-static curses_style curs_attr_fg(int col);
+static void curs_attr_fg(attr_t &attr, short &color_pair, int col);
 
 /**
  * @brief Get curses attributes for the passed internal color combination.
  *
  * Performs colour mapping for both default colours as well as the color map.
- * Additionally, this function takes into consideration a passed highlight.
+ * Additionally, this function takes into consideration a passed brand.
  *
+ * @param attr
+ *  The destination for the resulting character attributes.
+ * @param color_pair
+ *  The destination for the resulting color pair index.
  * @param fg
  *  The internal colour for the foreground.
  * @param bg
  *  The internal colour for the background.
- * @param highlight
- *  Internal color highlighting information.
- *
- *  @return
- *   Returns the character attributes and colour pair index.
+ * @param brand
+ *  Internal color branding information.
  */
-static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int highlight);
+static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
+    COLOURS bg, int brand);
 
 /**
  * @brief Returns a curses color pair index for the passed fg/bg combo.
@@ -265,15 +264,17 @@ static void flip_colour(cchar_t &ch);
  * resulting color combination may not be a strict color swap, but one that
  * is guaranteed to be visible.
  *
- * @param attr
+ * @param attr_flipped
+ *  The location to store the resulting character attributes.
+ * @param color_pair_flipped
+ *  The location to store the resulting color pair.
+ * @param attr_original
  *  The character attributes to flip.
- * @param color
+ * @param color_pair_original
  *  The color pair to flip.
- *
- *  @return
- *   Returns the flipped character attributes and colour pair index.
  */
-static curses_style flip_colour(curses_style style);
+static void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
+    attr_t attr_original, short color_pair_original);
 
 /**
  * @brief Translate internal colours to flagged curses colors.
@@ -304,7 +305,7 @@ static void write_char_at(int y, int x, const cchar_t &ch);
 
 static bool cursor_is_enabled = true;
 
-static unsigned int convert_to_curses_style(int chattr)
+static unsigned int convert_to_curses_attr(int chattr)
 {
     switch (chattr & CHATTR_ATTRMASK)
     {
@@ -432,8 +433,6 @@ void set_mouse_enabled(bool enabled)
 #ifdef NCURSES_MOUSE_VERSION
 static int proc_mouse_event(int c, const MEVENT *me)
 {
-    UNUSED(c);
-
     crawl_view.mousep.x = me->x + 1;
     crawl_view.mousep.y = me->y + 1;
 
@@ -470,7 +469,7 @@ static int proc_mouse_event(int c, const MEVENT *me)
 
 static int pending = 0;
 
-static int _get_key_from_curses()
+int getchk()
 {
 #ifdef WATCHDOG
     // If we have (or wait for) actual keyboard input, it's not an infinite
@@ -529,11 +528,12 @@ void set_getch_returns_resizes(bool rr)
     getch_returns_resizes = rr;
 }
 
-int getch_ck()
+int m_getch()
 {
-    while (true)
+    int c;
+    do
     {
-        int c = _get_key_from_curses();
+        c = getchk();
 
 #ifdef NCURSES_MOUSE_VERSION
         if (c == -KEY_MOUSE)
@@ -541,12 +541,8 @@ int getch_ck()
             MEVENT me;
             getmouse(&me);
             c = proc_mouse_event(c, &me);
-
-            if (!crawl_state.mouse_enabled)
-                continue;
         }
 #endif
-
 #ifdef KEY_RESIZE
         if (c == -KEY_RESIZE)
         {
@@ -561,39 +557,39 @@ int getch_ck()
             // This causes crashiness: e.g. in a menu, make the window taller,
             // then scroll down one line. To fix this, we always sync termsz:
             crawl_view.init_geometry();
-
-            if (!getch_returns_resizes)
-                continue;
         }
 #endif
-
-        switch (c)
-        {
-        // [dshaligram] MacOS ncurses returns 127 for backspace.
-        case 127:
-        case -KEY_BACKSPACE: return CK_BKSP;
-        case -KEY_DC:    return CK_DELETE;
-        case -KEY_HOME:  return CK_HOME;
-        case -KEY_PPAGE: return CK_PGUP;
-        case -KEY_END:   return CK_END;
-        case -KEY_NPAGE: return CK_PGDN;
-        case -KEY_UP:    return CK_UP;
-        case -KEY_DOWN:  return CK_DOWN;
-        case -KEY_LEFT:  return CK_LEFT;
-        case -KEY_RIGHT: return CK_RIGHT;
+    } while (
 #ifdef KEY_RESIZE
-        case -KEY_RESIZE: return CK_RESIZE;
+             (c == -KEY_RESIZE && !getch_returns_resizes) ||
 #endif
-        case -KEY_BTAB:  return CK_SHIFT_TAB;
-        // may or may not be defined depending on the terminal. Escape codes
-        // are the xterm convention, other terminals may do different things
-        // and ncurses may or may not handle them correctly.
-        case -KEY_SR:    return CK_SHIFT_UP;     // \033[1;2A
-        case -KEY_SLEFT: return CK_SHIFT_LEFT;   // \033[1;2D
-        case -KEY_SRIGHT: return CK_SHIFT_RIGHT; // \033[1;2C
-        case -KEY_SF:    return CK_SHIFT_DOWN;   // \033[1;2B
-        default:         return c;
-        }
+             ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+                 && !crawl_state.mouse_enabled));
+
+    return c;
+}
+
+int getch_ck()
+{
+    int c = m_getch();
+    switch (c)
+    {
+    // [dshaligram] MacOS ncurses returns 127 for backspace.
+    case 127:
+    case -KEY_BACKSPACE: return CK_BKSP;
+    case -KEY_DC:    return CK_DELETE;
+    case -KEY_HOME:  return CK_HOME;
+    case -KEY_PPAGE: return CK_PGUP;
+    case -KEY_END:   return CK_END;
+    case -KEY_NPAGE: return CK_PGDN;
+    case -KEY_UP:    return CK_UP;
+    case -KEY_DOWN:  return CK_DOWN;
+    case -KEY_LEFT:  return CK_LEFT;
+    case -KEY_RIGHT: return CK_RIGHT;
+#ifdef KEY_RESIZE
+    case -KEY_RESIZE: return CK_RESIZE;
+#endif
+    default:         return c;
     }
 }
 
@@ -620,25 +616,14 @@ static void unixcurses_defkeys()
 
     // non-arrow keypad keys (for macros)
     define_key("\033OM", 1010); // Enter
-
-    // TODO: I don't know under what context these are mapped to numpad keys,
-    // but they are *much* more commonly used for F1-F4. So don't
-    // unconditionally define these. I don't trust anything else in this
-    // function either, but most of it is a bit hard to test. Possibly the
-    // conditional define here should at least be generalized?
-#define check_define_key(s, n) if (!key_defined(s)) define_key(s, n)
-    check_define_key("\033OP", 1011); // NumLock
-    check_define_key("\033OQ", 1012); // /
-    check_define_key("\033OR", 1013); // *
-    check_define_key("\033OS", 1014); // -
-#undef check_define_key
-
-    // TODO: there may be codes missing here, I don't get special keycodes for
-    // *,/,= on mac console.
+    define_key("\033OP", 1011); // NumLock
+    define_key("\033OQ", 1012); // /
+    define_key("\033OR", 1013); // *
+    define_key("\033OS", 1014); // -
     define_key("\033Oj", 1015); // *
-    define_key("\033Ok", 1016); // + // XX why don't these collapse??
+    define_key("\033Ok", 1016); // +
     define_key("\033Ol", 1017); // +
-    define_key("\033Om", 1018); // . // XX this is - on mac console? Also confirmed on linux as -
+    define_key("\033Om", 1018); // .
     define_key("\033On", 1019); // .
     define_key("\033Oo", 1020); // -
 
@@ -751,9 +736,6 @@ void console_startup()
 
     set_mouse_enabled(false);
 
-    // TODO: how does this relate to what tiles.resize does?
-    ui::resize(crawl_view.termsz.x, crawl_view.termsz.y);
-
 #ifdef USE_TILE_WEB
     tiles.resize();
 #endif
@@ -825,6 +807,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
             cell++;
         }
     }
+    update_screen();
 }
 
 // These next four are front functions so that we can reduce
@@ -873,37 +856,19 @@ int num_to_lines(int num)
     return num;
 }
 
-#ifdef DGAMELAUNCH
-static bool _suppress_dgl_clrscr = false;
-
-// TODO: this is not an ideal way to solve this problem. An alternative might
-// be to queue dgl clrscr and only send them at the same time as an actual
-// refresh?
-suppress_dgl_clrscr::suppress_dgl_clrscr()
-    : prev(_suppress_dgl_clrscr)
-{
-    _suppress_dgl_clrscr = true;
-}
-
-suppress_dgl_clrscr::~suppress_dgl_clrscr()
-{
-    _suppress_dgl_clrscr = prev;
-}
-#endif
-
-void clrscr_sys()
+void clrscr()
 {
     textcolour(LIGHTGREY);
     textbackground(BLACK);
     clear();
 #ifdef DGAMELAUNCH
-    if (!_suppress_dgl_clrscr)
-    {
-        printf("%s", DGL_CLEAR_SCREEN);
-        fflush(stdout);
-    }
+    printf("%s", DGL_CLEAR_SCREEN);
+    fflush(stdout);
 #endif
 
+#ifdef USE_TILE_WEB
+    tiles.clrscr();
+#endif
 }
 
 void set_cursor_enabled(bool enabled)
@@ -919,42 +884,51 @@ bool is_cursor_enabled()
     return cursor_is_enabled;
 }
 
-static inline unsigned get_highlight(int col)
+bool is_smart_cursor_enabled()
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
-           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
-           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
-           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
-           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
-           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
-           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
-           (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
-                                            : unsigned{CHATTR_NORMAL};
+    return false;
+}
+
+void enable_smart_cursor(bool /*cursor*/)
+{
+}
+
+static inline unsigned get_brand(int col)
+{
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+           (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
+                                            : CHATTR_NORMAL;
 }
 
 // see declaration
-static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
+static void curs_attr(attr_t &attr, short &color_pair, COLOURS fg, COLOURS bg,
+    bool adjust_background)
 {
-    curses_style style;
-    style.attr = 0;
-    style.color_pair = 0;
+    attr_t flags = 0;
+    short temp_color_pair = 0;
     bool monochrome_output_requested = curs_palette_size() == 0;
 
-    // Convert over to curses colours.
+    // Convert over to curses colors.
     short fg_curses = translate_colour(fg);
     short bg_curses = translate_colour(bg);
 
-    // Resolve fg/bg colour conflicts.
+    // Resolve fg/bg color conflicts.
     curs_adjust_color_pair_to_non_identical(fg_curses, bg_curses,
         adjust_background);
 
     if (!monochrome_output_requested)
     {
-        // Grab the colour pair.
-        style.color_pair = curs_calc_pair_safe(fg_curses, bg_curses);
+        // Grab the color pair.
+        temp_color_pair = curs_calc_pair_safe(fg_curses, bg_curses);
 
-        // Request decolourise if the pair doesn't actually exist.
-        if (style.color_pair == 0
+        // Request decolorize if the pair doesn't actually exist.
+        if (temp_color_pair == 0
             && !curs_color_combo_has_pair(fg_curses, bg_curses))
         {
             monochrome_output_requested = true;
@@ -966,10 +940,10 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
         // curses typically uses WA_BOLD to give bright foreground colour,
         // but various termcaps may disagree
         if ((fg_curses & COLFLAG_CURSES_BRIGHTEN)
-            && (Options.bold_brightens_foreground != MB_FALSE
+            && (Options.bold_brightens_foreground
                 || Options.best_effort_brighten_foreground))
         {
-            style.attr |= WA_BOLD;
+            flags |= WA_BOLD;
         }
 
         // curses typically uses WA_BLINK to give bright background colour,
@@ -978,58 +952,58 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
             && (Options.blink_brightens_background
                 || Options.best_effort_brighten_background))
         {
-            style.attr |= WA_BLINK;
+            flags |= WA_BLINK;
         }
-    }
-    else if (Options.bold_brightens_foreground == MB_TRUE
-                && (fg_curses & COLFLAG_CURSES_BRIGHTEN))
-    {
-        style.attr |= WA_BOLD;
     }
 
     if (monochrome_output_requested)
     {
-        // Decolourise the output if necessary.
+        // Decolorize the output if necessary.
         if (curs_palette_size() != 0)
-            style.color_pair = curs_calc_pair_safe(COLOR_WHITE, COLOR_BLACK);
+            temp_color_pair = curs_calc_pair_safe(COLOR_WHITE, COLOR_BLACK);
 
         // Do the best we can for backgrounds with monochrome output.
         if (bg_curses != COLOR_BLACK)
-            style.attr |= WA_REVERSE;
+            flags |= WA_REVERSE;
     }
 
-    return style;
+    // Got everything we need -- write out the results.
+    color_pair = temp_color_pair;
+    attr = flags;
 }
 
 // see declaration
-static curses_style curs_attr_bg(int col)
+static void curs_attr_bg(attr_t &attr, short &color_pair, int col)
 {
     BG_COL = static_cast<COLOURS>(col & 0x00ff);
-    return curs_attr_mapped(FG_COL, BG_COL, get_highlight(col));
+    curs_attr_mapped(attr, color_pair, FG_COL, BG_COL, get_brand(col));
 }
 
 // see declaration
-static curses_style curs_attr_fg(int col)
+static void curs_attr_fg(attr_t &attr, short &color_pair, int col)
 {
     FG_COL = static_cast<COLOURS>(col & 0x00ff);
-    return curs_attr_mapped(FG_COL, BG_COL, get_highlight(col));
+    curs_attr_mapped(attr, color_pair, FG_COL, BG_COL, get_brand(col));
 }
 
 // see declaration
-static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int highlight)
+static void curs_attr_mapped(attr_t &attr, short &color_pair, COLOURS fg,
+    COLOURS bg, int brand)
 {
     COLOURS fg_mod = fg;
     COLOURS bg_mod = bg;
     attr_t flags = 0;
+    attr_t temp_attr = 0;
+    short temp_color_pair = 0;
 
     // calculate which curses flags we need...
-    if (highlight != CHATTR_NORMAL)
+    if (brand != CHATTR_NORMAL)
     {
-        flags |= convert_to_curses_style(highlight);
+        flags |= convert_to_curses_attr(brand);
 
         // Allow highlights to override the current background color.
-        if ((highlight & CHATTR_ATTRMASK) == CHATTR_HILITE)
-            bg_mod = static_cast<COLOURS>((highlight & CHATTR_COLMASK) >> 8);
+        if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
+            bg_mod = static_cast<COLOURS>((brand & CHATTR_COLMASK) >> 8);
     }
 
     // Respect color remapping.
@@ -1049,14 +1023,16 @@ static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int highlight)
         bg_mod = BLACK;
 
     // Done with color mapping; get the resulting attributes.
-    curses_style ret = curs_attr(fg_mod, bg_mod);
-    ret.attr |= flags;
+    curs_attr(temp_attr, temp_color_pair, fg_mod, bg_mod);
+    temp_attr |= flags;
 
     // Reverse color manually to ensure correct brightening attrs.
-    if ((highlight & CHATTR_ATTRMASK) == CHATTR_REVERSE)
-        return flip_colour(ret);
+    if ((brand & CHATTR_ATTRMASK) == CHATTR_REVERSE)
+        flip_colour(temp_attr, temp_color_pair, temp_attr, temp_color_pair);
 
-    return ret;
+    // Write out the results.
+    color_pair = temp_color_pair;
+    attr = temp_attr;
 }
 
 // see declaration
@@ -1136,27 +1112,6 @@ static bool curs_can_use_extended_colors()
     return Options.allow_extended_colours && COLORS >= NUM_TERM_COLOURS;
 }
 
-lib_display_info::lib_display_info()
-    : type(
-#ifdef USE_TILE_WEB
-        "Console/Webtiles"
-#elif defined(USE_TILE_LOCAL)
-        "SDL Tiles"
-#else
-        "Console"
-#endif
-        ),
-    term(termname()),
-    fg_colors(
-        (curs_can_use_extended_colors()
-                || Options.bold_brightens_foreground != MB_FALSE)
-        ? 16 : 8),
-    bg_colors(
-        (curs_can_use_extended_colors() || Options.blink_brightens_background)
-        ? 16 : 8)
-{
-}
-
 // see declaration
 static bool curs_color_combo_has_pair(short fg, short bg)
 {
@@ -1180,6 +1135,9 @@ static bool curs_color_combo_has_pair(short fg, short bg)
 static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     bool adjust_background)
 {
+    // The color to assign.
+    short non_conflicting_color = adjust_background ? bg : fg;
+
     // The default colors.
     short fg_default = translate_colour(FG_COL_DEFAULT);
     short bg_default = translate_colour(BG_COL_DEFAULT);
@@ -1190,17 +1148,10 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     short fg_default_to_compare = fg_default;
     short bg_default_to_compare = bg_default;
 
-    // Adjust the brighten bits of the expected output color depending on the
-    // game options, so we are doing an apples to apples comparison. If we
-    // aren't using extended colors, *and* we aren't applying a bold to
-    // brighten, then brightened colors are guaranteed not to be different
-    // than unbrightened colors. With just a `best_effort..` option set, don't
-    // undo brightening as it isn't assumed to be safe. It is this
-    // transformation that can result in black on black if a player incorrectly
-    // sets one of these options.
+    // Adjust the expected output color depending on the game options.
     if (!curs_can_use_extended_colors())
     {
-        if (Options.bold_brightens_foreground == MB_FALSE)
+        if (!Options.bold_brightens_foreground)
         {
             fg_to_compare = fg & ~COLFLAG_CURSES_BRIGHTEN;
             fg_default_to_compare = fg_default & ~COLFLAG_CURSES_BRIGHTEN;
@@ -1213,73 +1164,76 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
         }
     }
 
-    if (fg_to_compare != bg_to_compare)
-        return;  // colours look different; no need to adjust
-
-    // Choose terminal's current default colors as the default failsafe.
-    short failsafe_col = adjust_background ? fg_default : bg_default;
-
-    if (!adjust_background && fg_to_compare == bg_default_to_compare)
+    // Got the adjusted colors -- resolve any conflict.
+    if (fg_to_compare == bg_to_compare)
     {
-        /*
-            * Replacing the *foreground* color with a secondary failsafe.
-            *
-            * In general, use black as a failsafe for non-black backgrounds
-            * and white as a failsafe for black backgrounds. Black tends to
-            * look good on any visible background.
-            *
-            * However, for black and white *default* background colours,
-            * mitigate information contrast issues with bright black
-            * foregrounds by using blue as a special-case failsafe color.
-            */
-        switch (bg_default_to_compare)
+        // Choose terminal's current default colors as the default failsafe.
+        short failsafe_col = adjust_background ? fg_default : bg_default;
+
+        if (!adjust_background && fg_to_compare == bg_default_to_compare)
         {
-        case COLOR_BLACK:
-            if (fg_default_to_compare == COLOR_WHITE
-                || fg_default_to_compare == COLOR_BLACK)
+            /*
+             * Replacing the *foreground* color with a secondary failsafe.
+             *
+             * In general, use black as a failsafe for non-black backgrounds
+             * and white as a failsafe for black backgrounds. Black tends to
+             * look good on any visible background.
+             *
+             * However, for black and white *default* background colours,
+             * mitigate information contrast issues with bright black
+             * foregrounds by using blue as a special-case failsafe color.
+             */
+            switch (bg_default_to_compare)
             {
-                failsafe_col = COLOR_BLUE;
+            case COLOR_BLACK:
+                if (fg_default_to_compare == COLOR_WHITE
+                    || fg_default_to_compare == COLOR_BLACK)
+                {
+                    failsafe_col = COLOR_BLUE;
+                }
+                else
+                    failsafe_col = COLOR_WHITE;
+                break;
+            case COLOR_WHITE:
+                if (fg_default_to_compare == COLOR_WHITE
+                    || fg_default_to_compare == COLOR_BLACK)
+                {
+                    failsafe_col = COLOR_BLUE;
+                }
+                else
+                    failsafe_col = COLOR_BLACK;
+                break;
+            default:
+                failsafe_col = COLOR_BLACK;
+                break;
             }
-            else
+        }
+        else if (adjust_background && bg_to_compare == fg_default_to_compare)
+        {
+            /*
+             * Replacing the *background* color with a secondary failsafe.
+             *
+             * Don't bother special-casing bright black:
+             *  - The information contrast issue is not as prevalent for
+             *    backgrounds as foregrounds.
+             *  - A visible bright-black-on-black glyph actively changing into
+             *    black-on-blue when reversed looks much worse than a change to
+             *    black-on-white.
+             */
+            if (fg_default_to_compare == COLOR_BLACK)
                 failsafe_col = COLOR_WHITE;
-            break;
-        case COLOR_WHITE:
-            if (fg_default_to_compare == COLOR_WHITE
-                || fg_default_to_compare == COLOR_BLACK)
-            {
-                failsafe_col = COLOR_BLUE;
-            }
             else
                 failsafe_col = COLOR_BLACK;
-            break;
-        default:
-            failsafe_col = COLOR_BLACK;
-            break;
         }
-    }
-    else if (adjust_background && bg_to_compare == fg_default_to_compare)
-    {
-        /*
-            * Replacing the *background* color with a secondary failsafe.
-            *
-            * Don't bother special-casing bright black:
-            *  - The information contrast issue is not as prevalent for
-            *    backgrounds as foregrounds.
-            *  - A visible bright-black-on-black glyph actively changing into
-            *    black-on-blue when reversed looks much worse than a change to
-            *    black-on-white.
-            */
-        if (fg_default_to_compare == COLOR_BLACK)
-            failsafe_col = COLOR_WHITE;
-        else
-            failsafe_col = COLOR_BLACK;
+
+        non_conflicting_color = failsafe_col;
     }
 
     // Update the appropriate color in the pair.
     if (adjust_background)
-        bg = failsafe_col;
+        bg = non_conflicting_color;
     else
-        fg = failsafe_col;
+        fg = non_conflicting_color;
 }
 
 // see declaration
@@ -1425,34 +1379,22 @@ static COLOURS curses_color_to_internal_colour(short col)
 
 void textcolour(int col)
 {
-    const auto style = curs_attr_fg(col);
-    attr_set(style.attr, style.color_pair, nullptr);
+    attr_t attr = 0;
+    short color_pair = 0;
+    curs_attr_fg(attr, color_pair, col);
+    attr_set(attr, color_pair, nullptr);
 
 #ifdef USE_TILE_WEB
     tiles.textcolour(col);
 #endif
 }
 
-COLOURS default_hover_colour()
-{
-    // DARKGREY backgrounds go to black with 8 colors. I think this is
-    // generally what we want, rather than applying a workaround (like the
-    // DARKGREY -> BLUE foreground trick), but this means that using a
-    // DARKGREY hover, which arguably looks better in 16colors, won't work.
-    // DARKGREY is also not safe under bold_brightens_foreground, since a
-    // terminal that supports this won't necessarily handle a bold background.
-
-    // n.b. if your menu uses just one color, and you set that as the hover,
-    // you will get automatic color inversion. That is generally the safest
-    // option where possible.
-    return (curs_can_use_extended_colors() || Options.blink_brightens_background)
-                 ? DARKGREY : BLUE;
-}
-
 void textbackground(int col)
 {
-    const auto style = curs_attr_bg(col);
-    attr_set(style.attr, style.color_pair, nullptr);
+    attr_t attr = 0;
+    short color_pair = 0;
+    curs_attr_bg(attr, color_pair, col);
+    attr_set(attr, color_pair, nullptr);
 
 #ifdef USE_TILE_WEB
     tiles.textbackground(col);
@@ -1518,24 +1460,28 @@ static void flip_colour(cchar_t &ch)
         wch = new wchar_t[chars_to_allocate];
 
     // Good to go. Grab the color / attr info.
-    curses_style style;
-    getcchar(&ch, wch, &style.attr, &style.color_pair, nullptr);
-    style = flip_colour(style);
+    getcchar(&ch, wch, &attr, &color_pair, nullptr);
+
+    // Pass along to the more generic function for the heavy lifting.
+    flip_colour(attr, color_pair, attr, color_pair);
 
     // Assign the new, reversed info and clean up.
-    setcchar(&ch, wch, style.attr, style.color_pair, nullptr);
+    setcchar(&ch, wch, attr, color_pair, nullptr);
     if (chars_to_allocate > 0)
         delete [] wch;
 }
 
 // see declaration
-static curses_style flip_colour(curses_style style)
+void flip_colour(attr_t &attr_flipped, short &color_pair_flipped,
+    attr_t attr_original, short color_pair_original)
 {
     short fg = COLOR_WHITE;
     short bg = COLOR_BLACK;
+    attr_t temp_attr = attr_original;
+    short temp_color_pair = color_pair_original;
 
-    if (style.color_pair != 0)
-        pair_content(style.color_pair, &fg, &bg);
+    if (color_pair_original != 0)
+        pair_content(color_pair_original, &fg, &bg);
     else
     {
         // Default pair; use the current default colors.
@@ -1549,21 +1495,22 @@ static curses_style flip_colour(curses_style style)
     if (!curs_can_use_extended_colors())
     {
         // Check if these were brightened colours.
-        if (style.attr & WA_BOLD)
+        if (temp_attr & WA_BOLD)
             fg |= COLFLAG_CURSES_BRIGHTEN;
-        if (style.attr & WA_BLINK)
+        if (temp_attr & WA_BLINK)
             bg |= COLFLAG_CURSES_BRIGHTEN;
-        style.attr &= ~(WA_BOLD | WA_BLINK);
+        temp_attr &= ~(WA_BOLD | WA_BLINK);
     }
 
     if (!need_attribute_only_flip)
     {
         // Perform a flip using the inverse color pair, preferring to adjust
         // the background color in case of a conflict.
-        const auto out = curs_attr(curses_color_to_internal_colour(bg),
-                                   curses_color_to_internal_colour(fg), true);
-        style.color_pair = out.color_pair;
-        style.attr |= out.attr;
+        attr_t brightness_attr;
+        curs_attr(brightness_attr, temp_color_pair,
+            curses_color_to_internal_colour(bg),
+            curses_color_to_internal_colour(fg), true);
+        temp_attr |= brightness_attr;
     }
     else
     {
@@ -1576,22 +1523,26 @@ static curses_style flip_colour(curses_style style)
                 && (Options.blink_brightens_background
                     || Options.best_effort_brighten_background))
             {
-                style.attr |= WA_BLINK;
+                temp_attr |= WA_BLINK;
             }
-            // XX I don't *think* this logic should apply for
-            // bold_brightens_foreground = force...
             if ((bg & COLFLAG_CURSES_BRIGHTEN)
-                && (Options.bold_brightens_foreground != MB_FALSE
+                && (Options.bold_brightens_foreground
                     || Options.best_effort_brighten_foreground))
             {
-                style.attr |= WA_BOLD;
+                temp_attr |= WA_BOLD;
             }
         }
 
-        style.attr ^= WA_REVERSE;
+        // Toggle the reverse video bit.
+        if (temp_attr & WA_REVERSE)
+            temp_attr &= ~WA_REVERSE;
+        else
+            temp_attr |= WA_REVERSE;
     }
 
-    return style;
+    // Write out the results.
+    color_pair_flipped = temp_color_pair;
+    attr_flipped = temp_attr;
 }
 
 void fakecursorxy(int x, int y)
@@ -1602,10 +1553,6 @@ void fakecursorxy(int x, int y)
     cchar_t c = character_at(y_curses, x_curses);
     flip_colour(c);
     write_char_at(y_curses, x_curses, c);
-    // the above still results in changes to the return values for wherex and
-    // wherey, so set the cursor region to ensure that the cursor position is
-    // valid after this call. (This also matches the behavior of real cursorxy.)
-    set_cursor_region(GOTO_CRT);
 }
 
 int wherex()

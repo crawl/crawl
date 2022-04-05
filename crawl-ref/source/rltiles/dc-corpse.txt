@@ -15,7 +15,9 @@
 ## Insects ('a')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 giant_cockroach CORPSE_GIANT_COCKROACH
-radroach CORPSE_RADROACH
+worker_ant CORPSE_WORKER_ANT
+soldier_ant CORPSE_SOLDIER_ANT
+queen_ant CORPSE_QUEEN_ANT
 
 ## Batty monsters ('b')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
@@ -42,6 +44,7 @@ cat1 CORPSE_FELID
 
 ## Lizards ('l')
 frilled_lizard CORPSE_FRILLED_LIZARD
+leopard_gecko CORPSE_LEOPARD_GECKO
 iguana CORPSE_IGUANA
 basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
@@ -51,6 +54,7 @@ rat CORPSE_RAT
 quokka CORPSE_QUOKKA
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
+porcupine CORPSE_PORCUPINE
 %sdir mon/animals
 
 ## Spiders and insects ('s')
@@ -62,14 +66,13 @@ jumping_spider CORPSE_JUMPING_SPIDER
 wolf_spider CORPSE_WOLF_SPIDER
 redback CORPSE_REDBACK
 orb_spider CORPSE_ORB_SPIDER
-broodmother CORPSE_BROODMOTHER
-culicivora CORPSE_CULICIVORA
 %sdir mon/demons
 demonic_crawler CORPSE_DEMONIC_CRAWLER
 
-## Turtles and crabs ('t')
+## Turtles and crocodiles ('t')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
+crocodile CORPSE_CROCODILE
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
@@ -87,7 +90,6 @@ tyrant_leech CORPSE_TYRANT_LEECH
 torpor_snail CORPSE_TORPOR_SNAIL
 elephant_slug CORPSE_ELEPHANT_SLUG
 dart_slug CORPSE_DART_SLUG
-steelbarb_worm CORPSE_STEELBARB_WORM
 
 ## Flying Insects ('y')
 killer_bee CORPSE_KILLER_BEE
@@ -97,7 +99,6 @@ hornet CORPSE_HORNET
 spark_wasp CORPSE_SPARK_WASP
 ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
-sun_moth CORPSE_SUN_MOTH
 %sdir mon/demihumanoids
 meliai CORPSE_MELIAI
 
@@ -110,8 +111,6 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 
 ## Beetles ('B')
-%sdir mon/animals
-boulder_beetle CORPSE_BOULDER_BEETLE
 %sdir mon/undead
 death_scarab CORPSE_DEATH_SCARAB
 
@@ -120,8 +119,7 @@ death_scarab CORPSE_DEATH_SCARAB
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 bullfrog CORPSE_BULLFROG
 blink_frog CORPSE_BLINK_FROG
-cane_toad CORPSE_CANE_TOAD
-goliath_frog CORPSE_GOLIATH_FROG
+spiny_frog CORPSE_SPINY_FROG
 
 ## Snakes ('S')
 ball_python CORPSE_BALL_PYTHON
@@ -183,7 +181,6 @@ mon/demihumanoids/merfolk/merfolk_water CORPSE_MERFOLK
 %sdir mon/humanoids
 dryad CORPSE_DRYAD
 water_nymph CORPSE_WATER_NYMPH
-eleionoma CORPSE_ELEIONOMA
 
 ## Rotting monsters ('n')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
@@ -243,7 +240,6 @@ stone_giant CORPSE_STONE_GIANT
 titan CORPSE_TITAN
 juggernaut CORPSE_JUGGERNAUT
 iron_giant CORPSE_IRON_GIANT
-tainted_leviathan CORPSE_TAINTED_LEVIATHAN
 
 ## Dragons ('D')
 %sdir mon/dragons
@@ -264,14 +260,13 @@ mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 ## Hybrids ('H')
 %sdir mon/animals
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
+hippogriff CORPSE_HIPPOGRIFF
 manticore CORPSE_MANTICORE
 %sdir mon/demihumanoids
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
-fenstrider_witch CORPSE_FENSTRIDER_WITCH
 sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
-jorogumo CORPSE_JOROGUMO
 mon/unique/arachne_staveless CORPSE_ARACHNE
 %sdir mon/mutantbeast
 base3 CORPSE_MUTANT_BEAST
@@ -280,6 +275,7 @@ base3 CORPSE_MUTANT_BEAST
 %sdir mon/humanoids
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 kobold CORPSE_KOBOLD
+big_kobold CORPSE_BIG_KOBOLD
 
 ## Nagas ('N')
 %sdir mon/demihumanoids
@@ -300,11 +296,8 @@ deep_troll CORPSE_DEEP_TROLL
 ## Cephalopods ('x')
 %sdir player
 base/octopode1 CORPSE_OCTOPODE
-%sdir mon/animals
-bunyip CORPSE_BUNYIP
 
 ## Draconians ('d')
-%sdir player
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 %start
 %compose drcwing/drcwing_black
@@ -363,5 +356,9 @@ bunyip CORPSE_BUNYIP
 # Demonspawn ('6')
 %sdir mon/humanoids/demonspawn
 demonspawn CORPSE_DEMONSPAWN
+monstrous CORPSE_MONSTROUS_DEMONSPAWN
+gelid CORPSE_GELID_DEMONSPAWN
+infernal CORPSE_INFERNAL_DEMONSPAWN
+torturous CORPSE_TORTUROUS_DEMONSPAWN
 
 %corpse 0

@@ -41,6 +41,10 @@ faerie dragon scales
 它们的鲜艳肤色却成了它们的致命弱点，因为它们在接近猎物的时候太容易被发现了。
 妖精龙现在已经灭绝了；这件珍贵的遗物正是仅存的能证明它们曾经存在过的证据之一。
 %%%%
+demon blade "Bloodbane"
+
+某个丧失人性的狂人在它上面留下了无法抹去的污染。
+%%%%
 scimitar of Flaming Death
 
 冒烟中……
@@ -115,7 +119,7 @@ storm bow
 
 这张弓的颜色和阴暗的雨云一样，而且还发出潮湿的臭氧味。
 %%%%
-tower shield of Ignorance
+large shield of Ignorance
 
 “敞开心房无异于开门揖盗。”
 %%%%
@@ -127,7 +131,7 @@ cloak of the Thief
 
 它使穿戴者变得精通盗术。你也可以手动启动它，让它放出厚厚的烟云来掩护你逃跑。
 %%%%
-tower shield "Bullseye"
+large shield "Bullseye"
 
 如果你觉得自己被打中的次数还不够多，那你现在可找到救星了！
 %%%%

@@ -84,7 +84,7 @@ function zonify.fill_smallest_zones(zonemap, num_to_keep, fgroup, ffill, min_zon
 
   local sorted_zones = {}
   for name,group in pairs(zonemap) do table.insert(sorted_zones, name) end
-  util.sort(sorted_zones)
+  table.sort(sorted_zones)
   for i, name in ipairs(sorted_zones) do
     group = zonemap[name]
     if type(fgroup) == "function" and fgroup(group) or name==fgroup then
@@ -147,14 +147,12 @@ function zonify.map_map(e)
   -- local floor = ".W+({[)}]<>_"
   local wall = "wlxcvbtg"
 
-  local gxm,gym = e.width(), e.height()
+  -- TODO: Can we check size of current map after extend_map?
+  local gxm,gym = dgn.max_bounds()
   return zonify.map(
     { x1 = 1, y1 = 1, x2 = gxm-2, y2 = gym-2 },
     function(x,y)
-      -- we might be using this on a constrained map
-      return dgn.in_bounds(x,y) and 1 <= x and x <= gxm - 2
-             and 1 <= y and y <= gym - 2
-             and { glyph = e.mapgrd[x][y] } or nil
+      return dgn.in_bounds(x,y) and { glyph = e.mapgrd[x][y] } or nil
     end,
     function(val)
       return string.find(wall,val.glyph,1,true) and "wall" or "floor"
@@ -180,14 +178,12 @@ function zonify.map_fill_lava_zones(e, num_to_keep, glyph, min_zone_size)
 
   local wall = "wxcvbtg"
 
-  local gxm,gym = e.width(), e.height()
+  -- TODO: Can we check size of current map after extend_map?
+  local gxm,gym = dgn.max_bounds()
   local zonemap = zonify.map(
     { x1 = 1, y1 = 1, x2 = gxm-2, y2 = gym-2 },
     function(x,y)
-      -- we might be using this on a constrained map
-      return dgn.in_bounds(x,y) and 1 <= x and x <= gxm - 2
-             and 1 <= y and y <= gym - 2
-             and { glyph = e.mapgrd[x][y] } or nil
+      return dgn.in_bounds(x,y) and { glyph = e.mapgrd[x][y] } or nil
     end,
     function(val)
       return string.find(wall,val.glyph,1,true) and "wall" or "floor"
@@ -236,11 +232,6 @@ end
 -- is needed to fill in deep water zones and stop flyers/swimmers getting trapped.
 -- TODO: Need to simplify into a single pass that understands connectivity issues
 -- between different zone groups and can handle everything more elegantly.
--- TODO: This does not address zones separated by deep water, that in swamp
--- may be further filled by c++ code in _build_vault_impl, creating tele
--- closets of exactly the kind that this code prevents. Because of that, there's
--- yet *another* pass to fill these in there. This is all extremely redundant
--- and should be cleaned up one day.
 function zonify.grid_fill_water_zones(num_to_keep, feature, min_zone_size)
   if num_to_keep == nil then num_to_keep = 1 end
   if feature == nil then feature = 'rock_wall' end

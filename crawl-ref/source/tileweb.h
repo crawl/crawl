@@ -9,8 +9,6 @@
 
 #include <bitset>
 #include <map>
-#include <vector>
-
 #include <sys/un.h>
 
 #include "cursor-type.h"
@@ -24,9 +22,6 @@
 #include "tileweb-text.h"
 #include "viewgeom.h"
 
-using std::vector;
-
-class xlog_fields;
 class Menu;
 
 enum WebtilesUIState
@@ -40,7 +35,6 @@ enum WebtilesUIState
 struct player_info
 {
     player_info();
-    bool _state_ever_synced;
 
     string name;
     string job_title;
@@ -80,10 +74,9 @@ struct player_info
 
     vector<status_info> status;
 
-    FixedVector<item_def, ENDOFPACK> inv;
+    FixedVector<item_info, ENDOFPACK> inv;
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
-    string quiver_desc;
     string unarmed_attack;
     uint8_t unarmed_attack_colour;
     bool quiver_available;
@@ -123,6 +116,9 @@ public:
     void add_text_tag(text_tag_type type, const monster_info& mon);
 
     const coord_def &get_cursor() const;
+
+    void add_overlay(const coord_def &gc, tileidx_t idx);
+    void clear_overlays();
 
     void draw_doll_edit();
 
@@ -206,17 +202,11 @@ public:
     WebtilesUIState get_ui_state() { return m_ui_state; }
 
     void dump();
-    void update_input_mode(mouse_mode mode, bool force=false);
+    void update_input_mode(mouse_mode mode);
 
     void send_mcache(mcache_entry *entry, bool submerged,
-                     bool send = true);
+                     bool send_doll = true);
     void write_tileidx(tileidx_t t);
-
-    void zoom_dungeon(bool in);
-
-    void send_doll(const dolls_data &doll, bool submerged, bool ghost);
-    void send_milestone(const xlog_fields &xl);
-    void send_options();
 
 protected:
     int m_sock;
@@ -267,10 +257,10 @@ protected:
     bool m_view_loaded;
     bool m_player_on_level;
 
-    crawl_view_buffer m_current_view;
+    FixedArray<screen_cell_t, GXM, GYM> m_current_view;
     coord_def m_current_gc;
 
-    crawl_view_buffer m_next_view;
+    FixedArray<screen_cell_t, GXM, GYM> m_next_view;
     coord_def m_next_gc;
     coord_def m_next_view_tl;
     coord_def m_next_view_br;
@@ -309,6 +299,7 @@ protected:
     player_info m_current_player_info;
 
     void _send_version();
+    void _send_options();
     void _send_layout();
 
     void _send_everything();
@@ -327,7 +318,7 @@ protected:
                        map<uint32_t, coord_def>& new_monster_locs,
                        bool force_full);
     void _send_player(bool force_full = false);
-    void _send_item(item_def& current, const item_def& next,
+    void _send_item(item_info& current, const item_info& next,
                     bool force_full);
     void _send_messages();
 };

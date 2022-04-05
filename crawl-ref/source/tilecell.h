@@ -1,9 +1,6 @@
 #ifdef USE_TILE
 #pragma once
 
-#include "map-cell.h"
-#include "tag-version.h"
-
 enum halo_type
 {
     HALO_NONE = 0,
@@ -24,13 +21,12 @@ struct packed_cell
     tile_flavour flv;
     tileidx_t cloud;
 
-    // This is directly copied from env.map_knowledge by viewwindow()
-    map_cell map_knowledge;
-
     bool is_highlighted_summoner;
     bool is_bloody;
     bool is_silenced;
     char halo;
+    bool is_moldy;
+    bool glowing_mold;
     bool is_sanctuary;
     bool is_liquefied;
     bool mangrove_water;
@@ -48,12 +44,11 @@ struct packed_cell
     bool operator ==(const packed_cell &other) const;
     bool operator !=(const packed_cell &other) const { return !(*this == other); }
 
-    packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0),
-                    is_highlighted_summoner(false), is_bloody(false),
-                    is_silenced(false), halo(HALO_NONE), is_sanctuary(false),
-                    is_liquefied(false), mangrove_water(false),
-                    awakened_forest(false), orb_glow(0), blood_rotation(0),
-                    old_blood(false), travel_trail(0),
+    packed_cell() : num_dngn_overlay(0), fg(0), bg(0), cloud(0), is_bloody(false),
+                    is_silenced(false), halo(HALO_NONE), is_moldy(false),
+                    glowing_mold(false), is_sanctuary(false), is_liquefied(false),
+                    mangrove_water(false), awakened_forest(false), orb_glow(0),
+                    blood_rotation(0), old_blood(false), travel_trail(0),
                     quad_glow(false), disjunct(false)
 #if TAG_MAJOR_VERSION == 34
                     , heat_aura(false)
@@ -63,11 +58,11 @@ struct packed_cell
     packed_cell(const packed_cell* c) : num_dngn_overlay(c->num_dngn_overlay),
                                         fg(c->fg), bg(c->bg), flv(c->flv),
                                         cloud(c->cloud),
-                                        map_knowledge(c->map_knowledge),
-                                        is_highlighted_summoner(c->is_highlighted_summoner),
                                         is_bloody(c->is_bloody),
                                         is_silenced(c->is_silenced),
                                         halo(c->halo),
+                                        is_moldy(c->is_moldy),
+                                        glowing_mold(c->glowing_mold),
                                         is_sanctuary(c->is_sanctuary),
                                         is_liquefied(c->is_liquefied),
                                         mangrove_water(c->mangrove_water),
@@ -86,10 +81,8 @@ struct packed_cell
     void clear();
 };
 
-class crawl_view_buffer;
-
 // For a given location, pack any waves/ink/wall shadow tiles
 // that require knowledge of the surrounding env cells.
-void pack_cell_overlays(const coord_def &gc, crawl_view_buffer &vbuf);
+void pack_cell_overlays(const coord_def &gc, packed_cell *cell);
 
 #endif // TILECELL_H

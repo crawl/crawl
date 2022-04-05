@@ -18,6 +18,7 @@
 #include "env.h"
 #include "hints.h"
 #include "libutil.h"
+#include "map-knowledge.h"
 #include "mon-util.h"
 #include "options.h"
 #include "stringutil.h"
@@ -35,7 +36,7 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
     // These include the base monster's name in their name, but we don't
     // want things in the auto_exclude option to match them.
     if (mon->type == MONS_PILLAR_OF_SALT || mon->type == MONS_BLOCK_OF_ICE
-        || mons_class_is_test(mon->type)) // don't autoexclude test statues/spawners
+        || mon->type == MONS_TEST_STATUE)
     {
         return false;
     }
@@ -59,7 +60,8 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
     {
         if (pat.matches(name)
             && _mon_needs_auto_exclude(mon, sleepy)
-            && (mon->attitude == ATT_HOSTILE))
+            && (mon->attitude == ATT_HOSTILE
+                || mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
         {
             return true;
         }
@@ -79,37 +81,48 @@ static int _get_full_exclusion_radius()
                              + (you.species == SP_BARACHI ? 1 : 0);
 }
 
-/**
- * Adds auto-exclusions for any monsters in LOS that need them.
- */
-void add_auto_excludes()
+// If the monster is in the auto_exclude list, automatically set an
+// exclusion.
+void set_auto_exclude(const monster* mon)
 {
-    if (!is_map_persistent() || !map_bounds(you.pos()))
+    if (!is_map_persistent())
         return;
 
-    vector<monster*> mons;
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    // Something of a speed hack, but some vaults have a TON of plants.
+    if (mon->type == MONS_PLANT)
+        return;
+
+    if (_need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
-        monster *mon = monster_at(*ri);
-        if (!mon || mon->is_summoned())
-            continue;
-        // Something of a speed hack, but some vaults have a TON of plants.
-        if (mon->type == MONS_PLANT)
-            continue;
-        if (_need_auto_exclude(mon) && !is_exclude_root(*ri))
-        {
-            int radius = _get_full_exclusion_radius();
-            set_exclude(*ri, radius, true);
-            mons.emplace_back(mon);
-        }
+        int rad = _get_full_exclusion_radius();
+        if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+            rad = 2;
+        set_exclude(mon->pos(), rad, true);
+        // FIXME: If this happens for several monsters in the same turn
+        //        (as is possible for some vaults), this could be really
+        //        annoying. (jpeg)
+        mprf(MSGCH_WARN,
+             "Marking area around %s as unsafe for travelling.",
+             mon->name(DESC_THE).c_str());
+
+#ifdef USE_TILE
+        viewwindow();
+#endif
+        learned_something_new(HINT_AUTO_EXCLUSION, mon->pos());
     }
+}
 
-    if (mons.empty())
-        return;
-
-    mprf(MSGCH_WARN, "Marking area around %s as unsafe for travelling.",
-            describe_monsters_condensed(mons).c_str());
-    learned_something_new(HINT_AUTO_EXCLUSION);
+// Clear auto exclusion if the monster is killed or wakes up with the
+// player in sight. If sleepy is true, stationary monsters are ignored.
+void remove_auto_exclude(const monster* mon, bool sleepy)
+{
+    if (_need_auto_exclude(mon, sleepy))
+    {
+        del_exclude(mon->pos());
+#ifdef USE_TILE
+        viewwindow();
+#endif
+    }
 }
 
 travel_exclude::travel_exclude(const coord_def &p, int r,
@@ -118,8 +131,7 @@ travel_exclude::travel_exclude(const coord_def &p, int r,
       uptodate(false), autoex(autoexcl), desc(dsc), vault(vaultexcl)
 {
     const monster* m = monster_at(p);
-    if (m)
-    {
+    if (m) {
         // Don't exclude past glass for stationary monsters.
         if (m->is_stationary())
             los = los_def(p, opc_fully_no_trans, circle_def(r, C_SQUARE));
@@ -386,8 +398,6 @@ static void _exclude_update(const coord_def &p)
 {
 #ifdef USE_TILE
     _tile_exclude_gmap_update(p);
-#else
-    UNUSED(p);
 #endif
     _exclude_update();
 }
@@ -445,7 +455,7 @@ void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (feat_is_door(env.grid(p)) && env.map_knowledge(p).known())
+        if (feat_is_door(grd(p)) && env.map_knowledge(p).known())
         {
             _exclude_gate(p, exc->radius == 0);
             return;
@@ -546,8 +556,10 @@ void maybe_remove_autoexclusion(const coord_def &p)
         string desc = exc->desc;
         bool cloudy_exc = ends_with(desc, "cloud");
         if ((!m || !you.can_see(*m)
-                || !_need_auto_exclude(m)
-                || mons_type_name(m->type, DESC_PLAIN) != desc)
+                || m->attitude != ATT_HOSTILE
+                    && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
+                || strcmp(mons_type_name(m->type, DESC_PLAIN).c_str(),
+                          exc->desc.c_str()) != 0)
             && !cloudy_exc)
         {
             del_exclude(p);
@@ -662,7 +674,6 @@ void marshallExcludes(writer& outf, const exclude_set& excludes)
 
 void unmarshallExcludes(reader& inf, int minorVersion, exclude_set &excludes)
 {
-    UNUSED(minorVersion);
     excludes.clear();
     int nexcludes = unmarshallShort(inf);
     if (nexcludes)

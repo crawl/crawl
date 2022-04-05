@@ -20,10 +20,6 @@
 <div id="normal" style="display: none;">
   <div id="left_column">
     <canvas id="dungeon"></canvas>
-    <div id="mobile_input" style="display: none;">
-      <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" placeholder="Tap here for keyboard input"></input>
-    </div>
-    <canvas id="action-panel" class="action-panel hidden" style="display: none;"></canvas>
     <div id="message_pane">
       <div id="messages_container">
         <div id="messages"></div>
@@ -97,8 +93,7 @@
             <span id="stats_time" /></div>
         </div>
         <div style="float:left;width:100%;"><span class="stats_caption" id="stats_weapon_letter"></span>
-          <span id="stats_weapon_container"><span id="stats_weapon" /></span>
-        </div>
+          <span id="stats_weapon" /></div>
         <div id="stats_quiver_line" style="float:left;width:100%;"><span class="stats_caption" id="stats_quiver_letter"></span>
           <span id="stats_quiver" /></div>
         <div id="stats_status_lights" style="float:left;width:100%;" />
@@ -170,30 +165,30 @@
             <div class="pane">
                 <table class="vamp-attrs pane">
                     <thead>
-                        <tr><td></td><th class=fg2>Alive</th><th class=fg12>Bloodless</th></tr>
+                        <tr><td></td><th class=fg2>Full</th><th>Satiated</th><th class=fg14>Thirsty</th><th class=fg12>Bloodless</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>Regeneration</td><td>fast</td><td>none with monsters in sight</td></tr>
-                        <tr><td>HP Modifier</td><td>none</td><td>-20%</td></tr>
-                        <tr><td>Stealth boost</td><td>none</td><td>major</td></tr>
-                        <tr><td>Heal on bite</td><td>no</td><td>yes</td></tr>
-                        <tr class=group><th>Resistances</th><td></td><td></td></tr>
-                        <tr><td>Poison resistance</td><td></td><td>immune</td></tr>
-                        <tr><td>Cold resistance</td><td></td><td>++</td></tr>
-                        <tr><td>Negative resistance</td><td></td><td>+++</td></tr>
-                        <tr><td>Rot resistance</td><td></td><td>+</td></tr>
-                        <tr><td>Torment resistance</td><td></td><td>+</td></tr>
-                        <tr class=group><th>Transformations</th><td></td><td></td></tr>
-                        <tr><td>Bat form</td><td>no</td><td>yes</td></tr>
-                        <tr><td>Other forms / berserk</td><td>yes</td><td>no</td></tr>
+                        <tr><th>Metabolism</th><td>fast</td><td>normal</td><td>slow</td><td>none</td></tr>
+                        <tr><td>Regeneration</td><td>fast</td><td>normal</td><td>slow</td><td>none</td></tr>
+                        <tr><td>Stealth boost</td><td>none</td><td>none</td><td>minor</td><td>major</td></tr>
+                        <tr><td>Hunger costs</td><td>full</td><td>full</td><td>halved</td><td>none</td></tr>
+                        <tr class=group><th>Resistances</th><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>Poison resistance</td><td></td><td></td><td>+</td><td>immune</td></tr>
+                        <tr><td>Cold resistance</td><td></td><td></td><td>+</td><td>++</td></tr>
+                        <tr><td>Negative resistance</td><td></td><td>+</td><td>++</td><td>+++</td></tr>
+                        <tr><td>Rot resistance</td><td></td><td></td><td>+</td><td>+</td></tr>
+                        <tr><td>Torment resistance</td><td></td><td></td><td></td><td>+</td></tr>
+                        <tr class=group><th>Transformations</th><td></td><td></td><td></td><td></td></tr>
+                        <tr><td>Bat form</td><td>no</td><td>yes</td><td>yes</td><td>yes</td></tr>
+                        <tr><td>Other forms / berserk</td><td>yes</td><td>yes</td><td>no</td><td>no</td></tr>
                     </tbody>
                 </table>
                 <style></style>
             </div>
         </div>
         <div class="footer paneset">
-            <div class="pane">[!/^]: <b class=fg15>Mutations</b> | Blood properties</div>
-            <div class="pane">[!/^]: Mutations | <b class=fg15>Blood properties</b></div>
+            <div class="pane">[!/^]: Mutations | Blood properties</div>
+            <div class=pane>[!/^]: Mutations | Blood properties</div>
         </div>
     </div>
     <div id="describe-god-basic" class="describe-god fg7">
@@ -221,13 +216,13 @@
             <div><b class=fg3>!</b>/<b class=fg3>^</b>:&nbsp;</div>
             <div class=paneset>
                 <div class=pane><b class=fg15>Overview</b> | Powers | Wrath
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
                 </div>
                 <div class=pane>Overview | <b class=fg15>Powers</b> | Wrath
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
                 </div>
                 <div class=pane>Overview | Powers | <b class=fg15>Wrath</b>
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
                 </div>
             </div>
         </div>
@@ -259,16 +254,16 @@
             <div><b class=fg3>!</b>/<b class=fg3>^</b>:&nbsp;</div>
             <div class=paneset>
                 <div class=pane><b class=fg15>Overview</b> | Powers | Wrath | Extra
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
                 </div>
                 <div class=pane>Overview | <b class=fg15>Powers</b> | Wrath | Extra
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
                 </div>
                 <div class=pane>Overview | Powers | <b class=fg15>Wrath</b> | Extra
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
                 </div>
                 <div class=pane>Overview | Powers | Wrath | <b class=fg15>Extra</b>
-                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>J</b>/<b class=fg3>Enter</b>: join religion</span>
+                    <span class="join-keyhelp">&nbsp;&nbsp;<b class=fg3>Enter</b>: join religion</span>
                 </div>
             </div>
         </div>
@@ -297,89 +292,9 @@
     </div>
     <div class=msgwin-get-line>
         <div class=header></div>
-        <input type="text" data-sync-id="input">
-        <div data-hotkey="Enter"></div>
-        <div data-hotkey="Escape"></div>
-    </div>
-    <div class="newgame-choice">
-        <div class=header></div>
-        <div class="body fg7">
-            <div>
-                <div class="main-items grid">
-                </div>
-            </div>
-            <div class="descriptions paneset">
-            </div>
-            <div class="sub-items grid">
-            </div>
-        </div>
-    </div>
-    <div class="game-over">
-        <div class=header>
-            <canvas class="glyph-mode-hidden"></canvas>
-            <span></span>
-        </div>
         <div class="body fg7"></div>
     </div>
-    <div class="seed-selection">
-        <div class="header fg3"></div>
-        <div class="body fg7">
-            <p class="body-text"></p>
-            <div class="seed-input">
-                <span>Enter seed: </span>
-                <input type="text" data-sync-id="seed">
-                <button data-hotkey="-" data-sync-id="btn-clear">
-                    <span>[-] Clear</span>
-                </button>
-                <button data-hotkey="d" data-sync-id="btn-daily">
-                    <span>[d] Today's daily seed</span>
-                </button>
-            </div>
-            <p class="footer"></p>
-            <div class="pregen-toggle">
-                <label>
-                    <input type=checkbox data-sync-id="pregenerate" />
-                    <span>Fully pregenerate the Dungeon</span>
-                </label>
-            </div>
-        </div>
-        <div class="button-bar">
-            <button data-hotkey="Enter" data-sync-id="btn-begin">
-                <span>[Enter] Begin!</span>
-            </button>
-        </div>
-    </div>
 </div>
-
-<div id="action-panel-tooltip" style="display: none;"></div>
-<div id="action-panel-settings" style="display: none;">
-    <fieldset>
-        <legend>Orientation:</legend>
-        <div>
-            <input type="radio" class="text" id="action-orient-horizontal" name="action_panel_orientation" value="horizontal">
-            <label for="action-orient-horizontal">horizontal</label>
-        </div>
-        <div>
-            <input type="radio" class="text" id="action-orient-vertical" name="action_panel_orientation" value="vertical">
-            <label for="action-orient-vertical">vertical</label>
-        </div>
-    </fieldset>
-    <fieldset id="scale-set" class="option">
-        <legend>Scale, %:</legend>
-        <input type="number" class="text" id="scale-val" min="50" max="500" name="action_panel_scale" required>
-        <button class="reset" type="button" tabindex="-1">reset</button>
-    </fieldset>
-    <fieldset id="font-size-set" class="option">
-        <legend>Font size, px:</legend>
-        <input type="number" class="text" id="font-size-val" min="1" max="40" name="action_panel_font_size" required>
-        <button class="reset" type="button" tabindex="-1">reset</button>
-    </fieldset>
-    <div class="settings-buttons">
-        <button id="minimize-panel" type="button" tabindex="-1">Minimize</button>
-        <button id="close-settings" type="button" tabindex="-1">Close</button>
-    </div>
-</div>
-<div id="action-panel-placeholder" class="action-panel hidden" style="display: none;"><a href="javascript:">+</a></div>
 
 <div id="ui-stack"></div>
 

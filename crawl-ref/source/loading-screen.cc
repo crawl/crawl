@@ -30,8 +30,8 @@ protected:
 void UIShrinkableImage::_render()
 {
     int iw = m_img.orig_width()*scale, ih = m_img.orig_height()*scale;
-    int dx = (m_region.width-iw)/2, dy = (m_region.height-ih)/2;
-    int x = m_region.x + dx, y = m_region.y + dy;
+    int dx = (m_region[2]-iw)/2, dy = (m_region[3]-ih)/2;
+    int x = m_region[0] + dx, y = m_region[1] + dy;
     GLWPrim rect(x, y, x+iw, y+ih);
     rect.set_tex(0, 0, (float)m_img.orig_width()/m_img.width(),
             (float)m_img.orig_height()/m_img.height());
@@ -40,7 +40,7 @@ void UIShrinkableImage::_render()
     m_buf.draw();
 }
 
-SizeReq UIShrinkableImage::_get_preferred_size(Direction dim, int /*prosp_width*/)
+SizeReq UIShrinkableImage::_get_preferred_size(Direction dim, int prosp_width)
 {
     return { 0, (int)(!dim ? m_img.orig_width() : m_img.orig_height()) };
 }
@@ -48,7 +48,7 @@ SizeReq UIShrinkableImage::_get_preferred_size(Direction dim, int /*prosp_width*
 void UIShrinkableImage::_allocate_region()
 {
     float iw = m_img.orig_width(), ih = m_img.orig_height();
-    scale = min({1.0f, m_region.width/iw, m_region.height/ih});
+    scale = min({1.0f, m_region[2]/iw, m_region[3]/ih});
 }
 
 static shared_ptr<Text> loading_text;
@@ -65,21 +65,23 @@ void loading_screen_open()
 {
     auto splash = make_shared<UIShrinkableImage>(_get_title_image());
     loading_text = make_shared<Text>();
-    loading_text->set_margin_for_sdl(15, 0, 0, 0);
+    loading_text->set_margin_for_sdl({15, 0, 0, 0});
     auto vbox = make_shared<Box>(Widget::VERT);
-    vbox->set_cross_alignment(Widget::CENTER);
+    vbox->align_items = Widget::CENTER;
     vbox->add_child(move(splash));
     vbox->add_child(loading_text);
     FontWrapper *font = tiles.get_crt_font();
-    vbox->min_size().width = font->string_width(load_complete_msg.c_str());
+    vbox->min_size()[0] = font->string_width(load_complete_msg.c_str());
     popup = make_shared<ui::Popup>(move(vbox));
     ui::push_layout(popup);
 }
 
 void loading_screen_close()
 {
-    bool done = Options.tile_skip_title || crawl_state.test;
-    popup->on_keydown_event([&](const KeyEvent&) { return done = true; });
+    bool done = Options.tile_skip_title;
+    popup->on(Widget::slots.event, [&](wm_event ev)  {
+        return done = ev.type == WME_KEYDOWN;
+    });
     if (!done)
         loading_screen_update_msg(load_complete_msg);
     while (!done && !crawl_state.seen_hups)
@@ -91,7 +93,7 @@ void loading_screen_close()
 
 void loading_screen_update_msg(string message)
 {
-    loading_text->set_text(message);
+    loading_text->set_text(formatted_string(message));
     ui::pump_events(0);
 }
 

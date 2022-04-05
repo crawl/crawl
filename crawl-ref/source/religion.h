@@ -5,14 +5,10 @@
 
 #pragma once
 
-#include <vector>
-
 #include "enum.h"
 #include "mgen-data.h"
 #include "player.h"
 #include "religion-enum.h"
-
-using std::vector;
 
 #define MAX_PIETY      200
 #define HALF_MAX_PIETY (MAX_PIETY / 2)
@@ -22,6 +18,13 @@ using std::vector;
 #define NUM_VEHUMET_GIFTS 13
 
 #define NUM_PIETY_STARS 6
+
+enum class lifesaving_chance
+{
+    never,
+    sometimes,
+    always,
+};
 
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
@@ -48,10 +51,8 @@ void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
 void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
-int excom_xp_docked();
 
-bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true,
-                bool force = false);
+bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
@@ -60,8 +61,7 @@ void handle_god_time(int /*time_delta*/);
 int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
 int gozag_service_fee();
-bool player_can_join_god(god_type which_god, bool temp = true);
-void join_trog_skills(void);
+bool player_can_join_god(god_type which_god);
 void join_religion(god_type which_god);
 void god_pitch(god_type which_god);
 god_type choose_god(god_type def_god = NUM_GODS);
@@ -104,36 +104,26 @@ bool god_hates_spellcasting(god_type god);
 bool god_hates_spell(spell_type spell, god_type god, bool fake_spell = false);
 bool god_loathes_spell(spell_type spell, god_type god);
 string god_spell_warn_string(spell_type spell, god_type god);
-
-void initialize_ashenzari_props();
+bool god_hates_ability(ability_type ability, god_type god);
+lifesaving_chance elyvilon_lifesaving();
 bool god_protects_from_harm();
 bool jiyva_is_dead();
-bool ignis_is_dead();
 void set_penance_xp_timeout();
-bool fedhas_protects(const monster* target);
-bool god_protects(const actor *agent, const monster *target, bool quiet=true);
-bool god_protects(const monster *target, bool quiet=true);
+bool fedhas_protects(const monster& target);
 bool fedhas_neutralises(const monster& target);
 void nemelex_death_message();
-
-string ignore_faith_reason();
-bool faith_has_penalty();
 
 void mons_make_god_gift(monster& mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster& mon, god_type god = you.religion);
 
-bool yred_random_servant(unsigned int threshold, bool force_hostile = false);
-void give_yred_bonus_zombies(int stars);
-bool yred_reap_chance();
-bool yred_reclaim_souls(bool all = false);
-bool pay_yred_souls(unsigned int how_many, bool just_check = false);
+int yred_random_servants(unsigned int threshold, bool force_hostile = false);
 bool is_yred_undead_slave(const monster& mon);
 bool is_orcish_follower(const monster& mon);
 bool is_fellow_slime(const monster& mon);
 bool is_follower(const monster& mon);
 
 // Vehumet gift interface.
-bool vehumet_is_offering(spell_type spell, bool only = false);
+bool vehumet_is_offering(spell_type spell);
 void vehumet_accept_gift(spell_type spell);
 
 mgen_data hepliaklqana_ancestor_gen_data();
@@ -170,8 +160,8 @@ public:
     god_iterator();
 
     operator bool() const;
-    god_type operator*() const;
-    god_type operator->() const;
+    const god_type operator*() const;
+    const god_type operator->() const;
     god_iterator& operator++();
     god_iterator operator++(int);
 
@@ -181,7 +171,6 @@ protected:
 
 struct god_power
 {
-    god_type god;
     // 1-6 means it unlocks at that many stars of piety;
     // 0 means it is always available when worshipping the god;
     // -1 means it is available even under penance;
@@ -209,7 +198,6 @@ struct god_power
 
     god_power(int rank_, ability_type abil_, const char* gain_,
               const char* loss_ = "", const char* general_ = "") :
-              god(GOD_NO_GOD),
               rank{rank_}, abil{abil_}, gain{gain_},
               loss{*loss_ ? loss_ : gain_},
               general{*general_ ? general_ : gain_}
@@ -224,7 +212,6 @@ struct god_power
 };
 
 void set_god_ability_slots();
-const vector<vector<god_power>> & get_all_god_powers();
 vector<god_power> get_god_powers(god_type god);
 const god_power* god_power_from_ability(ability_type abil);
 bool god_power_usable(const god_power& power, bool ignore_piety=false, bool ignore_penance=false);

@@ -1,18 +1,12 @@
 #pragma once
 
-#include <cstdint>
-
-#include "tag-version.h"
-
-enum object_class_type : uint8_t           // env.item[].base_type
+enum object_class_type : uint8_t           // mitm[].base_type
 {
     OBJ_WEAPONS,
     OBJ_MISSILES,
     OBJ_ARMOUR,
     OBJ_WANDS,
-#if TAG_MAJOR_VERSION == 34
     OBJ_FOOD,
-#endif
     OBJ_SCROLLS,
     OBJ_JEWELLERY,
     OBJ_POTIONS,
@@ -29,5 +23,5 @@ enum object_class_type : uint8_t           // env.item[].base_type
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,
     OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()
-    OBJ_DETECTED,    // unknown item; pseudo-items on the map only
+    OBJ_DETECTED,    // unknown item; item_info only
 };

@@ -7,7 +7,7 @@ adjective: "Draconian"
 genus: "Draconian"
 difficulty: False
 species_flags:
-  - SPF_DRACONIAN
+  - draconian
 aptitudes:
   xp: -1
   hp: 1
@@ -22,6 +22,7 @@ aptitudes:
   dodging: -1
   spellcasting: -1
   hexes: -1
+  charms: -1
   invocations: 1
   # Mottled Draconian specific
   fire_magic: 1
@@ -36,6 +37,4 @@ fake_mutations:
   - long: You can spit globs of burning liquid.
     short: breathe sticky flame splash
   - long: You can ignite nearby creatures when you spit burning liquid.
-# start TAG_MAJOR_VERSION == 34
 create_enum: false
-# end TAG_MAJOR_VERSION

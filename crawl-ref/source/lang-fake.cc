@@ -400,7 +400,7 @@ static void _grunt(string &txt)
 {
     static const char* exact_grunt[][2] =
     {
-        {BATTLESPHERE_KEY, "BATTLESPHERE"},
+        {"battlesphere", "BATTLESPHERE"},
         {"Battlesphere", "BATTLESPHERE"},
         {"battlemage", "BATTLEMAGE"},
         {"Battlemage", "BATTLEMAGE"},

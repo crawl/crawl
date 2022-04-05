@@ -67,31 +67,13 @@ checkhdr ()
     done
 }
 
-# Run check on all headers for a given source
-# This is useful when you just want to check a single source file, most
-# likely because that source file has recently been heavily modified.
-checkcc ()
-{
-    for hdr in *.h; do
-        check $hdr $1
-    done
-}
-
 # run check on all pairs
 checkall ()
 {
-    checkafter ""
-}
-
-# Run checkhdr on all pairs alphabetically after a specific header
-# Useful to run directly in the case running checkall is interrupted.
-checkafter ()
-{
     for hdr in *.h; do
-        if [[ $hdr < $1 || $hdr = AppHdr.h ]]; then
+        if [ $hdr = AppHdr.h ]; then
             continue;
         fi
-
         checkhdr $hdr
     done
 }

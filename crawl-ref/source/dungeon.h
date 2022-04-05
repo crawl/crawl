@@ -12,7 +12,6 @@
 
 #include "env.h"
 #include "mapdef.h"
-#include "tag-version.h"
 
 COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t));
 
@@ -60,7 +59,6 @@ enum map_mask_type
     MMT_WAS_DOOR_MIMIC  = 0x400, // There was a door mimic there.
 #endif
     MMT_TURNED_TO_FLOOR = 0x800, // This feature was dug, deconstructed or such.
-    MMT_PASSABLE        = 0x1000 // Passable for purposes of determining level connectivity
 };
 
 class dgn_region;
@@ -160,8 +158,8 @@ public:
     int connect(bool spotty = false) const;
     string map_name_at(const coord_def &c) const;
     dungeon_feature_type feature_at(const coord_def &c);
-    bool is_exit(const coord_def &c) const;
-    bool is_space(const coord_def &c) const;
+    bool is_exit(const coord_def &c);
+    bool is_space(const coord_def &c);
 };
 
 class vault_place_iterator
@@ -170,7 +168,6 @@ public:
     vault_place_iterator(const vault_placement &vp);
     operator bool () const;
     coord_def operator * () const;
-    coord_def vault_pos() const;
     const coord_def *operator -> () const;
     vault_place_iterator &operator ++ ();
     vault_place_iterator operator ++ (int);
@@ -193,17 +190,12 @@ extern vector<vault_placement> Temp_Vaults;
 
 extern const map_bitmask *Vault_Placement_Mask;
 
-set<string> &get_uniq_map_tags();
-set<string> &get_uniq_map_names();
-
 void init_level_connectivity();
 void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
-bool builder(bool enable_random_maps = true);
-
-int dgn_builder_x();
-int dgn_builder_y();
+bool builder(bool enable_random_maps = true,
+             dungeon_feature_type dest_stairs_type = NUM_FEATURES);
 
 void dgn_clear_vault_placements();
 void dgn_erase_unused_vault_placements();
@@ -229,8 +221,6 @@ const vault_placement *dgn_safe_place_map(const map_def *map,
                                           bool check_collision,
                                           bool make_no_exits,
                                           const coord_def &pos = INVALID_COORD);
-
-void dgn_record_veto(const dgn_veto_exception &e);
 
 void level_clear_vault_memory();
 void run_map_epilogues();
@@ -267,11 +257,12 @@ void dgn_reset_level(bool enable_random_maps = true);
 const vault_placement *dgn_register_place(const vault_placement &place,
                                           bool register_vault);
 
+// Count number of mutually isolated zones. If choose_stairless, only count
+// zones with no stairs in them. If fill is set to anything other than
+// DNGN_UNSEEN, chosen zones will be filled with the provided feature.
 int dgn_count_disconnected_zones(
     bool choose_stairless,
     dungeon_feature_type fill = DNGN_UNSEEN);
-
-int dgn_count_tele_zones(bool choose_stairless);
 
 void dgn_replace_area(const coord_def& p1, const coord_def& p2,
                       dungeon_feature_type replace,
@@ -284,6 +275,12 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
 
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
+
+int count_neighbours(int x, int y, dungeon_feature_type feat);
+static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
+{
+    return count_neighbours(p.x, p.y, feat);
+}
 
 string dump_vault_maps();
 
@@ -305,5 +302,3 @@ void fixup_misplaced_items();
 
 void dgn_place_transporter(const coord_def &pos, const coord_def &dest);
 bool dgn_make_transporters_from_markers();
-
-int starting_absdepth();

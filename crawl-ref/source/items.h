@@ -5,15 +5,9 @@
 
 #pragma once
 
-#include <vector>
-
 #include "equipment-type.h"
 #include "god-type.h"
 #include "mon-inv-type.h"
-#include "item-prop.h"
-#include "tag-version.h"
-
-using std::vector;
 
 // Ways to get items, other than finding them on the ground or looting them
 // from slain monsters.
@@ -35,15 +29,11 @@ enum item_source_type
     AQ_WIZMODE    = 200,
 };
 
-enum autopickup_level_type
-{
-    AP_FORCE_OFF = -1,
-    AP_FORCE_NONE = 0,
-    AP_FORCE_ON = 1,
-};
-
 /// top-priority item override colour
 #define FORCED_ITEM_COLOUR_KEY "forced_item_colour"
+
+pair<bool, int> item_int(item_def &item);
+item_def& item_from_int(bool, int);
 
 int get_max_subtype(object_class_type base_type);
 bool item_type_has_unidentified(object_class_type base_type);
@@ -66,6 +56,7 @@ void clear_item_pickup_flags(item_def &item);
 bool is_stackable_item(const item_def &item);
 bool items_similar(const item_def &item1, const item_def &item2);
 bool items_stack(const item_def &item1, const item_def &item2);
+void merge_item_stacks(const item_def &source, item_def &dest, int quant = -1);
 void get_gold(const item_def& item, int quant, bool quiet);
 
 item_def *find_floor_item(object_class_type cls, int sub_type = -1);
@@ -86,9 +77,7 @@ void destroy_item(item_def &item, bool never_created = false);
 void destroy_item(int dest, bool never_created = false);
 void lose_item_stack(const coord_def& where);
 
-string item_message(vector<const item_def *> const &items);
 void item_check();
-void identify_item(item_def& item);
 void request_autopickup(bool do_pickup = true);
 void id_floor_items();
 
@@ -97,8 +86,7 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-vector<item_def*> item_list_on_square(int obj);
-vector<const item_def*> const_item_list_on_square(int obj);
+vector<const item_def*> item_list_on_square(int obj);
 
 bool copy_item_to_grid(item_def &item, const coord_def& p,
                        int quant_drop = -1,    // item.quantity by default
@@ -110,6 +98,9 @@ bool move_top_item(const coord_def &src, const coord_def &dest);
 
 // Get the top item in a given cell. If there are no items, return nullptr.
 const item_def* top_item_at(const coord_def& where);
+
+// Returns whether there is more than one item in a given cell.
+bool multiple_items_at(const coord_def& where);
 
 void drop();
 
@@ -142,10 +133,7 @@ bool item_needs_autopickup(const item_def &, bool ignore_force = false);
 bool can_autopickup();
 
 bool need_to_autopickup();
-void autopickup(bool forced = false);
-
-void set_item_autopickup(const item_def &item, autopickup_level_type ap);
-int item_autopickup_level(const item_def &item);
+void autopickup();
 
 int find_free_slot(const item_def &i);
 
@@ -172,8 +160,6 @@ object_class_type get_random_item_mimic_type();
 bool maybe_identify_base_type(item_def &item);
 int count_movable_items(int obj);
 
-bool valid_item_index(int i);
-
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're
 // examining but you can't kill the item linked to it.
@@ -182,9 +168,6 @@ class stack_iterator : public iterator<forward_iterator_tag, item_def>
 public:
     explicit stack_iterator(const coord_def& pos, bool accessible = false);
     explicit stack_iterator(int start_link);
-
-    bool operator==(const stack_iterator& rhs) const;
-    static stack_iterator end() { return stack_iterator(NON_ITEM); };
 
     operator bool() const;
     item_def& operator *() const;
@@ -218,15 +201,3 @@ private:
     monster& mon;
     mon_inv_type type;
 };
-
-/** All non-removed item subtypes for the specified base type */
-static inline vector<int> all_item_subtypes(object_class_type base)
-{
-    vector<int> subtypes;
-    for (int i = 0; i < get_max_subtype(base); ++i)
-    {
-        if (!item_type_removed(base, i))
-            subtypes.push_back(i);
-    }
-    return subtypes;
-}

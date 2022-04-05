@@ -106,35 +106,6 @@ branch summon cast prefix
 
 @The_monster@ calls forth creatures from
 %%%%
-Cantrip cast
-
-@The_monster@ casts a cantrip, but nothing happens.
-
-@The_monster@ begins to cast a cantrip, but forgets the words!
-
-@The_monster@ miscasts a cantrip.
-
-@The_monster@ looks braver for a moment.
-
-@The_monster@ looks encouraged for a moment.
-
-@The_monster@ looks satisfied for a moment.
-%%%%
-Creeping Frost cast
-
-@The_monster@ calls freezing cold from the walls.
-%%%%
-Goad Beasts cast
-
-@The_monster@ goads on nearby beasts.
-%%%%
-Call Down Lightning cast
-
-Electricity crackles from @the_monster@'s apparatus.
-%%%%
-Blink Range ironbound thunderhulk cast
-
-Strange energies crackle from @the_monster@'s apparatus.
 %%%%
 Mara Summon cast
 
@@ -198,12 +169,6 @@ Major Destruction cast
 
 @The_monster@ conjures a destructive force in the name of @possessive_God@!
 %%%%
-Sheza's Dance cast
-
-@The_monster@ sends weapons flying into battle!
-
-@The_monster@ gestures, and weapons take to the air!
-%%%%
 Druid's Call cast
 
 @The_monster@ calls out to the beasts of the wild!
@@ -216,13 +181,9 @@ Phantom Mirror cast
 
 @The_monster@ weaves an illusion.
 %%%%
-Pyroclastic Surge cast
+Chant Fire Storm cast
 
-@The_monster@ calls gouts of flame from the lava!
-%%%%
-Eruption cast
-
-@The_monster@ rends the earth beneath you!
+@The_monster@ begins to chant a fire storm spell!
 %%%%
 Chant Word of Entropy cast
 
@@ -239,23 +200,6 @@ unseen Call of Chaos cast
 Wind Blast cast
 
 @The_monster@ conjures a fierce blast of wind!
-%%%%
-Harpoon Shot cast
-
-@The_monster@ fires a harpoon shot @at@ @target@.
-%%%%
-Throw Klown Pie cast
-
-@The_monster@ pies you viciously!
-%%%%
-Stunning Burst cast
-
-@The_monster@ fires a burst of electricity @at@ @target@.
-%%%%
-Conjure Living Spells cast
-
-@The_monster@ erupts in a flurry of living spells!
-%%%%
 #################################################
 # These have special hard-coded messaging.
 #################################################
@@ -280,14 +224,6 @@ Spit Acid cast
 @The_monster@ spits acid @at@ @target@.
 %%%%
 unseen Spit Acid cast
-
-You hear a spitting sound.
-%%%%
-Acid Splash cast
-
-@The_monster@ spits acid @at@ @target@.
-%%%%
-unseen Acid Splash cast
 
 You hear a spitting sound.
 %%%%
@@ -360,10 +296,6 @@ unseen Spit Poison cast
 
 You hear a spitting sound.
 %%%%
-Freeze cast
-
-@The_monster@ freezes @target@.
-%%%%
 Sticky Flame Splash cast
 
 @The_monster@ spits sticky flame @at@ @target@.
@@ -399,36 +331,9 @@ Slug Dart cast
 Paralysis Gaze cast
 
 @The_monster@ gazes piercingly through @target@!
-%%%%
-Weakening Gaze cast
-
-@The_monster@ gazes fiercely through @target@!
 ########################################################################
 # Unique monsters
 ########################################################################
-%%%%
-Cantrip Dissolution cast
-
-@The_monster@ gurgles to an absent god.
-
-@The_monster@ jiggles mournfully.
-
-@The_monster@ wobbles aimlessly.
-
-@The_monster@ says, "Become one with my sorrow!"
-
-w:1
-@The_monster@ asks, "Why have you forsaken me @My_God@?"
-%%%%
-Summon Eyeballs Dissolution cast
-
-@The_monster@ gurgles deeply, a call to fellow slimes.
-
-@The_monster@ says, "@My_God@ sees all!"
-%%%%
-Dissolution cast
-
-@The_monster@ gurgles deeply.
 %%%%
 Frances cast
 
@@ -440,27 +345,6 @@ Frances cast
 
 @The_monster@ screams a word of power!
 %%%%
-Cantrip Gastronok cast
-
-@The_monster@ bubbles merrily.
-
-VISUAL:@The_monster@ glows a brilliant shade of cerise.
-
-VISUAL:@The_monster@ wobbles crazily.
-
-VISUAL:@The_monster@'s eyestalks stretch out, then return to normal size.
-
-You wobble.
-
-You take on a slight green cast.
-
-You feel briefly sluggish.
-
-You feel a sudden, passing aversion to salt.
-
-w:5
-You feel a sudden urge to swivel your nonexistent eyestalks around.
-%%%%
 Gastronok cast targeted
 
 @The_monster@ looks @at@ @target@ while chanting.
@@ -468,6 +352,16 @@ Gastronok cast targeted
 @The_monster@ looks @at@ @target@ and mumbles some strange words.
 
 @The_monster@ casts a spell @at@ @target@.
+%%%%
+Summon Eyeballs Dissolution cast
+
+@The_monster@ gurgles deeply, a call to fellow slimes.
+
+@The_monster@ says, "@My_God@ sees all!"
+%%%%
+Dissolution cast
+
+@The_monster@ gurgles deeply.
 %%%%
 Gastronok cast
 
@@ -529,21 +423,6 @@ Paralyse Xtahua cast
 @The_monster@ roars overwhelmingly @at@ @target@!
 
 @The_monster@ thunders ferociously @at@ @target@!
-%%%%
-Vv cast
-
-VISUAL:@The_monster@ gestures sharply.
-
-VISUAL:@The_monster@ stamps @possessive@ foot.
-
-VISUAL:@The_monster@ slams @possessive@ palms together.
-
-w:3
-VISUAL:@The_monster@ makes an elaborate arcing motion.
-%%%%
-unseen Vv cast
-
-You hear the sound of rock striking rock.
 %%%%
 ########################################################################
 # Individual monsters
@@ -661,10 +540,6 @@ Metal Splinters war gargoyle cast
 
 @The_monster@ launches @beam@ @at@ @target@.
 %%%%
-Splinterspray cast
-
-@The_monster@ hurls a spray of @beam@ @at@ @target@.
-%%%%
 Crystal Bolt crystal guardian cast
 
 @The_monster@ fires a crystalline bolt @at@ @target@.
@@ -684,10 +559,6 @@ Bolt of Magma molten gargoyle cast
 Primal Wave elemental wellspring cast
 
 A torrent of water rises up through @the_monster@!
-%%%%
-Summon Water Elementals elemental wellspring cast
-
-Water spirits pour forth from @the_monster@!
 %%%%
 Invisibility shadow cast
 
@@ -723,7 +594,7 @@ You hear a deafening rattling sound!
 %%%%
 ushabti cast targeted
 
-@The_monster@ gestures stiffly @at@ @target@.
+@The_monster@ gestures slowly @at@ @target@.
 %%%%
 Ghostly Fireball revenant cast
 
@@ -761,13 +632,13 @@ Lightning Bolt electric golem cast
 
 @The_monster@ hurls @beam@ @at@ @target@.
 %%%%
-unseen Warning Cry demonic crawler cast
+insubstantial wisp cast
 
-You hear terrible shrieking!
+@The_monster@ thrums sharply.
 %%%%
-Warning Cry demonic crawler cast
+Blink insubstantial wisp cast
 
-@The_monster@ shrieks in warning!
+__NONE
 %%%%
 unseen Warning Cry howler monkey cast
 
@@ -792,10 +663,6 @@ Fireball hell hog cast
 Throw Barbs peacekeeper cast
 
 @The_monster@ hurls a @beam@ @at@ @target@.
-%%%%
-Woodweal cast
-
-@The_monster@ touches a tree and draws upon its vitality.
 %%%%
 ########################################################################
 # Monster species and genus messages.
@@ -884,10 +751,6 @@ Static Discharge shock serpent cast
 Corrupting Pulse wretched star cast
 
 @The_monster@ pulses with an eldritch light!
-%%%%
-living spell cast
-
-@The_monster@ casts itself @at@ @target@.
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.

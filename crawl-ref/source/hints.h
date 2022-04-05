@@ -10,8 +10,6 @@
 #include <string>
 #include <vector>
 
-#include "tag-version.h"
-
 class formatted_string;
 class writer;
 class reader;
@@ -44,10 +42,9 @@ enum hints_event_type
     HINT_SEEN_WEAPON,
     HINT_SEEN_MISSILES,
     HINT_SEEN_ARMOUR,
-#if TAG_MAJOR_VERSION == 34
     HINT_SEEN_RANDART,
+    HINT_SEEN_FOOD,
     HINT_SEEN_CARRION,
-#endif
     HINT_SEEN_GOLD,
     // encountered dungeon features
     HINT_SEEN_STAIRS,
@@ -62,7 +59,10 @@ enum hints_event_type
     // other 'first events'
     HINT_SEEN_MONSTER,
     HINT_SEEN_ZERO_EXP_MON,
-    HINT_MONSTER_HIGHLIGHT,
+#if TAG_MAJOR_VERSION == 34
+    HINT_SEEN_TOADSTOOL,
+#endif
+    HINT_MONSTER_BRAND,
     HINT_MONSTER_FRIENDLY,
     HINT_MONSTER_SHOUT,
     HINT_MONSTER_LEFT_LOS,
@@ -74,26 +74,31 @@ enum hints_event_type
     HINT_GAINED_RANGED_SKILL,
     HINT_CHOOSE_STAT,
     HINT_MAKE_CHUNKS,
+#if TAG_MAJOR_VERSION == 34
+    HINT_OFFER_CORPSE,
+#endif
     HINT_NEW_ABILITY_GOD,
-#if TAG_MAJOR_VERSION == 34
     HINT_NEW_ABILITY_MUT,
-#endif
     HINT_NEW_ABILITY_ITEM,
-#if TAG_MAJOR_VERSION == 34
     HINT_FLEEING_MONSTER,
-#endif
+    HINT_ROTTEN_FOOD,
     HINT_CONVERT,
     HINT_GOD_DISPLEASED,
     HINT_EXCOMMUNICATE,
     HINT_SPELL_MISCAST,
+    HINT_SPELL_HUNGER,
     HINT_GLOWING,
     HINT_YOU_RESIST,
     // status changes
     HINT_YOU_ENCHANTED,
-    HINT_YOU_POISON,
 #if TAG_MAJOR_VERSION == 34
-    HINT_YOU_CURSED,
+    HINT_CONTAMINATED_CHUNK,
+    HINT_YOU_SICK,
 #endif
+    HINT_YOU_POISON,
+    HINT_YOU_ROTTING,
+    HINT_YOU_CURSED,
+    HINT_YOU_HUNGRY,
     HINT_YOU_STARVING,
     HINT_YOU_MUTATED,
     HINT_CAN_BERSERK,
@@ -117,25 +122,30 @@ enum hints_event_type
     HINT_AUTO_EXPLORE,
     HINT_DONE_EXPLORE,
     HINT_AUTO_EXCLUSION,
-    HINT_STAIR_HIGHLIGHT,
-    HINT_HEAP_HIGHLIGHT,
-    HINT_TRAP_HIGHLIGHT,
+    HINT_STAIR_BRAND,
+    HINT_HEAP_BRAND,
+    HINT_TRAP_BRAND,
     HINT_LOAD_SAVED_GAME,
     // for the tutorial
     HINT_AUTOPICKUP_THROWN,
     HINT_TARGET_NO_FOE,
-#if TAG_MAJOR_VERSION == 34
     HINT_REMOVED_CURSE,
-#endif
     HINT_ITEM_RESISTANCES,
+    HINT_FLYING,
+    HINT_INACCURACY,
     HINT_HEALING_POTIONS,
     HINT_GAINED_SPELLCASTING,
     HINT_FUMBLING_SHALLOW_WATER,
+    HINT_EATING_ROTTEN_FOOD,
     HINT_CLOUD_WARNING,
+#if TAG_MAJOR_VERSION == 34
+    HINT_MEMORISE_FAILURE,
+#endif
     HINT_ANIMATE_CORPSE_SKELETON,
     HINT_SEEN_WEB,
-    HINT_MALEVOLENCE,
-    HINT_OPPORTUNITY_ATTACK,
+#if TAG_MAJOR_VERSION == 34
+    HINT_SEEN_ROD,
+#endif
     HINT_EVENTS_NUM
 };
 
@@ -151,9 +161,8 @@ void print_hint(string key, const string& arg1 = "", const string& arg2 = "");
 void hints_death_screen();
 void hints_finished();
 
+void hints_dissection_reminder();
 void hints_healing_check();
-
-void hint_replace_cmds(string &s);
 
 void taken_new_item(object_class_type item_type);
 void hints_gained_new_skill(skill_type skill);
@@ -172,6 +181,7 @@ string hints_memorise_info();
 // Additional information for tutorial players.
 void check_item_hint(const item_def &item, unsigned int num_old_talents);
 string hints_describe_item(const item_def &item);
+void hints_inscription_info(string prompt);
 bool hints_pos_interesting(int x, int y);
 string hints_describe_pos(int x, int y);
 bool hints_monster_interesting(const monster* mons);

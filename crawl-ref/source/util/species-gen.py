@@ -1,11 +1,4 @@
-#!/usr/bin/env python3
-
-"""
-Generate species-data.h, aptitudes.h, species-groups.h, and species-type.h
-
-Works with both Python 2 & 3. If that changes, update how the Makefile calls
-this.
-"""
+#!/usr/bin/env python
 
 from __future__ import print_function
 
@@ -13,22 +6,14 @@ import argparse
 import os
 import sys
 import traceback
-import re
 import collections
-if sys.version_info.major == 2:
-    from collections import MutableMapping
-else:
-    from collections.abc import MutableMapping
+import re
 
 import yaml  # pip install pyyaml
 
-def quote_or_nullptr(key, d):
-    if key in d:
-        return quote(d[key])
-    else:
-        return 'nullptr'
+from gen_util import *
 
-class Species(MutableMapping):
+class Species(collections.MutableMapping):
     """Parser for YAML definition files.
 
     If any YAML content is invalid, the relevant parser function below should
@@ -162,10 +147,11 @@ SpeciesGroup = collections.namedtuple('SpeciesGroup',
                                             ['position', 'width', 'species'])
 SpeciesGroupEntry = collections.namedtuple('SpeciesGroupEntry',
                                             ['priority', 'enum'])
-SPECIES_GROUPS_TEMPLATE = collections.OrderedDict()
-SPECIES_GROUPS_TEMPLATE['Simple'] = SpeciesGroup('coord_def(0, 0)', '50', [])
-SPECIES_GROUPS_TEMPLATE['Intermediate'] = SpeciesGroup('coord_def(1, 0)', '20', [])
-SPECIES_GROUPS_TEMPLATE['Advanced'] = SpeciesGroup('coord_def(2, 0)', '20', [])
+SPECIES_GROUPS_TEMPLATE = {
+    'Simple': SpeciesGroup('coord_def(0, 0)', '20', []),
+    'Intermediate': SpeciesGroup('coord_def(25, 0)', '20', []),
+    'Advanced': SpeciesGroup('coord_def(50, 0)', '20', []),
+}
 SPECIES_GROUP_TEMPLATE = """
     {{
         "{name}",
@@ -177,55 +163,20 @@ SPECIES_GROUP_TEMPLATE = """
 ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'maces_and_flails', 'polearms', 'staves', 'slings', 'bows', 'crossbows',
     'throwing', 'armour', 'dodging', 'stealth', 'shields', 'unarmed_combat',
-    'spellcasting', 'conjurations', 'hexes', 'summoning',
+    'spellcasting', 'conjurations', 'hexes', 'charms', 'summoning',
     'necromancy', 'transmutations', 'translocations', 'fire_magic',
     'ice_magic', 'air_magic', 'earth_magic', 'poison_magic', 'invocations',
     'evocations')
-UNDEAD_TYPES = ('US_ALIVE', 'US_UNDEAD', 'US_SEMI_UNDEAD')
+UNDEAD_TYPES = ('US_ALIVE', 'US_HUNGRY_DEAD', 'US_UNDEAD', 'US_SEMI_UNDEAD')
 SIZES = ('SIZE_TINY', 'SIZE_LITTLE', 'SIZE_SMALL', 'SIZE_MEDIUM', 'SIZE_LARGE',
-    'SIZE_GIANT')
+    'SIZE_BIG', 'SIZE_GIANT')
 ALL_STATS = ('str', 'int', 'dex')
 ALL_WEAPON_SKILLS = ('SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
     'SK_MACES_FLAILS', 'SK_POLEARMS', 'SK_STAVES', 'SK_SLINGS', 'SK_BOWS',
     'SK_CROSSBOWS', 'SK_UNARMED_COMBAT')
 
-ALL_SPECIES_FLAGS = {'SPF_NO_HAIR', 'SPF_DRACONIAN', 'SPF_SMALL_TORSO',
-    'SPF_NO_BONES', 'SPF_BARDING'}
-
 def recommended_jobs(jobs):
     return ', '.join(validate_string(job, 'Job', 'JOB_[A-Z_]+') for job in jobs)
-
-
-def validate_string(val, name, pattern):
-    '''
-    Validate a string.
-
-    Note that re.match anchors to the start of the string, so you don't need to
-    prefix the pattern with '^'. But it doesn't require matching to the end, so
-    you'll probably want to suffix '$'.
-    '''
-    if not isinstance(val, str):
-        raise ValueError('%s isn\'t a string' % name)
-    if re.match(pattern, val):
-        return val
-    else:
-        raise ValueError('%s doesn\'t match pattern %s' % (val, pattern))
-    return val
-
-
-def validate_bool(val, name):
-    '''Validate a boolean.'''
-    if not isinstance(val, bool):
-        raise ValueError('%s isn\'t a boolean' % name)
-    return val
-
-
-def validate_int_range(val, name, min, max):
-    if not isinstance(val, int):
-        raise ValueError('%s isn\'t an integer' % name)
-    if not min <= val <= max:
-        raise ValueError('%s isn\'t between %s and %s' % (name, min, max))
-    return val
 
 
 def size(size):
@@ -236,21 +187,21 @@ def size(size):
     return val
 
 
-def enumify(s):
-    return s.replace(' ', '_').upper()
-
-def quote(s):
-    if not isinstance(s, str):
-        raise ValueError('Expected a string but got %s' % repr(s))
-    return '"%s"' % s
-
 def species_flags(flags):
-    global ALL_SPECIES_FLAGS
     out = set()
     for f in flags:
-        if f not in ALL_SPECIES_FLAGS:
+        if f == 'elven':
+            out.add('SPF_ELVEN')
+        elif f == 'draconian':
+            out.add('SPF_DRACONIAN')
+        elif f == 'orcish':
+            out.add('SPF_ORCISH')
+        elif f == 'hairless':
+            out.add('SPF_NO_HAIR')
+        elif f == 'small_torso':
+            out.add('SPF_SMALL_TORSO')
+        else:
             raise ValueError("Unknown species flag %s" % f)
-        out.add(f)
     if not out:
         out.add('SPF_NONE')
     return ' | '.join(out)
@@ -279,19 +230,6 @@ def levelup_stats(stats):
     else:
         return make_list(', '.join("STAT_%s" % s.upper() for s in stats))
 
-global LIST_TEMPLATE
-LIST_TEMPLATE = """    {{ {list} }}"""
-
-def empty_set(typ):
-    return "    set<%s>()" % typ
-
-def make_list(list_str):
-    global LIST_TEMPLATE
-    #TODO: add linebreaks + indents to obey 80 chars?
-    if len(list_str.strip()) == 0:
-        return "    {}"
-    else:
-        return LIST_TEMPLATE.format(list=list_str)
 
 def mutations(mut_def):
     out = []
@@ -390,10 +328,6 @@ def generate_species_type_data(s):
         return '    %s,\n' % s['enum']
 
 
-def load_template(templatedir, name):
-    return open(os.path.join(templatedir, name)).read()
-
-
 def main():
     parser = argparse.ArgumentParser(description='Generate species-data.h')
     parser.add_argument('datadir', help='dat/species source dir')
@@ -421,7 +355,7 @@ def main():
             continue
         f_path = os.path.join(args.datadir, f_name)
         try:
-            species_spec = yaml.safe_load(open(f_path))
+            species_spec = yaml.load(open(f_path))
         except yaml.YAMLError as e:
             print("Failed to load %s: %s" % (f_name, e))
             sys.exit(1)

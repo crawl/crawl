@@ -28,6 +28,7 @@ aptitudes:
   spellcasting: -2
   conjurations: -1
   hexes: -1
+  charms: -1
   summoning: -1
   necromancy: -1
   translocations: -1
@@ -39,17 +40,15 @@ aptitudes:
   poison_magic: -1
   invocations: False
   evocations: -1
-str: 9
-int: 10
-dex: 9
-# No natural stat gain (quadruple chosen instead)
+str: 11
+int: 12
+dex: 11
+# No natural stat gain (double chosen instead)
 levelup_stats: []
 levelup_stat_frequency: 28
 mutations:
   1:
     MUT_HIGH_MAGIC: 1
-    MUT_FORLORN: 1
-    MUT_DIVINE_ATTRS: 1
 recommended_jobs:
   - JOB_TRANSMUTER
   - JOB_CONJURER
@@ -57,6 +56,4 @@ recommended_jobs:
   - JOB_ICE_ELEMENTALIST
   - JOB_AIR_ELEMENTALIST
   - JOB_EARTH_ELEMENTALIST
-# start TAG_MAJOR_VERSION == 34
 create_enum: false
-# end TAG_MAJOR_VERSION

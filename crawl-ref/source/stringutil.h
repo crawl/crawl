@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include <vector>
-
 #include "config.h"
 #include "libutil.h" // always_true
 
@@ -15,8 +13,6 @@
 #else
 size_t strlcpy(char *dst, const char *src, size_t n);
 #endif
-
-using std::vector;
 
 string lowercase_string(const string &s);
 string &lowercase(string &s);
@@ -32,7 +28,7 @@ string uppercase_first(string);
 int ends_with(const string &s, const char * const suffixes[]);
 
 string wordwrap_line(string &s, int cols, bool tags = false,
-                     bool indent = false, int force_indent=-1);
+                     bool indent = false);
 
 string strip_filename_unsafe_chars(const string &s);
 
@@ -223,12 +219,12 @@ string comma_separated_line(Z start, Z end, const string &andc = " and ",
 template <typename Z>
 string join_strings(Z start, Z end, const string &sep = " ")
 {
-    return comma_separated_line(start, end, sep, sep);
+    return comma_separated_line(start, end, " ", " ");
 }
 
 static inline bool starts_with(const string &s, const string &prefix)
 {
-    return s.compare(0, prefix.size(), prefix) == 0;
+    return s.rfind(prefix, 0) != string::npos;
 }
 
 static inline bool ends_with(const string &s, const string &suffix)

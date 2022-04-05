@@ -1,5 +1,3 @@
-#pragma once
-
 struct sacrifice_def
 {
     ability_type  sacrifice;        // The ability that executes the sacrifice.
@@ -37,7 +35,7 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_WORDS, MUT_READ_SAFETY,
+{ ABIL_RU_SACRIFICE_WORDS, MUT_NO_READ,
   "sacrifice your ability to read while threatened",
   "sacrificed words",
 
@@ -47,14 +45,14 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_DRINK, MUT_DRINK_SAFETY,
+{ ABIL_RU_SACRIFICE_DRINK, MUT_NO_DRINK,
   "sacrifice your ability to drink while threatened",
   "sacrificed drink",
 
   30,
   SK_NONE,
   nullptr,
-  []() { return !you.has_mutation(MUT_NO_DRINK); },
+  []() { return you.species != SP_MUMMY; },
 },
 
 { ABIL_RU_SACRIFICE_ESSENCE, MUT_NON_MUTATION,
@@ -101,8 +99,8 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to be loved",
   "sacrificed love",
 
-  40,
-  SK_SUMMONINGS,
+  35,
+  SK_NONE,
   nullptr,
   nullptr,
 },
@@ -137,14 +135,14 @@ static const sacrifice_def sac_data[] =
   nullptr,
 },
 
-{ ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR_SKILL,
+{ ABIL_RU_SACRIFICE_DURABILITY, MUT_NO_ARMOUR,
   "sacrifice your Armour skill",
   "sacrificed armour",
 
   30,
   SK_ARMOUR,
   nullptr,
-  nullptr,
+  []() { return you_can_wear(EQ_BODY_ARMOUR) != MB_FALSE; },
 },
 
 { ABIL_RU_SACRIFICE_HAND, MUT_MISSING_HAND,
@@ -161,7 +159,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your experiences",
   "sacrificed experience",
 
-  40,
+  50,
   SK_NONE,
   nullptr,
   []() { return you.experience_level > RU_SAC_XP_LEVELS; }
@@ -171,7 +169,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your skill",
   "sacrificed skill",
 
-  30,
+  40,
   SK_NONE,
   nullptr,
   nullptr,
@@ -191,7 +189,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your resistance to extreme temperatures",
   "sacrificed resistance",
 
-  50,
+  60,
   SK_NONE,
   nullptr,
   nullptr,

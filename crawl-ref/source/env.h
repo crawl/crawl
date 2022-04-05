@@ -2,18 +2,12 @@
 
 #include <set>
 #include <memory> // unique_ptr
-#include <vector>
 
-#include "cloud.h"
 #include "coord.h"
 #include "fprop.h"
 #include "map-cell.h"
-#include "mapmark.h"
 #include "monster.h"
-#include "shopping.h"
 #include "trap-def.h"
-
-using std::vector;
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
 
@@ -61,6 +55,22 @@ struct crawl_environment
 
     vector<coord_def>                        travel_trail;
 
+    // indexed by grid coords
+#ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
+    FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;
+    FixedArray<tileidx_t, GXM, GYM> tile_bk_bg;
+    FixedArray<tileidx_t, GXM, GYM> tile_bk_cloud;
+#endif
+    FixedArray<tile_flavour, GXM, GYM> tile_flv;
+    // indexed by (show-1) coords
+#ifdef USE_TILE // TODO: separate out this stuff from crawl_environment
+    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
+    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
+    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_cloud;
+#endif
+    tile_flavour tile_default;
+    vector<string> tile_names;
+
     map<coord_def, cloud_struct> cloud;
 
     map<coord_def, shop_struct> shop; // shop list
@@ -95,9 +105,9 @@ struct crawl_environment
     coord_def orb_pos;
     int sanctuary_time;
     int forest_awoken_until;
-    bool forest_is_hostile;
     int density;
     int absdepth0;
+    vector<pair<coord_def, int> > sunlight;
 
     // Remaining fields not marshalled:
 
@@ -129,7 +139,7 @@ struct crawl_environment
 extern struct crawl_environment env;
 
 /**
- * Range proxy to iterate over only "real" env.mons slots, skipping anon slots.
+ * Range proxy to iterate over only "real" menv slots, skipping anon slots.
  *
  * Use as the range expression in a for loop:
  *     for (auto &mons : menv_real)
@@ -137,8 +147,8 @@ extern struct crawl_environment env;
 static const struct menv_range_proxy
 {
     menv_range_proxy() {}
-    monster *begin() const { return &env.mons[0]; }
-    monster *end()   const { return &env.mons[MAX_MONSTERS]; }
+    monster *begin() const { return &menv[0]; }
+    monster *end()   const { return &menv[MAX_MONSTERS]; }
 } menv_real;
 
 /**

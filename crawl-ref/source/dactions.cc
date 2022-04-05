@@ -13,7 +13,7 @@
 #include "decks.h"
 #include "dungeon.h"
 #include "god-companions.h" // hepliaklqana_ancestor
-#include "god-passive.h"
+#include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "map-knowledge.h"
@@ -23,7 +23,6 @@
 #include "mon-transit.h"
 #include "religion.h"
 #include "state.h"
-#include "tag-version.h"
 #include "view.h"
 
 static void _daction_hog_to_human(monster *mon, bool in_transit);
@@ -42,7 +41,7 @@ static const char *daction_names[] =
     0, 0, 0, 0, 0, 0, 0, 0,
 
     // Actions not needing a counter.
-    "old bound souls go poof",
+    "old enslaved souls go poof",
 #if TAG_MAJOR_VERSION == 34
     "holy beings allow another conversion attempt",
 #else
@@ -54,8 +53,8 @@ static const char *daction_names[] =
     "reclaim decks",
 #endif
     "reapply passive mapping",
-    "remove Jiyva altars and prayers",
-    "Pikel's minions go poof",
+    "remove Jiyva altars",
+    "Pikel's slaves go good-neutral",
     "corpses rot",
 #if TAG_MAJOR_VERSION == 34
     "Tomb loses -cTele",
@@ -75,7 +74,6 @@ static const char *daction_names[] =
 #endif
     "ancestor vanishes",
     "upgrade ancestor",
-    "remove Ignis altars",
 };
 #endif
 
@@ -86,6 +84,15 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     switch (act)
     {
+    case DACT_ALLY_UNHOLY_EVIL:
+        return mon->wont_attack() && mon->evil();
+    case DACT_ALLY_UNCLEAN_CHAOTIC:
+        return mon->wont_attack() && (mon->how_unclean() || mon->how_chaotic());
+    case DACT_ALLY_SPELLCASTER:
+        return mon->wont_attack() && mon->is_actual_spellcaster();
+    case DACT_ALLY_YRED_SLAVE:
+        // Changed: we don't force enslavement of those merely marked.
+        return is_yred_undead_slave(*mon);
     case DACT_ALLY_BEOGH: // both orcs and demons summoned by high priests
         return mon->wont_attack() && mons_is_god_gift(*mon, GOD_BEOGH);
     case DACT_ALLY_SLIME:
@@ -99,13 +106,14 @@ bool mons_matches_daction(const monster* mon, daction_type act)
         return mon->wont_attack() && mons_is_god_gift(*mon, GOD_HEPLIAKLQANA);
 
     // Not a stored counter:
-    case DACT_PIKEL_MINIONS:
-        return mon->type == MONS_LEMURE
+    case DACT_PIKEL_SLAVES:
+        return mon->type == MONS_SLAVE
                && testbits(mon->flags, MF_BAND_MEMBER)
-               && mon->props.exists(PIKEL_BAND_KEY);
+               && mon->props.exists("pikel_band")
+               && mon->mname != "freed slave";
 
-    case DACT_OLD_CHARMD_SOULS_POOF:
-        return mons_bound_soul(*mon);
+    case DACT_OLD_ENSLAVED_SOULS_POOF:
+        return mons_enslaved_soul(*mon);
 
     case DACT_SLIME_NEW_ATTEMPT:
         return mons_is_slime(*mon);
@@ -117,7 +125,7 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                && !mon->is_shapeshifter()
                // Must be one of Kirke's original band
                // *or* another monster that got porkalated
-               && (mon->props.exists(KIRKE_BAND_KEY)
+               && (mon->props.exists("kirke_band")
                    || mon->props.exists(ORIG_MONSTER_KEY));
 
     case DACT_BRIBE_TIMEOUT:
@@ -127,9 +135,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     case DACT_SET_BRIBES:
         return !testbits(mon->flags, MF_WAS_IN_VIEW);
-
-    case DACT_JIYVA_DEAD:
-        return mon->type == MONS_DISSOLUTION;
 
     default:
         return false;
@@ -172,11 +177,21 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         bool in_transit)
 {
     // Transiting monsters exist outside the normal monster list (env.mons or
-    // env.mons for short). Be careful not to write them into the monster grid, by,
+    // menv for short). Be careful not to write them into the monster grid, by,
     // for example, calling monster::move_to_pos on them.
     // See _daction_hog_to_human for an example.
     switch (act)
     {
+        case DACT_ALLY_YRED_SLAVE:
+            if (mon->type == MONS_ZOMBIE)
+            {
+                simple_monster_message(*mon, " crumbles into dust!");
+                monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+                break;
+            }
+        case DACT_ALLY_UNHOLY_EVIL:
+        case DACT_ALLY_UNCLEAN_CHAOTIC:
+        case DACT_ALLY_SPELLCASTER:
         case DACT_ALLY_BEOGH:
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
@@ -204,7 +219,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
                 upgrade_hepliaklqana_ancestor(true);
             break;
 
-        case DACT_OLD_CHARMD_SOULS_POOF:
+        case DACT_OLD_ENSLAVED_SOULS_POOF:
             simple_monster_message(*mon, " is freed.");
             // The monster disappears.
             monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
@@ -214,16 +229,16 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
             break;
 
-        case DACT_PIKEL_MINIONS:
+        case DACT_PIKEL_SLAVES:
         {
-            simple_monster_message(*mon, " departs this earthly plane.");
-            if (!in_transit)
-            {
-                check_place_cloud(CLOUD_BLACK_SMOKE, mon->pos(),
-                                                random_range(3, 5), nullptr);
-            }
-            // The monster disappears.
-            monster_die(*mon, KILL_DISMISSED, NON_MONSTER);
+            // monster changes attitude
+            bool hostile = you.get_mutation_level(MUT_NO_LOVE);
+            mon->attitude = hostile ? ATT_HOSTILE : ATT_GOOD_NEUTRAL;
+            mons_att_changed(mon);
+            mon->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR
+                              | MF_NAME_NOCORPSE;
+            mon->mname = "freed slave";
+            mon->behaviour = hostile ? BEH_SEEK : BEH_WANDER;
             break;
         }
         case DACT_KIRKE_HOGS:
@@ -245,13 +260,6 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
         case DACT_SET_BRIBES:
             gozag_set_bribe(mon);
-            break;
-
-        case DACT_JIYVA_DEAD:
-            mon->spells.clear();
-            mon->spells.push_back( { SPELL_CANTRIP, 62, MON_SPELL_PRIEST } );
-            mon->props[CUSTOM_SPELLS_KEY] = true;
-            break;
 
         // The other dactions do not affect monsters directly.
         default:
@@ -266,20 +274,17 @@ static void _apply_daction(daction_type act)
 
     switch (act)
     {
-    case DACT_JIYVA_DEAD:
-        for (rectangle_iterator ri(1); ri; ++ri)
-        {
-            if (env.grid(*ri) == DNGN_ALTAR_JIYVA)
-                env.grid(*ri) = DNGN_FLOOR;
-        }
-    // intentional fallthrough to handle Dissolution
+    case DACT_ALLY_UNHOLY_EVIL:
+    case DACT_ALLY_UNCLEAN_CHAOTIC:
+    case DACT_ALLY_SPELLCASTER:
+    case DACT_ALLY_YRED_SLAVE:
     case DACT_ALLY_BEOGH:
     case DACT_ALLY_HEPLIAKLQANA:
     case DACT_ALLY_SLIME:
     case DACT_ALLY_PLANT:
-    case DACT_OLD_CHARMD_SOULS_POOF:
+    case DACT_OLD_ENSLAVED_SOULS_POOF:
     case DACT_SLIME_NEW_ATTEMPT:
-    case DACT_PIKEL_MINIONS:
+    case DACT_PIKEL_SLAVES:
     case DACT_KIRKE_HOGS:
     case DACT_BRIBE_TIMEOUT:
     case DACT_SET_BRIBES:
@@ -298,19 +303,46 @@ static void _apply_daction(daction_type act)
     case DACT_REAUTOMAP:
         reautomap_level();
         break;
-    case DACT_REMOVE_IGNIS_ALTARS:
+    case DACT_REMOVE_JIYVA_ALTARS:
         for (rectangle_iterator ri(1); ri; ++ri)
-            if (env.grid(*ri) == DNGN_ALTAR_IGNIS)
-                env.grid(*ri) = DNGN_FLOOR;
+        {
+            if (grd(*ri) == DNGN_ALTAR_JIYVA)
+                grd(*ri) = DNGN_FLOOR;
+        }
         break;
     case DACT_ROT_CORPSES:
-        for (auto &item : env.item)
+        for (auto &item : mitm)
             if (item.is_type(OBJ_CORPSES, CORPSE_BODY))
                 item.freshness = 1; // thoroughly rotten
         break;
     case DACT_GOLD_ON_TOP:
-        gozag_detect_level_gold(false);
+    {
+        for (rectangle_iterator ri(0); ri; ++ri)
+        {
+            for (stack_iterator j(*ri); j; ++j)
+            {
+                if (j->base_type == OBJ_GOLD)
+                {
+                    bool detected = false;
+                    int dummy = j->index();
+                    unlink_item(dummy);
+                    move_item_to_grid(&dummy, *ri, true);
+                    if (!env.map_knowledge(*ri).item()
+                        || env.map_knowledge(*ri).item()->base_type != OBJ_GOLD)
+                    {
+                        detected = true;
+                    }
+                    update_item_at(*ri, true);
+
+                    // The gold might be beneath deep water.
+                    if (detected && env.map_knowledge(*ri).item())
+                        env.map_knowledge(*ri).flags |= MAP_DETECTED_ITEM;
+                    break;
+                }
+            }
+        }
         break;
+    }
     case DACT_REMOVE_GOZAG_SHOPS:
     {
         vector<map_marker *> markers = env.markers.get_all(MAT_FEATURE);
@@ -322,7 +354,7 @@ static void _apply_daction(daction_type act)
             if (feat->feat == DNGN_ABANDONED_SHOP)
             {
                 // TODO: clear shop data out?
-                env.grid(feat->pos) = DNGN_ABANDONED_SHOP;
+                grd(feat->pos) = DNGN_ABANDONED_SHOP;
                 view_update_at(feat->pos);
                 env.markers.remove(feat);
             }
@@ -342,10 +374,6 @@ static void _apply_daction(daction_type act)
     case DACT_HOLY_PETS_GO_NEUTRAL:
     case DACT_ALLY_MAKHLEB:
     case DACT_ALLY_TROG:
-    case DACT_ALLY_UNHOLY_EVIL:
-    case DACT_ALLY_UNCLEAN_CHAOTIC:
-    case DACT_ALLY_SPELLCASTER:
-    case DACT_ALLY_YRED_SLAVE:
 #endif
     case NUM_DACTION_COUNTERS:
     case NUM_DACTIONS:
@@ -404,9 +432,9 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     *mon = orig;
 
     // If the hog is in transit, then it is NOT stored in the normal
-    // monster list (env.mons or env.mons for short). We cannot call move_to_pos
+    // monster list (env.mons or menv for short). We cannot call move_to_pos
     // on such a hog, because move_to_pos will attempt to update the
-    // monster grid (env.mgrid or env.mgrid for short). Since the hog is not
+    // monster grid (env.mgrid or mgrd for short). Since the hog is not
     // stored in the monster list, this will corrupt the grid. The transit code
     // will update the grid properly once the transiting hog has been placed.
     if (!in_transit)

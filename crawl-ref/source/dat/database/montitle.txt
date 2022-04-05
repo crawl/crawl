@@ -11,10 +11,6 @@ Aizul title
 
 Aizul the Neglectful Guardian
 %%%%
-Amaemon title
-
-Amaemon the Diabolical Poisoner
-%%%%
 Antaeus title
 
 Antaeus, Guardian of Cocytus
@@ -155,10 +151,6 @@ Joseph title
 
 Joseph, a Mercenary
 %%%%
-Josephina title
-
-Josephina the Ice-Lich
-%%%%
 Josephine title
 
 Josephine the Decaying Necromancer
@@ -171,10 +163,6 @@ Kirke title
 
 Kirke, Weaver of Myths
 %%%%
-Lodul title
-
-Lodul the Thundrous
-%%%%
 Lom Lobon title
 
 Lom Lobon, Demon Lord of Forbidden Knowledge
@@ -183,10 +171,6 @@ Louise title
 
 Louise the Corrupted
 %%%%
-Maggie title
-
-Maggie the Vainglorious
-%%%%
 Mara title
 
 Mara, Lord of Illusions
@@ -194,6 +178,10 @@ Mara, Lord of Illusions
 Margery title
 
 Margery the Dragonslayer
+%%%%
+Maud title
+
+Maud the Forgotten
 %%%%
 Maurice title
 
@@ -206,10 +194,6 @@ Menkaure, Prince of Dust
 Mennas title
 
 Mennas, the Voice of Zin
-%%%%
-Mlioglotl title
-
-Mlioglotl, the Unformed Horror
 %%%%
 Mnoleg title
 
@@ -239,17 +223,9 @@ Nikola title
 
 Nikola the Mad Inventor
 %%%%
-Parghit title
-
-Parghit the Mighty
-%%%%
-Pargi title
-
-Pargi the Meek
-%%%%
 Pikel title
 
-Pikel, Merchant of Souls
+Pikel the Slaver
 %%%%
 Polyphemus title
 
@@ -258,6 +234,10 @@ Polyphemus the Watchful Shepherd
 Psyche title
 
 Psyche the Insane Magess
+%%%%
+Purgy title
+
+Purgy the Meek
 %%%%
 Robin title
 
@@ -307,15 +287,7 @@ Vashnia title
 
 Vashnia the Elite Marksnaga
 %%%%
-Vv title
-
-Vv the Exile
-%%%%
 Xtahua title
 
 Xtahua the Ancient
-%%%%
-Zenata title
-
-Zenata, Seeker of Sheza
 %%%%

@@ -28,7 +28,7 @@ public:
 #ifdef TARGET_OS_WINDOWS
     virtual void set_window_placement(coord_def *m_windowsz);
 #endif
-    virtual unsigned char get_mod_state() const override;
+    virtual tiles_key_mod get_mod_state() const override;
     virtual void set_mod_state(tiles_key_mod mod) override;
     virtual void set_mouse_cursor(mouse_cursor_type id) override;
     virtual unsigned short get_mouse_state(int *x, int *y) const override;
@@ -38,13 +38,14 @@ public:
     // System time functions
     virtual unsigned int set_timer(unsigned int interval,
                                    wm_timer_callback callback) override;
-    virtual void remove_timer(unsigned int& timer_id) override;
+    virtual void remove_timer(unsigned int timer_id) override;
     virtual unsigned int get_ticks() const override;
     virtual void delay(unsigned int ms) override;
 
     // Event functions
+    virtual int raise_custom_event() override;
     virtual int wait_event(wm_event *event, int timeout) override;
-    virtual bool next_event_is(wm_event_type type) override;
+    virtual unsigned int get_event_count(wm_event_type type) override;
     virtual void show_keyboard() override;
 
     // Display functions

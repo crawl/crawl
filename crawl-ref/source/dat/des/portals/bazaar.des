@@ -340,7 +340,7 @@ SHUFFLE: XY
 SUBST:   X = <, Y = >
 # high quality shops, pity they don't stay :p
 KFEAT:   B = general shop
-KFEAT:   C = book shop / jewellery shop
+KFEAT:   C = gadget shop / jewellery shop
 KFEAT:   D = antique weapon shop
 KFEAT:   E = antique armour shop
 KFEAT:   F = scroll shop / distillery shop
@@ -401,7 +401,7 @@ SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss
 # two guaranteed shops, expected four shops
 KFEAT:   A = any shop / antique weapon shop
 KFEAT:   B = any shop / antique armour shop
-KFEAT:   C = any shop / antiques shop
+KFEAT:   C = any shop / gadget shop
 KFEAT:   D = any shop / jewellery shop
 KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
@@ -512,7 +512,7 @@ ORIENT:  encompass
 SHUFFLE: ABCD
 : if crawl.coinflip() then
 SUBST:   A = <, B = >
-KFEAT:   C = jewellery shop / book shop
+KFEAT:   C = jewellery shop / gadget shop
 KFEAT:   D = antique armour shop / book shop
 : else
 SUBST:   T = <, A = >
@@ -554,12 +554,12 @@ NAME:      bazaar_minmay_generic_island
 TAGS:      no_rotate
 ORIENT:    encompass
 WEIGHT:    20
-KPROP:     w = no_tele_into
 SUBST:     w : wl
 SHUFFLE:   Aa/Bb/Cc/Dd, Cc/Ee, Dd/Ff
 COLOUR:    EeFf = yellow
 SUBST:     ab = !, AB = ., cd = !, CD = ., EeFf = $
 KFEAT:     ! = any shop
+KFEAT:     ? = any shop / T
 :          bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -767,12 +767,12 @@ xxxxxxxxxxxxxwwwwwxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# 2 scroll shops, 2 potion shops
+# 2 wand shops, 2 potion shops
 NAME:    dpeg_bazaar_wands
 TAGS:    no_rotate no_pool_fixup
 WEIGHT:  5
 ORIENT:  encompass
-KFEAT:   A = scroll shop
+KFEAT:   A = gadget shop
 KFEAT:   B = distillery shop
 ITEM:    ring of flight ident:type
 SHUFFLE: lAB/wBA
@@ -997,7 +997,7 @@ SUBST:   A = >, B = >
 SUBST:   . = .:1000 $
 SUBST:   K = T:20 1 .:5
 KFEAT:   C = any shop / distillery shop
-KFEAT:   D = any shop / antiques shop
+KFEAT:   D = any shop / gadget shop / food shop
 KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
 :        bazaar_setup(_G)
@@ -1285,7 +1285,7 @@ SUBST:      "=l , '=. , A=l , B=!
 : else
 SUBST:      "=. , '=l , A=! , B=l
 : end
-KFEAT:      ! = jewellery shop / jewellery shop / antiques shop / scroll shop / \
+KFEAT:      ! = jewellery shop / jewellery shop / gadget shop / scroll shop / \
                book shop
 LFLOORCOL:  darkgrey
 : set_border_fill_type("endless_lava")
@@ -1431,15 +1431,14 @@ NAME:   bazaar_minmay_snake
 TAGS:   no_rotate
 WEIGHT: 5
 ORIENT: encompass
-SHUFFLE: !?
-KFEAT:  ! = any shop
+KFEAT:  ! = food shop
 KFEAT:  ? = any shop / T
 :       bazaar_setup(_G)
 MAP
  xxxxx         xxxxx         xxxxx
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
 x.................................x
-x..<.............!.............?..x
+x..<.............?.............!..x
 x.................................x
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
  xxxxx         xxxxx         x...x
@@ -1467,7 +1466,7 @@ xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
  x...x         xxxxx         xxxxx
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
 x.................................x
-x..?.............!.............>..x
+x..!.............?.............>..x
 x.................................x
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
  xxxxx         xxxxx         xxxxx
@@ -1642,8 +1641,8 @@ TAGS:    no_rotate
 ORIENT:  encompass
 WEIGHT:  1
 SHUFFLE: AC, BD
-KFEAT:   A = armour shop / weapon shop / jewellery shop
-KFEAT:   B = general shop
+KFEAT:   A = armour shop / weapon shop / gadget shop
+KFEAT:   B = general shop / food shop
 KFEAT:   C = scroll shop / book shop / distillery shop
 SUBST:   D = >
 SUBST:   = : +x
@@ -1702,8 +1701,8 @@ WEIGHT:   1
 SHUFFLE:  AEST
 NSUBST:   A = 1:A / 1:B / 1:C / 1:D
 SUBST:    E=>, S=T, T:TUV, D=ABC.
-KFEAT:    A = armour shop / weapon shop / jewellery shop
-KFEAT:    B = general shop
+KFEAT:    A = armour shop / weapon shop / gadget shop
+KFEAT:    B = general shop / food shop
 KFEAT:    C = scroll shop / book shop / distillery shop
 : if crawl.coinflip() then
 SUBST:    '=+, "=x, :=x
@@ -1741,7 +1740,7 @@ WEIGHT:  1
 ORIENT:  encompass
 SUBST:   B = ., N = ., n = T, t = ., ' = ., " = .
 KITEM:   ? = wand of digging ident:type
-KFEAT:   ? = antiques shop
+KFEAT:   ? = gadget shop
 KFEAT:   ! = any shop
 SUBST:   T = V T U:1
 SHUFFLE: XY

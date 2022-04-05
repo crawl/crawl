@@ -20,6 +20,10 @@
 #include "travel.h"
 #include "view.h"
 
+#define PLAYERCOORDS(p, p1, p2) \
+    const coord_def p = player2grid(coord_def(luaL_safe_checkint(ls,p1), \
+                                              luaL_safe_checkint(ls,p2)));
+
 /*** What is the feature here?
  * @tparam int x
  * @tparam int y
@@ -99,11 +103,6 @@ LUAFN(view_is_safe_square)
         PLUARET(boolean, false);
         return 1;
     }
-    if (is_excluded(p))
-    {
-        PLUARET(boolean, false);
-        return 1;
-    }
     PLUARET(boolean, true);
     return 1;
 }
@@ -117,7 +116,6 @@ LUAFN(view_is_safe_square)
 LUAFN(view_can_reach)
 {
     COORDSHOW(s, 1, 2)
-    // TODO: refactor this to use can_reach_attack_between()
     const int x_distance  = abs(s.x);
     const int y_distance  = abs(s.y);
     if (x_distance > 2 || y_distance > 2)
@@ -132,8 +130,8 @@ LUAFN(view_can_reach)
     }
     const coord_def first_middle(s.x/2,s.y/2);
     const coord_def second_middle(s.x - s.x/2, s.y - s.y/2);
-    if (!feat_is_reachable_past(env.grid(player2grid(first_middle)))
-        && !feat_is_reachable_past(env.grid(player2grid(second_middle))))
+    if (!feat_is_reachable_past(grd(player2grid(first_middle)))
+        && !feat_is_reachable_past(grd(player2grid(second_middle))))
     {
         PLUARET(boolean, false);
         return 1;

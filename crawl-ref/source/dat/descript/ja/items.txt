@@ -1,7 +1,33 @@
 %%%%
+amulet of conservation
+
+この護符は着用者の所持品を破壊から保護する。
+ただし保護は絶対確実というわけではない。
+%%%%
 amulet of inaccuracy
 
 この護符は白兵戦での攻撃や飛び道具や呪文による射的を不正確なものにする。
+%%%%
+amulet of rage
+
+この護符は装着者がバーサークの激昂状態になることを可能とする。
+%%%%
+amulet of resist mutation
+
+この護符は着用者を突然変異から保護する。ただし保護は絶対確実というわけではない。
+%%%%
+amulet of stasis
+
+魔法の拘束で緻密に構成された護符であり、装着者をテレポート、減速、加速、
+または金縛りにする魔術や生理的な効果から遮断する。
+
+この護符は多くの転移術に対して有効であるが、
+追放のような次元転移に対してはこの護符の及ぶ範囲を越えている。
+%%%%
+amulet of warding
+
+この護符は魔法で召換されたモンスターからの攻撃を防ぐ。また、
+生命力を奪う攻撃への耐性を得る。
 %%%%
 animal skin
 
@@ -63,6 +89,10 @@ book of annihilations
 これは才能や力のある魔導師達が容易に破壊を操ることを可能にするために追い求められる。
 一方、虚弱な魔術師がこの作品を読もうとすると死ぬ運命になるだろう。
 %%%%
+book of battle
+
+スカルドが使用する呪文書だ。その戦いの詩歌は彼らに魔法の助けを授ける
+%%%%
 book of cantrips
 
 この本には特定の魔法の領域の基礎を学ぼうとする初心者を対象とした、
@@ -87,6 +117,12 @@ book of dreams
 神秘的な夢の状態を再現する多くの呪文を述べている。この作品に対して批評家は、
 これらの呪文は機能的にはすでに知られているものと違いはないと主張する。しかし、
 この本はその比類なき奇妙な描写や謎めいた余談のため、依然として人気がある。
+%%%%
+book of enchantments
+
+これはページがめくれるとかすかに輝く、呪術と秘術を詰め合わせた呪文書だ。
+奇妙で時代遅れの表題は、
+古い時代に2つの魔法領域が不完全で不可解な理解であったことを反映している。
 %%%%
 book of fixed level
 
@@ -194,6 +230,10 @@ cheese
 choko
 
 ほとんど味がない緑色の野菜だ。これは蔓に実がなる。
+%%%%
+chunk of flesh
+
+ダンジョンで見つけた生の肉片だ。これは長くはもたないだろう。
 %%%%
 cloak
 
@@ -536,6 +576,11 @@ scroll of magic mapping
 
 この巻き物は読んだ者の周辺の地形を明らかにする。
 %%%%
+scroll of random uselessness
+
+この巻き物は何らかの機能を持っているかのように振る舞い、 uselessness of this
+scroll by the sense of achievement you get from getting it to work at all.
+%%%%
 scroll of remove curse
 
 この巻物を読み上げると、あなたの装備中のアイテムから呪いが取り除かれる。
@@ -551,7 +596,7 @@ scythe
 sling
 
 布切れと皮紐でできた投石器だ。それほどのダメージは期待できない。 Unlike with
-other launchers, wearing a kite shield does not slow down its rate of fire.
+other launchers, wearing a shield does not slow down its rate of fire.
 %%%%
 sling bullet
 
@@ -565,6 +610,11 @@ snozzcumber
 staff of conjuration
 
 この杖は手にしている者が唱えた妖術の呪文の威力を強化する。
+%%%%
+staff of energy
+
+この杖は装着者に魔法のエネルギーを制御する方法を与える。
+呪文の詠唱ではもはや空腹にならず、手にした者の意志で周囲の魔力が注ぎ込まれる。
 %%%%
 steam dragon hide
 
@@ -618,11 +668,44 @@ troll leather armour
 よく見かけるトロルのゴワゴワでコブ状の皮から作られた鎧だ。
 これはかなり遅い速度だが不思議にも着用者の肉体を再生する（すでにトロルでなければ）。
 %%%%
+wand of cold
+
+強力な冷気の矢を放つ魔法の道具だ。
+%%%%
 wand of digging
 
 強化を受けていない岩を掘削する魔法の道具だ。
 %%%%
+wand of disintegration
+
+硬質の壁を除いてあらゆる物質構造を崩壊させる魔法の道具だ。
+肉体は言うまでもなく固定された石像でさえ崩壊する。
+%%%%
+wand of enslavement
+
+対象を奴隷として服従させる魔法の道具だ。
+%%%%
+wand of fire
+
+強力な炎の矢を放つ魔法の道具だ。
+%%%%
+wand of fireball
+
+炎の爆風を放つ魔法の道具だ。
+%%%%
+wand of invisibility
+
+対象を他者の視覚から隠蔽する魔法の道具だ。
+%%%%
+wand of magic darts
+
+小さな破壊エネルギーの矢を放つ魔法の道具だ。それらは絶対に外れることはない。
+%%%%
 wand of polymorph
 
 対象を別の形態に変化させる魔法の道具だ。特に不定形の生物に対して有効だ。
+%%%%
+wand of random effects
+
+変化に富んだ効果を引き起こす魔法の道具だ。
 %%%%

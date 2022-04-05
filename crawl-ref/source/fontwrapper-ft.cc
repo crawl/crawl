@@ -104,19 +104,17 @@ bool FTFontWrapper::configure_font()
     m_max_advance.x = metrics.max_advance >> 6;
     m_max_advance.y = (metrics.ascender-metrics.descender)>>6;
     m_ascender      = (metrics.ascender>>6);
-    // if you're looking for realistic glyph sizes use m_max_advance
+    // if you're looking for realistic glyph sizes uses m_max_advance
     // or char_width, these are still scaled.
-    // (TODO: why would you ever use these values? m_max_advance is almost
-    // certainly correct...)
     m_max_width     = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
     m_max_height    = (face->bbox.yMax >> 6) - (face->bbox.yMin >> 6);
     m_min_offset    = 0;
 
     charsz = coord_def(1,1);
     // Grow character size to power of 2
-    while (charsz.x <= m_max_advance.x)
+    while (charsz.x < m_max_width)
         charsz.x *= 2;
-    while (charsz.y <= m_max_advance.y)
+    while (charsz.y < m_max_height)
         charsz.y *= 2;
 
     // Fill out texture to be (16*charsz.x) X (16*charsz.y) X (32-bit)
@@ -152,10 +150,10 @@ bool FTFontWrapper::configure_font()
     // atlas[0] always contains a full-white block (never evicted)
     // this is currently used by colour_bar
     {
-        for (int x = 0; x < m_max_advance.x; x++)
-            for (int y = 0; y < m_max_advance.y; y++)
+        for (int x = 0; x < m_max_width; x++)
+            for (int y = 0; y < m_max_height; y++)
             {
-                unsigned int idx = x + y * m_max_advance.x;
+                unsigned int idx = x + y * m_max_width;
                 idx *= 4;
                 pixels[idx]     = 255;
                 pixels[idx + 1] = 255;
@@ -362,7 +360,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     m_buf->clear();
     n_subst = 0;
 
-    float texcoord_dy = (float)m_max_advance.y / (float)m_tex.height();
+    float texcoord_dy = (float)m_max_height / (float)m_tex.height();
     for (unsigned int y = 0; y < height; y++)
     {
         for (unsigned int x = 0; x < width; x++)
@@ -396,7 +394,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 float tex_y2 = tex_y + texcoord_dy;
 
                 GLWPrim rect(adv.x, adv.y - glyph.ascender + m_ascender,
-                             adv.x + this_width, adv.y + m_max_advance.y - glyph.ascender + m_ascender);
+                             adv.x + this_width, adv.y + m_max_height - glyph.ascender + m_ascender);
 
                 VColour col(term_colours[col_fg].r,
                             term_colours[col_fg].g,
@@ -463,11 +461,18 @@ void FTFontWrapper::draw_m_buf(unsigned int x_pos, unsigned int y_pos,
     glmanager->reset_transform();
 }
 
-static void _draw_box(int x_pos, int y_pos, int width, int height, VColour colour)
+static void _draw_box(int x_pos, int y_pos, float width, float height,
+                      float box_width, unsigned char box_colour,
+                      unsigned char box_alpha)
 {
     unique_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
-    GLWPrim rect(x_pos, y_pos, x_pos + width, y_pos + height);
+    GLWPrim rect(x_pos - box_width, y_pos - box_width,
+                 x_pos + width + box_width, y_pos + height + box_width);
 
+    VColour colour(term_colours[box_colour].r,
+                   term_colours[box_colour].g,
+                   term_colours[box_colour].b,
+                   box_alpha);
     rect.set_col(colour);
 
     buf->add(rect);
@@ -534,9 +539,6 @@ unsigned int FTFontWrapper::string_width(const char *text, bool logical)
                    : max_str_width;
 }
 
-// Find the position in `text` that does not exceed max_str_width, a width
-// in pixels. Returns INT_MAX if the string doesn't exceed INT_MAX. Stops at
-// newlines.
 int FTFontWrapper::find_index_before_width(const char *text, int max_str_width)
 {
     int width = max(-m_min_offset, 0);
@@ -546,8 +548,10 @@ int FTFontWrapper::find_index_before_width(const char *text, int max_str_width)
     for (char *itr = (char *)text; *itr; itr = next_glyph(itr))
     {
         if (*itr == '\n')
-            return INT_MAX;
-
+        {
+            width = 0;
+            continue;
+        }
         char32_t ch;
         utf8towc(&ch, itr);
         GlyphInfo &glyph = get_glyph_info(ch);
@@ -625,10 +629,10 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
             }
 
             ret = ret.chop_bytes(&line[ellipses] - &base[0]);
-            ret += "..";
+            ret += formatted_string("..");
             return ret;
         }
-        else if (space_idx != nl)
+        else
         {
             line[space_idx] = '\n';
             ret[&line[space_idx] - &base[0]] = '\n';
@@ -640,32 +644,94 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
     return ret;
 }
 
-/**
- * Render a tooltip around the given position.
- *
- * @param px the x coordinate
- * @param py the y coordinate
- * @param text the string to render
- * @param min_pos the top-left boundary of the screen
- * @param max_pos the bottom-right boundary of the screen
- */
-void FTFontWrapper::render_tooltip(unsigned int px, unsigned int py,
-                                  const formatted_string &text,
+void FTFontWrapper::render_string(unsigned int px, unsigned int py,
+                                  const char *text,
                                   const coord_def &min_pos,
-                                  const coord_def &max_pos)
+                                  const coord_def &max_pos,
+                                  unsigned char font_colour, bool drop_shadow,
+                                  unsigned char box_alpha,
+                                  unsigned char box_colour,
+                                  unsigned int outline,
+                                  bool tooltip)
 {
-    int outline = 7;
-    const int wx = string_width(text);
-    const int wy = string_height(text);
+    ASSERT(text);
 
-    // text starting location
-    int tx = px - 15, ty = py + 20;
+    // Determine extent of this text
+    unsigned int max_rows = 1;
+    unsigned int cols = 0;
+    unsigned int max_cols = 0;
+    char32_t c;
+    for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
+    {
+        int w = wcwidth(c);
+        if (w != -1)
+            cols += w;
+        max_cols = max(cols, max_cols);
 
-    // box position, before shifting
-    const int sx = tx - outline;
-    const int sy = ty - outline;
-    const int ex = tx + wx + outline;
-    const int ey = ty + wy + outline;
+        // NOTE: only newlines should be used for tool tips. Don't use EOL.
+        ASSERT(c != '\r');
+
+        if (c == '\n')
+        {
+            cols = 0;
+            max_rows++;
+        }
+    }
+
+    // Create the text block
+    char32_t *chars = (char32_t*)malloc(max_rows * max_cols * sizeof(char32_t));
+    uint8_t *colours = (uint8_t*)malloc(max_rows * max_cols);
+    for (unsigned int i = 0; i < max_rows * max_cols; i++)
+        chars[i] = ' ';
+    memset(colours, font_colour, max_rows * max_cols);
+
+    // Fill the text block
+    cols = 0;
+    unsigned int rows = 0;
+    for (const char *tp = text; int s = utf8towc(&c, tp); tp += s)
+    {
+        int w = wcwidth(c);
+        if (w > 0) // FIXME: combining characters are silently ignored
+        {
+            chars[cols + rows * max_cols] = c;
+            cols++;
+            if (w == 2)
+                chars[cols + rows * max_cols] = ' ', cols++;
+        }
+
+        if (c == '\n')
+        {
+            cols = 0;
+            rows++;
+        }
+    }
+
+    // Find a suitable location on screen
+    const int buffer = 5;  // additional buffer size from edges
+
+    int wx = string_width(text);
+    int wy = max_rows * char_height();
+
+    int sx, sy; // box starting location, uses extra buffer
+    int tx, ty; // text starting location
+
+    if (tooltip)
+    {
+        sy = py + outline;
+        ty = sy + buffer;
+        tx = px - 20;
+        sx = tx - buffer;
+    }
+    else
+    {
+        ty = py - wy - outline;
+        sy = ty - buffer;
+        tx = px - wx / 2;
+        sx = tx - buffer;
+    }
+    // box ending position
+    int ex = tx + wx + buffer;
+    int ey = ty + wy + buffer;
 
     if (ex > max_pos.x)
         tx += max_pos.x - ex;
@@ -677,49 +743,13 @@ void FTFontWrapper::render_tooltip(unsigned int px, unsigned int py,
     else if (sy < min_pos.y)
         ty -= sy - min_pos.y;
 
-    const VColour border_colour(125, 98, 60);
-    const VColour bg_colour(4, 2, 4);
-    _draw_box(tx-outline, ty-outline, wx+2*outline, wy+2*outline, border_colour);
-    outline -= 2;
-    _draw_box(tx-outline, ty-outline, wx+2*outline, wy+2*outline, bg_colour);
+    if (box_alpha != 0)
+        _draw_box(tx, ty, wx, wy, outline, box_colour, box_alpha);
 
-    render_string(tx, ty, text);
-}
+    render_textblock(tx, ty, chars, colours, max_cols, max_rows, drop_shadow);
 
-/**
- * Render a string at the given position.
- *
- * @param px the x coordinate
- * @param py the y coordinate
- * @param text the string to render
- * @param font_colour the text colour to use
- */
-void FTFontWrapper::render_string(unsigned int px, unsigned int py,
-                                  const formatted_string &text)
-{
-    glmanager->reset_transform();
-    FontBuffer m_font_buf(this);
-    m_font_buf.add(text, px, py);
-    m_font_buf.draw();
-}
-
-/**
- * Render a string hovering above the given position, centred horizontally.
- *
- * @param px the x coordinate
- * @param py the y coordinate
- * @param text the string to render
- * @param font_colour the text colour to use
- */
-void FTFontWrapper::render_hover_string(unsigned int px, unsigned int py,
-                                  const formatted_string &text)
-{
-    const int wx = string_width(text);
-    const int wy = string_height(text);
-    const int ty = py - wy;
-    const int tx = px - wx / 2;
-
-    render_string(tx, ty, text);
+    free(chars);
+    free(colours);
 }
 
 /**
@@ -745,34 +775,10 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
  * @param y the y coordinate
  * @param str the string to store
  * @param col a foreground color
- */
-void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          const string &str,
-                          const VColour &fg, const VColour &bg)
-{
-    store(buf, x, y, str, fg, bg, x);
-}
-
-/**
- * Store a string in a FontBuffer.
- *
- * @param buf the FontBuffer to store the glyph in.
- * @param x the x coordinate
- * @param y the y coordinate
- * @param str the string to store
- * @param col a foreground color
  * @param orig_x an x offset to use as an origin
  */
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const string &str, const VColour &col, float orig_x)
-{
-    // do we really need this whole mess of overloads?
-    store(buf, x, y, str, col, VColour::transparent, orig_x);
-}
-
-void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          const string &str,
-                          const VColour &fg, const VColour &bg, float orig_x)
 {
     const char *sp = str.c_str();
     char32_t c;
@@ -784,10 +790,8 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
             x = orig_x;
             y += m_max_advance.y * display_density.scale_to_logical();
         }
-        else if (bg == VColour::transparent)
-            store(buf, x, y, c, fg);
         else
-            store(buf, x, y, c, fg, bg);
+            store(buf, x, y, c, col);
     }
 }
 
@@ -818,25 +822,16 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
                           const formatted_string &fs, float orig_x)
 {
     int colour = LIGHTGREY;
-    int bg = -1;
     for (const formatted_string::fs_op &op : fs.ops)
     {
         switch (op.type)
         {
             case FSOP_COLOUR:
-                colour = op.colour & 0xF;
-                break;
-            case FSOP_BG:
-                bg = op.colour;
+                // Only foreground colors for now...
+                colour = op.x & 0xF;
                 break;
             case FSOP_TEXT:
-                if (bg >= 0)
-                {
-                    store(buf, x, y, op.text,
-                        term_colours[colour], term_colours[bg], orig_x);
-                }
-                else
-                    store(buf, x, y, op.text, term_colours[colour], orig_x);
+                store(buf, x, y, op.text, term_colours[colour], orig_x);
                 break;
             default:
                 break;
@@ -871,13 +866,13 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     float pos_sx = x + glyph.offset * density_mult;
     float pos_sy = y - (glyph.ascender - m_ascender) * density_mult;
     float pos_ex = pos_sx + this_width * density_mult;
-    float pos_ey = y + (m_max_advance.y - glyph.ascender + m_ascender)
+    float pos_ey = y + (m_max_height - glyph.ascender + m_ascender)
                    * density_mult;
 
     float tex_sx = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
     float tex_sy = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
     float tex_ex = tex_sx + (float)this_width / (float)(GLYPHS_PER_ROWCOL*charsz.x);
-    float tex_ey = tex_sy + (float)m_max_advance.y / (float)(GLYPHS_PER_ROWCOL*charsz.y);
+    float tex_ey = tex_sy + (float)m_max_height / (float)(GLYPHS_PER_ROWCOL*charsz.y);
 
     GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
@@ -908,12 +903,9 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     const int this_width = glyph.advance ? glyph.advance : char_width(false);
     const float bg_width = this_width * density_mult;
     const float bg_height = char_height(false) * density_mult;
-
-    // glyph position. But we want to put the background rect at x, unlike
-    // when rendering the glyph.
     const float pos_sx = x + glyph.offset * density_mult;
 
-    GLWPrim bg_rect(x, y, pos_sx + bg_width, y + bg_height);
+    GLWPrim bg_rect(pos_sx, y, pos_sx + bg_width, y + bg_height);
     bg_rect.set_col(bg_col);
     buf.add_primitive(bg_rect);
 

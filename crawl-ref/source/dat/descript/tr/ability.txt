@@ -7,6 +7,10 @@ Stop Flying ability
 
 Uçmayı bırak
 %%%%
+Animate Remains or Dead ability
+
+Bu tanımla karşılaşıyorsanız bu bir bug tur.
+%%%%
 Depart the Abyss ability
 
 Geldiğin yere dönmek için Abyss ten ayrıl

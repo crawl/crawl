@@ -11,13 +11,13 @@
 #include "god-item.h"
 #include "god-passive.h"
 #include "item-prop.h"
+#include "makeitem.h"
 #include "message.h"
 #include "player-equip.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-miscast.h"
-#include "spl-summoning.h"
 
 /** End your weapon branding spell.
  *
@@ -93,7 +93,12 @@ spret cast_excruciating_wounds(int power, bool fail)
     fail_check();
 
     if (dangerous_disto)
-        unwield_distortion(true);
+    {
+        // Can't get out of it that easily...
+        MiscastEffect(&you, nullptr, {miscast_source::wield},
+                      spschool::translocation, 9, 90,
+                      "rebranding a weapon of distortion");
+    }
 
     noisy(spell_effect_noise(SPELL_EXCRUCIATING_WOUNDS), you.pos());
     mprf("%s %s in agony.", weapon.name(DESC_YOUR).c_str(),
@@ -111,9 +116,6 @@ spret cast_excruciating_wounds(int power, bool fail)
         }
         if (orig_brand == SPWPN_ANTIMAGIC)
             calc_mp();
-        monster * spectral = find_spectral_weapon(&you);
-        if (orig_brand == SPWPN_SPECTRAL && spectral)
-            end_spectral_weapon(spectral, false);
     }
 
     you.increase_duration(DUR_EXCRUCIATING_WOUNDS, 8 + roll_dice(2, power), 50);
@@ -132,7 +134,6 @@ spret cast_confusing_touch(int power, bool fail)
                      max(10 + random2(power) / 5,
                          you.duration[DUR_CONFUSING_TOUCH]),
                      20, nullptr);
-    you.props[CONFUSING_TOUCH_KEY] = power;
 
     return spret::success;
 }

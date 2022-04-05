@@ -9,24 +9,21 @@
 
 #include <cmath>
 #include <numeric>
+#include <queue>
 #include <sstream>
 
 #include "act-iter.h"
 #include "areas.h"
-#include "artefact.h"
-#include "art-enum.h"
 #include "attitude-change.h"
 #include "bloodspatter.h"
 #include "branch.h"
+#include "butcher.h"
 #include "chardump.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
-#include "curse-type.h"
 #include "dactions.h"
 #include "database.h"
-#include "delay.h"
-#include "describe.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -34,6 +31,7 @@
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
+#include "food.h"
 #include "format.h" // formatted_string
 #include "god-blessing.h"
 #include "god-companions.h"
@@ -46,6 +44,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "item-use.h"
+#include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
@@ -54,6 +53,7 @@
 #include "message.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-death.h"
 #include "mon-gear.h" // H: give_weapon()/give_armour()
 #include "mon-place.h"
@@ -71,24 +71,24 @@
 #include "potion.h"
 #include "prompt.h"
 #include "religion.h"
+#include "rot.h"
 #include "shout.h"
 #include "skill-menu.h"
 #include "spl-book.h"
 #include "spl-goditem.h"
 #include "spl-monench.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "spl-wpnench.h"
 #include "sprint.h"
-#include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "target.h"
 #include "teleport.h" // monster_teleport
 #include "terrain.h"
 #ifdef USE_TILE
- #include "rltiles/tiledef-main.h"
+ #include "tiledef-main.h"
 #endif
 #include "timed-effects.h"
 #include "traps.h"
@@ -105,9 +105,7 @@ static bool _player_sacrificed_arcana();
  */
 bool can_do_capstone_ability(god_type god)
 {
-    // Worshippers of Ignis can use their capstone with any amount of piety
-    int pbreak = (god == GOD_IGNIS) ? -1 : 5;
-    return in_good_standing(god, pbreak) && !you.one_time_ability_used[god];
+   return in_good_standing(god, 5) && !you.one_time_ability_used[god];
 }
 
 static const char *_god_blessing_description(god_type god)
@@ -180,6 +178,8 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     enchant_weapon(wpn, true);
     enchant_weapon(wpn, true);
+    if (wpn.cursed())
+        do_uncurse_item(wpn);
 
     if (god == GOD_SHINING_ONE)
     {
@@ -212,13 +212,8 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
         holy_word(100, HOLY_WORD_TSO, you.pos(), true);
         // Un-bloodify surrounding squares.
         for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_SOLID); ri; ++ri)
-        {
             if (is_bloodcovered(*ri))
                 env.pgrid(*ri) &= ~FPROP_BLOODY;
-
-            if (env.grid(*ri) == DNGN_FOUNTAIN_BLOOD)
-                dungeon_terrain_changed(*ri, DNGN_FOUNTAIN_BLUE);
-        }
     }
     else if (god == GOD_KIKUBAAQUDGHA)
     {
@@ -248,7 +243,7 @@ bool zin_donate_gold()
 {
     if (you.gold == 0)
     {
-        mpr("You have nothing to donate!");
+        mpr("You don't have anything to sacrifice.");
         return false;
     }
 
@@ -275,7 +270,7 @@ bool zin_donate_gold()
     if (donation < 1)
     {
         simple_god_message(" finds your generosity lacking.");
-        return true;
+        return false;
     }
 
     you.duration[DUR_PIETY_POOL] += donation;
@@ -481,15 +476,15 @@ static const char * const book_of_zin[][3] =
 
 static const char * const sinner_text[] =
 {
-    "unbelievers",
-    "heretics",
-    "guilty",
     "hordes of the Abyss",
     "bastard children of Xom",
     "amorphous wretches",
     "fetid masses",
     "agents of filth",
     "squalid dregs",
+    "unbelievers",
+    "heretics",
+    "guilty",
     "legions of the damned",
     "servants of Hell",
     "forces of darkness",
@@ -498,15 +493,15 @@ static const char * const sinner_text[] =
 // First column is adjective, then noun.
 static const char * const sin_text[][2] =
 {
-    { "unfaithful",   "unfaithfulness" },
-    { "disloyal",     "disloyalty" },
-    { "doubting",     "doubt" },
     { "chaotic",      "chaos" },
     { "discordant",   "discord" },
     { "anarchic",     "anarchy" },
     { "unclean",      "uncleanliness" },
     { "impure",       "impurity" },
     { "contaminated", "contamination" },
+    { "unfaithful",   "unfaithfulness" },
+    { "disloyal",     "disloyalty" },
+    { "doubting",     "doubt" },
     { "profane",      "profanity" },
     { "blasphemous",  "blasphemy" },
     { "sacrilegious", "sacrilege" },
@@ -515,15 +510,15 @@ static const char * const sin_text[][2] =
 // First column is adjective, then noun.
 static const char * const virtue_text[][2] =
 {
-    { "faithful",  "faithfulness" },
-    { "loyal",     "loyalty" },
-    { "believing", "belief" },
     { "ordered",   "order" },
     { "harmonic",  "harmony" },
     { "lawful",    "lawfulness" },
     { "clean",     "cleanliness" },
     { "pure",      "purity" },
     { "hygienic",  "hygiene" },
+    { "faithful",  "faithfulness" },
+    { "loyal",     "loyalty" },
+    { "believing", "belief" },
     { "reverent",  "reverence" },
     { "pious",     "piety" },
     { "obedient",  "obedience" },
@@ -710,8 +705,6 @@ recite_eligibility zin_check_recite_to_single_monster(const monster *mon,
             elig += '0' + eligibility[i];
         dprf("Eligibility: %s", elig.c_str());
     }
-#else
-    UNUSED(quiet);
 #endif
 
     bool maybe_eligible = false;
@@ -759,23 +752,6 @@ bool zin_check_able_to_recite(bool quiet)
     }
 
     return true;
-}
-
-vector<coord_def> find_recite_targets()
-{
-    vector<coord_def> result;
-    recite_counts eligibility;
-    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-    {
-        if (you.can_see(**mi)
-            && zin_check_recite_to_single_monster(*mi, eligibility,
-                                                  true) == RE_ELIGIBLE)
-        {
-            result.push_back((*mi)->pos());
-        }
-    }
-
-    return result;
 }
 
 /**
@@ -847,6 +823,7 @@ enum class zin_eff
     dumb,
     ignite_chaos,
     saltify,
+    rot,
     holy_word,
 };
 
@@ -982,20 +959,49 @@ bool zin_recite_to_single_monster(const coord_def& where)
 
     case RECITE_CHAOTIC:
         if (check < 5)
-            effect = zin_eff::smite;
+        {
+            // nastier -- fallthrough if immune
+            if (coinflip() && mon->res_rotting() <= 1)
+                effect = zin_eff::rot;
+            else
+                effect = zin_eff::smite;
+        }
         else if (check < 10)
-            effect = zin_eff::silver_corona;
+        {
+            if (coinflip())
+                effect = zin_eff::silver_corona;
+            else
+                effect = zin_eff::smite;
+        }
         else if (check < 15)
-            effect = zin_eff::ignite_chaos;
+        {
+            if (coinflip())
+                effect = zin_eff::ignite_chaos;
+            else
+                effect = zin_eff::silver_corona;
+        }
         else
             effect = zin_eff::saltify;
         break;
 
     case RECITE_IMPURE:
+        // Many creatures normally resistant to rotting are still affected,
+        // because this is divine punishment. Those with no real flesh are
+        // immune, of course.
         if (check < 5)
-            effect = zin_eff::smite;
+        {
+            if (coinflip() && mon->res_rotting() <= 1)
+                effect = zin_eff::rot;
+            else
+                effect = zin_eff::smite;
+        }
         else if (check < 10)
-            effect = zin_eff::silver_corona;
+        {
+            if (coinflip())
+                effect = zin_eff::smite;
+            else
+                effect = zin_eff::silver_corona;
+        }
         else if (check < 15)
         {
             if (mon->undead_or_demonic() && coinflip())
@@ -1055,7 +1061,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
         break;
 
     case zin_eff::confuse:
-        if (!mon->clarity()
+        if (!mon->check_clarity(false)
             && mon->add_ench(mon_enchant(ENCH_CONFUSION, degree, &you,
                              (degree + random2(spellpower)) * BASELINE_DELAY)))
         {
@@ -1181,6 +1187,34 @@ bool zin_recite_to_single_monster(const coord_def& where)
         _zin_saltify(mon);
         break;
 
+    case zin_eff::rot:
+        // FIXME: no message (other than "You kill X!") is produced if the
+        // rotting kills the monster.
+        if (mon->res_rotting() <= 1
+            && mon->rot(&you, 1 + roll_dice(2, degree), true))
+        {
+            mon->add_ench(mon_enchant(ENCH_SICK, degree, &you,
+                          (degree + random2(spellpower)) * BASELINE_DELAY));
+            switch (prayertype)
+            {
+            case RECITE_CHAOTIC:
+                simple_monster_message(*mon,
+                    minor ? "'s chaotic flesh is covered in bleeding sores."
+                          : "'s chaotic flesh erupts into weeping sores!");
+                break;
+            case RECITE_IMPURE:
+                simple_monster_message(*mon,
+                    minor ? "'s impure flesh rots away."
+                          : "'s impure flesh sloughs off!");
+                break;
+
+            default:
+                die("bad recite rot");
+            }
+            affected = true;
+        }
+        break;
+
     case zin_eff::holy_word:
         holy_word_monsters(where, spellpower, HOLY_WORD_ZIN, &you);
         affected = true;
@@ -1207,7 +1241,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
 static void _zin_saltify(monster* mon)
 {
     const coord_def where = mon->pos();
-    const monster_type pillar_type = mons_species(mons_base_type(*mon));
+    const monster_type pillar_type =
+        mons_is_zombified(*mon) ? mons_zombie_base(*mon)
+                                : mons_species(mon->type);
     const int hd = mon->get_hit_dice();
 
     simple_monster_message(*mon, " is turned into a pillar of salt by the wrath of Zin!");
@@ -1259,30 +1295,27 @@ void zin_remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
-spret zin_imprison(const coord_def& target, bool fail)
+bool zin_remove_all_mutations()
 {
-    monster* mons = monster_at(target);
-    if (mons == nullptr || !you.can_see(*mons))
+    ASSERT(you.how_mutated());
+    ASSERT(can_do_capstone_ability(you.religion));
+
+    if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
     {
-        mpr("You can see no monster there to imprison!");
-        return spret::abort;
+        canned_msg(MSG_OK);
+        return false;
     }
+    flash_view(UA_PLAYER, WHITE);
+#ifndef USE_TILE_LOCAL
+    // Allow extra time for the flash to linger.
+    scaled_delay(1000);
+#endif
 
-    if (mons_is_firewood(*mons) || mons_is_conjured(mons->type))
-    {
-        mpr("You cannot imprison that!");
-        return spret::abort;
-    }
-
-    if (mons->friendly() || mons->good_neutral())
-    {
-        mpr("You cannot imprison a law-abiding creature!");
-        return spret::abort;
-    }
-
-    int power = 3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26);
-
-    return cast_tomb(power, mons, -GOD_ZIN, fail);
+    you.one_time_ability_used.set(GOD_ZIN);
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+    simple_god_message(" draws all chaos from your body!");
+    delete_all_mutations("Zin's power");
+    return true;
 }
 
 void zin_sanctuary()
@@ -1296,6 +1329,7 @@ void zin_sanctuary()
         mpr("You are suddenly bathed in radiance!");
 
     flash_view(UA_PLAYER, WHITE);
+    holy_word(100, HOLY_WORD_ZIN, you.pos(), true, &you);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     scaled_delay(1000);
@@ -1304,6 +1338,7 @@ void zin_sanctuary()
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
     create_sanctuary(you.pos(), 7 + you.skill_rdiv(SK_INVOCATIONS) / 2);
+
 }
 
 // shield bonus = attribute for duration turns, then decreasing by 1
@@ -1348,41 +1383,49 @@ void elyvilon_purification()
 {
     mpr("You feel purified!");
 
-    you.duration[DUR_SICKNESS] = 0;
+    you.disease = 0;
     you.duration[DUR_POISONING] = 0;
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
     you.duration[DUR_WEAK] = 0;
     restore_stat(STAT_ALL, 0, false);
-    undrain_hp(9999);
+    unrot_hp(9999);
     you.redraw_evasion = true;
 }
 
-void elyvilon_divine_vigour()
+bool elyvilon_divine_vigour()
 {
-    if (you.duration[DUR_DIVINE_VIGOUR])
-        return;
+    bool success = false;
 
-    mprf("%s grants you divine vigour.",
-         god_name(GOD_ELYVILON).c_str());
-
-    const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-    const int old_hp_max = you.hp_max;
-    const int old_mp_max = you.max_magic_points;
-    you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
-    you.set_duration(DUR_DIVINE_VIGOUR,
-                     40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
-
-    calc_hp();
-    inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
-    calc_mp();
-    if (old_mp_max > 0)
+    if (!you.duration[DUR_DIVINE_VIGOUR])
     {
-        inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
-                 / old_mp_max
-               - you.magic_points);
+        mprf("%s grants you divine vigour.",
+             god_name(GOD_ELYVILON).c_str());
+
+        const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
+        const int old_hp_max = you.hp_max;
+        const int old_mp_max = you.max_magic_points;
+        you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
+        you.set_duration(DUR_DIVINE_VIGOUR,
+                         40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
+
+        calc_hp();
+        inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
+        calc_mp();
+        if (old_mp_max > 0)
+        {
+            inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
+                     / old_mp_max
+                   - you.magic_points);
+        }
+
+        success = true;
     }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return success;
 }
 
 void elyvilon_remove_divine_vigour()
@@ -1407,19 +1450,14 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_LRD
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
-        || spell == SPELL_POLAR_VORTEX
+        || spell == SPELL_TORNADO
         || spell == SPELL_FREEZE
         || spell == SPELL_IGNITE_POISON
         || spell == SPELL_OZOCUBUS_REFRIGERATION
         || spell == SPELL_OLGREBS_TOXIC_RADIANCE
         || spell == SPELL_VIOLENT_UNRAVELLING
         || spell == SPELL_INNER_FLAME
-        || spell == SPELL_IGNITION
-        || spell == SPELL_FROZEN_RAMPARTS
-        || spell == SPELL_MAXWELLS_COUPLING
-        || spell == SPELL_NOXIOUS_BOG
-        || spell == SPELL_POISONOUS_VAPOURS
-        || spell == SPELL_SCORCH)
+        || spell == SPELL_IGNITION)
     {
         return true;
     }
@@ -1432,13 +1470,14 @@ void trog_do_trogs_hand(int pow)
     you.increase_duration(DUR_TROGS_HAND,
                           5 + roll_dice(2, pow / 3 + 1), 100,
                           "Your skin crawls.");
-    mprf(MSGCH_DURATION, "You feel strong-willed.");
+    mprf(MSGCH_DURATION, "You feel resistant to hostile enchantments.");
 }
 
 void trog_remove_trogs_hand()
 {
-    mprf(MSGCH_DURATION, "Your skin stops crawling.");
-    mprf(MSGCH_DURATION, "You feel less strong-willed.");
+    if (you.duration[DUR_REGENERATION] == 0)
+        mprf(MSGCH_DURATION, "Your skin stops crawling.");
+    mprf(MSGCH_DURATION, "You feel less resistant to hostile enchantments.");
     you.duration[DUR_TROGS_HAND] = 0;
 }
 
@@ -1538,10 +1577,7 @@ bool beogh_gift_item()
     direction(spd, args);
 
     if (!spd.isValid)
-    {
-        canned_msg(MSG_OK);
         return false;
-    }
 
     monster* mons = monster_at(spd.target);
     if (!beogh_can_gift_items_to(mons, false))
@@ -1558,7 +1594,7 @@ bool beogh_gift_item()
 
     item_def& gift = you.inv[item_slot];
 
-    const bool shield = is_offhand(gift);
+    const bool shield = is_shield(gift);
     const bool body_armour = gift.base_type == OBJ_ARMOUR
                              && get_armour_slot(gift) == EQ_BODY_ARMOUR;
     const bool weapon = gift.base_type == OBJ_WEAPONS;
@@ -1596,6 +1632,28 @@ bool beogh_gift_item()
                               use_alt_slot ? MSLOT_ALT_WEAPON :
                                              MSLOT_WEAPON;
 
+    // need to remove any curses so that drop_item won't fail
+    item_def* item_to_drop = mons->mslot_item(mslot);
+    if (item_to_drop && item_to_drop->cursed())
+    {
+        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
+                                item_to_drop->name(DESC_THE).c_str());
+        do_uncurse_item(*item_to_drop);
+    }
+
+    item_def *shield_slot = mons->mslot_item(MSLOT_SHIELD);
+    if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
+        && shield_slot
+        && mons->hands_reqd(gift) == HANDS_TWO
+        && shield_slot->cursed())
+    {
+        // TODO: this doesn't seem to describe the shield as uncursed to the
+        // player. The weapon case works properly.
+        mprf("%s removes the curse on %s.", god_name(GOD_BEOGH).c_str(),
+                                shield_slot->name(DESC_THE).c_str());
+        do_uncurse_item(*shield_slot);
+    }
+
     item_def *floor_item = mons->take_item(item_slot, mslot);
     if (!floor_item)
     {
@@ -1607,6 +1665,11 @@ bool beogh_gift_item()
     }
     if (use_alt_slot)
         mons->swap_weapons();
+
+    dprf("is_ranged weap: %d", range_weapon);
+    if (range_weapon)
+        gift_ammo_to_orc(mons, true); // give a small initial ammo freebie
+
 
     if (shield)
         mons->props[BEOGH_SH_GIFT_KEY] = true;
@@ -1629,7 +1692,7 @@ bool beogh_resurrect()
         {
             found_any = true;
             if (yesno(("Resurrect "
-                       + si->props[ORC_CORPSE_KEY].get_monster().full_name(DESC_THE)
+                       + si->props[ORC_CORPSE_KEY].get_monster().name(DESC_THE)
                        + "?").c_str(), true, 'n'))
             {
                 corpse = &*si;
@@ -1682,20 +1745,51 @@ bool beogh_resurrect()
     return true;
 }
 
-bool yred_can_bind_soul(monster* mon)
+bool jiyva_remove_bad_mutation()
 {
-    return mons_can_be_spectralised(*mon)
-           && !mons_bound_body_and_soul(*mon)
-           && mon->attitude != ATT_FRIENDLY;
+    if (!you.how_mutated())
+    {
+        mpr("You have no bad mutations to be cured!");
+        return false;
+    }
+
+    // Ensure that only bad mutations are removed.
+    if (!delete_mutation(RANDOM_BAD_MUTATION, "Jiyva's power", true, false, true, true))
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return false;
+    }
+
+    mpr("You feel cleansed.");
+    return true;
 }
 
-void yred_make_bound_soul(monster* mon, bool force_hostile)
+bool yred_injury_mirror()
+{
+    return in_good_standing(GOD_YREDELEMNUL, 1)
+           && you.duration[DUR_MIRROR_DAMAGE]
+           && crawl_state.which_god_acting() != GOD_YREDELEMNUL;
+}
+
+bool yred_can_enslave_soul(monster* mon)
+{
+    return (mon->holiness() & MH_NATURAL
+            || mon->holiness() & MH_DEMONIC
+            || mon->holiness() & MH_HOLY)
+           && !mon->is_summoned()
+           && !mons_enslaved_body_and_soul(*mon)
+           && mon->attitude != ATT_FRIENDLY
+           && mons_intel(*mon) >= I_HUMAN
+           && mon->type != MONS_PANDEMONIUM_LORD;
+}
+
+void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mon); // XXX: change to monster &mon
-    ASSERT(mons_bound_body_and_soul(*mon));
+    ASSERT(mons_enslaved_body_and_soul(*mon));
 
-    add_daction(DACT_OLD_CHARMD_SOULS_POOF);
-    remove_bound_soul_companion();
+    add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
+    remove_enslaved_soul_companion();
 
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
                                            : mon->pronoun(PRONOUN_POSSESSIVE);
@@ -1731,7 +1825,7 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
-    define_zombie(mon, mon->type, MONS_BOUND_SOUL);
+    define_zombie(mon, mon->type, MONS_SPECTRAL_THING);
 
     // If the original monster has been levelled up, its HD might be different
     // from its class HD, in which case its HP should be rerolled to match.
@@ -1741,7 +1835,10 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
         roll_zombie_hp(mon);
     }
 
+    mon->colour = ETC_UNHOLY;
+
     mon->flags |= MF_NO_REWARD;
+    mon->flags |= MF_ENSLAVED_SOUL;
 
     // If the original monster type has melee abilities, make sure
     // its spectral thing has them as well.
@@ -1761,8 +1858,6 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
-    mons_att_changed(mon);
-
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
@@ -1772,9 +1867,6 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
     {
         invalidate_agrid();
     }
-
-    // schedule our actual revival for the end of this combat round
-    avoided_death_fineff::schedule(mon);
 
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");
@@ -1796,7 +1888,7 @@ bool kiku_receive_corpses(int pow)
     for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_SQUARE,
                             LOS_NO_TRANS, true); ri; ++ri)
     {
-        if (mons_class_can_pass(MONS_HUMAN, env.grid(*ri)))
+        if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
             spaces_for_corpses++;
     }
     // floating over lava, heavy tomb abuse, etc
@@ -1811,7 +1903,7 @@ bool kiku_receive_corpses(int pow)
     for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_SQUARE,
                             LOS_NO_TRANS); ri; ++ri)
     {
-        bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, env.grid(*ri));
+        bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
         bool square_is_player_square = (*ri == you.pos());
         bool square_gets_corpse =
             random2(100) < percent_chance_a_square_receives_extra_corpse
@@ -1837,7 +1929,7 @@ bool kiku_receive_corpses(int pow)
         define_monster(dummy);
         dummy.position = *ri;
 
-        item_def* corpse = place_monster_corpse(dummy, true);
+        item_def* corpse = place_monster_corpse(dummy, true, true);
         if (!corpse)
             continue;
 
@@ -1867,55 +1959,44 @@ bool kiku_receive_corpses(int pow)
 }
 
 /**
- * Destroy a corpse at or adjacent to the player's location
+ * Destroy a corpse at the player's location
  *
- * @param just_check True if just checking whether the ability is possible,
- *                   false if we should go ahead and destroy a corpse.
- * @return           True if a corpse was available, false otherwise.
+ * @return  True if a corpse was destroyed, false otherwise.
 */
-bool kiku_take_corpse(bool just_check)
+bool kiku_take_corpse()
 {
-    for (fair_adjacent_iterator ai(you.pos(), false); ai; ++ai)
+    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
     {
-        for (stack_iterator si(*ai, true); si; ++si)
-        {
-            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
-                continue;
+        item_def &item(mitm[i]);
 
-            if (just_check)
-                return true;
-
-            item_was_destroyed(*si);
-            destroy_item(si->index());
-            return true;
-        }
+        if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
+            continue;
+        item_was_destroyed(item);
+        destroy_item(i);
+        return true;
     }
 
     return false;
 }
 
-bool kiku_gift_capstone_spells()
+bool kiku_gift_necronomicon()
 {
     ASSERT(can_do_capstone_ability(you.religion));
 
-    vector<spell_type> spells = { SPELL_HAUNT,
-                                  SPELL_BORGNJORS_REVIVIFICATION,
-                                  SPELL_INFESTATION,
-                                  SPELL_NECROMUTATION,
-                                  SPELL_DEATHS_DOOR };
-
-    string msg = "Do you wish to receive knowledge of "
-                 + comma_separated_fn(spells.begin(), spells.end(), spell_title)
-                 + "?";
-
-    if (!yesno(msg.c_str(), true, 'n'))
+    if (!yesno("Do you wish to receive a Necronomicon?", true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
     }
-
-    simple_god_message(" grants you forbidden knowledge!");
-    library_add_spells(spells);
+    int thing_created = items(true, OBJ_BOOKS, BOOK_NECRONOMICON, 1, 0,
+                              you.religion);
+    if (thing_created == NON_ITEM
+        || !move_item_to_grid(&thing_created, you.pos()))
+    {
+        return false;
+    }
+    set_ident_type(mitm[thing_created], true);
+    simple_god_message(" grants you a gift!");
     flash_view(UA_PLAYER, RED);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
@@ -1954,6 +2035,1416 @@ bool fedhas_passthrough(const monster_info* target)
                || target->attitude != ATT_HOSTILE);
 }
 
+// Basically we want to break a circle into n_arcs equal sized arcs and find
+// out which arc the input point pos falls on.
+static int _arc_decomposition(const coord_def & pos, int n_arcs)
+{
+    float theta = atan2((float)pos.y, (float)pos.x);
+
+    if (pos.x == 0 && pos.y != 0)
+        theta = pos.y > 0 ? PI / 2 : -PI / 2;
+
+    if (theta < 0)
+        theta += 2 * PI;
+
+    float arc_angle = 2 * PI / n_arcs;
+
+    theta += arc_angle / 2.0f;
+
+    if (theta >= 2 * PI)
+        theta -= 2 * PI;
+
+    return static_cast<int> (theta / arc_angle);
+}
+
+int place_ring(vector<coord_def> &ring_points,
+               const coord_def &origin,
+               mgen_data prototype,
+               int n_arcs,
+               int arc_occupancy,
+               int &seen_count)
+{
+    shuffle_array(ring_points);
+
+    int target_amount = ring_points.size();
+    int spawned_count = 0;
+    seen_count = 0;
+
+    vector<int> arc_counts(n_arcs, arc_occupancy);
+
+    for (unsigned i = 0;
+         spawned_count < target_amount && i < ring_points.size();
+         i++)
+    {
+        int direction = _arc_decomposition(ring_points.at(i)
+                                           - origin, n_arcs);
+
+        if (arc_counts[direction]-- <= 0)
+            continue;
+
+        prototype.pos = ring_points.at(i);
+
+        if (create_monster(prototype, false))
+        {
+            spawned_count++;
+            if (you.see_cell(ring_points.at(i)))
+                seen_count++;
+        }
+    }
+
+    return spawned_count;
+}
+
+// Collect lists of points that are within LOS (under the given env map),
+// unoccupied, and not solid (walls/statues).
+void collect_radius_points(vector<vector<coord_def> > &radius_points,
+                           const coord_def &origin, los_type los)
+{
+    radius_points.clear();
+    radius_points.resize(LOS_RADIUS);
+
+    // Just want to associate a point with a distance here for convenience.
+    typedef pair<coord_def, int> coord_dist;
+
+    // Using a priority queue because squares don't make very good circles at
+    // larger radii. We will visit points in order of increasing euclidean
+    // distance from the origin (not path distance). We want a min queue
+    // based on the distance, so we use greater_second as the comparator.
+    priority_queue<coord_dist, vector<coord_dist>,
+                   greater_second<coord_dist> > fringe;
+
+    fringe.push(coord_dist(origin, 0));
+
+    set<int> visited_indices;
+
+    int current_r = 1;
+    int current_thresh = current_r * (current_r + 1);
+
+    int max_distance = LOS_RADIUS * LOS_RADIUS + 1;
+
+    while (!fringe.empty())
+    {
+        coord_dist current = fringe.top();
+        // We're done here once we hit a point that is farther away from the
+        // origin than our maximum permissible radius.
+        if (current.second > max_distance)
+            break;
+
+        fringe.pop();
+
+        int idx = current.first.x + current.first.y * X_WIDTH;
+        if (!visited_indices.insert(idx).second)
+            continue;
+
+        while (current.second > current_thresh)
+        {
+            current_r++;
+            current_thresh = current_r * (current_r + 1);
+        }
+
+        // We don't include radius 0. This is also a good place to check if
+        // the squares are already occupied since we want to search past
+        // occupied squares but don't want to consider them valid targets.
+        if (current.second && !actor_at(current.first))
+            radius_points[current_r - 1].push_back(current.first);
+
+        for (adjacent_iterator i(current.first); i; ++i)
+        {
+            coord_dist temp(*i, current.second);
+
+            // If the grid is out of LOS, skip it.
+            if (!cell_see_cell(origin, temp.first, los))
+                continue;
+
+            coord_def local = temp.first - origin;
+
+            temp.second = local.abs();
+
+            idx = temp.first.x + temp.first.y * X_WIDTH;
+
+            if (!visited_indices.count(idx)
+                && in_bounds(temp.first)
+                && !cell_is_solid(temp.first))
+            {
+                fringe.push(temp);
+            }
+        }
+
+    }
+}
+
+static int _mushroom_prob(item_def & corpse)
+{
+    int low_threshold = 5;
+    int high_threshold = FRESHEST_CORPSE - 5;
+
+    // Expect this many trials over a corpse's lifetime since this function
+    // is called once for every 10 units of rot_time.
+    int step_size = 10;
+    float total_trials = (high_threshold - low_threshold) / step_size;
+
+    // Chance of producing no mushrooms (not really because of weight_factor
+    // below).
+    float p_failure = 0.5f;
+
+    float trial_prob_f = 1 - powf(p_failure, 1.0f / total_trials);
+
+    // The chance of producing mushrooms depends on the corpse capacity.
+    // Take humans as the base factor here.
+    float weight_factor = (float) max_corpse_chunks(corpse.mon_type) /
+                          (float) max_corpse_chunks(MONS_HUMAN);
+
+    trial_prob_f *= weight_factor;
+
+    int trial_prob = static_cast<int>(100 * trial_prob_f);
+
+    return trial_prob;
+}
+
+static bool _mushroom_spawn_message(int seen_targets, int seen_corpses)
+{
+    if (seen_targets <= 0)
+        return false;
+
+    string what  = seen_targets  > 1 ? "Some toadstools"
+                                     : "A toadstool";
+    string where = seen_corpses  > 1 ? "nearby corpses" :
+                   seen_corpses == 1 ? "a nearby corpse"
+                                     : "the ground";
+    mprf("%s grow%s from %s.",
+         what.c_str(), seen_targets > 1 ? "" : "s", where.c_str());
+
+    return true;
+}
+
+// Place a partial ring of toadstools around the given corpse. Returns
+// the number of mushrooms spawned. A return of 0 indicates no
+// mushrooms were placed -> some sort of failure mode was reached.
+static int _mushroom_ring(item_def &corpse, int & seen_count)
+{
+    // minimum number of mushrooms spawned on a given ring
+    unsigned min_spawn = 2;
+
+    seen_count = 0;
+
+    vector<vector<coord_def> > radius_points;
+
+    collect_radius_points(radius_points, corpse.pos, LOS_SOLID);
+
+    // So what we have done so far is collect the set of points at each radius
+    // reachable from the origin with (somewhat constrained) 8 connectivity,
+    // now we will choose one of those radii and spawn mushrooms at some
+    // of the points along it.
+    int chosen_idx = random2(LOS_RADIUS);
+
+    unsigned max_size = 0;
+    for (unsigned i = 0; i < LOS_RADIUS; ++i)
+    {
+        if (radius_points[i].size() >= max_size)
+        {
+            max_size = radius_points[i].size();
+            chosen_idx = i;
+        }
+    }
+
+    chosen_idx = random2(chosen_idx + 1);
+
+    // Not enough valid points?
+    if (radius_points[chosen_idx].size() < min_spawn)
+        return 0;
+
+    mgen_data temp(MONS_TOADSTOOL, BEH_GOOD_NEUTRAL, coord_def(), MHITNOT,
+                   MG_FORCE_PLACE);
+    temp.set_col(corpse.get_colour());
+
+    float target_arc_len = 2 * sqrtf(2.0f);
+
+    int n_arcs = static_cast<int> (ceilf(2 * PI * (chosen_idx + 1)
+                                   / target_arc_len));
+
+    int spawned_count = place_ring(radius_points[chosen_idx], corpse.pos, temp,
+                                   n_arcs, 1, seen_count);
+
+    return spawned_count;
+}
+
+// Try to spawn 'target_count' mushrooms around the position of
+// 'corpse'. Returns the number of mushrooms actually spawned.
+// Mushrooms radiate outwards from the corpse following bfs with
+// 8-connectivity. Could change the expansion pattern by using a
+// priority queue for sequencing (priority = distance from origin under
+// some metric).
+static int _spawn_corpse_mushrooms(item_def& corpse,
+                                  int target_count,
+                                  int& seen_targets)
+
+{
+    seen_targets = 0;
+    if (target_count == 0)
+        return 0;
+
+    int placed_targets = 0;
+
+    queue<coord_def> fringe;
+    set<int> visited_indices;
+
+    // Slight chance of spawning a ring of mushrooms around the corpse (and
+    // skeletonising it) if the corpse square is unoccupied.
+    if (!actor_at(corpse.pos) && one_chance_in(100))
+    {
+        int ring_seen;
+        // It's possible no reasonable ring can be found, in that case we'll
+        // give up and just place a toadstool on top of the corpse (probably).
+        int res = _mushroom_ring(corpse, ring_seen);
+
+        if (res)
+        {
+            corpse.freshness = 0;
+
+            if (you.see_cell(corpse.pos))
+                mpr("A ring of toadstools grows before your very eyes.");
+            else if (ring_seen > 1)
+                mpr("Some toadstools grow in a peculiar arc.");
+            else if (ring_seen > 0)
+                mpr("A toadstool grows.");
+
+            seen_targets = -1;
+
+            return res;
+        }
+    }
+
+    visited_indices.insert(X_WIDTH * corpse.pos.y + corpse.pos.x);
+    fringe.push(corpse.pos);
+
+    while (!fringe.empty())
+    {
+        coord_def current = fringe.front();
+
+        fringe.pop();
+
+        monster* mons = monster_at(current);
+
+        bool player_occupant = you.pos() == current;
+
+        // Is this square occupied by a non mushroom?
+        if (mons && mons->mons_species() != MONS_TOADSTOOL
+            || player_occupant && !you_worship(GOD_FEDHAS)
+            || !can_spawn_mushrooms(current))
+        {
+            continue;
+        }
+
+        if (!mons)
+        {
+            monster *mushroom = create_monster(
+                        mgen_data(MONS_TOADSTOOL,
+                                  BEH_GOOD_NEUTRAL,
+                                  current,
+                                  MHITNOT,
+                                  MG_FORCE_PLACE).set_col(corpse.get_colour()),
+                                  false);
+
+            if (mushroom)
+            {
+                // Going to explicitly override the die-off timer in
+                // this case since, we're creating a lot of toadstools
+                // at once that should die off quickly.
+                coord_def offset = corpse.pos - current;
+
+                int dist = static_cast<int>(sqrtf(offset.abs()) + 0.5);
+
+                // Trying a longer base duration...
+                int time_left = random2(8) + dist * 8 + 8;
+
+                time_left *= 10;
+
+                mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
+                mushroom->update_ench(temp_en);
+
+                placed_targets++;
+                if (current == you.pos())
+                {
+                    mprf("A toadstool grows %s.",
+                         player_has_feet() ? "at your feet" : "before you");
+                    current = mushroom->pos();
+                }
+                else if (you.see_cell(current))
+                    seen_targets++;
+            }
+            else
+                continue;
+        }
+
+        // We're done here if we placed the desired number of mushrooms.
+        if (placed_targets == target_count)
+            break;
+
+        for (fair_adjacent_iterator ai(current); ai; ++ai)
+        {
+            if (in_bounds(*ai) && mons_class_can_pass(MONS_TOADSTOOL, grd(*ai)))
+            {
+                const int index = ai->x + ai->y * X_WIDTH;
+                if (visited_indices.insert(index).second)
+                    fringe.push(*ai); // Not previously visited.
+            }
+        }
+    }
+
+    return placed_targets;
+}
+
+// Turns corpses in LOS into skeletons and grows toadstools on them.
+// Can also turn zombies into skeletons and destroy ghoul-type monsters.
+// Returns the number of corpses consumed.
+int fedhas_fungal_bloom()
+{
+    int seen_mushrooms = 0;
+    int seen_corpses = 0;
+    int processed_count = 0;
+    bool kills = false;
+
+    for (radius_iterator i(you.pos(), LOS_NO_TRANS); i; ++i)
+    {
+        monster* target = monster_at(*i);
+        if (!can_spawn_mushrooms(*i))
+            continue;
+
+        if (target && target->type != MONS_TOADSTOOL)
+        {
+            bool piety = !target->is_summoned();
+            switch (mons_genus(target->mons_species()))
+            {
+            case MONS_ZOMBIE:
+                // Maybe turn a zombie into a skeleton.
+                if (mons_skeleton(mons_zombie_base(*target)))
+                {
+                    simple_monster_message(*target, "'s flesh rots away.");
+
+                    downgrade_zombie_to_skeleton(target);
+
+                    behaviour_event(target, ME_ALERT, &you);
+
+                    if (piety)
+                        processed_count++;
+
+                    continue;
+                }
+                // Else fall through and destroy the zombie.
+                // Ghoul-type monsters are always destroyed.
+            case MONS_GHOUL:
+            {
+                simple_monster_message(*target, " rots away and dies.");
+
+                kills = true;
+
+                const coord_def pos = target->pos();
+                const int colour = target->colour;
+                const item_def* corpse = monster_die(*target, KILL_MISC,
+                                                     NON_MONSTER, true);
+
+                // If a corpse didn't drop, create a toadstool.
+                // If one did drop, we will create toadstools from it as usual
+                // later on.
+                // Give neither piety nor toadstools for summoned creatures.
+                // Assumes that summoned creatures do not drop corpses (hence
+                // will not give piety in the next loop).
+                if (!corpse && piety)
+                {
+                    if (create_monster(
+                                mgen_data(MONS_TOADSTOOL,
+                                          BEH_GOOD_NEUTRAL,
+                                          pos,
+                                          MHITNOT,
+                                          MG_FORCE_PLACE).set_col(colour)
+                                       .set_summoned(&you, 0, 0),
+                                          false))
+                    {
+                        seen_mushrooms++;
+                    }
+
+                    processed_count++;
+                    continue;
+                }
+
+                // Verify that summoned creatures do not drop a corpse.
+                ASSERT(!corpse || piety);
+
+                break;
+            }
+
+            default:
+                continue;
+            }
+        }
+
+        for (stack_iterator j(*i); j; ++j)
+        {
+            bool corpse_on_pos = false;
+
+            if (j->is_type(OBJ_CORPSES, CORPSE_BODY))
+            {
+                corpse_on_pos = true;
+
+                const int trial_prob = _mushroom_prob(*j);
+                const int target_count = 1 + binomial(20, trial_prob);
+                int seen_per;
+                _spawn_corpse_mushrooms(*j, target_count, seen_per);
+
+                // Either turn this corpse into a skeleton or destroy it.
+                if (mons_skeleton(j->mon_type))
+                    turn_corpse_into_skeleton(*j);
+                else
+                {
+                    item_was_destroyed(*j);
+                    destroy_item(j->index());
+                }
+
+                seen_mushrooms += seen_per;
+
+                processed_count++;
+            }
+
+            if (corpse_on_pos && you.see_cell(*i))
+                seen_corpses++;
+        }
+    }
+
+    if (seen_mushrooms > 0)
+        _mushroom_spawn_message(seen_mushrooms, seen_corpses);
+
+    if (kills)
+        mpr("That felt like a moral victory.");
+
+    if (processed_count)
+    {
+        simple_god_message(" appreciates your contribution to the "
+                           "ecosystem.");
+        // Doubling the expected value per sacrifice to approximate the
+        // extra piety gain blood god worshipers get for the initial kill.
+        // -cao
+
+        int piety_gain = 0;
+        for (int i = 0; i < processed_count * 2; ++i)
+            piety_gain += random2(15); // avg 1.4 piety per corpse
+        gain_piety(piety_gain, 10);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return processed_count;
+}
+
+static bool _create_plant(coord_def& target, int hp_adjust = 0)
+{
+    if (actor_at(target) || !mons_class_can_pass(MONS_PLANT, grd(target)))
+        return 0;
+
+    if (monster *plant = create_monster(mgen_data(MONS_PLANT,
+                                            BEH_FRIENDLY,
+                                            target,
+                                            MHITNOT,
+                                            MG_FORCE_PLACE,
+                                            GOD_FEDHAS)
+                                        .set_summoned(&you, 0, 0)))
+    {
+        plant->flags |= MF_NO_REWARD;
+        plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+        mons_make_god_gift(*plant, GOD_FEDHAS);
+
+        plant->max_hit_points += hp_adjust;
+        plant->hit_points += hp_adjust;
+
+        if (you.see_cell(target))
+        {
+            if (hp_adjust)
+            {
+                mprf("A plant, strengthened by %s, grows up from the ground.",
+                     god_name(GOD_FEDHAS).c_str());
+            }
+            else
+                mpr("A plant grows up from the ground.");
+        }
+        return true;
+    }
+
+    return false;
+}
+
+#define SUNLIGHT_DURATION 80
+
+spret fedhas_sunlight(bool fail)
+{
+    dist spelld;
+
+    bolt temp_bolt;
+    temp_bolt.colour = YELLOW;
+
+    targeter_smite tgt(&you, LOS_RADIUS, 0, 1);
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_HOSTILE_SUBMERGED;
+    args.range = LOS_RADIUS;
+    args.needs_path = false;
+    args.top_prompt = "Select sunlight destination.";
+    args.hitfunc = &tgt;
+    direction(spelld, args);
+
+    if (!spelld.isValid)
+        return spret::abort;
+
+    fail_check();
+
+    const coord_def base = spelld.target;
+
+    int revealed_count = 0;
+
+    for (adjacent_iterator ai(base, false); ai; ++ai)
+    {
+        if (!in_bounds(*ai) || cell_is_solid(*ai))
+            continue;
+
+        for (size_t i = 0; i < env.sunlight.size(); ++i)
+            if (env.sunlight[i].first == *ai)
+            {
+                erase_any(env.sunlight, i);
+                break;
+            }
+        const int expiry = you.elapsed_time + SUNLIGHT_DURATION;
+        env.sunlight.emplace_back(*ai, expiry);
+
+        temp_bolt.explosion_draw_cell(*ai);
+
+        monster *victim = monster_at(*ai);
+        if (victim && you.see_cell(*ai) && !victim->visible_to(&you))
+        {
+            // Like entering/exiting angel halos, flipping autopickup would
+            // be probably too much hassle.
+            revealed_count++;
+        }
+
+        if (victim)
+            behaviour_event(victim, ME_ALERT, &you);
+    }
+
+    {
+        unwind_var<int> no_time(you.time_taken, 0);
+        process_sunlights(false);
+    }
+
+#ifndef USE_TILE_LOCAL
+    // Move the cursor out of the way (it looks weird).
+    coord_def temp = grid2view(base);
+    cgotoxy(temp.x, temp.y, GOTO_DNGN);
+#endif
+    scaled_delay(200);
+
+    if (revealed_count)
+    {
+        mprf("In the bright light, you notice %s.", revealed_count == 1 ?
+             "an invisible shape" : "some invisible shapes");
+    }
+
+    return spret::success;
+}
+
+void process_sunlights(bool future)
+{
+    int time_cap = future ? INT_MAX - SUNLIGHT_DURATION : you.elapsed_time;
+
+    int evap_count = 0;
+
+    for (int i = env.sunlight.size() - 1; i >= 0; --i)
+    {
+        coord_def c = env.sunlight[i].first;
+        int until = env.sunlight[i].second;
+
+        if (until <= time_cap)
+            erase_any(env.sunlight, i);
+
+        until = min(until, time_cap);
+        int from = you.elapsed_time - you.time_taken;
+
+        // Deterministic roll, to guarantee evaporation when shined long enough.
+        struct { level_id place; coord_def coord; int64_t game_start; } to_hash;
+        to_hash.place = level_id::current();
+        to_hash.coord = c;
+        to_hash.game_start = you.birth_time;
+        int h = hash32(&to_hash, sizeof(to_hash)) % SUNLIGHT_DURATION;
+
+        if ((from + h) / SUNLIGHT_DURATION == (until + h) / SUNLIGHT_DURATION)
+            continue;
+
+        // Anything further on goes only on a successful evaporation roll, at
+        // most once peer coord per invocation.
+
+        // If this is a water square we will evaporate it.
+        dungeon_feature_type ftype = grd(c);
+        dungeon_feature_type orig_type = ftype;
+
+        switch (ftype)
+        {
+        case DNGN_SHALLOW_WATER:
+            ftype = DNGN_FLOOR;
+            break;
+
+        case DNGN_DEEP_WATER:
+            ftype = DNGN_SHALLOW_WATER;
+            break;
+
+        default:
+            break;
+        }
+
+        if (orig_type != ftype)
+        {
+            dungeon_terrain_changed(c, ftype);
+
+            if (you.see_cell(c))
+                evap_count++;
+
+            // This is a little awkward but if we evaporated all the way to
+            // the dungeon floor that may have given a monster
+            // ENCH_AQUATIC_LAND, and if that happened the player should get
+            // credit if the monster dies. The enchantment is inflicted via
+            // the dungeon_terrain_changed call chain and that doesn't keep
+            // track of what caused the terrain change. -cao
+            monster* mons = monster_at(c);
+            if (mons && ftype == DNGN_FLOOR
+                && mons->has_ench(ENCH_AQUATIC_LAND))
+            {
+                mon_enchant temp = mons->get_ench(ENCH_AQUATIC_LAND);
+                temp.who = KC_YOU;
+                temp.source = MID_PLAYER;
+                mons->add_ench(temp);
+            }
+        }
+    }
+
+    if (evap_count)
+        mpr("Some water evaporates in the bright sunlight.");
+
+    invalidate_agrid(true);
+}
+
+template<typename T>
+static bool less_second(const T & left, const T & right)
+{
+    return left.second < right.second;
+}
+
+typedef pair<coord_def, int> point_distance;
+
+// Find the distance from origin to each of the targets, those results
+// are stored in distances (which is the same size as targets). Exclusion
+// is a set of points which are considered disconnected for the search.
+static void _path_distance(const coord_def& origin,
+                           const vector<coord_def>& targets,
+                           set<int> exclusion,
+                           vector<int>& distances)
+{
+    queue<point_distance> fringe;
+    fringe.push(point_distance(origin,0));
+    distances.clear();
+    distances.resize(targets.size(), INT_MAX);
+
+    while (!fringe.empty())
+    {
+        point_distance current = fringe.front();
+        fringe.pop();
+
+        // did we hit a target?
+        for (unsigned i = 0; i < targets.size(); ++i)
+        {
+            if (current.first == targets[i])
+            {
+                distances[i] = current.second;
+                break;
+            }
+        }
+
+        for (adjacent_iterator adj_it(current.first); adj_it; ++adj_it)
+        {
+            int idx = adj_it->x + adj_it->y * X_WIDTH;
+            if (you.see_cell(*adj_it)
+                && !feat_is_solid(env.grid(*adj_it))
+                && *adj_it != you.pos()
+                && exclusion.insert(idx).second)
+            {
+                monster* temp = monster_at(*adj_it);
+                if (!temp || (temp->attitude == ATT_HOSTILE
+                              && !temp->is_stationary()))
+                {
+                    fringe.push(point_distance(*adj_it, current.second+1));
+                }
+            }
+        }
+    }
+}
+
+// Find the minimum distance from each point of origin to one of the targets
+// The distance is stored in 'distances', which is the same size as origins.
+static void _point_point_distance(const vector<coord_def>& origins,
+                                  const vector<coord_def>& targets,
+                                  vector<int>& distances)
+{
+    distances.clear();
+    distances.resize(origins.size(), INT_MAX);
+
+    // Consider all points of origin as blocked (you can search outward
+    // from one, but you can't form a path across a different one).
+    set<int> base_exclusions;
+    for (coord_def c : origins)
+    {
+        int idx = c.x + c.y * X_WIDTH;
+        base_exclusions.insert(idx);
+    }
+
+    vector<int> current_distances;
+    for (unsigned i = 0; i < origins.size(); ++i)
+    {
+        // Find the distance from the point of origin to each of the targets.
+        _path_distance(origins[i], targets, base_exclusions,
+                       current_distances);
+
+        // Find the smallest of those distances
+        int min_dist = current_distances[0];
+        for (unsigned j = 1; j < current_distances.size(); ++j)
+            if (current_distances[j] < min_dist)
+                min_dist = current_distances[j];
+
+        distances[i] = min_dist;
+    }
+}
+
+// So the idea is we want to decide which adjacent tiles are in the most 'danger'
+// We claim danger is proportional to the minimum distances from the point to a
+// (hostile) monster. This function carries out at most 7 searches to calculate
+// the distances in question.
+bool prioritise_adjacent(const coord_def &target, vector<coord_def>& candidates)
+{
+    radius_iterator los_it(target, LOS_NO_TRANS, true);
+
+    vector<coord_def> mons_positions;
+    // collect hostile monster positions in LOS
+    for (; los_it; ++los_it)
+    {
+        monster* hostile = monster_at(*los_it);
+
+        if (hostile && hostile->attitude == ATT_HOSTILE
+            && you.can_see(*hostile))
+        {
+            mons_positions.push_back(hostile->pos());
+        }
+    }
+
+    if (mons_positions.empty())
+    {
+        shuffle_array(candidates);
+        return true;
+    }
+
+    vector<int> distances;
+
+    _point_point_distance(candidates, mons_positions, distances);
+
+    vector<point_distance> possible_moves(candidates.size());
+
+    for (unsigned i = 0; i < possible_moves.size(); ++i)
+    {
+        possible_moves[i].first  = candidates[i];
+        possible_moves[i].second = distances[i];
+    }
+
+    sort(possible_moves.begin(), possible_moves.end(),
+              less_second<point_distance>);
+
+    for (unsigned i = 0; i < candidates.size(); ++i)
+        candidates[i] = possible_moves[i].first;
+
+    return true;
+}
+
+static bool _prompt_amount(int max, int& selected, const string& prompt)
+{
+    selected = max;
+    while (true)
+    {
+        msg::streams(MSGCH_PROMPT) << prompt << " (" << max << " max) " << endl;
+
+        const int keyin = get_ch();
+
+        // Cancel
+        if (key_is_escape(keyin) || keyin == ' ' || keyin == '0')
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        // Default is max
+        if (keyin == '\n' || keyin == '\r')
+        {
+            selected = max;
+            return true;
+        }
+
+        // Otherwise they should enter a digit
+        if (isadigit(keyin))
+        {
+            selected = keyin - '0';
+            if (selected > 0 && selected <= max)
+                return true;
+        }
+        // else they entered some garbage?
+    }
+
+    return false;
+}
+
+static int _collect_rations(vector<pair<int,int> >& available_rations)
+{
+    int total = 0;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].defined() && you.inv[i].is_type(OBJ_FOOD, FOOD_RATION))
+        {
+            total += you.inv[i].quantity;
+            available_rations.emplace_back(you.inv[i].quantity, i);
+        }
+    }
+    sort(available_rations.begin(), available_rations.end());
+
+    return total;
+}
+
+static void _decrease_amount(vector<pair<int, int> >& available, int amount)
+{
+    const int total_decrease = amount;
+    for (const auto &avail : available)
+    {
+        const int decrease_amount = min(avail.first, amount);
+        amount -= decrease_amount;
+        dec_inv_item_quantity(avail.second, decrease_amount);
+    }
+    if (total_decrease > 1)
+        mprf("%d rations are consumed!", total_decrease);
+    else
+        mpr("A ration is consumed!");
+}
+
+// Create a ring or partial ring around the caster. The user is
+// prompted to select a stack of rations, and then plants are placed on open
+// squares adjacent to the user. Of course, two rations are
+// consumed per plant, so a complete ring may not be formed.
+bool fedhas_plant_ring_from_rations()
+{
+    // How many rations is available?
+    vector<pair<int, int> > collected_rations;
+    int total_rations = _collect_rations(collected_rations);
+
+    // How many adjacent open spaces are there?
+    vector<coord_def> adjacent;
+    for (adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
+    {
+        if (monster_habitable_grid(MONS_PLANT, env.grid(*adj_it))
+            && !actor_at(*adj_it))
+        {
+            adjacent.push_back(*adj_it);
+        }
+    }
+
+    const int max_use = min(total_rations/2, static_cast<int>(adjacent.size()));
+
+    // Don't prompt if we can't do anything (due to having no rations or
+    // no squares to place plants on).
+    if (max_use == 0)
+    {
+        if (adjacent.empty())
+            mpr("No empty adjacent squares.");
+        else
+            mpr("Not enough rations available.");
+
+        return false;
+    }
+
+    prioritise_adjacent(you.pos(), adjacent);
+
+    // Screwing around with display code I don't really understand. -cao
+    targeter_smite range(&you, 1);
+    range_view_annotator show_range(&range);
+
+    for (int i = 0; i < max_use; ++i)
+    {
+#ifndef USE_TILE_LOCAL
+        coord_def temp = grid2view(adjacent[i]);
+        cgotoxy(temp.x, temp.y, GOTO_DNGN);
+        put_colour_ch(GREEN, '1' + i);
+#endif
+#ifdef USE_TILE
+        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
+#endif
+    }
+
+    // And how many plants does the user want to create?
+    int target_count;
+    if (!_prompt_amount(max_use, target_count,
+                        "How many plants will you create?"))
+    {
+        // User cancelled at the prompt.
+        return false;
+    }
+
+    const int hp_adjust = you.skill(SK_INVOCATIONS, 10);
+
+    // The user entered a number, remove all number overlays which
+    // are higher than that number.
+#ifndef USE_TILE_LOCAL
+    unsigned not_used = adjacent.size() - unsigned(target_count);
+    for (unsigned i = adjacent.size() - not_used; i < adjacent.size(); i++)
+        view_update_at(adjacent[i]);
+#endif
+#ifdef USE_TILE
+    // For tiles we have to clear all overlays and redraw the ones
+    // we want.
+    tiles.clear_overlays();
+    for (int i = 0; i < target_count; ++i)
+        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
+#endif
+
+    int created_count = 0;
+    for (int i = 0; i < target_count; ++i)
+    {
+        if (_create_plant(adjacent[i], hp_adjust))
+            created_count++;
+
+        // Clear the overlay and draw the plant we just placed.
+        // This is somewhat more complicated in tiles.
+        view_update_at(adjacent[i]);
+#ifdef USE_TILE
+        tiles.clear_overlays();
+        for (int j = i + 1; j < target_count; ++j)
+            tiles.add_overlay(adjacent[j], TILE_INDICATOR + j);
+        viewwindow(false);
+#endif
+        scaled_delay(200);
+    }
+
+    if (created_count)
+        _decrease_amount(collected_rations, 2 * created_count);
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return created_count;
+}
+
+// Create a circle of water around the target, with a radius of
+// approximately 2. This turns normal floor tiles into shallow water
+// and turns (unoccupied) shallow water into deep water. There is a
+// chance of spawning plants or fungus on unoccupied dry floor tiles
+// outside of the rainfall area. Return the number of plants/fungi
+// created.
+int fedhas_rain(const coord_def &target)
+{
+    int spawned_count = 0;
+    int processed_count = 0;
+
+    for (radius_iterator rad(target, LOS_NO_TRANS, true); rad; ++rad)
+    {
+        int rain_thresh = 2;
+        coord_def local = *rad - target;
+
+        dungeon_feature_type ftype = grd(*rad);
+
+        if (local.rdist() > rain_thresh)
+        {
+            // Maybe spawn a plant on (dry, open) squares that are in
+            // LOS but outside the rainfall area. In open space, there
+            // are 225 squares in LOS, and we are going to drop water on
+            // 25 of those, so if we want x plants to spawn on
+            // average in open space, the trial probability should be
+            // x/200.
+            if (x_chance_in_y(5, 200)
+                && !actor_at(*rad)
+                && ftype == DNGN_FLOOR)
+            {
+                if (create_monster(mgen_data(
+                                      random_choose(MONS_PLANT, MONS_FUNGUS),
+                                      BEH_GOOD_NEUTRAL,
+                                      *rad,
+                                      MHITNOT,
+                                      MG_FORCE_PLACE,
+                                      GOD_FEDHAS)
+                                   .set_summoned(&you, 0, 0)))
+                {
+                    spawned_count++;
+                }
+
+                processed_count++;
+            }
+
+            continue;
+        }
+
+        // Turn regular floor squares only into shallow water.
+        if (ftype == DNGN_FLOOR)
+        {
+            dungeon_terrain_changed(*rad, DNGN_SHALLOW_WATER);
+
+            processed_count++;
+        }
+        // We can also turn shallow water into deep water, but we're
+        // just going to skip cases where there is something on the
+        // shallow water. Destroying items will probably be annoying,
+        // and insta-killing monsters is clearly out of the question.
+        else if (!actor_at(*rad)
+                 && igrd(*rad) == NON_ITEM
+                 && ftype == DNGN_SHALLOW_WATER)
+        {
+            dungeon_terrain_changed(*rad, DNGN_DEEP_WATER);
+
+            processed_count++;
+        }
+
+        if (!feat_is_solid(ftype))
+        {
+            // Maybe place a raincloud.
+            //
+            // The rainfall area is 24 (5*5 - 1 (center));
+            // the expected number of clouds generated by a fixed chance
+            // per tile is 24 * p = expected. Say an Invocations skill
+            // of 27 gives expected 6 clouds.
+            int max_expected = 6;
+            int expected = you.skill_rdiv(SK_INVOCATIONS, max_expected, 27);
+
+            if (x_chance_in_y(expected, 24))
+            {
+                place_cloud(CLOUD_RAIN, *rad, 10, &you);
+
+                processed_count++;
+            }
+        }
+    }
+
+    if (spawned_count > 0)
+    {
+        mprf("%s grow%s in the rain.",
+             (spawned_count > 1 ? "Some plants" : "A plant"),
+             (spawned_count > 1 ? "" : "s"));
+    }
+
+    return processed_count;
+}
+
+int count_corpses_in_los(vector<stack_iterator> *positions)
+{
+    int count = 0;
+
+    for (radius_iterator rad(you.pos(), LOS_NO_TRANS, true); rad;
+         ++rad)
+    {
+        if (actor_at(*rad))
+            continue;
+
+        for (stack_iterator stack_it(*rad); stack_it; ++stack_it)
+        {
+            if (stack_it->is_type(OBJ_CORPSES, CORPSE_BODY))
+            {
+                if (positions)
+                    positions->push_back(stack_it);
+                count++;
+                break;
+            }
+        }
+    }
+
+    return count;
+}
+
+int fedhas_check_corpse_spores(bool quiet)
+{
+    vector<stack_iterator> positions;
+    int count = count_corpses_in_los(&positions);
+
+    if (quiet || count == 0)
+        return count;
+
+    viewwindow(false);
+    for (const stack_iterator &si : positions)
+    {
+#ifndef USE_TILE_LOCAL
+        coord_def temp = grid2view(si->pos);
+        cgotoxy(temp.x, temp.y, GOTO_DNGN);
+
+        unsigned colour = GREEN | COLFLAG_FRIENDLY_MONSTER;
+        colour = real_colour(colour);
+
+        unsigned character = mons_char(MONS_BALLISTOMYCETE_SPORE);
+        put_colour_ch(colour, character);
+#endif
+#ifdef USE_TILE
+        tiles.add_overlay(si->pos, TILE_SPORE_OVERLAY);
+#endif
+    }
+
+    if (yesnoquit("Will you create these spores?", true, 'y') <= 0)
+    {
+        viewwindow(false);
+        return -1;
+    }
+
+    return count;
+}
+
+// Destroy corpses in the player's LOS (first corpse on a stack only)
+// and make 1 ballistomycete spore per corpse. Spores are given the input as
+// their starting behavior; the function returns the number of corpses
+// processed.
+int fedhas_corpse_spores(beh_type attitude)
+{
+    vector<stack_iterator> positions;
+    int count = count_corpses_in_los(&positions);
+    ASSERT(attitude != BEH_FRIENDLY || count > 0);
+
+    if (count == 0)
+        return count;
+
+    for (const stack_iterator &si : positions)
+    {
+        count++;
+
+        if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE_SPORE,
+                                               attitude,
+                                               si->pos,
+                                               MHITNOT,
+                                               MG_FORCE_PLACE,
+                                               GOD_FEDHAS)
+                                            .set_summoned(&you, 0, 0)))
+        {
+            plant->flags |= MF_NO_REWARD;
+
+            if (attitude == BEH_FRIENDLY)
+            {
+                plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+                mons_make_god_gift(*plant, GOD_FEDHAS);
+
+                plant->behaviour = BEH_WANDER;
+                plant->foe = MHITNOT;
+            }
+        }
+
+        if (mons_skeleton(si->mon_type))
+            turn_corpse_into_skeleton(*si);
+        else
+        {
+            item_was_destroyed(*si);
+            destroy_item(si->index());
+        }
+    }
+
+    viewwindow(false);
+
+    return count;
+}
+
+struct monster_conversion
+{
+    monster_type new_type;
+    int piety_cost;
+    int ration_cost;
+};
+
+static const map<monster_type, monster_conversion> conversions =
+{
+    { MONS_PLANT,          { MONS_OKLOB_PLANT, 0, 2 } },
+    { MONS_BUSH,           { MONS_OKLOB_PLANT, 0, 2 } },
+    { MONS_BURNING_BUSH,   { MONS_OKLOB_PLANT, 0, 2 } },
+    { MONS_OKLOB_SAPLING,  { MONS_OKLOB_PLANT, 4, 0 } },
+    { MONS_FUNGUS,         { MONS_WANDERING_MUSHROOM, 3, 0 } },
+    { MONS_TOADSTOOL,      { MONS_WANDERING_MUSHROOM, 3, 0 } },
+    { MONS_BALLISTOMYCETE, { MONS_HYPERACTIVE_BALLISTOMYCETE, 4, 0 } },
+};
+
+bool mons_is_evolvable(const monster* mon)
+{
+    return conversions.count(mon->type) && !mon->has_ench(ENCH_PETRIFIED);
+}
+
+bool fedhas_check_evolve_flora(bool quiet)
+{
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+        if (mons_is_evolvable(*mi))
+            return true;
+
+    if (!quiet)
+        mpr("No evolvable flora in sight.");
+    return false;
+}
+
+static vector<string> _evolution_name(const monster_info& mon)
+{
+    auto conv = map_find(conversions, mon.type);
+    if (conv && !mon.has_trivial_ench(ENCH_PETRIFIED))
+        return { "can evolve into " + mons_type_name(conv->new_type, DESC_A) };
+    else
+        return { "cannot be evolved" };
+}
+
+spret fedhas_evolve_flora(bool fail)
+{
+    dist spelld;
+
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_EVOLVABLE_PLANTS;
+    args.range = LOS_RADIUS;
+    args.needs_path = false;
+    args.self = confirm_prompt_type::cancel;
+    args.show_floor_desc = true;
+    args.top_prompt = "Select plant or fungus to evolve.";
+    args.get_desc_func = _evolution_name;
+
+    direction(spelld, args);
+
+    if (!spelld.isValid)
+    {
+        // Check for user cancel.
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
+
+    monster* const plant = monster_at(spelld.target);
+
+    if (!plant)
+    {
+        if (feat_is_tree(env.grid(spelld.target)))
+            mpr("The tree has already reached the pinnacle of evolution.");
+        else
+            mpr("You must target a plant or fungus.");
+        return spret::abort;
+    }
+
+    if (!mons_is_evolvable(plant))
+    {
+        if (plant->type == MONS_BALLISTOMYCETE_SPORE)
+            mpr("You can evolve only complete plants, not seeds.");
+        else if (!mons_is_plant(*plant))
+            mpr("Only plants or fungi may be evolved.");
+        else if (plant->has_ench(ENCH_PETRIFIED))
+            mpr("Stone cannot grow or evolve.");
+        else
+        {
+            simple_monster_message(*plant, " has already reached the pinnacle"
+                                   " of evolution.");
+        }
+
+        return spret::abort;
+    }
+    auto upgrade_ptr = map_find(conversions, plant->type);
+    ASSERT(upgrade_ptr);
+    monster_conversion upgrade = *upgrade_ptr;
+
+    vector<pair<int, int> > collected_rations;
+    if (upgrade.ration_cost)
+    {
+        const int total_rations = _collect_rations(collected_rations);
+
+        if (total_rations < upgrade.ration_cost)
+        {
+            mpr("Not enough rations available.");
+            return spret::abort;
+        }
+    }
+
+    if (upgrade.piety_cost && upgrade.piety_cost > you.piety)
+    {
+        mpr("Not enough piety available.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    switch (upgrade.new_type)
+    {
+    case MONS_OKLOB_PLANT:
+    {
+        if (plant->type == MONS_OKLOB_SAPLING)
+            simple_monster_message(*plant, " appears stronger.");
+        else
+        {
+            string evolve_desc = " can now spit acid";
+            const int skill = you.skill(SK_INVOCATIONS);
+            if (skill >= 20)
+                evolve_desc += " continuously";
+            else if (skill >= 15)
+                evolve_desc += " quickly";
+            else if (skill >= 10)
+                evolve_desc += " rather quickly";
+            else if (skill >= 5)
+                evolve_desc += " somewhat quickly";
+            evolve_desc += ".";
+
+            simple_monster_message(*plant, evolve_desc.c_str());
+        }
+        break;
+    }
+
+    case MONS_WANDERING_MUSHROOM:
+        simple_monster_message(*plant, " can now pick up its mycelia and move.");
+        break;
+
+    case MONS_HYPERACTIVE_BALLISTOMYCETE:
+        simple_monster_message(*plant, " appears agitated.");
+        env.level_state |= LSTATE_GLOW_MOLD;
+        break;
+
+    default:
+        break;
+    }
+
+    plant->upgrade_type(upgrade.new_type, true, true);
+
+    plant->flags |= MF_NO_REWARD;
+    plant->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+    mons_make_god_gift(*plant, GOD_FEDHAS);
+
+    plant->attitude = ATT_FRIENDLY;
+
+    behaviour_event(plant, ME_ALERT);
+    mons_att_changed(plant);
+
+    // Try to remove slowly dying in case we are upgrading a
+    // toadstool, and spore production in case we are upgrading a
+    // ballistomycete.
+    plant->del_ench(ENCH_SLOWLY_DYING);
+    plant->del_ench(ENCH_SPORE_PRODUCTION);
+
+    if (plant->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+        plant->add_ench(ENCH_EXPLODING);
+    else if (plant->type == MONS_OKLOB_PLANT)
+    {
+        // frequency will be set by set_hit_dice below
+        plant->spells = { { SPELL_SPIT_ACID, 0, MON_SPELL_NATURAL } };
+    }
+
+    plant->set_hit_dice(plant->get_experience_level()
+                        + you.skill_rdiv(SK_INVOCATIONS));
+
+    if (upgrade.ration_cost)
+        _decrease_amount(collected_rations, upgrade.ration_cost);
+
+    if (upgrade.piety_cost)
+    {
+        lose_piety(upgrade.piety_cost);
+        mpr("Your piety has decreased.");
+    }
+
+    return spret::success;
+}
+
 static bool _lugonu_warp_monster(monster& mon, int pow)
 {
     if (coinflip())
@@ -1964,7 +3455,7 @@ static bool _lugonu_warp_monster(monster& mon, int pow)
 
     mon.hurt(&you, 1 + random2(pow / 6));
 
-    if (mon.alive() && !mon.no_tele())
+    if (mon.alive() && !mon.no_tele(true, false))
         mon.blink();
 
     return true;
@@ -1980,20 +3471,14 @@ static void _lugonu_warp_area(int pow)
 void lugonu_bend_space()
 {
     const int pow = 4 + skill_bump(SK_INVOCATIONS);
-    const bool pre_warp = random2(pow) > 9;
-    const bool post_warp = random2(pow) > 9;
+    const bool area_warp = random2(pow) > 9;
 
-    mprf("Space bends %saround you!", pre_warp && post_warp ? "violently " :
-                                      pre_warp || post_warp ? "sharply "
-                                                            : "");
+    mprf("Space bends %saround you!", area_warp ? "sharply " : "");
 
-    if (pre_warp)
+    if (area_warp)
         _lugonu_warp_area(pow);
 
     uncontrolled_blink(true);
-
-    if (post_warp)
-        _lugonu_warp_area(pow);
 }
 
 void cheibriados_time_bend(int pow)
@@ -2044,7 +3529,7 @@ static int _slouch_damage(monster *mon)
 static bool _slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
-    if (mon == nullptr || mon->is_stationary() || mon->cannot_act()
+    if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(*mon))
     {
@@ -2077,7 +3562,7 @@ static int _slouch_monsters(coord_def where)
     return 1;
 }
 
-spret cheibriados_slouch(bool fail)
+bool cheibriados_slouch()
 {
     int count = apply_area_visible(_slouchable, you.pos());
     if (!count)
@@ -2085,20 +3570,18 @@ spret cheibriados_slouch(bool fail)
                    true, 'n'))
         {
             canned_msg(MSG_OK);
-            return spret::abort;
+            return false;
         }
 
-    targeter_radius hitfunc(&you, LOS_DEFAULT);
-    if (stop_attack_prompt(hitfunc, "Slouch", _act_slouchable))
-        return spret::abort;
-
-    fail_check();
+    targeter_los hitfunc(&you, LOS_DEFAULT);
+    if (stop_attack_prompt(hitfunc, "harm", _act_slouchable))
+        return false;
 
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
     apply_area_visible(_slouch_monsters, you.pos());
-    return spret::success;
+    return true;
 }
 
 static void _run_time_step()
@@ -2177,198 +3660,67 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     mpr("You return to the normal time flow.");
 }
 
-struct curse_data
+bool ashenzari_transfer_knowledge()
 {
-    string name;
-    string abbr;
-    vector<skill_type> boosted;
-};
+    if (you.transfer_skill_points > 0 && !ashenzari_end_transfer())
+        return false;
 
-static map<curse_type, curse_data> _ashenzari_curses =
-{
-    { CURSE_MELEE, {
-        "Melee Combat", "Melee",
-        { SK_SHORT_BLADES, SK_LONG_BLADES, SK_AXES, SK_MACES_FLAILS,
-            SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
-    } },
-    { CURSE_RANGED, {
-        "Ranged Combat", "Range",
-        { SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_THROWING },
-    } },
-    { CURSE_ELEMENTS, {
-        "Elements", "Elem",
-        { SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC },
-    } },
-    { CURSE_ALCHEMY, {
-        "Alchemy", "Alch",
-        { SK_POISON_MAGIC, SK_TRANSMUTATIONS },
-    } },
-    { CURSE_COMPANIONS, {
-        "Companions", "Comp",
-        { SK_SUMMONINGS, SK_NECROMANCY },
-    } },
-    { CURSE_BEGUILING, {
-        "Beguiling", "Bglg",
-        { SK_CONJURATIONS, SK_HEXES, SK_TRANSLOCATIONS },
-    } },
-    { CURSE_SELF, {
-        "Introspection", "Self",
-        { SK_FIGHTING, SK_SPELLCASTING },
-    } },
-    { CURSE_FORTITUDE, {
-        "Fortitude", "Fort",
-        { SK_ARMOUR, SK_SHIELDS },
-    } },
-    { CURSE_CUNNING, {
-        "Cunning", "Cun",
-        { SK_DODGING, SK_STEALTH },
-    } },
-    { CURSE_EVOCATIONS, {
-        "Evocations", "Evo",
-        { SK_EVOCATIONS },
-    } },
-};
-
-static bool _can_use_curse(const curse_data& c)
-{
-    for (skill_type sk : c.boosted)
-        if (you.can_currently_train[sk])
-            return true;
-
-    return false;
-}
-
-string curse_name(const CrawlStoreValue& c)
-{
-    return _ashenzari_curses[static_cast<curse_type>(c.get_int())].name;
-}
-
-string curse_abbr(const CrawlStoreValue& curse)
-{
-    const curse_data& c =
-        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
-
-    return c.abbr;
-}
-
-const vector<skill_type>& curse_skills(const CrawlStoreValue& curse)
-{
-    const curse_data& c =
-        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
-
-    return c.boosted;
-}
-
-static string ashenzari_curse_knowledge_list()
-{
-    if (!you_worship(GOD_ASHENZARI))
-        return "";
-
-    const CrawlVector& curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
-
-    return lowercase_string(comma_separated_fn(curses.begin(), curses.end(),
-                              curse_name));
-}
-
-string desc_curse_skills(const CrawlStoreValue& curse)
-{
-    const curse_data& c =
-        _ashenzari_curses[static_cast<curse_type>(curse.get_int())];
-
-    vector<skill_type> trainable;
-
-    for (skill_type sk : c.boosted)
-        if (you.can_currently_train[sk])
-            trainable.push_back(sk);
-
-    return c.name + ": "
-           + comma_separated_fn(trainable.begin(), trainable.end(), skill_name);
-}
-
-/**
- * Choose skills to boost accompanying the current curse.
- */
-static void _choose_curse_knowledge()
-{
-    // This loop choses two available skills without replacement,
-    // it is a two element version of a reservoir sampling algorithm.
-    //
-    // If Ashenzari curses need some fancier weighting this is the
-    // place to do that weighting.
-    curse_type first_choice = NUM_CURSES;
-    curse_type second_choice = NUM_CURSES;
-    int valid_curses = 0;
-    for (auto const& curse : _ashenzari_curses)
+    while (true)
     {
-        if (_can_use_curse(curse.second))
+        skill_menu(SKMF_RESKILL_FROM);
+        if (is_invalid_skill(you.transfer_from_skill))
         {
-            ++valid_curses;
-            if (valid_curses == 1)
-                first_choice = curse.first;
-            else if (valid_curses == 2)
-            {
-                second_choice = curse.first;
-                if (coinflip())
-                    swap(first_choice, second_choice);
-            }
-            else if (one_chance_in(valid_curses))
-                first_choice = curse.first;
-            else if (one_chance_in(valid_curses - 1))
-                second_choice = curse.first;
+            redraw_screen();
+            return false;
         }
+
+        you.transfer_skill_points = skill_transfer_amount(
+                                                    you.transfer_from_skill);
+
+        skill_menu(SKMF_RESKILL_TO);
+        if (is_invalid_skill(you.transfer_to_skill))
+        {
+            you.transfer_from_skill = SK_NONE;
+            you.transfer_skill_points = 0;
+            continue;
+        }
+
+        break;
     }
 
-    you.props.erase(CURSE_KNOWLEDGE_KEY);
-    CrawlVector &curses = you.props[CURSE_KNOWLEDGE_KEY].get_vector();
+    // We reset the view to force view transfer next time.
+    you.skill_menu_view = SKM_NONE;
 
-    if (first_choice != NUM_CURSES)
-        curses.push_back(first_choice);
-    if (second_choice != NUM_CURSES)
-        curses.push_back(second_choice);
+    mprf("As you forget about %s, you feel ready to understand %s.",
+         skill_name(you.transfer_from_skill),
+         skill_name(you.transfer_to_skill));
 
-    // It's not an error for this to be empty, curses are still useful for
-    // piety alone
+    you.transfer_total_skill_points = you.transfer_skill_points;
+
+    redraw_screen();
+    return true;
 }
 
-/**
- * Offer a new curse to the player, letting them know their new curse is
- * available.
- */
-void ashenzari_offer_new_curse()
+bool ashenzari_end_transfer(bool finished, bool force)
 {
-    // No curse at full piety, since shattering resets the curse timer anyway
-    if (piety_rank() > 5)
-        return;
-
-    _choose_curse_knowledge();
-
-    you.props[AVAILABLE_CURSE_KEY] = true;
-    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
-    const string curse_names = ashenzari_curse_knowledge_list();
-    const string offer_string = curse_names.empty() ? "" :
-                                (" of " + curse_names);
-
-    mprf(MSGCH_GOD, "Ashenzari invites you to partake of a vision"
-                    " and a curse%s.", offer_string.c_str());
-}
-
-static void _do_curse_item(item_def &item)
-{
-    mprf("Your %s glows black for a moment.", item.name(DESC_PLAIN).c_str());
-    item.flags |= ISFLAG_CURSED;
-
-    if (you.equip[EQ_WEAPON] == item.link)
+    if (!force && !finished)
     {
-        // Redraw the weapon.
-        you.wield_change = true;
+        mprf("You are currently transferring knowledge from %s to %s.",
+             skill_name(you.transfer_from_skill),
+             skill_name(you.transfer_to_skill));
+        if (!yesno("Are you sure you want to cancel the transfer?", false, 'n'))
+            return false;
     }
 
-    for (auto & curse : you.props[CURSE_KNOWLEDGE_KEY].get_vector())
-    {
-        add_inscription(item,
-                curse_abbr(static_cast<curse_type>(curse.get_int())));
-        item.props[CURSE_KNOWLEDGE_KEY].get_vector().push_back(curse);
-    }
+    mprf("You %s forgetting about %s and learning about %s.",
+         finished ? "have finished" : "stop",
+         skill_name(you.transfer_from_skill),
+         skill_name(you.transfer_to_skill));
+    you.transfer_from_skill = SK_NONE;
+    you.transfer_to_skill = SK_NONE;
+    you.transfer_skill_points = 0;
+    you.transfer_total_skill_points = 0;
+    return true;
 }
 
 /**
@@ -2376,13 +3728,18 @@ static void _do_curse_item(item_def &item)
  *
  * This is the core logic behind Ash's Curse Item ability.
  * Player can abort without penalty.
- * Player can curse only worn items.
+ * Player can curse any cursable item (not just worn ones).
  *
+ * @param num_rc Number of remove curse scrolls available.
  * @return       Whether the player cursed anything.
  */
-bool ashenzari_curse_item()
+bool ashenzari_curse_item(int num_rc)
 {
-    const string prompt_msg = make_stringf("Curse which item? (Esc to abort)");
+    ASSERT(num_rc > 0);
+    const string prompt_msg = make_stringf(
+            "Curse which item? (%d remove curse scroll%s left)"
+            " (Esc to abort)",
+            num_rc, num_rc == 1 ? "" : "s");
     const int item_slot = prompt_invent_item(prompt_msg.c_str(),
                                              menu_type::invlist,
                                              OSEL_CURSABLE, OPER_ANY,
@@ -2398,73 +3755,8 @@ bool ashenzari_curse_item()
         return false;
     }
 
-    _do_curse_item(item);
-    make_ashenzari_randart(item);
-    ash_check_bondage();
-
-    you.props.erase(CURSE_KNOWLEDGE_KEY);
-    you.props.erase(AVAILABLE_CURSE_KEY);
-
-    return true;
-}
-
-/**
- * Give a prompt to uncurse (and destroy an item).
- *
- * Player can abort without penalty.
- *
- * @return      Whether the player uncursed anything.
- */
-bool ashenzari_uncurse_item()
-{
-    int item_slot = prompt_invent_item("Uncurse and destroy which item?",
-                                       menu_type::invlist,
-                                       OSEL_CURSED_WORN, OPER_ANY,
-                                       invprompt_flag::escape_only);
-    if (prompt_failed(item_slot))
-        return false;
-
-    item_def& item(you.inv[item_slot]);
-
-    if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
-        && you.equip[EQ_RING_AMULET] != -1)
-    {
-        mprf(MSGCH_PROMPT, "You must shatter the curse binding the ring to "
-                           "the amulet's finger first!");
-        return false;
-    }
-
-    if (item_is_melded(item))
-    {
-        mprf(MSGCH_PROMPT, "You cannot shatter the curse on %s while it is "
-                           "melded with your body!",
-             item.name(DESC_THE).c_str());
-        return false;
-    }
-
-    if (!yesno(make_stringf("Really remove and destroy %s?%s",
-                            item.name(DESC_THE).c_str(),
-                            you.props.exists(AVAILABLE_CURSE_KEY) ?
-                                " Ashenzari will withdraw the offered vision "
-                                "and curse!"
-                                : "").c_str(),
-                            false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    mprf("You shatter the curse binding %s!", item.name(DESC_THE).c_str());
-    unequip_item(item_equip_slot(you.inv[item_slot]));
-    ash_check_bondage();
-
-    you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 0;
-    if (you.props.exists(AVAILABLE_CURSE_KEY))
-    {
-        simple_god_message(" withdraws the vision and curse.");
-        you.props.erase(AVAILABLE_CURSE_KEY);
-    }
-
+    do_curse_item(item, false);
+    learned_something_new(HINT_YOU_CURSED);
     return true;
 }
 
@@ -2546,7 +3838,7 @@ void spare_beogh_convert()
     }
 }
 
-spret dithmenos_shadow_step(bool fail)
+bool dithmenos_shadow_step()
 {
     // You can shadow-step anywhere within your umbra.
     ASSERT(you.umbra_radius() > -1);
@@ -2564,10 +3856,7 @@ spret dithmenos_shadow_step(bool fail)
     dist sdirect;
     direction(sdirect, args);
     if (!sdirect.isValid || tgt.landing_site.origin())
-    {
-        canned_msg(MSG_OK);
-        return spret::abort;
-    }
+        return false;
 
     // Check for hazards.
     bool zot_trap_prompted = false,
@@ -2581,8 +3870,7 @@ spret dithmenos_shadow_step(bool fail)
         if (!cloud_prompted
             && !check_moveto_cloud(site, "shadow step", &cloud_prompted))
         {
-            canned_msg(MSG_OK);
-            return spret::abort;
+            return false;
         }
 
         if (!zot_trap_prompted)
@@ -2593,8 +3881,8 @@ spret dithmenos_shadow_step(bool fail)
                 if (!check_moveto_trap(site, "shadow step",
                                        &trap_prompted))
                 {
-                    canned_msg(MSG_OK);
-                    return spret::abort;
+                    you.turn_is_over = false;
+                    return false;
                 }
                 zot_trap_prompted = true;
             }
@@ -2602,8 +3890,8 @@ spret dithmenos_shadow_step(bool fail)
                      && !check_moveto_trap(site, "shadow step",
                                            &trap_prompted))
             {
-                canned_msg(MSG_OK);
-                return spret::abort;
+                you.turn_is_over = false;
+                return false;
             }
         }
 
@@ -2611,20 +3899,16 @@ spret dithmenos_shadow_step(bool fail)
             && !check_moveto_exclusion(site, "shadow step",
                                        &exclusion_prompted))
         {
-            canned_msg(MSG_OK);
-            return spret::abort;
+            return false;
         }
 
         if (!terrain_prompted
             && !check_moveto_terrain(site, "shadow step", "",
                                      &terrain_prompted))
         {
-            canned_msg(MSG_OK);
-            return spret::abort;
+            return false;
         }
     }
-
-    fail_check();
 
     const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
@@ -2632,7 +3916,7 @@ spret dithmenos_shadow_step(bool fail)
     if (!you.move_to_pos(tgt.landing_site))
     {
         mpr("Something blocks your shadow step.");
-        return spret::success;
+        return true;
     }
 
     const actor *victim = actor_at(sdirect.target);
@@ -2640,40 +3924,43 @@ spret dithmenos_shadow_step(bool fail)
          apostrophise(victim->name(DESC_THE)).c_str());
     // Using 'stepped = true' here because it's Shadow *Step*.
     // This helps to evade splash upon landing on water.
-    moveto_location_effects(env.grid(old_pos), true, old_pos);
+    moveto_location_effects(grd(old_pos), true, old_pos);
 
-    return spret::success;
+    return true;
 }
 
 static potion_type _gozag_potion_list[][4] =
 {
     { POT_HEAL_WOUNDS, NUM_POTIONS, NUM_POTIONS, NUM_POTIONS },
     { POT_HEAL_WOUNDS, POT_CURING, NUM_POTIONS, NUM_POTIONS },
-    { POT_HEAL_WOUNDS, POT_MAGIC, NUM_POTIONS, NUM_POTIONS },
+    { POT_HEAL_WOUNDS, POT_MAGIC, NUM_POTIONS, NUM_POTIONS, },
     { POT_CURING, POT_MAGIC, NUM_POTIONS, NUM_POTIONS },
     { POT_HEAL_WOUNDS, POT_BERSERK_RAGE, NUM_POTIONS, NUM_POTIONS },
-    { POT_HASTE, NUM_POTIONS, NUM_POTIONS, NUM_POTIONS },
     { POT_HASTE, POT_HEAL_WOUNDS, NUM_POTIONS, NUM_POTIONS },
     { POT_HASTE, POT_BRILLIANCE, NUM_POTIONS, NUM_POTIONS },
+    { POT_HASTE, POT_AGILITY, NUM_POTIONS, NUM_POTIONS },
+    { POT_MIGHT, POT_AGILITY, NUM_POTIONS, NUM_POTIONS },
+    { POT_HASTE, POT_FLIGHT, NUM_POTIONS, NUM_POTIONS },
     { POT_HASTE, POT_RESISTANCE, NUM_POTIONS, NUM_POTIONS },
-    { POT_BRILLIANCE, POT_MAGIC, NUM_POTIONS, NUM_POTIONS },
-    { POT_INVISIBILITY, POT_MIGHT, NUM_POTIONS, NUM_POTIONS },
+    { POT_RESISTANCE, POT_AGILITY, NUM_POTIONS, NUM_POTIONS },
+    { POT_RESISTANCE, POT_FLIGHT, NUM_POTIONS, NUM_POTIONS },
+    { POT_INVISIBILITY, POT_AGILITY, NUM_POTIONS , NUM_POTIONS },
     { POT_HEAL_WOUNDS, POT_CURING, POT_MAGIC, NUM_POTIONS },
     { POT_HEAL_WOUNDS, POT_CURING, POT_BERSERK_RAGE, NUM_POTIONS },
-    { POT_MIGHT, POT_BRILLIANCE, NUM_POTIONS, NUM_POTIONS },
-    { POT_RESISTANCE, NUM_POTIONS, NUM_POTIONS, NUM_POTIONS },
-    { POT_RESISTANCE, POT_MIGHT, NUM_POTIONS, NUM_POTIONS },
+    { POT_HEAL_WOUNDS, POT_HASTE, POT_AGILITY, NUM_POTIONS },
+    { POT_MIGHT, POT_AGILITY, POT_BRILLIANCE, NUM_POTIONS },
+    { POT_HASTE, POT_AGILITY, POT_FLIGHT, NUM_POTIONS },
+    { POT_FLIGHT, POT_AGILITY, POT_INVISIBILITY, NUM_POTIONS },
+    { POT_RESISTANCE, POT_MIGHT, POT_AGILITY, NUM_POTIONS },
     { POT_RESISTANCE, POT_MIGHT, POT_HASTE, NUM_POTIONS },
-    { POT_RESISTANCE, POT_INVISIBILITY, NUM_POTIONS, NUM_POTIONS },
-    { POT_LIGNIFY, POT_MIGHT, POT_RESISTANCE, NUM_POTIONS },
+    { POT_RESISTANCE, POT_INVISIBILITY, POT_AGILITY, NUM_POTIONS },
 };
 
 static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 {
     for (; *which != NUM_POTIONS; which++)
     {
-        // Check cases where a potion is permanently useless to the player
-        // species - temporarily useless potions can still be offered.
+        // Even god powers cannot override racial berserk/haste restrictions.
         if (*which == POT_BERSERK_RAGE
             && !you.can_go_berserk(true, false, true, nullptr, false))
         {
@@ -2681,11 +3968,6 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
         }
         if (*which == POT_HASTE && you.stasis())
             continue;
-        if (*which == POT_MAGIC && you.has_mutation(MUT_HP_CASTING))
-            continue;
-        if (*which == POT_LIGNIFY && you.undead_state(false) == US_UNDEAD)
-            continue;
-
         // Don't add potions which are already in the list
         bool dup = false;
         for (unsigned int i = 0; i < vec.size(); i++)
@@ -2701,14 +3983,23 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 
 #define ADD_POTIONS(a,b) _gozag_add_potions(a, b[random2(ARRAYSZ(b))])
 
+int gozag_potion_price()
+{
+    if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
+        return 0;
+
+    return GOZAG_POTION_PETITION_AMOUNT;
+}
+
 bool gozag_setup_potion_petition(bool quiet)
 {
-    if (you.gold < GOZAG_POTION_PETITION_AMOUNT)
+    const int gold_min = gozag_potion_price();
+    if (you.gold < gold_min)
     {
         if (!quiet)
         {
             mprf("You need at least %d gold to purchase potions right now!",
-                 GOZAG_POTION_PETITION_AMOUNT);
+                 gold_min);
         }
         return false;
     }
@@ -2733,20 +4024,19 @@ bool gozag_potion_petition()
             for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
             {
                 prices[i] = 0;
-                const int multiplier = random_range(20, 30); // arbitrary
+                int multiplier = random_range(20, 30); // arbitrary
+
+                if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
+                    multiplier = 0;
 
                 string key = make_stringf(GOZAG_POTIONS_KEY, i);
                 you.props.erase(key);
                 you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
                 pots[i] = &you.props[key].get_vector();
 
-                do
-                {
+                ADD_POTIONS(*pots[i], _gozag_potion_list);
+                if (coinflip())
                     ADD_POTIONS(*pots[i], _gozag_potion_list);
-                    if (coinflip())
-                        ADD_POTIONS(*pots[i], _gozag_potion_list);
-                }
-                while (pots[i]->empty());
 
                 for (const CrawlStoreValue& store : *pots[i])
                 {
@@ -2762,7 +4052,7 @@ bool gozag_potion_petition()
                 key = make_stringf(GOZAG_PRICE_KEY, i);
                 you.props[key].get_int() = prices[i];
 
-                if (prices[i] <= GOZAG_POTION_PETITION_AMOUNT)
+                if (prices[i] <= gozag_potion_price())
                     affordable_potions = true;
             }
         }
@@ -2818,6 +4108,9 @@ bool gozag_potion_petition()
     for (auto pot : *pots[keyin])
         potionlike_effect(static_cast<potion_type>(pot.get_int()), 40);
 
+    if (!you.attribute[ATTR_GOZAG_FIRST_POTION])
+        you.attribute[ATTR_GOZAG_FIRST_POTION] = 1;
+
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
         string key = make_stringf(GOZAG_POTIONS_KEY, i);
@@ -2827,6 +4120,19 @@ bool gozag_potion_petition()
     }
 
     return true;
+}
+
+/**
+ * How many shop types are offered with each use of Call Merchant?
+ */
+static int _gozag_max_shops()
+{
+    const int max_non_food_shops = 3;
+
+    // add a food shop if you can eat (non-mu/dj)
+    if (!you_foodless(false))
+        return max_non_food_shops + 1;
+    return max_non_food_shops;
 }
 
 /**
@@ -2867,7 +4173,7 @@ bool gozag_setup_call_merchant(bool quiet)
             return false;
         }
     }
-    if (env.grid(you.pos()) != DNGN_FLOOR)
+    if (grd(you.pos()) != DNGN_FLOOR)
     {
         if (!quiet)
         {
@@ -2884,7 +4190,7 @@ bool gozag_setup_call_merchant(bool quiet)
  */
 static bool _gozag_valid_shop_index(int index)
 {
-    return index >= 0 && index < GOZAG_MAX_SHOPS;
+    return index >= 0 && index < _gozag_max_shops();
 }
 
 /**
@@ -2922,10 +4228,15 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
     ASSERT(!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)));
 
     shop_type type = NUM_SHOPS;
-    int choice = random2(valid_shops.size());
-    type = valid_shops[choice];
-    // Don't choose this shop type again for this merchant call.
-    valid_shops.erase(valid_shops.begin() + choice);
+    if (index == 0 && !you_foodless(false))
+        type = SHOP_FOOD;
+    else
+    {
+        int choice = random2(valid_shops.size());
+        type = valid_shops[choice];
+        // Don't choose this shop type again for this merchant call.
+        valid_shops.erase(valid_shops.begin() + choice);
+    }
     you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, index)].get_int() = type;
 
     you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, index)].get_string()
@@ -2945,6 +4256,26 @@ static void _setup_gozag_shop(int index, vector<shop_type> &valid_shops)
 }
 
 /**
+ * If Gozag's version of a given shop type has a special name, what is it?
+ *
+ * @param type      The type of shop in question.
+ * @return          A special name for the shop (replacing its type-name) if
+ *                  appropriate, or an empty string otherwise.
+ */
+static string _gozag_special_shop_name(shop_type type)
+{
+    if (type == SHOP_FOOD)
+    {
+        if (you.species == SP_VAMPIRE)
+            return "Blood";
+        else if (you.species == SP_GHOUL)
+            return "Carrion"; // yum!
+    }
+
+    return "";
+}
+
+/**
  * Build a string describing the name, price & type of the shop being offered
  * at the given index.
  *
@@ -2961,7 +4292,10 @@ static string _describe_gozag_shop(int index)
         apostrophise(you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY,
                                             index)].get_string());
     const shop_type type = _gozag_shop_type(index);
-    const string type_name = shop_type_name(type);
+    const string special_name = _gozag_special_shop_name(type);
+    const string type_name = !special_name.empty() ?
+                                special_name :
+                                shop_type_name(type);
     const string suffix =
         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, index)].get_string();
 
@@ -2985,12 +4319,12 @@ static int _gozag_choose_shop()
         return -1;
 
     clear_messages();
-    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
+    for (int i = 0; i < _gozag_max_shops(); i++)
         mpr_nojoin(MSGCH_PLAIN, _describe_gozag_shop(i).c_str());
 
     mprf(MSGCH_PROMPT, "Fund which merchant?");
     const int shop_index = toalower(get_ch()) - 'a';
-    if (shop_index < 0 || shop_index > GOZAG_MAX_SHOPS - 1)
+    if (shop_index < 0 || shop_index > _gozag_max_shops() - 1)
         return _gozag_choose_shop(); // tail recurse
 
     if (you.gold < _gozag_shop_price(shop_index))
@@ -3019,10 +4353,15 @@ static string _gozag_shop_spec(int index)
     if (!suffix.empty())
         suffix = " suffix:" + suffix;
 
-    return make_stringf("%s shop name:%s%s gozag",
+    string spec_type = _gozag_special_shop_name(type);
+    if (!spec_type.empty())
+        spec_type = " type:" + spec_type;
+
+    return make_stringf("%s shop name:%s%s%s gozag",
                         shoptype_to_str(type),
                         replace_all(name, " ", "_").c_str(),
-                        suffix.c_str());
+                        suffix.c_str(),
+                        spec_type.c_str());
 
 }
 
@@ -3033,7 +4372,7 @@ static string _gozag_shop_spec(int index)
  */
 static void _gozag_place_shop(int index)
 {
-    ASSERT(env.grid(you.pos()) == DNGN_FLOOR);
+    ASSERT(grd(you.pos()) == DNGN_FLOOR);
     keyed_mapspec kmspec;
     kmspec.set_feat(_gozag_shop_spec(index), false);
 
@@ -3050,7 +4389,7 @@ static void _gozag_place_shop(int index)
     ASSERT(shop);
 
     const gender_type gender = random_choose(GENDER_FEMALE, GENDER_MALE,
-                                             GENDER_NEUTRAL);
+                                             GENDER_NEUTER);
 
     mprf(MSGCH_GOD, "%s invites you to visit %s %s%s%s.",
                     shop->shop_name.c_str(),
@@ -3067,21 +4406,19 @@ bool gozag_call_merchant()
     for (int i = 0; i < NUM_SHOPS; i++)
     {
         shop_type type = static_cast<shop_type>(i);
-#if TAG_MAJOR_VERSION == 34
-        if (type == SHOP_FOOD || type == SHOP_EVOKABLES)
+        // if they are useful to the player, food shops are handled through the
+        // first index.
+        if (type == SHOP_FOOD)
             continue;
-#endif
-        if (type == SHOP_DISTILLERY && you.has_mutation(MUT_NO_DRINK))
+        if (type == SHOP_DISTILLERY && you.species == SP_MUMMY)
             continue;
-
-        if (you.has_mutation(MUT_NO_ARMOUR) &&
+        if (type == SHOP_EVOKABLES && you.get_mutation_level(MUT_NO_ARTIFICE))
+            continue;
+        if (you.species == SP_FELID &&
             (type == SHOP_ARMOUR
-             || type == SHOP_ARMOUR_ANTIQUE))
-        {
-            continue;
-        }
-        if ((type == SHOP_WEAPON || type == SHOP_WEAPON_ANTIQUE)
-            && you.has_mutation(MUT_NO_GRASPING))
+             || type == SHOP_ARMOUR_ANTIQUE
+             || type == SHOP_WEAPON
+             || type == SHOP_WEAPON_ANTIQUE))
         {
             continue;
         }
@@ -3091,7 +4428,7 @@ bool gozag_call_merchant()
     // Set up some dummy shops.
     // Generate some shop inventory and store it as a store spec.
     // We still set up the shops in advance in case of hups.
-    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
+    for (int i = 0; i < _gozag_max_shops(); i++)
         if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)))
             _setup_gozag_shop(i, valid_shops);
 
@@ -3099,7 +4436,7 @@ bool gozag_call_merchant()
     if (shop_index == -1) // hup!
         return false;
 
-    ASSERT(shop_index >= 0 && shop_index < GOZAG_MAX_SHOPS);
+    ASSERT(shop_index >= 0 && shop_index < _gozag_max_shops());
 
     const int cost = _gozag_shop_price(shop_index);
     ASSERT(you.gold >= cost);
@@ -3112,7 +4449,7 @@ bool gozag_call_merchant()
     you.attribute[ATTR_GOZAG_SHOPS]++;
     you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
 
-    for (int j = 0; j < GOZAG_MAX_SHOPS; j++)
+    for (int j = 0; j < _gozag_max_shops(); j++)
     {
         you.props.erase(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, j));
         you.props.erase(make_stringf(GOZAG_SHOP_TYPE_KEY, j));
@@ -3208,10 +4545,10 @@ bool gozag_check_bribe_branch(bool quiet)
     }
     branch_type branch = you.where_are_you;
     branch_type branch2 = NUM_BRANCHES;
-    if (feat_is_branch_entrance(env.grid(you.pos())))
+    if (feat_is_branch_entrance(grd(you.pos())))
     {
         for (branch_iterator it; it; ++it)
-            if (it->entry_stairs == env.grid(you.pos())
+            if (it->entry_stairs == grd(you.pos())
                 && gozag_branch_bribable(it->id))
             {
                 branch2 = it->id;
@@ -3246,10 +4583,10 @@ bool gozag_bribe_branch()
     ASSERT(you.gold >= bribe_amount);
     bool prompted = false;
     branch_type branch = gozag_fixup_branch(you.where_are_you);
-    if (feat_is_branch_entrance(env.grid(you.pos())))
+    if (feat_is_branch_entrance(grd(you.pos())))
     {
         for (branch_iterator it; it; ++it)
-            if (it->entry_stairs == env.grid(you.pos())
+            if (it->entry_stairs == grd(you.pos())
                 && gozag_branch_bribable(it->id))
             {
                 branch_type stair_branch = gozag_fixup_branch(it->id);
@@ -3307,7 +4644,7 @@ static int _upheaval_radius(int pow)
     return pow >= 100 ? 2 : 1;
 }
 
-spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_target)
+spret qazlal_upheaval(coord_def target, bool quiet, bool fail)
 {
     int pow = you.skill(SK_INVOCATIONS, 6);
     const int max_radius = _upheaval_radius(pow);
@@ -3325,13 +4662,11 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
 #ifdef USE_TILE
     beam.tile_beam = -1;
 #endif
+    beam.draw_delay  = 0;
 
     if (target.origin())
     {
-        dist target_local;
-        if (!player_target)
-            player_target = &target_local;
-
+        dist spd;
         targeter_smite tgt(&you, LOS_RADIUS, 0, max_radius);
         direction_chooser_args args;
         args.restricts = DIR_TARGET;
@@ -3340,13 +4675,13 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         args.top_prompt = "Aiming: <white>Upheaval</white>";
         args.self = confirm_prompt_type::cancel;
         args.hitfunc = &tgt;
-        if (!spell_direction(*player_target, beam, &args))
+        if (!spell_direction(spd, beam, &args))
             return spret::abort;
 
         if (cell_is_solid(beam.target))
         {
             mprf("There is %s there.",
-                 article_a(feat_type_name(env.grid(beam.target))).c_str());
+                 article_a(feat_type_name(grd(beam.target))).c_str());
             return spret::abort;
         }
 
@@ -3415,35 +4750,27 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         if (!adj && max_radius > 1)
             chance -= 100;
         if (adj && max_radius > 1 || x_chance_in_y(chance, 100))
-           affected.push_back(*ri);
+        {
+            if (beam.flavour == BEAM_FRAG || !cell_is_solid(*ri))
+                affected.push_back(*ri);
+        }
+    }
+
+    for (coord_def pos : affected)
+    {
+        beam.draw(pos);
+        if (!quiet)
+            scaled_delay(25);
     }
     if (!quiet)
-        shuffle_array(affected);
-
-    // for `quiet` calls (i.e. disaster area), don't delay for individual tiles
-    // at all -- do the delay per upheaval draw. This will also fully suppress
-    // the redraw per tile.
-    beam.draw_delay = quiet ? 0 : 25;
-    for (coord_def pos : affected)
-        beam.draw(pos, false);
-
-    if (quiet)
     {
-        // When `quiet`, refresh the view after each complete draw pass.
-        // why this call dance to refresh? I just copied it from bolt::draw
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50); // add some delay per upheaval draw, otherwise it all
-                          // goes by too fast.
-    }
-    else
-    {
-        scaled_delay(200); // This is here to make it easy for the player to
-                           // see the overall impact of the upheaval
+        scaled_delay(100);
         mprf(MSGCH_GOD, "%s", message.c_str());
     }
+    else
+        scaled_delay(25);
 
-    beam.animate = false; // already drawn
+    int wall_count = 0;
 
     for (coord_def pos : affected)
     {
@@ -3454,7 +4781,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         switch (beam.flavour)
         {
             case BEAM_LAVA:
-                if (env.grid(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
+                if (grd(pos) == DNGN_FLOOR && !actor_at(pos) && coinflip())
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
@@ -3470,30 +4797,46 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
                                 &you);
                 }
                 break;
+            case BEAM_FRAG:
+                if (((grd(pos) == DNGN_ROCK_WALL
+                     || grd(pos) == DNGN_CLEAR_ROCK_WALL
+                     || grd(pos) == DNGN_SLIMY_WALL)
+                     && x_chance_in_y(pow / 4, 100)
+                    || feat_is_door(grd(pos))
+                    || grd(pos) == DNGN_GRATE))
+                {
+                    noisy(30, pos);
+                    destroy_wall(pos);
+                    wall_count++;
+                }
+                break;
             default:
                 break;
         }
     }
 
+    if (wall_count && !quiet)
+        mpr("Ka-crash!");
+
     return spret::success;
 }
 
-static const map<cloud_type, monster_type> elemental_clouds = {
-    { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
-    { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
-    { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
-    { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
-    { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
-    { CLOUD_PETRIFY,        MONS_EARTH_ELEMENTAL },
-    { CLOUD_BLACK_SMOKE,    MONS_AIR_ELEMENTAL },
-    { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
-    { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
-    { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
-    { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
-};
-
-vector<coord_def> find_elemental_targets()
+spret qazlal_elemental_force(bool fail)
 {
+    static const map<cloud_type, monster_type> elemental_clouds = {
+        { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
+        { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
+        { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
+        { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
+        { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
+        { CLOUD_PETRIFY,        MONS_EARTH_ELEMENTAL },
+        { CLOUD_BLACK_SMOKE,    MONS_AIR_ELEMENTAL },
+        { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
+        { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
+        { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
+        { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
+    };
+
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
     {
@@ -3506,12 +4849,6 @@ vector<coord_def> find_elemental_targets()
             targets.push_back(*ri);
     }
 
-    return targets;
-}
-
-spret qazlal_elemental_force(bool fail)
-{
-    vector<coord_def> targets = find_elemental_targets();
     if (targets.empty())
     {
         mpr("You can't see any clouds you can empower.");
@@ -3556,7 +4893,7 @@ spret qazlal_elemental_force(bool fail)
     return spret::success;
 }
 
-spret qazlal_disaster_area(bool fail)
+bool qazlal_disaster_area()
 {
     bool friendlies = false;
     vector<coord_def> targets;
@@ -3593,7 +4930,7 @@ spret qazlal_disaster_area(bool fail)
     if (targets.empty())
     {
         mpr("There isn't enough space here!");
-        return spret::abort;
+        return false;
     }
 
     if (friendlies
@@ -3601,10 +4938,8 @@ spret qazlal_disaster_area(bool fail)
                   "them?", true, 'n'))
     {
         canned_msg(MSG_OK);
-        return spret::abort;
+        return false;
     }
-
-    fail_check();
 
     mprf(MSGCH_GOD, "Nature churns violently around you!");
 
@@ -3627,9 +4962,9 @@ spret qazlal_disaster_area(bool fail)
         targets.erase(targets.begin() + which);
         weights.erase(weights.begin() + which);
     }
-    scaled_delay(200);
+    scaled_delay(100);
 
-    return spret::success;
+    return true;
 }
 
 static map<ability_type, const sacrifice_def *> sacrifice_data_map;
@@ -3649,8 +4984,7 @@ static const sacrifice_def &_get_sacrifice_def(ability_type sac)
     return *sacrifice_data_map[sac];
 }
 
-/// A map between sacrifice_def.sacrifice_vector strings & possible mut lists.
-/// Abilities that map to a single mutation are not here!
+/// A map between sacrifice_def.sacrifice_vector strings & possible mut lists
 static map<const char*, vector<mutation_type>> sacrifice_vector_map =
 {
     /// Mutations granted by ABIL_RU_SACRIFICE_HEALTH
@@ -3662,8 +4996,8 @@ static map<const char*, vector<mutation_type>> sacrifice_vector_map =
     /// Mutations granted by ABIL_RU_SACRIFICE_ESSENCE
     { ESSENCE_SAC_KEY, {
         MUT_ANTI_WIZARDRY,
-        MUT_WEAK_WILLED,
-        MUT_WEAK_WILLED,
+        MUT_MAGICAL_VULNERABILITY,
+        MUT_MAGICAL_VULNERABILITY,
         MUT_LOW_MAGIC,
     }},
     /// Mutations granted by ABIL_RU_SACRIFICE_PURITY
@@ -3680,8 +5014,8 @@ static map<const char*, vector<mutation_type>> sacrifice_vector_map =
 /// School-disabling mutations that will be painful for most characters.
 static const vector<mutation_type> _major_arcane_sacrifices =
 {
+    MUT_NO_CHARM_MAGIC,
     MUT_NO_CONJURATION_MAGIC,
-    MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_SUMMONING_MAGIC,
     MUT_NO_TRANSLOCATION_MAGIC,
 };
@@ -3690,6 +5024,7 @@ static const vector<mutation_type> _major_arcane_sacrifices =
 static const vector<mutation_type> _moderate_arcane_sacrifices =
 {
     MUT_NO_TRANSMUTATION_MAGIC,
+    MUT_NO_NECROMANCY_MAGIC,
     MUT_NO_HEXES_MAGIC,
 };
 
@@ -3711,61 +5046,10 @@ static const vector<mutation_type> _arcane_sacrifice_lists[] =
     _major_arcane_sacrifices,
 };
 
-// this function is for checks that can be done with the mutation_type alone.
-static bool _sac_mut_maybe_valid(mutation_type mut)
-{
-    // can't give the player this if they're already at max
-    if (you.get_mutation_level(mut) >= mutation_max_levels(mut))
-        return false;
-
-    // can't give the player this if they have an innate mut that conflicts
-    if (mut_check_conflict(mut, true))
-        return false;
-
-    // Don't offer sacrifices of skills that a player already can't use.
-    if (!can_sacrifice_skill(mut))
-        return false;
-
-    // Special case a few weird interactions:
-
-    // Don't offer to sacrifice summoning magic when already hated by all.
-    if (mut == MUT_NO_SUMMONING_MAGIC
-        && you.get_mutation_level(MUT_NO_LOVE))
-    {
-        return false;
-    }
-
-    // Vampires can't get inhibited regeneration for some reason related
-    // to their existing regen silliness.
-    // Neither can deep dwarf, for obvious reasons.
-    if (mut == MUT_INHIBITED_REGENERATION
-        && you.has_mutation(MUT_VAMPIRISM))
-    {
-        return false;
-    }
-
-    // demonspawn can't get frail if they have a robust facet
-    if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
-        && any_of(begin(you.demonic_traits), end(you.demonic_traits),
-                  [] (player::demon_trait t)
-                  { return t.mutation == MUT_ROBUST; }))
-    {
-        return false;
-    }
-
-    // No potion heal doesn't affect mummies since they can't quaff potions
-    if (mut == MUT_NO_POTION_HEAL && you.has_mutation(MUT_NO_DRINK))
-        return false;
-
-    return true;
-}
-
 /**
  * Choose a random mutation from the given list, only including those that are
  * valid choices for a Ru sacrifice. (Not already at the max level, not
  * conflicting with an innate mut.)
- * N.b. this is *only* used for choosing among the sublists for sac health,
- * essence, and purity.
  *
  * @param muts      The list of possible sacrifice mutations.
  * @return          A mutation from the list, or MUT_NON_MUTATION if no valid
@@ -3777,8 +5061,35 @@ static mutation_type _random_valid_sacrifice(const vector<mutation_type> &muts)
     mutation_type chosen_sacrifice = MUT_NON_MUTATION;
     for (auto mut : muts)
     {
-        if (!_sac_mut_maybe_valid(mut))
+        // can't give the player this if they're already at max
+        if (you.get_mutation_level(mut) >= mutation_max_levels(mut))
             continue;
+
+        // can't give the player this if they have an innate mut that conflicts
+        if (mut_check_conflict(mut, true))
+            continue;
+
+        // Special case a few weird interactions:
+
+        // Vampires can't get inhibited regeneration for some reason related
+        // to their existing regen silliness.
+        // Neither can deep dwarf, for obvious reasons.
+        if (mut == MUT_INHIBITED_REGENERATION && you.species == SP_VAMPIRE)
+            continue;
+
+        // demonspawn can't get frail if they have a robust facet
+        if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
+            && any_of(begin(you.demonic_traits), end(you.demonic_traits),
+                      [] (player::demon_trait t)
+                      { return t.mutation == MUT_ROBUST; }))
+        {
+            continue;
+        }
+
+        // No potion heal doesn't affect mummies since they can't quaff potions
+        if (mut == MUT_NO_POTION_HEAL && you.species == SP_MUMMY)
+            continue;
+
         // The Grunt Algorithm
         // (choose a random element from a set of unknown size without building
         // an explicit list, by giving each one a chance to be chosen equal to
@@ -3825,7 +5136,7 @@ static void _choose_arcana_mutations()
         = you.props[ARCANA_SAC_KEY].get_vector();
     ASSERT(current_arcane_sacrifices.empty());
 
-    for (const vector<mutation_type> &arcane_sacrifice_list :
+    for (const vector<mutation_type> arcane_sacrifice_list :
                                     _arcane_sacrifice_lists)
     {
         const mutation_type sacrifice =
@@ -3845,7 +5156,7 @@ static void _choose_arcana_mutations()
  */
 static bool _player_sacrificed_arcana()
 {
-    for (const vector<mutation_type> &arcane_sacrifice_list :
+    for (const vector<mutation_type> arcane_sacrifice_list :
                                     _arcane_sacrifice_lists)
     {
         for (mutation_type sacrifice : arcane_sacrifice_list)
@@ -3865,16 +5176,12 @@ static bool _player_sacrificed_arcana()
  */
 static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
 {
-    // for sacrifices other than health, essence, and arcana there is a
-    // deterministic mapping between the sacrifice_def and a mutation_type.
     if (sacrifice.mutation != MUT_NON_MUTATION
-        && !_sac_mut_maybe_valid(sacrifice.mutation))
+        && you.get_mutation_level(sacrifice.mutation))
     {
         return false;
     }
 
-    // For health, essence, and arcana, we still need to choose from the
-    // sublists in sacrifice_vector_map.
     if (sacrifice.sacrifice_vector)
     {
         const char* key = sacrifice.sacrifice_vector;
@@ -3888,7 +5195,6 @@ static bool _sacrifice_is_possible(sacrifice_def &sacrifice)
             return false;
     }
 
-    // finally, sacrifices may have custom validity checks.
     if (sacrifice.valid != nullptr && !sacrifice.valid())
         return false;
 
@@ -3935,21 +5241,18 @@ static const char* _arcane_mutation_to_school_name(mutation_type mutation)
  */
 static const char* _arcane_mutation_to_school_abbr(mutation_type mutation)
 {
-    return skill_abbr(arcane_mutation_to_skill(mutation));
+    // XXX: this does a really silly dance back and forth between school &
+    // spelltype.
+    const auto school = skill2spell_type(arcane_mutation_to_skill(mutation));
+    return spelltype_short_name(school);
 }
 
 static int _piety_for_skill(skill_type skill)
 {
     // Gnolls didn't have a choice about training the skill, so don't give
     // them more piety for waiting longer before taking the sacrifice.
-    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+    if (you.species == SP_GNOLL)
         return 0;
-
-    // This should be mostly redundant with other checks, but it's a useful
-    // sanitizer
-    if (is_useless_skill(skill))
-        return 0;
-
     return skill_exp_needed(you.skills[skill], skill, you.species) / 500;
 }
 
@@ -3962,10 +5265,10 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     if (sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
         // No one-handed staves for small races.
-        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             piety_gain += _piety_for_skill(SK_STAVES);
         // No one-handed bows.
-        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
+        if (you.species != SP_FORMICID)
             piety_gain += _piety_for_skill(SK_BOWS);
     }
     return piety_gain;
@@ -3985,11 +5288,11 @@ static int _get_stat_piety(stat_type input_stat, int multiplier)
 {
     int stat_val = 3; // If this is your highest stat.
     if (you.base_stats[STAT_INT] > you.base_stats[input_stat])
-        stat_val -= 1;
+            stat_val -= 1;
     if (you.base_stats[STAT_STR] > you.base_stats[input_stat])
-        stat_val -= 1;
+            stat_val -= 1;
     if (you.base_stats[STAT_DEX] > you.base_stats[input_stat])
-        stat_val -= 1;
+            stat_val -= 1;
     return stat_val * multiplier;
 }
 
@@ -4047,13 +5350,13 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             if (mut == MUT_LOW_MAGIC)
             {
                 piety_gain += 10 + max(you.skill_rdiv(SK_INVOCATIONS, 1, 2),
-                                       you.skill_rdiv(SK_SPELLCASTING, 1, 2));
+                                       max( you.skill_rdiv(SK_SPELLCASTING, 1, 2),
+                                            you.skill_rdiv(SK_EVOCATIONS, 1, 2)));
             }
-            else if (mut == MUT_WEAK_WILLED)
-                piety_gain += 38;
+            else if (mut == MUT_MAGICAL_VULNERABILITY)
+                piety_gain += 28;
             else
-                piety_gain += 2 + _get_stat_piety(STAT_INT, 6)
-                                + you.skill_rdiv(SK_SPELLCASTING, 1, 2);
+                piety_gain += 2 + _get_stat_piety(STAT_INT, 6);
             break;
         case ABIL_RU_SACRIFICE_PURITY:
             if (mut == MUT_WEAK || mut == MUT_DOPEY || mut == MUT_CLUMSY)
@@ -4081,26 +5384,11 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             if (you.get_mutation_level(MUT_NO_LOVE))
                 piety_gain -= 10; // You've already lost some value here
             break;
-        case ABIL_RU_SACRIFICE_SKILL:
-            // give a small bonus if sacrifice skill is taken multiple times
-            piety_gain += 7 * you.get_mutation_level(mut);
-            break;
         case ABIL_RU_SACRIFICE_NIMBLENESS:
-            if (you.get_mutation_level(MUT_NO_ARMOUR_SKILL))
+            if (you.get_mutation_level(MUT_NO_ARMOUR))
                 piety_gain += 20;
             else if (species_apt(SK_ARMOUR) == UNUSABLE_SKILL)
                 piety_gain += 28; // this sacrifice is worse for these races
-            break;
-        // words and drink cut off a lot of options if taken together
-        case ABIL_RU_SACRIFICE_DRINK:
-            if (you.get_mutation_level(MUT_READ_SAFETY))
-                piety_gain += 10;
-            break;
-        case ABIL_RU_SACRIFICE_WORDS:
-            if (you.get_mutation_level(MUT_DRINK_SAFETY))
-                piety_gain += 10;
-            else if (you.get_mutation_level(MUT_NO_DRINK))
-                piety_gain += 15; // extra bad for mummies
             break;
         case ABIL_RU_SACRIFICE_DURABILITY:
             if (you.get_mutation_level(MUT_NO_DODGING))
@@ -4114,25 +5402,24 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                 piety_gain = 1;
             }
             else if (you.get_mutation_level(MUT_NO_SUMMONING_MAGIC)
-                     || you.get_mutation_level(MUT_NO_ARTIFICE))
+                || you.get_mutation_level(MUT_NO_ARTIFICE))
             {
                 piety_gain /= 2;
             }
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
             if (you.get_mutation_level(MUT_COWARDICE))
-                piety_gain += 12;
+                piety_gain += 15;
             // Ds are highly likely to miss at least one mutation. This isn't
             // absolutely certain, but it's very likely and they should still
             // get a bonus for the risk. Could check the exact mutation
             // schedule, but this seems too leaky.
-            // Dj are guaranteed to lose a spell each time, which is pretty sad too.
-            if (you.species == SP_DEMONSPAWN || you.species == SP_DJINNI)
-                piety_gain += 16;
+            if (you.species == SP_DEMONSPAWN)
+                piety_gain += 28;
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
-            piety_gain += 12 * you.get_mutation_level(MUT_INEXPERIENCED);
-            break;
+            if (you.get_mutation_level(MUT_INEXPERIENCED))
+                piety_gain += 15;
 
         default:
             break;
@@ -4375,7 +5662,7 @@ static bool _execute_sacrifice(ability_type sac, const char* message)
 static void _ru_kill_skill(skill_type skill)
 {
     change_skill_points(skill, -you.skill_points[skill], true);
-    you.can_currently_train.set(skill, false);
+    you.can_train.set(skill, false);
     reset_training();
     check_selected_skills();
 }
@@ -4385,14 +5672,18 @@ static void _extra_sacrifice_code(ability_type sac)
     const sacrifice_def &sac_def = _get_sacrifice_def(sac);
     if (sac_def.sacrifice == ABIL_RU_SACRIFICE_HAND)
     {
-        auto ring_slots = species::ring_slots(you.species, true);
-        equipment_type sac_ring_slot = species::sacrificial_arm(you.species);
+        equipment_type ring_slot;
+
+        if (you.species == SP_OCTOPODE)
+            ring_slot = EQ_RING_EIGHT;
+        else
+            ring_slot = EQ_LEFT_RING;
 
         item_def* const shield = you.slot_item(EQ_SHIELD, true);
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
-        item_def* const ring = you.slot_item(sac_ring_slot, true);
-        int ring_inv_slot = you.equip[sac_ring_slot];
-        equipment_type open_ring_slot = EQ_NONE;
+        item_def* const ring = you.slot_item(ring_slot, true);
+        int ring_inv_slot = you.equip[ring_slot];
+        bool open_ring_slot = false;
 
         // Drop your shield if there is one
         if (shield != nullptr)
@@ -4416,31 +5707,41 @@ static void _extra_sacrifice_code(ability_type sac)
         // And one ring
         if (ring != nullptr)
         {
-            // XX does not handle an open slot on the finger amulet
-            for (const auto &eq : ring_slots)
-                if (!you.slot_item(eq, true))
+            if (you.species == SP_OCTOPODE)
+            {
+                for (int eq = EQ_RING_ONE; eq <= EQ_RING_SEVEN; eq++)
                 {
-                    open_ring_slot = eq;
-                    break;
+                    if (!you.slot_item(static_cast<equipment_type>(eq), true))
+                    {
+                        open_ring_slot = true;
+                        break;
+                    }
                 }
-
-            const bool can_keep = open_ring_slot != EQ_NONE;
+            }
+            else
+            {
+                if (!you.slot_item(static_cast<equipment_type>(
+                    EQ_RIGHT_RING), true))
+                {
+                    open_ring_slot = true;
+                }
+            }
 
             mprf("You can no longer wear %s!",
                 ring->name(DESC_YOUR).c_str());
-            unequip_item(sac_ring_slot, true, can_keep);
-            if (can_keep)
+            unequip_item(ring_slot);
+            if (open_ring_slot)
             {
                 mprf("You put %s back on %s %s!",
                      ring->name(DESC_YOUR).c_str(),
-                     (ring_slots.size() > 1 ? "another" : "your other"),
+                     (you.species == SP_OCTOPODE ? "another" : "your other"),
                      you.hand_name(true).c_str());
-                equip_item(open_ring_slot, ring_inv_slot, false, true);
+                puton_ring(ring_inv_slot, false);
             }
         }
     }
     else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_EXPERIENCE)
-        level_change();
+        adjust_level(-RU_SAC_XP_LEVELS);
     else if (sac_def.sacrifice == ABIL_RU_SACRIFICE_SKILL)
     {
         uint8_t saved_skills[NUM_SKILLS];
@@ -4460,7 +5761,6 @@ static void _extra_sacrifice_code(ability_type sac)
         }
 
         redraw_screen();
-        update_screen();
     }
 }
 
@@ -4633,10 +5933,10 @@ bool ru_do_sacrifice(ability_type sac)
     if (sac == ABIL_RU_SACRIFICE_HAND)
     {
         // No one-handed staves for small races.
-        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
+        if (species_size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
             _ru_kill_skill(SK_STAVES);
         // No one-handed bows.
-        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
+        if (you.species != SP_FORMICID)
             _ru_kill_skill(SK_BOWS);
     }
 
@@ -4647,13 +5947,13 @@ bool ru_do_sacrifice(ability_type sac)
 
     // Update how many Ru sacrifices you have. This is used to avoid giving the
     // player extra silver damage.
-    if (you.props.exists(NUM_SACRIFICES_KEY))
+    if (you.props.exists("num_sacrifice_muts"))
     {
-        you.props[NUM_SACRIFICES_KEY] = num_sacrifices +
-            you.props[NUM_SACRIFICES_KEY].get_int();
+        you.props["num_sacrifice_muts"] = num_sacrifices +
+            you.props["num_sacrifice_muts"].get_int();
     }
     else
-        you.props[NUM_SACRIFICES_KEY] = num_sacrifices;
+        you.props["num_sacrifice_muts"] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
     set_piety(min(piety_breakpoint(5), you.piety + piety_gain));
@@ -4665,7 +5965,6 @@ bool ru_do_sacrifice(ability_type sac)
     _ru_expire_sacrifices();
     ru_reset_sacrifice_timer(true);
     redraw_screen(); // pretty much everything could have changed
-    update_screen();
     return true;
 }
 
@@ -4711,7 +6010,7 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
 
     // raise the delay if there's an active sacrifice, and more so the more
     // often you pass on a sacrifice and the more piety you have.
-    const int base_delay = 90;
+    const int base_delay = 80;
     int delay = you.props[RU_SACRIFICE_DELAY_KEY].get_int();
     int added_delay;
     if (clear_timer)
@@ -4744,7 +6043,7 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
         }
     }
 
-    delay = div_rand_round((delay + added_delay) * (3 - you.faith()), 3);
+    delay = div_rand_round((delay + added_delay) * (3 + you.faith()), 3);
     if (crawl_state.game_is_sprint())
         delay /= SPRINT_MULTIPLIER;
 
@@ -4756,10 +6055,10 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
 //Your chance of eligiblity scales with piety.
 bool will_ru_retaliate()
 {
-    // Scales up to a 20% chance of retribution
+    // Scales up to a 25% chance of retribution
     return have_passive(passive_t::upgraded_aura_of_power)
            && crawl_state.which_god_acting() != GOD_RU
-           && one_chance_in(div_rand_round(800, you.piety));
+           && one_chance_in(div_rand_round(640, you.piety));
 }
 
 // Power of retribution increases with damage, decreases with monster HD.
@@ -4771,31 +6070,31 @@ void ru_do_retribution(monster* mons, int damage)
 
     if (power > 50 && (mons->antimagic_susceptible()))
     {
-        mprf(MSGCH_GOD, "You focus your inner power and drain %s's magic in "
+        mprf(MSGCH_GOD, "You focus your will and drain %s's magic in "
                 "retribution!", mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 1, act, power+random2(320)));
     }
     else if (power > 35)
     {
-        mprf(MSGCH_GOD, "You focus your inner power and paralyse %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your will and paralyse %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
     }
     else if (power > 25)
     {
-        mprf(MSGCH_GOD, "You focus your inner power and slow %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your will and slow %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
     }
     else if (power > 10 && mons_can_be_blinded(mons->type))
     {
-        mprf(MSGCH_GOD, "You focus your inner power and blind %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your will and blind %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
     }
     else if (power > 0)
     {
-        mprf(MSGCH_GOD, "You focus your inner power and illuminate %s in retribution!",
+        mprf(MSGCH_GOD, "You focus your will and illuminate %s in retribution!",
                 mons->name(DESC_THE).c_str());
         mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
     }
@@ -4846,9 +6145,11 @@ bool ru_power_leap()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_replaying_keys())
+    if (crawl_state.is_repeating_cmd())
     {
-        crawl_state.cancel_cmd_all("You can't repeat Power Leap.");
+        crawl_state.cant_cmd_repeat("You can't repeat power leap.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
         return false;
     }
     if (you.is_nervous())
@@ -4863,7 +6164,7 @@ bool ru_power_leap()
     while (1)
     {
         direction_chooser_args args;
-        args.restricts = DIR_ENFORCE_RANGE;
+        args.restricts = DIR_LEAP;
         args.mode = TARG_ANY;
         args.range = 3;
         args.needs_path = false;
@@ -4882,10 +6183,7 @@ bool ru_power_leap()
         }
 
         if (!beam.isValid || beam.target == you.pos())
-        {
-            canned_msg(MSG_OK);
             return false;         // early return
-        }
 
         monster* beholder = you.get_beholder(beam.target);
         if (beholder)
@@ -4913,19 +6211,19 @@ bool ru_power_leap()
             continue;
         }
 
-        if (env.grid(beam.target) == DNGN_OPEN_SEA)
+        if (grd(beam.target) == DNGN_OPEN_SEA)
         {
             clear_messages();
             mpr("You can't leap into the sea!");
             continue;
         }
-        else if (env.grid(beam.target) == DNGN_LAVA_SEA)
+        else if (grd(beam.target) == DNGN_LAVA_SEA)
         {
             clear_messages();
             mpr("You can't leap into the sea of lava!");
             continue;
         }
-        else if (!check_moveto(beam.target, "leap", false))
+        else if (!check_moveto(beam.target, "leap"))
         {
             // try again (messages handled by check_moveto)
         }
@@ -4957,7 +6255,6 @@ bool ru_power_leap()
     }
 
     move_player_to_grid(beam.target, false);
-    apply_barbs_damage();
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -5074,7 +6371,6 @@ bool ru_apocalypse()
         if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",
             true, 'n'))
         {
-            canned_msg(MSG_OK);
             return false;
         }
     }
@@ -5084,6 +6380,93 @@ bool ru_apocalypse()
     drain_player(100, false, true);
     return true;
 }
+
+#if TAG_MAJOR_VERSION == 34
+/**
+ * Calculate the effective power of a surged hex wand.
+ * Works by iterating over the possible rolls from random2avg().
+ * A much nicer way of computing this would be appreciated.
+ *
+ * @param   pow The base power.
+ * @returns     The effective spellpower of a hex wand.
+ */
+int pakellas_effective_hex_power(int pow)
+{
+    if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
+        return pow;
+
+    if (you.magic_points == 0)
+        return 0;
+
+    const int die_size = you.piety * 9 / piety_breakpoint(5);
+    const int max_roll = max(3, 2 * die_size);
+    vector<int> rolls(max_roll + 1, 0);
+
+    // i is the first random2(); j is the second random2()
+    int i = 0;
+    for (; i < die_size; i++)
+        for (int j = 0; j < die_size; j++)
+        {
+            // This should be the same as the formula in pakellas_device_surge()
+            int roll = min(you.magic_points,
+                              min(9,
+                                  max(3,
+                                      1 + (i + j) / 2)));
+            rolls[roll] = rolls[roll] + 1;
+        }
+
+    if (die_size == 0)
+        rolls[min(3, you.magic_points)] = 1;
+
+    int total_pow = 0;
+    int weight = 0;
+
+    for (i = 1; i <= max_roll; i++)
+    {
+        if (i > 9)
+            break;
+
+        int base_sev = i / 3;
+        int mod = i % 3;
+        int base_power = (base_sev == 0)
+            ? 0 // fizzle
+            : stepdown_spellpower(100*apply_enhancement(pow, base_sev));
+        weight += 3 * rolls[i];
+        total_pow +=
+            rolls[i] *
+            (base_power * (3 - mod)
+             + stepdown_spellpower(100*apply_enhancement(pow, base_sev+1))
+               * mod);
+    }
+    total_pow /= weight;
+    return total_pow;
+}
+
+/**
+ * Trigger a readied Device Surge, spending MP to multiply evocations power.
+ *
+ * @return  A number of enhancers (!) to multiply evo power by.
+ */
+int pakellas_surge_devices()
+{
+    if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
+        return 0;
+
+    const int mp = min(you.magic_points, min(9, max(3,
+                       1 + random2avg(you.piety * 9 / piety_breakpoint(5),
+                                      2))));
+
+    const int severity = div_rand_round(mp, 3);
+    dec_mp(mp);
+    you.duration[DUR_DEVICE_SURGE] = 0;
+    if (severity == 0)
+    {
+        mprf(MSGCH_GOD, "The surge fizzles.");
+        return -1;
+    }
+    return severity;
+}
+#endif
 
 static bool _mons_stompable(const monster &mons)
 {
@@ -5120,7 +6503,7 @@ bool uskayaw_stomp()
     }, you.pos());
 
     // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
-    // a few places already; see spl-vortex.cc, disaster area, etc.
+    // a few places already; see spl_tornado.cc, disaster area, etc.
     if (friendlies
         && !yesno("There are friendlies around, "
                   "are you sure you want to hurt them?",
@@ -5130,7 +6513,7 @@ bool uskayaw_stomp()
         return false;
     }
 
-    mpr("You stomp with the beat, sending a shockwave through the revellers "
+    mpr("You stomp with the beat, sending a shockwave through the revelers "
             "around you!");
     apply_monsters_around_square(_get_stomped, you.pos());
     return true;
@@ -5140,9 +6523,11 @@ bool uskayaw_line_pass()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_replaying_keys())
+    if (crawl_state.is_repeating_cmd())
     {
-        crawl_state.cancel_cmd_all("You can't repeat Line Pass.");
+        crawl_state.cant_cmd_repeat("You can't repeat line pass.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
         return false;
     }
 
@@ -5170,7 +6555,7 @@ bool uskayaw_line_pass()
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
-        args.restricts = DIR_ENFORCE_RANGE;
+        args.restricts = DIR_LEAP;
         args.mode = TARG_ANY;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Line Pass</white>";
@@ -5215,13 +6600,13 @@ bool uskayaw_line_pass()
             continue;
         }
 
-        if (env.grid(beam.target) == DNGN_OPEN_SEA)
+        if (grd(beam.target) == DNGN_OPEN_SEA)
         {
             clear_messages();
             mpr("You can't line pass into the sea!");
             continue;
         }
-        else if (env.grid(beam.target) == DNGN_LAVA_SEA)
+        else if (grd(beam.target) == DNGN_LAVA_SEA)
         {
             clear_messages();
             mpr("You can't line pass into the sea of lava!");
@@ -5233,7 +6618,7 @@ bool uskayaw_line_pass()
             mpr("You can't walk through walls!");
             continue;
         }
-        else if (!check_moveto(beam.target, "line pass", false))
+        else if (!check_moveto(beam.target, "line pass"))
         {
             // try again (messages handled by check_moveto)
         }
@@ -5261,7 +6646,6 @@ bool uskayaw_line_pass()
         line_pass.fire();
         you.stop_being_constricted(false);
         move_player_to_grid(beam.target, false);
-        apply_barbs_damage();
     }
 
     crawl_state.cancel_cmd_again();
@@ -5274,9 +6658,11 @@ spret uskayaw_grand_finale(bool fail)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_replaying_keys())
+    if (crawl_state.is_repeating_cmd())
     {
-        crawl_state.cancel_cmd_all("No encores!");
+        crawl_state.cant_cmd_repeat("No encores!");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
         return spret::abort;
     }
 
@@ -5303,10 +6689,7 @@ spret uskayaw_grand_finale(bool fail)
         }
 
         if (!beam.isValid || beam.target == you.pos())
-        {
-            canned_msg(MSG_OK);
             return spret::abort;   // early return
-        }
 
         mons = monster_at(beam.target);
         if (!mons || !you.can_see(*mons))
@@ -5316,7 +6699,7 @@ spret uskayaw_grand_finale(bool fail)
             continue;
         }
 
-        if (!check_moveto(beam.target, "move", false))
+        if (!check_moveto(beam.target, "move"))
         {
             // try again (messages handled by check_moveto)
         }
@@ -5358,10 +6741,7 @@ spret uskayaw_grand_finale(bool fail)
         throw_monster_bits(*mons); // have some fun while we're at it
     }
 
-    // throw_monster_bits can cause mons to be killed already, e.g. via pain
-    // bond or dismissing summons
-    if (mons->alive())
-        monster_die(*mons, KILL_YOU, NON_MONSTER, false);
+    monster_die(*mons, KILL_YOU, NON_MONSTER, false);
 
     if (!mons->alive())
         move_player_to_grid(beam.target, false);
@@ -5514,7 +6894,7 @@ static void _transfer_drain_nearby(coord_def destination)
     for (adjacent_iterator it(destination); it; ++it)
     {
         monster* mon = monster_at(*it);
-        if (!mon || god_protects(mon))
+        if (!mon || mons_is_hepliaklqana_ancestor(mon->type))
             continue;
 
         const int dur = random_range(60, 150);
@@ -5563,8 +6943,7 @@ spret hepliaklqana_transference(bool fail)
 
     if (victim == ancestor)
     {
-        mprf("You can't transfer your ancestor with %s.",
-             ancestor->pronoun(PRONOUN_REFLEXIVE).c_str());
+        mpr("You can't transfer your ancestor with themself.");
         return spret::abort;
     }
 
@@ -5578,13 +6957,14 @@ spret hepliaklqana_transference(bool fail)
     }
 
     const coord_def destination = ancestor->pos();
-    if (victim == &you && !check_moveto(destination, "transfer", false))
+    if (victim == &you && !check_moveto(destination, "transfer"))
         return spret::abort;
 
     const bool uninhabitable = victim && !victim->is_habitable(destination);
     if (uninhabitable && victim_visible)
     {
-        mprf("%s can't be transferred there.", victim->name(DESC_THE).c_str());
+        mprf("%s can't be transferred into %s.",
+             victim->name(DESC_THE).c_str(), feat_type_name(grd(destination)));
         return spret::abort;
     }
 
@@ -5600,8 +6980,6 @@ spret hepliaklqana_transference(bool fail)
 
     if (victim->is_player())
     {
-        if (cancel_harmful_move(false))
-            return spret::abort;
         ancestor->move_to_pos(target, true, true);
         victim->move_to_pos(destination, true, true);
     }
@@ -5661,22 +7039,15 @@ static void _hepliaklqana_choose_name()
 
 static void _hepliaklqana_choose_gender()
 {
-    static const map<gender_type, string> gender_map =
-    {
-        { GENDER_NEUTRAL, "neither" },
-        { GENDER_MALE,    "male"    },
-        { GENDER_FEMALE,  "female"  },
-    };
-
-    const gender_type current_gender =
-        (gender_type)you.props[HEPLIAKLQANA_ALLY_GENDER_KEY].get_int();
-    const string* desc = map_find(gender_map, current_gender);
-    ASSERT(desc);
+    static const string gender_names[] = { "neither", "male", "female" };
+    const int current_gender
+        = you.props[HEPLIAKLQANA_ALLY_GENDER_KEY].get_int();
+    ASSERT(size_t(current_gender) < ARRAYSZ(gender_names));
 
     mprf(MSGCH_PROMPT,
          "Was %s a) male, b) female, or c) neither? (Currently %s.)",
          hepliaklqana_ally_name().c_str(),
-         desc->c_str());
+         gender_names[current_gender].c_str());
 
     int keyin = toalower(get_ch());
     if (!isaalpha(keyin))
@@ -5685,19 +7056,15 @@ static void _hepliaklqana_choose_gender()
         return;
     }
 
-    static const gender_type gender_options[] = { GENDER_MALE,
-                                                  GENDER_FEMALE,
-                                                  GENDER_NEUTRAL };
-
     const uint32_t choice = keyin - 'a';
-    if (choice >= ARRAYSZ(gender_options))
+    if (choice > ARRAYSZ(gender_names))
     {
         canned_msg(MSG_OK);
         return;
     }
 
-    const gender_type new_gender = gender_options[choice];
-
+    // fun trick
+    const int new_gender = (choice + 1) % 3;
     if (new_gender == current_gender)
     {
         canned_msg(MSG_OK);
@@ -5707,7 +7074,7 @@ static void _hepliaklqana_choose_gender()
     you.props[HEPLIAKLQANA_ALLY_GENDER_KEY] = new_gender;
     mprf("%s was always %s, you're pretty sure.",
          hepliaklqana_ally_name().c_str(),
-         map_find(gender_map, new_gender)->c_str());
+         gender_names[new_gender].c_str());
     upgrade_hepliaklqana_ancestor(true);
 }
 
@@ -5721,7 +7088,7 @@ void hepliaklqana_choose_identity()
 bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
 {
     if (!have_passive(passive_t::wu_jian_wall_jump)
-        || !feat_can_wall_jump_against(env.grid(target))
+        || !feat_can_wall_jump_against(grd(target))
         || you.is_stationary()
         || you.digging)
     {
@@ -5740,10 +7107,10 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
 
     if (!wu_jian_can_wall_jump_in_principle(target))
     {
-        if (!feat_can_wall_jump_against(env.grid(target)))
+        if (!feat_can_wall_jump_against(grd(target)))
         {
             error_ret = string("You cannot wall jump against ") +
-                feature_description_at(target, false, DESC_THE) + ".";
+                feature_description_at(target, false, DESC_THE, true);
         }
         else
             error_ret = "";
@@ -5754,10 +7121,11 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                    + wall_jump_direction);
 
-    monster* beholder = you.get_beholder(wall_jump_landing_spot);
+    monster* beholder = you.get_beholder(target);
     if (beholder)
     {
-        error_ret = make_stringf("You cannot wall jump away from %s!",
+        error_ret = make_stringf("You cannot move your %s away from %s to wall jump!",
+             you.foot_name(true).c_str(),
              beholder->name(DESC_THE, true).c_str());
         return false;
     }
@@ -5765,13 +7133,13 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
     monster* fearmonger = you.get_fearmonger(wall_jump_landing_spot);
     if (fearmonger)
     {
-        error_ret = make_stringf("You cannot wall jump closer to %s!",
+        error_ret = make_stringf("You are too afraid to wall jump closer to %s!",
              fearmonger->name(DESC_THE, true).c_str());
         return false;
     }
 
     const actor* landing_actor = actor_at(wall_jump_landing_spot);
-    if (feat_is_solid(env.grid(you.pos() + wall_jump_direction))
+    if (feat_is_solid(grd(you.pos() + wall_jump_direction))
         || !in_bounds(wall_jump_landing_spot)
         || !you.is_habitable(wall_jump_landing_spot)
         || landing_actor)
@@ -5786,6 +7154,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
         }
         else
             error_ret = "You have no room to wall jump there.";
+        you.attribute[ATTR_WALL_JUMP_READY] = 0;
         return false;
     }
     error_ret = "";
@@ -5801,7 +7170,7 @@ bool wu_jian_can_wall_jump(const coord_def& target, string &error_ret)
  * @param targ the movement target (i.e. the wall being moved against).
  * @return whether the jump culminated.
  */
-bool wu_jian_do_wall_jump(coord_def targ)
+bool wu_jian_do_wall_jump(coord_def targ, bool ability)
 {
     // whether there's space in the first place is checked earlier
     // in wu_jian_can_wall_jump.
@@ -5811,38 +7180,70 @@ bool wu_jian_do_wall_jump(coord_def targ)
     if (!check_moveto(wall_jump_landing_spot, "wall jump"))
     {
         you.turn_is_over = false;
+        if (!ability && Options.wall_jump_prompt)
+        {
+            mprf(MSGCH_PLAIN, "You take your %s off %s.",
+                 you.foot_name(true).c_str(),
+                 feature_description_at(targ, false, DESC_THE, false).c_str());
+            you.attribute[ATTR_WALL_JUMP_READY] = 0;
+        }
+        return false;
+    }
+
+    if (!ability
+        && Options.wall_jump_prompt
+        && you.attribute[ATTR_WALL_JUMP_READY] == 0)
+    {
+        you.turn_is_over = false;
+        mprf(MSGCH_PLAIN,
+             "You put your %s on %s. Move against it again to jump.",
+             you.foot_name(true).c_str(),
+             feature_description_at(targ, false, DESC_THE, false).c_str());
+        you.attribute[ATTR_WALL_JUMP_READY] = 1;
         return false;
     }
 
     auto initial_position = you.pos();
     move_player_to_grid(wall_jump_landing_spot, false);
-    wu_jian_wall_jump_effects();
-    remove_water_hold();
+    if (!ability)
+        count_action(CACT_INVOKE, ABIL_WU_JIAN_WALLJUMP);
+    wu_jian_wall_jump_effects(initial_position);
 
-    int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
-                                                                      : 1;
+    if (ability)
+    {
+        // TODO: code duplication with movement...
+        // TODO: check engulfing
+        int wall_jump_modifier = (you.attribute[ATTR_SERPENTS_LASH] != 1) ? 2
+                                                                          : 1;
 
-    you.time_taken = player_speed() * wall_jump_modifier
-                     * player_movement_speed();
-    you.time_taken = div_rand_round(you.time_taken, 10);
+        you.time_taken = player_speed() * wall_jump_modifier
+                         * player_movement_speed();
+        you.time_taken = div_rand_round(you.time_taken, 10);
 
-    // need to set this here in case serpent's lash isn't active
-    you.turn_is_over = true;
-    request_autopickup();
-    wu_jian_post_move_effects(true, initial_position);
-
+        // need to set this here in case serpent's lash isn't active
+        you.turn_is_over = true;
+        request_autopickup();
+        wu_jian_post_move_effects(true, initial_position);
+    }
     return true;
 }
 
 spret wu_jian_wall_jump_ability()
 {
+    // This needs to be kept in sync with direct walljumping via movement.
+    // TODO: Refactor to call the same code.
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_replaying_keys())
+    if (crawl_state.is_repeating_cmd())
     {
-        crawl_state.cancel_cmd_all("You can't repeat a wall jump.");
+        crawl_state.cant_cmd_repeat("You can't repeat a wall jump.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
         return spret::abort;
     }
+
+    if (cancel_barbed_move())
+        return spret::abort;
 
     if (you.digging)
     {
@@ -5911,200 +7312,19 @@ spret wu_jian_wall_jump_ability()
         }
 
         if (!beam.isValid || beam.target == you.pos())
-        {
-            canned_msg(MSG_OK);
             return spret::abort; // early return
-        }
 
         if (wu_jian_can_wall_jump(beam.target, wj_error))
             break;
     }
 
-    if (!wu_jian_do_wall_jump(beam.target))
+    if (!wu_jian_do_wall_jump(beam.target, true))
         return spret::abort;
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
     apply_barbs_damage();
+    remove_ice_armour_movement();
     return spret::success;
-}
-
-void wu_jian_heavenly_storm()
-{
-    mprf(MSGCH_GOD, "The air is filled with shimmering golden clouds!");
-    wu_jian_sifu_message(" says: The storm will not cease as long as you "
-                         "keep fighting, disciple!");
-
-    for (radius_iterator ai(you.pos(), 2, C_SQUARE, LOS_SOLID); ai; ++ai)
-        if (!cell_is_solid(*ai))
-            place_cloud(CLOUD_GOLD_DUST, *ai, 5 + random2(5), &you);
-
-    you.set_duration(DUR_HEAVENLY_STORM, random_range(2, 3));
-    you.props[WU_JIAN_HEAVENLY_STORM_KEY] = WU_JIAN_HEAVENLY_STORM_INITIAL;
-    invalidate_agrid(true);
-}
-
-bool okawaru_duel_active()
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->props.exists(OKAWARU_DUEL_CURRENT_KEY))
-            return true;
-    }
-
-    return false;
-}
-
-spret okawaru_duel(const coord_def& target, bool fail)
-{
-    monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
-    {
-        mpr("You can see no monster there to duel!");
-        return spret::abort;
-    }
-
-    if (mons_is_firewood(*mons)
-        || mons_is_conjured(mons->type)
-        || mons_is_tentacle_or_tentacle_segment(mons->type)
-        || mons_primary_habitat(*mons) == HT_LAVA
-        || mons_primary_habitat(*mons) == HT_WATER
-        || mons->wont_attack())
-    {
-        mpr("You cannot duel that!");
-        return spret::abort;
-    }
-
-    if (mons_threat_level(*mons) < MTHRT_TOUGH)
-    {
-        simple_monster_message(*mons, " is not worthy to be dueled!");
-        return spret::abort;
-    }
-
-    if (mons->is_illusion())
-    {
-        fail_check();
-        mprf("You challenge %s to single combat, but %s is merely a clone!",
-             mons->name(DESC_THE).c_str(),
-             mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
-        // Still costs a turn to gain the information.
-        return spret::success;
-    }
-    // Check this after everything else so as not to waste a turn when trying
-    // to duel a clone that's already invalid to be dueled for other reasons.
-    else if (mons->is_summoned())
-    {
-        mpr("You cannot duel that!");
-        return spret::abort;
-    }
-
-    fail_check();
-
-    mprf("You enter into single combat with %s!",
-         mons->name(DESC_THE).c_str());
-
-    behaviour_event(mons, ME_ALERT, &you);
-    mons->props[OKAWARU_DUEL_TARGET_KEY] = true;
-    mons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
-    mons->set_transit(level_id(BRANCH_ARENA));
-    mons->destroy_inventory();
-    if (mons_is_elven_twin(mons))
-        elven_twin_died(mons, true, KILL_YOU, MID_PLAYER);
-    monster_cleanup(mons);
-
-    stop_delay(true);
-    down_stairs(DNGN_ENTER_ARENA);
-
-    return spret::success;
-}
-
-void okawaru_remove_heroism()
-{
-    mprf(MSGCH_DURATION, "You feel like a meek peon again.");
-    you.duration[DUR_HEROISM] = 0;
-    you.redraw_evasion      = true;
-    you.redraw_armour_class = true;
-}
-
-void okawaru_remove_finesse()
-{
-    mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
-    you.duration[DUR_FINESSE] = 0;
-}
-
-// End a duel, and send the duel target back with the player if it's still
-// alive.
-void okawaru_end_duel()
-{
-    ASSERT(player_in_branch(BRANCH_ARENA));
-    if (okawaru_duel_active())
-    {
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (mi->props.exists(OKAWARU_DUEL_CURRENT_KEY))
-            {
-                mi->props.erase(OKAWARU_DUEL_CURRENT_KEY);
-                mi->props[OKAWARU_DUEL_ABANDONED_KEY] = true;
-                mi->set_transit(current_level_parent());
-                mi->destroy_inventory();
-                monster_cleanup(*mi);
-            }
-        }
-    }
-
-    mpr("You are returned from the Arena.");
-    stop_delay(true);
-    down_stairs(DNGN_EXIT_ARENA);
-}
-
-vector<coord_def> find_slimeable_walls()
-{
-    vector<coord_def> walls;
-
-    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-    {
-        if (feat_is_wall(env.grid(*ri))
-            && !feat_is_permarock(env.grid(*ri))
-            && env.grid(*ri) != DNGN_SLIMY_WALL)
-        {
-            walls.push_back(*ri);
-        }
-    }
-
-    return walls;
-}
-
-spret jiyva_oozemancy(bool fail)
-{
-    vector<coord_def> walls = find_slimeable_walls();
-
-    if (walls.empty())
-    {
-        mpr("There are no walls around you to affect.");
-        return spret::abort;
-    }
-
-    fail_check();
-
-    const int dur = 10 + random2avg(you.piety / 8, 2);
-
-    for (auto pos : walls)
-    {
-        temp_change_terrain(pos, DNGN_SLIMY_WALL, dur * BASELINE_DELAY,
-                            TERRAIN_CHANGE_SLIME);
-    }
-
-    you.increase_duration(DUR_OOZEMANCY, dur);
-    mpr("Slime begins to ooze from the nearby walls!");
-
-    return spret::success;
-}
-
-void jiyva_end_oozemancy()
-{
-    you.duration[DUR_OOZEMANCY] = 0;
-    for (rectangle_iterator ri(0); ri; ++ri)
-        if (env.grid(*ri) == DNGN_SLIMY_WALL && is_temp_terrain(*ri))
-            revert_terrain_change(*ri, TERRAIN_CHANGE_SLIME);
 }

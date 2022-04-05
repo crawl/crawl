@@ -357,7 +357,6 @@ ENDMAP
 # These vaults deliberately do not have defined entry points.
 #
 # 10 vaults
-# TODO: several of these generate islands, this could be cleaned up.
 
 NAME:    infiniplex_forest_clump_tiny
 TAGS:    transparent
@@ -381,7 +380,7 @@ MAP
 ENDMAP
 
 NAME:    infiniplex_forest_clump_medium
-# this can generate islands, init_forest handles no_tele_into
+TAGS:    transparent
 : init_forest(_G, 2, 6)
 MAP
   """"
@@ -395,7 +394,7 @@ DEEtEED"
 ENDMAP
 
 NAME:    infiniplex_forest_clump_large
-# this can generate islands, init_forest handles no_tele_into
+TAGS:    transparent
 : init_forest(_G, 1, 3)
 MAP
    """"
@@ -411,7 +410,7 @@ MAP
 ENDMAP
 
 NAME:    infiniplex_forest_clump_long
-# this can generate islands, init_forest handles no_tele_into
+TAGS:    transparent
 : init_forest(_G, 2, 6)
 MAP
     """"""
@@ -424,7 +423,7 @@ DEEtttttDED"
 ENDMAP
 
 NAME:    infiniplex_forest_clump_diagonal
-# this can generate islands, init_forest handles no_tele_into
+TAGS:    transparent
 : init_forest(_G, 2, 6)
 MAP
 """"

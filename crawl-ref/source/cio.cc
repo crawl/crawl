@@ -78,19 +78,6 @@ private:
     coord_def pos;
 };
 
-// Convert letters (and 6 other characters) to control codes. Don't change
-// anything else.
-// Uses int instead of char32_t to match the caller.
-static inline int _control_safe(int c)
-{
-    if (c >= 'A'-1 && c < 'A'+' '-1) // ASCII letters and @ [ \ ] ^ _ `
-        return c-'A'+1;
-    else if (c >= 'a' && c <= 'z') // ASCII letters
-        return c-'a'+1;
-    else
-        return c; // anything else
-}
-
 int unmangle_direction_keys(int keyin, KeymapContext keymap,
                             bool allow_fake_modifiers)
 {
@@ -101,37 +88,21 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     if (allow_fake_modifiers && Options.use_modifier_prefix_keys)
     {
         /* can we say yuck? -- haranp */
-        if (keyin == '*'
-#ifndef USE_TILE_LOCAL
-            || keyin == CK_NUMPAD_MULTIPLY
-                && key_to_command(keyin, KMC_DEFAULT) == CMD_NO_CMD
-#endif
-            )
+        if (keyin == '*')
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("CTRL");
-            webtiles_send_more_text("CTRL");
-
             keyin = getchm(keymap);
-            // return control-key, if there is one.
-            keyin = _control_safe(_numpad2vi(keyin));
-            webtiles_send_more_text("");
+            // return control-key
+            keyin = CONTROL(toupper(_numpad2vi(keyin)));
         }
-        else if (keyin == '/'
-#ifndef USE_TILE_LOCAL
-            || keyin == CK_NUMPAD_DIVIDE
-                && key_to_command(keyin, KMC_DEFAULT) == CMD_NO_CMD
-#endif
-            )
+        else if (keyin == '/')
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("SHIFT");
-            webtiles_send_more_text("SHIFT");
-
             keyin = getchm(keymap);
             // return shift-key
-            keyin = toupper_safe(_numpad2vi(keyin));
-            webtiles_send_more_text("");
+            keyin = toupper(_numpad2vi(keyin));
         }
     }
 
@@ -202,32 +173,15 @@ void nowrap_eol_cprintf(const char *s, ...)
     cprintf("%s", chop_string(buf, max(wrapcol + 1 - wherex(), 0), false).c_str());
 }
 
-/**
- * Print a string wrapped by some value, relative to the current cursor region,
- * potentially skipping some lines. This function truncates if the region has
- * no more space. It is guaranteed to leave the cursor position in a valid spot
- * relative to the region.
- *
- * @param skiplines how many lines of text in `buf` to skip before printing
- * anything. (No output will be displayed for these lines.)
- * @param wrapcol the column to wrap at. The new line will start at the left
- * edge of the current cursor region after wrapping.
- * @param buf the string to print.
- */
 static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
 {
     ASSERT(skiplines >= 0);
 
-#ifndef USE_TILE_LOCAL
-    assert_valid_cursor_pos();
-#endif
     const GotoRegion region = get_cursor_region();
-    const coord_def sz = cgetsize(region);
+    const int max_y = cgetsize(region).y;
 
     size_t linestart = 0;
     size_t len = buf.length();
-
-    bool linebreak = false;
 
     while (linestart < len)
     {
@@ -237,47 +191,26 @@ static void wrapcprint_skipping(int skiplines, int wrapcol, const string &buf)
         if (avail > 0)
         {
             const string line = chop_string(buf.c_str() + linestart, avail, false);
-            if (line.length() == 0)
-                linebreak = true; // buf begins with a widechar, cursor is at the edge
-            else
-            {
-                linestart += line.length();
-                if (skiplines == 0)
-                    cprintf("%s", line.c_str());
-
-                linebreak = skiplines == 0
-                            && line.length() >= static_cast<unsigned int>(avail);
-            }
+            linestart += line.length();
+            if (skiplines == 0)
+                cprintf("%s", line.c_str());
         }
-        else
-            linebreak = true; // cursor started at the end of a line
 
-        // No room for more lines, quit now. As long as a linebreak happens
-        // whenever a write fails above, this should prevent infinite loops.
-        if (pos.y >= sz.y)
-        {
-#ifndef USE_TILE_LOCAL
-            // leave the cursor at the end of the region to ensure a valid pos.
-            // This could happen for example from printing something right up
-            // to the end of the mlist.
-            if (!valid_cursor_pos(cgetpos(region).x, pos.y, region))
-                cgotoxy(sz.x, sz.y, region);
-#endif
+        // No room for more lines, quit now.
+        if (pos.y >= max_y)
             break;
+        if (linestart < len)
+        {
+            // Only advance the cursor line if we printed something.
+            cgotoxy(1, pos.y + (skiplines ? 0 : 1), region);
         }
-
-        // even if the function returns, this will leave the cursor in a valid
-        // position inside the region.
-        if (linebreak)
-            cgotoxy(1, pos.y + 1, region);
-
         if (skiplines)
             --skiplines;
     }
 }
 
 // cprintf that knows how to wrap down lines
-void wrapcprintf(int wrapcol, const char *s, ...)
+static void wrapcprintf(int wrapcol, const char *s, ...)
 {
     va_list args;
     va_start(args, s);
@@ -286,31 +219,10 @@ void wrapcprintf(int wrapcol, const char *s, ...)
     wrapcprint_skipping(0, wrapcol, buf);
 }
 
-/**
- * Print a string wrapped by some value, relative to the current cursor region,
- * potentially skipping some lines. This function truncates if the region has
- * no more space. It is guaranteed to leave the cursor position in a valid spot
- * relative to the region, and uses the width of the region to determine the
- * wrap column.
- *
- * @param s a format string
- * @param ... formatting parameters
- */
-void wrapcprintf(const char *s, ...)
-{
-    va_list args;
-    va_start(args, s);
-    string buf = vmake_stringf(s, args);
-    va_end(args);
-    wrapcprint_skipping(0, cgetsize(get_cursor_region()).x, buf);
-}
-
 int cancellable_get_line(char *buf, int len, input_history *mh,
                         keyfun_action (*keyproc)(int &ch), const string &fill,
                         const string &tag)
 {
-    UNUSED(tag);
-
     flush_prev_message();
 
     mouse_control mc(MOUSE_MODE_PROMPT);
@@ -470,11 +382,6 @@ void line_reader::set_colour(COLOURS fg, COLOURS bg)
     bg_colour = bg;
 }
 
-string line_reader::get_prompt()
-{
-    return prompt;
-}
-
 void line_reader::set_prompt(string p)
 {
     prompt = p;
@@ -551,7 +458,7 @@ static void _webtiles_abort_get_line()
 
 int line_reader::getkey()
 {
-    return getchm();
+    return getchm(getch_ck);
 }
 
 int line_reader::read_line_core(bool reset_cursor)
@@ -566,7 +473,6 @@ int line_reader::read_line_core(bool reset_cursor)
         pos = width;
 
     cur = buffer;
-    // XX shared code with calc_pos
     int cpos = 0;
     while (*cur && cpos < pos)
     {
@@ -815,20 +721,12 @@ void line_reader::calc_pos()
     const char *cp = buffer;
     char32_t c;
     int s;
-    int pos_on_line = start.x;
     while (cp < cur && (s = utf8towc(&c, cp)))
     {
-        const int c_width = wcwidth(c);
-        if (pos_on_line + c_width >= wrapcol + 1)
-        {
-            if (pos_on_line + c_width > wrapcol + 1)
-                p += 1; // account for early wrapping for a wide char
-            pos_on_line = 1;
-            continue;
-        }
+        // FIXME: this won't handle a CJK character wrapping prematurely
+        // (if there's only one space left)
         cp += s;
-        p += c_width;
-        pos_on_line += c_width;
+        p += wcwidth(c);
     }
     pos = p;
 }
@@ -876,7 +774,6 @@ void line_reader::insert_char_at_cursor(int ch)
         pos += w;
         cursorto(0);
         print_segment();
-        calc_pos();
         cursorto(pos);
     }
 }
@@ -914,7 +811,6 @@ int line_reader::process_key(int ch)
             int clear = pos < olen ? olen - pos : 0;
             print_segment(0, clear);
 
-            calc_pos();
             cursorto(pos);
         }
         break;
@@ -934,7 +830,6 @@ int line_reader::process_key(int ch)
             length = cur - buffer;
             *cur = 0;
             print_segment(length, erase); // only overprint
-            calc_pos();
             cursorto(pos);
         }
         break;
@@ -957,7 +852,6 @@ int line_reader::process_key(int ch)
 
             cursorto(pos);
             print_segment(cur - buffer, glyph_width);
-            calc_pos();
             cursorto(pos);
         }
         break;
@@ -996,7 +890,6 @@ int line_reader::process_key(int ch)
     case CONTROL('A'):
         pos = 0;
         cur = buffer;
-        calc_pos();
         cursorto(pos);
         break;
     case CK_END:
@@ -1010,7 +903,6 @@ int line_reader::process_key(int ch)
         return -1;
     case CK_REDRAW:
         redraw_screen();
-        update_screen();
         return -1;
     default:
         if (mode == EDIT_MODE_OVERWRITE)

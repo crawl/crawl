@@ -146,8 +146,6 @@ static int _translate_keysym(SDL_Keysym &keysym)
         return 0;
 #endif
 
-    // XX: this comment isn't very accurate, for example many SDL keycodes are
-    //     |d with 1<<30, and the alt stuff here is just a mess.
     // This is arbitrary, but here's the current mappings.
     // 0-256: ASCII, Crawl arrow keys
     // 0-1k : Other SDL keys (F1, Windows keys, etc...) and modifiers
@@ -279,13 +277,13 @@ static int _translate_keysym(SDL_Keysym &keysym)
 }
 
 static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
-                             wm_mouse_event &tile_event)
+                             MouseEvent &tile_event)
 {
-    tile_event.held   = wm_mouse_event::NONE;
-    tile_event.event  = wm_mouse_event::MOVE;
-    tile_event.button = wm_mouse_event::NONE;
-    tile_event.px     = display_density.apply_game_scale(sdl_event.x);
-    tile_event.py     = display_density.apply_game_scale(sdl_event.y);
+    tile_event.held   = MouseEvent::NONE;
+    tile_event.event  = MouseEvent::MOVE;
+    tile_event.button = MouseEvent::NONE;
+    tile_event.px     = sdl_event.x;
+    tile_event.py     = sdl_event.y;
     tile_event.held   = wm->get_mouse_state(nullptr, nullptr);
     tile_event.mod    = wm->get_mod_state();
 
@@ -293,42 +291,42 @@ static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
 }
 
 static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
-                             wm_mouse_event &tile_event)
+                             MouseEvent &tile_event)
 {
-    tile_event.held  = wm_mouse_event::NONE;
+    tile_event.held  = MouseEvent::NONE;
     tile_event.event = (sdl_event.type == SDL_MOUSEBUTTONDOWN) ?
-    wm_mouse_event::PRESS : wm_mouse_event::RELEASE;
+    MouseEvent::PRESS : MouseEvent::RELEASE;
     switch (sdl_event.button)
     {
     case SDL_BUTTON_LEFT:
-        tile_event.button = wm_mouse_event::LEFT;
+        tile_event.button = MouseEvent::LEFT;
         break;
     case SDL_BUTTON_RIGHT:
-        tile_event.button = wm_mouse_event::RIGHT;
+        tile_event.button = MouseEvent::RIGHT;
         break;
     case SDL_BUTTON_MIDDLE:
-        tile_event.button = wm_mouse_event::MIDDLE;
+        tile_event.button = MouseEvent::MIDDLE;
         break;
     default:
         // Unhandled button.
-        tile_event.button = wm_mouse_event::NONE;
+        tile_event.button = MouseEvent::NONE;
         break;
     }
-    tile_event.px = display_density.apply_game_scale(sdl_event.x);
-    tile_event.py = display_density.apply_game_scale(sdl_event.y);
+    tile_event.px = sdl_event.x;
+    tile_event.py = sdl_event.y;
     tile_event.held = wm->get_mouse_state(nullptr, nullptr);
     tile_event.mod = wm->get_mod_state();
 }
 
 static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
-                                   wm_mouse_event &tile_event)
+                                   MouseEvent &tile_event)
 {
-    tile_event.held  = wm_mouse_event::NONE;
-    tile_event.event = wm_mouse_event::WHEEL;
-    tile_event.button = (sdl_event.y < 0) ? wm_mouse_event::SCROLL_DOWN
-                                          : wm_mouse_event::SCROLL_UP;
-    tile_event.px = display_density.apply_game_scale(sdl_event.x);
-    tile_event.py = display_density.apply_game_scale(sdl_event.y);
+    tile_event.held  = MouseEvent::NONE;
+    tile_event.event = MouseEvent::WHEEL;
+    tile_event.button = (sdl_event.y < 0) ? MouseEvent::SCROLL_DOWN
+                                          : MouseEvent::SCROLL_UP;
+    tile_event.px = sdl_event.x;
+    tile_event.py = sdl_event.y;
 }
 
 SDLWrapper::SDLWrapper():
@@ -364,28 +362,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
         return false;
     }
 
-    // find the current display, based on the mouse position
-    // TODO: probably want to allow configuring this?
-    int mouse_x, mouse_y;
-    SDL_GetGlobalMouseState(&mouse_x, &mouse_y);
-
-    int displays = SDL_GetNumVideoDisplays();
-    int cur_display;
-    for (cur_display = 0; cur_display < displays; cur_display++)
-    {
-        SDL_Rect bounds;
-        SDL_GetDisplayBounds(cur_display, &bounds);
-        if (mouse_x >= bounds.x && mouse_y >= bounds.y &&
-            mouse_x < bounds.x + bounds.w && mouse_y < bounds.y + bounds.h)
-        {
-            break;
-        }
-    }
-    if (cur_display >= displays)
-        cur_display = 0; // can this happen?
-
     SDL_DisplayMode display_mode;
-    SDL_GetDesktopDisplayMode(cur_display, &display_mode);
+    SDL_GetDesktopDisplayMode(0, &display_mode);
 
     _desktop_width = display_mode.w;
     _desktop_height = display_mode.h;
@@ -440,12 +418,10 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
     else
     {
-        int y = Options.tile_window_height;
         int x = Options.tile_window_width;
+        int y = Options.tile_window_height;
         x = (x > 0) ? x : _desktop_width + x;
         y = (y > 0) ? y : _desktop_height + y;
-        if (Options.tile_window_ratio > 0)
-            x = min(x, y * Options.tile_window_ratio / 1000);
 #ifdef TOUCH_UI
         // allow *much* smaller windows than default, primarily for testing
         // touch_ui features in an x86 build
@@ -463,8 +439,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
 
     string title = string(CRAWL " ") + Version::Long;
     m_window = SDL_CreateWindow(title.c_str(),
-                                SDL_WINDOWPOS_CENTERED_DISPLAY(cur_display),
-                                SDL_WINDOWPOS_CENTERED_DISPLAY(cur_display),
+                                SDL_WINDOWPOS_UNDEFINED,
+                                SDL_WINDOWPOS_UNDEFINED,
                                 m_windowsz->x, m_windowsz->y, flags);
     glDebug("SDL_CreateWindow");
     if (!m_window)
@@ -497,8 +473,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
 
     int x, y;
     SDL_GetWindowSize(m_window, &x, &y);
-    m_windowsz->x = display_density.apply_game_scale(x);
-    m_windowsz->y = display_density.apply_game_scale(y);
+    m_windowsz->x = x;
+    m_windowsz->y = y;
     init_hidpi();
 #ifdef __ANDROID__
 # ifndef TOUCH_UI
@@ -520,14 +496,14 @@ int SDLWrapper::screen_width() const
 {
     int w, dummy;
     SDL_GetWindowSize(m_window, &w, &dummy);
-    return display_density.apply_game_scale(w);
+    return w;
 }
 
 int SDLWrapper::screen_height() const
 {
     int dummy, h;
     SDL_GetWindowSize(m_window, &dummy, &h);
-    return display_density.apply_game_scale(h);
+    return h;
 }
 
 int SDLWrapper::desktop_width() const
@@ -626,11 +602,9 @@ bool SDLWrapper::init_hidpi()
 {
     coord_def windowsz;
     coord_def drawablesz;
-    // window size is in logical pixels
     SDL_GetWindowSize(m_window, &(windowsz.x), &(windowsz.y));
-    // drawable size is in device pixels
     SDL_GL_GetDrawableSize(m_window, &(drawablesz.x), &(drawablesz.y));
-    return display_density.update(drawablesz.x, windowsz.x, Options.game_scale);
+    return display_density.update(drawablesz.x, windowsz.x);
 }
 
 void SDLWrapper::resize(coord_def &m_windowsz)
@@ -646,9 +620,28 @@ unsigned int SDLWrapper::get_ticks() const
     return SDL_GetTicks();
 }
 
-unsigned char SDLWrapper::get_mod_state() const
+tiles_key_mod SDLWrapper::get_mod_state() const
 {
-    return _kmod_to_mod(SDL_GetModState());
+    SDL_Keymod mod = SDL_GetModState();
+
+    switch (mod)
+    {
+    case KMOD_LSHIFT:
+    case KMOD_RSHIFT:
+        return TILES_MOD_SHIFT;
+        break;
+    case KMOD_LCTRL:
+    case KMOD_RCTRL:
+        return TILES_MOD_CTRL;
+        break;
+    case KMOD_LALT:
+    case KMOD_RALT:
+        return TILES_MOD_ALT;
+        break;
+    case KMOD_NONE:
+    default:
+        return TILES_MOD_NONE;
+    }
 }
 
 void SDLWrapper::set_mod_state(tiles_key_mod mod)
@@ -708,17 +701,13 @@ void SDLWrapper::set_mouse_cursor(mouse_cursor_type type)
 unsigned short SDLWrapper::get_mouse_state(int *x, int *y) const
 {
     Uint32 state = SDL_GetMouseState(x, y);
-    if (x)
-        *x = display_density.apply_game_scale(*x);
-    if (y)
-        *y = display_density.apply_game_scale(*y);
     unsigned short ret = 0;
     if (state & SDL_BUTTON(SDL_BUTTON_LEFT))
-        ret |= wm_mouse_event::LEFT;
+        ret |= MouseEvent::LEFT;
     if (state & SDL_BUTTON(SDL_BUTTON_RIGHT))
-        ret |= wm_mouse_event::RIGHT;
+        ret |= MouseEvent::RIGHT;
     if (state & SDL_BUTTON(SDL_BUTTON_MIDDLE))
-        ret |= wm_mouse_event::MIDDLE;
+        ret |= MouseEvent::MIDDLE;
     return ret;
 }
 
@@ -784,10 +773,6 @@ static char32_t _key_suppresses_textinput(int keycode)
     case SDLK_PAGEDOWN:
         result_char = '3';
         break;
-    case SDLK_KP_PERIOD:
-    case SDLK_DELETE:
-        result_char = '.';
-        break;
     }
     if (result_char)
         utf8towc(&result, &result_char);
@@ -804,15 +789,7 @@ int SDLWrapper::send_textinput(wm_event *event)
         int wc_bytelen = utf8towc(&wc, m_textinput_queue.c_str());
         m_textinput_queue.erase(0, wc_bytelen);
 
-        // SDL2 on linux sends an apparently spurious '=' text event for ctrl-=,
-        // but not for key combinations like ctrl-f (no 'f' text event is sent).
-        // this is relevant only for ctrl-- and ctrl-= bindings at the moment,
-        // and I'm somewhat nervous about blocking genuine text entry via the alt
-        // key, so for the moment this only blacklists text events with ctrl held
-        bool nontext_modifier_held = wm->get_mod_state() & TILES_MOD_CTRL;
-
-        bool should_suppress = prev_keycode && _key_suppresses_textinput(prev_keycode) == wc;
-        if (nontext_modifier_held || should_suppress)
+        if (prev_keycode && _key_suppresses_textinput(prev_keycode) == wc)
         {
             // this needs to return something, or the event loop in
             // TilesFramework::getch_ck will block. Currently, CK_NO_KEY
@@ -923,31 +900,22 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
     return 1;
 }
 
-static unsigned int _timer_callback(unsigned int ticks, void *param)
-{
-    UNUSED(ticks);
-
-    SDL_Event event;
-    memset(&event, 0, sizeof(event));
-    event.type = SDL_USEREVENT;
-    event.user.data1 = param;
-    SDL_PushEvent(&event);
-    return 0;
-}
-
 unsigned int SDLWrapper::set_timer(unsigned int interval,
                                    wm_timer_callback callback)
 {
-    return SDL_AddTimer(interval, _timer_callback, reinterpret_cast<void*>(callback));
+    return SDL_AddTimer(interval, callback, nullptr);
 }
 
-void SDLWrapper::remove_timer(unsigned int& timer_id)
+void SDLWrapper::remove_timer(unsigned int timer_id)
 {
-    if (timer_id)
-    {
-        SDL_RemoveTimer(timer_id);
-        timer_id = 0;
-    }
+    SDL_RemoveTimer(timer_id);
+}
+
+int SDLWrapper::raise_custom_event()
+{
+    SDL_Event send_event;
+    send_event.type = SDL_USEREVENT;
+    return SDL_PushEvent(&send_event);
 }
 
 void SDLWrapper::swap_buffers()
@@ -960,12 +928,12 @@ void SDLWrapper::delay(unsigned int ms)
     SDL_Delay(ms);
 }
 
-bool SDLWrapper::next_event_is(wm_event_type type)
+unsigned int SDLWrapper::get_event_count(wm_event_type type)
 {
     // check for enqueued characters from a multi-char textinput event
     // count is floored to 1 for consistency with other event types
     if (type == WME_KEYDOWN && m_textinput_queue.size() > 0)
-        return true;
+        return 1;
 
     // Look for the presence of any keyboard events in the queue.
     Uint32 event;
@@ -1024,7 +992,7 @@ bool SDLWrapper::next_event_is(wm_event_type type)
         count += SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, SDL_TEXTINPUT, SDL_TEXTINPUT);
     ASSERT(count >= 0);
 
-    return count != 0;
+    return max(count, 0);
 }
 
 void SDLWrapper::show_keyboard()
@@ -1248,8 +1216,6 @@ void SDLWrapper::glDebug(const char* msg)
     int e = glGetError();
     if (e > 0)
        __android_log_print(ANDROID_LOG_INFO, "Crawl", "ERROR %x: %s", e, msg);
-#else
-    UNUSED(msg);
 #endif
 }
 #endif // USE_SDL

@@ -8,21 +8,12 @@
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
-#include "env.h"
 #include "player.h"
 #include "terrain.h"
 #include "travel.h"
-#include "map-knowledge.h"
-
-static bool _in_map_bounds(const coord_def& p)
-{
-    std::pair<coord_def, coord_def> b = known_map_bounds();
-    return p.x >= b.first.x && p.y >= b.first.y
-        && p.x <= b.second.x && p.y <= b.second.y;
-}
 
 /*** Set an exclusion.
- * Uses player-centered coordinates
+ * Uses player centered coordinates
  * @tparam int x
  * @tparam int y
  * @tparam[opt=LOS_RADIUS] int r
@@ -34,8 +25,8 @@ LUAFN(l_set_exclude)
     s.x = luaL_safe_checkint(ls, 1);
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
-        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
+    if (!in_bounds(p))
+        return 0;
     // XXX: dedup w/_get_full_exclusion_radius()?
     int r = LOS_RADIUS;
     if (lua_gettop(ls) > 2)
@@ -45,10 +36,10 @@ LUAFN(l_set_exclude)
 }
 
 /*** Remove an exclusion.
- * Uses player-centered coordinates
+ * Uses player centered coordinates
  * @tparam int x
  * @tparam int y
- * @function del_exclude
+ * @function del_eclude
  */
 LUAFN(l_del_exclude)
 {
@@ -56,35 +47,16 @@ LUAFN(l_del_exclude)
     s.x = luaL_safe_checkint(ls, 1);
     s.y = luaL_safe_checkint(ls, 2);
     const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
-        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
+    if (!in_bounds(p))
+        return 0;
     del_exclude(p);
     return 0;
-}
-
-/*** Test for exclusion.
- * Uses player-centered coordinates
- * @tparam int x
- * @tparam int y
- * @treturn boolean
- * @function is_excluded
- */
-LUAFN(l_is_excluded)
-{
-    coord_def s;
-    s.x = luaL_safe_checkint(ls, 1);
-    s.y = luaL_safe_checkint(ls, 2);
-    const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
-        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
-    PLUARET(boolean, is_excluded(p));
-    return 1;
 }
 
 /*** Can we get across this without swimming or flying?
  * @tparam string featurename
  * @treturn boolean
- * @function feature_traversable
+ * @function feature_is_traversable
  */
 LUAFN(l_feature_is_traversable)
 {
@@ -96,7 +68,7 @@ LUAFN(l_feature_is_traversable)
 /*** Is this feature solid?
  * @tparam string featurename
  * @treturn boolean
- * @function feature_solid
+ * @function feature_is_solid
  */
 LUAFN(l_feature_is_solid)
 {
@@ -129,8 +101,8 @@ LUAFN(l_find_deepest_explored)
 LUAFN(l_waypoint_delta)
 {
     int waynum = luaL_safe_checkint(ls, 1);
-    if (waynum < 0 || waynum >= TRAVEL_WAYPOINT_COUNT)
-        return luaL_error(ls, "Bad waypoint number: %d", waynum);
+    if (waynum < 0 || waynum > 9)
+        return 0;
     const level_pos waypoint = travel_cache.get_waypoint(waynum);
     if (waypoint.id != level_id::current())
         return 0;
@@ -140,69 +112,14 @@ LUAFN(l_waypoint_delta)
     return 2;
 }
 
-/*** Set a numbered waypoint.
- * Uses player-centered coordinates
- * @tparam int waynum
- * @tparam int x
- * @tparam int y
- * @function set_waypoint
- */
-LUAFN(l_set_waypoint)
-{
-    int waynum = luaL_safe_checkint(ls, 1);
-    if (waynum < 0 || waynum >= TRAVEL_WAYPOINT_COUNT)
-        return luaL_error(ls, "Bad waypoint number: %d", waynum);
-    coord_def s;
-    s.x = luaL_safe_checkint(ls, 2);
-    s.y = luaL_safe_checkint(ls, 3);
-    const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
-        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
-    travel_cache.set_waypoint(waynum, p.x, p.y);
-    return 0;
-}
-
-/*** Clears the travel trail.
- * Call crawl.redraw_screen afterward to see changes.
- * @function clear_travel_trail
- */
-static int l_clear_travel_trail(lua_State*)
-{
-    clear_travel_trail();
-    return 0;
-}
-
-/*** Set travel_trail on a cell
- * Call crawl.redraw_screen afterward to see changes.
- * Uses player-centered coordinates.
- * @tparam int x
- * @tparam int y
- * @function set_travel_trail
- */
-LUAFN(l_set_travel_trail)
-{
-    coord_def s;
-    s.x = luaL_safe_checkint(ls, 1);
-    s.y = luaL_safe_checkint(ls, 2);
-    const coord_def p = player2grid(s);
-    if (!_in_map_bounds(p))
-        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
-    env.travel_trail.push_back(p);
-    return 0;
-}
-
 static const struct luaL_reg travel_lib[] =
 {
     { "set_exclude", l_set_exclude },
     { "del_exclude", l_del_exclude },
-    { "is_excluded", l_is_excluded },
     { "feature_traversable", l_feature_is_traversable },
     { "feature_solid", l_feature_is_solid },
     { "find_deepest_explored", l_find_deepest_explored },
     { "waypoint_delta", l_waypoint_delta },
-    { "set_waypoint", l_set_waypoint },
-    { "clear_travel_trail", l_clear_travel_trail },
-    { "set_travel_trail", l_set_travel_trail },
 
     { nullptr, nullptr }
 };

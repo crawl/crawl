@@ -10,7 +10,6 @@
 #include <functional>
 
 #include "ability.h"
-#include "artefact.h"
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
@@ -20,12 +19,14 @@
 #include "decks.h"
 #include "describe.h"
 #include "describe-god.h"
+#include "describe-spells.h"
 #include "directn.h"
 #include "english.h"
 #include "enum.h"
 #include "env.h"
 #include "god-menu.h"
 #include "item-prop.h"
+#include "item-status-flag-type.h"
 #include "item-name.h"
 #include "items.h"
 #include "libutil.h" // map_find
@@ -38,20 +39,20 @@
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
-#include "rltiles/tiledef-main.h"
-#include "scroller.h"
 #include "skills.h"
+#include "stringutil.h"
 #include "spl-book.h"
 #include "spl-util.h"
-#include "stringutil.h"
-#include "tag-version.h"
 #include "terrain.h"
+#ifdef USE_TILE
 #include "tile-flags.h"
+#include "tiledef-main.h"
 #include "tilepick.h"
 #include "tileview.h"
+#endif
 #include "ui.h"
-#include "viewchar.h"
 #include "view.h"
+#include "viewchar.h"
 
 
 typedef vector<string> (*keys_by_glyph)(char32_t showchar);
@@ -111,7 +112,6 @@ public:
      */
     bool no_search() const { return simple_key_fetch != nullptr; }
 
-    bool find_description(string &response) const;
     int describe(const string &key, bool exact_match = false) const;
 
 public:
@@ -350,17 +350,6 @@ static vector<string> _get_monster_keys(char32_t showchar)
     return mon_keys;
 }
 
-static vector<string> _get_card_keys()
-{
-    vector<string> names;
-    for (int i = 0; i < NUM_CARDS; ++i)
-    {
-        card_type card = static_cast<card_type>(i);
-        if (!card_is_removed(card))
-            names.push_back(make_stringf("%s card", card_name(card)));
-    }
-    return names;
-}
 
 static vector<string> _get_god_keys()
 {
@@ -423,14 +412,14 @@ static vector<string> _get_skill_keys()
     return names;
 }
 
-static bool _monster_filter(string key, string /*body*/)
+static bool _monster_filter(string key, string body)
 {
     const monster_type mon_num = _mon_by_name(key);
     return mons_class_flag(mon_num, M_CANT_SPAWN)
            || mons_is_tentacle_segment(mon_num);
 }
 
-static bool _spell_filter(string key, string /*body*/)
+static bool _spell_filter(string key, string body)
 {
     if (!strip_suffix(key, "spell"))
         return true;
@@ -446,18 +435,33 @@ static bool _spell_filter(string key, string /*body*/)
     return false;
 }
 
-static bool _item_filter(string key, string /*body*/)
+static bool _item_filter(string key, string body)
 {
-    return item_kind_by_name(key).base_type == OBJ_UNASSIGNED
-        && !extant_unrandart_by_exact_name(key);
+    return item_kind_by_name(key).base_type == OBJ_UNASSIGNED;
 }
 
-static bool _feature_filter(string key, string /*body*/)
+static bool _feature_filter(string key, string body)
 {
     return feat_by_desc(key) == DNGN_UNSEEN;
 }
 
-static bool _ability_filter(string key, string /*body*/)
+static bool _card_filter(string key, string body)
+{
+    lowercase(key);
+
+    // Every card description contains the keyword "card".
+    if (!strip_suffix(key, "card"))
+        return true;
+
+    for (int i = 0; i < NUM_CARDS; ++i)
+    {
+        if (key == lowercase_string(card_name(static_cast<card_type>(i))))
+            return false;
+    }
+    return true;
+}
+
+static bool _ability_filter(string key, string body)
 {
     lowercase(key);
 
@@ -467,7 +471,7 @@ static bool _ability_filter(string key, string /*body*/)
     return !string_matches_ability_name(key);
 }
 
-static bool _status_filter(string key, string /*body*/)
+static bool _status_filter(string key, string body)
 {
     return !strip_suffix(lowercase(key), " status");
 }
@@ -482,16 +486,6 @@ static void _recap_mon_keys(vector<string> &keys)
             monster_type type = get_monster_by_name(keys[i]);
             keys[i] = mons_type_name(type, DESC_PLAIN);
         }
-    }
-}
-
-static void _recap_item_keys(vector<string> &keys)
-{
-    for (unsigned int i = 0, size = keys.size(); i < size; i++)
-    {
-        const int unrand_idx = extant_unrandart_by_exact_name(keys[i]);
-        if (unrand_idx)
-            keys[i] = get_unrand_entry(unrand_idx)->name; // fix capitalization
     }
 }
 
@@ -535,7 +529,28 @@ static void _recap_feat_keys(vector<string> &keys)
         if (type == DNGN_ENTER_SHOP)
             keys[i] = "A shop";
         else
-            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A);
+        {
+            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A,
+                                          false);
+        }
+    }
+}
+
+static void _recap_card_keys(vector<string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        lowercase(keys[i]);
+
+        for (int j = 0; j < NUM_CARDS; ++j)
+        {
+            card_type card = static_cast<card_type>(j);
+            if (keys[i] == lowercase_string(card_name(card)) + " card")
+            {
+                keys[i] = string(card_name(card)) + " card";
+                break;
+            }
+        }
     }
 }
 
@@ -576,7 +591,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
         base_type = MONS_GOBLIN;
 
     monster_info fake_mon(m_type, base_type);
-    fake_mon.props[FAKE_MON_KEY] = true;
+    fake_mon.props["fake"] = true;
 
     mslot = fake_mon;
 
@@ -610,18 +625,17 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
 static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
+#ifdef USE_TILE
     item_def item;
     item_kind kind = item_kind_by_name(key);
-    if (kind.base_type == OBJ_UNASSIGNED)
-        make_item_unrandart(item, extant_unrandart_by_exact_name(key));
-    else
-        get_item_by_name(&item, key.c_str(), kind.base_type);
+    get_item_by_name(&item, key.c_str(), kind.base_type);
     item_colour(item);
-    tileidx_t idx = tileidx_item(get_item_known_info(item));
+    tileidx_t idx = tileidx_item(get_item_info(item));
     tileidx_t base_item = tileidx_known_base_item(idx);
     if (base_item)
-        me->add_tile(tile_def(base_item));
-    me->add_tile(tile_def(idx));
+        me->add_tile(tile_def(base_item, TEX_DEFAULT));
+    me->add_tile(tile_def(idx, TEX_DEFAULT));
+#endif
     return me;
 }
 
@@ -633,12 +647,14 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
     MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
     me->data = &key;
 
+#ifdef USE_TILE
     const dungeon_feature_type feat = feat_by_desc(str);
     if (feat)
     {
         const tileidx_t idx = tileidx_feature_base(feat);
-        me->add_tile(tile_def(idx));
+        me->add_tile(tile_def(idx, get_dngn_tex(idx)));
     }
+#endif
 
     return me;
 }
@@ -646,7 +662,7 @@ static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 /**
  * Generate a ?/G menu entry. (ref. _simple_menu_gen()).
  */
-static MenuEntry* _god_menu_gen(char /*letter*/, const string &/*str*/, string &key)
+static MenuEntry* _god_menu_gen(char letter, const string &str, string &key)
 {
     return new GodMenuEntry(str_to_god(key));
 }
@@ -658,9 +674,11 @@ static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
+#ifdef USE_TILE
     const ability_type ability = ability_by_name(str);
     if (ability != ABIL_NON_ABILITY)
-        me->add_tile(tile_def(tileidx_ability(ability)));
+        me->add_tile(tile_def(tileidx_ability(ability), TEX_GUI));
+#endif
 
     return me;
 }
@@ -671,7 +689,9 @@ static MenuEntry* _ability_menu_gen(char letter, const string &str, string &key)
 static MenuEntry* _card_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
-    me->add_tile(tile_def(TILEG_NEMELEX_CARD));
+#ifdef USE_TILE
+    me->add_tile(tile_def(TILEG_NEMELEX_CARD, TEX_GUI));
+#endif
     return me;
 }
 
@@ -683,8 +703,10 @@ static MenuEntry* _spell_menu_gen(char letter, const string &str, string &key)
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
     const spell_type spell = spell_by_name(str);
+#ifdef USE_TILE
     if (spell != SPELL_NO_SPELL)
-        me->add_tile(tile_def(tileidx_spell(spell)));
+        me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
+#endif
     me->colour = is_player_spell(spell) ? WHITE
                                         : DARKGREY; // monster-only
 
@@ -698,8 +720,10 @@ static MenuEntry* _skill_menu_gen(char letter, const string &str, string &key)
 {
     MenuEntry* me = _simple_menu_gen(letter, str, key);
 
+#ifdef USE_TILE
     const skill_type skill = str_to_skill_safe(str);
-    me->add_tile(tile_def(tileidx_skill(skill, TRAINING_ENABLED)));
+    me->add_tile(tile_def(tileidx_skill(skill, TRAINING_ENABLED), TEX_GUI));
+#endif
 
     return me;
 }
@@ -713,8 +737,10 @@ static MenuEntry* _branch_menu_gen(char letter, const string &str, string &key)
 
     const branch_type branch = branch_by_shortname(str);
     int hotkey = branches[branch].travel_shortcut;
-    me->hotkeys = {hotkey, tolower_safe(hotkey)};
-    me->add_tile(tile_def(tileidx_branch(branch)));
+    me->hotkeys = {hotkey, tolower(hotkey)};
+#ifdef USE_TILE
+    me->add_tile(tile_def(tileidx_branch(branch), TEX_FEAT));
+#endif
 
     return me;
 }
@@ -735,11 +761,13 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     fake_cloud.decay = 1000;
     me->colour = element_colour(get_cloud_colour(fake_cloud));
 
+#ifdef USE_TILE
     cloud_info fake_cloud_info;
     fake_cloud_info.type = cloud;
     fake_cloud_info.colour = me->colour;
-    const tileidx_t idx = tileidx_cloud(fake_cloud_info);
-    me->add_tile(tile_def(idx));
+    const tileidx_t idx = tileidx_cloud(fake_cloud_info) & ~TILE_FLAG_FLYING;
+    me->add_tile(tile_def(idx, TEX_DEFAULT));
+#endif
 
     return me;
 }
@@ -755,10 +783,10 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
 string LookupType::prompt_string() const
 {
     string prompt_str = lowercase_string(type);
-    const size_t symbol_pos = prompt_str.find(tolower_safe(symbol));
+    const size_t symbol_pos = prompt_str.find(tolower(symbol));
     ASSERT(symbol_pos != string::npos);
 
-    prompt_str.replace(symbol_pos, 1, make_stringf("(%c)", toupper_safe(symbol)));
+    prompt_str.replace(symbol_pos, 1, make_stringf("(%c)", toupper(symbol)));
     return prompt_str;
 }
 
@@ -811,8 +839,7 @@ static string _mons_desc_key(monster_type type)
 void LookupType::display_keys(vector<string> &key_list) const
 {
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-                | MF_NO_SELECT_QTY | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT,
-            toggleable_sort());
+            | MF_NO_SELECT_QTY | MF_USE_TWO_COLUMNS , toggleable_sort());
     desc_menu.set_tag("description");
 
     // XXX: ugh
@@ -828,8 +855,7 @@ void LookupType::display_keys(vector<string> &key_list) const
             desc_menu.add_entry(_monster_menu_gen(letter,
                                                   key_to_menu_str(key),
                                                   monster_list[i]));
-        }
-        else
+        } else
             desc_menu.add_entry(make_menu_entry(letter, key));
     }
 
@@ -920,14 +946,17 @@ static int _describe_key(const string &key, const string &suffix,
     inf.quote = getQuoteString(key);
 
     const string desc = getLongDescription(key);
+    const int width = min(80, get_number_of_cols());
 
     inf.body << desc << extra_info;
-    inf.title = [&]() {
-        string title = key;
-        strip_suffix(title, suffix);
-        return uppercase_first(title);
-    }();
+
+    string title = key;
+    strip_suffix(title, suffix);
+    title = uppercase_first(title);
+    linebreak_string(footer, width - 1);
+
     inf.footer = footer;
+    inf.title  = title;
 
     return show_description(inf, tile);
 }
@@ -971,11 +1000,13 @@ static int _describe_monster(const string &key, const string &suffix,
     // one at random as this does?
     if (mons_is_draconian_job(mon_num))
         base_type = random_draconian_monster_species();
+    else if (mons_is_demonspawn_job(mon_num))
+        base_type = random_demonspawn_monster_species();
     monster_info mi(mon_num, base_type);
     // Avoid slime creature being described as "buggy"
     if (mi.type == MONS_SLIME_CREATURE)
         mi.slime_size = 1;
-    return describe_monsters(mi, footer);
+    return describe_monsters(mi, true, footer);
 }
 
 
@@ -988,17 +1019,17 @@ static int _describe_monster(const string &key, const string &suffix,
  * @return          The keypress the user made to exit.
  */
 static int _describe_spell(const string &key, const string &suffix,
-                             string /*footer*/)
+                             string footer)
 {
     const string spell_name = key.substr(0, key.size() - suffix.size());
     const spell_type spell = spell_by_name(spell_name, true);
     ASSERT(spell != SPELL_NO_SPELL);
-    describe_spell(spell);
+    describe_spell(spell, nullptr, nullptr, true);
     return 0;
 }
 
 static int _describe_skill(const string &key, const string &suffix,
-                             string /*footer*/)
+                             string footer)
 {
     const string skill_name = key.substr(0, key.size() - suffix.size());
     const skill_type skill = skill_from_name(skill_name.c_str());
@@ -1007,7 +1038,7 @@ static int _describe_skill(const string &key, const string &suffix,
 }
 
 static int _describe_ability(const string &key, const string &suffix,
-                             string /*footer*/)
+                             string footer)
 {
     const string abil_name = key.substr(0, key.size() - suffix.size());
     const ability_type abil = ability_by_name(abil_name.c_str());
@@ -1030,7 +1061,7 @@ static int _describe_card(const string &key, const string &suffix,
     const card_type card = name_to_card(card_name);
     ASSERT(card != NUM_CARDS);
 #ifdef USE_TILE
-    tile_def tile = tile_def(TILEG_NEMELEX_CARD);
+    tile_def tile = tile_def(TILEG_NEMELEX_CARD, TEX_GUI);
     return _describe_key(key, suffix, footer, which_decks(card) + "\n", &tile);
 #else
     return _describe_key(key, suffix, footer, which_decks(card) + "\n");
@@ -1054,8 +1085,8 @@ static int _describe_cloud(const string &key, const string &suffix,
 #ifdef USE_TILE
     cloud_info fake_cloud_info;
     fake_cloud_info.type = cloud;
-    const tileidx_t idx = tileidx_cloud(fake_cloud_info);
-    tile_def tile = tile_def(idx);
+    const tileidx_t idx = tileidx_cloud(fake_cloud_info) & ~TILE_FLAG_FLYING;
+    tile_def tile = tile_def(idx, TEX_DEFAULT);
     return _describe_key(key, suffix, footer, extra_cloud_info(cloud), &tile);
 #else
     return _describe_key(key, suffix, footer, extra_cloud_info(cloud));
@@ -1071,23 +1102,17 @@ static int _describe_cloud(const string &key, const string &suffix,
  * @return          The keypress the user made to exit.
  */
 static int _describe_item(const string &key, const string &suffix,
-                           string /*footer*/)
+                           string footer)
 {
-    const string item_name = key.substr(0, key.size() - suffix.size());
     item_def item;
-    if (!get_item_by_exact_name(item, item_name.c_str()))
-    {
-        const int unrand_idx = extant_unrandart_by_exact_name(item_name);
-        if (!unrand_idx)
-            die("Unable to get item %s by name", key.c_str());
-        make_item_unrandart(item, unrand_idx);
-    }
-    describe_item_popup(item);
+    if (!get_item_by_exact_name(item, key.c_str()))
+        die("Unable to get item %s by name", key.c_str());
+    describe_item(item);
     return 0;
 }
 
 static int _describe_feature(const string &key, const string &suffix,
-                             string /*footer*/)
+                             string footer)
 {
     const string feat_name = key.substr(0, key.size() - suffix.size());
     const dungeon_feature_type feat = feat_by_desc(feat_name);
@@ -1219,8 +1244,12 @@ static int _describe_branch(const string &key, const string &suffix,
             + "\n\n"
             + branch_rune_desc(branch, false);
 
-    tile_def tile = tile_def(tileidx_branch(branch));
+#ifdef USE_TILE
+    tile_def tile = tile_def(tileidx_branch(branch), TEX_FEAT);
     return _describe_key(key, suffix, footer, info, &tile);
+#else
+    return _describe_key(key, suffix, footer, info);
+#endif
 }
 
 /// All types of ?/ queries the player can enter.
@@ -1237,10 +1266,10 @@ static const vector<LookupType> lookup_types = {
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_ability, lookup_type::db_suffix),
-    LookupType('C', "card", nullptr, nullptr,
-               nullptr, _get_card_keys, _card_menu_gen,
+    LookupType('C', "card", _recap_card_keys, _card_filter,
+               nullptr, nullptr, _card_menu_gen,
                _describe_card, lookup_type::db_suffix),
-    LookupType('I', "item", _recap_item_keys, _item_filter,
+    LookupType('I', "item", nullptr, _item_filter,
                item_name_list_for_glyph, nullptr, _item_menu_gen,
                _describe_item, lookup_type::none),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
@@ -1265,28 +1294,13 @@ static const vector<LookupType> lookup_types = {
  */
 static map<char, const LookupType*> _build_lookup_type_map()
 {
-    ASSERT(lookup_types.size() == NUM_LOOKUP_HELP_TYPES);
     map<char, const LookupType*> lookup_map;
-    for (auto &lt : lookup_types)
-        lookup_map[lt.symbol] = &lt;
+    for (const auto &lookup : lookup_types)
+        lookup_map[lookup.symbol] = &lookup;
     return lookup_map;
 }
 static const map<char, const LookupType*> _lookup_types_by_symbol
     = _build_lookup_type_map();
-
-/// Return the display name (lowercase) for the given lookup type.
-string lookup_help_type_name(lookup_help_type lht)
-{
-    ASSERT(lht >= 0 && lht < NUM_LOOKUP_HELP_TYPES);
-    return lookup_types[lht].type;
-}
-
-/// Return the hotkey character for the given lookup type.
-char lookup_help_type_shortcut(lookup_help_type lht)
-{
-    ASSERT(lht >= 0 && lht < NUM_LOOKUP_HELP_TYPES);
-    return lookup_types[lht].symbol;
-}
 
 /**
  * Prompt the player for a search string for the given lookup type.
@@ -1356,46 +1370,86 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
     {
         if (by_symbol)
             return "No " + plur_type + " with symbol '" + regex + "'.";
-        return make_stringf("No matching %s for search string '%s'.",
-            plur_type.c_str(), regex.c_str());
+        return "No matching " + plur_type + ".";
     }
 
     // we're good!
     return "";
 }
 
-static void _show_type_response(string response)
+static int _lookup_prompt()
 {
-    // possibly overkill, but this renders very reliably
-    formatted_scroller fs(FS_EASY_EXIT);
-    fs.set_more();
-    fs.add_text(response);
-    fs.show();
-}
+    // TODO: show this + the regex prompt in the same menu?
+#ifdef TOUCH_UI
+    bool use_popup = true;
+#else
+    bool use_popup = !crawl_state.need_save || ui::has_layout();
+#endif
 
-bool find_description_of_type(lookup_help_type lht)
-{
-    ASSERT(lht >= 0 && lht < NUM_LOOKUP_HELP_TYPES);
-    string response;
-    bool done = lookup_types[lht].find_description(response);
-    dprf("response: '%s'", response.c_str());
-    if (!response.empty() && response != "Okay, then.") // TODO: ...
-        _show_type_response(response);
-    return done;
+    int ch = -1;
+    const string lookup_type_prompts =
+        comma_separated_fn(lookup_types.begin(), lookup_types.end(),
+                           mem_fn(&LookupType::prompt_string), " or ");
+    if (use_popup)
+    {
+        string prompt = make_stringf("Describe a %s? ",
+                                                lookup_type_prompts.c_str());
+        linebreak_string(prompt, 72);
+
+#ifdef USE_TILE_WEB
+        tiles_crt_popup show_as_popup;
+        tiles.set_ui_state(UI_CRT);
+#endif
+        auto prompt_ui =
+                make_shared<ui::Text>(formatted_string::parse_string(prompt));
+        bool done = false;
+
+        prompt_ui->on(ui::Widget::slots.event, [&](wm_event ev) {
+            if (ev.type == WME_KEYDOWN)
+            {
+                ch = ev.key.keysym.sym;
+                done = true;
+            }
+            return done;
+        });
+
+        mouse_control mc(MOUSE_MODE_MORE);
+        auto popup = make_shared<ui::Popup>(prompt_ui);
+        ui::run_layout(move(popup), done);
+    }
+    else
+    {
+        mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
+
+        {
+            cursor_control con(true);
+            ch = getchm();
+        }
+    }
+    return toupper(ch);
 }
 
 /**
- * Run an iteration of ?/ for the given lookup type.
+ * Run an iteration of ?/.
  *
  * @param response[out]   A response to input, to print before the next iter.
  * @return                true if the ?/ loop should continue
  *                        false if it should return control to the caller
  */
-bool LookupType::find_description(string &response) const
+static bool _find_description(string &response)
 {
-    const bool want_regex = !no_search();
+    int ch = _lookup_prompt();
+    const LookupType * const *lookup_type_ptr
+        = map_find(_lookup_types_by_symbol, ch);
+    if (!lookup_type_ptr)
+        return false;
+
+    ASSERT(*lookup_type_ptr);
+    const LookupType ltype = **lookup_type_ptr;
+
+    const bool want_regex = !(ltype.no_search());
     const string regex = want_regex ?
-                         _prompt_for_regex(*this, response) :
+                         _prompt_for_regex(ltype, response) :
                          "";
 
     if (!response.empty())
@@ -1408,100 +1462,56 @@ bool LookupType::find_description(string &response) const
         return true;
     }
 
+
     // Try to get an exact match first.
-    const bool exact_match = _exact_lookup_match(*this, regex);
+    const bool exact_match = _exact_lookup_match(ltype, regex);
 
-    vector<string> key_list = matching_keys(regex);
+    vector<string> key_list = ltype.matching_keys(regex);
 
-    const bool by_symbol = supports_glyph_lookup() && regex.size() == 1;
-    response = _keylist_invalid_reason(key_list, lowercase_string(type),
-                                       regex, by_symbol);
+    const bool by_symbol = ltype.supports_glyph_lookup()
+                           && regex.size() == 1;
+    const string type = lowercase_string(ltype.type);
+    response = _keylist_invalid_reason(key_list, type, regex, by_symbol);
     if (!response.empty())
         return true;
 
     if (key_list.size() == 1)
     {
-        describe(key_list[0]);
+        ltype.describe(key_list[0]);
         return true;
     }
 
-    if (exact_match && describe(regex, true) != ' ')
+    if (exact_match && ltype.describe(regex, true) != ' ')
         return true;
 
-    if (!(flags & lookup_type::disable_sort))
+    if (!(ltype.flags & lookup_type::disable_sort))
         sort(key_list.begin(), key_list.end());
 
-    display_keys(key_list);
+    ltype.display_keys(key_list);
     return true;
 }
 
-class LookupHelpMenu : public Menu
+/**
+ * Run the ?/ loop, repeatedly prompting the player to query for monsters,
+ * etc, until they indicate they're done.
+ */
+void keyhelp_query_descriptions()
 {
-public:
-    class LookupHelpMenuEntry : public MenuEntry
+    string response;
+    while (true)
     {
-    public:
-        LookupHelpMenuEntry(lookup_help_type lht)
-        : MenuEntry(uppercase_first(lookup_help_type_name(lht)),
-                    MEL_ITEM, 1, tolower(lookup_help_type_shortcut(lht))),
-          typ(lht)
-        {
-            // TODO: tiles!
-        }
+        redraw_screen();
 
-        lookup_help_type typ;
-    };
+        if (!response.empty())
+            mprf(MSGCH_PROMPT, "%s", response.c_str());
+        response = "";
 
-    LookupHelpMenu(command_type where_from=CMD_NO_CMD)
-        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP),
-          back_cmd(where_from)
-    {
-        action_cycle = Menu::CYCLE_NONE;
-        menu_action  = Menu::ACT_EXECUTE;
-        set_title(new MenuEntry("Lookup information about:", MEL_TITLE));
-        on_single_selection = [](const MenuEntry& item)
-        {
-            const LookupHelpMenuEntry *lhme
-                        = dynamic_cast<const LookupHelpMenuEntry *>(&item);
-            if (!lhme)
-                return false; // back button
-            find_description_of_type(lhme->typ);
-            return true;
-        };
+        if (!_find_description(response))
+            break;
+
+        clear_messages();
     }
 
-    void fill_entries()
-    {
-        clear();
-        // XX `?/esc` doesn't go back to the main help menu, possibly should
-        const string back = back_cmd == CMD_GAME_MENU
-                                ? "Back to game menu"
-                                : "Exit help lookup";
-        auto back_button = new MenuEntry(back, MEL_ITEM, 1, CK_ESCAPE);
-        if (back_cmd != CMD_NO_CMD)
-            back_button->add_tile(tileidx_command(back_cmd));
-
-        for (int i = FIRST_LOOKUP_HELP_TYPE; i < NUM_LOOKUP_HELP_TYPES; ++i)
-            add_entry(new LookupHelpMenuEntry((lookup_help_type)i));
-
-        add_entry(new MenuEntry("", MEL_SUBTITLE));
-        add_entry(back_button);
-    }
-
-    vector<MenuEntry *> show(bool reuse_selections = false) override
-    {
-        fill_entries();
-        cycle_hover();
-        return Menu::show(reuse_selections);
-    }
-
-private:
-    command_type back_cmd;
-};
-
-void keyhelp_query_descriptions(command_type where_from)
-{
-    LookupHelpMenu m(where_from);
-    m.show();
+    viewwindow();
+    mpr("Okay, then.");
 }

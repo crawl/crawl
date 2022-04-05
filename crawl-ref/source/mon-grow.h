@@ -6,7 +6,6 @@
 #pragma once
 
 #include "fixedvector.h"
-#include "monster-type.h"
 
 // Monster level-up data.
 

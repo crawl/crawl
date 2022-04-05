@@ -5,18 +5,12 @@
 
 #pragma once
 
-#include <vector>
-
 #include "item-prop-enum.h"
 #include "mon-flags.h"
 #include "random.h"
-#include "tag-version.h"
-
-using std::vector;
 
 #define CORPSE_NAME_KEY      "corpse_name_key"
 #define CORPSE_NAME_TYPE_KEY "corpse_name_type_key"
-#define IDENTIFIED_ALL_KEY   "identified_all_key"
 
 struct item_kind
 {
@@ -109,6 +103,7 @@ enum makename_type
     MNAME_JIYVA, /// No spaces, starts with J, Plog -> Jiyva
 };
 
+void check_item_knowledge(bool unknown_items = false);
 void display_runes();
 
 string quant_name(const item_def &item, int quant,
@@ -122,12 +117,11 @@ bool item_type_known(const object_class_type base_type, const int sub_type);
 bool is_interesting_item(const item_def& item);
 bool is_emergency_item(const item_def& item);
 bool is_good_item(const item_def &item);
-bool is_bad_item(const item_def &item);
+bool is_bad_item(const item_def &item, bool temp = false);
 bool is_dangerous_item(const item_def& item, bool temp = false);
-bool is_useless_item(const item_def &item, bool temp = false,
-                     bool ident = false);
+bool is_useless_item(const item_def &item, bool temp = false);
 
-string make_name(uint32_t seed = rng::get_uint32(),
+string make_name(uint32_t seed = get_uint32(),
                  makename_type name_type = MNAME_DEFAULT);
 void make_name_tests();
 
@@ -138,12 +132,11 @@ const char* armour_ego_name(const item_def& item, bool terse);
 const char* missile_brand_name(const item_def& item, mbn_type t);
 
 bool item_type_has_ids(object_class_type base_type);
-void check_if_everything_is_identified();
 bool get_ident_type(const item_def &item);
 bool get_ident_type(object_class_type basetype, int subtype);
-bool set_ident_type(item_def &item, bool identify, bool check_last=true);
-bool set_ident_type(object_class_type basetype, int subtype, bool identify,
-                    bool check_last=true);
+bool set_ident_type(item_def &item, bool identify);
+bool set_ident_type(object_class_type basetype, int subtype, bool identify);
+void pack_item_identify_message(int base_type, int sub_type);
 
 string item_prefix(const item_def &item, bool temp = true);
 string menu_colour_item_name(const item_def &item,
@@ -164,11 +157,8 @@ const char *base_type_string(const item_def &item);
 
 string sub_type_string(const item_def &item, bool known = true);
 
-string ego_type_string(const item_def &item, bool terse = false);
+string ego_type_string(const item_def &item, bool terse = false, brand_type override_brand = SPWPN_NORMAL);
 string ghost_brand_name(brand_type brand, monster_type mtype);
-string weapon_brand_desc(const char *body, const item_def &weap,
-                         bool terse = false,
-                         brand_type override_brand = SPWPN_NORMAL);
 
 const char* potion_type_name(int potiontype);  //used in xom.cc
 const char* jewellery_effect_name(int jeweltype, bool terse = false) PURE; //used in l-item.cc

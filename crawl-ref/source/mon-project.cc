@@ -43,7 +43,7 @@ spret cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     fail_check();
 
     int mtarg = !beam ? MHITNOT :
-                beam->target == you.pos() ? int{MHITYOU} : env.mgrid(beam->target);
+                beam->target == you.pos() ? MHITYOU : mgrd(beam->target);
 
     monster *mon = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
                 (is_player) ? BEH_FRIENDLY :
@@ -279,20 +279,6 @@ static bool _iood_shielded(monster& mon, actor &victim)
     return pro_block >= con_block;
 }
 
-dice_def iood_damage(int pow, int dist, bool random)
-{
-    int flat = 60;
-
-    if (dist < 4)
-    {
-        pow = random ? div_rand_round(pow * dist * 3, 10)
-                     : pow * dist * 3 / 10;
-        flat = flat * dist * 3 / 10;
-    }
-    return dice_def(9, random ? div_rand_round(flat + pow, 12)
-                              : (flat + pow) / 12 );
-}
-
 static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 {
     bolt beam;
@@ -326,12 +312,14 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
     beam.source_name = mon.props[IOOD_CASTER].get_string();
-    beam.origin_spell = SPELL_IOOD;
 
-    const int pow = mon.props[IOOD_POW].get_short();
+    int pow = mon.props[IOOD_POW].get_short();
+    pow = stepdown_value(pow, 30, 30, 200, -1);
     const int dist = mon.props[IOOD_DIST].get_int();
     ASSERT(dist >= 0);
-    beam.damage = iood_damage(pow, dist);
+    if (dist < 4)
+        pow = pow * (dist*2+3) / 10;
+    beam.damage = dice_def(9, pow / 4);
 
     if (dist < 3)
         beam.name = "wavering " + beam.name;
@@ -463,7 +451,7 @@ move_again:
             && you.see_cell(pos)
             && you.see_cell(starting_pos))
         {
-            mprf("%s hits %s.", mon.name(DESC_THE, true).c_str(),
+            mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
                  feature_description_at(pos, false, DESC_A).c_str());
         }
 
@@ -523,7 +511,8 @@ move_again:
 
         if (victim && _iood_shielded(mon, *victim))
         {
-            if (!victim->reflection())
+            item_def *shield = victim->shield();
+            if ((!shield || !shield_reflects(*shield)) && !victim->reflection())
             {
                 if (victim->is_player())
                     mprf("You block %s.", mon.name(DESC_THE, true).c_str());
@@ -532,12 +521,11 @@ move_again:
                     simple_monster_message(*mons, (" blocks "
                         + mon.name(DESC_THE, true) + ".").c_str());
                 }
-                victim->shield_block_succeeded();
+                victim->shield_block_succeeded(&mon);
                 _iood_stop(mon);
                 return true;
             }
 
-            item_def *shield = victim->shield();
             if (victim->is_player())
             {
                 if (shield && shield_reflects(*shield))
@@ -545,6 +533,7 @@ move_again:
                     mprf("Your %s reflects %s!",
                          shield->name(DESC_PLAIN).c_str(),
                          mon.name(DESC_THE, true).c_str());
+                    ident_reflector(shield);
                 }
                 else // has reflection property not from shield
                 {
@@ -558,26 +547,31 @@ move_again:
                 {
                     if (shield && shield_reflects(*shield))
                     {
-                        mprf("%s reflects %s off %s %s!",
+                        mprf("%s reflects %s with %s %s!",
                              victim->name(DESC_THE, true).c_str(),
                              mon.name(DESC_THE, true).c_str(),
-                             victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                             mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
                              shield->name(DESC_PLAIN).c_str());
+                        ident_reflector(shield);
                     }
                     else
                     {
                         mprf("%s reflects off an invisible shield around %s!",
                              mon.name(DESC_THE, true).c_str(),
                              victim->name(DESC_THE, true).c_str());
+
+                        item_def *amulet = victim->slot_item(EQ_AMULET);
+                        if (amulet)
+                            ident_reflector(amulet);
                     }
                 }
                 else
                 {
-                    mprf("%s bounces off of thin air!",
+                    mprf("%s bounces off thin air!",
                          mon.name(DESC_THE, true).c_str());
                 }
             }
-            victim->shield_block_succeeded();
+            victim->shield_block_succeeded(&mon);
 
             // mid_t is unsigned so won't fit in a plain int
             mon.props[IOOD_REFLECTOR] = (int64_t) victim->mid;

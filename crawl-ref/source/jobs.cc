@@ -2,16 +2,16 @@
 
 #include "jobs.h"
 
+#include "enum.h"
 #include "errors.h"
 #include "item-prop.h"
 #include "libutil.h"
 #include "mapdef.h"
 #include "ng-setup.h"
-#include "playable.h"
 #include "player.h"
-#include "spl-book.h"
 #include "stringutil.h"
 
+#include "job-def.h"
 #include "job-data.h"
 
 static const job_def& _job_def(job_type job)
@@ -69,28 +69,38 @@ job_type get_job_by_name(const char *name)
 // Must be called after species_stat_init for the wanderer formula to work.
 void job_stat_init(job_type job)
 {
-    rng::subgenerator stat_rng;
-
     you.hp_max_adj_perm = 0;
 
     you.base_stats[STAT_STR] += _job_def(job).s;
     you.base_stats[STAT_INT] += _job_def(job).i;
     you.base_stats[STAT_DEX] += _job_def(job).d;
+
+    if (job == JOB_WANDERER)
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            const auto stat = random_choose_weighted(
+                    you.base_stats[STAT_STR] > 17 ? 1 : 2, STAT_STR,
+                    you.base_stats[STAT_INT] > 17 ? 1 : 2, STAT_INT,
+                    you.base_stats[STAT_DEX] > 17 ? 1 : 2, STAT_DEX);
+            you.base_stats[stat]++;
+        }
+    }
 }
 
 bool job_has_weapon_choice(job_type job)
 {
-    return _job_def(job).wchoice != WCHOICE_NONE;
+    return _job_def(job).wchoice != weapon_choice::none;
 }
 
 bool job_gets_good_weapons(job_type job)
 {
-    return _job_def(job).wchoice == WCHOICE_GOOD;
+    return _job_def(job).wchoice == weapon_choice::good;
 }
 
 bool job_gets_ranged_weapons(job_type job)
 {
-    return _job_def(job).wchoice == WCHOICE_RANGED;
+    return _job_def(job).wchoice == weapon_choice::ranged;
 }
 
 void give_job_equipment(job_type job)
@@ -102,10 +112,10 @@ void give_job_equipment(job_type job)
     {
         const item_spec spec = items.get_item(i);
         int plus = 0;
-        if (spec.props.exists(CHARGES_KEY))
-            plus = spec.props[CHARGES_KEY];
-        if (spec.props.exists(PLUS_KEY))
-            plus = spec.props[PLUS_KEY];
+        if (spec.props.exists("charges"))
+            plus = spec.props["charges"];
+        if (spec.props.exists("plus"))
+            plus = spec.props["plus"];
         newgame_make_item(spec.base_type, spec.sub_type, max(spec.qty, 1),
                           plus, spec.ego);
     }
@@ -123,7 +133,7 @@ void give_job_skills(job_type job)
             const item_def *weap = you.weapon();
             skill = weap ? item_attack_skill(*weap) : SK_UNARMED_COMBAT;
             //XXX: WTF?
-            if (you.has_mutation(MUT_NO_GRASPING) && job == JOB_FIGHTER)
+            if (you.species == SP_FELID && job == JOB_FIGHTER)
                 amount += 2;
             // Don't give throwing hunters Short Blades skill.
             if (job_gets_ranged_weapons(job) && !(weap && is_range_weapon(*weap)))
@@ -131,11 +141,6 @@ void give_job_skills(job_type job)
         }
         you.skills[skill] += amount;
     }
-}
-
-vector<spell_type> get_job_spells(job_type job)
-{
-    return _job_def(job).library;
 }
 
 void debug_jobdata()
@@ -168,22 +173,17 @@ bool job_recommends_species(job_type job, species_type species)
 // A random valid (selectable on the new game screen) job.
 job_type random_starting_job()
 {
-    const auto jobs = playable_jobs();
-    return jobs[random2(jobs.size())];
+    job_type job;
+    do {
+        job = static_cast<job_type>(random_range(0, NUM_JOBS - 1));
+    } while (!is_starting_job(job));
+    return job;
 }
 
+// Ensure the job isn't JOB_RANDOM/JOB_VIABLE and it has recommended species
+// (old disabled jobs have none).
 bool is_starting_job(job_type job)
 {
-    return job_type_valid(job)  // Ensure the job isn't RANDOM/VIABLE/UNKNOWN
-        && !job_is_removed(job);
-}
-
-bool job_is_removed(job_type job)
-{
-    return _job_def(job).recommended_species.empty();
-}
-
-vector<species_type> job_recommended_species(job_type job)
-{
-    return _job_def(job).recommended_species;
+    return job < NUM_JOBS
+        && !_job_def(job).recommended_species.empty();
 }

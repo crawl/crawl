@@ -36,8 +36,8 @@ grey_dirt_b_7
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
 
-# The colourised versions of FLOOR_PEBBLE were made from
-# pebble_gray*.png, by colourising the non-border colour
+# The colorized versions of FLOOR_PEBBLE were made from
+# pebble_gray*.png, by colorizing the non-border color
 # with hues from 28 to 37, sat 54 to 68, lum 7 to 18 in GIMP.
 %desat 31
 %desat 32
@@ -237,11 +237,6 @@ acidic_floor1
 acidic_floor2
 acidic_floor3
 
-icy_floor0 FLOOR_ICY
-icy_floor1
-icy_floor2
-icy_floor3
-
 slime_overlay_N SLIME_OVERLAY
 slime_overlay_E
 slime_overlay_S
@@ -250,15 +245,6 @@ slime_overlay_NW
 slime_overlay_NE
 slime_overlay_SE
 slime_overlay_SW
-
-ice_overlay_N ICE_OVERLAY
-ice_overlay_E
-ice_overlay_S
-ice_overlay_W
-ice_overlay_NW
-ice_overlay_NE
-ice_overlay_SE
-ice_overlay_SW
 
 %weight 10
 snake-a0 FLOOR_SNAKE_A
@@ -1113,9 +1099,6 @@ shallow_water_murky DNGN_SHALLOW_WATER_MURKY
 shallow_water_murky2
 shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 shallow_water_murky_disturbance2
-
-toxic_bog1 DNGN_TOXIC_BOG
-toxic_bog2
 
 grey_dirt_bb SHORE_N
 grey_dirt_bl SHORE_W

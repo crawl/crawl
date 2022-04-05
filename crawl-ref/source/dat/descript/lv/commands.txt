@@ -94,6 +94,14 @@ CMD_CAST_SPELL verbose
 
 Uzburt burvestību.
 %%%%
+CMD_BUTCHER
+
+Apgraizīt līķi
+%%%%
+CMD_BUTCHER verbose
+
+Sakapāt līķi gabalos.
+%%%%
 CMD_MEMORISE_SPELL
 
 Iegaumēt burvestību

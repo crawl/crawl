@@ -1,17 +1,14 @@
 ae := autopickup_exceptions
 
-### specific inclusions ###
+#### inclusions ###
 
 # Autopickup runes by default.
 ae = <rune of Zot
 
-# Make it harder to miss out on zigfigs.
-ae += <figurine of a ziggurat
-
 ### exclusions ###
 
 # Exclude items useless in general or for your current character (such as
-# armour you can't wear).
+# inedible food or armour you can't wear).
 ae += useless_item
 
 # Exclude potentially useful items of high risk, like ?torment or
@@ -21,17 +18,17 @@ ae += dangerous_item
 # Exclude items which your god disapproves of.
 ae += forbidden
 
-### good_item backstop (keep last) ###
-
-ae += <good_item
+# Ignore books that you have already seen
+ae += [^n]identified.*spellbook
 
 # Don't pick up misc items when duplication doesn't help.
 :add_autopickup_func(function (it, name)
-:  if it.class(true) ~= "misc" then
-:    return
-:  end
 :  local itname = it.name(true) -- Not the name parameter, which includes prefixes.
-:  if not string.find(itname, "ziggurat") then
+:  if string.find(itname, "lamp of fire")
+:  or string.find(itname, "phial of floods")
+:  or string.find(itname, "fan of gales")
+:  or string.find(itname, "lightning rod")
+:  or string.find(itname, "crystal ball of energy") then
 :    for inv in iter.invent_iterator:new(items.inventory()) do
 :      if itname == inv.name() then
 :        return false
@@ -44,12 +41,13 @@ ae += <good_item
 # If you've sacrificed a hand, don't pick up pointless duplicate rings
 :add_autopickup_func(function (it, name)
 :  local itsubtype = it.subtype()
-:  if it.class(true) == "jewellery"
-:  and you.mutation("missing a hand") == 1 and you.race() ~= "octopode"
+:  if you.mutation("missing a hand") == 1 and you.race() ~= "octopode"
+:  and it.class(true) == "jewellery"
 :  and (itsubtype == "ring of positive energy"
 :   or itsubtype == "ring of flight"
 :   or itsubtype == "ring of poison resistance"
 :   or itsubtype == "ring of wizardry"
+:   or itsubtype == "ring of stealth"
 :   or itsubtype == "ring of teleportation"
 :   or itsubtype == "ring of protection from fire"
 :   or itsubtype == "ring of protection from cold"
@@ -72,29 +70,11 @@ ae += <good_item
 :   return it.stacks() or nil
 : end)
 
-# Excluding most amulets as you only need one of each. Likewise for some
-# rings. Some items may already be excluded as bad_item, e.g. inaccuracy.
-:add_autopickup_func(function (it, name)
-:  if (not it.class(true) == "jewellery") or it.artefact then
-:    return
-:  end
-:  local itsubtype = it.subtype()
-:  if itsubtype == "amulet of faith"
-:  or itsubtype == "amulet of guardian spirit"
-:  or itsubtype == "amulet of magic regeneration"
-:  or itsubtype == "amulet of nothing"
-:  or itsubtype == "amulet of reflection"
-:  or itsubtype == "amulet of regeneration"
-:  or itsubtype == "amulet of the acrobat"
-:  or itsubtype == "ring of flight"
-:  or itsubtype == "ring of poison resistance"
-:  or itsubtype == "ring of resist corrosion"
-:  or itsubtype == "ring of see invisible" then
-:    for inv in iter.invent_iterator:new(items.inventory()) do
-:      if inv.class(true) == "jewellery" and inv.subtype() == itsubtype then
-:        return false
-:      end
-:    end
-:  end
-:  return
-:end)
+# Excluding amulets as you only need one of each. (If you know the subtype
+# that means you already have one of it.). Some items may already be excluded
+# as bad_item, e.g. inaccuracy.
+ae += amulet of (nothing|inaccuracy|the gourmand|regeneration|harm)
+ae += amulet of (rage|guardian spirit|faith|magic regeneration|the acrobat)
+
+# Likewise for some rings.
+ae += ring of (see invisible|flight|poison resistance|resist corrosion)

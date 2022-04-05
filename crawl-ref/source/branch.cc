@@ -6,7 +6,6 @@
 #include "item-name.h"
 #include "player.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "travel.h"
 
 FixedVector<level_id, NUM_BRANCHES> brentry;
@@ -59,7 +58,6 @@ static const branch_type logical_branch_order[] = {
     BRANCH_WIZLAB,
     BRANCH_DESOLATION,
     BRANCH_GAUNTLET,
-    BRANCH_ARENA,
 };
 COMPILE_CHECK(ARRAYSZ(logical_branch_order) == NUM_BRANCHES);
 
@@ -68,7 +66,6 @@ static const branch_type danger_branch_order[] = {
     BRANCH_TEMPLE,
     BRANCH_BAZAAR,
     BRANCH_TROVE,
-    BRANCH_ARENA,
     BRANCH_DUNGEON,
     BRANCH_SEWER,
     BRANCH_OSSUARY,
@@ -107,14 +104,6 @@ static const branch_type danger_branch_order[] = {
 #endif
 };
 COMPILE_CHECK(ARRAYSZ(danger_branch_order) == NUM_BRANCHES);
-
-static const int number_of_branch_swap_pairs = 2;
-
-static const branch_type swap_branches[number_of_branch_swap_pairs][2] =
-{
-    {BRANCH_SHOALS, BRANCH_SWAMP},
-    {BRANCH_SPIDER, BRANCH_SNAKE}
-};
 
 branch_iterator::branch_iterator(branch_iterator_type type) :
     iter_type(type), i(0)
@@ -160,18 +149,6 @@ branch_iterator branch_iterator::operator++(int)
     return copy;
 }
 
-vector<branch_type> random_choose_disabled_branches()
-{
-    // You will get one of Shoals/Swamp and one of Spider/Snake.
-    // This way you get one "water" branch and one "poison" branch.
-    vector<branch_type> disabled_branch;
-
-    for (int i=0; i < number_of_branch_swap_pairs; i++)
-        disabled_branch.push_back(swap_branches[i][random_choose(0,1)]);
-
-    return disabled_branch;
-}
-
 const Branch& your_branch()
 {
     return branches[you.where_are_you];
@@ -205,16 +182,8 @@ bool is_hell_branch(branch_type branch)
 
 bool is_random_subbranch(branch_type branch)
 {
-    for (int i=0; i < number_of_branch_swap_pairs; i++)
-    {
-        for (int j=0; j < 2; j++)
-        {
-            if (branch == swap_branches[i][j])
-                return true;
-        }
-    }
-
-    return false;
+    return parent_branch(branch) == BRANCH_LAIR
+           && branch != BRANCH_SLIME;
 }
 
 bool is_connected_branch(const Branch *branch)
@@ -281,8 +250,6 @@ bool branch_is_unfinished(branch_type branch)
     {
         return true;
     }
-#else
-    UNUSED(branch);
 #endif
     return false;
 }
@@ -299,7 +266,8 @@ int runes_for_branch(branch_type branch)
 {
     switch (branch)
     {
-    case BRANCH_VAULTS:   return 1;
+    case BRANCH_VAULTS:   return VAULTS_ENTRY_RUNES;
+    case BRANCH_ZIGGURAT: return ZIG_ENTRY_RUNES;
     case BRANCH_ZOT:      return ZOT_ENTRY_RUNES;
     default:              return 0;
     }
@@ -319,9 +287,16 @@ string branch_noise_desc(branch_type br)
     {
         desc = "This branch is ";
         if (noise > 0)
-            desc += "noisy: sounds don't travel as far here.";
+        {
+            desc += make_stringf("very noisy, and so sound travels much less "
+                                 "far.");
+        }
         else
-            desc += "unnaturally silent: sounds travel farther here.";
+        {
+            desc += make_stringf("unnaturally silent, and so sound travels "
+                                 "much further.");
+
+        }
     }
 
     return desc;

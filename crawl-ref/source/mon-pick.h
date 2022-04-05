@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "level-id.h"
-#include "monster-type.h"
 #include "random-pick.h"
 
 typedef random_pick_entry<monster_type> pop_entry;
@@ -14,21 +12,19 @@ typedef random_pick_entry<monster_type> pop_entry;
 typedef bool (*mon_pick_vetoer)(monster_type);
 typedef bool (*mon_pick_pos_vetoer)(monster_type, coord_def);
 
-bool monster_in_population(branch_type branch, monster_type m, bool check_noncore=true);
-int monster_probability(level_id place, monster_type m);
-int monster_pop_depth_avg(branch_type branch, monster_type m);
+int mons_rarity(monster_type mcls, branch_type branch);
+int mons_depth(monster_type mcls, branch_type branch);
 
 monster_type pick_monster(level_id place, mon_pick_vetoer veto = nullptr);
-monster_type pick_monster_from(const vector<pop_entry>& fpop, int depth,
+monster_type pick_monster_from(const pop_entry *fpop, int depth,
                                mon_pick_vetoer = nullptr);
 monster_type pick_monster_no_rarity(branch_type branch);
 monster_type pick_monster_by_hash(branch_type branch, uint32_t hash);
 monster_type pick_monster_all_branches(int absdepth0, mon_pick_vetoer veto = nullptr);
 int branch_ood_cap(branch_type branch);
-int branch_zombie_cap(branch_type branch);
 bool branch_has_monsters(branch_type branch);
-const vector<pop_entry>& fish_population(branch_type br, bool lava);
-const vector<pop_entry>& zombie_population(branch_type br);
+const pop_entry* fish_population(branch_type br, bool lava);
+const pop_entry* zombie_population(branch_type br);
 
 void debug_monpick();
 
@@ -41,7 +37,7 @@ class monster_picker : public random_picker<monster_type, NUM_MONSTERS>
 public:
     monster_picker() : _veto(nullptr) { };
 
-    monster_type pick_with_veto(const vector<pop_entry>& weights, int level,
+    monster_type pick_with_veto(const pop_entry *weights, int level,
                                 monster_type none,
                                 mon_pick_vetoer vetoer = nullptr);
 

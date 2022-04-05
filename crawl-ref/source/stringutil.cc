@@ -44,16 +44,7 @@ string lowercase_string(const string &s)
     char32_t c;
     char buf[4];
     for (const char *tp = s.c_str(); int len = utf8towc(&c, tp); tp += len)
-    {
-        // crawl breaks horribly if this is allowed to affect ascii chars,
-        // so override locale-specific casing for ascii. (For example, in
-        // Turkish; tr_TR.utf8 lowercase I is a dotless i that is not
-        // ascii, which breaks many things.)
-        if (isaalpha(tp[0]))
-            res.append(1, toalower(tp[0]));
-        else
-            res.append(buf, wctoutf8(buf, towlower(c)));
-    }
+        res.append(buf, wctoutf8(buf, towlower(c)));
     return res;
 }
 
@@ -66,7 +57,8 @@ string &lowercase(string &s)
 string &uppercase(string &s)
 {
     for (char &ch : s)
-        ch = toupper_safe(ch);
+        ch = toupper(ch);
+
     return s;
 }
 
@@ -147,7 +139,7 @@ static const string _get_indent(const string &s)
 
 
 // The provided string is consumed!
-string wordwrap_line(string &s, int width, bool tags, bool indent, int force_indent)
+string wordwrap_line(string &s, int width, bool tags, bool indent)
 {
     ASSERT(width > 0);
 
@@ -220,10 +212,7 @@ string wordwrap_line(string &s, int width, bool tags, bool indent, int force_ind
     const string ret = s.substr(0, cp - cp0);
 
     const string indentation = (indent && c != '\n' && seen_nonspace)
-                                ? (force_indent > 0
-                                    ? string(force_indent, ' ')
-                                    : _get_indent(s))
-                                : "";
+                               ? _get_indent(s) : "";
 
     // eat all trailing spaces and up to one newline
     while (*cp == ' ')
@@ -469,7 +458,8 @@ vector<string> split_string(const string &sep, string s, bool trim_segments,
             --nsplits;
     }
 
-    add_segment(segments, s, trim_segments, accept_empty_segments);
+    if (!s.empty())
+        add_segment(segments, s, trim_segments, accept_empty_segments);
 
     return segments;
 }

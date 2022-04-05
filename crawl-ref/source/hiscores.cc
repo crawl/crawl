@@ -19,7 +19,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
-#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
+#ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
 
@@ -35,10 +35,6 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "jobs.h"
-#ifdef USE_TILE_WEB
-# include "json.h"
-# include "json-wrapper.h"
-#endif
 #include "kills.h"
 #include "libutil.h"
 #include "menu.h"
@@ -61,7 +57,6 @@
 #endif
 #include "unwind.h"
 #include "version.h"
-#include "outer-menu.h"
 
 using namespace ui;
 
@@ -73,7 +68,7 @@ static int hs_list_size = 0;
 static bool hs_list_initalized = false;
 
 static FILE *_hs_open(const char *mode, const string &filename);
-static void  _hs_close(FILE *handle);
+static void  _hs_close(FILE *handle, const string &filename);
 static bool  _hs_read(FILE *scores, scorefile_entry &dest);
 static void  _hs_write(FILE *scores, scorefile_entry &entry);
 static time_t _parse_time(const string &st);
@@ -87,7 +82,7 @@ static string _score_file_name()
     if (!SysEnv.scorefile.empty())
         ret = SysEnv.scorefile;
     else
-        ret = catpath(Options.shared_dir, "scores");
+        ret = Options.shared_dir + "scores";
 
     ret += crawl_state.game_type_qualifier();
     if (crawl_state.game_is_sprint() && !crawl_state.map.empty())
@@ -98,8 +93,7 @@ static string _score_file_name()
 
 static string _log_file_name()
 {
-    return catpath(Options.shared_dir,
-        "logfile" + crawl_state.game_type_qualifier());
+    return Options.shared_dir + "logfile" + crawl_state.game_type_qualifier();
 }
 
 int hiscores_new_entry(const scorefile_entry &ne)
@@ -163,7 +157,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
     // If we've still not inserted it, it's not a highscore.
     if (!inserted)
     {
-        _hs_close(scores);
+        _hs_close(scores, _score_file_name());
         return -1;
     }
 
@@ -187,7 +181,7 @@ int hiscores_new_entry(const scorefile_entry &ne)
     }
 
     // close scorefile.
-    _hs_close(scores);
+    _hs_close(scores, _score_file_name());
     return newest_entry;
 }
 
@@ -209,7 +203,7 @@ void logfile_new_entry(const scorefile_entry &ne)
     _hs_write(logfile, le);
 
     // close logfile.
-    _hs_close(logfile);
+    _hs_close(logfile, _log_file_name());
 }
 
 template <class t_printf>
@@ -256,7 +250,7 @@ void hiscores_read_to_memory()
     hs_list_initalized = true;
 
     //close off
-    _hs_close(scores);
+    _hs_close(scores, _score_file_name());
 }
 
 // Writes all entries in the scorefile to stdout in human-readable form.
@@ -284,19 +278,20 @@ void hiscores_print_all(int display_count, int format)
             _hiscores_print_entry(se, entry, format, printf);
     }
 
-    _hs_close(scores);
+    _hs_close(scores, _score_file_name());
 }
 
 // Displays high scores using curses. For output to the console, use
 // hiscores_print_all.
-string hiscores_print_list(int display_count, int format, int newest_entry, int& start_out)
+string hiscores_print_list(int display_count, int format, int newest_entry)
 {
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
     string ret;
 
     // Additional check to preserve previous functionality
-    if (!hs_list_initalized)
+    if (!hs_list_initalized) {
         hiscores_read_to_memory();
+    }
 
     int i, total_entries;
 
@@ -321,7 +316,7 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
         if (i == newest_entry)
             ret += "<yellow>";
 
-        _hiscores_print_entry(*hs_list[i], i, format, [&ret](const char */*fmt*/, const char *s){
+        _hiscores_print_entry(*hs_list[i], i, format, [&ret](const char *fmt, const char *s){
             ret += string(s);
         });
 
@@ -330,8 +325,46 @@ string hiscores_print_list(int display_count, int format, int newest_entry, int&
             ret += "<lightgrey>";
     }
 
-    start_out = start;
     return ret;
+}
+
+static void _add_hiscore_row(MenuScroller* scroller, scorefile_entry& se, int id)
+{
+    TextItem* tmp = nullptr;
+    tmp = new TextItem();
+
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(WHITE);
+
+    tmp->set_text(hiscores_format_single(se));
+    tmp->set_description_text(hiscores_format_single_long(se, true));
+    tmp->set_id(id);
+    tmp->set_bounds(coord_def(1,1), coord_def(1,2));
+
+    scroller->attach_item(tmp);
+    tmp->set_visible(true);
+}
+
+static void _construct_hiscore_table(MenuScroller* scroller)
+{
+    FILE *scores = _hs_open("r", _score_file_name());
+
+    if (scores == nullptr)
+        return;
+
+    int i;
+    // read highscore file
+    for (i = 0; i < SCORE_FILE_ENTRIES; i++)
+    {
+        hs_list[i].reset(new scorefile_entry);
+        if (_hs_read(scores, *hs_list[i]) == false)
+            break;
+    }
+
+    _hs_close(scores, _score_file_name());
+
+    for (int j=0; j<i; j++)
+        _add_hiscore_row(scroller, *hs_list[j], j);
 }
 
 static void _show_morgue(scorefile_entry& se)
@@ -343,8 +376,8 @@ static void _show_morgue(scorefile_entry& se)
     morgue_file.set_more();
 
     string morgue_base = morgue_name(se.get_name(), se.get_death_time());
-    string morgue_path = catpath(morgue_directory(),
-                            strip_filename_unsafe_chars(morgue_base) + ".txt");
+    string morgue_path = morgue_directory()
+                         + strip_filename_unsafe_chars(morgue_base) + ".txt";
     FILE* morgue = lk_open("r", morgue_path);
 
     if (!morgue) // TODO: add an error message
@@ -362,7 +395,7 @@ static void _show_morgue(scorefile_entry& se)
         morgue_text += "<w>" + replace_all(line, "<", "<<") + "</w>" + '\n';
     }
 
-    lk_close(morgue);
+    lk_close(morgue, morgue_path);
 
     column_composer cols(2, 40);
     cols.add_formatted(
@@ -382,159 +415,171 @@ static void _show_morgue(scorefile_entry& se)
 class UIHiscoresMenu : public Widget
 {
 public:
-    UIHiscoresMenu();
-
-    virtual shared_ptr<Widget> get_child_at_offset(int, int) override {
-        return static_pointer_cast<Widget>(m_root);
-    }
+    UIHiscoresMenu() : done(false) {
+        expand_v = true;
+    };
 
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
+    virtual bool on_event(const wm_event& event) override;
 
-    void on_show();
-
-    bool done = false;
-
+    bool done;
 private:
-    void _construct_hiscore_table();
-    void _add_hiscore_row(scorefile_entry& se, int id);
-
-    Widget* initial_focus = nullptr;
-    bool have_allocated {false};
-
-    shared_ptr<Box> m_root;
-    shared_ptr<Text> m_description;
-    shared_ptr<OuterMenu> m_score_entries;
+    PrecisionMenu menu;
 };
-
-static int nhsr;
-
-UIHiscoresMenu::UIHiscoresMenu()
-{
-    m_root = make_shared<Box>(Widget::VERT);
-    add_internal_child(m_root);
-    m_root->set_cross_alignment(Widget::STRETCH);
-
-    auto title_hbox = make_shared<Box>(Widget::HORZ);
-    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
-    title_hbox->set_margin_for_crt(0, 0, 1, 0);
-
-#ifdef USE_TILE
-    auto tile = make_shared<Image>();
-    tile->set_tile(tile_def(TILEG_STARTUP_HIGH_SCORES));
-    title_hbox->add_child(move(tile));
-#endif
-
-    auto title = make_shared<Text>(formatted_string(
-                "Dungeon Crawl Stone Soup: High Scores", YELLOW));
-    title->set_margin_for_sdl(0, 0, 0, 16);
-    title_hbox->add_child(move(title));
-
-    title_hbox->set_main_alignment(Widget::CENTER);
-    title_hbox->set_cross_alignment(Widget::CENTER);
-
-    m_description = make_shared<Text>(string(9, '\n'));
-
-    m_score_entries= make_shared<OuterMenu>(true, 1, 100);
-    nhsr = 0;
-    _construct_hiscore_table();
-
-    m_root->add_child(move(title_hbox));
-    if (initial_focus)
-    {
-        m_root->add_child(m_description);
-        m_root->add_child(m_score_entries);
-    }
-    else
-    {
-        auto placeholder = formatted_string("No high scores yet...", DARKGRAY);
-        m_root->add_child(make_shared<Text>(placeholder));
-        initial_focus = this;
-    }
-
-    on_hotkey_event([this](const KeyEvent& ev) {
-        return done = (key_is_escape(ev.key()) || ev.key() == CK_MOUSE_CMD);
-    });
-}
-
-void UIHiscoresMenu::_construct_hiscore_table()
-{
-    FILE *scores = _hs_open("r", _score_file_name());
-
-    if (scores == nullptr)
-        return;
-
-    int i;
-    // read highscore file
-    for (i = 0; i < SCORE_FILE_ENTRIES; i++)
-    {
-        hs_list[i].reset(new scorefile_entry);
-        if (_hs_read(scores, *hs_list[i]) == false)
-            break;
-    }
-
-    _hs_close(scores);
-
-    for (int j=0; j<i; j++)
-        _add_hiscore_row(*hs_list[j], j);
-}
-
-void UIHiscoresMenu::_add_hiscore_row(scorefile_entry& se, int id)
-{
-    auto tmp = make_shared<Text>();
-
-    tmp->set_text(hiscores_format_single(se));
-    auto btn = make_shared<MenuButton>();
-    tmp->set_margin_for_sdl(2);
-    btn->set_child(move(tmp));
-    btn->on_activate_event([id](const ActivateEvent&) {
-        _show_morgue(*hs_list[id]);
-        return true;
-    });
-    btn->on_focusin_event([this, se](const FocusEvent&) {
-        formatted_string desc(hiscores_format_single_long(se, true));
-        desc.cprintf(string(max(0, 9-count_linebreaks(desc)), '\n'));
-        m_description->set_text(move(desc));
-        return false;
-    });
-
-    if (!initial_focus)
-        initial_focus = btn.get();
-    m_score_entries->add_button(move(btn), 0, nhsr++);
-}
 
 void UIHiscoresMenu::_render()
 {
-    m_root->render();
-}
-
-void UIHiscoresMenu::on_show()
-{
-    ui::set_focused_widget(initial_focus);
+#ifdef USE_TILE_LOCAL
+    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
+    glmanager->set_transform(t, s);
+#endif
+    menu.draw_menu();
+#ifdef USE_TILE_LOCAL
+    glmanager->reset_transform();
+#endif
 }
 
 SizeReq UIHiscoresMenu::_get_preferred_size(Direction dim, int prosp_width)
 {
-    return m_root->get_preferred_size(dim, prosp_width);
+    SizeReq ret;
+    if (!dim)
+        ret = { 80, 100 };
+    else
+        ret = { 10, 10 };
+#ifdef USE_TILE_LOCAL
+    const FontWrapper* font = tiles.get_crt_font();
+    const int f = !dim ? font->char_width() : font->char_height();
+    ret.min *= f;
+    ret.nat *= f;
+#endif
+    return ret;
 }
 
 void UIHiscoresMenu::_allocate_region()
 {
-    if (!have_allocated)
+    menu.clear();
+
+#ifdef USE_TILE_LOCAL
+    const FontWrapper* font = tiles.get_crt_font();
+    const int max_col = m_region[2]/font->char_width();
+    const int max_line = m_region[3]/font->char_height();
+#else
+    const int max_col = m_region[2] - 1, max_line = m_region[3] - 1;
+#endif
+
+    const int scores_col_start = 1;
+    const int descriptor_col_start = 1;
+    const int scores_row_start = 10;
+    const int scores_col_end = max_col;
+    const int scores_row_end = max_line+1;
+
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+
+    MenuScroller* score_entries = new MenuScroller();
+
+    score_entries->init(coord_def(scores_col_start, scores_row_start),
+            coord_def(scores_col_end, scores_row_end), "score entries");
+
+    _construct_hiscore_table(score_entries);
+
+    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
+    descriptor->init(coord_def(descriptor_col_start, 1),
+            coord_def(max_col+1, scores_row_start - 1),
+            "descriptor");
+
+#ifdef USE_TILE_LOCAL
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+#else
+    BlackWhiteHighlighter* highlighter = new BlackWhiteHighlighter(&menu);
+#endif
+    highlighter->init(coord_def(-1,-1), coord_def(-1,-1), "highlighter");
+
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(1, 1), coord_def(max_col, max_line), "freeform");
+    // This freeform will only contain unfocusable texts
+    freeform->allow_focus(false);
+    freeform->set_visible(true);
+
+    score_entries->set_visible(true);
+    descriptor->set_visible(true);
+    highlighter->set_visible(true);
+
+    menu.attach_object(freeform);
+    menu.attach_object(score_entries);
+    menu.attach_object(descriptor);
+    menu.attach_object(highlighter);
+
+    menu.set_active_object(score_entries);
+    score_entries->set_active_item((MenuItem*) nullptr);
+    score_entries->activate_first_item();
+
+    enable_smart_cursor(false);
+}
+
+bool UIHiscoresMenu::on_event(const wm_event& ev)
+{
+#ifdef USE_TILE_LOCAL
+    if (ev.type == WME_MOUSEMOTION
+     || ev.type == WME_MOUSEBUTTONDOWN
+     || ev.type == WME_MOUSEWHEEL)
     {
-        have_allocated = true;
-        on_show();
+        MouseEvent mouse_ev = ev.mouse_event;
+        mouse_ev.px -= m_region[0];
+        mouse_ev.py -= m_region[1];
+
+        int key = menu.handle_mouse(mouse_ev);
+        if (key && key != CK_NO_KEY)
+        {
+            wm_event fake_key = {0};
+            fake_key.type = WME_KEYDOWN;
+            fake_key.key.keysym.sym = key;
+            on_event(fake_key);
+        }
+
+        if (ev.type == WME_MOUSEMOTION)
+            _expose();
+        return true;
     }
-    m_root->allocate_region(m_region);
+#endif
+
+    if (ev.type != WME_KEYDOWN)
+        return false;
+    int keyn = ev.key.keysym.sym;
+
+    if (key_is_escape(keyn) || keyn == CK_MOUSE_CMD)
+        return done = true;
+
+    if (menu.process_key(keyn))
+    {
+        menu.clear_selections();
+        _show_morgue(*hs_list[menu.get_active_item()->get_id()]);
+    }
+    _expose();
+
+    return true;
 }
 
 void show_hiscore_table()
 {
     unwind_var<string> sprintmap(crawl_state.map, crawl_state.sprint_map);
+
+    auto vbox = make_shared<Box>(Widget::VERT);
+    auto title = make_shared<Text>(formatted_string("Dungeon Crawl Stone Soup: High Scores", YELLOW));
+    title->align_self = Widget::CENTER;
+    title->set_margin_for_sdl({0, 0, 20, 0});
     auto hiscore_ui = make_shared<UIHiscoresMenu>();
-    auto popup = make_shared<ui::Popup>(hiscore_ui);
+    vbox->add_child(move(title));
+    vbox->add_child(hiscore_ui);
+    auto popup = make_shared<ui::Popup>(move(vbox));
+
+    bool smart_cursor_enabled = is_smart_cursor_enabled();
+
     ui::run_layout(move(popup), hiscore_ui->done);
+
+    // Go back to the menu and return the smart cursor to its previous state
+    enable_smart_cursor(smart_cursor_enabled);
 }
 
 // Trying to supply an appropriate verb for the attack type. -- bwr
@@ -604,9 +649,9 @@ static FILE *_hs_open(const char *mode, const string &scores)
     return lk_open(mode, scores);
 }
 
-static void _hs_close(FILE *handle)
+static void _hs_close(FILE *handle, const string &scores)
 {
-    lk_close(handle);
+    lk_close(handle, scores);
 }
 
 static bool _hs_read(FILE *scores, scorefile_entry &dest)
@@ -665,7 +710,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
-    "collision", "zot", "constriction",
+    "collision",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -789,7 +834,6 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     zigmax             = se.zigmax;
     scrolls_used       = se.scrolls_used;
     potions_used       = se.potions_used;
-    seed               = se.seed;
     fixup_char_name();
 
     // We could just reset raw_line to "" instead.
@@ -873,8 +917,7 @@ enum old_job_type
     OLD_JOB_JESTER       = -6,
     OLD_JOB_PRIEST       = -7,
     OLD_JOB_HEALER       = -8,
-    OLD_JOB_SKALD        = -9,
-    NUM_OLD_JOBS = -OLD_JOB_SKALD
+    NUM_OLD_JOBS = -OLD_JOB_HEALER
 };
 
 static const char* _job_name(int job)
@@ -897,8 +940,6 @@ static const char* _job_name(int job)
         return "Priest";
     case OLD_JOB_HEALER:
         return "Healer";
-    case OLD_JOB_SKALD:
-        return "Skald";
     }
 
     return get_job_name(static_cast<job_type>(job));
@@ -924,8 +965,6 @@ static const char* _job_abbrev(int job)
         return "Pr";
     case OLD_JOB_HEALER:
         return "He";
-    case OLD_JOB_SKALD:
-        return "Sk";
     }
 
     return get_job_abbrev(static_cast<job_type>(job));
@@ -974,13 +1013,7 @@ static string _species_name(int race)
     case OLD_SP_LAVA_ORC: return "Lava Orc";
     }
 
-    // Guard against an ASSERT in get_species_def; it's really bad if the game
-    // crashes at this point while trying to clean up a dead/quit player.
-    // (This doesn't seem to even impact what is shown in the score list?)
-    if (race < 0 || race >= NUM_SPECIES)
-        return "Unknown (buggy) species!";
-
-    return species::name(static_cast<species_type>(race));
+    return species_name(static_cast<species_type>(race));
 }
 
 static const char* _species_abbrev(int race)
@@ -998,16 +1031,12 @@ static const char* _species_abbrev(int race)
     case OLD_SP_LAVA_ORC: return "LO";
     }
 
-    // see note in _species_name: don't ASSERT in get_species_def.
-    if (race < 0 || race >= NUM_SPECIES)
-        return "??";
-
-    return species::get_abbrev(static_cast<species_type>(race));
+    return get_species_abbrev(static_cast<species_type>(race));
 }
 
 static int _species_by_name(const string& name)
 {
-    int race = species::from_str(name);
+    int race = str_to_species(name);
 
     if (race != SP_UNKNOWN)
         return race;
@@ -1107,8 +1136,6 @@ void scorefile_entry::init_with_fields()
 
     scrolls_used = fields->int_field("scrollsused");
     potions_used = fields->int_field("potionsused");
-
-    seed = fields->str_field("seed");
 
     fixup_char_name();
 }
@@ -1259,8 +1286,6 @@ void scorefile_entry::set_score_fields() const
     if (!killer_map.empty())
         fields->add_field("killermap", "%s", killer_map.c_str());
 
-    fields->add_field("seed", "%s", seed.c_str());
-
 #ifdef DGL_EXTENDED_LOGFILES
     const string short_msg = short_kill_message();
     fields->add_field("tmsg", "%s", short_msg.c_str());
@@ -1288,7 +1313,7 @@ string scorefile_entry::long_kill_message() const
 {
     string msg = death_description(DDV_LOGVERBOSE);
     msg = make_oneline(msg);
-    msg[0] = tolower_safe(msg[0]);
+    msg[0] = tolower(msg[0]);
     trim_string(msg);
     return msg;
 }
@@ -1297,7 +1322,7 @@ string scorefile_entry::short_kill_message() const
 {
     string msg = death_description(DDV_ONELINE);
     msg = make_oneline(msg);
-    msg[0] = tolower_safe(msg[0]);
+    msg[0] = tolower(msg[0]);
     trim_string(msg);
     return msg;
 }
@@ -1350,12 +1375,11 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
     if ((death_type == KILLED_BY_MONSTER
             || death_type == KILLED_BY_HEADBUTT
             || death_type == KILLED_BY_BEAM
-            || death_type == KILLED_BY_FREEZING
             || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_ACID
             || death_type == KILLED_BY_DRAINING
             || death_type == KILLED_BY_BURNING
-            || death_type == KILLED_BY_DEATH_EXPLOSION
+            || death_type == KILLED_BY_SPORE
             || death_type == KILLED_BY_CLOUD
             || death_type == KILLED_BY_ROTTING
             || death_type == KILLED_BY_REFLECTION
@@ -1363,8 +1387,7 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             || death_type == KILLED_BY_SPINES
             || death_type == KILLED_BY_WATER
             || death_type == KILLED_BY_BEING_THROWN
-            || death_type == KILLED_BY_COLLISION
-            || death_type == KILLED_BY_CONSTRICTION)
+            || death_type == KILLED_BY_COLLISION)
         && monster_by_mid(death_source))
     {
         const monster* mons = monster_by_mid(death_source);
@@ -1382,28 +1405,27 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             // shouldn't.
             if (you.hp <= 0)
             {
-                set_ident_flags(env.item[mons->inv[MSLOT_WEAPON]],
+                set_ident_flags(mitm[mons->inv[MSLOT_WEAPON]],
                                  ISFLAG_IDENT_MASK);
             }
 
             // Setting this is redundant for dancing weapons, however
-            // we do care about the above identification. -- bwr
-            if (!mons_class_is_animated_weapon(mons->type))
-                auxkilldata = env.item[mons->inv[MSLOT_WEAPON]].name(DESC_A);
+            // we do care about the above indentification. -- bwr
+            if (mons->type != MONS_DANCING_WEAPON)
+                auxkilldata = mitm[mons->inv[MSLOT_WEAPON]].name(DESC_A);
         }
 
         const bool death = (you.hp <= 0 || death_type == KILLED_BY_DRAINING);
 
         const description_level_type desc =
-            death_type == KILLED_BY_DEATH_EXPLOSION ? DESC_PLAIN : DESC_A;
+            death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_A;
 
         death_source_name = mons->name(desc, death);
 
         if (death || you.can_see(*mons))
             death_source_name = mons->full_name(desc);
 
-        // Some shadows have names
-        if (mons_is_player_shadow(*mons) && mons->mname.empty())
+        if (mons_is_player_shadow(*mons))
             death_source_name = "their own shadow"; // heh
 
         if (mons->mid == MID_YOU_FAULTLESS)
@@ -1423,9 +1445,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (mons_is_unique(mons->type))
             death_source_flags.insert("unique");
 
-        if (mons->props.exists(BLAME_KEY))
+        if (mons->props.exists("blame"))
         {
-            const CrawlVector& blame = mons->props[BLAME_KEY].get_vector();
+            const CrawlVector& blame = mons->props["blame"].get_vector();
 
             indirectkiller = blame[blame.size() - 1].get_string();
             _strip_to(indirectkiller, " by ");
@@ -1471,14 +1493,14 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
     if (death_type == KILLED_BY_POISON)
     {
-        death_source_name = you.props[POISONER_KEY].get_string();
-        auxkilldata = you.props[POISON_AUX_KEY].get_string();
+        death_source_name = you.props["poisoner"].get_string();
+        auxkilldata = you.props["poison_aux"].get_string();
     }
 
     if (death_type == KILLED_BY_BURNING)
     {
-        death_source_name = you.props[STICKY_FLAMER_KEY].get_string();
-        auxkilldata = you.props[STICKY_FLAME_AUX_KEY].get_string();
+        death_source_name = you.props["sticky_flame_source"].get_string();
+        auxkilldata = you.props["sticky_flame_aux"].get_string();
     }
 }
 
@@ -1549,7 +1571,6 @@ void scorefile_entry::reset()
     zigmax               = 0;
     scrolls_used         = 0;
     potions_used         = 0;
-    seed.clear();
 }
 
 static int _award_modified_experience()
@@ -1789,7 +1810,6 @@ void scorefile_entry::init(time_t dt)
 
     wiz_mode = (you.wizard || you.suppress_wizard ? 1 : 0);
     explore_mode = (you.explore ? 1 : 0);
-    seed = make_stringf("%" PRIu64, crawl_state.seed);
 }
 
 string scorefile_entry::hiscore_line(death_desc_verbosity verbosity) const
@@ -1993,14 +2013,11 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         ASSERT(birth_time);
         desc += " on ";
         desc += _hiscore_date_string(birth_time);
-        // TODO: show seed here?
 
         desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
 
-        if (god != GOD_NO_GOD
-            // XX is this check really needed?
-            && !species::mutation_level(static_cast<species_type>(race), MUT_FORLORN))
+        if (race != SP_DEMIGOD && god != GOD_NO_GOD)
         {
             if (god == GOD_XOM)
             {
@@ -2245,26 +2262,20 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "lava";
         else
         {
-            if (starts_with(species::skin_name(
-                        static_cast<species_type>(race)), "bandage"))
-            {
+            if (race == SP_MUMMY)
                 desc += "Turned to ash by lava";
-            }
             else
                 desc += "Took a swim in molten lava";
         }
         break;
 
     case KILLED_BY_WATER:
-        if (species::is_undead(static_cast<species_type>(race)))
+        if (you.undead_state())
         {
             if (terse)
                 desc = "fell apart";
-            else if (starts_with(species::skin_name(
-                        static_cast<species_type>(race)), "bandage"))
-            {
+            else if (race == SP_MUMMY)
                 desc = "Soaked and fell apart";
-            }
             else
                 desc = "Sank and fell apart";
         }
@@ -2285,8 +2296,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
             desc += "stupidity";
         else if (race >= 0 && // not a removed race
-                 (species::is_undead(static_cast<species_type>(race))
-                  || species::is_nonliving(static_cast<species_type>(race))))
+                 species_is_unbreathing(static_cast<species_type>(race)))
         {
             desc += "Forgot to exist";
         }
@@ -2320,7 +2330,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             if (num_runes > 0)
                 desc += "Got out of the dungeon";
-            else if (species::is_undead(static_cast<species_type>(race)))
+            else if (species_is_undead(static_cast<species_type>(race)))
                 desc += "Safely got out of the dungeon";
             else
                 desc += "Got out of the dungeon alive";
@@ -2363,10 +2373,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         desc += terse? "starvation" : "Starved to death";
         break;
 
-    case KILLED_BY_FREEZING:    // Freeze, Fridge spells
-        desc += terse? "frozen" : "Frozen to death";
-        if (!terse && !death_source_desc().empty())
-            desc += " by " + death_source_desc();
+    case KILLED_BY_FREEZING:    // refrigeration spell
+        desc += terse? "frozen" : "Froze to death";
         needs_damage = true;
         break;
 
@@ -2487,7 +2495,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         needs_damage = true;
         break;
 
-    case KILLED_BY_DEATH_EXPLOSION:
+    case KILLED_BY_SPORE:
         if (terse)
         {
             if (death_source_name.empty())
@@ -2629,18 +2637,6 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         needs_damage = true;
         break;
 
-    case KILLED_BY_ZOT:
-        desc += terse ? "Zot" : "Tarried too long and was consumed by Zot";
-        break;
-
-    case KILLED_BY_CONSTRICTION:
-        if (terse)
-            desc += "constriction";
-        else
-            desc += "Constricted to death by " + death_source_desc();
-        needs_damage = true;
-        break;
-
     default:
         desc += terse? "program bug" : "Nibbled to death by software bugs";
         break;
@@ -2671,7 +2667,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
     }
 
     if (oneline && desc.length() > 2)
-        desc[1] = tolower_safe(desc[1]);
+        desc[1] = tolower(desc[1]);
 
     // TODO: Eventually, get rid of "..." for cases where the text fits.
     if (terse)
@@ -2751,7 +2747,6 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                 if (!semiverbose)
                 {
                     desc += auxkilldata == "damnation" ? "... with " :
-                         auxkilldata == "creeping frost" ? "... by " :
                             (is_vowel(auxkilldata[0])) ? "... with an "
                                                        : "... with a ";
                     desc += auxkilldata;
@@ -2768,8 +2763,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 desc += make_stringf("... %s by %s",
                          death_type == KILLED_BY_COLLISION ? "caused" :
-                         auxkilldata == "by angry trees"   ? "awakened" :
-                         auxkilldata == "by Freeze"        ? "generated"
+                         auxkilldata == "by angry trees"   ? "awakened"
                                                            : "invoked",
                          death_source_name.c_str());
                 desc += _hiscore_newline_string();
@@ -2843,7 +2837,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         }
     }
 
-    if (death_type == KILLED_BY_DEATH_EXPLOSION && !terse && !auxkilldata.empty())
+    if (death_type == KILLED_BY_SPORE && !terse && !auxkilldata.empty())
     {
         desc += "... ";
         desc += auxkilldata;
@@ -2975,49 +2969,8 @@ string xlog_fields::xlog_line() const
     return line;
 }
 
-#ifdef USE_TILE_WEB
-JsonWrapper xlog_fields::xlog_json() const
-{
-    JsonWrapper j(json_mkobject());
-
-    for (const pair<string, string> &f : fields)
-    {
-        // Don't write empty fields.
-        if (f.second.empty())
-            continue;
-
-        json_append_member(j.node, f.first.c_str(),
-                                    json_mkstring(f.second.c_str()));
-    }
-    return j;
-}
-#endif
-
 ///////////////////////////////////////////////////////////////////////////////
 // Milestones
-
-#define LAST_MILESTONE_PROP "last_milestone"
-#define LAST_MILESTONE_TYPE_PROP "last_milestone_type"
-#define LAST_MILESTONE_TURN_PROP "last_milestone_turn"
-
-#if defined(USE_TILE_WEB)
-void sync_last_milestone()
-{
-    if (!you.props.exists(LAST_MILESTONE_TURN_PROP))
-        return; // no milestones yet
-    // send webtiles an extremely minimal milestone bundle -- just enough for
-    // the sake of the lobby on game start.
-    xlog_fields xl;
-    xl.add_field("type", "%s",
-                    you.props[LAST_MILESTONE_TYPE_PROP].get_string().c_str());
-    xl.add_field("milestone", "%s",
-                    you.props[LAST_MILESTONE_PROP].get_string().c_str());
-    xl.add_field("turn", "%d", you.props[LAST_MILESTONE_TURN_PROP].get_int());
-    xl.add_field("status", "milestone_only");
-
-    tiles.send_milestone(xl);
-}
-#endif
 
 /**
  * @brief Record the player reaching a milestone, if ::DGL_MILESTONES is defined.
@@ -3026,21 +2979,21 @@ void sync_last_milestone()
 void mark_milestone(const string &type, const string &milestone,
                     const string &origin_level, time_t milestone_time)
 {
-#if defined(USE_TILE_WEB) || defined(DGL_MILESTONES)
-    // save previous milestone info in you.props, so that we know whether
-    // this is new info
-    string &lastmilestone = you.props[LAST_MILESTONE_PROP].get_string();
-    string &lasttype = you.props[LAST_MILESTONE_TYPE_PROP].get_string();
-    if (!you.props.exists(LAST_MILESTONE_TURN_PROP))
-        you.props[LAST_MILESTONE_TURN_PROP] = -1;
-    int &lastturn = you.props[LAST_MILESTONE_TURN_PROP].get_int();
+#ifdef DGL_MILESTONES
+    static string lasttype, lastmilestone;
+    static long lastturn = -1;
 
     if (crawl_state.game_is_arena()
         || !crawl_state.need_save
         // Suppress duplicate milestones on the same turn.
         || (lastturn == you.num_turns
             && lasttype == type
-            && lastmilestone == milestone))
+            && lastmilestone == milestone)
+#ifndef SCORE_WIZARD_CHARACTERS
+        // Don't mark normal milestones in wizmode or explore mode
+        || (type != "crash" && (you.wizard || you.suppress_wizard || you.explore))
+#endif
+        )
     {
         return;
     }
@@ -3049,6 +3002,8 @@ void mark_milestone(const string &type, const string &milestone,
     lastmilestone = milestone;
     lastturn      = you.num_turns;
 
+    const string milestone_file =
+        (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
     const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
@@ -3065,75 +3020,22 @@ void mark_milestone(const string &type, const string &milestone,
                                     : se.get_death_time()).c_str());
     xl.add_field("type", "%s", type.c_str());
     xl.add_field("milestone", "%s", milestone.c_str());
-#ifdef USE_TILE_WEB
-    if (!crawl_state.game_crashed)
-        tiles.send_milestone(xl);
-#endif
-#ifdef DGL_MILESTONES
-#ifndef SCORE_WIZARD_CHARACTERS
-    // Don't mark normal milestones in wizmode or explore mode, when writing
-    // a dgl milestone file. (We do still send these milestones to the webtiles
-    // process.)
-    if (type != "crash" && (you.wizard || you.suppress_wizard || you.explore))
-        return;
-#endif
-
     const string xlog_line = xl.xlog_line();
-    const string milestone_file = catpath(
-        Options.save_dir, "milestones" + crawl_state.game_type_qualifier());
     if (FILE *fp = lk_open("a", milestone_file))
     {
         fprintf(fp, "%s\n", xlog_line.c_str());
-        lk_close(fp);
+        lk_close(fp, milestone_file);
     }
-#endif
-#else
-    UNUSED(type, milestone, origin_level, milestone_time);
-#endif // USE_TILE_WEB
+#endif // DGL_MILESTONES
 }
 
-#if defined(USE_TILE_WEB) || defined(DGL_WHEREIS)
-static xlog_fields _xlog_status(const char *status)
+#ifdef DGL_WHEREIS
+string xlog_status_line()
 {
     const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
     xl.add_field("time", "%s", make_date_string(time(nullptr)).c_str());
-    xl.add_field("status", "%s", status ? status : "");
     return xl.xlog_line();
 }
-#endif
-
-#ifdef USE_TILE_WEB
-void update_whereis_chargen(string name)
-{
-    // whereis info to indicate that character generation is happening
-    // scorefile_entry is very crashy pre-game, so just do some basic
-    // init here. We set the name manually because it is not yet set in `you`.
-    // TODO: make scorefile_entry more robust
-    if (!name.size())
-        return;
-    xlog_fields xl;
-    xl.add_field("name", "%s", name.c_str());
-    xl.add_field("lvl", "%d", 0);
-    xl.add_field("time", "%s", make_date_string(time(nullptr)).c_str());
-    xl.add_field("status", "chargen");
-    xl.add_field("milestone", "started generating a character.");
-    tiles.send_milestone(xl);
-}
-#endif
-
-void update_whereis(const char *status)
-{
-#if defined(USE_TILE_WEB) || defined(DGL_WHEREIS)
-    xlog_fields xl = _xlog_status(status);
-#ifdef USE_TILE_WEB
-    tiles.send_milestone(xl);
-#endif
-#ifdef DGL_WHEREIS
-    whereis_record(xl);
-#endif
-#else
-    UNUSED(status);
-#endif
-}
+#endif // DGL_WHEREIS

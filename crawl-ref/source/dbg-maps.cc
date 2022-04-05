@@ -22,7 +22,6 @@
 #include "shopping.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "view.h"
 
 #ifdef DEBUG_STATISTICS
@@ -85,8 +84,8 @@ static bool _do_build_level()
 
     watchdog();
 
-    msg::suppress mx;
-    if (kbhit() && key_is_escape(getch_ck()))
+    no_messages mx;
+    if (kbhit() && key_is_escape(getchk()))
     {
         mprf(MSGCH_WARN, "User requested cancel");
         return false;
@@ -117,7 +116,7 @@ static bool _do_build_level()
             {
                 const coord_def pos(x, y);
 
-                objstat_record_feature(env.grid[x][y], map_masked(pos, MMT_VAULT));
+                objstat_record_feature(grd[x][y], map_masked(pos, MMT_VAULT));
 
                 monster *mons = monster_at(pos);
                 if (mons)
@@ -132,16 +131,16 @@ static bool _do_build_level()
                 }
             }
 
-            if (env.grid[x][y] == DNGN_RUNED_DOOR)
-                env.grid[x][y] = DNGN_CLOSED_DOOR;
-            else if (env.grid[x][y] == DNGN_RUNED_CLEAR_DOOR)
-                env.grid[x][y] = DNGN_CLOSED_CLEAR_DOOR;
+            if (grd[x][y] == DNGN_RUNED_DOOR)
+                grd[x][y] = DNGN_CLOSED_DOOR;
+            else if (grd[x][y] == DNGN_RUNED_CLEAR_DOOR)
+                grd[x][y] = DNGN_CLOSED_CLEAR_DOOR;
         }
 
 
     // Record floor items for objstat.
     if (crawl_state.obj_stat_gen)
-        for (auto &item : env.item)
+        for (auto &item : mitm)
             if (item.defined())
                 objstat_record_item(item);
 
@@ -211,7 +210,7 @@ static void _dungeon_places()
 
 static bool _build_dungeon()
 {
-    for (const level_id &lid: generated_levels)
+    for (const level_id lid : generated_levels)
     {
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
@@ -264,8 +263,6 @@ bool mapstat_build_levels()
         dlua.callfn("dgn_clear_data", "");
         you.uniq_map_tags.clear();
         you.uniq_map_names.clear();
-        you.uniq_map_tags_abyss.clear();
-        you.uniq_map_names_abyss.clear();
         you.unique_creatures.reset();
         initialise_branch_depths();
         init_level_connectivity();
@@ -297,7 +294,7 @@ void mapstat_report_map_success(const string &map_name)
     success_count[map_name]++;
 }
 
-void mapstat_report_error(const map_def &/*map*/, const string &err)
+void mapstat_report_error(const map_def &map, const string &err)
 {
     last_error = err;
 }
@@ -306,8 +303,6 @@ static void _report_available_random_vaults(FILE *outf)
 {
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
-    you.uniq_map_tags_abyss.clear();
-    you.uniq_map_names_abyss.clear();
 
     fprintf(outf, "\n\nRandom vaults available by dungeon level:\n");
     for (auto lvl : generated_levels)
@@ -319,7 +314,7 @@ static void _report_available_random_vaults(FILE *outf)
         clear_messages();
         mprf("Examining random maps at %s", lvl.describe().c_str());
         mapstat_report_random_maps(outf, lvl);
-        if (kbhit() && key_is_escape(getch_ck()))
+        if (kbhit() && key_is_escape(getchk()))
             break;
         fprintf(outf, "---------------------------------\n");
     }
@@ -501,9 +496,9 @@ bool mapstat_find_forced_map()
     }
 
     if (map->is_minivault())
-        you.props[FORCE_MINIVAULT_KEY] = map->name;
+        you.props["force_minivault"] = map->name;
     else
-        you.props[FORCE_MAP_KEY] = map->name;
+        you.props["force_map"] = map->name;
 
     return true;
 }

@@ -4,12 +4,12 @@
 **/
 
 #include <cmath>
-#include <clocale>
 
 #include "AppHdr.h"
 
 #include "skill-menu.h"
 
+#include "art-enum.h"
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
@@ -36,13 +36,11 @@ using namespace ui;
 menu_letter2 SkillMenuEntry::m_letter;
 SkillMenu skm;
 
-static string _format_skill_target(int target);
-
 #ifdef USE_TILE_LOCAL
-bool SkillTextTileItem::handle_mouse(const wm_mouse_event& me)
+bool SkillTextTileItem::handle_mouse(const MouseEvent& me)
 {
-    if (me.event == wm_mouse_event::PRESS
-        && (me.button == wm_mouse_event::LEFT && me.mod & TILES_MOD_SHIFT))
+    if (me.event == MouseEvent::PRESS
+        && (me.button == MouseEvent::LEFT && me.mod & TILES_MOD_SHIFT))
     {
         skill_type sk = skill_type(get_id());
         if (is_invalid_skill(sk))
@@ -113,15 +111,14 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
     switch (state)
     {
     case SKM_SHOW_DEFAULT:
-        return you.can_currently_train[sk] && (you.should_show_skill[sk]
-                                               || you.training[sk])
-            || you.skill(sk, 10, false, false);
+        return you.can_train[sk] || you.skill(sk, 10, false, false)
+               || sk == you.transfer_from_skill || sk == you.transfer_to_skill;
     case SKM_SHOW_ALL:     return true;
     default:               return false;
     }
 }
 
-bool SkillMenuEntry::is_selectable(bool)
+bool SkillMenuEntry::is_selectable(bool keep_hotkey)
 {
     if (is_invalid_skill(m_sk))
         return false;
@@ -129,14 +126,42 @@ bool SkillMenuEntry::is_selectable(bool)
     if (is_set(SKMF_HELP))
         return true;
 
-    if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+    if (you.species == SP_GNOLL)
         return false;
 
     if (!_show_skill(m_sk, skm.get_state(SKM_SHOW)))
         return false;
 
-    if (mastered())
+    if (is_set(SKMF_RESKILL_TO) && you.transfer_from_skill == m_sk)
+    {
+        if (!keep_hotkey)
+            ++m_letter;
         return false;
+    }
+
+    if (is_set(SKMF_RESKILL_TO) && is_useless_skill(m_sk))
+        return false;
+
+    if (is_set(SKMF_RESKILL_FROM) && !you.skill_points[m_sk])
+    {
+        if (!keep_hotkey)
+            ++m_letter;
+        return false;
+    }
+
+    if (!you.can_train[m_sk] && !is_set(SKMF_RESKILL_TO)
+        && !is_set(SKMF_RESKILL_FROM))
+    {
+        return false;
+    }
+
+    if (mastered())
+    {
+        if (is_set(SKMF_RESKILL_TO) && !keep_hotkey)
+            ++m_letter;
+        if (!is_set(SKMF_RESKILL_FROM))
+            return false;
+    }
 
     return true;
 }
@@ -181,6 +206,7 @@ void SkillMenuEntry::set_display()
     case SKM_VIEW_COST:      set_cost();             break;
     case SKM_VIEW_TARGETS:   set_targets();          break;
     case SKM_VIEW_PROGRESS:  set_progress();         break;
+    case SKM_VIEW_TRANSFER:  set_reskill_progress(); break;
     case SKM_VIEW_NEW_LEVEL: set_new_level();        break;
     case SKM_VIEW_POINTS:    set_points();           break;
     default: die("Invalid view state.");
@@ -200,7 +226,7 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
         if (!keep_hotkey)
         {
             m_name->add_hotkey(++m_letter);
-            m_name->add_hotkey(toupper_safe(m_letter));
+            m_name->add_hotkey(toupper(m_letter));
         }
         m_name->set_id(m_sk);
         m_name->allow_highlight(true);
@@ -219,11 +245,20 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     {
         m_name->clear_tile();
         if (you.skills[m_sk] >= MAX_SKILL_LEVEL)
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_MASTERED)));
+        {
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_MASTERED),
+                                      TEX_GUI));
+        }
         else if (you.training[m_sk] == TRAINING_DISABLED)
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_INACTIVE)));
+        {
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, TRAINING_INACTIVE),
+                                      TEX_GUI));
+        }
         else
-            m_name->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk])));
+        {
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk]),
+                                      TEX_GUI));
+        }
     }
 #endif
     set_level();
@@ -261,8 +296,18 @@ COLOURS SkillMenuEntry::get_colour() const
 
     if (is_set(SKMF_HELP))
         return LIGHTGRAY;
+    else if (is_set(SKMF_RESKILL_TO) && m_sk == you.transfer_from_skill)
+        return BROWN;
+    else if (skm.get_state(SKM_VIEW) == SKM_VIEW_TRANSFER
+             && (m_sk == you.transfer_from_skill
+                 || m_sk == you.transfer_to_skill))
+    {
+        return CYAN;
+    }
     else if (skm.get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
-             && you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false))
+             && (you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false)
+                 // Drained a tiny but nonzero amount.
+                 || you.attribute[ATTR_XP_DRAIN] && you.skill_points[m_sk]))
     {
         if (you.skill(m_sk, 10, true) < you.skill(m_sk, 10, false))
             return use_bright_colour ? LIGHTGREEN : GREEN;
@@ -273,7 +318,7 @@ COLOURS SkillMenuEntry::get_colour() const
         return YELLOW;
     else if (!you.training[m_sk])
         return DARKGREY;
-    else if (you.skill_manual_points[m_sk])
+    else if (skill_has_manual(m_sk))
         return LIGHTBLUE;
     else if (you.train[m_sk] == TRAINING_FOCUSED)
         return WHITE;
@@ -291,7 +336,7 @@ string SkillMenuEntry::get_prefix()
     else
         letter = ' ';
 
-    const int sign = (!you.can_currently_train[m_sk] || mastered()) ? ' ' :
+    const int sign = (!you.can_train[m_sk] || mastered()) ? ' ' :
                                    (you.train[m_sk] == TRAINING_FOCUSED) ? '*' :
                                           you.train[m_sk] ? '+'
                                                           : '-';
@@ -302,7 +347,7 @@ void SkillMenuEntry::set_aptitude()
 {
     string text = "<white>";
 
-    const bool manual = you.skill_manual_points[m_sk] > 0;
+    const bool manual = skill_has_manual(m_sk);
     const int apt = species_apt(m_sk, you.species);
 
     if (apt != 0)
@@ -331,7 +376,7 @@ void SkillMenuEntry::set_level()
     else
         level = you.skill(m_sk, 10, real);
 
-    if (mastered())
+    if (mastered() && !you.attribute[ATTR_XP_DRAIN])
         m_level->set_text(to_string(level / 10));
     else
         m_level->set_text(make_stringf("%4.1f", level / 10.0));
@@ -355,7 +400,23 @@ void SkillMenuEntry::set_new_level()
         return;
     }
 
-    if (is_selectable())
+    if (you.skills[m_sk] > 0 && is_set(SKMF_RESKILL_FROM)
+        || m_sk == you.transfer_from_skill)
+    {
+        new_level = transfer_skill_points(m_sk, m_sk,
+                                          skill_transfer_amount(m_sk), true,
+                                          !real);
+        m_progress->set_fg_colour(BROWN);
+    }
+    else if (is_set(SKMF_RESKILL_TO))
+    {
+        new_level = transfer_skill_points(you.transfer_from_skill, m_sk,
+                                          you.transfer_skill_points, true,
+                                          !real);
+        m_progress->set_fg_colour(CYAN);
+    }
+
+    if (is_selectable() || m_sk == you.transfer_from_skill)
         m_progress->set_text(make_stringf("> %4.1f", new_level / 10.0));
     else
         m_progress->set_text("");
@@ -397,13 +458,32 @@ void SkillMenuEntry::set_targets()
     }
     else
     {
-        m_progress->set_text(_format_skill_target(target));
+        m_progress->set_text(make_stringf("%d.%d", target / 10, target % 10));
         if (target_met(m_sk))
             m_progress->set_fg_colour(DARKGREY); // mainly comes up in wizmode
         else
             m_progress->set_fg_colour(get_colour());
     }
     m_progress->set_editable(true, 4);
+}
+
+void SkillMenuEntry::set_reskill_progress()
+{
+    string text;
+    if (m_sk == you.transfer_from_skill)
+        text = "  *  ";
+    else if (m_sk == you.transfer_to_skill)
+    {
+        text += make_stringf(" %2d%%",
+                             (you.transfer_total_skill_points
+                             - you.transfer_skill_points)
+                                 * 100 / you.transfer_total_skill_points);
+    }
+    else
+        text = "";
+
+    m_progress->set_text(text);
+    m_progress->set_fg_colour(CYAN);
 }
 
 void SkillMenuEntry::set_title()
@@ -419,11 +499,21 @@ void SkillMenuEntry::set_title()
     if (is_set(SKMF_APTITUDE))
         m_aptitude->set_text("<blue>Apt </blue>");
 
+    if (is_set(SKMF_RESKILLING))
+    {
+        if (is_set(SKMF_RESKILL_FROM))
+            m_progress->set_text("Source");
+        else
+            m_progress->set_text("Target");
+        return;
+    }
+
     switch (skm.get_state(SKM_VIEW))
     {
     case SKM_VIEW_TRAINING:  m_progress->set_text("Train"); break;
     case SKM_VIEW_TARGETS:   m_progress->set_text("Target"); break;
     case SKM_VIEW_PROGRESS:  m_progress->set_text("Progr"); break;
+    case SKM_VIEW_TRANSFER:  m_progress->set_text("Trnsf"); break;
     case SKM_VIEW_POINTS:    m_progress->set_text("Points");break;
     case SKM_VIEW_COST:      m_progress->set_text("Cost");  break;
     case SKM_VIEW_NEW_LEVEL: m_progress->set_text("> New"); break;
@@ -448,7 +538,7 @@ void SkillMenuEntry::set_cost()
 
     if (you.skills[m_sk] == MAX_SKILL_LEVEL)
         return;
-    if (you.skill_manual_points[m_sk])
+    if (skill_has_manual(m_sk))
         m_progress->set_fg_colour(LIGHTRED);
     else
         m_progress->set_fg_colour(CYAN);
@@ -540,6 +630,8 @@ string SkillMenuSwitch::get_help()
         if (skm.is_set(SKMF_REDUCED))
         {
             vector<const char *> causes;
+            if (you.attribute[ATTR_XP_DRAIN])
+                causes.push_back("draining");
             if (player_under_penance(GOD_ASHENZARI))
                 causes.push_back("Ashenzari's anger");
 
@@ -567,6 +659,10 @@ string SkillMenuSwitch::get_help()
     case SKM_VIEW_PROGRESS:
         return "The percentage of the progress done before reaching next "
                "level is in <cyan>cyan</cyan>.\n";
+    case SKM_VIEW_TRANSFER:
+        return "The progress of the knowledge transfer is displayed in "
+               "<cyan>cyan</cyan> in front of the skill receiving the "
+               "knowledge. The donating skill is marked with <cyan>*</cyan>.";
     case SKM_VIEW_COST:
     {
         if (skm.is_set(SKMF_SIMPLE))
@@ -595,7 +691,7 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_MODE_MANUAL:    return "manual";
     case SKM_DO_PRACTISE:    return "train";
     case SKM_DO_FOCUS:       return "focus";
-    case SKM_SHOW_DEFAULT:   return "useful";
+    case SKM_SHOW_DEFAULT:   return "trainable";
     case SKM_SHOW_ALL:       return "all";
     case SKM_LEVEL_ENHANCED:
         return (skm.is_set(SKMF_ENHANCED)
@@ -606,6 +702,7 @@ string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_VIEW_TRAINING:  return "training";
     case SKM_VIEW_TARGETS:   return "targets";
     case SKM_VIEW_PROGRESS:  return "progress";
+    case SKM_VIEW_TRANSFER:  return "transfer";
     case SKM_VIEW_POINTS:    return "points";
     case SKM_VIEW_NEW_LEVEL: return "new level";
     case SKM_VIEW_COST:      return "cost";
@@ -690,14 +787,13 @@ void SkillMenu::init_experience()
         m_skill_backup.save();
         you.auto_training = false;
         reset_training();
-        you.clear_training_targets();
 
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             const skill_type sk = skill_type(i);
-            if (!is_useless_skill(sk) && !you.can_currently_train[sk])
+            if (!is_useless_skill(sk) && !you.can_train[sk])
             {
-                you.can_currently_train.set(sk);
+                you.can_train.set(sk);
                 you.train[sk] = TRAINING_DISABLED;
             }
         }
@@ -719,7 +815,6 @@ void SkillMenu::finish_experience(bool experience_change)
         if (experience_change)
         {
             redraw_screen();
-            update_screen();
             unwind_bool change_xp_for_real(crawl_state.simulating_xp_gain, false);
             train_skills();
         }
@@ -816,37 +911,22 @@ void SkillMenu::init(int flag, int region_height)
     do_skill_enabled_check();
 }
 
-static string _format_skill_target(int target)
-{
-    // Use locale-sensitive decimal marker for consistency with other parts of
-    // this menu.
-    std::lconv *locale_data = std::localeconv();
-    return make_stringf("%d%s%d", target / 10,
-                            locale_data->decimal_point, target % 10);
-}
-
 static keyfun_action _keyfun_target_input(int &ch)
 {
     if (ch == '-')
         return KEYFUN_BREAK; // reset to 0
-    // Use the locale decimal point, because atof (used in read_skill_target)
-    // is locale-sensitive, as is the output of printf code.
-    // `decimal_point` on the result is guaranteed to be non-empty by the
-    // standard.
-    std::lconv *locale_data = std::localeconv();
-
     if (ch == CONTROL('K') || ch == CONTROL('D') || ch == CONTROL('W') ||
             ch == CONTROL('U') || ch == CONTROL('A') || ch == CONTROL('E') ||
             ch == CK_ENTER || ch == CK_BKSP || ch == CK_ESCAPE ||
             ch < 0 || // this should get all other special keys
-            ch == *locale_data->decimal_point || isadigit(ch))
+            ch == '.' || isadigit(ch))
     {
         return KEYFUN_PROCESS;
     }
     return KEYFUN_IGNORE;
 }
 
-int SkillMenu::read_skill_target(skill_type sk)
+int SkillMenu::read_skill_target(skill_type sk, int keyn)
 {
     SkillMenuEntry *entry = find_entry(sk);
     ASSERT(entry);
@@ -855,7 +935,7 @@ int SkillMenu::read_skill_target(skill_type sk)
 
     const int old_target = you.get_training_target(sk);
     const string prefill = old_target <= 0 ? "0"
-                                           : _format_skill_target(old_target);
+                    : make_stringf("%d.%d", old_target / 10, old_target % 10);
 
     progress->set_editable(true, 5);
     progress->set_highlight_colour(RED);
@@ -957,7 +1037,7 @@ bool SkillMenu::do_skill_enabled_check()
     {
         // Shouldn't happen, but crash rather than locking the player in the
         // menu. Training will be fixed up on load.
-        ASSERT(!you.has_mutation(MUT_DISTRIBUTED_TRAINING));
+        ASSERT(you.species != SP_GNOLL);
         set_help("<lightred>You need to enable at least one skill.</lightred>");
         return false;
     }
@@ -1016,14 +1096,15 @@ skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
         {
         case SKM_MODE:  return SKM_MODE_MANUAL;
         case SKM_DO:    return SKM_DO_FOCUS;
+        case SKM_SHOW:  return SKM_SHOW_DEFAULT;
+        case SKM_LEVEL: return SKM_LEVEL_NORMAL;
         case SKM_VIEW:  return SKM_VIEW_NEW_LEVEL;
-        default:        return !m_switches[sw] ? SKM_NONE
-                                               : m_switches[sw]->get_state();
+        default:        return SKM_NONE;
         }
     }
     else if (!m_switches[sw])
     {
-        if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+        if (you.species == SP_GNOLL)
         {
             switch (sw)
             {
@@ -1093,10 +1174,14 @@ void SkillMenu::select(skill_type sk, int keyn)
 {
     if (is_set(SKMF_HELP))
         show_description(sk);
+    else if (is_set(SKMF_RESKILL_FROM))
+        you.transfer_from_skill = sk;
+    else if (is_set(SKMF_RESKILL_TO))
+        you.transfer_to_skill = sk;
     else if (skm.get_state(SKM_VIEW) == SKM_VIEW_TARGETS
                                             && skm.is_set(SKMF_SET_TARGET))
     {
-        read_skill_target(sk);
+        read_skill_target(sk, keyn);
     }
     else if (get_state(SKM_DO) == SKM_DO_PRACTISE
              || get_state(SKM_DO) == SKM_DO_FOCUS)
@@ -1122,9 +1207,6 @@ void SkillMenu::toggle(skill_menu_switch sw)
     {
     case SKM_MODE:
         you.auto_training = !you.auto_training;
-        // TODO: these are probably now redundant
-        Options.default_manual_training = !you.auto_training;
-        Options.prefs_dirty = true;
 
         // Switch the skill train state with the saved version.
         tmp = you.train;
@@ -1180,6 +1262,11 @@ void SkillMenu::init_flags()
         else if (you.skill(type, 10) < you.skill(type, 10, true))
             set_flag(SKMF_REDUCED);
     }
+
+    // You might be drained by a small enough amount to not affect the
+    // rounded numbers.
+    if (you.attribute[ATTR_XP_DRAIN])
+        set_flag(SKMF_REDUCED);
 }
 
 void SkillMenu::init_title()
@@ -1232,10 +1319,6 @@ void SkillMenu::init_button_row()
         m_clear_targets_button = new FormattedTextItem();
         m_clear_targets_button->set_id(SKM_CLEAR_TARGETS);
         m_clear_targets_button->add_hotkey('-');
-#ifndef USE_TILE_LOCAL
-        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT);
-        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT2);
-#endif
         m_clear_targets_button->set_highlight_colour(YELLOW);
         add_item(m_clear_targets_button, 25, m_pos);
         refresh_button_row();
@@ -1245,13 +1328,10 @@ void SkillMenu::init_button_row()
 void SkillMenu::init_switches()
 {
     SkillMenuSwitch* sw;
-    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+    if (you.species != SP_GNOLL)
     {
         sw = new SkillMenuSwitch("mode", '/');
         m_switches[SKM_MODE] = sw;
-#ifndef USE_TILE_LOCAL
-        sw->add_hotkey(CK_NUMPAD_DIVIDE);
-#endif
         sw->add(SKM_MODE_AUTO);
         if (!is_set(SKMF_SPECIAL) && !is_set(SKMF_SIMPLE))
             sw->add(SKM_MODE_MANUAL);
@@ -1268,9 +1348,11 @@ void SkillMenu::init_switches()
         {
             sw->add(SKM_DO_PRACTISE);
         }
-        if (!is_set(SKMF_SIMPLE) && Options.skill_focus != SKM_FOCUS_OFF)
+        if (!is_set(SKMF_RESKILLING) && !is_set(SKMF_SIMPLE)
+            && Options.skill_focus != SKM_FOCUS_OFF)
+        {
             sw->add(SKM_DO_FOCUS);
-
+        }
         sw->set_state(you.skill_menu_do);
         sw->add_hotkey('\t');
         sw->update();
@@ -1278,12 +1360,9 @@ void SkillMenu::init_switches()
         add_item(sw, sw->size(), m_pos);
 
         sw = new SkillMenuSwitch("skills", '*');
-#ifndef USE_TILE_LOCAL
-        sw->add_hotkey(CK_NUMPAD_MULTIPLY);
-#endif
         m_switches[SKM_SHOW] = sw;
         sw->add(SKM_SHOW_DEFAULT);
-        if (!is_set(SKMF_SIMPLE))
+        if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
         {
             sw->add(SKM_SHOW_ALL);
             if (Options.default_show_all_skills)
@@ -1307,18 +1386,25 @@ void SkillMenu::init_switches()
 
     sw = new SkillMenuSwitch("", '!');
     m_switches[SKM_VIEW] = sw;
+    const bool transferring = !is_invalid_skill(you.transfer_to_skill);
     if (!is_set(SKMF_SPECIAL) || you.wizard)
     {
         sw->add(SKM_VIEW_TRAINING);
+
+        if (transferring)
+        {
+            sw->add(SKM_VIEW_TRANSFER);
+            sw->set_state(SKM_VIEW_TRANSFER);
+        }
 
         sw->add(SKM_VIEW_COST);
 
         if (!you.auto_training)
             sw->set_state(SKM_VIEW_COST);
-
-        if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-            sw->add(SKM_VIEW_TARGETS);
     }
+
+    if (you.species != SP_GNOLL)
+        sw->add(SKM_VIEW_TARGETS);
 
     if (you.wizard)
     {
@@ -1382,7 +1468,7 @@ void SkillMenu::refresh_button_row()
             clearlegend = "[<yellow>-</yellow>] clear all targets";
         }
     }
-    else if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING)) // SKM_VIEW_TARGETS unavailable for Gn
+    else if (you.species != SP_GNOLL) // SKM_VIEW_TARGETS unavailable for Gn
         midlegend = "[<yellow>=</yellow>] set a skill target";
 
     m_help_button->set_text(helpstring + legend);
@@ -1417,7 +1503,19 @@ void SkillMenu::refresh_names()
 void SkillMenu::set_default_help()
 {
     string text;
-    if (is_set(SKMF_EXPERIENCE))
+    if (is_set(SKMF_RESKILL_FROM))
+    {
+        text = "Select a skill as the source of the knowledge transfer. The "
+               "chosen skill will be reduced to the level shown in "
+               "<brown>brown</brown>.";
+    }
+    else if (is_set(SKMF_RESKILL_TO))
+    {
+        text = "Select a skill as the destination of the knowledge transfer. "
+               "The chosen skill will be raised to the level shown in "
+               "<cyan>cyan</cyan>.";
+    }
+    else if (is_set(SKMF_EXPERIENCE))
     {
         text = "Select the skills you want to be trained. "
                "The chosen skills will be raised to the level shown in "
@@ -1438,6 +1536,10 @@ void SkillMenu::set_default_help()
         if (is_set(SKMF_MANUAL))
             text += "Bonus from skill manuals is in <lightred>red</lightred>. ";
     }
+
+    // This one takes priority.
+    if (get_state(SKM_VIEW) == SKM_VIEW_TRANSFER)
+        text = m_switches[SKM_VIEW]->get_help();
 
     m_help->set_text(text);
 }
@@ -1501,7 +1603,7 @@ void SkillMenu::set_skills()
 
 void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
-    ASSERT(you.can_currently_train[sk]);
+    ASSERT(you.can_train[sk]);
     if (keyn >= 'A' && keyn <= 'Z')
         you.train.init(TRAINING_DISABLED);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
@@ -1535,12 +1637,16 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
 
 void SkillMenu::set_title()
 {
+    const char* format = is_set(SKMF_RESKILLING)
+                                ? "Transfer Knowledge: select the %s skill"
+                                : "You have %s. Select the skills to train.";
     string t;
-    if (is_set(SKMF_EXPERIENCE))
-    {
-        t = "You have gained great experience. "
-            "Select the skills to train.";
-    }
+    if (is_set(SKMF_RESKILL_FROM))
+        t = make_stringf(format, "source");
+    else if (is_set(SKMF_RESKILL_TO))
+        t = make_stringf(format, "destination");
+    else if (is_set(SKMF_EXPERIENCE))
+        t = make_stringf(format, "quaffed a potion of experience");
 
     m_title->set_text(t);
 }
@@ -1635,14 +1741,14 @@ public:
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
 #ifdef USE_TILE_LOCAL
-    virtual bool on_event(const Event& ev) override;
+    virtual bool on_event(const wm_event& ev) override;
 #endif
 
 protected:
     int flag;
 };
 
-SizeReq UISkillMenu::_get_preferred_size(Direction dim, int /*prosp_width*/)
+SizeReq UISkillMenu::_get_preferred_size(Direction dim, int prosp_width)
 {
 #ifdef USE_TILE_LOCAL
     SizeReq ret;
@@ -1668,13 +1774,14 @@ SizeReq UISkillMenu::_get_preferred_size(Direction dim, int /*prosp_width*/)
 void UISkillMenu::_allocate_region()
 {
     skm.exit(true);
-    skm.init(flag, m_region.height);
+    int height = m_region[3];
+    skm.init(flag, height);
 }
 
 void UISkillMenu::_render()
 {
 #ifdef USE_TILE_LOCAL
-    GLW_3VF t = {(float)m_region.x, (float)m_region.y, 0}, s = {1, 1, 1};
+    GLW_3VF t = {(float)m_region[0], (float)m_region[1], 0}, s = {1, 1, 1};
     glmanager->set_transform(t, s);
 #endif
     skm.draw_menu();
@@ -1684,31 +1791,29 @@ void UISkillMenu::_render()
 }
 
 #ifdef USE_TILE_LOCAL
-bool UISkillMenu::on_event(const Event& ev)
+bool UISkillMenu::on_event(const wm_event& ev)
 {
-    if (ev.type() != Event::Type::MouseMove
-     && ev.type() != Event::Type::MouseDown
-     && ev.type() != Event::Type::MouseWheel)
+    if (ev.type != WME_MOUSEMOTION
+     && ev.type != WME_MOUSEBUTTONDOWN
+     && ev.type != WME_MOUSEWHEEL)
     {
         return Widget::on_event(ev);
     }
 
-    const auto mouse_event = static_cast<const MouseEvent&>(ev);
+    MouseEvent mouse_ev = ev.mouse_event;
+    mouse_ev.px -= m_region[0];
+    mouse_ev.py -= m_region[1];
 
-    wm_mouse_event mev = ui::to_wm_event(mouse_event);
-    mev.px -= m_region.x;
-    mev.py -= m_region.y;
-
-    int key = skm.handle_mouse(mev);
+    int key = skm.handle_mouse(mouse_ev);
     if (key && key != CK_NO_KEY)
     {
-        wm_keyboard_event fake_key = {0};
-        fake_key.keysym.sym = key;
-        KeyEvent key_ev(Event::Type::KeyDown, fake_key);
-        Widget::on_event(key_ev);
+        wm_event fake_key = {0};
+        fake_key.type = WME_KEYDOWN;
+        fake_key.key.keysym.sym = key;
+        Widget::on_event(fake_key);
     }
 
-    if (ev.type() == Event::Type::MouseMove)
+    if (ev.type == WME_MOUSEMOTION)
         _expose();
 
     return true;
@@ -1718,8 +1823,9 @@ bool UISkillMenu::on_event(const Event& ev)
 void skill_menu(int flag, int exp)
 {
     // experience potion; you may elect to put experience in normally
-    // untrainable skills (e.g. skills that your god hates). The only
-    // case where we abort is if all in-principle trainable skills are maxed.
+    // untrainable skills (skills where you aren't carrying the right item,
+    // or skills that your god hates). The only case where we abort is if all
+    // in-principle trainable skills are maxed.
     if (flag & SKMF_EXPERIENCE && !trainable_skills(true))
     {
         mpr("You feel omnipotent.");
@@ -1735,10 +1841,11 @@ void skill_menu(int flag, int exp)
 
     bool done = false;
     auto skill_menu_ui = make_shared<UISkillMenu>(flag);
-    auto popup = make_shared<ui::Popup>(skill_menu_ui);
 
-    skill_menu_ui->on_keydown_event([&done, &skill_menu_ui](const KeyEvent& ev) {
-        const auto keyn = ev.key();
+    skill_menu_ui->on(Widget::slots.event, [&done, &skill_menu_ui](wm_event ev) {
+        if (ev.type != WME_KEYDOWN)
+            return false;
+        int keyn = ev.key.keysym.sym;
 
         skill_menu_ui->_expose();
 
@@ -1809,6 +1916,11 @@ void skill_menu(int flag, int exp)
                 ASSERT(!is_invalid_skill(sk));
                 skm.select(sk, keyn);
                 skill_menu_ui->_expose();
+                if (skm.is_set(SKMF_RESKILLING))
+                {
+                    skm.clear();
+                    return done = true;
+                }
             }
         }
 
@@ -1818,6 +1930,7 @@ void skill_menu(int flag, int exp)
 #ifdef USE_TILE_WEB
     tiles_crt_popup show_as_popup("skills");
 #endif
+    auto popup = make_shared<ui::Popup>(skill_menu_ui);
     // XXX: this is, in theory, an arbitrary initial height. In practice,
     // there's a bug where an item in the MenuFreeform stays at its original
     // position even after skm.init is called again, crashing when the screen

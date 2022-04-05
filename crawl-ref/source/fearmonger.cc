@@ -5,7 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "mpr.h"
 #include "player.h"
 
 #include "areas.h"
@@ -110,6 +109,11 @@ void player::clear_fearmongers()
     duration[DUR_AFRAID] = 0;
 }
 
+static void _removed_fearmonger_msg(const monster* mon)
+{
+    return;
+}
+
 // Update all fearmongers' status after changes.
 void player::update_fearmongers()
 {
@@ -128,6 +132,7 @@ void player::update_fearmongers()
             // printing any subsequent messages, or a --more-- can
             // crash (#6547).
             _removed_fearmonger(true);
+            _removed_fearmonger_msg(mon);
         }
     }
     if (removed)
@@ -146,6 +151,7 @@ void player::update_fearmonger(const monster* mon)
             // Do this dance to clear the duration before printing messages
             // (#8844), but still print all messages in the right order.
             _removed_fearmonger(true);
+            _removed_fearmonger_msg(mon);
             _removed_fearmonger();
             return;
         }
@@ -174,7 +180,7 @@ bool player::_possible_fearmonger(const monster* mon) const
         && !silenced(pos()) && !silenced(mon->pos())
         && see_cell(mon->pos()) && mon->see_cell(pos())
         && !mon->submerged() && !mon->confused()
-        && !mon->asleep() && !mon->cannot_act()
+        && !mon->asleep() && !mon->cannot_move()
         && !mon->wont_attack() && !mon->pacified()
         && !mon->berserk_or_insane()
         && !mons_is_fleeing(*mon)

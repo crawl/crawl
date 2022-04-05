@@ -157,7 +157,7 @@ This is repeated until all of the triggerers have been removed, or the player
 leaves the level.
 
 [1]: "Turns" are a misnomer. The countdown operates off the value of ev:ticks(),
-     a value which may be, but is not always, "10" for every turn. In practise,
+     a value which may be, but is not always, "10" for every turn. In practice,
      for randomised functions, you can times your values by 10 to roughly get
      a "turns" value: therefore, "50" ~= every 5 turns, "200" ~= every 20 turns.
 
@@ -526,4 +526,5 @@ MARKER:  o = lua:props_marker { \
 -----------------------------
 
 If you have any comments, questions, or issues with Triggerables, your best bet
-would be #crawl-dev on Libera IRC.
+would be to contact the crawl-ref-discuss mailing list on SourceForge, or to try
+##crawl-dev on irc.freenode.org.

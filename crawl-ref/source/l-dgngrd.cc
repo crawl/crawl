@@ -57,12 +57,11 @@ static int dgn_feature_desc(lua_State *ls)
     const dungeon_feature_type feat =
     static_cast<dungeon_feature_type>(luaL_safe_checkint(ls, 1));
     const description_level_type dtype =
-        lua_isnumber(ls, 2)?
-        static_cast<description_level_type>(luaL_safe_checkint(ls, 2)) :
-            description_type_by_name(lua_tostring(ls, 2));
+    lua_isnumber(ls, 2)?
+    static_cast<description_level_type>(luaL_safe_checkint(ls, 2)) :
+    description_type_by_name(lua_tostring(ls, 2));
     const bool need_stop = lua_isboolean(ls, 3)? lua_toboolean(ls, 3) : false;
-    const string s = feature_description(feat, NUM_TRAPS, "", dtype)
-        + (need_stop ? "." : "");
+    const string s = feature_description(feat, NUM_TRAPS, "", dtype, need_stop);
     lua_pushstring(ls, s.c_str());
     return 1;
 }
@@ -70,14 +69,13 @@ static int dgn_feature_desc(lua_State *ls)
 static int dgn_feature_desc_at(lua_State *ls)
 {
     const description_level_type dtype =
-        lua_isnumber(ls, 3) ?
-        static_cast<description_level_type>(luaL_safe_checkint(ls, 3)) :
-            description_type_by_name(lua_tostring(ls, 3));
+    lua_isnumber(ls, 3)?
+    static_cast<description_level_type>(luaL_safe_checkint(ls, 3)) :
+    description_type_by_name(lua_tostring(ls, 3));
     const bool need_stop = lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : false;
     const string s = feature_description_at(coord_def(luaL_safe_checkint(ls, 1),
                                                       luaL_safe_checkint(ls, 2)),
-                                            false, dtype)
-        + (need_stop ? "." : "");
+                                            false, dtype, need_stop);
     lua_pushstring(ls, s.c_str());
     return 1;
 }
@@ -86,13 +84,6 @@ static int dgn_max_bounds(lua_State *ls)
 {
     lua_pushnumber(ls, GXM);
     lua_pushnumber(ls, GYM);
-    return 2;
-}
-
-static int dgn_builder_bounds(lua_State *ls)
-{
-    lua_pushnumber(ls, dgn_builder_x());
-    lua_pushnumber(ls, dgn_builder_y());
     return 2;
 }
 
@@ -115,12 +106,12 @@ static int dgn_grid(lua_State *ls)
         if (feat)
         {
             if (crawl_state.generating_level)
-                env.grid(c) = feat;
+                grd(c) = feat;
             else
                 dungeon_terrain_changed(c, feat);
         }
     }
-    PLUARET(number, env.grid(c));
+    PLUARET(number, grd(c));
 }
 
 LUAFN(dgn_distance)
@@ -149,7 +140,6 @@ const struct luaL_reg dgn_grid_dlib[] =
 
 { "grid", dgn_grid },
 { "max_bounds", dgn_max_bounds },
-{ "builder_bounds", dgn_builder_bounds },
 { "in_bounds", dgn_in_bounds },
 { "distance", dgn_distance },
 

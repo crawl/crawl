@@ -5,7 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "mpr.h"
 #include "player.h"
 
 #include "areas.h"
@@ -258,7 +257,7 @@ bool player::possible_beholder(const monster* mon) const
             && !silenced(pos())
             && !mon->is_silenced()
             && !mon->confused()
-            && !mon->asleep() && !mon->cannot_act()
+            && !mon->asleep() && !mon->cannot_move()
             && !mon->berserk_or_insane()
             && !mons_is_fleeing(*mon)
             && !is_sanctuary(pos())

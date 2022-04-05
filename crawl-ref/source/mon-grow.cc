@@ -164,8 +164,8 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
     if (!(holiness() & MH_NATURAL))
         return false;
 
-    // Only divine allies can level-up.
-    if (!is_divine_companion())
+    // Only monsters that you can gain XP from can level-up.
+    if (!mons_class_gives_xp(type) || is_summoned())
         return false;
 
     // Avoid wrap-around.
@@ -196,6 +196,10 @@ bool monster::gain_exp(int exp, int max_levels_to_gain)
         experience = (mexplevs[get_experience_level()]
                       + mexplevs[get_experience_level() + 1]) / 2;
     }
+
+    // If the monster has leveled up to a monster that will be angered
+    // by the player, handle it properly.
+    player_angers_monster(this);
 
     return levels_gained > 0;
 }

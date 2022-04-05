@@ -13,6 +13,7 @@
 
 void cluaopen_crawl(lua_State *ls);
 void cluaopen_file(lua_State *ls);
+void cluaopen_food(lua_State *ls);
 void cluaopen_item(lua_State *ls);
 void cluaopen_kills(lua_State *ls);     // defined in kills.cc
 void cluaopen_moninf(lua_State *ls);
@@ -83,5 +84,3 @@ int dgn_map_add_transform(lua_State *ls,
 
 struct monster_info;
 void lua_push_moninf(lua_State *ls, monster_info *mi);
-
-int lua_push_shop_items_at(lua_State *ls, const coord_def &s);

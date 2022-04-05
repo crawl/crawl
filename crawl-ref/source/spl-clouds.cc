@@ -9,67 +9,163 @@
 
 #include <algorithm>
 
+#include "butcher.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
-#include "corpse.h"
 #include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "fprop.h"
 #include "fight.h"
+#include "god-conduct.h"
 #include "items.h"
 #include "level-state-type.h"
+#include "losglobal.h"
 #include "message.h"
 #include "mon-behv.h" // ME_WHACK
 #include "ouch.h"
+#include "prompt.h"
 #include "random-pick.h"
 #include "shout.h"
 #include "spl-util.h"
 #include "target.h"
 #include "terrain.h"
+#include "viewchar.h"
 
-spret conjure_flame(int pow, bool fail)
+spret conjure_flame(const actor *agent, int pow, const coord_def& where,
+                         bool fail)
 {
-    cloud_struct* cloud = cloud_at(you.pos());
-
-    if (cloud && !(cloud->type == CLOUD_FIRE || cloud->type == CLOUD_EMBERS))
+    // FIXME: This would be better handled by a flag to enforce max range.
+    if (grid_distance(where, agent->pos()) > spell_range(SPELL_CONJURE_FLAME, pow)
+        || !in_bounds(where))
     {
-        mpr("There's already a cloud here!");
+        if (agent->is_player())
+            mpr("That's too far away.");
+        return spret::abort;
+    }
+
+    if (cell_is_solid(where))
+    {
+        if (agent->is_player())
+        {
+            const char *feat = feat_type_name(grd(where));
+            mprf("You can't place the cloud on %s.", article_a(feat).c_str());
+        }
+        return spret::abort;
+    }
+
+    cloud_struct* cloud = cloud_at(where);
+
+    if (cloud && cloud->type != CLOUD_FIRE)
+    {
+        if (agent->is_player())
+            mpr("There's already a cloud there!");
+        return spret::abort;
+    }
+
+    actor* victim = actor_at(where);
+    if (victim)
+    {
+        if (agent->can_see(*victim))
+        {
+            if (agent->is_player())
+                mpr("You can't place the cloud on a creature.");
+            return spret::abort;
+        }
+
+        fail_check();
+
+        // FIXME: maybe should do _paranoid_option_disable() here?
+        if (agent->is_player())
+            canned_msg(MSG_GHOSTLY_OUTLINE);
+        return spret::success;      // Don't give free detection!
+    }
+
+    fail_check();
+
+    if (cloud)
+    {
+        // Reinforce the cloud - but not too much.
+        // It must be a fire cloud from a previous test.
+        if (you.see_cell(where))
+            mpr("The fire blazes with new energy!");
+        const int extra_dur = 2 + min(random2(pow) / 2, 20);
+        cloud->decay += extra_dur * 5;
+        cloud->source = agent->mid;
+        if (agent->is_player())
+            cloud->set_whose(KC_YOU);
+        else
+            cloud->set_killer(KILL_MON_MISSILE);
+    }
+    else
+    {
+        const int durat = min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
+        place_cloud(CLOUD_FIRE, where, durat, agent);
+        if (you.see_cell(where))
+        {
+            if (agent->is_player())
+                mpr("The fire ignites!");
+            else
+                mpr("A cloud of flames bursts into life!");
+        }
+    }
+    noisy(spell_effect_noise(SPELL_CONJURE_FLAME), where);
+
+    return spret::success;
+}
+
+spret cast_poisonous_vapours(int pow, const dist &beam, bool fail)
+{
+    if (cell_is_solid(beam.target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(beam.target);
+    if (!mons || mons->submerged())
+    {
+        fail_check();
+        canned_msg(MSG_SPELL_FIZZLES);
+        return spret::success; // still losing a turn
+    }
+
+    if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
+    {
+        mprf("But poisonous vapours would do no harm to %s!",
+             mons->name(DESC_THE).c_str());
+        return spret::abort;
+    }
+
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return spret::abort;
+
+    cloud_struct* cloud = cloud_at(beam.target);
+    if (cloud && cloud->type != CLOUD_POISON)
+    {
+        // XXX: consider replacing the cloud instead?
+        mpr("There's already a cloud there!");
         return spret::abort;
     }
 
     fail_check();
 
-    if (cloud && cloud->type == CLOUD_FIRE)
+    const int cloud_duration = max(random2(pow + 1) / 10, 1); // in dekaauts
+    if (cloud)
     {
-        // Reinforce the cloud - but not too much.
-        // It must be a fire cloud from a previous test.
-        mpr("The fire blazes with new energy!");
-        const int extra_dur = 2 + min(random2(pow) / 2, 20);
-        cloud->decay += extra_dur * 5;
-        cloud->source = you.mid ;
+        // Reinforce the cloud.
+        mpr("The poisonous vapours increase!");
+        cloud->decay += cloud_duration * 10; // in this case, we're using auts
         cloud->set_whose(KC_YOU);
-    }
-    else if (cloud && cloud->type == CLOUD_EMBERS)
-    {
-        mpr("The fire ignites!");
-        place_cloud(CLOUD_FIRE, you.pos(), min(5 + (random2(pow)/2)
-                                                 + (random2(pow)/2), 23), &you);
     }
     else
     {
-        you.props[CFLAME_DUR_KEY] = min(5 + (random2(pow)/2)
-                                               + (random2(pow)/2), 23);
-        place_cloud(CLOUD_EMBERS, you.pos(), 1, &you);
-        // Create a cloud for the time it takes to cast plus 1 aut, so that no
-        // matter what happens the flame tries to ignite after the next player
-        // action.
-        cloud = cloud_at(you.pos());
-        cloud->decay = player_speed() + 1;
-        mpr("The fire begins to smoulder!");
+        place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
+        mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
     }
-    noisy(spell_effect_noise(SPELL_CONJURE_FLAME), you.pos());
+
+    behaviour_event(mons, ME_WHACK, &you);
 
     return spret::success;
 }
@@ -86,7 +182,7 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
 
     if (cell_is_solid(beam.target))
     {
-        const char *feat = feat_type_name(env.grid(beam.target));
+        const char *feat = feat_type_name(grd(beam.target));
         mprf("You can't place clouds on %s.", article_a(feat).c_str());
         return spret::abort;
     }
@@ -132,22 +228,6 @@ spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,
     return spret::success;
 }
 
-/*
- * A cloud_func that places an individual cloud as part of a cloud area. This
- * function is called by apply_area_cloud();
- *
- * @param where       The location of the cloud.
- * @param pow         The spellpower of the spell placing the clouds, which
- *                    determines how long the cloud will last.
- * @param spread_rate How quickly the cloud spreads.
- * @param ctype       The type of cloud to place.
- * @param agent       Any agent that may have caused the cloud. If this is the
- *                    player, god conducts are applied.
- * @param excl_rad    How large of an exclusion radius to make around the
- *                    cloud.
- * @returns           The number of clouds made, which is always 1.
- *
-*/
 static int _make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                                 cloud_type ctype, const actor *agent,
                                 int excl_rad)
@@ -159,20 +239,6 @@ static int _make_a_normal_cloud(coord_def where, int pow, int spread_rate,
     return 1;
 }
 
-/*
- * Make a large area of clouds centered on a given place. This never creates
- * player exclusions.
- *
- * @param ctype       The type of cloud to place.
- * @param agent       Any agent that may have caused the cloud. If this is the
- *                    player, god conducts are applied.
- * @param where       The location of the cloud.
- * @param pow         The spellpower of the spell placing the clouds, which
- *                    determines how long the cloud will last.
- * @param size        How large a radius of clouds to place from the `where'
- *                    argument.
- * @param spread_rate How quickly the cloud spreads.
-*/
 void big_cloud(cloud_type cl_type, const actor *agent,
                const coord_def& where, int pow, int size, int spread_rate)
 {
@@ -181,83 +247,90 @@ void big_cloud(cloud_type cl_type, const actor *agent,
                      cl_type, agent, spread_rate, -1);
 }
 
-spret cast_corpse_rot(int pow, bool fail)
+spret cast_ring_of_flames(int power, bool fail)
 {
     fail_check();
-    return corpse_rot(&you, pow);
+    you.increase_duration(DUR_FIRE_SHIELD,
+                          6 + (power / 10) + (random2(power) / 5), 50,
+                          "The air around you leaps into flame!");
+    manage_fire_shield(1);
+    return spret::success;
 }
 
-spret corpse_rot(actor* caster, int pow, bool actual)
+void manage_fire_shield(int delay)
+{
+    ASSERT(you.duration[DUR_FIRE_SHIELD]);
+
+    // Melt ice armour entirely.
+    maybe_melt_player_enchantments(BEAM_FIRE, 100);
+
+    // Remove fire clouds on top of you
+    if (cloud_at(you.pos()) && cloud_at(you.pos())->type == CLOUD_FIRE)
+        delete_cloud(you.pos());
+
+    // Place fire clouds all around you
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (!cell_is_solid(*ai) && !cloud_at(*ai))
+            place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
+}
+
+spret cast_corpse_rot(bool fail)
+{
+    if (!you.res_rotting())
+    {
+        for (stack_iterator si(you.pos()); si; ++si)
+        {
+            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
+            {
+                if (!yesno(("Really cast Corpse Rot while standing on " + si->name(DESC_A) + "?").c_str(), false, 'n'))
+                {
+                    canned_msg(MSG_OK);
+                    return spret::abort;
+                }
+                break;
+            }
+        }
+    }
+    fail_check();
+    corpse_rot(&you);
+    return spret::success;
+}
+
+void corpse_rot(actor* caster)
 {
     // If there is no caster (god wrath), centre the effect on the player.
     const coord_def center = caster ? caster->pos() : you.pos();
     bool saw_rot = false;
-    int did_rot = 0;
 
     for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
     {
-        for (stack_iterator si(*ri); si; ++si)
-            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-            {
-                if (!actual)
-                    return spret::success;
-                // Found a corpse. Skeletonise it if possible.
-                if (!mons_skeleton(si->mon_type))
+        if (!is_sanctuary(*ri) && !cloud_at(*ri))
+            for (stack_iterator si(*ri); si; ++si)
+                if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
                 {
-                    item_was_destroyed(*si);
-                    destroy_item(si->index());
+                    // Found a corpse. Skeletonise it if possible.
+                    if (!mons_skeleton(si->mon_type))
+                    {
+                        item_was_destroyed(*si);
+                        destroy_item(si->index());
+                    }
+                    else
+                        turn_corpse_into_skeleton(*si);
+
+                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3),caster);
+
+                    if (!saw_rot && you.see_cell(*ri))
+                        saw_rot = true;
+
+                    // Don't look for more corpses here.
+                    break;
                 }
-                else
-                    turn_corpse_into_skeleton(*si);
-
-                if (!saw_rot && you.see_cell(*ri))
-                    saw_rot = true;
-
-                ++did_rot;
-
-                // Chance to get an extra cloud per corpse (50% at max power).
-                if (x_chance_in_y(pow, 100))
-                    ++did_rot;
-            }
-    }
-    if (!actual)
-        return spret::abort;
-
-    for (fair_adjacent_iterator ai(center); ai; ++ai)
-    {
-        if (did_rot == 0)
-            break;
-
-        if (cell_is_solid(*ai) || cloud_at(*ai))
-            continue;
-
-        place_cloud(CLOUD_MIASMA, *ai, 2 + random2avg(8, 2), caster);
-        --did_rot;
     }
 
-    // Continue out to radius 2 if there are still corpses available.
-    if (did_rot)
-    {
-        for (distance_iterator di(center, true, true, 2); di; ++di)
-        {
-            if (did_rot == 0)
-                break;
-
-            if (cell_is_solid(*di) || cloud_at(*di))
-                continue;
-
-            place_cloud(CLOUD_MIASMA, *di, 2 + random2avg(8, 2), caster);
-            --did_rot;
-        }
-    }
-
-    // Abort the spell for players; monsters and wrath fail silently
     if (saw_rot)
         mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
-    else if (!caster || caster->is_player())
-        return spret::abort;
-
-    return spret::success;
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 void holy_flames(monster* caster, actor* defender)
@@ -290,4 +363,62 @@ void holy_flames(monster* caster, actor* defender)
             simple_monster_message(*defender->as_monster(),
                                    " is surrounded by blessed fire!");
     }
+}
+
+random_pick_entry<cloud_type> cloud_cone_clouds[] =
+{
+  { 0,   50, 200, FALL, CLOUD_MEPHITIC },
+  { 0,  100, 125, PEAK, CLOUD_FIRE },
+  { 0,  100, 125, PEAK, CLOUD_COLD },
+  { 0,  100, 125, PEAK, CLOUD_POISON },
+  { 30, 100, 125, RISE, CLOUD_NEGATIVE_ENERGY },
+  { 40, 100, 135, RISE, CLOUD_STORM },
+  { 50, 100, 175, RISE, CLOUD_ACID },
+  { 0,0,0,FLAT,CLOUD_NONE }
+};
+
+spret cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
+                           bool fail)
+{
+    if (env.level_state & LSTATE_STILL_WINDS)
+    {
+        if (caster->is_player())
+            mpr("The air is too still to form clouds.");
+        return spret::abort;
+    }
+
+    // For monsters:
+    pow = min(100, pow);
+
+    const int range = spell_range(SPELL_CLOUD_CONE, pow);
+
+    targeter_shotgun hitfunc(caster, CLOUD_CONE_BEAM_COUNT, range);
+
+    hitfunc.set_aim(pos);
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "cloud"))
+            return spret::abort;
+    }
+
+    fail_check();
+
+    random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
+    cloud_type cloud = cloud_picker.pick(cloud_cone_clouds, pow, CLOUD_NONE);
+
+    for (const auto &entry : hitfunc.zapped)
+    {
+        if (entry.second <= 0)
+            continue;
+        place_cloud(cloud, entry.first,
+                    5 + random2avg(12 + div_rand_round(pow * 3, 4), 3),
+                    caster);
+    }
+    mprf("%s %s a blast of %s!",
+         caster->name(DESC_THE).c_str(),
+         caster->conj_verb("create").c_str(),
+         cloud_type_name(cloud).c_str());
+
+    return spret::success;
 }

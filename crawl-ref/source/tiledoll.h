@@ -3,8 +3,6 @@
 
 #include "tile-player-flags.h"
 
-struct newgame_def;
-
 struct dolls_data
 {
     dolls_data();
@@ -33,8 +31,6 @@ void init_player_doll();
 void fill_doll_equipment(dolls_data &result);
 void create_random_doll(dolls_data &result);
 void save_doll_file(writer &dollf);
-
-void fill_doll_for_newgame(dolls_data &result, const newgame_def& ng);
 
 // Saves player doll definitions into dolls.txt.
 // Returns true if successful, else false.

@@ -7,6 +7,10 @@ Spit Poison ability
 
 Spits poison at a targeted creature.
 %%%%
+Blink ability
+
+Randomly translocates the user a short distance.
+%%%%
 Breathe Dispelling Energy ability
 
 Breathes a bolt of dispelling energy at a targeted creature, possibly removing
@@ -56,20 +60,16 @@ Breathes a blast of noxious fumes at a targeted creature.
 Bat Form ability
 
 Transforms the user into a swift-moving vampire bat, increasing evasion but
-substantially weakening melee attacks. The transformation drains the user's
-attributes.
+substantially weakening melee attacks.
 
-While transformed, any equipped weapons, armour and rings are melded, and the
+While tranformed, any equipped weapons, armour and rings are melded, and the
 user becomes unable to cast spells.
 %%%%
-Exsanguinate ability
+Fly ability
 
-Remove all of your blood, transitioning to a bloodless state.
-%%%%
-Revivify ability
-
-Return to life, transitioning from bloodless to alive. This process renders
-the user temporarily frail.
+Starts flight. During flight you can safely cross water and similar obstacles.
+Be warned, though, that some forms of flight are temporary and may expire at
+inopportune moments.
 %%%%
 Hurl Damnation ability
 
@@ -78,13 +78,9 @@ anyone adjacent, and are not affected by any means of protection, such as armour
 or resistances. However, certain creatures, usually those able to invoke
 damnation themselves, are entirely unscathed by damnation.
 %%%%
-Word of Chaos ability
+Cancel Portal Projectile ability
 
-Speaks a word of chaos, forcing enemies nearby to blink away from the user.
-Additionally, those affected may be slowed, ensnared, or terrified by the
-experience. Invoking a word of chaos is no easy feat and will drain the user's
-maximum health somewhat, and the ability then cannot be used again for a short
-time.
+Ends your Portal Projectile status.
 %%%%
 Heal Wounds ability
 
@@ -95,30 +91,20 @@ Dig ability
 
 Allows making tunnels through soft rock and rusted grates. Activating the
 ability has no cost and simply prepares you to start digging; once active,
-moving into a wall will start tunnelling. Doing so makes some noise and drains
-the user's maximum health.
+moving into a wall will start tunneling. Doing so makes some noise and causes
+hunger, and is a little slower than walking.
 
 Once active, activating the ability again or making any non-digging movement
 action will cancel the Dig status.
 %%%%
 Shaft Self ability
 
-Sends you to a random position one to three floors down, as if you jumped into
-a shaft trap. It takes some time to dig the shaft.
-%%%%
-Rolling Charge ability
-
-Rolls at a foe with a clatter of scales, then uncurls and strikes them in melee
-with increased accuracy. The greater the distance of the roll, the more
-momentum will be added to the force of your strike. You roll with sufficient
-speed to dodge traps and harmful terrain along the way, but not at your
-destination.
+Sends you to a random position one to two floors down, as if you jumped into a
+shaft trap. It takes some time to dig the shaft.
 %%%%
 Evoke Blink ability
 
-Randomly translocates the user a short distance. Translocating in this way
-destabilises the user temporarily, preventing consecutive blinks for a
-short period of time depending on Evocations skill.
+<Blink ability>
 %%%%
 Evoke Berserk Rage ability
 
@@ -129,9 +115,25 @@ Evoke Invisibility ability
 Turns the user invisible. Turning invisible causes magical contamination and
 may eventually cause glowing, nullifying the invisibility.
 %%%%
+Evoke Flight ability
+
+<Fly ability>
+%%%%
+Stop Flying ability
+
+Stops flying.
+%%%%
+Evoke Fog ability
+
+Releases a thick cloud of fog to obscure vision.
+%%%%
+Evoke Ratskin ability
+
+Summons up to two dungeon rats to serve their master for a brief time.
+%%%%
 Evoke Thunderclouds ability
 
-Creates a mighty thundercloud surrounding the user.
+Create a mighty thunderclouds around the user.
 %%%%
 End Transformation ability
 
@@ -148,14 +150,13 @@ and unclean will be affected by powerful and damaging effects, undead and
 demons will be affected by weaker rebukes, and any other intelligent creatures
 will have confusion sown amongst them, with heretics and priests of gods other
 than Zin being punished much more strongly. The effectiveness of the recitation
-is increased by Invocations skill and piety.
+is increased by Invocations skill.
 %%%%
 Vitalisation ability
 
-Temporarily provides protection from poison, confusion, petrification, and
-sickness, as well as the effects of clouds of foul pestilence. Your strength,
-intelligence and dexterity are also temporarily increased by a degree dependent
-on Invocations skill, and cannot be drained while the effect is active.
+Temporarily provides protection from poison, confusion, petrification, rotting
+and sickness, and increases and sustains your strength, intelligence and
+dexterity. The increases to your attributes are determined by Invocations skill.
 %%%%
 Imprison ability
 
@@ -183,8 +184,9 @@ by Invocations skill.
 Cleansing Flame ability
 
 Invokes a huge blast of divine fury centered on the user, severely damaging
-undead and demons and dealing damage to all other hostile creatures. The power
-of the blast is increased by Invocations skill.
+undead and demons and dealing damage to all other hostile creatures. The user's
+allies are never affected. The power of the blast is increased by Invocations
+skill.
 %%%%
 Summon Divine Warrior ability
 
@@ -206,52 +208,61 @@ freshness of these are dependent on Necromancy skill.
 %%%%
 Torment ability
 
-Sacrifices an adjacent cadaver to make all living creatures in sight experience
-all the pain that being suffered in its life. This damage is never directly
-lethal. Kikubaaqudgha will always at least partially shield you from the effect.
+Sacrifices a cadaver to make all living creatures in sight experience all
+the pain that being suffered in its life. This damage is never directly lethal.
+Kikubaaqudgha may shield you from the effect, depending on your piety.
 %%%%
 Brand Weapon With Pain ability
 
 Permanently bloodies a weapon of your choice with the essence of pain
 itself. This blessing cannot be used on artefact weapons. You must choose
-between this gift or that of knowledge of the most powerful necromantic spells,
-and either gift may only be received once.
+between this gift or that of the Necronomicon, and either gift may only be
+received once.
 %%%%
-Receive Forbidden Knowledge ability
+Receive Necronomicon ability
 
-Grants you knowledge of the most powerful and sinister Necromancy spells.
-You must choose between this gift or that of branding a weapon with pain, and
-either gift may only be received once.
+Grants you the Necronomicon, a spellbook containing the most powerful and
+sinister secrets of Necromancy. You must choose between this gift or that of
+branding a weapon with pain, and either gift may only be received once.
 %%%%
 # Yredelemnul
-Recall Undead Harvest ability
+Animate Remains ability
+
+Reanimates a single corpse or skeleton as a follower. Zombies and skeletons
+cannot leave the level they were created on.
+%%%%
+Recall Undead Slaves ability
 
 Recalls your undead followers from anywhere in the dungeon to your immediate
 surroundings.
 %%%%
-Dark Bargain ability
+Injury Mirror ability
 
-Offer up your reaped souls to Yredelemnul in exchange for the temporary help of
-an undead servant. The strength of the servant granted is increased by
-Invocations skill.
+Reflects damage taken for a short duration, hurting attackers whenever any
+damage is taken and reducing piety depending on the amount of damage dealt.
+%%%%
+Animate Dead ability
+
+Reanimates all corpses and skeletons in the vicinity as followers. Zombies and
+skeletons cannot leave the level they were created on.
 %%%%
 Drain Life ability
 
-[[Drain Life spell]] The amount of life force drained is increased by
-Invocations skill.
+Drains the life force of any nearby creatures, healing the user depending on
+the damage dealt. The amount of life force drained is increased by Invocations
+skill.
 %%%%
-Bind Soul ability
+Enslave Soul ability
 
-Marks a monster's soul as ripe for the taking. If the monster dies before the mark
-expires, it will return as a bound soul, still retaining the equipment, spells and
-abilities it had in life.
+Marks a monster's soul as ripe for the taking. Intelligent living, holy and
+demonic monsters can be targeted (excepting most lords of Pandemonium), as
+long as they are relatively uninjured. The duration of the mark is dependent on
+Invocations skill. If the monster dies while still marked, its soul will become
+yours.
 
-Living, holy and demonic monsters can be targeted (excepting most lords of
-Pandemonium), as long as they are relatively uninjured. The duration of the mark
-is dependent on Invocations skill.
-
-The bound soul will follow its captor through stairs, and can be recalled from
-other levels. Only one soul can be bound at a time.
+The enslaved soul will retain the monster's faculties, equipment and abilities,
+as well as some of its innate healing. However, only one soul can be enslaved
+at a time.
 %%%%
 # Okawaru
 Heroism ability
@@ -264,17 +275,11 @@ Finesse ability
 Greatly increases your combat speed. The duration is increased by Invocations
 skill.
 %%%%
-Duel ability
-
-Enters you into single combat with a worthy foe. On success, you and the
-challenged foe will be transported to Okawaru's Arena to fight to the death,
-with no escape until you either emerge victorious or are slain.
-%%%%
 # Makhleb
 Minor Destruction ability
 
-Shoots a weak blast of fire, lightning, stone, acid, or negative energy at the
-targeted creature. Damage and accuracy are increased by Invocations skill.
+Shoots a random harmful blast at the targeted creature. Damage and accuracy
+are increased by Invocations skill.
 %%%%
 Lesser Servant of Makhleb ability
 
@@ -283,15 +288,25 @@ demon hostile.
 %%%%
 Major Destruction ability
 
-Shoots a piercing bolt of fire, lightning, magma, acid, or negative energy at
-the targeted creature. Damage and accuracy are increased by Invocations skill.
+Shoots a random harmful beam or explosion at the targeted creature. Damage and
+accuracy are increased by Invocations skill.
 %%%%
 Greater Servant of Makhleb ability
 
-[[Greater Servant of Makhleb spell]] Failing to use this ability correctly will
-turn the demon hostile.
+Summons a major demon. Failing to use this ability correctly will turn the
+demon hostile.
 %%%%
 # Sif Muna
+Divine Energy ability
+
+Calls on Sif Muna for divine energy. While active, Sif Muna will allow you to
+cast spells even with insufficient reserves of magic. Doing so will cause you
+to briefly lose access to your magic after the spell is cast.
+%%%%
+Stop Divine Energy ability
+
+Stops requesting divine energy from Sif Muna, no longer allowing you to cast
+spells without sufficient magical reserves.
 %%%%
 Channel Magic ability
 
@@ -302,12 +317,6 @@ Forget Spell ability
 
 Removes a known spell from memory, so as to free memory to learn others.
 %%%%
-Divine Exegesis ability
-
-Casts any spell from your spell library with guaranteed success. You receive a
-bonus to spell power based on your Invocations skill that is worth 50% more
-than equivalent levels of training in the relevant skills of the spell itself.
-%%%%
 # Trog
 Berserk ability
 
@@ -315,45 +324,59 @@ Sends the user into a berserk rage. Going berserk temporarily increases health,
 speed, and damage dealt in melee. It will time out quickly outside of combat,
 but may be extended by multiple kills. While berserk, almost all actions other
 than movement and melee combat are prevented. When the rage expires, the user
-will be slowed and unable to berserk again for a short time.
+will be briefly slowed and occasionally may even pass out, and will be unable
+to berserk again for a short time.
 %%%%
 Trog's Hand ability
 
 Invokes a powerful regeneration ability which stacks with all other sources and
-is effective even on those who would not otherwise be able to regenerate. It
-also fortifies the user's willpower, protecting against many magical effects.
+is effective even on those who would not otherwise be able to regenerate. While
+active, the user will also be granted significant protection from hostile
+enchantments.
 %%%%
 Brothers in Arms ability
 
 Summons huge angry allies to wreak havoc.
 %%%%
 # Elyvilon
+Divine Protection ability
+
+Beseeches Elyvilon to save your life. If you are mortally wounded, the Healer
+may undo the killing blow. Especially pious individuals may be certain of this
+help, but in that case, any intervention costs piety (as opposed to merely
+asking for intervention, which is always free). Killing others while asking
+for divine protection will cause penance.
+%%%%
+Lesser Healing ability
+
+Heals a small amount of health, depending on Invocations skill.
+%%%%
 Purification ability
 
-Purges your body of poison, confusion, slowness, petrification, weakness, and
-sickness. Any drained strength, dexterity or intelligence will also be fully
-restored, along with any drained maximum health.
+Purges your body of negative effects such as poison, confusion, slowness,
+petrification, rotting, and sickness, and fully restores any lost strength,
+dexterity or intelligence.
 %%%%
 Heal Other ability
 
 Heals a creature other than yourself by a moderate amount, depending on
 Invocations skill. Using this ability on hostile monsters will try to turn them
-neutral. This works best on living creatures, with the undead and demons being
-progressively harder to pacify. Intelligent creatures are also more difficult
-to pacify.
-
+neutral. This works best on animals, and is less effective on humanoids and
+other intelligent creatures. Undead and demons are harder still to pacify.
 Ghosts of dead adventurers and demon lords are too wrathful to be pacified,
 mindless creatures are too unintelligent to be pacified, and no monster can be
 pacified while it is asleep.
 
-Whether the pacification succeeds or not, the invested piety and magic points
-are lost. If it does succeed, the monster is healed and you gain the monster's
-full experience value. Otherwise, the monster is unaffected and you gain
-nothing.
+Whether the pacification succeeds or not, the invested food, piety and magic
+points are lost. If it does succeed, the monster is healed and you gain half
+the monster's experience value. Otherwise, the monster is unaffected and you
+gain nothing.
 %%%%
-Heal Self ability
+Greater Healing ability
 
-Heals a moderate amount of health, depending on Invocations skill.
+Heals a moderate amount of health, depending on Invocations skill. Greater
+Healing will heal approximately three times as much as Lesser Healing, but at a
+slightly higher total piety cost.
 %%%%
 Divine Vigour ability
 
@@ -370,16 +393,15 @@ entered it.
 Bend Space ability
 
 Bends the fabric of space, instantly translocating the user a short distance,
-and possibly also translocating and damaging creatures adjacent to the initial
-location or the destination. In warping the fabric of space, this ability
-ignores effects that would usually prevent translocations. Invocations skill
-increases the chance of affecting nearby creatures and the damage dealt to
-those affected.
+and possibly also translocating and damaging other adjacent creatures. In
+warping the fabric of space, this ability ignores effects that would usually
+prevent translocations. Invocations skill increases the chance of affecting
+nearby creatures and the damage dealt to those affected.
 %%%%
 Banish ability
 
 Attempts to banish a creature into the Abyss. If the attempt succeeds, you gain
-some piety and the creature's full experience value. Invocations skill makes it
+some piety and half the creature's experience value. Invocations skill makes it
 harder to resist.
 %%%%
 Corrupt ability
@@ -425,7 +447,8 @@ Re-using this ability will discard the current stack.
 # Beogh
 Smiting ability
 
-[[Smiting spell]] The strength of the smiting is increased by Invocations skill.
+Smites any targeted enemy within sight, with no direct line of fire required.
+The strength of the smiting is increased by Invocations skill.
 %%%%
 Recall Orcish Followers ability
 
@@ -447,33 +470,47 @@ Bring an orc corpse back to life. The orc will be an ally, even if it was not
 already one before it died.
 %%%%
 # Fedhas
-Wall of Briars ability
+Fungal Bloom ability
 
-Grow short-lived briar patches around you. Monsters attacking these briars will
-be damaged by sharp thorns. Invocations skill increases the briars' health.
+Call up Fedhas to accelerate the natural process of decay, transforming all
+corpses nearby into fast-growing, short-lived toadstools. Zombies, ghouls,
+and necrophages are considered walking corpses, and are affected accordingly;
+zombies rot into skeletons, and ghouls and necrophages rot away entirely,
+granting no experience.
 %%%%
-Grow Ballistomycete ability
+Sunlight ability
 
-Grow a short-lived ballistomycete at the location you choose. A ballistomycete
-occasionally releases spores that quickly seek out foes and violently explode,
-damaging and confusing all living things caught in the blast.
-
-Invocations skill increases the health and duration of the ballistomycete as
-well as the damage of its exploding spores.
+Calls sunlight down over a small area of the dungeon. Monsters illuminated by
+the light will be easier to hit. Water affected by the sunlight will evaporate.
+In particular, deep water will become shallow water, and shallow water will dry
+up completely, revealing the dungeon floor.
 %%%%
-Overgrow ability
+Growth ability
 
-Permanently destroy a wall-like structure, growing a short-lived plant ally in
-its place. Even a tree will give its life to support the will of Fedhas, and
-only truly indestructible walls are immune to this power.
+Uses food to grow a ring of plants around yourself. If a complete ring cannot
+be formed (because you do not have enough food), plants will grow on squares
+adjacent to you that are close to monsters. The plants you create gain bonus
+health proportional to your Invocations skill.
 %%%%
-Grow Oklob ability
+Rain ability
 
-Grow a short-lived oklob plant at the location you choose. These dangerous
-plants spray corrosive vitriol at your foes.
+Causes rain to fall around you, turning the dungeon floor into shallow water
+and shallow water into deep water. This may also allow plants and mushrooms to
+grow in areas that are not directly drenched. Invocations skill increases the
+number of rain-clouds created.
+%%%%
+Reproduction ability
 
-Invocations skill increases the health and duration of the oklob as well as the
-frequency with which it sprays its acid.
+Creates ballistomycete spores from corpses in your line of sight. The spores will
+explode, causing damage to you or your enemies.
+%%%%
+Evolution ability
+
+Turns plants and fungi into stronger species. Upgraded plants gain a bonus to attack
+accuracy proportional to the user's Invocations skill, and oklob plants are
+more likely to spit acid at higher Invocations.
+
+Upgrading fungi requires piety, while upgrading plants requires food.
 %%%%
 # Cheibriados
 Bend Time ability
@@ -500,26 +537,32 @@ second you departed. Invocations skill increases the amount of time that passes
 while you're gone.
 %%%%
 # Jiyva
+Request Jelly ability
+
+Creates a neutral jelly that will wander the floor and digest items.
+%%%%
 Slimify ability
 
 Coats a wielded weapon or your fists with slime, turning the next living or
 corporeal undead monster hit into a neutral slime.
 %%%%
-Oozemancy ability
+Cure Bad Mutation ability
 
-Calls forth acidic ooze from the walls of the dungeon around you, damaging foes
-depending on the number of affected walls they remain adjacent to.
+Removes a randomly selected bad mutation.
 %%%%
 # Ashenzari
-Curse Item ability
+Scrying ability
 
-Curses a chosen equipped item, binding it to the wearer until the curse
-and the item both are broken. Cursed items can no longer be enchanted or
-modified.
+Provides astral sight, allowing you to see through walls.
 %%%%
-Shatter The Chains ability
+Transfer Knowledge ability
 
-Destroys a chosen cursed equipped item, relieving the wearer of the curse.
+Sacrifices part of one of your skills to improve another. The transfer will
+take place gradually as you gain experience.
+%%%%
+End Transfer Knowledge ability
+
+Aborts an ongoing skill transfer.
 %%%%
 # Dithmenos
 Shadow Step ability
@@ -530,11 +573,11 @@ landing on a random spot adjacent to the target.
 Shadow Form ability
 
 Transforms you into a swirling mass of dark shadows. While in this form, you
-are permanently invisible and are immune to poison, draining, and torment.
-All incoming damage is halved, you bleed smoke on any incoming attack, and
-you have infinite willpower. However, your ability to deal damage in melee
-and with ranged attacks is halved, your spellcasting power is greatly
-hampered, and your maximum health is further drained when taking damage.
+are permanently invisible and are immune to poison, draining, torment, and
+hostile enchantments. All incoming damage will be halved, and you will bleed
+smoke on any incoming attack. However, your ability to deal damage in melee and
+with ranged attacks will be halved, your spellcasting power will be greatly
+hampered, and your skills will be further drained when taking damage.
 Invocations skill increases the duration of the transformation.
 %%%%
 # Gozag
@@ -546,7 +589,25 @@ three lists at a time, with varying prices.
 Call Merchant ability
 
 Sends funds to a merchant to help them set up shop at your location. The cost of
-funding a shop increases with the number of shops funded.
+funding a shop increases with the number of shops funded.{{
+    if you.race() == "Mummy" then
+        return
+    end
+
+    local desc = " You will always have the option to fund a shop selling "
+
+    if you.race() == "Ghoul" then
+        desc = desc .. "carrion"
+    elseif you.race() == "Vampire" then
+        desc = desc .. "blood"
+    else
+        desc = desc .. "food"
+    end
+
+    desc = desc .. "."
+
+    return desc
+}}
 %%%%
 Bribe Branch ability
 
@@ -557,6 +618,14 @@ an increasing chance of being bribed), and more rarely will join your ranks,
 though they will not leave their home branch. Enemies accepting a bribe will
 lower the remaining bribe fund; upon its exhaustion, bribed enemies will become
 indifferent if they have not become your allies.
+%%%%
+# Pakellas
+Device Surge ability
+
+Readies a device surge, which triggers on your next usage of a magical device
+to strengthen its power at the cost of some magic. The amount of magical power
+that can be used for a surge varies, but correlates with how devoted a follower
+is to Pakellas.
 %%%%
 # Qazlal
 Upheaval ability
@@ -592,7 +661,7 @@ increases with your piety and experience level.
 Apocalypse ability
 
 Reveals Ru's truth to your enemies, dealing severe damage to all enemies in
-your line of sight. Affected creatures may be paralysed, slowed or have their
+your line of sight. Affected creatures may be paralyzed, slowed or have their
 magic drained. The damage dealt increases with your piety and experience level.
 %%%%
 Sacrifice Purity ability
@@ -673,7 +742,8 @@ decreased by one. This will likely cause you to lose ranks in trained skills.
 %%%%
 Sacrifice an Eye ability
 
-Sacrifices an eye, causing you to have a much harder time hitting targets.
+Sacrifices an eye, causing you to have a much harder time hitting targets, as
+if wearing an amulet of inaccuracy.
 %%%%
 Sacrifice Resistance ability
 
@@ -730,6 +800,10 @@ Donate Gold ability
 Donates half of your gold to Zin, which will increase your piety over time. The
 overall increase is determined by the size of your donation.
 %%%%
+Curse Item ability
+
+Curses a chosen item, at the cost of a scroll of remove curse.
+%%%%
 Recall Ancestor ability
 
 Recalls your ancestor from anywhere in the dungeon to your immediate
@@ -763,7 +837,7 @@ with both melee and conjurations. This choice is permanent and cannot be undone.
 %%%%
 Ancestor Life: Hexer ability
 
-Remembers your ancestor as a hexer, a cunning rogue capable of swift
+Remembers your ancestor as a hexer, a cunning rogue capable of skilled
 knifework and debilitating spellcasting. This choice is permanent and cannot be
 undone.
 %%%%
@@ -779,68 +853,20 @@ the landing spot and taking two turns to complete the motion.
 %%%%
 Serpent's Lash ability
 
-Allows you to move at supernatural speeds, making any normal movements up to a
-distance of two tiles instant. Martial attacks performed under the effect of
+Allows you to move at supernatural speeds, making any movements up to a
+distance of two tiles instantly. Martial attacks performed under the effect of
 Serpent's Lash are more damaging and never miss.
 %%%%
 Heavenly Storm ability
 
-Invokes a storm of heavenly clouds. While the storm rages, your evasion and
-combat accuracy and damage are substantially increased, and striking enemies
-with martial attacks increases this bonus. The storm weakens over time and
-fades away once the bonus reaches zero. The heavenly clouds prevent
-invisibility, and obscure the vision of those outside the storm.
-%%%%
-Fiery Armour ability
-
-Armour yourself in fire, providing +7 AC and searing foes foolish enough to
-strike you in melee. The fire takes quite a long time to burn out.
-%%%%
-Foxfire Swarm ability
-
-Conjures a swarm of animate flames all around you. These rapidly seek the
-nearest monsters, burning them. They will dissipate harmlessly if unable to
-reach a target or if you swap places with them.
-%%%%
-Rising Flame ability
-
-Sends you floating upward and, after a short delay for Ignis to gather enough
-power, blasts you through the ceiling and into the level above. This ability
-may only be used once.
+Invokes a storm of heavenly clouds. While the storm rages, striking enemies
+with martial attacks provides an increasing bonus to melee damage and accuracy.
+The bonus fades over time, and the storm lasts until the bonus has faded
+completely. The heavenly clouds prevent invisibility, and obscure the vision of
+those outside the storm.
 %%%%
 Hop ability
 
 Hops toward a chosen destination, landing somewhere nearby. After using this
 ability, you will be unable to hop again until you have spent some time not
 moving. (Other actions, such as casting spells and attacking, are fine.)
-%%%%
-Blinkbolt ability
-
-Turns the user into living lightning and zaps them at the chosen monster,
-dealing electric damage to everything in their path and depositing the user
-at the bolt's end. After using this ability, you will be unable to use it
-again for a short time.
-%%%%
-Evoke the Sceptre of Asmodeus ability
-
-Calls on the power of Asmodeus to summon fiery demons of Hell. The demons
-summoned will remain friendly only for a limited time, eventually becoming
-hostile before vanishing. The success of the ability scales with the Evocations
-skill, and this ability is available only while wielding the Sceptre of
-Asmodeus.
-%%%%
-Evoke the Staff of Dispater ability
-
-Blasts a targeted enemy with damnation. These unholy forces harm the victim and
-anyone adjacent, and are not affected by any means of protection, such as armour
-or resistances. However, certain creatures, usually those able to invoke
-damnation themselves, are entirely unscathed by damnation. The power of this
-ability scales with the Evocations skill, and this ability is available only
-while wielding the Staff of Dispater.
-%%%%
-Evoke the Staff of Olgreb ability
-
-Causes the caster to radiate toxic energy, continuously inflicting poison on
-everything in line of sight for as long as the aura lasts. The power of this
-ability scales with the Evocations skill, and this ability is available only
-while wielding the Staff of Olgreb.

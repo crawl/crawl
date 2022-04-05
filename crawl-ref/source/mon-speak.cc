@@ -207,6 +207,7 @@ static string _try_exact_string(const vector<string> &prefixes,
 
 static string __get_speak_string(const vector<string> &prefixes,
                                  const string &key,
+                                 const monster* mons,
                                  bool no_player, bool no_foe,
                                  bool no_foe_name, bool no_god,
                                  bool unseen)
@@ -281,9 +282,7 @@ static string _get_speak_string(const vector<string> &prefixes,
                                 bool unseen)
 {
     int duration = 1;
-    if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))
-        key += " banished";
-    else if (mons->hit_points <= 0)
+    if (mons->hit_points <= 0)
     {
         //separate death/permadeath lines for resurrection monsters
         if (mons_is_mons_class(mons, MONS_NATASHA)
@@ -295,6 +294,8 @@ static string _get_speak_string(const vector<string> &prefixes,
         }
         key += " killed";
     }
+    else if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))
+        key += " banished";
     else if (mons->is_summoned(&duration) && duration <= 0)
         key += " unsummoned";
 
@@ -302,7 +303,7 @@ static string _get_speak_string(const vector<string> &prefixes,
     for (int tries = 0; tries < 10; tries++)
     {
         msg =
-            __get_speak_string(prefixes, key, no_player, no_foe,
+            __get_speak_string(prefixes, key, mons, no_player, no_foe,
                                no_foe_name, no_god, unseen);
 
         // If the first message was non-empty and discarded then discard
@@ -398,17 +399,6 @@ void maybe_mons_speaks(monster* mons)
     // Okay then, don't speak.
 }
 
-static actor* _get_foe(const monster &mon)
-{
-    if (!crawl_state.game_is_arena()
-        && mon.wont_attack()
-        && invalid_monster_index(mon.foe))
-    {
-        return &you;
-    }
-    return mon.get_foe();
-}
-
 // Returns true if something is said.
 bool mons_speaks(monster* mons)
 {
@@ -454,10 +444,6 @@ bool mons_speaks(monster* mons)
         if (mons->berserk_or_insane())
             return false;
 
-        // Rolling beetles shouldn't twitch antennae
-        if (mons->has_ench(ENCH_ROLLING))
-            return false;
-
         // Charmed monsters aren't too expressive.
         if (mons->has_ench(ENCH_CHARM) && !one_chance_in(3))
             return false;
@@ -490,10 +476,12 @@ bool mons_speaks(monster* mons)
         prefixes.emplace_back("confused");
 
     // Allows monster speech to be altered slightly on-the-fly.
-    if (mons->props.exists(SPEECH_PREFIX_KEY))
-        prefixes.push_back(mons->props[SPEECH_PREFIX_KEY].get_string());
+    if (mons->props.exists("speech_prefix"))
+        prefixes.push_back(mons->props["speech_prefix"].get_string());
 
-    const actor*    foe  = _get_foe(*mons);
+    const actor*    foe   = (!crawl_state.game_is_arena() && mons->wont_attack()
+                                && invalid_monster_index(mons->foe)) ?
+                                    &you : mons->get_foe();
     const monster* m_foe = foe ? foe->as_monster() : nullptr;
 
     if (!foe || foe->is_player() || mons->wont_attack())
@@ -611,10 +599,10 @@ bool mons_speaks(monster* mons)
     }
     else
     {
-        if (msg.empty() && mons->props.exists(DBNAME_KEY))
+        if (msg.empty() && mons->props.exists("dbname"))
         {
             msg = _get_speak_string(prefixes,
-                                     mons->props[DBNAME_KEY].get_string(),
+                                     mons->props["dbname"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
 
@@ -625,7 +613,7 @@ bool mons_speaks(monster* mons)
                 // the key with prefixes.
                 vector<string> faux_prefixes;
                 msg = _get_speak_string(faux_prefixes,
-                                     mons->props[DBNAME_KEY].get_string(),
+                                     mons->props["dbname"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
             }
@@ -785,26 +773,6 @@ bool mons_speaks(monster* mons)
     return mons_speaks_msg(mons, msg, MSGCH_TALK, silence);
 }
 
-bool invalid_msg(const monster &mon, string msg)
-{
-    const actor*    foe    = _get_foe(mon);
-    const monster* m_foe   = foe ? foe->as_monster() : nullptr;
-    // TODO: dedup with mons_speaks()
-    const bool no_foe      = (foe == nullptr);
-    const bool no_player   = crawl_state.game_is_arena()
-                             || (!mon.wont_attack()
-                                 && (!foe || !foe->is_player()));
-    const bool mon_foe     = (m_foe != nullptr);
-    const bool no_god      = no_foe || (mon_foe && foe->deity() == GOD_NO_GOD);
-    const bool named_foe   = !no_foe && (!mon_foe || (m_foe->is_named()
-                                && m_foe->type != MONS_ROYAL_JELLY));
-    const bool no_foe_name = !named_foe
-                             || (mon_foe && (m_foe->flags & MF_NAME_MASK));
-    const bool unseen = !you.can_see(mon);
-    return _invalid_msg(msg, no_player, no_foe, no_foe_name, no_god, unseen);
-
-}
-
 bool mons_speaks_msg(monster* mons, const string &msg,
                      const msg_channel_type def_chan, bool silence)
 {
@@ -826,7 +794,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
     {
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
-        // warnings to scare the player. In order to accommodate this
+        // warning to scare the player. In order to accommodate this
         // intent, we're falsely categorizing various things in the
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr

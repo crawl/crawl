@@ -21,6 +21,7 @@
 #include "mon-place.h"
 #include "nearby-danger.h"
 #include "terrain.h"
+#include "view.h"
 
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
@@ -177,8 +178,8 @@ bool mons_tentacle_adjacent(const monster* parent, const monster* child)
 {
     return mons_is_tentacle_head(mons_base_type(*parent))
            && mons_is_tentacle_segment(child->type)
-           && child->props.exists(INWARDS_KEY)
-           && child->props[INWARDS_KEY].get_int() == (int) parent->mid;
+           && child->props.exists("inwards")
+           && child->props["inwards"].get_int() == (int) parent->mid;
 }
 
 const monster& get_tentacle_head(const monster& mon)
@@ -220,9 +221,9 @@ static void _establish_connection(monster* tentacle,
     {
         // This is a little awkward now. Oh well. -cao
         if (tentacle != head)
-            tentacle->props[INWARDS_KEY].get_int() = head->mid;
+            tentacle->props["inwards"].get_int() = head->mid;
         else
-            tentacle->props[INWARDS_KEY].get_int() = MID_NOBODY;
+            tentacle->props["inwards"].get_int() = MID_NOBODY;
 
         return;
     }
@@ -234,8 +235,8 @@ static void _establish_connection(monster* tentacle,
         mg.props[MGEN_TENTACLE_CONNECT] = int(tentacle->mid);
         if (monster *connect = create_monster(mg))
         {
-            connect->props[INWARDS_KEY].get_int() = MID_NOBODY;
-            connect->props[OUTWARDS_KEY].get_int() = MID_NOBODY;
+            connect->props["inwards"].get_int() = MID_NOBODY;
+            connect->props["outwards"].get_int() = MID_NOBODY;
 
             if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
@@ -266,8 +267,8 @@ static void _establish_connection(monster* tentacle,
         if (current_mons)
         {
             // Todo verify current monster type
-            current_mons->props[INWARDS_KEY].get_int() = last_mon->mid;
-            last_mon->props[OUTWARDS_KEY].get_int() = current_mons->mid;
+            current_mons->props["inwards"].get_int() = last_mon->mid;
+            last_mon->props["outwards"].get_int() = current_mons->mid;
             break;
         }
 
@@ -279,11 +280,11 @@ static void _establish_connection(monster* tentacle,
             connect->max_hit_points = tentacle->max_hit_points;
             connect->hit_points = tentacle->hit_points;
 
-            connect->props[INWARDS_KEY].get_int() = last_mon->mid;
-            connect->props[OUTWARDS_KEY].get_int() = MID_NOBODY;
+            connect->props["inwards"].get_int() = last_mon->mid;
+            connect->props["outwards"].get_int() = MID_NOBODY;
 
             if (last_mon->type == connector_type)
-                last_mon->props[OUTWARDS_KEY].get_int() = connect->mid;
+                last_mon->props["outwards"].get_int() = connect->mid;
 
             if (head->holiness() & MH_UNDEAD)
                 connect->flags |= MF_FAKE_UNDEAD;
@@ -575,9 +576,9 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     if (base_position == new_pos)
     {
         if (tentacle == head)
-            tentacle->props[INWARDS_KEY].get_int() = MID_NOBODY;
+            tentacle->props["inwards"].get_int() = MID_NOBODY;
         else
-            tentacle->props[INWARDS_KEY].get_int() = head->mid;
+            tentacle->props["inwards"].get_int() = head->mid;
         return true;
     }
 
@@ -689,8 +690,8 @@ static int _collect_connection_data(monster* start_monster,
             connection_data[*adj_it].insert(current_count);
         }
 
-        bool basis = current_mon->props.exists(INWARDS_KEY);
-        monster* next = basis ? monster_by_mid(current_mon->props[INWARDS_KEY].get_int()) : nullptr;
+        bool basis = current_mon->props.exists("inwards");
+        monster* next = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : nullptr;
 
         if (next && next->is_child_tentacle_of(start_monster))
         {
@@ -726,10 +727,10 @@ void move_solo_tentacle(monster* tentacle)
     bool severed = tentacle->has_ench(ENCH_SEVERED);
 
     coord_def base_position;
-    if (!tentacle->props.exists(BASE_POSITION_KEY))
-        tentacle->props[BASE_POSITION_KEY].get_coord() = tentacle->pos();
+    if (!tentacle->props.exists("base_position"))
+        tentacle->props["base_position"].get_coord() = tentacle->pos();
 
-    base_position = tentacle->props[BASE_POSITION_KEY].get_coord();
+    base_position = tentacle->props["base_position"].get_coord();
 
     if (!severed)
     {
@@ -760,7 +761,7 @@ void move_solo_tentacle(monster* tentacle)
         {
             if (!actor_at(*ai) && tentacle->is_habitable(*ai))
             {
-                tentacle->props[BASE_POSITION_KEY].get_coord() = *ai;
+                tentacle->props["base_position"].get_coord() = *ai;
                 base_position = *ai;
                 break;
             }
@@ -812,7 +813,7 @@ void move_solo_tentacle(monster* tentacle)
                 bool near_tree = false;
                 for (adjacent_iterator ai(constrictee->pos()); ai; ++ai)
                 {
-                    if (feat_is_tree(env.grid(*ai)))
+                    if (feat_is_tree(grd(*ai)))
                     {
                         near_tree = true;
                         break;
@@ -829,7 +830,7 @@ void move_solo_tentacle(monster* tentacle)
                         {
                             for (adjacent_iterator ai2(*ai); ai2; ++ai2)
                             {
-                                if (feat_is_tree(env.grid(*ai2)))
+                                if (feat_is_tree(grd(*ai2)))
                                 {
                                     pull_constrictee = true;
                                     shift_constrictee = true;
@@ -895,7 +896,7 @@ void move_solo_tentacle(monster* tentacle)
     }
 
     // Why do I have to do this move? I don't get it.
-    // specifically, if tentacle isn't registered at its new position on env.mgrid
+    // specifically, if tentacle isn't registered at its new position on mgrd
     // the search fails (sometimes), Don't know why. -cao
     tentacle->move_to_pos(new_pos);
 
@@ -1003,8 +1004,8 @@ void move_child_tentacles(monster* mons)
                 connection_data[*adj_it].insert(current_count);
             }
 
-            bool basis = current_mon->props.exists(INWARDS_KEY);
-            monster* inward = basis ? monster_by_mid(current_mon->props[INWARDS_KEY].get_int()) : nullptr;
+            bool basis = current_mon->props.exists("inwards");
+            monster* inward = basis ? monster_by_mid(current_mon->props["inwards"].get_int()) : nullptr;
 
             if (inward
                 && (inward->is_child_tentacle_of(tentacle)
@@ -1052,7 +1053,7 @@ void move_child_tentacles(monster* mons)
         if (tentacle->is_constricting() && retract_found)
         {
             constrictee = actor_by_mid(tentacle->constricting->begin()->first);
-            if (feat_has_solid_floor(env.grid(old_pos))
+            if (feat_has_solid_floor(grd(old_pos))
                 && constrictee->is_habitable(old_pos))
             {
                 pull_constrictee = true;
@@ -1091,7 +1092,7 @@ void move_child_tentacles(monster* mons)
 
         // Why do I have to do this move? I don't get it.
         // specifically, if tentacle isn't registered at its new position on
-        // env.mgrid the search fails (sometimes), Don't know why. -cao
+        // mgrd the search fails (sometimes), Don't know why. -cao
         tentacle->move_to_pos(new_pos);
 
         if (pull_constrictee)
@@ -1124,7 +1125,7 @@ void move_child_tentacles(monster* mons)
         // in some way. Should look into this more at some point -cao
         if (!connected)
         {
-            env.mgrid(tentacle->pos()) = tentacle->mindex();
+            mgrd(tentacle->pos()) = tentacle->mindex();
             monster_die(*tentacle, KILL_MISC, NON_MONSTER, true);
 
             continue;
@@ -1237,7 +1238,7 @@ void mons_create_tentacles(monster* head)
     // unoccupied.
     for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
     {
-        if (monster_habitable_grid(tent_type, env.grid(*adj_it))
+        if (monster_habitable_grid(tent_type, grd(*adj_it))
             && !actor_at(*adj_it))
         {
             adj_squares.push_back(*adj_it);
@@ -1260,7 +1261,7 @@ void mons_create_tentacles(monster* head)
             if (you.can_see(*tentacle))
                 visible_count++;
 
-            tentacle->props[INWARDS_KEY].get_int() = head->mid;
+            tentacle->props["inwards"].get_int() = head->mid;
 
             if (head->holiness() & MH_UNDEAD)
                 tentacle->flags |= MF_FAKE_UNDEAD;

@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <fcntl.h>
-#if defined(UNIX) || defined(TARGET_COMPILER_MINGW)
+#if !defined(__IBMCPP__) && !defined(TARGET_COMPILER_VC)
 #include <unistd.h>
 #endif
 
@@ -50,7 +50,6 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
-#include "tag-version.h"
 #include "transform.h"
 #include "travel.h"
 #include "unicode.h"
@@ -65,13 +64,13 @@ static void _sdump_header(dump_params &);
 static void _sdump_stats(dump_params &);
 static void _sdump_location(dump_params &);
 static void _sdump_religion(dump_params &);
+static void _sdump_hunger(dump_params &);
 static void _sdump_transform(dump_params &);
 static void _sdump_visits(dump_params &);
 static void _sdump_gold(dump_params &);
 static void _sdump_misc(dump_params &);
 static void _sdump_turns_by_place(dump_params &);
 static void _sdump_notes(dump_params &);
-static void _sdump_screenshots(dump_params &);
 static void _sdump_inventory(dump_params &);
 static void _sdump_skills(dump_params &);
 static void _sdump_spells(dump_params &);
@@ -89,7 +88,9 @@ static void _sdump_vault_list(dump_params &);
 static void _sdump_skill_gains(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
+#ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
+#endif
 static bool _write_dump(const string &fname, const dump_params &,
                         bool print_dump_path = false);
 
@@ -121,13 +122,13 @@ static dump_section_handler dump_handlers[] =
     { "stats",          _sdump_stats         },
     { "location",       _sdump_location      },
     { "religion",       _sdump_religion      },
+    { "hunger",         _sdump_hunger        },
     { "transform",      _sdump_transform     },
     { "visits",         _sdump_visits        },
     { "gold",           _sdump_gold          },
     { "misc",           _sdump_misc          },
     { "turns_by_place", _sdump_turns_by_place},
     { "notes",          _sdump_notes         },
-    { "screenshots",    _sdump_screenshots   },
     { "inventory",      _sdump_inventory     },
     { "skills",         _sdump_skills        },
     { "spells",         _sdump_spells        },
@@ -149,7 +150,11 @@ static dump_section_handler dump_handlers[] =
     { "",               _sdump_newline       },
     { "-",              _sdump_separator     },
 
+#ifdef CLUA_BINDINGS
     { nullptr,          _sdump_lua           }
+#else
+    { nullptr,          nullptr              }
+#endif
 };
 
 static void dump_section(dump_params &par)
@@ -186,15 +191,6 @@ bool dump_char(const string &fname, bool quiet, bool full_id,
     return _write_dump(fname, _get_dump(full_id, se), quiet);
 }
 
-string seed_description()
-{
-    return make_stringf(
-        "Game seed: %" PRIu64 "%s", crawl_state.seed,
-            crawl_state.type == GAME_TYPE_CUSTOM_SEED
-            ? " (custom seed)"
-            : you.deterministic_levelgen ? "" : " (classic levelgen)");
-}
-
 static void _sdump_header(dump_params &par)
 {
     string type = crawl_state.game_type_name();
@@ -216,14 +212,31 @@ static void _sdump_header(dump_params &par)
 #endif
     par.text += " character file.\n\n";
 
-    if (you.fully_seeded && crawl_state.seed_is_known())
-        par.text += seed_description() + "\n\n";
+    if (you.game_is_seeded
+#ifdef DGAMELAUNCH
+        && par.se // for online games, only show seed for a dead char
+#endif
+        )
+    {
+        par.text += make_stringf("Game seed: %" PRIu64 "\n\n", crawl_state.seed);
+    }
 }
 
 static void _sdump_stats(dump_params &par)
 {
-    par.text += dump_overview_screen();
+    par.text += dump_overview_screen(par.full_id);
     par.text += "\n\n";
+}
+
+static void _sdump_hunger(dump_params &par)
+{
+    if (par.se)
+        par.text += "You were ";
+    else
+        par.text += "You are ";
+
+    par.text += hunger_level();
+    par.text += ".\n\n";
 }
 
 static void _sdump_transform(dump_params &par)
@@ -412,6 +425,7 @@ static void _sdump_misc(dump_params &par)
 {
     _sdump_location(par);
     _sdump_religion(par);
+    _sdump_hunger(par);
     _sdump_transform(par);
     _sdump_visits(par);
     _sdump_gold(par);
@@ -426,6 +440,35 @@ static string _denanify(const string &s)
     out = replace_all(out, " 1#IND ", "  N/A  ");
     out = replace_all(out, " -1#IND ", "  N/A   ");
     return out;
+}
+
+static string _sdump_turns_place_info(const PlaceInfo place_info, string name = "")
+{
+    const PlaceInfo   gi = you.global_info;
+    string out;
+
+    if (name.empty())
+        name = place_info.short_name();
+
+    float a, b, c, d, e, f;
+    unsigned int non_interlevel =
+        place_info.turns_total - place_info.turns_interlevel;
+    unsigned int global_non_interlevel =
+        gi.turns_total - gi.turns_interlevel;
+
+    a = TO_PERCENT(place_info.turns_total, gi.turns_total);
+    b = TO_PERCENT(non_interlevel, global_non_interlevel);
+    c = TO_PERCENT(place_info.turns_interlevel, place_info.turns_total);
+    d = TO_PERCENT(place_info.turns_resting, non_interlevel);
+    e = TO_PERCENT(place_info.turns_explore, non_interlevel);
+    f = static_cast<float>(non_interlevel) /
+        static_cast<float>(place_info.levels_seen);
+
+    out =
+        make_stringf("%14s | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %13.1f\n",
+                     name.c_str(), a, b, c , d, e, f);
+
+    return _denanify(out);
 }
 
 static string _sdump_level_xp_info(LevelXPInfo xp_info, string name = "")
@@ -450,33 +493,6 @@ static string _sdump_level_xp_info(LevelXPInfo xp_info, string name = "")
     return _denanify(out);
 }
 
-static string _sdump_turns_place_info(const PlaceInfo place_info, string name = "")
-{
-    string out;
-
-    if (name.empty())
-        name = place_info.short_name();
-
-    unsigned int non_interlevel =
-        place_info.elapsed_total / 10 - place_info.elapsed_interlevel / 10;
-
-    const float g = static_cast<float>(place_info.elapsed_total / 10)
-                            / static_cast<float>(place_info.levels_seen);
-
-    out =
-        make_stringf("%14s | %6d | %6d | %6d | %6d | %6d | %3d | %6.1f |\n",
-                     name.c_str(),
-                     place_info.elapsed_total / 10,
-                     non_interlevel,
-                     place_info.elapsed_interlevel / 10,
-                     place_info.elapsed_resting / 10,
-                     place_info.elapsed_explore / 10,
-                     place_info.levels_seen,
-                     g);
-
-    return _denanify(out);
-}
-
 static void _sdump_turns_by_place(dump_params &par)
 {
     string &text(par.text);
@@ -484,19 +500,24 @@ static void _sdump_turns_by_place(dump_params &par)
     const vector<PlaceInfo> all_visited = you.get_all_place_info(true);
 
     text +=
-"Table legend: (Time is in decaauts)\n"
-" A = Elapsed time spent in this place.\n"
-" B = Non-inter-level travel time spent in this place.\n"
-" C = Inter-level travel time spent in this place.\n"
-" D = Time resting spent in this place.\n"
-" E = Time spent auto-exploring this place.\n"
-" F = Levels seen in this place.\n"
-" G = Mean time per level.\n";
+"Table legend:\n"
+" A = Turns spent in this place as a percentage of turns spent in the\n"
+"     entire game.\n"
+" B = Non-inter-level travel turns spent in this place as a percentage of\n"
+"     non-inter-level travel turns spent in the entire game.\n"
+" C = Inter-level travel turns spent in this place as a percentage of\n"
+"     turns spent in this place.\n"
+" D = Turns resting spent in this place as a percentage of non-inter-level\n"
+"     travel turns spent in this place.\n"
+" E = Turns spent auto-exploring this place as a percentage of\n"
+"     non-inter-level travel turns spent in this place.\n"
+" F = Non-inter-level travel turns spent in this place divided by the\n"
+"     number of levels of this place that you've seen.\n\n";
 
     text += "               ";
-    text += "    A        B        C        D        E      F       G\n";
+    text += "    A       B       C       D       E               F\n";
     text += "               ";
-    text += "+--------+--------+--------+--------+--------+-----+--------+\n";
+    text += "+-------+-------+-------+-------+-------+----------------------\n";
 
     text += _sdump_turns_place_info(you.global_info, "Total");
 
@@ -504,25 +525,8 @@ static void _sdump_turns_by_place(dump_params &par)
         text += _sdump_turns_place_info(pi);
 
     text += "               ";
-    text += "+--------+--------+--------+--------+--------+-----+--------+\n";
+    text += "+-------+-------+-------+-------+-------+----------------------\n";
 
-    text += "\n";
-
-    CrawlHashTable &time_tracking = you.props[TIME_PER_LEVEL_KEY].get_table();
-    vector<pair<int, string>> to_sort;
-    for (auto &l : time_tracking)
-        if (l.first != "upgrade" && l.first != "Pan")
-            to_sort.emplace_back(l.second.get_int(), l.first);
-    if (to_sort.size() == 0)
-        return; // turn 0 game
-    sort(to_sort.begin(), to_sort.end());
-    reverse(to_sort.begin(), to_sort.end());
-
-    text += "Top non-repeatable levels by time:\n";
-    for (unsigned int i = 0; i < 15 && i < to_sort.size(); i++)
-        text += make_stringf("%8s: %d daAuts\n", to_sort[i].second.c_str(), to_sort[i].first / 10);
-    if (time_tracking.exists("upgrade"))
-        text += "Note: time per level data comes from an upgraded game and may be incomplete.\n";
     text += "\n";
 }
 
@@ -570,6 +574,7 @@ static void _sdump_separator(dump_params &par)
     par.text += string(79, '-') + "\n";
 }
 
+#ifdef CLUA_BINDINGS
 // Assume this is an arbitrary Lua function name, call the function and
 // dump whatever it returns.
 static void _sdump_lua(dump_params &par)
@@ -583,10 +588,11 @@ static void _sdump_lua(dump_params &par)
     else
         par.text += luatext;
 }
+#endif
 
 string chardump_desc(const item_def& item)
 {
-    string desc = get_item_description(item, IDM_DUMP);
+    string desc = get_item_description(item, false, true);
     string outs;
 
     outs.reserve(desc.length() + 32);
@@ -620,28 +626,6 @@ static void _sdump_screenshot(dump_params &par)
 {
     par.text += screenshot();
     par.text += "\n\n";
-}
-
-static void _sdump_screenshots(dump_params &par)
-{
-    string &text(par.text);
-    if (note_list.empty())
-        return;
-
-    text += "Illustrated notes\n\n";
-
-    for (const Note &note : note_list)
-    {
-        if (note.hidden() || note.type != NOTE_USER_NOTE || note.screen.length() == 0)
-            continue;
-
-        text += note.screen;
-        text += "\n";
-        text += make_stringf("Turn %d on ", note.turn);
-        text += note.place.describe() + ": ";
-        text += note.name;
-        text += "\n\n";
-    }
 }
 
 static void _sdump_notes(dump_params &par)
@@ -825,8 +809,12 @@ static void _sdump_inventory(dump_params &par)
                 if (origin_describable(item) && _dump_item_origin(item))
                     text += "\n" "   (" + origin_desc(item) + ")";
 
-                if (is_dumpable_artefact(item))
+                if (is_dumpable_artefact(item)
+                    || Options.dump_book_spells
+                       && item.base_type == OBJ_BOOKS)
+                {
                     text += chardump_desc(item);
+                }
                 else
                     text += "\n";
             }
@@ -897,7 +885,7 @@ static void _sdump_spells(dump_params &par)
 
         text += "You " + verb + " the following spells:\n\n";
 
-        text += " Your Spells              Type           Power      Damage    Failure   Level" "\n";
+        text += " Your Spells              Type           Power        Failure   Level  Hunger" "\n";
 
         for (int j = 0; j < 52; j++)
         {
@@ -930,19 +918,15 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line += spell_power_string(spell);
 
-                spell_line = chop_string(spell_line, 52);
-
-                const string spell_damage = spell_damage_string(spell);
-                spell_line += spell_damage.length() ? spell_damage : "N/A";
-
-                spell_line = chop_string(spell_line, 62);
+                spell_line = chop_string(spell_line, 54);
 
                 spell_line += failure_rate_to_string(raw_spell_fail(spell));
 
-                spell_line = chop_string(spell_line, 74);
+                spell_line = chop_string(spell_line, 66);
 
-                spell_line += make_stringf("%d", spell_difficulty(spell));
+                spell_line += make_stringf("%-5d", spell_difficulty(spell));
 
+                spell_line += spell_hunger_string(spell);
                 spell_line += "\n";
 
                 text += spell_line;
@@ -960,7 +944,7 @@ static void _sdump_spells(dump_params &par)
     {
         verb = par.se? "contained" : "contains";
         text += "Your spell library " + verb + " the following spells:\n\n";
-        text += " Spells                   Type           Power      Damage    Failure   Level" "\n";
+        text += " Spells                   Type           Power        Failure   Level  Hunger" "\n";
 
         auto const library = get_sorted_spell_list(true, false);
 
@@ -994,22 +978,21 @@ static void _sdump_spells(dump_params &par)
             else
                 spell_line += "Unusable";
 
-            spell_line = chop_string(spell_line, 52);
-
-            const string spell_damage = spell_damage_string(spell);
-            spell_line += spell_damage.length() ? spell_damage : "N/A";
-
-            spell_line = chop_string(spell_line, 62);
+            spell_line = chop_string(spell_line, 54);
 
             if (memorisable)
                 spell_line += failure_rate_to_string(raw_spell_fail(spell));
             else
                 spell_line += "N/A";
 
-            spell_line = chop_string(spell_line, 74);
+            spell_line = chop_string(spell_line, 66);
 
-            spell_line += make_stringf("%d", spell_difficulty(spell));
+            spell_line += make_stringf("%-5d", spell_difficulty(spell));
 
+            if (memorisable)
+                spell_line += spell_hunger_string(spell);
+            else
+                spell_line += "N/A";
             spell_line += "\n";
 
             text += spell_line;
@@ -1223,10 +1206,8 @@ static string _describe_action(caction_type type)
         return "  Use";
     case CACT_STAB:
         return " Stab";
-#if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
         return "  Eat";
-#endif
     case CACT_RIPOSTE:
         return "Rpst.";
     default:
@@ -1249,7 +1230,7 @@ static const char* _stab_names[] =
     "Betrayed ally",
 };
 
-static const char* _aux_attack_names[] =
+static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
 {
     "No attack",
     "Constrict",
@@ -1257,13 +1238,11 @@ static const char* _aux_attack_names[] =
     "Headbutt",
     "Peck",
     "Tailslap",
-    "Touch",
     "Punch",
     "Bite",
     "Pseudopods",
     "Tentacles",
 };
-COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 
 static string _describe_action_subtype(caction_type type, int compound_subtype)
 {
@@ -1325,8 +1304,8 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         {
         case DODGE_EVASION:
             return "Dodged";
-        case DODGE_REPEL:
-            return "Repelled";
+        case DODGE_DEFLECT:
+            return "Deflected";
         default:
             return "Error";
         }
@@ -1372,10 +1351,9 @@ static string _describe_action_subtype(caction_type type, int compound_subtype)
         COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STABS);
         ASSERT_RANGE(subtype, 1, NUM_STABS);
         return _stab_names[subtype];
-#if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
-        return "Removed food";
-#endif
+        return subtype >= 0 ? uppercase_first(food_type_name(subtype))
+                            : "Corpse";
     default:
         return "Error";
     }
@@ -1519,6 +1497,45 @@ static void _sdump_mutations(dump_params &par)
     }
 }
 
+// Must match the order of hunger_state_t enums
+static const char* hunger_names[] =
+{
+    "fainting",
+    "starving",
+    "near starving",
+    "very hungry",
+    "hungry",
+    "not hungry",
+    "full",
+    "very full",
+    "completely stuffed",
+};
+COMPILE_CHECK(ARRAYSZ(hunger_names) == HS_ENGORGED + 1);
+
+// Must match the order of hunger_state_t enums
+static const char* thirst_names[] =
+{
+    "bloodless",
+    "bloodless",
+    "near bloodless",
+    "very thirsty",
+    "thirsty",
+    "not thirsty",
+    "full",
+    "very full",
+    "almost alive",
+};
+COMPILE_CHECK(ARRAYSZ(thirst_names) == HS_ENGORGED + 1);
+
+const char *hunger_level()
+{
+    ASSERT(you.hunger_state <= HS_ENGORGED);
+
+    if (you.species == SP_VAMPIRE)
+        return thirst_names[you.hunger_state];
+    return hunger_names[you.hunger_state];
+}
+
 string morgue_directory()
 {
     string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
@@ -1531,7 +1548,7 @@ string morgue_directory()
     return dir;
 }
 
-void dump_map(FILE *fp, bool debug, bool dist, bool log)
+void dump_map(FILE *fp, bool debug, bool dist)
 {
     if (debug)
     {
@@ -1581,18 +1598,18 @@ void dump_map(FILE *fp, bool debug, bool dist, bool log)
                     fputc('@', fp);
                 else if (testbits(env.pgrid[x][y], FPROP_HIGHLIGHT))
                     fputc('?', fp);
-                else if (dist && env.grid[x][y] == DNGN_FLOOR
+                else if (dist && grd[x][y] == DNGN_FLOOR
                          && travel_point_distance[x][y] > 0
                          && travel_point_distance[x][y] < 10)
                 {
                     fputc('0' + travel_point_distance[x][y], fp);
                 }
-                else if (env.grid[x][y] >= NUM_FEATURES)
+                else if (grd[x][y] >= NUM_FEATURES)
                     fputc('!', fp);
                 else
                 {
                     fputs(OUTS(stringize_glyph(
-                               get_feature_def(env.grid[x][y]).symbol())), fp);
+                               get_feature_def(grd[x][y]).symbol())), fp);
                 }
             }
             fputc('\n', fp);
@@ -1612,14 +1629,10 @@ void dump_map(FILE *fp, bool debug, bool dist, bool log)
             for (int j = Y_BOUND_1; j <= Y_BOUND_2; j++)
                 if (env.map_knowledge[i][j].known())
                 {
-                    if (i > max_x)
-                        max_x = i;
-                    if (i < min_x)
-                        min_x = i;
-                    if (j > max_y)
-                        max_y = j;
-                    if (j < min_y)
-                        min_y = j;
+                    if (i > max_x) max_x = i;
+                    if (i < min_x) min_x = i;
+                    if (j > max_y) max_y = j;
+                    if (j < min_y) min_y = j;
                 }
 
         for (int y = min_y; y <= max_y; ++y)
@@ -1633,22 +1646,15 @@ void dump_map(FILE *fp, bool debug, bool dist, bool log)
             fputc('\n', fp);
         }
     }
-
-    // for debug use in scripts, e.g. placement.lua
-    if (log)
-    {
-        string the_log = get_last_messages(NUM_STORED_MESSAGES, true);
-        fprintf(fp, "\n%s", the_log.c_str());
-    }
 }
 
-void dump_map(const char* fname, bool debug, bool dist, bool log)
+void dump_map(const char* fname, bool debug, bool dist)
 {
     FILE* fp = fopen_replace(fname);
     if (!fp)
         return;
 
-    dump_map(fp, debug, dist, log);
+    dump_map(fp, debug, dist);
 
     fclose(fp);
 }
@@ -1667,6 +1673,9 @@ static bool _write_dump(const string &fname, const dump_params &par, bool quiet)
     stash_file_name = file_name;
     stash_file_name += ".lst";
     StashTrack.dump(stash_file_name.c_str(), par.full_id);
+
+    string map_file_name = file_name + ".map";
+    dump_map(map_file_name.c_str());
 
     file_name += ".txt";
     FILE *handle = fopen_replace(file_name.c_str());
@@ -1733,7 +1742,7 @@ void display_char_dump()
 #ifdef DGL_WHEREIS
 ///////////////////////////////////////////////////////////////////////////
 // whereis player
-void whereis_record(const xlog_fields &xl)
+void whereis_record(const char *status)
 {
     const string file_name = morgue_directory()
                              + strip_filename_unsafe_chars(you.your_name)
@@ -1742,7 +1751,9 @@ void whereis_record(const xlog_fields &xl)
     if (FILE *handle = fopen_replace(file_name.c_str()))
     {
         // no need to bother with supporting ancient charsets for DGL
-        fprintf(handle, "%s\n", xl.xlog_line().c_str());
+        fprintf(handle, "%s:status=%s\n",
+                xlog_status_line().c_str(),
+                status? status : "");
         fclose(handle);
     }
 }

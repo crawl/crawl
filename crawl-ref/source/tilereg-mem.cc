@@ -15,7 +15,6 @@
 #include "stringutil.h"
 #include "tile-inventory-flags.h"
 #include "tilepick.h"
-#include "tilereg-cmd.h"
 #include "tiles-build-specific.h"
 
 MemoriseRegion::MemoriseRegion(const TileRegionInit &init) : SpellRegion(init)
@@ -55,17 +54,14 @@ void MemoriseRegion::draw_tag()
     draw_desc(desc.c_str());
 }
 
-int MemoriseRegion::handle_mouse(wm_mouse_event &event)
+int MemoriseRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
-    if (!place_cursor(event, item_idx)
-        || tile_command_not_applicable(CMD_MEMORISE_SPELL))
-    {
+    if (!place_cursor(event, item_idx))
         return 0;
-    }
 
     const spell_type spell = (spell_type) m_items[item_idx].idx;
-    if (event.button == wm_mouse_event::LEFT)
+    if (event.button == MouseEvent::LEFT)
     {
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
@@ -75,11 +71,10 @@ int MemoriseRegion::handle_mouse(wm_mouse_event &event)
             flush_input_buffer(FLUSH_ON_FAILURE);
         return CK_MOUSE_CMD;
     }
-    else if (event.button == wm_mouse_event::RIGHT)
+    else if (event.button == MouseEvent::RIGHT)
     {
         describe_spell(spell);
         redraw_screen();
-        update_screen();
         return CK_MOUSE_CMD;
     }
     return 0;
@@ -141,9 +136,6 @@ void MemoriseRegion::update()
     {
         const spell_type spell = spells[i];
 
-        if (you.hidden_spells.get(spell))
-            continue;
-
         InventoryTile desc;
         desc.tile     = tileidx_spell(spell);
         desc.idx      = (int) spell;
@@ -151,13 +143,12 @@ void MemoriseRegion::update()
 
         if (!can_learn_spell(true)
             || spell_difficulty(spell) > you.experience_level
-            || player_spell_levels() < spell_levels_required(spell)
-            || tile_command_not_applicable(CMD_MEMORISE_SPELL))
+            || player_spell_levels() < spell_levels_required(spell))
         {
             desc.flag |= TILEI_FLAG_INVALID;
         }
 
-        if (vehumet_is_offering(spell, true))
+        if (vehumet_is_offering(spell))
             desc.flag |= TILEI_FLAG_EQUIP;
 
         m_items.push_back(desc);

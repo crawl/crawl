@@ -90,10 +90,13 @@ static COORD screensize;
 static unsigned InputCP, OutputCP;
 static const unsigned PREFERRED_CODEPAGE = 437;
 
+static bool w32_smart_cursor = true;
+
 // we can do straight translation of DOS colour to win32 console colour.
 #define WIN32COLOR(col) (WORD)(col)
 static void writeChar(char32_t c);
 static void bFlush();
+static void _setcursortype_internal(bool curstype);
 
 // [ds] Unused for portability reasons
 /*
@@ -119,12 +122,6 @@ static DWORD crawlColorData[16] =
 };
  */
 
-/** @brief The current foreground @em colour. */
-static COLOURS FG_COL = LIGHTGREY;
-
-/** @brief The current background @em colour. */
-static COLOURS BG_COL = BLACK;
-
 void writeChar(char32_t c)
 {
     if (c == '\t')
@@ -148,7 +145,7 @@ void writeChar(char32_t c)
         bFlush();
 
         // reposition
-        gotoxy_sys(1, cy+2);
+        cgotoxy(1, cy+2);
 
         return;
     }
@@ -182,6 +179,16 @@ void writeChar(char32_t c)
     cx += 1;
     if (cx >= screensize.X)
         cx = screensize.X - 1;
+}
+
+void enable_smart_cursor(bool cursor)
+{
+    w32_smart_cursor = cursor;
+}
+
+bool is_smart_cursor_enabled()
+{
+    return w32_smart_cursor;
 }
 
 void bFlush()
@@ -317,7 +324,7 @@ static void set_w32_screen_size()
 static void w32_handle_resize_event()
 {
     if (crawl_state.waiting_for_command)
-        handle_terminal_resize();
+        handle_terminal_resize(true);
     else
         crawl_state.terminal_resized = true;
 }
@@ -386,8 +393,8 @@ void console_startup()
     // initialise text colour
     textcolour(DARKGREY);
 
-    cursor_is_enabled = true; // ensure cursor is set regardless of actual state
-    set_cursor_enabled(false);
+    // initialise cursor to NONE.
+    _setcursortype_internal(false);
 
     crawl_state.terminal_resize_handler = w32_term_resizer;
     crawl_state.terminal_resize_check   = w32_check_screen_resize;
@@ -425,7 +432,7 @@ void console_shutdown()
     _set_string_input(true);
 
     // set cursor and normal textcolour
-    set_cursor_enabled(true);
+    _setcursortype_internal(true);
     textcolour(DARKGREY);
 
     inbuf = nullptr;
@@ -447,12 +454,18 @@ void console_shutdown()
     }
 }
 
+void set_cursor_enabled(bool enabled)
+{
+    if (!w32_smart_cursor)
+        _setcursortype_internal(enabled);
+}
+
 bool is_cursor_enabled()
 {
     return cursor_is_enabled;
 }
 
-void set_cursor_enabled(bool curstype)
+static void _setcursortype_internal(bool curstype)
 {
     CONSOLE_CURSOR_INFO cci;
 
@@ -469,7 +482,7 @@ void set_cursor_enabled(bool curstype)
     // now, if we just changed from NOCURSOR to CURSOR,
     // actually move screen cursor
     if (cursor_is_enabled)
-        gotoxy_sys(cx+1, cy+1);
+        cgotoxy(cx+1, cy+1);
 }
 
 // This will force the cursor down to the next line.
@@ -481,7 +494,7 @@ void clear_to_end_of_line()
         cprintf("%*s", cols - pos + 1, "");
 }
 
-void clrscr_sys()
+void clrscr()
 {
     int x,y;
     COORD source;
@@ -505,6 +518,9 @@ void clrscr_sys()
     target.Bottom = screensize.Y - 1;
 
     WriteConsoleOutputW(outbuf, screen, screensize, source, &target);
+
+    // reset cursor to 1,1 for convenience
+    cgotoxy(1,1);
 }
 
 void gotoxy_sys(int x, int y)
@@ -537,132 +553,25 @@ void gotoxy_sys(int x, int y)
     }
 }
 
-static unsigned short _dos_reverse_highlight(unsigned short colour)
-{
-    if (Options.dos_use_background_intensity)
-    {
-        // If the console treats the intensity bit on background colours
-        // correctly, we can do a very simple colour invert.
-
-        // Special casery for shadows.
-        if (colour == BLACK)
-            colour = (DARKGREY << 4);
-        else
-            colour = (colour & 0xF) << 4;
-    }
-    else
-    {
-        // If we're on a console that takes its DOSness very seriously the
-        // background high-intensity bit is actually a blink bit. Blinking is
-        // evil, so we strip the background high-intensity bit. This, sadly,
-        // limits us to 7 background colours.
-
-        // Strip off high-intensity bit. Special case DARKGREY, since it's the
-        // high-intensity counterpart of black, and we don't want black on
-        // black.
-        //
-        // We *could* set the foreground colour to WHITE if the background
-        // intensity bit is set, but I think we've carried the
-        // angry-fruit-salad theme far enough already.
-
-        if (colour == DARKGREY)
-            colour |= (LIGHTGREY << 4);
-        else if (colour == BLACK)
-            colour = LIGHTGREY << 4;
-        else
-        {
-            // Zap out any existing background colour, and the high
-            // intensity bit.
-            colour  &= 7;
-
-            // And swap the foreground colour over to the background
-            // colour, leaving the foreground black.
-            colour <<= 4;
-        }
-    }
-
-    return colour;
-}
-
-static unsigned short _dos_do_highlight(unsigned short colour,
-                                        unsigned short highlite)
-{
-    if (!highlite)
-        return colour;
-
-    if (colour == highlite)
-        colour = 0;
-
-    colour |= (highlite << 4);
-    return colour;
-}
-
-static unsigned short _dos_highlight(unsigned short colour, unsigned highlight)
-{
-    if ((highlight & CHATTR_ATTRMASK) == CHATTR_NORMAL)
-        return colour;
-
-    colour &= 0xFF;
-
-    if ((highlight & CHATTR_ATTRMASK) == CHATTR_HILITE)
-        return _dos_do_highlight(colour, (highlight & CHATTR_COLMASK) >> 8);
-    else
-        return _dos_reverse_highlight(colour);
-}
-
-// XX code duplication
-static inline unsigned get_highlight(int col)
-{
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
-           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
-           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
-           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
-           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
-           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
-           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
-           (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
-                                            : unsigned{CHATTR_NORMAL};
-}
-
-static void update_text_colours(int highlight)
-{
-    unsigned short highlighted_bg_fg = _dos_highlight(FG_COL, highlight);
-    const bool highlight_overrides_bg = highlighted_bg_fg & 0xF0;
-
-    const short fg = highlighted_bg_fg & 0x0F;
-    const short bg = highlight_overrides_bg ? (highlighted_bg_fg & 0xF0) >> 4 : BG_COL;
-
-    const short macro_fg = Options.colour[fg];
-    const short macro_bg = Options.colour[bg];
-
-    current_colour = (macro_bg << 4) | macro_fg;
-}
-
 void textcolour(int c)
 {
-    FG_COL = static_cast<COLOURS>(c & 0xF);
-    update_text_colours(get_highlight(c));
+    // change current colour used to stamp chars
+    short fg = c & 0xF;
+    short bg = (c >> 4) & 0xF;
+    short macro_fg = Options.colour[fg];
+    short macro_bg = Options.colour[bg];
+
+    current_colour = macro_fg | (macro_bg << 4);
 }
 
 void textbackground(int c)
 {
-    BG_COL = static_cast<COLOURS>(c & 0xF);
-    update_text_colours(get_highlight(c));
-}
+    // change current background colour used to stamp chars
+    // parameter does NOT come bitshifted by four
+    short bg = c & 0xF;
+    short macro_bg = Options.colour[bg];
 
-COLOURS default_hover_colour()
-{
-    // Does this work with all the ancient "dos" options?
-    return DARKGREY;
-}
-
-// TODO: needs testing on windows
-lib_display_info::lib_display_info()
-    : type("Windows Console"),
-    term("N/A"),
-    fg_colors(16),
-    bg_colors(Options.dos_use_background_intensity ? 7 : 8) // ?? no idea really
-{
+    current_colour = current_colour | (macro_bg << 4);
 }
 
 static void cprintf_aux(const char *s)
@@ -670,7 +579,7 @@ static void cprintf_aux(const char *s)
     // early out -- not initted yet
     if (outbuf == nullptr)
     {
-        printf("%ls", OUTW(s));
+        printf("%S", OUTW(s));
         return;
     }
 
@@ -730,6 +639,27 @@ static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted, contro
     { CK_CTRL_END, CK_CTRL_DOWN, CK_CTRL_PGDN, CK_CTRL_LEFT, CK_CTRL_CLEAR, CK_CTRL_RIGHT,
       CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT, CK_CTRL_TAB },
 };
+
+static int ck_tr[] =
+{
+    'k', 'j', 'h', 'l', '0', 'y', 'b', '.', 'u', 'n', '0',
+    // 'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u', (autofight)
+    '8', '2', '4', '6', '0', '7', '1', '5', '9', '3', '0',
+    // '1', '2', '3', '4', '5', '6', '7', '8', '9', (non-move autofight)
+    11, 10, 8, 12, '0', 25, 2, 0, 21, 14, '0',
+    // 2, 10, 14, 8, 0, 12, 25, 11, 21,
+};
+
+static int key_to_command(int keyin)
+{
+    if (keyin >= CK_UP && keyin <= CK_CTRL_PGDN)
+        return ck_tr[ keyin - CK_UP ];
+
+    if (keyin == CK_DELETE)
+        return '.';
+
+    return keyin;
+}
 
 static int vk_translate(WORD VirtCode, WCHAR c, DWORD cKeys)
 {
@@ -800,6 +730,11 @@ static int vk_translate(WORD VirtCode, WCHAR c, DWORD cKeys)
     return vk_tr[1][mkey];
 }
 
+int m_getch()
+{
+    return getchk();
+}
+
 static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
 {
     const coord_def pos(mer.dwMousePosition.X + 1, mer.dwMousePosition.Y + 1);
@@ -858,6 +793,10 @@ int getch_ck()
         return repeat_key;
     }
 
+    const bool oldValue = cursor_is_enabled;
+    if (w32_smart_cursor)
+        _setcursortype_internal(true);
+
     bool waiting_for_event = true;
     while (waiting_for_event)
     {
@@ -901,7 +840,16 @@ int getch_ck()
         }
     }
 
+    if (w32_smart_cursor)
+        _setcursortype_internal(oldValue);
+
     return key;
+}
+
+int getchk()
+{
+    int c = getch_ck();
+    return key_to_command(c);
 }
 
 bool kbhit()
@@ -949,6 +897,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
             cell++;
         }
     }
+    update_screen();
     textcolour(WHITE);
 }
 

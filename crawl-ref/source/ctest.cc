@@ -30,7 +30,6 @@
 #include "item-name.h"
 #include "jobs.h"
 #include "libutil.h"
-#include "mapdef.h"
 #include "maps.h"
 #include "message.h"
 #include "mon-pick.h"
@@ -125,8 +124,7 @@ static void run_test(const string &file)
         return;
 
     ++ntests;
-    if (!crawl_state.script)
-        fprintf(stderr, "Running test #%d: '%s'.\n", ntests, file.c_str());
+    fprintf(stderr, "Running test #%d: '%s'.\n", ntests, file.c_str());
     mprf(MSGCH_DIAGNOSTICS, "Running %s %d: %s",
          activity, ntests, file.c_str());
     flush_prev_message();
@@ -155,8 +153,7 @@ static void _run_test(const string &name, void (*func)())
 
     if (!_has_test(name))
         return;
-    if (!crawl_state.script)
-        fprintf(stderr, "Running test #%d: '%s'.\n", ntests, name.c_str());
+    fprintf(stderr, "Running test #%d: '%s'.\n", ntests, name.c_str());
 
     ++ntests;
     try
@@ -215,10 +212,6 @@ void run_tests()
         }
     }
 
-#ifdef DEBUG_TAG_PROFILING
-    tag_profile_out();
-#endif
-
     if (crawl_state.test_list)
         end(0);
     cio_cleanup();
@@ -226,14 +219,8 @@ void run_tests()
         fprintf(stderr, "%s error: %s\n", activity, fe.second.c_str());
 
     const int code = failures.empty() ? 0 : 1;
-    // scripts are responsible for printing their own errors
-    if (crawl_state.script && ntests == 1)
-        end(code, false);
-    else
-    {
-        end(code, false, "%d %ss, %d succeeded, %d failed",
-            ntests, activity, nsuccess, (int)failures.size());
-    }
+    end(code, false, "%d %ss, %d succeeded, %d failed",
+        ntests, activity, nsuccess, (int)failures.size());
 }
 
 #endif // DEBUG_TESTS

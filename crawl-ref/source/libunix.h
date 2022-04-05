@@ -6,14 +6,3 @@
 
 void fakecursorxy(int x, int y);
 int unixcurses_get_vi_key(int keyin);
-
-#ifdef DGAMELAUNCH
-class suppress_dgl_clrscr
-{
-public:
-    suppress_dgl_clrscr();
-    ~suppress_dgl_clrscr();
-private:
-    bool prev;
-};
-#endif

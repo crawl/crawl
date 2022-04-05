@@ -123,7 +123,7 @@ void reautomap_level()
 
 void set_terrain_seen(const coord_def pos)
 {
-    const dungeon_feature_type feat = env.grid(pos);
+    const dungeon_feature_type feat = grd(pos);
     map_cell* cell = &env.map_knowledge(pos);
 
     // First time we've seen a notable feature.
@@ -133,7 +133,7 @@ void set_terrain_seen(const coord_def pos)
 
         if (!is_boring_terrain(feat))
         {
-            string desc = feature_description_at(pos, false, DESC_A) + ".";
+            string desc = feature_description_at(pos, false, DESC_A);
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc));
         }
     }
@@ -172,7 +172,7 @@ void map_cell::set_detected_item()
 {
     clear_item();
     flags |= MAP_DETECTED_ITEM;
-    _item = new item_def();
+    _item = new item_info();
     _item->base_type = OBJ_DETECTED;
     _item->rnd       = 1;
 }
@@ -325,40 +325,4 @@ bool map_cell::update_cloud_state()
 
     // TODO: track decay & vanish appropriately (based on some worst case?)
     return false;
-}
-
-/**
- * Find the known map bounds as a pair of coordinates. Returns (-1,-1) x (-1,-1)
- * if the map is not known at all (this state shouldn't arise during normal
- * gameplay, but may arise in weird limiting cases, like during levelgen or
- * in tests).
- */
-std::pair<coord_def, coord_def> known_map_bounds() {
-    int min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
-    bool found_y = false;
-
-    for (int j = 0; j < GYM; j++)
-        for (int i = 0; i < GXM; i++)
-        {
-            if (env.map_knowledge[i][j].known())
-            {
-                if (!found_y)
-                {
-                    found_y = true;
-                    min_y = j;
-                }
-
-                max_y = j;
-
-                if (i < min_x)
-                    min_x = i;
-
-                if (i > max_x)
-                    max_x = i;
-            }
-        }
-    if (!found_y)
-        min_x = max_x = min_y = max_y = -1;
-
-    return std::make_pair(coord_def(min_x, min_y), coord_def(max_x, max_y));
 }
