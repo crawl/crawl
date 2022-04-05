@@ -37,6 +37,7 @@
 #include "known-items.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "message.h"
@@ -157,7 +158,8 @@ void UseItemMenu::populate_menu()
     // Entry for unarmed
     if (item_type_filter == OSEL_WIELD)
     {
-        string hands_title = " -   unarmed";
+        string hands_title = " -   "; // noloc (key to press, not punctuation)
+        hands_title += localise("unarmed");
         MenuEntry *hands = new MenuEntry (hands_title, MEL_ITEM);
         add_entry(hands);
     }
@@ -168,9 +170,9 @@ void UseItemMenu::populate_menu()
         // items.
         if (!item_floor.empty())
         {
-            string subtitle_text = "Inventory Items";
+            string subtitle_text = localise("Inventory Items");
             if (!is_inventory)
-                subtitle_text += " (',' to select)";
+                subtitle_text += localise(" (',' to select)");
             auto subtitle = new MenuEntry(subtitle_text, MEL_TITLE);
             subtitle->colour = LIGHTGREY;
             add_entry(subtitle);
@@ -198,9 +200,9 @@ void UseItemMenu::populate_menu()
             add_entry(new MenuEntry("", MEL_TITLE));
 #endif
         // Load floor items to menu
-        string subtitle_text = "Floor Items";
+        string subtitle_text = localise("Floor Items");
         if (is_inventory)
-            subtitle_text += " (',' to select)";
+            subtitle_text += localise(" (',' to select)");
         auto subtitle = new MenuEntry(subtitle_text, MEL_TITLE);
         subtitle->colour = LIGHTGREY;
         add_entry(subtitle);
@@ -291,7 +293,8 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
                                  // actually chooses
 
     // Init the menu
-    UseItemMenu menu(item_type, prompt);
+    string loc_prompt = localise(prompt ? prompt : "");
+    UseItemMenu menu(item_type, loc_prompt.c_str());
 
     while (true)
     {
@@ -418,8 +421,14 @@ bool can_wield(const item_def *weapon, bool say_reason,
         && is_weapon(*you.weapon())
         && you.weapon()->cursed())
     {
-        SAY(mprf("You can't unwield your weapon%s!",
-                 !unwield ? " to draw a new one" : ""));
+        if (unwield)
+        {
+            SAY(mpr("You can't unwield your weapon!"));
+        }
+        else
+        {
+            SAY(mpr("You can't unwield your weapon to draw a new one!"));
+        }
         return false;
     }
 
@@ -430,8 +439,19 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (you.get_mutation_level(MUT_MISSING_HAND)
             && you.hands_reqd(*weapon) == HANDS_TWO)
     {
-        SAY(mprf("You can't wield that without your missing %s.",
-            species::arm_name(you.species).c_str()));
+        // i18n: We can't just put a %s placeholder for arm/tentacle because
+        // it makes translation hard due to grammatical gender and case.
+        // Note: We don't have to handle "leg" because felids can't wield
+        // anything and so will never get this far.
+        string arm_name = species::arm_name(you.species);
+        if (arm_name == "tentacle")
+        {
+            SAY(mpr("You can't wield that without your missing tentacle."));
+        }
+        else
+        {
+            SAY(mpr("You can't wield that without your missing arm."));
+        }
         return false;
     }
 
@@ -656,10 +676,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             // Can we safely unwield this item?
             if (needs_handle_warning(*wpn, OPER_WIELD, penance))
             {
-                string prompt =
-                    "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
+                string prompt = localise("Really unwield %s?",
+                                         wpn->name(DESC_INVENTORY));
                 if (penance)
-                    prompt += " This could place you under penance!";
+                    prompt += localise(" This could place you under penance!");
 
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {
@@ -704,8 +724,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Switching to a launcher while berserk is likely a mistake.
     if (you.berserk() && is_range_weapon(new_wpn))
     {
-        string prompt = "You can't shoot while berserk! Really wield " +
-                        new_wpn.name(DESC_INVENTORY) + "?";
+        string prompt =
+            localise("You can't shoot while berserk! Really wield %s?",
+                     new_wpn.name(DESC_INVENTORY));
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
@@ -875,9 +896,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (slot == EQ_BODY_ARMOUR
                 && species::mutation_level(you.species, MUT_BIG_WINGS))
             {
-                mprf("Your wings%s won't fit in that.",
-                    you.has_mutation(MUT_BIG_WINGS)
-                        ? "" : ", even vestigial as they are,");
+                if (you.has_mutation(MUT_BIG_WINGS))
+                    mpr("Your wings won't fit in that.");
+                else
+                {
+                    mpr("Your wings, even vestigial as they are, "
+                        "won't fit in that.");
+                }
             }
             else
                 mpr("You can't wear that!");
@@ -902,7 +927,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (you.has_innate_mutation(MUT_TENTACLE_ARMS))
                 mpr("You need the rest of your tentacles for walking.");
             else
-                mprf("You'd need another %s to do that!", you.hand_name(false).c_str());
+                mpr("You'd need another arm to do that!");
         }
         return false;
     }
@@ -918,8 +943,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             else
             {
                 // Singular hand should have already been handled above.
-                mprf("You'd need three %s to do that!",
-                     you.hand_name(true).c_str());
+                mpr("You'd need three arms to do that!");
             }
         }
         return false;
@@ -945,10 +969,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3)
         {
             if (verbose)
-            {
-                mprf("The hauberk won't fit your %s.",
-                     you.hand_name(true).c_str());
-            }
+                mpr("The hauberk won't fit your claws.");
             return false;
         }
 
@@ -964,18 +985,17 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             for (int s = EQ_HELMET; s <= EQ_BOOTS; s++)
             {
-                // No strange race can wear this.
-                const string parts[] = { "head", you.hand_name(true),
-                                         you.foot_name(true) };
-                COMPILE_CHECK(ARRAYSZ(parts) == EQ_BOOTS - EQ_HELMET + 1);
-
                 // Auto-disrobing would be nice.
                 if (you.equip[s] != -1)
                 {
                     if (verbose)
                     {
-                        mprf("You'd need your %s free.",
-                             parts[s - EQ_HELMET].c_str());
+                        if (s == EQ_HELMET)
+                            mpr("You'd need to take off your headwear first.");
+                        else if (s == EQ_GLOVES)
+                            mpr("You'd need to take off your gloves first.");
+                        else
+                            mpr("You'd need to take off your boots first.");
                     }
                     return false;
                 }
@@ -983,10 +1003,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 if (!get_form()->slot_available(s))
                 {
                     if (verbose)
-                    {
-                        mprf("The hauberk won't fit your %s.",
-                             parts[s - EQ_HELMET].c_str());
-                    }
+                        mpr("You can't wear the hauberk in your current form.");
                     return false;
                 }
             }
@@ -1018,8 +1035,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     {
         if (verbose)
         {
-            mprf("This armour is too %s for you!",
-                 (bad_size > 0) ? "big" : "small");
+            if (bad_size > 0)
+                mpr("This armour is too big for you!");
+            else
+                mpr("This armour is too small for you!");
         }
 
         return false;
@@ -1031,8 +1050,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
             {
-                mprf("You can't wear a glove with your huge claw%s!",
-                     you.arm_count() == 1 ? "" : "s");
+                if (you.arm_count() == 1)
+                    mprf("You can't wear a glove with your huge claw!");
+                else
+                    mprf("You can't wear gloves with your huge claws!");
             }
             return false;
         }
@@ -1444,14 +1465,14 @@ static int _prompt_ring_to_remove()
 
     for (size_t i = 0; i < rings.size(); i++)
     {
-        string m = "<w>";
+        string k;
         const char key = _ring_slot_key(ring_types[i]);
-        m += key;
+        k += key;
         if (key == '<')
-            m += '<';
+            k += '<';
 
-        m += "</w> or " + rings[i]->name(DESC_INVENTORY);
-        mprf_nocap("%s", m.c_str());
+        string name = rings[i]->name(DESC_INVENTORY);
+        mprf_nocap("<w>%s</w> or %s", k.c_str(), name.c_str());
     }
     flush_prev_message();
 
@@ -1573,25 +1594,32 @@ static afsz _abort_for_stat_zero(const item_def &item, int prop_str,
     if (quiet)
         return afsz::stop;
 
-    string verb = "";
+    string msg;
     if (remove)
     {
         if (item.base_type == OBJ_WEAPONS)
-            verb = "Unwield";
+            msg = "Unwielding this item will reduce %s to zero or below.";
         else
-            verb = "Remov"; // -ing, not a typo
+            msg = "Removing this item will reduce %s to zero or below.";
     }
     else
     {
         if (item.base_type == OBJ_WEAPONS)
-            verb = "Wield";
+            msg = "Wielding this item will reduce %s to zero or below.";
         else
-            verb = "Wear";
+            msg = "Wearing this item will reduce %s to zero or below.";
     }
 
-    string prompt = make_stringf("%sing this item will reduce your %s to zero "
-                                 "or below. Continue?", verb.c_str(),
-                                 stat_desc(red_stat, SD_NAME));
+    string stat;
+    if (red_stat == STAT_STR)
+        stat = "your strength";
+    else if (red_stat == STAT_INT)
+        stat = "your intelligence";
+    else
+        stat = "your dexterity";
+
+    string prompt = localise(msg, stat);
+    prompt += localise(" Continue?");
     if (!yesno(prompt.c_str(), true, 'n', true, false))
     {
         canned_msg(MSG_OK);
@@ -1791,30 +1819,30 @@ static equipment_type _choose_ring_slot()
 {
     clear_messages();
 
-    mprf(MSGCH_PROMPT,
-         "Put ring on which %s? (<w>Esc</w> to cancel)", you.hand_name(false).c_str());
+    mpr(MSGCH_PROMPT, "Put ring where? (<w>Esc</w> to cancel)");
 
     const vector<equipment_type> slots = _current_ring_types();
     for (auto eq : slots)
     {
-        string msg = "<w>";
+        string msg;
         const char key = _ring_slot_key(eq);
-        msg += key;
+        string k;
+        k += key;
         if (key == '<')
-            msg += '<';
+            k += '<';
 
         item_def* ring = you.slot_item(eq, true);
         if (ring)
-            msg += "</w> or " + ring->name(DESC_INVENTORY);
+            msg = localise("<w>%s</w> or %s", k, ring->name(DESC_INVENTORY));
         else
-            msg += "</w> - no ring";
+            msg = localise("<w>%s</w> - no ring", k);
 
         if (eq == EQ_LEFT_RING)
-            msg += " (left)";
+            msg += localise(" (left)");
         else if (eq == EQ_RIGHT_RING)
-            msg += " (right)";
+            msg += localise(" (right)");
         else if (eq == EQ_RING_AMULET)
-            msg += " (amulet)";
+            msg += localise(" (amulet)");
         mprf_nocap("%s", msg.c_str());
     }
     flush_prev_message();
@@ -1896,10 +1924,19 @@ static bool _can_puton_ring(const item_def &item)
     if (melded == (int)slots.size())
         mpr("You can't wear that in your present form.");
     else
-        mprf("You're already wearing %s cursed ring%s!%s",
-             number_in_words(cursed).c_str(),
-             (cursed == 1 ? "" : "s"),
-             (cursed > 2 ? " Isn't that enough for you?" : ""));
+    {
+        string msg;
+        if (cursed == 1)
+            msg = localise("You're already wearing one cursed ring!");
+        else if (cursed == 2)
+            msg = localise("You're already wearing two cursed rings!");
+        else if (cursed > 2)
+        {
+            msg += localise("You're already wearing %d cursed rings!"
+                            " Isn't that enough for you?");
+        }
+        mpr_nolocalise(msg);
+    }
     return false;
 }
 
@@ -2336,10 +2373,9 @@ void drink(item_def* potion)
     }
 
     bool penance = god_hates_item(*potion);
-    string prompt = make_stringf("Really quaff the %s?%s",
-                                 potion->name(DESC_DBNAME).c_str(),
-                                 penance ? " This action would place"
-                                           " you under penance!" : "");
+    string prompt = localise("Really quaff %s?", potion->name(DESC_THE));
+    if (penance)
+        prompt += localise(" This action would place you under penance!");
     if (alreadyknown && (is_dangerous_item(*potion, true) || penance)
         && Options.bad_item_prompt
         && !yesno(prompt.c_str(), false, 'n'))
@@ -2716,9 +2752,10 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     {
         const bool plural = armour_is_hide(arm)
                             && arm.sub_type != ARM_TROLL_LEATHER_ARMOUR;
-        mprf("%s %s green for a moment.",
-             _item_name(arm).c_str(),
-             conjugate_verb("glow", plural).c_str());
+        if (plural)
+            mprf("%s glow green for a moment.", _item_name(arm).c_str());
+        else
+            mprf("%s glows green for a moment.", _item_name(arm).c_str());
     }
 
     arm.plus++;
@@ -3168,18 +3205,16 @@ void read(item_def* scroll, dist *target)
     ASSERT(scroll);
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll->sub_type);
+
+    // NOTE: can't use DESC_THE because we'll get the count if it's part of a stack
+    string scroll_name = "the " + scroll->name(DESC_QUALNAME); // noloc
+
     // Handle player cancels before we waste time
     if (item_type_known(*scroll))
     {
         const bool hostile_check = scroll_hostile_check(which_scroll);
         bool penance = god_hates_item(*scroll);
-        string verb_object = "read the " + scroll->name(DESC_DBNAME);
-
-        string penance_prompt = make_stringf("Really %s? This action would"
-                                             " place you under penance%s!",
-                                             verb_object.c_str(),
-                                             hostile_check ? ""
-                    : " and you can't even see any enemies this would affect");
+        string verb_object = localise("read %s", scroll_name);
 
         targeter_radius hitfunc(&you, LOS_NO_TRANS);
 
@@ -3196,30 +3231,47 @@ void read(item_def* scroll, dist *target)
         {
             return;
         }
-        else if (penance && !yesno(penance_prompt.c_str(), false, 'n'))
+        else if (penance)
         {
-            canned_msg(MSG_OK);
-            return;
+            string penance_prompt = localise("Really read %s?", scroll_name);
+            penance_prompt += localise(" This action would place you under"
+                                       " penance!");
+            if (!hostile_check)
+            {
+                penance_prompt += localise(" And you can't even see any enemies"
+                                           " this would affect!");
+            }
+            if (!yesno(penance_prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
         }
-        else if (bad_item
-                 && !yesno(make_stringf("Really %s?%s",
-                                        verb_object.c_str(),
-                                        hostile_check ? ""
-                        : " You can't even see any enemies this would affect."
-                                        ).c_str(),
-                           false, 'n'))
+
+        if (bad_item)
         {
-            canned_msg(MSG_OK);
-            return;
+            string prompt = localise("Really read %s?", scroll_name);
+            if (!hostile_check)
+            {
+                prompt += localise(" You can't even see any enemies this would"
+                                   " affect.");
+            }
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
         }
-        else if (!bad_item && !hostile_check && !yesno(make_stringf(
-            "You can't see any enemies this would affect, really %s?",
-                                        verb_object.c_str()).c_str(),
-                                                false, 'n'))
+        else if (!bad_item && !hostile_check)
         {
-            // is this too nanny dev?
-            canned_msg(MSG_OK);
-            return;
+            string prompt = localise("You can't see any enemies this would"
+                                     " affect, really read %s?", scroll_name);
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                // is this too nanny dev?
+                canned_msg(MSG_OK);
+                return;
+            }
         }
     }
 
@@ -3250,9 +3302,8 @@ void read(item_def* scroll, dist *target)
 
     // For cancellable scrolls leave printing this message to their
     // respective functions.
-    const string pre_succ_msg =
-            make_stringf("As you read the %s, it crumbles to dust.",
-                          scroll->name(DESC_QUALNAME).c_str());
+    const string pre_succ_msg = localise("As you read %s, it crumbles to dust.",
+                                         scroll_name.c_str());
     if (!_is_cancellable_scroll(which_scroll))
     {
         mpr(pre_succ_msg);
@@ -3491,8 +3542,6 @@ void read(item_def* scroll, dist *target)
     set_ident_type(*scroll, true);
     set_ident_flags(*scroll, ISFLAG_KNOW_TYPE); // for notes
 
-    string scroll_name = scroll->name(DESC_QUALNAME);
-
     if (!cancel_scroll)
     {
         if (in_inventory(*scroll))
@@ -3513,9 +3562,13 @@ void read(item_def* scroll, dist *target)
         && which_scroll != SCR_AMNESIA
         && which_scroll != SCR_ACQUIREMENT)
     {
-        mprf("It %s a %s.",
-             scroll->quantity < prev_quantity ? "was" : "is",
-             scroll_name.c_str());
+        // can't use DESC_A becaue we will get the stack count
+        string a_scroll = "a " + scroll->name(DESC_QUALNAME); // noloc
+        
+        if (scroll->quantity < prev_quantity)
+            mprf("It was %s.", a_scroll.c_str());
+        else
+            mprf("It is %s.", a_scroll.c_str());
     }
 
     if (!alreadyknown && dangerous)
@@ -3555,7 +3608,8 @@ void tile_item_drop(int idx, bool partdrop)
     int quantity = you.inv[idx].quantity;
     if (partdrop && quantity > 1)
     {
-        quantity = prompt_for_int("Drop how many? ", true);
+        string prompt = localise("Drop how many?") + " ";
+        quantity = prompt_for_int(prompt.c_str(), true);
         if (quantity < 1)
         {
             canned_msg(MSG_OK);
