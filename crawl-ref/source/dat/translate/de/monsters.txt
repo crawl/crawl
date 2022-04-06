@@ -737,8 +737,8 @@ die Tresorwache
 the vault warden
 der Tresorwärter
 %%%%
-the ironbrand convoker
-der Eisenbrandeinberufer
+the ironbound convoker
+der eisenbeschlagene Einberufer
 %%%%
 the imperial myrmidon
 der kaiserliche Myrmidon
@@ -2770,11 +2770,11 @@ ein Tresorwärter
 %%%%
 # check plural above
 %%%%
-an ironbrand convoker
-ein Eisenbrandeinberufer
+an ironbound convoker
+ein eisenbeschlagener Einberufer
 %%%%
-%d ironbrand convokers
-%d Eisenbrandeinberufer
+%d ironbound convokers
+%d eisenbeschlagene Einberufer
 %%%%
 # check plural above
 %%%%
@@ -5771,8 +5771,8 @@ Eure Tresorwache
 your vault warden
 Euer Tresorwärter
 %%%%
-your ironbrand convoker
-Euer Eisenbrandeinberufer
+your ironbound convoker
+Euer eisenbeschlagener Einberufer
 %%%%
 your imperial myrmidon
 Euer kaiserlicher Myrmidon
@@ -7251,8 +7251,8 @@ Tresorwache
 vault warden
 Tresorwärter
 %%%%
-ironbrand convoker
-Eisenbrandeinberufer
+ironbound convoker
+eisenbeschlagener Einberufer
 %%%%
 imperial myrmidon
 kaiserlicher Myrmidon

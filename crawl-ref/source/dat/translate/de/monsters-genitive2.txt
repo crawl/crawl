@@ -700,8 +700,8 @@ der Tresorwache
 {gen}the vault warden
 des Tresorwärters
 %%%%
-{gen}the ironbrand convoker
-des Eisenbrandeinberufers
+{gen}the ironbound convoker
+des eisenbeschlagenen Einberufers
 %%%%
 {gen}the imperial myrmidon
 des kaiserlichen Myrmidons
@@ -2180,8 +2180,8 @@ einer Tresorwache
 {gen}a vault warden
 eines Tresorwärters
 %%%%
-{gen}an ironbrand convoker
-eines Eisenbrandeinberufers
+{gen}an ironbound convoker
+eines eisenbeschlagenen Einberufers
 %%%%
 {gen}an imperial myrmidon
 eines kaiserlichen Myrmidons
@@ -3600,8 +3600,8 @@ Eurer Tresorwache
 {gen}your vault warden
 Eures Tresorwärters
 %%%%
-{gen}your ironbrand convoker
-Eures Eisenbrandeinberufers
+{gen}your ironbound convoker
+Eures eisenbeschlagenen Einberufers
 %%%%
 {gen}your imperial myrmidon
 Eures kaiserlichen Myrmidons
