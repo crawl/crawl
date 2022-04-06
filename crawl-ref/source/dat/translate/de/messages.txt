@@ -7370,7 +7370,7 @@ building %s
 %s wird generiert
 %%%%
 Emergency fixup: removing player from wall at %d,%d. Please report this as a bug!
-Notfallkorrektur: Ich entferne des Spielers von der Wand bei %d,%d. Bitte melden Sie dies als Fehler!
+Notfallkorrektur: Spieler wird von der Wand bei %d,%d entfernt. Bitte dies als Fehler melden!
 %%%%
 &P with '%s' failed; clearing force props and trying with random generation next.
 &P mit '%s' scheitert; Die "force props" wird gelöscht, und es wird mit Zufallsgenerierung versucht.
