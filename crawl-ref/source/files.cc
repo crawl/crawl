@@ -630,7 +630,7 @@ bool check_mkdir(const string &whatdir, string *dir, bool silent)
 static string _get_savefile_directory()
 {
     string dir = catpath(Options.save_dir, crawl_state.game_savedir_path());
-    check_mkdir("Save directory", &dir, false);
+    check_mkdir("Save directory", &dir, false); // localise
     if (dir.empty())
         dir = ".";
     return dir;
@@ -645,7 +645,7 @@ static string _get_savefile_directory()
 static string _get_old_bonefile_directory()
 {
     string dir = catpath(Options.shared_dir, crawl_state.game_savedir_path());
-    check_mkdir("Bones directory", &dir, false);
+    check_mkdir("Bones directory", &dir, false); // localise
     if (dir.empty())
         dir = ".";
     return dir;
@@ -660,7 +660,7 @@ static string _get_bonefile_directory()
 {
     string dir = catpath(Options.shared_dir, crawl_state.game_savedir_path());
     dir = catpath(dir, "bones");
-    check_mkdir("Bones directory", &dir, false);
+    check_mkdir("Bones directory", &dir, false); // localise
     if (dir.empty())
         dir = ".";
     return dir;

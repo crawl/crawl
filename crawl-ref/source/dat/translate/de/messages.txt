@@ -7304,88 +7304,94 @@ Really summon while emitting %s?
 ##################
 %%%%
 Empty file name.
-
+Leerer Dateiname.
 %%%%
 "%s" contains bad characters.
-
+"%s" enthält ungültige Zeichen.
 %%%%
 "%s" is an absolute path.
-
+"%s" ist ein absoluter Pfad.
 %%%%
 "%s" contains ".." sequences.
-
+"%s" enthält "..".
 %%%%
 Incomplete or corrupted data directory '%s'
-
+Unvollständiges oder fehlerhaftes Datenverzeichnis '%s'
 %%%%
 Data directory '%s' found.
 Datenverzeichnis '%s' gefunden.
 %%%%
 Missing DCSS data directory; tried:
-
+Fehlendes Datenverzeichnis; probiert:
 %%%%
 Cannot find data file '%s' anywhere, aborting
-
+Kann Datendatei '%' nirgendwo finden, abgebrochen.
 %%%%
 %s "%s" does not exist and I can't create it.
-
+%s "%s" existiert nicht, und ich kann es nicht erstellen.
+%%%%
+Save directory
+Speicherverzeichnis
+%%%%
+Bones directory
+Bones-Verzeichnis
 %%%%
 Could not load '%s'
-
+'%s' konnte nicht geladen werden
 %%%%
 Your summoned ally is left behind.
-
+Euer beschworener Verbündeter bleibt zurück.
 %%%%
 Your summoned allies are left behind.
-
+Eure beschworene Verbündeter bleiben zurück.
 %%%%
 Your mindless thrall stays behind.
-
+Euer geistloser Sklave bleibt zurück.
 %%%%
 Your mindless thralls stay behind.
-
+Eure geistlose Sklaven bleiben zurück.
 %%%%
 Second portal entrance for %s!
 Zweiter Portaleingang für %s!
 %%%%
 Portal %s already exists!
-
+Portal '%s' existiert schon!
 %%%%
 Generating dungeon...
-
+Dungeon wird generiert...
 %%%%
 building a lair branch
-
+Ein Versteck-Zweig wird generiert
 %%%%
 building another lair branch
-
+Noch ein Versteck-Zweig wird generiert
 %%%%
 building %s
-
+%s wird generiert
 %%%%
 Emergency fixup: removing player from wall at %d,%d. Please report this as a bug!
-
+Notfallkorrektur: Ich entferne des Spielers von der Wand bei %d,%d. Bitte melden Sie dies als Fehler!
 %%%%
 &P with '%s' failed; clearing force props and trying with random generation next.
-
+&P mit '%s' scheitert; Die "force props" wird gelöscht, und es wird mit Zufallsgenerierung versucht.
 %%%%
 Level annotation: %s
 Ebenenanmerkung: %s
 %%%%
 The staircase slides away right after you climb it!
-
+Die Treppe rutscht weg, sobald Ihr sie hinaufgestiegen seid!
 %%%%
 The hatch slides away right after you use it!
-
+Die Klappe rutscht sofort nach der Benutzung weg!
 %%%%
 The portal slides away right after you pass through it!
-
+Das Portal rutscht sofort nach der Benutzung weg!
 %%%%
 %s settles down.
 %s beruhigt sich.
 %%%%
 See you soon, %s!
-
+Bis bald, %s!
 %%%%
 Bones file exists but can't be opened: %s
 Bones-Datei existiert, kann aber nicht geöffnet werden: %s
@@ -7397,7 +7403,7 @@ Error installing bones file to %s
 Fehler beim Installieren der Bones-Datei auf %s
 %%%%
 Failed to unlink probably corrupt bones file: %s
-
+Vermutlich beschädigte Knochendatei konnte nicht entlinkt werden: %s
 %%%%
 Bones file to back up doesn't exist: %s
 Zu sichernde Bones-Datei existiert nicht: %s
@@ -7409,10 +7415,10 @@ Error backing up bones file to %s
 Fehler beim Sichern der Bones-Datei auf%s
 %%%%
 Ghost file "%s" seems to be invalid (short read); deleting it.
-
+Gespenst-Datei "%s" scheint ungültig zu sein (kurzes Lesen); wird gelöscht.
 %%%%
 Mismatch between bones backup filename '%s' and version %d.%d!
-
+Unstimmigkeit zwischen dem Namen der Bones-Datei '%s' und der Version %d.%d!
 %%%%
 Failed to unlink bones file: %s
 Fehler beim Aufheben der Verknüpfung der Bones-Datei:%s
@@ -7424,82 +7430,82 @@ Placed ghost is not MONS_PLAYER_GHOST, but %s
 Platzierter Geist ist nicht MONS_PLAYER_GHOST, sondern%s
 %%%%
 regular
-
+normal
 %%%%
 There is an existing game for name '%s' from an incompatible version of Crawl (%s).
-
+Es gibt schon ein Spiel für den Namen '%s' aus einer inkompatiblen Version von Crawl (%s).
 %%%%
 Unless you reinstall that version, you can't load it.
-
+Es ist nur mit jener Version ladbar.
 %%%%
 Do you want to DELETE that game and start a new one?
-
+Jenes Spiel LÖSCHEN und ein Neues starten?
 %%%%
 %s is from an incompatible version and can't be loaded.
-
+'%s' kommt aus einer inkompatiblen Version und kann nicht geladen werden.
 %%%%
 You already have a %s game saved under the name '%s';
-
+Es gibt schon ein Spiel dieser Art (%s) unter den Namen '%s';
 %%%%
 do you want to load that instead?
-
+soll ich das stattdessen laden?
 %%%%
 Please use a different name to start a new %s game, then.
-
+Bitte verwendet dann einen anderen Namen, um ein neues %s Spiel zu beginnen.
 %%%%
 This game comes from a previous release of Crawl (%s).
-
+Dieses Spiel stammt aus einer früheren Version von Crawl (%s).
 %%%%
 If you load it now, you won't be able to go back. Continue?
-
+Wenn es jetzt geladen wird, gibt es kein Zurück mehr. Weiter?
 %%%%
 Please use version %s to load %s then.
-
+Dann bitte Version %s benutzen um das Spiel zu laden.
 %%%%
 There exists a save by that name but it appears to be invalid.
-
+Es gibt schon ein Spiel mit diesen Namen, aber es scheint ungültig zu sein.
 %%%%
 Do you want to delete it?
-
+Soll ich es löschen?
 %%%%
 Error: %s
-Fehler:%s
+Fehler: %s
 %%%%
 File is corrupt (found version %d.%d).
-
+Datei ist korrumpiert (Version %d.%d gefunden)
 %%%%
 This save is from an older version.
-
+Diese Datei stammt aus einer älteren Version.
 %%%%
 %s %s is not compatible with save files this old. You can:
-
+%s %s %s ist nicht kompatibel mit so alten Speicherdateien. Möglichkeiten:
 %%%%
 " • continue your game with an older version of %s"
-
+" • das Spiel mit einer älteren Version von %s weitermachen"
 %%%%
 " • delete it and start a new game"
-
+" • das Spiel löschen und ein Neues starten"
 %%%%
 This save's version: (%d.%d) (must be >= %d.%d)
-
+Version dieses Spiels: (%d.%d) (muss >= %d.%d sein)
 %%%%
 This save is from a newer version.
-
+Dieses Spiel stammt aus einer neueren Version.
 %%%%
 %s cannot load saves from newer versions. You can:
-
+%s kann nicht Spiele aus neuerer Versionen laden. Möglichkeiten:
 %%%%
 " • continue your game with a newer version of %s"
-
+" • Spiel mit einer neueren Version von %s weitermachen"
 %%%%
 This save's version: (%d.%d) (must be <= %d.%d)
-
+Version dieses Spiels: (%d.%d) (muss <= %d.%d sein)
 %%%%
 ERROR: Could not lock file %s
 FEHLER: Datei%s konnte nicht gesperrt werden
 %%%%
 Unable to open lock file "%s"
-
+Sperrdatei "%s" kann nicht geöffnet werden
 %%%%
 
 ##################
@@ -10597,7 +10603,7 @@ read %s
 " Ihr könnt nicht einmal Feinde sehen, die betroffen würden!"
 %%%%
 You can't see any enemies this would affect, really read %s?
-"Ihr könnt keine Feinde sehen, die betroffen würden. Wirklich %s lesen?"
+Ihr könnt keine Feinde sehen, die betroffen würden. Wirklich %s lesen?
 %%%%
 You almost manage to decipher the scroll, but fail in this attempt.
 Es gelingt Euch fast, die Schriftrolle zu entziffern, aber Ihr scheitert bei diesem Versuch.
