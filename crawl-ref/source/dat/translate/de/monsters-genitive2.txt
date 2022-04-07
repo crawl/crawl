@@ -854,7 +854,7 @@ der kriechenden Leiche
 der makaberen Masse
 %%%%
 {gen}the ancient zyme
-des alten Zymens
+des uralten Zymes
 %%%%
 {gen}the worldbinder
 des Weltbinders
@@ -2334,7 +2334,7 @@ einer kriechenden Leiche
 einer makaberen Masse
 %%%%
 {gen}an ancient zyme
-eines alten Zymens
+eines uralten Zymes
 %%%%
 {gen}a worldbinder
 eines Weltbinders
@@ -3754,7 +3754,7 @@ Eurer kriechenden Leiche
 Eurer makaberen Masse
 %%%%
 {gen}your ancient zyme
-Eures alten Zymens
+Eures uralten Zymes
 %%%%
 {gen}your worldbinder
 Eures Weltbinders

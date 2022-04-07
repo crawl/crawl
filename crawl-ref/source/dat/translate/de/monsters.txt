@@ -2,17 +2,6 @@
 #
 # German translations for monster names (nominative case)
 #
-# Translation notes:
-#
-#  - The German for "(hob)goblin" is "Kobold", but there are already kobolds in the game, so I've kept the English names.
-#
-#  - It's difficult to choose translations for the different types of magic users. I've gone with:
-#      Wizard -> Zauberer (because that's what they used for Harry Potter)
-#      the Enchantress -> die Hexenmeisterin (Google Translate and leo.org both gave me "die Zauberin", but I think this sounds better)
-#      Sorcerer -> Hexenmeister
-#      Mage -> Magier (so Earth Mage -> Erdmagier, etc.)
-#      Shifter -> Verschieber (because verschieben means to move, displace)
-#
 ###############################################################################
 %%%%
 
@@ -367,8 +356,7 @@ die 27-köpfige Lernäische Hydra
 %%%%
 
 ################################
-# definite - nominative
-# (+ accusative for fem./neut.)
+# definite
 ################################
 %%%%
 the program bug
@@ -891,7 +879,7 @@ the macabre mass
 die makabere Masse
 %%%%
 the ancient zyme
-der alte Zyme
+das uralte Zym
 %%%%
 the worldbinder
 der Weltbinder
@@ -939,7 +927,7 @@ the curse skull
 der Fluchschädel
 %%%%
 the curse toe
-der Fluchzehe
+der Fluchzeh
 %%%%
 the angel
 der Engel
@@ -1848,8 +1836,7 @@ das furchtbare gespürte Monster
 %%%%
 
 ################################
-# indefinite - nominative
-# (+ accusative for fem./neut.)
+# indefinite
 ################################
 %%%%
 a program bug
@@ -3133,10 +3120,10 @@ eine makabere Masse
 %d makabere Massen
 %%%%
 an ancient zyme
-ein alter Zyme
+ein uraltes Zym
 %%%%
 %d ancient zymes
-%d alte Zymen
+%d uralte Zyme
 %%%%
 # check plural above
 %%%%
@@ -3245,7 +3232,7 @@ ein Fluchschädel
 # check plural above
 %%%%
 a curse toe
-ein Fluchzehe
+ein Fluchzeh
 %%%%
 %d curse toes
 %d Fluchzehen
@@ -5925,7 +5912,7 @@ your macabre mass
 Eure makabere Masse
 %%%%
 your ancient zyme
-Euer alter Zyme
+Euer uraltes Zym
 %%%%
 your worldbinder
 Euer Weltbinder
@@ -5973,7 +5960,7 @@ your curse skull
 Euer Fluchschädel
 %%%%
 your curse toe
-Euer Fluchzehe
+Euer Fluchzeh
 %%%%
 your angel
 Euer Engel
@@ -7405,7 +7392,7 @@ macabre mass
 makabere Masse
 %%%%
 ancient zyme
-alter Zyme
+uraltes Zym
 %%%%
 worldbinder
 Weltbinder
@@ -7453,7 +7440,7 @@ curse skull
 Fluchschädel
 %%%%
 curse toe
-Fluchzehe
+Fluchzeh
 %%%%
 angel
 Engel

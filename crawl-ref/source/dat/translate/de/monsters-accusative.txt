@@ -399,9 +399,6 @@ den Tyrannblutegel
 {acc}the small abomination
 den kleinen Greuel
 %%%%
-{acc}the ancient zyme
-den alten Zymen
-%%%%
 {acc}the worldbinder
 den Weltbinder
 %%%%
@@ -1511,11 +1508,6 @@ einen Tyrannblutegel
 %%%%
 {acc}a small abomination
 einen kleinen Greuel
-%%%%
-# check plural above
-%%%%
-{acc}an ancient zyme
-einen alten Zymen
 %%%%
 # check plural above
 %%%%
@@ -2701,9 +2693,6 @@ Euren Tyrannblutegel
 {acc}your small abomination
 Euren kleinen Greuel
 %%%%
-{acc}your ancient zyme
-Euren alten Zymen
-%%%%
 {acc}your worldbinder
 Euren Weltbinder
 %%%%
@@ -3601,9 +3590,6 @@ Tyrannblutegel
 %%%%
 {acc}small abomination
 kleinen Greuel
-%%%%
-{acc}ancient zyme
-alten Zymen
 %%%%
 {acc}worldbinder
 Weltbinder

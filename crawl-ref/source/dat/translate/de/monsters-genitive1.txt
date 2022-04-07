@@ -864,7 +864,7 @@ the macabre mass's
 der makaberen Masse
 %%%%
 the ancient zyme's
-des alten Zymens
+des uralten Zymes
 %%%%
 the worldbinder's
 des Weltbinders
@@ -2344,7 +2344,7 @@ a macabre mass's
 einer makaberen Masse
 %%%%
 an ancient zyme's
-eines alten Zymens
+eines uralten Zymes
 %%%%
 a worldbinder's
 eines Weltbinders
@@ -3764,7 +3764,7 @@ your macabre mass's
 Eurer makaberen Masse
 %%%%
 your ancient zyme's
-Eures alten Zymens
+Eures uralten Zymes
 %%%%
 your worldbinder's
 Eures Weltbinders

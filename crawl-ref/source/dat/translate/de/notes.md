@@ -50,6 +50,18 @@ Anrufen means to call someone, including a god, for help (i.e. invoke): https://
 Hervorrufen seems to mean evoke: https://de.thefreedictionary.com/hervorrufen  
 Hervorzaubern seems to unambiguously mean conjure: https://de.pons.com/%C3%BCbersetzung/deutsch-englisch/hervorzaubern
 
+It's difficult to choose translations for the different types of magic users. I've gone with:  
+- Wizard -> Zauberer (because that's what they used for Harry Potter)
+- the Enchantress -> die Hexenmeisterin (Google Translate and leo.org both gave me "die Zauberin", but I think this sounds better)
+- Sorcerer -> Hexenmeister
+- Mage -> Magier (so Earth Mage -> Erdmagier, etc.)
+- Shifter -> Verschieber (because verschieben means to move, displace)
+
+The German for "(hob)goblin" is "Kobold", but there are already kobolds in the game, so I've kept the English names.
+
+Zyme is an obscure word for something that causes infection. It's related to the word enzyme.
+Since the German word for enzyme is das Enzym, it's logical that Zyme -> das Zym.
+
 ## Adjectives
 
 DCSS dynamically adds adjectives to things (unidentified items in particular).

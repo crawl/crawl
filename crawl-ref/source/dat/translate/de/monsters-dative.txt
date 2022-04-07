@@ -636,7 +636,7 @@ der kriechenden Leiche
 der makaberen Masse
 %%%%
 {dat}the ancient zyme
-dem alten Zymen
+dem uralten Zym
 %%%%
 {dat}the worldbinder
 dem Weltbinder
@@ -684,7 +684,7 @@ dem fliegenden Schädel
 dem Fluchschädel
 %%%%
 {dat}the curse toe
-dem Fluchzehen
+dem Fluchzeh
 %%%%
 {dat}the angel
 dem Engel
@@ -1128,13 +1128,13 @@ dem Gespenst
 dem Phantom
 %%%%
 {dat}the hungry ghost
-dem hungrigen Geisten
+dem hungrigen Geist
 %%%%
 {dat}the flayed ghost
-dem enthäuteten Geisten
+dem enthäuteten Geist
 %%%%
 {dat}the player ghost
-dem Spielergeisten
+dem Spielergeist
 %%%%
 {dat}the shadow
 dem Schatten
@@ -1146,13 +1146,13 @@ dem stillen Gespenst
 der ertrunkenen Seele
 %%%%
 {dat}the wraith
-dem Geisten
+dem Geist
 %%%%
 {dat}the shadow wraith
-dem Schattengeisten
+dem Schattengeist
 %%%%
 {dat}the freezing wraith
-dem Frostgeisten
+dem Frostgeist
 %%%%
 {dat}the eidolon
 dem Eidolon
@@ -2877,10 +2877,10 @@ einer makaberen Masse
 %d makaberen Massen
 %%%%
 {dat}an ancient zyme
-einem alten Zymen
+einem uralten Zym
 %%%%
 {dat}%d ancient zymes
-%d alten Zymen
+%d uralten Zymen
 %%%%
 # check plural above
 %%%%
@@ -2989,7 +2989,7 @@ einem Fluchschädel
 # check plural above
 %%%%
 {dat}a curse toe
-einem Fluchzehen
+einem Fluchzeh
 %%%%
 {dat}%d curse toes
 %d Fluchzehen
@@ -3971,19 +3971,19 @@ einem Phantom
 # check plural above
 %%%%
 {dat}a hungry ghost
-einem hungrigen Geisten
+einem hungrigen Geist
 %%%%
 {dat}%d hungry ghosts
 %d hungrigen Geistern
 %%%%
 {dat}a flayed ghost
-einem enthäuteten Geisten
+einem enthäuteten Geist
 %%%%
 {dat}%d flayed ghosts
 %d enthäuteten Geistern
 %%%%
 {dat}a player ghost
-einem Spielergeisten
+einem Spielergeist
 %%%%
 {dat}%d player ghosts
 %d Spielergeistern
@@ -4009,19 +4009,19 @@ einer ertrunkenen Seele
 %d ertrunkenen Seelen
 %%%%
 {dat}a wraith
-einem Geisten
+einem Geist
 %%%%
 {dat}%d wraiths
 %d Geistern
 %%%%
 {dat}a shadow wraith
-einem Schattengeisten
+einem Schattengeist
 %%%%
 {dat}%d shadow wraiths
 %d Schattengeistern
 %%%%
 {dat}a freezing wraith
-einem Frostgeisten
+einem Frostgeist
 %%%%
 {dat}%d freezing wraiths
 %d Frostgeistern
@@ -5607,7 +5607,7 @@ Eurer kriechenden Leiche
 Eurer makaberen Masse
 %%%%
 {dat}your ancient zyme
-Eurem alten Zymen
+Eurem uralten Zym
 %%%%
 {dat}your worldbinder
 Eurem Weltbinder
@@ -5655,7 +5655,7 @@ Eurem fliegenden Schädel
 Eurem Fluchschädel
 %%%%
 {dat}your curse toe
-Eurem Fluchzehen
+Eurem Fluchzeh
 %%%%
 {dat}your angel
 Eurem Engel
@@ -6099,13 +6099,13 @@ Eurem Gespenst
 Eurem Phantom
 %%%%
 {dat}your hungry ghost
-Eurem hungrigen Geisten
+Eurem hungrigen Geist
 %%%%
 {dat}your flayed ghost
-Eurem enthäuteten Geisten
+Eurem enthäuteten Geist
 %%%%
 {dat}your player ghost
-Eurem Spielergeisten
+Eurem Spielergeist
 %%%%
 {dat}your shadow
 Eurem Schatten
@@ -6117,13 +6117,13 @@ Eurem stillen Gespenst
 Eurer ertrunkenen Seele
 %%%%
 {dat}your wraith
-Eurem Geisten
+Eurem Geist
 %%%%
 {dat}your shadow wraith
-Eurem Schattengeisten
+Eurem Schattengeist
 %%%%
 {dat}your freezing wraith
-Eurem Frostgeisten
+Eurem Frostgeist
 %%%%
 {dat}your eidolon
 Eurem Eidolon
