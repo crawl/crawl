@@ -70,7 +70,7 @@ Actinomycete/Aktinomyzet is similar:
 https://books.google.com/ngrams/graph?content=Actinomycete%2CAktinomyzet&year_start=1800&year_end=2019&corpus=31&smoothing=3
 
 Not sure how to translate Ballostomycete spore. Words like Myxospore exist in both German and English, but the English version
-of Crawl does not use Ballistospore. How do you form a compound noun with Ballistomyzet?
+of Crawl does not use Ballistospore. How do you form a compound noun with Ballistomyzet? Ballistomyzetenspore?
 
 ## Adjectives
 
