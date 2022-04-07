@@ -62,6 +62,16 @@ The German for "(hob)goblin" is "Kobold", but there are already kobolds in the g
 Zyme is an obscure word for something that causes infection. It's related to the word enzyme.
 Since the German word for enzyme is das Enzym, it's logical that Zyme -> das Zym.
 
+Ballistomycete is a made up word, but the mycete ending, meaning fungus, is used in real words like myxomycete, actinomycete, etc.
+Duden has Myxomyzet as a weak masculine noun: https://www.duden.de/deklination/substantive/Myxomyzet
+Google Ngrams indicates that Myxomycete exists in German, but Myxomyzet is more common:
+https://books.google.com/ngrams/graph?content=Myxomyzet%2CMyxomycete&year_start=1800&year_end=2019&corpus=31&smoothing=3
+Actinomycete/Aktinomyzet is similar:
+https://books.google.com/ngrams/graph?content=Actinomycete%2CAktinomyzet&year_start=1800&year_end=2019&corpus=31&smoothing=3
+
+Not sure how to translate Ballostomycete spore. Words like Myxospore exist in both German and English, but the English version
+of Crawl does not use Ballistospore. How do you form a compound noun with Ballistomyzet?
+
 ## Adjectives
 
 DCSS dynamically adds adjectives to things (unidentified items in particular).
