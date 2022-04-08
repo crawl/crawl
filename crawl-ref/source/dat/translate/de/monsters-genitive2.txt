@@ -25,7 +25,7 @@ Polyphems
 Tiamats
 %%%%
 {gen}Bai Suzhen
-Bais Suzhens
+Bai Suzhens
 %%%%
 {gen}Xtahua
 Xtahuas
@@ -91,7 +91,7 @@ Urugs
 Nergalles
 %%%%
 {gen}Saint Roka
-Sankts Rokas
+Sankt Rokas
 %%%%
 {gen}Sojobo
 Sojobos
@@ -193,13 +193,13 @@ Nikolas
 Mnolegs
 %%%%
 {gen}Lom Lobon
-Loms Lobons
+Lom Lobons
 %%%%
 {gen}Cerebov
 Cerebovs
 %%%%
 {gen}Gloorx Vloq
-Gloorxs Vloqs
+Gloorx Vloqs
 %%%%
 {gen}Geryon
 Geryons
@@ -220,16 +220,16 @@ Verrückten Yiufs
 der Hexenmeisterin
 %%%%
 {gen}Blork the orc
-Blorks des Orks
+Blork des Orks
 %%%%
 {gen}Blork
 Blorks
 %%%%
 {gen}the Royal Jelly
-des Gelées Royales
+des Gelée Royales
 %%%%
 {gen}Royal Jelly
-Gelées Royales
+Gelée Royales
 %%%%
 {gen}the Serpent of Hell
 der Höllenschlange

@@ -312,11 +312,12 @@ for line in lines:
 
         # decline
         german = ""
-        for word in words:
+        for i, word in enumerate(words):
             if is_determiner(word):
                 word = decline_determiner(word, gender, target_case)
             elif is_noun(word):
-                word = decline_noun(word, gender, target_case)
+                if i == len(words) - 1 or word == "Prinz":
+                    word = decline_noun(word, gender, target_case)
             else:
                 word = decline_adjective(word, gender, target_case, declension)
             
