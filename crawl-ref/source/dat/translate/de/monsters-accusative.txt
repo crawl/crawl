@@ -125,8 +125,11 @@ den Tiefenelf-Klingenmeister
 {acc}the deep elf master archer
 den Tiefenelf-Bogenmeister
 %%%%
-{acc}the deep elf mage
-den Tiefenelf-Magier
+{acc}the deep elf zephyrmancer
+den Tiefenelf-Zephyrmanten
+%%%%
+{acc}the deep elf pyromancer
+den Tiefenelf-Pyromanten
 %%%%
 {acc}the deep elf high priest
 den Tiefenelf-Hohepriester
@@ -335,6 +338,12 @@ den Tresorwärter
 {acc}the ironbound convoker
 den eisenbeschlagenen Einberufer
 %%%%
+{acc}the ironbound preserver
+den eisenbeschlagenen Bewahrer
+%%%%
+{acc}the ironbound beastmaster
+den eisenbeschlagenen Bestienmeister
+%%%%
 {acc}the imperial myrmidon
 den kaiserlichen Myrmidon
 %%%%
@@ -343,9 +352,6 @@ den Diener des Flüsterns
 %%%%
 {acc}the ragged hierophant
 den zerlumpten Hierophanten
-%%%%
-{acc}the ironheart preserver
-den Eisenherzbewahrer
 %%%%
 {acc}the shapeshifter
 den Gestaltwandler
@@ -1020,8 +1026,11 @@ einen Tiefenelf-Klingenmeister
 {acc}a deep elf master archer
 einen Tiefenelf-Bogenmeister
 %%%%
-{acc}a deep elf mage
-einen Tiefenelf-Magier
+{acc}a deep elf zephyrmancer
+einen Tiefenelf-Zephyrmanten
+%%%%
+{acc}a deep elf pyromancer
+einen Tiefenelf-Pyromanten
 %%%%
 {acc}a deep elf high priest
 einen Tiefenelf-Hohepriester
@@ -1238,9 +1247,6 @@ einen Diener des Flüsterns
 %%%%
 {acc}a ragged hierophant
 einen zerlumpten Hierophanten
-%%%%
-{acc}an ironheart preserver
-einen Eisenherzbewahrer
 %%%%
 {acc}a shapeshifter
 einen Gestaltwandler
@@ -1915,8 +1921,11 @@ Euren Tiefenelf-Klingenmeister
 {acc}your deep elf master archer
 Euren Tiefenelf-Bogenmeister
 %%%%
-{acc}your deep elf mage
-Euren Tiefenelf-Magier
+{acc}your deep elf zephyrmancer
+Euren Tiefenelf-Zephyrmanten
+%%%%
+{acc}your deep elf pyromancer
+Euren Tiefenelf-Pyromanten
 %%%%
 {acc}your deep elf high priest
 Euren Tiefenelf-Hohepriester
@@ -2125,6 +2134,12 @@ Euren Tresorwärter
 {acc}your ironbound convoker
 Euren eisenbeschlagenen Einberufer
 %%%%
+{acc}the ironbound preserver
+Euren eisenbeschlagenen Bewahrer
+%%%%
+{acc}the ironbound beastmaster
+Euren eisenbeschlagenen Bestienmeister
+%%%%
 {acc}your imperial myrmidon
 Euren kaiserlichen Myrmidon
 %%%%
@@ -2133,9 +2148,6 @@ Euren Diener des Flüsterns
 %%%%
 {acc}your ragged hierophant
 Euren zerlumpten Hierophanten
-%%%%
-{acc}your ironheart preserver
-Euren Eisenherzbewahrer
 %%%%
 {acc}your shapeshifter
 Euren Gestaltwandler
@@ -2750,6 +2762,12 @@ grauen Drakonier
 {acc}deep elf archer
 Tiefenelf-Bogenschützen
 %%%%
+{acc}deep elf zephyrmancer
+Tiefenelf-Zephyrmanten
+%%%%
+{acc}deep elf pyromancer
+Tiefenelf-Pyromanten
+%%%%
 {acc}deep elf demonologist
 Tiefenelf-Dämonologen
 %%%%
@@ -2791,6 +2809,12 @@ Nekromanten
 %%%%
 {acc}ironbound convoker
 eisenbeschlagenen Einberufer
+%%%%
+{acc}ironbound preserver
+eisenbeschlagenen Bewahrer
+%%%%
+{acc}ironbound beastmaster
+eisenbeschlagenen Bestienmeister
 %%%%
 {acc}imperial myrmidon
 kaiserlichen Myrmidon

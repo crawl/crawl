@@ -467,8 +467,11 @@ des Tiefenelf-Klingenmeisters
 {gen}the deep elf master archer
 des Tiefenelf-Bogenmeisters
 %%%%
-{gen}the deep elf mage
-des Tiefenelf-Magiers
+{gen}the deep elf zephyrmancer
+des Tiefenelf-Zephyrmanten
+%%%%
+{gen}the deep elf pyromancer
+des Tiefenelf-Pyromanten
 %%%%
 {gen}the deep elf high priest
 des Tiefenelf-Hohepriesters
@@ -719,6 +722,15 @@ des Tresorwärters
 {gen}the ironbound convoker
 des eisenbeschlagenen Einberufers
 %%%%
+{gen}the ironbound frostheart
+des eisengebundenen Frostherzens
+%%%%
+{gen}the ironbound preserver
+des eisenbeschlagenen Bewahrers
+%%%%
+{gen}the ironbound beastmaster
+des eisenbeschlagenen Bestienmeisters
+%%%%
 {gen}the imperial myrmidon
 des kaiserlichen Myrmidons
 %%%%
@@ -727,9 +739,6 @@ des Dieners des Flüsterns
 %%%%
 {gen}the ragged hierophant
 des zerlumpten Hierophanten
-%%%%
-{gen}the ironheart preserver
-des Eisenherzbewahrers
 %%%%
 {gen}the shapeshifter
 des Gestaltwandlers
@@ -1974,8 +1983,11 @@ eines Tiefenelf-Klingenmeisters
 {gen}a deep elf master archer
 eines Tiefenelf-Bogenmeisters
 %%%%
-{gen}a deep elf mage
-eines Tiefenelf-Magiers
+{gen}a deep elf zephyrmancer
+eines Tiefenelf-Zephyrmanten
+%%%%
+{gen}a deep elf pyromancer
+eines Tiefenelf-Pyromanten
 %%%%
 {gen}a deep elf high priest
 eines Tiefenelf-Hohepriesters
@@ -2247,6 +2259,24 @@ eines eisenbeschlagenen Einberufers
 {gen}%d ironbound convokers
 %d eisenbeschlagener Einberufer
 %%%%
+{gen}an ironbound frostheart
+eines eisengebundenen Frostherzens
+%%%%
+{gen}%d ironbound frosthearts
+%d eisengebundener Frostherzen
+%%%%
+{gen}an ironbound preserver
+eines eisenbeschlagenen Bewahrer
+%%%%
+{gen}%d ironbound preservers
+%d eisenbeschlagener Bewahrer
+%%%%
+{gen}an ironbound beastmaster
+eines eisenbeschlagenen Bestienmeister
+%%%%
+{gen}%d ironbound beastmasters
+%d eisenbeschlagener Bestienmeister
+%%%%
 {gen}an imperial myrmidon
 eines kaiserlichen Myrmidons
 %%%%
@@ -2261,9 +2291,6 @@ eines zerlumpten Hierophanten
 %%%%
 {gen}%d ragged hierophants
 %d zerlumpter Hierophanten
-%%%%
-{gen}an ironheart preserver
-eines Eisenherzbewahrers
 %%%%
 {gen}a shapeshifter
 eines Gestaltwandlers
@@ -3718,8 +3745,11 @@ Eures Tiefenelf-Klingenmeisters
 {gen}your deep elf master archer
 Eures Tiefenelf-Bogenmeisters
 %%%%
-{gen}your deep elf mage
-Eures Tiefenelf-Magiers
+{gen}your deep elf zephyrmancer
+Eures Tiefenelf-Zephyrmanten
+%%%%
+{gen}your deep elf pyromancer
+Eures Tiefenelf-Pyromanten
 %%%%
 {gen}your deep elf high priest
 Eures Tiefenelf-Hohepriesters
@@ -3970,6 +4000,15 @@ Eures Tresorwärters
 {gen}your ironbound convoker
 Eures eisenbeschlagenen Einberufers
 %%%%
+{gen}your ironbound frostheart
+Eures eisengebundenen Frostherzens
+%%%%
+{gen}the ironbound preserver
+Eures eisenbeschlagenen Bewahrers
+%%%%
+{gen}the ironbound beastmaster
+Eures eisenbeschlagenen Bestienmeisters
+%%%%
 {gen}your imperial myrmidon
 Eures kaiserlichen Myrmidons
 %%%%
@@ -3978,9 +4017,6 @@ Eures Dieners des Flüsterns
 %%%%
 {gen}your ragged hierophant
 Eures zerlumpten Hierophanten
-%%%%
-{gen}your ironheart preserver
-Eures Eisenherzbewahrers
 %%%%
 {gen}your shapeshifter
 Eures Gestaltwandlers
@@ -5180,8 +5216,11 @@ Tiefenelf-Klingenmeisters
 {gen}deep elf master archer
 Tiefenelf-Bogenmeisters
 %%%%
-{gen}deep elf mage
-Tiefenelf-Magiers
+{gen}deep elf zephyrmancer
+Tiefenelf-Zephyrmanten
+%%%%
+{gen}deep elf pyromancer
+Tiefenelf-Pyromanten
 %%%%
 {gen}deep elf high priest
 Tiefenelf-Hohepriesters
@@ -5414,6 +5453,15 @@ Tresorwärters
 {gen}ironbound convoker
 eisenbeschlagenen Einberufers
 %%%%
+{gen}ironbound frostheart
+eisengebundenen Frostherzens
+%%%%
+{gen}ironbound preserver
+eisenbeschlagenen Bewahrers
+%%%%
+{gen}ironbound beastmaster
+eisenbeschlagenen Bestienmeisters
+%%%%
 {gen}imperial myrmidon
 kaiserlichen Myrmidons
 %%%%
@@ -5422,9 +5470,6 @@ Dieners des Flüsterns
 %%%%
 {gen}ragged hierophant
 zerlumpten Hierophanten
-%%%%
-{gen}ironheart preserver
-Eisenherzbewahrers
 %%%%
 {gen}shapeshifter
 Gestaltwandlers

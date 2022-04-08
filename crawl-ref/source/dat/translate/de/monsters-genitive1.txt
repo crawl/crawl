@@ -713,6 +713,15 @@ des Tresorwärters
 the ironbound convoker's
 des eisenbeschlagenen Einberufers
 %%%%
+the ironbound frostheart's
+des eisengebundenen Frostherzens
+%%%%
+the ironbound preserver's
+des eisenbeschlagenen Bewahrers
+%%%%
+the ironbound beastmaster's
+des eisenbeschlagenen Bestienmeisters
+%%%%
 the imperial myrmidon's
 des kaiserlichen Myrmidons
 %%%%
@@ -721,9 +730,6 @@ des Dieners des Flüsterns
 %%%%
 the ragged hierophant's
 des zerlumpten Hierophantens
-%%%%
-the ironheart preserver's
-des Eisenherzbewahrers
 %%%%
 the shapeshifter's
 des Gestaltwandlers
@@ -2193,6 +2199,15 @@ eines Tresorwärters
 an ironbound convoker's
 eines eisenbeschlagenen Einberufers
 %%%%
+an ironbound frostheart's
+eines eisengebundenen Frostherzens
+%%%%
+an ironbound preserver's
+eines eisenbeschlagenen Bewahrers
+%%%%
+an ironbound beastmaster's
+eines eisenbeschlagenen Bestienmeisters
+%%%%
 an imperial myrmidon's
 eines kaiserlichen Myrmidons
 %%%%
@@ -2201,9 +2216,6 @@ eines Dieners des Flüsterns
 %%%%
 a ragged hierophant's
 eines zerlumpten Hierophantens
-%%%%
-an ironheart preserver's
-eines Eisenherzbewahrers
 %%%%
 a shapeshifter's
 eines Gestaltwandlers
@@ -3613,6 +3625,15 @@ Eures Tresorwärters
 your ironbound convoker's
 Eures eisenbeschlagenen Einberufers
 %%%%
+your ironbound frostheart's
+Eures eisengebundenen Frostherzens
+%%%%
+your ironbound preserver's
+Eures eisenbeschlagenen Bewahrers
+%%%%
+your ironbound beastmaster's
+Eures eisenbeschlagenen Bestienmeisters
+%%%%
 your imperial myrmidon's
 Eures kaiserlichen Myrmidons
 %%%%
@@ -3621,9 +3642,6 @@ Eures Dieners des Flüsterns
 %%%%
 your ragged hierophant's
 Eures zerlumpten Hierophantens
-%%%%
-your ironheart preserver's
-Eures Eisenherzbewahrers
 %%%%
 your shapeshifter's
 Eures Gestaltwandlers

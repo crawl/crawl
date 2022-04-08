@@ -151,6 +151,12 @@ def decline_noun(word, gender, target_case, proper):
         result = re.sub(r'(ant|taur|myzet)$', r'\1en', result)
         result = re.sub(r'(loge|mycete)$', r'\1n', result)
 
+    if word.endswith('herz'):
+        if target_case == Case.GENITIVE:
+            result = word + "ens"
+        elif target_case == Case.DATIVE:
+            result = word + "en"
+
     if result != word:
         return result
 
