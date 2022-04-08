@@ -218,7 +218,12 @@ for line in lines:
             last_written = line
     elif re.match(r'\s*#', line):
         # comments
-        outline = line.replace('nominative', 'dative')
+        if target_case == Case.DATIVE:
+            outline = line.replace('nominative', 'dative (where different to nominative)')
+        elif target_case == Case.ACCUSATIVE:
+            outline = line.replace('nominative', 'accusative (where different to nominative)')
+        elif target_case == Case.GENITIVE:
+            outline = line.replace('nominative', 'genitive (where different to nominative)')
         writeline(outfile, outline)
         last_written = outline
     elif english == "":

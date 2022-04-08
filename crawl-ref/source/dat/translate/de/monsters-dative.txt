@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# German translations for monster names (dative case)
+# German translations for monster names - dative (where different to nominative)
 #
 ###############################################################################
 %%%%
