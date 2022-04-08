@@ -740,6 +740,9 @@ der eisenbeschlagene Bewahrer
 the ironbound beastmaster
 der eisenbeschlagene Bestienmeister
 %%%%
+the ironbound thunderhulk
+der eisenbeschlagene Donnerkoloss
+%%%%
 the imperial myrmidon
 der kaiserliche Myrmidon
 %%%%
@@ -2639,6 +2642,12 @@ ein eisenbeschlagene Bestienmeister
 %%%%
 %d ironbound beastmasters
 %d eisenbeschlagene Bestienmeister
+%%%%
+an ironbound thunderhulk
+ein eisenbeschlagener Donnerkoloss
+%%%%
+%d ironbound thunderhulks
+%d eisenbeschlagene Donnerkolosse
 %%%%
 an imperial myrmidon
 ein kaiserlicher Myrmidon
@@ -5563,6 +5572,9 @@ Euer eisenbeschlagener Bewahrer
 the ironbound beastmaster
 Euer eisenbeschlagener Bestienmeister
 %%%%
+your ironbound thunderhulk
+Euer eisenbeschlagener Donnerkoloss
+%%%%
 your imperial myrmidon
 Euer kaiserlicher Myrmidon
 %%%%
@@ -7051,6 +7063,9 @@ eisenbeschlagener Bewahrer
 %%%%
 ironbound beastmaster
 eisenbeschlagener Bestienmeister
+%%%%
+ironbound thunderhulk
+eisenbeschlagener Donnerkoloss
 %%%%
 imperial myrmidon
 kaiserlicher Myrmidon

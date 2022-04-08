@@ -731,6 +731,9 @@ des eisenbeschlagenen Bewahrers
 {gen}the ironbound beastmaster
 des eisenbeschlagenen Bestienmeisters
 %%%%
+{gen}the ironbound thunderhulk
+des eisenbeschlagenen Donnerkolosses
+%%%%
 {gen}the imperial myrmidon
 des kaiserlichen Myrmidons
 %%%%
@@ -2276,6 +2279,12 @@ eines eisenbeschlagenen Bestienmeister
 %%%%
 {gen}%d ironbound beastmasters
 %d eisenbeschlagener Bestienmeister
+%%%%
+{gen}an ironbound thunderhulk
+eines eisenbeschlagenen Donnerkolosses
+%%%%
+{gen}%d ironbound thunderhulks
+%d eisenbeschlagener Donnerkolosse
 %%%%
 {gen}an imperial myrmidon
 eines kaiserlichen Myrmidons
@@ -4009,6 +4018,9 @@ Eures eisenbeschlagenen Bewahrers
 {gen}the ironbound beastmaster
 Eures eisenbeschlagenen Bestienmeisters
 %%%%
+{gen}your ironbound thunderhulk
+Eures eisenbeschlagenen Donnerkolosses
+%%%%
 {gen}your imperial myrmidon
 Eures kaiserlichen Myrmidons
 %%%%
@@ -5461,6 +5473,9 @@ eisenbeschlagenen Bewahrers
 %%%%
 {gen}ironbound beastmaster
 eisenbeschlagenen Bestienmeisters
+%%%%
+{gen}ironbound thunderhulk
+eisenbeschlagenen Donnerkolosses
 %%%%
 {gen}imperial myrmidon
 kaiserlichen Myrmidons
