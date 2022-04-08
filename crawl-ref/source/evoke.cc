@@ -930,7 +930,7 @@ static bool _xoms_chessboard()
 
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->friendly() || mi->neutral())
+        if (mi->friendly() || mi->neutral() && !mi->has_ench(ENCH_INSANE))
             continue;
         if (mons_is_firewood(**mi))
             continue;
