@@ -1094,7 +1094,7 @@ des Auges des Schwächens
 des orangen leuchtenden Gehirns
 %%%%
 {gen}the great orb of eyes
-des großen Augenkugels
+der großen Augenkugel
 %%%%
 {gen}the shining eye
 des leuchtenden Auges
@@ -2514,7 +2514,7 @@ eines Auges des Schwächens
 eines orangen leuchtenden Gehirns
 %%%%
 {gen}a great orb of eyes
-eines großen Augenkugels
+einer großen Augenkugel
 %%%%
 {gen}a shining eye
 eines leuchtenden Auges
@@ -3994,7 +3994,7 @@ Eures Auges des Schwächens
 Eures orangen leuchtenden Gehirns
 %%%%
 {gen}your great orb of eyes
-Eures großen Augenkugels
+Eurer großen Augenkugel
 %%%%
 {gen}your shining eye
 Eures leuchtenden Auges

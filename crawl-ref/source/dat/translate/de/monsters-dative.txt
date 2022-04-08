@@ -876,7 +876,7 @@ dem Auge des Schwächens
 dem orangen leuchtenden Gehirn
 %%%%
 {dat}the great orb of eyes
-dem großen Augenkugel
+der großen Augenkugel
 %%%%
 {dat}the shining eye
 dem leuchtenden Auge
@@ -3339,7 +3339,7 @@ einem orangen leuchtenden Gehirn
 # check plural above
 %%%%
 {dat}a great orb of eyes
-einem großen Augenkugel
+einer großen Augenkugel
 %%%%
 {dat}%d great orbs of eyes
 %d großen Augenkugeln
@@ -5847,7 +5847,7 @@ Eurem Auge des Schwächens
 Eurem orangen leuchtenden Gehirn
 %%%%
 {dat}your great orb of eyes
-Eurem großen Augenkugel
+Eurer großen Augenkugel
 %%%%
 {dat}your shining eye
 Eurem leuchtenden Auge

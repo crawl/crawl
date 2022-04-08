@@ -513,9 +513,6 @@ den Stachelfrosch
 {acc}the blink frog
 den Flimmerfrosch
 %%%%
-{acc}the great orb of eyes
-den großen Augenkugel
-%%%%
 {acc}the ophan
 den Ophan
 %%%%
@@ -1701,11 +1698,6 @@ einen Flimmerfrosch
 %%%%
 # check plural above
 %%%%
-{acc}a great orb of eyes
-einen großen Augenkugel
-%%%%
-# check plural above
-%%%%
 {acc}an ophan
 einen Ophan
 %%%%
@@ -2807,9 +2799,6 @@ Euren Stachelfrosch
 {acc}your blink frog
 Euren Flimmerfrosch
 %%%%
-{acc}your great orb of eyes
-Euren großen Augenkugel
-%%%%
 {acc}your ophan
 Euren Ophan
 %%%%
@@ -3704,9 +3693,6 @@ Stachelfrosch
 %%%%
 {acc}blink frog
 Flimmerfrosch
-%%%%
-{acc}great orb of eyes
-großen Augenkugel
 %%%%
 {acc}ophan
 Ophan

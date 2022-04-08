@@ -1119,7 +1119,7 @@ the glowing orange brain
 das orange leuchtende Gehirn
 %%%%
 the great orb of eyes
-der große Augenkugel
+die große Augenkugel
 %%%%
 the shining eye
 das leuchtende Auge
@@ -3642,7 +3642,7 @@ ein oranges leuchtendes Gehirn
 # check plural above
 %%%%
 a great orb of eyes
-ein großer Augenkugel
+eine große Augenkugel
 %%%%
 %d great orbs of eyes
 %d große Augenkugel
@@ -6152,7 +6152,7 @@ your glowing orange brain
 Euer oranges leuchtendes Gehirn
 %%%%
 your great orb of eyes
-Euer großer Augenkugel
+Eure große Augenkugel
 %%%%
 your shining eye
 Euer leuchtendes Auge
@@ -7632,7 +7632,7 @@ glowing orange brain
 oranges leuchtendes Gehirn
 %%%%
 great orb of eyes
-großer Augenkugel
+große Augenkugel
 %%%%
 shining eye
 leuchtendes Auge
