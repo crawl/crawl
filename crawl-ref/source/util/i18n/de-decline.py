@@ -1,6 +1,8 @@
 ###############################################################################
 #
-# German: Generate dative from nominative
+# German declensions
+# Produce accusative/dative/genitive files from nominative file
+# Usage: de-decline.py acc|dat|gen <infile> <outfile>
 #
 ###############################################################################
 import os;
@@ -218,6 +220,8 @@ for line in lines:
             last_written = line
     elif re.match(r'\s*#', line):
         # comments
+        if 'check' in line:
+            continue
         if target_case == Case.DATIVE:
             outline = line.replace('nominative', 'dative (where different to nominative)')
         elif target_case == Case.ACCUSATIVE:
