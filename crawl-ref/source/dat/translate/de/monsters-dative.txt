@@ -1936,7 +1936,7 @@ einem Warg
 einem Wolf
 %%%%
 {dat}%d wolves
-%d Wolfen
+%d Wölfen
 %%%%
 {dat}a hog
 einem Schwein
@@ -1973,9 +1973,6 @@ einem heiligen Schwein
 %%%%
 {dat}a felid
 einem Felid
-%%%%
-{dat}%d felids
-%d Feliden
 %%%%
 {dat}a bear
 einem Bären

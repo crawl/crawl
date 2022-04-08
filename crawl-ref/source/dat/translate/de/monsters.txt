@@ -2187,15 +2187,11 @@ ein Zwerg
 %d dwarves
 %d Zwerge
 %%%%
-# check plural above
-%%%%
 a deep dwarf
 ein Tiefenzwerg
 %%%%
 %d deep dwarves
 %d Tiefenzwerge
-%%%%
-# check plural above
 %%%%
 a jackal
 ein Schakal
@@ -2203,15 +2199,11 @@ ein Schakal
 %d jackals
 %d Schakale
 %%%%
-# check plural above
-%%%%
 a hound
 ein Hund
 %%%%
 %d hounds
 %d Hunde
-%%%%
-# check plural above
 %%%%
 a howler monkey
 ein Brüllaffe
@@ -2219,23 +2211,17 @@ ein Brüllaffe
 %d howler monkeys
 %d Brüllaffen
 %%%%
-# check plural above
-%%%%
 a warg
 ein Warg
 %%%%
 %d wargs
 %d Warge
 %%%%
-# check plural above
-%%%%
 a wolf
 ein Wolf
 %%%%
 %d wolves
-%d Wolfe
-%%%%
-# check plural above
+%d Wölfe
 %%%%
 a hog
 ein Schwein
@@ -2243,15 +2229,11 @@ ein Schwein
 %d hogs
 %d Schweine
 %%%%
-# check plural above
-%%%%
 a hell hound
 ein Höllenhund
 %%%%
 %d hell hounds
 %d Höllenhunde
-%%%%
-# check plural above
 %%%%
 a doom hound
 ein Untergangshund
@@ -2259,15 +2241,11 @@ ein Untergangshund
 %d doom hounds
 %d Untergangshunde
 %%%%
-# check plural above
-%%%%
 a raiju
 ein Raiju
 %%%%
 %d raiju
 %d Raijus
-%%%%
-# check plural above
 %%%%
 a hell hog
 ein höllisches Schwein
@@ -2275,23 +2253,17 @@ ein höllisches Schwein
 %d hell hogs
 %d höllische Schweine
 %%%%
-# check plural above
-%%%%
 a holy swine
 ein heiliges Schwein
 %%%%
 %d holy swine
 %d heilige Schweine
 %%%%
-# check plural above
-%%%%
 a felid
 ein Felid
 %%%%
 %d felids
-%d Felide
-%%%%
-# check plural above
+%d Feliden
 %%%%
 a bear
 ein Bär
