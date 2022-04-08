@@ -75,6 +75,8 @@ of Crawl does not use Ballistospore. How do you form a compound noun with Ballis
 Boggart - in Harry Potter this is translated as der Irrwicht (pl: die Irrwichte), but the Spook-Zyklus (Wardstone Chronicles),
 Boggart (pl: Boggarts) is used: https://de.wikipedia.org/wiki/Spook-Zyklus
 
+Eleionoma - German plural is Eleionomai - ref: https://de.wikipedia.org/wiki/Eleionomai
+
 ## Adjectives
 
 DCSS dynamically adds adjectives to things (unidentified items in particular).

@@ -4518,8 +4518,6 @@ einer königlichen Mumie
 {dat}a eleionoma
 einer Eleionoma
 %%%%
-# Ref: https://de.wikipedia.org/wiki/Eleionomai
-%%%%
 {dat}a lemure
 einer Lemure
 %%%%

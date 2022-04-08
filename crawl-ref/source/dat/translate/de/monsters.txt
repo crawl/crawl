@@ -5220,7 +5220,6 @@ eine königliche Mumie
 a eleionoma
 eine Eleionoma
 %%%%
-# Ref: https://de.wikipedia.org/wiki/Eleionomai
 %d eleionomas
 %d Eleionomai
 %%%%
