@@ -5278,7 +5278,7 @@ ein Rollsteinkäfer
 %d Rollsteinkäfer
 %%%%
 a cane toad
-ein Aga-Kröte
+eine Aga-Kröte
 %%%%
 %d cane toads
 %d Aga-Kröten
