@@ -151,9 +151,14 @@ def decline_noun(word, gender, target_case):
         result = re.sub(r'(ant|myzet)$', r'\1en', result)
         result = re.sub(r'(loge|mycete)$', r'\1n', result)
 
-    # if genitive and not changed above then do the standard change
-    if target_case == Case.GENITIVE and result == word:
-        if word.endswith("ss"):
+    if result != word:
+        return result
+
+    if target_case == Case.GENITIVE:
+        if re.search(r'[Gg]eist$', word):
+            result = word + "es"
+        # standard genitive change for masculine/neuter
+        elif word.endswith("ss") or word.endswith("sch"):
             result = word + "es"
         elif not word.endswith("s"):
             result = word + "s"

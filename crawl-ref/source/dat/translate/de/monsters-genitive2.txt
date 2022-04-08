@@ -322,7 +322,7 @@ der 26-köpfigen Lernäischen Hydra
 der 27-köpfigen Lernäischen Hydra
 %%%%
 {gen}%s's ghost
-%ss Geists
+%ss Geistes
 %%%%
 
 ################################
@@ -1065,16 +1065,16 @@ des Eisenelementars
 der elementaren Quelle
 %%%%
 {gen}the giant frog
-des Riesenfroschs
+des Riesenfrosches
 %%%%
 {gen}the bullfrog
-des Ochsenfroschs
+des Ochsenfrosches
 %%%%
 {gen}the spiny frog
-des Stachelfroschs
+des Stachelfrosches
 %%%%
 {gen}the blink frog
-des Flimmerfroschs
+des Flimmerfrosches
 %%%%
 {gen}the barachi
 der Barachi
@@ -1230,10 +1230,10 @@ des Oklob-Setzlings
 der Oklob-Pflanze
 %%%%
 {gen}the bush
-des Buschs
+des Busches
 %%%%
 {gen}the burning bush
-des brennenden Buschs
+des brennenden Busches
 %%%%
 {gen}the toadstool
 des Giftpilzs
@@ -1341,13 +1341,13 @@ des Gespensts
 des Phantoms
 %%%%
 {gen}the hungry ghost
-des hungrigen Geists
+des hungrigen Geistes
 %%%%
 {gen}the flayed ghost
-des enthäuteten Geists
+des enthäuteten Geistes
 %%%%
 {gen}the player ghost
-des Spielergeists
+des Spielergeistes
 %%%%
 {gen}the shadow
 des Schattens
@@ -1359,13 +1359,13 @@ des stillen Gespensts
 der ertrunkenen Seele
 %%%%
 {gen}the wraith
-des Geists
+des Geistes
 %%%%
 {gen}the shadow wraith
-des Schattengeists
+des Schattengeistes
 %%%%
 {gen}the freezing wraith
-des Frostgeists
+des Frostgeistes
 %%%%
 {gen}the eidolon
 des Eidolons
@@ -1758,7 +1758,7 @@ des Rollsteinkäfers
 der Aga-Kröte
 %%%%
 {gen}the goliath frog
-des Goliathfroschs
+des Goliathfrosches
 %%%%
 {gen}the fenstrider witch
 der Fennläuferhexe
@@ -2650,16 +2650,16 @@ einer elementaren Quelle
 %d elementarer Quellen
 %%%%
 {gen}a giant frog
-eines Riesenfroschs
+eines Riesenfrosches
 %%%%
 {gen}a bullfrog
-eines Ochsenfroschs
+eines Ochsenfrosches
 %%%%
 {gen}a spiny frog
-eines Stachelfroschs
+eines Stachelfrosches
 %%%%
 {gen}a blink frog
-eines Flimmerfroschs
+eines Flimmerfrosches
 %%%%
 {gen}a barachi
 einer Barachi
@@ -2860,10 +2860,10 @@ eines Oklob-Setzlings
 einer Oklob-Pflanze
 %%%%
 {gen}a bush
-eines Buschs
+eines Busches
 %%%%
 {gen}a burning bush
-eines brennenden Buschs
+eines brennenden Busches
 %%%%
 {gen}%d burning bushes
 %d brennender Busche
@@ -2980,19 +2980,19 @@ eines Gespensts
 eines Phantoms
 %%%%
 {gen}a hungry ghost
-eines hungrigen Geists
+eines hungrigen Geistes
 %%%%
 {gen}%d hungry ghosts
 %d hungriger Geister
 %%%%
 {gen}a flayed ghost
-eines enthäuteten Geists
+eines enthäuteten Geistes
 %%%%
 {gen}%d flayed ghosts
 %d enthäuteter Geister
 %%%%
 {gen}a player ghost
-eines Spielergeists
+eines Spielergeistes
 %%%%
 {gen}a shadow
 eines Schattens
@@ -3010,13 +3010,13 @@ einer ertrunkenen Seele
 %d ertrunkener Seelen
 %%%%
 {gen}a wraith
-eines Geists
+eines Geistes
 %%%%
 {gen}a shadow wraith
-eines Schattengeists
+eines Schattengeistes
 %%%%
 {gen}a freezing wraith
-eines Frostgeists
+eines Frostgeistes
 %%%%
 {gen}an eidolon
 eines Eidolons
@@ -3508,7 +3508,7 @@ eines Rollsteinkäfers
 einer Aga-Kröte
 %%%%
 {gen}a goliath frog
-eines Goliathfroschs
+eines Goliathfrosches
 %%%%
 {gen}a fenstrider witch
 einer Fennläuferhexe
@@ -4316,16 +4316,16 @@ Eures Eisenelementars
 Eurer elementaren Quelle
 %%%%
 {gen}your giant frog
-Eures Riesenfroschs
+Eures Riesenfrosches
 %%%%
 {gen}your bullfrog
-Eures Ochsenfroschs
+Eures Ochsenfrosches
 %%%%
 {gen}your spiny frog
-Eures Stachelfroschs
+Eures Stachelfrosches
 %%%%
 {gen}your blink frog
-Eures Flimmerfroschs
+Eures Flimmerfrosches
 %%%%
 {gen}your barachi
 Eurer Barachi
@@ -4481,10 +4481,10 @@ Eures Oklob-Setzlings
 Eurer Oklob-Pflanze
 %%%%
 {gen}your bush
-Eures Buschs
+Eures Busches
 %%%%
 {gen}your burning bush
-Eures brennenden Buschs
+Eures brennenden Busches
 %%%%
 {gen}your toadstool
 Eures Giftpilzs
@@ -4592,13 +4592,13 @@ Eures Gespensts
 Eures Phantoms
 %%%%
 {gen}your hungry ghost
-Eures hungrigen Geists
+Eures hungrigen Geistes
 %%%%
 {gen}your flayed ghost
-Eures enthäuteten Geists
+Eures enthäuteten Geistes
 %%%%
 {gen}your player ghost
-Eures Spielergeists
+Eures Spielergeistes
 %%%%
 {gen}your shadow
 Eures Schattens
@@ -4610,13 +4610,13 @@ Eures stillen Gespensts
 Eurer ertrunkenen Seele
 %%%%
 {gen}your wraith
-Eures Geists
+Eures Geistes
 %%%%
 {gen}your shadow wraith
-Eures Schattengeists
+Eures Schattengeistes
 %%%%
 {gen}your freezing wraith
-Eures Frostgeists
+Eures Frostgeistes
 %%%%
 {gen}your eidolon
 Eures Eidolons
@@ -5009,7 +5009,7 @@ Eures Rollsteinkäfers
 Eurer Aga-Kröte
 %%%%
 {gen}your goliath frog
-Eures Goliathfroschs
+Eures Goliathfrosches
 %%%%
 {gen}your fenstrider witch
 Eurer Fennläuferhexe
@@ -5673,16 +5673,16 @@ Eisenelementars
 elementarer Quelle
 %%%%
 {gen}giant frog
-Riesenfroschs
+Riesenfrosches
 %%%%
 {gen}bullfrog
-Ochsenfroschs
+Ochsenfrosches
 %%%%
 {gen}spiny frog
-Stachelfroschs
+Stachelfrosches
 %%%%
 {gen}blink frog
-Flimmerfroschs
+Flimmerfrosches
 %%%%
 {gen}floating eye
 schwebenden Auges
@@ -5814,10 +5814,10 @@ verwelkter Pflanze
 Oklob-Setzlings
 %%%%
 {gen}bush
-Buschs
+Busches
 %%%%
 {gen}burning bush
-brennenden Buschs
+brennenden Busches
 %%%%
 {gen}toadstool
 Giftpilzs
@@ -5895,13 +5895,13 @@ Gespensts
 Phantoms
 %%%%
 {gen}hungry ghost
-hungrigen Geists
+hungrigen Geistes
 %%%%
 {gen}flayed ghost
-enthäuteten Geists
+enthäuteten Geistes
 %%%%
 {gen}player ghost
-Spielergeists
+Spielergeistes
 %%%%
 {gen}shadow
 Schattens
@@ -5913,13 +5913,13 @@ stillen Gespensts
 ertrunkener Seele
 %%%%
 {gen}wraith
-Geists
+Geistes
 %%%%
 {gen}shadow wraith
-Schattengeists
+Schattengeistes
 %%%%
 {gen}freezing wraith
-Frostgeists
+Frostgeistes
 %%%%
 {gen}eidolon
 Eidolons
@@ -6243,7 +6243,7 @@ Bunyips
 Rollsteinkäfers
 %%%%
 {gen}goliath frog
-Goliathfroschs
+Goliathfrosches
 %%%%
 {gen}palentonga
 Palentongas
