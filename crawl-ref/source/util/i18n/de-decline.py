@@ -130,7 +130,7 @@ def decline_determiner(word, gender, target_case):
     else:
         return result
 
-def decline_noun(word, gender, target_case):
+def decline_noun(word, gender, target_case, proper):
     if gender == Gender.PLURAL and target_case == Case.DATIVE:
         if not re.search(r'[nsi]$', word):
             return word + "n"
@@ -158,6 +158,8 @@ def decline_noun(word, gender, target_case):
         if re.search(r'[Gg]eist$', word):
             result = word + "es"
         # standard genitive change for masculine/neuter
+        elif word.endswith("s") and proper:
+            result = word + "'"
         elif word.endswith("ss") or word.endswith("sch"):
             result = word + "es"
         elif not word.endswith("s"):
@@ -311,13 +313,14 @@ for line in lines:
             known_gender[key] = gender
 
         # decline
+        proper_noun = (re.match(r'^[A-Z]', english) != None)
         german = ""
         for i, word in enumerate(words):
             if is_determiner(word):
                 word = decline_determiner(word, gender, target_case)
             elif is_noun(word):
                 if i == len(words) - 1 or word == "Prinz":
-                    word = decline_noun(word, gender, target_case)
+                    word = decline_noun(word, gender, target_case, proper_noun)
             else:
                 word = decline_adjective(word, gender, target_case, declension)
             
