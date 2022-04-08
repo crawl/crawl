@@ -6,6 +6,12 @@
 %%%%
 
 ##############################################
+# Misc
+##############################################
+# unseen monster
+%%%%
+
+##############################################
 # Uniques
 ##############################################
 %%%%
@@ -26,6 +32,9 @@ dem Gelée Royale
 %%%%
 {dat}the Serpent of Hell
 der Höllenschlange
+%%%%
+{dat}Lernaean hydra
+Lernäischer Hydra
 %%%%
 {dat}the Lernaean hydra
 der Lernäischen Hydra
@@ -1602,25 +1611,14 @@ einem Programmfehler
 {dat}%d program bugs
 %d Programmfehlern
 %%%%
-# check plural above
-%%%%
 {dat}a worker ant
 einer Ameisenarbeiterin
-%%%%
-{dat}%d worker ants
-%d Ameisenarbeiterinnen
 %%%%
 {dat}a queen ant
 einer Ameisenkönigin
 %%%%
-{dat}%d queen ants
-%d Ameisenköniginnen
-%%%%
 {dat}a soldier ant
 einer Ameisensoldatin
-%%%%
-{dat}%d soldier ants
-%d Ameisensoldatinnen
 %%%%
 {dat}a formicid
 einem Formicid
@@ -1628,15 +1626,11 @@ einem Formicid
 {dat}%d formicids
 %d Formiciden
 %%%%
-# check plural above
-%%%%
 {dat}an entropy weaver
 einem Entropieweber
 %%%%
 {dat}%d entropy weavers
 %d Entropiewebern
-%%%%
-# check plural above
 %%%%
 {dat}a bat
 einer Fledermaus
@@ -1665,18 +1659,11 @@ einer Feuerfledermaus
 {dat}a bennu
 einem Bennu
 %%%%
-{dat}%d bennus
-%d Bennus
-%%%%
-# check plural above
-%%%%
 {dat}a caustic shrike
 einem ätzenden Würger
 %%%%
 {dat}%d caustic shrikes
 %d ätzenden Würgern
-%%%%
-# check plural above
 %%%%
 {dat}a shard shrike
 einem Scherbenwürger
@@ -1684,15 +1671,8 @@ einem Scherbenwürger
 {dat}%d shard shrikes
 %d Scherbenwürgern
 %%%%
-# check plural above
-%%%%
 {dat}a centaur
 einem Zentaur
-%%%%
-{dat}%d centaurs
-%d Zentauren
-%%%%
-# check plural above
 %%%%
 {dat}a centaur warrior
 einem Zentaur-Krieger
@@ -1700,23 +1680,14 @@ einem Zentaur-Krieger
 {dat}%d centaur warriors
 %d Zentaur-Kriegern
 %%%%
-# check plural above
-%%%%
 {dat}a yaktaur
 einem Yaktaur
-%%%%
-{dat}%d yaktaurs
-%d Yaktauren
-%%%%
-# check plural above
 %%%%
 {dat}a yaktaur captain
 einem Yaktaur-Kapitän
 %%%%
 {dat}%d yaktaur captains
 %d Yaktaur-Kapitänen
-%%%%
-# check plural above
 %%%%
 {dat}a faun
 einem Faun
@@ -1727,16 +1698,11 @@ einem Faun
 {dat}a satyr
 einem Satyr
 %%%%
-{dat}%d satyrs
-%d Satyrn
-%%%%
 {dat}a draconian
 einem Drakonier
 %%%%
 {dat}%d draconians
 %d Drakoniern
-%%%%
-# check plural above
 %%%%
 {dat}a black draconian
 einem schwarzen Drakonier
@@ -1744,15 +1710,11 @@ einem schwarzen Drakonier
 {dat}%d black draconians
 %d schwarzen Drakoniern
 %%%%
-# check plural above
-%%%%
 {dat}a yellow draconian
 einem gelben Drakonier
 %%%%
 {dat}%d yellow draconians
 %d gelben Drakoniern
-%%%%
-# check plural above
 %%%%
 {dat}a pale draconian
 einem blassen Drakonier
@@ -1760,15 +1722,11 @@ einem blassen Drakonier
 {dat}%d pale draconians
 %d blassen Drakoniern
 %%%%
-# check plural above
-%%%%
 {dat}a green draconian
 einem grünen Drakonier
 %%%%
 {dat}%d green draconians
 %d grünen Drakoniern
-%%%%
-# check plural above
 %%%%
 {dat}a purple draconian
 einem purpurnen Drakonier
@@ -1776,15 +1734,11 @@ einem purpurnen Drakonier
 {dat}%d purple draconians
 %d purpurnen Drakoniern
 %%%%
-# check plural above
-%%%%
 {dat}a red draconian
 einem roten Drakonier
 %%%%
 {dat}%d red draconians
 %d roten Drakoniern
-%%%%
-# check plural above
 %%%%
 {dat}a white draconian
 einem weißen Drakonier
@@ -1792,15 +1746,11 @@ einem weißen Drakonier
 {dat}%d white draconians
 %d weißen Drakoniern
 %%%%
-# check plural above
-%%%%
 {dat}a grey draconian
 einem grauen Drakonier
 %%%%
 {dat}%d grey draconians
 %d grauen Drakoniern
-%%%%
-# check plural above
 %%%%
 {dat}a draconian stormcaller
 einem Drakonier-Sturmrufer
@@ -1808,15 +1758,11 @@ einem Drakonier-Sturmrufer
 {dat}%d draconian stormcallers
 %d Drakonier-Sturmrufern
 %%%%
-# check plural above
-%%%%
 {dat}a draconian monk
 einem Drakonier-Mönch
 %%%%
 {dat}%d draconian monks
 %d Drakonier-Mönchen
-%%%%
-# check plural above
 %%%%
 {dat}a draconian shifter
 einem Drakonier-Verwandler
@@ -1824,15 +1770,11 @@ einem Drakonier-Verwandler
 {dat}%d draconian shifters
 %d Drakonier-Verwandlern
 %%%%
-# check plural above
-%%%%
 {dat}a draconian annihilator
 einem Drakonier-Vernichter
 %%%%
 {dat}%d draconian annihilators
 %d Drakonier-Vernichtern
-%%%%
-# check plural above
 %%%%
 {dat}a draconian knight
 einem Drakonier-Ritter
@@ -1840,23 +1782,14 @@ einem Drakonier-Ritter
 {dat}%d draconian knights
 %d Drakonier-Rittern
 %%%%
-# check plural above
-%%%%
 {dat}a draconian scorcher
 einem Drakonier-Verschmorer
 %%%%
 {dat}%d draconian scorchers
 %d Drakonier-Verschmorern
 %%%%
-# check plural above
-%%%%
 {dat}an elf
 einem Elf
-%%%%
-{dat}%d elves
-%d Elfen
-%%%%
-# check plural above
 %%%%
 {dat}a deep elf knight
 einem Tiefenelf-Ritter
@@ -1864,15 +1797,8 @@ einem Tiefenelf-Ritter
 {dat}%d deep elf knights
 %d Tiefenelf-Rittern
 %%%%
-# check plural above
-%%%%
 {dat}a deep elf archer
 einem Tiefenelf-Bogenschützen
-%%%%
-{dat}%d deep elf archers
-%d Tiefenelf-Bogenschützen
-%%%%
-# check plural above
 %%%%
 {dat}a deep elf blademaster
 einem Tiefenelf-Klingenmeister
@@ -1880,15 +1806,11 @@ einem Tiefenelf-Klingenmeister
 {dat}%d deep elf blademasters
 %d Tiefenelf-Klingenmeistern
 %%%%
-# check plural above
-%%%%
 {dat}a deep elf master archer
 einem Tiefenelf-Bogenmeister
 %%%%
 {dat}%d deep elf master archers
 %d Tiefenelf-Bogenmeistern
-%%%%
-# check plural above
 %%%%
 {dat}a deep elf mage
 einem Tiefenelf-Magier
@@ -1896,23 +1818,14 @@ einem Tiefenelf-Magier
 {dat}%d deep elf magi
 %d Tiefenelf-Magiern
 %%%%
-# check plural above
-%%%%
 {dat}a deep elf high priest
 einem Tiefenelf-Hohepriester
 %%%%
 {dat}%d deep elf high priests
 %d Tiefenelf-Hohepriestern
 %%%%
-# check plural above
-%%%%
 {dat}a deep elf demonologist
 einem Tiefenelf-Dämonologen
-%%%%
-{dat}%d deep elf demonologists
-%d Tiefenelf-Dämonologen
-%%%%
-# check plural above
 %%%%
 {dat}a deep elf annihilator
 einem Tiefenelf-Vernichter
@@ -1920,15 +1833,11 @@ einem Tiefenelf-Vernichter
 {dat}%d deep elf annihilators
 %d Tiefenelf-Vernichtern
 %%%%
-# check plural above
-%%%%
 {dat}a deep elf sorcerer
 einem Tiefenelf-Zauberer
 %%%%
 {dat}%d deep elf sorcerers
 %d Tiefenelf-Zauberern
-%%%%
-# check plural above
 %%%%
 {dat}a deep elf death mage
 einem Tiefenelf-Todesmagier
@@ -1936,13 +1845,8 @@ einem Tiefenelf-Todesmagier
 {dat}%d deep elf death magi
 %d Tiefenelf-Todesmagiern
 %%%%
-# check plural above
-%%%%
 {dat}a deep elf elementalist
 einem Tiefenelf-Elementalisten
-%%%%
-{dat}%d deep elf elementalists
-%d Tiefenelf-Elementalisten
 %%%%
 {dat}a wandering mushroom
 einem wandernden Pilz
@@ -1950,21 +1854,14 @@ einem wandernden Pilz
 {dat}%d wandering mushrooms
 %d wandernden Pilzen
 %%%%
-# check plural above
-%%%%
 {dat}a deathcap
 einer Todesmütze
-%%%%
-{dat}%d deathcaps
-%d Todesmützen
 %%%%
 {dat}a thorn hunter
 einem Dornenjäger
 %%%%
 {dat}%d thorn hunters
 %d Dornenjägern
-%%%%
-# check plural above
 %%%%
 {dat}a shambling mangrove
 einer watschelnden Mangrove
@@ -1978,19 +1875,11 @@ einem Rebjäger
 {dat}%d vine stalkers
 %d Rebjägern
 %%%%
-# check plural above
-%%%%
 {dat}a goblin
 einem Goblin
 %%%%
-{dat}%d goblins
-%d Goblins
-%%%%
 {dat}a hobgoblin
 einem Hobgoblin
-%%%%
-{dat}%d hobgoblins
-%d Hobgoblins
 %%%%
 {dat}a gnoll
 einem Gnoll
@@ -1998,15 +1887,8 @@ einem Gnoll
 {dat}%d gnolls
 %d Gnollen
 %%%%
-# check plural above
-%%%%
 {dat}a gnoll shaman
 einem Gnoll-Schamanen
-%%%%
-{dat}%d gnoll shamans
-%d Gnoll-Schamanen
-%%%%
-# check plural above
 %%%%
 {dat}a gnoll sergeant
 einem Gnoll-Wachtmeister
@@ -2014,19 +1896,16 @@ einem Gnoll-Wachtmeister
 {dat}%d gnoll sergeants
 %d Gnoll-Wachtmeistern
 %%%%
-# check plural above
-%%%%
 {dat}a boggart
 einem Boggart
-%%%%
-{dat}%d boggarts
-%d Boggarts
 %%%%
 {dat}a dwarf
 einem Zwerg
 %%%%
 {dat}%d dwarves
 %d Zwergen
+%%%%
+# check plural above
 %%%%
 {dat}a deep dwarf
 einem Tiefenzwerg
@@ -2054,9 +1933,6 @@ einem Hund
 %%%%
 {dat}a howler monkey
 einem Brüllaffen
-%%%%
-{dat}%d howler monkeys
-%d Brüllaffen
 %%%%
 # check plural above
 %%%%
@@ -2103,9 +1979,6 @@ einem Untergangshund
 {dat}a raiju
 einem Raiju
 %%%%
-{dat}%d raiju
-%d Raijus
-%%%%
 # check plural above
 %%%%
 {dat}a hell hog
@@ -2135,26 +2008,14 @@ einem Felid
 {dat}a bear
 einem Bären
 %%%%
-{dat}%d bears
-%d Bären
-%%%%
 {dat}a polar bear
 einem Eisbären
-%%%%
-{dat}%d polar bears
-%d Eisbären
 %%%%
 {dat}a black bear
 einem Schwarzbären
 %%%%
-{dat}%d black bears
-%d Schwarzbären
-%%%%
 {dat}a spriggan
 einem Spriggan
-%%%%
-{dat}%d spriggans
-%d Spriggans
 %%%%
 {dat}a spriggan rider
 einem Spriggan-Reiter
@@ -2166,9 +2027,6 @@ einem Spriggan-Reiter
 %%%%
 {dat}a spriggan druid
 einem Spriggan-Druiden
-%%%%
-{dat}%d spriggan druids
-%d Spriggan-Druiden
 %%%%
 # check plural above
 %%%%
@@ -2239,9 +2097,6 @@ einem Todesdrachling
 {dat}a giant lizard
 einer Rieseneidechse
 %%%%
-{dat}%d giant lizards
-%d Rieseneidechsen
-%%%%
 {dat}a frilled lizard
 einer gekräuselten Eidechse
 %%%%
@@ -2250,9 +2105,6 @@ einer gekräuselten Eidechse
 %%%%
 {dat}a leopard gecko
 einem Leopardgecko
-%%%%
-{dat}%d leopard geckos
-%d Leopardgeckos
 %%%%
 # check plural above
 %%%%
@@ -2275,14 +2127,8 @@ einem Basilisk
 {dat}a wyvern
 einem Wyvern
 %%%%
-{dat}%d wyverns
-%d Wyverns
-%%%%
 {dat}a komodo dragon
 einem Komododrachen
-%%%%
-{dat}%d komodo dragons
-%d Komododrachen
 %%%%
 # check plural above
 %%%%
@@ -2321,9 +2167,6 @@ einem Meervolk-Aquamancer
 {dat}a merfolk siren
 einer Meervolk-Sirene
 %%%%
-{dat}%d merfolk sirens
-%d Meervolk-Sirenen
-%%%%
 {dat}a merfolk avatar
 einem Meervolk-Avatar
 %%%%
@@ -2335,14 +2178,8 @@ einem Meervolk-Avatar
 {dat}a water nymph
 einer Wassernymphe
 %%%%
-{dat}%d water nymphs
-%d Wassernymphen
-%%%%
 {dat}a bog body
 einer Moorleiche
-%%%%
-{dat}%d bog bodies
-%d Moorleichen
 %%%%
 {dat}a necrophage
 einem Nekrophagen
@@ -2449,9 +2286,6 @@ einem Menschen
 {dat}a slave
 einem Sklaven
 %%%%
-{dat}%d slaves
-%d Sklaven
-%%%%
 # check plural above
 %%%%
 {dat}a hell knight
@@ -2473,9 +2307,6 @@ einem Todesritter
 {dat}a necromancer
 einem Nekromanten
 %%%%
-{dat}%d necromancers
-%d Nekromanten
-%%%%
 {dat}a wizard
 einem Zauberer
 %%%%
@@ -2494,9 +2325,6 @@ einem Tresorwächter
 %%%%
 {dat}a vault sentinel
 einer Tresorwache
-%%%%
-{dat}%d vault sentinels
-%d Tresorwachen
 %%%%
 {dat}a vault warden
 einem Tresorwärter
@@ -2563,9 +2391,6 @@ einem leuchtenden Gestaltwandler
 {dat}a Killer Klown
 einem Killer-Klown
 %%%%
-{dat}%d Killer Klowns
-%d Killer-Klowns
-%%%%
 {dat}a demigod
 einem Halbgott
 %%%%
@@ -2583,28 +2408,16 @@ einem Halbling
 {dat}a rat
 einer Ratte
 %%%%
-{dat}%d rats
-%d Ratten
-%%%%
 {dat}a quokka
 einem Quokka
-%%%%
-{dat}%d quokkas
-%d Quokkas
 %%%%
 # check plural above
 %%%%
 {dat}a river rat
 einer Flussratte
 %%%%
-{dat}%d river rats
-%d Flussratten
-%%%%
 {dat}a hell rat
 einer Höllenratte
-%%%%
-{dat}%d hell rats
-%d Höllenratten
 %%%%
 {dat}a porcupine
 einem Stachelschwein
@@ -2616,9 +2429,6 @@ einem Stachelschwein
 %%%%
 {dat}a giant cockroach
 einer Riesenkakerlake
-%%%%
-{dat}%d giant cockroaches
-%d Riesenkakerlaken
 %%%%
 {dat}a scorpion
 einem Skorpion
@@ -2639,22 +2449,13 @@ einem Kaiserskorpion
 {dat}a death scarab
 einem Todesskarabäus
 %%%%
-{dat}%d death scarabs
-%d Todesskarabäen
-%%%%
 # check plural above
 %%%%
 {dat}a spider
 einer Spinne
 %%%%
-{dat}%d spiders
-%d Spinnen
-%%%%
 {dat}a tarantella
 einer Tarantella
-%%%%
-{dat}%d tarantellas
-%d Tarantellen
 %%%%
 # check plural above
 %%%%
@@ -2667,14 +2468,8 @@ einer springenden Spinne
 {dat}a wolf spider
 einer Wolfsspinne
 %%%%
-{dat}%d wolf spiders
-%d Wolfsspinnen
-%%%%
 {dat}a redback
 einer Rotrückenspinne
-%%%%
-{dat}%d redbacks
-%d Rotrückenspinnen
 %%%%
 {dat}a demonic crawler
 einem dämonischen Kriecher
@@ -2686,9 +2481,6 @@ einem dämonischen Kriecher
 %%%%
 {dat}an orb spider
 einer Kugelspinne
-%%%%
-{dat}%d orb spiders
-%d Kugelspinnen
 %%%%
 {dat}a crocodile
 einem Krokodil
@@ -2709,38 +2501,20 @@ einem Alligator
 {dat}a snapping turtle
 einer Schnappschildkröte
 %%%%
-{dat}%d snapping turtles
-%d Schnappschildkröten
-%%%%
 {dat}an alligator snapping turtle
 einer Alligatorschnappschildkröte
-%%%%
-{dat}%d alligator snapping turtles
-%d Alligatorschnappschildkröten
 %%%%
 {dat}a crab
 einer Krabbe
 %%%%
-{dat}%d crabs
-%d Krabben
-%%%%
 {dat}a fire crab
 einer Feuerkrabbe
-%%%%
-{dat}%d fire crabs
-%d Feuerkrabben
 %%%%
 {dat}a ghost crab
 einer Geisterkrabbe
 %%%%
-{dat}%d ghost crabs
-%d Geisterkrabben
-%%%%
 {dat}an apocalypse crab
 einer Apokalypse-Krabbe
-%%%%
-{dat}%d apocalypse crabs
-%d Apokalypse-Krabben
 %%%%
 {dat}an ugly thing
 einem hässlichen Ding
@@ -2825,20 +2599,11 @@ einem Tyrannblutegel
 {dat}a dart slug
 einer Pfeilschnecke
 %%%%
-{dat}%d dart slugs
-%d Pfeilschnecken
-%%%%
 {dat}a torpor snail
 einer Erstarrungsschnecke
 %%%%
-{dat}%d torpor snails
-%d Erstarrungsschnecken
-%%%%
 {dat}an elephant slug
 einer Elefantenschnecke
-%%%%
-{dat}%d elephant slugs
-%d Elefantenschnecken
 %%%%
 {dat}an unseen horror
 einem unsichtbaren Grauen
@@ -2887,58 +2652,31 @@ einem Weltbinder
 {dat}a killer bee
 einer Killerbiene
 %%%%
-{dat}%d killer bees
-%d Killerbienen
-%%%%
 {dat}a queen bee
 einer Bienenkönigin
-%%%%
-{dat}%d queen bees
-%d Bienenköniginnen
 %%%%
 {dat}a vampire mosquito
 einer Vampir-Mücke
 %%%%
-{dat}%d vampire mosquitoes
-%d Vampir-Mücken
-%%%%
 {dat}a hornet
 einer Hornisse
 %%%%
-{dat}%d hornets
-%d Hornissen
-%%%%
 {dat}a meliai
 einer Meliai
-%%%%
-{dat}%d meliai
-%d Meliais
 %%%%
 # check plural above
 %%%%
 {dat}a spark wasp
 einer Funkenwespe
 %%%%
-{dat}%d spark wasps
-%d Funkenwespen
-%%%%
 {dat}a moth
 einer Motte
-%%%%
-{dat}%d moths
-%d Motten
 %%%%
 {dat}a ghost moth
 einer Geistermotte
 %%%%
-{dat}%d ghost moths
-%d Geistermotten
-%%%%
 {dat}a moth of wrath
 einer Motte des Zorns
-%%%%
-{dat}%d moths of wrath
-%d Motten des Zorns
 %%%%
 {dat}a wight
 einem Wight
@@ -2983,9 +2721,6 @@ einem Fluchschädel
 {dat}a curse toe
 einem Fluchzeh
 %%%%
-{dat}%d curse toes
-%d Fluchzehen
-%%%%
 # check plural above
 %%%%
 {dat}an angel
@@ -3015,9 +2750,6 @@ einem Seraph
 {dat}a daeva
 einem Daeva
 %%%%
-{dat}%d daevas
-%d Daevas
-%%%%
 # check plural above
 %%%%
 {dat}a profane servitor
@@ -3030,9 +2762,6 @@ einem profanen Diener
 %%%%
 {dat}a giant
 einem Riesen
-%%%%
-{dat}%d giants
-%d Riesen
 %%%%
 # check plural above
 %%%%
@@ -3055,24 +2784,15 @@ einem Ettin
 {dat}a fire giant
 einem Feuerriesen
 %%%%
-{dat}%d fire giants
-%d Feuerriesen
-%%%%
 # check plural above
 %%%%
 {dat}a frost giant
 einem Frostriesen
 %%%%
-{dat}%d frost giants
-%d Frostriesen
-%%%%
 # check plural above
 %%%%
 {dat}a stone giant
 einem Steinriesen
-%%%%
-{dat}%d stone giants
-%d Steinriesen
 %%%%
 # check plural above
 %%%%
@@ -3095,120 +2815,135 @@ einem Juggernaut
 {dat}an iron giant
 einem Eisenriesen
 %%%%
-{dat}%d iron giants
-%d Eisenriesen
-%%%%
 # check plural above
 %%%%
 {dat}a dragon
 einem Drachen
-%%%%
-{dat}%d dragons
-%d Drachen
 %%%%
 # check plural above
 %%%%
 {dat}a fire dragon
 einem Feuerdrachen
 %%%%
-{dat}%d fire dragons
-%d Feuerdrachen
-%%%%
 # check plural above
 %%%%
 {dat}a hydra
 einer Hydra
 %%%%
-{dat}%d hydras
-%d Hydren
-%%%%
 # check plural above
+%%%%
+{dat}a one-headed hydra
+einer einköpfigen Hydra
+%%%%
+{dat}a two-headed hydra
+einer zweiköpfigen Hydra
+%%%%
+{dat}a three-headed hydra
+einer dreiköpfigen Hydra
+%%%%
+{dat}a four-headed hydra
+einer vierköpfigen Hydra
+%%%%
+{dat}e five-headed hydra
+einer fünfköpfigen Hydra
+%%%%
+{dat}e six-headed hydra
+einer sechsköpfigen Hydra
+%%%%
+{dat}a seven-headed hydra
+einer siebenköpfigen Hydra
+%%%%
+{dat}a eight-headed hydra
+einer achtköpfigen Hydra
+%%%%
+{dat}a nine-headed hydra
+einer neunköpfigen Hydra
+%%%%
+{dat}a ten-headed hydra
+einer zehnköpfigen Hydra
+%%%%
+{dat}a 11-headed hydra
+einer 11-köpfigen Hydra
+%%%%
+{dat}a 12-headed hydra
+einer 12-köpfigen Hydra
+%%%%
+{dat}a 13-headed hydra
+einer 13-köpfigen Hydra
+%%%%
+{dat}a 14-headed hydra
+einer 14-köpfigen Hydra
+%%%%
+{dat}a 15-headed hydra
+einer 15-köpfigen Hydra
+%%%%
+{dat}a 16-headed hydra
+einer 16-köpfigen Hydra
+%%%%
+{dat}a 17-headed hydra
+einer 17-köpfigen Hydra
+%%%%
+{dat}a 18-headed hydra
+einer 18-köpfigen Hydra
+%%%%
+{dat}a 19-headed hydra
+einer 19-köpfigen Hydra
+%%%%
+{dat}a 20-headed hydra
+einer 20-köpfigen Hydra
 %%%%
 {dat}an ice dragon
 einem Eisdrachen
-%%%%
-{dat}%d ice dragons
-%d Eisdrachen
 %%%%
 # check plural above
 %%%%
 {dat}a steam dragon
 einem Dampfdrachen
 %%%%
-{dat}%d steam dragons
-%d Dampfdrachen
-%%%%
 # check plural above
 %%%%
 {dat}a swamp dragon
 einem Sumpfdrachen
-%%%%
-{dat}%d swamp dragons
-%d Sumpfdrachen
 %%%%
 # check plural above
 %%%%
 {dat}an acid dragon
 einem Säuredrachen
 %%%%
-{dat}%d acid dragons
-%d Säuredrachen
-%%%%
 # check plural above
 %%%%
 {dat}a quicksilver dragon
 einem Quecksilberdrachen
-%%%%
-{dat}%d quicksilver dragons
-%d Quecksilberdrachen
 %%%%
 # check plural above
 %%%%
 {dat}an iron dragon
 einem Eisendrachen
 %%%%
-{dat}%d iron dragons
-%d Eisendrachen
-%%%%
 # check plural above
 %%%%
 {dat}a storm dragon
 einem Sturmdrachen
-%%%%
-{dat}%d storm dragons
-%d Sturmdrachen
 %%%%
 # check plural above
 %%%%
 {dat}a golden dragon
 einem Golddrachen
 %%%%
-{dat}%d golden dragons
-%d Golddrachen
-%%%%
 # check plural above
 %%%%
 {dat}a shadow dragon
 einem Schattendrachen
-%%%%
-{dat}%d shadow dragons
-%d Schattendrachen
 %%%%
 # check plural above
 %%%%
 {dat}a bone dragon
 einem Knochendrachen
 %%%%
-{dat}%d bone dragons
-%d Knochendrachen
-%%%%
 # check plural above
 %%%%
 {dat}a pearl dragon
 einem Perlendrachen
-%%%%
-{dat}%d pearl dragons
-%d Perlendrachen
 %%%%
 # check plural above
 %%%%
@@ -3301,9 +3036,6 @@ einem Flimmerfrosch
 {dat}a barachi
 einer Barachi
 %%%%
-{dat}%d barachim
-%d Barachis
-%%%%
 # check plural above
 %%%%
 {dat}a floating eye
@@ -3316,9 +3048,6 @@ einem schwebenden Auge
 %%%%
 {dat}an eye of draining
 einem Auge des Schwächens
-%%%%
-{dat}%d eyes of draining
-%d Augen des Schwächens
 %%%%
 # check plural above
 %%%%
@@ -3348,9 +3077,6 @@ einem leuchtenden Auge
 %%%%
 {dat}an eye of devastation
 einem Auge der Verwüstung
-%%%%
-{dat}%d eyes of devastation
-%d Augen der Verwüstung
 %%%%
 # check plural above
 %%%%
@@ -3389,24 +3115,15 @@ einem Mantikor
 {dat}a minotaur
 einem Minotaurus
 %%%%
-{dat}%d minotaurs
-%d Minotauren
-%%%%
 # check plural above
 %%%%
 {dat}a sphinx
 einer Sphinx
 %%%%
-{dat}%d sphinxes
-%d Sphinxen
-%%%%
 # check plural above
 %%%%
 {dat}a harpy
 einer Harpyie
-%%%%
-{dat}%d harpies
-%d Harpyien
 %%%%
 {dat}a mutant beast
 einer mutierten Bestie
@@ -3416,9 +3133,6 @@ einer mutierten Bestie
 %%%%
 {dat}an ancestor
 einem Ahnen
-%%%%
-{dat}%d ancestors
-%d Ahnen
 %%%%
 # check plural above
 %%%%
@@ -3456,9 +3170,6 @@ einem Schlamm
 %%%%
 {dat}a jelly
 einem Gelee
-%%%%
-{dat}%d jellies
-%d Geleen
 %%%%
 # check plural above
 %%%%
@@ -3521,16 +3232,10 @@ einem großen Kobold
 {dat}a kobold demonologist
 einem Kobold-Dämonologen
 %%%%
-{dat}%d kobold demonologists
-%d Kobold-Dämonologen
-%%%%
 # check plural above
 %%%%
 {dat}a lich
 einem Lich
-%%%%
-{dat}%d liches
-%d Lichs
 %%%%
 {dat}an ancient lich
 einem alten Lich
@@ -3557,14 +3262,8 @@ einem halazidischen Hexenmeister
 {dat}a mummy
 einer Mumie
 %%%%
-{dat}%d mummies
-%d Mumien
-%%%%
 {dat}a guardian mummy
 einer Wächtermumie
-%%%%
-{dat}%d guardian mummies
-%d Wächtermumien
 %%%%
 {dat}a greater mummy
 einer größeren Mumie
@@ -3583,9 +3282,6 @@ einem Mumie-Priester
 {dat}a naga
 einem Naga
 %%%%
-{dat}%d nagas
-%d Nagas
-%%%%
 # check plural above
 %%%%
 {dat}a naga mage
@@ -3599,16 +3295,10 @@ einem Naga-Magier
 {dat}a naga sharpshooter
 einem Naga-Scharfschützen
 %%%%
-{dat}%d naga sharpshooters
-%d Naga-Scharfschützen
-%%%%
 # check plural above
 %%%%
 {dat}a naga ritualist
 einem Naga-Ritualisten
-%%%%
-{dat}%d naga ritualists
-%d Naga-Ritualisten
 %%%%
 {dat}a naga warrior
 einem Naga-Krieger
@@ -3620,9 +3310,6 @@ einem Naga-Krieger
 %%%%
 {dat}a nagaraja
 einem Nagaraja
-%%%%
-{dat}%d nagarajas
-%d Nagarajas
 %%%%
 # check plural above
 %%%%
@@ -3653,9 +3340,6 @@ einem Oger-Magier
 {dat}a plant
 einer Pflanze
 %%%%
-{dat}%d plants
-%d Pflanzen
-%%%%
 {dat}a demonic plant
 einer dämonischen Pflanze
 %%%%
@@ -3676,9 +3360,6 @@ einem Oklob-Setzling
 %%%%
 {dat}an oklob plant
 einer Oklob-Pflanze
-%%%%
-{dat}%d oklob plants
-%d Oklob-Pflanzen
 %%%%
 {dat}a bush
 einem Busch
@@ -3715,9 +3396,6 @@ einem Pilz
 {dat}a ballistomycete
 einem Ballistomyceten
 %%%%
-{dat}%d ballistomycetes
-%d Ballistomyceten
-%%%%
 # check plural above
 %%%%
 {dat}a hyperactive ballistomycete
@@ -3738,9 +3416,6 @@ einem Dornstrauch
 %%%%
 {dat}a tengu
 einem Tengu
-%%%%
-{dat}%d tengu
-%d Tengus
 %%%%
 # check plural above
 %%%%
@@ -3779,22 +3454,13 @@ einem Efreet
 {dat}a rakshasa
 einem Rakshasa
 %%%%
-{dat}%d rakshasas
-%d Rakshasas
-%%%%
 # check plural above
 %%%%
 {dat}a dryad
 einer Dryade
 %%%%
-{dat}%d dryads
-%d Dryaden
-%%%%
 {dat}a snaplasher vine
 einer Peitscherrebe
-%%%%
-{dat}%d snaplasher vines
-%d Peitscherreben
 %%%%
 {dat}a snaplasher vine segment
 einem Peitscherrebesegment
@@ -3805,22 +3471,13 @@ einem Peitscherrebesegment
 {dat}a snake
 einer Schlange
 %%%%
-{dat}%d snakes
-%d Schlangen
-%%%%
 {dat}a ball python
 einer Kugelpython
-%%%%
-{dat}%d ball pythons
-%d Kugelpythonen
 %%%%
 # check plural above
 %%%%
 {dat}an adder
 einer Kreuzotter
-%%%%
-{dat}%d adders
-%d Kreuzottern
 %%%%
 # check plural above
 %%%%
@@ -3843,34 +3500,19 @@ einer schwarzen Mamba
 {dat}a sea snake
 einer Seeschlange
 %%%%
-{dat}%d sea snakes
-%d Seeschlangen
-%%%%
 {dat}an anaconda
 einer Anakonda
-%%%%
-{dat}%d anacondas
-%d Anakondas
 %%%%
 # check plural above
 %%%%
 {dat}a guardian serpent
 einer Wächter-Schlange
 %%%%
-{dat}%d guardian serpents
-%d Wächter-Schlangen
-%%%%
 {dat}a shock serpent
 einer Schockschlange
 %%%%
-{dat}%d shock serpents
-%d Schockschlangen
-%%%%
 {dat}a mana viper
 einer Manaviper
-%%%%
-{dat}%d mana vipers
-%d Manavipern
 %%%%
 # check plural above
 %%%%
@@ -3909,9 +3551,6 @@ einem Tiefentroll-Erdmagier
 {dat}a deep troll shaman
 einem Tiefentroll-Schamanen
 %%%%
-{dat}%d deep troll shamans
-%d Tiefentroll-Schamanen
-%%%%
 # check plural above
 %%%%
 {dat}a vampire
@@ -3940,9 +3579,6 @@ einem Vampir-Magier
 %%%%
 {dat}a jiangshi
 einem Jiangshi
-%%%%
-{dat}%d jiangshi
-%d Jiangshis
 %%%%
 # check plural above
 %%%%
@@ -3982,9 +3618,6 @@ einem Spielergeist
 %%%%
 {dat}a shadow
 einem Schatten
-%%%%
-{dat}%d shadows
-%d Schatten
 %%%%
 {dat}a silent spectre
 einem stillen Gespenst
@@ -4053,9 +3686,6 @@ einem verprügelnden Grauen
 {dat}a tentacled monstrosity
 einer Tentakel-Monstrosität
 %%%%
-{dat}%d tentacled monstrosities
-%d Tentakel-Monstrositäten
-%%%%
 {dat}an Orb Guardian
 einem Kugelwächter
 %%%%
@@ -4119,42 +3749,24 @@ einem Todesyak
 {dat}a catoblepas
 einer Catoblepas
 %%%%
-{dat}%d catoblepae
-%d Catoblepasen
-%%%%
 # check plural above
 %%%%
 {dat}an elephant
 einem Elefanten
 %%%%
-{dat}%d elephants
-%d Elefanten
-%%%%
 {dat}a dire elephant
 einem Schreckenselefanten
-%%%%
-{dat}%d dire elephants
-%d Schreckenselefanten
 %%%%
 {dat}a hellephant
 einem Höllefanten
 %%%%
-{dat}%d hellephants
-%d Höllefanten
-%%%%
 {dat}an apis
 einer Apis
-%%%%
-{dat}%d apises
-%d Apisen
 %%%%
 # check plural above
 %%%%
 {dat}an ice beast
 einer Eisbestie
-%%%%
-{dat}%d ice beasts
-%d Eisbestien
 %%%%
 {dat}a sky beast
 einem Himmelstier
@@ -4167,9 +3779,6 @@ einem Himmelstier
 {dat}a zombie
 einem Zombie
 %%%%
-{dat}%d zombies
-%d Zombies
-%%%%
 {dat}a skeleton
 einem Skelett
 %%%%
@@ -4180,9 +3789,6 @@ einem Skelett
 %%%%
 {dat}a simulacrum
 einem Simulacrum
-%%%%
-{dat}%d simulacra
-%d Simulacren
 %%%%
 # check plural above
 %%%%
@@ -4277,9 +3883,6 @@ einem Oktopod
 {dat}a lava snake
 einer Lavaschlange
 %%%%
-{dat}%d lava snakes
-%d Lavaschlangen
-%%%%
 {dat}a salamander
 einem Salamander
 %%%%
@@ -4323,9 +3926,6 @@ einem Spieler
 {dat}a player illusion
 einer Spieler-Illusion
 %%%%
-{dat}%d player illusions
-%d Spieler-Illusionen
-%%%%
 # check plural above
 %%%%
 {dat}a dancing weapon
@@ -4336,9 +3936,6 @@ einer tanzenden Waffe
 %%%%
 {dat}a spectral weapon
 einer Spektralwaffe
-%%%%
-{dat}%d spectral weapons
-%d Spektralwaffen
 %%%%
 {dat}an eldritch tentacle
 einem unheimlichen Tentakel
@@ -4356,9 +3953,6 @@ einem unheimlichen Tentakelsegment
 %%%%
 {dat}a demonspawn
 einer Dämonenbrut
-%%%%
-{dat}%d demonspawn
-%d Dämonenbruten
 %%%%
 # check plural above
 %%%%
@@ -4396,9 +3990,6 @@ einer quälenden Dämonenbrut
 %%%%
 {dat}a blood saint
 einem Blutheiligen
-%%%%
-{dat}%d blood saints
-%d Blutheiligen
 %%%%
 # check plural above
 %%%%
@@ -4447,20 +4038,11 @@ einem weißen Teufelchen
 {dat}an ufetubus
 einem Ufetubus
 %%%%
-{dat}%d ufetubi
-%d Ufetubi
-%%%%
 {dat}an iron imp
 einem Eisenteufelchen
 %%%%
-{dat}%d iron imps
-%d Eisenteufelchen
-%%%%
 {dat}a shadow imp
 einem Schattenteufelchen
-%%%%
-{dat}%d shadow imps
-%d Schattenteufelchen
 %%%%
 {dat}a rust devil
 einem Rostteufel
@@ -4505,9 +4087,6 @@ einem Eisteufel
 {dat}a chaos spawn
 einer Chaosbrut
 %%%%
-{dat}%d chaos spawn
-%d Chaosbruten
-%%%%
 # check plural above
 %%%%
 {dat}a sun demon
@@ -4537,9 +4116,6 @@ einem Rauchdämon
 {dat}a neqoxec
 einer Neqoxec
 %%%%
-{dat}%d neqoxecs
-%d Neqoxecen
-%%%%
 # check plural above
 %%%%
 {dat}a ynoxinul
@@ -4552,9 +4128,6 @@ einem Ynoxinul
 %%%%
 {dat}a sixfirhy
 einem Sixfirhy
-%%%%
-{dat}%d sixfirhies
-%d Sixfirhys
 %%%%
 # check plural above
 %%%%
@@ -4624,9 +4197,6 @@ einem Schnitter
 %%%%
 {dat}a lorocyproca
 einer Lorocyproca
-%%%%
-{dat}%d lorocyprocas
-%d Lorocyprocas
 %%%%
 # check plural above
 %%%%
@@ -4741,9 +4311,6 @@ einem Blitzgolem
 {dat}an ushabti
 einer Uschabti
 %%%%
-{dat}%d ushabtiu
-%d Uschabtis
-%%%%
 # check plural above
 %%%%
 {dat}a guardian golem
@@ -4765,14 +4332,8 @@ einem zaubergeschmeideten Diener
 {dat}an ice statue
 einer Eisstatue
 %%%%
-{dat}%d ice statues
-%d Eisstatuen
-%%%%
 {dat}an obsidian statue
 einer Obsidianstatue
-%%%%
-{dat}%d obsidian statues
-%d Obsidianstatuen
 %%%%
 {dat}an orange crystal statue
 einer orangen Kristallstatue
@@ -4783,20 +4344,11 @@ einer orangen Kristallstatue
 {dat}a statue
 einer Statue
 %%%%
-{dat}%d statues
-%d Statuen
-%%%%
 {dat}a training dummy
 einer Trainingspuppe
 %%%%
-{dat}%d training dummies
-%d Trainingspuppen
-%%%%
 {dat}a pillar of salt
 einer Säule des Salzes
-%%%%
-{dat}%d pillars of salt
-%d Säulen des Salzes
 %%%%
 {dat}a block of ice
 einem Eisblock
@@ -4825,14 +4377,8 @@ einem Blitzturm
 {dat}a gargoyle
 einem Gargoyle
 %%%%
-{dat}%d gargoyles
-%d Gargoyles
-%%%%
 {dat}a war gargoyle
 einem Kriegsgargoyle
-%%%%
-{dat}%d war gargoyles
-%d Kriegsgargoyles
 %%%%
 {dat}a molten gargoyle
 einem geschmolzenen Gargoyle
@@ -4867,9 +4413,6 @@ einem Kugelblitz
 {dat}a ballistomycete spore
 einer Ballistomycetenspore
 %%%%
-{dat}%d ballistomycete spores
-%d Ballistomycetensporen
-%%%%
 {dat}a lost soul
 einer verlorenen Seele
 %%%%
@@ -4887,16 +4430,10 @@ einem lauernden Grauen
 {dat}an orb of fire
 einer Feuerkugel
 %%%%
-{dat}%d orbs of fire
-%d Feuerkugeln
-%%%%
 # check plural above
 %%%%
 {dat}an orb of destruction
 einer Kugel der Zerstörung
-%%%%
-{dat}%d orbs of destruction
-%d Kugeln der Zerstörung
 %%%%
 # check plural above
 %%%%
@@ -4919,14 +4456,8 @@ einem elenden Stern
 {dat}a battlesphere
 einer Kampfsphäre
 %%%%
-{dat}%d battlespheres
-%d Kampfsphären
-%%%%
 {dat}a death cob
 einem Todeskolben
-%%%%
-{dat}%d death cobs
-%d Todeskolben
 %%%%
 {dat}a moon troll
 einem Mondtroll
@@ -4957,9 +4488,6 @@ einem Irrlicht
 {dat}a bunyip
 einem Bunyip
 %%%%
-{dat}%d bunyips
-%d Bunyips
-%%%%
 {dat}a boulder beetle
 einem Rollsteinkäfer
 %%%%
@@ -4968,9 +4496,6 @@ einem Rollsteinkäfer
 %%%%
 {dat}a cane toad
 einer Aga-Kröte
-%%%%
-{dat}%d cane toads
-%d Aga-Kröten
 %%%%
 {dat}a goliath frog
 einem Goliathfrosch
@@ -4981,14 +4506,8 @@ einem Goliathfrosch
 {dat}a fenstrider witch
 einer Fennläuferhexe
 %%%%
-{dat}%d fenstrider witches
-%d Fennläuferhexen
-%%%%
 {dat}a palentonga
 einem Palentonga
-%%%%
-{dat}%d palentongas
-%d Palentongas
 %%%%
 {dat}a royal mummy
 einer königlichen Mumie
@@ -4999,14 +4518,10 @@ einer königlichen Mumie
 {dat}a eleionoma
 einer Eleionoma
 %%%%
-{dat}%d eleionomas
-%d Eleionomai
+# Ref: https://de.wikipedia.org/wiki/Eleionomai
 %%%%
 {dat}a lemure
 einer Lemure
-%%%%
-{dat}%d lemures
-%d Lemuren
 %%%%
 # Test monsters can be created in Arena
 %%%%
@@ -5019,14 +4534,8 @@ einem Test-Erzeuger
 {dat}a test statue
 einer Test-Statue
 %%%%
-{dat}%d test statues
-%d Test-Statuen
-%%%%
 {dat}a test blob
 einem Test-Klumpen
-%%%%
-{dat}%d test blobs
-%d Test-Klumpen
 %%%%
 {dat}a sensed monster
 einem gespürten Monster
@@ -5075,6 +4584,7 @@ einem furchtbaren gespürten Monster
 %d furchtbaren gespürten Monstern
 %%%%
 # check plural above
+
 ################################
 # allies
 ################################
@@ -6553,4 +6063,491 @@ Eurem harten gespürten Monster
 %%%%
 {dat}your nasty sensed monster
 Eurem furchtbaren gespürten Monster
+%%%%
+
+################################
+# without determiner
+################################
+%%%%
+{dat}caustic shrike
+ätzendem Würger
+%%%%
+{dat}black draconian
+schwarzem Drakonier
+%%%%
+{dat}yellow draconian
+gelbem Drakonier
+%%%%
+{dat}pale draconian
+blassem Drakonier
+%%%%
+{dat}green draconian
+grünem Drakonier
+%%%%
+{dat}purple draconian
+purpurnem Drakonier
+%%%%
+{dat}red draconian
+rotem Drakonier
+%%%%
+{dat}white draconian
+weißem Drakonier
+%%%%
+{dat}grey draconian
+grauem Drakonier
+%%%%
+{dat}deep elf archer
+Tiefenelf-Bogenschützen
+%%%%
+{dat}deep elf demonologist
+Tiefenelf-Dämonologen
+%%%%
+{dat}deep elf elementalist
+Tiefenelf-Elementalisten
+%%%%
+{dat}wandering mushroom
+wanderndem Pilz
+%%%%
+{dat}shambling mangrove
+watschelnder Mangrove
+%%%%
+{dat}gnoll shaman
+Gnoll-Schamanen
+%%%%
+{dat}howler monkey
+Brüllaffen
+%%%%
+{dat}hell hog
+höllischem Schwein
+%%%%
+{dat}holy swine
+heiligem Schwein
+%%%%
+{dat}bear
+Bären
+%%%%
+{dat}polar bear
+Eisbären
+%%%%
+{dat}black bear
+Schwarzbären
+%%%%
+{dat}spriggan druid
+Spriggan-Druiden
+%%%%
+{dat}frilled lizard
+gekräuselter Eidechse
+%%%%
+{dat}komodo dragon
+Komododrachen
+%%%%
+{dat}bloated husk
+aufgeblähter Hülle
+%%%%
+{dat}human
+Menschen
+%%%%
+{dat}slave
+Sklaven
+%%%%
+{dat}necromancer
+Nekromanten
+%%%%
+{dat}ironbound convoker
+eisenbeschlagenem Einberufer
+%%%%
+{dat}imperial myrmidon
+kaiserlichem Myrmidon
+%%%%
+{dat}ragged hierophant
+zerlumptem Hierophanten
+%%%%
+{dat}glowing shapeshifter
+leuchtendem Gestaltwandler
+%%%%
+{dat}jumping spider
+springender Spinne
+%%%%
+{dat}demonic crawler
+dämonischem Kriecher
+%%%%
+{dat}ugly thing
+hässlichem Ding
+%%%%
+{dat}very ugly thing
+sehr hässlichem Ding
+%%%%
+{dat}spatial vortex
+räumlichem Wirbel
+%%%%
+{dat}spatial maelstrom
+räumlichem Mahlstrom
+%%%%
+{dat}insubstantial wisp
+unwesentlichem Irrlicht
+%%%%
+{dat}unseen horror
+unsichtbarem Grauen
+%%%%
+{dat}small abomination
+kleinem Greuel
+%%%%
+{dat}crawling corpse
+kriechender Leiche
+%%%%
+{dat}macabre mass
+makaberer Masse
+%%%%
+{dat}ancient zyme
+uraltem Zym
+%%%%
+{dat}ancient champion
+altem Champion
+%%%%
+{dat}flying skull
+fliegendem Schädel
+%%%%
+{dat}profane servitor
+profanem Diener
+%%%%
+{dat}giant
+Riesen
+%%%%
+{dat}fire giant
+Feuerriesen
+%%%%
+{dat}frost giant
+Frostriesen
+%%%%
+{dat}stone giant
+Steinriesen
+%%%%
+{dat}iron giant
+Eisenriesen
+%%%%
+{dat}dragon
+Drachen
+%%%%
+{dat}fire dragon
+Feuerdrachen
+%%%%
+{dat}one-headed hydra
+einköpfiger Hydra
+%%%%
+{dat}two-headed hydra
+zweiköpfiger Hydra
+%%%%
+{dat}three-headed hydra
+dreiköpfiger Hydra
+%%%%
+{dat}four-headed hydra
+vierköpfiger Hydra
+%%%%
+{dat}five-headed hydra
+fünfköpfiger Hydra
+%%%%
+{dat}six-headed hydra
+sechsköpfiger Hydra
+%%%%
+{dat}seven-headed hydra
+siebenköpfiger Hydra
+%%%%
+{dat}eight-headed hydra
+achtköpfiger Hydra
+%%%%
+{dat}nine-headed hydra
+neunköpfiger Hydra
+%%%%
+{dat}ten-headed hydra
+zehnköpfiger Hydra
+%%%%
+{dat}11-headed hydra
+11-köpfiger Hydra
+%%%%
+{dat}12-headed hydra
+12-köpfiger Hydra
+%%%%
+{dat}13-headed hydra
+13-köpfiger Hydra
+%%%%
+{dat}14-headed hydra
+14-köpfiger Hydra
+%%%%
+{dat}15-headed hydra
+15-köpfiger Hydra
+%%%%
+{dat}16-headed hydra
+16-köpfiger Hydra
+%%%%
+{dat}17-headed hydra
+17-köpfiger Hydra
+%%%%
+{dat}18-headed hydra
+18-köpfiger Hydra
+%%%%
+{dat}19-headed hydra
+19-köpfiger Hydra
+%%%%
+{dat}20-headed hydra
+20-köpfiger Hydra
+%%%%
+{dat}ice dragon
+Eisdrachen
+%%%%
+{dat}steam dragon
+Dampfdrachen
+%%%%
+{dat}swamp dragon
+Sumpfdrachen
+%%%%
+{dat}acid dragon
+Säuredrachen
+%%%%
+{dat}quicksilver dragon
+Quecksilberdrachen
+%%%%
+{dat}iron dragon
+Eisendrachen
+%%%%
+{dat}storm dragon
+Sturmdrachen
+%%%%
+{dat}golden dragon
+Golddrachen
+%%%%
+{dat}shadow dragon
+Schattendrachen
+%%%%
+{dat}bone dragon
+Knochendrachen
+%%%%
+{dat}pearl dragon
+Perlendrachen
+%%%%
+{dat}elemental wellspring
+elementarer Quelle
+%%%%
+{dat}floating eye
+schwebendem Auge
+%%%%
+{dat}glowing orange brain
+orangem leuchtendem Gehirn
+%%%%
+{dat}great orb of eyes
+großer Augenkugel
+%%%%
+{dat}shining eye
+leuchtendem Auge
+%%%%
+{dat}golden eye
+goldenem Auge
+%%%%
+{dat}mutant beast
+mutierter Bestie
+%%%%
+{dat}ancestor
+Ahnen
+%%%%
+{dat}merged slime creature
+verschmolzener Schleimkreatur
+%%%%
+{dat}azure jelly
+azurblauem Gelee
+%%%%
+{dat}big kobold
+großem Kobold
+%%%%
+{dat}kobold demonologist
+Kobold-Dämonologen
+%%%%
+{dat}ancient lich
+altem Lich
+%%%%
+{dat}halazid warlock
+halazidischem Hexenmeister
+%%%%
+{dat}greater mummy
+größerer Mumie
+%%%%
+{dat}naga sharpshooter
+Naga-Scharfschützen
+%%%%
+{dat}naga ritualist
+Naga-Ritualisten
+%%%%
+{dat}two-headed ogre
+zweiköpfigem Oger
+%%%%
+{dat}demonic plant
+dämonischer Pflanze
+%%%%
+{dat}withered plant
+verwelkter Pflanze
+%%%%
+{dat}burning bush
+brennendem Busch
+%%%%
+{dat}ballistomycete
+Ballistomyceten
+%%%%
+{dat}hyperactive ballistomycete
+hyperaktivem Ballistomyceten
+%%%%
+{dat}black mamba
+schwarzer Mamba
+%%%%
+{dat}deep troll shaman
+Tiefentroll-Schamanen
+%%%%
+{dat}hungry ghost
+hungrigem Geist
+%%%%
+{dat}flayed ghost
+enthäutetem Geist
+%%%%
+{dat}silent spectre
+stillem Gespenst
+%%%%
+{dat}drowned soul
+ertrunkener Seele
+%%%%
+{dat}phantasmal warrior
+phantastischem Krieger
+%%%%
+{dat}large abomination
+großem Greuel
+%%%%
+{dat}thrashing horror
+verprügelndem Grauen
+%%%%
+{dat}starcursed mass
+sternverfluchter Masse
+%%%%
+{dat}elephant
+Elefanten
+%%%%
+{dat}dire elephant
+Schreckenselefanten
+%%%%
+{dat}hellephant
+Höllefanten
+%%%%
+{dat}small zombie
+kleinem Zombie
+%%%%
+{dat}small skeleton
+kleinem Skelett
+%%%%
+{dat}small simulacrum
+kleinem Simulacrum
+%%%%
+{dat}large zombie
+großem Zombie
+%%%%
+{dat}large skeleton
+großem Skelett
+%%%%
+{dat}large simulacrum
+großem Simulacrum
+%%%%
+{dat}spectral thing
+spektraler Sache
+%%%%
+{dat}dancing weapon
+tanzender Waffe
+%%%%
+{dat}eldritch tentacle
+unheimlichem Tentakel
+%%%%
+{dat}eldritch tentacle segment
+unheimlichem Tentakelsegment
+%%%%
+{dat}monstrous demonspawn
+monströser Dämonenbrut
+%%%%
+{dat}gelid demonspawn
+gelidem Dämonenbrut
+%%%%
+{dat}infernal demonspawn
+höllischer Dämonenbrut
+%%%%
+{dat}torturous demonspawn
+quälender Dämonenbrut
+%%%%
+{dat}blood saint
+Blutheiligen
+%%%%
+{dat}black sun
+schwarzer Sonne
+%%%%
+{dat}crimson imp
+karminrotem Teufelchen
+%%%%
+{dat}white imp
+weißem Teufelchen
+%%%%
+{dat}orange demon
+orangem Dämon
+%%%%
+{dat}red devil
+rotem Teufel
+%%%%
+{dat}green death
+grünem Tod
+%%%%
+{dat}animated tree
+animiertem Baum
+%%%%
+{dat}spellforged servitor
+zaubergeschmeidetem Diener
+%%%%
+{dat}orange crystal statue
+oranger Kristallstatue
+%%%%
+{dat}molten gargoyle
+geschmolzenem Gargoyle
+%%%%
+{dat}pandemonium lord
+Pandemoniumsherrn
+%%%%
+{dat}hell lord
+Höllenherrn
+%%%%
+{dat}lost soul
+verlorener Seele
+%%%%
+{dat}lurking horror
+lauerndem Grauen
+%%%%
+{dat}fulminant prism
+fulminantem Prisma
+%%%%
+{dat}wretched star
+elendem Stern
+%%%%
+{dat}nameless horror
+namenlosem Horror
+%%%%
+{dat}royal mummy
+königlicher Mumie
+%%%%
+# Test monsters can be created in Arena
+%%%%
+{dat}sensed monster
+gespürtem Monster
+%%%%
+{dat}friendly sensed monster
+freundlichem gespürtem Monster
+%%%%
+{dat}trivial sensed monster
+trivialem gespürtem Monster
+%%%%
+{dat}easy sensed monster
+leichtem gespürtem Monster
+%%%%
+{dat}tough sensed monster
+hartem gespürtem Monster
+%%%%
+{dat}nasty sensed monster
+furchtbarem gespürtem Monster
 %%%%

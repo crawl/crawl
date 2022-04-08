@@ -5239,7 +5239,7 @@ ein Test-Erzeuger
 %d Test-Erzeuger
 %%%%
 a test statue
-ein Test-Statue
+eine Test-Statue
 %%%%
 %d test statues
 %d Test-Statuen
