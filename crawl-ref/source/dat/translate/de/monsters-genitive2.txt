@@ -1346,13 +1346,13 @@ des Gespensts
 des Phantoms
 %%%%
 {gen}the hungry ghost
-des hungrigen Geistens
+des hungrigen Geistes
 %%%%
 {gen}the flayed ghost
-des enthäuteten Geistens
+des enthäuteten Geistes
 %%%%
 {gen}the player ghost
-des Spielergeistens
+des Spielergeistes
 %%%%
 {gen}the shadow
 des Schattens
@@ -1364,13 +1364,13 @@ des stillen Gespensts
 der ertrunkenen Seele
 %%%%
 {gen}the wraith
-des Geistens
+des Geistes
 %%%%
 {gen}the shadow wraith
-des Schattengeistens
+des Schattengeistes
 %%%%
 {gen}the freezing wraith
-des Frostgeistens
+des Frostgeistes
 %%%%
 {gen}the eidolon
 des Eidolons
@@ -2766,13 +2766,13 @@ eines Gespensts
 eines Phantoms
 %%%%
 {gen}a hungry ghost
-eines hungrigen Geistens
+eines hungrigen Geistes
 %%%%
 {gen}a flayed ghost
-eines enthäuteten Geistens
+eines enthäuteten Geistes
 %%%%
 {gen}a player ghost
-eines Spielergeistens
+eines Spielergeistes
 %%%%
 {gen}a shadow
 eines Schattens
@@ -2784,13 +2784,13 @@ eines stillen Gespensts
 einer ertrunkenen Seele
 %%%%
 {gen}a wraith
-eines Geistens
+eines Geistes
 %%%%
 {gen}a shadow wraith
-eines Schattengeistens
+eines Schattengeistes
 %%%%
 {gen}a freezing wraith
-eines Frostgeistens
+eines Frostgeistes
 %%%%
 {gen}an eidolon
 eines Eidolons
@@ -4246,13 +4246,13 @@ Eures Gespensts
 Eures Phantoms
 %%%%
 {gen}your hungry ghost
-Eures hungrigen Geistens
+Eures hungrigen Geistes
 %%%%
 {gen}your flayed ghost
-Eures enthäuteten Geistens
+Eures enthäuteten Geistes
 %%%%
 {gen}your player ghost
-Eures Spielergeistens
+Eures Spielergeistes
 %%%%
 {gen}your shadow
 Eures Schattens
@@ -4264,13 +4264,13 @@ Eures stillen Gespensts
 Eurer ertrunkenen Seele
 %%%%
 {gen}your wraith
-Eures Geistens
+Eures Geistes
 %%%%
 {gen}your shadow wraith
-Eures Schattengeistens
+Eures Schattengeistes
 %%%%
 {gen}your freezing wraith
-Eures Frostgeistens
+Eures Frostgeistes
 %%%%
 {gen}your eidolon
 Eures Eidolons

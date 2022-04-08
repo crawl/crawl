@@ -664,25 +664,25 @@ den Vampir-Ritter
 den Vampir-Magier
 %%%%
 {acc}the hungry ghost
-den hungrigen Geisten
+den hungrigen Geist
 %%%%
 {acc}the flayed ghost
-den enthäuteten Geisten
+den enthäuteten Geist
 %%%%
 {acc}the player ghost
-den Spielergeisten
+den Spielergeist
 %%%%
 {acc}the shadow
 den Schatten
 %%%%
 {acc}the wraith
-den Geisten
+den Geist
 %%%%
 {acc}the shadow wraith
-den Schattengeisten
+den Schattengeist
 %%%%
 {acc}the freezing wraith
-den Frostgeisten
+den Frostgeist
 %%%%
 {acc}the eidolon
 den Eidolon
@@ -1941,25 +1941,25 @@ einen Vampir-Magier
 # check plural above
 %%%%
 {acc}a hungry ghost
-einen hungrigen Geisten
+einen hungrigen Geist
 %%%%
 {acc}a flayed ghost
-einen enthäuteten Geisten
+einen enthäuteten Geist
 %%%%
 {acc}a player ghost
-einen Spielergeisten
+einen Spielergeist
 %%%%
 {acc}a shadow
 einen Schatten
 %%%%
 {acc}a wraith
-einen Geisten
+einen Geist
 %%%%
 {acc}a shadow wraith
-einen Schattengeisten
+einen Schattengeist
 %%%%
 {acc}a freezing wraith
-einen Frostgeisten
+einen Frostgeist
 %%%%
 {acc}an eidolon
 einen Eidolon
@@ -2950,25 +2950,25 @@ Euren Vampir-Ritter
 Euren Vampir-Magier
 %%%%
 {acc}your hungry ghost
-Euren hungrigen Geisten
+Euren hungrigen Geist
 %%%%
 {acc}your flayed ghost
-Euren enthäuteten Geisten
+Euren enthäuteten Geist
 %%%%
 {acc}your player ghost
-Euren Spielergeisten
+Euren Spielergeist
 %%%%
 {acc}your shadow
 Euren Schatten
 %%%%
 {acc}your wraith
-Euren Geisten
+Euren Geist
 %%%%
 {acc}your shadow wraith
-Euren Schattengeisten
+Euren Schattengeist
 %%%%
 {acc}your freezing wraith
-Euren Frostgeisten
+Euren Frostgeist
 %%%%
 {acc}your eidolon
 Euren Eidolon
@@ -3845,25 +3845,13 @@ Vampir-Ritter
 Vampir-Magier
 %%%%
 {acc}hungry ghost
-hungrigen Geisten
+hungrigen Geist
 %%%%
 {acc}flayed ghost
-enthäuteten Geisten
-%%%%
-{acc}player ghost
-Spielergeisten
+enthäuteten Geist
 %%%%
 {acc}shadow
 Schatten
-%%%%
-{acc}wraith
-Geisten
-%%%%
-{acc}shadow wraith
-Schattengeisten
-%%%%
-{acc}freezing wraith
-Frostgeisten
 %%%%
 {acc}eidolon
 Eidolon

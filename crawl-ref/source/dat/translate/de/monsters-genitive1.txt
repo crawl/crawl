@@ -1356,13 +1356,13 @@ the phantom's
 des Phantoms
 %%%%
 the hungry ghost's
-des hungrigen Geistens
+des hungrigen Geistes
 %%%%
 the flayed ghost's
-des enthäuteten Geistens
+des enthäuteten Geistes
 %%%%
 the player ghost's
-des Spielergeistens
+des Spielergeistes
 %%%%
 the shadow's
 des Schattens
@@ -1374,13 +1374,13 @@ the drowned soul's
 der ertrunkenen Seele
 %%%%
 the wraith's
-des Geistens
+des Geistes
 %%%%
 the shadow wraith's
-des Schattengeistens
+des Schattengeistes
 %%%%
 the freezing wraith's
-des Frostgeistens
+des Frostgeistes
 %%%%
 the eidolon's
 des Eidolons
@@ -2776,13 +2776,13 @@ a phantom's
 eines Phantoms
 %%%%
 a hungry ghost's
-eines hungrigen Geistens
+eines hungrigen Geistes
 %%%%
 a flayed ghost's
-eines enthäuteten Geistens
+eines enthäuteten Geistes
 %%%%
 a player ghost's
-eines Spielergeistens
+eines Spielergeistes
 %%%%
 a shadow's
 eines Schattens
@@ -2794,13 +2794,13 @@ a drowned soul's
 einer ertrunkenen Seele
 %%%%
 a wraith's
-eines Geistens
+eines Geistes
 %%%%
 a shadow wraith's
-eines Schattengeistens
+eines Schattengeistes
 %%%%
 a freezing wraith's
-eines Frostgeistens
+eines Frostgeistes
 %%%%
 an eidolon's
 eines Eidolons
@@ -4256,13 +4256,13 @@ your phantom's
 Eures Phantoms
 %%%%
 your hungry ghost's
-Eures hungrigen Geistens
+Eures hungrigen Geistes
 %%%%
 your flayed ghost's
-Eures enthäuteten Geistens
+Eures enthäuteten Geistes
 %%%%
 your player ghost's
-Eures Spielergeistens
+Eures Spielergeistes
 %%%%
 your shadow's
 Eures Schattens
@@ -4274,13 +4274,13 @@ your drowned soul's
 Eurer ertrunkenen Seele
 %%%%
 your wraith's
-Eures Geistens
+Eures Geistes
 %%%%
 your shadow wraith's
-Eures Schattengeistens
+Eures Schattengeistes
 %%%%
 your freezing wraith's
-Eures Frostgeistens
+Eures Frostgeistes
 %%%%
 your eidolon's
 Eures Eidolons
