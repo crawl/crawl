@@ -3367,33 +3367,25 @@ a giant frog
 ein Riesenfrosch
 %%%%
 %d giant frogs
-%d Riesenfrosche
-%%%%
-# check plural above
+%d Riesenfrösche
 %%%%
 a bullfrog
 ein Ochsenfrosch
 %%%%
 %d bullfrogs
-%d Ochsenfrosche
-%%%%
-# check plural above
+%d Ochsenfrösche
 %%%%
 a spiny frog
 ein Stachelfrosch
 %%%%
 %d spiny frogs
-%d Stachelfrosche
-%%%%
-# check plural above
+%d Stachelfrösche
 %%%%
 a blink frog
 ein Flimmerfrosch
 %%%%
 %d blink frogs
-%d Flimmerfrosche
-%%%%
-# check plural above
+%d Flimmerfrösche
 %%%%
 a barachi
 eine Barachi

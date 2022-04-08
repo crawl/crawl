@@ -2761,25 +2761,25 @@ einer elementaren Quelle
 einem Riesenfrosch
 %%%%
 {dat}%d giant frogs
-%d Riesenfroschen
+%d Riesenfröschen
 %%%%
 {dat}a bullfrog
 einem Ochsenfrosch
 %%%%
 {dat}%d bullfrogs
-%d Ochsenfroschen
+%d Ochsenfröschen
 %%%%
 {dat}a spiny frog
 einem Stachelfrosch
 %%%%
 {dat}%d spiny frogs
-%d Stachelfroschen
+%d Stachelfröschen
 %%%%
 {dat}a blink frog
 einem Flimmerfrosch
 %%%%
 {dat}%d blink frogs
-%d Flimmerfroschen
+%d Flimmerfröschen
 %%%%
 {dat}a barachi
 einer Barachi
