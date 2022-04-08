@@ -369,13 +369,13 @@ des ätzenden Würgers
 des Scherbenwürgers
 %%%%
 {gen}the centaur
-des Zentaurs
+des Zentauren
 %%%%
 {gen}the centaur warrior
 des Zentaur-Kriegers
 %%%%
 {gen}the yaktaur
-des Yaktaurs
+des Yaktauren
 %%%%
 {gen}the yaktaur captain
 des Yaktaur-Kapitäns
@@ -1852,13 +1852,13 @@ eines ätzenden Würgers
 eines Scherbenwürgers
 %%%%
 {gen}a centaur
-eines Zentaurs
+eines Zentauren
 %%%%
 {gen}a centaur warrior
 eines Zentaur-Kriegers
 %%%%
 {gen}a yaktaur
-eines Yaktaurs
+eines Yaktauren
 %%%%
 {gen}a yaktaur captain
 eines Yaktaur-Kapitäns
@@ -3620,13 +3620,13 @@ Eures ätzenden Würgers
 Eures Scherbenwürgers
 %%%%
 {gen}your centaur
-Eures Zentaurs
+Eures Zentauren
 %%%%
 {gen}your centaur warrior
 Eures Zentaur-Kriegers
 %%%%
 {gen}your yaktaur
-Eures Yaktaurs
+Eures Yaktauren
 %%%%
 {gen}your yaktaur captain
 Eures Yaktaur-Kapitäns
@@ -5082,13 +5082,13 @@ Bennus
 Scherbenwürgers
 %%%%
 {gen}centaur
-Zentaurs
+Zentauren
 %%%%
 {gen}centaur warrior
 Zentaur-Kriegers
 %%%%
 {gen}yaktaur
-Yaktaurs
+Yaktauren
 %%%%
 {gen}yaktaur captain
 Yaktaur-Kapitäns

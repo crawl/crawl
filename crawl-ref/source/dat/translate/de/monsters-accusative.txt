@@ -48,13 +48,13 @@ den ätzenden Würger
 den Scherbenwürger
 %%%%
 {acc}the centaur
-den Zentaur
+den Zentauren
 %%%%
 {acc}the centaur warrior
 den Zentaur-Krieger
 %%%%
 {acc}the yaktaur
-den Yaktaur
+den Yaktauren
 %%%%
 {acc}the yaktaur captain
 den Yaktaur-Kapitän
@@ -943,13 +943,13 @@ einen ätzenden Würger
 einen Scherbenwürger
 %%%%
 {acc}a centaur
-einen Zentaur
+einen Zentauren
 %%%%
 {acc}a centaur warrior
 einen Zentaur-Krieger
 %%%%
 {acc}a yaktaur
-einen Yaktaur
+einen Yaktauren
 %%%%
 {acc}a yaktaur captain
 einen Yaktaur-Kapitän
@@ -1838,13 +1838,13 @@ Euren ätzenden Würger
 Euren Scherbenwürger
 %%%%
 {acc}your centaur
-Euren Zentaur
+Euren Zentauren
 %%%%
 {acc}your centaur warrior
 Euren Zentaur-Krieger
 %%%%
 {acc}your yaktaur
-Euren Yaktaur
+Euren Yaktauren
 %%%%
 {acc}your yaktaur captain
 Euren Yaktaur-Kapitän
@@ -2716,6 +2716,12 @@ Euren Test-Klumpen
 %%%%
 {acc}caustic shrike
 ätzenden Würger
+%%%%
+{acc}centaur
+Zentauren
+%%%%
+{acc}yaktaur
+Yaktauren
 %%%%
 {acc}black draconian
 schwarzen Drakonier

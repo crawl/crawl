@@ -384,13 +384,13 @@ the shard shrike's
 des Scherbenwürgers
 %%%%
 the centaur's
-des Zentaurs
+des Zentauren
 %%%%
 the centaur warrior's
 des Zentaur-Kriegers
 %%%%
 the yaktaur's
-des Yaktaurs
+des Yaktauren
 %%%%
 the yaktaur captain's
 des Yaktaur-Kapitäns
@@ -1864,13 +1864,13 @@ a shard shrike's
 eines Scherbenwürgers
 %%%%
 a centaur's
-eines Zentaurs
+eines Zentauren
 %%%%
 a centaur warrior's
 eines Zentaur-Kriegers
 %%%%
 a yaktaur's
-eines Yaktaurs
+eines Yaktauren
 %%%%
 a yaktaur captain's
 eines Yaktaur-Kapitäns
@@ -3284,13 +3284,13 @@ your shard shrike's
 Eures Scherbenwürgers
 %%%%
 your centaur's
-Eures Zentaurs
+Eures Zentauren
 %%%%
 your centaur warrior's
 Eures Zentaur-Kriegers
 %%%%
 your yaktaur's
-Eures Yaktaurs
+Eures Yaktauren
 %%%%
 your yaktaur captain's
 Eures Yaktaur-Kapitäns

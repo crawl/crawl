@@ -148,7 +148,7 @@ def decline_noun(word, gender, target_case):
         result = re.sub(r'([Hh]err)$', r'\1n', result)
         result = re.sub(r'([Dd]ruide|[Hh]eilige|Ahne)$', r'\1n', result)
         result = re.sub(r'([^e]ist)$', r'\1en', result)
-        result = re.sub(r'(ant|myzet)$', r'\1en', result)
+        result = re.sub(r'(ant|taur|myzet)$', r'\1en', result)
         result = re.sub(r'(loge|mycete)$', r'\1n', result)
 
     if result != word:

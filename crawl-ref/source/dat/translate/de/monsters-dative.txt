@@ -165,13 +165,13 @@ dem ätzenden Würger
 dem Scherbenwürger
 %%%%
 {dat}the centaur
-dem Zentaur
+dem Zentauren
 %%%%
 {dat}the centaur warrior
 dem Zentaur-Krieger
 %%%%
 {dat}the yaktaur
-dem Yaktaur
+dem Yaktauren
 %%%%
 {dat}the yaktaur captain
 dem Yaktaur-Kapitän
@@ -1672,7 +1672,7 @@ einem Scherbenwürger
 %d Scherbenwürgern
 %%%%
 {dat}a centaur
-einem Zentaur
+einem Zentauren
 %%%%
 {dat}a centaur warrior
 einem Zentaur-Krieger
@@ -1681,7 +1681,7 @@ einem Zentaur-Krieger
 %d Zentaur-Kriegern
 %%%%
 {dat}a yaktaur
-einem Yaktaur
+einem Yaktauren
 %%%%
 {dat}a yaktaur captain
 einem Yaktaur-Kapitän
@@ -4058,13 +4058,13 @@ Eurem ätzenden Würger
 Eurem Scherbenwürger
 %%%%
 {dat}your centaur
-Eurem Zentaur
+Eurem Zentauren
 %%%%
 {dat}your centaur warrior
 Eurem Zentaur-Krieger
 %%%%
 {dat}your yaktaur
-Eurem Yaktaur
+Eurem Yaktauren
 %%%%
 {dat}your yaktaur captain
 Eurem Yaktaur-Kapitän
@@ -5500,6 +5500,12 @@ Eurem furchtbaren gespürten Monster
 %%%%
 {dat}caustic shrike
 ätzendem Würger
+%%%%
+{dat}centaur
+Zentauren
+%%%%
+{dat}yaktaur
+Yaktauren
 %%%%
 {dat}black draconian
 schwarzem Drakonier
