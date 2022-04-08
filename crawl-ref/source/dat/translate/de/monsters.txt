@@ -1845,8 +1845,6 @@ ein Programmfehler
 %d program bugs
 %d Programmfehler
 %%%%
-# check plural above
-%%%%
 a worker ant
 eine Ameisenarbeiterin
 %%%%
@@ -1871,15 +1869,11 @@ ein Formicid
 %d formicids
 %d Formicide
 %%%%
-# check plural above
-%%%%
 an entropy weaver
 ein Entropieweber
 %%%%
 %d entropy weavers
 %d Entropieweber
-%%%%
-# check plural above
 %%%%
 a bat
 eine Fledermaus
@@ -1911,15 +1905,11 @@ ein Bennu
 %d bennus
 %d Bennus
 %%%%
-# check plural above
-%%%%
 a caustic shrike
 ein ätzender Würger
 %%%%
 %d caustic shrikes
 %d ätzende Würger
-%%%%
-# check plural above
 %%%%
 a shard shrike
 ein Scherbenwürger
@@ -1927,15 +1917,11 @@ ein Scherbenwürger
 %d shard shrikes
 %d Scherbenwürger
 %%%%
-# check plural above
-%%%%
 a centaur
 ein Zentaur
 %%%%
 %d centaurs
-%d Zentaure
-%%%%
-# check plural above
+%d Zentauren
 %%%%
 a centaur warrior
 ein Zentaur-Krieger
@@ -1943,15 +1929,11 @@ ein Zentaur-Krieger
 %d centaur warriors
 %d Zentaur-Krieger
 %%%%
-# check plural above
-%%%%
 a yaktaur
 ein Yaktaur
 %%%%
 %d yaktaurs
-%d Yaktaure
-%%%%
-# check plural above
+%d Yaktauren
 %%%%
 a yaktaur captain
 ein Yaktaur-Kapitän
@@ -1959,23 +1941,17 @@ ein Yaktaur-Kapitän
 %d yaktaur captains
 %d Yaktaur-Kapitäne
 %%%%
-# check plural above
-%%%%
 a faun
 ein Faun
 %%%%
 %d fauns
 %d Faune
 %%%%
-# check plural above
-%%%%
 a satyr
 ein Satyr
 %%%%
 %d satyrs
-%d Satyre
-%%%%
-# check plural above
+%d Satyrn
 %%%%
 a draconian
 ein Drakonier
@@ -1983,15 +1959,11 @@ ein Drakonier
 %d draconians
 %d Drakonier
 %%%%
-# check plural above
-%%%%
 a black draconian
 ein schwarzer Drakonier
 %%%%
 %d black draconians
 %d schwarze Drakonier
-%%%%
-# check plural above
 %%%%
 a yellow draconian
 ein gelber Drakonier
@@ -1999,15 +1971,11 @@ ein gelber Drakonier
 %d yellow draconians
 %d gelbe Drakonier
 %%%%
-# check plural above
-%%%%
 a pale draconian
 ein blasser Drakonier
 %%%%
 %d pale draconians
 %d blasse Drakonier
-%%%%
-# check plural above
 %%%%
 a green draconian
 ein grüner Drakonier
@@ -2015,15 +1983,11 @@ ein grüner Drakonier
 %d green draconians
 %d grüne Drakonier
 %%%%
-# check plural above
-%%%%
 a purple draconian
 ein purpurner Drakonier
 %%%%
 %d purple draconians
 %d purpurne Drakonier
-%%%%
-# check plural above
 %%%%
 a red draconian
 ein roter Drakonier
@@ -2031,15 +1995,11 @@ ein roter Drakonier
 %d red draconians
 %d rote Drakonier
 %%%%
-# check plural above
-%%%%
 a white draconian
 ein weißer Drakonier
 %%%%
 %d white draconians
 %d weiße Drakonier
-%%%%
-# check plural above
 %%%%
 a grey draconian
 ein grauer Drakonier
@@ -2047,15 +2007,11 @@ ein grauer Drakonier
 %d grey draconians
 %d graue Drakonier
 %%%%
-# check plural above
-%%%%
 a draconian stormcaller
 ein Drakonier-Sturmrufer
 %%%%
 %d draconian stormcallers
 %d Drakonier-Sturmrufer
-%%%%
-# check plural above
 %%%%
 a draconian monk
 ein Drakonier-Mönch
@@ -2063,15 +2019,11 @@ ein Drakonier-Mönch
 %d draconian monks
 %d Drakonier-Mönche
 %%%%
-# check plural above
-%%%%
 a draconian shifter
 ein Drakonier-Verwandler
 %%%%
 %d draconian shifters
 %d Drakonier-Verwandler
-%%%%
-# check plural above
 %%%%
 a draconian annihilator
 ein Drakonier-Vernichter
@@ -2079,15 +2031,11 @@ ein Drakonier-Vernichter
 %d draconian annihilators
 %d Drakonier-Vernichter
 %%%%
-# check plural above
-%%%%
 a draconian knight
 ein Drakonier-Ritter
 %%%%
 %d draconian knights
 %d Drakonier-Ritter
-%%%%
-# check plural above
 %%%%
 a draconian scorcher
 ein Drakonier-Verschmorer
@@ -2095,15 +2043,11 @@ ein Drakonier-Verschmorer
 %d draconian scorchers
 %d Drakonier-Verschmorer
 %%%%
-# check plural above
-%%%%
 an elf
 ein Elf
 %%%%
 %d elves
-%d Elfe
-%%%%
-# check plural above
+%d Elfen
 %%%%
 a deep elf knight
 ein Tiefenelf-Ritter
@@ -2111,15 +2055,11 @@ ein Tiefenelf-Ritter
 %d deep elf knights
 %d Tiefenelf-Ritter
 %%%%
-# check plural above
-%%%%
 a deep elf archer
 ein Tiefenelf-Bogenschütze
 %%%%
 %d deep elf archers
 %d Tiefenelf-Bogenschützen
-%%%%
-# check plural above
 %%%%
 a deep elf blademaster
 ein Tiefenelf-Klingenmeister
@@ -2127,15 +2067,11 @@ ein Tiefenelf-Klingenmeister
 %d deep elf blademasters
 %d Tiefenelf-Klingenmeister
 %%%%
-# check plural above
-%%%%
 a deep elf master archer
 ein Tiefenelf-Bogenmeister
 %%%%
 %d deep elf master archers
 %d Tiefenelf-Bogenmeister
-%%%%
-# check plural above
 %%%%
 a deep elf mage
 ein Tiefenelf-Magier
@@ -2143,15 +2079,11 @@ ein Tiefenelf-Magier
 %d deep elf magi
 %d Tiefenelf-Magier
 %%%%
-# check plural above
-%%%%
 a deep elf high priest
 ein Tiefenelf-Hohepriester
 %%%%
 %d deep elf high priests
 %d Tiefenelf-Hohepriester
-%%%%
-# check plural above
 %%%%
 a deep elf demonologist
 ein Tiefenelf-Dämonologe
@@ -2159,15 +2091,11 @@ ein Tiefenelf-Dämonologe
 %d deep elf demonologists
 %d Tiefenelf-Dämonologen
 %%%%
-# check plural above
-%%%%
 a deep elf annihilator
 ein Tiefenelf-Vernichter
 %%%%
 %d deep elf annihilators
 %d Tiefenelf-Vernichter
-%%%%
-# check plural above
 %%%%
 a deep elf sorcerer
 ein Tiefenelf-Zauberer
@@ -2175,15 +2103,11 @@ ein Tiefenelf-Zauberer
 %d deep elf sorcerers
 %d Tiefenelf-Zauberer
 %%%%
-# check plural above
-%%%%
 a deep elf death mage
 ein Tiefenelf-Todesmagier
 %%%%
 %d deep elf death magi
 %d Tiefenelf-Todesmagier
-%%%%
-# check plural above
 %%%%
 a deep elf elementalist
 ein Tiefenelf-Elementalist
@@ -2197,8 +2121,6 @@ ein wandernder Pilz
 %d wandering mushrooms
 %d wandernde Pilze
 %%%%
-# check plural above
-%%%%
 a deathcap
 eine Todesmütze
 %%%%
@@ -2211,8 +2133,6 @@ ein Dornenjäger
 %d thorn hunters
 %d Dornenjäger
 %%%%
-# check plural above
-%%%%
 a shambling mangrove
 eine watschelnde Mangrove
 %%%%
@@ -2224,8 +2144,6 @@ ein Rebjäger
 %%%%
 %d vine stalkers
 %d Rebjäger
-%%%%
-# check plural above
 %%%%
 a goblin
 ein Goblin
@@ -2245,15 +2163,11 @@ ein Gnoll
 %d gnolls
 %d Gnolle
 %%%%
-# check plural above
-%%%%
 a gnoll shaman
 ein Gnoll-Schamane
 %%%%
 %d gnoll shamans
 %d Gnoll-Schamanen
-%%%%
-# check plural above
 %%%%
 a gnoll sergeant
 ein Gnoll-Wachtmeister
@@ -2261,15 +2175,11 @@ ein Gnoll-Wachtmeister
 %d gnoll sergeants
 %d Gnoll-Wachtmeister
 %%%%
-# check plural above
-%%%%
 a boggart
 ein Boggart
 %%%%
 %d boggarts
-%d Boggarte
-%%%%
-# check plural above
+%d Boggarts
 %%%%
 a dwarf
 ein Zwerg
@@ -5257,7 +5167,7 @@ a nameless horror
 ein namenloser Horror
 %%%%
 %d nameless horrors
-%d namenlose Horror
+%d namenlose Horrors
 %%%%
 a will-o-the-wisp
 ein Irrlicht

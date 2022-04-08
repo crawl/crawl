@@ -72,6 +72,9 @@ https://books.google.com/ngrams/graph?content=Actinomycete%2CAktinomyzet&year_st
 Not sure how to translate Ballostomycete spore. Words like Myxospore exist in both German and English, but the English version
 of Crawl does not use Ballistospore. How do you form a compound noun with Ballistomyzet? Ballistomyzetenspore?
 
+Boggart - in Harry Potter this is translated as der Irrwicht (pl: die Irrwichte), but the Spook-Zyklus (Wardstone Chronicles),
+Boggart (pl: Boggarts) is used: https://de.wikipedia.org/wiki/Spook-Zyklus
+
 ## Adjectives
 
 DCSS dynamically adds adjectives to things (unidentified items in particular).

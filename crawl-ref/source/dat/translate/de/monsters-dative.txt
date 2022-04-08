@@ -1724,15 +1724,11 @@ einem Faun
 {dat}%d fauns
 %d Faunen
 %%%%
-# check plural above
-%%%%
 {dat}a satyr
 einem Satyr
 %%%%
 {dat}%d satyrs
-%d Satyren
-%%%%
-# check plural above
+%d Satyrn
 %%%%
 {dat}a draconian
 einem Drakonier
@@ -2024,17 +2020,13 @@ einem Gnoll-Wachtmeister
 einem Boggart
 %%%%
 {dat}%d boggarts
-%d Boggarten
-%%%%
-# check plural above
+%d Boggarts
 %%%%
 {dat}a dwarf
 einem Zwerg
 %%%%
 {dat}%d dwarves
 %d Zwergen
-%%%%
-# check plural above
 %%%%
 {dat}a deep dwarf
 einem Tiefenzwerg
@@ -4954,7 +4946,7 @@ einem Fuchsfeuer
 einem namenlosen Horror
 %%%%
 {dat}%d nameless horrors
-%d namenlosen Horror
+%d namenlosen Horrors
 %%%%
 {dat}a will-o-the-wisp
 einem Irrlicht
