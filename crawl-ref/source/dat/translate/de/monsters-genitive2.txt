@@ -1905,7 +1905,7 @@ eines Drakonier-Sturmrufers
 eines Drakonier-Mönchs
 %%%%
 {gen}a draconian shifter
-eines Drakonier-Verwandlers
+eines Drakonier-Verschiebers
 %%%%
 {gen}a draconian annihilator
 eines Drakonier-Vernichters
@@ -3325,7 +3325,7 @@ Eures Drakonier-Sturmrufers
 Eures Drakonier-Mönchs
 %%%%
 {gen}your draconian shifter
-Eures Drakonier-Verwandlers
+Eures Drakonier-Verschiebers
 %%%%
 {gen}your draconian annihilator
 Eures Drakonier-Vernichters

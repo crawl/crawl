@@ -993,6 +993,9 @@ einen Drakonier-Sturmrufer
 {acc}a draconian monk
 einen Drakonier-Mönch
 %%%%
+{acc}a draconian shifter
+einen Drakonier-Verschieber
+%%%%
 {acc}a draconian annihilator
 einen Drakonier-Vernichter
 %%%%

@@ -1765,10 +1765,10 @@ einem Drakonier-Mönch
 %d Drakonier-Mönchen
 %%%%
 {dat}a draconian shifter
-einem Drakonier-Verwandler
+einem Drakonier-Verschieber
 %%%%
 {dat}%d draconian shifters
-%d Drakonier-Verwandlern
+%d Drakonier-Verschiebern
 %%%%
 {dat}a draconian annihilator
 einem Drakonier-Vernichter

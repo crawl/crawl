@@ -2020,10 +2020,10 @@ ein Drakonier-Mönch
 %d Drakonier-Mönche
 %%%%
 a draconian shifter
-ein Drakonier-Verwandler
+ein Drakonier-Verschieber
 %%%%
 %d draconian shifters
-%d Drakonier-Verwandler
+%d Drakonier-Verschieber
 %%%%
 a draconian annihilator
 ein Drakonier-Vernichter

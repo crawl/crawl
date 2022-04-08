@@ -1915,7 +1915,7 @@ a draconian monk's
 eines Drakonier-Mönchs
 %%%%
 a draconian shifter's
-eines Drakonier-Verwandlers
+eines Drakonier-Verschiebers
 %%%%
 a draconian annihilator's
 eines Drakonier-Vernichters
@@ -3335,7 +3335,7 @@ your draconian monk's
 Eures Drakonier-Mönchs
 %%%%
 your draconian shifter's
-Eures Drakonier-Verwandlers
+Eures Drakonier-Verschiebers
 %%%%
 your draconian annihilator's
 Eures Drakonier-Vernichters
