@@ -2193,9 +2193,6 @@ einem Lava-Ork
 {dat}a human
 einem Menschen
 %%%%
-{dat}%d humans
-%d Menschen
-%%%%
 {dat}a slave
 einem Sklaven
 %%%%

@@ -2295,15 +2295,11 @@ ein Spriggan-Reiter
 %d spriggan riders
 %d Spriggan-Reiter
 %%%%
-# check plural above
-%%%%
 a spriggan druid
 ein Spriggan-Druide
 %%%%
 %d spriggan druids
 %d Spriggan-Druiden
-%%%%
-# check plural above
 %%%%
 a spriggan berserker
 ein Spriggan-Berserker
@@ -2311,23 +2307,17 @@ ein Spriggan-Berserker
 %d spriggan berserkers
 %d Spriggan-Berserker
 %%%%
-# check plural above
-%%%%
 a spriggan air mage
 ein Spriggan-Luftmagier
 %%%%
 %d spriggan air magi
 %d Spriggan-Luftmagier
 %%%%
-# check plural above
-%%%%
 a spriggan defender
 ein Spriggan-Verteidiger
 %%%%
 %d spriggan defenders
 %d Spriggan-Verteidiger
-%%%%
-# check plural above
 %%%%
 a drake
 ein Drachling
@@ -2416,8 +2406,6 @@ ein Komododrache
 %%%%
 %d komodo dragons
 %d Komododrachen
-%%%%
-# check plural above
 %%%%
 a merfolk
 ein Meervolk
@@ -2513,15 +2501,11 @@ ein Ork-Zauberer
 %d orc wizards
 %d Ork-Zauberer
 %%%%
-# check plural above
-%%%%
 an orc priest
 ein Ork-Priester
 %%%%
 %d orc priests
 %d Ork-Priester
-%%%%
-# check plural above
 %%%%
 an orc warrior
 ein Ork-Krieger
@@ -2529,15 +2513,11 @@ ein Ork-Krieger
 %d orc warriors
 %d Ork-Krieger
 %%%%
-# check plural above
-%%%%
 an orc knight
 ein Ork-Ritter
 %%%%
 %d orc knights
 %d Ork-Ritter
-%%%%
-# check plural above
 %%%%
 an orc warlord
 ein Ork-Warlord
@@ -2553,15 +2533,11 @@ ein Ork-Hexenmeister
 %d orc sorcerers
 %d Ork-Hexenmeister
 %%%%
-# check plural above
-%%%%
 an orc high priest
 ein Ork-Hohepriester
 %%%%
 %d orc high priests
 %d Ork-Hohepriester
-%%%%
-# check plural above
 %%%%
 a lava orc
 ein Lava-Ork
@@ -2575,9 +2551,7 @@ a human
 ein Mensch
 %%%%
 %d humans
-%d Mensche
-%%%%
-# check plural above
+%d Menschen
 %%%%
 a slave
 ein Sklave
@@ -2585,23 +2559,17 @@ ein Sklave
 %d slaves
 %d Sklaven
 %%%%
-# check plural above
-%%%%
 a hell knight
 ein Höllenritter
 %%%%
 %d hell knights
 %d Höllenritter
 %%%%
-# check plural above
-%%%%
 a death knight
 ein Todesritter
 %%%%
 %d death knights
 %d Todesritter
-%%%%
-# check plural above
 %%%%
 a necromancer
 ein Nekromant
@@ -2615,15 +2583,11 @@ ein Zauberer
 %d wizards
 %d Zauberer
 %%%%
-# check plural above
-%%%%
 a vault guard
 ein Tresorwächter
 %%%%
 %d vault guards
 %d Tresorwächter
-%%%%
-# check plural above
 %%%%
 a vault sentinel
 eine Tresorwache
@@ -2637,15 +2601,11 @@ ein Tresorwärter
 %d vault wardens
 %d Tresorwärter
 %%%%
-# check plural above
-%%%%
 an ironbound convoker
 ein eisenbeschlagener Einberufer
 %%%%
 %d ironbound convokers
 %d eisenbeschlagene Einberufer
-%%%%
-# check plural above
 %%%%
 an imperial myrmidon
 ein kaiserlicher Myrmidon
@@ -2660,8 +2620,6 @@ ein Diener des Flüsterns
 %%%%
 %d servants of whispers
 %d Diener des Flüsterns
-%%%%
-# check plural above
 %%%%
 a ragged hierophant
 ein zerlumpter Hierophant
@@ -2683,15 +2641,11 @@ ein Gestaltwandler
 %d shapeshifters
 %d Gestaltwandler
 %%%%
-# check plural above
-%%%%
 a glowing shapeshifter
 ein leuchtender Gestaltwandler
 %%%%
 %d glowing shapeshifters
 %d leuchtende Gestaltwandler
-%%%%
-# check plural above
 %%%%
 a Killer Klown
 ein Killer-Klown
@@ -2744,8 +2698,6 @@ ein Stachelschwein
 %%%%
 %d porcupines
 %d Stachelschweine
-%%%%
-# check plural above
 %%%%
 a giant cockroach
 eine Riesenkakerlake
@@ -2815,8 +2767,6 @@ ein dämonischer Kriecher
 %d demonic crawlers
 %d dämonische Kriecher
 %%%%
-# check plural above
-%%%%
 an orb spider
 eine Kugelspinne
 %%%%
@@ -2881,15 +2831,11 @@ ein hässliches Ding
 %d ugly things
 %d hässliche Dinge
 %%%%
-# check plural above
-%%%%
 a very ugly thing
 ein sehr hässliches Ding
 %%%%
 %d very ugly things
 %d sehr hässliche Dinge
-%%%%
-# check plural above
 %%%%
 a fire vortex
 ein Feuerwirbel
@@ -3015,8 +2961,6 @@ ein Weltbinder
 %d worldbinders
 %d Weltbinder
 %%%%
-# check plural above
-%%%%
 a killer bee
 eine Killerbiene
 %%%%
@@ -3086,8 +3030,6 @@ ein Skelettkrieger
 %%%%
 %d skeletal warriors
 %d Skelettkrieger
-%%%%
-# check plural above
 %%%%
 an ancient champion
 ein alter Champion
@@ -3159,15 +3101,11 @@ ein profaner Diener
 %d profane servitors
 %d profane Diener
 %%%%
-# check plural above
-%%%%
 a giant
 ein Riese
 %%%%
 %d giants
 %d Riesen
-%%%%
-# check plural above
 %%%%
 a cyclops
 ein Zyklop
@@ -3191,23 +3129,17 @@ ein Feuerriese
 %d fire giants
 %d Feuerriesen
 %%%%
-# check plural above
-%%%%
 a frost giant
 ein Frostriese
 %%%%
 %d frost giants
 %d Frostriesen
 %%%%
-# check plural above
-%%%%
 a stone giant
 ein Steinriese
 %%%%
 %d stone giants
 %d Steinriesen
-%%%%
-# check plural above
 %%%%
 a titan
 ein Titan
@@ -3231,23 +3163,17 @@ ein Eisenriese
 %d iron giants
 %d Eisenriesen
 %%%%
-# check plural above
-%%%%
 a dragon
 ein Drache
 %%%%
 %d dragons
 %d Drachen
 %%%%
-# check plural above
-%%%%
 a fire dragon
 ein Feuerdrache
 %%%%
 %d fire dragons
 %d Feuerdrachen
-%%%%
-# check plural above
 %%%%
 a hydra
 eine Hydra
@@ -3323,15 +3249,11 @@ ein Eisdrache
 %d ice dragons
 %d Eisdrachen
 %%%%
-# check plural above
-%%%%
 a steam dragon
 ein Dampfdrache
 %%%%
 %d steam dragons
 %d Dampfdrachen
-%%%%
-# check plural above
 %%%%
 a swamp dragon
 ein Sumpfdrache
@@ -3339,15 +3261,11 @@ ein Sumpfdrache
 %d swamp dragons
 %d Sumpfdrachen
 %%%%
-# check plural above
-%%%%
 an acid dragon
 ein Säuredrache
 %%%%
 %d acid dragons
 %d Säuredrachen
-%%%%
-# check plural above
 %%%%
 a quicksilver dragon
 ein Quecksilberdrache
@@ -3355,15 +3273,11 @@ ein Quecksilberdrache
 %d quicksilver dragons
 %d Quecksilberdrachen
 %%%%
-# check plural above
-%%%%
 an iron dragon
 ein Eisendrache
 %%%%
 %d iron dragons
 %d Eisendrachen
-%%%%
-# check plural above
 %%%%
 a storm dragon
 ein Sturmdrache
@@ -3371,15 +3285,11 @@ ein Sturmdrache
 %d storm dragons
 %d Sturmdrachen
 %%%%
-# check plural above
-%%%%
 a golden dragon
 ein Golddrache
 %%%%
 %d golden dragons
 %d Golddrachen
-%%%%
-# check plural above
 %%%%
 a shadow dragon
 ein Schattendrache
@@ -3387,23 +3297,17 @@ ein Schattendrache
 %d shadow dragons
 %d Schattendrachen
 %%%%
-# check plural above
-%%%%
 a bone dragon
 ein Knochendrache
 %%%%
 %d bone dragons
 %d Knochendrachen
 %%%%
-# check plural above
-%%%%
 a pearl dragon
 ein Perlendrache
 %%%%
 %d pearl dragons
 %d Perlendrachen
-%%%%
-# check plural above
 %%%%
 an elemental
 ein Elementar
@@ -3629,8 +3533,6 @@ ein Kampfmagier
 %d battlemagi
 %d Kampfmagier
 %%%%
-# check plural above
-%%%%
 a hexer
 ein Hexer
 %%%%
@@ -3787,8 +3689,6 @@ ein Naga-Magier
 %d naga magi
 %d Naga-Magier
 %%%%
-# check plural above
-%%%%
 a naga sharpshooter
 ein Naga-Scharfschütze
 %%%%
@@ -3840,8 +3740,6 @@ ein Oger-Magier
 %%%%
 %d ogre magi
 %d Oger-Magier
-%%%%
-# check plural above
 %%%%
 a plant
 eine Pflanze
@@ -4097,8 +3995,6 @@ ein Tiefentroll-Erdmagier
 %d deep troll earth magi
 %d Tiefentroll-Erdmagier
 %%%%
-# check plural above
-%%%%
 a deep troll shaman
 ein Tiefentroll-Schamane
 %%%%
@@ -4128,8 +4024,6 @@ ein Vampir-Magier
 %%%%
 %d vampire magi
 %d Vampir-Magier
-%%%%
-# check plural above
 %%%%
 a jiangshi
 ein Jiangshi
@@ -4502,8 +4396,6 @@ ein Wolkenmagier
 %%%%
 %d Cloud Mages
 %d Wolkenmagier
-%%%%
-# check plural above
 %%%%
 a player
 ein Spieler
