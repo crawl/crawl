@@ -82,13 +82,13 @@ for line in keyfile:
     if re.match(r'^\s*$', line) or re.match(r'^\s*#', line):
         # blank line or comment
         if not re.match('^# duplicate', line):
+            if 'locnote:' in line:
+                locnote = re.sub(r'.*locnote: *', '# note: ', line)
+                continue
             if in_entry:
                 outfile.write("%%%%\n");
                 in_entry = False
-            if 'locnote:' in line:
-                locnote = re.sub(r'.*locnote: *', '# note: ', line)
-            else:
-                outfile.write(line)
+            outfile.write(line)
     else:
         key = strip_quotes_if_allowed(line.strip())
         if key in ignore_vals:
