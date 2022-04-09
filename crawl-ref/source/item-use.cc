@@ -2505,12 +2505,15 @@ void drink(item_def* potion)
         return;
     }
 
+    // Check for Delatra's gloves before potentially melding them.
+    bool heal_on_id = player_equip_unrand(UNRAND_DELATRAS_GLOVES);
+
     if (!quaff_potion(*potion))
         return;
 
     if (!alreadyknown)
     {
-        if (player_equip_unrand(UNRAND_DELATRAS_GLOVES))
+        if (heal_on_id)
         {
             mpr("The energy of discovery flows from your fingertips!");
             potionlike_effect(POT_HEAL_WOUNDS, 40);
