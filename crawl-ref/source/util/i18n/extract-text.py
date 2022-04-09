@@ -207,7 +207,7 @@ for filename in files:
                 continue
 
             # remove comment
-            if '//' in line and not re.search('// *localise', line):
+            if '//' in line and not re.search(r'// *(localise|locnote)', line):
                 line = strip_line_comment(line)
 
             line = line.strip()
@@ -231,8 +231,13 @@ for filename in files:
 
             lines.append(line)
 
-        
         for line in lines:
+
+            if 'locnote' in line:
+                note = re.sub(r'^.*locnote: *', '# locnote: ', line)
+                strings.append(note)
+                line = strip_line_comment(line)
+                line = line.strip()
 
             if '"' not in line:
                 continue
@@ -442,6 +447,10 @@ for filename in files:
         if string == '':
             continue
 
+        if 'locnote' in string:
+            filtered_strings.append(string)
+            continue
+
         # ignore pronouns
         if string.lower() == 'you':
             continue
@@ -492,7 +501,10 @@ for filename in files:
             #   - if it has leading or trailing whitespace
             #   - if it starts with # (because otherwise it looks like a comment)
             #   - if it starts and ends with double-quotes
-            if re.search('^(\s|#)', string) or  re.search('\s$', string) \
+            if '# locnote' in string:
+                output.append(string)
+                continue
+            elif re.search('^(\s|#)', string) or  re.search('\s$', string) \
                or (string.startswith(r'\"') and string.endswith('"')):
                 string = '"' + string + '"'
             else:

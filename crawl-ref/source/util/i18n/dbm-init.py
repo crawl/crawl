@@ -77,6 +77,7 @@ keyfile = open(keyfile_name)
 outfile = open("dbm.txt", "w")
 
 in_entry = False
+locnote = ""
 for line in keyfile:
     if re.match(r'^\s*$', line) or re.match(r'^\s*#', line):
         # blank line or comment
@@ -84,12 +85,18 @@ for line in keyfile:
             if in_entry:
                 outfile.write("%%%%\n");
                 in_entry = False
-            outfile.write(line)
+            if 'locnote:' in line:
+                locnote = re.sub(r'.*locnote: *', '# note: ', line)
+            else:
+                outfile.write(line)
     else:
         key = strip_quotes_if_allowed(line.strip())
         if key in ignore_vals:
             continue
         outfile.write("%%%%\n");
+        if locnote != "":
+            outfile.write(locnote)
+            locnote = ""
         outfile.write(key + "\n")
         if key in old_vals:
             outfile.write(old_vals[key])
