@@ -17,7 +17,7 @@ int yesnoquit(const char* str, bool safe = true, int default_answer = 0,
               bool allow_all = false, bool clear_after = true,
               char alt_yes = 'Y', char alt_yes2 = 'Y');
 
-int prompt_for_quantity(const char *prompt);
+int prompt_for_quantity(const string &prompt);
 int prompt_for_int(const char *prompt, bool nonneg, const string &prefill = "");
 double prompt_for_float(const char* prompt);
 

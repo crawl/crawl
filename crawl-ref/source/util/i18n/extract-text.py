@@ -356,6 +356,9 @@ for filename in files:
                 if 'search_stashes' in line:
                     continue
 
+                if re.search(r'\bstrlen\s*\(', line):
+                    continue
+
             extract = True
 
             # tokenize line into string and non-string

@@ -48,6 +48,7 @@
 #include "item-status-flag-type.h"
 #include "item-use.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "message.h"
@@ -557,8 +558,8 @@ void unlink_item(int dest)
                 return;
             }
         }
-        mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but "
-                          "it isn't in the monster's inventory.",
+        mprf(MSGCH_ERROR, "Item %s claims to be held by monster %s, but " // noloc
+                          "it isn't in the monster's inventory.", // noloc
              env.item[dest].name(DESC_PLAIN, false, true).c_str(),
              mons->name(DESC_PLAIN, true).c_str());
         // Don't return so the debugging code can take a look at it.
@@ -859,9 +860,9 @@ string item_message(vector<const item_def *> const &items)
                     out_string += "</" + colour + ">";
                 switch (specialness)
                 {
-                case 2: colour = "yellow";   break; // artefact
-                case 1: colour = "white";    break; // glowing/runed
-                case 0: colour = "darkgrey"; break; // mundane
+                case 2: colour = "yellow";   break; // artefact - noloc
+                case 1: colour = "white";    break; // glowing/runed - noloc
+                case 0: colour = "darkgrey"; break; // mundane - noloc
                 }
                 if (!colour.empty())
                     out_string += "<" + colour + ">";
@@ -905,7 +906,7 @@ void item_check()
     {
         const item_def& it(*items[0]);
         string name = menu_colour_item_name(it, DESC_A);
-        strm << "You see here " << name << '.' << endl;
+        strm << localise("You see here %s.", name) << endl;
         _maybe_give_corpse_hint(it);
         return;
     }
@@ -920,7 +921,7 @@ void item_check()
         mprf_nocap("%s", desc_string.c_str());
     }
     else
-        strm << "There are many items here." << endl;
+        strm << localise("There are many items here.") << endl;
 
     if (items.size() > 2 && crawl_state.game_is_hints_tutorial())
     {
@@ -1016,16 +1017,19 @@ void pickup_menu(int item_link)
     auto items = item_list_on_square(item_link);
     ASSERT(items.size());
 
-    string prompt = "Pick up what? " + slot_description()
+    string prompt = localise("Pick up what?") + " " + slot_description() + " "
 #ifdef TOUCH_UI
-                  + " (<Enter> or tap header to pick up)"
+                  + localise("(<Enter> or tap header to pick up)")
 #else
-                  + " (_ for help)"
+                  + localise ("(_ for help)")
 #endif
                   ;
 
     if (items.size() == 1 && items[0]->quantity > 1)
+    {
         prompt = "Select pick up quantity by entering a number, then select the item";
+        prompt = localise(prompt);
+    }
     vector<SelItem> selected = select_items(items, prompt.c_str(), false,
                                             menu_type::pickup);
     if (selected.empty())
@@ -1142,7 +1146,7 @@ void origin_acquired(item_def &item, int agent)
 
 static string _milestone_rune(const item_def &item)
 {
-    return string("found ") + item.name(DESC_A) + ".";
+    return string("found ") + item.name(DESC_A) + "."; // noloc
 }
 
 static void _milestone_check(const item_def &item)
@@ -1221,12 +1225,6 @@ bool origin_describable(const item_def &item)
            && item.base_type != OBJ_CORPSES;
 }
 
-static string _article_it(const item_def &/*item*/)
-{
-    // "it" is always correct, since gloves and boots also come in pairs.
-    return "it";
-}
-
 static bool _origin_is_original_equip(const item_def &item)
 {
     return _origin_is_special(item) && item.orig_monnum == -IT_SRC_START;
@@ -1273,16 +1271,16 @@ bool origin_is_acquirement(const item_def& item, item_source_type *type)
     return false;
 }
 
-string origin_desc(const item_def &item)
+string origin_desc(const item_def &item, bool localize)
 {
     if (!origin_describable(item))
         return "";
 
-    if (_origin_is_original_equip(item))
-        return "Original Equipment";
-
     string desc;
-    if (item.orig_monnum)
+    map<string, string> params;
+    if (_origin_is_original_equip(item))
+        desc = "Original Equipment";
+    else if (item.orig_monnum)
     {
         if (item.orig_monnum < 0)
         {
@@ -1290,49 +1288,53 @@ string origin_desc(const item_def &item)
             switch (iorig)
             {
             case IT_SRC_SHOP:
-                desc += "You bought " + _article_it(item) + " in a shop ";
+                desc = "You bought it in a shop @in_location@";
                 break;
             case IT_SRC_START:
-                desc += "Buggy Original Equipment: ";
+                desc = "Buggy Original Equipment: @in_location@";
                 break;
             case AQ_SCROLL:
-                desc += "You acquired " + _article_it(item) + " ";
+                desc = "You acquired it @in_location@";
                 break;
 #if TAG_MAJOR_VERSION == 34
             case AQ_CARD_GENIE:
-                desc += "You drew the Genie ";
+                desc = "You drew the Genie @in_location@"; // noloc (removed in 0.15)
                 break;
 #endif
             case AQ_WIZMODE:
-                desc += "Your wizardly powers created "+ _article_it(item)+ " ";
+                desc = "Your wizardly powers created it @in_location@";
                 break;
             default:
                 if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
                 {
-                    desc += god_name(static_cast<god_type>(iorig))
-                        + " gifted " + _article_it(item) + " to you ";
+                    desc = "@God@ gifted it to you @in_location@";
+                    params["God"] = god_name(static_cast<god_type>(iorig));
                 }
                 else
                 {
                     // Bug really.
-                    desc += "You stumbled upon " + _article_it(item) + " ";
+                    desc = "You stumbled upon it @in_location@";
                 }
                 break;
             }
         }
         else if (item.orig_monnum == MONS_DANCING_WEAPON)
-            desc += "You subdued it ";
+            desc = "You subdued it @in_location@";
         else
         {
-            desc += "You took " + _article_it(item) + " off "
-                    + _origin_monster_name(item) + " ";
+            desc = "You took it off @monster@ @in_location@";
+            params["monster"] = _origin_monster_name(item);
         }
     }
     else
-        desc += "You found " + _article_it(item) + " ";
+        desc = "You found it @in_location@";
 
-    desc += _origin_place_desc(item);
-    return desc;
+    params["in_location"] = _origin_place_desc(item);
+
+    if (localize)
+        return localise(desc, params);
+    else
+        return replace_keys(desc, params);
 }
 
 /**
@@ -1362,10 +1364,8 @@ bool pickup_single_item(int link, int qty)
     }
     if (qty == 0 && item->quantity > 1 && item->base_type != OBJ_GOLD)
     {
-        const string prompt
-                = make_stringf("Pick up how many of %s (; or enter for all)? ",
-                               item->name(DESC_THE, false,
-                                          false, false).c_str());
+        string prompt = localise("Pick up how many of %s (; or enter for all)?",
+                                 item->name(DESC_THE, false, false, false));
 
         qty = prompt_for_quantity(prompt.c_str());
         if (qty == -1)
@@ -1722,12 +1722,13 @@ void get_gold(const item_def& item, int quant, bool quiet)
 
     if (!quiet)
     {
-        const string gain = quant != you.gold
-                            ? make_stringf(" (gained %d)", quant)
-                            : "";
+        if (you.gold == 1)
+            mprf("You now have 1 gold piece.");
+        else if (quant == you.gold)
+            mprf("You now have %d gold pieces.", you.gold);
+        else
+            mprf("You now have %d gold pieces (gained %d).", you.gold, quant);
 
-        mprf("You now have %d gold piece%s%s.",
-             you.gold, you.gold != 1 ? "s" : "", gain.c_str());
         learned_something_new(HINT_SEEN_GOLD);
     }
 }
@@ -1861,9 +1862,13 @@ static void _get_book(item_def& it)
     }
 
     if (you.skill_manual_points[sk])
+    {
+        // locnote: pick up manual
         mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
+    }
     else
         mprf("You pick up %s and begin studying.", it.name(DESC_A).c_str());
+
     you.skill_manual_points[sk] += it.skill_points;
     you.skills_to_show.insert(sk);
 }
@@ -1896,6 +1901,7 @@ static void _get_rune(const item_def& it, bool quiet)
     if (!quiet)
     {
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
+        // locnote: pick up rune
         mprf("You pick up %s and feel its power.",
              rune_short_name(it.sub_type).c_str());
         int nrunes = runes_in_pack();
@@ -2011,10 +2017,15 @@ static bool _merge_wand_charges(const item_def &it, int &inv_slot, bool quiet)
 #ifdef USE_SOUND
             parse_sound(PICKUP_SOUND);
 #endif
-            mprf_nocap("%s (gained %d charge%s)",
-                        menu_colour_item_name(you.inv[inv_slot],
-                                                    DESC_INVENTORY).c_str(),
-                        it.charges, it.charges == 1 ? "" : "s");
+            string item_name = menu_colour_item_name(you.inv[inv_slot],
+                                                     DESC_INVENTORY);
+            if (it.charges == 1)
+                mprf_nocap("%s (gained 1 charge)", item_name.c_str());
+            else
+            {
+                mprf_nocap("%s (gained %d charges)",
+                           item_name.c_str(), it.charges);
+            }
         }
 
         return true;
@@ -2538,7 +2549,10 @@ bool drop_item(int item_dropped, int quant_drop)
      || item_dropped == you.equip[EQ_RING_AMULET])
     {
         if (!Options.easy_unequip)
+        {
+            // locnote: ring/amulet
             mpr("You will have to take that off first.");
+        }
         else if (remove_ring(item_dropped, true))
         {
             // The delay handles the case where the item disappeared.
@@ -2942,14 +2956,14 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
     // the special-cased gold here is because this call can become very heavy
     // for gozag players under extreme circumstances
     const string iname = item.base_type == OBJ_GOLD
-                                                ? "{gold}"
+                                                ? "{gold}" // noloc
                                                 : _autopickup_item_name(item);
 
     maybe_bool res = clua.callmaybefn("ch_force_autopickup", "is",
                                       &item, iname.c_str());
     if (!clua.error.empty())
     {
-        mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s",
+        mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s", // noloc
              clua.error.c_str());
     }
 
@@ -4134,10 +4148,10 @@ static void _rune_from_specs(const char* _specs, item_def &item)
         string line;
         for (int i = 0; i < NUM_RUNE_TYPES; i++)
         {
-            line += make_stringf("[%c] %-10s ", i + 'a', rune_type_name(i));
+            line += localise("[%c] %s ", i + 'a', rune_type_name(i)); // noloc
             if (i % 5 == 4 || i == NUM_RUNE_TYPES - 1)
             {
-                mprf(MSGCH_PROMPT, "%s", line.c_str());
+                mpr_nolocalise(MSGCH_PROMPT, line);
                 line.clear();
             }
         }

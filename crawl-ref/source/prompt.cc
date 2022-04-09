@@ -300,8 +300,12 @@ int yesnoquit(const char* str, bool allow_lowercase, int default_answer, bool al
  *         0 if the user escaped;
  *         the number chosen otherwise.
  */
-int prompt_for_quantity(const char *prompt)
+int prompt_for_quantity(const string &p)
 {
+    string prompt = p;
+    if (!prompt.empty() && !ends_with(prompt, " "))
+        prompt += " ";
+
     msgwin_prompt(prompt);
 
     int ch = getch_ck();

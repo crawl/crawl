@@ -10677,88 +10677,64 @@ In Eurer gegenwärtigen Form könnt Ihr nichts anziehen oder ausziehen.
 ##################
 %%%%
 Too many items on level, removing some.
-Zu viele Gegenstände auf Level, einige entfernen.
+Zu viele Gegenstände auf Level, einige werden gelöscht.
 %%%%
-Item %s claims to be held by monster %s, but it isn't in the monster's inventory.
-
-%%%%
-darkgrey
-
-%%%%
-"You see here "
-
+You see here %s.
+Ihr seht hier {acc}%s.
 %%%%
 Items here: %s.
-
+Gegstände hier: %s
 %%%%
 Things that are here:
-
+Dinge die hier sind:
 %%%%
 There are many items here.
-
+Es ist viele Gegenstände hier.
 %%%%
-"Pick up what? "
-
+Pick up what?
+Was aufheben?
 %%%%
-" (<Enter> or tap header to pick up)"
-
-%%%%
-" (_ for help)"
-
+(<Enter> or tap header to pick up)
+(<Eingabe> oder tippen auf die Kopfzeile, um aufzuheben)
 %%%%
 Select pick up quantity by entering a number, then select the item
-
-%%%%
-"found "
-
-%%%%
-it
-
+Anzahl eingaben, und dann den Gegenstand wählen
 %%%%
 Original Equipment
-
+Originalausstattung
 %%%%
-"You bought "
-
+You bought it in a shop @in_location@
+Ihr habt diesen Gegenstand in einem Laden @in_location@ gekauft
 %%%%
-" in a shop "
-
+Buggy Original Equipment: @in_location@
+Verbuggte Originalausstattung: @in_location@
 %%%%
-"Buggy Original Equipment: "
-
+You acquired it @in_location@
+Ihr habt diesen Gegenstand @in_location@ erworben
 %%%%
-"You acquired "
-
+Your wizardly powers created it @in_location@
+Eure Zaubermacht hat diesen Gegenstand @in_location@ geschaffen
 %%%%
-"Your wizardly powers created "
-
+@God@ gifted it to you @in_location@
+@God@ hat Euch diesen Gegenstand geschenkt @in_location@
 %%%%
-" gifted "
-
+You stumbled upon it @in_location@
+Ihr seid auf diesen Gegenstand @in_location@ gestoßen
 %%%%
-" to you "
-
+You subdued it @in_location@
+Ihr habt diesen Gegenstand @in_location@ besiegt
 %%%%
-"You stumbled upon "
-
+You took it off @monster@ @in_location@
+Ihr habt diesen Gegenstand {dat}@monster@ @in_location@ abgenommen
 %%%%
-"You subdued it "
-
-%%%%
-"You took "
-
-%%%%
-" off "
-
-%%%%
-"You found "
-
+You found it @in_location@
+Ihr habt diesen Gegenstand @in_location@ gefunden
 %%%%
 Are you sure you want to pick up this pile of gold now?
-
+Seid Ihr sicher, dass Ihr diesen Haufen Gold jetzt abholen wollt?
 %%%%
-"Pick up how many of %s (; or enter for all)? "
-
+Pick up how many of %s (; or enter for all)?
+Wieviele von {dat}%s aufheben (; oder Enter für Alle)?
 %%%%
 There are no items here.
 Hier gibt es keine Gegenstände.
@@ -10773,40 +10749,45 @@ There are several objects here.
 Hier gibt es mehrere Objekte.
 %%%%
 Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)
-
+%s aufheben? ((j)a/(n)ein/(a)lle/(m)enü/*?g,/q)
 %%%%
-" (gained %d)"
-
+You now have 1 gold piece.
+Ihr habt jetzt 1 Goldmünze.
 %%%%
-You now have %d gold piece%s%s.
-
+You now have %d gold pieces.
+Ihr habt jetzt %d Goldmünzen.
+%%%%
+You now have %d gold pieces (gained %d).
+Ihr habt jetzt %d Goldmünzen (%d bekommen).
 %%%%
 %s burns to shimmering ash in your grasp.
-
+%s verbrennt in Eurem Griff zu schimmernder Asche.
 %%%%
 You pick up %s and begin reading...
-Ihr nimmt %s und fängst an zu lesen...
+Ihr hebt {acc}%s und fängst an zu lesen...
 %%%%
 Unfortunately, you learned nothing new.
-
+Leider habt Ihr nichts Neues gelernt.
 %%%%
 You pick up %s. Unfortunately, it's quite useless to you.
-
+Ihr hebt {acc}%s auf. Leider ist das völlig nutzlos für Euch.
 %%%%
 You pick up %s, but it has nothing more to teach you.
-
+Ihr hebt {acc}%s auf, aber es hat Euch nichts mehr zu lehren.
 %%%%
+# note: pick up manual
 You pick up another %s and continue studying.
-
+Ihr hebt noch ein {acc}%s auf und studiert weiter.
 %%%%
 You pick up %s and begin studying.
-
+Ihr hebt {acc}%s auf und fangt an zu lernen.
 %%%%
+# note: pick up rune
 You pick up %s and feel its power.
-Ihr nimmt {acc}%s und fühlst ihre Kraft.
+Ihr hebt {acc}%s auf und fühlt ihre Kraft.
 %%%%
 You have collected all the runes! Now go and win!
-Ihr habt alle Runen gesammelt! Jetzt geh und gewinne!
+Ihr habt alle Runen gesammelt! Jetzt geht und gewinnt!
 %%%%
 %d runes! That's enough to enter the realm of Zot.
 %d Runen! Das reicht aus, um das Reich von Zot zu betreten.
@@ -10818,67 +10799,56 @@ Press } to see all the runes you have collected.
 } drücken, um alle Runen zu sehen, die Ihr gesammelt habt.
 %%%%
 You feel the abyssal rune guiding you out of this place.
-Ihr fühlt die abgrundtiefe Rune, die Euch aus diesem Ort herausführt.
+Ihr fühlt wie die Abgrundsrune Euch aus diesem Ort herausführt.
 %%%%
 You pick up the Orb of Zot!
-Ihr nimmt die Kugel von Zot!
+Ihr hebt die Kugel von Zot auf!
 %%%%
 Zot can harm you no longer.
-
+Zot kann Euch nicht mehr schaden.
 %%%%
 Now all you have to do is get back out of the dungeon!
-
+Jetzt müsst Ihr nur noch wieder aus dem Dungeon herauskommen!
 %%%%
 %s (gained %d)
-
+%s (%d bekommen)
 %%%%
-%s (gained %d charge%s)
-
+%s (gained 1 charge)
+%s (1 Ladung bekommen)
 %%%%
-You see here %s.
-Ihr seht hier%s.
+%s (gained %d charges)
+%s (%d Ladungen bekommen)
 %%%%
+# note: ring/amulet
 You will have to take that off first.
-Das musst Ihr zuert ausziehen.
+Das musst Ihr zuerst abnehmen.
 %%%%
 Too many items on this level, not dropping the item.
-Zu viele Gegenstände auf dieser Ebene, ohne den Gegenstand fallen zu lassen.
+Zu viele Gegenstände auf dieser Ebene. Gegenstand wird nicht abgesetzt.
 %%%%
 You drop %s.
-Ihr lasst %s fallen.
+Ihr setzt {acc}%s ab.
 %%%%
 No item to drop.
-Kein Gegenstand zum Ablegen.
+Kein Gegenstand zum Absetzen.
 %%%%
 Autopickup disabled for %s.
-Autopickup für%s deaktiviert.
+Autopickup für {acc}%s deaktiviert.
 %%%%
 Autopickup disabled for %d items.
-Autopickup für%d-Elemente deaktiviert.
-%%%%
-{gold}
-
-%%%%
-ch_force_autopickup failed: %s
-ch_force_autopickup fehlgeschlagen:%s
+Autopickup für %d Gegenstände deaktiviert.
 %%%%
 Your pack is full.
-
-%%%%
-" of zot"
-
-%%%%
-"[%c] %-10s "
-
+Euer Gepäck ist voll.
 %%%%
 "Which rune (ESC to exit)? "
-Welche Rune (ESC zum Verlassen)?
+"Welche Rune (ESC zum Abbrechen)? "
 %%%%
 "What ego type? "
-
+"Welches Ego? "
 %%%%
 "A manual for which skill? "
-
+"Ein Hundbuch für welche Fertigkeit? "
 %%%%
 Sorry, no books on that skill today.
 Sorry, heute keine Bücher über diese Fertigkeit.
@@ -20948,6 +20918,9 @@ Your bite disrupts the magic of your enemies.
 ))
 
 %%%%
+darkgrey
+
+%%%%
 lightred
 
 %%%%
@@ -23191,6 +23164,9 @@ Hit by a%s %s thrown by %s
 block
 
 %%%%
+" off "
+
+%%%%
 " off an invisible shield around "
 
 %%%%
@@ -24732,6 +24708,9 @@ select item for purchase
 
 %%%%
 <%s>I'll put %s outside for you.</%s>\n
+
+%%%%
+it
 
 %%%%
 them
@@ -28043,6 +28022,9 @@ b
 ##################
 # stash.cc
 ##################
+%%%%
+{gold}
+
 %%%%
 " {autopickup}"
 

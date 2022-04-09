@@ -134,7 +134,7 @@ void origin_set(const coord_def& where);
 void origin_set_monster(item_def &item, const monster* mons);
 bool origin_known(const item_def &item);
 bool origin_describable(const item_def &item);
-string origin_desc(const item_def &item);
+string origin_desc(const item_def &item, bool localize = false);
 void origin_purchased(item_def &item);
 void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);

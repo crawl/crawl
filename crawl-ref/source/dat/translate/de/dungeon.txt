@@ -180,7 +180,7 @@ the Realm of Zot
 das Reich von Zot
 %%%%
 the Abyss
-der Abyss
+der Abgrund
 %%%%
 a ziggurat
 eine Zikkurat
@@ -358,3 +358,99 @@ Lab
 Lab
 %%%%
 
+##############################################
+# on branch level
+##############################################
+%%%%
+on level %d of the Dungeon
+auf Level %d des Dungeons
+%%%%
+on level %d of the Orcish Mines
+auf Level %d der orkischen Minen
+%%%%
+on level %d of the Elven Halls
+auf Level %d der Elfenhallen
+%%%%
+on level %d of the Lair of Beasts
+auf Level %d des Verstecks der Bestien
+%%%%
+on level %d of the Swamp
+auf Level %d des Sumpfes
+%%%%
+on level %d of the Shoals
+auf Level %d der Untiefen
+%%%%
+on level %d of the Snake Pit
+auf Level %d der Schlangengrube
+%%%%
+on level %d of the Spider Nest
+auf Level %d des Spinnennests
+%%%%
+on level %d of the Pits of Slime
+auf Level %d der Schleimgruben
+%%%%
+on level %d of the Vaults
+auf Level %d der Gewölbe
+%%%%
+on level %d of the Crypt
+auf Level %d der Krypta
+%%%%
+on level %d of the Tomb of the Ancients
+auf Level %d der Gruft der Antiker
+%%%%
+on level %d of the Depths
+auf Level %d der Tiefen
+%%%%
+on level %d of the Vestibule of Hell
+auf Level %d des Vestibüls der Hölle
+%%%%
+on level %d of the Iron City of Dis
+auf Level %d der Eisernen Stadt von Dis
+%%%%
+on level %d of the Realm of Zot
+auf Level %d des Reiches von Zot
+%%%%
+on level %d of the Abyss
+auf Level %d des Abgrunds
+%%%%
+on level %d of a ziggurat
+auf Level %d einer Zikkurat
+%%%%
+
+##############################################
+# in single-level branch
+##############################################
+%%%%
+in the Ecumenical Temple
+im Ökumenischen Tempel
+%%%%
+in a bazaar
+in einem Basar
+%%%%
+in a treasure trove
+in einem Schatzfund
+%%%%
+in a sewer
+in einem Siel
+%%%%
+in an ossuary
+in einem Beinhaus
+%%%%
+in a bailey
+in einem Burghof
+%%%%
+in a Gauntlet
+in einer Spießrute
+%%%%
+in an ice cave
+in einer Eishöhle
+%%%%
+in a volcano
+in einem Vulkan
+%%%%
+in a wizard's laboratory
+im Labor eines Zauberers
+%%%%
+in the Desolation of Salt
+in der Verwüstung des Salzes
+%%%%

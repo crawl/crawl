@@ -1088,6 +1088,23 @@ static string _localise_ghost_name(const string& context, const string& value)
     return make_stringf(fmt.c_str(), name.c_str());
 }
 
+static string _localise_location(const string& context, const string& value)
+{
+    if (starts_with(value, "on level "))
+    {
+        const regex pattern("^on level ([0-9]+) ");
+        smatch sm;
+        if (regex_search(value, sm, pattern) && sm.size() == 2)
+        {
+            string level = sm[1].str();
+            string value2 = replace_first(value, level, "%d");
+            string result = cxlate(context, value2, false);
+            return replace_first(result, "%d", level);
+        }
+    }
+    return "";
+}
+
 // localise a string
 static string _localise_string(const string& context, const string& value)
 {
@@ -1098,6 +1115,11 @@ static string _localise_string(const string& context, const string& value)
 
     // try simple translation
     string result = cxlate(context, value, false);
+    if (!result.empty())
+        return result;
+    
+    // handle strings like "on level 3 of the dungeon"
+    result = _localise_location(context, value);
     if (!result.empty())
         return result;
 
