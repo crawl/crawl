@@ -1269,9 +1269,9 @@ static void _redraw_title()
     textcolour(YELLOW);
     CGOTOXY(1, 2, GOTO_STAT);
     string species = species::name(you.species);
-    NOWRAP_EOL_CPRINTF("%s", localise(species).c_str());
     if (you_worship(GOD_NO_GOD))
     {
+        NOWRAP_EOL_CPRINTF("%s", localise(species).c_str());
         if (you.char_class == JOB_MONK
             && !you.has_mutation(MUT_FORLORN) // XX is this necessary?
             && !had_gods())
