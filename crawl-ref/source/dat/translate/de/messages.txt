@@ -10858,23 +10858,6 @@ Ihr habt den letzten Gegenstand der Art "%s" identifiziert.
 %%%%
 
 ##################
-# jobs.cc
-##################
-%%%%
-Un
-
-%%%%
-Unemployed
-
-%%%%
-"job number "
-
-%%%%
-is not present\n
-
-%%%%
-
-##################
 # kills.cc
 ##################
 %%%%
