@@ -13,6 +13,7 @@
 #include "item-status-flag-type.h"
 #include "known-items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "unicode.h"
@@ -29,7 +30,7 @@ public:
         {
             InvEntry *ie = new InvEntry(*item);
             if (tag == "pickup")
-                ie->tag = "pickup";
+                ie->tag = "pickup"; // noloc
             // If there's no hotkey, provide one.
             if (ie->hotkeys[0] == ' ')
                 ie->hotkeys[0] = ckey++;
@@ -44,7 +45,7 @@ public:
 protected:
     string help_key() const override
     {
-        return "known-menu";
+        return "known-menu"; // noloc
     }
 
     bool process_key(int key) override
@@ -133,7 +134,7 @@ public:
             name = "runes";
         else if (item->sub_type == get_max_subtype(item->base_type))
         {
-            name = "unknown "
+            name = "unknown " // noloc
                    + lowercase_string(item_class_name(item->base_type));
         }
         else if (item->base_type == OBJ_JEWELLERY)
@@ -152,6 +153,7 @@ public:
         else
             symbol = '-';
 
+        name = localise(name);
         return make_stringf(" %c%c%c%c%s", hotkeys[0], need_cursor ? '[' : ' ',
                                            symbol, need_cursor ? ']' : ' ',
                                            name.c_str());
@@ -370,7 +372,8 @@ void check_item_knowledge(bool unknown_items)
     else
         stitle = "You recognise all items. (Select to toggle autopickup)";
 
-    string prompt = "(_ for help)";
+    stitle = localise(stitle);
+    string prompt = localise("(_ for help)");
     //TODO: when the menu is opened, the text is not justified properly.
     stitle = stitle + string(max(0, MIN_COLS - strwidth(stitle + prompt)),
                              ' ') + prompt;
@@ -391,7 +394,7 @@ void check_item_knowledge(bool unknown_items)
     ml = menu.load_items(items_misc, known_item_mangle, ml, false);
     if (!items_other.empty())
     {
-        menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
+        menu.add_entry(new MenuEntry(localise("Other Items"), MEL_SUBTITLE));
         ml = menu.load_items_seq(items_other, known_item_mangle, ml);
     }
 

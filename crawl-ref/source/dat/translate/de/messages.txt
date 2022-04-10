@@ -10861,32 +10861,26 @@ Ihr habt den letzten Gegenstand der Art "%s" identifiziert.
 # known-items.cc
 ##################
 %%%%
-known-menu
-
-%%%%
 "Select to reset item to default: "
-
+"Gegenstand wählen um ihn auf die Standardeinstellungen zurückzusetzen: "
 %%%%
 manuals
-
+Handbücher
 %%%%
 spellbooks
-
+Zauberbücher
 %%%%
 runes
-
-%%%%
-"unknown "
-
+Runen
 %%%%
 Items not yet recognised: (toggle with -)
-
+Unerkannte Gegenstände: (unschalten mit -)
 %%%%
 Recognised items. (- for unrecognised, select to toggle autopickup)
-
+Erkannte Gegenstände. (- für unerkannte, wählen um Auto-Raffen umzuschalten)
 %%%%
 You recognise all items. (Select to toggle autopickup)
-
+Alle Gegenstände erkannt. (Wählen um Auto-Raffen umzuschalten)
 %%%%
 Other Items
 Andere Gegenstände
