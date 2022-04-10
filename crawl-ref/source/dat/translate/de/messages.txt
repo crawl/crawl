@@ -10858,125 +10858,6 @@ Ihr habt den letzten Gegenstand der Art "%s" identifiziert.
 %%%%
 
 ##################
-# kills.cc
-##################
-%%%%
-collateral kills
-
-%%%%
-others
-
-%%%%
-Grand Total: %d creatures vanquished
-
-%%%%
-Lua error:\n
-
-%%%%
-Vanquished Creatures
-
-%%%%
-%d creature%s vanquished.\n
-
-%%%%
-" (once)"
-
-%%%%
-" (twice)"
-
-%%%%
-" (thrice)"
-
-%%%%
-" (%d times)"
-
-%%%%
-" zombie"
-
-%%%%
-" skeleton"
-
-%%%%
-" simulacrum"
-
-%%%%
-"spectral "
-
-%%%%
-" (shapeshifter)"
-
-%%%%
-"The ghost of "
-
-%%%%
-Unexpected argument type
-
-%%%%
-spectre
-
-%%%%
-strange
-
-%%%%
-natural
-
-%%%%
-undead
-
-%%%%
-nonliving
-
-%%%%
-Unexpected argument type, wanted table
-
-%%%%
-%u creature%s vanquished.
-
-%%%%
-nkills
-
-%%%%
-exp
-
-%%%%
-desc
-
-%%%%
-monnum
-
-%%%%
-modifier
-
-%%%%
-holiness
-
-%%%%
-symbol
-
-%%%%
-isghost
-
-%%%%
-ispandemon
-
-%%%%
-isunique
-
-%%%%
-rawwrite
-
-%%%%
-write
-
-%%%%
-summary
-
-%%%%
-kills
-
-%%%%
-
-##################
 # known-items.cc
 ##################
 %%%%
@@ -11363,6 +11244,9 @@ depth
 place
 
 %%%%
+desc
+
+%%%%
 tags
 
 %%%%
@@ -11693,6 +11577,9 @@ tile
 ##################
 # l-file.cc
 ##################
+%%%%
+write
+
 %%%%
 file
 
@@ -13727,6 +13614,15 @@ Monster '%s' needs a defining item.
 
 %%%%
 Index out of range: %d
+
+%%%%
+" zombie"
+
+%%%%
+" skeleton"
+
+%%%%
+" simulacrum"
 
 %%%%
 " spectre"
@@ -16891,6 +16787,9 @@ INVALID MONSTER
 "submerged "
 
 %%%%
+"spectral "
+
+%%%%
 "ghostly "
 
 %%%%
@@ -16904,6 +16803,9 @@ INVALID MONSTER
 
 %%%%
 " beast"
+
+%%%%
+spectre
 
 %%%%
 shaped pillar of salt
@@ -17186,6 +17088,15 @@ Tentakel platzen aus dem Körper der Sternbrut!
 ##################
 # mon-util.cc
 ##################
+%%%%
+natural
+
+%%%%
+undead
+
+%%%%
+nonliving
+
 %%%%
 evil
 
