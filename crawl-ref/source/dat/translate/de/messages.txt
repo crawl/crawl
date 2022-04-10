@@ -10873,9 +10873,6 @@ Unemployed
 is not present\n
 
 %%%%
-job-data
-
-%%%%
 
 ##################
 # kills.cc
@@ -17044,9 +17041,6 @@ Es konnte kein Pfad von (%d,%d) nach (%d,%d) gefunden werden.
 Warning: monster '%s' is not yet fully coded.
 Warnung: Monster '%s' ist noch nicht vollständig codiert.
 %%%%
-mon-bands
-
-%%%%
 %s feels only hate for you!
 
 %%%%
@@ -17504,9 +17498,6 @@ Monster %d has no name\n
 %s has a corpse but no corpse tile\n
 
 %%%%
-mon-data
-
-%%%%
 no spells
 
 %%%%
@@ -17529,9 +17520,6 @@ Spellbook %s has spell %s marked MON_SPELL_NOISY redundantly\n
 
 %%%%
 Spellbook %s has spell %s with no category\n
-
-%%%%
-mon-spell
 
 %%%%
 almost destroyed
@@ -31793,9 +31781,6 @@ Duplicate name '%s'!\n
 
 %%%%
 No action for '%s'!\n
-
-%%%%
-xom-data
 
 %%%%
 mapping estimate: %d%%\nexploration estimate: %d%%\n
