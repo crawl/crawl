@@ -214,6 +214,12 @@ for filename in files:
             if line == '':
                 continue
 
+            if filename == 'job-data.h':
+                # special handling - only take the line with the job abbreviation and name
+                if re.search(r'"[A-Z][a-zA-Z]"', line):
+                    lines.append(line)
+                continue
+
             if len(lines) > 0:        
                 last = lines[-1]
 
