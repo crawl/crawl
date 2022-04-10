@@ -20,9 +20,6 @@ Mönch
 Hunter
 Jäger
 %%%%
-Assassin
-Assassine
-%%%%
 Berserker
 Berserker
 %%%%
@@ -34,9 +31,6 @@ Abgrundritter
 %%%%
 Chaos Knight
 Chaosritter
-%%%%
-Skald
-Skalde
 %%%%
 Enchanter
 Verzauberer
@@ -87,6 +81,15 @@ Wanderer
 Wanderer
 %%%%
 
+# obsolete
+%%%%
+Assassin
+Assassine
+%%%%
+Skald
+Skalde
+%%%%
+
 ##############################################
 # Player species
 ##############################################
@@ -126,9 +129,6 @@ Ghul
 %%%%
 Gnoll
 Gnoll
-%%%%
-Halfling
-Halbling
 %%%%
 Hill Orc
 Hügelork
@@ -176,18 +176,22 @@ Vine Stalker
 Rebpirscher
 %%%%
 
+# obsolete
+%%%%
+Halfling
+Halbling
 %%%%
 Centaur
-# obsolete
+Zentaur
 %%%%
 Sludge Elf
-# obsolete
+
 %%%%
 High Elf
-# obsolete
+
 %%%%
 Lava Orc
-# obsolete
+
 %%%%
 
 ##############################################
