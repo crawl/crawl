@@ -1,15 +1,14 @@
 ###############################################################################
 #
-# German translations for item names
-#
-# Translation notes:
-#
+# Translations for item names - nominative
 #
 ###############################################################################
 %%%%
 
 #################################
-# Item Types
+# Item Types (terse)
+# Used in item search, plus one specific message
+# (and also some unlocalised contexts)
 #################################
 %%%%
 weapon
@@ -62,57 +61,6 @@ Gold
 %%%%
 rune
 Rune
-%%%%
-
-#################################
-# Generic Adjectives
-#################################
-# These can be applied to various classes of items
-%%%%
-"cursed "
-"verfluchte "
-%%%%
-"uncursed "
-"unverfluchte "
-%%%%
-"enchanted "
-"verzauberte "
-%%%%
-"glowing "
-"glühende "
-%%%%
-"shiny "
-"glänzende "
-%%%%
-"{adj-er}cursed "
-"verfluchter "
-%%%%
-"{adj-er}uncursed "
-"unverfluchter "
-%%%%
-"{adj-er}enchanted "
-"verzauberter "
-%%%%
-"{adj-er}glowing "
-"glühender "
-%%%%
-"{adj-er}shiny "
-"glänzender "
-%%%%
-"{adj-es}cursed "
-"verfluchtes "
-%%%%
-"{adj-es}uncursed "
-"unverfluchtes "
-%%%%
-"{adj-es}enchanted "
-"verzaubertes "
-%%%%
-"{adj-es}glowing "
-"glühendes "
-%%%%
-"{adj-es}shiny "
-"glänzendes "
 %%%%
 
 #################################
@@ -885,29 +833,6 @@ ein Silberbumerang
 #################################
 # Weapon Brands
 #################################
-# the first 3 are applied as adjectives
-%%%%
-"antimagic "
-"antimagische "
-%%%%
-"{adj-er}antimagic "
-"antimagischer "
-%%%%
-"{adj-es}antimagic "
-"antimagisches "
-%%%%
-"vampiric "
-"vampirische "
-%%%%
-"{adj-er}vampiric "
-"vampirischer "
-%%%%
-"{adj-es}vampiric "
-"vampirisches "
-%%%%
-"vorpal "
-Vorpal-
-%%%%
 # don't think this is used, but it's in the code
 %%%%
 " of acid"
@@ -1313,29 +1238,6 @@ Eure %sGolddrachenschuppen
 %%%%
 %sgold dragon scales
 %sGolddrachenschuppen
-%%%%
-
-#################################
-# Armour adjectives
-#################################
-%%%%
-"embroidered "
-"bestickte "
-%%%%
-"dyed "
-"gefärbte "
-%%%%
-"{adj-er}embroidered "
-"bestickter "
-%%%%
-"{adj-er}dyed "
-"gefärbter "
-%%%%
-"{adj-es}embroidered "
-"besticktes "
-%%%%
-"{adj-es}dyed "
-"gefärbtes "
 %%%%
 
 #################################
@@ -1819,33 +1721,6 @@ Euer {adj-er}%sobsoleter Ring
 {adj-er}%sMondsteinring
 %%%%
 
-# adjectives
-%%%%
-"{adj-er}encrusted "
-"verkrusteter "
-%%%%
-"{adj-er}tubular "
-"röhrenförmiger "
-%%%%
-"{adj-er}blackened "
-"geschwärzter "
-%%%%
-"{adj-er}scratched "
-"zerkratzter "
-%%%%
-"{adj-er}small "
-"kleiner "
-%%%%
-"{adj-er}twisted "
-"verdrehter "
-%%%%
-"{adj-er}notched "
-"gekerbter "
-%%%%
-"{adj-er}knobbly "
-"knubbeliger "
-%%%%
-
 #################################
 # Amulets
 #################################
@@ -2120,39 +1995,6 @@ Euer {adj-es}%sAmulett der Regeneration
 {adj-es}%sBeryllamulett
 %%%%
 
-# adjectives
-%%%%
-"{adj-es}dented "
-"verbeultes "
-%%%%
-"{adj-es}square "
-"quadratisches "
-%%%%
-"{adj-es}thick "
-"dickes "
-%%%%
-"{adj-es}thin "
-"dünnes "
-%%%%
-"{adj-es}blackened "
-"geschwärztes "
-%%%%
-"{adj-es}small "
-"kleines "
-%%%%
-"{adj-es}twisted "
-"verdrehtes "
-%%%%
-"{adj-es}tiny "
-"sehr kleines "
-%%%%
-"{adj-es}triangular "
-"dreieckiges "
-%%%%
-"{adj-es}lumpy "
-"klumpiges "
-%%%%
-
 #################################
 # Artefact suffixes
 #################################
@@ -2324,48 +2166,6 @@ beseitigter Zauberstab
 %%%%
 %sfluorescent wand
 {adj-er}%sfluoreszierender Zauberstab
-%%%%
-
-# adjectives
-%%%%
-"{adj-er}jewelled "
-"juwelenbesetzter "
-%%%%
-"{adj-er}curved "
-"gebogener "
-%%%%
-"{adj-er}long "
-"langer "
-%%%%
-"{adj-er}short "
-"kurzer "
-%%%%
-#msgctxt "adj-er"
-#"twisted "
-#"verdrehter "
-%%%%
-"{adj-er}crooked "
-"krummer "
-%%%%
-"{adj-er}forked "
-"gegabelter "
-%%%%
-#msgctxt "adj-er"
-#"blackened "
-#"geschwärzter "
-%%%%
-"{adj-er}tapered "
-"verjüngter "
-%%%%
-"{adj-er}worn "
-"abgenutzter "
-%%%%
-#msgctxt "adj-er"
-#"encrusted "
-#"verkrusteter "
-%%%%
-"{adj-er}sharpened "
-"geschärfter "
 %%%%
 
 #################################
@@ -2750,224 +2550,6 @@ ein {adj-er}%sZaubertrank
 %d %spotions
 %d %sZaubertränke
 %%%%
-# potion colours
-%%%%
-"{adj-er}blue "
-"blauer "
-%%%%
-"{adj-er}black "
-"schwarzer "
-%%%%
-"{adj-er}silvery "
-"silberner "
-%%%%
-"{adj-er}cyan "
-"blaugrüner "
-%%%%
-"{adj-er}purple "
-"purpurroter "
-%%%%
-"{adj-er}inky "
-"tintiger "
-%%%%
-"{adj-er}red "
-"roter "
-%%%%
-"{adj-er}yellow "
-"gelber "
-%%%%
-"{adj-er}green "
-"grüner "
-%%%%
-"{adj-er}brown "
-"brauner "
-%%%%
-"{adj-er}ruby "
-"rubinroter "
-%%%%
-"{adj-er}white "
-"weißer "
-%%%%
-"{adj-er}emerald "
-"smaragdgrüner "
-%%%%
-"{adj-er}grey "
-"grauer "
-%%%%
-"{adj-er}coppery "
-"kupferfarbener "
-%%%%
-"{adj-er}golden "
-"goldener "
-%%%%
-"{adj-er}dark "
-"dunkler "
-%%%%
-"{adj-er}puce "
-"braunroter "
-%%%%
-"{adj-er}amethyst "
-"amethystfarbener "
-%%%%
-"{adj-er}sapphire "
-"saphirblauer "
-%%%%
-# potion colours - plural
-# no context because in German, the -e ending is most common, so treat as default
-%%%%
-"blue "
-"blaue "
-%%%%
-"black "
-"schwarze "
-%%%%
-"silvery "
-"silberne "
-%%%%
-"cyan "
-"blaugrüne "
-%%%%
-"purple "
-"purpurrote "
-%%%%
-# undeclined
-%%%%
-"orange "
-"orange "
-%%%%
-"inky "
-"tintige "
-%%%%
-"red "
-"rote "
-%%%%
-"yellow "
-"gelbe "
-%%%%
-"green "
-"grüne "
-%%%%
-"brown "
-"braune "
-%%%%
-"ruby "
-"rubinrote "
-%%%%
-"white "
-"weiße "
-%%%%
-"emerald "
-"smaragdgrüne "
-%%%%
-"grey "
-"graue "
-%%%%
-# undeclined
-%%%%
-"pink "
-"rosa "
-%%%%
-"coppery "
-"kupferfarbene "
-%%%%
-"golden "
-"goldene "
-%%%%
-"dark "
-"dunkle "
-%%%%
-"puce "
-"braunrote "
-%%%%
-"amethyst "
-"amethystfarbene "
-%%%%
-"sapphire "
-"saphirblaue "
-%%%%
-# potion qualifiers
-%%%%
-"{adj-er}bubbling "
-"sprudelnder "
-%%%%
-"{adj-er}fizzy "
-"zischender "
-%%%%
-"{adj-er}fuming "
-"rauchender "
-%%%%
-"{adj-er}smoky "
-"rauchiger "
-%%%%
-"{adj-er}viscous "
-"dickflüssiger "
-%%%%
-"{adj-er}lumpy "
-"klumpiger "
-%%%%
-"{adj-er}sedimented "
-"sedimentierter "
-%%%%
-"{adj-er}metallic "
-"metallischer "
-%%%%
-"{adj-er}murky "
-"trüber "
-%%%%
-"{adj-er}gluggy "
-"klebriger "
-%%%%
-"{adj-er}oily "
-"öliger "
-%%%%
-"{adj-er}slimy "
-"schleimiger "
-%%%%
-"{adj-er}emulsified "
-"emulgierter "
-%%%%
-# potion qualifiers - plural
-# no context because in German, the -e ending is most common, so treat as default
-%%%%
-"bubbling "
-"sprudelnde "
-%%%%
-"fizzy "
-"zischende "
-%%%%
-"fuming "
-"rauchende "
-%%%%
-"smoky "
-"rauchige "
-%%%%
-"viscous "
-"dickflüssige "
-%%%%
-"lumpy "
-"klumpige "
-%%%%
-"sedimented "
-"sedimentierte "
-%%%%
-"metallic "
-"metallische "
-%%%%
-"murky "
-"trübe "
-%%%%
-"gluggy "
-"klebrige "
-%%%%
-"oily "
-"ölige "
-%%%%
-"slimy "
-"schleimige "
-%%%%
-"emulsified "
-"emulgierte "
-%%%%
 
 #################################
 # Magical Staves
@@ -3044,54 +2626,6 @@ ein {adj-er}%sStecken der Herbeirufung
 a %sstaff
 ein {adj-er}%sStecken
 %%%%
-
-# adjectives
-# covered elsewhere
-#msgctxt "adj-er"
-#"crooked "
-#"krummer "
-# covered elsewhere
-#msgctxt "adj-er"
-#"knobbly "
-#"knubbeliger "
-%%%%
-"{adj-er}weird "
-"seltsamer "
-%%%%
-"{adj-er}gnarled "
-"knorriger "
-%%%%
-"{adj-er}thin "
-"dünner "
-%%%%
-# covered elsewhere
-#msgctxt "adj-er"
-#"curved "
-#"gebogener "
-# covered elsewhere
-#msgctxt "adj-er"
-#"twisted "
-#"verdrehter "
-%%%%
-"{adj-er}thick "
-"dicker "
-%%%%
-# covered elsewhere
-#msgctxt "adj-er"
-#"long "
-#"langer "
-# covered elsewhere
-#msgctxt "adj-er"
-#"short "
-#"kurzer "
-%%%%
-"{adj-er}smoking "
-"rauchiger "
-%%%%
-# covered elsewhere
-#msgctxt "adj-er"
-#"jewelled "
-#"juwelenbesetzter "
 
 #################################
 # Spellbooks
@@ -3480,32 +3014,6 @@ a %spapyrus book
 ein {adj-es}%sPapyrusbuch
 %%%%
 
-# adjectives
-%%%%
-"{adj-es}chunky "
-"klobiges "
-%%%%
-# covered under amulets
-#msgctxt "adj-es"
-#"thick "
-#"dickes "
-# covered under amulets
-#msgctxt "adj-es"
-#"thin "
-#"dünnes "
-%%%%
-"{adj-es}wide "
-"breites "
-%%%%
-# Note: the German for "dog-eared" is "mit/voller Eselsohren", but that can't be used as an adjective
-%%%%
-"{adj-es}dog-eared "
-"schäbiges "
-%%%%
-"{adj-es}oblong "
-"längliches "
-%%%%
-
 #################################
 # Food
 #################################
@@ -3618,52 +3126,6 @@ eine %sRune von Zot
 the %srune
 die %sRune
 %%%%
-# adjectives
-%%%%
-"iron "
-"eiserne "
-%%%%
-"icy "
-"eisige "
-%%%%
-"bone "
-Knochen-
-%%%%
-#"slimy "
-#"schleimige "
-%%%%
-"silver "
-"silberne "
-%%%%
-"serpentine "
-Schlangen-
-%%%%
-#"golden "
-#"goldene "
-%%%%
-"decaying "
-"verfallende "
-%%%%
-"barnacled "
-Kletten-
-%%%%
-"gossamer "
-Spinnfäden-
-%%%%
-"demonic "
-"dämonische "
-%%%%
-#"glowing "
-#"leuchtende "
-%%%%
-"magical "
-"magische "
-%%%%
-"fiery "
-"feurige "
-%%%%
-#"dark "
-#"dunkle "
 # terse version for character overview screen
 %%%%
 iron

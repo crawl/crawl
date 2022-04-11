@@ -1,0 +1,348 @@
+###############################################################################
+#
+# Translations for adjectives (-en form)
+#
+# Note: Some of these may be redundant, as the adjective may never occur in
+# this form, but it's better to be safe than sorry.
+#
+###############################################################################
+
+################################
+# General adjectives
+################################
+%%%%
+"{adj-en}large "
+"großen "
+%%%%
+"{adj-en}small "
+"kleinen "
+%%%%
+"{adj-en}cursed "
+"verfluchten "
+%%%%
+"{adj-en}enchanted "
+"verzauberten "
+%%%%
+"{adj-en}glowing "
+"glühenden "
+%%%%
+"{adj-en}shiny "
+"glänzenden "
+%%%%
+"{adj-en}runed "
+"runenverzierten "
+%%%%
+
+%%%%
+# used for rings, amulets, wands, staves
+"{adj-en}twisted "
+"verdrehten "
+%%%%
+# used for rings, amulets, wands
+"{adj-en}blackened "
+"geschwärzten "
+%%%%
+# used for amulets and staves
+"{adj-en}thick "
+"dicken "
+%%%%
+# used for amulets and staves
+"{adj-en}thin "
+"dünnen "
+%%%%
+# used for rings and wands
+"{adj-en}encrusted "
+"verkrusteten "
+%%%%
+# used for potion and rune
+"{adj-en}golden "
+"goldenen "
+%%%%
+# used for potion and rune
+"{adj-en}dark "
+"dunklen "
+%%%%
+# used for rings and staves
+"{adj-en}knobbly "
+"knubbeligen "
+%%%%
+
+# all these used for both wands and staves
+%%%%
+"{adj-en}jewelled "
+"juwelenbesetzten "
+%%%%
+"{adj-en}curved "
+"gebogenen "
+%%%%
+"{adj-en}long "
+"langen "
+%%%%
+"{adj-en}short "
+"kurzen "
+%%%%
+"{adj-en}crooked "
+"krummen "
+%%%%
+
+################################
+# armour
+################################
+%%%%
+"{adj-en}embroidered "
+"bestickten "
+%%%%
+"{adj-en}dyed "
+"gefärbten "
+%%%%
+
+################################
+# weapon brands applied as adjectives
+################################
+%%%%
+"{adj-en}vorpal "
+"Vorpal-"
+%%%%
+"{adj-en}antimagic "
+"antimagische "
+%%%%
+"{adj-en}vampiric "
+"vampirische "
+%%%%
+
+################################
+# rings
+################################
+%%%%
+"{adj-en}tubular "
+"röhrenförmigen "
+%%%%
+"{adj-en}scratched "
+"zerkratzten "
+%%%%
+"{adj-en}notched "
+"gekerbten "
+%%%%
+
+################################
+# amulets
+################################
+%%%%
+"{adj-en}dented "
+"verbeulten "
+%%%%
+"{adj-en}square "
+"quadratischen "
+%%%%
+"{adj-en}tiny "
+"sehr kleinen "
+%%%%
+"{adj-en}triangular "
+"dreieckigen "
+%%%%
+"{adj-en}lumpy "
+"klumpigen "
+%%%%
+
+################################
+# wands
+################################
+%%%%
+"{adj-en}forked "
+"gegabelten "
+%%%%
+"{adj-en}tapered "
+"verjüngten "
+%%%%
+"{adj-en}worn "
+"abgenutzten "
+%%%%
+"{adj-en}sharpened "
+"geschärften "
+%%%%
+
+################################
+# magical staves
+################################
+%%%%
+"{adj-en}weird "
+"seltsamen "
+%%%%
+"{adj-en}gnarled "
+"knorrigen "
+%%%%
+"{adj-en}smoking "
+"rauchigen "
+%%%%
+
+################################
+# potions
+################################
+
+# potion colours
+%%%%
+"{adj-en}blue "
+"blauen "
+%%%%
+"{adj-en}black "
+"schwarzen "
+%%%%
+"{adj-en}silvery "
+"silbernen "
+%%%%
+"{adj-en}cyan "
+"blaugrünen "
+%%%%
+"{adj-en}purple "
+"purpurroten "
+%%%%
+"{adj-en}orange "
+"orange "
+%%%%
+"{adj-en}inky "
+"tintigen "
+%%%%
+"{adj-en}red "
+"roten "
+%%%%
+"{adj-en}yellow "
+"gelben "
+%%%%
+"{adj-en}green "
+"grünen "
+%%%%
+"{adj-en}brown "
+"braunen "
+%%%%
+"{adj-en}ruby "
+"rubinroten "
+%%%%
+"{adj-en}white "
+"weißen "
+%%%%
+"{adj-en}emerald "
+"smaragdgrünen "
+%%%%
+"{adj-en}grey "
+"grauen "
+%%%%
+"{adj-en}pink "
+"rosa "
+%%%%
+"{adj-en}coppery "
+"kupferfarbenen "
+%%%%
+"{adj-en}puce "
+"braunroten "
+%%%%
+"{adj-en}amethyst "
+"amethystfarbenen "
+%%%%
+"{adj-en}sapphire "
+"saphirblauen "
+%%%%
+
+# potion qualifiers (optionally added in front of colour)
+%%%%
+"{adj-en}bubbling "
+"sprudelnden "
+%%%%
+"{adj-en}fuming "
+"rauchenden "
+%%%%
+"{adj-en}fizzy "
+"zischenden "
+%%%%
+"{adj-en}viscous "
+"dickflüssigen "
+%%%%
+"{adj-en}lumpy "
+"klumpigen "
+%%%%
+"{adj-en}smoky "
+"rauchigen "
+%%%%
+"{adj-en}sedimented "
+"sedimentierten "
+%%%%
+"{adj-en}metallic "
+"metallischen "
+%%%%
+"{adj-en}murky "
+"trüben "
+%%%%
+"{adj-en}gluggy "
+"klebrigen "
+%%%%
+"{adj-en}oily "
+"öligen "
+%%%%
+"{adj-en}slimy "
+"schleimigen "
+%%%%
+"{adj-en}emulsified "
+"emulgierten "
+%%%%
+
+################################
+# runes
+################################
+
+%%%%
+"{adj-en}iron "
+"eisernen "
+%%%%
+"{adj-en}icy "
+"eisigen "
+%%%%
+"{adj-en}bone "
+"Knochen-"
+%%%%
+#"{adj-en}slimy "
+#"schleimigen "
+%%%%
+"{adj-en}silver "
+"silbernen "
+%%%%
+"{adj-en}serpentine "
+"Schlangen-"
+%%%%
+"{adj-en}decaying "
+"verfallenden "
+%%%%
+"{adj-en}barnacled "
+"Kletten-"
+%%%%
+"{adj-en}gossamer "
+"Spinnfäden-"
+%%%%
+"{adj-en}demonic "
+"dämonischen "
+%%%%
+"{adj-en}magical "
+"magischen "
+%%%%
+"{adj-en}fiery "
+"feurigen "
+%%%%
+
+################################
+# doors/gates
+################################
+%%%%
+"{adj-en}open "
+"offenen "
+%%%%
+"{adj-en}closed "
+"geschlossenen "
+%%%%
+"{adj-en}sealed "
+"versiegelten "
+%%%%
+"{adj-en}translucent "
+"durchsichtigen "
+%%%%
+"{adj-en}huge "
+"riesigen "
+%%%%
+

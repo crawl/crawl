@@ -4,28 +4,6 @@
 # Accustive case where it differs from nominative (i.e. masculine nouns)
 #
 ###############################################################################
-%%%%
-
-#################################
-# Generic Adjectives
-#################################
-# These can be applied to various classes of items
-%%%%
-"{adj-en}cursed "
-"verfluchten "
-%%%%
-"{adj-en}uncursed "
-"unverfluchten "
-%%%%
-"{adj-en}enchanted "
-"verzauberten "
-%%%%
-"{adj-en}glowing "
-"glühenden "
-%%%%
-"{adj-en}shiny "
-"glänzenden "
-%%%%
 
 #################################
 # Melee Weapons
@@ -215,18 +193,6 @@ einen Silberbumerang
 %%%%
 
 #################################
-# Weapon Brands
-#################################
-# the first 3 are applied as adjectives
-%%%%
-"{adj-en}antimagic "
-"antimagischer "
-%%%%
-"{adj-en}vampiric "
-"vampirischer "
-%%%%
-
-#################################
 # Armour
 #################################
 # definite article
@@ -306,17 +272,6 @@ einen {adj-en}%sNagaharnisch
 %%%%
 {acc}a %sbuckler
 einen {adj-en}%sBuckler
-%%%%
-
-#################################
-# Armour adjectives
-#################################
-%%%%
-"{adj-en}embroidered "
-"bestickter "
-%%%%
-"{adj-en}dyed "
-"gefärbter "
 %%%%
 
 #################################
@@ -484,32 +439,6 @@ einen {adj-en}%sBronzering
 {acc}a %smoonstone ring
 einen {adj-en}%sMondsteinring
 %%%%
-# adjectives
-%%%%
-"{adj-en}encrusted "
-"verkrusteten "
-%%%%
-"{adj-en}tubular "
-"röhrenförmigen "
-%%%%
-"{adj-en}blackened "
-"geschwärzten "
-%%%%
-"{adj-en}scratched "
-"zerkratzten "
-%%%%
-"{adj-en}small "
-"kleinen "
-%%%%
-"{adj-en}twisted "
-"verdrehten "
-%%%%
-"{adj-en}notched "
-"gekerbten "
-%%%%
-"{adj-en}knobbly "
-"knubbeligen "
-%%%%
 
 #################################
 # Wands
@@ -586,50 +515,6 @@ einen {adj-en}%sZauberstab aus Blei
 {acc}a %sfluorescent wand
 einen {adj-en}%sfluoreszierender Zauberstab
 %%%%
-# adjectives
-%%%%
-"{adj-en}jewelled "
-"juwelenbesetzten "
-%%%%
-"{adj-en}curved "
-"gebogenen "
-%%%%
-"{adj-en}long "
-"langen "
-%%%%
-"{adj-en}short "
-"kurzen "
-%%%%
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"twisted "
-#"verdrehten "
-%%%%
-"{adj-en}crooked "
-"krummen "
-%%%%
-"{adj-en}forked "
-"gegabelten "
-%%%%
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"blackened "
-#"geschwärzten "
-%%%%
-"{adj-en}tapered "
-"verjüngten "
-%%%%
-"{adj-en}worn "
-"abgenutzten "
-%%%%
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"encrusted "
-#"verkrusteten "
-%%%%
-"{adj-en}sharpened "
-"geschärften "
-%%%%
 
 #################################
 # Potions
@@ -692,109 +577,6 @@ einen Trank der Stecherei
 {acc}a %spotion
 einen {adj-en}%sZaubertrank
 %%%%
-# potion colours
-%%%%
-"{adj-en}blue "
-"blauen "
-%%%%
-"{adj-en}black "
-"schwarzen "
-%%%%
-"{adj-en}silvery "
-"silbernen "
-%%%%
-"{adj-en}cyan "
-"blaugrünen "
-%%%%
-"{adj-en}purple "
-"purpurroten "
-%%%%
-"{adj-en}inky "
-"tintigen "
-%%%%
-"{adj-en}red "
-"roten "
-%%%%
-"{adj-en}yellow "
-"gelben "
-%%%%
-"{adj-en}green "
-"grünen "
-%%%%
-"{adj-en}brown "
-"braunen "
-%%%%
-"{adj-en}ruby "
-"rubinroten "
-%%%%
-"{adj-en}white "
-"weißen "
-%%%%
-"{adj-en}emerald "
-"smaragdgrünen "
-%%%%
-"{adj-en}grey "
-"grauen "
-%%%%
-"{adj-en}coppery "
-"kupferfarbenen "
-%%%%
-"{adj-en}golden "
-"goldenen "
-%%%%
-"{adj-en}dark "
-"dunklen "
-%%%%
-"{adj-en}puce "
-"braunroten "
-%%%%
-"{adj-en}amethyst "
-"amethystfarbenen "
-%%%%
-"{adj-en}sapphire "
-"saphirblauen "
-%%%%
-# potion qualifiers
-%%%%
-"{adj-en}bubbling "
-"sprudelnden "
-%%%%
-"{adj-en}fizzy "
-"zischenden "
-%%%%
-"{adj-en}fuming "
-"rauchenden "
-%%%%
-"{adj-en}smoky "
-"rauchigen "
-%%%%
-"{adj-en}viscous "
-"dickflüssigen "
-%%%%
-"{adj-en}lumpy "
-"klumpigen "
-%%%%
-"{adj-en}sedimented "
-"sedimentierten "
-%%%%
-"{adj-en}metallic "
-"metallischen "
-%%%%
-"{adj-en}murky "
-"trüben "
-%%%%
-"{adj-en}gluggy "
-"klebrigen "
-%%%%
-"{adj-en}oily "
-"öligen "
-%%%%
-"{adj-en}slimy "
-"schleimigen "
-%%%%
-"{adj-en}emulsified "
-"emulgierten "
-%%%%
 
 #################################
 # Magical Staves
@@ -833,60 +615,7 @@ einen {adj-en}%sStecken der Herbeirufung
 {acc}a %sstaff
 einen {adj-en}%sStecken
 %%%%
-# adjectives
-# covered elsewhere
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"crooked "
-#"krummen "
-# covered elsewhere
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"knobbly "
-#"knubbeligen "
-%%%%
-"{adj-en}weird "
-"seltsamen "
-%%%%
-"{adj-en}gnarled "
-"knorrigen "
-%%%%
-"{adj-en}thin "
-"dünnen "
-%%%%
-# covered elsewhere
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"curved "
-#"gebogenen "
-# covered elsewhere
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"twisted "
-#"verdrehten "
-%%%%
-"{adj-en}thick "
-"dicken "
-%%%%
-# covered elsewhere
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"long "
-#"langen "
-# covered elsewhere
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"short "
-#"kurzen "
-%%%%
-"{adj-en}smoking "
-"rauchigen "
-%%%%
-# covered elsewhere
-#msgctxt "adj-en"
-#msgctxt "acc"
-#"jewelled "
-#"juwelenbesetzten "
+
 #################################
 # Miscellaneous Items
 #################################

@@ -1,0 +1,347 @@
+###############################################################################
+#
+# Translations for adjectives (-en form)
+#
+# This is treated as the default form.
+#
+###############################################################################
+
+################################
+# General adjectives
+################################
+%%%%
+"large "
+"große "
+%%%%
+"small "
+"kleine "
+%%%%
+"cursed "
+"verfluchte "
+%%%%
+"enchanted "
+"verzauberte "
+%%%%
+"glowing "
+"glühende "
+%%%%
+"shiny "
+"glänzende "
+%%%%
+"runed "
+"runenverzierte "
+%%%%
+
+%%%%
+# used for rings, amulets, wands, staves
+"twisted "
+"verdrehte "
+%%%%
+# used for rings, amulets, wands
+"blackened "
+"geschwärzte "
+%%%%
+# used for amulets and staves
+"thick "
+"dicke "
+%%%%
+# used for amulets and staves
+"thin "
+"dünne "
+%%%%
+# used for rings and wands
+"encrusted "
+"verkrustete "
+%%%%
+# used for potion and rune
+"golden "
+"goldene "
+%%%%
+# used for potion and rune
+"dark "
+"dunkle "
+%%%%
+# used for rings and staves
+"knobbly "
+"knubbelige "
+%%%%
+
+# all these used for both wands and staves
+%%%%
+"jewelled "
+"juwelenbesetzte "
+%%%%
+"curved "
+"gebogene "
+%%%%
+"long "
+"lange "
+%%%%
+"short "
+"kurze "
+%%%%
+"crooked "
+"krumme "
+%%%%
+
+################################
+# armour
+################################
+%%%%
+"embroidered "
+"bestickte "
+%%%%
+"dyed "
+"gefärbte "
+%%%%
+
+################################
+# weapon brands applied as adjectives
+################################
+%%%%
+"vorpal "
+"Vorpal-"
+%%%%
+"antimagic "
+"antimagische "
+%%%%
+"vampiric "
+"vampirische "
+%%%%
+
+################################
+# rings
+################################
+%%%%
+"tubular "
+"röhrenförmige "
+%%%%
+"scratched "
+"zerkratzte "
+%%%%
+"notched "
+"gekerbte "
+%%%%
+
+################################
+# amulets
+################################
+%%%%
+"dented "
+"verbeulte "
+%%%%
+"square "
+"quadratische "
+%%%%
+"tiny "
+"sehr kleine "
+%%%%
+"triangular "
+"dreieckige "
+%%%%
+"lumpy "
+"klumpige "
+%%%%
+
+################################
+# wands
+################################
+%%%%
+"forked "
+"gegabelte "
+%%%%
+"tapered "
+"verjüngte "
+%%%%
+"worn "
+"abgenutzte "
+%%%%
+"sharpened "
+"geschärfte "
+%%%%
+
+################################
+# magical staves
+################################
+%%%%
+"weird "
+"seltsame "
+%%%%
+"gnarled "
+"knorrige "
+%%%%
+"smoking "
+"rauchige "
+%%%%
+
+################################
+# potions
+################################
+
+# potion colours
+%%%%
+"blue "
+"blaue "
+%%%%
+"black "
+"schwarze "
+%%%%
+"silvery "
+"silberne "
+%%%%
+"cyan "
+"blaugrüne "
+%%%%
+"purple "
+"purpurrote "
+%%%%
+"orange "
+"orange "
+%%%%
+"inky "
+"tintige "
+%%%%
+"red "
+"rote "
+%%%%
+"yellow "
+"gelbe "
+%%%%
+"green "
+"grüne "
+%%%%
+"brown "
+"braune "
+%%%%
+"ruby "
+"rubinrote "
+%%%%
+"white "
+"weiße "
+%%%%
+"emerald "
+"smaragdgrüne "
+%%%%
+"grey "
+"graue "
+%%%%
+"pink "
+"rosa "
+%%%%
+"coppery "
+"kupferfarbene "
+%%%%
+"puce "
+"braunrote "
+%%%%
+"amethyst "
+"amethystfarbene "
+%%%%
+"sapphire "
+"saphirblaue "
+%%%%
+
+# potion qualifiers (optionally added in front of colour)
+%%%%
+"bubbling "
+"sprudelnde "
+%%%%
+"fuming "
+"rauchende "
+%%%%
+"fizzy "
+"zischende "
+%%%%
+"viscous "
+"dickflüssige "
+%%%%
+"lumpy "
+"klumpige "
+%%%%
+"smoky "
+"rauchige "
+%%%%
+"sedimented "
+"sedimentierte "
+%%%%
+"metallic "
+"metallische "
+%%%%
+"murky "
+"trübe "
+%%%%
+"gluggy "
+"klebrige "
+%%%%
+"oily "
+"ölige "
+%%%%
+"slimy "
+"schleimige "
+%%%%
+"emulsified "
+"emulgierte "
+%%%%
+
+################################
+# runes
+################################
+
+%%%%
+"iron "
+"eiserne "
+%%%%
+"icy "
+"eisige "
+%%%%
+"bone "
+"Knochen-"
+%%%%
+#"slimy "
+#"schleimige "
+%%%%
+"silver "
+"silberne "
+%%%%
+"serpentine "
+"Schlangen-"
+%%%%
+"decaying "
+"verfallende "
+%%%%
+"barnacled "
+"Kletten-"
+%%%%
+"gossamer "
+"Spinnfäden-"
+%%%%
+"demonic "
+"dämonische "
+%%%%
+"magical "
+"magische "
+%%%%
+"fiery "
+"feurige "
+%%%%
+
+################################
+# doors/gates
+################################
+%%%%
+"open "
+"offene "
+%%%%
+"closed "
+"geschlossene "
+%%%%
+"sealed "
+"versiegelte "
+%%%%
+"translucent "
+"durchsichtige "
+%%%%
+"huge "
+"riesige "
+%%%%
+
