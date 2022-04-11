@@ -308,9 +308,6 @@ einen {adj-en}%sRing von Unsichtbares sehen
 {acc}a %sring of resist corrosion
 einen {adj-en}%sRing der Korrosionresistenz
 %%%%
-{acc}a %sring of attention
-einen {adj-en}%sRing der Aufmerksamkeit
-%%%%
 {acc}a %sring of teleportation
 einen {adj-en}%sRing der Teleportation
 %%%%
@@ -459,20 +456,14 @@ einen Zauberstab des Eisstrahls
 {acc}a wand of polymorph
 einen Zauberstab der Verwandlung
 %%%%
-{acc}a wand of enslavement
-einen Zauberstab der Versklavung
+{acc}a wand of charming
+einen Zauberstab der Verzauberung
 %%%%
 {acc}a wand of acid
 einen Zauberstab der Säure
 %%%%
-{acc}a wand of random effects
-einen Zauberstab der zufälligen Effekten
-%%%%
-{acc}a wand of disintegration
-einen Zauberstab der Auflösung
-%%%%
-{acc}a wand of clouds
-einen Zauberstab der Wolken
+{acc}a wand of mindburst
+einen Zauberstab des Gehirnschlags
 %%%%
 {acc}a wand of removedness
 einen beseitigter Zauberstab
@@ -522,6 +513,9 @@ einen {adj-en}%sfluoreszierender Zauberstab
 %%%%
 {acc}a potion of ambrosia
 einen Trank der Ambrosia
+%%%%
+{acc}a potion of attraction
+einen Trank der Anziehung
 %%%%
 {acc}a potion of berserk rage
 einen Trank der Berserker-Wut
@@ -582,9 +576,6 @@ einen {adj-en}%sZaubertrank
 # Magical Staves
 #################################
 %%%%
-{acc}a %sstaff of wizardry
-einen {adj-en}%sStecken der Zauberei
-%%%%
 {acc}a %sstaff of fire
 einen {adj-en}%sStecken des Feuers
 %%%%
@@ -593,9 +584,6 @@ einen {adj-en}%sStecken der Kälte
 %%%%
 {acc}a %sstaff of poison
 einen {adj-en}%sStecken des Giftes
-%%%%
-{acc}a %sstaff of energy
-einen {adj-en}%sStecken der Energie
 %%%%
 {acc}a %sstaff of death
 einen {adj-en}%sStecken des Todes
@@ -609,8 +597,8 @@ einen {adj-en}%sStecken der Luft
 {acc}a %sstaff of earth
 einen {adj-en}%sStecken der Erde
 %%%%
-{acc}a %sstaff of summoning
-einen {adj-en}%sStecken der Herbeirufung
+a %sstaff of removedness
+einen {adj-en}%sStecken der Obsoleszenz
 %%%%
 {acc}a %sstaff
 einen {adj-en}%sStecken

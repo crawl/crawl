@@ -1355,9 +1355,6 @@ ein {adj-er}%sRing von Unsichtbares sehen
 a %sring of resist corrosion
 ein {adj-er}%sRing der Korrosionresistenz
 %%%%
-a %sring of attention
-ein {adj-er}%sRing der Aufmerksamkeit
-%%%%
 a %sring of teleportation
 ein {adj-er}%sRing der Teleportation
 %%%%
@@ -1517,9 +1514,6 @@ Euer {adj-er}%sRing von Unsichtbares sehen
 your %sring of resist corrosion
 Euer {adj-er}%sRing der Korrosionresistenz
 %%%%
-your %sring of attention
-Euer {adj-er}%sRing der Aufmerksamkeit
-%%%%
 your %sring of teleportation
 Euer {adj-er}%sRing der Teleportation
 %%%%
@@ -1588,9 +1582,6 @@ Euer {adj-er}%sobsoleter Ring
 %%%%
 %sring of resist corrosion
 {adj-er}%sRing der Korrosionresistenz
-%%%%
-%sring of attention
-{adj-er}%sRing der Aufmerksamkeit
 %%%%
 %sring of teleportation
 {adj-er}%sRing der Teleportation
@@ -2037,20 +2028,14 @@ ein Zauberstab des Eisstrahls
 a wand of polymorph
 ein Zauberstab der Verwandlung
 %%%%
-a wand of enslavement
-ein Zauberstab der Versklavung
+a wand of charming
+ein Zauberstab der Verzauberung
 %%%%
 a wand of acid
 ein Zauberstab der Säure
 %%%%
-a wand of random effects
-ein Zauberstab der zufälligen Effekten
-%%%%
-a wand of disintegration
-ein Zauberstab der Auflösung
-%%%%
-a wand of clouds
-ein Zauberstab der Wolken
+a wand of mindburst
+ein Zauberstab des Gehirnschlags
 %%%%
 a wand of removedness
 ein beseitigter Zauberstab
@@ -2111,20 +2096,14 @@ Zauberstab des Eisstrahls
 wand of polymorph
 Zauberstab der Verwandlung
 %%%%
-wand of enslavement
-Zauberstab der Versklavung
+wand of charming
+Zauberstab der Verzauberung
 %%%%
 wand of acid
 Zauberstab der Säure
 %%%%
-wand of random effects
-Zauberstab der zufälligen Effekten
-%%%%
-wand of disintegration
-Zauberstab der Auflösung
-%%%%
-wand of clouds
-Zauberstab der Wolken
+wand of mindburst
+Zauberstab des Gehirnschlags
 %%%%
 wand of removedness
 beseitigter Zauberstab
@@ -2216,9 +2195,6 @@ Schriftrolle des magischen Kartierens
 scroll of noise
 Schriftrolle des Lärms
 %%%%
-scroll of random uselessness
-Schriftrolle der zufälligen Nutzlosigkeit
-%%%%
 scroll of remove curse
 Schriftrolle des Segnens
 %%%%
@@ -2236,6 +2212,9 @@ Schriftrolle der Qual
 %%%%
 scroll of vulnerability
 Schriftrolle der Vulnerabilität
+%%%%
+scroll of removedness
+Schriftrolle der Obsoleszenz
 %%%%
 
 # indefinite article
@@ -2282,9 +2261,6 @@ eine Schriftrolle des magischen Kartierens
 a scroll of noise
 eine Schriftrolle des Lärms
 %%%%
-a scroll of random uselessness
-eine Schriftrolle der zufälligen Nutzlosigkeit
-%%%%
 a scroll of remove curse
 eine Schriftrolle des Segnens
 %%%%
@@ -2305,6 +2281,9 @@ eine Schriftrolle der Qual
 %%%%
 a scroll of vulnerability
 eine Schriftrolle der Vulnerabilität
+%%%%
+a scroll of removedness
+eine Schriftrolle der Obsoleszenz
 %%%%
 
 # plural
@@ -2351,9 +2330,6 @@ eine Schriftrolle der Vulnerabilität
 %d scrolls of noise
 %d Schriftrollen des Lärms
 %%%%
-%d scrolls of random uselessness
-%d Schriftrollen der zufälligen Nutzlosigkeit
-%%%%
 %d scrolls of remove curse
 %d Schriftrollen des Segnens
 %%%%
@@ -2372,6 +2348,9 @@ eine Schriftrolle der Vulnerabilität
 %d scrolls of vulnerability
 %d Schriftrollen der Vulnerabilität
 %%%%
+%d scrolls of removedness
+%d Schriftrollen der Obsoleszenz
+%%%%
 
 #################################
 # Potions
@@ -2380,6 +2359,9 @@ eine Schriftrolle der Vulnerabilität
 %%%%
 potion of ambrosia
 Trank der Ambrosia
+%%%%
+potion of attraction
+Trank der Anziehung
 %%%%
 potion of berserk rage
 Trank der Berserker-Wut
@@ -2426,14 +2408,14 @@ Trank der Mutation
 potion of resistance
 Trank des Widerstands
 %%%%
-potion of stabbing
-Trank der Stecherei
-%%%%
 
 #indefinite article
 %%%%
 a potion of ambrosia
 ein Trank der Ambrosia
+%%%%
+a potion of attraction
+ein Trank der Anziehung
 %%%%
 a potion of berserk rage
 ein Trank der Berserker-Wut
@@ -2480,14 +2462,14 @@ ein Trank der Mutation
 a potion of resistance
 ein Trank des Widerstands
 %%%%
-a potion of stabbing
-ein Trank der Stecherei
-%%%%
 
 # plural
 %%%%
 %d potions of ambrosia
 %d Tränke der Ambrosia
+%%%%
+%d potions of attraction
+%d Tränke der Anziehung
 %%%%
 %d potions of berserk rage
 %d Tränke der Berserker-Wut
@@ -2534,9 +2516,6 @@ ein Trank der Stecherei
 %d potions of resistance
 %d Tränke des Widerstands
 %%%%
-%d potions of stabbing
-%d Tränke der Stecherei
-%%%%
 
 # unidentified potions are named "<colour> <potion>"
 # or "<qualifier> <colour> potion"
@@ -2557,9 +2536,6 @@ ein {adj-er}%sZaubertrank
 
 # no article
 %%%%
-%sstaff of wizardry
-{adj-er}%sStecken der Zauberei
-%%%%
 %sstaff of fire
 {adj-er}%sStecken des Feuers
 %%%%
@@ -2568,9 +2544,6 @@ ein {adj-er}%sZaubertrank
 %%%%
 %sstaff of poison
 {adj-er}%sStecken des Giftes
-%%%%
-%sstaff of energy
-{adj-er}%sStecken der Energie
 %%%%
 %sstaff of death
 {adj-er}%sStecken des Todes
@@ -2584,17 +2557,14 @@ ein {adj-er}%sZaubertrank
 %sstaff of earth
 {adj-er}%sStecken der Erde
 %%%%
-%sstaff of summoning
-{adj-er}%sStecken der Herbeirufung
+%sstaff of removedness
+{adj-er}%sStecken der Obsoleszenz
 %%%%
 %sstaff
 {adj-er}%sStecken
 %%%%
 
 # indefinite article
-%%%%
-a %sstaff of wizardry
-ein {adj-er}%sStecken der Zauberei
 %%%%
 a %sstaff of fire
 ein {adj-er}%sStecken des Feuers
@@ -2604,9 +2574,6 @@ ein {adj-er}%sStecken der Kälte
 %%%%
 a %sstaff of poison
 ein {adj-er}%sStecken des Giftes
-%%%%
-a %sstaff of energy
-ein {adj-er}%sStecken der Energie
 %%%%
 a %sstaff of death
 ein {adj-er}%sStecken des Todes
@@ -2620,8 +2587,8 @@ ein {adj-er}%sStecken der Luft
 a %sstaff of earth
 ein {adj-er}%sStecken der Erde
 %%%%
-a %sstaff of summoning
-ein {adj-er}%sStecken der Herbeirufung
+a %sstaff of removedness
+ein {adj-er}%sStecken der Obsoleszenz
 %%%%
 a %sstaff
 ein {adj-er}%sStecken
@@ -3061,6 +3028,15 @@ Phantomspiegel
 figurine of a ziggurat
 Figur einer Zikkurat
 %%%%
+condenser vane
+Kondensationsfahne
+%%%%
+piece from Xom's chessboard
+Figure von Xoms Schachbrett
+%%%%
+tin of tremorstones
+Dose Bebensteine
+%%%%
 
 # indefinite article
 %%%%
@@ -3079,6 +3055,15 @@ ein Phantomspiegel
 a figurine of a ziggurat
 eine Figur einer Zikkurat
 %%%%
+a condenser vane
+eine Kondensationsfahne
+%%%%
+a piece from Xom's chessboard
+eine Figur von Xoms Schachbrett
+%%%%
+a tin of tremorstones
+eine Dose Bebensteine
+%%%%
 
 # plural
 %%%%
@@ -3096,6 +3081,15 @@ eine Figur einer Zikkurat
 %%%%
 %d figurines of a ziggurat
 %d Figuren einer Zikkurat
+%%%%
+%d condenser vanes
+%d Kondensationsfahnen
+%%%%
+%d pieces from Xom's chessboard
+%d Figuren von Xoms Schachbrett
+%%%%
+%d tins of tremorstones
+%d Dosen Bebensteine
 %%%%
 
 %%%%
