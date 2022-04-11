@@ -50,6 +50,10 @@
 "{adj-es}thin "
 "dünnes "
 %%%%
+# used for amulets and potions
+"{adj-es}lumpy "
+"klumpiges "
+%%%%
 # used for rings and wands
 "{adj-es}encrusted "
 "verkrustetes "
@@ -139,9 +143,6 @@
 %%%%
 "{adj-es}triangular "
 "dreieckiges "
-%%%%
-"{adj-es}lumpy "
-"klumpiges "
 %%%%
 
 ################################
@@ -255,9 +256,6 @@
 %%%%
 "{adj-es}viscous "
 "dickflüssiges "
-%%%%
-"{adj-es}lumpy "
-"klumpiges "
 %%%%
 "{adj-es}smoky "
 "rauchiges "

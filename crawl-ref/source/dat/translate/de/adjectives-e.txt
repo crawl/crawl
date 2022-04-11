@@ -49,6 +49,10 @@
 "thin "
 "dünne "
 %%%%
+# used for amulets and potions
+"lumpy "
+"klumpige "
+%%%%
 # used for rings and wands
 "encrusted "
 "verkrustete "
@@ -138,9 +142,6 @@
 %%%%
 "triangular "
 "dreieckige "
-%%%%
-"lumpy "
-"klumpige "
 %%%%
 
 ################################
@@ -254,9 +255,6 @@
 %%%%
 "viscous "
 "dickflüssige "
-%%%%
-"lumpy "
-"klumpige "
 %%%%
 "smoky "
 "rauchige "

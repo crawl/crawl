@@ -600,7 +600,7 @@ einen {adj-en}%sStecken der Luft
 {acc}a %sstaff of earth
 einen {adj-en}%sStecken der Erde
 %%%%
-a %sstaff of removedness
+{acc}a %sstaff of removedness
 einen {adj-en}%sStecken der Obsoleszenz
 %%%%
 {acc}a %sstaff
