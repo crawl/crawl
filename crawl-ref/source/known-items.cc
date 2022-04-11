@@ -208,8 +208,8 @@ public:
     {
         int flags = item->base_type == OBJ_WANDS ? 0 : int{ISFLAG_KNOW_PLUSES};
 
-        return string(" ") + item->name(DESC_PLAIN, false, true, false,
-                                        flags);
+        string item_name = item->name(DESC_PLAIN, false, true, false, flags);
+        return string(" ") + localise(item_name);
     }
 };
 

@@ -1389,7 +1389,7 @@ Abbrechen
 %%%%
 
 ##############################################
-# Inventory list
+# Inventory and item menus
 ##############################################
 %%%%
 Inventory:
@@ -1397,4 +1397,46 @@ Inventar:
 %%%%
 "%d/%d slots"
 "%d/%d Plätze"
+%%%%
+
+# subheadings
+%%%%
+Hand Weapons
+Handwaffen
+%%%%
+Missiles
+Geschosse
+%%%%
+Wands
+Zauberstäbe
+%%%%
+Scrolls
+Schriftrollen
+%%%%
+Jewellery
+Schmuck
+%%%%
+Potions
+Zaubertränke
+%%%%
+Books
+Bücher
+%%%%
+Magical Staves
+Magische Stecken
+%%%%
+Orbs of Power
+Kugeln der Macht
+%%%%
+Carrion
+Aas
+%%%%
+Runes of Zot
+Runen von Zot
+%%%%
+Miscellaneous
+Verschiedenes
+%%%%
+Other Items
+Andere Gegenstände
 %%%%

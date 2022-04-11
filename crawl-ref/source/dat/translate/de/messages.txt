@@ -10042,42 +10042,6 @@ Ihr habt keinen solchen Gegenstand bei Euch.
 (select all with <w>%s</w><blue>)
 (alle mit <w>%s</w><blue> wählen)
 %%%%
-Hand Weapons
-Handwaffen
-%%%%
-Missiles
-Geschosse
-%%%%
-Wands
-Zauberstäbe
-%%%%
-Scrolls
-Schriftrollen
-%%%%
-Jewellery
-Schmuck
-%%%%
-Potions
-Zaubertränke
-%%%%
-Books
-Bücher
-%%%%
-Magical Staves
-Magische Stecken
-%%%%
-Orbs of Power
-Kugeln der Macht
-%%%%
-Miscellaneous
-Verschiedenes
-%%%%
-Carrion
-Aas
-%%%%
-Runes of Zot
-Runen von Zot
-%%%%
 " (1 turn)"
 " (1 Runde)"
 %%%%
@@ -10864,26 +10828,14 @@ Ihr habt den letzten Gegenstand der Art "%s" identifiziert.
 "Select to reset item to default: "
 "Gegenstand wählen um ihn auf die Standardeinstellungen zurückzusetzen: "
 %%%%
-manuals
-Handbücher
-%%%%
-spellbooks
-Zauberbücher
-%%%%
-runes
-Runen
-%%%%
 Items not yet recognised: (toggle with -)
-Unerkannte Gegenstände: (unschalten mit -)
+Unerkannte Gegenstände: (umschalten mit -)
 %%%%
 Recognised items. (- for unrecognised, select to toggle autopickup)
 Erkannte Gegenstände. (- für unerkannte, wählen um Auto-Raffen umzuschalten)
 %%%%
 You recognise all items. (Select to toggle autopickup)
 Alle Gegenstände erkannt. (Wählen um Auto-Raffen umzuschalten)
-%%%%
-Other Items
-Andere Gegenstände
 %%%%
 
 ##################
@@ -20961,15 +20913,6 @@ main-items
 
 %%%%
 sub-items
-
-%%%%
-large rocks
-
-%%%%
-boomerangs
-
-%%%%
-javelins
 
 %%%%
 " and throwing nets"

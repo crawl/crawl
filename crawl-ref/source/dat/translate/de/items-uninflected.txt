@@ -1,0 +1,338 @@
+###############################################################################
+#
+# Translations for item names (uninflected)
+#
+# In contrast to the strings in item.txt, there's no need to provide inflected
+# forms (e.g. accusative, dative, genitive) for these strings as they are only
+# used in very specific contexts
+#
+###############################################################################
+
+#################################
+# Uncounted plural forms
+# (used only in known items menu)
+#################################
+
+%%%%
+unknown magical staves
+unerkannte magische Stecken
+%%%%
+unknown jewellery
+unerkannter Schmuck
+%%%%
+unknown wands
+unerkannte Zauberstäbe
+%%%%
+unknown scrolls
+unerkannte Schriftrollenn
+%%%%
+unknown potions
+unerkannte Zaubertränke
+%%%%
+
+%%%%
+staves of earth
+Stecken der Erde
+%%%%
+staves of air
+Stecken der Luft
+%%%%
+staves of fire
+Stecken des Feuers
+%%%%
+staves of cold
+Stecken der Kälte
+%%%%
+staves of conjuration
+Stecken der Hervorrufung
+%%%%
+staves of death
+Stecken des Todes
+%%%%
+staves of poison
+Stecken des Giftes
+%%%%
+
+%%%%
+arrows
+Pfeile
+%%%%
+bolts
+Bolzen
+%%%%
+darts
+Wurfpfeile
+%%%%
+stones
+Steine
+%%%%
+large rocks
+Felsblöcke
+%%%%
+sling bullets
+Schleuderkugeln
+%%%%
+javelins
+Wurfspeere
+%%%%
+throwing nets
+Wurfnetze
+%%%%
+boomerangs
+Bumerangs
+%%%%
+
+%%%%
+rings of protection
+Ringe des Schutzes
+%%%%
+rings of protection from fire
+Ringe der Feuerresistenz
+%%%%
+rings of poison resistance
+Ringe der Giftresistenz
+%%%%
+rings of protection from cold
+Ringe dee Kälteresistenz
+%%%%
+rings of strength
+Ringe der Stärke
+%%%%
+rings of slaying
+Ringe des Tötens
+%%%%
+rings of see invisible
+Ringe von Unsichtbares sehen
+%%%%
+rings of resist corrosion
+Ringe der Korrosionresistenz
+%%%%
+rings of evasion
+Ringe der Umgehung
+%%%%
+rings of stealth
+Ringe der Heimlichkeit
+%%%%
+rings of dexterity
+Ringe der Geschicklichkeit
+%%%%
+rings of intelligence
+Ringe der Intelligenz
+%%%%
+rings of wizardry
+Ringe der Zauberei
+%%%%
+rings of magical power
+Ringe magischer Kraft
+%%%%
+rings of flight
+Ringe des Fliegens
+%%%%
+rings of positive energy
+Ringe positiver Energie
+%%%%
+rings of willpower
+Ringe der Willenskraft
+%%%%
+rings of fire
+Ringe des Feuers
+%%%%
+rings of ice
+Ringe des Eises
+%%%%
+
+%%%%
+amulets of magic regeneration
+Amulette der magischen Regeneration
+%%%%
+amulets of the acrobat
+Amulette des Akrobaten
+%%%%
+amulets of guardian spirit
+Amulette des Geistschildes
+%%%%
+amulets of faith
+Amulette des Glaubens
+%%%%
+amulets of reflection
+Amulette der Reflexion
+%%%%
+amulets of regeneration
+Amulette der Regeneration
+%%%%
+
+%%%%
+wands of flame
+Zauberstäbe des Flammens
+%%%%
+wands of paralysis
+Zauberstäbe der Paralyse
+%%%%
+wands of digging
+Zauberstäbe des Grabens
+%%%%
+wands of iceblast
+Zauberstäbe des Eisstrahls
+%%%%
+wands of polymorph
+Zauberstäbe der Verwandlung
+%%%%
+wands of charming
+Zauberstäbe der Verzauberung
+%%%%
+wands of acid
+Zauberstäbe der Säure
+%%%%
+wands of mindburst
+Zauberstäbe des Gehirnschlags
+%%%%
+
+%%%%
+scrolls of acquirement
+Schriftrollen des Erwerbs
+%%%%
+scrolls of amnesia
+Schriftrollen der Amnesie
+%%%%
+scrolls of blinking
+Schriftrollen des Flimmerns
+%%%%
+scrolls of brand weapon
+Schriftrollen der Waffenmark
+%%%%
+scrolls of enchant armour
+Schriftrollen der Rüstungsverzauberung
+%%%%
+scrolls of enchant weapon
+Schriftrollen der Waffenverzauberung
+%%%%
+scrolls of fear
+Schriftrollen der Angst
+%%%%
+scrolls of fog
+Schriftrollen des Nebels
+%%%%
+scrolls of holy word
+Schriftrollen des heiligen Wortes
+%%%%
+scrolls of identify
+Schriftrollen der Identifizierung
+%%%%
+scrolls of immolation
+Schriftrollen der Verbrennug
+%%%%
+scrolls of magic mapping
+Schriftrollen des magischen Kartierens
+%%%%
+scrolls of noise
+Schriftrollen des Lärms
+%%%%
+scrolls of remove curse
+Schriftrollen des Segnens
+%%%%
+scrolls of silence
+Schriftrollen der Stille
+%%%%
+scrolls of summoning
+Schriftrollen des Herbeirufs
+%%%%
+scrolls of teleportation
+Schriftrollen der Teleportation
+%%%%
+scrolls of torment
+Schriftrollen der Qual
+%%%%
+scrolls of vulnerability
+Schriftrollen der Vulnerabilität
+%%%%
+
+%%%%
+boxes of beasts
+Kisten der Bestien
+%%%%
+lightning rods
+Blitzstangen
+%%%%
+phials of floods
+Phiolen der Fluten
+%%%%
+phantom mirrors
+Phantomspiegel
+%%%%
+figurines of a ziggurat
+Figuren einer Zikkurat
+%%%%
+condenser vanes
+Kondensationsfahnen
+%%%%
+pieces from Xom's chessboard
+Figuren von Xoms Schachbrett
+%%%%
+tins of tremorstones
+Dosen Bebensteine
+%%%%
+
+%%%%
+potions of ambrosia
+Tränke der Ambrosia
+%%%%
+potions of attraction
+Tränke der Anziehung
+%%%%
+potions of berserk rage
+Tränke der Berserker-Wut
+%%%%
+potions of brilliance
+Tränke der Brillanz
+%%%%
+potions of cancellation
+Tränke der Aufhebung
+%%%%
+potions of curing
+Tränke des Gegenmittels
+%%%%
+potions of degeneration
+Tränke der Degeneration
+%%%%
+potions of experience
+Tränke der Erfahrung
+%%%%
+potions of flight
+Tränke des Fliegens
+%%%%
+potions of haste
+Tränke der Geschwindigkeit
+%%%%
+potions of heal wounds
+Heiltränke
+%%%%
+potions of invisibility
+Tränke der Unsichtbarkeit
+%%%%
+potions of lignification
+Tränke der Verholzung
+%%%%
+potions of magic
+Tränke der Magie
+%%%%
+potions of might
+Tränke der Macht
+%%%%
+potions of mutation
+Tränke der Mutation
+%%%%
+potions of resistance
+Tränke des Widerstands
+%%%%
+
+%%%%
+spellbooks
+Zauberbücher
+%%%%
+manuals
+Handbücher
+%%%%
+runes
+Runen
+%%%%
+
