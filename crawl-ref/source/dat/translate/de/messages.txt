@@ -21392,8 +21392,11 @@ save file decompression failed: %s
 That's too large and heavy for you to wield.
 Das ist zu groß und zu schwer für Euch.
 %%%%
-You can't wield %s.
-Ihr könnt%s nicht führen.
+You can't wield armour.
+Rüstung kann nicht handgehabt werden.
+%%%%
+You can't wield jewellery.
+Schmuck kann nicht handgehabt werden.
 %%%%
 You can't use weapons.
 Ihr könnt keine Waffen benutzen.
