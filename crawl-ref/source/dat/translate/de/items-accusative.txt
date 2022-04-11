@@ -335,6 +335,9 @@ einen {adj-en}%sRing des Fliegens
 {acc}a %sring of positive energy
 einen {adj-en}%sRing positiver Energie
 %%%%
+{acc}a %sring of willpower
+einen {adj-en}%sRing der Willenskraft
+%%%%
 {acc}a %sring of protection from magic
 einen {adj-en}%sRing der Magieresistenz
 %%%%

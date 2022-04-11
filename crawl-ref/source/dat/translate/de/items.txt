@@ -1382,8 +1382,8 @@ ein {adj-er}%sRing des Fliegens
 a %sring of positive energy
 ein {adj-er}%sRing positiver Energie
 %%%%
-a %sring of protection from magic
-ein {adj-er}%sRing der Magieresistenz
+a %sring of willpower
+ein {adj-er}%sRing der Willenskraft
 %%%%
 a %sring of fire
 ein {adj-er}%sRing des Feuers
@@ -1541,8 +1541,8 @@ Euer {adj-er}%sRing des Fliegens
 your %sring of positive energy
 Euer {adj-er}%sRing positiver Energie
 %%%%
-your %sring of protection from magic
-Euer {adj-er}%sRing der Magieresistenz
+your %sring of willpower
+Euer {adj-er}%sRing der Willenskraft
 %%%%
 your %sring of fire
 Euer {adj-er}%sRing des Feuers
@@ -1610,8 +1610,8 @@ Euer {adj-er}%sobsoleter Ring
 %sring of positive energy
 {adj-er}%sRing positiver Energie
 %%%%
-%sring of protection from magic
-{adj-er}%sRing der Magieresistenz
+%sring of willpower
+{adj-er}%sRing der Willenskraft
 %%%%
 %sring of fire
 {adj-er}%sRing des Feuers
