@@ -4249,7 +4249,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Hurt conducts -- pain bond is exempted for balance/gameplay reasons.
         // Damage over time effects are excluded for similar reasons.
-        if (agent && agent->is_player() && mons_gives_xp(*this, *agent)
+        if (agent && agent->is_player()
+            && mons_class_gives_xp(type)
             && flavour != BEAM_SHARED_PAIN
             && flavour != BEAM_STICKY_FLAME
             && kill_type != KILLED_BY_POISON
