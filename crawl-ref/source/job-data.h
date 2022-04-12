@@ -221,7 +221,7 @@ static const map<job_type, job_def> job_data =
 { JOB_GLADIATOR, {
     "Gl", "Gladiator",
     6, 0, 6,
-    { SP_DEEP_DWARF, SP_HILL_ORC, SP_MERFOLK, SP_MINOTAUR, SP_GARGOYLE,
+    { SP_DEEP_DWARF, SP_HILL_ORC, SP_MERFOLK, SP_TROLL, SP_GARGOYLE,
       SP_GNOLL, },
     { },
     { "leather armour", "helmet", "throwing net q:3" },
@@ -233,7 +233,7 @@ static const map<job_type, job_def> job_data =
 { JOB_HUNTER, {
     "Hu", "Hunter",
     3, 1, 8,
-    { SP_HILL_ORC, SP_MINOTAUR, SP_GNOLL, SP_KOBOLD, SP_OGRE, SP_TROLL, },
+    { SP_HILL_ORC, SP_MINOTAUR, SP_GNOLL, SP_KOBOLD, SP_SPRIGGAN, },
     { },
     { "leather armour", "scroll of immolation" },
     WCHOICE_RANGED,
