@@ -10839,1202 +10839,6 @@ Alle Gegenstände erkannt. (Wählen um Auto-Raffen umzuschalten)
 %%%%
 
 ##################
-# l-colour.cc
-##################
-%%%%
-Expected colour generation function.
-
-%%%%
-"Unknown colour: "
-
-%%%%
-colour
-
-%%%%
-
-##################
-# l-crawl.cc
-##################
-%%%%
-needs a boolean argument
-
-%%%%
-Cannot currently process new keys (%s delay active)
-
-%%%%
-Cannot currently process new keys (turn is over)
-
-%%%%
-"Invalid command: "
-
-%%%%
-"Not a (supported) targeted command: "
-
-%%%%
-Cannot currently process new keys (there is pending input)
-
-%%%%
-Must have at least one key to process.
-
-%%%%
-First key is invalid command
-
-%%%%
-Must be an array
-
-%%%%
-Table contains non-string
-
-%%%%
-Invalid regex object
-
-%%%%
-matches
-
-%%%%
-equals
-
-%%%%
-Invalid message filter object
-
-%%%%
-<<
-
-%%%%
-traceback
-
-%%%%
-This function is wizard mode only.
-
-%%%%
-(error object is not a string)
-
-%%%%
-call_dlua: cannot pass non-scalars yet (TODO)
-call_dlua: kann noch keine Nicht-Skalare übergeben (TODO)
-%%%%
-long
-
-%%%%
-must be a string "long", "short", or "major"
-
-%%%%
-tutorial
-
-%%%%
-ranger
-
-%%%%
-mpr
-
-%%%%
-dpr
-
-%%%%
-stderr
-
-%%%%
-more
-
-%%%%
-delay
-
-%%%%
-random2
-
-%%%%
-random2avg
-
-%%%%
-coinflip
-
-%%%%
-worley
-
-%%%%
-simplex
-
-%%%%
-getch
-
-%%%%
-yesno
-
-%%%%
-yesnoquit
-
-%%%%
-kbhit
-
-%%%%
-sendkeys
-
-%%%%
-playsound
-
-%%%%
-version
-
-%%%%
-crawl
-
-%%%%
-" requires a god!"
-
-%%%%
-'%s' matches no god.
-
-%%%%
-Bad number of max runes: %d
-
-%%%%
-rng_wrap missing rng name
-
-%%%%
-Unknown rng name %s
-
-%%%%
-rng_wrap missing function
-
-%%%%
-Failed to run rng-wrapped function (%d)
-
-%%%%
-
-##################
-# l-debug.cc
-##################
-%%%%
-debug lightning beam
-
-%%%%
-DEBUG
-
-%%%%
-god_wrath requires a god!
-
-%%%%
-Bad unique tracking: %s placed=%d was_set=%d is_set=%d
-
-%%%%
-spawns
-
-%%%%
-confirmations
-
-%%%%
-afflictions
-
-%%%%
-unknown thing to disable: %s
-
-%%%%
-: (
-
-%%%%
-%
-
-%%%%
-seed: %
-
-%%%%
-", generator states: "
-
-%%%%
-viewwindow
-
-%%%%
-disable
-
-%%%%
-
-##################
-# l-dgn.cc
-##################
-%%%%
-crawl.vault-placement
-
-%%%%
-Chance must be in the range [0,%d]
-
-%%%%
-Bad weight: %d (must be >= 0)
-
-%%%%
-"Bad orient: "
-
-%%%%
-Expected args, got none.
-
-%%%%
-Unexpected nil.
-
-%%%%
-Map is empty
-
-%%%%
-Line %d out of range (0-%d)
-
-%%%%
-Index %d out of range
-
-%%%%
-Expected marker key and marker function/table.
-
-%%%%
-Not enough points to test connectedness (need at least %d)
-
-%%%%
-Can't set floor to black.
-
-%%%%
-No such colour as '
-
-%%%%
-'
-
-%%%%
-Can't set rock to black.
-
-%%%%
-"Can't set floor to "
-
-%%%%
-Unknown colour: '
-
-%%%%
-Expected colour name or number
-
-%%%%
-unknown branch: '%s'.
-
-%%%%
-set_border_fill_type requires a feature.
-
-%%%%
-unknown feature '
-
-%%%%
-'.
-
-%%%%
-set_border_fill_type cannot be the feature '
-
-%%%%
-set_feature_name takes a feature and the new name.
-
-%%%%
-No such dungeon feature as '
-
-%%%%
-"'.  "
-
-%%%%
-Can't set floor colour to black.
-
-%%%%
-"' is not a valid halo tile. It has "
-
-%%%%
-" variations, but needs exactly 9."
-
-%%%%
-Point (%d,%d) isn't in bounds.
-
-%%%%
-Distance must be positive.
-
-%%%%
-pow_min must be non-negative
-
-%%%%
-pow_max must not be less than pow_min
-
-%%%%
-pow_max must be positive
-
-%%%%
-pow_rolls must be positive
-
-%%%%
-size must be positive.
-
-%%%%
-Invalid cloud type '
-
-%%%%
-Invalid kill category '
-
-%%%%
-spread_rate must be between -1 and 100,inclusive
-
-%%%%
-Expected marker table or function
-
-%%%%
-Expected map-bounds check fn and action fn.
-
-%%%%
-Expected vault_placement
-
-%%%%
-name
-
-%%%%
-filename
-
-%%%%
-depth
-
-%%%%
-place
-
-%%%%
-desc
-
-%%%%
-tags
-
-%%%%
-chance
-
-%%%%
-weight
-
-%%%%
-orient
-
-%%%%
-shuffle
-
-%%%%
-clear
-
-%%%%
-subst
-
-%%%%
-nsubst
-
-%%%%
-lfloorcol
-
-%%%%
-lrockcol
-
-%%%%
-normalise
-
-%%%%
-map
-
-%%%%
-mons
-
-%%%%
-item
-
-%%%%
-marker
-
-%%%%
-kfeat
-
-%%%%
-kitem
-
-%%%%
-kmons
-
-%%%%
-kprop
-
-%%%%
-kmask
-
-%%%%
-mapsize
-
-%%%%
-subvault
-
-%%%%
-fheight
-
-%%%%
-noisy
-
-%%%%
-pos
-
-%%%%
-size
-
-%%%%
-exits
-
-%%%%
-dgn
-
-%%%%
-
-##################
-# l-dgnbld.cc
-##################
-%%%%
-{}()[]<>@
-
-%%%%
-'%s' in table, but not an int.
-
-%%%%
-'%s' in table, but not a string.
-
-%%%%
-'%s' has more than one character.
-
-%%%%
-'%s' in table, but not a bool.
-
-%%%%
-x1
-
-%%%%
-y1
-
-%%%%
-x2
-
-%%%%
-y2
-
-%%%%
-Invalid x coordinate: %d
-
-%%%%
-Invalid y coordinate: %d
-
-%%%%
-x
-
-%%%%
-Primary vault has x_min %d but no x_max
-
-%%%%
-Primary vault has x_min %d but no y_min
-
-%%%%
-Primary vault has x_min %d but no y_max
-
-%%%%
-Primary vault has x_max %d but no x_min
-
-%%%%
-Primary vault has y_min %d but no x_min
-
-%%%%
-Primary vault has y_max %d but no x_min
-
-%%%%
-xcvbmn
-
-%%%%
-Invalid min connections: %d
-
-%%%%
-Invalid max connections: %d (min is %d)
-
-%%%%
-Invalid xdir: %d
-
-%%%%
-Invalid ydir: %d
-
-%%%%
-Could not find feature '%c' to replace
-
-%%%%
-No elements to replace
-
-%%%%
-Could not find '%c'
-
-%%%%
-contents
-
-%%%%
-Invalid pool index %i/%i at (%i, %i)
-
-%%%%
-height
-
-%%%%
-delve
-
-%%%%
-width
-
-%%%%
-
-##################
-# l-dgnevt.cc
-##################
-%%%%
-type
-
-%%%%
-dest
-
-%%%%
-ticks
-
-%%%%
-arg1
-
-%%%%
-arg2
-
-%%%%
-dgnevent
-
-%%%%
-turn
-
-%%%%
-unused
-
-%%%%
-
-##################
-# l-dgngrd.cc
-##################
-%%%%
-Feature must be a string or a feature index.
-
-%%%%
-Invalid dungeon feature
-
-%%%%
-grid
-
-%%%%
-distance
-
-%%%%
-
-##################
-# l-dgnit.cc
-##################
-%%%%
-crawldgn.item_list
-
-%%%%
-Expected item list object or string
-
-%%%%
-Expected type: [BbSifsC], got: '%s'
-
-%%%%
-Unknown type: '%s'
-
-%%%%
-
-##################
-# l-dgnlvl.cc
-##################
-%%%%
-Expected branch name
-
-%%%%
-No such branch
-
-%%%%
-Expected level_id
-
-%%%%
-
-##################
-# l-dgnmon.cc
-##################
-%%%%
-crawldgn.monster_list
-
-%%%%
-Expected monster list object or string
-
-%%%%
-Too many arguments.
-
-%%%%
-Too few arguments.
-
-%%%%
-Invalid map object
-
-%%%%
-Mon list is empty.
-
-%%%%
-Mon list must contain only one slot.
-
-%%%%
-mon #%d: Can't use a place with no natural monsters as a monster place.
-
-%%%%
-mon #%d: can't use random monster in list specifying random monsters
-
-%%%%
-dgn.set_random_mon_list() : colour for %s being ignored.
-
-%%%%
-dgn.set_random_mon_list() : items for %s being ignored.
-
-%%%%
-Mon list contains only pandemonium lords.
-
-%%%%
-
-##################
-# l-dgntil.cc
-##################
-%%%%
-Expected string for tile name
-
-%%%%
-Couldn't find tile '
-
-%%%%
-lrocktile
-
-%%%%
-lfloortile
-
-%%%%
-rtile
-
-%%%%
-ftile
-
-%%%%
-tile
-
-%%%%
-
-##################
-# l-file.cc
-##################
-%%%%
-write
-
-%%%%
-file
-
-%%%%
-Need two arguments: tag header and value
-
-%%%%
-Need reader as one argument
-
-%%%%
-Cannot marshall %s
-
-%%%%
-Unexpected type signature.
-
-%%%%
-Cannot find data directory: '%s'
-
-%%%%
-marshall
-
-%%%%
-writefile
-
-%%%%
-
-##################
-# l-global.cc
-##################
-%%%%
-pmatch
-
-%%%%
-
-##################
-# l-item.cc
-##################
-%%%%
-Invalid item
-
-%%%%
-Turn is over
-Turn is over
-%%%%
-Bad item
-Schlechter Gegenstand
-%%%%
-Item is not equipped
-Gegenstand ist nicht ausgerüstet
-%%%%
-Can't drop worn items
-
-%%%%
-Invalid item slot: %d
-
-%%%%
-branded
-
-%%%%
-plus
-
-%%%%
-plus2
-
-%%%%
-class
-
-%%%%
-subtype
-
-%%%%
-cursed
-
-%%%%
-worn
-
-%%%%
-stacks
-
-%%%%
-quantity
-
-%%%%
-slot
-
-%%%%
-ininventory
-
-%%%%
-wield
-
-%%%%
-wear
-
-%%%%
-puton
-
-%%%%
-remove
-
-%%%%
-drop
-
-%%%%
-dropped
-
-%%%%
-spells
-
-%%%%
-artprops
-
-%%%%
-damage
-
-%%%%
-accuracy
-
-%%%%
-ac
-
-%%%%
-encumbrance
-
-%%%%
-inscription
-
-%%%%
-description
-
-%%%%
-pluses
-
-%%%%
-destroy
-
-%%%%
-inventory
-
-%%%%
-inslot
-
-%%%%
-items
-
-%%%%
-
-##################
-# l-los.cc
-##################
-%%%%
-findray
-
-%%%%
-start
-
-%%%%
-dir
-
-%%%%
-advance
-
-%%%%
-
-##################
-# l-mapgrd.cc
-##################
-%%%%
-Cannot assign to read-only table.
-
-%%%%
-Invalid coords: %d, %d
-
-%%%%
-mapgrd must be set to a single char.
-
-%%%%
-
-##################
-# l-mapmrk.cc
-##################
-%%%%
-property
-
-%%%%
-mapmarker
-
-%%%%
-
-##################
-# l-moninf.cc
-##################
-%%%%
-no such holiness: '
-
-%%%%
-no such moninf flag: '
-
-%%%%
-mb:is() out of bounds
-
-%%%%
-monster
-
-%%%%
-
-##################
-# l-mons.cc
-##################
-%%%%
-Invalid monster wrapper
-
-%%%%
-hp must be positive
-
-%%%%
-maxhp must be positive
-
-%%%%
-Don't know how to set monster property of the given value type for property '%s'
-
-%%%%
-Don't have a property called '%s'.
-
-%%%%
-No such enchantment: %s
-
-%%%%
-unique
-
-%%%%
-hd
-
-%%%%
-beh
-
-%%%%
-muse
-
-%%%%
-hp
-
-%%%%
-targetx
-
-%%%%
-targety
-
-%%%%
-mname
-
-%%%%
-dismiss
-
-%%%%
-speak
-
-%%%%
-wander
-
-%%%%
-seek
-
-%%%%
-flee
-
-%%%%
-cornered
-
-%%%%
-retreat
-
-%%%%
-withdraw
-
-%%%%
-invalid
-
-%%%%
-behaviour
-
-%%%%
-
-##################
-# l-option.cc
-##################
-%%%%
-autoswitch
-
-%%%%
-options
-
-%%%%
-
-##################
-# l-spells.cc
-##################
-%%%%
-"Invalid spell: "
-
-%%%%
-memorised
-
-%%%%
-letter
-
-%%%%
-path
-
-%%%%
-level
-
-%%%%
-range
-
-%%%%
-fail
-
-%%%%
-power
-
-%%%%
-cast
-
-%%%%
-describe
-
-%%%%
-
-##################
-# l-travel.cc
-##################
-%%%%
-Coordinates out of bounds: (%d, %d)
-
-%%%%
-Bad branch name: '%s'
-
-%%%%
-Bad waypoint number: %d
-
-%%%%
-travel
-
-%%%%
-
-##################
-# l-view.cc
-##################
-%%%%
-withheld
-
-%%%%
-view
-
-%%%%
-
-##################
-# l-wiz.cc
-##################
-%%%%
-No such monster: '%s'.
-
-%%%%
-wiz
-
-%%%%
-
-##################
-# l-you.cc
-##################
-%%%%
-Unknown skill name `%s`.
-
-%%%%
-Invalid spell: '%s'.
-
-%%%%
-"Invalid ability: "
-
-%%%%
-No such mutation: '%s'.
-
-%%%%
-Unknown skill name `%s`
-
-%%%%
-turns
-
-%%%%
-time
-
-%%%%
-memorise
-
-%%%%
-abilities
-
-%%%%
-race
-
-%%%%
-genus
-
-%%%%
-god
-
-%%%%
-mp
-
-%%%%
-skill
-
-%%%%
-xl
-
-%%%%
-transform
-
-%%%%
-caught
-
-%%%%
-asleep
-
-%%%%
-hasted
-
-%%%%
-slowed
-
-%%%%
-teleporting
-
-%%%%
-anchored
-
-%%%%
-rooted
-
-%%%%
-silencing
-
-%%%%
-regenerating
-
-%%%%
-sick
-
-%%%%
-deaths
-
-%%%%
-lives
-
-%%%%
-constricted
-
-%%%%
-constricting
-
-%%%%
-status
-
-%%%%
-where
-
-%%%%
-absdepth
-
-%%%%
-los
-
-%%%%
-'%s' matches both branch '%s' and '%s'
-
-%%%%
-'%s' matches no branches.
-
-%%%%
-That species isn't available.
-Diese Art ist nicht verfügbar.
-%%%%
-Can't change to invalid xl %d
-Kann nicht zu ungültigem xl%d geändert werden
-%%%%
-moveto
-
-%%%%
-uniques
-
-%%%%
-unrands
-
-%%%%
-die
-
-%%%%
-init
-
-%%%%
-exercise
-
-%%%%
-mutate
-
-%%%%
-
-##################
 # libunix.cc
 ##################
 %%%%
@@ -12143,6 +10947,9 @@ your
 
 %%%%
 its
+
+%%%%
+worn
 
 %%%%
 inv
@@ -12255,7 +11062,13 @@ portal
 \n\nThis branch contains the entrance%s to %s.
 
 %%%%
+monster
+
+%%%%
 spell
+
+%%%%
+skill
 
 %%%%
 ability
@@ -12264,10 +11077,19 @@ ability
 card
 
 %%%%
+item
+
+%%%%
 feature
 
 %%%%
+god
+
+%%%%
 cloud
+
+%%%%
+status
 
 %%%%
 " Enter a single letter to list %s displayed by that symbol."
@@ -12283,6 +11105,9 @@ Okay, dann.
 
 %%%%
 " with symbol '"
+
+%%%%
+'.
 
 %%%%
 "No matching "
@@ -12306,6 +11131,9 @@ return %s
 
 %%%%
 =repl
+
+%%%%
+(error object is not a string)
 
 %%%%
 [Hit ESC to exit interpreter.]
@@ -12361,6 +11189,9 @@ Flushing non-empty key buffer (Buffer is '%s')
 Flushing non-empty key buffer
 Leeren des nicht leeren Schlüsselpuffers
 %%%%
+<<
+
+%%%%
 <red>[none]</red>
 
 %%%%
@@ -12371,6 +11202,9 @@ default
 
 %%%%
 menu
+
+%%%%
+level
 
 %%%%
 targeting
@@ -12463,6 +11297,9 @@ redefine
 redefine with raw key entry
 
 %%%%
+clear
+
+%%%%
 abort
 
 %%%%
@@ -12494,6 +11331,9 @@ Created
 
 %%%%
 Cannot parse marcos += %s , there is only one argument
+
+%%%%
+'
 
 %%%%
 ' is not a valid macro or keymap context (macros += %s)
@@ -12683,6 +11523,9 @@ Ctrl-%c
 
 %%%%
 percent
+
+%%%%
+%
 
 %%%%
 
@@ -13577,6 +12420,9 @@ Index out of range: %d
 -
 
 %%%%
+Index %d out of range
+
+%%%%
 archmagi
 
 %%%%
@@ -13720,6 +12566,9 @@ lua_marker: write error: %s
 Expected marker class name (string) to save, got %s
 
 %%%%
+write
+
+%%%%
 lua_marker::write error: %s
 
 %%%%
@@ -13728,6 +12577,9 @@ lua_marker::read error: %s
 %%%%
 mlua error: %s
 mlua Fehler:%s
+%%%%
+init
+
 %%%%
 activate
 
@@ -13739,6 +12591,12 @@ notify_dgn_event: Lua error: %s
 notify_dgn_event: Lua-Fehler:%s
 %%%%
 error (%s): %s
+
+%%%%
+describe
+
+%%%%
+property
 
 %%%%
 Lua marker property (%s) error: %s
@@ -13798,6 +12656,9 @@ Lua validation for map %s failed.
 
 %%%%
 entry
+
+%%%%
+tutorial
 
 %%%%
 des
@@ -14819,7 +13680,13 @@ unaware
 wandering
 
 %%%%
+hasted
+
+%%%%
 strong
+
+%%%%
+slowed
 
 %%%%
 fleeing
@@ -14837,6 +13704,12 @@ charmed
 burning
 
 %%%%
+sick
+
+%%%%
+caught
+
+%%%%
 webbed
 
 %%%%
@@ -14847,6 +13720,9 @@ enslaved
 
 %%%%
 insane
+
+%%%%
+silencing
 
 %%%%
 mesmerizing
@@ -16524,6 +15400,9 @@ unusually resistant
 slightly transparent
 
 %%%%
+regenerating
+
+%%%%
 sheltered
 
 %%%%
@@ -16570,6 +15449,9 @@ entangled in a net
 
 %%%%
 entangled in a web
+
+%%%%
+asleep
 
 %%%%
 infested
@@ -16638,6 +15520,9 @@ covered in acid
 covered in terrible wounds
 
 %%%%
+rooted
+
+%%%%
 constricted by roots
 
 %%%%
@@ -16663,6 +15548,9 @@ softly glowing
 
 %%%%
 coronas
+
+%%%%
+anchored
 
 %%%%
 unable to translocate
@@ -17418,6 +16306,9 @@ a flying bit
 tide-call-turn
 
 %%%%
+map
+
+%%%%
 
 ##################
 # monster.cc
@@ -17840,6 +16731,9 @@ fly
 
 %%%%
 swim
+
+%%%%
+crawl
 
 %%%%
 walk
@@ -21197,6 +20091,9 @@ Turn:
 ∞
 
 %%%%
+x
+
+%%%%
 Weapon
 
 %%%%
@@ -22350,6 +21247,9 @@ Ihr fühlt Euch %s lebhaft.
 very
 
 %%%%
+more
+
+%%%%
 You can't survive in this terrain! You fly above the %s, but the process is draining.
 
 %%%%
@@ -22393,6 +21293,9 @@ wielding %s
 
 %%%%
 wearing %d %s preventing teleportation
+
+%%%%
+items
 
 %%%%
 artefacts
@@ -22495,6 +21398,9 @@ You have %d tentacle%s available for constriction.
 
 %%%%
 You are being %s by %s.
+
+%%%%
+constricted
 
 %%%%
 "You are constricting "
@@ -24106,6 +23012,9 @@ Vehumet offers you knowledge of %s.
 " female "
 
 %%%%
+name
+
+%%%%
 %s regains the memory of %s %s.
 %s gewinnt den Speicher von%s%s zurück.
 %%%%
@@ -24473,6 +23382,9 @@ formatted-scroller
 ##################
 %%%%
 -<w>
+
+%%%%
+type
 
 %%%%
 price
@@ -25158,6 +24070,9 @@ Adj
 
 %%%%
 Genus
+
+%%%%
+genus
 
 %%%%
 Weight
@@ -26204,6 +25119,9 @@ the Torment card
 %%%%
 %s %s a Word of immense power!
 %s%s ein Wort von immenser Kraft!
+%%%%
+speak
+
 %%%%
 %s shields you from torment!
 
@@ -27897,6 +26815,9 @@ es
 
 %%%%
 <lightgrey>: <w>%s</w> [toggle: <w>!</w>], by <w>%s</w> [<w>/</w>], <w>%s</w> useless & duplicates [<w>=</w>]</lightgrey>
+
+%%%%
+travel
 
 %%%%
 "view  "
@@ -30751,6 +29672,9 @@ testing miscast
 %%%%
 "What species would you like to be now? "
 
+%%%%
+That species isn't available.
+Diese Art ist nicht verfügbar.
 %%%%
 "Cast which spell? "
 Welchen Zauber wirken?

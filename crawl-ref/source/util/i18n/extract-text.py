@@ -180,6 +180,7 @@ else:
     for fname in source_files:
         if fname not in files and \
            fname not in SKIP_FILES and \
+           not re.match('l-', fname) and \
            not re.match('dbg-', fname):
             files.append(fname)
     
