@@ -75,6 +75,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 {
     attack_occurred = false;
     damage_brand = attacker->damage_brand(attack_number);
+    weapon = attacker->weapon(attack_number);
     init_attack(SK_UNARMED_COMBAT, attack_number);
     if (weapon && !using_weapon())
         wpn_skill = SK_FIGHTING;
