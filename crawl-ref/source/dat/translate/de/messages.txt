@@ -10839,145 +10839,6 @@ Alle Gegenstände erkannt. (Wählen um Auto-Raffen umzuschalten)
 %%%%
 
 ##################
-# libunix.cc
-##################
-%%%%
-\033Op
-
-%%%%
-\033Oq
-
-%%%%
-\033Or
-
-%%%%
-\033Os
-
-%%%%
-\033Ot
-
-%%%%
-\033Ou
-
-%%%%
-\033Ov
-
-%%%%
-\033Ow
-
-%%%%
-\033Ox
-
-%%%%
-\033Oy
-
-%%%%
-\033OM
-
-%%%%
-\033OP
-
-%%%%
-\033OQ
-
-%%%%
-\033OR
-
-%%%%
-\033OS
-
-%%%%
-\033Oj
-
-%%%%
-\033Ok
-
-%%%%
-\033Ol
-
-%%%%
-\033Om
-
-%%%%
-\033On
-
-%%%%
-\033Oo
-
-%%%%
-\033[1~
-
-%%%%
-\033[4~
-
-%%%%
-\033[E
-
-%%%%
-kbs
-
-%%%%
-\010
-
-%%%%
-\033[?1051l\033[?1052l\033[?1060l\033[?1061h
-
-%%%%
-\033[?1051l\033[?1052l\033[?1060l\033[?1061l
-
-%%%%
-{"msg":"delay","t":%d}
-
-%%%%
-
-##################
-# libutil.cc
-##################
-%%%%
-The
-
-%%%%
-the
-
-%%%%
-Your
-
-%%%%
-your
-
-%%%%
-its
-
-%%%%
-worn
-
-%%%%
-inv
-
-%%%%
-base
-
-%%%%
-qual
-
-%%%%
-\`$*?|><&\n!;
-
-%%%%
-\n\n
-
-%%%%
-"\n "
-
-%%%%
-><
-
-%%%%
-TZ
-
-%%%%
-
-##################
 # libw32c.cc
 ##################
 %%%%
@@ -14095,6 +13956,9 @@ Ihr hört ein zischendes Geräusch.
 %s attack snaps %s out of %s fear.
 %s Angriff löst%s aus%s Angst.
 %%%%
+the
+
+%%%%
 PLAIN:@The_monster@ returns to your side!
 
 %%%%
@@ -14207,6 +14071,12 @@ vile air
 %%%%
 %s %s go into a battle-frenzy!
 %s%s geraten in einen Kampfrausch!
+%%%%
+Your
+
+%%%%
+The
+
 %%%%
 %s activates a sealing rune.
 %s aktiviert eine Versiegelungsrune.
@@ -16056,6 +15926,9 @@ your god
 
 %%%%
 @Foe
+
+%%%%
+your
 
 %%%%
 to
@@ -23804,6 +23677,9 @@ enhanced
 
 %%%%
 reduced
+
+%%%%
+base
 
 %%%%
 training
