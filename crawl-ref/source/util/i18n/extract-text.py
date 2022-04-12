@@ -415,6 +415,9 @@ for filename in files:
                     # skip (in)equality tests (assume string is defined elsewhere)
                     if re.search(r'[=!]=\s*$', last):
                         continue
+                    if re.search(r'\bstrcmp\b', last):
+                        continue
+
 
                     # skip map keys
                     if re.search(r'\[\s*$', last):

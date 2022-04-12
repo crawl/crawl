@@ -27542,12 +27542,6 @@ TILEP_SHOW_EQUIP must be distinct from all player tile enums
 # tiledoll.cc
 ##################
 %%%%
-MODE=DEFAULT
-
-%%%%
-MODE=EQUIP
-
-%%%%
 NUM=
 
 %%%%
@@ -28552,15 +28546,6 @@ Found %s
 ##################
 # tutorial.cc
 ##################
-%%%%
-spellcasting
-
-%%%%
-conjurations
-
-%%%%
-invocations
-
 %%%%
 In Crawl, death is a sad but common occurrence. Note that there's usually something you could have done to survive, for example by using some kind of item, running away, resting between fights, or by avoiding combat entirely. Keep trying, eventually you'll prevail!
 
