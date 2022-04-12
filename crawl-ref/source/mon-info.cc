@@ -619,6 +619,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_RES_DROWN);
     if (m->clarity())
         mb.set(MB_CLARITY);
+    if (!mons_can_be_blinded(m->type))
+        mb.set(MB_UNBLINDABLE);
 
     dam = mons_get_damage_level(*m);
 
