@@ -1230,7 +1230,7 @@ static string _damage_rating(const item_def &item)
     rating = stat_modify_damage(rating, skill, true);
     rating = apply_weapon_skill(rating, skill, false);
     rating = apply_fighting_skill(rating, false, false);
-    rating += plusses * DAM_RATE_SCALE / 2;
+    rating += plusses * DAM_RATE_SCALE;
 
     const int delay = _get_delay(item);
     const int rating_per_time = (rating * 10 / delay) / DAM_RATE_SCALE;
@@ -1240,7 +1240,7 @@ static string _damage_rating(const item_def &item)
     string plusses_desc;
     if (plusses)
     {
-        plusses_desc = make_stringf(" %s %d/2 ((%s)/2)",
+        plusses_desc = make_stringf(" %s %d (%s)",
                                     plusses < 0 ? "-" : "+",
                                     abs(plusses),
                                     slaying && item.plus ? "Ench + Slay" :
