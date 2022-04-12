@@ -1680,8 +1680,9 @@ void msgwin_reply(string reply)
     msgwin_clear_temporary();
     msgwin_set_temporary(false);
     reply = replace_all(reply, "<", "<<");
-    mprf(MSGCH_PROMPT, "%s<lightgrey>%s</lightgrey>", // noloc
-         _prompt.c_str(), reply.c_str());
+    // don't localise the user's input (the prompt should already be localised)
+    mprf_nolocalise(MSGCH_PROMPT, "%s<lightgrey>%s</lightgrey>",
+                    _prompt.c_str(), reply.c_str());
     msgwin.got_input();
 }
 
