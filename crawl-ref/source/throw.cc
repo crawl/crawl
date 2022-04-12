@@ -57,8 +57,7 @@ bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
                            const item_def& projectile)
 {
     return is_throwable(&attacker, projectile)
-            && projectile.base_type == OBJ_MISSILES
-            && projectile.sub_type == MI_JAVELIN
+            && projectile.is_type(OBJ_MISSILES, MI_JAVELIN)
            || weapon
               && (get_weapon_brand(*weapon) == SPWPN_PENETRATION
                   || is_unrandom_artefact(*weapon, UNRAND_STORM_BOW));
@@ -468,7 +467,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.was_missile = true;
 
     item_def *launcher = nullptr;
-    if (item.base_type != OBJ_MISSILES || !is_throwable(agent, item))
+    if (!is_throwable(agent, item))
         launcher = agent->weapon(0);
 
     if (agent->is_player())
