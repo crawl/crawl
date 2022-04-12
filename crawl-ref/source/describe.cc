@@ -1187,52 +1187,25 @@ static int _get_delay(const item_def &item)
     return you.attack_delay_with(&fake_proj, false, &item).expected();
 }
 
-
-static const int DAM_RATE_SCALE = 100;
-
-static int _brand_bonus(int dam, brand_type brand)
+static string _describe_brand(brand_type brand)
 {
-    // TODO: make this less awful/duplicative
-    switch (brand)
-    {
+    switch (brand) {
+    case SPWPN_ACID:
+    case SPWPN_CHAOS:
+    case SPWPN_DISTORTION:
+    case SPWPN_DRAINING:
+    case SPWPN_ELECTROCUTION:
     case SPWPN_FLAMING:
     case SPWPN_FREEZING:
-        return dam / 4;
-    case SPWPN_HOLY_WRATH:
-        return dam * 3 / 4;
-    case SPWPN_ELECTROCUTION:
-        return DAM_RATE_SCALE * ((8 + 20) / 2) / 4;
-    case SPWPN_DRAINING:
-        return DAM_RATE_SCALE * (2 + 4) / 2 + dam / 4;
-    case SPWPN_VORPAL:
-        return dam / 6;
     case SPWPN_PAIN:
+    case SPWPN_VORPAL:
     {
-        const int sk = you.skill(SK_NECROMANCY);
-        const int dam_on_trigger = sk / 2;
-        return DAM_RATE_SCALE * dam_on_trigger * sk / (sk + 1);
+        const string brand_name = uppercase_first(brand_type_name(brand, true));
+        return make_stringf(" + %s", brand_name.c_str());
     }
-    case SPWPN_DISTORTION:
-    {
-        // XXX: this seems like it should be extra easy to dedup.
-        const int small_damage = (1 + 6) / 2;
-        const int big_damage = (3 + 26) / 2;
-        return DAM_RATE_SCALE * (small_damage * 35 + big_damage * 25) / 100;
-    }
-    case SPWPN_ACID:
-        return DAM_RATE_SCALE * (2 + 8) / 2;
     default:
-        return 0;
-    }
-}
-
-static string _describe_brand(brand_type brand, int bonus)
-{
-    if (!bonus)
         return "";
-    const string brand_name = uppercase_first(brand_type_name(brand, true));
-    return make_stringf(" + %d/hit (%s)", bonus, brand_name.c_str());
-    //TODO: colourize
+    }
 }
 
 static string _damage_rating(const item_def &item)
@@ -1252,13 +1225,12 @@ static string _damage_rating(const item_def &item)
     if (item_type_known(item))
         brand = get_weapon_brand(item);
 
+    const int DAM_RATE_SCALE = 100;
     int rating = base_dam * DAM_RATE_SCALE;
     rating = stat_modify_damage(rating, skill, true);
     rating = apply_weapon_skill(rating, skill, false);
     rating = apply_fighting_skill(rating, false, false);
     rating += plusses * DAM_RATE_SCALE / 2;
-
-    const int brand_rating = max(0, _brand_bonus(rating, brand) / DAM_RATE_SCALE);
 
     const int delay = _get_delay(item);
     const int rating_per_time = (rating * 10 / delay) / DAM_RATE_SCALE;
@@ -1279,7 +1251,7 @@ static string _damage_rating(const item_def &item)
     const string overall = make_stringf(
         "\nDamage rating: %d (%d/hit / %d.%d delay/hit)%s",
         rating_per_time, rating, delay/10, delay % 10,
-        _describe_brand(brand, brand_rating).c_str());
+        _describe_brand(brand).c_str());
     const string per_hit = make_stringf(
         "\n  (Per hit: Base %d x %d%% (%s) x %d%% (Skill)%s)",
         base_dam,
