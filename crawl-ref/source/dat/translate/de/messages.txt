@@ -3889,7 +3889,7 @@ It makes you vulnerable to %s.
 
 %%%%
 It protects you from %s.
-
+Schützt gegen %s.
 %%%%
 It greatly protects you from %s.
 
@@ -4315,16 +4315,16 @@ This weapon's minimum attack delay (%.1f) is reached at skill level %d.
 
 %%%%
 It is a one-handed weapon.
-
+Sie ist eine Einhandwaffe.
 %%%%
 It is a two-handed weapon.
-
+Sie ist eine Zweihandwaffe.
 %%%%
 It is a weapon for one hand-pair.
-
+Sie ist eine Waffe für ein Handpaar.
 %%%%
 It is a weapon for two hand-pairs.
-
+Sie ist eine Waffe für zwei Handpaare.
 %%%%
 It can be evoked to extend its reach.
 
@@ -4432,25 +4432,25 @@ It is temporarily rebranded; it is actually %s.
 
 %%%%
 "This is %s. "
-
+"Das ist %s. "
 %%%%
 This weapon falls into the '%s' category.
-
+Das ist eine Waffe der Art '%s'.
 %%%%
 It is too large for you to wield.
-
+Eine so große Waffe könnt Ihr nicht führen.
 %%%%
 It cannot be enchanted further.
-
+Dieser Gegenstand kann nicht weiter verzaubert werden.
 %%%%
 It can be maximally enchanted to +%d.
-
+Dieser Gegenstand kann maximal bis zu +%d verzaubert werden.
 %%%%
 It has a random effect on any target it hits.
 
 %%%%
 It is coated with poison.
-
+Sie ist mit Gift überzogen.
 %%%%
 It is tipped with a substance that causes asphyxiation, dealing direct damage as well as poisoning and slowing those it strikes.\nIt is twice as likely to be destroyed on impact as other darts.
 
@@ -4507,10 +4507,10 @@ it protects its wearer from cold.
 
 %%%%
 it protects its wearer from poison.
-
+Dieser Gegenständ schützt den Träger gegen Gift.
 %%%%
 it allows its wearer to see invisible things.
-
+Dieser Gegenständ ermöglicht, dass der Träger das Unsichtbare sehen kann.
 %%%%
 when activated, it grants its wearer temporary invisibility, but also drains their maximum health.
 
