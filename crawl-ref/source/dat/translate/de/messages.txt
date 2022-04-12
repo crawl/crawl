@@ -10839,26 +10839,6 @@ Alle Gegenstände erkannt. (Wählen um Auto-Raffen umzuschalten)
 %%%%
 
 ##################
-# libw32c.cc
-##################
-%%%%
-Error initialising console input mode.
-
-%%%%
-Error initialising console output mode.
-
-%%%%
-Could not initialise libw32c console support.
-
-%%%%
-SetConsoleCursorPosition() failed!
-
-%%%%
-Error in ReadConsoleInputW()!
-
-%%%%
-
-##################
 # loading-screen.cc
 ##################
 
