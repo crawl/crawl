@@ -613,7 +613,11 @@ void debuff_monster(monster &mon)
         return;
 
     for (enchant_type buff : buffs)
-        mon.del_ench(buff, true, true);
+        mon.del_ench(buff, true, buff != ENCH_PETRIFYING);
+    // We generally want to set effect = true so that enchantments get cleaned
+    // up - invisible monsters reappear, etc. However, the only thing that
+    // effect = true does for PETRIFYING is cause it to turn into
+    // ENCH_PETRIFIED. So... let's not do that. (Hacky, sorry!)
 
     simple_monster_message(mon, "'s magical effects unravel!");
 }
