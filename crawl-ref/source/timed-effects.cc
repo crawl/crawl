@@ -667,6 +667,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROLLING:
         case ENCH_MERFOLK_AVATAR_SONG:
         case ENCH_INFESTATION:
+        case ENCH_HELD:
             del_ench(entry.first);
             break;
 
@@ -687,10 +688,6 @@ void monster::timeout_enchantments(int levels)
             // pacified monster leave the level.
             if (alive() && !is_stationary())
                 monster_blink(this, true);
-            break;
-
-        case ENCH_HELD:
-            del_ench(entry.first);
             break;
 
         case ENCH_TIDE:
