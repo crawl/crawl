@@ -1892,16 +1892,22 @@ static string _describe_armour(const item_def &item, bool verbose)
             // Make this match the formatting in _randart_descrip,
             // since instead of the item being named something like
             // 'cloak of invisiblity', it's 'the cloak of the Snail (+Inv, ...)'
-            string name = string(armour_ego_name(item, true));
+            string name = localise(string(armour_ego_name(item, true)));
             name = chop_string(name, MAX_ARTP_NAME_LEN - 1, false) + ":";
             name.append(MAX_ARTP_NAME_LEN - name.length(), ' ');
             description += name;
         }
         else
         {
-            string ego_name = "of " + string(armour_ego_name(item, false)); // noloc
-            ego_name = uppercase_first(localise(ego_name));
-            description += make_stringf(localise("'%s': ").c_str(), ego_name);
+            // i18n: need space in front of "of" for translation (because
+            // normally it's in the context of "<thing> of <ego>").
+            string ego_name = " of " + string(armour_ego_name(item, false)); // noloc
+            ego_name = localise(ego_name);
+            // now remove that space
+            if (starts_with(ego_name, " "))
+                ego_name = ego_name.substr(1);
+            ego_name = uppercase_first(ego_name);
+            description += localise("'%s': ", LocalisationArg(ego_name, false));
         }
 
         string ego_desc = localise(_item_ego_desc(ego));
