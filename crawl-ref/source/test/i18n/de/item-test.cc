@@ -124,15 +124,15 @@ const vector<string> armour_en =
 {
     "a leather armour",
     "a +1 scale mail",
-    "an uncursed robe",
+    "an cursed robe",
     "a cursed -1 chain mail",
     "a pair of gloves",
     "an enchanted pair of boots",
     "a pair of runed gloves",
     "a cursed pair of runed gloves",
-    "an uncursed +0 pair of boots",
+    "an cursed +0 pair of boots",
     "a cursed +2 pair of glowing boots",
-    "an uncursed +2 pair of gloves of archery",
+    "an cursed +2 pair of gloves of archery",
     "the +1 plate armour of Dice, Bag, and Bottle {Str+6 Int-3 Dex+4 SInv} (5390 gold)"
 };
 
@@ -140,15 +140,15 @@ const vector<string> armour_de =
 {
     "eine Lederrüstung",
     "ein +1 Schuppenpanzer",
-    "eine unverfluchte Robe",
+    "eine verfluchte Robe",
     "ein verfluchter -1 Kettenpanzer",
     "ein Paar Handschuhe",
     "ein verzaubertes Paar Stiefel",
     "ein Paar runenverzierte Handschuhe",
     "ein verfluchtes Paar runenverzierte Handschuhe",
-    "ein unverfluchtes +0 Paar Stiefel",
+    "ein verfluchtes +0 Paar Stiefel",
     "ein verfluchtes +2 Paar glühende Stiefel",
-    "ein unverfluchtes +2 Paar Handschuhe der Schießkunst",
+    "ein verfluchtes +2 Paar Handschuhe der Schießkunst",
     "der +1 Plattenpanzer von Würfel, Beutel, und Flasche {Stä+6 Int-3 Ges+4 UnsS} (5390 Gold)"
 };
 
@@ -199,14 +199,14 @@ vector<map<string, string>> rings =
         {"acc", "einen Ring der Zauberei"}
     },
     {
-        {"en", "an uncursed ring of protection from fire"},
-        {"nom", "ein unverfluchter Ring der Feuerresistenz"},
-        {"acc", "einen unverfluchten Ring der Feuerresistenz"}
+        {"en", "an cursed ring of protection from fire"},
+        {"nom", "ein verfluchter Ring der Feuerresistenz"},
+        {"acc", "einen verfluchten Ring der Feuerresistenz"}
     },
     {
-        {"en", "an uncursed +4 ring of protection"},
-        {"nom", "ein unverfluchter +4 Ring des Schutzes"},
-        {"acc", "einen unverfluchten +4 Ring des Schutzes"}
+        {"en", "an cursed +4 ring of protection"},
+        {"nom", "ein verfluchter +4 Ring des Schutzes"},
+        {"acc", "einen verfluchten +4 Ring des Schutzes"}
     },
     {
         {"en", "the ring \"Cuti\" {rF+ MR+ Dex+2}"},
@@ -286,9 +286,9 @@ vector<map<string, string>> staves =
         {"acc", "einen Stecken der Erde"}
     },
     {
-        {"en", "an uncursed staff of fire"},
-        {"nom", "ein unverfluchter Stecken des Feuers"},
-        {"acc", "einen unverfluchten Stecken des Feuers"}
+        {"en", "an cursed staff of fire"},
+        {"nom", "ein verfluchter Stecken des Feuers"},
+        {"acc", "einen verfluchten Stecken des Feuers"}
     },
 };
 
