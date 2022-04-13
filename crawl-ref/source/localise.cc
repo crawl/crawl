@@ -1043,7 +1043,7 @@ static string _localise_list(const string& context, const string& s)
     {
         string sep = *it;
         // split on the first separator only
-        vector<string> tokens = split_string(sep, value, true, true, 1);
+        vector<string> tokens = split_string(sep, value, false, true, 1);
         // there should only ever be 1 or 2 tokens
         if (tokens.size() == 2)
         {
