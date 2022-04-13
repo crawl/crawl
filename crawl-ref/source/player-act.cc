@@ -252,12 +252,19 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
 random_var player::attack_delay_with(const item_def *projectile, bool rescale,
                                      const item_def *weap) const
 {
+    // The delay for swinging non-weapons and tossing non-missiles.
     random_var attk_delay(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
     const int DELAY_SCALE = 20;
 
     const bool throwing = projectile && is_throwable(this, *projectile);
+    const bool unarmed_attack = !weap && !projectile;
+    const bool melee_weapon_attack = !projectile
+                                     && weap
+                                     && is_melee_weapon(*weap);
+    const bool ranged_weapon_attack = projectile
+                                      && is_launcher_ammo(*projectile);
     if (throwing)
     {
         // Thrown weapons use 10 + projectile damage to determine base delay.
@@ -271,13 +278,13 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
         attk_delay = rv::max(attk_delay,
                 random_var(FASTEST_PLAYER_THROWING_SPEED));
     }
-    else if (!projectile && !weap)
+    else if (unarmed_attack)
     {
         int sk = form_uses_xl() ? experience_level * 10 :
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
     }
-    else if (weap)
+    else if (melee_weapon_attack || ranged_weapon_attack)
     {
         const skill_type wpn_skill = item_attack_skill(*weap);
         // Cap skill contribution to mindelay skill, so that rounding
@@ -303,7 +310,8 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
 
     // Slow attacks with ranged weapons, but not clumsy bashes.
     // Don't slow throwing attacks while holding a ranged weapon.
-    if (!throwing && is_slowed_by_armour(weap) && projectile)
+    // Don't slow tossing.
+    if (ranged_weapon_attack && is_slowed_by_armour(weap))
     {
         const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE);
         attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
