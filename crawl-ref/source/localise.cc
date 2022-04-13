@@ -228,6 +228,53 @@ static const type_info* _format_spec_to_type(const string& fmt)
     return NULL;
 }
 
+// find the nth occurrence of a char in a string
+static size_t _find_nth_occurrence(const string &s, const char c, size_t n)
+{
+    if (n > 0)
+    {
+        size_t count = 0;
+        size_t pos = s.find(c);
+        while (pos != string::npos)
+        {
+            count++;
+            if (count == n)
+                return pos;
+            pos = s.find(c, pos+1);
+        }
+    }
+    return string::npos;
+}
+
+// split on nth occurrence of char
+// prefix will contain everything up to and including the target character
+// the rest of the string will be returned in suffix
+// if less than n occurrences, then prefix will be full string and suffix will be empty
+static void _split_after_nth_occurrence(const string &s, const char c, size_t n,
+                                        string& prefix, string& suffix)
+{
+    if (n == 0)
+    {
+        prefix = "";
+        suffix = s;
+    }
+    else
+    {
+        size_t pos = _find_nth_occurrence(s, c, n);
+        if (pos == string::npos)
+        {
+            prefix = s;
+            suffix = "";
+            return;
+        }
+        else
+        {
+            prefix = s.substr(0, pos+1); // target char is included
+            suffix = s.substr(pos+1);
+        }
+    }
+}
+
 // split format string into constants and format specifiers
 static vector<string> _split_format(const string& fmt_str)
 {
@@ -520,12 +567,16 @@ static string _strip_context(const string& s, size_t pos, string& context)
 
 static string _strip_determiner(const string& s, string& determiner)
 {
-    vector<string> tokens = split_string(" ", s, true, false, 1);
-
-    if (tokens.size() == 2 && is_determiner(tokens[0]))
+    auto pos = s.find(' ');
+    if (pos != string::npos)
     {
-        determiner = tokens[0];
-        return tokens[1];
+        string prefix = s.substr(0, pos);
+        if (is_determiner(prefix))
+        {
+            determiner = prefix;
+            // ditch the space in between
+            return s.substr(pos + 1);
+        }
     }
 
     return s;
@@ -830,9 +881,12 @@ static string _localise_item_name(const string& context, const string& item)
     // try to construct a string that can be translated
 
     const size_t max_adjectives = 3;
-    vector<string> words = split_string(" ", base, true);
-    for (size_t adjs = 0; adjs < words.size() && adjs <= max_adjectives; adjs++)
+    for (size_t adjs = 0; adjs <= max_adjectives; adjs++)
     {
+        // split base string after the nth space
+        string part1, part2;
+        _split_after_nth_occurrence(base, ' ', adjs, part1, part2);
+
         string item_en;
 
         if (!determiner.empty())
@@ -846,12 +900,8 @@ static string _localise_item_name(const string& context, const string& item)
         // placeholder for adjectives
         item_en += "%s";
 
-        // concatenate all the non-adjectives
-        for (size_t j = adjs; j < words.size(); j++)
-        {
-            item_en += j == adjs ? "" : " ";
-            item_en += words[j];
-        }
+        // concatenate the non-adjectives
+        item_en += part2;
 
         bool space_with_adjective = true;
 
@@ -939,11 +989,14 @@ static string _localise_item_name(const string& context, const string& item)
                     }
                 }
                 // localise adjectives
+                vector<string> adjectives = split_string(" ", part1);
                 string prefix_adjs;
                 string postfix_adjs;
                 for (size_t k = 0; k < adjs; k++)
                 {
-                    string adj_en = words[k] + (space_with_adjective ? " " : "");
+                    string adj_en = adjectives[k];
+                    if (space_with_adjective)
+                        adj_en += " ";
                     string adj = cxlate(new_context, adj_en);
                     if (!adj.empty() && adj[0] == ' ')
                         postfix_adjs += adj;
@@ -1021,14 +1074,14 @@ static string _localise_multiple_sentences(const string& context, const string& 
         {
             sentences.push_back(s.substr(last, pos - last + 1));
         }
-        else {
+        else
+        {
             char c = s[pos];
             if (c == '.' || c == '?' || c == '!')
             {
                 if (s[pos+1] == ' ')
                 {
                     sentences.push_back(s.substr(last, pos - last + 1));
-                    pos++;
                     last = pos + 1;
                 }
             }
@@ -1039,11 +1092,27 @@ static string _localise_multiple_sentences(const string& context, const string& 
         return s;
 
     string result;
+    int count = 0;
     for (string sentence: sentences)
     {
-        if (!result.empty())
-            result += _localise_string(context, " ");
-        result += _localise_string(context, sentence);
+        if (sentence == " ")
+        {
+            result += sentence;
+            continue;
+        }
+        string translated = _localise_string(context, sentence);
+        if (count > 0 && translated == sentence)
+        {
+            // try without the leading space
+            translated = _localise_string(context, sentence.substr(1));
+            result += cxlate(context, " ", false);
+            result += translated;
+        }
+        else
+        {
+            result += translated;
+        }
+        count++;
     }
     return result;
 }
