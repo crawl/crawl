@@ -2153,7 +2153,7 @@ beseitigter Zauberstab
 
 # no article (for mouse hover)
 %%%%
-scroll labeled %s
+scroll labelled %s
 Schriftrolle beschriftet mit %s
 %%%%
 scroll of acquirement
@@ -2219,7 +2219,7 @@ Schriftrolle der Obsoleszenz
 
 # indefinite article
 %%%%
-a scroll labeled %s
+a scroll labelled %s
 eine Schriftrolle beschriftet mit %s
 %%%%
 a scroll of acquirement
@@ -2288,7 +2288,7 @@ eine Schriftrolle der Obsoleszenz
 
 # plural
 %%%%
-%d scrolls labeled %s
+%d scrolls labelled %s
 %d Schriftrollen beschriftet mit %s
 %%%%
 %d scrolls of acquirement

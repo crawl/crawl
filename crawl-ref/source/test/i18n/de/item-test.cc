@@ -18,8 +18,8 @@ const vector<string> cases = {
 
 const vector<string> test_items = {
 
-    "a scroll labeled BLAHDEY BLAH",
-    "3 scrolls labeled FOO",
+    "a scroll labelled BLAHDEY BLAH",
+    "3 scrolls labelled FOO",
 
     "a scroll of blinking",
     "2 scrolls of remove curse",

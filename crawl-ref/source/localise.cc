@@ -713,7 +713,7 @@ static string _localise_artefact_suffix(const string& s)
 
 static string _localise_unidentified_scroll(const string& context, const string& name)
 {
-    static const string pattern = " labeled ";
+    static const string pattern = " labelled ";
 
     size_t pos = name.find(pattern);
     if (pos == string::npos)
@@ -1239,7 +1239,7 @@ static string _localise_string(const string& context, const string& value)
         return _add_annotations(result, annotations);
     }
 
-    if (contains(value, "scroll") && contains(value, "labeled"))
+    if (contains(value, "scroll") && contains(value, "labelled"))
     {
         return _localise_unidentified_scroll(context, value);
     }
