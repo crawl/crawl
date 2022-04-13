@@ -713,17 +713,19 @@ static string _localise_artefact_suffix(const string& s)
 
 static string _localise_unidentified_scroll(const string& context, const string& name)
 {
-    static const string pattern = " labelled ";
+    static const string pattern1 = "scroll labelled ";
+    static const string pattern2 = "scrolls labelled ";
 
-    size_t pos = name.find(pattern);
-    if (pos == string::npos)
-    {
-        // not an unidentified scroll
-        return name;
-    }
+    // find start of label
+    size_t pos;
+    if ((pos = name.find(pattern1)) != string::npos)
+        pos += pattern1.length();
+    else if ((pos = name.find(pattern2)) != string::npos)
+        pos += pattern2.length();
+    else
+        return "";
 
     // separate the label from the rest
-    pos += pattern.length();
     string label = name.substr(pos);
     label = cxlate(context, label);
 
@@ -754,7 +756,7 @@ static string _localise_pair(const string& context, const string& name)
 {
     size_t pos = name.find("pair of ");
     if (pos == string::npos)
-        return name;
+        return "";
 
     string prefix = name.substr(0, pos);
     string rest = name.substr(pos);
@@ -843,9 +845,17 @@ static string _localise_pair(const string& context, const string& name)
 static string _localise_item_name(const string& context, const string& item)
 {
     if (item.empty())
-    {
         return item;
-    }
+
+    // try unlabelled scroll
+    string result = _localise_unidentified_scroll(context, item);
+    if (!result.empty())
+        return result;
+
+    // try "pair of <whatever>"
+    result = _localise_pair(context, item);
+    if (!result.empty() && result != item)
+        return result;
 
     string suffix;
     string base = _strip_suffix(item, suffix);
@@ -864,7 +874,6 @@ static string _localise_item_name(const string& context, const string& item)
     int count = 0;
     base = _strip_count(base, count);
 
-    string result;
     bool success = false;
 
     // change his/her/its/their to a/an for ease of translation
@@ -1237,16 +1246,6 @@ static string _localise_string(const string& context, const string& value)
         result = _localise_string(context, rest);
         annotations = _localise_annotations(annotations);
         return _add_annotations(result, annotations);
-    }
-
-    if (contains(value, "scroll") && contains(value, "labelled"))
-    {
-        return _localise_unidentified_scroll(context, value);
-    }
-    else if (contains(value, "pair of "))
-    {
-        // pair of boots/gloves
-        return _localise_pair(context, value);
     }
 
     // try treating it as an item name
