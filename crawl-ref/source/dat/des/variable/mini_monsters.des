@@ -8434,6 +8434,118 @@ cccGcccGcc
   ccc ccc
 ENDMAP
 
+# Kobolds had taken it and single-handedly killed those against them...
+NAME:   dilly_guarded_unrand_throatcut
+TAGS:   no_monster_gen
+DEPTH:  D:3-9
+WEIGHT: 3
+ITEM:   Throatcutter no_pickup
+{{
+ dgn.delayed_decay(_G, '_', 'orc skeleton / orc wizard skeleton'
+                             .. ' / orc priest skeleton / goblin skeleton' 
+                             .. ' / hobgoblin skeleton / gnoll skeleton'
+                             .. ' / hound skeleton')
+}}
+NSUBST:  _ = 10:_ / *: . 
+MONS:  kobold, kobold brigand, kobold demonologist
+: if you.depth() < 5 then
+SUBST:  2 = 1:30 2
+SUBST:  1 = 1.
+: elseif you.depth() >= 8 then
+NSUBST:  2 = 1:3 / *:2
+: end
+KFEAT: ' = rock_wall
+SUBST: ' = 'xx
+KPROP: ' = bloody
+TILE:   c = DNGN_STONE_DARK
+MAP
+   ccccc
+  cc...cc
+ cc..d..cc
+ c.......c
+ c1122211c
+ c_11211_c
+ cc_111_cc
+  cc___cc
+   cc+cc
+    '_'
+    '_'
+   ''_''
+''''___''''
++_________+
+''''___''''
+   ''_''
+    '_'
+    '_'
+    '+'
+ENDMAP
+
+# Natasha misses her master
+NAME:   dilly_guarded_unrand_morg
+TAGS:   no_monster_gen
+DEPTH:  D:2-9
+WEIGHT: 3
+ITEM:   morg no_pickup, w:30 book of necromancy / w:5 book of decay / \
+        w:5 book of death
+MONS:  skeleton, phantom, necrophage, wraith
+KMONS:  P = withered plant
+KMONS:  N = wight
+SUBST:  P = PP.
+TILE:   t = DNGN_TREE_DEAD
+: if you.depth() < 4 then
+KMONS:  N = Natasha, phantom
+SUBST:  2 = 1
+SUBST:  3 = .
+: elseif you.depth() >= 8 then
+KMONS:  N = wraith
+SUBST:  2 = 4
+SUBST:  1 = 3.
+SUBST:  3 = 123
+: end
+MAP
+ ttt
+ttPttt
+ttPePtt
+tP3G3Pt
+tP2d2Pt
+ttP1NPtt
+tPP1.ttt
+ttPPP..ttttt
+ tttttt...Ptt
+      ttttt.t
+          tt@
+ENDMAP
+
+NAME:  dilly_guarded_unrand_devastator
+TAGS:   no_monster_gen transparent
+DEPTH:  D:4-12
+WEIGHT: 3
+ITEM:   devastator no_pickup, stone, large rock q:1
+: dgn.delayed_decay(_G, '_', 'human corpse')
+MONS:   human; mace,  gargoyle, orc warrior band
+NSUBST:  s = 10:x / 3:G / 4:M / 1:d / *:.
+: if you.depth() < 6 then
+NSUBST:  M = 1:1 / *:G
+: elseif you.depth() >= 11 then
+NSUBST:  M = 1:1 / *:2
+: else
+NSUBST:  M = 1:_ / 2:3 / *:x
+SUBST:   G = I
+: end
+FTILE:  123sGdI._' = floor_pebble
+NSUBST: ' = 10:e / 5:f / *:.
+MAP
+  s's's
+ '''''''
+ s's's's
+'''''''''
+s's's's's
+'''''''''
+ s's's's
+ '''''''
+  s's's
+ENDMAP
+
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
