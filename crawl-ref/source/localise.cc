@@ -1175,9 +1175,26 @@ static string _localise_location(const string& context, const string& value)
         if (regex_search(value, sm, pattern) && sm.size() == 2)
         {
             string level = sm[1].str();
-            string value2 = replace_first(value, level, "%d");
-            string result = cxlate(context, value2, false);
+            string temp = replace_first(value, level, "%d");
+            string result = cxlate(context, temp, false);
             return replace_first(result, "%d", level);
+        }
+    }
+    else if (starts_with(value, "between levels "))
+    {
+        const regex pattern("^between levels ([0-9]+) and ([0-9]+) ");
+        smatch sm;
+        if (regex_search(value, sm, pattern) && sm.size() == 2)
+        {
+            string level1 = sm[1].str();
+            string level2 = sm[2].str();
+            string temp = replace_first(value, level1, "%d");
+            temp = replace_first(value, temp, "%d");
+
+            string result = cxlate(context, temp, false);
+            result = replace_first(result, "%d", level1);
+            result = replace_first(result, "%d", level2);
+            return result;
         }
     }
     return "";

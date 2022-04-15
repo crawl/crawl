@@ -418,6 +418,65 @@ auf Level %d einer Zikkurat
 %%%%
 
 ##############################################
+# between branch levels
+##############################################
+%%%%
+between levels %d and %d of the Dungeon
+zwischen Levels %d und %d des Dungeons
+%%%%
+between levels %d and %d of the Orcish Mines
+zwischen Levels %d und %d der orkischen Minen
+%%%%
+between levels %d and %d of the Elven Halls
+zwischen Levels %d und %d der Elfenhallen
+%%%%
+between levels %d and %d of the Lair of Beasts
+zwischen Levels %d und %d des Verstecks der Bestien
+%%%%
+between levels %d and %d of the Swamp
+zwischen Levels %d und %d des Sumpfes
+%%%%
+between levels %d and %d of the Shoals
+zwischen Levels %d und %d der Untiefen
+%%%%
+between levels %d and %d of the Snake Pit
+zwischen Levels %d und %d der Schlangengrube
+%%%%
+between levels %d and %d of the Spider Nest
+zwischen Levels %d und %d des Spinnennests
+%%%%
+between levels %d and %d of the Pits of Slime
+zwischen Levels %d und %d der Schleimgruben
+%%%%
+between levels %d and %d of the Vaults
+zwischen Levels %d und %d der Gewölbe
+%%%%
+between levels %d and %d of the Crypt
+zwischen Levels %d und %d der Krypta
+%%%%
+between levels %d and %d of the Tomb of the Ancients
+zwischen Levels %d und %d der Gruft der Antiker
+%%%%
+between levels %d and %d of the Depths
+zwischen Levels %d und %d der Tiefen
+%%%%
+between levels %d and %d of the Vestibule of Hell
+zwischen Levels %d und %d des Vestibüls der Hölle
+%%%%
+between levels %d and %d of the Iron City of Dis
+zwischen Levels %d und %d der Eisernen Stadt von Dis
+%%%%
+between levels %d and %d of the Realm of Zot
+zwischen Levels %d und %d des Reiches von Zot
+%%%%
+between levels %d and %d of the Abyss
+zwischen Levels %d und %d des Abgrunds
+%%%%
+between levels %d and %d of a ziggurat
+zwischen Levels %d und %d einer Zikkurat
+%%%%
+
+##############################################
 # in single-level branch
 ##############################################
 %%%%

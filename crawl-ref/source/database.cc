@@ -19,6 +19,7 @@
 #include "end.h"
 #include "files.h"
 #include "libutil.h"
+#include "localise.h"
 #include "options.h"
 #include "random.h"
 #include "stringutil.h"
@@ -404,6 +405,53 @@ static datum _database_fetch(DBM *database, const string &key)
     return result;
 }
 
+// translate key into users language so we can match against their search
+static string _localise_key(const string& key)
+{
+    if (contains(key, "serpent of hell"))
+    {
+        // special case (key has dis/cocytus/etc. as suffix)
+        string soh_key = lowercase_string(localise("the Serpent of Hell"));
+        size_t pos = key.find_last_of(' ');
+        if (pos != string::npos)
+        {
+            // localise the suffix (hell branch)
+            soh_key += " ";
+            string place = uppercase_first(key.substr(pos+1));
+            soh_key += lowercase_string(localise(place));
+        }
+        return soh_key;
+    }
+
+    // try canonicalised (lowercase) key
+    string result = localise(key);
+    if (result != key)
+        return result;
+
+    // try capitalised form
+    string key2 = uppercase_first(key);
+    result = lowercase_string(localise(key2));
+
+    if (result == key && contains(key, " "))
+    {
+        // try capitalising every (important) word
+        vector<string> words = split_string(" ", key);
+        key2 = "";
+        for (string word: words)
+        {
+            if (!key2.empty())
+                key2 += " ";
+            if (word == "the" || word == "of")
+                key2 += word;
+            else
+                key2 += uppercase_first(word);
+        }
+        result = lowercase_string(localise(key2));
+    }
+
+    return result;
+}
+
 static vector<string> _database_find_keys(DBM *database,
                                           const string &regex,
                                           bool ignore_case,
@@ -412,13 +460,21 @@ static vector<string> _database_find_keys(DBM *database,
     text_pattern             tpat(regex, ignore_case);
     vector<string> matches;
 
+    string lang = get_localisation_language();
+    bool is_english = lang.empty() || lang == "en";
+
     datum dbKey = dbm_firstkey(database);
 
     while (dbKey.dptr != nullptr)
     {
         string key((const char *)dbKey.dptr, dbKey.dsize);
 
-        if (tpat.matches(key)
+        // try to match in both English and the user's language
+        bool matched = tpat.matches(key);
+        if (!matched && !is_english)
+            matched = tpat.matches(_localise_key(key));
+
+        if (matched
             && key.find("__") == string::npos
             && (filter == nullptr || !(*filter)(key, "")))
         {
@@ -863,8 +919,6 @@ vector<string> getLongDescKeysByRegex(const string &regex,
         return empty;
     }
 
-    // FIXME: need to match regex against translated keys, which can't
-    // be done by db only.
     return _database_find_keys(DescriptionDB.get(), regex, true, filter);
 }
 

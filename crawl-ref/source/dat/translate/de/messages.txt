@@ -10846,119 +10846,122 @@ Alle Gegenstände erkannt. (Wählen um Auto-Raffen umzuschalten)
 # lookup-help.cc
 ##################
 %%%%
-The Serpent of Hell (
-
+Describe which?
+Welches beschreiben?
 %%%%
-"Describe which? "
-
+" (CTRL-S to sort by monster toughness)"
+" (STRG-S: nach Schwierigkeit sortieren)"
 %%%%
-(CTRL-S to sort by monster toughness)
-
+" (CTRL-S to sort by name)"
+" (CTRL-S: nach Namen sortieren)"
 %%%%
-(CTRL-S to sort by name)
-
+This entry is an exact match for '%s'. To see non-exact matches, press space.
+Dieser Eintrag ist ein exakter Treffer für '%s'. Leertaste drücken um nicht exakte Treffer zu sehen.
 %%%%
-%s spell
-
+This branch can only be entered while carrying at least 1 rune of Zot.
+Dieser Bereich kann nur betreten werden, wenn man mindestens eine Rune von Zot bei sich hat.
 %%%%
-%s ability
-
+This branch can only be entered while carrying at least %d runes of Zot.
+Dieser Bereich kann nur betreten werden, wenn man mindestens %d Runen von Zot bei sich hat.
 %%%%
-A shop
-
+This branch is %d levels deep.
+Dieser Bereich is %d Levels tief.
 %%%%
-(<
-
+The entrance to this branch can be found %s.
+Der Eingang dieses Bereichs kann %s gefunden werden."
 %%%%
-">) "
-
+This branch contains the entrance to %s.
+Dieser Bereich enthaltet die Eingang für {acc}%s.'
 %%%%
-This entry is an exact match for '
-
+This branch contains the entrances to %s.
+Dieser Bereich enthaltet die Eingänge für {acc}%s.'
 %%%%
-'. To see non-exact matches, press space.
-
-%%%%
-\n\nThis %s can only be entered while carrying at least %d rune%s of Zot.
-
-%%%%
-portal
-
-%%%%
-\n\nThis %s is %d levels deep.
-
-%%%%
-"\n\nThe entrance to this branch can be found "
-
-%%%%
-"in "
-
-%%%%
-"on level %d of "
-
-%%%%
-"between levels %d and %d of "
-
-%%%%
-\n\nThis branch contains the entrance%s to %s.
-
+(M)onster
+(M)onster
 %%%%
 monster
-
+Monster
+%%%%
+(S)pell
+(Z)auberspruch
 %%%%
 spell
-
+Zauberspruch
+%%%%
+s(K)ill
+f(E)rtigkeit
 %%%%
 skill
-
+Fertigkeit
+%%%%
+(A)bility
+f(A)ehigkeit
 %%%%
 ability
-
+Fähigkeit
+%%%%
+(C)ard
+(K)arte
 %%%%
 card
-
+Karte
+%%%%
+(I)tem
+(O)bjekt
 %%%%
 item
-
+Objekt
+%%%%
+(F)eature
+(F)eature
 %%%%
 feature
-
+Feature
+%%%%
+(G)od
+(G)ott
 %%%%
 god
-
+Gott
+%%%%
+(B)ranch
+(B)ereich
+%%%%
+c(L)oud
+(W)olke
 %%%%
 cloud
-
+Wolke
+%%%%
+s(T)atus
+s(T)atus
 %%%%
 status
-
+Status
 %%%%
-" Enter a single letter to list %s displayed by that symbol."
-
+Describe %s; partial names and regexps are fine.
+%s beschreiben; Namenteile und Regexps gilten auch.
 %%%%
-"Describe a %s; partial names and regexps are fine.%s\nDescribe what? "
-
+" Enter a single letter to list all displayed by that symbol."
+" Einen einzigen Buchstaben eingeben, um alle was mit diesem Symbol angezeigt wird aufzulisten."
+%%%%
+Describe what?
+Was beschreiben?
 %%%%
 Okay, then.
 Okay, dann.
 %%%%
-"No "
-
+No %s with symbol '%s'.
+Nichts in der Kategorie '%s' wird durch '%s' representiert.
 %%%%
-" with symbol '"
-
-%%%%
-'.
-
-%%%%
-"No matching "
-
+No matching %s.
+Kein Treffer in der Kategorie '%s'.
 %%%%
 "Describe a %s? "
-"Beschreibe %s? "
+"%s beschreiben? "
 %%%%
 Description must contain at least one non-space.
-
+Die Beschreibung muss mindestens ein Nicht-Leerzeichen enthalten.
 %%%%
 
 ##################
@@ -20134,6 +20137,9 @@ save file decompression failed: %s
 "on "
 
 %%%%
+"in "
+
+%%%%
 
 ##################
 # player-act.cc
@@ -20852,7 +20858,7 @@ You have reached level %d, the highest you will ever reach!
 Ihr habt Level %d erreicht, das höchste, das Ihr jemals erreichen werdet!
 %%%%
 You have reached level %d!
-Ihr habt Level%d erreicht!
+Ihr habt Level %d erreicht!
 %%%%
 Your skin feels tougher.
 Eure Haut fühlt sich härter an.
@@ -27409,6 +27415,9 @@ grate
 
 %%%%
 escape hatch
+
+%%%%
+portal
 
 %%%%
 staircase

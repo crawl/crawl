@@ -28,6 +28,7 @@
 #include "item-name.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "localise.h"
 #include "macro.h"
 #include "makeitem.h" // item_colour
 #include "menu.h"
@@ -76,13 +77,13 @@ DEF_BITFIELD(lookup_type_flags, lookup_type);
 class LookupType
 {
 public:
-    LookupType(char _symbol, string _type, db_keys_recap _recap,
+    LookupType(string _prompt, string _type, db_keys_recap _recap,
                db_find_filter _filter_forbid, keys_by_glyph _glyph_fetch,
                simple_key_list _simple_key_fetch,
                menu_entry_generator _menu_gen, key_describer _describer,
                lookup_type_flags _flags)
-    : symbol(_symbol), type(_type), filter_forbid(_filter_forbid),
-      flags(_flags),
+    : prompt(_prompt), type(_type),
+      filter_forbid(_filter_forbid), flags(_flags),
       simple_key_fetch(_simple_key_fetch), glyph_fetch(_glyph_fetch),
       recap(_recap), menu_gen(_menu_gen), describer(_describer)
     {
@@ -92,7 +93,8 @@ public:
         ASSERT(describer != nullptr);
     }
 
-    string prompt_string() const;
+    const string& prompt_string() const;
+    string symbol() const;
     string suffix() const;
     vector<string> matching_keys(string regex) const;
     void display_keys(vector<string> &key_list) const;
@@ -111,9 +113,10 @@ public:
 
     int describe(const string &key, bool exact_match = false) const;
 
-public:
+private:
     /// The letter pressed to choose this (e.g. 'M'). case insensitive
-    char symbol;
+    string prompt;
+public:
     /// A description of the lookup type (e.g. "monster"). case insensitive
     string type;
     /// a function returning 'true' if the search result corresponding to
@@ -189,7 +192,7 @@ static bool _is_soh(string name)
 static string _soh_name(monster_type m_type)
 {
     branch_type b = serpent_of_hell_branch(m_type);
-    return string("The Serpent of Hell (") + branches[b].longname + ")";
+    return string("the Serpent of Hell (") + branches[b].longname + ")"; // noloc
 }
 
 static monster_type _mon_by_name(string name)
@@ -251,14 +254,14 @@ public:
 
     void set_prompt()
     {
-        string prompt = "Describe which? ";
+        string prompt = localise("Describe which?");
 
         if (toggleable_sort)
         {
             if (sort_alpha)
-                prompt += "(CTRL-S to sort by monster toughness)";
+                prompt += localise(" (CTRL-S to sort by monster toughness)");
             else
-                prompt += "(CTRL-S to sort by name)";
+                prompt += localise(" (CTRL-S to sort by name)");
         }
         set_title(new MenuEntry(prompt, MEL_TITLE));
     }
@@ -498,7 +501,7 @@ static void _recap_spell_keys(vector<string> &keys)
         // first, strip " spell"
         const string key_name = keys[i].substr(0, keys[i].length() - 6);
         // then get the real name
-        keys[i] = make_stringf("%s spell",
+        keys[i] = make_stringf("%s spell", // noloc
                                spell_title(spell_by_name(key_name)));
     }
 }
@@ -514,7 +517,8 @@ static void _recap_ability_keys(vector<string> &keys)
     {
         strip_suffix(key, "ability");
         // get the real name
-        key = make_stringf("%s ability", ability_name(ability_by_name(key)));
+        key = make_stringf("%s ability", // noloc
+                           ability_name(ability_by_name(key)));
     }
 }
 
@@ -524,7 +528,7 @@ static void _recap_feat_keys(vector<string> &keys)
     {
         dungeon_feature_type type = feat_by_desc(keys[i]);
         if (type == DNGN_ENTER_SHOP)
-            keys[i] = "A shop";
+            keys[i] = "A shop"; // noloc
         else
             keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A);
     }
@@ -558,7 +562,13 @@ static void _recap_card_keys(vector<string> &keys)
  */
 static MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
+    // str will have first letter capitalised, which may break localisation
+    // if we don't get a hit on the capitalised string then try without capital
+    string name = localise(str);
+    if (name == str)
+        name = uppercase_first(localise(lowercase_first(str)));
+
+    MenuEntry* me = new MenuEntry(name, MEL_ITEM, 1, letter);
     me->data = &key;
     return me;
 }
@@ -577,7 +587,8 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     // Create and store fake monsters, so the menu code will
     // have something valid to refer to.
     monster_type m_type = _mon_by_name(str);
-    const string name = _is_soh(str) ? _soh_name(m_type) : str;
+    string name = _is_soh(str) ? _soh_name(m_type) : str;
+    name = uppercase_first(localise(name));
 
     monster_type base_type = MONS_NO_MONSTER;
     // HACK: Set an arbitrary humanoid monster as base type.
@@ -594,17 +605,17 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     if (colour == BLACK)
         colour = LIGHTGREY;
 
-    string prefix = "(<";
+    string prefix = "(<"; // noloc
     prefix += colour_to_str(colour);
-    prefix += ">";
+    prefix += ">"; // noloc
     prefix += stringize_glyph(mons_char(m_type));
-    prefix += "</";
+    prefix += "</"; // noloc
     prefix += colour_to_str(colour);
-    prefix += ">) ";
+    prefix += ">) "; // noloc
 
     const string title = prefix + name;
 #else
-    const string &title = name;
+    const string title = name;
 #endif
 
     // NOTE: MonsterMenuEntry::get_tiles() takes care of setting
@@ -636,7 +647,7 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
  */
 static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
+    MenuEntry* me = new MenuEntry(localise(str), MEL_ITEM, 1, letter);
     me->data = &key;
 
     const dungeon_feature_type feat = feat_by_desc(str);
@@ -752,20 +763,38 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
 
 
 /**
- * How should this type be expressed in the prompt string?
+ * Return prompt string.
  *
- * @return The 'type', with the first instance of the 'symbol' found &
- *          replaced with an uppercase version surrounded by parens
- *          e.g. "monster", 'm' -> "(M)onster"
+ * @return The prompt string, e.g. "(M)onster"
  */
-string LookupType::prompt_string() const
+const string& LookupType::prompt_string() const
 {
-    string prompt_str = lowercase_string(type);
-    const size_t symbol_pos = prompt_str.find(tolower_safe(symbol));
-    ASSERT(symbol_pos != string::npos);
+    return prompt;
+}
 
-    prompt_str.replace(symbol_pos, 1, make_stringf("(%c)", toupper_safe(symbol)));
-    return prompt_str;
+/**
+ * Extract symbol from prompt string.
+ *
+ * @return The symbol, e.g. "(M)onster" -> "m" (could be multi-byte char)
+ */
+string LookupType::symbol() const
+{
+    string symbol;
+
+    string lprompt = localise(prompt);
+    size_t start = lprompt.find("(");
+    size_t end = lprompt.find(")");
+    if (start != string::npos && end != string::npos && end > start)
+        symbol = lprompt.substr(start + 1, end - start - 1);
+
+    if (symbol.empty() && !lprompt.empty())
+    {
+        // malformed - take the first char
+        // TODO: i18n: fix for multibyte
+        symbol = lprompt.substr(0, 1);
+    }
+
+    return uppercase(symbol);
 }
 
 /**
@@ -831,7 +860,7 @@ void LookupType::display_keys(vector<string> &key_list) const
         if (doing_mons)
         {
             desc_menu.add_entry(_monster_menu_gen(letter,
-                                                  key_to_menu_str(key),
+                                                  key,
                                                   monster_list[i]));
         }
         else
@@ -901,10 +930,13 @@ string LookupType::key_to_menu_str(const string &key) const
  */
 int LookupType::describe(const string &key, bool exact_match) const
 {
-    const string footer
-        = exact_match ? "This entry is an exact match for '" + key
-        + "'. To see non-exact matches, press space."
-        : "";
+    string footer;
+    if (exact_match)
+    {
+        footer = localise("This entry is an exact match for '%s'. "
+                          "To see non-exact matches, press space.",
+                          LocalisationArg(key, false));
+    }
     return describer(key, suffix(), footer);
 }
 
@@ -1120,10 +1152,17 @@ static string _branch_entry_runes(branch_type br)
 
     if (num_runes > 0)
     {
-        desc = make_stringf("\n\nThis %s can only be entered while carrying "
-                            "at least %d rune%s of Zot.",
-                            br == BRANCH_ZIGGURAT ? "portal" : "branch",
-                            num_runes, num_runes > 1 ? "s" : "");
+        desc = "\n\n";
+        if (num_runes == 1)
+        {
+            desc += localise("This branch can only be entered while carrying "
+                             "at least 1 rune of Zot.");
+        }
+        else
+        {
+            desc += localise("This branch can only be entered while carrying "
+                             "at least %d runes of Zot.", num_runes);
+        }
     }
 
     return desc;
@@ -1137,10 +1176,8 @@ static string _branch_depth(branch_type br)
     // Abyss depth is explained in the description.
     if (depth > 1 && br != BRANCH_ABYSS)
     {
-        desc = make_stringf("\n\nThis %s is %d levels deep.",
-                            br == BRANCH_ZIGGURAT ? "portal"
-                                                  : "branch",
-                            depth);
+        desc = "\n\n";
+        desc = localise("This branch is %d levels deep.", depth);
     }
 
     return desc;
@@ -1156,18 +1193,20 @@ static string _branch_location(branch_type br)
     // Ziggurat locations are explained in the description.
     if (parent != NUM_BRANCHES && br != BRANCH_ZIGGURAT)
     {
-        desc = "\n\nThe entrance to this branch can be found ";
+        string place;
         if (min == max)
         {
             if (branches[parent].numlevels == 1)
-                desc += "in ";
+                place = "in "; // noloc
             else
-                desc += make_stringf("on level %d of ", min);
+                desc = make_stringf("on level %d of ", min); // noloc
         }
         else
-            desc += make_stringf("between levels %d and %d of ", min, max);
-        desc += branches[parent].longname;
-        desc += ".";
+            place = make_stringf("between levels %d and %d of ", min, max); // noloc
+        place += branches[parent].longname;
+
+        desc += "\n\n";
+        desc += localise("The entrance to this branch can be found %s.", place);
     }
 
     return desc;
@@ -1185,10 +1224,18 @@ static string _branch_subbranches(branch_type br)
     // Lair's random branches are explained in the description.
     if (!subbranch_names.empty() && br != BRANCH_LAIR)
     {
-        desc += make_stringf("\n\nThis branch contains the entrance%s to %s.",
-                             subbranch_names.size() > 1 ? "s" : "",
+        desc += "\n\n";
+        if (subbranch_names.size() == 1)
+        {
+            desc += localise("This branch contains the entrance to %s.",
+                             subbranch_names[0]);
+        }
+        else
+        {
+            desc += localise("This branch contains the entrances to %s.",
                              comma_separated_line(begin(subbranch_names),
                                                   end(subbranch_names)).c_str());
+        }
     }
 
     return desc;
@@ -1227,53 +1274,52 @@ static int _describe_branch(const string &key, const string &suffix,
 
 /// All types of ?/ queries the player can enter.
 static const vector<LookupType> lookup_types = {
-    LookupType('M', "monster", _recap_mon_keys, _monster_filter,
+    LookupType("(M)onster", "monster", _recap_mon_keys, _monster_filter,
                _get_monster_keys, nullptr, nullptr,
                _describe_monster, lookup_type::toggleable_sort),
-    LookupType('S', "spell", _recap_spell_keys, _spell_filter,
+    LookupType("(S)pell", "spell", _recap_spell_keys, _spell_filter,
                nullptr, nullptr, _spell_menu_gen,
                _describe_spell, lookup_type::db_suffix),
-    LookupType('K', "skill", nullptr, nullptr,
+    LookupType("s(K)ill", "skill", nullptr, nullptr,
                nullptr, _get_skill_keys, _skill_menu_gen,
                _describe_skill, lookup_type::none),
-    LookupType('A', "ability", _recap_ability_keys, _ability_filter,
+    LookupType("(A)bility", "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_ability, lookup_type::db_suffix),
-    LookupType('C', "card", _recap_card_keys, _card_filter,
+    LookupType("(C)ard", "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _card_menu_gen,
                _describe_card, lookup_type::db_suffix),
-    LookupType('I', "item", nullptr, _item_filter,
+    LookupType("(I)tem", "item", nullptr, _item_filter,
                item_name_list_for_glyph, nullptr, _item_menu_gen,
                _describe_item, lookup_type::none),
-    LookupType('F', "feature", _recap_feat_keys, _feature_filter,
+    LookupType("(F)eature", "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
                _describe_feature, lookup_type::none),
-    LookupType('G', "god", nullptr, nullptr,
+    LookupType("(G)od", "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
                _describe_god, lookup_type::none),
-    LookupType('B', "branch", nullptr, nullptr,
+    LookupType("(B)ranch", "branch", nullptr, nullptr,
                nullptr, _get_branch_keys, _branch_menu_gen,
                _describe_branch, lookup_type::disable_sort),
-    LookupType('L', "cloud", nullptr, nullptr,
+    LookupType("c(L)oud", "cloud", nullptr, nullptr,
                nullptr, _get_cloud_keys, _cloud_menu_gen,
                _describe_cloud, lookup_type::db_suffix),
-    LookupType('T', "status", nullptr, _status_filter,
+    LookupType("s(T)atus", "status", nullptr, _status_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_generic, lookup_type::db_suffix),
 };
 
 /**
  * Build a mapping from LookupTypes' symbols to the objects themselves.
+ * i18n: This has to be done at runtime because not all languages will have the same symbols
  */
-static map<char, const LookupType*> _build_lookup_type_map()
+static map<string, const LookupType*> _build_lookup_type_map()
 {
-    map<char, const LookupType*> lookup_map;
+    map<string, const LookupType*> lookup_map;
     for (const auto &lookup : lookup_types)
-        lookup_map[lookup.symbol] = &lookup;
+        lookup_map[lookup.symbol()] = &lookup;
     return lookup_map;
 }
-static const map<char, const LookupType*> _lookup_types_by_symbol
-    = _build_lookup_type_map();
 
 /**
  * Prompt the player for a search string for the given lookup type.
@@ -1286,14 +1332,15 @@ static const map<char, const LookupType*> _lookup_types_by_symbol
 static string _prompt_for_regex(const LookupType &lookup_type, string &err)
 {
     const string type = lowercase_string(lookup_type.type);
-    const string extra = lookup_type.supports_glyph_lookup() ?
-        make_stringf(" Enter a single letter to list %s displayed by that"
-                     " symbol.", pluralise(type).c_str()) :
-        "";
-    const string prompt = make_stringf(
-         "Describe a %s; partial names and regexps are fine.%s\n"
-         "Describe what? ",
-         type.c_str(), extra.c_str());
+    string prompt = localise("Describe %s; partial names and regexps are fine.",
+                             type);
+    if (lookup_type.supports_glyph_lookup())
+    {
+        prompt += localise(" Enter a single letter to list all displayed by"
+                           " that symbol.");
+    }
+    prompt += "\n";
+    prompt += localise("Describe what?") + " ";
 
     char buf[80];
     if (msgwin_get_line(prompt, buf, sizeof(buf)) || buf[0] == '\0')
@@ -1337,13 +1384,14 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
                                       const string &regex,
                                       bool by_symbol)
 {
-    const string plur_type = pluralise(type);
-
     if (key_list.empty())
     {
         if (by_symbol)
-            return "No " + plur_type + " with symbol '" + regex + "'.";
-        return "No matching " + plur_type + ".";
+        {
+            return localise("No %s with symbol '%s'.", type,
+                            LocalisationArg(regex, false));
+        }
+        return localise("No matching %s.", type);
     }
 
     // we're good!
@@ -1365,8 +1413,7 @@ static int _lookup_prompt()
                            mem_fn(&LookupType::prompt_string), " or ");
     if (use_popup)
     {
-        string prompt = make_stringf("Describe a %s? ",
-                                                lookup_type_prompts.c_str());
+        string prompt = localise("Describe a %s? ", lookup_type_prompts);
         linebreak_string(prompt, 72);
 
 #ifdef USE_TILE_WEB
@@ -1407,9 +1454,13 @@ static int _lookup_prompt()
  */
 static bool _find_description(string &response)
 {
-    int ch = _lookup_prompt();
+    static const map<string, const LookupType*> _lookup_types_by_symbol
+        = _build_lookup_type_map();
+
+    int ch = _lookup_prompt(); // TODO: i18n: handle multibyte chars
+    string symbol(1, ch);
     const LookupType * const *lookup_type_ptr
-        = map_find(_lookup_types_by_symbol, ch);
+        = map_find(_lookup_types_by_symbol, symbol);
     if (!lookup_type_ptr)
         return false;
 
