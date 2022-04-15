@@ -3383,7 +3383,7 @@ bool monster::undead_or_demonic(bool /*temp*/) const
 bool monster::evil() const
 {
     // Assume that all unknown gods are evil.
-    if (is_priest() && (is_evil_god(god) || is_unknown_god(god)))
+    if (is_evil_god(god) || is_priest() && is_unknown_god(god))
         return true;
     if (has_attack_flavour(AF_DRAIN) || has_attack_flavour(AF_VAMPIRIC))
         return true;

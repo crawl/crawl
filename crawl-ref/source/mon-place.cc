@@ -1071,8 +1071,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (mg.cls == MONS_CRAZY_YIUF)
         mon->god = GOD_XOM;
     // Grinder and Ignacio belong to Makhleb.
+    // Hell Knights need some reason to be evil.
     else if (mg.cls == MONS_GRINDER
-             || mg.cls == MONS_IGNACIO)
+             || mg.cls == MONS_IGNACIO
+             || mg.cls == MONS_HELL_KNIGHT)
     {
         mon->god = GOD_MAKHLEB;
     }
