@@ -440,9 +440,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HELL_KNIGHT,
       {
-       { SPELL_BOLT_OF_FIRE, 17, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-       { SPELL_HASTE, 26, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_FIRE, 17, MON_SPELL_PRIEST },
+       { SPELL_BLINK, 10, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
+       { SPELL_HASTE, 26, MON_SPELL_PRIEST },
       }
     },
 
