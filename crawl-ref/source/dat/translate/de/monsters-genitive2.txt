@@ -4012,10 +4012,10 @@ Eures eisenbeschlagenen Einberufers
 {gen}your ironbound frostheart
 Eures eisengebundenen Frostherzens
 %%%%
-{gen}the ironbound preserver
+{gen}your ironbound preserver
 Eures eisenbeschlagenen Bewahrers
 %%%%
-{gen}the ironbound beastmaster
+{gen}your ironbound beastmaster
 Eures eisenbeschlagenen Bestienmeisters
 %%%%
 {gen}your ironbound thunderhulk

@@ -2140,10 +2140,10 @@ Euren Tresorwärter
 {acc}your ironbound convoker
 Euren eisenbeschlagenen Einberufer
 %%%%
-{acc}the ironbound preserver
+{acc}your ironbound preserver
 Euren eisenbeschlagenen Bewahrer
 %%%%
-{acc}the ironbound beastmaster
+{acc}your ironbound beastmaster
 Euren eisenbeschlagenen Bestienmeister
 %%%%
 {acc}your ironbound thunderhulk

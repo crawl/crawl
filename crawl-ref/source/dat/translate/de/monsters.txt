@@ -5566,10 +5566,10 @@ Euer eisenbeschlagener Einberufer
 your ironbound frostheart
 Euer eisengebundenes Frostherz
 %%%%
-the ironbound preserver
+your ironbound preserver
 Euer eisenbeschlagener Bewahrer
 %%%%
-the ironbound beastmaster
+your ironbound beastmaster
 Euer eisenbeschlagener Bestienmeister
 %%%%
 your ironbound thunderhulk

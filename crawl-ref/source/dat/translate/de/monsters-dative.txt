@@ -4417,10 +4417,10 @@ Eurem eisenbeschlagenen Einberufer
 {dat}your ironbound frostheart
 Eurem eisengebundenen Frostherzen
 %%%%
-{dat}the ironbound preserver
+{dat}your ironbound preserver
 Eurem eisenbeschlagenen Bewahrer
 %%%%
-{dat}the ironbound beastmaster
+{dat}your ironbound beastmaster
 Eurem eisenbeschlagenen Bestienmeister
 %%%%
 {dat}your ironbound thunderhulk
