@@ -19,6 +19,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #ifdef USE_TILE
@@ -64,6 +65,33 @@
 #endif
 
 using namespace ui;
+
+MenuEntry::MenuEntry(const string &txt, MenuEntryLevel lev, int qty, int hotk,
+                     bool preselect) :
+    text(txt), quantity(qty), selected_qty(0), colour(-1),
+    hotkeys(), level(lev), preselected(preselect),
+    indent_no_hotkeys(false),
+    data(nullptr)
+{
+    colour = (lev == MEL_ITEM ? MENU_ITEM_STOCK_COLOUR :
+                                lev == MEL_SUBTITLE ? BLUE : WHITE);
+    if (hotk)
+        hotkeys.push_back(hotk);
+
+    if (localisation_active())
+    {
+        string original = text;
+        text = localise(original);
+        if (text == original)
+        {
+            // sometimes menu entries are capitalised which can break localisation
+            string lower = lowercase_first(original);
+            string lower2 = localise(lower);
+            if (lower2 != lower)
+                text = uppercase_first(lower2);
+        }
+    }
+}
 
 class UIMenu : public Widget
 {

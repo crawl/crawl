@@ -601,7 +601,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     // Build menu entries for monsters.
     if (!list_mons.empty())
     {
-        desc_menu.add_entry(new MenuEntry(localise("Monsters"), MEL_SUBTITLE));
+        desc_menu.add_entry(new MenuEntry("Monsters", MEL_SUBTITLE));
         for (const monster_info &mi : list_mons)
         {
             // List monsters in the form
@@ -662,7 +662,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
 
-        desc_menu.add_entry(new MenuEntry(localise("Items"), MEL_SUBTITLE));
+        desc_menu.add_entry(new MenuEntry("Items", MEL_SUBTITLE));
         for (InvEntry *me : all_items)
         {
 #ifndef USE_TILE_LOCAL
@@ -681,7 +681,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
 
     if (!list_features.empty())
     {
-        desc_menu.add_entry(new MenuEntry(localise("Features"), MEL_SUBTITLE));
+        desc_menu.add_entry(new MenuEntry("Features", MEL_SUBTITLE));
         for (const coord_def &c : list_features)
         {
             ostringstream desc;

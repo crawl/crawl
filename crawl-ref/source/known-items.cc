@@ -394,7 +394,7 @@ void check_item_knowledge(bool unknown_items)
     ml = menu.load_items(items_misc, known_item_mangle, ml, false);
     if (!items_other.empty())
     {
-        menu.add_entry(new MenuEntry(localise("Other Items"), MEL_SUBTITLE));
+        menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
         ml = menu.load_items_seq(items_other, known_item_mangle, ml);
     }
 

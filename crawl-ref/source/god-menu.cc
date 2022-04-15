@@ -10,14 +10,13 @@
 
 #include "colour.h"
 #include "libutil.h"
-#include "localise.h"
 #include "religion.h"
 #include "terrain.h"
 #include "tilepick.h"
 #include "tileview.h"
 
 GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
-    MenuEntry(localise(god_name(god_, long_name)), MEL_ITEM, 1, 0, false),
+    MenuEntry(god_name(god_, long_name), MEL_ITEM, 1, 0, false),
     god(god_)
 {
     if (god == GOD_SHINING_ONE)
