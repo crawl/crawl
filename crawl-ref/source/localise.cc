@@ -1384,9 +1384,9 @@ const string& get_localisation_language()
     return _language;
 }
 
-static bool _skip_translation()
+bool localisation_active()
 {
-    return (_paused || _language.empty() || _language == "en");
+    return (!_paused && !_language.empty() && _language != "en");
 }
 
 string localise(const vector<LocalisationArg>& args)
@@ -1404,7 +1404,7 @@ string localise(const vector<LocalisationArg>& args)
 
     // translate format string
     string fmt_xlated;
-    if (fmt_arg.translate && !_skip_translation())
+    if (fmt_arg.translate && localisation_active())
     {
         fmt_xlated = _localise_string("", fmt_arg);
         success = (fmt_xlated != fmt_arg.stringVal);
@@ -1466,7 +1466,7 @@ string localise(const vector<LocalisationArg>& args)
                 else if (*type == typeid(char*))
                 {
                     // arg is string
-                    if (arg.translate && !_skip_translation())
+                    if (arg.translate && localisation_active())
                     {
                         string argx = _localise_string(_context, arg);
                         ss << _format_utf8_string(fmt_spec, argx);
@@ -1513,7 +1513,7 @@ string localise(const vector<LocalisationArg>& args)
 
     string result = ss.str();
 
-    if (!_skip_translation() && args.size() > 1 && fmt_arg.translate && !success)
+    if (localisation_active() && args.size() > 1 && fmt_arg.translate && !success)
     {
         // there may be a translation for the completed string
         result = _localise_string("", result);
@@ -1525,7 +1525,7 @@ string localise(const vector<LocalisationArg>& args)
 
 string vlocalise(const string& fmt_str, va_list argp)
 {
-    if (_skip_translation())
+    if (!localisation_active())
     {
         return vmake_stringf(fmt_str.c_str(), argp);
     }
@@ -1612,7 +1612,7 @@ string vlocalise(const string& fmt_str, va_list argp)
  */
 int localise_char(char ch)
 {
-    if (_skip_translation())
+    if (!localisation_active())
         return (int)ch;
 
     string en(1, ch);
@@ -1638,7 +1638,7 @@ string localise(const string& text_en, const map<string, string>& params)
 {
     if (text_en.empty())
         return "";
-    else if (_skip_translation())
+    else if (!localisation_active())
         return replace_keys(text_en, params);
 
     _context = "";
@@ -1704,7 +1704,7 @@ string localise(const string& text_en, const map<string, string>& params)
  */
 string localise_contextual(const string& context, const string& text_en)
 {
-    if (_skip_translation())
+    if (!localisation_active())
         return text_en;
     else
         return _localise_string(context, text_en);

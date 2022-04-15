@@ -460,8 +460,7 @@ static vector<string> _database_find_keys(DBM *database,
     text_pattern             tpat(regex, ignore_case);
     vector<string> matches;
 
-    string lang = get_localisation_language();
-    bool is_english = lang.empty() || lang == "en";
+    bool localising = localisation_active();
 
     datum dbKey = dbm_firstkey(database);
 
@@ -471,7 +470,7 @@ static vector<string> _database_find_keys(DBM *database,
 
         // try to match in both English and the user's language
         bool matched = tpat.matches(key);
-        if (!matched && !is_english)
+        if (!matched && localising)
             matched = tpat.matches(_localise_key(key));
 
         if (matched

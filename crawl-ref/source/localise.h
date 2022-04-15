@@ -64,6 +64,13 @@ void unpause_localisation();
 const string& get_localisation_language();
 
 /**
+ *  Is localisation active?
+ *
+ *  @returns true if language is not English and localisation not paused.
+ */
+bool localisation_active();
+
+/**
  *  Localise a list of args.
  *  @param args The list of arguments.
  *              If there's more than one, the first one is expected to be a printf-style format string.
