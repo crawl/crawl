@@ -344,3 +344,12 @@
 "riesigen "
 %%%%
 
+################################
+# monsters
+################################
+%%%%
+# used for obsolete monsters
+"{adj-en}removed "
+"entfernten "
+%%%%
+

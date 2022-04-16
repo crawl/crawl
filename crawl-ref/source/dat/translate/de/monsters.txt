@@ -1817,6 +1817,30 @@ die Eleionoma
 the lemure
 die Lemure
 %%%%
+the endoplasm
+das Endoplasma
+%%%%
+the rockslime
+der Felsenschleim
+%%%%
+the quicksilver ooze
+der Quecksilber-Schlamm
+%%%%
+the kobold brigand
+der Kobold-Brigant
+%%%%
+the dread lich
+der Grauenlich
+%%%%
+the djinni
+der Dschinn
+%%%%
+the salamander tyrant
+der Salamander-Tyrann
+%%%%
+the animated armour
+die animierte Rüstung
+%%%%
 # Test monsters can be created in Arena
 %%%%
 the test spawner
@@ -5119,6 +5143,54 @@ eine Lemure
 %d lemures
 %d Lemuren
 %%%%
+an endoplasm
+ein Endoplasma
+%%%%
+%d endoplasms
+%d Endoplasmen
+%%%%
+a rockslime
+ein Felsenschleim
+%%%%
+%d rockslimes
+%d Felsenschleime
+%%%%
+a quicksilver ooze
+ein Quecksilber-Schlamm
+%%%%
+%d quicksilver oozes
+%d Quecksilber-Schlamme
+%%%%
+a kobold brigand
+ein Kobold-Brigant
+%%%%
+%d kobold brigands
+%d Kobold-Briganten
+%%%%
+a dread lich
+ein Grauenlich
+%%%%
+%d dread liches
+%d Grauenlichs
+%%%%
+a djinni
+ein Dschinn
+%%%%
+%d djinn
+%d Dschinn
+%%%%
+a salamander tyrant
+ein Salamander-Tyrann
+%%%%
+%d salamander tyrants
+%d Salamander-Tyrannen
+%%%%
+an animated armour
+eine animierte Rüstung
+%%%%
+%d animated armours
+%d animierte Rüstungen
+%%%%
 # Test monsters can be created in Arena
 %%%%
 a test spawner
@@ -6649,6 +6721,30 @@ Eure Eleionoma
 your lemure
 Eure Lemure
 %%%%
+your endoplasm
+Euer Endoplasma
+%%%%
+your rockslime
+Euer Felsenschleim
+%%%%
+your quicksilver ooze
+Euer Quecksilber-Schlamm
+%%%%
+your kobold brigand
+Euer Kobold-Brigant
+%%%%
+your dread lich
+Euer Grauenlich
+%%%%
+your djinni
+Euer Dschinn
+%%%%
+your salamander tyrant
+Euer Salamander-Tyrann
+%%%%
+your animated armour
+Eure animierte Rüstung
+%%%%
 # Test monsters can be created in Arena
 %%%%
 your test spawner
@@ -8140,6 +8236,30 @@ Eleionoma
 %%%%
 lemure
 Lemure
+%%%%
+endoplasm
+Endoplasma
+%%%%
+rockslime
+Felsenschleim
+%%%%
+quicksilver ooze
+Quecksilber-Schlamm
+%%%%
+kobold brigand
+Kobold-Brigant
+%%%%
+dread lich
+Grauenlich
+%%%%
+djinni
+Dschinn
+%%%%
+salamander tyrant
+Salamander-Tyrann
+%%%%
+animated armour
+animierte Rüstung
 %%%%
 # Test monsters can be created in Arena
 %%%%

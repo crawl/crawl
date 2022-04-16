@@ -1808,6 +1808,30 @@ der Eleionoma
 {gen}the lemure
 der Lemure
 %%%%
+{gen}the endoplasm
+des Endoplasmas
+%%%%
+{gen}the rockslime
+des Felsenschleims
+%%%%
+{gen}the quicksilver ooze
+des Quecksilber-Schlamms
+%%%%
+{gen}the kobold brigand
+des Kobold-Briganten
+%%%%
+{gen}the dread lich
+des Grauenlichs
+%%%%
+{gen}the djinni
+des Dschinns
+%%%%
+{gen}the salamander tyrant
+des Salamander-Tyranns
+%%%%
+{gen}the animated armour
+der animierten Rüstung
+%%%%
 # Test monsters can be created in Arena
 %%%%
 {gen}the test spawner
@@ -3585,6 +3609,33 @@ einer Eleionoma
 {gen}a lemure
 einer Lemure
 %%%%
+{gen}an endoplasm
+eines Endoplasmas
+%%%%
+{gen}a rockslime
+eines Felsenschleims
+%%%%
+{gen}a quicksilver ooze
+eines Quecksilber-Schlamms
+%%%%
+{gen}a kobold brigand
+eines Kobold-Briganten
+%%%%
+{gen}a dread lich
+eines Grauenlichs
+%%%%
+{gen}a djinni
+eines Dschinns
+%%%%
+{gen}a salamander tyrant
+eines Salamander-Tyranns
+%%%%
+{gen}an animated armour
+einer animierten Rüstung
+%%%%
+{gen}%d animated armours
+%d animierter Rüstungen
+%%%%
 # Test monsters can be created in Arena
 %%%%
 {gen}a test spawner
@@ -5095,6 +5146,30 @@ Eurer Eleionoma
 {gen}your lemure
 Eurer Lemure
 %%%%
+{gen}your endoplasm
+Eures Endoplasmas
+%%%%
+{gen}your rockslime
+Eures Felsenschleims
+%%%%
+{gen}your quicksilver ooze
+Eures Quecksilber-Schlamms
+%%%%
+{gen}your kobold brigand
+Eures Kobold-Briganten
+%%%%
+{gen}your dread lich
+Eures Grauenlichs
+%%%%
+{gen}your djinni
+Eures Dschinns
+%%%%
+{gen}your salamander tyrant
+Eures Salamander-Tyranns
+%%%%
+{gen}your animated armour
+Eurer animierten Rüstung
+%%%%
 # Test monsters can be created in Arena
 %%%%
 {gen}your test spawner
@@ -6331,6 +6406,30 @@ Palentongas
 %%%%
 {gen}royal mummy
 königlicher Mumie
+%%%%
+{gen}endoplasm
+Endoplasmas
+%%%%
+{gen}rockslime
+Felsenschleims
+%%%%
+{gen}quicksilver ooze
+Quecksilber-Schlamms
+%%%%
+{gen}kobold brigand
+Kobold-Briganten
+%%%%
+{gen}dread lich
+Grauenlichs
+%%%%
+{gen}djinni
+Dschinns
+%%%%
+{gen}salamander tyrant
+Salamander-Tyranns
+%%%%
+{gen}animated armour
+animierter Rüstung
 %%%%
 # Test monsters can be created in Arena
 %%%%

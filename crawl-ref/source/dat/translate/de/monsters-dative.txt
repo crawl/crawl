@@ -1583,6 +1583,30 @@ der Eleionoma
 {dat}the lemure
 der Lemure
 %%%%
+{dat}the endoplasm
+dem Endoplasma
+%%%%
+{dat}the rockslime
+dem Felsenschleim
+%%%%
+{dat}the quicksilver ooze
+dem Quecksilber-Schlamm
+%%%%
+{dat}the kobold brigand
+dem Kobold-Briganten
+%%%%
+{dat}the dread lich
+dem Grauenlich
+%%%%
+{dat}the djinni
+dem Dschinn
+%%%%
+{dat}the salamander tyrant
+dem Salamander-Tyrann
+%%%%
+{dat}the animated armour
+der animierten Rüstung
+%%%%
 # Test monsters can be created in Arena
 %%%%
 {dat}the test spawner
@@ -3987,6 +4011,39 @@ einer Eleionoma
 {dat}a lemure
 einer Lemure
 %%%%
+{dat}an endoplasm
+einem Endoplasma
+%%%%
+{dat}a rockslime
+einem Felsenschleim
+%%%%
+{dat}%d rockslimes
+%d Felsenschleimen
+%%%%
+{dat}a quicksilver ooze
+einem Quecksilber-Schlamm
+%%%%
+{dat}%d quicksilver oozes
+%d Quecksilber-Schlammen
+%%%%
+{dat}a kobold brigand
+einem Kobold-Briganten
+%%%%
+{dat}a dread lich
+einem Grauenlich
+%%%%
+{dat}a djinni
+einem Dschinn
+%%%%
+{dat}a salamander tyrant
+einem Salamander-Tyrann
+%%%%
+{dat}an animated armour
+einer animierten Rüstung
+%%%%
+{dat}%d animated armours
+%d animierten Rüstungen
+%%%%
 # Test monsters can be created in Arena
 %%%%
 {dat}a test spawner
@@ -5500,6 +5557,30 @@ Eurer Eleionoma
 {dat}your lemure
 Eurer Lemure
 %%%%
+{dat}your endoplasm
+Eurem Endoplasma
+%%%%
+{dat}your rockslime
+Eurem Felsenschleim
+%%%%
+{dat}your quicksilver ooze
+Eurem Quecksilber-Schlamm
+%%%%
+{dat}your kobold brigand
+Eurem Kobold-Briganten
+%%%%
+{dat}your dread lich
+Eurem Grauenlich
+%%%%
+{dat}your djinni
+Eurem Dschinn
+%%%%
+{dat}your salamander tyrant
+Eurem Salamander-Tyrann
+%%%%
+{dat}your animated armour
+Eurer animierten Rüstung
+%%%%
 # Test monsters can be created in Arena
 %%%%
 {dat}your test spawner
@@ -6019,6 +6100,12 @@ namenlosem Horror
 %%%%
 {dat}royal mummy
 königlicher Mumie
+%%%%
+{dat}kobold brigand
+Kobold-Briganten
+%%%%
+{dat}animated armour
+animierter Rüstung
 %%%%
 # Test monsters can be created in Arena
 %%%%

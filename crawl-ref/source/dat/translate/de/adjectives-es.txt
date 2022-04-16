@@ -344,3 +344,12 @@
 "riesiges "
 %%%%
 
+################################
+# monsters
+################################
+%%%%
+# used for obsolete monsters
+"{adj-es}removed "
+"entferntes "
+%%%%
+

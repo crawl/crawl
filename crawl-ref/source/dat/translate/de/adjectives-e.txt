@@ -343,3 +343,12 @@
 "riesige "
 %%%%
 
+################################
+# monsters
+################################
+%%%%
+# used for obsolete monsters
+"removed "
+"entfernte "
+%%%%
+

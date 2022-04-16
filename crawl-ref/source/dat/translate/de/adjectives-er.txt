@@ -344,3 +344,12 @@
 "riesiger "
 %%%%
 
+################################
+# monsters
+################################
+%%%%
+# used for obsolete monsters
+"{adj-er}removed "
+"entfernter "
+%%%%
+

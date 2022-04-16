@@ -920,6 +920,24 @@ den Goliathfrosch
 {acc}the palentonga
 den Palentonga
 %%%%
+{acc}the rockslime
+den Felsenschleim
+%%%%
+{acc}the quicksilver ooze
+den Quecksilber-Schlamm
+%%%%
+{acc}the kobold brigand
+den Kobold-Briganten
+%%%%
+{acc}the dread lich
+den Grauenlich
+%%%%
+{acc}the djinni
+den Dschinn
+%%%%
+{acc}the salamander tyrant
+den Salamander-Tyrann
+%%%%
 # Test monsters can be created in Arena
 %%%%
 {acc}the test spawner
@@ -1817,6 +1835,24 @@ einen Goliathfrosch
 %%%%
 {acc}a palentonga
 einen Palentonga
+%%%%
+{acc}a rockslime
+einen Felsenschleim
+%%%%
+{acc}a quicksilver ooze
+einen Quecksilber-Schlamm
+%%%%
+{acc}a kobold brigand
+einen Kobold-Briganten
+%%%%
+{acc}a dread lich
+einen Grauenlich
+%%%%
+{acc}a djinni
+einen Dschinn
+%%%%
+{acc}a salamander tyrant
+einen Salamander-Tyrann
 %%%%
 # Test monsters can be created in Arena
 %%%%
@@ -2722,6 +2758,24 @@ Euren Goliathfrosch
 {acc}your palentonga
 Euren Palentonga
 %%%%
+{acc}your rockslime
+Euren Felsenschleim
+%%%%
+{acc}your quicksilver ooze
+Euren Quecksilber-Schlamm
+%%%%
+{acc}your kobold brigand
+Euren Kobold-Briganten
+%%%%
+{acc}your dread lich
+Euren Grauenlich
+%%%%
+{acc}your djinni
+Euren Dschinn
+%%%%
+{acc}your salamander tyrant
+Euren Salamander-Tyrann
+%%%%
 # Test monsters can be created in Arena
 %%%%
 {acc}your test spawner
@@ -3013,6 +3067,9 @@ elenden Stern
 %%%%
 {acc}nameless horror
 namenlosen Horror
+%%%%
+{acc}kobold brigand
+Kobold-Briganten
 %%%%
 # Test monsters can be created in Arena
 %%%%
