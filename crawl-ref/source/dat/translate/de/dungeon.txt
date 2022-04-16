@@ -346,8 +346,9 @@ Verwüst
 
 # obsolete branches
 %%%%
-Dwarf
-Zwerg
+# duplicate of player genus
+#Dwarf
+#Zwerg
 %%%%
 # duplicate : also used as HUD abbreviation for blade hands
 #Blade

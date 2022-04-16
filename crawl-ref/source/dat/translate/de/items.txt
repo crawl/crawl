@@ -70,11 +70,6 @@ Rune
 unarmed
 unbewaffnet
 %%%%
-# unarmed when you have claws
-%%%%
-claws
-Krallen
-%%%%
 # with definite article
 # Note that %s is a placeholder for any adjectives
 %%%%

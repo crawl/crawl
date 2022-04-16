@@ -1626,8 +1626,9 @@ Auflösender
 Blob
 Blob
 %%%%
-Royal Jelly
-Gelee Royale
+# duplicate of monster
+#Royal Jelly
+#Gelee Royale
 %%%%
 
 # Fedhas

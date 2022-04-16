@@ -353,7 +353,7 @@ Esc - Beenden
 * - Zufälliger Name
 %%%%
 Enter - Begin!
-Enter-Taste - Beginnen!
+Enter - Beginnen!
 %%%%
 That's a silly name!
 Das ist ein alberner Name!
@@ -376,7 +376,7 @@ Wähle 0 für einen zufälligen Samen. [Tab]/[Shift-Tab] um Fokus zu verwechseln
 [-] Löschen
 %%%%
 [Enter] Begin!
-[Enter-Taste] Beginnen!
+[Enter] Beginnen!
 %%%%
 [d] Today's daily seed
 [d] Samen des Tages
@@ -884,8 +884,9 @@ Nichts im Köcher
 %s restricted
 %s beschränkt
 %%%%
-weapon
-Waffe
+# duplicate of item category
+#weapon
+#Waffe
 %%%%
 cloak
 Umhang
@@ -907,8 +908,9 @@ Gelieger
 shield
 Schild
 %%%%
-armour
-Rüstung
+# duplicate of item category
+#armour
+#Rüstung
 %%%%
 amulet
 Amulett
@@ -1098,9 +1100,6 @@ Religion
 %%%%
 out of sight
 außer Sichtweite
-%%%%
-floor
-Boden
 %%%%
 wall
 Wand
@@ -1350,9 +1349,6 @@ links/rechts
 %%%%
 Confirm choice
 Bestätigen
-%%%%
-Enter
-Enter
 %%%%
 Change category
 Klasse ändern

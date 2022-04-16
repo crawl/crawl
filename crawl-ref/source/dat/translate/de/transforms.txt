@@ -67,14 +67,16 @@ Eure Pfoten
 
 # tentacle (octopode)
 %%%%
-tentacle
-Tentakel
+# duplicate: also a monster
+#tentacle
+#Tentakel
 %%%%
 tentacles
 Tentakel
 %%%%
-your tentacle
-Euer Tentakel
+# duplicate: also a monster
+#your tentacle
+#Euer Tentakel
 %%%%
 your tentacles
 Eure Tentakel
@@ -281,7 +283,7 @@ Vorderpfoten
 your front paw
 Eure Vorderpfote
 %%%%
-front paws
+your front paws
 Eure Vorderpfoten
 %%%%
 your weapon front paw
@@ -291,8 +293,9 @@ your shield front paw
 Eure Schildvorderpfote
 %%%%
 # foot equivalent
-paw
-Pfote
+# duplicate: felids also have paws
+#paw
+#Pfote
 %%%%
 # altar action
 You bow your head before the altar of %s.
