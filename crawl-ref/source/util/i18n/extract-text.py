@@ -318,8 +318,10 @@ for filename in files:
                 if re.search(r'\bfopen(_u)? *\(', line):
                     continue
 
-                # ignore lua function calls
-                if re.search(r'call[a-zA-Z]*fn *\(', line):
+                # ignore lua code
+                if 'execfile' in line:
+                    continue
+                if re.search(r'^[^"]*lua[^"]*\(', line):
                     continue
 
                 # Leave notes/milsones in English

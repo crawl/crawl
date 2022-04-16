@@ -10989,26 +10989,8 @@ Die Beschreibung muss mindestens ein Nicht-Leerzeichen enthalten.
 # luaterp.cc
 ##################
 %%%%
-"> "
-
-%%%%
-return %s
-
-%%%%
-=repl
-
-%%%%
-(error object is not a string)
-
-%%%%
 [Hit ESC to exit interpreter.]
-[Drücke ESC, um den Interpreter zu beenden.]
-%%%%
-error calling __echo (%s)
-Fehler beim Aufrufen von __echo (%s)
-%%%%
-dlua/debug.lua
-
+[ESC drücken, um den Interpreter zu beenden.]
 %%%%
 
 ##################
@@ -12120,9 +12102,6 @@ Lua Fehler beim Kopieren des Hooks (%s) von '%s' nach '%s':%s
 Lua error running hook '%s' on map '%s': %s
 Lua-Fehler beim Ausführen des Hooks '%s' auf der Karte '%s':%s
 %%%%
->b
-
-%%%%
 temple_overflow_generic_%u
 
 %%%%
@@ -12410,9 +12389,6 @@ feature (%s)
 lua_marker exec error: %s
 lua_marker exec error:%s
 %%%%
-"return "
-
-%%%%
 lua_marker load error: %s
 lua_marker Ladefehler:%s
 %%%%
@@ -12425,16 +12401,10 @@ lua_marker: Erwartete Tabelle, habe es nicht verstanden.
 Couldn't find table.
 Tisch konnte nicht gefunden werden.
 %%%%
-read
-
-%%%%
 lua_marker: write error: %s
 
 %%%%
 Expected marker class name (string) to save, got %s
-
-%%%%
-write
 
 %%%%
 lua_marker::write error: %s
@@ -12558,12 +12528,6 @@ Failed to open %s for reading
 %%%%
 Regenerating des: %s
 Regenerating des:%s
-%%%%
-dlua/loadmaps.lua
-
-%%%%
-dlua/sanity.lua
-
 %%%%
 Lua error (map %s): %s
 Lua-Fehler (Karte%s):%s
@@ -20727,9 +20691,6 @@ Eure Basisattribute sind Str%d, Int%d, Dex%d.
 "Increase (s)trength, (i)ntelligence, or (d)exterity? "
 
 %%%%
->s
-
-%%%%
 Uppercase letters only, please.
 Bitte nur Großbuchstaben.
 %%%%
@@ -26656,9 +26617,6 @@ Error: no return path. You did create the exit manually, didn't you? Let's go to
 Non-debug Crawl cannot run tests. Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC or DEBUG_TESTS)
 
 %%%%
-b
-
-%%%%
 <white>[
 
 %%%%
@@ -27243,9 +27201,6 @@ Error writing to %s
 %%%%
 Error: monster %s in %s at (%d,%d)
 Fehler: Monster%s in%s bei (%d,%d)
-%%%%
-dgn.persist.calc_score
-
 %%%%
 Failed to save Lua data: %s
 Fehler beim Speichern der Lua-Daten:%s
