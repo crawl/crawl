@@ -10647,22 +10647,22 @@ There are several objects here.
 Hier gibt es mehrere Objekte.
 %%%%
 Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)
-%s aufheben? ((j)a/(n)ein/(a)lle/(m)enü/*?g,/q)
+{acc}%s aufheben? ((j)a/(n)ein/(a)lle/(m)enü/*?g,/q)
 %%%%
 You now have 1 gold piece.
-Ihr habt jetzt 1 Goldmünze.
+Ihr habt jetzt 1 Goldstück.
 %%%%
 You now have %d gold pieces.
-Ihr habt jetzt %d Goldmünzen.
+Ihr habt jetzt %d Goldstücke.
 %%%%
 You now have %d gold pieces (gained %d).
-Ihr habt jetzt %d Goldmünzen (%d bekommen).
+Ihr habt jetzt %d Goldstücke (%d bekommen).
 %%%%
 %s burns to shimmering ash in your grasp.
 %s verbrennt in Eurem Griff zu schimmernder Asche.
 %%%%
 You pick up %s and begin reading...
-Ihr hebt {acc}%s und fängst an zu lesen...
+Ihr hebt {acc}%s auf und fangt an zu lesen...
 %%%%
 Unfortunately, you learned nothing new.
 Leider habt Ihr nichts Neues gelernt.
