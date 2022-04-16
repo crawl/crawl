@@ -268,9 +268,9 @@ for filename in files:
                     # The only exception is file system-related messages, which
                     # relate to the user's own environment.
                     if 'file' not in line and 'directory' not in line \
-                       and 'write' not in line and ' read ' not in line \
+                       and 'writ' not in line and ' read ' not in line \
                        and 'lock' not in line and 'load' not in line \
-                       and ' save' not in line:
+                       and ' save' not in line and 'open' not in line:
                         continue
                 extract = True
             elif re.search(r'prompt[a-zA-Z_]* *\(', line) or 'yesno' in line:
