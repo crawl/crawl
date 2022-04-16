@@ -918,7 +918,7 @@ dem Hippogriff
 dem Mantikor
 %%%%
 {dat}the minotaur
-dem Minotaurus
+dem Minotaur
 %%%%
 {dat}the sphinx
 der Sphinx
@@ -2893,7 +2893,7 @@ einem Mantikor
 %d Mantikoren
 %%%%
 {dat}a minotaur
-einem Minotaurus
+einem Minotaur
 %%%%
 {dat}a sphinx
 einer Sphinx
@@ -4892,7 +4892,7 @@ Eurem Hippogriff
 Eurem Mantikor
 %%%%
 {dat}your minotaur
-Eurem Minotaurus
+Eurem Minotaur
 %%%%
 {dat}your sphinx
 Eurer Sphinx

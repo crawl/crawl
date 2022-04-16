@@ -534,7 +534,7 @@ den Hippogriff
 den Mantikor
 %%%%
 {acc}the minotaur
-den Minotaurus
+den Minotaur
 %%%%
 {acc}the ancestor
 den Ahnen
@@ -1450,7 +1450,7 @@ einen Hippogriff
 einen Mantikor
 %%%%
 {acc}a minotaur
-einen Minotaurus
+einen Minotaur
 %%%%
 {acc}an ancestor
 einen Ahnen
@@ -2372,7 +2372,7 @@ Euren Hippogriff
 Euren Mantikor
 %%%%
 {acc}your minotaur
-Euren Minotaurus
+Euren Minotaur
 %%%%
 {acc}your ancestor
 Euren Ahnen

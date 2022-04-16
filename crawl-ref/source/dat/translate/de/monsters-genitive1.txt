@@ -1134,7 +1134,7 @@ the manticore's
 des Mantikors
 %%%%
 the minotaur's
-des Minotaurus
+des Minotaur
 %%%%
 the sphinx's
 der Sphinx
@@ -2587,7 +2587,7 @@ a manticore's
 eines Mantikors
 %%%%
 a minotaur's
-eines Minotaurus
+eines Minotaur
 %%%%
 a sphinx's
 einer Sphinx
@@ -4100,7 +4100,7 @@ your manticore's
 Eures Mantikors
 %%%%
 your minotaur's
-Eures Minotaurus
+Eures Minotaur
 %%%%
 your sphinx's
 Eurer Sphinx

@@ -1143,7 +1143,7 @@ des Hippogriffs
 des Mantikors
 %%%%
 {gen}the minotaur
-des Minotaurus
+des Minotaur
 %%%%
 {gen}the sphinx
 der Sphinx
@@ -2791,7 +2791,7 @@ eines Hippogriffs
 eines Mantikors
 %%%%
 {gen}a minotaur
-eines Minotaurus
+eines Minotaur
 %%%%
 {gen}a sphinx
 einer Sphinx
@@ -4481,7 +4481,7 @@ Eures Hippogriffs
 Eures Mantikors
 %%%%
 {gen}your minotaur
-Eures Minotaurus
+Eures Minotaur
 %%%%
 {gen}your sphinx
 Eurer Sphinx

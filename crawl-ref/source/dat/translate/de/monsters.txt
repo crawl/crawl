@@ -1152,7 +1152,7 @@ the manticore
 der Mantikor
 %%%%
 the minotaur
-der Minotaurus
+der Minotaur
 %%%%
 the sphinx
 die Sphinx
@@ -3534,7 +3534,7 @@ ein Mantikor
 # check plural above
 %%%%
 a minotaur
-ein Minotaurus
+ein Minotaur
 %%%%
 %d minotaurs
 %d Minotauren
@@ -6056,7 +6056,7 @@ your manticore
 Euer Mantikor
 %%%%
 your minotaur
-Euer Minotaurus
+Euer Minotaur
 %%%%
 your sphinx
 Eure Sphinx
@@ -7572,7 +7572,7 @@ manticore
 Mantikor
 %%%%
 minotaur
-Minotaurus
+Minotaur
 %%%%
 sphinx
 Sphinx
