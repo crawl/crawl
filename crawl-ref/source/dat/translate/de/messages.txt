@@ -20068,10 +20068,10 @@ Ihr fühlt Euch seltsam instabil.
 # player-stats.cc
 ##################
 %%%%
-Your experience leads to a%s increase in your attributes!
+Your experience leads to an increase in your attributes!
 
 %%%%
-" dramatic"
+Your experience leads to a dramatic increase in your attributes!
 
 %%%%
 Strength
@@ -20950,11 +20950,8 @@ health
 mana
 
 %%%%
-<darkgrey>Empty</darkgrey>
-
-%%%%
-<darkgrey>Nothing quivered</darkgrey>
-
+Empty
+Leer
 %%%%
 , <w>%</w> - select action
 

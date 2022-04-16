@@ -393,7 +393,7 @@ static void _handle_FAQ()
         return;
     }
     Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);
-    MenuEntry *title = new MenuEntry("Frequently Asked Questions");
+    MenuEntry *title = new MenuEntry(localise("Frequently Asked Questions"));
     title->colour = YELLOW;
     FAQmenu.set_title(title);
 

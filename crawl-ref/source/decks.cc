@@ -825,9 +825,9 @@ bool stack_five(int to_stack)
     menu.set_title(title);
     for (unsigned int i = 0; i < stack.size(); i++)
     {
+        string name = card_name((card_type)stack[i].get_int());
         MenuEntry * const entry =
-            new MenuEntry(card_name((card_type)stack[i].get_int()),
-                          MEL_ITEM, 1, '1'+i);
+            new MenuEntry(localise(name), MEL_ITEM, 1, '1'+i);
         entry->add_tile(tile_def(TILEG_NEMELEX_CARD));
         menu.add_entry(entry);
     }

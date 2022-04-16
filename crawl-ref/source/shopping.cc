@@ -26,6 +26,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "menu.h"
 #include "message.h"
 #include "notes.h"
@@ -2180,7 +2181,7 @@ void ShoppingList::display(bool view_only)
     shopmenu.set_tag("shop");
     shopmenu.menu_action  = view_only ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
     shopmenu.action_cycle = view_only ? Menu::CYCLE_NONE : Menu::CYCLE_CYCLE;
-    string title          = "item";
+    string title          = localise("item");
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     mtitle->quantity = list->size();

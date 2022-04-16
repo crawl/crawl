@@ -21,6 +21,7 @@
 #include "item-prop.h"
 #include "item-use.h"
 #include "items.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #include "movement.h"
@@ -153,9 +154,9 @@ namespace quiver
 
     formatted_string action::quiver_description(bool short_desc) const
     {
-        return formatted_string::parse_string(
-                        short_desc ? "<darkgrey>Empty</darkgrey>"
-                                   : "<darkgrey>Nothing quivered</darkgrey>");
+        string desc = localise(short_desc ? "Empty" : "Nothing quivered");
+        desc = string("<darkgrey>") + desc + "</darkgrey>";
+        return formatted_string::parse_string(desc);
     }
 
     vector<tile_def> action::get_tiles() const
@@ -2989,9 +2990,9 @@ namespace quiver
                 continue;
             string action_desc = a->quiver_description();
             if (*you.launcher_action.get() == *a)
-                action_desc += " (quivered ammo)";
+                action_desc += localise(" (quivered ammo)");
             else if (you.quiver_action.item_is_quivered(a->get_item()))
-                action_desc += " (quivered)";
+                action_desc += localise(" (quivered)");
             MenuEntry *me = new MenuEntry(action_desc,
                                                 MEL_ITEM, 1,
                                                 (int) hotkey);

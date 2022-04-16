@@ -11,6 +11,7 @@
 #include "god-passive.h"
 #include "hints.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #ifdef TOUCH_UI
 #include "menu.h"
@@ -107,33 +108,42 @@ bool attribute_increase()
 
     const int statgain = species::get_stat_gain_multiplier(you.species);
 
-    const string stat_gain_message = make_stringf("Your experience leads to a%s "
-                                                  "increase in your attributes!",
-                                                  (statgain > 1) ?
-                                                  " dramatic" : "n");
+    string stat_gain_message;
+    if (statgain <= 1)
+    {
+        stat_gain_message = localise("Your experience leads to an "
+                                     "increase in your attributes!");
+    }
+    else
+    {
+        stat_gain_message = localise("Your experience leads to a dramatic "
+                                     "increase in your attributes!");
+    }
+
     crawl_state.stat_gain_prompt = true;
 #ifdef TOUCH_UI
     learned_something_new(HINT_CHOOSE_STAT);
     Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE);
     MenuEntry * const status = new MenuEntry("", MEL_SUBTITLE);
-    MenuEntry * const s_me = new MenuEntry("Strength", MEL_ITEM, 1,
+    MenuEntry * const s_me = new MenuEntry(localise("Strength"), MEL_ITEM, 1,
                                                         need_caps ? 'S' : 's');
     s_me->add_tile(tile_def(TILEG_FIGHTING_ON));
-    MenuEntry * const i_me = new MenuEntry("Intelligence", MEL_ITEM, 1,
+    MenuEntry * const i_me = new MenuEntry(localise("Intelligence"), MEL_ITEM, 1,
                                                         need_caps ? 'I' : 'i');
     i_me->add_tile(tile_def(TILEG_SPELLCASTING_ON));
-    MenuEntry * const d_me = new MenuEntry("Dexterity", MEL_ITEM, 1,
+    MenuEntry * const d_me = new MenuEntry(localise("Dexterity"), MEL_ITEM, 1,
                                                         need_caps ? 'D' : 'd');
     d_me->add_tile(tile_def(TILEG_DODGING_ON));
 
-    pop.set_title(new MenuEntry("Increase Attributes", MEL_TITLE));
-    pop.add_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
+    pop.set_title(new MenuEntry(localise("Increase Attributes"), MEL_TITLE));
+    pop.add_entry(new MenuEntry(stat_gain_message + localise(" Increase:"),
+                                MEL_TITLE));
     pop.add_entry(status);
     pop.add_entry(s_me);
     pop.add_entry(i_me);
     pop.add_entry(d_me);
 #else
-    mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
+    mpr_nolocalise(MSGCH_INTRINSIC_GAIN, stat_gain_message);
     learned_something_new(HINT_CHOOSE_STAT);
     if (innate_stat(STAT_STR) != you.strength()
         || innate_stat(STAT_INT) != you.intel()
