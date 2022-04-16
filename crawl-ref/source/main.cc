@@ -427,13 +427,14 @@ NORETURN static void _launch_game()
 
     if (!crawl_state.game_is_tutorial())
     {
-        string what = string("the ") + species::name(you.species) + " " +
-                      get_job_name(you.char_class);
+        string combo = string("the %s ") + get_job_name(you.char_class);
+        combo = localise(combo, species::name(you.species));
+
         msg::stream << "<yellow>"
                     << localise(game_start ? "Welcome, %s %s."
                                            : "Welcome back, %s %s.",
                                 LocalisationArg(you.your_name, false),
-                                what)
+                                LocalisationArg(combo, false))
                     << "</yellow>"
                     << endl;
         // TODO: seeded sprint?
