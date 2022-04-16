@@ -79,8 +79,8 @@ bool yesno(const char *str, bool allow_lowercase, int default_answer, bool clear
     if (use_popup)
     {
         status = new MenuEntry("", MEL_SUBTITLE);
-        MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, localise_char('Y'));
-        MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, localise_char('N'));
+        MenuEntry * const y_me = new MenuEntry(localise("Yes"), MEL_ITEM, 1, localise_char('Y'));
+        MenuEntry * const n_me = new MenuEntry(localise("No"), MEL_ITEM, 1, localise_char('N'));
         y_me->add_tile(tile_def(TILEG_PROMPT_YES));
         n_me->add_tile(tile_def(TILEG_PROMPT_NO));
 

@@ -115,8 +115,18 @@ public:
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
                int hotk = 0,
-               bool preselect = false);
-
+               bool preselect = false) :
+        text(txt), quantity(qty), selected_qty(0), colour(-1),
+        hotkeys(), level(lev), preselected(preselect),
+        indent_no_hotkeys(false),
+        data(nullptr)
+    {
+        colour = (lev == MEL_ITEM     ?  MENU_ITEM_STOCK_COLOUR :
+                  lev == MEL_SUBTITLE ?  BLUE  :
+                                         WHITE);
+        if (hotk)
+            hotkeys.push_back(hotk);
+    }
     virtual ~MenuEntry() { }
 
     bool operator<(const MenuEntry& rhs) const

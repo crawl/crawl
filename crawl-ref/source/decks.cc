@@ -820,7 +820,8 @@ bool stack_five(int to_stack)
     }
 
     StackFiveMenu menu(stack);
-    MenuEntry *const title = new MenuEntry("Select two cards to swap them:", MEL_TITLE);
+    string text = localise("Select two cards to swap them:");
+    MenuEntry *const title = new MenuEntry(text, MEL_TITLE);
     menu.set_title(title);
     for (unsigned int i = 0; i < stack.size(); i++)
     {

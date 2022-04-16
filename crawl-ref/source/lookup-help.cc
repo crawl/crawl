@@ -562,7 +562,13 @@ static void _recap_card_keys(vector<string> &keys)
  */
 static MenuEntry* _simple_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
+    // str will have first letter capitalised, which may break localisation
+    // if we don't get a hit on the capitalised string then try without capital
+    string name = localise(str);
+    if (name == str)
+        name = uppercase_first(localise(lowercase_first(str)));
+
+    MenuEntry* me = new MenuEntry(name, MEL_ITEM, 1, letter);
     me->data = &key;
     return me;
 }
@@ -582,6 +588,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     // have something valid to refer to.
     monster_type m_type = _mon_by_name(str);
     string name = _is_soh(str) ? _soh_name(m_type) : str;
+    name = uppercase_first(localise(name));
 
     monster_type base_type = MONS_NO_MONSTER;
     // HACK: Set an arbitrary humanoid monster as base type.
@@ -608,7 +615,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
 
     const string title = prefix + name;
 #else
-    const string &title = name;
+    const string title = name;
 #endif
 
     // NOTE: MonsterMenuEntry::get_tiles() takes care of setting
@@ -640,7 +647,7 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
  */
 static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = new MenuEntry(str, MEL_ITEM, 1, letter);
+    MenuEntry* me = new MenuEntry(localise(str), MEL_ITEM, 1, letter);
     me->data = &key;
 
     const dungeon_feature_type feat = feat_by_desc(str);
@@ -853,7 +860,7 @@ void LookupType::display_keys(vector<string> &key_list) const
         if (doing_mons)
         {
             desc_menu.add_entry(_monster_menu_gen(letter,
-                                                  key_to_menu_str(key),
+                                                  key,
                                                   monster_list[i]));
         }
         else
