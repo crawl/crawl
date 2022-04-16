@@ -508,20 +508,13 @@ vector<string> split_string(const string &sep, string s, bool trim_segments,
 
 
 // Crude, but functional.
-string make_time_string(time_t abs_time, bool terse)
+string make_time_string(time_t abs_time, bool /*terse*/)
 {
-    const int days  = abs_time / 86400;
-    const int hours = (abs_time % 86400) / 3600;
+    const int hours = abs_time / 3600;
     const int mins  = (abs_time % 3600) / 60;
     const int secs  = abs_time % 60;
 
-    string buff;
-    if (days > 0)
-    {
-        buff += make_stringf("%d %s ", days, terse ? ","
-                             : days > 1 ? "days" : "day");
-    }
-    return buff + make_stringf("%02d:%02d:%02d", hours, mins, secs);
+    return make_stringf("%02d:%02d:%02d", hours, mins, secs);
 }
 
 string make_file_time(time_t when)
