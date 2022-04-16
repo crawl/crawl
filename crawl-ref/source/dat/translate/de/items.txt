@@ -1336,7 +1336,7 @@ a %sring of poison resistance
 ein {adj-er}%sRing der Giftresistenz
 %%%%
 a %sring of protection from cold
-ein {adj-er}%sRing dee Kälteresistenz
+ein {adj-er}%sRing der Kälteresistenz
 %%%%
 a %sring of strength
 ein {adj-er}%sRing der Stärke
@@ -1495,7 +1495,7 @@ your %sring of poison resistance
 Euer {adj-er}%sRing der Giftresistenz
 %%%%
 your %sring of protection from cold
-Euer {adj-er}%sRing dee Kälteresistenz
+Euer {adj-er}%sRing der Kälteresistenz
 %%%%
 your %sring of strength
 Euer {adj-er}%sRing der Stärke
@@ -1564,7 +1564,7 @@ Euer {adj-er}%sobsoleter Ring
 {adj-er}%sRing der Giftresistenz
 %%%%
 %sring of protection from cold
-{adj-er}%sRing dee Kälteresistenz
+{adj-er}%sRing der Kälteresistenz
 %%%%
 %sring of strength
 {adj-er}%sRing der Stärke

@@ -93,7 +93,7 @@ rings of poison resistance
 Ringe der Giftresistenz
 %%%%
 rings of protection from cold
-Ringe dee Kälteresistenz
+Ringe der Kälteresistenz
 %%%%
 rings of strength
 Ringe der Stärke

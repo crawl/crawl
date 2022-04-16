@@ -294,7 +294,7 @@ einen {adj-en}%sRing der Feuerresistenz
 einen {adj-en}%sRing der Giftresistenz
 %%%%
 {acc}a %sring of protection from cold
-einen {adj-en}%sRing dee Kälteresistenz
+einen {adj-en}%sRing der Kälteresistenz
 %%%%
 {acc}a %sring of strength
 einen {adj-en}%sRing der Stärke
