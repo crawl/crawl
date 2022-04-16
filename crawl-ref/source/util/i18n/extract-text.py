@@ -511,8 +511,8 @@ for filename in files:
         if 'Gozag bribe' in string or 'Gozag permabribe' in string:
             continue
 
-        # ignore filenames
-        if re.match(r'^[A-Za-z_]+\.[A-Za-z]+$', string):
+        # ignore filenames and file extensions
+        if re.match(r'^[A-Za-z0-9_\-\/]*\.[A-Za-z]{1,4}$', string):
             continue
 
         # ignore format strings without any actual text

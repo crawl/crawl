@@ -10913,9 +10913,6 @@ Die Beschreibung muss mindestens ein Nicht-Leerzeichen enthalten.
 Macro directory
 
 %%%%
--macro.txt
-
-%%%%
 ==
 
 %%%%
@@ -11946,13 +11943,7 @@ veto
 epilogue
 
 %%%%
-.lk
-
-%%%%
 rb
-
-%%%%
-.dsc
 
 %%%%
 Map inf is invalid: %s
@@ -12346,13 +12337,7 @@ Data file cache
 Can't create data file cache: %s
 
 %%%%
-.idx
-
-%%%%
 Unable to read %s
-
-%%%%
-.lux
 
 %%%%
 Unable to open %s for writing
@@ -27456,9 +27441,6 @@ Es hat keinen Sinn mehr, diese Fruchtbarkeit umzuschalten.
 # tilesdl.cc
 ##################
 %%%%
-kernel32.dll
-
-%%%%
 AttachConsole
 
 %%%%
@@ -27466,9 +27448,6 @@ CONOUT$
 
 %%%%
 FreeConsole
-
-%%%%
-dat/tiles/stone_soup_icon-512x512.png
 
 %%%%
 Execute system commands
