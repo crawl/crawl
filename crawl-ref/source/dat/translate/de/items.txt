@@ -3420,8 +3420,9 @@ laufen
 ponderous
 Schwerfäll
 %%%%
-Fly
-fliegen
+# duplicate of spell name
+#Fly
+#fliegen
 %%%%
 Archmagi
 Erzmagier

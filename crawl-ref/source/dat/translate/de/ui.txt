@@ -861,8 +861,9 @@ Klingenhand
 %%%%
 # Note: The maximum is 2, even for an octopode
 %%%%
-Blade Hands
-Klingenhände
+# duplicate of the spell name
+#Blade Hands
+#Klingenhände
 %%%%
 
 ##############################################
@@ -1298,8 +1299,9 @@ Nach Hintergrund
 Base
 Basis
 %%%%
-Shadow
-Schatte
+# duplicate: Also HUD abbreviation for shadow form
+#Shadow
+#Schatte
 %%%%
 Halo
 %%%%
