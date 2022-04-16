@@ -27845,11 +27845,8 @@ rest
 " (under plant)"
 
 %%%%
-Found %d %s.
-%d %s gefunden.
-%%%%
-"Found "
-
+Found %s.
+Ihr habt {acc}%s gefunden.
 %%%%
 " leading "
 
@@ -27864,7 +27861,7 @@ Found %d %s.
 
 %%%%
 Found %s
-%s gefunden
+Ihr habt {acc}%s gefunden
 %%%%
 
 ##################

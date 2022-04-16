@@ -4822,20 +4822,21 @@ template <class C> void explore_discoveries::say_any(
     string plural = pluralise(category);
     if (size != 1)
         category = plural.c_str();
+    string things = make_stringf("%d %s", size, category);
 
     if (has_duplicates(coll.begin(), coll.end()))
     {
-        mprf("Found %d %s.", size, category);
+        mprf("Found %s.", things.c_str());
         return;
     }
 
-    const auto message = formatted_string::parse_string("Found " +
-                           comma_separated_line(coll.begin(), coll.end()) + ".");
+    string msg = localise("Found %s.", comma_separated_line(coll.begin(), coll.end()));
+    const auto message = formatted_string::parse_string(msg);
 
     if (message.width() >= get_number_of_cols())
-        mprf("Found %d %s.", size, category);
+        mprf("Found %s.", things.c_str());
     else
-        mpr(message);
+        mpr_nolocalise(message);
 }
 
 vector<string> explore_discoveries::apply_quantities(
