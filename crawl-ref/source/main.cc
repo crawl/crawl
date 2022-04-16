@@ -88,6 +88,7 @@
 #include "level-state-type.h"
 #include "libutil.h"
 #include "luaterp.h"
+#include "localise.h"
 #include "lookup-help.h"
 #include "macro.h"
 #include "makeitem.h"
@@ -426,10 +427,14 @@ NORETURN static void _launch_game()
 
     if (!crawl_state.game_is_tutorial())
     {
-        msg::stream << "<yellow>Welcome" << (game_start? "" : " back") << ", "
-                    << you.your_name << " the "
-                    << species::name(you.species)
-                    << " " << get_job_name(you.char_class) << ".</yellow>"
+        string what = string("the ") + species::name(you.species) + " " +
+                      get_job_name(you.char_class);
+        msg::stream << "<yellow>"
+                    << localise(game_start ? "Welcome, %s %s."
+                                           : "Welcome back, %s %s.",
+                                LocalisationArg(you.your_name, false),
+                                what)
+                    << "</yellow>"
                     << endl;
         // TODO: seeded sprint?
         if (crawl_state.type == GAME_TYPE_CUSTOM_SEED)
@@ -488,6 +493,8 @@ static void _show_commandline_options_help()
 # define puts(x) (help += x, help += '\n')
 #endif
 
+    // i18n: At this point we haven't loaded the localised strings,
+    // so unfortunately this can only be in English
     puts("Command line options:");
     puts("  -help                 prints this list of options");
     puts("  -name <string>        character name");
@@ -669,7 +676,7 @@ static string _welcome_spam_suffix()
 static void _announce_goal_message()
 {
     const string type = _welcome_spam_suffix();
-    mprf(MSGCH_PLAIN, "<yellow>%s</yellow>",
+    mprf(MSGCH_PLAIN, "<yellow>%s</yellow>", // noloc
          getMiscString("welcome_spam" + type).c_str());
 }
 
@@ -1057,7 +1064,7 @@ static void _input()
         // User pressed a key, so stop repeating commands and discard
         // the keypress.
         crawl_state.cancel_cmd_repeat("Key pressed, interrupting command "
-                                      "repetition.");
+                                      "repetition."); // localise
         crawl_state.prev_cmd = CMD_NO_CMD;
         flush_prev_message();
         getchm();
@@ -1279,8 +1286,10 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     {
         if (crawl_state.doing_prev_cmd_again)
         {
-            mprf("You can't repeat %s actions.",
-                ftype == DNGN_ENTER_SHOP ? "shop" : "altar");
+            if (ftype == DNGN_ENTER_SHOP)
+                mpr("You can't repeat shop actions.");
+            else
+                mpr("You can't repeat altar actions.");
             crawl_state.cancel_cmd_all();
         }
         else if (you.berserk())
@@ -1469,10 +1478,11 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
     {
-        string prompt = make_stringf("Are you sure you want to leave %s?%s",
-                                     branches[root_branch].longname,
-                                     crawl_state.game_is_tutorial() ? "" :
-                                     " This will make you lose the game!");
+        string prompt = localise("Are you sure you want to leave %s?",
+                                 branches[root_branch].longname);
+        if (crawl_state.game_is_tutorial())
+            prompt += localise(" This will make you lose the game!");
+        
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             mpr("Alright, then stay!");
@@ -1645,21 +1655,23 @@ static void _experience_check()
     }
 
     handle_real_time();
-    msg::stream << "Play time: " << make_time_string(you.real_time())
-                << " (" << you.num_turns << " turns)."
+    string time_str = make_time_string(you.real_time());
+    msg::stream << localise("Play time: %s (%d turns).",
+                            LocalisationArg(time_str, false),
+                            you.num_turns)
                 << endl;
 
     if (!crawl_state.game_is_sprint())
     {
         if (zot_immune())
-            msg::stream << "You are forever immune to Zot's power.";
+            msg::stream << localise("You are forever immune to Zot's power.");
         else if (player_in_branch(BRANCH_ABYSS))
-            msg::stream << "You have unlimited time to explore this branch.";
+            msg::stream << localise("You have unlimited time to explore this branch.");
         else
         {
-            msg::stream << "Zot will find you in " << turns_until_zot()
-                        << " turns if you stay in this branch and explore no"
-                        << " new floors.";
+            msg::stream << localise("Zot will find you in %d turns if you "
+                                    "stay in this branch and explore no new "
+                                    "floors.", turns_until_zot());
         }
         msg::stream << endl;
     }
@@ -1674,8 +1686,8 @@ static void _do_remove_armour()
 {
     if (you.has_mutation(MUT_NO_ARMOUR))
     {
-        mprf("You can't remove your %s, sorry.",
-                            species::skin_name(you.species).c_str());
+        string your_skin = string("your ") + species::skin_name(you.species);
+        mprf("You can't remove %s, sorry.", your_skin.c_str());
         return;
     }
 
@@ -1758,17 +1770,26 @@ static void _do_cycle_quiver(int dir)
         const bool others = quiver::menu_size() > (valid ? 1 : 0);
         // Things could be excluded from this via inscriptions, custom
         // fire_order, or setting fire_items_start.
-        mprf("No %squiver actions available for cycling.%s",
-            valid ? "other " : "",
-            others ? " Use <white>Q</white> to select from all actions."
-                   : "");
+        string msg;
+        if (valid)
+            msg = localise("No other quiver actions available for cycling.");
+        else
+            msg = localise("No quiver actions available for cycling.");
+        if (others)
+            msg += localise(" Use <white>Q</white> to select from all actions.");
+        mpr_nolocalise(msg);
     }
 }
 
 static void _do_list_gold()
 {
     if (shopping_list.empty())
-        mprf("You have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
+    {
+        if (you.gold == 1)
+            mpr("You have 1 gold piece.");
+        else
+            mprf("You have %d gold pieces.", you.gold);
+    }
     else
         shopping_list.display();
 }
@@ -1898,23 +1919,23 @@ public:
     {
         clear();
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
-        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE));
+        add_entry(new CmdMenuEntry(localise("Return to game"), MEL_ITEM, CK_ESCAPE));
         items[1]->add_tile(tileidx_command(CMD_GAME_MENU));
-        add_entry(new CmdMenuEntry("Save and return to main menu",
+        add_entry(new CmdMenuEntry(localise("Save and return to main menu"),
             MEL_ITEM, 'S', CMD_SAVE_GAME_NOW));
-        add_entry(new CmdMenuEntry("Generate and view character dump",
+        add_entry(new CmdMenuEntry(localise("Generate and view character dump"),
             MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
 #ifdef USE_TILE_LOCAL
-        add_entry(new CmdMenuEntry("Edit player tile",
+        add_entry(new CmdMenuEntry(localise("Edit player tile"),
             MEL_ITEM, '-', CMD_EDIT_PLAYER_TILE));
 #endif
-        add_entry(new CmdMenuEntry("Edit macros",
+        add_entry(new CmdMenuEntry(localise("Edit macros"),
             MEL_ITEM, '~', CMD_MACRO_MENU));
-        add_entry(new CmdMenuEntry("Help and manual",
+        add_entry(new CmdMenuEntry(localise("Help and manual"),
             MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry(
-                            "Quit and <lightred>abandon character</lightred>",
+            localise("Quit and <lightred>abandon character</lightred>"),
             MEL_ITEM, 'Q', CMD_QUIT));
     }
 
@@ -2027,13 +2048,19 @@ void process_command(command_type cmd, command_type prev_cmd)
             Options.autopickup_on = 1;
         else
             Options.autopickup_on = 0;
-        mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
+        if (Options.autopickup_on > 0)
+            mpr("Autopickup is now on.");
+        else
+            mpr("Autopickup is now off.");
         break;
 
 #ifdef USE_SOUND
     case CMD_TOGGLE_SOUND:
         Options.sounds_on = !Options.sounds_on;
-        mprf("Sound effects are now %s.", Options.sounds_on ? "on" : "off");
+        if (Options.sounds_on > 0)
+            mpr("Sound effects are now on.");
+        else
+            mpr("Sound effects are now off.");
         break;
 #endif
 
@@ -2287,8 +2314,8 @@ void process_command(command_type cmd, command_type prev_cmd)
     {
         const char * const prompt
             = (crawl_should_restart(game_exit::save))
-              ? "Save game and return to main menu?"
-              : "Save game and exit?";
+              ? "Save game and return to main menu?" // localise
+              : "Save game and exit?"; // localise
         explicit_keymap map;
         map['S'] = 'y';
         if (yesno(prompt, true, 'n', true, true, false, &map))
@@ -2306,12 +2333,14 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_QUIT:
     {
         // TODO: msg whether this will start a new game? not very important
-        if (crawl_state.disables[DIS_CONFIRMATIONS]
-            || yes_or_no("Are you sure you want to abandon this character%s?",
-                Options.newgame_after_quit ? "" : // hard to predict this case
-                (crawl_should_restart(game_exit::quit)
-                                            ? " and return to the main menu"
-                                            : " and quit the game")))
+        string prompt;
+        if (Options.newgame_after_quit)
+            prompt = "Are you sure you want to abandon this character?"; // localise
+        else if (crawl_should_restart(game_exit::quit))
+            prompt = "Are you sure you want to abandon this character and return to the main menu?"; // localise
+        else
+            prompt = "Are you sure you want to abandon this character and quit the game?"; // localise
+        if (crawl_state.disables[DIS_CONFIRMATIONS] || yes_or_no("%s", prompt.c_str()))
         {
             ouch(INSTANT_DEATH, KILLED_BY_QUITTING);
         }
@@ -2341,9 +2370,9 @@ void process_command(command_type cmd, command_type prev_cmd)
 
         if (feat_is_altar(env.grid(you.pos())))
         {
-            string msg = "Press <w>%</w> or <w>%</w> to pray at altars.";
+            string msg = localise("Press <w>%</w> or <w>%</w> to pray at altars.");
             insert_commands(msg, { CMD_GO_UPSTAIRS, CMD_GO_DOWNSTAIRS });
-            mpr(msg);
+            mpr_nolocalise(msg);
         }
 
         break;
@@ -2794,7 +2823,8 @@ static void _check_cmd_repeat(int last_turn)
 #ifdef WIZARD
         crawl_state.cant_cmd_repeat("Can't repeat a command which "
                                     "takes no turns (unless it's a "
-                                    "wizard command), cancelling ");
+                                    "wizard command), cancelling "
+                                    "repetitions.");
 #else
         crawl_state.cant_cmd_repeat("Can't repeat a command which "
                                     "takes no turns, cancelling "
@@ -2947,7 +2977,7 @@ static void _do_prev_cmd_again()
 
     if (crawl_state.doing_prev_cmd_again)
     {
-        mprf(MSGCH_ERROR, "Trying to re-do re-do command, aborting.");
+        mprf(MSGCH_ERROR, "Trying to re-do re-do command, aborting."); // localise
         crawl_state.cancel_cmd_all();
         return;
     }

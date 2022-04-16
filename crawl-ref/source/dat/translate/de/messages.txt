@@ -11056,188 +11056,20 @@ Created %s '%s' => '%s'.
 # main.cc
 ##################
 %%%%
-UTF-8
-
-%%%%
 Error: truncation inside the save file.
-
+Fehler: Trunkierung innerhalb der Speicherdatei.
 %%%%
-<yellow>Welcome
-
+Welcome, %s %s.
+Wilkommen, %s %s.
 %%%%
-" back"
-
-%%%%
-" the "
-
-%%%%
-.</yellow>
-
+Welcome back, %s %s.
+Wilkommen zurück, %s %s.
 %%%%
 Press <w>?</w> for a list of commands and other information.
-Drücke <w>?</w>, um eine Liste der Befehle und anderer Informationen anzuzeigen.
-%%%%
-Command line options:
-
-%%%%
-"  -help                 prints this list of options"
-
-%%%%
-"  -name <string>        character name"
-
-%%%%
-"  -species <arg>        preselect character species (by letter, abbreviation, or name)"
-
-%%%%
-"  -background <arg>     preselect character background (by letter, abbreviation, or name)"
-
-%%%%
-"  -dir <path>           crawl directory"
-
-%%%%
-"  -rc <file>            init file name"
-
-%%%%
-"  -rcdir <dir>          directory that contains (included) rc files"
-
-%%%%
-"  -morgue <dir>         directory to save character dumps"
-
-%%%%
-"  -macro <dir>          directory to save/find macro.txt"
-
-%%%%
-"  -version              Crawl version (and compilation info)"
-
-%%%%
-"  -save-version <name>  Save file version for the given player"
-
-%%%%
-"  -sprint               select Sprint"
-
-%%%%
-"  -sprint-map <name>    preselect a Sprint map"
-
-%%%%
-"  -tutorial             select the Tutorial"
-
-%%%%
-"  -wizard               allow access to wizard mode"
-
-%%%%
-"  -explore              allow access to explore mode"
-
-%%%%
-"  -no-throttle          disable throttling of user Lua scripts"
-
-%%%%
-"  -throttle             enable throttling of user Lua scripts"
-
-%%%%
-"  -seed <number>        specify a game seed to use when creating a new game"
-
-%%%%
-Command line options override init file options, which override
-
-%%%%
-environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).
-
-%%%%
-"  -extra-opt-first optname=optval"
-
-%%%%
-"  -extra-opt-last  optname=optval"
-
-%%%%
-Acts as if 'optname=optval' was at the top or bottom of the init
-
-%%%%
-file. Can be used multiple times.
-
-%%%%
-Highscore list options: (Can be redirected to more, etc.)
-
-%%%%
-"  -scores [N]            highscore list"
-
-%%%%
-"  -tscores [N]           terse highscore list"
-
-%%%%
-"  -vscores [N]           verbose highscore list"
-
-%%%%
-"  -scorefile <filename>  scorefile to report on"
-
-%%%%
-Arena options: (Stage a tournament between various monsters.)
-
-%%%%
-"  -arena \"<monster list> v <monster list> arena:<arena map>\""
-
-%%%%
-Miscellaneous options:
-
-%%%%
-"  -dump-maps       write map Lua to stderr when parsing .des files"
-
-%%%%
-"  -gdb/-no-gdb     produce gdb backtrace when a crash happens (default:on)"
-
-%%%%
-"  -playable-json   list playable species, jobs, and character combos."
-
-%%%%
-"  -branches-json   list branch data."
-
-%%%%
-Dungeon Crawl command line help
-
-%%%%
-"the following items: "
-
-%%%%
-"the following spells memorised: "
-
+<w>?</w> drücken, um eine Liste der Befehle und anderer Informationen anzuzeigen.
 %%%%
 You begin with %s%s%s.
-Ihr beginnt mit {dat}%s%s%s.
-%%%%
-"; and the following spell memorised: "
-
-%%%%
-"; and the following spells available to memorise: "
-
-%%%%
-" set off with "
-
-%%%%
-" Hints"
-
-%%%%
-" Halloween"
-
-%%%%
-<yellow>%s</yellow>
-
-%%%%
-" newgame"
-
-%%%%
-" bored"
-
-%%%%
-" penance"
-
-%%%%
-" began the quest for the Orb."
-
-%%%%
-You started the game in wizard mode.
-
-%%%%
-" MP: "
-
+Ihr beginnt mit {dat} %s%s%s.
 %%%%
 You're about to run into a slime covered wall!
 Ihr seid dabei, gegen eine mit Schleim bedeckte Wand zu rennen!
@@ -11267,25 +11099,22 @@ No previous command to repeat.
 Kein vorheriger Befehl zum Wiederholen.
 %%%%
 Really repeat movement command while danger is nearby?
-
+Wirklich den Bewegungsbefehl wiederholen, wenn Gefahr in der Nähe ist?
 %%%%
 Unknown command, not repeating.
-Unbekannter Befehl, nicht wiederholend.
+Unbekannter Befehl, nicht wiederholbar.
 %%%%
 Game saved, see you later!
-
+Spiel gespeichert, bis später!
 %%%%
 Key pressed, interrupting command repetition.
-
+Taste gedrückt und damit die Befehlswiederholung unterbrochen.
 %%%%
-Cannot move, cancelling command repetition.
-
+You can't repeat shop actions.
+Laden-Aktionen können nicht wiederholt werden.
 %%%%
-You can't repeat %s actions.
-Ihr könnt%s Aktionen nicht wiederholen.
-%%%%
-altar
-
+You can't repeat altar actions.
+Altar-Aktionen können nicht wiederholt werden.
 %%%%
 There is nothing on the other side of the stone arch.
 Auf der anderen Seite des Steinbogens ist nichts.
@@ -11306,40 +11135,40 @@ You need a rune to enter this place.
 Ihr braucht eine Rune, um diesen Ort zu betreten.
 %%%%
 You need at least %d runes to enter this place.
-Ihr braucht mindestens%d Runen, um diesen Ort zu betreten.
+Ihr braucht mindestens %d Runen, um diesen Ort zu betreten.
 %%%%
 A rune of Zot still resides in this realm, and once you leave you can never return. Are you sure you want to leave?
-
+Eine Rune von Zot befindet sich immer noch in diesem Reich, und Zurückkehren nach dem Verlassen ist nicht möglich. Seid Ihr sicher, dass Ihr gehen wollt?
 %%%%
 This transporter is marked as excluded!
 Dieser Transporter ist als ausgeschlossen gekennzeichnet!
 %%%%
 Enter transporter anyway?
-
+Transporter trotzdem betreten?
 %%%%
 Are you sure you want to leave this ziggurat?
-
+Seid Ihr sicher, dass Ihr diese Ziggurat verlassen wollt?
 %%%%
 Really leave the ziggurat figurine behind?
-
+Die Figur einer Ziggurat wirklich zurücklassen?
 %%%%
 Really leave the Orb behind?
-
+Den Orb wirklich zurücklassen?
 %%%%
-Are you sure you want to leave %s?%s
-
+Are you sure you want to leave %s?
+Seid Ihr alle sicher, dass Ihr {acc}%s verlassen wollt?
 %%%%
 " This will make you lose the game!"
-
+" Damit werdet Ihr das Spiel verlieren!"
 %%%%
 Alright, then stay!
-Okay, dann bleib!
+Okay, bleibt dann!
 %%%%
 Really go through this one-way escape hatch?
-
+Wirklich durch diese Einweg-Fluchtluke gehen?
 %%%%
 Really dive through this shaft in the floor?
-
+Wirklich durch diesen Schacht im Boden tauchen?
 %%%%
 The transporter is blocked on the other side!
 Der Transporter ist auf der anderen Seite blockiert!
@@ -11348,55 +11177,46 @@ The transporter is blocked by a creature on the other side!
 Der Transporter wird von einer Kreatur auf der anderen Seite blockiert!
 %%%%
 You enter the transporter and appear at another place.
-Ihr betrittt den Transporter und tauchst an einem anderen Ort auf.
+Ihr betritt den Transporter und tauchst an einem anderen Ort auf.
 %%%%
 You are a level %d %s %s.
-Ihr seid ein Level%d%s%s.
+Ihr seid ein Level %d %s %s.
 %%%%
 You are %d%% of the way to level %d.
-Ihr seid%d %%auf dem Weg zum Level%d.
+Ihr seid %d%% auf dem Weg zum Level %d.
 %%%%
 I'm sorry, level %d is as high as you can go.
-Es tut mir leid, Level%d ist so hoch wie Ihr könnt.
+Es tut mir leid, Level %d ist so hoch wie Ihr könnt.
 %%%%
 With the way you've been playing, I'm surprised you got this far.
 Mit der Art, wie Ihr gespielt habt, bin ich überrascht, dass Ihr so weit gekommen seid.
 %%%%
 You'll get an extra life in %d.%02d levels' worth of XP.
-
+Ihr werdet noch ein Leben mit zusätzlichen XP im Wert von %d,%02d Levels bekommen.
 %%%%
 If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.
-
+Wenn Ihr jetzt sterbt, werdet Ihr noch ein Leben mit zusätzlichen XP im Wert von %d,%02d Levels bekommen.
 %%%%
-"Play time: "
-
-%%%%
-" turns)."
-
+Play time: %s (%d turns).
+Spielzeit: %s (%d Runden).
 %%%%
 You are forever immune to Zot's power.
-
+Ihr seid für immer immun gegen die Macht von Zot.
 %%%%
 You have unlimited time to explore this branch.
-
+Ihr habt unbegrenzt Zeit, diesen Bereich zu erkunden.
 %%%%
-"Zot will find you in "
-
+Zot will find you in %d turns if you stay in this branch and explore no new floors.
+Zot wird Euch in %d Runden finden, wenn Ihr in diesem Bereich bleibt und keine neuen Ebenen erkundet.
 %%%%
-" turns if you stay in this branch and explore no"
-
-%%%%
-" new floors."
-
-%%%%
-You can't remove your %s, sorry.
-
+You can't remove %s, sorry.
+Ihr könnt %s nicht ausziehen, tut mir leid.
 %%%%
 Take off which item?
-
+Welchen Gegenstand ausziehen?
 %%%%
 You pace your travel speed to your slowest ally.
-Ihr beschleunigt Eure Reisegeschwindigkeit zu Eurem langsamsten Verbündeten.
+Ihr passt Eure Reisegeschwindigkeit an Euren langsamsten Verbündeten an.
 %%%%
 You travel at normal speed.
 Ihr geht mit normaler Geschwindigkeit.
@@ -11408,88 +11228,91 @@ You start resting.
 Ihr fangt an Euch auszuruhen.
 %%%%
 Move the cursor to view the level map, or type <w>?</w> for a list of commands.
-
+Den Cursor bewegen, um die Ebenekarte anzuzeigen, oder <w>?</w> eingeben für eine Liste der Befehle.
 %%%%
 Returning to the game...
-Zurück zum Spiel ...
+Zurück zum Spiel...
 %%%%
-No %squiver actions available for cycling.%s
-
+No other quiver actions available for cycling.
+Keine anderen Köcheraktionen zum Durchwechseln verfügbar.
 %%%%
-"other "
-
+No quiver actions available for cycling.
+Keine Köcheraktionen zum Durchwechseln verfügbar.
 %%%%
 " Use <white>Q</white> to select from all actions."
-
+" <white>Q</white> verwenden, um aus allen Aktionen auszuwählen."
 %%%%
-You have %d gold piece%s.
-Ihr habt %d Goldstück%s.
+You have 1 gold piece.
+Ihr habt 1 Goldstück.
+%%%%
+You have %d gold pieces.
+Ihr habt %d Goldstücke.
 %%%%
 You should not fight recklessly!
 Ihr sollt nicht rücksichtslos kämpfen!
 %%%%
 Nothing quivered!
-
+Nichts im Köcher!
 %%%%
 Return to game
-
+Zurück zum Spiel
 %%%%
 Save and return to main menu
-
+Spiel speichern und zum Hauptmenü zurückkehren
 %%%%
 Generate and view character dump
-
+Charakter-Dump generieren und ansehen
 %%%%
 Edit player tile
-
+Spieler-Figur bearbeiten
 %%%%
 Edit macros
-
+Macros bearbeiten
 %%%%
 Help and manual
-
+Hilfe und Handbuch
 %%%%
 Quit and <lightred>abandon character</lightred>
-
+Das Spiel beenden und <lightred>Charakter aufgeben</lightred>
 %%%%
-Autopickup is now %s.
-Autopickup ist jetzt %s.
+Autopickup is now on.
+Autoabholung ist nun eingeschaltet.
 %%%%
-on
-
+Autopickup is now off.
+Autoabholung ist nun ausgeschaltet.
 %%%%
-off
-
+Sound effects are now on.
+Die Soundeffekte sind jetzt eingeschaltet.
 %%%%
-Sound effects are now %s.
-Soundeffekte sind jetzt %s.
+Sound effects are now off.
+Die Soundeffekte sind jetzt ausgeschaltet.
 %%%%
 Save game and return to main menu?
-
+Spiel speichern und zum Hauptmenü zurückkehren?
 %%%%
 Save game and exit?
-
+Spiel speichern und beenden?
 %%%%
 Saving game... please wait.
-Spiel speichern ... bitte warten.
+Spiel wird gespeichert... bitte wartet.
 %%%%
-Are you sure you want to abandon this character%s?
-
+Are you sure you want to abandon this character?
+Seid Ihr sicher, dass Ihr diesen Charakter aufgeben wollt?
 %%%%
-" and return to the main menu"
-
+Are you sure you want to abandon this character and return to the main menu?
+Seid Ihr sicher, dass Ihr diesen Charakter aufgeben und zum Hauptmenü zurückkehren wollt?
 %%%%
-" and quit the game"
-
+Are you sure you want to abandon this character and quit the game?
+Seid Ihr sicher, dass Ihr diesen Charakter aufgeben und das Spiel beenden wollt?
 %%%%
 Unknown command. (For a list of commands type <w>?\?</w>.)
-
+Unbekannter Befehl. (<w>?\?</w> eingeben für eine Liste der Befehle.)
 %%%%
 Unknown command.
 Unbekannter Befehl.
 %%%%
 Press <w>%</w> or <w>%</w> to pray at altars.
-
+<w>%</w> oder <w>%</w> drücken, um an Altären zu beten.
 %%%%
 You have a vision of a gate.
 Ihr habt eine Vision von einem Tor.
@@ -11498,10 +11321,10 @@ You have a vision of multiple gates.
 Ihr habt eine Vision von mehreren Toren.
 %%%%
 You are cast into the Abyss!
-Ihr seid in den Abgrund geworfen!
+Ihr werdet in den Abgrund geworfen!
 %%%%
 You are cast deeper into the Abyss!
-Ihr seid tiefer in den Abgrund geworfen!
+Ihr werdet tiefer in den Abgrund geworfen!
 %%%%
 The Abyss bends around you!
 Der Abgrund biegt sich um Euch!
@@ -11516,7 +11339,7 @@ Outside, the world ends.
 Draußen endet die Welt.
 %%%%
 Sorry, but your quest for the Orb is now rather pointless. You quit...
-
+Tut mir leid, aber Eure Suche nach der Kugel ist jetzt ziemlich sinnlos. Ihr gibt auf...
 %%%%
 You feel a strong urge to attack something.
 Ihr habt einen starken Drang, etwas anzugreifen.
@@ -11527,20 +11350,17 @@ Ihr fühlt, wie Euer Zorn fast nachlässt.
 Your blood rage is quickly leaving you.
 Eure Blutwut verlässt Euch schnell.
 %%%%
-repeat
-
-%%%%
-"Can't repeat a command which takes no turns (unless it's a wizard command), cancelling "
-
+Can't repeat a command which takes no turns (unless it's a wizard command), cancelling repetitions.
+Ein Befehl (außerdem ein Zauberer-Befehl), der keine Runden benötigt, kann nicht wiederholt werden. Wiederholungen werden aufgehoben.
 %%%%
 Can't repeat a command which takes no turns, cancelling repetitions.
-
+Ein Befehl, der keine Runden benötigt, kann nicht wiederholt werden. Wiederholungen werden aufgehoben.
 %%%%
 "Number of times to repeat, then command key: "
-
+"Anzahl der Wiederholungen, dann Befehlstaste: "
 %%%%
 You must enter the number of times for the command to repeat.
-Ihr müsst eingeben, wie oft der Befehl wiederholt werden soll.
+Ihr müsst eingeben, wieviele Male der Befehl wiederholt werden soll.
 %%%%
 "Enter command to be repeated: "
 Befehl eingeben, der wiederholt werden soll:
@@ -11548,7 +11368,7 @@ Befehl eingeben, der wiederholt werden soll:
 Can't re-do previous command from within a macro.
 Der vorherige Befehl kann nicht innerhalb eines Makros wiederholt werden.
 %%%%
-No previous command to re-do.
+Trying to re-do re-do command, aborting.
 
 %%%%
 
@@ -15086,6 +14906,9 @@ shaped block of ice
 
 %%%%
 " shaped shifter"
+
+%%%%
+" the "
 
 %%%%
 trivial
@@ -19353,15 +19176,6 @@ not found
 
 %%%%
 ; using defaults.</lightred>
-
-%%%%
-con
-
-%%%%
-nul
-
-%%%%
-prn
 
 %%%%
 LPT
@@ -26687,12 +26501,6 @@ Invis
 \r
 
 %%%%
-days
-
-%%%%
-day
-
-%%%%
 
 ##################
 # syscalls.cc
@@ -26931,6 +26739,9 @@ pass through
 
 %%%%
 grate
+
+%%%%
+altar
 
 %%%%
 escape hatch
@@ -28565,6 +28376,12 @@ Welches Feld ändern?
 %%%%
 Toggling %s to %s.
 %s auf %s umschalten.
+%%%%
+off
+
+%%%%
+on
+
 %%%%
 %s was %d.
 %s war %d.

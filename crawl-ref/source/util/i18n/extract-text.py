@@ -154,7 +154,7 @@ SPECIAL_FILES = [
 # as opposed to extracting all strings unless we have a reason to ignore them.
 LAZY_FILES = [
     'dgn-overview.cc', 'end.cc', 'files.cc','fineff.cc', 'god-passive.cc', 
-    'god-prayer.cc', 'hiscores.cc', 'macro.cc'
+    'god-prayer.cc', 'hiscores.cc', 'macro.cc', 'main.cc'
 ]
 
 files = []
@@ -273,7 +273,8 @@ for filename in files:
                        and ' save' not in line and 'open' not in line:
                         continue
                 extract = True
-            elif re.search(r'prompt[a-zA-Z_]* *\(', line) or 'yesno' in line:
+            elif re.search(r'prompt[a-zA-Z_]* *\(', line) or 'yesno' in line \
+                 or 'yes_or_no' in line:
                 # extract prompts
                 extract = True
             elif re.match(r'\s*end *\(', line):
@@ -281,6 +282,10 @@ for filename in files:
             elif re.search(r'\bsave_game *\(', line):
                 extract = True
             elif re.search(r'\bhand_act *\(', line):
+                extract = True
+            elif 'cant_cmd_' in line:
+                extract = True
+            elif 'get_num_and_char' in line:
                 extract = True
                 
             if lazy:
@@ -428,7 +433,7 @@ for filename in files:
                     # skip (in)equality tests (assume string is defined elsewhere)
                     if re.search(r'[=!]=\s*$', last):
                         continue
-                    if re.search(r'\bstrcmp\b', last):
+                    if re.search(r'\bstr(case)?cmp\b', last):
                         continue
 
 
