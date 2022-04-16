@@ -41,6 +41,7 @@
 #include "files.h"
 #include "initfile.h"
 #include "libutil.h"
+#include "localise.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h" // erase_val
@@ -927,7 +928,7 @@ static string _keyseq_desc(const keyseq &key)
 static string _keyseq_action_desc(keyseq &action)
 {
     if (action.empty())
-        return "<red>[none]</red>";
+        return "<red>" + localise("[none]") + "</red>";
 
     string action_str = vtostr(action);
     action_str = replace_all(action_str, "<", "<<");
@@ -950,11 +951,11 @@ class MacroEditMenu : public Menu
 private:
     const vector<pair<KeymapContext,string>> modes =
         { { KMC_NONE, "macros" }, // not actually what KMC_NONE means
-          { KMC_DEFAULT, "default" },
-          { KMC_MENU, "menu" },
-          { KMC_LEVELMAP, "level" },
-          { KMC_TARGETING, "targeting" },
-          { KMC_CONFIRM, "confirmation" }
+          { KMC_DEFAULT, "default" }, // localise
+          { KMC_MENU, "menu" }, // localise
+          { KMC_LEVELMAP, "level" }, // localise
+          { KMC_TARGETING, "targeting" }, // localise
+          { KMC_CONFIRM, "confirmation" } // localise
         };
 
 public:
@@ -993,13 +994,14 @@ public:
         // TODO: this seems like somehow it should involve ui::Switcher, but I
         // have no idea how to use that class with a Menu
         clear();
-        add_entry(new MenuEntry("Create/edit " + mode_name() + " from key",
-            MEL_ITEM, 1, '~'));
+        string text = localise("Create/edit %s from key", mode_name());
+        add_entry(new MenuEntry(text, MEL_ITEM, 1, '~'));
         if (get_map().size())
         {
-            add_entry(new MenuEntry("Clear all " + mode_name() + "s",
-                MEL_ITEM, 1, '-'));
-            add_entry(new MenuEntry("Current " + mode_name() + "s", MEL_SUBTITLE));
+            text = localise("Clear all %s", mode_name_plural());
+            add_entry(new MenuEntry(text, MEL_ITEM, 1, '-'));
+            text = localise("Current %s", mode_name_plural());
+            add_entry(new MenuEntry(text, MEL_SUBTITLE));
             for (auto &mapping : get_map())
             {
                 // TODO: indicate if macro is from rc file somehow?
@@ -1052,9 +1054,9 @@ public:
         vector<string> result;
         for (auto m : modes)
             if (keymc == m.first)
-                result.push_back("<w>" + m.second + "</w>");
+                result.push_back("<w>" + localise(m.second) + "</w>");
             else
-                result.push_back(m.second);
+                result.push_back(localise(m.second));
 
         string hint;
         if (keymc != KMC_NONE)
@@ -1062,18 +1064,25 @@ public:
 
         // there's much less use-case for editing keymaps in-game, so hide the
         // details by default
-        string mode_hint = edited_keymaps
-            ? "cycle mode: " + join_strings(result.begin(), result.end(), "|")
-            : "edit keymaps";
+        string mode_hint;
+        if (edited_keymaps)
+        {
+            mode_hint = localise("cycle mode: ");
+            mode_hint += join_strings(result.begin(), result.end(), "|");
+        }
+        else
+            mode_hint = localise("edit keymaps");
 
         set_more(formatted_string::parse_string(
             status_msg + "\n"
-            "Arrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help\n"
-            "[<w>!</w>"
+            + localise("Arrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help")
+            + "\n"
 #ifdef USE_TILE_LOCAL
-            "/<w>Right-click</w>"
+           + localise("[<w>!</w>/<w>Right-click</w>] ")
+#else
+           + localise("[<w>!</w>] ")
 #endif
-            "] " + mode_hint));
+           + mode_hint));
 
     }
 
@@ -1082,30 +1091,45 @@ public:
         // XX less stupid implementation
         switch (keymc)
         {
-        case KMC_NONE: return "macro";
-        case KMC_DEFAULT: return "regular keymap";
-        case KMC_MENU: return "menu keymap";
-        case KMC_TARGETING: return "targeting keymap";
-        case KMC_LEVELMAP: return "level map keymap";
-        case KMC_CONFIRM: return "confirmation keymap";
+        case KMC_NONE: return "macro"; // localise
+        case KMC_DEFAULT: return "regular keymap"; // localise
+        case KMC_MENU: return "menu keymap"; // localise
+        case KMC_TARGETING: return "targeting keymap"; // localise
+        case KMC_LEVELMAP: return "level map keymap"; // localise
+        case KMC_CONFIRM: return "confirmation keymap"; // localise
         default: return "buggy keymap";
+        }
+    }
+
+    string mode_name_plural()
+    {
+        // XX less stupid implementation
+        switch (keymc)
+        {
+        case KMC_NONE: return "macros"; // localise
+        case KMC_DEFAULT: return "regular keymaps"; // localise
+        case KMC_MENU: return "menu keymaps"; // localise
+        case KMC_TARGETING: return "targeting keymaps"; // localise
+        case KMC_LEVELMAP: return "level map keymaps"; // localise
+        case KMC_CONFIRM: return "confirmation keymaps"; // localise
+        default: return "buggy keymaps";
         }
     }
 
     virtual formatted_string calc_title() override
     {
         return formatted_string::parse_string(
-            "Editing <w>" + mode_name() + "s</w>.");
+            localise("Editing <w>%s</w>.", mode_name_plural()));
     }
 
     void clear_all()
     {
-        const string clear_prompt = make_stringf("Really clear all %ss?",
-                mode_name().c_str());
+        const string clear_prompt = localise("Really clear all %s?",
+                mode_name_plural());
         if (yesno(clear_prompt.c_str(), true, 'N'))
         {
             get_map() = macromap();
-            status_msg = "All " + mode_name() + "s cleared!";
+            status_msg = localise("All %s cleared!", mode_name_plural());
             crawl_state.unsaved_macros = true;
             fill_entries();
         }
@@ -1132,10 +1156,10 @@ public:
         action_str = replace_all(action_str, "<", "<<");
         key_str = replace_all(key_str, "<", "<<");
 
-        status_msg = make_stringf("Cleared %s '%s' => '%s'.",
-                    mode_name().c_str(),
-                    key_str.c_str(),
-                 action_str.c_str());
+        status_msg = localise("Cleared %s '%s' => '%s'.",
+                              mode_name(),
+                              LocalisationArg(key_str, false),
+                              LocalisationArg(action_str, false));
 
         macro_del(mapref, key);
         crawl_state.unsaved_macros = true;
@@ -1201,20 +1225,22 @@ public:
             clear();
             key.clear();
             set_more(string(""));
-            prompt = make_stringf(
-                "Input trigger key to edit or create a %s:",
-                parent.mode_name().c_str());
+            prompt = localise(
+                "Input trigger key to edit or create %s:",
+                parent.mode_name());
             set_title(new MenuEntry(prompt, MEL_TITLE));
-            set_more("<lightgray>([<w>~</w>] to enter by keycode)</lightgray>");
+            set_more("<lightgray>" +
+                     localise("([<w>~</w>] to enter by keycode)") +
+                     "</lightgray>");
             doing_key_input = true;
         }
 
         void reset_key_prompt()
         {
-            prompt = make_stringf("Current %s for %s: %s",
-                        parent.mode_name().c_str(),
-                        _keyseq_desc(key).c_str(),
-                        _keyseq_action_desc(action).c_str());
+            prompt = localise("Current %s for %s: %s",
+                        parent.mode_name(),
+                        LocalisationArg(_keyseq_desc(key), false),
+                        LocalisationArg(_keyseq_action_desc(action), false));
 
             set_title(new MenuEntry(prompt + "\n", MEL_TITLE));
         }
@@ -1227,11 +1253,12 @@ public:
             reset_key_prompt();
             set_more(string(""));
 
-            add_entry(new MenuEntry("redefine", MEL_ITEM, 1, 'r'));
-            add_entry(new MenuEntry("redefine with raw key entry", MEL_ITEM, 1, 'R'));
+            add_entry(new MenuEntry(localise("redefine"), MEL_ITEM, 1, 'r'));
+            add_entry(new MenuEntry(localise("redefine with raw key entry"), 
+                                    MEL_ITEM, 1, 'R'));
             if (!action.empty())
-                add_entry(new MenuEntry("clear", MEL_ITEM, 1, 'c'));
-            add_entry(new MenuEntry("abort", MEL_ITEM, 1, 'a'));
+                add_entry(new MenuEntry(localise("clear"), MEL_ITEM, 1, 'c'));
+            add_entry(new MenuEntry(localise("abort"), MEL_ITEM, 1, 'a'));
 
             on_single_selection = [this](const MenuEntry& item)
             {
@@ -1259,13 +1286,12 @@ public:
         /// except enter and esc
         void edit_action_raw()
         {
-            prompt = make_stringf(
-                "<w>%s</w>\nInput (raw) new %s for %s: ",
-                        prompt.c_str(),
-                        parent.mode_name().c_str(),
-                        _keyseq_desc(key).c_str());
+            prompt = make_stringf("<w>%s</w>\n", prompt.c_str());
+            prompt += localise("Input (raw) new %s for %s: ",
+                        parent.mode_name(),
+                        LocalisationArg(_keyseq_desc(key), false));
             set_title(new MenuEntry(prompt, MEL_TITLE));
-            set_more("Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.");
+            set_more(localise("Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept."));
             update_menu(true);
             doing_raw_action_input = true;
         }
@@ -1275,14 +1301,14 @@ public:
         bool edit_action()
         {
             char buff[1024];
-            const string edit_prompt = make_stringf("<w>%s</w>\nInput new %s for %s:",
-                        prompt.c_str(),
-                        parent.mode_name().c_str(),
-                        _keyseq_desc(key).c_str());
+            string edit_prompt = make_stringf("<w>%s</w>\n", prompt.c_str());
+            edit_prompt += localise("Input new %s for %s: ",
+                        parent.mode_name(),
+                        LocalisationArg(_keyseq_desc(key), false));
 
             int old_last_hovered = last_hovered;
             set_hovered(-1);
-            set_more("Input a key sequence. Use <w>\\{n}</w> to enter keycode <w>n</w>. [<w>esc</w>] for menu");
+            set_more(localise("Input a key sequence. Use <w>\\{n}</w> to enter keycode <w>n</w>. [<w>esc</w>] for menu"));
             if (!title_prompt(buff, sizeof(buff), edit_prompt.c_str()))
             {
                 set_hovered(old_last_hovered);
@@ -1296,7 +1322,8 @@ public:
             // issues with backslashes, for example
             if (!new_action.size())
             {
-                set_more(make_stringf("Parsing error in key sequence '%s'", buff));
+                set_more(localise("Parsing error in key sequence '%s'",
+                                  LocalisationArg(buff, false)));
                 return true;
             }
             set_hovered(old_last_hovered);
@@ -1350,8 +1377,11 @@ public:
                 else if (keyin == '~')
                 {
                     char buff[10];
-                    set_more("Quick reference: 8: [<w>bksp</w>], 9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>esc</w>]");
-                    if (!title_prompt(buff, sizeof(buff), "Enter keycode by number:"))
+                    set_more(localise("Quick reference: 8: [<w>bksp</w>], "
+                                      "9: [<w>tab</w>], 13: [<w>enter</w>], "
+                                      "27: [<w>esc</w>]"));
+                    const string tprompt = localise("Enter keycode by number:");
+                    if (!title_prompt(buff, sizeof(buff), tprompt.c_str()))
                     {
                         abort = true;
                         return false;
@@ -1418,11 +1448,12 @@ public:
                 && (!get_map().count(pop.key) || get_map()[pop.key] != pop.action))
             {
                 macro_add(get_map(), pop.key, pop.action);
-                status_msg = make_stringf("%s %s '%s' => '%s'.",
-                    existed ? "Redefined" : "Created",
-                    mode_name().c_str(),
-                    _keyseq_desc(pop.key).c_str(),
-                    _keyseq_action_desc(pop.key, get_map()).c_str());
+                status_msg = localise(
+                    existed ? "Redefined %s '%s' => '%s'."
+                            : "Created %s '%s' => '%s'.",
+                    mode_name(),
+                    LocalisationArg(_keyseq_desc(pop.key), false),
+                    LocalisationArg(_keyseq_action_desc(pop.key, get_map()), false));
                 crawl_state.unsaved_macros = true;
             }
             else if (!pop.action.size())
@@ -1495,7 +1526,7 @@ void macro_quick_add()
     keyseq empty;
     menu.edit_mapping(empty);
     if (menu.status_msg.size())
-        mpr(menu.status_msg);
+        mpr_nolocalise(menu.status_msg);
     else
         canned_msg(MSG_OK);
 }

@@ -10910,356 +10910,146 @@ Die Beschreibung muss mindestens ein Nicht-Leerzeichen enthalten.
 # macro.cc
 ##################
 %%%%
-Macro directory
-
-%%%%
-==
-
-%%%%
-\{!more}
-
-%%%%
-\\
-
-%%%%
 Couldn't open %s for writing!
 %s konnte nicht zum Schreiben geöffnet werden!
 %%%%
-K:
-
-%%%%
-K%d:
-
-%%%%
-M:
-
-%%%%
-\
-
-%%%%
-<<
-
-%%%%
-<red>[none]</red>
-
+[none]
+[nichts]
 %%%%
 macros
-
+Macros
 %%%%
 default
-
+Standard
 %%%%
 menu
-
+Menü
 %%%%
 level
-
+Ebene
 %%%%
 targeting
-
+Abzielen
 %%%%
 confirmation
-
+Bestätigung
 %%%%
-"Create/edit "
-
+Create/edit %s from key
+%s von Taste anlegen/updaten
 %%%%
-" from key"
-
+Clear all %s
+Alle %s löschen
 %%%%
-"Clear all "
-
-%%%%
-"Current "
-
+Current %s
+Aktuelles %s
 %%%%
 "cycle mode: "
-
-%%%%
-|
-
+"Moden durchwechseln: "
 %%%%
 edit keymaps
-
+Keymaps bearbeiten
 %%%%
 Arrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help
-
+Pfeile/[<w>Enter</w>] auswählen, [<w>Rücktaste</w>] Wahl leeren, [<w>?</w>] Hilfe
 %%%%
-/<w>Right-click</w>
-
+"[<w>!</w>/<w>Right-click</w>] "
+"[<w>!</w>/<w>Rechtsklick</w>] "
 %%%%
-"] "
-
+"[<w>!</w>] "
+"[<w>!</w>] "
 %%%%
 macro
-
+Macro
 %%%%
 regular keymap
-
+Standardtastenplan
 %%%%
 menu keymap
-
+Menü-Tastenplan
 %%%%
 targeting keymap
-
+Abzielung-Tastenplan
 %%%%
 level map keymap
-
+Ebeneplan-Tastenplan
 %%%%
 confirmation keymap
-
+Bestätigungstastenplan
 %%%%
-Editing <w>
-
+regular keymaps
+Standardtastenpläne
 %%%%
-s</w>.
-
+menu keymaps
+Menü-Tastenpläne
 %%%%
-Really clear all %ss?
-
+targeting keymaps
+Abzielung-Tastenpläne
 %%%%
-"All "
-
+level map keymaps
+Ebeneplan-Tastenpläne
 %%%%
-s cleared!
-
+confirmation keymaps
+Bestätigungstastenpläne
+%%%%
+Editing <w>%s</w>.
+<w>%s</w> bearbeiten.
+%%%%
+Really clear all %s?
+Wirklich alle %s löschen?
+%%%%
+All %s cleared!
+Alle %s gelöscht!
 %%%%
 Cleared %s '%s' => '%s'.
 %s '%s' => '%s' gelöscht.
 %%%%
-Input trigger key to edit or create a %s:
-
+Input trigger key to edit or create %s:
+Taste eingeben um {acc}%s zu bearbeiten oder erstellen:
 %%%%
-<lightgray>([<w>~</w>] to enter by keycode)</lightgray>
-
+([<w>~</w>] to enter by keycode)
+([<w>~</w>] um durch Keycode einzugeben)
 %%%%
 Current %s for %s: %s
-
+Aktuelles %s für %s: %s
 %%%%
 redefine
-
+redefinieren
 %%%%
 redefine with raw key entry
-
+mit rohe Taste redefinieren
 %%%%
 clear
-
+löschen
 %%%%
 abort
-
-%%%%
-<w>%s</w>
-
+beenden
 %%%%
 "Input (raw) new %s for %s: "
-
+"Neues %s (roh) für %s eingeben: "
 %%%%
 Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.
-
+Rohes Eingeben: [<w>Esc</w>] beenden, [<w>Enter</w>] akzeptieren.
 %%%%
-Input new %s for %s:
-
+"Input new %s for %s: "
+"Neues %s für %s eingeben: "
 %%%%
 Input a key sequence. Use <w>\{n}</w> to enter keycode <w>n</w>. [<w>esc</w>] for menu
-
+Tastenfolge eingeben. <w>\{n}</w> verwenden um ein Keycode einzugeben<w>n</w>. [<w>Esc</w>] für Menu
 %%%%
 Parsing error in key sequence '%s'
-
+Parsing-Fehler in Tastenfolge '%s'
 %%%%
 Quick reference: 8: [<w>bksp</w>], 9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>esc</w>]
-
+Schnellreferenz: 8: [<w>Rücktaste</w>], 9: [<w>Tab</w>], 13: [<w>Enter</w>], 27: [<w>Esc</w>]
 %%%%
 Enter keycode by number:
-
+Keycode als Nummer eingeben:
 %%%%
-Redefined
-
+Redefined %s '%s' => '%s'.
+%s redefiniert: '%s' => '%s'.
 %%%%
-Created
-
-%%%%
-Cannot parse marcos += %s , there is only one argument
-
-%%%%
-'
-
-%%%%
-' is not a valid macro or keymap context (macros += %s)
-
-%%%%
-Cannot parse macros += %s , there are only two arguments
-
-%%%%
-newline
-
-%%%%
-Space
-
-%%%%
-NULL
-
-%%%%
-Backspace
-
-%%%%
-Tab
-
-%%%%
-Esc
-
-%%%%
-Del
-
-%%%%
-Up
-
-%%%%
-Down
-
-%%%%
-Left
-
-%%%%
-Right
-
-%%%%
-Ins
-
-%%%%
-Home
-
-%%%%
-Clear
-
-%%%%
-PgUp
-
-%%%%
-PgDn
-
-%%%%
-Shift-Up
-
-%%%%
-Shift-Down
-
-%%%%
-Shift-Left
-
-%%%%
-Shift-Right
-
-%%%%
-Shift-Ins
-
-%%%%
-Shift-Home
-
-%%%%
-Shift-Clear
-
-%%%%
-Shift-PgUp
-
-%%%%
-Shift-PgDn
-
-%%%%
-Shift-Tab
-
-%%%%
-^Up
-
-%%%%
-^Down
-
-%%%%
-^Left
-
-%%%%
-^Right
-
-%%%%
-^Ins
-
-%%%%
-^Home
-
-%%%%
-^Clear
-
-%%%%
-^PgUp
-
-%%%%
-^PgDn
-
-%%%%
-^Tab
-
-%%%%
-F0
-
-%%%%
-F1
-
-%%%%
-F2
-
-%%%%
-F3
-
-%%%%
-F4
-
-%%%%
-F5
-
-%%%%
-F6
-
-%%%%
-F7
-
-%%%%
-F8
-
-%%%%
-F9
-
-%%%%
-F10
-
-%%%%
-F11
-
-%%%%
-F12
-
-%%%%
-Shift-
-
-%%%%
-Ctrl-
-
-%%%%
-End
-
-%%%%
-uppercase %c
-
-%%%%
-Numpad %d
-
-%%%%
-Ctrl-%c
-
-%%%%
-percent
-
-%%%%
-%
-
+Created %s '%s' => '%s'.
+%s erstellt: '%s' => '%s'.
 %%%%
 
 ##################
@@ -11769,6 +11559,9 @@ No previous command to re-do.
 Failed to create item '
 
 %%%%
+'
+
+%%%%
 Running generate_armour_item tests.
 
 %%%%
@@ -12151,6 +11944,9 @@ Requested corpse '%s' is invalid
 
 %%%%
 Bad item generation weight: '%d'
+
+%%%%
+|
 
 %%%%
 Bad identify status: %s
@@ -13169,6 +12965,9 @@ Ihr könnt die Nachrichten später mit Strg-P erneut lesen.
 %%%%
 --more--
 --mehr--
+%%%%
+<<
+
 %%%%
 Something appears at your feet!
 Etwas erscheint zu Euren Füßen!
@@ -19372,6 +19171,9 @@ Trunk games don't count for the tournament, you want %s.
 " Play trunk anyway? (Y/N)"
 
 %%%%
+%
+
+%%%%
 Press [p] or [ctrl-v] to paste a seed from the clipboard
 
 %%%%
@@ -20899,6 +20701,9 @@ Ihr schnappt erleichtert nach Luft, als Luft wieder Eure Lunge erreicht.
 %%%%
 Your lungs strain for air!
 Eure Lungen belasten die Luft!
+%%%%
+"] "
+
 %%%%
 ", a level "
 
