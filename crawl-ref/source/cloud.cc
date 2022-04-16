@@ -1598,7 +1598,7 @@ bool is_harmless_cloud(cloud_type type)
 string cloud_type_name(cloud_type type, bool terse)
 {
     if (type <= CLOUD_NONE || type >= NUM_CLOUD_TYPES)
-        return "buggy goodness"; // noloc
+        return "buggy goodness";
 
     ASSERT(clouds[type].terse_name);
     if (terse || clouds[type].verbose_name == nullptr)

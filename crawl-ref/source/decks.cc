@@ -186,9 +186,9 @@ const char* card_name(card_type card)
     case CARD_FAMINE_REMOVED:
     case CARD_SHAFT_REMOVED:
 #endif
-    case NUM_CARDS:            return "a buggy card"; // noloc
+    case NUM_CARDS:            return "a buggy card";
     }
-    return "a very buggy card"; // noloc
+    return "a very buggy card";
 }
 
 card_type name_to_card(string name)
@@ -1734,7 +1734,7 @@ void card_effect(card_type which_card,
 #endif
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
-        mprf("You have drawn a buggy card!"); // noloc
+        mprf("You have drawn a buggy card!");
         break;
     }
 }

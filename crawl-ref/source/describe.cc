@@ -638,7 +638,7 @@ static string _randart_descrip(const item_def &item)
                 "It makes you extremely vulnerable to %s.",
                 "It makes you very vulnerable to %s.",
                 "It makes you vulnerable to %s.",
-                "Buggy descriptor!", // noloc
+                "Buggy descriptor!",
                 "It protects you from %s.",
                 "It greatly protects you from %s.",
                 "It renders you almost immune to %s."
@@ -3794,7 +3794,7 @@ static const char* _get_resist_name(mon_resist_flags res_type)
     case MR_RES_VORTEX:
         return "polar vortices";
     default:
-        return "buggy resistance"; // noloc
+        return "buggy resistance";
     }
 }
 

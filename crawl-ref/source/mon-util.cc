@@ -4479,7 +4479,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     {
         dungeon_feature_type feat = env.grid(mons.pos());
         if (feat_is_solid(feat) || feat >= NUM_FEATURES)
-            msg = replace_all(msg, "@surface@", "buggy surface"); // noloc
+            msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)
             msg = replace_tag(msg, "@surface@", "lava");
         else if (feat_is_water(feat))
@@ -4493,8 +4493,8 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     }
     else
     {
-        msg = replace_all(msg, "@surface@", "buggy unseen surface"); // noloc
-        msg = replace_all(msg, "@feature@", "buggy unseen feature"); // noloc
+        msg = replace_all(msg, "@surface@", "buggy unseen surface");
+        msg = replace_all(msg, "@feature@", "buggy unseen feature");
     }
 
     string something = mons.name(DESC_PLAIN);

@@ -523,6 +523,10 @@ for filename in files:
         if re.match(r'^[!\.\?]+$', string):
             continue
 
+        # ignore buggy stuff
+        if 'buggy' in string:
+            continue
+
         filtered_strings.append(string)
 
     if len(filtered_strings) > 0:

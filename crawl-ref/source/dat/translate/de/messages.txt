@@ -3022,9 +3022,6 @@ Ihr fühlt eine Welle von Magie.
 # delay.h
 ##################
 %%%%
-You finish doing something buggy.
-Ihr macht etwas Buggy fertig.
-%%%%
 You continue putting on %s.
 Ihr zieht%s weiter an.
 %%%%
@@ -4200,9 +4197,6 @@ a slithering body
 " It smells delicious!"
 
 %%%%
-It is of an unusually buggy age.
-
-%%%%
 It is larval and weak, freshly emerged from its mother's pouch.
 
 %%%%
@@ -4216,9 +4210,6 @@ It is an elder, stronger than mature beasts.
 
 %%%%
 It is a primal beast, the most powerful of its kind.
-
-%%%%
-it seems unusually buggy
 
 %%%%
 it sports a set of venomous tails
@@ -10569,9 +10560,6 @@ Es ist eine Schriftrolle der Amnesie.
 You feel forgetful for a moment.
 Ihr fühlt Euch für einen Moment vergesslich.
 %%%%
-Read a buggy scroll, please report this.
-Ihr habt eine fehlerhafte Schriftrolle gelesen, bitte meldet das.
-%%%%
 It was %s.
 Das war %s.
 %%%%
@@ -11025,9 +11013,6 @@ level map keymap
 
 %%%%
 confirmation keymap
-
-%%%%
-buggy keymap
 
 %%%%
 Editing <w>
@@ -15268,9 +15253,6 @@ about %d
 INVALID MONSTER
 
 %%%%
-"buggy "
-
-%%%%
 "very large "
 
 %%%%
@@ -16073,9 +16055,6 @@ DEAD MONSTER
 
 %%%%
 INVALID YOU_FAULTLESS
-
-%%%%
-it (buggy)
 
 %%%%
 pincer
@@ -20930,9 +20909,6 @@ more
 You can't survive in this terrain! You fly above the %s, but the process is draining.
 
 %%%%
-buggy terrain
-
-%%%%
 The %s engulfing you falls away.
 
 %%%%
@@ -23253,9 +23229,6 @@ this level
 
 %%%%
 " unseen"
-
-%%%%
-You hear something buggy!
 
 %%%%
 No shout entry for default shout type '
@@ -25923,9 +25896,6 @@ Ihr könnt keinen Durchgang auf der anderen Seite der transparenten Wand schaffe
 Creating a passage of Golubria requires sufficient empty space.
 Um eine Passage von Golubria zu schaffen, ist ausreichend leerer Raum erforderlich.
 %%%%
-Something buggy happened.
-Etwas Buggy ist passiert.
-%%%%
 The Orb disrupts the stability of your passage!
 
 %%%%
@@ -27116,9 +27086,6 @@ You cannot grow anything here.
 "miniscule "
 
 %%%%
-buggy door
-
-%%%%
 melt
 
 %%%%
@@ -27526,9 +27493,6 @@ Failed to find a valid window layout: screen too small or game_scale too large?
 ##################
 # timed-effects.cc
 ##################
-%%%%
-Something hellishly buggy happens.
-
 %%%%
 the effects of Hell
 
@@ -29084,9 +29048,6 @@ land
 Which monster?
 Welches Monster?
 %%%%
-buggy spell
-
-%%%%
 E
 
 %%%%
@@ -29877,9 +29838,6 @@ a beloved toy of Xom.
 
 %%%%
 Xom's teddy bear.
-
-%%%%
-a very buggy toy of Xom.
 
 %%%%
 a BORING thing.
