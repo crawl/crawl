@@ -62,3 +62,71 @@ ein vorsortierter Stapel
 your stacked deck
 Euer vorsortierter Stapel
 %%%%
+
+
+####################
+# Cards
+####################
+
+%%%%
+Velocity
+Geschwindigkeit
+%%%%
+Exile
+Exil
+%%%%
+the Elixir
+das Elixier
+%%%%
+the Stairs
+die Treppe
+%%%%
+the Tomb
+das Grabmal
+%%%%
+Wild Magic
+Wilde Magie
+%%%%
+the Elements
+die Elemente
+%%%%
+the Pentagram
+das Pentagramm
+%%%%
+the Dance
+der Tanz
+%%%%
+the Swarm
+der Schwarm
+%%%%
+the Rangers
+die Waldläufer
+%%%%
+Vitriol
+Vitriol
+%%%%
+the Cloud
+die Wolke
+%%%%
+the Storm
+der Sturm
+%%%%
+Wrath
+Zorn
+%%%%
+the Wraith
+das Gespenst
+%%%%
+the Swine
+das Schwein
+%%%%
+the Orb
+die Kugel
+%%%%
+the Illusion
+die Illusion
+%%%%
+Degeneration
+Degeneration
+%%%%
+

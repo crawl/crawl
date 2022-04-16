@@ -2762,66 +2762,6 @@ A deck of cards, depicting a range of weird and wonderful creatures.
 A deck of cards, which wreak havoc on the user.
 
 %%%%
-Velocity
-
-%%%%
-Exile
-
-%%%%
-the Elixir
-
-%%%%
-the Stairs
-
-%%%%
-the Tomb
-
-%%%%
-Wild Magic
-
-%%%%
-the Elements
-
-%%%%
-the Pentagram
-
-%%%%
-the Dance
-
-%%%%
-the Swarm
-
-%%%%
-the Rangers
-
-%%%%
-Vitriol
-
-%%%%
-the Cloud
-
-%%%%
-the Storm
-
-%%%%
-Wrath
-
-%%%%
-the Wraith
-
-%%%%
-the Swine
-
-%%%%
-the Orb
-
-%%%%
-the Illusion
-
-%%%%
-Degeneration
-
-%%%%
 "Remaining cards: "
 
 %%%%
