@@ -453,7 +453,13 @@ for filename in files:
                     if string != "" and (string[0] == " " or string[0] == "'"):
                         string = '%s' + string
 
-                strings.append(string)
+                if "\\n" in string:
+                    # split lines
+                    substrings = string.split("\\n")
+                    for ss in substrings:
+                        strings.append(ss)
+                else:
+                    strings.append(string)
             
 
     # filter out strings we want to ignore

@@ -1208,8 +1208,22 @@ static string _localise_string(const string& context, const string& value)
         return value;
     }
 
+    string result;
+    if (contains(value, "\n"))
+    {
+        // split lines and localise individually
+        vector<string> lines = split_string("\n", value, false, true);
+        for (size_t i = 0; i < lines.size(); i++)
+        {
+            if (i > 0)
+                result += "\n";
+            result += _localise_string(context, lines[i]);
+        }
+        return result;
+    }
+
     // try simple translation
-    string result = cxlate(context, value, false);
+    result = cxlate(context, value, false);
     if (!result.empty())
         return result;
     

@@ -254,7 +254,7 @@ You must catch your breath between uses of this ability.
 This ability takes some time before being effective.
 
 %%%%
-\nUsing this ability will hurt you.
+Using this ability will hurt you.
 
 %%%%
 This ability causes exhaustion, and cannot be used when exhausted.
@@ -275,10 +275,7 @@ This ability will temporarily drain your maximum hit points when used.
 This ability has a chance of reducing your maximum magic capacity when used.
 
 %%%%
-\nIf you bind an item with this curse Ashenzari will enhance the following skills:\n
-
-%%%%
-.\n
+If you bind an item with this curse Ashenzari will enhance the following skills:
 
 %%%%
 If you make this sacrifice, your powers granted by Ru will become stronger in proportion to the value of the sacrifice, and you may gain new powers as well.
@@ -2325,14 +2322,23 @@ You are no longer entranced.
 # branch-data.h
 ##################
 %%%%
-Welcome to Hell!\nPlease enjoy your stay.
+Welcome to Hell!
 
 %%%%
-Welcome to the Realm of Zot!\nYou feel the power of the Orb interfering with translocations here.
+Please enjoy your stay.
 
 %%%%
-You enter the halls of Pandemonium!\nTo return, you must find a gate leading back.
+Welcome to the Realm of Zot!
 
+%%%%
+You feel the power of the Orb interfering with translocations here.
+
+%%%%
+You enter the halls of Pandemonium!
+
+%%%%
+To return, you must find a gate leading back.
+Um zurückzukehren, müsst Ihr ein Tor finden, das zurückführt.
 %%%%
 You land on top of a ziggurat so tall you cannot make out the ground.
 
@@ -3753,9 +3759,6 @@ RegenMP
 It improves your spell success rate.
 
 %%%%
-It enhances your fire magic.
-
-%%%%
 It enhances your ice magic.
 
 %%%%
@@ -3871,9 +3874,6 @@ It increases damage dealt and taken.
 
 %%%%
 It bestows one free step when moving towards enemies.
-
-%%%%
-It increases the power of your magical spells.
 
 %%%%
 %+d
@@ -4344,9 +4344,6 @@ It is particularly good for stabbing helpless or unaware enemies.
 Any ammunition fired from it burns those it strikes, dealing additional fire damage.
 
 %%%%
-It burns those it strikes, dealing additional fire damage.
-
-%%%%
 " Big, fiery blades are also staple armaments of hydra-hunters."
 
 %%%%
@@ -4393,9 +4390,6 @@ It inflicts extra damage upon your enemies.
 
 %%%%
 Each projectile launched from it has a different, random effect.
-
-%%%%
-Each time it hits an enemy it has a different, random effect.
 
 %%%%
 It occasionally heals its wielder for a portion of the damage dealt when it wounds a living foe.
@@ -4452,13 +4446,19 @@ It has a random effect on any target it hits.
 It is coated with poison.
 Sie ist mit Gift überzogen.
 %%%%
-It is tipped with a substance that causes asphyxiation, dealing direct damage as well as poisoning and slowing those it strikes.\nIt is twice as likely to be destroyed on impact as other darts.
+It is tipped with a substance that causes asphyxiation, dealing direct damage as well as poisoning and slowing those it strikes.
 
 %%%%
-It is tipped with a substance that sends those it hits into a mindless rage, attacking friend and foe alike.\nThe chance of successfully applying its effect increases with Throwing and Stealth skill.
+It is twice as likely to be destroyed on impact as other darts.
 
 %%%%
-It is tipped with a substance that causes blindness and brief confusion.\nThe chance of successfully applying its effect increases with Throwing and Stealth skill.
+It is tipped with a substance that sends those it hits into a mindless rage, attacking friend and foe alike.
+
+%%%%
+The chance of successfully applying its effect increases with Throwing and Stealth skill.
+
+%%%%
+It is tipped with a substance that causes blindness and brief confusion.
 
 %%%%
 It causes any target it hits to blink, with a tendency towards blinking further away from the attacker.
@@ -4647,10 +4647,10 @@ Once activated, this device and all other devices of its kind are rendered tempo
 " The device is presently inert."
 
 %%%%
-"\n\nIf you drink this now, you will no longer be "
+"If you drink this now, you will no longer be "
 
 %%%%
-\n\nDrinking this now will have no effect.
+Drinking this now will have no effect.
 
 %%%%
 "Damage: "
@@ -4710,13 +4710,13 @@ Translocational energy.
 disjunction haloed
 
 %%%%
-"\nYou have not yet explored it and cannot tell "
+"You have not yet explored it and cannot tell "
 
 %%%%
 where it leads.
 
 %%%%
-\nYou can view the location it leads to by examining it with <w>%s</w> and pressing <w>%s</w>.
+You can view the location it leads to by examining it with <w>%s</w> and pressing <w>%s</w>.
 
 %%%%
 (Pray here with <w>'%s'</w> to learn more.)
@@ -5157,7 +5157,7 @@ Max HP: %d
 Will:
 
 %%%%
-" ∞\n"
+" ∞"
 
 %%%%
 It can travel through water.
@@ -5181,7 +5181,7 @@ very large
 "It is currently targeted by "
 
 %%%%
-It is currently targeted by allies:\n
+It is currently targeted by allies:
 
 %%%%
 "It is currently targeting "
@@ -9345,7 +9345,10 @@ Die göttliche Erfahrung erschöpft Eure Kraft!
 (erroneous character)
 
 %%%%
-<white>You must be new here indeed!</white>\n\n<cyan>You can be:</cyan>
+<white>You must be new here indeed!</white>
+
+%%%%
+<cyan>You can be:</cyan>
 
 %%%%
 "  * - Random hints mode character"
@@ -9381,7 +9384,7 @@ tut
 Remember to rest between fights and to enter unexplored terrain with full health and magic. Ideally you should retreat into areas you've already explored and cleared of monsters; resting on the edge of the explored terrain increases the chances of your rest being interrupted by wandering monsters. To rest, press <w>5</w> or <w>Shift-numpad 5</w><tiles>, or <w>click the rest button</w></tiles>.
 
 %%%%
-\nAlso, berserking might help you not to lose so much health in the first place. To use your abilities press <w>a</w>.
+Also, berserking might help you not to lose so much health in the first place. To use your abilities press <w>a</w>.
 
 %%%%
 "That "
@@ -9396,13 +9399,13 @@ Remember to rest between fights and to enter unexplored terrain with full health
 " is a monster, usually depicted by a letter. Some typical early monsters look like <brown>r</brown>, <green>l</green>, <brown>K</brown> or <lightgrey>g</lightgrey>. "
 
 %%%%
-Your console settings allowing, you'll always see a list of monsters somewhere on the screen.\n
+Your console settings allowing, you'll always see a list of monsters somewhere on the screen.
 
 %%%%
 "You can gain information about it by pressing <w>x</w> and moving the cursor over the monster, and read the monster description by then pressing <w>v</w>. "
 
 %%%%
-"\nTo attack this monster with your wielded weapon, just move into it. "
+"To attack this monster with your wielded weapon, just move into it. "
 
 %%%%
 Note that as long as there's a non-friendly monster in view you won't be able to automatically move to distant squares, to avoid death by misclicking.
@@ -9411,7 +9414,10 @@ Note that as long as there's a non-friendly monster in view you won't be able to
 "However, as a hunter you will want to deal with it using your bow. If you have a look at your shortbow from your <w>i</w>nventory, you'll find an explanation of how to do this. "
 
 %%%%
-First <w>w</w>ield it, then follow the instructions.<tiles>\nAs a short-cut you can also <w>right-click</w> on your shortbow to read its description, and <w>left-click</w> to wield it.</tiles>
+First <w>w</w>ield it, then follow the instructions.<tiles>
+
+%%%%
+As a short-cut you can also <w>right-click</w> on your shortbow to read its description, and <w>left-click</w> to wield it.</tiles>
 
 %%%%
 <tiles>Clicking with your <w>right mouse button</w> on your shortbow will also let you read its description.</tiles>
@@ -9504,7 +9510,10 @@ Note that this kind of alliance only exists between the three good gods, so don'
 , so you're stuck with having to suffer the wrath of one god or another.
 
 %%%%
-"Welcome back! If it's been a while, you may want to refresh your memory.\nYour <w>%</w>nventory, "
+Welcome back! If it's been a while, you may want to refresh your memory.
+
+%%%%
+"Your <w>%</w>nventory, "
 
 %%%%
 your spells (<w>%?</w>)
@@ -9561,10 +9570,10 @@ then be taken to target mode with the nearest monster or previous target already
 This screen shows the spells in your spell library. From here you can memorise spells by selecting them, as well as view spell descriptions, search for them, and organize them. As a conjurer, you start with five memorisable spells, and one already memorised: Magic Dart. (To view memorised spells, you can exit this menu and select <w>I</w>.)
 
 %%%%
-\n\nA spell that isn't <darkgray>grayed out</darkgray> or <lightred>forbidden</lightred> can be memorised right away by selecting it at this menu.
+A spell that isn't <darkgray>grayed out</darkgray> or <lightred>forbidden</lightred> can be memorised right away by selecting it at this menu.
 
 %%%%
-"\n\nYou cannot memorise any "
+"You cannot memorise any "
 
 %%%%
 "more "
@@ -9573,10 +9582,13 @@ This screen shows the spells in your spell library. From here you can memorise s
 "spells right now. This will change as you grow in levels and Spellcasting proficiency. "
 
 %%%%
-"\n\nTo use magic, "
+"To use magic, "
 
 %%%%
-"you can <w>left mouse click</w> on the monster you wish to target (or on your player character to cast a spell on yourself) while pressing the <w>Control key</w>, and then select a spell from the menu. Or you can switch to the spellcasting display by <w>clicking on the</w> corresponding <w>tab</w>.\n\nAlternatively, "
+you can <w>left mouse click</w> on the monster you wish to target (or on your player character to cast a spell on yourself) while pressing the <w>Control key</w>, and then select a spell from the menu. Or you can switch to the spellcasting display by <w>clicking on the</w> corresponding <w>tab</w>.
+
+%%%%
+"Alternatively, "
 
 %%%%
 "you can press <w>%</w> and choose a spell, e.g. <w>a</w> (check with <w>?</w>). For attack spells you'll "
@@ -9624,7 +9636,7 @@ this
 "When wielded, some weapons (such as this one) offer certain abilities you can activate. "
 
 %%%%
-\nThis weapon offers its wearer protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>
+This weapon offers its wearer protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>
 
 %%%%
 " or click on your avatar with the <w>right mouse button</w>"
@@ -9633,7 +9645,7 @@ this
 You can wield this weapon with <w>%</w>, or use <w>%</w> to switch between the weapons in slot a and b. (Use <w>%i</w> to adjust item slots.)
 
 %%%%
-\nHowever, you've been training in <w>
+However, you've been training in <w>
 
 %%%%
 </w> for a while, so maybe you should continue training that rather than <w>
@@ -9645,7 +9657,7 @@ You can wield this weapon with <w>%</w>, or use <w>%</w> to switch between the w
 "To attack a monster, "
 
 %%%%
-if you have appropriate ammo quivered you can <w>left mouse click</w> on the monster while prssing the <w>Shift key</w>. Alternatively, you can <w>left mouse click</w> on the tile for the ammo you wish to fire, and then <w>left mouse click</w> on the monster.\n\n
+if you have appropriate ammo quivered you can <w>left mouse click</w> on the monster while prssing the <w>Shift key</w>. Alternatively, you can <w>left mouse click</w> on the tile for the ammo you wish to fire, and then <w>left mouse click</w> on the monster.
 
 %%%%
 "To launch ammunition using the keyboard, "
@@ -9657,7 +9669,7 @@ if you have appropriate ammo quivered you can <w>left mouse click</w> on the mon
 To attack a monster, you can simply walk into it.
 
 %%%%
-"\n\nWeapons and armour that have unusual descriptions "
+"Weapons and armour that have unusual descriptions "
 
 %%%%
 "like this are much more likely to be of higher "
@@ -9672,7 +9684,10 @@ enchantment or have special properties, good or bad.
 "As you're already wielding the appropriate launcher, you can simply "
 
 %%%%
-"<w>left mouse click</w> on the monster you want to hit while pressing the <w>Shift key</w>. Alternatively, you can <w>left mouse click</w> on this tile of the ammo you want to fire, and then <w>left mouse click</w> on the monster you want to hit.\n\nTo launch this ammo using the keyboard, you can simply "
+<w>left mouse click</w> on the monster you want to hit while pressing the <w>Shift key</w>. Alternatively, you can <w>left mouse click</w> on this tile of the ammo you want to fire, and then <w>left mouse click</w> on the monster you want to hit.
+
+%%%%
+"To launch this ammo using the keyboard, you can simply "
 
 %%%%
 "<w>%</w>ire "
@@ -9696,19 +9711,19 @@ You can wear pieces of armour with <w>%</w> and take them off again with <w>%</w
 , or, alternatively, simply click on their tiles to perform either action
 
 %%%%
-\nNote that body armour with a high encumbrance rating may hinder your ability to cast spells. Light armour such as robes and leather armour will be generally safe for any aspiring spellcaster.
+Note that body armour with a high encumbrance rating may hinder your ability to cast spells. Light armour such as robes and leather armour will be generally safe for any aspiring spellcaster.
 
 %%%%
-\nNote that shields will hinder your ability to cast spells, until you've gained enough Shields skill to remove the penalty.
+Note that shields will hinder your ability to cast spells, until you've gained enough Shields skill to remove the penalty.
 
 %%%%
-\nNote that many ranged weapons are two handed and so cannot be used with a shield.
+Note that many ranged weapons are two handed and so cannot be used with a shield.
 
 %%%%
-\n\nThis armour offers its wearer protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>
+This armour offers its wearer protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>
 
 %%%%
-"\n\nWhen worn, some types of armour (such as this one) offer certain <w>%</w>bilities you can activate. "
+"When worn, some types of armour (such as this one) offer certain <w>%</w>bilities you can activate. "
 
 %%%%
 The magic within can be unleashed by evoking (<w>%</w>) it.
@@ -9738,13 +9753,13 @@ Jewellery can be <w>%</w>ut on or <w>%</w>emoved again
 , though in Tiles, either can be done by clicking on the item in your inventory
 
 %%%%
-"\n\nThis "
+"This "
 
 %%%%
 " offers its wearer protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>"
 
 %%%%
-"\n\nWhen worn, some types of jewellery (such as this one) offer certain <w>%</w>bilities you can activate. "
+"When worn, some types of jewellery (such as this one) offer certain <w>%</w>bilities you can activate. "
 
 %%%%
 Press <w>%</w> to quaff this potion
@@ -9753,7 +9768,7 @@ Press <w>%</w> to quaff this potion
 A manual can greatly help you in training a skill. After you pick one up, the skill in question will be trained more efficiently and will level up faster until you exhaust the manual's contents.
 
 %%%%
-\nYou can pick up a spellbook to add its spells to your spell library. (View your spell library with <w>%</w>.)
+You can pick up a spellbook to add its spells to your spell library. (View your spell library with <w>%</w>.)
 
 %%%%
 Skeletons and corpses can be used as components for certain necromantic spells. Apart from that, they are largely useless.
@@ -9765,7 +9780,7 @@ This staff can enhance your spellcasting, making spells of its related spell sch
 It also offers its wielder protection from certain sources. For an overview of your resistances (among other things) press <w>%</w>
 
 %%%%
-"\n\nSeeing how "
+"Seeing how "
 
 %%%%
 " frowns upon the use of magic, this staff will be of little use to you and you might just as well <w>%</w>rop it now."
@@ -9774,16 +9789,19 @@ It also offers its wielder protection from certain sources. For an overview of y
 Miscellaneous items sometimes harbour magical powers that can be harnessed by e<w>%</w>oking the item.
 
 %%%%
-\n<
+It's just a harmless statue - or is it?
 
 %%%%
-It's just a harmless statue - or is it?\nEven if not a danger by themselves, statues often mark special areas, dangerous ones or ones harbouring treasure.
+Even if not a danger by themselves, statues often mark special areas, dangerous ones or ones harbouring treasure.
 
 %%%%
 These nasty constructions can cause a range of unpleasant effects. You won't be able to avoid tripping traps by flying over them; their magic construction will cause them to be triggered anyway.
 
 %%%%
-The dungeon contains a number of natural obstacles such as shafts, which lead one to three levels down. Once you know the shaft is there, you can safely step over it.\nIf you want to jump down there, use <w>></w> to do so. Be warned that getting back here might be difficult.
+The dungeon contains a number of natural obstacles such as shafts, which lead one to three levels down. Once you know the shaft is there, you can safely step over it.
+
+%%%%
+If you want to jump down there, use <w>></w> to do so. Be warned that getting back here might be difficult.
 
 %%%%
 Some areas of the dungeon, such as the Spider Nest, may be strewn with giant webs that may ensnare you for a short time. Players in Spider Form can safely navigate the webs (as can incorporeal entities and various oozes).
@@ -9795,7 +9813,7 @@ You can enter the next (deeper) level by following them down (<w>></w>). To get 
 " In Tiles, you can achieve the same, in either direction, by clicking the <w>left mouse button</w>."
 
 %%%%
-"\n\nYou have not yet passed through this particular set of stairs. "
+"You have not yet passed through this particular set of stairs. "
 
 %%%%
 These stairs lead out of the dungeon. Following them will end the game. The only way to win is to transport the fabled Orb of Zot outside.
@@ -9810,10 +9828,10 @@ You can enter the previous (shallower) level by following these up (<w><<</w>). 
 Escape hatches can be used to quickly leave a level with <w><<</w> and <w>></w>, respectively. Note that you will usually be unable to return right away.
 
 %%%%
-\nTo avoid accidentally opening a door you'd rather remain closed during travel or autoexplore, you can mark it with an exclusion from the map view (<w>X</w>) with <w>ee</w> while your cursor is on the grid in question. Such an exclusion will prevent autotravel from ever entering that grid until you remove the exclusion with another press of <w>Xe</w>.
+To avoid accidentally opening a door you'd rather remain closed during travel or autoexplore, you can mark it with an exclusion from the map view (<w>X</w>) with <w>ee</w> while your cursor is on the grid in question. Such an exclusion will prevent autotravel from ever entering that grid until you remove the exclusion with another press of <w>Xe</w>.
 
 %%%%
-This is your chance to join a religion! In general, the gods will help their followers, bestowing powers of all sorts upon them, but many of them demand a life of dedication, constant tributes or entertainment in return.\n
+This is your chance to join a religion! In general, the gods will help their followers, bestowing powers of all sorts upon them, but many of them demand a life of dedication, constant tributes or entertainment in return.
 
 %%%%
 This particular altar is so ancient that you cannot make out which god it is dedicated to! Converting here by pressing <w>></w> while standing on the altar will enter you into service of a random god, who will grant you some additional piety in thanks.
@@ -9834,7 +9852,10 @@ You can get information about <w>
 " probably won't like it if you switch allegiance, but having a look won't hurt: to get information on <w>"
 
 %%%%
-"</w>, press <w>></w> while standing on the altar. Before taking up the responding faith (and abandoning your current one!) you'll be asked for confirmation.\nTo see your current standing with "
+</w>, press <w>></w> while standing on the altar. Before taking up the responding faith (and abandoning your current one!) you'll be asked for confirmation.
+
+%%%%
+"To see your current standing with "
 
 %%%%
 " press <w>^</w>"
@@ -9867,7 +9888,7 @@ Beware, sometimes these can be deadly!
 currently harmless, but that could change at some point. Check the overview screen (<w>%</w>) to view your resistances.
 
 %%%%
-\nThis cloud
+This cloud
 
 %%%%
 It
@@ -9876,10 +9897,10 @@ It
 " is opaque. If two or more opaque clouds are between you and a square, you won't be able to see anything in that square."
 
 %%%%
-Did you think you were the only adventurer in the dungeon? Well, you thought wrong! These unique adversaries often possess skills that normal monsters wouldn't, so be careful.\n\n
+Did you think you were the only adventurer in the dungeon? Well, you thought wrong! These unique adversaries often possess skills that normal monsters wouldn't, so be careful.
 
 %%%%
-The ghost of a deceased adventurer, it would like nothing better than to send you the same way.\n\n
+The ghost of a deceased adventurer, it would like nothing better than to send you the same way.
 
 %%%%
 "This monster is a demon of the "
@@ -9900,22 +9921,22 @@ second-lowest
 lowest
 
 %%%%
-" tier.\n\n"
+" tier."
 
 %%%%
-This monster appears to be really dangerous!\n
+This monster appears to be really dangerous!
 
 %%%%
-This monster appears to be quite dangerous.\n
+This monster appears to be quite dangerous.
 
 %%%%
-A berserking monster is bloodthirsty and fighting madly. Such a blood rage makes it particularly dangerous!\n\n
+A berserking monster is bloodthirsty and fighting madly. Such a blood rage makes it particularly dangerous!
 
 %%%%
 Friendly monsters will follow you around and attempt to aid you in battle. You can order nearby allies by <w>t</w>alking to them.
 
 %%%%
-\n\nHowever, it is only <w>temporarily</w> friendly, and will become dangerous again when this friendliness wears off.
+However, it is only <w>temporarily</w> friendly, and will become dangerous again when this friendliness wears off.
 
 %%%%
 You can easily mark its square as dangerous to avoid accidentally entering into its field of view when using auto-explore or auto-travel. To do so, enter targeting mode with <w>x</w> and then press <w>e</w> when your cursor is hovering over the monster's grid. Doing so will mark this grid and all surrounding ones within a radius of 8 as "excluded" ones that explore or travel modes won't enter.
@@ -9933,7 +9954,7 @@ Apparently it has not noticed you - yet. Note that you do not have to engage eve
 Apparently it has been distracted by something. You could use this opportunity to sneak up on this monster - or to sneak away.
 
 %%%%
-\nThis monster doesn't appear to have any resistances or susceptibilities. It cannot fly and is of average speed. Examining other, possibly more high-level monsters can give important clues as to how to deal with them.
+This monster doesn't appear to have any resistances or susceptibilities. It cannot fly and is of average speed. Examining other, possibly more high-level monsters can give important clues as to how to deal with them.
 
 %%%%
 Error, no message for '%s'.
@@ -11078,7 +11099,7 @@ confirmation
 edit keymaps
 
 %%%%
-\nArrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help\n[<w>!</w>
+Arrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help
 
 %%%%
 /<w>Right-click</w>
@@ -11147,13 +11168,16 @@ clear
 abort
 
 %%%%
-"<w>%s</w>\nInput (raw) new %s for %s: "
+<w>%s</w>
+
+%%%%
+"Input (raw) new %s for %s: "
 
 %%%%
 Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.
 
 %%%%
-<w>%s</w>\nInput new %s for %s:
+Input new %s for %s:
 
 %%%%
 Input a key sequence. Use <w>\{n}</w> to enter keycode <w>n</w>. [<w>esc</w>] for menu
@@ -12054,7 +12078,7 @@ Map was built for a different version of Crawl (%s) (map: %d.%d us: %d.%d)
 Map fp_name (%s) != name (%s)!
 
 %%%%
-Map: %s\n%s%s%s%s%s%s
+Map: %s
 
 %%%%
 prelude
@@ -16034,76 +16058,76 @@ blob
 INVALID
 
 %%%%
-Monster %d has no name\n
+Monster %d has no name
 
 %%%%
-%s has WL %d > 200\n
+%s has WL %d > 200
 
 %%%%
-%s has rPois++\n
+%s has rPois++
 
 %%%%
-%s has rElec++\n
+%s has rElec++
 
 %%%%
-%s has 0 HD: %d\n
+%s has 0 HD: %d
 
 %%%%
 %s has <= 0 HP: %d
 
 %%%%
-%s has an empty glyph\n
+%s has an empty glyph
 
 %%%%
-%s has negative AC\n
+%s has negative AC
 
 %%%%
-%s has negative EV\n
+%s has negative EV
 
 %%%%
-%s has negative xp mod\n
+%s has negative xp mod
 
 %%%%
-%s has 0 speed\n
+%s has 0 speed
 
 %%%%
-%s has too many genders\n
+%s has too many genders
 
 %%%%
-%s has no defined shape\n
+%s has no defined shape
 
 %%%%
-%s isn't a species but has a corpse tile\n
+%s isn't a species but has a corpse tile
 
 %%%%
-%s has a corpse tile & no corpse\n
+%s has a corpse tile & no corpse
 
 %%%%
-%s has a corpse but no corpse tile\n
+%s has a corpse but no corpse tile
 
 %%%%
 no spells
 
 %%%%
-Book #%d is unused (%s)\n
+Book #%d is unused (%s)
 
 %%%%
-Empty book %s\n
+Empty book %s
 
 %%%%
-Book %s contains invalid spell %d\n
+Book %s contains invalid spell %d
 
 %%%%
-Spellbook %s has spell %s at freq %d (greater than max freq %d)\n
+Spellbook %s has spell %s at freq %d (greater than max freq %d)
 
 %%%%
-Spellbook %s has spell %s in multiple categories (%d and %d)\n
+Spellbook %s has spell %s in multiple categories (%d and %d)
 
 %%%%
-Spellbook %s has spell %s marked MON_SPELL_NOISY redundantly\n
+Spellbook %s has spell %s marked MON_SPELL_NOISY redundantly
 
 %%%%
-Spellbook %s has spell %s with no category\n
+Spellbook %s has spell %s with no category
 
 %%%%
 almost destroyed
@@ -19355,7 +19379,7 @@ Your attributes grow dramatically as you level up.
 Innate Abilities, Weirdness & Mutations
 
 %%%%
-You are rather mundane.\n
+You are rather mundane.
 
 %%%%
 <w>Mutations</w>|Blood properties
@@ -19403,7 +19427,10 @@ none with monsters in sight
 "yes "
 
 %%%%
-"\n<w>Resistances</w>\nPoison resistance    "
+<w>Resistances</w>
+
+%%%%
+"Poison resistance    "
 
 %%%%
 immune
@@ -19427,7 +19454,10 @@ immune
 "Torment resistance   "
 
 %%%%
-"\n<w>Transformations</w>\nBat form (XL 3+)     "
+<w>Transformations</w>
+
+%%%%
+"Bat form (XL 3+)     "
 
 %%%%
 "yes   "
@@ -19445,10 +19475,10 @@ immune
 "Berserk              "
 
 %%%%
-<brown>()</brown>  : Partially suppressed.\n
+<brown>()</brown>  : Partially suppressed.
 
 %%%%
-<darkgrey>(())</darkgrey>: Completely suppressed.\n
+<darkgrey>(())</darkgrey>: Completely suppressed.
 
 %%%%
 <magenta>[]</magenta>   : Transient mutations.
@@ -19587,13 +19617,25 @@ Trunk games don't count for the tournament, you want %s.
 " Play trunk anyway? (Y/N)"
 
 %%%%
-\nPress [p] or [ctrl-v] to paste a seed from the clipboard\n(overwriting the current value).\n
+Press [p] or [ctrl-v] to paste a seed from the clipboard
 
 %%%%
-\nThe seed will determine the dungeon layout, monsters, and items\nthat you discover, relative to this version of crawl. Upgrading\nmid-game may affect seeding. (See the manual for more details.)\n
+(overwriting the current value).
 
 %%%%
-Warning: your build of crawl does not support stable seeding!\nLevels may differ from 'official' seeded games.\n
+The seed will determine the dungeon layout, monsters, and items
+
+%%%%
+that you discover, relative to this version of crawl. Upgrading
+
+%%%%
+mid-game may affect seeding. (See the manual for more details.)
+
+%%%%
+Warning: your build of crawl does not support stable seeding!
+
+%%%%
+Levels may differ from 'official' seeded games.
 
 %%%%
 Seeded play
@@ -19747,7 +19789,7 @@ Map %s has temple_overflow_god tags but no count tag
 # ng-input.cc
 ##################
 %%%%
-</yellow>\n<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2021 Crawl DevTeam
+<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2021 Crawl DevTeam
 
 %%%%
 <lightgrey>Options read from "
@@ -20019,10 +20061,10 @@ Ring
 "<w>A:</w> "
 
 %%%%
-"\n<w>0:</w> "
+"<w>0:</w> "
 
 %%%%
-"\n<w>%s:</w> "
+"<w>%s:</w> "
 
 %%%%
 
@@ -21390,9 +21432,6 @@ You feel %sattractive to monsters.
 You cannot fly right now.
 
 %%%%
-Drinking this now will have no effect.
-
-%%%%
 You feel magically purged.
 Ihr fühlt Euch magisch gereinigt.
 %%%%
@@ -22463,7 +22502,19 @@ You can no longer step out of the flow of time.
 You can step out of the flow of time.
 
 %%%%
-Ashenzari warns you of distant threats and treasures.\nAshenzari reveals the structure of the dungeon to you.\nAshenzari shows you where magical portals lie.\nAshenzari prevents you from stumbling into unseen traps.\nAshenzari identifies your possessions.
+Ashenzari warns you of distant threats and treasures.
+
+%%%%
+Ashenzari reveals the structure of the dungeon to you.
+
+%%%%
+Ashenzari shows you where magical portals lie.
+
+%%%%
+Ashenzari prevents you from stumbling into unseen traps.
+
+%%%%
+Ashenzari identifies your possessions.
 
 %%%%
 Ashenzari will now reveal the unseen.
@@ -23276,7 +23327,7 @@ price
 "[<w>Esc</w>] exit          "
 
 %%%%
-%s  [%s] %s\n[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list
+[<w>/</w>] sort (%s)%s  %s  [%s] put item on shopping list
 
 %%%%
 [<w>!</w>] <w>buy</w>|examine items
@@ -23291,16 +23342,16 @@ select item for purchase
 [<w>Enter</w>] make purchase
 
 %%%%
-<%s>You don't have enough money.</%s>\n
+<%s>You don't have enough money.</%s>
 
 %%%%
-<%s>Purchase items%s for %d gold? (%s/N)</%s>\n
+<%s>Purchase items%s for %d gold? (%s/N)</%s>
 
 %%%%
 " in shopping list"
 
 %%%%
-<%s>I'll put %s outside for you.</%s>\n
+<%s>I'll put %s outside for you.</%s>
 
 %%%%
 it
@@ -23626,13 +23677,13 @@ Ashenzari's anger
 " are in <magenta>magenta</magenta>."
 
 %%%%
-The percentage of incoming experience used to train each skill is in <brown>brown</brown>.\n
+The percentage of incoming experience used to train each skill is in <brown>brown</brown>.
 
 %%%%
-The current training targets, if any.\n
+The current training targets, if any.
 
 %%%%
-The percentage of the progress done before reaching next level is in <cyan>cyan</cyan>.\n
+The percentage of the progress done before reaching next level is in <cyan>cyan</cyan>.
 
 %%%%
 The relative cost of raising each skill is in <cyan>cyan</cyan>
@@ -23704,7 +23755,10 @@ highlighter
 <lightred>You need to enable at least one skill.</lightred>
 
 %%%%
-Press the letter of a skill to read its description.\nPress <w>?</w> for a general explanation of skilling and the various toggles.
+Press the letter of a skill to read its description.
+
+%%%%
+Press <w>?</w> for a general explanation of skilling and the various toggles.
 
 %%%%
 mode
@@ -23940,7 +23994,7 @@ genus
 Weight
 
 %%%%
-" %c Level %.*f%s %s\n"
+" %c Level %.*f%s %s"
 
 %%%%
 
@@ -26558,9 +26612,6 @@ Die abgrundtiefe Rune von Zot befindet sich in dieser Tiefe.
 You enter the Abyss!
 Ihr betrittt den Abgrund!
 %%%%
-To return, you must find a gate leading back.
-Um zurückzukehren, müsst Ihr ein Tor finden, das zurückführt.
-%%%%
 Killing monsters will force the Abyss to allow you passage.
 Das Töten von Monstern wird den Abyss zwingen, Euch den Durchgang zu erlauben.
 %%%%
@@ -26634,7 +26685,7 @@ b
 "[Stash: "
 
 %%%%
-" \n\t"
+\t
 
 %%%%
 %s%s (%d gold)
@@ -27147,7 +27198,10 @@ Invis
 <lightred>ERROR: string above had unterminated tag</lightred>
 
 %%%%
-" \t\n\r"
+" \t"
+
+%%%%
+\r
 
 %%%%
 days
@@ -27557,7 +27611,7 @@ mc:
 " | 0x%8"
 
 %%%%
-" (%s)\n%cBG: %4"
+%cBG: %4
 
 %%%%
 
@@ -27585,19 +27639,28 @@ mc:
 # tilereg-dgn.cc
 ##################
 %%%%
-GC(%d, %d) EP(%d, %d)\n
+GC(%d, %d) EP(%d, %d)
 
 %%%%
-HEIGHT(%d)\n
+HEIGHT(%d)
 
 %%%%
-GC(%d, %d) [%s]\n
+GC(%d, %d) [%s]
 
 %%%%
-Vault: %s (%d,%d)-(%d,%d) (%dx%d)\n\n
+Vault: %s (%d,%d)-(%d,%d) (%dx%d)
 
 %%%%
-\nFLV: floor: %d (%s) (%d)\n     wall:  %d (%s) (%d)\n     feat:  %d (%s) (%d)\n  special:  %d
+FLV: floor: %d (%s) (%d)
+
+%%%%
+"     wall:  %d (%s) (%d)"
+
+%%%%
+"     feat:  %d (%s) (%d)"
+
+%%%%
+"  special:  %d"
 
 %%%%
 [L-Click] Move
@@ -27656,9 +27719,6 @@ Escape, Ctrl-S
 " (%-)"
 
 %%%%
-%s\n%s %s
-
-%%%%
 Evoke (%)
 
 %%%%
@@ -27682,10 +27742,6 @@ Evoke (%)
 ##################
 # tilereg-msg.cc
 ##################
-%%%%
-\n...
-
-%%%%
 
 ##################
 # tilereg-skl.h
@@ -28631,7 +28687,10 @@ Ihr fühlt Euch Eurer Umgebung bewusst.
 You sensed %s.
 
 %%%%
-Select layers to display:\n<%s>(m)onsters</%s>|<%s>(p)layer</%s>|<%s>(i)tems</%s>|<%s>(c)louds</%s>
+Select layers to display:
+
+%%%%
+<%s>(m)onsters</%s>|<%s>(p)layer</%s>|<%s>(i)tems</%s>|<%s>(c)louds</%s>
 
 %%%%
 |<%s>monster (w)eapons</%s>|<%s>monster (h)ealth</%s>
@@ -28705,7 +28764,7 @@ Ihr könnt dieses Level nicht kommentieren.
 # windowmanager-sdl.cc
 ##################
 %%%%
-Failed to initialise SDL: %s\n
+Failed to initialise SDL: %s
 
 %%%%
 SDL_GL_DEPTH_SIZE 8
@@ -28723,17 +28782,17 @@ SDL_GL_BLUE_SIZE 8
 SDL_GL_ALPHA_SIZE 8
 
 %%%%
-Failed to create window: %s\n
+Failed to create window: %s
 
 %%%%
-Failed to create GL context: %s\n
+Failed to create GL context: %s
 
 %%%%
 Unable to find window icon '%s'
 Fenstersymbol '%s' konnte nicht gefunden werden
 %%%%
-Failed to load icon '%s': %s\n
-Fehler beim Laden des Symbols '%s': %s\n
+Failed to load icon '%s': %s
+
 %%%%
 SDL_VIDEO_WINDOW_POS=%d,%d
 
@@ -28744,10 +28803,10 @@ SDL_VIDEO_WINDOW_POS=center
 SDL_VIDEO_CENTERED=1
 
 %%%%
-Failed to create cursor: %s\n
+Failed to create cursor: %s
 
 %%%%
-Warning: unsupported format, bpp = %d for '%s'\n
+Warning: unsupported format, bpp = %d for '%s'
 
 %%%%
 
@@ -28971,17 +29030,14 @@ Das Monster konnte nicht neben den Spieler gestellt werden.
 "Defend: "
 Verteidigen:
 %%%%
-%s\n   | %s
-
-%%%%
-%s\t%s\n
+%s\t%s
 
 %%%%
 %d\t
 
 %%%%
-Cancelling simulation.\n
-Simulation abbrechen.\n
+Cancelling simulation.
+
 %%%%
 Can't write %s: %s
 %s kann nicht geschrieben werden: %s
@@ -29189,7 +29245,7 @@ Die Akquisition ist fehlgeschlagen und hat vorzeitig aufgehört.
 No items generated.
 Keine Elemente generiert.
 %%%%
-\nSkills:\n
+Skills:
 
 %%%%
 debug randart
@@ -29228,7 +29284,7 @@ earth magic
 air magic
 
 %%%%
-%%%ds: %%6.2f\n
+%%%ds: %%6.2f
 
 %%%%
 Results written into 'items.stat'.
@@ -29643,8 +29699,8 @@ Setzen von Attributen (Str, Int, Dex) auf: %i,%i,%i
 %c%c %-*s : %d
 
 %%%%
-"\nEdit which duration (letter or name)? "
-\nBearbeiten welche Dauer (Buchstabe oder Name)?
+"Edit which duration (letter or name)? "
+
 %%%%
 "Edit which duration (name)? "
 Welche Dauer (Name) bearbeiten?
@@ -29786,10 +29842,274 @@ Do you really want to enter explore mode?
 Can't repeat entering explore mode
 
 %%%%
-<yellow>Player stats</yellow>\n<w>A</w>      set all skills to level\n<w>Ctrl-D</w> change enchantments/durations\n<w>g</w>      exercise a skill\n<w>k</w>      change experience level and skills\n<w>l</w>      change experience level\n<w>Ctrl-P</w> list props\n<w>r</w>      change character's species\n<w>s</w>      set skill to level\n<w>x</w>      gain an experience level\n<w>$</w>      set gold to a specified value\n<w>]</w>      get a mutation\n<w>_</w>      gain religion\n<w>^</w>      set piety to a value\n<w>@</w>      set Str Int Dex\n<w>#</w>      load character from a dump file\n<w>&</w>      list all divine followers\n<w>=</w>      show info about skill points\n<w>n</w>      set Zot clock to a value\n\n<yellow>Dungeon features</yellow>\n<w>T</w>      make a trap\n<w>,</w>/<w>.</w>    create up/down staircase\n<w>(</w>      turn cell into feature\n<w>\</w>      make a shop\n\n<yellow>Builder debugging</yellow>\n<w>L</w>      place a vault by name\n<w>P</w>      create a level based on a vault\n<w>Ctrl-R</w> regenerate current level\n<w>Ctrl-A</w> generate new Abyss area\n<w>K</w>      mark all vaults as unused\n<w>:</w>      find branches and overflow\n       temples in the dungeon\n<w>;</w>      list known levels and counters\n<w>Ctrl-E</w> dump level builder information\n\n<yellow>Other level related commands</yellow>\n<w>{</w>      magic mapping\n<w>b</w>      controlled blink\n<w>B</w>      controlled teleport\n<w>~</w>      go to a specific level\n<w>u</w>/<w>d</w>    shift up/down one level\n<w>Ctrl-B</w> banish yourself to the Abyss\n<w>Ctrl-S</w> change Abyss speed\n<w>R</w>      change monster spawn rate\n<w>Ctrl-W</w> change Shoals' tide speed\n
+<yellow>Player stats</yellow>
 
 %%%%
-<yellow>Other player related effects</yellow>\n<w>c</w>      card effect\n<w>h</w>/<w>H</w>    heal yourself (super-Heal)\n<w>X</w>      make Xom do something now\n<w>z</w>      cast spell by number/name\n<w>!</w>      memorise spell\n<w>W</w>      god wrath\n<w>w</w>      god mollification\n<w>p</w>      polymorph into a form\n<w>V</w>      toggle xray vision\n<w>E</w>      (un)freeze time\n\n<yellow>Monster related commands</yellow>\n<w>m</w>/<w>M</w>    create specified monster\n<w>D</w>      detect all monsters\n<w>G</w>      dismiss all monsters\n<w>"</w>      list monsters\n\n<yellow>Item related commands</yellow>\n<w>a</w>      acquirement\n<w>i</w>/<w>I</w>    identify/unidentify inventory\n<w>y</w>/<w>Y</w>    id/unid item types+level items\n<w>o</w>/<w>%</w>    create an object\n<w>t</w>      tweak object properties\n<w>v</w>      recharge all XP evokers\n<w>Ctrl-V</w> show gold value of an item\n<w>-</w>      get a god gift\n<w>|</w>      create all unrand artefacts\n<w>Ctrl-\</w> create all unrands / fallbacks\n<w>+</w>      make randart from item\n<w>'</w>      list items\n<w>J</w>      Jiyva off-level sacrifice\n\n<yellow>Debugging commands</yellow>\n<w>f</w>      quick fight simulation\n<w>F</w>      single scale fsim\n<w>Ctrl-F</w> double scale fsim\n<w>Ctrl-I</w> item generation stats\n<w>O</w>      measure exploration time\n<w>Ctrl-T</w> dungeon (D)Lua interpreter\n<w>Ctrl-U</w> client (C)Lua interpreter\n<w>Ctrl-X</w> Xom effect stats\n<w>Ctrl-Y</w> temporarily suppress wizmode\n<w>Ctrl-C</w> force a crash\n<w>`</w>      list unassigned command keys\n\n<yellow>Other wizard commands</yellow>\n(not prefixed with <w>&</w>!)\n<w>x?</w>     list targeted commands\n<w>X?</w>     list map-mode commands\n
+<w>A</w>      set all skills to level
+
+%%%%
+<w>Ctrl-D</w> change enchantments/durations
+
+%%%%
+<w>g</w>      exercise a skill
+
+%%%%
+<w>k</w>      change experience level and skills
+
+%%%%
+<w>l</w>      change experience level
+
+%%%%
+<w>Ctrl-P</w> list props
+
+%%%%
+<w>r</w>      change character's species
+
+%%%%
+<w>s</w>      set skill to level
+
+%%%%
+<w>x</w>      gain an experience level
+
+%%%%
+<w>$</w>      set gold to a specified value
+
+%%%%
+<w>]</w>      get a mutation
+
+%%%%
+<w>_</w>      gain religion
+
+%%%%
+<w>^</w>      set piety to a value
+
+%%%%
+<w>@</w>      set Str Int Dex
+
+%%%%
+<w>#</w>      load character from a dump file
+
+%%%%
+<w>&</w>      list all divine followers
+
+%%%%
+<w>=</w>      show info about skill points
+
+%%%%
+<w>n</w>      set Zot clock to a value
+
+%%%%
+<yellow>Dungeon features</yellow>
+
+%%%%
+<w>T</w>      make a trap
+
+%%%%
+<w>,</w>/<w>.</w>    create up/down staircase
+
+%%%%
+<w>(</w>      turn cell into feature
+
+%%%%
+<w>\</w>      make a shop
+
+%%%%
+<yellow>Builder debugging</yellow>
+
+%%%%
+<w>L</w>      place a vault by name
+
+%%%%
+<w>P</w>      create a level based on a vault
+
+%%%%
+<w>Ctrl-R</w> regenerate current level
+
+%%%%
+<w>Ctrl-A</w> generate new Abyss area
+
+%%%%
+<w>K</w>      mark all vaults as unused
+
+%%%%
+<w>:</w>      find branches and overflow
+
+%%%%
+"       temples in the dungeon"
+
+%%%%
+<w>;</w>      list known levels and counters
+
+%%%%
+<w>Ctrl-E</w> dump level builder information
+
+%%%%
+<yellow>Other level related commands</yellow>
+
+%%%%
+<w>{</w>      magic mapping
+
+%%%%
+<w>b</w>      controlled blink
+
+%%%%
+<w>B</w>      controlled teleport
+
+%%%%
+<w>~</w>      go to a specific level
+
+%%%%
+<w>u</w>/<w>d</w>    shift up/down one level
+
+%%%%
+<w>Ctrl-B</w> banish yourself to the Abyss
+
+%%%%
+<w>Ctrl-S</w> change Abyss speed
+
+%%%%
+<w>R</w>      change monster spawn rate
+
+%%%%
+<w>Ctrl-W</w> change Shoals' tide speed
+
+%%%%
+<yellow>Other player related effects</yellow>
+
+%%%%
+<w>c</w>      card effect
+
+%%%%
+<w>h</w>/<w>H</w>    heal yourself (super-Heal)
+
+%%%%
+<w>X</w>      make Xom do something now
+
+%%%%
+<w>z</w>      cast spell by number/name
+
+%%%%
+<w>!</w>      memorise spell
+
+%%%%
+<w>W</w>      god wrath
+
+%%%%
+<w>w</w>      god mollification
+
+%%%%
+<w>p</w>      polymorph into a form
+
+%%%%
+<w>V</w>      toggle xray vision
+
+%%%%
+<w>E</w>      (un)freeze time
+
+%%%%
+<yellow>Monster related commands</yellow>
+
+%%%%
+<w>m</w>/<w>M</w>    create specified monster
+
+%%%%
+<w>D</w>      detect all monsters
+
+%%%%
+<w>G</w>      dismiss all monsters
+
+%%%%
+<w>"</w>      list monsters
+
+%%%%
+<yellow>Item related commands</yellow>
+
+%%%%
+<w>a</w>      acquirement
+
+%%%%
+<w>i</w>/<w>I</w>    identify/unidentify inventory
+
+%%%%
+<w>y</w>/<w>Y</w>    id/unid item types+level items
+
+%%%%
+<w>o</w>/<w>%</w>    create an object
+
+%%%%
+<w>t</w>      tweak object properties
+
+%%%%
+<w>v</w>      recharge all XP evokers
+
+%%%%
+<w>Ctrl-V</w> show gold value of an item
+
+%%%%
+<w>-</w>      get a god gift
+
+%%%%
+<w>|</w>      create all unrand artefacts
+
+%%%%
+<w>Ctrl-\</w> create all unrands / fallbacks
+
+%%%%
+<w>+</w>      make randart from item
+
+%%%%
+<w>'</w>      list items
+
+%%%%
+<w>J</w>      Jiyva off-level sacrifice
+
+%%%%
+<yellow>Debugging commands</yellow>
+
+%%%%
+<w>f</w>      quick fight simulation
+
+%%%%
+<w>F</w>      single scale fsim
+
+%%%%
+<w>Ctrl-F</w> double scale fsim
+
+%%%%
+<w>Ctrl-I</w> item generation stats
+
+%%%%
+<w>O</w>      measure exploration time
+
+%%%%
+<w>Ctrl-T</w> dungeon (D)Lua interpreter
+
+%%%%
+<w>Ctrl-U</w> client (C)Lua interpreter
+
+%%%%
+<w>Ctrl-X</w> Xom effect stats
+
+%%%%
+<w>Ctrl-Y</w> temporarily suppress wizmode
+
+%%%%
+<w>Ctrl-C</w> force a crash
+
+%%%%
+<w>`</w>      list unassigned command keys
+
+%%%%
+<yellow>Other wizard commands</yellow>
+
+%%%%
+(not prefixed with <w>&</w>!)
+
+%%%%
+<w>x?</w>     list targeted commands
+
+%%%%
+<w>X?</w>     list map-mode commands
 
 %%%%
 
@@ -30376,22 +30696,25 @@ chaos cloud
 psuedo-banishment
 
 %%%%
-Xom event %d has no associated data!\n
+Xom event %d has no associated data!
 
 %%%%
-Duplicate name '%s'!\n
+Duplicate name '%s'!
 
 %%%%
-'%s' badness %d outside 10-50 range.\n
+'%s' badness %d outside 10-50 range.
 
 %%%%
-'%s' is not bad, but has badness!\n
+'%s' is not bad, but has badness!
 
 %%%%
-No action for '%s'!\n
+No action for '%s'!
 
 %%%%
-mapping estimate: %d%%\nexploration estimate: %d%%\n
+mapping estimate: %d%%
+
+%%%%
+exploration estimate: %d%%
 
 %%%%
 "How many iterations over the entire piety range? "
