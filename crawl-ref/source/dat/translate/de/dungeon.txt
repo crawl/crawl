@@ -363,58 +363,58 @@ Lab
 ##############################################
 %%%%
 on level %d of the Dungeon
-auf Level %d des Dungeons
+auf Ebene %d des Dungeons
 %%%%
 on level %d of the Orcish Mines
-auf Level %d der orkischen Minen
+auf Ebene %d der orkischen Minen
 %%%%
 on level %d of the Elven Halls
-auf Level %d der Elfenhallen
+auf Ebene %d der Elfenhallen
 %%%%
 on level %d of the Lair of Beasts
-auf Level %d des Verstecks der Bestien
+auf Ebene %d des Verstecks der Bestien
 %%%%
 on level %d of the Swamp
-auf Level %d des Sumpfes
+auf Ebene %d des Sumpfes
 %%%%
 on level %d of the Shoals
-auf Level %d der Untiefen
+auf Ebene %d der Untiefen
 %%%%
 on level %d of the Snake Pit
-auf Level %d der Schlangengrube
+auf Ebene %d der Schlangengrube
 %%%%
 on level %d of the Spider Nest
-auf Level %d des Spinnennests
+auf Ebene %d des Spinnennests
 %%%%
 on level %d of the Pits of Slime
-auf Level %d der Schleimgruben
+auf Ebene %d der Schleimgruben
 %%%%
 on level %d of the Vaults
-auf Level %d der Gewölbe
+auf Ebene %d der Gewölbe
 %%%%
 on level %d of the Crypt
-auf Level %d der Krypta
+auf Ebene %d der Krypta
 %%%%
 on level %d of the Tomb of the Ancients
-auf Level %d der Gruft der Antiker
+auf Ebene %d der Gruft der Antiker
 %%%%
 on level %d of the Depths
-auf Level %d der Tiefen
+auf Ebene %d der Tiefen
 %%%%
 on level %d of the Vestibule of Hell
-auf Level %d des Vestibüls der Hölle
+auf Ebene %d des Vestibüls der Hölle
 %%%%
 on level %d of the Iron City of Dis
-auf Level %d der Eisernen Stadt von Dis
+auf Ebene %d der Eisernen Stadt von Dis
 %%%%
 on level %d of the Realm of Zot
-auf Level %d des Reiches von Zot
+auf Ebene %d des Reiches von Zot
 %%%%
 on level %d of the Abyss
-auf Level %d des Abgrunds
+auf Ebene %d des Abgrunds
 %%%%
 on level %d of a ziggurat
-auf Level %d einer Zikkurat
+auf Ebene %d einer Zikkurat
 %%%%
 
 ##############################################
@@ -422,58 +422,58 @@ auf Level %d einer Zikkurat
 ##############################################
 %%%%
 between levels %d and %d of the Dungeon
-zwischen Levels %d und %d des Dungeons
+zwischen Ebenen %d und %d des Dungeons
 %%%%
 between levels %d and %d of the Orcish Mines
-zwischen Levels %d und %d der orkischen Minen
+zwischen Ebenen %d und %d der orkischen Minen
 %%%%
 between levels %d and %d of the Elven Halls
-zwischen Levels %d und %d der Elfenhallen
+zwischen Ebenen %d und %d der Elfenhallen
 %%%%
 between levels %d and %d of the Lair of Beasts
-zwischen Levels %d und %d des Verstecks der Bestien
+zwischen Ebenen %d und %d des Verstecks der Bestien
 %%%%
 between levels %d and %d of the Swamp
-zwischen Levels %d und %d des Sumpfes
+zwischen Ebenen %d und %d des Sumpfes
 %%%%
 between levels %d and %d of the Shoals
-zwischen Levels %d und %d der Untiefen
+zwischen Ebenen %d und %d der Untiefen
 %%%%
 between levels %d and %d of the Snake Pit
-zwischen Levels %d und %d der Schlangengrube
+zwischen Ebenen %d und %d der Schlangengrube
 %%%%
 between levels %d and %d of the Spider Nest
-zwischen Levels %d und %d des Spinnennests
+zwischen Ebenen %d und %d des Spinnennests
 %%%%
 between levels %d and %d of the Pits of Slime
-zwischen Levels %d und %d der Schleimgruben
+zwischen Ebenen %d und %d der Schleimgruben
 %%%%
 between levels %d and %d of the Vaults
-zwischen Levels %d und %d der Gewölbe
+zwischen Ebenen %d und %d der Gewölbe
 %%%%
 between levels %d and %d of the Crypt
-zwischen Levels %d und %d der Krypta
+zwischen Ebenen %d und %d der Krypta
 %%%%
 between levels %d and %d of the Tomb of the Ancients
-zwischen Levels %d und %d der Gruft der Antiker
+zwischen Ebenen %d und %d der Gruft der Antiker
 %%%%
 between levels %d and %d of the Depths
-zwischen Levels %d und %d der Tiefen
+zwischen Ebenen %d und %d der Tiefen
 %%%%
 between levels %d and %d of the Vestibule of Hell
-zwischen Levels %d und %d des Vestibüls der Hölle
+zwischen Ebenen %d und %d des Vestibüls der Hölle
 %%%%
 between levels %d and %d of the Iron City of Dis
-zwischen Levels %d und %d der Eisernen Stadt von Dis
+zwischen Ebenen %d und %d der Eisernen Stadt von Dis
 %%%%
 between levels %d and %d of the Realm of Zot
-zwischen Levels %d und %d des Reiches von Zot
+zwischen Ebenen %d und %d des Reiches von Zot
 %%%%
 between levels %d and %d of the Abyss
-zwischen Levels %d und %d des Abgrunds
+zwischen Ebenen %d und %d des Abgrunds
 %%%%
 between levels %d and %d of a ziggurat
-zwischen Levels %d und %d einer Zikkurat
+zwischen Ebenen %d und %d einer Zikkurat
 %%%%
 
 ##############################################
