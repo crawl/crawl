@@ -25,6 +25,11 @@ using namespace std;
 #include "unicode.h"
 #include "english.h"
 
+#if 0
+#define DEBUG(...) fprintf(stderr, "DEBUG: "); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");
+#else
+#define DEBUG(...)
+#endif
 
 static string _language;
 static bool _paused;
@@ -672,7 +677,7 @@ static bool is_list(const string& s)
 
 
 // forward declarations
-static string _localise_string(const string& context, const string& value);
+static string _localise_string(const string context, const string& value);
 static string _localise_counted_string(const string& context, const string& singular,
                                        const string& plural, const int count);
 // localise counted string when you only have the plural
@@ -1036,6 +1041,8 @@ static string _localise_item_name(const string& context, const string& item)
 // does nothing if input is not a list
 static string _localise_list(const string& context, const string& s)
 {
+    DEBUG("start _localise_list: context='%s', s='%s'", context.c_str(), s.c_str());
+
     static vector<string> separators = {", or ", ", and ",
                                         "; or ", "; and ",
                                         ", ", "; ", ": ",
@@ -1059,10 +1066,10 @@ static string _localise_list(const string& context, const string& s)
             // restore annotations
             tokens[1] = _add_annotations(tokens[1], annotations);
 
-            sep = cxlate(_context, sep);
+            sep = cxlate(context, sep);
             // the tokens could be lists themselves
-            string tok0 = _localise_string(_context, tokens[0]);
-            string tok1 = _localise_string(_context, tokens[1]);
+            string tok0 = _localise_string(context, tokens[0]);
+            string tok1 = _localise_string(context, tokens[1]);
             return tok0 + sep + tok1;
         }
     }
@@ -1201,8 +1208,10 @@ static string _localise_location(const string& context, const string& value)
 }
 
 // localise a string
-static string _localise_string(const string& context, const string& value)
+static string _localise_string(const string context, const string& value)
 {
+    DEBUG("start _localise_string: context='%s', value='%s'", context.c_str(), value.c_str());
+
     if (value.empty())
     {
         return value;

@@ -11068,8 +11068,20 @@ Wilkommen zurück, %s %s.
 Press <w>?</w> for a list of commands and other information.
 <w>?</w> drücken, um eine Liste der Befehle und anderer Informationen anzuzeigen.
 %%%%
-You begin with %s%s%s.
-Ihr beginnt mit {dat} %s%s%s.
+You begin with the following spells memorised: %s
+Ihr beginnt mit den folgenden Zaubersprüchen memoriert: {acc}%s
+%%%%
+You begin with the following equipment: %s
+Ihr beginnt mit der folgenden Ausrüstung: {acc}%s
+%%%%
+; and the following spells memorised: %s
+; und die folgenden Zaubersprüche memoriert: {acc}%s
+%%%%
+; and the following spell memorised: %s
+; und den folgenden Zauberspruch memoriert: {acc}%s
+%%%%
+; and the following spells available to memorise: %s
+; und die folgenden Zaubersprüche zum Memorieren verfügbar: {acc}%s
 %%%%
 You're about to run into a slime covered wall!
 Ihr seid dabei, gegen eine mit Schleim bedeckte Wand zu rennen!
@@ -11210,7 +11222,7 @@ Zot will find you in %d turns if you stay in this branch and explore no new floo
 Zot wird Euch in %d Runden finden, wenn Ihr in diesem Bereich bleibt und keine neuen Ebenen erkundet.
 %%%%
 You can't remove %s, sorry.
-Ihr könnt %s nicht ausziehen, tut mir leid.
+Ihr könnt {acc}%s nicht ausziehen, tut mir leid.
 %%%%
 Take off which item?
 Welchen Gegenstand ausziehen?
@@ -11369,7 +11381,7 @@ Can't re-do previous command from within a macro.
 Der vorherige Befehl kann nicht innerhalb eines Makros wiederholt werden.
 %%%%
 Trying to re-do re-do command, aborting.
-
+Ein Wiederholungsbefehl kann nich wiederholt werden.
 %%%%
 
 ##################

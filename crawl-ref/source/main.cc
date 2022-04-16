@@ -96,6 +96,7 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
+#include "message-util.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-act.h"
@@ -586,8 +587,7 @@ static void _show_commandline_options_help()
 
 static string _wanderer_equip_str()
 {
-    return "the following items: "
-        + comma_separated_fn(begin(you.inv), end(you.inv),
+    return comma_separated_fn(begin(you.inv), end(you.inv),
                          [] (const item_def &item) -> string
                          {
                              return item.name(DESC_A, false, true);
@@ -614,14 +614,29 @@ static void _djinn_announce_spells()
     const string equip_str = you.char_class == JOB_WANDERER ?
                                         _wanderer_equip_str():
                                         "";
-    const string spell_str = you.spell_no ?
-                                "the following spells memorised: " + _wanderer_spell_str() :
-                                "";
-    if (spell_str.empty() && equip_str.empty())
-        return;
+    const string spell_str = _wanderer_spell_str();
 
-    const string spacer = spell_str.empty() || equip_str.empty() ? "" : "; and ";
-    mprf("You begin with %s%s%s.", equip_str.c_str(), spacer.c_str(), spell_str.c_str());
+    string msg;
+    if (equip_str.empty() && !spell_str.empty())
+    {
+        msg = localise("You begin with the following spells memorised: %s",
+                       spell_str);
+    }
+    else if (!equip_str.empty())
+    {
+        msg = localise("You begin with the following equipment: %s", equip_str);
+        if (!spell_str.empty())
+        {
+            msg += localise("; and the following spells memorised: %s",
+                            spell_str);
+        }
+    }
+
+    if (!msg.empty())
+    {
+        msg = add_punctuation(msg, ".", false);
+        mpr_nolocalise(msg);
+    }
 }
 
 // Announce to the message log and make a note of the player's starting items,
@@ -629,31 +644,45 @@ static void _djinn_announce_spells()
 static void _wanderer_note_equipment()
 {
     const string equip_str = _wanderer_equip_str();
-
-    // Wanderers start with at most 1 spell memorised.
-    const string spell_str =
-        !you.spell_no ? "" :
-        "; and the following spell memorised: "
-        + _wanderer_spell_str();
-
+    const string spell_str = _wanderer_spell_str();
     auto const library = get_sorted_spell_list(true, true);
     const string library_str =
-        !library.size() ? "" :
-        "; and the following spells available to memorise: "
-        + comma_separated_fn(library.begin(), library.end(),
-                             [] (const spell_type spell) -> string
-                             {
-                                 return spell_title(spell);
-                             }, ", ", ", ");
+        comma_separated_fn(library.begin(), library.end(),
+                           [] (const spell_type spell) -> string
+                           {
+                                return spell_title(spell);
+                           }, ", ", ", ");
+
+    string msg; // message for the user (localised)
+    string note; // progress note (not localised)
+
+    string fmt = "You begin with the following equipment: %s"; // localise
+    msg = localise(fmt, equip_str);
+    note = make_stringf(fmt.c_str(), equip_str.c_str());
+
+    if (!spell_str.empty())
+    {
+        // Wanderers start with at most 1 spell memorised.
+        msg += localise("; and the following spell memorised: %s", spell_str);
+        note += make_stringf("; and the following spell memorised: %s",
+                             spell_str.c_str());
+    }
+
+    if (!library_str.empty())
+    {
+        msg += localise("; and the following spells available to memorise: %s", library_str);
+        note += make_stringf("; and the following spells available to memorise: %s",
+                             library_str.c_str());
+    }
+
+    msg = add_punctuation(msg, ".", false);
+    note += ".";
 
     // Announce the starting equipment and spells, because it is otherwise
     // not obvious if the player has any spells.
-    mprf("You begin with %s%s%s.", equip_str.c_str(),
-         spell_str.c_str(), library_str.c_str());
+    mpr_nolocalise(msg);
 
-    const string combined_str = you.your_name + " set off with "
-                                + equip_str + spell_str + library_str;
-    take_note(Note(NOTE_MESSAGE, 0, 0, combined_str));
+    take_note(Note(NOTE_MESSAGE, 0, 0, note));
 }
 
 /**
