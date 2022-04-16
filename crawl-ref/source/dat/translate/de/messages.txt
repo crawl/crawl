@@ -311,9 +311,6 @@ Ihr fliegt schon!
 Sorry, you're not good enough to have a special ability.
 Sorry, Ihr seid nicht gut genug, um eine besondere Fähigkeit zu haben.
 %%%%
-Lua error: %s
-Lua Fehler: %s
-%%%%
 "Use which ability? (? or * to list) "
 
 %%%%
@@ -925,44 +922,11 @@ vs
 Round %d of %d
 Runde %d von %d
 %%%%
-Book-keeping says faction_a has negative active members.
-Buchhaltung sagt, dass fraktion_a negative aktive Mitglieder hat.
-%%%%
-Book-keeping says faction_b has negative active members.
-Buchhaltung sagt, dass fraktion_b negative aktive Mitglieder hat.
-%%%%
-Book-keeping error in faction member count: %d:%d instead of %d:%d
-
-%%%%
-Both factions alive but one declared the winner.
-Beide Fraktionen leben, aber eine hat den Sieger erklärt.
-%%%%
-ERROR: Both sides have spawners, but the active member count of one side has been reduced to zero!
-
-%%%%
 arena miscast
 
 %%%%
 Cancelled contest at user request
 
-%%%%
-Tie declared, but faction_a won.
-Gleichstand erklärt, aber fraktion_a hat gewonnen.
-%%%%
-Tie declared, but faction_b won.
-Gleichstand erklärt, aber fraktion_b hat gewonnen.
-%%%%
-*BOTH* factions won?!
-*BEIDE* Fraktionen haben gewonnen?!
-%%%%
-Faction_a real winner.
-Faction_a echter Gewinner.
-%%%%
-Faction_b real winner.
-Faction_b echter Gewinner.
-%%%%
-Both sides dead.
-Beide Teams tot.
 %%%%
 Tie
 
@@ -3193,9 +3157,6 @@ You become bloodless.
 
 %%%%
 You return to life.
-
-%%%%
-CLua bindings not available on this build!
 
 %%%%
 %s appears in a burst of microwaves!
@@ -5603,9 +5564,6 @@ Ihr könnt dort keinen Gegenstand sehen.
 Marked for pickup.
 Zur Abholung markiert.
 %%%%
-Targeting interrupted by HUP signal.
-Targeting durch HUP-Signal unterbrochen.
-%%%%
 Out of range.
 
 %%%%
@@ -7177,9 +7135,6 @@ The chess piece greys!
 Marking area around %s as unsafe for travelling.
 Den Bereich um %s wird als unsicher für Reisen gezeichnet.
 %%%%
-exclusion not up-to-date: e (%d,%d) p (%d,%d)
-Ausschluss nicht aktuell: e (%d,%d) p (%d,%d)
-%%%%
 %s cloud
 
 %%%%
@@ -7351,12 +7306,6 @@ Euer geistloser Sklave bleibt zurück.
 Your mindless thralls stay behind.
 Eure geistlose Sklaven bleiben zurück.
 %%%%
-Second portal entrance for %s!
-Zweiter Portaleingang für %s!
-%%%%
-Portal %s already exists!
-Portal '%s' existiert schon!
-%%%%
 Generating dungeon...
 Dungeon wird generiert...
 %%%%
@@ -7368,12 +7317,6 @@ Noch ein Versteck-Zweig wird generiert
 %%%%
 building %s
 %s wird generiert
-%%%%
-Emergency fixup: removing player from wall at %d,%d. Please report this as a bug!
-Notfallkorrektur: Spieler wird von der Wand bei %d,%d entfernt. Bitte dies als Fehler melden!
-%%%%
-&P with '%s' failed; clearing force props and trying with random generation next.
-&P mit '%s' scheitert; Die "force props" wird gelöscht, und es wird mit Zufallsgenerierung versucht.
 %%%%
 Level annotation: %s
 Ebenenanmerkung: %s
@@ -7422,12 +7365,6 @@ Unstimmigkeit zwischen dem Namen der Bones-Datei '%s' und der Version %d.%d!
 %%%%
 Failed to unlink bones file: %s
 Fehler beim Aufheben der Verknüpfung der Bones-Datei:%s
-%%%%
-Placed ghost is not alive.
-Platzierter Geist lebt nicht.
-%%%%
-Placed ghost is not MONS_PLAYER_GHOST, but %s
-Platzierter Geist ist nicht MONS_PLAYER_GHOST, sondern%s
 %%%%
 regular
 normal
@@ -8263,9 +8200,6 @@ Das könnt Ihr%s nicht geben.
 %%%%
 %s can't equip that with a two-handed weapon.
 %s können das nicht mit einer Zweihandwaffe ausstatten.
-%%%%
-Gift failed: %s is unable to take %s.
-Geschenk fehlgeschlagen:%s kann%s nicht nehmen.
 %%%%
 Resurrect %s?
 
@@ -9372,9 +9306,6 @@ Die göttliche Erfahrung erschöpft Eure Kraft!
 ]</w>
 
 %%%%
-Error, no hint for '%s'.
-Fehler, kein Hinweis für '%s'.
-%%%%
 See you next game!
 Bis zum nächsten Spiel!
 %%%%
@@ -9956,9 +9887,6 @@ Apparently it has been distracted by something. You could use this opportunity t
 %%%%
 This monster doesn't appear to have any resistances or susceptibilities. It cannot fly and is of average speed. Examining other, possibly more high-level monsters can give important clues as to how to deal with them.
 
-%%%%
-Error, no message for '%s'.
-Fehler, keine Nachricht für '%s'.
 %%%%
 
 ##################
@@ -11024,17 +10952,8 @@ K%d:
 M:
 
 %%%%
-(Key replay ran out of keys)
-(Die Schlüsselwiedergabe hat keine Schlüssel mehr)
-%%%%
 \
 
-%%%%
-Flushing non-empty key buffer (Buffer is '%s')
-
-%%%%
-Flushing non-empty key buffer
-Leeren des nicht leeren Schlüsselpuffers
 %%%%
 <<
 
@@ -11339,21 +11258,6 @@ F11
 F12
 
 %%%%
-key_to_command(): command '%s' (%d:%d) wrong for desired context %d
-
-%%%%
-Cannot bind command #%d to a key.
-Befehl #%d kann nicht an einen Schlüssel gebunden werden.
-%%%%
-Cannot bind command '%s' to a key.
-Befehl '%s' kann nicht an einen Schlüssel gebunden werden.
-%%%%
-Cannot bind user function keys to a command.
-Benutzerfunktionstasten können nicht an einen Befehl gebunden werden.
-%%%%
-Cannot bind synthetic keys to a command.
-Synthetische Schlüssel können nicht an einen Befehl gebunden werden.
-%%%%
 Shift-
 
 %%%%
@@ -11606,12 +11510,6 @@ Key pressed, interrupting command repetition.
 
 %%%%
 Cannot move, cancelling command repetition.
-
-%%%%
-Infinite lua loop detected, aborting.
-Endlose Lua-Schleife erkannt, abgebrochen.
-%%%%
-Banning ready() after %d throttles
 
 %%%%
 You can't repeat %s actions.
@@ -11869,9 +11767,6 @@ repeat
 Can't repeat a command which takes no turns, cancelling repetitions.
 
 %%%%
-(Key replay stole keys)
-(Schlüsselwiederholung hat Schlüssel gestohlen)
-%%%%
 "Number of times to repeat, then command key: "
 
 %%%%
@@ -11887,9 +11782,6 @@ Der vorherige Befehl kann nicht innerhalb eines Makros wiederholt werden.
 No previous command to re-do.
 
 %%%%
-Trying to re-do re-do command, aborting.
-Der Versuch, den Befehl erneut auszuführen, wird abgebrochen.
-%%%%
 
 ##################
 # makeitem.cc
@@ -11897,9 +11789,6 @@ Der Versuch, den Befehl erneut auszuführen, wird abgebrochen.
 %%%%
 Failed to create item '
 
-%%%%
-Invalid brand on item %s, annulling.
-Ungültige Marke auf Artikel%s, annulliert.
 %%%%
 Running generate_armour_item tests.
 
@@ -12030,12 +11919,6 @@ Illegal spec: %s
 Bad NSUBST spec: %s (%s)
 
 %%%%
-dgn_set_map failed for '%s': %s
-dgn_set_map fehlgeschlagen für '%s':%s
-%%%%
-dgn_set_map failed: %s
-dgn_set_map fehlgeschlagen:%s
-%%%%
 dlprelude
 
 %%%%
@@ -12096,11 +11979,11 @@ Map inf is invalid: %s
 Map %s: can't write index - cache offset not set!
 
 %%%%
-Lua error copying hook (%s) from '%s' to '%s': %s
-Lua Fehler beim Kopieren des Hooks (%s) von '%s' nach '%s':%s
-%%%%
 Lua error running hook '%s' on map '%s': %s
 Lua-Fehler beim Ausführen des Hooks '%s' auf der Karte '%s':%s
+%%%%
+Lua error: %s
+Lua Fehler: %s
 %%%%
 temple_overflow_generic_%u
 
@@ -12386,20 +12269,8 @@ Bad feature marker: %s (unknown feature '%s')
 feature (%s)
 
 %%%%
-lua_marker exec error: %s
-lua_marker exec error:%s
-%%%%
 lua_marker load error: %s
 lua_marker Ladefehler:%s
-%%%%
-lua_marker_mapless exec error: %s
-lua_marker_mapless exec error:%s
-%%%%
-lua_marker: Expected table, didn't get it.
-lua_marker: Erwartete Tabelle, habe es nicht verstanden.
-%%%%
-Couldn't find table.
-Tisch konnte nicht gefunden werden.
 %%%%
 lua_marker: write error: %s
 
@@ -12413,9 +12284,6 @@ lua_marker::write error: %s
 lua_marker::read error: %s
 
 %%%%
-mlua error: %s
-mlua Fehler:%s
-%%%%
 init
 
 %%%%
@@ -12425,9 +12293,6 @@ activate
 event
 
 %%%%
-notify_dgn_event: Lua error: %s
-notify_dgn_event: Lua-Fehler:%s
-%%%%
 error (%s): %s
 
 %%%%
@@ -12436,9 +12301,6 @@ describe
 %%%%
 property
 
-%%%%
-Lua marker property (%s) error: %s
-Fehler der Lua-Markereigenschaft (%s):%s
 %%%%
 error (prop:%s): %s
 
@@ -12484,12 +12346,6 @@ position (%d,%d)
 # maps.cc
 ##################
 %%%%
-Fatal lua error: %s
-
-%%%%
-Map resolution error: %s
-
-%%%%
 Lua validation for map %s failed.
 
 %%%%
@@ -12528,9 +12384,6 @@ Failed to open %s for reading
 %%%%
 Regenerating des: %s
 Regenerating des:%s
-%%%%
-Lua error (map %s): %s
-Lua-Fehler (Karte%s):%s
 %%%%
 
 ##################
@@ -13321,14 +13174,6 @@ Select what (regex)?
 %%%%
 %-*s
 
-%%%%
-
-##################
-# message-stream.cc
-##################
-%%%%
-oops, hit overflow
-Ups, Hit Overflow
 %%%%
 
 ##################
@@ -14684,15 +14529,6 @@ Roots
 %s grab %s.
 %s schnapp%s.
 %%%%
-env.mgrid(%d,%d) points to %s monster, even though it contains submerged monster %s (see bug 2293518)
-
-%%%%
-dead
-
-%%%%
-%s tried to unsubmerge while on same square as %s (see bug 2293518)
-
-%%%%
 %s is no longer moving quickly.
 
 %%%%
@@ -14767,9 +14603,6 @@ no longer
 %%%%
 %s is no longer berserk.
 
-%%%%
-%s is on the same square as you!
-%s ist auf dem gleichen Feld wie Ihr!
 %%%%
 Something invisible bursts forth from the water.
 Etwas Unsichtbares platzt aus dem Wasser.
@@ -15655,9 +15488,6 @@ something unseen
 ##################
 # mon-project.cc
 ##################
-%%%%
-Failed to spawn projectile.
-Projektil konnte nicht erzeugt werden.
 %%%%
 %s dissipates.
 
@@ -19721,17 +19551,11 @@ No %s maps found.
 No temples?!
 
 %%%%
-Temple %s set as variable but has no sizes.
-
-%%%%
 temple_altars_%d
 
 %%%%
 Failed to load map, reloading all maps (%s).
 
-%%%%
-Temple %s: %s
-Tempel %s: %s
 %%%%
 No valid temples.
 
@@ -19740,12 +19564,6 @@ Main temple '%s' has no altars
 
 %%%%
 temple_overflow_generic_%d
-
-%%%%
-Malformed temple tag '%s' in map %s
-Missgebildeter Tempel-Tag '%s' in Karte%s
-%%%%
-Map %s has temple_overflow_god tags but no count tag
 
 %%%%
 
@@ -20705,9 +20523,6 @@ weaker
 %%%%
 stronger
 
-%%%%
-Bad stat: %d
-Schlechter Status:%d
 %%%%
 Your divine stamina protects you from %s loss.
 Eure göttliche Ausdauer schützt Euch vor dem Verlust von %s.
@@ -21721,9 +21536,6 @@ All level %d spells are either disliked by %s or cannot be cast by you.
 %%%%
 No level %d spells?!?!?!
 
-%%%%
-Could not create fixed level randart spellbook: %s
-"Randart-Zauberbuch mit festem Level konnte nicht erstellt werden: %s "
 %%%%
 %s%s of %s
 
@@ -23324,9 +23136,6 @@ them
 some of them
 
 %%%%
-Help! Non-existent shop.
-Hilfe! Nicht existierender Laden.
-%%%%
 %s appears to be closed.
 %s scheint geschlossen zu sein.
 %%%%
@@ -23375,12 +23184,6 @@ general
 "Available shop types: "
 
 %%%%
-%s is already on the shopping list.
-%s ist bereits auf der Einkaufsliste.
-%%%%
-%s isn't on shopping list, can't delete it.
-%s ist nicht auf der Einkaufsliste, kann nicht gelöscht werden.
-%%%%
 Shopping list: replace %dgp %s with cheaper one? (Y/n)
 
 %%%%
@@ -23428,9 +23231,6 @@ You cannot afford %s; travel there anyway? (y/N)
 %%%%
 %s with an entry fee of %d gold pieces.
 
-%%%%
-ERROR: Unable to delete thing from shopping list!
-FEHLER: Sache kann nicht von Einkaufsliste gelöscht werden!
 %%%%
 Your shopping list is now empty.
 Eure Einkaufsliste ist jetzt leer.
@@ -23552,14 +23352,6 @@ Ihr %s%s!
 
 %%%%
 " for attention"
-
-%%%%
-
-##################
-# show.cc
-##################
-%%%%
-monster %s (%d) at (%d, %d) was improperly placed. Updating env.mgrid.
 
 %%%%
 
@@ -24396,12 +24188,6 @@ the malice of Vehumet
 %%%%
 You miscast %s.
 Ihr habt %s falsch besetzt.
-%%%%
-Spell '%s' is not a player castable spell.
-Der Zauber '%s' ist kein vom Spieler wirkender Zauber.
-%%%%
-Invalid spell!
-Ungültiger Zauber!
 %%%%
 mildly dangerous
 
@@ -25901,9 +25687,6 @@ Eure Kampfsphäre schwankt und verliert den Zusammenhalt.
 You feel your bond with your battlesphere wane.
 Ihr fühlt, wie Eure Bindung zu Eurer Kampfsphäre schwindet.
 %%%%
-Battlesphere targeting itself? Fixing.
-Battlesphere zielt auf sich selbst? Reparieren.
-%%%%
 barrage of energy
 
 %%%%
@@ -26070,9 +25853,6 @@ Ihr fühlt die Kraft des Abgrunds, die Eure Translokation verzögert!
 %%%%
 You feel the Orb delaying your translocation!
 Ihr fühlt, wie die Kugel Eure Translokation verzögert!
-%%%%
-Controlled teleport interrupted by HUP signal, cancelling teleport.
-
 %%%%
 Even you can't go there right now. Sorry!
 Sogar Ihr könnt jetzt nicht dorthin gehen. Entschuldigung!
@@ -26602,12 +26382,6 @@ You feel Zot lose track of you.
 %%%%
 Beware, you cannot shaft yourself on this level.
 Vorsicht, Ihr könnt Euch auf dieser Ebene nicht bewegen.
-%%%%
-Error: no Hell exit level, how in the Vestibule did you get here? Let's go to D:1.
-
-%%%%
-Error: no return path. You did create the exit manually, didn't you? Let's go to D:1.
-
 %%%%
 
 ##################
@@ -27199,9 +26973,6 @@ Incomplete read of "%s" - aborting.
 Error writing to %s
 
 %%%%
-Error: monster %s in %s at (%d,%d)
-Fehler: Monster%s in%s bei (%d,%d)
-%%%%
 Failed to save Lua data: %s
 Fehler beim Speichern der Lua-Daten:%s
 %%%%
@@ -27222,9 +26993,6 @@ Marduk
 %%%%
 Failed to load Lua persist table: %s
 Fehler beim Laden der Lua-Persist-Tabelle:%s
-%%%%
-elsewhere companion has duplicate mid %d: %s
-An anderer Stelle hat der Begleiter ein doppeltes%d:%s
 %%%%
 Bones file has an invalid ghost count (
 
@@ -27366,9 +27134,6 @@ The wall %ss %s!
 You hear a sizzling splash.
 Ihr hört ein brutzelndes Plätschern.
 %%%%
-Attempting to change terrain to a trap without a corresponding trap_def!
-
-%%%%
 suddenly disappears
 
 %%%%
@@ -27383,9 +27148,6 @@ moves
 %%%%
 " to "
 
-%%%%
-swap_features(): No boring squares on level?
-swap_features (): Keine langweiligen Quadrate auf Level?
 %%%%
 You fall into the %s!
 Ihr fallt in die %s!
@@ -28743,9 +28505,6 @@ Failed to create window: %s
 Failed to create GL context: %s
 
 %%%%
-Unable to find window icon '%s'
-Fenstersymbol '%s' konnte nicht gefunden werden
-%%%%
 Failed to load icon '%s': %s
 
 %%%%
@@ -29122,9 +28881,6 @@ Realer Wert: %d (bekannt:%d)
 Value: %d
 Wert: %d
 %%%%
-Failed to generate item for '%s'
-Fehler beim Generieren des Elements für '%s'
-%%%%
 "Made "
 
 %%%%
@@ -29453,9 +29209,6 @@ Alter Typ und neuer Typ sind gleich, nicht polymorph.
 %%%%
 Target species must be different from current species.
 Zielarten müssen sich von aktuellen Arten unterscheiden.
-%%%%
-Polymorph killed monster?
-Polymorph töten Monster?
 %%%%
 Trying harder
 Härter versuchen
@@ -30471,12 +30224,6 @@ chaos upgrade
 " (+ monsters)"
 
 %%%%
-Couldn't find ray between player and stairs.
-Ich konnte keinen Strahl zwischen Spieler und Treppe finden.
-%%%%
-Ray didn't cross stairs.
-Ray hat keine Treppe überquert.
-%%%%
 %s slides %s you!
 %s schiebt%s Euch!
 %%%%
@@ -30488,9 +30235,6 @@ towards
 %%%%
 STAIR BEAM
 
-%%%%
-_move_stair(): failed to move %s
-_move_stair (): %s konnte nicht verschoben werden
 %%%%
 repel stairs
 

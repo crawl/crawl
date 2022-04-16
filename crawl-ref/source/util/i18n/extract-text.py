@@ -258,11 +258,21 @@ for filename in files:
             elif 'simple_monster_message' in line or 'simple_god_message' in line:
                 extract = True
             elif re.search(r'mpr[a-zA-Z_]* *\(', line):
-                # extract mpr, mprf, etc. messages, unless they are diagnostics
+                # extract mpr, mprf, etc. messages
                 if 'MSGCH_DIAGNOSTICS' in line:
+                    # ignore diagnostic messages - these are for devs
                     continue
-                else:
-                    extract = True
+                if 'MSGCH_ERROR' in line:
+                    # Error messages mostly relate to programming errors, so we
+                    # keep the original English for the user to report to the devs.
+                    # The only exception is file system-related messages, which
+                    # relate to the user's own environment.
+                    if 'file' not in line and 'directory' not in line \
+                       and 'write' not in line and ' read ' not in line \
+                       and 'lock' not in line and 'load' not in line \
+                       and ' save' not in line:
+                        continue
+                extract = True
             elif re.search(r'prompt[a-zA-Z_]* *\(', line) or 'yesno' in line:
                 # extract prompts
                 extract = True

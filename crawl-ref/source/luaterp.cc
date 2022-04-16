@@ -124,7 +124,7 @@ static void _run_dlua_interpreter(lua_State *ls)
             lua_insert(ls, 1);
             if (lua_pcall(ls, lua_gettop(ls) - 1, 0, 0) != 0)
             {
-                mprf(MSGCH_ERROR, "error calling __echo (%s)", // noloc (debug msg)
+                mprf(MSGCH_ERROR, "error calling __echo (%s)",
                                   lua_tostring(ls, -1));
             }
         }
