@@ -10607,9 +10607,6 @@ Originalausstattung
 You bought it in a shop @in_location@
 Ihr habt diesen Gegenstand in einem Laden @in_location@ gekauft
 %%%%
-Buggy Original Equipment: @in_location@
-Verbuggte Originalausstattung: @in_location@
-%%%%
 You acquired it @in_location@
 Ihr habt diesen Gegenstand @in_location@ erworben
 %%%%
@@ -21284,9 +21281,6 @@ unnamed object
 "%s (Confirm with \"yes\".) "
 
 %%%%
-Buggy prompt?
-
-%%%%
 "Uppercase "
 
 %%%%
@@ -21434,9 +21428,6 @@ No targets found!
 
 %%%%
 "Abil: "
-
-%%%%
-Buggy
 
 %%%%
 Drink

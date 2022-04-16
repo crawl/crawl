@@ -524,7 +524,7 @@ for filename in files:
             continue
 
         # ignore buggy stuff
-        if 'buggy' in string:
+        if 'buggy' in string or 'Buggy' in string:
             continue
 
         filtered_strings.append(string)
