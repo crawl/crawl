@@ -370,11 +370,8 @@ entered it.
 Bend Space ability
 
 Bends the fabric of space, instantly translocating the user a short distance,
-and possibly also translocating and damaging creatures adjacent to the initial
-location or the destination. In warping the fabric of space, this ability
-ignores effects that would usually prevent translocations. Invocations skill
-increases the chance of affecting nearby creatures and the damage dealt to
-those affected.
+and possibly also translocating foes adjacent to the destination. This ignores
+effects that would usually prevent translocations.
 %%%%
 Banish ability
 
