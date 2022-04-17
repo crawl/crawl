@@ -647,8 +647,7 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
  */
 static MenuEntry* _feature_menu_gen(char letter, const string &str, string &key)
 {
-    MenuEntry* me = new MenuEntry(localise(str), MEL_ITEM, 1, letter);
-    me->data = &key;
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
 
     const dungeon_feature_type feat = feat_by_desc(str);
     if (feat)
