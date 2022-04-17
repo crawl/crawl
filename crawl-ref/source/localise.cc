@@ -1069,7 +1069,15 @@ static string _localise_list(const string& context, const string& s)
             sep = cxlate(context, sep);
             // the tokens could be lists themselves
             string tok0 = _localise_string(context, tokens[0]);
-            string tok1 = _localise_string(context, tokens[1]);
+
+            // If we were called with a non-empty context, we want to make sure it persists.
+            // (e.g. German cases - the whole list should be in the same case)
+            // However, if we have an empty context, we want to allow any change to the global context to persist.
+            // (this could be important if this is not actually a list, but just comething with a comma, etc. in it)
+            if (!context.empty())
+                _context = context;
+
+            string tok1 = _localise_string(_context, tokens[1]);
             return tok0 + sep + tok1;
         }
     }
