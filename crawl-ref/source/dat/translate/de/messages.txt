@@ -2099,12 +2099,6 @@ water
 electricity
 
 %%%%
-noxious fumes
-
-%%%%
-negative energy
-
-%%%%
 miasma
 
 %%%%
@@ -2124,9 +2118,6 @@ fragments
 
 %%%%
 magma
-
-%%%%
-thunder
 
 %%%%
 stunning bolt
@@ -2181,9 +2172,6 @@ torment damage
 
 %%%%
 inner flame
-
-%%%%
-calcifying dust
 
 %%%%
 magic web
@@ -2366,102 +2354,6 @@ SHIFT
 ##################
 # cloud.cc
 ##################
-%%%%
-blazing flames
-
-%%%%
-freezing vapour
-
-%%%%
-freezing vapours
-
-%%%%
-black smoke
-
-%%%%
-grey smoke
-
-%%%%
-blue smoke
-
-%%%%
-purple smoke
-
-%%%%
-translocational energy
-
-%%%%
-spreading flames
-
-%%%%
-a forest fire
-
-%%%%
-a cloud of scalding steam
-
-%%%%
-ink
-
-%%%%
-blessed fire
-
-%%%%
-foul pestilence
-
-%%%%
-dark miasma
-
-%%%%
-thin mist
-
-%%%%
-seething chaos
-
-%%%%
-rain
-
-%%%%
-the rain
-
-%%%%
-mutagenic fog
-
-%%%%
-magical condensation
-
-%%%%
-whirling frost
-
-%%%%
-sparse dust
-
-%%%%
-spectral mist
-
-%%%%
-acidic fog
-
-%%%%
-a thunderstorm
-
-%%%%
-white fluffiness
-
-%%%%
-salt
-
-%%%%
-golden dust
-
-%%%%
-smouldering embers
-
-%%%%
-embers
-
-%%%%
-wisps of flame
-
 %%%%
 The forest fire spreads!
 Der Waldbrand breitet sich aus!

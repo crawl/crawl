@@ -1,0 +1,125 @@
+###############################################################################
+#
+# Translations for clouds - nominative
+#
+###############################################################################
+
+%%%%
+flame
+Flamme
+%%%%
+blazing flames
+lodernde Flammen
+%%%%
+noxious fumes
+schädlicher Dunst
+%%%%
+freezing vapour
+gefrierender Dunst
+%%%%
+freezing vapours
+gefrierende Dünste
+%%%%
+poison gas
+Giftgas
+%%%%
+black smoke
+schwarzer Rauch
+%%%%
+grey smoke
+grauer Rauch
+%%%%
+blue smoke
+blauer Rauch
+%%%%
+purple smoke
+violetter Rauch
+%%%%
+translocational energy
+Translokationsenergie
+%%%%
+spreading flames
+sich ausbreitende Flammen
+%%%%
+a forest fire
+ein Waldbrand
+%%%%
+steam
+Dampf
+%%%%
+a cloud of scalding steam
+eine Wolke aus brühendem Dampf
+%%%%
+ink
+Tinte
+%%%%
+calcifying dust
+verkalkender Staub
+%%%%
+blessed fire
+gesegnetes Feuer
+%%%%
+foul pestilence
+faulige Pestilenz
+%%%%
+dark miasma
+dunkles Miasma
+%%%%
+thin mist
+dünner Nebel
+%%%%
+seething chaos
+brodelndes Chaos
+%%%%
+rain
+Regen
+%%%%
+the rain
+der Regen
+%%%%
+mutagenic fog
+mutagener Nebel
+%%%%
+magical condensation
+magische Kondensation
+%%%%
+whirling frost
+wirbelnder Frost
+%%%%
+sparse dust
+spärlicher Staub
+%%%%
+spectral mist
+spektraler Nebel
+%%%%
+acidic fog
+säurehaltiger Nebel
+%%%%
+thunder
+Donner
+%%%%
+a thunderstorm
+ein Gewitter
+%%%%
+negative energy
+Negativenergie
+%%%%
+white fluffiness
+weiße Flaumigkeit
+%%%%
+salt
+Salz
+%%%%
+golden dust
+goldener Staub
+%%%%
+smouldering embers
+schwelende Glut
+%%%%
+embers
+Glut
+%%%%
+wisps of flame
+Flammensträhnen
+%%%%
+
