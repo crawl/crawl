@@ -734,7 +734,7 @@ Ihr könnt nicht berserkern.
 
 # on breath cooldown
 %%%%
-Breath
+{status}Breath
 Atmen
 %%%%
 short of breath

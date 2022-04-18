@@ -45,6 +45,9 @@ Werfen
 Dodging
 Ausweichen
 %%%%
+Stealth
+Heimlichkeit
+%%%%
 Stabbing
 # obsolete
 %%%%
