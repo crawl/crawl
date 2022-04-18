@@ -686,7 +686,7 @@ Glaciate
 Vereisen
 %%%%
 Dragon's Call
-Ruf des Drachen
+Drachenruf
 %%%%
 Spellforged Servitor
 Zaubergeschmiedeter Diener

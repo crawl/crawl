@@ -12,6 +12,7 @@
 #include "god-passive.h"
 #include "item-prop.h"
 #include "level-state-type.h"
+#include "localise.h"
 #include "mon-transit.h" // untag_followers() in duration-data
 #include "mutation.h"
 #include "options.h"
@@ -104,9 +105,9 @@ static void _mark_expiring(status_info& inf, bool expiring)
     if (expiring)
     {
         if (!inf.short_text.empty())
-            inf.short_text += " (expiring)";
+            inf.short_text = localise(inf.short_text) + localise(" (expiring)");
         if (!inf.long_text.empty())
-            inf.long_text = "Expiring: " + inf.long_text;
+            inf.long_text = localise("Expiring: ") + localise(inf.long_text);
     }
 }
 
@@ -197,12 +198,12 @@ bool fill_status_info(int status, status_info& inf)
     switch (status)
     {
     case DUR_CORROSION:
-        inf.light_text = make_stringf("Corr (%d)",
+        inf.light_text = localise("Corr (%d)",
                           (-4 * you.props["corrosion_amount"].get_int()));
         break;
 
     case DUR_FLAYED:
-        inf.light_text = make_stringf("Flay (%d)",
+        inf.light_text = localise("Flay (%d)",
                           (-1 * you.props["flay_damage"].get_int()));
         break;
 
@@ -277,7 +278,10 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_colour = RED;
             inf.light_text   = "Held";
             inf.short_text   = "held";
-            inf.long_text    = make_stringf("You are %s.", held_status());
+            if (strcmp(held_status(), "held in a net") == 0)
+                inf.long_text = "You are held in a net.";
+            else
+                inf.long_text = "You are caught in a web.";
         }
         break;
 
@@ -360,7 +364,7 @@ bool fill_status_info(int status, status_info& inf)
         if (pbd_str > 0)
         {
             inf.light_colour = LIGHTMAGENTA;
-            inf.light_text   = make_stringf("Regen (%d)", pbd_str);
+            inf.light_text   = localise("Regen (%d)", pbd_str);
         }
         break;
     }
@@ -378,8 +382,8 @@ bool fill_status_info(int status, status_info& inf)
         string skills = manual_skill_names();
         if (!skills.empty())
         {
-            inf.short_text = "studying " + manual_skill_names(true);
-            inf.long_text = "You are studying " + skills + ".";
+            inf.short_text = localise("studying %s", manual_skill_names(true));
+            inf.long_text = localise("You are studying %s.", skills);
         }
         break;
     }
@@ -446,7 +450,7 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text
-               = make_stringf("Lash (%u)",
+               = localise("Lash (%u)",
                               you.attribute[ATTR_SERPENTS_LASH]);
             inf.short_text = "serpent's lash";
             inf.long_text = "You are moving at supernatural speed.";
@@ -458,14 +462,14 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = WHITE;
             inf.light_text
-                = make_stringf("Storm (%d)",
+                = localise("Storm (%d)",
                                you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int());
         }
         break;
 
     case DUR_WEREBLOOD:
         inf.light_text
-            = make_stringf("Slay (%u)",
+            = localise("Slay (%u)",
                            you.props[WEREBLOOD_KEY].get_int());
         break;
 
@@ -613,15 +617,13 @@ bool fill_status_info(int status, status_info& inf)
                                                 : BLUE;
 
             inf.light_text = "Bribe";
-            inf.short_text = make_stringf("bribing [%s]",
+            inf.short_text = localise("bribing [%s]",
                                            comma_separated_line(places.begin(),
                                                                 places.end(),
-                                                                ", ", ", ")
-                                                                .c_str());
-            inf.long_text = "You are bribing "
-                             + comma_separated_line(places.begin(),
-                                                    places.end())
-                             + ".";
+                                                           ", ", ", "));
+            inf.long_text = localise("You are bribing %s.",
+                                     comma_separated_line(places.begin(),
+                                                          places.end()));
         }
         break;
     }
@@ -629,7 +631,7 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_HORROR:
     {
         const int horror = you.props[HORROR_PENALTY_KEY].get_int();
-        inf.light_text = make_stringf("Horr(%d)", -1 * horror);
+        inf.light_text = localise("Horr(%d)", -1 * horror);
         if (horror >= HORROR_LVL_OVERWHELMING)
         {
             inf.light_colour = RED;
@@ -718,14 +720,20 @@ bool fill_status_info(int status, status_info& inf)
         if (!found)
         {
             inf.light_colour = RED;
-            inf.light_text   = "Missing";
-            inf.short_text   = "missing status";
-            inf.long_text    = "Missing status description.";
+            inf.light_text   = "Missing"; // noloc
+            inf.short_text   = "missing status"; // noloc
+            inf.long_text    = "Missing status description."; // noloc
             return false;
         }
         else
             break;
     }
+
+    // Use context here because many status light values clash with spells, etc.
+    inf.light_text = localise_contextual("status", inf.light_text); // noloc
+    inf.short_text = localise(inf.short_text);
+    inf.long_text = localise(inf.long_text);
+
     return true;
 }
 
@@ -740,7 +748,7 @@ static void _describe_zot(status_info& inf)
     else if (!Options.always_show_zot || !zot_clock_active())
         return;
 
-    inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
+    inf.light_text = localise("Zot (%d)", turns_until_zot());
     switch (lvl)
     {
         case 0:
@@ -778,21 +786,21 @@ static void _describe_glow(status_info& inf)
     inf.light_text = "Contam";
 
     /// Mappings from contamination levels to descriptions.
-    static const string contam_adjectives[] =
+    static const string contam_short[] =
     {
-        "",
-        "very slightly ",
-        "slightly ",
-        "",
-        "heavily ",
-        "very heavily ",
-        "very very heavily ", // this is silly but no one will ever see it
-        "impossibly ",        // (likewise)
+        "contaminated",
+        "very slightly contaminated",
+        "slightly contaminated",
+        "contaminated",
+        "heavily contaminated",
+        "very heavily contaminated",
+        "very very heavily contaminated", // this is silly but no one will ever see it - noloc
+        "impossibly contaminated",        // (likewise) - noloc
     };
     ASSERT(signed_cont >= 0);
 
-    const int adj_i = min((size_t) cont, ARRAYSZ(contam_adjectives) - 1);
-    inf.short_text = contam_adjectives[adj_i] + "contaminated";
+    const int short_i = min((size_t) cont, ARRAYSZ(contam_short) - 1);
+    inf.short_text = contam_short[short_i];
     inf.long_text = describe_contamination(cont);
 }
 
@@ -827,15 +835,28 @@ static void _describe_poison(status_info& inf)
                                   : ((you.hp - max(0, poison_survival())) * 100 / you.hp);
     inf.light_colour = (player_res_poison(false) >= 3
                          ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
-    inf.light_text   = "Pois";
-    const string adj =
-         (pois_perc >= 100) ? "lethally" :
-         (pois_perc > 65)   ? "seriously" :
-         (pois_perc > 35)   ? "quite"
-                            : "mildly";
-    inf.short_text   = adj + " poisoned"
-        + make_stringf(" (%d -> %d)", you.hp, poison_survival());
-    inf.long_text    = "You are " + inf.short_text + ".";
+    inf.light_text   = localise("Pois");
+    if (pois_perc >= 100)
+    { 
+        inf.short_text = "lethally poisoned";
+        inf.long_text = "You are lethally poisoned.";
+    }
+    else if (pois_perc > 65)
+    { 
+        inf.short_text = "seriously poisoned";
+        inf.long_text = "You are seriously poisoned.";
+    }
+    else if (pois_perc > 35)
+    { 
+        inf.short_text = "quite poisoned";
+        inf.long_text = "You are quite poisoned.";
+    }
+    else
+    { 
+        inf.short_text = "mildly poisoned";
+        inf.long_text = "You are mildly poisoned.";
+    }
+    inf.short_text += make_stringf(" (%d -> %d)", you.hp, poison_survival()); // noloc
 }
 
 static void _describe_speed(status_info& inf)
@@ -875,12 +896,19 @@ static void _describe_airborne(status_info& inf)
     const bool perm      = you.permanent_flight();
     const bool expiring  = (!perm && dur_expiring(DUR_FLIGHT));
     const bool emergency = you.props[EMERGENCY_FLIGHT_KEY].get_bool();
-    const string desc   = you.tengu_flight() ? " quickly and evasively" : "";
 
     inf.light_colour = perm ? WHITE : emergency ? LIGHTRED : BLUE;
     inf.light_text   = "Fly";
-    inf.short_text   = "flying" + desc;
-    inf.long_text    = "You are flying" + desc + ".";
+    if (!you.tengu_flight())
+    {
+        inf.short_text   = "flying";
+        inf.long_text    = "You are flying.";
+    }
+    else
+    {
+        inf.short_text   = "flying quickly and evasively";
+        inf.long_text    = "You are flying quickly and evasively.";
+    }
     inf.light_colour = _dur_colour(inf.light_colour, expiring);
     _mark_expiring(inf, expiring);
 }
@@ -896,12 +924,22 @@ static void _describe_sickness(status_info& inf)
                                               low, high);
         inf.light_text     = "Sick";
 
-        string mod = (you.duration[DUR_SICKNESS] > high) ? "badly "  :
-                     (you.duration[DUR_SICKNESS] >  low) ? ""
-                                                         : "mildly ";
+        if (you.duration[DUR_SICKNESS] > high)
+        {
+            inf.short_text = "badly diseased";
+            inf.long_text  = "You are badly diseased.";
+        }
+        else if (you.duration[DUR_SICKNESS] > low)
+        {
+            inf.short_text = "diseased";
+            inf.long_text  = "You are diseased.";
+        }
+        else
+        {
+            inf.short_text = "mildly diseased";
+            inf.long_text  = "You are mildly diseased.";
 
-        inf.short_text = mod + "diseased";
-        inf.long_text  = "You are " + mod + "diseased.";
+        }
     }
 }
 
@@ -919,7 +957,7 @@ static void _describe_transform(status_info& inf)
     const Form * const form = get_form();
     inf.light_text = form->short_name;
     inf.short_text = form->get_long_name();
-    inf.long_text = form->get_description();
+    inf.long_text = form->get_description(); // already localised
 
     const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 2
                           && you.form == transformation::bat);
@@ -937,10 +975,27 @@ static void _describe_stat_zero(status_info& inf, stat_type st)
     {
         inf.light_colour = you.stat(st) ? LIGHTRED : RED;
         inf.light_text   = s0_names[st];
-        inf.short_text   = make_stringf("lost %s", stat_desc(st, SD_NAME));
-        inf.long_text    = make_stringf(you.stat(st) ?
-                "You are recovering from loss of %s." : "You have no %s!",
-                stat_desc(st, SD_NAME));
+        if (st == STAT_STR)
+        {
+            inf.short_text = "lost strength";
+            inf.long_text  = you.stat(st)
+                             ? "You are recovering from loss of strength."
+                             : "You have no strength!";
+        }
+        else if (st == STAT_INT)
+        {
+            inf.short_text = "lost intelligence";
+            inf.long_text  = you.stat(st)
+                             ? "You are recovering from loss of intelligence."
+                             : "You have no intelligence!";
+        }
+        else if (st == STAT_DEX)
+        {
+            inf.short_text = "lost dexterity";
+            inf.long_text  = you.stat(st)
+                             ? "You are recovering from loss of dexterity."
+                             : "You have no dexterity!";
+        }
     }
 }
 
@@ -990,12 +1045,13 @@ static void _describe_invisible(status_info& inf)
         inf.light_colour = _dur_colour(BLUE, dur_expiring(DUR_INVIS));
     inf.light_text   = "Invis";
     inf.short_text   = "invisible";
+    inf.long_text    = "You are invisible.";
     if (you.backlit())
     {
         inf.light_colour = DARKGREY;
-        inf.short_text += " (but backlit and visible)";
+        inf.short_text = "invisible (but backlit and visible)";
+        inf.long_text = "You are invisible (but backlit and visible).";
     }
-    inf.long_text = "You are " + inf.short_text + ".";
     _mark_expiring(inf, dur_expiring(you.form == transformation::shadow
                                      ? DUR_TRANSFORMATION
                                      : DUR_INVIS));
