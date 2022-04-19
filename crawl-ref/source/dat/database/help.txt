@@ -183,7 +183,7 @@ level-map
 <h>Other</h>
 <w>v</w>          : Examine the last remembered state of the indicated tile.
 <w>!</w>          : Annotate level.
-<w>Ctrl-C</w>     : Clear item and monster memory.
+<w>Ctrl-C</w>     : Clear monster memory.
 <w>Ctrl-F</w>     : Forget level map.
 <w>Ctrl-U</w>     : Restore forgotten level map.{{
 if you.wizard() then
