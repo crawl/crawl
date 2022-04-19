@@ -10034,17 +10034,6 @@ Ein Wiederholungsbefehl kann nich wiederholt werden.
 %%%%
 
 ##################
-# makeitem.cc
-##################
-%%%%
-Failed to create item '
-
-%%%%
-'
-
-%%%%
-
-##################
 # map-knowledge.cc
 ##################
 %%%%
@@ -13757,6 +13746,9 @@ unbeliever
 
 %%%%
 good god
+
+%%%%
+'
 
 %%%%
 cap-
