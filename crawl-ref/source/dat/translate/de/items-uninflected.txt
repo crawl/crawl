@@ -195,7 +195,7 @@ scrolls of amnesia
 Schriftrollen der Amnesie
 %%%%
 scrolls of blinking
-Schriftrollen des Flimmerns
+Schriftrollen des Blinzelns
 %%%%
 scrolls of brand weapon
 Schriftrollen der Waffenmark

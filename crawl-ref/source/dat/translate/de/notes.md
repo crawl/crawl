@@ -77,6 +77,9 @@ Boggart (pl: Boggarts) is used: https://de.wikipedia.org/wiki/Spook-Zyklus
 
 Eleionoma - German plural is Eleionomai - ref: https://de.wikipedia.org/wiki/Eleionomai
 
+Blink - in [5] translated as Flimmern.
+      - in [6] translated as Blinzeln: https://de.classic.wowhead.com/search?q=blinzeln
+
 ## Adjectives
 
 DCSS dynamically adds adjectives to things (unidentified items in particular).

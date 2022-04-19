@@ -37,7 +37,7 @@ Lightning Bolt
 Blitz
 %%%%
 Blinkbolt
-Flimmerstrahl
+Blinzelbolzen
 %%%%
 Bolt of Magma
 Magmastrahl
@@ -120,16 +120,16 @@ Verdammnis herbeirufen
 %%%%
 # duplicate of ability
 #Blink
-#Flimmern
+#Blinzeln
 %%%%
 Blink Range
-Reichweite flimmern
+Reichweite blinzeln
 %%%%
 Blink Away
-Wegflimmern
+Wegblinzeln
 %%%%
 Blink Close
-Naheflimmern
+Naheblinzeln
 %%%%
 Iskenderun's Mystic Blast
 Iskenderuns mystische Explosion
@@ -404,10 +404,10 @@ Summon Drakes
 Drachlinge beschwören
 %%%%
 Blink Other
-Anderen flimmern
+Anderen blinzeln
 %%%%
 Blink Other Close
-Anderen naheflimmern
+Anderen naheblinzeln
 %%%%
 Summon Mushrooms
 Pilze beschwören
@@ -587,7 +587,7 @@ Dimension Anchor
 Dimensions-Anker
 %%%%
 Blink Allies Encircling
-Verbündete einkreisend flimmern
+Verbündete einkreisend blinzeln
 %%%%
 Awaken Vines
 Ranken erwecken
@@ -659,7 +659,7 @@ Magie zehren
 #Große Zerstörung
 %%%%
 Blink Allies Away
-Verbündeten wegflimmern
+Verbündeten wegblinzeln
 %%%%
 Summon Forest
 Wald beschwören

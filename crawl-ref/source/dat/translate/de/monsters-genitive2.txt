@@ -1107,7 +1107,7 @@ des Ochsenfrosches
 des Stachelfrosches
 %%%%
 {gen}the blink frog
-des Flimmerfrosches
+des Blinzelfrosches
 %%%%
 {gen}the barachi
 der Barachi
@@ -2740,7 +2740,7 @@ eines Ochsenfrosches
 eines Stachelfrosches
 %%%%
 {gen}a blink frog
-eines Flimmerfrosches
+eines Blinzelfrosches
 %%%%
 {gen}a barachi
 einer Barachi
@@ -4445,7 +4445,7 @@ Eures Ochsenfrosches
 Eures Stachelfrosches
 %%%%
 {gen}your blink frog
-Eures Flimmerfrosches
+Eures Blinzelfrosches
 %%%%
 {gen}your barachi
 Eurer Barachi
@@ -5838,7 +5838,7 @@ Ochsenfrosches
 Stachelfrosches
 %%%%
 {gen}blink frog
-Flimmerfrosches
+Blinzelfrosches
 %%%%
 {gen}floating eye
 schwebenden Auges

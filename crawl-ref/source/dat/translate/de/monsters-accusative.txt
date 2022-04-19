@@ -522,7 +522,7 @@ den Ochsenfrosch
 den Stachelfrosch
 %%%%
 {acc}the blink frog
-den Flimmerfrosch
+den Blinzelfrosch
 %%%%
 {acc}the ophan
 den Ophan
@@ -1438,7 +1438,7 @@ einen Ochsenfrosch
 einen Stachelfrosch
 %%%%
 {acc}a blink frog
-einen Flimmerfrosch
+einen Blinzelfrosch
 %%%%
 {acc}an ophan
 einen Ophan
@@ -2360,7 +2360,7 @@ Euren Ochsenfrosch
 Euren Stachelfrosch
 %%%%
 {acc}your blink frog
-Euren Flimmerfrosch
+Euren Blinzelfrosch
 %%%%
 {acc}your ophan
 Euren Ophan

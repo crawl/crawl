@@ -2158,7 +2158,7 @@ scroll of amnesia
 Schriftrolle der Amnesie
 %%%%
 scroll of blinking
-Schriftrolle des Flimmerns
+Schriftrolle des Blinzelns
 %%%%
 scroll of brand weapon
 Schriftrolle der Waffenmark
@@ -2224,7 +2224,7 @@ a scroll of amnesia
 eine Schriftrolle der Amnesie
 %%%%
 a scroll of blinking
-eine Schriftrolle des Flimmerns
+eine Schriftrolle des Blinzelns
 %%%%
 a scroll of brand weapon
 eine Schriftrolle der Waffenmark
@@ -2293,7 +2293,7 @@ eine Schriftrolle der Obsoleszenz
 %d Schriftrollen der Amnesie
 %%%%
 %d scrolls of blinking
-%d Schriftrollen des Flimmerns
+%d Schriftrollen des Blinzelns
 %%%%
 %d scrolls of brand weapon
 %d Schriftrollen der Waffenmark

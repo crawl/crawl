@@ -882,7 +882,7 @@ dem Ochsenfrosch
 dem Stachelfrosch
 %%%%
 {dat}the blink frog
-dem Flimmerfrosch
+dem Blinzelfrosch
 %%%%
 {dat}the barachi
 der Barachi
@@ -2830,10 +2830,10 @@ einem Stachelfrosch
 %d Stachelfröschen
 %%%%
 {dat}a blink frog
-einem Flimmerfrosch
+einem Blinzelfrosch
 %%%%
 {dat}%d blink frogs
-%d Flimmerfröschen
+%d Blinzelfröschen
 %%%%
 {dat}a barachi
 einer Barachi
@@ -4856,7 +4856,7 @@ Eurem Ochsenfrosch
 Eurem Stachelfrosch
 %%%%
 {dat}your blink frog
-Eurem Flimmerfrosch
+Eurem Blinzelfrosch
 %%%%
 {dat}your barachi
 Eurer Barachi

@@ -2302,7 +2302,7 @@ the Placeless @Genus@
 der Ortlose
 %%%%
 the Blinker
-der Flimmerer
+der Blinzeler
 %%%%
 the Portalist
 der Portalist
@@ -2941,7 +2941,7 @@ Placeless @Genus@
 Ortloser
 %%%%
 Blinker
-Flimmerer
+Blinzeler
 %%%%
 Portalist
 Portalist

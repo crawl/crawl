@@ -1116,7 +1116,7 @@ the spiny frog
 der Stachelfrosch
 %%%%
 the blink frog
-der Flimmerfrosch
+der Blinzelfrosch
 %%%%
 the barachi
 die Barachi
@@ -3440,10 +3440,10 @@ ein Stachelfrosch
 %d Stachelfrösche
 %%%%
 a blink frog
-ein Flimmerfrosch
+ein Blinzelfrosch
 %%%%
 %d blink frogs
-%d Flimmerfrösche
+%d Blinzelfrösche
 %%%%
 a barachi
 eine Barachi
@@ -6020,7 +6020,7 @@ your spiny frog
 Euer Stachelfrosch
 %%%%
 your blink frog
-Euer Flimmerfrosch
+Euer Blinzelfrosch
 %%%%
 your barachi
 Eure Barachi
@@ -7536,7 +7536,7 @@ spiny frog
 Stachelfrosch
 %%%%
 blink frog
-Flimmerfrosch
+Blinzelfrosch
 %%%%
 barachi
 Barachi

@@ -1882,13 +1882,13 @@ Ihr seid bereit, noch einmal zu hüpfen.
 -FStrahl
 %%%%
 blinkbolt cooldown
-Abklingzeit von Flimmerstrahl
+Abklingzeit von Blinzelbolzen
 %%%%
 no blinkbolt
-kein Flimmerstrahl
+kein Blinzelbolzen
 %%%%
 You feel energetic enough to blinkbolt again.
-Ihr fühlt Euch energiegeladen genug, um wieder zu flimmerstrahlen.
+Ihr fühlt Euch energiegeladen genug, um wieder zu blinzelbolzenen.
 %%%%
 
 %%%%

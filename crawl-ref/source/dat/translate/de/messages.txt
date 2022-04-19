@@ -11544,7 +11544,7 @@ You are now empty-handed.
 Eure Hände sind jetzt leer.
 %%%%
 You blink.
-Ihr flimmert.
+Ihr blinzelt.
 %%%%
 You feel a strange sense of stasis.
 Ihr fühlt ein seltsames Gefühl der Stase.
@@ -24018,7 +24018,7 @@ Blink to where?
 
 %%%%
 Please don't blink into the map border.
-Bitte nicht in den Kartenrand flimmern.
+Bitte nicht in den Kartenrand blinzeln.
 %%%%
 Please don't try to blink into monsters.
 Bitte versuche nicht, in Monster zu blinzeln.

@@ -12,7 +12,7 @@ Spit Poison
 Gift spucken
 %%%%
 Blink
-Flimmern
+Blinzeln
 %%%%
 Breathe Fire
 Feuer spucken
@@ -76,7 +76,7 @@ Rollender Ansturm
 # Example: "Evoke Berserk Rage" (item ability) vs "Berserk" (god-given ability)
 %%%%
 Evoke Blink
-Flimmern evozieren
+Blinzeln evozieren
 %%%%
 Heal Wounds
 Wunden heilen
