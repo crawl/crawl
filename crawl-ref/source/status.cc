@@ -31,6 +31,10 @@
 
 #include "duration-data.h"
 
+static bool _light_localised;
+static bool _short_localised;
+static bool _long_localised;
+
 static int duration_index[NUM_DURATIONS];
 
 void init_duration_index()
@@ -105,9 +109,23 @@ static void _mark_expiring(status_info& inf, bool expiring)
     if (expiring)
     {
         if (!inf.short_text.empty())
-            inf.short_text = localise(inf.short_text) + localise(" (expiring)");
+        {
+            if (!_short_localised)
+            {
+                inf.short_text = localise(inf.short_text);
+                _short_localised = true;
+            }
+            inf.short_text += localise(" (expiring)");
+        }
         if (!inf.long_text.empty())
-            inf.long_text = localise("Expiring: ") + localise(inf.long_text);
+        {
+            if (!_long_localised)
+            {
+                inf.long_text = localise(inf.long_text);
+                _long_localised = true;
+            }
+            inf.long_text = localise("Expiring: ") + inf.long_text;
+        }
     }
 }
 
@@ -177,6 +195,10 @@ static void _describe_zot(status_info& inf);
 
 bool fill_status_info(int status, status_info& inf)
 {
+    _light_localised = false;
+    _short_localised = false;
+    _long_localised = false;
+
     inf = status_info();
 
     bool found = false;
@@ -200,11 +222,13 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_CORROSION:
         inf.light_text = localise("Corr (%d)",
                           (-4 * you.props["corrosion_amount"].get_int()));
+        _light_localised = true;
         break;
 
     case DUR_FLAYED:
         inf.light_text = localise("Flay (%d)",
                           (-1 * you.props["flay_damage"].get_int()));
+        _light_localised = true;
         break;
 
     case DUR_NO_POTIONS:
@@ -365,6 +389,8 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.light_colour = LIGHTMAGENTA;
             inf.light_text   = localise("Regen (%d)", pbd_str);
+            _light_localised = true;
+
         }
         break;
     }
@@ -384,6 +410,8 @@ bool fill_status_info(int status, status_info& inf)
         {
             inf.short_text = localise("studying %s", manual_skill_names(true));
             inf.long_text = localise("You are studying %s.", skills);
+            _short_localised = true;
+            _long_localised = true;
         }
         break;
     }
@@ -452,6 +480,7 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text
                = localise("Lash (%u)",
                               you.attribute[ATTR_SERPENTS_LASH]);
+            _light_localised = true;
             inf.short_text = "serpent's lash";
             inf.long_text = "You are moving at supernatural speed.";
         }
@@ -464,6 +493,8 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text
                 = localise("Storm (%d)",
                                you.props[WU_JIAN_HEAVENLY_STORM_KEY].get_int());
+            _light_localised = true;
+
         }
         break;
 
@@ -471,6 +502,7 @@ bool fill_status_info(int status, status_info& inf)
         inf.light_text
             = localise("Slay (%u)",
                            you.props[WEREBLOOD_KEY].get_int());
+        _light_localised = true;
         break;
 
     case STATUS_BEOGH:
@@ -624,6 +656,8 @@ bool fill_status_info(int status, status_info& inf)
             inf.long_text = localise("You are bribing %s.",
                                      comma_separated_line(places.begin(),
                                                           places.end()));
+        _short_localised = true;
+        _long_localised = true;
         }
         break;
     }
@@ -632,6 +666,8 @@ bool fill_status_info(int status, status_info& inf)
     {
         const int horror = you.props[HORROR_PENALTY_KEY].get_int();
         inf.light_text = localise("Horr(%d)", -1 * horror);
+        _light_localised = true;
+
         if (horror >= HORROR_LVL_OVERWHELMING)
         {
             inf.light_colour = RED;
@@ -730,9 +766,12 @@ bool fill_status_info(int status, status_info& inf)
     }
 
     // Use context here because many status light values clash with spells, etc.
-    inf.light_text = localise_contextual("status", inf.light_text); // noloc
-    inf.short_text = localise(inf.short_text);
-    inf.long_text = localise(inf.long_text);
+    if (!_light_localised)
+        inf.light_text = localise_contextual("status", inf.light_text); // noloc
+    if (!_short_localised)
+        inf.short_text = localise(inf.short_text);
+    if (!_long_localised)
+        inf.long_text = localise(inf.long_text);
 
     return true;
 }
@@ -749,6 +788,7 @@ static void _describe_zot(status_info& inf)
         return;
 
     inf.light_text = localise("Zot (%d)", turns_until_zot());
+    _light_localised = true;
     switch (lvl)
     {
         case 0:
@@ -835,7 +875,7 @@ static void _describe_poison(status_info& inf)
                                   : ((you.hp - max(0, poison_survival())) * 100 / you.hp);
     inf.light_colour = (player_res_poison(false) >= 3
                          ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
-    inf.light_text   = localise("Pois");
+    inf.light_text   = "Pois";
     if (pois_perc >= 100)
     { 
         inf.short_text = "lethally poisoned";
@@ -856,7 +896,9 @@ static void _describe_poison(status_info& inf)
         inf.short_text = "mildly poisoned";
         inf.long_text = "You are mildly poisoned.";
     }
-    inf.short_text += make_stringf(" (%d -> %d)", you.hp, poison_survival()); // noloc
+    inf.short_text = localise("%s (%d -> %d)", inf.short_text, you.hp,
+                              poison_survival());
+    _short_localised = true;
 }
 
 static void _describe_speed(status_info& inf)
@@ -958,6 +1000,7 @@ static void _describe_transform(status_info& inf)
     inf.light_text = form->short_name;
     inf.short_text = form->get_long_name();
     inf.long_text = form->get_description(); // already localised
+    _long_localised = true;
 
     const bool vampbat = (you.get_mutation_level(MUT_VAMPIRISM) >= 2
                           && you.form == transformation::bat);
