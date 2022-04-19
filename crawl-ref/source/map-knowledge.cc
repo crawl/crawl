@@ -83,8 +83,11 @@ void clear_map_or_travel_trail()
     }
     else
     {
-        mpr("Clearing level map.");
-        clear_map();
+        mpr("Clearing monster memory.");
+        /* Items (other than corpses) cannot in general be moved or destroyed
+         * once they have been seen, so there is no need to clear them.
+         */
+        clear_map(false);
         crawl_view.set_player_at(you.pos());
     }
 }
