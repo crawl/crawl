@@ -2470,39 +2470,6 @@ No answer found in the FAQ! Please submit a bug report!
 # dactions.cc
 ##################
 %%%%
-slimes allow another conversion attempt
-
-%%%%
-reapply passive mapping
-
-%%%%
-remove Jiyva altars
-
-%%%%
-Pikel's minions go poof
-
-%%%%
-corpses rot
-
-%%%%
-hogs to humans
-
-%%%%
-gold to top of piles
-
-%%%%
-bribe timeout
-
-%%%%
-remove Gozag shops
-
-%%%%
-ancestor vanishes
-
-%%%%
-upgrade ancestor
-
-%%%%
 %s crumbles into dust!
 %s zerbröckelt zu Staub!
 %%%%
@@ -10074,9 +10041,6 @@ Failed to create item '
 
 %%%%
 '
-
-%%%%
-Running generate_armour_item tests.
 
 %%%%
 

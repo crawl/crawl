@@ -69,34 +69,45 @@ def strip_line_comment(line):
 
 # start of conditionally compiled section that can be skipped (debug or obsolete code)?
 def is_skippable_if(line):
-    return re.match(r'^\s*#\s*ifdef .*DEBUG', line) or \
-       re.match(r'^\s*#\s*ifdef .*VERBOSE', line) or \
-       re.match(r'^\s*#\s*if +defined *\(DEBUG', line) or \
-       re.match(r'^\s*#\s*if\s*TAG_MAJOR_VERSION\s*==\s*34', line)
+    return re.search(r'^\s*#\s*ifdef .*DEBUG', line) or \
+       re.search(r'^\s*#\s*ifdef .*VERBOSE', line) or \
+       re.search(r'^\s*#\s*if +defined *\(DEBUG', line) or \
+       re.search(r'^\s*#\s*if\s*TAG_MAJOR_VERSION\s*==\s*34', line)
 
 # strip out stuff that is excluded by #ifdef's, etc.
 def strip_uncompiled(lines):
     skip = False
     result = []
     ifs = []
+    skips = []
 
     for line in lines:
 
-        if re.match('^\s*#', line):
-            if re.match('^\s*#\s*if', line):
+        if re.search(r'^\s*#', line):
+            if re.search(r'^\s*#\s*if', line):
                 ifs.append(line)
                 # skip parts that are only included in DEBUG build
                 if is_skippable_if(line):
                     skip = True
+                    skips.append(skip)
                     continue
-            elif re.match(r'\s*#\s*else', line):
+                else:
+                    skips.append(skip)
+            elif re.search(r'^\s*#\s*else', line):
+                if skips[-1] == True:
+                    if len(skips) < 2 or skips[-2] == False:
+                        skip = False
+                        skips[-1] = False
                 if is_skippable_if(ifs[-1]):
-                    skip = False
                     continue
-            elif re.match(r'\s*#\s*endif', line):
+            elif re.search(r'^\s*#\s*endif', line):
                 if_line = ifs.pop()
-                if is_skippable_if(if_line):
+                skips.pop()
+                if len(skips) == 0:
                     skip = False
+                else:
+                    skip = skips[-1]
+                if is_skippable_if(if_line):
                     continue
 
         if not skip:
@@ -216,6 +227,9 @@ for filename in files:
             line = line.strip()
             if line == '':
                 continue
+
+            # avoid false string delimiter
+            line = line.replace("'\"'", "'\\\"'")
 
             if filename == 'job-data.h':
                 # special handling - only take the line with the job abbreviation and name
