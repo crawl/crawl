@@ -11956,22 +11956,7 @@ blast of chaotic breath
 blast of icy breath
 
 %%%%
-chilling breath
-
-%%%%
 blast of chilling breath
-
-%%%%
-stream of webbing
-
-%%%%
-shadow bolt
-
-%%%%
-shadow shard
-
-%%%%
-vile air
 
 %%%%
 %s goes into a battle-frenzy!

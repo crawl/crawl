@@ -1982,8 +1982,9 @@ Immunität gegen Mesmerisation
 %%%%
 
 %%%%
-haste
-Eile
+# duplicate of zap
+#haste
+#Eile
 %%%%
 flight
 Flug

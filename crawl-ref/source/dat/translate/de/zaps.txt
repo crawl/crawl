@@ -266,6 +266,267 @@ die widerliche Luft
 %%%%
 
 #################################
+# full names without article
+#################################
+
+%%%%
+noxious blast
+schädlicher Strahl
+%%%%
+blast of poison
+Giftstrahl
+%%%%
+bolt of energy
+Energiestrahl
+%%%%
+spray of metal splinters
+Gischt der Metallsplitter
+%%%%
+spray of wooden splinters
+Gischt der Holzsplitter
+%%%%
+burst of rock shards
+Gischt der Steinsplitter
+%%%%
+volley of thorns
+Dornensalve
+%%%%
+volley of spikes
+Salve der Stacheln
+%%%%
+toxic sludge
+giftiger Schlamm
+%%%%
+damnation
+Verdammnis
+%%%%
+foul vapour
+fauliger Dunst
+%%%%
+# this blasts outwards from the player in all directions
+blast of cleansing flame
+Wolken der reinigenden Flamme
+%%%%
+# this creates a single straight line of clouds
+blast of calcifying dust
+Strahl des verkalkenden Staubs
+%%%%
+ghostly fireball
+geisterhafter Feuerball
+%%%%
+flash freeze
+Blitzgefrieren
+%%%%
+glob of lava
+Lavaklumpen
+%%%%
+# chaos crab area effect
+blast of chaos
+Chaosstrahl
+%%%%
+# fire breath (beam), flame clouds (area)
+blast of flame
+Wolke der Flammen
+%%%%
+blast of cold
+Wolke des Frostes
+%%%%
+# searing breath (beam), similar to fire breath
+searing blast
+sengende Wolke
+%%%%
+bolt of electricity
+Elektrizitätbolzen
+%%%%
+puff of flame
+Flammenhauch
+%%%%
+puff of frost
+Frosthauch
+%%%%
+stinking cloud
+stinkende Wolke
+%%%%
+magic dart
+magischer Pfeil
+%%%%
+bolt of fire
+Feuerbolzen
+%%%%
+bolt of cold
+Frostbolzen
+%%%%
+torrent of water
+Wasserschwall
+%%%%
+fireball
+Feuerball
+%%%%
+bolt of lightning
+Blitzschlag
+%%%%
+bolt of poison
+Giftblitz
+%%%%
+bolt of negative energy
+Bolzen der negativen Energie
+%%%%
+crystal spear
+Kristallspeer
+%%%%
+sticky flame
+klebrige Flamme
+%%%%
+# a physical stinger on the caster's limb
+sting
+Stachel
+%%%%
+iron shot
+Eisenschuss
+%%%%
+stone arrow
+Steinpfeil
+%%%%
+# Shock spell (electricity)
+zap
+Zappen
+%%%%
+stunning burst
+betäubende Explosion
+%%%%
+orb of electricity
+Elektrizitätskugel
+%%%%
+splash of poison
+Giftspritzer
+%%%%
+fiery breath
+feuriger Atem
+%%%%
+freezing breath
+eisiger Atem
+%%%%
+glob of acid
+Säureklumpen
+%%%%
+poison gas
+Giftgas
+%%%%
+bolt of dispelling energy
+Blitz der vertreibenden Energie
+%%%%
+splash of acid
+Säurespritzer
+%%%%
+agony
+Qualen
+%%%%
+ball of steam
+Dampfkugel
+%%%%
+shard of ice
+Eissplitter
+%%%%
+flame tongue
+Flammenzunge
+%%%%
+blast of sand
+Sandstrahl
+%%%%
+bolt of magma
+Magmabolzen
+%%%%
+poison arrow
+Giftpfeil
+%%%%
+blast of choking fumes
+Explosion der erstickenden Dämpfe
+%%%%
+lance of force
+Lanze der Kraft
+%%%%
+searing ray
+sengender Strahl
+%%%%
+crystal bolt
+Kristallbolzen
+%%%%
+bolt of acid
+Säurebolzen
+%%%%
+unravelling
+Aufdröseln
+%%%%
+iceblast
+Eisblitz
+%%%%
+slug dart
+Schneckenpfeil
+%%%%
+living lightning
+lebender Blitz
+%%%%
+freezing blast
+Gefrierstrahl
+%%%%
+harpoon shot
+Harpunenschuss
+%%%%
+beckoning
+Lockung
+%%%%
+great blast of fire
+großer Feuerstoß
+%%%%
+malmutate
+Malmutat
+%%%%
+refrigeration
+Kühlung
+%%%%
+drain life
+Lebensentziehung
+%%%%
+sonic wave
+Schallwelle
+%%%%
+klown pie
+Klowntorte
+%%%%
+# duplicate of monster
+#the foxfire
+#das Fuchsfeuer
+%%%%
+hail
+Hagel
+%%%%
+mystic blast
+mystische Explosion
+%%%%
+chilling breath
+kühlender Atem
+%%%%
+porkalator
+Verschweiner
+%%%%
+stream of webbing
+Strom Spinnennetz
+%%%%
+# duplicate of cloud
+#the spectral mist
+#
+%%%%
+shadow bolt
+Schattenbolzen
+%%%%
+shadow shard
+Schattensplitter
+%%%%
+vile air
+widerliche Luft
+%%%%
+
+#################################
 # short names
 #################################
 
@@ -291,8 +552,9 @@ Blitz
 dispelling energy
 vertreibende Energie
 %%%%
-missile
-Geschoss
+# duplicate of item type
+#missile
+#Geschoss
 %%%%
 magic missile
 magisches Geschoss
@@ -312,14 +574,16 @@ Magie
 electricity
 Elektrizität
 %%%%
-noxious fumes
-schädliche Dämpfe
+# duplicate of cloud
+#noxious fumes
+#schädliche Dämpfe
 %%%%
 poison
 Gift
 %%%%
-negative energy
-negative Energie
+# duplicate of cloud
+#negative energy
+#negative Energie
 %%%%
 acid
 Säure
@@ -369,8 +633,9 @@ zufällig
 chaos
 Chaos
 %%%%
-slow
-langsam
+# duplicate of mutation
+#slow
+#Langsamkeit
 %%%%
 haste
 Eile
@@ -426,17 +691,11 @@ Blinzeln
 blink close
 Nahblinzeln
 %%%%
-beckoning
-winken
-%%%%
 petrify
 versteinern
 %%%%
 backlight
 Gegenlicht
-%%%%
-porkalator
-Schweinsgalopp
 %%%%
 hibernation
 Winterschlaf
@@ -487,9 +746,6 @@ Beweglichkeit
 sap magic
 Magie-Zehren
 %%%%
-crystal bolt
-Kristallbolzen
-%%%%
 drain magic
 Magie-Entleerung
 %%%%
@@ -502,9 +758,6 @@ Atem der Toten
 # duplicate of status
 #resistance
 #Resistenz
-%%%%
-unravelling
-Aufdröseln
 %%%%
 unravelled magic
 aufgedröselte Magie

@@ -165,6 +165,49 @@ den Schattensplitter
 %%%%
 
 #################################
+# full names without article
+#################################
+
+%%%%
+{acc}noxious blast
+schädlichen Strahl
+%%%%
+{acc}toxic sludge
+giftigen Schlamm
+%%%%
+{acc}foul vapour
+fauligen Dunst
+%%%%
+{acc}ghostly fireball
+geisterhaften Feuerball
+%%%%
+{acc}magic dart
+magischen Pfeil
+%%%%
+{acc}fiery breath
+feurigen Atem
+%%%%
+{acc}freezing breath
+eisigen Atem
+%%%%
+{acc}searing ray
+sengenden Strahl
+%%%%
+{acc}living lightning
+lebenden Blitz
+%%%%
+{acc}great blast of fire
+großen Feuerstoß
+%%%%
+# duplicate of monster
+#the foxfire
+#das Fuchsfeuer
+%%%%
+{acc}chilling breath
+kühlenden Atem
+%%%%
+
+#################################
 # short names
 #################################
 
