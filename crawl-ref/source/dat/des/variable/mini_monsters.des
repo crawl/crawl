@@ -9027,7 +9027,7 @@ NAME:   special_room
 TAGS:   allow_dup luniq no_item_gen ruin_spider ruin_slime
 TAGS:   no_monster_gen layout_rooms layout_corridors layout_passages
 TAGS:   layout_narrow_caves layout_open_caves
-CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider, Crypt, Pan), 3%
+CHANCE: 1% (Geh, Coc, Dis, Tar, Pan), 2%
 DEPTH:  D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
         Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Geh, !Geh:$, Pan
 KFEAT:  X = slimy_wall
