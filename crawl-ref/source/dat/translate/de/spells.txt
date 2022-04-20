@@ -898,6 +898,58 @@ Rollen
 Hurl Sludge
 Schlamm schleudern
 %%%%
+Polar Vortex
+Polarwirbel
+%%%%
+Call Down Lightning
+Blitz abrufen
+%%%%
+Charm
+Bannen
+%%%%
+Mindburst
+Geistesblitz
+%%%%
+Storm Form
+Sturmform
+%%%%
+Creeping Frost
+Kriechender Frost
+%%%%
+Weakening Gaze
+Schwächender Blick
+%%%%
+Maxwell's Capacitive Coupling
+Maxwells Kapazitive Kopplung
+%%%%
+Summon Tzitzimitl
+Tzitzimitl Beschwören
+%%%%
+Summon Hell Sentinel
+Höllenwächter Beschwören
+%%%%
+Animate Armour
+Rüstung Beleben
+%%%%
+Manifold Assault
+Vielfältigter Angriff
+%%%%
+Goad Beasts
+Bestien Anstacheln
+%%%%
+Concentrate Venom
+Gift Konzentrieren
+%%%%
+Eruption
+Eruption
+%%%%
+Pyroclastic Surge
+Pyroklastische Woge
+%%%%
+Stunning Burst
+Betäubende Explosion
+%%%%
 nonexistent spell
 nicht vorhandener Zauber
 %%%%
+
