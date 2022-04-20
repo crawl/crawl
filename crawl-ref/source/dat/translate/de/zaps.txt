@@ -1,0 +1,527 @@
+###############################################################################
+#
+# Translations for "zaps" (beams, rays, explosisions, etc.)
+#
+###############################################################################
+
+#################################
+# full names
+#################################
+
+%%%%
+the noxious blast
+der schädliche Strahl
+%%%%
+the blast of poison
+der Giftstrahl
+%%%%
+the bolt of energy
+der Energiestrahl
+%%%%
+the spray of metal splinters
+die Gischt der Metallsplitter
+%%%%
+the spray of wooden splinters
+die Gischt der Holzsplitter
+%%%%
+the burst of rock shards
+die Gischt der Steinsplitter
+%%%%
+the volley of thorns
+die Dornensalve
+%%%%
+the volley of spikes
+die Salve der Stacheln
+%%%%
+the toxic sludge
+der giftige Schlamm
+%%%%
+the damnation
+die Verdammnis
+%%%%
+the foul vapour
+der faulige Dunst
+%%%%
+# this blasts outwards from the player in all directions
+the blast of cleansing flame
+die Wolken der reinigenden Flamme
+%%%%
+# this creates a single straight line of clouds
+the blast of calcifying dust
+der Strahl des verkalkenden Staubs
+%%%%
+the ghostly fireball
+der geisterhafte Feuerball
+%%%%
+the flash freeze
+das Blitzgefrieren
+%%%%
+the glob of lava
+der Lavaklumpen
+%%%%
+# chaos crab area effect
+the blast of chaos
+der Chaosstrahl
+%%%%
+# fire breath (beam), flame clouds (area)
+the blast of flame
+die Wolke der Flammen
+%%%%
+the blast of cold
+die Wolke des Frostes
+%%%%
+# searing breath (beam), similar to fire breath
+the searing blast
+die sengende Wolke
+%%%%
+the bolt of electricity
+der Elektrizitätbolzen
+%%%%
+the puff of flame
+der Flammenhauch
+%%%%
+the puff of frost
+der Frosthauch
+%%%%
+the stinking cloud
+die stinkende Wolke
+%%%%
+the magic dart
+der magische Pfeil
+%%%%
+the bolt of fire
+der Feuerbolzen
+%%%%
+the bolt of cold
+der Frostbolzen
+%%%%
+the torrent of water
+der Wasserschwall
+%%%%
+the fireball
+der Feuerball
+%%%%
+the bolt of lightning
+der Blitzschlag
+%%%%
+the bolt of poison
+der Giftblitz
+%%%%
+the bolt of negative energy
+der Bolzen der negativen Energie
+%%%%
+the crystal spear
+der Kristallspeer
+%%%%
+the sticky flame
+die klebrige Flamme
+%%%%
+# a physical stinger on the caster's limb
+the sting
+der Stachel
+%%%%
+the iron shot
+der Eisenschuss
+%%%%
+the stone arrow
+der Steinpfeil
+%%%%
+# Shock spell (electricity)
+the zap
+das Zappen
+%%%%
+the stunning burst
+die betäubende Explosion
+%%%%
+the orb of electricity
+die Elektrizitätskugel
+%%%%
+the splash of poison
+der Giftspritzer
+%%%%
+the fiery breath
+der feurige Atem
+%%%%
+the freezing breath
+der eisige Atem
+%%%%
+the glob of acid
+der Säureklumpen
+%%%%
+the poison gas
+das Giftgas
+%%%%
+the bolt of dispelling energy
+der Blitz der vertreibenden Energie
+%%%%
+the splash of acid
+der Säurespritzer
+%%%%
+the agony
+die Qualen
+%%%%
+the ball of steam
+die Dampfkugel
+%%%%
+the shard of ice
+der Eissplitter
+%%%%
+the flame tongue
+die Flammenzunge
+%%%%
+the blast of sand
+der Sandstrahl
+%%%%
+the bolt of magma
+der Magmabolzen
+%%%%
+the poison arrow
+der Giftpfeil
+%%%%
+the blast of choking fumes
+die Explosion der erstickenden Dämpfe
+%%%%
+the lance of force
+die Lanze der Kraft
+%%%%
+the searing ray
+der sengende Strahl
+%%%%
+the crystal bolt
+der Kristallbolzen
+%%%%
+the bolt of acid
+der Säurebolzen
+%%%%
+the unravelling
+die Aufdröseln
+%%%%
+the iceblast
+der Eisblitz
+%%%%
+the slug dart
+der Schneckenpfeil
+%%%%
+the living lightning
+der lebende Blitz
+%%%%
+the freezing blast
+der Gefrierstrahl
+%%%%
+the harpoon shot
+der Harpunenschuss
+%%%%
+the beckoning
+die Lockung
+%%%%
+the great blast of fire
+der große Feuerstoß
+%%%%
+the malmutate
+das Malmutat
+%%%%
+the refrigeration
+die Kühlung
+%%%%
+the drain life
+die Lebensentziehung
+%%%%
+the sonic wave
+die Schallwelle
+%%%%
+the klown pie
+die Klowntorte
+%%%%
+# duplicate of monster
+#the foxfire
+#das Fuchsfeuer
+%%%%
+the hail
+der Hagel
+%%%%
+the mystic blast
+die mystische Explosion
+%%%%
+the chilling breath
+der kühlende Atem
+%%%%
+the porkalator
+der Verschweiner
+%%%%
+the stream of webbing
+der Strom Spinnennetz
+%%%%
+# duplicate of cloud
+#the spectral mist
+#
+%%%%
+the shadow bolt
+der Schattenbolzen
+%%%%
+the shadow shard
+der Schattensplitter
+%%%%
+the vile air
+die widerliche Luft
+%%%%
+
+#################################
+# short names
+#################################
+
+%%%%
+metal splinters
+Metallsplitter
+%%%%
+splinters
+Holzsplitter
+%%%%
+flames
+Flammen
+%%%%
+frost
+Frost
+%%%%
+sticky fire
+klebriges Feuer
+%%%%
+lightning
+Blitz
+%%%%
+dispelling energy
+vertreibende Energie
+%%%%
+missile
+Geschoss
+%%%%
+magic missile
+magisches Geschoss
+%%%%
+fire
+Feuer
+%%%%
+cold
+Kälte
+%%%%
+water
+Wasser
+%%%%
+magic
+Magie
+%%%%
+electricity
+Elektrizität
+%%%%
+noxious fumes
+schädliche Dämpfe
+%%%%
+poison
+Gift
+%%%%
+negative energy
+negative Energie
+%%%%
+acid
+Säure
+%%%%
+miasma
+Miasma
+%%%%
+spores
+Sporen
+%%%%
+poison sting
+Giftstachel
+%%%%
+damnation
+Verdammnis
+%%%%
+steam
+Dampf
+%%%%
+energy
+Energie
+%%%%
+cleansing flame
+reinigende Flamme
+%%%%
+fragments
+Fragmente
+%%%%
+magma
+Magma
+%%%%
+ice
+Eis
+%%%%
+thunder
+Donner
+%%%%
+stunning bolt
+betäubender Blitz
+%%%%
+devastation
+Verwüstung
+%%%%
+random
+zufällig
+%%%%
+chaos
+Chaos
+%%%%
+slow
+langsam
+%%%%
+haste
+Eile
+%%%%
+might
+Macht
+%%%%
+healing
+Heilung
+%%%%
+paralysis
+Lähmung
+%%%%
+confusion
+Verwirrung
+%%%%
+invisibility
+Unsichtbarkeit
+%%%%
+digging
+Graben
+%%%%
+teleportation
+Teleportation
+%%%%
+polymorph
+Polymorph
+%%%%
+malmutation
+Fehlmutation
+%%%%
+charming
+Verzauberung
+%%%%
+banishment
+Verbannung
+%%%%
+pain
+Schmerz
+%%%%
+agony
+Agonie
+%%%%
+dispel undead
+Untote vertreiben
+%%%%
+mindburst
+Geistesblitz
+%%%%
+blink
+Blinzeln
+%%%%
+blink close
+Nahblinzeln
+%%%%
+beckoning
+winken
+%%%%
+petrify
+versteinern
+%%%%
+backlight
+Gegenlicht
+%%%%
+porkalator
+Schweinsgalopp
+%%%%
+hibernation
+Winterschlaf
+%%%%
+sleep
+schlafen
+%%%%
+berserk
+Berserker
+%%%%
+visual effects
+Visuelle Effekte
+%%%%
+torment damage
+Folter-Schaden
+%%%%
+air
+Luft
+%%%%
+inner flame
+innere Flamme
+%%%%
+# duplicate of cloud
+#calcifying dust
+#verkalkender Staub
+%%%%
+magic web
+magisches Netz
+%%%%
+sentinel's mark
+Zeichen des Wächters
+%%%%
+dimension anchor
+Dimensionsanker
+%%%%
+vulnerability
+Verwundbarkeit
+%%%%
+malign offering
+bösartiges Angebot
+%%%%
+virulence
+Virulenz
+%%%%
+agility
+Beweglichkeit
+%%%%
+sap magic
+Magie-Zehren
+%%%%
+crystal bolt
+Kristallbolzen
+%%%%
+drain magic
+Magie-Entleerung
+%%%%
+tukima's dance
+Tukimas Tanz
+%%%%
+breath of the dead
+Atem der Toten
+%%%%
+# duplicate of status
+#resistance
+#Resistenz
+%%%%
+unravelling
+Aufdröseln
+%%%%
+unravelled magic
+aufgedröselte Magie
+%%%%
+shared pain
+geteilter Schmerz
+%%%%
+infestation
+Verseuchung
+%%%%
+vile clutch
+widerliche Umklammerung
+%%%%
+vampiric draining
+vampirische Entleerung
+%%%%
+concentrate venom
+Gift konzentrieren
+%%%%
+

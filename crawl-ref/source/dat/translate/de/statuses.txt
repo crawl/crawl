@@ -988,19 +988,19 @@ Ihr werdet versteinert.
 # Potion of resistance
 %%%%
 Resist
-Widerstehen
+Resist
 %%%%
 resistant
-widerstehen
+resistent
 %%%%
 resistance
-Widerstand
+Resistenz
 %%%%
 You are resistant to the elements.
 Ihr seid resistent gegen die Elemente.
 %%%%
 Your resistance to elements expires.
-Eure Re­sis­tenz gegen die Elemente lässt nach.
+Eure Resistenz gegen die Elemente lässt nach.
 %%%%
 You start to feel less resistant.
 Ihr fühlt Euch weniger resistent gegen die Elemente.

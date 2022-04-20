@@ -2066,129 +2066,6 @@ You hear the sound of one hand!
 By Zin's power, %s is contained.
 
 %%%%
-sticky fire
-
-%%%%
-lightning
-
-%%%%
-dispelling energy
-
-%%%%
-magic missile
-
-%%%%
-water
-
-%%%%
-electricity
-
-%%%%
-miasma
-
-%%%%
-spores
-
-%%%%
-poison sting
-
-%%%%
-energy
-
-%%%%
-cleansing flame
-
-%%%%
-fragments
-
-%%%%
-magma
-
-%%%%
-stunning bolt
-
-%%%%
-devastation
-
-%%%%
-random
-
-%%%%
-healing
-
-%%%%
-malmutation
-
-%%%%
-banishment
-
-%%%%
-dispel undead
-
-%%%%
-blink
-
-%%%%
-blink close
-
-%%%%
-petrify
-
-%%%%
-backlight
-
-%%%%
-porkalator
-
-%%%%
-hibernation
-
-%%%%
-visual effects
-
-%%%%
-torment damage
-
-%%%%
-inner flame
-
-%%%%
-magic web
-
-%%%%
-malign offering
-
-%%%%
-virulence
-
-%%%%
-drain magic
-
-%%%%
-tukima's dance
-
-%%%%
-breath of the dead
-
-%%%%
-unravelled magic
-
-%%%%
-shared pain
-
-%%%%
-infestation
-
-%%%%
-vile clutch
-
-%%%%
-vampiric draining
-
-%%%%
-concentrate venom
-
-%%%%
 
 ##################
 # behold.cc
@@ -10389,9 +10266,6 @@ Index %d out of range
 archmagi
 
 %%%%
-frost
-
-%%%%
 exploding
 
 %%%%
@@ -12070,16 +11944,7 @@ Wurzeln brachen aus der Erde hervor!
 The grasping roots grab you!
 Die greifenden Wurzeln packen Euch!
 %%%%
-metal splinters
-
-%%%%
-splinters
-
-%%%%
 blast of fiery breath
-
-%%%%
-flames
 
 %%%%
 blast of searing breath
