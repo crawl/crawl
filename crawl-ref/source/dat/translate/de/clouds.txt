@@ -5,8 +5,9 @@
 ###############################################################################
 
 %%%%
-flame
-Flamme
+# duplicate of item brand
+#flame
+#Flamme
 %%%%
 blazing flames
 lodernde Flammen

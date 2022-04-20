@@ -409,8 +409,9 @@ eisiger Atem
 glob of acid
 Säureklumpen
 %%%%
-poison gas
-Giftgas
+# duplicate of cloud
+#poison gas
+#Giftgas
 %%%%
 bolt of dispelling energy
 Blitz der vertreibenden Energie
@@ -578,15 +579,17 @@ Elektrizität
 #noxious fumes
 #schädliche Dämpfe
 %%%%
-poison
-Gift
+# duplicate of item brand
+#poison
+#Gift
 %%%%
 # duplicate of cloud
 #negative energy
 #negative Energie
 %%%%
-acid
-Säure
+# duplicate of item brand
+#acid
+#Säure
 %%%%
 miasma
 Miasma
@@ -597,11 +600,9 @@ Sporen
 poison sting
 Giftstachel
 %%%%
-damnation
-Verdammnis
-%%%%
-steam
-Dampf
+# duplicate of cloud
+#steam
+#Dampf
 %%%%
 energy
 Energie
@@ -618,8 +619,9 @@ Magma
 ice
 Eis
 %%%%
-thunder
-Donner
+# duplicate of cloud
+#thunder
+#Donner
 %%%%
 stunning bolt
 betäubender Blitz
@@ -630,8 +632,9 @@ Verwüstung
 random
 zufällig
 %%%%
-chaos
-Chaos
+# duplicate of item brand
+#chaos
+#Chaos
 %%%%
 # duplicate of mutation
 #slow
@@ -673,11 +676,9 @@ Verzauberung
 banishment
 Verbannung
 %%%%
-pain
-Schmerz
-%%%%
-agony
-Agonie
+# duplicate of item brand
+#pain
+#Schmerz
 %%%%
 dispel undead
 Untote vertreiben

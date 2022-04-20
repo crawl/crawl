@@ -689,8 +689,9 @@ Agi
 agile
 agil
 %%%%
-agility
-Agilität
+# duplicate of zap
+#agility
+#Agilität
 %%%%
 You are agile.
 Ihr seid agil.
@@ -707,8 +708,9 @@ Berserk
 berserking
 berserkend
 %%%%
-berserk
-Berserker
+# duplicate of zap
+#berserk
+#berserk
 %%%%
 You are possessed by a berserker rage.
 Ihr seid von einer Berserkerwut besessen.
@@ -936,8 +938,9 @@ Macht
 mighty
 mächtig
 %%%%
-might
-Macht
+# duplicate of zap
+#might
+#Macht
 %%%%
 You are mighty.
 Ihr seid mächtig.
@@ -954,11 +957,12 @@ Para
 paralysed
 gelähmt
 %%%%
-paralysis
-Lähmung
+# duplicate of zap
+#paralysis
+#Lähmung
 %%%%
 You are paralysed.
-Ihr seid alle gelähmt.
+Ihr seid gelähmt.
 %%%%
 
 # Petrified (i.e. turned to stone)
@@ -1030,8 +1034,9 @@ Euer Schleim beginnt zu erstarren.
 sleeping
 schlafend
 %%%%
-sleep
-Schlaf
+# duplicate of zap
+#sleep
+#Schlaf
 %%%%
 You are sleeping.
 Ihr schlaft.
@@ -1291,8 +1296,9 @@ Mark
 marked
 markiert
 %%%%
-sentinel's mark
-Sentinel-Zeichen
+# duplicate of zap
+#sentinel's mark
+#Sentinel-Zeichen
 %%%%
 A sentinel's mark is revealing your location to enemies.
 Das Zeichen eines Wächters verrät Euren Feinden Euren Standort.
@@ -1356,8 +1362,9 @@ Eure Angriffe fühlen sich nicht mehr so schwach an.
 untranslocatable
 Unverschiebbar
 %%%%
-dimension anchor
-Dimensionsanker
+# duplicate of zap
+#dimension anchor
+#Dimensionsanker
 %%%%
 You are firmly anchored to this plane.
 Ihr seid fest in dieser Ebene verankert.
@@ -1503,8 +1510,9 @@ Gezehrt
 magic-sapped
 Magie gezehrt
 %%%%
-sap magic
-Magie gezehrt
+# duplicate of zap
+#sap magic
+#Magie gezehrt
 %%%%
 Casting spells hinders your spell success.
 Das Wirken von Zaubern behindert Euren Zaubererfolg.

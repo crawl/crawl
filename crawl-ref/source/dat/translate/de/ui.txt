@@ -691,8 +691,9 @@ rNeg
 %%%%
 # poison resistance
 %%%%
-rPois
-rGift
+# duplicate of item brand
+#rPois
+#rGift
 %%%%
 # electricty resistance
 %%%%
@@ -701,8 +702,9 @@ rElek
 %%%%
 # corrosion resistance
 %%%%
-rCorr
-rKorr
+# duplicate of item brand
+#rCorr
+#rKorr
 %%%%
 # mutation resistance
 %%%%
@@ -711,8 +713,9 @@ rMut
 %%%%
 # magic resistance
 %%%%
-Will
-Wille
+# duplicate of item brand
+#Will
+#Wille
 %%%%
 # Stealth = Heimlichkeit
 %%%%
@@ -742,8 +745,9 @@ Glaube
 %%%%
 # spirit shield
 %%%%
-Spirit
-Geist
+# duplicate of item brand
+#Spirit
+#Geist
 %%%%
 # reflection
 %%%%
