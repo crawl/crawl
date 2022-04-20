@@ -836,9 +836,6 @@ ein Silberbumerang
 " of chaos"
 " des Chaos"
 %%%%
-" of disruption"
-" der Störung"
-%%%%
 " of distortion"
 " der Verwindung"
 %%%%
