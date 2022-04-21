@@ -676,33 +676,20 @@ static string _insert_adjectives(const string& s, const vector<string>& adjs)
     return _insert_adjectives(_context, result, adjs);
 }
 
-// check if string is actually a list of things
-static bool is_list(const string& s)
+// get fist tag of form "<foo>" or "</foo>"
+// return empty string if none found
+static string _get_first_tag(const string& s)
 {
-    // specific artefacts names
-    if (contains(s, "Dice, Bag, and Bottle") || contains(s, "Gyre"))
-        return false;
+    size_t start = s.find('<');
+    if (start == string::npos || start == s.length() - 1)
+        return "";
+    
+    size_t end = s.find('>', start + 1);
+    if (end == string::npos)
+        return "";
 
-    int bracket_depth = 0;
-    for (size_t i = 0; i < s.length(); i++)
-    {
-        if (s[i] == '(' || s[i] == '{' || s[i] == '[')
-            bracket_depth++;
-        else if (s[i] == ')' || s[i] == '}' || s[i] == ']')
-            bracket_depth--;
-        else if (bracket_depth == 0)
-        {
-            if (s[i] == ',' or s[i] == ';' or s[i] == ':')
-                return true;
-            else if (strncmp(&s.c_str()[i], " and ", 5) == 0
-                     || strncmp(&s.c_str()[i], " or ", 4) == 0)
-                return true;
-        }
-    }
-
-    return false;
+    return s.substr(start, end - start + 1);
 }
-
 
 // forward declarations
 static string _localise_string(const string context, const string& value);
@@ -710,7 +697,7 @@ static string _localise_counted_string(const string& context, const string& sing
                                        const string& plural, const int count);
 // localise counted string when you only have the plural
 static string _localise_counted_string(const string& context, const string& value);
-static string _localise_list(const string& context, const string& value);
+static string _localise_list(const string context, const string& value);
 
 
 static string _localise_artefact_suffix(const string& s)
@@ -1065,53 +1052,128 @@ static string _localise_item_name(const string& context, const string& item)
     return item;
 }
 
-// localise a string containing a list of things (joined by commas, "and", "or")
-// does nothing if input is not a list
-static string _localise_list(const string& context, const string& s)
+// list separators, order is important - we want to get the longest possible
+// match at any given point
+static const vector<string> seps =
 {
-    DEBUG("start _localise_list: context='%s', s='%s'", context.c_str(), s.c_str());
+    ", and ", "; and ", " and ",
+    ", or ", "; or ", " or ",
+    ", ", "; ", ": ", ",", ";"
+};
 
-    static vector<string> separators = {", or ", ", and ",
-                                        "; or ", "; and ",
-                                        ", ", "; ", ": ",
-                                        " or ", " and "};
+static bool is_list_separator(const string& s)
+{
+    if (s.empty() || s.length() > 6)
+        return false;
 
-    // annotations can contain commas, so remove them for the moment
-    list<string> annotations;
-    string value = _strip_annotations(s, annotations);
-
-    _context = context;
-
-    std::vector<string>::iterator it;
-    for (it = separators.begin(); it != separators.end(); ++it)
+    for (const string& sep: seps)
     {
-        string sep = *it;
-        // split on the first separator only
-        vector<string> tokens = split_string(sep, value, false, true, 1);
-        // there should only ever be 1 or 2 tokens
-        if (tokens.size() == 2)
+        if (s == sep)
+            return true;
+    }
+
+    return false;
+}
+
+// split list of things into separate strings
+// ignore lists that are contained within tags or brackets
+static void _split_list(string s, vector<string>& result)
+{
+    // these specific artifact names contain list separators
+    // temporarily replace them to avoid false matches
+    static const vector< pair<string,string> > replacements =
+    {
+        { "Dice, Bag, and Bottle", "dice_bag_bottle" },
+        { "\"Gyre\" and \"Gimble\"", "gyre_gimble" },
+    };
+    bool replaced = false;
+    for (auto r: replacements)
+    {
+        if (contains(s, r.first))
         {
-            // restore annotations
-            tokens[1] = _add_annotations(tokens[1], annotations);
-
-            sep = cxlate(context, sep);
-            // the tokens could be lists themselves
-            string tok0 = _localise_string(context, tokens[0]);
-
-            // If we were called with a non-empty context, we want to make sure it persists.
-            // (e.g. German cases - the whole list should be in the same case)
-            // However, if we have an empty context, we want to allow any change to the global context to persist.
-            // (this could be important if this is not actually a list, but just comething with a comma, etc. in it)
-            if (!context.empty())
-                _context = context;
-
-            string tok1 = _localise_string(_context, tokens[1]);
-            return tok0 + sep + tok1;
+            s = replace_all(s, r.first, r.second);
+            replaced = true;
         }
     }
 
-    // not a list
-    return s;
+    // ignore lists inside brackets of any description
+    size_t next = 0;
+    int bracket_depth = 0;
+    for (size_t i = 0; i < s.length(); i++)
+    {
+        if (s[i] == '(' || s[i] == '{' || s[i] == '[')
+            bracket_depth++;
+        else if (s[i] == ')' || s[i] == '}' || s[i] == ']')
+            bracket_depth--;
+        else if (bracket_depth == 0)
+        {
+            for (const string& sep: seps)
+            {
+                if (s.compare(i, sep.length(), sep) == 0)
+                {
+                    if (i > next)
+                        result.push_back(s.substr(next, i-next));
+                    result.push_back(sep);
+                    next = i + sep.length();
+                    i += sep.length() - 1;
+                }
+            }
+        }
+    }
+
+    if (next < s.length())
+        result.push_back(s.substr(next));
+
+    if (result.size() == 1)
+        result.clear();
+
+    if (!result.empty())
+    {
+        // make sure whole list is not conatined in a tag
+        string start_tag = _get_first_tag(result[0]);
+        if (!start_tag.empty())
+        {
+            string end_tag = start_tag;
+            end_tag.replace(0, 2, "</");
+            if (!contains(result[0], end_tag))
+                result.clear();
+        }
+    }
+
+    // undo temporary replacements
+    if (replaced)
+    {
+        for (string& res: result)
+        {
+            for (auto r: replacements)
+                res = replace_all(res, r.second, r.first);
+        }
+    }
+}
+
+// localise a string containing a list of things (joined by commas, "and", "or")
+// returns empty string if input is not a list
+static string _localise_list(const string context, const string& s)
+{
+    DEBUG("start _localise_list: context='%s', s='%s'", context.c_str(), s.c_str());
+
+    vector<string> substrings;
+    _split_list(s, substrings);
+    if (substrings.size() < 2)
+        return "";
+
+    string result;
+    for (string sub: substrings)
+    {
+        // If we were called with a non-empty context, we want to make sure it persists.
+        // (e.g. German cases - the whole list should be in the same case)
+        if (!context.empty())
+            _context = context;
+
+        result += _localise_string(_context, sub);
+    }
+
+    return result;
 }
 
 static string _localise_multiple_sentences(const string& context, const string& s)
@@ -1272,7 +1334,17 @@ static string _localise_string(const string context, const string& value)
     result = cxlate(context, value, false);
     if (!result.empty())
         return result;
-    
+
+    // if value is a list separator and we didn't get a hit from cxlate(),
+    // then there's no point wasting any more time - just use the English one
+    if (is_list_separator(value))
+        return value;
+
+    // try treating as list
+    result = _localise_list(context, value);
+    if (!result.empty())
+        return result;
+
     // split out any embedded tags
     vector<string> strings;
     _split_tags(value, strings);
@@ -1299,11 +1371,6 @@ static string _localise_string(const string context, const string& value)
     result = _localise_counted_string(context, value);
     if (result != value)
         return result;
-
-    if (is_list(value))
-    {
-        return _localise_list(context, value);
-    }
 
     // try treating as multiple sentences
     result = _localise_multiple_sentences(context, value);
