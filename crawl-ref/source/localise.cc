@@ -357,6 +357,34 @@ static vector<string> _split_format(const string& fmt_str)
     return results;
 }
 
+// split embedded tags from actual text
+static void _split_tags(string s, vector<string>& results)
+{
+    size_t start, end;
+
+    do {
+        start = s.find('<');
+        end = s.find('>');
+
+        if (start == string::npos || end == string::npos)
+            break;
+
+        // part before the tag
+        if (start != 0)
+            results.push_back(s.substr(0, start));
+
+        // the tag
+        results.push_back(s.substr(start, end-start+1));
+
+        // part after the tag
+        s = s.substr(end+1);
+
+    } while (true);
+
+    if (!s.empty())
+        results.push_back(s);
+}
+
 /**
  * Get arg types from format string.
  * Returns a map indexed by argument id, beginning with 1.
@@ -1245,6 +1273,23 @@ static string _localise_string(const string context, const string& value)
     if (!result.empty())
         return result;
     
+    // split out any embedded tags
+    vector<string> strings;
+    _split_tags(value, strings);
+    if (strings.size() > 1)
+    {
+        result = "";
+        for (string s: strings)
+        {
+            // localise the text, but not the tags
+            if (s.length() >= 2 && s[0] == '<' && s[s.length()-1] == '>')
+                result += s;
+            else
+                result += _localise_string(context, s);
+        }
+        return result;
+    }
+
     // handle strings like "on level 3 of the dungeon"
     result = _localise_location(context, value);
     if (!result.empty())

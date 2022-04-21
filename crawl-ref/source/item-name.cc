@@ -3224,7 +3224,7 @@ string menu_colour_item_name(const item_def &item, description_level_type desc)
 
     const string colour = colour_to_str(col);
     const char * const colour_z = colour.c_str();
-    return make_stringf("<%s>%s</%s>", colour_z, localise(item_name).c_str(), colour_z);
+    return make_stringf("<%s>%s</%s>", colour_z, item_name.c_str(), colour_z);
 }
 
 typedef map<string, item_kind> item_names_map;
