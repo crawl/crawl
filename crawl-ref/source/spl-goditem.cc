@@ -613,7 +613,11 @@ void debuff_monster(monster &mon)
         return;
 
     for (enchant_type buff : buffs)
-        mon.del_ench(buff, true, true);
+        mon.del_ench(buff, true, buff != ENCH_PETRIFYING);
+    // We generally want to set effect = true so that enchantments get cleaned
+    // up - invisible monsters reappear, etc. However, the only thing that
+    // effect = true does for PETRIFYING is cause it to turn into
+    // ENCH_PETRIFIED. So... let's not do that. (Hacky, sorry!)
 
     simple_monster_message(mon, "'s magical effects unravel!");
 }
@@ -717,7 +721,7 @@ int detect_creatures(int pow, bool telepathic)
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
-    clear_map(false);
+    clear_map();
 
     for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
@@ -1306,8 +1310,7 @@ void majin_bo_vampirism(monster &mon, int damage)
     dprf("Majin bo might trigger, dam: %d.", damage);
 
     if (damage < 1 || !actor_is_susceptible_to_vampirism(mon)
-        || you.hp == you.hp_max || you.duration[DUR_DEATHS_DOOR]
-        || x_chance_in_y(2, 5))
+        || you.hp == you.hp_max || you.duration[DUR_DEATHS_DOOR])
     {
         return;
     }

@@ -1558,7 +1558,7 @@ bool beogh_gift_item()
 
     item_def& gift = you.inv[item_slot];
 
-    const bool shield = is_shield(gift);
+    const bool shield = is_offhand(gift);
     const bool body_armour = gift.base_type == OBJ_ARMOUR
                              && get_armour_slot(gift) == EQ_BODY_ARMOUR;
     const bool weapon = gift.base_type == OBJ_WEAPONS;
@@ -1607,10 +1607,6 @@ bool beogh_gift_item()
     }
     if (use_alt_slot)
         mons->swap_weapons();
-
-    dprf("is_ranged weap: %d", range_weapon);
-    if (range_weapon)
-        gift_ammo_to_orc(mons);
 
     if (shield)
         mons->props[BEOGH_SH_GIFT_KEY] = true;
@@ -1958,46 +1954,21 @@ bool fedhas_passthrough(const monster_info* target)
                || target->attitude != ATT_HOSTILE);
 }
 
-static bool _lugonu_warp_monster(monster& mon, int pow)
+static bool _lugonu_warp_monster(monster& mon)
 {
-    if (coinflip())
+    // XXX: should this ignore mon.no_tele(), as with the player?
+    if (mon.wont_attack() || mon.no_tele() || coinflip())
         return false;
 
-    if (!mon.friendly())
-        behaviour_event(&mon, ME_ANNOY, &you);
-
-    mon.hurt(&you, 1 + random2(pow / 6));
-
-    if (mon.alive() && !mon.no_tele())
-        mon.blink();
-
+    mon.blink();
     return true;
-}
-
-static void _lugonu_warp_area(int pow)
-{
-    apply_monsters_around_square([pow] (monster& mon) {
-        return _lugonu_warp_monster(mon, pow);
-    }, you.pos());
 }
 
 void lugonu_bend_space()
 {
-    const int pow = 4 + skill_bump(SK_INVOCATIONS);
-    const bool pre_warp = random2(pow) > 9;
-    const bool post_warp = random2(pow) > 9;
-
-    mprf("Space bends %saround you!", pre_warp && post_warp ? "violently " :
-                                      pre_warp || post_warp ? "sharply "
-                                                            : "");
-
-    if (pre_warp)
-        _lugonu_warp_area(pow);
-
+    mpr("Space bends violently around you!");
     uncontrolled_blink(true);
-
-    if (post_warp)
-        _lugonu_warp_area(pow);
+    apply_monsters_around_square(_lugonu_warp_monster, you.pos());
 }
 
 void cheibriados_time_bend(int pow)

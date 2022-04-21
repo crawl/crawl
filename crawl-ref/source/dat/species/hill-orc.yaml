@@ -47,7 +47,6 @@ recommended_jobs:
   - JOB_FIRE_ELEMENTALIST
 recommended_weapons:
   - SK_MACES_FLAILS
-  - SK_LONG_BLADES
   - SK_AXES
   - SK_POLEARMS
 # start TAG_MAJOR_VERSION == 34

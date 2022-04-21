@@ -8,6 +8,7 @@
 #include <list>
 #include <functional>
 
+#include "mon-enum.h"
 #include "target.h"
 #include "wu-jian-attack-type.h"
 
@@ -67,9 +68,6 @@ int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);
 
 int mons_weapon_damage_rating(const item_def &launcher);
-int mons_missile_damage(monster* mons, const item_def *launch,
-                        const item_def *missile);
-int mons_usable_missile(monster* mons, item_def **launcher);
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance,
@@ -84,10 +82,18 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
                         bool *prompted = nullptr,
                         const monster *mons = nullptr);
 
-string rude_stop_summoning_reason();
-bool rude_stop_summoning_prompt(string verb = "summon");
+string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
+bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
+                           string verb = "summon");
 
 bool can_reach_attack_between(coord_def source, coord_def target,
                               reach_type range);
 dice_def spines_damage(monster_type mon);
 int archer_bonus_damage(int hd);
+
+int aux_to_hit();
+
+bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon);
+int stat_modify_damage(int base_dam, skill_type wpn_skill, bool using_weapon);
+int apply_weapon_skill(int base_dam, skill_type wpn_skill, bool random);
+int apply_fighting_skill(int base_dam, bool aux, bool random);

@@ -455,6 +455,7 @@ void inc_inv_item_quantity(int obj, int amount)
 void inc_mitm_item_quantity(int obj, int amount)
 {
     env.item[obj].quantity += amount;
+    ASSERT(env.item[obj].defined());
 }
 
 void init_item(int item)
@@ -2117,11 +2118,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     note_inscribe_item(item);
 
     if (crawl_state.game_is_hints())
-    {
         taken_new_item(item.base_type);
-        if (is_artefact(item))
-            learned_something_new(HINT_SEEN_RANDART);
-    }
 
     you.last_pickup[item.link] = quant_got;
     quiver::on_actions_changed(true);
@@ -3342,9 +3339,7 @@ equipment_type item_equip_slot(const item_def& item)
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
     return item_equip_slot(item) != EQ_NONE
-           || quiver_too
-                && (you.quiver_action.item_is_quivered(item)
-                    || you.launcher_action.item_is_quivered(item));
+           || quiver_too && you.quiver_action.item_is_quivered(item);
 }
 
 bool item_is_melded(const item_def& item)
@@ -3364,14 +3359,6 @@ bool item_def::has_spells() const
 bool item_def::cursed() const
 {
     return flags & ISFLAG_CURSED;
-}
-
-bool item_def::launched_by(const item_def &launcher) const
-{
-    if (base_type != OBJ_MISSILES)
-        return false;
-    const missile_type mt = fires_ammo_type(launcher);
-    return sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET);
 }
 
 int item_def::index() const
@@ -3500,19 +3487,16 @@ colour_t item_def::missile_colour() const
     {
         case MI_STONE:
             return BROWN;
-        case MI_SLING_BULLET:
-            return CYAN;
         case MI_LARGE_ROCK:
             return LIGHTGREY;
-        case MI_ARROW:
-            return BLUE;
 #if TAG_MAJOR_VERSION == 34
+        case MI_ARROW:
         case MI_NEEDLE:
+        case MI_BOLT:
+        case MI_SLING_BULLET:
 #endif
         case MI_DART:
             return WHITE;
-        case MI_BOLT:
-            return LIGHTBLUE;
         case MI_JAVELIN:
             return RED;
         case MI_THROWING_NET:
@@ -4045,17 +4029,18 @@ bool item_type_has_unidentified(object_class_type base_type)
 
 // Checks whether the item is actually a good one.
 // TODO: check brands, etc.
-bool item_def::is_valid(bool iinfo) const
+bool item_def::is_valid(bool iinfo, bool error) const
 {
+    auto channel = error ? MSGCH_ERROR : MSGCH_DIAGNOSTICS;
     if (base_type == OBJ_DETECTED)
     {
         if (!iinfo)
-            dprf("weird detected item");
+            mprf(channel, "weird detected item");
         return iinfo;
     }
     else if (!defined())
     {
-        dprf("undefined");
+        mprf(channel, "undefined item");
         return false;
     }
     const int max_sub = get_max_subtype(base_type);
@@ -4064,22 +4049,22 @@ bool item_def::is_valid(bool iinfo) const
         if (!iinfo || sub_type > max_sub || !item_type_has_unidentified(base_type))
         {
             if (!iinfo)
-                dprf("weird subtype and no info");
+                mprf(channel, "weird item subtype and no info");
             if (sub_type > max_sub)
-                dprf("huge subtype");
+                mprf(channel, "huge item subtype");
             if (!item_type_has_unidentified(base_type))
-                dprf("unided item of a type that can't be");
+                mprf(channel, "unided item of a type that can't be");
             return false;
         }
     }
     if (get_colour() == 0)
     {
-        dprf("black item");
-        return false; // No black items.
+        mprf(channel, "item color invalid"); // 0 = BLACK and so invisible
+        return false;
     }
     if (!appearance_initialized())
     {
-        dprf("no rnd");
+        mprf(channel, "item has uninitialized rnd");
         return false; // no items with uninitialized rnd
     }
     return true;

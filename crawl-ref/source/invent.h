@@ -30,7 +30,7 @@ enum object_selector
 #if TAG_MAJOR_VERSION == 34
     OSEL_DRAW_DECK               =  -7,
 #endif
-    OSEL_THROWABLE               =  -8,
+    OSEL_LAUNCHING               =  -8,
     OSEL_EVOKABLE                =  -9,
     OSEL_WORN_ARMOUR             = -10,
     OSEL_CURSED_WORN             = -11,

@@ -646,28 +646,9 @@ unsigned int SDLWrapper::get_ticks() const
     return SDL_GetTicks();
 }
 
-tiles_key_mod SDLWrapper::get_mod_state() const
+unsigned char SDLWrapper::get_mod_state() const
 {
-    SDL_Keymod mod = SDL_GetModState();
-
-    switch (mod)
-    {
-    case KMOD_LSHIFT:
-    case KMOD_RSHIFT:
-        return TILES_MOD_SHIFT;
-        break;
-    case KMOD_LCTRL:
-    case KMOD_RCTRL:
-        return TILES_MOD_CTRL;
-        break;
-    case KMOD_LALT:
-    case KMOD_RALT:
-        return TILES_MOD_ALT;
-        break;
-    case KMOD_NONE:
-    default:
-        return TILES_MOD_NONE;
-    }
+    return _kmod_to_mod(SDL_GetModState());
 }
 
 void SDLWrapper::set_mod_state(tiles_key_mod mod)
@@ -828,7 +809,7 @@ int SDLWrapper::send_textinput(wm_event *event)
         // this is relevant only for ctrl-- and ctrl-= bindings at the moment,
         // and I'm somewhat nervous about blocking genuine text entry via the alt
         // key, so for the moment this only blacklists text events with ctrl held
-        bool nontext_modifier_held = wm->get_mod_state() == TILES_MOD_CTRL;
+        bool nontext_modifier_held = wm->get_mod_state() & TILES_MOD_CTRL;
 
         bool should_suppress = prev_keycode && _key_suppresses_textinput(prev_keycode) == wc;
         if (nontext_modifier_held || should_suppress)

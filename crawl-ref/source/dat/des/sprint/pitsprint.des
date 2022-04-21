@@ -443,8 +443,6 @@ function armoury_setup(e)
           any armour good_item ident:all w:20")
   e.kitem("c = any weapon good_item ident:all")
   e.kitem("d = any armour good_item ident:all")
-  e.kitem("e = arrow q:50 mundane ident:all")
-  e.kitem("f = bolt q:50 mundane ident:all")
   e.subst("c = ccc(")
   e.subst("d = ddd[")
   e.lua_marker('~', props_marker {

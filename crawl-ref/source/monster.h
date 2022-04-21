@@ -151,6 +151,8 @@ public:
         override;
     bool is_perm_summoned() const override;
     bool has_action_energy() const;
+    bool may_have_action_energy() const;
+    bool outpaced_by_player() const;
     void drain_action_energy();
     void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
     void apply_location_effects(const coord_def &oldpos,
@@ -535,7 +537,6 @@ public:
     bool has_spell_of_type(spschool discipline) const;
 
     void bind_melee_flags();
-    void bind_spell_flags();
     void calc_speed();
     bool attempt_escape(int attempts = 1);
     void struggle_against_net();

@@ -57,8 +57,7 @@ NAME:    minmay_goblin_kobold_castle
 TAGS:    no_rotate
 ORIENT:  north
 DEPTH:   D:3-6
-MONS:    goblin; hunting sling . stone / hobgoblin w:2; hunting sling . sling \
-         bullet / nothing
+MONS:    goblin; hunting sling / hobgoblin w:2; hunting sling / nothing
 MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
 MONS:    kobold; stone / nothing
 MONS:    kobold; club w:18 / kobold brigand w:1 / gnoll w:3; club | spear / nothing
@@ -1130,7 +1129,7 @@ DEPTH:   D:11-, Depths
 ORIENT:  southeast
 ITEM:    any armour, any armour good_item
 ITEM:    any weapon, any weapon good_item
-ITEM:    arrow, bolt, sling bullet, gold
+ITEM:    boomerang, javelin w:3, throwing net w:3, gold
 : if you.in_branch("D") then
 MONS:    orc warrior / deep elf knight w:1 / deep elf archer w:1
 MONS:    orc warrior w:20 / centaur warrior
@@ -1612,7 +1611,7 @@ DEPTH:  D:3-4
   end
   kmons("O = " .. boss)
 }}
-MONS:   goblin, goblin ; hunting sling . stone, jackal
+MONS:   goblin, goblin ; hunting sling, jackal
 NSUBST: . = 1:0 / 3:3 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx
@@ -2438,4 +2437,90 @@ xxxxxxxxxxxxxxxxxxxx
  a.cpcpcpcpcpcpcc'xx
  a.'.'.'.'.'.'.'..xx
  aaaaaaaaaaaaaaaaaxx
+ENDMAP
+
+NAME:   dreamdust_cave_troll
+TAGS:   no_monster_gen
+ORIENT: northwest
+DEPTH:  D:10-, Lair
+NSUBST: - = 1 / 1=^ / 2=? / .
+SUBST:  ^ = ^.
+KFEAT:  ^ = net trap
+MONS:   patrolling deep troll
+: dgn.delayed_decay(_G, "?", "yak corpse")
+MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
+                              delay = 10, size = 1, excl_rad = 0 }
+MAP
+xxxxxxx
+x--xxxx
+x-!-xxx
+xx-.xxx
+xxxx.^x
+xxxxx.x
+xxx^^xx
+xxx@xxx
+ENDMAP
+
+NAME:   dreamdust_under_siege
+TAGS:   transparent no_monster_gen no_pool_fixup patrolling
+ORIENT: south
+DEPTH:  D:12-, Orc:1, Depths, !Depths:1
+WEIGHT: 5
+TILE:   c = wall_stone_smooth
+FTILE:  +'{([>-O = floor_cobble_blood
+# Monster Placement
+NSUBST: ' = 6=1' / 6=1'' / '
+NSUBST: . = 1=2 / 3=2. / 10=3. / 10=3.. / .
+# Theme variations
+: if you.in_branch("D") then
+TILE:   G : dngn_statue_angel
+KFEAT:  O = altar_zin / altar_elyvilon / altar_the_shining_one
+FTILE:  -O : floor_limestone / floor_w_marble
+COLOUR: - : white
+MONS:   apis / nothing
+MONS:   necromancer band / death knight band
+MONS:   nothing
+: elseif you.in_branch("Orc") then
+SUBST:  ( = {, [ = >, G = I
+KFEAT:  > = escape_hatch_down
+KFEAT:  O = altar_beogh
+KPROP:  -O = bloody
+MONS:   orc warrior band / nothing
+MONS:   necromancer band
+MONS:   nothing
+: else
+# Depths
+:    if crawl.coinflip() then
+# Holy defenders
+TILE:   G : dngn_statue_angel
+KFEAT:  O = altar_zin / altar_elyvilon / altar_the_shining_one
+FTILE:  -O : floor_limestone / floor_w_marble
+COLOUR: - : white
+MONS:   angel / cherub
+MONS:   lich / ancient lich w:3
+MONS:   zombie / simulacrum
+:    else
+# Unholy defenders
+TILE:   G : dngn_statue_imp / dngn_statue_demonic_bust
+KFEAT:  O = altar_yredelemnul / altar_kikubaaqudgha
+KPROP:  -O = bloody
+MONS:   ancient champion / vampire knight / lich
+MONS:   daeva / angel
+MONS:   daeva w:5 / cherub / nothing w:20
+:    end
+: end
+MAP
+ ...........................
+.............................
+...wwwww.............wwwww...
+..wwcncww..wG...Gw..wwcncww..
+..wcc'ccwwwwc+++cwwwwcc'ccw..
+..wn'('cccncc'''ccnccc'['nw..
+..wcc''c'''''''''''''c''ccw..
+..wwccc+'''''''''''''+cccww..
+...wwc'''''''''''''''''cww...
+...wwc'''''''---'''''''cww...
+...wwcccccccccOcccccccccww...
+xxxxxxxxxxxxxcccxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

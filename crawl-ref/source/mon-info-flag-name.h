@@ -84,6 +84,8 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_SLEEPING, "asleep", "asleep", "asleep"},
     { MB_UNAWARE, "unaware", "unaware", "unaware"},
     { MB_BLIND, "blind", "blind", "blind"},
+    { MB_DISTRACTED_ONLY, "distracted", "not watching you", "distracted"},
+    { MB_CANT_SEE_YOU, "can't see you", "can't see you", "can't see you"},
     { MB_INFESTATION, "infested", "infested", "infested"},
     // Debuffs
     { MB_DUMB, "stupefied", "stupefied", "stupefied"},
@@ -118,7 +120,7 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_SICK, "sick", "sick", "sick"},
     { MB_WEAK, "weak", "weak", "weak"},
     { MB_LIGHTLY_DRAINED, "drained", "lightly drained", "drained"},
-    { MB_HEAVILY_DRAINED, "drained", "heavily drained", "drained"},
+    { MB_HEAVILY_DRAINED, "very drained", "heavily drained", "very drained"},
     { MB_SAP_MAGIC, "magic-sapped", "magic-sapped", "magic-sapped"},
     { MB_GLOWING, "corona", "softly glowing", "coronas"},
     { MB_WATERLOGGED, "waterlogged", "waterlogged", "waterlogged"},

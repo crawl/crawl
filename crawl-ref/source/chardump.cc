@@ -586,7 +586,7 @@ static void _sdump_lua(dump_params &par)
 
 string chardump_desc(const item_def& item)
 {
-    string desc = get_item_description(item, false, true);
+    string desc = get_item_description(item, IDM_DUMP);
     string outs;
 
     outs.reserve(desc.length() + 32);

@@ -303,8 +303,8 @@ public:
     vector<unsigned> fire_order;  // missile search order for 'f' command
     unordered_set<spell_type, hash<int>> fire_order_spell;
     unordered_set<ability_type, hash<int>> fire_order_ability;
-    bool        launcher_autoquiver; // whether to autoquiver launcher ammo on wield
     bool        quiver_menu_focus;
+    bool        launcher_autoquiver;
 
     unordered_set<int> force_spell_targeter; // spell types to always use a
                                              // targeter for
@@ -325,6 +325,7 @@ public:
 #endif
     vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files
+    bool           no_player_bones;   // don't save player's info in bones files
 
     // internal use only:
     int         sc_entries;      // # of score entries
@@ -588,6 +589,7 @@ public:
     int         tile_window_ratio;
     maybe_bool  tile_use_small_layout;
 #endif
+    int         tile_sidebar_pixels;
     int         tile_cell_pixels;
     int         tile_viewport_scale;
     int         tile_map_scale;

@@ -373,7 +373,6 @@ string attack::anon_pronoun(pronoun_type pron)
 void attack::init_attack(skill_type unarmed_skill, int attack_number)
 {
     ASSERT(attacker);
-    weapon          = attacker->weapon(attack_number);
 
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
     if (attacker->is_player() && you.form_uses_xl())
@@ -1044,39 +1043,6 @@ string attack::defender_name(bool allow_reflexive)
         return def_name(DESC_THE);
 }
 
-int attack::player_stat_modify_damage(int damage)
-{
-    // At 10 strength, damage is multiplied by 1.0
-    // Each point of strength over 10 increases this by 0.025 (2.5%),
-    // strength below 10 reduces the multiplied by the same amount.
-    // Minimum multiplier is 0.01 (1%) (reached at -30 str).
-    damage *= max(1.0, 75 + 2.5 * you.strength());
-    damage /= 100;
-
-    return damage;
-}
-
-int attack::player_apply_weapon_skill(int damage)
-{
-    if (using_weapon())
-    {
-        damage *= 2500 + (random2(you.skill(wpn_skill, 100) + 1));
-        damage /= 2500;
-    }
-
-    return damage;
-}
-
-int attack::player_apply_fighting_skill(int damage, bool aux)
-{
-    const int base = aux? 40 : 30;
-
-    damage *= base * 100 + (random2(you.skill(SK_FIGHTING, 100) + 1));
-    damage /= base * 100;
-
-    return damage;
-}
-
 int attack::player_apply_misc_modifiers(int damage)
 {
     return damage;
@@ -1218,12 +1184,13 @@ int attack::calc_damage()
         potential_damage = using_weapon() || wpn_skill == SK_THROWING
             ? weapon_damage() : calc_base_unarmed_damage();
 
-        potential_damage = player_stat_modify_damage(potential_damage);
+        potential_damage = stat_modify_damage(potential_damage, wpn_skill, using_weapon());
 
         damage = random2(potential_damage+1);
 
-        damage = player_apply_weapon_skill(damage);
-        damage = player_apply_fighting_skill(damage, false);
+        if (using_weapon())
+            damage = apply_weapon_skill(damage, wpn_skill, true);
+        damage = apply_fighting_skill(damage, false, true);
         damage = player_apply_misc_modifiers(damage);
         damage = player_apply_slaying_bonuses(damage, false);
         damage = player_stab(damage);

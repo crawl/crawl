@@ -385,6 +385,7 @@ blood_saint MONS_DEMONSPAWN_BLOOD_SAINT
 warmonger MONS_DEMONSPAWN_WARMONGER
 corrupter MONS_DEMONSPAWN_CORRUPTER
 black_sun MONS_DEMONSPAWN_BLACK_SUN
+mon/unique/amaemon MONS_AMAEMON
 ## From the Wucad Mu wizard laboratory
 %sdir mon/vault
 demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK
@@ -451,8 +452,10 @@ octopode MONS_OCTOPODE
 %sdir mon/animals
 bunyip MONS_BUNYIP
 
-## Golems ('8')
+## Golems ('9')
 %rim 0
+%sdir mon/unique
+vv MONS_VV
 %sdir mon/nonliving
 crystal_guardian MONS_CRYSTAL_GUARDIAN
 electric_golem MONS_ELECTRIC_GOLEM
@@ -469,7 +472,7 @@ toenail_golem MONS_TOENAIL_GOLEM
 flesh_golem MONS_FLESH_GOLEM
 %rim 1
 
-## Statues and statue-like things (also '8')
+## Statues and statue-like things ('8')
 %sdir mon/unique
 roxanne MONS_ROXANNE
 %sdir mon/statues
@@ -551,7 +554,10 @@ frederick MONS_FREDERICK
 harold MONS_HAROLD
 jessica MONS_JESSICA
 joseph MONS_JOSEPH
+%rim 0
+josephina MONS_JOSEPHINA
 josephine MONS_JOSEPHINE
+%rim 1
 kirke MONS_KIRKE
 louise MONS_LOUISE
 maggie MONS_MAGGIE
@@ -563,6 +569,7 @@ nikola MONS_NIKOLA
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
+zenata MONS_ZENATA
 %rim 1
 terence MONS_TERENCE
 
@@ -853,6 +860,7 @@ guardian_serpent MONS_GUARDIAN_SERPENT
 %sdir mon/unique
 %rim 0
 erolcha MONS_EROLCHA
+lodul MONS_LODUL
 %rim 1
 %sdir mon/humanoids
 ogre MONS_OGRE
@@ -896,6 +904,7 @@ vine_stalker MONS_VINE_STALKER
 ## Trolls ('T')
 %sdir mon/unique
 pargi MONS_PARGI
+parghit MONS_PARGHIT
 snorg MONS_SNORG
 %sdir mon/humanoids
 troll MONS_TROLL

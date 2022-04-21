@@ -33,6 +33,15 @@ enum item_description_type
     NUM_IDESC
 };
 
+enum item_description_mode
+{
+    IDM_DEFAULT,
+    IDM_PLAIN,
+    IDM_DUMP,
+    IDM_MONSTER,
+    NUM_IDM_TYPES,
+};
+
 struct describe_info
 {
     ostringstream body;
@@ -45,8 +54,8 @@ struct describe_info
 
 bool is_dumpable_artefact(const item_def &item);
 
-string get_item_description(const item_def &item, bool verbose,
-                            bool dump = false, bool lookup = false);
+string get_item_description(const item_def &item,
+                            item_description_mode mode = IDM_DEFAULT);
 
 bool describe_feature_wide(const coord_def& pos, bool do_actions=false);
 void describe_feature_type(dungeon_feature_type feat);

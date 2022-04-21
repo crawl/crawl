@@ -758,9 +758,6 @@ void trap_def::trigger(actor& triggerer)
         break;
     }
 
-    if (you_trigger)
-        learned_something_new(HINT_SEEN_TRAP, p);
-
     if (trap_destroyed)
         destroy(know_trap_destroyed);
 }
@@ -1148,6 +1145,8 @@ void do_trap_effects()
         default:
             break;
     }
+
+    learned_something_new(HINT_MALEVOLENCE);
 }
 
 level_id generic_shaft_dest(level_id place)

@@ -501,7 +501,7 @@ STR:     7
 NAME:     glaive of the Guard
 OBJ:      OBJ_WEAPONS/WPN_GLAIVE
 FALLBACK: OBJ_WEAPONS/WPN_BARDICHE
-PLUS:     +8
+PLUS:     +5
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_guard
 TILE_EQ:  glaive_of_the_guard
@@ -1395,7 +1395,7 @@ MP:      6
 INT:     6
 BRAND:   SPWPN_VAMPIRISM
 BOOL:    skip_ego
-DBRAND:  It occasionally heals its wielder for a portion of the damage dealt
+DBRAND:  It heals its wielder for a portion of the damage dealt
  when they wound a living foe with it or with a spell.
 DESCRIP: Its wielder's spells cost health as well as magical power.
 
@@ -1406,7 +1406,7 @@ TYPE:    pair of quick blades
 COLOUR:  ETC_ENCHANT
 TILE:    urand_gyre
 TILE_EQ: gyre
-PLUS:    7
+PLUS:    12
 BRAND:   SPWPN_PROTECTION
 FB_BRAND: SPWPN_VORPAL
 
@@ -1611,10 +1611,9 @@ DESCRIP:  It heals its wearer when they drink unknown potions.
 +It restores its wearer's MP when they read unknown scrolls.
 
 NAME:       woodcutter's axe
-OBJ:        OBJ_WEAPONS/WPN_WAR_AXE
-FALLBACK:   OBJ_WEAPONS/WPN_BROAD_AXE
-PLUS:       8
-BASE_DELAY: -5
+OBJ:        OBJ_WEAPONS/WPN_BATTLEAXE
+PLUS:       3
+BASE_DELAY: -7
 COLOUR:     BROWN
 TILE:       urand_woodcutters_axe
 TILE_EQ:    axe_short

@@ -319,16 +319,9 @@ string branch_noise_desc(branch_type br)
     {
         desc = "This branch is ";
         if (noise > 0)
-        {
-            desc += make_stringf("very noisy, and so sound travels much less "
-                                 "far.");
-        }
+            desc += "noisy: sounds don't travel as far here.";
         else
-        {
-            desc += make_stringf("unnaturally silent, and so sound travels "
-                                 "much further.");
-
-        }
+            desc += "unnaturally silent: sounds travel farther here.";
     }
 
     return desc;

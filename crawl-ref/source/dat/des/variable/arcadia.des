@@ -197,8 +197,8 @@ ORIENT: northeast
 MONS:   the Enchantress patrolling, thorn hunter / spriggan defender
 MONS:   tengu reaver / glowing shapeshifter hd:13
 MONS:   satyr w:15 / spriggan berserker w:15 / spriggan air mage, faun
-MONS:   tengu conjurer ; quarterstaff . robe . longbow . arrow / \
-        tengu conjurer ; quarterstaff . robe . arbalest . bolt / \
+MONS:   tengu conjurer ; quarterstaff . robe . longbow / \
+        tengu conjurer ; quarterstaff . robe . arbalest / \
         deep elf archer / rakshasa / eleionoma
 KMONS:  L = water nymph
 KMONS:  P = plant

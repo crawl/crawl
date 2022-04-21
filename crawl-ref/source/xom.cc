@@ -719,8 +719,7 @@ static bool _choose_enchantable_monster(const monster& mon)
            && !mons_invuln_will(mon);
 }
 
-static bool _is_chaos_upgradeable(const item_def &item,
-                                  const monster* mon)
+static bool _is_chaos_upgradeable(const item_def &item)
 {
     // Since Xom is a god, he is capable of changing randarts, but not
     // other artefacts.
@@ -769,21 +768,8 @@ static bool _is_chaos_upgradeable(const item_def &item,
         if (get_ammo_brand(item) == SPMSL_NORMAL)
             return true;
     }
-    else
-    {
-        // If the weapon is a launcher, and the monster is either out
-        // of ammo or is carrying javelins, then don't bother upgrading
-        // the launcher.
-        if (is_range_weapon(item)
-            && (mon->inv[MSLOT_MISSILE] == NON_ITEM
-                || !has_launcher(env.item[mon->inv[MSLOT_MISSILE]])))
-        {
-            return false;
-        }
-
-        if (get_weapon_brand(item) == SPWPN_NORMAL)
-            return true;
-    }
+    else if (get_weapon_brand(item) == SPWPN_NORMAL)
+        return true;
 
     return false;
 }
@@ -838,7 +824,7 @@ static bool _choose_chaos_upgrade(const monster& mon)
         if (is_chaotic_item(item))
             return false;
 
-        if (_is_chaos_upgradeable(item, &mon))
+        if (_is_chaos_upgradeable(item))
         {
             if (item.base_type != OBJ_MISSILES)
                 return true;
@@ -846,7 +832,7 @@ static bool _choose_chaos_upgrade(const monster& mon)
             // If, for some weird reason, a monster is carrying a bow
             // and javelins, then branding the javelins is okay, since
             // they won't be fired by the bow.
-            if (!special_launcher || !has_launcher(item))
+            if (!special_launcher || is_throwable(&mon, item))
                 return true;
         }
 
@@ -1310,12 +1296,11 @@ static void _xom_snakes_to_sticks(int /*sever*/)
             action = true;
         }
 
-        const object_class_type base_type = x_chance_in_y(3,5) ? OBJ_MISSILES
-                                                               : OBJ_WEAPONS;
+        const object_class_type base_type = coinflip() ? OBJ_MISSILES
+                                                       : OBJ_WEAPONS;
 
         const int sub_type =
-            (base_type == OBJ_MISSILES ?
-             (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
+            (base_type == OBJ_MISSILES ? MI_JAVELIN
              : _xom_random_stickable(mi->get_experience_level()));
 
         int item_slot = items(false, base_type, sub_type,
@@ -2148,7 +2133,7 @@ static void _xom_chaos_upgrade(int /*sever*/)
     for (int i = 0; i < 3 && !rc; ++i)
     {
         item_def* const item = mon->mslot_item(slots[i]);
-        if (item && _is_chaos_upgradeable(*item, mon))
+        if (item && _is_chaos_upgradeable(*item))
         {
             _do_chaos_upgrade(*item, mon);
             rc = true;

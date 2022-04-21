@@ -435,8 +435,8 @@ static bool _sort_mem_spells(const sortable_spell &a, const sortable_spell &b)
         return mem_a;
 
     // List the Vehumet gifts at the very top.
-    const bool offering_a = vehumet_is_offering(a.spell);
-    const bool offering_b = vehumet_is_offering(b.spell);
+    const bool offering_a = vehumet_is_offering(a.spell, true);
+    const bool offering_b = vehumet_is_offering(b.spell, true);
     if (offering_a != offering_b)
         return offering_a;
 
@@ -679,7 +679,7 @@ private:
 
     colour_t entry_colour(const sortable_spell& entry)
     {
-        if (vehumet_is_offering(entry.spell))
+        if (vehumet_is_offering(entry.spell, true))
             return LIGHTBLUE;
         else
         {

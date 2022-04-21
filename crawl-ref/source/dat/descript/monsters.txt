@@ -17,6 +17,13 @@ disgraced after thieves looted it while she slept. She now slithers about the
 dungeon, seeking vengeance against all would-be looters. She is an accomplished
 spellcaster, but no more deadly in melee combat than others of her kind.
 %%%%
+Amaemon
+
+Amaemon always knew he was different, but it was still a horrific surprise when
+his demonic heritage manifested. As his body twisted, Amaemon was forced to flee
+far from the surface. The passage of time has only left him more obsessed with
+what he has lost - consumed by poison both physical and spiritual.
+%%%%
 Antaeus
 
 Once a hero among the titans, Antaeus grew jealous of the titan queen. In
@@ -252,6 +259,12 @@ Joseph
 
 Looks like a mercenary in a stupid-looking hat.
 %%%%
+Josephina
+
+A fearsome necromancer who followed her craft beyond the limits of flesh and
+life. Her pursuit of demonic knowledge left her body ruined, but the powers she
+gained allowed her to rebuild her missing limbs from glittering ice.
+%%%%
 Josephine
 
 A formidable necromancer, committed to her craft even after it left her aged,
@@ -273,6 +286,13 @@ A huge beast, mightiest of hydras, infamous in myth and legend. It flows
 through the water faster than a human can run, swatting aside trees as though
 they were matchsticks. Its many heads slaver and gnash constantly as it hunts
 for prey to slake its bottomless appetite.
+%%%%
+Lodul
+
+An ogre emissary of the Ironbound Order, sent to find and stop intruders before
+they enter the Vaults. Fiercely charismatic, he's rallied a small army of his
+kin, overawing them with the long-range lightning array he wears on his back.
+(The large coin purse he took from the Vaults is also quite persuasive.)
 %%%%
 Lom Lobon
 
@@ -381,6 +401,17 @@ A brilliant scientist obsessed with electricity. In his attempts to perfect his
 electric golem, he was involved in a terrible accident, and now phases in and
 out of reality.
 %%%%
+Pargi
+
+An unusually weak troll.
+%%%%
+Parghit
+
+An unusually strong troll, his wiry frame scarred by many against-the-odds
+victories. He has been wounded so many times that his body has adapted, and now
+heals almost instantly. His necklace of troll claws is a memento of those who
+underestimated him.
+%%%%
 Pikel
 
 A wise kobold would fear the forces of Hell, and certainly would not set up a
@@ -402,10 +433,6 @@ A frog of unusual size, with a tiny crown perched incongruously atop his head.
 Psyche
 
 A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
-%%%%
-Pargi
-
-An unusually weak troll.
 %%%%
 Robin
 
@@ -477,9 +504,23 @@ Vashnia
 An elite marksnaga who leads a skilled team of sharpshooters. She is
 particularly skilled in translocation magic.
 %%%%
+Vv
+
+One of the Stoneborn, formed untold aeons ago with supreme command over rock.
+Her people shelter deep within the living earth, so whatever has forced Vv
+into the oppressive openness of the Dungeon must be dire indeed. But whatever
+it is, she's not talking...
+%%%%
 Xtahua
 
 An ancient and mighty dragon.
+%%%%
+Zenata
+
+A master weaponsmith, her flesh melding into steel so smoothly that it's hard to
+tell where one ends and the other begins. She entered the Dungeon to search for
+the secrets of an ancient, long-suppressed cult, said to have exalted metal over
+flesh. The price of knowledge was her humanity - a price she paid eagerly.
 %%%%
 the Serpent of Hell gehenna
 

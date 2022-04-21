@@ -299,8 +299,6 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 }
             }
         }
-        else if (you.launcher_action.item_is_quivered(*this))
-            buff << " (quivered ammo)";
         else if (you.quiver_action.item_is_quivered(*this))
             buff << " (quivered)";
     }
@@ -2850,21 +2848,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (you.has_mutation(MUT_NO_GRASPING))
             return true;
 
-        // These are the same checks as in is_throwable(), except that
-        // we don't take launchers into account.
-        switch (item.sub_type)
-        {
-        case MI_LARGE_ROCK:
-            return !you.can_throw_large_rocks();
-        case MI_JAVELIN:
-            return you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM
-                   && !you.can_throw_large_rocks();
-        case MI_ARROW:
-            return you.has_mutation(MUT_MISSING_HAND)
-                   && !you.has_mutation(MUT_QUADRUMANOUS);
-        }
-
-        return false;
+        return !is_throwable(&you, item);
 
     case OBJ_ARMOUR:
         if (!can_wear_armour(item, false, true))

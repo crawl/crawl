@@ -2599,7 +2599,7 @@ void Menu::cycle_hover(bool reverse)
         items_tried++;
         // try to find a non-heading to hover over
         const int sz = static_cast<int>(items.size());
-        if (is_set(MF_WRAP))
+        if (is_set(MF_WRAP) && sz > 0)
             new_hover = (new_hover + sz) % sz;
         new_hover = max(0, min(new_hover, sz - 1));
 
@@ -2664,6 +2664,8 @@ int Menu::next_block_from(int index, bool forward, bool wrap) const
 
 bool Menu::cycle_headers(bool forward)
 {
+    if (items.size() == 0)
+        return false;
     // XX this doesn't work quite right if called before the menu is displayed
     int start = is_set(MF_ARROWS_SELECT) ? max(last_hovered, 0)
                                          : get_first_visible();

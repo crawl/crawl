@@ -507,47 +507,19 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
 static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/,
                                         int /*agent*/)
 {
-    int count = 0;
-    int skill = SK_THROWING;
+    // Choose from among all usable missile types.
+    vector<pair<missile_type, int> > missile_weights;
 
-    for (int i = SK_SLINGS; i <= SK_THROWING; i++)
-    {
-        const int sk = _skill_rdiv((skill_type)i);
-        count += sk;
-        if (x_chance_in_y(sk, count))
-            skill = i;
-    }
+    missile_weights.emplace_back(MI_BOOMERANG, 50);
+    missile_weights.emplace_back(MI_DART, 75);
 
-    missile_type result = MI_BOOMERANG;
+    if (you.body_size() >= SIZE_MEDIUM)
+        missile_weights.emplace_back(MI_JAVELIN, 100);
 
-    switch (skill)
-    {
-    case SK_SLINGS:    result = MI_SLING_BULLET; break;
-    case SK_BOWS:      result = MI_ARROW; break;
-    case SK_CROSSBOWS: result = MI_BOLT; break;
+    if (you.can_throw_large_rocks())
+        missile_weights.emplace_back(MI_LARGE_ROCK, 100);
 
-    case SK_THROWING:
-        {
-            // Choose from among all usable missile types.
-            vector<pair<missile_type, int> > missile_weights;
-
-            missile_weights.emplace_back(MI_BOOMERANG, 50);
-            missile_weights.emplace_back(MI_DART, 75);
-
-            if (you.body_size() >= SIZE_MEDIUM)
-                missile_weights.emplace_back(MI_JAVELIN, 100);
-
-            if (you.can_throw_large_rocks())
-                missile_weights.emplace_back(MI_LARGE_ROCK, 100);
-
-            result = *random_choose_weighted(missile_weights);
-        }
-        break;
-
-    default:
-        break;
-    }
-    return result;
+    return *random_choose_weighted(missile_weights);
 }
 
 static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,

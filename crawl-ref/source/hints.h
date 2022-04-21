@@ -44,8 +44,10 @@ enum hints_event_type
     HINT_SEEN_WEAPON,
     HINT_SEEN_MISSILES,
     HINT_SEEN_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     HINT_SEEN_RANDART,
     HINT_SEEN_CARRION,
+#endif
     HINT_SEEN_GOLD,
     // encountered dungeon features
     HINT_SEEN_STAIRS,
@@ -77,7 +79,9 @@ enum hints_event_type
     HINT_NEW_ABILITY_MUT,
 #endif
     HINT_NEW_ABILITY_ITEM,
+#if TAG_MAJOR_VERSION == 34
     HINT_FLEEING_MONSTER,
+#endif
     HINT_CONVERT,
     HINT_GOD_DISPLEASED,
     HINT_EXCOMMUNICATE,
@@ -130,6 +134,8 @@ enum hints_event_type
     HINT_CLOUD_WARNING,
     HINT_ANIMATE_CORPSE_SKELETON,
     HINT_SEEN_WEB,
+    HINT_MALEVOLENCE,
+    HINT_OPPORTUNITY_ATTACK,
     HINT_EVENTS_NUM
 };
 

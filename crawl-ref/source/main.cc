@@ -571,6 +571,7 @@ static void _show_commandline_options_help()
 #endif
     puts("  -playable-json   list playable species, jobs, and character combos.");
     puts("  -branches-json   list branch data.");
+    puts("  -no-player-bones do not write player's info to bones files.");
 
 #if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
     text_popup(help, L"Dungeon Crawl command line help");
@@ -1652,10 +1653,10 @@ static void _experience_check()
         perc = (you.experience - exp_needed(xl)) * 100
              / (exp_needed(xl + 1) - exp_needed(xl));
         perc = (nl - xl) * 100 - perc;
-        mprf(you.lives < 2 ?
-             "You'll get an extra life in %d.%02d levels' worth of XP." :
-             "If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
-             perc / 100, perc % 100);
+        you.lives < 2 ?
+             mprf("You'll get an extra life in %d.%02d levels' worth of XP.", perc / 100, perc % 100) :
+             mprf("If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
+             (perc / 100) + 1 , perc % 100);
     }
 
     handle_real_time();
@@ -1771,7 +1772,6 @@ static void _do_display_map()
 static void _do_cycle_quiver(int dir)
 {
     const bool changed = you.quiver_action.cycle(dir);
-    you.launcher_action.set(you.quiver_action.get());
     quiver::set_needs_redraw();
 
     const bool valid = you.quiver_action.get()->is_valid();
@@ -1783,7 +1783,7 @@ static void _do_cycle_quiver(int dir)
         // fire_order, or setting fire_items_start, and still available from
         // the menu. This messaging still excludes stuff that requires
         // force-quivering, e.g. zigfigs
-        const bool others = !valid && quiver::anything_to_quiver(true);
+        const bool others = !valid && quiver::anything_to_quiver();
         mprf("No %squiver actions available for cycling.%s",
             valid ? "other " : "",
             others ? " Use [<white>Q</white>] to select from all actions."

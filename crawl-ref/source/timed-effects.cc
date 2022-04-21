@@ -638,6 +638,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_FRIENDLY_BRIBED: case ENCH_CORROSION: case ENCH_GOLD_LUST:
         case ENCH_RESISTANCE: case ENCH_HEXED: case ENCH_IDEALISED:
         case ENCH_BOUND_SOUL: case ENCH_STILL_WINDS: case ENCH_DRAINED:
+        case ENCH_ANGUISH:
             lose_ench_levels(entry.second, levels);
             break;
 
@@ -666,6 +667,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROLLING:
         case ENCH_MERFOLK_AVATAR_SONG:
         case ENCH_INFESTATION:
+        case ENCH_HELD:
             del_ench(entry.first);
             break;
 
@@ -686,10 +688,6 @@ void monster::timeout_enchantments(int levels)
             // pacified monster leave the level.
             if (alive() && !is_stationary())
                 monster_blink(this, true);
-            break;
-
-        case ENCH_HELD:
-            del_ench(entry.first);
             break;
 
         case ENCH_TIDE:
@@ -1269,17 +1267,19 @@ void decr_zot_clock()
     if (!zot_clock_active())
         return;
     int &zot = _zot_clock();
+
+    const int div = you.has_mutation(MUT_SHORT_LIFESPAN) ? 10 : 1;
     if (zot == -1)
     {
         // new branch
-        zot = MAX_ZOT_CLOCK - ZOT_CLOCK_PER_FLOOR;
+        zot = MAX_ZOT_CLOCK - ZOT_CLOCK_PER_FLOOR / div;
     }
     else
     {
         // old branch, new floor
         if (bezotted())
             mpr("As you enter the new level, Zot loses track of you.");
-        zot = max(0, zot - ZOT_CLOCK_PER_FLOOR);
+        zot = max(0, zot - ZOT_CLOCK_PER_FLOOR / div);
     }
 }
 

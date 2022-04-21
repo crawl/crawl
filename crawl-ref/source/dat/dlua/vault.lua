@@ -84,24 +84,23 @@ function ks_random_setup(e, norandomexits)
     end
 end
 
--- the Serpent should appear in exactly one hell end
--- XXX: are things like shafts going to break this?
-function hell_branches_remaining()
-   local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
-   local ret = #hell_branches
-   for _, branch in ipairs(hell_branches) do
-      if travel.find_deepest_explored(branch) == 7 then
-         ret = ret - 1
-      end
-   end
-   return ret
+function soh_hangout()
+  if dgn.persist.soh_hangout == nil then
+    local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
+    dgn.persist.soh_hangout = util.random_from(hell_branches)
+  end
+  return dgn.persist.soh_hangout
 end
 
+-- the Serpent should appear in exactly one hell end. Vaults that call this
+-- should guarantee that `D` is present.
 function serpent_of_hell_setup(e)
-   if not you.uniques("the Serpent of Hell") and
-      crawl.one_chance_in(hell_branches_remaining()) then
-      e.kmons('D = the Serpent of Hell')
-   end
+  local b = soh_hangout()
+  if not you.uniques("the Serpent of Hell")
+        and you.in_branch(b)
+        and you.depth() == dgn.br_depth(b) then
+    e.kmons('D = the Serpent of Hell')
+  end
 end
 
 -- Guarantee two rare base types with a brand

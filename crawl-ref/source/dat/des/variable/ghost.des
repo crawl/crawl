@@ -1185,8 +1185,7 @@ G...@...G
 ENDMAP
 
 NAME:   ebering_ghost_funeral_grove
-# Don't place on Swamp:$ since Lerny can knock down the trees.
-DEPTH:  D:8-, Lair, Swamp, !Swamp:$
+DEPTH:  D:8-, Lair, Swamp
 ORIENT: float
 # Monsters and loot
 KITEM:  O = potion of lignification ident:all
@@ -2629,7 +2628,7 @@ NAME:   hellmonk_ghost_big_iron
 TAGS:   vaults_orient_s
 DEPTH:  D:8-13, Elf, Vaults, !Vaults:$, Crypt, Depths, Zot
 ORIENT: float
-ITEM:   randbook disc:earth spells:iron_shot, bolt q:1
+ITEM:   randbook disc:earth spells:iron_shot, javelin q:1
 KMONS:  O = player ghost
 KMONS:  p = plant
 KMONS:  - = bush

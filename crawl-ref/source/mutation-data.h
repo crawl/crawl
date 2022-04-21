@@ -2283,6 +2283,18 @@ static const mutation_def mut_data[] =
   {"You feel more mortal.", "", ""},
 },
 
+{ MUT_DEVOUR_ON_KILL, 0, 1, mutflag::good, true /* but irrelevant */, "devour on kill",
+  {"You thrive by killing the living.", "", ""},
+  {"You feel hungry for flesh.", "", ""},
+  {"You feel less hungry for flesh.", "", ""},
+},
+
+{ MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false, "short lifespan",
+  {"You are easily found by Zot.", "", ""},
+  {"You feel your time running out.", "", ""},
+  {"You feel long-lived.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

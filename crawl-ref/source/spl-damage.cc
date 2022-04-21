@@ -1112,6 +1112,7 @@ static const map<monster_type, monster_frag> fraggable_monsters = {
     { MONS_USHABTI,           { "rock", BROWN } },
     { MONS_STATUE,            { "rock", BROWN } },
     { MONS_GARGOYLE,          { "rock", BROWN } },
+    { MONS_VV,                { "rock", BROWN } },
     { MONS_IRON_ELEMENTAL,    { "metal", CYAN, frag_damage_type::metal } },
     { MONS_IRON_GOLEM,        { "metal", CYAN, frag_damage_type::metal } },
     { MONS_PEACEKEEPER,       { "metal", CYAN, frag_damage_type::metal } },
@@ -1676,8 +1677,11 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     beam.source = wielder->pos();
     beam.target = where;
     beam.hit = AUTOMATIC_HIT;
-    beam.loudness = 7;
     beam.explode();
+
+    // We need to do this separately from the beam, since explosions reset
+    // noise values & visual beams don't cause noise regardless.
+    noisy(7, where);
 
     counted_monster_list affected_monsters;
     for (adjacent_iterator ai(where, false); ai; ++ai)
@@ -1825,7 +1829,7 @@ dice_def irradiate_damage(int pow, bool random)
 {
     const int dice = 3;
     const int max_dam = 40 + (random ? div_rand_round(pow, 2) : pow / 2);
-    return calc_dice(dice, max_dam);
+    return calc_dice(dice, max_dam, random);
 }
 
 /**
@@ -2054,7 +2058,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, actor *agent)
     // clouds where it's standing!
 
     monster* mon = monster_at(where);
-    if (invalid_monster(mon) || mon == agent)
+    if (invalid_monster(mon) || mon == agent || tracer && !agent->can_see(*mon))
         return 0;
 
     // how poisoned is the victim?

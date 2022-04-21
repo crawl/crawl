@@ -9,6 +9,7 @@ from webtiles import load_games
 
 server_config = {}
 source_file = None
+source_module = None
 
 # light wrapper class that maps get/set/etc to getattr/setattr/etc
 # doesn't bother to implement most of the dict interface...
@@ -37,12 +38,38 @@ admin_password_reset = False
 # classic config: everything is just done in a module
 # (TODO: add some alternative)
 def init_config_from_module(module):
-    global server_config, source_file
+    global server_config, source_file, source_module
+    source_module = module
     server_config = ConfigModuleWrapper(module)
     source_file = os.path.abspath(module.__file__)
     global allow_password_reset, admin_password_reset
     allow_password_reset = get('allow_password_reset')
     admin_password_reset = get('admin_password_reset')
+
+
+def reload():
+    global source_file, source_module
+    try:
+        logging.warning("Reloading config from %s", source_file)
+        try:
+            from importlib import reload
+        except:
+            from imp import reload
+        # major caveat: this will not reset the namespace before doing the
+        # reload. So to return something to the default value requires an
+        # explicit setting. XX is there anything to do about this?
+        reload(source_module)
+        init_config_from_module(source_module)
+        try:
+            load_game_data()
+        except ValueError:
+            logging.error("Game data reload failed!", exc_info=True)
+            # if you get to here, game data is probably messed up. But there's
+            # nothing to be done, probably...
+        # XX it might be good to revalidate here, but I'm not sure how to
+        # recover from errors
+    except:
+        logging.error("Config reload failed!", exc_info=True)
 
 
 server_path = None
@@ -80,6 +107,7 @@ defaults = {
     'no_cache': False,
     'live_debug': False,
     'lobby_update_rate': 2,
+    'games_config_dir': 'games.d',
 }
 
 def get(key, default=None):

@@ -144,7 +144,6 @@ public:
 
     virtual bool fumbles_attack() = 0;
 
-    virtual bool fights_well_unarmed() { return true; }
     virtual void attacking(actor *other) = 0;
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;

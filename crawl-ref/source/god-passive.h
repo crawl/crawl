@@ -293,7 +293,7 @@ int qazlal_sh_boost(int piety = you.piety);
 int tso_sh_boost();
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
-bool does_ru_wanna_redirect(monster* mon);
+bool does_ru_wanna_redirect(const monster &mon);
 ru_interference get_ru_attack_interference_level();
 monster* shadow_monster(bool equip = true);
 void shadow_monster_reset(monster *mon);
@@ -310,5 +310,6 @@ void wu_jian_wall_jump_effects();
 bool wu_jian_has_momentum(wu_jian_attack_type);
 bool wu_jian_post_move_effects(bool did_wall_jump,
                                const coord_def& initial_position);
+bool wu_jian_move_triggers_attacks(coord_def new_pos);
 
 void okawaru_handle_duel();

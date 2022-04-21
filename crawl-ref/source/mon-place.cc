@@ -1071,8 +1071,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (mg.cls == MONS_CRAZY_YIUF)
         mon->god = GOD_XOM;
     // Grinder and Ignacio belong to Makhleb.
+    // Hell Knights need some reason to be evil.
     else if (mg.cls == MONS_GRINDER
-             || mg.cls == MONS_IGNACIO)
+             || mg.cls == MONS_IGNACIO
+             || mg.cls == MONS_HELL_KNIGHT)
     {
         mon->god = GOD_MAKHLEB;
     }
@@ -1778,6 +1780,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_JACKAL,          { {}, {{ BAND_JACKALS, {1, 4} }}}},
     { MONS_MARGERY,         { {}, {{ BAND_HELL_KNIGHTS, {4, 8}, true }}}},
     { MONS_HELL_KNIGHT,     { {}, {{ BAND_HELL_KNIGHTS, {4, 8} }}}},
+    { MONS_AMAEMON,         { {}, {{ BAND_ORANGE_DEMONS, {1, 2}, true }}}},
     { MONS_JOSEPHINE,       { {}, {{ BAND_JOSEPHINE, {3, 6}, true }}}},
     { MONS_NECROMANCER,     { {}, {{ BAND_NECROMANCER, {3, 6}, true }}}},
     { MONS_VAMPIRE_MAGE,    { {3}, {{ BAND_JIANGSHI, {2, 4}, true }}}},
@@ -1796,6 +1799,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
     { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
     { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
+    { MONS_LODUL,           { {}, {{ BAND_OGRE_MAGE, {6, 10} }}}},
     { MONS_BALRUG,          { {0, 0, []() { return !player_in_hell(); }},
                                    {{ BAND_BALRUG, {2, 5}, true }}}},
     { MONS_CACODEMON,       { {}, {{ BAND_CACODEMON, {1, 4}, true }}}},
@@ -1941,6 +1945,7 @@ static const map<monster_type, band_set> bands_by_leader = {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
+    { MONS_JOSEPHINA, { {}, {{ BAND_SIMULACRA, {4, 6} }}}},
     { MONS_BONE_DRAGON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_BONE_DRAGONS, {1, 2}} }}},
     { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
@@ -2128,6 +2133,7 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_DREAM_SHEEP,         {{{MONS_DREAM_SHEEP, 1}}}},
     { BAND_DEATH_SCARABS,       {{{MONS_DEATH_SCARAB, 1}}}},
     { BAND_FLYING_SKULLS,       {{{MONS_FLYING_SKULL, 1}}}},
+    { BAND_ORANGE_DEMONS,       {{{MONS_ORANGE_DEMON, 1}}}},
     { BAND_SHARD_SHRIKE,        {{{MONS_SHARD_SHRIKE, 1}}}},
     { BAND_SOJOBO,              {{{MONS_TENGU_REAVER, 1}}}},
     { BAND_DIRE_ELEPHANTS,      {{{MONS_DIRE_ELEPHANT, 1}}}},
@@ -2843,6 +2849,9 @@ conduct_type god_hates_monster(const monster &mon)
 monster* create_monster(mgen_data mg, bool fail_msg)
 {
     ASSERT(in_bounds(mg.pos)); // otherwise it's a guaranteed fail
+
+    if (crawl_state.player_moving)
+        return nullptr; // monster might end up on player's tile - too scary
 
     const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
 

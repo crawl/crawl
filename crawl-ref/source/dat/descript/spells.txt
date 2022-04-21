@@ -1257,6 +1257,12 @@ well as those turned to stone by petrification. It is less effective against
 flying, gelatinous and insubstantial creatures. It may also destroy nearby
 walls.
 %%%%
+Sheza's Dance spell
+
+Summons weapons from far and wide - a dagger newly forged, a sword long-rusted
+in a moldering tomb, an axe still steaming with the blood of its victim -
+animating them and sending them out to attack.
+%%%%
 Shock spell
 
 Throws a bouncing bolt of electricity. It partially bypasses armour.
@@ -1561,6 +1567,10 @@ Summons wandering mushrooms and deathcaps next to a targeted creature.
 Summon Scarabs spell
 
 Calls forth a swarm of death scarabs.
+%%%%
+Summon Scorpions spell
+
+Calls forth a swarm of venomous scorpions.
 %%%%
 Summon Small Mammal spell
 

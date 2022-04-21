@@ -808,7 +808,7 @@ static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
     bolt *expl   = new bolt(*beam);
     expl->flavour = BEAM_DAMNATION;
     expl->is_explosion = true;
-    expl->damage = dice_def(3, 14);
+    expl->damage = dice_def(2, 14);
     expl->name   = "damnation";
 
     beam->special_explosion = expl;
@@ -1346,7 +1346,7 @@ static void _BATTLE_world_reacts(item_def */*item*/)
 {
     if (!find_battlesphere(&you)
         && there_are_monsters_nearby(true, true, false)
-        && rude_stop_summoning_reason().empty())
+        && stop_summoning_reason(MR_RES_POISON, M_FLIES).empty())
     {
         cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE, true),
                           GOD_NO_GOD, false);

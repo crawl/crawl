@@ -19,6 +19,7 @@
 #include "coordit.h"
 #include "english.h"
 #include "env.h"
+#include "fight.h"
 #include "ghost.h"
 #include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
@@ -618,6 +619,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_RES_DROWN);
     if (m->clarity())
         mb.set(MB_CLARITY);
+    if (!mons_can_be_blinded(m->type))
+        mb.set(MB_UNBLINDABLE);
 
     dam = mons_get_damage_level(*m);
 
@@ -655,6 +658,15 @@ monster_info::monster_info(const monster* m, int milev)
         monster_info_flags flag = ench_to_mb(*m, entry.first);
         if (flag != NUM_MB_FLAGS)
             mb.set(flag);
+    }
+
+    if (!m->friendly())
+    {
+        const stab_type st = find_stab_type(&you, *m, false);
+        if (st == STAB_INVISIBLE && !mb[MB_BLIND])
+            mb.set(MB_CANT_SEE_YOU);
+        else if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
+            mb.set(MB_DISTRACTED_ONLY);
     }
 
     if (type == MONS_SILENT_SPECTRE)
@@ -1397,7 +1409,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     case ATT_OLD_STRICT_NEUTRAL:
 #endif
         if (fellow_slime())
-            out << "(fellow slime)";
+            out << " (fellow slime)";
         colour_type = _MLC_GOOD_NEUTRAL;
         break;
     case ATT_NEUTRAL:
@@ -1774,14 +1786,10 @@ static bool _has_polearm(const monster_info& mi)
 
 static bool _has_launcher(const monster_info& mi)
 {
-    if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
-    {
-        const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        const item_def* missile = mi.inv[MSLOT_MISSILE].get();
-        return weapon && missile && missile->launched_by(*weapon);
-    }
-    else
+    if (mi.itemuse() < MONUSE_STARTING_EQUIPMENT)
         return false;
+    const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
+    return weapon && is_range_weapon(*weapon);
 }
 
 static bool _has_missile(const monster_info& mi)

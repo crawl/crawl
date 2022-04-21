@@ -1233,10 +1233,6 @@ void TilesFramework::_send_player(bool force_full)
     }
     json_close_object(true);
 
-    _update_int(force_full, c.launcher_item,
-                you.launcher_action.is_empty()
-                ? (int8_t) -1
-                : (int8_t) you.launcher_action.get()->get_item(), "launcher_item");
     _update_int(force_full, c.quiver_item,
                 (int8_t) you.quiver_action.get()->get_item(), "quiver_item");
 
@@ -1319,8 +1315,8 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
                            "sub_type", false);
     if (Options.action_panel_glyphs)
     {
-        string cur_glyph = stringize_glyph(get_item_glyph(current).ch);
-        string next_glyph = stringize_glyph(get_item_glyph(next).ch);
+        string cur_glyph = force_full ? "" : stringize_glyph(get_item_glyph(current).ch);
+        string next_glyph = !defined ? "" : stringize_glyph(get_item_glyph(next).ch);
         changed |= _update_string(force_full, cur_glyph, next_glyph, "g", false);
     }
     if (is_xp_evoker(next))

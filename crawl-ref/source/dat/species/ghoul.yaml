@@ -53,8 +53,7 @@ mutations:
     MUT_INHIBITED_REGENERATION: 1
     MUT_COLD_RESISTANCE: 1
     MUT_CLAWS: 1
-fake_mutations:
-  - long: You thrive by killing the living.
+    MUT_DEVOUR_ON_KILL: 1
 recommended_jobs:
   - JOB_WARPER
   - JOB_GLADIATOR

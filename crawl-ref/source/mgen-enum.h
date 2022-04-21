@@ -118,6 +118,7 @@ enum band_type
     BAND_SPECTRALS,
     BAND_BONE_DRAGONS,
     BAND_MIXED_SPIDERS,
+    BAND_ORANGE_DEMONS,
     NUM_BANDS                   // always last
 };
 

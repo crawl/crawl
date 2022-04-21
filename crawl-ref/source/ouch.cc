@@ -609,7 +609,8 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
         int count_created = 0;
         for (int i = 0; i < how_many; ++i)
         {
-            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), damager->mindex());
+            const int mindex = damager->alive() ? damager->mindex() : MHITNOT;
+            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), mindex);
             mg.set_summoned(&you, 2, 0, you.religion);
 
             if (create_monster(mg))
@@ -788,7 +789,11 @@ void reset_damage_counters()
 
 bool can_shave_damage()
 {
-    return you.species == SP_DEEP_DWARF;
+    return you.species == SP_DEEP_DWARF
+#if TAG_MAJOR_VERSION == 34
+    || you.species == SP_MAYFLYTAUR
+#endif
+    ;
 }
 
 int do_shave_damage(int dam)

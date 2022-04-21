@@ -1,3 +1,68 @@
+Stone Soup 0.29-a0 (through 0.29-a0-274-g17cd264cf)
+---------------------------------------------------
+
+Branches, Environment
+---------------------
+- Zombies and skeletons are removed from normal Dungeon spawns.
+
+Character
+---------
+- All 'mage' backgrounds now start with a potion of magic.
+- Gladiators add a single throwing weapon (javelin, large rock, or boomerang)
+  to their starting kit.
+- Monks start with a potion of ambrosia.
+- Hunters no longer start with a short sword and gain a scroll of immolation.
+- Brigands get an additional poisoned & curare dart.
+- Artificers trade their chesspiece for 9 iceblast charges.
+- Wanderers get an additional random potion or scroll.
+- Abyssal Knights start with more piety.
+- Chaos Knights start with a piece from Xom's chessboard.
+- Transmuters start with a potion of lignification.
+- Warpers sart with two more dispersal boomerangs (a total of 7).
+- Arkane Markspersons start with a scroll of vulnerability.
+- Enchanters start with a second potion of invisibility.
+- Kobold crossbows aptitude is increased to +3.
+- Merfolk polearms aptitude is decreased to +3, and long blades aptitude
+  increased +2.
+- Mummy necromancy enhancers now arrive at XL 3 and 13.
+- Unrandart tweaks:
+  - the Glaive of the Guard is reduced to +5.
+  - the arbalest "Damnation"'s explosions now do 2d14 damage.
+  - Gyre & Gimble are increased to +12.
+  - The Woodcutter's axe is now a battleaxe.
+
+Items
+-----
+- Launcher ammunition is removed, and launcher stats adjusted for unlimited
+  ammunition.
+- Launcher, long blade, and short blade damage now scale with Dex.
+- Launcher attack delay is increased by armour penalties.
+- Spriggans can no longer wield triple crossbows, and fustibali are 2-handed
+
+
+Monsters
+--------
+- Monster move energy is no longer randomized.
+- Monsters gain a 1/3 chance to gain a free attack on a player moving away from
+  them. Wu Jian martial attacks & rampaging give immunity, and monsters that
+  don't move fast enough to follow you can't attack.
+- New uniques:
+  - Parghit the Mighty, an "alt-timeline" version of Pargi with extremely high
+    regeneration and enchanted golden dragon scales. Appears in Depths, Zot,
+    Crypt, and Tomb.
+  - Josephina the Ice-Lich, an "alt-timeline" version of Josephine with
+    Seracfall and a band of simulacra along side Ghostly Fireball. Appears in
+    late Vaults, Depths, Zot, Crypt, and Tomb.
+  - Amaemon the Diabolical Poisoner, a poison-themed demonspawn unique
+    appearing with a band of orange demons in mid-D, early Lair, and Orc:1.
+  - Lodul the Thundrous, an ironbound thunderhulk sent to patrol outside the
+    Vaults, in late D, with a band of 2-headed ogres.
+  - Vv the Exile, an fire/ice spellcaster with Creeping Frost, Eruption, and
+    Pyroclastic Surge, appearing in Depths, Zot, Crypt, and Tomb.
+  - Zenata, Seeker of Sheza, with Resonance Strike and a new spell Sheza's
+    Dance, which summons dancing weapons, as well as a high-tier weapon with
+    some plusses. Appears searching Depths, Zot, Crypt, and Tomb.
+
 Stone Soup 0.28.0 (20220203)
 ----------------------------
 

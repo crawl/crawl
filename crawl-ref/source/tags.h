@@ -21,6 +21,7 @@
 
 using std::vector;
 
+struct player_save_info;
 struct show_type;
 struct monster_info;
 struct map_cell;
@@ -203,6 +204,8 @@ void remove_removed_library_spells(FixedBitVector<NUM_SPELLS>& lib);
 
 void tag_read(reader &inf, tag_type tag_id);
 void tag_write(tag_type tagID, writer &outf);
+player_save_info tag_read_char_info(reader &th, uint8_t format, uint8_t major,
+                                                                uint8_t minor);
 void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor);
 
 vector<ghost_demon> tag_read_ghosts(reader &th);

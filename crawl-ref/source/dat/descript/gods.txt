@@ -448,11 +448,9 @@ increasingly powerful destructive spells as they gain piety.
 Wu Jian powers
 
 Disciples of the Council learn to perform three martial techniques while moving
-around in combat. Martial techniques are incompatible with more elaborate
-methods of moving, and do not combine with charging, digging, hopping, or
-rampaging. They will also be taught to move at unfathomable speeds for short
-distances, and become able to summon a storm of golden clouds to increase their
-precision and damage for as long as they keep using martial attacks.
+around in combat. They will also be taught to move at unfathomable speeds for
+short distances, and become able to summon a storm of golden clouds to increase
+their precision and damage for as long as they keep using martial attacks.
 %%%%
 Xom powers
 
@@ -676,7 +674,6 @@ their enemies alerted, and their senses confounded by the
 axioms of Law; confusion, fainting and complete paralysis will be their lot.
 %%%%
 Wu Jian extra
-
   .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
   ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
   .......       .......
@@ -688,4 +685,7 @@ Wu Jian extra
   ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and
   ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
   ..#....       ..#.... takes two turns. Activated via the (a)bility menu.
+
+These prevent enemies from getting free attacks on you while you move away.
+You cannot launch martial attacks while digging, rampaging or rolling.
 %%%%

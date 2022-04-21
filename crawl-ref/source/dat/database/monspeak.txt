@@ -1712,6 +1712,40 @@ Antaeus
 @_hell_lord_taunt_@
 ## END Antaeus
 %%%%
+############ AMAEMON ### A demonspawn with poisoned words and a poisoned heart
+Amaemon
+
+@_Amaemon_common_@
+
+w:5
+@_Amaemon_rare_@
+%%%%
+_Amaemon_common_
+
+@The_monster@ hisses.
+
+VISUAL:Something foul drips from @the_monster@'s claws.
+
+VISUAL:@The_monster@'s eyes glow red.
+
+VISUAL:@The_monster@'s tail lashes.
+
+@The_monster@ shouts @at_foe@, "You think you're better than me?"
+
+@The_monster@ says @to_foe@, "Afraid of a little sting?"
+%%%%
+_Amaemon_rare_
+
+@The_monster@ whines, "They said I was special. Look at me now!"
+
+@The_monster@ sighs, "Demons are the only companions you can really rely on."
+
+@The_monster@ says @to_foe@, "Need some antivenom? Don't worry, you can trust me."
+
+@The_monster@ whispers, "Once I find the ORB, I'll be cured. I'll be normal again!"
+
+@The_monster@ sings, "Eyes close, heart stop, nighty-night for you..."
+%%%%
 ############ ARACHNE ### Half-human half-spider
 Arachne
 
@@ -4793,6 +4827,46 @@ _Joseph_rare_
 @The_monster@ shouts @at_foe@, "Wow!"
 ## END Joseph ##
 %%%%
+############ JOSEPHINA ### A half-frozen lich
+Josephina
+
+@_Josephina_common_@
+
+w:5
+@_Josephina_rare_@
+%%%%
+_Josephina_common_
+
+VISUAL:@The_monster@ grins evilly.
+
+VISUAL:@The_monster@ grins malevolently.
+
+@The_monster@ laughs insanely.
+
+@The_monster@ lets out a long cackle.
+
+VISUAL:@The_monster@ glitters frostily.
+
+@The_monster@ screams @at_foe@, "Die!"
+
+%%%%
+_Josephina_rare_
+
+VISUAL:@The_monster@ grinds @possessive@ teeth.
+
+VISUAL:One of @The_monster@'s icy fingers falls off.
+
+@The_monster@ says @to_foe@, "I'll make a rug of your skin."
+
+@The_monster@ howls, "Hell holds no secrets from me!"
+
+@The_monster@ shouts @at_foe@, "You can't hurt me! Ice reforms..."
+
+@The_monster@ screams, "I will never die! I am immortal!"
+
+@The_monster@ screams @at_foe@, "I'll use your head as a decoration in Hell!"
+## END Josephine ##
+%%%%
 ############ JOSEPHINE ### A twisted old witch looking for someone to kill
 Josephine
 
@@ -4859,6 +4933,38 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 @_wizard_common_spell_@
 @_fake_spell_effect_@
 ### END Kirke ###
+%%%%
+############ LODUL ### A thunderhulk ogre warchief
+Lodul
+
+@_Lodul_common_@
+
+w:5
+@_Lodul_rare_@
+%%%%
+_Lodul_common_
+
+@The_monster@ lets out a whooping war cry.
+
+VISUAL:@The_monster@ jingles a heavy purse and winks.
+
+@The_monster@ shouts @at_foe@, "Intruder!"
+
+@The_monster@ says @to_foe@, "I guard Vaults good! You no get in!"
+
+VISUAL:@The_monster@ stamps @possessive@ feet.
+%%%%
+_Lodul_rare_
+
+@The_monster@ says @to_foe@, "Work for me? I pay good."
+
+@The_monster@ shouts @at_foe@, "Taste the thunder!"
+
+VISUAL:@The_monster@ adjusts @possessive@ apparatus.
+
+@The_monster@ shouts, "Zap! Ha ha ha, made you jump."
+
+@The_monster@ roars, "I Iron Bound! You Brass... Trash!"
 %%%%
 ############ LOUISE ### A sorceress driven mad by the abyss
 Louise
@@ -5727,6 +5833,38 @@ VISUAL:@The_monster@ clenches @possessive@ claws.
 
 VISUAL:@The_monster@ looks very sad for a moment.
 %%%%
+############ PARGHIT ### A once-teased troll
+Parghit
+
+@_Parghit_common_@
+
+w:5
+@_Parghit_rare_@
+%%%%
+_Parghit_common_
+
+@The_monster@ snarls @at_foe@, "Go! Away!"
+
+VISUAL:@The_monster@ looks around cautiously.
+
+@The_monster@ hisses menacingly.
+
+@The_monster@ snarls @at_foe@, "My dungeon! Leave!"
+%%%%
+_Parghit_rare_
+
+VISUAL:@The_monster@ clenches @possessive@ teeth.
+
+VISUAL:@The_monster@ clenches @possessive@ claws.
+
+@The_monster@ hisses @at_foe@, "I bite!"
+
+@The_monster@ snarls, "Me hang you on necklace!"
+
+@The_monster@ warns @foe@, "Me EAT bullies!"
+
+@The_monster@ growls, "You tougher than dragon?"
+%%%%
 ############ ROXANNE ### a sapphire statue of an earth mage
 Roxanne
 
@@ -6206,6 +6344,44 @@ _Xtahua_rare_
 
 @The_monster@ roars, "BAH! BLOODY ADVENTURERS." @player_only@
 ## END Xtahua ##
+%%%%
+############ ZENATA ### A cultist of constructs
+Zenata
+
+@_Zenata_common_@
+
+w:5
+@_Zenata_rare_@
+%%%%
+_Zenata_common_
+
+VISUAL:@The_monster@ polishes a blade.
+
+Strange mechanisms whir as @The_monster@ focuses on @foe@.
+
+VISUAL:A stray blade cuts @The_monster@'s own flesh. She ignores it.
+
+# A Deepness in the Sky, more or less
+@The_monster@ howls @at_foe@, "I'll flense you until there's nothing left!"
+
+@The_monster@ shouts @at_foe@, "I'll hammer you into slag!"
+
+@The_monster@ screams, "I nearly understand... Get out of my way!"
+%%%%
+_Zenata_rare_
+
+@The_monster@ says, "Look what I've done to myself! Think you can do worse?"
+
+@The_monster@ laughs @at_foe@, "Think you're sharper than me?"
+
+# SHODAN!
+@The_monster@ scoffs, "How can you challenge a perfect, immortal machine?"
+
+@The_monsters@ wonders, "When I cut you open, what secrets will I find?"
+
+@The_monster@ mutters, "I can hear her whispering... but she's dead. She's dead!"
+
+@The_monster@ says, "I'll bring them back. Then they'll show me... everything..."
 %%%%
 ##########################################
 # Specific non-unique monsters

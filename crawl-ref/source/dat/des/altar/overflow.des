@@ -3846,6 +3846,44 @@ xx+++xx
  ""@""
 ENDMAP
 
+NAME:    dreamdust_divine_triumvirate
+TAGS:    temple_overflow_3 temple_overflow_elyvilon
+TAGS:    temple_overflow_zin temple_overflow_the_shining_one
+TAGS:    no_monster_gen no_item_gen transparent
+KFEAT:   D = altar_zin
+KFEAT:   E = altar_elyvilon
+KFEAT:   F = altar_the_shining_one
+NSUBST:  ? = 1:D / 1:E / 1:F
+TILE:    G = dngn_statue_triangle
+KFEAT:   a = granite_statue
+TILE:    a = dngn_statue_angel
+: if crawl.one_chance_in(2) then
+# Silver theme
+KFEAT:   c = v
+TILE:    c = dngn_metal_wall_white
+COLOUR:  c- = white
+FTILE:   -aDEFG = floor_w_marble
+: else
+# Gold theme
+TILE:    c = wall_church
+COLOUR:  c- = yellow
+FTILE:   -aDEFG = floor_limestone
+: end
+MAP
+.....................
+.cccccccca-acccccccc.
+..ccccccca-accccccc..
+ ..cca---------acc..
+  ..cc---?-?---cc..
+   ..cc---G---cc..
+    ..cc--?--cc..
+     ..cc---cc..
+      ..ccacc..
+       ..ccc..
+        ..c..
+         ...
+ENDMAP
+
 NAME:  grunt_temple_overflow_champion_of_chaos
 TAGS:  temple_overflow_2 temple_overflow_makhleb temple_overflow_xom
 TAGS:  no_monster_gen transparent
@@ -5511,20 +5549,27 @@ TAGS:    temple_overflow_generic_15 temple_overflow_generic_14 \
   else
     altarcount = tonumber(get_overflow_altar_count(_G))
   end
+  if not altarcount then
+    altarcount = 9
+  end
   -- altar arrangements by row. rows of 3 have G or T at the ends.
   -- 9: 3/3/3. 10: 3/4/3. 11: 4/3/4. 12: 4/4/4. 13: 4/5/4. 14: 5/4/5. 15: 5/5/5.
   if altarcount >= 13 then
-    subst("T:F")
+    subst("T=F")
   end
   if altarcount % 2 == 0 then
-    subst("T:.")
-    shuffle("FH")
+    subst("T=.")
+    subst("F=Z")
+    subst("H=F")
+    subst("Z=H")
   end
   if altarcount >= 11 then
-    subst("G:D")
+    subst("G=D")
   end
   if altarcount >= 11 and altarcount <= 13 then
-    shuffle("DE")
+    subst("D=Z")
+    subst("E=D")
+    subst("Z=E")
   end
 }}
 SUBST:   DF : B

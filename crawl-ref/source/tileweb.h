@@ -83,7 +83,6 @@ struct player_info
     FixedVector<item_def, ENDOFPACK> inv;
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
-    int8_t launcher_item;
     string quiver_desc;
     string unarmed_attack;
     uint8_t unarmed_attack_colour;

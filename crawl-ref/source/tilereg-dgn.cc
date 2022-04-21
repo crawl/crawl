@@ -310,7 +310,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
 
     // TODO: unify code with tooltip construction?
     const item_def* weapon = you.weapon();
-    const bool primary_ranged = !you.launcher_action.is_empty();
+    const bool primary_ranged = weapon && is_range_weapon(*weapon);
     const int melee_dist = weapon ? weapon_reach(*weapon) : 1;
 
     if (!ctrl && !shift && !alt
@@ -688,7 +688,8 @@ static void _add_tip(string &tip, string text)
 bool tile_dungeon_tip(const coord_def &gc, string &tip)
 {
     // TODO: these are not formatted very nicely
-    const bool primary_ranged = !you.launcher_action.is_empty();
+    const item_def *weapon = you.weapon();
+    const bool primary_ranged = weapon && is_range_weapon(*weapon);
     const bool primary_is_secondary = primary_ranged &&
         quiver::get_primary_action() == quiver::get_secondary_action();
     const int melee_dist = you.weapon() ? weapon_reach(*you.weapon()) : 1;

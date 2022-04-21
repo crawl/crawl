@@ -341,7 +341,13 @@ spret frog_hop(bool fail, dist *target)
     if (!target)
         target = &empty; // XX just convert some of these fn signatures to take dist &
     const int hop_range = frog_hop_range();
-    targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
+    targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS, false,
+                       [](const coord_def &p){
+        if (is_feat_dangerous(env.grid(p), true))
+            return false;
+        const actor* act = actor_at(p);
+        return !act || !you.can_see(*act);
+    });
     tgt.obeys_mesmerise = true;
 
     while (true)

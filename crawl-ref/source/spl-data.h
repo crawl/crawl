@@ -3526,6 +3526,28 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SUMMON_SCORPIONS, "Summon Scorpions",
+    spschool::summoning | spschool::poison,
+    spflag::mons_abjure | spflag::monster,
+    4,
+    200,
+    -1, -1,
+    0, 0,
+    TILEG_SUMMON_SCORPIONS,
+},
+
+{
+    SPELL_SHEZAS_DANCE, "Sheza's Dance",
+    spschool::summoning | spschool::earth,
+    spflag::mons_abjure | spflag::monster,
+    5,
+    200,
+    -1, -1,
+    0, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,
@@ -3605,7 +3627,6 @@ AXED_SPELL(SPELL_VAMPIRE_SUMMON, "Vampire Summon")
 AXED_SPELL(SPELL_WARP_BRAND, "Warp Weapon")
 AXED_SPELL(SPELL_WEAVE_SHADOWS, "Weave Shadows")
 AXED_SPELL(SPELL_STRIKING, "Striking")
-AXED_SPELL(SPELL_SUMMON_SCORPIONS, "Summon Scorpions")
 AXED_SPELL(SPELL_RESURRECT, "Resurrect")
 AXED_SPELL(SPELL_HOLY_WORD, "Holy word")
 AXED_SPELL(SPELL_SACRIFICE, "Sacrifice")

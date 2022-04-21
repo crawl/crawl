@@ -1844,11 +1844,10 @@ DEPTH:   Snake, !Snake:$
 ORIENT:  float
 ITEM:    shortbow / longbow w:4 / hand crossbow / arbalest w:3 \
          / triple crossbow w:1
-ITEM:    arrow / bolt
 MONS:    naga sharpshooter
 SUBST:   s = 1'
 SHUFFLE: }])
-KMASK:   1dew'+}]) = opaque
+KMASK:   1dw'+}]) = opaque
 MAP
  xxxxxxxxx.@@@.xxxxxxxxx
 xxxxxxxxxxx...xxxxxxxxxxx
@@ -1860,7 +1859,7 @@ xx....wwwwwwwwwwwww....xx
 xx....wwwwwwwwwwwww....xx
 xx....ww1'''s'''1ww....xx
 xxx...ww'ccccccc'ww...xxx
-.xx...ww'ceeeeec'ww...xx.
+.xx...ww'c'''''c'ww...xx.
 @.....ww'+''s''c'ww.....@
 @.....wws+''1'}csww.....@
 @.....ww'+''s''c'ww.....@

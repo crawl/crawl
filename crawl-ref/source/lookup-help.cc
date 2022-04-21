@@ -10,6 +10,7 @@
 #include <functional>
 
 #include "ability.h"
+#include "artefact.h"
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
@@ -447,7 +448,8 @@ static bool _spell_filter(string key, string /*body*/)
 
 static bool _item_filter(string key, string /*body*/)
 {
-    return item_kind_by_name(key).base_type == OBJ_UNASSIGNED;
+    return item_kind_by_name(key).base_type == OBJ_UNASSIGNED
+        && !extant_unrandart_by_exact_name(key);
 }
 
 static bool _feature_filter(string key, string /*body*/)
@@ -480,6 +482,16 @@ static void _recap_mon_keys(vector<string> &keys)
             monster_type type = get_monster_by_name(keys[i]);
             keys[i] = mons_type_name(type, DESC_PLAIN);
         }
+    }
+}
+
+static void _recap_item_keys(vector<string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        const int unrand_idx = extant_unrandart_by_exact_name(keys[i]);
+        if (unrand_idx)
+            keys[i] = get_unrand_entry(unrand_idx)->name; // fix capitalization
     }
 }
 
@@ -600,7 +612,10 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
     MenuEntry* me = _simple_menu_gen(letter, str, key);
     item_def item;
     item_kind kind = item_kind_by_name(key);
-    get_item_by_name(&item, key.c_str(), kind.base_type);
+    if (kind.base_type == OBJ_UNASSIGNED)
+        make_item_unrandart(item, extant_unrandart_by_exact_name(key));
+    else
+        get_item_by_name(&item, key.c_str(), kind.base_type);
     item_colour(item);
     tileidx_t idx = tileidx_item(get_item_known_info(item));
     tileidx_t base_item = tileidx_known_base_item(idx);
@@ -1061,7 +1076,12 @@ static int _describe_item(const string &key, const string &suffix,
     const string item_name = key.substr(0, key.size() - suffix.size());
     item_def item;
     if (!get_item_by_exact_name(item, item_name.c_str()))
-        die("Unable to get item %s by name", key.c_str());
+    {
+        const int unrand_idx = extant_unrandart_by_exact_name(item_name);
+        if (!unrand_idx)
+            die("Unable to get item %s by name", key.c_str());
+        make_item_unrandart(item, unrand_idx);
+    }
     describe_item_popup(item);
     return 0;
 }
@@ -1220,7 +1240,7 @@ static const vector<LookupType> lookup_types = {
     LookupType('C', "card", nullptr, nullptr,
                nullptr, _get_card_keys, _card_menu_gen,
                _describe_card, lookup_type::db_suffix),
-    LookupType('I', "item", nullptr, _item_filter,
+    LookupType('I', "item", _recap_item_keys, _item_filter,
                item_name_list_for_glyph, nullptr, _item_menu_gen,
                _describe_item, lookup_type::none),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,

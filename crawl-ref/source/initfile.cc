@@ -238,8 +238,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
-        new BoolGameOption(SIMPLE_NAME(launcher_autoquiver), true),
         new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false),
+        new BoolGameOption(SIMPLE_NAME(launcher_autoquiver), true),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
         new ColourGameOption(SIMPLE_NAME(tc_exclude_circle), RED),
@@ -403,6 +403,7 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_tip_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT),
         new BoolGameOption(SIMPLE_NAME(tile_single_column_menus), true),
+        new IntGameOption(SIMPLE_NAME(tile_sidebar_pixels), 32, 1, INT_MAX),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
@@ -591,11 +592,6 @@ static map<string, weapon_type> _special_weapon_map = {
     {"unarmed",     WPN_UNARMED},
     {"claws",       WPN_UNARMED},
 
-    {"thrown",      WPN_THROWN},
-    {"rocks",       WPN_THROWN},
-    {"boomerangs",   WPN_THROWN},
-    {"javelins",    WPN_THROWN},
-
     {"random",      WPN_RANDOM},
 
     {"viable",      WPN_VIABLE},
@@ -629,8 +625,6 @@ static string _weapon_to_str(weapon_type wpn_type)
     {
     case WPN_UNARMED:
         return "claws";
-    case WPN_THROWN:
-        return "thrown";
     case WPN_VIABLE:
         return "viable";
     case WPN_RANDOM:
@@ -663,9 +657,7 @@ int str_to_summon_type(const string &str)
 
 static fire_type _str_to_fire_types(const string &str)
 {
-    if (str == "launcher")
-        return FIRE_LAUNCHER;
-    else if (str == "stone")
+    if (str == "stone")
         return FIRE_STONE;
     else if (str == "rock")
         return FIRE_ROCK;
@@ -677,10 +669,10 @@ static fire_type _str_to_fire_types(const string &str)
         return FIRE_DART;
     else if (str == "net")
         return FIRE_NET;
-    else if (str == "throwing")
+    else if (str == "throwing" || str == "ammo")
         return FIRE_THROWING;
-    else if (str == "ammo")
-        return FIRE_AMMO;
+    else if (str == "launcher")
+        return FIRE_LAUNCHER;
     else if (str == "inscribed")
         return FIRE_INSCRIBED;
     else if (str == "spell")
@@ -1164,10 +1156,9 @@ void game_options::reset_options()
 
     force_spell_targeter =
         { SPELL_HAILSTORM, SPELL_STARBURST, SPELL_FROZEN_RAMPARTS,
-          SPELL_MAXWELLS_COUPLING, SPELL_IGNITION, SPELL_NOXIOUS_BOG,
+          SPELL_IGNITION, SPELL_NOXIOUS_BOG, SPELL_ANGUISH,
           SPELL_CAUSE_FEAR, SPELL_INTOXICATE, SPELL_DISCORD, SPELL_DISPERSAL,
-          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE,
-          SPELL_ANGUISH, };
+          SPELL_ENGLACIATION, SPELL_DAZZLING_FLASH, SPELL_FLAME_WAVE };
     always_use_static_spell_targeters = false;
 
     force_ability_targeter =
@@ -2116,7 +2107,8 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
     : seed(0), seed_from_rc(0),
-    no_save(false), language(lang_t::EN), lang_name(nullptr),
+    no_save(false), no_player_bones(false), language(lang_t::EN),
+    lang_name(nullptr),
     prefs_dirty(false)
 {
     reset_options();
@@ -4360,6 +4352,7 @@ enum commandline_option_type
     CLO_WIZARD,
     CLO_EXPLORE,
     CLO_NO_SAVE,
+    CLO_NO_PLAYER_BONES,
     CLO_GDB,
     CLO_NO_GDB, CLO_NOGDB,
     CLO_THROTTLE,
@@ -4385,9 +4378,9 @@ static const char *cmd_ops[] =
     "objstat", "iters", "force-map", "arena", "dump-maps", "test", "script",
     "builddb", "help", "version", "seed", "pregen", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "tutorial", "wizard", "explore", "no-save", "gdb",
-    "no-gdb", "nogdb", "throttle", "no-throttle", "playable-json",
-    "branches-json", "save-json", "gametypes-json", "bones",
+    "print-charset", "tutorial", "wizard", "explore", "no-save",
+    "no-player-bones", "gdb", "no-gdb", "nogdb", "throttle", "no-throttle",
+    "playable-json", "branches-json", "save-json", "gametypes-json", "bones",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection", "print-webtiles-options",
 #endif
@@ -4435,6 +4428,10 @@ static void _print_version()
 
 static void _print_save_version(char *name)
 {
+    // Ensure that the savedir option is set correctly on the first parse_args
+    // pass.
+    // TODO: read initfile for local games?
+    Options.reset_paths();
     try
     {
         string filename = name;
@@ -5594,6 +5591,11 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_NO_SAVE:
             if (!rc_only)
                 Options.no_save = true;
+            break;
+
+        case CLO_NO_PLAYER_BONES:
+            if (!rc_only)
+                Options.no_player_bones = true;
             break;
 
 #ifdef USE_TILE_WEB

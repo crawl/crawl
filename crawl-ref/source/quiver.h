@@ -22,19 +22,6 @@ class preserve_quiver_slots;
 
 namespace quiver
 {
-    enum launcher
-    {
-        AMMO_THROW,           // no launcher wielded -> darts, stones, ...
-        AMMO_BOW,             // wielded bow -> arrows
-        AMMO_SLING,           // wielded sling -> stones, sling bullets
-        AMMO_CROSSBOW,        // wielded crossbow -> bolts
-        // Used to be hand crossbows
-    #if TAG_MAJOR_VERSION == 34
-        AMMO_BLOWGUN,         // wielded blowgun -> needles
-    #endif
-        NUM_LAUNCHERS
-    };
-
     void reset_state();
 
     struct action : public enable_shared_from_this<action>
@@ -68,7 +55,7 @@ namespace quiver
         virtual bool is_enabled() const { return false; }
         virtual bool is_valid() const { return true; }
         virtual bool is_targeted() const { return false; }
-        virtual bool do_inscription_check() const;
+        bool do_inscription_check() const;
 
         /// Should the action be triggered indirectly via autofight lua code,
         /// or does it need to be triggered directly?
@@ -122,8 +109,6 @@ namespace quiver
     bool is_autofight_combat_spell(spell_type spell);
 
     shared_ptr<action> find_ammo_action();
-    shared_ptr<action> find_action_from_launcher(const item_def *item);
-
     shared_ptr<action> ammo_to_action(int slot, bool force=false);
     shared_ptr<action> slot_to_action(int slot, bool force=false);
     shared_ptr<action> spell_to_action(spell_type spell);
@@ -132,7 +117,7 @@ namespace quiver
     shared_ptr<action> get_secondary_action();
     void set_needs_redraw();
 
-    bool anything_to_quiver(bool at_all=false);
+    bool anything_to_quiver();
 
     // this is roughly a custom not_null wrapper on shared_ptr<action>
     struct action_cycler
@@ -174,20 +159,6 @@ namespace quiver
         vector<shared_ptr<action>> history;
     };
 
-    struct launcher_action_cycler : public action_cycler
-    {
-        // some things about this class are not implemented to be launcher
-        // specific because they aren't used, e.g. cycling
-        launcher_action_cycler();
-
-        using action_cycler::set; // unhide the other signature
-        bool set(const shared_ptr<action> n, bool _autoswitched=false) override;
-        bool is_empty() const override;
-        void set_needs_redraw() override;
-        string fire_key_hints() const override;
-        virtual bool targeter_handles_key(command_type c) const override;
-    };
-
     void choose(action_cycler &cur_quiver, bool allow_empty=true);
     bool set_to_quiver(shared_ptr<quiver::action> s, action_cycler &cur_quiver);
     void on_actions_changed(bool check_autoswitch=false);
@@ -201,19 +172,16 @@ namespace quiver
         ammo_history();
 
         // Queries from engine -- don't affect state
-        int get_last_ammo(const item_def *launcher) const;
-        int get_last_ammo(quiver::launcher type) const;
+        int get_last_ammo() const;
 
         // Callbacks from engine
         // TODO: weird to have these on this object given the action refactor
-        void set_quiver(const item_def &item, quiver::launcher ammo_type);
+        void set_quiver(const item_def &item);
         void on_item_fired(const item_def &item, bool explicitly_chosen = false);
+        void maybe_swap(int from_slot, int to_slot);
 
-        // save/load
-        void save(writer&) const;
+#if TAG_MAJOR_VERSION == 34
         void load(reader&);
-
-     private:
-        item_def m_last_used_of_type[quiver::NUM_LAUNCHERS];
+#endif
     };
 }
