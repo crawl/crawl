@@ -448,11 +448,21 @@ static void _resolve_escapes(string& str)
 
 static string _localise_annotation(const string& s)
 {
-    string result = xlate(s);
-    if (result != s)
+    if (s.empty())
+        return "";
+
+    // try translating whole thing
+    string result = xlate(s, false);
+    if (!result.empty())
         return result;
 
-    result = "";
+    // try without the leading space
+    if (s[0] == ' ')
+    {
+        result = xlate(s.substr(1), false);
+        if (!result.empty())
+            return string(" ") + result;
+    }
 
     // separate into tokens of either all-alpha or all non-alpha characters
     // should be able to do this with regex, but I couldn't make it work

@@ -1352,9 +1352,6 @@ Brand
 *Rage
 
 %%%%
-Clar
-
-%%%%
 BAcc
 
 %%%%
@@ -1368,12 +1365,6 @@ nupgr
 
 %%%%
 *Slow
-
-%%%%
-SH
-
-%%%%
-Rampage
 
 %%%%
 body armour

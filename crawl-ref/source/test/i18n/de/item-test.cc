@@ -112,7 +112,7 @@ const vector<string> expected = {
     "eine -1 Breitaxt des Einfrierens",
     "eine verfluchte -2 Breitaxt des Entleerens",
     "die +11 Breitaxt \"Jetioplo\" (Waffe) {Vorpal, Stä+4}",
-    "der +9 Dreizack von \"the Crushed Allies\" {Vorpal, zerbrechlich +Uns Stä+3 Int+3}",
+    "der +9 Dreizack von \"the Crushed Allies\" {Vorpal, Fragil +Uns Stä+3 Int+3}",
     "das +7 Paar Schnellklingen \"Gyre\" und \"Gimble\"",
     "+7 Paar Schnellklingen",
 
