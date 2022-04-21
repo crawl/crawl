@@ -73,7 +73,7 @@ const vector<string> expected = {
     "eine Schriftrolle beschriftet mit BLAHDEY BLAH",
     "3 Schriftrollen beschriftet mit FOO",
 
-    "eine Schriftrolle des Flimmerns",
+    "eine Schriftrolle des Blinzelns",
     "2 Schriftrollen des Segnens",
 
     "ein grüner Zaubertrank",
@@ -112,7 +112,7 @@ const vector<string> expected = {
     "eine -1 Breitaxt des Einfrierens",
     "eine verfluchte -2 Breitaxt des Entleerens",
     "die +11 Breitaxt \"Jetioplo\" (Waffe) {Vorpal, Stä+4}",
-    "der +9 Dreizack von \"the Crushed Allies\" {vorpal, zerbrechlich +Uns Stä+3 Int+3}",
+    "der +9 Dreizack von \"the Crushed Allies\" {Vorpal, zerbrechlich +Uns Stä+3 Int+3}",
     "das +7 Paar Schnellklingen \"Gyre\" und \"Gimble\"",
     "+7 Paar Schnellklingen",
 
@@ -294,16 +294,6 @@ vector<map<string, string>> staves =
 
 vector<map<string, string>> books =
 {
-    {
-        {"en", "a hardcover book"},
-        {"nom", "ein gebundenes Buch"},
-        {"acc", "ein gebundenes Buch"}
-    },
-    {
-        {"en", "a dog-eared paperback book"},
-        {"nom", "ein schäbiges Taschenbuch"},
-        {"acc", "ein schäbiges Taschenbuch"}
-    },
     {
         {"en", "a book of Vapours"},
         {"nom", "ein Buch der Dämpfe"},

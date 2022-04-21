@@ -863,7 +863,7 @@ ein Silberbumerang
 " des Schmerzes"
 %%%%
 " of protection"
-" de Schutzes"
+" des Schutzes"
 %%%%
 " of penetration"
 " der Penetration"
@@ -2763,23 +2763,6 @@ Buch des Chaos
 book of the Hunter
 Buch des Jägers
 %%%%
-%sbook
-{adj-es}%sBuch
-%%%%
-%spaperback book
-{adj-es}%sTaschenbuch
-%%%%
-%shardcover book
-{adj-es}%sgebundenes Buch
-%%%%
-%sleatherbound book
-{adj-es}%sledergebundenes Buch
-%%%%
-%smetal-bound book
-{adj-es}%smetallgebundenes Buch
-%%%%
-%spapyrus book
-{adj-es}%sPapyrusbuch
 
 # indefinite article
 %%%%
@@ -2953,24 +2936,6 @@ ein Buch des Chaos
 %%%%
 a book of the Hunter
 ein Buch des Jägers
-%%%%
-a %sbook
-ein {adj-es}%sBuch
-%%%%
-a %spaperback book
-ein {adj-es}%sTaschenbuch
-%%%%
-a %shardcover book
-ein {adj-es}%sgebundenes Buch
-%%%%
-a %sleatherbound book
-ein {adj-es}%sledergebundenes Buch
-%%%%
-a %smetal-bound book
-ein {adj-es}%smetallgebundenes Buch
-%%%%
-a %spapyrus book
-ein {adj-es}%sPapyrusbuch
 %%%%
 
 #################################
@@ -3438,6 +3403,9 @@ Abstoßung
 %%%%
 harm
 Schaden
+%%%%
+Fragile
+zerbrechlich
 %%%%
 
 #################################

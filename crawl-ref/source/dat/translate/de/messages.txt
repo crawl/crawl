@@ -1370,9 +1370,6 @@ nupgr
 *Slow
 
 %%%%
-Fragile
-
-%%%%
 SH
 
 %%%%
