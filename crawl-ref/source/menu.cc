@@ -1432,8 +1432,12 @@ bool Menu::process_key(int keyin)
 #ifdef USE_TILE_WEB
     const int old_vis_first = get_first_visible();
 #endif
-    if (keyin == ' ' && !!(flags & MF_MULTISELECT))
+    if (keyin == ' '
+        && !!(flags & MF_MULTISELECT) && !!(flags & MF_ARROWS_SELECT))
+    {
+        // XX allow customizing this mapping
         keyin = '.';
+    }
 
     switch (keyin)
     {
