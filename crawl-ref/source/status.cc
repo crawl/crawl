@@ -3,6 +3,7 @@
 #include "status.h"
 
 #include "areas.h"
+#include "art-enum.h" // bearserk
 #include "branch.h"
 #include "cloud.h"
 #include "duration-type.h"
@@ -203,6 +204,11 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_FLAYED:
         inf.light_text = make_stringf("Flay (%d)",
                           (-1 * you.props[FLAY_DAMAGE_KEY].get_int()));
+        break;
+
+    case DUR_BERSERK:
+        if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+            inf.light_text = "Bearserk";
         break;
 
     case STATUS_NO_POTIONS:
