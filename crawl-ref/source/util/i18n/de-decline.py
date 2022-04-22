@@ -413,13 +413,16 @@ for line in lines:
         # decline
         proper_noun = (re.match(r'^[A-Z]', english) != None)
         german = ""
+        before_noun = True
         for i, word in enumerate(words):
             if is_determiner(word):
-                word = decline_determiner(word, gender, target_case)
+                if before_noun:
+                    word = decline_determiner(word, gender, target_case)
             elif is_noun(word):
+                before_noun = False
                 if i == len(words) - 1 or word == "Prinz":
                     word = decline_noun(word, gender, target_case, proper_noun)
-            else:
+            elif before_noun:
                 word = decline_adjective(word, gender, target_case, declension)
             
             if german != "":

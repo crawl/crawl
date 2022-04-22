@@ -1172,13 +1172,13 @@ einem {adj-em}%sRing der Intelligenz
 einem {adj-em}%sRing der Zauberei
 %%%%
 {dat}a %sring of magical power
-einem {adj-em}%sRing magischem Kraft
+einem {adj-em}%sRing magischer Kraft
 %%%%
 {dat}a %sring of flight
 einem {adj-em}%sRing des Fliegens
 %%%%
 {dat}a %sring of positive energy
-einem {adj-em}%sRing positivem Energie
+einem {adj-em}%sRing positiver Energie
 %%%%
 {dat}a %sring of willpower
 einem {adj-em}%sRing der Willenskraft
@@ -1331,13 +1331,13 @@ Eurem {adj-em}%sRing der Intelligenz
 Eurem {adj-em}%sRing der Zauberei
 %%%%
 {dat}your %sring of magical power
-Eurem {adj-em}%sRing magischem Kraft
+Eurem {adj-em}%sRing magischer Kraft
 %%%%
 {dat}your %sring of flight
 Eurem {adj-em}%sRing des Fliegens
 %%%%
 {dat}your %sring of positive energy
-Eurem {adj-em}%sRing positivem Energie
+Eurem {adj-em}%sRing positiver Energie
 %%%%
 {dat}your %sring of willpower
 Eurem {adj-em}%sRing der Willenskraft
@@ -1400,13 +1400,13 @@ Eurem {adj-em}%sobsoletem Ring
 {adj-em}%sRing der Zauberei
 %%%%
 {dat}%sring of magical power
-{adj-em}%sRing magischem Kraft
+{adj-em}%sRing magischer Kraft
 %%%%
 {dat}%sring of flight
 {adj-em}%sRing des Fliegens
 %%%%
 {dat}%sring of positive energy
-{adj-em}%sRing positivem Energie
+{adj-em}%sRing positiver Energie
 %%%%
 {dat}%sring of willpower
 {adj-em}%sRing der Willenskraft
