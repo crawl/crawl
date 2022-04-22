@@ -8493,7 +8493,7 @@ KMONS:  N = wight
 SUBST:  P = PP.
 TILE:   t = DNGN_TREE_DEAD
 : if you.depth() < 4 then
-KMONS:  N = Natasha, skeleton
+KMONS:  N = Natasha, phantom
 SUBST:  2 = 1:20 2:5
 SUBST:  3 = .
 : elseif you.depth() >= 8 then
@@ -8518,13 +8518,13 @@ ENDMAP
 
 NAME:  dilly_guarded_unrand_devastator
 TAGS:   no_monster_gen transparent
-DEPTH:  D:5-12
+DEPTH:  D:4-12
 WEIGHT: 3
 ITEM:   devastator no_pickup, stone, large rock q:1
-: dgn.delayed_decay(_G, '_', 'dwarf corpse')
-MONS:   dwarf; mace,  gargoyle, orc warrior band
+: dgn.delayed_decay(_G, '_', 'human corpse')
+MONS:   human; mace,  gargoyle, orc warrior band
 NSUBST:  s = 10:x / 3:G / 4:M / 1:d / *:.
-: if you.depth() < 7 then
+: if you.depth() < 6 then
 NSUBST:  M = 1:1 / *:G
 : elseif you.depth() >= 11 then
 NSUBST:  M = 1:1 / *:2
