@@ -1316,7 +1316,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
         description += ".";
     }
 
-    if (want_player_stats)
+    if (want_player_stats && !is_unrandom_artefact(item, UNRAND_DAMNATION))
         description += _damage_rating(item);
 }
 
