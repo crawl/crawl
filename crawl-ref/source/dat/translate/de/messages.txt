@@ -3432,9 +3432,6 @@ It increases damage dealt and taken.
 It bestows one free step when moving towards enemies.
 
 %%%%
-%+d
-
-%%%%
 It makes you extremely vulnerable to %s.
 
 %%%%
@@ -21352,6 +21349,9 @@ Ihr %s%s!
 ##################
 %%%%
 %s %-15s
+
+%%%%
+%+d
 
 %%%%
 <lightred>+4</lightred>

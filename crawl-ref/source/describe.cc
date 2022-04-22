@@ -620,12 +620,7 @@ static string _randart_descrip(const item_def &item)
         if (!known_proprt(desc.property)) // can this ever happen..?
             continue;
 
-        string sdesc = desc.desc;
-
-        // FIXME Not the nicest hack.
-        char buf[80];
-        snprintf(buf, sizeof buf, "%+d", proprt[desc.property]);
-        sdesc = replace_all(sdesc, "%d", buf);
+        string sdesc = localise(desc.desc, proprt[desc.property]);
 
         if (desc.is_graded_resist)
         {
