@@ -415,16 +415,15 @@ for line in lines:
         german = ""
         before_noun = True
         for i, word in enumerate(words):
-            if is_determiner(word):
-                if before_noun:
+            if before_noun:
+                if is_determiner(word):
                     word = decline_determiner(word, gender, target_case)
-            elif is_noun(word):
-                if before_noun:
-                    if word != "Prinz":
+                elif is_noun(word):
+                    if word != "Prinz" and word != "Blork":
                         before_noun = False
                     word = decline_noun(word, gender, target_case, proper_noun)
-            elif before_noun:
-                word = decline_adjective(word, gender, target_case, declension)
+                else:
+                    word = decline_adjective(word, gender, target_case, declension)
             
             if german != "":
                 german += " "
