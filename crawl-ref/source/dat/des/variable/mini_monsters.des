@@ -8494,7 +8494,7 @@ SUBST:  P = PP.
 TILE:   t = DNGN_TREE_DEAD
 : if you.depth() < 4 then
 KMONS:  N = Natasha, phantom
-SUBST:  2 = 1:20 2:5
+SUBST:  2 = 1
 SUBST:  3 = .
 : elseif you.depth() >= 8 then
 KMONS:  N = wraith
