@@ -190,6 +190,9 @@ der %sKampfstab
 the %slajatang
 der %sLajatang
 %%%%
+the %slance
+die %sLanze
+%%%%
 
 # without determiner (used in start menu and HUD)
 # Note: The %s is a placeholder for any adjectives
@@ -310,6 +313,9 @@ der %sLajatang
 %%%%
 %slajatang
 {adj-er}%sLajatang
+%%%%
+%slance
+%sLanze
 %%%%
 
 # with indefinite article
@@ -438,6 +444,9 @@ ein {adj-er}%sKampfstab
 a %slajatang
 ein {adj-er}%sLajatang
 %%%%
+a %slance
+eine %sLanze
+%%%%
 
 # your <item>
 # Note that %s is a placeholder for any adjectives
@@ -565,6 +574,10 @@ Euer {adj-er}%sKampfstab
 your %slajatang
 Euer {adj-er}%sLajatang
 %%%%
+%%%%
+you %slance
+Eure %sLanze
+%%%%
 
 #################################
 # Launchers
@@ -672,36 +685,6 @@ Euer {adj-er}%sLangbogen
 #################################
 # Missiles
 #################################
-# without article
-%%%%
-arrow
-Pfeil
-%%%%
-bolt
-Bolzen
-%%%%
-dart
-Wurfpfeil
-%%%%
-stone
-Stein
-%%%%
-large rock
-Felsblock
-%%%%
-sling bullet
-Schleuderkugel
-%%%%
-javelin
-Wurfspeer
-%%%%
-throwing net
-Wurfnetz
-%%%%
-boomerang
-Bumerang
-%%%%
-
 # definite article
 %%%%
 the arrow
@@ -730,6 +713,36 @@ das Wurfnetz
 %%%%
 the boomerang
 der Bumerang
+%%%%
+
+# without article
+%%%%
+arrow
+Pfeil
+%%%%
+bolt
+Bolzen
+%%%%
+dart
+Wurfpfeil
+%%%%
+stone
+Stein
+%%%%
+large rock
+Felsblock
+%%%%
+sling bullet
+Schleuderkugel
+%%%%
+javelin
+Wurfspeer
+%%%%
+throwing net
+Wurfnetz
+%%%%
+boomerang
+Bumerang
 %%%%
 
 # indefinite article/plural
@@ -828,8 +841,8 @@ ein Silberbumerang
 #################################
 # Weapon Brands
 #################################
-# don't think this is used, but it's in the code
 %%%%
+# don't think this is used, but it's in the code
 " of acid"
 " der Säure"
 %%%%
@@ -840,7 +853,6 @@ ein Silberbumerang
 " der Verwindung"
 %%%%
 # only on artefact "Wyrmbane"
-%%%%
 " of dragon slaying"
 " der Drachentötung"
 %%%%
@@ -2143,72 +2155,6 @@ beseitigter Zauberstab
 # Scrolls
 #################################
 
-# no article (for mouse hover)
-%%%%
-scroll labelled %s
-Schriftrolle beschriftet mit %s
-%%%%
-scroll of acquirement
-Schriftrolle des Erwerbs
-%%%%
-scroll of amnesia
-Schriftrolle der Amnesie
-%%%%
-scroll of blinking
-Schriftrolle des Blinzelns
-%%%%
-scroll of brand weapon
-Schriftrolle der Waffenmark
-%%%%
-scroll of enchant armour
-Schriftrolle der Rüstungsverzauberung
-%%%%
-scroll of enchant weapon
-Schriftrolle der Waffenverzauberung
-%%%%
-scroll of fear
-Schriftrolle der Angst
-%%%%
-scroll of fog
-Schriftrolle des Nebels
-%%%%
-scroll of holy word
-Schriftrolle des heiligen Wortes
-%%%%
-scroll of identify
-Schriftrolle der Identifizierung
-%%%%
-scroll of immolation
-Schriftrolle der Verbrennug
-%%%%
-scroll of magic mapping
-Schriftrolle des magischen Kartierens
-%%%%
-scroll of noise
-Schriftrolle des Lärms
-%%%%
-scroll of remove curse
-Schriftrolle des Segnens
-%%%%
-scroll of silence
-Schriftrolle der Stille
-%%%%
-scroll of summoning
-Schriftrolle des Herbeirufs
-%%%%
-scroll of teleportation
-Schriftrolle der Teleportation
-%%%%
-scroll of torment
-Schriftrolle der Qual
-%%%%
-scroll of vulnerability
-Schriftrolle der Vulnerabilität
-%%%%
-scroll of removedness
-Schriftrolle der Obsoleszenz
-%%%%
-
 # indefinite article
 %%%%
 a scroll labelled %s
@@ -2344,62 +2290,75 @@ eine Schriftrolle der Obsoleszenz
 %d Schriftrollen der Obsoleszenz
 %%%%
 
+# no article (for mouse hover)
+%%%%
+scroll labelled %s
+Schriftrolle beschriftet mit %s
+%%%%
+scroll of acquirement
+Schriftrolle des Erwerbs
+%%%%
+scroll of amnesia
+Schriftrolle der Amnesie
+%%%%
+scroll of blinking
+Schriftrolle des Blinzelns
+%%%%
+scroll of brand weapon
+Schriftrolle der Waffenmark
+%%%%
+scroll of enchant armour
+Schriftrolle der Rüstungsverzauberung
+%%%%
+scroll of enchant weapon
+Schriftrolle der Waffenverzauberung
+%%%%
+scroll of fear
+Schriftrolle der Angst
+%%%%
+scroll of fog
+Schriftrolle des Nebels
+%%%%
+scroll of holy word
+Schriftrolle des heiligen Wortes
+%%%%
+scroll of identify
+Schriftrolle der Identifizierung
+%%%%
+scroll of immolation
+Schriftrolle der Verbrennug
+%%%%
+scroll of magic mapping
+Schriftrolle des magischen Kartierens
+%%%%
+scroll of noise
+Schriftrolle des Lärms
+%%%%
+scroll of remove curse
+Schriftrolle des Segnens
+%%%%
+scroll of silence
+Schriftrolle der Stille
+%%%%
+scroll of summoning
+Schriftrolle des Herbeirufs
+%%%%
+scroll of teleportation
+Schriftrolle der Teleportation
+%%%%
+scroll of torment
+Schriftrolle der Qual
+%%%%
+scroll of vulnerability
+Schriftrolle der Vulnerabilität
+%%%%
+scroll of removedness
+Schriftrolle der Obsoleszenz
+%%%%
+
 #################################
 # Potions
 #################################
-# no article
-%%%%
-potion of ambrosia
-Trank der Ambrosia
-%%%%
-potion of attraction
-Trank der Anziehung
-%%%%
-potion of berserk rage
-Trank der Berserker-Wut
-%%%%
-potion of brilliance
-Trank der Brillanz
-%%%%
-potion of cancellation
-Trank der Aufhebung
-%%%%
-potion of curing
-Trank des Gegenmittels
-%%%%
-potion of degeneration
-Trank der Degeneration
-%%%%
-potion of experience
-Trank der Erfahrung
-%%%%
-potion of flight
-Trank des Fliegens
-%%%%
-potion of haste
-Trank der Geschwindigkeit
-%%%%
-potion of heal wounds
-Heiltrank
-%%%%
-potion of invisibility
-Trank der Unsichtbarkeit
-%%%%
-potion of lignification
-Trank der Verholzung
-%%%%
-potion of magic
-Trank der Magie
-%%%%
-potion of might
-Trank der Macht
-%%%%
-potion of mutation
-Trank der Mutation
-%%%%
-potion of resistance
-Trank des Widerstands
-%%%%
 
 #indefinite article
 %%%%
@@ -2453,6 +2412,60 @@ ein Trank der Mutation
 %%%%
 a potion of resistance
 ein Trank des Widerstands
+%%%%
+
+# no article
+%%%%
+potion of ambrosia
+Trank der Ambrosia
+%%%%
+potion of attraction
+Trank der Anziehung
+%%%%
+potion of berserk rage
+Trank der Berserker-Wut
+%%%%
+potion of brilliance
+Trank der Brillanz
+%%%%
+potion of cancellation
+Trank der Aufhebung
+%%%%
+potion of curing
+Trank des Gegenmittels
+%%%%
+potion of degeneration
+Trank der Degeneration
+%%%%
+potion of experience
+Trank der Erfahrung
+%%%%
+potion of flight
+Trank des Fliegens
+%%%%
+potion of haste
+Trank der Geschwindigkeit
+%%%%
+potion of heal wounds
+Heiltrank
+%%%%
+potion of invisibility
+Trank der Unsichtbarkeit
+%%%%
+potion of lignification
+Trank der Verholzung
+%%%%
+potion of magic
+Trank der Magie
+%%%%
+potion of might
+Trank der Macht
+%%%%
+potion of mutation
+Trank der Mutation
+%%%%
+potion of resistance
+Trank des Widerstands
 %%%%
 
 # plural
@@ -2526,36 +2539,6 @@ ein {adj-er}%sZaubertrank
 # Magical Staves
 #################################
 
-# no article
-%%%%
-%sstaff of fire
-{adj-er}%sStecken des Feuers
-%%%%
-%sstaff of cold
-{adj-er}%sStecken der Kälte
-%%%%
-%sstaff of poison
-{adj-er}%sStecken des Giftes
-%%%%
-%sstaff of death
-{adj-er}%sStecken des Todes
-%%%%
-%sstaff of conjuration
-{adj-er}%sStecken der Hervorrufung
-%%%%
-%sstaff of air
-{adj-er}%sStecken der Luft
-%%%%
-%sstaff of earth
-{adj-er}%sStecken der Erde
-%%%%
-%sstaff of removedness
-{adj-er}%sStecken der Obsoleszenz
-%%%%
-%sstaff
-{adj-er}%sStecken
-%%%%
-
 # indefinite article
 %%%%
 a %sstaff of fire
@@ -2586,183 +2569,39 @@ a %sstaff
 ein {adj-er}%sStecken
 %%%%
 
+# no article
+%%%%
+%sstaff of fire
+{adj-er}%sStecken des Feuers
+%%%%
+%sstaff of cold
+{adj-er}%sStecken der Kälte
+%%%%
+%sstaff of poison
+{adj-er}%sStecken des Giftes
+%%%%
+%sstaff of death
+{adj-er}%sStecken des Todes
+%%%%
+%sstaff of conjuration
+{adj-er}%sStecken der Hervorrufung
+%%%%
+%sstaff of air
+{adj-er}%sStecken der Luft
+%%%%
+%sstaff of earth
+{adj-er}%sStecken der Erde
+%%%%
+%sstaff of removedness
+{adj-er}%sStecken der Obsoleszenz
+%%%%
+%sstaff
+{adj-er}%sStecken
+%%%%
+
 #################################
 # Spellbooks
 #################################
-
-# no article
-%%%%
-book of Minor Magic
-Buch der kleinen Magie
-%%%%
-book of Conjurations
-Buch der Hervorrufung
-%%%%
-book of Flames
-Buch der Flammen
-%%%%
-book of Frost
-Buch des Frosts
-%%%%
-book of the Dryads
-Buch der Dryaden
-%%%%
-book of Fire
-Buch des Feuers
-%%%%
-book of Ice
-Buch des Eises
-%%%%
-book of Spatial Translocations
-Buch der räumlichen Translokationen
-%%%%
-book of Hexes
-Buch der Verhexungen
-%%%%
-book of Lightning
-Buch des Blitzes
-%%%%
-book of Death
-Buch des Todes
-%%%%
-book of Misfortune
-Buch des Unglücks
-%%%%
-book of Changes
-Buch der Veränderungen
-%%%%
-book of Transfigurations
-Buch der Umgestaltungen
-%%%%
-book of Battle
-Buch der Schlacht
-%%%%
-book of Vapours
-Buch der Dämpfe
-%%%%
-book of Necromancy
-Buch der Nekromantie
-%%%%
-book of Callings
-Buch der Rufe
-%%%%
-book of Maledictions
-Buch der Flüche
-%%%%
-book of Air
-Buch der Luft
-%%%%
-book of the Sky
-Buch des Himmels
-%%%%
-book of the Warp
-Buch des Warps
-%%%%
-book of Annihilations
-Buch der Vernichtung
-%%%%
-book of Unlife
-Buch des Unlebens
-%%%%
-book of Geomancy
-Buch der Geomantie
-%%%%
-book of the Earth
-Buch der Erde
-%%%%
-book of Power
-Buch der Macht
-%%%%
-book of Cantrips
-Buch der Schelmenstreiche
-%%%%
-book of Party Tricks
-Buch mit Partytricks
-%%%%
-book of Debilitation
-Buch der Entkräftung
-%%%%
-book of the Dragon
-Buch des Drachen
-%%%%
-book of Burglary
-Buch des Diebstahls
-%%%%
-book of Dreams
-Buch der Träume
-%%%%
-book of Alchemy
-Buch der Alchemie
-%%%%
-book of Beasts
-Buch der Bestien
-%%%%
-book of Spectacle
-Buch des Spektakels
-%%%%
-book of Winter
-Buch des Winters
-%%%%
-book of the Spheres
-Buch der Sphären
-%%%%
-book of Armaments
-Buch der Bewaffnung
-%%%%
-book of Pain
-Buch des Schmerzes
-%%%%
-book of Decay
-Buch des Verfalls
-%%%%
-book of Displacement
-Buch der Verdrängung
-%%%%
-book of Rime
-Buch des Reims
-%%%%
-book of Stone
-Buch des Steins
-%%%%
-book of the Senses
-Buch der Sinne
-%%%%
-book of Blasting
-Buch der Sprengung
-%%%%
-book of Iron
-Buch des Eisens
-%%%%
-book of the Tundra
-Buch der Tundra
-%%%%
-book of the Moon
-Buch des Mondes
-%%%%
-book of Storms
-Buch der Stürme
-%%%%
-book of Weapons
-Buch der Gewehre
-%%%%
-book of Sloth
-Buch der Faulheit
-%%%%
-book of Blood
-Buch des Blutes
-%%%%
-book of Dangerous Friends
-Buch der gefährlichen Freunde
-%%%%
-book of Touch
-Buch der Berührung
-%%%%
-book of Chaos
-Buch des Chaos
-%%%%
-book of the Hunter
-Buch des Jägers
-%%%%
 
 # indefinite article
 %%%%
@@ -2938,27 +2777,184 @@ a book of the Hunter
 ein Buch des Jägers
 %%%%
 
+# no article
+%%%%
+book of Minor Magic
+Buch der kleinen Magie
+%%%%
+book of Conjurations
+Buch der Hervorrufung
+%%%%
+book of Flames
+Buch der Flammen
+%%%%
+book of Frost
+Buch des Frosts
+%%%%
+book of the Dryads
+Buch der Dryaden
+%%%%
+book of Fire
+Buch des Feuers
+%%%%
+book of Ice
+Buch des Eises
+%%%%
+book of Spatial Translocations
+Buch der räumlichen Translokationen
+%%%%
+book of Hexes
+Buch der Verhexungen
+%%%%
+book of Lightning
+Buch des Blitzes
+%%%%
+book of Death
+Buch des Todes
+%%%%
+book of Misfortune
+Buch des Unglücks
+%%%%
+book of Changes
+Buch der Veränderungen
+%%%%
+book of Transfigurations
+Buch der Umgestaltungen
+%%%%
+book of Battle
+Buch der Schlacht
+%%%%
+book of Vapours
+Buch der Dämpfe
+%%%%
+book of Necromancy
+Buch der Nekromantie
+%%%%
+book of Callings
+Buch der Rufe
+%%%%
+book of Maledictions
+Buch der Flüche
+%%%%
+book of Air
+Buch der Luft
+%%%%
+book of the Sky
+Buch des Himmels
+%%%%
+book of the Warp
+Buch des Warps
+%%%%
+book of Annihilations
+Buch der Vernichtung
+%%%%
+book of Unlife
+Buch des Unlebens
+%%%%
+book of Geomancy
+Buch der Geomantie
+%%%%
+book of the Earth
+Buch der Erde
+%%%%
+book of Power
+Buch der Macht
+%%%%
+book of Cantrips
+Buch der Schelmenstreiche
+%%%%
+book of Party Tricks
+Buch mit Partytricks
+%%%%
+book of Debilitation
+Buch der Entkräftung
+%%%%
+book of the Dragon
+Buch des Drachen
+%%%%
+book of Burglary
+Buch des Diebstahls
+%%%%
+book of Dreams
+Buch der Träume
+%%%%
+book of Alchemy
+Buch der Alchemie
+%%%%
+book of Beasts
+Buch der Bestien
+%%%%
+book of Spectacle
+Buch des Spektakels
+%%%%
+book of Winter
+Buch des Winters
+%%%%
+book of the Spheres
+Buch der Sphären
+%%%%
+book of Armaments
+Buch der Bewaffnung
+%%%%
+book of Pain
+Buch des Schmerzes
+%%%%
+book of Decay
+Buch des Verfalls
+%%%%
+book of Displacement
+Buch der Verdrängung
+%%%%
+book of Rime
+Buch des Reims
+%%%%
+book of Stone
+Buch des Steins
+%%%%
+book of the Senses
+Buch der Sinne
+%%%%
+book of Blasting
+Buch der Sprengung
+%%%%
+book of Iron
+Buch des Eisens
+%%%%
+book of the Tundra
+Buch der Tundra
+%%%%
+book of the Moon
+Buch des Mondes
+%%%%
+book of Storms
+Buch der Stürme
+%%%%
+book of Weapons
+Buch der Gewehre
+%%%%
+book of Sloth
+Buch der Faulheit
+%%%%
+book of Blood
+Buch des Blutes
+%%%%
+book of Dangerous Friends
+Buch der gefährlichen Freunde
+%%%%
+book of Touch
+Buch der Berührung
+%%%%
+book of Chaos
+Buch des Chaos
+%%%%
+book of the Hunter
+Buch des Jägers
+%%%%
+
 #################################
-# Food
+# Corpses
 #################################
-%%%%
-a ration
-eine Ration
-%%%%
-%d rations
-%d Rationen
-%%%%
-a chunk of flesh
-ein Fleischstück
-%%%%
-%d chunks of flesh
-%d Fleischstücke
-%%%%
-an inedible chunk of flesh
-ein ungenießbares Fleischstück
-%%%%
-%d inedible chunks of flesh
-%d ungenießbare Fleischstücke
+
 %%%%
 a %s corpse
 eine %s-Leiche
@@ -2967,33 +2963,6 @@ eine %s-Leiche
 #################################
 # Miscellaneous Items
 #################################
-
-# no article
-%%%%
-box of beasts
-Kiste der Bestien
-%%%%
-lightning rod
-Blitzstange
-%%%%
-phial of floods
-Phiole der Fluten
-%%%%
-phantom mirror
-Phantomspiegel
-%%%%
-figurine of a ziggurat
-Figur einer Zikkurat
-%%%%
-condenser vane
-Kondensationsfahne
-%%%%
-piece from Xom's chessboard
-Figure von Xoms Schachbrett
-%%%%
-tin of tremorstones
-Dose Bebensteine
-%%%%
 
 # indefinite article
 %%%%
@@ -3022,13 +2991,40 @@ a tin of tremorstones
 eine Dose Bebensteine
 %%%%
 
+# no article
+%%%%
+box of beasts
+Kiste der Bestien
+%%%%
+lightning rod
+Blitzstange
+%%%%
+phial of floods
+Phiole der Fluten
+%%%%
+phantom mirror
+Phantomspiegel
+%%%%
+figurine of a ziggurat
+Figur einer Zikkurat
+%%%%
+condenser vane
+Kondensationsfahne
+%%%%
+piece from Xom's chessboard
+Figure von Xoms Schachbrett
+%%%%
+tin of tremorstones
+Dose Bebensteine
+%%%%
+
 # plural
 %%%%
 %d boxes of beasts
 %d Kisten der Bestien
 %%%%
 %d lightning rods
-%d Blitzstange
+%d Blitzstangen
 %%%%
 %d phials of floods
 %d Phiolen der Fluten
