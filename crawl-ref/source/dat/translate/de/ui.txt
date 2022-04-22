@@ -706,13 +706,6 @@ rElek
 #rCorr
 #rKorr
 %%%%
-# mutation resistance
-%%%%
-rMut
-rMut
-%%%%
-# magic resistance
-%%%%
 # duplicate of item brand
 #Will
 #Wille
@@ -734,11 +727,6 @@ MPRegen  %03.2f/Wendung
 %%%%
 SeeInvis
 SeheUns
-%%%%
-# Gourmand
-%%%%
-Gourm
-Gourm
 %%%%
 Faith
 Glaube

@@ -5,9 +5,6 @@
 ###############################################################################
 
 %%%%
-" (carried) "
-" (getragen) "
-%%%%
 " (gone by now)"
 " (inzwischen weg)"
 %%%%
@@ -23,75 +20,149 @@ Gottesgeschenk
 Fragile
 Fragil
 %%%%
+
+# attribute +/-
+%%%%
+# strength
 Str
 Stä
 %%%%
+# dexterity
 Dex
 Ges
 %%%%
+# intelligence
 Int
 Int
+%%%%
+HP
+TP
+%%%%
+MP
+MP
 %%%%
 # armour class
-%%%%
 AC
 RK
 %%%%
 # evasion
-%%%%
 EV
 EV
 %%%%
+# shields
 SH
 SCH
 %%%%
-rF
-rF
-%%%%
-rC
-rK
-%%%%
-rN
-rN
-%%%%
-Will
-Wille
-%%%%
+# stealth
 Stlth
 Heiml
 %%%%
+
+# resistances +/-
+%%%%
+# fire
+rF
+rF
+%%%%
+# cold
+rC
+rK
+%%%%
+# negative energy
+rN
+rN
+%%%%
+# poison
 rPois
 rGift
 %%%%
+# corrosion
 rCorr
 rKorr
 %%%%
-Inv
-Uns
+# will (magic resistance)
+Will
+Wille
 %%%%
+# clarity (immunity to confusion, etc.)
+Clar
+Klar
+%%%%
+# torment
+rTorment
+rFolter
+%%%%
+# mutation
+rMut
+rMut
+%%%%
+rMiasma
+rMiasma
+%%%%
+
+# benefits
+%%%%
+# wizardry (reduces spell failure rate)
+Wiz
+Zaub
+%%%%
+# blink ability
++Blink
++Blinzeln
+%%%%
+# invisibility ability
++Inv
++Uns
+%%%%
+# see invisible
 SInv
 UnsS
 %%%%
+# regeneration
 Regen
 Regen
 %%%%
-Rage
-Wut
+# Extra move when moving towards enemy
+Rampage
+Randale
 %%%%
 Acrobat
 Akrobat
 %%%%
-Noise
-Lärm
+# random rat summoning
+*Rats
+*Ratten
 %%%%
-Clar
-Klar
+# berserk ability
++Rage
++Wut
 %%%%
-Corrode
-Korrod
+
+# disadvantages
 %%%%
-Rampage
-Randale
+# random involuntary berserking
+*Rage
+*Wut
+%%%%
+# no casting spells
+-Cast
+-Zauber
+%%%%
+# random noise
+*Noise
+*Lärm
+%%%%
+# random corrosion
+*Corrode
+*Korrod
+%%%%
+# random slowing
+*Slow
+*Träg
+%%%%
+# random teleport
+*Tele
+*Tele
 %%%%
 
 # weapon brands
@@ -147,6 +218,10 @@ ernten
 acid
 Säure
 %%%%
+# accuracy
+Acc
+Genau
+%%%%
 
 # missile brands
 %%%%
@@ -167,6 +242,10 @@ Silber
 %%%%
 disperse
 streuen
+%%%%
+# dragon/draconian slaying (Wyrmbane)
+slay drac
+Drak töten
 %%%%
 
 # armour egos
@@ -198,6 +277,67 @@ Abstoßung
 %%%%
 harm
 Schaden
+%%%%
+
+#################################
+# Item slots
+#################################
+%%%%
+" (melded)"
+" (verschmelzt)"
+%%%%
+" (weapon)"
+" (Waffe)"
+%%%%
+" (in mouth)"
+" (im Mund)"
+%%%%
+" (worn)"
+" (angehabt)"
+%%%%
+# yes, this is supposed to have leading AND trailing space
+" (carried) "
+" (im Gepäck) "
+%%%%
+" (left hand)"
+" (linke Hand)"
+%%%%
+" (right hand)"
+" (rechte Hand)"
+%%%%
+" (left paw)"
+" (linke Pfote)"
+%%%%
+" (right paw)"
+" (rechte Pfote)"
+%%%%
+" (left claw)"
+" (linke Kralle)"
+%%%%
+" (right claw)"
+" (rechte Kralle)"
+%%%%
+# NOTE: This is mantle in the zoological sense (octopode)
+%%%%
+" (around mantle)"
+" (um den Mantel)"
+%%%%
+" (around neck)"
+" (um den Hals)"
+%%%%
+" (on tentacle)"
+" (am Tentakel)"
+%%%%
+# finger amulet can wear a ring
+%%%%
+" (on amulet)"
+" (am Amulett)"
+%%%%
+" (quivered)"
+" (im Köcher)"
+%%%%
+Item in an invalid slot
+Gegenstand in falscher Position
 %%%%
 
 

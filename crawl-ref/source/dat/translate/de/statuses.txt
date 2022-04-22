@@ -1632,7 +1632,7 @@ Euer Schutz vor Feuer lässt nach.
 # Cold resistance
 %%%%
 rC+
-rC+
+rK+
 %%%%
 protected from cold
 geschützt vor Kälte

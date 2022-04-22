@@ -3166,68 +3166,6 @@ Die Kugel von Zot
 %%%%
 
 #################################
-# Item slots
-#################################
-%%%%
-" (melded)"
-" (verschmelzt)"
-%%%%
-" (weapon)"
-" (Waffe)"
-%%%%
-" (in mouth)"
-" (im Mund)"
-%%%%
-" (worn)"
-" (getragen)"
-%%%%
-" (left hand)"
-" (linke Hand)"
-%%%%
-" (right hand)"
-" (rechte Hand)"
-%%%%
-# NOTE: German has different words for the paw of a cat/dog/etc.(die Pfote) vs. the paw of a lion/bear/etc. (die Pranke)
-# This refers to a felid's paw, which I guess it's the same as a cat's paw...
-%%%%
-" (left paw)"
-" (linke Pfote)"
-%%%%
-" (right paw)"
-" (rechte Pfote)"
-%%%%
-# Claw -> die Kralle oder die Klaue?
-%%%%
-" (left claw)"
-" (linke Kralle)"
-%%%%
-" (right claw)"
-" (rechte Kralle)"
-%%%%
-# NOTE: This is mantle in the zoological sense (octopode)
-%%%%
-" (around mantle)"
-" (um den Mantel)"
-%%%%
-" (around neck)"
-" (um den Hals)"
-%%%%
-" (on tentacle)"
-" (am Tentakel)"
-%%%%
-# finger amulet can wear a ring
-%%%%
-" (on amulet)"
-" (am Amulett)"
-%%%%
-" (quivered)"
-" (im Köcher)"
-%%%%
-Item in an invalid slot
-Gegenstand in falscher Position
-%%%%
-
-#################################
 # Unrand Artefacts
 #################################
 %%%%

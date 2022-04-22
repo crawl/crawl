@@ -164,9 +164,6 @@ no special abilities
 %d MP
 
 %%%%
-MP
-
-%%%%
 Permanent MP (%d left)
 
 %%%%
@@ -231,9 +228,6 @@ small
 
 %%%%
 ": "
-
-%%%%
-HP
 
 %%%%
 variable
@@ -1334,24 +1328,6 @@ You feel ready to stride towards your foes.
 Brand
 
 %%%%
-+Blink
-
-%%%%
-+Rage
-
-%%%%
-*Noise
-
-%%%%
--Cast
-
-%%%%
-*Tele
-
-%%%%
-*Rage
-
-%%%%
 BAcc
 
 %%%%
@@ -1359,12 +1335,6 @@ BDam
 
 %%%%
 nupgr
-
-%%%%
-*Corrode
-
-%%%%
-*Slow
 
 %%%%
 body armour
@@ -3334,9 +3304,6 @@ Krystalspeer
 
 %%%%
 Description|<w>Quote</w>
-
-%%%%
-Wiz
 
 %%%%
 RegenMP

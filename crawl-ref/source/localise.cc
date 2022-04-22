@@ -464,18 +464,81 @@ static string _localise_annotation(const string& s)
             return string(" ") + result;
     }
 
-    // separate into tokens of either all-alpha or all non-alpha characters
-    // should be able to do this with regex, but I couldn't make it work
-    size_t i = 0;
-    while (i < s.length())
+    // separate into tokens
+    vector<string> tokens;
+    string rest = s;
+
+    // open brackets
+    size_t pos = s.find_first_of("([{");
+    if (pos != string::npos)
     {
-        int alpha = isalpha(s[i]);
-        size_t len = 1;
-        while (i + len < s.length() - 1 && isalpha(s[i+len]) == alpha)
-            len++;
-        string token = s.substr(i, len);
-        result += alpha ? xlate(token) : token;
-        i += len;
+        tokens.push_back(s.substr(0, pos+1));
+        rest = s.substr(pos+1);
+    }
+
+    // close brackets
+    string suffix;
+    pos = rest.find_last_of(")]}");
+    if (pos != string::npos)
+    {
+        suffix = rest.substr(pos);
+        rest = rest.substr(0, pos);
+    }
+
+    while ((pos = rest.find(',')) != string::npos)
+    {
+        tokens.push_back(rest.substr(0, pos+1));
+        rest = rest.substr(pos+1);
+    }
+
+    while ((pos = rest.find(' ')) != string::npos)
+    {
+        if (pos > 0)
+            tokens.push_back(rest.substr(0, pos));
+        tokens.push_back(rest.substr(pos, 1));
+        rest = rest.substr(pos+1);
+    }
+
+    if (!rest.empty())
+        tokens.push_back(rest);
+
+    if (!suffix.empty())
+        tokens.push_back(suffix);
+
+    // now build the result from the individual tokens
+    result = "";
+    for (size_t idx = 0; idx < tokens.size(); idx++)
+    {
+        string tok = tokens[idx];
+
+        // check for alphas
+        int last_alpha_pos = -1;
+        for (int k = (int)tok.length() - 1; k >= 0; k--)
+        {
+            if (isalpha(tok[k]))
+            {
+                last_alpha_pos = k;
+                break;
+            }
+        }
+
+        if (last_alpha_pos < 0)
+        {
+            result += tok;
+            continue;
+        }
+
+        string ltok = xlate(tok, false);
+        if (!ltok.empty())
+            result += ltok;
+        else if (last_alpha_pos == (int)tok.length())
+            result += tok;
+        else
+        {
+            string tok_suffix = tok.substr(last_alpha_pos+1);
+            tok = tok.substr(0, last_alpha_pos+1);
+            result += xlate(tok, true) + tok_suffix;
+        }
     }
 
     return result;
