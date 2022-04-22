@@ -1411,20 +1411,20 @@ MAP
      ...                             ...
 ENDMAP
 
-NAME:   crystal_passage
+NAME:   reono_crystal_passage
 DEPTH:  D, Depths
 TAGS:   transparent extra no_monster_gen
-KITEM:   d = any potion
+KITEM:  d = any potion
 MAP
-xxxb@bxxx
-xxxb.bxxx
-xxxb.bxxx
-bbbT.Tbbb
+mmmm@mmmm
+mbbm.mbbm
+mbbm.mbbm
+mmmm.mmmm
 @...d...@
-bbbT.Tbbb
-xxxb.bxxx
-xxxb.bxxx
-xxxb@bxxx
+mmmm.mmmm
+mbbm.mbbm
+mbbm.mbbm
+mmmm@mmmm
 ENDMAP
 
 ###############################################################################
