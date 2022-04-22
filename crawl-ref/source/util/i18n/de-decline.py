@@ -419,8 +419,9 @@ for line in lines:
                 if before_noun:
                     word = decline_determiner(word, gender, target_case)
             elif is_noun(word):
-                before_noun = False
-                if i == len(words) - 1 or word == "Prinz":
+                if before_noun:
+                    if word != "Prinz":
+                        before_noun = False
                     word = decline_noun(word, gender, target_case, proper_noun)
             elif before_noun:
                 word = decline_adjective(word, gender, target_case, declension)

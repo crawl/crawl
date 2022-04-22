@@ -2415,12 +2415,6 @@ einer Dose Bebensteine
 {dat}%d phantom mirrors
 %d Phantomspiegeln
 %%%%
-{dat}%d figurines of a ziggurat
-%d Figuren einer Zikkuratn
-%%%%
-{dat}%d tins of tremorstones
-%d Dosen Bebensteinen
-%%%%
 
 %%%%
 {dat}the horn of Geryon
