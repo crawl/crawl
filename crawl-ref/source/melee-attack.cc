@@ -282,9 +282,17 @@ bool melee_attack::handle_phase_attempted()
     {
         if (you.see_cell(attack_position))
         {
-            mprf("%s strikes at %s from the darkness!",
-                 attacker->name(DESC_THE, true).c_str(),
-                 defender->name(DESC_THE).c_str());
+            if (defender->is_player())
+            {
+                mprf("%s strikes at you from the darkness!",
+                    attacker->name(DESC_THE, true).c_str());
+            }
+            else
+            {
+                mprf("%s strikes at %s from the darkness!",
+                    attacker->name(DESC_THE, true).c_str(),
+                    defender->name(DESC_THE).c_str());
+            }
         }
         to_hit = AUTOMATIC_HIT;
         needs_message = false;
@@ -930,14 +938,14 @@ class AuxConstrict: public AuxAttackType
 {
 public:
     AuxConstrict()
-    : AuxAttackType(0, "grab", "You grab %s") { };
+    : AuxAttackType(0, "your grab", "You grab %s") { };
 };
 
 class AuxKick: public AuxAttackType
 {
 public:
     AuxKick()
-    : AuxAttackType(5, "kick", "You kick %s") { };
+    : AuxAttackType(5, "your kick", "You kick %s") { };
 
     int get_damage() const override
     {
@@ -970,7 +978,7 @@ public:
     string get_name() const override
     {
         if (you.get_mutation_level(MUT_TENTACLE_SPIKE))
-            return "tentacle spike";
+            return "your tentacle spike";
         return name;
     }
 };
@@ -979,7 +987,7 @@ class AuxHeadbutt: public AuxAttackType
 {
 public:
     AuxHeadbutt()
-    : AuxAttackType(5, "headbutt", "You headbutt %s") { };
+    : AuxAttackType(5, "your headbutt", "You headbutt %s") { };
 
     int get_damage() const override
     {
@@ -991,14 +999,14 @@ class AuxPeck: public AuxAttackType
 {
 public:
     AuxPeck()
-    : AuxAttackType(6, "peck", "You peck %s") { };
+    : AuxAttackType(6, "your peck", "You peck %s") { };
 };
 
 class AuxTailslap: public AuxAttackType
 {
 public:
     AuxTailslap()
-    : AuxAttackType(6, "tail-slap", "You tail-slap %s") { };
+    : AuxAttackType(6, "your tail-slap", "You tail-slap %s") { };
 
     int get_damage() const override
     {
@@ -1016,7 +1024,7 @@ class AuxPunch: public AuxAttackType
 {
 public:
     AuxPunch()
-    : AuxAttackType(5, "punch", "You punch %s") { };
+    : AuxAttackType(5, "your punch", "You punch %s") { };
 
     int get_damage() const override
     {
@@ -1034,13 +1042,13 @@ public:
     string get_name() const override
     {
         if (you.form == transformation::blade_hands)
-            return "slash";
+            return "your slash";
 
         if (you.has_usable_claws())
-            return "claw";
+            return "your claw";
 
         if (you.has_usable_tentacles())
-            return "tentacle-slap";
+            return "your tentacle-slap";
 
         return name;
     }
@@ -1065,7 +1073,7 @@ class AuxBite: public AuxAttackType
 {
 public:
     AuxBite()
-    : AuxAttackType(0, "bite", "You bite %s") { };
+    : AuxAttackType(0, "your bite", "You bite %s") { };
 
     int get_damage() const override
     {
@@ -1097,7 +1105,7 @@ class AuxPseudopods: public AuxAttackType
 {
 public:
     AuxPseudopods()
-    : AuxAttackType(4, "bludgeon", "You bludgeon %s") { };
+    : AuxAttackType(4, "your bludgeon", "You bludgeon %s") { };
 
     int get_damage() const override
     {
@@ -1109,7 +1117,7 @@ class AuxTentacles: public AuxAttackType
 {
 public:
     AuxTentacles()
-    : AuxAttackType(12, "squeeze", "You squeeze %s") { };
+    : AuxAttackType(12, "your squeeze", "You squeeze %s") { };
 };
 
 static const AuxConstrict   AUX_CONSTRICT = AuxConstrict();
@@ -1215,8 +1223,7 @@ bool melee_attack::player_aux_test_hit()
     if (to_hit >= evasion || auto_hit)
         return true;
 
-    string your_attack = "your " + aux_attack;
-    mprf("%s misses %s.", your_attack.c_str(),
+    mprf("%s misses %s.", aux_attack.c_str(),
          defender->name(DESC_THE).c_str());
 
     return false;

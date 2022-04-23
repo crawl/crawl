@@ -9878,13 +9878,16 @@ Leere Ebene-Karte.
 ##################
 %%%%
 You attempt to attack %s, but flinch away in fear!
-Ihr versucht {acc}%s anzugreifen, zuckst aber vor Angst zurück!
+Ihr versucht {acc}%s anzugreifen, zuckt aber vor Angst zurück!
+%%%%
+%s strikes at you from the darkness!
+%s schlägt aus der Dunkelheit auf Euch an!
 %%%%
 %s strikes at %s from the darkness!
 %s schlägt aus der Dunkelheit auf {acc}%s an!
 %%%%
 %s completely misses you.
-
+%s verfehlt Euch völlig.
 %%%%
 %s completely misses %s.
 %s verfehlt {acc}%s völlig.
@@ -9893,19 +9896,19 @@ Ihr versucht {acc}%s anzugreifen, zuckst aber vor Angst zurück!
 %s verfehlt {acc}%s.
 %%%%
 %s closely misses you.
-
+%s verfehlt Euch.
 %%%%
 %s closely misses %s.
 %s verfehlt {acc}%s nur knapp.
 %%%%
 %s barely misses you.
-
+%s verfehlt Euch nur knapp.
 %%%%
 %s barely misses %s.
 %s verfehlt {acc}%s sehr knapp.
 %%%%
 You engulf %s in ooze!
-
+Ihr verschlingt {acc}%s in Schlamm!
 %%%%
 " but do no damage."
 , fügt aber keinen Schaden zu.
@@ -9916,56 +9919,56 @@ quick blade "Gimble"
 quick blade "Gyre"
 
 %%%%
-grab
-
+your grab
+Euer Umschlingsversuch
 %%%%
 You grab %s
 Ihr umschlingt {acc}%s
 %%%%
-kick
-
+your kick
+Euer Tritt
 %%%%
 You kick %s
 Ihr tritt {acc}%s
 %%%%
 You claw %s.
-
+Ihr zerkratzt {acc}%s.
 %%%%
 You pierce %s.
-
+Ihr stecht {acc}%s durch.
 %%%%
-tentacle spike
-
+your tentacle spike
+Euer Tentakel-Stachel
 %%%%
-headbutt
-
+your headbutt
+Euer Kopfstoß
 %%%%
 You headbutt %s
 Ihr versetzt {dat}%s einen Kopfstoß
 %%%%
-peck
-
+your peck
+Euer Picken
 %%%%
 You peck %s
 Ihr pickt {acc}%s
 %%%%
-tail-slap
-
+your tail-slap
+Euer Schwanzschlag
 %%%%
 You tail-slap %s
 Ihr schlagt {acc}%s mit dem Schwanz
 %%%%
-punch
-
+your punch
+Euer Faustschlag
 %%%%
 You punch %s
 Ihr boxt {acc}%s
 %%%%
-slash
-
+your slash
+Euer Schnitt
 %%%%
-tentacle-slap
-
+your tentacle-slap
+Euer Tentakelschlag
 %%%%
 You slash %s
 Ihr schlitzt {acc}%s auf
@@ -9976,23 +9979,23 @@ Ihr zerkratzt {acc}%s
 You tentacle-slap %s
 Ihr schlagt {acc}%s mit Eurem Tentakel
 %%%%
-bite
-
+your bite
+Euer Biss
 %%%%
 You bite %s
 Ihr beißt {acc}%s
 %%%%
-bludgeon
-
+your bludgeon
+Euer Schlag
 %%%%
 You bludgeon %s
 Ihr knüppelt {acc}%s
 %%%%
-squeeze
-
+your squeeze
+Euer Quetschen
 %%%%
 You squeeze %s
-
+Ihr zerquetscht %s
 %%%%
 You drain %s magic.
 Ihr entleert die Magie {gen}%s.
@@ -10034,7 +10037,7 @@ You clumsily bash %s
 Ihr schlagt {acc}%s ungeschickt
 %%%%
 You puncture %s
-Ihr sticht {acc}%s durch
+Ihr stecht {acc}%s durch
 %%%%
 You impale %s
 Ihr spießt {acc}%s auf
@@ -10160,7 +10163,7 @@ You chomp %s
 Ihr kaut {acc}%s
 %%%%
 You buffet %s
-
+Ihr rüttelt {acc}%s
 %%%%
 You batter %s
 Iht verprügelt {acc}%s
@@ -10223,13 +10226,13 @@ Ihr schneidet einen der Köpfe {gen}%s ab!
 %s schneidet einen der Köpfe {gen}%s ab!
 %%%%
 %s burns!
-
+%s brennt!
 %%%%
 %s burn!
-
+%s brennen!
 %%%%
 %s is burned by acid!
-
+%s wird durch Säure gebrannt!
 %%%%
 %s pokes you
 %s stößt Euch an
@@ -10442,7 +10445,7 @@ schlägt Euch mit dem Tentakel
 %s schlägt {acc}%s von weitem
 %%%%
 " with %s"
-
+" mit {dat}%s"
 %%%%
 %s poisons you!
 %s vergiftet Euch!
@@ -10526,16 +10529,16 @@ Eure göttliche Ausdauer schützt Euch vor Gift!
 %s überflutet {acc}%s!
 %%%%
 %s engulfs you!
-
+%s überflutet Euch!
 %%%%
 %s engulfs %s!
-
+%s überflutet {acc}%s!
 %%%%
 %s willpower is stripped away!
-
+{gen}%s Willenskraft wird abgebaut!
 %%%%
 %s drowns you
-
+%s ertränkt Euch
 %%%%
 %s drowns %s
 %s ertränkt {acc}%s
@@ -10583,16 +10586,16 @@ You headbutt %s but do no damage.
 Ihr versetzt {dat}%s einen Kopfstoß, fügt aber keinen Schaden zu.
 %%%%
 @The_monster@ is blinded by the light from your cloak!
-
+@The_monster@ wird durch das Licht Eures Umhangs geblendet!
 %%%%
 @The_monster@ is temporarily struck blind!
-
+@The_monster@ wird vorübergehend erblindet!
 %%%%
 @The_monster@'s sight is seared by the starlight!
-
+Die Sicht {gen}@the_monster@ wird durchs Sternenlicht versengt!
 %%%%
 @The_monster@'s vision is obscured by starry radiance!
-
+Die Sicht {gen}@the_monster@ wird durch Sternen-Glanz verbergt!
 %%%%
 You riposte.
 Ihr holt zum Gegenschlag aus.
@@ -10601,10 +10604,10 @@ Ihr holt zum Gegenschlag aus.
 %s holt zum Gegenschlag aus.
 %%%%
 You are held in place!
-
+Ihr werdet festgehalten!
 %%%%
 %s is held in place!
-
+%s wird festgehalten!
 %%%%
 You hold your ground!
 Ihr bleibt fest!
@@ -13072,6 +13075,9 @@ Lernaean
 hit
 
 %%%%
+bite
+
+%%%%
 release spores at
 
 %%%%
@@ -13079,6 +13085,24 @@ touch
 
 %%%%
 engulf
+
+%%%%
+peck
+
+%%%%
+headbutt
+
+%%%%
+punch
+
+%%%%
+kick
+
+%%%%
+tentacle-slap
+
+%%%%
+tail-slap
 
 %%%%
 gore
@@ -14625,6 +14649,9 @@ Your talons dull and shrink into feet.
 
 %%%%
 Your talons look more like feet.
+
+%%%%
+tentacle spike
 
 %%%%
 One of your tentacles bears a spike.
@@ -18807,6 +18834,9 @@ Leer
 
 %%%%
 release spores
+
+%%%%
+slash
 
 %%%%
 smack
