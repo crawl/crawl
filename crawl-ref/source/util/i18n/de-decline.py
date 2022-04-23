@@ -83,7 +83,7 @@ def starts_with_capital(word):
     return re.match(r'^[A-ZÄÖÜ]', word)
 
 def is_noun(word):
-    word = word.replace('%s', '')
+    word = re.sub(r'%s\-?', '', word)
     word = re.sub(r'\{[^\}]*\}', '', word)
     # special case of adjectives starting with capital
     if word.startswith("Lernäisch") or word.startswith("Verrückt"):
@@ -209,7 +209,7 @@ def decline_adjective(word, gender, target_case, declension):
 # decline adjective context marker
 def decline_adj_context(s, gender, target_case, declension):
 
-    if '%ss ' in s:
+    if '%ss ' in s or '%s-' in s:
         return s
 
     # remove the old context marker
