@@ -208,6 +208,10 @@ def decline_adjective(word, gender, target_case, declension):
 
 # decline adjective context marker
 def decline_adj_context(s, gender, target_case, declension):
+
+    if '%ss ' in s:
+        return s
+
     # remove the old context marker
     s = re.sub(r'\{adj-[a-z]+\}', '', s, 1)
 
@@ -321,6 +325,9 @@ for line in lines:
         if english.startswith('%d '):
             gender = Gender.PLURAL
             declension = Declension.STRONG
+        elif german.startswith('Blork') or german.startswith('Prinz'):
+            gender = Gender.MASCULINE
+            declension = Declension.STRONG
         elif '{adj-er}'in german:
             gender = Gender.MASCULINE
             declension = Declension.STRONG
@@ -419,9 +426,16 @@ for line in lines:
                 if is_determiner(word):
                     word = decline_determiner(word, gender, target_case)
                 elif is_noun(word):
-                    if word != "Prinz" and word != "Blork":
+                    if word == "Prinz":
+                        # decline noun, but don't stop declining later words
+                        word = decline_noun(word, gender, target_case, proper_noun)
+                    elif word == "Gelée":
+                        # don't decline this word or anything following
                         before_noun = False
-                    word = decline_noun(word, gender, target_case, proper_noun)
+                    elif not proper_noun or i == len(words) - 1:
+                        # decline noun but nothing else following
+                        word = decline_noun(word, gender, target_case, proper_noun)
+                        before_noun = False
                 else:
                     word = decline_adjective(word, gender, target_case, declension)
             

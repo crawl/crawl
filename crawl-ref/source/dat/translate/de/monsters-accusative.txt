@@ -534,7 +534,7 @@ den Hippogriff
 den Mantikor
 %%%%
 {acc}the minotaur
-den Minotaur
+den Minotauren
 %%%%
 {acc}the ancestor
 den Ahnen
@@ -1450,7 +1450,7 @@ einen Hippogriff
 einen Mantikor
 %%%%
 {acc}a minotaur
-einen Minotaur
+einen Minotauren
 %%%%
 {acc}an ancestor
 einen Ahnen
@@ -2372,7 +2372,7 @@ Euren Hippogriff
 Euren Mantikor
 %%%%
 {acc}your minotaur
-Euren Minotaur
+Euren Minotauren
 %%%%
 {acc}your ancestor
 Euren Ahnen
@@ -2965,6 +2965,9 @@ Knochendrachen
 %%%%
 {acc}pearl dragon
 Perlendrachen
+%%%%
+{acc}minotaur
+Minotauren
 %%%%
 {acc}ancestor
 Ahnen

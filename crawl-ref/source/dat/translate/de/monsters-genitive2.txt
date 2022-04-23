@@ -247,10 +247,7 @@ Blork des Orks
 Blorks
 %%%%
 {gen}the Royal Jelly
-des Gelée Royales
-%%%%
-{gen}Royal Jelly
-Gelée Royales
+des Gelée Royale
 %%%%
 {gen}the Serpent of Hell
 der Höllenschlange
@@ -1143,7 +1140,7 @@ des Hippogriffs
 des Mantikors
 %%%%
 {gen}the minotaur
-des Minotaur
+des Minotauren
 %%%%
 {gen}the sphinx
 der Sphinx
@@ -2791,7 +2788,7 @@ eines Hippogriffs
 eines Mantikors
 %%%%
 {gen}a minotaur
-eines Minotaur
+eines Minotauren
 %%%%
 {gen}a sphinx
 einer Sphinx
@@ -4481,7 +4478,7 @@ Eures Hippogriffs
 Eures Mantikors
 %%%%
 {gen}your minotaur
-Eures Minotaur
+Eures Minotauren
 %%%%
 {gen}your sphinx
 Eurer Sphinx
@@ -5869,6 +5866,9 @@ Hippogriffs
 %%%%
 {gen}manticore
 Mantikors
+%%%%
+{gen}minotaur
+Minotauren
 %%%%
 {gen}mutant beast
 mutierter Bestie
