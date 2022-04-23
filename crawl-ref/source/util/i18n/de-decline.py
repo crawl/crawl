@@ -212,38 +212,198 @@ def decline_adj_context(s, gender, target_case, declension):
     if '%ss ' in s or '%s-' in s:
         return s
 
-    # remove the old context marker
+    context = "adj-en"
+    if target_case == Case.DATIVE and declension == Declension.STRONG:
+        if gender == Gender.FEMININE:
+            context = "adj-er"
+        elif gender != Gender.PLURAL:
+            context = "adj-em"
+    elif target_case == Case.GENITIVE and declension == Declension.STRONG:
+        if gender == Gender.FEMININE or gender == Gender.PLURAL:
+            context = "adj-er"
+    elif target_case == Case.ACCUSATIVE or target_case == Case.NOMINATIVE:
+        if gender == Gender.FEMININE:
+            context = "adj-e"
+        elif gender == Gender.NEUTER:
+            if declension == Declension.WEAK:
+                context = "adj-e"
+            else:
+                context = "adj-es"
+        elif gender == Gender.PLURAL:
+            if declension == Declension.STRONG:
+                context = "adj-e"
+        elif gender == Gender.MASCULINE and target_case == Case.NOMINATIVE:
+            if declension == Declension.WEAK:
+                context = "adj-e"
+            else:
+                context = "adj-er"
+
+    # remove any old context marker
     s = re.sub(r'\{adj-[a-z]+\}', '', s, 1)
 
-    if target_case in [Case.DATIVE, Case.GENITIVE]:
-        if declension != Declension.STRONG:
-            # weak/mixed declension: always -en
-            s = re.sub(r'%s', '{adj-en}%s', s, 1)
-        elif gender == Gender.FEMININE:
-            # feminine strong: -er in both cases
-            s = re.sub(r'%s', '{adj-er}%s', s, 1)
-        elif gender == Gender.PLURAL:
-            # plural strong
-            if target_case == Case.GENITIVE:
-                s = re.sub(r'%s', '{adj-er}%s', s, 1)
-            else:
-                s = re.sub(r'%s', '{adj-en}%s', s, 1)
-        else:
-            # masc/neuter strong
-            if target_case == Case.GENITIVE:
-                s = re.sub(r'%s', '{adj-en}%s', s, 1)
-            else:
-                s = re.sub(r'%s', '{adj-em}%s', s, 1)
-    elif target_case == Case.ACCUSATIVE:
-        if gender == Gender.MASCULINE:
-            # ending is always -en regardless of declension
-            s = re.sub(r'%s', '{adj-en}%s', s, 1)
-        elif gender == Gender.NEUTER and declension != Declension.WEAK:
-            s = re.sub(r'%s', '{adj-es}%s', s, 1)
-        elif gender == Gender.PLURAL and declension != Declension.STRONG:
-            s = re.sub(r'%s', '{adj-en}%s', s, 1)
-    
+    # add the new one
+    if context != "adj-e" or 'Paar' in german:
+        s = re.sub(r'%s', '{'+context+'}%s', s, 1)
+
     return s
+
+
+known_gender = {}
+
+# decline string
+def decline(german, english):
+
+    if english.startswith('" of ') or english.startswith('of ') \
+        or not re.search('[A-Za-z]', english.replace('%s', '')):
+        # don't decline this
+        return german
+
+    # extract and save any suffix (" of whatever"), which has its own case
+    suffix = ""
+    m = re.search(r' (von|der|des) .*$', german)
+    if m:
+        suffix = m.group(0)
+        if suffix == " der Ork":
+            # special case where article of main noun is not at the start
+            suffix = ""
+        elif suffix != "":
+            german = german.replace(suffix, '')
+    
+    # split german up into individual words
+    words = german.split()
+
+    # try to determine gender and declension
+    gender = Gender.UNKNOWN;
+    declension = Declension.STRONG
+
+    if english.startswith('%d '):
+        gender = Gender.PLURAL
+        declension = Declension.STRONG
+    elif german.startswith('Blork') or german.startswith('Prinz'):
+        gender = Gender.MASCULINE
+        declension = Declension.STRONG
+    elif '{adj-er}'in german:
+        gender = Gender.MASCULINE
+        declension = Declension.STRONG
+    elif '{adj-es}' in german:
+        gender = Gender.NEUTER
+        declension = Declension.STRONG
+
+    i = 0
+    while gender == Gender.UNKNOWN and i < len(words):
+        word = words[i]
+        if (is_determiner(word)):
+            if is_definite_article(word):
+                declension = Declension.WEAK
+            else:
+                declension = Declension.MIXED
+            lword = word.lower()
+            if lword == 'der':
+                gender = Gender.MASCULINE
+            elif lword == 'eine':
+                gender = Gender.FEMININE
+            elif lword == 'das':
+                gender = Gender.NEUTER
+            elif lword in ['die', 'eure']:
+                if is_plural(english):
+                    gender = Gender.PLURAL
+                else:
+                    gender = Gender.FEMININE
+        elif is_noun(word):
+            # handle some special cases
+            if re.search(r'[Bb]uch$', word):
+                gender = Gender.NEUTER
+            elif re.search(r'[Ss]tab$', word):
+                gender = Gender.MASCULINE
+            elif re.search(r'[Ss]tecken$', word):
+                gender = Gender.MASCULINE
+            elif re.search(r'[Tt]rank$', word):
+                gender = Gender.MASCULINE
+            elif re.search(r'[Pp]feil$', word):
+                gender = Gender.MASCULINE
+            elif re.search(r'[Bb]umerang$', word):
+                gender = Gender.MASCULINE
+            elif re.search(r'[Ss]peer$', word):
+                gender = Gender.MASCULINE
+            elif re.search(r'[Ss]piegel$', word):
+                gender = Gender.MASCULINE
+            elif re.search(r'[Ss]chriftrolle$', word):
+                gender = Gender.FEMININE
+            elif re.search(r'[Aa]ffe$', word):
+                if re.search(r'[Ww]affe$', word):
+                    gender = Gender.FEMININE
+                else:
+                    gender = Gender.MASCULINE
+            # don't continue after the noun
+            break
+        else:
+            # probably an adjective, so check for gendered ending
+            if word.endswith("er"):
+                gender = Gender.MASCULINE
+            elif word.endswith("es"):
+                gender = Gender.NEUTER
+            elif word.endswith("e"):
+                if is_plural(english):
+                    gender = Gender.PLURAL
+                else:
+                    gender = Gender.FEMININE
+        i += 1
+
+    if gender == Gender.UNKNOWN and is_plural(english):
+        gender = Gender.PLURAL
+
+    # lookup/save known genders
+    key = german
+    key = re.sub('^(der|die|das) ', '', key)
+    key = re.sub('^(eine|ein) ', '', key)
+    key = re.sub('^(Euer|Eure) ', '', key)
+    if gender == Gender.UNKNOWN:
+        # lookup known gender
+        if key in known_gender:
+            gender = known_gender[key]
+    else:
+        # save known gender
+        if not key in known_gender:
+            known_gender[key] = gender
+
+    logging.debug("Gender is " + gender.name)
+
+    if gender == Gender.UNKNOWN:
+        logging.warning("Unknown gender for: " + german)
+        gender = Gender.MASCULINE
+
+    # decline
+    proper_noun = (re.match(r'^[A-Z]', english) != None)
+    german = ""
+    before_noun = True
+    for i, word in enumerate(words):
+        if before_noun:
+            if is_determiner(word):
+                word = decline_determiner(word, gender, target_case)
+            elif is_noun(word):
+                if word == "Prinz":
+                    # decline noun, but don't stop declining later words
+                    word = decline_noun(word, gender, target_case, proper_noun)
+                elif word == "Gelée":
+                    # don't decline this word or anything following
+                    before_noun = False
+                elif not proper_noun or i == len(words) - 1:
+                    # decline noun but nothing else following
+                    word = decline_noun(word, gender, target_case, proper_noun)
+                    before_noun = False
+            else:
+                word = decline_adjective(word, gender, target_case, declension)
+
+        if german != "":
+            german += " "
+        german += word
+
+    german = decline_adj_context(german, gender, target_case, declension)
+
+    # restore saved suffix
+    german += suffix
+
+    return german
 
 
 # process command line args
@@ -255,6 +415,8 @@ if case_str.startswith('acc') or case_str.startswith('akk'):
     target_case = Case.ACCUSATIVE
 elif case_str.startswith('gen'):
     target_case = Case.GENITIVE
+elif case_str.startswith('nom'):
+    target_case = Case.NOMINATIVE
 infile_name = sys.argv[2];
 outfile_name = sys.argv[3];
 print("Reading from {} and writing to {}".format(infile_name, outfile_name))
@@ -265,7 +427,6 @@ outfile = open(outfile_name, "w")
 lines = infile.readlines()
 last_written = ""
 english = ""
-known_gender = {}
 for line in lines:
     line = line.strip('\n\r')
     if re.match(r'\s*$', line):
@@ -288,6 +449,8 @@ for line in lines:
             outline = line.replace('nominative', 'accusative (where different to nominative)')
         elif target_case == Case.GENITIVE:
             outline = line.replace('nominative', 'genitive (where different to nominative)')
+        else:
+            outline = line
         writeline(outfile, outline)
         last_written = outline
     elif english == "":
@@ -296,164 +459,15 @@ for line in lines:
     else:
         # Now we have the German and the English strings, so we can process
         german = line
-
-        if english.startswith('" of ') or english.startswith('of ') \
-           or not re.search('[A-Za-z]', english.replace('%s', '')):
-            # don't decline this
-            english = ""
-            german = ""
-            continue
-
-        # extract and save any suffix (" of whatever"), which has its own case
-        suffix = ""
-        m = re.search(r' (von|der|des) .*$', german)
-        if m:
-            suffix = m.group(0)
-            if suffix == " der Ork":
-                # special case where article of main noun is not at the start
-                suffix = ""
-            elif suffix != "":
-                german = german.replace(suffix, '')
         
-        # split german up into individual words
-        words = german.split()
+        german = decline(german, english)
 
-        # try to determine gender and declension
-        gender = Gender.UNKNOWN;
-        declension = Declension.STRONG
-
-        if english.startswith('%d '):
-            gender = Gender.PLURAL
-            declension = Declension.STRONG
-        elif german.startswith('Blork') or german.startswith('Prinz'):
-            gender = Gender.MASCULINE
-            declension = Declension.STRONG
-        elif '{adj-er}'in german:
-            gender = Gender.MASCULINE
-            declension = Declension.STRONG
-        elif '{adj-es}' in german:
-            gender = Gender.NEUTER
-            declension = Declension.STRONG
-
-        i = 0
-        while gender == Gender.UNKNOWN and i < len(words):
-            word = words[i]
-            if (is_determiner(word)):
-                if is_definite_article(word):
-                    declension = Declension.WEAK
-                else:
-                    declension = Declension.MIXED
-                lword = word.lower()
-                if lword == 'der':
-                    gender = Gender.MASCULINE
-                elif lword == 'eine':
-                    gender = Gender.FEMININE
-                elif lword == 'das':
-                    gender = Gender.NEUTER
-                elif lword in ['die', 'eure']:
-                    if is_plural(english):
-                        gender = Gender.PLURAL
-                    else:
-                        gender = Gender.FEMININE
-            elif is_noun(word):
-                # handle some special cases
-                if re.search(r'[Bb]uch$', word):
-                    gender = Gender.NEUTER
-                elif re.search(r'[Ss]tab$', word):
-                    gender = Gender.MASCULINE
-                elif re.search(r'[Ss]tecken$', word):
-                    gender = Gender.MASCULINE
-                elif re.search(r'[Tt]rank$', word):
-                    gender = Gender.MASCULINE
-                elif re.search(r'[Pp]feil$', word):
-                    gender = Gender.MASCULINE
-                elif re.search(r'[Bb]umerang$', word):
-                    gender = Gender.MASCULINE
-                elif re.search(r'[Ss]peer$', word):
-                    gender = Gender.MASCULINE
-                elif re.search(r'[Ss]piegel$', word):
-                    gender = Gender.MASCULINE
-                elif re.search(r'[Ss]chriftrolle$', word):
-                    gender = Gender.FEMININE
-                elif re.search(r'[Aa]ffe$', word):
-                    if re.search(r'[Ww]affe$', word):
-                        gender = Gender.FEMININE
-                    else:
-                        gender = Gender.MASCULINE
-                # don't continue after the noun
-                break
-            else:
-                # probably an adjective, so check for gendered ending
-                if word.endswith("er"):
-                    gender = Gender.MASCULINE
-                elif word.endswith("es"):
-                    gender = Gender.NEUTER
-                elif word.endswith("e"):
-                    if is_plural(english):
-                        gender = Gender.PLURAL
-                    else:
-                        gender = Gender.FEMININE
-            i += 1
-
-        if gender == Gender.UNKNOWN and is_plural(english):
-            gender = Gender.PLURAL
-
-        # lookup/save known genders
-        key = german
-        key = re.sub('^(der|die|das) ', '', key)
-        key = re.sub('^(eine|ein) ', '', key)
-        key = re.sub('^(Euer|Eure) ', '', key)
-        if gender == Gender.UNKNOWN:
-            # lookup known gender
-            if key in known_gender:
-                gender = known_gender[key]
-        else:
-            # save known gender
-            if not key in known_gender:
-                known_gender[key] = gender
-
-        logging.debug("Gender is " + gender.name)
-
-        if gender == Gender.UNKNOWN:
-            logging.warning("Unknown gender for: " + german)
-
-        # decline
-        proper_noun = (re.match(r'^[A-Z]', english) != None)
-        german = ""
-        before_noun = True
-        for i, word in enumerate(words):
-            if before_noun:
-                if is_determiner(word):
-                    word = decline_determiner(word, gender, target_case)
-                elif is_noun(word):
-                    if word == "Prinz":
-                        # decline noun, but don't stop declining later words
-                        word = decline_noun(word, gender, target_case, proper_noun)
-                    elif word == "Gelée":
-                        # don't decline this word or anything following
-                        before_noun = False
-                    elif not proper_noun or i == len(words) - 1:
-                        # decline noun but nothing else following
-                        word = decline_noun(word, gender, target_case, proper_noun)
-                        before_noun = False
-                else:
-                    word = decline_adjective(word, gender, target_case, declension)
-            
-            if german != "":
-                german += " "
-            german += word
-
-        # restore saved suffix
-        german += suffix
-
-        german = decline_adj_context(german, gender, target_case, declension)
-
-        if german != line:
+        if german != line or target_case == Case.NOMINATIVE:
             if target_case == Case.ACCUSATIVE:
                 outfile.write('{acc}')
-            if target_case == Case.DATIVE:
+            elif target_case == Case.DATIVE:
                 outfile.write('{dat}')
-            if target_case == Case.GENITIVE:
+            elif target_case == Case.GENITIVE:
                 outfile.write('{gen}')
             writeline(outfile, english)
             writeline(outfile, german)
