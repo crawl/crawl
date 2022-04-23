@@ -242,8 +242,7 @@ def decline_adj_context(s, gender, target_case, declension):
     s = re.sub(r'\{adj-[a-z]+\}', '', s, 1)
 
     # add the new one
-    if context != "adj-e" or 'Paar' in german:
-        s = re.sub(r'%s', '{'+context+'}%s', s, 1)
+    s = re.sub(r'%s', '{'+context+'}%s', s, 1)
 
     return s
 

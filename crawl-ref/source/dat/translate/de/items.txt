@@ -74,134 +74,134 @@ unbewaffnet
 # Note that %s is a placeholder for any adjectives
 %%%%
 the %sclub
-die %sKeule
+die {adj-e}%sKeule
 %%%%
 the %swhip
-die %sPeitsche
+die {adj-e}%sPeitsche
 %%%%
 the %smace
-der %sStreitkolben
+der {adj-e}%sStreitkolben
 %%%%
 the %sflail
-der %sFlegel
+der {adj-e}%sFlegel
 %%%%
 the %smorningstar
-der %sMorgenstern
+der {adj-e}%sMorgenstern
 %%%%
 the %sdemon whip
-die %sDämonenpeitsche
+die {adj-e}%sDämonenpeitsche
 %%%%
 the %ssacred scourge
-die %sgeistliche Geißel
+die {adj-e}%sgeistliche Geißel
 %%%%
 the %sdire flail
-der %sSchreckensflegel
+der {adj-e}%sSchreckensflegel
 %%%%
 the %seveningstar
-der %sAbendstern
+der {adj-e}%sAbendstern
 %%%%
 the %sgreat mace
-der %sgroßer Streitkolben
+der {adj-e}%sgroßer Streitkolben
 %%%%
 the %sgiant club
-die %sRiesenkeule
+die {adj-e}%sRiesenkeule
 %%%%
 the %sgiant spiked club
-die %sriesige Stachelkeule
+die {adj-e}%sriesige Stachelkeule
 %%%%
 the %sdagger
-der %sDolch
+der {adj-e}%sDolch
 %%%%
 the %squick blade
-die %sSchnellklinge
+die {adj-e}%sSchnellklinge
 %%%%
 the %sshort sword
-das %sKurzschwert
+das {adj-e}%sKurzschwert
 %%%%
 the %srapier
-das %sRapier
+das {adj-e}%sRapier
 %%%%
 the %sfalchion
-das %sFalchion
+das {adj-e}%sFalchion
 %%%%
 the %slong sword
-das %sLangschwert
+das {adj-e}%sLangschwert
 %%%%
 the %sscimitar
-der %sKrummsäbel
+der {adj-e}%sKrummsäbel
 %%%%
 the %sdemon blade
-die %sDämonenklinge
+die {adj-e}%sDämonenklinge
 %%%%
 the %seudemon blade
-die %sEudämonenklinge
+die {adj-e}%sEudämonenklinge
 %%%%
 the %sdouble sword
-das %sDoppelschwert
+das {adj-e}%sDoppelschwert
 %%%%
 the %sgreat sword
-das %sGroßschwert
+das {adj-e}%sGroßschwert
 %%%%
 the %striple sword
-das %sDreifach-Schwert
+das {adj-e}%sDreifach-Schwert
 %%%%
 the %shand axe
-das %sHandbeil
+das {adj-e}%sHandbeil
 %%%%
 the %swar axe
-die %sKriegsaxt
+die {adj-e}%sKriegsaxt
 %%%%
 the %sbroad axe
-die %sBreitaxt
+die {adj-e}%sBreitaxt
 %%%%
 the %sbattleaxe
-die %sStreitaxt
+die {adj-e}%sStreitaxt
 %%%%
 the %sexecutioner's axe
-die %sHenkersaxt
+die {adj-e}%sHenkersaxt
 %%%%
 the %sspear
-der %sSpeer
+der {adj-e}%sSpeer
 %%%%
 the %strident
-der %sDreizack
+der {adj-e}%sDreizack
 %%%%
 the %shalberd
-die %sHellebarde
+die {adj-e}%sHellebarde
 %%%%
 the %sscythe
-die %sSense
+die {adj-e}%sSense
 %%%%
 the %sdemon trident
-der %sDämonendreizack
+der {adj-e}%sDämonendreizack
 %%%%
 the %strishula
-der %sTrishula
+der {adj-e}%sTrishula
 %%%%
 the %sglaive
-die %sGleve
+die {adj-e}%sGleve
 %%%%
 the %sbardiche
-die %sBardiche
+die {adj-e}%sBardiche
 %%%%
 the %squarterstaff
-der %sKampfstab
+der {adj-e}%sKampfstab
 %%%%
 the %slajatang
-der %sLajatang
+der {adj-e}%sLajatang
 %%%%
 the %slance
-die %sLanze
+die {adj-e}%sLanze
 %%%%
 
 # without determiner (used in start menu and HUD)
 # Note: The %s is a placeholder for any adjectives
 %%%%
 %sclub
-%sKeule
+{adj-e}%sKeule
 %%%%
 %swhip
-%sPeitsche
+{adj-e}%sPeitsche
 %%%%
 %smace
 {adj-er}%sStreitkolben
@@ -213,10 +213,10 @@ die %sLanze
 {adj-er}%sMorgenstern
 %%%%
 %sdemon whip
-%sDämonenpeitsche
+{adj-e}%sDämonenpeitsche
 %%%%
 %ssacred scourge
-%sgeistliche Geißel
+{adj-e}%sgeistliche Geißel
 %%%%
 %sdire flail
 {adj-er}%sSchreckensflegel
@@ -228,16 +228,16 @@ die %sLanze
 {adj-er}%sgroßer Streitkolben
 %%%%
 %sgiant club
-%sRiesenkeule
+{adj-e}%sRiesenkeule
 %%%%
 %sgiant spiked club
-%sriesige Stachelkeule
+{adj-e}%sriesige Stachelkeule
 %%%%
 %sdagger
 {adj-er}%sDolch
 %%%%
 %squick blade
-%sSchnellklinge
+{adj-e}%sSchnellklinge
 %%%%
 %sshort sword
 {adj-es}%sKurzschwert
@@ -255,10 +255,10 @@ die %sLanze
 {adj-er}%sKrummsäbel
 %%%%
 %sdemon blade
-%sDämonenklinge
+{adj-e}%sDämonenklinge
 %%%%
 %seudemon blade
-%sEudämonenklinge
+{adj-e}%sEudämonenklinge
 %%%%
 %sdouble sword
 {adj-es}%sDoppelschwert
@@ -273,16 +273,16 @@ die %sLanze
 {adj-er}%sHandbeil
 %%%%
 %swar axe
-%sKriegsaxt
+{adj-e}%sKriegsaxt
 %%%%
 %sbroad axe
-%sBreitaxt
+{adj-e}%sBreitaxt
 %%%%
 %sbattleaxe
-%sStreitaxt
+{adj-e}%sStreitaxt
 %%%%
 %sexecutioner's axe
-%sHenkersaxt
+{adj-e}%sHenkersaxt
 %%%%
 %sspear
 {adj-er}%sSpeer
@@ -291,10 +291,10 @@ die %sLanze
 {adj-er}%sDreizack
 %%%%
 %shalberd
-%sHellebarde
+{adj-e}%sHellebarde
 %%%%
 %sscythe
-%sSense
+{adj-e}%sSense
 %%%%
 %sdemon trident
 {adj-er}%sDämonendreizack
@@ -303,10 +303,10 @@ die %sLanze
 {adj-er}%sTrishula
 %%%%
 %sglaive
-%sGleve
+{adj-e}%sGleve
 %%%%
 %sbardiche
-%sBardiche
+{adj-e}%sBardiche
 %%%%
 %squarterstaff
 {adj-er}%sKampfstab
@@ -315,17 +315,17 @@ die %sLanze
 {adj-er}%sLajatang
 %%%%
 %slance
-%sLanze
+{adj-e}%sLanze
 %%%%
 
 # with indefinite article
 # Note that %s is a placeholder for any adjectives
 %%%%
 a %sclub
-eine %sKeule
+eine {adj-e}%sKeule
 %%%%
 a %swhip
-eine %sPeitsche
+eine {adj-e}%sPeitsche
 %%%%
 a %smace
 ein {adj-er}%sStreitkolben
@@ -337,10 +337,10 @@ a %smorningstar
 ein {adj-er}%sMorgenstern
 %%%%
 a %sdemon whip
-eine %sDämonenpeitsche
+eine {adj-e}%sDämonenpeitsche
 %%%%
 a %ssacred scourge
-eine %sgeistliche Geißel
+eine {adj-e}%sgeistliche Geißel
 %%%%
 a %sdire flail
 ein {adj-er}%sSchreckensflegel
@@ -352,16 +352,16 @@ a %sgreat mace
 ein {adj-er}%sgroßer Streitkolben
 %%%%
 a %sgiant club
-eine %sRiesenkeule
+eine {adj-e}%sRiesenkeule
 %%%%
 a %sgiant spiked club
-eine %sriesige Stachelkeule
+eine {adj-e}%sriesige Stachelkeule
 %%%%
 a %sdagger
 ein {adj-er}%sDolch
 %%%%
 a %squick blade
-eine %sSchnellklinge
+eine {adj-e}%sSchnellklinge
 %%%%
 a %sshort sword
 ein {adj-es}%sKurzschwert
@@ -383,10 +383,10 @@ a %sscimitar
 ein {adj-er}%sKrummsäbel
 %%%%
 a %sdemon blade
-eine %sDämonenklinge
+eine {adj-e}%sDämonenklinge
 %%%%
 a %seudemon blade
-eine %sEudämonenklinge
+eine {adj-e}%sEudämonenklinge
 %%%%
 a %sdouble sword
 ein {adj-es}%sDoppelschwert
@@ -403,16 +403,16 @@ a %shand axe
 ein {adj-es}%sBeil
 %%%%
 a %swar axe
-eine %sKriegsaxt
+eine {adj-e}%sKriegsaxt
 %%%%
 a %sbroad axe
-eine %sBreitaxt
+eine {adj-e}%sBreitaxt
 %%%%
 a %sbattleaxe
-eine %sStreitaxt
+eine {adj-e}%sStreitaxt
 %%%%
 a %sexecutioner's axe
-eine %sHenkersaxt
+eine {adj-e}%sHenkersaxt
 %%%%
 a %sspear
 ein {adj-er}%sSpeer
@@ -421,10 +421,10 @@ a %strident
 ein {adj-er}%sDreizack
 %%%%
 a %shalberd
-eine %sHellebarde
+eine {adj-e}%sHellebarde
 %%%%
 a %sscythe
-eine %sSense
+eine {adj-e}%sSense
 %%%%
 a %sdemon trident
 ein {adj-er}%sDämonendreizack
@@ -433,10 +433,10 @@ a %strishula
 ein {adj-er}%sTrishula
 %%%%
 a %sglaive
-eine %sGleve
+eine {adj-e}%sGleve
 %%%%
 a %sbardiche
-eine %sBardiche
+eine {adj-e}%sBardiche
 %%%%
 a %squarterstaff
 ein {adj-er}%sKampfstab
@@ -445,17 +445,17 @@ a %slajatang
 ein {adj-er}%sLajatang
 %%%%
 a %slance
-eine %sLanze
+eine {adj-e}%sLanze
 %%%%
 
 # your <item>
 # Note that %s is a placeholder for any adjectives
 %%%%
 your %sclub
-Eure %sKeule
+Eure {adj-e}%sKeule
 %%%%
 your %swhip
-Eure %sPeitsche
+Eure {adj-e}%sPeitsche
 %%%%
 your %smace
 Euer {adj-er}%sStreitkolben
@@ -467,10 +467,10 @@ your %smorningstar
 Euer {adj-er}%sMorgenstern
 %%%%
 your %sdemon whip
-Eure %sDämonenpeitsche
+Eure {adj-e}%sDämonenpeitsche
 %%%%
 your %ssacred scourge
-Eure %sgeistliche Geißel
+Eure {adj-e}%sgeistliche Geißel
 %%%%
 your %sdire flail
 Euer {adj-er}%sSchreckensflegel
@@ -482,16 +482,16 @@ your %sgreat mace
 Euer {adj-er}%sgroßer Streitkolben
 %%%%
 your %sgiant club
-Eure %sRiesenkeule
+Eure {adj-e}%sRiesenkeule
 %%%%
 your %sgiant spiked club
-Eure %sriesige Stachelkeule
+Eure {adj-e}%sriesige Stachelkeule
 %%%%
 your %sdagger
 Euer {adj-er}%sDolch
 %%%%
 your %squick blade
-Eure %sSchnellklinge
+Eure {adj-e}%sSchnellklinge
 %%%%
 your %sshort sword
 Euer {adj-es}%sKurzschwert
@@ -513,10 +513,10 @@ your %sscimitar
 Euer {adj-er}%sKrummsäbel
 %%%%
 your %sdemon blade
-Eure %sDämonenklinge
+Eure {adj-e}%sDämonenklinge
 %%%%
 your %seudemon blade
-Eure %sEudämonenklinge
+Eure {adj-e}%sEudämonenklinge
 %%%%
 your %sdouble sword
 Euer {adj-es}%sDoppelschwert
@@ -533,16 +533,16 @@ your %shand axe
 Euer {adj-es}%sBeil
 %%%%
 your %swar axe
-Eure %sKriegsaxt
+Eure {adj-e}%sKriegsaxt
 %%%%
 your %sbroad axe
-Eure %sBreitaxt
+Eure {adj-e}%sBreitaxt
 %%%%
 your %sbattleaxe
-Eure %sStreitaxt
+Eure {adj-e}%sStreitaxt
 %%%%
 your %sexecutioner's axe
-Eure %sHenkersaxt
+Eure {adj-e}%sHenkersaxt
 %%%%
 your %sspear
 Euer {adj-er}%sSpeer
@@ -551,10 +551,10 @@ your %strident
 Euer {adj-er}%sDreizack
 %%%%
 your %shalberd
-Eure %sHellebarde
+Eure {adj-e}%sHellebarde
 %%%%
 your %sscythe
-Eure %sSense
+Eure {adj-e}%sSense
 %%%%
 your %sdemon trident
 Euer {adj-er}%sDämonendreizack
@@ -563,10 +563,10 @@ your %strishula
 Euer {adj-er}%sTrishula
 %%%%
 your %sglaive
-Eure %sGleve
+Eure {adj-e}%sGleve
 %%%%
 your %sbardiche
-Eure %sBardiche
+Eure {adj-e}%sBardiche
 %%%%
 your %squarterstaff
 Euer {adj-er}%sKampfstab
@@ -575,7 +575,7 @@ your %slajatang
 Euer {adj-er}%sLajatang
 %%%%
 you %slance
-Eure %sLanze
+Eure {adj-e}%sLanze
 %%%%
 
 #################################
@@ -585,44 +585,44 @@ Eure %sLanze
 # Note that %s is a placeholder for any adjectives
 %%%%
 the %shunting sling
-die %sSchleuder
+die {adj-e}%sSchleuder
 %%%%
 the %sfustibalus
-der %sFustibalus
+der {adj-e}%sFustibalus
 %%%%
 the %shand crossbow
-die %sHandarmbrust
+die {adj-e}%sHandarmbrust
 %%%%
 the %sarbalest
-die %sArmbrust
+die {adj-e}%sArmbrust
 %%%%
 the %striple crossbow
-die %sDreifach-Armbrust
+die {adj-e}%sDreifach-Armbrust
 %%%%
 the %sshortbow
-der %sKurzbogen
+der {adj-e}%sKurzbogen
 %%%%
 the %slongbow
-der %sLangbogen
+der {adj-e}%sLangbogen
 %%%%
 
 # indefinite article
 # Note that %s is a placeholder for any adjectives
 %%%%
 a %shunting sling
-eine %sSchleuder
+eine {adj-e}%sSchleuder
 %%%%
 a %sfustibalus
 ein {adj-er}%sFustibalus
 %%%%
 a %shand crossbow
-eine %sHandarmbrust
+eine {adj-e}%sHandarmbrust
 %%%%
 a %sarbalest
-eine %sArmbrust
+eine {adj-e}%sArmbrust
 %%%%
 a %striple crossbow
-eine %sDreifach-Armbrust
+eine {adj-e}%sDreifach-Armbrust
 %%%%
 a %sshortbow
 ein {adj-er}%sKurzbogen
@@ -635,19 +635,19 @@ ein {adj-er}%sLangbogen
 # Note that %s is a placeholder for any adjectives
 %%%%
 your %shunting sling
-Eure %sSchleuder
+Eure {adj-e}%sSchleuder
 %%%%
 your %sfustibalus
 Euer {adj-er}%sFustibalus
 %%%%
 your %shand crossbow
-Eure %sHandarmbrust
+Eure {adj-e}%sHandarmbrust
 %%%%
 your %sarbalest
-Eure %sArmbrust
+Eure {adj-e}%sArmbrust
 %%%%
 your %striple crossbow
-Eure %sDreifach-Armbrust
+Eure {adj-e}%sDreifach-Armbrust
 %%%%
 your %sshortbow
 Euer {adj-er}%sKurzbogen
@@ -660,19 +660,19 @@ Euer {adj-er}%sLangbogen
 # Note that %s is a placeholder for any adjectives
 %%%%
 %shunting sling
-%sSchleuder
+{adj-e}%sSchleuder
 %%%%
 %sfustibalus
 {adj-er}%sFustibalus
 %%%%
 %shand crossbow
-%sHandarmbrust
+{adj-e}%sHandarmbrust
 %%%%
 %sarbalest
-%sArmbrust
+{adj-e}%sArmbrust
 %%%%
 %striple crossbow
-%sDreifach-Armbrust
+{adj-e}%sDreifach-Armbrust
 %%%%
 %sshortbow
 {adj-er}%sKurzbogen
@@ -901,64 +901,64 @@ ein Silberbumerang
 # Note that the %s is a placeholder for any adjectives
 %%%%
 the %sanimal skin
-die %sTierhaut
+die {adj-e}%sTierhaut
 %%%%
 the %srobe
-die %sRobe
+die {adj-e}%sRobe
 %%%%
 the %sleather armour
-die %sLederrüstung
+die {adj-e}%sLederrüstung
 %%%%
 the %sring mail
-der %sRingpanzer
+der {adj-e}%sRingpanzer
 %%%%
 the %sscale mail
-der %sSchuppenpanzer
+der {adj-e}%sSchuppenpanzer
 %%%%
 the %schain mail
-der %sKettenpanzer
+der {adj-e}%sKettenpanzer
 %%%%
 the %splate armour
-der %sPlattenpanzer
+der {adj-e}%sPlattenpanzer
 %%%%
 the %scrystal plate armour
-der %sKristallplattenpanzer
+der {adj-e}%sKristallplattenpanzer
 %%%%
 the %stroll leather armour
-die %sTrolllederrüstung
+die {adj-e}%sTrolllederrüstung
 %%%%
 the %scloak
-der %sUmhang
+der {adj-e}%sUmhang
 %%%%
 the %sscarf
-der %sSchal
+der {adj-e}%sSchal
 %%%%
 the %spair of %sgloves
 das {adj-e}%sPaar {adj-e}%sHandschuhe
 %%%%
 the %shelmet
-der %sHelm
+der {adj-e}%sHelm
 %%%%
 the %shat
-der %sHut
+der {adj-e}%sHut
 %%%%
 the %spair of %sboots
 das {adj-e}%sPaar {adj-e}%sStiefel
 %%%%
 the %scentaur barding
-der %sZentaurenharnisch
+der {adj-e}%sZentaurenharnisch
 %%%%
 the %snaga barding
-der %sNagaharnisch
+der {adj-e}%sNagaharnisch
 %%%%
 the %sbuckler
-der %sBuckler
+der {adj-e}%sBuckler
 %%%%
 the %skite shield
-das %sKiteschild
+das {adj-e}%sKiteschild
 %%%%
 the %stower shield
-das %sTurmschild
+das {adj-e}%sTurmschild
 %%%%
 the %ssteam dragon scales
 die {adj-en}%sDampfdrachenschuppen
@@ -995,13 +995,13 @@ die {adj-en}%sGolddrachenschuppen
 # Note that the %s is a placeholder for any adjectives
 %%%%
 a %sanimal skin
-eine %sTierhaut
+eine {adj-e}%sTierhaut
 %%%%
 a %srobe
-eine %sRobe
+eine {adj-e}%sRobe
 %%%%
 a %sleather armour
-eine %sLederrüstung
+eine {adj-e}%sLederrüstung
 %%%%
 a %sring mail
 ein {adj-er}%sRingpanzer
@@ -1019,7 +1019,7 @@ a %scrystal plate armour
 ein {adj-er}%sKristallplattenpanzer
 %%%%
 a %stroll leather armour
-eine %sTrolllederrüstung
+eine {adj-e}%sTrolllederrüstung
 %%%%
 a %scloak
 ein {adj-er}%sUmhang
@@ -1059,13 +1059,13 @@ ein {adj-es}%sTurmschild
 # Note that the %s is a placeholder for any adjectives
 %%%%
 your %sanimal skin
-Eure %sTierhaut
+Eure {adj-e}%sTierhaut
 %%%%
 your %srobe
-Eure %sRobe
+Eure {adj-e}%sRobe
 %%%%
 your %sleather armour
-Eure %sLederrüstung
+Eure {adj-e}%sLederrüstung
 %%%%
 your %sring mail
 Euer {adj-er}%sRingpanzer
@@ -1083,7 +1083,7 @@ your %scrystal plate armour
 Euer {adj-er}%sKristallplattenpanzer
 %%%%
 your %stroll leather armour
-Eure %sTrolllederrüstung
+Eure {adj-e}%sTrolllederrüstung
 %%%%
 your %scloak
 Euer {adj-er}%sUmhang
@@ -1153,13 +1153,13 @@ Eure {adj-en}%sGolddrachenschuppen
 # Note that the %s is a placeholder for any adjectives
 %%%%
 %sanimal skin
-%sTierhaut
+{adj-e}%sTierhaut
 %%%%
 %srobe
-%sRobe
+{adj-e}%sRobe
 %%%%
 %sleather armour
-%sLederrüstung
+{adj-e}%sLederrüstung
 %%%%
 %sring mail
 {adj-er}%sRingpanzer
@@ -1177,7 +1177,7 @@ Eure {adj-en}%sGolddrachenschuppen
 {adj-er}%sKristallplattenpanzer
 %%%%
 %stroll leather armour
-%sTrolllederrüstung
+{adj-e}%sTrolllederrüstung
 %%%%
 %scloak
 {adj-er}%sUmhang
@@ -1213,34 +1213,34 @@ Eure {adj-en}%sGolddrachenschuppen
 {adj-es}%sTurmschild
 %%%%
 %ssteam dragon scales
-%sDampfdrachenschuppen
+{adj-e}%sDampfdrachenschuppen
 %%%%
 %sacid dragon scales
-%sSauredrachenschuppen
+{adj-e}%sSauredrachenschuppen
 %%%%
 %squicksilver dragon scales
-%sQuecksilberdrachenschuppen
+{adj-e}%sQuecksilberdrachenschuppen
 %%%%
 %sswamp dragon scales
-%sSumpfdrachenschuppen
+{adj-e}%sSumpfdrachenschuppen
 %%%%
 %sfire dragon scales
-%sFeuerdrachenschuppen
+{adj-e}%sFeuerdrachenschuppen
 %%%%
 %sice dragon scales
-%sEisdrachenschuppen
+{adj-e}%sEisdrachenschuppen
 %%%%
 %spearl dragon scales
-%sPerlendrachenschuppen
+{adj-e}%sPerlendrachenschuppen
 %%%%
 %sstorm dragon scales
-%sSturmdrachenschuppen
+{adj-e}%sSturmdrachenschuppen
 %%%%
 %sshadow dragon scales
-%sSchattendrachenschuppen
+{adj-e}%sSchattendrachenschuppen
 %%%%
 %sgold dragon scales
-%sGolddrachenschuppen
+{adj-e}%sGolddrachenschuppen
 %%%%
 
 #################################
@@ -1326,7 +1326,7 @@ Eure {adj-en}%sGolddrachenschuppen
 #################################
 %%%%
 the %sring
-der %sRing
+der {adj-e}%sRing
 %%%%
 
 # with indefinite article
@@ -1720,7 +1720,7 @@ Euer {adj-er}%sobsoleter Ring
 #################################
 %%%%
 the %samulet
-das %sAmulett
+das {adj-e}%sAmulett
 %%%%
 a %samulet
 ein {adj-es}%sAmulett
@@ -2157,7 +2157,7 @@ beseitigter Zauberstab
 # indefinite article
 %%%%
 a scroll labelled %s
-eine Schriftrolle beschriftet mit %s
+eine Schriftrolle beschriftet mit {adj-e}%s
 %%%%
 a scroll of acquirement
 eine Schriftrolle des Erwerbs
@@ -2226,7 +2226,7 @@ eine Schriftrolle der Obsoleszenz
 # plural
 %%%%
 %d scrolls labelled %s
-%d Schriftrollen beschriftet mit %s
+%d Schriftrollen beschriftet mit {adj-e}%s
 %%%%
 %d scrolls of acquirement
 %d Schriftrollen des Erwerbs
@@ -2292,7 +2292,7 @@ eine Schriftrolle der Obsoleszenz
 # no article (for mouse hover)
 %%%%
 scroll labelled %s
-Schriftrolle beschriftet mit %s
+Schriftrolle beschriftet mit {adj-e}%s
 %%%%
 scroll of acquirement
 Schriftrolle des Erwerbs
@@ -2531,7 +2531,7 @@ a %spotion
 ein {adj-er}%sZaubertrank
 %%%%
 %d %spotions
-%d %sZaubertränke
+%d {adj-e}%sZaubertränke
 %%%%
 
 #################################
@@ -3055,22 +3055,22 @@ das Horn von Geryon
 # "This branch contains the <whatever> rune of Zot."
 %%%%
 the %srune of Zot
-die %sRune von Zot
+die {adj-e}%sRune von Zot
 %%%%
 # "found a <whatever> rune of Zot"
 %%%%
 a %srune of Zot
-eine %sRune von Zot
+eine {adj-e}%sRune von Zot
 %%%%
 # Used in the list of collected runes
 %%%%
 %srune of Zot
-%sRune von Zot
+{adj-e}%sRune von Zot
 %%%%
 # "You pick up the <whatever> rune and feel its power."
 %%%%
 the %srune
-die %sRune
+die {adj-e}%sRune
 %%%%
 # terse version for character overview screen
 %%%%
@@ -3165,354 +3165,354 @@ Die Kugel von Zot
 #################################
 %%%%
 the %sSinging Sword
-das %ssingende Schwert
+das {adj-e}%ssingende Schwert
 %%%%
 # alternative name for the Singing Sword
 the %sScreaming Sword
-das %sschreiende Schwert
+das {adj-e}%sschreiende Schwert
 %%%%
 # alternative name for the Singing Sword
 the %sSulking Sword
-das %sschmollende Schwert
+das {adj-e}%sschmollende Schwert
 %%%%
 the %spair of quick blades "Gyre" and "Gimble"
 das {adj-e}%sPaar Schnellklingen "Gyre" und "Gimble"
 %%%%
 the %sWrath of Trog
-der %sZorn von Trog
+der {adj-e}%sZorn von Trog
 %%%%
 the %smace of Variability
-der %sStreitkolben der Variabilität
+der {adj-e}%sStreitkolben der Variabilität
 %%%%
 the %sglaive of Prune
-die %sGleve der Prünelle
+die {adj-e}%sGleve der Prünelle
 %%%%
 the %ssword of Power
-das %sSchwert der Macht
+das {adj-e}%sSchwert der Macht
 %%%%
 the %sstaff of Olgreb
-der %sStecken von Olgreb
+der {adj-e}%sStecken von Olgreb
 %%%%
 the %sstaff of Wucad Mu
-der %sStecken von Wucad Mu
+der {adj-e}%sStecken von Wucad Mu
 %%%%
 the %sVampire's Tooth
-der %sZahn des Vampirs
+der {adj-e}%sZahn des Vampirs
 %%%%
 the %sscythe of Curses
-die %sSense der Flüche
+die {adj-e}%sSense der Flüche
 %%%%
 the %ssceptre of Torment
-das %sZepter der Qual
+das {adj-e}%sZepter der Qual
 %%%%
 the %ssword of Zonguldrok
-das %sSchwert von Zonguldrok
+das {adj-e}%sSchwert von Zonguldrok
 %%%%
 the %ssword of Cerebov
-das %sSchwert von Cerebov
+das {adj-e}%sSchwert von Cerebov
 %%%%
 the %sstaff of Dispater
-der %sStecken von Dispater
+der {adj-e}%sStecken von Dispater
 %%%%
 the %ssceptre of Asmodeus
-das %sZepter von Asmodeus
+das {adj-e}%sZepter von Asmodeus
 %%%%
 the %sfaerie dragon scales
 die {adj-en}%sFeen-Drachenschuppen
 %%%%
 the %sdemon blade "Bloodbane"
-die %sDämonenklinge "Blutfluch"
+die {adj-e}%sDämonenklinge "Blutfluch"
 %%%%
 the %sscimitar of Flaming Death
-der %sKrummsäbel des flammenden Todes
+der {adj-e}%sKrummsäbel des flammenden Todes
 %%%%
 the %seveningstar "Brilliance"
-der %sAbendstern "Brillanz"
+der {adj-e}%sAbendstern "Brillanz"
 %%%%
 the %sdemon blade "Leech"
-die %sDämonenklinge "Egel"
+die {adj-e}%sDämonenklinge "Egel"
 %%%%
 the %sdagger of Chilly Death
-der %sDolch des kühlen Todes
+der {adj-e}%sDolch des kühlen Todes
 %%%%
 the %sdagger "Morg"
-der %sDolch "Morg"
+der {adj-e}%sDolch "Morg"
 %%%%
 the %sscythe "Finisher"
-die %sSense "Beender"
+die {adj-e}%sSense "Beender"
 %%%%
 the %ssling "Punk"
-die %sSchleuder "Punk"
+die {adj-e}%sSchleuder "Punk"
 %%%%
 the %slongbow "Zephyr"
-der %sLangbogen "Zephyr"
+der {adj-e}%sLangbogen "Zephyr"
 %%%%
 the %sgiant club "Skullcrusher"
-die %sRiesenkeule "Schädelbrecher"
+die {adj-e}%sRiesenkeule "Schädelbrecher"
 %%%%
 the %sglaive of the Guard
-die %sGleve der Wache
+die {adj-e}%sGleve der Wache
 %%%%
 the %szealot's sword
-das %sSchwert des Zeloten
+das {adj-e}%sSchwert des Zeloten
 %%%%
 the %sarbalest "Damnation"
-die %sArmbrust "Verdammnis"
+die {adj-e}%sArmbrust "Verdammnis"
 %%%%
 the %ssword of the Doom Knight
-das %sSchwert des Verhängnis-Ritters
+das {adj-e}%sSchwert des Verhängnis-Ritters
 %%%%
 the %smorningstar "Eos"
-der %sMorgenstern "Eos"
+der {adj-e}%sMorgenstern "Eos"
 %%%%
 the %sspear of the Botono
-der %sSpeer des Botonos
+der {adj-e}%sSpeer des Botonos
 %%%%
 the %strident of the Octopus King
-der %sDreizack des Krakenkönigs
+der {adj-e}%sDreizack des Krakenkönigs
 %%%%
 the %smithril axe "Arga"
-die %sMithrilaxt "Arga"
+die {adj-e}%sMithrilaxt "Arga"
 %%%%
 the %sElemental Staff
-der %sElementarstecken
+der {adj-e}%sElementarstecken
 %%%%
 the %sheavy crossbow "Sniper"
-die %sschwere Armbrust "Scharfschütze"
+die {adj-e}%sschwere Armbrust "Scharfschütze"
 %%%%
 the %slongbow "Piercer"
-der %sLangbogen "Stecher"
+der {adj-e}%sLangbogen "Stecher"
 %%%%
 the %sblowgun of the Assassin
-das %sBlasrohr des Assassinen
+das {adj-e}%sBlasrohr des Assassinen
 %%%%
 the %slance "Wyrmbane"
-die %sLanze "Wyrmbane"
+die {adj-e}%sLanze "Wyrmbane"
 %%%%
 the %sSpriggan's Knife
-das %sMesser des Spriggans
+das {adj-e}%sMesser des Spriggans
 %%%%
 the %splutonium sword
-das %sPlutoniumschwert
+das {adj-e}%sPlutoniumschwert
 %%%%
 the %sgreat mace "Undeadhunter"
-der %sgroße Streitkolben "Untotenjäger"
+der {adj-e}%sgroße Streitkolben "Untotenjäger"
 %%%%
 the %swhip "Snakebite"
-die %sPeitsche "Schlangenbiss"
+die {adj-e}%sPeitsche "Schlangenbiss"
 %%%%
 the %sknife of Accuracy
-das %sMesser der Genauigkeit
+das {adj-e}%sMesser der Genauigkeit
 %%%%
 the %sLehudib's crystal spear
-der %sKristallspeer Lehudibs
+der {adj-e}%sKristallspeer Lehudibs
 %%%%
 the %scaptain's cutlass
-das %sEntermesser des Kapitäns
+das {adj-e}%sEntermesser des Kapitäns
 %%%%
 the %sstorm bow
-der %sSturmbogen
+der {adj-e}%sSturmbogen
 %%%%
 the %stower shield of Ignorance
-der %sTurmschild des Nichtwissens
+der {adj-e}%sTurmschild des Nichtwissens
 %%%%
 the %srobe of Augmentation
-das %sGewand der Augmentation
+das {adj-e}%sGewand der Augmentation
 %%%%
 the %scloak of the Thief
-der %sUmhang des Diebes
+der {adj-e}%sUmhang des Diebes
 %%%%
 the %stower shield "Bullseye"
-der %sTurmschild "Volltreffer"
+der {adj-e}%sTurmschild "Volltreffer"
 %%%%
 the %scrown of Dyrovepreva
-die %sKrone von Dyrovepreva
+die {adj-e}%sKrone von Dyrovepreva
 %%%%
 the %shat of the Bear Spirit
-der %sHut des Bärengeistes
+der {adj-e}%sHut des Bärengeistes
 %%%%
 the %srobe of Misfortune
-das %sRobe des Unglücks
+das {adj-e}%sRobe des Unglücks
 %%%%
 the %scloak of Flash
-der %sUmhang von Flash
+der {adj-e}%sUmhang von Flash
 %%%%
 the %shood of the Assassin
-die %sKapuze des Assassinen
+die {adj-e}%sKapuze des Assassinen
 %%%%
 the %sLear's hauberk
-die %sHalsberge Lears
+die {adj-e}%sHalsberge Lears
 %%%%
 the %sskin of Zhor
-die %sHaut von Zhor
+die {adj-e}%sHaut von Zhor
 %%%%
 the %ssalamander hide armour
-die %sSalamanderhaut-Rüstung
+die {adj-e}%sSalamanderhaut-Rüstung
 %%%%
 the %spair of gauntlets of War
 das {adj-e}%sPaar Gantelets des Krieges
 %%%%
 the %sshield of Resistance
-der %sSchild der Resistenz
+der {adj-e}%sSchild der Resistenz
 %%%%
 the %srobe of Folly
-das %sGewand der Torheit
+das {adj-e}%sGewand der Torheit
 %%%%
 the %sMaxwell's patent armour
-die %spatentierte Rüstung Maxwells
+die {adj-e}%spatentierte Rüstung Maxwells
 %%%%
 the %smask of the Dragon
-die %sMaske des Drachens
+die {adj-e}%sMaske des Drachens
 %%%%
 the %srobe of Night
-die %sRobe der Nacht
+die {adj-e}%sRobe der Nacht
 %%%%
 the %sscales of the Dragon King
 die {adj-en}%sSchuppen des Drachenkönigs
 %%%%
 the %shat of the Alchemist
-der %sHut des Alchemisten
+der {adj-e}%sHut des Alchemisten
 %%%%
 the %spair of fencer's gloves
 das {adj-e}%sPaar Handschuhe des Fechters
 %%%%
 the %scloak of Starlight
-der %sUmhang des Sternenlichts
+der {adj-e}%sUmhang des Sternenlichts
 %%%%
 the %sratskin cloak
-der %sRattenfellumhang
+der {adj-e}%sRattenfellumhang
 %%%%
 the %sshield of the Gong
-der %sSchild des Gongs
+der {adj-e}%sSchild des Gongs
 %%%%
 the %samulet of the Air
-das %sAmulett der Luft
+das {adj-e}%sAmulett der Luft
 %%%%
 the %sring of Shadows
-der %sRing der Schatten
+der {adj-e}%sRing der Schatten
 %%%%
 the %samulet of Cekugob
-das %sAmulett von Cekugob
+das {adj-e}%sAmulett von Cekugob
 %%%%
 the %samulet of the Four Winds
-das %sAmulett der vier Winde
+das {adj-e}%sAmulett der vier Winde
 %%%%
 the %snecklace of Bloodlust
-die %sKette des Blutrausches
+die {adj-e}%sKette des Blutrausches
 %%%%
 the %sring of Phasing
-der %sRing der Phase
+der {adj-e}%sRing der Phase
 %%%%
 the %sring of Robustness
-der %sRing der Robustheit
+der {adj-e}%sRing der Robustheit
 %%%%
 the %sring of the Mage
-der %sRing des Magiers
+der {adj-e}%sRing des Magiers
 %%%%
 the %sbrooch of Shielding
-die %sBrosche der Abschirmung
+die {adj-e}%sBrosche der Abschirmung
 %%%%
 the %srobe of Clouds
-die %sRobe der Wolken
+die {adj-e}%sRobe der Wolken
 %%%%
 the %shat of Pondering
-der %sHut der Schwerfälligkeit
+der {adj-e}%sHut der Schwerfälligkeit
 %%%%
 the %sobsidian axe
-die %sObsidianaxt
+die {adj-e}%sObsidianaxt
 %%%%
 the %slightning scales
 die {adj-en}%sBlitzschuppen
 %%%%
 the %sBlack Knight's horse barding
-der %sRossharnisch des schwarzen Ritters
+der {adj-e}%sRossharnisch des schwarzen Ritters
 %%%%
 the %samulet of Vitality
-das %sAmulett der Vitalität
+das {adj-e}%sAmulett der Vitalität
 %%%%
 the %sautumn katana
-das %sHerbstkatana
+das {adj-e}%sHerbstkatana
 %%%%
 the %sshillelagh "Devastator"
-der %sShillelagh "Verwüster"
+der {adj-e}%sShillelagh "Verwüster"
 %%%%
 the %sdragonskin cloak
-der %sDrachenhautumhang
+der {adj-e}%sDrachenhautumhang
 %%%%
 a %sring of the Octopus King
 ein {adj-er}%sRing des Krakenkönigs
 %%%%
 the %sAxe of Woe
-die %sAxt des Wehs
+die {adj-e}%sAxt des Wehs
 %%%%
 the %smoon troll leather armour
-die %sMondtroll-lederrüstung
+die {adj-e}%sMondtroll-lederrüstung
 %%%%
 the %smacabre finger necklace
-die %smakabere Fingerhalskette
+die {adj-e}%smakabere Fingerhalskette
 %%%%
 the %spair of boots of the spider
 das {adj-e}%sPaar Stiefel der Spinne
 %%%%
 the %sdark maul
-der %sdunkle Kriegshammer
+der {adj-e}%sdunkle Kriegshammer
 %%%%
 the %shat of the High Council
-der %sHut des Hohen Rates
+der {adj-e}%sHut des Hohen Rates
 %%%%
 the %sarc blade
-die %sLichtbogenklinge
+die {adj-e}%sLichtbogenklinge
 %%%%
 the %sdemon whip "Spellbinder"
-die %sDämonenpeitsche "Verzauberer"
+die {adj-e}%sDämonenpeitsche "Verzauberer"
 %%%%
 the %slajatang of Order
-der %sLajatang der Ordnung
+der {adj-e}%sLajatang der Ordnung
 %%%%
 the %sgreat mace "Firestarter"
-der %sgroße Streitkolben "Brandstifter"
+der {adj-e}%sgroße Streitkolben "Brandstifter"
 %%%%
 the %sorange crystal plate armour
-der %sorange Kristallplattenpanzer
+der {adj-e}%sorange Kristallplattenpanzer
 %%%%
 the %sMajin-Bo
-der %sMajin-Bo
+der {adj-e}%sMajin-Bo
 %%%%
 the %sMaxwell's etheric cage
-der %sÄtherkäfig von Maxwell
+der {adj-e}%sÄtherkäfig von Maxwell
 %%%%
 the %scrown of Eternal Torment
-die %sKrone der ewigen Qual
+die {adj-e}%sKrone der ewigen Qual
 %%%%
 the %srobe of Vines
-das %sGewand der Reben
+das {adj-e}%sGewand der Reben
 %%%%
 the %sKryia's mail coat
-der %sSchuppenpanzer von Kryia
+der {adj-e}%sSchuppenpanzer von Kryia
 %%%%
 the %sfrozen axe "Frostbite"
-die %sgefrorene Axt "Erfrierungen"
+die {adj-e}%sgefrorene Axt "Erfrierungen"
 %%%%
 the %sarmour of Talos
-die %sRüstung von Talos
+die {adj-e}%sRüstung von Talos
 %%%%
 the %swarlock's mirror
-der %sSpiegel des Hexenmeisters
+der {adj-e}%sSpiegel des Hexenmeisters
 %%%%
 the %samulet of invisibility
-das %sAmulett der Unsichtbarkeit
+das {adj-e}%sAmulett der Unsichtbarkeit
 %%%%
 the %sMaxwell's thermic engine
-das %sthermische Gerät von Maxwell
+das {adj-e}%sthermische Gerät von Maxwell
 %%%%
 the %sdemon trident "Rift"
-der %sDämonendreizack "Riss"
+der {adj-e}%sDämonendreizack "Riss"
 %%%%
 the %sstaff of Battle
-der %sStecken der Schlacht
+der {adj-e}%sStecken der Schlacht
 %%%%
 the %sCigotuvi's embrace
-die %sUmarmung von Cigotuvi
+die {adj-e}%sUmarmung von Cigotuvi
 %%%%
 
 #################################
@@ -3542,7 +3542,7 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sStreitkolben der Variabilität
 %%%%
 %sglaive of Prune
-%sGleve der Prünelle
+{adj-e}%sGleve der Prünelle
 %%%%
 %ssword of Power
 {adj-es}%sSchwert der Macht
@@ -3557,7 +3557,7 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sZahn des Vampirs
 %%%%
 %sscythe of Curses
-%sSense der Flüche
+{adj-e}%sSense der Flüche
 %%%%
 %ssceptre of Torment
 {adj-es}%sZepter der Qual
@@ -3575,10 +3575,10 @@ die %sUmarmung von Cigotuvi
 {adj-es}%sZepter von Asmodeus
 %%%%
 %sfaerie dragon scales
-%sFeen-Drachenschuppen
+{adj-e}%sFeen-Drachenschuppen
 %%%%
 %sdemon blade "Bloodbane"
-%sDämonenklinge "Blutfluch"
+{adj-e}%sDämonenklinge "Blutfluch"
 %%%%
 %sscimitar of Flaming Death
 {adj-er}%sKrummsäbel des flammenden Todes
@@ -3587,7 +3587,7 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sAbendstern "Brillanz"
 %%%%
 %sdemon blade "Leech"
-%sDämonenklinge "Egel"
+{adj-e}%sDämonenklinge "Egel"
 %%%%
 %sdagger of Chilly Death
 {adj-er}%sDolch des kühlen Todes
@@ -3596,25 +3596,25 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sDolch "Morg"
 %%%%
 %sscythe "Finisher"
-%sSense "Beender"
+{adj-e}%sSense "Beender"
 %%%%
 %ssling "Punk"
-%sSchleuder "Punk"
+{adj-e}%sSchleuder "Punk"
 %%%%
 %slongbow "Zephyr"
 {adj-er}%sLangbogen "Zephyr"
 %%%%
 %sgiant club "Skullcrusher"
-%sRiesenkeule "Schädelbrecher"
+{adj-e}%sRiesenkeule "Schädelbrecher"
 %%%%
 %sglaive of the Guard
-%sGleve der Wache
+{adj-e}%sGleve der Wache
 %%%%
 %szealot's sword
 {adj-es}%sSchwert des Zeloten
 %%%%
 %sarbalest "Damnation"
-%sArmbrust "Verdammnis"
+{adj-e}%sArmbrust "Verdammnis"
 %%%%
 %ssword of the Doom Knight
 {adj-es}%sSchwert des Verhängnis-Ritters
@@ -3629,14 +3629,14 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sDreizack des Krakenkönigs
 %%%%
 %smithril axe "Arga"
-%sMithrilaxt "Arga"
+{adj-e}%sMithrilaxt "Arga"
 %%%%
 %sElemental Staff
 {adj-er}%sElementarstecken
 %%%%
 # heavy crossbow "Sniper" - base name
 %sheavy crossbow
-%sschwere Armbrust
+{adj-e}%sschwere Armbrust
 %%%%
 %slongbow "Piercer"
 {adj-er}%sLangbogen "Stecher"
@@ -3645,7 +3645,7 @@ die %sUmarmung von Cigotuvi
 {adj-es}%sBlasrohr des Assassinen
 %%%%
 %slance "Wyrmbane"
-%sLanze "Wyrmbane"
+{adj-e}%sLanze "Wyrmbane"
 %%%%
 %sSpriggan's Knife
 {adj-es}%sMesser des Spriggans
@@ -3657,7 +3657,7 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sgroßer Streitkolben "Untotenjäger"
 %%%%
 %swhip "Snakebite"
-%sPeitsche "Schlangenbiss"
+{adj-e}%sPeitsche "Schlangenbiss"
 %%%%
 %sknife of Accuracy
 {adj-es}%sMesser der Genauigkeit
@@ -3684,28 +3684,28 @@ die %sUmarmung von Cigotuvi
 {adj-es}%sTurmschild "Volltreffer"
 %%%%
 %scrown of Dyrovepreva
-%sKrone von Dyrovepreva
+{adj-e}%sKrone von Dyrovepreva
 %%%%
 %shat of the Bear Spirit
 {adj-er}%sHut des Bärengeistes
 %%%%
 %srobe of Misfortune
-%sRobe des Unglücks
+{adj-e}%sRobe des Unglücks
 %%%%
 %scloak of Flash
 {adj-er}%sUmhang von Flash
 %%%%
 %shood of the Assassin
-%sKapuze des Assassinen
+{adj-e}%sKapuze des Assassinen
 %%%%
 %sLear's hauberk
-%sHalsberge Lears
+{adj-e}%sHalsberge Lears
 %%%%
 %sskin of Zhor
-%sHaut von Zhor
+{adj-e}%sHaut von Zhor
 %%%%
 %ssalamander hide armour
-%sSalamanderhaut-Rüstung
+{adj-e}%sSalamanderhaut-Rüstung
 %%%%
 %spair of gauntlets of War
 {adj-es}%sPaar Gantelets des Krieges
@@ -3717,16 +3717,16 @@ die %sUmarmung von Cigotuvi
 {adj-es}%sGewand der Torheit
 %%%%
 %sMaxwell's patent armour
-%spatentierte Rüstung Maxwells
+{adj-e}%spatentierte Rüstung Maxwells
 %%%%
 %smask of the Dragon
-%sMaske des Drachens
+{adj-e}%sMaske des Drachens
 %%%%
 %srobe of Night
-%sRobe der Nacht
+{adj-e}%sRobe der Nacht
 %%%%
 %sscales of the Dragon King
-%sSchuppen des Drachenkönigs
+{adj-e}%sSchuppen des Drachenkönigs
 %%%%
 %shat of the Alchemist
 {adj-er}%sHut des Alchemisten
@@ -3756,7 +3756,7 @@ die %sUmarmung von Cigotuvi
 {adj-es}%sAmulett der vier Winde
 %%%%
 %snecklace of Bloodlust
-%sKette des Blutrausches
+{adj-e}%sKette des Blutrausches
 %%%%
 %sring of Phasing
 {adj-er}%sRing der Phase
@@ -3768,19 +3768,19 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sRing des Magiers
 %%%%
 %sbrooch of Shielding
-%sBrosche der Abschirmung
+{adj-e}%sBrosche der Abschirmung
 %%%%
 %srobe of Clouds
-%sRobe der Wolken
+{adj-e}%sRobe der Wolken
 %%%%
 %shat of Pondering
 {adj-er}%sHut der Schwerfälligkeit
 %%%%
 %sobsidian axe
-%sObsidianaxt
+{adj-e}%sObsidianaxt
 %%%%
 %slightning scales
-%sBlitzschuppen
+{adj-e}%sBlitzschuppen
 %%%%
 %sBlack Knight's horse barding
 {adj-er}%sRossharnisch des schwarzen Ritters
@@ -3801,13 +3801,13 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sRing des Krakenkönigs
 %%%%
 %sAxe of Woe
-%sAxt des Wehs
+{adj-e}%sAxt des Wehs
 %%%%
 %smoon troll leather armour
-%sMondtroll-lederrüstung
+{adj-e}%sMondtroll-lederrüstung
 %%%%
 %smacabre finger necklace
-%smakabere Fingerhalskette
+{adj-e}%smakabere Fingerhalskette
 %%%%
 %spair of boots of the spider
 {adj-es}%sPaar Stiefel der Spinne
@@ -3819,10 +3819,10 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sHut des Hohen Rates
 %%%%
 %sarc blade
-%sLichtbogenklinge
+{adj-e}%sLichtbogenklinge
 %%%%
 %sdemon whip "Spellbinder"
-%sDämonenpeitsche "Verzauberer"
+{adj-e}%sDämonenpeitsche "Verzauberer"
 %%%%
 %slajatang of Order
 {adj-er}%sLajatang der Ordnung
@@ -3840,7 +3840,7 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sÄtherkäfig von Maxwell
 %%%%
 %scrown of Eternal Torment
-%sKrone der ewigen Qual
+{adj-e}%sKrone der ewigen Qual
 %%%%
 %srobe of Vines
 {adj-es}%sGewand der Reben
@@ -3849,10 +3849,10 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sSchuppenpanzer von Kryia
 %%%%
 %sfrozen axe "Frostbite"
-%sgefrorene Axt "Erfrierungen"
+{adj-e}%sgefrorene Axt "Erfrierungen"
 %%%%
 %sarmour of Talos
-%sRüstung von Talos
+{adj-e}%sRüstung von Talos
 %%%%
 %swarlock's mirror
 {adj-er}%sSpiegel des Hexenmeisters
@@ -3870,5 +3870,5 @@ die %sUmarmung von Cigotuvi
 {adj-er}%sStecken der Schlacht
 %%%%
 %sCigotuvi's embrace
-%sUmarmung von Cigotuvi
+{adj-e}%sUmarmung von Cigotuvi
 %%%%
