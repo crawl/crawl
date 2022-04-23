@@ -9867,10 +9867,10 @@ Ein Wiederholungsbefehl kann nich wiederholt werden.
 ##################
 %%%%
 Clearing travel trail.
-Reiseweg räumen.
+Lösche Reiseweg.
 %%%%
 Clearing level map.
-Levelkarte löschen.
+Leere Ebene-Karte.
 %%%%
 
 ##################
