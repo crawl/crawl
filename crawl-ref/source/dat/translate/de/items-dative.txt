@@ -644,6 +644,18 @@ dem Bolzen
 {dat}the dart
 dem Wurfpfeil
 %%%%
+{dat}the poisoned dart
+dem vergifteten Wurfpfeil
+%%%%
+{dat}the atropa-tipped dart
+dem Atropa-Wurfpfeil
+%%%%
+{dat}the curare-tipped dart
+dem Curare-Wurfpfeil
+%%%%
+{dat}the datura-tipped dart
+dem Datura-Wurfpfeil
+%%%%
 {dat}the stone
 dem Stein
 %%%%
@@ -665,6 +677,9 @@ dem Bumerang
 
 # without article
 %%%%
+{dat}poisoned dart
+vergiftetem Wurfpfeil
+%%%%
 
 # indefinite article/plural
 %%%%
@@ -684,27 +699,27 @@ einem Wurfpfeil
 %d Wurfpfeilen
 %%%%
 {dat}a poisoned dart
-einem Giftwurfpfeil
+einem vergifteten Wurfpfeil
 %%%%
 {dat}%d poisoned darts
-%d Giftwurfpfeilen
+%d vergifteten Wurfpfeilen
 %%%%
-{dat}a curare dart
+{dat}a curare-tipped dart
 einem Kurare-Wurfpfeil
 %%%%
-{dat}%d curare darts
+{dat}%d curare-tipped darts
 %d Kurare-Wurfpfeilen
 %%%%
-{dat}an atropa dart
+{dat}an atropa-tipped dart
 einem Atropa-Wurfpfeil
 %%%%
-{dat}%d atropa darts
+{dat}%d atropa-tipped darts
 %d Atropa-Wurfpfeilen
 %%%%
-{dat}a datura dart
+{dat}a datura-tipped dart
 einem Datura-Wurfpfeil
 %%%%
-{dat}%d datura darts
+{dat}%d datura-tipped darts
 %d Datura-Wurfpfeilen
 %%%%
 {dat}a stone

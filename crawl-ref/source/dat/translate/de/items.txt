@@ -695,6 +695,18 @@ der Bolzen
 the dart
 der Wurfpfeil
 %%%%
+the poisoned dart
+der vergiftete Wurfpfeil
+%%%%
+the atropa-tipped dart
+der Atropa-Wurfpfeil
+%%%%
+the curare-tipped dart
+der Curare-Wurfpfeil
+%%%%
+the datura-tipped dart
+der Datura-Wurfpfeil
+%%%%
 the stone
 der Stein
 %%%%
@@ -724,6 +736,18 @@ Bolzen
 %%%%
 dart
 Wurfpfeil
+%%%%
+poisoned dart
+vergifteter Wurfpfeil
+%%%%
+atropa-tipped dart
+Atropa-Wurfpfeil
+%%%%
+curare-tipped dart
+Curare-Wurfpfeil
+%%%%
+datura-tipped dart
+Datura-Wurfpfeil
 %%%%
 stone
 Stein
@@ -765,27 +789,27 @@ ein Wurfpfeil
 %d Wurfpfeile
 %%%%
 a poisoned dart
-ein Giftwurfpfeil
+ein vergifteter Wurfpfeil
 %%%%
 %d poisoned darts
-%d Giftwurfpfeile
+%d vergiftete Wurfpfeile
 %%%%
-a curare dart
+a curare-tipped dart
 ein Kurare-Wurfpfeil
 %%%%
-%d curare darts
+%d curare-tipped darts
 %d Kurare-Wurfpfeile
 %%%%
-an atropa dart
+an atropa-tipped dart
 ein Atropa-Wurfpfeil
 %%%%
-%d atropa darts
+%d atropa-tipped darts
 %d Atropa-Wurfpfeile
 %%%%
-a datura dart
+a datura-tipped dart
 ein Datura-Wurfpfeil
 %%%%
-%d datura darts
+%d datura-tipped darts
 %d Datura-Wurfpfeile
 %%%%
 a stone

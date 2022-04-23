@@ -287,6 +287,18 @@ den Bolzen
 {acc}the dart
 den Wurfpfeil
 %%%%
+{acc}the poisoned dart
+den vergifteten Wurfpfeil
+%%%%
+{acc}the atropa-tipped dart
+den Atropa-Wurfpfeil
+%%%%
+{acc}the curare-tipped dart
+den Curare-Wurfpfeil
+%%%%
+{acc}the datura-tipped dart
+den Datura-Wurfpfeil
+%%%%
 {acc}the stone
 den Stein
 %%%%
@@ -302,6 +314,9 @@ den Bumerang
 
 # without article
 %%%%
+{acc}poisoned dart
+vergifteten Wurfpfeil
+%%%%
 
 # indefinite article/plural
 %%%%
@@ -315,15 +330,15 @@ einen Bolzen
 einen Wurfpfeil
 %%%%
 {acc}a poisoned dart
-einen Giftwurfpfeil
+einen vergifteten Wurfpfeil
 %%%%
-{acc}a curare dart
+{acc}a curare-tipped dart
 einen Kurare-Wurfpfeil
 %%%%
-{acc}an atropa dart
+{acc}an atropa-tipped dart
 einen Atropa-Wurfpfeil
 %%%%
-{acc}a datura dart
+{acc}a datura-tipped dart
 einen Datura-Wurfpfeil
 %%%%
 {acc}a stone
