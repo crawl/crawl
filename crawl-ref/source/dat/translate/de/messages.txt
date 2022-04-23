@@ -227,9 +227,6 @@ small
 "This ability costs: "
 
 %%%%
-": "
-
-%%%%
 variable
 
 %%%%
@@ -3161,9 +3158,6 @@ Your ancestor manifests to aid you.
 You are protected from the effects of unwielding distortion weapons.
 
 %%%%
-(
-
-%%%%
 None.
 
 %%%%
@@ -3177,9 +3171,6 @@ None.
 
 %%%%
 |<w>Right-click</w>
-
-%%%%
-"]: "
 
 %%%%
 <w>Overview</w>|Powers|Wrath
@@ -3309,9 +3300,6 @@ Description|<w>Quote</w>
 RegenMP
 
 %%%%
-,
-
-%%%%
 It improves your spell success rate.
 
 %%%%
@@ -3331,9 +3319,6 @@ It allows you to gain divine favour quickly.
 
 %%%%
 It reflects blocked missile attacks.
-
-%%%%
-:
 
 %%%%
 It affects your AC (%+d).
@@ -4428,9 +4413,6 @@ This spell has no description. Casting it may therefore be unwise. Please file a
 "Range : "
 
 %%%%
-..---->
-
-%%%%
 " (pow %d)"
 
 %%%%
@@ -4702,9 +4684,6 @@ Max HP: %d
 
 %%%%
 Will:
-
-%%%%
-" ∞"
 
 %%%%
 It can travel through water.
@@ -6922,9 +6901,6 @@ the Hells
 Gozag spreads your bribe to %s!
 
 %%%%
-****
-
-%%%%
 Aiming: <white>Upheaval</white>
 Ziel: <white>Umwälzung</white>
 %%%%
@@ -7869,9 +7845,6 @@ Runed door
 
 %%%%
 " didn't mind your converting to "
-
-%%%%
-". "
 
 %%%%
 "You even kept some of your piety! "
@@ -10632,32 +10605,23 @@ Ihr zieht das Blut {gen}%s!
 # menu.cc
 ##################
 %%%%
-top
-
+[<w>+</w>|<w>></w>|<w>Space</w>]: page down
+[<w>+</w>|<w>></w>|<w>Leertaste</w>]: Bild ab
 %%%%
-bot
-
+[%s]: page up
+[%s]: Bild auf
 %%%%
-<w>-</w>|<w><<</w>
-
-%%%%
-<w><<</w>
-
-%%%%
-<lightgrey>[<w>+</w>|<w>></w>|<w>Space</w>]: page down        [
-
-%%%%
-]: page up        [<w>Esc</w>]: close        [<w>XXX</w>]</lightgrey>
-
+[<w>Esc</w>]: close
+[<w>Esc</w>]: schließen
 %%%%
 Select what (regex)?
-
+Was auswählen (regex)?
 %%%%
-" (%d item%s)"
-
+" (1 item)"
+" (1 Eintrag)"
 %%%%
-%-*s
-
+" (%d items)"
+" (%d Einträge)"
 %%%%
 
 ##################
@@ -10686,9 +10650,6 @@ Ihr könnt die Nachrichten später mit Strg-P erneut lesen.
 %%%%
 --more--
 --mehr--
-%%%%
-<<
-
 %%%%
 Something appears at your feet!
 Etwas erscheint zu Euren Füßen!
@@ -12979,9 +12940,6 @@ unbeliever
 
 %%%%
 good god
-
-%%%%
-'
 
 %%%%
 cap-
@@ -16519,15 +16477,6 @@ qazlal
 ))</darkgrey>
 
 %%%%
-[+
-
-%%%%
-]
-
-%%%%
-[
-
-%%%%
 You can breathe fire.
 
 %%%%
@@ -16666,9 +16615,6 @@ none with monsters in sight
 "none       "
 
 %%%%
--20%
-
-%%%%
 "Stealth boost        "
 
 %%%%
@@ -16696,13 +16642,7 @@ immune
 "Cold resistance      "
 
 %%%%
-"++    "
-
-%%%%
 "Negative resistance  "
-
-%%%%
-"+++   "
 
 %%%%
 "Miasma resistance    "
@@ -16775,12 +16715,6 @@ You have sharp claws.
 
 %%%%
 Your bite disrupts the magic of your enemies.
-
-%%%%
-((
-
-%%%%
-))
 
 %%%%
 darkgrey
@@ -16865,16 +16799,13 @@ Random character
 "Recommended "
 
 %%%%
-"  |"
-
-%%%%
 Trunk games don't count for the tournament, you want %s.
 
 %%%%
 " Play trunk anyway? (Y/N)"
 
 %%%%
-%
+%Y%m%d
 
 %%%%
 Press [p] or [ctrl-v] to paste a seed from the clipboard
@@ -16986,9 +16917,6 @@ weapon-main
 
 %%%%
 weapon-sub
-
-%%%%
-" %"
 
 %%%%
 "You have a choice of "
@@ -17188,9 +17116,6 @@ Hab ich mir gedacht.
 morgue-
 
 %%%%
--
-
-%%%%
 
 ##################
 # outer-menu.cc
@@ -17207,28 +17132,10 @@ newgame-choice
 (Hit _)
 
 %%%%
-%-6d
-
-%%%%
-%-12s
-
-%%%%
 stats
 
 %%%%
-**....
-
-%%%%
 Turn:
-
-%%%%
-…)
-
-%%%%
-(…)
-
-%%%%
-∞
 
 %%%%
 x
@@ -17273,16 +17180,7 @@ Amulet Ring
 Ring
 
 %%%%
-*
-
-%%%%
-#
-
-%%%%
 <w>%c</w> - <%s>%s%s</%s>
-
-%%%%
-"  - "
 
 %%%%
 <darkgrey>(
@@ -17292,9 +17190,6 @@ Ring
 
 %%%%
 )</darkgrey>
-
-%%%%
-" ["
 
 %%%%
 "<w>@:</w> "
@@ -18398,9 +18293,6 @@ Ihr schnappt erleichtert nach Luft, als Luft wieder Eure Lunge erreicht.
 %%%%
 Your lungs strain for air!
 Eure Lungen belasten die Luft!
-%%%%
-"] "
-
 %%%%
 ", a level "
 
@@ -20804,27 +20696,10 @@ Ihr %s%s!
 %%%%
 
 ##################
-# showsymb.cc
-##################
-%%%%
-"} "
-
-%%%%
-
-##################
 # skill-menu.cc
 ##################
 %%%%
-%s %-15s
-
-%%%%
-%+d
-
-%%%%
 <lightred>+4</lightred>
-
-%%%%
---
 
 %%%%
 "     Skill"
@@ -20948,9 +20823,6 @@ freeform
 
 %%%%
 highlighter
-
-%%%%
-0
 
 %%%%
 "Enter a skill target for %s: "
@@ -21469,9 +21341,6 @@ Ihr fühlt einen %sMachtanstieg%s
 "slight "
 
 %%%%
-%-34.34s
-
-%%%%
 Type                          Failure  Level
 
 %%%%
@@ -21524,9 +21393,6 @@ majin-bo cast
 
 %%%%
 A voice whispers, "
-
-%%%%
-\"
 
 %%%%
 "Cast which spell? (? or * to list) "
@@ -21686,9 +21552,6 @@ Deafening
 
 %%%%
 %s%dd%d
-
-%%%%
-@.->
 
 %%%%
 Malevolent energies surge around you.
@@ -23877,12 +23740,6 @@ Non-debug Crawl cannot run tests. Please use a debug build (defined FULLDEBUG, D
 " {shop}"
 
 %%%%
-.*
-
-%%%%
-{
-
-%%%%
 Enter for "%s"
 
 %%%%
@@ -24003,9 +23860,6 @@ sprint/
 ##################
 %%%%
 <lightred>ERROR: string above had unterminated tag</lightred>
-
-%%%%
-|
 
 %%%%
 " \t"
@@ -24419,10 +24273,6 @@ mc:
 ##################
 # tilereg-cmd.cc
 ##################
-%%%%
-" (%)"
-
-%%%%
 
 ##################
 # tilereg-dgn.cc
@@ -24478,15 +24328,6 @@ Move towards
 (show equip)
 
 %%%%
-->
-
-%%%%
-%-18.18s %-23.23s %-19.19s %s
-
-%%%%
-%-18.18s 0-9, %-18.18s %-19.19s %s
-
-%%%%
 %-18.18s m                       %-19.19s %s
 
 %%%%
@@ -24504,9 +24345,6 @@ Escape, Ctrl-S
 ##################
 # tilereg-inv.cc
 ##################
-%%%%
-" (%-)"
-
 %%%%
 Evoke (%)
 
@@ -24557,10 +24395,6 @@ Es hat keinen Sinn mehr, diese Fruchtbarkeit umzuschalten.
 ##################
 # tilereg-spl.cc
 ##################
-%%%%
-"    ("
-
-%%%%
 
 ##################
 # tilereg-stat.cc
@@ -25238,9 +25072,6 @@ Ihr seid in einem von Reisen ausgeschlossenen Gebiet und hältst%s an.
 " @ (x,y)"
 
 %%%%
-"(%c) %-14s "
-
-%%%%
 * - list branches
 
 %%%%
@@ -25305,12 +25136,6 @@ Invalid depth for %s in spec "%s"
 
 %%%%
 " placeholder"
-
-%%%%
-" (?)"
-
-%%%%
-(%d) %-9s
 
 %%%%
 Existing waypoints:
@@ -25399,9 +25224,6 @@ w=
 ##################
 # ui.cc
 ##################
-%%%%
-[ ]
-
 %%%%
 X
 
@@ -25705,9 +25527,6 @@ Level Stack:
 Known levels:
 Bekannte Level:
 %%%%
-%-10s : %s
-
-%%%%
 `- total
 
 %%%%
@@ -25727,15 +25546,6 @@ Abyss-Geschwindigkeit auf%i setzen.
 ##################
 # wiz-dump.cc
 ##################
-%%%%
-"{(, "
-
-%%%%
-"}), "
-
-%%%%
-({
-
 %%%%
 Unknown species: %s
 
@@ -25883,9 +25693,6 @@ Kein solcher Gegenstand.
 %%%%
 You can't tweak the randart properties of an equipped item.
 Ihr könnt die Randart-Eigenschaften eines ausgerüsteten Gegenstands nicht optimieren.
-%%%%
-"%s) %s%-6s%s "
-
 %%%%
 "Change which field? "
 Welches Feld ändern?
@@ -26186,9 +25993,6 @@ in
 noi
 
 %%%%
-" (#"
-
-%%%%
 Detected %i monster%s.
 %i Monster%s erkannt.
 %%%%
@@ -26478,9 +26282,6 @@ Gib Werte für Str, Int, Dex (durch Leerzeichen getrennt) ein:
 %%%%
 Setting attributes (Str, Int, Dex) to: %i, %i, %i
 Setzen von Attributen (Str, Int, Dex) auf: %i,%i,%i
-%%%%
-%c%c %-*s : %d
-
 %%%%
 "Edit which duration (letter or name)? "
 

@@ -562,3 +562,23 @@ string chop_string(const string &s, int width, bool spaces, bool right_justify)
 {
     return chop_string(s.c_str(), width, spaces, right_justify);
 }
+
+string pad_string(const char *s, int width, bool right_justify)
+{
+    // handle nullptr gracefully
+    return pad_string(string(s ? s : ""), width, right_justify);
+}
+
+string pad_string(const string &s, int width, bool right_justify)
+{
+    int count = width - strwidth(s);
+    if (count <= 0)
+        return s;
+    else
+    {
+        if (right_justify)
+            return string(count, ' ') + s;
+        else
+            return s + string(count, ' ');
+    }
+}

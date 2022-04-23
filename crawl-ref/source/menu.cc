@@ -19,6 +19,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "message.h"
 #ifdef USE_TILE
@@ -558,8 +559,8 @@ void UIMenuPopup::_allocate_region()
     {
         int scroll = m_menu->m_ui.scroller->get_scroll();
         int scroll_percent = scroll*100/(menu_height-viewport_height);
-        string perc = scroll <= 0 ? "top"
-            : scroll_percent >= 100 ? "bot"
+        string perc = scroll <= 0 ? "top" // noloc
+            : scroll_percent >= 100 ? "bot" // noloc
             : make_stringf("%2d%%", scroll_percent);
 
         string scroll_more = m_menu->more.to_colour_string();
@@ -943,11 +944,13 @@ void Menu::set_more(const string s)
 void Menu::set_more()
 {
     m_keyhelp_more = true;
-    string pageup_keys = minus_is_pageup() ? "<w>-</w>|<w><<</w>" : "<w><<</w>";
+    string separator = "        "; // noloc
+    string pageup_keys = minus_is_pageup() ? "<w>-</w>|<w><<</w>" : "<w><<</w>"; // noloc
     more = formatted_string::parse_string(
-        "<lightgrey>[<w>+</w>|<w>></w>|<w>Space</w>]: page down        "
-        "[" + pageup_keys + "]: page up        "
-        "[<w>Esc</w>]: close        [<w>XXX</w>]</lightgrey>"
+        "<lightgrey>" + localise("[<w>+</w>|<w>></w>|<w>Space</w>]: page down")
+        + separator + localise("[%s]: page up", pageup_keys) + separator
+        + localise("[<w>Esc</w>]: close") + separator
+        + "[<w>XXX</w>]</lightgrey>" // noloc
     );
     update_more();
 }
@@ -1283,7 +1286,7 @@ bool Menu::process_key(int keyin)
             char linebuf[80] = "";
 
             const bool validline = title_prompt(linebuf, sizeof linebuf,
-                                                "Select what (regex)?");
+                                        localise("Select what (regex)?").c_str());
 
             return (validline && linebuf[0]) ? filter_with_regex(linebuf) : true;
         }
@@ -1428,15 +1431,12 @@ string Menu::get_select_count_string(int count) const
         ret = f_selitem(&sel);
     else
     {
-        char buf[100] = "";
-        if (count)
-        {
-            snprintf(buf, sizeof buf, " (%d item%s)", count,
-                    (count > 1 ? "s" : ""));
-        }
-        ret = string(buf);
+        if (count == 1)
+            ret = " (1 item)";
+        else if (count > 1)
+            ret = localise(" (%d items)", count);
     }
-    return ret + string(max(12-(int)ret.size(), 0), ' ');
+    return pad_string(ret, 12);
 }
 
 vector<MenuEntry*> Menu::selected_entries() const

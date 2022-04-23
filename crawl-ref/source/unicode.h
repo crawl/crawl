@@ -10,6 +10,10 @@ int strwidth(const string &s);
 string chop_string(const char *s, int width, bool spaces = true, bool right_justify = false);
 string chop_string(const string &s, int width, bool spaces = true, bool right_justify = false);
 
+// Pad string with spaces up to width. Do nothing if string is width or wider.
+string pad_string(const char *s, int width, bool right_justify = false);
+string pad_string(const string &s, int width, bool right_justify = false);
+
 int wctoutf8(char *d, char32_t s);
 int utf8towc(char32_t *d, const char *s);
 #ifdef TARGET_OS_WINDOWS

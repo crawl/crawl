@@ -536,7 +536,8 @@ for filename in files:
             continue
 
         # ignore format strings without any actual text
-        if re.match(r'^(\\n)*([^a-zA-Z]*%[0-9\.\*]*l{0,2}[a-zA-Z][^a-zA-Z]*)*(\\n)*$', string):
+        temp = re.sub(r'%[\-\+ #0]?[\*0-9]*(\.[\*0-9]*)?(hh|h|l|ll|j|z|t|L)?[diuoxXfFeEgGaAcspn]', '', string)
+        if not re.search('[a-zA-Z]', temp):
             continue
 
         # ignore punctuation
