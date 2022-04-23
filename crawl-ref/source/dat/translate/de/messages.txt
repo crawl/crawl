@@ -9913,12 +9913,6 @@ Ihr verschlingt {acc}%s in Schlamm!
 " but do no damage."
 , fügt aber keinen Schaden zu.
 %%%%
-quick blade "Gimble"
-
-%%%%
-quick blade "Gyre"
-
-%%%%
 your grab
 Euer Umschlingsversuch
 %%%%
@@ -11349,7 +11343,7 @@ blast of chilling breath
 %s gerät in einen Kampfrausch!
 %%%%
 %s %s go into a battle-frenzy!
-%s%s geraten in einen Kampfrausch!
+%s %s geraten in einen Kampfrausch!
 %%%%
 Your
 
