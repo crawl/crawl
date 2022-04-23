@@ -9874,133 +9874,6 @@ Leere Ebene-Karte.
 %%%%
 
 ##################
-# mapmark.cc
-##################
-%%%%
-Bad feature marker: %s (unknown feature '%s')
-
-%%%%
-feature (%s)
-
-%%%%
-lua_marker load error: %s
-lua_marker Ladefehler:%s
-%%%%
-lua_marker: write error: %s
-
-%%%%
-Expected marker class name (string) to save, got %s
-
-%%%%
-lua_marker::write error: %s
-
-%%%%
-lua_marker::read error: %s
-
-%%%%
-init
-
-%%%%
-activate
-
-%%%%
-event
-
-%%%%
-error (%s): %s
-
-%%%%
-describe
-
-%%%%
-property
-
-%%%%
-error (prop:%s): %s
-
-%%%%
-Unable to get table for lua marker.
-
-%%%%
-error (table_to_string): %s
-
-%%%%
-table_to_string() returned nothing
-
-%%%%
-Unable to initialise Lua marker from '%s'
-
-%%%%
-Lugonu corrupt (%d)
-
-%%%%
-map_wiz_props_marker::parse() not implemented
-
-%%%%
-"Wizard props: "
-
-%%%%
-Tomb (%d, %d, %d)
-
-%%%%
-Malign gateway (%d, %s)
-
-%%%%
-Terrain change marker (%d->%d, %d)
-
-%%%%
-Cloud spreader marker (%d)
-
-%%%%
-position (%d,%d)
-
-%%%%
-
-##################
-# maps.cc
-##################
-%%%%
-Lua validation for map %s failed.
-
-%%%%
-entry
-
-%%%%
-tutorial
-
-%%%%
-des
-
-%%%%
-Data file cache
-
-%%%%
-Can't create data file cache: %s
-
-%%%%
-Unable to read %s
-
-%%%%
-rb
-
-%%%%
-Unable to open %s for writing
-
-%%%%
-wb
-
-%%%%
-Failed to open %s for reading
-
-%%%%
-Regenerating des: %s
-Regenerating des:%s
-%%%%
-Lua error: %s
-Lua Fehler: %s
-%%%%
-
-##################
 # melee-attack.cc
 ##################
 %%%%
@@ -24677,6 +24550,9 @@ AttachConsole
 
 %%%%
 CONOUT$
+
+%%%%
+wb
 
 %%%%
 FreeConsole
