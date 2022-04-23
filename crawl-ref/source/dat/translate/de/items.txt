@@ -2956,7 +2956,7 @@ Buch des Jägers
 
 %%%%
 a %s corpse
-eine %s-Leiche
+eine {nom}%s-Leiche
 %%%%
 
 #################################
