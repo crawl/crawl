@@ -9874,454 +9874,6 @@ Leere Ebene-Karte.
 %%%%
 
 ##################
-# mapdef.h
-##################
-%%%%
-randbook_disc1
-
-%%%%
-randbook_disc2
-
-%%%%
-
-##################
-# mapdef.cc
-##################
-%%%%
-north
-
-%%%%
-south
-
-%%%%
-east
-
-%%%%
-west
-
-%%%%
-northwest
-
-%%%%
-northeast
-
-%%%%
-southwest
-
-%%%%
-southeast
-
-%%%%
-encompass
-
-%%%%
-float
-
-%%%%
-centre
-
-%%%%
-.+=w@{}()[]<>BC^TUVY$%*|Odefghijk0123456789
-
-%%%%
-malformed declaration - must use = or : in '%s'
-
-%%%%
-selector '%s' must be <= %d characters in '%s'
-
-%%%%
-no substitute defined in '%s'
-
-%%%%
-:??
-
-%%%%
-:$
-
-%%%%
-Any
-
-%%%%
-Unknown branch: '%s'
-
-%%%%
-Level-range %s:%d-%d is malformed
-
-%%%%
-any
-
-%%%%
-"Bad depth: "
-
-%%%%
-Bad depth range: %d-%d
-
-%%%%
-block shuffle segment length mismatch
-
-%%%%
-use / for block shuffle, or multiple SHUFFLE: lines
-
-%%%%
-no glyphs specified for clearing
-
-%%%%
-Invalid weight specifier in "
-
-%%%%
-\"
-
-%%%%
-bad spec: '%s' in '%s'
-
-%%%%
-Illegal spec: %s
-
-%%%%
-1=
-
-%%%%
-*=
-
-%%%%
-Bad NSUBST spec: %s (%s)
-
-%%%%
-dlprelude
-
-%%%%
-dlmapchunk
-
-%%%%
-dlmain
-
-%%%%
-dlvalidate
-
-%%%%
-dlveto
-
-%%%%
-dlepilogue
-
-%%%%
-Map was built for a different version of Crawl (%s) (map: %d.%d us: %d.%d)
-
-%%%%
-Map fp_name (%s) != name (%s)!
-
-%%%%
-Map: %s
-
-%%%%
-prelude
-
-%%%%
-mapchunk
-
-%%%%
-main
-
-%%%%
-validate
-
-%%%%
-veto
-
-%%%%
-epilogue
-
-%%%%
-rb
-
-%%%%
-Map inf is invalid: %s
-
-%%%%
-Map %s: can't write index - cache offset not set!
-
-%%%%
-Lua error running hook '%s' on map '%s': %s
-Lua-Fehler beim Ausführen des Hooks '%s' auf der Karte '%s':%s
-%%%%
-Lua error: %s
-Lua Fehler: %s
-%%%%
-temple_overflow_generic_%u
-
-%%%%
-Temple ('%s') has %u altars and a 'temple_overflow_generic_' tag, but does not match the number of altars: should have at least '%s'.
-
-%%%%
-Temple vault must contain at least one altar.
-
-%%%%
-Can't change feat 'B' in temple (KFEAT)
-
-%%%%
-Temple vault has too many altars
-
-%%%%
-Map '%s' has no DEPTH, no PLACE and no selectable tag in '%s'
-
-%%%%
-Map tagged 'overwrite_floor_cell' must be 1x1
-
-%%%%
-Map '%s' cannot use 'encompass' orientation in the abyss
-
-%%%%
-Map '%s' is too big for the Abyss: %dx%d - max %dx%d
-
-%%%%
-%s '%s' is too big: %dx%d - max %dx%d
-
-%%%%
-Minivault
-
-%%%%
-Float
-
-%%%%
-Map '%s' is too big: %dx%d - max %dx%d
-
-%%%%
-Map too large - height %d (max %d)
-
-%%%%
-Map too large - width %d (max %d)
-
-%%%%
-Map too large - %dx%d (max %dx%d)
-
-%%%%
-Map '%s' has no (possible) exits; use TAGS: no_exits if this is intentional
-
-%%%%
-minivault
-
-%%%%
-SUBVAULT does not support '='. Use ':' instead.
-
-%%%%
-luniq
-
-%%%%
-No vault found for tag '%s'
-
-%%%%
-Fatal lua error while resolving subvault '%s'
-
-%%%%
-Could not fit '%s' in (%d,%d) to (%d, %d).
-
-%%%%
-;
-
-%%%%
-Invalid spell slot format: '%s' in '%s'
-
-%%%%
-Unknown spell name: '%s' in '%s'
-
-%%%%
-Not a monster spell: '%s'
-
-%%%%
-Need a positive spell frequency;got '%s' in '%s'
-
-%%%%
-Spell slot '%s' missing a casting type
-
-%%%%
-bad %sench specifier: "%s"
-
-%%%%
-unknown ench: "%s"
-
-%%%%
-invalid deg in ench specifier "%s"
-
-%%%%
-invalid dur in ench specifier "%s"
-
-%%%%
-spells:
-
-%%%%
-Not enough non-semicolons for '%s' spec.
-
-%%%%
-Too many semi-colons for '%s' spec.
-
-%%%%
-More items than monster item slots for '%s'.
-
-%%%%
-0123456789
-
-%%%%
-bad monster summon type: "%s"
-
-%%%%
-marked summon with no duration
-
-%%%%
-bad monster colour "%s" in "%s"
-
-%%%%
-bad monster god: "%s"
-
-%%%%
-bad tile name: "%s".
-
-%%%%
-"orc "
-
-%%%%
-unknown monster: "%s"
-
-%%%%
-can't place dummy monster: "%s"
-
-%%%%
-Can't give spec items to a random monster.
-
-%%%%
-Monster '%s' can't use items.
-
-%%%%
-Monster '%s' needs a defining item.
-
-%%%%
-Index out of range: %d
-
-%%%%
-" zombie"
-
-%%%%
-" skeleton"
-
-%%%%
-" simulacrum"
-
-%%%%
-" spectre"
-
-%%%%
--
-
-%%%%
-Index %d out of range
-
-%%%%
-archmagi
-
-%%%%
-exploding
-
-%%%%
-unknown god name: '%s'
-
-%%%%
-Can't use non-base monster for corpse/chunk items
-
-%%%%
-'%s' cannot leave corpses
-
-%%%%
-'%s' has no skeleton
-
-%%%%
-Requested corpse '%s' is invalid
-
-%%%%
-Bad item generation weight: '%d'
-
-%%%%
-|
-
-%%%%
-Bad identify status: %s
-
-%%%%
-Bad item level: %d
-
-%%%%
-Bad uniq level: %d
-
-%%%%
-Bad spell school: %s
-
-%%%%
-Bad spellbook size: %d
-
-%%%%
-Bad slevels: %d.
-
-%%%%
-&
-
-%%%%
-Bad spell: %s
-
-%%%%
-removed deck: "%s".
-
-%%%%
-Can't set an ego for random items.
-
-%%%%
-Can't set an ego for gold.
-
-%%%%
-An ego can only be applied to a weapon, missile or armour.
-
-%%%%
-No such ego as: %s
-Kein Ego wie: %s
-%%%%
-Ego '%s' is invalid for item '%s'.
-
-%%%%
-Ego '%s' is incompatible with item '%s'.
-
-%%%%
-Bad item class: '%s'
-
-%%%%
-Bad item name: '%s'
-
-%%%%
-Unable to parse marker from %s
-
-%%%%
-bad trap name: '%s'
-
-%%%%
-bad shop type: '%s'
-
-%%%%
-too many semi-colons for '%s' spec
-
-%%%%
-no features matching "%s"
-
-%%%%
-vault
-
-%%%%
-UNUSED
-
-%%%%
-opaque
-
-%%%%
-Unknown flag: '%s'
-
-%%%%
-
-##################
 # mapmark.cc
 ##################
 %%%%
@@ -10429,6 +9981,9 @@ Can't create data file cache: %s
 Unable to read %s
 
 %%%%
+rb
+
+%%%%
 Unable to open %s for writing
 
 %%%%
@@ -10440,6 +9995,9 @@ Failed to open %s for reading
 %%%%
 Regenerating des: %s
 Regenerating des:%s
+%%%%
+Lua error: %s
+Lua Fehler: %s
 %%%%
 
 ##################
@@ -12826,6 +12384,9 @@ tp
 
 %%%%
 tide
+
+%%%%
+exploding
 
 %%%%
 tethered
@@ -16954,6 +16515,9 @@ Your legs feel aquatic.
 Your legs no longer feel aquatic.
 
 %%%%
+float
+
+%%%%
 You float through the air rather than walking.
 
 %%%%
@@ -17024,6 +16588,9 @@ The darkness flees at your approach.
 
 %%%%
 The shadows grow bolder once more.
+
+%%%%
+any
 
 %%%%
 xom
@@ -17725,6 +17292,9 @@ Thought so.
 Hab ich mir gedacht.
 %%%%
 morgue-
+
+%%%%
+-
 
 %%%%
 
@@ -22059,6 +21629,9 @@ majin-bo cast
 A voice whispers, "
 
 %%%%
+\"
+
+%%%%
 "Cast which spell? (? or * to list) "
 "Welchen Zauber wirken? (? oder * auflisten) "
 %%%%
@@ -24535,6 +24108,9 @@ sprint/
 <lightred>ERROR: string above had unterminated tag</lightred>
 
 %%%%
+|
+
+%%%%
 " \t"
 
 %%%%
@@ -26438,6 +26014,9 @@ Wert für%s darf nicht negativ sein
 "New ego? "
 
 %%%%
+No such ego as: %s
+Kein Ego wie: %s
+%%%%
 Ego '%s' is invalid for %s.
 Ego '%s' ist für %s ungültig.
 %%%%
@@ -26562,6 +26141,9 @@ running
 
 %%%%
 see invis
+
+%%%%
+archmagi
 
 %%%%
 hexes

@@ -144,7 +144,7 @@ SKIP_FILES = [
     # lua scripting stuff
     'clua.h', 'clua.cc', 'cluautil.h', 'cluautil.cc', 'dlua.h', 'dlua.cc',
     # internal logic
-    'domino.h', 'domino.cc', 'dungeon.h', 'dungeon.cc',
+    'domino.h', 'domino.cc', 'dungeon.h', 'dungeon.cc', 'mapdef.h', 'mapdef.cc',
     # error messages that probably aren't worth translating
     'fontwrapper-ft.cc', 'game-options.h', 'game-options.cc', 'glwrapper-ogl.cc',
     'libw32c.h', 'libw32c.cc',
@@ -525,7 +525,7 @@ for filename in files:
             continue
 
         # ignore identifiers
-        if '_' in string and re.match(r'^[A-Za-z_-]+$', string):
+        if '_' in string and re.match(r'^[A-Za-z0-9_\-]+$', string):
             continue
         if 'Gozag bribe' in string or 'Gozag permabribe' in string:
             continue
