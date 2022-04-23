@@ -574,7 +574,6 @@ Euer {adj-er}%sKampfstab
 your %slajatang
 Euer {adj-er}%sLajatang
 %%%%
-%%%%
 you %slance
 Eure %sLanze
 %%%%
@@ -962,34 +961,34 @@ the %stower shield
 das %sTurmschild
 %%%%
 the %ssteam dragon scales
-die %sDampfdrachenschuppen
+die {adj-en}%sDampfdrachenschuppen
 %%%%
 the %sacid dragon scales
-die %sSauredrachenschuppen
+die {adj-en}%sSauredrachenschuppen
 %%%%
 the %squicksilver dragon scales
-die %sQuecksilberdrachenschuppen
+die {adj-en}%sQuecksilberdrachenschuppen
 %%%%
 the %sswamp dragon scales
-die %sSumpfdrachenschuppen
+die {adj-en}%sSumpfdrachenschuppen
 %%%%
 the %sfire dragon scales
-die %sFeuerdrachenschuppen
+die {adj-en}%sFeuerdrachenschuppen
 %%%%
 the %sice dragon scales
-die %sEisdrachenschuppen
+die {adj-en}%sEisdrachenschuppen
 %%%%
 the %spearl dragon scales
-die %sPerlendrachenschuppen
+die {adj-en}%sPerlendrachenschuppen
 %%%%
 the %sstorm dragon scales
-die %sSturmdrachenschuppen
+die {adj-en}%sSturmdrachenschuppen
 %%%%
 the %sshadow dragon scales
-die %sSchattendrachenschuppen
+die {adj-en}%sSchattendrachenschuppen
 %%%%
 the %sgold dragon scales
-die %sGolddrachenschuppen
+die {adj-en}%sGolddrachenschuppen
 %%%%
 
 # indefinite article
@@ -1120,34 +1119,34 @@ your %stower shield
 Euer {adj-es}%sTurmschild
 %%%%
 your %ssteam dragon scales
-Eure %sDampfdrachenschuppen
+Eure {adj-en}%sDampfdrachenschuppen
 %%%%
 your %sacid dragon scales
-Eure %sSauredrachenschuppen
+Eure {adj-en}%sSauredrachenschuppen
 %%%%
 your %squicksilver dragon scales
-Eure %sQuecksilberdrachenschuppen
+Eure {adj-en}%sQuecksilberdrachenschuppen
 %%%%
 your %sswamp dragon scales
-Eure %sSumpfdrachenschuppen
+Eure {adj-en}%sSumpfdrachenschuppen
 %%%%
 your %sfire dragon scales
-Eure %sFeuerdrachenschuppen
+Eure {adj-en}%sFeuerdrachenschuppen
 %%%%
 your %sice dragon scales
-Eure %sEisdrachenschuppen
+Eure {adj-en}%sEisdrachenschuppen
 %%%%
 your %spearl dragon scales
-Eure %sPerlendrachenschuppen
+Eure {adj-en}%sPerlendrachenschuppen
 %%%%
 your %sstorm dragon scales
-Eure %sSturmdrachenschuppen
+Eure {adj-en}%sSturmdrachenschuppen
 %%%%
 your %sshadow dragon scales
-Eure %sSchattendrachenschuppen
+Eure {adj-en}%sSchattendrachenschuppen
 %%%%
 your %sgold dragon scales
-Eure %sGolddrachenschuppen
+Eure {adj-en}%sGolddrachenschuppen
 %%%%
 
 # no determiner
@@ -3177,7 +3176,7 @@ the %sSulking Sword
 das %sschmollende Schwert
 %%%%
 the %spair of quick blades "Gyre" and "Gimble"
-das %sPaar Schnellklingen "Gyre" und "Gimble"
+das {adj-e}%sPaar Schnellklingen "Gyre" und "Gimble"
 %%%%
 the %sWrath of Trog
 der %sZorn von Trog
@@ -3219,7 +3218,7 @@ the %ssceptre of Asmodeus
 das %sZepter von Asmodeus
 %%%%
 the %sfaerie dragon scales
-die %sFeen-Drachenschuppen
+die {adj-en}%sFeen-Drachenschuppen
 %%%%
 the %sdemon blade "Bloodbane"
 die %sDämonenklinge "Blutfluch"
@@ -3351,7 +3350,7 @@ the %ssalamander hide armour
 die %sSalamanderhaut-Rüstung
 %%%%
 the %spair of gauntlets of War
-das %sPaar Gantelets des Krieges
+das {adj-e}%sPaar Gantelets des Krieges
 %%%%
 the %sshield of Resistance
 der %sSchild der Resistenz
@@ -3369,13 +3368,13 @@ the %srobe of Night
 die %sRobe der Nacht
 %%%%
 the %sscales of the Dragon King
-die %sSchuppen des Drachenkönigs
+die {adj-en}%sSchuppen des Drachenkönigs
 %%%%
 the %shat of the Alchemist
 der %sHut des Alchemisten
 %%%%
 the %spair of fencer's gloves
-das %sPaar Handschuhe des Fechters
+das {adj-e}%sPaar Handschuhe des Fechters
 %%%%
 the %scloak of Starlight
 der %sUmhang des Sternenlichts
@@ -3423,7 +3422,7 @@ the %sobsidian axe
 die %sObsidianaxt
 %%%%
 the %slightning scales
-die %sBlitzschuppen
+die {adj-en}%sBlitzschuppen
 %%%%
 the %sBlack Knight's horse barding
 der %sRossharnisch des schwarzen Ritters
@@ -3453,7 +3452,7 @@ the %smacabre finger necklace
 die %smakabere Fingerhalskette
 %%%%
 the %spair of boots of the spider
-das %sPaar Stiefel der Spinne
+das {adj-e}%sPaar Stiefel der Spinne
 %%%%
 the %sdark maul
 der %sdunkle Kriegshammer
@@ -3826,7 +3825,7 @@ die %sUmarmung von Cigotuvi
 %sDämonenpeitsche "Verzauberer"
 %%%%
 %slajatang of Order
-%sLajatang der Ordnung
+{adj-er}%sLajatang der Ordnung
 %%%%
 %sgreat mace "Firestarter"
 {adj-er}%sgroßer Streitkolben "Brandstifter"

@@ -383,17 +383,11 @@ den {adj-en}%sUmhang
 {acc}the %sscarf
 den {adj-en}%sSchal
 %%%%
-{acc}the %spair of %sgloves
-das %sPaar {adj-e}%sHandschuhe
-%%%%
 {acc}the %shelmet
 den {adj-en}%sHelm
 %%%%
 {acc}the %shat
 den {adj-en}%sHut
-%%%%
-{acc}the %spair of %sboots
-das %sPaar {adj-e}%sStiefel
 %%%%
 {acc}the %scentaur barding
 den {adj-en}%sZentaurenharnisch
@@ -403,36 +397,6 @@ den {adj-en}%sNagaharnisch
 %%%%
 {acc}the %sbuckler
 den {adj-en}%sBuckler
-%%%%
-{acc}the %ssteam dragon scales
-die {adj-en}%sDampfdrachenschuppen
-%%%%
-{acc}the %sacid dragon scales
-die {adj-en}%sSauredrachenschuppen
-%%%%
-{acc}the %squicksilver dragon scales
-die {adj-en}%sQuecksilberdrachenschuppen
-%%%%
-{acc}the %sswamp dragon scales
-die {adj-en}%sSumpfdrachenschuppen
-%%%%
-{acc}the %sfire dragon scales
-die {adj-en}%sFeuerdrachenschuppen
-%%%%
-{acc}the %sice dragon scales
-die {adj-en}%sEisdrachenschuppen
-%%%%
-{acc}the %spearl dragon scales
-die {adj-en}%sPerlendrachenschuppen
-%%%%
-{acc}the %sstorm dragon scales
-die {adj-en}%sSturmdrachenschuppen
-%%%%
-{acc}the %sshadow dragon scales
-die {adj-en}%sSchattendrachenschuppen
-%%%%
-{acc}the %sgold dragon scales
-die {adj-en}%sGolddrachenschuppen
 %%%%
 
 # indefinite article
@@ -513,36 +477,6 @@ Euren {adj-en}%sNagaharnisch
 %%%%
 {acc}your %sbuckler
 Euren {adj-en}%sBuckler
-%%%%
-{acc}your %ssteam dragon scales
-Eure {adj-en}%sDampfdrachenschuppen
-%%%%
-{acc}your %sacid dragon scales
-Eure {adj-en}%sSauredrachenschuppen
-%%%%
-{acc}your %squicksilver dragon scales
-Eure {adj-en}%sQuecksilberdrachenschuppen
-%%%%
-{acc}your %sswamp dragon scales
-Eure {adj-en}%sSumpfdrachenschuppen
-%%%%
-{acc}your %sfire dragon scales
-Eure {adj-en}%sFeuerdrachenschuppen
-%%%%
-{acc}your %sice dragon scales
-Eure {adj-en}%sEisdrachenschuppen
-%%%%
-{acc}your %spearl dragon scales
-Eure {adj-en}%sPerlendrachenschuppen
-%%%%
-{acc}your %sstorm dragon scales
-Eure {adj-en}%sSturmdrachenschuppen
-%%%%
-{acc}your %sshadow dragon scales
-Eure {adj-en}%sSchattendrachenschuppen
-%%%%
-{acc}your %sgold dragon scales
-Eure {adj-en}%sGolddrachenschuppen
 %%%%
 
 # no determiner
@@ -1367,9 +1301,6 @@ den {adj-en}%sZahn des Vampirs
 {acc}the %sstaff of Dispater
 den {adj-en}%sStecken von Dispater
 %%%%
-{acc}the %sfaerie dragon scales
-die {adj-en}%sFeen-Drachenschuppen
-%%%%
 {acc}the %sscimitar of Flaming Death
 den {adj-en}%sKrummsäbel des flammenden Todes
 %%%%
@@ -1427,9 +1358,6 @@ den {adj-en}%sUmhang von Flash
 {acc}the %sshield of Resistance
 den {adj-en}%sSchild der Resistenz
 %%%%
-{acc}the %sscales of the Dragon King
-die {adj-en}%sSchuppen des Drachenkönigs
-%%%%
 {acc}the %shat of the Alchemist
 den {adj-en}%sHut des Alchemisten
 %%%%
@@ -1456,9 +1384,6 @@ den {adj-en}%sRing des Magiers
 %%%%
 {acc}the %shat of Pondering
 den {adj-en}%sHut der Schwerfälligkeit
-%%%%
-{acc}the %slightning scales
-die {adj-en}%sBlitzschuppen
 %%%%
 {acc}the %sBlack Knight's horse barding
 den {adj-en}%sRossharnisch des schwarzen Ritters
