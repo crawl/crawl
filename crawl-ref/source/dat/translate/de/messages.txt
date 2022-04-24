@@ -10636,9 +10636,6 @@ Was auswählen (regex)?
 # message.cc
 ##################
 %%%%
-" x%d"
-" x%d"
-%%%%
 --more-- Press Space or click to continue.
 --mehr-- Die Leertaste drücken oder klicken, um fortzufahren.
 %%%%
@@ -10767,9 +10764,6 @@ Ihr fühlt Euch plötzlich von magischer Energie erschöpft!
 %%%%
 Your god isn't willing to do this for you now.
 Euer Gott ist nicht bereit, das jetzt für Euch zu tun.
-%%%%
-The Council
-Das Konzil
 %%%%
 Sifu %s says: %s
 Sifu %s sagt: %s

@@ -90,6 +90,10 @@ der Glänzende
 the Wu Jian Council
 das Wu Jian Konzil
 %%%%
+# Wu Jian Council - short form
+The Council
+Das Konzil
+%%%%
 
 ########################
 # God names - genitive

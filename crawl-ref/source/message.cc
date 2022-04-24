@@ -111,7 +111,7 @@ struct message_particle
         // TODO: colour the repeats indicator?
         string rep = "";
         if (repeats > 1)
-            rep = make_stringf(" x%d", repeats);
+            rep = localise(" x%d", repeats);
         return text + rep;
     }
 
@@ -119,7 +119,7 @@ struct message_particle
     {
         string rep = "";
         if (repeats > 1)
-            rep = make_stringf(" x%d", repeats);
+            rep = localise(" x%d", repeats);
         return pure_text() + rep;
     }
 
