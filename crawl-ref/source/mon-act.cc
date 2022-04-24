@@ -2524,8 +2524,10 @@ static bool _monster_eat_item(monster* mons)
 
         if (eaten && !shown_msg && player_can_hear(mons->pos()))
         {
-            mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-                 you.see_cell(mons->pos()) ? "" : " distant");
+            if (you.see_cell(mons->pos()))
+                mpr(MSGCH_SOUND, "You hear a slurping noise.");
+            else
+                mpr(MSGCH_SOUND, "You hear a distant slurping noise.");
             shown_msg = true;
         }
 
@@ -2657,23 +2659,20 @@ static void _mons_open_door(monster& mons, const coord_def &pos)
         viewwindow();
         update_screen();
 
-        string open_str = "opens the ";
-        open_str += adj;
-        open_str += noun;
-        open_str += ".";
+        string object = string("the ") + adj + noun;
 
         // Should this be conditionalized on you.can_see(mons?)
         mons.seen_context = (all_door.size() <= 2) ? SC_DOOR : SC_GATE;
 
         if (!you.can_see(mons))
         {
-            mprf("Something unseen %s", open_str.c_str());
+            mprf("Something unseen opens %s.", object.c_str());
             interrupt_activity(activity_interrupt::force);
         }
         else if (!you_are_delayed())
         {
-            mprf("%s %s", mons.name(DESC_A).c_str(),
-                 open_str.c_str());
+            mprf("%s opens %s.", mons.name(DESC_A).c_str(),
+                 object.c_str());
         }
     }
 
@@ -3105,8 +3104,10 @@ static void _jelly_grows(monster& mons)
 {
     if (player_can_hear(mons.pos()))
     {
-        mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
-             you.see_cell(mons.pos()) ? "" : " distant");
+        if (you.see_cell(mons.pos()))
+            mpr(MSGCH_SOUND, "You hear a slurping noise.");
+        else
+            mpr(MSGCH_SOUND, "You hear a distant slurping noise.");
     }
 
     const int avg_hp = mons_avg_hp(mons.type);
@@ -3515,7 +3516,7 @@ static bool _monster_move(monster* mons)
                     const bool actor_visible = you.can_see(*mons);
                     mprf("%s knocks down a tree!",
                          actor_visible?
-                         mons->name(DESC_THE).c_str() : "Something");
+                         mons->name(DESC_THE).c_str() : "something");
                     noisy(25, target);
                 }
                 else

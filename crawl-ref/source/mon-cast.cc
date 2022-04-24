@@ -7065,7 +7065,7 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
                                    "out of sight";
 
         mprf("%s throws %s %s!",
-             (thrower_seen ? thrower.name(DESC_THE).c_str() : "Something"),
+             (thrower_seen ? thrower.name(DESC_THE).c_str() : "something"),
              (throwee_seen ? throwee.name(DESC_THE, true).c_str() : "something"),
              destination.c_str());
 
@@ -7809,5 +7809,5 @@ static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot 
 
 static string _god_name(god_type god)
 {
-    return god_has_name(god) ? god_name(god) : "Something";
+    return god_has_name(god) ? god_name(god) : "something";
 }

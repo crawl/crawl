@@ -10862,160 +10862,127 @@ Wütende Insekten schießen aus dem Laub {gen}%s hervor!
 ##################
 %%%%
 %s is no longer engulfed.
-
+%s ist nicht mehr verschlungen.
 %%%%
 %s and %s swap places.
-%s und%s tauschen Plätze.
+%s und %s tauschen Plätze.
 %%%%
 By Zin's power the foxfire is contained!
-Durch Zins Kraft ist das Fuchsfeuer enthalten!
+Durch Zins Kraft ist das Fuchsfeuer eingedämmt!
 %%%%
 %s swoops through the air toward %s!
-%s fliegt durch die Luft in Richtung%s!
+%s fliegt durch die Luft in Richtung %s!
 %%%%
 %s reads a scroll.
-
+%s liest eine Schriftrolle.
 %%%%
 Wisps of shadow swirl around %s.
-Schattenfetzen wirbeln um%s.
+Schattenfetzen wirbeln um {acc}%s herum.
 %%%%
 %s zaps a wand.
-
+%s zappt einen Zauberstab.
 %%%%
 You hear a zap.
-Ihr hört einen Zap.
+Ihr hört ein Zappen.
 %%%%
 %s is stunned by your conviction and fails to attack.
-
+%s ist durch Eure Überzeugung betäubt und kann nicht angreifen.
 %%%%
 You redirect %s's attack!
-Ihr lenkt den Angriff von%s um!
+Ihr lenkt den Angriff {gen}%s um!
 %%%%
 %s falls limply to the ground.
-
-%%%%
-_handle_reaching()
-
-%%%%
-spell or special
-
-%%%%
-_handle_potion()
-
-%%%%
-_handle_scroll()
-
-%%%%
-_handle_wand()
-
-%%%%
-_handle_swoop()
-
-%%%%
-_handle_throw()
-
+%s fällt schlaff zu Boden.
 %%%%
 %s crackles loudly.
-
+%s knistert laut.
 %%%%
 You hear a loud crackle.
 Ihr hört ein lautes Knistern.
 %%%%
 %s is lost in a daze.
-
+%s wird benebelt.
 %%%%
 %s is distracted by your dazzling golden aura.
-
-%%%%
-handle_pickup()
-
-%%%%
-fight_melee()
-
+%s wird durch Eure schillernde goldene Aura abgelenkt.
 %%%%
 Something you can't see is thrashing in a web.
 Etwas, das Ihr nicht sehen könnt, schlägt in einem Netz um sich.
 %%%%
 %s struggles to get unstuck from the web.
-
+%s kämpft, um sich aus dem Spinnennetz zu befreien.
 %%%%
 Something wriggles in the net.
 Etwas zappelt im Netz.
 %%%%
 %s struggles against the net.
-
+%s kämpft, um sich aus dem Netz zu befreien.
 %%%%
 The net rips apart, and %s comes free!
-Das Netz zerreißt und%s kommt frei!
+Das Netz zerreißt und %s kommt frei!
 %%%%
 All of a sudden the net rips apart!
 Plötzlich zerreißt das Netz!
 %%%%
 You feel yourself growing ill in the presence of %s.
-
+Ihr spürt, wie Ihr in der Gegenwart {gen}%s krank werdet.
 %%%%
 Being near %s leaves you feeling lethargic.
-In der Nähe von {dat}%s, fühlt Ihr Euch träge.
+In der Nähe {acc}%s, fühlt Ihr Euch träge.
 %%%%
 %s watery aura covers %s.
-%s wässrige Aura bedeckt %s.
+{gen}%s wässrige Aura bedeckt {acc}%s.
 %%%%
 %s moves out of view.
-%s geriet aus dem Blickfeld.
+%s bewegt sich aus dem Blickfeld.
 %%%%
 %s splits in two!
-
+%s teilt sich in zwei!
 %%%%
 You hear a squelching noise.
 Ihr hört ein Quietschgeräusch.
 %%%%
-You hear a%s slurping noise.
-Ihr hört ein%s schlürfendes Geräusch.
+You hear a slurping noise.
+Ihr hört ein Schlürfgeräusch.
 %%%%
-" distant"
-
+Something unseen opens %s.
+Etwas Ungesehenes öffnet %s.
 %%%%
-"opens the "
-
-%%%%
-Something unseen %s
-Etwas Unsichtbares %s
+%s opens %s.
+%s öffnet %s.
 %%%%
 %s escapes!
-
+%s entkommt!
 %%%%
 %s struggles to escape constriction.
-
+%s kämpft, um der Einschnürung zu entkommen.
 %%%%
 The door bursts into shrapnel!
 Die Tür platzt in Splitter!
 %%%%
 %s bursts through the door, destroying it!
-
+%s bricht durch die Tür und zerstört sie!
 %%%%
 The door mysteriously vanishes.
 Die Tür verschwindet auf mysteriöse Weise.
 %%%%
 %s eats the door!
-
+%s frisst die Tür!
 %%%%
 %s rages.
 %s tobt.
 %%%%
 %s flops around on dry land!
-
+%s plumpst auf dem Trockenen herum!
 %%%%
 %s falters for a moment.
-
+%s zögert einen Moment.
 %%%%
 %s knocks down a tree!
 %s schlägt einen Baum um!
 %%%%
-Something
-Etwas
-%%%%
 You hear a crashing sound.
-
+Ihr hört ein krachendes Geräusch.
 %%%%
 You hear a sizzling sound.
 Ihr hört ein zischendes Geräusch.
