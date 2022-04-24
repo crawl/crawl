@@ -706,14 +706,13 @@ i-vulnerability SCR_VULNERABILITY
 %back scroll-red
 i-silence SCR_SILENCE
 %back scroll-yellow
-# start TAG_MAJOR_VERSION == 34
 i-amnesia SCR_AMNESIA
+# start TAG_MAJOR_VERSION == 34
 %back scroll-grey
-i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
+i-curse-jewellery SCR_CURSE_JEWELLERY
 # end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-amnesia SCR_AMNESIA SCR_ID_LAST
-# end TAG_MAJOR_VERSION
+%back scroll-brown
+i-poison SCR_POISON SCR_ID_LAST
 %back none
 
 ##################OBJ_JEWELLERY

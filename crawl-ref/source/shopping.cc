@@ -527,6 +527,7 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_AMNESIA:
             case SCR_FEAR:
             case SCR_IMMOLATION:
+            case SCR_POISON:
             case SCR_MAGIC_MAPPING:
                 valued += 35;
                 break;

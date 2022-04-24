@@ -703,6 +703,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_ENCHANT_ARMOUR:     return "enchant armour";
     case SCR_TORMENT:            return "torment";
     case SCR_IMMOLATION:         return "immolation";
+    case SCR_POISON:             return "poison";
     case SCR_BLINKING:           return "blinking";
     case SCR_MAGIC_MAPPING:      return "magic mapping";
     case SCR_FOG:                return "fog";
@@ -2729,6 +2730,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_IMMOLATION:
         case SCR_VULNERABILITY:
             return true;
+        case SCR_POISON:
+            return !player_res_poison(false, temp, true);
         case SCR_TORMENT:
             return !you.res_torment();
         case SCR_HOLY_WORD:
@@ -2923,6 +2926,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_SUMMONING:
             return you.allies_forbidden();
         case SCR_FOG:
+        case SCR_POISON:
             return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
             return you.props.exists(IDENTIFIED_ALL_KEY)

@@ -25,3 +25,5 @@ void holy_flames(monster* caster, actor* defender);
 
 spret cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
                            bool fail = false);
+
+spret scroll_of_poison(bool unknown);

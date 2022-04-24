@@ -4918,6 +4918,7 @@ ORIENT: float
 KMASK:  -'DE12 = no_item_gen
 # Cancellation placed only for mutagenic clouds.
 ITEM:   potion of resistance ident:type, potion of cancellation ident:type q:2
+# TODO: add scrolls of poison when appropriate
 # Replaces a gold pile in late Dungeon
 : item(dgn.good_aux_armour)
 # Monsters appropriate for the cloud type must be defined in order of

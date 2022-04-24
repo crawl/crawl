@@ -1095,6 +1095,11 @@ scroll of noise
 
 A prank scroll that creates a loud noise when read.
 %%%%
+scroll of poison
+
+A scroll that fills the air with poison, covering every unoccupied space in
+sight with toxic fumes.
+%%%%
 scroll of silence
 
 A scroll that eliminates all sound near the reader. This makes reading scrolls,

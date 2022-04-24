@@ -2940,7 +2940,8 @@ static bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_BRAND_WEAPON
            || scroll == SCR_ENCHANT_WEAPON
            || scroll == SCR_MAGIC_MAPPING
-           || scroll == SCR_ACQUIREMENT;
+           || scroll == SCR_ACQUIREMENT
+           || scroll == SCR_POISON;
 }
 
 /**
@@ -3162,6 +3163,30 @@ public:
     }
 };
 
+class targeter_poison_scroll : public targeter_radius
+{
+public:
+    targeter_poison_scroll();
+    aff_type is_affected(coord_def loc) override;
+};
+
+targeter_poison_scroll::targeter_poison_scroll()
+    : targeter_radius(&you, LOS_NO_TRANS)
+{ }
+
+aff_type targeter_poison_scroll::is_affected(coord_def loc)
+{
+    const aff_type base_aff = targeter_radius::is_affected(loc);
+    if (base_aff == AFF_NO)
+        return AFF_NO;
+    if (cell_is_solid(loc) || cloud_type_at(loc) != CLOUD_NONE)
+        return AFF_NO;
+    const actor* act = actor_at(loc);
+    if (act != nullptr && you.can_see(*act))
+        return AFF_NO;
+    return AFF_YES;
+}
+
 // TODO: why do I have to do this
 class scroll_targeting_behaviour : public targeting_behaviour
 {
@@ -3196,6 +3221,8 @@ static unique_ptr<targeter> _get_scroll_targeter(scroll_type which_scroll)
         return make_unique<targeter_silence>(2, 4); // TODO: calculate from power (or simplify the calc)
     case SCR_TORMENT:
         return make_unique<targeter_torment>();
+    case SCR_POISON:
+        return make_unique<targeter_poison_scroll>();
     default:
         return nullptr;
     }
@@ -3247,6 +3274,7 @@ bool scroll_has_targeter(scroll_type which_scroll)
     case SCR_SUMMONING:
     case SCR_VULNERABILITY:
     case SCR_IMMOLATION:
+    case SCR_POISON:
     case SCR_HOLY_WORD:
     case SCR_SILENCE:
     case SCR_TORMENT:
@@ -3285,6 +3313,13 @@ bool scroll_hostile_check(scroll_type which_scroll)
                 && !mons_class_is_test(mon->type))
         {
             continue;
+        }
+
+        if (which_scroll == SCR_POISON)
+        {
+            monster_info mi(mon);
+            if (!(mi.mresists & MR_RES_POISON))
+                return true;
         }
 
         if (hitfunc->valid_aim(*ri) && hitfunc->is_affected(*ri) != AFF_NO)
@@ -3520,6 +3555,17 @@ void read(item_def* scroll, dist *target)
             mpr("The air around you briefly surges with heat, but it dissipates.");
 
         bad_effect = true;
+        break;
+    }
+
+    case SCR_POISON:
+    {
+        const spret result = scroll_of_poison(!alreadyknown);
+        cancel_scroll = result == spret::abort;
+        if (!cancel_scroll)
+            mpr(pre_succ_msg);
+        // amusing to Xom, at least
+        bad_effect = result == spret::success && !player_res_poison();
         break;
     }
 

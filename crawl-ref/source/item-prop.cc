@@ -2141,6 +2141,7 @@ static map<scroll_type, item_rarity_type> _scroll_rarity = {
     { SCR_FOG,            RARITY_UNCOMMON },
     { SCR_BLINKING,       RARITY_UNCOMMON },
     { SCR_IMMOLATION,     RARITY_UNCOMMON },
+    { SCR_POISON,         RARITY_UNCOMMON },
     { SCR_VULNERABILITY,  RARITY_UNCOMMON },
     { SCR_SUMMONING,      RARITY_RARE },
     { SCR_SILENCE,        RARITY_RARE },

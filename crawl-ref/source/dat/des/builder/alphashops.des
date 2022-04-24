@@ -145,7 +145,7 @@
        "plate armour", "ring of poison resistance", "manual of polearms",
        "wand of polymorph", "ring of positive energy", "ring of protection",
        "manual of poison magic", "wand of paralysis",
-       "ring of protection from fire", "staff of poison",
+       "ring of protection from fire", "staff of poison", "scroll of poison",
        "ring of protection from cold", "book of pain" }
 
       elseif s == "Q" then i = { "quarterstaff", "quicksilver dragon scales",
