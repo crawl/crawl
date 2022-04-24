@@ -3847,16 +3847,16 @@ This weapon's minimum attack delay (%.1f) is reached at skill level %d.
 
 %%%%
 It is a one-handed weapon.
-Sie ist eine Einhandwaffe.
+Das ist eine Einhandwaffe.
 %%%%
 It is a two-handed weapon.
-Sie ist eine Zweihandwaffe.
+Das ist eine Zweihandwaffe.
 %%%%
 It is a weapon for one hand-pair.
-Sie ist eine Waffe für ein Handpaar.
+Das ist eine Waffe für ein Handpaar.
 %%%%
 It is a weapon for two hand-pairs.
-Sie ist eine Waffe für zwei Handpaare.
+Das ist eine Waffe für zwei Handpaare.
 %%%%
 It can be evoked to extend its reach.
 
@@ -8946,7 +8946,7 @@ not susceptible
 nicht anfällig
 %%%%
 Read which item (* to show all)?
-Wlehcen Gegenstand lesen (* all zu zeigen)?
+Welchen Gegenstand lesen (* alle zu zeigen)?
 %%%%
 read %s
 %s lesen
