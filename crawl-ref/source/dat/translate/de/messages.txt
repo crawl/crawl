@@ -10789,16 +10789,7 @@ You become entangled in the net!
 Ihr werdet in das Netz verwickelt!
 %%%%
 You get stuck in the web!
-Ihr steckt im Web fest!
-%%%%
-true
-
-%%%%
-false
-
-%%%%
-maybe
-
+Ihr steckt im Spinnennetz fest!
 %%%%
 
 ##################
