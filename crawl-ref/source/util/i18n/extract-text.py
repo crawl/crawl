@@ -128,7 +128,7 @@ SKIP_FILES = [
     'colour.h', 'colour.cc', 'format.h', 'format.cc',
     # keys/properties
     'defines.h', 'dgn-layouts.h', 'dgn-layouts.cc', 'god-abil.h', 'initfile.cc',
-    'libunix.h', 'libunix.cc', 'libutil.h', 'libutil.cc',
+    'libunix.h', 'libunix.cc', 'libutil.h', 'libutil.cc', 'mgen-data.h',
     # debug/test stuff
     'debug.h', 'ctest.h', 'ctest.cc', 'fake-main.cc', 'coord-def.h',
     'crash.h', 'crash.cc', 'errors.h', 'errors.cc',
