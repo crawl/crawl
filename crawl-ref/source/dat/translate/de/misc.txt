@@ -195,3 +195,30 @@ Strg-Z
 This item has been removed, sorry!
 Dieser Gegenstand wurde abgeschafft, sorry!
 %%%%
+
+####################
+# Corrosion sources
+####################
+
+# These are used as subject in the messages "<source> corrodes you!"
+# and "<source> corrodes <monster>!"
+
+%%%%
+the acid
+die Säure
+%%%%
+the entropic weave
+das entropisches Weben
+%%%%
+Your corrosive artefact
+Euer ätzendes Artefakt
+%%%%
+Your corrupting presence
+Eure verderbliche Präsenz
+%%%%
+# a flying bit of exploded monster (used directly after monster explosion
+# message, so it will be obvious what it refers to)
+a flying bit
+ein fliegendes Stück
+%%%%
+

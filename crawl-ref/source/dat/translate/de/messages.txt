@@ -673,10 +673,6 @@ Acquire %s? (%s/%s)
 ##################
 # actor.h
 ##################
-%%%%
-the acid
-die Säure
-%%%%
 
 ##################
 # actor.cc
@@ -11273,9 +11269,6 @@ Eine Kältewelle zieht über Euch.
 %s channels a blast of cleansing flame!
 
 %%%%
-the entropic weave
-
-%%%%
 %s begins emitting a brilliant aura!
 
 %%%%
@@ -13153,9 +13146,6 @@ not wounded
 %s is hit by a flying piece of %s!
 %s wird von einem fliegenden Stück%s getroffen!
 %%%%
-a flying bit
-
-%%%%
 %s regains %s memory of %s.
 %s gewinnt%s Speicher von%s zurück.
 %%%%
@@ -13372,9 +13362,6 @@ Ihr hört ein plätscherndes Geräusch.
 %%%%
 %s is splashed with acid
 %s ist mit Säure%s besprit
-%%%%
-Your corrupting presence
-
 %%%%
 %s begins to crumble.
 
@@ -16848,9 +16835,6 @@ Ihr strahlt eine bunte Rauchwolke aus!
 %%%%
 Your body deteriorates!
 Euer Körper verschlechtert sich!
-%%%%
-Your corrosive artefact
-
 %%%%
 Your shape twists and changes as you die.
 Eure Form dreht sich und verändert sich, als Ihr sterbt.
