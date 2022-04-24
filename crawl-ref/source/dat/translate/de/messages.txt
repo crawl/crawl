@@ -10770,155 +10770,6 @@ Sifu %s sagt: %s
 %%%%
 
 ##################
-# mi-enum.h
-##################
-%%%%
-stabbable
-
-%%%%
-distracted
-
-%%%%
-dormant
-
-%%%%
-unaware
-
-%%%%
-wandering
-
-%%%%
-strong
-
-%%%%
-fleeing
-
-%%%%
-rotting
-
-%%%%
-summoned
-
-%%%%
-charmed
-
-%%%%
-burning
-
-%%%%
-sick
-
-%%%%
-caught
-
-%%%%
-webbed
-
-%%%%
-possessable
-
-%%%%
-enslaved
-
-%%%%
-insane
-
-%%%%
-silencing
-
-%%%%
-mesmerizing
-
-%%%%
-submerged
-
-%%%%
-bleeding
-
-%%%%
-safe
-
-%%%%
-unsafe
-
-%%%%
-withdrawn
-
-%%%%
-attached
-
-%%%%
-dazed
-
-%%%%
-mute
-
-%%%%
-blind
-
-%%%%
-dumb
-
-%%%%
-mad
-
-%%%%
-clinging
-
-%%%%
-firewood
-
-%%%%
-suppressed
-
-%%%%
-rolling
-
-%%%%
-wretched
-
-%%%%
-screamed
-
-%%%%
-retching
-
-%%%%
-barbs
-
-%%%%
-icemail
-
-%%%%
-shroud
-
-%%%%
-spectralised
-
-%%%%
-hexed
-
-%%%%
-airborne
-
-%%%%
-idealised
-
-%%%%
-pinned
-
-%%%%
-waterlogged
-
-%%%%
-withering
-
-%%%%
-crumbling
-
-%%%%
-
-##################
 # misc.cc
 ##################
 %%%%
@@ -11918,6 +11769,12 @@ Ihr %serkennt %s %s.
 "can no longer "
 
 %%%%
+hexed
+
+%%%%
+charmed
+
+%%%%
 bribed
 
 %%%%
@@ -12197,7 +12054,16 @@ charm
 tp
 
 %%%%
+submerged
+
+%%%%
+sick
+
+%%%%
 tide
+
+%%%%
+insane
 
 %%%%
 exploding
@@ -12215,10 +12081,34 @@ regen
 temporarily pacified
 
 %%%%
+dazed
+
+%%%%
+mute
+
+%%%%
+blind
+
+%%%%
+dumb
+
+%%%%
+mad
+
+%%%%
 recite timer
 
 %%%%
 breath timer
+
+%%%%
+rolling
+
+%%%%
+wretched
+
+%%%%
+screamed
 
 %%%%
 injury bond
@@ -12230,10 +12120,22 @@ haunting
 awaken vines
 
 %%%%
+barbs
+
+%%%%
+icemail
+
+%%%%
 permabribed
 
 %%%%
+idealised
+
+%%%%
 stilling the winds
+
+%%%%
+waterlogged
 
 %%%%
 anon friend
@@ -12346,6 +12248,12 @@ tower shield_louise
 control wrested from you
 
 %%%%
+summoned
+
+%%%%
+wandering
+
+%%%%
 durably summoned
 
 %%%%
@@ -12368,6 +12276,9 @@ soul bound
 
 %%%%
 souls bound
+
+%%%%
+strong
 
 %%%%
 empowered
@@ -12395,6 +12306,9 @@ covering ground quickly
 
 %%%%
 stilling wind
+
+%%%%
+silencing
 
 %%%%
 radiating silence
@@ -12511,13 +12425,28 @@ surrounded by acidic fog
 surrounded by foul miasma
 
 %%%%
+possessable
+
+%%%%
+caught
+
+%%%%
 entangled in a net
+
+%%%%
+webbed
 
 %%%%
 entangled in a web
 
 %%%%
+dormant
+
+%%%%
 asleep
+
+%%%%
+unaware
 
 %%%%
 infested
@@ -12526,7 +12455,13 @@ infested
 stupefied
 
 %%%%
+withering
+
+%%%%
 withering away
+
+%%%%
+crumbling
 
 %%%%
 crumbling away
@@ -12538,10 +12473,16 @@ petrifying slowly
 lost in madness
 
 %%%%
+fleeing
+
+%%%%
 encased in ice
 
 %%%%
 asphyxiating
+
+%%%%
+burning
 
 %%%%
 covered in liquid flames
@@ -21491,6 +21432,9 @@ the malice of Vehumet
 %%%%
 You miscast %s.
 Ihr habt %s falsch besetzt.
+%%%%
+safe
+
 %%%%
 mildly dangerous
 
