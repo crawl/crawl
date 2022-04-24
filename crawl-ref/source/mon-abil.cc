@@ -747,13 +747,17 @@ bool lost_soul_revive(monster& mons, killer_type killer)
                      mi->name(DESC_THE).c_str(),
                      revivee_name.c_str());
             }
+            else if (mi->is_summoned())
+            {
+                mprf("%s assumes the form of %s and becomes anchored to this world!",
+                     mi->name(DESC_THE).c_str(),
+                     revivee_name.c_str());
+            }
             else
             {
-                mprf("%s assumes the form of %s%s!",
+                mprf("%s assumes the form of %s!",
                      mi->name(DESC_THE).c_str(),
-                     revivee_name.c_str(),
-                     (mi->is_summoned() ? " and becomes anchored to this"
-                      " world" : ""));
+                     revivee_name.c_str());
             }
         }
 

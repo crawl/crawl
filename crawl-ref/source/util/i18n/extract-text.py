@@ -129,7 +129,7 @@ SKIP_FILES = [
     # keys/properties
     'defines.h', 'dgn-layouts.h', 'dgn-layouts.cc', 'god-abil.h', 'initfile.cc',
     'libunix.h', 'libunix.cc', 'libutil.h', 'libutil.cc', 'mgen-data.h',
-    'mi-enum.h',
+    'mi-enum.h', 'mon-abil.h',
     # debug/test stuff
     'debug.h', 'ctest.h', 'ctest.cc', 'fake-main.cc', 'coord-def.h',
     'crash.h', 'crash.cc', 'errors.h', 'errors.cc',
@@ -364,7 +364,9 @@ for filename in files:
                     continue
 
                 # ouch and hurt strings just go to score file
-                if re.search(r'\bouch\s*\(', line) or re.search(r'\bhurt\s*\(', line):
+                if re.search(r'\bouch\s*\(', line) or re.search(r'\bhurt\s*\(', line) \
+                   or re.search(r'\bparalyse\s*\(', line) \
+                   or re.search(r'\bpetrify\s*\(', line):
                     continue
 
                 # skip tags/keys

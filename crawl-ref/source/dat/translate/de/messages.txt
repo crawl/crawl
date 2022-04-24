@@ -10793,79 +10793,68 @@ Ihr steckt im Spinnennetz fest!
 %%%%
 
 ##################
-# mon-abil.h
-##################
-%%%%
-boris orb key
-
-%%%%
-
-##################
 # mon-abil.cc
 ##################
 %%%%
 %s is empowered by the presence of the orb!
-
+%s ist durch die Anwesenheit der Kugel ermächtigt!
 %%%%
 %s basks in your mutagenic energy and changes!
-
+%s sonnt sich in Eurer mutagenen Energie und verändert sich!
 %%%%
 %s basks in the mutagenic energy from its kin and changes!
-
+%s sonnt sich in der mutagenen Energie seiner Verwandten und verändert sich!
 %%%%
 %s basks in the mutagenic energy and changes!
-
+%s sonnt sich in der mutagenen Energie und verändert sich!
 %%%%
 %s splits.
 %s teilt sich.
 %%%%
 Two slime creatures merge to form %s.
-Zwei Schleimkreaturen verschmelzen zu%s.
+Zwei Schleimkreaturen verschmelzen zu {acc}%s.
 %%%%
 Something merges into %s, and it vanishes!
-
+Etwas verschmilzt mit {dat}%s, und verschwindet!
 %%%%
 %s merges with something you can't see.
-
+%s verschmilzt mit etwas, das Ihr nicht sehen könnt.
 %%%%
 A cacophony of accursed wailing tears at your sanity!
-
+Eine Kakophonie verfluchtes Gejammer zerreißt Euren Verstand!
 %%%%
 A deafening chorus of shrieks assaults your mind!
-
+Ein ohrenbetäubender Chor von Schreien überfällt Euren Verstand!
 %%%%
 A chorus of shrieks assaults your mind.
-
+Ein Chor von Schreien überfällt Euren Verstand!
 %%%%
 The starcursed mass shrieks in your mind.
-
+Die sternenverfluchte Masse kreischt in Eurem Verstand.
 %%%%
 %s writhes in pain as voices assail %s mind.
-
-%%%%
-accursed screaming
-
+%s krümmt sich vor Schmerz, während Stimmen den Verstand attackieren.
 %%%%
 %s sacrifices itself to reknit %s!
-%s opfert sich, um%s neu zu stricken!
+%s opfert sich, um {acc}%s neu zu stricken!
 %%%%
-%s assumes the form of %s%s!
-%s nimmt die Form von%s%s an!
+%s assumes the form of %s and becomes anchored to this world!
+%s nimmt die Form {gen}%s an und wird in dieser Welt verankert!
 %%%%
-" and becomes anchored to this world"
-
+%s assumes the form of %s!
+%s nimmt die Form {gen}%s an!
 %%%%
 Angry insects surge out from beneath %s foliage!
-Wütende Insekten schießen unter%s Laub hervor!
+Wütende Insekten schießen aus dem Laub {gen}%s hervor!
 %%%%
 %s flows with the water.
-
+%s fließt mit dem Wasser.
 %%%%
 %s flows through the trees.
-
+%s fließt durch die Bäume.
 %%%%
 %s overheats!
-
+%s überhitzt!
 %%%%
 
 ##################
