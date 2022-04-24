@@ -10992,38 +10992,35 @@ Ihr hört ein zischendes Geräusch.
 # mon-behv.cc
 ##################
 %%%%
-%s attack snaps %s out of %s fear.
-%s Angriff löst%s aus%s Angst.
+The attack snaps %s out of %s fear.
+Der Angriff reißt {acc}%s aus der Angst.
 %%%%
-the
-
+@The_monster@ returns to your side!
+@The_monster@ kehrt an Eure Seite zurück!
 %%%%
-PLAIN:@The_monster@ returns to your side!
-
-%%%%
-PLAIN:Cornered, @The_monster@ turns to fight!
-
+Cornered, @The_monster@ turns to fight!
+In die Enge getrieben, wendet sich @the_monster@ dem Kampf zu!
 %%%%
 (press <w>%c</w> on the <w>%s</w>bility menu to convert to Beogh)
-(Drücke <w>%c</w> im Menü <w>%s</w>, um nach Beogh zu konvertieren.)
+(<w>%c</w> im F<w>%s</w>eigkeitsmenü drücken, um nach Beogh zu konvertieren.)
 %%%%
 %s passes through the gate.
-
+%s geht durch das Tor.
 %%%%
 %s goes up the stairs.
-
+%s geht die Treppe hinauf.
 %%%%
 %s goes down the stairs.
-
+%s geht die Treppe hinunter.
 %%%%
 %s takes the escape hatch.
-
+%s nimmt die Fluchtluke.
 %%%%
 %s goes down the shaft.
-
+%s geht den Schacht hinunter.
 %%%%
 %s jumps into the shaft.
-
+%s springt in den Schacht.
 %%%%
 
 ##################
@@ -11034,7 +11031,7 @@ PLAIN:Cornered, @The_monster@ turns to fight!
 
 %%%%
 %s liquefies the ground around %s!
-%s verflüssigt den Boden um%s!
+%s verflüssigt den Boden um %s!
 %%%%
 %s casts a cantrip, but nothing happens.
 
@@ -18453,6 +18450,9 @@ magical contamination
 
 %%%%
 You become %stransparent, but the glow from %s %s prevents you from becoming completely invisible.
+
+%%%%
+the
 
 %%%%
 You fade into invisibility!

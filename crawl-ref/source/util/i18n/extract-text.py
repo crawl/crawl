@@ -489,6 +489,9 @@ for filename in files:
                     if string != "" and (string[0] == " " or string[0] == "'"):
                         string = '%s' + string
 
+                # strip channel information
+                string = re.sub(r'(PLAIN|SOUND|VISUAL|((VISUAL )?WARN|ENCHANT|SPELL)):', '', string)
+
                 if "\\n" in string:
                     # split lines
                     substrings = string.split("\\n")
