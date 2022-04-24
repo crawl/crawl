@@ -26,6 +26,19 @@ lernaean_hydra07
 lernaean_hydra08
 lernaean_hydra09
 lernaean_hydra10
+# This is exceptionally here so as to be grouped with the large monsters
+%sdir mon/undead/zombies
+zombie_lernaean_hydra01 MONS_LERNAEAN_HYDRA_ZOMBIE
+zombie_lernaean_hydra02
+zombie_lernaean_hydra03
+zombie_lernaean_hydra04
+zombie_lernaean_hydra05
+zombie_lernaean_hydra06
+zombie_lernaean_hydra07
+zombie_lernaean_hydra08
+zombie_lernaean_hydra09
+zombie_lernaean_hydra10
+%sdir mon/unique
 royal_jelly MONS_ROYAL_JELLY
 serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA
 serpent_of_hell-coc MONS_SERPENT_OF_HELL_COCYTUS
@@ -49,6 +62,8 @@ meat_hydra MONS_MEAT_HYDRA
 scourge MONS_SCOURGE
 meatlord MONS_MEATLORD
 unspeakable MONS_UNSPEAKABLE
+
+%include dc-demon.txt
 
 ### Animals
 %sdir mon/animals
