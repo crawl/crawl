@@ -10886,7 +10886,7 @@ You hear a zap.
 Ihr hört ein Zappen.
 %%%%
 %s is stunned by your conviction and fails to attack.
-%s ist durch Eure Überzeugung betäubt und kann nicht angreifen.
+%s wird durch Eure Überzeugung betäubt und kann nicht angreifen.
 %%%%
 You redirect %s's attack!
 Ihr lenkt den Angriff {gen}%s um!
@@ -10901,7 +10901,7 @@ You hear a loud crackle.
 Ihr hört ein lautes Knistern.
 %%%%
 %s is lost in a daze.
-%s wird benebelt.
+%s ist benebelt.
 %%%%
 %s is distracted by your dazzling golden aura.
 %s wird durch Eure schillernde goldene Aura abgelenkt.
