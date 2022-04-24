@@ -11288,12 +11288,6 @@ the entropic weave
 at
 
 %%%%
-NONEXISTENT FOE
-
-%%%%
-DEAD FOE
-
-%%%%
 next to
 
 %%%%
@@ -11301,12 +11295,6 @@ thin air
 
 %%%%
 past
-
-%%%%
-NON TARGETED BEAM
-
-%%%%
-INVALID BEAM
 
 %%%%
 %s throws %s at %s!

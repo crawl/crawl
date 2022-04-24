@@ -6713,7 +6713,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
                                 bool gestured)
 {
     targ_prep = "at";
-    target    = "nothing";
+    target    = "nothing"; // noloc
 
     bolt tracer = pbolt;
     // For a targeted but rangeless spell make the range positive so that
@@ -6723,17 +6723,17 @@ static void _speech_fill_target(string& targ_prep, string& target,
     fire_tracer(mons, tracer);
 
     if (pbolt.target == you.pos())
-        target = "you";
+        target = "you"; // noloc
     else if (pbolt.target == mons->pos())
         target = mons->pronoun(PRONOUN_REFLEXIVE);
     // Monsters should only use targeted spells while foe == MHITNOT
     // if they're targeting themselves.
     else if (mons->foe == MHITNOT && !mons_is_confused(*mons, true))
-        target = "NONEXISTENT FOE";
+        target = "NONEXISTENT FOE"; // noloc
     else if (!invalid_monster_index(mons->foe)
              && env.mons[mons->foe].type == MONS_NO_MONSTER)
     {
-        target = "DEAD FOE";
+        target = "DEAD FOE"; // noloc
     }
     else if (in_bounds(pbolt.target) && you.see_cell(pbolt.target))
     {
@@ -6933,9 +6933,9 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     string beam_name;
     if (!targeted)
-        beam_name = "NON TARGETED BEAM";
+        beam_name = "NON TARGETED BEAM"; // noloc
     else if (pbolt.name.empty())
-        beam_name = "INVALID BEAM";
+        beam_name = "INVALID BEAM"; // noloc
     else
         beam_name = pbolt.get_short_name();
 
