@@ -364,10 +364,11 @@ for filename in files:
                 if re.search(r'\bbanish\s*\(', line):
                     continue
 
-                # ouch and hurt strings just go to score file
+                # score file stuff
                 if re.search(r'\bouch\s*\(', line) or re.search(r'\bhurt\s*\(', line) \
                    or re.search(r'\bparalyse\s*\(', line) \
-                   or re.search(r'\bpetrify\s*\(', line):
+                   or re.search(r'\bpetrify\s*\(', line) \
+                   or 'aux_source' in line:
                     continue
 
                 # skip tags/keys
@@ -533,7 +534,7 @@ for filename in files:
             continue
 
         # ignore identifiers
-        if '_' in string and re.match(r'^[A-Za-z0-9_\-]+$', string):
+        if '_' in string and re.match(r'^[A-Za-z0-9_\- ]+$', string):
             continue
         if 'Gozag bribe' in string or 'Gozag permabribe' in string:
             continue

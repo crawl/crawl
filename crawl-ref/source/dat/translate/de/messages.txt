@@ -11246,9 +11246,6 @@ Ihr spürt eine böse Präsenz.
 %s shimmers and seems to become three!
 
 %%%%
-" blink_other_close"
-
-%%%%
 Walls emerge from the floor!
 Wände tauchen aus dem Boden auf!
 %%%%
@@ -12084,9 +12081,6 @@ By Zin's power, the fiery explosion is contained.
 ##################
 %%%%
 high tier
-
-%%%%
-tower shield_louise
 
 %%%%
 
@@ -13275,9 +13269,6 @@ some gold
 
 %%%%
 DEAD MONSTER
-
-%%%%
-INVALID YOU_FAULTLESS
 
 %%%%
 pincer
@@ -23989,14 +23980,6 @@ toss away
 %%%%
 
 ##################
-# tile-player-flags.h
-##################
-%%%%
-TILEP_SHOW_EQUIP must be distinct from all player tile enums
-
-%%%%
-
-##################
 # tiledoll.cc
 ##################
 %%%%
@@ -25142,21 +25125,6 @@ Ihr könnt dieses Level nicht kommentieren.
 ##################
 %%%%
 Failed to initialise SDL: %s
-
-%%%%
-SDL_GL_DEPTH_SIZE 8
-
-%%%%
-SDL_GL_RED_SIZE 8
-
-%%%%
-SDL_GL_GREEN_SIZE 8
-
-%%%%
-SDL_GL_BLUE_SIZE 8
-
-%%%%
-SDL_GL_ALPHA_SIZE 8
 
 %%%%
 Failed to create window: %s
