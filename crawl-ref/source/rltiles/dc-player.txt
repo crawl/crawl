@@ -2,7 +2,6 @@
 %startvalue TILE_MAIN_MAX main
 %prefix TILEP
 
-%include dc-demon.txt
 %include dc-mon.txt
 
 effect/net_trap TRAP_NET
