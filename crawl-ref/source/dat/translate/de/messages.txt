@@ -1715,22 +1715,13 @@ Euer Wille ist überwältigt!
 This spell isn't strong enough to banish yourself.
 Dieser Zauber ist nicht stark genug, um Euch selbst zu verbannen.
 %%%%
-by nerve-wracking pain
-
-%%%%
 Pain shoots through your body!
 Schmerz schießt durch Euren Körper!
 %%%%
 You convulse!
 Ihr krümmt Euch!
 %%%%
-by dispel undead
-
-%%%%
 Your mind is blasted!
-
-%%%%
-mindburst bolt
 
 %%%%
 You feel a momentary urge to oink.
@@ -2565,9 +2556,6 @@ Clouds appear around you!
 Wolken erscheinen um Euch herum!
 %%%%
 electrical discharge
-
-%%%%
-the storm
 
 %%%%
 You hear a mighty peal of thunder!
@@ -11031,7 +11019,7 @@ In die Enge getrieben, wendet sich @the_monster@ dem Kampf zu!
 
 %%%%
 %s liquefies the ground around %s!
-%s verflüssigt den Boden um %s!
+%s verflüssigt den Boden um sich herum!
 %%%%
 %s casts a cantrip, but nothing happens.
 
@@ -11063,38 +11051,17 @@ Wurzeln brachen aus der Erde hervor!
 The grasping roots grab you!
 Die greifenden Wurzeln packen Euch!
 %%%%
-blast of fiery breath
-
-%%%%
-blast of searing breath
-
-%%%%
-blast of chaotic breath
-
-%%%%
-blast of icy breath
-
-%%%%
-blast of chilling breath
-
-%%%%
 %s goes into a battle-frenzy!
 %s gerät in einen Kampfrausch!
 %%%%
-%s %s go into a battle-frenzy!
-%s %s geraten in einen Kampfrausch!
-%%%%
-Your
-
-%%%%
-The
-
+%s go into a battle-frenzy!
+%s geraten in einen Kampfrausch!
 %%%%
 %s activates a sealing rune.
 %s aktiviert eine Versiegelungsrune.
 %%%%
-Someone
-
+Someone activates a sealing rune.
+Jemand aktiviert eine Versiegelungsrune.
 %%%%
 The doors slam shut!
 Die Türen schlagen zu!
@@ -11105,17 +11072,11 @@ Eine Tür schlägt zu!
 You are pushed out of the doorway!
 Ihr werdet aus der Tür geschoben!
 %%%%
-creeping frost
-
-%%%%
-flame surge
-
-%%%%
-%s calls on %s to defend %s!
-%s fordert%s auf,%s zu verteidigen!
+The queen bee calls on %s to defend her!
+Die Bienenkönigin ruft %s auf, sie zu verteidigen!
 %%%%
 %s goads %s on!
-%s stachelt%s an!
+%s stachelt %s an!
 %%%%
 Sorry, this spell isn't supported for dummies!
 Sorry, dieser Zauber wird für Dummies nicht unterstützt!
@@ -11156,14 +11117,11 @@ Zins Macht schützt Euren Mitkrieger vor böser Magie!
 Send 'em back where they came from!
 Schick sie zurück, wo sie herkommen!
 %%%%
-%s %s frozen%s
-
-%%%%
 %s attempts to bespell you!
 
 %%%%
 %s draws you further into %s thrall.
-%s zieht Euch weiter in%s Thrall.
+%s zieht Euch weiter in die Verzauberung.
 %%%%
 %s radiates an aura of fear!
 
@@ -11180,14 +11138,14 @@ Schreckliche Wunden breiten sich über mehr %s Körper aus!
 Terrible wounds open up all over %s body!
 Schreckliche Wunden öffnen sich am ganzen Körper %s!
 %%%%
-" and %s"
+A blast of power from the earth strikes %s!
 
 %%%%
-" and the adjacent constructs"
+A blast of power from the earth and the adjacent constructs strikes %s!
 
 %%%%
-A blast of power from the earth%s strikes %s!
-Ein Stromstoß von der Erde%s trifft %s!
+A blast of power from the earth and %s strikes %s!
+
 %%%%
 You are overwhelmed by glittering dream dust!
 
@@ -11195,37 +11153,37 @@ You are overwhelmed by glittering dream dust!
 The dream sheep are wreathed in dream dust.
 
 %%%%
-The dream sheep shake%s wool and sparkle%s.
+The dream sheep shakes its wool and sparkles.
 
 %%%%
-s its
+The dream sheep shake their wool and sparkle.
 
 %%%%
-" their"
+The dream sheep ruffles its wool and motes of dream dust sparkle, to no effect.
 
 %%%%
-The dream sheep ruffle%s wool and motes of dream dust sparkle, to no effect.
+The dream sheep ruffle their wool and motes of dream dust sparkle, to no effect.
 
 %%%%
-As the sheep sparkle%s and sway%s, %s falls asleep.
+As the sheep sparkles and sways, %s falls asleep.
 
 %%%%
-The dream sheep attempt%s to lull %s to sleep.
+As the sheep sparkle and sway, %s falls asleep.
+
+%%%%
+The dream sheep attempts to lull %s to sleep.
+
+%%%%
+The dream sheep attempt to lull %s to sleep.
 
 %%%%
 " You feel drowsy..."
 
 %%%%
-A freezing vortex appears %s%s%s!
+A freezing vortex appears around %s!
 
 %%%%
-"around "
-
-%%%%
-"and lifts "
-
-%%%%
-" up!"
+A freezing vortex appears and lifts %s up!
 
 %%%%
 A freezing vortex appears out of thin air!
@@ -11282,13 +11240,10 @@ Ihr spürt eine böse Präsenz.
 %s squirts a massive cloud of ink into the water!
 
 %%%%
-%s shimmers and seems to become %s!
-%s schimmert und scheint%s zu werden!
-%%%%
-two
+%s shimmers and seems to become two!
 
 %%%%
-three
+%s shimmers and seems to become three!
 
 %%%%
 " blink_other_close"
@@ -11315,9 +11270,6 @@ Ein elektrisches Summen erfüllt die Luft.
 A wave of cold passes over you.
 Eine Kältewelle zieht über Euch.
 %%%%
-%s shimmers and seems to become two!
-
-%%%%
 %s begins repelling missiles!
 
 %%%%
@@ -11334,18 +11286,6 @@ the entropic weave
 
 %%%%
 %s curls into a ball and begins rolling!
-
-%%%%
-" cast"
-
-%%%%
-" targeted"
-
-%%%%
-"silent "
-
-%%%%
-"unseen "
 
 %%%%
 at
@@ -11372,31 +11312,22 @@ NON TARGETED BEAM
 INVALID BEAM
 
 %%%%
-at %s
+%s throws %s at %s!
 
 %%%%
-%s throws %s %s!
-%s wirft%s%s!
-%%%%
-Hit by %s thrown by %s
+%s throws %s out of sight!
 
 %%%%
-%s unleashes a %s howl, and it begins to echo in your mind!
-%s entfesselt ein%s Heulen und es beginnt in Eurem Kopf zu widerhallen!
-%%%%
-silent
+%s unleashes a terrible howl, and it begins to echo in your mind!
 
 %%%%
-terrible
+%s unleashes a silent howl, and it begins to echo in your mind!
 
 %%%%
-Some walls %s!
-Einige Wände%s!
-%%%%
-begin to move on their own
+Some walls begin to move on their own!
 
 %%%%
-crumble away
+Some walls crumble away!
 
 %%%%
 You hear rumbling.
@@ -12145,21 +12076,6 @@ explosion is contained
 
 %%%%
 By Zin's power, the fiery explosion is contained.
-
-%%%%
-ignited by their inner flame
-
-%%%%
-ignited by themself
-
-%%%%
-ignited by their pet
-
-%%%%
-set off by themself
-
-%%%%
-set off by their pet
 
 %%%%
 
@@ -18768,12 +18684,6 @@ owner
 # ranged-attack.cc
 ##################
 %%%%
-Shot with a%s %s by %s
-
-%%%%
-Hit by a%s %s thrown by %s
-
-%%%%
 block
 
 %%%%
@@ -21480,9 +21390,6 @@ Ihr könnt den Sturm nicht auf %s setzen.
 You call forth a pillar of damnation!
 Ihr ruft eine Säule der Verdammnis hervor!
 %%%%
-arc of chain lightning
-
-%%%%
 " (and %lu other bad targets)"
 
 %%%%
@@ -21493,9 +21400,6 @@ Lightning arcs from %s %s!
 
 %%%%
 arc of chaos
-
-%%%%
-chain of chaos
 
 %%%%
 The %s grounds out.
@@ -21620,9 +21524,6 @@ stone arch
 %%%%
 You can't deconstruct that!
 Das könnt Ihr nicht dekonstruieren!
-%%%%
-by Lee's Rapid Deconstruction
-
 %%%%
 The %s shatters!
 Das%s zerbricht!
@@ -22005,9 +21906,6 @@ Something is bathed in an unholy light!
 Etwas ist in ein unheiliges Licht getaucht!
 %%%%
 golden flame
-
-%%%%
-the Shining One's cleansing flame
 
 %%%%
 
@@ -24316,9 +24214,6 @@ Your body shudders with the violent release of wild energies!
 magical storm
 
 %%%%
-a magical explosion
-
-%%%%
 Your body momentarily shudders from a surge of wild energies until Zin's power calms it.
 
 %%%%
@@ -24817,6 +24712,9 @@ Ihr hört ein lautes "Zot"!
 %%%%
 %s shaft crumbles and collapses.
 %s Welle bröckelt und bricht zusammen.
+%%%%
+The
+
 %%%%
 The web tears apart.
 Das Netz zerreißt.
@@ -26740,9 +26638,6 @@ Euer Körper ist voller Verzerrungsenergie.
 The area is suffused with divine lightning!
 
 %%%%
-Xom's lightning strike
-
-%%%%
 scenery
 
 %%%%
@@ -26767,6 +26662,9 @@ Several
 %s%s door%s slam%s shut
 
 %%%%
+two
+
+%%%%
 several
 
 %%%%
@@ -26780,9 +26678,6 @@ nother
 
 %%%%
 fake destruction
-
-%%%%
-Xom's destruction
 
 %%%%
 good enchant monster

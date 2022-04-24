@@ -4203,9 +4203,7 @@ You feel a sudden, passing aversion to salt.
 
 Your skin takes on a slight green cast.
 
-# Doesn't work for Naga and transformed Merfolk.
-# There's a hack in mon-cast.cc to prevent it from being used in those cases.
-Your legs wobble like jelly.
+You wobble like jelly.
 
 w:5
 You feel a sudden urge to swivel your nonexistent eyestalks around.

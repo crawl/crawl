@@ -264,6 +264,9 @@ der Schattensplitter
 the vile air
 die widerliche Luft
 %%%%
+the flame surge
+die Flammenwoge
+%%%%
 
 #################################
 # full names without article
@@ -525,6 +528,9 @@ Schattensplitter
 %%%%
 vile air
 widerliche Luft
+%%%%
+flame surge
+Flammenwoge
 %%%%
 
 #################################
