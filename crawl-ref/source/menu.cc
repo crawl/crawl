@@ -76,9 +76,11 @@ public:
 #endif
     {
 #ifdef USE_TILE_LOCAL
-        const ImageManager *m_image = tiles.get_image_manager();
+        // this seems ... non-ideal?? (pattern occurs in a few other places,
+        // precision menu, playerdoll, ...)
+        const ImageManager *image = tiles.get_image_manager();
         for (int i = 0; i < TEX_MAX; i++)
-            m_tile_buf[i].set_tex(&m_image->m_textures[i]);
+            m_tile_buf[i].set_tex(&image->get_texture(static_cast<TextureID>(i)));
 #else
         expand_h = true;
 #endif

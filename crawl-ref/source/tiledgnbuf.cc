@@ -13,17 +13,17 @@
 #include "tilepick.h"
 
 DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
-    m_buf_floor(&im->m_textures[TEX_FLOOR]),
-    m_buf_wall(&im->m_textures[TEX_WALL]),
-    m_buf_feat(&im->m_textures[TEX_FEAT]),
-    m_buf_feat_trans(&im->m_textures[TEX_FEAT], 17),
-    m_buf_doll(&im->m_textures[TEX_PLAYER], 17),
-    m_buf_main_trans(&im->m_textures[TEX_DEFAULT], 17),
-    m_buf_main(&im->m_textures[TEX_DEFAULT]),
-    m_buf_spells(&im->m_textures[TEX_GUI]),
-    m_buf_skills(&im->m_textures[TEX_GUI]),
-    m_buf_commands(&im->m_textures[TEX_GUI]),
-    m_buf_icons(&im->m_textures[TEX_ICONS])
+    m_buf_floor(&im->get_texture(TEX_FLOOR)),
+    m_buf_wall(&im->get_texture(TEX_WALL)),
+    m_buf_feat(&im->get_texture(TEX_FEAT)),
+    m_buf_feat_trans(&im->get_texture(TEX_FEAT), 17),
+    m_buf_doll(&im->get_texture(TEX_PLAYER), 17),
+    m_buf_main_trans(&im->get_texture(TEX_DEFAULT), 17),
+    m_buf_main(&im->get_texture(TEX_DEFAULT)),
+    m_buf_spells(&im->get_texture(TEX_GUI)),
+    m_buf_skills(&im->get_texture(TEX_GUI)),
+    m_buf_commands(&im->get_texture(TEX_GUI)),
+    m_buf_icons(&im->get_texture(TEX_ICONS))
 {
 }
 

@@ -1056,7 +1056,8 @@ void Image::_render()
 #ifdef USE_TILE_LOCAL
     scissor_stack.push(m_region);
     TileBuffer tb;
-    tb.set_tex(&tiles.get_image_manager()->m_textures[get_tile_texture(m_tile.tile)]);
+    tb.set_tex(&tiles.get_image_manager()->get_texture(
+                                            get_tile_texture(m_tile.tile)));
 
     for (int y = m_region.y; y < m_region.y+m_region.height; y+=m_th)
         for (int x = m_region.x; x < m_region.x+m_region.width; x+=m_tw)
@@ -1747,7 +1748,7 @@ void Checkbox::_render()
 
     const int x = m_region.x, y = m_region.y;
     TileBuffer tb;
-    tb.set_tex(&tiles.get_image_manager()->m_textures[TEX_GUI]);
+    tb.set_tex(&tiles.get_image_manager()->get_texture(TEX_GUI));
     tb.add(tile, x, y, 0, 0, false, check_h, 1.0, 1.0);
     tb.draw();
 #else
@@ -2358,8 +2359,9 @@ SizeReq Dungeon::_get_preferred_size(Direction dim, int /*prosp_width*/)
 PlayerDoll::PlayerDoll(dolls_data doll)
 {
     m_save_doll = doll;
+    const ImageManager *image = tiles.get_image_manager();
     for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].set_tex(&tiles.get_image_manager()->m_textures[i]);
+        m_tile_buf[i].set_tex(&image->get_texture(static_cast<TextureID>(i)));
     _pack_doll();
 }
 

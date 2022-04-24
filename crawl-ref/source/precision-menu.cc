@@ -910,8 +910,9 @@ void FormattedTextItem::render()
 #ifdef USE_TILE_LOCAL
 TextTileItem::TextTileItem()
 {
+    const ImageManager *image = tiles.get_image_manager();
     for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].set_tex(&tiles.get_image_manager()->m_textures[i]);
+        m_tile_buf[i].set_tex(&image->get_texture(static_cast<TextureID>(i)));
     m_unit_height_pixels = max<int>(m_unit_height_pixels, TILE_Y);
 }
 
