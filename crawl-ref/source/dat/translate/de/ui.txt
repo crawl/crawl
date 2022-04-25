@@ -799,8 +799,9 @@ sehr schnell
 quick
 schnell
 %%%%
-slow
-langsam
+# duplicate of monster status
+#slow
+#langsam
 %%%%
 very slow
 sehr langsam

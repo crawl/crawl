@@ -746,8 +746,9 @@ Winterschlaf
 sleep
 schlafen
 %%%%
-berserk
-Berserker
+# duplicate of monster status
+#berserk
+#Berserker
 %%%%
 visual effects
 Visuelle Effekte

@@ -1,0 +1,561 @@
+###############################################################################
+#
+# Monster properties
+#
+# Used in a couple of places:
+#  1. When targeting
+#  2. When examining with xv in brackets after the monster name
+#  3. On mouse hover, in the sentence: "This monster is %s."
+#  4. In a message when monster comes into view
+#
+# For #3, a custom sentence is used for some props, instead of sticking the
+# property string into the generic sentence above.
+#
+# Additionally, some properties have a different short form (some even have
+# singular and plural short forms), but all the above places use the long form,
+# so not sure where the short forms are used.
+#
+###############################################################################
+
+%%%%
+friendly
+freundlich
+%%%%
+peaceful
+friedlich
+%%%%
+neutral
+neutral
+%%%%
+wandering
+wandernd
+%%%%
+charmed
+verzaubert
+%%%%
+regenerating
+regenerierend
+%%%%
+engulfed
+verschlungen
+%%%%
+paralysed
+gelähmt
+%%%%
+petrified
+versteinert
+%%%%
+petrifying slowly
+langsam versteinernd
+%%%%
+# short form
+petrifying
+versteinernd
+%%%%
+confused
+verwirrt
+%%%%
+# hexed - long form. This obviously doesn't work in a sentence, but it
+# doesn't seem to be used at all, so probably doesn't matter.
+control wrested from you
+Kontrolle von Euch entrissen
+%%%%
+# hexed - short form
+hexed
+verhext
+%%%%
+summoned
+beschworen
+%%%%
+durably summoned
+Dauerhaft beschworen
+%%%%
+expiring
+ablaufend
+%%%%
+mesmerising
+hypnotisierend
+%%%%
+berserk
+berserk
+%%%%
+fast
+schnell
+%%%%
+rolling
+rollend
+%%%%
+# duplicate of zap
+#inner flame
+#innere Flamme
+%%%%
+# reflecting damage - long form
+# not used in sentence
+reflecting injuries
+reflektiert Verletzung
+%%%%
+# reflecting damage - short singular
+reflects damage
+reflektiert Schaden
+%%%%
+# reflecting damage - short plural
+reflect damage
+reflektieren Schaden
+%%%%
+soul bound
+Seele gebunden
+%%%%
+# short form plural
+souls bound
+Seelen gebunden
+%%%%
+strong
+stark
+%%%%
+spells empowered
+Zaubersprüche gestärkt
+%%%%
+# short form
+empowered
+gestärkt
+%%%%
+fully charged
+voll aufgeladen
+%%%%
+# fully charged - short form
+charged
+aufgeladen
+%%%%
+partially charged
+teilweise aufgeladen
+%%%%
+# partially charged - short form
+charging
+aufgeladen
+%%%%
+# agile - long form
+unusually agile
+ungewöhnlich agil
+%%%%
+# agile - short form
+agile
+agil
+%%%%
+# swift - long form
+covering ground quickly
+rasch bewegend
+%%%%
+# swift - short form
+swift
+rasch
+%%%%
+stilling the winds
+die Winde stillend
+%%%%
+stilling wind
+die Winde stillend
+%%%%
+# silencing - long form
+radiating silence
+Stille ausstrahlend
+%%%%
+# silencing - short form
+silencing
+Stille ausstrahlend
+%%%%
+ready to howl
+bereit zu heulen
+%%%%
+# ready to howl - short form
+can howl
+kann heulen
+%%%%
+brilliance aura
+strahlende Aura
+%%%%
+# brilliance aura - short form plural
+brilliance auras
+Brillanz Auren
+%%%%
+surrounded by a freezing vortex
+umgeben von einem eisigen Wirbel
+%%%%
+vortex
+Wirbel
+%%%%
+vortices
+Wirbel
+%%%%
+# vortex cooldown - long form
+surrounded by restless winds
+umgeben von unruhigen Winden
+%%%%
+# vortex cooldown - short form
+gusty
+stürmisch
+%%%%
+frenzied and insane
+rasend und wahnsinnig
+%%%%
+insane
+wahnsinnig
+%%%%
+inspiring fear
+Angst einflößend
+%%%%
+scary
+beängstigend
+%%%%
+chanting recall
+Rückruf skandierend
+%%%%
+repelling missiles
+Geschosse repellierend
+%%%%
+# short form singular
+repels missiles
+repelliert Geschosse
+%%%%
+# short form plural
+repel missiles
+repellieren abwehrend
+%%%%
+radiating toxic energy
+giftige Energie ausstrahlend
+%%%%
+# short form singular
+toxic aura
+toxische Aura
+%%%%
+# short form plural
+toxic auras
+toxische Auren
+%%%%
+concentrated venom
+konzentriertes Gift
+%%%%
+# black mark - long form
+absorbing vital energies
+Lebensenergien absorbierend
+%%%%
+black mark
+schwarzer Fleck
+%%%%
+black marks
+Schwarze Flecken
+%%%%
+# icemail - long form
+surrounded by an icy envelope
+von einem eisigen Umschlag umgebend
+%%%%
+icemail
+Eisrüstung
+%%%%
+unusually resistant
+ungewöhnlich resistent
+%%%%
+resistant
+resistent
+%%%%
+slightly transparent
+leicht transparent
+%%%%
+invisible
+unsichtbar
+%%%%
+strong-willed
+willensstark
+%%%%
+sheltered from injuries
+vor Verletzungen geschützt
+%%%%
+sheltered
+behütet
+%%%%
+incited by Gozag
+angestiftet von Gozag
+%%%%
+incited
+angestiftet
+%%%%
+surrounded by thunder
+umgeben von Donner
+%%%%
+surrounded by flames
+umgeben von Flammen
+%%%%
+surrounded by chaotic energy
+umgeben von chaotischer Energie
+%%%%
+surrounded by mutagenic energy
+umgeben von mutagener Energie
+%%%%
+surrounded by fog
+umgeben von Nebel
+%%%%
+surrounded by freezing clouds
+umgeben von gefrierenden Wolken
+%%%%
+surrounded by negative energy
+umgeben von negativer Energie
+%%%%
+surrounded by acidic fog
+umgeben von säurehaltigen Nebeln
+%%%%
+surrounded by foul miasma
+umgeben von fauligem Miasma
+%%%%
+# short form of all the "surrounded by..." props
+clouds
+Wolken
+%%%%
+possessable
+besitzbar
+%%%%
+entangled in a net
+in einem Netz verstrickt
+%%%%
+# short form
+caught
+gefangen
+%%%%
+entangled in a web
+in einem Netz verstrickt
+%%%%
+# short form
+webbed
+verstrickt
+%%%%
+asleep
+schlafend
+%%%%
+# the equivalent of asleep for monsters that don't sleep (e.g. Orbs of Fire)
+dormant
+ruhend
+%%%%
+unaware
+ahnungslos
+%%%%
+blind
+blind
+%%%%
+infested
+verseucht
+%%%%
+stupefied
+betäubt
+%%%%
+withering away
+verwelkend
+%%%%
+# short form
+withering
+verwelkend
+%%%%
+crumbling away
+wegbröckelnd
+%%%%
+# short form
+crumbling
+bröckelnd
+%%%%
+lost in madness
+im Wahnsinn verloren
+%%%%
+# short form
+mad
+verrückt
+%%%%
+fleeing
+fliehend
+%%%%
+dazed
+benommen
+%%%%
+mute
+stumm
+%%%%
+encased in ice
+in Eis eingeschlossen
+%%%%
+# short form
+frozen
+eingefroren
+%%%%
+asphyxiating
+erstickend
+%%%%
+covered in liquid flames
+mit flüssigen Flammen bedeckt
+%%%%
+# short form
+burning
+brennend
+%%%%
+poisoned
+vergiftet
+%%%%
+very poisoned
+stark vergiftet
+%%%%
+extremely poisoned
+extrem vergiftet
+%%%%
+slow
+langsam
+%%%%
+catching @possessive@ breath
+Atem anhaltend
+%%%%
+# short form
+catching breath
+Atem anhaltend
+%%%%
+weak-willed
+willensschwach
+%%%%
+more vulnerable to fire
+anfälliger für Feuer
+%%%%
+# short form
+inflammable
+entflammbar
+%%%%
+more vulnerable to poison
+anfälliger für Gift
+%%%%
+# short form
+easily poisoned
+leicht vergiftet
+%%%%
+misshapen and mutated
+missgebildet und mutiert
+%%%%
+# short form
+misshapen
+missgebildet
+%%%%
+covered in acid
+mit Säure überzogen
+%%%%
+# short form
+corroded
+korrodiert
+%%%%
+# flayed - long form
+covered in terrible wounds
+mit schrecklichen Wunden bedeckt
+%%%%
+# short form
+flayed
+gehäutet
+%%%%
+constricted by roots
+von Wurzeln eingeschnürt
+%%%%
+# short form
+rooted
+verwurzelt
+%%%%
+constricted by zombie hands
+von Zombiehänden eingeklemmt
+%%%%
+# short form
+clutched
+umklammert
+%%%%
+skewered by barbs
+durch Widerhaken aufgespießt
+%%%%
+# short form
+skewered
+aufgespießt
+%%%%
+sick
+krank
+%%%%
+weak
+schwach
+%%%%
+magic-sapped
+magisch gezehrt
+%%%%
+# corona - long form
+softly glowing
+sanft glühend
+%%%%
+corona
+Korona
+%%%%
+coronas
+Koronen
+%%%%
+waterlogged
+wasserdurchtränkt
+%%%%
+# anchored - long form
+unable to translocate
+translozierensunfähig
+%%%%
+anchored
+verankert
+%%%%
+covering ground slowly
+langsam bewegend
+%%%%
+# short form
+struggling
+zappelnd
+%%%%
+idealised
+idealisiert
+%%%%
+disembodied soul
+entkörperlichte Seele
+%%%%
+ally target
+Ziel eines Verbündeten
+%%%%
+# has custom sentence for #3
+hasn't noticed you
+hat Euch nicht bemerkt
+%%%%
+lightly drained
+leicht entleert
+%%%%
+heavily drained
+stark entleert
+%%%%
+# short form for lightly/heavily drained
+drained
+entleert
+%%%%
+
+# affected by Usk pain bond
+%%%%
+sharing its pain
+Schmerz beteiligend
+%%%%
+sharing her pain
+Schmerz beteiligend
+%%%%
+sharing his pain
+Schmerz beteiligend
+%%%%
+sharing their pain
+Schmerz beteiligend
+%%%%
+sharing @possessive@ pain
+Schmerz beteiligend
+%%%%
+# short form
+pain bonded
+Schmerz verbunden
+%%%%
+
+# these ones are duplicates of item properties
+%%%%
+#curare
+#Curare
+%%%%
+
