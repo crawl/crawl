@@ -216,10 +216,18 @@ for filename in files:
         lines = []
 
         # join split lines and remove comments
+        ignoring = False
         for line in lines_raw:
 
             # ignore strings explicitly marked as not to be extracted
             if 'noloc' in line:
+                if 'noloc section start' in line:
+                    ignoring = True
+                if 'noloc section end' in line:
+                    ignoring = False
+                continue
+
+            if ignoring:
                 continue
 
             # remove comment

@@ -11608,29 +11608,17 @@ Nicht mehr unter Kirkes Bann, die Schweine nehmen wieder ihre ursprüngliche For
 # mon-ench.cc
 ##################
 %%%%
-You %sdetect the %s %s.
-Ihr %serkennt %s %s.
-%%%%
-"can no longer "
+You detect %s.
 
 %%%%
-hexed
+You can no longer detect %s.
 
 %%%%
-charmed
+Zombie hands grab %s.
 
 %%%%
-bribed
+Roots grab %s.
 
-%%%%
-Zombie hands
-
-%%%%
-Roots
-
-%%%%
-%s grab %s.
-%s schnapp%s.
 %%%%
 %s is no longer moving quickly.
 
@@ -11638,13 +11626,10 @@ Roots
 %s becomes audible again.
 
 %%%%
-As %s %s, the sound returns.
-Als%s%s kehrt der Ton zurück.
-%%%%
-is destroyed
+As %s is destroyed, the sound returns.
 
 %%%%
-dies
+As %s dies, the sound returns.
 
 %%%%
 %s no longer looks unusually strong.
@@ -11671,18 +11656,6 @@ dies
 %s breaks free of your control!
 %s befreit sich von Eurer Kontrolle!
 %%%%
-%s is no longer %s.
-%s ist nicht mehr%s.
-%%%%
-You can %s detect the %s.
-Ihr könnt%s die%s erkennen.
-%%%%
-once again
-
-%%%%
-no longer
-
-%%%%
 %s is no longer charmed.
 
 %%%%
@@ -11690,6 +11663,9 @@ no longer
 
 %%%%
 %s is no longer bribed.
+
+%%%%
+You can once again detect %s.
 
 %%%%
 %s stops glowing and disappears.
@@ -11803,14 +11779,11 @@ The forest calms down.
 %s is no longer infested.
 
 %%%%
-zombie hands
+The zombie hands release their grip on %s.
 
 %%%%
-roots
+The roots release their grip on %s.
 
-%%%%
-The %s release their grip on %s.
-Die%s lassen%s los.
 %%%%
 %s is no longer waterlogged.
 
@@ -11882,120 +11855,6 @@ Die Winde um%s beruhigen sich.
 %s Lied ist unterbrochen.
 %%%%
 %s is no longer sharing pain.
-
-%%%%
-fatigue
-
-%%%%
-summon
-
-%%%%
-abj
-
-%%%%
-charm
-
-%%%%
-tp
-
-%%%%
-submerged
-
-%%%%
-sick
-
-%%%%
-tide
-
-%%%%
-insane
-
-%%%%
-exploding
-
-%%%%
-tethered
-
-%%%%
-severed
-
-%%%%
-regen
-
-%%%%
-temporarily pacified
-
-%%%%
-dazed
-
-%%%%
-mute
-
-%%%%
-blind
-
-%%%%
-dumb
-
-%%%%
-mad
-
-%%%%
-recite timer
-
-%%%%
-breath timer
-
-%%%%
-rolling
-
-%%%%
-wretched
-
-%%%%
-screamed
-
-%%%%
-injury bond
-
-%%%%
-haunting
-
-%%%%
-awaken vines
-
-%%%%
-barbs
-
-%%%%
-icemail
-
-%%%%
-permabribed
-
-%%%%
-idealised
-
-%%%%
-stilling the winds
-
-%%%%
-waterlogged
-
-%%%%
-anon friend
-
-%%%%
-you w/o fault
-
-%%%%
-N/A
-
-%%%%
-" you"
-
-%%%%
-" pet"
 
 %%%%
 
@@ -12072,6 +11931,12 @@ high tier
 # mon-info-flag-name.h
 ##################
 %%%%
+charmed
+
+%%%%
+hexed
+
+%%%%
 control wrested from you
 
 %%%%
@@ -12088,6 +11953,9 @@ expiring
 
 %%%%
 mesmerising
+
+%%%%
+rolling
 
 %%%%
 reflects damage
@@ -12135,6 +12003,9 @@ covering ground quickly
 stilling wind
 
 %%%%
+stilling the winds
+
+%%%%
 silencing
 
 %%%%
@@ -12163,6 +12034,9 @@ gusty
 
 %%%%
 surrounded by restless winds
+
+%%%%
+insane
 
 %%%%
 frenzied and insane
@@ -12199,6 +12073,9 @@ absorbing vital energies
 
 %%%%
 black marks
+
+%%%%
+icemail
 
 %%%%
 surrounded by an icy envelope
@@ -12276,6 +12153,9 @@ asleep
 unaware
 
 %%%%
+blind
+
+%%%%
 infested
 
 %%%%
@@ -12297,10 +12177,19 @@ crumbling away
 petrifying slowly
 
 %%%%
+mad
+
+%%%%
 lost in madness
 
 %%%%
 fleeing
+
+%%%%
+dazed
+
+%%%%
+mute
 
 %%%%
 encased in ice
@@ -12369,10 +12258,16 @@ skewered
 skewered by barbs
 
 %%%%
+sick
+
+%%%%
 softly glowing
 
 %%%%
 coronas
+
+%%%%
+waterlogged
 
 %%%%
 anchored
@@ -12391,6 +12286,9 @@ pain bonded
 
 %%%%
 sharing @possessive@ pain
+
+%%%%
+idealised
 
 %%%%
 disembodied soul
@@ -16421,6 +16319,9 @@ immune
 
 %%%%
 <magenta>[]</magenta>   : Transient mutations.
+
+%%%%
+N/A
 
 %%%%
 mutations
@@ -22559,6 +22460,9 @@ You aren't wearing any armour!
 %%%%
 A chill wind blows around you.
 Ein kalter Wind weht um Euch herum.
+%%%%
+summon
+
 %%%%
 %s appears.
 %s erscheint.

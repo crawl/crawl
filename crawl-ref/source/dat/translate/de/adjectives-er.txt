@@ -348,6 +348,15 @@
 # monsters
 ################################
 %%%%
+"{adj-er}hexed "
+"verfluchter "
+%%%%
+"{adj-er}charmed "
+"verzuaberter "
+%%%%
+"{adj-er}bribed "
+"bestochener "
+%%%%
 # used for obsolete monsters
 "{adj-er}removed "
 "entfernter "

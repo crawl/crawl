@@ -26,6 +26,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "losglobal.h"
 #include "message.h"
 #include "mon-abil.h"
@@ -294,12 +295,25 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         {
             if (!quiet)
             {
-                mprf("You %sdetect the %s %s.",
-                     friendly() ? "" : "can no longer ",
-                     ench.ench == ENCH_HEXED ? "hexed" :
-                     ench.ench == ENCH_CHARM ? "charmed"
-                                             : "bribed",
-                     name(DESC_PLAIN, true).c_str());
+                string mon_name = name(DESC_PLAIN, true);
+                string adj;
+                if (ench.ench == ENCH_HEXED)
+                    adj = "hexed ";
+                else if (ench.ench == ENCH_CHARM)
+                    adj = "charmed ";
+                else
+                    adj = "bribed ";
+                // For the moment, we only add the adjective if language is English.
+                // TODO: i18n: Handle the adjective in other languages
+                if (localisation_active())
+                    mon_name = string("the ") + mon_name;
+                else
+                    mon_name = string("the ") + adj + mon_name;
+
+                if (friendly())
+                    mprf("You detect %s.", mon_name.c_str());
+                else
+                    mprf("You can no longer detect %s.", mon_name.c_str());
             }
 
             autotoggle_autopickup(!friendly());
@@ -352,13 +366,19 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     case ENCH_GRASPING_ROOTS:
     {
         actor *source_actor = actor_by_mid(ench.source, true);
-        const string noun = ench.ench == ENCH_VILE_CLUTCH ? "Zombie hands" :
-                                                            "Roots";
         source_actor->start_constricting(*this);
         if (you.see_cell(pos()))
         {
-            mprf(MSGCH_WARN, "%s grab %s.", noun.c_str(),
-                 name(DESC_THE).c_str());
+            if (ench.ench == ENCH_VILE_CLUTCH)
+            {
+                mprf(MSGCH_WARN, "Zombie hands grab %s.",
+                     name(DESC_THE).c_str());
+            }
+            else
+            {
+                mprf(MSGCH_WARN, "Roots grab %s.",
+                     name(DESC_THE).c_str());
+            }
         }
         break;
     }
@@ -512,10 +532,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (alive())
                 simple_monster_message(*this, " becomes audible again.");
+            else if (wounded_damaged(holiness()))
+            {
+                mprf("As %s is destroyed, the sound returns.",
+                     name(DESC_THE).c_str());
+            }
             else
-                mprf("As %s %s, the sound returns.",
-                     name(DESC_THE).c_str(),
-                     wounded_damaged(holiness()) ? "is destroyed" : "dies");
+            {
+                mprf("As %s dies, the sound returns.",
+                     name(DESC_THE).c_str());
+            }
         }
         break;
 
@@ -606,20 +632,20 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             if (!quiet)
             {
+                string the_mon = name(DESC_THE, true);
                 if (me.ench == ENCH_CHARM && props.exists("charmed_demon"))
-                {
-                    mprf("%s breaks free of your control!",
-                         name(DESC_THE, true).c_str());
-                }
+                    mprf("%s breaks free of your control!", the_mon.c_str());
+                else if (me.ench == ENCH_CHARM)
+                    mprf("%s is no longer charmed.", the_mon.c_str());
+                else if (me.ench == ENCH_HEXED)
+                    mprf("%s is no longer hexed.", the_mon.c_str());
                 else
-                    mprf("%s is no longer %s.", name(DESC_THE, true).c_str(),
-                         me.ench == ENCH_CHARM   ? "charmed"
-                         : me.ench == ENCH_HEXED ? "hexed"
-                                                 : "bribed");
+                    mprf("%s is no longer bribed.", the_mon.c_str());
 
-                mprf("You can %s detect the %s.",
-                     friendly() ? "once again" : "no longer",
-                     name(DESC_PLAIN, true).c_str());
+                if (friendly())
+                    mprf("You can once again detect %s.", the_mon.c_str());
+                else
+                    mprf("You can no longer detect %s.", the_mon.c_str());
             }
 
             autotoggle_autopickup(friendly());
@@ -850,8 +876,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_WRETCHED:
         if (!quiet)
         {
-            const string msg = "%s seems to return to a normal shape.";
-            simple_monster_message(*this, msg.c_str());
+            simple_monster_message(*this,
+                                   " seems to return to a normal shape.");
         }
         break;
 
@@ -982,16 +1008,22 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_VILE_CLUTCH:
     case ENCH_GRASPING_ROOTS:
     {
-        const string noun = me.ench == ENCH_VILE_CLUTCH ? "zombie hands"
-                                                        : "roots";
         if (is_constricted())
         {
             // We handle the end-of-enchantment message here since the method
             // of constriction is no longer detectable.
             if (!quiet && you.can_see(*this))
             {
-                mprf("The %s release their grip on %s.", noun.c_str(),
-                        name(DESC_THE).c_str());
+                if (me.ench == ENCH_VILE_CLUTCH)
+                {
+                    mprf("The zombie hands release their grip on %s.",
+                         name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("The roots release their grip on %s.",
+                         name(DESC_THE).c_str());
+                }
             }
             stop_being_constricted(true);
         }
@@ -1954,6 +1986,7 @@ static inline int _mod_speed(int val, int speed)
 /////////////////////////////////////////////////////////////////////////
 // mon_enchant
 
+// noloc section start
 static const char *enchant_names[] =
 {
     "none", "berserk", "haste", "might", "fatigue", "slow", "fear",
@@ -2121,6 +2154,7 @@ const char *mon_enchant::kill_category_desc(kill_category k) const
     return k == KC_YOU ?      " you" :
            k == KC_FRIENDLY ? " pet" : "";
 }
+// noloc section end
 
 void mon_enchant::merge_killer(kill_category k, mid_t m)
 {

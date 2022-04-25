@@ -347,8 +347,18 @@
 # monsters
 ################################
 %%%%
+"hexed "
+"verfluchte "
+%%%%
+"charmed "
+"verzuaberte "
+%%%%
+"bribed "
+"bestochene "
+%%%%
 # used for obsolete monsters
 "removed "
 "entfernte "
 %%%%
+
 
