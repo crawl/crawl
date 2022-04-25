@@ -11862,47 +11862,23 @@ Die Winde um%s beruhigen sich.
 # mon-explode.cc
 ##################
 %%%%
-explosion of spores
-
-%%%%
-blast of lightning
-
-%%%%
-blast of energy
-
-%%%%
-pyre of ghostly fire
-
-%%%%
 You hear an otherworldly crackling!
-
-%%%%
-fiery explosion
-
-%%%%
-blast of putrescent gases
 
 %%%%
 You hear an high-pitched explosion!
 
 %%%%
-torment is averted
+By Zin's power, %s torment is averted.
 
 %%%%
-fires are quelled
+By Zin's power, %s fires are quelled.
 
 %%%%
-explosion is contained
-
-%%%%
-"By Zin's power, "
+By Zin's power, %s explosion is contained.
 
 %%%%
 %s blazes out!
-%s geht aus!
-%%%%
-"Unknown spore type: "
-
+%s lodert aus!
 %%%%
 By Zin's power, the fiery explosion is contained.
 
@@ -25370,9 +25346,6 @@ Realer Wert: %d (bekannt:%d)
 %%%%
 Value: %d
 Wert: %d
-%%%%
-"Made "
-
 %%%%
 Make an artefact out of which item?
 

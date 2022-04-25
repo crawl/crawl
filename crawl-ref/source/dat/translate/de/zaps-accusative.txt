@@ -163,6 +163,18 @@ den Schattenbolzen
 {acc}the shadow shard
 den Schattensplitter
 %%%%
+{acc}the blast of lightning
+den Einschlag des Blitzes
+%%%%
+{acc}the blast of energy
+den Einschlag der Energie
+%%%%
+{acc}the blast of putrescent gases
+den Einschlag faulender Gase
+%%%%
+{acc}the pyre of ghostly fire
+den Scheiterhaufen des geisterhaften Feuers
+%%%%
 
 #################################
 # full names without article

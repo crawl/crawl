@@ -267,6 +267,24 @@ die widerliche Luft
 the flame surge
 die Flammenwoge
 %%%%
+the explosion of spores
+die Explosion der Sporen
+%%%%
+the blast of lightning
+der Einschlag des Blitzes
+%%%%
+the blast of energy
+der Einschlag der Energie
+%%%%
+the blast of putrescent gases
+der Einschlag faulender Gase
+%%%%
+the pyre of ghostly fire
+der Scheiterhaufen des geisterhaften Feuers
+%%%%
+the fiery explosion
+die feurige Explosion
+%%%%
 
 #################################
 # full names without article
@@ -531,6 +549,24 @@ widerliche Luft
 %%%%
 flame surge
 Flammenwoge
+%%%%
+explosion of spores
+Explosion der Sporen
+%%%%
+blast of lightning
+Einschlag des Blitzes
+%%%%
+blast of energy
+Einschlag der Energie
+%%%%
+blast of putrescent gases
+Einschlag faulender Gase
+%%%%
+pyre of ghostly fire
+Scheiterhaufen des geisterhaften Feuers
+%%%%
+fiery explosion
+feurige Explosion
 %%%%
 
 #################################

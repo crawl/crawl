@@ -15,6 +15,7 @@
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
+#include "localise.h"
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h" // YOU_KILL
@@ -156,9 +157,11 @@ struct monster_explosion {
 static const map<monster_type, monster_explosion> explosions {
     { MONS_BALLISTOMYCETE_SPORE, { setup_spore_explosion } },
     { MONS_BALL_LIGHTNING, { _setup_lightning_explosion } },
-    { MONS_LURKING_HORROR, { nullptr, "torment is averted" } },
+    { MONS_LURKING_HORROR, { nullptr, 
+                             "By Zin's power, %s torment is averted." } },
     { MONS_FULMINANT_PRISM, { _setup_prism_explosion } },
-    { MONS_BENNU, { _setup_bennu_explosion, "fires are quelled" } },
+    { MONS_BENNU, { _setup_bennu_explosion,
+                    "By Zin's power, %s fires are quelled." } },
     { MONS_BLOATED_HUSK, { _setup_bloated_husk_explosion } },
 };
 
@@ -193,7 +196,7 @@ bool explode_monster(monster* mons, killer_type killer,
     bolt beam;
     const monster_type type = mons->type;
     string sanct_msg = "";
-    string boom_msg = make_stringf("%s explodes!", mons->full_name(DESC_THE).c_str());
+    string boom_msg = localise("%s explodes!", mons->full_name(DESC_THE));
     actor* agent = nullptr;
     bool inner_flame = false;
 
@@ -203,14 +206,13 @@ bool explode_monster(monster* mons, killer_type killer,
         const monster_explosion &explosion = it->second;
         if (explosion.prep_explode)
             explosion.prep_explode(beam, *mons);
-        string effect = "explosion is contained";
+        string effect = "By Zin's power, %s explosion is contained.";
         if (explosion.sanct_effect != "")
             effect = explosion.sanct_effect;
-        sanct_msg = string("By Zin's power, ") +
-                    apostrophise(mons->name(DESC_THE)) + " " +
-                    effect + ".";
+        sanct_msg = localise(effect, apostrophise(mons->name(DESC_THE)));
+
         if (type == MONS_BENNU)
-            boom_msg = make_stringf("%s blazes out!", mons->full_name(DESC_THE).c_str());
+            boom_msg = localise("%s blazes out!", mons->full_name(DESC_THE));
     }
     else
     {

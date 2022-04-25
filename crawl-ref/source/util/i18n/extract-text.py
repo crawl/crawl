@@ -281,11 +281,11 @@ for filename in files:
                 extract = True
             elif 'simple_monster_message' in line or 'simple_god_message' in line:
                 extract = True
+            elif 'MSGCH_DIAGNOSTICS' in line:
+                # ignore diagnostic messages - these are for devs
+                continue
             elif re.search(r'mpr[a-zA-Z_]* *\(', line):
                 # extract mpr, mprf, etc. messages
-                if 'MSGCH_DIAGNOSTICS' in line:
-                    # ignore diagnostic messages - these are for devs
-                    continue
                 if 'MSGCH_ERROR' in line:
                     # Error messages mostly relate to programming errors, so we
                     # keep the original English for the user to report to the devs.
