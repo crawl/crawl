@@ -4196,10 +4196,10 @@ einem %s-förmigen Eisblock
 %d %s-Skeletten
 %%%%
 {dat}%d %s shaped pillars of salt
-%den %s-förmigen Salzsäulen
+%d %s-förmigen Salzsäulen
 %%%%
 {dat}%d %s shaped blocks of ice
-%d %s-förmiger Eisblöcken
+%d %s-förmigen Eisblöcken
 %%%%
 
 

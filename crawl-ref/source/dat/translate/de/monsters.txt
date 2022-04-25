@@ -5367,7 +5367,7 @@ ein %s-förmiger Eisblock
 %d %s-Simulacra
 %%%%
 %d %s shaped pillars of salt
-%de %s-förmige Salzsäulen
+%d %s-förmige Salzsäulen
 %%%%
 %d %s shaped blocks of ice
 %d %s-förmige Eisblöcke
