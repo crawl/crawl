@@ -11885,14 +11885,6 @@ By Zin's power, the fiery explosion is contained.
 %%%%
 
 ##################
-# mon-gear.cc
-##################
-%%%%
-high tier
-
-%%%%
-
-##################
 # mon-grow.cc
 ##################
 %%%%
