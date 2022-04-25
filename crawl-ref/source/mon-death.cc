@@ -1062,9 +1062,11 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
     if (cell_is_solid(mons->pos()))
         return;
 
-    string prefix = " ";
+    string name = mons->name(DESC_THE);
     if (corpse && mons_class_can_leave_corpse(mons_species(mons->type)))
-        prefix = "'s corpse ";
+        name = localise("%s's corpse", name);
+    else
+        name = localise(name);
 
     string msg = summoned_poof_msg(mons);
 
@@ -1076,8 +1078,8 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 
     if (!silent && you.see_cell(mons->pos()) && mons->visible_to(&you))
     {
-        // i18n: This won't work properly if msg requires non-default case
-        msg = localise(msg, LocalisationArg(mons->name(DESC_THE), false));
+        // i18n: This won't work properly if name requires non-default case
+        msg = localise(msg, LocalisationArg(name, false));
         mpr_nolocalise(msg);
     }
 
@@ -1277,9 +1279,10 @@ static bool _mons_reaped(actor &killer, monster& victim)
 
     if (you.can_see(victim))
     {
-        mprf("%s turns into a %s!", victim.name(DESC_THE).c_str(),
-                                    zombie->type == MONS_ZOMBIE ? "zombie"
-                                                                : "skeleton");
+        if (zombie->type == MONS_ZOMBIE)
+            mprf("%s turns into a zombie!", victim.name(DESC_THE).c_str());
+        else
+            mprf("%s turns into a skeleton!", victim.name(DESC_THE).c_str());
     }
     else if (you.can_see(*zombie))
         mprf("%s appears out of thin air!", zombie->name(DESC_THE).c_str());

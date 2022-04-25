@@ -11375,7 +11375,7 @@ Mit einem infernalischen Schauder verschwindet die Macht, die diesen Ort beherrs
 With an infernal noise, the power ruling this place vanishes!
 Mit einem infernalischen Geräusch verschwindet die Macht, die diesen Ort beherrscht!
 %%%%
-"'s corpse "
+%s's corpse
 
 %%%%
 A freezing mist gathers momentarily, then fades.
@@ -11396,7 +11396,10 @@ Mit seinem letzten Atemzug opfert der Spriggan-Druide seine Kraft den Bestien de
 %s seems to grow more fierce.
 %s scheint immer grimmiger zu werden.
 %%%%
-%s turns into a %s!
+%s turns into a zombie!
+
+%%%%
+%s turns into a skeleton!
 
 %%%%
 %s appears out of thin air!
