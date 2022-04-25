@@ -4202,9 +4202,6 @@ ice covered
 A halo.
 
 %%%%
-haloed
-
-%%%%
 An umbra.
 
 %%%%
@@ -5200,19 +5197,7 @@ wall of the weird stuff which makes up Pandemonium
 This monster is %s.
 Dieses Monster ist %s.
 %%%%
-sleepwalking
-
-%%%%
-drifting
-
-%%%%
 chance to confuse on hit: %d%%
-
-%%%%
-indifferent
-
-%%%%
-umbra
 
 %%%%
 fire blocked by %s

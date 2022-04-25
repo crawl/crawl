@@ -27,8 +27,17 @@ friedlich
 neutral
 neutral
 %%%%
+indifferent
+gleichgültig
+%%%%
 wandering
 wandernd
+%%%%
+drifting
+dahintreibend
+%%%%
+sleepwalking
+schlafwandelnd
 %%%%
 charmed
 verzaubert
@@ -529,6 +538,12 @@ stark entleert
 # short form for lightly/heavily drained
 drained
 entleert
+%%%%
+haloed
+nimbiert
+%%%%
+umbra
+Umbra
 %%%%
 
 # affected by Usk pain bond
