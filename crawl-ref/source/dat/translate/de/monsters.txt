@@ -1870,6 +1870,24 @@ das harte gespürte Monster
 the nasty sensed monster
 das furchtbare gespürte Monster
 %%%%
+the %ssting beast
+das {adj-e}%sStichbiest
+%%%%
+the %sbat beast
+das {adj-e}%sFledermaus-Biest
+%%%%
+the %sfire beast
+das {adj-e}%sFeuerbiest
+%%%%
+the %sweird beast
+das {adj-e}%sbizarre Biest
+%%%%
+the %sshock beast
+das {adj-e}%sSchockbiest
+%%%%
+the %sox beast
+das {adj-e}%sOchsenbiest
+%%%%
 
 ################################
 # indefinite
@@ -5258,6 +5276,43 @@ ein furchtbares gespürtes Monster
 %d furchtbare gespürte Monster
 %%%%
 # check plural above
+%%%%
+a %ssting beast
+ein {adj-es}%sStichbiest
+%%%%
+%d %ssting beasts
+%d {adj-e}%sStichbiester
+%%%%
+a %sbat beast
+ein {adj-es}%sFledermaus-Biest
+%%%%
+%d %sbat beasts
+%d {adj-e}%sFledermaus-Biester
+%%%%
+a %sfire beast
+ein {adj-es}%sFeuerbiest
+%%%%
+%d %sfire beasts
+%d {adj-e}%sFeuerbiester
+%%%%
+a %sweird beast
+ein {adj-es}%sbizarre Biest
+%%%%
+%d %sweird beasts
+%d {adj-e}%sbizarre Biester
+%%%%
+a %sshock beast
+ein {adj-es}%sSchockbiest
+%%%%
+%d %sshock beasts
+%d {adj-e}%sSchockbiester
+%%%%
+a %sox beast
+ein {adj-es}%sOchsenbiest
+%%%%
+%d %sox beasts
+%d {adj-e}%sOchsenbiester
+%%%%
 
 ################################
 # allies
@@ -6773,6 +6828,24 @@ Euer hartes gespürtes Monster
 %%%%
 your nasty sensed monster
 Euer furchtbares gespürtes Monster
+%%%%
+your %ssting beast
+Euer {adj-es}%sStichbiest
+%%%%
+your %sbat beast
+Euer {adj-es}%sFledermaus-Biest
+%%%%
+your %sfire beast
+Euer {adj-es}%sFeuerbiest
+%%%%
+your %sweird beast
+Euer {adj-es}%sbizarre Biest
+%%%%
+your %sshock beast
+Euer {adj-es}%sSchockbiest
+%%%%
+your %sox beast
+Euer {adj-es}%sOchsenbiest
 %%%%
 
 ################################
@@ -8290,3 +8363,22 @@ hartes gespürtes Monster
 nasty sensed monster
 furchtbares gespürtes Monster
 %%%%
+%ssting beast
+{adj-es}%sStichbiest
+%%%%
+%sbat beast
+{adj-es}%sFledermaus-Biest
+%%%%
+%sfire beast
+{adj-es}%sFeuerbiest
+%%%%
+%sweird beast
+{adj-es}%sbizarre Biest
+%%%%
+%sshock beast
+{adj-es}%sSchockbiest
+%%%%
+%sox beast
+{adj-es}%sOchsenbiest
+%%%%
+

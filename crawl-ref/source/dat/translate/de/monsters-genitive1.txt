@@ -1852,6 +1852,24 @@ des harten gespürten Monsters
 the nasty sensed monster's
 des furchtbaren gespürten Monsters
 %%%%
+the %ssting beast's
+des {adj-en}%sStichbiests
+%%%%
+the %sbat beast's
+des {adj-en}%sFledermaus-Biests
+%%%%
+the %sfire beast's
+des {adj-en}%sFeuerbiests
+%%%%
+the %sweird beast's
+des {adj-en}%sbizarren Biests
+%%%%
+the %sshock beast's
+des {adj-en}%sSchockbiests
+%%%%
+the %sox beast's
+des {adj-en}%sOchsenbiests
+%%%%
 
 ################################
 # indefinite
@@ -3304,6 +3322,24 @@ eines harten gespürten Monsters
 %%%%
 a nasty sensed monster's
 eines furchtbaren gespürten Monsters
+%%%%
+a %ssting beast's
+eines {adj-en}%sStichbiests
+%%%%
+a %sbat beast's
+eines {adj-en}%sFledermaus-Biests
+%%%%
+a %sfire beast's
+eines {adj-en}%sFeuerbiests
+%%%%
+a %sweird beast's
+eines {adj-en}%sbizarren Biests
+%%%%
+a %sshock beast's
+eines {adj-en}%sSchockbiests
+%%%%
+a %sox beast's
+eines {adj-en}%sOchsenbiests
 %%%%
 
 ################################
@@ -4818,3 +4854,22 @@ Eures harten gespürten Monsters
 your nasty sensed monster's
 Eures furchtbaren gespürten Monsters
 %%%%
+your %ssting beast's
+Eures {adj-en}%sStichbiests
+%%%%
+your %sbat beast's
+Eures {adj-en}%sFledermaus-Biests
+%%%%
+your %sfire beast's
+Eures {adj-en}%sFeuerbiests
+%%%%
+your %sweird beast's
+Eures {adj-en}%sbizarren Biests
+%%%%
+your %sshock beast's
+Eures {adj-en}%sSchockbiests
+%%%%
+your %sox beast's
+Eures {adj-en}%sOchsenbiests
+%%%%
+

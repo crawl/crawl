@@ -361,4 +361,21 @@
 "entfernte "
 %%%%
 
+# mutant beasts from a box of beasts
+%%%%
+"larval "
+"larvale "
+%%%%
+"juvenile "
+"juvenile "
+%%%%
+"mature "
+"reife "
+%%%%
+"elder "
+"ältere "
+%%%%
+"primal "
+"urzeitliche "
+%%%%
 

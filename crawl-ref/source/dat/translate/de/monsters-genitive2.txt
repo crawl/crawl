@@ -1858,6 +1858,24 @@ des harten gespürten Monsters
 {gen}the nasty sensed monster
 des furchtbaren gespürten Monsters
 %%%%
+{gen}the %ssting beast
+des {adj-en}%sStichbiests
+%%%%
+{gen}the %sbat beast
+des {adj-en}%sFledermaus-Biests
+%%%%
+{gen}the %sfire beast
+des {adj-en}%sFeuerbiests
+%%%%
+{gen}the %sweird beast
+des {adj-en}%sbizarren Biests
+%%%%
+{gen}the %sshock beast
+des {adj-en}%sSchockbiests
+%%%%
+{gen}the %sox beast
+des {adj-en}%sOchsenbiests
+%%%%
 
 ################################
 # indefinite
@@ -3680,6 +3698,42 @@ eines furchtbaren gespürten Monsters
 {gen}%d nasty sensed monsters
 %d furchtbarer gespürter Monster
 %%%%
+{gen}a %ssting beast
+eines {adj-en}%sStichbiests
+%%%%
+{gen}%d %ssting beasts
+%d {adj-er}%sStichbiester
+%%%%
+{gen}a %sbat beast
+eines {adj-en}%sFledermaus-Biests
+%%%%
+{gen}%d %sbat beasts
+%d {adj-er}%sFledermaus-Biester
+%%%%
+{gen}a %sfire beast
+eines {adj-en}%sFeuerbiests
+%%%%
+{gen}%d %sfire beasts
+%d {adj-er}%sFeuerbiester
+%%%%
+{gen}a %sweird beast
+eines {adj-en}%sbizarre Biests
+%%%%
+{gen}%d %sweird beasts
+%d {adj-er}%sbizarrer Biester
+%%%%
+{gen}a %sshock beast
+eines {adj-en}%sSchockbiests
+%%%%
+{gen}%d %sshock beasts
+%d {adj-er}%sSchockbiester
+%%%%
+{gen}a %sox beast
+eines {adj-en}%sOchsenbiests
+%%%%
+{gen}%d %sox beasts
+%d {adj-er}%sOchsenbiester
+%%%%
 
 ################################
 # allies
@@ -5196,6 +5250,24 @@ Eures harten gespürten Monsters
 {gen}your nasty sensed monster
 Eures furchtbaren gespürten Monsters
 %%%%
+{gen}your %ssting beast
+Eures {adj-en}%sStichbiests
+%%%%
+{gen}your %sbat beast
+Eures {adj-en}%sFledermaus-Biests
+%%%%
+{gen}your %sfire beast
+Eures {adj-en}%sFeuerbiests
+%%%%
+{gen}your %sweird beast
+Eures {adj-en}%sbizarre Biests
+%%%%
+{gen}your %sshock beast
+Eures {adj-en}%sSchockbiests
+%%%%
+{gen}your %sox beast
+Eures {adj-en}%sOchsenbiests
+%%%%
 
 ################################
 # without determiner
@@ -6457,3 +6529,22 @@ harten gespürten Monsters
 {gen}nasty sensed monster
 furchtbaren gespürten Monsters
 %%%%
+{gen}%ssting beast
+{adj-en}%sStichbiests
+%%%%
+{gen}%sbat beast
+{adj-en}%sFledermaus-Biests
+%%%%
+{gen}%sfire beast
+{adj-en}%sFeuerbiests
+%%%%
+{gen}%sweird beast
+{adj-en}%sbizarre Biests
+%%%%
+{gen}%sshock beast
+{adj-en}%sSchockbiests
+%%%%
+{gen}%sox beast
+{adj-en}%sOchsenbiests
+%%%%
+

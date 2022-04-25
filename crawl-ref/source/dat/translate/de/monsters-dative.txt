@@ -1636,6 +1636,24 @@ dem harten gespürten Monster
 {dat}the nasty sensed monster
 dem furchtbaren gespürten Monster
 %%%%
+{dat}the %ssting beast
+dem {adj-en}%sStichbiest
+%%%%
+{dat}the %sbat beast
+dem {adj-en}%sFledermaus-Biest
+%%%%
+{dat}the %sfire beast
+dem {adj-en}%sFeuerbiest
+%%%%
+{dat}the %sweird beast
+dem {adj-en}%sbizarren Biest
+%%%%
+{dat}the %sshock beast
+dem {adj-en}%sSchockbiest
+%%%%
+{dat}the %sox beast
+dem {adj-en}%sOchsenbiest
+%%%%
 
 ################################
 # indefinite
@@ -4094,6 +4112,42 @@ einem furchtbaren gespürten Monster
 {dat}%d nasty sensed monsters
 %d furchtbaren gespürten Monstern
 %%%%
+{dat}a %ssting beast
+einem {adj-em}%sStichbiest
+%%%%
+{dat}%d %ssting beasts
+%d {adj-en}%sStichbiestern
+%%%%
+{dat}a %sbat beast
+einem {adj-em}%sFledermaus-Biest
+%%%%
+{dat}%d %sbat beasts
+%d {adj-en}%sFledermaus-Biestern
+%%%%
+{dat}a %sfire beast
+einem {adj-em}%sFeuerbiest
+%%%%
+{dat}%d %sfire beasts
+%d {adj-en}%sFeuerbiestern
+%%%%
+{dat}a %sweird beast
+einem {adj-em}%sbizarre Biest
+%%%%
+{dat}%d %sweird beasts
+%d {adj-en}%sbizarren Biestern
+%%%%
+{dat}a %sshock beast
+einem {adj-em}%sSchockbiest
+%%%%
+{dat}%d %sshock beasts
+%d {adj-en}%sSchockbiestern
+%%%%
+{dat}a %sox beast
+einem {adj-em}%sOchsenbiest
+%%%%
+{dat}%d %sox beasts
+%d {adj-en}%sOchsenbiestern
+%%%%
 
 ################################
 # allies
@@ -5610,6 +5664,24 @@ Eurem harten gespürten Monster
 {dat}your nasty sensed monster
 Eurem furchtbaren gespürten Monster
 %%%%
+{dat}your %ssting beast
+Eurem {adj-em}%sStichbiest
+%%%%
+{dat}your %sbat beast
+Eurem {adj-em}%sFledermaus-Biest
+%%%%
+{dat}your %sfire beast
+Eurem {adj-em}%sFeuerbiest
+%%%%
+{dat}your %sweird beast
+Eurem {adj-em}%sbizarre Biest
+%%%%
+{dat}your %sshock beast
+Eurem {adj-em}%sSchockbiest
+%%%%
+{dat}your %sox beast
+Eurem {adj-em}%sOchsenbiest
+%%%%
 
 ################################
 # without determiner
@@ -6130,3 +6202,22 @@ hartem gespürtem Monster
 {dat}nasty sensed monster
 furchtbarem gespürtem Monster
 %%%%
+{dat}%ssting beast
+{adj-em}%sStichbiest
+%%%%
+{dat}%sbat beast
+{adj-em}%sFledermaus-Biest
+%%%%
+{dat}%sfire beast
+{adj-em}%sFeuerbiest
+%%%%
+{dat}%sweird beast
+{adj-em}%sbizarre Biest
+%%%%
+{dat}%sshock beast
+{adj-em}%sSchockbiest
+%%%%
+{dat}%sox beast
+{adj-em}%sOchsenbiest
+%%%%
+
