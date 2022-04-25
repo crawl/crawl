@@ -3382,16 +3382,6 @@ a %s shaped block of ice's
 eines %s-förmigen Eisblocks
 %%%%
 
-# derived monsters (undead, etc.)
-# "elf zombie", "orc skeleton", etc.
-%%%%
-%d %s shaped pillars of salt's
-%d %s-förmiger Salzsäulen
-%%%%
-%d %s shaped blocks of ice's
-%d %s-förmiger Eisblöcke
-%%%%
-
 ################################
 # allies
 ################################
