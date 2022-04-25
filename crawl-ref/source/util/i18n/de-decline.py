@@ -286,7 +286,10 @@ def decline(german, english):
         declension = Declension.STRONG
     elif '{adj-es}' in german:
         gender = Gender.NEUTER
-        declension = Declension.STRONG
+        if is_determiner(words[0]):
+            declension = Declension.MIXED
+        else:
+            declension = Declension.STRONG
 
     i = 0
     while gender == Gender.UNKNOWN and i < len(words):
