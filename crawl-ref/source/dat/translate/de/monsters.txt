@@ -1913,1372 +1913,640 @@ der %s-förmige Eisblock
 ################################
 # indefinite
 ################################
+
 %%%%
 a program bug
 ein Programmfehler
 %%%%
-%d program bugs
-%d Programmfehler
-%%%%
 a worker ant
 eine Ameisenarbeiterin
-%%%%
-%d worker ants
-%d Ameisenarbeiterinnen
 %%%%
 a queen ant
 eine Ameisenkönigin
 %%%%
-%d queen ants
-%d Ameisenköniginnen
-%%%%
 a soldier ant
 eine Ameisensoldatin
-%%%%
-%d soldier ants
-%d Ameisensoldatinnen
 %%%%
 a formicid
 ein Formicid
 %%%%
-%d formicids
-%d Formicide
-%%%%
 an entropy weaver
 ein Entropieweber
-%%%%
-%d entropy weavers
-%d Entropieweber
 %%%%
 a bat
 eine Fledermaus
 %%%%
-%d bats
-%d Fledermäuse
-%%%%
 a butterfly
 ein Schmetterling
-%%%%
-%d butterflies
-%d Schmetterlinge
 %%%%
 a vampire bat
 eine Vampirfledermaus
 %%%%
-%d vampire bats
-%d Vampirfledermäuse
-%%%%
 a fire bat
 eine Feuerfledermaus
-%%%%
-%d fire bats
-%d Feuerfledermäuse
 %%%%
 a bennu
 ein Bennu
 %%%%
-%d bennus
-%d Bennus
-%%%%
 a caustic shrike
 ein ätzender Würger
-%%%%
-%d caustic shrikes
-%d ätzende Würger
 %%%%
 a shard shrike
 ein Scherbenwürger
 %%%%
-%d shard shrikes
-%d Scherbenwürger
-%%%%
 a centaur
 ein Zentaur
-%%%%
-%d centaurs
-%d Zentauren
 %%%%
 a centaur warrior
 ein Zentaur-Krieger
 %%%%
-%d centaur warriors
-%d Zentaur-Krieger
-%%%%
 a yaktaur
 ein Yaktaur
-%%%%
-%d yaktaurs
-%d Yaktauren
 %%%%
 a yaktaur captain
 ein Yaktaur-Kapitän
 %%%%
-%d yaktaur captains
-%d Yaktaur-Kapitäne
-%%%%
 a faun
 ein Faun
-%%%%
-%d fauns
-%d Faune
 %%%%
 a satyr
 ein Satyr
 %%%%
-%d satyrs
-%d Satyrn
-%%%%
 a draconian
 ein Drakonier
-%%%%
-%d draconians
-%d Drakonier
 %%%%
 a black draconian
 ein schwarzer Drakonier
 %%%%
-%d black draconians
-%d schwarze Drakonier
-%%%%
 a yellow draconian
 ein gelber Drakonier
-%%%%
-%d yellow draconians
-%d gelbe Drakonier
 %%%%
 a pale draconian
 ein blasser Drakonier
 %%%%
-%d pale draconians
-%d blasse Drakonier
-%%%%
 a green draconian
 ein grüner Drakonier
-%%%%
-%d green draconians
-%d grüne Drakonier
 %%%%
 a purple draconian
 ein purpurner Drakonier
 %%%%
-%d purple draconians
-%d purpurne Drakonier
-%%%%
 a red draconian
 ein roter Drakonier
-%%%%
-%d red draconians
-%d rote Drakonier
 %%%%
 a white draconian
 ein weißer Drakonier
 %%%%
-%d white draconians
-%d weiße Drakonier
-%%%%
 a grey draconian
 ein grauer Drakonier
-%%%%
-%d grey draconians
-%d graue Drakonier
 %%%%
 a draconian stormcaller
 ein Drakonier-Sturmrufer
 %%%%
-%d draconian stormcallers
-%d Drakonier-Sturmrufer
-%%%%
 a draconian monk
 ein Drakonier-Mönch
-%%%%
-%d draconian monks
-%d Drakonier-Mönche
 %%%%
 a draconian shifter
 ein Drakonier-Verschieber
 %%%%
-%d draconian shifters
-%d Drakonier-Verschieber
-%%%%
 a draconian annihilator
 ein Drakonier-Vernichter
-%%%%
-%d draconian annihilators
-%d Drakonier-Vernichter
 %%%%
 a draconian knight
 ein Drakonier-Ritter
 %%%%
-%d draconian knights
-%d Drakonier-Ritter
-%%%%
 a draconian scorcher
 ein Drakonier-Verschmorer
-%%%%
-%d draconian scorchers
-%d Drakonier-Verschmorer
 %%%%
 an elf
 ein Elf
 %%%%
-%d elves
-%d Elfen
-%%%%
 a deep elf knight
 ein Tiefenelf-Ritter
-%%%%
-%d deep elf knights
-%d Tiefenelf-Ritter
 %%%%
 a deep elf archer
 ein Tiefenelf-Bogenschütze
 %%%%
-%d deep elf archers
-%d Tiefenelf-Bogenschützen
-%%%%
 a deep elf blademaster
 ein Tiefenelf-Klingenmeister
-%%%%
-%d deep elf blademasters
-%d Tiefenelf-Klingenmeister
 %%%%
 a deep elf master archer
 ein Tiefenelf-Bogenmeister
 %%%%
-%d deep elf master archers
-%d Tiefenelf-Bogenmeister
-%%%%
 a deep elf zephyrmancer
 ein Tiefenelf-Zephyrmant
-%%%%
-%d deep elf zephyrmancers
-%d Tiefenelf-Zephyrmanten
 %%%%
 a deep elf pyromancer
 ein Tiefenelf-Pyromant
 %%%%
-%d deep elf pyromancer
-%d Tiefenelf-Pyromanten
-%%%%
 a deep elf high priest
 ein Tiefenelf-Hohepriester
-%%%%
-%d deep elf high priests
-%d Tiefenelf-Hohepriester
 %%%%
 a deep elf demonologist
 ein Tiefenelf-Dämonologe
 %%%%
-%d deep elf demonologists
-%d Tiefenelf-Dämonologen
-%%%%
 a deep elf annihilator
 ein Tiefenelf-Vernichter
-%%%%
-%d deep elf annihilators
-%d Tiefenelf-Vernichter
 %%%%
 a deep elf sorcerer
 ein Tiefenelf-Zauberer
 %%%%
-%d deep elf sorcerers
-%d Tiefenelf-Zauberer
-%%%%
 a deep elf death mage
 ein Tiefenelf-Todesmagier
-%%%%
-%d deep elf death magi
-%d Tiefenelf-Todesmagier
 %%%%
 a deep elf elementalist
 ein Tiefenelf-Elementalist
 %%%%
-%d deep elf elementalists
-%d Tiefenelf-Elementalisten
-%%%%
 a wandering mushroom
 ein wandernder Pilz
-%%%%
-%d wandering mushrooms
-%d wandernde Pilze
 %%%%
 a deathcap
 eine Todesmütze
 %%%%
-%d deathcaps
-%d Todesmützen
-%%%%
 a thorn hunter
 ein Dornenjäger
-%%%%
-%d thorn hunters
-%d Dornenjäger
 %%%%
 a shambling mangrove
 eine watschelnde Mangrove
 %%%%
-%d shambling mangroves
-%d watschelnde Mangroven
-%%%%
 a vine stalker
 ein Rebjäger
-%%%%
-%d vine stalkers
-%d Rebjäger
 %%%%
 a goblin
 ein Goblin
 %%%%
-%d goblins
-%d Goblins
-%%%%
 a hobgoblin
 ein Hobgoblin
-%%%%
-%d hobgoblins
-%d Hobgoblins
 %%%%
 a gnoll
 ein Gnoll
 %%%%
-%d gnolls
-%d Gnolle
-%%%%
 a gnoll shaman
 ein Gnoll-Schamane
-%%%%
-%d gnoll shamans
-%d Gnoll-Schamanen
 %%%%
 a gnoll sergeant
 ein Gnoll-Wachtmeister
 %%%%
-%d gnoll sergeants
-%d Gnoll-Wachtmeister
-%%%%
 a boggart
 ein Boggart
-%%%%
-%d boggarts
-%d Boggarts
 %%%%
 a dwarf
 ein Zwerg
 %%%%
-%d dwarves
-%d Zwerge
-%%%%
 a deep dwarf
 ein Tiefenzwerg
-%%%%
-%d deep dwarves
-%d Tiefenzwerge
 %%%%
 a jackal
 ein Schakal
 %%%%
-%d jackals
-%d Schakale
-%%%%
 a hound
 ein Hund
-%%%%
-%d hounds
-%d Hunde
 %%%%
 a howler monkey
 ein Brüllaffe
 %%%%
-%d howler monkeys
-%d Brüllaffen
-%%%%
 a warg
 ein Warg
-%%%%
-%d wargs
-%d Warge
 %%%%
 a wolf
 ein Wolf
 %%%%
-%d wolves
-%d Wölfe
-%%%%
 a hog
 ein Schwein
-%%%%
-%d hogs
-%d Schweine
 %%%%
 a hell hound
 ein Höllenhund
 %%%%
-%d hell hounds
-%d Höllenhunde
-%%%%
 a doom hound
 ein Untergangshund
-%%%%
-%d doom hounds
-%d Untergangshunde
 %%%%
 a raiju
 ein Raiju
 %%%%
-%d raiju
-%d Raijus
-%%%%
 a hell hog
 ein höllisches Schwein
-%%%%
-%d hell hogs
-%d höllische Schweine
 %%%%
 a holy swine
 ein heiliges Schwein
 %%%%
-%d holy swine
-%d heilige Schweine
-%%%%
 a felid
 ein Felid
-%%%%
-%d felids
-%d Feliden
 %%%%
 a bear
 ein Bär
 %%%%
-%d bears
-%d Bären
-%%%%
 a polar bear
 ein Eisbär
-%%%%
-%d polar bears
-%d Eisbären
 %%%%
 a black bear
 ein Schwarzbär
 %%%%
-%d black bears
-%d Schwarzbären
-%%%%
 a spriggan
 ein Spriggan
-%%%%
-%d spriggans
-%d Spriggans
 %%%%
 a spriggan rider
 ein Spriggan-Reiter
 %%%%
-%d spriggan riders
-%d Spriggan-Reiter
-%%%%
 a spriggan druid
 ein Spriggan-Druide
-%%%%
-%d spriggan druids
-%d Spriggan-Druiden
 %%%%
 a spriggan berserker
 ein Spriggan-Berserker
 %%%%
-%d spriggan berserkers
-%d Spriggan-Berserker
-%%%%
 a spriggan air mage
 ein Spriggan-Luftmagier
-%%%%
-%d spriggan air magi
-%d Spriggan-Luftmagier
 %%%%
 a spriggan defender
 ein Spriggan-Verteidiger
 %%%%
-%d spriggan defenders
-%d Spriggan-Verteidiger
-%%%%
 a drake
 ein Drachling
-%%%%
-%d drakes
-%d Drachlinge
 %%%%
 a swamp drake
 ein Sumpfdrachling
 %%%%
-%d swamp drakes
-%d Sumpfdrachlinge
-%%%%
 a rime drake
 ein Reifsdrachling
-%%%%
-%d rime drakes
-%d Reifsdrachlinge
 %%%%
 a wind drake
 ein Winddrachling
 %%%%
-%d wind drakes
-%d Winddrachlinge
-%%%%
 a lindwurm
 ein Lindwurm
-%%%%
-%d lindwurms
-%d Lindwurme
-%%%%
-# check plural above
 %%%%
 a death drake
 ein Todesdrachling
 %%%%
-%d death drakes
-%d Todesdrachlinge
-%%%%
-# check plural above
-%%%%
 a giant lizard
 eine Rieseneidechse
-%%%%
-%d giant lizards
-%d Rieseneidechsen
 %%%%
 a frilled lizard
 eine gekräuselte Eidechse
 %%%%
-%d frilled lizards
-%d gekräuselte Eidechsen
-%%%%
 a leopard gecko
 ein Leopardgecko
-%%%%
-%d leopard geckos
-%d Leopardgeckos
-%%%%
-# check plural above
 %%%%
 an iguana
 ein Leguan
 %%%%
-%d iguanas
-%d Leguane
-%%%%
-# check plural above
-%%%%
 a basilisk
 ein Basilisk
-%%%%
-%d basilisks
-%d Basiliske
-%%%%
-# check plural above
 %%%%
 a wyvern
 ein Wyvern
 %%%%
-%d wyverns
-%d Wyverns
-%%%%
 a komodo dragon
 ein Komododrache
-%%%%
-%d komodo dragons
-%d Komododrachen
 %%%%
 a merfolk
 ein Meervolk
 %%%%
-%d merfolk
-%d Meervolke
-%%%%
-# check plural above
-%%%%
 a merfolk impaler
 ein Meervolk-Impaler
-%%%%
-%d merfolk impalers
-%d Meervolk-Impaler
-%%%%
-# check plural above
 %%%%
 a merfolk javelineer
 ein Meervolk-Speerführer
 %%%%
-%d merfolk javelineers
-%d Meervolk-Speerführer
-%%%%
-# check plural above
-%%%%
 a merfolk aquamancer
 ein Meervolk-Aquamancer
-%%%%
-%d merfolk aquamancers
-%d Meervolk-Aquamancer
-%%%%
-# check plural above
 %%%%
 a merfolk siren
 eine Meervolk-Sirene
 %%%%
-%d merfolk sirens
-%d Meervolk-Sirenen
-%%%%
 a merfolk avatar
 ein Meervolk-Avatar
-%%%%
-%d merfolk avatars
-%d Meervolk-Avatare
-%%%%
-# check plural above
 %%%%
 a water nymph
 eine Wassernymphe
 %%%%
-%d water nymphs
-%d Wassernymphen
-%%%%
 a bog body
 eine Moorleiche
-%%%%
-%d bog bodies
-%d Moorleichen
 %%%%
 a necrophage
 ein Nekrophagen
 %%%%
-%d necrophages
-%d Nekrophagene
-%%%%
-# check plural above
-%%%%
 a bloated husk
 eine aufgeblähte Hülle
-%%%%
-%d bloated husks
-%d aufgeblähte Hülle
 %%%%
 a ghoul
 ein Ghul
 %%%%
-%d ghouls
-%d Ghule
-%%%%
-# check plural above
-%%%%
 an orc
 ein Ork
-%%%%
-%d orcs
-%d Orke
-%%%%
-# check plural above
 %%%%
 an orc wizard
 ein Ork-Zauberer
 %%%%
-%d orc wizards
-%d Ork-Zauberer
-%%%%
 an orc priest
 ein Ork-Priester
-%%%%
-%d orc priests
-%d Ork-Priester
 %%%%
 an orc warrior
 ein Ork-Krieger
 %%%%
-%d orc warriors
-%d Ork-Krieger
-%%%%
 an orc knight
 ein Ork-Ritter
-%%%%
-%d orc knights
-%d Ork-Ritter
 %%%%
 an orc warlord
 ein Ork-Warlord
 %%%%
-%d orc warlords
-%d Ork-Warlorde
-%%%%
-# check plural above
-%%%%
 an orc sorcerer
 ein Ork-Hexenmeister
-%%%%
-%d orc sorcerers
-%d Ork-Hexenmeister
 %%%%
 an orc high priest
 ein Ork-Hohepriester
 %%%%
-%d orc high priests
-%d Ork-Hohepriester
-%%%%
 a lava orc
 ein Lava-Ork
-%%%%
-%d lava orcs
-%d Lava-Orke
-%%%%
-# check plural above
 %%%%
 a human
 ein Mensch
 %%%%
-%d humans
-%d Menschen
-%%%%
 a slave
 ein Sklave
-%%%%
-%d slaves
-%d Sklaven
 %%%%
 a hell knight
 ein Höllenritter
 %%%%
-%d hell knights
-%d Höllenritter
-%%%%
 a death knight
 ein Todesritter
-%%%%
-%d death knights
-%d Todesritter
 %%%%
 a necromancer
 ein Nekromant
 %%%%
-%d necromancers
-%d Nekromanten
-%%%%
 a wizard
 ein Zauberer
-%%%%
-%d wizards
-%d Zauberer
 %%%%
 a vault guard
 ein Tresorwächter
 %%%%
-%d vault guards
-%d Tresorwächter
-%%%%
 a vault sentinel
 eine Tresorwache
-%%%%
-%d vault sentinels
-%d Tresorwachen
 %%%%
 a vault warden
 ein Tresorwärter
 %%%%
-%d vault wardens
-%d Tresorwärter
-%%%%
 an ironbound convoker
 ein eisenbeschlagener Einberufer
-%%%%
-%d ironbound convokers
-%d eisenbeschlagene Einberufer
 %%%%
 an ironbound frostheart
 ein eisengebundenes Frostherz
 %%%%
-%d ironbound frosthearts
-%d eisengebundene Frostherzen
-%%%%
 an ironbound preserver
 ein eisenbeschlagene Bewahrer
-%%%%
-%d ironbound preservers
-%d eisenbeschlagene Bewahrer
 %%%%
 an ironbound beastmaster
 ein eisenbeschlagene Bestienmeister
 %%%%
-%d ironbound beastmasters
-%d eisenbeschlagene Bestienmeister
-%%%%
 an ironbound thunderhulk
 ein eisenbeschlagener Donnerkoloss
-%%%%
-%d ironbound thunderhulks
-%d eisenbeschlagene Donnerkolosse
 %%%%
 an imperial myrmidon
 ein kaiserlicher Myrmidon
 %%%%
-%d imperial myrmidons
-%d kaiserliche Myrmidone
-%%%%
-# check plural above
-%%%%
 a servant of whispers
 ein Diener des Flüsterns
-%%%%
-%d servants of whispers
-%d Diener des Flüsterns
 %%%%
 a ragged hierophant
 ein zerlumpter Hierophant
 %%%%
-%d ragged hierophants
-%d zerlumpte Hierophanten
-%%%%
 a shapeshifter
 ein Gestaltwandler
-%%%%
-%d shapeshifters
-%d Gestaltwandler
 %%%%
 a glowing shapeshifter
 ein leuchtender Gestaltwandler
 %%%%
-%d glowing shapeshifters
-%d leuchtende Gestaltwandler
-%%%%
 a Killer Klown
 ein Killer-Klown
-%%%%
-%d Killer Klowns
-%d Killer-Klowns
 %%%%
 a demigod
 ein Halbgott
 %%%%
-%d demigods
-%d Halbgotte
-%%%%
-# check plural above
-%%%%
 a halfling
 ein Halbling
-%%%%
-%d halflings
-%d Halblinge
 %%%%
 a rat
 eine Ratte
 %%%%
-%d rats
-%d Ratten
-%%%%
 a quokka
 ein Quokka
-%%%%
-%d quokkas
-%d Quokkas
-%%%%
-# check plural above
 %%%%
 a river rat
 eine Flussratte
 %%%%
-%d river rats
-%d Flussratten
-%%%%
 a hell rat
 eine Höllenratte
-%%%%
-%d hell rats
-%d Höllenratten
 %%%%
 a porcupine
 ein Stachelschwein
 %%%%
-%d porcupines
-%d Stachelschweine
-%%%%
 a giant cockroach
 eine Riesenkakerlake
-%%%%
-%d giant cockroaches
-%d Riesenkakerlaken
 %%%%
 a scorpion
 ein Skorpion
 %%%%
-%d scorpions
-%d Skorpione
-%%%%
-# check plural above
-%%%%
 an emperor scorpion
 ein Kaiserskorpion
-%%%%
-%d emperor scorpions
-%d Kaiserskorpione
-%%%%
-# check plural above
 %%%%
 a death scarab
 ein Todesskarabäus
 %%%%
-%d death scarabs
-%d Todesskarabäen
-%%%%
-# check plural above
-%%%%
 a spider
 eine Spinne
-%%%%
-%d spiders
-%d Spinnen
 %%%%
 a tarantella
 eine Tarantella
 %%%%
-%d tarantellas
-%d Tarantellen
-%%%%
-# check plural above
-%%%%
 a jumping spider
 eine springende Spinne
-%%%%
-%d jumping spiders
-%d springende Spinnen
 %%%%
 a wolf spider
 eine Wolfsspinne
 %%%%
-%d wolf spiders
-%d Wolfsspinnen
-%%%%
 a redback
 eine Rotrückenspinne
-%%%%
-%d redbacks
-%d Rotrückenspinnen
 %%%%
 a demonic crawler
 ein dämonischer Kriecher
 %%%%
-%d demonic crawlers
-%d dämonische Kriecher
-%%%%
 an orb spider
 eine Kugelspinne
-%%%%
-%d orb spiders
-%d Kugelspinnen
 %%%%
 a crocodile
 ein Krokodil
 %%%%
-%d crocodiles
-%d Krokodile
-%%%%
-# check plural above
-%%%%
 an alligator
 ein Alligator
-%%%%
-%d alligators
-%d Alligatore
-%%%%
-# check plural above
 %%%%
 a snapping turtle
 eine Schnappschildkröte
 %%%%
-%d snapping turtles
-%d Schnappschildkröten
-%%%%
 an alligator snapping turtle
 eine Alligatorschnappschildkröte
-%%%%
-%d alligator snapping turtles
-%d Alligatorschnappschildkröten
 %%%%
 a crab
 eine Krabbe
 %%%%
-%d crabs
-%d Krabben
-%%%%
 a fire crab
 eine Feuerkrabbe
-%%%%
-%d fire crabs
-%d Feuerkrabben
 %%%%
 a ghost crab
 eine Geisterkrabbe
 %%%%
-%d ghost crabs
-%d Geisterkrabben
-%%%%
 an apocalypse crab
 eine Apokalypse-Krabbe
-%%%%
-%d apocalypse crabs
-%d Apokalypse-Krabben
 %%%%
 an ugly thing
 ein hässliches Ding
 %%%%
-%d ugly things
-%d hässliche Dinge
-%%%%
 a very ugly thing
 ein sehr hässliches Ding
-%%%%
-%d very ugly things
-%d sehr hässliche Dinge
 %%%%
 a fire vortex
 ein Feuerwirbel
 %%%%
-%d fire vortices
-%d Feuerwirbel
-%%%%
-# check plural above
-%%%%
 a spatial vortex
 ein räumlicher Wirbel
-%%%%
-%d spatial vortices
-%d räumliche Wirbel
-%%%%
-# check plural above
 %%%%
 a spatial maelstrom
 ein räumlicher Mahlstrom
 %%%%
-%d spatial maelstroms
-%d räumliche Mahlstrome
-%%%%
-# check plural above
-%%%%
 an insubstantial wisp
 ein unwesentliches Irrlicht
-%%%%
-%d insubstantial wisps
-%d unwesentliche Irrlichte
-%%%%
-# check plural above
 %%%%
 a twister
 ein Twister
 %%%%
-%d twisters
-%d Twister
-%%%%
-# check plural above
-%%%%
 a worm
 ein Wurm
-%%%%
-%d worms
-%d Wurme
-%%%%
-# check plural above
 %%%%
 a swamp worm
 ein Sumpfwurm
 %%%%
-%d swamp worms
-%d Sumpfwurme
-%%%%
-# check plural above
-%%%%
 a tyrant leech
 ein Tyrannblutegel
-%%%%
-%d tyrant leeches
-%d Tyrannblutegel
-%%%%
-# check plural above
 %%%%
 a dart slug
 eine Pfeilschnecke
 %%%%
-%d dart slugs
-%d Pfeilschnecken
-%%%%
 a torpor snail
 eine Erstarrungsschnecke
-%%%%
-%d torpor snails
-%d Erstarrungsschnecken
 %%%%
 an elephant slug
 eine Elefantenschnecke
 %%%%
-%d elephant slugs
-%d Elefantenschnecken
-%%%%
 an unseen horror
 ein unsichtbares Grauen
-%%%%
-%d unseen horrors
-%d unsichtbare Grauene
-%%%%
-# check plural above
 %%%%
 a small abomination
 ein kleiner Greuel
 %%%%
-%d small abominations
-%d kleine Greuel
-%%%%
-# check plural above
-%%%%
 a crawling corpse
 eine kriechende Leiche
-%%%%
-%d crawling corpses
-%d kriechende Leichen
 %%%%
 a macabre mass
 eine makabere Masse
 %%%%
-%d macabre masses
-%d makabere Massen
-%%%%
 an ancient zyme
 ein uraltes Zym
-%%%%
-%d ancient zymes
-%d uralte Zyme
-%%%%
-# check plural above
 %%%%
 a worldbinder
 ein Weltbinder
 %%%%
-%d worldbinders
-%d Weltbinder
-%%%%
 a killer bee
 eine Killerbiene
-%%%%
-%d killer bees
-%d Killerbienen
 %%%%
 a queen bee
 eine Bienenkönigin
 %%%%
-%d queen bees
-%d Bienenköniginnen
-%%%%
 a vampire mosquito
 eine Vampir-Mücke
-%%%%
-%d vampire mosquitoes
-%d Vampir-Mücken
 %%%%
 a hornet
 eine Hornisse
 %%%%
-%d hornets
-%d Hornissen
-%%%%
 a meliai
 eine Meliai
-%%%%
-%d meliai
-%d Meliais
-%%%%
-# check plural above
 %%%%
 a spark wasp
 eine Funkenwespe
 %%%%
-%d spark wasps
-%d Funkenwespen
-%%%%
 a moth
 eine Motte
-%%%%
-%d moths
-%d Motten
 %%%%
 a ghost moth
 eine Geistermotte
 %%%%
-%d ghost moths
-%d Geistermotten
-%%%%
 a moth of wrath
 eine Motte des Zorns
-%%%%
-%d moths of wrath
-%d Motten des Zorns
 %%%%
 a wight
 ein Wight
 %%%%
-%d wights
-%d Wighte
-%%%%
-# check plural above
-%%%%
 a skeletal warrior
 ein Skelettkrieger
-%%%%
-%d skeletal warriors
-%d Skelettkrieger
 %%%%
 an ancient champion
 ein alter Champion
 %%%%
-%d ancient champions
-%d alte Champione
-%%%%
-# check plural above
-%%%%
 a flying skull
 ein fliegender Schädel
-%%%%
-%d flying skulls
-%d fliegende Schädel
-%%%%
-# check plural above
 %%%%
 a curse skull
 ein Fluchschädel
 %%%%
-%d curse skulls
-%d Fluchschädel
-%%%%
-# check plural above
-%%%%
 a curse toe
 ein Fluchzeh
-%%%%
-%d curse toes
-%d Fluchzehen
-%%%%
-# check plural above
 %%%%
 an angel
 ein Engel
 %%%%
-%d angels
-%d Engel
-%%%%
-# check plural above
-%%%%
 a cherub
 ein Cherub
-%%%%
-%d cherubim
-%d Cherube
-%%%%
-# check plural above
 %%%%
 a seraph
 ein Seraph
 %%%%
-%d seraphim
-%d Seraphe
-%%%%
-# check plural above
-%%%%
 a daeva
 ein Daeva
-%%%%
-%d daevas
-%d Daevas
-%%%%
-# check plural above
 %%%%
 a profane servitor
 ein profaner Diener
 %%%%
-%d profane servitors
-%d profane Diener
-%%%%
 a giant
 ein Riese
-%%%%
-%d giants
-%d Riesen
 %%%%
 a cyclops
 ein Zyklop
 %%%%
-%d cyclopes
-%d Zyklope
-%%%%
-# check plural above
-%%%%
 an ettin
 ein Ettin
-%%%%
-%d ettins
-%d Ettine
-%%%%
-# check plural above
 %%%%
 a fire giant
 ein Feuerriese
 %%%%
-%d fire giants
-%d Feuerriesen
-%%%%
 a frost giant
 ein Frostriese
-%%%%
-%d frost giants
-%d Frostriesen
 %%%%
 a stone giant
 ein Steinriese
 %%%%
-%d stone giants
-%d Steinriesen
-%%%%
 a titan
 ein Titan
-%%%%
-%d titans
-%d Titane
-%%%%
-# check plural above
 %%%%
 a juggernaut
 ein Juggernaut
 %%%%
-%d juggernauts
-%d Juggernaute
-%%%%
-# check plural above
-%%%%
 an iron giant
 ein Eisenriese
-%%%%
-%d iron giants
-%d Eisenriesen
 %%%%
 a dragon
 ein Drache
 %%%%
-%d dragons
-%d Drachen
-%%%%
 a fire dragon
 ein Feuerdrache
 %%%%
-%d fire dragons
-%d Feuerdrachen
-%%%%
 a hydra
 eine Hydra
-%%%%
-%d hydras
-%d Hydren
-%%%%
-# check plural above
 %%%%
 a one-headed hydra
 eine einköpfige Hydra
@@ -3343,1996 +2611,836 @@ eine 20-köpfige Hydra
 an ice dragon
 ein Eisdrache
 %%%%
-%d ice dragons
-%d Eisdrachen
-%%%%
 a steam dragon
 ein Dampfdrache
-%%%%
-%d steam dragons
-%d Dampfdrachen
 %%%%
 a swamp dragon
 ein Sumpfdrache
 %%%%
-%d swamp dragons
-%d Sumpfdrachen
-%%%%
 an acid dragon
 ein Säuredrache
-%%%%
-%d acid dragons
-%d Säuredrachen
 %%%%
 a quicksilver dragon
 ein Quecksilberdrache
 %%%%
-%d quicksilver dragons
-%d Quecksilberdrachen
-%%%%
 an iron dragon
 ein Eisendrache
-%%%%
-%d iron dragons
-%d Eisendrachen
 %%%%
 a storm dragon
 ein Sturmdrache
 %%%%
-%d storm dragons
-%d Sturmdrachen
-%%%%
 a golden dragon
 ein Golddrache
-%%%%
-%d golden dragons
-%d Golddrachen
 %%%%
 a shadow dragon
 ein Schattendrache
 %%%%
-%d shadow dragons
-%d Schattendrachen
-%%%%
 a bone dragon
 ein Knochendrache
-%%%%
-%d bone dragons
-%d Knochendrachen
 %%%%
 a pearl dragon
 ein Perlendrache
 %%%%
-%d pearl dragons
-%d Perlendrachen
-%%%%
 an elemental
 ein Elementar
-%%%%
-%d elementals
-%d Elementare
-%%%%
-# check plural above
 %%%%
 an earth elemental
 ein Erdelementar
 %%%%
-%d earth elementals
-%d Erdelementare
-%%%%
-# check plural above
-%%%%
 a fire elemental
 ein Feuerelementar
-%%%%
-%d fire elementals
-%d Feuerelementare
-%%%%
-# check plural above
 %%%%
 a water elemental
 ein Wasserelementar
 %%%%
-%d water elementals
-%d Wasserelementare
-%%%%
-# check plural above
-%%%%
 an air elemental
 ein Luftelementar
-%%%%
-%d air elementals
-%d Luftelementare
-%%%%
-# check plural above
 %%%%
 an iron elemental
 ein Eisenelementar
 %%%%
-%d iron elementals
-%d Eisenelementare
-%%%%
-# check plural above
-%%%%
 an elemental wellspring
 eine elementare Quelle
-%%%%
-%d elemental wellsprings
-%d elementare Quellen
 %%%%
 a giant frog
 ein Riesenfrosch
 %%%%
-%d giant frogs
-%d Riesenfrösche
-%%%%
 a bullfrog
 ein Ochsenfrosch
-%%%%
-%d bullfrogs
-%d Ochsenfrösche
 %%%%
 a spiny frog
 ein Stachelfrosch
 %%%%
-%d spiny frogs
-%d Stachelfrösche
-%%%%
 a blink frog
 ein Blinzelfrosch
-%%%%
-%d blink frogs
-%d Blinzelfrösche
 %%%%
 a barachi
 eine Barachi
 %%%%
-%d barachim
-%d Barachis
-%%%%
-# check plural above
-%%%%
 a floating eye
 ein schwebendes Auge
-%%%%
-%d floating eyes
-%d schwebende Augen
-%%%%
-# check plural above
 %%%%
 an eye of draining
 ein Auge des Schwächens
 %%%%
-%d eyes of draining
-%d Augen des Schwächens
-%%%%
-# check plural above
-%%%%
 a glowing orange brain
 ein oranges leuchtendes Gehirn
-%%%%
-%d glowing orange brains
-%d orange leuchtende Gehirne
-%%%%
-# check plural above
 %%%%
 a great orb of eyes
 eine große Augenkugel
 %%%%
-%d great orbs of eyes
-%d große Augenkugel
-%%%%
-# check plural above
-%%%%
 a shining eye
 ein leuchtendes Auge
-%%%%
-%d shining eyes
-%d leuchtende Augen
-%%%%
-# check plural above
 %%%%
 an eye of devastation
 ein Auge der Verwüstung
 %%%%
-%d eyes of devastation
-%d Augen der Verwüstung
-%%%%
-# check plural above
-%%%%
 a golden eye
 ein goldenes Auge
-%%%%
-%d golden eyes
-%d goldene Augen
-%%%%
-# check plural above
 %%%%
 an ophan
 ein Ophan
 %%%%
-%d ophanim
-%d Ophane
-%%%%
-# check plural above
-%%%%
 a hippogriff
 ein Hippogriff
-%%%%
-%d hippogriffs
-%d Hippogriffe
-%%%%
-# check plural above
 %%%%
 a manticore
 ein Mantikor
 %%%%
-%d manticores
-%d Mantikore
-%%%%
-# check plural above
-%%%%
 a minotaur
 ein Minotaur
-%%%%
-%d minotaurs
-%d Minotauren
-%%%%
-# check plural above
 %%%%
 a sphinx
 eine Sphinx
 %%%%
-%d sphinxes
-%d Sphinxen
-%%%%
-# check plural above
-%%%%
 a harpy
 eine Harpyie
-%%%%
-%d harpies
-%d Harpyien
 %%%%
 a mutant beast
 eine mutierte Bestie
 %%%%
-%d mutant beasts
-%d mutierte Bestien
-%%%%
 an ancestor
 ein Ahne
-%%%%
-%d ancestors
-%d Ahnen
-%%%%
-# check plural above
 %%%%
 a knight
 ein Ritter
 %%%%
-%d knights
-%d Ritter
-%%%%
-# check plural above
-%%%%
 a battlemage
 ein Kampfmagier
-%%%%
-%d battlemagi
-%d Kampfmagier
 %%%%
 a hexer
 ein Hexer
 %%%%
-%d hexers
-%d Hexer
-%%%%
-# check plural above
-%%%%
 an ooze
 ein Schlamm
-%%%%
-%d oozes
-%d Schlamme
-%%%%
-# check plural above
 %%%%
 a jelly
 ein Gelee
 %%%%
-%d jellies
-%d Geleen
-%%%%
-# check plural above
-%%%%
 a slime creature
 ein Schleimwesen
-%%%%
-%d slime creatures
-%d Schleimwesene
-%%%%
-# check plural above
 %%%%
 a merged slime creature
 eine verschmolzene Schleimkreatur
 %%%%
-%d merged slime creatures
-%d verschmolzene Schleimkreaturen
-%%%%
-# check plural above
-%%%%
 an azure jelly
 ein azurblaues Gelee
-%%%%
-%d azure jellies
-%d azurblaue Geleen
-%%%%
-# check plural above
 %%%%
 a death ooze
 ein Todesschlamm
 %%%%
-%d death oozes
-%d Todesschlamme
-%%%%
-# check plural above
-%%%%
 an acid blob
 ein Säureklumpen
-%%%%
-%d acid blobs
-%d Säureklumpene
-%%%%
-# check plural above
 %%%%
 a kobold
 ein Kobold
 %%%%
-%d kobolds
-%d Kobolde
-%%%%
-# check plural above
-%%%%
 a big kobold
 ein großer Kobold
-%%%%
-%d big kobolds
-%d große Kobolde
-%%%%
-# check plural above
 %%%%
 a kobold demonologist
 ein Kobold-Dämonologe
 %%%%
-%d kobold demonologists
-%d Kobold-Dämonologen
-%%%%
-# check plural above
-%%%%
 a lich
 ein Lich
-%%%%
-%d liches
-%d Lichs
 %%%%
 an ancient lich
 ein alter Lich
 %%%%
-%d ancient liches
-%d alte Lichs
-%%%%
 a revenant
 ein Wiedergänger
-%%%%
-%d revenants
-%d Wiedergänger
-%%%%
-# check plural above
 %%%%
 a halazid warlock
 ein halazidischer Hexenmeister
 %%%%
-%d halazid warlocks
-%d halazidische Hexenmeister
-%%%%
-# check plural above
-%%%%
 a mummy
 eine Mumie
-%%%%
-%d mummies
-%d Mumien
 %%%%
 a guardian mummy
 eine Wächtermumie
 %%%%
-%d guardian mummies
-%d Wächtermumien
-%%%%
 a greater mummy
 eine größere Mumie
-%%%%
-%d greater mummies
-%d größere Mumien
 %%%%
 a mummy priest
 ein Mumie-Priester
 %%%%
-%d mummy priests
-%d Mumie-Priester
-%%%%
-# check plural above
-%%%%
 a naga
 ein Naga
-%%%%
-%d nagas
-%d Nagas
-%%%%
-# check plural above
 %%%%
 a naga mage
 ein Naga-Magier
 %%%%
-%d naga magi
-%d Naga-Magier
-%%%%
 a naga sharpshooter
 ein Naga-Scharfschütze
-%%%%
-%d naga sharpshooters
-%d Naga-Scharfschützen
-%%%%
-# check plural above
 %%%%
 a naga ritualist
 ein Naga-Ritualist
 %%%%
-%d naga ritualists
-%d Naga-Ritualisten
-%%%%
 a naga warrior
 ein Naga-Krieger
-%%%%
-%d naga warriors
-%d Naga-Krieger
-%%%%
-# check plural above
 %%%%
 a nagaraja
 ein Nagaraja
 %%%%
-%d nagarajas
-%d Nagarajas
-%%%%
-# check plural above
-%%%%
 an ogre
 ein Oger
-%%%%
-%d ogres
-%d Oger
-%%%%
-# check plural above
 %%%%
 a two-headed ogre
 ein zweiköpfiger Oger
 %%%%
-%d two-headed ogres
-%d zweiköpfige Oger
-%%%%
-# check plural above
-%%%%
 an ogre mage
 ein Oger-Magier
-%%%%
-%d ogre magi
-%d Oger-Magier
 %%%%
 a plant
 eine Pflanze
 %%%%
-%d plants
-%d Pflanzen
-%%%%
 a demonic plant
 eine dämonische Pflanze
-%%%%
-%d demonic plants
-%d dämonische Pflanzen
 %%%%
 a withered plant
 eine verwelkte Pflanze
 %%%%
-%d withered plants
-%d verwelkte Pflanzen
-%%%%
 an oklob sapling
 ein Oklob-Setzling
-%%%%
-%d oklob saplings
-%d Oklob-Setzlinge
 %%%%
 an oklob plant
 eine Oklob-Pflanze
 %%%%
-%d oklob plants
-%d Oklob-Pflanzen
-%%%%
 a bush
 ein Busch
-%%%%
-%d bushes
-%d Busche
-%%%%
-# check plural above
 %%%%
 a burning bush
 ein brennender Busch
 %%%%
-%d burning bushes
-%d brennende Busche
-%%%%
-# check plural above
-%%%%
 a toadstool
 ein Giftpilz
-%%%%
-%d toadstools
-%d Giftpilze
-%%%%
-# check plural above
 %%%%
 a fungus
 ein Pilz
 %%%%
-%d fungi
-%d Pilze
-%%%%
-# check plural above
-%%%%
 a ballistomycete
 ein Ballistomycete
-%%%%
-%d ballistomycetes
-%d Ballistomyceten
-%%%%
-# check plural above
 %%%%
 a hyperactive ballistomycete
 ein hyperaktiver Ballistomycete
 %%%%
-%d hyperactive ballistomycetes
-%d hyperaktive Ballistomyceten
-%%%%
-# check plural above
-%%%%
 a briar patch
 ein Dornstrauch
-%%%%
-%d briar patches
-%d Dornstrauche
-%%%%
-# check plural above
 %%%%
 a tengu
 ein Tengu
 %%%%
-%d tengu
-%d Tengus
-%%%%
-# check plural above
-%%%%
 a tengu conjurer
 ein Tengu-Zauberer
-%%%%
-%d tengu conjurers
-%d Tengu-Zauberer
-%%%%
-# check plural above
 %%%%
 a tengu warrior
 ein Tengu-Krieger
 %%%%
-%d tengu warriors
-%d Tengu-Krieger
-%%%%
-# check plural above
-%%%%
 a tengu reaver
 ein Tengu-Häscher
-%%%%
-%d tengu reavers
-%d Tengu-Häscher
-%%%%
-# check plural above
 %%%%
 an efreet
 ein Efreet
 %%%%
-%d efreet
-%d Efreete
-%%%%
-# check plural above
-%%%%
 a rakshasa
 ein Rakshasa
-%%%%
-%d rakshasas
-%d Rakshasas
-%%%%
-# check plural above
 %%%%
 a dryad
 eine Dryade
 %%%%
-%d dryads
-%d Dryaden
-%%%%
 a snaplasher vine
 eine Peitscherrebe
-%%%%
-%d snaplasher vines
-%d Peitscherreben
 %%%%
 a snaplasher vine segment
 ein Peitscherrebesegment
 %%%%
-%d snaplasher vine segments
-%d Peitscherrebesegmente
-%%%%
 a snake
 eine Schlange
-%%%%
-%d snakes
-%d Schlangen
 %%%%
 a ball python
 eine Kugelpython
 %%%%
-%d ball pythons
-%d Kugelpythonen
-%%%%
-# check plural above
-%%%%
 an adder
 eine Kreuzotter
-%%%%
-%d adders
-%d Kreuzottern
-%%%%
-# check plural above
 %%%%
 a water moccasin
 ein Wassermokassin
 %%%%
-%d water moccasins
-%d Wassermokassine
-%%%%
-# check plural above
-%%%%
 a black mamba
 eine schwarze Mamba
-%%%%
-%d black mambas
-%d schwarze Mambas
-%%%%
-# check plural above
 %%%%
 a sea snake
 eine Seeschlange
 %%%%
-%d sea snakes
-%d Seeschlangen
-%%%%
 an anaconda
 eine Anakonda
-%%%%
-%d anacondas
-%d Anakondas
-%%%%
-# check plural above
 %%%%
 a guardian serpent
 eine Wächter-Schlange
 %%%%
-%d guardian serpents
-%d Wächter-Schlangen
-%%%%
 a shock serpent
 eine Schockschlange
-%%%%
-%d shock serpents
-%d Schockschlangen
 %%%%
 a mana viper
 eine Manaviper
 %%%%
-%d mana vipers
-%d Manavipern
-%%%%
-# check plural above
-%%%%
 a troll
 ein Troll
-%%%%
-%d trolls
-%d Trolle
-%%%%
-# check plural above
 %%%%
 an iron troll
 ein Eisentroll
 %%%%
-%d iron trolls
-%d Eisentrolle
-%%%%
-# check plural above
-%%%%
 a deep troll
 ein Tiefentroll
-%%%%
-%d deep trolls
-%d Tiefentrolle
-%%%%
-# check plural above
 %%%%
 a deep troll earth mage
 ein Tiefentroll-Erdmagier
 %%%%
-%d deep troll earth magi
-%d Tiefentroll-Erdmagier
-%%%%
 a deep troll shaman
 ein Tiefentroll-Schamane
-%%%%
-%d deep troll shamans
-%d Tiefentroll-Schamanen
-%%%%
-# check plural above
 %%%%
 a vampire
 ein Vampir
 %%%%
-%d vampires
-%d Vampire
-%%%%
-# check plural above
-%%%%
 a vampire knight
 ein Vampir-Ritter
-%%%%
-%d vampire knights
-%d Vampir-Ritter
-%%%%
-# check plural above
 %%%%
 a vampire mage
 ein Vampir-Magier
 %%%%
-%d vampire magi
-%d Vampir-Magier
-%%%%
 a jiangshi
 ein Jiangshi
-%%%%
-%d jiangshi
-%d Jiangshis
-%%%%
-# check plural above
 %%%%
 a ghost
 ein Gespenst
 %%%%
-%d ghosts
-%d Gespenste
-%%%%
-# check plural above
-%%%%
 a phantom
 ein Phantom
-%%%%
-%d phantoms
-%d Phantome
-%%%%
-# check plural above
 %%%%
 a hungry ghost
 ein hungriger Geist
 %%%%
-%d hungry ghosts
-%d hungrige Geister
-%%%%
 a flayed ghost
 ein enthäuteter Geist
-%%%%
-%d flayed ghosts
-%d enthäutete Geister
 %%%%
 a player ghost
 ein Spielergeist
 %%%%
-%d player ghosts
-%d Spielergeister
-%%%%
 a shadow
 ein Schatten
-%%%%
-%d shadows
-%d Schatten
 %%%%
 a silent spectre
 ein stilles Gespenst
 %%%%
-%d silent spectres
-%d stille Gespenste
-%%%%
-# check plural above
-%%%%
 a drowned soul
 eine ertrunkene Seele
-%%%%
-%d drowned souls
-%d ertrunkene Seelen
 %%%%
 a wraith
 ein Geist
 %%%%
-%d wraiths
-%d Geister
-%%%%
 a shadow wraith
 ein Schattengeist
-%%%%
-%d shadow wraiths
-%d Schattengeister
 %%%%
 a freezing wraith
 ein Frostgeist
 %%%%
-%d freezing wraiths
-%d Frostgeister
-%%%%
 an eidolon
 ein Eidolon
-%%%%
-%d eidola
-%d Eidolone
-%%%%
-# check plural above
 %%%%
 a phantasmal warrior
 ein phantastischer Krieger
 %%%%
-%d phantasmal warriors
-%d phantastische Krieger
-%%%%
-# check plural above
-%%%%
 a large abomination
 ein großer Greuel
-%%%%
-%d large abominations
-%d große Greuel
-%%%%
-# check plural above
 %%%%
 a thrashing horror
 ein verprügelndes Grauen
 %%%%
-%d thrashing horrors
-%d verprügelnde Grauene
-%%%%
-# check plural above
-%%%%
 a tentacled monstrosity
 eine Tentakel-Monstrosität
-%%%%
-%d tentacled monstrosities
-%d Tentakel-Monstrositäten
 %%%%
 an Orb Guardian
 ein Kugelwächter
 %%%%
-%d Orb Guardians
-%d Kugelwächter
-%%%%
-# check plural above
-%%%%
 a tentacled starspawn
 ein Tentakelsternbrut
-%%%%
-%d tentacled starspawn
-%d Tentakelsternbrute
-%%%%
-# check plural above
 %%%%
 a starspawn tentacle
 ein Sternbruttentakel
 %%%%
-%d starspawn tentacles
-%d Sternbruttentakel
-%%%%
-# check plural above
-%%%%
 a starspawn tentacle segment
 ein Sternbruttentakelsegment
-%%%%
-%d starspawn tentacle segments
-%d Sternbruttentakelsegmente
 %%%%
 a starcursed mass
 eine sternverfluchte Masse
 %%%%
-%d starcursed masses
-%d sternverfluchte Massen
-%%%%
 a dream sheep
 ein Traumschaf
-%%%%
-%d dream sheep
-%d Traumschafe
-%%%%
-# check plural above
 %%%%
 a yak
 ein Yak
 %%%%
-%d yaks
-%d Yake
-%%%%
-# check plural above
-%%%%
 a death yak
 ein Todesyak
-%%%%
-%d death yaks
-%d Todesyake
-%%%%
-# check plural above
 %%%%
 a catoblepas
 eine Catoblepas
 %%%%
-%d catoblepae
-%d Catoblepasen
-%%%%
-# check plural above
-%%%%
 an elephant
 ein Elefant
-%%%%
-%d elephants
-%d Elefanten
 %%%%
 a dire elephant
 ein Schreckenselefant
 %%%%
-%d dire elephants
-%d Schreckenselefanten
-%%%%
 a hellephant
 ein Höllefant
-%%%%
-%d hellephants
-%d Höllefanten
 %%%%
 an apis
 eine Apis
 %%%%
-%d apises
-%d Apisen
-%%%%
-# check plural above
-%%%%
 an ice beast
 eine Eisbestie
-%%%%
-%d ice beasts
-%d Eisbestien
 %%%%
 a sky beast
 ein Himmelstier
 %%%%
-%d sky beasts
-%d Himmelstiere
-%%%%
-# check plural above
-%%%%
 a zombie
 ein Zombie
-%%%%
-%d zombies
-%d Zombies
 %%%%
 a skeleton
 ein Skelett
 %%%%
-%d skeletons
-%d Skelette
-%%%%
-# check plural above
-%%%%
 a simulacrum
 ein Simulacrum
-%%%%
-%d simulacra
-%d Simulacren
-%%%%
-# check plural above
 %%%%
 a small zombie
 ein kleiner Zombie
 %%%%
-%d small zombies
-%d kleine Zombies
-%%%%
 a small skeleton
 ein kleines Skelett
-%%%%
-%d small skeletons
-%d kleine Skelette
-%%%%
-# check plural above
 %%%%
 a small simulacrum
 ein kleines Simulacrum
 %%%%
-%d small simulacra
-%d kleine Simulacren
-%%%%
-# check plural above
-%%%%
 a large zombie
 ein großer Zombie
-%%%%
-%d large zombies
-%d große Zombies
 %%%%
 a large skeleton
 ein großes Skelett
 %%%%
-%d large skeletons
-%d große Skelette
-%%%%
-# check plural above
-%%%%
 a large simulacrum
 ein großes Simulacrum
-%%%%
-%d large simulacra
-%d große Simulacren
-%%%%
-# check plural above
 %%%%
 a spectral thing
 eine spektrale Sache
 %%%%
-%d spectral things
-%d spektrale Sachen
-%%%%
 an electric eel
 ein Zitteraal
-%%%%
-%d electric eels
-%d Zitteraale
-%%%%
-# check plural above
 %%%%
 a kraken
 ein Kraken
 %%%%
-%d krakens
-%d Krakene
-%%%%
-# check plural above
-%%%%
 a tentacle
 ein Tentakel
-%%%%
-%d tentacles
-%d Tentakel
-%%%%
-# check plural above
 %%%%
 a tentacle segment
 ein Tentakelsegment
 %%%%
-%d tentacle segments
-%d Tentakelsegmente
-%%%%
 an octopode
 ein Oktopod
-%%%%
-%d octopodes
-%d Oktopode
-%%%%
-# check plural above
 %%%%
 a lava snake
 eine Lavaschlange
 %%%%
-%d lava snakes
-%d Lavaschlangen
-%%%%
 a salamander
 ein Salamander
-%%%%
-%d salamanders
-%d Salamander
-%%%%
-# check plural above
 %%%%
 a salamander mystic
 ein Salamander-Mystiker
 %%%%
-%d salamander mystics
-%d Salamander-Mystiker
-%%%%
-# check plural above
-%%%%
 a Hellbinder
 ein Höllenbinder
-%%%%
-%d Hellbinders
-%d Höllenbinder
-%%%%
-# check plural above
 %%%%
 a Cloud Mage
 ein Wolkenmagier
 %%%%
-%d Cloud Mages
-%d Wolkenmagier
-%%%%
 a player
 ein Spieler
-%%%%
-%d players
-%d Spieler
-%%%%
-# check plural above
 %%%%
 a player illusion
 eine Spieler-Illusion
 %%%%
-%d player illusions
-%d Spieler-Illusionen
-%%%%
-# check plural above
-%%%%
 a dancing weapon
 eine tanzende Waffe
-%%%%
-%d dancing weapons
-%d tanzende Waffen
 %%%%
 a spectral weapon
 eine Spektralwaffe
 %%%%
-%d spectral weapons
-%d Spektralwaffen
-%%%%
 an eldritch tentacle
 ein unheimlicher Tentakel
-%%%%
-%d eldritch tentacles
-%d unheimliche Tentakel
-%%%%
-# check plural above
 %%%%
 an eldritch tentacle segment
 ein unheimliches Tentakelsegment
 %%%%
-%d eldritch tentacle segments
-%d unheimliche Tentakelsegmente
-%%%%
 a demonspawn
 eine Dämonenbrut
-%%%%
-%d demonspawn
-%d Dämonenbruten
-%%%%
-# check plural above
 %%%%
 a monstrous demonspawn
 eine monströse Dämonenbrut
 %%%%
-%d monstrous demonspawn
-%d monströse Dämonenbruten
-%%%%
-# check plural above
-%%%%
 a gelid demonspawn
 ein gelider Dämonenbrut
-%%%%
-%d gelid demonspawn
-%d gelide Dämonenbrute
-%%%%
-# check plural above
 %%%%
 an infernal demonspawn
 eine höllische Dämonenbrut
 %%%%
-%d infernal demonspawn
-%d höllische Dämonenbruten
-%%%%
-# check plural above
-%%%%
 a torturous demonspawn
 eine quälende Dämonenbrut
-%%%%
-%d torturous demonspawn
-%d quälende Dämonenbruten
-%%%%
-# check plural above
 %%%%
 a blood saint
 ein Blutheilige
 %%%%
-%d blood saints
-%d Blutheiligen
-%%%%
-# check plural above
-%%%%
 a warmonger
 ein Kriegstreiber
-%%%%
-%d warmongers
-%d Kriegstreiber
-%%%%
-# check plural above
 %%%%
 a corrupter
 ein Korruptor
 %%%%
-%d corrupters
-%d Korruptore
-%%%%
-# check plural above
-%%%%
 a black sun
 eine schwarze Sonne
-%%%%
-%d black suns
-%d schwarze Sonnen
 %%%%
 a crimson imp
 ein karminrotes Teufelchen
 %%%%
-%d crimson imps
-%d karminrote Teufelchen
-%%%%
 a quasit
 ein Quasit
-%%%%
-%d quasits
-%d Quasite
-%%%%
-# check plural above
 %%%%
 a white imp
 ein weißes Teufelchen
 %%%%
-%d white imps
-%d weiße Teufelchen
-%%%%
 an ufetubus
 ein Ufetubus
-%%%%
-%d ufetubi
-%d Ufetubi
 %%%%
 an iron imp
 ein Eisenteufelchen
 %%%%
-%d iron imps
-%d Eisenteufelchen
-%%%%
 a shadow imp
 ein Schattenteufelchen
-%%%%
-%d shadow imps
-%d Schattenteufelchen
 %%%%
 a rust devil
 ein Rostteufel
 %%%%
-%d rust devils
-%d Rostteufel
-%%%%
-# check plural above
-%%%%
 an orange demon
 ein oranger Dämon
-%%%%
-%d orange demons
-%d orange Dämone
-%%%%
-# check plural above
 %%%%
 a red devil
 ein roter Teufel
 %%%%
-%d red devils
-%d rote Teufel
-%%%%
-# check plural above
-%%%%
 a hellwing
 ein Höllenflügel
-%%%%
-%d hellwings
-%d Höllenflügel
-%%%%
-# check plural above
 %%%%
 an ice devil
 ein Eisteufel
 %%%%
-%d ice devils
-%d Eisteufel
-%%%%
-# check plural above
-%%%%
 a chaos spawn
 eine Chaosbrut
-%%%%
-%d chaos spawn
-%d Chaosbruten
-%%%%
-# check plural above
 %%%%
 a sun demon
 ein Sonnendämon
 %%%%
-%d sun demons
-%d Sonnendämone
-%%%%
-# check plural above
-%%%%
 a soul eater
 ein Seelenfresser
-%%%%
-%d soul eaters
-%d Seelenfresser
-%%%%
-# check plural above
 %%%%
 a smoke demon
 ein Rauchdämon
 %%%%
-%d smoke demons
-%d Rauchdämone
-%%%%
-# check plural above
-%%%%
 a neqoxec
 eine Neqoxec
-%%%%
-%d neqoxecs
-%d Neqoxecen
-%%%%
-# check plural above
 %%%%
 a ynoxinul
 ein Ynoxinul
 %%%%
-%d ynoxinuls
-%d Ynoxinule
-%%%%
-# check plural above
-%%%%
 a sixfirhy
 ein Sixfirhy
-%%%%
-%d sixfirhies
-%d Sixfirhys
-%%%%
-# check plural above
 %%%%
 a shadow demon
 ein Schattendämon
 %%%%
-%d shadow demons
-%d Schattendämone
-%%%%
-# check plural above
-%%%%
 a green death
 ein grüner Tod
-%%%%
-%d green deaths
-%d grüne Tode
-%%%%
-# check plural above
 %%%%
 a blizzard demon
 ein Blizzarddämon
 %%%%
-%d blizzard demons
-%d Blizzarddämone
-%%%%
-# check plural above
-%%%%
 a balrug
 ein Balrug
-%%%%
-%d balrugs
-%d Balruge
-%%%%
-# check plural above
 %%%%
 a cacodemon
 ein Cacodaemon
 %%%%
-%d cacodemons
-%d Cacodaemone
-%%%%
-# check plural above
-%%%%
 a hell beast
 ein Höllentier
-%%%%
-%d hell beasts
-%d Höllentiere
-%%%%
-# check plural above
 %%%%
 a hellion
 ein Teufelsbraten
 %%%%
-%d hellions
-%d Teufelsbratene
-%%%%
-# check plural above
-%%%%
 a reaper
 ein Schnitter
-%%%%
-%d reapers
-%d Schnitter
-%%%%
-# check plural above
 %%%%
 a lorocyproca
 eine Lorocyproca
 %%%%
-%d lorocyprocas
-%d Lorocyprocas
-%%%%
-# check plural above
-%%%%
 a tormentor
 ein Peiniger
-%%%%
-%d tormentors
-%d Peiniger
-%%%%
-# check plural above
 %%%%
 a Brimstone Fiend
 ein Schwefelunterweltler
 %%%%
-%d Brimstone Fiends
-%d Schwefelunterweltler
-%%%%
-# check plural above
-%%%%
 an Ice Fiend
 ein Eisunterweltler
-%%%%
-%d Ice Fiends
-%d Eisunterweltler
-%%%%
-# check plural above
 %%%%
 a Tzitzimitl
 ein Tzitzimitl
 %%%%
-%d Tzitzimimeh
-%d Tzitzimitle
-%%%%
-# check plural above
-%%%%
 a Hell Sentinel
 ein Höllenwächter
-%%%%
-%d Hell Sentinels
-%d Höllenwächter
-%%%%
-# check plural above
 %%%%
 an Executioner
 ein Scharfrichter
 %%%%
-%d Executioners
-%d Scharfrichter
-%%%%
-# check plural above
-%%%%
 an animated tree
 ein animierter Baum
-%%%%
-%d animated trees
-%d animierte Bäume
 %%%%
 a golem
 ein Golem
 %%%%
-%d golems
-%d Goleme
-%%%%
-# check plural above
-%%%%
 a saltling
 ein Salzling
-%%%%
-%d saltlings
-%d Salzlinge
 %%%%
 a peacekeeper
 ein Friedenshüter
 %%%%
-%d peacekeepers
-%d Friedenshüter
-%%%%
-# check plural above
-%%%%
 an iron golem
 ein Eisengolem
-%%%%
-%d iron golems
-%d Eisengoleme
-%%%%
-# check plural above
 %%%%
 a crystal guardian
 ein Kristallwächter
 %%%%
-%d crystal guardians
-%d Kristallwächter
-%%%%
-# check plural above
-%%%%
 a toenail golem
 ein Zehennagelgolem
-%%%%
-%d toenail golems
-%d Zehennagelgoleme
-%%%%
-# check plural above
 %%%%
 an electric golem
 ein Blitzgolem
 %%%%
-%d electric golems
-%d Blitzgoleme
-%%%%
-# check plural above
-%%%%
 an ushabti
 eine Uschabti
-%%%%
-%d ushabtiu
-%d Uschabtis
-%%%%
-# check plural above
 %%%%
 a guardian golem
 ein Wächtergolem
 %%%%
-%d guardian golems
-%d Wächtergoleme
-%%%%
-# check plural above
-%%%%
 a spellforged servitor
 ein zaubergeschmeideter Diener
-%%%%
-%d spellforged servitors
-%d zaubergeschmeidete Diener
-%%%%
-# check plural above
 %%%%
 an ice statue
 eine Eisstatue
 %%%%
-%d ice statues
-%d Eisstatuen
-%%%%
 an obsidian statue
 eine Obsidianstatue
-%%%%
-%d obsidian statues
-%d Obsidianstatuen
 %%%%
 an orange crystal statue
 eine orange Kristallstatue
 %%%%
-%d orange crystal statues
-%d orange Kristallstatuen
-%%%%
 a statue
 eine Statue
-%%%%
-%d statues
-%d Statuen
 %%%%
 a training dummy
 eine Trainingspuppe
 %%%%
-%d training dummies
-%d Trainingspuppen
-%%%%
 a pillar of salt
 eine Säule des Salzes
-%%%%
-%d pillars of salt
-%d Säulen des Salzes
 %%%%
 a block of ice
 ein Eisblock
 %%%%
-%d blocks of ice
-%d Eisblocke
-%%%%
-# check plural above
-%%%%
 a diamond obelisk
 ein Diamantobelisk
-%%%%
-%d diamond obelisks
-%d Diamantobeliske
-%%%%
-# check plural above
 %%%%
 a lightning spire
 ein Blitzturm
 %%%%
-%d lightning spires
-%d Blitzturme
-%%%%
-# check plural above
-%%%%
 a gargoyle
 ein Gargoyle
-%%%%
-%d gargoyles
-%d Gargoyles
 %%%%
 a war gargoyle
 ein Kriegsgargoyle
 %%%%
-%d war gargoyles
-%d Kriegsgargoyles
-%%%%
 a molten gargoyle
 ein geschmolzener Gargoyle
-%%%%
-%d molten gargoyles
-%d geschmolzene Gargoyles
 %%%%
 a pandemonium lord
 ein Pandemoniumsherr
 %%%%
-%d pandemonium lords
-%d Pandemoniumsherre
-%%%%
-# check plural above
-%%%%
 a hell lord
 ein Höllenherr
-%%%%
-%d hell lords
-%d Höllenherre
-%%%%
-# check plural above
 %%%%
 a ball lightning
 ein Kugelblitz
 %%%%
-%d ball lightnings
-%d Kugelblitze
-%%%%
-# check plural above
-%%%%
 a ballistomycete spore
 eine Ballistomycetenspore
-%%%%
-%d ballistomycete spores
-%d Ballistomycetensporen
 %%%%
 a lost soul
 eine verlorene Seele
 %%%%
-%d lost souls
-%d verlorene Seelen
-%%%%
 a lurking horror
 ein lauerndes Grauen
-%%%%
-%d lurking horrors
-%d lauernde Grauene
-%%%%
-# check plural above
 %%%%
 an orb of fire
 eine Feuerkugel
 %%%%
-%d orbs of fire
-%d Feuerkugeln
-%%%%
-# check plural above
-%%%%
 an orb of destruction
 eine Kugel der Zerstörung
-%%%%
-%d orbs of destruction
-%d Kugeln der Zerstörung
-%%%%
-# check plural above
 %%%%
 a fulminant prism
 ein fulminantes Prisma
 %%%%
-%d fulminant prisms
-%d fulminante Prismen
-%%%%
-# check plural above
-%%%%
 a wretched star
 ein elender Stern
-%%%%
-%d wretched stars
-%d elende Sterne
-%%%%
-# check plural above
 %%%%
 a battlesphere
 eine Kampfsphäre
 %%%%
-%d battlespheres
-%d Kampfsphären
-%%%%
 a death cob
 ein Todeskolben
-%%%%
-%d death cobs
-%d Todeskolben
 %%%%
 a moon troll
 ein Mondtroll
 %%%%
-%d moon trolls
-%d Mondtrolle
-%%%%
-# check plural above
-%%%%
 a foxfire
 ein Fuchsfeuer
-%%%%
-%d foxfires
-%d Fuchsfeuer
 %%%%
 a nameless horror
 ein namenloser Horror
 %%%%
-%d nameless horrors
-%d namenlose Horrors
-%%%%
 a will-o-the-wisp
 ein Irrlicht
-%%%%
-%d will-o-the-wisps
-%d Irrlichter
 %%%%
 a bunyip
 ein Bunyip
 %%%%
-%d bunyips
-%d Bunyips
-%%%%
 a boulder beetle
 ein Rollsteinkäfer
-%%%%
-%d boulder beetles
-%d Rollsteinkäfer
 %%%%
 a cane toad
 eine Aga-Kröte
 %%%%
-%d cane toads
-%d Aga-Kröten
-%%%%
 a goliath frog
 ein Goliathfrosch
-%%%%
-%d goliath frogs
-%d Goliathfrösche
 %%%%
 a fenstrider witch
 eine Fennläuferhexe
 %%%%
-%d fenstrider witches
-%d Fennläuferhexen
-%%%%
 a palentonga
 ein Palentonga
-%%%%
-%d palentongas
-%d Palentongas
 %%%%
 a royal mummy
 eine königliche Mumie
 %%%%
-%d royal mummies
-%d königliche Mumien
-%%%%
 a eleionoma
 eine Eleionoma
-%%%%
-%d eleionomas
-%d Eleionomai
 %%%%
 a lemure
 eine Lemure
 %%%%
-%d lemures
-%d Lemuren
-%%%%
 an endoplasm
 ein Endoplasma
-%%%%
-%d endoplasms
-%d Endoplasmen
 %%%%
 a rockslime
 ein Felsenschleim
 %%%%
-%d rockslimes
-%d Felsenschleime
-%%%%
 a quicksilver ooze
 ein Quecksilber-Schlamm
-%%%%
-%d quicksilver oozes
-%d Quecksilber-Schlamme
 %%%%
 a kobold brigand
 ein Kobold-Brigant
 %%%%
-%d kobold brigands
-%d Kobold-Briganten
-%%%%
 a dread lich
 ein Grauenlich
-%%%%
-%d dread liches
-%d Grauenlichs
 %%%%
 a djinni
 ein Dschinn
 %%%%
-%d djinn
-%d Dschinn
-%%%%
 a salamander tyrant
 ein Salamander-Tyrann
-%%%%
-%d salamander tyrants
-%d Salamander-Tyrannen
 %%%%
 an animated armour
 eine animierte Rüstung
 %%%%
-%d animated armours
-%d animierte Rüstungen
-%%%%
-# Test monsters can be created in Arena
-%%%%
 a test spawner
 ein Test-Erzeuger
-%%%%
-%d test spawners
-%d Test-Erzeuger
 %%%%
 a test statue
 eine Test-Statue
 %%%%
-%d test statues
-%d Test-Statuen
-%%%%
 a test blob
 ein Test-Klumpen
-%%%%
-%d test blobs
-%d Test-Klumpen
 %%%%
 a sensed monster
 ein gespürtes Monster
 %%%%
-%d sensed monsters
-%d gespürte Monster
-%%%%
-# check plural above
-%%%%
 a friendly sensed monster
 ein freundliches gespürtes Monster
-%%%%
-%d friendly sensed monsters
-%d freundliche gespürte Monster
-%%%%
-# check plural above
 %%%%
 a trivial sensed monster
 ein triviales gespürtes Monster
 %%%%
-%d trivial sensed monsters
-%d triviale gespürte Monster
-%%%%
-# check plural above
-%%%%
 an easy sensed monster
 ein leichtes gespürtes Monster
-%%%%
-%d easy sensed monsters
-%d leichte gespürte Monster
-%%%%
-# check plural above
 %%%%
 a tough sensed monster
 ein hartes gespürtes Monster
 %%%%
-%d tough sensed monsters
-%d harte gespürte Monster
-%%%%
-# check plural above
-%%%%
 a nasty sensed monster
 ein furchtbares gespürtes Monster
-%%%%
-%d nasty sensed monsters
-%d furchtbare gespürte Monster
-%%%%
-# check plural above
 %%%%
 a %ssting beast
 ein {adj-es}%sStichbiest
 %%%%
-%d %ssting beasts
-%d {adj-e}%sStichbiester
-%%%%
 a %sbat beast
 ein {adj-es}%sFledermaus-Biest
-%%%%
-%d %sbat beasts
-%d {adj-e}%sFledermaus-Biester
 %%%%
 a %sfire beast
 ein {adj-es}%sFeuerbiest
 %%%%
-%d %sfire beasts
-%d {adj-e}%sFeuerbiester
-%%%%
 a %sweird beast
 ein {adj-es}%sbizarres Biest
-%%%%
-%d %sweird beasts
-%d {adj-e}%sbizarre Biester
 %%%%
 a %sshock beast
 ein {adj-es}%sSchockbiest
 %%%%
-%d %sshock beasts
-%d {adj-e}%sSchockbiester
-%%%%
 a %sox beast
 ein {adj-es}%sOchsenbiest
-%%%%
-%d %sox beasts
-%d {adj-e}%sOchsenbiester
 %%%%
 
 # derived monsters (undead, etc.)
@@ -5354,6 +3462,1479 @@ a %s shaped block of ice
 ein %s-förmiger Eisblock
 %%%%
 
+################################
+# Plural
+################################
+
+%%%%
+%d program bugs
+%d Programmfehler
+%%%%
+%d worker ants
+%d Ameisenarbeiterinnen
+%%%%
+%d queen ants
+%d Ameisenköniginnen
+%%%%
+%d soldier ants
+%d Ameisensoldatinnen
+%%%%
+%d formicids
+%d Formicide
+%%%%
+%d entropy weavers
+%d Entropieweber
+%%%%
+%d bats
+%d Fledermäuse
+%%%%
+%d butterflies
+%d Schmetterlinge
+%%%%
+%d vampire bats
+%d Vampirfledermäuse
+%%%%
+%d fire bats
+%d Feuerfledermäuse
+%%%%
+%d bennus
+%d Bennus
+%%%%
+%d caustic shrikes
+%d ätzende Würger
+%%%%
+%d shard shrikes
+%d Scherbenwürger
+%%%%
+%d centaurs
+%d Zentauren
+%%%%
+%d centaur warriors
+%d Zentaur-Krieger
+%%%%
+%d yaktaurs
+%d Yaktauren
+%%%%
+%d yaktaur captains
+%d Yaktaur-Kapitäne
+%%%%
+%d fauns
+%d Faune
+%%%%
+%d satyrs
+%d Satyrn
+%%%%
+%d draconians
+%d Drakonier
+%%%%
+%d black draconians
+%d schwarze Drakonier
+%%%%
+%d yellow draconians
+%d gelbe Drakonier
+%%%%
+%d pale draconians
+%d blasse Drakonier
+%%%%
+%d green draconians
+%d grüne Drakonier
+%%%%
+%d purple draconians
+%d purpurne Drakonier
+%%%%
+%d red draconians
+%d rote Drakonier
+%%%%
+%d white draconians
+%d weiße Drakonier
+%%%%
+%d grey draconians
+%d graue Drakonier
+%%%%
+%d draconian stormcallers
+%d Drakonier-Sturmrufer
+%%%%
+%d draconian monks
+%d Drakonier-Mönche
+%%%%
+%d draconian shifters
+%d Drakonier-Verschieber
+%%%%
+%d draconian annihilators
+%d Drakonier-Vernichter
+%%%%
+%d draconian knights
+%d Drakonier-Ritter
+%%%%
+%d draconian scorchers
+%d Drakonier-Verschmorer
+%%%%
+%d elves
+%d Elfen
+%%%%
+%d deep elf knights
+%d Tiefenelf-Ritter
+%%%%
+%d deep elf archers
+%d Tiefenelf-Bogenschützen
+%%%%
+%d deep elf blademasters
+%d Tiefenelf-Klingenmeister
+%%%%
+%d deep elf master archers
+%d Tiefenelf-Bogenmeister
+%%%%
+%d deep elf zephyrmancers
+%d Tiefenelf-Zephyrmanten
+%%%%
+%d deep elf pyromancer
+%d Tiefenelf-Pyromanten
+%%%%
+%d deep elf high priests
+%d Tiefenelf-Hohepriester
+%%%%
+%d deep elf demonologists
+%d Tiefenelf-Dämonologen
+%%%%
+%d deep elf annihilators
+%d Tiefenelf-Vernichter
+%%%%
+%d deep elf sorcerers
+%d Tiefenelf-Zauberer
+%%%%
+%d deep elf death magi
+%d Tiefenelf-Todesmagier
+%%%%
+%d deep elf elementalists
+%d Tiefenelf-Elementalisten
+%%%%
+%d wandering mushrooms
+%d wandernde Pilze
+%%%%
+%d deathcaps
+%d Todesmützen
+%%%%
+%d thorn hunters
+%d Dornenjäger
+%%%%
+%d shambling mangroves
+%d watschelnde Mangroven
+%%%%
+%d vine stalkers
+%d Rebjäger
+%%%%
+%d goblins
+%d Goblins
+%%%%
+%d hobgoblins
+%d Hobgoblins
+%%%%
+%d gnolls
+%d Gnolle
+%%%%
+%d gnoll shamans
+%d Gnoll-Schamanen
+%%%%
+%d gnoll sergeants
+%d Gnoll-Wachtmeister
+%%%%
+%d boggarts
+%d Boggarts
+%%%%
+%d dwarves
+%d Zwerge
+%%%%
+%d deep dwarves
+%d Tiefenzwerge
+%%%%
+%d jackals
+%d Schakale
+%%%%
+%d hounds
+%d Hunde
+%%%%
+%d howler monkeys
+%d Brüllaffen
+%%%%
+%d wargs
+%d Warge
+%%%%
+%d wolves
+%d Wölfe
+%%%%
+%d hogs
+%d Schweine
+%%%%
+%d hell hounds
+%d Höllenhunde
+%%%%
+%d doom hounds
+%d Untergangshunde
+%%%%
+%d raiju
+%d Raijus
+%%%%
+%d hell hogs
+%d höllische Schweine
+%%%%
+%d holy swine
+%d heilige Schweine
+%%%%
+%d felids
+%d Feliden
+%%%%
+%d bears
+%d Bären
+%%%%
+%d polar bears
+%d Eisbären
+%%%%
+%d black bears
+%d Schwarzbären
+%%%%
+%d spriggans
+%d Spriggans
+%%%%
+%d spriggan riders
+%d Spriggan-Reiter
+%%%%
+%d spriggan druids
+%d Spriggan-Druiden
+%%%%
+%d spriggan berserkers
+%d Spriggan-Berserker
+%%%%
+%d spriggan air magi
+%d Spriggan-Luftmagier
+%%%%
+%d spriggan defenders
+%d Spriggan-Verteidiger
+%%%%
+%d drakes
+%d Drachlinge
+%%%%
+%d swamp drakes
+%d Sumpfdrachlinge
+%%%%
+%d rime drakes
+%d Reifsdrachlinge
+%%%%
+%d wind drakes
+%d Winddrachlinge
+%%%%
+%d lindwurms
+%d Lindwurme
+%%%%
+%d death drakes
+%d Todesdrachlinge
+%%%%
+%d giant lizards
+%d Rieseneidechsen
+%%%%
+%d frilled lizards
+%d gekräuselte Eidechsen
+%%%%
+%d leopard geckos
+%d Leopardgeckos
+%%%%
+%d iguanas
+%d Leguane
+%%%%
+%d basilisks
+%d Basiliske
+%%%%
+%d wyverns
+%d Wyverns
+%%%%
+%d komodo dragons
+%d Komododrachen
+%%%%
+%d merfolk
+%d Meervolke
+%%%%
+%d merfolk impalers
+%d Meervolk-Impaler
+%%%%
+%d merfolk javelineers
+%d Meervolk-Speerführer
+%%%%
+%d merfolk aquamancers
+%d Meervolk-Aquamancer
+%%%%
+%d merfolk sirens
+%d Meervolk-Sirenen
+%%%%
+%d merfolk avatars
+%d Meervolk-Avatare
+%%%%
+%d water nymphs
+%d Wassernymphen
+%%%%
+%d bog bodies
+%d Moorleichen
+%%%%
+%d necrophages
+%d Nekrophagene
+%%%%
+%d bloated husks
+%d aufgeblähte Hülle
+%%%%
+%d ghouls
+%d Ghule
+%%%%
+%d orcs
+%d Orke
+%%%%
+%d orc wizards
+%d Ork-Zauberer
+%%%%
+%d orc priests
+%d Ork-Priester
+%%%%
+%d orc warriors
+%d Ork-Krieger
+%%%%
+%d orc knights
+%d Ork-Ritter
+%%%%
+%d orc warlords
+%d Ork-Warlorde
+%%%%
+%d orc sorcerers
+%d Ork-Hexenmeister
+%%%%
+%d orc high priests
+%d Ork-Hohepriester
+%%%%
+%d lava orcs
+%d Lava-Orke
+%%%%
+%d humans
+%d Menschen
+%%%%
+%d slaves
+%d Sklaven
+%%%%
+%d hell knights
+%d Höllenritter
+%%%%
+%d death knights
+%d Todesritter
+%%%%
+%d necromancers
+%d Nekromanten
+%%%%
+%d wizards
+%d Zauberer
+%%%%
+%d vault guards
+%d Tresorwächter
+%%%%
+%d vault sentinels
+%d Tresorwachen
+%%%%
+%d vault wardens
+%d Tresorwärter
+%%%%
+%d ironbound convokers
+%d eisenbeschlagene Einberufer
+%%%%
+%d ironbound frosthearts
+%d eisengebundene Frostherzen
+%%%%
+%d ironbound preservers
+%d eisenbeschlagene Bewahrer
+%%%%
+%d ironbound beastmasters
+%d eisenbeschlagene Bestienmeister
+%%%%
+%d ironbound thunderhulks
+%d eisenbeschlagene Donnerkolosse
+%%%%
+%d imperial myrmidons
+%d kaiserliche Myrmidone
+%%%%
+%d servants of whispers
+%d Diener des Flüsterns
+%%%%
+%d ragged hierophants
+%d zerlumpte Hierophanten
+%%%%
+%d shapeshifters
+%d Gestaltwandler
+%%%%
+%d glowing shapeshifters
+%d leuchtende Gestaltwandler
+%%%%
+%d Killer Klowns
+%d Killer-Klowns
+%%%%
+%d demigods
+%d Halbgotte
+%%%%
+%d halflings
+%d Halblinge
+%%%%
+%d rats
+%d Ratten
+%%%%
+%d quokkas
+%d Quokkas
+%%%%
+%d river rats
+%d Flussratten
+%%%%
+%d hell rats
+%d Höllenratten
+%%%%
+%d porcupines
+%d Stachelschweine
+%%%%
+%d giant cockroaches
+%d Riesenkakerlaken
+%%%%
+%d scorpions
+%d Skorpione
+%%%%
+%d emperor scorpions
+%d Kaiserskorpione
+%%%%
+%d death scarabs
+%d Todesskarabäen
+%%%%
+%d spiders
+%d Spinnen
+%%%%
+%d tarantellas
+%d Tarantellen
+%%%%
+%d jumping spiders
+%d springende Spinnen
+%%%%
+%d wolf spiders
+%d Wolfsspinnen
+%%%%
+%d redbacks
+%d Rotrückenspinnen
+%%%%
+%d demonic crawlers
+%d dämonische Kriecher
+%%%%
+%d orb spiders
+%d Kugelspinnen
+%%%%
+%d crocodiles
+%d Krokodile
+%%%%
+%d alligators
+%d Alligatore
+%%%%
+%d snapping turtles
+%d Schnappschildkröten
+%%%%
+%d alligator snapping turtles
+%d Alligatorschnappschildkröten
+%%%%
+%d crabs
+%d Krabben
+%%%%
+%d fire crabs
+%d Feuerkrabben
+%%%%
+%d ghost crabs
+%d Geisterkrabben
+%%%%
+%d apocalypse crabs
+%d Apokalypse-Krabben
+%%%%
+%d ugly things
+%d hässliche Dinge
+%%%%
+%d very ugly things
+%d sehr hässliche Dinge
+%%%%
+%d fire vortices
+%d Feuerwirbel
+%%%%
+%d spatial vortices
+%d räumliche Wirbel
+%%%%
+%d spatial maelstroms
+%d räumliche Mahlstrome
+%%%%
+%d insubstantial wisps
+%d unwesentliche Irrlichte
+%%%%
+%d twisters
+%d Twister
+%%%%
+%d worms
+%d Wurme
+%%%%
+%d swamp worms
+%d Sumpfwurme
+%%%%
+%d tyrant leeches
+%d Tyrannblutegel
+%%%%
+%d dart slugs
+%d Pfeilschnecken
+%%%%
+%d torpor snails
+%d Erstarrungsschnecken
+%%%%
+%d elephant slugs
+%d Elefantenschnecken
+%%%%
+%d unseen horrors
+%d unsichtbare Grauene
+%%%%
+%d small abominations
+%d kleine Greuel
+%%%%
+%d crawling corpses
+%d kriechende Leichen
+%%%%
+%d macabre masses
+%d makabere Massen
+%%%%
+%d ancient zymes
+%d uralte Zyme
+%%%%
+%d worldbinders
+%d Weltbinder
+%%%%
+%d killer bees
+%d Killerbienen
+%%%%
+%d queen bees
+%d Bienenköniginnen
+%%%%
+%d vampire mosquitoes
+%d Vampir-Mücken
+%%%%
+%d hornets
+%d Hornissen
+%%%%
+%d meliai
+%d Meliais
+%%%%
+%d spark wasps
+%d Funkenwespen
+%%%%
+%d moths
+%d Motten
+%%%%
+%d ghost moths
+%d Geistermotten
+%%%%
+%d moths of wrath
+%d Motten des Zorns
+%%%%
+%d wights
+%d Wighte
+%%%%
+%d skeletal warriors
+%d Skelettkrieger
+%%%%
+%d ancient champions
+%d alte Champione
+%%%%
+%d flying skulls
+%d fliegende Schädel
+%%%%
+%d curse skulls
+%d Fluchschädel
+%%%%
+%d curse toes
+%d Fluchzehen
+%%%%
+%d angels
+%d Engel
+%%%%
+%d cherubim
+%d Cherube
+%%%%
+%d seraphim
+%d Seraphe
+%%%%
+%d daevas
+%d Daevas
+%%%%
+%d profane servitors
+%d profane Diener
+%%%%
+%d giants
+%d Riesen
+%%%%
+%d cyclopes
+%d Zyklope
+%%%%
+%d ettins
+%d Ettine
+%%%%
+%d fire giants
+%d Feuerriesen
+%%%%
+%d frost giants
+%d Frostriesen
+%%%%
+%d stone giants
+%d Steinriesen
+%%%%
+%d titans
+%d Titane
+%%%%
+%d juggernauts
+%d Juggernaute
+%%%%
+%d iron giants
+%d Eisenriesen
+%%%%
+%d dragons
+%d Drachen
+%%%%
+%d fire dragons
+%d Feuerdrachen
+%%%%
+%d hydras
+%d Hydren
+%%%%
+%d ice dragons
+%d Eisdrachen
+%%%%
+%d steam dragons
+%d Dampfdrachen
+%%%%
+%d swamp dragons
+%d Sumpfdrachen
+%%%%
+%d acid dragons
+%d Säuredrachen
+%%%%
+%d quicksilver dragons
+%d Quecksilberdrachen
+%%%%
+%d iron dragons
+%d Eisendrachen
+%%%%
+%d storm dragons
+%d Sturmdrachen
+%%%%
+%d golden dragons
+%d Golddrachen
+%%%%
+%d shadow dragons
+%d Schattendrachen
+%%%%
+%d bone dragons
+%d Knochendrachen
+%%%%
+%d pearl dragons
+%d Perlendrachen
+%%%%
+%d elementals
+%d Elementare
+%%%%
+%d earth elementals
+%d Erdelementare
+%%%%
+%d fire elementals
+%d Feuerelementare
+%%%%
+%d water elementals
+%d Wasserelementare
+%%%%
+%d air elementals
+%d Luftelementare
+%%%%
+%d iron elementals
+%d Eisenelementare
+%%%%
+%d elemental wellsprings
+%d elementare Quellen
+%%%%
+%d giant frogs
+%d Riesenfrösche
+%%%%
+%d bullfrogs
+%d Ochsenfrösche
+%%%%
+%d spiny frogs
+%d Stachelfrösche
+%%%%
+%d blink frogs
+%d Blinzelfrösche
+%%%%
+%d barachim
+%d Barachis
+%%%%
+%d floating eyes
+%d schwebende Augen
+%%%%
+%d eyes of draining
+%d Augen des Schwächens
+%%%%
+%d glowing orange brains
+%d orange leuchtende Gehirne
+%%%%
+%d great orbs of eyes
+%d große Augenkugel
+%%%%
+%d shining eyes
+%d leuchtende Augen
+%%%%
+%d eyes of devastation
+%d Augen der Verwüstung
+%%%%
+%d golden eyes
+%d goldene Augen
+%%%%
+%d ophanim
+%d Ophane
+%%%%
+%d hippogriffs
+%d Hippogriffe
+%%%%
+%d manticores
+%d Mantikore
+%%%%
+%d minotaurs
+%d Minotauren
+%%%%
+%d sphinxes
+%d Sphinxen
+%%%%
+%d harpies
+%d Harpyien
+%%%%
+%d mutant beasts
+%d mutierte Bestien
+%%%%
+%d ancestors
+%d Ahnen
+%%%%
+%d knights
+%d Ritter
+%%%%
+%d battlemagi
+%d Kampfmagier
+%%%%
+%d hexers
+%d Hexer
+%%%%
+%d oozes
+%d Schlamme
+%%%%
+%d jellies
+%d Geleen
+%%%%
+%d slime creatures
+%d Schleimwesene
+%%%%
+%d merged slime creatures
+%d verschmolzene Schleimkreaturen
+%%%%
+%d azure jellies
+%d azurblaue Geleen
+%%%%
+%d death oozes
+%d Todesschlamme
+%%%%
+%d acid blobs
+%d Säureklumpene
+%%%%
+%d kobolds
+%d Kobolde
+%%%%
+%d big kobolds
+%d große Kobolde
+%%%%
+%d kobold demonologists
+%d Kobold-Dämonologen
+%%%%
+%d liches
+%d Lichs
+%%%%
+%d ancient liches
+%d alte Lichs
+%%%%
+%d revenants
+%d Wiedergänger
+%%%%
+%d halazid warlocks
+%d halazidische Hexenmeister
+%%%%
+%d mummies
+%d Mumien
+%%%%
+%d guardian mummies
+%d Wächtermumien
+%%%%
+%d greater mummies
+%d größere Mumien
+%%%%
+%d mummy priests
+%d Mumie-Priester
+%%%%
+%d nagas
+%d Nagas
+%%%%
+%d naga magi
+%d Naga-Magier
+%%%%
+%d naga sharpshooters
+%d Naga-Scharfschützen
+%%%%
+%d naga ritualists
+%d Naga-Ritualisten
+%%%%
+%d naga warriors
+%d Naga-Krieger
+%%%%
+%d nagarajas
+%d Nagarajas
+%%%%
+%d ogres
+%d Oger
+%%%%
+%d two-headed ogres
+%d zweiköpfige Oger
+%%%%
+%d ogre magi
+%d Oger-Magier
+%%%%
+%d plants
+%d Pflanzen
+%%%%
+%d demonic plants
+%d dämonische Pflanzen
+%%%%
+%d withered plants
+%d verwelkte Pflanzen
+%%%%
+%d oklob saplings
+%d Oklob-Setzlinge
+%%%%
+%d oklob plants
+%d Oklob-Pflanzen
+%%%%
+%d bushes
+%d Busche
+%%%%
+%d burning bushes
+%d brennende Busche
+%%%%
+%d toadstools
+%d Giftpilze
+%%%%
+%d fungi
+%d Pilze
+%%%%
+%d ballistomycetes
+%d Ballistomyceten
+%%%%
+%d hyperactive ballistomycetes
+%d hyperaktive Ballistomyceten
+%%%%
+%d briar patches
+%d Dornstrauche
+%%%%
+%d tengu
+%d Tengus
+%%%%
+%d tengu conjurers
+%d Tengu-Zauberer
+%%%%
+%d tengu warriors
+%d Tengu-Krieger
+%%%%
+%d tengu reavers
+%d Tengu-Häscher
+%%%%
+%d efreet
+%d Efreete
+%%%%
+%d rakshasas
+%d Rakshasas
+%%%%
+%d dryads
+%d Dryaden
+%%%%
+%d snaplasher vines
+%d Peitscherreben
+%%%%
+%d snaplasher vine segments
+%d Peitscherrebesegmente
+%%%%
+%d snakes
+%d Schlangen
+%%%%
+%d ball pythons
+%d Kugelpythonen
+%%%%
+%d adders
+%d Kreuzottern
+%%%%
+%d water moccasins
+%d Wassermokassine
+%%%%
+%d black mambas
+%d schwarze Mambas
+%%%%
+%d sea snakes
+%d Seeschlangen
+%%%%
+%d anacondas
+%d Anakondas
+%%%%
+%d guardian serpents
+%d Wächter-Schlangen
+%%%%
+%d shock serpents
+%d Schockschlangen
+%%%%
+%d mana vipers
+%d Manavipern
+%%%%
+%d trolls
+%d Trolle
+%%%%
+%d iron trolls
+%d Eisentrolle
+%%%%
+%d deep trolls
+%d Tiefentrolle
+%%%%
+%d deep troll earth magi
+%d Tiefentroll-Erdmagier
+%%%%
+%d deep troll shamans
+%d Tiefentroll-Schamanen
+%%%%
+%d vampires
+%d Vampire
+%%%%
+%d vampire knights
+%d Vampir-Ritter
+%%%%
+%d vampire magi
+%d Vampir-Magier
+%%%%
+%d jiangshi
+%d Jiangshis
+%%%%
+%d ghosts
+%d Gespenste
+%%%%
+%d phantoms
+%d Phantome
+%%%%
+%d hungry ghosts
+%d hungrige Geister
+%%%%
+%d flayed ghosts
+%d enthäutete Geister
+%%%%
+%d player ghosts
+%d Spielergeister
+%%%%
+%d shadows
+%d Schatten
+%%%%
+%d silent spectres
+%d stille Gespenste
+%%%%
+%d drowned souls
+%d ertrunkene Seelen
+%%%%
+%d wraiths
+%d Geister
+%%%%
+%d shadow wraiths
+%d Schattengeister
+%%%%
+%d freezing wraiths
+%d Frostgeister
+%%%%
+%d eidola
+%d Eidolone
+%%%%
+%d phantasmal warriors
+%d phantastische Krieger
+%%%%
+%d large abominations
+%d große Greuel
+%%%%
+%d thrashing horrors
+%d verprügelnde Grauene
+%%%%
+%d tentacled monstrosities
+%d Tentakel-Monstrositäten
+%%%%
+%d Orb Guardians
+%d Kugelwächter
+%%%%
+%d tentacled starspawn
+%d Tentakelsternbrute
+%%%%
+%d starspawn tentacles
+%d Sternbruttentakel
+%%%%
+%d starspawn tentacle segments
+%d Sternbruttentakelsegmente
+%%%%
+%d starcursed masses
+%d sternverfluchte Massen
+%%%%
+%d dream sheep
+%d Traumschafe
+%%%%
+%d yaks
+%d Yake
+%%%%
+%d death yaks
+%d Todesyake
+%%%%
+%d catoblepae
+%d Catoblepasen
+%%%%
+%d elephants
+%d Elefanten
+%%%%
+%d dire elephants
+%d Schreckenselefanten
+%%%%
+%d hellephants
+%d Höllefanten
+%%%%
+%d apises
+%d Apisen
+%%%%
+%d ice beasts
+%d Eisbestien
+%%%%
+%d sky beasts
+%d Himmelstiere
+%%%%
+%d zombies
+%d Zombies
+%%%%
+%d skeletons
+%d Skelette
+%%%%
+%d simulacra
+%d Simulacren
+%%%%
+%d small zombies
+%d kleine Zombies
+%%%%
+%d small skeletons
+%d kleine Skelette
+%%%%
+%d small simulacra
+%d kleine Simulacren
+%%%%
+%d large zombies
+%d große Zombies
+%%%%
+%d large skeletons
+%d große Skelette
+%%%%
+%d large simulacra
+%d große Simulacren
+%%%%
+%d spectral things
+%d spektrale Sachen
+%%%%
+%d electric eels
+%d Zitteraale
+%%%%
+%d krakens
+%d Krakene
+%%%%
+%d tentacles
+%d Tentakel
+%%%%
+%d tentacle segments
+%d Tentakelsegmente
+%%%%
+%d octopodes
+%d Oktopode
+%%%%
+%d lava snakes
+%d Lavaschlangen
+%%%%
+%d salamanders
+%d Salamander
+%%%%
+%d salamander mystics
+%d Salamander-Mystiker
+%%%%
+%d Hellbinders
+%d Höllenbinder
+%%%%
+%d Cloud Mages
+%d Wolkenmagier
+%%%%
+%d players
+%d Spieler
+%%%%
+%d player illusions
+%d Spieler-Illusionen
+%%%%
+%d dancing weapons
+%d tanzende Waffen
+%%%%
+%d spectral weapons
+%d Spektralwaffen
+%%%%
+%d eldritch tentacles
+%d unheimliche Tentakel
+%%%%
+%d eldritch tentacle segments
+%d unheimliche Tentakelsegmente
+%%%%
+%d demonspawn
+%d Dämonenbruten
+%%%%
+%d monstrous demonspawn
+%d monströse Dämonenbruten
+%%%%
+%d gelid demonspawn
+%d gelide Dämonenbrute
+%%%%
+%d infernal demonspawn
+%d höllische Dämonenbruten
+%%%%
+%d torturous demonspawn
+%d quälende Dämonenbruten
+%%%%
+%d blood saints
+%d Blutheiligen
+%%%%
+%d warmongers
+%d Kriegstreiber
+%%%%
+%d corrupters
+%d Korruptore
+%%%%
+%d black suns
+%d schwarze Sonnen
+%%%%
+%d crimson imps
+%d karminrote Teufelchen
+%%%%
+%d quasits
+%d Quasite
+%%%%
+%d white imps
+%d weiße Teufelchen
+%%%%
+%d ufetubi
+%d Ufetubi
+%%%%
+%d iron imps
+%d Eisenteufelchen
+%%%%
+%d shadow imps
+%d Schattenteufelchen
+%%%%
+%d rust devils
+%d Rostteufel
+%%%%
+%d orange demons
+%d orange Dämone
+%%%%
+%d red devils
+%d rote Teufel
+%%%%
+%d hellwings
+%d Höllenflügel
+%%%%
+%d ice devils
+%d Eisteufel
+%%%%
+%d chaos spawn
+%d Chaosbruten
+%%%%
+%d sun demons
+%d Sonnendämone
+%%%%
+%d soul eaters
+%d Seelenfresser
+%%%%
+%d smoke demons
+%d Rauchdämone
+%%%%
+%d neqoxecs
+%d Neqoxecen
+%%%%
+%d ynoxinuls
+%d Ynoxinule
+%%%%
+%d sixfirhies
+%d Sixfirhys
+%%%%
+%d shadow demons
+%d Schattendämone
+%%%%
+%d green deaths
+%d grüne Tode
+%%%%
+%d blizzard demons
+%d Blizzarddämone
+%%%%
+%d balrugs
+%d Balruge
+%%%%
+%d cacodemons
+%d Cacodaemone
+%%%%
+%d hell beasts
+%d Höllentiere
+%%%%
+%d hellions
+%d Teufelsbratene
+%%%%
+%d reapers
+%d Schnitter
+%%%%
+%d lorocyprocas
+%d Lorocyprocas
+%%%%
+%d tormentors
+%d Peiniger
+%%%%
+%d Brimstone Fiends
+%d Schwefelunterweltler
+%%%%
+%d Ice Fiends
+%d Eisunterweltler
+%%%%
+%d Tzitzimimeh
+%d Tzitzimitle
+%%%%
+%d Hell Sentinels
+%d Höllenwächter
+%%%%
+%d Executioners
+%d Scharfrichter
+%%%%
+%d animated trees
+%d animierte Bäume
+%%%%
+%d golems
+%d Goleme
+%%%%
+%d saltlings
+%d Salzlinge
+%%%%
+%d peacekeepers
+%d Friedenshüter
+%%%%
+%d iron golems
+%d Eisengoleme
+%%%%
+%d crystal guardians
+%d Kristallwächter
+%%%%
+%d toenail golems
+%d Zehennagelgoleme
+%%%%
+%d electric golems
+%d Blitzgoleme
+%%%%
+%d ushabtiu
+%d Uschabtis
+%%%%
+%d guardian golems
+%d Wächtergoleme
+%%%%
+%d spellforged servitors
+%d zaubergeschmeidete Diener
+%%%%
+%d ice statues
+%d Eisstatuen
+%%%%
+%d obsidian statues
+%d Obsidianstatuen
+%%%%
+%d orange crystal statues
+%d orange Kristallstatuen
+%%%%
+%d statues
+%d Statuen
+%%%%
+%d training dummies
+%d Trainingspuppen
+%%%%
+%d pillars of salt
+%d Säulen des Salzes
+%%%%
+%d blocks of ice
+%d Eisblocke
+%%%%
+%d diamond obelisks
+%d Diamantobeliske
+%%%%
+%d lightning spires
+%d Blitzturme
+%%%%
+%d gargoyles
+%d Gargoyles
+%%%%
+%d war gargoyles
+%d Kriegsgargoyles
+%%%%
+%d molten gargoyles
+%d geschmolzene Gargoyles
+%%%%
+%d pandemonium lords
+%d Pandemoniumsherre
+%%%%
+%d hell lords
+%d Höllenherre
+%%%%
+%d ball lightnings
+%d Kugelblitze
+%%%%
+%d ballistomycete spores
+%d Ballistomycetensporen
+%%%%
+%d lost souls
+%d verlorene Seelen
+%%%%
+%d lurking horrors
+%d lauernde Grauene
+%%%%
+%d orbs of fire
+%d Feuerkugeln
+%%%%
+%d orbs of destruction
+%d Kugeln der Zerstörung
+%%%%
+%d fulminant prisms
+%d fulminante Prismen
+%%%%
+%d wretched stars
+%d elende Sterne
+%%%%
+%d battlespheres
+%d Kampfsphären
+%%%%
+%d death cobs
+%d Todeskolben
+%%%%
+%d moon trolls
+%d Mondtrolle
+%%%%
+%d foxfires
+%d Fuchsfeuer
+%%%%
+%d nameless horrors
+%d namenlose Horrors
+%%%%
+%d will-o-the-wisps
+%d Irrlichter
+%%%%
+%d bunyips
+%d Bunyips
+%%%%
+%d boulder beetles
+%d Rollsteinkäfer
+%%%%
+%d cane toads
+%d Aga-Kröten
+%%%%
+%d goliath frogs
+%d Goliathfrösche
+%%%%
+%d fenstrider witches
+%d Fennläuferhexen
+%%%%
+%d palentongas
+%d Palentongas
+%%%%
+%d royal mummies
+%d königliche Mumien
+%%%%
+%d eleionomas
+%d Eleionomai
+%%%%
+%d lemures
+%d Lemuren
+%%%%
+%d endoplasms
+%d Endoplasmen
+%%%%
+%d rockslimes
+%d Felsenschleime
+%%%%
+%d quicksilver oozes
+%d Quecksilber-Schlamme
+%%%%
+%d kobold brigands
+%d Kobold-Briganten
+%%%%
+%d dread liches
+%d Grauenlichs
+%%%%
+%d djinn
+%d Dschinn
+%%%%
+%d salamander tyrants
+%d Salamander-Tyrannen
+%%%%
+%d animated armours
+%d animierte Rüstungen
+%%%%
+%d test spawners
+%d Test-Erzeuger
+%%%%
+%d test statues
+%d Test-Statuen
+%%%%
+%d test blobs
+%d Test-Klumpen
+%%%%
+%d sensed monsters
+%d gespürte Monster
+%%%%
+%d friendly sensed monsters
+%d freundliche gespürte Monster
+%%%%
+%d trivial sensed monsters
+%d triviale gespürte Monster
+%%%%
+%d easy sensed monsters
+%d leichte gespürte Monster
+%%%%
+%d tough sensed monsters
+%d harte gespürte Monster
+%%%%
+%d nasty sensed monsters
+%d furchtbare gespürte Monster
+%%%%
+%d %ssting beasts
+%d {adj-e}%sStichbiester
+%%%%
+%d %sbat beasts
+%d {adj-e}%sFledermaus-Biester
+%%%%
+%d %sfire beasts
+%d {adj-e}%sFeuerbiester
+%%%%
+%d %sweird beasts
+%d {adj-e}%sbizarre Biester
+%%%%
+%d %sshock beasts
+%d {adj-e}%sSchockbiester
+%%%%
+%d %sox beasts
+%d {adj-e}%sOchsenbiester
+%%%%
+
 # derived monsters (undead, etc.)
 # "elf zombie", "orc skeleton", etc.
 %%%%
@@ -5372,7 +4953,6 @@ ein %s-förmiger Eisblock
 %d %s shaped blocks of ice
 %d %s-förmige Eisblöcke
 %%%%
-
 
 ################################
 # allies

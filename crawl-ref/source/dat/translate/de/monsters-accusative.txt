@@ -963,6 +963,7 @@ den %s-förmigen Eisblock
 ################################
 # indefinite
 ################################
+
 %%%%
 {acc}a program bug
 einen Programmfehler
@@ -1867,8 +1868,6 @@ einen Dschinn
 {acc}a salamander tyrant
 einen Salamander-Tyrann
 %%%%
-# Test monsters can be created in Arena
-%%%%
 {acc}a test spawner
 einen Test-Erzeuger
 %%%%
@@ -1886,10 +1885,15 @@ einen %s-Zombie
 einen %s-förmigen Eisblock
 %%%%
 
+################################
+# Plural
+################################
+
+%%%%
+
 # derived monsters (undead, etc.)
 # "elf zombie", "orc skeleton", etc.
 %%%%
-
 
 ################################
 # allies

@@ -1679,12 +1679,10 @@ dem %s-förmigen Eisblock
 ################################
 # indefinite
 ################################
+
 %%%%
 {dat}a program bug
 einem Programmfehler
-%%%%
-{dat}%d program bugs
-%d Programmfehlern
 %%%%
 {dat}a worker ant
 einer Ameisenarbeiterin
@@ -1698,38 +1696,20 @@ einer Ameisensoldatin
 {dat}a formicid
 einem Formicid
 %%%%
-{dat}%d formicids
-%d Formiciden
-%%%%
 {dat}an entropy weaver
 einem Entropieweber
-%%%%
-{dat}%d entropy weavers
-%d Entropiewebern
 %%%%
 {dat}a bat
 einer Fledermaus
 %%%%
-{dat}%d bats
-%d Fledermäusen
-%%%%
 {dat}a butterfly
 einem Schmetterling
-%%%%
-{dat}%d butterflies
-%d Schmetterlingen
 %%%%
 {dat}a vampire bat
 einer Vampirfledermaus
 %%%%
-{dat}%d vampire bats
-%d Vampirfledermäusen
-%%%%
 {dat}a fire bat
 einer Feuerfledermaus
-%%%%
-{dat}%d fire bats
-%d Feuerfledermäusen
 %%%%
 {dat}a bennu
 einem Bennu
@@ -1737,14 +1717,8 @@ einem Bennu
 {dat}a caustic shrike
 einem ätzenden Würger
 %%%%
-{dat}%d caustic shrikes
-%d ätzenden Würgern
-%%%%
 {dat}a shard shrike
 einem Scherbenwürger
-%%%%
-{dat}%d shard shrikes
-%d Scherbenwürgern
 %%%%
 {dat}a centaur
 einem Zentauren
@@ -1752,23 +1726,14 @@ einem Zentauren
 {dat}a centaur warrior
 einem Zentaur-Krieger
 %%%%
-{dat}%d centaur warriors
-%d Zentaur-Kriegern
-%%%%
 {dat}a yaktaur
 einem Yaktauren
 %%%%
 {dat}a yaktaur captain
 einem Yaktaur-Kapitän
 %%%%
-{dat}%d yaktaur captains
-%d Yaktaur-Kapitänen
-%%%%
 {dat}a faun
 einem Faun
-%%%%
-{dat}%d fauns
-%d Faunen
 %%%%
 {dat}a satyr
 einem Satyr
@@ -1776,92 +1741,47 @@ einem Satyr
 {dat}a draconian
 einem Drakonier
 %%%%
-{dat}%d draconians
-%d Drakoniern
-%%%%
 {dat}a black draconian
 einem schwarzen Drakonier
-%%%%
-{dat}%d black draconians
-%d schwarzen Drakoniern
 %%%%
 {dat}a yellow draconian
 einem gelben Drakonier
 %%%%
-{dat}%d yellow draconians
-%d gelben Drakoniern
-%%%%
 {dat}a pale draconian
 einem blassen Drakonier
-%%%%
-{dat}%d pale draconians
-%d blassen Drakoniern
 %%%%
 {dat}a green draconian
 einem grünen Drakonier
 %%%%
-{dat}%d green draconians
-%d grünen Drakoniern
-%%%%
 {dat}a purple draconian
 einem purpurnen Drakonier
-%%%%
-{dat}%d purple draconians
-%d purpurnen Drakoniern
 %%%%
 {dat}a red draconian
 einem roten Drakonier
 %%%%
-{dat}%d red draconians
-%d roten Drakoniern
-%%%%
 {dat}a white draconian
 einem weißen Drakonier
-%%%%
-{dat}%d white draconians
-%d weißen Drakoniern
 %%%%
 {dat}a grey draconian
 einem grauen Drakonier
 %%%%
-{dat}%d grey draconians
-%d grauen Drakoniern
-%%%%
 {dat}a draconian stormcaller
 einem Drakonier-Sturmrufer
-%%%%
-{dat}%d draconian stormcallers
-%d Drakonier-Sturmrufern
 %%%%
 {dat}a draconian monk
 einem Drakonier-Mönch
 %%%%
-{dat}%d draconian monks
-%d Drakonier-Mönchen
-%%%%
 {dat}a draconian shifter
 einem Drakonier-Verschieber
-%%%%
-{dat}%d draconian shifters
-%d Drakonier-Verschiebern
 %%%%
 {dat}a draconian annihilator
 einem Drakonier-Vernichter
 %%%%
-{dat}%d draconian annihilators
-%d Drakonier-Vernichtern
-%%%%
 {dat}a draconian knight
 einem Drakonier-Ritter
 %%%%
-{dat}%d draconian knights
-%d Drakonier-Rittern
-%%%%
 {dat}a draconian scorcher
 einem Drakonier-Verschmorer
-%%%%
-{dat}%d draconian scorchers
-%d Drakonier-Verschmorern
 %%%%
 {dat}an elf
 einem Elf
@@ -1869,23 +1789,14 @@ einem Elf
 {dat}a deep elf knight
 einem Tiefenelf-Ritter
 %%%%
-{dat}%d deep elf knights
-%d Tiefenelf-Rittern
-%%%%
 {dat}a deep elf archer
 einem Tiefenelf-Bogenschützen
 %%%%
 {dat}a deep elf blademaster
 einem Tiefenelf-Klingenmeister
 %%%%
-{dat}%d deep elf blademasters
-%d Tiefenelf-Klingenmeistern
-%%%%
 {dat}a deep elf master archer
 einem Tiefenelf-Bogenmeister
-%%%%
-{dat}%d deep elf master archers
-%d Tiefenelf-Bogenmeistern
 %%%%
 {dat}a deep elf zephyrmancer
 einem Tiefenelf-Zephyrmanten
@@ -1896,29 +1807,17 @@ einem Tiefenelf-Pyromanten
 {dat}a deep elf high priest
 einem Tiefenelf-Hohepriester
 %%%%
-{dat}%d deep elf high priests
-%d Tiefenelf-Hohepriestern
-%%%%
 {dat}a deep elf demonologist
 einem Tiefenelf-Dämonologen
 %%%%
 {dat}a deep elf annihilator
 einem Tiefenelf-Vernichter
 %%%%
-{dat}%d deep elf annihilators
-%d Tiefenelf-Vernichtern
-%%%%
 {dat}a deep elf sorcerer
 einem Tiefenelf-Zauberer
 %%%%
-{dat}%d deep elf sorcerers
-%d Tiefenelf-Zauberern
-%%%%
 {dat}a deep elf death mage
 einem Tiefenelf-Todesmagier
-%%%%
-{dat}%d deep elf death magi
-%d Tiefenelf-Todesmagiern
 %%%%
 {dat}a deep elf elementalist
 einem Tiefenelf-Elementalisten
@@ -1926,29 +1825,17 @@ einem Tiefenelf-Elementalisten
 {dat}a wandering mushroom
 einem wandernden Pilz
 %%%%
-{dat}%d wandering mushrooms
-%d wandernden Pilzen
-%%%%
 {dat}a deathcap
 einer Todesmütze
 %%%%
 {dat}a thorn hunter
 einem Dornenjäger
 %%%%
-{dat}%d thorn hunters
-%d Dornenjägern
-%%%%
 {dat}a shambling mangrove
 einer watschelnden Mangrove
 %%%%
-{dat}%d shambling mangroves
-%d watschelnden Mangroven
-%%%%
 {dat}a vine stalker
 einem Rebjäger
-%%%%
-{dat}%d vine stalkers
-%d Rebjägern
 %%%%
 {dat}a goblin
 einem Goblin
@@ -1959,17 +1846,11 @@ einem Hobgoblin
 {dat}a gnoll
 einem Gnoll
 %%%%
-{dat}%d gnolls
-%d Gnollen
-%%%%
 {dat}a gnoll shaman
 einem Gnoll-Schamanen
 %%%%
 {dat}a gnoll sergeant
 einem Gnoll-Wachtmeister
-%%%%
-{dat}%d gnoll sergeants
-%d Gnoll-Wachtmeistern
 %%%%
 {dat}a boggart
 einem Boggart
@@ -1977,26 +1858,14 @@ einem Boggart
 {dat}a dwarf
 einem Zwerg
 %%%%
-{dat}%d dwarves
-%d Zwergen
-%%%%
 {dat}a deep dwarf
 einem Tiefenzwerg
-%%%%
-{dat}%d deep dwarves
-%d Tiefenzwergen
 %%%%
 {dat}a jackal
 einem Schakal
 %%%%
-{dat}%d jackals
-%d Schakalen
-%%%%
 {dat}a hound
 einem Hund
-%%%%
-{dat}%d hounds
-%d Hunden
 %%%%
 {dat}a howler monkey
 einem Brüllaffen
@@ -2004,32 +1873,17 @@ einem Brüllaffen
 {dat}a warg
 einem Warg
 %%%%
-{dat}%d wargs
-%d Wargen
-%%%%
 {dat}a wolf
 einem Wolf
-%%%%
-{dat}%d wolves
-%d Wölfen
 %%%%
 {dat}a hog
 einem Schwein
 %%%%
-{dat}%d hogs
-%d Schweinen
-%%%%
 {dat}a hell hound
 einem Höllenhund
 %%%%
-{dat}%d hell hounds
-%d Höllenhunden
-%%%%
 {dat}a doom hound
 einem Untergangshund
-%%%%
-{dat}%d doom hounds
-%d Untergangshunden
 %%%%
 {dat}a raiju
 einem Raiju
@@ -2037,14 +1891,8 @@ einem Raiju
 {dat}a hell hog
 einem höllischen Schwein
 %%%%
-{dat}%d hell hogs
-%d höllischen Schweinen
-%%%%
 {dat}a holy swine
 einem heiligen Schwein
-%%%%
-{dat}%d holy swine
-%d heiligen Schweinen
 %%%%
 {dat}a felid
 einem Felid
@@ -2064,65 +1912,35 @@ einem Spriggan
 {dat}a spriggan rider
 einem Spriggan-Reiter
 %%%%
-{dat}%d spriggan riders
-%d Spriggan-Reitern
-%%%%
 {dat}a spriggan druid
 einem Spriggan-Druiden
 %%%%
 {dat}a spriggan berserker
 einem Spriggan-Berserker
 %%%%
-{dat}%d spriggan berserkers
-%d Spriggan-Berserkern
-%%%%
 {dat}a spriggan air mage
 einem Spriggan-Luftmagier
-%%%%
-{dat}%d spriggan air magi
-%d Spriggan-Luftmagiern
 %%%%
 {dat}a spriggan defender
 einem Spriggan-Verteidiger
 %%%%
-{dat}%d spriggan defenders
-%d Spriggan-Verteidigern
-%%%%
 {dat}a drake
 einem Drachling
-%%%%
-{dat}%d drakes
-%d Drachlingen
 %%%%
 {dat}a swamp drake
 einem Sumpfdrachling
 %%%%
-{dat}%d swamp drakes
-%d Sumpfdrachlingen
-%%%%
 {dat}a rime drake
 einem Reifsdrachling
-%%%%
-{dat}%d rime drakes
-%d Reifsdrachlingen
 %%%%
 {dat}a wind drake
 einem Winddrachling
 %%%%
-{dat}%d wind drakes
-%d Winddrachlingen
-%%%%
 {dat}a lindwurm
 einem Lindwurm
 %%%%
-{dat}%d lindwurms
-%d Lindwurmen
-%%%%
 {dat}a death drake
 einem Todesdrachling
-%%%%
-{dat}%d death drakes
-%d Todesdrachlingen
 %%%%
 {dat}a giant lizard
 einer Rieseneidechse
@@ -2130,23 +1948,14 @@ einer Rieseneidechse
 {dat}a frilled lizard
 einer gekräuselten Eidechse
 %%%%
-{dat}%d frilled lizards
-%d gekräuselten Eidechsen
-%%%%
 {dat}a leopard gecko
 einem Leopardgecko
 %%%%
 {dat}an iguana
 einem Leguan
 %%%%
-{dat}%d iguanas
-%d Leguanen
-%%%%
 {dat}a basilisk
 einem Basilisk
-%%%%
-{dat}%d basilisks
-%d Basilisken
 %%%%
 {dat}a wyvern
 einem Wyvern
@@ -2157,35 +1966,20 @@ einem Komododrachen
 {dat}a merfolk
 einem Meervolk
 %%%%
-{dat}%d merfolk
-%d Meervolken
-%%%%
 {dat}a merfolk impaler
 einem Meervolk-Impaler
-%%%%
-{dat}%d merfolk impalers
-%d Meervolk-Impalern
 %%%%
 {dat}a merfolk javelineer
 einem Meervolk-Speerführer
 %%%%
-{dat}%d merfolk javelineers
-%d Meervolk-Speerführern
-%%%%
 {dat}a merfolk aquamancer
 einem Meervolk-Aquamancer
-%%%%
-{dat}%d merfolk aquamancers
-%d Meervolk-Aquamancern
 %%%%
 {dat}a merfolk siren
 einer Meervolk-Sirene
 %%%%
 {dat}a merfolk avatar
 einem Meervolk-Avatar
-%%%%
-{dat}%d merfolk avatars
-%d Meervolk-Avataren
 %%%%
 {dat}a water nymph
 einer Wassernymphe
@@ -2196,74 +1990,38 @@ einer Moorleiche
 {dat}a necrophage
 einem Nekrophagen
 %%%%
-{dat}%d necrophages
-%d Nekrophagenen
-%%%%
 {dat}a bloated husk
 einer aufgeblähten Hülle
-%%%%
-{dat}%d bloated husks
-%d aufgeblähten Hüllen
 %%%%
 {dat}a ghoul
 einem Ghul
 %%%%
-{dat}%d ghouls
-%d Ghulen
-%%%%
 {dat}an orc
 einem Ork
-%%%%
-{dat}%d orcs
-%d Orken
 %%%%
 {dat}an orc wizard
 einem Ork-Zauberer
 %%%%
-{dat}%d orc wizards
-%d Ork-Zauberern
-%%%%
 {dat}an orc priest
 einem Ork-Priester
-%%%%
-{dat}%d orc priests
-%d Ork-Priestern
 %%%%
 {dat}an orc warrior
 einem Ork-Krieger
 %%%%
-{dat}%d orc warriors
-%d Ork-Kriegern
-%%%%
 {dat}an orc knight
 einem Ork-Ritter
-%%%%
-{dat}%d orc knights
-%d Ork-Rittern
 %%%%
 {dat}an orc warlord
 einem Ork-Warlord
 %%%%
-{dat}%d orc warlords
-%d Ork-Warlorden
-%%%%
 {dat}an orc sorcerer
 einem Ork-Hexenmeister
-%%%%
-{dat}%d orc sorcerers
-%d Ork-Hexenmeistern
 %%%%
 {dat}an orc high priest
 einem Ork-Hohepriester
 %%%%
-{dat}%d orc high priests
-%d Ork-Hohepriestern
-%%%%
 {dat}a lava orc
 einem Lava-Ork
-%%%%
-{dat}%d lava orcs
-%d Lava-Orken
 %%%%
 {dat}a human
 einem Menschen
@@ -2274,14 +2032,8 @@ einem Sklaven
 {dat}a hell knight
 einem Höllenritter
 %%%%
-{dat}%d hell knights
-%d Höllenrittern
-%%%%
 {dat}a death knight
 einem Todesritter
-%%%%
-{dat}%d death knights
-%d Todesrittern
 %%%%
 {dat}a necromancer
 einem Nekromanten
@@ -2289,14 +2041,8 @@ einem Nekromanten
 {dat}a wizard
 einem Zauberer
 %%%%
-{dat}%d wizards
-%d Zauberern
-%%%%
 {dat}a vault guard
 einem Tresorwächter
-%%%%
-{dat}%d vault guards
-%d Tresorwächtern
 %%%%
 {dat}a vault sentinel
 einer Tresorwache
@@ -2304,68 +2050,35 @@ einer Tresorwache
 {dat}a vault warden
 einem Tresorwärter
 %%%%
-{dat}%d vault wardens
-%d Tresorwärtern
-%%%%
 {dat}an ironbound convoker
 einem eisenbeschlagenen Einberufer
-%%%%
-{dat}%d ironbound convokers
-%d eisenbeschlagenen Einberufern
 %%%%
 {dat}an ironbound frostheart
 einem eisengebundenen Frostherzen
 %%%%
-{dat}%d ironbound frosthearts
-%d eisengebundenen Frostherzen
-%%%%
 {dat}an ironbound preserver
 einem eisenbeschlagenen Bewahrer
-%%%%
-{dat}%d ironbound preservers
-%d eisenbeschlagenen Bewahrern
 %%%%
 {dat}an ironbound beastmaster
 einem eisenbeschlagenen Bestienmeister
 %%%%
-{dat}%d ironbound beastmasters
-%d eisenbeschlagenen Bestienmeistern
-%%%%
 {dat}an ironbound thunderhulk
 einem eisenbeschlagenen Donnerkoloss
-%%%%
-{dat}%d ironbound thunderhulks
-%d eisenbeschlagenen Donnerkolossen
 %%%%
 {dat}an imperial myrmidon
 einem kaiserlichen Myrmidon
 %%%%
-{dat}%d imperial myrmidons
-%d kaiserlichen Myrmidonen
-%%%%
 {dat}a servant of whispers
 einem Diener des Flüsterns
-%%%%
-{dat}%d servants of whispers
-%d Dienern des Flüsterns
 %%%%
 {dat}a ragged hierophant
 einem zerlumpten Hierophanten
 %%%%
-{dat}%d ragged hierophants
-%d zerlumpten Hierophanten
-%%%%
 {dat}a shapeshifter
 einem Gestaltwandler
 %%%%
-{dat}%d shapeshifters
-%d Gestaltwandlern
-%%%%
 {dat}a glowing shapeshifter
 einem leuchtenden Gestaltwandler
-%%%%
-{dat}%d glowing shapeshifters
-%d leuchtenden Gestaltwandlern
 %%%%
 {dat}a Killer Klown
 einem Killer-Klown
@@ -2373,14 +2086,8 @@ einem Killer-Klown
 {dat}a demigod
 einem Halbgott
 %%%%
-{dat}%d demigods
-%d Halbgotten
-%%%%
 {dat}a halfling
 einem Halbling
-%%%%
-{dat}%d halflings
-%d Halblingen
 %%%%
 {dat}a rat
 einer Ratte
@@ -2397,23 +2104,14 @@ einer Höllenratte
 {dat}a porcupine
 einem Stachelschwein
 %%%%
-{dat}%d porcupines
-%d Stachelschweinen
-%%%%
 {dat}a giant cockroach
 einer Riesenkakerlake
 %%%%
 {dat}a scorpion
 einem Skorpion
 %%%%
-{dat}%d scorpions
-%d Skorpionen
-%%%%
 {dat}an emperor scorpion
 einem Kaiserskorpion
-%%%%
-{dat}%d emperor scorpions
-%d Kaiserskorpionen
 %%%%
 {dat}a death scarab
 einem Todesskarabäus
@@ -2427,9 +2125,6 @@ einer Tarantella
 {dat}a jumping spider
 einer springenden Spinne
 %%%%
-{dat}%d jumping spiders
-%d springenden Spinnen
-%%%%
 {dat}a wolf spider
 einer Wolfsspinne
 %%%%
@@ -2439,23 +2134,14 @@ einer Rotrückenspinne
 {dat}a demonic crawler
 einem dämonischen Kriecher
 %%%%
-{dat}%d demonic crawlers
-%d dämonischen Kriechern
-%%%%
 {dat}an orb spider
 einer Kugelspinne
 %%%%
 {dat}a crocodile
 einem Krokodil
 %%%%
-{dat}%d crocodiles
-%d Krokodilen
-%%%%
 {dat}an alligator
 einem Alligator
-%%%%
-{dat}%d alligators
-%d Alligatoren
 %%%%
 {dat}a snapping turtle
 einer Schnappschildkröte
@@ -2478,62 +2164,32 @@ einer Apokalypse-Krabbe
 {dat}an ugly thing
 einem hässlichen Ding
 %%%%
-{dat}%d ugly things
-%d hässlichen Dingen
-%%%%
 {dat}a very ugly thing
 einem sehr hässlichen Ding
-%%%%
-{dat}%d very ugly things
-%d sehr hässlichen Dingen
 %%%%
 {dat}a fire vortex
 einem Feuerwirbel
 %%%%
-{dat}%d fire vortices
-%d Feuerwirbeln
-%%%%
 {dat}a spatial vortex
 einem räumlichen Wirbel
-%%%%
-{dat}%d spatial vortices
-%d räumlichen Wirbeln
 %%%%
 {dat}a spatial maelstrom
 einem räumlichen Mahlstrom
 %%%%
-{dat}%d spatial maelstroms
-%d räumlichen Mahlstromen
-%%%%
 {dat}an insubstantial wisp
 einem unwesentlichen Irrlicht
-%%%%
-{dat}%d insubstantial wisps
-%d unwesentlichen Irrlichten
 %%%%
 {dat}a twister
 einem Twister
 %%%%
-{dat}%d twisters
-%d Twistern
-%%%%
 {dat}a worm
 einem Wurm
-%%%%
-{dat}%d worms
-%d Wurmen
 %%%%
 {dat}a swamp worm
 einem Sumpfwurm
 %%%%
-{dat}%d swamp worms
-%d Sumpfwurmen
-%%%%
 {dat}a tyrant leech
 einem Tyrannblutegel
-%%%%
-{dat}%d tyrant leeches
-%d Tyrannblutegeln
 %%%%
 {dat}a dart slug
 einer Pfeilschnecke
@@ -2547,38 +2203,20 @@ einer Elefantenschnecke
 {dat}an unseen horror
 einem unsichtbaren Grauen
 %%%%
-{dat}%d unseen horrors
-%d unsichtbaren Grauenen
-%%%%
 {dat}a small abomination
 einem kleinen Greuel
-%%%%
-{dat}%d small abominations
-%d kleinen Greueln
 %%%%
 {dat}a crawling corpse
 einer kriechenden Leiche
 %%%%
-{dat}%d crawling corpses
-%d kriechenden Leichen
-%%%%
 {dat}a macabre mass
 einer makaberen Masse
-%%%%
-{dat}%d macabre masses
-%d makaberen Massen
 %%%%
 {dat}an ancient zyme
 einem uralten Zym
 %%%%
-{dat}%d ancient zymes
-%d uralten Zymen
-%%%%
 {dat}a worldbinder
 einem Weltbinder
-%%%%
-{dat}%d worldbinders
-%d Weltbindern
 %%%%
 {dat}a killer bee
 einer Killerbiene
@@ -2610,32 +2248,17 @@ einer Motte des Zorns
 {dat}a wight
 einem Wight
 %%%%
-{dat}%d wights
-%d Wighten
-%%%%
 {dat}a skeletal warrior
 einem Skelettkrieger
-%%%%
-{dat}%d skeletal warriors
-%d Skelettkriegern
 %%%%
 {dat}an ancient champion
 einem alten Champion
 %%%%
-{dat}%d ancient champions
-%d alten Championen
-%%%%
 {dat}a flying skull
 einem fliegenden Schädel
 %%%%
-{dat}%d flying skulls
-%d fliegenden Schädeln
-%%%%
 {dat}a curse skull
 einem Fluchschädel
-%%%%
-{dat}%d curse skulls
-%d Fluchschädeln
 %%%%
 {dat}a curse toe
 einem Fluchzeh
@@ -2643,20 +2266,11 @@ einem Fluchzeh
 {dat}an angel
 einem Engel
 %%%%
-{dat}%d angels
-%d Engeln
-%%%%
 {dat}a cherub
 einem Cherub
 %%%%
-{dat}%d cherubim
-%d Cheruben
-%%%%
 {dat}a seraph
 einem Seraph
-%%%%
-{dat}%d seraphim
-%d Seraphen
 %%%%
 {dat}a daeva
 einem Daeva
@@ -2664,23 +2278,14 @@ einem Daeva
 {dat}a profane servitor
 einem profanen Diener
 %%%%
-{dat}%d profane servitors
-%d profanen Dienern
-%%%%
 {dat}a giant
 einem Riesen
 %%%%
 {dat}a cyclops
 einem Zyklop
 %%%%
-{dat}%d cyclopes
-%d Zyklopen
-%%%%
 {dat}an ettin
 einem Ettin
-%%%%
-{dat}%d ettins
-%d Ettinen
 %%%%
 {dat}a fire giant
 einem Feuerriesen
@@ -2694,14 +2299,8 @@ einem Steinriesen
 {dat}a titan
 einem Titan
 %%%%
-{dat}%d titans
-%d Titanen
-%%%%
 {dat}a juggernaut
 einem Juggernaut
-%%%%
-{dat}%d juggernauts
-%d Juggernauten
 %%%%
 {dat}an iron giant
 einem Eisenriesen
@@ -2811,68 +2410,35 @@ einem Perlendrachen
 {dat}an elemental
 einem Elementar
 %%%%
-{dat}%d elementals
-%d Elementaren
-%%%%
 {dat}an earth elemental
 einem Erdelementar
-%%%%
-{dat}%d earth elementals
-%d Erdelementaren
 %%%%
 {dat}a fire elemental
 einem Feuerelementar
 %%%%
-{dat}%d fire elementals
-%d Feuerelementaren
-%%%%
 {dat}a water elemental
 einem Wasserelementar
-%%%%
-{dat}%d water elementals
-%d Wasserelementaren
 %%%%
 {dat}an air elemental
 einem Luftelementar
 %%%%
-{dat}%d air elementals
-%d Luftelementaren
-%%%%
 {dat}an iron elemental
 einem Eisenelementar
-%%%%
-{dat}%d iron elementals
-%d Eisenelementaren
 %%%%
 {dat}an elemental wellspring
 einer elementaren Quelle
 %%%%
-{dat}%d elemental wellsprings
-%d elementaren Quellen
-%%%%
 {dat}a giant frog
 einem Riesenfrosch
-%%%%
-{dat}%d giant frogs
-%d Riesenfröschen
 %%%%
 {dat}a bullfrog
 einem Ochsenfrosch
 %%%%
-{dat}%d bullfrogs
-%d Ochsenfröschen
-%%%%
 {dat}a spiny frog
 einem Stachelfrosch
 %%%%
-{dat}%d spiny frogs
-%d Stachelfröschen
-%%%%
 {dat}a blink frog
 einem Blinzelfrosch
-%%%%
-{dat}%d blink frogs
-%d Blinzelfröschen
 %%%%
 {dat}a barachi
 einer Barachi
@@ -2880,29 +2446,17 @@ einer Barachi
 {dat}a floating eye
 einem schwebenden Auge
 %%%%
-{dat}%d floating eyes
-%d schwebenden Augen
-%%%%
 {dat}an eye of draining
 einem Auge des Schwächens
 %%%%
 {dat}a glowing orange brain
 einem orangen leuchtenden Gehirn
 %%%%
-{dat}%d glowing orange brains
-%d orangen leuchtenden Gehirnen
-%%%%
 {dat}a great orb of eyes
 einer großen Augenkugel
 %%%%
-{dat}%d great orbs of eyes
-%d großen Augenkugeln
-%%%%
 {dat}a shining eye
 einem leuchtenden Auge
-%%%%
-{dat}%d shining eyes
-%d leuchtenden Augen
 %%%%
 {dat}an eye of devastation
 einem Auge der Verwüstung
@@ -2910,26 +2464,14 @@ einem Auge der Verwüstung
 {dat}a golden eye
 einem goldenen Auge
 %%%%
-{dat}%d golden eyes
-%d goldenen Augen
-%%%%
 {dat}an ophan
 einem Ophan
-%%%%
-{dat}%d ophanim
-%d Ophanen
 %%%%
 {dat}a hippogriff
 einem Hippogriff
 %%%%
-{dat}%d hippogriffs
-%d Hippogriffen
-%%%%
 {dat}a manticore
 einem Mantikor
-%%%%
-{dat}%d manticores
-%d Mantikoren
 %%%%
 {dat}a minotaur
 einem Minotauren
@@ -2943,35 +2485,20 @@ einer Harpyie
 {dat}a mutant beast
 einer mutierten Bestie
 %%%%
-{dat}%d mutant beasts
-%d mutierten Bestien
-%%%%
 {dat}an ancestor
 einem Ahnen
 %%%%
 {dat}a knight
 einem Ritter
 %%%%
-{dat}%d knights
-%d Rittern
-%%%%
 {dat}a battlemage
 einem Kampfmagier
-%%%%
-{dat}%d battlemagi
-%d Kampfmagiern
 %%%%
 {dat}a hexer
 einem Hexer
 %%%%
-{dat}%d hexers
-%d Hexern
-%%%%
 {dat}an ooze
 einem Schlamm
-%%%%
-{dat}%d oozes
-%d Schlammen
 %%%%
 {dat}a jelly
 einem Gelee
@@ -2979,44 +2506,23 @@ einem Gelee
 {dat}a slime creature
 einem Schleimwesen
 %%%%
-{dat}%d slime creatures
-%d Schleimwesenen
-%%%%
 {dat}a merged slime creature
 einer verschmolzenen Schleimkreatur
-%%%%
-{dat}%d merged slime creatures
-%d verschmolzenen Schleimkreaturen
 %%%%
 {dat}an azure jelly
 einem azurblauen Gelee
 %%%%
-{dat}%d azure jellies
-%d azurblauen Geleen
-%%%%
 {dat}a death ooze
 einem Todesschlamm
-%%%%
-{dat}%d death oozes
-%d Todesschlammen
 %%%%
 {dat}an acid blob
 einem Säureklumpen
 %%%%
-{dat}%d acid blobs
-%d Säureklumpenen
-%%%%
 {dat}a kobold
 einem Kobold
 %%%%
-{dat}%d kobolds
-%d Kobolden
-%%%%
 {dat}a big kobold
 einem großen Kobold
-%%%%
-{dat}%d big kobolds
-%d großen Kobolden
 %%%%
 {dat}a kobold demonologist
 einem Kobold-Dämonologen
@@ -3027,20 +2533,11 @@ einem Lich
 {dat}an ancient lich
 einem alten Lich
 %%%%
-{dat}%d ancient liches
-%d alten Lichs
-%%%%
 {dat}a revenant
 einem Wiedergänger
 %%%%
-{dat}%d revenants
-%d Wiedergängern
-%%%%
 {dat}a halazid warlock
 einem halazidischen Hexenmeister
-%%%%
-{dat}%d halazid warlocks
-%d halazidischen Hexenmeistern
 %%%%
 {dat}a mummy
 einer Mumie
@@ -3051,23 +2548,14 @@ einer Wächtermumie
 {dat}a greater mummy
 einer größeren Mumie
 %%%%
-{dat}%d greater mummies
-%d größeren Mumien
-%%%%
 {dat}a mummy priest
 einem Mumie-Priester
-%%%%
-{dat}%d mummy priests
-%d Mumie-Priestern
 %%%%
 {dat}a naga
 einem Naga
 %%%%
 {dat}a naga mage
 einem Naga-Magier
-%%%%
-{dat}%d naga magi
-%d Naga-Magiern
 %%%%
 {dat}a naga sharpshooter
 einem Naga-Scharfschützen
@@ -3078,29 +2566,17 @@ einem Naga-Ritualisten
 {dat}a naga warrior
 einem Naga-Krieger
 %%%%
-{dat}%d naga warriors
-%d Naga-Kriegern
-%%%%
 {dat}a nagaraja
 einem Nagaraja
 %%%%
 {dat}an ogre
 einem Oger
 %%%%
-{dat}%d ogres
-%d Ogern
-%%%%
 {dat}a two-headed ogre
 einem zweiköpfigen Oger
 %%%%
-{dat}%d two-headed ogres
-%d zweiköpfigen Ogern
-%%%%
 {dat}an ogre mage
 einem Oger-Magier
-%%%%
-{dat}%d ogre magi
-%d Oger-Magiern
 %%%%
 {dat}a plant
 einer Pflanze
@@ -3108,20 +2584,11 @@ einer Pflanze
 {dat}a demonic plant
 einer dämonischen Pflanze
 %%%%
-{dat}%d demonic plants
-%d dämonischen Pflanzen
-%%%%
 {dat}a withered plant
 einer verwelkten Pflanze
 %%%%
-{dat}%d withered plants
-%d verwelkten Pflanzen
-%%%%
 {dat}an oklob sapling
 einem Oklob-Setzling
-%%%%
-{dat}%d oklob saplings
-%d Oklob-Setzlingen
 %%%%
 {dat}an oklob plant
 einer Oklob-Pflanze
@@ -3129,26 +2596,14 @@ einer Oklob-Pflanze
 {dat}a bush
 einem Busch
 %%%%
-{dat}%d bushes
-%d Buschen
-%%%%
 {dat}a burning bush
 einem brennenden Busch
-%%%%
-{dat}%d burning bushes
-%d brennenden Buschen
 %%%%
 {dat}a toadstool
 einem Giftpilz
 %%%%
-{dat}%d toadstools
-%d Giftpilzen
-%%%%
 {dat}a fungus
 einem Pilz
-%%%%
-{dat}%d fungi
-%d Pilzen
 %%%%
 {dat}a ballistomycete
 einem Ballistomyceten
@@ -3156,14 +2611,8 @@ einem Ballistomyceten
 {dat}a hyperactive ballistomycete
 einem hyperaktiven Ballistomyceten
 %%%%
-{dat}%d hyperactive ballistomycetes
-%d hyperaktiven Ballistomyceten
-%%%%
 {dat}a briar patch
 einem Dornstrauch
-%%%%
-{dat}%d briar patches
-%d Dornstrauchen
 %%%%
 {dat}a tengu
 einem Tengu
@@ -3171,26 +2620,14 @@ einem Tengu
 {dat}a tengu conjurer
 einem Tengu-Zauberer
 %%%%
-{dat}%d tengu conjurers
-%d Tengu-Zauberern
-%%%%
 {dat}a tengu warrior
 einem Tengu-Krieger
-%%%%
-{dat}%d tengu warriors
-%d Tengu-Kriegern
 %%%%
 {dat}a tengu reaver
 einem Tengu-Häscher
 %%%%
-{dat}%d tengu reavers
-%d Tengu-Häschern
-%%%%
 {dat}an efreet
 einem Efreet
-%%%%
-{dat}%d efreet
-%d Efreeten
 %%%%
 {dat}a rakshasa
 einem Rakshasa
@@ -3204,9 +2641,6 @@ einer Peitscherrebe
 {dat}a snaplasher vine segment
 einem Peitscherrebesegment
 %%%%
-{dat}%d snaplasher vine segments
-%d Peitscherrebesegmenten
-%%%%
 {dat}a snake
 einer Schlange
 %%%%
@@ -3219,14 +2653,8 @@ einer Kreuzotter
 {dat}a water moccasin
 einem Wassermokassin
 %%%%
-{dat}%d water moccasins
-%d Wassermokassinen
-%%%%
 {dat}a black mamba
 einer schwarzen Mamba
-%%%%
-{dat}%d black mambas
-%d schwarzen Mambas
 %%%%
 {dat}a sea snake
 einer Seeschlange
@@ -3246,26 +2674,14 @@ einer Manaviper
 {dat}a troll
 einem Troll
 %%%%
-{dat}%d trolls
-%d Trollen
-%%%%
 {dat}an iron troll
 einem Eisentroll
-%%%%
-{dat}%d iron trolls
-%d Eisentrollen
 %%%%
 {dat}a deep troll
 einem Tiefentroll
 %%%%
-{dat}%d deep trolls
-%d Tiefentrollen
-%%%%
 {dat}a deep troll earth mage
 einem Tiefentroll-Erdmagier
-%%%%
-{dat}%d deep troll earth magi
-%d Tiefentroll-Erdmagiern
 %%%%
 {dat}a deep troll shaman
 einem Tiefentroll-Schamanen
@@ -3273,20 +2689,11 @@ einem Tiefentroll-Schamanen
 {dat}a vampire
 einem Vampir
 %%%%
-{dat}%d vampires
-%d Vampiren
-%%%%
 {dat}a vampire knight
 einem Vampir-Ritter
 %%%%
-{dat}%d vampire knights
-%d Vampir-Rittern
-%%%%
 {dat}a vampire mage
 einem Vampir-Magier
-%%%%
-{dat}%d vampire magi
-%d Vampir-Magiern
 %%%%
 {dat}a jiangshi
 einem Jiangshi
@@ -3294,32 +2701,17 @@ einem Jiangshi
 {dat}a ghost
 einem Gespenst
 %%%%
-{dat}%d ghosts
-%d Gespensten
-%%%%
 {dat}a phantom
 einem Phantom
-%%%%
-{dat}%d phantoms
-%d Phantomen
 %%%%
 {dat}a hungry ghost
 einem hungrigen Geist
 %%%%
-{dat}%d hungry ghosts
-%d hungrigen Geistern
-%%%%
 {dat}a flayed ghost
 einem enthäuteten Geist
 %%%%
-{dat}%d flayed ghosts
-%d enthäuteten Geistern
-%%%%
 {dat}a player ghost
 einem Spielergeist
-%%%%
-{dat}%d player ghosts
-%d Spielergeistern
 %%%%
 {dat}a shadow
 einem Schatten
@@ -3327,56 +2719,29 @@ einem Schatten
 {dat}a silent spectre
 einem stillen Gespenst
 %%%%
-{dat}%d silent spectres
-%d stillen Gespensten
-%%%%
 {dat}a drowned soul
 einer ertrunkenen Seele
-%%%%
-{dat}%d drowned souls
-%d ertrunkenen Seelen
 %%%%
 {dat}a wraith
 einem Geist
 %%%%
-{dat}%d wraiths
-%d Geistern
-%%%%
 {dat}a shadow wraith
 einem Schattengeist
-%%%%
-{dat}%d shadow wraiths
-%d Schattengeistern
 %%%%
 {dat}a freezing wraith
 einem Frostgeist
 %%%%
-{dat}%d freezing wraiths
-%d Frostgeistern
-%%%%
 {dat}an eidolon
 einem Eidolon
-%%%%
-{dat}%d eidola
-%d Eidolonen
 %%%%
 {dat}a phantasmal warrior
 einem phantastischen Krieger
 %%%%
-{dat}%d phantasmal warriors
-%d phantastischen Kriegern
-%%%%
 {dat}a large abomination
 einem großen Greuel
 %%%%
-{dat}%d large abominations
-%d großen Greueln
-%%%%
 {dat}a thrashing horror
 einem verprügelnden Grauen
-%%%%
-{dat}%d thrashing horrors
-%d verprügelnden Grauenen
 %%%%
 {dat}a tentacled monstrosity
 einer Tentakel-Monstrosität
@@ -3384,50 +2749,26 @@ einer Tentakel-Monstrosität
 {dat}an Orb Guardian
 einem Kugelwächter
 %%%%
-{dat}%d Orb Guardians
-%d Kugelwächtern
-%%%%
 {dat}a tentacled starspawn
 einem Tentakelsternbrut
-%%%%
-{dat}%d tentacled starspawn
-%d Tentakelsternbruten
 %%%%
 {dat}a starspawn tentacle
 einem Sternbruttentakel
 %%%%
-{dat}%d starspawn tentacles
-%d Sternbruttentakeln
-%%%%
 {dat}a starspawn tentacle segment
 einem Sternbruttentakelsegment
-%%%%
-{dat}%d starspawn tentacle segments
-%d Sternbruttentakelsegmenten
 %%%%
 {dat}a starcursed mass
 einer sternverfluchten Masse
 %%%%
-{dat}%d starcursed masses
-%d sternverfluchten Massen
-%%%%
 {dat}a dream sheep
 einem Traumschaf
-%%%%
-{dat}%d dream sheep
-%d Traumschafen
 %%%%
 {dat}a yak
 einem Yak
 %%%%
-{dat}%d yaks
-%d Yaken
-%%%%
 {dat}a death yak
 einem Todesyak
-%%%%
-{dat}%d death yaks
-%d Todesyaken
 %%%%
 {dat}a catoblepas
 einer Catoblepas
@@ -3450,17 +2791,11 @@ einer Eisbestie
 {dat}a sky beast
 einem Himmelstier
 %%%%
-{dat}%d sky beasts
-%d Himmelstieren
-%%%%
 {dat}a zombie
 einem Zombie
 %%%%
 {dat}a skeleton
 einem Skelett
-%%%%
-{dat}%d skeletons
-%d Skeletten
 %%%%
 {dat}a simulacrum
 einem Simulacrum
@@ -3468,74 +2803,38 @@ einem Simulacrum
 {dat}a small zombie
 einem kleinen Zombie
 %%%%
-{dat}%d small zombies
-%d kleinen Zombies
-%%%%
 {dat}a small skeleton
 einem kleinen Skelett
-%%%%
-{dat}%d small skeletons
-%d kleinen Skeletten
 %%%%
 {dat}a small simulacrum
 einem kleinen Simulacrum
 %%%%
-{dat}%d small simulacra
-%d kleinen Simulacren
-%%%%
 {dat}a large zombie
 einem großen Zombie
-%%%%
-{dat}%d large zombies
-%d großen Zombies
 %%%%
 {dat}a large skeleton
 einem großen Skelett
 %%%%
-{dat}%d large skeletons
-%d großen Skeletten
-%%%%
 {dat}a large simulacrum
 einem großen Simulacrum
-%%%%
-{dat}%d large simulacra
-%d großen Simulacren
 %%%%
 {dat}a spectral thing
 einer spektralen Sache
 %%%%
-{dat}%d spectral things
-%d spektralen Sachen
-%%%%
 {dat}an electric eel
 einem Zitteraal
-%%%%
-{dat}%d electric eels
-%d Zitteraalen
 %%%%
 {dat}a kraken
 einem Kraken
 %%%%
-{dat}%d krakens
-%d Krakenen
-%%%%
 {dat}a tentacle
 einem Tentakel
-%%%%
-{dat}%d tentacles
-%d Tentakeln
 %%%%
 {dat}a tentacle segment
 einem Tentakelsegment
 %%%%
-{dat}%d tentacle segments
-%d Tentakelsegmenten
-%%%%
 {dat}an octopode
 einem Oktopod
-%%%%
-{dat}%d octopodes
-%d Oktopoden
 %%%%
 {dat}a lava snake
 einer Lavaschlange
@@ -3543,32 +2842,17 @@ einer Lavaschlange
 {dat}a salamander
 einem Salamander
 %%%%
-{dat}%d salamanders
-%d Salamandern
-%%%%
 {dat}a salamander mystic
 einem Salamander-Mystiker
-%%%%
-{dat}%d salamander mystics
-%d Salamander-Mystikern
 %%%%
 {dat}a Hellbinder
 einem Höllenbinder
 %%%%
-{dat}%d Hellbinders
-%d Höllenbindern
-%%%%
 {dat}a Cloud Mage
 einem Wolkenmagier
 %%%%
-{dat}%d Cloud Mages
-%d Wolkenmagiern
-%%%%
 {dat}a player
 einem Spieler
-%%%%
-{dat}%d players
-%d Spielern
 %%%%
 {dat}a player illusion
 einer Spieler-Illusion
@@ -3576,23 +2860,14 @@ einer Spieler-Illusion
 {dat}a dancing weapon
 einer tanzenden Waffe
 %%%%
-{dat}%d dancing weapons
-%d tanzenden Waffen
-%%%%
 {dat}a spectral weapon
 einer Spektralwaffe
 %%%%
 {dat}an eldritch tentacle
 einem unheimlichen Tentakel
 %%%%
-{dat}%d eldritch tentacles
-%d unheimlichen Tentakeln
-%%%%
 {dat}an eldritch tentacle segment
 einem unheimlichen Tentakelsegment
-%%%%
-{dat}%d eldritch tentacle segments
-%d unheimlichen Tentakelsegmenten
 %%%%
 {dat}a demonspawn
 einer Dämonenbrut
@@ -3600,26 +2875,14 @@ einer Dämonenbrut
 {dat}a monstrous demonspawn
 einer monströsen Dämonenbrut
 %%%%
-{dat}%d monstrous demonspawn
-%d monströsen Dämonenbruten
-%%%%
 {dat}a gelid demonspawn
 einem geliden Dämonenbrut
-%%%%
-{dat}%d gelid demonspawn
-%d geliden Dämonenbruten
 %%%%
 {dat}an infernal demonspawn
 einer höllischen Dämonenbrut
 %%%%
-{dat}%d infernal demonspawn
-%d höllischen Dämonenbruten
-%%%%
 {dat}a torturous demonspawn
 einer quälenden Dämonenbrut
-%%%%
-{dat}%d torturous demonspawn
-%d quälenden Dämonenbruten
 %%%%
 {dat}a blood saint
 einem Blutheiligen
@@ -3627,38 +2890,20 @@ einem Blutheiligen
 {dat}a warmonger
 einem Kriegstreiber
 %%%%
-{dat}%d warmongers
-%d Kriegstreibern
-%%%%
 {dat}a corrupter
 einem Korruptor
-%%%%
-{dat}%d corrupters
-%d Korruptoren
 %%%%
 {dat}a black sun
 einer schwarzen Sonne
 %%%%
-{dat}%d black suns
-%d schwarzen Sonnen
-%%%%
 {dat}a crimson imp
 einem karminroten Teufelchen
-%%%%
-{dat}%d crimson imps
-%d karminroten Teufelchen
 %%%%
 {dat}a quasit
 einem Quasit
 %%%%
-{dat}%d quasits
-%d Quasiten
-%%%%
 {dat}a white imp
 einem weißen Teufelchen
-%%%%
-{dat}%d white imps
-%d weißen Teufelchen
 %%%%
 {dat}an ufetubus
 einem Ufetubus
@@ -3672,32 +2917,17 @@ einem Schattenteufelchen
 {dat}a rust devil
 einem Rostteufel
 %%%%
-{dat}%d rust devils
-%d Rostteufeln
-%%%%
 {dat}an orange demon
 einem orangen Dämon
-%%%%
-{dat}%d orange demons
-%d orangen Dämonen
 %%%%
 {dat}a red devil
 einem roten Teufel
 %%%%
-{dat}%d red devils
-%d roten Teufeln
-%%%%
 {dat}a hellwing
 einem Höllenflügel
 %%%%
-{dat}%d hellwings
-%d Höllenflügeln
-%%%%
 {dat}an ice devil
 einem Eisteufel
-%%%%
-{dat}%d ice devils
-%d Eisteufeln
 %%%%
 {dat}a chaos spawn
 einer Chaosbrut
@@ -3705,20 +2935,11 @@ einer Chaosbrut
 {dat}a sun demon
 einem Sonnendämon
 %%%%
-{dat}%d sun demons
-%d Sonnendämonen
-%%%%
 {dat}a soul eater
 einem Seelenfresser
 %%%%
-{dat}%d soul eaters
-%d Seelenfressern
-%%%%
 {dat}a smoke demon
 einem Rauchdämon
-%%%%
-{dat}%d smoke demons
-%d Rauchdämonen
 %%%%
 {dat}a neqoxec
 einer Neqoxec
@@ -3726,59 +2947,32 @@ einer Neqoxec
 {dat}a ynoxinul
 einem Ynoxinul
 %%%%
-{dat}%d ynoxinuls
-%d Ynoxinulen
-%%%%
 {dat}a sixfirhy
 einem Sixfirhy
 %%%%
 {dat}a shadow demon
 einem Schattendämon
 %%%%
-{dat}%d shadow demons
-%d Schattendämonen
-%%%%
 {dat}a green death
 einem grünen Tod
-%%%%
-{dat}%d green deaths
-%d grünen Toden
 %%%%
 {dat}a blizzard demon
 einem Blizzarddämon
 %%%%
-{dat}%d blizzard demons
-%d Blizzarddämonen
-%%%%
 {dat}a balrug
 einem Balrug
-%%%%
-{dat}%d balrugs
-%d Balrugen
 %%%%
 {dat}a cacodemon
 einem Cacodaemon
 %%%%
-{dat}%d cacodemons
-%d Cacodaemonen
-%%%%
 {dat}a hell beast
 einem Höllentier
-%%%%
-{dat}%d hell beasts
-%d Höllentieren
 %%%%
 {dat}a hellion
 einem Teufelsbraten
 %%%%
-{dat}%d hellions
-%d Teufelsbratenen
-%%%%
 {dat}a reaper
 einem Schnitter
-%%%%
-{dat}%d reapers
-%d Schnittern
 %%%%
 {dat}a lorocyproca
 einer Lorocyproca
@@ -3786,86 +2980,44 @@ einer Lorocyproca
 {dat}a tormentor
 einem Peiniger
 %%%%
-{dat}%d tormentors
-%d Peinigern
-%%%%
 {dat}a Brimstone Fiend
 einem Schwefelunterweltler
-%%%%
-{dat}%d Brimstone Fiends
-%d Schwefelunterweltlern
 %%%%
 {dat}an Ice Fiend
 einem Eisunterweltler
 %%%%
-{dat}%d Ice Fiends
-%d Eisunterweltlern
-%%%%
 {dat}a Tzitzimitl
 einem Tzitzimitl
-%%%%
-{dat}%d Tzitzimimeh
-%d Tzitzimitlen
 %%%%
 {dat}a Hell Sentinel
 einem Höllenwächter
 %%%%
-{dat}%d Hell Sentinels
-%d Höllenwächtern
-%%%%
 {dat}an Executioner
 einem Scharfrichter
-%%%%
-{dat}%d Executioners
-%d Scharfrichtern
 %%%%
 {dat}an animated tree
 einem animierten Baum
 %%%%
-{dat}%d animated trees
-%d animierten Bäumen
-%%%%
 {dat}a golem
 einem Golem
-%%%%
-{dat}%d golems
-%d Golemen
 %%%%
 {dat}a saltling
 einem Salzling
 %%%%
-{dat}%d saltlings
-%d Salzlingen
-%%%%
 {dat}a peacekeeper
 einem Friedenshüter
-%%%%
-{dat}%d peacekeepers
-%d Friedenshütern
 %%%%
 {dat}an iron golem
 einem Eisengolem
 %%%%
-{dat}%d iron golems
-%d Eisengolemen
-%%%%
 {dat}a crystal guardian
 einem Kristallwächter
-%%%%
-{dat}%d crystal guardians
-%d Kristallwächtern
 %%%%
 {dat}a toenail golem
 einem Zehennagelgolem
 %%%%
-{dat}%d toenail golems
-%d Zehennagelgolemen
-%%%%
 {dat}an electric golem
 einem Blitzgolem
-%%%%
-{dat}%d electric golems
-%d Blitzgolemen
 %%%%
 {dat}an ushabti
 einer Uschabti
@@ -3873,14 +3025,8 @@ einer Uschabti
 {dat}a guardian golem
 einem Wächtergolem
 %%%%
-{dat}%d guardian golems
-%d Wächtergolemen
-%%%%
 {dat}a spellforged servitor
 einem zaubergeschmeideten Diener
-%%%%
-{dat}%d spellforged servitors
-%d zaubergeschmeideten Dienern
 %%%%
 {dat}an ice statue
 einer Eisstatue
@@ -3890,9 +3036,6 @@ einer Obsidianstatue
 %%%%
 {dat}an orange crystal statue
 einer orangen Kristallstatue
-%%%%
-{dat}%d orange crystal statues
-%d orangen Kristallstatuen
 %%%%
 {dat}a statue
 einer Statue
@@ -3906,20 +3049,11 @@ einer Säule des Salzes
 {dat}a block of ice
 einem Eisblock
 %%%%
-{dat}%d blocks of ice
-%d Eisblocken
-%%%%
 {dat}a diamond obelisk
 einem Diamantobelisk
 %%%%
-{dat}%d diamond obelisks
-%d Diamantobelisken
-%%%%
 {dat}a lightning spire
 einem Blitzturm
-%%%%
-{dat}%d lightning spires
-%d Blitzturmen
 %%%%
 {dat}a gargoyle
 einem Gargoyle
@@ -3930,26 +3064,14 @@ einem Kriegsgargoyle
 {dat}a molten gargoyle
 einem geschmolzenen Gargoyle
 %%%%
-{dat}%d molten gargoyles
-%d geschmolzenen Gargoyles
-%%%%
 {dat}a pandemonium lord
 einem Pandemoniumsherrn
-%%%%
-{dat}%d pandemonium lords
-%d Pandemoniumsherren
 %%%%
 {dat}a hell lord
 einem Höllenherrn
 %%%%
-{dat}%d hell lords
-%d Höllenherren
-%%%%
 {dat}a ball lightning
 einem Kugelblitz
-%%%%
-{dat}%d ball lightnings
-%d Kugelblitzen
 %%%%
 {dat}a ballistomycete spore
 einer Ballistomycetenspore
@@ -3957,14 +3079,8 @@ einer Ballistomycetenspore
 {dat}a lost soul
 einer verlorenen Seele
 %%%%
-{dat}%d lost souls
-%d verlorenen Seelen
-%%%%
 {dat}a lurking horror
 einem lauernden Grauen
-%%%%
-{dat}%d lurking horrors
-%d lauernden Grauenen
 %%%%
 {dat}an orb of fire
 einer Feuerkugel
@@ -3975,14 +3091,8 @@ einer Kugel der Zerstörung
 {dat}a fulminant prism
 einem fulminanten Prisma
 %%%%
-{dat}%d fulminant prisms
-%d fulminanten Prismen
-%%%%
 {dat}a wretched star
 einem elenden Stern
-%%%%
-{dat}%d wretched stars
-%d elenden Sternen
 %%%%
 {dat}a battlesphere
 einer Kampfsphäre
@@ -3993,26 +3103,14 @@ einem Todeskolben
 {dat}a moon troll
 einem Mondtroll
 %%%%
-{dat}%d moon trolls
-%d Mondtrollen
-%%%%
 {dat}a foxfire
 einem Fuchsfeuer
-%%%%
-{dat}%d foxfires
-%d Fuchsfeuern
 %%%%
 {dat}a nameless horror
 einem namenlosen Horror
 %%%%
-{dat}%d nameless horrors
-%d namenlosen Horrors
-%%%%
 {dat}a will-o-the-wisp
 einem Irrlicht
-%%%%
-{dat}%d will-o-the-wisps
-%d Irrlichtern
 %%%%
 {dat}a bunyip
 einem Bunyip
@@ -4020,17 +3118,11 @@ einem Bunyip
 {dat}a boulder beetle
 einem Rollsteinkäfer
 %%%%
-{dat}%d boulder beetles
-%d Rollsteinkäfern
-%%%%
 {dat}a cane toad
 einer Aga-Kröte
 %%%%
 {dat}a goliath frog
 einem Goliathfrosch
-%%%%
-{dat}%d goliath frogs
-%d Goliathfröschen
 %%%%
 {dat}a fenstrider witch
 einer Fennläuferhexe
@@ -4040,9 +3132,6 @@ einem Palentonga
 %%%%
 {dat}a royal mummy
 einer königlichen Mumie
-%%%%
-{dat}%d royal mummies
-%d königlichen Mumien
 %%%%
 {dat}a eleionoma
 einer Eleionoma
@@ -4056,14 +3145,8 @@ einem Endoplasma
 {dat}a rockslime
 einem Felsenschleim
 %%%%
-{dat}%d rockslimes
-%d Felsenschleimen
-%%%%
 {dat}a quicksilver ooze
 einem Quecksilber-Schlamm
-%%%%
-{dat}%d quicksilver oozes
-%d Quecksilber-Schlammen
 %%%%
 {dat}a kobold brigand
 einem Kobold-Briganten
@@ -4080,16 +3163,8 @@ einem Salamander-Tyrann
 {dat}an animated armour
 einer animierten Rüstung
 %%%%
-{dat}%d animated armours
-%d animierten Rüstungen
-%%%%
-# Test monsters can be created in Arena
-%%%%
 {dat}a test spawner
 einem Test-Erzeuger
-%%%%
-{dat}%d test spawners
-%d Test-Erzeugern
 %%%%
 {dat}a test statue
 einer Test-Statue
@@ -4100,74 +3175,38 @@ einem Test-Klumpen
 {dat}a sensed monster
 einem gespürten Monster
 %%%%
-{dat}%d sensed monsters
-%d gespürten Monstern
-%%%%
 {dat}a friendly sensed monster
 einem freundlichen gespürten Monster
-%%%%
-{dat}%d friendly sensed monsters
-%d freundlichen gespürten Monstern
 %%%%
 {dat}a trivial sensed monster
 einem trivialen gespürten Monster
 %%%%
-{dat}%d trivial sensed monsters
-%d trivialen gespürten Monstern
-%%%%
 {dat}an easy sensed monster
 einem leichten gespürten Monster
-%%%%
-{dat}%d easy sensed monsters
-%d leichten gespürten Monstern
 %%%%
 {dat}a tough sensed monster
 einem harten gespürten Monster
 %%%%
-{dat}%d tough sensed monsters
-%d harten gespürten Monstern
-%%%%
 {dat}a nasty sensed monster
 einem furchtbaren gespürten Monster
-%%%%
-{dat}%d nasty sensed monsters
-%d furchtbaren gespürten Monstern
 %%%%
 {dat}a %ssting beast
 einem {adj-en}%sStichbiest
 %%%%
-{dat}%d %ssting beasts
-%d {adj-en}%sStichbiestern
-%%%%
 {dat}a %sbat beast
 einem {adj-en}%sFledermaus-Biest
-%%%%
-{dat}%d %sbat beasts
-%d {adj-en}%sFledermaus-Biestern
 %%%%
 {dat}a %sfire beast
 einem {adj-en}%sFeuerbiest
 %%%%
-{dat}%d %sfire beasts
-%d {adj-en}%sFeuerbiestern
-%%%%
 {dat}a %sweird beast
 einem {adj-en}%sbizarren Biest
-%%%%
-{dat}%d %sweird beasts
-%d {adj-en}%sbizarren Biestern
 %%%%
 {dat}a %sshock beast
 einem {adj-en}%sSchockbiest
 %%%%
-{dat}%d %sshock beasts
-%d {adj-en}%sSchockbiestern
-%%%%
 {dat}a %sox beast
 einem {adj-en}%sOchsenbiest
-%%%%
-{dat}%d %sox beasts
-%d {adj-en}%sOchsenbiestern
 %%%%
 
 # derived monsters (undead, etc.)
@@ -4189,6 +3228,972 @@ einer %s-förmigen Salzsäule
 einem %s-förmigen Eisblock
 %%%%
 
+################################
+# Plural
+################################
+
+%%%%
+{dat}%d program bugs
+%d Programmfehlern
+%%%%
+{dat}%d formicids
+%d Formiciden
+%%%%
+{dat}%d entropy weavers
+%d Entropiewebern
+%%%%
+{dat}%d bats
+%d Fledermäusen
+%%%%
+{dat}%d butterflies
+%d Schmetterlingen
+%%%%
+{dat}%d vampire bats
+%d Vampirfledermäusen
+%%%%
+{dat}%d fire bats
+%d Feuerfledermäusen
+%%%%
+{dat}%d caustic shrikes
+%d ätzenden Würgern
+%%%%
+{dat}%d shard shrikes
+%d Scherbenwürgern
+%%%%
+{dat}%d centaur warriors
+%d Zentaur-Kriegern
+%%%%
+{dat}%d yaktaur captains
+%d Yaktaur-Kapitänen
+%%%%
+{dat}%d fauns
+%d Faunen
+%%%%
+{dat}%d draconians
+%d Drakoniern
+%%%%
+{dat}%d black draconians
+%d schwarzen Drakoniern
+%%%%
+{dat}%d yellow draconians
+%d gelben Drakoniern
+%%%%
+{dat}%d pale draconians
+%d blassen Drakoniern
+%%%%
+{dat}%d green draconians
+%d grünen Drakoniern
+%%%%
+{dat}%d purple draconians
+%d purpurnen Drakoniern
+%%%%
+{dat}%d red draconians
+%d roten Drakoniern
+%%%%
+{dat}%d white draconians
+%d weißen Drakoniern
+%%%%
+{dat}%d grey draconians
+%d grauen Drakoniern
+%%%%
+{dat}%d draconian stormcallers
+%d Drakonier-Sturmrufern
+%%%%
+{dat}%d draconian monks
+%d Drakonier-Mönchen
+%%%%
+{dat}%d draconian shifters
+%d Drakonier-Verschiebern
+%%%%
+{dat}%d draconian annihilators
+%d Drakonier-Vernichtern
+%%%%
+{dat}%d draconian knights
+%d Drakonier-Rittern
+%%%%
+{dat}%d draconian scorchers
+%d Drakonier-Verschmorern
+%%%%
+{dat}%d deep elf knights
+%d Tiefenelf-Rittern
+%%%%
+{dat}%d deep elf blademasters
+%d Tiefenelf-Klingenmeistern
+%%%%
+{dat}%d deep elf master archers
+%d Tiefenelf-Bogenmeistern
+%%%%
+{dat}%d deep elf high priests
+%d Tiefenelf-Hohepriestern
+%%%%
+{dat}%d deep elf annihilators
+%d Tiefenelf-Vernichtern
+%%%%
+{dat}%d deep elf sorcerers
+%d Tiefenelf-Zauberern
+%%%%
+{dat}%d deep elf death magi
+%d Tiefenelf-Todesmagiern
+%%%%
+{dat}%d wandering mushrooms
+%d wandernden Pilzen
+%%%%
+{dat}%d thorn hunters
+%d Dornenjägern
+%%%%
+{dat}%d shambling mangroves
+%d watschelnden Mangroven
+%%%%
+{dat}%d vine stalkers
+%d Rebjägern
+%%%%
+{dat}%d gnolls
+%d Gnollen
+%%%%
+{dat}%d gnoll sergeants
+%d Gnoll-Wachtmeistern
+%%%%
+{dat}%d dwarves
+%d Zwergen
+%%%%
+{dat}%d deep dwarves
+%d Tiefenzwergen
+%%%%
+{dat}%d jackals
+%d Schakalen
+%%%%
+{dat}%d hounds
+%d Hunden
+%%%%
+{dat}%d wargs
+%d Wargen
+%%%%
+{dat}%d wolves
+%d Wölfen
+%%%%
+{dat}%d hogs
+%d Schweinen
+%%%%
+{dat}%d hell hounds
+%d Höllenhunden
+%%%%
+{dat}%d doom hounds
+%d Untergangshunden
+%%%%
+{dat}%d hell hogs
+%d höllischen Schweinen
+%%%%
+{dat}%d holy swine
+%d heiligen Schweinen
+%%%%
+{dat}%d spriggan riders
+%d Spriggan-Reitern
+%%%%
+{dat}%d spriggan berserkers
+%d Spriggan-Berserkern
+%%%%
+{dat}%d spriggan air magi
+%d Spriggan-Luftmagiern
+%%%%
+{dat}%d spriggan defenders
+%d Spriggan-Verteidigern
+%%%%
+{dat}%d drakes
+%d Drachlingen
+%%%%
+{dat}%d swamp drakes
+%d Sumpfdrachlingen
+%%%%
+{dat}%d rime drakes
+%d Reifsdrachlingen
+%%%%
+{dat}%d wind drakes
+%d Winddrachlingen
+%%%%
+{dat}%d lindwurms
+%d Lindwurmen
+%%%%
+{dat}%d death drakes
+%d Todesdrachlingen
+%%%%
+{dat}%d frilled lizards
+%d gekräuselten Eidechsen
+%%%%
+{dat}%d iguanas
+%d Leguanen
+%%%%
+{dat}%d basilisks
+%d Basilisken
+%%%%
+{dat}%d merfolk
+%d Meervolken
+%%%%
+{dat}%d merfolk impalers
+%d Meervolk-Impalern
+%%%%
+{dat}%d merfolk javelineers
+%d Meervolk-Speerführern
+%%%%
+{dat}%d merfolk aquamancers
+%d Meervolk-Aquamancern
+%%%%
+{dat}%d merfolk avatars
+%d Meervolk-Avataren
+%%%%
+{dat}%d necrophages
+%d Nekrophagenen
+%%%%
+{dat}%d bloated husks
+%d aufgeblähten Hüllen
+%%%%
+{dat}%d ghouls
+%d Ghulen
+%%%%
+{dat}%d orcs
+%d Orken
+%%%%
+{dat}%d orc wizards
+%d Ork-Zauberern
+%%%%
+{dat}%d orc priests
+%d Ork-Priestern
+%%%%
+{dat}%d orc warriors
+%d Ork-Kriegern
+%%%%
+{dat}%d orc knights
+%d Ork-Rittern
+%%%%
+{dat}%d orc warlords
+%d Ork-Warlorden
+%%%%
+{dat}%d orc sorcerers
+%d Ork-Hexenmeistern
+%%%%
+{dat}%d orc high priests
+%d Ork-Hohepriestern
+%%%%
+{dat}%d lava orcs
+%d Lava-Orken
+%%%%
+{dat}%d hell knights
+%d Höllenrittern
+%%%%
+{dat}%d death knights
+%d Todesrittern
+%%%%
+{dat}%d wizards
+%d Zauberern
+%%%%
+{dat}%d vault guards
+%d Tresorwächtern
+%%%%
+{dat}%d vault wardens
+%d Tresorwärtern
+%%%%
+{dat}%d ironbound convokers
+%d eisenbeschlagenen Einberufern
+%%%%
+{dat}%d ironbound frosthearts
+%d eisengebundenen Frostherzen
+%%%%
+{dat}%d ironbound preservers
+%d eisenbeschlagenen Bewahrern
+%%%%
+{dat}%d ironbound beastmasters
+%d eisenbeschlagenen Bestienmeistern
+%%%%
+{dat}%d ironbound thunderhulks
+%d eisenbeschlagenen Donnerkolossen
+%%%%
+{dat}%d imperial myrmidons
+%d kaiserlichen Myrmidonen
+%%%%
+{dat}%d servants of whispers
+%d Dienern des Flüsterns
+%%%%
+{dat}%d ragged hierophants
+%d zerlumpten Hierophanten
+%%%%
+{dat}%d shapeshifters
+%d Gestaltwandlern
+%%%%
+{dat}%d glowing shapeshifters
+%d leuchtenden Gestaltwandlern
+%%%%
+{dat}%d demigods
+%d Halbgotten
+%%%%
+{dat}%d halflings
+%d Halblingen
+%%%%
+{dat}%d porcupines
+%d Stachelschweinen
+%%%%
+{dat}%d scorpions
+%d Skorpionen
+%%%%
+{dat}%d emperor scorpions
+%d Kaiserskorpionen
+%%%%
+{dat}%d jumping spiders
+%d springenden Spinnen
+%%%%
+{dat}%d demonic crawlers
+%d dämonischen Kriechern
+%%%%
+{dat}%d crocodiles
+%d Krokodilen
+%%%%
+{dat}%d alligators
+%d Alligatoren
+%%%%
+{dat}%d ugly things
+%d hässlichen Dingen
+%%%%
+{dat}%d very ugly things
+%d sehr hässlichen Dingen
+%%%%
+{dat}%d fire vortices
+%d Feuerwirbeln
+%%%%
+{dat}%d spatial vortices
+%d räumlichen Wirbeln
+%%%%
+{dat}%d spatial maelstroms
+%d räumlichen Mahlstromen
+%%%%
+{dat}%d insubstantial wisps
+%d unwesentlichen Irrlichten
+%%%%
+{dat}%d twisters
+%d Twistern
+%%%%
+{dat}%d worms
+%d Wurmen
+%%%%
+{dat}%d swamp worms
+%d Sumpfwurmen
+%%%%
+{dat}%d tyrant leeches
+%d Tyrannblutegeln
+%%%%
+{dat}%d unseen horrors
+%d unsichtbaren Grauenen
+%%%%
+{dat}%d small abominations
+%d kleinen Greueln
+%%%%
+{dat}%d crawling corpses
+%d kriechenden Leichen
+%%%%
+{dat}%d macabre masses
+%d makaberen Massen
+%%%%
+{dat}%d ancient zymes
+%d uralten Zymen
+%%%%
+{dat}%d worldbinders
+%d Weltbindern
+%%%%
+{dat}%d wights
+%d Wighten
+%%%%
+{dat}%d skeletal warriors
+%d Skelettkriegern
+%%%%
+{dat}%d ancient champions
+%d alten Championen
+%%%%
+{dat}%d flying skulls
+%d fliegenden Schädeln
+%%%%
+{dat}%d curse skulls
+%d Fluchschädeln
+%%%%
+{dat}%d angels
+%d Engeln
+%%%%
+{dat}%d cherubim
+%d Cheruben
+%%%%
+{dat}%d seraphim
+%d Seraphen
+%%%%
+{dat}%d profane servitors
+%d profanen Dienern
+%%%%
+{dat}%d cyclopes
+%d Zyklopen
+%%%%
+{dat}%d ettins
+%d Ettinen
+%%%%
+{dat}%d titans
+%d Titanen
+%%%%
+{dat}%d juggernauts
+%d Juggernauten
+%%%%
+{dat}%d elementals
+%d Elementaren
+%%%%
+{dat}%d earth elementals
+%d Erdelementaren
+%%%%
+{dat}%d fire elementals
+%d Feuerelementaren
+%%%%
+{dat}%d water elementals
+%d Wasserelementaren
+%%%%
+{dat}%d air elementals
+%d Luftelementaren
+%%%%
+{dat}%d iron elementals
+%d Eisenelementaren
+%%%%
+{dat}%d elemental wellsprings
+%d elementaren Quellen
+%%%%
+{dat}%d giant frogs
+%d Riesenfröschen
+%%%%
+{dat}%d bullfrogs
+%d Ochsenfröschen
+%%%%
+{dat}%d spiny frogs
+%d Stachelfröschen
+%%%%
+{dat}%d blink frogs
+%d Blinzelfröschen
+%%%%
+{dat}%d floating eyes
+%d schwebenden Augen
+%%%%
+{dat}%d glowing orange brains
+%d orangen leuchtenden Gehirnen
+%%%%
+{dat}%d great orbs of eyes
+%d großen Augenkugeln
+%%%%
+{dat}%d shining eyes
+%d leuchtenden Augen
+%%%%
+{dat}%d golden eyes
+%d goldenen Augen
+%%%%
+{dat}%d ophanim
+%d Ophanen
+%%%%
+{dat}%d hippogriffs
+%d Hippogriffen
+%%%%
+{dat}%d manticores
+%d Mantikoren
+%%%%
+{dat}%d mutant beasts
+%d mutierten Bestien
+%%%%
+{dat}%d knights
+%d Rittern
+%%%%
+{dat}%d battlemagi
+%d Kampfmagiern
+%%%%
+{dat}%d hexers
+%d Hexern
+%%%%
+{dat}%d oozes
+%d Schlammen
+%%%%
+{dat}%d slime creatures
+%d Schleimwesenen
+%%%%
+{dat}%d merged slime creatures
+%d verschmolzenen Schleimkreaturen
+%%%%
+{dat}%d azure jellies
+%d azurblauen Geleen
+%%%%
+{dat}%d death oozes
+%d Todesschlammen
+%%%%
+{dat}%d acid blobs
+%d Säureklumpenen
+%%%%
+{dat}%d kobolds
+%d Kobolden
+%%%%
+{dat}%d big kobolds
+%d großen Kobolden
+%%%%
+{dat}%d ancient liches
+%d alten Lichs
+%%%%
+{dat}%d revenants
+%d Wiedergängern
+%%%%
+{dat}%d halazid warlocks
+%d halazidischen Hexenmeistern
+%%%%
+{dat}%d greater mummies
+%d größeren Mumien
+%%%%
+{dat}%d mummy priests
+%d Mumie-Priestern
+%%%%
+{dat}%d naga magi
+%d Naga-Magiern
+%%%%
+{dat}%d naga warriors
+%d Naga-Kriegern
+%%%%
+{dat}%d ogres
+%d Ogern
+%%%%
+{dat}%d two-headed ogres
+%d zweiköpfigen Ogern
+%%%%
+{dat}%d ogre magi
+%d Oger-Magiern
+%%%%
+{dat}%d demonic plants
+%d dämonischen Pflanzen
+%%%%
+{dat}%d withered plants
+%d verwelkten Pflanzen
+%%%%
+{dat}%d oklob saplings
+%d Oklob-Setzlingen
+%%%%
+{dat}%d bushes
+%d Buschen
+%%%%
+{dat}%d burning bushes
+%d brennenden Buschen
+%%%%
+{dat}%d toadstools
+%d Giftpilzen
+%%%%
+{dat}%d fungi
+%d Pilzen
+%%%%
+{dat}%d hyperactive ballistomycetes
+%d hyperaktiven Ballistomyceten
+%%%%
+{dat}%d briar patches
+%d Dornstrauchen
+%%%%
+{dat}%d tengu conjurers
+%d Tengu-Zauberern
+%%%%
+{dat}%d tengu warriors
+%d Tengu-Kriegern
+%%%%
+{dat}%d tengu reavers
+%d Tengu-Häschern
+%%%%
+{dat}%d efreet
+%d Efreeten
+%%%%
+{dat}%d snaplasher vine segments
+%d Peitscherrebesegmenten
+%%%%
+{dat}%d water moccasins
+%d Wassermokassinen
+%%%%
+{dat}%d black mambas
+%d schwarzen Mambas
+%%%%
+{dat}%d trolls
+%d Trollen
+%%%%
+{dat}%d iron trolls
+%d Eisentrollen
+%%%%
+{dat}%d deep trolls
+%d Tiefentrollen
+%%%%
+{dat}%d deep troll earth magi
+%d Tiefentroll-Erdmagiern
+%%%%
+{dat}%d vampires
+%d Vampiren
+%%%%
+{dat}%d vampire knights
+%d Vampir-Rittern
+%%%%
+{dat}%d vampire magi
+%d Vampir-Magiern
+%%%%
+{dat}%d ghosts
+%d Gespensten
+%%%%
+{dat}%d phantoms
+%d Phantomen
+%%%%
+{dat}%d hungry ghosts
+%d hungrigen Geistern
+%%%%
+{dat}%d flayed ghosts
+%d enthäuteten Geistern
+%%%%
+{dat}%d player ghosts
+%d Spielergeistern
+%%%%
+{dat}%d silent spectres
+%d stillen Gespensten
+%%%%
+{dat}%d drowned souls
+%d ertrunkenen Seelen
+%%%%
+{dat}%d wraiths
+%d Geistern
+%%%%
+{dat}%d shadow wraiths
+%d Schattengeistern
+%%%%
+{dat}%d freezing wraiths
+%d Frostgeistern
+%%%%
+{dat}%d eidola
+%d Eidolonen
+%%%%
+{dat}%d phantasmal warriors
+%d phantastischen Kriegern
+%%%%
+{dat}%d large abominations
+%d großen Greueln
+%%%%
+{dat}%d thrashing horrors
+%d verprügelnden Grauenen
+%%%%
+{dat}%d Orb Guardians
+%d Kugelwächtern
+%%%%
+{dat}%d tentacled starspawn
+%d Tentakelsternbruten
+%%%%
+{dat}%d starspawn tentacles
+%d Sternbruttentakeln
+%%%%
+{dat}%d starspawn tentacle segments
+%d Sternbruttentakelsegmenten
+%%%%
+{dat}%d starcursed masses
+%d sternverfluchten Massen
+%%%%
+{dat}%d dream sheep
+%d Traumschafen
+%%%%
+{dat}%d yaks
+%d Yaken
+%%%%
+{dat}%d death yaks
+%d Todesyaken
+%%%%
+{dat}%d sky beasts
+%d Himmelstieren
+%%%%
+{dat}%d skeletons
+%d Skeletten
+%%%%
+{dat}%d small zombies
+%d kleinen Zombies
+%%%%
+{dat}%d small skeletons
+%d kleinen Skeletten
+%%%%
+{dat}%d small simulacra
+%d kleinen Simulacren
+%%%%
+{dat}%d large zombies
+%d großen Zombies
+%%%%
+{dat}%d large skeletons
+%d großen Skeletten
+%%%%
+{dat}%d large simulacra
+%d großen Simulacren
+%%%%
+{dat}%d spectral things
+%d spektralen Sachen
+%%%%
+{dat}%d electric eels
+%d Zitteraalen
+%%%%
+{dat}%d krakens
+%d Krakenen
+%%%%
+{dat}%d tentacles
+%d Tentakeln
+%%%%
+{dat}%d tentacle segments
+%d Tentakelsegmenten
+%%%%
+{dat}%d octopodes
+%d Oktopoden
+%%%%
+{dat}%d salamanders
+%d Salamandern
+%%%%
+{dat}%d salamander mystics
+%d Salamander-Mystikern
+%%%%
+{dat}%d Hellbinders
+%d Höllenbindern
+%%%%
+{dat}%d Cloud Mages
+%d Wolkenmagiern
+%%%%
+{dat}%d players
+%d Spielern
+%%%%
+{dat}%d dancing weapons
+%d tanzenden Waffen
+%%%%
+{dat}%d eldritch tentacles
+%d unheimlichen Tentakeln
+%%%%
+{dat}%d eldritch tentacle segments
+%d unheimlichen Tentakelsegmenten
+%%%%
+{dat}%d monstrous demonspawn
+%d monströsen Dämonenbruten
+%%%%
+{dat}%d gelid demonspawn
+%d geliden Dämonenbruten
+%%%%
+{dat}%d infernal demonspawn
+%d höllischen Dämonenbruten
+%%%%
+{dat}%d torturous demonspawn
+%d quälenden Dämonenbruten
+%%%%
+{dat}%d warmongers
+%d Kriegstreibern
+%%%%
+{dat}%d corrupters
+%d Korruptoren
+%%%%
+{dat}%d black suns
+%d schwarzen Sonnen
+%%%%
+{dat}%d crimson imps
+%d karminroten Teufelchen
+%%%%
+{dat}%d quasits
+%d Quasiten
+%%%%
+{dat}%d white imps
+%d weißen Teufelchen
+%%%%
+{dat}%d rust devils
+%d Rostteufeln
+%%%%
+{dat}%d orange demons
+%d orangen Dämonen
+%%%%
+{dat}%d red devils
+%d roten Teufeln
+%%%%
+{dat}%d hellwings
+%d Höllenflügeln
+%%%%
+{dat}%d ice devils
+%d Eisteufeln
+%%%%
+{dat}%d sun demons
+%d Sonnendämonen
+%%%%
+{dat}%d soul eaters
+%d Seelenfressern
+%%%%
+{dat}%d smoke demons
+%d Rauchdämonen
+%%%%
+{dat}%d ynoxinuls
+%d Ynoxinulen
+%%%%
+{dat}%d shadow demons
+%d Schattendämonen
+%%%%
+{dat}%d green deaths
+%d grünen Toden
+%%%%
+{dat}%d blizzard demons
+%d Blizzarddämonen
+%%%%
+{dat}%d balrugs
+%d Balrugen
+%%%%
+{dat}%d cacodemons
+%d Cacodaemonen
+%%%%
+{dat}%d hell beasts
+%d Höllentieren
+%%%%
+{dat}%d hellions
+%d Teufelsbratenen
+%%%%
+{dat}%d reapers
+%d Schnittern
+%%%%
+{dat}%d tormentors
+%d Peinigern
+%%%%
+{dat}%d Brimstone Fiends
+%d Schwefelunterweltlern
+%%%%
+{dat}%d Ice Fiends
+%d Eisunterweltlern
+%%%%
+{dat}%d Tzitzimimeh
+%d Tzitzimitlen
+%%%%
+{dat}%d Hell Sentinels
+%d Höllenwächtern
+%%%%
+{dat}%d Executioners
+%d Scharfrichtern
+%%%%
+{dat}%d animated trees
+%d animierten Bäumen
+%%%%
+{dat}%d golems
+%d Golemen
+%%%%
+{dat}%d saltlings
+%d Salzlingen
+%%%%
+{dat}%d peacekeepers
+%d Friedenshütern
+%%%%
+{dat}%d iron golems
+%d Eisengolemen
+%%%%
+{dat}%d crystal guardians
+%d Kristallwächtern
+%%%%
+{dat}%d toenail golems
+%d Zehennagelgolemen
+%%%%
+{dat}%d electric golems
+%d Blitzgolemen
+%%%%
+{dat}%d guardian golems
+%d Wächtergolemen
+%%%%
+{dat}%d spellforged servitors
+%d zaubergeschmeideten Dienern
+%%%%
+{dat}%d orange crystal statues
+%d orangen Kristallstatuen
+%%%%
+{dat}%d blocks of ice
+%d Eisblocken
+%%%%
+{dat}%d diamond obelisks
+%d Diamantobelisken
+%%%%
+{dat}%d lightning spires
+%d Blitzturmen
+%%%%
+{dat}%d molten gargoyles
+%d geschmolzenen Gargoyles
+%%%%
+{dat}%d pandemonium lords
+%d Pandemoniumsherren
+%%%%
+{dat}%d hell lords
+%d Höllenherren
+%%%%
+{dat}%d ball lightnings
+%d Kugelblitzen
+%%%%
+{dat}%d lost souls
+%d verlorenen Seelen
+%%%%
+{dat}%d lurking horrors
+%d lauernden Grauenen
+%%%%
+{dat}%d fulminant prisms
+%d fulminanten Prismen
+%%%%
+{dat}%d wretched stars
+%d elenden Sternen
+%%%%
+{dat}%d moon trolls
+%d Mondtrollen
+%%%%
+{dat}%d foxfires
+%d Fuchsfeuern
+%%%%
+{dat}%d nameless horrors
+%d namenlosen Horrors
+%%%%
+{dat}%d will-o-the-wisps
+%d Irrlichtern
+%%%%
+{dat}%d boulder beetles
+%d Rollsteinkäfern
+%%%%
+{dat}%d goliath frogs
+%d Goliathfröschen
+%%%%
+{dat}%d royal mummies
+%d königlichen Mumien
+%%%%
+{dat}%d rockslimes
+%d Felsenschleimen
+%%%%
+{dat}%d quicksilver oozes
+%d Quecksilber-Schlammen
+%%%%
+{dat}%d animated armours
+%d animierten Rüstungen
+%%%%
+{dat}%d test spawners
+%d Test-Erzeugern
+%%%%
+{dat}%d sensed monsters
+%d gespürten Monstern
+%%%%
+{dat}%d friendly sensed monsters
+%d freundlichen gespürten Monstern
+%%%%
+{dat}%d trivial sensed monsters
+%d trivialen gespürten Monstern
+%%%%
+{dat}%d easy sensed monsters
+%d leichten gespürten Monstern
+%%%%
+{dat}%d tough sensed monsters
+%d harten gespürten Monstern
+%%%%
+{dat}%d nasty sensed monsters
+%d furchtbaren gespürten Monstern
+%%%%
+{dat}%d %ssting beasts
+%d {adj-en}%sStichbiestern
+%%%%
+{dat}%d %sbat beasts
+%d {adj-en}%sFledermaus-Biestern
+%%%%
+{dat}%d %sfire beasts
+%d {adj-en}%sFeuerbiestern
+%%%%
+{dat}%d %sweird beasts
+%d {adj-en}%sbizarren Biestern
+%%%%
+{dat}%d %sshock beasts
+%d {adj-en}%sSchockbiestern
+%%%%
+{dat}%d %sox beasts
+%d {adj-en}%sOchsenbiestern
+%%%%
+
 # derived monsters (undead, etc.)
 # "elf zombie", "orc skeleton", etc.
 %%%%
@@ -4201,7 +4206,6 @@ einem %s-förmigen Eisblock
 {dat}%d %s shaped blocks of ice
 %d %s-förmigen Eisblöcken
 %%%%
-
 
 ################################
 # allies

@@ -1901,6 +1901,7 @@ des %s-förmigen Eisblocks
 ################################
 # indefinite
 ################################
+
 %%%%
 {gen}a program bug
 eines Programmfehlers
@@ -1938,9 +1939,6 @@ eines Bennus
 {gen}a caustic shrike
 eines ätzenden Würgers
 %%%%
-{gen}%d caustic shrikes
-%d ätzender Würger
-%%%%
 {gen}a shard shrike
 eines Scherbenwürgers
 %%%%
@@ -1968,50 +1966,26 @@ eines Drakoniers
 {gen}a black draconian
 eines schwarzen Drakoniers
 %%%%
-{gen}%d black draconians
-%d schwarzer Drakonier
-%%%%
 {gen}a yellow draconian
 eines gelben Drakoniers
-%%%%
-{gen}%d yellow draconians
-%d gelber Drakonier
 %%%%
 {gen}a pale draconian
 eines blassen Drakoniers
 %%%%
-{gen}%d pale draconians
-%d blasser Drakonier
-%%%%
 {gen}a green draconian
 eines grünen Drakoniers
-%%%%
-{gen}%d green draconians
-%d grüner Drakonier
 %%%%
 {gen}a purple draconian
 eines purpurnen Drakoniers
 %%%%
-{gen}%d purple draconians
-%d purpurner Drakonier
-%%%%
 {gen}a red draconian
 eines roten Drakoniers
-%%%%
-{gen}%d red draconians
-%d roter Drakonier
 %%%%
 {gen}a white draconian
 eines weißen Drakoniers
 %%%%
-{gen}%d white draconians
-%d weißer Drakonier
-%%%%
 {gen}a grey draconian
 eines grauen Drakoniers
-%%%%
-{gen}%d grey draconians
-%d grauer Drakonier
 %%%%
 {gen}a draconian stormcaller
 eines Drakonier-Sturmrufers
@@ -2073,9 +2047,6 @@ eines Tiefenelf-Elementalisten
 {gen}a wandering mushroom
 eines wandernden Pilzs
 %%%%
-{gen}%d wandering mushrooms
-%d wandernder Pilze
-%%%%
 {gen}a deathcap
 einer Todesmütze
 %%%%
@@ -2084,9 +2055,6 @@ eines Dornenjägers
 %%%%
 {gen}a shambling mangrove
 einer watschelnden Mangrove
-%%%%
-{gen}%d shambling mangroves
-%d watschelnder Mangroven
 %%%%
 {gen}a vine stalker
 eines Rebjägers
@@ -2145,14 +2113,8 @@ eines Raijus
 {gen}a hell hog
 eines höllischen Schweins
 %%%%
-{gen}%d hell hogs
-%d höllischer Schweine
-%%%%
 {gen}a holy swine
 eines heiligen Schweins
-%%%%
-{gen}%d holy swine
-%d heiliger Schweine
 %%%%
 {gen}a felid
 eines Felids
@@ -2208,9 +2170,6 @@ einer Rieseneidechse
 {gen}a frilled lizard
 einer gekräuselten Eidechse
 %%%%
-{gen}%d frilled lizards
-%d gekräuselter Eidechsen
-%%%%
 {gen}a leopard gecko
 eines Leopardgeckos
 %%%%
@@ -2255,9 +2214,6 @@ eines Nekrophagens
 %%%%
 {gen}a bloated husk
 einer aufgeblähten Hülle
-%%%%
-{gen}%d bloated husks
-%d aufgeblähter Hülle
 %%%%
 {gen}a ghoul
 eines Ghuls
@@ -2319,38 +2275,20 @@ eines Tresorwärters
 {gen}an ironbound convoker
 eines eisenbeschlagenen Einberufers
 %%%%
-{gen}%d ironbound convokers
-%d eisenbeschlagener Einberufer
-%%%%
 {gen}an ironbound frostheart
 eines eisengebundenen Frostherzens
-%%%%
-{gen}%d ironbound frosthearts
-%d eisengebundener Frostherzen
 %%%%
 {gen}an ironbound preserver
 eines eisenbeschlagenen Bewahrer
 %%%%
-{gen}%d ironbound preservers
-%d eisenbeschlagener Bewahrer
-%%%%
 {gen}an ironbound beastmaster
 eines eisenbeschlagenen Bestienmeister
-%%%%
-{gen}%d ironbound beastmasters
-%d eisenbeschlagener Bestienmeister
 %%%%
 {gen}an ironbound thunderhulk
 eines eisenbeschlagenen Donnerkolosses
 %%%%
-{gen}%d ironbound thunderhulks
-%d eisenbeschlagener Donnerkolosse
-%%%%
 {gen}an imperial myrmidon
 eines kaiserlichen Myrmidons
-%%%%
-{gen}%d imperial myrmidons
-%d kaiserlicher Myrmidone
 %%%%
 {gen}a servant of whispers
 eines Dieners des Flüsterns
@@ -2358,17 +2296,11 @@ eines Dieners des Flüsterns
 {gen}a ragged hierophant
 eines zerlumpten Hierophanten
 %%%%
-{gen}%d ragged hierophants
-%d zerlumpter Hierophanten
-%%%%
 {gen}a shapeshifter
 eines Gestaltwandlers
 %%%%
 {gen}a glowing shapeshifter
 eines leuchtenden Gestaltwandlers
-%%%%
-{gen}%d glowing shapeshifters
-%d leuchtender Gestaltwandler
 %%%%
 {gen}a Killer Klown
 eines Killer-Klowns
@@ -2415,9 +2347,6 @@ einer Tarantella
 {gen}a jumping spider
 einer springenden Spinne
 %%%%
-{gen}%d jumping spiders
-%d springender Spinnen
-%%%%
 {gen}a wolf spider
 einer Wolfsspinne
 %%%%
@@ -2426,9 +2355,6 @@ einer Rotrückenspinne
 %%%%
 {gen}a demonic crawler
 eines dämonischen Kriechers
-%%%%
-{gen}%d demonic crawlers
-%d dämonischer Kriecher
 %%%%
 {gen}an orb spider
 einer Kugelspinne
@@ -2460,14 +2386,8 @@ einer Apokalypse-Krabbe
 {gen}an ugly thing
 eines hässlichen Dings
 %%%%
-{gen}%d ugly things
-%d hässlicher Dinge
-%%%%
 {gen}a very ugly thing
 eines sehr hässlichen Dings
-%%%%
-{gen}%d very ugly things
-%d sehr hässlicher Dinge
 %%%%
 {gen}a fire vortex
 eines Feuerwirbels
@@ -2475,20 +2395,11 @@ eines Feuerwirbels
 {gen}a spatial vortex
 eines räumlichen Wirbels
 %%%%
-{gen}%d spatial vortices
-%d räumlicher Wirbel
-%%%%
 {gen}a spatial maelstrom
 eines räumlichen Mahlstroms
 %%%%
-{gen}%d spatial maelstroms
-%d räumlicher Mahlstrome
-%%%%
 {gen}an insubstantial wisp
 eines unwesentlichen Irrlichts
-%%%%
-{gen}%d insubstantial wisps
-%d unwesentlicher Irrlichte
 %%%%
 {gen}a twister
 eines Twisters
@@ -2514,32 +2425,17 @@ einer Elefantenschnecke
 {gen}an unseen horror
 eines unsichtbaren Grauens
 %%%%
-{gen}%d unseen horrors
-%d unsichtbarer Grauene
-%%%%
 {gen}a small abomination
 eines kleinen Greuels
-%%%%
-{gen}%d small abominations
-%d kleiner Greuel
 %%%%
 {gen}a crawling corpse
 einer kriechenden Leiche
 %%%%
-{gen}%d crawling corpses
-%d kriechender Leichen
-%%%%
 {gen}a macabre mass
 einer makaberen Masse
 %%%%
-{gen}%d macabre masses
-%d makaberer Massen
-%%%%
 {gen}an ancient zyme
 eines uralten Zyms
-%%%%
-{gen}%d ancient zymes
-%d uralter Zyme
 %%%%
 {gen}a worldbinder
 eines Weltbinders
@@ -2580,14 +2476,8 @@ eines Skelettkriegers
 {gen}an ancient champion
 eines alten Champions
 %%%%
-{gen}%d ancient champions
-%d alter Champione
-%%%%
 {gen}a flying skull
 eines fliegenden Schädels
-%%%%
-{gen}%d flying skulls
-%d fliegender Schädel
 %%%%
 {gen}a curse skull
 eines Fluchschädels
@@ -2609,9 +2499,6 @@ eines Daevas
 %%%%
 {gen}a profane servitor
 eines profanen Dieners
-%%%%
-{gen}%d profane servitors
-%d profaner Diener
 %%%%
 {gen}a giant
 eines Riesen
@@ -2763,9 +2650,6 @@ eines Eisenelementars
 {gen}an elemental wellspring
 einer elementaren Quelle
 %%%%
-{gen}%d elemental wellsprings
-%d elementarer Quellen
-%%%%
 {gen}a giant frog
 eines Riesenfrosches
 %%%%
@@ -2784,38 +2668,23 @@ einer Barachi
 {gen}a floating eye
 eines schwebenden Auges
 %%%%
-{gen}%d floating eyes
-%d schwebender Augen
-%%%%
 {gen}an eye of draining
 eines Auges des Schwächens
 %%%%
 {gen}a glowing orange brain
 eines orangen leuchtenden Gehirns
 %%%%
-{gen}%d glowing orange brains
-%d oranger leuchtender Gehirne
-%%%%
 {gen}a great orb of eyes
 einer großen Augenkugel
 %%%%
-{gen}%d great orbs of eyes
-%d großer Augenkugel
-%%%%
 {gen}a shining eye
 eines leuchtenden Auges
-%%%%
-{gen}%d shining eyes
-%d leuchtender Augen
 %%%%
 {gen}an eye of devastation
 eines Auges der Verwüstung
 %%%%
 {gen}a golden eye
 eines goldenen Auges
-%%%%
-{gen}%d golden eyes
-%d goldener Augen
 %%%%
 {gen}an ophan
 eines Ophans
@@ -2837,9 +2706,6 @@ einer Harpyie
 %%%%
 {gen}a mutant beast
 einer mutierten Bestie
-%%%%
-{gen}%d mutant beasts
-%d mutierter Bestien
 %%%%
 {gen}an ancestor
 eines Ahnen
@@ -2865,14 +2731,8 @@ eines Schleimwesens
 {gen}a merged slime creature
 einer verschmolzenen Schleimkreatur
 %%%%
-{gen}%d merged slime creatures
-%d verschmolzener Schleimkreaturen
-%%%%
 {gen}an azure jelly
 eines azurblauen Gelees
-%%%%
-{gen}%d azure jellies
-%d azurblauer Geleen
 %%%%
 {gen}a death ooze
 eines Todesschlamms
@@ -2886,9 +2746,6 @@ eines Kobolds
 {gen}a big kobold
 eines großen Kobolds
 %%%%
-{gen}%d big kobolds
-%d großer Kobolde
-%%%%
 {gen}a kobold demonologist
 eines Kobold-Dämonologen
 %%%%
@@ -2898,17 +2755,11 @@ eines Lichs
 {gen}an ancient lich
 eines alten Lichs
 %%%%
-{gen}%d ancient liches
-%d alter Lichs
-%%%%
 {gen}a revenant
 eines Wiedergängers
 %%%%
 {gen}a halazid warlock
 eines halazidischen Hexenmeisters
-%%%%
-{gen}%d halazid warlocks
-%d halazidischer Hexenmeister
 %%%%
 {gen}a mummy
 einer Mumie
@@ -2918,9 +2769,6 @@ einer Wächtermumie
 %%%%
 {gen}a greater mummy
 einer größeren Mumie
-%%%%
-{gen}%d greater mummies
-%d größerer Mumien
 %%%%
 {gen}a mummy priest
 eines Mumie-Priesters
@@ -2949,9 +2797,6 @@ eines Ogers
 {gen}a two-headed ogre
 eines zweiköpfigen Ogers
 %%%%
-{gen}%d two-headed ogres
-%d zweiköpfiger Oger
-%%%%
 {gen}an ogre mage
 eines Oger-Magiers
 %%%%
@@ -2961,14 +2806,8 @@ einer Pflanze
 {gen}a demonic plant
 einer dämonischen Pflanze
 %%%%
-{gen}%d demonic plants
-%d dämonischer Pflanzen
-%%%%
 {gen}a withered plant
 einer verwelkten Pflanze
-%%%%
-{gen}%d withered plants
-%d verwelkter Pflanzen
 %%%%
 {gen}an oklob sapling
 eines Oklob-Setzlings
@@ -2982,9 +2821,6 @@ eines Busches
 {gen}a burning bush
 eines brennenden Busches
 %%%%
-{gen}%d burning bushes
-%d brennender Busche
-%%%%
 {gen}a toadstool
 eines Giftpilzs
 %%%%
@@ -2996,9 +2832,6 @@ eines Ballistomyceten
 %%%%
 {gen}a hyperactive ballistomycete
 eines hyperaktiven Ballistomyceten
-%%%%
-{gen}%d hyperactive ballistomycetes
-%d hyperaktiver Ballistomyceten
 %%%%
 {gen}a briar patch
 eines Dornstrauchs
@@ -3044,9 +2877,6 @@ eines Wassermokassins
 %%%%
 {gen}a black mamba
 einer schwarzen Mamba
-%%%%
-{gen}%d black mambas
-%d schwarzer Mambas
 %%%%
 {gen}a sea snake
 einer Seeschlange
@@ -3099,14 +2929,8 @@ eines Phantoms
 {gen}a hungry ghost
 eines hungrigen Geistes
 %%%%
-{gen}%d hungry ghosts
-%d hungriger Geister
-%%%%
 {gen}a flayed ghost
 eines enthäuteten Geistes
-%%%%
-{gen}%d flayed ghosts
-%d enthäuteter Geister
 %%%%
 {gen}a player ghost
 eines Spielergeistes
@@ -3117,14 +2941,8 @@ eines Schattens
 {gen}a silent spectre
 eines stillen Gespensts
 %%%%
-{gen}%d silent spectres
-%d stiller Gespenste
-%%%%
 {gen}a drowned soul
 einer ertrunkenen Seele
-%%%%
-{gen}%d drowned souls
-%d ertrunkener Seelen
 %%%%
 {gen}a wraith
 eines Geistes
@@ -3141,20 +2959,11 @@ eines Eidolons
 {gen}a phantasmal warrior
 eines phantastischen Kriegers
 %%%%
-{gen}%d phantasmal warriors
-%d phantastischer Krieger
-%%%%
 {gen}a large abomination
 eines großen Greuels
 %%%%
-{gen}%d large abominations
-%d großer Greuel
-%%%%
 {gen}a thrashing horror
 eines verprügelnden Grauens
-%%%%
-{gen}%d thrashing horrors
-%d verprügelnder Grauene
 %%%%
 {gen}a tentacled monstrosity
 einer Tentakel-Monstrosität
@@ -3173,9 +2982,6 @@ eines Sternbruttentakelsegments
 %%%%
 {gen}a starcursed mass
 einer sternverfluchten Masse
-%%%%
-{gen}%d starcursed masses
-%d sternverfluchter Massen
 %%%%
 {gen}a dream sheep
 eines Traumschafs
@@ -3219,44 +3025,23 @@ eines Simulacrums
 {gen}a small zombie
 eines kleinen Zombies
 %%%%
-{gen}%d small zombies
-%d kleiner Zombies
-%%%%
 {gen}a small skeleton
 eines kleinen Skeletts
-%%%%
-{gen}%d small skeletons
-%d kleiner Skelette
 %%%%
 {gen}a small simulacrum
 eines kleinen Simulacrums
 %%%%
-{gen}%d small simulacra
-%d kleiner Simulacren
-%%%%
 {gen}a large zombie
 eines großen Zombies
-%%%%
-{gen}%d large zombies
-%d großer Zombies
 %%%%
 {gen}a large skeleton
 eines großen Skeletts
 %%%%
-{gen}%d large skeletons
-%d großer Skelette
-%%%%
 {gen}a large simulacrum
 eines großen Simulacrums
 %%%%
-{gen}%d large simulacra
-%d großer Simulacren
-%%%%
 {gen}a spectral thing
 einer spektralen Sache
-%%%%
-{gen}%d spectral things
-%d spektraler Sachen
 %%%%
 {gen}an electric eel
 eines Zitteraals
@@ -3297,23 +3082,14 @@ einer Spieler-Illusion
 {gen}a dancing weapon
 einer tanzenden Waffe
 %%%%
-{gen}%d dancing weapons
-%d tanzender Waffen
-%%%%
 {gen}a spectral weapon
 einer Spektralwaffe
 %%%%
 {gen}an eldritch tentacle
 eines unheimlichen Tentakels
 %%%%
-{gen}%d eldritch tentacles
-%d unheimlicher Tentakel
-%%%%
 {gen}an eldritch tentacle segment
 eines unheimlichen Tentakelsegments
-%%%%
-{gen}%d eldritch tentacle segments
-%d unheimlicher Tentakelsegmente
 %%%%
 {gen}a demonspawn
 einer Dämonenbrut
@@ -3321,26 +3097,14 @@ einer Dämonenbrut
 {gen}a monstrous demonspawn
 einer monströsen Dämonenbrut
 %%%%
-{gen}%d monstrous demonspawn
-%d monströser Dämonenbruten
-%%%%
 {gen}a gelid demonspawn
 eines geliden Dämonenbruts
-%%%%
-{gen}%d gelid demonspawn
-%d gelider Dämonenbrute
 %%%%
 {gen}an infernal demonspawn
 einer höllischen Dämonenbrut
 %%%%
-{gen}%d infernal demonspawn
-%d höllischer Dämonenbruten
-%%%%
 {gen}a torturous demonspawn
 einer quälenden Dämonenbrut
-%%%%
-{gen}%d torturous demonspawn
-%d quälender Dämonenbruten
 %%%%
 {gen}a blood saint
 eines Blutheiligen
@@ -3354,23 +3118,14 @@ eines Korruptors
 {gen}a black sun
 einer schwarzen Sonne
 %%%%
-{gen}%d black suns
-%d schwarzer Sonnen
-%%%%
 {gen}a crimson imp
 eines karminroten Teufelchens
-%%%%
-{gen}%d crimson imps
-%d karminroter Teufelchen
 %%%%
 {gen}a quasit
 eines Quasits
 %%%%
 {gen}a white imp
 eines weißen Teufelchens
-%%%%
-{gen}%d white imps
-%d weißer Teufelchen
 %%%%
 {gen}an ufetubus
 eines Ufetubus
@@ -3387,14 +3142,8 @@ eines Rostteufels
 {gen}an orange demon
 eines orangen Dämons
 %%%%
-{gen}%d orange demons
-%d oranger Dämone
-%%%%
 {gen}a red devil
 eines roten Teufels
-%%%%
-{gen}%d red devils
-%d roter Teufel
 %%%%
 {gen}a hellwing
 eines Höllenflügels
@@ -3428,9 +3177,6 @@ eines Schattendämons
 %%%%
 {gen}a green death
 eines grünen Tods
-%%%%
-{gen}%d green deaths
-%d grüner Tode
 %%%%
 {gen}a blizzard demon
 eines Blizzarddämons
@@ -3474,9 +3220,6 @@ eines Scharfrichters
 {gen}an animated tree
 eines animierten Baums
 %%%%
-{gen}%d animated trees
-%d animierter Bäume
-%%%%
 {gen}a golem
 eines Golems
 %%%%
@@ -3507,9 +3250,6 @@ eines Wächtergolems
 {gen}a spellforged servitor
 eines zaubergeschmeideten Dieners
 %%%%
-{gen}%d spellforged servitors
-%d zaubergeschmeideter Diener
-%%%%
 {gen}an ice statue
 einer Eisstatue
 %%%%
@@ -3518,9 +3258,6 @@ einer Obsidianstatue
 %%%%
 {gen}an orange crystal statue
 einer orangen Kristallstatue
-%%%%
-{gen}%d orange crystal statues
-%d oranger Kristallstatuen
 %%%%
 {gen}a statue
 einer Statue
@@ -3549,9 +3286,6 @@ eines Kriegsgargoyles
 {gen}a molten gargoyle
 eines geschmolzenen Gargoyles
 %%%%
-{gen}%d molten gargoyles
-%d geschmolzener Gargoyles
-%%%%
 {gen}a pandemonium lord
 eines Pandemoniumsherrn
 %%%%
@@ -3567,14 +3301,8 @@ einer Ballistomycetenspore
 {gen}a lost soul
 einer verlorenen Seele
 %%%%
-{gen}%d lost souls
-%d verlorener Seelen
-%%%%
 {gen}a lurking horror
 eines lauernden Grauens
-%%%%
-{gen}%d lurking horrors
-%d lauernder Grauene
 %%%%
 {gen}an orb of fire
 einer Feuerkugel
@@ -3585,14 +3313,8 @@ einer Kugel der Zerstörung
 {gen}a fulminant prism
 eines fulminanten Prismas
 %%%%
-{gen}%d fulminant prisms
-%d fulminanter Prismen
-%%%%
 {gen}a wretched star
 eines elenden Sterns
-%%%%
-{gen}%d wretched stars
-%d elender Sterne
 %%%%
 {gen}a battlesphere
 einer Kampfsphäre
@@ -3608,9 +3330,6 @@ eines Fuchsfeuers
 %%%%
 {gen}a nameless horror
 eines namenlosen Horrors
-%%%%
-{gen}%d nameless horrors
-%d namenloser Horrors
 %%%%
 {gen}a will-o-the-wisp
 eines Irrlichts
@@ -3635,9 +3354,6 @@ eines Palentongas
 %%%%
 {gen}a royal mummy
 einer königlichen Mumie
-%%%%
-{gen}%d royal mummies
-%d königlicher Mumien
 %%%%
 {gen}a eleionoma
 einer Eleionoma
@@ -3669,11 +3385,6 @@ eines Salamander-Tyranns
 {gen}an animated armour
 einer animierten Rüstung
 %%%%
-{gen}%d animated armours
-%d animierter Rüstungen
-%%%%
-# Test monsters can be created in Arena
-%%%%
 {gen}a test spawner
 eines Test-Erzeugers
 %%%%
@@ -3686,74 +3397,38 @@ eines Test-Klumpens
 {gen}a sensed monster
 eines gespürten Monsters
 %%%%
-{gen}%d sensed monsters
-%d gespürter Monster
-%%%%
 {gen}a friendly sensed monster
 eines freundlichen gespürten Monsters
-%%%%
-{gen}%d friendly sensed monsters
-%d freundlicher gespürter Monster
 %%%%
 {gen}a trivial sensed monster
 eines trivialen gespürten Monsters
 %%%%
-{gen}%d trivial sensed monsters
-%d trivialer gespürter Monster
-%%%%
 {gen}an easy sensed monster
 eines leichten gespürten Monsters
-%%%%
-{gen}%d easy sensed monsters
-%d leichter gespürter Monster
 %%%%
 {gen}a tough sensed monster
 eines harten gespürten Monsters
 %%%%
-{gen}%d tough sensed monsters
-%d harter gespürter Monster
-%%%%
 {gen}a nasty sensed monster
 eines furchtbaren gespürten Monsters
-%%%%
-{gen}%d nasty sensed monsters
-%d furchtbarer gespürter Monster
 %%%%
 {gen}a %ssting beast
 eines {adj-en}%sStichbiests
 %%%%
-{gen}%d %ssting beasts
-%d {adj-er}%sStichbiester
-%%%%
 {gen}a %sbat beast
 eines {adj-en}%sFledermaus-Biests
-%%%%
-{gen}%d %sbat beasts
-%d {adj-er}%sFledermaus-Biester
 %%%%
 {gen}a %sfire beast
 eines {adj-en}%sFeuerbiests
 %%%%
-{gen}%d %sfire beasts
-%d {adj-er}%sFeuerbiester
-%%%%
 {gen}a %sweird beast
 eines {adj-en}%sbizarren Biests
-%%%%
-{gen}%d %sweird beasts
-%d {adj-er}%sbizarrer Biester
 %%%%
 {gen}a %sshock beast
 eines {adj-en}%sSchockbiests
 %%%%
-{gen}%d %sshock beasts
-%d {adj-er}%sSchockbiester
-%%%%
 {gen}a %sox beast
 eines {adj-en}%sOchsenbiests
-%%%%
-{gen}%d %sox beasts
-%d {adj-er}%sOchsenbiester
 %%%%
 
 # derived monsters (undead, etc.)
@@ -3775,6 +3450,336 @@ einer %s-förmigen Salzsäule
 eines %s-förmigen Eisblocks
 %%%%
 
+################################
+# Plural
+################################
+
+%%%%
+{gen}%d caustic shrikes
+%d ätzender Würger
+%%%%
+{gen}%d black draconians
+%d schwarzer Drakonier
+%%%%
+{gen}%d yellow draconians
+%d gelber Drakonier
+%%%%
+{gen}%d pale draconians
+%d blasser Drakonier
+%%%%
+{gen}%d green draconians
+%d grüner Drakonier
+%%%%
+{gen}%d purple draconians
+%d purpurner Drakonier
+%%%%
+{gen}%d red draconians
+%d roter Drakonier
+%%%%
+{gen}%d white draconians
+%d weißer Drakonier
+%%%%
+{gen}%d grey draconians
+%d grauer Drakonier
+%%%%
+{gen}%d wandering mushrooms
+%d wandernder Pilze
+%%%%
+{gen}%d shambling mangroves
+%d watschelnder Mangroven
+%%%%
+{gen}%d hell hogs
+%d höllischer Schweine
+%%%%
+{gen}%d holy swine
+%d heiliger Schweine
+%%%%
+{gen}%d frilled lizards
+%d gekräuselter Eidechsen
+%%%%
+{gen}%d bloated husks
+%d aufgeblähter Hülle
+%%%%
+{gen}%d ironbound convokers
+%d eisenbeschlagener Einberufer
+%%%%
+{gen}%d ironbound frosthearts
+%d eisengebundener Frostherzen
+%%%%
+{gen}%d ironbound preservers
+%d eisenbeschlagener Bewahrer
+%%%%
+{gen}%d ironbound beastmasters
+%d eisenbeschlagener Bestienmeister
+%%%%
+{gen}%d ironbound thunderhulks
+%d eisenbeschlagener Donnerkolosse
+%%%%
+{gen}%d imperial myrmidons
+%d kaiserlicher Myrmidone
+%%%%
+{gen}%d ragged hierophants
+%d zerlumpter Hierophanten
+%%%%
+{gen}%d glowing shapeshifters
+%d leuchtender Gestaltwandler
+%%%%
+{gen}%d jumping spiders
+%d springender Spinnen
+%%%%
+{gen}%d demonic crawlers
+%d dämonischer Kriecher
+%%%%
+{gen}%d ugly things
+%d hässlicher Dinge
+%%%%
+{gen}%d very ugly things
+%d sehr hässlicher Dinge
+%%%%
+{gen}%d spatial vortices
+%d räumlicher Wirbel
+%%%%
+{gen}%d spatial maelstroms
+%d räumlicher Mahlstrome
+%%%%
+{gen}%d insubstantial wisps
+%d unwesentlicher Irrlichte
+%%%%
+{gen}%d unseen horrors
+%d unsichtbarer Grauene
+%%%%
+{gen}%d small abominations
+%d kleiner Greuel
+%%%%
+{gen}%d crawling corpses
+%d kriechender Leichen
+%%%%
+{gen}%d macabre masses
+%d makaberer Massen
+%%%%
+{gen}%d ancient zymes
+%d uralter Zyme
+%%%%
+{gen}%d ancient champions
+%d alter Champione
+%%%%
+{gen}%d flying skulls
+%d fliegender Schädel
+%%%%
+{gen}%d profane servitors
+%d profaner Diener
+%%%%
+{gen}%d elemental wellsprings
+%d elementarer Quellen
+%%%%
+{gen}%d floating eyes
+%d schwebender Augen
+%%%%
+{gen}%d glowing orange brains
+%d oranger leuchtender Gehirne
+%%%%
+{gen}%d great orbs of eyes
+%d großer Augenkugel
+%%%%
+{gen}%d shining eyes
+%d leuchtender Augen
+%%%%
+{gen}%d golden eyes
+%d goldener Augen
+%%%%
+{gen}%d mutant beasts
+%d mutierter Bestien
+%%%%
+{gen}%d merged slime creatures
+%d verschmolzener Schleimkreaturen
+%%%%
+{gen}%d azure jellies
+%d azurblauer Geleen
+%%%%
+{gen}%d big kobolds
+%d großer Kobolde
+%%%%
+{gen}%d ancient liches
+%d alter Lichs
+%%%%
+{gen}%d halazid warlocks
+%d halazidischer Hexenmeister
+%%%%
+{gen}%d greater mummies
+%d größerer Mumien
+%%%%
+{gen}%d two-headed ogres
+%d zweiköpfiger Oger
+%%%%
+{gen}%d demonic plants
+%d dämonischer Pflanzen
+%%%%
+{gen}%d withered plants
+%d verwelkter Pflanzen
+%%%%
+{gen}%d burning bushes
+%d brennender Busche
+%%%%
+{gen}%d hyperactive ballistomycetes
+%d hyperaktiver Ballistomyceten
+%%%%
+{gen}%d black mambas
+%d schwarzer Mambas
+%%%%
+{gen}%d hungry ghosts
+%d hungriger Geister
+%%%%
+{gen}%d flayed ghosts
+%d enthäuteter Geister
+%%%%
+{gen}%d silent spectres
+%d stiller Gespenste
+%%%%
+{gen}%d drowned souls
+%d ertrunkener Seelen
+%%%%
+{gen}%d phantasmal warriors
+%d phantastischer Krieger
+%%%%
+{gen}%d large abominations
+%d großer Greuel
+%%%%
+{gen}%d thrashing horrors
+%d verprügelnder Grauene
+%%%%
+{gen}%d starcursed masses
+%d sternverfluchter Massen
+%%%%
+{gen}%d small zombies
+%d kleiner Zombies
+%%%%
+{gen}%d small skeletons
+%d kleiner Skelette
+%%%%
+{gen}%d small simulacra
+%d kleiner Simulacren
+%%%%
+{gen}%d large zombies
+%d großer Zombies
+%%%%
+{gen}%d large skeletons
+%d großer Skelette
+%%%%
+{gen}%d large simulacra
+%d großer Simulacren
+%%%%
+{gen}%d spectral things
+%d spektraler Sachen
+%%%%
+{gen}%d dancing weapons
+%d tanzender Waffen
+%%%%
+{gen}%d eldritch tentacles
+%d unheimlicher Tentakel
+%%%%
+{gen}%d eldritch tentacle segments
+%d unheimlicher Tentakelsegmente
+%%%%
+{gen}%d monstrous demonspawn
+%d monströser Dämonenbruten
+%%%%
+{gen}%d gelid demonspawn
+%d gelider Dämonenbrute
+%%%%
+{gen}%d infernal demonspawn
+%d höllischer Dämonenbruten
+%%%%
+{gen}%d torturous demonspawn
+%d quälender Dämonenbruten
+%%%%
+{gen}%d black suns
+%d schwarzer Sonnen
+%%%%
+{gen}%d crimson imps
+%d karminroter Teufelchen
+%%%%
+{gen}%d white imps
+%d weißer Teufelchen
+%%%%
+{gen}%d orange demons
+%d oranger Dämone
+%%%%
+{gen}%d red devils
+%d roter Teufel
+%%%%
+{gen}%d green deaths
+%d grüner Tode
+%%%%
+{gen}%d animated trees
+%d animierter Bäume
+%%%%
+{gen}%d spellforged servitors
+%d zaubergeschmeideter Diener
+%%%%
+{gen}%d orange crystal statues
+%d oranger Kristallstatuen
+%%%%
+{gen}%d molten gargoyles
+%d geschmolzener Gargoyles
+%%%%
+{gen}%d lost souls
+%d verlorener Seelen
+%%%%
+{gen}%d lurking horrors
+%d lauernder Grauene
+%%%%
+{gen}%d fulminant prisms
+%d fulminanter Prismen
+%%%%
+{gen}%d wretched stars
+%d elender Sterne
+%%%%
+{gen}%d nameless horrors
+%d namenloser Horrors
+%%%%
+{gen}%d royal mummies
+%d königlicher Mumien
+%%%%
+{gen}%d animated armours
+%d animierter Rüstungen
+%%%%
+{gen}%d sensed monsters
+%d gespürter Monster
+%%%%
+{gen}%d friendly sensed monsters
+%d freundlicher gespürter Monster
+%%%%
+{gen}%d trivial sensed monsters
+%d trivialer gespürter Monster
+%%%%
+{gen}%d easy sensed monsters
+%d leichter gespürter Monster
+%%%%
+{gen}%d tough sensed monsters
+%d harter gespürter Monster
+%%%%
+{gen}%d nasty sensed monsters
+%d furchtbarer gespürter Monster
+%%%%
+{gen}%d %ssting beasts
+%d {adj-er}%sStichbiester
+%%%%
+{gen}%d %sbat beasts
+%d {adj-er}%sFledermaus-Biester
+%%%%
+{gen}%d %sfire beasts
+%d {adj-er}%sFeuerbiester
+%%%%
+{gen}%d %sweird beasts
+%d {adj-er}%sbizarrer Biester
+%%%%
+{gen}%d %sshock beasts
+%d {adj-er}%sSchockbiester
+%%%%
+{gen}%d %sox beasts
+%d {adj-er}%sOchsenbiester
+%%%%
+
 # derived monsters (undead, etc.)
 # "elf zombie", "orc skeleton", etc.
 %%%%
@@ -3784,7 +3789,6 @@ eines %s-förmigen Eisblocks
 {gen}%d %s shaped blocks of ice
 %d %s-förmiger Eisblöcke
 %%%%
-
 
 ################################
 # allies
