@@ -4113,37 +4113,37 @@ einem furchtbaren gespürten Monster
 %d furchtbaren gespürten Monstern
 %%%%
 {dat}a %ssting beast
-einem {adj-em}%sStichbiest
+einem {adj-en}%sStichbiest
 %%%%
 {dat}%d %ssting beasts
 %d {adj-en}%sStichbiestern
 %%%%
 {dat}a %sbat beast
-einem {adj-em}%sFledermaus-Biest
+einem {adj-en}%sFledermaus-Biest
 %%%%
 {dat}%d %sbat beasts
 %d {adj-en}%sFledermaus-Biestern
 %%%%
 {dat}a %sfire beast
-einem {adj-em}%sFeuerbiest
+einem {adj-en}%sFeuerbiest
 %%%%
 {dat}%d %sfire beasts
 %d {adj-en}%sFeuerbiestern
 %%%%
 {dat}a %sweird beast
-einem {adj-em}%sbizarre Biest
+einem {adj-en}%sbizarren Biest
 %%%%
 {dat}%d %sweird beasts
 %d {adj-en}%sbizarren Biestern
 %%%%
 {dat}a %sshock beast
-einem {adj-em}%sSchockbiest
+einem {adj-en}%sSchockbiest
 %%%%
 {dat}%d %sshock beasts
 %d {adj-en}%sSchockbiestern
 %%%%
 {dat}a %sox beast
-einem {adj-em}%sOchsenbiest
+einem {adj-en}%sOchsenbiest
 %%%%
 {dat}%d %sox beasts
 %d {adj-en}%sOchsenbiestern
@@ -5665,22 +5665,22 @@ Eurem harten gespürten Monster
 Eurem furchtbaren gespürten Monster
 %%%%
 {dat}your %ssting beast
-Eurem {adj-em}%sStichbiest
+Eurem {adj-en}%sStichbiest
 %%%%
 {dat}your %sbat beast
-Eurem {adj-em}%sFledermaus-Biest
+Eurem {adj-en}%sFledermaus-Biest
 %%%%
 {dat}your %sfire beast
-Eurem {adj-em}%sFeuerbiest
+Eurem {adj-en}%sFeuerbiest
 %%%%
 {dat}your %sweird beast
-Eurem {adj-em}%sbizarre Biest
+Eurem {adj-en}%sbizarren Biest
 %%%%
 {dat}your %sshock beast
-Eurem {adj-em}%sSchockbiest
+Eurem {adj-en}%sSchockbiest
 %%%%
 {dat}your %sox beast
-Eurem {adj-em}%sOchsenbiest
+Eurem {adj-en}%sOchsenbiest
 %%%%
 
 ################################
@@ -6212,7 +6212,7 @@ furchtbarem gespürtem Monster
 {adj-em}%sFeuerbiest
 %%%%
 {dat}%sweird beast
-{adj-em}%sbizarre Biest
+{adj-em}%sbizarrem Biest
 %%%%
 {dat}%sshock beast
 {adj-em}%sSchockbiest

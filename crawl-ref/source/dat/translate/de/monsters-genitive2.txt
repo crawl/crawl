@@ -3717,7 +3717,7 @@ eines {adj-en}%sFeuerbiests
 %d {adj-er}%sFeuerbiester
 %%%%
 {gen}a %sweird beast
-eines {adj-en}%sbizarre Biests
+eines {adj-en}%sbizarren Biests
 %%%%
 {gen}%d %sweird beasts
 %d {adj-er}%sbizarrer Biester
@@ -5260,7 +5260,7 @@ Eures {adj-en}%sFledermaus-Biests
 Eures {adj-en}%sFeuerbiests
 %%%%
 {gen}your %sweird beast
-Eures {adj-en}%sbizarre Biests
+Eures {adj-en}%sbizarren Biests
 %%%%
 {gen}your %sshock beast
 Eures {adj-en}%sSchockbiests
@@ -6539,7 +6539,7 @@ furchtbaren gespürten Monsters
 {adj-en}%sFeuerbiests
 %%%%
 {gen}%sweird beast
-{adj-en}%sbizarre Biests
+{adj-en}%sbizarren Biests
 %%%%
 {gen}%sshock beast
 {adj-en}%sSchockbiests

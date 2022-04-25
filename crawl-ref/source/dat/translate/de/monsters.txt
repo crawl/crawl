@@ -5296,7 +5296,7 @@ ein {adj-es}%sFeuerbiest
 %d {adj-e}%sFeuerbiester
 %%%%
 a %sweird beast
-ein {adj-es}%sbizarre Biest
+ein {adj-es}%sbizarres Biest
 %%%%
 %d %sweird beasts
 %d {adj-e}%sbizarre Biester
@@ -6839,7 +6839,7 @@ your %sfire beast
 Euer {adj-es}%sFeuerbiest
 %%%%
 your %sweird beast
-Euer {adj-es}%sbizarre Biest
+Euer {adj-es}%sbizarres Biest
 %%%%
 your %sshock beast
 Euer {adj-es}%sSchockbiest
@@ -8373,7 +8373,7 @@ furchtbares gespürtes Monster
 {adj-es}%sFeuerbiest
 %%%%
 %sweird beast
-{adj-es}%sbizarre Biest
+{adj-es}%sbizarres Biest
 %%%%
 %sshock beast
 {adj-es}%sSchockbiest

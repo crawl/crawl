@@ -78,4 +78,17 @@ int main()
     msg = localise("You begin with the following equipment: %s", "a potion of lignification, a +0 buckler, a +2 spear");
     string expected = "Ihr beginnt mit der folgenden Ausrüstung: einen Trank der Verholzung, einen +0 Buckler, einen +2 Speer";
     show_result(msg, expected);
+
+    // test mutant beasts
+    msg = localise("the juvenile shock beast");
+    expected = "das juvenile Schockbiest";
+    show_result(msg, expected);
+
+    msg = localise("an elder weird beast");
+    expected = "ein älteres bizarres Biest";
+    show_result(msg, expected);
+
+    msg = localise_contextual("dat", "your mature fire beast");
+    expected = "Eurem reifen Feuerbiest";
+    show_result(msg, expected);
 }
