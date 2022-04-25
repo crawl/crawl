@@ -138,7 +138,7 @@ def decline_determiner(word, gender, target_case):
 def decline_noun(word, gender, target_case, proper):
     logging.debug("decline_noun start: " + word)
     if gender == Gender.PLURAL and target_case == Case.DATIVE:
-        if not re.search(r'[nsi]$', word):
+        if not re.search(r'[nsai]$', word):
             logging.debug("decline_noun: add -n to dative plural")
             return word + "n"
 

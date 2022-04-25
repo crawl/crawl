@@ -1871,6 +1871,27 @@ the %sox beast's
 des {adj-en}%sOchsenbiests
 %%%%
 
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{gen}the %s zombie's
+des %s-Zombies
+%%%%
+{gen}the %s skeleton's
+des %s-Skeletts
+%%%%
+{gen}the %s simulacrum's
+des %s-Simulacrums
+%%%%
+# can result from Zin's Recite
+{gen}the %s shaped pillar of salt's
+der %s-förmigen Salzsäule
+%%%%
+# can result from Glaciate
+{gen}the %s shaped block of ice's
+des %s-förmigen Eisblocks
+%%%%
+
 ################################
 # indefinite
 ################################
@@ -3340,6 +3361,35 @@ eines {adj-en}%sSchockbiests
 %%%%
 a %sox beast's
 eines {adj-en}%sOchsenbiests
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+a %s zombie's
+eines %s-Zombies
+%%%%
+a %s skeleton's
+eines %s-Skeletts
+%%%%
+a %s simulacrum's
+eines %s-Simulacrums
+%%%%
+a %s shaped pillar of salt's
+einer %s-förmigen Salzsäule
+%%%%
+a %s shaped block of ice's
+eines %s-förmigen Eisblocks
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+%d %s shaped pillars of salt's
+%d %s-förmiger Salzsäulen
+%%%%
+%d %s shaped blocks of ice's
+%d %s-förmiger Eisblöcke
 %%%%
 
 ################################
@@ -4871,5 +4921,24 @@ Eures {adj-en}%sSchockbiests
 %%%%
 your %sox beast's
 Eures {adj-en}%sOchsenbiests
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+your %s zombie's
+Eures %s-Zombies
+%%%%
+your %s skeleton's
+Eures %s-Skeletts
+%%%%
+your %s simulacrum's
+Eures %s-Simulacrums
+%%%%
+your %s shaped pillar of salt's
+Eurer %s-förmigen Salzsäule
+%%%%
+your %s shaped block of ice's
+Eures %s-förmigen Eisblocks
 %%%%
 

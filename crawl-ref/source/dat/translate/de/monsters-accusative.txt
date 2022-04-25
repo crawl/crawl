@@ -947,6 +947,19 @@ den Test-Erzeuger
 den Test-Klumpen
 %%%%
 
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{acc}the %s zombie
+den %s-Zombie
+%%%%
+# can result from Zin's Recite
+%%%%
+# can result from Glaciate
+{acc}the %s shaped block of ice
+den %s-förmigen Eisblock
+%%%%
+
 ################################
 # indefinite
 ################################
@@ -1862,6 +1875,21 @@ einen Test-Erzeuger
 {acc}a test blob
 einen Test-Klumpen
 %%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{acc}a %s zombie
+einen %s-Zombie
+%%%%
+{acc}a %s shaped block of ice
+einen %s-förmigen Eisblock
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+
 
 ################################
 # allies
@@ -2785,6 +2813,16 @@ Euren Test-Erzeuger
 Euren Test-Klumpen
 %%%%
 
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{acc}your %s zombie
+Euren %s-Zombie
+%%%%
+{acc}your %s shaped block of ice
+Euren %s-förmigen Eisblock
+%%%%
+
 ################################
 # without determiner
 ################################
@@ -3076,3 +3114,11 @@ Kobold-Briganten
 %%%%
 # Test monsters can be created in Arena
 %%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{acc}%s shaped block of ice
+%s-förmigen Eisblock
+%%%%
+

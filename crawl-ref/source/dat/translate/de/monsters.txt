@@ -1889,6 +1889,27 @@ the %sox beast
 das {adj-e}%sOchsenbiest
 %%%%
 
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+the %s zombie
+der %s-Zombie
+%%%%
+the %s skeleton
+das %s-Skelett
+%%%%
+the %s simulacrum
+das %s-Simulacrum
+%%%%
+# can result from Zin's Recite
+the %s shaped pillar of salt
+die %s-förmige Salzsäule
+%%%%
+# can result from Glaciate
+the %s shaped block of ice
+der %s-förmige Eisblock
+%%%%
+
 ################################
 # indefinite
 ################################
@@ -5314,6 +5335,45 @@ ein {adj-es}%sOchsenbiest
 %d {adj-e}%sOchsenbiester
 %%%%
 
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+a %s zombie
+ein %s-Zombie
+%%%%
+a %s skeleton
+ein %s-Skelett
+%%%%
+a %s simulacrum
+ein %s-Simulacrum
+%%%%
+a %s shaped pillar of salt
+eine %s-förmige Salzsäule
+%%%%
+a %s shaped block of ice
+ein %s-förmiger Eisblock
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+%d %s zombies
+%d %s-Zombies
+%%%%
+%d %s skeletons
+%d %s-Skelette
+%%%%
+%d %s simulacra
+%d %s-Simulacra
+%%%%
+%d %s shaped pillars of salt
+%de %s-förmige Salzsäulen
+%%%%
+%d %s shaped blocks of ice
+%d %s-förmige Eisblöcke
+%%%%
+
+
 ################################
 # allies
 ################################
@@ -6848,6 +6908,25 @@ your %sox beast
 Euer {adj-es}%sOchsenbiest
 %%%%
 
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+your %s zombie
+Euer %s-Zombie
+%%%%
+your %s skeleton
+Euer %s-Skelett
+%%%%
+your %s simulacrum
+Euer %s-Simulacrum
+%%%%
+your %s shaped pillar of salt
+Eure %s-förmige Salzsäule
+%%%%
+your %s shaped block of ice
+Euer %s-förmiger Eisblock
+%%%%
+
 ################################
 # without determiner
 ################################
@@ -8380,5 +8459,24 @@ furchtbares gespürtes Monster
 %%%%
 %sox beast
 {adj-es}%sOchsenbiest
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+%s zombie
+%s-Zombie
+%%%%
+%s skeleton
+%s-Skelett
+%%%%
+%s simulacrum
+%s-Simulacrum
+%%%%
+%s shaped pillar of salt
+%s-förmige Salzsäule
+%%%%
+%s shaped block of ice
+%s-förmiger Eisblock
 %%%%
 

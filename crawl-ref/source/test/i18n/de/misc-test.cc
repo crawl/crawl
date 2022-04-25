@@ -91,4 +91,17 @@ int main()
     msg = localise_contextual("dat", "your mature fire beast");
     expected = "Eurem reifen Feuerbiest";
     show_result(msg, expected);
+
+    // test derived undead
+    msg = localise("the orc skeleton");
+    expected = "das Ork-Skelett";
+    show_result(msg, expected);
+
+    msg = localise_contextual("acc", "your elf zombie");
+    expected = "Euren Elf-Zombie";
+    show_result(msg, expected);
+
+    msg = localise("3 ogre simulacra");
+    expected = "3 Oger-Simulacra";
+    show_result(msg, expected);
 }

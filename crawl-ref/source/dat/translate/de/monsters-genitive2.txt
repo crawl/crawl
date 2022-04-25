@@ -1877,6 +1877,27 @@ des {adj-en}%sSchockbiests
 des {adj-en}%sOchsenbiests
 %%%%
 
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{gen}the %s zombie
+des %s-Zombies
+%%%%
+{gen}the %s skeleton
+des %s-Skeletts
+%%%%
+{gen}the %s simulacrum
+des %s-Simulacrums
+%%%%
+# can result from Zin's Recite
+{gen}the %s shaped pillar of salt
+der %s-förmigen Salzsäule
+%%%%
+# can result from Glaciate
+{gen}the %s shaped block of ice
+des %s-förmigen Eisblocks
+%%%%
+
 ################################
 # indefinite
 ################################
@@ -3735,6 +3756,36 @@ eines {adj-en}%sOchsenbiests
 %d {adj-er}%sOchsenbiester
 %%%%
 
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{gen}a %s zombie
+eines %s-Zombies
+%%%%
+{gen}a %s skeleton
+eines %s-Skeletts
+%%%%
+{gen}a %s simulacrum
+eines %s-Simulacrums
+%%%%
+{gen}a %s shaped pillar of salt
+einer %s-förmigen Salzsäule
+%%%%
+{gen}a %s shaped block of ice
+eines %s-förmigen Eisblocks
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{gen}%d %s shaped pillars of salt
+%d %s-förmiger Salzsäulen
+%%%%
+{gen}%d %s shaped blocks of ice
+%d %s-förmiger Eisblöcke
+%%%%
+
+
 ################################
 # allies
 ################################
@@ -5269,6 +5320,25 @@ Eures {adj-en}%sSchockbiests
 Eures {adj-en}%sOchsenbiests
 %%%%
 
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{gen}your %s zombie
+Eures %s-Zombies
+%%%%
+{gen}your %s skeleton
+Eures %s-Skeletts
+%%%%
+{gen}your %s simulacrum
+Eures %s-Simulacrums
+%%%%
+{gen}your %s shaped pillar of salt
+Eurer %s-förmigen Salzsäule
+%%%%
+{gen}your %s shaped block of ice
+Eures %s-förmigen Eisblocks
+%%%%
+
 ################################
 # without determiner
 ################################
@@ -6546,5 +6616,24 @@ furchtbaren gespürten Monsters
 %%%%
 {gen}%sox beast
 {adj-en}%sOchsenbiests
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{gen}%s zombie
+%s-Zombies
+%%%%
+{gen}%s skeleton
+%s-Skeletts
+%%%%
+{gen}%s simulacrum
+%s-Simulacrums
+%%%%
+{gen}%s shaped pillar of salt
+%s-förmiger Salzsäule
+%%%%
+{gen}%s shaped block of ice
+%s-förmigen Eisblocks
 %%%%
 
