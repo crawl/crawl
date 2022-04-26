@@ -313,20 +313,20 @@ einem {adj-em}%sDolch
 einer {adj-en}%sSchnellklinge
 %%%%
 {dat}a %sshort sword
-einem {adj-em}%sKurzschwert
+einem {adj-en}%sKurzschwert
 %%%%
 # neut
 %%%%
 {dat}a %srapier
-einem {adj-em}%sRapier
+einem {adj-en}%sRapier
 %%%%
 # neut
 %%%%
 {dat}a %sfalchion
-einem {adj-em}%sFalchion
+einem {adj-en}%sFalchion
 %%%%
 {dat}a %slong sword
-einem {adj-em}%sLangschwert
+einem {adj-en}%sLangschwert
 %%%%
 {dat}a %sscimitar
 einem {adj-em}%sKrummsäbel
@@ -338,18 +338,18 @@ einer {adj-en}%sDämonenklinge
 einer {adj-en}%sEudämonenklinge
 %%%%
 {dat}a %sdouble sword
-einem {adj-em}%sDoppelschwert
+einem {adj-en}%sDoppelschwert
 %%%%
 {dat}a %sgreat sword
-einem {adj-em}%sGroßschwert
+einem {adj-en}%sGroßschwert
 %%%%
 {dat}a %striple sword
-einem {adj-em}%sDreifach-Schwert
+einem {adj-en}%sDreifach-Schwert
 %%%%
 # neut
 %%%%
 {dat}a %shand axe
-einem {adj-em}%sBeil
+einem {adj-en}%sBeil
 %%%%
 {dat}a %swar axe
 einer {adj-en}%sKriegsaxt
@@ -443,20 +443,20 @@ Eurem {adj-em}%sDolch
 Eurer {adj-en}%sSchnellklinge
 %%%%
 {dat}your %sshort sword
-Eurem {adj-em}%sKurzschwert
+Eurem {adj-en}%sKurzschwert
 %%%%
 # neut
 %%%%
 {dat}your %srapier
-Eurem {adj-em}%sRapier
+Eurem {adj-en}%sRapier
 %%%%
 # neut
 %%%%
 {dat}your %sfalchion
-Eurem {adj-em}%sFalchion
+Eurem {adj-en}%sFalchion
 %%%%
 {dat}your %slong sword
-Eurem {adj-em}%sLangschwert
+Eurem {adj-en}%sLangschwert
 %%%%
 {dat}your %sscimitar
 Eurem {adj-em}%sKrummsäbel
@@ -468,18 +468,18 @@ Eurer {adj-en}%sDämonenklinge
 Eurer {adj-en}%sEudämonenklinge
 %%%%
 {dat}your %sdouble sword
-Eurem {adj-em}%sDoppelschwert
+Eurem {adj-en}%sDoppelschwert
 %%%%
 {dat}your %sgreat sword
-Eurem {adj-em}%sGroßschwert
+Eurem {adj-en}%sGroßschwert
 %%%%
 {dat}your %striple sword
-Eurem {adj-em}%sDreifach-Schwert
+Eurem {adj-en}%sDreifach-Schwert
 %%%%
 # neut
 %%%%
 {dat}your %shand axe
-Eurem {adj-em}%sBeil
+Eurem {adj-en}%sBeil
 %%%%
 {dat}your %swar axe
 Eurer {adj-en}%sKriegsaxt
@@ -907,7 +907,7 @@ einem {adj-em}%sUmhang
 einem {adj-em}%sSchal
 %%%%
 {dat}a %spair of %sgloves
-einem {adj-em}%sPaar {adj-e}%sHandschuhe
+einem {adj-en}%sPaar {adj-e}%sHandschuhe
 %%%%
 {dat}a %shelmet
 einem {adj-em}%sHelm
@@ -916,7 +916,7 @@ einem {adj-em}%sHelm
 einem {adj-em}%sHut
 %%%%
 {dat}a %spair of %sboots
-einem {adj-em}%sPaar {adj-e}%sStiefel
+einem {adj-en}%sPaar {adj-e}%sStiefel
 %%%%
 {dat}a %scentaur barding
 einem {adj-em}%sZentaurenharnisch
@@ -928,10 +928,10 @@ einem {adj-em}%sNagaharnisch
 einem {adj-em}%sBuckler
 %%%%
 {dat}a %skite shield
-einem {adj-em}%sKiteschild
+einem {adj-en}%sKiteschild
 %%%%
 {dat}a %stower shield
-einem {adj-em}%sTurmschild
+einem {adj-en}%sTurmschild
 %%%%
 
 # your <item>
@@ -971,7 +971,7 @@ Eurem {adj-em}%sUmhang
 Eurem {adj-em}%sSchal
 %%%%
 {dat}your %spair of %sgloves
-Eurem {adj-em}%sPaar {adj-e}%sHandschuhe
+Eurem {adj-en}%sPaar {adj-e}%sHandschuhe
 %%%%
 {dat}your %shelmet
 Eurem {adj-em}%sHelm
@@ -980,7 +980,7 @@ Eurem {adj-em}%sHelm
 Eurem {adj-em}%sHut
 %%%%
 {dat}your %spair of %sboots
-Eurem {adj-em}%sPaar {adj-e}%sStiefel
+Eurem {adj-en}%sPaar {adj-e}%sStiefel
 %%%%
 {dat}your %scentaur barding
 Eurem {adj-em}%sZentaurenharnisch
@@ -992,10 +992,10 @@ Eurem {adj-em}%sNagaharnisch
 Eurem {adj-em}%sBuckler
 %%%%
 {dat}your %skite shield
-Eurem {adj-em}%sKiteschild
+Eurem {adj-en}%sKiteschild
 %%%%
 {dat}your %stower shield
-Eurem {adj-em}%sTurmschild
+Eurem {adj-en}%sTurmschild
 %%%%
 {dat}your %ssteam dragon scales
 Euren {adj-en}%sDampfdrachenschuppen
@@ -1533,151 +1533,151 @@ Eurem {adj-em}%sobsoletem Ring
 dem {adj-en}%sAmulett
 %%%%
 {dat}a %samulet
-einem {adj-em}%sAmulett
+einem {adj-en}%sAmulett
 %%%%
 {dat}a %samulet of magic regeneration
-einem {adj-em}%sAmulett der magischen Regeneration
+einem {adj-en}%sAmulett der magischen Regeneration
 %%%%
 {dat}a %samulet of the acrobat
-einem {adj-em}%sAmulett des Akrobaten
+einem {adj-en}%sAmulett des Akrobaten
 %%%%
 {dat}a %samulet of inaccuracy
-einem {adj-em}%sAmulett der Ungenauigkeit
+einem {adj-en}%sAmulett der Ungenauigkeit
 %%%%
 {dat}a %samulet of nothing
-einem {adj-em}%sAmulett von nichts
+einem {adj-en}%sAmulett von nichts
 %%%%
 {dat}a %samulet of guardian spirit
-einem {adj-em}%sAmulett des Geistschildes
+einem {adj-en}%sAmulett des Geistschildes
 %%%%
 {dat}a %samulet of faith
-einem {adj-em}%sAmulett des Glaubens
+einem {adj-en}%sAmulett des Glaubens
 %%%%
 {dat}a %samulet of reflection
-einem {adj-em}%sAmulett der Reflexion
+einem {adj-en}%sAmulett der Reflexion
 %%%%
 {dat}a %samulet of regeneration
-einem {adj-em}%sAmulett der Regeneration
+einem {adj-en}%sAmulett der Regeneration
 %%%%
 
 # unidentified
 %%%%
 {dat}a %ssapphire amulet
-einem {adj-em}%sSaphiramulett
+einem {adj-en}%sSaphiramulett
 %%%%
 {dat}a %szirconium amulet
-einem {adj-em}%sZirkoniumamulett
+einem {adj-en}%sZirkoniumamulett
 %%%%
 {dat}a %sgolden amulet
-einem {adj-em}%sGoldamulett
+einem {adj-en}%sGoldamulett
 %%%%
 {dat}a %semerald amulet
-einem {adj-em}%sSmaragdamulett
+einem {adj-en}%sSmaragdamulett
 %%%%
 {dat}a %sgarnet amulet
-einem {adj-em}%sGranatamulett
+einem {adj-en}%sGranatamulett
 %%%%
 {dat}a %sbronze amulet
-einem {adj-em}%sBronzeamulett
+einem {adj-en}%sBronzeamulett
 %%%%
 {dat}a %sbrass amulet
-einem {adj-em}%sMessingamulett
+einem {adj-en}%sMessingamulett
 %%%%
 {dat}a %scopper amulet
-einem {adj-em}%sKupferamulett
+einem {adj-en}%sKupferamulett
 %%%%
 {dat}a %sruby amulet
-einem {adj-em}%sRubinamulett
+einem {adj-en}%sRubinamulett
 %%%%
 {dat}a %scitrine amulet
-einem {adj-em}%sCitrinamulett
+einem {adj-en}%sCitrinamulett
 %%%%
 {dat}a %sbone amulet
-einem {adj-em}%sKnochenamulett
+einem {adj-en}%sKnochenamulett
 %%%%
 {dat}a %splatinum amulet
-einem {adj-em}%sPlatinamulett
+einem {adj-en}%sPlatinamulett
 %%%%
 {dat}a %sjade amulet
-einem {adj-em}%sJade-Amulett
+einem {adj-en}%sJade-Amulett
 %%%%
 {dat}a %sfluorescent amulet
-einem {adj-em}%sfluoreszierendem Amulett
+einem {adj-en}%sfluoreszierenden Amulett
 %%%%
 {dat}a %samethyst amulet
-einem {adj-em}%sAmethystamulett
+einem {adj-en}%sAmethystamulett
 %%%%
 {dat}a %scameo amulet
-einem {adj-em}%sCameo-Amulett
+einem {adj-en}%sCameo-Amulett
 %%%%
 {dat}a %spearl amulet
-einem {adj-em}%sPerlenamulett
+einem {adj-en}%sPerlenamulett
 %%%%
 {dat}a %sblue amulet
-einem {adj-em}%sblauem Amulett
+einem {adj-en}%sblauen Amulett
 %%%%
 {dat}a %speridot amulet
-einem {adj-em}%sPeridot-Amulett
+einem {adj-en}%sPeridot-Amulett
 %%%%
 {dat}a %sjasper amulet
-einem {adj-em}%sJaspisamulett
+einem {adj-en}%sJaspisamulett
 %%%%
 {dat}a %sdiamond amulet
-einem {adj-em}%sDiamantamulett
+einem {adj-en}%sDiamantamulett
 %%%%
 {dat}a %smalachite amulet
-einem {adj-em}%sMalachitamulett
+einem {adj-en}%sMalachitamulett
 %%%%
 {dat}a %ssteel amulet
-einem {adj-em}%sStahlamulett
+einem {adj-en}%sStahlamulett
 %%%%
 {dat}a %scabochon amulet
-einem {adj-em}%sCabochon-Amulett
+einem {adj-en}%sCabochon-Amulett
 %%%%
 {dat}a %ssilver amulet
-einem {adj-em}%sSilberamulett
+einem {adj-en}%sSilberamulett
 %%%%
 {dat}a %ssoapstone amulet
-einem {adj-em}%sSpecksteinamulett
+einem {adj-en}%sSpecksteinamulett
 %%%%
 {dat}a %slapis lazuli amulet
-einem {adj-em}%sLapislazuli-Amulett
+einem {adj-en}%sLapislazuli-Amulett
 %%%%
 {dat}a %sfiligree amulet
-einem {adj-em}%sFiligranamulett
+einem {adj-en}%sFiligranamulett
 %%%%
 {dat}a %sberyl amulet
-einem {adj-em}%sBeryllamulett
+einem {adj-en}%sBeryllamulett
 %%%%
 
 # your <item>
 %%%%
 {dat}your %samulet
-Eurem {adj-em}%sAmulett
+Eurem {adj-en}%sAmulett
 %%%%
 {dat}your %samulet of magic regeneration
-Eurem {adj-em}%sAmulett der magischen Regeneration
+Eurem {adj-en}%sAmulett der magischen Regeneration
 %%%%
 {dat}your %samulet of the acrobat
-Eurem {adj-em}%sAmulett des Akrobaten
+Eurem {adj-en}%sAmulett des Akrobaten
 %%%%
 {dat}your %samulet of inaccuracy
-Eurem {adj-em}%sAmulett der Ungenauigkeit
+Eurem {adj-en}%sAmulett der Ungenauigkeit
 %%%%
 {dat}your %samulet of nothing
-Eurem {adj-em}%sAmulett von nichts
+Eurem {adj-en}%sAmulett von nichts
 %%%%
 {dat}your %samulet of guardian spirit
-Eurem {adj-em}%sAmulett des Geistschildes
+Eurem {adj-en}%sAmulett des Geistschildes
 %%%%
 {dat}your %samulet of faith
-Eurem {adj-em}%sAmulett des Glaubens
+Eurem {adj-en}%sAmulett des Glaubens
 %%%%
 {dat}your %samulet of reflection
-Eurem {adj-em}%sAmulett der Reflexion
+Eurem {adj-en}%sAmulett der Reflexion
 %%%%
 {dat}your %samulet of regeneration
-Eurem {adj-em}%sAmulett der Regeneration
+Eurem {adj-en}%sAmulett der Regeneration
 %%%%
 
 # no determiner
