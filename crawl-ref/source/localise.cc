@@ -953,6 +953,11 @@ static string _localise_item_name(const string& context, const string& item)
     string suffix;
     string base = _strip_suffix(item, suffix);
 
+    // try to translate base without suffix
+    result = cxlate(context, base, false);
+    if (!result.empty())
+        return result + _localise_string(context, suffix);
+
     string determiner;
     string owner;
     base = _strip_determiner(base, determiner);
