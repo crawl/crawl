@@ -63,6 +63,17 @@ rune
 Rune
 %%%%
 
+%%%%
+the %sweapon
+die {adj-e}%sWaffe
+%%%%
+a %sweapon
+eine {adj-e}%sWaffe
+%%%%
+your %sweapon
+Eure {adj-e}%sWaffe
+%%%%
+
 #################################
 # Melee Weapons
 #################################

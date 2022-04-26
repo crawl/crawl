@@ -15,6 +15,17 @@
 magischem Stecken
 %%%%
 
+%%%%
+{dat}the %sweapon
+der {adj-en}%sWaffe
+%%%%
+{dat}a %sweapon
+einer {adj-en}%sWaffe
+%%%%
+{dat}your %sweapon
+Eurer {adj-en}%sWaffe
+%%%%
+
 #################################
 # Melee Weapons
 #################################
