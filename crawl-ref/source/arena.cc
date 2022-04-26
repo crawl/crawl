@@ -758,7 +758,7 @@ namespace arena
 
     static void handle_keypress(int ch)
     {
-        if (key_is_escape(ch) || toalower(ch) == 'q')
+        if (key_is_escape(ch) || toalower(ch) == 'q' || ch == CK_MOUSE_CMD)
         {
             contest_cancelled = true;
             return;
@@ -1486,8 +1486,9 @@ static void _choose_arena_teams(newgame_def& choice,
     arena::skipped_arena_ui = false;
     clear_message_store();
 
+    auto text = make_shared<Text>("Enter your choice of teams:\n ");
     auto vbox = make_shared<Box>(ui::Widget::VERT);
-    vbox->add_child(make_shared<Text>("Enter your choice of teams:\n "));
+    vbox->add_child(text);
     vbox->set_cross_alignment(Widget::Align::STRETCH);
     auto teams_input = make_shared<ui::TextEntry>();
     teams_input->set_sync_id("teams");
@@ -1507,7 +1508,8 @@ static void _choose_arena_teams(newgame_def& choice,
         return done = (ev.key() == CK_ENTER);
     });
     popup->on_keydown_event([&](const KeyEvent& ev) {
-        return done = cancel = key_is_escape(ev.key());
+        done = cancel = key_is_escape(ev.key()) || ev.key() == CK_MOUSE_CMD;
+        return done;
     });
 
     ui::run_layout(move(popup), done, teams_input);

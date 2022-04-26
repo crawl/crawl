@@ -1991,6 +1991,13 @@ bool TextEntry::on_event(const Event& event)
     case Event::Type::KeyDown:
         {
             const auto key = static_cast<const KeyEvent&>(event).key();
+#ifdef USE_TILE_LOCAL
+            // exit a popup on right click with text entry focus. XX this seems
+            // like a bad way to handle it, but I'm not sure what a better way
+            // might be.
+            if (key == CK_MOUSE_CMD)
+                return false;
+#endif
             int ret = m_line_reader.process_key_core(key);
             if (ret == CK_ESCAPE || ret == 0)
                 ui::set_focused_widget(nullptr);

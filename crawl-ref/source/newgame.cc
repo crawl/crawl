@@ -366,7 +366,7 @@ static bool _reroll_random(newgame_def& ng)
     auto popup = make_shared<ui::Popup>(move(vbox));
 
     bool done = false;
-    char c;
+    int c;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         c = ev.key();
         return done = true;
@@ -381,7 +381,9 @@ static bool _reroll_random(newgame_def& ng)
 #endif
     ui::run_layout(move(popup), done);
 
-    if (key_is_escape(c) || toalower(c) == 'q' || crawl_state.seen_hups)
+    // XX mouse interface in local tiles for `y` -- right now right click does
+    // `q` only
+    if (key_is_escape(c) || c == CK_MOUSE_CMD || toalower(c) == 'q' || crawl_state.seen_hups)
         game_ended(game_exit::abort);
     return toalower(c) == 'n' || c == '\t' || c == '!' || c == '#';
 }
@@ -697,7 +699,7 @@ static keyfun_action _keyfun_seed_input(int &ch)
     // lose focus. (TODO: maybe handle this better in TextEntry somehow?)
     if (ch == CONTROL('K') || ch == CONTROL('D') || ch == CONTROL('W') ||
             ch == CONTROL('U') || ch == CONTROL('A') || ch == CONTROL('E') ||
-            ch == CK_BKSP || ch == CK_ESCAPE ||
+            ch == CK_BKSP || ch == CK_ESCAPE || ch == CK_MOUSE_CMD ||
             ch < 0 || // this should get all other special keys
             isadigit(ch))
     {
@@ -937,7 +939,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
             return false;
         }
 #endif
-        else if (key_is_escape(key))
+        else if (key_is_escape(key) || key == CK_MOUSE_CMD)
             return done = cancel = true;
         return false;
     });
@@ -2250,6 +2252,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 #endif
                 end(0);
                 break;
+            case CK_MOUSE_CMD:
             CASE_ESCAPE
                 return done = cancel = true;
                 break;
