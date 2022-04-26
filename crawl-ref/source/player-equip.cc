@@ -109,7 +109,16 @@ bool unequip_item(equipment_type slot, bool msg, bool skip_effects)
         you.equip[slot] = -1;
 
         if (you.melded[slot])
+        {
             you.melded.set(slot, false);
+            if (!skip_effects)
+            {
+                // Cursed items should always be destroyed on unequip.
+                item_def& item = you.inv[item_slot];
+                if (item.cursed())
+                    destroy_item(item);
+            }
+        }
         else if (!skip_effects)
             unequip_effect(slot, item_slot, false, msg);
 
