@@ -1332,15 +1332,22 @@ static string _localise_counted_string(const string& context, const string& valu
     return _localise_counted_string(context, singular, plural, count);
 }
 
-// localise counted string when you only have the plural
+// localise ghost/illusion name
 static string _localise_ghost_name(const string& context, const string& value)
 {
-    const string suffix = "'s ghost";
-    if (!ends_with(value, {suffix.c_str()}))
-        return value;
+    const string ghost_suffix = "'s ghost";
+    const string illusion_suffix = "'s illusion";
+    string suffix;
+
+    if (ends_with(value, ghost_suffix))
+        suffix = ghost_suffix;
+    else if (ends_with(value, illusion_suffix))
+        suffix = illusion_suffix;
+    else
+        return "";
 
     string name = value.substr(0, value.length() - suffix.length());
-    string fmt = cxlate(context, "%s's ghost");
+    string fmt = cxlate(context, string("%s") + suffix);
     return make_stringf(fmt.c_str(), name.c_str());
 }
 
@@ -1452,7 +1459,7 @@ static string _localise_string(const string context, const string& value)
 
     // try treating as ghost name
     result = _localise_ghost_name(context, value);
-    if (result != value)
+    if (!result.empty())
         return result;
 
     if (regex_search(value, regex("^[a-zA-Z] - ")))

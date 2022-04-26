@@ -194,6 +194,19 @@ dem Glänzenden
 dem Wu Jian Konzil
 %%%%
 
+########################
+# " of <god>"
+########################
+%%%%
+# generic
+" of %s"
+" von {dat}%s"
+%%%%
+# specific override
+" of the Shining One"
+" des Glänzenden"
+%%%%
+
 ##################
 # god blessings
 ##################

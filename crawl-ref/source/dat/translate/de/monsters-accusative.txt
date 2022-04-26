@@ -959,6 +959,9 @@ den %s-Zombie
 {acc}the %s shaped block of ice
 den %s-förmigen Eisblock
 %%%%
+{acc}the %s shaped shifter
+den %s-förmigen Gestaltwandler
+%%%%
 
 ################################
 # indefinite
@@ -1883,6 +1886,9 @@ einen %s-Zombie
 %%%%
 {acc}a %s shaped block of ice
 einen %s-förmigen Eisblock
+%%%%
+{acc}a %s shaped shifter
+einen %s-förmigen Gestaltwandler
 %%%%
 
 ################################
@@ -2826,6 +2832,9 @@ Euren %s-Zombie
 {acc}your %s shaped block of ice
 Euren %s-förmigen Eisblock
 %%%%
+{acc}your %s shaped shifter
+Euren %s-förmigen Gestaltwandler
+%%%%
 
 ################################
 # without determiner
@@ -3124,5 +3133,8 @@ Kobold-Briganten
 %%%%
 {acc}%s shaped block of ice
 %s-förmigen Eisblock
+%%%%
+{acc}%s shaped shifter
+%s-förmigen Gestaltwandler
 %%%%
 

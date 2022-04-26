@@ -98,6 +98,10 @@
 "dyed "
 "gefärbte "
 %%%%
+# affected by Animate Armour spell
+"animated "
+"animierte "
+%%%%
 
 ################################
 # weapon brands applied as adjectives
@@ -347,6 +351,24 @@
 # monsters
 ################################
 %%%%
+"helpless "
+"hilflose "
+%%%%
+"submerged "
+"untergetauchte "
+%%%%
+"spectral "
+"geisterhafte "
+%%%%
+"ghostly "
+"gespenstische "
+%%%%
+"active "
+"active "
+%%%%
+"sensed "
+"gespürte "
+%%%%
 "hexed "
 "verfluchte "
 %%%%
@@ -377,5 +399,17 @@
 %%%%
 "primal "
 "urzeitliche "
+%%%%
+
+# slime size (large also possible, but that's covered above)
+%%%%
+"very large "
+"sehr große "
+%%%%
+"enormous "
+"riesige "
+%%%%
+"titanic "
+"titanische "
 %%%%
 

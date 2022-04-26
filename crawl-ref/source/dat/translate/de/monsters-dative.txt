@@ -947,8 +947,8 @@ dem Schlamm
 {dat}the jelly
 dem Gelee
 %%%%
-{dat}the slime creature
-dem Schleimwesen
+{dat}the %sslime creature
+dem {adj-en}%sSchleimwesen
 %%%%
 {dat}the merged slime creature
 der verschmolzenen Schleimkreatur
@@ -1674,6 +1674,9 @@ der %s-förmigen Salzsäule
 # can result from Glaciate
 {dat}the %s shaped block of ice
 dem %s-förmigen Eisblock
+%%%%
+{dat}the %s shaped shifter
+dem %s-förmigen Gestaltwandler
 %%%%
 
 ################################
@@ -2503,8 +2506,8 @@ einem Schlamm
 {dat}a jelly
 einem Gelee
 %%%%
-{dat}a slime creature
-einem Schleimwesen
+{dat}a %sslime creature
+einem {adj-en}%sSchleimwesen
 %%%%
 {dat}a merged slime creature
 einer verschmolzenen Schleimkreatur
@@ -3227,6 +3230,9 @@ einer %s-förmigen Salzsäule
 {dat}a %s shaped block of ice
 einem %s-förmigen Eisblock
 %%%%
+{dat}a %s shaped shifter
+einem %s-förmigen Gestaltwandler
+%%%%
 
 ################################
 # Plural
@@ -3707,8 +3713,8 @@ einem %s-förmigen Eisblock
 {dat}%d oozes
 %d Schlammen
 %%%%
-{dat}%d slime creatures
-%d Schleimwesenen
+{dat}%d %sslime creatures
+%d {adj-en}%sSchleimwesenen
 %%%%
 {dat}%d merged slime creatures
 %d verschmolzenen Schleimkreaturen
@@ -4205,6 +4211,9 @@ einem %s-förmigen Eisblock
 %%%%
 {dat}%d %s shaped blocks of ice
 %d %s-förmigen Eisblöcken
+%%%%
+{dat}%d %s shaped shifters
+%d %s-förmigen Gestaltwandlern
 %%%%
 
 ################################
@@ -5033,8 +5042,8 @@ Eurem Schlamm
 {dat}your jelly
 Eurem Gelee
 %%%%
-{dat}your slime creature
-Eurem Schleimwesen
+{dat}your %sslime creature
+Eurem {adj-en}%sSchleimwesen
 %%%%
 {dat}your merged slime creature
 Eurer verschmolzenen Schleimkreatur
@@ -5759,6 +5768,9 @@ Eurer %s-förmigen Salzsäule
 {dat}your %s shaped block of ice
 Eurem %s-förmigen Eisblock
 %%%%
+{dat}your %s shaped shifter
+Eurem %s-förmigen Gestaltwandler
+%%%%
 
 ################################
 # without determiner
@@ -6070,6 +6082,9 @@ mutierter Bestie
 {dat}ancestor
 Ahnen
 %%%%
+{dat}%sslime creature
+{adj-em}%sSchleimwesen
+%%%%
 {dat}merged slime creature
 verschmolzener Schleimkreatur
 %%%%
@@ -6306,5 +6321,8 @@ furchtbarem gespürtem Monster
 %%%%
 {dat}%s shaped block of ice
 %s-förmigem Eisblock
+%%%%
+{dat}%s shaped shifter
+%s-förmigem Gestaltwandler
 %%%%
 

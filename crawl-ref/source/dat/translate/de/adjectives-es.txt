@@ -99,6 +99,9 @@
 "{adj-es}dyed "
 "gefärbtes "
 %%%%
+"{adj-es}animated "
+"animiertes "
+%%%%
 
 ################################
 # weapon brands applied as adjectives
@@ -348,6 +351,24 @@
 # monsters
 ################################
 %%%%
+"{adj-es}helpless "
+"hilfloses "
+%%%%
+"{adj-es}submerged "
+"untergetauchtes "
+%%%%
+"{adj-es}spectral "
+"geisterhaftes "
+%%%%
+"{adj-es}ghostly "
+"gespenstisches "
+%%%%
+"{adj-es}active "
+"actives "
+%%%%
+"{adj-es}sensed "
+"gespürtes "
+%%%%
 "{adj-es}hexed "
 "verfluchtes "
 %%%%
@@ -378,5 +399,17 @@
 %%%%
 "{adj-es}primal "
 "urzeitliches "
+%%%%
+
+# slime size (large also possible, but that's covered above)
+%%%%
+"{adj-es}very large "
+"sehr großes "
+%%%%
+"{adj-es}enormous "
+"riesiges "
+%%%%
+"{adj-es}titanic "
+"titanisches "
 %%%%
 

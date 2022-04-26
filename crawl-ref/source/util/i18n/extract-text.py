@@ -170,6 +170,12 @@ LAZY_FILES = [
     'god-prayer.cc', 'hiscores.cc', 'macro.cc', 'main.cc'
 ]
 
+IGNORE_STRINGS = [
+    'the', 'the ', ' the ',
+    'a', 'a ', 'an', 'an ',
+    'you', 'you '
+]
+
 files = []
 if len(sys.argv) > 1:
     # use list of files specified on command line
@@ -521,8 +527,8 @@ for filename in files:
             filtered_strings.append(string)
             continue
 
-        # ignore pronouns
-        if string.lower() == 'you':
+        # ignore articles, pronouns, etc.
+        if string.lower() in IGNORE_STRINGS:
             continue
 
         # ignore strings that are just whitespace
@@ -561,7 +567,7 @@ for filename in files:
             continue
 
         # ignore buggy stuff
-        if 'buggy' in string or 'Buggy' in string:
+        if 'buggy' in string or 'Buggy' in string or 'INVALID' in string:
             continue
 
         filtered_strings.append(string)

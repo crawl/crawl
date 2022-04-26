@@ -4296,7 +4296,7 @@ static void _print_bar(int value, int scale, string name,
  */
 static void _describe_monster_hp(const monster_info& mi, ostringstream &result)
 {
-    result << localise("Max HP: %d", mi.get_max_hp_desc()) << "\n";
+    result << localise("Max HP: ") <<  mi.get_max_hp_desc(true) << "\n";
 }
 
 /**
@@ -5282,7 +5282,7 @@ string get_ghost_description(const monster_info &mi, bool concise)
 
     const species_type gspecies = mi.i_ghost.species;
 
-    gstr << mi.mname
+    gstr << mi.mname << localise(" ")
          << skill_title_by_rank(mi.i_ghost.best_skill,
                         mi.i_ghost.best_skill_rank,
                         true,

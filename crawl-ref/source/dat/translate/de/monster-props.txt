@@ -88,9 +88,6 @@ hypnotisierend
 berserk
 berserk
 %%%%
-fast
-schnell
-%%%%
 rolling
 rollend
 %%%%
@@ -410,9 +407,6 @@ stark vergiftet
 extremely poisoned
 extrem vergiftet
 %%%%
-slow
-langsam
-%%%%
 catching @possessive@ breath
 Atem anhaltend
 %%%%
@@ -568,9 +562,92 @@ pain bonded
 Schmerz verbunden
 %%%%
 
-# these ones are duplicates of item properties
+# duplicate of item property
 %%%%
 #curare
 #Curare
+%%%%
+
+# how fast
+%%%%
+extremely fast
+extrem Schnell
+%%%%
+very fast
+sehr schnell
+%%%%
+fast
+schnell
+%%%%
+slow
+langsam
+%%%%
+very slow
+sehr langsam
+%%%%
+
+# how wounded?
+%%%%
+almost destroyed
+fast zerstört
+%%%%
+almost dead
+fast tot
+%%%%
+severely damaged
+gravierend beschädigt
+%%%%
+severely wounded
+gravierend verwundet
+%%%%
+heavily damaged
+schwer beschädigt
+%%%%
+heavily wounded
+schwer verwundet
+%%%%
+moderately damaged
+mittelschwer beschädigt
+%%%%
+moderately wounded
+mittelschwer verwundet
+%%%%
+lightly damaged
+leicht beschädigt
+%%%%
+lightly wounded
+leicht verwundet
+%%%%
+not damaged
+nicht beschädigt
+%%%%
+not wounded
+nicht verwundet
+%%%%
+
+%%%%
+constricted by you
+von Euch gewürgt
+%%%%
+constricted by %s
+von {dat}%s gewürgt
+%%%%
+held by you
+von Euch gefangen
+%%%%
+held by %s
+von {dat}%s gefangen
+%%%%
+constricting you
+würgt Euch
+%%%%
+constricting %s
+würgt {acc}%s
+%%%%
+holding you
+Euch haltend
+%%%%
+holding %s
+{acc}%s haltend
 %%%%
 

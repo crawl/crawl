@@ -342,6 +342,9 @@ der 27-köpfigen Lernäischen Hydra
 {gen}%s's ghost
 %ss Geistes
 %%%%
+{gen}%s's illusion
+%ss Illusions
+%%%%
 
 ################################
 # definite
@@ -1169,8 +1172,8 @@ des Schlamms
 {gen}the jelly
 des Gelees
 %%%%
-{gen}the slime creature
-des Schleimwesens
+{gen}the %sslime creature
+des {adj-en}%sSchleimwesens
 %%%%
 {gen}the merged slime creature
 der verschmolzenen Schleimkreatur
@@ -1896,6 +1899,9 @@ der %s-förmigen Salzsäule
 # can result from Glaciate
 {gen}the %s shaped block of ice
 des %s-förmigen Eisblocks
+%%%%
+{gen}the %s shaped shifter
+des %s-förmigen Gestaltwandlers
 %%%%
 
 ################################
@@ -2725,8 +2731,8 @@ eines Schlamms
 {gen}a jelly
 eines Gelees
 %%%%
-{gen}a slime creature
-eines Schleimwesens
+{gen}a %sslime creature
+eines {adj-en}%sSchleimwesens
 %%%%
 {gen}a merged slime creature
 einer verschmolzenen Schleimkreatur
@@ -3449,6 +3455,9 @@ einer %s-förmigen Salzsäule
 {gen}a %s shaped block of ice
 eines %s-förmigen Eisblocks
 %%%%
+{gen}a %s shaped shifter
+eines %s-förmigen Gestaltwandlers
+%%%%
 
 ################################
 # Plural
@@ -3589,6 +3598,9 @@ eines %s-förmigen Eisblocks
 %%%%
 {gen}%d mutant beasts
 %d mutierter Bestien
+%%%%
+{gen}%d %sslime creatures
+%d {adj-er}%sSchleimwesene
 %%%%
 {gen}%d merged slime creatures
 %d verschmolzener Schleimkreaturen
@@ -3788,6 +3800,9 @@ eines %s-förmigen Eisblocks
 %%%%
 {gen}%d %s shaped blocks of ice
 %d %s-förmiger Eisblöcke
+%%%%
+{gen}%d %s shaped shifters
+%d %s-förmiger Gestaltwandler
 %%%%
 
 ################################
@@ -4616,8 +4631,8 @@ Eures Schlamms
 {gen}your jelly
 Eures Gelees
 %%%%
-{gen}your slime creature
-Eures Schleimwesens
+{gen}your %sslime creature
+Eures {adj-en}%sSchleimwesens
 %%%%
 {gen}your merged slime creature
 Eurer verschmolzenen Schleimkreatur
@@ -5342,6 +5357,9 @@ Eurer %s-förmigen Salzsäule
 {gen}your %s shaped block of ice
 Eures %s-förmigen Eisblocks
 %%%%
+{gen}your %s shaped shifter
+Eures %s-förmigen Gestaltwandlers
+%%%%
 
 ################################
 # without determiner
@@ -6037,8 +6055,8 @@ Schlamms
 {gen}jelly
 Gelees
 %%%%
-{gen}slime creature
-Schleimwesens
+{gen}%sslime creature
+{adj-en}%sSchleimwesens
 %%%%
 {gen}merged slime creature
 verschmolzener Schleimkreatur
@@ -6639,5 +6657,8 @@ furchtbaren gespürten Monsters
 %%%%
 {gen}%s shaped block of ice
 %s-förmigen Eisblocks
+%%%%
+{gen}%s shaped shifter
+%s-förmigen Gestaltwandlers
 %%%%
 

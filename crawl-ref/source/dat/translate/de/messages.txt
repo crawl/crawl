@@ -4658,7 +4658,7 @@ about %d%% to evade %s
 none (normally %s)
 
 %%%%
-Max HP: %d
+"Max HP: "
 
 %%%%
 Will:
@@ -4782,13 +4782,13 @@ It can can be affected by reciting Zin's laws.
 
 %%%%
 The apparition of %s.
-
+Eine Erscheinung (%s).
 %%%%
 It looks just like you...spooky!
 
 %%%%
 An illusion of %s.
-
+Eine Illusion (%s).
 %%%%
 It is quickly melting away.
 
@@ -4872,9 +4872,6 @@ master
 
 %%%%
 legendary
-
-%%%%
-" of %s"
 
 %%%%
 This cloud is opaque; one tile will not block vision, but multiple will.
@@ -5108,7 +5105,7 @@ Marked for pickup.
 Zur Abholung markiert.
 %%%%
 Out of range.
-
+Außerhalb der Reichweite.
 %%%%
 sanctuary
 
@@ -5165,7 +5162,7 @@ What do you want to remember?
 
 %%%%
 There is %s here.
-
+Es gibt {acc}%s hier.
 %%%%
 There is an entrance to %s here.
 
@@ -5180,100 +5177,100 @@ wall of the weird stuff which makes up Pandemonium
 
 %%%%
 , covered with ice
-
+, mit Eis bedeckt
 %%%%
 , summoned
 
 %%%%
 , spattered with blood
-
+, mit Blut bespritzt
 %%%%
 " armed with %s"
-
+" mit {dat}%s bewaffnet"
 %%%%
 " wielding %s"
-
+" {acc}%s führend"
 %%%%
 This monster is %s.
 Dieses Monster ist %s.
 %%%%
 chance to confuse on hit: %d%%
-
+Chance, bei einem Treffer zu verwirren: %d%%
 %%%%
 fire blocked by %s
-
+Feuern durch {acc}%s blockiert
 %%%%
 You are mesmerised by this monster's song.
-
+Das Lied dieses Monsters zieht Euch in seinen Bann.
 %%%%
 This monster appears to be sleepwalking.
-
+Dieses Monster scheint schlafwandelnd zu sein.
 %%%%
 This monster appears to be resting.
-
+Dieses Monster scheint sich auszuruhen.
 %%%%
 This monster is fleeing.
-
+Dieses Monster flieht.
 %%%%
 This monster has not noticed you.
-
+Dieses Monster hat Euch nicht bemerkt.
 %%%%
 This monster is friendly.
-
+Dieses Monster ist freundlich.
 %%%%
 This monster seems to be peaceful towards you.
-
+Dieses Ungeheuer scheint Euch gegenüber friedlich zu sein.
 %%%%
 This monster is indifferent to you.
-
+Dieses Ungeheuer ist Euch gleichgültig.
 %%%%
 This monster has been summoned and is expiring.
-
+Dieses Monster wurde beschworen und läuft ab.
 %%%%
 This monster has been summoned but will not time out.
-
+Dieses Monster wurde beschworen und wird nicht ablaufen.
 %%%%
 This monster has been summoned.
-
+Dieses Monster wurde beschworen.
 %%%%
 This monster is illuminated by a divine halo.
-
+Dieses Monster wird von einem göttlichen Heiligenschein erleuchtet.
 %%%%
 This monster is wreathed by an umbra.
-
+Dieses Monster ist mit einer Umbra umhüllt.
 %%%%
 This monster is mindless.
-
+Dieses Monster ist hirnlos.
 %%%%
 This monster is chaotic.
-
+Dieses Monster ist chaotisch.
 %%%%
 This monster's soul is ripe for the taking.
-
+Die Seele dieses Monsters ist reif für die Übernahme.
 %%%%
 This monster is a disembodied soul.
-
+Dieses Monster ist eine körperlose Seele.
 %%%%
 This monster is reflecting injuries back at attackers.
-
+Dieses Monster wirft Verletzungen auf die Angreifer zurück.
 %%%%
 This monster is filled with an inner flame.
-
+Dieses Ungeheuer ist von einer inneren Flamme erfüllt.
 %%%%
 Your line of fire to this monster is blocked by %s.
-
+Eure Schusslinie zu diesem Monster ist von {dat}%s blockiert.
 %%%%
 wearing %s
-
+{acc}%s tragend
 %%%%
 quivering %s
-
+mit {dat}%s im Köcher
 %%%%
 carrying %s and %s
-
+mit {dat}%s und {dat}%s dabei
 %%%%
 carrying %s
-
+mit {dat}%s dabei
 %%%%
 This square lies inside a sanctuary.
 
@@ -8195,9 +8192,6 @@ You can get information about <w>
 
 %%%%
 Beware, sometimes these can be deadly!
-
-%%%%
-"The "
 
 %%%%
 "are "
@@ -11873,55 +11867,13 @@ By Zin's power, the fiery explosion is contained.
 # mon-info.cc
 ##################
 %%%%
-nightvision
-
-%%%%
-inwards
-
-%%%%
-outwards
-
-%%%%
 about %d
-
-%%%%
-INVALID MONSTER
-
-%%%%
-"very large "
-
-%%%%
-"enormous "
-
-%%%%
-"titanic "
-
-%%%%
-"animated "
-
+gegen %d
 %%%%
 " ghost"
 
 %%%%
 " illusion"
-
-%%%%
-"helpless "
-
-%%%%
-"submerged "
-
-%%%%
-"spectral "
-
-%%%%
-"ghostly "
-
-%%%%
-"sensed "
-
-%%%%
-"active "
 
 %%%%
 "-headed "
@@ -11942,56 +11894,8 @@ shaped block of ice
 " shaped shifter"
 
 %%%%
-" the "
-
-%%%%
-trivial
-
-%%%%
-easy
-
-%%%%
-tough
-
-%%%%
-nasty
-
-%%%%
 " (fellow slime)"
-
-%%%%
-constricted by you
-
-%%%%
-constricted by %s
-
-%%%%
-held by you
-
-%%%%
-held by %s
-
-%%%%
-constricting you
-
-%%%%
-constricting %s
-
-%%%%
-holding you
-
-%%%%
-holding %s
-
-%%%%
-extremely fast
-
-%%%%
-very fast
-
-%%%%
-normal
-
+" (Mitschleim)"
 %%%%
 with wands
 
@@ -12490,9 +12394,6 @@ snail
 blob
 
 %%%%
-INVALID
-
-%%%%
 Monster %d has no name
 
 %%%%
@@ -12565,47 +12466,11 @@ Spellbook %s has spell %s marked MON_SPELL_NOISY redundantly
 Spellbook %s has spell %s with no category
 
 %%%%
-almost destroyed
-
-%%%%
-almost dead
-
-%%%%
-severely damaged
-
-%%%%
-severely wounded
-
-%%%%
-heavily damaged
-
-%%%%
-heavily wounded
-
-%%%%
-moderately damaged
-
-%%%%
-moderately wounded
-
-%%%%
-lightly damaged
-
-%%%%
-lightly wounded
-
-%%%%
-not damaged
-
-%%%%
-not wounded
-
-%%%%
 %s is %s.
 %s ist %s.
 %%%%
 %s is hit by a flying piece of %s!
-%s wird von einem fliegenden Stück%s getroffen!
+%s wird von einem fliegenden Stück {gen}%s getroffen!
 %%%%
 %s regains %s memory of %s.
 %s gewinnt%s Speicher von%s zurück.
@@ -12700,9 +12565,6 @@ some gold
 %%%%
 %s drops %s.
 %s lässt %s fallen.
-%%%%
-"INVALID MONSTER "
-
 %%%%
 " (NUM_MONSTERS + %d)"
 
@@ -17530,7 +17392,7 @@ held in place by your roots
 
 %%%%
 wielding %s
-
+{acc}%s führend
 %%%%
 wearing %d %s preventing teleportation
 
@@ -17793,9 +17655,6 @@ magical contamination
 
 %%%%
 You become %stransparent, but the glow from %s %s prevents you from becoming completely invisible.
-
-%%%%
-the
 
 %%%%
 You fade into invisibility!
@@ -18074,6 +17933,9 @@ You have nothing to quiver.
 ##################
 %%%%
 starting
+
+%%%%
+easy
 
 %%%%
 difficult
@@ -24135,9 +23997,6 @@ Ihr hört ein lautes "Zot"!
 %s shaft crumbles and collapses.
 %s Welle bröckelt und bricht zusammen.
 %%%%
-The
-
-%%%%
 The web tears apart.
 Das Netz zerreißt.
 %%%%
@@ -24896,6 +24755,9 @@ Wert für%s darf nicht negativ sein
 %%%%
 %s was %s.
 %s war %s.
+%%%%
+normal
+
 %%%%
 "New ego? "
 

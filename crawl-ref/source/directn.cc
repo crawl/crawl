@@ -3643,6 +3643,7 @@ string get_monster_equipment_desc(const monster_info& mi,
             desc = get_ghost_description(mi);
         else
             desc = mi.full_name(mondtype);
+        desc = localise(desc);
 
         if (print_attitude)
         {

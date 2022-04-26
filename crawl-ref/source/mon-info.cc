@@ -44,8 +44,10 @@
 #endif
 #include "traps.h"
 
+// noloc section start
 #define SPELL_HD_KEY "spell_hd"
 #define NIGHTVISION_KEY "nightvision"
+// noloc section end
 
 /// Simple 1:1 mappings between monster enchantments & info flags.
 static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
@@ -463,8 +465,10 @@ monster_info::monster_info(const monster* m, int milev)
     // Translate references to tentacles into just their locations
     if (mons_is_tentacle_or_tentacle_segment(type))
     {
+        // noloc section start
         _translate_tentacle_ref(*this, m, "inwards");
         _translate_tentacle_ref(*this, m, "outwards");
+        // noloc section end
     }
 
     base_type = m->base_monster;
@@ -813,7 +817,7 @@ monster_info::monster_info(const monster* m, int milev)
 }
 
 /// Player-known max HP information for a monster: "about 55", "243".
-string monster_info::get_max_hp_desc() const
+string monster_info::get_max_hp_desc(bool localize) const
 {
     if (props.exists(KNOWN_MAX_HP_KEY))
         return std::to_string(props[KNOWN_MAX_HP_KEY].get_int());
@@ -832,7 +836,11 @@ string monster_info::get_max_hp_desc() const
     if (type == MONS_SLIME_CREATURE)
         mhp *= slime_size;
 
-    return make_stringf("about %d", mhp);
+    static const char* fmt_str = "about %d";
+    if (localize)
+        return localise(fmt_str, mhp);
+    else
+        return make_stringf(fmt_str, mhp);
 }
 
 /**
@@ -1302,11 +1310,13 @@ enum _monster_list_colour_type
     _NUM_MLC
 };
 
+// noloc section start (internal identifiers only)
 static const char * const _monster_list_colour_names[_NUM_MLC] =
 {
     "friendly", "neutral", "good_neutral", "strict_neutral",
     "trivial", "easy", "tough", "nasty"
 };
+// noloc section end
 
 static int _monster_list_colours[_NUM_MLC] =
 {
@@ -1425,11 +1435,7 @@ string monster_info::wounds_description_sentence() const
     if (wounds.empty())
         return "";
     else
-    {
-        return string(pronoun(PRONOUN_SUBJECTIVE)) + " "
-               + conjugate_verb("are", pronoun_plurality())
-               + " " + wounds + ".";
-    }
+        return localise("This monster is %s.", wounds);
 }
 
 string monster_info::wounds_description(bool use_colour) const
@@ -1554,7 +1560,7 @@ string monster_info::speed_description() const
         return "fast";
 
     // This only ever displays through Lua.
-    return "normal";
+    return "normal"; // noloc
 }
 
 bool monster_info::wields_two_weapons() const

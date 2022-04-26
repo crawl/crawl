@@ -1891,6 +1891,9 @@ der %s-förmigen Salzsäule
 {gen}the %s shaped block of ice's
 des %s-förmigen Eisblocks
 %%%%
+the %s shaped shifter's
+des %s-förmigen Gestaltwandlers
+%%%%
 
 ################################
 # indefinite
@@ -3380,6 +3383,9 @@ einer %s-förmigen Salzsäule
 %%%%
 a %s shaped block of ice's
 eines %s-förmigen Eisblocks
+%%%%
+a %s shaped shifter's
+eines %s-förmigen Gestaltwandlers
 %%%%
 
 ################################
@@ -4930,5 +4936,8 @@ Eurer %s-förmigen Salzsäule
 %%%%
 your %s shaped block of ice's
 Eures %s-förmigen Eisblocks
+%%%%
+your %s shaped shifter's
+Eures %s-förmigen Gestaltwandlers
 %%%%
 
