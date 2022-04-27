@@ -1916,6 +1916,20 @@ the %s shaped shifter
 der %s-förmige Gestaltwandler
 %%%%
 
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+the spectre
+die Spukgestalt
+%%%%
+the shaped pillar of salt
+die geformte Salzsäule
+%%%%
+the shaped block of ice
+der geformte Eisblock
+%%%%
+
 ################################
 # indefinite
 ################################
@@ -3471,6 +3485,20 @@ a %s shaped shifter
 ein %s-förmiger Gestaltwandler
 %%%%
 
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+a spectre
+eine Spukgestalt
+%%%%
+a shaped pillar of salt
+eine geformte Salzsäule
+%%%%
+a shaped block of ice
+ein geformter Eisblock
+%%%%
+
 ################################
 # Plural
 ################################
@@ -4964,6 +4992,20 @@ ein %s-förmiger Gestaltwandler
 %%%%
 %d %s shaped shifters
 %d %s-förmige Gestaltwandler
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+%d spectres
+%d Spukgestalten
+%%%%
+%d shaped pillars of salt
+%d geformte Salzsäulen
+%%%%
+%d shaped blocks of ice
+%d geformte Eisblöcke
 %%%%
 
 ################################
@@ -6522,6 +6564,20 @@ your %s shaped shifter
 Euer %s-förmiger Gestaltwandler
 %%%%
 
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+your spectre
+Eure Spukgestalt
+%%%%
+your shaped pillar of salt
+Eure geformte Salzsäule
+%%%%
+your shaped block of ice
+Euer geformter Eisblock
+%%%%
+
 ################################
 # without determiner
 ################################
@@ -8056,7 +8112,7 @@ furchtbares gespürtes Monster
 {adj-es}%sOchsenbiest
 %%%%
 
-# derived monsters (undead, etc.)
+# derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
 %s zombie
@@ -8076,5 +8132,19 @@ furchtbares gespürtes Monster
 %%%%
 %s shaped shifter
 %s-förmiger Gestaltwandler
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+spectre
+Spukgestalt
+%%%%
+shaped pillar of salt
+geformte Salzsäule
+%%%%
+shaped block of ice
+geformter Eisblock
 %%%%
 

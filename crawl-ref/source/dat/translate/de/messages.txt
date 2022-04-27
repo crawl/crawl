@@ -11870,30 +11870,6 @@ By Zin's power, the fiery explosion is contained.
 about %d
 gegen %d
 %%%%
-" ghost"
-
-%%%%
-" illusion"
-
-%%%%
-"-headed "
-
-%%%%
-" beast"
-
-%%%%
-spectre
-
-%%%%
-shaped pillar of salt
-
-%%%%
-shaped block of ice
-
-%%%%
-" shaped shifter"
-
-%%%%
 " (fellow slime)"
 " (Mitschleim)"
 %%%%

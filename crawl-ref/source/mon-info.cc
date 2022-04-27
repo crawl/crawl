@@ -975,10 +975,10 @@ string monster_info::_core_name() const
             break;
 
         case MONS_PLAYER_GHOST:
-            s = apostrophise(mname) + " ghost";
+            s = apostrophise(mname) + " ghost"; // noloc
             break;
         case MONS_PLAYER_ILLUSION:
-            s = apostrophise(mname) + " illusion";
+            s = apostrophise(mname) + " illusion"; // noloc
             break;
         case MONS_PANDEMONIUM_LORD:
             s = mname;
@@ -1051,7 +1051,7 @@ string monster_info::common_name(description_level_type desc) const
         else
             ss << std::to_string(num_heads);
 
-        ss << "-headed ";
+        ss << "-headed "; // noloc
     }
 
     if (type == MONS_MUTANT_BEAST && !is(MB_NAME_REPLACE))
@@ -1061,7 +1061,7 @@ string monster_info::common_name(description_level_type desc) const
         ss << _mutant_beast_tier_name(tier) << " ";
         for (auto facet : props[MUTANT_BEAST_FACETS].get_vector())
             ss << _mutant_beast_facet(facet.get_int()); // no space between
-        ss << " beast";
+        ss << " beast"; // noloc
     }
 
     if (!nocore)
@@ -1113,7 +1113,7 @@ string monster_info::common_name(description_level_type desc) const
         // If momentarily in original form, don't display "shaped
         // shifter".
         if (mons_genus(type) != MONS_SHAPESHIFTER)
-            ss << " shaped shifter";
+            ss << " shaped shifter"; // noloc
     }
 
     string s;
