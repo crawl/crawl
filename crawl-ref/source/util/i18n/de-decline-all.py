@@ -2,7 +2,7 @@
 #
 # German declensions
 # Produce accusative/dative/genitive files from nominative file
-# Usage: de-decline.py <singular file> <plural file> [<unique file>]
+# Usage: de-decline.py <input file>
 #
 ###############################################################################
 import logging;
@@ -303,7 +303,7 @@ def decline(english, german, determiner, target_case):
         elif german.endswith('Hydra') or german.endswith('schlange'):
             gender = Gender.FEMININE
         else:
-            logging.warning("Unknown gender for: " + german)
+            logging.info("Unknown gender for: " + german)
             gender = Gender.MASCULINE
 
     # split german up into individual words
@@ -460,37 +460,38 @@ def decline_file(infile_name, target_case, determiner, english_possessive = Fals
 
 
 # process command line args
-if len(sys.argv) < 3 or len(sys.argv) > 4:
-    sys.exit("Usage: de-decline.py <singular file> <plural file> [<unique file>]")
-sing_file_name = sys.argv[1];
-plural_file_name = sys.argv[2];
-unique_file_name = sys.argv[3] if len(sys.argv) > 3 else ''
+if len(sys.argv) != 2:
+    sys.exit("Usage: de-decline.py <input file>")
+infile_name = sys.argv[1];
 
-decline_file(sing_file_name, Case.ACCUSATIVE, "the")
-decline_file(sing_file_name, Case.DATIVE, "the")
-decline_file(sing_file_name, Case.GENITIVE, "the", True)
-decline_file(sing_file_name, Case.GENITIVE, "the", False)
+if 'plural' in infile_name:
+    decline_file(infile_name, Case.DATIVE, "%d")
+elif 'unique' in infile_name:
+    decline_file(infile_name, Case.ACCUSATIVE, "the")
+    decline_file(infile_name, Case.DATIVE, "the")
+    decline_file(infile_name, Case.GENITIVE, "the", True)
+    decline_file(infile_name, Case.GENITIVE, "the", False)
+else:
+    decline_file(infile_name, Case.ACCUSATIVE, "the")
+    decline_file(infile_name, Case.DATIVE, "the")
+    decline_file(infile_name, Case.GENITIVE, "the", True)
+    decline_file(infile_name, Case.GENITIVE, "the", False)
 
-decline_file(sing_file_name, Case.NOMINATIVE, "a")
-decline_file(sing_file_name, Case.ACCUSATIVE, "a")
-decline_file(sing_file_name, Case.DATIVE, "a")
-decline_file(sing_file_name, Case.GENITIVE, "a", True)
-decline_file(sing_file_name, Case.GENITIVE, "a", False)
+    decline_file(infile_name, Case.NOMINATIVE, "a")
+    decline_file(infile_name, Case.ACCUSATIVE, "a")
+    decline_file(infile_name, Case.DATIVE, "a")
+    decline_file(infile_name, Case.GENITIVE, "a", True)
+    decline_file(infile_name, Case.GENITIVE, "a", False)
 
-decline_file(sing_file_name, Case.NOMINATIVE, "your")
-decline_file(sing_file_name, Case.ACCUSATIVE, "your")
-decline_file(sing_file_name, Case.DATIVE, "your")
-decline_file(sing_file_name, Case.GENITIVE, "your", True)
-decline_file(sing_file_name, Case.GENITIVE, "your", False)
+    decline_file(infile_name, Case.NOMINATIVE, "your")
+    decline_file(infile_name, Case.ACCUSATIVE, "your")
+    decline_file(infile_name, Case.DATIVE, "your")
+    decline_file(infile_name, Case.GENITIVE, "your", True)
+    decline_file(infile_name, Case.GENITIVE, "your", False)
 
-decline_file(sing_file_name, Case.NOMINATIVE, "")
-decline_file(sing_file_name, Case.ACCUSATIVE, "")
-decline_file(sing_file_name, Case.DATIVE, "")
+    decline_file(infile_name, Case.NOMINATIVE, "")
+    decline_file(infile_name, Case.ACCUSATIVE, "")
+    decline_file(infile_name, Case.DATIVE, "")
 
-decline_file(plural_file_name, Case.DATIVE, "%d")
 
-if unique_file_name != "":
-    decline_file(unique_file_name, Case.ACCUSATIVE, "the")
-    decline_file(unique_file_name, Case.DATIVE, "the")
-    decline_file(unique_file_name, Case.GENITIVE, "the", True)
-    decline_file(unique_file_name, Case.GENITIVE, "the", False)
+
