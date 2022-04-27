@@ -1535,7 +1535,7 @@ Eurem {adj-en}%sSchockbiest
 Eurem {adj-en}%sOchsenbiest
 %%%%
 
-# derived monsters (undead, etc.)
+# derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
 {dat}your %s zombie

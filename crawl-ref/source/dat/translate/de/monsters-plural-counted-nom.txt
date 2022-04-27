@@ -1473,7 +1473,7 @@
 %d {adj-e}%sOchsenbiester
 %%%%
 
-# derived monsters (undead, etc.)
+# derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
 %d %s zombies

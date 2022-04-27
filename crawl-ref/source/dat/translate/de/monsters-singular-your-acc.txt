@@ -923,7 +923,7 @@ Euren Test-Erzeuger
 Euren Test-Klumpen
 %%%%
 
-# derived monsters (undead, etc.)
+# derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
 {acc}your %s zombie

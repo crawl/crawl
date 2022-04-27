@@ -1535,7 +1535,7 @@ eines {adj-en}%sSchockbiests
 eines {adj-en}%sOchsenbiests
 %%%%
 
-# derived monsters (undead, etc.)
+# derived monsters containing the name of the original monster
 # "elf zombie", "orc skeleton", etc.
 %%%%
 {gen}a %s zombie
