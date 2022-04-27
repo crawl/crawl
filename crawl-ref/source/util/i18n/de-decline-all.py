@@ -480,29 +480,32 @@ if 'plural' in infile_name:
 elif 'unique' in infile_name:
     decline_file(infile_name, Case.ACCUSATIVE, "the")
     decline_file(infile_name, Case.DATIVE, "the")
-    decline_file(infile_name, Case.GENITIVE, "the", True)
-    decline_file(infile_name, Case.GENITIVE, "the", False)
+    if 'monsters' in infile_name:
+        decline_file(infile_name, Case.GENITIVE, "the", True)
+        decline_file(infile_name, Case.GENITIVE, "the", False)
 else:
-    decline_file(infile_name, Case.ACCUSATIVE, "the")
-    decline_file(infile_name, Case.DATIVE, "the")
-    decline_file(infile_name, Case.GENITIVE, "the", True)
-    decline_file(infile_name, Case.GENITIVE, "the", False)
-
     decline_file(infile_name, Case.NOMINATIVE, "a")
-    decline_file(infile_name, Case.ACCUSATIVE, "a")
-    decline_file(infile_name, Case.DATIVE, "a")
-    decline_file(infile_name, Case.GENITIVE, "a", True)
-    decline_file(infile_name, Case.GENITIVE, "a", False)
-
     decline_file(infile_name, Case.NOMINATIVE, "your")
-    decline_file(infile_name, Case.ACCUSATIVE, "your")
-    decline_file(infile_name, Case.DATIVE, "your")
-    decline_file(infile_name, Case.GENITIVE, "your", True)
-    decline_file(infile_name, Case.GENITIVE, "your", False)
-
     decline_file(infile_name, Case.NOMINATIVE, "")
+
+    decline_file(infile_name, Case.ACCUSATIVE, "the")
+    decline_file(infile_name, Case.ACCUSATIVE, "a")
+    decline_file(infile_name, Case.ACCUSATIVE, "your")
     decline_file(infile_name, Case.ACCUSATIVE, "")
+
+    decline_file(infile_name, Case.DATIVE, "the")
+    decline_file(infile_name, Case.DATIVE, "a")
+    decline_file(infile_name, Case.DATIVE, "your")
     decline_file(infile_name, Case.DATIVE, "")
+
+    if 'monsters' in infile_name:
+        decline_file(infile_name, Case.GENITIVE, "the", True)
+        decline_file(infile_name, Case.GENITIVE, "a", True)
+        decline_file(infile_name, Case.GENITIVE, "your", True)
+
+        decline_file(infile_name, Case.GENITIVE, "the", False)
+        decline_file(infile_name, Case.GENITIVE, "a", False)
+        decline_file(infile_name, Case.GENITIVE, "your", False)
 
 
 
