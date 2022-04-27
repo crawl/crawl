@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters -  singular, your, nominative
+# Monsters - singular, your, nominative
 #
 ###############################################################################
 
@@ -1547,9 +1547,11 @@ Euer %s-Skelett
 your %s simulacrum
 Euer %s-Simulacrum
 %%%%
+# can result from Zin's Recite
 your %s shaped pillar of salt
 Eure %s-förmige Salzsäule
 %%%%
+# can result from Glaciate
 your %s shaped block of ice
 Euer %s-förmiger Eisblock
 %%%%

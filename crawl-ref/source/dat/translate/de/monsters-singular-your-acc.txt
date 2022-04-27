@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, your, accusative
+# Monsters - singular, your, accusative (where different to nominative)
 #
 ###############################################################################
 
@@ -929,10 +929,21 @@ Euren Test-Klumpen
 {acc}your %s zombie
 Euren %s-Zombie
 %%%%
+# can result from Zin's Recite
+%%%%
+# can result from Glaciate
 {acc}your %s shaped block of ice
 Euren %s-förmigen Eisblock
 %%%%
 {acc}your %s shaped shifter
 Euren %s-förmigen Gestaltwandler
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{acc}your shaped block of ice
+Euren geformten Eisblock
 %%%%
 

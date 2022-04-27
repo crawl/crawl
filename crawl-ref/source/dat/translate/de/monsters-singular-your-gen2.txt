@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, your, genitive(2)
+# Monsters - singular, your, genitive (where different to nominative)
 #
 ###############################################################################
 
@@ -1547,13 +1547,29 @@ Eures %s-Skeletts
 {gen}your %s simulacrum
 Eures %s-Simulacrums
 %%%%
+# can result from Zin's Recite
 {gen}your %s shaped pillar of salt
 Eurer %s-förmigen Salzsäule
 %%%%
+# can result from Glaciate
 {gen}your %s shaped block of ice
 Eures %s-förmigen Eisblocks
 %%%%
 {gen}your %s shaped shifter
 Eures %s-förmigen Gestaltwandlers
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{gen}your spectre
+Eurer Spukgestalt
+%%%%
+{gen}your shaped pillar of salt
+Eurer geformten Salzsäule
+%%%%
+{gen}your shaped block of ice
+Eures geformten Eisblocks
 %%%%
 
