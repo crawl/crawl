@@ -213,8 +213,7 @@ def decline_adjective(word, gender, target_case, declension):
     elif declension == Declension.WEAK:
         ending = adj_weak[gender][target_case.value]
 
-    if ending != "e":
-        word = re.sub(r'e[rs]?$', ending, word)
+    word = re.sub(r'e[rs]?$', ending, word)
 
     return word
 
