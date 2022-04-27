@@ -1,0 +1,1556 @@
+###############################################################################
+#
+# Monsters - singular, your, genitive
+#
+###############################################################################
+
+%%%%
+your program bug's
+Eures Programmfehlers
+%%%%
+your worker ant's
+Eurer Ameisenarbeiterin
+%%%%
+your queen ant's
+Eurer Ameisenkönigin
+%%%%
+your soldier ant's
+Eurer Ameisensoldatin
+%%%%
+your formicid's
+Eures Formicids
+%%%%
+your entropy weaver's
+Eures Entropiewebers
+%%%%
+your bat's
+Eurer Fledermaus
+%%%%
+your butterfly's
+Eures Schmetterlings
+%%%%
+your vampire bat's
+Eurer Vampirfledermaus
+%%%%
+your fire bat's
+Eurer Feuerfledermaus
+%%%%
+your bennu's
+Eures Bennus
+%%%%
+your caustic shrike's
+Eures ätzenden Würgers
+%%%%
+your shard shrike's
+Eures Scherbenwürgers
+%%%%
+your centaur's
+Eures Zentauren
+%%%%
+your centaur warrior's
+Eures Zentaur-Kriegers
+%%%%
+your yaktaur's
+Eures Yaktauren
+%%%%
+your yaktaur captain's
+Eures Yaktaur-Kapitäns
+%%%%
+your faun's
+Eures Fauns
+%%%%
+your satyr's
+Eures Satyrs
+%%%%
+your draconian's
+Eures Drakoniers
+%%%%
+your black draconian's
+Eures schwarzen Drakoniers
+%%%%
+your yellow draconian's
+Eures gelben Drakoniers
+%%%%
+your pale draconian's
+Eures blassen Drakoniers
+%%%%
+your green draconian's
+Eures grünen Drakoniers
+%%%%
+your purple draconian's
+Eures purpurnen Drakoniers
+%%%%
+your red draconian's
+Eures roten Drakoniers
+%%%%
+your white draconian's
+Eures weißen Drakoniers
+%%%%
+your grey draconian's
+Eures grauen Drakoniers
+%%%%
+your draconian stormcaller's
+Eures Drakonier-Sturmrufers
+%%%%
+your draconian monk's
+Eures Drakonier-Mönchs
+%%%%
+your draconian shifter's
+Eures Drakonier-Verschiebers
+%%%%
+your draconian annihilator's
+Eures Drakonier-Vernichters
+%%%%
+your draconian knight's
+Eures Drakonier-Ritters
+%%%%
+your draconian scorcher's
+Eures Drakonier-Verschmorers
+%%%%
+your elf's
+Eures Elfs
+%%%%
+your deep elf knight's
+Eures Tiefenelf-Ritters
+%%%%
+your deep elf archer's
+Eures Tiefenelf-Bogenschützens
+%%%%
+your deep elf blademaster's
+Eures Tiefenelf-Klingenmeisters
+%%%%
+your deep elf master archer's
+Eures Tiefenelf-Bogenmeisters
+%%%%
+your deep elf mage's
+Eures Tiefenelf-Magiers
+%%%%
+your deep elf high priest's
+Eures Tiefenelf-Hohepriesters
+%%%%
+your deep elf demonologist's
+Eures Tiefenelf-Dämonologens
+%%%%
+your deep elf annihilator's
+Eures Tiefenelf-Vernichters
+%%%%
+your deep elf sorcerer's
+Eures Tiefenelf-Zauberers
+%%%%
+your deep elf death mage's
+Eures Tiefenelf-Todesmagiers
+%%%%
+your deep elf elementalist's
+Eures Tiefenelf-Elementalistens
+%%%%
+your wandering mushroom's
+Eures wandernden Pilzs
+%%%%
+your deathcap's
+Eurer Todesmütze
+%%%%
+your thorn hunter's
+Eures Dornenjägers
+%%%%
+your shambling mangrove's
+Eurer watschelnden Mangrove
+%%%%
+your vine stalker's
+Eures Rebjägers
+%%%%
+your goblin's
+Eures Goblins
+%%%%
+your hobgoblin's
+Eures Hobgoblins
+%%%%
+your gnoll's
+Eures Gnolls
+%%%%
+your gnoll shaman's
+Eures Gnoll-Schamanens
+%%%%
+your gnoll sergeant's
+Eures Gnoll-Wachtmeisters
+%%%%
+your boggart's
+Eures Boggarts
+%%%%
+your dwarf's
+Eures Zwergs
+%%%%
+your deep dwarf's
+Eures Tiefenzwergs
+%%%%
+your jackal's
+Eures Schakals
+%%%%
+your hound's
+Eures Hunds
+%%%%
+your howler monkey's
+Eures Brüllaffens
+%%%%
+your warg's
+Eures Wargs
+%%%%
+your wolf's
+Eures Wolfs
+%%%%
+your hog's
+Eures Schweins
+%%%%
+your hell hound's
+Eures Höllenhunds
+%%%%
+your doom hound's
+Eures Untergangshunds
+%%%%
+your raiju's
+Eures Raijus
+%%%%
+your hell hog's
+Eures höllischen Schweins
+%%%%
+your holy swine's
+Eures heiligen Schweins
+%%%%
+your felid's
+Eures Felids
+%%%%
+your bear's
+Eures Bärens
+%%%%
+your polar bear's
+Eures Eisbärens
+%%%%
+your black bear's
+Eures Schwarzbärens
+%%%%
+your spriggan's
+Eures Spriggans
+%%%%
+your spriggan rider's
+Eures Spriggan-Reiters
+%%%%
+your spriggan druid's
+Eures Spriggan-Druidens
+%%%%
+your spriggan berserker's
+Eures Spriggan-Berserkers
+%%%%
+your spriggan air mage's
+Eures Spriggan-Luftmagiers
+%%%%
+your spriggan defender's
+Eures Spriggan-Verteidigers
+%%%%
+your drake's
+Eures Drachlings
+%%%%
+your swamp drake's
+Eures Sumpfdrachlings
+%%%%
+your rime drake's
+Eures Reifsdrachlings
+%%%%
+your wind drake's
+Eures Winddrachlings
+%%%%
+your lindwurm's
+Eures Lindwurms
+%%%%
+your death drake's
+Eures Todesdrachlings
+%%%%
+your giant lizard's
+Eurer Rieseneidechse
+%%%%
+your frilled lizard's
+Eurer gekräuselten Eidechse
+%%%%
+your leopard gecko's
+Eures Leopardgeckos
+%%%%
+your iguana's
+Eures Leguans
+%%%%
+your basilisk's
+Eures Basilisks
+%%%%
+your wyvern's
+Eures Wyverns
+%%%%
+your komodo dragon's
+Eures Komododrachens
+%%%%
+your merfolk's
+Eures Meervolks
+%%%%
+your merfolk impaler's
+Eures Meervolk-Impalers
+%%%%
+your merfolk javelineer's
+Eures Meervolk-Speerführers
+%%%%
+your merfolk aquamancer's
+Eures Meervolk-Aquamancers
+%%%%
+your merfolk siren's
+Eurer Meervolk-Sirene
+%%%%
+your merfolk avatar's
+Eures Meervolk-Avatars
+%%%%
+your water nymph's
+Eurer Wassernymphe
+%%%%
+your bog body's
+Eurer Moorleiche
+%%%%
+your necrophage's
+Eures Nekrophagens
+%%%%
+your bloated husk's
+Eurer aufgeblähten Hülle
+%%%%
+your ghoul's
+Eures Ghuls
+%%%%
+your orc's
+Eures Orks
+%%%%
+your orc wizard's
+Eures Ork-Zauberers
+%%%%
+your orc priest's
+Eures Ork-Priesters
+%%%%
+your orc warrior's
+Eures Ork-Kriegers
+%%%%
+your orc knight's
+Eures Ork-Ritters
+%%%%
+your orc warlord's
+Eures Ork-Warlords
+%%%%
+your orc sorcerer's
+Eures Ork-Hexenmeisters
+%%%%
+your orc high priest's
+Eures Ork-Hohepriesters
+%%%%
+your lava orc's
+Eures Lava-Orks
+%%%%
+your human's
+Eures Menschens
+%%%%
+your slave's
+Eures Sklavens
+%%%%
+your hell knight's
+Eures Höllenritters
+%%%%
+your death knight's
+Eures Todesritters
+%%%%
+your necromancer's
+Eures Nekromantens
+%%%%
+your wizard's
+Eures Zauberers
+%%%%
+your vault guard's
+Eures Tresorwächters
+%%%%
+your vault sentinel's
+Eurer Tresorwache
+%%%%
+your vault warden's
+Eures Tresorwärters
+%%%%
+your ironbound convoker's
+Eures eisenbeschlagenen Einberufers
+%%%%
+your ironbound frostheart's
+Eures eisengebundenen Frostherzens
+%%%%
+your ironbound preserver's
+Eures eisenbeschlagenen Bewahrers
+%%%%
+your ironbound beastmaster's
+Eures eisenbeschlagenen Bestienmeisters
+%%%%
+your ironbound thunderhulk's
+Eures eisenbeschlagenen Donnerkolosses
+%%%%
+your imperial myrmidon's
+Eures kaiserlichen Myrmidons
+%%%%
+your servant of whispers's
+Eures Dieners des Flüsterns
+%%%%
+your ragged hierophant's
+Eures zerlumpten Hierophantens
+%%%%
+your shapeshifter's
+Eures Gestaltwandlers
+%%%%
+your glowing shapeshifter's
+Eures leuchtenden Gestaltwandlers
+%%%%
+your Killer Klown's
+Eures Killer-Klowns
+%%%%
+your demigod's
+Eures Halbgotts
+%%%%
+your halfling's
+Eures Halblings
+%%%%
+your rat's
+Eurer Ratte
+%%%%
+your quokka's
+Eures Quokkas
+%%%%
+your river rat's
+Eurer Flussratte
+%%%%
+your hell rat's
+Eurer Höllenratte
+%%%%
+your porcupine's
+Eures Stachelschweins
+%%%%
+your giant cockroach's
+Eurer Riesenkakerlake
+%%%%
+your scorpion's
+Eures Skorpions
+%%%%
+your emperor scorpion's
+Eures Kaiserskorpions
+%%%%
+your death scarab's
+Eures Todesskarabäus
+%%%%
+your spider's
+Eurer Spinne
+%%%%
+your tarantella's
+Eurer Tarantella
+%%%%
+your jumping spider's
+Eurer springenden Spinne
+%%%%
+your wolf spider's
+Eurer Wolfsspinne
+%%%%
+your redback's
+Eurer Rotrückenspinne
+%%%%
+your demonic crawler's
+Eures dämonischen Kriechers
+%%%%
+your orb spider's
+Eurer Kugelspinne
+%%%%
+your crocodile's
+Eures Krokodils
+%%%%
+your alligator's
+Eures Alligators
+%%%%
+your snapping turtle's
+Eurer Schnappschildkröte
+%%%%
+your alligator snapping turtle's
+Eurer Alligatorschnappschildkröte
+%%%%
+your crab's
+Eurer Krabbe
+%%%%
+your fire crab's
+Eurer Feuerkrabbe
+%%%%
+your ghost crab's
+Eurer Geisterkrabbe
+%%%%
+your apocalypse crab's
+Eurer Apokalypse-Krabbe
+%%%%
+your ugly thing's
+Eures hässlichen Dings
+%%%%
+your very ugly thing's
+Eures sehr hässlichen Dings
+%%%%
+your fire vortex's
+Eures Feuerwirbels
+%%%%
+your spatial vortex's
+Eures räumlichen Wirbels
+%%%%
+your spatial maelstrom's
+Eures räumlichen Mahlstroms
+%%%%
+your insubstantial wisp's
+Eures unwesentlichen Irrlichts
+%%%%
+your twister's
+Eures Twisters
+%%%%
+your worm's
+Eures Wurms
+%%%%
+your swamp worm's
+Eures Sumpfwurms
+%%%%
+your tyrant leech's
+Eures Tyrannblutegels
+%%%%
+your dart slug's
+Eurer Pfeilschnecke
+%%%%
+your torpor snail's
+Eurer Erstarrungsschnecke
+%%%%
+your elephant slug's
+Eurer Elefantenschnecke
+%%%%
+your unseen horror's
+Eures unsichtbaren Grauens
+%%%%
+your small abomination's
+Eures kleinen Greuels
+%%%%
+your crawling corpse's
+Eurer kriechenden Leiche
+%%%%
+your macabre mass's
+Eurer makaberen Masse
+%%%%
+your ancient zyme's
+Eures uralten Zymes
+%%%%
+your worldbinder's
+Eures Weltbinders
+%%%%
+your killer bee's
+Eurer Killerbiene
+%%%%
+your queen bee's
+Eurer Bienenkönigin
+%%%%
+your vampire mosquito's
+Eurer Vampir-Mücke
+%%%%
+your hornet's
+Eurer Hornisse
+%%%%
+your meliai's
+Eurer Meliai
+%%%%
+your spark wasp's
+Eurer Funkenwespe
+%%%%
+your moth's
+Eurer Motte
+%%%%
+your ghost moth's
+Eurer Geistermotte
+%%%%
+your moth of wrath's
+Eurer Motte des Zorns
+%%%%
+your wight's
+Eures Wights
+%%%%
+your skeletal warrior's
+Eures Skelettkriegers
+%%%%
+your ancient champion's
+Eures alten Champions
+%%%%
+your flying skull's
+Eures fliegenden Schädels
+%%%%
+your curse skull's
+Eures Fluchschädels
+%%%%
+your curse toe's
+Eures Fluchzehens
+%%%%
+your angel's
+Eures Engels
+%%%%
+your cherub's
+Eures Cherubs
+%%%%
+your seraph's
+Eures Seraphs
+%%%%
+your daeva's
+Eures Daevas
+%%%%
+your profane servitor's
+Eures profanen Dieners
+%%%%
+your giant's
+Eures Riesens
+%%%%
+your cyclops's
+Eures Zyklops
+%%%%
+your ettin's
+Eures Ettins
+%%%%
+your fire giant's
+Eures Feuerriesens
+%%%%
+your frost giant's
+Eures Frostriesens
+%%%%
+your stone giant's
+Eures Steinriesens
+%%%%
+your titan's
+Eures Titans
+%%%%
+your juggernaut's
+Eures Juggernauts
+%%%%
+your iron giant's
+Eures Eisenriesens
+%%%%
+your dragon's
+Eures Drachens
+%%%%
+your fire dragon's
+Eures Feuerdrachens
+%%%%
+your hydra's
+Eurer Hydra
+%%%%
+your one-headed hydra's
+Eurer einköpfigen Hydra
+%%%%
+your two-headed hydra's
+Eurer zweiköpfigen Hydra
+%%%%
+your three-headed hydra's
+Eurer dreiköpfigen Hydra
+%%%%
+your four-headed hydra's
+Eurer vierköpfigen Hydra
+%%%%
+your five-headed hydra's
+Eurer fünfköpfigen Hydra
+%%%%
+your six-headed hydra's
+Eurer sechsköpfigen Hydra
+%%%%
+your seven-headed hydra's
+Eurer siebenköpfigen Hydra
+%%%%
+your eight-headed hydra's
+Eurer achtköpfigen Hydra
+%%%%
+your nine-headed hydra's
+Eurer neunköpfigen Hydra
+%%%%
+your ten-headed hydra's
+Eurer zehnköpfigen Hydra
+%%%%
+your 11-headed hydra's
+Eurer 11-köpfigen Hydra
+%%%%
+your 12-headed hydra's
+Eurer 12-köpfigen Hydra
+%%%%
+your 13-headed hydra's
+Eurer 13-köpfigen Hydra
+%%%%
+your 14-headed hydra's
+Eurer 14-köpfigen Hydra
+%%%%
+your 15-headed hydra's
+Eurer 15-köpfigen Hydra
+%%%%
+your 16-headed hydra's
+Eurer 16-köpfigen Hydra
+%%%%
+your 17-headed hydra's
+Eurer 17-köpfigen Hydra
+%%%%
+your 18-headed hydra's
+Eurer 18-köpfigen Hydra
+%%%%
+your 19-headed hydra's
+Eurer 19-köpfigen Hydra
+%%%%
+your 20-headed hydra's
+Eurer 20-köpfigen Hydra
+%%%%
+your ice dragon's
+Eures Eisdrachens
+%%%%
+your steam dragon's
+Eures Dampfdrachens
+%%%%
+your swamp dragon's
+Eures Sumpfdrachens
+%%%%
+your acid dragon's
+Eures Säuredrachens
+%%%%
+your quicksilver dragon's
+Eures Quecksilberdrachens
+%%%%
+your iron dragon's
+Eures Eisendrachens
+%%%%
+your storm dragon's
+Eures Sturmdrachens
+%%%%
+your golden dragon's
+Eures Golddrachens
+%%%%
+your shadow dragon's
+Eures Schattendrachens
+%%%%
+your bone dragon's
+Eures Knochendrachens
+%%%%
+your pearl dragon's
+Eures Perlendrachens
+%%%%
+your elemental's
+Eures Elementars
+%%%%
+your earth elemental's
+Eures Erdelementars
+%%%%
+your fire elemental's
+Eures Feuerelementars
+%%%%
+your water elemental's
+Eures Wasserelementars
+%%%%
+your air elemental's
+Eures Luftelementars
+%%%%
+your iron elemental's
+Eures Eisenelementars
+%%%%
+your elemental wellspring's
+Eurer elementaren Quelle
+%%%%
+your giant frog's
+Eures Riesenfroschs
+%%%%
+your bullfrog's
+Eures Ochsenfroschs
+%%%%
+your spiny frog's
+Eures Stachelfroschs
+%%%%
+your blink frog's
+Eures Blinzelfroschs
+%%%%
+your barachi's
+Eurer Barachi
+%%%%
+your floating eye's
+Eures schwebenden Auges
+%%%%
+your eye of draining's
+Eures Auges des Schwächens
+%%%%
+your glowing orange brain's
+Eures orangen leuchtenden Gehirns
+%%%%
+your great orb of eyes's
+Eurer großen Augenkugel
+%%%%
+your shining eye's
+Eures leuchtenden Auges
+%%%%
+your eye of devastation's
+Eures Auge der Verwüstungs
+%%%%
+your golden eye's
+Eures goldenen Auges
+%%%%
+your ophan's
+Eures Ophans
+%%%%
+your hippogriff's
+Eures Hippogriffs
+%%%%
+your manticore's
+Eures Mantikors
+%%%%
+your minotaur's
+Eures Minotaur
+%%%%
+your sphinx's
+Eurer Sphinx
+%%%%
+your harpy's
+Eurer Harpyie
+%%%%
+your mutant beast's
+Eurer mutierten Bestie
+%%%%
+your ancestor's
+Eures Ahnens
+%%%%
+your knight's
+Eures Ritters
+%%%%
+your battlemage's
+Eures Kampfmagiers
+%%%%
+your hexer's
+Eures Hexers
+%%%%
+your ooze's
+Eures Schlamms
+%%%%
+your jelly's
+Eures Gelees
+%%%%
+your slime creature's
+Eures Schleimwesens
+%%%%
+your merged slime creature's
+Eurer verschmolzenen Schleimkreatur
+%%%%
+your azure jelly's
+Eures azurblauen Gelees
+%%%%
+your death ooze's
+Eures Todesschlamms
+%%%%
+your acid blob's
+Eures Säureklumpens
+%%%%
+your kobold's
+Eures Kobolds
+%%%%
+your big kobold's
+Eures großen Kobolds
+%%%%
+your kobold demonologist's
+Eures Kobold-Dämonologens
+%%%%
+your lich's
+Eures Lichs
+%%%%
+your ancient lich's
+Eures alten Lichs
+%%%%
+your revenant's
+Eures Wiedergängers
+%%%%
+your halazid warlock's
+Eures halazidischen Hexenmeisters
+%%%%
+your mummy's
+Eurer Mumie
+%%%%
+your guardian mummy's
+Eurer Wächtermumie
+%%%%
+your greater mummy's
+Eurer größeren Mumie
+%%%%
+your mummy priest's
+Eures Mumie-Priesters
+%%%%
+your naga's
+Eures Nagas
+%%%%
+your naga mage's
+Eures Naga-Magiers
+%%%%
+your naga sharpshooter's
+Eures Naga-Scharfschützens
+%%%%
+your naga ritualist's
+Eures Naga-Ritualistens
+%%%%
+your naga warrior's
+Eures Naga-Kriegers
+%%%%
+your nagaraja's
+Eures Nagarajas
+%%%%
+your ogre's
+Eures Ogers
+%%%%
+your two-headed ogre's
+Eures zweiköpfigen Ogers
+%%%%
+your ogre mage's
+Eures Oger-Magiers
+%%%%
+your plant's
+Eurer Pflanze
+%%%%
+your demonic plant's
+Eurer dämonischen Pflanze
+%%%%
+your withered plant's
+Eurer verwelkten Pflanze
+%%%%
+your oklob sapling's
+Eures Oklob-Setzlings
+%%%%
+your oklob plant's
+Eurer Oklob-Pflanze
+%%%%
+your bush's
+Eures Buschs
+%%%%
+your burning bush's
+Eures brennenden Buschs
+%%%%
+your toadstool's
+Eures Giftpilzs
+%%%%
+your fungus's
+Eures Pilzs
+%%%%
+your ballistomycete's
+Eures Ballistomycetens
+%%%%
+your hyperactive ballistomycete's
+Eures hyperaktiven Ballistomycetens
+%%%%
+your briar patch's
+Eures Dornstrauchs
+%%%%
+your tengu's
+Eures Tengus
+%%%%
+your tengu conjurer's
+Eures Tengu-Zauberers
+%%%%
+your tengu warrior's
+Eures Tengu-Kriegers
+%%%%
+your tengu reaver's
+Eures Tengu-Häschers
+%%%%
+your efreet's
+Eures Efreets
+%%%%
+your rakshasa's
+Eures Rakshasas
+%%%%
+your dryad's
+Eurer Dryade
+%%%%
+your snaplasher vine's
+Eurer Peitscherrebe
+%%%%
+your snaplasher vine segment's
+Eures Peitscherrebesegments
+%%%%
+your snake's
+Eurer Schlange
+%%%%
+your ball python's
+Eurer Kugelpython
+%%%%
+your adder's
+Eurer Kreuzotter
+%%%%
+your water moccasin's
+Eures Wassermokassins
+%%%%
+your black mamba's
+Eurer schwarzen Mamba
+%%%%
+your sea snake's
+Eurer Seeschlange
+%%%%
+your anaconda's
+Eurer Anakonda
+%%%%
+your guardian serpent's
+Eurer Wächter-Schlange
+%%%%
+your shock serpent's
+Eurer Schockschlange
+%%%%
+your mana viper's
+Eurer Manaviper
+%%%%
+your troll's
+Eures Trolls
+%%%%
+your iron troll's
+Eures Eisentrolls
+%%%%
+your deep troll's
+Eures Tiefentrolls
+%%%%
+your deep troll earth mage's
+Eures Tiefentroll-Erdmagiers
+%%%%
+your deep troll shaman's
+Eures Tiefentroll-Schamanens
+%%%%
+your vampire's
+Eures Vampirs
+%%%%
+your vampire knight's
+Eures Vampir-Ritters
+%%%%
+your vampire mage's
+Eures Vampir-Magiers
+%%%%
+your jiangshi's
+Eures Jiangshis
+%%%%
+your ghost's
+Eures Gespensts
+%%%%
+your phantom's
+Eures Phantoms
+%%%%
+your hungry ghost's
+Eures hungrigen Geistes
+%%%%
+your flayed ghost's
+Eures enthäuteten Geistes
+%%%%
+your player ghost's
+Eures Spielergeistes
+%%%%
+your shadow's
+Eures Schattens
+%%%%
+your silent spectre's
+Eures stillen Gespensts
+%%%%
+your drowned soul's
+Eurer ertrunkenen Seele
+%%%%
+your wraith's
+Eures Geistes
+%%%%
+your shadow wraith's
+Eures Schattengeistes
+%%%%
+your freezing wraith's
+Eures Frostgeistes
+%%%%
+your eidolon's
+Eures Eidolons
+%%%%
+your phantasmal warrior's
+Eures phantastischen Kriegers
+%%%%
+your large abomination's
+Eures großen Greuels
+%%%%
+your thrashing horror's
+Eures verprügelnden Grauens
+%%%%
+your tentacled monstrosity's
+Eurer Tentakel-Monstrosität
+%%%%
+your Orb Guardian's
+Eures Kugelwächters
+%%%%
+your tentacled starspawn's
+Eures Tentakelsternbruts
+%%%%
+your starspawn tentacle's
+Eures Sternbruttentakels
+%%%%
+your starspawn tentacle segment's
+Eures Sternbruttentakelsegments
+%%%%
+your starcursed mass's
+Eurer sternverfluchten Masse
+%%%%
+your dream sheep's
+Eures Traumschafs
+%%%%
+your yak's
+Eures Yaks
+%%%%
+your death yak's
+Eures Todesyaks
+%%%%
+your catoblepas's
+Eurer Catoblepas
+%%%%
+your elephant's
+Eures Elefantens
+%%%%
+your dire elephant's
+Eures Schreckenselefantens
+%%%%
+your hellephant's
+Eures Höllefantens
+%%%%
+your apis's
+Eurer Apis
+%%%%
+your ice beast's
+Eurer Eisbestie
+%%%%
+your sky beast's
+Eures Himmelstiers
+%%%%
+your zombie's
+Eures Zombies
+%%%%
+your skeleton's
+Eures Skeletts
+%%%%
+your simulacrum's
+Eures Simulacrums
+%%%%
+your small zombie's
+Eures kleinen Zombies
+%%%%
+your small skeleton's
+Eures kleinen Skeletts
+%%%%
+your small simulacrum's
+Eures kleinen Simulacrums
+%%%%
+your large zombie's
+Eures großen Zombies
+%%%%
+your large skeleton's
+Eures großen Skeletts
+%%%%
+your large simulacrum's
+Eures großen Simulacrums
+%%%%
+your spectral thing's
+Eurer spektralen Sache
+%%%%
+your electric eel's
+Eures Zitteraals
+%%%%
+your kraken's
+Eures Krakens
+%%%%
+your tentacle's
+Eures Tentakels
+%%%%
+your tentacle segment's
+Eures Tentakelsegments
+%%%%
+your octopode's
+Eures Oktopods
+%%%%
+your lava snake's
+Eurer Lavaschlange
+%%%%
+your salamander's
+Eures Salamanders
+%%%%
+your salamander mystic's
+Eures Salamander-Mystikers
+%%%%
+your Hellbinder's
+Eures Höllenbinders
+%%%%
+your Cloud Mage's
+Eures Wolkenmagiers
+%%%%
+your player's
+Eures Spielers
+%%%%
+your player illusion's
+Eurer Spieler-Illusion
+%%%%
+your dancing weapon's
+Eurer tanzenden Waffe
+%%%%
+your spectral weapon's
+Eurer Spektralwaffe
+%%%%
+your eldritch tentacle's
+Eures unheimlichen Tentakels
+%%%%
+your eldritch tentacle segment's
+Eures unheimlichen Tentakelsegments
+%%%%
+your demonspawn's
+Eurer Dämonenbrut
+%%%%
+your monstrous demonspawn's
+Eurer monströsen Dämonenbrut
+%%%%
+your gelid demonspawn's
+Eures geliden Dämonenbruts
+%%%%
+your infernal demonspawn's
+Eurer höllischen Dämonenbrut
+%%%%
+your torturous demonspawn's
+Eurer quälenden Dämonenbrut
+%%%%
+your blood saint's
+Eures Blutheiligens
+%%%%
+your warmonger's
+Eures Kriegstreibers
+%%%%
+your corrupter's
+Eures Korruptors
+%%%%
+your black sun's
+Eurer schwarzen Sonne
+%%%%
+your crimson imp's
+Eures karminroten Teufelchens
+%%%%
+your quasit's
+Eures Quasits
+%%%%
+your white imp's
+Eures weißen Teufelchens
+%%%%
+your ufetubus's
+Eures Ufetubus
+%%%%
+your iron imp's
+Eures Eisenteufelchens
+%%%%
+your shadow imp's
+Eures Schattenteufelchens
+%%%%
+your rust devil's
+Eures Rostteufels
+%%%%
+your orange demon's
+Eures orangen Dämons
+%%%%
+your red devil's
+Eures roten Teufels
+%%%%
+your hellwing's
+Eures Höllenflügels
+%%%%
+your ice devil's
+Eures Eisteufels
+%%%%
+your chaos spawn's
+Eurer Chaosbrut
+%%%%
+your sun demon's
+Eures Sonnendämons
+%%%%
+your soul eater's
+Eures Seelenfressers
+%%%%
+your smoke demon's
+Eures Rauchdämons
+%%%%
+your neqoxec's
+Eurer Neqoxec
+%%%%
+your ynoxinul's
+Eures Ynoxinuls
+%%%%
+your sixfirhy's
+Eures Sixfirhys
+%%%%
+your shadow demon's
+Eures Schattendämons
+%%%%
+your green death's
+Eures grünen Tods
+%%%%
+your blizzard demon's
+Eures Blizzarddämons
+%%%%
+your balrug's
+Eures Balrugs
+%%%%
+your cacodemon's
+Eures Cacodaemons
+%%%%
+your hell beast's
+Eures Höllentiers
+%%%%
+your hellion's
+Eures Teufelsbratens
+%%%%
+your reaper's
+Eures Schnitters
+%%%%
+your lorocyproca's
+Eurer Lorocyproca
+%%%%
+your tormentor's
+Eures Peinigers
+%%%%
+your Brimstone Fiend's
+Eures Schwefelunterweltlers
+%%%%
+your Ice Fiend's
+Eures Eisunterweltlers
+%%%%
+your Tzitzimitl's
+Eures Tzitzimitls
+%%%%
+your Hell Sentinel's
+Eures Höllenwächters
+%%%%
+your Executioner's
+Eures Scharfrichters
+%%%%
+your animated tree's
+Eures animierten Baums
+%%%%
+your golem's
+Eures Golems
+%%%%
+your saltling's
+Eures Salzlings
+%%%%
+your peacekeeper's
+Eures Friedenshüters
+%%%%
+your iron golem's
+Eures Eisengolems
+%%%%
+your crystal guardian's
+Eures Kristallwächters
+%%%%
+your toenail golem's
+Eures Zehennagelgolems
+%%%%
+your electric golem's
+Eures Blitzgolems
+%%%%
+your ushabti's
+Eurer Uschabti
+%%%%
+your guardian golem's
+Eures Wächtergolems
+%%%%
+your spellforged servitor's
+Eures zaubergeschmeideten Dieners
+%%%%
+your ice statue's
+Eurer Eisstatue
+%%%%
+your obsidian statue's
+Eurer Obsidianstatue
+%%%%
+your orange crystal statue's
+Eurer orangen Kristallstatue
+%%%%
+your statue's
+Eurer Statue
+%%%%
+your training dummy's
+Eurer Trainingspuppe
+%%%%
+your pillar of salt's
+Eurer Säule des Salzes
+%%%%
+your block of ice's
+Eures Eisblocks
+%%%%
+your diamond obelisk's
+Eures Diamantobelisks
+%%%%
+your lightning spire's
+Eures Blitzturms
+%%%%
+your gargoyle's
+Eures Gargoyles
+%%%%
+your war gargoyle's
+Eures Kriegsgargoyles
+%%%%
+your molten gargoyle's
+Eures geschmolzenen Gargoyles
+%%%%
+your pandemonium lord's
+Eures Pandemoniumsherrns
+%%%%
+your hell lord's
+Eures Höllenherrns
+%%%%
+your ball lightning's
+Eures Kugelblitzs
+%%%%
+your ballistomycete spore's
+Eurer Ballistomycetenspore
+%%%%
+your lost soul's
+Eurer verlorenen Seele
+%%%%
+your lurking horror's
+Eures lauernden Grauens
+%%%%
+your orb of fire's
+Eurer Feuerkugel
+%%%%
+your orb of destruction's
+Eurer Kugel der Zerstörung
+%%%%
+your fulminant prism's
+Eures fulminanten Prismas
+%%%%
+your wretched star's
+Eures elenden Sterns
+%%%%
+your battlesphere's
+Eurer Kampfsphäre
+%%%%
+your death cob's
+Eures Todeskolbens
+%%%%
+your moon troll's
+Eures Mondtrolls
+%%%%
+your foxfire's
+Eures Fuchsfeuers
+%%%%
+your nameless horror's
+Eures namenlosen Horrors
+%%%%
+your will-o-the-wisp's
+Eures Irrlichts
+%%%%
+your bunyip's
+Eures Bunyips
+%%%%
+your boulder beetle's
+Eures Rollsteinkäfers
+%%%%
+your cane toad's
+Eurer Aga-Kröte
+%%%%
+your goliath frog's
+Eures Goliathfrosches
+%%%%
+your fenstrider witch's
+Eurer Fennläuferhexe
+%%%%
+your palentonga's
+Eures Palentongas
+%%%%
+your royal mummy's
+Eurer königlichen Mumie
+%%%%
+your eleionoma's
+Eurer Eleionoma
+%%%%
+your lemure's
+Eurer Lemure
+%%%%
+your endoplasm's
+Eures Endoplasmas
+%%%%
+your rockslime's
+Eures Felsenschleims
+%%%%
+your quicksilver ooze's
+Eures Quecksilber-Schlamms
+%%%%
+your kobold brigand's
+Eures Kobold-Briganten
+%%%%
+your dread lich's
+Eures Grauenlichs
+%%%%
+your djinni's
+Eures Dschinns
+%%%%
+your salamander tyrant's
+Eures Salamander-Tyranns
+%%%%
+your animated armour's
+Eurer animierten Rüstung
+%%%%
+# Test monsters can be created in Arena
+%%%%
+your test spawner's
+Eures Test-Erzeugers
+%%%%
+your test statue's
+Eurer Test-Statue
+%%%%
+your test blob's
+Eures Test-Klumpens
+%%%%
+your sensed monster's
+Eures gespürten Monsters
+%%%%
+your friendly sensed monster's
+Eures freundlichen gespürten Monsters
+%%%%
+your trivial sensed monster's
+Eures trivialen gespürten Monsters
+%%%%
+your easy sensed monster's
+Eures leichten gespürten Monsters
+%%%%
+your tough sensed monster's
+Eures harten gespürten Monsters
+%%%%
+your nasty sensed monster's
+Eures furchtbaren gespürten Monsters
+%%%%
+your %ssting beast's
+Eures {adj-en}%sStichbiests
+%%%%
+your %sbat beast's
+Eures {adj-en}%sFledermaus-Biests
+%%%%
+your %sfire beast's
+Eures {adj-en}%sFeuerbiests
+%%%%
+your %sweird beast's
+Eures {adj-en}%sbizarren Biests
+%%%%
+your %sshock beast's
+Eures {adj-en}%sSchockbiests
+%%%%
+your %sox beast's
+Eures {adj-en}%sOchsenbiests
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+your %s zombie's
+Eures %s-Zombies
+%%%%
+your %s skeleton's
+Eures %s-Skeletts
+%%%%
+your %s simulacrum's
+Eures %s-Simulacrums
+%%%%
+your %s shaped pillar of salt's
+Eurer %s-förmigen Salzsäule
+%%%%
+your %s shaped block of ice's
+Eures %s-förmigen Eisblocks
+%%%%
+your %s shaped shifter's
+Eures %s-förmigen Gestaltwandlers
+%%%%
+

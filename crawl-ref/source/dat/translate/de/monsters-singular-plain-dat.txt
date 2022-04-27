@@ -1,0 +1,557 @@
+###############################################################################
+#
+# Monsters - singular, plain, dative
+#
+###############################################################################
+
+%%%%
+{dat}caustic shrike
+ätzendem Würger
+%%%%
+{dat}centaur
+Zentauren
+%%%%
+{dat}yaktaur
+Yaktauren
+%%%%
+{dat}black draconian
+schwarzem Drakonier
+%%%%
+{dat}yellow draconian
+gelbem Drakonier
+%%%%
+{dat}pale draconian
+blassem Drakonier
+%%%%
+{dat}green draconian
+grünem Drakonier
+%%%%
+{dat}purple draconian
+purpurnem Drakonier
+%%%%
+{dat}red draconian
+rotem Drakonier
+%%%%
+{dat}white draconian
+weißem Drakonier
+%%%%
+{dat}grey draconian
+grauem Drakonier
+%%%%
+{dat}deep elf archer
+Tiefenelf-Bogenschützen
+%%%%
+{dat}deep elf zephyrmancer
+Tiefenelf-Zephyrmanten
+%%%%
+{dat}deep elf pyromancer
+Tiefenelf-Pyromanten
+%%%%
+{dat}deep elf demonologist
+Tiefenelf-Dämonologen
+%%%%
+{dat}deep elf elementalist
+Tiefenelf-Elementalisten
+%%%%
+{dat}wandering mushroom
+wanderndem Pilz
+%%%%
+{dat}shambling mangrove
+watschelnder Mangrove
+%%%%
+{dat}gnoll shaman
+Gnoll-Schamanen
+%%%%
+{dat}howler monkey
+Brüllaffen
+%%%%
+{dat}hell hog
+höllischem Schwein
+%%%%
+{dat}holy swine
+heiligem Schwein
+%%%%
+{dat}bear
+Bären
+%%%%
+{dat}polar bear
+Eisbären
+%%%%
+{dat}black bear
+Schwarzbären
+%%%%
+{dat}spriggan druid
+Spriggan-Druiden
+%%%%
+{dat}frilled lizard
+gekräuselter Eidechse
+%%%%
+{dat}komodo dragon
+Komododrachen
+%%%%
+{dat}bloated husk
+aufgeblähter Hülle
+%%%%
+{dat}human
+Menschen
+%%%%
+{dat}slave
+Sklaven
+%%%%
+{dat}necromancer
+Nekromanten
+%%%%
+{dat}ironbound convoker
+eisenbeschlagenem Einberufer
+%%%%
+{dat}ironbound frostheart
+eisengebundenem Frostherzen
+%%%%
+{dat}ironbound preserver
+eisenbeschlagenem Bewahrer
+%%%%
+{dat}ironbound beastmaster
+eisenbeschlagenem Bestienmeister
+%%%%
+{dat}ironbound thunderhulk
+eisenbeschlagenem Donnerkoloss
+%%%%
+{dat}imperial myrmidon
+kaiserlichem Myrmidon
+%%%%
+{dat}ragged hierophant
+zerlumptem Hierophanten
+%%%%
+{dat}glowing shapeshifter
+leuchtendem Gestaltwandler
+%%%%
+{dat}jumping spider
+springender Spinne
+%%%%
+{dat}demonic crawler
+dämonischem Kriecher
+%%%%
+{dat}ugly thing
+hässlichem Ding
+%%%%
+{dat}very ugly thing
+sehr hässlichem Ding
+%%%%
+{dat}spatial vortex
+räumlichem Wirbel
+%%%%
+{dat}spatial maelstrom
+räumlichem Mahlstrom
+%%%%
+{dat}insubstantial wisp
+unwesentlichem Irrlicht
+%%%%
+{dat}unseen horror
+unsichtbarem Grauen
+%%%%
+{dat}small abomination
+kleinem Greuel
+%%%%
+{dat}crawling corpse
+kriechender Leiche
+%%%%
+{dat}macabre mass
+makaberer Masse
+%%%%
+{dat}ancient zyme
+uraltem Zym
+%%%%
+{dat}ancient champion
+altem Champion
+%%%%
+{dat}flying skull
+fliegendem Schädel
+%%%%
+{dat}profane servitor
+profanem Diener
+%%%%
+{dat}giant
+Riesen
+%%%%
+{dat}fire giant
+Feuerriesen
+%%%%
+{dat}frost giant
+Frostriesen
+%%%%
+{dat}stone giant
+Steinriesen
+%%%%
+{dat}iron giant
+Eisenriesen
+%%%%
+{dat}dragon
+Drachen
+%%%%
+{dat}fire dragon
+Feuerdrachen
+%%%%
+{dat}one-headed hydra
+einköpfiger Hydra
+%%%%
+{dat}two-headed hydra
+zweiköpfiger Hydra
+%%%%
+{dat}three-headed hydra
+dreiköpfiger Hydra
+%%%%
+{dat}four-headed hydra
+vierköpfiger Hydra
+%%%%
+{dat}five-headed hydra
+fünfköpfiger Hydra
+%%%%
+{dat}six-headed hydra
+sechsköpfiger Hydra
+%%%%
+{dat}seven-headed hydra
+siebenköpfiger Hydra
+%%%%
+{dat}eight-headed hydra
+achtköpfiger Hydra
+%%%%
+{dat}nine-headed hydra
+neunköpfiger Hydra
+%%%%
+{dat}ten-headed hydra
+zehnköpfiger Hydra
+%%%%
+{dat}11-headed hydra
+11-köpfiger Hydra
+%%%%
+{dat}12-headed hydra
+12-köpfiger Hydra
+%%%%
+{dat}13-headed hydra
+13-köpfiger Hydra
+%%%%
+{dat}14-headed hydra
+14-köpfiger Hydra
+%%%%
+{dat}15-headed hydra
+15-köpfiger Hydra
+%%%%
+{dat}16-headed hydra
+16-köpfiger Hydra
+%%%%
+{dat}17-headed hydra
+17-köpfiger Hydra
+%%%%
+{dat}18-headed hydra
+18-köpfiger Hydra
+%%%%
+{dat}19-headed hydra
+19-köpfiger Hydra
+%%%%
+{dat}20-headed hydra
+20-köpfiger Hydra
+%%%%
+{dat}ice dragon
+Eisdrachen
+%%%%
+{dat}steam dragon
+Dampfdrachen
+%%%%
+{dat}swamp dragon
+Sumpfdrachen
+%%%%
+{dat}acid dragon
+Säuredrachen
+%%%%
+{dat}quicksilver dragon
+Quecksilberdrachen
+%%%%
+{dat}iron dragon
+Eisendrachen
+%%%%
+{dat}storm dragon
+Sturmdrachen
+%%%%
+{dat}golden dragon
+Golddrachen
+%%%%
+{dat}shadow dragon
+Schattendrachen
+%%%%
+{dat}bone dragon
+Knochendrachen
+%%%%
+{dat}pearl dragon
+Perlendrachen
+%%%%
+{dat}elemental wellspring
+elementarer Quelle
+%%%%
+{dat}floating eye
+schwebendem Auge
+%%%%
+{dat}glowing orange brain
+orangem leuchtendem Gehirn
+%%%%
+{dat}great orb of eyes
+großer Augenkugel
+%%%%
+{dat}shining eye
+leuchtendem Auge
+%%%%
+{dat}golden eye
+goldenem Auge
+%%%%
+{dat}minotaur
+Minotauren
+%%%%
+{dat}mutant beast
+mutierter Bestie
+%%%%
+{dat}ancestor
+Ahnen
+%%%%
+{dat}%sslime creature
+{adj-em}%sSchleimwesen
+%%%%
+{dat}merged slime creature
+verschmolzener Schleimkreatur
+%%%%
+{dat}azure jelly
+azurblauem Gelee
+%%%%
+{dat}big kobold
+großem Kobold
+%%%%
+{dat}kobold demonologist
+Kobold-Dämonologen
+%%%%
+{dat}ancient lich
+altem Lich
+%%%%
+{dat}halazid warlock
+halazidischem Hexenmeister
+%%%%
+{dat}greater mummy
+größerer Mumie
+%%%%
+{dat}naga sharpshooter
+Naga-Scharfschützen
+%%%%
+{dat}naga ritualist
+Naga-Ritualisten
+%%%%
+{dat}two-headed ogre
+zweiköpfigem Oger
+%%%%
+{dat}demonic plant
+dämonischer Pflanze
+%%%%
+{dat}withered plant
+verwelkter Pflanze
+%%%%
+{dat}burning bush
+brennendem Busch
+%%%%
+{dat}ballistomycete
+Ballistomyceten
+%%%%
+{dat}hyperactive ballistomycete
+hyperaktivem Ballistomyceten
+%%%%
+{dat}black mamba
+schwarzer Mamba
+%%%%
+{dat}deep troll shaman
+Tiefentroll-Schamanen
+%%%%
+{dat}hungry ghost
+hungrigem Geist
+%%%%
+{dat}flayed ghost
+enthäutetem Geist
+%%%%
+{dat}silent spectre
+stillem Gespenst
+%%%%
+{dat}drowned soul
+ertrunkener Seele
+%%%%
+{dat}phantasmal warrior
+phantastischem Krieger
+%%%%
+{dat}large abomination
+großem Greuel
+%%%%
+{dat}thrashing horror
+verprügelndem Grauen
+%%%%
+{dat}starcursed mass
+sternverfluchter Masse
+%%%%
+{dat}elephant
+Elefanten
+%%%%
+{dat}dire elephant
+Schreckenselefanten
+%%%%
+{dat}hellephant
+Höllefanten
+%%%%
+{dat}small zombie
+kleinem Zombie
+%%%%
+{dat}small skeleton
+kleinem Skelett
+%%%%
+{dat}small simulacrum
+kleinem Simulacrum
+%%%%
+{dat}large zombie
+großem Zombie
+%%%%
+{dat}large skeleton
+großem Skelett
+%%%%
+{dat}large simulacrum
+großem Simulacrum
+%%%%
+{dat}spectral thing
+spektraler Sache
+%%%%
+{dat}dancing weapon
+tanzender Waffe
+%%%%
+{dat}eldritch tentacle
+unheimlichem Tentakel
+%%%%
+{dat}eldritch tentacle segment
+unheimlichem Tentakelsegment
+%%%%
+{dat}monstrous demonspawn
+monströser Dämonenbrut
+%%%%
+{dat}gelid demonspawn
+gelidem Dämonenbrut
+%%%%
+{dat}infernal demonspawn
+höllischer Dämonenbrut
+%%%%
+{dat}torturous demonspawn
+quälender Dämonenbrut
+%%%%
+{dat}blood saint
+Blutheiligen
+%%%%
+{dat}black sun
+schwarzer Sonne
+%%%%
+{dat}crimson imp
+karminrotem Teufelchen
+%%%%
+{dat}white imp
+weißem Teufelchen
+%%%%
+{dat}orange demon
+orangem Dämon
+%%%%
+{dat}red devil
+rotem Teufel
+%%%%
+{dat}green death
+grünem Tod
+%%%%
+{dat}animated tree
+animiertem Baum
+%%%%
+{dat}spellforged servitor
+zaubergeschmeidetem Diener
+%%%%
+{dat}orange crystal statue
+oranger Kristallstatue
+%%%%
+{dat}molten gargoyle
+geschmolzenem Gargoyle
+%%%%
+{dat}pandemonium lord
+Pandemoniumsherrn
+%%%%
+{dat}hell lord
+Höllenherrn
+%%%%
+{dat}lost soul
+verlorener Seele
+%%%%
+{dat}lurking horror
+lauerndem Grauen
+%%%%
+{dat}fulminant prism
+fulminantem Prisma
+%%%%
+{dat}wretched star
+elendem Stern
+%%%%
+{dat}nameless horror
+namenlosem Horror
+%%%%
+{dat}royal mummy
+königlicher Mumie
+%%%%
+{dat}kobold brigand
+Kobold-Briganten
+%%%%
+{dat}animated armour
+animierter Rüstung
+%%%%
+# Test monsters can be created in Arena
+%%%%
+{dat}sensed monster
+gespürtem Monster
+%%%%
+{dat}friendly sensed monster
+freundlichem gespürtem Monster
+%%%%
+{dat}trivial sensed monster
+trivialem gespürtem Monster
+%%%%
+{dat}easy sensed monster
+leichtem gespürtem Monster
+%%%%
+{dat}tough sensed monster
+hartem gespürtem Monster
+%%%%
+{dat}nasty sensed monster
+furchtbarem gespürtem Monster
+%%%%
+{dat}%ssting beast
+{adj-em}%sStichbiest
+%%%%
+{dat}%sbat beast
+{adj-em}%sFledermaus-Biest
+%%%%
+{dat}%sfire beast
+{adj-em}%sFeuerbiest
+%%%%
+{dat}%sweird beast
+{adj-em}%sbizarrem Biest
+%%%%
+{dat}%sshock beast
+{adj-em}%sSchockbiest
+%%%%
+{dat}%sox beast
+{adj-em}%sOchsenbiest
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{dat}%s shaped pillar of salt
+%s-förmiger Salzsäule
+%%%%
+{dat}%s shaped block of ice
+%s-förmigem Eisblock
+%%%%
+{dat}%s shaped shifter
+%s-förmigem Gestaltwandler
+%%%%
+

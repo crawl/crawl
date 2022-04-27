@@ -1,0 +1,338 @@
+###############################################################################
+#
+# Monsters - unique, genitive(2)
+#
+###############################################################################
+
+%%%%
+{gen}Mennas
+Mennas'
+%%%%
+{gen}Nessos
+Nessos'
+%%%%
+{gen}Chuck
+Chucks
+%%%%
+{gen}Polyphemus
+Polyphems
+%%%%
+{gen}Antaeus
+Antaeus'
+%%%%
+{gen}Tiamat
+Tiamats
+%%%%
+{gen}Bai Suzhen
+Bai Suzhens
+%%%%
+{gen}Xtahua
+Xtahuas
+%%%%
+{gen}Ijyb
+Ijybs
+%%%%
+{gen}Robin
+Robins
+%%%%
+{gen}Grum
+Grums
+%%%%
+{gen}Duvessa
+Duvessas
+%%%%
+{gen}Dowan
+Dowans
+%%%%
+{gen}Fannar
+Fannars
+%%%%
+{gen}Jorgrun
+Jorgruns
+%%%%
+{gen}Natasha
+Nataschas
+%%%%
+{gen}Arachne
+Arachnes
+%%%%
+{gen}Asterion
+Asterions
+%%%%
+{gen}Agnes
+Agnes'
+%%%%
+{gen}Dissolution
+Dissolutions
+%%%%
+{gen}Sonja
+Sonjas
+%%%%
+{gen}Pikel
+Pikels
+%%%%
+{gen}Boris
+Boris'
+%%%%
+{gen}Menkaure
+Menkaures
+%%%%
+{gen}Khufu
+Khufus
+%%%%
+{gen}Ilsuiw
+Ilsuiws
+%%%%
+{gen}Vashnia
+Vashnias
+%%%%
+{gen}Erolcha
+Erolchas
+%%%%
+{gen}Urug
+Urugs
+%%%%
+{gen}Nergalle
+Nergalles
+%%%%
+{gen}Saint Roka
+Sankt Rokas
+%%%%
+{gen}Sojobo
+Sojobos
+%%%%
+{gen}Azrael
+Azraels
+%%%%
+{gen}Mara
+Maras
+%%%%
+{gen}Aizul
+Aizuls
+%%%%
+{gen}Snorg
+Snorgs
+%%%%
+{gen}Purgy
+Purgys
+%%%%
+{gen}Jory
+Jorys
+%%%%
+{gen}Gastronok
+Gastronoks
+%%%%
+{gen}Nellie
+Nellies
+%%%%
+{gen}Murray
+Murrays
+%%%%
+{gen}Ignacio
+Ignacios
+%%%%
+{gen}Grinder
+Grinders
+%%%%
+{gen}Roxanne
+Roxannes
+%%%%
+{gen}Terence
+Terences
+%%%%
+{gen}Jessica
+Jessicas
+%%%%
+{gen}Sigmund
+Sigmunds
+%%%%
+{gen}Edmund
+Edmunds
+%%%%
+{gen}Psyche
+Psyches
+%%%%
+{gen}Donald
+Donalds
+%%%%
+{gen}Joseph
+Josephs
+%%%%
+{gen}Erica
+Ericas
+%%%%
+{gen}Josephine
+Josephines
+%%%%
+{gen}Harold
+Harolds
+%%%%
+{gen}Louise
+Louises
+%%%%
+{gen}Frances
+Frances'
+%%%%
+{gen}Rupert
+Ruperts
+%%%%
+{gen}Kirke
+Kirkes
+%%%%
+{gen}Frederick
+Fredericks
+%%%%
+{gen}Margery
+Margerys
+%%%%
+{gen}Maggie
+Maggies
+%%%%
+{gen}Eustachio
+Eustachios
+%%%%
+{gen}Maurice
+Maurices
+%%%%
+{gen}Nikola
+Nikolas
+%%%%
+{gen}Mnoleg
+Mnolegs
+%%%%
+{gen}Lom Lobon
+Lom Lobons
+%%%%
+{gen}Cerebov
+Cerebovs
+%%%%
+{gen}Gloorx Vloq
+Gloorx Vloqs
+%%%%
+{gen}Geryon
+Geryons
+%%%%
+{gen}Dispater
+Dispaters
+%%%%
+{gen}Asmodeus
+Asmodäus'
+%%%%
+{gen}Ereshkigal
+Ereshkigals
+%%%%
+{gen}Prince Ribbit
+Prinzen Ribbits
+%%%%
+{gen}Crazy Yiuf
+Verrückten Yiufs
+%%%%
+{gen}the Enchantress
+der Hexenmeisterin
+%%%%
+{gen}Blork the orc
+Blork des Orks
+%%%%
+{gen}Blork
+Blorks
+%%%%
+{gen}the Royal Jelly
+des Gelée Royale
+%%%%
+{gen}the Serpent of Hell
+der Höllenschlange
+%%%%
+{gen}Lernaean hydra
+Lernäischer Hydra
+%%%%
+{gen}the Lernaean hydra
+der Lernäischen Hydra
+%%%%
+{gen}the one-headed Lernaean hydra
+der einköpfigen Lernäischen Hydra
+%%%%
+{gen}the two-headed Lernaean hydra
+der zweiköpfigen Lernäischen Hydra
+%%%%
+{gen}the three-headed Lernaean hydra
+der dreiköpfigen Lernäischen Hydra
+%%%%
+{gen}the four-headed Lernaean hydra
+der vierköpfigen Lernäischen Hydra
+%%%%
+{gen}the five-headed Lernaean hydra
+der fünfköpfigen Lernäischen Hydra
+%%%%
+{gen}the six-headed Lernaean hydra
+der sechsköpfigen Lernäischen Hydra
+%%%%
+{gen}the seven-headed Lernaean hydra
+der siebenköpfigen Lernäischen Hydra
+%%%%
+{gen}the eight-headed Lernaean hydra
+der achtköpfigen Lernäischen Hydra
+%%%%
+{gen}the nine-headed Lernaean hydra
+der neunköpfigen Lernäischen Hydra
+%%%%
+{gen}the ten-headed Lernaean hydra
+der zehnköpfigen Lernäischen Hydra
+%%%%
+{gen}the 11-headed Lernaean hydra
+der 11-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 12-headed Lernaean hydra
+der 12-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 13-headed Lernaean hydra
+der 13-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 14-headed Lernaean hydra
+der 14-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 15-headed Lernaean hydra
+der 15-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 16-headed Lernaean hydra
+der 16-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 17-headed Lernaean hydra
+der 17-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 18-headed Lernaean hydra
+der 18-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 19-headed Lernaean hydra
+der 19-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 20-headed Lernaean hydra
+der 20-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 21-headed Lernaean hydra
+der 21-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 22-headed Lernaean hydra
+der 22-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 23-headed Lernaean hydra
+der 23-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 24-headed Lernaean hydra
+der 24-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 25-headed Lernaean hydra
+der 25-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 26-headed Lernaean hydra
+der 26-köpfigen Lernäischen Hydra
+%%%%
+{gen}the 27-headed Lernaean hydra
+der 27-köpfigen Lernäischen Hydra
+%%%%
+{gen}%s's ghost
+%ss Geistes
+%%%%
+{gen}%s's illusion
+%ss Illusions
+%%%%
+

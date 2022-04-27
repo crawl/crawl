@@ -1,0 +1,938 @@
+###############################################################################
+#
+# Monsters - singular, your, accusative
+#
+###############################################################################
+
+%%%%
+{acc}your program bug
+Euren Programmfehler
+%%%%
+{acc}your formicid
+Euren Formicid
+%%%%
+{acc}your entropy weaver
+Euren Entropieweber
+%%%%
+{acc}your butterfly
+Euren Schmetterling
+%%%%
+{acc}your caustic shrike
+Euren ätzenden Würger
+%%%%
+{acc}your shard shrike
+Euren Scherbenwürger
+%%%%
+{acc}your centaur
+Euren Zentauren
+%%%%
+{acc}your centaur warrior
+Euren Zentaur-Krieger
+%%%%
+{acc}your yaktaur
+Euren Yaktauren
+%%%%
+{acc}your yaktaur captain
+Euren Yaktaur-Kapitän
+%%%%
+{acc}your faun
+Euren Faun
+%%%%
+{acc}your satyr
+Euren Satyr
+%%%%
+{acc}your draconian
+Euren Drakonier
+%%%%
+{acc}your black draconian
+Euren schwarzen Drakonier
+%%%%
+{acc}your yellow draconian
+Euren gelben Drakonier
+%%%%
+{acc}your pale draconian
+Euren blassen Drakonier
+%%%%
+{acc}your green draconian
+Euren grünen Drakonier
+%%%%
+{acc}your purple draconian
+Euren purpurnen Drakonier
+%%%%
+{acc}your red draconian
+Euren roten Drakonier
+%%%%
+{acc}your white draconian
+Euren weißen Drakonier
+%%%%
+{acc}your grey draconian
+Euren grauen Drakonier
+%%%%
+{acc}your draconian stormcaller
+Euren Drakonier-Sturmrufer
+%%%%
+{acc}your draconian monk
+Euren Drakonier-Mönch
+%%%%
+{acc}your draconian shifter
+Euren Drakonier-Verschieber
+%%%%
+{acc}your draconian annihilator
+Euren Drakonier-Vernichter
+%%%%
+{acc}your draconian knight
+Euren Drakonier-Ritter
+%%%%
+{acc}your draconian scorcher
+Euren Drakonier-Verschmorer
+%%%%
+{acc}your elf
+Euren Elf
+%%%%
+{acc}your deep elf knight
+Euren Tiefenelf-Ritter
+%%%%
+{acc}your deep elf archer
+Euren Tiefenelf-Bogenschützen
+%%%%
+{acc}your deep elf blademaster
+Euren Tiefenelf-Klingenmeister
+%%%%
+{acc}your deep elf master archer
+Euren Tiefenelf-Bogenmeister
+%%%%
+{acc}your deep elf zephyrmancer
+Euren Tiefenelf-Zephyrmanten
+%%%%
+{acc}your deep elf pyromancer
+Euren Tiefenelf-Pyromanten
+%%%%
+{acc}your deep elf high priest
+Euren Tiefenelf-Hohepriester
+%%%%
+{acc}your deep elf demonologist
+Euren Tiefenelf-Dämonologen
+%%%%
+{acc}your deep elf annihilator
+Euren Tiefenelf-Vernichter
+%%%%
+{acc}your deep elf sorcerer
+Euren Tiefenelf-Zauberer
+%%%%
+{acc}your deep elf death mage
+Euren Tiefenelf-Todesmagier
+%%%%
+{acc}your deep elf elementalist
+Euren Tiefenelf-Elementalisten
+%%%%
+{acc}your wandering mushroom
+Euren wandernden Pilz
+%%%%
+{acc}your thorn hunter
+Euren Dornenjäger
+%%%%
+{acc}your vine stalker
+Euren Rebjäger
+%%%%
+{acc}your goblin
+Euren Goblin
+%%%%
+{acc}your hobgoblin
+Euren Hobgoblin
+%%%%
+{acc}your gnoll
+Euren Gnoll
+%%%%
+{acc}your gnoll shaman
+Euren Gnoll-Schamanen
+%%%%
+{acc}your gnoll sergeant
+Euren Gnoll-Wachtmeister
+%%%%
+{acc}your boggart
+Euren Boggart
+%%%%
+{acc}your dwarf
+Euren Zwerg
+%%%%
+{acc}your deep dwarf
+Euren Tiefenzwerg
+%%%%
+{acc}your jackal
+Euren Schakal
+%%%%
+{acc}your hound
+Euren Hund
+%%%%
+{acc}your howler monkey
+Euren Brüllaffen
+%%%%
+{acc}your warg
+Euren Warg
+%%%%
+{acc}your wolf
+Euren Wolf
+%%%%
+{acc}your hell hound
+Euren Höllenhund
+%%%%
+{acc}your doom hound
+Euren Untergangshund
+%%%%
+{acc}your raiju
+Euren Raiju
+%%%%
+{acc}your bear
+Euren Bären
+%%%%
+{acc}your polar bear
+Euren Eisbären
+%%%%
+{acc}your black bear
+Euren Schwarzbären
+%%%%
+{acc}your spriggan
+Euren Spriggan
+%%%%
+{acc}your spriggan rider
+Euren Spriggan-Reiter
+%%%%
+{acc}your spriggan druid
+Euren Spriggan-Druiden
+%%%%
+{acc}your spriggan berserker
+Euren Spriggan-Berserker
+%%%%
+{acc}your spriggan air mage
+Euren Spriggan-Luftmagier
+%%%%
+{acc}your spriggan defender
+Euren Spriggan-Verteidiger
+%%%%
+{acc}your drake
+Euren Drachling
+%%%%
+{acc}your swamp drake
+Euren Sumpfdrachling
+%%%%
+{acc}your rime drake
+Euren Reifsdrachling
+%%%%
+{acc}your wind drake
+Euren Winddrachling
+%%%%
+{acc}your lindwurm
+Euren Lindwurm
+%%%%
+{acc}your death drake
+Euren Todesdrachling
+%%%%
+{acc}your leopard gecko
+Euren Leopardgecko
+%%%%
+{acc}your iguana
+Euren Leguan
+%%%%
+{acc}your basilisk
+Euren Basilisk
+%%%%
+{acc}your wyvern
+Euren Wyvern
+%%%%
+{acc}your komodo dragon
+Euren Komododrachen
+%%%%
+{acc}your merfolk impaler
+Euren Meervolk-Impaler
+%%%%
+{acc}your merfolk javelineer
+Euren Meervolk-Speerführer
+%%%%
+{acc}your merfolk aquamancer
+Euren Meervolk-Aquamancer
+%%%%
+{acc}your merfolk avatar
+Euren Meervolk-Avatar
+%%%%
+{acc}your necrophage
+Euren Nekrophagen
+%%%%
+{acc}your ghoul
+Euren Ghul
+%%%%
+{acc}your orc
+Euren Ork
+%%%%
+{acc}your orc wizard
+Euren Ork-Zauberer
+%%%%
+{acc}your orc priest
+Euren Ork-Priester
+%%%%
+{acc}your orc warrior
+Euren Ork-Krieger
+%%%%
+{acc}your orc knight
+Euren Ork-Ritter
+%%%%
+{acc}your orc warlord
+Euren Ork-Warlord
+%%%%
+{acc}your orc sorcerer
+Euren Ork-Hexenmeister
+%%%%
+{acc}your orc high priest
+Euren Ork-Hohepriester
+%%%%
+{acc}your lava orc
+Euren Lava-Ork
+%%%%
+{acc}your human
+Euren Menschen
+%%%%
+{acc}your slave
+Euren Sklaven
+%%%%
+{acc}your hell knight
+Euren Höllenritter
+%%%%
+{acc}your death knight
+Euren Todesritter
+%%%%
+{acc}your necromancer
+Euren Nekromanten
+%%%%
+{acc}your wizard
+Euren Zauberer
+%%%%
+{acc}your vault guard
+Euren Tresorwächter
+%%%%
+{acc}your vault warden
+Euren Tresorwärter
+%%%%
+{acc}your ironbound convoker
+Euren eisenbeschlagenen Einberufer
+%%%%
+{acc}your ironbound preserver
+Euren eisenbeschlagenen Bewahrer
+%%%%
+{acc}your ironbound beastmaster
+Euren eisenbeschlagenen Bestienmeister
+%%%%
+{acc}your ironbound thunderhulk
+Euren eisenbeschlagenen Donnerkoloss
+%%%%
+{acc}your imperial myrmidon
+Euren kaiserlichen Myrmidon
+%%%%
+{acc}your servant of whispers
+Euren Diener des Flüsterns
+%%%%
+{acc}your ragged hierophant
+Euren zerlumpten Hierophanten
+%%%%
+{acc}your shapeshifter
+Euren Gestaltwandler
+%%%%
+{acc}your glowing shapeshifter
+Euren leuchtenden Gestaltwandler
+%%%%
+{acc}your Killer Klown
+Euren Killer-Klown
+%%%%
+{acc}your demigod
+Euren Halbgott
+%%%%
+{acc}your halfling
+Euren Halbling
+%%%%
+{acc}your scorpion
+Euren Skorpion
+%%%%
+{acc}your emperor scorpion
+Euren Kaiserskorpion
+%%%%
+{acc}your death scarab
+Euren Todesskarabäus
+%%%%
+{acc}your demonic crawler
+Euren dämonischen Kriecher
+%%%%
+{acc}your alligator
+Euren Alligator
+%%%%
+{acc}your fire vortex
+Euren Feuerwirbel
+%%%%
+{acc}your spatial vortex
+Euren räumlichen Wirbel
+%%%%
+{acc}your spatial maelstrom
+Euren räumlichen Mahlstrom
+%%%%
+{acc}your twister
+Euren Twister
+%%%%
+{acc}your worm
+Euren Wurm
+%%%%
+{acc}your swamp worm
+Euren Sumpfwurm
+%%%%
+{acc}your tyrant leech
+Euren Tyrannblutegel
+%%%%
+{acc}your small abomination
+Euren kleinen Greuel
+%%%%
+{acc}your worldbinder
+Euren Weltbinder
+%%%%
+{acc}your wight
+Euren Wight
+%%%%
+{acc}your skeletal warrior
+Euren Skelettkrieger
+%%%%
+{acc}your ancient champion
+Euren alten Champion
+%%%%
+{acc}your flying skull
+Euren fliegenden Schädel
+%%%%
+{acc}your curse skull
+Euren Fluchschädel
+%%%%
+{acc}your curse toe
+Euren Fluchzeh
+%%%%
+{acc}your angel
+Euren Engel
+%%%%
+{acc}your cherub
+Euren Cherub
+%%%%
+{acc}your seraph
+Euren Seraph
+%%%%
+{acc}your daeva
+Euren Daeva
+%%%%
+{acc}your profane servitor
+Euren profanen Diener
+%%%%
+{acc}your giant
+Euren Riesen
+%%%%
+{acc}your cyclops
+Euren Zyklop
+%%%%
+{acc}your ettin
+Euren Ettin
+%%%%
+{acc}your fire giant
+Euren Feuerriesen
+%%%%
+{acc}your frost giant
+Euren Frostriesen
+%%%%
+{acc}your stone giant
+Euren Steinriesen
+%%%%
+{acc}your titan
+Euren Titan
+%%%%
+{acc}your juggernaut
+Euren Juggernaut
+%%%%
+{acc}your iron giant
+Euren Eisenriesen
+%%%%
+{acc}your dragon
+Euren Drachen
+%%%%
+{acc}your fire dragon
+Euren Feuerdrachen
+%%%%
+{acc}your ice dragon
+Euren Eisdrachen
+%%%%
+{acc}your steam dragon
+Euren Dampfdrachen
+%%%%
+{acc}your swamp dragon
+Euren Sumpfdrachen
+%%%%
+{acc}your acid dragon
+Euren Säuredrachen
+%%%%
+{acc}your quicksilver dragon
+Euren Quecksilberdrachen
+%%%%
+{acc}your iron dragon
+Euren Eisendrachen
+%%%%
+{acc}your storm dragon
+Euren Sturmdrachen
+%%%%
+{acc}your golden dragon
+Euren Golddrachen
+%%%%
+{acc}your shadow dragon
+Euren Schattendrachen
+%%%%
+{acc}your bone dragon
+Euren Knochendrachen
+%%%%
+{acc}your pearl dragon
+Euren Perlendrachen
+%%%%
+{acc}your giant frog
+Euren Riesenfrosch
+%%%%
+{acc}your bullfrog
+Euren Ochsenfrosch
+%%%%
+{acc}your spiny frog
+Euren Stachelfrosch
+%%%%
+{acc}your blink frog
+Euren Blinzelfrosch
+%%%%
+{acc}your ophan
+Euren Ophan
+%%%%
+{acc}your hippogriff
+Euren Hippogriff
+%%%%
+{acc}your manticore
+Euren Mantikor
+%%%%
+{acc}your minotaur
+Euren Minotauren
+%%%%
+{acc}your ancestor
+Euren Ahnen
+%%%%
+{acc}your knight
+Euren Ritter
+%%%%
+{acc}your battlemage
+Euren Kampfmagier
+%%%%
+{acc}your hexer
+Euren Hexer
+%%%%
+{acc}your ooze
+Euren Schlamm
+%%%%
+{acc}your death ooze
+Euren Todesschlamm
+%%%%
+{acc}your acid blob
+Euren Säureklumpen
+%%%%
+{acc}your kobold
+Euren Kobold
+%%%%
+{acc}your big kobold
+Euren großen Kobold
+%%%%
+{acc}your kobold demonologist
+Euren Kobold-Dämonologen
+%%%%
+{acc}your lich
+Euren Lich
+%%%%
+{acc}your ancient lich
+Euren alten Lich
+%%%%
+{acc}your revenant
+Euren Wiedergänger
+%%%%
+{acc}your halazid warlock
+Euren halazidischen Hexenmeister
+%%%%
+{acc}your mummy priest
+Euren Mumie-Priester
+%%%%
+{acc}your naga
+Euren Naga
+%%%%
+{acc}your naga mage
+Euren Naga-Magier
+%%%%
+{acc}your naga sharpshooter
+Euren Naga-Scharfschützen
+%%%%
+{acc}your naga ritualist
+Euren Naga-Ritualisten
+%%%%
+{acc}your naga warrior
+Euren Naga-Krieger
+%%%%
+{acc}your nagaraja
+Euren Nagaraja
+%%%%
+{acc}your ogre
+Euren Oger
+%%%%
+{acc}your two-headed ogre
+Euren zweiköpfigen Oger
+%%%%
+{acc}your ogre mage
+Euren Oger-Magier
+%%%%
+{acc}your oklob sapling
+Euren Oklob-Setzling
+%%%%
+{acc}your bush
+Euren Busch
+%%%%
+{acc}your burning bush
+Euren brennenden Busch
+%%%%
+{acc}your toadstool
+Euren Giftpilz
+%%%%
+{acc}your fungus
+Euren Pilz
+%%%%
+{acc}your ballistomycete
+Euren Ballistomyceten
+%%%%
+{acc}your hyperactive ballistomycete
+Euren hyperaktiven Ballistomyceten
+%%%%
+{acc}your briar patch
+Euren Dornstrauch
+%%%%
+{acc}your tengu
+Euren Tengu
+%%%%
+{acc}your tengu conjurer
+Euren Tengu-Zauberer
+%%%%
+{acc}your tengu warrior
+Euren Tengu-Krieger
+%%%%
+{acc}your tengu reaver
+Euren Tengu-Häscher
+%%%%
+{acc}your rakshasa
+Euren Rakshasa
+%%%%
+{acc}your water moccasin
+Euren Wassermokassin
+%%%%
+{acc}your troll
+Euren Troll
+%%%%
+{acc}your iron troll
+Euren Eisentroll
+%%%%
+{acc}your deep troll
+Euren Tiefentroll
+%%%%
+{acc}your deep troll earth mage
+Euren Tiefentroll-Erdmagier
+%%%%
+{acc}your deep troll shaman
+Euren Tiefentroll-Schamanen
+%%%%
+{acc}your vampire
+Euren Vampir
+%%%%
+{acc}your vampire knight
+Euren Vampir-Ritter
+%%%%
+{acc}your vampire mage
+Euren Vampir-Magier
+%%%%
+{acc}your hungry ghost
+Euren hungrigen Geist
+%%%%
+{acc}your flayed ghost
+Euren enthäuteten Geist
+%%%%
+{acc}your player ghost
+Euren Spielergeist
+%%%%
+{acc}your shadow
+Euren Schatten
+%%%%
+{acc}your wraith
+Euren Geist
+%%%%
+{acc}your shadow wraith
+Euren Schattengeist
+%%%%
+{acc}your freezing wraith
+Euren Frostgeist
+%%%%
+{acc}your eidolon
+Euren Eidolon
+%%%%
+{acc}your phantasmal warrior
+Euren phantastischen Krieger
+%%%%
+{acc}your large abomination
+Euren großen Greuel
+%%%%
+{acc}your Orb Guardian
+Euren Kugelwächter
+%%%%
+{acc}your tentacled starspawn
+Euren Tentakelsternbrut
+%%%%
+{acc}your starspawn tentacle
+Euren Sternbruttentakel
+%%%%
+{acc}your elephant
+Euren Elefanten
+%%%%
+{acc}your dire elephant
+Euren Schreckenselefanten
+%%%%
+{acc}your hellephant
+Euren Höllefanten
+%%%%
+{acc}your zombie
+Euren Zombie
+%%%%
+{acc}your small zombie
+Euren kleinen Zombie
+%%%%
+{acc}your large zombie
+Euren großen Zombie
+%%%%
+{acc}your electric eel
+Euren Zitteraal
+%%%%
+{acc}your kraken
+Euren Kraken
+%%%%
+{acc}your tentacle
+Euren Tentakel
+%%%%
+{acc}your octopode
+Euren Oktopod
+%%%%
+{acc}your salamander
+Euren Salamander
+%%%%
+{acc}your salamander mystic
+Euren Salamander-Mystiker
+%%%%
+{acc}your Hellbinder
+Euren Höllenbinder
+%%%%
+{acc}your Cloud Mage
+Euren Wolkenmagier
+%%%%
+{acc}your player
+Euren Spieler
+%%%%
+{acc}your eldritch tentacle
+Euren unheimlichen Tentakel
+%%%%
+{acc}your gelid demonspawn
+Euren geliden Dämonenbrut
+%%%%
+{acc}your blood saint
+Euren Blutheiligen
+%%%%
+{acc}your warmonger
+Euren Kriegstreiber
+%%%%
+{acc}your corrupter
+Euren Korruptor
+%%%%
+{acc}your ufetubus
+Euren Ufetubus
+%%%%
+{acc}your rust devil
+Euren Rostteufel
+%%%%
+{acc}your orange demon
+Euren orangen Dämon
+%%%%
+{acc}your red devil
+Euren roten Teufel
+%%%%
+{acc}your hellwing
+Euren Höllenflügel
+%%%%
+{acc}your ice devil
+Euren Eisteufel
+%%%%
+{acc}your sun demon
+Euren Sonnendämon
+%%%%
+{acc}your soul eater
+Euren Seelenfresser
+%%%%
+{acc}your smoke demon
+Euren Rauchdämon
+%%%%
+{acc}your sixfirhy
+Euren Sixfirhy
+%%%%
+{acc}your shadow demon
+Euren Schattendämon
+%%%%
+{acc}your green death
+Euren grünen Tod
+%%%%
+{acc}your blizzard demon
+Euren Blizzarddämon
+%%%%
+{acc}your balrug
+Euren Balrug
+%%%%
+{acc}your cacodemon
+Euren Cacodaemon
+%%%%
+{acc}your hellion
+Euren Teufelsbraten
+%%%%
+{acc}your reaper
+Euren Schnitter
+%%%%
+{acc}your tormentor
+Euren Peiniger
+%%%%
+{acc}your Brimstone Fiend
+Euren Schwefelunterweltler
+%%%%
+{acc}your Ice Fiend
+Euren Eisunterweltler
+%%%%
+{acc}your Hell Sentinel
+Euren Höllenwächter
+%%%%
+{acc}your Executioner
+Euren Scharfrichter
+%%%%
+{acc}your animated tree
+Euren animierten Baum
+%%%%
+{acc}your golem
+Euren Golem
+%%%%
+{acc}your saltling
+Euren Salzling
+%%%%
+{acc}your peacekeeper
+Euren Friedenshüter
+%%%%
+{acc}your iron golem
+Euren Eisengolem
+%%%%
+{acc}your crystal guardian
+Euren Kristallwächter
+%%%%
+{acc}your toenail golem
+Euren Zehennagelgolem
+%%%%
+{acc}your electric golem
+Euren Blitzgolem
+%%%%
+{acc}your guardian golem
+Euren Wächtergolem
+%%%%
+{acc}your spellforged servitor
+Euren zaubergeschmeideten Diener
+%%%%
+{acc}your block of ice
+Euren Eisblock
+%%%%
+{acc}your diamond obelisk
+Euren Diamantobelisk
+%%%%
+{acc}your lightning spire
+Euren Blitzturm
+%%%%
+{acc}your gargoyle
+Euren Gargoyle
+%%%%
+{acc}your war gargoyle
+Euren Kriegsgargoyle
+%%%%
+{acc}your molten gargoyle
+Euren geschmolzenen Gargoyle
+%%%%
+{acc}your pandemonium lord
+Euren Pandemoniumsherrn
+%%%%
+{acc}your hell lord
+Euren Höllenherrn
+%%%%
+{acc}your ball lightning
+Euren Kugelblitz
+%%%%
+{acc}your wretched star
+Euren elenden Stern
+%%%%
+{acc}your death cob
+Euren Todeskolben
+%%%%
+{acc}your moon troll
+Euren Mondtroll
+%%%%
+{acc}your nameless horror
+Euren namenlosen Horror
+%%%%
+{acc}your bunyip
+Euren Bunyip
+%%%%
+{acc}your boulder beetle
+Euren Rollsteinkäfer
+%%%%
+{acc}your goliath frog
+Euren Goliathfrosch
+%%%%
+{acc}your palentonga
+Euren Palentonga
+%%%%
+{acc}your rockslime
+Euren Felsenschleim
+%%%%
+{acc}your quicksilver ooze
+Euren Quecksilber-Schlamm
+%%%%
+{acc}your kobold brigand
+Euren Kobold-Briganten
+%%%%
+{acc}your dread lich
+Euren Grauenlich
+%%%%
+{acc}your djinni
+Euren Dschinn
+%%%%
+{acc}your salamander tyrant
+Euren Salamander-Tyrann
+%%%%
+# Test monsters can be created in Arena
+%%%%
+{acc}your test spawner
+Euren Test-Erzeuger
+%%%%
+{acc}your test blob
+Euren Test-Klumpen
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{acc}your %s zombie
+Euren %s-Zombie
+%%%%
+{acc}your %s shaped block of ice
+Euren %s-förmigen Eisblock
+%%%%
+{acc}your %s shaped shifter
+Euren %s-förmigen Gestaltwandler
+%%%%
+

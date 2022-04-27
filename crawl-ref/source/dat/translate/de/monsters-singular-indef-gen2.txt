@@ -1,0 +1,1557 @@
+###############################################################################
+#
+# Monsters - singular, indefinite article, genitive(2)
+#
+###############################################################################
+
+%%%%
+{gen}a program bug
+eines Programmfehlers
+%%%%
+{gen}a worker ant
+einer Ameisenarbeiterin
+%%%%
+{gen}a queen ant
+einer Ameisenkönigin
+%%%%
+{gen}a soldier ant
+einer Ameisensoldatin
+%%%%
+{gen}a formicid
+eines Formicids
+%%%%
+{gen}an entropy weaver
+eines Entropiewebers
+%%%%
+{gen}a bat
+einer Fledermaus
+%%%%
+{gen}a butterfly
+eines Schmetterlings
+%%%%
+{gen}a vampire bat
+einer Vampirfledermaus
+%%%%
+{gen}a fire bat
+einer Feuerfledermaus
+%%%%
+{gen}a bennu
+eines Bennus
+%%%%
+{gen}a caustic shrike
+eines ätzenden Würgers
+%%%%
+{gen}a shard shrike
+eines Scherbenwürgers
+%%%%
+{gen}a centaur
+eines Zentauren
+%%%%
+{gen}a centaur warrior
+eines Zentaur-Kriegers
+%%%%
+{gen}a yaktaur
+eines Yaktauren
+%%%%
+{gen}a yaktaur captain
+eines Yaktaur-Kapitäns
+%%%%
+{gen}a faun
+eines Fauns
+%%%%
+{gen}a satyr
+eines Satyrs
+%%%%
+{gen}a draconian
+eines Drakoniers
+%%%%
+{gen}a black draconian
+eines schwarzen Drakoniers
+%%%%
+{gen}a yellow draconian
+eines gelben Drakoniers
+%%%%
+{gen}a pale draconian
+eines blassen Drakoniers
+%%%%
+{gen}a green draconian
+eines grünen Drakoniers
+%%%%
+{gen}a purple draconian
+eines purpurnen Drakoniers
+%%%%
+{gen}a red draconian
+eines roten Drakoniers
+%%%%
+{gen}a white draconian
+eines weißen Drakoniers
+%%%%
+{gen}a grey draconian
+eines grauen Drakoniers
+%%%%
+{gen}a draconian stormcaller
+eines Drakonier-Sturmrufers
+%%%%
+{gen}a draconian monk
+eines Drakonier-Mönchs
+%%%%
+{gen}a draconian shifter
+eines Drakonier-Verschiebers
+%%%%
+{gen}a draconian annihilator
+eines Drakonier-Vernichters
+%%%%
+{gen}a draconian knight
+eines Drakonier-Ritters
+%%%%
+{gen}a draconian scorcher
+eines Drakonier-Verschmorers
+%%%%
+{gen}an elf
+eines Elfs
+%%%%
+{gen}a deep elf knight
+eines Tiefenelf-Ritters
+%%%%
+{gen}a deep elf archer
+eines Tiefenelf-Bogenschützen
+%%%%
+{gen}a deep elf blademaster
+eines Tiefenelf-Klingenmeisters
+%%%%
+{gen}a deep elf master archer
+eines Tiefenelf-Bogenmeisters
+%%%%
+{gen}a deep elf zephyrmancer
+eines Tiefenelf-Zephyrmanten
+%%%%
+{gen}a deep elf pyromancer
+eines Tiefenelf-Pyromanten
+%%%%
+{gen}a deep elf high priest
+eines Tiefenelf-Hohepriesters
+%%%%
+{gen}a deep elf demonologist
+eines Tiefenelf-Dämonologen
+%%%%
+{gen}a deep elf annihilator
+eines Tiefenelf-Vernichters
+%%%%
+{gen}a deep elf sorcerer
+eines Tiefenelf-Zauberers
+%%%%
+{gen}a deep elf death mage
+eines Tiefenelf-Todesmagiers
+%%%%
+{gen}a deep elf elementalist
+eines Tiefenelf-Elementalisten
+%%%%
+{gen}a wandering mushroom
+eines wandernden Pilzs
+%%%%
+{gen}a deathcap
+einer Todesmütze
+%%%%
+{gen}a thorn hunter
+eines Dornenjägers
+%%%%
+{gen}a shambling mangrove
+einer watschelnden Mangrove
+%%%%
+{gen}a vine stalker
+eines Rebjägers
+%%%%
+{gen}a goblin
+eines Goblins
+%%%%
+{gen}a hobgoblin
+eines Hobgoblins
+%%%%
+{gen}a gnoll
+eines Gnolls
+%%%%
+{gen}a gnoll shaman
+eines Gnoll-Schamanen
+%%%%
+{gen}a gnoll sergeant
+eines Gnoll-Wachtmeisters
+%%%%
+{gen}a boggart
+eines Boggarts
+%%%%
+{gen}a dwarf
+eines Zwergs
+%%%%
+{gen}a deep dwarf
+eines Tiefenzwergs
+%%%%
+{gen}a jackal
+eines Schakals
+%%%%
+{gen}a hound
+eines Hunds
+%%%%
+{gen}a howler monkey
+eines Brüllaffen
+%%%%
+{gen}a warg
+eines Wargs
+%%%%
+{gen}a wolf
+eines Wolfs
+%%%%
+{gen}a hog
+eines Schweins
+%%%%
+{gen}a hell hound
+eines Höllenhunds
+%%%%
+{gen}a doom hound
+eines Untergangshunds
+%%%%
+{gen}a raiju
+eines Raijus
+%%%%
+{gen}a hell hog
+eines höllischen Schweins
+%%%%
+{gen}a holy swine
+eines heiligen Schweins
+%%%%
+{gen}a felid
+eines Felids
+%%%%
+{gen}a bear
+eines Bären
+%%%%
+{gen}a polar bear
+eines Eisbären
+%%%%
+{gen}a black bear
+eines Schwarzbären
+%%%%
+{gen}a spriggan
+eines Spriggans
+%%%%
+{gen}a spriggan rider
+eines Spriggan-Reiters
+%%%%
+{gen}a spriggan druid
+eines Spriggan-Druiden
+%%%%
+{gen}a spriggan berserker
+eines Spriggan-Berserkers
+%%%%
+{gen}a spriggan air mage
+eines Spriggan-Luftmagiers
+%%%%
+{gen}a spriggan defender
+eines Spriggan-Verteidigers
+%%%%
+{gen}a drake
+eines Drachlings
+%%%%
+{gen}a swamp drake
+eines Sumpfdrachlings
+%%%%
+{gen}a rime drake
+eines Reifsdrachlings
+%%%%
+{gen}a wind drake
+eines Winddrachlings
+%%%%
+{gen}a lindwurm
+eines Lindwurms
+%%%%
+{gen}a death drake
+eines Todesdrachlings
+%%%%
+{gen}a giant lizard
+einer Rieseneidechse
+%%%%
+{gen}a frilled lizard
+einer gekräuselten Eidechse
+%%%%
+{gen}a leopard gecko
+eines Leopardgeckos
+%%%%
+{gen}an iguana
+eines Leguans
+%%%%
+{gen}a basilisk
+eines Basilisks
+%%%%
+{gen}a wyvern
+eines Wyverns
+%%%%
+{gen}a komodo dragon
+eines Komododrachen
+%%%%
+{gen}a merfolk
+eines Meervolks
+%%%%
+{gen}a merfolk impaler
+eines Meervolk-Impalers
+%%%%
+{gen}a merfolk javelineer
+eines Meervolk-Speerführers
+%%%%
+{gen}a merfolk aquamancer
+eines Meervolk-Aquamancers
+%%%%
+{gen}a merfolk siren
+einer Meervolk-Sirene
+%%%%
+{gen}a merfolk avatar
+eines Meervolk-Avatars
+%%%%
+{gen}a water nymph
+einer Wassernymphe
+%%%%
+{gen}a bog body
+einer Moorleiche
+%%%%
+{gen}a necrophage
+eines Nekrophagens
+%%%%
+{gen}a bloated husk
+einer aufgeblähten Hülle
+%%%%
+{gen}a ghoul
+eines Ghuls
+%%%%
+{gen}an orc
+eines Orks
+%%%%
+{gen}an orc wizard
+eines Ork-Zauberers
+%%%%
+{gen}an orc priest
+eines Ork-Priesters
+%%%%
+{gen}an orc warrior
+eines Ork-Kriegers
+%%%%
+{gen}an orc knight
+eines Ork-Ritters
+%%%%
+{gen}an orc warlord
+eines Ork-Warlords
+%%%%
+{gen}an orc sorcerer
+eines Ork-Hexenmeisters
+%%%%
+{gen}an orc high priest
+eines Ork-Hohepriesters
+%%%%
+{gen}a lava orc
+eines Lava-Orks
+%%%%
+{gen}a human
+eines Menschen
+%%%%
+{gen}a slave
+eines Sklaven
+%%%%
+{gen}a hell knight
+eines Höllenritters
+%%%%
+{gen}a death knight
+eines Todesritters
+%%%%
+{gen}a necromancer
+eines Nekromanten
+%%%%
+{gen}a wizard
+eines Zauberers
+%%%%
+{gen}a vault guard
+eines Tresorwächters
+%%%%
+{gen}a vault sentinel
+einer Tresorwache
+%%%%
+{gen}a vault warden
+eines Tresorwärters
+%%%%
+{gen}an ironbound convoker
+eines eisenbeschlagenen Einberufers
+%%%%
+{gen}an ironbound frostheart
+eines eisengebundenen Frostherzens
+%%%%
+{gen}an ironbound preserver
+eines eisenbeschlagenen Bewahrer
+%%%%
+{gen}an ironbound beastmaster
+eines eisenbeschlagenen Bestienmeister
+%%%%
+{gen}an ironbound thunderhulk
+eines eisenbeschlagenen Donnerkolosses
+%%%%
+{gen}an imperial myrmidon
+eines kaiserlichen Myrmidons
+%%%%
+{gen}a servant of whispers
+eines Dieners des Flüsterns
+%%%%
+{gen}a ragged hierophant
+eines zerlumpten Hierophanten
+%%%%
+{gen}a shapeshifter
+eines Gestaltwandlers
+%%%%
+{gen}a glowing shapeshifter
+eines leuchtenden Gestaltwandlers
+%%%%
+{gen}a Killer Klown
+eines Killer-Klowns
+%%%%
+{gen}a demigod
+eines Halbgotts
+%%%%
+{gen}a halfling
+eines Halblings
+%%%%
+{gen}a rat
+einer Ratte
+%%%%
+{gen}a quokka
+eines Quokkas
+%%%%
+{gen}a river rat
+einer Flussratte
+%%%%
+{gen}a hell rat
+einer Höllenratte
+%%%%
+{gen}a porcupine
+eines Stachelschweins
+%%%%
+{gen}a giant cockroach
+einer Riesenkakerlake
+%%%%
+{gen}a scorpion
+eines Skorpions
+%%%%
+{gen}an emperor scorpion
+eines Kaiserskorpions
+%%%%
+{gen}a death scarab
+eines Todesskarabäus
+%%%%
+{gen}a spider
+einer Spinne
+%%%%
+{gen}a tarantella
+einer Tarantella
+%%%%
+{gen}a jumping spider
+einer springenden Spinne
+%%%%
+{gen}a wolf spider
+einer Wolfsspinne
+%%%%
+{gen}a redback
+einer Rotrückenspinne
+%%%%
+{gen}a demonic crawler
+eines dämonischen Kriechers
+%%%%
+{gen}an orb spider
+einer Kugelspinne
+%%%%
+{gen}a crocodile
+eines Krokodils
+%%%%
+{gen}an alligator
+eines Alligators
+%%%%
+{gen}a snapping turtle
+einer Schnappschildkröte
+%%%%
+{gen}an alligator snapping turtle
+einer Alligatorschnappschildkröte
+%%%%
+{gen}a crab
+einer Krabbe
+%%%%
+{gen}a fire crab
+einer Feuerkrabbe
+%%%%
+{gen}a ghost crab
+einer Geisterkrabbe
+%%%%
+{gen}an apocalypse crab
+einer Apokalypse-Krabbe
+%%%%
+{gen}an ugly thing
+eines hässlichen Dings
+%%%%
+{gen}a very ugly thing
+eines sehr hässlichen Dings
+%%%%
+{gen}a fire vortex
+eines Feuerwirbels
+%%%%
+{gen}a spatial vortex
+eines räumlichen Wirbels
+%%%%
+{gen}a spatial maelstrom
+eines räumlichen Mahlstroms
+%%%%
+{gen}an insubstantial wisp
+eines unwesentlichen Irrlichts
+%%%%
+{gen}a twister
+eines Twisters
+%%%%
+{gen}a worm
+eines Wurms
+%%%%
+{gen}a swamp worm
+eines Sumpfwurms
+%%%%
+{gen}a tyrant leech
+eines Tyrannblutegels
+%%%%
+{gen}a dart slug
+einer Pfeilschnecke
+%%%%
+{gen}a torpor snail
+einer Erstarrungsschnecke
+%%%%
+{gen}an elephant slug
+einer Elefantenschnecke
+%%%%
+{gen}an unseen horror
+eines unsichtbaren Grauens
+%%%%
+{gen}a small abomination
+eines kleinen Greuels
+%%%%
+{gen}a crawling corpse
+einer kriechenden Leiche
+%%%%
+{gen}a macabre mass
+einer makaberen Masse
+%%%%
+{gen}an ancient zyme
+eines uralten Zyms
+%%%%
+{gen}a worldbinder
+eines Weltbinders
+%%%%
+{gen}a killer bee
+einer Killerbiene
+%%%%
+{gen}a queen bee
+einer Bienenkönigin
+%%%%
+{gen}a vampire mosquito
+einer Vampir-Mücke
+%%%%
+{gen}a hornet
+einer Hornisse
+%%%%
+{gen}a meliai
+einer Meliai
+%%%%
+{gen}a spark wasp
+einer Funkenwespe
+%%%%
+{gen}a moth
+einer Motte
+%%%%
+{gen}a ghost moth
+einer Geistermotte
+%%%%
+{gen}a moth of wrath
+einer Motte des Zorns
+%%%%
+{gen}a wight
+eines Wights
+%%%%
+{gen}a skeletal warrior
+eines Skelettkriegers
+%%%%
+{gen}an ancient champion
+eines alten Champions
+%%%%
+{gen}a flying skull
+eines fliegenden Schädels
+%%%%
+{gen}a curse skull
+eines Fluchschädels
+%%%%
+{gen}a curse toe
+eines Fluchzehs
+%%%%
+{gen}an angel
+eines Engels
+%%%%
+{gen}a cherub
+eines Cherubs
+%%%%
+{gen}a seraph
+eines Seraphs
+%%%%
+{gen}a daeva
+eines Daevas
+%%%%
+{gen}a profane servitor
+eines profanen Dieners
+%%%%
+{gen}a giant
+eines Riesen
+%%%%
+{gen}a cyclops
+eines Zyklops
+%%%%
+{gen}an ettin
+eines Ettins
+%%%%
+{gen}a fire giant
+eines Feuerriesen
+%%%%
+{gen}a frost giant
+eines Frostriesen
+%%%%
+{gen}a stone giant
+eines Steinriesen
+%%%%
+{gen}a titan
+eines Titans
+%%%%
+{gen}a juggernaut
+eines Juggernauts
+%%%%
+{gen}an iron giant
+eines Eisenriesen
+%%%%
+{gen}a dragon
+eines Drachen
+%%%%
+{gen}a fire dragon
+eines Feuerdrachen
+%%%%
+{gen}a hydra
+einer Hydra
+%%%%
+{gen}a one-headed hydra
+einer einköpfigen Hydra
+%%%%
+{gen}a two-headed hydra
+einer zweiköpfigen Hydra
+%%%%
+{gen}a three-headed hydra
+einer dreiköpfigen Hydra
+%%%%
+{gen}a four-headed hydra
+einer vierköpfigen Hydra
+%%%%
+{gen}e five-headed hydra
+einer fünfköpfigen Hydra
+%%%%
+{gen}e six-headed hydra
+einer sechsköpfigen Hydra
+%%%%
+{gen}a seven-headed hydra
+einer siebenköpfigen Hydra
+%%%%
+{gen}a eight-headed hydra
+einer achtköpfigen Hydra
+%%%%
+{gen}a nine-headed hydra
+einer neunköpfigen Hydra
+%%%%
+{gen}a ten-headed hydra
+einer zehnköpfigen Hydra
+%%%%
+{gen}a 11-headed hydra
+einer 11-köpfigen Hydra
+%%%%
+{gen}a 12-headed hydra
+einer 12-köpfigen Hydra
+%%%%
+{gen}a 13-headed hydra
+einer 13-köpfigen Hydra
+%%%%
+{gen}a 14-headed hydra
+einer 14-köpfigen Hydra
+%%%%
+{gen}a 15-headed hydra
+einer 15-köpfigen Hydra
+%%%%
+{gen}a 16-headed hydra
+einer 16-köpfigen Hydra
+%%%%
+{gen}a 17-headed hydra
+einer 17-köpfigen Hydra
+%%%%
+{gen}a 18-headed hydra
+einer 18-köpfigen Hydra
+%%%%
+{gen}a 19-headed hydra
+einer 19-köpfigen Hydra
+%%%%
+{gen}a 20-headed hydra
+einer 20-köpfigen Hydra
+%%%%
+{gen}an ice dragon
+eines Eisdrachen
+%%%%
+{gen}a steam dragon
+eines Dampfdrachen
+%%%%
+{gen}a swamp dragon
+eines Sumpfdrachen
+%%%%
+{gen}an acid dragon
+eines Säuredrachen
+%%%%
+{gen}a quicksilver dragon
+eines Quecksilberdrachen
+%%%%
+{gen}an iron dragon
+eines Eisendrachen
+%%%%
+{gen}a storm dragon
+eines Sturmdrachen
+%%%%
+{gen}a golden dragon
+eines Golddrachen
+%%%%
+{gen}a shadow dragon
+eines Schattendrachen
+%%%%
+{gen}a bone dragon
+eines Knochendrachen
+%%%%
+{gen}a pearl dragon
+eines Perlendrachen
+%%%%
+{gen}an elemental
+eines Elementars
+%%%%
+{gen}an earth elemental
+eines Erdelementars
+%%%%
+{gen}a fire elemental
+eines Feuerelementars
+%%%%
+{gen}a water elemental
+eines Wasserelementars
+%%%%
+{gen}an air elemental
+eines Luftelementars
+%%%%
+{gen}an iron elemental
+eines Eisenelementars
+%%%%
+{gen}an elemental wellspring
+einer elementaren Quelle
+%%%%
+{gen}a giant frog
+eines Riesenfrosches
+%%%%
+{gen}a bullfrog
+eines Ochsenfrosches
+%%%%
+{gen}a spiny frog
+eines Stachelfrosches
+%%%%
+{gen}a blink frog
+eines Blinzelfrosches
+%%%%
+{gen}a barachi
+einer Barachi
+%%%%
+{gen}a floating eye
+eines schwebenden Auges
+%%%%
+{gen}an eye of draining
+eines Auges des Schwächens
+%%%%
+{gen}a glowing orange brain
+eines orangen leuchtenden Gehirns
+%%%%
+{gen}a great orb of eyes
+einer großen Augenkugel
+%%%%
+{gen}a shining eye
+eines leuchtenden Auges
+%%%%
+{gen}an eye of devastation
+eines Auges der Verwüstung
+%%%%
+{gen}a golden eye
+eines goldenen Auges
+%%%%
+{gen}an ophan
+eines Ophans
+%%%%
+{gen}a hippogriff
+eines Hippogriffs
+%%%%
+{gen}a manticore
+eines Mantikors
+%%%%
+{gen}a minotaur
+eines Minotauren
+%%%%
+{gen}a sphinx
+einer Sphinx
+%%%%
+{gen}a harpy
+einer Harpyie
+%%%%
+{gen}a mutant beast
+einer mutierten Bestie
+%%%%
+{gen}an ancestor
+eines Ahnen
+%%%%
+{gen}a knight
+eines Ritters
+%%%%
+{gen}a battlemage
+eines Kampfmagiers
+%%%%
+{gen}a hexer
+eines Hexers
+%%%%
+{gen}an ooze
+eines Schlamms
+%%%%
+{gen}a jelly
+eines Gelees
+%%%%
+{gen}a %sslime creature
+eines {adj-en}%sSchleimwesens
+%%%%
+{gen}a merged slime creature
+einer verschmolzenen Schleimkreatur
+%%%%
+{gen}an azure jelly
+eines azurblauen Gelees
+%%%%
+{gen}a death ooze
+eines Todesschlamms
+%%%%
+{gen}an acid blob
+eines Säureklumpens
+%%%%
+{gen}a kobold
+eines Kobolds
+%%%%
+{gen}a big kobold
+eines großen Kobolds
+%%%%
+{gen}a kobold demonologist
+eines Kobold-Dämonologen
+%%%%
+{gen}a lich
+eines Lichs
+%%%%
+{gen}an ancient lich
+eines alten Lichs
+%%%%
+{gen}a revenant
+eines Wiedergängers
+%%%%
+{gen}a halazid warlock
+eines halazidischen Hexenmeisters
+%%%%
+{gen}a mummy
+einer Mumie
+%%%%
+{gen}a guardian mummy
+einer Wächtermumie
+%%%%
+{gen}a greater mummy
+einer größeren Mumie
+%%%%
+{gen}a mummy priest
+eines Mumie-Priesters
+%%%%
+{gen}a naga
+eines Nagas
+%%%%
+{gen}a naga mage
+eines Naga-Magiers
+%%%%
+{gen}a naga sharpshooter
+eines Naga-Scharfschützen
+%%%%
+{gen}a naga ritualist
+eines Naga-Ritualisten
+%%%%
+{gen}a naga warrior
+eines Naga-Kriegers
+%%%%
+{gen}a nagaraja
+eines Nagarajas
+%%%%
+{gen}an ogre
+eines Ogers
+%%%%
+{gen}a two-headed ogre
+eines zweiköpfigen Ogers
+%%%%
+{gen}an ogre mage
+eines Oger-Magiers
+%%%%
+{gen}a plant
+einer Pflanze
+%%%%
+{gen}a demonic plant
+einer dämonischen Pflanze
+%%%%
+{gen}a withered plant
+einer verwelkten Pflanze
+%%%%
+{gen}an oklob sapling
+eines Oklob-Setzlings
+%%%%
+{gen}an oklob plant
+einer Oklob-Pflanze
+%%%%
+{gen}a bush
+eines Busches
+%%%%
+{gen}a burning bush
+eines brennenden Busches
+%%%%
+{gen}a toadstool
+eines Giftpilzs
+%%%%
+{gen}a fungus
+eines Pilzs
+%%%%
+{gen}a ballistomycete
+eines Ballistomyceten
+%%%%
+{gen}a hyperactive ballistomycete
+eines hyperaktiven Ballistomyceten
+%%%%
+{gen}a briar patch
+eines Dornstrauchs
+%%%%
+{gen}a tengu
+eines Tengus
+%%%%
+{gen}a tengu conjurer
+eines Tengu-Zauberers
+%%%%
+{gen}a tengu warrior
+eines Tengu-Kriegers
+%%%%
+{gen}a tengu reaver
+eines Tengu-Häschers
+%%%%
+{gen}an efreet
+eines Efreets
+%%%%
+{gen}a rakshasa
+eines Rakshasas
+%%%%
+{gen}a dryad
+einer Dryade
+%%%%
+{gen}a snaplasher vine
+einer Peitscherrebe
+%%%%
+{gen}a snaplasher vine segment
+eines Peitscherrebesegments
+%%%%
+{gen}a snake
+einer Schlange
+%%%%
+{gen}a ball python
+einer Kugelpython
+%%%%
+{gen}an adder
+einer Kreuzotter
+%%%%
+{gen}a water moccasin
+eines Wassermokassins
+%%%%
+{gen}a black mamba
+einer schwarzen Mamba
+%%%%
+{gen}a sea snake
+einer Seeschlange
+%%%%
+{gen}an anaconda
+einer Anakonda
+%%%%
+{gen}a guardian serpent
+einer Wächter-Schlange
+%%%%
+{gen}a shock serpent
+einer Schockschlange
+%%%%
+{gen}a mana viper
+einer Manaviper
+%%%%
+{gen}a troll
+eines Trolls
+%%%%
+{gen}an iron troll
+eines Eisentrolls
+%%%%
+{gen}a deep troll
+eines Tiefentrolls
+%%%%
+{gen}a deep troll earth mage
+eines Tiefentroll-Erdmagiers
+%%%%
+{gen}a deep troll shaman
+eines Tiefentroll-Schamanen
+%%%%
+{gen}a vampire
+eines Vampirs
+%%%%
+{gen}a vampire knight
+eines Vampir-Ritters
+%%%%
+{gen}a vampire mage
+eines Vampir-Magiers
+%%%%
+{gen}a jiangshi
+eines Jiangshis
+%%%%
+{gen}a ghost
+eines Gespensts
+%%%%
+{gen}a phantom
+eines Phantoms
+%%%%
+{gen}a hungry ghost
+eines hungrigen Geistes
+%%%%
+{gen}a flayed ghost
+eines enthäuteten Geistes
+%%%%
+{gen}a player ghost
+eines Spielergeistes
+%%%%
+{gen}a shadow
+eines Schattens
+%%%%
+{gen}a silent spectre
+eines stillen Gespensts
+%%%%
+{gen}a drowned soul
+einer ertrunkenen Seele
+%%%%
+{gen}a wraith
+eines Geistes
+%%%%
+{gen}a shadow wraith
+eines Schattengeistes
+%%%%
+{gen}a freezing wraith
+eines Frostgeistes
+%%%%
+{gen}an eidolon
+eines Eidolons
+%%%%
+{gen}a phantasmal warrior
+eines phantastischen Kriegers
+%%%%
+{gen}a large abomination
+eines großen Greuels
+%%%%
+{gen}a thrashing horror
+eines verprügelnden Grauens
+%%%%
+{gen}a tentacled monstrosity
+einer Tentakel-Monstrosität
+%%%%
+{gen}an Orb Guardian
+eines Kugelwächters
+%%%%
+{gen}a tentacled starspawn
+eines Tentakelsternbruts
+%%%%
+{gen}a starspawn tentacle
+eines Sternbruttentakels
+%%%%
+{gen}a starspawn tentacle segment
+eines Sternbruttentakelsegments
+%%%%
+{gen}a starcursed mass
+einer sternverfluchten Masse
+%%%%
+{gen}a dream sheep
+eines Traumschafs
+%%%%
+{gen}a yak
+eines Yaks
+%%%%
+{gen}a death yak
+eines Todesyaks
+%%%%
+{gen}a catoblepas
+einer Catoblepas
+%%%%
+{gen}an elephant
+eines Elefanten
+%%%%
+{gen}a dire elephant
+eines Schreckenselefanten
+%%%%
+{gen}a hellephant
+eines Höllefanten
+%%%%
+{gen}an apis
+einer Apis
+%%%%
+{gen}an ice beast
+einer Eisbestie
+%%%%
+{gen}a sky beast
+eines Himmelstiers
+%%%%
+{gen}a zombie
+eines Zombies
+%%%%
+{gen}a skeleton
+eines Skeletts
+%%%%
+{gen}a simulacrum
+eines Simulacrums
+%%%%
+{gen}a small zombie
+eines kleinen Zombies
+%%%%
+{gen}a small skeleton
+eines kleinen Skeletts
+%%%%
+{gen}a small simulacrum
+eines kleinen Simulacrums
+%%%%
+{gen}a large zombie
+eines großen Zombies
+%%%%
+{gen}a large skeleton
+eines großen Skeletts
+%%%%
+{gen}a large simulacrum
+eines großen Simulacrums
+%%%%
+{gen}a spectral thing
+einer spektralen Sache
+%%%%
+{gen}an electric eel
+eines Zitteraals
+%%%%
+{gen}a kraken
+eines Krakens
+%%%%
+{gen}a tentacle
+eines Tentakels
+%%%%
+{gen}a tentacle segment
+eines Tentakelsegments
+%%%%
+{gen}an octopode
+eines Oktopods
+%%%%
+{gen}a lava snake
+einer Lavaschlange
+%%%%
+{gen}a salamander
+eines Salamanders
+%%%%
+{gen}a salamander mystic
+eines Salamander-Mystikers
+%%%%
+{gen}a Hellbinder
+eines Höllenbinders
+%%%%
+{gen}a Cloud Mage
+eines Wolkenmagiers
+%%%%
+{gen}a player
+eines Spielers
+%%%%
+{gen}a player illusion
+einer Spieler-Illusion
+%%%%
+{gen}a dancing weapon
+einer tanzenden Waffe
+%%%%
+{gen}a spectral weapon
+einer Spektralwaffe
+%%%%
+{gen}an eldritch tentacle
+eines unheimlichen Tentakels
+%%%%
+{gen}an eldritch tentacle segment
+eines unheimlichen Tentakelsegments
+%%%%
+{gen}a demonspawn
+einer Dämonenbrut
+%%%%
+{gen}a monstrous demonspawn
+einer monströsen Dämonenbrut
+%%%%
+{gen}a gelid demonspawn
+eines geliden Dämonenbruts
+%%%%
+{gen}an infernal demonspawn
+einer höllischen Dämonenbrut
+%%%%
+{gen}a torturous demonspawn
+einer quälenden Dämonenbrut
+%%%%
+{gen}a blood saint
+eines Blutheiligen
+%%%%
+{gen}a warmonger
+eines Kriegstreibers
+%%%%
+{gen}a corrupter
+eines Korruptors
+%%%%
+{gen}a black sun
+einer schwarzen Sonne
+%%%%
+{gen}a crimson imp
+eines karminroten Teufelchens
+%%%%
+{gen}a quasit
+eines Quasits
+%%%%
+{gen}a white imp
+eines weißen Teufelchens
+%%%%
+{gen}an ufetubus
+eines Ufetubus
+%%%%
+{gen}an iron imp
+eines Eisenteufelchens
+%%%%
+{gen}a shadow imp
+eines Schattenteufelchens
+%%%%
+{gen}a rust devil
+eines Rostteufels
+%%%%
+{gen}an orange demon
+eines orangen Dämons
+%%%%
+{gen}a red devil
+eines roten Teufels
+%%%%
+{gen}a hellwing
+eines Höllenflügels
+%%%%
+{gen}an ice devil
+eines Eisteufels
+%%%%
+{gen}a chaos spawn
+einer Chaosbrut
+%%%%
+{gen}a sun demon
+eines Sonnendämons
+%%%%
+{gen}a soul eater
+eines Seelenfressers
+%%%%
+{gen}a smoke demon
+eines Rauchdämons
+%%%%
+{gen}a neqoxec
+einer Neqoxec
+%%%%
+{gen}a ynoxinul
+eines Ynoxinuls
+%%%%
+{gen}a sixfirhy
+eines Sixfirhys
+%%%%
+{gen}a shadow demon
+eines Schattendämons
+%%%%
+{gen}a green death
+eines grünen Tods
+%%%%
+{gen}a blizzard demon
+eines Blizzarddämons
+%%%%
+{gen}a balrug
+eines Balrugs
+%%%%
+{gen}a cacodemon
+eines Cacodaemons
+%%%%
+{gen}a hell beast
+eines Höllentiers
+%%%%
+{gen}a hellion
+eines Teufelsbratens
+%%%%
+{gen}a reaper
+eines Schnitters
+%%%%
+{gen}a lorocyproca
+einer Lorocyproca
+%%%%
+{gen}a tormentor
+eines Peinigers
+%%%%
+{gen}a Brimstone Fiend
+eines Schwefelunterweltlers
+%%%%
+{gen}an Ice Fiend
+eines Eisunterweltlers
+%%%%
+{gen}a Tzitzimitl
+eines Tzitzimitls
+%%%%
+{gen}a Hell Sentinel
+eines Höllenwächters
+%%%%
+{gen}an Executioner
+eines Scharfrichters
+%%%%
+{gen}an animated tree
+eines animierten Baums
+%%%%
+{gen}a golem
+eines Golems
+%%%%
+{gen}a saltling
+eines Salzlings
+%%%%
+{gen}a peacekeeper
+eines Friedenshüters
+%%%%
+{gen}an iron golem
+eines Eisengolems
+%%%%
+{gen}a crystal guardian
+eines Kristallwächters
+%%%%
+{gen}a toenail golem
+eines Zehennagelgolems
+%%%%
+{gen}an electric golem
+eines Blitzgolems
+%%%%
+{gen}an ushabti
+einer Uschabti
+%%%%
+{gen}a guardian golem
+eines Wächtergolems
+%%%%
+{gen}a spellforged servitor
+eines zaubergeschmeideten Dieners
+%%%%
+{gen}an ice statue
+einer Eisstatue
+%%%%
+{gen}an obsidian statue
+einer Obsidianstatue
+%%%%
+{gen}an orange crystal statue
+einer orangen Kristallstatue
+%%%%
+{gen}a statue
+einer Statue
+%%%%
+{gen}a training dummy
+einer Trainingspuppe
+%%%%
+{gen}a pillar of salt
+einer Säule des Salzes
+%%%%
+{gen}a block of ice
+eines Eisblocks
+%%%%
+{gen}a diamond obelisk
+eines Diamantobelisks
+%%%%
+{gen}a lightning spire
+eines Blitzturms
+%%%%
+{gen}a gargoyle
+eines Gargoyles
+%%%%
+{gen}a war gargoyle
+eines Kriegsgargoyles
+%%%%
+{gen}a molten gargoyle
+eines geschmolzenen Gargoyles
+%%%%
+{gen}a pandemonium lord
+eines Pandemoniumsherrn
+%%%%
+{gen}a hell lord
+eines Höllenherrn
+%%%%
+{gen}a ball lightning
+eines Kugelblitzs
+%%%%
+{gen}a ballistomycete spore
+einer Ballistomycetenspore
+%%%%
+{gen}a lost soul
+einer verlorenen Seele
+%%%%
+{gen}a lurking horror
+eines lauernden Grauens
+%%%%
+{gen}an orb of fire
+einer Feuerkugel
+%%%%
+{gen}an orb of destruction
+einer Kugel der Zerstörung
+%%%%
+{gen}a fulminant prism
+eines fulminanten Prismas
+%%%%
+{gen}a wretched star
+eines elenden Sterns
+%%%%
+{gen}a battlesphere
+einer Kampfsphäre
+%%%%
+{gen}a death cob
+eines Todeskolbens
+%%%%
+{gen}a moon troll
+eines Mondtrolls
+%%%%
+{gen}a foxfire
+eines Fuchsfeuers
+%%%%
+{gen}a nameless horror
+eines namenlosen Horrors
+%%%%
+{gen}a will-o-the-wisp
+eines Irrlichts
+%%%%
+{gen}a bunyip
+eines Bunyips
+%%%%
+{gen}a boulder beetle
+eines Rollsteinkäfers
+%%%%
+{gen}a cane toad
+einer Aga-Kröte
+%%%%
+{gen}a goliath frog
+eines Goliathfrosches
+%%%%
+{gen}a fenstrider witch
+einer Fennläuferhexe
+%%%%
+{gen}a palentonga
+eines Palentongas
+%%%%
+{gen}a royal mummy
+einer königlichen Mumie
+%%%%
+{gen}a eleionoma
+einer Eleionoma
+%%%%
+{gen}a lemure
+einer Lemure
+%%%%
+{gen}an endoplasm
+eines Endoplasmas
+%%%%
+{gen}a rockslime
+eines Felsenschleims
+%%%%
+{gen}a quicksilver ooze
+eines Quecksilber-Schlamms
+%%%%
+{gen}a kobold brigand
+eines Kobold-Briganten
+%%%%
+{gen}a dread lich
+eines Grauenlichs
+%%%%
+{gen}a djinni
+eines Dschinns
+%%%%
+{gen}a salamander tyrant
+eines Salamander-Tyranns
+%%%%
+{gen}an animated armour
+einer animierten Rüstung
+%%%%
+{gen}a test spawner
+eines Test-Erzeugers
+%%%%
+{gen}a test statue
+einer Test-Statue
+%%%%
+{gen}a test blob
+eines Test-Klumpens
+%%%%
+{gen}a sensed monster
+eines gespürten Monsters
+%%%%
+{gen}a friendly sensed monster
+eines freundlichen gespürten Monsters
+%%%%
+{gen}a trivial sensed monster
+eines trivialen gespürten Monsters
+%%%%
+{gen}an easy sensed monster
+eines leichten gespürten Monsters
+%%%%
+{gen}a tough sensed monster
+eines harten gespürten Monsters
+%%%%
+{gen}a nasty sensed monster
+eines furchtbaren gespürten Monsters
+%%%%
+{gen}a %ssting beast
+eines {adj-en}%sStichbiests
+%%%%
+{gen}a %sbat beast
+eines {adj-en}%sFledermaus-Biests
+%%%%
+{gen}a %sfire beast
+eines {adj-en}%sFeuerbiests
+%%%%
+{gen}a %sweird beast
+eines {adj-en}%sbizarren Biests
+%%%%
+{gen}a %sshock beast
+eines {adj-en}%sSchockbiests
+%%%%
+{gen}a %sox beast
+eines {adj-en}%sOchsenbiests
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{gen}a %s zombie
+eines %s-Zombies
+%%%%
+{gen}a %s skeleton
+eines %s-Skeletts
+%%%%
+{gen}a %s simulacrum
+eines %s-Simulacrums
+%%%%
+{gen}a %s shaped pillar of salt
+einer %s-förmigen Salzsäule
+%%%%
+{gen}a %s shaped block of ice
+eines %s-förmigen Eisblocks
+%%%%
+{gen}a %s shaped shifter
+eines %s-förmigen Gestaltwandlers
+%%%%
+

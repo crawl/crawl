@@ -1,0 +1,342 @@
+###############################################################################
+#
+# German translations for monster names (genitive case, set 1)
+#
+# These are used to replace an English genitive.
+# Note that DCSS always adds 's in English, even if the Noun alread ends in s.
+#
+###############################################################################
+%%%%
+
+##############################################
+# Misc
+##############################################
+# unseen monster
+%%%%
+something's
+von etwas
+%%%%
+
+##############################################
+# Uniques
+##############################################
+%%%%
+Mennas's
+Mennas'
+%%%%
+Nessos's
+Nessos'
+%%%%
+Chuck's
+Chucks
+%%%%
+Polyphemus's
+Polyphems
+%%%%
+Antaeus's
+Antaeus'
+%%%%
+Tiamat's
+Tiamats
+%%%%
+Bai Suzhen's
+Bai Suzhens
+%%%%
+Xtahua's
+Xtahuas
+%%%%
+Ijyb's
+Ijybs
+%%%%
+Robin's
+Robins
+%%%%
+Grum's
+Grums
+%%%%
+Duvessa's
+Duvessas
+%%%%
+Dowan's
+Dowans
+%%%%
+Fannar's
+Fannars
+%%%%
+Jorgrun's
+Jorgruns
+%%%%
+Natasha's
+Nataschas
+%%%%
+Arachne's
+Arachnes
+%%%%
+Asterion's
+Asterions
+%%%%
+Agnes's
+Agnes'
+%%%%
+Dissolution's
+Dissolutions
+%%%%
+Sonja's
+Sonjas
+%%%%
+Pikel's
+Pikels
+%%%%
+Boris's
+Boris'
+%%%%
+Menkaure's
+Menkaures
+%%%%
+Khufu's
+Khufus
+%%%%
+Ilsuiw's
+Ilsuiws
+%%%%
+Vashnia's
+Vashnias
+%%%%
+Erolcha's
+Erolchas
+%%%%
+Urug's
+Urugs
+%%%%
+Nergalle's
+Nergalles
+%%%%
+Saint Roka's
+Sankt Rokas
+%%%%
+Sojobo's
+Sojobos
+%%%%
+Azrael's
+Azraels
+%%%%
+Mara's
+Maras
+%%%%
+Aizul's
+Aizuls
+%%%%
+Snorg's
+Snorgs
+%%%%
+Purgy's
+Purgys
+%%%%
+Jory's
+Jorys
+%%%%
+Gastronok's
+Gastronoks
+%%%%
+Nellie's
+Nellies
+%%%%
+Murray's
+Murrays
+%%%%
+Ignacio's
+Ignacios
+%%%%
+Grinder's
+Grinders
+%%%%
+Roxanne's
+Roxannes
+%%%%
+Terence's
+Terences
+%%%%
+Jessica's
+Jessicas
+%%%%
+Sigmund's
+Sigmunds
+%%%%
+Edmund's
+Edmunds
+%%%%
+Psyche's
+Psyches
+%%%%
+Donald's
+Donalds
+%%%%
+Joseph's
+Josephs
+%%%%
+Erica's
+Ericas
+%%%%
+Josephine's
+Josephines
+%%%%
+Harold's
+Harolds
+%%%%
+Louise's
+Louises
+%%%%
+Frances's
+Frances'
+%%%%
+Rupert's
+Ruperts
+%%%%
+Kirke's
+Kirkes
+%%%%
+Frederick's
+Fredericks
+%%%%
+Margery's
+Margerys
+%%%%
+Maggie's
+Maggies
+%%%%
+Eustachio's
+Eustachios
+%%%%
+Maurice's
+Maurices
+%%%%
+Nikola's
+Nikolas
+%%%%
+Mnoleg's
+Mnolegs
+%%%%
+Lom Lobon's
+Lom Lobons
+%%%%
+Cerebov's
+Cerebovs
+%%%%
+Gloorx Vloq's
+Gloorx Vloqs
+%%%%
+Geryon's
+Geryons
+%%%%
+Dispater's
+Dispaters
+%%%%
+Asmodeus's
+Asmodäus'
+%%%%
+Ereshkigal's
+Ereshkigals
+%%%%
+Prince Ribbit's
+Prinzen Ribbits
+%%%%
+Crazy Yiuf's
+Verrücktem Yiufs
+%%%%
+the Enchantress's
+der Hexenmeisterin
+%%%%
+Blork the orc's
+des Blorks des Orks
+%%%%
+the Royal Jelly's
+des Gelée Royales
+%%%%
+the Serpent of Hell's
+der Höllenschlange
+%%%%
+the Lernaean hydra's
+der Lernäischen Hydra
+%%%%
+the one-headed Lernaean hydra's
+der einköpfigen Lernäischen Hydra
+%%%%
+the two-headed Lernaean hydra's
+der zweiköpfigen Lernäischen Hydra
+%%%%
+the three-headed Lernaean hydra's
+der dreiköpfigen Lernäischen Hydra
+%%%%
+the four-headed Lernaean hydra's
+der vierköpfigen Lernäischen Hydra
+%%%%
+the five-headed Lernaean hydra's
+der fünfköpfigen Lernäischen Hydra
+%%%%
+the six-headed Lernaean hydra's
+der sechsköpfigen Lernäischen Hydra
+%%%%
+the seven-headed Lernaean hydra's
+der siebenköpfigen Lernäischen Hydra
+%%%%
+the eight-headed Lernaean hydra's
+der achtköpfigen Lernäischen Hydra
+%%%%
+the nine-headed Lernaean hydra's
+der neunköpfigen Lernäischen Hydra
+%%%%
+the ten-headed Lernaean hydra's
+der zehnköpfigen Lernäischen Hydra
+%%%%
+the 11-headed Lernaean hydra's
+der 11-köpfigen Lernäischen Hydra
+%%%%
+the 12-headed Lernaean hydra's
+der 12-köpfigen Lernäischen Hydra
+%%%%
+the 13-headed Lernaean hydra's
+der 13-köpfigen Lernäischen Hydra
+%%%%
+the 14-headed Lernaean hydra's
+der 14-köpfigen Lernäischen Hydra
+%%%%
+the 15-headed Lernaean hydra's
+der 15-köpfigen Lernäischen Hydra
+%%%%
+the 16-headed Lernaean hydra's
+der 16-köpfigen Lernäischen Hydra
+%%%%
+the 17-headed Lernaean hydra's
+der 17-köpfigen Lernäischen Hydra
+%%%%
+the 18-headed Lernaean hydra's
+der 18-köpfigen Lernäischen Hydra
+%%%%
+the 19-headed Lernaean hydra's
+der 19-köpfigen Lernäischen Hydra
+%%%%
+the 20-headed Lernaean hydra's
+der 20-köpfigen Lernäischen Hydra
+%%%%
+the 21-headed Lernaean hydra's
+der 21-köpfigen Lernäischen Hydra
+%%%%
+the 22-headed Lernaean hydra's
+der 22-köpfigen Lernäischen Hydra
+%%%%
+the 23-headed Lernaean hydra's
+der 23-köpfigen Lernäischen Hydra
+%%%%
+the 24-headed Lernaean hydra's
+der 24-köpfigen Lernäischen Hydra
+%%%%
+the 25-headed Lernaean hydra's
+der 25-köpfigen Lernäischen Hydra
+%%%%
+the 26-headed Lernaean hydra's
+der 26-köpfigen Lernäischen Hydra
+%%%%
+the 27-headed Lernaean hydra's
+der 27-köpfigen Lernäischen Hydra
+%%%%
+

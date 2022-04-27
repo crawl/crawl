@@ -1,0 +1,305 @@
+###############################################################################
+#
+# Monsters - singular, plain, accusative
+#
+###############################################################################
+
+%%%%
+{acc}caustic shrike
+ätzenden Würger
+%%%%
+{acc}centaur
+Zentauren
+%%%%
+{acc}yaktaur
+Yaktauren
+%%%%
+{acc}black draconian
+schwarzen Drakonier
+%%%%
+{acc}yellow draconian
+gelben Drakonier
+%%%%
+{acc}pale draconian
+blassen Drakonier
+%%%%
+{acc}green draconian
+grünen Drakonier
+%%%%
+{acc}purple draconian
+purpurnen Drakonier
+%%%%
+{acc}red draconian
+roten Drakonier
+%%%%
+{acc}white draconian
+weißen Drakonier
+%%%%
+{acc}grey draconian
+grauen Drakonier
+%%%%
+{acc}deep elf archer
+Tiefenelf-Bogenschützen
+%%%%
+{acc}deep elf zephyrmancer
+Tiefenelf-Zephyrmanten
+%%%%
+{acc}deep elf pyromancer
+Tiefenelf-Pyromanten
+%%%%
+{acc}deep elf demonologist
+Tiefenelf-Dämonologen
+%%%%
+{acc}deep elf elementalist
+Tiefenelf-Elementalisten
+%%%%
+{acc}wandering mushroom
+wandernden Pilz
+%%%%
+{acc}gnoll shaman
+Gnoll-Schamanen
+%%%%
+{acc}howler monkey
+Brüllaffen
+%%%%
+{acc}bear
+Bären
+%%%%
+{acc}polar bear
+Eisbären
+%%%%
+{acc}black bear
+Schwarzbären
+%%%%
+{acc}spriggan druid
+Spriggan-Druiden
+%%%%
+{acc}komodo dragon
+Komododrachen
+%%%%
+{acc}human
+Menschen
+%%%%
+{acc}slave
+Sklaven
+%%%%
+{acc}necromancer
+Nekromanten
+%%%%
+{acc}ironbound convoker
+eisenbeschlagenen Einberufer
+%%%%
+{acc}ironbound preserver
+eisenbeschlagenen Bewahrer
+%%%%
+{acc}ironbound beastmaster
+eisenbeschlagenen Bestienmeister
+%%%%
+{acc}ironbound thunderhulk
+eisenbeschlagenen Donnerkoloss
+%%%%
+{acc}imperial myrmidon
+kaiserlichen Myrmidon
+%%%%
+{acc}ragged hierophant
+zerlumpten Hierophanten
+%%%%
+{acc}glowing shapeshifter
+leuchtenden Gestaltwandler
+%%%%
+{acc}demonic crawler
+dämonischen Kriecher
+%%%%
+{acc}spatial vortex
+räumlichen Wirbel
+%%%%
+{acc}spatial maelstrom
+räumlichen Mahlstrom
+%%%%
+{acc}small abomination
+kleinen Greuel
+%%%%
+{acc}ancient champion
+alten Champion
+%%%%
+{acc}flying skull
+fliegenden Schädel
+%%%%
+{acc}profane servitor
+profanen Diener
+%%%%
+{acc}giant
+Riesen
+%%%%
+{acc}fire giant
+Feuerriesen
+%%%%
+{acc}frost giant
+Frostriesen
+%%%%
+{acc}stone giant
+Steinriesen
+%%%%
+{acc}iron giant
+Eisenriesen
+%%%%
+{acc}dragon
+Drachen
+%%%%
+{acc}fire dragon
+Feuerdrachen
+%%%%
+{acc}ice dragon
+Eisdrachen
+%%%%
+{acc}steam dragon
+Dampfdrachen
+%%%%
+{acc}swamp dragon
+Sumpfdrachen
+%%%%
+{acc}acid dragon
+Säuredrachen
+%%%%
+{acc}quicksilver dragon
+Quecksilberdrachen
+%%%%
+{acc}iron dragon
+Eisendrachen
+%%%%
+{acc}storm dragon
+Sturmdrachen
+%%%%
+{acc}golden dragon
+Golddrachen
+%%%%
+{acc}shadow dragon
+Schattendrachen
+%%%%
+{acc}bone dragon
+Knochendrachen
+%%%%
+{acc}pearl dragon
+Perlendrachen
+%%%%
+{acc}minotaur
+Minotauren
+%%%%
+{acc}ancestor
+Ahnen
+%%%%
+{acc}big kobold
+großen Kobold
+%%%%
+{acc}kobold demonologist
+Kobold-Dämonologen
+%%%%
+{acc}ancient lich
+alten Lich
+%%%%
+{acc}halazid warlock
+halazidischen Hexenmeister
+%%%%
+{acc}naga sharpshooter
+Naga-Scharfschützen
+%%%%
+{acc}naga ritualist
+Naga-Ritualisten
+%%%%
+{acc}two-headed ogre
+zweiköpfigen Oger
+%%%%
+{acc}burning bush
+brennenden Busch
+%%%%
+{acc}ballistomycete
+Ballistomyceten
+%%%%
+{acc}hyperactive ballistomycete
+hyperaktiven Ballistomyceten
+%%%%
+{acc}deep troll shaman
+Tiefentroll-Schamanen
+%%%%
+{acc}hungry ghost
+hungrigen Geist
+%%%%
+{acc}flayed ghost
+enthäuteten Geist
+%%%%
+{acc}phantasmal warrior
+phantastischen Krieger
+%%%%
+{acc}large abomination
+großen Greuel
+%%%%
+{acc}elephant
+Elefanten
+%%%%
+{acc}dire elephant
+Schreckenselefanten
+%%%%
+{acc}hellephant
+Höllefanten
+%%%%
+{acc}small zombie
+kleinen Zombie
+%%%%
+{acc}large zombie
+großen Zombie
+%%%%
+{acc}eldritch tentacle
+unheimlichen Tentakel
+%%%%
+{acc}gelid demonspawn
+geliden Dämonenbrut
+%%%%
+{acc}blood saint
+Blutheiligen
+%%%%
+{acc}orange demon
+orangen Dämon
+%%%%
+{acc}red devil
+roten Teufel
+%%%%
+{acc}green death
+grünen Tod
+%%%%
+{acc}animated tree
+animierten Baum
+%%%%
+{acc}spellforged servitor
+zaubergeschmeideten Diener
+%%%%
+{acc}molten gargoyle
+geschmolzenen Gargoyle
+%%%%
+{acc}pandemonium lord
+Pandemoniumsherrn
+%%%%
+{acc}hell lord
+Höllenherrn
+%%%%
+{acc}wretched star
+elenden Stern
+%%%%
+{acc}nameless horror
+namenlosen Horror
+%%%%
+{acc}kobold brigand
+Kobold-Briganten
+%%%%
+# Test monsters can be created in Arena
+%%%%
+
+# derived monsters (undead, etc.)
+# "elf zombie", "orc skeleton", etc.
+%%%%
+{acc}%s shaped block of ice
+%s-förmigen Eisblock
+%%%%
+{acc}%s shaped shifter
+%s-förmigen Gestaltwandler
+%%%%
+

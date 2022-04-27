@@ -1,0 +1,355 @@
+###############################################################################
+#
+# Monsters -  unique, nominative
+#
+###############################################################################
+
+%%%%
+Mennas
+Mennas
+%%%%
+Nessos
+Nessos
+%%%%
+Chuck
+Chuck
+%%%%
+Polyphemus
+Polyphem
+%%%%
+Antaeus
+Antaeus
+%%%%
+Tiamat
+Tiamat
+%%%%
+Bai Suzhen
+Bai Suzhen
+%%%%
+Xtahua
+Xtahua
+%%%%
+Ijyb
+Ijyb
+%%%%
+Robin
+Robin
+%%%%
+Grum
+Grum
+%%%%
+Duvessa
+Duvessa
+%%%%
+Dowan
+Dowan
+%%%%
+Fannar
+Fannar
+%%%%
+Jorgrun
+Jorgrun
+%%%%
+Natasha
+Natascha
+%%%%
+Arachne
+Arachne
+%%%%
+Asterion
+Asterion
+%%%%
+Agnes
+Agnes
+%%%%
+Dissolution
+Dissolution
+%%%%
+Sonja
+Sonja
+%%%%
+Pikel
+Pikel
+%%%%
+Boris
+Boris
+%%%%
+Menkaure
+Menkaure
+%%%%
+Khufu
+Khufu
+%%%%
+Ilsuiw
+Ilsuiw
+%%%%
+Vashnia
+Vashnia
+%%%%
+Erolcha
+Erolcha
+%%%%
+Urug
+Urug
+%%%%
+Nergalle
+Nergalle
+%%%%
+Saint Roka
+Sankt Roka
+%%%%
+Sojobo
+Sojobo
+%%%%
+Azrael
+Azrael
+%%%%
+Mara
+Mara
+%%%%
+Aizul
+Aizul
+%%%%
+Snorg
+Snorg
+%%%%
+Purgy
+Purgy
+%%%%
+Jory
+Jory
+%%%%
+Gastronok
+Gastronok
+%%%%
+Nellie
+Nellie
+%%%%
+Murray
+Murray
+%%%%
+Ignacio
+Ignacio
+%%%%
+Grinder
+Grinder
+%%%%
+Roxanne
+Roxanne
+%%%%
+Terence
+Terence
+%%%%
+Jessica
+Jessica
+%%%%
+Sigmund
+Sigmund
+%%%%
+Edmund
+Edmund
+%%%%
+Psyche
+Psyche
+%%%%
+Donald
+Donald
+%%%%
+Joseph
+Joseph
+%%%%
+Erica
+Erica
+%%%%
+Josephine
+Josephine
+%%%%
+Harold
+Harold
+%%%%
+Louise
+Louise
+%%%%
+Frances
+Frances
+%%%%
+Rupert
+Rupert
+%%%%
+Kirke
+Kirke
+%%%%
+Frederick
+Frederick
+%%%%
+Margery
+Margery
+%%%%
+Maggie
+Maggie
+%%%%
+Eustachio
+Eustachio
+%%%%
+Maurice
+Maurice
+%%%%
+Nikola
+Nikola
+%%%%
+Mnoleg
+Mnoleg
+%%%%
+Lom Lobon
+Lom Lobon
+%%%%
+Cerebov
+Cerebov
+%%%%
+Gloorx Vloq
+Gloorx Vloq
+%%%%
+Geryon
+Geryon
+%%%%
+Dispater
+Dispater
+%%%%
+Asmodeus
+Asmodäus
+%%%%
+Ereshkigal
+Ereshkigal
+%%%%
+Prince Ribbit
+Prinz Ribbit
+%%%%
+Crazy Yiuf
+Verrückter Yiuf
+%%%%
+the Enchantress
+die Hexenmeisterin
+%%%%
+Enchantress
+Hexenmeisterin
+%%%%
+Blork the orc
+Blork der Ork
+%%%%
+Blork
+Blork
+%%%%
+the Royal Jelly
+das Gelée Royale
+%%%%
+Royal Jelly
+Gelée Royale
+%%%%
+the Serpent of Hell
+die Höllenschlange
+%%%%
+Serpent of Hell
+Höllenschlange
+%%%%
+Lernaean hydra
+Lernäische Hydra
+%%%%
+the Lernaean hydra
+die Lernäische Hydra
+%%%%
+the one-headed Lernaean hydra
+die einköpfige Lernäische Hydra
+%%%%
+the two-headed Lernaean hydra
+die zweiköpfige Lernäische Hydra
+%%%%
+the three-headed Lernaean hydra
+die dreiköpfige Lernäische Hydra
+%%%%
+the four-headed Lernaean hydra
+die vierköpfige Lernäische Hydra
+%%%%
+the five-headed Lernaean hydra
+die fünfköpfige Lernäische Hydra
+%%%%
+the six-headed Lernaean hydra
+die sechsköpfige Lernäische Hydra
+%%%%
+the seven-headed Lernaean hydra
+die siebenköpfige Lernäische Hydra
+%%%%
+the eight-headed Lernaean hydra
+die achtköpfige Lernäische Hydra
+%%%%
+the nine-headed Lernaean hydra
+die neunköpfige Lernäische Hydra
+%%%%
+the ten-headed Lernaean hydra
+die zehnköpfige Lernäische Hydra
+%%%%
+the 11-headed Lernaean hydra
+die 11-köpfige Lernäische Hydra
+%%%%
+the 12-headed Lernaean hydra
+die 12-köpfige Lernäische Hydra
+%%%%
+the 13-headed Lernaean hydra
+die 13-köpfige Lernäische Hydra
+%%%%
+the 14-headed Lernaean hydra
+die 14-köpfige Lernäische Hydra
+%%%%
+the 15-headed Lernaean hydra
+die 15-köpfige Lernäische Hydra
+%%%%
+the 16-headed Lernaean hydra
+die 16-köpfige Lernäische Hydra
+%%%%
+the 17-headed Lernaean hydra
+die 17-köpfige Lernäische Hydra
+%%%%
+the 18-headed Lernaean hydra
+die 18-köpfige Lernäische Hydra
+%%%%
+the 19-headed Lernaean hydra
+die 19-köpfige Lernäische Hydra
+%%%%
+the 20-headed Lernaean hydra
+die 20-köpfige Lernäische Hydra
+%%%%
+the 21-headed Lernaean hydra
+die 21-köpfige Lernäische Hydra
+%%%%
+the 22-headed Lernaean hydra
+die 22-köpfige Lernäische Hydra
+%%%%
+the 23-headed Lernaean hydra
+die 23-köpfige Lernäische Hydra
+%%%%
+the 24-headed Lernaean hydra
+die 24-köpfige Lernäische Hydra
+%%%%
+the 25-headed Lernaean hydra
+die 25-köpfige Lernäische Hydra
+%%%%
+the 26-headed Lernaean hydra
+die 26-köpfige Lernäische Hydra
+%%%%
+the 27-headed Lernaean hydra
+die 27-köpfige Lernäische Hydra
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+# unseen monster
+something
+etwas
+%%%%
+%s's ghost
+%ss Geist
+%%%%
+%s's illusion
+%ss Illusion
+%%%%
+

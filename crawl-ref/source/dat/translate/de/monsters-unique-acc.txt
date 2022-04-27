@@ -1,0 +1,17 @@
+###############################################################################
+#
+# Monsters - unique, accusative
+#
+###############################################################################
+
+%%%%
+{acc}Prince Ribbit
+Prinzen Ribbit
+%%%%
+{acc}Crazy Yiuf
+Verrückten Yiuf
+%%%%
+{acc}Blork the orc
+Blork den Ork
+%%%%
+

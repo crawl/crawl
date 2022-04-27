@@ -1,0 +1,1573 @@
+###############################################################################
+#
+# Monsters - singular, plain, nominative
+#
+###############################################################################
+
+%%%%
+program bug
+Programmfehler
+%%%%
+worker ant
+Ameisenarbeiterin
+%%%%
+queen ant
+Ameisenkönigin
+%%%%
+soldier ant
+Ameisensoldatin
+%%%%
+formicid
+Formicid
+%%%%
+entropy weaver
+Entropieweber
+%%%%
+bat
+Fledermaus
+%%%%
+butterfly
+Schmetterling
+%%%%
+vampire bat
+Vampirfledermaus
+%%%%
+fire bat
+Feuerfledermaus
+%%%%
+bennu
+Bennu
+%%%%
+caustic shrike
+ätzender Würger
+%%%%
+shard shrike
+Scherbenwürger
+%%%%
+centaur
+Zentaur
+%%%%
+centaur warrior
+Zentaur-Krieger
+%%%%
+yaktaur
+Yaktaur
+%%%%
+yaktaur captain
+Yaktaur-Kapitän
+%%%%
+faun
+Faun
+%%%%
+satyr
+Satyr
+%%%%
+draconian
+Drakonier
+%%%%
+black draconian
+schwarzer Drakonier
+%%%%
+yellow draconian
+gelber Drakonier
+%%%%
+pale draconian
+blasser Drakonier
+%%%%
+green draconian
+grüner Drakonier
+%%%%
+purple draconian
+purpurner Drakonier
+%%%%
+red draconian
+roter Drakonier
+%%%%
+white draconian
+weißer Drakonier
+%%%%
+grey draconian
+grauer Drakonier
+%%%%
+draconian stormcaller
+Drakonier-Sturmrufer
+%%%%
+draconian monk
+Drakonier-Mönch
+%%%%
+draconian shifter
+Drakonier-Verschieber
+%%%%
+draconian annihilator
+Drakonier-Vernichter
+%%%%
+draconian knight
+Drakonier-Ritter
+%%%%
+draconian scorcher
+Drakonier-Verschmorer
+%%%%
+elf
+Elf
+%%%%
+deep elf knight
+Tiefenelf-Ritter
+%%%%
+deep elf archer
+Tiefenelf-Bogenschütze
+%%%%
+deep elf blademaster
+Tiefenelf-Klingenmeister
+%%%%
+deep elf master archer
+Tiefenelf-Bogenmeister
+%%%%
+deep elf zephyrmancer
+Tiefenelf-Zephyrmant
+%%%%
+deep elf pyromancer
+Tiefenelf-Pyromant
+%%%%
+deep elf high priest
+Tiefenelf-Hohepriester
+%%%%
+deep elf demonologist
+Tiefenelf-Dämonologe
+%%%%
+deep elf annihilator
+Tiefenelf-Vernichter
+%%%%
+deep elf sorcerer
+Tiefenelf-Zauberer
+%%%%
+deep elf death mage
+Tiefenelf-Todesmagier
+%%%%
+deep elf elementalist
+Tiefenelf-Elementalist
+%%%%
+wandering mushroom
+wandernder Pilz
+%%%%
+deathcap
+Todesmütze
+%%%%
+thorn hunter
+Dornenjäger
+%%%%
+shambling mangrove
+watschelnde Mangrove
+%%%%
+vine stalker
+Rebjäger
+%%%%
+goblin
+Goblin
+%%%%
+hobgoblin
+Hobgoblin
+%%%%
+gnoll
+Gnoll
+%%%%
+gnoll shaman
+Gnoll-Schamane
+%%%%
+gnoll sergeant
+Gnoll-Wachtmeister
+%%%%
+boggart
+Boggart
+%%%%
+dwarf
+Zwerg
+%%%%
+deep dwarf
+Tiefenzwerg
+%%%%
+jackal
+Schakal
+%%%%
+hound
+Hund
+%%%%
+howler monkey
+Brüllaffe
+%%%%
+warg
+Warg
+%%%%
+wolf
+Wolf
+%%%%
+hog
+Schwein
+%%%%
+hell hound
+Höllenhund
+%%%%
+doom hound
+Untergangshund
+%%%%
+raiju
+Raiju
+%%%%
+hell hog
+höllisches Schwein
+%%%%
+holy swine
+heiliges Schwein
+%%%%
+felid
+Felid
+%%%%
+bear
+Bär
+%%%%
+polar bear
+Eisbär
+%%%%
+black bear
+Schwarzbär
+%%%%
+spriggan
+Spriggan
+%%%%
+spriggan rider
+Spriggan-Reiter
+%%%%
+spriggan druid
+Spriggan-Druide
+%%%%
+spriggan berserker
+Spriggan-Berserker
+%%%%
+spriggan air mage
+Spriggan-Luftmagier
+%%%%
+spriggan defender
+Spriggan-Verteidiger
+%%%%
+drake
+Drachling
+%%%%
+swamp drake
+Sumpfdrachling
+%%%%
+rime drake
+Reifsdrachling
+%%%%
+wind drake
+Winddrachling
+%%%%
+lindwurm
+Lindwurm
+%%%%
+death drake
+Todesdrachling
+%%%%
+giant lizard
+Rieseneidechse
+%%%%
+frilled lizard
+gekräuselte Eidechse
+%%%%
+leopard gecko
+Leopardgecko
+%%%%
+iguana
+Leguan
+%%%%
+basilisk
+Basilisk
+%%%%
+wyvern
+Wyvern
+%%%%
+komodo dragon
+Komododrache
+%%%%
+merfolk
+Meervolk
+%%%%
+merfolk impaler
+Meervolk-Impaler
+%%%%
+merfolk javelineer
+Meervolk-Speerführer
+%%%%
+merfolk aquamancer
+Meervolk-Aquamancer
+%%%%
+merfolk siren
+Meervolk-Sirene
+%%%%
+merfolk avatar
+Meervolk-Avatar
+%%%%
+water nymph
+Wassernymphe
+%%%%
+bog body
+Moorleiche
+%%%%
+necrophage
+Nekrophagen
+%%%%
+bloated husk
+aufgeblähte Hülle
+%%%%
+ghoul
+Ghul
+%%%%
+orc
+Ork
+%%%%
+orc wizard
+Ork-Zauberer
+%%%%
+orc priest
+Ork-Priester
+%%%%
+orc warrior
+Ork-Krieger
+%%%%
+orc knight
+Ork-Ritter
+%%%%
+orc warlord
+Ork-Warlord
+%%%%
+orc sorcerer
+Ork-Hexenmeister
+%%%%
+orc high priest
+Ork-Hohepriester
+%%%%
+lava orc
+Lava-Ork
+%%%%
+human
+Mensch
+%%%%
+slave
+Sklave
+%%%%
+hell knight
+Höllenritter
+%%%%
+death knight
+Todesritter
+%%%%
+necromancer
+Nekromant
+%%%%
+wizard
+Zauberer
+%%%%
+vault guard
+Tresorwächter
+%%%%
+vault sentinel
+Tresorwache
+%%%%
+vault warden
+Tresorwärter
+%%%%
+ironbound convoker
+eisenbeschlagener Einberufer
+%%%%
+ironbound frostheart
+eisengebundenes Frostherz
+%%%%
+ironbound preserver
+eisenbeschlagener Bewahrer
+%%%%
+ironbound beastmaster
+eisenbeschlagener Bestienmeister
+%%%%
+ironbound thunderhulk
+eisenbeschlagener Donnerkoloss
+%%%%
+imperial myrmidon
+kaiserlicher Myrmidon
+%%%%
+servant of whispers
+Diener des Flüsterns
+%%%%
+ragged hierophant
+zerlumpter Hierophant
+%%%%
+shapeshifter
+Gestaltwandler
+%%%%
+glowing shapeshifter
+leuchtender Gestaltwandler
+%%%%
+Killer Klown
+Killer-Klown
+%%%%
+demigod
+Halbgott
+%%%%
+halfling
+Halbling
+%%%%
+rat
+Ratte
+%%%%
+quokka
+Quokka
+%%%%
+river rat
+Flussratte
+%%%%
+hell rat
+Höllenratte
+%%%%
+porcupine
+Stachelschwein
+%%%%
+giant cockroach
+Riesenkakerlake
+%%%%
+scorpion
+Skorpion
+%%%%
+emperor scorpion
+Kaiserskorpion
+%%%%
+death scarab
+Todesskarabäus
+%%%%
+spider
+Spinne
+%%%%
+tarantella
+Tarantella
+%%%%
+jumping spider
+springende Spinne
+%%%%
+wolf spider
+Wolfsspinne
+%%%%
+redback
+Rotrückenspinne
+%%%%
+demonic crawler
+dämonischer Kriecher
+%%%%
+orb spider
+Kugelspinne
+%%%%
+crocodile
+Krokodil
+%%%%
+alligator
+Alligator
+%%%%
+snapping turtle
+Schnappschildkröte
+%%%%
+alligator snapping turtle
+Alligatorschnappschildkröte
+%%%%
+crab
+Krabbe
+%%%%
+fire crab
+Feuerkrabbe
+%%%%
+ghost crab
+Geisterkrabbe
+%%%%
+apocalypse crab
+Apokalypse-Krabbe
+%%%%
+ugly thing
+hässliches Ding
+%%%%
+very ugly thing
+sehr hässliches Ding
+%%%%
+fire vortex
+Feuerwirbel
+%%%%
+spatial vortex
+räumlicher Wirbel
+%%%%
+spatial maelstrom
+räumlicher Mahlstrom
+%%%%
+insubstantial wisp
+unwesentliches Irrlicht
+%%%%
+twister
+Twister
+%%%%
+worm
+Wurm
+%%%%
+swamp worm
+Sumpfwurm
+%%%%
+tyrant leech
+Tyrannblutegel
+%%%%
+dart slug
+Pfeilschnecke
+%%%%
+torpor snail
+Erstarrungsschnecke
+%%%%
+elephant slug
+Elefantenschnecke
+%%%%
+unseen horror
+unsichtbares Grauen
+%%%%
+small abomination
+kleiner Greuel
+%%%%
+crawling corpse
+kriechende Leiche
+%%%%
+macabre mass
+makabere Masse
+%%%%
+ancient zyme
+uraltes Zym
+%%%%
+worldbinder
+Weltbinder
+%%%%
+killer bee
+Killerbiene
+%%%%
+queen bee
+Bienenkönigin
+%%%%
+vampire mosquito
+Vampir-Mücke
+%%%%
+hornet
+Hornisse
+%%%%
+meliai
+Meliai
+%%%%
+spark wasp
+Funkenwespe
+%%%%
+moth
+Motte
+%%%%
+ghost moth
+Geistermotte
+%%%%
+moth of wrath
+Motte des Zorns
+%%%%
+wight
+Wight
+%%%%
+skeletal warrior
+Skelettkrieger
+%%%%
+ancient champion
+alter Champion
+%%%%
+flying skull
+fliegender Schädel
+%%%%
+curse skull
+Fluchschädel
+%%%%
+curse toe
+Fluchzeh
+%%%%
+angel
+Engel
+%%%%
+cherub
+Cherub
+%%%%
+seraph
+Seraph
+%%%%
+daeva
+Daeva
+%%%%
+profane servitor
+profaner Diener
+%%%%
+giant
+Riese
+%%%%
+cyclops
+Zyklop
+%%%%
+ettin
+Ettin
+%%%%
+fire giant
+Feuerriese
+%%%%
+frost giant
+Frostriese
+%%%%
+stone giant
+Steinriese
+%%%%
+titan
+Titan
+%%%%
+juggernaut
+Juggernaut
+%%%%
+iron giant
+Eisenriese
+%%%%
+dragon
+Drache
+%%%%
+fire dragon
+Feuerdrache
+%%%%
+hydra
+Hydra
+%%%%
+one-headed hydra
+einköpfige Hydra
+%%%%
+two-headed hydra
+zweiköpfige Hydra
+%%%%
+three-headed hydra
+dreiköpfige Hydra
+%%%%
+four-headed hydra
+vierköpfige Hydra
+%%%%
+five-headed hydra
+fünfköpfige Hydra
+%%%%
+six-headed hydra
+sechsköpfige Hydra
+%%%%
+seven-headed hydra
+siebenköpfige Hydra
+%%%%
+eight-headed hydra
+achtköpfige Hydra
+%%%%
+nine-headed hydra
+neunköpfige Hydra
+%%%%
+ten-headed hydra
+zehnköpfige Hydra
+%%%%
+11-headed hydra
+11-köpfige Hydra
+%%%%
+12-headed hydra
+12-köpfige Hydra
+%%%%
+13-headed hydra
+13-köpfige Hydra
+%%%%
+14-headed hydra
+14-köpfige Hydra
+%%%%
+15-headed hydra
+15-köpfige Hydra
+%%%%
+16-headed hydra
+16-köpfige Hydra
+%%%%
+17-headed hydra
+17-köpfige Hydra
+%%%%
+18-headed hydra
+18-köpfige Hydra
+%%%%
+19-headed hydra
+19-köpfige Hydra
+%%%%
+20-headed hydra
+20-köpfige Hydra
+%%%%
+ice dragon
+Eisdrache
+%%%%
+steam dragon
+Dampfdrache
+%%%%
+swamp dragon
+Sumpfdrache
+%%%%
+acid dragon
+Säuredrache
+%%%%
+quicksilver dragon
+Quecksilberdrache
+%%%%
+iron dragon
+Eisendrache
+%%%%
+storm dragon
+Sturmdrache
+%%%%
+golden dragon
+Golddrache
+%%%%
+shadow dragon
+Schattendrache
+%%%%
+bone dragon
+Knochendrache
+%%%%
+pearl dragon
+Perlendrache
+%%%%
+elemental
+Elementar
+%%%%
+earth elemental
+Erdelementar
+%%%%
+fire elemental
+Feuerelementar
+%%%%
+water elemental
+Wasserelementar
+%%%%
+air elemental
+Luftelementar
+%%%%
+iron elemental
+Eisenelementar
+%%%%
+elemental wellspring
+elementare Quelle
+%%%%
+giant frog
+Riesenfrosch
+%%%%
+bullfrog
+Ochsenfrosch
+%%%%
+spiny frog
+Stachelfrosch
+%%%%
+blink frog
+Blinzelfrosch
+%%%%
+barachi
+Barachi
+%%%%
+floating eye
+schwebendes Auge
+%%%%
+eye of draining
+Auge des Schwächens
+%%%%
+glowing orange brain
+oranges leuchtendes Gehirn
+%%%%
+great orb of eyes
+große Augenkugel
+%%%%
+shining eye
+leuchtendes Auge
+%%%%
+eye of devastation
+Auge der Verwüstung
+%%%%
+golden eye
+goldenes Auge
+%%%%
+ophan
+Ophan
+%%%%
+hippogriff
+Hippogriff
+%%%%
+manticore
+Mantikor
+%%%%
+minotaur
+Minotaur
+%%%%
+sphinx
+Sphinx
+%%%%
+harpy
+Harpyie
+%%%%
+mutant beast
+mutierte Bestie
+%%%%
+ancestor
+Ahne
+%%%%
+knight
+Ritter
+%%%%
+battlemage
+Kampfmagier
+%%%%
+hexer
+Hexer
+%%%%
+ooze
+Schlamm
+%%%%
+jelly
+Gelee
+%%%%
+%sslime creature
+{adj-es}%sSchleimwesen
+%%%%
+merged slime creature
+verschmolzene Schleimkreatur
+%%%%
+azure jelly
+azurblaues Gelee
+%%%%
+death ooze
+Todesschlamm
+%%%%
+acid blob
+Säureklumpen
+%%%%
+kobold
+Kobold
+%%%%
+big kobold
+großer Kobold
+%%%%
+kobold demonologist
+Kobold-Dämonologe
+%%%%
+lich
+Lich
+%%%%
+ancient lich
+alter Lich
+%%%%
+revenant
+Wiedergänger
+%%%%
+halazid warlock
+halazidischer Hexenmeister
+%%%%
+mummy
+Mumie
+%%%%
+guardian mummy
+Wächtermumie
+%%%%
+greater mummy
+größere Mumie
+%%%%
+mummy priest
+Mumie-Priester
+%%%%
+naga
+Naga
+%%%%
+naga mage
+Naga-Magier
+%%%%
+naga sharpshooter
+Naga-Scharfschütze
+%%%%
+naga ritualist
+Naga-Ritualist
+%%%%
+naga warrior
+Naga-Krieger
+%%%%
+nagaraja
+Nagaraja
+%%%%
+ogre
+Oger
+%%%%
+two-headed ogre
+zweiköpfiger Oger
+%%%%
+ogre mage
+Oger-Magier
+%%%%
+plant
+Pflanze
+%%%%
+demonic plant
+dämonische Pflanze
+%%%%
+withered plant
+verwelkte Pflanze
+%%%%
+oklob sapling
+Oklob-Setzling
+%%%%
+oklob plant
+Oklob-Pflanze
+%%%%
+bush
+Busch
+%%%%
+burning bush
+brennender Busch
+%%%%
+toadstool
+Giftpilz
+%%%%
+fungus
+Pilz
+%%%%
+ballistomycete
+Ballistomycete
+%%%%
+hyperactive ballistomycete
+hyperaktiver Ballistomycete
+%%%%
+briar patch
+Dornstrauch
+%%%%
+tengu
+Tengu
+%%%%
+tengu conjurer
+Tengu-Zauberer
+%%%%
+tengu warrior
+Tengu-Krieger
+%%%%
+tengu reaver
+Tengu-Häscher
+%%%%
+efreet
+Efreet
+%%%%
+rakshasa
+Rakshasa
+%%%%
+dryad
+Dryade
+%%%%
+snaplasher vine
+Peitscherrebe
+%%%%
+snaplasher vine segment
+Peitscherrebesegment
+%%%%
+snake
+Schlange
+%%%%
+ball python
+Kugelpython
+%%%%
+adder
+Kreuzotter
+%%%%
+water moccasin
+Wassermokassin
+%%%%
+black mamba
+schwarze Mamba
+%%%%
+sea snake
+Seeschlange
+%%%%
+anaconda
+Anakonda
+%%%%
+guardian serpent
+Wächter-Schlange
+%%%%
+shock serpent
+Schockschlange
+%%%%
+mana viper
+Manaviper
+%%%%
+troll
+Troll
+%%%%
+iron troll
+Eisentroll
+%%%%
+deep troll
+Tiefentroll
+%%%%
+deep troll earth mage
+Tiefentroll-Erdmagier
+%%%%
+deep troll shaman
+Tiefentroll-Schamane
+%%%%
+vampire
+Vampir
+%%%%
+vampire knight
+Vampir-Ritter
+%%%%
+vampire mage
+Vampir-Magier
+%%%%
+jiangshi
+Jiangshi
+%%%%
+ghost
+Gespenst
+%%%%
+phantom
+Phantom
+%%%%
+hungry ghost
+hungriger Geist
+%%%%
+flayed ghost
+enthäuteter Geist
+%%%%
+player ghost
+Spielergeist
+%%%%
+shadow
+Schatten
+%%%%
+silent spectre
+stilles Gespenst
+%%%%
+drowned soul
+ertrunkene Seele
+%%%%
+wraith
+Geist
+%%%%
+shadow wraith
+Schattengeist
+%%%%
+freezing wraith
+Frostgeist
+%%%%
+eidolon
+Eidolon
+%%%%
+phantasmal warrior
+phantastischer Krieger
+%%%%
+large abomination
+großer Greuel
+%%%%
+thrashing horror
+verprügelndes Grauen
+%%%%
+tentacled monstrosity
+Tentakel-Monstrosität
+%%%%
+Orb Guardian
+Kugelwächter
+%%%%
+tentacled starspawn
+Tentakelsternbrut
+%%%%
+starspawn tentacle
+Sternbruttentakel
+%%%%
+starspawn tentacle segment
+Sternbruttentakelsegment
+%%%%
+starcursed mass
+sternverfluchte Masse
+%%%%
+dream sheep
+Traumschaf
+%%%%
+yak
+Yak
+%%%%
+death yak
+Todesyak
+%%%%
+catoblepas
+Catoblepas
+%%%%
+elephant
+Elefant
+%%%%
+dire elephant
+Schreckenselefant
+%%%%
+hellephant
+Höllefant
+%%%%
+apis
+Apis
+%%%%
+ice beast
+Eisbestie
+%%%%
+sky beast
+Himmelstier
+%%%%
+zombie
+Zombie
+%%%%
+skeleton
+Skelett
+%%%%
+simulacrum
+Simulacrum
+%%%%
+small zombie
+kleiner Zombie
+%%%%
+small skeleton
+kleines Skelett
+%%%%
+small simulacrum
+kleines Simulacrum
+%%%%
+large zombie
+großer Zombie
+%%%%
+large skeleton
+großes Skelett
+%%%%
+large simulacrum
+großes Simulacrum
+%%%%
+spectral thing
+spektrale Sache
+%%%%
+electric eel
+Zitteraal
+%%%%
+kraken
+Kraken
+%%%%
+tentacle
+Tentakel
+%%%%
+tentacle segment
+Tentakelsegment
+%%%%
+octopode
+Oktopod
+%%%%
+lava snake
+Lavaschlange
+%%%%
+salamander
+Salamander
+%%%%
+salamander mystic
+Salamander-Mystiker
+%%%%
+Hellbinder
+Höllenbinder
+%%%%
+Cloud Mage
+Wolkenmagier
+%%%%
+player
+Spieler
+%%%%
+player illusion
+Spieler-Illusion
+%%%%
+dancing weapon
+tanzende Waffe
+%%%%
+spectral weapon
+Spektralwaffe
+%%%%
+eldritch tentacle
+unheimlicher Tentakel
+%%%%
+eldritch tentacle segment
+unheimliches Tentakelsegment
+%%%%
+demonspawn
+Dämonenbrut
+%%%%
+monstrous demonspawn
+monströse Dämonenbrut
+%%%%
+gelid demonspawn
+gelider Dämonenbrut
+%%%%
+infernal demonspawn
+höllische Dämonenbrut
+%%%%
+torturous demonspawn
+quälende Dämonenbrut
+%%%%
+blood saint
+Blutheilige
+%%%%
+warmonger
+Kriegstreiber
+%%%%
+corrupter
+Korruptor
+%%%%
+black sun
+schwarze Sonne
+%%%%
+crimson imp
+karminrotes Teufelchen
+%%%%
+quasit
+Quasit
+%%%%
+white imp
+weißes Teufelchen
+%%%%
+ufetubus
+Ufetubus
+%%%%
+iron imp
+Eisenteufelchen
+%%%%
+shadow imp
+Schattenteufelchen
+%%%%
+rust devil
+Rostteufel
+%%%%
+orange demon
+oranger Dämon
+%%%%
+red devil
+roter Teufel
+%%%%
+hellwing
+Höllenflügel
+%%%%
+ice devil
+Eisteufel
+%%%%
+chaos spawn
+Chaosbrut
+%%%%
+sun demon
+Sonnendämon
+%%%%
+soul eater
+Seelenfresser
+%%%%
+smoke demon
+Rauchdämon
+%%%%
+neqoxec
+Neqoxec
+%%%%
+ynoxinul
+Ynoxinul
+%%%%
+sixfirhy
+Sixfirhy
+%%%%
+shadow demon
+Schattendämon
+%%%%
+green death
+grüner Tod
+%%%%
+blizzard demon
+Blizzarddämon
+%%%%
+balrug
+Balrug
+%%%%
+cacodemon
+Cacodaemon
+%%%%
+hell beast
+Höllentier
+%%%%
+hellion
+Teufelsbraten
+%%%%
+reaper
+Schnitter
+%%%%
+lorocyproca
+Lorocyproca
+%%%%
+tormentor
+Peiniger
+%%%%
+Brimstone Fiend
+Schwefelunterweltler
+%%%%
+Ice Fiend
+Eisunterweltler
+%%%%
+Tzitzimitl
+Tzitzimitl
+%%%%
+Hell Sentinel
+Höllenwächter
+%%%%
+Executioner
+Scharfrichter
+%%%%
+animated tree
+animierter Baum
+%%%%
+golem
+Golem
+%%%%
+saltling
+Salzling
+%%%%
+peacekeeper
+Friedenshüter
+%%%%
+iron golem
+Eisengolem
+%%%%
+crystal guardian
+Kristallwächter
+%%%%
+toenail golem
+Zehennagelgolem
+%%%%
+electric golem
+Blitzgolem
+%%%%
+ushabti
+Uschabti
+%%%%
+guardian golem
+Wächtergolem
+%%%%
+spellforged servitor
+zaubergeschmeideter Diener
+%%%%
+ice statue
+Eisstatue
+%%%%
+obsidian statue
+Obsidianstatue
+%%%%
+orange crystal statue
+orange Kristallstatue
+%%%%
+statue
+Statue
+%%%%
+training dummy
+Trainingspuppe
+%%%%
+pillar of salt
+Säule des Salzes
+%%%%
+block of ice
+Eisblock
+%%%%
+diamond obelisk
+Diamantobelisk
+%%%%
+lightning spire
+Blitzturm
+%%%%
+gargoyle
+Gargoyle
+%%%%
+war gargoyle
+Kriegsgargoyle
+%%%%
+molten gargoyle
+geschmolzener Gargoyle
+%%%%
+pandemonium lord
+Pandemoniumsherr
+%%%%
+hell lord
+Höllenherr
+%%%%
+ball lightning
+Kugelblitz
+%%%%
+ballistomycete spore
+Ballistomycetenspore
+%%%%
+lost soul
+verlorene Seele
+%%%%
+lurking horror
+lauerndes Grauen
+%%%%
+orb of fire
+Feuerkugel
+%%%%
+orb of destruction
+Kugel der Zerstörung
+%%%%
+fulminant prism
+fulminantes Prisma
+%%%%
+wretched star
+elender Stern
+%%%%
+battlesphere
+Kampfsphäre
+%%%%
+death cob
+Todeskolben
+%%%%
+moon troll
+Mondtroll
+%%%%
+foxfire
+Fuchsfeuer
+%%%%
+nameless horror
+namenloser Horror
+%%%%
+will-o-the-wisp
+Irrlicht
+%%%%
+bunyip
+Bunyip
+%%%%
+boulder beetle
+Rollsteinkäfer
+%%%%
+cane toad
+Aga-Kröte
+%%%%
+goliath frog
+Goliathfrosch
+%%%%
+fenstrider witch
+Fennläuferhexe
+%%%%
+palentonga
+Palentonga
+%%%%
+royal mummy
+königliche Mumie
+%%%%
+eleionoma
+Eleionoma
+%%%%
+lemure
+Lemure
+%%%%
+endoplasm
+Endoplasma
+%%%%
+rockslime
+Felsenschleim
+%%%%
+quicksilver ooze
+Quecksilber-Schlamm
+%%%%
+kobold brigand
+Kobold-Brigant
+%%%%
+dread lich
+Grauenlich
+%%%%
+djinni
+Dschinn
+%%%%
+salamander tyrant
+Salamander-Tyrann
+%%%%
+animated armour
+animierte Rüstung
+%%%%
+# Test monsters can be created in Arena
+%%%%
+test spawner
+Test-Erzeuger
+%%%%
+test statue
+Test-Statue
+%%%%
+test blob
+Test-Klumpen
+%%%%
+sensed monster
+gespürtes Monster
+%%%%
+friendly sensed monster
+freundliches gespürtes Monster
+%%%%
+trivial sensed monster
+triviales gespürtes Monster
+%%%%
+easy sensed monster
+leichtes gespürtes Monster
+%%%%
+tough sensed monster
+hartes gespürtes Monster
+%%%%
+nasty sensed monster
+furchtbares gespürtes Monster
+%%%%
+%ssting beast
+{adj-es}%sStichbiest
+%%%%
+%sbat beast
+{adj-es}%sFledermaus-Biest
+%%%%
+%sfire beast
+{adj-es}%sFeuerbiest
+%%%%
+%sweird beast
+{adj-es}%sbizarres Biest
+%%%%
+%sshock beast
+{adj-es}%sSchockbiest
+%%%%
+%sox beast
+{adj-es}%sOchsenbiest
+%%%%
+
+# derived monsters containing the name of the original monster
+# "elf zombie", "orc skeleton", etc.
+%%%%
+%s zombie
+%s-Zombie
+%%%%
+%s skeleton
+%s-Skelett
+%%%%
+%s simulacrum
+%s-Simulacrum
+%%%%
+%s shaped pillar of salt
+%s-förmige Salzsäule
+%%%%
+%s shaped block of ice
+%s-förmiger Eisblock
+%%%%
+%s shaped shifter
+%s-förmiger Gestaltwandler
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+spectre
+Spukgestalt
+%%%%
+shaped pillar of salt
+geformte Salzsäule
+%%%%
+shaped block of ice
+geformter Eisblock
+%%%%
+
