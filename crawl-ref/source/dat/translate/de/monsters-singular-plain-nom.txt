@@ -1535,7 +1535,7 @@ furchtbares gespürtes Monster
 {adj-es}%sOchsenbiest
 %%%%
 
-# derived monsters containing the name of the original monster
+# derived monsters (undead, etc.)
 # "elf zombie", "orc skeleton", etc.
 %%%%
 %s zombie
@@ -1547,9 +1547,11 @@ furchtbares gespürtes Monster
 %s simulacrum
 %s-Simulacrum
 %%%%
+# can result from Zin's Recite
 %s shaped pillar of salt
 %s-förmige Salzsäule
 %%%%
+# can result from Glaciate
 %s shaped block of ice
 %s-förmiger Eisblock
 %%%%

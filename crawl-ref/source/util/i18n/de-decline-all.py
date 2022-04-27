@@ -483,6 +483,10 @@ decline_file(sing_file_name, Case.DATIVE, "your")
 decline_file(sing_file_name, Case.GENITIVE, "your", True)
 decline_file(sing_file_name, Case.GENITIVE, "your", False)
 
+decline_file(sing_file_name, Case.NOMINATIVE, "")
+decline_file(sing_file_name, Case.ACCUSATIVE, "")
+decline_file(sing_file_name, Case.DATIVE, "")
+
 decline_file(plural_file_name, Case.DATIVE, "%d")
 
 if unique_file_name != "":

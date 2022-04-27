@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, plain, dative
+# Monsters - singular, plain, dative (where different to nominative)
 #
 ###############################################################################
 
@@ -545,13 +545,26 @@ furchtbarem gespürtem Monster
 # derived monsters (undead, etc.)
 # "elf zombie", "orc skeleton", etc.
 %%%%
+# can result from Zin's Recite
 {dat}%s shaped pillar of salt
 %s-förmiger Salzsäule
 %%%%
+# can result from Glaciate
 {dat}%s shaped block of ice
 %s-förmigem Eisblock
 %%%%
 {dat}%s shaped shifter
 %s-förmigem Gestaltwandler
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{dat}shaped pillar of salt
+geformter Salzsäule
+%%%%
+{dat}shaped block of ice
+geformtem Eisblock
 %%%%
 

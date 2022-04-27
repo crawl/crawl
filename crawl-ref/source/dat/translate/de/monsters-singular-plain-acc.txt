@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, plain, accusative
+# Monsters - singular, plain, accusative (where different to nominative)
 #
 ###############################################################################
 
@@ -296,10 +296,21 @@ Kobold-Briganten
 # derived monsters (undead, etc.)
 # "elf zombie", "orc skeleton", etc.
 %%%%
+# can result from Zin's Recite
+%%%%
+# can result from Glaciate
 {acc}%s shaped block of ice
 %s-förmigen Eisblock
 %%%%
 {acc}%s shaped shifter
 %s-förmigen Gestaltwandler
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{acc}shaped block of ice
+geformten Eisblock
 %%%%
 
