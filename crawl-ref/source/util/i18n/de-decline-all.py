@@ -46,7 +46,7 @@ def is_plural(english):
     # erroneously recognised as plural
     english = re.sub(r' of .*$', '', english)
     if english.endswith('s'):
-        if english.endswith('ss'):
+        if english.endswith('ss') or english.endswith("'s"):
             return False
         elif english.endswith('us'):
             if english.endswith('tengus') or english.endswith('bennus'):
@@ -208,7 +208,7 @@ def decline_adjective(word, gender, target_case, declension):
         ending = adj_weak[gender][target_case.value]
 
     if ending != "e":
-        word = re.sub(r'e$', ending, word)
+        word = re.sub(r'e[rs]?$', ending, word)
 
     return word
 
@@ -271,6 +271,13 @@ def decline(english, german, determiner, target_case):
         elif suffix != "":
             german = german.replace(suffix, '')
     
+    # determine declension
+    declension = Declension.STRONG
+    if determiner == "the":
+        declension = Declension.WEAK
+    elif determiner == "a" or determiner == "your":
+        declension = Declension.MIXED
+
     # determine gender
     gender = Gender.UNKNOWN;
     if german.startswith('der '):
@@ -279,22 +286,25 @@ def decline(english, german, determiner, target_case):
         gender = Gender.FEMININE
     elif german.startswith('das '):
         gender = Gender.NEUTER
-    elif german.startswith('%d '):
-        gender = Gender.PLURAL
-    elif is_plural(english):
-        gender = Gender.PLURAL
-    elif german.startswith('Blork') or german.startswith('Prinz'):
+    elif german.startswith('Blork der '):
         gender = Gender.MASCULINE
     else:
-        logging.warning("Unknown gender for: " + german)
-        gender = Gender.MASCULINE
-
-    # determine declension
-    declension = Declension.STRONG
-    if determiner == "the":
-        declension = Declension.WEAK
-    elif determiner == "a" or determiner == "your":
-        declension = Declension.MIXED
+        declension = Declension.STRONG
+        if german.startswith('%d '):
+            gender = Gender.PLURAL
+        elif is_plural(english):
+            gender = Gender.PLURAL
+        elif german.startswith('Blork') or german.startswith('Prinz'):
+            gender = Gender.MASCULINE
+        elif german.endswith('Yiuf') or german.endswith('Geist'):
+            gender = Gender.MASCULINE
+        elif german.startswith('Hexenmeisterin') or german.endswith('Illusion'):
+            gender = Gender.FEMININE
+        elif german.endswith('Hydra') or german.endswith('schlange'):
+            gender = Gender.FEMININE
+        else:
+            logging.warning("Unknown gender for: " + german)
+            gender = Gender.MASCULINE
 
     # split german up into individual words
     words = german.split()
@@ -422,7 +432,7 @@ def decline_file(infile_name, target_case, determiner, english_possessive = Fals
                         english = re.sub(r'^an one', r'a one', english)
 
             if english_possessive:
-                # DCSS always adds "'S" even if the noun ends in s
+                # DCSS always adds "'s" even if the noun ends in s
                 english += "'s"
 
             nominative = line
@@ -474,3 +484,9 @@ decline_file(sing_file_name, Case.GENITIVE, "your", True)
 decline_file(sing_file_name, Case.GENITIVE, "your", False)
 
 decline_file(plural_file_name, Case.DATIVE, "%d")
+
+if unique_file_name != "":
+    decline_file(unique_file_name, Case.ACCUSATIVE, "the")
+    decline_file(unique_file_name, Case.DATIVE, "the")
+    decline_file(unique_file_name, Case.GENITIVE, "the", True)
+    decline_file(unique_file_name, Case.GENITIVE, "the", False)

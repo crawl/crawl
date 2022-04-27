@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - unique, genitive(2)
+# Monsters - unique, genitive (where different to nominative)
 #
 ###############################################################################
 
@@ -329,10 +329,13 @@ der 26-köpfigen Lernäischen Hydra
 {gen}the 27-headed Lernaean hydra
 der 27-köpfigen Lernäischen Hydra
 %%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+# unseen monster
+%%%%
 {gen}%s's ghost
 %ss Geistes
-%%%%
-{gen}%s's illusion
-%ss Illusions
 %%%%
 

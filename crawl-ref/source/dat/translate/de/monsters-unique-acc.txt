@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - unique, accusative
+# Monsters - unique, accusative (where different to nominative)
 #
 ###############################################################################
 
@@ -13,5 +13,11 @@ Verrückten Yiuf
 %%%%
 {acc}Blork the orc
 Blork den Ork
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+# unseen monster
 %%%%
 

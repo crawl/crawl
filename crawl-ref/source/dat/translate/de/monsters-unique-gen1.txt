@@ -1,25 +1,9 @@
 ###############################################################################
 #
-# German translations for monster names (genitive case, set 1)
-#
-# These are used to replace an English genitive.
-# Note that DCSS always adds 's in English, even if the Noun alread ends in s.
+# Monsters - unique, genitive (where different to nominative)
 #
 ###############################################################################
-%%%%
 
-##############################################
-# Misc
-##############################################
-# unseen monster
-%%%%
-something's
-von etwas
-%%%%
-
-##############################################
-# Uniques
-##############################################
 %%%%
 Mennas's
 Mennas'
@@ -241,19 +225,25 @@ Prince Ribbit's
 Prinzen Ribbits
 %%%%
 Crazy Yiuf's
-Verrücktem Yiufs
+Verrückten Yiufs
 %%%%
 the Enchantress's
 der Hexenmeisterin
 %%%%
 Blork the orc's
-des Blorks des Orks
+Blork des Orks
+%%%%
+Blork's
+Blorks
 %%%%
 the Royal Jelly's
-des Gelée Royales
+des Gelée Royale
 %%%%
 the Serpent of Hell's
 der Höllenschlange
+%%%%
+Lernaean hydra's
+Lernäischer Hydra
 %%%%
 the Lernaean hydra's
 der Lernäischen Hydra
@@ -338,5 +328,14 @@ der 26-köpfigen Lernäischen Hydra
 %%%%
 the 27-headed Lernaean hydra's
 der 27-köpfigen Lernäischen Hydra
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+# unseen monster
+%%%%
+%s's ghost's
+%ss Geistes
 %%%%
 

@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - unique, dative
+# Monsters - unique, dative (where different to nominative)
 #
 ###############################################################################
 
@@ -109,5 +109,11 @@ der 26-köpfigen Lernäischen Hydra
 %%%%
 {dat}the 27-headed Lernaean hydra
 der 27-köpfigen Lernäischen Hydra
+%%%%
+
+# not really uniques, but gramatically similar
+
+%%%%
+# unseen monster
 %%%%
 
