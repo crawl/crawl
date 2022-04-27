@@ -334,6 +334,8 @@ der 27-köpfigen Lernäischen Hydra
 
 %%%%
 # unseen monster
+something's
+des Etwas
 %%%%
 %s's ghost's
 %ss Geistes

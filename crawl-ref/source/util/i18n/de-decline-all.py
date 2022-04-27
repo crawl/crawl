@@ -88,6 +88,9 @@ def is_noun(word):
     # special case of adjectives starting with capital
     if word.startswith("Lernäisch") or word.startswith("Verrückt"):
         return False
+    elif word.lower() == "etwas":
+        # really a pronoun, but we wnat to treat as a noun
+        return True
     # otherwise, words that start with a capital are probably nouns
     return starts_with_capital(word) and not is_determiner(word)
 
@@ -137,6 +140,9 @@ def decline_noun(word, gender, target_case, proper):
 
     if gender == Gender.PLURAL or gender == Gender.FEMININE:
         return word
+
+    if target_case == Case.GENITIVE and word.lower() == "etwas":
+        return "des Etwas"
 
     if gender == Gender.NEUTER and word.endswith('herz'):
         if target_case == Case.GENITIVE:
