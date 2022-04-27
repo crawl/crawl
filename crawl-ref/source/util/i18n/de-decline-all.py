@@ -457,3 +457,5 @@ decline_file(sing_file_name, Case.NOMINATIVE, "a")
 decline_file(sing_file_name, Case.ACCUSATIVE, "a")
 decline_file(sing_file_name, Case.DATIVE, "a")
 #decline_file(sing_file_name, Case.GENITIVE, "a")
+
+decline_file(plural_file_name, Case.DATIVE, "%d")

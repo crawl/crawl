@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - plural, counted, dative
+# Monsters - plural, counted, dative (where different to nominative)
 #
 ###############################################################################
 
@@ -980,5 +980,16 @@
 %%%%
 {dat}%d %s shaped shifters
 %d %s-förmigen Gestaltwandlern
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{dat}%d shaped pillars of salt
+%d geformten Salzsäulen
+%%%%
+{dat}%d shaped blocks of ice
+%d geformten Eisblöcken
 %%%%
 
