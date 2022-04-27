@@ -335,7 +335,7 @@ def decline(english, german, determiner, target_case):
     return german
 
 
-def decline_file(infile_name, target_case, determiner):
+def decline_file(infile_name, target_case, determiner, english_possessive = False):
 
     outfile_name = infile_name
 
@@ -344,7 +344,10 @@ def decline_file(infile_name, target_case, determiner):
     elif target_case == Case.DATIVE:
         outfile_name = outfile_name.replace("-nom", "-dat")
     elif target_case == Case.GENITIVE:
-        outfile_name = outfile_name.replace("-nom", "-gen2")
+        if english_possessive:
+            outfile_name = outfile_name.replace("-nom", "-gen1")
+        else:
+            outfile_name = outfile_name.replace("-nom", "-gen2")
 
     if determiner == "a":
         outfile_name = outfile_name.replace("-def", "-indef")
@@ -418,6 +421,10 @@ def decline_file(infile_name, target_case, determiner):
                         english = re.sub(r'^a ([AEIOUaeiou])', r'an \1', english)
                         english = re.sub(r'^an one', r'a one', english)
 
+            if english_possessive:
+                # DCSS always adds "'S" even if the noun ends in s
+                english += "'s"
+
             nominative = line
             if determiner != "the" and determiner != "%d":
                 nominative = decline(english, nominative, determiner, Case.NOMINATIVE)
@@ -433,7 +440,7 @@ def decline_file(infile_name, target_case, determiner):
                     outfile.write('{acc}')
                 elif target_case == Case.DATIVE:
                     outfile.write('{dat}')
-                elif target_case == Case.GENITIVE:
+                elif target_case == Case.GENITIVE and not english_possessive:
                     outfile.write('{gen}')
                 writeline(outfile, english)
                 writeline(outfile, german)
@@ -451,16 +458,19 @@ unique_file_name = sys.argv[3] if len(sys.argv) > 3 else ''
 
 decline_file(sing_file_name, Case.ACCUSATIVE, "the")
 decline_file(sing_file_name, Case.DATIVE, "the")
-decline_file(sing_file_name, Case.GENITIVE, "the")
+decline_file(sing_file_name, Case.GENITIVE, "the", True)
+decline_file(sing_file_name, Case.GENITIVE, "the", False)
 
 decline_file(sing_file_name, Case.NOMINATIVE, "a")
 decline_file(sing_file_name, Case.ACCUSATIVE, "a")
 decline_file(sing_file_name, Case.DATIVE, "a")
-decline_file(sing_file_name, Case.GENITIVE, "a")
+decline_file(sing_file_name, Case.GENITIVE, "a", True)
+decline_file(sing_file_name, Case.GENITIVE, "a", False)
 
 decline_file(sing_file_name, Case.NOMINATIVE, "your")
 decline_file(sing_file_name, Case.ACCUSATIVE, "your")
 decline_file(sing_file_name, Case.DATIVE, "your")
-decline_file(sing_file_name, Case.GENITIVE, "your")
+decline_file(sing_file_name, Case.GENITIVE, "your", True)
+decline_file(sing_file_name, Case.GENITIVE, "your", False)
 
 decline_file(plural_file_name, Case.DATIVE, "%d")

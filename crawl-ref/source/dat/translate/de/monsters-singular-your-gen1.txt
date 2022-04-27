@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, your, genitive
+# Monsters - singular, your, genitive (where different to nominative)
 #
 ###############################################################################
 
@@ -114,7 +114,7 @@ your deep elf knight's
 Eures Tiefenelf-Ritters
 %%%%
 your deep elf archer's
-Eures Tiefenelf-Bogenschützens
+Eures Tiefenelf-Bogenschützen
 %%%%
 your deep elf blademaster's
 Eures Tiefenelf-Klingenmeisters
@@ -122,14 +122,17 @@ Eures Tiefenelf-Klingenmeisters
 your deep elf master archer's
 Eures Tiefenelf-Bogenmeisters
 %%%%
-your deep elf mage's
-Eures Tiefenelf-Magiers
+your deep elf zephyrmancer's
+Eures Tiefenelf-Zephyrmanten
+%%%%
+your deep elf pyromancer's
+Eures Tiefenelf-Pyromanten
 %%%%
 your deep elf high priest's
 Eures Tiefenelf-Hohepriesters
 %%%%
 your deep elf demonologist's
-Eures Tiefenelf-Dämonologens
+Eures Tiefenelf-Dämonologen
 %%%%
 your deep elf annihilator's
 Eures Tiefenelf-Vernichters
@@ -141,7 +144,7 @@ your deep elf death mage's
 Eures Tiefenelf-Todesmagiers
 %%%%
 your deep elf elementalist's
-Eures Tiefenelf-Elementalistens
+Eures Tiefenelf-Elementalisten
 %%%%
 your wandering mushroom's
 Eures wandernden Pilzs
@@ -168,7 +171,7 @@ your gnoll's
 Eures Gnolls
 %%%%
 your gnoll shaman's
-Eures Gnoll-Schamanens
+Eures Gnoll-Schamanen
 %%%%
 your gnoll sergeant's
 Eures Gnoll-Wachtmeisters
@@ -189,7 +192,7 @@ your hound's
 Eures Hunds
 %%%%
 your howler monkey's
-Eures Brüllaffens
+Eures Brüllaffen
 %%%%
 your warg's
 Eures Wargs
@@ -219,13 +222,13 @@ your felid's
 Eures Felids
 %%%%
 your bear's
-Eures Bärens
+Eures Bären
 %%%%
 your polar bear's
-Eures Eisbärens
+Eures Eisbären
 %%%%
 your black bear's
-Eures Schwarzbärens
+Eures Schwarzbären
 %%%%
 your spriggan's
 Eures Spriggans
@@ -234,7 +237,7 @@ your spriggan rider's
 Eures Spriggan-Reiters
 %%%%
 your spriggan druid's
-Eures Spriggan-Druidens
+Eures Spriggan-Druiden
 %%%%
 your spriggan berserker's
 Eures Spriggan-Berserkers
@@ -282,7 +285,7 @@ your wyvern's
 Eures Wyverns
 %%%%
 your komodo dragon's
-Eures Komododrachens
+Eures Komododrachen
 %%%%
 your merfolk's
 Eures Meervolks
@@ -345,10 +348,10 @@ your lava orc's
 Eures Lava-Orks
 %%%%
 your human's
-Eures Menschens
+Eures Menschen
 %%%%
 your slave's
-Eures Sklavens
+Eures Sklaven
 %%%%
 your hell knight's
 Eures Höllenritters
@@ -357,7 +360,7 @@ your death knight's
 Eures Todesritters
 %%%%
 your necromancer's
-Eures Nekromantens
+Eures Nekromanten
 %%%%
 your wizard's
 Eures Zauberers
@@ -393,7 +396,7 @@ your servant of whispers's
 Eures Dieners des Flüsterns
 %%%%
 your ragged hierophant's
-Eures zerlumpten Hierophantens
+Eures zerlumpten Hierophanten
 %%%%
 your shapeshifter's
 Eures Gestaltwandlers
@@ -534,7 +537,7 @@ your macabre mass's
 Eurer makaberen Masse
 %%%%
 your ancient zyme's
-Eures uralten Zymes
+Eures uralten Zyms
 %%%%
 your worldbinder's
 Eures Weltbinders
@@ -582,7 +585,7 @@ your curse skull's
 Eures Fluchschädels
 %%%%
 your curse toe's
-Eures Fluchzehens
+Eures Fluchzehs
 %%%%
 your angel's
 Eures Engels
@@ -600,7 +603,7 @@ your profane servitor's
 Eures profanen Dieners
 %%%%
 your giant's
-Eures Riesens
+Eures Riesen
 %%%%
 your cyclops's
 Eures Zyklops
@@ -609,13 +612,13 @@ your ettin's
 Eures Ettins
 %%%%
 your fire giant's
-Eures Feuerriesens
+Eures Feuerriesen
 %%%%
 your frost giant's
-Eures Frostriesens
+Eures Frostriesen
 %%%%
 your stone giant's
-Eures Steinriesens
+Eures Steinriesen
 %%%%
 your titan's
 Eures Titans
@@ -624,13 +627,13 @@ your juggernaut's
 Eures Juggernauts
 %%%%
 your iron giant's
-Eures Eisenriesens
+Eures Eisenriesen
 %%%%
 your dragon's
-Eures Drachens
+Eures Drachen
 %%%%
 your fire dragon's
-Eures Feuerdrachens
+Eures Feuerdrachen
 %%%%
 your hydra's
 Eurer Hydra
@@ -696,37 +699,37 @@ your 20-headed hydra's
 Eurer 20-köpfigen Hydra
 %%%%
 your ice dragon's
-Eures Eisdrachens
+Eures Eisdrachen
 %%%%
 your steam dragon's
-Eures Dampfdrachens
+Eures Dampfdrachen
 %%%%
 your swamp dragon's
-Eures Sumpfdrachens
+Eures Sumpfdrachen
 %%%%
 your acid dragon's
-Eures Säuredrachens
+Eures Säuredrachen
 %%%%
 your quicksilver dragon's
-Eures Quecksilberdrachens
+Eures Quecksilberdrachen
 %%%%
 your iron dragon's
-Eures Eisendrachens
+Eures Eisendrachen
 %%%%
 your storm dragon's
-Eures Sturmdrachens
+Eures Sturmdrachen
 %%%%
 your golden dragon's
-Eures Golddrachens
+Eures Golddrachen
 %%%%
 your shadow dragon's
-Eures Schattendrachens
+Eures Schattendrachen
 %%%%
 your bone dragon's
-Eures Knochendrachens
+Eures Knochendrachen
 %%%%
 your pearl dragon's
-Eures Perlendrachens
+Eures Perlendrachen
 %%%%
 your elemental's
 Eures Elementars
@@ -750,16 +753,16 @@ your elemental wellspring's
 Eurer elementaren Quelle
 %%%%
 your giant frog's
-Eures Riesenfroschs
+Eures Riesenfrosches
 %%%%
 your bullfrog's
-Eures Ochsenfroschs
+Eures Ochsenfrosches
 %%%%
 your spiny frog's
-Eures Stachelfroschs
+Eures Stachelfrosches
 %%%%
 your blink frog's
-Eures Blinzelfroschs
+Eures Blinzelfrosches
 %%%%
 your barachi's
 Eurer Barachi
@@ -780,7 +783,7 @@ your shining eye's
 Eures leuchtenden Auges
 %%%%
 your eye of devastation's
-Eures Auge der Verwüstungs
+Eures Auges der Verwüstung
 %%%%
 your golden eye's
 Eures goldenen Auges
@@ -795,7 +798,7 @@ your manticore's
 Eures Mantikors
 %%%%
 your minotaur's
-Eures Minotaur
+Eures Minotauren
 %%%%
 your sphinx's
 Eurer Sphinx
@@ -807,7 +810,7 @@ your mutant beast's
 Eurer mutierten Bestie
 %%%%
 your ancestor's
-Eures Ahnens
+Eures Ahnen
 %%%%
 your knight's
 Eures Ritters
@@ -824,8 +827,8 @@ Eures Schlamms
 your jelly's
 Eures Gelees
 %%%%
-your slime creature's
-Eures Schleimwesens
+your %sslime creature's
+Eures {adj-en}%sSchleimwesens
 %%%%
 your merged slime creature's
 Eurer verschmolzenen Schleimkreatur
@@ -846,7 +849,7 @@ your big kobold's
 Eures großen Kobolds
 %%%%
 your kobold demonologist's
-Eures Kobold-Dämonologens
+Eures Kobold-Dämonologen
 %%%%
 your lich's
 Eures Lichs
@@ -879,10 +882,10 @@ your naga mage's
 Eures Naga-Magiers
 %%%%
 your naga sharpshooter's
-Eures Naga-Scharfschützens
+Eures Naga-Scharfschützen
 %%%%
 your naga ritualist's
-Eures Naga-Ritualistens
+Eures Naga-Ritualisten
 %%%%
 your naga warrior's
 Eures Naga-Kriegers
@@ -915,10 +918,10 @@ your oklob plant's
 Eurer Oklob-Pflanze
 %%%%
 your bush's
-Eures Buschs
+Eures Busches
 %%%%
 your burning bush's
-Eures brennenden Buschs
+Eures brennenden Busches
 %%%%
 your toadstool's
 Eures Giftpilzs
@@ -927,10 +930,10 @@ your fungus's
 Eures Pilzs
 %%%%
 your ballistomycete's
-Eures Ballistomycetens
+Eures Ballistomyceten
 %%%%
 your hyperactive ballistomycete's
-Eures hyperaktiven Ballistomycetens
+Eures hyperaktiven Ballistomyceten
 %%%%
 your briar patch's
 Eures Dornstrauchs
@@ -1005,7 +1008,7 @@ your deep troll earth mage's
 Eures Tiefentroll-Erdmagiers
 %%%%
 your deep troll shaman's
-Eures Tiefentroll-Schamanens
+Eures Tiefentroll-Schamanen
 %%%%
 your vampire's
 Eures Vampirs
@@ -1095,13 +1098,13 @@ your catoblepas's
 Eurer Catoblepas
 %%%%
 your elephant's
-Eures Elefantens
+Eures Elefanten
 %%%%
 your dire elephant's
-Eures Schreckenselefantens
+Eures Schreckenselefanten
 %%%%
 your hellephant's
-Eures Höllefantens
+Eures Höllefanten
 %%%%
 your apis's
 Eurer Apis
@@ -1206,7 +1209,7 @@ your torturous demonspawn's
 Eurer quälenden Dämonenbrut
 %%%%
 your blood saint's
-Eures Blutheiligens
+Eures Blutheiligen
 %%%%
 your warmonger's
 Eures Kriegstreibers
@@ -1386,10 +1389,10 @@ your molten gargoyle's
 Eures geschmolzenen Gargoyles
 %%%%
 your pandemonium lord's
-Eures Pandemoniumsherrns
+Eures Pandemoniumsherrn
 %%%%
 your hell lord's
-Eures Höllenherrns
+Eures Höllenherrn
 %%%%
 your ball lightning's
 Eures Kugelblitzs
@@ -1544,13 +1547,29 @@ Eures %s-Skeletts
 your %s simulacrum's
 Eures %s-Simulacrums
 %%%%
+# can result from Zin's Recite
 your %s shaped pillar of salt's
 Eurer %s-förmigen Salzsäule
 %%%%
+# can result from Glaciate
 your %s shaped block of ice's
 Eures %s-förmigen Eisblocks
 %%%%
 your %s shaped shifter's
 Eures %s-förmigen Gestaltwandlers
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+your spectre's
+Eurer Spukgestalt
+%%%%
+your shaped pillar of salt's
+Eurer geformten Salzsäule
+%%%%
+your shaped block of ice's
+Eures geformten Eisblocks
 %%%%
 

@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, definite article, genitive
+# Monsters - singular, definite article, genitive (where different to nominative)
 #
 ###############################################################################
 
@@ -114,7 +114,7 @@ the deep elf knight's
 des Tiefenelf-Ritters
 %%%%
 the deep elf archer's
-des Tiefenelf-Bogenschützens
+des Tiefenelf-Bogenschützen
 %%%%
 the deep elf blademaster's
 des Tiefenelf-Klingenmeisters
@@ -122,14 +122,17 @@ des Tiefenelf-Klingenmeisters
 the deep elf master archer's
 des Tiefenelf-Bogenmeisters
 %%%%
-the deep elf mage's
-des Tiefenelf-Magiers
+the deep elf zephyrmancer's
+des Tiefenelf-Zephyrmanten
+%%%%
+the deep elf pyromancer's
+des Tiefenelf-Pyromanten
 %%%%
 the deep elf high priest's
 des Tiefenelf-Hohepriesters
 %%%%
 the deep elf demonologist's
-des Tiefenelf-Dämonologens
+des Tiefenelf-Dämonologen
 %%%%
 the deep elf annihilator's
 des Tiefenelf-Vernichters
@@ -141,7 +144,7 @@ the deep elf death mage's
 des Tiefenelf-Todesmagiers
 %%%%
 the deep elf elementalist's
-des Tiefenelf-Elementalistens
+des Tiefenelf-Elementalisten
 %%%%
 the wandering mushroom's
 des wandernden Pilzs
@@ -168,7 +171,7 @@ the gnoll's
 des Gnolls
 %%%%
 the gnoll shaman's
-des Gnoll-Schamanens
+des Gnoll-Schamanen
 %%%%
 the gnoll sergeant's
 des Gnoll-Wachtmeisters
@@ -189,7 +192,7 @@ the hound's
 des Hunds
 %%%%
 the howler monkey's
-des Brüllaffens
+des Brüllaffen
 %%%%
 the warg's
 des Wargs
@@ -219,13 +222,13 @@ the felid's
 des Felids
 %%%%
 the bear's
-des Bärens
+des Bären
 %%%%
 the polar bear's
-des Eisbärens
+des Eisbären
 %%%%
 the black bear's
-des Schwarzbärens
+des Schwarzbären
 %%%%
 the spriggan's
 des Spriggans
@@ -234,7 +237,7 @@ the spriggan rider's
 des Spriggan-Reiters
 %%%%
 the spriggan druid's
-des Spriggan-Druidens
+des Spriggan-Druiden
 %%%%
 the spriggan berserker's
 des Spriggan-Berserkers
@@ -282,7 +285,7 @@ the wyvern's
 des Wyverns
 %%%%
 the komodo dragon's
-des Komododrachens
+des Komododrachen
 %%%%
 the merfolk's
 des Meervolks
@@ -345,10 +348,10 @@ the lava orc's
 des Lava-Orks
 %%%%
 the human's
-des Menschens
+des Menschen
 %%%%
 the slave's
-des Sklavens
+des Sklaven
 %%%%
 the hell knight's
 des Höllenritters
@@ -357,7 +360,7 @@ the death knight's
 des Todesritters
 %%%%
 the necromancer's
-des Nekromantens
+des Nekromanten
 %%%%
 the wizard's
 des Zauberers
@@ -393,7 +396,7 @@ the servant of whispers's
 des Dieners des Flüsterns
 %%%%
 the ragged hierophant's
-des zerlumpten Hierophantens
+des zerlumpten Hierophanten
 %%%%
 the shapeshifter's
 des Gestaltwandlers
@@ -534,7 +537,7 @@ the macabre mass's
 der makaberen Masse
 %%%%
 the ancient zyme's
-des uralten Zymes
+des uralten Zyms
 %%%%
 the worldbinder's
 des Weltbinders
@@ -582,7 +585,7 @@ the curse skull's
 des Fluchschädels
 %%%%
 the curse toe's
-des Fluchzehens
+des Fluchzehs
 %%%%
 the angel's
 des Engels
@@ -600,7 +603,7 @@ the profane servitor's
 des profanen Dieners
 %%%%
 the giant's
-des Riesens
+des Riesen
 %%%%
 the cyclops's
 des Zyklops
@@ -609,13 +612,13 @@ the ettin's
 des Ettins
 %%%%
 the fire giant's
-des Feuerriesens
+des Feuerriesen
 %%%%
 the frost giant's
-des Frostriesens
+des Frostriesen
 %%%%
 the stone giant's
-des Steinriesens
+des Steinriesen
 %%%%
 the titan's
 des Titans
@@ -624,13 +627,13 @@ the juggernaut's
 des Juggernauts
 %%%%
 the iron giant's
-des Eisenriesens
+des Eisenriesen
 %%%%
 the dragon's
-des Drachens
+des Drachen
 %%%%
 the fire dragon's
-des Feuerdrachens
+des Feuerdrachen
 %%%%
 the hydra's
 der Hydra
@@ -696,37 +699,37 @@ the 20-headed hydra's
 der 20-köpfigen Hydra
 %%%%
 the ice dragon's
-des Eisdrachens
+des Eisdrachen
 %%%%
 the steam dragon's
-des Dampfdrachens
+des Dampfdrachen
 %%%%
 the swamp dragon's
-des Sumpfdrachens
+des Sumpfdrachen
 %%%%
 the acid dragon's
-des Säuredrachens
+des Säuredrachen
 %%%%
 the quicksilver dragon's
-des Quecksilberdrachens
+des Quecksilberdrachen
 %%%%
 the iron dragon's
-des Eisendrachens
+des Eisendrachen
 %%%%
 the storm dragon's
-des Sturmdrachens
+des Sturmdrachen
 %%%%
 the golden dragon's
-des Golddrachens
+des Golddrachen
 %%%%
 the shadow dragon's
-des Schattendrachens
+des Schattendrachen
 %%%%
 the bone dragon's
-des Knochendrachens
+des Knochendrachen
 %%%%
 the pearl dragon's
-des Perlendrachens
+des Perlendrachen
 %%%%
 the elemental's
 des Elementars
@@ -750,16 +753,16 @@ the elemental wellspring's
 der elementaren Quelle
 %%%%
 the giant frog's
-des Riesenfroschs
+des Riesenfrosches
 %%%%
 the bullfrog's
-des Ochsenfroschs
+des Ochsenfrosches
 %%%%
 the spiny frog's
-des Stachelfroschs
+des Stachelfrosches
 %%%%
 the blink frog's
-des Blinzelfroschs
+des Blinzelfrosches
 %%%%
 the barachi's
 der Barachi
@@ -780,7 +783,7 @@ the shining eye's
 des leuchtenden Auges
 %%%%
 the eye of devastation's
-des Auge der Verwüstungs
+des Auges der Verwüstung
 %%%%
 the golden eye's
 des goldenen Auges
@@ -795,7 +798,7 @@ the manticore's
 des Mantikors
 %%%%
 the minotaur's
-des Minotaur
+des Minotauren
 %%%%
 the sphinx's
 der Sphinx
@@ -807,7 +810,7 @@ the mutant beast's
 der mutierten Bestie
 %%%%
 the ancestor's
-des Ahnens
+des Ahnen
 %%%%
 the knight's
 des Ritters
@@ -824,8 +827,8 @@ des Schlamms
 the jelly's
 des Gelees
 %%%%
-the slime creature's
-des Schleimwesens
+the %sslime creature's
+des {adj-en}%sSchleimwesens
 %%%%
 the merged slime creature's
 der verschmolzenen Schleimkreatur
@@ -846,7 +849,7 @@ the big kobold's
 des großen Kobolds
 %%%%
 the kobold demonologist's
-des Kobold-Dämonologens
+des Kobold-Dämonologen
 %%%%
 the lich's
 des Lichs
@@ -879,10 +882,10 @@ the naga mage's
 des Naga-Magiers
 %%%%
 the naga sharpshooter's
-des Naga-Scharfschützens
+des Naga-Scharfschützen
 %%%%
 the naga ritualist's
-des Naga-Ritualistens
+des Naga-Ritualisten
 %%%%
 the naga warrior's
 des Naga-Kriegers
@@ -915,10 +918,10 @@ the oklob plant's
 der Oklob-Pflanze
 %%%%
 the bush's
-des Buschs
+des Busches
 %%%%
 the burning bush's
-des brennenden Buschs
+des brennenden Busches
 %%%%
 the toadstool's
 des Giftpilzs
@@ -927,10 +930,10 @@ the fungus's
 des Pilzs
 %%%%
 the ballistomycete's
-des Ballistomycetens
+des Ballistomyceten
 %%%%
 the hyperactive ballistomycete's
-des hyperaktiven Ballistomycetens
+des hyperaktiven Ballistomyceten
 %%%%
 the briar patch's
 des Dornstrauchs
@@ -1005,7 +1008,7 @@ the deep troll earth mage's
 des Tiefentroll-Erdmagiers
 %%%%
 the deep troll shaman's
-des Tiefentroll-Schamanens
+des Tiefentroll-Schamanen
 %%%%
 the vampire's
 des Vampirs
@@ -1095,13 +1098,13 @@ the catoblepas's
 der Catoblepas
 %%%%
 the elephant's
-des Elefantens
+des Elefanten
 %%%%
 the dire elephant's
-des Schreckenselefantens
+des Schreckenselefanten
 %%%%
 the hellephant's
-des Höllefantens
+des Höllefanten
 %%%%
 the apis's
 der Apis
@@ -1206,7 +1209,7 @@ the torturous demonspawn's
 der quälenden Dämonenbrut
 %%%%
 the blood saint's
-des Blutheiligens
+des Blutheiligen
 %%%%
 the warmonger's
 des Kriegstreibers
@@ -1386,10 +1389,10 @@ the molten gargoyle's
 des geschmolzenen Gargoyles
 %%%%
 the pandemonium lord's
-des Pandemoniumsherrns
+des Pandemoniumsherrn
 %%%%
 the hell lord's
-des Höllenherrns
+des Höllenherrn
 %%%%
 the ball lightning's
 des Kugelblitzs
@@ -1535,24 +1538,38 @@ des {adj-en}%sOchsenbiests
 # derived monsters (undead, etc.)
 # "elf zombie", "orc skeleton", etc.
 %%%%
-{gen}the %s zombie's
+the %s zombie's
 des %s-Zombies
 %%%%
-{gen}the %s skeleton's
+the %s skeleton's
 des %s-Skeletts
 %%%%
-{gen}the %s simulacrum's
+the %s simulacrum's
 des %s-Simulacrums
 %%%%
 # can result from Zin's Recite
-{gen}the %s shaped pillar of salt's
+the %s shaped pillar of salt's
 der %s-förmigen Salzsäule
 %%%%
 # can result from Glaciate
-{gen}the %s shaped block of ice's
+the %s shaped block of ice's
 des %s-förmigen Eisblocks
 %%%%
 the %s shaped shifter's
 des %s-förmigen Gestaltwandlers
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+the spectre's
+der Spukgestalt
+%%%%
+the shaped pillar of salt's
+der geformten Salzsäule
+%%%%
+the shaped block of ice's
+des geformten Eisblocks
 %%%%
 

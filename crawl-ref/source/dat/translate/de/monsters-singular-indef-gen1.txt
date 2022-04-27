@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, indefinite article, genitive
+# Monsters - singular, indefinite article, genitive (where different to nominative)
 #
 ###############################################################################
 
@@ -114,7 +114,7 @@ a deep elf knight's
 eines Tiefenelf-Ritters
 %%%%
 a deep elf archer's
-eines Tiefenelf-Bogenschützens
+eines Tiefenelf-Bogenschützen
 %%%%
 a deep elf blademaster's
 eines Tiefenelf-Klingenmeisters
@@ -122,14 +122,17 @@ eines Tiefenelf-Klingenmeisters
 a deep elf master archer's
 eines Tiefenelf-Bogenmeisters
 %%%%
-a deep elf mage's
-eines Tiefenelf-Magiers
+a deep elf zephyrmancer's
+eines Tiefenelf-Zephyrmanten
+%%%%
+a deep elf pyromancer's
+eines Tiefenelf-Pyromanten
 %%%%
 a deep elf high priest's
 eines Tiefenelf-Hohepriesters
 %%%%
 a deep elf demonologist's
-eines Tiefenelf-Dämonologens
+eines Tiefenelf-Dämonologen
 %%%%
 a deep elf annihilator's
 eines Tiefenelf-Vernichters
@@ -141,7 +144,7 @@ a deep elf death mage's
 eines Tiefenelf-Todesmagiers
 %%%%
 a deep elf elementalist's
-eines Tiefenelf-Elementalistens
+eines Tiefenelf-Elementalisten
 %%%%
 a wandering mushroom's
 eines wandernden Pilzs
@@ -168,7 +171,7 @@ a gnoll's
 eines Gnolls
 %%%%
 a gnoll shaman's
-eines Gnoll-Schamanens
+eines Gnoll-Schamanen
 %%%%
 a gnoll sergeant's
 eines Gnoll-Wachtmeisters
@@ -189,7 +192,7 @@ a hound's
 eines Hunds
 %%%%
 a howler monkey's
-eines Brüllaffens
+eines Brüllaffen
 %%%%
 a warg's
 eines Wargs
@@ -219,13 +222,13 @@ a felid's
 eines Felids
 %%%%
 a bear's
-eines Bärens
+eines Bären
 %%%%
 a polar bear's
-eines Eisbärens
+eines Eisbären
 %%%%
 a black bear's
-eines Schwarzbärens
+eines Schwarzbären
 %%%%
 a spriggan's
 eines Spriggans
@@ -234,7 +237,7 @@ a spriggan rider's
 eines Spriggan-Reiters
 %%%%
 a spriggan druid's
-eines Spriggan-Druidens
+eines Spriggan-Druiden
 %%%%
 a spriggan berserker's
 eines Spriggan-Berserkers
@@ -282,7 +285,7 @@ a wyvern's
 eines Wyverns
 %%%%
 a komodo dragon's
-eines Komododrachens
+eines Komododrachen
 %%%%
 a merfolk's
 eines Meervolks
@@ -345,10 +348,10 @@ a lava orc's
 eines Lava-Orks
 %%%%
 a human's
-eines Menschens
+eines Menschen
 %%%%
 a slave's
-eines Sklavens
+eines Sklaven
 %%%%
 a hell knight's
 eines Höllenritters
@@ -357,7 +360,7 @@ a death knight's
 eines Todesritters
 %%%%
 a necromancer's
-eines Nekromantens
+eines Nekromanten
 %%%%
 a wizard's
 eines Zauberers
@@ -393,7 +396,7 @@ a servant of whispers's
 eines Dieners des Flüsterns
 %%%%
 a ragged hierophant's
-eines zerlumpten Hierophantens
+eines zerlumpten Hierophanten
 %%%%
 a shapeshifter's
 eines Gestaltwandlers
@@ -534,7 +537,7 @@ a macabre mass's
 einer makaberen Masse
 %%%%
 an ancient zyme's
-eines uralten Zymes
+eines uralten Zyms
 %%%%
 a worldbinder's
 eines Weltbinders
@@ -582,7 +585,7 @@ a curse skull's
 eines Fluchschädels
 %%%%
 a curse toe's
-eines Fluchzehens
+eines Fluchzehs
 %%%%
 an angel's
 eines Engels
@@ -600,7 +603,7 @@ a profane servitor's
 eines profanen Dieners
 %%%%
 a giant's
-eines Riesens
+eines Riesen
 %%%%
 a cyclops's
 eines Zyklops
@@ -609,13 +612,13 @@ an ettin's
 eines Ettins
 %%%%
 a fire giant's
-eines Feuerriesens
+eines Feuerriesen
 %%%%
 a frost giant's
-eines Frostriesens
+eines Frostriesen
 %%%%
 a stone giant's
-eines Steinriesens
+eines Steinriesen
 %%%%
 a titan's
 eines Titans
@@ -624,49 +627,109 @@ a juggernaut's
 eines Juggernauts
 %%%%
 an iron giant's
-eines Eisenriesens
+eines Eisenriesen
 %%%%
 a dragon's
-eines Drachens
+eines Drachen
 %%%%
 a fire dragon's
-eines Feuerdrachens
+eines Feuerdrachen
 %%%%
 a hydra's
 einer Hydra
 %%%%
+a one-headed hydra's
+einer einköpfigen Hydra
+%%%%
+a two-headed hydra's
+einer zweiköpfigen Hydra
+%%%%
+a three-headed hydra's
+einer dreiköpfigen Hydra
+%%%%
+a four-headed hydra's
+einer vierköpfigen Hydra
+%%%%
+a five-headed hydra's
+einer fünfköpfigen Hydra
+%%%%
+a six-headed hydra's
+einer sechsköpfigen Hydra
+%%%%
+a seven-headed hydra's
+einer siebenköpfigen Hydra
+%%%%
+an eight-headed hydra's
+einer achtköpfigen Hydra
+%%%%
+a nine-headed hydra's
+einer neunköpfigen Hydra
+%%%%
+a ten-headed hydra's
+einer zehnköpfigen Hydra
+%%%%
+a 11-headed hydra's
+einer 11-köpfigen Hydra
+%%%%
+a 12-headed hydra's
+einer 12-köpfigen Hydra
+%%%%
+a 13-headed hydra's
+einer 13-köpfigen Hydra
+%%%%
+a 14-headed hydra's
+einer 14-köpfigen Hydra
+%%%%
+a 15-headed hydra's
+einer 15-köpfigen Hydra
+%%%%
+a 16-headed hydra's
+einer 16-köpfigen Hydra
+%%%%
+a 17-headed hydra's
+einer 17-köpfigen Hydra
+%%%%
+a 18-headed hydra's
+einer 18-köpfigen Hydra
+%%%%
+a 19-headed hydra's
+einer 19-köpfigen Hydra
+%%%%
+a 20-headed hydra's
+einer 20-köpfigen Hydra
+%%%%
 an ice dragon's
-eines Eisdrachens
+eines Eisdrachen
 %%%%
 a steam dragon's
-eines Dampfdrachens
+eines Dampfdrachen
 %%%%
 a swamp dragon's
-eines Sumpfdrachens
+eines Sumpfdrachen
 %%%%
 an acid dragon's
-eines Säuredrachens
+eines Säuredrachen
 %%%%
 a quicksilver dragon's
-eines Quecksilberdrachens
+eines Quecksilberdrachen
 %%%%
 an iron dragon's
-eines Eisendrachens
+eines Eisendrachen
 %%%%
 a storm dragon's
-eines Sturmdrachens
+eines Sturmdrachen
 %%%%
 a golden dragon's
-eines Golddrachens
+eines Golddrachen
 %%%%
 a shadow dragon's
-eines Schattendrachens
+eines Schattendrachen
 %%%%
 a bone dragon's
-eines Knochendrachens
+eines Knochendrachen
 %%%%
 a pearl dragon's
-eines Perlendrachens
+eines Perlendrachen
 %%%%
 an elemental's
 eines Elementars
@@ -690,16 +753,16 @@ an elemental wellspring's
 einer elementaren Quelle
 %%%%
 a giant frog's
-eines Riesenfroschs
+eines Riesenfrosches
 %%%%
 a bullfrog's
-eines Ochsenfroschs
+eines Ochsenfrosches
 %%%%
 a spiny frog's
-eines Stachelfroschs
+eines Stachelfrosches
 %%%%
 a blink frog's
-eines Blinzelfroschs
+eines Blinzelfrosches
 %%%%
 a barachi's
 einer Barachi
@@ -720,7 +783,7 @@ a shining eye's
 eines leuchtenden Auges
 %%%%
 an eye of devastation's
-eines Auge der Verwüstungs
+eines Auges der Verwüstung
 %%%%
 a golden eye's
 eines goldenen Auges
@@ -735,7 +798,7 @@ a manticore's
 eines Mantikors
 %%%%
 a minotaur's
-eines Minotaur
+eines Minotauren
 %%%%
 a sphinx's
 einer Sphinx
@@ -747,7 +810,7 @@ a mutant beast's
 einer mutierten Bestie
 %%%%
 an ancestor's
-eines Ahnens
+eines Ahnen
 %%%%
 a knight's
 eines Ritters
@@ -764,8 +827,8 @@ eines Schlamms
 a jelly's
 eines Gelees
 %%%%
-a slime creature's
-eines Schleimwesens
+a %sslime creature's
+eines {adj-en}%sSchleimwesens
 %%%%
 a merged slime creature's
 einer verschmolzenen Schleimkreatur
@@ -786,7 +849,7 @@ a big kobold's
 eines großen Kobolds
 %%%%
 a kobold demonologist's
-eines Kobold-Dämonologens
+eines Kobold-Dämonologen
 %%%%
 a lich's
 eines Lichs
@@ -819,10 +882,10 @@ a naga mage's
 eines Naga-Magiers
 %%%%
 a naga sharpshooter's
-eines Naga-Scharfschützens
+eines Naga-Scharfschützen
 %%%%
 a naga ritualist's
-eines Naga-Ritualistens
+eines Naga-Ritualisten
 %%%%
 a naga warrior's
 eines Naga-Kriegers
@@ -855,10 +918,10 @@ an oklob plant's
 einer Oklob-Pflanze
 %%%%
 a bush's
-eines Buschs
+eines Busches
 %%%%
 a burning bush's
-eines brennenden Buschs
+eines brennenden Busches
 %%%%
 a toadstool's
 eines Giftpilzs
@@ -867,10 +930,10 @@ a fungus's
 eines Pilzs
 %%%%
 a ballistomycete's
-eines Ballistomycetens
+eines Ballistomyceten
 %%%%
 a hyperactive ballistomycete's
-eines hyperaktiven Ballistomycetens
+eines hyperaktiven Ballistomyceten
 %%%%
 a briar patch's
 eines Dornstrauchs
@@ -945,7 +1008,7 @@ a deep troll earth mage's
 eines Tiefentroll-Erdmagiers
 %%%%
 a deep troll shaman's
-eines Tiefentroll-Schamanens
+eines Tiefentroll-Schamanen
 %%%%
 a vampire's
 eines Vampirs
@@ -1035,13 +1098,13 @@ a catoblepas's
 einer Catoblepas
 %%%%
 an elephant's
-eines Elefantens
+eines Elefanten
 %%%%
 a dire elephant's
-eines Schreckenselefantens
+eines Schreckenselefanten
 %%%%
 a hellephant's
-eines Höllefantens
+eines Höllefanten
 %%%%
 an apis's
 einer Apis
@@ -1146,7 +1209,7 @@ a torturous demonspawn's
 einer quälenden Dämonenbrut
 %%%%
 a blood saint's
-eines Blutheiligens
+eines Blutheiligen
 %%%%
 a warmonger's
 eines Kriegstreibers
@@ -1326,10 +1389,10 @@ a molten gargoyle's
 eines geschmolzenen Gargoyles
 %%%%
 a pandemonium lord's
-eines Pandemoniumsherrns
+eines Pandemoniumsherrn
 %%%%
 a hell lord's
-eines Höllenherrns
+eines Höllenherrn
 %%%%
 a ball lightning's
 eines Kugelblitzs
@@ -1394,7 +1457,7 @@ eines Palentongas
 a royal mummy's
 einer königlichen Mumie
 %%%%
-a eleionoma's
+an eleionoma's
 einer Eleionoma
 %%%%
 a lemure's
@@ -1421,7 +1484,7 @@ eines Dschinns
 a salamander tyrant's
 eines Salamander-Tyranns
 %%%%
-a animated armour's
+an animated armour's
 einer animierten Rüstung
 %%%%
 # Test monsters can be created in Arena
@@ -1484,13 +1547,29 @@ eines %s-Skeletts
 a %s simulacrum's
 eines %s-Simulacrums
 %%%%
+# can result from Zin's Recite
 a %s shaped pillar of salt's
 einer %s-förmigen Salzsäule
 %%%%
+# can result from Glaciate
 a %s shaped block of ice's
 eines %s-förmigen Eisblocks
 %%%%
 a %s shaped shifter's
 eines %s-förmigen Gestaltwandlers
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+a spectre's
+einer Spukgestalt
+%%%%
+a shaped pillar of salt's
+einer geformten Salzsäule
+%%%%
+a shaped block of ice's
+eines geformten Eisblocks
 %%%%
 
