@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, definite article, genitive (where different to nominative)
+# Monsters - singular, definite article, genitive (translating English possessive)
 #
 ###############################################################################
 

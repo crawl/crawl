@@ -399,14 +399,19 @@ def decline_file(infile_name, target_case, determiner, english_possessive = Fals
             # comments
             if 'check' in line:
                 continue
+
             if target_case == Case.DATIVE:
                 outline = line.replace('nominative', 'dative (where different to nominative)')
             elif target_case == Case.ACCUSATIVE:
                 outline = line.replace('nominative', 'accusative (where different to nominative)')
             elif target_case == Case.GENITIVE:
-                outline = line.replace('nominative', 'genitive (where different to nominative)')
+                if english_possessive:
+                    outline = line.replace('nominative', 'genitive (translating English possessive)')
+                else:
+                    outline = line.replace('nominative', 'genitive (where different to nominative)')
             else:
                 outline = line
+
             if determiner == "a":
                 outline = outline.replace('definite article', 'indefinite article');
             elif determiner == "your":
@@ -414,6 +419,7 @@ def decline_file(infile_name, target_case, determiner, english_possessive = Fals
             elif determiner == "":
                 outline = outline.replace('definite article', 'plain');
                 outline = outline.replace('counted', 'plain');
+
             writeline(outfile, outline)
             last_written = outline
         elif english == "":

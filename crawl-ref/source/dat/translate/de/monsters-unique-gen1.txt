@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - unique, genitive (where different to nominative)
+# Monsters - unique, genitive (translating English possessive)
 #
 ###############################################################################
 

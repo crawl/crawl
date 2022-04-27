@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, your, genitive (where different to nominative)
+# Monsters - singular, your, genitive (translating English possessive)
 #
 ###############################################################################
 
