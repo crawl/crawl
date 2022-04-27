@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, indefinite article, genitive(2)
+# Monsters - singular, indefinite article, genitive (where different to nominative)
 #
 ###############################################################################
 
@@ -381,10 +381,10 @@ eines eisenbeschlagenen Einberufers
 eines eisengebundenen Frostherzens
 %%%%
 {gen}an ironbound preserver
-eines eisenbeschlagenen Bewahrer
+eines eisenbeschlagenen Bewahrers
 %%%%
 {gen}an ironbound beastmaster
-eines eisenbeschlagenen Bestienmeister
+eines eisenbeschlagenen Bestienmeisters
 %%%%
 {gen}an ironbound thunderhulk
 eines eisenbeschlagenen Donnerkolosses
@@ -650,16 +650,16 @@ einer dreiköpfigen Hydra
 {gen}a four-headed hydra
 einer vierköpfigen Hydra
 %%%%
-{gen}e five-headed hydra
+{gen}a five-headed hydra
 einer fünfköpfigen Hydra
 %%%%
-{gen}e six-headed hydra
+{gen}a six-headed hydra
 einer sechsköpfigen Hydra
 %%%%
 {gen}a seven-headed hydra
 einer siebenköpfigen Hydra
 %%%%
-{gen}a eight-headed hydra
+{gen}an eight-headed hydra
 einer achtköpfigen Hydra
 %%%%
 {gen}a nine-headed hydra
@@ -1457,7 +1457,7 @@ eines Palentongas
 {gen}a royal mummy
 einer königlichen Mumie
 %%%%
-{gen}a eleionoma
+{gen}an eleionoma
 einer Eleionoma
 %%%%
 {gen}a lemure
@@ -1486,6 +1486,8 @@ eines Salamander-Tyranns
 %%%%
 {gen}an animated armour
 einer animierten Rüstung
+%%%%
+# Test monsters can be created in Arena
 %%%%
 {gen}a test spawner
 eines Test-Erzeugers
@@ -1545,13 +1547,29 @@ eines %s-Skeletts
 {gen}a %s simulacrum
 eines %s-Simulacrums
 %%%%
+# can result from Zin's Recite
 {gen}a %s shaped pillar of salt
 einer %s-förmigen Salzsäule
 %%%%
+# can result from Glaciate
 {gen}a %s shaped block of ice
 eines %s-förmigen Eisblocks
 %%%%
 {gen}a %s shaped shifter
 eines %s-förmigen Gestaltwandlers
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{gen}a spectre
+einer Spukgestalt
+%%%%
+{gen}a shaped pillar of salt
+einer geformten Salzsäule
+%%%%
+{gen}a shaped block of ice
+eines geformten Eisblocks
 %%%%
 

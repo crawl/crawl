@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, definite article, genitive(2)
+# Monsters - singular, definite article, genitive (where different to nominative)
 #
 ###############################################################################
 
@@ -1557,5 +1557,19 @@ des %s-förmigen Eisblocks
 %%%%
 {gen}the %s shaped shifter
 des %s-förmigen Gestaltwandlers
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{gen}the spectre
+der Spukgestalt
+%%%%
+{gen}the shaped pillar of salt
+der geformten Salzsäule
+%%%%
+{gen}the shaped block of ice
+des geformten Eisblocks
 %%%%
 

@@ -135,6 +135,9 @@ def decline_noun(word, gender, target_case, proper):
             logging.debug("decline_noun: add -n to dative plural")
             return word + "n"
 
+    if gender == Gender.PLURAL or gender == Gender.FEMININE:
+        return word
+
     if gender == Gender.NEUTER and word.endswith('herz'):
         if target_case == Case.GENITIVE:
             return word + "ens"
@@ -143,20 +146,17 @@ def decline_noun(word, gender, target_case, proper):
         else:
             return word
 
-    if gender != Gender.MASCULINE:
-        return word
- 
     result = word
-
-    # weak masculine nouns are declined in all cases except nominative
-    result = re.sub(r'(Prinz|Mensch|[Bb]är)$', r'\1en', result)
-    result = re.sub(r'([Ss]chamane|[Ss]chütze|Sklave)$', r'\1n', result)
-    result = re.sub(r'([Rr]iese|[Aa]ffe|[Dd]rache)$', r'\1n', result)
-    result = re.sub(r'([Hh]err)$', r'\1n', result)
-    result = re.sub(r'([Dd]ruide|[Hh]eilige|Ahne)$', r'\1n', result)
-    result = re.sub(r'([^e]ist)$', r'\1en', result)
-    result = re.sub(r'(ant|taur|myzet)$', r'\1en', result)
-    result = re.sub(r'(loge|mycete)$', r'\1n', result)
+    if gender == Gender.MASCULINE:
+        # weak masculine nouns are declined in all cases except nominative
+        result = re.sub(r'(Prinz|Mensch|[Bb]är)$', r'\1en', result)
+        result = re.sub(r'([Ss]chamane|[Ss]chütze|Sklave)$', r'\1n', result)
+        result = re.sub(r'([Rr]iese|[Aa]ffe|[Dd]rache)$', r'\1n', result)
+        result = re.sub(r'([Hh]err)$', r'\1n', result)
+        result = re.sub(r'([Dd]ruide|[Hh]eilige|Ahne)$', r'\1n', result)
+        result = re.sub(r'([^e]ist)$', r'\1en', result)
+        result = re.sub(r'(ant|taur|myzet)$', r'\1en', result)
+        result = re.sub(r'(loge|mycete)$', r'\1n', result)
 
     if result != word:
         return result
@@ -451,11 +451,11 @@ unique_file_name = sys.argv[3] if len(sys.argv) > 3 else ''
 
 decline_file(sing_file_name, Case.ACCUSATIVE, "the")
 decline_file(sing_file_name, Case.DATIVE, "the")
-#decline_file(sing_file_name, Case.GENITIVE, "the")
+decline_file(sing_file_name, Case.GENITIVE, "the")
 
 decline_file(sing_file_name, Case.NOMINATIVE, "a")
 decline_file(sing_file_name, Case.ACCUSATIVE, "a")
 decline_file(sing_file_name, Case.DATIVE, "a")
-#decline_file(sing_file_name, Case.GENITIVE, "a")
+decline_file(sing_file_name, Case.GENITIVE, "a")
 
 decline_file(plural_file_name, Case.DATIVE, "%d")
