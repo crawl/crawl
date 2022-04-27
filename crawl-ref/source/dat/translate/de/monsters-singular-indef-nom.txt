@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters -  singular, indefinite article, nominative
+# Monsters - singular, indefinite article, nominative
 #
 ###############################################################################
 
@@ -381,10 +381,10 @@ an ironbound frostheart
 ein eisengebundenes Frostherz
 %%%%
 an ironbound preserver
-ein eisenbeschlagene Bewahrer
+ein eisenbeschlagener Bewahrer
 %%%%
 an ironbound beastmaster
-ein eisenbeschlagene Bestienmeister
+ein eisenbeschlagener Bestienmeister
 %%%%
 an ironbound thunderhulk
 ein eisenbeschlagener Donnerkoloss
@@ -650,16 +650,16 @@ eine dreiköpfige Hydra
 a four-headed hydra
 eine vierköpfige Hydra
 %%%%
-e five-headed hydra
+a five-headed hydra
 eine fünfköpfige Hydra
 %%%%
-e six-headed hydra
+a six-headed hydra
 eine sechsköpfige Hydra
 %%%%
 a seven-headed hydra
 eine siebenköpfige Hydra
 %%%%
-a eight-headed hydra
+an eight-headed hydra
 eine achtköpfige Hydra
 %%%%
 a nine-headed hydra
@@ -1457,7 +1457,7 @@ ein Palentonga
 a royal mummy
 eine königliche Mumie
 %%%%
-a eleionoma
+an eleionoma
 eine Eleionoma
 %%%%
 a lemure
@@ -1486,6 +1486,8 @@ ein Salamander-Tyrann
 %%%%
 an animated armour
 eine animierte Rüstung
+%%%%
+# Test monsters can be created in Arena
 %%%%
 a test spawner
 ein Test-Erzeuger
@@ -1545,9 +1547,11 @@ ein %s-Skelett
 a %s simulacrum
 ein %s-Simulacrum
 %%%%
+# can result from Zin's Recite
 a %s shaped pillar of salt
 eine %s-förmige Salzsäule
 %%%%
+# can result from Glaciate
 a %s shaped block of ice
 ein %s-förmiger Eisblock
 %%%%

@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, indefinite article, accusative
+# Monsters - singular, indefinite article, accusative (where different to nominative)
 #
 ###############################################################################
 
@@ -313,6 +313,12 @@ einen Tresorwärter
 %%%%
 {acc}an ironbound convoker
 einen eisenbeschlagenen Einberufer
+%%%%
+{acc}an ironbound preserver
+einen eisenbeschlagenen Bewahrer
+%%%%
+{acc}an ironbound beastmaster
+einen eisenbeschlagenen Bestienmeister
 %%%%
 {acc}an ironbound thunderhulk
 einen eisenbeschlagenen Donnerkoloss
@@ -908,6 +914,8 @@ einen Dschinn
 {acc}a salamander tyrant
 einen Salamander-Tyrann
 %%%%
+# Test monsters can be created in Arena
+%%%%
 {acc}a test spawner
 einen Test-Erzeuger
 %%%%
@@ -921,10 +929,21 @@ einen Test-Klumpen
 {acc}a %s zombie
 einen %s-Zombie
 %%%%
+# can result from Zin's Recite
+%%%%
+# can result from Glaciate
 {acc}a %s shaped block of ice
 einen %s-förmigen Eisblock
 %%%%
 {acc}a %s shaped shifter
 einen %s-förmigen Gestaltwandler
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{acc}a shaped block of ice
+einen geformten Eisblock
 %%%%
 

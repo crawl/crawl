@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, definite article, accusative
+# Monsters - singular, definite article, accusative (where different to nominative)
 #
 ###############################################################################
 
@@ -937,5 +937,13 @@ den %s-förmigen Eisblock
 %%%%
 {acc}the %s shaped shifter
 den %s-förmigen Gestaltwandler
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{acc}the shaped block of ice
+den geformten Eisblock
 %%%%
 

@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters -  singular, definite article, nominative
+# Monsters - singular, definite article, nominative
 #
 ###############################################################################
 

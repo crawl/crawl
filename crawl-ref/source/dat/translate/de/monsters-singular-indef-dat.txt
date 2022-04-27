@@ -1,6 +1,6 @@
 ###############################################################################
 #
-# Monsters - singular, indefinite article, dative
+# Monsters - singular, indefinite article, dative (where different to nominative)
 #
 ###############################################################################
 
@@ -650,16 +650,16 @@ einer dreiköpfigen Hydra
 {dat}a four-headed hydra
 einer vierköpfigen Hydra
 %%%%
-{dat}e five-headed hydra
+{dat}a five-headed hydra
 einer fünfköpfigen Hydra
 %%%%
-{dat}e six-headed hydra
+{dat}a six-headed hydra
 einer sechsköpfigen Hydra
 %%%%
 {dat}a seven-headed hydra
 einer siebenköpfigen Hydra
 %%%%
-{dat}a eight-headed hydra
+{dat}an eight-headed hydra
 einer achtköpfigen Hydra
 %%%%
 {dat}a nine-headed hydra
@@ -1457,7 +1457,7 @@ einem Palentonga
 {dat}a royal mummy
 einer königlichen Mumie
 %%%%
-{dat}a eleionoma
+{dat}an eleionoma
 einer Eleionoma
 %%%%
 {dat}a lemure
@@ -1486,6 +1486,8 @@ einem Salamander-Tyrann
 %%%%
 {dat}an animated armour
 einer animierten Rüstung
+%%%%
+# Test monsters can be created in Arena
 %%%%
 {dat}a test spawner
 einem Test-Erzeuger
@@ -1545,13 +1547,29 @@ einem %s-Skelett
 {dat}a %s simulacrum
 einem %s-Simulacrum
 %%%%
+# can result from Zin's Recite
 {dat}a %s shaped pillar of salt
 einer %s-förmigen Salzsäule
 %%%%
+# can result from Glaciate
 {dat}a %s shaped block of ice
 einem %s-förmigen Eisblock
 %%%%
 {dat}a %s shaped shifter
 einem %s-förmigen Gestaltwandler
+%%%%
+
+# derived monsters without the name of the original monster
+# (and not already covered above)
+# "zombie", "skeleton", etc.
+%%%%
+{dat}a spectre
+einer Spukgestalt
+%%%%
+{dat}a shaped pillar of salt
+einer geformten Salzsäule
+%%%%
+{dat}a shaped block of ice
+einem geformten Eisblock
 %%%%
 
