@@ -3,7 +3,7 @@ ignore := runrest_ignore_message
 
 ignore += Jiyva gurgles merrily
 ignore += Jiyva appreciates your sacrifice
-ignore += Jiyva says: Divide and consume
+ignore += god:Divide and consume
 ignore += You hear.*splatter
 
 ignore += You feel.*sick
