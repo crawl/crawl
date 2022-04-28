@@ -497,12 +497,10 @@ else:
     decline_file(infile_name, Case.ACCUSATIVE, "the")
     decline_file(infile_name, Case.ACCUSATIVE, "a")
     decline_file(infile_name, Case.ACCUSATIVE, "your")
-    decline_file(infile_name, Case.ACCUSATIVE, "")
 
     decline_file(infile_name, Case.DATIVE, "the")
     decline_file(infile_name, Case.DATIVE, "a")
     decline_file(infile_name, Case.DATIVE, "your")
-    decline_file(infile_name, Case.DATIVE, "")
 
     if 'monsters' in infile_name:
         decline_file(infile_name, Case.GENITIVE, "the", True)
