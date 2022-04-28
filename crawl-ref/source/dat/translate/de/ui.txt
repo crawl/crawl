@@ -839,6 +839,9 @@ Ihr seht %s.
 "melded "
 vereint
 %%%%
+unarmed
+unbewaffnet
+%%%%
 Unarmed
 Unbewaffnet
 %%%%

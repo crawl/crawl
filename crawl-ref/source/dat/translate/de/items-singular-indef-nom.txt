@@ -61,12 +61,8 @@ eine {adj-e}%sSchnellklinge
 a %sshort sword
 ein {adj-es}%sKurzschwert
 %%%%
-# neut
-%%%%
 a %srapier
 ein {adj-es}%sRapier
-%%%%
-# neut
 %%%%
 a %sfalchion
 ein {adj-es}%sFalchion
@@ -93,7 +89,7 @@ a %striple sword
 ein {adj-es}%sDreifach-Schwert
 %%%%
 a %shand axe
-ein {adj-es}%sBeil
+ein {adj-es}%sHandbeil
 %%%%
 a %swar axe
 eine {adj-e}%sKriegsaxt
@@ -141,6 +137,7 @@ a %slance
 eine {adj-e}%sLanze
 %%%%
 
+
 #################################
 # Launchers
 #################################
@@ -185,11 +182,11 @@ ein Wurfpfeil
 a poisoned dart
 ein vergifteter Wurfpfeil
 %%%%
-a curare-tipped dart
-ein Kurare-Wurfpfeil
-%%%%
 an atropa-tipped dart
 ein Atropa-Wurfpfeil
+%%%%
+a curare-tipped dart
+ein Curare-Wurfpfeil
 %%%%
 a datura-tipped dart
 ein Datura-Wurfpfeil
@@ -205,9 +202,6 @@ eine Schleuderkugel
 %%%%
 a javelin
 ein Wurfspeer
-%%%%
-%d javelins
-%d Wurfspeere
 %%%%
 a silver javelin
 ein Silberwurfspeer
@@ -286,6 +280,36 @@ ein {adj-es}%sKiteschild
 %%%%
 a %stower shield
 ein {adj-es}%sTurmschild
+%%%%
+a %ssteam dragon scales
+{adj-en}%sDampfdrachenschuppen
+%%%%
+a %sacid dragon scales
+{adj-en}%sSauredrachenschuppen
+%%%%
+a %squicksilver dragon scales
+{adj-en}%sQuecksilberdrachenschuppen
+%%%%
+a %sswamp dragon scales
+{adj-en}%sSumpfdrachenschuppen
+%%%%
+a %sfire dragon scales
+{adj-en}%sFeuerdrachenschuppen
+%%%%
+a %sice dragon scales
+{adj-en}%sEisdrachenschuppen
+%%%%
+a %spearl dragon scales
+{adj-en}%sPerlendrachenschuppen
+%%%%
+a %sstorm dragon scales
+{adj-en}%sSturmdrachenschuppen
+%%%%
+a %sshadow dragon scales
+{adj-en}%sSchattendrachenschuppen
+%%%%
+a %sgold dragon scales
+{adj-en}%sGolddrachenschuppen
 %%%%
 
 #################################
@@ -454,6 +478,7 @@ ein {adj-er}%sMondsteinring
 # Amulets
 #################################
 
+%%%%
 a %samulet
 ein {adj-es}%sAmulett
 %%%%
@@ -604,6 +629,7 @@ ein Zauberstab des Gehirnschlags
 a wand of removedness
 ein beseitigter Zauberstab
 %%%%
+
 # unidentified
 %%%%
 a %siron wand
@@ -770,6 +796,13 @@ ein Trank der Mutation
 %%%%
 a potion of resistance
 ein Trank des Widerstands
+%%%%
+
+# unidentified potions are named "<colour> <potion>"
+# or "<qualifier> <colour> potion"
+%%%%
+a %spotion
+ein {adj-er}%sZaubertrank
 %%%%
 
 #################################

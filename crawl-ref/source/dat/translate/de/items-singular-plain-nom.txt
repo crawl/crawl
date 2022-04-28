@@ -89,7 +89,7 @@
 {adj-es}%sDreifach-Schwert
 %%%%
 %shand axe
-{adj-er}%sHandbeil
+{adj-es}%sHandbeil
 %%%%
 %swar axe
 {adj-e}%sKriegsaxt
@@ -136,6 +136,7 @@
 %slance
 {adj-e}%sLanze
 %%%%
+
 
 #################################
 # Launchers
@@ -202,11 +203,17 @@ Schleuderkugel
 javelin
 Wurfspeer
 %%%%
+silver javelin
+Silberwurfspeer
+%%%%
 throwing net
 Wurfnetz
 %%%%
 boomerang
 Bumerang
+%%%%
+silver boomerang
+Silberbumerang
 %%%%
 
 #################################
@@ -715,6 +722,9 @@ Schriftrolle des Segnens
 scroll of silence
 Schriftrolle der Stille
 %%%%
+# Note: In DCSS, there is a distinction between summoning and conjuration
+# The usual German word for summoning is Beschwörung, but that also means conjuration
+%%%%
 scroll of summoning
 Schriftrolle des Herbeirufs
 %%%%
@@ -1009,6 +1019,11 @@ Buch des Jägers
 # Corpses
 #################################
 
+%%%%
+%s corpse
+{nom}%s-Leiche
+%%%%
+
 #################################
 # Miscellaneous Items
 #################################
@@ -1033,7 +1048,7 @@ condenser vane
 Kondensationsfahne
 %%%%
 piece from Xom's chessboard
-Figure von Xoms Schachbrett
+Figur von Xoms Schachbrett
 %%%%
 tin of tremorstones
 Dose Bebensteine

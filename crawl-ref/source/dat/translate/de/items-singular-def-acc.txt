@@ -1,20 +1,17 @@
 ###############################################################################
 #
-# Translations for item names - accusative (where different to nominative)
+# Items - singular, definite article, accusative (where different to nominative)
+#
+# Note that %s is a placeholder for any adjectives
 #
 ###############################################################################
-%%%%
 
-#################################
-# Item Types (terse)
-# Used in item search, plus one specific message
-# (and also some unlocalised contexts)
-#################################
 %%%%
 
 #################################
 # Melee Weapons
 #################################
+
 %%%%
 {acc}the %smace
 den {adj-en}%sStreitkolben
@@ -59,9 +56,11 @@ den {adj-en}%sKampfstab
 den {adj-en}%sLajatang
 %%%%
 
+
 #################################
 # Launchers
 #################################
+
 %%%%
 {acc}the %sfustibalus
 den {adj-en}%sFustibalus
@@ -76,6 +75,7 @@ den {adj-en}%sLangbogen
 #################################
 # Missiles
 #################################
+
 %%%%
 {acc}the arrow
 den Pfeil
@@ -107,13 +107,20 @@ den Felsblock
 {acc}the javelin
 den Wurfspeer
 %%%%
+{acc}the silver javelin
+den Silberwurfspeer
+%%%%
 {acc}the boomerang
 den Bumerang
+%%%%
+{acc}the silver boomerang
+den Silberbumerang
 %%%%
 
 #################################
 # Armour
 #################################
+
 %%%%
 {acc}the %sring mail
 den {adj-en}%sRingpanzer
@@ -155,33 +162,244 @@ den {adj-en}%sBuckler
 #################################
 # Rings
 #################################
+
 %%%%
 {acc}the %sring
 den {adj-en}%sRing
 %%%%
+{acc}the %sring of protection
+den {adj-en}%sRing des Schutzes
+%%%%
+{acc}the %sring of protection from fire
+den {adj-en}%sRing der Feuerresistenz
+%%%%
+{acc}the %sring of poison resistance
+den {adj-en}%sRing der Giftresistenz
+%%%%
+{acc}the %sring of protection from cold
+den {adj-en}%sRing der Kälteresistenz
+%%%%
+{acc}the %sring of strength
+den {adj-en}%sRing der Stärke
+%%%%
+{acc}the %sring of slaying
+den {adj-en}%sRing des Tötens
+%%%%
+{acc}the %sring of see invisible
+den {adj-en}%sRing von Unsichtbares sehen
+%%%%
+{acc}the %sring of resist corrosion
+den {adj-en}%sRing der Korrosionresistenz
+%%%%
+{acc}the %sring of teleportation
+den {adj-en}%sRing der Teleportation
+%%%%
+{acc}the %sring of evasion
+den {adj-en}%sRing der Umgehung
+%%%%
+{acc}the %sring of stealth
+den {adj-en}%sRing der Heimlichkeit
+%%%%
+{acc}the %sring of dexterity
+den {adj-en}%sRing der Geschicklichkeit
+%%%%
+{acc}the %sring of intelligence
+den {adj-en}%sRing der Intelligenz
+%%%%
+{acc}the %sring of wizardry
+den {adj-en}%sRing der Zauberei
+%%%%
+{acc}the %sring of magical power
+den {adj-en}%sRing magischer Kraft
+%%%%
+{acc}the %sring of flight
+den {adj-en}%sRing des Fliegens
+%%%%
+{acc}the %sring of positive energy
+den {adj-en}%sRing positiver Energie
+%%%%
+{acc}the %sring of willpower
+den {adj-en}%sRing der Willenskraft
+%%%%
+{acc}the %sring of fire
+den {adj-en}%sRing des Feuers
+%%%%
+{acc}the %sring of ice
+den {adj-en}%sRing des Eises
+%%%%
+{acc}the %sring of obsoleteness
+den {adj-en}%sobsoleten Ring
+%%%%
 
 # unidentified
 %%%%
-# unidentified
+{acc}the %swooden ring
+den {adj-en}%sHolzring
+%%%%
+{acc}the %ssilver ring
+den {adj-en}%sSilberring
+%%%%
+{acc}the %sgolden ring
+den {adj-en}%sGoldring
+%%%%
+{acc}the %siron ring
+den {adj-en}%sEisenring
+%%%%
+{acc}the %ssteel ring
+den {adj-en}%sStahlring
+%%%%
+{acc}the %stourmaline ring
+den {adj-en}%sTurmalinring
+%%%%
+{acc}the %sbrass ring
+den {adj-en}%sMessingring
+%%%%
+{acc}the %scopper ring
+den {adj-en}%sKupferring
+%%%%
+{acc}the %sgranite ring
+den {adj-en}%sGranitring
+%%%%
+{acc}the %sivory ring
+den {adj-en}%sElfenbeinring
+%%%%
+{acc}the %sruby ring
+den {adj-en}%sRubinring
+%%%%
+{acc}the %smarble ring
+den {adj-en}%sMarmorring
+%%%%
+{acc}the %sjade ring
+den {adj-en}%sJadering
+%%%%
+{acc}the %sglass ring
+den {adj-en}%sGlasring
+%%%%
+{acc}the %sagate ring
+den {adj-en}%sAchatring
+%%%%
+{acc}the %sbone ring
+den {adj-en}%sKnochenring
+%%%%
+{acc}the %sdiamond ring
+den {adj-en}%sDiamantring
+%%%%
+{acc}the %semerald ring
+den {adj-en}%sSmaragdring
+%%%%
+{acc}the %speridot ring
+den {adj-en}%sPeridotring
+%%%%
+{acc}the %sgarnet ring
+den {adj-en}%sGranatring
+%%%%
+{acc}the %sopal ring
+den {adj-en}%sOpalring
+%%%%
+{acc}the %spearl ring
+den {adj-en}%sPerlenring
+%%%%
+{acc}the %scoral ring
+den {adj-en}%sKorallenring
+%%%%
+{acc}the %ssapphire ring
+den {adj-en}%sSaphirring
+%%%%
+{acc}the %scabochon ring
+den {adj-en}%sCabochonring
+%%%%
+{acc}the %sgilded ring
+den {adj-en}%svergoldeten Ring
+%%%%
+{acc}the %sonyx ring
+den {adj-en}%sOnyxring
+%%%%
+{acc}the %sbronze ring
+den {adj-en}%sBronzering
+%%%%
+{acc}the %smoonstone ring
+den {adj-en}%sMondsteinring
 %%%%
 
 #################################
 # Amulets
 #################################
+
 %%%%
 
-# unidentified
-%%%%
 # unidentified
 %%%%
 
 #################################
 # Wands
 #################################
+
 %%%%
+{acc}the wand of flame
+den Zauberstab des Flammens
+%%%%
+{acc}the wand of paralysis
+den Zauberstab der Paralyse
+%%%%
+{acc}the wand of digging
+den Zauberstab des Grabens
+%%%%
+{acc}the wand of iceblast
+den Zauberstab des Eisstrahls
+%%%%
+{acc}the wand of polymorph
+den Zauberstab der Verwandlung
+%%%%
+{acc}the wand of charming
+den Zauberstab der Verzauberung
+%%%%
+{acc}the wand of acid
+den Zauberstab der Säure
+%%%%
+{acc}the wand of mindburst
+den Zauberstab des Gehirnschlags
+%%%%
+{acc}the wand of removedness
+den beseitigten Zauberstab
+%%%%
+
 # unidentified
 %%%%
-# unidentified
+{acc}the %siron wand
+den {adj-en}%sEisenzauberstab
+%%%%
+{acc}the %sbrass wand
+den {adj-en}%sMessingzauberstab
+%%%%
+{acc}the %sbone wand
+den {adj-en}%sZauberstab aus Knochen
+%%%%
+{acc}the %swooden wand
+den {adj-en}%sHolzzauberstab
+%%%%
+{acc}the %scopper wand
+den {adj-en}%sKupferzauberstab
+%%%%
+{acc}the %sgold wand
+den {adj-en}%sGoldzauberstab
+%%%%
+{acc}the %ssilver wand
+den {adj-en}%sSilberzauberstab
+%%%%
+{acc}the %sbronze wand
+den {adj-en}%sZauberstab aus Bronze
+%%%%
+{acc}the %sivory wand
+den {adj-en}%sElfenbeinzauberstab
+%%%%
+{acc}the %sglass wand
+den {adj-en}%sgläsernen Zauberstab
+%%%%
+{acc}the %slead wand
+den {adj-en}%sZauberstab aus Blei
+%%%%
+{acc}the %sfluorescent wand
+den {adj-en}%sfluoreszierenden Zauberstab
 %%%%
 
 #################################
@@ -189,6 +407,7 @@ den {adj-en}%sRing
 #################################
 
 %%%%
+# Note: In DCSS, there is a distinction between summoning and conjuration
 # The usual German word for summoning is Beschwörung, but that also means conjuration
 %%%%
 
@@ -197,15 +416,96 @@ den {adj-en}%sRing
 #################################
 
 %%%%
+{acc}the potion of ambrosia
+den Trank der Ambrosia
+%%%%
+{acc}the potion of attraction
+den Trank der Anziehung
+%%%%
+{acc}the potion of berserk rage
+den Trank der Berserker-Wut
+%%%%
+{acc}the potion of brilliance
+den Trank der Brillanz
+%%%%
+{acc}the potion of cancellation
+den Trank der Aufhebung
+%%%%
+{acc}the potion of curing
+den Trank des Gegenmittels
+%%%%
+{acc}the potion of degeneration
+den Trank der Degeneration
+%%%%
+{acc}the potion of experience
+den Trank der Erfahrung
+%%%%
+{acc}the potion of flight
+den Trank des Fliegens
+%%%%
+{acc}the potion of haste
+den Trank der Geschwindigkeit
+%%%%
+{acc}the potion of heal wounds
+den Heiltrank
+%%%%
+{acc}the potion of invisibility
+den Trank der Unsichtbarkeit
+%%%%
+{acc}the potion of lignification
+den Trank der Verholzung
+%%%%
+{acc}the potion of magic
+den Trank der Magie
+%%%%
+{acc}the potion of might
+den Trank der Macht
+%%%%
+{acc}the potion of mutation
+den Trank der Mutation
+%%%%
+{acc}the potion of resistance
+den Trank des Widerstands
+%%%%
 
 # unidentified potions are named "<colour> <potion>"
 # or "<qualifier> <colour> potion"
+%%%%
+{acc}the %spotion
+den {adj-en}%sZaubertrank
 %%%%
 
 #################################
 # Magical Staves
 #################################
 
+%%%%
+{acc}the %sstaff of fire
+den {adj-en}%sStecken des Feuers
+%%%%
+{acc}the %sstaff of cold
+den {adj-en}%sStecken der Kälte
+%%%%
+{acc}the %sstaff of poison
+den {adj-en}%sStecken des Giftes
+%%%%
+{acc}the %sstaff of death
+den {adj-en}%sStecken des Todes
+%%%%
+{acc}the %sstaff of conjuration
+den {adj-en}%sStecken der Hervorrufung
+%%%%
+{acc}the %sstaff of air
+den {adj-en}%sStecken der Luft
+%%%%
+{acc}the %sstaff of earth
+den {adj-en}%sStecken der Erde
+%%%%
+{acc}the %sstaff of removedness
+den {adj-en}%sStecken der Obsoleszenz
+%%%%
+{acc}the %sstaff
+den {adj-en}%sStecken
 %%%%
 
 #################################
@@ -224,5 +524,8 @@ den {adj-en}%sRing
 # Miscellaneous Items
 #################################
 
+%%%%
+{acc}the phantom mirror
+den Phantomspiegel
 %%%%
 

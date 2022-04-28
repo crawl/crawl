@@ -1,14 +1,11 @@
 ###############################################################################
 #
-# Translations for item names - dative (where different to nominative)
+# Items - singular, your, dative (where different to nominative)
+#
+# Note that %s is a placeholder for any adjectives
 #
 ###############################################################################
 
-#################################
-# Item Types (terse)
-# Used in item search, plus one specific message
-# (and also some unlocalised contexts)
-#################################
 %%%%
 {dat}your %sweapon
 Eurer {adj-en}%sWaffe
@@ -17,6 +14,7 @@ Eurer {adj-en}%sWaffe
 #################################
 # Melee Weapons
 #################################
+
 %%%%
 {dat}your %sclub
 Eurer {adj-en}%sKeule
@@ -25,13 +23,13 @@ Eurer {adj-en}%sKeule
 Eurer {adj-en}%sPeitsche
 %%%%
 {dat}your %smace
-Eurem {adj-em}%sStreitkolben
+Eurem {adj-en}%sStreitkolben
 %%%%
 {dat}your %sflail
-Eurem {adj-em}%sFlegel
+Eurem {adj-en}%sFlegel
 %%%%
 {dat}your %smorningstar
-Eurem {adj-em}%sMorgenstern
+Eurem {adj-en}%sMorgenstern
 %%%%
 {dat}your %sdemon whip
 Eurer {adj-en}%sDämonenpeitsche
@@ -40,13 +38,13 @@ Eurer {adj-en}%sDämonenpeitsche
 Eurer {adj-en}%sgeistlichen Geißel
 %%%%
 {dat}your %sdire flail
-Eurem {adj-em}%sSchreckensflegel
+Eurem {adj-en}%sSchreckensflegel
 %%%%
 {dat}your %seveningstar
-Eurem {adj-em}%sAbendstern
+Eurem {adj-en}%sAbendstern
 %%%%
 {dat}your %sgreat mace
-Eurem {adj-em}%sgroßem Streitkolben
+Eurem {adj-en}%sgroßen Streitkolben
 %%%%
 {dat}your %sgiant club
 Eurer {adj-en}%sRiesenkeule
@@ -55,7 +53,7 @@ Eurer {adj-en}%sRiesenkeule
 Eurer {adj-en}%sriesigen Stachelkeule
 %%%%
 {dat}your %sdagger
-Eurem {adj-em}%sDolch
+Eurem {adj-en}%sDolch
 %%%%
 {dat}your %squick blade
 Eurer {adj-en}%sSchnellklinge
@@ -73,7 +71,7 @@ Eurem {adj-en}%sFalchion
 Eurem {adj-en}%sLangschwert
 %%%%
 {dat}your %sscimitar
-Eurem {adj-em}%sKrummsäbel
+Eurem {adj-en}%sKrummsäbel
 %%%%
 {dat}your %sdemon blade
 Eurer {adj-en}%sDämonenklinge
@@ -91,7 +89,7 @@ Eurem {adj-en}%sGroßschwert
 Eurem {adj-en}%sDreifach-Schwert
 %%%%
 {dat}your %shand axe
-Eurem {adj-en}%sBeil
+Eurem {adj-en}%sHandbeil
 %%%%
 {dat}your %swar axe
 Eurer {adj-en}%sKriegsaxt
@@ -106,10 +104,10 @@ Eurer {adj-en}%sStreitaxt
 Eurer {adj-en}%sHenkersaxt
 %%%%
 {dat}your %sspear
-Eurem {adj-em}%sSpeer
+Eurem {adj-en}%sSpeer
 %%%%
 {dat}your %strident
-Eurem {adj-em}%sDreizack
+Eurem {adj-en}%sDreizack
 %%%%
 {dat}your %shalberd
 Eurer {adj-en}%sHellebarde
@@ -118,10 +116,10 @@ Eurer {adj-en}%sHellebarde
 Eurer {adj-en}%sSense
 %%%%
 {dat}your %sdemon trident
-Eurem {adj-em}%sDämonendreizack
+Eurem {adj-en}%sDämonendreizack
 %%%%
 {dat}your %strishula
-Eurem {adj-em}%sTrishula
+Eurem {adj-en}%sTrishula
 %%%%
 {dat}your %sglaive
 Eurer {adj-en}%sGleve
@@ -130,23 +128,26 @@ Eurer {adj-en}%sGleve
 Eurer {adj-en}%sBardiche
 %%%%
 {dat}your %squarterstaff
-Eurem {adj-em}%sKampfstab
+Eurem {adj-en}%sKampfstab
 %%%%
 {dat}your %slajatang
-Eurem {adj-em}%sLajatang
+Eurem {adj-en}%sLajatang
 %%%%
+{dat}your %slance
 Eurer {adj-en}%sLanze
 %%%%
+
 
 #################################
 # Launchers
 #################################
+
 %%%%
 {dat}your %shunting sling
 Eurer {adj-en}%sSchleuder
 %%%%
 {dat}your %sfustibalus
-Eurem {adj-em}%sFustibalus
+Eurem {adj-en}%sFustibalus
 %%%%
 {dat}your %shand crossbow
 Eurer {adj-en}%sHandarmbrust
@@ -158,20 +159,67 @@ Eurer {adj-en}%sArmbrust
 Eurer {adj-en}%sDreifach-Armbrust
 %%%%
 {dat}your %sshortbow
-Eurem {adj-em}%sKurzbogen
+Eurem {adj-en}%sKurzbogen
 %%%%
 {dat}your %slongbow
-Eurem {adj-em}%sLangbogen
+Eurem {adj-en}%sLangbogen
 %%%%
 
 #################################
 # Missiles
 #################################
+
+%%%%
+{dat}your arrow
+Eurem Pfeil
+%%%%
+{dat}your bolt
+Eurem Bolzen
+%%%%
+{dat}your dart
+Eurem Wurfpfeil
+%%%%
+{dat}your poisoned dart
+Eurem vergifteten Wurfpfeil
+%%%%
+{dat}your atropa-tipped dart
+Eurem Atropa-Wurfpfeil
+%%%%
+{dat}your curare-tipped dart
+Eurem Curare-Wurfpfeil
+%%%%
+{dat}your datura-tipped dart
+Eurem Datura-Wurfpfeil
+%%%%
+{dat}your stone
+Eurem Stein
+%%%%
+{dat}your large rock
+Eurem Felsblock
+%%%%
+{dat}your sling bullet
+Eurer Schleuderkugel
+%%%%
+{dat}your javelin
+Eurem Wurfspeer
+%%%%
+{dat}your silver javelin
+Eurem Silberwurfspeer
+%%%%
+{dat}your throwing net
+Eurem Wurfnetz
+%%%%
+{dat}your boomerang
+Eurem Bumerang
+%%%%
+{dat}your silver boomerang
+Eurem Silberbumerang
 %%%%
 
 #################################
 # Armour
 #################################
+
 %%%%
 {dat}your %sanimal skin
 Eurer {adj-en}%sTierhaut
@@ -183,49 +231,49 @@ Eurer {adj-en}%sRobe
 Eurer {adj-en}%sLederrüstung
 %%%%
 {dat}your %sring mail
-Eurem {adj-em}%sRingpanzer
+Eurem {adj-en}%sRingpanzer
 %%%%
 {dat}your %sscale mail
-Eurem {adj-em}%sSchuppenpanzer
+Eurem {adj-en}%sSchuppenpanzer
 %%%%
 {dat}your %schain mail
-Eurem {adj-em}%sKettenpanzer
+Eurem {adj-en}%sKettenpanzer
 %%%%
 {dat}your %splate armour
-Eurem {adj-em}%sPlattenpanzer
+Eurem {adj-en}%sPlattenpanzer
 %%%%
 {dat}your %scrystal plate armour
-Eurem {adj-em}%sKristallplattenpanzer
+Eurem {adj-en}%sKristallplattenpanzer
 %%%%
 {dat}your %stroll leather armour
 Eurer {adj-en}%sTrolllederrüstung
 %%%%
 {dat}your %scloak
-Eurem {adj-em}%sUmhang
+Eurem {adj-en}%sUmhang
 %%%%
 {dat}your %sscarf
-Eurem {adj-em}%sSchal
+Eurem {adj-en}%sSchal
 %%%%
 {dat}your %spair of %sgloves
 Eurem {adj-en}%sPaar {adj-e}%sHandschuhe
 %%%%
 {dat}your %shelmet
-Eurem {adj-em}%sHelm
+Eurem {adj-en}%sHelm
 %%%%
 {dat}your %shat
-Eurem {adj-em}%sHut
+Eurem {adj-en}%sHut
 %%%%
 {dat}your %spair of %sboots
 Eurem {adj-en}%sPaar {adj-e}%sStiefel
 %%%%
 {dat}your %scentaur barding
-Eurem {adj-em}%sZentaurenharnisch
+Eurem {adj-en}%sZentaurenharnisch
 %%%%
 {dat}your %snaga barding
-Eurem {adj-em}%sNagaharnisch
+Eurem {adj-en}%sNagaharnisch
 %%%%
 {dat}your %sbuckler
-Eurem {adj-em}%sBuckler
+Eurem {adj-en}%sBuckler
 %%%%
 {dat}your %skite shield
 Eurem {adj-en}%sKiteschild
@@ -267,85 +315,169 @@ Euren {adj-en}%sGolddrachenschuppen
 #################################
 # Rings
 #################################
+
+%%%%
+{dat}your %sring
+Eurem {adj-en}%sRing
+%%%%
+{dat}your %sring of protection
+Eurem {adj-en}%sRing des Schutzes
+%%%%
+{dat}your %sring of protection from fire
+Eurem {adj-en}%sRing der Feuerresistenz
+%%%%
+{dat}your %sring of poison resistance
+Eurem {adj-en}%sRing der Giftresistenz
+%%%%
+{dat}your %sring of protection from cold
+Eurem {adj-en}%sRing der Kälteresistenz
+%%%%
+{dat}your %sring of strength
+Eurem {adj-en}%sRing der Stärke
+%%%%
+{dat}your %sring of slaying
+Eurem {adj-en}%sRing des Tötens
+%%%%
+{dat}your %sring of see invisible
+Eurem {adj-en}%sRing von Unsichtbares sehen
+%%%%
+{dat}your %sring of resist corrosion
+Eurem {adj-en}%sRing der Korrosionresistenz
+%%%%
+{dat}your %sring of teleportation
+Eurem {adj-en}%sRing der Teleportation
+%%%%
+{dat}your %sring of evasion
+Eurem {adj-en}%sRing der Umgehung
+%%%%
+{dat}your %sring of stealth
+Eurem {adj-en}%sRing der Heimlichkeit
+%%%%
+{dat}your %sring of dexterity
+Eurem {adj-en}%sRing der Geschicklichkeit
+%%%%
+{dat}your %sring of intelligence
+Eurem {adj-en}%sRing der Intelligenz
+%%%%
+{dat}your %sring of wizardry
+Eurem {adj-en}%sRing der Zauberei
+%%%%
+{dat}your %sring of magical power
+Eurem {adj-en}%sRing magischer Kraft
+%%%%
+{dat}your %sring of flight
+Eurem {adj-en}%sRing des Fliegens
+%%%%
+{dat}your %sring of positive energy
+Eurem {adj-en}%sRing positiver Energie
+%%%%
+{dat}your %sring of willpower
+Eurem {adj-en}%sRing der Willenskraft
+%%%%
+{dat}your %sring of fire
+Eurem {adj-en}%sRing des Feuers
+%%%%
+{dat}your %sring of ice
+Eurem {adj-en}%sRing des Eises
+%%%%
+{dat}your %sring of obsoleteness
+Eurem {adj-en}%sobsoleten Ring
 %%%%
 
 # unidentified
 %%%%
-{dat}your %sring
-Eurem {adj-em}%sRing
+{dat}your %swooden ring
+Eurem {adj-en}%sHolzring
 %%%%
-{dat}your %sring of protection
-Eurem {adj-em}%sRing des Schutzes
+{dat}your %ssilver ring
+Eurem {adj-en}%sSilberring
 %%%%
-{dat}your %sring of protection from fire
-Eurem {adj-em}%sRing der Feuerresistenz
+{dat}your %sgolden ring
+Eurem {adj-en}%sGoldring
 %%%%
-{dat}your %sring of poison resistance
-Eurem {adj-em}%sRing der Giftresistenz
+{dat}your %siron ring
+Eurem {adj-en}%sEisenring
 %%%%
-{dat}your %sring of protection from cold
-Eurem {adj-em}%sRing der Kälteresistenz
+{dat}your %ssteel ring
+Eurem {adj-en}%sStahlring
 %%%%
-{dat}your %sring of strength
-Eurem {adj-em}%sRing der Stärke
+{dat}your %stourmaline ring
+Eurem {adj-en}%sTurmalinring
 %%%%
-{dat}your %sring of slaying
-Eurem {adj-em}%sRing des Tötens
+{dat}your %sbrass ring
+Eurem {adj-en}%sMessingring
 %%%%
-{dat}your %sring of see invisible
-Eurem {adj-em}%sRing von Unsichtbares sehen
+{dat}your %scopper ring
+Eurem {adj-en}%sKupferring
 %%%%
-{dat}your %sring of resist corrosion
-Eurem {adj-em}%sRing der Korrosionresistenz
+{dat}your %sgranite ring
+Eurem {adj-en}%sGranitring
 %%%%
-{dat}your %sring of teleportation
-Eurem {adj-em}%sRing der Teleportation
+{dat}your %sivory ring
+Eurem {adj-en}%sElfenbeinring
 %%%%
-{dat}your %sring of evasion
-Eurem {adj-em}%sRing der Umgehung
+{dat}your %sruby ring
+Eurem {adj-en}%sRubinring
 %%%%
-{dat}your %sring of stealth
-Eurem {adj-em}%sRing der Heimlichkeit
+{dat}your %smarble ring
+Eurem {adj-en}%sMarmorring
 %%%%
-{dat}your %sring of dexterity
-Eurem {adj-em}%sRing der Geschicklichkeit
+{dat}your %sjade ring
+Eurem {adj-en}%sJadering
 %%%%
-{dat}your %sring of intelligence
-Eurem {adj-em}%sRing der Intelligenz
+{dat}your %sglass ring
+Eurem {adj-en}%sGlasring
 %%%%
-{dat}your %sring of wizardry
-Eurem {adj-em}%sRing der Zauberei
+{dat}your %sagate ring
+Eurem {adj-en}%sAchatring
 %%%%
-{dat}your %sring of magical power
-Eurem {adj-em}%sRing magischer Kraft
+{dat}your %sbone ring
+Eurem {adj-en}%sKnochenring
 %%%%
-{dat}your %sring of flight
-Eurem {adj-em}%sRing des Fliegens
+{dat}your %sdiamond ring
+Eurem {adj-en}%sDiamantring
 %%%%
-{dat}your %sring of positive energy
-Eurem {adj-em}%sRing positiver Energie
+{dat}your %semerald ring
+Eurem {adj-en}%sSmaragdring
 %%%%
-{dat}your %sring of willpower
-Eurem {adj-em}%sRing der Willenskraft
+{dat}your %speridot ring
+Eurem {adj-en}%sPeridotring
 %%%%
-{dat}your %sring of fire
-Eurem {adj-em}%sRing des Feuers
+{dat}your %sgarnet ring
+Eurem {adj-en}%sGranatring
 %%%%
-{dat}your %sring of ice
-Eurem {adj-em}%sRing des Eises
+{dat}your %sopal ring
+Eurem {adj-en}%sOpalring
 %%%%
-{dat}your %sring of obsoleteness
-Eurem {adj-em}%sobsoletem Ring
+{dat}your %spearl ring
+Eurem {adj-en}%sPerlenring
 %%%%
-# unidentified
+{dat}your %scoral ring
+Eurem {adj-en}%sKorallenring
+%%%%
+{dat}your %ssapphire ring
+Eurem {adj-en}%sSaphirring
+%%%%
+{dat}your %scabochon ring
+Eurem {adj-en}%sCabochonring
+%%%%
+{dat}your %sgilded ring
+Eurem {adj-en}%svergoldeten Ring
+%%%%
+{dat}your %sonyx ring
+Eurem {adj-en}%sOnyxring
+%%%%
+{dat}your %sbronze ring
+Eurem {adj-en}%sBronzering
+%%%%
+{dat}your %smoonstone ring
+Eurem {adj-en}%sMondsteinring
 %%%%
 
 #################################
 # Amulets
 #################################
-%%%%
 
-# unidentified
 %%%%
 {dat}your %samulet
 Eurem {adj-en}%sAmulett
@@ -374,16 +506,167 @@ Eurem {adj-en}%sAmulett der Reflexion
 {dat}your %samulet of regeneration
 Eurem {adj-en}%sAmulett der Regeneration
 %%%%
+
 # unidentified
+%%%%
+{dat}your %ssapphire amulet
+Eurem {adj-en}%sSaphiramulett
+%%%%
+{dat}your %szirconium amulet
+Eurem {adj-en}%sZirkoniumamulett
+%%%%
+{dat}your %sgolden amulet
+Eurem {adj-en}%sGoldamulett
+%%%%
+{dat}your %semerald amulet
+Eurem {adj-en}%sSmaragdamulett
+%%%%
+{dat}your %sgarnet amulet
+Eurem {adj-en}%sGranatamulett
+%%%%
+{dat}your %sbronze amulet
+Eurem {adj-en}%sBronzeamulett
+%%%%
+{dat}your %sbrass amulet
+Eurem {adj-en}%sMessingamulett
+%%%%
+{dat}your %scopper amulet
+Eurem {adj-en}%sKupferamulett
+%%%%
+{dat}your %sruby amulet
+Eurem {adj-en}%sRubinamulett
+%%%%
+{dat}your %scitrine amulet
+Eurem {adj-en}%sCitrinamulett
+%%%%
+{dat}your %sbone amulet
+Eurem {adj-en}%sKnochenamulett
+%%%%
+{dat}your %splatinum amulet
+Eurem {adj-en}%sPlatinamulett
+%%%%
+{dat}your %sjade amulet
+Eurem {adj-en}%sJade-Amulett
+%%%%
+{dat}your %sfluorescent amulet
+Eurem {adj-en}%sfluoreszierenden Amulett
+%%%%
+{dat}your %samethyst amulet
+Eurem {adj-en}%sAmethystamulett
+%%%%
+{dat}your %scameo amulet
+Eurem {adj-en}%sCameo-Amulett
+%%%%
+{dat}your %spearl amulet
+Eurem {adj-en}%sPerlenamulett
+%%%%
+{dat}your %sblue amulet
+Eurem {adj-en}%sblauen Amulett
+%%%%
+{dat}your %speridot amulet
+Eurem {adj-en}%sPeridot-Amulett
+%%%%
+{dat}your %sjasper amulet
+Eurem {adj-en}%sJaspisamulett
+%%%%
+{dat}your %sdiamond amulet
+Eurem {adj-en}%sDiamantamulett
+%%%%
+{dat}your %smalachite amulet
+Eurem {adj-en}%sMalachitamulett
+%%%%
+{dat}your %ssteel amulet
+Eurem {adj-en}%sStahlamulett
+%%%%
+{dat}your %scabochon amulet
+Eurem {adj-en}%sCabochon-Amulett
+%%%%
+{dat}your %ssilver amulet
+Eurem {adj-en}%sSilberamulett
+%%%%
+{dat}your %ssoapstone amulet
+Eurem {adj-en}%sSpecksteinamulett
+%%%%
+{dat}your %slapis lazuli amulet
+Eurem {adj-en}%sLapislazuli-Amulett
+%%%%
+{dat}your %sfiligree amulet
+Eurem {adj-en}%sFiligranamulett
+%%%%
+{dat}your %sberyl amulet
+Eurem {adj-en}%sBeryllamulett
 %%%%
 
 #################################
 # Wands
 #################################
+
 %%%%
+{dat}your wand of flame
+Eurem Zauberstab des Flammens
+%%%%
+{dat}your wand of paralysis
+Eurem Zauberstab der Paralyse
+%%%%
+{dat}your wand of digging
+Eurem Zauberstab des Grabens
+%%%%
+{dat}your wand of iceblast
+Eurem Zauberstab des Eisstrahls
+%%%%
+{dat}your wand of polymorph
+Eurem Zauberstab der Verwandlung
+%%%%
+{dat}your wand of charming
+Eurem Zauberstab der Verzauberung
+%%%%
+{dat}your wand of acid
+Eurem Zauberstab der Säure
+%%%%
+{dat}your wand of mindburst
+Eurem Zauberstab des Gehirnschlags
+%%%%
+{dat}your wand of removedness
+Eurem beseitigten Zauberstab
+%%%%
+
 # unidentified
 %%%%
-# unidentified
+{dat}your %siron wand
+Eurem {adj-en}%sEisenzauberstab
+%%%%
+{dat}your %sbrass wand
+Eurem {adj-en}%sMessingzauberstab
+%%%%
+{dat}your %sbone wand
+Eurem {adj-en}%sZauberstab aus Knochen
+%%%%
+{dat}your %swooden wand
+Eurem {adj-en}%sHolzzauberstab
+%%%%
+{dat}your %scopper wand
+Eurem {adj-en}%sKupferzauberstab
+%%%%
+{dat}your %sgold wand
+Eurem {adj-en}%sGoldzauberstab
+%%%%
+{dat}your %ssilver wand
+Eurem {adj-en}%sSilberzauberstab
+%%%%
+{dat}your %sbronze wand
+Eurem {adj-en}%sZauberstab aus Bronze
+%%%%
+{dat}your %sivory wand
+Eurem {adj-en}%sElfenbeinzauberstab
+%%%%
+{dat}your %sglass wand
+Eurem {adj-en}%sgläsernen Zauberstab
+%%%%
+{dat}your %slead wand
+Eurem {adj-en}%sZauberstab aus Blei
+%%%%
+{dat}your %sfluorescent wand
+Eurem {adj-en}%sfluoreszierenden Zauberstab
 %%%%
 
 #################################
@@ -391,7 +674,71 @@ Eurem {adj-en}%sAmulett der Regeneration
 #################################
 
 %%%%
+{dat}your scroll labelled %s
+Eurer Schriftrolle beschriftet mit {adj-e}%s
+%%%%
+{dat}your scroll of acquirement
+Eurer Schriftrolle des Erwerbs
+%%%%
+{dat}your scroll of amnesia
+Eurer Schriftrolle der Amnesie
+%%%%
+{dat}your scroll of blinking
+Eurer Schriftrolle des Blinzelns
+%%%%
+{dat}your scroll of brand weapon
+Eurer Schriftrolle der Waffenmark
+%%%%
+{dat}your scroll of enchant armour
+Eurer Schriftrolle der Rüstungsverzauberung
+%%%%
+{dat}your scroll of enchant weapon
+Eurer Schriftrolle der Waffenverzauberung
+%%%%
+{dat}your scroll of fear
+Eurer Schriftrolle der Angst
+%%%%
+{dat}your scroll of fog
+Eurer Schriftrolle des Nebels
+%%%%
+{dat}your scroll of holy word
+Eurer Schriftrolle des heiligen Wortes
+%%%%
+{dat}your scroll of identify
+Eurer Schriftrolle der Identifizierung
+%%%%
+{dat}your scroll of immolation
+Eurer Schriftrolle der Verbrennug
+%%%%
+{dat}your scroll of magic mapping
+Eurer Schriftrolle des magischen Kartierens
+%%%%
+{dat}your scroll of noise
+Eurer Schriftrolle des Lärms
+%%%%
+{dat}your scroll of remove curse
+Eurer Schriftrolle des Segnens
+%%%%
+{dat}your scroll of silence
+Eurer Schriftrolle der Stille
+%%%%
+# Note: In DCSS, there is a distinction between summoning and conjuration
 # The usual German word for summoning is Beschwörung, but that also means conjuration
+%%%%
+{dat}your scroll of summoning
+Eurer Schriftrolle des Herbeirufs
+%%%%
+{dat}your scroll of teleportation
+Eurer Schriftrolle der Teleportation
+%%%%
+{dat}your scroll of torment
+Eurer Schriftrolle der Qual
+%%%%
+{dat}your scroll of vulnerability
+Eurer Schriftrolle der Vulnerabilität
+%%%%
+{dat}your scroll of removedness
+Eurer Schriftrolle der Obsoleszenz
 %%%%
 
 #################################
@@ -399,9 +746,63 @@ Eurem {adj-en}%sAmulett der Regeneration
 #################################
 
 %%%%
+{dat}your potion of ambrosia
+Eurem Trank der Ambrosia
+%%%%
+{dat}your potion of attraction
+Eurem Trank der Anziehung
+%%%%
+{dat}your potion of berserk rage
+Eurem Trank der Berserker-Wut
+%%%%
+{dat}your potion of brilliance
+Eurem Trank der Brillanz
+%%%%
+{dat}your potion of cancellation
+Eurem Trank der Aufhebung
+%%%%
+{dat}your potion of curing
+Eurem Trank des Gegenmittels
+%%%%
+{dat}your potion of degeneration
+Eurem Trank der Degeneration
+%%%%
+{dat}your potion of experience
+Eurem Trank der Erfahrung
+%%%%
+{dat}your potion of flight
+Eurem Trank des Fliegens
+%%%%
+{dat}your potion of haste
+Eurem Trank der Geschwindigkeit
+%%%%
+{dat}your potion of heal wounds
+Eurem Heiltrank
+%%%%
+{dat}your potion of invisibility
+Eurem Trank der Unsichtbarkeit
+%%%%
+{dat}your potion of lignification
+Eurem Trank der Verholzung
+%%%%
+{dat}your potion of magic
+Eurem Trank der Magie
+%%%%
+{dat}your potion of might
+Eurem Trank der Macht
+%%%%
+{dat}your potion of mutation
+Eurem Trank der Mutation
+%%%%
+{dat}your potion of resistance
+Eurem Trank des Widerstands
+%%%%
 
 # unidentified potions are named "<colour> <potion>"
 # or "<qualifier> <colour> potion"
+%%%%
+{dat}your %spotion
+Eurem {adj-en}%sZaubertrank
 %%%%
 
 #################################
@@ -409,11 +810,209 @@ Eurem {adj-en}%sAmulett der Regeneration
 #################################
 
 %%%%
+{dat}your %sstaff of fire
+Eurem {adj-en}%sStecken des Feuers
+%%%%
+{dat}your %sstaff of cold
+Eurem {adj-en}%sStecken der Kälte
+%%%%
+{dat}your %sstaff of poison
+Eurem {adj-en}%sStecken des Giftes
+%%%%
+{dat}your %sstaff of death
+Eurem {adj-en}%sStecken des Todes
+%%%%
+{dat}your %sstaff of conjuration
+Eurem {adj-en}%sStecken der Hervorrufung
+%%%%
+{dat}your %sstaff of air
+Eurem {adj-en}%sStecken der Luft
+%%%%
+{dat}your %sstaff of earth
+Eurem {adj-en}%sStecken der Erde
+%%%%
+{dat}your %sstaff of removedness
+Eurem {adj-en}%sStecken der Obsoleszenz
+%%%%
+{dat}your %sstaff
+Eurem {adj-en}%sStecken
+%%%%
 
 #################################
 # Spellbooks
 #################################
 
+%%%%
+{dat}your book of Minor Magic
+Eurem Buch der kleinen Magie
+%%%%
+{dat}your book of Conjurations
+Eurem Buch der Hervorrufung
+%%%%
+{dat}your book of Flames
+Eurem Buch der Flammen
+%%%%
+{dat}your book of Frost
+Eurem Buch des Frosts
+%%%%
+{dat}your book of the Dryads
+Eurem Buch der Dryaden
+%%%%
+{dat}your book of Fire
+Eurem Buch des Feuers
+%%%%
+{dat}your book of Ice
+Eurem Buch des Eises
+%%%%
+{dat}your book of Spatial Translocations
+Eurem Buch der räumlichen Translokationen
+%%%%
+{dat}your book of Hexes
+Eurem Buch der Verhexungen
+%%%%
+{dat}your book of Lightning
+Eurem Buch des Blitzes
+%%%%
+{dat}your book of Death
+Eurem Buch des Todes
+%%%%
+{dat}your book of Misfortune
+Eurem Buch des Unglücks
+%%%%
+{dat}your book of Changes
+Eurem Buch der Veränderungen
+%%%%
+{dat}your book of Transfigurations
+Eurem Buch der Umgestaltungen
+%%%%
+{dat}your book of Battle
+Eurem Buch der Schlacht
+%%%%
+{dat}your book of Vapours
+Eurem Buch der Dämpfe
+%%%%
+{dat}your book of Necromancy
+Eurem Buch der Nekromantie
+%%%%
+{dat}your book of Callings
+Eurem Buch der Rufe
+%%%%
+{dat}your book of Maledictions
+Eurem Buch der Flüche
+%%%%
+{dat}your book of Air
+Eurem Buch der Luft
+%%%%
+{dat}your book of the Sky
+Eurem Buch des Himmels
+%%%%
+{dat}your book of the Warp
+Eurem Buch des Warps
+%%%%
+{dat}your book of Annihilations
+Eurem Buch der Vernichtung
+%%%%
+{dat}your book of Unlife
+Eurem Buch des Unlebens
+%%%%
+{dat}your book of Geomancy
+Eurem Buch der Geomantie
+%%%%
+{dat}your book of the Earth
+Eurem Buch der Erde
+%%%%
+{dat}your book of Power
+Eurem Buch der Macht
+%%%%
+{dat}your book of Cantrips
+Eurem Buch der Schelmenstreiche
+%%%%
+{dat}your book of Party Tricks
+Eurem Buch mit Partytricks
+%%%%
+{dat}your book of Debilitation
+Eurem Buch der Entkräftung
+%%%%
+{dat}your book of the Dragon
+Eurem Buch des Drachen
+%%%%
+{dat}your book of Burglary
+Eurem Buch des Diebstahls
+%%%%
+{dat}your book of Dreams
+Eurem Buch der Träume
+%%%%
+{dat}your book of Alchemy
+Eurem Buch der Alchemie
+%%%%
+{dat}your book of Beasts
+Eurem Buch der Bestien
+%%%%
+{dat}your book of Spectacle
+Eurem Buch des Spektakels
+%%%%
+{dat}your book of Winter
+Eurem Buch des Winters
+%%%%
+{dat}your book of the Spheres
+Eurem Buch der Sphären
+%%%%
+{dat}your book of Armaments
+Eurem Buch der Bewaffnung
+%%%%
+{dat}your book of Pain
+Eurem Buch des Schmerzes
+%%%%
+{dat}your book of Decay
+Eurem Buch des Verfalls
+%%%%
+{dat}your book of Displacement
+Eurem Buch der Verdrängung
+%%%%
+{dat}your book of Rime
+Eurem Buch des Reims
+%%%%
+{dat}your book of Stone
+Eurem Buch des Steins
+%%%%
+{dat}your book of the Senses
+Eurem Buch der Sinne
+%%%%
+{dat}your book of Blasting
+Eurem Buch der Sprengung
+%%%%
+{dat}your book of Iron
+Eurem Buch des Eisens
+%%%%
+{dat}your book of the Tundra
+Eurem Buch der Tundra
+%%%%
+{dat}your book of the Moon
+Eurem Buch des Mondes
+%%%%
+{dat}your book of Storms
+Eurem Buch der Stürme
+%%%%
+{dat}your book of Weapons
+Eurem Buch der Gewehre
+%%%%
+{dat}your book of Sloth
+Eurem Buch der Faulheit
+%%%%
+{dat}your book of Blood
+Eurem Buch des Blutes
+%%%%
+{dat}your book of Dangerous Friends
+Eurem Buch der gefährlichen Freunde
+%%%%
+{dat}your book of Touch
+Eurem Buch der Berührung
+%%%%
+{dat}your book of Chaos
+Eurem Buch des Chaos
+%%%%
+{dat}your book of the Hunter
+Eurem Buch des Jägers
 %%%%
 
 #################################
@@ -421,10 +1020,37 @@ Eurem {adj-en}%sAmulett der Regeneration
 #################################
 
 %%%%
+{dat}your %s corpse
+Eurer {nom}%s-Leiche
+%%%%
 
 #################################
 # Miscellaneous Items
 #################################
 
+%%%%
+{dat}your box of beasts
+Eurer Kiste der Bestien
+%%%%
+{dat}your lightning rod
+Eurer Blitzstange
+%%%%
+{dat}your phial of floods
+Eurer Phiole der Fluten
+%%%%
+{dat}your phantom mirror
+Eurem Phantomspiegel
+%%%%
+{dat}your figurine of a ziggurat
+Eurer Figur einer Zikkurat
+%%%%
+{dat}your condenser vane
+Eurer Kondensationsfahne
+%%%%
+{dat}your piece from Xom's chessboard
+Eurer Figur von Xoms Schachbrett
+%%%%
+{dat}your tin of tremorstones
+Eurer Dose Bebensteine
 %%%%
 

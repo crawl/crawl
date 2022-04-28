@@ -16,9 +16,6 @@ die {adj-e}%sWaffe
 #################################
 
 %%%%
-unarmed
-unbewaffnet
-%%%%
 the %sclub
 die {adj-e}%sKeule
 %%%%
@@ -206,11 +203,17 @@ die Schleuderkugel
 the javelin
 der Wurfspeer
 %%%%
+the silver javelin
+der Silberwurfspeer
+%%%%
 the throwing net
 das Wurfnetz
 %%%%
 the boomerang
 der Bumerang
+%%%%
+the silver boomerang
+der Silberbumerang
 %%%%
 
 #################################
@@ -479,9 +482,6 @@ der {adj-e}%sMondsteinring
 the %samulet
 das {adj-e}%sAmulett
 %%%%
-the %samulet
-das {adj-e}%sAmulett
-%%%%
 the %samulet of magic regeneration
 das {adj-e}%sAmulett der magischen Regeneration
 %%%%
@@ -549,7 +549,7 @@ the %sjade amulet
 das {adj-e}%sJade-Amulett
 %%%%
 the %sfluorescent amulet
-das {adj-e}%sfluoreszierendes Amulett
+das {adj-e}%sfluoreszierende Amulett
 %%%%
 the %samethyst amulet
 das {adj-e}%sAmethystamulett
@@ -561,7 +561,7 @@ the %spearl amulet
 das {adj-e}%sPerlenamulett
 %%%%
 the %sblue amulet
-das {adj-e}%sblaues Amulett
+das {adj-e}%sblaue Amulett
 %%%%
 the %speridot amulet
 das {adj-e}%sPeridot-Amulett

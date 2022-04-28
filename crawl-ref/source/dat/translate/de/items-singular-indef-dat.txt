@@ -1,14 +1,11 @@
 ###############################################################################
 #
-# Translations for item names - dative (where different to nominative)
+# Items - singular, indefinite article, dative (where different to nominative)
+#
+# Note that %s is a placeholder for any adjectives
 #
 ###############################################################################
 
-#################################
-# Item Types (terse)
-# Used in item search, plus one specific message
-# (and also some unlocalised contexts)
-#################################
 %%%%
 {dat}a %sweapon
 einer {adj-en}%sWaffe
@@ -17,6 +14,7 @@ einer {adj-en}%sWaffe
 #################################
 # Melee Weapons
 #################################
+
 %%%%
 {dat}a %sclub
 einer {adj-en}%sKeule
@@ -25,13 +23,13 @@ einer {adj-en}%sKeule
 einer {adj-en}%sPeitsche
 %%%%
 {dat}a %smace
-einem {adj-em}%sStreitkolben
+einem {adj-en}%sStreitkolben
 %%%%
 {dat}a %sflail
-einem {adj-em}%sFlegel
+einem {adj-en}%sFlegel
 %%%%
 {dat}a %smorningstar
-einem {adj-em}%sMorgenstern
+einem {adj-en}%sMorgenstern
 %%%%
 {dat}a %sdemon whip
 einer {adj-en}%sDämonenpeitsche
@@ -40,13 +38,13 @@ einer {adj-en}%sDämonenpeitsche
 einer {adj-en}%sgeistlichen Geißel
 %%%%
 {dat}a %sdire flail
-einem {adj-em}%sSchreckensflegel
+einem {adj-en}%sSchreckensflegel
 %%%%
 {dat}a %seveningstar
-einem {adj-em}%sAbendstern
+einem {adj-en}%sAbendstern
 %%%%
 {dat}a %sgreat mace
-einem {adj-em}%sgroßem Streitkolben
+einem {adj-en}%sgroßen Streitkolben
 %%%%
 {dat}a %sgiant club
 einer {adj-en}%sRiesenkeule
@@ -55,7 +53,7 @@ einer {adj-en}%sRiesenkeule
 einer {adj-en}%sriesigen Stachelkeule
 %%%%
 {dat}a %sdagger
-einem {adj-em}%sDolch
+einem {adj-en}%sDolch
 %%%%
 {dat}a %squick blade
 einer {adj-en}%sSchnellklinge
@@ -73,7 +71,7 @@ einem {adj-en}%sFalchion
 einem {adj-en}%sLangschwert
 %%%%
 {dat}a %sscimitar
-einem {adj-em}%sKrummsäbel
+einem {adj-en}%sKrummsäbel
 %%%%
 {dat}a %sdemon blade
 einer {adj-en}%sDämonenklinge
@@ -91,7 +89,7 @@ einem {adj-en}%sGroßschwert
 einem {adj-en}%sDreifach-Schwert
 %%%%
 {dat}a %shand axe
-einem {adj-en}%sBeil
+einem {adj-en}%sHandbeil
 %%%%
 {dat}a %swar axe
 einer {adj-en}%sKriegsaxt
@@ -106,10 +104,10 @@ einer {adj-en}%sStreitaxt
 einer {adj-en}%sHenkersaxt
 %%%%
 {dat}a %sspear
-einem {adj-em}%sSpeer
+einem {adj-en}%sSpeer
 %%%%
 {dat}a %strident
-einem {adj-em}%sDreizack
+einem {adj-en}%sDreizack
 %%%%
 {dat}a %shalberd
 einer {adj-en}%sHellebarde
@@ -118,10 +116,10 @@ einer {adj-en}%sHellebarde
 einer {adj-en}%sSense
 %%%%
 {dat}a %sdemon trident
-einem {adj-em}%sDämonendreizack
+einem {adj-en}%sDämonendreizack
 %%%%
 {dat}a %strishula
-einem {adj-em}%sTrishula
+einem {adj-en}%sTrishula
 %%%%
 {dat}a %sglaive
 einer {adj-en}%sGleve
@@ -130,24 +128,26 @@ einer {adj-en}%sGleve
 einer {adj-en}%sBardiche
 %%%%
 {dat}a %squarterstaff
-einem {adj-em}%sKampfstab
+einem {adj-en}%sKampfstab
 %%%%
 {dat}a %slajatang
-einem {adj-em}%sLajatang
+einem {adj-en}%sLajatang
 %%%%
 {dat}a %slance
 einer {adj-en}%sLanze
 %%%%
 
+
 #################################
 # Launchers
 #################################
+
 %%%%
 {dat}a %shunting sling
 einer {adj-en}%sSchleuder
 %%%%
 {dat}a %sfustibalus
-einem {adj-em}%sFustibalus
+einem {adj-en}%sFustibalus
 %%%%
 {dat}a %shand crossbow
 einer {adj-en}%sHandarmbrust
@@ -159,15 +159,16 @@ einer {adj-en}%sArmbrust
 einer {adj-en}%sDreifach-Armbrust
 %%%%
 {dat}a %sshortbow
-einem {adj-em}%sKurzbogen
+einem {adj-en}%sKurzbogen
 %%%%
 {dat}a %slongbow
-einem {adj-em}%sLangbogen
+einem {adj-en}%sLangbogen
 %%%%
 
 #################################
 # Missiles
 #################################
+
 %%%%
 {dat}an arrow
 einem Pfeil
@@ -181,11 +182,11 @@ einem Wurfpfeil
 {dat}a poisoned dart
 einem vergifteten Wurfpfeil
 %%%%
-{dat}a curare-tipped dart
-einem Kurare-Wurfpfeil
-%%%%
 {dat}an atropa-tipped dart
 einem Atropa-Wurfpfeil
+%%%%
+{dat}a curare-tipped dart
+einem Curare-Wurfpfeil
 %%%%
 {dat}a datura-tipped dart
 einem Datura-Wurfpfeil
@@ -218,6 +219,7 @@ einem Silberbumerang
 #################################
 # Armour
 #################################
+
 %%%%
 {dat}a %sanimal skin
 einer {adj-en}%sTierhaut
@@ -229,49 +231,49 @@ einer {adj-en}%sRobe
 einer {adj-en}%sLederrüstung
 %%%%
 {dat}a %sring mail
-einem {adj-em}%sRingpanzer
+einem {adj-en}%sRingpanzer
 %%%%
 {dat}a %sscale mail
-einem {adj-em}%sSchuppenpanzer
+einem {adj-en}%sSchuppenpanzer
 %%%%
 {dat}a %schain mail
-einem {adj-em}%sKettenpanzer
+einem {adj-en}%sKettenpanzer
 %%%%
 {dat}a %splate armour
-einem {adj-em}%sPlattenpanzer
+einem {adj-en}%sPlattenpanzer
 %%%%
 {dat}a %scrystal plate armour
-einem {adj-em}%sKristallplattenpanzer
+einem {adj-en}%sKristallplattenpanzer
 %%%%
 {dat}a %stroll leather armour
 einer {adj-en}%sTrolllederrüstung
 %%%%
 {dat}a %scloak
-einem {adj-em}%sUmhang
+einem {adj-en}%sUmhang
 %%%%
 {dat}a %sscarf
-einem {adj-em}%sSchal
+einem {adj-en}%sSchal
 %%%%
 {dat}a %spair of %sgloves
 einem {adj-en}%sPaar {adj-e}%sHandschuhe
 %%%%
 {dat}a %shelmet
-einem {adj-em}%sHelm
+einem {adj-en}%sHelm
 %%%%
 {dat}a %shat
-einem {adj-em}%sHut
+einem {adj-en}%sHut
 %%%%
 {dat}a %spair of %sboots
 einem {adj-en}%sPaar {adj-e}%sStiefel
 %%%%
 {dat}a %scentaur barding
-einem {adj-em}%sZentaurenharnisch
+einem {adj-en}%sZentaurenharnisch
 %%%%
 {dat}a %snaga barding
-einem {adj-em}%sNagaharnisch
+einem {adj-en}%sNagaharnisch
 %%%%
 {dat}a %sbuckler
-einem {adj-em}%sBuckler
+einem {adj-en}%sBuckler
 %%%%
 {dat}a %skite shield
 einem {adj-en}%sKiteschild
@@ -283,169 +285,169 @@ einem {adj-en}%sTurmschild
 #################################
 # Rings
 #################################
+
 %%%%
 {dat}a %sring
-einem {adj-em}%sRing
+einem {adj-en}%sRing
 %%%%
 {dat}a %sring of protection
-einem {adj-em}%sRing des Schutzes
+einem {adj-en}%sRing des Schutzes
 %%%%
 {dat}a %sring of protection from fire
-einem {adj-em}%sRing der Feuerresistenz
+einem {adj-en}%sRing der Feuerresistenz
 %%%%
 {dat}a %sring of poison resistance
-einem {adj-em}%sRing der Giftresistenz
+einem {adj-en}%sRing der Giftresistenz
 %%%%
 {dat}a %sring of protection from cold
-einem {adj-em}%sRing der Kälteresistenz
+einem {adj-en}%sRing der Kälteresistenz
 %%%%
 {dat}a %sring of strength
-einem {adj-em}%sRing der Stärke
+einem {adj-en}%sRing der Stärke
 %%%%
 {dat}a %sring of slaying
-einem {adj-em}%sRing des Tötens
+einem {adj-en}%sRing des Tötens
 %%%%
 {dat}a %sring of see invisible
-einem {adj-em}%sRing von Unsichtbares sehen
+einem {adj-en}%sRing von Unsichtbares sehen
 %%%%
 {dat}a %sring of resist corrosion
-einem {adj-em}%sRing der Korrosionresistenz
+einem {adj-en}%sRing der Korrosionresistenz
 %%%%
 {dat}a %sring of teleportation
-einem {adj-em}%sRing der Teleportation
+einem {adj-en}%sRing der Teleportation
 %%%%
 {dat}a %sring of evasion
-einem {adj-em}%sRing der Umgehung
+einem {adj-en}%sRing der Umgehung
 %%%%
 {dat}a %sring of stealth
-einem {adj-em}%sRing der Heimlichkeit
+einem {adj-en}%sRing der Heimlichkeit
 %%%%
 {dat}a %sring of dexterity
-einem {adj-em}%sRing der Geschicklichkeit
+einem {adj-en}%sRing der Geschicklichkeit
 %%%%
 {dat}a %sring of intelligence
-einem {adj-em}%sRing der Intelligenz
+einem {adj-en}%sRing der Intelligenz
 %%%%
 {dat}a %sring of wizardry
-einem {adj-em}%sRing der Zauberei
+einem {adj-en}%sRing der Zauberei
 %%%%
 {dat}a %sring of magical power
-einem {adj-em}%sRing magischer Kraft
+einem {adj-en}%sRing magischer Kraft
 %%%%
 {dat}a %sring of flight
-einem {adj-em}%sRing des Fliegens
+einem {adj-en}%sRing des Fliegens
 %%%%
 {dat}a %sring of positive energy
-einem {adj-em}%sRing positiver Energie
+einem {adj-en}%sRing positiver Energie
 %%%%
 {dat}a %sring of willpower
-einem {adj-em}%sRing der Willenskraft
+einem {adj-en}%sRing der Willenskraft
 %%%%
 {dat}a %sring of fire
-einem {adj-em}%sRing des Feuers
+einem {adj-en}%sRing des Feuers
 %%%%
 {dat}a %sring of ice
-einem {adj-em}%sRing des Eises
+einem {adj-en}%sRing des Eises
 %%%%
 {dat}a %sring of obsoleteness
-einem {adj-em}%sobsoletem Ring
+einem {adj-en}%sobsoleten Ring
 %%%%
 
 # unidentified
 %%%%
 {dat}a %swooden ring
-einem {adj-em}%sHolzring
+einem {adj-en}%sHolzring
 %%%%
 {dat}a %ssilver ring
-einem {adj-em}%sSilberring
+einem {adj-en}%sSilberring
 %%%%
 {dat}a %sgolden ring
-einem {adj-em}%sGoldring
+einem {adj-en}%sGoldring
 %%%%
 {dat}a %siron ring
-einem {adj-em}%sEisenring
+einem {adj-en}%sEisenring
 %%%%
 {dat}a %ssteel ring
-einem {adj-em}%sStahlring
+einem {adj-en}%sStahlring
 %%%%
 {dat}a %stourmaline ring
-einem {adj-em}%sTurmalinring
+einem {adj-en}%sTurmalinring
 %%%%
 {dat}a %sbrass ring
-einem {adj-em}%sMessingring
+einem {adj-en}%sMessingring
 %%%%
 {dat}a %scopper ring
-einem {adj-em}%sKupferring
+einem {adj-en}%sKupferring
 %%%%
 {dat}a %sgranite ring
-einem {adj-em}%sGranitring
+einem {adj-en}%sGranitring
 %%%%
 {dat}a %sivory ring
-einem {adj-em}%sElfenbeinring
+einem {adj-en}%sElfenbeinring
 %%%%
 {dat}a %sruby ring
-einem {adj-em}%sRubinring
+einem {adj-en}%sRubinring
 %%%%
 {dat}a %smarble ring
-einem {adj-em}%sMarmorring
+einem {adj-en}%sMarmorring
 %%%%
 {dat}a %sjade ring
-einem {adj-em}%sJadering
+einem {adj-en}%sJadering
 %%%%
 {dat}a %sglass ring
-einem {adj-em}%sGlasring
+einem {adj-en}%sGlasring
 %%%%
 {dat}a %sagate ring
-einem {adj-em}%sAchatring
+einem {adj-en}%sAchatring
 %%%%
 {dat}a %sbone ring
-einem {adj-em}%sKnochenring
+einem {adj-en}%sKnochenring
 %%%%
 {dat}a %sdiamond ring
-einem {adj-em}%sDiamantring
+einem {adj-en}%sDiamantring
 %%%%
 {dat}a %semerald ring
-einem {adj-em}%sSmaragdring
+einem {adj-en}%sSmaragdring
 %%%%
 {dat}a %speridot ring
-einem {adj-em}%sPeridotring
+einem {adj-en}%sPeridotring
 %%%%
 {dat}a %sgarnet ring
-einem {adj-em}%sGranatring
+einem {adj-en}%sGranatring
 %%%%
 {dat}a %sopal ring
-einem {adj-em}%sOpalring
+einem {adj-en}%sOpalring
 %%%%
 {dat}a %spearl ring
-einem {adj-em}%sPerlenring
+einem {adj-en}%sPerlenring
 %%%%
 {dat}a %scoral ring
-einem {adj-em}%sKorallenring
+einem {adj-en}%sKorallenring
 %%%%
 {dat}a %ssapphire ring
-einem {adj-em}%sSaphirring
+einem {adj-en}%sSaphirring
 %%%%
 {dat}a %scabochon ring
-einem {adj-em}%sCabochonring
+einem {adj-en}%sCabochonring
 %%%%
 {dat}a %sgilded ring
-einem {adj-em}%svergoldetem Ring
+einem {adj-en}%svergoldeten Ring
 %%%%
 {dat}a %sonyx ring
-einem {adj-em}%sOnyxring
+einem {adj-en}%sOnyxring
 %%%%
 {dat}a %sbronze ring
-einem {adj-em}%sBronzering
+einem {adj-en}%sBronzering
 %%%%
 {dat}a %smoonstone ring
-einem {adj-em}%sMondsteinring
-%%%%
-# unidentified
+einem {adj-en}%sMondsteinring
 %%%%
 
 #################################
 # Amulets
 #################################
+
 %%%%
 {dat}a %samulet
 einem {adj-en}%sAmulett
@@ -564,12 +566,11 @@ einem {adj-en}%sFiligranamulett
 {dat}a %sberyl amulet
 einem {adj-en}%sBeryllamulett
 %%%%
-# unidentified
-%%%%
 
 #################################
 # Wands
 #################################
+
 %%%%
 {dat}a wand of flame
 einem Zauberstab des Flammens
@@ -598,45 +599,44 @@ einem Zauberstab des Gehirnschlags
 {dat}a wand of removedness
 einem beseitigten Zauberstab
 %%%%
+
 # unidentified
 %%%%
 {dat}a %siron wand
-einem {adj-em}%sEisenzauberstab
+einem {adj-en}%sEisenzauberstab
 %%%%
 {dat}a %sbrass wand
-einem {adj-em}%sMessingzauberstab
+einem {adj-en}%sMessingzauberstab
 %%%%
 {dat}a %sbone wand
-einem {adj-em}%sZauberstab aus Knochen
+einem {adj-en}%sZauberstab aus Knochen
 %%%%
 {dat}a %swooden wand
-einem {adj-em}%sHolzzauberstab
+einem {adj-en}%sHolzzauberstab
 %%%%
 {dat}a %scopper wand
-einem {adj-em}%sKupferzauberstab
+einem {adj-en}%sKupferzauberstab
 %%%%
 {dat}a %sgold wand
-einem {adj-em}%sGoldzauberstab
+einem {adj-en}%sGoldzauberstab
 %%%%
 {dat}a %ssilver wand
-einem {adj-em}%sSilberzauberstab
+einem {adj-en}%sSilberzauberstab
 %%%%
 {dat}a %sbronze wand
-einem {adj-em}%sZauberstab aus Bronze
+einem {adj-en}%sZauberstab aus Bronze
 %%%%
 {dat}a %sivory wand
-einem {adj-em}%sElfenbeinzauberstab
+einem {adj-en}%sElfenbeinzauberstab
 %%%%
 {dat}a %sglass wand
-einem {adj-em}%sgläsernem Zauberstab
+einem {adj-en}%sgläsernen Zauberstab
 %%%%
 {dat}a %slead wand
-einem {adj-em}%sZauberstab aus Blei
+einem {adj-en}%sZauberstab aus Blei
 %%%%
 {dat}a %sfluorescent wand
-einem {adj-em}%sfluoreszierendem Zauberstab
-%%%%
-# unidentified
+einem {adj-en}%sfluoreszierenden Zauberstab
 %%%%
 
 #################################
@@ -645,7 +645,7 @@ einem {adj-em}%sfluoreszierendem Zauberstab
 
 %%%%
 {dat}a scroll labelled %s
-einer Schriftrolle beschriftet mit {adj-en}%s
+einer Schriftrolle beschriftet mit {adj-e}%s
 %%%%
 {dat}a scroll of acquirement
 einer Schriftrolle des Erwerbs
@@ -692,6 +692,7 @@ einer Schriftrolle des Segnens
 {dat}a scroll of silence
 einer Schriftrolle der Stille
 %%%%
+# Note: In DCSS, there is a distinction between summoning and conjuration
 # The usual German word for summoning is Beschwörung, but that also means conjuration
 %%%%
 {dat}a scroll of summoning
@@ -771,7 +772,7 @@ einem Trank des Widerstands
 # or "<qualifier> <colour> potion"
 %%%%
 {dat}a %spotion
-einem {adj-em}%sZaubertrank
+einem {adj-en}%sZaubertrank
 %%%%
 
 #################################
@@ -780,31 +781,31 @@ einem {adj-em}%sZaubertrank
 
 %%%%
 {dat}a %sstaff of fire
-einem {adj-em}%sStecken des Feuers
+einem {adj-en}%sStecken des Feuers
 %%%%
 {dat}a %sstaff of cold
-einem {adj-em}%sStecken der Kälte
+einem {adj-en}%sStecken der Kälte
 %%%%
 {dat}a %sstaff of poison
-einem {adj-em}%sStecken des Giftes
+einem {adj-en}%sStecken des Giftes
 %%%%
 {dat}a %sstaff of death
-einem {adj-em}%sStecken des Todes
+einem {adj-en}%sStecken des Todes
 %%%%
 {dat}a %sstaff of conjuration
-einem {adj-em}%sStecken der Hervorrufung
+einem {adj-en}%sStecken der Hervorrufung
 %%%%
 {dat}a %sstaff of air
-einem {adj-em}%sStecken der Luft
+einem {adj-en}%sStecken der Luft
 %%%%
 {dat}a %sstaff of earth
-einem {adj-em}%sStecken der Erde
+einem {adj-en}%sStecken der Erde
 %%%%
 {dat}a %sstaff of removedness
-einem {adj-em}%sStecken der Obsoleszenz
+einem {adj-en}%sStecken der Obsoleszenz
 %%%%
 {dat}a %sstaff
-einem {adj-em}%sStecken
+einem {adj-en}%sStecken
 %%%%
 
 #################################

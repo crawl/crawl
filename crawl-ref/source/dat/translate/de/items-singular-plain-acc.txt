@@ -1,23 +1,17 @@
 ###############################################################################
 #
-# Translations for item names - accusative (where different to nominative)
+# Items - singular, plain, accusative (where different to nominative)
+#
+# Note that %s is a placeholder for any adjectives
 #
 ###############################################################################
-%%%%
 
-#################################
-# Item Types (terse)
-# Used in item search, plus one specific message
-# (and also some unlocalised contexts)
-#################################
-%%%%
-{acc}magical staff
-magischen Stecken
 %%%%
 
 #################################
 # Melee Weapons
 #################################
+
 %%%%
 {acc}%smace
 {adj-en}%sStreitkolben
@@ -43,9 +37,6 @@ magischen Stecken
 {acc}%sscimitar
 {adj-en}%sKrummsäbel
 %%%%
-{acc}%shand axe
-{adj-en}%sHandbeil
-%%%%
 {acc}%sspear
 {adj-en}%sSpeer
 %%%%
@@ -65,9 +56,11 @@ magischen Stecken
 {adj-en}%sLajatang
 %%%%
 
+
 #################################
 # Launchers
 #################################
+
 %%%%
 {acc}%sfustibalus
 {adj-en}%sFustibalus
@@ -82,6 +75,7 @@ magischen Stecken
 #################################
 # Missiles
 #################################
+
 %%%%
 {acc}poisoned dart
 vergifteten Wurfpfeil
@@ -90,6 +84,7 @@ vergifteten Wurfpfeil
 #################################
 # Armour
 #################################
+
 %%%%
 {acc}%sring mail
 {adj-en}%sRingpanzer
@@ -131,9 +126,7 @@ vergifteten Wurfpfeil
 #################################
 # Rings
 #################################
-%%%%
 
-# unidentified
 %%%%
 {acc}%sring
 {adj-en}%sRing
@@ -201,6 +194,7 @@ vergifteten Wurfpfeil
 {acc}%sring of obsoleteness
 {adj-en}%sobsoleten Ring
 %%%%
+
 # unidentified
 %%%%
 {acc}%swooden ring
@@ -294,22 +288,21 @@ vergifteten Wurfpfeil
 #################################
 # Amulets
 #################################
+
 %%%%
 
-# unidentified
-%%%%
 # unidentified
 %%%%
 
 #################################
 # Wands
 #################################
-%%%%
-# unidentified
+
 %%%%
 {acc}wand of removedness
 beseitigten Zauberstab
 %%%%
+
 # unidentified
 %%%%
 {acc}%siron wand
@@ -354,6 +347,7 @@ beseitigten Zauberstab
 #################################
 
 %%%%
+# Note: In DCSS, there is a distinction between summoning and conjuration
 # The usual German word for summoning is Beschwörung, but that also means conjuration
 %%%%
 

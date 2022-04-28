@@ -46,7 +46,7 @@ def is_plural(english):
     # erroneously recognised as plural
     english = re.sub(r' of .*$', '', english)
     if english.endswith('s'):
-        if english.endswith('ss') or english.endswith("'s"):
+        if re.search(r"[s'%]s$", english):
             return False
         elif english.endswith('us'):
             if english.endswith('tengus') or english.endswith('bennus'):
@@ -106,7 +106,8 @@ indefinite_articles = \
 {
     Gender.MASCULINE: ["ein", "einen", "einem", "eines"],
     Gender.FEMININE: ["eine", "eine", "einer", "einer"],
-    Gender.NEUTER: ["ein", "ein", "einem", "eines"]
+    Gender.NEUTER: ["ein", "ein", "einem", "eines"],
+    Gender.PLURAL: ["", "", "", ""],
 }
 
 yours = \
@@ -267,7 +268,7 @@ def decline(english, german, determiner, target_case):
 
     # extract and save any suffix (" of whatever"), which has its own case
     suffix = ""
-    m = re.search(r' (von|der|des) .*$', german)
+    m = re.search(r' (mit|von|der|des) .*$', german)
     if m:
         suffix = m.group(0)
         if suffix == " der Ork":
@@ -288,7 +289,10 @@ def decline(english, german, determiner, target_case):
     if german.startswith('der '):
         gender = Gender.MASCULINE
     elif german.startswith('die '):
-        gender = Gender.FEMININE
+        if is_plural(english):
+            gender = Gender.PLURAL
+        else:
+            gender = Gender.FEMININE
     elif german.startswith('das '):
         gender = Gender.NEUTER
     elif german.startswith('Blork der '):

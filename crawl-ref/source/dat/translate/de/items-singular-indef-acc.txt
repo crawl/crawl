@@ -1,20 +1,17 @@
 ###############################################################################
 #
-# Translations for item names - accusative (where different to nominative)
+# Items - singular, indefinite article, accusative (where different to nominative)
+#
+# Note that %s is a placeholder for any adjectives
 #
 ###############################################################################
-%%%%
 
-#################################
-# Item Types (terse)
-# Used in item search, plus one specific message
-# (and also some unlocalised contexts)
-#################################
 %%%%
 
 #################################
 # Melee Weapons
 #################################
+
 %%%%
 {acc}a %smace
 einen {adj-en}%sStreitkolben
@@ -59,9 +56,11 @@ einen {adj-en}%sKampfstab
 einen {adj-en}%sLajatang
 %%%%
 
+
 #################################
 # Launchers
 #################################
+
 %%%%
 {acc}a %sfustibalus
 einen {adj-en}%sFustibalus
@@ -76,6 +75,7 @@ einen {adj-en}%sLangbogen
 #################################
 # Missiles
 #################################
+
 %%%%
 {acc}an arrow
 einen Pfeil
@@ -89,11 +89,11 @@ einen Wurfpfeil
 {acc}a poisoned dart
 einen vergifteten Wurfpfeil
 %%%%
-{acc}a curare-tipped dart
-einen Kurare-Wurfpfeil
-%%%%
 {acc}an atropa-tipped dart
 einen Atropa-Wurfpfeil
+%%%%
+{acc}a curare-tipped dart
+einen Curare-Wurfpfeil
 %%%%
 {acc}a datura-tipped dart
 einen Datura-Wurfpfeil
@@ -120,6 +120,7 @@ einen Silberbumerang
 #################################
 # Armour
 #################################
+
 %%%%
 {acc}a %sring mail
 einen {adj-en}%sRingpanzer
@@ -161,6 +162,7 @@ einen {adj-en}%sBuckler
 #################################
 # Rings
 #################################
+
 %%%%
 {acc}a %sring
 einen {adj-en}%sRing
@@ -318,22 +320,20 @@ einen {adj-en}%sBronzering
 {acc}a %smoonstone ring
 einen {adj-en}%sMondsteinring
 %%%%
-# unidentified
-%%%%
 
 #################################
 # Amulets
 #################################
+
 %%%%
 
-# unidentified
-%%%%
 # unidentified
 %%%%
 
 #################################
 # Wands
 #################################
+
 %%%%
 {acc}a wand of flame
 einen Zauberstab des Flammens
@@ -362,6 +362,7 @@ einen Zauberstab des Gehirnschlags
 {acc}a wand of removedness
 einen beseitigten Zauberstab
 %%%%
+
 # unidentified
 %%%%
 {acc}a %siron wand
@@ -400,14 +401,13 @@ einen {adj-en}%sZauberstab aus Blei
 {acc}a %sfluorescent wand
 einen {adj-en}%sfluoreszierenden Zauberstab
 %%%%
-# unidentified
-%%%%
 
 #################################
 # Scrolls
 #################################
 
 %%%%
+# Note: In DCSS, there is a distinction between summoning and conjuration
 # The usual German word for summoning is Beschwörung, but that also means conjuration
 %%%%
 

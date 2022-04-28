@@ -1,29 +1,23 @@
 ###############################################################################
 #
-# Translations for item names - dative (where different to nominative)
+# Items - plural, counted, dative (where different to nominative)
+#
+# Note that %s is a placeholder for any adjectives
 #
 ###############################################################################
 
 #################################
-# Item Types (terse)
-# Used in item search, plus one specific message
-# (and also some unlocalised contexts)
-#################################
-%%%%
-
-#################################
 # Melee Weapons
 #################################
-%%%%
 
 #################################
 # Launchers
 #################################
-%%%%
 
 #################################
 # Missiles
 #################################
+
 %%%%
 {dat}%d arrows
 %d Pfeilen
@@ -62,46 +56,23 @@
 #################################
 # Armour
 #################################
-%%%%
 
 #################################
 # Rings
 #################################
-%%%%
-
-# unidentified
-%%%%
-# unidentified
-%%%%
 
 #################################
 # Amulets
 #################################
-%%%%
-
-# unidentified
-%%%%
-# unidentified
-%%%%
 
 #################################
 # Wands
 #################################
-%%%%
-# unidentified
-%%%%
-# unidentified
-%%%%
 
 #################################
 # Scrolls
 #################################
 
-%%%%
-# The usual German word for summoning is Beschwörung, but that also means conjuration
-%%%%
-{dat}%d scrolls labelled %s
-%d Schriftrollen beschriftet mit {adj-en}%s
 %%%%
 
 #################################
@@ -172,19 +143,13 @@
 # Magical Staves
 #################################
 
-%%%%
-
 #################################
 # Spellbooks
 #################################
 
-%%%%
-
 #################################
 # Corpses
 #################################
-
-%%%%
 
 #################################
 # Miscellaneous Items
