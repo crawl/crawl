@@ -250,8 +250,9 @@ schleimige
 abyssal
 Abgrunds-
 %%%%
-silver
-silberne
+# duplicate of missile brand
+#silver
+#silberne
 %%%%
 golden
 goldene

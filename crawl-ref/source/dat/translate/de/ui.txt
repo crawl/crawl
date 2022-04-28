@@ -802,9 +802,6 @@ schnell
 no status effects
 keine Statuseffekte
 %%%%
-Orb of Zot
-Kugel von Zot
-%%%%
 "%d/%d runes: "
 "%d/%d Runen: "
 %%%%
