@@ -4,18 +4,4 @@
 #
 ###############################################################################
 
-#################################
-# Runes
-#################################
-
-%%%%
-a %srune of Zot
-eine {adj-e}%sRune von Zot
-%%%%
-an obsidian rune of Zot
-eine Obsidianrune von Zot
-%%%%
-an abyssal rune of Zot
-eine Abgrundsrune von Zot
-%%%%
 

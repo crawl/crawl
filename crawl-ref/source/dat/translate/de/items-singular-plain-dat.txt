@@ -676,3 +676,62 @@ beseitigtem Zauberstab
 
 %%%%
 
+#################################
+# Runes
+#################################
+
+# These are unique, but there is at least one place where gramatically they're
+# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
+# decline as per non-unique items.
+
+%%%%
+{dat}decaying rune
+verfallender Rune
+%%%%
+{dat}slimy runne
+schleimiger Rune
+%%%%
+{dat}silver rune
+silberner Rune
+%%%%
+{dat}golden rune
+goldener Rune
+%%%%
+
+# hell runes
+%%%%
+{dat}icy rune
+eisiger Rune
+%%%%
+{dat}iron rune
+eiserner Rune
+%%%%
+
+# pandemonium runes
+%%%%
+{dat}demonic rune
+dämonischer Rune
+%%%%
+{dat}glowing rune
+leuchtender runer
+%%%%
+{dat}magical rune
+magischer Rune
+%%%%
+{dat}fiery rune
+feuriger Rune
+%%%%
+{dat}dark rune
+dunkler Rune
+%%%%
+
+#################################
+# Artefacts
+#################################
+
+# Most are unique, but this one isn't
+%%%%
+{dat}%sring of the Octopus King
+{adj-em}%sRing des Krakenkönigs
+%%%%
+

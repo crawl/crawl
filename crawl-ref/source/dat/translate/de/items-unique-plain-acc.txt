@@ -5,25 +5,6 @@
 ###############################################################################
 
 #################################
-# Runes
-#################################
-# "This branch contains the <whatever> rune of Zot."
-%%%%
-# "found a <whatever> rune of Zot"
-%%%%
-# Used in the list of collected runes
-%%%%
-# "You pick up the <whatever> rune and feel its power."
-%%%%
-# terse version for character overview screen
-%%%%
-#"silver"
-#"silberne"
-%%%%
-# these ones are constructed differently
-%%%%
-
-#################################
 # The Orb
 #################################
 %%%%

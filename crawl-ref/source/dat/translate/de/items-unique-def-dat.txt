@@ -1,49 +1,18 @@
 ###############################################################################
 #
-# Items, unique, dative
+# Items - unique, definite article, dative (where different to nominative)
+#
+# Note that %s is a placeholder for any adjectives
 #
 ###############################################################################
 
-#################################
-# Runes
-#################################
-# "This branch contains the <whatever> rune of Zot."
-%%%%
-{dat}the %srune of Zot
-der {adj-en}%sRune von Zot
-%%%%
-# "found a <whatever> rune of Zot"
-%%%%
-# Used in the list of collected runes
-%%%%
-# "You pick up the <whatever> rune and feel its power."
-%%%%
-{dat}the %srune
-der {adj-en}%sRune
-%%%%
-# terse version for character overview screen
-%%%%
-#"silver"
-#"silberne"
-%%%%
-# these ones are constructed differently
-%%%%
-{dat}the obsidian rune of Zot
-der Obsidianrune von Zot
-%%%%
-{dat}the obsidian rune
-der Obsidianrune
-%%%%
-{dat}the abyssal rune of Zot
-der Abgrundsrune von Zot
-%%%%
-{dat}the abyssal rune
-der Abgrundsrune
-%%%%
 
 #################################
 # The Orb
 #################################
+%%%%
+{dat}the Orb of Zot
+der Kugel von Zot
 %%%%
 
 #################################
@@ -218,7 +187,7 @@ der {adj-en}%sKrone von Dyrovepreva
 dem {adj-en}%sHut des Bärengeistes
 %%%%
 {dat}the %srobe of Misfortune
-dem {adj-en}%sRobe des Unglücks
+der {adj-en}%sRobe des Unglücks
 %%%%
 {dat}the %scloak of Flash
 dem {adj-en}%sUmhang von Flash
@@ -401,16 +370,3 @@ der {adj-en}%sUmarmung von Cigotuvi
 dem Horn von Geryon
 %%%%
 
-#################################
-# Unrand Artefacts - without article
-# (Used in character overview screen and HUD)
-#################################
-%%%%
-# alternative name for the Singing Sword
-%%%%
-# alternative name for the Singing Sword
-%%%%
-# "Gyre" and "Gimble" - base name
-%%%%
-# heavy crossbow "Sniper" - base name
-%%%%

@@ -214,6 +214,9 @@ Rune
 " "%s""
 " "%s""
 %%%%
+" of Zot"
+" von Zot"
+%%%%
 # specific artefacts don't necessarily need to be translated
 # if there's no specific translation, the English text will put in quotes.
 %%%%
@@ -222,6 +225,69 @@ Rune
 %%%%
 " of Dice, Bag, and Bottle"
 " von Würfel, Beutel, und Flasche"
+%%%%
+
+#################################
+# Runes(terse form for char overview screen)
+#################################
+
+%%%%
+decaying
+verfallende
+%%%%
+barnacled
+Kletten-
+%%%%
+gossamer
+Spinnfäden-
+%%%%
+serpentine
+Schlangen-
+%%%%
+slimy
+schleimige
+%%%%
+abyssal
+Abgrunds-
+%%%%
+silver
+silberne
+%%%%
+golden
+goldene
+%%%%
+
+# hell runes
+%%%%
+obsidian
+Obsidian-
+%%%%
+icy
+eisige
+%%%%
+bone
+Knochen-
+%%%%
+iron
+eiserne
+%%%%
+
+# pan runes
+%%%%
+demonic
+dämonische
+%%%%
+glowing
+leuchtende
+%%%%
+magical
+magische
+%%%%
+fiery
+feurige
+%%%%
+dark
+dunkle
 %%%%
 
 #################################

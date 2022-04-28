@@ -529,3 +529,29 @@ Euren {adj-en}%sStecken
 Euren Phantomspiegel
 %%%%
 
+#################################
+# Runes
+#################################
+
+# These are unique, but there is at least one place where gramatically they're
+# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
+# decline as per non-unique items.
+
+%%%%
+
+# hell runes
+%%%%
+
+# pandemonium runes
+%%%%
+
+#################################
+# Artefacts
+#################################
+
+# Most are unique, but this one isn't
+%%%%
+{acc}your %sring of the Octopus King
+Euren {adj-en}%sRing des Krakenkönigs
+%%%%
+

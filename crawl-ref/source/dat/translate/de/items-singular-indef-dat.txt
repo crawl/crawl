@@ -1024,3 +1024,80 @@ einer Figur von Xoms Schachbrett
 einer Dose Bebensteine
 %%%%
 
+#################################
+# Runes
+#################################
+
+# These are unique, but there is at least one place where gramatically they're
+# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
+# decline as per non-unique items.
+
+%%%%
+{dat}a decaying rune
+einer verfallenden Rune
+%%%%
+{dat}a barnacled rune
+einer Kletten-Rune
+%%%%
+{dat}a gossamer rune
+einer Spinnfäden-Rune
+%%%%
+{dat}a serpentine rune
+einer Schlangen-Rune
+%%%%
+{dat}a slimy runne
+einer schleimigen Rune
+%%%%
+{dat}an abyssal rune
+einer Abgrundsrune
+%%%%
+{dat}a silver rune
+einer silbernen Rune
+%%%%
+{dat}a golden rune
+einer goldenen Rune
+%%%%
+
+# hell runes
+%%%%
+{dat}an obsidian rune
+einer Obsidianrune
+%%%%
+{dat}an icy rune
+einer eisigen Rune
+%%%%
+{dat}a bone rune
+einer Knochen-Rune
+%%%%
+{dat}an iron rune
+einer eisernen Rune
+%%%%
+
+# pandemonium runes
+%%%%
+{dat}a demonic rune
+einer dämonischen Rune
+%%%%
+{dat}a glowing rune
+einer leuchtenden runen
+%%%%
+{dat}a magical rune
+einer magischen Rune
+%%%%
+{dat}a fiery rune
+einer feurigen Rune
+%%%%
+{dat}a dark rune
+einer dunklen Rune
+%%%%
+
+#################################
+# Artefacts
+#################################
+
+# Most are unique, but this one isn't
+%%%%
+{dat}a %sring of the Octopus King
+einem {adj-en}%sRing des Krakenkönigs
+%%%%
+

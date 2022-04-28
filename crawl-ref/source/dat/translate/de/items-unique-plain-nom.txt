@@ -2,31 +2,22 @@
 #
 # Items - unique, plain, nominative
 #
+# Note that %s is a placeholder for any adjectives
+#
 ###############################################################################
 
-#################################
-# Runes
-#################################
-
-%%%%
-%srune of Zot
-{adj-e}%sRune von Zot
-%%%%
-obsidian rune of Zot
-Obsidianrune von Zot
-%%%%
-abyssal rune of Zot
-Abgrundsrune von Zot
-%%%%
 
 #################################
 # The Orb
 #################################
+%%%%
+Orb of Zot
+Kugel von Zot
+%%%%
 
 #################################
 # Unrand Artefacts
 #################################
-
 %%%%
 %sSinging Sword
 {adj-es}%ssingendes Schwert
@@ -39,9 +30,8 @@ Abgrundsrune von Zot
 %sSulking Sword
 {adj-es}%sschmollendes Schwert
 %%%%
-# "Gyre" and "Gimble" - base name
-%spair of quick blades
-{adj-es}%sPaar Schnellklingen
+%spair of quick blades "Gyre" and "Gimble"
+{adj-es}%sPaar Schnellklingen "Gyre" und "Gimble"
 %%%%
 %sWrath of Trog
 {adj-er}%sZorn von Trog
@@ -142,9 +132,8 @@ Abgrundsrune von Zot
 %sElemental Staff
 {adj-er}%sElementarstecken
 %%%%
-# heavy crossbow "Sniper" - base name
-%sheavy crossbow
-{adj-e}%sschwere Armbrust
+%sheavy crossbow "Sniper"
+{adj-e}%sschwere Armbrust "Scharfschütze"
 %%%%
 %slongbow "Piercer"
 {adj-er}%sLangbogen "Stecher"
@@ -180,7 +169,7 @@ Abgrundsrune von Zot
 {adj-er}%sSturmbogen
 %%%%
 %stower shield of Ignorance
-{adj-es}%sTurmschild des Nichtwissens
+{adj-er}%sTurmschild des Nichtwissens
 %%%%
 %srobe of Augmentation
 {adj-es}%sGewand der Augmentation
@@ -189,7 +178,7 @@ Abgrundsrune von Zot
 {adj-er}%sUmhang des Diebes
 %%%%
 %stower shield "Bullseye"
-{adj-es}%sTurmschild "Volltreffer"
+{adj-er}%sTurmschild "Volltreffer"
 %%%%
 %scrown of Dyrovepreva
 {adj-e}%sKrone von Dyrovepreva
@@ -219,7 +208,7 @@ Abgrundsrune von Zot
 {adj-es}%sPaar Gantelets des Krieges
 %%%%
 %sshield of Resistance
-{adj-es}%sSchild der Resistenz
+{adj-er}%sSchild der Resistenz
 %%%%
 %srobe of Folly
 {adj-es}%sGewand der Torheit
@@ -249,7 +238,7 @@ Abgrundsrune von Zot
 {adj-er}%sRattenfellumhang
 %%%%
 %sshield of the Gong
-{adj-es}%sSchild des Gongs
+{adj-er}%sSchild des Gongs
 %%%%
 %samulet of the Air
 {adj-es}%sAmulett der Luft
@@ -305,9 +294,6 @@ Abgrundsrune von Zot
 %sdragonskin cloak
 {adj-er}%sDrachenhautumhang
 %%%%
-%sring of the Octopus King
-{adj-er}%sRing des Krakenkönigs
-%%%%
 %sAxe of Woe
 {adj-e}%sAxt des Wehs
 %%%%
@@ -342,7 +328,7 @@ Abgrundsrune von Zot
 {adj-er}%soranger Kristallplattenpanzer
 %%%%
 %sMajin-Bo
-{adj-es}%sMajin-Bo
+{adj-er}%sMajin-Bo
 %%%%
 %sMaxwell's etheric cage
 {adj-er}%sÄtherkäfig von Maxwell
@@ -379,5 +365,8 @@ Abgrundsrune von Zot
 %%%%
 %sCigotuvi's embrace
 {adj-e}%sUmarmung von Cigotuvi
+%%%%
+horn of Geryon
+Horn von Geryon
 %%%%
 

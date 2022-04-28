@@ -1054,3 +1054,80 @@ the tin of tremorstones
 die Dose Bebensteine
 %%%%
 
+#################################
+# Runes
+#################################
+
+# These are unique, but there is at least one place where gramatically they're
+# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
+# decline as per non-unique items.
+
+%%%%
+the decaying rune
+die verfallende Rune
+%%%%
+the barnacled rune
+die Kletten-Rune
+%%%%
+the gossamer rune
+die Spinnfäden-Rune
+%%%%
+the serpentine rune
+die Schlangen-Rune
+%%%%
+the slimy runne
+die schleimige Rune
+%%%%
+the abyssal rune
+die Abgrundsrune
+%%%%
+the silver rune
+die silberne Rune
+%%%%
+the golden rune
+die goldene Rune
+%%%%
+
+# hell runes
+%%%%
+the obsidian rune
+die Obsidianrune
+%%%%
+the icy rune
+die eisige Rune
+%%%%
+the bone rune
+die Knochen-Rune
+%%%%
+the iron rune
+die eiserne Rune
+%%%%
+
+# pandemonium runes
+%%%%
+the demonic rune
+die dämonische Rune
+%%%%
+the glowing rune
+die leuchtende rune
+%%%%
+the magical rune
+die magische Rune
+%%%%
+the fiery rune
+die feurige Rune
+%%%%
+the dark rune
+die dunkle Rune
+%%%%
+
+#################################
+# Artefacts
+#################################
+
+# Most are unique, but this one isn't
+%%%%
+the %sring of the Octopus King
+der {adj-e}%sRing des Krakenkönigs
+%%%%
+

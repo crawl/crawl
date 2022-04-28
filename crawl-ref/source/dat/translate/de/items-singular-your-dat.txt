@@ -1054,3 +1054,80 @@ Eurer Figur von Xoms Schachbrett
 Eurer Dose Bebensteine
 %%%%
 
+#################################
+# Runes
+#################################
+
+# These are unique, but there is at least one place where gramatically they're
+# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
+# decline as per non-unique items.
+
+%%%%
+{dat}your decaying rune
+Eurer verfallenden Rune
+%%%%
+{dat}your barnacled rune
+Eurer Kletten-Rune
+%%%%
+{dat}your gossamer rune
+Eurer Spinnfäden-Rune
+%%%%
+{dat}your serpentine rune
+Eurer Schlangen-Rune
+%%%%
+{dat}your slimy runne
+Eurer schleimigen Rune
+%%%%
+{dat}your abyssal rune
+Eurer Abgrundsrune
+%%%%
+{dat}your silver rune
+Eurer silbernen Rune
+%%%%
+{dat}your golden rune
+Eurer goldenen Rune
+%%%%
+
+# hell runes
+%%%%
+{dat}your obsidian rune
+Eurer Obsidianrune
+%%%%
+{dat}your icy rune
+Eurer eisigen Rune
+%%%%
+{dat}your bone rune
+Eurer Knochen-Rune
+%%%%
+{dat}your iron rune
+Eurer eisernen Rune
+%%%%
+
+# pandemonium runes
+%%%%
+{dat}your demonic rune
+Eurer dämonischen Rune
+%%%%
+{dat}your glowing rune
+Eurer leuchtenden runen
+%%%%
+{dat}your magical rune
+Eurer magischen Rune
+%%%%
+{dat}your fiery rune
+Eurer feurigen Rune
+%%%%
+{dat}your dark rune
+Eurer dunklen Rune
+%%%%
+
+#################################
+# Artefacts
+#################################
+
+# Most are unique, but this one isn't
+%%%%
+{dat}your %sring of the Octopus King
+Eurem {adj-en}%sRing des Krakenkönigs
+%%%%
+

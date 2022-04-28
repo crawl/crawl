@@ -1054,3 +1054,80 @@ der Figur von Xoms Schachbrett
 der Dose Bebensteine
 %%%%
 
+#################################
+# Runes
+#################################
+
+# These are unique, but there is at least one place where gramatically they're
+# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
+# decline as per non-unique items.
+
+%%%%
+{dat}the decaying rune
+der verfallenden Rune
+%%%%
+{dat}the barnacled rune
+der Kletten-Rune
+%%%%
+{dat}the gossamer rune
+der Spinnfäden-Rune
+%%%%
+{dat}the serpentine rune
+der Schlangen-Rune
+%%%%
+{dat}the slimy runne
+der schleimigen Rune
+%%%%
+{dat}the abyssal rune
+der Abgrundsrune
+%%%%
+{dat}the silver rune
+der silbernen Rune
+%%%%
+{dat}the golden rune
+der goldenen Rune
+%%%%
+
+# hell runes
+%%%%
+{dat}the obsidian rune
+der Obsidianrune
+%%%%
+{dat}the icy rune
+der eisigen Rune
+%%%%
+{dat}the bone rune
+der Knochen-Rune
+%%%%
+{dat}the iron rune
+der eisernen Rune
+%%%%
+
+# pandemonium runes
+%%%%
+{dat}the demonic rune
+der dämonischen Rune
+%%%%
+{dat}the glowing rune
+der leuchtenden runen
+%%%%
+{dat}the magical rune
+der magischen Rune
+%%%%
+{dat}the fiery rune
+der feurigen Rune
+%%%%
+{dat}the dark rune
+der dunklen Rune
+%%%%
+
+#################################
+# Artefacts
+#################################
+
+# Most are unique, but this one isn't
+%%%%
+{dat}the %sring of the Octopus King
+dem {adj-en}%sRing des Krakenkönigs
+%%%%
+

@@ -6,83 +6,6 @@
 #
 ###############################################################################
 
-#################################
-# Runes
-#################################
-%%%%
-the %srune of Zot
-die {adj-e}%sRune von Zot
-%%%%
-the %srune
-die {adj-e}%sRune
-%%%%
-# terse version for character overview screen
-%%%%
-iron
-eiserne
-%%%%
-obsidian
-Obsidian-
-%%%%
-icy
-eisige
-%%%%
-bone
-Knochen-
-%%%%
-slimy
-schleimige
-%%%%
-#"silver"
-#"silberne"
-%%%%
-serpentine
-Schlangen-
-%%%%
-golden
-goldene
-%%%%
-decaying
-verfallende
-%%%%
-barnacled
-Kletten-
-%%%%
-gossamer
-Spinnfäden-
-%%%%
-demonic
-dämonische
-%%%%
-abyssal
-Abgrunds-
-%%%%
-glowing
-leuchtende
-%%%%
-magical
-magische
-%%%%
-fiery
-feurige
-%%%%
-dark
-dunkle
-%%%%
-# these ones are constructed differently
-%%%%
-the obsidian rune of Zot
-die Obsidianrune von Zot
-%%%%
-the obsidian rune
-die Obsidianrune
-%%%%
-the abyssal rune of Zot
-die Abgrundsrune von Zot
-%%%%
-the abyssal rune
-die Abgrundsrune
-%%%%
 
 #################################
 # The Orb
@@ -264,7 +187,7 @@ the %shat of the Bear Spirit
 der {adj-e}%sHut des Bärengeistes
 %%%%
 the %srobe of Misfortune
-das {adj-e}%sRobe des Unglücks
+die {adj-e}%sRobe des Unglücks
 %%%%
 the %scloak of Flash
 der {adj-e}%sUmhang von Flash
@@ -370,9 +293,6 @@ der {adj-e}%sShillelagh "Verwüster"
 %%%%
 the %sdragonskin cloak
 der {adj-e}%sDrachenhautumhang
-%%%%
-a %sring of the Octopus King
-ein {adj-er}%sRing des Krakenkönigs
 %%%%
 the %sAxe of Woe
 die {adj-e}%sAxt des Wehs

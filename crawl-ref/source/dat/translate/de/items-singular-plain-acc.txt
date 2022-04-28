@@ -415,3 +415,29 @@ beseitigten Zauberstab
 
 %%%%
 
+#################################
+# Runes
+#################################
+
+# These are unique, but there is at least one place where gramatically they're
+# treated as non-unique: "You found a <whatever> rune of Zot.", so we need to
+# decline as per non-unique items.
+
+%%%%
+
+# hell runes
+%%%%
+
+# pandemonium runes
+%%%%
+
+#################################
+# Artefacts
+#################################
+
+# Most are unique, but this one isn't
+%%%%
+{acc}%sring of the Octopus King
+{adj-en}%sRing des Krakenkönigs
+%%%%
+

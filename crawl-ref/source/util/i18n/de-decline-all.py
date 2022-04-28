@@ -286,14 +286,14 @@ def decline(english, german, determiner, target_case):
 
     # determine gender
     gender = Gender.UNKNOWN;
-    if german.startswith('der '):
+    if german.startswith(('der ', 'Der ')):
         gender = Gender.MASCULINE
-    elif german.startswith('die '):
+    elif german.startswith(('die ', 'Die ')):
         if is_plural(english):
             gender = Gender.PLURAL
         else:
             gender = Gender.FEMININE
-    elif german.startswith('das '):
+    elif german.startswith(('das ', 'Das')):
         gender = Gender.NEUTER
     elif german.startswith('Blork der '):
         gender = Gender.MASCULINE
@@ -327,7 +327,7 @@ def decline(english, german, determiner, target_case):
     for i, word in enumerate(words):
         if before_noun:
             if is_determiner(word):
-                word = decline_determiner(determiner, gender, target_case)
+                word = decline_determiner(determiner.lower(), gender, target_case)
             elif is_noun(word):
                 if word == "Prinz":
                     # decline noun, but don't stop declining later words
@@ -439,9 +439,9 @@ def decline_file(infile_name, target_case, determiner, english_possessive = Fals
                     english = re.sub(r'^%d ', determiner + ' ', english)
             else:
                 if determiner == "":
-                    english = re.sub(r'^the ', '', english)
+                    english = re.sub(r'^[Tt]he ', '', english)
                 else:
-                    english = re.sub(r'^the ', determiner + ' ', english)
+                    english = re.sub(r'^[Tt]he ', determiner + ' ', english)
                     if determiner == "a":
                         english = re.sub(r'^a ([AEIOUaeiou])', r'an \1', english)
                         english = re.sub(r'^an one', r'a one', english)
@@ -482,8 +482,10 @@ infile_name = sys.argv[1];
 if 'plural' in infile_name:
     decline_file(infile_name, Case.DATIVE, "%d")
 elif 'unique' in infile_name:
+    decline_file(infile_name, Case.NOMINATIVE, "")
     decline_file(infile_name, Case.ACCUSATIVE, "the")
     decline_file(infile_name, Case.DATIVE, "the")
+
     if 'monsters' in infile_name:
         decline_file(infile_name, Case.GENITIVE, "the", True)
         decline_file(infile_name, Case.GENITIVE, "the", False)
