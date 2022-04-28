@@ -1056,5 +1056,11 @@ void extract_manticore_spikes(const char* endmsg)
         you.attribute[ATTR_BARBS_POW] = 0;
 
         you.props.erase(BARBS_MOVE_KEY);
+
+        // somewhat hacky: ensure that a rest delay can get the right interrupt
+        // check when barbs are removed, and all other rest stop conditions are
+        // satisfied
+        if (you.is_sufficiently_rested())
+            interrupt_activity(activity_interrupt::full_hp);
     }
 }
