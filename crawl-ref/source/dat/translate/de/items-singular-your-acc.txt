@@ -1,0 +1,258 @@
+###############################################################################
+#
+# Translations for item names - accusative (where different to nominative)
+#
+###############################################################################
+%%%%
+
+#################################
+# Item Types (terse)
+# Used in item search, plus one specific message
+# (and also some unlocalised contexts)
+#################################
+%%%%
+
+#################################
+# Melee Weapons
+#################################
+%%%%
+{acc}your %smace
+Euren {adj-en}%sStreitkolben
+%%%%
+{acc}your %sflail
+Euren {adj-en}%sFlegel
+%%%%
+{acc}your %smorningstar
+Euren {adj-en}%sMorgenstern
+%%%%
+{acc}your %sdire flail
+Euren {adj-en}%sSchreckensflegel
+%%%%
+{acc}your %seveningstar
+Euren {adj-en}%sAbendstern
+%%%%
+{acc}your %sgreat mace
+Euren {adj-en}%sgroßen Streitkolben
+%%%%
+{acc}your %sdagger
+Euren {adj-en}%sDolch
+%%%%
+{acc}your %sscimitar
+Euren {adj-en}%sKrummsäbel
+%%%%
+{acc}your %sspear
+Euren {adj-en}%sSpeer
+%%%%
+{acc}your %strident
+Euren {adj-en}%sDreizack
+%%%%
+{acc}your %sdemon trident
+Euren {adj-en}%sDämonendreizack
+%%%%
+{acc}your %strishula
+Euren {adj-en}%sTrishula
+%%%%
+{acc}your %squarterstaff
+Euren {adj-en}%sKampfstab
+%%%%
+{acc}your %slajatang
+Euren {adj-en}%sLajatang
+%%%%
+
+#################################
+# Launchers
+#################################
+%%%%
+{acc}your %sfustibalus
+Euren {adj-en}%sFustibalus
+%%%%
+{acc}your %sshortbow
+Euren {adj-en}%sKurzbogen
+%%%%
+{acc}your %slongbow
+Euren {adj-en}%sLangbogen
+%%%%
+
+#################################
+# Missiles
+#################################
+%%%%
+
+#################################
+# Armour
+#################################
+%%%%
+{acc}your %sring mail
+Euren {adj-en}%sRingpanzer
+%%%%
+{acc}your %sscale mail
+Euren {adj-en}%sSchuppenpanzer
+%%%%
+{acc}your %schain mail
+Euren {adj-en}%sKettenpanzer
+%%%%
+{acc}your %splate armour
+Euren {adj-en}%sPlattenpanzer
+%%%%
+{acc}your %scrystal plate armour
+Euren {adj-en}%sKristallplattenpanzer
+%%%%
+{acc}your %scloak
+Euren {adj-en}%sUmhang
+%%%%
+{acc}your %sscarf
+Euren {adj-en}%sSchal
+%%%%
+{acc}your %shelmet
+Euren {adj-en}%sHelm
+%%%%
+{acc}your %shat
+Euren {adj-en}%sHut
+%%%%
+{acc}your %scentaur barding
+Euren {adj-en}%sZentaurenharnisch
+%%%%
+{acc}your %snaga barding
+Euren {adj-en}%sNagaharnisch
+%%%%
+{acc}your %sbuckler
+Euren {adj-en}%sBuckler
+%%%%
+
+#################################
+# Rings
+#################################
+%%%%
+
+# unidentified
+%%%%
+{acc}your %sring
+Euren {adj-en}%sRing
+%%%%
+{acc}your %sring of protection
+Euren {adj-en}%sRing des Schutzes
+%%%%
+{acc}your %sring of protection from fire
+Euren {adj-en}%sRing der Feuerresistenz
+%%%%
+{acc}your %sring of poison resistance
+Euren {adj-en}%sRing der Giftresistenz
+%%%%
+{acc}your %sring of protection from cold
+Euren {adj-en}%sRing der Kälteresistenz
+%%%%
+{acc}your %sring of strength
+Euren {adj-en}%sRing der Stärke
+%%%%
+{acc}your %sring of slaying
+Euren {adj-en}%sRing des Tötens
+%%%%
+{acc}your %sring of see invisible
+Euren {adj-en}%sRing von Unsichtbares sehen
+%%%%
+{acc}your %sring of resist corrosion
+Euren {adj-en}%sRing der Korrosionresistenz
+%%%%
+{acc}your %sring of teleportation
+Euren {adj-en}%sRing der Teleportation
+%%%%
+{acc}your %sring of evasion
+Euren {adj-en}%sRing der Umgehung
+%%%%
+{acc}your %sring of stealth
+Euren {adj-en}%sRing der Heimlichkeit
+%%%%
+{acc}your %sring of dexterity
+Euren {adj-en}%sRing der Geschicklichkeit
+%%%%
+{acc}your %sring of intelligence
+Euren {adj-en}%sRing der Intelligenz
+%%%%
+{acc}your %sring of wizardry
+Euren {adj-en}%sRing der Zauberei
+%%%%
+{acc}your %sring of magical power
+Euren {adj-en}%sRing magischer Kraft
+%%%%
+{acc}your %sring of flight
+Euren {adj-en}%sRing des Fliegens
+%%%%
+{acc}your %sring of positive energy
+Euren {adj-en}%sRing positiver Energie
+%%%%
+{acc}your %sring of willpower
+Euren {adj-en}%sRing der Willenskraft
+%%%%
+{acc}your %sring of fire
+Euren {adj-en}%sRing des Feuers
+%%%%
+{acc}your %sring of ice
+Euren {adj-en}%sRing des Eises
+%%%%
+{acc}your %sring of obsoleteness
+Euren {adj-en}%sobsoleten Ring
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Amulets
+#################################
+%%%%
+
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Wands
+#################################
+%%%%
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Scrolls
+#################################
+
+%%%%
+# The usual German word for summoning is Beschwörung, but that also means conjuration
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+
+# unidentified potions are named "<colour> <potion>"
+# or "<qualifier> <colour> potion"
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+%%%%
+
+#################################
+# Spellbooks
+#################################
+
+%%%%
+
+#################################
+# Corpses
+#################################
+
+%%%%
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+

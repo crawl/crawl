@@ -1,0 +1,197 @@
+###############################################################################
+#
+# Translations for item names - dative (where different to nominative)
+#
+###############################################################################
+
+#################################
+# Item Types (terse)
+# Used in item search, plus one specific message
+# (and also some unlocalised contexts)
+#################################
+%%%%
+
+#################################
+# Melee Weapons
+#################################
+%%%%
+
+#################################
+# Launchers
+#################################
+%%%%
+
+#################################
+# Missiles
+#################################
+%%%%
+{dat}%d arrows
+%d Pfeilen
+%%%%
+{dat}%d darts
+%d Wurfpfeilen
+%%%%
+{dat}%d poisoned darts
+%d vergifteten Wurfpfeilen
+%%%%
+{dat}%d curare-tipped darts
+%d Kurare-Wurfpfeilen
+%%%%
+{dat}%d atropa-tipped darts
+%d Atropa-Wurfpfeilen
+%%%%
+{dat}%d datura-tipped darts
+%d Datura-Wurfpfeilen
+%%%%
+{dat}%d stones
+%d Steinen
+%%%%
+{dat}%d large rocks
+%d Felsblöcken
+%%%%
+{dat}%d javelins
+%d Wurfspeeren
+%%%%
+{dat}%d silver javelins
+%d Silberwurfspeeren
+%%%%
+{dat}%d throwing nets
+%d Wurfnetzen
+%%%%
+
+#################################
+# Armour
+#################################
+%%%%
+
+#################################
+# Rings
+#################################
+%%%%
+
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Amulets
+#################################
+%%%%
+
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Wands
+#################################
+%%%%
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Scrolls
+#################################
+
+%%%%
+# The usual German word for summoning is Beschwörung, but that also means conjuration
+%%%%
+{dat}%d scrolls labelled %s
+%d Schriftrollen beschriftet mit {adj-en}%s
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+{dat}%d potions of ambrosia
+%d Tränken der Ambrosia
+%%%%
+{dat}%d potions of attraction
+%d Tränken der Anziehung
+%%%%
+{dat}%d potions of berserk rage
+%d Tränken der Berserker-Wut
+%%%%
+{dat}%d potions of brilliance
+%d Tränken der Brillanz
+%%%%
+{dat}%d potions of cancellation
+%d Tränken der Aufhebung
+%%%%
+{dat}%d potions of curing
+%d Tränken des Gegenmittels
+%%%%
+{dat}%d potions of degeneration
+%d Tränken der Degeneration
+%%%%
+{dat}%d potions of experience
+%d Tränken der Erfahrung
+%%%%
+{dat}%d potions of flight
+%d Tränken des Fliegens
+%%%%
+{dat}%d potions of haste
+%d Tränken der Geschwindigkeit
+%%%%
+{dat}%d potions of heal wounds
+%d Heiltränken
+%%%%
+{dat}%d potions of invisibility
+%d Tränken der Unsichtbarkeit
+%%%%
+{dat}%d potions of lignification
+%d Tränken der Verholzung
+%%%%
+{dat}%d potions of magic
+%d Tränken der Magie
+%%%%
+{dat}%d potions of might
+%d Tränken der Macht
+%%%%
+{dat}%d potions of mutation
+%d Tränken der Mutation
+%%%%
+{dat}%d potions of resistance
+%d Tränken des Widerstands
+%%%%
+
+# unidentified potions are named "<colour> <potion>"
+# or "<qualifier> <colour> potion"
+%%%%
+{dat}%d %spotions
+%d {adj-en}%sZaubertränken
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+%%%%
+
+#################################
+# Spellbooks
+#################################
+
+%%%%
+
+#################################
+# Corpses
+#################################
+
+%%%%
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+{dat}%d phantom mirrors
+%d Phantomspiegeln
+%%%%
+

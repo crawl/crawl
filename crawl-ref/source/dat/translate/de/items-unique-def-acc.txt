@@ -1,0 +1,197 @@
+###############################################################################
+#
+# Translations for item names - accusative (where different to nominative)
+#
+###############################################################################
+
+#################################
+# Runes
+#################################
+# "This branch contains the <whatever> rune of Zot."
+%%%%
+# "found a <whatever> rune of Zot"
+%%%%
+# Used in the list of collected runes
+%%%%
+# "You pick up the <whatever> rune and feel its power."
+%%%%
+# terse version for character overview screen
+%%%%
+#"silver"
+#"silberne"
+%%%%
+# these ones are constructed differently
+%%%%
+
+#################################
+# The Orb
+#################################
+%%%%
+
+#################################
+# Unrand Artefacts
+#################################
+%%%%
+# alternative name for the Singing Sword
+%%%%
+# alternative name for the Singing Sword
+%%%%
+{acc}the %sWrath of Trog
+den {adj-en}%sZorn von Trog
+%%%%
+{acc}the %smace of Variability
+den {adj-en}%sStreitkolben der Variabilität
+%%%%
+{acc}the %sstaff of Olgreb
+den {adj-en}%sStecken von Olgreb
+%%%%
+{acc}the %sstaff of Wucad Mu
+den {adj-en}%sStecken von Wucad Mu
+%%%%
+{acc}the %sVampire's Tooth
+den {adj-en}%sZahn des Vampirs
+%%%%
+{acc}the %sstaff of Dispater
+den {adj-en}%sStecken von Dispater
+%%%%
+{acc}the %sscimitar of Flaming Death
+den {adj-en}%sKrummsäbel des flammenden Todes
+%%%%
+{acc}the %seveningstar "Brilliance"
+den {adj-en}%sAbendstern "Brillanz"
+%%%%
+{acc}the %sdagger of Chilly Death
+den {adj-en}%sDolch des kühlen Todes
+%%%%
+{acc}the %sdagger "Morg"
+den {adj-en}%sDolch "Morg"
+%%%%
+{acc}the %slongbow "Zephyr"
+den {adj-en}%sLangbogen "Zephyr"
+%%%%
+{acc}the %smorningstar "Eos"
+den {adj-en}%sMorgenstern "Eos"
+%%%%
+{acc}the %sspear of the Botono
+den {adj-en}%sSpeer des Botonos
+%%%%
+{acc}the %strident of the Octopus King
+den {adj-en}%sDreizack des Krakenkönigs
+%%%%
+{acc}the %sElemental Staff
+den {adj-en}%sElementarstecken
+%%%%
+{acc}the %slongbow "Piercer"
+den {adj-en}%sLangbogen "Stecher"
+%%%%
+{acc}the %sgreat mace "Undeadhunter"
+den {adj-en}%sgroßen Streitkolben "Untotenjäger"
+%%%%
+{acc}the %sLehudib's crystal spear
+den {adj-en}%sKristallspeer Lehudibs
+%%%%
+{acc}the %sstorm bow
+den {adj-en}%sSturmbogen
+%%%%
+{acc}the %stower shield of Ignorance
+den {adj-en}%sTurmschild des Nichtwissens
+%%%%
+{acc}the %scloak of the Thief
+den {adj-en}%sUmhang des Diebes
+%%%%
+{acc}the %stower shield "Bullseye"
+den {adj-en}%sTurmschild "Volltreffer"
+%%%%
+{acc}the %shat of the Bear Spirit
+den {adj-en}%sHut des Bärengeistes
+%%%%
+{acc}the %scloak of Flash
+den {adj-en}%sUmhang von Flash
+%%%%
+{acc}the %sshield of Resistance
+den {adj-en}%sSchild der Resistenz
+%%%%
+{acc}the %shat of the Alchemist
+den {adj-en}%sHut des Alchemisten
+%%%%
+{acc}the %scloak of Starlight
+den {adj-en}%sUmhang des Sternenlichts
+%%%%
+{acc}the %sratskin cloak
+den {adj-en}%sRattenfellumhang
+%%%%
+{acc}the %sshield of the Gong
+den {adj-en}%sSchild des Gongs
+%%%%
+{acc}the %sring of Shadows
+den {adj-en}%sRing der Schatten
+%%%%
+{acc}the %sring of Phasing
+den {adj-en}%sRing der Phase
+%%%%
+{acc}the %sring of Robustness
+den {adj-en}%sRing der Robustheit
+%%%%
+{acc}the %sring of the Mage
+den {adj-en}%sRing des Magiers
+%%%%
+{acc}the %shat of Pondering
+den {adj-en}%sHut der Schwerfälligkeit
+%%%%
+{acc}the %sBlack Knight's horse barding
+den {adj-en}%sRossharnisch des schwarzen Ritters
+%%%%
+{acc}the %sshillelagh "Devastator"
+den {adj-en}%sShillelagh "Verwüster"
+%%%%
+{acc}the %sdragonskin cloak
+den {adj-en}%sDrachenhautumhang
+%%%%
+{acc}the %sdark maul
+den {adj-en}%sdunklen Kriegshammer
+%%%%
+{acc}the %shat of the High Council
+den {adj-en}%sHut des Hohen Rates
+%%%%
+{acc}the %slajatang of Order
+den {adj-en}%sLajatang der Ordnung
+%%%%
+{acc}the %sgreat mace "Firestarter"
+den {adj-en}%sgroßen Streitkolben "Brandstifter"
+%%%%
+{acc}the %sorange crystal plate armour
+den {adj-en}%sorangen Kristallplattenpanzer
+%%%%
+{acc}the %sMajin-Bo
+den {adj-en}%sMajin-Bo
+%%%%
+{acc}the %sMaxwell's etheric cage
+den {adj-en}%sÄtherkäfig von Maxwell
+%%%%
+{acc}the %sKryia's mail coat
+den {adj-en}%sSchuppenpanzer von Kryia
+%%%%
+{acc}the %swarlock's mirror
+den {adj-en}%sSpiegel des Hexenmeisters
+%%%%
+{acc}the %sdemon trident "Rift"
+den {adj-en}%sDämonendreizack "Riss"
+%%%%
+{acc}the %sstaff of Battle
+den {adj-en}%sStecken der Schlacht
+%%%%
+
+#################################
+# Unrand Artefacts - without article
+# (Used in character overview screen and HUD)
+#################################
+%%%%
+# alternative name for the Singing Sword
+%%%%
+# alternative name for the Singing Sword
+%%%%
+# "Gyre" and "Gimble" - base name
+%%%%
+# heavy crossbow "Sniper" - base name
+%%%%
+

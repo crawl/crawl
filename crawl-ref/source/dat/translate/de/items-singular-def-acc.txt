@@ -1,0 +1,228 @@
+###############################################################################
+#
+# Translations for item names - accusative (where different to nominative)
+#
+###############################################################################
+%%%%
+
+#################################
+# Item Types (terse)
+# Used in item search, plus one specific message
+# (and also some unlocalised contexts)
+#################################
+%%%%
+
+#################################
+# Melee Weapons
+#################################
+%%%%
+{acc}the %smace
+den {adj-en}%sStreitkolben
+%%%%
+{acc}the %sflail
+den {adj-en}%sFlegel
+%%%%
+{acc}the %smorningstar
+den {adj-en}%sMorgenstern
+%%%%
+{acc}the %sdire flail
+den {adj-en}%sSchreckensflegel
+%%%%
+{acc}the %seveningstar
+den {adj-en}%sAbendstern
+%%%%
+{acc}the %sgreat mace
+den {adj-en}%sgroßen Streitkolben
+%%%%
+{acc}the %sdagger
+den {adj-en}%sDolch
+%%%%
+{acc}the %sscimitar
+den {adj-en}%sKrummsäbel
+%%%%
+{acc}the %sspear
+den {adj-en}%sSpeer
+%%%%
+{acc}the %strident
+den {adj-en}%sDreizack
+%%%%
+{acc}the %sdemon trident
+den {adj-en}%sDämonendreizack
+%%%%
+{acc}the %strishula
+den {adj-en}%sTrishula
+%%%%
+{acc}the %squarterstaff
+den {adj-en}%sKampfstab
+%%%%
+{acc}the %slajatang
+den {adj-en}%sLajatang
+%%%%
+
+#################################
+# Launchers
+#################################
+%%%%
+{acc}the %sfustibalus
+den {adj-en}%sFustibalus
+%%%%
+{acc}the %sshortbow
+den {adj-en}%sKurzbogen
+%%%%
+{acc}the %slongbow
+den {adj-en}%sLangbogen
+%%%%
+
+#################################
+# Missiles
+#################################
+%%%%
+{acc}the arrow
+den Pfeil
+%%%%
+{acc}the bolt
+den Bolzen
+%%%%
+{acc}the dart
+den Wurfpfeil
+%%%%
+{acc}the poisoned dart
+den vergifteten Wurfpfeil
+%%%%
+{acc}the atropa-tipped dart
+den Atropa-Wurfpfeil
+%%%%
+{acc}the curare-tipped dart
+den Curare-Wurfpfeil
+%%%%
+{acc}the datura-tipped dart
+den Datura-Wurfpfeil
+%%%%
+{acc}the stone
+den Stein
+%%%%
+{acc}the large rock
+den Felsblock
+%%%%
+{acc}the javelin
+den Wurfspeer
+%%%%
+{acc}the boomerang
+den Bumerang
+%%%%
+
+#################################
+# Armour
+#################################
+%%%%
+{acc}the %sring mail
+den {adj-en}%sRingpanzer
+%%%%
+{acc}the %sscale mail
+den {adj-en}%sSchuppenpanzer
+%%%%
+{acc}the %schain mail
+den {adj-en}%sKettenpanzer
+%%%%
+{acc}the %splate armour
+den {adj-en}%sPlattenpanzer
+%%%%
+{acc}the %scrystal plate armour
+den {adj-en}%sKristallplattenpanzer
+%%%%
+{acc}the %scloak
+den {adj-en}%sUmhang
+%%%%
+{acc}the %sscarf
+den {adj-en}%sSchal
+%%%%
+{acc}the %shelmet
+den {adj-en}%sHelm
+%%%%
+{acc}the %shat
+den {adj-en}%sHut
+%%%%
+{acc}the %scentaur barding
+den {adj-en}%sZentaurenharnisch
+%%%%
+{acc}the %snaga barding
+den {adj-en}%sNagaharnisch
+%%%%
+{acc}the %sbuckler
+den {adj-en}%sBuckler
+%%%%
+
+#################################
+# Rings
+#################################
+%%%%
+{acc}the %sring
+den {adj-en}%sRing
+%%%%
+
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Amulets
+#################################
+%%%%
+
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Wands
+#################################
+%%%%
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Scrolls
+#################################
+
+%%%%
+# The usual German word for summoning is Beschwörung, but that also means conjuration
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+
+# unidentified potions are named "<colour> <potion>"
+# or "<qualifier> <colour> potion"
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+%%%%
+
+#################################
+# Spellbooks
+#################################
+
+%%%%
+
+#################################
+# Corpses
+#################################
+
+%%%%
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+

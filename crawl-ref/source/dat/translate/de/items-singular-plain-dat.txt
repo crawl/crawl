@@ -1,0 +1,682 @@
+###############################################################################
+#
+# Translations for item names - dative (where different to nominative)
+#
+###############################################################################
+
+#################################
+# Item Types (terse)
+# Used in item search, plus one specific message
+# (and also some unlocalised contexts)
+#################################
+%%%%
+{dat}magical staff
+magischem Stecken
+%%%%
+
+#################################
+# Melee Weapons
+#################################
+%%%%
+{dat}%sclub
+{adj-er}%sKeule
+%%%%
+{dat}%swhip
+{adj-er}%sPeitsche
+%%%%
+{dat}%smace
+{adj-em}%sStreitkolben
+%%%%
+{dat}%sflail
+{adj-em}%sFlegel
+%%%%
+{dat}%smorningstar
+{adj-em}%sMorgenstern
+%%%%
+{dat}%sdemon whip
+{adj-er}%sDämonenpeitsche
+%%%%
+{dat}%ssacred scourge
+{adj-er}%sgeistlicher Geißel
+%%%%
+{dat}%sdire flail
+{adj-em}%sSchreckensflegel
+%%%%
+{dat}%seveningstar
+{adj-em}%sAbendstern
+%%%%
+{dat}%sgreat mace
+{adj-em}%sgroßem Streitkolben
+%%%%
+{dat}%sgiant club
+{adj-er}%sRiesenkeule
+%%%%
+{dat}%sgiant spiked club
+{adj-er}%sriesiger Stachelkeule
+%%%%
+{dat}%sdagger
+{adj-em}%sDolch
+%%%%
+{dat}%squick blade
+{adj-er}%sSchnellklinge
+%%%%
+{dat}%sshort sword
+{adj-em}%sKurzschwert
+%%%%
+{dat}%srapier
+{adj-em}%sRapier
+%%%%
+{dat}%sfalchion
+{adj-em}%sFalchion
+%%%%
+{dat}%slong sword
+{adj-em}%sLangschwert
+%%%%
+{dat}%sscimitar
+{adj-em}%sKrummsäbel
+%%%%
+{dat}%sdemon blade
+{adj-er}%sDämonenklinge
+%%%%
+{dat}%seudemon blade
+{adj-er}%sEudämonenklinge
+%%%%
+{dat}%sdouble sword
+{adj-em}%sDoppelschwert
+%%%%
+{dat}%sgreat sword
+{adj-em}%sGroßschwert
+%%%%
+{dat}%striple sword
+{adj-em}%sDreifach-Schwert
+%%%%
+{dat}%shand axe
+{adj-em}%sHandbeil
+%%%%
+{dat}%swar axe
+{adj-er}%sKriegsaxt
+%%%%
+{dat}%sbroad axe
+{adj-er}%sBreitaxt
+%%%%
+{dat}%sbattleaxe
+{adj-er}%sStreitaxt
+%%%%
+{dat}%sexecutioner's axe
+{adj-er}%sHenkersaxt
+%%%%
+{dat}%sspear
+{adj-em}%sSpeer
+%%%%
+{dat}%strident
+{adj-em}%sDreizack
+%%%%
+{dat}%shalberd
+{adj-er}%sHellebarde
+%%%%
+{dat}%sscythe
+{adj-er}%sSense
+%%%%
+{dat}%sdemon trident
+{adj-em}%sDämonendreizack
+%%%%
+{dat}%strishula
+{adj-em}%sTrishula
+%%%%
+{dat}%sglaive
+{adj-er}%sGleve
+%%%%
+{dat}%sbardiche
+{adj-er}%sBardiche
+%%%%
+{dat}%squarterstaff
+{adj-em}%sKampfstab
+%%%%
+{dat}%slajatang
+{adj-em}%sLajatang
+%%%%
+{dat}%slance
+{adj-er}%sLanze
+%%%%
+{dat}you %slance
+%%%%
+
+#################################
+# Launchers
+#################################
+%%%%
+{dat}%shunting sling
+{adj-er}%sSchleuder
+%%%%
+{dat}%sfustibalus
+{adj-em}%sFustibalus
+%%%%
+{dat}%shand crossbow
+{adj-er}%sHandarmbrust
+%%%%
+{dat}%sarbalest
+{adj-er}%sArmbrust
+%%%%
+{dat}%striple crossbow
+{adj-er}%sDreifach-Armbrust
+%%%%
+{dat}%sshortbow
+{adj-em}%sKurzbogen
+%%%%
+{dat}%slongbow
+{adj-em}%sLangbogen
+%%%%
+
+#################################
+# Missiles
+#################################
+%%%%
+{dat}poisoned dart
+vergiftetem Wurfpfeil
+%%%%
+
+#################################
+# Armour
+#################################
+%%%%
+{dat}%sanimal skin
+{adj-er}%sTierhaut
+%%%%
+{dat}%srobe
+{adj-er}%sRobe
+%%%%
+{dat}%sleather armour
+{adj-er}%sLederrüstung
+%%%%
+{dat}%sring mail
+{adj-em}%sRingpanzer
+%%%%
+{dat}%sscale mail
+{adj-em}%sSchuppenpanzer
+%%%%
+{dat}%schain mail
+{adj-em}%sKettenpanzer
+%%%%
+{dat}%splate armour
+{adj-em}%sPlattenpanzer
+%%%%
+{dat}%scrystal plate armour
+{adj-em}%sKristallplattenpanzer
+%%%%
+{dat}%stroll leather armour
+{adj-er}%sTrolllederrüstung
+%%%%
+{dat}%scloak
+{adj-em}%sUmhang
+%%%%
+{dat}%sscarf
+{adj-em}%sSchal
+%%%%
+{dat}%spair of %sgloves
+{adj-em}%sPaar {adj-e}%sHandschuhe
+%%%%
+{dat}%shelmet
+{adj-em}%sHelm
+%%%%
+{dat}%shat
+{adj-em}%sHut
+%%%%
+{dat}%spair of %sboots
+{adj-em}%sPaar {adj-e}%sStiefel
+%%%%
+{dat}%scentaur barding
+{adj-em}%sZentaurenharnisch
+%%%%
+{dat}%snaga barding
+{adj-em}%sNagaharnisch
+%%%%
+{dat}%sbuckler
+{adj-em}%sBuckler
+%%%%
+{dat}%skite shield
+{adj-em}%sKiteschild
+%%%%
+{dat}%stower shield
+{adj-em}%sTurmschild
+%%%%
+{dat}%ssteam dragon scales
+{adj-en}%sDampfdrachenschuppen
+%%%%
+{dat}%sacid dragon scales
+{adj-en}%sSauredrachenschuppen
+%%%%
+{dat}%squicksilver dragon scales
+{adj-en}%sQuecksilberdrachenschuppen
+%%%%
+{dat}%sswamp dragon scales
+{adj-en}%sSumpfdrachenschuppen
+%%%%
+{dat}%sfire dragon scales
+{adj-en}%sFeuerdrachenschuppen
+%%%%
+{dat}%sice dragon scales
+{adj-en}%sEisdrachenschuppen
+%%%%
+{dat}%spearl dragon scales
+{adj-en}%sPerlendrachenschuppen
+%%%%
+{dat}%sstorm dragon scales
+{adj-en}%sSturmdrachenschuppen
+%%%%
+{dat}%sshadow dragon scales
+{adj-en}%sSchattendrachenschuppen
+%%%%
+{dat}%sgold dragon scales
+{adj-en}%sGolddrachenschuppen
+%%%%
+
+#################################
+# Rings
+#################################
+%%%%
+
+# unidentified
+%%%%
+{dat}%sring
+{adj-em}%sRing
+%%%%
+{dat}%sring of protection
+{adj-em}%sRing des Schutzes
+%%%%
+{dat}%sring of protection from fire
+{adj-em}%sRing der Feuerresistenz
+%%%%
+{dat}%sring of poison resistance
+{adj-em}%sRing der Giftresistenz
+%%%%
+{dat}%sring of protection from cold
+{adj-em}%sRing der Kälteresistenz
+%%%%
+{dat}%sring of strength
+{adj-em}%sRing der Stärke
+%%%%
+{dat}%sring of slaying
+{adj-em}%sRing des Tötens
+%%%%
+{dat}%sring of see invisible
+{adj-em}%sRing von Unsichtbares sehen
+%%%%
+{dat}%sring of resist corrosion
+{adj-em}%sRing der Korrosionresistenz
+%%%%
+{dat}%sring of teleportation
+{adj-em}%sRing der Teleportation
+%%%%
+{dat}%sring of evasion
+{adj-em}%sRing der Umgehung
+%%%%
+{dat}%sring of stealth
+{adj-em}%sRing der Heimlichkeit
+%%%%
+{dat}%sring of dexterity
+{adj-em}%sRing der Geschicklichkeit
+%%%%
+{dat}%sring of intelligence
+{adj-em}%sRing der Intelligenz
+%%%%
+{dat}%sring of wizardry
+{adj-em}%sRing der Zauberei
+%%%%
+{dat}%sring of magical power
+{adj-em}%sRing magischer Kraft
+%%%%
+{dat}%sring of flight
+{adj-em}%sRing des Fliegens
+%%%%
+{dat}%sring of positive energy
+{adj-em}%sRing positiver Energie
+%%%%
+{dat}%sring of willpower
+{adj-em}%sRing der Willenskraft
+%%%%
+{dat}%sring of fire
+{adj-em}%sRing des Feuers
+%%%%
+{dat}%sring of ice
+{adj-em}%sRing des Eises
+%%%%
+{dat}%sring of obsoleteness
+{adj-em}%sobsoletem Ring
+%%%%
+# unidentified
+%%%%
+{dat}%swooden ring
+{adj-em}%sHolzring
+%%%%
+{dat}%ssilver ring
+{adj-em}%sSilberring
+%%%%
+{dat}%sgolden ring
+{adj-em}%sGoldring
+%%%%
+{dat}%siron ring
+{adj-em}%sEisenring
+%%%%
+{dat}%ssteel ring
+{adj-em}%sStahlring
+%%%%
+{dat}%stourmaline ring
+{adj-em}%sTurmalinring
+%%%%
+{dat}%sbrass ring
+{adj-em}%sMessingring
+%%%%
+{dat}%scopper ring
+{adj-em}%sKupferring
+%%%%
+{dat}%sgranite ring
+{adj-em}%sGranitring
+%%%%
+{dat}%sivory ring
+{adj-em}%sElfenbeinring
+%%%%
+{dat}%sruby ring
+{adj-em}%sRubinring
+%%%%
+{dat}%smarble ring
+{adj-em}%sMarmorring
+%%%%
+{dat}%sjade ring
+{adj-em}%sJadering
+%%%%
+{dat}%sglass ring
+{adj-em}%sGlasring
+%%%%
+{dat}%sagate ring
+{adj-em}%sAchatring
+%%%%
+{dat}%sbone ring
+{adj-em}%sKnochenring
+%%%%
+{dat}%sdiamond ring
+{adj-em}%sDiamantring
+%%%%
+{dat}%semerald ring
+{adj-em}%sSmaragdring
+%%%%
+{dat}%speridot ring
+{adj-em}%sPeridotring
+%%%%
+{dat}%sgarnet ring
+{adj-em}%sGranatring
+%%%%
+{dat}%sopal ring
+{adj-em}%sOpalring
+%%%%
+{dat}%spearl ring
+{adj-em}%sPerlenring
+%%%%
+{dat}%scoral ring
+{adj-em}%sKorallenring
+%%%%
+{dat}%ssapphire ring
+{adj-em}%sSaphirring
+%%%%
+{dat}%scabochon ring
+{adj-em}%sCabochonring
+%%%%
+{dat}%sgilded ring
+{adj-em}%svergoldetem Ring
+%%%%
+{dat}%sonyx ring
+{adj-em}%sOnyxring
+%%%%
+{dat}%sbronze ring
+{adj-em}%sBronzering
+%%%%
+{dat}%smoonstone ring
+{adj-em}%sMondsteinring
+%%%%
+
+#################################
+# Amulets
+#################################
+%%%%
+
+# unidentified
+%%%%
+{dat}%samulet
+{adj-em}%sAmulett
+%%%%
+{dat}%samulet of magic regeneration
+{adj-em}%sAmulett der magischen Regeneration
+%%%%
+{dat}%samulet of the acrobat
+{adj-em}%sAmulett des Akrobaten
+%%%%
+{dat}%samulet of inaccuracy
+{adj-em}%sAmulett der Ungenauigkeit
+%%%%
+{dat}%samulet of nothing
+{adj-em}%sAmulett von nichts
+%%%%
+{dat}%samulet of guardian spirit
+{adj-em}%sAmulett des Geistschildes
+%%%%
+{dat}%samulet of faith
+{adj-em}%sAmulett des Glaubens
+%%%%
+{dat}%samulet of reflection
+{adj-em}%sAmulett der Reflexion
+%%%%
+{dat}%samulet of regeneration
+{adj-em}%sAmulett der Regeneration
+%%%%
+# unidentified
+%%%%
+{dat}%ssapphire amulet
+{adj-em}%sSaphiramulett
+%%%%
+{dat}%szirconium amulet
+{adj-em}%sZirkoniumamulett
+%%%%
+{dat}%sgolden amulet
+{adj-em}%sGoldamulett
+%%%%
+{dat}%semerald amulet
+{adj-em}%sSmaragdamulett
+%%%%
+{dat}%sgarnet amulet
+{adj-em}%sGranatamulett
+%%%%
+{dat}%sbronze amulet
+{adj-em}%sBronzeamulett
+%%%%
+{dat}%sbrass amulet
+{adj-em}%sMessingamulett
+%%%%
+{dat}%scopper amulet
+{adj-em}%sKupferamulett
+%%%%
+{dat}%sruby amulet
+{adj-em}%sRubinamulett
+%%%%
+{dat}%scitrine amulet
+{adj-em}%sCitrinamulett
+%%%%
+{dat}%sbone amulet
+{adj-em}%sKnochenamulett
+%%%%
+{dat}%splatinum amulet
+{adj-em}%sPlatinamulett
+%%%%
+{dat}%sjade amulet
+{adj-em}%sJade-Amulett
+%%%%
+{dat}%sfluorescent amulet
+{adj-em}%sfluoreszierendem Amulett
+%%%%
+{dat}%samethyst amulet
+{adj-em}%sAmethystamulett
+%%%%
+{dat}%scameo amulet
+{adj-em}%sCameo-Amulett
+%%%%
+{dat}%spearl amulet
+{adj-em}%sPerlenamulett
+%%%%
+{dat}%sblue amulet
+{adj-em}%sblauem Amulett
+%%%%
+{dat}%speridot amulet
+{adj-em}%sPeridot-Amulett
+%%%%
+{dat}%sjasper amulet
+{adj-em}%sJaspisamulett
+%%%%
+{dat}%sdiamond amulet
+{adj-em}%sDiamantamulett
+%%%%
+{dat}%smalachite amulet
+{adj-em}%sMalachitamulett
+%%%%
+{dat}%ssteel amulet
+{adj-em}%sStahlamulett
+%%%%
+{dat}%scabochon amulet
+{adj-em}%sCabochon-Amulett
+%%%%
+{dat}%ssilver amulet
+{adj-em}%sSilberamulett
+%%%%
+{dat}%ssoapstone amulet
+{adj-em}%sSpecksteinamulett
+%%%%
+{dat}%slapis lazuli amulet
+{adj-em}%sLapislazuli-Amulett
+%%%%
+{dat}%sfiligree amulet
+{adj-em}%sFiligranamulett
+%%%%
+{dat}%sberyl amulet
+{adj-em}%sBeryllamulett
+%%%%
+
+#################################
+# Wands
+#################################
+%%%%
+# unidentified
+%%%%
+{dat}wand of removedness
+beseitigtem Zauberstab
+%%%%
+# unidentified
+%%%%
+{dat}%siron wand
+{adj-em}%sEisenzauberstab
+%%%%
+{dat}%sbrass wand
+{adj-em}%sMessingzauberstab
+%%%%
+{dat}%sbone wand
+{adj-em}%sZauberstab aus Knochen
+%%%%
+{dat}%swooden wand
+{adj-em}%sHolzzauberstab
+%%%%
+{dat}%scopper wand
+{adj-em}%sKupferzauberstab
+%%%%
+{dat}%sgold wand
+{adj-em}%sGoldzauberstab
+%%%%
+{dat}%ssilver wand
+{adj-em}%sSilberzauberstab
+%%%%
+{dat}%sbronze wand
+{adj-em}%sZauberstab aus Bronze
+%%%%
+{dat}%sivory wand
+{adj-em}%sElfenbeinzauberstab
+%%%%
+{dat}%sglass wand
+{adj-em}%sgläsernem Zauberstab
+%%%%
+{dat}%slead wand
+{adj-em}%sZauberstab aus Blei
+%%%%
+{dat}%sfluorescent wand
+{adj-em}%sfluoreszierendem Zauberstab
+%%%%
+
+#################################
+# Scrolls
+#################################
+
+%%%%
+# The usual German word for summoning is Beschwörung, but that also means conjuration
+%%%%
+{dat}scroll labelled %s
+Schriftrolle beschriftet mit {adj-er}%s
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+
+# unidentified potions are named "<colour> <potion>"
+# or "<qualifier> <colour> potion"
+%%%%
+{dat}%spotion
+{adj-em}%sZaubertrank
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+%%%%
+{dat}%sstaff of fire
+{adj-em}%sStecken des Feuers
+%%%%
+{dat}%sstaff of cold
+{adj-em}%sStecken der Kälte
+%%%%
+{dat}%sstaff of poison
+{adj-em}%sStecken des Giftes
+%%%%
+{dat}%sstaff of death
+{adj-em}%sStecken des Todes
+%%%%
+{dat}%sstaff of conjuration
+{adj-em}%sStecken der Hervorrufung
+%%%%
+{dat}%sstaff of air
+{adj-em}%sStecken der Luft
+%%%%
+{dat}%sstaff of earth
+{adj-em}%sStecken der Erde
+%%%%
+{dat}%sstaff of removedness
+{adj-em}%sStecken der Obsoleszenz
+%%%%
+{dat}%sstaff
+{adj-em}%sStecken
+%%%%
+
+#################################
+# Spellbooks
+#################################
+
+%%%%
+
+#################################
+# Corpses
+#################################
+
+%%%%
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+

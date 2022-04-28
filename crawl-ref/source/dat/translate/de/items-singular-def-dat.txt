@@ -1,0 +1,383 @@
+###############################################################################
+#
+# Translations for item names - dative (where different to nominative)
+#
+###############################################################################
+
+#################################
+# Item Types (terse)
+# Used in item search, plus one specific message
+# (and also some unlocalised contexts)
+#################################
+%%%%
+{dat}the %sweapon
+der {adj-en}%sWaffe
+%%%%
+
+#################################
+# Melee Weapons
+#################################
+%%%%
+{dat}the %sclub
+der {adj-en}%sKeule
+%%%%
+{dat}the %swhip
+der {adj-en}%sPeitsche
+%%%%
+{dat}the %smace
+dem {adj-en}%sStreitkolben
+%%%%
+{dat}the %sflail
+dem {adj-en}%sFlegel
+%%%%
+{dat}the %smorningstar
+dem {adj-en}%sMorgenstern
+%%%%
+{dat}the %sdemon whip
+der {adj-en}%sDämonenpeitsche
+%%%%
+{dat}the %ssacred scourge
+der {adj-en}%sgeistlichen Geißel
+%%%%
+{dat}the %sdire flail
+dem {adj-en}%sSchreckensflegel
+%%%%
+{dat}the %seveningstar
+dem {adj-en}%sAbendstern
+%%%%
+{dat}the %sgreat mace
+dem {adj-en}%sgroßen Streitkolben
+%%%%
+{dat}the %sgiant club
+der {adj-en}%sRiesenkeule
+%%%%
+{dat}the %sgiant spiked club
+der {adj-en}%sriesigen Stachelkeule
+%%%%
+{dat}the %sdagger
+dem {adj-en}%sDolch
+%%%%
+{dat}the %squick blade
+der {adj-en}%sSchnellklinge
+%%%%
+{dat}the %sshort sword
+dem {adj-en}%sKurzschwert
+%%%%
+{dat}the %srapier
+dem {adj-en}%sRapier
+%%%%
+{dat}the %sfalchion
+dem {adj-en}%sFalchion
+%%%%
+{dat}the %slong sword
+dem {adj-en}%sLangschwert
+%%%%
+{dat}the %sscimitar
+dem {adj-en}%sKrummsäbel
+%%%%
+{dat}the %sdemon blade
+der {adj-en}%sDämonenklinge
+%%%%
+{dat}the %seudemon blade
+der {adj-en}%sEudämonenklinge
+%%%%
+{dat}the %sdouble sword
+dem {adj-en}%sDoppelschwert
+%%%%
+{dat}the %sgreat sword
+dem {adj-en}%sGroßschwert
+%%%%
+{dat}the %striple sword
+dem {adj-en}%sDreifach-Schwert
+%%%%
+{dat}the %shand axe
+dem {adj-en}%sHandbeil
+%%%%
+{dat}the %swar axe
+der {adj-en}%sKriegsaxt
+%%%%
+{dat}the %sbroad axe
+der {adj-en}%sBreitaxt
+%%%%
+{dat}the %sbattleaxe
+der {adj-en}%sStreitaxt
+%%%%
+{dat}the %sexecutioner's axe
+der {adj-en}%sHenkersaxt
+%%%%
+{dat}the %sspear
+dem {adj-en}%sSpeer
+%%%%
+{dat}the %strident
+dem {adj-en}%sDreizack
+%%%%
+{dat}the %shalberd
+der {adj-en}%sHellebarde
+%%%%
+{dat}the %sscythe
+der {adj-en}%sSense
+%%%%
+{dat}the %sdemon trident
+dem {adj-en}%sDämonendreizack
+%%%%
+{dat}the %strishula
+dem {adj-en}%sTrishula
+%%%%
+{dat}the %sglaive
+der {adj-en}%sGleve
+%%%%
+{dat}the %sbardiche
+der {adj-en}%sBardiche
+%%%%
+{dat}the %squarterstaff
+dem {adj-en}%sKampfstab
+%%%%
+{dat}the %slajatang
+dem {adj-en}%sLajatang
+%%%%
+{dat}the %slance
+der {adj-en}%sLanze
+%%%%
+
+#################################
+# Launchers
+#################################
+%%%%
+{dat}the %shunting sling
+der {adj-en}%sSchleuder
+%%%%
+{dat}the %sfustibalus
+dem {adj-en}%sFustibalus
+%%%%
+{dat}the %shand crossbow
+der {adj-en}%sHandarmbrust
+%%%%
+{dat}the %sarbalest
+der {adj-en}%sArmbrust
+%%%%
+{dat}the %striple crossbow
+der {adj-en}%sDreifach-Armbrust
+%%%%
+{dat}the %sshortbow
+dem {adj-en}%sKurzbogen
+%%%%
+{dat}the %slongbow
+dem {adj-en}%sLangbogen
+%%%%
+
+#################################
+# Missiles
+#################################
+%%%%
+{dat}the arrow
+dem Pfeil
+%%%%
+{dat}the bolt
+dem Bolzen
+%%%%
+{dat}the dart
+dem Wurfpfeil
+%%%%
+{dat}the poisoned dart
+dem vergifteten Wurfpfeil
+%%%%
+{dat}the atropa-tipped dart
+dem Atropa-Wurfpfeil
+%%%%
+{dat}the curare-tipped dart
+dem Curare-Wurfpfeil
+%%%%
+{dat}the datura-tipped dart
+dem Datura-Wurfpfeil
+%%%%
+{dat}the stone
+dem Stein
+%%%%
+{dat}the large rock
+dem Felsblock
+%%%%
+{dat}the sling bullet
+der Schleuderkugel
+%%%%
+{dat}the javelin
+dem Wurfspeer
+%%%%
+{dat}the throwing net
+dem Wurfnetz
+%%%%
+{dat}the boomerang
+dem Bumerang
+%%%%
+
+#################################
+# Armour
+#################################
+%%%%
+{dat}the %sanimal skin
+der {adj-en}%sTierhaut
+%%%%
+{dat}the %srobe
+der {adj-en}%sRobe
+%%%%
+{dat}the %sleather armour
+der {adj-en}%sLederrüstung
+%%%%
+{dat}the %sring mail
+dem {adj-en}%sRingpanzer
+%%%%
+{dat}the %sscale mail
+dem {adj-en}%sSchuppenpanzer
+%%%%
+{dat}the %schain mail
+dem {adj-en}%sKettenpanzer
+%%%%
+{dat}the %splate armour
+dem {adj-en}%sPlattenpanzer
+%%%%
+{dat}the %scrystal plate armour
+dem {adj-en}%sKristallplattenpanzer
+%%%%
+{dat}the %stroll leather armour
+der {adj-en}%sTrolllederrüstung
+%%%%
+{dat}the %scloak
+dem {adj-en}%sUmhang
+%%%%
+{dat}the %sscarf
+dem {adj-en}%sSchal
+%%%%
+{dat}the %spair of %sgloves
+dem {adj-en}%sPaar {adj-e}%sHandschuhe
+%%%%
+{dat}the %shelmet
+dem {adj-en}%sHelm
+%%%%
+{dat}the %shat
+dem {adj-en}%sHut
+%%%%
+{dat}the %spair of %sboots
+dem {adj-en}%sPaar {adj-e}%sStiefel
+%%%%
+{dat}the %scentaur barding
+dem {adj-en}%sZentaurenharnisch
+%%%%
+{dat}the %snaga barding
+dem {adj-en}%sNagaharnisch
+%%%%
+{dat}the %sbuckler
+dem {adj-en}%sBuckler
+%%%%
+{dat}the %skite shield
+dem {adj-en}%sKiteschild
+%%%%
+{dat}the %stower shield
+dem {adj-en}%sTurmschild
+%%%%
+{dat}the %ssteam dragon scales
+den {adj-en}%sDampfdrachenschuppen
+%%%%
+{dat}the %sacid dragon scales
+den {adj-en}%sSauredrachenschuppen
+%%%%
+{dat}the %squicksilver dragon scales
+den {adj-en}%sQuecksilberdrachenschuppen
+%%%%
+{dat}the %sswamp dragon scales
+den {adj-en}%sSumpfdrachenschuppen
+%%%%
+{dat}the %sfire dragon scales
+den {adj-en}%sFeuerdrachenschuppen
+%%%%
+{dat}the %sice dragon scales
+den {adj-en}%sEisdrachenschuppen
+%%%%
+{dat}the %spearl dragon scales
+den {adj-en}%sPerlendrachenschuppen
+%%%%
+{dat}the %sstorm dragon scales
+den {adj-en}%sSturmdrachenschuppen
+%%%%
+{dat}the %sshadow dragon scales
+den {adj-en}%sSchattendrachenschuppen
+%%%%
+{dat}the %sgold dragon scales
+den {adj-en}%sGolddrachenschuppen
+%%%%
+
+#################################
+# Rings
+#################################
+%%%%
+{dat}the %sring
+dem {adj-en}%sRing
+%%%%
+
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Amulets
+#################################
+%%%%
+{dat}the %samulet
+dem {adj-en}%sAmulett
+%%%%
+
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Wands
+#################################
+%%%%
+# unidentified
+%%%%
+# unidentified
+%%%%
+
+#################################
+# Scrolls
+#################################
+
+%%%%
+# The usual German word for summoning is Beschwörung, but that also means conjuration
+%%%%
+
+#################################
+# Potions
+#################################
+
+%%%%
+
+# unidentified potions are named "<colour> <potion>"
+# or "<qualifier> <colour> potion"
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+%%%%
+
+#################################
+# Spellbooks
+#################################
+
+%%%%
+
+#################################
+# Corpses
+#################################
+
+%%%%
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+

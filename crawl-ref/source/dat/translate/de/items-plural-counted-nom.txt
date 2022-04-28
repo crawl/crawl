@@ -1,0 +1,259 @@
+###############################################################################
+#
+# Items - plural, counted, nominative
+#
+# Note that %s is a placeholder for any adjectives
+#
+###############################################################################
+
+#################################
+# Melee Weapons
+#################################
+
+#################################
+# Launchers
+#################################
+
+#################################
+# Missiles
+#################################
+
+%%%%
+%d arrows
+%d Pfeile
+%%%%
+%d bolts
+%d Bolzen
+%%%%
+%d darts
+%d Wurfpfeile
+%%%%
+%d poisoned darts
+%d vergiftete Wurfpfeile
+%%%%
+%d curare-tipped darts
+%d Kurare-Wurfpfeile
+%%%%
+%d atropa-tipped darts
+%d Atropa-Wurfpfeile
+%%%%
+%d datura-tipped darts
+%d Datura-Wurfpfeile
+%%%%
+%d stones
+%d Steine
+%%%%
+%d large rocks
+%d Felsblöcke
+%%%%
+%d sling bullets
+%d Schleuderkugeln
+%%%%
+%d javelins
+%d Wurfspeere
+%%%%
+%d silver javelins
+%d Silberwurfspeere
+%%%%
+%d throwing nets
+%d Wurfnetze
+%%%%
+%d boomerangs
+%d Bumerangs
+%%%%
+%d silver boomerangs
+%d Silberbumerangs
+%%%%
+
+#################################
+# Armour
+#################################
+
+#################################
+# Rings
+#################################
+
+#################################
+# Amulets
+#################################
+
+#################################
+# Wands
+#################################
+
+#################################
+# Scrolls
+#################################
+
+%%%%
+%d scrolls labelled %s
+%d Schriftrollen beschriftet mit {adj-en}%s
+%%%%
+%d scrolls of acquirement
+%d Schriftrollen des Erwerbs
+%%%%
+%d scrolls of amnesia
+%d Schriftrollen der Amnesie
+%%%%
+%d scrolls of blinking
+%d Schriftrollen des Blinzelns
+%%%%
+%d scrolls of brand weapon
+%d Schriftrollen der Waffenmark
+%%%%
+%d scrolls of enchant armour
+%d Schriftrollen der Rüstungsverzauberung
+%%%%
+%d scrolls of enchant weapon
+%d Schriftrollen der Waffenverzauberung
+%%%%
+%d scrolls of fear
+%d Schriftrollen der Angst
+%%%%
+%d scrolls of fog
+%d Schriftrollen des Nebels
+%%%%
+%d scrolls of holy word
+%d Schriftrollen des heiligen Wortes
+%%%%
+%d scrolls of identify
+%d Schriftrollen der Identifizierung
+%%%%
+%d scrolls of immolation
+%d Schriftrollen der Verbrennung
+%%%%
+%d scrolls of magic mapping
+%d Schriftrollen des magischen Kartierens
+%%%%
+%d scrolls of noise
+%d Schriftrollen des Lärms
+%%%%
+%d scrolls of remove curse
+%d Schriftrollen des Segnens
+%%%%
+%d scrolls of silence
+%d Schriftrollen der Stille
+%%%%
+%d scrolls of summoning
+%d Schriftrollen des Herbeirufs
+%%%%
+%d scrolls of teleportation
+%d Schriftrollen der Teleportation
+%%%%
+%d scrolls of torment
+%d Schriftrollen der Qual
+%%%%
+%d scrolls of vulnerability
+%d Schriftrollen der Vulnerabilität
+%%%%
+%d scrolls of removedness
+%d Schriftrollen der Obsoleszenz
+%%%%
+
+#################################
+# Potions
+#################################
+
+# plural
+%%%%
+%d potions of ambrosia
+%d Tränke der Ambrosia
+%%%%
+%d potions of attraction
+%d Tränke der Anziehung
+%%%%
+%d potions of berserk rage
+%d Tränke der Berserker-Wut
+%%%%
+%d potions of brilliance
+%d Tränke der Brillanz
+%%%%
+%d potions of cancellation
+%d Tränke der Aufhebung
+%%%%
+%d potions of curing
+%d Tränke des Gegenmittels
+%%%%
+%d potions of degeneration
+%d Tränke der Degeneration
+%%%%
+%d potions of experience
+%d Tränke der Erfahrung
+%%%%
+%d potions of flight
+%d Tränke des Fliegens
+%%%%
+%d potions of haste
+%d Tränke der Geschwindigkeit
+%%%%
+%d potions of heal wounds
+%d Heiltränke
+%%%%
+%d potions of invisibility
+%d Tränke der Unsichtbarkeit
+%%%%
+%d potions of lignification
+%d Tränke der Verholzung
+%%%%
+%d potions of magic
+%d Tränke der Magie
+%%%%
+%d potions of might
+%d Tränke der Macht
+%%%%
+%d potions of mutation
+%d Tränke der Mutation
+%%%%
+%d potions of resistance
+%d Tränke des Widerstands
+%%%%
+
+# unidentified potions are named "<colour> <potion>"
+# or "<qualifier> <colour> potion"
+%%%%
+%d %spotions
+%d {adj-e}%sZaubertränke
+%%%%
+
+#################################
+# Magical Staves
+#################################
+
+#################################
+# Spellbooks
+#################################
+
+#################################
+# Corpses
+#################################
+
+#################################
+# Miscellaneous Items
+#################################
+
+%%%%
+%d boxes of beasts
+%d Kisten der Bestien
+%%%%
+%d lightning rods
+%d Blitzstangen
+%%%%
+%d phials of floods
+%d Phiolen der Fluten
+%%%%
+%d phantom mirrors
+%d Phantomspiegel
+%%%%
+%d figurines of a ziggurat
+%d Figuren einer Zikkurat
+%%%%
+%d condenser vanes
+%d Kondensationsfahnen
+%%%%
+%d pieces from Xom's chessboard
+%d Figuren von Xoms Schachbrett
+%%%%
+%d tins of tremorstones
+%d Dosen Bebensteine
+%%%%
+

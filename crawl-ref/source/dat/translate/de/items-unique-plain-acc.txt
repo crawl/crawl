@@ -1,0 +1,283 @@
+###############################################################################
+#
+# Translations for item names - accusative (where different to nominative)
+#
+###############################################################################
+
+#################################
+# Runes
+#################################
+# "This branch contains the <whatever> rune of Zot."
+%%%%
+# "found a <whatever> rune of Zot"
+%%%%
+# Used in the list of collected runes
+%%%%
+# "You pick up the <whatever> rune and feel its power."
+%%%%
+# terse version for character overview screen
+%%%%
+#"silver"
+#"silberne"
+%%%%
+# these ones are constructed differently
+%%%%
+
+#################################
+# The Orb
+#################################
+%%%%
+
+#################################
+# Unrand Artefacts
+#################################
+%%%%
+# alternative name for the Singing Sword
+%%%%
+# alternative name for the Singing Sword
+%%%%
+{acc}the %sWrath of Trog
+%%%%
+{acc}the %smace of Variability
+%%%%
+{acc}the %sstaff of Olgreb
+%%%%
+{acc}the %sstaff of Wucad Mu
+%%%%
+{acc}the %sVampire's Tooth
+%%%%
+{acc}the %sstaff of Dispater
+%%%%
+{acc}the %sscimitar of Flaming Death
+%%%%
+{acc}the %seveningstar "Brilliance"
+%%%%
+{acc}the %sdagger of Chilly Death
+%%%%
+{acc}the %sdagger "Morg"
+%%%%
+{acc}the %slongbow "Zephyr"
+%%%%
+{acc}the %smorningstar "Eos"
+%%%%
+{acc}the %sspear of the Botono
+%%%%
+{acc}the %strident of the Octopus King
+%%%%
+{acc}the %sElemental Staff
+%%%%
+{acc}the %slongbow "Piercer"
+%%%%
+{acc}the %sgreat mace "Undeadhunter"
+%%%%
+{acc}the %sLehudib's crystal spear
+%%%%
+{acc}the %sstorm bow
+%%%%
+{acc}the %stower shield of Ignorance
+%%%%
+{acc}the %scloak of the Thief
+%%%%
+{acc}the %stower shield "Bullseye"
+%%%%
+{acc}the %shat of the Bear Spirit
+%%%%
+{acc}the %scloak of Flash
+%%%%
+{acc}the %sshield of Resistance
+%%%%
+{acc}the %shat of the Alchemist
+%%%%
+{acc}the %scloak of Starlight
+%%%%
+{acc}the %sratskin cloak
+%%%%
+{acc}the %sshield of the Gong
+%%%%
+{acc}the %sring of Shadows
+%%%%
+{acc}the %sring of Phasing
+%%%%
+{acc}the %sring of Robustness
+%%%%
+{acc}the %sring of the Mage
+%%%%
+{acc}the %shat of Pondering
+%%%%
+{acc}the %sBlack Knight's horse barding
+%%%%
+{acc}the %sshillelagh "Devastator"
+%%%%
+{acc}the %sdragonskin cloak
+%%%%
+{acc}a %sring of the Octopus King
+%%%%
+{acc}the %sdark maul
+%%%%
+{acc}the %shat of the High Council
+%%%%
+{acc}the %slajatang of Order
+%%%%
+{acc}the %sgreat mace "Firestarter"
+%%%%
+{acc}the %sorange crystal plate armour
+%%%%
+{acc}the %sMajin-Bo
+%%%%
+{acc}the %sMaxwell's etheric cage
+%%%%
+{acc}the %sKryia's mail coat
+%%%%
+{acc}the %swarlock's mirror
+%%%%
+{acc}the %sdemon trident "Rift"
+%%%%
+{acc}the %sstaff of Battle
+%%%%
+
+#################################
+# Unrand Artefacts - without article
+# (Used in character overview screen and HUD)
+#################################
+%%%%
+# alternative name for the Singing Sword
+%%%%
+# alternative name for the Singing Sword
+%%%%
+# "Gyre" and "Gimble" - base name
+%%%%
+{acc}%sWrath of Trog
+{adj-en}%sZorn von Trog
+%%%%
+{acc}%smace of Variability
+{adj-en}%sStreitkolben der Variabilität
+%%%%
+{acc}%sstaff of Olgreb
+{adj-en}%sStecken von Olgreb
+%%%%
+{acc}%sstaff of Wucad Mu
+{adj-en}%sStecken von Wucad Mu
+%%%%
+{acc}%sVampire's Tooth
+{adj-en}%sZahn des Vampirs
+%%%%
+{acc}%sstaff of Dispater
+{adj-en}%sStecken von Dispater
+%%%%
+{acc}%sscimitar of Flaming Death
+{adj-en}%sKrummsäbel des flammenden Todes
+%%%%
+{acc}%seveningstar "Brilliance"
+{adj-en}%sAbendstern "Brillanz"
+%%%%
+{acc}%sdagger of Chilly Death
+{adj-en}%sDolch des kühlen Todes
+%%%%
+{acc}%sdagger "Morg"
+{adj-en}%sDolch "Morg"
+%%%%
+{acc}%slongbow "Zephyr"
+{adj-en}%sLangbogen "Zephyr"
+%%%%
+{acc}%smorningstar "Eos"
+{adj-en}%sMorgenstern "Eos"
+%%%%
+{acc}%sspear of the Botono
+{adj-en}%sSpeer des Botonos
+%%%%
+{acc}%strident of the Octopus King
+{adj-en}%sDreizack des Krakenkönigs
+%%%%
+{acc}%sElemental Staff
+{adj-en}%sElementarstecken
+%%%%
+# heavy crossbow "Sniper" - base name
+%%%%
+{acc}%slongbow "Piercer"
+{adj-en}%sLangbogen "Stecher"
+%%%%
+{acc}%sgreat mace "Undeadhunter"
+{adj-en}%sgroßen Streitkolben "Untotenjäger"
+%%%%
+{acc}%sLehudib's crystal spear
+{adj-en}%sKristallspeer Lehudibs
+%%%%
+{acc}%sstorm bow
+{adj-en}%sSturmbogen
+%%%%
+{acc}%scloak of the Thief
+{adj-en}%sUmhang des Diebes
+%%%%
+{acc}%shat of the Bear Spirit
+{adj-en}%sHut des Bärengeistes
+%%%%
+{acc}%scloak of Flash
+{adj-en}%sUmhang von Flash
+%%%%
+{acc}%shat of the Alchemist
+{adj-en}%sHut des Alchemisten
+%%%%
+{acc}%scloak of Starlight
+{adj-en}%sUmhang des Sternenlichts
+%%%%
+{acc}%sratskin cloak
+{adj-en}%sRattenfellumhang
+%%%%
+{acc}%sring of Shadows
+{adj-en}%sRing der Schatten
+%%%%
+{acc}%sring of Phasing
+{adj-en}%sRing der Phase
+%%%%
+{acc}%sring of Robustness
+{adj-en}%sRing der Robustheit
+%%%%
+{acc}%sring of the Mage
+{adj-en}%sRing des Magiers
+%%%%
+{acc}%shat of Pondering
+{adj-en}%sHut der Schwerfälligkeit
+%%%%
+{acc}%sBlack Knight's horse barding
+{adj-en}%sRossharnisch des schwarzen Ritters
+%%%%
+{acc}%sshillelagh "Devastator"
+{adj-en}%sShillelagh "Verwüster"
+%%%%
+{acc}%sdragonskin cloak
+{adj-en}%sDrachenhautumhang
+%%%%
+{acc}%sring of the Octopus King
+{adj-en}%sRing des Krakenkönigs
+%%%%
+{acc}%sdark maul
+{adj-en}%sdunklen Kriegshammer
+%%%%
+{acc}%shat of the High Council
+{adj-en}%sHut des Hohen Rates
+%%%%
+{acc}%slajatang of Order
+{adj-en}%sLajatang der Ordnung
+%%%%
+{acc}%sgreat mace "Firestarter"
+{adj-en}%sgroßen Streitkolben "Brandstifter"
+%%%%
+{acc}%sorange crystal plate armour
+{adj-en}%sorangen Kristallplattenpanzer
+%%%%
+{acc}%sMaxwell's etheric cage
+{adj-en}%sÄtherkäfig von Maxwell
+%%%%
+{acc}%sKryia's mail coat
+{adj-en}%sSchuppenpanzer von Kryia
+%%%%
+{acc}%swarlock's mirror
+{adj-en}%sSpiegel des Hexenmeisters
+%%%%
+{acc}%sdemon trident "Rift"
+{adj-en}%sDämonendreizack "Riss"
+%%%%
+{acc}%sstaff of Battle
+{adj-en}%sStecken der Schlacht
+%%%%
+
