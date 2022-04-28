@@ -857,8 +857,11 @@ static void _update_equipment_attunement_by_health()
                     item_slot_name(static_cast<equipment_type>(slot)) :
                     "armour");
 
-            if (slot == EQ_GLOVES || slot == EQ_BOOTS)
+            if (slot == EQ_BOOTS && arm.sub_type != ARM_BARDING
+                || slot == EQ_GLOVES)
+            {
                 plural = true;
+            }
             you.activated.set(slot);
         }
     }
