@@ -55,7 +55,8 @@ Euren {adj-en}%sKampfstab
 {acc}your %slajatang
 Euren {adj-en}%sLajatang
 %%%%
-
+# "Gyre" and "Gimble" - base name
+%%%%
 
 #################################
 # Launchers

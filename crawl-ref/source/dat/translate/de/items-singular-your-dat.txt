@@ -136,7 +136,10 @@ Eurem {adj-en}%sLajatang
 {dat}your %slance
 Eurer {adj-en}%sLanze
 %%%%
-
+# "Gyre" and "Gimble" - base name
+{dat}your %spair of quick blades
+Eurem {adj-en}%sPaar Schnellklingen
+%%%%
 
 #################################
 # Launchers

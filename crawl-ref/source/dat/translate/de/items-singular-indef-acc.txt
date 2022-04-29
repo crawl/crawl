@@ -55,7 +55,8 @@ einen {adj-en}%sKampfstab
 {acc}a %slajatang
 einen {adj-en}%sLajatang
 %%%%
-
+# "Gyre" and "Gimble" - base name
+%%%%
 
 #################################
 # Launchers

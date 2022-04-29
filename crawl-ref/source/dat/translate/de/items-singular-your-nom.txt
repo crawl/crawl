@@ -136,7 +136,10 @@ Euer {adj-er}%sLajatang
 your %slance
 Eure {adj-e}%sLanze
 %%%%
-
+# "Gyre" and "Gimble" - base name
+your %spair of quick blades
+Euer {adj-es}%sPaar Schnellklingen
+%%%%
 
 #################################
 # Launchers

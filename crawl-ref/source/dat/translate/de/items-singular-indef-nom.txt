@@ -136,7 +136,10 @@ ein {adj-er}%sLajatang
 a %slance
 eine {adj-e}%sLanze
 %%%%
-
+# "Gyre" and "Gimble" - base name
+a %spair of quick blades
+ein {adj-es}%sPaar Schnellklingen
+%%%%
 
 #################################
 # Launchers

@@ -55,7 +55,8 @@ den {adj-en}%sKampfstab
 {acc}the %slajatang
 den {adj-en}%sLajatang
 %%%%
-
+# "Gyre" and "Gimble" - base name
+%%%%
 
 #################################
 # Launchers

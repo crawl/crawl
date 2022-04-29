@@ -26,7 +26,7 @@ using namespace std;
 #include "english.h"
 
 #if 0
-#define DEBUG(...) fprintf(stderr, "DEBUG: "); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");
+#define DEBUG(...) fprintf(stderr, "DEBUG: %s: ", __FUNCTION__); fprintf (stderr, __VA_ARGS__); fprintf(stderr, "\n");
 #else
 #define DEBUG(...)
 #endif
@@ -847,12 +847,18 @@ static string _localise_unidentified_scroll(const string& context, const string&
 // they can have adjectives in 2 places (e.g. "an uncursed pair of glowing boots")
 static string _localise_pair(const string& context, const string& name)
 {
-    size_t pos = name.find("pair of ");
+    static const string pair_of = "pair of ";
+
+    size_t pos = name.find(pair_of);
     if (pos == string::npos)
         return "";
 
+    DEBUG("context='%s', name='%s'", context.c_str(), name.c_str());
+
     string prefix = name.substr(0, pos);
     string rest = name.substr(pos);
+
+    DEBUG("prefix='%s', rest='%s'", prefix.c_str(), rest.c_str());
 
     // break the prefix up into determiner and adjectives
     string determiner;
@@ -875,46 +881,61 @@ static string _localise_pair(const string& context, const string& name)
     // check for unrand artefact
     string candidate = determiner + " %s" + rest;
     trim_string(candidate);
-    string result = cxlate(context, candidate);
-    if (result != candidate)
+    DEBUG("candidate='%s'", candidate.c_str());
+    string result = cxlate(context, candidate, false);
+    if (result != "")
     {
         result = _insert_adjectives(result, adj_group1);
         return result;
     }
 
     // break it up further
-    vector<string> adj_group2;
-    string base = determiner + " %s";
-    trim_string(base);
     string suffix;
-    vector<string> words2 = split_string(" ", rest, true);
-    for (size_t i = 0; i < words2.size(); i++)
+    pos = rest.find(" of ", pair_of.length());
+    if (pos != string::npos)
     {
-        const string& word = words2[i];
-        if (word == "pair")
-            base += word;
-        else if (word == "of" && i > 0 && words2[i-1] == "pair")
-            base += " " + word;
-        else if (word == "boots" || word == "gloves")
-            base += " %s" + word;
-        else if (word == "of")
-            suffix = " " + word;
-        else if (!suffix.empty())
-            suffix += " " + word;
-        else
-            adj_group2.push_back(word);
+        suffix = rest.substr(pos);
+        rest = rest.substr(0, pos);
     }
+
+    DEBUG("determiner='%s', rest='%s', suffix='%s'", \
+          determiner.c_str(), rest.c_str(), suffix.c_str());
+
+    vector<string> adj_group2;
+    string base = determiner.empty() ? string("%s") : (determiner + " %s");
+    base += pair_of + "%s";
+    rest = rest.substr(pair_of.length());
+    vector<string> words2 = split_string(" ", rest, true);
+
+    size_t cnt = words2.size();
+    if (cnt >= 2 && words2[cnt-2] == "quick" && words2[cnt-1] == "blades")
+    {
+        base += words2[cnt-2] + " " + words2[cnt-1];
+        cnt -= 2;
+    }
+    else if (cnt > 0)
+    {
+        base += words2[cnt-1];
+        cnt--;
+    }
+
+    for (size_t i = 0; i < cnt; i++)
+         adj_group2.push_back(words2[i]);
+
+    DEBUG("base='%s', suffix='%s'", base.c_str(), suffix.c_str());
 
     if (suffix.empty())
         result = cxlate(context, base);
     else
     {
-        result = cxlate(context, base + suffix);
-        if (result == base + suffix)
+        result = cxlate(context, base + suffix, false);
+        if (result.empty())
         {
             result = cxlate(context, base) + cxlate(context, suffix);
         }
     }
+
+    DEBUG("before inserting adjectives: result='%s'", result.c_str());
 
     // first set of adjectives (before the word "pair")
     result = _insert_adjectives(result, adj_group1);
@@ -922,6 +943,7 @@ static string _localise_pair(const string& context, const string& name)
     // second set of adjectives (before the word "boots"/"gloves")
     result = _insert_adjectives(result, adj_group2);
 
+    DEBUG("result='%s'", result.c_str());
     return result;
 }
 
@@ -937,6 +959,8 @@ static string _localise_pair(const string& context, const string& name)
 //
 static string _localise_item_name(const string& context, const string& item)
 {
+    DEBUG("context='%s', value='%s'", context.c_str(), item.c_str());
+
     if (item.empty())
         return item;
 
@@ -1233,12 +1257,12 @@ static void _split_list(string s, vector<string>& result)
 // returns empty string if input is not a list
 static string _localise_list(const string context, const string& s)
 {
-    DEBUG("start _localise_list: context='%s', s='%s'", context.c_str(), s.c_str());
-
     vector<string> substrings;
     _split_list(s, substrings);
     if (substrings.size() < 2)
         return "";
+
+    DEBUG("context='%s', s='%s'", context.c_str(), s.c_str());
 
     string result;
     for (string sub: substrings)
@@ -1329,6 +1353,8 @@ static string _localise_counted_string(const string& context, const string& valu
         return value;
     }
 
+    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
+
     int count;
     string plural = _strip_count(value, count);
     string singular = article_a(singularise(plural));
@@ -1393,7 +1419,7 @@ static string _localise_location(const string& context, const string& value)
 // localise a string
 static string _localise_string(const string context, const string& value)
 {
-    DEBUG("start _localise_string: context='%s', value='%s'", context.c_str(), value.c_str());
+    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
 
     if (value.empty())
     {

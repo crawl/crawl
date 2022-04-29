@@ -136,7 +136,10 @@
 %slance
 {adj-e}%sLanze
 %%%%
-
+# "Gyre" and "Gimble" - base name
+%spair of quick blades
+{adj-es}%sPaar Schnellklingen
+%%%%
 
 #################################
 # Launchers

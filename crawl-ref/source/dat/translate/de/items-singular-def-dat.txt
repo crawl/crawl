@@ -136,7 +136,10 @@ dem {adj-en}%sLajatang
 {dat}the %slance
 der {adj-en}%sLanze
 %%%%
-
+# "Gyre" and "Gimble" - base name
+{dat}the %spair of quick blades
+dem {adj-en}%sPaar Schnellklingen
+%%%%
 
 #################################
 # Launchers
