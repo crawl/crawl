@@ -675,7 +675,7 @@ Euer {adj-er}%sfluoreszierender Zauberstab
 
 %%%%
 your scroll labelled %s
-Eure Schriftrolle beschriftet mit {adj-e}%s
+Eure Schriftrolle beschriftet mit %s
 %%%%
 your scroll of acquirement
 Eure Schriftrolle des Erwerbs

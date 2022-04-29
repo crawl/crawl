@@ -645,7 +645,7 @@ einem {adj-en}%sfluoreszierenden Zauberstab
 
 %%%%
 {dat}a scroll labelled %s
-einer Schriftrolle beschriftet mit {adj-e}%s
+einer Schriftrolle beschriftet mit %s
 %%%%
 {dat}a scroll of acquirement
 einer Schriftrolle des Erwerbs

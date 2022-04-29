@@ -675,7 +675,7 @@ der {adj-e}%sfluoreszierender Zauberstab
 
 %%%%
 the scroll labelled %s
-die Schriftrolle beschriftet mit {adj-e}%s
+die Schriftrolle beschriftet mit %s
 %%%%
 the scroll of acquirement
 die Schriftrolle des Erwerbs

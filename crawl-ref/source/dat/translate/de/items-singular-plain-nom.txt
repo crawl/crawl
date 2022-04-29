@@ -675,7 +675,7 @@ beseitigter Zauberstab
 
 %%%%
 scroll labelled %s
-Schriftrolle beschriftet mit {adj-e}%s
+Schriftrolle beschriftet mit %s
 %%%%
 scroll of acquirement
 Schriftrolle des Erwerbs

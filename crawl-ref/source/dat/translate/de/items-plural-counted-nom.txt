@@ -87,7 +87,7 @@
 
 %%%%
 %d scrolls labelled %s
-%d Schriftrollen beschriftet mit {adj-en}%s
+%d Schriftrollen beschriftet mit %s
 %%%%
 %d scrolls of acquirement
 %d Schriftrollen des Erwerbs

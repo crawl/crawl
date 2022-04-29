@@ -250,11 +250,8 @@ def decline_adj_context(s, gender, target_case, declension):
             else:
                 context = "adj-er"
 
-    # remove any old context marker
-    s = re.sub(r'\{adj-[a-z]+\}', '', s, 1)
-
-    # add the new one
-    s = re.sub(r'%s', '{'+context+'}%s', s, 1)
+    # replace the context marker
+    s = re.sub(r'\{adj-[a-z]+\}', '{'+context+'}', s, 1)
 
     return s
 
