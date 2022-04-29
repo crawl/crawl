@@ -1506,7 +1506,7 @@ void smallterm_warning()
     clrscr();
     CGOTOXY(1,1, GOTO_CRT);
     string msg = localise("Your terminal window is too small; please resize to at least %d,%d", MIN_COLS, MIN_LINES);
-    CPRINT(msg.c_str());
+    CPRINTF(msg.c_str());
 }
 #endif
 
@@ -1722,7 +1722,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             }
             else
                 desc.resize(crawl_view.mlistsz.x - printed, ' ');
-            CPRINTF(localise("%s", desc));
+            CPRINTF("%s", localise(desc).c_str());
         }
     }
 
