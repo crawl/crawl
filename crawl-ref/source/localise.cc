@@ -35,6 +35,14 @@ static string _language;
 static bool _paused;
 static string _context;
 
+// forward declarations
+static string _localise_string(const string context, const string& value);
+static string _localise_counted_string(const string& context, const string& singular,
+                                       const string& plural, const int count);
+// localise counted string when you only have the plural
+static string _localise_counted_string(const string& context, const string& value);
+static string _localise_list(const string context, const string& value);
+
 // check if string contains the char
 static inline bool _contains(const std::string& s, char c)
 {
@@ -445,7 +453,6 @@ static void _resolve_escapes(string& str)
     _replace_all(str, "\\}", "}");
 }
 
-
 static string _localise_annotation(const string& s)
 {
     if (s.empty())
@@ -538,8 +545,8 @@ static string _localise_annotation(const string& s)
             string tok_suffix = tok.substr(last_alpha_pos+1);
             tok = tok.substr(0, last_alpha_pos+1);
             result += xlate(tok, true) + tok_suffix;
+            }
         }
-    }
 
     return result;
 }
@@ -763,15 +770,6 @@ static string _get_first_tag(const string& s)
 
     return s.substr(start, end - start + 1);
 }
-
-// forward declarations
-static string _localise_string(const string context, const string& value);
-static string _localise_counted_string(const string& context, const string& singular,
-                                       const string& plural, const int count);
-// localise counted string when you only have the plural
-static string _localise_counted_string(const string& context, const string& value);
-static string _localise_list(const string context, const string& value);
-
 
 static string _localise_artefact_suffix(const string& s)
 {
@@ -1339,9 +1337,7 @@ static string _localise_counted_string(const string& context, const string& sing
 {
     string result;
     result = cnxlate(context, singular, plural, count);
-    ostringstream cnt;
-    cnt << count;
-    result = replace_first(result, "%d", cnt.str());
+    result = replace_first(result, "%d", to_string(count));
     return result;
 }
 
@@ -1644,7 +1640,7 @@ bool localisation_active()
     return (!_paused && !_language.empty() && _language != "en");
 }
 
-string localise(const vector<LocalisationArg>& args)
+static string _build_string(const vector<LocalisationArg>& args, bool translate)
 {
     if (args.empty())
     {
@@ -1659,7 +1655,7 @@ string localise(const vector<LocalisationArg>& args)
 
     // translate format string
     string fmt_xlated;
-    if (fmt_arg.translate && localisation_active())
+    if (fmt_arg.translate && translate)
     {
         fmt_xlated = _localise_string("", fmt_arg);
         success = (fmt_xlated != fmt_arg.stringVal);
@@ -1667,12 +1663,6 @@ string localise(const vector<LocalisationArg>& args)
     else
     {
         fmt_xlated = fmt_arg.stringVal;
-    }
-
-    if (args.size() == 1 || fmt_xlated.empty())
-    {
-        // We're done here
-        return fmt_xlated;
     }
 
     // get arg types for original English string
@@ -1721,7 +1711,7 @@ string localise(const vector<LocalisationArg>& args)
                 else if (*type == typeid(char*))
                 {
                     // arg is string
-                    if (arg.translate && localisation_active())
+                    if (arg.translate && translate)
                     {
                         string argx = _localise_string(_context, arg);
                         ss << _format_utf8_string(fmt_spec, argx);
@@ -1768,7 +1758,7 @@ string localise(const vector<LocalisationArg>& args)
 
     string result = ss.str();
 
-    if (localisation_active() && args.size() > 1 && fmt_arg.translate && !success)
+    if (translate && args.size() > 1 && fmt_arg.translate && !success)
     {
         // there may be a translation for the completed string
         result = _localise_string("", result);
@@ -1776,6 +1766,34 @@ string localise(const vector<LocalisationArg>& args)
 
     return result;
 
+}
+
+string localise(const vector<LocalisationArg>& args)
+    {
+    // trivial cases
+    if (args.empty())
+    {
+        return "";
+    }
+    else if (args.size() == 1)
+    {
+        if (localisation_active())
+            return _localise_string("", args.at(0).stringVal);
+        else
+            return args.at(0).stringVal;
+    }
+
+    string english = _build_string(args, false);
+    if (!localisation_active() || english.empty())
+        return english;
+
+    // check for translation of completed english string
+    string result = xlate(english, false);
+    if (!result.empty())
+    return result;
+
+    // translate piecemeal
+    return _build_string(args, true);
 }
 
 string vlocalise(const string& fmt_str, va_list argp)

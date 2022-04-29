@@ -1292,7 +1292,8 @@ static void _redraw_title()
     {
         string god = you_worship(GOD_JIYVA) ? god_name_jiyva(true)
                                             : god_name(you.religion);
-        NOWRAP_EOL_CPRINTF(localise("%s of %s", species, god).c_str());
+        string of_god = localise(" of %s", god); // noloc
+        NOWRAP_EOL_CPRINTF("%s%s", localise(species).c_str(), of_god.c_str());
 
         string piety = _god_asterisks();
         textcolour(_god_status_colour(YELLOW));
@@ -1713,6 +1714,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             string desc;
             mons_to_string_pane(desc, desc_colour, zombified,
                                 mons, start, count);
+            desc = localise(desc);
             textcolour(desc_colour);
             if (static_cast<int>(desc.length()) > crawl_view.mlistsz.x - printed)
             {

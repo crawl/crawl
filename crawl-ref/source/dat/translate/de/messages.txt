@@ -11874,7 +11874,7 @@ gegen %d
 " (Mitschleim)"
 %%%%
 with wands
-
+mit Zauberstäben
 %%%%
 polearm
 
@@ -17343,8 +17343,8 @@ Ihr schnappt erleichtert nach Luft, als Luft wieder Eure Lunge erreicht.
 Your lungs strain for air!
 Eure Lungen belasten die Luft!
 %%%%
-", a level "
-
+, a level %d %s %s
+, Level %d %s %s
 %%%%
 You resist the pull of the Abyss.
 Ihr widersteht dem Zug des Abgrunds.
