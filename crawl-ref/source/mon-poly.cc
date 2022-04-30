@@ -248,6 +248,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     flags |= MF_POLYMORPHED;
     string name;
 
+    // noloc section start (we will localise these but not with these exact strings)
     // Preserve the names of uniques and named monsters.
     if (mons->type == MONS_ROYAL_JELLY
         || mons->mname == "shaped Royal Jelly")
@@ -288,6 +289,7 @@ void change_monster_type(monster* mons, monster_type targetc)
         if (the_pos != string::npos)
             name = name.substr(0, the_pos);
     }
+    // noloc section end
 
     const god_type old_god        = mons->god;
     const int  old_hp             = mons->hit_points;
@@ -616,23 +618,23 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     bool player_messaged = true;
     if (could_see)
     {
-        string verb = "";
+        string msg;
         string obj = can_see ? mons_type_name(targetc, DESC_A)
                              : "something you cannot see";
 
         if (oldc == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
         {
-            verb = "grows a second head";
+            msg = "%s grows a second head!";
             obj = "";
         }
         else if (mons->is_shapeshifter())
-            verb = "changes into ";
+            msg = "%s changes into %s!";
         else if (_jiyva_slime_target(targetc))
-            verb = "quivers uncontrollably and liquefies into ";
+            msg = "%s quivers uncontrollably and liquefies into %s!";
         else
-            verb = "evaporates and reforms as ";
+            msg = "%s evaporates and reforms as %s!";
 
-        mprf("%s %s%s!", old_name_the.c_str(), verb.c_str(), obj.c_str());
+        mprf(msg.c_str(), old_name_the.c_str(), obj.c_str());
     }
     else if (can_see)
     {
@@ -645,7 +647,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (need_note || could_see && can_see && mons_is_notable(*mons))
     {
         string new_name = can_see ? mons->full_name(DESC_A)
-                                  : "something unseen";
+                                  : "something unseen"; // noloc
 
         take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
 
@@ -758,7 +760,10 @@ void seen_monster(monster* mons)
     {
         const item_def *wyrmbane = you.weapon();
         if (wyrmbane && mons->dragon_level() > wyrmbane->plus)
-            mprf("<green>Wyrmbane glows as a worthy foe approaches.</green>");
+        {
+            mprf("<green>%s</green>", // noloc
+                 "Wyrmbane glows as a worthy foe approaches.");
+        }
     }
 
     // attempt any god conversions on first sight

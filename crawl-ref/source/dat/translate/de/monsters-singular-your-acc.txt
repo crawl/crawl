@@ -947,3 +947,6 @@ Euren %s-förmigen Gestaltwandler
 Euren geformten Eisblock
 %%%%
 
+# polymorphed uniques
+%%%%
+

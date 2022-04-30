@@ -1573,3 +1573,15 @@ your shaped block of ice's
 Eures geformten Eisblocks
 %%%%
 
+# polymorphed uniques
+%%%%
+your %s shaped Royal Jelly's
+Eures %s-förmigen Gelée Royale
+%%%%
+your %s shaped Lernaean hydra's
+Eurer %s-förmigen Lernäischen Hydra
+%%%%
+your %s shaped Serpent of Hell's
+Eurer %s-förmigen Höllenschlange
+%%%%
+

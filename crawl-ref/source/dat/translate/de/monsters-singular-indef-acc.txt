@@ -947,3 +947,6 @@ einen %s-förmigen Gestaltwandler
 einen geformten Eisblock
 %%%%
 
+# polymorphed uniques
+%%%%
+

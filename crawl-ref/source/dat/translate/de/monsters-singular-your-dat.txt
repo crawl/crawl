@@ -1573,3 +1573,15 @@ Eurer geformten Salzsäule
 Eurem geformten Eisblock
 %%%%
 
+# polymorphed uniques
+%%%%
+{dat}your %s shaped Royal Jelly
+Eurem %s-förmigen Gelée Royale
+%%%%
+{dat}your %s shaped Lernaean hydra
+Eurer %s-förmigen Lernäischen Hydra
+%%%%
+{dat}your %s shaped Serpent of Hell
+Eurer %s-förmigen Höllenschlange
+%%%%
+

@@ -11865,15 +11865,6 @@ mit Zauberstäben
 %s's form twists and warps, and jellies spill out!
 
 %%%%
-shaped Royal Jelly
-
-%%%%
-shaped Lernaean hydra
-
-%%%%
-shaped Serpent of Hell
-
-%%%%
 %s's appearance momentarily alters.
 
 %%%%
@@ -11883,25 +11874,22 @@ shaped Serpent of Hell
 something you cannot see
 
 %%%%
-grows a second head
+%s grows a second head!
 
 %%%%
-"changes into "
+%s changes into %s!
 
 %%%%
-"quivers uncontrollably and liquefies into "
+%s quivers uncontrollably and liquefies into %s!
 
 %%%%
-"evaporates and reforms as "
-
-%%%%
-something unseen
+%s evaporates and reforms as %s!
 
 %%%%
 %s quivers momentarily.
 
 %%%%
-<green>Wyrmbane glows as a worthy foe approaches.</green>
+Wyrmbane glows as a worthy foe approaches.
 
 %%%%
 
@@ -25762,6 +25750,9 @@ good monster polymorph
 
 %%%%
 bad monster polymorph
+
+%%%%
+something unseen
 
 %%%%
 polymorph %s -> %s

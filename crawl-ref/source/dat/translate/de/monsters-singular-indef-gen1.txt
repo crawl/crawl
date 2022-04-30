@@ -1573,3 +1573,15 @@ a shaped block of ice's
 eines geformten Eisblocks
 %%%%
 
+# polymorphed uniques
+%%%%
+a %s shaped Royal Jelly's
+eines %s-förmigen Gelée Royale
+%%%%
+a %s shaped Lernaean hydra's
+einer %s-förmigen Lernäischen Hydra
+%%%%
+a %s shaped Serpent of Hell's
+einer %s-förmigen Höllenschlange
+%%%%
+
