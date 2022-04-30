@@ -4847,30 +4847,6 @@ describe-monster
 "doll":[[%u,%d]]
 
 %%%%
-weakling
-
-%%%%
-amateur
-
-%%%%
-novice
-
-%%%%
-journeyman
-
-%%%%
-adept
-
-%%%%
-veteran
-
-%%%%
-master
-
-%%%%
-legendary
-
-%%%%
 This cloud is opaque; one tile will not block vision, but multiple will.
 
 %%%%
