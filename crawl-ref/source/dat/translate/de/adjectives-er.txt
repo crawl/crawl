@@ -413,3 +413,30 @@
 "titanischer "
 %%%%
 
+# player ghost ranks
+%%%%
+"{adj-er}weakling "
+"schwacher "
+%%%%
+"{adj-er}amateur "
+"amateurhafter "
+%%%%
+"{adj-er}novice "
+"unerfahrener "
+%%%%
+"{adj-er}journeyman "
+"durchschnittlicher "
+%%%%
+"{adj-er}adept "
+"geschickter "
+%%%%
+"{adj-er}veteran "
+"erfahrener "
+%%%%
+"{adj-er}master "
+"meisterhafter "
+%%%%
+"{adj-er}legendary "
+"legendärer "
+%%%%
+

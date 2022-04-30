@@ -5234,22 +5234,15 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
 
 static const char* xl_rank_names[] =
 {
-    "weakling",
-    "amateur",
-    "novice",
-    "journeyman",
-    "adept",
-    "veteran",
-    "master",
-    "legendary"
+    "weakling ",
+    "amateur ",
+    "novice ",
+    "journeyman ",
+    "adept ",
+    "veteran ",
+    "master ",
+    "legendary "
 };
-
-static string _xl_rank_name(const int xl_rank)
-{
-    const string rank = xl_rank_names[xl_rank];
-
-    return article_a(rank);
-}
 
 string short_ghost_description(const monster *mon, bool abbrev)
 {
@@ -5258,19 +5251,16 @@ string short_ghost_description(const monster *mon, bool abbrev)
     const ghost_demon &ghost = *(mon->ghost);
     const char* rank = xl_rank_names[ghost_level_to_rank(ghost.xl)];
 
-    string desc = make_stringf("%s %s %s", rank,
-                               species::name(ghost.species).c_str(),
-                               get_job_name(ghost.job));
+    string fmt = string("%s%s ") + get_job_name(ghost.job); // noloc
+    string desc = localise(fmt, rank, species::name(ghost.species));
 
     if (abbrev || strwidth(desc) > 40)
     {
-        desc = make_stringf("%s %s%s",
-                            rank,
-                            species::get_abbrev(ghost.species),
-                            get_job_abbrev(ghost.job));
+        fmt = string("%s%s") + get_job_abbrev(ghost.job); // noloc
+        desc = localise(fmt, rank, species::get_abbrev(ghost.species));
     }
 
-    return localise(desc);
+    return desc;
 }
 
 // Describes the current ghost's previous owner. The caller must
@@ -5288,19 +5278,20 @@ string get_ghost_description(const monster_info &mi, bool concise)
                         true,
                         gspecies,
                         species::has_low_str(gspecies), mi.i_ghost.religion)
-         << localise(", ") << _xl_rank_name(mi.i_ghost.xl_rank)
-         << localise(" ");
+         << localise(", ");
 
+    string rank = xl_rank_names[ghost_level_to_rank(mi.i_ghost.xl_rank)];
+
+    string fmt;
     if (concise)
     {
-        gstr << species::get_abbrev(gspecies)
-             << get_job_abbrev(mi.i_ghost.job);
+        fmt = string("a %s%s") + get_job_abbrev(mi.i_ghost.job); // noloc
+        gstr << localise(fmt, rank, species::get_abbrev(gspecies));
     }
     else
     {
-        gstr << species::name(gspecies)
-             << localise(" ")
-             << get_job_name(mi.i_ghost.job);
+        fmt = string("a %s%s ") + get_job_name(mi.i_ghost.job); // noloc
+        gstr << localise(fmt, rank, species::name(gspecies));
     }
 
     if (mi.i_ghost.religion != GOD_NO_GOD)
