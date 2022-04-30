@@ -11849,21 +11849,6 @@ gegen %d
 with wands
 mit Zauberstäben
 %%%%
-polearm
-
-%%%%
-polearms
-
-%%%%
-launcher
-
-%%%%
-launchers
-
-%%%%
-missiles
-
-%%%%
 
 ##################
 # mon-pathfind.cc

@@ -7,6 +7,23 @@
 ###############################################################################
 
 #################################
+# Weapon Types
+#################################
+
+# these are used in monster pane in console version
+
+%%%%
+polearms
+Stangenwaffen
+%%%%
+launchers
+Werfer
+%%%%
+missiles
+Geschosse
+%%%%
+
+#################################
 # Melee Weapons
 #################################
 

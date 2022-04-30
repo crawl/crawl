@@ -17,8 +17,9 @@
 weapon
 Waffe
 %%%%
-missile
-Geschoss
+# duplicate
+#missile
+#Geschoss
 %%%%
 armour
 Rüstung

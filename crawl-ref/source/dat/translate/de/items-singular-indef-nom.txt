@@ -6,9 +6,24 @@
 #
 ###############################################################################
 
+#################################
+# Weapon Types
+#################################
+
+# these are used in monster pane in console version
+
 %%%%
 a %sweapon
 eine {adj-e}%sWaffe
+%%%%
+a polearm
+eine Stangenwaffe
+%%%%
+a launcher
+ein Werfer
+%%%%
+a missile
+ein Geschoss
 %%%%
 
 #################################

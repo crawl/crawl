@@ -6,9 +6,24 @@
 #
 ###############################################################################
 
+#################################
+# Weapon Types
+#################################
+
+# these are used in monster pane in console version
+
 %%%%
 your %sweapon
 Eure {adj-e}%sWaffe
+%%%%
+your polearm
+Eure Stangenwaffe
+%%%%
+your launcher
+Euer Werfer
+%%%%
+your missile
+Euer Geschoss
 %%%%
 
 #################################
