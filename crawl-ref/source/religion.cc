@@ -1192,14 +1192,10 @@ bool pay_yred_souls(unsigned int how_many, bool just_check)
 
 static bool _want_missile_gift()
 {
-    skill_type sk = best_skill(SK_SLINGS, SK_THROWING);
-    // Default to throwing if all missile skills are at zero.
-    if (you.skills[sk] == 0)
-        sk = SK_THROWING;
     return you.piety >= piety_breakpoint(2)
            && random2(you.piety) > 70
            && one_chance_in(8)
-           && x_chance_in_y(1 + you.skills[sk], 12);
+           && x_chance_in_y(1 + you.skills[SK_THROWING], 12);
 }
 
 static bool _want_nemelex_gift()
