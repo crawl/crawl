@@ -1256,7 +1256,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mons_class_is_animated_weapon(mg.cls))
     {
         if (mg.props.exists(TUKIMA_WEAPON))
+        {
             give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
+            mon->props[TUKIMA_WEAPON] = true;
+        }
         else
             give_item(mon, place.absdepth(), summoned);
 

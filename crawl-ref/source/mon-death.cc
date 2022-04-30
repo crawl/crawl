@@ -1777,7 +1777,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!was_banished && !summoned_it && !silent && !hard_reset)
         {
             // Under Gozag, permanent dancing weapons get turned to gold.
-            if (have_passive(passive_t::goldify_corpses))
+            // Exception: Tukima'd weapons; we don't want to trickily punish Gozagites
+            // for using Tukima's Dance.
+            if (have_passive(passive_t::goldify_corpses)
+                && !mons.props.exists(TUKIMA_WEAPON))
             {
                 if (mons_will_goldify(mons))
                 {
