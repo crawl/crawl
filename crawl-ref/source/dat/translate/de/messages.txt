@@ -11917,44 +11917,6 @@ Ihr hört eine laute magische Explosion!
 %%%%
 
 ##################
-# mon-speak.cc
-##################
-%%%%
-" banished"
-
-%%%%
-" permanently"
-
-%%%%
-" killed"
-
-%%%%
-" unsummoned"
-
-%%%%
-hostile
-
-%%%%
-related
-
-%%%%
-unbeliever
-
-%%%%
-good god
-
-%%%%
-cap-
-
-%%%%
-stupid
-
-%%%%
-__NEXT used by shape-based speech string for monster '
-
-%%%%
-
-##################
 # mon-tentacle.cc
 ##################
 %%%%
@@ -16830,6 +16792,9 @@ weaker
 stronger
 
 %%%%
+stupid
+
+%%%%
 Your divine stamina protects you from %s loss.
 Eure göttliche Ausdauer schützt Euch vor dem Verlust von %s.
 %%%%
@@ -19544,6 +19509,9 @@ this level
 
 %%%%
 " unseen"
+
+%%%%
+cap-
 
 %%%%
 No shout entry for default shout type '
