@@ -11851,17 +11851,6 @@ mit Zauberstäben
 %%%%
 
 ##################
-# mon-pathfind.cc
-##################
-%%%%
-The monster is already there!
-Das Monster ist schon da!
-%%%%
-Couldn't find a path from (%d,%d) to (%d,%d).
-Es konnte kein Pfad von (%d,%d) nach (%d,%d) gefunden werden.
-%%%%
-
-##################
 # mon-place.cc
 ##################
 %%%%
