@@ -1718,7 +1718,7 @@ struct band_info
     band_type type;
     /// The min & max # of followers; doesn't count the leader.
     random_var range;
-    /// Should the band followers try very hard to stick to the leader?
+    /// Should the leader of this band be credited for kills?
     bool natural_leader;
 };
 
@@ -1751,7 +1751,7 @@ static const band_set basic_drac_set = { {3, 19, drac_branch},
 
 /// classed draconian band description
 static const band_set classy_drac_set = { {0, 21, drac_branch},
-                                          {{BAND_DRACONIAN, {3, 7} }}};
+                                          {{BAND_DRACONIAN, {3, 7}, true }}};
 
 // javelineer & impaler
 static const band_conditions mf_band_condition = { 0, 0, []() {
@@ -1789,8 +1789,8 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_VAMPIRE_MAGE,    { {3}, {{ BAND_JIANGSHI, {2, 4}, true }}}},
     { MONS_JIANGSHI,        { {}, {{ BAND_JIANGSHI, {0, 2} }}}},
     { MONS_GNOLL,           { {0, 1}, {{ BAND_GNOLLS, {2, 4} }}}},
-    { MONS_GNOLL_SHAMAN,    { {}, {{ BAND_GNOLLS, {3, 6} }}}},
-    { MONS_GNOLL_SERGEANT,  { {}, {{ BAND_GNOLLS, {3, 6} }}}},
+    { MONS_GNOLL_SHAMAN,    { {}, {{ BAND_GNOLLS, {3, 6}, true }}}},
+    { MONS_GNOLL_SERGEANT,  { {}, {{ BAND_GNOLLS, {3, 6}, true }}}},
     { MONS_DEATH_KNIGHT,    { {0, 0, []() { return x_chance_in_y(2, 3); }},
                                   {{ BAND_DEATH_KNIGHT, {3, 5}, true }}}},
     { MONS_GRUM,            { {}, {{ BAND_WOLVES, {2, 5}, true }}}},
@@ -1802,7 +1802,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_YAKTAUR,         { {2}, {{ BAND_YAKTAURS, {2, 5} }}}},
     { MONS_DEATH_YAK,       { {}, {{ BAND_DEATH_YAKS, {2, 6} }}}},
     { MONS_OGRE_MAGE,       { {}, {{ BAND_OGRE_MAGE, {4, 8} }}}},
-    { MONS_LODUL,           { {}, {{ BAND_OGRE_MAGE, {6, 10} }}}},
+    { MONS_LODUL,           { {}, {{ BAND_OGRE_MAGE, {6, 10}, true }}}},
     { MONS_BALRUG,          { {0, 0, []() { return !player_in_hell(); }},
                                    {{ BAND_BALRUG, {2, 5}, true }}}},
     { MONS_CACODEMON,       { {}, {{ BAND_CACODEMON, {1, 4}, true }}}},
@@ -1818,7 +1818,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_NAGA_MAGE,       { naga_band_condition, {{ BAND_NAGAS, {2, 5} }}}},
     { MONS_NAGA_WARRIOR,    { naga_band_condition, {{ BAND_NAGAS, {2, 5} }}}},
     { MONS_NAGA_SHARPSHOOTER, { {2}, {{ BAND_NAGA_SHARPSHOOTER, {1, 4} }}}},
-    { MONS_NAGA_RITUALIST,  { {}, {{ BAND_NAGA_RITUALIST, {3, 6} }}}},
+    { MONS_NAGA_RITUALIST,  { {}, {{ BAND_NAGA_RITUALIST, {3, 6}, true }}}},
     { MONS_RIVER_RAT,       { {}, {{ BAND_GREEN_RATS, {4, 10} }}}},
     { MONS_HELL_RAT,        { {}, {{ BAND_HELL_RATS, {3, 7} }}}},
     { MONS_DREAM_SHEEP,     { {}, {{ BAND_DREAM_SHEEP, {3, 7} }}}},
@@ -1837,13 +1837,13 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ANCIENT_CHAMPION, { {2, 0, []() {
         return !player_in_hell(); }},
                                   {{ BAND_SKELETAL_WARRIORS, {2, 5}, true}}}},
-    { MONS_SKELETAL_WARRIOR, { {}, {{ BAND_SKELETAL_WARRIORS, {2, 5}, true }}}},
+    { MONS_SKELETAL_WARRIOR, { {}, {{ BAND_SKELETAL_WARRIORS, {2, 5} }}}},
     { MONS_CYCLOPS,         { { 0, 0, []() {
         return player_in_branch(BRANCH_SHOALS); }},
                                   {{ BAND_DREAM_SHEEP, {2, 5}, true }}}},
     { MONS_ALLIGATOR,       { { 5, 0, []() {
         return !player_in_branch(BRANCH_LAIR); }},
-                                  {{ BAND_ALLIGATOR, {1, 2}, true }}}},
+                                  {{ BAND_ALLIGATOR, {1, 2} }}}},
     { MONS_POLYPHEMUS,      { {}, {{ BAND_POLYPHEMUS, {3, 6}, true }}}},
     { MONS_HARPY,           { {}, {{ BAND_HARPIES, {2, 5} }}}},
     { MONS_SALTLING,        { {}, {{ BAND_SALTLINGS, {2, 4} }}}},
@@ -1867,24 +1867,24 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_DRACONIAN_SHIFTER, classy_drac_set },
     // yup, scary
     { MONS_TIAMAT,          { {}, {{ BAND_DRACONIAN, {8, 15}, true }}}},
-    { MONS_ILSUIW,          { {}, {{ BAND_ILSUIW, {3, 6} }}}},
+    { MONS_ILSUIW,          { {}, {{ BAND_ILSUIW, {3, 6}, true }}}},
     { MONS_AZRAEL,          { {}, {{ BAND_AZRAEL, {4, 9}, true }}}},
     { MONS_DUVESSA,         { {}, {{ BAND_DUVESSA, {1, 2} }}}},
     { MONS_KHUFU,           { {}, {{ BAND_KHUFU, {3, 4}, true }}}},
     { MONS_GOLDEN_EYE,      { {}, {{ BAND_GOLDEN_EYE, {1, 6} }}}},
     { MONS_PIKEL,           { {}, {{ BAND_PIKEL, {4, 5}, true }}}},
-    { MONS_MERFOLK_AQUAMANCER, { {}, {{ BAND_MERFOLK_AQUAMANCER, {3, 5} }}}},
+    { MONS_MERFOLK_AQUAMANCER, { {}, {{ BAND_MERFOLK_AQUAMANCER, {3, 5}, true }}}},
     { MONS_MERFOLK_JAVELINEER, { mf_band_condition,
-                                  {{ BAND_MERFOLK_JAVELINEER, {2, 5} }}}},
+                                  {{ BAND_MERFOLK_JAVELINEER, {2, 5}, true }}}},
     { MONS_MERFOLK_IMPALER, { mf_band_condition,
-                                  {{ BAND_MERFOLK_IMPALER, {2, 5} }}}},
+                                  {{ BAND_MERFOLK_IMPALER, {2, 5}, true }}}},
     { MONS_ELEPHANT,        { {}, {{ BAND_ELEPHANT, {2, 6} }}}},
     { MONS_REDBACK,         { {}, {{ BAND_REDBACK, {1, 5} }}}},
     { MONS_CULICIVORA,      { {}, {{ BAND_MIXED_SPIDERS, {1, 4} }}}},
     { MONS_ENTROPY_WEAVER,  { {}, {{ BAND_REDBACK, {1, 4} }}}},
     { MONS_PHARAOH_ANT,     { {}, {{ BAND_MIXED_SPIDERS, {1, 3} }}}},
-    { MONS_JOROGUMO,        { {}, {{ BAND_MIXED_SPIDERS, {1, 3} }}}},
-    { MONS_BROODMOTHER,     { {}, {{ BAND_MIXED_SPIDERS, {2, 4} }}}},
+    { MONS_JOROGUMO,        { {}, {{ BAND_MIXED_SPIDERS, {1, 3}, true }}}},
+    { MONS_BROODMOTHER,     { {}, {{ BAND_MIXED_SPIDERS, {2, 4}, true }}}},
     { MONS_SUN_MOTH,        { {}, {{ BAND_MIXED_SPIDERS, {1, 3} }}}},
     { MONS_RADROACH,        { {}, {{ BAND_MIXED_SPIDERS, {1, 3} }}}},
     { MONS_JUMPING_SPIDER,  { {2}, {{ BAND_JUMPING_SPIDER, {1, 6} }}}},
@@ -1892,15 +1892,15 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_VAULT_WARDEN,    { {}, {{ BAND_YAKTAURS, {2, 6}, true },
                                    { BAND_VAULT_WARDEN, {2, 5}, true }}}},
     { MONS_IRONBOUND_PRESERVER, { {}, {{ BAND_DEEP_TROLLS, {3, 6}, true }}}},
-    { MONS_TENGU_CONJURER,  { {2}, {{ BAND_TENGU, {1, 2}, true }}}},
-    { MONS_TENGU_WARRIOR,   { {2}, {{ BAND_TENGU, {1, 2}, true }}}},
+    { MONS_TENGU_CONJURER,  { {2}, {{ BAND_TENGU, {1, 2} }}}},
+    { MONS_TENGU_WARRIOR,   { {2}, {{ BAND_TENGU, {1, 2} }}}},
     { MONS_SOJOBO,          { {}, {{ BAND_SOJOBO, {2, 3}, true }}}},
     { MONS_SPRIGGAN_RIDER,  { {3}, {{ BAND_SPRIGGAN_RIDERS, {1, 3} }}}},
     { MONS_SPRIGGAN_BERSERKER, { {2}, {{ BAND_SPRIGGANS, {2, 4} }}}},
-    { MONS_SPRIGGAN_DEFENDER, { {}, {{ BAND_SPRIGGAN_ELITES, {2, 5}, true }}}},
+    { MONS_SPRIGGAN_DEFENDER, { {}, {{ BAND_SPRIGGAN_ELITES, {2, 5} }}}},
     { MONS_THE_ENCHANTRESS, { {}, {{ BAND_ENCHANTRESS, {6, 11}, true }}}},
     { MONS_SHAMBLING_MANGROVE, { {4}, {{ BAND_SPRIGGAN_RIDERS, {1, 2} }}}},
-    { MONS_VAMPIRE_KNIGHT,  { {4}, {{ BAND_PHANTASMAL_WARRIORS, {2, 3} }}}},
+    { MONS_VAMPIRE_KNIGHT,  { {4}, {{ BAND_PHANTASMAL_WARRIORS, {2, 3}, true }}}},
     { MONS_RAIJU,           { {}, {{ BAND_RAIJU, {2, 4} }}}},
     { MONS_SALAMANDER_MYSTIC, { {}, {{ BAND_SALAMANDERS, {2, 4} }}}},
     { MONS_SALAMANDER_TYRANT, { {0, 0, [](){ return !player_in_branch(BRANCH_GEHENNA); }}, {{ BAND_SALAMANDER_ELITES, {2, 5} }}}},
@@ -1948,14 +1948,14 @@ static const map<monster_type, band_set> bands_by_leader = {
         return player_in_branch(BRANCH_VAULTS);
     }},                            {{ BAND_UGLY_THINGS, {2, 4}, true }}}},
     { MONS_WENDIGO, { {}, {{ BAND_SIMULACRA, {2, 6} }}}},
-    { MONS_JOSEPHINA, { {}, {{ BAND_SIMULACRA, {4, 6} }}}},
+    { MONS_JOSEPHINA, { {}, {{ BAND_SIMULACRA, {4, 6}, true }}}},
     { MONS_BONE_DRAGON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_BONE_DRAGONS, {1, 2}} }}},
     { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
-                                   {{ BAND_SPECTRALS, {2, 6}} }}},
+                                   {{ BAND_SPECTRALS, {2, 6}, true} }}},
 
     // special-cased band-sizes
-    { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1} }}}},
+    { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
     { MONS_THRASHING_HORROR, { {}, {{ BAND_THRASHING_HORRORS, {0, 1} }}}},
 };
 
