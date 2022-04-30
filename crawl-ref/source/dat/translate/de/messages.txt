@@ -11900,9 +11900,6 @@ Wyrmbane glows as a worthy foe approaches.
 %s dissipates.
 
 %%%%
-"wavering "
-
-%%%%
 %s hits %s.
 %s trifft %s.
 %%%%
@@ -11915,11 +11912,8 @@ Die Kugeln kollidieren in einer blendenden Explosion!
 You hear a loud magical explosion!
 Ihr hört eine laute magische Explosion!
 %%%%
-Your %s reflects %s!
-Eure %s spiegelt %s!
-%%%%
-%s reflects %s off %s %s!
-%s spiegelt%s aus%s%s wider!
+%s's %s reflects %s!
+
 %%%%
 
 ##################

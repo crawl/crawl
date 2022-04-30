@@ -1412,6 +1412,9 @@ der Feuerkugel
 the orb of destruction's
 der Kugel der Zerstörung
 %%%%
+the wavering orb of destruction's
+der schwankenden Kugel der Zerstörung
+%%%%
 the fulminant prism's
 des fulminanten Prismas
 %%%%

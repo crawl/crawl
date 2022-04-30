@@ -1412,6 +1412,9 @@ Eure Feuerkugel
 your orb of destruction
 Eure Kugel der Zerstörung
 %%%%
+your wavering orb of destruction
+Eure schwankende Kugel der Zerstörung
+%%%%
 your fulminant prism
 Euer fulminantes Prisma
 %%%%

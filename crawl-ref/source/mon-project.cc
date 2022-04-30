@@ -329,7 +329,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.damage = iood_damage(pow, dist);
 
     if (dist < 3)
-        beam.name = "wavering " + beam.name;
+        beam.name = "wavering orb of destruction";
     if (dist < 2)
         beam.hit_verb = BHV_WEAKLY_HIT;
     beam.ex_size = 1;
@@ -538,8 +538,8 @@ move_again:
             {
                 if (shield && shield_reflects(*shield))
                 {
-                    mprf("Your %s reflects %s!",
-                         shield->name(DESC_PLAIN).c_str(),
+                    mprf("%s reflects %s!",
+                         shield->name(DESC_YOUR).c_str(),
                          mon.name(DESC_THE, true).c_str());
                     ident_reflector(shield);
                 }
@@ -555,11 +555,10 @@ move_again:
                 {
                     if (shield && shield_reflects(*shield))
                     {
-                        mprf("%s reflects %s off %s %s!",
+                        mprf("%s's %s reflects %s!",
                              victim->name(DESC_THE, true).c_str(),
-                             mon.name(DESC_THE, true).c_str(),
-                             victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                             shield->name(DESC_PLAIN).c_str());
+                             shield->name(DESC_PLAIN).c_str(),
+                             mon.name(DESC_THE, true).c_str());
                         ident_reflector(shield);
                     }
                     else

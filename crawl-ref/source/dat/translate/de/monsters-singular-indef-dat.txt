@@ -1412,6 +1412,9 @@ einer Feuerkugel
 {dat}an orb of destruction
 einer Kugel der Zerstörung
 %%%%
+{dat}a wavering orb of destruction
+einer schwankenden Kugel der Zerstörung
+%%%%
 {dat}a fulminant prism
 einem fulminanten Prisma
 %%%%
