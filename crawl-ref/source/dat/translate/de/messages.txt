@@ -11920,23 +11920,8 @@ Ihr hört eine laute magische Explosion!
 # mon-tentacle.cc
 ##################
 %%%%
-Error! failed to place monster in tentacle connect change
-Fehler! Monster konnte nicht in Tentakel-Verbindungsänderung platziert werden
-%%%%
-connector placement failed at %d %d
-Die Platzierung des Steckers ist bei%d%d fehlgeschlagen.
-%%%%
-link information corruption!!! tentacle in chain doesn't match mindex
-Link Information Corruption !!! Tentakel in Kette stimmt nicht mit Mindex überein
-%%%%
 The vine drags %s backwards!
 Die Rebe zieht%s nach hinten!
-%%%%
-tentacle connect failed! What the heck!  severed status %d
-Tentakelverbindung fehlgeschlagen! Was zum Teufel! Status%d abgetrennt
-%%%%
-pathed to %d %d from %d %d mid %d count %d
-Pfad zu%d%d von%d%d Mitte%d Anzahl%d
 %%%%
 The tentacle pulls %s backwards!
 Der Tentakel zieht%s nach hinten!
