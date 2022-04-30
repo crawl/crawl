@@ -11865,35 +11865,8 @@ Es konnte kein Pfad von (%d,%d) nach (%d,%d) gefunden werden.
 # mon-place.cc
 ##################
 %%%%
-"led by "
-
-%%%%
-"summoned by "
-
-%%%%
-"woven by "
-
-%%%%
-"animated by "
-
-%%%%
-"called from beyond by "
-
-%%%%
-"called by "
-
-%%%%
-"attached to "
-
-%%%%
-"created by "
-
-%%%%
-Warning: monster '%s' is not yet fully coded.
-Warnung: Monster '%s' ist noch nicht vollständig codiert.
-%%%%
 %s feels only hate for you!
-
+%s empfindet nur Hass für Euch!
 %%%%
 
 ##################
