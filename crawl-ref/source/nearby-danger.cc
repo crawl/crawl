@@ -148,6 +148,10 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                            // monsters capable of throwing or zapping wands.
                            || !mons_can_hurt_player(mon)));
 
+    // is this overkill? The main goal here is to disable or interrupt rests
+    // and waits when there is an inhibiting monster in view
+    is_safe = is_safe && !regeneration_is_inhibited(mon);
+
     if (consider_user_options)
     {
         bool moving = you_are_delayed()

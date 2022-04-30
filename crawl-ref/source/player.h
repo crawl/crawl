@@ -993,7 +993,7 @@ int player_wizardry(spell_type spell);
 int player_prot_life(bool allow_random = true, bool temp = true,
                      bool items = true);
 
-bool regeneration_is_inhibited();
+bool regeneration_is_inhibited(const monster *m=nullptr);
 int player_regen();
 int player_mp_regen();
 

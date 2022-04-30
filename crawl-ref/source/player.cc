@@ -1124,24 +1124,30 @@ static int _player_bonus_regen()
     return rr;
 }
 
+static bool _mons_inhibits_regen(const monster &m)
+{
+    return mons_is_threatening(m)
+                && !m.wont_attack()
+                && !m.neutral()
+                && !m.submerged();
+}
+
 /// Is the player's hp regeneration inhibited by nearby monsters?
-bool regeneration_is_inhibited()
+/// If the optional monster argument is provided, instead check whether that
+/// specific monster inhibits regeneration.
+bool regeneration_is_inhibited(const monster *m)
 {
     // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
         || you.duration[DUR_COLLAPSE]
         || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
-        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        {
-            if (mons_is_threatening(**mi)
-                && !mi->wont_attack()
-                && !mi->neutral()
-                && !mi->submerged())
-            {
-                return true;
-            }
-        }
+        if (m)
+            return _mons_inhibits_regen(*m);
+        else
+            for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+                if (_mons_inhibits_regen(**mi))
+                    return true;
     }
 
     return false;
