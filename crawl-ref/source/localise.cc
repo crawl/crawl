@@ -1422,6 +1422,36 @@ static string _localise_ghost_name(const string& context, const string& value)
     return make_stringf(fmt.c_str(), name.c_str());
 }
 
+static string _localise_monster_name(const string& context, const string& value)
+{
+    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
+
+    string result = _localise_ghost_name(context, value);
+    if (!result.empty())
+        return result;
+
+    // substring " the " could mean a name like "Boghold the orc warlord"
+    size_t pos = value.find(" the ");
+    if (pos == string::npos)
+        return "";
+
+    // make sure it's not "of the", which would indicate an item
+    if (value.rfind(" of", pos) == pos - 3)
+        return "";
+
+    // prefix, e.g. "Boghold "
+    string prefix = value.substr(0, pos+1);
+
+    // base name, e.g. "the orc warlord"
+    string base = value.substr(pos+1);
+
+    result = cxlate(context, base, false);
+    if (result.empty())
+        return "";
+
+    return prefix + result;
+}
+
 static string _localise_location(const string& context, const string& value)
 {
     if (starts_with(value, "on level "))
@@ -1528,8 +1558,8 @@ static string _localise_string(const string context, const string& value)
     if (result != value)
         return result;
 
-    // try treating as ghost name
-    result = _localise_ghost_name(context, value);
+    // try treating as monster name
+    result = _localise_monster_name(context, value);
     if (!result.empty())
         return result;
 
