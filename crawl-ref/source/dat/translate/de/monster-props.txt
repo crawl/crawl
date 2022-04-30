@@ -651,3 +651,12 @@ holding %s
 {acc}%s haltend
 %%%%
 
+#############################
+# Counted plural forms
+#############################
+
+%%%%
+%d ally target
+%d Ziele Verbündeter
+%%%%
+

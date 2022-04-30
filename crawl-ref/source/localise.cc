@@ -453,70 +453,48 @@ static void _resolve_escapes(string& str)
     _replace_all(str, "\\}", "}");
 }
 
-static string _localise_annotation(const string& s)
+static string _localise_annotation_element(const string& s)
 {
     if (s.empty())
         return "";
+
+    DEBUG("s='%s'", s.c_str());
 
     // try translating whole thing
     string result = xlate(s, false);
     if (!result.empty())
         return result;
 
-    // try without the leading space
-    if (s[0] == ' ')
-    {
-        result = xlate(s.substr(1), false);
-        if (!result.empty())
-            return string(" ") + result;
-    }
-
-    // separate into tokens
-    vector<string> tokens;
     string rest = s;
+    string prefix, suffix;
 
-    // open brackets
-    size_t pos = s.find_first_of("([{");
-    if (pos != string::npos)
-    {
-        tokens.push_back(s.substr(0, pos+1));
-        rest = s.substr(pos+1);
-    }
+    size_t pos = rest.find_first_not_of(" ");
+    if (pos == string::npos)
+        return s;
+    prefix = rest.substr(0, pos);
+    rest = rest.substr(pos);
 
-    // close brackets
-    string suffix;
-    pos = rest.find_last_of(")]}");
-    if (pos != string::npos)
-    {
-        suffix = rest.substr(pos);
-        rest = rest.substr(0, pos);
-    }
+    pos = rest.find_last_not_of(" ");
+    if (pos == string::npos)
+        return s;
+    suffix = rest.substr(pos+1);
+    rest = rest.substr(0, pos+1);
 
-    while ((pos = rest.find(',')) != string::npos)
-    {
-        tokens.push_back(rest.substr(0, pos+1));
-        rest = rest.substr(pos+1);
-    }
+    if (!prefix.empty() || !suffix.empty())
+        return prefix + _localise_annotation_element(rest) + suffix;
 
-    while ((pos = rest.find(' ')) != string::npos)
-    {
-        if (pos > 0)
-            tokens.push_back(rest.substr(0, pos));
-        tokens.push_back(rest.substr(pos, 1));
-        rest = rest.substr(pos+1);
-    }
+    if (isdigit(s[0]))
+        return _localise_counted_string("", s);
 
-    if (!rest.empty())
-        tokens.push_back(rest);
-
-    if (!suffix.empty())
-        tokens.push_back(suffix);
-
-    // now build the result from the individual tokens
-    result = "";
+    vector<string> tokens = split_string(" ", s, false, true);
     for (size_t idx = 0; idx < tokens.size(); idx++)
     {
+        if (idx > 0)
+            result += " ";
+
         string tok = tokens[idx];
+        if (tok.empty())
+            continue;
 
         // check for alphas
         int last_alpha_pos = -1;
@@ -537,17 +515,75 @@ static string _localise_annotation(const string& s)
 
         string ltok = xlate(tok, false);
         if (!ltok.empty())
+        {
             result += ltok;
-        else if (last_alpha_pos == (int)tok.length())
-            result += tok;
-        else
+        }
+        else if (last_alpha_pos < (int)tok.length() - 1)
         {
             string tok_suffix = tok.substr(last_alpha_pos+1);
             tok = tok.substr(0, last_alpha_pos+1);
             result += xlate(tok, true) + tok_suffix;
-            }
         }
+        else
+        {
+            result += tok;
+        }
+    }
 
+    return result;
+
+}
+
+static string _localise_annotation(const string& s)
+{
+    if (s.empty())
+        return "";
+
+    DEBUG("s='%s'", s.c_str());
+
+    // try translating whole thing
+    string result = xlate(s, false);
+    if (!result.empty())
+        return result;
+
+    // try without the leading space
+    if (s[0] == ' ')
+    {
+        result = xlate(s.substr(1), false);
+        if (!result.empty())
+            return string(" ") + result;
+    }
+
+    string rest = s;
+    string prefix, suffix;
+
+    size_t pos = rest.find_first_not_of("([{ ");
+    if (pos == string::npos)
+        return s;
+    prefix = rest.substr(0, pos);
+    rest = rest.substr(pos);
+
+    pos = rest.find_last_not_of(")]} ");
+    if (pos == string::npos)
+        return s;
+    suffix = rest.substr(pos+1);
+    rest = rest.substr(0, pos+1);
+
+    if (!prefix.empty() || !suffix.empty())
+        return prefix + _localise_annotation(rest) + suffix;
+
+    vector<string> tokens = split_string(",", s, false, true);
+
+    bool first = true;
+    for (string token: tokens)
+    {
+        if (first)
+            first = false;
+        else
+            result += ",";
+        result += _localise_annotation_element(token);
+    }
+    
     return result;
 }
 
@@ -1335,6 +1371,9 @@ static string _localise_multiple_sentences(const string& context, const string& 
 static string _localise_counted_string(const string& context, const string& singular,
                                        const string& plural, const int count)
 {
+    DEBUG("context='%s', singular='%s', plural='%s', count=%d", \
+          context.c_str(), singular.c_str(), plural.c_str(), count);
+
     string result;
     result = cnxlate(context, singular, plural, count);
     result = replace_first(result, "%d", to_string(count));
@@ -1353,8 +1392,13 @@ static string _localise_counted_string(const string& context, const string& valu
 
     int count;
     string plural = _strip_count(value, count);
-    string singular = article_a(singularise(plural));
     plural = "%d " + plural;
+
+    string singular;
+    if (plural == "%d gold" || plural == "%d Gold")
+        singular = plural; // "1 gold", not "a gold"
+    else
+        singular = article_a(singularise(plural));
 
     return _localise_counted_string(context, singular, plural, count);
 }

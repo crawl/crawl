@@ -197,9 +197,6 @@ Max HP drain
 Cursed item
 
 %%%%
-%d Gold
-
-%%%%
 Free
 
 %%%%

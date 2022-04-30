@@ -222,3 +222,15 @@ a flying bit
 ein fliegendes Stück
 %%%%
 
+#################################
+# Cost
+#################################
+%%%%
+%d gold
+%d Gold
+%%%%
+# capitalised form used on abilities menu
+%d Gold
+%d Gold
+%%%%
+
