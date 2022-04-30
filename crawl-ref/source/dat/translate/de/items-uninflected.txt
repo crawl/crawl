@@ -292,8 +292,8 @@ dunkle
 %%%%
 
 #################################
-# Uncounted plural forms
-# (used only in known items menu)
+# Uncounted plural forms that are only used in known items menu
+# (Some others are used elsewhere and do need to be inflected)
 #################################
 
 %%%%
@@ -334,35 +334,6 @@ Stecken des Todes
 %%%%
 staves of poison
 Stecken des Giftes
-%%%%
-
-%%%%
-arrows
-Pfeile
-%%%%
-bolts
-Bolzen
-%%%%
-darts
-Wurfpfeile
-%%%%
-stones
-Steine
-%%%%
-large rocks
-Felsblöcke
-%%%%
-sling bullets
-Schleuderkugeln
-%%%%
-javelins
-Wurfspeere
-%%%%
-throwing nets
-Wurfnetze
-%%%%
-boomerangs
-Bumerangs
 %%%%
 
 %%%%
@@ -468,144 +439,6 @@ Zauberstäbe der Säure
 %%%%
 wands of mindburst
 Zauberstäbe des Gehirnschlags
-%%%%
-
-%%%%
-scrolls of acquirement
-Schriftrollen des Erwerbs
-%%%%
-scrolls of amnesia
-Schriftrollen der Amnesie
-%%%%
-scrolls of blinking
-Schriftrollen des Blinzelns
-%%%%
-scrolls of brand weapon
-Schriftrollen der Waffenmark
-%%%%
-scrolls of enchant armour
-Schriftrollen der Rüstungsverzauberung
-%%%%
-scrolls of enchant weapon
-Schriftrollen der Waffenverzauberung
-%%%%
-scrolls of fear
-Schriftrollen der Angst
-%%%%
-scrolls of fog
-Schriftrollen des Nebels
-%%%%
-scrolls of holy word
-Schriftrollen des heiligen Wortes
-%%%%
-scrolls of identify
-Schriftrollen der Identifizierung
-%%%%
-scrolls of immolation
-Schriftrollen der Verbrennug
-%%%%
-scrolls of magic mapping
-Schriftrollen des magischen Kartierens
-%%%%
-scrolls of noise
-Schriftrollen des Lärms
-%%%%
-scrolls of remove curse
-Schriftrollen des Segnens
-%%%%
-scrolls of silence
-Schriftrollen der Stille
-%%%%
-scrolls of summoning
-Schriftrollen des Herbeirufs
-%%%%
-scrolls of teleportation
-Schriftrollen der Teleportation
-%%%%
-scrolls of torment
-Schriftrollen der Qual
-%%%%
-scrolls of vulnerability
-Schriftrollen der Vulnerabilität
-%%%%
-
-%%%%
-boxes of beasts
-Kisten der Bestien
-%%%%
-lightning rods
-Blitzstangen
-%%%%
-phials of floods
-Phiolen der Fluten
-%%%%
-phantom mirrors
-Phantomspiegel
-%%%%
-figurines of a ziggurat
-Figuren einer Zikkurat
-%%%%
-condenser vanes
-Kondensationsfahnen
-%%%%
-pieces from Xom's chessboard
-Figuren von Xoms Schachbrett
-%%%%
-tins of tremorstones
-Dosen Bebensteine
-%%%%
-
-%%%%
-potions of ambrosia
-Tränke der Ambrosia
-%%%%
-potions of attraction
-Tränke der Anziehung
-%%%%
-potions of berserk rage
-Tränke der Berserker-Wut
-%%%%
-potions of brilliance
-Tränke der Brillanz
-%%%%
-potions of cancellation
-Tränke der Aufhebung
-%%%%
-potions of curing
-Tränke des Gegenmittels
-%%%%
-potions of degeneration
-Tränke der Degeneration
-%%%%
-potions of experience
-Tränke der Erfahrung
-%%%%
-potions of flight
-Tränke des Fliegens
-%%%%
-potions of haste
-Tränke der Geschwindigkeit
-%%%%
-potions of heal wounds
-Heiltränke
-%%%%
-potions of invisibility
-Tränke der Unsichtbarkeit
-%%%%
-potions of lignification
-Tränke der Verholzung
-%%%%
-potions of magic
-Tränke der Magie
-%%%%
-potions of might
-Tränke der Macht
-%%%%
-potions of mutation
-Tränke der Mutation
-%%%%
-potions of resistance
-Tränke des Widerstands
 %%%%
 
 %%%%

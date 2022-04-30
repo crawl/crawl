@@ -312,6 +312,9 @@ def decline(english, german, determiner, target_case):
             logging.info("Unknown gender for: " + german)
             gender = Gender.MASCULINE
 
+    if gender == Gender.PLURAL and determiner == "":
+        german = german.replace('%d ', '')
+
     # split german up into individual words
     words = german.split()
 
@@ -371,6 +374,7 @@ def decline_file(infile_name, target_case, determiner, english_possessive = Fals
         outfile_name = outfile_name.replace("-def", "-your")
     elif determiner == "":
         outfile_name = outfile_name.replace("-def", "-plain")
+        outfile_name = outfile_name.replace("-counted", "-plain")
     
     print("Reading from {} and writing to {}".format(infile_name, outfile_name))
 
@@ -477,6 +481,10 @@ if len(sys.argv) != 2:
 infile_name = sys.argv[1];
 
 if 'plural' in infile_name:
+    if 'items' in infile_name:
+        decline_file(infile_name, Case.NOMINATIVE, "")
+        decline_file(infile_name, Case.DATIVE, "")
+
     decline_file(infile_name, Case.DATIVE, "%d")
 elif 'unique' in infile_name:
     decline_file(infile_name, Case.NOMINATIVE, "")
