@@ -8490,7 +8490,7 @@ MONS:   skeleton / zombie, spectral thing / simulacrum, necrophage, phantom
 MONS:   wraith
 : if you.depth() < 5 then
 KMONS:  D = natasha, phantom
-SUBST:  2 = 1112
+SUBST:  3 = 2, 2 = 1112
 : elseif you.depth() < 8 then
 KMONS:  D = wight band w:30 / wraith
 SUBST:  3 = 34
