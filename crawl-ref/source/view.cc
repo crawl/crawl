@@ -508,9 +508,7 @@ static void _maybe_trigger_shoutitis(const vector<monster*> monsters)
 
     for (const monster* mon : monsters)
     {
-        if (!mons_is_tentacle_or_tentacle_segment(mon->type)
-            && !mons_is_conjured(mon->type)
-            && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100))
+        if (should_shout_at_mons(*mon))
         {
             yell(mon);
             return;

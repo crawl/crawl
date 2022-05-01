@@ -3308,6 +3308,14 @@ bool mons_self_destructs(const monster& m)
     return mons_blows_up(m) || mons_destroyed_on_impact(m);
 }
 
+/// Does this monster trigger your shoutitis? (Random.)
+bool should_shout_at_mons(const monster &m)
+{
+    return !mons_is_tentacle_or_tentacle_segment(m.type)
+        && !mons_is_conjured(m.type)
+        && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100);
+}
+
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
     return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL;

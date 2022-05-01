@@ -277,6 +277,8 @@ bool mons_self_destructs(const monster& m);
 bool mons_blows_up(const monster& m);
 bool mons_destroyed_on_impact(const monster& m);
 
+bool should_shout_at_mons(const monster &m);
+
 mon_intel_type mons_class_intel(monster_type mc);
 mon_intel_type mons_intel(const monster& mon);
 

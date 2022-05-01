@@ -1128,11 +1128,8 @@ static inline bool _monster_warning(activity_interrupt ai,
                 }
             }
         }
-        if (you.has_mutation(MUT_SCREAM)
-            && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100))
-        {
+        if (should_shout_at_mons(*mon))
             yell(mon);
-        }
         mons_set_just_seen(mon);
     }
 
