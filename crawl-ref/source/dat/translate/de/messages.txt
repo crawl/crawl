@@ -9276,9 +9276,6 @@ Couldn't open %s for writing!
 [none]
 [nichts]
 %%%%
-macros
-Macros
-%%%%
 default
 Standard
 %%%%
@@ -9335,6 +9332,9 @@ Ebeneplan-Tastenplan
 %%%%
 confirmation keymap
 Bestätigungstastenplan
+%%%%
+macros
+Macros
 %%%%
 regular keymaps
 Standardtastenpläne
@@ -23981,9 +23981,6 @@ explosion
 ##################
 # viewgeom.cc
 ##################
-%%%%
--Wstrict-overflow
-
 %%%%
 Terminal too small (%d,%d); need at least (%d,%d)
 
