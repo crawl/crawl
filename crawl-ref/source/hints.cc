@@ -1322,7 +1322,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "are downstairs. You can enter the next (deeper) "
                 "level by following them down (<w>%</w>). To return to "
                 "this level, press <w>%</w> while standing on the "
-                "upstairs.";
+                "upstairs. The first time you enter a new level, you get "
+                "a free action; after that, monsters get to move first.";
         cmd.push_back(CMD_GO_DOWNSTAIRS);
         cmd.push_back(CMD_GO_UPSTAIRS);
 
