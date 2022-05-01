@@ -485,11 +485,11 @@ der Geisterkrabbe
 {gen}the apocalypse crab
 der Apokalypse-Krabbe
 %%%%
-{gen}the ugly thing
-des hässlichen Dings
+{gen}the %sugly thing
+des {adj-en}%shässlichen Dings
 %%%%
-{gen}the very ugly thing
-des sehr hässlichen Dings
+{gen}the %svery ugly thing
+des {adj-en}%ssehr hässlichen Dings
 %%%%
 {gen}the fire vortex
 des Feuerwirbels

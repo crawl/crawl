@@ -485,11 +485,11 @@ Eurer Geisterkrabbe
 {gen}your apocalypse crab
 Eurer Apokalypse-Krabbe
 %%%%
-{gen}your ugly thing
-Eures hässlichen Dings
+{gen}your %sugly thing
+Eures {adj-en}%shässlichen Dings
 %%%%
-{gen}your very ugly thing
-Eures sehr hässlichen Dings
+{gen}your %svery ugly thing
+Eures {adj-en}%ssehr hässlichen Dings
 %%%%
 {gen}your fire vortex
 Eures Feuerwirbels

@@ -485,11 +485,11 @@ Eurer Geisterkrabbe
 your apocalypse crab's
 Eurer Apokalypse-Krabbe
 %%%%
-your ugly thing's
-Eures hässlichen Dings
+your %sugly thing's
+Eures {adj-en}%shässlichen Dings
 %%%%
-your very ugly thing's
-Eures sehr hässlichen Dings
+your %svery ugly thing's
+Eures {adj-en}%ssehr hässlichen Dings
 %%%%
 your fire vortex's
 Eures Feuerwirbels

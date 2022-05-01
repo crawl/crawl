@@ -174,7 +174,8 @@ LAZY_FILES = [
 IGNORE_STRINGS = [
     'the', 'the ', ' the ',
     'a', 'a ', 'an', 'an ',
-    'you', 'you '
+    'you', 'you ',
+    'bug', 'null'
 ]
 
 files = []
@@ -545,7 +546,7 @@ for filename in files:
             continue
 
         # ignore variable names
-        if re.match(r'^(\\n|\s)*@[A-Za-z0-9_]+@(\\n|\s)*$', string):
+        if re.match(r'^(\\n|\s)*@[A-Za-z0-9_]+@?(\\n|\s)*$', string):
             continue
 
         # ignore identifiers
@@ -568,7 +569,8 @@ for filename in files:
             continue
 
         # ignore buggy stuff
-        if 'buggy' in string or 'Buggy' in string or 'INVALID' in string:
+        if 'INVALID' in string or re.search(r'bugg(il)?y', string, re.I) or \
+           re.search(r'bugginess', string, re.I):
             continue
 
         filtered_strings.append(string)

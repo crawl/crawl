@@ -320,11 +320,11 @@
 {dat}%d alligators
 %d Alligatoren
 %%%%
-{dat}%d ugly things
-%d hässlichen Dingen
+{dat}%d %sugly things
+%d {adj-en}%shässlichen Dingen
 %%%%
-{dat}%d very ugly things
-%d sehr hässlichen Dingen
+{dat}%d %svery ugly things
+%d {adj-en}%ssehr hässlichen Dingen
 %%%%
 {dat}%d fire vortices
 %d Feuerwirbeln

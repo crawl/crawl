@@ -485,11 +485,11 @@
 %d apocalypse crabs
 %d Apokalypse-Krabben
 %%%%
-%d ugly things
-%d hässliche Dinge
+%d %sugly things
+%d {adj-e}%shässliche Dinge
 %%%%
-%d very ugly things
-%d sehr hässliche Dinge
+%d %svery ugly things
+%d {adj-e}%ssehr hässliche Dinge
 %%%%
 %d fire vortices
 %d Feuerwirbel

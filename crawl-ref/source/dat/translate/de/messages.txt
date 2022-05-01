@@ -1333,9 +1333,6 @@ body armour
 non-descript
 
 %%%%
-of Bugginess
-
-%%%%
 exec axe
 
 %%%%
@@ -4397,9 +4394,6 @@ You cannot be affected by this spell right now. %s
 Chance to defeat your Will: %d%%%s
 
 %%%%
-"pale "
-
-%%%%
 "It has %sscales. "
 
 %%%%
@@ -4641,9 +4635,6 @@ very quickly
 
 %%%%
 quickly
-
-%%%%
-buggily
 
 %%%%
 about %d%% to evade %s
@@ -6424,9 +6415,6 @@ Apostates
 
 %%%%
 Anathema
-
-%%%%
-Bugginess
 
 %%%%
 Finish your current sermon first, please.
@@ -11943,91 +11931,25 @@ Tentakel platzen aus dem Körper der Sternbrut!
 # mon-util.cc
 ##################
 %%%%
-natural
+%s %s and vanishes in a puff of smoke!
 
 %%%%
-undead
+%s %s and vanishes!
 
 %%%%
-nonliving
+%s vanishes in a puff of smoke!
 
 %%%%
-evil
+%s vanishes!
 
 %%%%
-bug
+%s are a mimic!
 
 %%%%
-" in a puff of smoke"
-
-%%%%
-The %s mimic %svanishes%s!
-Die%s-Nachahmung%svanishes%s!
-%%%%
-%s %s a mimic!
-%s %s a mimic!
-%%%%
-is
+%s is a mimic!
 
 %%%%
 Lernaean
-
-%%%%
-hit
-
-%%%%
-bite
-
-%%%%
-release spores at
-
-%%%%
-touch
-
-%%%%
-engulf
-
-%%%%
-peck
-
-%%%%
-headbutt
-
-%%%%
-punch
-
-%%%%
-kick
-
-%%%%
-tentacle-slap
-
-%%%%
-tail-slap
-
-%%%%
-gore
-
-%%%%
-constrict
-
-%%%%
-trample
-
-%%%%
-trunk-slap
-
-%%%%
-pounce on
-
-%%%%
-hit, bite, peck, or gore
-
-%%%%
-hit or gore
-
-%%%%
-" on"
 
 %%%%
 pale
@@ -12045,33 +11967,6 @@ infernal
 torturous
 
 %%%%
-random monster
-
-%%%%
-random draconian
-
-%%%%
-random base draconian
-
-%%%%
-random nonbase draconian
-
-%%%%
-random demonspawn
-
-%%%%
-random base demonspawn
-
-%%%%
-random nonbase demonspawn
-
-%%%%
-wandering monster
-
-%%%%
-invalid monster_type %d
-
-%%%%
 Geryon discards his horn.
 
 %%%%
@@ -12085,18 +11980,6 @@ your god is
 
 %%%%
 your god
-
-%%%%
-"insult "
-
-%%%%
-"insult general "
-
-%%%%
-@foe
-
-%%%%
-@Foe
 
 %%%%
 your
@@ -12165,130 +12048,10 @@ sneers
 squeals
 
 %%%%
-buggily says
-
-%%%%
 breathes
 
 %%%%
 whispers
-
-%%%%
-humanoid
-
-%%%%
-winged humanoid
-
-%%%%
-tailed humanoid
-
-%%%%
-winged tailed humanoid
-
-%%%%
-quadruped
-
-%%%%
-tailless quadruped
-
-%%%%
-winged quadruped
-
-%%%%
-bird
-
-%%%%
-fish
-
-%%%%
-insect
-
-%%%%
-winged insect
-
-%%%%
-arachnid
-
-%%%%
-centipede
-
-%%%%
-snail
-
-%%%%
-blob
-
-%%%%
-Monster %d has no name
-
-%%%%
-%s has WL %d > 200
-
-%%%%
-%s has rPois++
-
-%%%%
-%s has rElec++
-
-%%%%
-%s has 0 HD: %d
-
-%%%%
-%s has <= 0 HP: %d
-
-%%%%
-%s has an empty glyph
-
-%%%%
-%s has negative AC
-
-%%%%
-%s has negative EV
-
-%%%%
-%s has negative xp mod
-
-%%%%
-%s has 0 speed
-
-%%%%
-%s has too many genders
-
-%%%%
-%s has no defined shape
-
-%%%%
-%s isn't a species but has a corpse tile
-
-%%%%
-%s has a corpse tile & no corpse
-
-%%%%
-%s has a corpse but no corpse tile
-
-%%%%
-no spells
-
-%%%%
-Book #%d is unused (%s)
-
-%%%%
-Empty book %s
-
-%%%%
-Book %s contains invalid spell %d
-
-%%%%
-Spellbook %s has spell %s at freq %d (greater than max freq %d)
-
-%%%%
-Spellbook %s has spell %s in multiple categories (%d and %d)
-
-%%%%
-Spellbook %s has spell %s marked MON_SPELL_NOISY redundantly
-
-%%%%
-Spellbook %s has spell %s with no category
 
 %%%%
 %s is %s.
@@ -12297,8 +12060,8 @@ Spellbook %s has spell %s with no category
 %s is hit by a flying piece of %s!
 %s wird von einem fliegenden Stück {gen}%s getroffen!
 %%%%
-%s regains %s memory of %s.
-%s gewinnt%s Speicher von%s zurück.
+%s regains the memory of %s.
+%s erinnert sich wieder an {acc}%s.
 %%%%
 
 ##################
@@ -15319,6 +15082,9 @@ You feel less vital.
 You feel more vital.
 
 %%%%
+engulf
+
+%%%%
 Your melee attacks may engulf your foes in ooze.
 
 %%%%
@@ -17620,6 +17386,12 @@ Leer
 , <w>%</w> - select action, <w>%</w>/<w>%</w> - cycle
 
 %%%%
+bite
+
+%%%%
+touch
+
+%%%%
 release spores
 
 %%%%
@@ -17627,6 +17399,12 @@ slash
 
 %%%%
 smack
+
+%%%%
+hit
+
+%%%%
+punch
 
 %%%%
 shoot
@@ -18982,9 +18760,6 @@ Gene Jian Bin
 
 %%%%
 Cai Fang
-
-%%%%
-Bug
 
 %%%%
 FAKE GOD MONSTER
@@ -24149,6 +23924,9 @@ progress-bar
 There
 
 %%%%
+is
+
+%%%%
 " a foul "
 
 %%%%
@@ -25269,7 +25047,7 @@ Can't repeat re-activating wizard mode.
 
 %%%%
 WARNING: ABOUT TO ENTER WIZARD MODE!
-WARNUNG: ÜBER DEN WIZARD-MODUS!
+WARNUNG: EINTRITT IN DEN WIZARD-MODUS!
 %%%%
 If you continue, your game will not be scored!
 Wenn Ihr weitermacht, wird Euer Spiel nicht gewertet!
@@ -25287,7 +25065,7 @@ You cannot repeat that wizard command.
 
 %%%%
 WARNING: ABOUT TO ENTER EXPLORE MODE!
-WARNUNG: ÜBER DEN EXPLORE-MODUS!
+WARNUNG: EINTRITT IN DEN ERKUNDUNGSMODUS!
 %%%%
 Do you really want to enter explore mode?
 

@@ -485,11 +485,11 @@ Geisterkrabbe
 apocalypse crab
 Apokalypse-Krabbe
 %%%%
-ugly thing
-hässliches Ding
+%sugly thing
+{adj-es}%shässliches Ding
 %%%%
-very ugly thing
-sehr hässliches Ding
+%svery ugly thing
+{adj-es}%ssehr hässliches Ding
 %%%%
 fire vortex
 Feuerwirbel

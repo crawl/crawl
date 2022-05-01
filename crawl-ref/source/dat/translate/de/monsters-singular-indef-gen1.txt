@@ -485,11 +485,11 @@ einer Geisterkrabbe
 an apocalypse crab's
 einer Apokalypse-Krabbe
 %%%%
-an ugly thing's
-eines hässlichen Dings
+a %sugly thing's
+eines {adj-en}%shässlichen Dings
 %%%%
-a very ugly thing's
-eines sehr hässlichen Dings
+a %svery ugly thing's
+eines {adj-en}%ssehr hässlichen Dings
 %%%%
 a fire vortex's
 eines Feuerwirbels

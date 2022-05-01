@@ -180,10 +180,11 @@
 %%%%
 
 ################################
-# potions
+# colours
 ################################
 
-# potion colours
+# used for potions, draconians, (very) ugly things
+
 %%%%
 "{adj-es}blue "
 "blaues "
@@ -245,6 +246,13 @@
 "{adj-es}sapphire "
 "saphirblaues "
 %%%%
+"{adj-es}pale "
+"blaßes "
+%%%%
+
+################################
+# potions
+################################
 
 # potion qualifiers (optionally added in front of colour)
 %%%%

@@ -650,6 +650,7 @@ mon_holy_type holiness_by_name(string name)
 
 const char * holiness_name(mon_holy_type_flags which_holiness)
 {
+    // noloc section start (only used in LUA)
     switch (which_holiness)
     {
     case MH_HOLY:
@@ -669,6 +670,7 @@ const char * holiness_name(mon_holy_type_flags which_holiness)
     default:
         return "bug";
     }
+    // noloc section end
 }
 
 string holiness_description(mon_holy_type holiness)
@@ -1121,13 +1123,28 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
     if (!you.see_cell(pos))
         return;
 
-    const char* const smoke_str = can_place_smoke ? " in a puff of smoke" : "";
-
+    const string mimic = "the " + name + " mimic"; // noloc
     const bool can_cackle = !silenced(pos) && !silenced(you.pos());
-    const string cackle = can_cackle ? getSpeakString("_laughs_") + " and " : "";
+    const string cackle = can_cackle ? getSpeakString("_laughs_") : "";
 
-    mprf("The %s mimic %svanishes%s!",
-         name.c_str(), cackle.c_str(), smoke_str);
+    if (can_place_smoke && can_cackle)
+    {
+        mprf("%s %s and vanishes in a puff of smoke!",
+             mimic.c_str(), cackle.c_str());
+    }
+    else if (can_cackle)
+    {
+        mprf("%s %s and vanishes!", mimic.c_str(), cackle.c_str());
+    }
+    else if (can_place_smoke)
+    {
+        mprf("%s vanishes in a puff of smoke!", mimic.c_str());
+    }
+    else
+    {
+        mprf("%s vanishes!", mimic.c_str());
+    }
+
     interrupt_activity(activity_interrupt::mimic);
 }
 
@@ -1182,7 +1199,12 @@ void discover_mimic(const coord_def& pos)
 #endif
 
     if (you.see_cell(pos))
-        mprf("%s %s a mimic!", name.c_str(), plural ? "are" : "is");
+    {
+        if (plural)
+            mprf("%s are a mimic!", name.c_str());
+        else
+            mprf("%s is a mimic!", name.c_str());
+    }
 
     const string shortname = feature_mimic ? feat_type_name(feat)
                                            : item->name(DESC_BASENAME);
@@ -2105,6 +2127,7 @@ static int _mons_damage(monster_type mc, int rt)
  */
 string mon_attack_name(attack_type attack, bool with_object)
 {
+    // noloc section start (we do localise these, but not as standalone verbs like this)
     static const char *attack_types[] =
     {
         "hit",         // including weapon attacks
@@ -2154,6 +2177,7 @@ string mon_attack_name(attack_type attack, bool with_object)
         return replace_all(replace_all(attack_types[verb_index], " at", ""),
                                                                  " on", "");
     }
+    // noloc section end
 }
 
 /**
@@ -3143,6 +3167,7 @@ monster_type demonspawn_base_by_name(const string &name)
 
 string mons_type_name(monster_type mc, description_level_type desc)
 {
+    // noloc section start
     string result;
 
     if (!mons_is_unique(mc))
@@ -3205,6 +3230,7 @@ string mons_type_name(monster_type mc, description_level_type desc)
     }
 
     return result;
+    // noloc section end
 }
 
 static string _get_proper_monster_name(const monster& mon)
@@ -4287,6 +4313,7 @@ static string _replace_god_name(god_type god, bool need_verb = false)
 
 static string _get_species_insult(const string &species, const string &type)
 {
+    // noloc section start (keys)
     string insult;
     string lookup;
 
@@ -4310,6 +4337,7 @@ static string _get_species_insult(const string &species, const string &type)
     }
 
     return insult;
+    // noloc section end
 }
 
 // From should be of the form "prefix @tag@". Replaces all substrings
@@ -4770,6 +4798,7 @@ string get_mon_shape_str(const mon_body_shape shape)
 {
     ASSERT_RANGE(shape, MON_SHAPE_HUMANOID, MON_SHAPE_MISC + 1);
 
+    // noloc section start (db lookup keys)
     static const char *shape_names[] =
     {
         "bug", "humanoid", "winged humanoid", "tailed humanoid",
@@ -4779,6 +4808,7 @@ string get_mon_shape_str(const mon_body_shape shape)
         "arachnid", "centipede", "snail", "plant", "fungus", "orb",
         "blob", "misc"
     };
+    // noloc section end
 
     COMPILE_CHECK(ARRAYSZ(shape_names) == MON_SHAPE_MISC + 1);
     return shape_names[shape];
@@ -4939,6 +4969,8 @@ bool mons_foe_is_marked(const monster& mon)
     else
         return false;
 }
+
+// noloc section start (debug stuff)
 
 void debug_mondata()
 {
@@ -5141,6 +5173,8 @@ void debug_monspells()
 
     dump_test_fails(fails, "mon-spell");
 }
+
+// noloc section end
 
 // Used when clearing level data, to ensure any additional reset quirks
 // are handled properly.
@@ -5676,9 +5710,8 @@ void set_ancestor_spells(monster &ancestor, bool notify)
         if (find(old_spells.begin(), old_spells.end(), spellslot.spell)
             == old_spells.end())
         {
-            mprf("%s regains %s memory of %s.",
+            mprf("%s regains the memory of %s.",
                  ancestor.name(DESC_YOUR, true).c_str(),
-                 ancestor.pronoun(PRONOUN_POSSESSIVE, true).c_str(),
                  spell_title(spellslot.spell));
         }
     }

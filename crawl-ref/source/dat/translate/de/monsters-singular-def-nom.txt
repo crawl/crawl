@@ -485,11 +485,11 @@ die Geisterkrabbe
 the apocalypse crab
 die Apokalypse-Krabbe
 %%%%
-the ugly thing
-das hässliche Ding
+the %sugly thing
+das {adj-e}%shässliche Ding
 %%%%
-the very ugly thing
-das sehr hässliche Ding
+the %svery ugly thing
+das {adj-e}%ssehr hässliche Ding
 %%%%
 the fire vortex
 der Feuerwirbel
