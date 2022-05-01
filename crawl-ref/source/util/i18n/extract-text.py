@@ -225,6 +225,7 @@ for filename in files:
 
         # join split lines and remove comments
         ignoring = False
+        in_map = False
         for line in lines_raw:
 
             # ignore strings explicitly marked as not to be extracted
@@ -254,6 +255,17 @@ for filename in files:
                 if re.search(r'"[A-Z][a-zA-Z]"', line):
                     lines.append(line)
                 continue
+
+            # ignore keys (but not values) in map initialisation
+            if re.search(r'map<string,[^>]+> +[A-Za-z0-9_]+\s+=', line):
+                in_map = True
+            if in_map:
+                # surround with @'s so it looks like a param name (later code will skip it)
+                line = re.sub(r'\{\s*"([^"]+)"\s*,', r'{"@\1@",', line)
+                #sys.stderr.write("NERFED MAP KEY: " + line + "\n")
+            # NOTE: map end could be same line as map start
+            if re.search(r'}\s*;', line):
+                in_map = False
 
             if len(lines) > 0:        
                 last = lines[-1]

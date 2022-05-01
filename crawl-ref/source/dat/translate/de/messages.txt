@@ -19734,18 +19734,6 @@ Teletunneler
 Corpseflower
 
 %%%%
-Adj
-
-%%%%
-Genus
-
-%%%%
-genus
-
-%%%%
-Weight
-
-%%%%
 " %c Level %.*f%s %s"
 
 %%%%

@@ -263,10 +263,10 @@ string god_title(god_type which_god, species_type which_species, int piety,
 
     const map<string, string> replacements =
     {
-        { "Adj", species::name(which_species, species::SPNAME_ADJ) }, // noloc
-        { "Genus", species::name(which_species, species::SPNAME_GENUS) }, // noloc
-        { "Walking", species::walking_verb(which_species) }, // noloc
-        { "Walker", species::walker_noun(which_species) }, // noloc
+        { "Adj", species::name(which_species, species::SPNAME_ADJ) },
+        { "Genus", species::name(which_species, species::SPNAME_GENUS) },
+        { "Walking", species::walking_verb(which_species) },
+        { "Walker", species::walker_noun(which_species) },
     };
 
     return localise(title, replacements);
