@@ -869,6 +869,8 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
                     [] (const item_def & item) { return item.name(DESC_A); },
                     " and ", ", ", bind(item_needs_autopickup, placeholders::_1,
                                         false));
+            // XX [A] doesn't make sense for items being picked up only because
+            // of an =g inscription
             const string prompt =
                 make_stringf("Could not pick up %s here; ([A]lways) ignore %s?",
                              wishlist.c_str(),

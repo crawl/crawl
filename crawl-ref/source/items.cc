@@ -2212,6 +2212,10 @@ void mark_items_non_pickup_at(const coord_def &pos)
     {
         env.item[item].flags |= ISFLAG_DROPPED;
         env.item[item].flags &= ~ISFLAG_THROWN;
+        // remove any force-pickup autoinscription, otherwise the full
+        // inventory pickup check gets stuck in a loop
+        env.item[item].inscription = replace_all(
+                                        env.item[item].inscription, "=g", "");
         item = env.item[item].link;
     }
 }
