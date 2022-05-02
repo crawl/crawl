@@ -328,7 +328,7 @@ def decline(english, german, determiner, target_case):
         if before_noun:
             if is_determiner(word):
                 word = decline_determiner(determiner.lower(), gender, target_case)
-            elif is_noun(word):
+            elif is_noun(word) and not (i < len(words) - 1 and words[i+1] == "Drakonier"):
                 if word == "Prinz":
                     # decline noun, but don't stop declining later words
                     word = decline_noun(word, gender, target_case, proper_noun)
@@ -495,17 +495,19 @@ elif 'unique' in infile_name:
         decline_file(infile_name, Case.GENITIVE, "the", True)
         decline_file(infile_name, Case.GENITIVE, "the", False)
 else:
-    decline_file(infile_name, Case.NOMINATIVE, "a")
-    decline_file(infile_name, Case.NOMINATIVE, "your")
+    decline_file(infile_name, Case.ACCUSATIVE, "the")
+    decline_file(infile_name, Case.DATIVE, "the")
+
     decline_file(infile_name, Case.NOMINATIVE, "")
 
-    decline_file(infile_name, Case.ACCUSATIVE, "the")
-    decline_file(infile_name, Case.ACCUSATIVE, "a")
-    decline_file(infile_name, Case.ACCUSATIVE, "your")
+    if not 'player' in infile_name:
+        decline_file(infile_name, Case.NOMINATIVE, "a")
+        decline_file(infile_name, Case.ACCUSATIVE, "a")
+        decline_file(infile_name, Case.DATIVE, "a")
 
-    decline_file(infile_name, Case.DATIVE, "the")
-    decline_file(infile_name, Case.DATIVE, "a")
-    decline_file(infile_name, Case.DATIVE, "your")
+        decline_file(infile_name, Case.NOMINATIVE, "your")
+        decline_file(infile_name, Case.ACCUSATIVE, "your")
+        decline_file(infile_name, Case.DATIVE, "your")
 
     if 'monsters' in infile_name:
         decline_file(infile_name, Case.GENITIVE, "the", True)

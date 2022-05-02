@@ -1,0 +1,180 @@
+###############################################################################
+#
+# Player species & genus - definite, nominative
+#
+###############################################################################
+
+##############################################
+# Player species
+##############################################
+%%%%
+the Barachi
+der Barachi
+%%%%
+the Deep Dwarf
+der Tiefenzwerg
+%%%%
+the Deep Elf
+der Tiefenelf
+%%%%
+the Demigod
+der Halbgott
+%%%%
+the Demonspawn
+die Dämonenbrut
+%%%%
+the Djinni
+der Dschinn
+%%%%
+the Draconian
+der Drakonier
+%%%%
+the Felid
+der Felid
+%%%%
+the Formicid
+der Formicid
+%%%%
+the Gargoyle
+der Gargoyle
+%%%%
+the Ghoul
+der Ghul
+%%%%
+the Gnoll
+der Gnoll
+%%%%
+the Hill Orc
+der Hügelork
+%%%%
+the Human
+der Mensch
+%%%%
+the Kobold
+der Kobold
+%%%%
+the Merfolk
+das Meervolk
+%%%%
+the Minotaur
+der Minotaur
+%%%%
+the Mummy
+die Mumie
+%%%%
+the Naga
+der Naga
+%%%%
+the Octopode
+der Oktopode
+%%%%
+the Ogre
+der Oger
+%%%%
+the Palentonga
+der Palentonga
+%%%%
+the Spriggan
+der Spriggan
+%%%%
+the Tengu
+der Tengu
+%%%%
+the Troll
+der Troll
+%%%%
+the Vampire
+der Vampir
+%%%%
+the Vine Stalker
+der Rebpirscher
+%%%%
+
+# obsolete (can you still get player ghosts of these species?)
+%%%%
+the Halfling
+der Halbling
+%%%%
+the Centaur
+der Zentaur
+%%%%
+the Sludge Elf
+der Schlammelf
+%%%%
+the High Elf
+der Hochelf
+%%%%
+the Lava Orc
+der Lava-Ork
+%%%%
+
+##############################################
+# Draconian subspecies
+##############################################
+%%%%
+the Mottled Draconian
+der Fleckige Drakonier
+%%%%
+the Black Draconian
+der Schwarze Drakonier
+%%%%
+the Green Draconian
+der Grüne Drakonier
+%%%%
+the Grey Draconian
+der Graue Drakonier
+%%%%
+the Pale Draconian
+der Helle Drakonier
+%%%%
+the Purple Draconian
+der Purpurne Drakonier
+%%%%
+the Red Draconian
+der Rote Drakonier
+%%%%
+the White Draconian
+der Weiße Drakonier
+%%%%
+the Yellow Draconian
+der Gelbe Drakonier
+%%%%
+
+##############################################
+# Player genus
+# NOTE: If not listed then species is used
+##############################################
+%%%%
+# Barachi
+the Frog
+der Frosch
+%%%%
+# Deep Dwarf
+the Dwarf
+der Zwerg
+%%%%
+# Deep Elf
+the Elf
+der Elf
+%%%%
+# Demigod
+the God
+der Gott
+%%%%
+# Felid
+the Cat
+die Katze
+%%%%
+# Formicid
+the Ant
+die Ameise
+%%%%
+# Octopode
+the Octopus
+der Oktopus
+%%%%
+# Hill Orc
+the Orc
+der Ork
+%%%%
+

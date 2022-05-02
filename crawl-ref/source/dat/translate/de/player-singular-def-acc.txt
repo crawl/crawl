@@ -1,0 +1,167 @@
+###############################################################################
+#
+# Player species & genus - definite, accusative (where different to nominative)
+#
+###############################################################################
+
+##############################################
+# Player species
+##############################################
+%%%%
+{acc}the Barachi
+den Barachi
+%%%%
+{acc}the Deep Dwarf
+den Tiefenzwerg
+%%%%
+{acc}the Deep Elf
+den Tiefenelf
+%%%%
+{acc}the Demigod
+den Halbgott
+%%%%
+{acc}the Djinni
+den Dschinn
+%%%%
+{acc}the Draconian
+den Drakonier
+%%%%
+{acc}the Felid
+den Felid
+%%%%
+{acc}the Formicid
+den Formicid
+%%%%
+{acc}the Gargoyle
+den Gargoyle
+%%%%
+{acc}the Ghoul
+den Ghul
+%%%%
+{acc}the Gnoll
+den Gnoll
+%%%%
+{acc}the Hill Orc
+den Hügelork
+%%%%
+{acc}the Human
+den Menschen
+%%%%
+{acc}the Kobold
+den Kobold
+%%%%
+{acc}the Minotaur
+den Minotauren
+%%%%
+{acc}the Naga
+den Naga
+%%%%
+{acc}the Octopode
+den Oktopode
+%%%%
+{acc}the Ogre
+den Oger
+%%%%
+{acc}the Palentonga
+den Palentonga
+%%%%
+{acc}the Spriggan
+den Spriggan
+%%%%
+{acc}the Tengu
+den Tengu
+%%%%
+{acc}the Troll
+den Troll
+%%%%
+{acc}the Vampire
+den Vampir
+%%%%
+{acc}the Vine Stalker
+den Rebpirscher
+%%%%
+
+# obsolete (can you still get player ghosts of these species?)
+%%%%
+{acc}the Halfling
+den Halbling
+%%%%
+{acc}the Centaur
+den Zentauren
+%%%%
+{acc}the Sludge Elf
+den Schlammelf
+%%%%
+{acc}the High Elf
+den Hochelf
+%%%%
+{acc}the Lava Orc
+den Lava-Ork
+%%%%
+
+##############################################
+# Draconian subspecies
+##############################################
+%%%%
+{acc}the Mottled Draconian
+den Fleckigen Drakonier
+%%%%
+{acc}the Black Draconian
+den Schwarzen Drakonier
+%%%%
+{acc}the Green Draconian
+den Grünen Drakonier
+%%%%
+{acc}the Grey Draconian
+den Grauen Drakonier
+%%%%
+{acc}the Pale Draconian
+den Hellen Drakonier
+%%%%
+{acc}the Purple Draconian
+den Purpurnen Drakonier
+%%%%
+{acc}the Red Draconian
+den Roten Drakonier
+%%%%
+{acc}the White Draconian
+den Weißen Drakonier
+%%%%
+{acc}the Yellow Draconian
+den Gelben Drakonier
+%%%%
+
+##############################################
+# Player genus
+# NOTE: If not listed then species is used
+##############################################
+%%%%
+# Barachi
+{acc}the Frog
+den Frosch
+%%%%
+# Deep Dwarf
+{acc}the Dwarf
+den Zwerg
+%%%%
+# Deep Elf
+{acc}the Elf
+den Elf
+%%%%
+# Demigod
+{acc}the God
+den Gott
+%%%%
+# Felid
+%%%%
+# Formicid
+%%%%
+# Octopode
+{acc}the Octopus
+den Oktopus
+%%%%
+# Hill Orc
+{acc}the Orc
+den Ork
+%%%%
+

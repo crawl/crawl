@@ -1,0 +1,180 @@
+###############################################################################
+#
+# Player species & genus - definite, nominative
+#
+###############################################################################
+
+##############################################
+# Player species
+##############################################
+%%%%
+Barachi
+Barachi
+%%%%
+Deep Dwarf
+Tiefenzwerg
+%%%%
+Deep Elf
+Tiefenelf
+%%%%
+Demigod
+Halbgott
+%%%%
+Demonspawn
+Dämonenbrut
+%%%%
+Djinni
+Dschinn
+%%%%
+Draconian
+Drakonier
+%%%%
+Felid
+Felid
+%%%%
+Formicid
+Formicid
+%%%%
+Gargoyle
+Gargoyle
+%%%%
+Ghoul
+Ghul
+%%%%
+Gnoll
+Gnoll
+%%%%
+Hill Orc
+Hügelork
+%%%%
+Human
+Mensch
+%%%%
+Kobold
+Kobold
+%%%%
+Merfolk
+Meervolk
+%%%%
+Minotaur
+Minotaur
+%%%%
+Mummy
+Mumie
+%%%%
+Naga
+Naga
+%%%%
+Octopode
+Oktopode
+%%%%
+Ogre
+Oger
+%%%%
+Palentonga
+Palentonga
+%%%%
+Spriggan
+Spriggan
+%%%%
+Tengu
+Tengu
+%%%%
+Troll
+Troll
+%%%%
+Vampire
+Vampir
+%%%%
+Vine Stalker
+Rebpirscher
+%%%%
+
+# obsolete (can you still get player ghosts of these species?)
+%%%%
+Halfling
+Halbling
+%%%%
+Centaur
+Zentaur
+%%%%
+Sludge Elf
+Schlammelf
+%%%%
+High Elf
+Hochelf
+%%%%
+Lava Orc
+Lava-Ork
+%%%%
+
+##############################################
+# Draconian subspecies
+##############################################
+%%%%
+Mottled Draconian
+Fleckiger Drakonier
+%%%%
+Black Draconian
+Schwarzer Drakonier
+%%%%
+Green Draconian
+Grüner Drakonier
+%%%%
+Grey Draconian
+Grauer Drakonier
+%%%%
+Pale Draconian
+Heller Drakonier
+%%%%
+Purple Draconian
+Purpurner Drakonier
+%%%%
+Red Draconian
+Roter Drakonier
+%%%%
+White Draconian
+Weißer Drakonier
+%%%%
+Yellow Draconian
+Gelber Drakonier
+%%%%
+
+##############################################
+# Player genus
+# NOTE: If not listed then species is used
+##############################################
+%%%%
+# Barachi
+Frog
+Frosch
+%%%%
+# Deep Dwarf
+Dwarf
+Zwerg
+%%%%
+# Deep Elf
+Elf
+Elf
+%%%%
+# Demigod
+God
+Gott
+%%%%
+# Felid
+Cat
+Katze
+%%%%
+# Formicid
+Ant
+Ameise
+%%%%
+# Octopode
+Octopus
+Oktopus
+%%%%
+# Hill Orc
+Orc
+Ork
+%%%%
+
