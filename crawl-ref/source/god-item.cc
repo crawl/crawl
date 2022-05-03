@@ -56,8 +56,6 @@ static bool _is_book_type(const item_def& item,
 
 bool is_holy_item(const item_def& item, bool calc_unid)
 {
-    bool retval = false;
-
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
