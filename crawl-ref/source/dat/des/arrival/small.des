@@ -3647,40 +3647,38 @@ vvv...vvv
 ENDMAP
 
 ##############################################################################
-# most teleporter vaults are dangerous, especially for new players.
-# here's a no-stress scenario in which they can try out teleporters
-NAME:    spicycebolla_arrival_teleporter_tutorial
+# Most transpoter vaults are dangerous, especially for new players. Here's a
+# no-stress scenario in which they can try out transporters.
+NAME:    spicycebolla_arrival_transporter_tutorial
 TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
-FTILE:   .GATUVYt>{EFJK : floor_pebble_blue
-COLOUR:  . : blue
-SUBST:   A = wW, G : GATUVYt
+SUBST:   a = wW, G : GATUVYt
 SHUFFLE: -!
-SUBST:   - : .:40 W
-SUBST:   ! : .
-SHUFFLE: EJ/FK
+SUBST:   - : !:40 W
+COLOUR:  . : blue
+FTILE:   .GATUVYt>{EFJK : floor_pebble_blue
 MARKER:  E = lua:transp_loc("tut_entry")
-MARKER:  F = lua:transp_dest_loc("tut_stairs")
-MARKER:  J = lua:transp_dest_loc("tut_entry")
-MARKER:  K = lua:transp_loc("tut_stairs")
+MARKER:  F = lua:transp_dest_loc("tut_entry")
+MARKER:  J = lua:transp_loc("tut_hatch")
+MARKER:  K = lua:transp_dest_loc("tut_hatch")
 MAP
- AAAA!AAA
-Awww!wwwwA
-www!wwwwwwA
-wwAW!WAwwww
-wAW...WAwwA
-wW.J>K.WwwwA
-wAW.G.WAwwww
-wwAWWWAwwwwA
-AwwwwwwwwwwwA
- AwwwwAWWWAww
- wwwwAW.G.WAw
- AwwwW.E{F.Ww
-  AwwAW...WAw
-  wwwwAW-WAww
-  Awwwwww-www
-   Awwww-wwwA
-    AAA@AAAA
+ aaaa@aaa
+awww!wwwwa
+www!wwwwwwa
+wwaW!Wawwww
+waW...Wawwa
+wW.E>K.Wwwwa
+waW.G.Wawwww
+wwaWWWawwwwa
+awwwwwwwwwwwa
+ awwwwaWWWaww
+ wwwwaW.G.Waw
+ awwwW.F{J.Ww
+  awwaW...Waw
+  wwwwaW-Waww
+  awwwwww-www
+   awwww-wwwa
+    aaa@aaaa
 ENDMAP
 
 ##############################################################
