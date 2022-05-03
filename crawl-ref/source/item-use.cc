@@ -3053,23 +3053,7 @@ string cannot_read_item_reason(const item_def *item)
  */
 static bool _scroll_will_harm(const scroll_type scr, const actor &m)
 {
-    if (!m.alive())
-        return false;
-
-    switch (scr)
-    {
-        case SCR_HOLY_WORD:
-            if (m.undead_or_demonic())
-                return true;
-            break;
-        case SCR_TORMENT:
-            if (!m.res_torment())
-                return true;
-            break;
-        default: break;
-    }
-
-    return false;
+    return m.alive() && scr == SCR_TORMENT && !m.res_torment();
 }
 
 static vector<string> _desc_finite_wl(const monster_info& mi)
@@ -3081,14 +3065,6 @@ static vector<string> _desc_finite_wl(const monster_info& mi)
     else
         r.push_back("susceptible");
     return r;
-}
-
-static vector<string> _desc_holy_word(const monster_info& mi)
-{
-    if (mi.holi & (MH_UNDEAD | MH_DEMONIC))
-        return { "susceptible" };
-    else
-        return { "not susceptible" };
 }
 
 static vector<string> _desc_res_torment(const monster_info& mi)
@@ -3108,25 +3084,6 @@ public:
     bool affects_monster(const monster_info& mon)
     {
         return mon.willpower() != WILL_INVULN;
-    }
-};
-
-class targeter_holy_word : public targeter_multimonster
-{
-public:
-    targeter_holy_word() : targeter_multimonster(&you)
-    { }
-
-    bool affects_monster(const monster_info& mon)
-    {
-        return bool(mon.holi & (MH_UNDEAD | MH_DEMONIC));
-    }
-
-    aff_type is_affected(coord_def loc)
-    {
-        if (loc == you.pos() && you.undead_or_demonic())
-            return AFF_YES;
-        return targeter_multimonster::is_affected(loc);
     }
 };
 
@@ -3215,8 +3172,6 @@ static unique_ptr<targeter> _get_scroll_targeter(scroll_type which_scroll)
     case SCR_VULNERABILITY:
     case SCR_IMMOLATION:
         return make_unique<targeter_finite_will>();
-    case SCR_HOLY_WORD:
-        return make_unique<targeter_holy_word>();
     case SCR_SILENCE:
         return make_unique<targeter_silence>(2, 4); // TODO: calculate from power (or simplify the calc)
     case SCR_TORMENT:
@@ -3245,8 +3200,6 @@ static bool _scroll_targeting_check(scroll_type scroll, dist *target)
             args.get_desc_func = targeter_addl_desc(SPELL_CAUSE_FEAR, 1000,
                 get_spell_flags(SPELL_CAUSE_FEAR), hitfunc.get());
         }
-        else if (scroll == SCR_HOLY_WORD)
-            args.get_desc_func = _desc_holy_word;
         else if (scroll == SCR_VULNERABILITY || scroll == SCR_IMMOLATION)
             args.get_desc_func = _desc_finite_wl;
         else if (scroll == SCR_TORMENT)
@@ -3275,7 +3228,6 @@ bool scroll_has_targeter(scroll_type which_scroll)
     case SCR_VULNERABILITY:
     case SCR_IMMOLATION:
     case SCR_POISON:
-    case SCR_HOLY_WORD:
     case SCR_SILENCE:
     case SCR_TORMENT:
         return true;
@@ -3619,23 +3571,13 @@ void read(item_def* scroll, dist *target)
     case SCR_CURSE_JEWELLERY:
     case SCR_RECHARGING:
     case SCR_RANDOM_USELESSNESS:
+    case SCR_HOLY_WORD:
     {
         mpr("This item has been removed, sorry!");
         cancel_scroll = true;
         break;
     }
 #endif
-
-    case SCR_HOLY_WORD:
-    {
-        holy_word(100, HOLY_WORD_SCROLL, you.pos(), false, &you);
-
-        // This is always naughty, even if you didn't affect anyone.
-        // Don't speak those foul holy words even in jest!
-        did_god_conduct(DID_HOLY, 10, item_type_known(*scroll));
-        bad_effect = you.undead_or_demonic();
-        break;
-    }
 
     case SCR_SILENCE:
         cast_silence(30);

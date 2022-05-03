@@ -2799,12 +2799,6 @@ scroll of fog
  impenetrable fog!”
     -Bill Watterson, _Calvin and Hobbes_. February 11th, 1993
 %%%%
-scroll of holy word
-
-“However many holy words you read, however many you speak,
- what good will they do you if you do not act on upon them?”
-    -Gautama Buddha
-%%%%
 scroll of identify
 
 “This, what is it in itself, and by itself, according to its proper

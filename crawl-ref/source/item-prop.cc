@@ -805,6 +805,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
     { OBJ_SCROLLS,   SCR_REMOVE_CURSE },
     { OBJ_SCROLLS,   SCR_RANDOM_USELESSNESS },
+    { OBJ_SCROLLS,   SCR_HOLY_WORD },
     { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
     { OBJ_WANDS,     WAND_FROST_REMOVED },
     { OBJ_WANDS,     WAND_FIRE_REMOVED },
@@ -2147,7 +2148,6 @@ static map<scroll_type, item_rarity_type> _scroll_rarity = {
     { SCR_SILENCE,        RARITY_RARE },
     { SCR_BRAND_WEAPON,   RARITY_RARE },
     { SCR_TORMENT,        RARITY_RARE },
-    { SCR_HOLY_WORD,      RARITY_RARE },
     { SCR_ACQUIREMENT,    RARITY_VERY_RARE },
 };
 

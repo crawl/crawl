@@ -435,8 +435,8 @@ enum scroll_type
 #if TAG_MAJOR_VERSION == 34
     SCR_RECHARGING,
     SCR_ENCHANT_WEAPON_III,
-#endif
     SCR_HOLY_WORD,
+#endif
     SCR_VULNERABILITY,
     SCR_SILENCE,
     SCR_AMNESIA,

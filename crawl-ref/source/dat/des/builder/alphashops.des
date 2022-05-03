@@ -112,7 +112,7 @@
 
       elseif s == "H" then i = { "halberd", "hand axe",
        "hand crossbow", "hunting sling", "potion of heal wounds",
-       "potion of haste", "scroll of holy word", "manual of hexes", "hat",
+       "potion of haste", "manual of hexes", "hat",
        "helmet", "book of hexes", "book of the hunter" }
 
       elseif s == "I" then i = { "ring of ice",

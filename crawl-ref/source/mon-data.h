@@ -38,8 +38,7 @@
                         holy wrath weapons. Includes good priests.
        MH_NATURAL    - baseline monster type
        MH_UNDEAD     - immunity from draining, pain, torment; resistance
-                        to poison; extra damage from holy wrath;
-                        affected by holy word
+                        to poison; extra damage from holy wrath
        MH_DEMONIC    - similar to undead, but no poison resistance
                         *no* automatic damnation resistance
        MH_NONLIVING  - golems and other constructs

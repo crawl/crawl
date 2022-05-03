@@ -864,8 +864,7 @@ KMONS:      | = ancient lich / dread lich / royal mummy w:20
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
 KITEM:      | = scroll of acquirement q:1 ident:type / scroll of enchant weapon q:3 ident:type /\
-                scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type, \
-                scroll of holy word q:2 ident:type
+                scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type
 :           elseif lrnd == 1 then
 KITEM:      % = any armour
 KITEM:      * = any good_item armour
@@ -1789,8 +1788,8 @@ wizname = crawl.make_name()
 kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
       .. string.gsub(wizname, " ", "_") .. " ; majin-bo")
 }}
-KITEM:      d = scroll of summoning / scroll of holy word \
-                / w:5 scroll of torment / any scroll w:20 / potion of haste \
+KITEM:      d = scroll of summoning / w:5 scroll of torment / \
+                / any scroll w:20 / potion of haste \
                 / potion of heal wounds / any potion w:20
 KITEM:      e = wand of acid / wand of iceblast / ring of fire / ring of ice \
                 / randbook disc:summoning

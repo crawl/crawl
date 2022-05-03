@@ -162,7 +162,7 @@ function general_item_setup(e)
   e.kitem("^ = superb_item ident:all w:590 /\
           potion of heal wounds ident:all q:4 w:3 /\
           potion of haste ident:all q:4 w:3 /\
-          scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
+          scroll of fog w:1 ident:all /\
           potion of might ident:all w:2 /\
           scroll of acquirement q:1 w:1 ident:all /\
           scroll of enchant weapon ident:all q:4 w:2 /\

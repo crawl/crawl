@@ -981,10 +981,6 @@ void holy_word_player(holy_word_source_type source)
 
     switch (source)
     {
-    case HOLY_WORD_SCROLL:
-        aux = "a scroll of holy word";
-        break;
-
     case HOLY_WORD_ZIN:
         aux = "Zin's holy word";
         break;
@@ -1026,13 +1022,6 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
             simple_monster_message(*mons, " is blasted by Zin's holy word!");
         else
             simple_monster_message(*mons, " convulses!");
-
-        if (attacker && attacker->is_player()
-            && source == HOLY_WORD_SCROLL
-            && item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD))
-        {
-            set_attack_conducts(conducts, *mons, you.can_see(*mons));
-        }
     }
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
@@ -1042,15 +1031,8 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     // Currently, holy word annoys the monsters it affects
     // because it can kill them, and because hostile
     // monsters don't use it.
-    // Tolerate unknown scroll, to not annoy Yred worshippers too much.
-    if (attacker != nullptr
-        && attacker != mons
-        && (attacker != &you
-            || source != HOLY_WORD_SCROLL
-            || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
-    {
+    if (attacker != nullptr && attacker != mons)
         behaviour_event(mons, ME_ANNOY, attacker);
-    }
 
     mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
                                (10 + random2(10)) * BASELINE_DELAY));
@@ -1071,6 +1053,7 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
 
     // Sequencing so that we don't holy word a demonic guardian reacting to
     // a player reading a holy word scroll on themselves (mantis 12600).
+    // (This probably can't happen anymore...?)
     holy_word_monsters(where, pow, source, attacker);
 }
 

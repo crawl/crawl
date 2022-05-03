@@ -709,11 +709,11 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
     case SCR_BRAND_WEAPON:       return "brand weapon";
-    case SCR_HOLY_WORD:          return "holy word";
     case SCR_VULNERABILITY:      return "vulnerability";
     case SCR_SILENCE:            return "silence";
     case SCR_AMNESIA:            return "amnesia";
 #if TAG_MAJOR_VERSION == 34
+    case SCR_HOLY_WORD:          return "holy word";
     case SCR_CURSE_WEAPON:       return "curse weapon";
     case SCR_CURSE_ARMOUR:       return "curse armour";
     case SCR_CURSE_JEWELLERY:    return "curse jewellery";
@@ -2734,8 +2734,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
             return !player_res_poison(false, temp, true);
         case SCR_TORMENT:
             return !you.res_torment();
-        case SCR_HOLY_WORD:
-            return you.undead_or_demonic();
         default:
             return false;
         }
