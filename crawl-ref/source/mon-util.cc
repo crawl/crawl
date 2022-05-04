@@ -4281,32 +4281,20 @@ monster_type royal_jelly_ejectable_monster()
                          MONS_QUICKSILVER_OOZE);
 }
 
-// Replaces @foe_god@ and @god_is@ with foe's god name.
+// Replaces @foe_god@ with foe's god name.
 //
 // Atheists get "You"/"you", and worshippers of nameless gods get "Your
 // god"/"your god".
-static string _replace_god_name(god_type god, bool need_verb = false)
+static string _replace_god_name(god_type god)
 {
     string result;
 
-    if (need_verb)
-    {
-        if (god == GOD_NO_GOD)
-            result = "you are";
-        else if (god == GOD_NAMELESS)
-            result = "your god is";
-        else
-            result = god_name(god, false) + " is";
-    }
+    if (god == GOD_NO_GOD)
+        result = "you";
+    else if (god == GOD_NAMELESS)
+        result = "your god";
     else
-    {
-        if (god == GOD_NO_GOD)
-            result = "you are";
-        else if (god == GOD_NAMELESS)
-            result = "your god";
-        else
-            result = god_name(god, false);
-    }
+        result = god_name(god, false);
 
     return result;
 }
@@ -4384,6 +4372,86 @@ static string _replace_speech_tag(string msg, string from, const string &to)
     return msg;
 }
 
+static string _get_sound_string(int s_type, bool foe_is_player)
+{
+    static const char * sound_list[] =
+    {
+        "says to @foe@",         // actually S_SILENT
+        "shouts at @foe@",
+        "barks at @foe@",
+        "howls at @foe@",
+        "shouts at @foe@",
+        "roars at @foe@",
+        "screams at @foe@",
+        "bellows at @foe@",
+        "bleats at @foe@",
+        "trumpets at @foe@",
+        "screeches at @foe@",
+        "buzzes at @foe@",
+        "moans at @foe@",
+        "gurgles at @foe@",
+        "croaks at @foe@",       // locnote: frogs/toads, but also shadow demon
+        "growls at @foe@",
+        "hisses at @foe@",
+        "sneers at @foe@",       // S_DEMON_TAUNT
+        "says to @foe@",         // S_CHERUB -- they just speak normally.
+        "squeals at @foe@",
+        "roars at @foe@",
+        "buggily says to @foe@", // NUM_SHOUTS
+        "breathes at @foe@",     // S_VERY_SOFT
+        "whispers to @foe@",     // S_SOFT
+        "says to @foe@",         // S_NORMAL
+        "shouts at @foe@",       // S_LOUD
+        "screams at @foe@",      // S_VERY_LOUD
+    };
+    COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
+
+    // if fo is player, we don't say "at/to you", we just use the verb
+    static const char * sound_list_player_foe[] =
+    {
+        "says",         // actually S_SILENT
+        "shouts",
+        "barks",
+        "howls",
+        "shouts",
+        "roars",
+        "screams",
+        "bellows",
+        "bleats",
+        "trumpets",
+        "screeches",
+        "buzzes",
+        "moans",
+        "gurgles",
+        "croaks",       // locnote: frogs/toads, but also shadow demon
+        "growls",
+        "hisses",
+        "sneers",       // S_DEMON_TAUNT
+        "says",         // S_CHERUB -- they just speak normally.
+        "squeals",
+        "roars",
+        "buggily says", // NUM_SHOUTS
+        "breathes",     // S_VERY_SOFT
+        "whispers",     // S_SOFT
+        "says",         // S_NORMAL
+        "shouts",       // S_LOUD
+        "screams",      // S_VERY_LOUD
+    };
+    COMPILE_CHECK(ARRAYSZ(sound_list_player_foe) == NUM_LOUDNESS);
+
+
+    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Invalid @says@ type.");
+        return foe_is_player ? "buggily says" : "buggily says to @foe@";
+    }
+    else if (foe_is_player)
+        return sound_list_player_foe[s_type];
+    else
+        return sound_list[s_type];
+
+}
+
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
 string do_mon_str_replacements(const string &in_msg, const monster& mons,
@@ -4400,13 +4468,13 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     msg = maybe_pick_random_substring(msg);
 
+    map<string, string> params;
+
     // FIXME: Handle player_genus in case it was not generalised to foe_genus.
-    msg = replace_all(msg, "@a_player_genus@",
-                article_a(species::name(you.species, species::SPNAME_GENUS)));
-    msg = replace_all(msg, "@player_genus@",
-                species::name(you.species, species::SPNAME_GENUS));
-    msg = replace_all(msg, "@player_genus_plural@",
-                pluralise(species::name(you.species, species::SPNAME_GENUS)));
+    string player_genus = species::name(you.species, species::SPNAME_GENUS);
+    params["player_genus"] =  player_genus;
+    params["a_player_genus"] =  article_a(player_genus);
+    params["player_genus_plural"] =  pluralise(player_genus);
 
     string foe_genus;
 
@@ -4414,31 +4482,26 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         ;
     else if (foe->is_player())
     {
-        foe_genus = species::name(you.species, species::SPNAME_GENUS);
-
-        msg = _replace_speech_tag(msg, " @to_foe@", "");
-        msg = _replace_speech_tag(msg, " @at_foe@", "");
+        foe_genus = player_genus;
 
         msg = _replace_speech_tag(msg, " @to_foe@", "");
         msg = _replace_speech_tag(msg, " @at_foe@", "");
 
         msg = replace_all(msg, "@player_only@", "");
-        msg = replace_all(msg, " @foe,@", ",");
 
-        msg = replace_all(msg, "@player", "@foe");
-        msg = replace_all(msg, "@Player", "@Foe");
+        params["foe_possessive"] = "your";
+        params["foe"] = "you";
 
-        // i18n: TODO: Fix this
-        msg = replace_all(msg, "@foe_possessive@", "your");
-        msg = replace_tag(msg, "@foe@", "you");
-        msg = replace_tag(msg, "@Foe@", "you");
+        params["foe_name"] = you.your_name;
+        params["foe_species"] = species::name(you.species);
 
-        msg = replace_all(msg, "@foe_name@", you.your_name);
-        msg = replace_all(msg, "@foe_species@", species::name(you.species));
-        msg = replace_all(msg, "@foe_genus@", foe_genus);
-        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_genus));
-        msg = replace_all(msg, "@foe_genus_plural@",
-                          pluralise(foe_genus));
+        params["says_to_foe"] = "says";
+        params["screams_at_foe"] = "screams";
+        params["shouts_at_foe"] = "shouts";
+        params["asks_foe"] = "asks";
+
+        // monster-specific sounds
+        params["speaks_to_foe"] = _get_sound_string(s_type, true);
     }
     else
     {
@@ -4456,43 +4519,45 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         else
             foe_name = foe->name(DESC_THE);
 
-        string prep = "at";
-        if (s_type == S_SILENT || s_type == S_SHOUT || s_type == S_NORMAL)
-            prep = "to";
-        msg = replace_all(msg, "@says@ @to_foe@", "@says@ " + prep + " @foe@");
+        params["foe_possessive"] = apostrophise(foe_name);
+        params["foe"] = foe_name;
 
+        if (!localisation_active())
+        {
+            // i18n: this only works for English
         msg = _replace_speech_tag(msg, " @to_foe@", " to @foe@");
         msg = _replace_speech_tag(msg, " @at_foe@", " at @foe@");
-
-        msg = replace_all(msg, "@foe,@", "@foe@,");
-        msg = replace_tag(msg, "@foe_possessive@", apostrophise(foe_name));
-        msg = replace_tag(msg, "@foe@", foe_name);
-        msg = replace_tag(msg, "@Foe@", foe_name);
+        }
 
         if (m_foe->is_named())
-            msg = replace_tag(msg, "@foe_name@", foe->name(DESC_PLAIN, true));
+            params["foe_name"] = foe->name(DESC_PLAIN, true);
 
         string species = mons_type_name(mons_species(m_foe->type), DESC_PLAIN);
-
-        msg = replace_tag(msg, "@foe_species@", species);
+        params["foe_species"] = species;
 
         foe_genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
 
-        msg = replace_tag(msg, "@foe_genus@", foe_genus);
-        msg = replace_tag(msg, "@Foe_genus@", foe_genus);
-        msg = replace_tag(msg, "@foe_genus_plural@", pluralise(foe_genus));
+        params["says_to_foe"] = "says to @foe@";
+        params["screams_at_foe"] = "screams at @foe@";
+        params["shouts_at_foe"] = "shouts at @foe@";
+        params["asks_foe"] = "asks @foe@";
+
+        // monster-specific sounds
+        params["speaks_to_foe"] = _get_sound_string(s_type, false);
     }
 
-    description_level_type nocap = DESC_THE, cap = DESC_THE;
+    params["foe_genus"] = foe_genus;
+    params["foe_genus_plural"] = pluralise(foe_genus);
+    params["the_foe_genus"] = string("the ") + foe_genus;
+
+    description_level_type nocap = DESC_THE;
 
     if (mons.is_named() && you.can_see(mons))
     {
         const string name = mons.name(DESC_THE);
 
-        msg = replace_tag(msg, "@the_something@", name);
-        msg = replace_tag(msg, "@The_something@", name);
-        msg = replace_tag(msg, "@the_monster@",   name);
-        msg = replace_tag(msg, "@The_monster@",   name);
+        params["the_something"] = name;
+        params["the_monster"] = name;
     }
     else if (mons.attitude == ATT_FRIENDLY
              && !mons_is_unique(mons.type)
@@ -4500,123 +4565,90 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
              && you.can_see(mons))
     {
         nocap = DESC_YOUR;
-        cap   = DESC_YOUR;
     }
 
     if (you.see_cell(mons.pos()))
     {
         dungeon_feature_type feat = env.grid(mons.pos());
         if (feat_is_solid(feat) || feat >= NUM_FEATURES)
-            msg = replace_all(msg, "@surface@", "buggy surface");
+            params["the surface"] = "the buggy surface";
         else if (feat == DNGN_LAVA)
-            msg = replace_tag(msg, "@surface@", "lava");
+            params["the_surface"] = "the lava";
         else if (feat_is_water(feat))
-            msg = replace_tag(msg, "@surface@", "water");
+            params["the_surface"] = "the water";
         else if (feat_is_altar(feat))
-            msg = replace_tag(msg, "@surface@", "altar");
+            params["the_surface"] = "the altar";
         else
-            msg = replace_tag(msg, "@surface@", "ground");
+            params["the_surface"] = "the ground";
 
-        msg = replace_tag(msg, "@feature@", raw_feature_description(mons.pos()));
+        params["feature"] = string("the ") + raw_feature_description(mons.pos());
     }
     else
     {
-        msg = replace_all(msg, "@surface@", "buggy unseen surface");
-        msg = replace_all(msg, "@feature@", "buggy unseen feature");
+        params["the_surface"] = "the buggy unseen surface";
+        params["feature"] = "buggy unseen feature";
     }
 
     string something = mons.name(DESC_PLAIN);
-    msg = replace_tag(msg, "@something@",   something);
-    msg = replace_tag(msg, "@a_something@", mons.name(DESC_A));
-    msg = replace_tag(msg, "@the_something@", mons.name(nocap));
-
-    msg = replace_tag(msg, "@Something@",   something);
-    msg = replace_tag(msg, "@A_something@", mons.name(DESC_A));
-    msg = replace_tag(msg, "@The_something@", mons.name(cap));
+    params["something"] = something;
+    params["a_something"] = mons.name(DESC_A);
+    params["the_something"] = mons.name(nocap);
 
     // Player name.
-    msg = replace_all(msg, "@player_name@", you.your_name);
+    params["player_name"] = you.your_name;
 
-    string plain = mons.name(DESC_PLAIN);
-    msg = replace_tag(msg, "@monster@",     plain);
-    msg = replace_tag(msg, "@a_monster@",   mons.name(DESC_A));
-    msg = replace_tag(msg, "@the_monster@", mons.name(nocap));
+    params["monster"] = mons.name(DESC_PLAIN);
+    params["a_monster"] = mons.name(DESC_A);
+    params["the_monster"] = mons.name(nocap);
 
-    msg = replace_tag(msg, "@Monster@",     plain);
-    msg = replace_tag(msg, "@A_monster@",   mons.name(DESC_A));
-    msg = replace_tag(msg, "@The_monster@", mons.name(cap));
-
-    // i18n: TODO: Fix this - pronouns are problematic to translate
-    msg = replace_tag(msg, "@Subjective@",
-                      mons.pronoun(PRONOUN_SUBJECTIVE));
-    msg = replace_tag(msg, "@subjective@",
-                      mons.pronoun(PRONOUN_SUBJECTIVE));
-    msg = replace_tag(msg, "@Possessive@",
-                      mons.pronoun(PRONOUN_POSSESSIVE));
-    msg = replace_tag(msg, "@possessive@",
-                      mons.pronoun(PRONOUN_POSSESSIVE));
-    msg = replace_tag(msg, "@reflexive@",
-                      mons.pronoun(PRONOUN_REFLEXIVE));
-    msg = replace_tag(msg, "@objective@",
-                      mons.pronoun(PRONOUN_OBJECTIVE));
+    // i18n: This only really works for English.
+    params["subjective"] = mons.pronoun(PRONOUN_SUBJECTIVE);
+    params["possessive"] = mons.pronoun(PRONOUN_POSSESSIVE);
+    params["reflexive"] = mons.pronoun(PRONOUN_REFLEXIVE);
+    params["objective"] = mons.pronoun(PRONOUN_OBJECTIVE);
 
     // Body parts.
     bool   can_plural = false;
     string part_str   = mons.hand_name(false, &can_plural);
 
-    msg = replace_tag(msg, "@hand@", part_str);
-    msg = replace_tag(msg, "@Hand@", uppercase_first(part_str));
+    params["hand"] = part_str;
 
     if (!can_plural)
         part_str = "NO PLURAL HANDS"; // noloc
     else
         part_str = mons.hand_name(true);
 
-    msg = replace_tag(msg, "@hands@", part_str);
-    msg = replace_tag(msg, "@Hands@", part_str);
+    params["hands"] = part_str;
 
     can_plural = false;
     part_str   = mons.arm_name(false, &can_plural);
 
-    msg = replace_tag(msg, "@arm@", part_str);
-    msg = replace_tag(msg, "@Arm@", part_str);
+    params["arm"] = part_str;
 
     if (!can_plural)
         part_str = "NO PLURAL ARMS"; // noloc
     else
         part_str = mons.arm_name(true);
 
-    msg = replace_tag(msg, "@arms@", part_str);
-    msg = replace_tag(msg, "@Arms@", part_str);
+    params["arms"] = part_str;
 
     can_plural = false;
     part_str   = mons.foot_name(false, &can_plural);
 
-    msg = replace_tag(msg, "@foot@", part_str);
-    msg = replace_tag(msg, "@Foot@", part_str);
+    params["foot"] = part_str;
 
     if (!can_plural)
         part_str = "NO PLURAL FEET"; // noloc
     else
         part_str = mons.foot_name(true);
 
-    msg = replace_tag(msg, "@feet@", part_str);
-    msg = replace_tag(msg, "@Feet@", part_str);
+    params["feet"] = part_str;
 
     if (foe != nullptr)
     {
         const god_type god = foe->deity();
 
-        // Replace with "you are" for atheists.
-        msg = replace_tag(msg, "@god_is@",
-                          _replace_god_name(god, true));
-        msg = replace_tag(msg, "@God_is@", _replace_god_name(god, true));
-
-        // No verb needed.
-        msg = replace_tag(msg, "@foe_god@",
-                          _replace_god_name(god, false));
-        msg = replace_tag(msg, "@Foe_god@",
-                          _replace_god_name(god, false));
+        params["foe_god"] = _replace_god_name(god);
     }
 
     // The monster's god, not the player's. Atheists get
@@ -4627,87 +4659,41 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     // if it gets one, it should be used for the last two entries.
     if (mons.god == GOD_NO_GOD)
     {
-        msg = replace_all(msg, "@a_God@", "NO GOD"); // noloc
-        msg = replace_all(msg, "@A_God@", "NO GOD"); // noloc
-        msg = replace_all(msg, "@possessive_God@", "NO GOD"); // noloc
-        msg = replace_all(msg, "@Possessive_God@", "NO GOD"); // noloc
-
-        msg = replace_all(msg, "@my_God@", "NO GOD"); // noloc
-        msg = replace_all(msg, "@My_God@", "NO GOD"); // noloc
+        params["a_God"] = "NO GOD"; // noloc
+        params["possessive_God"] = "NO GOD"; // noloc
+        params["my_God"] = "NO GOD"; // noloc
     }
     else if (mons.god == GOD_NAMELESS)
     {
-        msg = replace_tag(msg, "@a_God@", "a god");
-        msg = replace_tag(msg, "@A_God@", "a god"); // will be capitalised
-        const string possessive = mons.pronoun(PRONOUN_POSSESSIVE) + " god";
-        msg = replace_tag(msg, "@possessive_God@", possessive);
-        msg = replace_tag(msg, "@Possessive_God@", possessive);
-
-        msg = replace_tag(msg, "@my_God@", "my God");
-        msg = replace_tag(msg, "@My_God@", "my God");// will be capitalised
+        params["a_God"] = "a god";
+        const string possessive = mons.pronoun(PRONOUN_POSSESSIVE) + " god"; // noloc
+        params["possessive_God"] = possessive;
+        params["my_God"] = "my god";
     }
     else
     {
         const string godname = god_name(mons.god);
-        msg = replace_tag(msg, "@a_God@", godname);
-        msg = replace_tag(msg, "@A_God@", godname);
-        msg = replace_tag(msg, "@possessive_God@", godname);
-        msg = replace_tag(msg, "@Possessive_God@", godname);
-
-        msg = replace_tag(msg, "@my_God@", godname);
-        msg = replace_tag(msg, "@My_God@", godname);
+        params["a_God"] = godname;
+        params["possessive_God"] = godname;
+        params["my_God"] = godname;
     }
 
+    // noloc section start
     // Replace with species specific insults.
     if (msg.find("@species_insult_") != string::npos)
     {
-        msg = replace_tag(msg, "@species_insult_adj1@",
-                               _get_species_insult(foe_genus, "adj1"));
-        msg = replace_tag(msg, "@species_insult_adj2@",
-                               _get_species_insult(foe_genus, "adj2"));
-        msg = replace_tag(msg, "@species_insult_noun@",
-                               _get_species_insult(foe_genus, "noun"));
+        params["species_insult_adj1"] = _get_species_insult(foe_genus, "adj1");
+        params["species_insult_adj2"] = _get_species_insult(foe_genus, "adj2");
+        params["species_insult_noun"] = _get_species_insult(foe_genus, "noun");
     }
+    // noloc section end
 
-    static const char * sound_list[] =
-    {
-        "says",         // actually S_SILENT
-        "shouts",
-        "barks",
-        "howls",
-        "shouts",
-        "roars",
-        "screams",
-        "bellows",
-        "bleats",
-        "trumpets",
-        "screeches",
-        "buzzes",
-        "moans",
-        "gurgles",
-        "croaks",
-        "growls",
-        "hisses",
-        "sneers",       // S_DEMON_TAUNT
-        "says",         // S_CHERUB -- they just speak normally.
-        "squeals",
-        "roars",
-        "buggily says", // NUM_SHOUTS
-        "breathes",     // S_VERY_SOFT
-        "whispers",     // S_SOFT
-        "says",         // S_NORMAL
-        "shouts",       // S_LOUD
-        "screams",      // S_VERY_LOUD
-    };
-    COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
+    // monster-specific sounds
+    params["speaks"] = _get_sound_string(s_type, true);
 
-    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
-    {
-        mprf(MSGCH_DIAGNOSTICS, "Invalid @says@ type.");
-        msg = replace_tag(msg, "@says@", "buggily says");
-    }
-    else
-        msg = replace_tag(msg, "@says@", sound_list[s_type]);
+    // i18n: msg text should already be in the target language,
+    // but the params need to be localised
+    msg = localise(msg, params, false);
 
     msg = maybe_capitalise_substring(msg);
 

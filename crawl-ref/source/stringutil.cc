@@ -381,6 +381,8 @@ string maybe_capitalise_substring(string s)
  */
 string replace_keys(const string &text, const map<string, string>& replacements)
 {
+    static int nested_calls = 0;
+
     string::size_type at = 0, last = 0;
     ostringstream res;
     while ((at = text.find('@', last)) != string::npos)
@@ -393,10 +395,22 @@ string replace_keys(const string &text, const map<string, string>& replacements)
         const string key = text.substr(at + 1, end - at - 1);
         const string* value = map_find(replacements, key);
 
+        if (!value && isupper(key[0]))
+            value = map_find(replacements, lowercase_string(key));
+
         if (!value)
             return text;
 
-        res << *value;
+        // allow nesting, but avoid infinite loops from circular refs
+        if (nested_calls < 5 && value->find("@") != string::npos)
+        {
+            nested_calls++;
+            string new_value = replace_keys(*value, replacements);
+            nested_calls--;
+            res << new_value;
+        }
+        else
+            res << *value;
 
         last = end + 1;
     }

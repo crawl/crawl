@@ -174,7 +174,7 @@ LAZY_FILES = [
 IGNORE_STRINGS = [
     'the', 'the ', ' the ',
     'a', 'a ', 'an', 'an ',
-    'you', 'you ',
+    'you', 'you ', 'your', 'your ',
     'bug', 'null'
 ]
 

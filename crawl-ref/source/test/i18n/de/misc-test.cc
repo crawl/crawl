@@ -3,6 +3,8 @@
 #include "localise.h"
 #include "database.h"
 #include "initfile.h"
+#include "mgen-data.h"
+#include "mon-place.h"
 #include "options.h"
 #include "unicode.h"
 
@@ -111,5 +113,41 @@ int main()
 
     msg = localise("Boghold the orc warlord (strong)");
     expected = "Boghold der Ork-Warlord (stark)";
+    show_result(msg, expected);
+
+    you.position = coord_def(10, 10);
+    env.grid.init(DNGN_FLOOR);
+    env.pgrid.init(FPROP_NONE);
+    env.level_map_ids.init(INVALID_MAP_INDEX);
+    env.level_map_mask.init(INVALID_MAP_INDEX);
+    init_monsters();
+
+    monster *mons = get_free_monster();
+    mons->type = MONS_DOWAN;
+    mons->hit_points = 30;
+    mons->position = coord_def(10, 9);
+
+    monster *mons2 = get_free_monster();
+    mons2->type = MONS_ORC;
+    mons2->hit_points = 20;
+    mons2->position = coord_def(10, 11);
+
+    mons->foe = mons2->mindex();
+    msg = getSpeakString("Gozag permabribe");
+    msg = do_mon_str_replacements(msg, *mons);
+    expected = "Dowan grinst den Ork gierig an und klimpert mit dem Geldbeutel.";
+    show_result(msg, expected);
+
+    mons->foe = MHITYOU;
+    msg = getSpeakString("Gozag permabribe");
+    msg = do_mon_str_replacements(msg, *mons);
+    expected = "Dowan grinst Euch gierig an und klimpert mit dem Geldbeutel.";
+    show_result(msg, expected);
+
+    // test invisible monster
+    mons->add_ench(mon_enchant(ENCH_INVIS));
+    msg = getSpeakString("fleeing Dowan");
+    msg = do_mon_str_replacements(msg, *mons);
+    expected = "VISUAL:Etwas schreit entsetzt auf.";
     show_result(msg, expected);
 }

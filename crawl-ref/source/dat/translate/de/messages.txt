@@ -11970,89 +11970,154 @@ torturous
 Geryon discards his horn.
 
 %%%%
-you are
-
-%%%%
-your god is
-
-%%%%
-" is"
-
-%%%%
 your god
 
 %%%%
-your
-
+says to @foe@
+sagt zu {dat}@foe@
 %%%%
-to
-
+shouts at @foe@
+schreit {acc}@foe@ an
+%%%%
+barks at @foe@
+bellt {acc}@foe@ an
+%%%%
+howls at @foe@
+heult {acc}@foe@ an
+%%%%
+roars at @foe@
+brüllt {acc}@foe@ an
+%%%%
+screams at @foe@
+schreit {acc}@foe@ an
+%%%%
+bellows at @foe@
+brüllt {acc}@foe@ an
+%%%%
+bleats at @foe@
+blökt {acc}@foe@ an
+%%%%
+trumpets at @foe@
+trompetet {acc}@foe@ an
+%%%%
+screeches at @foe@
+kreischt {acc}@foe@ an
+%%%%
+buzzes at @foe@
+brummt {acc}@foe@ an
+%%%%
+moans at @foe@
+stöhnt {acc}@foe@ an
+%%%%
+gurgles at @foe@
+gurgelt {acc}@foe@ an
+%%%%
+# note: frogs/toads, but also shadow demon
+croaks at @foe@
+quakt {acc}@foe@ an
+%%%%
+growls at @foe@
+knurrt {acc}@foe@ an
+%%%%
+hisses at @foe@
+zischt {acc}@foe@ an
+%%%%
+sneers at @foe@
+verspottet @foe@
+%%%%
+squeals at @foe@
+quiekt {acc}@foe@ an
+%%%%
+breathes at @foe@
+haucht {acc}@foe@ an
+%%%%
+whispers to @foe@
+flüstert {dat}@foe@ zu
+%%%%
+says
+sagt
+%%%%
+shouts
+schreit
+%%%%
+barks
+bellt
+%%%%
+howls
+heult
+%%%%
+roars
+brüllt
+%%%%
+screams
+schreit
+%%%%
+bellows
+brüllt
+%%%%
+bleats
+blökt
+%%%%
+trumpets
+trompetet
+%%%%
+screeches
+kreischt
+%%%%
+buzzes
+brummt
+%%%%
+moans
+stöhnt
+%%%%
+gurgles
+gurgelt
+%%%%
+# note: frogs/toads, but also shadow demon
+croaks
+quakt
+%%%%
+growls
+knurrt
+%%%%
+hisses
+zischt
+%%%%
+sneers
+spottet
+%%%%
+squeals
+quiekt
+%%%%
+breathes
+haucht
+%%%%
+whispers
+flüstert
 %%%%
 @foe@,
 
 %%%%
-" god"
-
+the water
+das Wasser
 %%%%
-says
-
+the altar
+den Altar
 %%%%
-shouts
-
+the ground
+den Boden
 %%%%
-barks
-
+a god
+ein Gott
 %%%%
-howls
-
+my god
+mein Gott
 %%%%
-roars
-
+asks
+fragt
 %%%%
-screams
-
-%%%%
-bellows
-
-%%%%
-bleats
-
-%%%%
-trumpets
-
-%%%%
-screeches
-
-%%%%
-buzzes
-
-%%%%
-moans
-
-%%%%
-gurgles
-
-%%%%
-croaks
-
-%%%%
-growls
-
-%%%%
-hisses
-
-%%%%
-sneers
-
-%%%%
-squeals
-
-%%%%
-breathes
-
-%%%%
-whispers
-
+asks @foe@
+fragt {acc}@foe@
 %%%%
 %s is %s.
 %s ist %s.
@@ -12379,9 +12444,6 @@ The barbed spikes dig painfully into your body as you move.
 
 %%%%
 The barbed spikes snap loose.
-
-%%%%
-"Your "
 
 %%%%
 " will break if you move. Continue?"

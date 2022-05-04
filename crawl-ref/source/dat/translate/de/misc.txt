@@ -234,3 +234,17 @@ ein fliegendes Stück
 %d Gold
 %%%%
 
+#################################
+# Pronouns
+#################################
+%%%%
+you
+Ihr
+%%%%
+{acc}you
+Euch
+%%%%
+{dat}you
+Euch
+%%%%
+

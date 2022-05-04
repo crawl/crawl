@@ -98,7 +98,8 @@ int localise_char(char ch);
 /**
  * Localise a string with embedded @foo@ style parameters
  */
-string localise(const string& text_en, const map<string, string>& params);
+string localise(const string& text, const map<string, string>& params,
+                bool localise_text = true);
 
 
 /**

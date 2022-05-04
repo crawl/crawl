@@ -1981,19 +1981,29 @@ int localise_char(char ch)
 /**
  * Localise a string with embedded @foo@ style parameters
  */
-string localise(const string& text_en, const map<string, string>& params)
+string localise(const string& text_in, const map<string, string>& params, bool localise_text)
 {
-    if (text_en.empty())
+    static int nested_calls = 0;
+
+    if (text_in.empty())
         return "";
     else if (!localisation_active())
-        return replace_keys(text_en, params);
+        return replace_keys(text_in, params);
 
     _context = "";
-    string text = xlate(text_en, false);
-    if (text.empty())
+    string text;   
+    if (!localise_text)
     {
-        // try to translate completed English string
-        return xlate(replace_keys(text_en, params));
+        text = text_in;
+    }
+    else
+    {
+        text  = xlate(text_in, false);
+        if (text.empty())
+        {
+            // try to translate completed English string
+            return xlate(replace_keys(text_in, params));
+        }
     }
 
     size_t at = 0;
@@ -2021,10 +2031,29 @@ string localise(const string& text_en, const map<string, string>& params)
 
             const string key = text.substr(at + 1, end - at - 1);
             const string* value_en = map_find(params, key);
+            if (!value_en)
+                value_en = map_find(params, lowercase_string(key));
+
             if (value_en)
             {
                 // translate value and insert
-                string value = _localise_string(_context, *value_en);
+                string value;
+                if (key == "player_name")
+                {
+                    // don't try to translate player name
+                    value = *value_en;
+                }
+                else
+                {
+                    value = _localise_string(_context, *value_en);
+                    // allow nesting, but avoid infinite loops from circular refs
+                    if (nested_calls < 5 && value.find("@") != string::npos)
+                    {
+                        nested_calls++;
+                        value = localise(value, params, false);
+                        nested_calls--;
+                    }
+                }
                 if (!key.empty() && isupper(key[0]))
                     value = uppercase_first(value);
                 res << value;

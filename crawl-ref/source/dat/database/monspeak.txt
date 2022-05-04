@@ -418,15 +418,15 @@ VISUAL:@The_monster@ summons a swarm of flies.
 %%%%
 _hell_lord_taunt_
 
-@The_monster@ @says@ @to_foe@, "@demon_taunt@"
+@The_monster@ @speaks@ @to_foe@, "@demon_taunt@"
 %%%%
 _demon_taunt_
 
-@The_monster@ @says@ @to_foe@, "@demon_taunt@"
+@The_monster@ @speaks@ @to_foe@, "@demon_taunt@"
 %%%%
 _says_imp_taunt_
 
-@The_monster@ @says@ @to_foe@, "@imp_taunt@"
+@The_monster@ @speaks@ @to_foe@, "@imp_taunt@"
 ##########################################
 # Messages by monster body shape
 ##########################################
