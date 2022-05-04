@@ -5560,9 +5560,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             string msg;
             if (mon->heads() <= 1)
-                msg = localise("%s mind is blasted", mon->name(DESC_THE));
+                msg = localise("%s mind is blasted", mon->name(DESC_ITS));
             else
-                msg = localise("%s minds are blasted", mon->name(DESC_THE));
+                msg = localise("%s minds are blasted", mon->name(DESC_ITS));
             attack_strength_message(msg, dam, false);
             obvious_effect = true;
         }
