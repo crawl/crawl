@@ -141,6 +141,11 @@ komodo_dragon MONS_KOMODO_DRAGON
 %sdir mon/unique
 %rim 0
 gastronok MONS_GASTRONOK
+gastronok1
+gastronok2
+kit_karsonok
+shaolinok
+sideburnok
 
 ## Rodents ('r')
 %sdir mon/animals
@@ -1262,9 +1267,4 @@ polymoth MONS_POLYMOTH
 %rim 0
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT
-gastronok1 MONS_GASTRONOK_MUSTACHE
-gastronok2 MONS_GASTRONOK_CLEANSHAVEN
-kit_karsonok MONS_GASTRONOK_HANDLEBAR
-shaolinok MONS_GASTRONOK_FU_MANCHU
-sideburnok MONS_GASTRONOK_SIDEBURNS
 anubis_guard MONS_ANUBIS_GUARD

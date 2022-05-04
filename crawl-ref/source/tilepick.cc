@@ -4351,22 +4351,10 @@ void bind_item_tile(item_def &item)
 void tile_init_props(monster* mon)
 {
     // Only monsters using mon_mod or mon_cycle need a tile_num.
-    switch (mon->type)
+    switch (get_mon_tile_variation(mon->type))
     {
-        case MONS_TOADSTOOL:
-        case MONS_FUNGUS:
-        case MONS_PLANT:
-        case MONS_BUSH:
-        case MONS_FIRE_VORTEX:
-        case MONS_TWISTER:
-        case MONS_SPATIAL_VORTEX:
-        case MONS_SPATIAL_MAELSTROM:
-        case MONS_ABOMINATION_SMALL:
-        case MONS_ABOMINATION_LARGE:
-        case MONS_BLOCK_OF_ICE:
-        case MONS_BUTTERFLY:
-        case MONS_HUMAN:
-        case MONS_DEEP_ELF_ELEMENTALIST:
+        case TVARY_MOD:
+        case TVARY_CYCLE:
             break;
         default:
             return;
