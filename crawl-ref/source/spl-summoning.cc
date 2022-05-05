@@ -1237,7 +1237,7 @@ spret cast_summon_horrible_things(int pow, god_type god, bool fail)
     if (god == GOD_NO_GOD && one_chance_in(5))
     {
         // if someone deletes the db, no message is ok
-        mpr(getMiscString("SHT_int_loss"));
+        mpr_nolocalise(getMiscString("SHT_int_loss"));
         lose_stat(STAT_INT, 1);
     }
 

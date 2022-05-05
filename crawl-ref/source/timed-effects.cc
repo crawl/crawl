@@ -68,7 +68,7 @@ static void _hell_effect_noise()
     if (msg.empty())
         msg = "Something hellishly buggy happens.";
 
-    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
+    mpr_nolocalise(MSGCH_HELL_EFFECT, msg);
     if (loud)
         noisy(15, you.pos());
 }

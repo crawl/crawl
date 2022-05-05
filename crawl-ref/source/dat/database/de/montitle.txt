@@ -1,0 +1,295 @@
+###############################################################################
+# Monster titles.
+# Displayed when they first come into view and on their description screen.
+#########
+%%%%
+Agnes title
+
+Agnes die Wandererin
+%%%%
+Aizul title
+
+Aizul der Vernachlässigende Wächter
+%%%%
+Antaeus title
+
+Antaeus, Wächter von Kokytus
+%%%%
+Arachne title
+
+Arachne die Weberin
+%%%%
+Asmodeus title
+
+Asmodeus, Prinz von Gehenna
+%%%%
+Asterion title
+
+Asterion der Gefallene König
+%%%%
+Azrael title
+
+Azrael die Grenzenlose Flamme
+%%%%
+Bai Suzhen title
+
+Bai Suzhen, Madame Weißschlange
+%%%%
+Boris title
+
+Boris, Meister von Leben und Tod
+%%%%
+Cerebov title
+
+Cerebov, Dämonenfürst von Feuer und Stahl
+%%%%
+Chuck title
+
+Chuck der Sammler
+%%%%
+Crazy Yiuf title
+
+Verrückte Yiuf der Erleuchtete
+%%%%
+Dispater title
+
+Dispater, Herr der Eisernen Stadt
+%%%%
+Dissolution title
+
+Dissolution, Hohenpriester von Jiyva
+%%%%
+Donald title
+
+Donald der Abenteurer
+%%%%
+Dowan title
+
+Dowan, Brüder von Duvessa
+%%%%
+Duvessa title
+
+Duvessa, Schwester von Dowan
+%%%%
+Edmund title
+
+Edmund der Jüngere
+%%%%
+Ereshkigal title
+
+Ereshkigal, Königin von Tartarus
+%%%%
+Erica title
+
+Erica des hitzigen Gemüts
+%%%%
+Erolcha title
+
+Erolcha die Listige
+%%%%
+Eustachio title
+
+Eustachio der Prachtvolle
+%%%%
+Fannar title
+
+# neuter
+Fannar das Kaltherzige
+%%%%
+Frances title
+
+Frances, Herzogin von Pandemonium
+%%%%
+Frederick title
+
+Frederick der Makellos
+%%%%
+Gastronok title
+
+Gastronok der Schwerfällig
+%%%%
+Geryon title
+
+Geryon, Torwächter der Hölle
+%%%%
+Gloorx Vloq title
+
+Gloorx Vloq, Dämonenfürst der Finsternis
+%%%%
+Grum title
+
+Grum der Jäger
+%%%%
+Harold title
+
+Harold der Verwitterte
+%%%%
+Ignacio title
+
+Ignacio, Meister der Quälenden Schmerzen
+%%%%
+Ilsuiw title
+
+Ilsuiw, Hexe der Gezeiten
+%%%%
+Ijyb title
+
+Ijyb der Verdorbene Goblin
+%%%%
+Jessica title
+
+Jessica die Zauberlehrlingin
+%%%%
+Jorgrun title
+
+Jorgrun Erdrüttler
+%%%%
+Jory title
+
+Jory der Blutbefleckte Graf
+%%%%
+Joseph title
+
+Joseph, ein Söldner
+%%%%
+Josephine title
+
+Josephine die Verwesende Nekromantin
+%%%%
+Khufu title
+
+Khufu der Unsterbliche Pharao
+%%%%
+Kirke title
+
+Kirke, Weberin der Mythen
+%%%%
+Lom Lobon title
+
+Lom Lobon, Dämonenfürst des verbotenen Wissens
+%%%%
+Louise title
+
+Louise die Verdorbenen
+%%%%
+Maggie title
+
+Maggie die Hochmütige
+%%%%
+Mara title
+
+Mara, Herr der Illusionen
+%%%%
+Margery title
+
+Margery die Drachentöterin
+%%%%
+Maurice title
+
+Maurice der Dieb
+%%%%
+Menkaure title
+
+Menkaure, Staubprinz
+%%%%
+Mennas title
+
+Mennas, die Stimme Zins
+%%%%
+Mnoleg title
+
+Mnoleg, Dämonenfürst des Chaos
+%%%%
+Murray title
+
+Murray der Dämonische Sprechende Schädel
+%%%%
+# NOTE: Title deliberately similar to Boris'
+Natasha title
+
+Natasha, Diener von Leben und Tod
+%%%%
+Nellie title
+
+Nellie, Star der Show
+%%%%
+Nergalle title
+
+Nergalle die Seelenbinderin
+%%%%
+Nessos title
+
+Nessos der Zentaur-Schütze
+%%%%
+Nikola title
+
+Nikola der Verrückte Erfinder
+%%%%
+Pikel title
+
+Pikel der Sklavenhändler
+%%%%
+Polyphemus title
+
+Polyphemus der Wachsame Hirte
+%%%%
+Psyche title
+
+Psyche die Wahnsinnige Magierin
+%%%%
+Purgy title
+
+Purgy der Sanftmütige
+%%%%
+Robin title
+
+Robin des starken Arms
+%%%%
+Roxanne title
+
+Roxanne, Geomantin Emeritus
+%%%%
+Rupert title
+
+Rupert der Wilde
+%%%%
+Saint Roka title
+
+Saint Roka der Messias
+%%%%
+Sigmund title
+
+Sigmund der Gefürchtete
+%%%%
+Snorg title
+
+Snorg der Unersättliche
+%%%%
+Sojobo title
+
+Sojobo, Königin der Tengus
+%%%%
+Sonja title
+
+Sonja, die Anmutige Assassinin
+%%%%
+Terence title
+
+Terence der Unvorsichtige
+%%%%
+Tiamat title
+
+Tiamat, Avatar des Drachenfürstin
+%%%%
+Urug title
+
+Urug die Orkische Ballista
+%%%%
+Vashnia title
+
+Vashnia die Elite Naga-Schützin
+%%%%
+Xtahua title
+
+Xtahua der Uralte
+%%%%
