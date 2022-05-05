@@ -203,8 +203,8 @@ static const char *divine_title[][8] =
      "Contemplative",         "Epochal",               "Timeless",                 "@Adj@ Aeon"},
 
     // Ashenzari -- divination theme
-    {"Star-crossed",       "Cursed",                "Initiated",                "Soothsayer",
-        "Seer",               "Oracle",                "Illuminatus",              "Omniscient"},
+    {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
+        "Oracle",            "Illuminatus",            "Prince of Secrets",        "Omniscient"},
 
     // Dithmenos -- darkness theme
     {"Ember",              "Gloomy",                "Darkened",                 "Extinguished",
