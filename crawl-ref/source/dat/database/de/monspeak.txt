@@ -7189,18 +7189,18 @@ w:40
 
 @The_monster@ predigt über @_recite_subject_@
 
-@The_monster@ @_recites_start_@ a @_lecture_modifier_@ lecture about @_recite_subject_@
+@The_monster@ @_recites_start_@ eine @_lecture_modifier_@ Vorlesung über @_recite_subject_@
 
 @The_monster@ erklärt ausführlich über @_recite_subject_@
 
-@The_monster@ erklärt die Bedeutung von@_important_subject_@
+@The_monster@ erklärt @_important_subject_@
 
 @The_monster@ @_recites_start_@ eine @_lecture_modifier_@ Predigt über @_recite_subject_@
 
-@The_monster@ @_recites_start_@ eine @_lecture_modifier_@ Predigt über @_recite_subject_@
+@The_monster@ @_recites_start_@ eine @_lecture_modifier_@ Rede über @_recite_subject_@
 
 w:5
-@The_monster@ speaks about @_recite_subject_@
+@The_monster@ spricht über @_recite_subject_@
 %%%%
 _recites_start_
 
@@ -7214,11 +7214,11 @@ ein Gedicht über
 
 die heiligen Texte über
 
-das Wort von Zin auf
+das Wort von Zin über
 
-klangvoll auf
+klangvoll über
 
-lautstark auf
+lautstark über
 %%%%
 _lecture_modifier_
 
@@ -7238,7 +7238,7 @@ die Axiome des Rechts.
 
 die Bücher des Gesetzes.
 
-das heilige Gesetz von Zin.
+das heilige Gesetz Zins.
 %%%%
 # used for "explaining the importance of ..."
 _important_subject_
@@ -7247,33 +7247,31 @@ _important_subject_
 w:50
 @_axioms_of_law_@
 
-the eternal Law.
+das ewige Gesetz.
 
-obedience to the Law.
+Gehorsamkeit gegenüber dem Gesetz.
 
-the one true way.
+den einzigen wahren Weg.
 
 # purity
-purity of body and mind.
+Reinheit von Körper und Geist.
 
-preserving your bodily integrity.
+das Bewahren der körperlichen Unversehrtheit.
 
-keeping your body clean and pure.
+wie man den Körper sauber und rein haltet.
 
-proper care of body and soul.
+die richtige Pflege von Körper und Geist.
 
 # mutations
-avoiding mutations.
+die Vermeidung von Mutationen.
 
-just saying no to mutations.
+einfach nein zu Mutationen sagen.
 
 # respecting intelligent beings
-proper burial practice.
+die richtigen Bestattungspraktiken.
 
 # demons
-not dealing with demons.
-
-rejecting the service of demons.
+die Ablehnung des Dienstes von Dämonen.
 %%%%
 # the subject of your recital/lecture/whatever
 # needs the full dot or exclamation mark
@@ -7286,35 +7284,35 @@ w:120
 w:80
 @_axioms_of_law_@
 
-the Law and the prophets.
+das Gesetz und die Propheten.
 
-the importance of the Law.
+die Bedeutung des Gesetzes.
 
 # anti-mutation
-mutations, and how to avoid them.
+Mutationen, und wie man sie vermeidet.
 
-potions of mutation - the devil's brew!
+Tränke der Mutation - das Gebräu des Teufels!
 
-neqoxecs and cacodemons - may they all be destroyed!
+Neqoxecs und Kakodämonen - mögen sie alle vernichtet werden!
 
 # respecting intelligent beings
-a proper diet respecting intelligent beings.
+eine angemessene Ernährung unter Berücksichtigung intelligenter Wesen.
 
 # necromancy and evil
-the evils of necromancy.
+das Übel der Nekromantie.
 
-undead, and why they are evil.
+Untote, und warum sie böse sind.
 
 # the gods
-the fall of Lugonu.
+der Fall von Lugonu.
 
-the alliance of Zin and the Shining One.
+das Bündnis zwischen Zin und dem Glänzenden.
 
-the alliance of Zin and Elyvilon.
+das Bündnis zwischen Zin und Elyvilon.
 
-the lawlessness of @_chaotic_god_@.
+die Gesetzlosigkeit {gen}@_chaotic_god_@.
 
-the evilness of @_evil_god_@.
+die Bösartigkeit {gen}@_evil_god_@.
 %%%%
 _chaotic_god_
 
@@ -7340,23 +7338,23 @@ Lugonu
 %%%%
 confused zin angel
 
-@The_monster@ rambles incoherently.
+@The_monster@ schwafelt unzusammenhängend.
 
-@The_monster@ lectures the ground at length about @_important_subject_@
+@The_monster@ hält dem Boden lange Vorträge über @_important_subject_@
 
-@The_monster@ lectures its feet at length about @_important_subject_@
+@The_monster@ hält seinen Füßen einen langen Vortrag über @_important_subject_@
 
-VISUAL:@The_monster@ stares off into space for a moment.
+VISUAL: @The_monster@ starrt einen Moment lang ins Leere.
 %%%%
 silenced zin angel
 
-VISUAL:@The_monster@ gestures at @foe@ frantically.
+VISUAL:@The_monster@ gestikuliert verzweifelt nach {dat}@foe@.
 
-VISUAL:@The_monster@ looks angrily to the heavens.
+VISUAL:@The_monster@ blickt wütend zum Himmel.
 
-VISUAL:@The_monster@ furiously gestures all around.
+VISUAL:@The_monster@ gestikuliert wütend in der Gegend herum.
 
-VISUAL:@The_monster@ scowls with righteous anger.
+VISUAL:@The_monster@ starrt mit gerechtem Zorn.
 %%%%
 ###############################################################################
 # Speech keys used *specifically* in (portal) vaults.
@@ -7364,70 +7362,70 @@ VISUAL:@The_monster@ scowls with righteous anger.
 ###############################################################################
 deformed humanoid
 
-VISUAL:@The_monster@ howls in pain.
+VISUAL:@The_monster@ heult vor Schmerzen.
 
-VISUAL:@The_monster@ wails in agony.
+VISUAL:@The_monster@ heult vor Qual.
 
-VISUAL:@The_monster@ weeps.
+VISUAL:@The_monster@ weint.
 
-VISUAL:@The_monster@ sobs.
+VISUAL:@The_monster@ schluchzt.
 
-@The_monster@ screams, "The pain, the pain!"
+@The_monster@ schreit, "Der Schmerz, der Schmerz!"
 
-VISUAL:@The_monster@ begins coughing up blood.
+VISUAL:@The_monster@ beginnt, Blut zu husten.
 
-@The_monster@ yells, "Please, just kill me!"
-
-w:1
-VISUAL:@The_monster@ begins hyperventilating.
-
-VISUAL:@The_monster@ twists in agony.
-
-VISUAL:@The_monster@ stares vacantly at its hideously deformed hands.
-
-@The_monster@ asks, "What has happened to me?"
-
-@The_monster@ asks, "What has been done to me?"
-
-VISUAL:@The_monster@ prays for aid.
-
-@The_monster@ sagt, "I think I died... I think I'm dead..."
-
-w:3
-@The_monster@ wails, "So itchy! Itchy, itchy, itchy! Always itchy!"
-
-VISUAL:@The_monster@ gurgles, unable to form words.
+@The_monster@ schreit, "Bitte, töte mich einfach!"
 
 w:1
-@The_monster@ yells, "I will have my revenge on the monster who did this!"
+VISUAL:@The_monster@ beginnt zu hyperventilieren.
 
-@The_monster@ murmelt, "Took all my skin, all gone, all gone..."
+VISUAL:@The_monster@ windet sich vor Qual.
 
-@The_monster@ sagt, "I was beautiful once. Now look at me."
+VISUAL:@The_monster@ starrt ausdruckslos auf seine grässlich deformierten Hände.
 
-VISUAL:@The_monster@ wriggles its tentacles.
+@The_monster@ fragt, "Was ist mit mir geschehen?"
 
-VISUAL:A dozen eyes blink open in the @monster@'s chest.
+@The_monster@ fragt, "Was hat man mir angetan?"
 
-VISUAL:Strange appendages sprout from the @monster@'s back.
+VISUAL:@The_monster@ betet um Hilfe.
 
-VISUAL:@The_monster@ lashes its tail.
-
-VISUAL:@The_monster@ suddenly sprouts two large horns!
+@The_monster@ sagt, "Ich glaube, ich bin gestorben... Ich glaube, ich bin tot..."
 
 w:3
-VISUAL:@The_monster@'s flesh secretes a thick mucus.
+@The_monster@ jammert, "Es juckt so! Juckend, juckend, juckend! Immer juckt es!"
 
-VISUAL:Hollow, blind eyes appear on the @monster@'s head.
+VISUAL:@The_monster@ gurgelt, unfähig, Worte zu bilden.
 
-VISUAL:Suppurating sores blossom under the @monster@'s eyelids.
+w:1
+@The_monster@ schreit, "Ich werde mich an dem Monster rächen, das das getan hat!"
 
-@The_monster@ begs you to kill @objective@.
+@The_monster@ murmelt, "Hat mir die ganze Haut genommen, ganz weg, ganz weg..."
 
-VISUAL:@The_monster@ looks at its body and cries without tears.
+@The_monster@ sagt, "Ich war einmal schön. Jetzt sieh mich an."
+
+VISUAL:@The_monster@ zappelt mit seinen Tentakeln.
+
+VISUAL:Ein Dutzend Augen blinzeln in der Brust {gen}@the_monster@ auf.
+
+VISUAL:Aus dem Rücken {gen}@the_monster@ sprießen seltsame Anhängsel.
+
+VISUAL:@The_monster@ peitscht mit dem Schwanz.
+
+VISUAL:@The_monster@ hat plötzlich zwei große Hörner!
+
+w:3
+VISUAL:Das Fleisch {gen}@the_monster@ sondert einen dicken Schleim ab.
+
+VISUAL:Hohle, blinde Augen erscheinen auf dem Kopf {gen}@the_monster@.
+
+VISUAL:Eiternde Wunden blühen unter den Augenlidern {gen}@the_monster@.
+
+@The_monster@ bittet um den Tod.
+
+VISUAL:@The_monster@ schaut auf den Körper und weint ohne Tränen.
 
 # Pungent Stench
-@The_monster@ screams, "I am only a sick, bizarre, defaced creation."
+@The_monster@ schreit, "Ich bin nur eine kranke, bizarre, verunstaltete Schöpfung."
 %%%%
 #############################################################
 # Gozag bribery keys
