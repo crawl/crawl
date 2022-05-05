@@ -4135,12 +4135,11 @@ bool confuse_player(int amount, bool quiet, bool force)
     return true;
 }
 
-void paralyse_player(string source, int amount)
+void paralyse_player(string source)
 {
-    if (!amount)
-        amount = 2 + random2(6 + you.duration[DUR_PARALYSIS] / BASELINE_DELAY);
-
-    you.paralyse(nullptr, amount, source);
+    const int cur_para = you.duration[DUR_PARALYSIS] / BASELINE_DELAY;
+    const int dur = random_range(2, 5 + cur_para);
+    you.paralyse(nullptr, dur, source);
 }
 
 bool poison_player(int amount, string source, string source_aux, bool force)

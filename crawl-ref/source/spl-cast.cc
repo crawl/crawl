@@ -2923,6 +2923,6 @@ void do_demonic_magic(int pow, int rank)
             continue;
 
         if (mons->check_willpower(&you, pow) <= 0)
-            mons->paralyse(&you, 1 + roll_dice(1,4));
+            mons->paralyse(&you, random_range(2, 5));
     }
 }
