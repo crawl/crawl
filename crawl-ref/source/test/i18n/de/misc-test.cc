@@ -122,32 +122,49 @@ int main()
     env.level_map_mask.init(INVALID_MAP_INDEX);
     init_monsters();
 
-    monster *mons = get_free_monster();
-    mons->type = MONS_DOWAN;
-    mons->hit_points = 30;
-    mons->position = coord_def(10, 9);
+    monster *dowan = get_free_monster();
+    dowan->type = MONS_DOWAN;
+    dowan->hit_points = 30;
+    dowan->position = coord_def(10, 9);
 
-    monster *mons2 = get_free_monster();
-    mons2->type = MONS_ORC;
-    mons2->hit_points = 20;
-    mons2->position = coord_def(10, 11);
+    monster *orc = get_free_monster();
+    orc->type = MONS_ORC;
+    orc->hit_points = 20;
+    orc->position = coord_def(10, 11);
 
-    mons->foe = mons2->mindex();
+    dowan->foe = orc->mindex();
     msg = getSpeakString("Gozag permabribe");
-    msg = do_mon_str_replacements(msg, *mons);
+    msg = do_mon_str_replacements(msg, *dowan);
     expected = "Dowan grinst den Ork gierig an und klimpert mit dem Geldbeutel.";
     show_result(msg, expected);
 
-    mons->foe = MHITYOU;
+    dowan->foe = MHITYOU;
     msg = getSpeakString("Gozag permabribe");
-    msg = do_mon_str_replacements(msg, *mons);
+    msg = do_mon_str_replacements(msg, *dowan);
     expected = "Dowan grinst Euch gierig an und klimpert mit dem Geldbeutel.";
     show_result(msg, expected);
 
-    // test invisible monster
-    mons->add_ench(mon_enchant(ENCH_INVIS));
+    dowan->foe = orc->mindex();
+    msg = getSpeakString("_Vashnia_rare_2_");
+    msg = do_mon_str_replacements(msg, *dowan);
+    expected = "Dowan sagt zu dem Ork, \"Du wirst ein schönes Nadelkissen abgeben.\"";
+    show_result(msg, expected);
+
+    dowan->foe = MHITYOU;
+    msg = getSpeakString("_Vashnia_rare_2_");
+    msg = do_mon_str_replacements(msg, *dowan);
+    expected = "Dowan sagt, \"Du wirst ein schönes Nadelkissen abgeben.\"";
+    show_result(msg, expected);
+
     msg = getSpeakString("fleeing Dowan");
-    msg = do_mon_str_replacements(msg, *mons);
+    msg = do_mon_str_replacements(msg, *orc);
+    expected = "VISUAL:Der Ork schreit entsetzt auf.";
+    show_result(msg, expected);
+
+    // test invisible monster
+    orc->add_ench(mon_enchant(ENCH_INVIS));
+    msg = getSpeakString("fleeing Dowan");
+    msg = do_mon_str_replacements(msg, *orc);
     expected = "VISUAL:Etwas schreit entsetzt auf.";
     show_result(msg, expected);
 }

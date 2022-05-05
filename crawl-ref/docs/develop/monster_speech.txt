@@ -509,18 +509,13 @@ The following variables are hardcoded:
 @hands@         : plural of @hand@ [1]
 @arms@          : plural of @arm@ [1]
 @feet@          : plural of @foot@ [1]
+@foe@           : The currently targetted foe of the monster
+                  - either "you" or another monster
 @speaks@        : synonym of "says" that fits monsters' (hardcoded)
-                  speech pattern and noise level.
-@foe@           : The monster's foe - either "you" or another monster
-@says_to_foe@   : "says" if foe is you, "says to @foe@" otherwise
-@screams_at_foe@: "screams" if foe is you, "screams at @foe@" otherwise
-@shouts_at_foe@ : "shouts" if foe is you, "shouts at @foe@" otherwise
-@asks_foe@      : "asks" if foe is you, "asks @foe@" otherwise
-@speaks_to_foe@ : sound that fits monsters' (hardcoded) speech pattern and
-                  noise level. For many monsters, this will be the same
-                  as @says_to_foe@, but a dragon, for example, will 
-                  "roar at @foe@". As per the other variables above, the
-                  "at/to @foe@" bit will be omitted if foe is you.
+                  speech pattern and noise level (e.g. says, shouts, screams, etc.)
+@speaks_to_foe@ : if foe is you then just "@speaks@", otherwise 
+                  "@speaks@ to/at @foe" as appropriate (e.g. "says to @foe@",
+                  "shouts at @foe@", etc.)
 
 Capitalized forms (@Monster@, @A_something@, @Possessive@, @My_God@)
 are expanded with capitalized text.

@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <regex>
 #include <sstream>
 
 #include "act-iter.h"
@@ -4328,51 +4329,16 @@ static string _get_species_insult(const string &species, const string &type)
     // noloc section end
 }
 
-// From should be of the form "prefix @tag@". Replaces all substrings
-// of the form "prefix @tag@" with to, and all strings of the form
-// "prefix @tag/alt@" with either to (if nonempty) or "prefix alt".
-static string _replace_speech_tag(string msg, string from, const string &to)
+// replace a construction like [foo?baz:bar] with baz if foo is true,
+// or bar if foo is false
+static string _resolve_conditional_speech(const string &s, const string& key,
+                                          bool value)
 {
-    if (from.empty())
-        return msg;
-    msg = replace_all(msg, from, to);
-
-    // Change the @ to a / for the next search
-    from[from.size() - 1] = '/';
-
-    // @tag/alternative@
-    size_t pos = 0;
-    while ((pos = msg.find(from, pos)) != string::npos)
-    {
-        // beginning of tag
-        const size_t at_pos = msg.find('@', pos);
-        // beginning of alternative
-        const size_t alt_pos = pos + from.size();
-        // end of tag (one-past-the-end of alternative)
-        const size_t alt_end = msg.find('@', alt_pos);
-
-        // unclosed @tag/alt, or "from" has no @: leave it alone.
-        if (alt_end == string::npos || at_pos == string::npos)
-            break;
-
-        if (to.empty())
-        {
-            // Replace only the @...@ part.
-            msg.replace(at_pos, alt_end - at_pos + 1,
-                        msg.substr(alt_pos, alt_end - alt_pos));
-            pos = at_pos + (alt_end - alt_pos);
-        }
-        else
-        {
-            // Replace the whole from string, up to the second @
-            msg.replace(pos, alt_end - pos + 1, to);
-            pos += to.size();
-        }
-    }
-    return msg;
+    regex rgx("\\[" + key +"\\?([^:\\?\\[\\]]*):([^:\\?\\[\\]]*)\\]");
+    return regex_replace(s, rgx, value ? "$1" : "$2");
 }
 
-static string _get_sound_string(int s_type, bool foe_is_player)
+static string _get_sound_string(int s_type, bool verb_only)
 {
     static const char * sound_list[] =
     {
@@ -4407,7 +4373,7 @@ static string _get_sound_string(int s_type, bool foe_is_player)
     COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
 
     // if fo is player, we don't say "at/to you", we just use the verb
-    static const char * sound_list_player_foe[] =
+    static const char * sound_list_verb_only[] =
     {
         "says",         // actually S_SILENT
         "shouts",
@@ -4437,16 +4403,16 @@ static string _get_sound_string(int s_type, bool foe_is_player)
         "shouts",       // S_LOUD
         "screams",      // S_VERY_LOUD
     };
-    COMPILE_CHECK(ARRAYSZ(sound_list_player_foe) == NUM_LOUDNESS);
+    COMPILE_CHECK(ARRAYSZ(sound_list_verb_only) == NUM_LOUDNESS);
 
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
     {
         mprf(MSGCH_DIAGNOSTICS, "Invalid @says@ type.");
-        return foe_is_player ? "buggily says" : "buggily says to @foe@";
+        return verb_only ? "buggily says" : "buggily says to @foe@";
     }
-    else if (foe_is_player)
-        return sound_list_player_foe[s_type];
+    else if (verb_only)
+        return sound_list_verb_only[s_type];
     else
         return sound_list[s_type];
 
@@ -4466,8 +4432,6 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
         s_type = mons_shouts(mons.type);
 
-    msg = maybe_pick_random_substring(msg);
-
     map<string, string> params;
 
     // FIXME: Handle player_genus in case it was not generalised to foe_genus.
@@ -4477,15 +4441,14 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     params["player_genus_plural"] =  pluralise(player_genus);
 
     string foe_genus;
+    bool foe_is_player = false;
 
     if (foe == nullptr)
-        ;
+        params["foe"] = "NULL";
     else if (foe->is_player())
     {
+        foe_is_player = true;
         foe_genus = player_genus;
-
-        msg = _replace_speech_tag(msg, " @to_foe@", "");
-        msg = _replace_speech_tag(msg, " @at_foe@", "");
 
         msg = replace_all(msg, "@player_only@", "");
 
@@ -4494,14 +4457,6 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
         params["foe_name"] = you.your_name;
         params["foe_species"] = species::name(you.species);
-
-        params["says_to_foe"] = "says";
-        params["screams_at_foe"] = "screams";
-        params["shouts_at_foe"] = "shouts";
-        params["asks_foe"] = "asks";
-
-        // monster-specific sounds
-        params["speaks_to_foe"] = _get_sound_string(s_type, true);
     }
     else
     {
@@ -4522,13 +4477,6 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         params["foe_possessive"] = apostrophise(foe_name);
         params["foe"] = foe_name;
 
-        if (!localisation_active())
-        {
-            // i18n: this only works for English
-        msg = _replace_speech_tag(msg, " @to_foe@", " to @foe@");
-        msg = _replace_speech_tag(msg, " @at_foe@", " at @foe@");
-        }
-
         if (m_foe->is_named())
             params["foe_name"] = foe->name(DESC_PLAIN, true);
 
@@ -4536,14 +4484,6 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         params["foe_species"] = species;
 
         foe_genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
-
-        params["says_to_foe"] = "says to @foe@";
-        params["screams_at_foe"] = "screams at @foe@";
-        params["shouts_at_foe"] = "shouts at @foe@";
-        params["asks_foe"] = "asks @foe@";
-
-        // monster-specific sounds
-        params["speaks_to_foe"] = _get_sound_string(s_type, false);
     }
 
     params["foe_genus"] = foe_genus;
@@ -4690,6 +4630,10 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     // monster-specific sounds
     params["speaks"] = _get_sound_string(s_type, true);
+    params["speaks_to_foe"] = _get_sound_string(s_type, foe_is_player);
+
+    msg = _resolve_conditional_speech(msg, "foe_is_player", foe_is_player);
+    msg = maybe_pick_random_substring(msg);
 
     // i18n: msg text should already be in the target language,
     // but the params need to be localised

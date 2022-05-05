@@ -12095,9 +12095,6 @@ haucht
 whispers
 flüstert
 %%%%
-@foe@,
-
-%%%%
 the water
 das Wasser
 %%%%
@@ -12112,12 +12109,6 @@ ein Gott
 %%%%
 my god
 mein Gott
-%%%%
-asks
-fragt
-%%%%
-asks @foe@
-fragt {acc}@foe@
 %%%%
 %s is %s.
 %s ist %s.
