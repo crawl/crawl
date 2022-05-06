@@ -1,0 +1,786 @@
+############################################################
+# godspeak.txt contains the messages for divine speech.
+#
+# For an explanation of how to read godspeak.txt and how to
+# add new messages, see monster_speech.txt in the
+# docs/develop/ directory.
+############################################################
+%%%%
+# fall-back in case a keyword can't be found
+Xom general effect
+
+Xom kichert.
+
+"Wie wäre es damit?"
+
+"Lass uns ein Experiment machen, hmmm?"
+
+w:1
+"Ich frage mich... Was macht dieser Knopf?"
+%%%%
+##############################
+# Xom throwing stuff at you.
+##############################
+Xom general gift
+
+Xom gewährt dir ein Geschenk!
+
+"Hier."
+
+Xoms großzügige Natur offenbart sich.
+
+Xom schenkt Euch eine Art Instrument
+
+"Nimm dieses Instrument von etwas!"
+
+"Nimm dieses Zeichen meiner Wertschätzung."
+
+Xom lächelt Euch an.
+
+"Fang!"
+%%%%
+####################
+# friendly summons
+####################
+Xom single summon
+
+"Diene dem Sterblichen, mein Kind!"
+
+"Diene dem Spielzeug, mein Kind!"
+
+Xom öffnet ein Tor.
+%%%%
+# several demons
+Xom multiple summons
+
+"Dient den Sterblichen, meine Kinder!"
+
+Xom gewährt Euch eine vorübergehende Hilfe.
+
+Xom öffnet kurzzeitig ein Tor.
+%%%%
+Xom animate monster weapon
+
+"Zeit, sich zu amüsieren!"
+
+Du hörst Xoms wahnsinniges Lachen.
+
+Xom gewährt Euch einen kleinen Gefallen.
+
+Xom lächelt Euch an.
+%%%%
+# changing the scenery
+Xom scenery
+
+Xom berührt kurz Eure Umgebung.
+
+Xom verleiht Eurer Umgebung eine persönliche Note.
+
+Xom beschwert sich über die Landschaft.
+
+Xom verändert den Dungeon um dich herum.
+
+"So, das sieht besser aus."
+
+"Nur eine kleine Verbesserung..."
+%%%%
+##################
+# Xom nastiness
+##################
+Xom rearrange the pieces
+
+Xom beschließt, die Figuren neu anzuordnen.
+
+"Erst hier, jetzt dort".
+
+"Das könnte besser sein!"
+
+"So mag ich es!"
+%%%%
+Xom teleportation journey
+
+"Huiii!"
+
+"Komm, wir machen einen Ausflug!"
+
+"Wo es aufhört, weiß niemand!"
+
+Xom verdreht den Raum um Euch herum.
+%%%%
+Xom confusion
+
+"Heh heh heh..."
+
+Die Macht von Xom berührt für einen Moment Euren Geist.
+
+Xom kichert.
+%%%%
+# 50% stat loss, 25% draining, 25% torment
+Xom draining or torment
+
+"Du hast mich verärgert, Sterblicher."
+
+"Du bist zu selbstbewusst für deinen geringen Wert."
+
+Xoms Macht berührt Euch einen Moment lang.
+
+Ihr hört Xoms wahnsinniges Lachen.
+
+"Leide!"
+
+Xoms bösartige Aufmerksamkeit richtet sich für einen Moment auf Euch.
+%%%%
+# 25% chance dancing weapon, else summon hostile monster
+Xom hostile monster
+
+"Zeit, sich zu amüsieren!"
+
+"Kämpfe ums Überleben, Sterblicher."
+
+"Mal sehen, ob es stark genug ist, um zu überleben."
+
+Ihr hört Xoms wahnsinniges Lachen.
+%%%%
+Xom banishment
+
+"Du hast es dir in deiner kleinen Welt zu bequem gemacht, Sterblicher!"
+
+Xom wirft Euch in den Abgrund!
+
+Die Welt scheint sich zu drehen, während Xoms wahnsinniges Lachen in Euren Ohren klingt.
+%%%%
+Xom revert own banishment
+
+w:30
+"Ein Scherz!"
+
+"Aber wenn ich es mir recht überlege..."
+
+"Nein, ich habe es mir anders überlegt."
+
+Xom zieht Euch zurück in die vergleichbare Stille des Dungeons.
+%%%%
+%%%%
+Xom revert other banishment
+
+"Komm zurück!"
+
+"Nein, tust du nicht!"
+
+Xom zieht Euch zurück in die vergleichbare Stille des Verlieses.
+%%%%
+# Xom upgrades a nearby hostile monster's weapon to a chaos brand
+Xom chaos upgrade
+
+Xoms Macht berührt eine Waffe in der Nähe.
+
+"Lass dir das Chaos schmecken, Sterblicher."
+
+Xom gluckst.
+%%%%
+Xom noise
+
+Xom macht plötzlich ein Geräusch! Ihr hört @weapon_noise@
+
+w:1
+"Buh!"
+
+w:1
+Xom macht einen Trommelwirbel.
+%%%%
+Xom blink monsters
+
+"Da drüben, sofort!"
+
+"Komm hierher!"
+
+Xom beschließt, ein bisschen umzuräumen.
+%%%%
+#####################
+# other effects
+#####################
+Xom potion effect
+
+"Geh hinaus und zerstöre!"
+
+"Geh hinaus und richte Schaden an, Sterblicher!"
+
+Xom gewährt Euch einen kleinen Gefallen.
+
+Xom lächelt Euch an.
+%%%%
+Xom cleaving
+
+@Xom potion effect@
+%%%%
+# random divination (magic mapping, detect items, detect creatures)
+Xom divination
+
+"Sieh, was ich sehe, mein Kind!"
+
+Xom gewährt dir Einsicht.
+
+Xom schmunzelt.
+%%%%
+# cast a random spell
+Xom spell effect
+
+Die Macht von Xom fließt durch Euch!
+
+Xom spielt einen Moment lang mit der Realität.
+
+Xom lacht.
+%%%%
+# multicoloured smoke trail
+Xom cloud trail
+
+"Geh hinaus und dekoriere neu, mein Kind!"
+
+"Dieser Ort braucht ein bisschen mehr Atmosphäre."
+%%%%
+# strengthens friendlies, weakens hostiles
+Xom good monster polymorph
+
+"Das könnte besser sein!"
+
+"Hum-di-hum-di-hum..."
+
+Xoms Kraft berührt ein Monster in der Nähe.
+
+Ihr hört Xoms onkelhaftes Kichern.
+%%%%
+# weakens friendlies, strengthens hostiles
+Xom bad monster polymorph
+
+@Xom good monster polymorph@
+%%%%
+Xom good mutations
+
+"Du brauchst ein paar kleine Korrekturen, Sterblicher!"
+
+"Lass mich deinen erbärmlichen Körper verändern."
+
+Xoms Macht berührt Euch einen Moment lang.
+
+Ihr hört Xoms wahnsinniges Gackern.
+%%%%
+Xom random mutations
+
+"Du brauchst ein paar kleine Verbesserungen, Sterblicher!"
+
+"Lass mich deinen Körper verändern."
+
+Xoms Macht berührt Euch für einen Moment.
+
+Ihr hört Xoms onkelhaftes Kichern.
+%%%%
+Xom snakes to sticks
+
+Xom verwandelt Dinge um Euch herum.
+
+"So gefallen sie mir besser."
+
+"Ich mochte diese verschnörkelten Dinger noch nie."
+
+Xom berührt Eure Umgebung.
+
+@Xom good monster polymorph@
+%%%%
+Xom destruction
+
+"Brenn, Baby, brenn!"
+
+"Ka-boom!"
+
+Xom ruft gewaltige Explosionen hervor.
+
+Xom lässt Verwüstung niederregnen!
+
+@Xom fake destruction@
+%%%%
+Xom fake destruction
+
+"Spüre meine Macht!"
+
+Xom demonstriert seine zerstörerische Kraft.
+
+w:1
+"Es soll im Höllenfeuer enden!"
+%%%%
+Xom accidental homicide
+
+"Ups, das wollte ich nicht tun!"
+%%%%
+Xom weird death
+
+"Wie ist das passiert? Seltsam."
+%%%%
+Xom resurrection
+
+"Lass mich deinen Körper reparieren."
+
+Xom bringt den Tod dazu, Euch in Ruhe zu lassen.
+
+Xoms wahnsinniges Lachen verscheucht den Tod.
+
+Xoms Macht belebt Euch wieder.
+
+Xom erweckt Euch wieder zum Leben.
+
+Xom lächelt Euch an.
+
+"Spielzeug, stirb mir jetzt nicht weg!"
+
+w:1
+"Ein [weiteres Leben|weiterer Versuch|weiterer Anlauf]."
+%%%%
+Xom repel stairs
+
+Xom verändert die Szenerie.
+
+Xom stößt auf eine nahe gelegene @staircase@.
+
+"Du bist dran!"
+
+Xom verändert den Dungeon um Euch herum.
+%%%%
+Xom good enchant monster
+
+@Xom good monster polymorph@
+%%%%
+Xom bad enchant monster
+
+@Xom good enchant monster@
+%%%%
+Xom stealth player
+
+Xom bringt Euch auffällig zum Schweigen.
+
+Xom flüstert: Pssst!
+%%%%
+Xom cloud
+
+"Das Wetter ist hier ein bisschen zu langweilig."
+
+Xom bittet Qazlal, die Sache ein wenig aufzupeppen.
+
+"Vorhersage: überwiegend bewölkt."
+%%%%
+Xom life saving general
+
+"Was? Warte, NEIN!"
+
+"Hey, es wurde gerade interessant!"
+
+"NOOOOOOO, nicht @_my_plaything_@!"
+
+"Nicht hier und nicht jetzt."
+
+"Nur noch ein Versuch."
+
+Xom ist großzügig.
+%%%%
+Xom life saving actor
+
+w:20
+@Xom life saving general@
+
+"Hey, das ist @_my_plaything_@!"
+
+"Oh, nein, das tust du nicht!"
+
+"Das ist @_my_plaything_@, hol dir dein eigenes!"
+
+"Lass @_my_plaything_acc_@ in Ruhe!"
+%%%%
+Xom boring death
+
+Xom gähnt laut!
+
+"Langweilig im Leben, langweilig im Tod..."
+
+"Was!? Das war's?"
+
+"Ich glaube, ich brauche jetzt ein neues Spielzeug."
+
+"Hm? Habe ich etwas verpasst?"
+
+"Es war an der Zeit."
+
+"Dieses Spielzeug ist kaputt."
+
+"Es ist alles nur Spaß und Spiel, bis jemand ein Auge verliert."
+
+w:1
+"Es ist kein Spaß und kein Spiel, bis jemand ein Auge verliert."
+%%%%
+# Xom laughing
+# (Currently only used post-game in response to "You die...")
+Xom laughter
+
+Xom lacht sich kaputt!
+
+Xom brüllt vor Lachen!
+
+Xom findet das zum Totlachen!
+
+Xom ist höchst amüsiert!
+
+Xom gackert wie wild!
+
+Xom kichert!
+
+Xom lacht hämisch!
+
+Xom heult vor Lachen!
+
+Xom bricht in Gelächter aus!
+
+Xom kichert wie verrückt!
+
+Xom kichert!
+
+Xom lacht herzhaft!
+
+Xom gluckst!
+%%%%
+_my_plaything_
+
+# piety > 180 and > 80, respectively
+{{
+if you.piety_rank() > 4 then
+    return "mein Teddybär"
+elseif you.piety_rank() > 2 then
+    return "mein Spielzeug"
+else
+    return "meine Spielsache"
+end
+}}
+%%%%
+_my_plaything_acc_
+
+# piety > 180 and > 80, respectively
+{{
+if you.piety_rank() > 4 then
+    return "meinen Teddybären"
+elseif you.piety_rank() > 2 then
+    return "mein Spielzeug"
+else
+    return "meine Spielsache"
+end
+}}
+%%%%
+recite_closure
+
+"Amen!"
+
+"Ruhm für Zin!"
+
+"Und so wurde es geschrieben."
+
+"Das sagt Zin."
+
+"Reinheit sei mit euch allen."
+
+"Geschrieben mit Blut, besiegelt durch deinen Tod".
+
+"Aus Zins Mund, von Zins Hand."
+
+w:5
+"So soll es immer sein."
+
+w:3
+"Im Feuer! Im Schmerz!"
+%%%%
+######################################
+# Welcome messages on game restoration
+######################################
+Ashenzari welcome
+
+Aschenzari sagt: Nimm teil an meiner Vision. Nimm teil an meinem Fluch.
+%%%%
+Beogh penance
+
+Beogh sagt: Verratet nicht eure orkischen Brüder!
+%%%%
+Beogh welcome
+
+Beogh sagt: Ertränk die Ungläubigen in einem Meer von Blut!
+%%%%
+Cheibriados penance
+
+Cheibriados sagt: Sei nicht so voreilig!
+%%%%
+Cheibriados welcome
+
+Cheibriados sagt: Immer mit der Ruhe.
+%%%%
+Dithmenos penance
+
+Dithmenos sagt: Kehre zurück in die Dunkelheit!
+%%%%
+Dithmenos welcome
+
+Dithmenos sagt: Verbreite die ewige Nacht.
+%%%%
+Elyvilon penance
+
+Elyvilon sagt: Sei eifriger in deinen Diensten.
+%%%%
+Elyvilon welcome
+
+Elyvilon sagt: Geh hinaus und hilf den Schwachen!
+%%%%
+Fedhas penance
+
+Fedhas protestiert gegen Eure Eingriffe gegen die Natur.
+%%%%
+Fedhas welcome
+
+Fedhas sagt: Verbreite Leben und Tod.
+%%%%
+Gozag welcome
+
+Gozag sagt: Gier ist gut.
+%%%%
+Hepliaklqana welcome
+
+Hepliaklqana sagt: Deine Vergangenheit wird zu deiner Gegenwart!
+%%%%
+Jiyva welcome
+
+Schleim für den Schleimgott!
+
+w:1
+Es lebe das neue Fleisch!
+%%%%
+Kikubaaqudgha welcome
+
+Kikubaaqudgha sagt: Verbreite unendliche Qualen und Dunkelheit!
+%%%%
+Lugonu welcome
+
+Lugonu sagt: Verbreite Gemetzel und Korruption!
+%%%%
+Lugonu newgame
+
+Lugonu says: Verlasse den Abgrund und verbreite Verderben, mein Diener!
+<lightgrey>(das F<w>a</w>eigkeitsmenü benutzen, um den Abgrund zu verlassen)</lightgrey>
+%%%%
+Makhleb welcome
+
+Blut und Seelen für Makhleb!
+%%%%
+Nemelex Xobeh welcome
+
+Nemelex Xobeh sagt: Es ist alles in den Karten!
+%%%%
+Okawaru penance
+
+Okawaru sagt: Stelle deine Ehre im Kampf wieder her!
+%%%%
+Okawaru welcome
+
+Okawaru sagt: Bring mir Ruhm im Kampf!
+%%%%
+# Remove Pakellas speech when TAG_MAJOR_VERSION > 34
+Pakellas penance
+
+Pakellas sagt: Das ist ein Ansatz, der hier nicht funktionieren wird.
+
+Pakellas sagt: Enttäuschende Ergebnisse bis jetzt.
+
+Pakellas sagt: Bei diesem Tempo müssen wir das Experiment vielleicht abbrechen.
+
+Pakellas sagt: Steh dem Fortschritt nicht im Weg!
+%%%%
+Pakellas welcome
+
+Pakellas sagt: Es ist Zeit, das Experiment fortzusetzen.
+
+Pakellas sagt: Es ist Zeit, weitere Testpersonen zu finden.
+
+Pakellas sagt: Bist du bereit, weitere Geräte auszuprobieren?
+
+Pakellas sagt: Dies führt zu einigen sehr interessanten Ergebnissen.
+
+Pakellas sagt: Welche Lösungen wirst du dich als Nächstes einfallen lassen?
+
+Pakellas sagt: Fortschritt oder Untergang!
+
+# nicolae-
+w:5
+Pakellas sagt: Keiner sagt einem Gott, er solle nicht Gott spielen!
+
+w:1
+Pakellas sagt: Sie nannten mich verrückt... nun, wir werden es ihnen zeigen!
+%%%%
+Pakellas death
+
+Pakellas sagt: Zurück zum Reißbrett!
+
+Pakellas sagt: Gute Hilfe ist heutzutage so schwer zu finden!
+
+Pakellas sagt: Zeit, einen neuen Assistenten zu finden...
+
+Pakellas sagt: Das ist ein weiterer möglicher Ansatz, der eliminiert wurde.
+
+Pakellas sagt: Zeit, das nächste Experiment zu starten...
+%%%%
+Qazlal penance
+
+Qazlal donnert: Greift nicht in die natürliche Ordnung ein!
+%%%%
+Qazlal welcome
+
+Qazlal sagt: Lasst die Kräfte der Natur alles niederreißen!
+%%%%
+Ru welcome
+
+Ru sagt: Schneide deinen falschen Körper weg!
+%%%%
+Sif Muna penance
+
+Sif Muna sagt: Suche nach mehr Wissen und Weisheit.
+%%%%
+Sif Muna welcome
+
+Sif Muna flüstert: Ich kenne viele Geheimnisse...
+%%%%
+the Shining One penance
+
+Der Glänzende sagt: Ein Märtyrer zu sein, kann deine Sünde wegwaschen!
+%%%%
+the Shining One welcome
+
+Der Glänzende sagt: Führe die Kräfte des Lichts zum Sieg!
+%%%%
+Trog penance
+
+Trog wütet: Tötet sie alle!
+%%%%
+Trog welcome
+
+Trog sagt: Tötet sie alle!
+%%%%
+Uskayaw welcome
+
+Uskayaw sagt: Gib dich dem Rhythmus hin!
+%%%%
+Vehumet welcome
+
+Vehumet sagt: Lass es im Höllenfeuer enden!
+%%%%
+Wu Jian welcome
+
+Der Konzil sagt: Folge dem Pfad der Weisheit und des Kampfes!
+%%%%
+Xom bored
+
+Xom gähnt.
+
+"Ich frage mich, was noch läuft..."
+
+@Xom welcome@
+%%%%
+Xom newgame
+
+Xom sagt: Ein neues Spielzeug!
+%%%%
+Xom welcome
+
+Xom kichert.
+
+Xom gluckst.
+
+w:3
+@_xom_welcome_rare_@
+%%%%
+_xom_welcome_rare_
+
+Xom says: Ich beobachte dich, mein @_xom_child_@.
+
+Xom ohrfeigt Euch mit einer @_trout_species_@!
+%%%%
+_xom_child_
+
+scheußliches Kind
+
+uneheliches Kind
+
+hässliches Kind
+
+rothaariges Stiefkind
+
+dummes Kind
+
+wertloses Kind
+
+verschwenderisches Kind
+
+wahnsinniges Kind
+
+freches Kind
+%%%%
+_trout_species_
+
+Regenbogenforelle
+
+Kropfforelle
+
+Cutthroat-Forelle
+
+Stierforelle
+
+Silberforelle
+
+w:3
+@_trout_species_rare_@
+%%%%
+_trout_species_rare_
+
+komplexen Forelle
+
+polygonalen Forelle
+
+imaginären Forelle
+
+inversen Forelle
+
+unwahrscheinlichen Forelle
+
+benutzten Forelle
+
+gebrauchten Forelle
+
+verbotenen Forelle
+
+anspruchsvollen Forelle
+
+leckeren Forelle
+
+verschimmelten Forelle
+
+gefälschten Forelle
+
+w:2
+Objekt Forelle
+%%%%
+Yredelemnul penance
+
+Yredelemnul sagt: Im Tod sind alle gleich! Heiliges Märtyrertum bedeutet nichts!
+%%%%
+Yredelemnul welcome
+
+Yredelemnul sagt: Tragt die schwarze Fackel! Erwecke die untätigen Toten!
+%%%%
+Zin penance
+
+Zin geißelt Euch für Euren Ungehorsam gegenüber dem Gesetz.
+
+Zin erklärt eindringlich die Bedeutung @_important_subject_gen_@
+%%%%
+Zin welcome
+
+Zin sagt: Verbreite das Licht, mein Kind.
+%%%%

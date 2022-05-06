@@ -7193,7 +7193,7 @@ w:40
 
 @The_monster@ erklärt ausführlich über @_recite_subject_@
 
-@The_monster@ erklärt @_important_subject_@
+@The_monster@ erklärt die Bedeutung @_important_subject_gen_@
 
 @The_monster@ @_recites_start_@ eine @_lecture_modifier_@ Predigt über @_recite_subject_@
 
@@ -7240,7 +7240,6 @@ die Bücher des Gesetzes.
 
 das heilige Gesetz Zins.
 %%%%
-# used for "explaining the importance of ..."
 _important_subject_
 
 # law
@@ -7272,6 +7271,39 @@ die richtigen Bestattungspraktiken.
 
 # demons
 die Ablehnung des Dienstes von Dämonen.
+%%%%
+# used for "explaining the importance of ..."
+_important_subject_gen_
+
+# law
+#w:50
+#@_axioms_of_law_@
+
+des ewigen Gesetzes.
+
+der Gehorsamkeit gegenüber dem Gesetz.
+
+des einzigen wahren Wegs.
+
+# purity
+der Reinheit von Körper und Geist.
+
+des Bewahrens der körperlichen Unversehrtheit.
+
+der Reinhaltung des Körpers.
+
+der richtigen Pflege von Körper und Geist.
+
+# mutations
+der Vermeidung von Mutationen.
+
+dass man einfach nein zu Mutationen sagt.
+
+# respecting intelligent beings
+der richtigen Bestattungspraktiken.
+
+# demons
+der Ablehnung des Dienstes von Dämonen.
 %%%%
 # the subject of your recital/lecture/whatever
 # needs the full dot or exclamation mark
