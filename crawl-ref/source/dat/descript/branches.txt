@@ -194,11 +194,10 @@ Gauntlet
 An elaborate complex designed to lure foolhardy adventurers seeking riches and
 glory. Those who enter must choose a path through several combat arenas, each
 of which contains treasure guarded by dangerous and sometimes exotic creatures.
-At the end awaits a fearsome minotaur guarding a large hoard of loot taken from
+At the end awaits a fearsome minotaur, guarding a large hoard of loot taken from
 the bodies of foolish adventurers.
 
-Beware that powerful magic prevents long-range teleports in Gauntlets. What's
-worse, some of these complexes offer only one exit...in the minotaur's lair.
+Long-range teleports are impossible in Gauntlets.
 %%%%
 Bazaar
 

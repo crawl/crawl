@@ -1197,7 +1197,7 @@ ENDMAP
 # the string 'exit_glyphs'.
 
 # The glyphs in these strings must be in the same order of the subvault
-# transporter satements so that the transporters go to their intended
+# transporter statements so that the transporters go to their intended
 # destinations.
 #
 # Gauntlet arenas have two tiers for easier and harder difficulties. To set a
