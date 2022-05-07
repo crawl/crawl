@@ -943,7 +943,8 @@ A ring that protects its wearer from the effects of acid and corrosion.
 %%%%
 ring of magical power
 
-A ring that increases its wearer's reserves of magical power.
+A ring that increases its wearer's reserves of magical power for so long as it
+is worn.
 %%%%
 ring of poison resistance
 

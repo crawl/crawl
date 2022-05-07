@@ -374,8 +374,10 @@ static void _unequip_artefact_effect(item_def &item,
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
     {
-        canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_DECREASE
-                                                  : MSG_MANA_INCREASE);
+        const bool gives_mp = proprt[ARTP_MAGICAL_POWER] > 0;
+        canned_msg(gives_mp ? MSG_MANA_DECREASE : MSG_MANA_INCREASE);
+        if (gives_mp)
+            drain_mp(proprt[ARTP_MAGICAL_POWER]);
     }
 
     notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     true);
@@ -1274,7 +1276,10 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
 
     case RING_MAGICAL_POWER:
         if (!you.has_mutation(MUT_HP_CASTING))
+        {
             canned_msg(MSG_MANA_DECREASE);
+            pay_mp(9);
+        }
         break;
 
     case AMU_FAITH:
