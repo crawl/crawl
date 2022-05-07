@@ -17,14 +17,15 @@ Tiefenzwerge
 Deep Elves
 Tiefenelfen
 %%%%
-Demigod
+Demigods
 Halbgötter
 %%%%
 Demonspawns
 Dämonenbruten
 %%%%
-Djinn
-Dschinns
+# conflicts with the adjective
+#Djinn
+#Dschinns
 %%%%
 Draconians
 Drakonier
@@ -38,13 +39,13 @@ Formicids
 Gargoyles
 Gargoyles
 %%%%
-Ghoul
-Ghuls
+Ghouls
+Ghule
 %%%%
 Gnolls
 Gnolle
 %%%%
-Hill Orc
+Hill Orcs
 Hügelorks
 %%%%
 Humans
@@ -113,31 +114,31 @@ Lava-Orks
 # Draconian subspecies
 ##############################################
 %%%%
-Mottled Draconian
+Mottled Draconians
 Fleckige Drakonier
 %%%%
-Black Draconian
+Black Draconians
 Schwarze Drakonier
 %%%%
-Green Draconian
+Green Draconians
 Grüne Drakonier
 %%%%
-Grey Draconian
+Grey Draconians
 Graue Drakonier
 %%%%
-Pale Draconian
+Pale Draconians
 Helle Drakonier
 %%%%
-Purple Draconian
+Purple Draconians
 Purpurne Drakonier
 %%%%
-Red Draconian
+Red Draconians
 Rote Drakonier
 %%%%
-White Draconian
+White Draconians
 Weiße Drakonier
 %%%%
-Yellow Draconian
+Yellow Draconians
 Gelbe Drakonier
 %%%%
 
@@ -155,7 +156,7 @@ Dwarves
 Zwerge
 %%%%
 # Deep Elf
-Elve
+Elves
 Elfen
 %%%%
 # Demigod
