@@ -4311,16 +4311,17 @@ static string _get_species_insult(const string &species, const string &type)
     {
         lookup  = "insult ";
         lookup += species;
-        lookup += " ";
-        lookup += type;
+        if (!type.empty())
+            lookup += string(" ") + type;
 
         insult  = getSpeakString(lowercase(lookup));
     }
 
     if (insult.empty()) // Species too specific?
     {
-        lookup  = "insult general ";
-        lookup += type;
+        lookup  = "insult general";
+        if (!type.empty())
+            lookup += string(" ") + type;
 
         insult  = getSpeakString(lookup);
     }
@@ -4436,6 +4437,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     // FIXME: Handle player_genus in case it was not generalised to foe_genus.
     string player_genus = species::name(you.species, species::SPNAME_GENUS);
+    lowercase(player_genus);
     params["player_genus"] =  player_genus;
     params["a_player_genus"] =  article_a(player_genus);
     params["player_genus_plural"] =  pluralise(player_genus);
@@ -4620,11 +4622,19 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
 
     // noloc section start
     // Replace with species specific insults.
+    if (msg.find("@species_insult@") != string::npos)
+    {
+        string insult = _get_species_insult(foe_genus, "");
+        msg = replace_all(msg, "@species_insult@", insult);
+    }
     if (msg.find("@species_insult_") != string::npos)
     {
-        params["species_insult_adj1"] = _get_species_insult(foe_genus, "adj1");
-        params["species_insult_adj2"] = _get_species_insult(foe_genus, "adj2");
-        params["species_insult_noun"] = _get_species_insult(foe_genus, "noun");
+        msg = replace_all(msg, "@species_insult_adj1@",
+                               _get_species_insult(foe_genus, "adj1"));
+        msg = replace_all(msg, "@species_insult_adj2@",
+                               _get_species_insult(foe_genus, "adj2"));
+        msg = replace_all(msg, "@species_insult_noun@",
+                               _get_species_insult(foe_genus, "noun"));
     }
     // noloc section end
 

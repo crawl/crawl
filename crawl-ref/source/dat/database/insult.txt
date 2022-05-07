@@ -1169,7 +1169,7 @@ weenchy-treat
 ##########################################################
 # noun, Felid special
 ##########################################################
-insult felid noun
+insult cat noun
 
 kitten
 

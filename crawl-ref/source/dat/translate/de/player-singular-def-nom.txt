@@ -178,3 +178,43 @@ the Orc
 der Ork
 %%%%
 
+##############################################
+# Player genus uncapitalised
+##############################################
+%%%%
+# Barachi
+the frog
+der Frosch
+%%%%
+# Deep Dwarf
+# duplicate of monster
+#the dwarf
+#der Zwerg
+%%%%
+# Deep Elf
+# duplicate of monster
+#the elf
+#der Elf
+%%%%
+# Demigod
+the god
+der Gott
+%%%%
+# Felid
+the cat
+die Katze
+%%%%
+# Formicid
+the ant
+die Ameise
+%%%%
+# Octopode
+the octopus
+der Oktopus
+%%%%
+# Hill Orc
+# duplicate of monster
+#the orc
+#der Ork
+%%%%
+

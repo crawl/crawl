@@ -167,4 +167,16 @@ int main()
     msg = do_mon_str_replacements(msg, *orc);
     expected = "VISUAL:Etwas schreit entsetzt auf.";
     show_result(msg, expected);
+
+    cout << "TEST INSULTS: " << endl;
+    you.species = SP_MINOTAUR;
+    orc->foe = MHITYOU;
+
+    msg = getSpeakString("generic_insult");
+    msg = do_mon_str_replacements(msg, *orc);
+    cout << msg << endl;
+
+    msg = getSpeakString("generic_insult");
+    msg = do_mon_str_replacements(msg, *orc);
+    cout << msg << endl;
 }
