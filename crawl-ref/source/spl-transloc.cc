@@ -602,9 +602,6 @@ spret palentonga_charge(bool fail, dist *target)
     if (fedhas_passthrough(target_mons))
         target_mons = nullptr;
     ASSERT(target_mons != nullptr);
-    // Are you actually moving forward?
-    if (grid_distance(you.pos(), target_pos) > 1 || !target_mons)
-        mpr("You roll forward with a clatter of scales!");
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -620,6 +617,15 @@ spret palentonga_charge(bool fail, dist *target)
         }
     }
     const coord_def dest_pos = target_path.at(target_path.size() - 2);
+
+    // Are you actually moving forward? XXX: revisit this check
+    if (grid_distance(you.pos(), target_pos) > 1 || !target_mons)
+    {
+        if (silenced(dest_pos))
+            mpr("You roll forward in eerie silence!");
+        else
+            mpr("You roll forward with a clatter of scales!");
+    }
 
     remove_water_hold();
     move_player_to_grid(dest_pos, true);
