@@ -2,7 +2,6 @@ stop := runrest_stop_message
 ignore := runrest_ignore_message
 
 ignore += Jiyva gurgles merrily
-ignore += Jiyva appreciates your sacrifice
 ignore += god:Divide and consume
 ignore += You hear.*splatter
 
@@ -12,7 +11,6 @@ ignore += standing in the rain
 ignore += A.*toadstool withers and dies
 ignore += toadstools? grows
 ignore += You walk carefully through the
-ignore += Fedhas appreciates ongoing decay
 ignore += The winds around you calm down.
 ignore += Lightning arcs down from a storm cloud
 ignore += (crumbles|melts) away\.
@@ -49,7 +47,6 @@ stop += You now have enough gold to
 
 # Enchantments
 #
-ignore += Your skin is crawling a little less now.
 ignore += of your corpse armour falls away.
 
 # Transformation endings.
