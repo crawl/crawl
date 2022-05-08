@@ -1180,6 +1180,19 @@ string casting_uselessness_reason(spell_type spell, bool temp)
         break;
     }
 
+    // Gozagite effects.
+    switch (spell)
+    {
+    case SPELL_CORPSE_ROT:
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_SIMULACRUM:
+        if (have_passive(passive_t::goldify_corpses))
+            return "necromancy does not work on golden corpses.";
+        break;
+    default:
+        break;
+    }
+
 
     return "";
 }
@@ -1376,6 +1389,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_DEATH_CHANNEL:
+    case SPELL_ANIMATE_DEAD:
         if (have_passive(passive_t::reaping))
             return "you are already reaping souls!";
         break;

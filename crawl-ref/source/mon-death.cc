@@ -1423,14 +1423,14 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
     if (was_visible && could_give_xp)
     {
         // no doubling up with yred and death channel / simulacrum
-        if (have_passive(passive_t::reaping))
+        if (have_passive(passive_t::reaping) && !have_passive(passive_t::goldify_corpses))
         {
             if (yred_reap_chance())
                 _yred_reap(mons, exploded);
             return true;
         }
 
-        if (mons.has_ench(ENCH_SIMULACRUM))
+        if (mons.has_ench(ENCH_SIMULACRUM) && !have_passive(passive_t::goldify_corpses))
         {
             const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
             _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
@@ -1445,14 +1445,19 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
                                  static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
 
-        if (!exploded && coinflip() && (_animate_dead_reap(mons)
-                                        || _reaping(mons)))
+        if (!exploded
+            && !have_passive(passive_t::goldify_corpses)
+            && coinflip()
+            && (_animate_dead_reap(mons) || _reaping(mons)))
         {
             return true;
         }
     }
 
-    if (!exploded && could_give_xp && mons.has_ench(ENCH_NECROTIZE))
+    if (!exploded
+        && !have_passive(passive_t::goldify_corpses)
+        && could_give_xp
+        && mons.has_ench(ENCH_NECROTIZE))
     {
         _make_derived_undead(&mons, quiet, MONS_SKELETON,
                                  BEH_FRIENDLY,
@@ -2489,7 +2494,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                                             was_visible, could_give_xp);
 
         // currently allowing this to stack with other death effects -hm
-        if (you.duration[DUR_CORPSE_ROT])
+        if (you.duration[DUR_CORPSE_ROT] && !have_passive(passive_t::goldify_corpses))
         {
             const int rot_pow = you.props[CORPSE_ROT_POWER_KEY].get_int();
             _corpse_rot(mons, rot_pow);
