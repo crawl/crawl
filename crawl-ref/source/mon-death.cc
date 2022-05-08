@@ -1405,6 +1405,64 @@ static void _corpse_rot(monster &mons, int pow)
     mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
 }
 
+static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
+                              bool was_visible, bool could_give_xp)
+{
+    if (mons.has_ench(ENCH_INFESTATION))
+        _infestation_create_scarab(&mons);
+
+    // Yred worship and death channel aren't stronger than this enchantment
+    if (mons.has_ench(ENCH_BOUND_SOUL))
+    {
+        _make_derived_undead(&mons, quiet, MONS_SIMULACRUM,
+                             SAME_ATTITUDE(&mons),
+                             SPELL_BIND_SOULS, GOD_NO_GOD);
+        return true;
+    }
+
+    if (was_visible && could_give_xp)
+    {
+        // no doubling up with yred and death channel / simulacrum
+        if (have_passive(passive_t::reaping))
+        {
+            if (yred_reap_chance())
+                _yred_reap(mons, exploded);
+            return true;
+        }
+
+        if (mons.has_ench(ENCH_SIMULACRUM))
+        {
+            const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
+            _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
+            return true;
+        }
+
+        if (you.duration[DUR_DEATH_CHANNEL])
+        {
+            _make_derived_undead(&mons, quiet, MONS_SPECTRAL_THING,
+                                 BEH_FRIENDLY,
+                                 SPELL_DEATH_CHANNEL,
+                                 static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
+        }
+
+        if (!exploded && coinflip() && (_animate_dead_reap(mons)
+                                        || _reaping(mons)))
+        {
+            return true;
+        }
+    }
+
+    if (!exploded && could_give_xp && mons.has_ench(ENCH_NECROTIZE))
+    {
+        _make_derived_undead(&mons, quiet, MONS_SKELETON,
+                                 BEH_FRIENDLY,
+                                 SPELL_NECROTIZE,
+                                 GOD_NO_GOD);
+        return true;
+    }
+    return false;
+}
+
 static bool _god_will_bless_follower(monster* victim)
 {
     return have_passive(passive_t::bless_followers)
@@ -2427,55 +2485,8 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool corpse_consumed = false;
     if (!was_banished && !mons_reset)
     {
-        if (mons.has_ench(ENCH_INFESTATION))
-            _infestation_create_scarab(&mons);
-
-        // Yred worship and death channel aren't stronger than this enchantment
-        if (mons.has_ench(ENCH_BOUND_SOUL))
-        {
-            _make_derived_undead(&mons, !death_message, MONS_SIMULACRUM,
-                                 SAME_ATTITUDE(&mons),
-                                 SPELL_BIND_SOULS, GOD_NO_GOD);
-            corpse_consumed = true;
-        }
-        else if (was_visible && could_give_xp)
-        {
-            // no doubling up with yred and death channel / simulacrum
-            if (have_passive(passive_t::reaping))
-            {
-                if (yred_reap_chance())
-                    _yred_reap(mons, exploded);
-                corpse_consumed = true;
-            }
-            else if (mons.has_ench(ENCH_SIMULACRUM))
-            {
-                const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
-                _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
-                corpse_consumed = true;
-            }
-            else if (you.duration[DUR_DEATH_CHANNEL])
-            {
-                _make_derived_undead(&mons, !death_message, MONS_SPECTRAL_THING,
-                                     BEH_FRIENDLY,
-                                     SPELL_DEATH_CHANNEL,
-                                     static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
-            }
-        }
-
-        if (!corpse_consumed && coinflip() &&
-                (_animate_dead_reap(mons) || _reaping(mons)))
-        {
-            corpse_consumed = true;
-        }
-
-        if (!corpse_consumed && mons.has_ench(ENCH_NECROTIZE))
-        {
-            _make_derived_undead(&mons, !death_message, MONS_SKELETON,
-                                     BEH_FRIENDLY,
-                                     SPELL_NECROTIZE,
-                                     GOD_NO_GOD);
-            corpse_consumed = true;
-        }
+        corpse_consumed = _apply_necromancy(mons, !death_message, exploded,
+                                            was_visible, could_give_xp);
 
         // currently allowing this to stack with other death effects -hm
         if (you.duration[DUR_CORPSE_ROT])
