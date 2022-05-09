@@ -4860,16 +4860,19 @@ static void _branch_summon_helper(monster* mons, spell_type spell_cast)
 
     if (you.see_cell(mons->pos()))
     {
-        string msg = getSpeakString("branch summon cast prefix");
+        string msg = getSpeakString("branch summon cast");
         if (!msg.empty())
         {
-            msg  = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
-            msg += " ";
-            msg += branches[summon_list[which_branch].origin].longname;
-            msg += "!";
-            mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
-                                     : MSGCH_MONSTER_ENCHANT,
-                 "%s", msg.c_str());
+            const map<string, string>& params =
+            {
+                { "the_monster", mons->name(DESC_THE) },
+                { "branch", branches[summon_list[which_branch].origin].longname },
+            };
+            msg  = localise(msg, params, false);
+
+            mpr_nolocalise(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
+                                               : MSGCH_MONSTER_ENCHANT,
+                           msg);
         }
     }
 

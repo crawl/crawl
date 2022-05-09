@@ -102,9 +102,9 @@ unseen Blinkbolt cast
 
 Living lightning bursts into view!
 %%%%
-branch summon cast prefix
+branch summon cast
 
-@The_monster@ calls forth creatures from
+@The_monster@ calls forth creatures from @branch@!
 %%%%
 Creeping Frost cast
 
