@@ -17,27 +17,27 @@
 %%%%
 _to_foe_
 
-[foe_is_player?: zu {dat}@foe@]
+[@foe@==you?: zu {dat}@foe@]
 %%%%
 _at_foe_
 
-[foe_is_player?: {acc}@foe@ an]
+[@foe@==you?: {acc}@foe@ an]
 %%%%
 _asks_foe_
 
-[foe_is_player?fragt:fragt {acc}@foe@]
+[@foe@==you?fragt:fragt {acc}@foe@]
 %%%%
 _says_to_foe_
 
-[foe_is_player?sagt:sagt zu {dat}@foe@]
+[@foe@==you?sagt:sagt zu {dat}@foe@]
 %%%%
 _shouts_at_foe_
 
-[foe_is_player?schreit:schreit {acc}@foe@ an]
+[@foe@==you?schreit:schreit {acc}@foe@ an]
 %%%%
 _screams_at_foe_
 
-[foe_is_player?schreit:schreit {acc}@foe@ an]
+[@foe@==you?schreit:schreit {acc}@foe@ an]
 %%%%
 ############################################################
 # Library of randomised word/phrase substitutions.

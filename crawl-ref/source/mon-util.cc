@@ -4330,13 +4330,62 @@ static string _get_species_insult(const string &species, const string &type)
     // noloc section end
 }
 
-// replace a construction like [foo?baz:bar] with baz if foo is true,
-// or bar if foo is false
-static string _resolve_conditional_speech(const string &s, const string& key,
-                                          bool value)
+// replace [@foo@==bar?A:B] with A if @foo@ == bar or B if not
+// replace [@foo@?A:B] with A if @foo@ is non-empty or B if empty
+static string _resolve_conditional_speech(const string &s,
+                                          const map<string, string> &params)
 {
-    regex rgx("\\[" + key +"\\?([^:\\?\\[\\]]*):([^:\\?\\[\\]]*)\\]");
-    return regex_replace(s, rgx, value ? "$1" : "$2");
+    static const string elem = "([^:\\?\\[\\]]*)"; // anything but "[?:]"
+    static const regex rgx("\\[" + elem + "\\?" + elem + ":" + elem  + "\\]");
+    string result = s;
+    smatch match;
+
+    string::const_iterator start = s.begin();
+    string::const_iterator end = s.end();
+    while (regex_search(start, end, match, rgx) && match.size() == 4)
+    {
+        string condition = match[1].str();
+        string left, right;
+        size_t pos = condition.find("=");
+        left = condition.substr(0, pos);
+        bool equals_test = false;
+        if (pos != string::npos)
+        {
+            equals_test = true;
+            right = condition.substr(pos+1);
+            // allow "=="
+            if (!right.empty() && right[0] == '=')
+                right = right.substr(1);
+        }
+
+        if (left.length() >= 2 && left[0] == '@' && left[left.length()-1] == '@')
+        {
+            string param = left.substr(1, left.length()-2);
+            auto it = params.find(param);
+            if (it == params.end())
+                left = "";
+            else
+                left = params.at(param);
+        }
+
+        string choice;
+        if (equals_test)
+        {
+            // test for left = right
+            choice = left == right ? match[2].str() : match[3].str();
+        }
+        else
+        {
+            // just test for left being non-empty
+            choice = !left.empty() ? match[2].str() : match[3].str();
+        }
+
+        result = replace_first(result, match[0], choice);
+
+        start = match.suffix().first;
+    }
+
+    return result;
 }
 
 static string _get_sound_string(int s_type, bool verb_only)
@@ -4446,7 +4495,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     bool foe_is_player = false;
 
     if (foe == nullptr)
-        params["foe"] = "NULL";
+        ;
     else if (foe->is_player())
     {
         foe_is_player = true;
@@ -4642,7 +4691,7 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
     params["speaks"] = _get_sound_string(s_type, true);
     params["speaks_to_foe"] = _get_sound_string(s_type, foe_is_player);
 
-    msg = _resolve_conditional_speech(msg, "foe_is_player", foe_is_player);
+    msg = _resolve_conditional_speech(msg, params);
     msg = maybe_pick_random_substring(msg);
 
     // i18n: msg text should already be in the target language,

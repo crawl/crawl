@@ -17,15 +17,15 @@
 %%%%
 _to_foe_
 
-[foe_is_player?: to @foe@]
+[@foe@==you?: to @foe@]
 %%%%
 _at_foe_
 
-[foe_is_player?: at @foe@]
+[@foe@==you?: at @foe@]
 %%%%
 _asks_foe_
 
-[foe_is_player?asks:asks @foe@]
+[@foe@==you?asks:asks @foe@]
 %%%%
 ############################################################
 # Library of randomised word/phrase substitutions.
