@@ -604,6 +604,17 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     return new MonsterMenuEntry(title, &mslot, letter);
 }
 
+static bool _make_item_fake_unrandart(item_def &item, int unrand_index)
+{
+    // fill in the item info without marking the unrand as actually generated
+    // use API rather than unwinds so that sanity checks don't need to be
+    // duplicated
+    const auto prior_status = get_unique_item_status(unrand_index);
+    const bool r = make_item_unrandart(item, unrand_index);
+    set_unique_item_status(item, prior_status);
+    return r;
+}
+
 /**
  * Generate a ?/I menu entry. (ref. _simple_menu_gen()).
  */
@@ -613,7 +624,7 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
     item_def item;
     item_kind kind = item_kind_by_name(key);
     if (kind.base_type == OBJ_UNASSIGNED)
-        make_item_unrandart(item, extant_unrandart_by_exact_name(key));
+        _make_item_fake_unrandart(item, extant_unrandart_by_exact_name(key));
     else
         get_item_by_name(&item, key.c_str(), kind.base_type);
     item_colour(item);
@@ -1080,7 +1091,7 @@ static int _describe_item(const string &key, const string &suffix,
         const int unrand_idx = extant_unrandart_by_exact_name(item_name);
         if (!unrand_idx)
             die("Unable to get item %s by name", key.c_str());
-        make_item_unrandart(item, unrand_idx);
+        _make_item_fake_unrandart(item, unrand_idx);
     }
     describe_item_popup(item);
     return 0;
