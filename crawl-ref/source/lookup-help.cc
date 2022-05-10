@@ -1512,6 +1512,11 @@ private:
 
 void keyhelp_query_descriptions(command_type where_from)
 {
-    LookupHelpMenu m(where_from);
-    m.show();
+    rng::generator rng(rng::UI);
+
+    // force a sequence point
+    {
+        LookupHelpMenu m(where_from);
+        m.show();
+    }
 }
