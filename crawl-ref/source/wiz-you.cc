@@ -390,6 +390,12 @@ void wizard_set_skill_level(skill_type skill)
         return;
     }
 
+    if (is_useless_skill(skill))
+    {
+        mpr("Can't change a useless skill.");
+        return;
+    }
+
     mpr(skill_name(skill));
     const double old_amount = you.skill(skill, 10, true) * 0.1;
     string prompt = make_stringf("To what level? (current = %.1f) ",
