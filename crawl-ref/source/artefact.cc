@@ -294,7 +294,7 @@ unique_item_status_type get_unique_item_status(int art)
     return you.unique_items[art - UNRAND_START];
 }
 
-static void _set_unique_item_status(int art, bool exists)
+static void _set_unique_item_existence(int art, bool exists)
 {
     ASSERT_RANGE(art, UNRAND_START + 1, UNRAND_LAST);
 
@@ -317,7 +317,10 @@ void set_unique_item_status(const item_def& item,
                             unique_item_status_type status)
 {
     if (item.flags & ISFLAG_UNRANDART)
-        _set_unique_item_status(item.unrand_idx, status);
+    {
+        ASSERT_RANGE(item.unrand_idx, UNRAND_START + 1, UNRAND_LAST);
+        you.unique_items[item.unrand_idx - UNRAND_START] = status;
+    }
 }
 
 /**
@@ -1828,7 +1831,7 @@ static void _make_octoring(item_def &item)
 
     // If there are any types left, unset the 'already found' flag
     if (you.octopus_king_rings != 0xff)
-        _set_unique_item_status(UNRAND_OCTOPUS_KING_RING, false);
+        _set_unique_item_existence(UNRAND_OCTOPUS_KING_RING, false);
 }
 
 bool make_item_unrandart(item_def &item, int unrand_index)
@@ -1849,7 +1852,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
     item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
 
-    _set_unique_item_status(unrand_index, true);
+    _set_unique_item_existence(unrand_index, true);
 
     if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
