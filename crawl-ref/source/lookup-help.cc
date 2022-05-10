@@ -1389,7 +1389,6 @@ bool find_description_of_type(lookup_help_type lht)
     ASSERT(lht >= 0 && lht < NUM_LOOKUP_HELP_TYPES);
     string response;
     bool done = lookup_types[lht].find_description(response);
-    dprf("response: '%s'", response.c_str());
     if (!response.empty() && response != "Okay, then.") // TODO: ...
         _show_type_response(response);
     return done;
