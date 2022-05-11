@@ -1150,6 +1150,41 @@ static string _killer_type_name(killer_type killer)
     die("invalid killer type");
 }
 
+static string _derived_undead_message(const monster &mons, monster_type which_z,
+                                      const char* mist)
+{
+    switch (which_z)
+    {
+    case MONS_SPECTRAL_THING:
+    case MONS_SIMULACRUM:
+        return make_stringf("A %s mist starts to gather...", mist);
+    case MONS_SKELETON:
+    case MONS_ZOMBIE:
+        break;
+    default:
+        return "A buggy dead thing appears!";
+    }
+
+    const auto habitat = mons_class_primary_habitat(mons.type);
+    if (habitat == HT_WATER || habitat == HT_LAVA)
+        return "The dead are swimming!";
+
+    if (mons_class_flag(mons.type, M_FLIES))
+        return "The dead are flying!";
+
+    const auto shape = get_mon_shape(mons);
+    if (shape == MON_SHAPE_SNAKE || shape == MON_SHAPE_SNAIL)
+        return "The dead are slithering!";
+    if (shape == MON_SHAPE_ARACHNID || shape == MON_SHAPE_CENTIPEDE)
+        return "The dead are crawling!"; // to say nothing of creeping
+
+    const monster_type genus = mons_genus(mons.type);
+    if (genus == MONS_FROG || genus == MONS_QUOKKA)
+        return "The dead are hopping!";
+
+    return "The dead are walking!"; // a classic for sure
+}
+
 /**
  * Make derived undead out of a dying/dead monster.
  *
@@ -1226,12 +1261,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
             agent_name = agent->as_monster()->full_name(DESC_A);
     }
 
-    string monster_name = "";
-
-    string message = quiet ? "" :
-        which_z == MONS_SKELETON ? make_stringf("A skeleton leaps to life!") :
-        make_stringf("A %s mist starts to gather...", mist);
-
+    const string message = quiet ? "" : _derived_undead_message(*mons, which_z, mist);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
             mons->get_experience_level(), agent_name, message);
 }
@@ -1241,7 +1271,7 @@ static void _make_simulacra(monster* mons, int pow, god_type god)
     const int count = 1 + random2(1 + div_rand_round(pow, 20));
     for (int i = 0; i < count; ++i)
     {
-        _make_derived_undead(mons, true, MONS_SIMULACRUM, BEH_FRIENDLY,
+        _make_derived_undead(mons, false, MONS_SIMULACRUM, BEH_FRIENDLY,
                 SPELL_SIMULACRUM, god);
     }
     mpr("A freezing mist starts to gather...");
@@ -1339,7 +1369,9 @@ static bool _animate_dead_reap(monster &mons)
     if (!x_chance_in_y(100 + pow, 200))
         return false;
 
-    return _mons_reaped(you, mons);
+    _make_derived_undead(&mons, false, MONS_ZOMBIE, BEH_FRIENDLY,
+                         SPELL_ANIMATE_DEAD, GOD_NO_GOD);
+    return true;
 }
 
 static bool _reaping(monster &mons)
