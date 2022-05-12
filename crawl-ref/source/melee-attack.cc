@@ -1097,12 +1097,12 @@ class AuxTouch: public AuxAttackType
 {
 public:
     AuxTouch()
-    : AuxAttackType(3, 40, "touch") { };
+    : AuxAttackType(6, 40, "touch") { };
 
     int get_damage() const override
     {
         return damage
-               + random2(1 + you.get_mutation_level(MUT_DEMONIC_TOUCH) * 2);
+               + random2(1 + you.get_mutation_level(MUT_DEMONIC_TOUCH) * 4);
     }
 
     int get_brand() const override
