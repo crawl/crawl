@@ -3978,27 +3978,30 @@ c...c...c...c
 ccCcccCcccCcc
 ENDMAP
 
-NAME:  dispersion_dpeg
-TAGS:  transparent
-DEPTH: D:$, Depths
-KMASK: 89 = opaque
-KMONS: 8 = 8
-KMONS: 9 = 9
-KITEM: 89 = % / * / w:1 |
-KFEAT: X = permanent teleport trap / dispersal trap
-KFEAT: Z : permanent teleport trap / w:30 x
-SUBST: Y = 89, x : xcvb
+NAME:    dispersion_dpeg
+TAGS:    transparent
+DEPTH:   D:$, Depths
+KITEM:   89 = * / |
+KMONS:   8 = 8
+KMONS:   9 = 9
+KFEAT:   ^ = teleport trap / dispersal trap
+KFEAT:   ~ = teleport trap / floor w:20
+SHUFFLE: xm / cn / cn / cn
+SUBST:   9 = 89, c : cvb
+# Traps occur at the corners, but ensure we always have a dispersal-free path
+# out of the center.
+NSUBST:  a = ~ / ^, p = ~ / ^
 MAP
 ............
 ............
-...xxxxxx...
+..pxxmmxxp..
 ..x......x..
-..x.ZXXZ.x..
-..x.XYYX.x..
-..x.XYYX.x..
-..x.ZXXZ.x..
+..x.amma.x..
+..m.m99m.m..
+..m.m99m.m..
+..x.amma.x..
 ..x......x..
-...xxxxxx...
+..pxxmmxxp..
 ............
 ............
 ENDMAP
