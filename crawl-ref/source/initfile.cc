@@ -112,6 +112,10 @@ game_options Options;
 static string _get_save_path(string subdir);
 static string _supported_language_listing();
 
+static bool _force_allow_wizard();
+static bool _force_allow_explore();
+
+
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
     return l.first < r.first;
@@ -1255,11 +1259,8 @@ void game_options::reset_options()
 
 #ifdef WIZARD
 #  ifdef DGAMELAUNCH
-    if (wiz_mode != WIZ_NO)
-    {
         wiz_mode         = WIZ_NEVER;
         explore_mode     = WIZ_NEVER;
-    }
 #  else
 #    ifdef DEBUG_DIAGNOSTICS
     // Most of the time in debug builds, you want to be using wizmode anyways.
@@ -1270,7 +1271,9 @@ void game_options::reset_options()
 #    endif
     explore_mode         = WIZ_NO;
 #  endif
+    // defaults further adjusted in fixup_options depending on CLOs
 #endif
+
     terp_files.clear();
 
 #ifdef USE_TILE
@@ -2398,6 +2401,18 @@ void game_options::fixup_options()
 
     if (!check_mkdir("Morgue directory", &morgue_dir))
         end(1, false, "Cannot create morgue directory '%s'", morgue_dir.c_str());
+
+#ifdef WIZARD
+    // Let CLOs override wiz/explore disabling (including the option being
+    // disabled on dgamelaunch builds)
+    if (_force_allow_wizard() && wiz_mode == WIZ_NEVER)
+        wiz_mode = WIZ_NO;
+    if ((_force_allow_wizard() || _force_allow_explore())
+                                            && explore_mode == WIZ_NEVER)
+    {
+        explore_mode = WIZ_NO;
+    }
+#endif
 }
 
 static int _str_to_killcategory(const string &s)
@@ -4350,8 +4365,33 @@ static const char *cmd_ops[] =
 #endif
 };
 
-static const int num_cmd_ops = CLO_NOPS;
-static bool arg_seen[num_cmd_ops];
+
+#define num_cmd_ops CLO_NOPS
+
+static bool& _arg_seen(commandline_option_type c)
+{
+    static bool arg_seen[num_cmd_ops];
+    static bool arg_seen_init = false;
+    if (!arg_seen_init)
+    {
+        for (int i = 0; i < num_cmd_ops; i++)
+            arg_seen[i] = false;
+        arg_seen_init = true;
+    }
+    return arg_seen[c];
+}
+
+// set these checks up so they can be forward-declared without reordering the
+// whole file
+static bool _force_allow_wizard()
+{
+    return _arg_seen(CLO_WIZARD);
+}
+
+static bool _force_allow_explore()
+{
+    return _arg_seen(CLO_EXPLORE);
+}
 
 static string _find_executable_path()
 {
@@ -5131,7 +5171,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
     // initialise
     for (int i = 0; i < num_cmd_ops; i++)
-         arg_seen[i] = false;
+         _arg_seen(static_cast<commandline_option_type>(i)) = false;
 
     if (SysEnv.cmd_args.empty())
     {
@@ -5192,14 +5232,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
         }
 
         // Disallow options specified more than once.
-        if (arg_seen[o])
+        if (_arg_seen(static_cast<commandline_option_type>(o)))
         {
             fprintf(stderr, "Duplicate option: %s\n\n", argv[current]);
             return false;
         }
 
         // Set arg to 'seen'.
-        arg_seen[o] = true;
+        _arg_seen(static_cast<commandline_option_type>(o)) = true;
 
         // Partially parse next argument.
         bool next_is_param = false;
@@ -5538,20 +5578,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 Options.game.type = GAME_TYPE_TUTORIAL;
             break;
 
-        case CLO_WIZARD:
-#ifdef WIZARD
-            if (!rc_only)
-                Options.wiz_mode = WIZ_NO;
-#endif
-            break;
-
-        case CLO_EXPLORE:
-#ifdef WIZARD
-            if (!rc_only)
-                Options.explore_mode = WIZ_NO;
-#endif
-            break;
-
         case CLO_NO_SAVE:
             if (!rc_only)
                 Options.no_save = true;
@@ -5614,7 +5640,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             nextUsed = true;
 
             // Can be used multiple times.
-            arg_seen[o] = false;
+            _arg_seen(static_cast<commandline_option_type>(o)) = false;
             break;
 
         case CLO_EXTRA_OPT_LAST:
@@ -5629,7 +5655,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             nextUsed = true;
 
             // Can be used multiple times.
-            arg_seen[o] = false;
+            _arg_seen(static_cast<commandline_option_type>(o)) = false;
             break;
         }
 
