@@ -44,6 +44,7 @@
 #include "mon-movetarget.h"
 #include "mon-place.h"
 #include "mon-speak.h"
+#include "place.h" // absdungeon_depth
 #include "player-equip.h"
 #include "player-stats.h"
 #include "prompt.h"
@@ -2504,7 +2505,52 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
+}
 
+void kiku_unearth_wretches()
+{
+    const int pow = you.skill(SK_NECROMANCY, 6);
+    const int min_wretches = 2;
+    const int max_wretches = min_wretches + div_rand_round(pow, 27); // 8 max
+    const int wretches = random_range(min_wretches, max_wretches);
+    bool created = false;
+    for (int i = 0; i < wretches; ++i) {
+        // choose a type
+        const int typ_pow = you.skill(SK_NECROMANCY, 4);
+        const int adjusted_power = min(typ_pow / 4, random2(random2(typ_pow)));
+        const level_id lev(you.where_are_you, adjusted_power
+                           - absdungeon_depth(you.where_are_you, 0));
+        const monster_type mon_type = pick_local_corpsey_monster(lev);
+        ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
+        // place a monster
+        mgen_data mg(mon_type,
+                     BEH_HOSTILE, // so players don't have attack prompts
+                     you.pos(),
+                     MHITNOT);
+        mg.extra_flags = MF_NO_REWARD // ?
+                       | MF_NO_REGEN;
+        mg.props[KIKU_WRETCH_KEY] = true;
+
+        monster *mon = create_monster(mg);
+        if (!mon)
+            continue;
+
+        created = true;
+        mons_add_blame(mon, "unearthed by the player character");
+        mon->hit_points = 1;
+        mon->props[ALWAYS_CORPSE_KEY] = true;
+        mon->props[KIKU_WRETCH_KEY] = true;
+
+        // Die in 2-3 turns.
+        mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
+                                   20 + random2(10)));
+        mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you, 9999));
+    }
+    if (!created) {
+        simple_god_message(" has no space to call forth the wretched!");
+    } else {
+        simple_god_message(" calls piteous wretches from the earth!");
+    }
 }
 
 static bool _create_foxfire(const actor &agent, coord_def pos,

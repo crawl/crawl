@@ -377,6 +377,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         // Kikubaaqudgha
+        { ABIL_KIKU_UNEARTH_WRETCHES, "Unearth Wretches",
+            3, 0, 4, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_KIKU_TORMENT, "Torment",
             4, 0, 8, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge",
@@ -2736,6 +2738,11 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         // included in default force_more_message
         if (!bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW))
             return spret::abort;
+        break;
+
+    case ABIL_KIKU_UNEARTH_WRETCHES:
+        fail_check();
+        kiku_unearth_wretches();
         break;
 
     case ABIL_KIKU_TORMENT:

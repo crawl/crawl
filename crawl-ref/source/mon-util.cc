@@ -4681,6 +4681,9 @@ const char* mons_class_name(monster_type mc)
 mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 {
     const monster& threat = get_tentacle_head(mon);
+    if (threat.props.exists(KIKU_WRETCH_KEY))
+        return MTHRT_TRIVIAL; // ignores 'real', sorry...
+
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
     const int tension = exper_value(threat, real, true) / (1 + factor);
 

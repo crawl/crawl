@@ -198,12 +198,17 @@ Permanently blesses a weapon of your choice with the holy wrath of the Shining
 One. Demon weapons will be converted into a more powerful sacred weapon. This
 blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
+Unearth Wretches ability
+
+Bring forth those near death from Kikubaaqudgha's necropolis, providing ample
+fodder for all kinds of necromancy. Their number and quality is dependent on
+Necromancy skill.
+%%%%
 Torment ability
 
-Open a link to the spirit of the dead, making all living creatures in sight
-experience all the pain that spirit suffered in its life. This damage is never
-directly lethal. Kikubaaqudgha will always at least partially shield you from
-the effect.
+Call out to the dead, making all living creatures in sight experience all the
+pain some poor soul suffered in its entire life. This damage is never directly
+lethal. Kikubaaqudgha will always at least partially shield you from the effect.
 %%%%
 Brand Weapon With Pain ability
 

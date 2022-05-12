@@ -5256,7 +5256,8 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_INFESTATION:
-        rc = mons_gives_xp(*mon, you) && !mon->has_ench(ENCH_INFESTATION);
+        rc = (mons_gives_xp(*mon, you) || mon->props.exists(KIKU_WRETCH_KEY))
+             && !mon->has_ench(ENCH_INFESTATION);
         break;
 
     case BEAM_VILE_CLUTCH:

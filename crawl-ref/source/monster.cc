@@ -3860,6 +3860,10 @@ int monster::willpower() const
     if (mons_invuln_will(*this))
         return WILL_INVULN;
 
+    // alas, ye foolish wretches...
+    if (props.exists(KIKU_WRETCH_KEY))
+        return 0;
+
     const item_def *arm = mslot_item(MSLOT_ARMOUR);
     if (arm && is_unrandom_artefact(*arm, UNRAND_FOLLY))
         return 0;

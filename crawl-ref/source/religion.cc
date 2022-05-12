@@ -121,7 +121,9 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Kikubaaqudgha
-        {   { 2, "Kikubaaqudgha is now protecting you from necromantic miscasts and death curses.",
+        {
+            { 1, ABIL_KIKU_UNEARTH_WRETCHES, "bring forth the wretched and dying" },
+            { 2, "Kikubaaqudgha is now protecting you from necromantic miscasts and death curses.",
                  "Kikubaaqudgha will no longer protect you from necromantic miscasts or death curses.",
                  "Kikubaaqudgha protects you from necromantic miscasts and death curses." },
             { 4, "Kikubaaqudgha is now protecting you from unholy torment.",

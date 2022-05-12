@@ -98,6 +98,8 @@ spret fedhas_grow_ballistomycete(const coord_def& target, bool fail);
 spret fedhas_overgrow(bool fail);
 spret fedhas_grow_oklob(const coord_def& target, bool fail);
 
+void kiku_unearth_wretches();
+
 spret cast_foxfire(actor &agent, int pow, god_type god, bool fail);
 spret foxfire_swarm();
 bool summon_spider(const actor &agent, coord_def pos, god_type god,

@@ -1288,7 +1288,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         mon->colour = wpn->get_colour();
     }
-    else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
+    else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT
+             && !mg.props.exists(KIKU_WRETCH_KEY))
     {
         give_item(mon, place.absdepth(), summoned);
         // Give these monsters a second weapon. - bwr

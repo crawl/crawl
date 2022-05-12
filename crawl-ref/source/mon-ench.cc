@@ -1555,6 +1555,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             if (you.can_see(*this))
             {
+
                 switch (type)
                 {
                     case MONS_PILLAR_OF_SALT:
@@ -1565,8 +1566,16 @@ void monster::apply_enchantment(const mon_enchant &me)
                         mprf("%s melts away.", name(DESC_THE, false).c_str());
                         break;
                     default:
-                        mprf("A nearby %s withers and dies.",
-                             name(DESC_PLAIN, false).c_str());
+                        if (props.exists(KIKU_WRETCH_KEY))
+                        {
+                            mprf("A nearby %s perishes wretchedly.",
+                                 name(DESC_PLAIN, false).c_str());
+                        }
+                        else
+                        {
+                            mprf("A nearby %s withers and dies.",
+                                 name(DESC_PLAIN, false).c_str());
+                        }
                         break;
 
                 }

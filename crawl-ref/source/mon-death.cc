@@ -1440,7 +1440,7 @@ static void _corpse_rot(monster &mons, int pow)
 }
 
 static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
-                              bool was_visible, bool could_give_xp)
+                              bool was_visible, bool corpseworthy)
 {
     if (mons.has_ench(ENCH_INFESTATION))
         _infestation_create_scarab(&mons);
@@ -1454,7 +1454,7 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
         return true;
     }
 
-    if (was_visible && could_give_xp)
+    if (was_visible && corpseworthy)
     {
         // no doubling up with yred and death channel / simulacrum
         if (have_passive(passive_t::reaping) && !have_passive(passive_t::goldify_corpses))
@@ -1489,7 +1489,7 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
 
     if (!exploded
         && !have_passive(passive_t::goldify_corpses)
-        && could_give_xp
+        && corpseworthy
         && mons.has_ench(ENCH_NECROTIZE))
     {
         _make_derived_undead(&mons, quiet, MONS_SKELETON,
@@ -2523,8 +2523,9 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool corpse_consumed = false;
     if (!was_banished && !mons_reset)
     {
+        const bool wretch = mons.props.exists(KIKU_WRETCH_KEY);
         corpse_consumed = _apply_necromancy(mons, !death_message, exploded,
-                                            was_visible, could_give_xp);
+                                            was_visible, could_give_xp || wretch);
 
         // currently allowing this to stack with other death effects -hm
         if (you.duration[DUR_CORPSE_ROT] && !have_passive(passive_t::goldify_corpses))
@@ -2641,8 +2642,11 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!silent && !wizard)
             _special_corpse_messaging(mons);
         // message ordering... :(
-        if (corpse->base_type == OBJ_CORPSES) // not gold
+        if (corpse->base_type == OBJ_CORPSES // not gold
+            && !mons.props.exists(KIKU_WRETCH_KEY))
+        {
             _maybe_drop_monster_organ(*corpse, silent);
+        }
     }
 
     ASSERT(mons.type != MONS_NO_MONSTER);
