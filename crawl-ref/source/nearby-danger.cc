@@ -386,10 +386,14 @@ bool player_in_a_dangerous_place(bool *invis)
     return gen_threat > logexp * 1.3 || hi_threat > logexp / 2;
 }
 
-void bring_to_safety()
+/// Returns true iff the player moved, or something moved.
+bool bring_to_safety()
 {
     if (player_in_branch(BRANCH_ABYSS))
-        return abyss_teleport();
+    {
+        abyss_teleport();
+        return true;
+    }
 
     coord_def best_pos, pos;
     double min_threat = DBL_MAX;
@@ -433,8 +437,11 @@ void bring_to_safety()
         tries += 1000;
     }
 
-    if (min_threat < DBL_MAX)
-        you.moveto(best_pos);
+    if (min_threat == DBL_MAX)
+        return false;
+
+    you.moveto(best_pos);
+    return true;
 }
 
 // This includes ALL afflictions, unlike wizard/Xom revive.

@@ -39,7 +39,7 @@ bool there_are_monsters_nearby(bool dangerous_only = false,
 
 
 bool player_in_a_dangerous_place(bool *invis = nullptr);
-void bring_to_safety();
+bool bring_to_safety();
 void revive(); // XXX: move elsewhere?
 
 #define DISCONNECT_DIST (INT_MAX - 1000)

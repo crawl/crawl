@@ -70,6 +70,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "nearby-danger.h"
 #include "notes.h"
 #include "place.h"
 #include "prompt.h"
@@ -1137,6 +1138,13 @@ static void _place_player_on_stair(int stair_taken, const coord_def& dest_pos,
             _get_dest_stair_type(static_cast<dungeon_feature_type>(stair_taken),
                                  find_first));
 
+    if (stair_type == DNGN_TRAP_SHAFT && you.where_are_you == BRANCH_DUNGEON)
+    {
+        // Shafts are scary enough in D without putting you near mons.
+        if (bring_to_safety())
+            return;
+        // If we can't find a safe place, fall through to default random placement.
+    }
     you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first,
                                      hatch_name));
 }
