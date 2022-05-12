@@ -516,6 +516,41 @@ const vector<GameOption*> game_options::build_options_list()
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
 #endif
+        // see post-processing in fixup_options that handles the interaction
+        // with CLOs for the following two options:
+        new MultipleChoiceGameOption<wizard_option_type>(
+            SIMPLE_NAME(wiz_mode),
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+            WIZ_NEVER,
+#elif defined(DEBUG_DIAGNOSTICS)
+            WIZ_YES, // default debug build games to wizmode. Can be overridden in rc
+#else
+            WIZ_NO,
+#endif
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+            {}, // setting in rc is disabled
+#else
+            {{"true", WIZ_YES},
+             {"false", WIZ_NO},
+             {"never", WIZ_NEVER}},
+#endif
+             true),
+        new MultipleChoiceGameOption<wizard_option_type>(
+            SIMPLE_NAME(explore_mode),
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+            WIZ_NEVER,
+#else
+            WIZ_NO,
+#endif
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+            {}, // setting in rc is disabled
+#else
+            {{"true", WIZ_YES},
+             {"false", WIZ_NO},
+             {"never", WIZ_NEVER}},
+#endif
+             true),
+
 #ifdef WIZARD
         new BoolGameOption(SIMPLE_NAME(fsim_csv), false),
         new ListGameOption<string>(SIMPLE_NAME(fsim_scale)),
@@ -1255,23 +1290,6 @@ void game_options::reset_options()
 #else
     restart_after_game = MB_MAYBE;
 #endif
-#endif
-
-#ifdef WIZARD
-#  ifdef DGAMELAUNCH
-        wiz_mode         = WIZ_NEVER;
-        explore_mode     = WIZ_NEVER;
-#  else
-#    ifdef DEBUG_DIAGNOSTICS
-    // Most of the time in debug builds, you want to be using wizmode anyways.
-    // This can be overridden by an explicit rc setting.
-    wiz_mode             = WIZ_YES;
-#    else
-    wiz_mode             = WIZ_NO;
-#    endif
-    explore_mode         = WIZ_NO;
-#  endif
-    // defaults further adjusted in fixup_options depending on CLOs
 #endif
 
     terp_files.clear();
@@ -3319,37 +3337,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             flush_input[FLUSH_LUA]
                 = read_bool(field, flush_input[FLUSH_LUA]);
         }
-    }
-    else if (key == "wiz_mode")
-    {
-        // wiz_mode is recognised as a legal key in all compiles -- bwr
-#ifdef WIZARD
-    #ifndef DGAMELAUNCH
-        if (field == "never")
-            wiz_mode = WIZ_NEVER;
-        else if (field == "no")
-            wiz_mode = WIZ_NO;
-        else if (field == "yes")
-            wiz_mode = WIZ_YES;
-        else
-            report_error("Unknown wiz_mode option: %s\n", field.c_str());
-    #endif
-#endif
-    }
-    else if (key == "explore_mode")
-    {
-#ifdef WIZARD
-    #ifndef DGAMELAUNCH
-        if (field == "never")
-            explore_mode = WIZ_NEVER;
-        else if (field == "no")
-            explore_mode = WIZ_NO;
-        else if (field == "yes")
-            explore_mode = WIZ_YES;
-        else
-            report_error("Unknown explore_mode option: %s\n", field.c_str());
-    #endif
-#endif
     }
     else if (key == "ban_pickup")
     {

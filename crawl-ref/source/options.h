@@ -24,6 +24,7 @@
 #include "spell-type.h"
 #include "tag-pref.h"
 #include "travel-open-doors-type.h"
+#include "wizard-option-type.h"
 
 using std::vector;
 
@@ -321,10 +322,9 @@ public:
     char_set_type  char_set;
     FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
 
-#ifdef WIZARD
-    int            wiz_mode;      // no, never, start in wiz mode
-    int            explore_mode;  // no, never, start in explore mode
-#endif
+    wizard_option_type wiz_mode;      // no, never, start in wiz mode
+    wizard_option_type explore_mode;  // no, never, start in explore mode
+
     vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files
     bool           no_player_bones;   // don't save player's info in bones files
