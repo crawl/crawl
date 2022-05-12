@@ -158,6 +158,11 @@ const vector<GameOption*> game_options::build_options_list()
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
     vector<GameOption*> options = {
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
+        new MultipleChoiceGameOption<int>(
+            autopickup_on, {"default_autopickup"},
+            1,
+            {{"true", 1}, // XX this would be better as an enum
+             {"false", 0}}, true),
         new BoolGameOption(SIMPLE_NAME(default_show_all_skills), false),
         new MultipleChoiceGameOption<skill_focus_mode>(
             SIMPLE_NAME(skill_focus),
@@ -246,6 +251,11 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(spell_menu), false),
         new BoolGameOption(SIMPLE_NAME(easy_floor_use), false),
         new BoolGameOption(SIMPLE_NAME(bad_item_prompt), true),
+        new MultipleChoiceGameOption<slot_select_mode>(
+            SIMPLE_NAME(assign_item_slot),
+            SS_FORWARD,
+            {{"forward", SS_FORWARD},
+             {"backward", SS_BACKWARD}}),
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
@@ -451,6 +461,20 @@ const vector<GameOption*> game_options::build_options_list()
              {"false", SCREENMODE_WINDOW},
              {"maybe", SCREENMODE_AUTO},
              {"auto", SCREENMODE_AUTO}}, true),
+        new MultipleChoiceGameOption<maybe_bool>(
+            SIMPLE_NAME(tile_use_small_layout),
+            MB_MAYBE,
+#ifdef TOUCH_UI
+            {{"true", MB_TRUE},
+             {"false", MB_FALSE},
+             {"maybe", MB_MAYBE},
+             {"auto", MB_MAYBE}}, true
+#else
+            // this option is unsupported, undocumented, and fairly crashy.
+            // XX do something about this.
+            {}
+#endif
+            ),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
@@ -1140,8 +1164,6 @@ void game_options::reset_options()
     messaging = true;
 #endif
 
-    autopickup_on    = 1;
-
     game = newgame_def();
 
     incremental_pregen = true;
@@ -1165,8 +1187,6 @@ void game_options::reset_options()
     // Sort only pickup menus by default.
     sort_menus.clear();
     set_menu_sort("pickup: true");
-
-    assign_item_slot       = SS_FORWARD;
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
@@ -1252,11 +1272,6 @@ void game_options::reset_options()
 #  endif
 #endif
     terp_files.clear();
-
-#ifdef USE_TILE_LOCAL
-    // touch only
-    tile_use_small_layout = MB_MAYBE;
-#endif
 
 #ifdef USE_TILE
     // XXX: arena may now be chosen after options are read.
@@ -3059,13 +3074,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "fake_lang")
         set_fake_langs(field);
-    else if (key == "default_autopickup")
-    {
-        if (read_bool(field, true))
-            autopickup_on = 1;
-        else
-            autopickup_on = 0;
-    }
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
@@ -3219,13 +3227,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             fire_items_start = letter_to_index(field[0]);
         else
             report_error("Bad fire item start index: %s\n", field.c_str());
-    }
-    else if (key == "assign_item_slot")
-    {
-        if (field == "forward")
-            assign_item_slot = SS_FORWARD;
-        else if (field == "backward")
-            assign_item_slot = SS_BACKWARD;
     }
 #ifndef DGAMELAUNCH
     else if (key == "restart_after_game")

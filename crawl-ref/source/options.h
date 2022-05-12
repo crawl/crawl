@@ -20,6 +20,7 @@
 #include "pattern.h"
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
+#include "slot-select-mode.h"
 #include "spell-type.h"
 #include "tag-pref.h"
 #include "travel-open-doors-type.h"
@@ -225,7 +226,7 @@ public:
     // Whether exclusions and exclusion radius are visible in the viewport.
     bool        always_show_exclusions;
 
-    int         autopickup_on;
+    int         autopickup_on; // can be -1, 0, or 1. XX refactor as enum
     bool        autopickup_starting_ammo;
     bool        default_manual_training;
     bool        default_show_all_skills;
@@ -445,7 +446,7 @@ public:
     bool        easy_floor_use;     // , selects the floor item if there's 1
     bool        bad_item_prompt;    // Confirm before using a bad consumable
 
-    int         assign_item_slot;   // How free slots are assigned
+    slot_select_mode assign_item_slot;   // How free slots are assigned
     maybe_bool  show_god_gift;      // Show {god gift} in item names
 
     maybe_bool  restart_after_game; // If true, Crawl will not close on game-end
