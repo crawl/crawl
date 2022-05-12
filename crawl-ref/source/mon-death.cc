@@ -1366,7 +1366,7 @@ static bool _animate_dead_reap(monster &mons)
     if (!you.duration[DUR_ANIMATE_DEAD])
         return false;
     const int pow = you.props[ANIMATE_DEAD_POWER_KEY].get_int();
-    if (!x_chance_in_y(100 + pow, 200))
+    if (!x_chance_in_y(150 + pow/2, 200))
         return false;
 
     _make_derived_undead(&mons, false, MONS_ZOMBIE, BEH_FRIENDLY,
@@ -1380,8 +1380,9 @@ static bool _reaping(monster &mons)
         return false;
 
     int rd = mons.props[REAPING_DAMAGE_KEY].get_int();
-    dprf("Reaping chance: %d/%d", rd, mons.damage_total);
-    if (!x_chance_in_y(rd, mons.damage_total))
+    const int denom = mons.damage_total * 2;
+    dprf("Reaping chance: %d/%d", rd, denom);
+    if (!x_chance_in_y(rd, denom))
         return false;
 
     actor *killer = actor_by_mid(mons.props[REAPER_KEY].get_int());
@@ -1479,7 +1480,6 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
 
         if (!exploded
             && !have_passive(passive_t::goldify_corpses)
-            && coinflip()
             && (_animate_dead_reap(mons) || _reaping(mons)))
         {
             return true;

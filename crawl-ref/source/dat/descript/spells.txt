@@ -47,7 +47,8 @@ Animate Dead spell
 
 For some time after casting this, living creatures killed by the caster will rise
 as zombies. The chance of reanimating a monster and the duration of the effect
-increase with spell power. Zombies cannot leave the level they were created on.
+increase with spell power. Re-casting this spell will return zombies on the
+caster's floor to dust.
 %%%%
 Animate Skeleton spell
 

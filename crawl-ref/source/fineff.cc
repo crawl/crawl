@@ -694,7 +694,7 @@ void make_derived_undead_fineff::fire()
         if (!mg.mname.empty())
             name_zombie(*undead, mg.base_type, mg.mname);
 
-        if (mg.god != GOD_YREDELEMNUL)
+        if (mg.god != GOD_YREDELEMNUL && undead->type != MONS_ZOMBIE)
         {
             int dur = undead->type == MONS_SKELETON ? 2 : 5;
             undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
