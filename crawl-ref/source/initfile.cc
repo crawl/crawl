@@ -154,14 +154,27 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
 #endif
 
+// TODO: better organize this list somehow?
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
     vector<GameOption*> options = {
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
         new BoolGameOption(SIMPLE_NAME(default_show_all_skills), false),
+        new MultipleChoiceGameOption<skill_focus_mode>(
+            SIMPLE_NAME(skill_focus),
+            SKM_FOCUS_ON,
+            {{"true", SKM_FOCUS_ON},
+             {"false", SKM_FOCUS_OFF},
+             {"toggle", SKM_FOCUS_TOGGLE}}, true),
         new BoolGameOption(SIMPLE_NAME(read_persist_options), false),
         new BoolGameOption(SIMPLE_NAME(auto_switch), false),
         new BoolGameOption(SIMPLE_NAME(suppress_startup_errors), false),
         new BoolGameOption(SIMPLE_NAME(simple_targeting), false),
+        new MultipleChoiceGameOption<confirm_prompt_type>(
+            SIMPLE_NAME(allow_self_target),
+            confirm_prompt_type::prompt,
+            {{"true", confirm_prompt_type::none},
+             {"false", confirm_prompt_type::cancel},
+             {"prompt", confirm_prompt_type::prompt}}, true),
         new BoolGameOption(easy_unequip,
                            { "easy_unequip", "easy_armour", "easy_armor" },
                            true),
@@ -177,6 +190,11 @@ const vector<GameOption*> game_options::build_options_list()
             MB_FALSE, {{"false", MB_FALSE},
                        {"true", MB_MAYBE},
                        {"force", MB_TRUE}}, true),
+        new MultipleChoiceGameOption<char_set_type>(
+            SIMPLE_NAME(char_set),
+            CSET_DEFAULT,
+            {{"default", CSET_DEFAULT},
+             {"ascii", CSET_ASCII}}),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
         new BoolGameOption(SIMPLE_NAME(allow_extended_colours), true),
@@ -212,6 +230,13 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
         new BoolGameOption(SIMPLE_NAME(small_more), false),
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
+        new MultipleChoiceGameOption<maybe_bool>(
+            SIMPLE_NAME(show_god_gift),
+            MB_MAYBE, {{"false", MB_FALSE},
+                       {"unid", MB_MAYBE},
+                       {"unident", MB_MAYBE},
+                       {"unidentified", MB_MAYBE},
+                       {"true", MB_TRUE}}, true),
         new BoolGameOption(SIMPLE_NAME(show_travel_trail), USING_DGL),
         new BoolGameOption(SIMPLE_NAME(use_fake_cursor), USING_UNIX ),
         new BoolGameOption(SIMPLE_NAME(use_fake_player_cursor), true),
@@ -298,7 +323,22 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(level_map_cursor_step), 7, 1, 50),
         new IntGameOption(SIMPLE_NAME(dump_item_origin_price), -1, -1),
         new IntGameOption(SIMPLE_NAME(dump_message_count), 40),
+        new MultipleChoiceGameOption<kill_dump_options>(
+            SIMPLE_NAME(dump_kill_places),
+            KDO_ONE_PLACE,
+            {{"none", KDO_NO_PLACES},
+             {"false", KDO_NO_PLACES},
+             {"all", KDO_ALL_PLACES},
+             {"single", KDO_ONE_PLACE},
+             {"one", KDO_ONE_PLACE},
+             {"true", KDO_ONE_PLACE}}, true),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
+        new MultipleChoiceGameOption<easy_confirm_type>(
+            SIMPLE_NAME(easy_confirm),
+            easy_confirm_type::safe,
+            {{"none", easy_confirm_type::none},
+             {"safe", easy_confirm_type::safe},
+             {"all", easy_confirm_type::all}}),
         new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_messages)),
@@ -404,6 +444,13 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT),
         new BoolGameOption(SIMPLE_NAME(tile_single_column_menus), true),
         new IntGameOption(SIMPLE_NAME(tile_sidebar_pixels), 32, 1, INT_MAX),
+        new MultipleChoiceGameOption<screen_mode>(
+            SIMPLE_NAME(tile_full_screen),
+            SCREENMODE_AUTO,
+            {{"true", SCREENMODE_FULL},
+             {"false", SCREENMODE_WINDOW},
+             {"maybe", SCREENMODE_AUTO},
+             {"auto", SCREENMODE_AUTO}}, true),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
@@ -430,6 +477,13 @@ const vector<GameOption*> game_options::build_options_list()
             {{"horizontal", "horizontal"}, {"vertical", "vertical"}}),
         new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600),
         new BoolGameOption(SIMPLE_NAME(action_panel_glyphs), false),
+        new MultipleChoiceGameOption<string>(
+            SIMPLE_NAME(tile_display_mode),
+            "tiles",
+            {{"tiles", "tiles"},
+             {"glyph", "glyphs"},
+             {"glyphs", "glyphs"},
+             {"hybrid", "hybrid"}}),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -1090,8 +1144,6 @@ void game_options::reset_options()
 
     game = newgame_def();
 
-    char_set      = CSET_DEFAULT;
-
     incremental_pregen = true;
     pregen_dungeon = false;
 
@@ -1104,10 +1156,6 @@ void game_options::reset_options()
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
 
-    easy_confirm           = easy_confirm_type::safe;
-    allow_self_target      = confirm_prompt_type::prompt;
-    skill_focus            = SKM_FOCUS_ON;
-
     user_note_prefix       = "";
 
     arena_dump_msgs        = false;
@@ -1119,14 +1167,12 @@ void game_options::reset_options()
     set_menu_sort("pickup: true");
 
     assign_item_slot       = SS_FORWARD;
-    show_god_gift          = MB_MAYBE;
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_TRANSPORTER | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
-    dump_kill_places       = KDO_ONE_PLACE;
     dump_item_origins      = IODS_ARTEFACTS;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
@@ -1208,9 +1254,7 @@ void game_options::reset_options()
     terp_files.clear();
 
 #ifdef USE_TILE_LOCAL
-
-    // window layout
-    tile_full_screen      = SCREENMODE_AUTO;
+    // touch only
     tile_use_small_layout = MB_MAYBE;
 #endif
 
@@ -1230,8 +1274,6 @@ void game_options::reset_options()
 #endif
 
 #ifdef USE_TILE_WEB
-    tile_display_mode = "tiles";
-
     action_panel.clear();
     action_panel.emplace_back(OBJ_WANDS);
     action_panel.emplace_back(OBJ_SCROLLS);
@@ -3006,15 +3048,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.name = field;
     }
 #endif
-    else if (key == "char_set")
-    {
-        if (field == "ascii")
-            char_set = CSET_ASCII;
-        else if (field == "default")
-            char_set = CSET_DEFAULT;
-        else
-            report_error("Bad character set, using default: %s\n", field.c_str());
-    }
     else if (key == "language")
     {
         if (!set_lang(field.c_str()))
@@ -3032,25 +3065,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             autopickup_on = 1;
         else
             autopickup_on = 0;
-    }
-    else if (key == "easy_confirm")
-    {
-        // decide when to allow both 'Y'/'N' and 'y'/'n' on yesno() prompts
-        if (field == "none")
-            easy_confirm = easy_confirm_type::none;
-        else if (field == "safe")
-            easy_confirm = easy_confirm_type::safe;
-        else if (field == "all")
-            easy_confirm = easy_confirm_type::all;
-    }
-    else if (key == "allow_self_target")
-    {
-        if (field == "yes")
-            allow_self_target = confirm_prompt_type::none;
-        else if (field == "no")
-            allow_self_target = confirm_prompt_type::cancel;
-        else if (field == "prompt")
-            allow_self_target = confirm_prompt_type::prompt;
     }
     else if (key == "lua_file" && runscript)
     {
@@ -3217,17 +3231,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "restart_after_game")
         restart_after_game = read_maybe_bool(field);
 #endif
-    else if (key == "show_god_gift")
-    {
-        if (field == "yes")
-            show_god_gift = MB_TRUE;
-        else if (field == "unid" || field == "unident" || field == "unidentified")
-            show_god_gift = MB_MAYBE;
-        else if (field == "no")
-            show_god_gift = MB_FALSE;
-        else
-            report_error("Unknown show_god_gift value: %s\n", field.c_str());
-    }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal, caret_equal);
     else if (key == "fire_order_spell" && runscript)
@@ -3277,15 +3280,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     {
         // field is already cleaned up from trim_string()
         user_note_prefix = orig_field;
-    }
-    else if (key == "skill_focus")
-    {
-        if (field == "toggle")
-            skill_focus = SKM_FOCUS_TOGGLE;
-        else if (read_bool(field, true))
-            skill_focus = SKM_FOCUS_ON;
-        else
-            skill_focus = SKM_FOCUS_OFF;
     }
     else if (key == "flush")
     {
@@ -3710,12 +3704,6 @@ void game_options::read_option_line(const string &str, bool runscript)
 
         new_dump_fields(field, !minus_equal, caret_equal);
     }
-    else if (key == "dump_kill_places")
-    {
-        dump_kill_places = (field == "none" ? KDO_NO_PLACES :
-                            field == "all"  ? KDO_ALL_PLACES
-                                            : KDO_ONE_PLACE);
-    }
     else if (key == "kill_map")
     {
         // TODO: treat this as a map option (e.g. kill_map.you = friendly)
@@ -3792,18 +3780,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             report_error(possible_error.c_str(), orig_field.c_str());
     }
 #ifdef USE_TILE
-#ifdef USE_TILE_LOCAL
-    else if (key == "tile_full_screen")
-    {
-        const maybe_bool fs_val = read_maybe_bool(field);
-        if (fs_val == MB_TRUE)
-            tile_full_screen = SCREENMODE_FULL;
-        else if (fs_val == MB_FALSE)
-            tile_full_screen = SCREENMODE_WINDOW;
-        else
-            tile_full_screen = SCREENMODE_AUTO;
-    }
-#endif // USE_TILE_LOCAL
 #ifdef TOUCH_UI
     else if (key == "tile_use_small_layout")
         tile_use_small_layout = read_maybe_bool(field);
@@ -3821,19 +3797,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         set_tile_offsets(field, true);
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
-#ifdef USE_TILE_WEB
-    else if (key == "tile_display_mode")
-    {
-        if (field == "tiles" || field == "glyphs" || field == "hybrid")
-            tile_display_mode = field;
-        else
-        {
-            mprf(MSGCH_ERROR, "Unknown value for tile_display_mode: '%s'"
-                              " (possible values: tiles/glyphs/hybrid",
-                                                                field.c_str());
-        }
-    }
-#endif
 #endif // USE_TILE
 
     else if (key == "bindkey")

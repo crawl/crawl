@@ -420,6 +420,7 @@ job-type.h.o \
 KeymapContext.h.o \
 kill-category.h.o \
 killer-type.h.o \
+kill-dump-options-type.h.o \
 kill-method-type.h.o \
 known-items.h.o \
 lang-t.h.o \

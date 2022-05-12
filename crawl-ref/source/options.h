@@ -12,6 +12,7 @@
 #include "feature.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
+#include "kill-dump-options-type.h"
 #include "lang-t.h"
 #include "maybe-bool.h"
 #include "mpr.h"
@@ -427,7 +428,7 @@ public:
     vector<menu_sort_condition> sort_menus;
 
     bool        dump_on_save;       // Automatically dump character when saving.
-    int         dump_kill_places;   // How to dump place information for kills.
+    kill_dump_options dump_kill_places;   // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
 
     int         dump_item_origins;  // Show where items came from?

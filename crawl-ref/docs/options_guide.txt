@@ -2424,8 +2424,8 @@ dump_kill_places = (none | all | single)
         In the Vanquished Creatures list, this option controls how the
         locations of each kill are displayed. Use 'none' to suppress
         place display altogether, 'all' to display all known (up to 5)
-        kill places, anything else to the default of showing kill places
-        only for single kills
+        kill places, and 'single' to use the default of showing kill
+        places only for single kills.
 
 dump_item_origins = artefacts
         The game remembers where you find items. If you want this item
