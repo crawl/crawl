@@ -1287,9 +1287,9 @@ eventually covering only the caster, before it times out.
 %%%%
 Simulacrum spell
 
-Mirrors the soul of a creature in ice. When the creature dies, icy replicas of
-its body burst forth to serve the caster. Simulacra cannot leave the level they
-were created on. The number of simulacra created depends on spell power.
+Grips a creature's soul in chains of ice. When it dies, its corpse freezes and
+splits, transforming into icy replicas which serve the caster. Simulacra cannot
+leave the level they were created on. The number created depends on spell power.
 %%%%
 Siren Song spell
 

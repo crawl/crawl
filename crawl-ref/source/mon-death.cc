@@ -1157,6 +1157,7 @@ static string _derived_undead_message(const monster &mons, monster_type which_z,
     {
     case MONS_SPECTRAL_THING:
     case MONS_SIMULACRUM:
+        // XXX: print immediately instead?
         return make_stringf("A %s mist starts to gather...", mist);
     case MONS_SKELETON:
     case MONS_ZOMBIE:

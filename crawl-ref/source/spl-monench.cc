@@ -8,6 +8,7 @@
 
 #include "spl-monench.h"
 
+#include "english.h" // apostrophise
 #include "env.h"
 #include "message.h"
 #include "spl-util.h"
@@ -183,7 +184,7 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
 
     if (mons->has_ench(ENCH_SIMULACRUM))
     {
-        mprf("%s's soul is already mirrored in ice!",
+        mprf("%s's soul is already gripped in ice!",
              mons->name(DESC_THE).c_str());
         return spret::abort;
     }
@@ -196,7 +197,7 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
 
     fail_check();
     int dur = 20 + random2(1 + div_rand_round(pow, 10));
-    mprf("You mirror the soul of %s.", mons->name(DESC_THE).c_str());
+    mprf("You freeze %s soul.", apostrophise(mons->name(DESC_THE)).c_str());
     mons->add_ench(mon_enchant(ENCH_SIMULACRUM, 0, &you, dur * BASELINE_DELAY));
     mons->props[SIMULACRUM_POWER_KEY] = pow;
     return spret::success;
