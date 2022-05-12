@@ -360,12 +360,7 @@ bool melee_attack::handle_phase_dodged()
 
         if (defender->is_player())
         {
-            const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
-                && (!defender->weapon()
-                    || is_melee_weapon(*defender->weapon()));
-            if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
-                riposte();
-
+            maybe_riposte();
             // Retaliations can kill!
             if (!attacker->alive())
                 return false;
@@ -373,6 +368,15 @@ bool melee_attack::handle_phase_dodged()
     }
 
     return true;
+}
+
+void melee_attack::maybe_riposte()
+{
+    const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
+        && (!defender->weapon()
+            || is_melee_weapon(*defender->weapon()));
+    if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
+        riposte();
 }
 
 void melee_attack::apply_black_mark_effects()
@@ -788,7 +792,15 @@ bool melee_attack::attack()
     }
 
     if (shield_blocked)
+    {
         handle_phase_blocked();
+        maybe_riposte();
+        if (!attacker->alive())
+        {
+            handle_phase_end();
+            return false;
+        }
+    }
     else
     {
         if (attacker != defender

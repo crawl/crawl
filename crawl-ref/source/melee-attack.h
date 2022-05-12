@@ -105,8 +105,9 @@ private:
     /* Divine Effect */
     void do_fiery_armour_burn();
 
-    /* Race Effects */
+    /* Retaliation Effects */
     void do_minotaur_retaliation();
+    void maybe_riposte();
 
     /* Item Effects */
     void do_starlight();
