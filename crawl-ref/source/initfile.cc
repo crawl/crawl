@@ -375,7 +375,7 @@ const vector<GameOption*> game_options::build_options_list()
              {"true", travel_open_doors_type::_true}}),
 
 #ifdef DGL_SIMPLE_MESSAGING
-        new BoolGameOption(SIMPLE_NAME(messaging), false),
+        new BoolGameOption(SIMPLE_NAME(messaging), true),
 #endif
 #ifndef DGAMELAUNCH
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
@@ -1199,10 +1199,6 @@ void game_options::reset_options()
 
     additional_macro_files.clear();
 
-#ifdef DGL_SIMPLE_MESSAGING
-    messaging = true;
-#endif
-
     game = newgame_def();
 
     incremental_pregen = true;
@@ -1218,10 +1214,6 @@ void game_options::reset_options()
     autopickups.set(OBJ_WANDS);
 
     user_note_prefix       = "";
-
-    arena_dump_msgs        = false;
-    arena_dump_msgs_all    = false;
-    arena_list_eq          = false;
 
     // Sort only pickup menus by default.
     sort_menus.clear();
@@ -1274,12 +1266,8 @@ void game_options::reset_options()
           ABIL_RU_APOCALYPSE, ABIL_LUGONU_CORRUPT, ABIL_IGNIS_FOXFIRE };
     always_use_static_ability_targeters = false;
 
-    // These are only used internally, and only from the commandline:
-    // XXX: These need a better place.
-    sc_entries             = 0;
-    sc_format              = -1;
-
 #ifdef DGAMELAUNCH
+    // not settable via rc on DGL, so no Options object to initialize them
     restart_after_game = MB_FALSE;
     restart_after_save = false;
     newgame_after_quit = false;
@@ -2185,7 +2173,9 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
     : seed(0), seed_from_rc(0),
-    no_save(false), no_player_bones(false), language(lang_t::EN),
+    no_save(false), no_player_bones(false),
+    sc_entries(0), sc_format(-1),
+    language(lang_t::EN),
     lang_name(nullptr),
     prefs_dirty(false)
 {
