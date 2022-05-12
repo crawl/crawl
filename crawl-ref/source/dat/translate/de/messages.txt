@@ -9215,9 +9215,6 @@ Feature
 (G)od
 (G)ott
 %%%%
-god
-Gott
-%%%%
 (B)ranch
 (B)ereich
 %%%%
@@ -11203,16 +11200,7 @@ Eine Kältewelle zieht über Euch.
 %s curls into a ball and begins rolling!
 
 %%%%
-at
-
-%%%%
-next to
-
-%%%%
 thin air
-
-%%%%
-past
 
 %%%%
 %s throws %s at %s!

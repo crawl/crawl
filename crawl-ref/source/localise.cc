@@ -1491,7 +1491,7 @@ static string _localise_string(const string context, const string& value)
 {
     DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
 
-    if (value.empty())
+    if (value.empty() || !localisation_active())
     {
         return value;
     }
@@ -1987,12 +1987,10 @@ string localise(const string& text_in, const map<string, string>& params, bool l
 
     if (text_in.empty())
         return "";
-    else if (!localisation_active())
-        return replace_keys(text_in, params);
 
     _context = "";
     string text;   
-    if (!localise_text)
+    if (!localise_text || !localisation_active())
     {
         text = text_in;
     }
@@ -2061,6 +2059,8 @@ string localise(const string& text_in, const map<string, string>& params, bool l
             else
             {
                 // no value - leave the @foo@ tag
+                if (!_context.empty())
+                    res << "{" << _context << "}";
                 res << '@' << key << '@';
             }
         }

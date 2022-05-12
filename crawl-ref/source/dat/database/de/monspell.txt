@@ -1,0 +1,935 @@
+# This file contains the messages used to "announce" a spell, like
+# "The wizard mumbles some strange words."  The messages are looked
+# up in the following order by the following keys:
+#
+# 1) The name of the spell being cast:
+#   a) First try with the type, then the species, the the genus.
+#   b) If a wizard, "wizard"; similarly for priest, magical, and natural.
+#   c) If being cast by a wizard or priest monster with arms, first try
+#      with the suffix "real".
+#   d) If being cast by a monster of normal or higher intelligence with arms,
+#      try with the suffix "gestures".
+#   e) Next, try without any suffix.
+# 2) The name of the monster's type, then species, then genus.
+# 3) "priest" if the spell is an invocation, "wizard" if it's a wizard spell,
+#    or "magical" if it's magical.
+# 4) If the spell uses a targeted, visible beam:
+#   a) "<beam_short_name> beam".
+#   b) "beam catchall".
+#
+# For 2 and 3, if the spell has a target it will first add the suffix
+# "targeted" to the lookup key before trying without the suffix.
+#
+# For any of them, if a wizard has no arms, it will use "non-humanoid wizard"
+# instead of "wizard."
+#
+# For example, a nagaraja casting Teleport Self:
+# * Teleport Self nagaraja cast
+# * Teleport Self naga cast
+# * Teleport Self naga cast
+# * Teleport Self wizard cast
+# * Teleport Self cast real
+# * Teleport Self cast gestures
+# * Teleport Self cast
+# * nagaraja cast
+# * naga cast
+# * naga cast
+# * wizard cast
+#
+# And one "casting" Spit Poison:
+# * Spit Poison nagaraja cast
+# * Spit Poison naga cast
+# * Spit Poison naga cast
+# * Spit Poison naga cast
+# * Spit Poison natural cast
+# * Spit Poison cast gestures
+# * Spit Poison cast
+# * nagaraja cast targeted
+# * nagaraja cast
+# * naga cast targeted
+# * naga cast
+# * naga cast targeted
+# * naga cast
+# * poison beam cast
+# * catchall beam cast
+#
+# For all lookups, if the monster is unseen by the player it will add the
+# prefix "unseen" to the key, or if the player or monster is silenced
+# it will prefix "silent" to the key (if the monster is both unseen and
+# unheard no message is ever given). If using the prefix "silent" gives
+# no results it will try again without the prefix, assuming that the
+# spell has no sound component.
+#
+# To give no message use the string "__NONE".
+
+#####################################################
+# Translate English preposition to German
+#####################################################
+%%%%
+at_or_near_target
+
+# in most cases here, "at" translates to "auf"
+[@at@==at?auf {acc}@target@:][@at@==next to?neben {acc}@target@:][@at@==past?an {dat}@target@ vorbei:]
+%%%%
+at_or_near_target_2
+
+# but sometimes it doesn't
+[@at@==at?{acc}@target@ an:][@at@==next to?neben {acc}@target@:][@at@==past?an {dat}@target@ vorbei:]
+%%%%
+
+#####################################################
+# Individual spells.
+#####################################################
+%%%%
+Airstrike cast
+
+@The_monster@ fuchtelt mit den {dat}@arms@ in weiten Kreisen herum.
+%%%%
+unseen Airstrike cast
+
+Ihr hört den Wind wehen.
+%%%%
+unseen Animate Dead cast real
+
+Ihr hört, wie @something@ den Toten zuruft.
+%%%%
+Animate Dead cast real
+
+@The_monster@ skandiert und gestikuliert in der Umgebung.
+
+@The_monster@ wirft die @arms@ weit und skandiert.
+%%%%
+Animate Dead cast gestures
+
+@The_monster@ gestikuliert in der Umgebung.
+
+@The_monster@ wirft die @arms@ wei.
+%%%%
+Battlecry cast
+
+@The_monster@ brüllt einen Kampfschrei!
+%%%%
+Blinkbolt cast
+
+@The_monster@ geht in einen lebenden Blitz über!
+%%%%
+unseen Blinkbolt cast
+
+Ein Lebendiger Blitz kommt in Sicht!
+%%%%
+branch summon cast
+
+@The_monster@ ruft Kreaturen hervor aus {dat}@branch@!
+%%%%
+Creeping Frost cast
+
+@The_monster@ ruft eisige Kälte aus den Wänden.
+%%%%
+Goad Beasts cast
+
+@The_monster@ stachelt die Tiere in der Nähe an.
+%%%%
+ironbound thunderhulk cast
+
+Elektrizität knistert in {gen}@the_monster@ Apparat.
+%%%%
+Mara Summon cast
+
+@The_monster@ webt eine Illusion.
+
+@The_monster@ schimmert.
+%%%%
+unseen Mara summon cast
+
+Etwas webt eine Illusion!
+%%%%
+Symbol of Torment cast
+
+@The_monster@ ruft die Mächte der Finsternis an!
+%%%%
+unseen Symbol of Torment cast
+
+@The_something@ ruft die Mächte der Finsternis an!
+%%%%
+Orb of Destruction orb spider cast
+
+@The_monster@ webt eine glühende Energiekugel.
+%%%%
+Orb of Destruction cast
+
+@The_monster@ ruft eine leuchtende Kugel hervor.
+
+@The_monster@ ruft eine Kugel reiner Magie hervor.
+
+@The_monster@ schleudert einen Ball zerstörerischer Magie.
+%%%%
+unseen Orb of Destruction cast
+
+@The_something@ ruft eine leuchtende Kugel hervor.
+%%%%
+Sticky Flame cast
+
+@The_monster@ besprüht {acc}@target@ mit brennendem Glibber.
+%%%%
+Holy Flames cast
+
+@The_monster@ ruft gesegnete Flammen hervor!
+%%%%
+unseen Holy Flames cast
+
+Gesegnete Flammen werden hervorgerufen!
+%%%%
+Word of Recall cast
+
+@The_monster@ beginnt, ein Wort des Rückrufs zu rezitieren!
+%%%%
+Call Lost Soul cast
+
+@The_monster@ ruft eine ruhelose Seele herbei!
+%%%%
+Haste Plants cast
+
+@The_monster@ stärkt die Pflanzen um sich herum!
+%%%%
+Major Destruction cast
+
+@The_monster@ ruft eine zerstörerische Kraft im Namen {gen}@a_God@ hervor!
+%%%%
+Druid's Call cast
+
+@The_monster@ ruft die Tiere der Wildnis herbei!
+%%%%
+Legendary Destruction cast
+
+@Major Destruction cast@
+%%%%
+Phantom Mirror cast
+
+@The_monster@ webt eine Illusion.
+%%%%
+Pyroclastic Surge cast
+
+@The_monster@ ruft Flammenspritzer aus der Lava!
+%%%%
+Eruption cast
+
+@The_monster@ zerreißt die Erde unter Euch!
+%%%%
+Chant Word of Entropy cast
+
+@The_monster@ beginnt, ein Wort der Entropie zu skandieren!
+%%%%
+Call of Chaos cast
+
+@The_monster@ ruft die Mächte des Chaos an!
+%%%%
+unseen Call of Chaos cast
+
+@The_something@ ruft die Mächte des Chaos an!
+%%%%
+Wind Blast cast
+
+@The_monster@ ruft einen heftigen Windstoß hervor!
+%%%%
+Harpoon Shot cast
+
+@The_monster@ feuert einen Harpunenschuss @at_or_near_target@.
+%%%%
+Throw Klown Pie cast
+
+@The_monster@ tortet Euch bösartig!
+%%%%
+Stunning Burst cast
+
+@The_monster@ feuert einen Stromstoß @at_or_near_target@.
+%%%%
+#################################################
+# These have special hard-coded messaging.
+#################################################
+%%%%
+Siren Song cast
+
+__NONE
+%%%%
+Avatar Song cast
+
+__NONE
+%%%%
+Seal Doors cast
+
+__NONE
+#####################################################
+# Individual natural spells (breathing and spitting).
+#####################################################
+%%%%
+Spit Acid cast
+
+@The_monster@ spuckt Säure @at_or_near_target@.
+%%%%
+unseen Spit Acid cast
+
+Ihr hört ein spuckendes Geräusch.
+%%%%
+Acid Splash cast
+
+@The_monster@ spuckt Säure @at_or_near_target@.
+%%%%
+unseen Acid Splash cast
+
+Ihr hört ein spuckendes Geräusch.
+%%%%
+unseen Cold Breath cast
+
+Ihr hört ein Brüllen.
+%%%%
+Cold Breath cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+unseen Chilling Breath cast
+
+Ihr hört ein Brüllen.
+%%%%
+Chilling Breath cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+# Drac ghost breath
+Bolt of Draining natural cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+Lightning Bolt natural cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+Steam Ball natural cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+Quicksilver Bolt natural cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+Poisonous Cloud natural cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+unseen Fire Breath cast
+
+Ihr hört ein Brüllen.
+%%%%
+Fire Breath cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+unseen Searing Breath cast
+
+Ihr hört ein Brüllen.
+%%%%
+Searing Breath cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%%
+Electrical Bolt cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@!
+%%%%%
+Spit Lava cast
+
+@The_monster@ spuckt Lava @at_or_near_target@!
+%%%%
+Spit Poison cast
+
+@The_monster@ spuckt Gift @at_or_near_target@!
+%%%%
+unseen Spit Poison cast
+
+Ihr hört ein spuckendes Geräusch.
+%%%%
+Freeze cast
+
+@The_monster@ freezes @target@.
+%%%%
+Sticky Flame Splash cast
+
+@The_monster@ spuckt klebrige Flammen @at_or_near_target@.
+%%%%
+unseen Sticky Flame Splash cast
+
+Ihr hört ein spuckendes Geräusch.
+%%%%
+Petrifying Cloud cast
+
+@The_monster@ haucht eine Wolke verkalkenden Staubes @at_or_near_target@.
+%%%%
+Frenzy cast
+
+@The_monster@ zuckt vor Wut.
+%%%%
+Volley of Thorns cast
+
+@The_monster@ feuert eine Salve von Dornen @at_or_near_target@.
+%%%%
+Warning Cry cast
+
+@The_monster@ heult einen Warnschrei!
+%%%%
+unseen Warning Cry cast
+
+Ihr hört einen lauten Warnschrei!
+%%%%
+Slug Dart cast
+
+@The_monster@ wirft einen Pfeil @at_or_near_target@.
+%%%%
+Paralysis Gaze cast
+
+@The_monster@ starrt durchdringend durch {acc}@target@!
+%%%%
+Weakening Gaze cast
+
+@The_monster@ starrt grimmig durch {acc}@target@!
+########################################################################
+# Unique monsters
+########################################################################
+%%%%
+Frances cast
+
+@The_monster@ murmelt in einer schrecklichen Sprache.
+
+@The_monster@ flüstert unentzifferbare Worte.
+
+@The_monster@ skandiert Phrasen aus dem Mund eines Teufels.
+
+@The_monster@ schreit ein Wort der Macht!
+%%%%
+Gastronok cast targeted
+
+@The_monster@ schaut @at_or_near_target_2@ und skandiert.
+
+@The_monster@ schaut @at_or_near_target_2@ und murmelt einige seltsame Worte.
+
+@The_monster@ spricht einen Zauber @at_or_near_target@.
+%%%%
+Summon Eyeballs Dissolution cast
+
+@The_monster@ gurgelt tief, einen Ruf an die Schleimfreunde.
+
+@The_monster@ sagt, "@My_God@ sieht alles!"
+%%%%
+Dissolution cast
+
+@The_monster@ gurgelt tief.
+%%%%
+Gastronok cast
+
+Die Augenstiele {gen}@the_monster@ zittern, als er einige seltsame Worte murmelt.
+
+@The_monster@ sagt einen Zauberspruch auf und wackelt dabei.
+
+@The_monster@ murmelt ein paar seltsame Worte.
+
+@The_monster@ spricht einen Zauberspruch.
+%%%%
+Geryon cast
+
+@The_monster@ bläst ein großes silbernes Horn.
+%%%%
+unseen Geryon cast
+
+Ihr hört ein seltsames und klagendes Geräusch.
+%%%%
+# Roxanne can't gesture or point either.
+Roxanne cast
+
+@sphinx cast@
+%%%%
+silent Berserker Rage Rupert cast
+
+@The_monster@ gerät in Rage!
+%%%%
+Berserker Rage Rupert cast
+
+@The_monster@ brüllt wie verrückt und gerät in Rage!
+%%%%
+Rupert cast targeted
+
+@The_monster@ brüllt wild @at_or_near_target@.
+
+@The_monster@ schreit laut @at_or_near_target@.
+%%%%
+Ensnare Arachne cast
+
+@The_monster@ richtet ihren Stecken @at_or_near_target@ und schießt einen Strom Spinnennetz.
+
+{gen}@The_monster@ Stecken schießt einen Strom Spinnennetz.
+%%%%
+unseen Ensnare Arachne cast
+
+Ein Strom Spinnennetz schießt aus der Luft.
+%%%%
+Lehudib's Crystal Spear the Serpent of Hell cast
+
+@The_monster@ spuckt Kristall @at_or_near_target@.
+%%%%
+Mennas cast
+
+VISUAL:@The_monster@ gestikuliert hektisch.
+%%%%
+Paralyse Xtahua cast
+
+@The_monster@ brüllt überwältigend @at_or_near_target_2@!
+
+@The_monster@ donnert wütend @at_or_near_target_2@!
+%%%%
+########################################################################
+# Individual monsters
+########################################################################
+glowing orange brain cast
+
+@The_monster@ pulsiert.
+%%%%
+silent flayed ghost cast
+
+@The_monster@ stöhnt in stiller Qual.
+
+@The_monster@ starrt @at_or_near_target_2@ mit gequälter Bosheit.
+%%%%
+flayed ghost cast
+
+@The_monster@ starrt @at_or_near_target_2@ mit gequälter Bosheit.
+
+@The_monster@ schreit: "Leide, wie ich gelitten habe!"
+
+@The_monster@ schreit: "Fühle, was ich gefühlt habe!"
+%%%%
+manticore cast
+
+@The_monster@  schnipst mit dem Schwanz.
+%%%%
+orange crystal statue cast
+
+@The_monster@ glitzert.
+%%%%
+orange crystal statue cast targeted
+
+@The_monster@ richtet seinen stechenden Blick @at_or_near_target@.
+%%%%
+orb of fire cast
+
+@The_monster@ leuchtet gelb.
+
+@The_monster@ leuchtet hell magenta.
+
+@The_monster@ leuchtet tief violett.
+
+@The_monster@ leuchtet rot.
+
+@The_monster@ strahlt ein grelles rotes Licht aus.
+%%%%
+obsidian statue cast
+
+Die Augen {gen}@the_monster@ leuchten kurz auf.
+%%%%
+# Sphinxes can't gesture or point.
+sphinx cast
+
+@The_monster@ murmelt ein paar seltsame Worte.
+
+@The_monster@ spricht einen Zauberspruch.
+%%%%
+eidolon cast targeted
+
+@The_monster@ starrt durchdringend @at_or_near_target@.
+%%%%
+basilisk cast targeted
+
+@floating eye cast targeted@
+%%%%
+basilisk cast
+
+@floating eye cast@
+%%%%
+wretched star cast
+
+@The_monster@ leuchtet turbulent.
+%%%%
+thrashing horror cast
+
+@The_monster@ schüttelt sich heftig!
+%%%%
+Airstrike wind drake cast
+
+@The_monster@ schlägt mit den Flügeln @at_or_near_target@.
+%%%%
+Wind Blast wind drake cast
+
+@The_monster@ stößt einen heftigen Windstoß aus!
+%%%%
+dryad cast
+
+@The_monster@ ruft dem Wald zu.
+%%%%
+Battlecry cherub cast
+
+@The_monster@ singt eine kraftvolle Hymne!
+%%%%
+Minor Healing dryad cast
+
+@The_monster@ schöpft aus der Vitalität der Natur.
+%%%%
+Battlecry satyr cast
+
+@The_monster@ spielt eine mitreißende Melodie auf seinen Pfeifen!
+%%%%
+Cause Fear satyr cast
+
+@The_monster@ spielt eine schaurige Melodie auf seinen Pfeifen!
+%%%%
+Sleep satyr cast
+
+@The_monster@ spielt eine einlullende Melodie auf seinen Pfeifen!
+%%%%
+Sleep dream sheep cast
+
+@The_monster@ materialisiert plötzlich eine große Menge an Traumstaub!
+%%%%
+Metal Splinters war gargoyle cast
+
+@The_monster@ schießt {acc}@beam@ @at_or_near_target@.
+%%%%
+Splinterspray cast
+
+@The_monster@ schleudert einen Sprühregen aus {dat}@beam@ @at_or_near_target@.
+%%%%
+Crystal Bolt crystal guardian cast
+
+@The_monster@ feuert einen kristallinen Bolzen @at_or_near_target@.
+%%%%
+Blink Other statue cast
+
+@The_monster@ spricht einen Zaube @at_or_near_target@.
+%%%%
+Stone Arrow gargoyle cast
+
+@The_monster@ schleudert @beam@ @at_or_near_target@.
+%%%%
+Bolt of Magma molten gargoyle cast
+
+@The_monster@ schleudert Magma @at_or_near_target@!
+%%%%
+Primal Wave elemental wellspring cast
+
+Ein reißender Strom Wasser steigt durch {acc}@the_monster@!
+%%%%
+Summon Water Elementals elemental wellspring cast
+
+Wassergeister strömen aus {dem}@the_monster@!
+%%%%
+Invisibility shadow cast
+
+@The_monster@ schlüpft in die Dunkelheit.
+%%%%
+ghost moth cast targeted
+
+@The_monster@ starrt @at_or_near_target_2@.
+%%%%
+ghost moth cast
+
+@The_monster@ sieht sich um.
+%%%%
+unseen ghost moth cast targeted
+
+Ihr habt das Gefühl, dass Ihr von etwas beobachtet werdet. @player_only@
+%%%%
+golden eye cast targeted
+
+@The_monster@ blinzelt @at_or_near_target_2@.
+%%%%
+Death Rattle ushabti cast
+
+@The_monster@ schüttelt und rasselt.
+%%%%
+Warning Cry ushabti cast
+
+@The_monster@ schüttelt und rattert ohrenbetäubend!
+%%%%
+unseen Warning Cry ushabti cast
+
+Ihr hört ein ohrenbetäubendes Klappern!
+%%%%
+ushabti cast targeted
+
+@The_monster@ gestikuliert langsam @at_or_near_target@.
+%%%%
+Ghostly Fireball revenant cast
+
+@The_monster@ schlägt mit geisterhaften Flammen um sich.
+%%%%
+Spectral Cloud revenant cast
+
+@The_monster@ beschwört spektrale Nebel um {acc}@target@.
+%%%%
+Dispel Undead revenant cast
+
+@The_monster@ gestikuliert heftig @at_or_near_target@.
+%%%%
+Blink Away revenant cast
+
+__NONE
+%%%%
+Warning Cry seraph cast
+
+@The_monster@ schreit eine Warnung an seine Verbündete!
+%%%%
+unseen Warning Cry seraph cast
+
+Ihr hört einen lauten Warnschrei!
+%%%%
+Battlecry seraph cast
+
+@The_monster@ singt eine kraftvolle Hymne!
+%%%%
+Throw Icicle shard shrike cast
+
+@The_monster@ spuckt einen Eissplitter @at_or_near_target@.
+%%%%
+Lightning Bolt electric golem cast
+
+@The_monster@ schleudert @beam@ @at_or_near_target@.
+%%%%
+unseen Warning Cry howler monkey cast
+
+Ihr hört ein gewaltiges Gejohle und Geheul!
+%%%%
+Warning Cry howler monkey cast
+
+@The_monster@ johlt und heult mit unglaublichem Elan!
+%%%%
+unseen Warning Cry vault sentinel cast
+
+Ihr hört einen Ton, der laut auf einem Horn geblasen wird!
+%%%%
+Warning Cry vault sentinel cast
+
+@The_monster@ bläst einen lauten Ton auf einem Signalhorn!
+%%%%
+Fireball hell hog cast
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+Throw Barbs peacekeeper cast
+
+@The_monster@ schleudert @beam@ @at_or_near_target@.
+%%%%
+Woodweal cast
+
+@The_monster@ berührt einen Baum und schöpft aus seiner Lebenskraft.
+%%%%
+########################################################################
+# Monster species and genus messages.
+########################################################################
+%%%%
+angel cast targeted
+
+@The_monster@ ruft den Zorn {gen}@a_God@ auf {acc}@target@ ab.
+%%%%
+crab cast targeted
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+dragon cast targeted
+
+@The_monster@ spuckt {acc}@beam@ @at_or_near_target@.
+%%%%
+dragon cast
+
+@The_monster@ brüllt!
+%%%%
+unseen dragon cast
+
+Ihr hört ein Brüllen.
+%%%%
+drake cast targeted
+
+@dragon cast targeted@
+%%%%
+curse skull cast
+
+@The_monster@ klappert mit dem Kiefer.
+%%%%
+silent curse skull cast
+
+@The_monster@ klappert lautlos mit dem Kiefer.
+%%%%
+unseen curse skull cast
+
+Ihr hört das Klappern der Zähne.
+%%%%
+floating eye cast targeted
+
+@The_monster@ starrt @at_or_near_target_2@.
+%%%%
+floating eye cast
+
+@The_monster@ sieht sich um.
+%%%%
+unseen floating eye cast targeted
+
+Du spürt, wie Euch etwas anstarrt. @player_only@
+%%%%
+guardian serpent cast targeted
+
+@The_monster@ windet sich und schwankt hin und her mit dem Oberkörper @at_or_near_target@.
+
+@The_monster@ spricht einen Zauber @at_or_near_target@.
+%%%%
+guardian serpent cast
+
+@The_monster@ windet sich und vollführt einen mystischen Schlangentanz.
+
+@The_monster@ casts a spell.
+
+@The_monster@ gestikuliert mit dem Schwanz.
+
+@The_monster@ webt mit der Zungenspitze komplizierte Muster.
+%%%%
+Bolt of Fire ophan cast
+
+@The_monster@ macht sich die reinigende Kraft des Feuers zunutze!
+%%%%
+unseen Bolt of Fire ophan cast
+
+Etwas macht sich die reinigende Kraft des Feuers zunutze!
+%%%%
+Shock shock serpent cast
+
+@The_monster@ entlädt eine schmale Stromranke.
+%%%%
+Static Discharge shock serpent cast
+
+@The_monster@ knistert vor Elektrizität!
+%%%%
+Corrupting Pulse wretched star cast
+
+@The_monster@ pulsiert mit einem unheimlichen Licht!
+###########################################################################
+# Generic messages for priests and wizards which have been polymorphed into
+# something without hands.
+###########################################################################
+%%%%
+polymorphed wizard cast targeted
+
+@The_monster@ spricht einen Zauber @at_or_near_target@.
+%%%%
+polymorphed wizard cast
+
+@The_monster@ spricht einen Zauber.
+%%%%
+polymorphed unseen wizard cast
+
+Ihr hört einige seltsame, gemurmelte Worte.
+######################################################
+# Generic priest, wizard and magical casting messages.
+######################################################
+%%%%
+Haste Other priest cast
+
+@The_monster@ ruft {acc}@a_God@ an, um {acc}@target@ zu beschleunigen.
+%%%%
+Heal Other priest cast
+
+@The_monster@ ruft {acc}@a_God@ an, um {acc}@target@ zu heilen.
+%%%%
+Might Other priest cast
+
+@The_monster@ ruft {acc}@a_God@ an, um {acc}@target@ zu stärken.
+%%%%
+Malign Offering priest cast
+
+@The_monster@ spricht ein dunkles Gebet und zeigt @at_or_near_target@.
+%%%%
+Blink magical cast
+
+__NONE
+%%%%
+priest cast targeted
+
+@The_monster@ ruft den Zorn {gen}@a_God@ auf {acc}@target@ herab.
+
+@The_monster@ murmelt ein paar seltsame Gebete zu {dat}@a_God@ gegen {acc}@target@.
+
+@The_monster@ beschwört die Hilfe von @a_God@ gegen {acc}@target@.
+%%%%
+priest cast
+
+@The_monster@ betet zu {dat}@a_God@.
+
+@The_monster@ murmelt einige seltsame Gebete zu {dat}@a_God@.
+
+@The_monster@ spricht eine Anrufung an {acc}@a_God@ aus.
+%%%%
+unseen priest cast targeted
+
+Ihr hört, wie @something@ den Zorn {gen}@a_God@ auf {acc}@target@ herabruft.
+
+Ihr hört, wie @something@ seltsame Gebete zu {dat}@a_God@ gegen {acc}@target@ murmelt.
+
+Ihr hört, wie @something@ die Hilfe {gen}@a_God@ gegen {acc}@target@ anruft.
+%%%%
+unseen priest cast
+
+Ihr hört einige seltsame, gemurmelte Gebete an {acc}@a_God@.
+%%%%
+non-humanoid wizard cast targeted
+
+@The_monster@ starrt @at_or_near_target_2@ und murmelt einige seltsame Worte.
+
+@The_monster@ spricht einen Zauber @at_or_near_target@.
+%%%%
+non-humanoid wizard cast
+
+@The_monster@ murmelt ein paar seltsame Worte.
+
+@The_monster@ spricht einen Zauberspruch.
+%%%%
+unseen non-humanoid wizard cast
+
+Ihr hört einige seltsame, gemurmelte Worte.
+%%%%
+wizard cast targeted
+
+@The_monster@ gestikuliert @at_or_near_target@ und skandiert.
+
+@The_monster@ zeigt @at_or_near_target@ und murmelt ein paar seltsame Worte.
+
+@The_monster@ spricht einen Zauber @at_or_near_target@.
+%%%%
+wizard cast
+
+@The_monster@ gestikuliert wild und skandiert.
+
+@The_monster@ murmelt ein paar seltsame Worte.
+
+@The_monster@ spricht einen Zauberspruch.
+%%%%
+unseen wizard cast
+
+Ihr hört einige seltsame, gemurmelte Worte.
+%%%%
+magical cast targeted
+
+@The_monster@ gestikuliert @at_or_near_target@.
+%%%%
+magical cast
+
+@The_monster@ gestikuliert.
+%%%%
+######################################################
+# Generic beam messages.
+######################################################
+beam catchall cast
+
+@The_monster@ wirft {acc}@beam@ @at_or_near_target@.
+%%%%

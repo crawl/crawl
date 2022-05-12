@@ -6715,8 +6715,9 @@ static void _speech_fill_target(string& targ_prep, string& target,
                                 const monster* mons, const bolt& pbolt,
                                 bool gestured)
 {
+    // noloc section start
     targ_prep = "at";
-    target    = "nothing"; // noloc
+    target    = "nothing";
 
     bolt tracer = pbolt;
     // For a targeted but rangeless spell make the range positive so that
@@ -6726,17 +6727,17 @@ static void _speech_fill_target(string& targ_prep, string& target,
     fire_tracer(mons, tracer);
 
     if (pbolt.target == you.pos())
-        target = "you"; // noloc
+        target = "you";
     else if (pbolt.target == mons->pos())
         target = mons->pronoun(PRONOUN_REFLEXIVE);
     // Monsters should only use targeted spells while foe == MHITNOT
     // if they're targeting themselves.
     else if (mons->foe == MHITNOT && !mons_is_confused(*mons, true))
-        target = "NONEXISTENT FOE"; // noloc
+        target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(mons->foe)
              && env.mons[mons->foe].type == MONS_NO_MONSTER)
     {
-        target = "DEAD FOE"; // noloc
+        target = "DEAD FOE";
     }
     else if (in_bounds(pbolt.target) && you.see_cell(pbolt.target))
     {
@@ -6779,7 +6780,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
                                                  NUM_TRAPS, "", DESC_THE);
                 }
                 else
-                    target = "thin air";
+                    target = "thin air"; // localise
             }
 
             return;
@@ -6885,6 +6886,7 @@ static void _speech_fill_target(string& targ_prep, string& target,
     // rather than "past".
     if (gestured || target == "nothing")
         targ_prep = "at";
+    // noloc section end
 
     // "throws whatever at something" is better than "at nothing"
     if (target == "nothing")
@@ -6925,24 +6927,28 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                           || msg.find("Point") != string::npos
                           || msg.find(" point") != string::npos;
 
+    // noloc section start
     string targ_prep = "at";
     string target    = "NO_TARGET";
 
     if (targeted)
         _speech_fill_target(targ_prep, target, mons, pbolt, gestured);
 
-    msg = replace_all(msg, "@at@",     targ_prep);
-    msg = replace_all(msg, "@target@", target);
-
     string beam_name;
     if (!targeted)
-        beam_name = "NON TARGETED BEAM"; // noloc
+        beam_name = "NON TARGETED BEAM";
     else if (pbolt.name.empty())
-        beam_name = "INVALID BEAM"; // noloc
+        beam_name = "INVALID BEAM";
     else
         beam_name = pbolt.get_short_name();
+    // noloc section end
 
-    msg = replace_all(msg, "@beam@", beam_name);
+    // do first round of param substitution
+    map<string, string> params;
+    params["at"] = targ_prep;
+    params["target"] = target;
+    params["beam"] = beam_name;
+    msg = localise(msg, params, false);
 
     const msg_channel_type chan =
         (unseen              ? MSGCH_SOUND :

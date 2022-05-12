@@ -236,7 +236,7 @@ for filename in files:
                     ignoring = False
                 continue
 
-            if ignoring:
+            if ignoring and not 'localise' in line:
                 continue
 
             # remove comment
