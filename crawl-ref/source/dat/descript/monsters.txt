@@ -2434,7 +2434,7 @@ heaviness of its outer armour, it is rather fast.
 stoker
 
 A mortal who made an unholy pact in life, now chained to tend the fires of
-hell in undeath as payment. It seems to want to keep its distance.
+hell in undeath as payment.
 %%%%
 stone giant
 

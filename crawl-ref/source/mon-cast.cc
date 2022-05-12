@@ -6453,7 +6453,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_STOKE_FLAMES:
-        _summon(*mons, MONS_CREEPING_INFERNO, 1, slot);
+        _summon(*mons, MONS_CREEPING_INFERNO, 2, slot);
         return;
 
     }
