@@ -1,0 +1,350 @@
+############################################################
+# As of Stone Soup 0.3 the previously hardcoded monster
+# speech has been outsourced. This makes changing existing
+# messages, and adding new ones really easy.
+#
+# shout.txt holds the utterances (and visual equivalents) of
+# monsters that notice you.
+#
+# For an explanation of how to read monspeak.txt or shout.txt
+# and how to add new messages, see monster_speech.txt in the
+# docs/develop/ directory.
+############################################################
+%%%%
+__BUGGY
+
+# This line should never get displayed to the user, even if
+# monster_shout() in shout.cc detects buggy behaviour,
+# so showing this line would itself be a bug.
+SOUND:You hear doubly buggy behaviour!
+%%%%
+__SHOUT
+
+SOUND:Ihr hört einen Schrei!
+%%%%
+__SHOUT seen
+
+SOUND:@The_monster@ schreit!
+%%%%
+__BARK unseen
+
+SOUND:Ihr hört ein Bellen!
+%%%%
+__BARK seen
+
+SOUND:@The_monster@ bellt!
+%%%%
+__HOWL unseen
+
+SOUND:Ihr hört ein Heulen!
+%%%%
+__HOWL seen
+
+SOUND:@The_monster@ heult!
+%%%%
+__TWO_SHOUTS unseen
+
+SOUND:Ihr hört zwei Schreie!
+%%%%
+__TWO_SHOUTS seen
+
+SOUND:@The_monster@ schreit in Stereo!
+%%%%
+__ROAR unseen
+
+SOUND:Ihr hört ein Brüllen!
+%%%%
+__ROAR seen
+
+SOUND:@The_monster@ brüllt!
+%%%%
+__SCREAM unseen
+
+SOUND:Ihr hört einen grässlichen Schrei!
+%%%%
+__SCREAM seen
+
+SOUND:@The_monster@ stößt einen grässlichen Schrei aus!
+%%%%
+__BELLOW unseen
+
+SOUND:Ihr hört ein Brüllen!
+%%%%
+__BELLOW seen
+
+SOUND:@The_monster@ brüllt!
+%%%%
+__BLEAT unseen
+
+SOUND:Ihr hört ein Blöken!
+%%%%
+__BLEAT seen
+
+SOUND:@The_monster@ blökt!
+%%%%
+__TRUMPET unseen
+
+SOUND:Ihr hört ein Trompeten!
+%%%%
+__TRUMPET seen
+
+SOUND:@The_monster@ trompetet!
+%%%%
+__SCREECH unseen
+
+SOUND:Ihr hört ein Kreischen!
+%%%%
+__SCREECH seen
+
+SOUND:@The_monster@ kreischt!
+%%%%
+__BUZZ unseen
+
+SOUND:Ihr hört ein wütendes, summendes Geräusch.
+%%%%
+__BUZZ seen
+
+SOUND:@The_monster@ summt wütend.
+%%%%
+__MOAN unseen
+
+SOUND:Ihr hört ein schauriges Stöhnen.
+%%%%
+__MOAN seen
+
+SOUND:@The_monster@ gibt ein schauriges Stöhnen von sich.
+%%%%
+__GURGLE unseen
+
+SOUND:Ihr hört ein furchtbares gurgelndes Geräusch!
+%%%%
+__GURGLE seen
+
+SOUND:@The_monster@ gurgelt entsetzlich!
+%%%%
+__CROAK unseen
+
+SOUND:Ihr hört ein lautes, tiefes Quaken!
+
+SOUND:Ihr hört ein Quaken.
+%%%%
+__CROAK seen
+
+SOUND:@The_monster@ gibt ein lautes, tiefes Quaken von sich!
+
+SOUND:@The_monster@ quakt.
+%%%%
+__GROWL unseen
+
+SOUND:Ihr hört ein wütendes Knurren.
+%%%%
+__GROWL seen
+
+SOUND:@The_monster@ knurrt wütend.
+%%%%
+__HISS unseen
+
+SOUND:Ihr hört ein wütendes Zischen.
+%%%%
+__HISS seen
+
+SOUND:@The_monster@ zischt wütend.
+%%%%
+__SQUEAL unseen
+
+SOUND:Ihr hört ein wütendes Quietschen.
+%%%%
+__SQUEAL seen
+
+SOUND:@The_monster@ quietscht wütend.
+%%%%
+__DEMON_TAUNT
+
+@The_monster@ @says@, "@demon_taunt@"
+%%%%
+__CHERUB seen
+
+SOUND:@The_monster@s Adlerkopf kreischt!
+
+SOUND:@The_monsters@s Löwenkopf brüllt!
+
+SOUND:@The_monster@s Ochsenkopf blökt!
+
+SOUND:@The_monster@s Menschenkopf brüllt!
+%%%%
+__CHERUB unseen
+
+SOUND:Ihr hört einen Schrei.
+
+SOUND:Ihr hört ein Kreischen.
+
+SOUND:Ihr hört ein Brüllen.
+
+SOUND:Ihr hört ein Blöken.
+%%%%
+__LOUD_ROAR unseen
+
+SOUND:Ihr hört ein ohrenbetäubendes Brüllen!
+%%%%
+__LOUD_ROAR seen
+
+SOUND:@The_monster@ brüllt ohrenbetäubend!
+%%%%
+############################################
+# End of default shouts
+############################################
+############################################################
+# Player ghost shouts. Potentially different ones for each
+# class, though currently they all just copy the default
+# player ghost.
+############################################################
+%%%%
+player ghost
+
+VISUAL:@The_monster@ wendet Euch einen bösartigen Blick zu.
+%%%%
+Fighter player ghost
+
+@player ghost@
+%%%%
+Wizard player ghost
+
+@player ghost@
+%%%%
+Gladiator player ghost
+
+@player ghost@
+%%%%
+Necromancer player ghost
+
+@player ghost@
+%%%%
+Assassin player ghost
+
+@player ghost@
+%%%%
+Berserker player ghost
+
+@player ghost@
+%%%%
+Hunter player ghost
+
+@player ghost@
+%%%%
+Conjurer player ghost
+
+@player ghost@
+%%%%
+Enchanter player ghost
+
+@player ghost@
+%%%%
+Fire Elementalist player ghost
+
+@player ghost@
+%%%%
+Ice Elementalist player ghost
+
+@player ghost@
+%%%%
+Summoner player ghost
+
+@player ghost@
+%%%%
+Air Elementalist player ghost
+
+@player ghost@
+%%%%
+Earth Elementalist player ghost
+
+@player ghost@
+%%%%
+Venom Mage player ghost
+
+@player ghost@
+%%%%
+Chaos Knight player ghost
+
+@player ghost@
+%%%%
+Transmuter player ghost
+
+@player ghost@
+%%%%
+Monk player ghost
+
+@player ghost@
+%%%%
+Warper player ghost
+
+@player ghost@
+%%%%
+Wanderer player ghost
+
+@player ghost@
+########################################
+# Shouts by monster symbol
+########################################
+%%%%
+'&'
+
+@__DEMON_TAUNT@
+%%%%
+'cap-G'
+
+VISUAL:@The_monster@ wendet den Blick zu Euch.
+%%%%
+'cap-J'
+
+VISUAL:@The_monster@ zittert.
+########################################
+# Shouts by monster genus
+########################################
+%%%%
+giant slug
+
+VISUAL:@The_monster@ schwenkt die Augenstiele auf Euch zu.
+########################################
+# Shouts for specific monsters
+########################################
+%%%%
+ballistomycete spore
+
+VISUAL:@The_monster@ schwenkt die Rhizome.
+%%%%
+glowing orange brain
+
+VISUAL:@The_monster@ wendet seine Aufmerksamkeit Euch zu.
+%%%%
+# Iron imps, shadow imps and white imps copy imps.
+imp
+
+# Shout one half the time, taunt the other half.
+@__SHOUT@
+
+SOUND:@The_monster@ @says@, "@imp_taunt@"
+%%%%
+moth of wrath
+
+VISUAL:@The_monster@s Fell sträubt sich vor Wut, als sie Euch bemerkt.
+%%%%
+iron imp
+
+@imp@
+%%%%
+shadow imp
+
+@imp@
+%%%%
+white imp
+
+@imp@
+####################################
+# Shouts for specific uniques
+####################################
+%%%%
+Polyphemus
+
+# This would also work for other monsters that are surrounded by allies.
+SOUND:@The_monster@ shouts, "Greift an, meine Lieblinge! Greift an!"
+%%%%

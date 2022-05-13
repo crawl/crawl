@@ -145,6 +145,7 @@ bool monster_attempt_shout(monster &mon)
  */
 void monster_shout(monster* mons, int shout)
 {
+    // noloc section start (keys)
     shout_type s_type = static_cast<shout_type>(shout);
     mon_acting mact(mons);
 
@@ -186,6 +187,7 @@ void monster_shout(monster* mons, int shout)
         if (message.empty() || message == "__DEFAULT")
             message = getShoutString(default_msg_key, suffix);
     }
+    // noloc section end
 
     if (default_msg_key == "__BUGGY")
     {
