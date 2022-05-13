@@ -1399,7 +1399,7 @@ w:1
 @The_weapon@ singt, in einem durchdringenden Sopran, "Wehe! Wehe! Weh!"
 
 w:1
-@The_weapon@ singt, in einem quietschenden Tenor, "Oh, Oh! Au! Au! Au!"
+@The_weapon@ singt, in einem quietschenden Tenor, "Ohe! Ohe! Au! Au!"
 
 w:1
 @The_weapon@ singt, in einem schmelzenden Tenor, "Wie liebliche Luft wieder uns weht..."
