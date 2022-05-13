@@ -1236,7 +1236,7 @@ You feel a darkness envelop your magic.
 Ihr fühlt eine Dunkelheit, die Eure Magie umhüllt.
 %%%%
 A voice whispers, "%s"
-
+Eine Stimme flüstert, "%s"
 %%%%
 The darkness slowly releases its grasp on your magic.
 
@@ -20086,9 +20086,6 @@ majin-bo cast weak
 
 %%%%
 majin-bo cast
-
-%%%%
-A voice whispers, "
 
 %%%%
 "Cast which spell? (? or * to list) "

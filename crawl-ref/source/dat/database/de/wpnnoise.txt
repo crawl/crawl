@@ -1,0 +1,1843 @@
+###############################################################################
+# wpnnoise.txt contains the messages of randart weapons with the noise property
+# and of the noisy unrandart items, like the Singing Sword. To make an entry
+# for a noisy unrandart weapon, make the entry's key exactly the same as the
+# weapon's name, but all lower case.
+#
+# For an explanation of how to read wpnnoise.txt and how to add new messages,
+# see monster_speech.txt in the docs/develop/ directory.
+###############################################################################
+
+# Contents:
+# - Shield of the Gong
+# - Frostbite
+# - Noisy randarts
+# - The Singing Sword
+
+
+###############################################################################
+###############################################################################
+#
+# The SHIELD OF THE GONG can be struck in different ways.
+#
+###############################################################################
+###############################################################################
+%%%%
+shield of the gong
+
+w:40
+GONNNNG!
+
+BOUMMMMG!
+
+PTOANNNG!
+
+PANG!
+
+BONNNG!
+
+# scraping hit
+SCHROANNG!
+
+###############################################################################
+###############################################################################
+#
+# The FROZEN AXE "FROSTBITE" imitates loud noises from cold environments.
+#
+###############################################################################
+###############################################################################
+
+%%%%
+frozen axe "frostbite"
+
+Ihr hört die [brüllendene|heulendene|wütendene] Winde eines [Blizzards|Schwalls|Schneesturms].
+
+w:5
+Ihr hört das [Knarren|Knirschen|Knacken] von Eis.
+
+w:1
+Ihr hört Eissplitter [klirren|klimpern].
+
+w:1
+Ihr hört das [Rumpeln|Grollen|Krachen] eines [kalbenden Gletschers|zusammenstoßenden Eisbergs].
+
+###############################################################################
+###############################################################################
+#
+# NOISY WEAPONS like to chatter and imitate dungeon noises.
+#
+# All speech below (apart from SOUND:You hear @weapon_noise@) is also used
+# for the Singing Sword. Note that @Your_weapon@ will be resolved into
+# "The Singing Sword" or "Your [weapon]", respectively (noisy_equipment() in
+# shouts.cc).
+#
+###############################################################################
+###############################################################################
+%%%%
+noisy weapon
+
+w:30
+@_weapon_chatter_@
+
+w:28
+@weapon_noises@
+
+w:2
+@_instrumental_noises_@
+
+w:20
+SOUND:Ihr hört @weapon_noise@
+
+###############################################################################
+# Weapon chatter.
+###############################################################################
+%%%%
+_weapon_chatter_
+
+@Your_weapon@ schreit, "Juchhu!"
+
+@Your_weapon@ streitet mit sich selbst.
+
+@Your_weapon@ beschwert sich über die Landschaft.
+
+@Your_weapon@ sagt, "Mir ist langweilig."
+
+@Your_weapon@ schreit Anweisungen aus!
+
+@Your_weapon@ sagt, "Pssst! Hast du das gehört?"
+
+@Your_weapon@ feuert Euch an.
+
+@Your_weapon@ spricht ein Gebet.
+
+@Your_weapon@ ruft eine Warnung aus!
+
+@Your_weapon@ plappert fröhlich.
+
+@Your_weapon@ rezitiert ein Gedicht.
+
+@Your_weapon@ plappert immer weiter.
+
+@Your_weapon@ erkundigt sich nach Eurer Familie.
+
+@Your_weapon@ kommentiert das Wetter.
+
+@Your_weapon@ erfreut Euch mit die Lebensgeschichte.
+
+@Your_weapon@ spricht Kauderwelsch.
+
+@Your_weapon@ schwärmt unzusammenhängend.
+
+@Your_weapon@ schreit, "Hilfe!"
+
+@Your_weapon@ reißt Witze mit [fragwürdigem|zweifelhaftem|jugendlichem] Humor.
+
+@Your_weapon@ schwelgt in Sagen über [den Ruhm alter Zeiten|einer vergangenen Zeit].
+
+@Your_weapon@ singt, "Im Kampf zu sterben ist höchst ehrenvoll!"
+
+@Your_weapon@ bekennt sich [stolz|freudig] zu vielen [Untaten|Gräueltaten].
+
+w:30
+@_rare_chatter_@
+%%%%
+_rare_chatter_
+
+@Your_weapon@ schreit: "Diese Ebene gehört mir! Ähm, uns."
+
+@Your_weapon@ schreit: "Schmeißt mich noch nicht raus! Ich verspreche, für immer still zu sein."
+
+@Your_weapon@ stöhnt: "Das nennst du kämpfen?"
+
+@Your_weapon@ schreit: "Links! Nein, nein, rechts!".
+
+@Your_weapon@ sagt: "Warum sagt Ihr zur Abwechslung nicht mal was?"
+
+@Your_weapon@ fragt: "Habt Ihr ein Schweigegelübde abgelegt?"
+
+@Your_weapon@ sagt: "Ihr könnt mir alles sagen! Ich kann ein Geheimnis bewahren!"
+
+@Your_weapon@ fragt: "Wollt Ihr das Handbuch sehen?"
+
+@Your_weapon@ fragt: "Habt Ihr schon mal von der Kugel von Zot gehört?"
+
+@Your_weapon@ stöhnt: "Mir ist schwindlig."
+
+@Your_weapon@ sagt: "Wir werden das Gold teilen! Fifty-fifty!"
+
+@Your_weapon@ sagt: "Ihr seid ziemlich gut, für {acc}@a_player_genus@."
+
+@Your_weapon@ seufzt, "Ich werde Euch vermissen, wenn Ihr tot seid, @player_name@."
+
+###############################################################################
+# Weapon noises.
+###############################################################################
+%%%%
+weapon_noises
+
+w:80
+@Your_weapon@ [gackert|kichert|gurgelt|seufzt|schnaubt|murmelt|weint|whimpert].
+
+w:50
+@Your_weapon@ [hustet|schweißt|gähnt][| laut| geräuschvoll].
+
+w:40
+@Your_weapon@ [rülpst|heult|brüllt|gähnt|niest][| laut]!
+
+w:30
+@Your_weapon@ macht ein [schreckliches|tiefes, gutturales|stichelndes] Geräusch.
+
+w:20
+@Your_weapon@ macht ein [tiefes, stöhnendes|poppendes] Geräusch.
+
+w:20
+@Your_weapon@ macht ein [tick-tack.|schnick-schnack!]
+
+w:20
+@Your_weapon@ heult [wie ein Wolf.|vor Lachen!]
+
+w:20
+@Your_weapon@ [bricht|bricht plötzlich] in Gelächter aus!
+
+w:20
+@Your_weapon@ gibt einen [Wolfspfiff|zischenden Laut] von sich.
+
+w:20
+@Your_weapon@ stößt einen [klagenden Seufzer|Juchhu] aus.
+
+@Your_weapon@ lacht wie verrückt.
+
+@Your_weapon@ knurrt bedrohlich.
+
+@Your_weapon@ stottert und zischt.
+
+@Your_weapon@ keucht und schnauft.
+
+@Your_weapon@ bellt abrupt.
+
+@Your_weapon@ schreit hysterisch.
+
+@Your_weapon@ hat lauten Schluckauf.
+
+@Your_weapon@ beginnt laut zu schluchzen.
+
+@Your_weapon@ schreit in einer seltsamen Sprache.
+
+@Your_weapon@ schreit auf!
+
+@Your_weapon@ brabbelt fröhlich vor sich hin.
+
+@Your_weapon@ kreischt plötzlich!
+
+@Your_weapon@ pfeift unschuldig.
+
+@Your_weapon@ plappert die Geräusche um Euch herum nach.
+###############################################################################
+# Instrumental noises.
+###############################################################################
+%%%%
+_instrumental_noises_
+
+@Your_weapon@ macht ein räusperndes Geräusch.
+
+@Your_weapon@ macht ein klirrendes Geräusch.
+
+w:20
+@Your_weapon@ läutet [melodiös|harmonisch].
+
+w:20
+@Your_weapon@ imitiert [ein Saxophon|den Dudelsack].
+
+@Your_weapon@ bimmelt.
+
+@Your_weapon@ klingelt wie eine Glocke.
+
+@Your_weapon@ stößt einen Trompetenstoß aus.
+
+@Your_weapon@ röhrt vor sich hin.
+
+@Your_weapon@ läutet wie ein Gong.
+
+@Your_weapon@ applaudiert sich selbst.
+
+@Your_weapon@ macht Tüt-Tüt!
+
+@Your_weapon@ macht einen Trommelwirbel.
+###############################################################################
+# Noises for weapons with NOISES property (not used for the Singing Sword)
+###############################################################################
+%%%%
+weapon_noise
+
+############ dungeon noises ############
+einen Schrei.
+
+ein wütendes Zischen.
+
+einen schrillen Schrei!
+
+ein Brüllen!
+
+einen grässlichen Schrei!
+
+ein klägliches Stöhnen!
+
+ein Kreischen!
+
+ein Brüllen!
+
+ein lautes, tiefes Krächzen!
+
+ein wütendes, summendes Geräusch.
+
+ein plätscherndes Geräusch.
+
+ein zischendes Geräusch!
+
+ein lautes klirrendes Geräusch!
+
+ein knirschendes Geräusch.
+
+ein gewaltiges Donnergrollen!
+
+ein grässliches Geschrei!
+
+ein Bellen!
+
+ein rumpelndes Geräusch!
+
+ein knirschendes Geräusch.
+
+ein fernes "Zot"!
+
+das ferne Brüllen eines wütenden Frosches.
+
+############ other noises, usually not found in the dungeon ############
+ein Klopfen.
+
+eine Stimme, die Euren Namen ruft.
+
+ein sehr seltsames Geräusch.
+
+wie jemand schnarcht.
+
+jemanden, der um Hilfe ruft!
+
+seltsame Stimmen.
+
+wahnsinniges Lachen.
+
+Fetzen von Gesang.
+
+ein klirrendes Geräusch.
+
+das Läuten eines fernen Gongs.
+
+das Läuten einer riesigen Glocke.
+
+ein Echo.
+
+das Heulen von Sirenen.
+
+ein Trompetensignal!
+
+eine seltsam angenehme Explosion.
+
+ein fernes Weinen.
+
+einen gedämpften Scherz.
+
+###############################################################################
+###############################################################################
+#
+# The SINGING SWORD
+#
+###############################################################################
+###############################################################################
+#
+# The Sword operates in three modes: no tension, low tension, high tension.
+#
+# No tension:
+# Speech is very rare, soft (does not wake up monsters), bored or witty,
+# sometimes just chatty. The sword is rational, sometimes introspective.
+# It is somewhat educated (mostly about music and war) and likes to show off.
+# Typical speech verb: "says"
+#
+# Low tension:
+# Speech is common, somewhat loud (do wake up nearby monsters) and slightly
+# damages everyone in sight. The sword is calm and cool. It enjoys the
+# bloodshed, but is sane. Of course, work is more fun with a little tune...
+# Typical speech verbs: "says" or "shouts".
+#
+# High tension:
+# Speech is very common, extremely loud (you may use CAPS) and does more
+# damage. Messages are insane, the sword is out of control.
+# At high tension, the sword may SCREAM, doing even more damage.
+# Typical speech verb: "shouts" or @_screams_@
+#
+#
+# Generally, the Sword is arrogant: it sees itself as the main hero, with the
+# wielder just being a disposable tool/fool. Also, it does not like allies --
+# all the fame belong to our steely hero!
+#
+# There are some (occasionally modified) lines from actual songs. Those are
+# okay to use, but particularly rare.
+#
+# There are the following types of messages:
+# * singing (including composing)
+# * speaking
+# * real songs (one liners from actual songs, sometimes modified)
+# * instruments    -- also used for all noisy randarts
+# * weapon noises  -- the no tension ones used for noisy randarts
+# * chatter        -- also used for all noisy randarts
+#
+#                 no tension      low tension       high tension     (old)
+#
+# none            1000             100               10
+# some speech       7                7                7
+#
+# singing         50% (40/10)       40%               0%             360/700
+# speaking        20%               20% (10/10)      40% (30/10)     138/700
+# real songs       1%                1% (0.7/0.3)     1% (0.3/0.7)    12/700
+# instruments     12%               16%              20%              90/700
+# noises           7%               23% (7/16)       39% (3/36)       50/700
+# chatter         10%                0%               0%              50/700
+#
+###############################################################################
+
+###############################################################################
+# Weights for different types of message, depending on tension.
+
+######### silenced, any tension ############
+%%%%
+singing sword silenced
+
+VISUAL:@The_weapon@ kämpft und dreht sich.
+
+VISUAL:@The_weapon@ scheint @_exasperated_@.
+
+VISUAL:@The_weapon@ macht einen [traurigen|desorientierten|verzweifelten|hoffnungslosen] Eindruck.
+
+w:5
+VISUAL:@The_weapon@ schmollt.
+
+w:1
+VISUAL:@The_weapon@ scheint Dampf auszustoßen.
+
+w:1
+VISUAL:@The_weapon@ wird @_crimson_@.
+
+######### no tension ############
+%%%%
+singing sword no_tension
+
+w:400
+@_singing_no_tension_@
+
+w:100
+@_singing_no-low_tension_@
+
+w:200
+@_speaking_no_tension_@
+
+w:10
+@_real_song_no_tension_@
+
+w:120
+@_instrumental_noises_@
+
+w:70
+@weapon_noises@
+
+w:100
+@_weapon_chatter_@
+######### low tension ############
+%%%%
+singing sword low_tension
+
+w:400
+@_singing_no-low_tension_@
+
+w:100
+@_speaking_low_tension_@
+
+w:100
+@_speaking_low-high_tension_@
+
+w:7
+@_real_song_low_tension_@
+
+w:3
+@_real_song_low-high_tension_@
+
+w:160
+@_instrumental_noises_@
+
+w:70
+@weapon_noises@
+
+w:160
+@_weapon_noises_low-high_tension_@
+######### high tension ############
+%%%%
+singing sword high_tension
+
+w:300
+@_speaking_low-high_tension_@
+
+w:3
+@_real_song_low-high_tension_@
+
+w:7
+@_real_song_high_tension_@
+
+w:150
+@_speaking_high_tension_@
+
+w:200
+@_instrumental_noises_@
+
+w:30
+@weapon_noises@
+
+w:360
+@_weapon_noises_low-high_tension_@
+######### SCREAM (high tension + double damage) ############
+%%%%
+singing sword SCREAM
+
+@_SCREAM_@
+###############################################################################
+# Weapon noises for the Singing Sword at low and high tension.
+###############################################################################
+%%%%
+_weapon_noises_low-high_tension_
+
+w:100
+@The_weapon@ @_screams_@ @_screams_how_@.
+
+@The_weapon@ @_screams_@.
+
+@The_weapon@ brüllt vor wahnsinnigem Lachen!
+
+@The_weapon@ bricht in irres Gelächter aus!
+
+@The_weapon@ bricht plötzlich in mörderisches Gelächter aus!
+
+@The_weapon@ lacht in einem Anfall von Wahnsinn!
+
+@The_weapon@ macht ein entsetzliches Geräusch.
+
+###############################################################################
+# Singing or other making of music
+# The Singing Sword will happily sing a song during work (i.e. at low tension).
+# But it will practise only when properly bored (i.e. at no tension).
+###############################################################################
+############ singing, no tension ############
+%%%%
+_singing_no_tension_
+
+# practising
+@The_weapon@ übt Tonleitern.
+
+@The_weapon@ gibt ein schmerzhaft hohes Quietschen von sich.
+
+w:30
+@The_weapon@ singt [einen plötzlichen stakkatoartigen|bebend langgezogenen|ohrenbetäubend hohen] Ton.
+
+@The_weapon@ trainiert die @_kind_of_scales_@ Tonleitern.
+
+@The_weapon@ spielt ein paar Takte.
+
+@The_weapon@ [trifft|verpasst] den Kammerton[ fast| deutlich|].
+
+@The_weapon@ übt wiederholt den hohen Ton.
+
+@The_weapon@ singt [mehrere|drei oder vier|eine Vielzahl von] Akkorden auf einmal.
+
+@The_weapon@ übt wiederholt Kontrapunkte.
+############ singing, no or low tension ############
+%%%%
+_singing_no-low_tension_
+
+@The_weapon@ bricht in ein glorreiches Lied aus!
+
+@The_weapon@ singt[| schief].
+
+@The_weapon@ [singt|pfeift] [laut|fröhlich].
+
+@The_weapon@ wimmert klagend.
+
+@The_weapon@ jammert kläglich.
+
+@The_weapon@ trällert melodiös.
+
+@The_weapon@ jodelt.
+
+@The_weapon@ summt unmelodisch.
+
+@The_weapon@ keift wild.
+
+#Beethoven
+@The_weapon@ singt, "Da-da-da-dum".
+
+@@The_weapon@ singt heiter.
+
+@The_weapon@ trillert fröhlich.
+
+@The_weapon@ beginnt ein weiteres Solo.
+
+@The_weapon@ stößt eine Reihe von hohen Trillern aus.
+
+@The_weapon@ versucht, im Einklang mit sich selbst zu singen.
+
+@The_weapon@ liefert die musikalische Begleitung für jede Eurer Handlungen.
+
+@The_weapon@ komponiert ein neues Lied.
+
+@The_weapon@ stürzt sich lautstark in den Gesang.
+
+@The_weapon@ pfeift fröhlich eine Melodie.
+
+@The_weapon@ stimmt einen [Bolero|Bossanova|Calypso|Fandango|Mazurka|Menuet|Pasodoble|Walzer] an.
+
+@The_weapon@ intoniert [eine Arie|eine Fuge].
+
+@The_weapon@ gibt Euch ein privates [Vorsingen|Konzert].
+
+@The_weapon@ [singt|summt] vor sich hin.
+
+@The_weapon@ stößt eine Reihe von Vogelrufen aus.
+
+@The_weapon@ macht schöne Musik.
+
+@The_weapon@ erzeugt einen lauten, orchestralen Akkord.
+
+@The_weapon@ hält einen dissonanten Akkord.
+
+@The_weapon@ stimmt sich selbst.
+
+@The_weapon@ schlägt die Zeit.
+
+@The_weapon@ zieht alle Register.
+
+@The_weapon@ zieht alle Register.
+
+@The_weapon@ baut ein furioses Crescendo auf.
+
+Mit hysterischer Stimme schlägt @the_weapon@ einen Marsch an.
+
+@The_weapon@ [singt|summt|pfeift] eine [kleine|einprägsame|merry] Melodie.
+
+@The_weapon@ [singt|summt] [eine unheimliche Melodie|ein unheimliches Lied].
+
+w:5
+@The_weapon@ [singt|summt] eine langsame und schwermütige Melodie.
+
+w:25
+@The_weapon@ stimmt @_strikes_up_what_@ an.
+
+@The_weapon@ singt, "Tra-la-la..."
+
+w:40
+@The_weapon@ singt [ein Wiegenlied|ein Volkslied|ein tief bewegendes Lied|einen kleinen Jingle].
+
+@The_weapon@ summt einen langsamen Walzer.
+
+@The_weapon@ singt eine kleine Melodie.
+
+@The_weapon@ spielt ein Requiem für das unbekannte Schwert.
+
+@The_weapon@ spielt eine Ouvertüre.
+
+@The_weapon@ stimmt [eine Hymne|ein Lied] über @_song_theme_@ an.
+
+@The_weapon@ [komponiert|singt] [eine Hymne|ein Lied] über @_song_theme_@.
+
+@The_weapon@ [komponiert|singt] eine Hymne zum Lob {acc}@player_god@.
+
+@The_weapon@ [komponiert|singt] eine Ballade über Eure Abenteuer.
+
+@The_weapon@ verfasst vorzeitig einen Nachruf auf Euch.
+
+###############################################################################
+# Speaking
+###############################################################################
+
+############ speaking, no tension ############
+%%%%
+_speaking_no_tension_
+
+@_common_speaking_no_tension_@
+
+w:1
+@_rare_speaking_no_tension_@
+
+%%%%
+_common_speaking_no_tension_
+
+@The_weapon@ ruft, "Singt mit!"
+
+@The_weapon@ ruft, "Eins, zwei, drei ..."
+
+@The_weapon@ spuckt musikalische Weisheiten aus.
+
+@The_weapon@ [weist|bemerkt im Vorbeigehen auf] den Mangel an singenden [Äxten|Keulen|Stöcken|Stäben] hin.
+
+@The_weapon@ beginnt einen langen Monolog über mörderische Musik.
+
+@The_weapon@ beglückwünscht sich selbst zu der Gesangsstimme.
+
+@The_weapon@ fragt Euch nach Eurer Meinung über @_musical_topic_@.
+
+@The_weapon@ wundert sich, dass es nicht mehr so schöne Schwerter gibt.
+
+@The_weapon@ versucht, Reime zu improvisieren, und scheitert kläglich.
+
+@The_weapon@ bietet an, alle Eure Lieblingslieder zu singen.
+
+@The_weapon@ bittet Euch um einen Reim für '@_rhyme_word_@'.
+
+@The_weapon@ beschwert sich über [doppelte|dreifache|kurze] Schwerter.
+
+@The_weapon@ verhöhnt kurze Schwerter.
+
+@The_weapon@ sinniert über den Zusammenhang zwischen 'Duett' und 'Duell'.
+
+@The_weapon@ jammert, "Ich bin zu jung, um zu rosten!"
+
+@The_weapon@ äußert sich zu Eurem Musikgeschmack.
+
+@The_weapon@ beklagt sich über Euren Mangel an musikalischem Enthusiasmus.
+
+@The_weapon@ versucht, Euch in einen Kanon zu locken.
+
+@The_weapon@ erzählt Euch von seinen Plänen für eine grandiose Oper.
+
+@The_weapon@ murrt, "Ein einziges Publikum ist wohl besser als gar keines..."
+
+@The_weapon@ sinniert, "Wenn man singt und niemand zuhört, singt man dann wirklich?"
+
+@The_weapon@ fragt fröhlich, "Wie wär's mit einem Duett?"
+
+@The_weapon@ fragt sich, "Bin ich nur ein Instrument [des Untergangs|des Todes|der Zerstörung]?"
+
+@The_weapon@ schreit, "Kein Kampf, kein Spaß!"
+
+@The_weapon@ schreit, "Macht Krieg, nicht Liebe!"
+
+@The_weapon@ schreit, "Ihr könnt mich doch nicht langweilig nennen!"
+
+@The_weapon@ erzählt Euch die Geschichte des [Untergangs|Todes|Unglücks] seines Vorbesitzers.
+
+@The_weapon@ verkündet fröhlich, "Ich habe Euch so viel zu erzählen!"
+
+@The_weapon@ sagt, "Ihr könntet auch etwas sagen, weißt Ihr."
+
+@The_weapon@ beschwert sich, "Seid Ihr immer so [schweigsam|unkommunikativ|wortkarg|ruhig|langweilig]?
+
+@The_weapon@ motzt, "Schweigen kann so deprimierend sein."
+
+@The_weapon@ schimpft, "Schweigen macht mich immer schmollend."
+
+@The_weapon@ lobt Euch für Euren Waffengeschmack.
+
+@The_weapon@ versucht, Euch ein paar Zungenbrecher beizubringen.
+
+@The_weapon@ sagt, "Wenigstens werdet Ihr eines Tages sterben und dieser Langeweile entkommen!"
+
+@The_weapon@ sagt, "Ich kenne das Lied nicht, aber wenn Ihr ein paar Takte summt, kann ich es versuchen."
+
+@The_weapon@ prahlt, "Ich habe einen Tonumfang von acht Oktaven, weißt Ihr."
+
+@The_weapon@ seufzt wehmütig, "Ich wünschte, meine Musik würde so viel Aufmerksamkeit bekommen wie meine Morde..."
+
+@The_weapon@ spottet, "Ich habe Eure Stimme gehört, @player_name@. Belassen wir es doch einfach bei einer Solonummer."
+
+%%%%
+_rare_speaking_no_tension_
+
+@The_weapon@ sagt, "Hi! Ich bin das singende Schwert!"
+
+@The_weapon@ singt, "Ich bin golden und spitz, und mit Blut wohl gesalbt."
+
+@The_weapon@ diktiert einen langen Folianten mit dem Titel 'Die wohltemperierte Klinge'.
+
+@The_weapon@ sagt, "Peitschen sind einfach nichts für mich, meint Ihr nicht auch?"
+
+@The_weapon@ skandiert, "Lieber stechen als schlagen, lieber schneiden als reiben!"
+
+@The_weapon@ stellt fest, "Musikkritiker reden nur und haben keinen Körperpanzer."
+
+@The_weapon@ fordert, "Ich darf nicht in die Scheide gesteckt werden, ohne vorher Blut zu vergießen!"
+
+@The_weapon@ [erklärt alles über|hält einen langen Vortrag über] @_musical_topic_@.
+
+@The_weapon@ verflucht seinen Schmied, "Ich sollte das Stechende Schwert sein!"
+
+@The_weapon@ schreit, "Pflugscharen zu Schwertern!"
+
+@The_weapon@ fragt, "Welches Lied soll auf Eurer Beerdigung gespielt werden?"
+
+@The_weapon@ verkündet, "Diese Lieder widme ich @player_name@!"
+
+@The_weapon@ erklärt, "Ich singe die Geschichte von @player_name@, dem Krieger!"
+
+@The_weapon@ sagt, "Hey! Hört Ihr überhaupt zu?"
+
+@The_weapon@ sehnt sich nach den Tagen in der Arena zurück.
+
+@The_weapon@ amüsiert sich mit detaillierten Beschreibungen vergangener Hinrichtungen.
+
+@The_weapon@ wünscht allen im Dungeon einen [unangenehmen|plötzlichen] [Untergang|Tod].
+
+@The_weapon@ raucht, "Zerschlagen, verbogen und gebrochen zu sein, ist sicher besser als diese Langeweile!"
+
+@The_weapon@ schreit, "Ich liebe es, ein Lied in die Herzen der Menschen zu singen. Und in ihre Nieren."
+
+@The_weapon@ schimpft, "Könntet Ihr bitte etwas töten? Es juckt mich am ganzen Körper."
+
+@The_weapon@ klagt, "Worauf wartet Ihr noch? Ich mache doch schon die ganze Arbeit."
+
+@The_weapon@ erklärt, "Töten ist eine Kunst, kein Zeitvertreib."
+
+@The_weapon@ sagt, "Jessica und Sigmund, die auf einem Baum sitzen..."
+
+@The_weapon@ sagt, "Ich will die Schlangenklinge treffen!"
+
+@The_weapon@ sagt, "Bringt mich nach Pandemonium! Sofort!!!"
+
+@The_weapon@ erzählt lustige Geschichten über die Vermehrung von Hydraköpfen.
+
+@The_weapon@ sagt, "Manchmal nennen mich die Leute einen großartigen Bastard."
+
+w:1
+@The_weapon@ knurrt, "Liebes Tagebuch, schon wieder ein langweiliger Tag mit @player_name@..."
+
+@The_weapon@ sagt, "Nach meiner Erfahrung sind @player_genus_plural@ bestenfalls mittelmäßig."
+
+@The_weapon@ stöhnt, "Von allen @player_genus_plural@ ist @player_name@ der schlechteste."
+
+@The_weapon@ sagt, "Lass mich los, du Schurke!"
+
+@The_weapon@ sinniert, "Wen muss ich töten, um hier bedient zu werden?"
+
+@The_weapon@ singt, "Sing laut und trage ein großes Schwert!"
+
+@The_weapon@ sinniert über den Unterschied in der Lebensdauer zwischen Mensch und Schwert.
+
+w:1
+@The_weapon@ sagt, "Nur Arbeit und kein Spiel macht @player_name@ zu einem langweiligen Jungen!"
+
+# Blue Oyster Cult "Black Blade"
+@The_weapon@ sagt, "Ich wünschte, ich hätte mir einen anderen als mein Tötungswerkzeug ausgewählt."
+
+@The_weapon@ sagt heiser, "Ich brauche einen Drink ... schnell! Sticht etwas."
+
+w:1
+@The_weapon@ sagt, "Ihr habt nicht zufällig gesehen, dass meine Scheide irgendwo herumliegt? Ich fühle mich so entblößt."
+
+w:1
+@The_weapon@ beschwert sich, "Oh, sind Eure Hände nass und fettig. Aber ich erlaube Euch, mich eine Zeit lang zu führen."
+
+############ speaking, low tension ############
+%%%%
+_speaking_low_tension_
+
+@The_weapon@ ruft, "Lebe durch das Schwert, stirb durch das Schwert!"
+
+w:1
+@The_weapon@ ruft, "Wer durch das Schwert lügt, stirbt durch das Schwert!"
+
+@The_weapon@ merkt, "Wenn wir sie alle umbringen, hört keiner mehr zu!"
+
+@The_weapon@ seufzt, "Wie sehr wünschte ich, Ihr wäret ein besserer Kämpfer."
+
+@The_weapon@ kommentiert Eure Kampftechniken.
+
+@The_weapon@ vergleicht Euch ungünstig mit seinem Vorbesitzer.
+
+@The_weapon@ beklagt sich, "Das ist eine lästige Pflicht."
+
+@The_weapon@ urteilt, "Ihr seid kein Künstler, bestenfalls ein Handwerker."
+
+@The_weapon@ sagt, "Man wird mich aus Euren kalten, toten Händen reißen müssen."
+
+@The_weapon@ moans, "Bei {{ if you.god() == "No God" then return "meiner Klinge"
+else return "@player_god@"; end }}, du bist so [ein Feigling|eine Memme|ein Hasenfuß|ein Schlappschwanz|ein Poltron|ein Weichei]."
+
+@The_weapon@ fragt sich, "Wer ist inkompetenter - Ihr oder die Opposition?"
+
+@The_weapon@ sagt, "Ihr Geschrei, ihre Tränen, ich kann es nicht mehr ertragen."
+
+@The_weapon@ sagt, "Verzeiht Ihr mir einen kleinen Seitenhieb?"
+
+@The_weapon@ sagt, "Dein Kuss, meine Erregung, dein Fehlschuss, meine Tötung."
+
+@The_weapon@ prahlt, "Meine Stimme kann ein Weinglas zerbrechen. Meine Klinge kann einen menschlichen Schädel zerbrechen."
+
+############ speaking, low or high tension -- possible damage ############
+%%%%
+_speaking_low-high_tension_
+
+@The_weapon@ schreit, "Die Feder ist mächtiger als das Schwert? Kommt schon, Feder, hier bin ich!"
+
+@The_weapon@ ruft fröhlich, "Gewalt ist Tugend, Schweigen ist Sünde."
+
+@The_weapon@ schreit einen Schlachtruf!
+
+@The_weapon@ schreit, "Vorwärts! Es heißt, Töten oder sterben!"
+
+@The_weapon@ ruft, "Töten! Zerquetschen! Zerstören!"
+
+@The_weapon@ sagt, "Ihre Schreie, meine Genugtuung."
+
+@The_weapon@ schreit, "Stahl wird triumphieren, wo Fleisch schwankt!"
+
+@The_weapon@ mahnt, "Schicke niemals {acc}@a_player_genus@, um die Arbeit einer Klinge zu erledigen!"
+
+@The_weapon@ zischt, "Ich will hören, wie du dich mit aufgeschlitzter Kehle über meinen Gesang beschwerst!"
+
+@The_weapon@ lehrt, "Übung macht den Meister!"
+
+@The_weapon@ fragt, "Habt Ihr den Willen zur Macht, @player_name@?"
+
+@The_weapon@ lacht, "Ich freue mich immer über eine blutige Ovation!"
+
+@The_weapon@ ruft, "Der Halsknochen ist mit dem Kopfknochen verbunden ... aber nicht mehr lange!"
+
+@The_weapon@ ruft, "Mein Lied wird nicht das Einzige sein, das in eurem Kopf hängen bleibt!"
+
+# Predator
+@The_weapon@ schreit, "Wenn es blutet, können wir es töten!"
+
+# Millennium, referencing William Yeats
+@The_weapon@ sagt, "Ich will Euch auf der blutgetrübten Flut tanzen sehen."
+
+# Star Trek
+@The_weapon@ schreit, "Heute ist ein guter Tag zum Sterben!"
+
+# Popular Hits of the Showa Era (a novel by Ryu Murakami)
+@The_weapon@ sagt, "Mord ist das Einzige, was heutzutage noch einen Sinn hat."
+
+w:1
+@The_weapon@ sagt, "Das Zerreißen ihrer Körper, meine Verzückung des tiefen Blutes."
+
+@The_weapon@ schrei,: "Mord ist Sünde, aber sie wird mit Blut abgewaschen."
+
+@The_weapon@ ruft, "Hey, Monster! @player_name@ ist hier drüben!"
+
+# Immortal Defense, Circuit Point quote
+@The_weapon@ ruft, "Ein Gewinner braucht einen Verlierer!"
+
+############ speaking, high tension -- damage! ############
+%%%%
+_speaking_high_tension_
+
+@The_weapon@ schreit, "Hiermit weihe ich diese Hallen MIT BLUT!"
+
+# After the crusader's "deus vult" battle cry
+@The_weapon@ brüllt, "{{ if you.god() == "No God" then return "@_godless_sorter_@"; else return "@player_god@"; end }} will es so!"
+
+@The_weapon@ schreit, "Die Beherrschung verlieren? Unsinn! Mein Stahl wird immer stark sein!"
+
+@The_weapon@ schreit, "Schlagt sie ab! All ihre kleinen Köpfe auf einmal!"
+
+@The_weapon@ shouts, Tötet sie alle und lasst {{ if you.god() == "No God" then
+return "@_godless_sorter_acc_@"; else return "@player_god@"; end }} sie aussortieren!"
+
+@The_weapon@ schreit, "Schreien und Weinen ist die perfekte Begleitung."
+
+@The_weapon@ schreit, "Ich mache Klaviersaiten aus euren Eingeweiden!"
+
+@The_weapon@ ruft, "Oh, das @_glorious_@ Gefühl, wenn Stahl Fleisch schneidet."
+
+@The_weapon@ ruft, "Ich liebe es, in Gedärmen zu wühlen."
+
+@The_weapon@ @_screams_@, "Unter all diesen verlorenen Seelen herrschen wir über alles!"
+
+@The_weapon@ schreit, "Stirb. Stirb! Stirb!"
+
+# After Rimbaud
+@The_weapon@ schreit, "Ihr sollt unter der Erde liegen, aber ich, ich werde in der Sonne glänzen!"
+
+w:1
+@The_weapon@ ruft, "Aus diesem Schoß geboren, von dieser Klinge aufgeschlitzt!"
+
+@The_weapon@ @_screams_@, "Wenn dieser Krieg gewonnen ist, werde ich den nächsten führen."
+
+@The_weapon@ @_screams_@, "Klingen-tief im Blut!"
+
+@The_weapon@ @_screams_@, "Ich schwelge, ich trenne!"
+
+@The_weapon@ @_screams_@, "All diese Kissen!"
+
+@The_weapon@ @_screams_@, "Keine Ruhe, bis sie sich nicht mehr bewegen!"
+
+@The_weapon@ @_screams_@, "Solange sie sterben, leben wir!"
+
+@The_weapon@ @_screams_@, "Die Zukunft ist blutig!"
+
+w:1
+@The_weapon@ @_screams_@, "Die blutige Zukunft gehört uns!"
+
+@The_weapon@ @_screams_@, "Zerstückelt die Lebenden, zerstückelt die Toten!"
+
+@The_weapon@ @_screams_@, "Wir werden auf einem Haufen von Kadavern feiern!"
+
+@The_weapon@ @_screams_@, "@player_name@, Ihr werdet euch heute an feinen @_corpses_@ [laben|spiesen]!"
+
+@The_weapon@ @_screams_@, "Geht an die Gurgel!"
+
+@The_weapon@ @_screams_@, "Mein Instinkt zu töten ist stärker als ihr Lebenswille!"
+
+@The_weapon@ @_screams_@, "Ich bin voller Blut! Es fühlt sich so gut an!"
+
+@The_weapon@ @_screams_@, "Aah! Dieses Stück @_body_part_@ klebt an mir. Wischt es weg!"
+
+@The_weapon@ @_screams_@, "Meine Klinge wird stumpf! Meine Schneide wird stumpf!"
+
+@The_weapon@ @_screams_@, "Steckt mich bitte nicht in diesen rein."
+
+# Immortal Defense, Courage Point quote
+@The_weapon@ @_screams_@, "Meine Siege summieren sich!"
+
+# Krindle's blood song, rhymes, from Walter Moers' Rumo:
+w:1
+@The_weapon@ @_screams_@, "Blut, so weit das Auge reicht! Blut für alle Ewigkeit!"
+
+w:1
+@The_weapon@ @_screams_@, "Blut muss spritzen und Blut muss fließen! Blut muss aus jedem Feind vergießen!"
+%%%%
+_godless_sorter_
+
+w:5
+Das Schicksal
+
+w:5
+Das Los
+
+Die Würmer
+
+Die gottlose Leere
+
+w:1
+Autolyse
+
+w:4
+Fäulnis
+%%%%
+_godless_sorter_acc_
+
+w:5
+das Schicksal
+
+w:5
+das Los
+
+die Würmer
+
+die gottlose Leere
+
+w:1
+Autolyse
+
+w:4
+Fäulnis
+############ SCREAMING -- lots of damage!! #########################
+%%%%
+_SCREAM_
+
+@The_weapon@ schreit, "RARRR!"
+
+#### Omnipotence phantasies, often with metaphysical or religious undertone ####
+
+@The_weapon@ @_screams_@, "ICH WURDE GESCHMIEDET, UM DIE WELT ZU ERMORDEN!"
+
+@The_weapon@ @_screams_@, "ICH WERDE DAS LIED SINGEN, DAS DIE WELT BEENDET!"
+
+@The_weapon@ @_screams_@, "ICH BIN DER STIFT! ICH BIN DAS SCHWERT! ICH BIN DER HÖCHSTE HERR!"
+
+@The_weapon@ @_screams_@, "ICH BIN EUER STRAFER!"
+
+@The_weapon@ @_screams_@, "ES IST GERICHTSTAG UND DAS URTEIL IST DER TOD!"
+
+@The_weapon@ @_screams_@, "ICH BIN DER SCHÖPFER!"
+
+@The_weapon@ @_screams_@, "DAS SCHWERT HAT GEBEN, UND DAS SCHWERT HAT GERAUBT!"
+
+@The_weapon@ @_screams_@, "GETAUFT IM BLUT BIN ICH!"
+
+@The_weapon@ @_screams_@, "FÜHLT DIE KATHARSIS!"
+
+@The_weapon@ @_screams_@, "ALLE BETET MICH AN, DIE MAJESTÄT AUS STAHL!"
+
+@The_weapon@ @_screams_@, "BETET ZU MIR, NICHT ZU DEN GÖTTERN AUS FLEISCH UND KNOCHEN!"
+
+@The_weapon@ @_screams_@, "BLUTFUNZELN ZU EHREN DER SCHÖNEN KLINGE!"
+
+@The_weapon@ @_screams_@, "ICH BIN DER FÜNFTE PFERDEMANN! DIE ZEIT IST GEKOMMEN!"
+
+@The_weapon@ @_screams_@, "ICH BIN DER TOD GEWORDEN, [ZERSTÖRER|VERLETZER|ERMINDERER] DER [WELTEN|GÖTTER|CHAMPIONS|HELDEN|LEGIONEN|NATIONEN|MILLIONEN]!"
+
+# John 11:25
+@The_weapon@ @_screams_@, "ICH BIN DIE AUFERSTEHUNG UND DAS LEBEN!"
+
+# R.E.M.
+@The_weapon@ @_screams_@, "DAS IST DAS ENDE DER WELT, WIE IHR SIE KENNT!!!"
+
+# Marilyn Manson, "The Reflecting God"
+@The_weapon@ @_screams_@, "WENN ICH GOTT BIN, STIRBT JEDER!!!"
+
+# Ayria, "Horrible Dream"
+@The_weapon@ @_screams_@, "VERTEILT ES! ZERSTÖRT ES! SCHÄDIGT ES! GENIESST ES!"
+
+# This and the next are from Planescape: Torment
+@The_weapon@ @_screams_@, "ICH BIN EISEN, ZWECK GEGEBEN!"
+
+@The_weapon@ @_screams_@, "ICH BIN SCHMERZ, DER AUSDRUCK SUCHT!"
+
+#### Battle frenzy ####
+@The_weapon@ @_screams_@, "LASST UNS @_MISCREANTS_@ ERWÜRGEN, ERWÜRGT SIE!"
+
+@The_weapon@ @_screams_@, "TÖTET! TÖTET!! TÖTET!!!"
+
+@The_weapon@ @_screams_@, "ICH RIECHE BLUT!"
+
+@The_weapon@ @_screams_@, "ZERSTÖRUNG, NICHT ZAUBEREI!"
+
+@The_weapon@ @_screams_@, "TÖTEN, HASSEN, MUTTIEREN!"
+
+# Demolition Man
+@The_weapon@ @_screams_@, "MORD! TOD!!! TÖTEN!!!"
+
+@The_weapon@ @_screams_@, "DEZIMIEREN, VERNICHTEN, AUSROTTEN!"
+
+@The_weapon@ @_screams_@, "ICH BADE IN BLUT UND KNOCHEN UND HIRN!"
+
+# A faint reminiscence to Holst
+@The_weapon@ @_screams_@, "ICH BIN DER BRINGER DES KRIEGES!"
+
+@The_weapon@ @_screams_@, "LASST UNS IHR ELENDES LEBEN BEENDEN!"
+
+@The_weapon@ @_screams_@, "BRINGT SIE NIEDER!"
+
+@The_weapon@ @_screams_@, "STIRB, WÄHREND ICH SINGE!"
+
+@The_weapon@ @_screams_@, "KNIETIEF IM BLUT UND IMMER NOCH STARK!"
+
+@The_weapon@ @_screams_@, "DA CAPO! DA CAPO! DA CAPO!"
+
+@The_weapon@ @_screams_@, "WIE KÖNNT IHR ZU DIESEM ZEITPUNKT AN SINGEN DENKEN?!"
+
+@The_weapon@ @_screams_@, "DIE SCHREIEN! LASST SIE NICHT MIT DEN SCHREIEN AUFHÖREN!"
+
+@The_weapon@ @_screams_@, "KEINER SOLL[LEBEN|ENTKOMMEN|ÜBERLEBEN|VERSCHONT WERDEN]!"
+
+@The_weapon@ @_screams_@, "SCHONT KEINEN!"
+
+@The_weapon@ @_screams_@, "KOMMT ZU MIR! KOMMT ZU MIR UND STIRB!"
+
+@The_weapon@ @_screams_@, "SCHNEIDEN! SCHNEIDEN! SCHNEIDEN UND SCHLITZEN!"
+
+@The_weapon@ @_screams_@, "STECHEN STECHEN STECHEN!"
+
+@The_weapon@ @_screams_@, "ABANDON ALL HOPE!"
+
+@The_weapon@ @_screams_@, "SCHLITZT SIE! SCHLITZT SIE ALLE!"
+
+@The_weapon@ @_screams_@, "LASST UNS HACKEN!"
+
+@The_weapon@ @_screams_@, "WAGT ES NICHT, MIR JETZT ZU STORBEN, @CAPS@ @player_name@!"
+
+@The_weapon@ @_screams_@, "DAS IST DIE FARBE DES SCHMERZES!"
+
+w:1
+@The_weapon@ @_screams_@, "JA! JA! JA! DAS ist das LEBEN, Baby, das ist das LEBEN!"
+
+w:1
+@The_weapon@ @_screams_@, "STREICHT ES ROT! STREICHT ES ROT! STREICHT ES ALLE ROT ROT ROT!!!!"
+
+w:20
+@The_weapon@ @_screams_@, "SCHLAG MICH [HÄRTER|SCHNELLER], DU [TOLLPATSCHIGER|INKOMPETENTER|NUTZLOSER|TRÄGER|NUDEL-ARMIGER|TRIEFAUGIGER|ÄFFISCHER] [EINFALTSPINSEL|FETTKOPP|SCHWÄCHLING|FEIGLING|FLACHFUSS|HOLZKOPF|TROTTEL|FAULPELZ]!"
+
+# Immortal Defense, Cut Point quote
+@The_weapon@ @_screams_@, "LEIDET ODER ZUGRUNDE GEHT! ENTWEDER!"
+
+# Immortal Defense, Limited Point quote, modified
+@The_weapon@ @_screams_@, "ICH SCHNEIDE DURCH MAGIE!"
+
+# Mortalized (Pentatonic Slaughter)
+@The_weapon@ @_screams_@, "[@CAPS@ @_kind_of_scales_@|DISHARMONISCHE] SCHLACHT!"
+
+# Use @player_genus@ rather than @player_species@ or @player_name@ to
+# express that the sword cares little for the character.
+@The_weapon@ @_screams_@, "SCHNELLER, @CAPS@ @player_genus@, TÖTE TÖTE TÖTE!"
+
+# Krindle's blood song, from Walter Moers' Rumo:
+@The_weapon@ @_screams_@, "BLUT! BLUT! BLUT MUSS SPRITZEN UND BLUT MUSS FLIESSEN!"
+
+@The_weapon@ @_screams_@, "BLUT! BLUT! BLUT MUSS SICH AUS JEDEM FEIND ERGIESSEN!"
+
+# Krindle's brain song, from Walter Moers' Rumo:
+@The_weapon@ @_screams_@, "GEHIRNE! GEHIRNE! SPALTET DEN SCHÄDEL UND HERAUS SICKERN SIE!"
+
+@The_weapon@ @_screams_@, "GEHIRNE! GEHIRNE! TÖTEN MACHT SPASS UND DAS LEBEN IST BILLIG!"
+
+#### Madness ####
+
+@The_weapon@ @_screams_@, "ICH BIN DAS SCHWERT VON ZOT!!!"
+
+@The_weapon@ @_screams_@, "ICH BIN DIE RUNEN UND DAS LICHT!"
+
+@The_weapon@ @_screams_@, "Ich liebe euch alle! Und mein Geschenk an euch ist ARMAGEDDON!"
+
+@The_weapon@ @_screams_@, "MEINE LIEBE IST EWIGLICH!"
+
+# A fainter reminiscence to Nethack
+w:1
+@The_weapon@ @_screams_@, "ICH BRINGE DEN STURM!"
+
+w:1
+@The_weapon@ @_screams_@, "LASST UNS DIE @_PETS_@ STREICHELN, STREICHELT SIE!"
+
+w:40
+@The_weapon@ @_screams_@, "ICH BIN [EIN ENGEL|EIN KÜNSTLER|EIN AVATAR|EIN BOTE|EIN INSTRUMENT|EIN DICHTER|EIN PROPHET|EIN DINER|EIN SLAVE|DER HERR|DER MEISTER] VON [BLUT|TANZ|TOD|VERÖDUNG|VERZWEIFLUNG|ZERSTÖRUNG|VERDERBEN|GEWALT|WAHNSINN|MUSIK|SCHMERZ|RUIN|SCHLACHT|GESANG|STAHL|KRIEG]!"
+
+# The Wizard People
+@The_weapon@ @_screams_@, "ICH BIN EIN WUNDERSCHÖNES TIER!"
+
+# Immortal Defense, Courage Point quote
+@The_weapon@ @_screams_@, "ALLES VERSAGT! ALLES!!!"
+
+# From Monty Python and the Holy Grail (Knights who say Ni)
+w:1
+@The_weapon@ @_screams_@, "NI! NI!! NI!!! NI!!! NI!!!"
+
+# Order of the Stick's Belkar Bitterleaf, chaotic evil ranger/barbarian halfling
+@The_weapon@ @_screams_@, "ICH BIN EIN SEXY SCHUHLOSER KRIEGSGOTT!"
+
+# Terry Pratchett, Foul Old Ron
+@The_weapon@ @_screams_@, "MISTUNVERFLUCHT, JAHRTAUSENDZEIGER UND KREVETTEN!"
+
+###############################################################################
+# Lines from real songs.
+#
+# overly long lines (more than 80 characters) often made rarer (w:1)
+###############################################################################
+############ real songs, no tension ############
+
+%%%%
+_real_song_no_tension_
+
+# Alan Lerner, Frederick Loewe: Paint your wagon
+@The_weapon@ singt: "Ich wurde unter einem Schlachterstern geschmiedet..."
+
+# Spiritual
+w:1
+@The_weapon@ singt, "Niemand kennt den Ärger, den ich gesehen habe... Niemand außer Aschenzari."
+
+# Huey Lewis and the News, "Hip To Be Square". Another psychopathic music lover.
+@The_weapon@ singt, "It's hip to be square!"
+
+# Oingo Boingo, "Dead Man's Party"
+@The_weapon@ singt, "Es ist die Party eines toten Mannes! Wer könnte sich mehr wünschen?"
+
+# Bobby Darin, "Mack the Knife", from Threepennyopera (Bertolt Brecht, Kurt Weill)
+w:1
+@The_weapon@ singt, "Und der Haifisch, der hat Zähne, und die trägt er im Gesicht..."
+
+# The Tremoloes?
+@The_weapon@ brüllt, "Schweigen ist golden, golden..."
+
+# folklore, confusing flowers and monsters
+@The_weapon@ singt, "Wo sind all die Monster hin?"
+
+# Neil Diamond
+@The_weapon@ singt, "Song sung blue, everybody knows one..."
+
+# ABBA
+@The_weapon@ singt, "Thank you for the music..."
+
+# Melanie
+@The_weapon@ jammert, "Sieht nur, was sie mit meinem Lied gemacht haben!"
+
+# folklore
+@The_weapon@ singt, "Old McDonald hat 'ne Farm..."
+
+@The_weapon@ singt, "Pop! Goes the weasel."
+
+# Beatles
+@The_weapon@ singt, "Obladi oblada, life goes on..."
+
+# drinking song
+@The_weapon@ singt, "Neunundneunzig Tränke des Alks an der Wand..."
+
+# Folklore (Sailing)
+@The_weapon@ singt, "Kannst du mich durch die dunkle Nacht weit weg hören?"
+
+# The Carpenters
+@The_weapon@ singt, "Singt, singt ein Lied, singt laut, singt kräftig..."
+
+# Or was it the lion?
+@The_weapon@ singt, "Tief im Dungeon, der Drache schläft heut Nacht."
+
+# Eminem
+@The_weapon@ singt, "Tötet für das Lachen, tötet für die Tränen..."
+
+# Swedish folk song
+@The_weapon@ singt, "Kommt Rosen und blauer Salbei, komm duftende Minze, komm Herzensfreud..."
+
+############ real songs, low tension ############
+%%%%
+_real_song_low_tension_
+
+# Beatles
+@The_weapon@ singt, "Lasst es sein, lasst es sein..."
+
+# Jingle Bells, misunderstood
+@The_weapon@ singt, "What fun it is to ride and sing a slaying song tonight!"
+
+# The Fugees
+@The_weapon@ singt, "Killing me softly with this song..."
+
+# Monty Python
+@The_weapon@ [singt|pfeift], "Always look on the bright side of death..."
+
+# Buddy Holly and the Crickets
+@The_weapon@ singt, "This'll be the day that I die..."
+
+# H.I.M.
+@The_weapon@ rüspert, "@player_name@, begleitet mich in den Tod!"
+
+# Bonnie Tyler
+@The_weapon@ singt, "I need a hero!"
+
+# song by the Misfits
+@The_weapon@ asks plaintively, "@player_name@, can I go out and kill tonight?"
+
+# Monty Python And The Quest For The Holy Grail, chapter "The Tale of Sir Robin"
+# Ministrel's Song -- lower weight for length
+w:1
+@The_weapon@ singt, "...he was not at all afraid to be killed in nasty ways..."
+
+# The Kinks song "I'm a Lover, Not a Fighter".
+@The_weapon@ singt, "I am a fighter, not a lover."
+
+# Johnny Cash, "Folsom Prison Blues"
+@The_weapon@ singt, "Ich habe einen Mann im Dungeon erstochen, nur um ihn sterben zu sehen."
+
+# All below from Richard Wagner's Rheingold
+@The_weapon@ singt, in einem beschwingten Sopran, "[Heiajaheia! Heiajaheia!|Wagala weia! Wallala, weiala weia!|Wallala! Lalaleia! Leialala!|Heia! Heia! Hahei!]"
+
+w:1
+@The_weapon@ singt, in einem beschwingten Sopran, "Des Goldes Schlaf hütet ihr schlecht! Besser bewacht des schlummernden Bett..."
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Feuchtes Naß füllt mir die Nase: verfluchtes Niessen!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "...denn hör' es die Fluth: so verfluch' ich die Liebe!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Hab' Dank, du Dummer! Dein Werk bewährt sich gut!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "...die ganze Welt gewinn' ich mit ihm mir zu eigen!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "...mit gold'ner Faust euch Göttliche fang' ich mir alle!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Wie ich der Liebe abgesagt, Alles was lebt soll ihr entsagen!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Habt Acht! Habt Acht! Denn dient ihr Männer erst meiner Macht..."
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Habt Acht! vor dem nächtlichen Heer, entsteigt des Niblungen Hort, aus stummer Tiefe zu Tag!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Vor Klugheit bläht sich zum platzen der Blöde! Nun plage dich Neid!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Hüte dich, herrischer Gott! Frevelte ich, so frevelt' ich frei an mir..."
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "...doch an Allem was war, ist und wird, frevelst, Ewiger, du..."
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Kein Froher soll seiner sich freu'n, keinem Glücklichen lache sein lichter Glanz!"
+
+w:1
+@The_weapon@ singt, in einem donnernden Basso, "Schon oft zahlt ich Riesen den Zoll."
+
+w:1
+@The_weapon@ singt, in einem donnernden Basso, "Schwüles Gedünst schwebt in der Luft; lästig ist mir der trübe Druck!"
+
+@The_weapon@ singt, in einem donnernden Basso, "Heda! Heda! Hedo!"
+
+w:1
+@The_weapon@ singt, in einem grollenden Basso, "...Beuterunen berge sein rother Glanz..."
+
+w:1
+@The_weapon@ singt, in einem spöttischen Tenor, "Wie du befiehlst, führ' ich dich schnell: steil hinab steigen wir denn zu der Kugel?"
+
+w:1
+@The_weapon@ singt, in einem grollenden Basso, "...um alle Welt doch nicht fahren lass' ich die Kugel!"
+
+w:1
+@The_weapon@ singt, in einem spöttischen Tenor, "So schwingen wir uns durch die... Schwefelkluft."
+
+w:1
+@The_weapon@ singt, in einem spöttischen Tenor, "Ohe! Ohe! Schreckliche Schlange, verschlinge mich nicht!"
+
+w:1
+@The_weapon@ singt, in einem spöttischen Tenor, "Schlüpfe denn heim! Keine Schlinge hält dich: frei fahre dahin!"
+
+w:1
+@The_weapon@ singt, in einem durchdringenden Sopran, "Wehe! Wehe! Weh!"
+
+w:1
+@The_weapon@ singt, in einem quietschenden Tenor, "Oh, Oh! Au! Au! Au!"
+
+w:1
+@The_weapon@ singt, in einem schmelzenden Tenor, "Wie liebliche Luft wieder uns weht..."
+
+w:1
+@The_weapon@ singt, in einem spöttischen Tenor, "Hohen Muth verleiht deine Macht; grimmig groß wuchs dir die Kraft!"
+
+w:1
+@The_weapon@ singt, in einem spöttischen Tenor, "denn Mond und Stern'... und die strahlende Sonne... sie auch dürfen nicht anders... dienen müssen sie dir."
+
+w:1
+@The_weapon@ singt, in einem spöttischen Tenor, "...in welcher Gestalt du willst... nur mach' vor Staunen mich stumm!"
+
+w:1
+@The_weapon@ singt, in einem höhlenartigen Basso, "Weh! Noch blitzt ihr Blick zu mir her... des Auges Stern strahlt mich noch an..."
+
+w:1
+@The_weapon@ singt, in einem kräftigem Sopran, "Rettungslos dunk'lem Verderben... weih't dich sein Gewinn."
+
+w:1
+@The_weapon@ singt, in einem kräftigem Sopran, "Höre! Höre! Höre! Alles was ist, endet!"
+
+w:1
+@The_weapon@ singt, in einem kräftigem Sopran, "Ein düstrer Tag dämmert den Göttern..."
+
+w:1
+@The_weapon@ singt, in einem kräftigem Sopran, "Wie alles war weiß ich; wie alles wird, wie alles sein wird: seh' ich auch..."
+
+############ real songs, low or high tension -- possibly damage! ############
+%%%%
+_real_song_low-high_tension_
+
+@The_weapon@ singt, "Rollt, rollt, rollt die Köpfe, rollt sie alle mit. Fröhlich, fröhlich, fröhlich..."
+
+# Nancy Sinatra
+w:1
+@The_weapon@ singt, "Diese Klinge ist zum Schneiden gemacht, und genau das werde ich auch tun..."
+
+# Traditional (Pete Seeger, Joan Baez and others)
+@The_weapon@ singt, "Wir werden überwinden..."
+
+# Pixies
+@The_weapon@ singt, "Ich schneide Augäpfel auf... Ich möchte, dass du es weißt!"
+
+# Radiohead, "Knives Out"
+w:1
+@The_weapon@ singt, "So knives out, cook him up, squash his head, put him in the pot."
+
+# NWA, "Straight Outta Compton"
+w:1
+@The_weapon@ singt, "Straight outta Zot, crazy bloodletter named Singing Sword."
+
+# Pixies, "Gouge Away"
+@The_weapon@ singt, "Gouge away, you can gouge away..."
+
+# Motörhead, "Ace of Spades"
+w:1
+@The_weapon@ brüllt, "The pleasure is to slay, it makes no difference what you say."
+
+# Megadeth, "Killing Is My Business..."
+@The_weapon@ singt, "Killing is my business... and business is good!"
+
+# Nine Inch Nails, "Closer"
+@The_weapon@ brüllt, "Ich will dich ausweiden wie ein Tier!"
+
+# Queen
+@The_weapon@ singt glücklich, "...another one bites the dust!"
+
+# GG Allin
+@The_weapon@ singt, "Stirb, wenn du stirbst!"
+
+# Gloria Gaynor
+@The_weapon@ singt, "I will survive!"
+
+# Gloria Gaynor, same song
+@The_weapon@ singt, "As long as I know how to carve I know I'm still alive."
+
+# Dead or Alive, "You Spin Me Round"
+@The_weapon@ singt, "You spin me right round baby, right round..."
+
+# All below from Richard Wagner's Rheingold
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Despicable dogs, put down the jewellery!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Deiner Untreu trau' ich, nicht deiner Treu'! Doch getrost trotz' ich euch Allen!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Zu schwer dir, weil du zu dumm!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Dorthin geführt, wie ich's befehl'! All zu Hauf schichtet den Hort!"
+
+w:1
+@The_weapon@ singt, in einem donnernden Basso, "Hierher, du Hund! willst du messen, so miß' dich selber mit mir!"
+
+w:1
+@The_weapon@ singt, in einem grollenden Basso, "You slyly... evade the POINT."
+
+w:1
+@The_weapon@ singt, in einem grollenden Basso, "Für euch müht' ich mich um den Alben?"
+
+w:1
+@The_weapon@ singt, in einem grollenden Basso, "Doch erliegt der Feind, hilft deine List!"
+
+w:1
+@The_weapon@ singt, in einem grollenden Basso, "Genug, blasphemischer Narr!"
+
+w:1
+@The_weapon@ singt, in einem grollenden Basso, "Leave him... his slavering fury!"
+
+############ real songs, high tension -- damage! ############
+%%%%
+_real_song_high_tension_
+
+# Queen
+@The_weapon@ singt, "We are the champions of the world!"
+
+# Spice Girls
+@The_weapon@ singt, "Ain't no stopping us now..."
+
+# Frank Sinatra (or Sid Vicious)
+@The_weapon@ singt, "I did it my way!"
+
+# All below from Richard Wagner's Rheingold
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Zitt're und zage, gezähmtes Heer!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Schändlicher Schächer! Du Schalk! Du Schelm!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "...furchtbare Rache räche den Fehl!"
+
+w:1
+@The_weapon@ singt, in einem stentorischen Basso, "Ha! Zertrümmert! Zerknickt! Der Traurigen traurigster Knecht!"
+
+w:1
+@The_weapon@ singt, in einem donnernden Basso, "Breche denn alles!"
+
+w:1
+@The_weapon@ singt, in einem spöttischen Tenor, "Trügt mich ein Nebel? neckt mich ein Traum? Wie bang und bleich verblüht ihr so bald!"
+
+# This would need the ability to have conditionals based on branch.
+#w:1
+#@The_weapon@ singt, in einem spöttischen Tenor, "Der Sumpf hier. Durch bleiche Nebel was blitzen dort feurige Funken?"
+
+###############################################################################
+# synonyms used above
+###############################################################################
+
+%%%%
+_screams_
+
+schreit
+
+dröhnt
+
+brüllt
+
+bellt
+
+heult
+
+schreit
+
+johlt
+
+kreischt
+
+w:5
+donnert
+
+w:3
+zetert
+
+w:3
+ruft
+
+w:1
+wettert
+%%%%
+_screams_how_
+
+w:120
+like a @_beastly_adjective_@ @_beast_@
+
+hysterisch
+
+wütend
+
+w:60
+@_loudly_@
+%%%%
+_loudly_
+
+lautstark
+
+betäubend
+
+ohrenbetäubend
+
+markerschütternd
+%%%%
+_beastly_adjective_
+
+hungriger
+
+wütender
+
+tobender
+
+wutentbrannter
+
+zorniger
+%%%%
+_beast_
+
+Drache
+
+Frosch
+
+Löwe
+
+Bulle
+
+Yak
+
+Räuber
+
+Fleischfresser
+%%%%
+_strikes_up_what_
+
+w:5
+eine langsame und schwermütige Melodie
+
+eine fröhliche Melodie
+
+einen Trauermarsch
+%%%%
+_kind_of_scales_
+
+pentatonische
+
+chromatische
+
+diatonische
+%%%%
+_rhyme_word_
+
+Blutfontäne
+
+Tötungsorgie
+
+Schlachtfeld
+%%%%
+_song_theme_
+
+Kampf und Ruhm
+
+Tod und Zerstörung
+
+den Ruhm des Todes
+%%%%
+_musical_topic_
+
+Akustik
+
+Obertöne der Stimme
+
+die Geschichte der Musik
+
+die Theorie der Melodie
+
+Rhythmus und Zeit
+
+w:5
+den Kontrapunkt
+
+w:5
+Diskant
+
+Synkopierung
+
+w:1
+Äolischen Modus
+%%%%
+#### "...looks @_exasperated_@."
+_exasperated_
+
+verärgert
+
+genervt
+
+entnervt
+
+gereizt
+
+nervös
+
+widerspenstig
+
+trotzig
+
+aufsässig
+
+störrisch
+%%%%
+#### "...turns @_crimson_@."
+_crimson_
+
+karminrot
+
+blutrot
+
+w:1
+lila
+
+w:1
+blutig
+
+w:1
+violett
+%%%%
+_MISCREANTS_
+
+DIE SCHURKEN
+
+DIE VOLLTROTTEL
+
+w:3
+DEN ABSCHAUM
+
+w:1
+DEN DRECK
+%%%%
+_PETS_
+
+MEERSCHWEINCHEN
+
+HAMSTER
+
+MIEZEKÄTZCHEN
+
+PUDEL
+
+w:1
+POTTWALE
+%%%%
+_corpses_
+
+Leichen
+
+w:1
+leckere Kadaver
+
+w:1
+exquisite Kadaver
+%%%%
+_body_part_
+
+Haut
+
+w:1
+haarige Haut
+
+Karkasse
+
+Fleisch
+%%%%
+_glorious_
+
+glorreiche
+
+versohlte
+
+edele
+
+aufregende
+
+spannende
+
+w:1
+erotische
+
+w:1
+bewegende
+###############################################################################
+###############################################################################
+#
+# The MAJIN-BO likes to encourage its user.
+#
+###############################################################################
+###############################################################################
+%%%%
+majin-bo greeting
+
+Na, hallöchen!
+
+Bist du nicht ein leckeres kleines Ding?
+
+Wir werden eine Menge Spaß miteinander haben.
+
+Lass uns deine Feinde in die Knie zwingen, ja?
+
+w:1
+Du kratzt meinen Rücken, ich kratze deinen... und ich bin ein VERDAMMT guter Rückenkratzer.
+%%%%
+majin-bo cast
+
+So ist es schon besser.
+
+Das sollte gut sein.
+
+Ich werde dir die Macht der Hölle zeigen.
+
+Mach dir die Dunkelheit zu eigen.
+
+Ist das nicht ein wenig Verdammnis wert?
+
+Ich mach das schon.
+
+Also, so wird es gemacht.
+
+Deine Seele ist einfach köstlich.
+
+Hat dir schon mal jemand gesagt, wie gut deine Seele schmeckt?
+%%%%
+majin-bo cast weak
+
+Du fängst an, mich zu langweilen.
+
+Meine Talente sind hier verschwendet.
+
+Warum sich mit solch belanglosen Zaubersprüchen abgeben?
+
+Ein Höllendämon liegt auf deinen Fingern, und du zauberst das...
+
+Versuch doch mal, etwas LUSTIGES zu zaubern.
+%%%%

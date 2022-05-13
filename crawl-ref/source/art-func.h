@@ -575,8 +575,8 @@ static void _GONG_melee_effects(item_def* /*item*/, actor* wearer,
 
     string msg = getSpeakString("shield of the gong");
     if (msg.empty())
-        msg = "You hear a strange loud sound.";
-    mprf(MSGCH_SOUND, "%s", msg.c_str());
+        msg = localise("You hear a strange loud sound.");
+    mpr_nolocalise(MSGCH_SOUND, msg);
 
     noisy(40, wearer->pos());
 }
@@ -1255,8 +1255,10 @@ static void _MAJIN_equip(item_def *item, bool *show_msgs, bool /*unmeld*/)
 
     if (!item->props.exists(MB_WELCOME_KEY) && should_msg)
     {
-        mprf(MSGCH_TALK, "A voice whispers, \"%s\"",
-                         getSpeakString("majin-bo greeting").c_str());
+        string greeting = getSpeakString("majin-bo greeting");
+        string msg = localise("A voice whispers, \"%s\"",
+                              LocalisationArg(greeting, false));
+        mpr_nolocalise(MSGCH_TALK, msg);
         item->props[MB_WELCOME_KEY].get_bool() = true;
     }
 }
