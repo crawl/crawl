@@ -681,6 +681,7 @@ MONS:    w:15 withered plant /\
          name:bog n_adj col:green/\
          w:5 nothing
 ITEM:    any potion / any scroll / any jewellery w:1
+KPROP:   w = no_tele_into
 : ossuary_setup_features(_G)
 : lrockcol('brown')
 MAP
