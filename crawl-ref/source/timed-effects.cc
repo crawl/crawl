@@ -1302,7 +1302,7 @@ void incr_zot_clock()
 
     if (_zot_clock() >= MAX_ZOT_CLOCK)
     {
-        mpr("Zot has found you!");
+        mprf("%s", getSpeakString("Zot death").c_str());
         ouch(INSTANT_DEATH, KILLED_BY_ZOT);
         return;
     }

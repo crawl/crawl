@@ -1170,7 +1170,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         xom_death_message((kill_method_type) se.get_death_type());
         more();
 
-        _place_player_corpse(death_type == KILLED_BY_DISINT);
+        if (death_type != KILLED_BY_ZOT)
+            _place_player_corpse(death_type == KILLED_BY_DISINT);
         return;
     }
 

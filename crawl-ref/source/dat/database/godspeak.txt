@@ -808,3 +808,25 @@ Zin welcome
 
 Zin says: Spread the light, my child.
 %%%%
+Zot death
+
+# hm, is Zot a god..?
+Zot has found you!
+
+Zot unmakes you!
+
+Zot excises you from existence.
+
+Zot touches you for a single instant, and you cease to be.
+
+w:5
+Zot's tendrils burst from within you!
+
+w:3
+Zot's will forges a new reality, without you in it.
+
+w:3
+Zot snuffs you out like a light.
+
+w:3
+Zot's power takes hold, and you dissolve into a dark mist.
