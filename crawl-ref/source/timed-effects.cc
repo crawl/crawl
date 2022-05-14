@@ -1262,7 +1262,7 @@ bool bezotted()
 }
 
 // Decrease the zot clock when the player enters a new level.
-void decr_zot_clock()
+void decr_zot_clock(bool extra_life)
 {
     if (!zot_clock_active())
         return;
