@@ -1728,6 +1728,12 @@ static void _do_rest()
     }
 #endif
 
+    if (bezotted() && !yesno("Really rest while Zot is near?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
     if (i_feel_safe())
     {
         if (you.is_sufficiently_rested(true) && ancestor_full_hp())
