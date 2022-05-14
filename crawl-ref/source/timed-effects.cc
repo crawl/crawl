@@ -1278,7 +1278,12 @@ void decr_zot_clock()
     {
         // old branch, new floor
         if (bezotted())
-            mpr("As you enter the new level, Zot loses track of you.");
+        {
+            if (extra_life)
+                mpr("As you die, Zot loses track of you.");
+            else
+                mpr("As you enter the new level, Zot loses track of you.");
+        }
         zot = max(0, zot - ZOT_CLOCK_PER_FLOOR / div);
     }
 }
