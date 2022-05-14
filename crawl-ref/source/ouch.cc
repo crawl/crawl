@@ -787,14 +787,10 @@ void reset_damage_counters()
     you.source_damage = 0;
 }
 
+#if TAG_MAJOR_VERSION == 34
 bool can_shave_damage()
 {
-    return you.species == SP_DEEP_DWARF
-        || you.species == SP_STAR
-#if TAG_MAJOR_VERSION == 34
-    || you.species == SP_MAYFLYTAUR
-#endif
-    ;
+    return you.species == SP_DEEP_DWARF || you.species == SP_MAYFLYTAUR;
 }
 
 int do_shave_damage(int dam)
@@ -809,6 +805,7 @@ int do_shave_damage(int dam)
 
     return dam;
 }
+#endif
 
 // Determine what's threatening for purposes of sacrifice drink and reading.
 // the statuses are guaranteed not to happen if the incoming damage is less
@@ -880,11 +877,13 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (dam != INSTANT_DEATH)
         dam = _apply_extra_harm(dam, source);
 
+#if TAG_MAJOR_VERSION == 34
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)
     {
         dam = max(0, do_shave_damage(dam));
     }
+#endif
 
     if (dam != INSTANT_DEATH)
     {

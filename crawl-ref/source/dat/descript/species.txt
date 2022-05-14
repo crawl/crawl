@@ -4,11 +4,6 @@ Barachi
 Barachim are slow-moving, amphibious humanoids who can hop long distances.
 Their extended range of vision also allows them to be seen from further away.
 %%%%
-Deep Dwarf
-
-Deep Dwarves live underground and cannot regenerate health naturally, but they
-are very resilient to damage, and have a limited ability to heal at will.
-%%%%
 Deep Elf
 
 Deep Elves have a strong affinity for all kinds of magic, but are very fragile.

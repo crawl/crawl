@@ -130,8 +130,6 @@ merfolk_water_f MERFOLK_WATER
 merfolk_water_m
 vampire_f VAMPIRE
 vampire_m
-deep_dwarf_m DEEP_DWARF
-deep_dwarf_f
 gargoyle_m GARGOYLE
 gargoyle_f
 gargoyle_red_m

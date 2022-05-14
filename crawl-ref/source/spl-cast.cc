@@ -1034,14 +1034,6 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
 
     if (god == GOD_NO_GOD)
     {
-        // Casting pain costs 1 hp.
-        // Deep Dwarves' damage reduction always blocks at least 1 hp.
-        if (spell == SPELL_PAIN
-            && (you.species != SP_DEEP_DWARF && !you.res_torment()))
-        {
-            dec_hp(1, false);
-        }
-
         if (you.duration[DUR_SAP_MAGIC] && !fake_spell)
         {
             mprf(MSGCH_WARN, "You lose access to your magic!");

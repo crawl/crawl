@@ -46,9 +46,9 @@ enum ability_type
     ABIL_REVIVIFY,
 #if TAG_MAJOR_VERSION == 34
     ABIL_BOTTLE_BLOOD,
-#endif
     // Deep Dwarves
     ABIL_HEAL_WOUNDS,
+#endif
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,

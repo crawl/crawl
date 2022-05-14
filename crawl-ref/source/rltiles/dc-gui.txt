@@ -239,12 +239,6 @@ felids/cat3 SP_RECOMMENDED_FELID
 %compose hair/short_black
 %finish SP_RECOMMENDED_PALENTONGA
 %start
-%compose base/deep_dwarf_m
-%compose body/animal_skin
-%compose hair/short_white
-%compose beard/garibaldi_white
-%finish SP_RECOMMENDED_DEEP_DWARF
-%start
 %compose base/deep_elf_f
 %compose body/animal_skin
 %compose hair/elf_white
@@ -358,7 +352,6 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %texture disabled-fg
 enum:SP_RECOMMENDED_FELID SP_FELID
 enum:SP_RECOMMENDED_PALENTONGA SP_PALENTONGA
-enum:SP_RECOMMENDED_DEEP_DWARF SP_DEEP_DWARF
 enum:SP_RECOMMENDED_DEEP_ELF SP_DEEP_ELF
 enum:SP_RECOMMENDED_DEMIGOD SP_DEMIGOD
 enum:SP_RECOMMENDED_DEMONSPAWN SP_DEMONSPAWN

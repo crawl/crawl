@@ -1474,9 +1474,9 @@ learn how to play, into three categories: *Simple*, *Intermediate*, and
 *Advanced*. These categories do not necessarily align with difficulty for an
 experienced Crawl player, but rather are intended as an indication of to what
 degree a species has unusual or complex mechanics, or requires deeper/wider
-knowledge of how the game works. (For example, Deep Dwarves have one of the
-higher win rates of all species, but are classified as "Intermediate" because
-their no-healing mechanic takes some adapting to, and has non-trivial
+knowledge of how the game works. (For example, Djinn have one of the higher
+win rates of all species, but are classified as "Intermediate" because
+their no-mp/no-books mechanic takes some adapting to, and has non-trivial
 interactions with background and god choice.) Despite being the outcome of a
 discussion among many players, these categorizations definitely have a
 subjective element to them, and you shouldn't take them to be limiting!
@@ -1745,25 +1745,6 @@ Ogres (Og)
   Ogres are proficient at using all types of melee weapons, but all
   sophisticated forms of missile combat are awkward for them. They are, however,
   good at throwing things, in particular boulders.
-
-Deep Dwarves (DD)
-  Deep Dwarves are short, hardy people who, unlike their extinct surface
-  relatives, never left the underground homelands. Living there for countless
-  generations made them turn pale and lose all ability to regenerate health
-  over time, or to have their rate of regeneration hastened by any effects.
-  Deep Dwarves can instead draw on their magical essence to heal, but doing so
-  will gradually deplete their maximum reserves of magic. They are passively
-  able to reduce all incoming damage, and their empathy with the earth allows
-  them to sense their surroundings; these abilities increase in power as they
-  gain experience levels.
-
-  Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
-  damage. Offensively, they are skilled users of axes, crossbows, and slings.
-  Deep Dwarves are highly spiritual beings, often portrayed as actual spirits
-  by outsiders; because of this, their skill with Invocations is great, and
-  they often rely on divine assistance for healing. They are most at home with
-  the magic of earth and death, eventually gaining some resistance to the dark
-  powers of necromancy.
 
 Meteorae (Me)
   Meteorae are the people of the heavens, fallen to earth. They possess exceptional

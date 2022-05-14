@@ -954,8 +954,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         if (!you.spirit_shield())
         {
             mpr("You feel strangely alone.");
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_DEEP_DWARF)
                 mpr("Your magic begins regenerating once more.");
+#endif
         }
         break;
 
@@ -1277,10 +1279,12 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
             _remove_amulet_of_faith(item);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case AMU_GUARDIAN_SPIRIT:
         if (you.species == SP_DEEP_DWARF && player_regenerates_mp())
             mpr("Your magic begins regenerating once more.");
         break;
+#endif
 
     case AMU_MANA_REGENERATION:
         if (!meld)

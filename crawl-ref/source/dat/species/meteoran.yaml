@@ -54,17 +54,10 @@ mutations:
     MUT_EXPLORE_REGEN: 1
     MUT_GLOWING: 1
     MUT_PASSIVE_MAPPING: 1
-  6:
-    MUT_MANA_REGENERATION: 1
   9:
     MUT_PASSIVE_MAPPING: 1
-  15:
-    MUT_REGENERATION: 1
   18:
     MUT_PASSIVE_MAPPING: 1
-fake_mutations:
-  - long: You are resistant to damage.
-    short: damage resistance
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_WANDERER

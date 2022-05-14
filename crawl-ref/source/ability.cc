@@ -334,8 +334,10 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::none }, // range special-cased
         { ABIL_BLINKBOLT, "Blinkbolt",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::none },
+#if TAG_MAJOR_VERSION == 34
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
+#endif
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, -1, {}, abflag::none },
 
@@ -849,8 +851,10 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::variable_mp)
         ret += ", MP";
 
+#if TAG_MAJOR_VERSION == 34
     if (ability == ABIL_HEAL_WOUNDS)
         ret += make_stringf(", Permanent MP (%d left)", get_real_mp(false));
+#endif
 
     if (ability == ABIL_TRAN_BAT)
     {
@@ -1034,12 +1038,14 @@ static const string _detailed_cost_description(ability_type ability)
         ret << ".";
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (abil.ability == ABIL_HEAL_WOUNDS)
     {
         ASSERT(!have_cost); // validate just in case this ever changes
         return "This ability has a chance of reducing your maximum magic "
                "capacity when used.";
     }
+#endif
 
     return ret.str();
 }
@@ -1855,6 +1861,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         if (you.hp == you.hp_max)
         {
@@ -1875,6 +1882,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
         }
         return true;
+#endif
 
     case ABIL_SHAFT_SELF:
         return you.can_do_shaft_ability(quiet);
@@ -2134,7 +2142,9 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_EXSANGUINATE:
     case ABIL_REVIVIFY:
     case ABIL_SHAFT_SELF:
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
+#endif
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_END_TRANSFORMATION:
     case ABIL_ZIN_VITALISATION:
@@ -2481,6 +2491,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)
     {
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         fail_check();
         if (one_chance_in(4))
@@ -2490,6 +2501,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         }
         potionlike_effect(POT_HEAL_WOUNDS, 40);
         break;
+#endif
 
     case ABIL_DIG:
         if (!you.digging)
@@ -3653,8 +3665,10 @@ bool player_has_ability(ability_type abil, bool include_unusable)
 
     switch (abil)
     {
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         return you.species == SP_DEEP_DWARF;
+#endif
     case ABIL_SHAFT_SELF:
         if (crawl_state.game_is_sprint() || brdepth[you.where_are_you] == 1)
             return false;
@@ -3736,7 +3750,10 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
 
     // TODO: can we just iterate over ability_type?
     vector<ability_type> check_order =
-        { ABIL_HEAL_WOUNDS,
+        {
+#if TAG_MAJOR_VERSION == 34
+            ABIL_HEAL_WOUNDS,
+#endif
             ABIL_DIG,
             ABIL_SHAFT_SELF,
             ABIL_HOP,
