@@ -84,6 +84,7 @@
  #include "tilepick.h"
  #include "tileview.h"
 #endif
+#include "timed-effects.h" // bezotting_level
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -707,6 +708,9 @@ void update_vision_range()
     // Halo and umbra radius scale with you.normal_vision, so to avoid
     // penalizing players with low LOS from items, don't shrink normal_vision.
     you.current_vision = you.normal_vision;
+
+    if (you.species == SP_METEORAN)
+        you.current_vision -= max(0, (bezotting_level() - 1) * 2); // spooky fx
 
     // scarf of shadows gives -1.
     if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
@@ -7052,6 +7056,7 @@ bool player::backlit(bool self_halo) const
            || duration[DUR_CORONA]
            || duration[DUR_LIQUID_FLAMES]
            || duration[DUR_QUAD_DAMAGE]
+           || you.has_mutation(MUT_GLOWING)
            || !umbraed() && haloed() && (self_halo || halo_radius() == -1);
 }
 

@@ -422,6 +422,8 @@ public:
                 afflictions.push_back("liquid flames");
             if (you.duration[DUR_QUAD_DAMAGE])
                 afflictions.push_back("!!!QUAD DAMAGE!!!");
+            if (you.has_mutation(MUT_GLOWING))
+                afflictions.push_back("body"); // all flesh is a curse...
             mprf(MSGCH_DURATION,
                  "You become %stransparent, but the glow from %s "
                  "%s prevents you from becoming completely invisible.",

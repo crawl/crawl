@@ -1765,6 +1765,14 @@ Deep Dwarves (DD)
   the magic of earth and death, eventually gaining some resistance to the dark
   powers of necromancy.
 
+Meteorae (Me)
+  Meteorae are the people of the heavens, fallen to earth. They possess exceptional
+  skills, an uncanny sense for the space around them, and the ability to recover
+  health and magic as they explore the dungeon. However, as creatures clearly not
+  native to the world, they are easy prey for the dark forces that hunt adventurers
+  - they have one-tenth as much time as normal before Zot finds them. (See the
+  section on 'Zot' for more.)
+
 Advanced Species
 ================
 

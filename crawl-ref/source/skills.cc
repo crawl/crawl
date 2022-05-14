@@ -26,6 +26,7 @@
 #include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h" // now_is_morning
 #include "notes.h"
 #include "output.h"
 #include "random.h"
@@ -1693,6 +1694,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Prickly Pangolin";
             break;
 
+        case SK_MACES_FLAILS:
+            if (species == SP_METEORAN && skill_rank == 5)
+                result = now_is_morning() ? "Morning Star" : "Evening Star";
+            break;
+
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
                 result = claw_and_tooth_titles[skill_rank];
@@ -1736,6 +1742,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Black Lotus";
             else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
                 result = "Rockslime";
+            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_ZIN)
+                result = "Silver Star"; // removed dc6d6fabc (0.15), ha!
+            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_DITHMENOS)
+                result = "Starry Night"; // what a miserable god choice... challenge!
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
@@ -1747,10 +1757,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
         case SK_BOWS:
             if (species::is_elven(species) && skill_rank == 5)
-            {
                 result = "Master Archer";
-                break;
-            }
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Shooting Star";
             break;
 
         case SK_SPELLCASTING:
@@ -1786,6 +1795,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_AIR_MAGIC:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Storm Dragon";
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Meteorite"; // meteorologist / star, ha
             break;
 
         case SK_POISON_MAGIC:
@@ -1801,6 +1812,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_TRANSLOCATIONS:
             if (species == SP_FORMICID && skill_rank == 5)
                 result = "Teletunneler";
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Black Hole";
             break;
 
         case SK_NECROMANCY:

@@ -59,6 +59,8 @@ naga_red_f
 naga_red_m
 ogre_m OGRE
 ogre_f
+meteoran_f METEORAN
+meteoran_m
 troll_f TROLL
 troll_m
 octopode1 OCTOPODE

@@ -1223,6 +1223,11 @@ int turns_until_zot()
     return turns_until_zot_in(you.where_are_you);
 }
 
+static int _zot_lifespan_div()
+{
+    return you.has_mutation(MUT_SHORT_LIFESPAN) ? 10 : 1;
+}
+
 // A scale from 0 to 4 of how much danger the player is in of
 // reaching the end of the zot clock. 0 is no danger, 4 is dead.
 static int _bezotting_level_in(branch_type br)
@@ -1230,7 +1235,7 @@ static int _bezotting_level_in(branch_type br)
     if (!_zot_clock_active_in(br))
         return 0;
 
-    const int remaining_turns = turns_until_zot_in(br);
+    const int remaining_turns = turns_until_zot_in(br) * _zot_lifespan_div();
     if (remaining_turns <= 0)
         return 4;
     if (remaining_turns < 100)
@@ -1269,7 +1274,7 @@ void decr_zot_clock(bool extra_life)
         return;
     int &zot = _zot_clock();
 
-    const int div = you.has_mutation(MUT_SHORT_LIFESPAN) ? 10 : 1;
+    const int div = _zot_lifespan_div();
     if (zot == -1)
     {
         // new branch
@@ -1287,6 +1292,8 @@ void decr_zot_clock(bool extra_life)
         }
         zot = max(0, zot - ZOT_CLOCK_PER_FLOOR / div);
     }
+    if (you.species == SP_METEORAN)
+        update_vision_range();
 }
 
 static int _added_zot_time()
@@ -1343,6 +1350,9 @@ void incr_zot_clock()
             break;
     }
 
+    if (you.species == SP_METEORAN)
+        update_vision_range();
+
     take_note(Note(NOTE_MESSAGE, 0, 0, "Glimpsed the power of Zot."));
     interrupt_activity(activity_interrupt::force);
 }
@@ -1354,6 +1364,6 @@ void set_turns_until_zot(int turns_left)
 
     int &clock = _zot_clock();
     clock = MAX_ZOT_CLOCK - turns_left * BASELINE_DELAY;
-    if (you.species == SP_STAR)
+    if (you.species == SP_METEORAN)
         update_vision_range();
 }

@@ -198,6 +198,15 @@ bool today_is_halloween()
     return date->tm_mon == 9 && date->tm_mday == 31;
 }
 
+bool now_is_morning()
+{
+    const time_t curr_time = time(nullptr);
+    const tm *date = TIME_FN(&curr_time);
+    // Assume 'morning' starts at 6 AM and ends at 6 PM.
+    dprf("hr %d", date->tm_hour);
+    return date->tm_hour >= 6 && date->tm_hour < 18;
+}
+
 bool tobool(maybe_bool mb, bool def)
 {
     switch (mb)

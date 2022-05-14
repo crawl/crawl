@@ -790,6 +790,7 @@ void reset_damage_counters()
 bool can_shave_damage()
 {
     return you.species == SP_DEEP_DWARF
+        || you.species == SP_STAR
 #if TAG_MAJOR_VERSION == 34
     || you.species == SP_MAYFLYTAUR
 #endif

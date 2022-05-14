@@ -2770,9 +2770,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
 
 static bool _invisibility_is_useless(const bool temp)
 {
-    // If you're Corona'd or a TSO-ite, this is always useless.
-    return temp ? you.backlit()
-                : you.haloed() && will_have_passive(passive_t::halo);
+    if (temp)
+        return you.backlit();
+    return you.haloed() && will_have_passive(passive_t::halo);
 }
 
 /**

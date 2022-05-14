@@ -4025,6 +4025,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_GNOLL;
         case SP_DJINNI:
             return TILEG_SP_DJINNI;
+        case SP_METEORAN:
+            return TILEG_SP_METEORAN;
         default:
             return TILEP_ERROR;
     }

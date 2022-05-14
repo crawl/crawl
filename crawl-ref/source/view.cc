@@ -1018,6 +1018,15 @@ void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
     }
 }
 
+static void _do_explore_healing()
+{
+    // Full heal in, on average, 420 tiles. (270 for MP.)
+    const int healing = div_rand_round(random2(you.hp_max), 210);
+    inc_hp(healing);
+    const int mp = div_rand_round(random2(you.max_magic_points), 135);
+    inc_mp(mp);
+}
+
 enum class update_flag
 {
     affect_excludes = (1 << 0),
@@ -1067,6 +1076,11 @@ static update_flags player_view_update_at(const coord_def &gc)
 
     if (!(env.pgrid(gc) & FPROP_SEEN_OR_NOEXP))
     {
+        if (!crawl_state.game_is_arena()
+            && you.has_mutation(MUT_EXPLORE_REGEN))
+        {
+            _do_explore_healing();
+        }
         if (!crawl_state.game_is_arena()
             && cell_triggers_conduct(gc)
             && !player_in_branch(BRANCH_TEMPLE)
