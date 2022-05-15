@@ -772,6 +772,11 @@ engulf mutation
 Your melee attacks may engulf living foes that are your size or smaller.
 Those foes will be silenced and unable to breathe.
 %%%%
+otherworldly mutation
+
+You are foreign to this world, easily perceived by dark forces. You have only
+one-tenth the normal time on each dungeon floor before Zot finds and ends you.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink while threatened mutation
 

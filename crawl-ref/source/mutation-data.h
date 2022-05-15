@@ -2318,7 +2318,7 @@ static const mutation_def mut_data[] =
   {"You feel less hungry for flesh.", "", ""},
 },
 
-{ MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false, "short lifespan",
+{ MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false, "otherworldly",
   {"You are easily found by Zot.", "", ""},
   {"You feel your time running out.", "", ""},
   {"You feel long-lived.", "", ""},
