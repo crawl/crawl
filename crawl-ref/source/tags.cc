@@ -4256,7 +4256,7 @@ static void _tag_read_you_items(reader &th)
         you.force_autopickup[OBJ_FOOD][FOOD_RATION] = oldstate;
 
         you.force_autopickup[OBJ_BOOKS][BOOK_MANUAL] =
-            you.force_autopickup[OBJ_BOOKS][NUM_BOOKS];
+            you.force_autopickup[OBJ_BOOKS][0];
     }
     if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE_AP_FIX)
     {

@@ -430,6 +430,11 @@ void check_item_knowledge(bool unknown_items)
             _add_fake_item(OBJ_MISCELLANY, i, selected_items, items_misc);
         }
 
+        // N.b. NUM_BOOKS drastically exceeds MAX_SUBTYPES, but it doesn't
+        // matter for force_autopickup purposes because we only use 0 and
+        // BOOK_MANUAL
+        COMPILE_CHECK(BOOK_MANUAL < MAX_SUBTYPES);
+
         // Misc.
         static const pair<object_class_type, int> misc_list[] =
         {
