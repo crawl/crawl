@@ -377,66 +377,93 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             set_hovered(next);
     }
 
-    function page_down()
+    // return a positive or negative number indicating hover relative to the
+    // current pane. Will return 0 if there is no current hover.
+    function get_relative_hover()
     {
-        var relative_hover = -1;
-        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
-            menu.last_hovered = menu.first_visible;
-        if (menu.last_hovered >= 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
-            relative_hover = menu.last_hovered - menu.first_visible;
-        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
-            menu.last_hovered = 0;
-        var next = menu.last_visible + 1;
-        if (relative_hover > 0
-            && menu.items[menu.first_visible + relative_hover - 1].level < 2)
-        {
-            // if the top element is a header, act as if we're scrolling down
-            // from there -- it's more natural this way
-            relative_hover = relative_hover - 1;
-        }
-        if (next >= menu.items.length)
-            next = menu.items.length - 1;
-        scroll_to_item(next);
-        if (relative_hover >= 0)
-        {
-            // The <= here is to handle headers
-            if (menu.first_visible + relative_hover <= menu.last_hovered)
-                relative_hover = menu.items.length - 1 - menu.first_visible;
-            set_hovered(next_hoverable_item(false,
-                            menu.first_visible + relative_hover, true), true);
-        }
+        // XX this function has some heuristics to deal with the fact that
+        // headers mess up relative hover, and they still aren't perfect
+        if (menu.last_hovered < 0 || menu.items.length == 0)
+            return 0;
+
+        // use a negative relative hover if we are on the last element, to
+        // prevent a common weird interaction with headers. XX should this be
+        // generalized?
+        if (menu.last_visible == menu.last_hovered)
+            return -1;
+
+        var relative_hover = menu.last_hovered - menu.first_visible;
+
+        var headers = 0;
+
+        // factor out headers
+        for (var i = 0; i <= relative_hover; i++)
+            if (menu.items[menu.first_visible + i].level < 2)
+                headers += 1;
+        relative_hover = Math.max(0, relative_hover - headers);
+
+        return relative_hover;
     }
 
-    function page_up()
+    // set the hover relative to the current pane. If the value is negative,
+    // index from the end. The value ignores non-hoverable items (headers).
+    function set_relative_hover(relative_hover)
     {
         if (menu.items.length == 0)
             return;
-        var relative_hover = -1;
-        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
-            menu.last_hovered = menu.first_visible;
-        if (menu.last_hovered >= 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
-            relative_hover = menu.last_hovered - menu.first_visible;
-        var pagesz = menu.elem.find(".menu_contents").innerHeight();
-        var itemsz = menu.items[menu.first_visible].elem[0].getBoundingClientRect().height;
-        var delta = Math.floor(pagesz / itemsz)
-        var previous = menu.first_visible - delta;
-        if (previous < 0)
-            previous = 0;
-        scroll_to_item(previous);
+        var hover_target = 0;
         if (relative_hover >= 0)
         {
-            var hover_target = menu.first_visible + relative_hover;
-            // if the hover didn't move, we are on a single-screen menu. Go
-            // to the first item.
-            if (hover_target == menu.last_hovered)
-                hover_target = menu.first_visible;
-            // `relative_hover` is a bit of an estimate, and gets messed up by
-            // headings. So make sure it really does end up visible.
-            // TODO: make this look visually crisper
-            if (hover_target > menu.last_visible)
-                hover_target = menu.last_visible;
-            set_hovered(next_hoverable_item(false, hover_target, true), false);
+            // skip headers
+            for (var i = 0; i <= relative_hover
+                        && menu.first_visible + i <= menu.last_visible; i++)
+            {
+                if (menu.items[menu.first_visible + i].level < 2)
+                    relative_hover += 1;
+            }
+
+            hover_target = menu.first_visible + relative_hover;
         }
+        else // XX headers not handled
+            hover_target = menu.last_visible + relative_hover + 1;
+
+        // don't scroll -- lock to whatever is currently visible
+        if (hover_target > menu.last_visible)
+            hover_target = menu.last_visible;
+        else if (hover_target < menu.first_visible)
+            hover_target = menu.first_visible;
+        set_hovered(next_hoverable_item(false, hover_target, true), true);
+    }
+
+    function paging(up)
+    {
+        if (menu.items.length == 0)
+            return;
+        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
+            menu.last_hovered = menu.first_visible;
+        var adjust_hover = menu.last_hovered >= 0;
+        var relative_hover = get_relative_hover();
+        if (up)
+        {
+            // if we are already at the top, don't scroll, and move any hover
+            // to the top
+            if (menu.first_visible == 0)
+                relative_hover = 0;
+            else
+                scroll_bottom_to_item(menu.first_visible);
+        }
+        else
+        {
+            // if we are already at the end, don't scroll, and move any hover
+            // to the end
+            if (menu.last_visible == menu.items.length - 1)
+                relative_hover = -1;
+            else
+                scroll_to_item(menu.last_visible);
+        }
+
+        if (adjust_hover)
+            set_relative_hover(relative_hover)
     }
 
     function line_down()
@@ -494,7 +521,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
-        // ensure that an immediately preceding heading are visible
+        // ensure that an immediately preceding heading is visible
         if (item.index > 0 && menu.items[item.index - 1].level < 2)
             item = menu.items[item.index - 1];
         if (item.index == menu.first_visible)
@@ -569,11 +596,13 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             const item_rect = item.elem[0].getBoundingClientRect();
             if (item_rect.bottom >= bottom)
             {
+                // one after the last visible item
                 if (bottom - item_rect.top > 10)
                     menu.last_part_visible = i;
-                menu.last_visible = i-1;
                 break;
             }
+            else
+                menu.last_visible = i;
         }
         if (menu.first_part_visible === -1)
             menu.first_part_visible = menu.first_visible;
@@ -853,14 +882,14 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         case 33: // page up
             if (menu.tag == "macro_mapping")
                 break; // Treat input as raw, no need to scroll anyway
-            page_up();
+            paging(true);
             event.preventDefault();
             return false;
         case 107: // numpad +
         case 34: // page down
             if (menu.tag == "macro_mapping")
                 break; // Treat input as raw, no need to scroll anyway
-            page_down();
+            paging();
             event.preventDefault();
             return false;
         case 35: // end
@@ -945,14 +974,14 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             // otherwise, fall through to pageup:
         case "<":
         case ";":
-            page_up();
+            paging(true);
             event.preventDefault();
             return false;
 
         case ">":
         case "+":
         case " ":
-            page_down();
+            paging();
             event.preventDefault();
             return false;
         case "'": // legacy thing
