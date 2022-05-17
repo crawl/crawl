@@ -36,6 +36,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 /// has a given hound already used up its howl?
 #define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
 #define KIKU_WRETCH_KEY "kiku_wretch"
+#define ANIMATE_DEAD_KEY "animate_dead"
 
 #define DROPPER_MID_KEY "dropper_mid"
 
