@@ -113,8 +113,10 @@ struct duration_def
     duration_type dur;
     int    light_colour; ///< Base colour for status light.
     const char *light_text; ///< Text for the status light.
-    const char *short_text; ///< Text for @ line on the % screen and morgues.
-                            ///< Should be an adjective.
+    const char *short_text; ///< Adjective text for cancellation potion
+                            ///< descriptions (e.g. "If you drink this now, you
+                            ///< will no longer be swift/mighty/on fire.") Also
+                            ///< used for the @ line on the % screen and morgue.
     const char *name_text;  ///< Text used in wizmode &^D. If empty, use the
                             ///< short_text.
     const char *long_text;  ///< Text for the @ message.
@@ -584,7 +586,7 @@ static const duration_def duration_data[] =
       { "Your reaping aura is weakening.", 1 }}, 6},
     { DUR_CORPSE_ROT,
       MAGENTA, "Rot",
-      "corpse rot", "corpse rot",
+      "producing miasma", "corpse rot",
       "You are producing miasma from the slain.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your miasmic aura fades." },
       { "Your miasmic aura is weakening.", 1 }}, 6},
