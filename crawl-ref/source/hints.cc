@@ -1064,7 +1064,6 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_FUMBLING_SHALLOW_WATER:
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
-    case HINT_ANIMATE_CORPSE_SKELETON:
     case HINT_SKILL_RAISE:
     case HINT_OPPORTUNITY_ATTACK:
         return true;
@@ -2470,10 +2469,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "should either wait for a few turns to see if it "
                 "vanishes (with <w>%</w>), or just step around it.";
         cmd.push_back(CMD_WAIT);
-        break;
-    case HINT_ANIMATE_CORPSE_SKELETON:
-        text << "Animate Skeleton works on the corpse of any monster that has "
-                "a skeleton inside.";
         break;
     default:
         text << "You've found something new (but I don't know what)!";

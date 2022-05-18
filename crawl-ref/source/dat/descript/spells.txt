@@ -50,13 +50,6 @@ as zombies. The chance of reanimating a monster and the duration of the effect
 increase with spell power. Re-casting this spell will return zombies on the
 caster's floor to dust.
 %%%%
-Animate Skeleton spell
-
-Reanimates a single skeleton as a follower, even if that skeleton is still
-encased in flesh. This magic is unstable, so eventually those reanimated will
-crumble to dust. Skeletons cannot leave the level they were created on. The
-resilience of a skeleton raised by this spell increases with spell power.
-%%%%
 Apportation spell
 
 Pulls the top item or group of similar items from a distant pile to the floor
