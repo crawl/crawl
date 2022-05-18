@@ -893,7 +893,8 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 
     auto pregen_check = make_shared<ui::Checkbox>();
     pregen_check->set_sync_id("pregenerate");
-    pregen_check->set_checked(choice.pregenerate = Options.pregen_dungeon);
+    choice.pregenerate = Options.pregen_dungeon == level_gen_type::full;
+    pregen_check->set_checked(choice.pregenerate);
     pregen_check->set_visible(show_pregen_toggle);
     pregen_check->set_child(make_shared<ui::Text>("Fully pregenerate the dungeon"));
     box->add_child(pregen_check);
@@ -966,7 +967,10 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         game_ended(game_exit::abort);
 
     Options.seed = choice.seed = tmp_seed;
-    Options.pregen_dungeon = choice.pregenerate = pregen_check->checked();
+    choice.pregenerate = pregen_check->checked();
+    if (choice.pregenerate)
+        Options.pregen_dungeon = level_gen_type::full; // XX don't do this
+    // otherwise, let (potentially default) option decide
 }
 
 // Read a choice of game into ng.

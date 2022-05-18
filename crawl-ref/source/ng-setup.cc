@@ -502,7 +502,8 @@ static void _setup_generic(const newgame_def& ng,
     rng::reset(); // initialize rng from Options.seed
     _init_player();
     you.game_seed = crawl_state.seed;
-    you.deterministic_levelgen = Options.incremental_pregen;
+    you.deterministic_levelgen =
+                            Options.pregen_dungeon != level_gen_type::classic;
 
 #if TAG_MAJOR_VERSION == 34
     // Avoid the remove_dead_shops() Gozag fixup in new games: see
@@ -618,6 +619,9 @@ static void _setup_generic(const newgame_def& ng,
 
     // pregen temple -- it's quick and easy, and this prevents a popup from
     // happening. This needs to happen after you.save is created.
-    if (normal_dungeon_setup && !pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
+    if (normal_dungeon_setup && you.deterministic_levelgen &&
+        !pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
+    {
         die("Builder failure while trying to generate temple!");
+    }
 }

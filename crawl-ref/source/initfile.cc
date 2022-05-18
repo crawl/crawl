@@ -374,6 +374,18 @@ const vector<GameOption*> game_options::build_options_list()
              {"false", travel_open_doors_type::_false},
              {"true", travel_open_doors_type::_true}}),
 
+        new MultipleChoiceGameOption<level_gen_type>(
+            SIMPLE_NAME(pregen_dungeon),
+            level_gen_type::incremental,
+            {{"incremental", level_gen_type::incremental},
+#ifndef DGAMELAUNCH
+             {"true", level_gen_type::full},
+             {"full", level_gen_type::full},
+#endif
+             {"classic", level_gen_type::classic},
+             {"false", level_gen_type::classic}
+            }, true),
+
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), true),
 #endif
@@ -1200,9 +1212,6 @@ void game_options::reset_options()
     additional_macro_files.clear();
 
     game = newgame_def();
-
-    incremental_pregen = true;
-    pregen_dungeon = false;
 
     // set it to the .crawlrc default
     autopickups.reset();
@@ -3815,34 +3824,6 @@ void game_options::read_option_line(const string &str, bool runscript)
                 seed_from_rc = tmp_seed;
         }
     }
-    else if (key == "pregen_dungeon")
-    {
-        // TODO: probably convert the underlying values to some kind of enum
-        // TODO: store these options in a save?
-        if (field == "true" || field == "full")
-        {
-#ifdef DGAMELAUNCH
-            report_error(
-                "Full pregeneration is not allowed on this build of crawl.");
-#else
-            pregen_dungeon = true;
-            incremental_pregen = true; // still affects loading games not
-                                       // started with full pregen
-#endif
-        }
-        else if (field == "incremental")
-        {
-            pregen_dungeon = false;
-            incremental_pregen = true;
-        }
-        else if (field == "false" || field == "classic")
-            pregen_dungeon = incremental_pregen = false;
-        else
-        {
-            report_error("Unknown value '%s' for pregen_dungeon.",
-                                                            field.c_str());
-        }
-    }
 #ifdef USE_TILE
     // TODO: generalize these to an option type?
     else if (key == "tile_viewport_scale")
@@ -5533,7 +5514,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_PREGEN:
-            Options.pregen_dungeon = true;
+            Options.pregen_dungeon = level_gen_type::full;
             break;
 
         case CLO_SPRINT:

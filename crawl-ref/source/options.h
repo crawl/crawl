@@ -14,6 +14,7 @@
 #include "flush-reason-type.h"
 #include "kill-dump-options-type.h"
 #include "lang-t.h"
+#include "level-gen-type.h"
 #include "maybe-bool.h"
 #include "mpr.h"
 #include "newgame-def.h"
@@ -182,8 +183,7 @@ public:
 
     uint64_t    seed;           // Non-random games.
     uint64_t    seed_from_rc;
-    bool        pregen_dungeon; // Is the dungeon completely generated at the beginning?
-    bool        incremental_pregen; // Does the dungeon always generate in a specified order?
+    level_gen_type pregen_dungeon;
 
 #ifdef DGL_SIMPLE_MESSAGING
     bool        messaging;      // Check for messages.

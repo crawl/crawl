@@ -440,16 +440,22 @@ game_seed = none
         unsigned 64 bit integer.
 
 pregen_dungeon = incremental
+        This setting determines the level generation mode for new games, which
+        interacts with random seeding (see the "Seeded play" section of the
+        manual). In order to generate a stable dungeon from a seed, levels need
+        to be generated in a consistent order. The recommended setting of
+        `incremental` will generate levels as needed when entering a new level
+        so that the game always generates levels in the same order, potentially
+        catching up when skipping levels in the standard order.
+
         When set to `true` or `full`, the game will pregenerate the entire
         connected dungeon when starting a new character. This leads to
-        deterministic dungeon generation relative to a particular game seed, at
-        the cost of a slow game start. If set to `incremental`, the game will
-        generate levels as needed so that it always generates them in the same
-        order, also producing a deterministic dungeon. You still may encounter
-        variation in bazaars, the abyss, pandemonium, and ziggurats, and for
-        incremental pregeneration, artefacts. When set to `false` or `classic`,
-        the game will generate all levels on level entry, as was the rule before
-        0.23. Some servers may disallow full pregeneration.
+        deterministic dungeon generation relative to a particular game seed,
+        and no load times when entering levels, but at the cost of a slow game
+        start. Some servers may disallow full pregeneration for online play.
+
+        When set to `false` or `classic`, the game will generate all levels on level entry, as was the rule before 0.23. Dungeons will not be stable
+        given a seed with this option.
 
 2-  File System.
 ================
