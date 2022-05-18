@@ -410,19 +410,13 @@ bool bring_to_safety()
             || cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
+            || slime_wall_neighbour(pos)
             || crawl_state.game_is_sprint()
                && grid_distance(pos, you.pos()) > 8)
         {
             tries++;
             continue;
         }
-
-        for (adjacent_iterator ai(pos); ai; ++ai)
-            if (env.grid(*ai) == DNGN_SLIMY_WALL)
-            {
-                tries++;
-                continue;
-            }
 
         bool junk;
         double gen_threat = 0.0, hi_threat = 0.0;
