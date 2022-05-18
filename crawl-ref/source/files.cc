@@ -2029,15 +2029,14 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         _fixup_visited_from_package();
 #endif
 
-    // Did we get here by popping the level stack?
-    bool popped = false;
-
     coord_def return_pos; //TODO: initialize to null
 
     string hatch_name = "";
     if (feat_is_escape_hatch(stair_taken))
         hatch_name = _get_hatch_name();
 
+    // Did we get here by popping the level stack?
+    bool popped = false;
     if (load_mode != LOAD_VISITOR)
         popped = _leave_level(stair_taken, old_level, &return_pos);
 
