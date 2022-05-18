@@ -2020,6 +2020,10 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (!you.save->has_chunk(level_name) && load_mode == LOAD_VISITOR)
         return false;
 
+    const bool fast = load_mode == LOAD_ENTER_LEVEL_FAST;
+    if (fast)
+        load_mode = LOAD_ENTER_LEVEL;
+
     const bool make_changes =
         (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
 
@@ -2232,9 +2236,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
     {
-        // new levels have less wary monsters, and we don't
+        // new stairs have less wary monsters, and we don't
         // want them to attack players quite as soon:
-        you.time_taken *= (just_created_level ? 1 : 2);
+        you.time_taken *= fast ? 1 : 2;
 
         you.time_taken = div_rand_round(you.time_taken * 3, 4);
 
