@@ -1338,33 +1338,6 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
     return spret::success;
 }
 
-static bool _animatable_remains(const item_def& item)
-{
-    return item.base_type == OBJ_CORPSES
-        && mons_class_can_be_zombified(item.mon_type)
-        // the above allows spectrals/etc
-        && (mons_zombifiable(item.mon_type)
-            || mons_skeleton(item.mon_type));
-}
-
-vector<coord_def> simple_find_corpses()
-{
-    vector<coord_def> result;
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-    {
-        for (stack_iterator si(*ri, true); si; ++si)
-        {
-            if (_animatable_remains(*si))
-            {
-                result.push_back(*ri);
-                break;
-            }
-        }
-    }
-
-    return result;
-}
-
 monster_type pick_random_wraith()
 {
     return random_choose_weighted(1, MONS_SHADOW_WRAITH,
