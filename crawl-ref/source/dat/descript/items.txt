@@ -446,7 +446,7 @@ clouds, acidic fog and clouds of negative energy become available.
 %%%%
 corpse
 
-A corpse. Useful only to practitioners of necromancy.
+A corpse. Useless and dead.
 %%%%
 crystal plate armour
 
