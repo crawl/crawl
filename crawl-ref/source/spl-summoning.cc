@@ -2487,7 +2487,8 @@ void kiku_unearth_wretches()
     const int max_wretches = min_wretches + div_rand_round(pow, 27); // 8 max
     const int wretches = random_range(min_wretches, max_wretches);
     bool created = false;
-    for (int i = 0; i < wretches; ++i) {
+    for (int i = 0; i < wretches; ++i)
+    {
         // choose a type
         const int typ_pow = you.skill(SK_NECROMANCY, 4);
         const int adjusted_power = min(typ_pow / 4, random2(random2(typ_pow)));
@@ -2519,11 +2520,10 @@ void kiku_unearth_wretches()
                                    20 + random2(10)));
         mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you, 9999));
     }
-    if (!created) {
+    if (!created)
         simple_god_message(" has no space to call forth the wretched!");
-    } else {
+    else
         simple_god_message(" calls piteous wretches from the earth!");
-    }
 }
 
 static bool _create_foxfire(const actor &agent, coord_def pos,

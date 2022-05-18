@@ -641,7 +641,7 @@ void infestation_death_fineff::fire()
     if (have_passive(passive_t::bonus_undead)
         && x_chance_in_y(200 + you.piety, 1600))
     {
-            ++num_scarabs;
+        ++num_scarabs;
     }
 
     int seen = 0;
@@ -673,7 +673,8 @@ void make_derived_undead_fineff::fire()
     for (int i = 0; i < num_undead; ++i)
     {
         monster *undead = create_monster(mg);
-        if (!undead) continue;
+        if (!undead)
+            continue;
 
         if (!message.empty() && !messaged)
         {
