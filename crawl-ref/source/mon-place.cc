@@ -264,7 +264,7 @@ static void _apply_ood(level_id &place)
         // We want a left-weighted distribution; slight fuzzing should be much
         // more common than the full depth fuzz. This does mean that OODs are closer
         // to a 6% chance than the 14% implied above, which is a bit silly.
-        const int fuzz = random_range(-fuzzspan, fuzzspan);
+        const int fuzz = random_range(-fuzzspan, fuzzspan, 2);
         if (fuzz > 0)
         {
             place.depth += fuzz;
