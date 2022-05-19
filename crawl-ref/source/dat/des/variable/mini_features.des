@@ -2956,6 +2956,187 @@ xx.xx
 xx@xx
 ENDMAP
 
+NAME:   nicolae_diode_basic
+TAGS:   transparent luniq_nico_xporter
+DEPTH:  D:8-, Depths, Zot
+MARKER: D = lua:transp_loc("nico_diode_basic")
+MARKER: E = lua:transp_dest_loc("nico_diode_basic")
+MAP
+xxxxxxxxxxxxx
+xbcccccccccbx
+.....GcG.....
+......n......
+@....DnE....@
+......n......
+.....GcG.....
+xbcccccccccbx
+xxxxxxxxxxxxx
+ENDMAP
+
+# Can have an arrangement of 2 in/2 out, 3 in/1 out, or 1 in/3 out.
+NAME:    nicolae_diode_intersection
+TAGS:    transparent luniq_nico_xporter
+DEPTH:   D:8-, Depths, Zot
+KMASK:   'TPQRSpqrs = opaque
+SHUFFLE: Pp/qQ/Rr/sS, Qq, Rr
+MARKER:  P = lua:transp_loc("nico_diodex_p")
+MARKER:  Q = lua:transp_loc("nico_diodex_q")
+MARKER:  R = lua:transp_loc("nico_diodex_r")
+MARKER:  S = lua:transp_loc("nico_diodex_s")
+MARKER:  p = lua:transp_dest_loc("nico_diodex_p")
+MARKER:  q = lua:transp_dest_loc("nico_diodex_q")
+MARKER:  r = lua:transp_dest_loc("nico_diodex_r")
+MARKER:  s = lua:transp_dest_loc("nico_diodex_s")
+MAP
+     xx..@..xx
+     xb.....bx
+     xc.....cx
+     xc.....cx
+    xxc.....cxx
+xxxxxccG.R.Gccxxxxx
+xbccccccnnnccccccbx
+.....GcG'r'GcG.....
+......n'''''n......
+@....Pnp'T'Qnq....@
+......n'''''n......
+.....GcG'S'GcG.....
+xbccccccnnnccccccbx
+xxxxxccG.s.Gccxxxxx
+    xxc.....cxx
+     xc.....cx
+     xc.....cx
+     xb.....bx
+     xx..@..xx
+ENDMAP
+
+NAME:    nicolae_diode_quadrants
+TAGS:    transparent luniq_nico_xporter
+DEPTH:   D:8-, Depths, Zot
+SHUFFLE: Pp, Qq, Rr, Ss
+MARKER:  P = lua:transp_loc("nico_diodequads_p")
+MARKER:  Q = lua:transp_loc("nico_diodequads_q")
+MARKER:  R = lua:transp_loc("nico_diodequads_r")
+MARKER:  S = lua:transp_loc("nico_diodequads_s")
+MARKER:  p = lua:transp_dest_loc("nico_diodequads_p")
+MARKER:  q = lua:transp_dest_loc("nico_diodequads_q")
+MARKER:  r = lua:transp_dest_loc("nico_diodequads_r")
+MARKER:  s = lua:transp_dest_loc("nico_diodequads_s")
+MAP
+         xxx
+         xbx
+         xcx
+   @..xxxxcxxxx..@
+   ...xbcccccbx...
+   ......GcG......
+   xx.....n.....xx
+   xb....Pnp....bx
+   xc.....n.....cx
+xxxxcG.s.GcG.Q.Gcxxxx
+xbccccnnncccnnnccccbx
+xxxxcG.S.GcG.q.Gcxxxx
+   xc.....n.....cx
+   xb....rnR....bx
+   xx.....n.....xx
+   ......GcG......
+   ...xbcccccbx...
+   @..xxxxcxxxx..@
+         xcx
+         xbx
+         xxx
+ENDMAP
+
+NAME:   nicolae_diode_stairs
+TAGS:   luniq_nico_xporter
+DEPTH:  D:8-, Depths, Zot
+: if you.depth() == 1 then
+SUBST: S = )}]
+: elseif you.depth_fraction() < 1 then
+SUBST: S = (){}[]
+: else
+SUBST: S = ({[
+: end
+MARKER: D = lua:transp_loc("nico_diode_stairs_in")
+MARKER: E = lua:transp_dest_loc("nico_diode_stairs_in")
+MARKER: F = lua:transp_loc("nico_diode_stairs_out")
+MARKER: H = lua:transp_dest_loc("nico_diode_stairs_out")
+MAP
+xxxxxxxxxxxxxxxxxxx
+xbcccccccbcccccccbx
+.....GcG...GcG.....
+......n.....n......
+@....DnE.S.FnH....@
+......n.....n......
+.....GcG...GcG.....
+xbcccccccbcccccccbx
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_transporter_circle
+TAGS:   transparent luniq_nico_xporter
+DEPTH:  D:8-, Depths, Zot
+MARKER: P = lua:transp_loc("nico_xportcircle_p")
+MARKER: Q = lua:transp_loc("nico_xportcircle_q")
+MARKER: R = lua:transp_loc("nico_xportcircle_r")
+MARKER: S = lua:transp_loc("nico_xportcircle_s")
+MARKER: p = lua:transp_dest_loc("nico_xportcircle_p")
+MARKER: q = lua:transp_dest_loc("nico_xportcircle_q")
+MARKER: r = lua:transp_dest_loc("nico_xportcircle_r")
+MARKER: s = lua:transp_dest_loc("nico_xportcircle_s")
+MAP
+    xx..@..xx
+    xb.....bx
+    xc.....cx
+   xxc.....cxx
+xxxxccG...Gccxxxx
+xbcccccp.Qcccccbx
+....Gcnc.cncG....
+.....Pcbnbcq.....
+@......nnn......@
+.....scbnbcR.....
+....Gcnc.cncG....
+xbcccccS.rcccccbx
+xxxxccG...Gccxxxx
+   xxc.....cxx
+    xc.....cx
+    xb.....bx
+    xx..@..xx
+ENDMAP
+
+# The central area is laid out such that when you stand on a transporter,
+# the only landing site you can see is the one you'll go to. Hopefully
+# this helps make things a little clearer for players trying to figure
+# out where all the transporters go. Or maybe it won't.
+NAME:   nicolae_transporter_intersection
+TAGS:   transparent luniq_nico_xporter
+DEPTH:  D:8-, Depths, Zot
+MARKER: P = lua:transp_loc("nico_transportx_s")
+MARKER: Q = lua:transp_loc("nico_transportx_w")
+MARKER: R = lua:transp_loc("nico_transportx_n")
+MARKER: S = lua:transp_loc("nico_transportx_e")
+MARKER: p = lua:transp_dest_loc("nico_transportx_s")
+MARKER: q = lua:transp_dest_loc("nico_transportx_w")
+MARKER: r = lua:transp_dest_loc("nico_transportx_n")
+MARKER: s = lua:transp_dest_loc("nico_transportx_e")
+MAP
+    xx..@..xx
+    xb.....bx
+    xc.....cx
+   xxc.....cxx
+xxxxccG...Gccxxxx
+xbcccccPcrcccccbx
+....GccncnccG....
+.....qnnnnnQ.....
+@....ccnbncc....@
+.....Snnnnns.....
+....GccncnccG....
+xbcccccpcRcccccbx
+xxxxccG...Gccxxxx
+   xxc.....cxx
+    xc.....cx
+    xb.....bx
+    xx..@..xx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
