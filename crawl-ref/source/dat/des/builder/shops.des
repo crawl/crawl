@@ -1301,6 +1301,30 @@ xx'''NbWbb..xx
    xxxxxxxx
 ENDMAP
 
+# A reference to the special Oracle level from NetHack.
+# Like in NetHack, players can purchase readings from the Oracle. In a sense.
+NAME:   nicolae_nh_oracle_at_delphi
+TAGS:   transparent no_rotate
+DEPTH:  D:5-9
+WEIGHT: 1
+KFEAT:  O = scroll shop name:The_Oracle type:Delphic suffix:Readings ; \
+            any scroll | any book
+NSUBST: . = 2=0 / ., D = . / c, E = + / x, F = + / x
+TILE:   G : dngn_statue_centaur
+MAP
+xxxxxxxxxxxxx
+xG.........Gx
+E.....G.....F
+E...cDcDc...F
+E...D-T-D...F
+E..GcTOTcG..F
+E...D-T-D...F
+E...cDcDc...F
+E.....G.....F
+xG.........Gx
+xxxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
