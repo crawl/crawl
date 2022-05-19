@@ -46,7 +46,7 @@
 #define STAT_PRECISION 2
 
 const static char *stat_out_prefix = "objstat_";
-const static char *stat_out_ext = ".txt";
+const static char *stat_out_ext = ".tsv";
 static FILE *stat_outf;
 
 enum item_base_type
