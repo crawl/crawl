@@ -1101,7 +1101,9 @@ static void _write_stat(map<string, int> &stats, const string &field)
     ostringstream output;
     bool is_chance = false;
 
-    output.precision(STAT_PRECISION);
+    // NumOOD is by its nature reporting events rare enough that some more
+    // precision is helpful
+    output.precision(field == "NumOOD" ? STAT_PRECISION + 1 : STAT_PRECISION);
     output.setf(ios_base::fixed);
 
     // These fields want a per-instance average.
