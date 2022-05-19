@@ -171,8 +171,9 @@ static set<monster_type> objstat_monsters;
 // Ex: monster_recs[level][mc]["Num"]
 static map<level_id, map<monster_type, map <string, int> > > monster_recs;
 static const vector<string> monster_fields = {
-    "Num", "NumVault", "NumInBranch", "NumMin", "NumMax", "NumSD",
-    "MonsHD", "MonsHP", "MonsXP", "TotalXP", "TotalXPVault", "RelativeDepth"
+    "Num", "NumVault", "NumInBranch", "NumMin", "NumMax", "NumSD", "NumOOD",
+    "MonsHD", "MonsHP", "MonsXP", "TotalXP", "TotalXPVault",
+    "RelativeDepth", "DistanceOOD",
 };
 
 static set<dungeon_feature_type> objstat_features;
@@ -911,6 +912,10 @@ void objstat_record_monster(const monster *mons)
         // a reasonably close guide. Higher values are more under depth.
         // Don't record if monster is not a branch native.
         _record_monster_stat(type, "RelativeDepth", cur_lev.depth - avg_depth);
+        const int ood = monster_how_ood(cur_lev.branch, cur_lev.depth, type);
+        _record_monster_stat(type, "DistanceOOD", ood);
+        if (ood > 0)
+            _record_monster_stat(type, "NumOOD", 1);
     }
 }
 
@@ -1105,7 +1110,8 @@ static void _write_stat(map<string, int> &stats, const string &field)
         || field == "MonsHD"
         || field == "MonsHP"
         || field == "MonsXP"
-        || field == "RelativeDepth")
+        || field == "RelativeDepth"
+        || field == "DistanceOOD")
     {
         string num_field = "Num";
         // The classed fields need to be average relative to the right count.
@@ -1115,7 +1121,7 @@ static void _write_stat(map<string, int> &stats, const string &field)
             num_field = "NumShop";
         else if (ends_with(field, "Mons"))
             num_field = "NumMons";
-        else if (field == "RelativeDepth")
+        else if (field == "RelativeDepth" || field == "DistanceOOD")
             num_field = "NumInBranch";
         if (stats[num_field.c_str()] == 0)
             out_val = 0.0; // XX some kind of `NA` value?
