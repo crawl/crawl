@@ -250,6 +250,16 @@ int monster_pop_depth_avg(branch_type branch, monster_type m)
     return -1;
 }
 
+// if a monster is ood, how far ood is it? If it's not ood but in the branch
+// data, return 0. If it's not in the branch data, return -1.
+int monster_how_ood(branch_type branch, int depth, monster_type m)
+{
+    for (const pop_entry& pop : population[branch])
+        if (pop.value == m)
+            return max(0, pop.minr - depth);
+    return -1;
+}
+
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 static bool _not_skeletonable(monster_type mt)
 {
