@@ -2550,6 +2550,28 @@ MAP
  ...
 ENDMAP
 
+# A shopkeeper has learned why there are no NetHack-style shops in this dungeon.
+NAME:   nicolae_nh_ransacked_shop
+TAGS:   transparent patrolling no_item_gen
+DEPTH:  D:4-10
+KITEM:  1d = any armour no_uniq w:90 / any weapon no_uniq / nothing w:25
+KMONS:  1 = orc priest band / orc wizard band / orc warrior band / \
+            kobold brigand band
+KFEAT:  + = broken_door / +
+NSUBST: D = + / c, E = e / .
+KPROP:  e = bloody
+: dgn.delayed_decay(_G, "e", "human corpse")
+MAP
+xx     xx
+xcDDDDDcx
+xcEEEEEcx
+xcdddddcx
+xcdd1ddcx
+xcdddddcx
+xcccccccx
+xxxxxxxxx
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -3057,6 +3079,33 @@ xx.............xx
  x.............x
 xx.............xx
 xGD..D..1..E..EGx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Another NetHack-inspired vault, based on the top floor of Vlad's Tower.
+NAME:  nicolae_nh_vlads_tower
+TAGS:  transparent patrolling
+DEPTH: D:10-, Crypt
+KITEM: | = |
+KITEM: _ = *
+KITEM: 1 = %
+KMONS: _ = vampire mage / vampire knight
+KMONS: 1 = vampire / jiangshi
+KFEAT: _ = altar_dithmenos / altar_kikubaaqudgha / altar_makhleb / \
+           altar_yredelemnul
+MAP
+xxxxxxxxxxxxxxxxx
+xxxcccxcccxcccxxx
+xxxc1cxc1cxc1cxxx
+xccc+ccc+ccc+cccx
+xc.......+.+...cx
+xccc+ccccc.ccc+cx
+xxxc..._|c.+1c..@
+xccc+ccccc.cccccx
+xc.......+.+...cx
+xccc+ccc+ccc+cccx
+xxxc1cxc1cxc1cxxx
+xxxcccxcccxcccxxx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
