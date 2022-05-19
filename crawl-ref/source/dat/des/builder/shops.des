@@ -1307,9 +1307,15 @@ NAME:   nicolae_nh_oracle_at_delphi
 TAGS:   transparent no_rotate
 DEPTH:  D:5-9
 WEIGHT: 1
+# In Nethack, sometimes statues can contain spellbooks if you break them open.
+# Here, for each statue, there's a 1/12 chance that it's broken, leaving 
+# behind a pile of rocks and a book. With 8 statues, the odds are about 50/50
+# that at least one free spellbook will be generated. And some rocks.
+KITEM:  ` = stone, any book
 KFEAT:  O = scroll shop name:The_Oracle type:Delphic suffix:Readings ; \
             any scroll | any book
 NSUBST: . = 2=0 / ., D = . / c, E = + / x, F = + / x
+SUBST:  G = G:11 `:1
 TILE:   G : dngn_statue_centaur
 MAP
 xxxxxxxxxxxxx
