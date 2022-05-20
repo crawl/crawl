@@ -527,7 +527,7 @@ DESCRIP:  Whenever the wielder enters a berserk rage, their allies are
  berserked alongside them.
 
 NAME:    arbalest "Damnation"
-INSCRIP: damnation,
+INSCRIP: damnation
 OBJ:     OBJ_WEAPONS/WPN_ARBALEST
 FB_BRAND: SPWPN_FLAMING
 PLUS:    +6
@@ -1648,7 +1648,7 @@ COLOUR:   ETC_HOLY
 BRAND:    SPWPN_HOLY_WRATH
 LIFE:     1
 BOOL:     fly, noises
-INSCRIP:  anguish
+INSCRIP:  anguish,
 DBRAND:   It inflicts anguish, making its victims' attacks reflect back on
  them.
 TILE:    urand_condemnation
