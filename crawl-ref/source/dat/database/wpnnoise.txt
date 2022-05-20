@@ -65,7 +65,7 @@ You hear the [rumble|boom|crash] of [a glacier calving|icebergs colliding].
 ###############################################################################
 ###############################################################################
 #
-# The TRISHULA "BARBS OF CONDEMNATION" calls angels to battle.
+# The TRISHULA "BARBS OF CONDEMNATION" cries out against injustice.
 #
 ###############################################################################
 ###############################################################################
@@ -75,13 +75,19 @@ trishula "Barbs of Condemnation"
 
 @Your_weapon@ lets out a [divine|blessed|sacred|holy] [chiming|tinkling|ringing|pealing|tintinnabulation].
 
-@Your_weapon@ sings the [divine|blessed|sacred|holy] song of [the angels|the Heavens|Zin|Elyvilon|the Shining One].
+@Your_weapon@ sings the [divine|blessed|sacred|holy] song of the [angels|Heavens|Barachim].
 
 w:5
 @Your_weapon@ [chants|recites|intones] a [divine|blessed|sacred|holy] warrior-psalm.
 
 w:1
 @Your_weapon@ [calls|cries for|demands] [evildoers|demons|the wicked] to come forth and be judged!
+
+w:1
+@Your_weapon@ [wails|laments|cries out] at the [injustice|cruelty|suffering] of the world.
+
+w:1
+@Your_weapon@ [croaks|ribbits] in the tongue of ancient peoples.
 
 ###############################################################################
 ###############################################################################

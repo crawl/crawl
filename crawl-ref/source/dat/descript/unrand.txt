@@ -725,7 +725,7 @@ others, so his staff protects its wielder.
 %%%%
 trishula "Barbs of Condemnation"
 
-The weapon of the archangel Lucreil, guardian and judge of the first mortals.
-Seeing their suffering, Lucreil led an army against the gods and was by them
-unmade. The survivors fled into the wilderness, bringing this weapon with them as
-the sole remnant of the archangel's justice.
+A weapon to bring forth guilt from the guilty. It was first wielded by the archangel
+Lucreil, who, on seeing the suffering of the first mortals, led them as an army
+against the cruelty of the gods. The ragged survivors of Lucriel's army took this
+weapon with them into the wilderness, the sole remnant of an archangel's virtue.
