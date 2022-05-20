@@ -2738,7 +2738,7 @@ string spell_damage_string(spell_type spell, bool evoked)
     switch (spell)
     {
         case SPELL_MAXWELLS_COUPLING:
-            return "∞";
+            return Options.char_set == CSET_ASCII ? "death" : "\u221e"; //"∞"
         case SPELL_CONJURE_FLAME:
             return desc_cloud_damage(CLOUD_FIRE, false);
         case SPELL_FREEZING_CLOUD:

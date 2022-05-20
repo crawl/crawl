@@ -1319,7 +1319,7 @@ static bool _know_ego(const item_def &item, description_level_type desc,
 static string _plus_prefix(const item_def &weap)
 {
     if (is_unrandom_artefact(weap, UNRAND_WOE))
-        return "+∞ ";
+        return Options.char_set == CSET_ASCII ? "+inf " : "+\u221e "; // ∞
     return make_stringf("%+d ", weap.plus);
 }
 
