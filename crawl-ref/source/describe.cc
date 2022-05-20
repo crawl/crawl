@@ -1200,6 +1200,9 @@ static string _describe_brand(brand_type brand)
 
 static string _damage_rating(const item_def &item)
 {
+    if (is_unrandom_artefact(item, UNRAND_WOE))
+        return "\nDamage rating: your enemies will bleed and die for Makhleb.";
+
     const int base_dam = property(item, PWPN_DAMAGE);
     const skill_type skill = _item_training_skill(item);
     const int stat_mult = stat_modify_damage(100, skill, true);
@@ -1266,14 +1269,28 @@ static void _append_weapon_stats(string &description, const item_def &item)
             skill_name(staff_skill(static_cast<stave_type>(item.sub_type))));
     }
 
+    if (is_unrandom_artefact(item, UNRAND_WOE))
+    {
+        const char *inf = Options.char_set == CSET_ASCII ? "inf" : "\u221e"; //"∞"
+        description += make_stringf(
+            "Base accuracy: %s  Base damage: %s  ",
+            inf,
+            inf);
+    }
+    else
+    {
+        description += make_stringf(
+            "Base accuracy: %+d  Base damage: %d  ",
+            property(item, PWPN_HIT),
+            base_dam);
+    }
+
     description += make_stringf(
-    "Base accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
-    "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d.",
-        property(item, PWPN_HIT),
-        base_dam,
-        (float) property(item, PWPN_SPEED) / 10,
-        (float) weapon_min_delay(item, item_brand_known(item)) / 10,
-        mindelay_skill / 10);
+        "Base attack delay: %.1f\n"
+        "This weapon's minimum attack delay (%.1f) is reached at skill level %d.",
+            (float) property(item, PWPN_SPEED) / 10,
+            (float) weapon_min_delay(item, item_brand_known(item)) / 10,
+            mindelay_skill / 10);
 
     const bool want_player_stats = !is_useless_item(item) && crawl_state.need_save;
     if (want_player_stats)
@@ -1377,8 +1394,10 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
             description += "\n\nIt can be evoked to extend its reach.";
             break;
         case SK_AXES:
-            description += "\n\nIt hits all enemies adjacent to the wielder, "
-                           "dealing less damage to those not targeted.";
+            description += "\n\nIt hits all enemies adjacent to the wielder";
+            if (!is_unrandom_artefact(item, UNRAND_WOE))
+                description += ", dealing less damage to those not targeted";
+            description += ".";
             break;
         case SK_SHORT_BLADES:
             {
@@ -4673,7 +4692,9 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
 {
     if (mi.willpower() == WILL_INVULN)
     {
-        result << "  Will: ∞\n";
+        result << (Options.char_set == CSET_ASCII
+                        ? "  Will: \u221e\n" // ∞
+                        : "  Will: inf\n");
         return;
     }
 
