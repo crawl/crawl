@@ -1858,6 +1858,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
+    case ENCH_ANGUISH:
+        if (decay_enchantment(en))
+            simple_monster_message(*this, " is no longer haunted by guilt.");
+        break;
+
     default:
         break;
     }
@@ -2233,6 +2238,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_RESISTANCE:
     case ENCH_IDEALISED:
     case ENCH_BOUND_SOUL:
+    case ENCH_ANGUISH:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:
