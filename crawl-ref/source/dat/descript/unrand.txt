@@ -722,3 +722,10 @@ staff of the Meek
 A sacred relic of the Monks of St. Lee, followers of the renunciate archmage. Just
 as St. Lee sought to atone for the destruction his spells wrought by protecting
 others, so his staff protects its wielder.
+%%%%
+trishula "Barbs of Condemnation"
+
+The weapon of the archangel Lucreil, guardian and judge of the first mortals.
+Seeing their suffering, Lucreil led an army against the gods and was by them
+unmade. The survivors fled into the wilderness, bringing this weapon with them as
+the sole remnant of the archangel's justice.

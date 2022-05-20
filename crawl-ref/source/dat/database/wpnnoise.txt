@@ -11,6 +11,7 @@
 # Contents:
 # - Shield of the Gong
 # - Frostbite
+# - Barbs of Condemnation
 # - Noisy randarts
 # - The Singing Sword
 
@@ -60,6 +61,27 @@ You hear shards of ice [tinkling|chiming].
 
 w:1
 You hear the [rumble|boom|crash] of [a glacier calving|icebergs colliding].
+
+###############################################################################
+###############################################################################
+#
+# The TRISHULA "BARBS OF CONDEMNATION" calls angels to battle.
+#
+###############################################################################
+###############################################################################
+
+%%%%
+trishula "Barbs of Condemnation"
+
+@Your_weapon@ lets out a [divine|blessed|sacred|holy] [chiming|tinkling|ringing|pealing|tintinnabulation].
+
+@Your_weapon@ sings the [divine|blessed|sacred|holy] song of [the angels|the Heavens|Zin|Elyvilon|the Shining One].
+
+w:5
+@Your_weapon@ [chants|recites|intones] a [divine|blessed|sacred|holy] warrior-psalm.
+
+w:1
+@Your_weapon@ [calls|cries for|demands] [evildoers|demons|the wicked] to come forth and be judged!
 
 ###############################################################################
 ###############################################################################

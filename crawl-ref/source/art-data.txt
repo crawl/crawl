@@ -1640,6 +1640,22 @@ BRAND:      SPWPN_PROTECTION
 INSCRIP:    meekguard
 DBRAND:     It provides extra protection to wielders with little health.
 
+ENUM:     CONDEMNATION
+NAME:     trishula "Barbs of Condemnation"
+OBJ:      OBJ_WEAPONS/WPN_TRISHULA
+FALLBACK: OBJ_WEAPONS/WPN_DEMON_TRIDENT
+PLUS:     8
+COLOUR:   ETC_HOLY
+BRAND:    SPWPN_HOLY_WRATH
+LIFE:     1
+BOOL:     skip_ego, fly, noises
+INSCRIP:  anguish
+DBRAND:   It inflicts anguish, making its victims' attacks reflect back on
+ them.
+TILE:    urand_condemnation
+TILE_EQ: condemnation
+
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
