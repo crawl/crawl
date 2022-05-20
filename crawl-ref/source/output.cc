@@ -1803,7 +1803,7 @@ static string _itosym(int level, int max = 1, bool immune = false)
         return "";
 
     if (immune)
-        return Options.char_set == CSET_ASCII ? "!" : "\u221e"; //"∞", WGL4 but not CP437
+        return Options.char_set == CSET_ASCII ? "inf" : "\u221e"; //"∞"
 
     string sym;
     bool spacing = (max >= 5) ? false : true;
