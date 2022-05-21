@@ -723,7 +723,7 @@ A sacred relic of the Monks of St. Lee, followers of the renunciate archmage. Ju
 as St. Lee sought to atone for the destruction his spells wrought by protecting
 others, so his staff protects its wielder.
 %%%%
-trishula "Barbs of Condemnation"
+trishula "Condemnation"
 
 A weapon to bring forth guilt from the guilty. It was first wielded by the archangel
 Lucreil, who, on seeing the suffering of the first mortals, led them as an army
