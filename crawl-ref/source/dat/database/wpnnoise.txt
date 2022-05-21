@@ -11,7 +11,7 @@
 # Contents:
 # - Shield of the Gong
 # - Frostbite
-# - Barbs of Condemnation
+# - Condemnation
 # - Noisy randarts
 # - The Singing Sword
 
@@ -65,13 +65,13 @@ You hear the [rumble|boom|crash] of [a glacier calving|icebergs colliding].
 ###############################################################################
 ###############################################################################
 #
-# The TRISHULA "BARBS OF CONDEMNATION" cries out against injustice.
+# The TRISHULA "CONDEMNATION" cries out against injustice.
 #
 ###############################################################################
 ###############################################################################
 
 %%%%
-trishula "Barbs of Condemnation"
+trishula "Condemnation"
 
 @Your_weapon@ lets out a [divine|blessed|sacred|holy] [chiming|tinkling|ringing|pealing|tintinnabulation].
 
