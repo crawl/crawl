@@ -567,7 +567,7 @@ static const struct spell_desc spelldata[] =
     25,
     5, 5,
     1, 0,
-    TILEG_PAIN,
+    TILEG_NECROTIZE,
 },
 
 {
