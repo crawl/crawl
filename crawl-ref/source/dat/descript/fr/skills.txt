@@ -1,15 +1,15 @@
 %%%%
 Fighting
 
-La compétence Combat accroit votre précision et les dégâts en combat au corps à
-corps et, accroitre aussi votre maximum de points de vie.
+La compétence Combat augmente votre précision et les dégâts en combat au corps à
+corps et augmente aussi vos points de vie maximum.
 %%%%
 Short Blades
 
 Les Épées Courtes ont la réputation d’être le meilleur outil pour poignarder.
 
 Être compétent en Épées Courtes vous permettra d'attaquer plus rapidement avec
-toutes les armes de ce type, accroitra votre précision et les dégâts
+toutes les armes de ce type, augmentera votre précision et les dégâts
 occasionnés par elles. Il est généralement recommandé de concentrer vos efforts
 dans un ou deux types d'armes pour devenir plus puissant avec elles.
 
@@ -19,7 +19,7 @@ Longues, et vice versa.
 Long Blades
 
 Être compétent en Épées Longues  vous permettra d'attaquer plus rapidement avec
-toutes les armes de ce type, accroitra votre précision et les dégâts
+toutes les armes de ce type, augmentera votre précision et les dégâts
 occasionnés par elles.
 
 Être compétent en Épées Longues rend plus facile l'apprentissage en Épées
@@ -31,7 +31,7 @@ D'un simple geste les Haches peuvent traverser de multiples ennemis encerclant
 l'utilisateur.
 
 Être compétent avec les Haches vous permettra d'attaquer plus rapidement avec
-toutes les armes de ce type, accroitra votre précision et les dégâts
+toutes les armes de ce type, augmentera votre précision et les dégâts
 occasionnés par elles. Il est généralement recommandé de concentrer vos efforts
 dans un ou deux types d'armes pour devenir plus puissant avec elles.
 
@@ -41,7 +41,7 @@ en Armes d'Hast, et vice versa.
 Maces & Flails
 
 Être compétent en Masses & Fléaux  vous permettra d'attaquer plus rapidement
-avec toutes les armes de ce type, accroitra votre précision et les dégâts
+avec toutes les armes de ce type, augmentera votre précision et les dégâts
 occasionnés par elles.
 
 Être compétent en Masses & Fléaux rend plus facile l'apprentissage en Haches et
@@ -53,7 +53,7 @@ Une Arme d'Hast peut être évoquée avec “v” pour attaquer des ennemis à d
 cases de vous.
 
 Être compétent en Armes d'Hast vous permettra d'attaquer plus rapidement avec
-toutes les armes de ce type, accroitra votre précision et les dégâts
+toutes les armes de ce type, augmentera votre précision et les dégâts
 occasionnés par elles.
 
 Être compétent en Armes d'Hast rend plus facile l'apprentissage en Haches et
@@ -61,12 +61,12 @@ Bâtons, et vice versa.
 %%%%
 Staves
 
-Les Bâtons requièrent un relativement faible niveau de compétence pour être
-employé le plus efficacement cependant, ils n'ont pas de dégâts aussi puissants
+Les Bâtons requièrent relativement un faible niveau de compétence pour être
+employé le plus efficacement. Cependant, ils n'ont pas de dégâts aussi puissants
 que la plupart des autres catégories d'armes.
 
 Être compétent en Bâtons vous permettra d'attaquer plus rapidement avec toutes
-les armes de ce type, accroitra votre précision et les dégâts occasionnés par
+les armes de ce type, augmentera votre précision et les dégâts occasionnés par
 elles. Il est généralement recommandé de concentrer vos efforts dans un ou deux
 types d'armes pour devenir plus puissant avec elles.
 
@@ -96,7 +96,7 @@ Throwing
 
 Entrainer Lancer fera des armes de jet (tels les javelots) et sarbacanes plus
 efficaces. En particulier, elle augmente les chances d'une arme de retour de
-revenir au lanceur et, permet à certaines aiguilles magiques d'avoir un effet
+revenir au lanceur et permet à certaines aiguilles magiques d'avoir un effet
 quand tirée avec une sarbacane.
 
 Être compétent avec les Lancer facilite l'apprentissage en Frondes, et vice
@@ -104,7 +104,7 @@ versa.
 %%%%
 Armour
 
-La compétence Armure augmente la CA obtenue par le port d'une armure lourde et,
+La compétence Armure augmente la CA obtenue par le port d'une armure lourde et
 il aide aussi à diminuer la gène des armures lourdes en combat et en
 sorcellerie.
 %%%%
@@ -118,8 +118,8 @@ explosions.
 Stealth
 
 En entrainant Furtivité, vous pouvez faire en sorte d'être plus difficilement
-remarqué par les monstres s'ils sont endormis ou s'ils ne sont pas en alerte,
-et accroit vos chances de faire perdre vos traces aux monstres après avoir
+remarqué par les monstres s'ils sont endormis ou s'ils ne sont pas en alerte
+et augmentera vos chances de faire perdre vos traces aux monstres après avoir
 quitté leur champ de vision. Notez que les monstres deviennent de plus en plus
 suspicieux et observateur au fur et à mesure que vous descendez.
 
@@ -149,7 +149,7 @@ rapidement, il pourra également plus facilement les désamorcer.
 %%%%
 Unarmed Combat
 
-Être compétent en Combat à Mains Nues accroit votre précision, vos dégâts et la
+Être compétent en Combat à Mains Nues augmente votre précision, vos dégâts et la
 vitesse de vos attaques au corps-à-corps sans aucune arme. Cela vous permet
 aussi occasionnellement de frapper avec votre deuxième main, en supposant
 qu'elle soit libre pour cela.
