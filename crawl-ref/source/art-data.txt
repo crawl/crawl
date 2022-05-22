@@ -1654,6 +1654,14 @@ DBRAND:   It inflicts anguish, making its victims' attacks reflect back on
 TILE:    urand_condemnation
 TILE_EQ: condemnation
 
+NAME:    amulet of Elemental Vulnerability
+OBJ:     OBJ_JEWELLERY/AMU_NOTHING
+COLOUR:  ETC_VEHUMET
+TILE:    urand_elemental_vulnerability
+AC:      8
+BOOL:    poison
+FIRE:    -2
+COLD:    -2
 
 # This entry must always be last.
 ENUM:   DUMMY2

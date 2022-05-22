@@ -729,3 +729,10 @@ A weapon to bring forth guilt from the guilty. It was first wielded by the archa
 Lucreil, who, on seeing the suffering of the first mortals, led them as an army
 against the cruelty of the gods. The ragged survivors of Lucriel's army took this
 weapon with them into the wilderness, the sole remnant of an archangel's virtue.
+%%%%
+amulet of Elemental Vulnerability
+
+A blue-steel amulet. Its creator, an exceedingly practical woman, designed it to
+provide powerful protection against mundane jabs, stabs and bites. It's worse than
+useless against fire and frost, but how often does anyone really need to worry
+about that?
