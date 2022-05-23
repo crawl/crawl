@@ -1442,10 +1442,7 @@ static void _corpse_rot(monster &mons, int pow)
 static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
                               bool was_visible, bool corpseworthy)
 {
-    if (mons.has_ench(ENCH_INFESTATION))
-        _infestation_create_scarab(&mons);
-
-    // Yred worship and death channel aren't stronger than this enchantment
+    // This is a hostile effect, and monsters are dirty cheaters. Sorry!
     if (mons.has_ench(ENCH_BOUND_SOUL))
     {
         _make_derived_undead(&mons, quiet, MONS_SIMULACRUM,
@@ -1454,10 +1451,29 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
         return true;
     }
 
+    // no doubling up with death channel and yred.
+    // otherwise, death channel can work with other corpse-consuming spells.
+    if (you.duration[DUR_DEATH_CHANNEL] && !have_passive(passive_t::reaping))
+    {
+        _make_derived_undead(&mons, quiet, MONS_SPECTRAL_THING,
+                             BEH_FRIENDLY,
+                             SPELL_DEATH_CHANNEL,
+                             static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
+    }
+
+    // Players' corpse-consuming effects. Go from best to worst.
+
+    if (mons.has_ench(ENCH_INFESTATION))
+    {
+        _infestation_create_scarab(&mons);
+        return true;
+    }
+
     if (was_visible && corpseworthy)
     {
-        // no doubling up with yred and death channel / simulacrum
-        if (have_passive(passive_t::reaping) && !have_passive(passive_t::goldify_corpses))
+        // Yred takes priority over everything but Infestation.
+        // (Maybe Simulacrum should also be allowed? Or Infestation shouldn't?)
+        if (have_passive(passive_t::reaping))
         {
             if (yred_reap_chance())
                 _yred_reap(mons, exploded);
@@ -1469,14 +1485,6 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
             const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
             _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
             return true;
-        }
-
-        if (you.duration[DUR_DEATH_CHANNEL])
-        {
-            _make_derived_undead(&mons, quiet, MONS_SPECTRAL_THING,
-                                 BEH_FRIENDLY,
-                                 SPELL_DEATH_CHANNEL,
-                                 static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
 
         if (!exploded
