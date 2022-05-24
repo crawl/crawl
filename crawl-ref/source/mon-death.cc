@@ -1451,25 +1451,17 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
         return true;
     }
 
-    // no doubling up with death channel and yred.
-    // otherwise, death channel can work with other corpse-consuming spells.
-    if (you.duration[DUR_DEATH_CHANNEL] && !have_passive(passive_t::reaping))
-    {
-        _make_derived_undead(&mons, quiet, MONS_SPECTRAL_THING,
-                             BEH_FRIENDLY,
-                             SPELL_DEATH_CHANNEL,
-                             static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
-    }
-
     // Players' corpse-consuming effects. Go from best to worst.
-
     if (mons.has_ench(ENCH_INFESTATION))
     {
         _infestation_create_scarab(&mons);
         return true;
     }
 
-    if (was_visible && corpseworthy)
+    if (!corpseworthy)
+        return false;
+
+    if (was_visible)
     {
         // Yred takes priority over everything but Infestation.
         // (Maybe Simulacrum should also be allowed? Or Infestation shouldn't?)
@@ -1497,7 +1489,6 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
 
     if (!exploded
         && !have_passive(passive_t::goldify_corpses)
-        && corpseworthy
         && mons.has_ench(ENCH_NECROTIZE))
     {
         _make_derived_undead(&mons, quiet, MONS_SKELETON,
@@ -2532,8 +2523,23 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (!was_banished && !mons_reset)
     {
         const bool wretch = mons.props.exists(KIKU_WRETCH_KEY);
+        const bool corpseworthy = could_give_xp || wretch;
+
+        // no doubling up with death channel and yred.
+        // otherwise, death channel can work with other corpse-consuming spells.
+        if (was_visible
+            && corpseworthy
+            && you.duration[DUR_DEATH_CHANNEL]
+            && !have_passive(passive_t::reaping))
+        {
+            _make_derived_undead(&mons, !death_message, MONS_SPECTRAL_THING,
+                                 BEH_FRIENDLY,
+                                 SPELL_DEATH_CHANNEL,
+                                 static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
+        }
+
         corpse_consumed = _apply_necromancy(mons, !death_message, exploded,
-                                            was_visible, could_give_xp || wretch);
+                                            was_visible, corpseworthy);
 
         // currently allowing this to stack with other death effects -hm
         if (you.duration[DUR_CORPSE_ROT] && !have_passive(passive_t::goldify_corpses))
