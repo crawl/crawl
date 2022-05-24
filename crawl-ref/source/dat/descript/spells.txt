@@ -406,9 +406,8 @@ nearby may be dazzled and left stumbling blindly.
 %%%%
 Death Channel spell
 
-Binds the souls of living, demonic and holy creatures slain by the caster and
-their allies, causing their spectres to remain and fight for the caster. When
-the channel expires the spectres will fade away.
+Binds the souls of slain living, demonic and holy creatures, forcing their
+spectres to remain and fight for the caster for as long as the channel lasts.
 %%%%
 Death Rattle spell
 

@@ -1383,8 +1383,13 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_SIMULACRUM:
         if (have_passive(passive_t::goldify_corpses))
             return "necromancy does not work on golden corpses.";
-        // Fallthrough to Death Channel.
+        if (have_passive(passive_t::reaping))
+            return "you are already reaping souls!";
+        break;
+
     case SPELL_DEATH_CHANNEL:
+        if (temp && you.duration[DUR_DEATH_CHANNEL])
+            return "you are already channeling the dead.";
         if (have_passive(passive_t::reaping))
             return "you are already reaping souls!";
         break;
