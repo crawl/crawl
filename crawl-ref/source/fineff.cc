@@ -701,7 +701,7 @@ void make_derived_undead_fineff::fire()
                 undead->props[ANIMATE_DEAD_KEY] = true;
             else
             {
-                int dur = undead->type == MONS_SKELETON ? 2 : 5;
+                int dur = undead->type == MONS_SKELETON ? 3 : 5;
                 undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
             }
         }
