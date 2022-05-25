@@ -119,6 +119,13 @@ public:
     bool valid_aim(coord_def a) override;
 };
 
+class targeter_simulacrum : public targeter_smite
+{
+public:
+    targeter_simulacrum(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+};
+
 class targeter_unravelling : public targeter_smite
 {
 public:

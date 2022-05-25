@@ -12,6 +12,7 @@
 #include "env.h"
 #include "message.h"
 #include "spl-util.h"
+#include "stringutil.h" // make_stringf
 #include "terrain.h"
 
 int englaciate(coord_def where, int pow, actor *agent)
@@ -167,6 +168,23 @@ spret cast_vile_clutch(int pow, bolt &beam, bool fail)
     return result;
 }
 
+string mons_simulacrum_immune_reason(const monster *mons)
+{
+    if (!mons || !you.can_see(*mons))
+        return "You can't see anything there.";
+
+    if (mons->has_ench(ENCH_SIMULACRUM))
+    {
+        return make_stringf("%s's soul is already gripped in ice!",
+                            mons->name(DESC_THE).c_str());
+    }
+
+    if (!mons_can_be_zombified(*mons) && !(mons->holiness() & MH_DEMONIC))
+        return "You can't make simulacra of that!";
+
+    return "";
+}
+
 spret cast_simulacrum(coord_def target, int pow, bool fail)
 {
     if (cell_is_solid(target))
@@ -176,22 +194,10 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     }
 
     monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
+    const string immune_reason = mons_simulacrum_immune_reason(mons);
+    if (!immune_reason.empty())
     {
-        mpr("You can't see anything there.");
-        return spret::abort;
-    }
-
-    if (mons->has_ench(ENCH_SIMULACRUM))
-    {
-        mprf("%s's soul is already gripped in ice!",
-             mons->name(DESC_THE).c_str());
-        return spret::abort;
-    }
-
-    if (!mons_can_be_zombified(*mons) && !(mons->holiness() & MH_DEMONIC))
-    {
-        mpr("You can't make simulacra of that!");
+        mprf("%s", immune_reason.c_str());
         return spret::abort;
     }
 

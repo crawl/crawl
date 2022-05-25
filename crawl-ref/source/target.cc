@@ -22,6 +22,7 @@
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
+#include "spl-monench.h" // mons_simulacrum_immune_reason
 #include "spl-other.h"
 #include "spl-transloc.h"
 #include "stringutil.h"
@@ -707,6 +708,18 @@ bool targeter_inner_flame::valid_aim(coord_def a)
     if (!targeter_smite::valid_aim(a))
         return false;
     return mons_inner_flame_immune_reason(monster_at(a)).empty();
+}
+
+targeter_simulacrum::targeter_simulacrum(const actor* act, int range) :
+    targeter_smite(act, range, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_simulacrum::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+    return mons_simulacrum_immune_reason(monster_at(a)).empty();
 }
 
 targeter_unravelling::targeter_unravelling()
