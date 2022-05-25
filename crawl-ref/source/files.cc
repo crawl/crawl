@@ -2237,9 +2237,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode == LOAD_ENTER_LEVEL)
     {
         // new stairs have less wary monsters, and we don't
-        // want them to attack players quite as soon.
-        // (just_created_level only relevant if we crashed.)
-        you.time_taken *= fast || just_created_level ? 1 : 2;
+        // want them to attack players quite as soon:
+        you.time_taken *= fast ? 1 : 2;
 
         you.time_taken = div_rand_round(you.time_taken * 3, 4);
 
