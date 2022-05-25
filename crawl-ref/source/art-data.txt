@@ -1238,11 +1238,10 @@ NAME:     ring of the Octopus King
 OBJ:      OBJ_JEWELLERY/RING_FIRST_RING
 COLOUR:   ETC_WATER
 TILE:     urand_octoring
-AC:       1
-EV:       1
-STR:      1
-INT:      1
-DEX:      1
+AC:       +2
+EV:       +2
+SH:       +2
+HP:       +2
 BOOL:     unided, no_upgrade
 
 # Meatsprint only. The type is adjusted to the biggest two-handed axe the
