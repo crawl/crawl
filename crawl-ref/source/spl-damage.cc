@@ -3136,6 +3136,27 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
     return spret::success;
 }
 
+// XXX: this should take a monster_info.
+string mons_inner_flame_immune_reason(const monster *mons)
+{
+    if (!mons || !you.can_see(*mons))
+        return "You can't see anything there.";
+
+    if (mons->has_ench(ENCH_INNER_FLAME))
+    {
+        return make_stringf("%s is already burning with an inner flame!",
+                            mons->name(DESC_THE).c_str());
+    }
+
+    if (mons->willpower() == WILL_INVULN)
+    {
+        return make_stringf("%s has infinite will and cannot be affected.",
+                            mons->name(DESC_THE).c_str());
+    }
+
+    return "";
+}
+
 spret cast_inner_flame(coord_def target, int pow, bool fail)
 {
     if (cell_is_solid(target))
@@ -3145,16 +3166,10 @@ spret cast_inner_flame(coord_def target, int pow, bool fail)
     }
 
     const monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
+    const string immune_reason = mons_inner_flame_immune_reason(mons);
+    if (!immune_reason.empty())
     {
-        mpr("You can't see anything there.");
-        return spret::abort;
-    }
-
-    if (mons->has_ench(ENCH_INNER_FLAME))
-    {
-        mprf("%s is already burning with an inner flame!",
-             mons->name(DESC_THE).c_str());
+        mprf("%s", immune_reason.c_str());
         return spret::abort;
     }
 

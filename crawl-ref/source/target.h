@@ -112,6 +112,13 @@ public:
     bool valid_aim(coord_def a) override;
 };
 
+class targeter_inner_flame : public targeter_smite
+{
+public:
+    targeter_inner_flame(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+};
+
 class targeter_unravelling : public targeter_smite
 {
 public:
