@@ -698,8 +698,8 @@ bool targeter_transference::valid_aim(coord_def a)
     return true;
 }
 
-targeter_inner_flame::targeter_inner_flame(const actor* act, int range) :
-    targeter_smite(act, range, 0, 0, false, nullptr)
+targeter_inner_flame::targeter_inner_flame(const actor* act, int r) :
+    targeter_smite(act, r, 0, 0, false, nullptr)
 {
 }
 
@@ -710,8 +710,8 @@ bool targeter_inner_flame::valid_aim(coord_def a)
     return mons_inner_flame_immune_reason(monster_at(a)).empty();
 }
 
-targeter_simulacrum::targeter_simulacrum(const actor* act, int range) :
-    targeter_smite(act, range, 0, 0, false, nullptr)
+targeter_simulacrum::targeter_simulacrum(const actor* act, int r) :
+    targeter_smite(act, r, 0, 0, false, nullptr)
 {
 }
 
