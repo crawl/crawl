@@ -1549,7 +1549,7 @@ bool zombie_picker::veto(monster_type mt)
         corpse_type = random_draconian_monster_species();
 
     // Zombifiability in general.
-    if (!mons_class_can_be_zombified(corpse_type))
+    if (!mons_class_can_leave_corpse(corpse_type))
         return true;
     // Monsters that don't really exist
     if (mons_class_flag(mt, M_UNFINISHED))
