@@ -2633,12 +2633,14 @@ void world_reacts()
         update_turn_count();
         msgwin_new_turn();
         crawl_state.lua_calls_no_turn = 0;
-        if (crawl_state.game_is_sprint()
-            && !(you.num_turns % 256)
+        if ((crawl_state.game_is_sprint() && !(you.num_turns % 256)
+                || crawl_state.save_after_turn)
             && !you_are_delayed()
             && !crawl_state.disables[DIS_SAVE_CHECKPOINTS])
         {
             // Resting makes the saving quite random, but meh.
+            crawl_state.save_after_turn = false;
+            save_level(level_id::current());
             save_game(false);
         }
     }

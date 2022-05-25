@@ -30,7 +30,8 @@ game_state::game_state()
       terminal_resized(false), last_winch(0),
       seed(0),
       io_inited(false),
-      need_save(false), game_started(false), saving_game(false),
+      need_save(false), save_after_turn(false),
+      game_started(false), saving_game(false),
       updating_scores(false),
 #ifndef USE_TILE_LOCAL
       smallterm(false),

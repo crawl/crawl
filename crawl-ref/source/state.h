@@ -53,6 +53,7 @@ struct game_state
 
     bool io_inited;         // Is curses or the equivalent initialised?
     bool need_save;         // Set to true when game can be saved, false when the game ends.
+    bool save_after_turn;
     bool game_started;      // Set to true when a game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.

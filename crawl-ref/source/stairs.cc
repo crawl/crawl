@@ -948,6 +948,11 @@ void floor_transition(dungeon_feature_type how,
 
     you.turn_is_over = true;
 
+    // This save point is somewhat odd, in that it corresponds to
+    // a time when the player didn't have control. So, force a save after the
+    // next world_reacts. XX should this be later in this function? Or not
+    // here at all? (the hup check in save_game_state should be, though)
+    crawl_state.save_after_turn = true;
     save_game_state();
 
     new_level();
