@@ -726,8 +726,12 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         }
 
         // On body armour, an enchantment of less than 0 is never viable.
+        // On aux armour & shields, going below -2 is likewise unviable.
+        // (You think you're better than the hat of the Alchemist?)
         if (get_armour_slot(item) == EQ_BODY_ARMOUR)
             item.plus = max(static_cast<int>(item.plus), random2(2));
+        else
+            item.plus = max(static_cast<int>(item.plus), random_range(-2, 1));
 
         // Needs to be done after the barding chance else we get randart
         // bardings named Boots of xy.
