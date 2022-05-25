@@ -1681,14 +1681,20 @@ bool mons_can_be_zombified(const monster& mon)
 {
     return mons_class_can_be_zombified(mon.type)
            && !mon.is_summoned()
-           && !mons_bound_body_and_soul(mon);
+           && !mons_bound_body_and_soul(mon)
+           && mons_has_attacks(mon, true);
 }
 
-bool mons_can_be_spectralised(const monster& mon)
+// Does this monster have a soul that can be used for necromancy (Death
+// Channel, Simulacrum, Yredelemnul's Bind Soul)? For Bind Soul, allow
+// monsters with no attacks if they have some spells to use.
+bool mons_can_be_spectralised(const monster& mon, bool divine)
 {
     return mon.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
            && !mon.is_summoned()
-           && mon.type != MONS_PANDEMONIUM_LORD;
+           && mon.type != MONS_PANDEMONIUM_LORD
+           && (mons_has_attacks(mon, true)
+               || divine && mon.has_spells());
 }
 
 bool mons_class_can_use_stairs(monster_type mc)
@@ -5017,13 +5023,13 @@ bool mons_is_player_shadow(const monster& mon)
 }
 
 // Zero-damage attacks with special effects (constriction, drowning, pure fire,
-// etc.) aren't counted, since this is used to decide whether the monster can
-// go berserk or be weakened, both of which require an attack with non-zero
-// base damage.
-bool mons_has_attacks(const monster& mon)
+// etc.) aren't counted by default, since this is used to decide whether the
+// monster can go berserk or be weakened, both of which require an attack with
+// non-zero base damage.
+bool mons_has_attacks(const monster& mon, bool allow_damageless)
 {
     const mon_attack_def attk = mons_attack_spec(mon, 0);
-    return attk.type != AT_NONE && attk.damage > 0;
+    return attk.type != AT_NONE && (allow_damageless || attk.damage > 0);
 }
 
 // The default suitable() function for choose_random_nearby_monster().

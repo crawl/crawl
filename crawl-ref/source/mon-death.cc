@@ -1204,8 +1204,11 @@ static void _make_derived_undead(monster* mons, bool quiet,
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
     // - Simulacrum, Death Channel and Yred reaping of unzombifiable things:
-    if (!requires_corpse && !mons_can_be_spectralised(*mons))
+    if (!requires_corpse
+        && !mons_can_be_spectralised(*mons, god == GOD_YREDELEMNUL))
+    {
         return;
+    }
     // - Monster Bind Souls
     if (spell == SPELL_BIND_SOULS && !(mons->holiness() & MH_NATURAL
                                        && mons_can_be_zombified(*mons)))

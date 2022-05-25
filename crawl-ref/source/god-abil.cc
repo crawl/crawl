@@ -1680,7 +1680,7 @@ bool beogh_resurrect()
 
 bool yred_can_bind_soul(monster* mon)
 {
-    return mons_can_be_spectralised(*mon)
+    return mons_can_be_spectralised(*mon, true)
            && !mons_bound_body_and_soul(*mon)
            && mon->attitude != ATT_FRIENDLY;
 }
