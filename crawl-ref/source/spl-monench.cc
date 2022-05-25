@@ -189,7 +189,7 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
         return spret::abort;
     }
 
-    if (!mons_can_be_zombified(*mons))
+    if (!mons_can_be_zombified(*mons) && !(mons->holiness() & MH_DEMONIC))
     {
         mpr("You can't make simulacra of that!");
         return spret::abort;
