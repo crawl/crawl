@@ -3173,9 +3173,6 @@ spret cast_inner_flame(coord_def target, int pow, bool fail)
         return spret::abort;
     }
 
-    if (stop_attack_prompt(mons, false, you.pos()))
-        return spret::abort;
-
     bolt beam;
     beam.source = mons->pos();
     beam.target = mons->pos();
