@@ -179,7 +179,7 @@ string mons_simulacrum_immune_reason(const monster *mons)
                             mons->name(DESC_THE).c_str());
     }
 
-    if (!mons_can_be_zombified(*mons) && !(mons->holiness() & MH_DEMONIC))
+    if (!mons_can_be_spectralised(*mons))
         return "You can't make simulacra of that!";
 
     return "";

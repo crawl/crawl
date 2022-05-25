@@ -1200,10 +1200,11 @@ static void _make_derived_undead(monster* mons, bool quiet,
                                  monster_type which_z, beh_type beh,
                                  spell_type spell, god_type god)
 {
+    bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
-    // - Death Channel and Yred reaping of unzombifiable things:
-    if (which_z == MONS_SPECTRAL_THING && !mons_can_be_spectralised(*mons))
+    // - Simulacrum, Death Channel and Yred reaping of unzombifiable things:
+    if (!requires_corpse && !mons_can_be_spectralised(*mons))
         return;
     // - Monster Bind Souls
     if (spell == SPELL_BIND_SOULS && !(mons->holiness() & MH_NATURAL
@@ -1212,7 +1213,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
         return;
     }
     // - all other reaping (brand, chaos, and Yred)
-    if (which_z != MONS_SPECTRAL_THING && !mons_can_be_zombified(*mons))
+    if (requires_corpse && !mons_can_be_zombified(*mons))
         return;
 
     // Use the original monster type as the zombified type here, to
