@@ -3518,10 +3518,12 @@ colour_t item_def::armour_colour() const
     {
         case ARM_CLOAK:
         case ARM_SCARF:
+        case ARM_CRYSTAL_PLATE_ARMOUR:
             return WHITE;
         case ARM_BARDING:
             return GREEN;
         case ARM_ROBE:
+        case ARM_ANIMAL_SKIN:
             return RED;
 #if TAG_MAJOR_VERSION == 34
         case ARM_CAP:
@@ -3535,15 +3537,12 @@ colour_t item_def::armour_colour() const
             return LIGHTBLUE;
         case ARM_LEATHER_ARMOUR:
             return BROWN;
-        case ARM_ANIMAL_SKIN:
-            return LIGHTGREY;
-        case ARM_CRYSTAL_PLATE_ARMOUR:
-        case ARM_ORB:
-            return WHITE;
         case ARM_KITE_SHIELD:
         case ARM_TOWER_SHIELD:
         case ARM_BUCKLER:
             return CYAN;
+        case ARM_ORB:
+            return LIGHTGREY;
         default:
             return LIGHTCYAN;
     }
