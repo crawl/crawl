@@ -2503,6 +2503,12 @@ void game_options::set_player_tile(const string &field)
         const monster_type m = _mons_class_by_string(fields[1]);
         if (m == MONS_0)
             report_error("Unknown monster: \"%s\"", fields[1].c_str());
+        else if (mons_class_is_animated_object(m))
+        {
+            report_error(
+                "Can't use mons:animated object for player tile, sorry: \"%s\"",
+                fields[1].c_str());
+        }
         else
         {
             tile_use_monster = m;
