@@ -999,6 +999,7 @@ NAME:   evilmike_makhleb_hellhole
 TAGS:   no_monster_gen
 ORIENT: southeast
 DEPTH:  D:13-, !D:$, Depths, !Depths:$
+KPROP:  Pq- = no_tele_into
 ITEM:   demon blade good_item / demon whip good_item / demon trident good_item
 : item(dgn.loot_potions)
 # depth controls the number of greater servants... amount ranges from 1 to 3
@@ -1018,6 +1019,7 @@ NSUBST: 1 = 11., 2 = 22., D = 3
 KFEAT:  4 = altar_makhleb
 KFEAT:  a = v
 KFEAT:  p = iron_grate
+KFEAT:  q = l
 NSUBST: * = 2=| / *
 SUBST:  Z = Y, Y = Y:4 V:1
 SUBST:  v = v:6 a:1, . = .:7 ':1
@@ -1052,9 +1054,9 @@ MAP
           xv.1..2..vdl3""xxxx""1""xxxxllxxx
           xv.vvv.1.ve'1vx"xxxx"xxx"xxxxll"x
           xv.vvvv..vvpvvx"xx""xxxx"xxxxl>"x
-          xv$vvvv..v'P'vxx""xxx"x"xxxxx"""x
-          xv**vvv1.vPlPvxx"xxxxx"xxxxx"""xx
-          xv**$....v'P'vxx"1xxxxx""1""xxx"x
+          xv$vvvv..v-P-vxx""xxx"x"xxxxx"""x
+          xv**vvv1.vPqPvxx"xxxxx"xxxxx"""xx
+          xv**$....v-P-vxx"1xxxxx""1""xxx"x
           xvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
