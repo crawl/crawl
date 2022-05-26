@@ -1306,11 +1306,22 @@ void incr_zot_clock()
     if (!bezotted())
         return;
 
+    const bool in_death_range = get_real_hp(true, true) <= get_real_hp(true, false) / 10;
     if (_zot_clock() >= MAX_ZOT_CLOCK)
     {
-        mprf("%s", getSpeakString("Zot death").c_str());
-        ouch(INSTANT_DEATH, KILLED_BY_ZOT);
-        return;
+        if (in_death_range)
+        {
+            mprf("%s", getSpeakString("Zot death").c_str());
+            ouch(INSTANT_DEATH, KILLED_BY_ZOT);
+            return;
+        }
+
+        mpr("Zot's power touches on you...");
+        drain_player(270, true, true);
+        take_note(Note(NOTE_MESSAGE, 0, 0, "Touched by the power of Zot."));
+        interrupt_activity(activity_interrupt::force);
+
+        set_turns_until_zot(you.has_mutation(MUT_SHORT_LIFESPAN) ? 200 : 1000);
     }
 
     const int lvl = bezotting_level();
@@ -1320,13 +1331,15 @@ void incr_zot_clock()
     switch (lvl)
     {
         case 1:
-            mpr("You have lingered too long. Zot senses you. Dive deeper or flee this branch before you perish!");
+            mprf("You have lingered too long. Zot senses you. Dive deeper or flee this branch before you %s!", in_death_range ? "perish" : "suffer");
             break;
         case 2:
-            mpr("Zot draws nearer. Dive deeper or flee this branch before you perish!");
+            mprf("Zot draws nearer. Dive deeper or flee this branch before you %s!",
+                 in_death_range ? "perish" : "suffer");
             break;
         case 3:
-            mpr("Zot has nearly found you. Death is approaching. Descend or flee this branch!");
+            mprf("Zot has nearly found you. %s is approaching. Descend or flee this branch!",
+                 in_death_range ? "death" : "suffering");
             break;
     }
 
@@ -1341,4 +1354,6 @@ void set_turns_until_zot(int turns_left)
 
     int &clock = _zot_clock();
     clock = MAX_ZOT_CLOCK - turns_left * BASELINE_DELAY;
+    if (you.species == SP_STAR)
+        update_vision_range();
 }
