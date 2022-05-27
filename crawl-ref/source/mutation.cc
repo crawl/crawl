@@ -467,6 +467,11 @@ static string _dragon_abil(string desc, bool terse=false)
     return _annotate_form_based(desc, supp, terse);
 }
 
+tileidx_t get_mutation_tile(mutation_type mut)
+{
+    return _get_mutation_def(mut).tile;
+}
+
 /*
  * Does the player have mutation `mut` with at least one temporary level?
  *
@@ -1228,6 +1233,11 @@ private:
             MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
             ++hotkey;
             me->data = &mut;
+#ifdef USE_TILE
+            const tileidx_t tile = get_mutation_tile(mut);
+            if (tile != 0)
+                me->add_tile(tile_def(tile + you.get_mutation_level(mut, false) - 1));
+#endif
             add_entry(me);
         }
 
