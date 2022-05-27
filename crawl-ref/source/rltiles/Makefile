@@ -1,4 +1,4 @@
-name_S := $(shell uname -s)
+uname_S := $(shell uname -s)
 
 ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lmingw32
