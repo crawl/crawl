@@ -1672,10 +1672,13 @@ bool mons_class_can_leave_corpse(monster_type mc)
 
 bool mons_class_can_be_zombified(monster_type mc)
 {
+    // XX what is the difference between this and mons_zombifiable? Maybe they
+    // can be collapsed?
     monster_type ms = mons_species(mc);
     return !invalid_monster_type(ms)
-           && (mons_class_holiness(mc) & MH_NATURAL
-               || mons_class_can_leave_corpse(ms));
+            && !mons_class_flag(mc, M_NO_ZOMBIE)
+            && (mons_class_holiness(mc) & MH_NATURAL
+                || mons_class_can_leave_corpse(ms));
 }
 
 bool mons_can_be_zombified(const monster& mon)
@@ -2212,7 +2215,8 @@ bool mons_skeleton(monster_type mc)
 
 bool mons_zombifiable(monster_type mc)
 {
-    return !mons_class_flag(mc, M_NO_ZOMBIE) && mons_zombie_size(mc);
+    // XX why does this exist separately from `mons_class_can_be_zombified`?
+    return mons_zombie_size(mc);
 }
 
 bool mons_flattens_trees(const monster& mon)
