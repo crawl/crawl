@@ -1,4 +1,4 @@
-uname_S := $(shell uname -s)
+name_S := $(shell uname -s)
 
 ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lmingw32
@@ -116,7 +116,7 @@ TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for hig
 ##########################################################################
 # Dependencies
 
-gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt dc-abilities.txt dc-invocations.txt
+gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt dc-abilities.txt dc-invocations.txt dc-mutations.txt
 main.png tiledef-main.h tileinfo-main.js: dc-item.txt dc-unrand.txt dc-corpse.txt dc-misc.txt
 player.png tiledef-player.h tileinfo-player.js: dc-mon.txt dc-tentacles.txt dc-zombie.txt dc-demon.txt
 

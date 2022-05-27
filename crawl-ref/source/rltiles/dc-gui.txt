@@ -23,6 +23,8 @@ high_scores STARTUP_HIGH_SCORES
 %include dc-abilities.txt
 %include dc-invocations.txt
 
+%include dc-mutations.txt
+
 misc/todo TODO
 misc/error ERROR
 

@@ -1,0 +1,29 @@
+%sdir gui/mutations
+
+blue_scales_1 MUT_ICY_BLUE_SCALES
+blue_scales_2
+blue_scales_3
+brown_scales_1 MUT_RUGGED_BROWN_SCALES
+brown_scales_2
+brown_scales_3
+green_scales_1 MUT_SLIMY_GREEN_SCALES
+green_scales_2
+green_scales_3
+iridescent_scales_1 MUT_IRIDESCENT_SCALES
+iridescent_scales_2
+iridescent_scales_3
+metallic_scales_1 MUT_THIN_METALLIC_SCALES
+metallic_scales_2
+metallic_scales_3
+red_scales_1 MUT_MOLTEN_SCALES
+red_scales_2
+red_scales_3
+yellow_scales_1 MUT_YELLOW_SCALES
+yellow_scales_2
+yellow_scales_3
+
+fangs_1 MUT_FANGS
+fangs_2
+fangs_3
+
+clarity MUT_CLARITY
