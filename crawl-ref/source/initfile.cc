@@ -2506,7 +2506,7 @@ void game_options::set_player_tile(const string &field)
         else if (mons_class_is_animated_object(m) || mons_is_sensed(m))
         {
             report_error(
-                "Can't use that monster fora mons: player tile, sorry: \"%s\"",
+                "Can't use that monster as a mons: player tile, sorry: \"%s\"",
                 fields[1].c_str());
         }
         else
