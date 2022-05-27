@@ -10,6 +10,7 @@
 
 #include "equipment-type.h"
 #include "mutation-type.h"
+#include "externs.h"
 
 using std::vector;
 
