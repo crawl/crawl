@@ -983,7 +983,7 @@ void ShopMenu::update_help()
     string top_line = make_stringf("<yellow>You have %d gold piece%s.",
                                    you.gold,
                                    you.gold != 1 ? "s" : "");
-    const int total_cost = selected_cost(true);
+    const int total_cost = !can_purchase ? 0 : selected_cost(true);
     if (total_cost > you.gold)
     {
         top_line += "<lightred>";
@@ -1268,11 +1268,13 @@ bool ShopMenu::process_key(int keyin)
                     shopping_list.add_thing(item, item_price(item, shop), &pos);
             }
         }
-        else
+        else if (can_purchase)
+        {
             // Move shoplist to selection.
             for (auto entry : items)
                 if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item, &pos))
                     entry->select(-2);
+        }
         // Move shoplist to selection.
         update_help();
         update_menu(true);
@@ -1284,6 +1286,10 @@ bool ShopMenu::process_key(int keyin)
         update_help();
         update_menu(true);
         return true;
+    case '.':
+        if (!can_purchase)
+            return true; // XX describe?
+        break;
     default:
         break;
     }
