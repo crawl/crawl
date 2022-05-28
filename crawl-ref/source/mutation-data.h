@@ -633,6 +633,8 @@ static const mutation_def mut_data[] =
   {"You feel frail.",
    "You feel frail.",
    "You feel frail."},
+
+    TILEG_MUT_ROBUST,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -1600,6 +1602,8 @@ static const mutation_def mut_data[] =
   {"Your brain returns to normal size.",
    "Your brain shrinks.",
    "Your brain shrinks."},
+
+    TILEG_MUT_BIG_BRAIN,
 },
 
 { MUT_CAMOUFLAGE, 1, 3, mutflag::good, true,

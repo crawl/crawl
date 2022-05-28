@@ -22,6 +22,13 @@ yellow_scales_1 MUT_YELLOW_SCALES
 yellow_scales_2
 yellow_scales_3
 
+big_brain_1 MUT_BIG_BRAIN
+big_brain_2
+big_brain_3
+robust_1 MUT_ROBUST
+robust_2
+robust_3
+
 fangs_1 MUT_FANGS
 fangs_2
 fangs_3
