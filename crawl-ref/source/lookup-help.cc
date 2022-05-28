@@ -35,6 +35,7 @@
 #include "message.h"
 #include "mon-info.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -760,6 +761,24 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     return me;
 }
 
+/**
+ * Generate a ?/U menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _mut_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+
+    const mutation_type mut = mutation_from_name(str, false);
+    if (mut == NUM_MUTATIONS)
+        return me;
+
+    const tileidx_t tile = get_mutation_tile(mut);
+    if (tile)
+        me->add_tile(tile_def(tile + mutation_max_levels(mut) - 1));
+
+    return me;
+}
+
 
 /**
  * How should this type be expressed in the prompt string?
@@ -1275,7 +1294,7 @@ static const vector<LookupType> lookup_types = {
                nullptr, nullptr, _simple_menu_gen,
                _describe_generic, lookup_type::db_suffix),
     LookupType('U', "mutation", nullptr, _mutation_filter,
-               nullptr, nullptr, _simple_menu_gen,
+               nullptr, nullptr, _mut_menu_gen,
                _describe_generic, lookup_type::db_suffix),
 };
 
