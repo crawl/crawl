@@ -1116,6 +1116,8 @@ string pad_more_with_esc(const string &s)
 
 string Menu::get_keyhelp(bool scrollable) const
 {
+    // TODO: derive this from cmd key bindings
+
     // multiselect always shows a keyhelp, for singleselect it is blank unless
     // it can be scrolled
     if (!scrollable && !is_set(MF_MULTISELECT))
@@ -1354,6 +1356,7 @@ bool Menu::filter_with_regex(const char *re)
             if (flags & MF_SINGLESELECT)
             {
                 // Return the first item found.
+                // currently, no menu uses this?
                 get_selected(&sel);
                 return false;
             }
@@ -1392,110 +1395,69 @@ bool Menu::title_prompt(char linebuf[], int bufsz, const char* prompt, string he
     return validline;
 }
 
-bool Menu::process_key(int keyin)
+bool Menu::cycle_mode(bool forward)
 {
-    if (items.empty())
+    switch (action_cycle)
     {
-        lastch = keyin;
+    case CYCLE_NONE:
         return false;
-    }
-#ifdef TOUCH_UI
-    else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'
-             || keyin == CK_TOUCH_DUMMY))
-#else
-    else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'))
-#endif
-    {
+    case CYCLE_TOGGLE:
+        // direction doesn't matter for this case
         ASSERT(menu_action != ACT_MISC);
         if (menu_action == ACT_EXECUTE)
             menu_action = ACT_EXAMINE;
         else
             menu_action = ACT_EXECUTE;
-
-        sel.clear();
-        update_title();
-        update_more();
-        return true;
+        break;
+    case CYCLE_CYCLE:
+        if (forward)
+            menu_action = (action)((menu_action + 1) % ACT_NUM);
+        else
+            menu_action = (action)((menu_action + ACT_NUM - 1) % ACT_NUM);
+        break;
     }
-#ifdef TOUCH_UI
-    else if (action_cycle == CYCLE_CYCLE && (keyin == '!' || keyin == '?'
-             || keyin == CK_TOUCH_DUMMY))
-#else
-    else if (action_cycle == CYCLE_CYCLE && (keyin == '!' || keyin == '?'))
-#endif
-    {
-        menu_action = (action)((menu_action+1) % ACT_NUM);
-        sel.clear();
-        update_title();
-        update_more();
-        return true;
-    }
+    sel.clear();
+    update_title();
+    update_more();
+    return true;
+}
 
-    if (f_keyfilter)
-        keyin = (*f_keyfilter)(keyin);
-    keyin = pre_process(keyin);
+bool Menu::process_command(command_type cmd)
+{
+    bool ret = true;
 
 #ifdef USE_TILE_WEB
     const int old_vis_first = get_first_visible();
 #endif
-    if (keyin == ' '
-        && !!(flags & MF_MULTISELECT) && !!(flags & MF_ARROWS_SELECT))
-    {
-        // XX allow customizing this mapping
-        keyin = '.';
-    }
 
-    switch (keyin)
+    switch (cmd)
     {
-    case CK_REDRAW:
-        return true;
-#ifndef TOUCH_UI
-    case 0:
-        return true;
-#endif
-    case CK_MOUSE_B2:
-    case CK_MOUSE_CMD:
-    CASE_ESCAPE
-        sel.clear();
-        lastch = keyin;
-        return is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
-    case CK_MOUSE_B1:
-    case CK_MOUSE_CLICK:
-        if (!is_set(MF_NOSELECT))
-            break;
-    case ' ': case CK_PGDN: case '>': case '+':
-#ifndef USE_TILE_LOCAL
-    case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
-#endif
-        if (!page_down() && is_set(MF_WRAP))
-            m_ui.scroller->set_scroll(0);
-        break;
-    case CK_PGUP: // XX why is '-' not used here, at least for non-multiselect menus?
-    case '<':
-        page_up();
-        break;
-    case CK_SHIFT_LEFT:
-    case CK_SHIFT_UP:
-        line_up();
-        break;
-    case CK_UP:
+    case CMD_MENU_UP:
         if (is_set(MF_ARROWS_SELECT))
             cycle_hover(true);
         else
             line_up();
         break;
-    case CK_SHIFT_RIGHT:
-    case CK_SHIFT_DOWN:
-        line_down();
-        break;
-    case '\'': // backwards compatibility
-    case CK_DOWN:
+    case CMD_MENU_DOWN:
         if (is_set(MF_ARROWS_SELECT))
             cycle_hover();
         else
             line_down();
         break;
-    case CK_HOME:
+    case CMD_MENU_LINE_UP:
+        line_up();
+        break;
+    case CMD_MENU_LINE_DOWN:
+        line_down();
+        break;
+    case CMD_MENU_PAGE_UP:
+        page_up();
+        break;
+    case CMD_MENU_PAGE_DOWN:
+        if (!page_down() && is_set(MF_WRAP))
+            m_ui.scroller->set_scroll(0);
+        break;
+    case CMD_MENU_SCROLL_TO_TOP:
         m_ui.scroller->set_scroll(0);
         if (is_set(MF_ARROWS_SELECT) && items.size())
         {
@@ -1504,7 +1466,7 @@ bool Menu::process_key(int keyin)
                 cycle_hover();
         }
         break;
-    case CK_END:
+    case CMD_MENU_SCROLL_TO_END:
         // setting this to INT_MAX when the last item is already visible does
         // unnecessary scrolling to force the last item to be exactly at the
         // end of the menu. (This has a weird interaction with page down.)
@@ -1523,7 +1485,7 @@ bool Menu::process_key(int keyin)
             }
         }
         break;
-    case CONTROL('F'):
+    case CMD_MENU_SEARCH:
         if ((flags & MF_ALLOW_FILTER))
         {
             char linebuf[80] = "";
@@ -1531,9 +1493,94 @@ bool Menu::process_key(int keyin)
             const bool validline = title_prompt(linebuf, sizeof linebuf,
                                                 "Select what (regex)?");
 
-            return (validline && linebuf[0]) ? filter_with_regex(linebuf) : true;
+            // XX what is the use case for this exiting, should this set lastch
+            ret = (validline && linebuf[0]) ? filter_with_regex(linebuf) : true;
         }
         break;
+    case CMD_MENU_CYCLE_MODE:
+        cycle_mode(true);
+        break;
+    case CMD_MENU_CYCLE_MODE_REVERSE:
+        cycle_mode(false);
+        break;
+    case CMD_MENU_CYCLE_HEADERS:
+        cycle_headers(true);
+        break;
+    case CMD_MENU_HELP:
+        if (!help_key().empty())
+            show_specific_help(help_key());
+        break;
+    case CMD_MENU_EXIT:
+        sel.clear();
+        lastch = ESCAPE; // XX is this correct?
+        ret = is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
+        break;
+    default:
+        break;
+    }
+
+    if (cmd != CMD_NO_CMD)
+        num = -1;
+
+#ifdef USE_TILE_WEB
+    if (old_vis_first != get_first_visible())
+        webtiles_update_scroll_pos();
+#endif
+
+    return ret;
+}
+
+bool Menu::process_key(int keyin)
+{
+    if (!is_set(MF_SHOW_EMPTY) && items.empty())
+    {
+        lastch = keyin;
+        return false;
+    }
+
+    if (f_keyfilter)
+        keyin = (*f_keyfilter)(keyin);
+    keyin = pre_process(keyin);
+
+#ifdef USE_TILE_WEB
+    const int old_vis_first = get_first_visible();
+#endif
+    if (keyin == ' '
+        && !!(flags & MF_MULTISELECT) && !!(flags & MF_ARROWS_SELECT))
+    {
+        // XX allow customizing this mapping
+        keyin = '.';
+    }
+
+    command_type cmd = CMD_NO_CMD;
+    if (keyin == -1)
+        cmd = CMD_MENU_EXIT;
+    else if (!is_set(MF_NO_SELECT_QTY) && !is_set(MF_NOSELECT) && isadigit(keyin))
+    {
+        // override cmd bindings for quantity digits
+        if (num > 999)
+            num = -1;
+        num = (num == -1) ? keyin - '0' :
+                            num * 10 + keyin - '0';
+    }
+    else
+        cmd = key_to_command(keyin, KMC_MENU);
+
+    if (cmd != CMD_NO_CMD)
+        return process_command(cmd);
+
+    switch (keyin)
+    {
+    case CK_REDRAW:
+        return true;
+#ifndef TOUCH_UI
+    case 0:
+        return true;
+#endif
+    case CK_MOUSE_B1:
+    case CK_MOUSE_CLICK:
+        if (!is_set(MF_NOSELECT))
+            break;
     case '.':
 #ifndef USE_TILE_LOCAL
     case CK_NUMPAD_DECIMAL:
@@ -1547,10 +1594,6 @@ bool Menu::process_key(int keyin)
         }
         break;
 
-    case '_':
-        if (!help_key().empty())
-            show_specific_help(help_key());
-        break;
 
 #ifdef TOUCH_UI
     case CK_TOUCH_DUMMY:  // mouse click in top/bottom region of menu
@@ -1579,13 +1622,13 @@ bool Menu::process_key(int keyin)
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return false;
 
-        if (!is_set(MF_NO_SELECT_QTY) && isadigit(keyin))
-        {
-            if (num > 999)
-                num = -1;
-            num = (num == -1) ? keyin - '0' :
-                                num * 10 + keyin - '0';
-        }
+        // if (!is_set(MF_NO_SELECT_QTY) && isadigit(keyin))
+        // {
+        //     if (num > 999)
+        //         num = -1;
+        //     num = (num == -1) ? keyin - '0' :
+        //                         num * 10 + keyin - '0';
+        // }
 
         select_items(keyin, num);
         get_selected(&sel);
@@ -1620,10 +1663,12 @@ bool Menu::process_key(int keyin)
         break;
     }
 
+    // reset number state if anything other than setting a digit happened
     if (!isadigit(keyin))
         num = -1;
 
 #ifdef USE_TILE_WEB
+    // XX is handling this in process_command enough?
     if (old_vis_first != get_first_visible())
         webtiles_update_scroll_pos();
 #endif

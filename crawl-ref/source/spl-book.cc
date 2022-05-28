@@ -581,42 +581,12 @@ private:
             return pad_more_with_esc(desc.str());
     }
 
-    virtual bool process_key(int keyin) override
+    bool cycle_mode(bool forward) override
     {
         bool entries_changed = false;
-        switch (keyin)
+        // completely replace superclass mode implementation
+        if (forward)
         {
-        case CK_LEFT:
-            switch (current_action)
-            {
-                case action::cast:
-                case action::memorise:
-                    current_action = action::unhide;
-                    entries_changed = true;
-                    break;
-                case action::describe:
-                    current_action = you.divine_exegesis ? action::cast
-                                                         : action::memorise;
-                    entries_changed = true; // may need to remove hotkeys
-                    break;
-                case action::hide:
-                    current_action = action::describe;
-                    break;
-                case action::unhide:
-                    current_action = action::hide;
-                    entries_changed = true;
-                    break;
-            }
-            update_title();
-            update_more();
-            break;
-
-            break;
-        case CK_RIGHT:
-        case '!':
-#ifdef TOUCH_UI
-        case CK_TOUCH_DUMMY:
-#endif
             switch (current_action)
             {
                 case action::cast:
@@ -637,11 +607,43 @@ private:
                     entries_changed = true;
                     break;
             }
-            update_title();
-            update_more();
-            break;
+        }
+        else
+        {
+            switch (current_action)
+            {
+                case action::cast:
+                case action::memorise:
+                    current_action = action::unhide;
+                    entries_changed = true;
+                    break;
+                case action::describe:
+                    current_action = you.divine_exegesis ? action::cast
+                                                         : action::memorise;
+                    entries_changed = true; // may need to remove hotkeys
+                    break;
+                case action::hide:
+                    current_action = action::describe;
+                    break;
+                case action::unhide:
+                    current_action = action::hide;
+                    entries_changed = true;
+                    break;
+            }
+        }
+        update_title();
+        if (entries_changed)
+            update_entries();
+        update_more();
+        return true;
+    }
 
-        case CONTROL('F'):
+    virtual bool process_command(command_type cmd) override
+    {
+        bool entries_changed = false;
+        switch (cmd)
+        {
+        case CMD_MENU_SEARCH:
         {
             char linebuf[80] = "";
             const bool validline = title_prompt(linebuf, sizeof linebuf,
@@ -654,22 +656,20 @@ private:
             entries_changed = old_search != search_text;
             break;
         }
-
-        case '?':
+        case CMD_MENU_HELP:
             show_spell_library_help();
             break;
-        case CK_MOUSE_B2:
-        case CK_MOUSE_CMD:
-        CASE_ESCAPE
+        case CMD_MENU_EXIT:
+            // TODO: can this be generalized to the superclass?
             if (search_text.size())
             {
                 search_text = "";
                 entries_changed = true;
                 break;
             }
-            // intentional fallthrough if search is empty
+            // otherwise, fallthrough to default handling
         default:
-            return Menu::process_key(keyin);
+            return Menu::process_command(cmd);
         }
 
         if (entries_changed)
@@ -678,6 +678,14 @@ private:
             update_more();
         }
         return true;
+    }
+
+    int pre_process(int k) override
+    {
+        // hack, let ? be help in this menu.
+        if (k == '?')
+            k = '_';
+        return k;
     }
 
     colour_t entry_colour(const sortable_spell& entry)
@@ -784,7 +792,7 @@ private:
 public:
     SpellLibraryMenu(spell_list& list)
         : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_INIT_HOVER
+                | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_SHOW_EMPTY
                 // To have the ctrl-f menu show up in webtiles
                 | MF_ALLOW_FILTER, "spell"),
         current_action(you.divine_exegesis ? action::cast : action::memorise),

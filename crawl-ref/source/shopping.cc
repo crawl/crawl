@@ -847,6 +847,8 @@ class ShopMenu : public InvMenu
     void purchase_selected();
     void describe(size_t i);
 
+    bool cycle_mode(bool) override;
+
     virtual bool process_key(int keyin) override;
 
 public:
@@ -1210,23 +1212,25 @@ void ShopMenu::describe(size_t i)
     describe_item_popup(item);
 }
 
+bool ShopMenu::cycle_mode(bool)
+{
+    if (can_purchase)
+    {
+        if (menu_action == ACT_EXECUTE)
+            menu_action = ACT_EXAMINE;
+        else
+            menu_action = ACT_EXECUTE;
+        update_help();
+        update_more();
+        return true;
+    }
+    return false;
+}
+
 bool ShopMenu::process_key(int keyin)
 {
     switch (keyin)
     {
-    case '!':
-    case '?':
-        if (can_purchase)
-        {
-            if (menu_action == ACT_EXECUTE)
-                menu_action = ACT_EXAMINE;
-            else
-                menu_action = ACT_EXECUTE;
-            update_help();
-            update_more();
-        }
-        return true;
-    case CK_MOUSE_CLICK:
     case CK_ENTER:
         if (menu_action == ACT_EXECUTE)
         {

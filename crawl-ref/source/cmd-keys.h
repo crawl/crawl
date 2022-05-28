@@ -355,13 +355,49 @@
 {'o', CMD_MAP_EXPLORE},
 {'v', CMD_MAP_DESCRIBE},
 {ESCAPE, CMD_MAP_EXIT_MAP},
-{CONTROL('I'), CMD_AUTOFIGHT},
+{CONTROL('I'), CMD_AUTOFIGHT}, // tab
 {CK_SHIFT_TAB, CMD_AUTOFIRE}, // also 'p'
 
 #ifdef WIZARD
 {'T', CMD_MAP_WIZARD_TELEPORT},
 {CONTROL('X'), CMD_MAP_WIZARD_FORGET},
 #endif
+
+// XX numpad number bindings?
+{CK_UP, CMD_MENU_UP},
+{'\'', CMD_MENU_DOWN}, // backwards compatibility
+{CK_DOWN, CMD_MENU_DOWN},
+{CK_SHIFT_UP, CMD_MENU_LINE_UP},
+{CK_SHIFT_DOWN, CMD_MENU_LINE_DOWN},
+{CK_SHIFT_LEFT, CMD_MENU_LINE_UP}, // some terms don't have shift-up/down available by default
+{CK_SHIFT_RIGHT, CMD_MENU_LINE_DOWN},
+{CK_PGUP, CMD_MENU_PAGE_UP},
+{'<', CMD_MENU_PAGE_UP},
+// XX what about '-'?
+{' ', CMD_MENU_PAGE_DOWN}, // currently still can be overridden with hacks
+{CK_PGDN, CMD_MENU_PAGE_DOWN},
+{'>', CMD_MENU_PAGE_DOWN},
+{'+', CMD_MENU_PAGE_DOWN},
+{-1017, CMD_MENU_PAGE_DOWN}, // numpad +
+{-1016, CMD_MENU_PAGE_DOWN}, // numpad +
+{CK_HOME, CMD_MENU_SCROLL_TO_TOP},
+{CK_END, CMD_MENU_SCROLL_TO_END},
+{CONTROL('F'), CMD_MENU_SEARCH},
+{'!', CMD_MENU_CYCLE_MODE},
+{'?', CMD_MENU_CYCLE_MODE}, // XX why do we use this for cycle. Sometimes overridden for help
+#ifdef TOUCH_UI
+{CK_TOUCH_DUMMY, CMD_MENU_CYCLE_MODE}, // is this correct??
+#endif
+{CONTROL('I'), CMD_MENU_CYCLE_MODE}, // tab
+{CK_RIGHT, CMD_MENU_CYCLE_MODE},
+{CK_SHIFT_TAB, CMD_MENU_CYCLE_MODE_REVERSE},
+{CK_LEFT, CMD_MENU_CYCLE_MODE_REVERSE},
+{',', CMD_MENU_CYCLE_HEADERS},
+{'_', CMD_MENU_HELP},
+{CK_MOUSE_B2, CMD_MENU_EXIT},
+{CK_MOUSE_CMD, CMD_MENU_EXIT},
+{ESCAPE, CMD_MENU_EXIT}, // should this be rebindable? Should any of these be rebindable?
+{CONTROL('G'), CMD_MENU_EXIT},
 
 #ifdef USE_TILE
 {CONTROL('R'), CMD_DOLL_RANDOMIZE},
