@@ -855,12 +855,13 @@ class ShopMenu : public InvMenu
     level_pos pos;
     bool can_purchase;
 
-    int selected_cost() const;
+    int selected_cost(bool use_shopping_list=false) const;
 
     void init_entries();
     void update_help();
     void resort();
     void purchase_selected();
+    void describe(size_t i);
 
     virtual bool process_key(int keyin) override;
 
@@ -959,20 +960,30 @@ void ShopMenu::init_entries()
     }
 }
 
-int ShopMenu::selected_cost() const
+int ShopMenu::selected_cost(bool use_shopping_list) const
 {
     int cost = 0;
     for (auto item : selected_entries())
         cost += item_price(*dynamic_cast<ShopEntry*>(item)->item, shop);
+    if (use_shopping_list && cost == 0)
+    {
+        for (auto item : items)
+        {
+            const item_def& it = *dynamic_cast<ShopEntry*>(item)->item;
+            if (shopping_list.is_on_list(it, &pos))
+                cost += item_price(it, shop);
+        }
+    }
     return cost;
 }
 
 void ShopMenu::update_help()
 {
+    // TODO: convert to a regular keyhelp
     string top_line = make_stringf("<yellow>You have %d gold piece%s.",
                                    you.gold,
                                    you.gold != 1 ? "s" : "");
-    const int total_cost = selected_cost();
+    const int total_cost = selected_cost(true);
     if (total_cost > you.gold)
     {
         top_line += "<lightred>";
@@ -996,6 +1007,19 @@ void ShopMenu::update_help()
     int top_line_width = strwidth(formatted_string::parse_string(top_line).tostring());
     top_line += string(max(0, 80 - top_line_width), ' ') + '\n';
 
+    const bool no_selection = selected_entries().empty();
+    const bool from_shopping_list = no_selection && total_cost > 0;
+    const bool no_action = menu_action == ACT_EXECUTE
+                                && (!can_purchase ||
+                                    no_selection && !from_shopping_list)
+                || menu_action == ACT_EXAMINE && !is_set(MF_ARROWS_SELECT);
+    const string action_desc =
+            no_action                    ? " " "     "  "                   "
+            : menu_action == ACT_EXAMINE ? "[<w>Enter</w>] describe         "
+            : from_shopping_list         ? "[<w>Enter</w>] buy shopping list"
+                                         : "[<w>Enter</w>] buy marked items ";
+
+    // XX swap shopping list / select by letter?
     set_more(formatted_string::parse_string(top_line + make_stringf(
         //You have 0 gold pieces.
         //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
@@ -1006,18 +1030,17 @@ void ShopMenu::update_help()
         //               "/R-Click"
         "[<w>Esc</w>] exit          "
 #endif
-        "%s  %s %s\n"
+        "%s      %s %s\n"
         "[<w>/</w>] sort (%s)%s  %s  %s put item on shopping list",
         !can_purchase ? " " " "  "  " "       "  "          " :
         menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
                                      "[<w>!</w>] buy|<w>examine</w> items",
         hyphenated_hotkey_letters(item_count(), 'a').c_str(),
-        menu_action == ACT_EXECUTE ? "select item for purchase" : "examine item",
+        menu_action == ACT_EXECUTE ? "mark item for purchase" : "examine item",
         shopping_order_names[order],
         // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
-        !can_purchase ? " " "     "  "               " :
-                        "[<w>Enter</w>] make purchase",
+        action_desc.c_str(),
         hyphenated_hotkey_letters(item_count(), 'A').c_str())));
 }
 
@@ -1185,6 +1208,24 @@ void ShopMenu::resort()
         items[i]->hotkeys[0] = index_to_letter(i);
 }
 
+void ShopMenu::describe(size_t i)
+{
+    ASSERT(i < items.size());
+    // A hack to make the description more useful.
+    // The default copy constructor is non-const for item_def,
+    // so we need this violation of const hygene to tweak the flags
+    // to make the description more useful. The flags are copied by
+    // value by the default copy constructor so this is safe.
+    item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
+        items[i])->item));
+    if (shoptype_identifies_stock(shop.type))
+    {
+        item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
+                       | ISFLAG_NOTED_GET);
+    }
+    describe_item_popup(item);
+}
+
 bool ShopMenu::process_key(int keyin)
 {
     switch (keyin)
@@ -1203,11 +1244,18 @@ bool ShopMenu::process_key(int keyin)
         return true;
     case CK_MOUSE_CLICK:
     case CK_ENTER:
-        if (can_purchase)
-            purchase_selected();
+        if (menu_action == ACT_EXECUTE)
+        {
+            if (can_purchase)
+                purchase_selected();
+        }
+        else if (last_hovered >= 0)
+            describe(last_hovered);
+
         return true;
     case '$':
     {
+        // XX maybe add highlighted item if no selection?
         const vector<MenuEntry*> selected = selected_entries();
         if (!selected.empty())
         {
@@ -1226,6 +1274,7 @@ bool ShopMenu::process_key(int keyin)
                 if (shopping_list.is_on_list(*dynamic_cast<ShopEntry*>(entry)->item, &pos))
                     entry->select(-2);
         // Move shoplist to selection.
+        update_help();
         update_menu(true);
         return true;
     }
@@ -1242,20 +1291,7 @@ bool ShopMenu::process_key(int keyin)
     if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size()
         && menu_action == ACT_EXAMINE)
     {
-        // A hack to make the description more useful.
-        // The default copy constructor is non-const for item_def,
-        // so we need this violation of const hygene to tweak the flags
-        // to make the description more useful. The flags are copied by
-        // value by the default copy constructor so this is safe.
-        item_def& item(*const_cast<item_def*>(dynamic_cast<ShopEntry*>(
-            items[letter_to_index(keyin)])->item));
-        if (shoptype_identifies_stock(shop.type))
-        {
-            item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
-                           | ISFLAG_NOTED_GET);
-        }
-        describe_item_popup(item);
-
+        describe(letter_to_index(keyin));
         return true;
     }
     else if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
@@ -1268,6 +1304,7 @@ bool ShopMenu::process_key(int keyin)
             shopping_list.del_thing(item, &pos);
         else
             shopping_list.add_thing(item, item_price(item, shop), &pos);
+        update_help();
         update_menu(true);
         return true;
     }
