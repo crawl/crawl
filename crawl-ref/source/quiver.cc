@@ -2795,6 +2795,47 @@ namespace quiver
                 || !set_to_quiver(make_shared<ability_action>(talents[selected].which));
         }
 
+        bool cycle_headers(bool forward) override
+        {
+            // TODO: implement direction
+            if (!forward)
+                return false;
+            if (!is_set(MF_ARROWS_SELECT))
+            {
+                last_hovered = -1; // suppress any mouse hover
+                // need to manually focus mode for this case
+                // can this be generalized?
+                if (focus_mode == Focus::ITEM)
+                {
+                    focus_mode = Focus::SPELL;
+                    if (!item_visible(first_spell))
+                        set_scroll(first_spell);
+                }
+                else if (focus_mode == Focus::SPELL)
+                {
+                    focus_mode = Focus::ABIL;
+                    if (!item_visible(first_abil))
+                        set_scroll(first_abil);
+                }
+                else if (focus_mode == Focus::ABIL)
+                {
+                    if (!item_visible(first_item))
+                        set_scroll(first_item);
+                    focus_mode = Focus::ITEM;
+                }
+                sync_focus();
+                return true;
+            }
+            else
+                return Menu::cycle_headers(forward);
+        }
+
+        bool cycle_mode(bool) override
+        {
+            toggle_focus_mode();
+            return true;
+        }
+
         bool process_key(int key) override
         {
             // TODO: some kind of view action option?
@@ -2804,42 +2845,6 @@ namespace quiver
                 // TODO maybe drop this messaging?
                 mprf("Clearing quiver.");
                 return false;
-            }
-            else if (key == ',')
-            {
-                if (!is_set(MF_ARROWS_SELECT))
-                {
-                    last_hovered = -1; // suppress any mouse hover
-                    // need to manually focus mode for this case
-                    // can this be generalized?
-                    if (focus_mode == Focus::ITEM)
-                    {
-                        focus_mode = Focus::SPELL;
-                        if (!item_visible(first_spell))
-                            set_scroll(first_spell);
-                    }
-                    else if (focus_mode == Focus::SPELL)
-                    {
-                        focus_mode = Focus::ABIL;
-                        if (!item_visible(first_abil))
-                            set_scroll(first_abil);
-                    }
-                    else if (focus_mode == Focus::ABIL)
-                    {
-                        if (!item_visible(first_item))
-                            set_scroll(first_item);
-                        focus_mode = Focus::ITEM;
-                    }
-                    sync_focus();
-                }
-                else
-                    cycle_headers();
-                return true;
-            }
-            else if (key == '!')
-            {
-                toggle_focus_mode();
-                return true;
             }
             else if (isadigit(key))
             {

@@ -276,6 +276,7 @@ enum MenuFlag
     MF_UNCANCEL         = 0x10000,   ///< Menu is uncancellable
     MF_SPECIAL_MINUS    = 0x20000,   ///< '-' isn't PGUP or clear multiselect
     MF_ARROWS_SELECT    = 0x40000,   ///< arrow keys select, rather than scroll
+    MF_SHOW_EMPTY       = 0x80000,   ///< don't auto-exit empty menus
 };
 
 class UIMenu;
@@ -369,10 +370,12 @@ public:
     virtual bool page_up();
     virtual bool line_up();
     virtual bool cycle_headers(bool forward=true);
+    virtual bool cycle_mode(bool forward=true);
 
     bool title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag="");
 
     virtual bool process_key(int keyin);
+    virtual bool process_command(command_type cmd);
 
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;

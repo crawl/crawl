@@ -978,8 +978,10 @@ public:
             cycle_hover();
     }
 
-    void cycle_mode()
+    bool cycle_mode(bool forward) override
     {
+        if (!forward) // XX implement reverse
+            return false;
         auto it = modes.begin();
         for (; it != modes.end(); it++)
             if (it->first == keymc)
@@ -997,6 +999,7 @@ public:
         status_msg = "";
         update_title();
         fill_entries();
+        return true;
     }
 
     KeymapContext get_mode() const
@@ -1115,7 +1118,8 @@ public:
     {
     public:
         MappingEditMenu(keyseq _key, keyseq _action, MacroEditMenu &_parent)
-            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT,
+            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
+                | MF_SHOW_EMPTY,
                     "", KMC_MENU),
               key(_key), action(_action), abort(false),
               parent(_parent),
@@ -1425,49 +1429,81 @@ public:
         edit_mapping(key);
     }
 
-    bool process_key(int keyin) override
+    bool process_command(command_type cmd) override
     {
-        switch (keyin)
+        switch (cmd)
         {
-        case CK_REDRAW:
-        case ' ': case CK_PGDN: case '>': case '+':
-        case CK_MOUSE_CLICK:
-        case CK_MOUSE_B1:
-        case CK_PGUP: case '<':
-        case CK_UP:
-        case CK_DOWN:
-        case CK_HOME:
-        case CK_END:
-        case CK_ENTER:
-            if (item_count() == 0)
-                return true; // override weird superclass behavior
-            //fallthrough
-        case CK_MOUSE_B2:
-        CASE_ESCAPE
-        case '-':
-        case '~':
-            return Menu::process_key(keyin);
-        case '?':
+        case CMD_MENU_HELP:
             show_specific_helps({ "macro-menu"
 #ifndef USE_TILE_LOCAL
                     , "console-keycodes"
 #endif
                     });
             return true;
-        case CK_MOUSE_CMD:
-        case '!':
-            cycle_mode();
-            return true;
-        case CK_DELETE:
-        case CK_BKSP:
-            clear_hovered();
-            return true;
-        default: // any other key -- no menu item yet
-            lastch = keyin;
-            add_mapping_from_last();
-            return true;
+        default:
+            return Menu::process_command(cmd);
         }
     }
+
+    int pre_process(int k) override
+    {
+        // hack, let ? be help in this menu.
+        if (k == '?')
+            k = '_';
+        return k;
+    }
+
+    bool process_key(int keyin) override
+    {
+        // this menu overrides most superclass keyhandling. First pass some
+        // special cases to the superclass unconditionally:
+        switch (keyin)
+        {
+        case CK_REDRAW:
+        case CK_MOUSE_CLICK:
+        case CK_MOUSE_B1:
+        case CK_ENTER:
+        CASE_ESCAPE
+        case '-': // menu item, always present
+        case '~': // menu item, always present
+            // then check for a few other special cases the superclass needs
+            // to handle
+            return Menu::process_key(keyin);
+        case CK_DELETE:
+        case CK_BKSP:
+            // non-menu-item hotkey specific to this menu
+            clear_hovered();
+            return true;
+        default:
+            break;
+        }
+
+        // then check if the key would do an important menu control command,
+        // pass if necessary
+        command_type cmd = key_to_command(keyin, KMC_MENU);
+        switch (cmd)
+        {
+            case CMD_MENU_PAGE_UP:
+            case CMD_MENU_PAGE_DOWN:
+            case CMD_MENU_UP:
+            case CMD_MENU_DOWN:
+            case CMD_MENU_SCROLL_TO_TOP:
+            case CMD_MENU_SCROLL_TO_END:
+            case CMD_MENU_EXIT:
+            case CMD_MENU_HELP:
+            case CMD_MENU_CYCLE_MODE: // somewhat weird defaults in this context?
+                return Menu::process_key(keyin);
+            default:
+                break;
+        }
+
+        // finally, handle any other key. Handles opening a submenu both if
+        // a mapping exists, and if it doesn't.
+        lastch = keyin;
+        add_mapping_from_last();
+        return true;
+    }
+
     bool selected_new_key;
     string status_msg;
 protected:
@@ -1988,6 +2024,9 @@ KeymapContext context_for_command(command_type cmd)
     if (cmd >= CMD_MIN_TARGET && cmd <= CMD_MAX_TARGET)
         return KMC_TARGETING;
 
+    if (cmd >= CMD_MIN_MENU && cmd <= CMD_MAX_MENU)
+        return KMC_MENU;
+
 #ifdef USE_TILE
     if (cmd >= CMD_MIN_DOLL && cmd <= CMD_MAX_DOLL)
         return KMC_DOLL;
@@ -2013,6 +2052,12 @@ void bind_command_to_key(command_type cmd, int key)
 
         mprf(MSGCH_ERROR, "Cannot bind command '%s' to a key.",
              command_name.c_str());
+        return;
+    }
+    else if (context == KMC_MENU)
+    {
+        // TODO: something less brute force?
+        mprf(MSGCH_ERROR, "Cannot rebind menu commands.");
         return;
     }
 

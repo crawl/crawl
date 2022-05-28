@@ -1241,7 +1241,7 @@ static void _input()
         // binding, your turn may be ended by the first invoke of the
         // macro.
         if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
-            process_command(cmd, real_prev_cmd);
+            ::process_command(cmd, real_prev_cmd);
 
         repeat_again_rec.paused = true;
 
@@ -1917,7 +1917,7 @@ public:
                 {
                     // recurse
                     if (c->cmd != CMD_NO_CMD)
-                        process_command(c->cmd, CMD_GAME_MENU);
+                        ::process_command(c->cmd, CMD_GAME_MENU);
                     return true;
                 }
                 // otherwise, exit menu and process in the main process_command call
