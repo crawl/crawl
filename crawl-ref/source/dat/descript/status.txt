@@ -72,6 +72,14 @@ expires you will be slowed and unable to berserk again for a short duration.
 You are recovering from your berserk rage, and are unable to berserk again for
 a short duration.
 %%%%
+Bearserk status
+
+You are filled with barbearic rage! You are hasted, deal grizzly damage, and
+have greatly increased health, but find it impawsible to do much other than
+move and maul foes. You'll bid furwell to this status very quickly unless you
+are attacking, and when it expires you will be slowed and unable to bearserk
+again for a short duration.
+%%%%
 Pois status
 
 You are poisoned and will continually lose health. While poisoned, your current
