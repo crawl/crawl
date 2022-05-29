@@ -1459,6 +1459,8 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
                                          TILEP_MONS_ZOMBIE_QUADRUPED_LARGE} },
         { MON_SHAPE_QUADRUPED,          {TILEP_MONS_ZOMBIE_QUADRUPED_SMALL,
                                          TILEP_MONS_ZOMBIE_QUADRUPED_LARGE} },
+        { MON_SHAPE_BLOB,               {TILEP_MONS_ZOMBIE_JELLY}},
+        { MON_SHAPE_ORB,                {TILEP_MONS_ZOMBIE_ORB}},
         { MON_SHAPE_HUMANOID,           GENERIC_ZOMBIES },
         { MON_SHAPE_HUMANOID_WINGED,    GENERIC_ZOMBIES },
         { MON_SHAPE_HUMANOID_TAILED,    GENERIC_ZOMBIES },
@@ -1501,6 +1503,8 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         case MONS_SIMULACRUM:
             return _zombie_tile_to_simulacrum(zombie_tile);
         default:
+            if (zombie_tile == TILEP_ERROR)
+                return TILEP_MONS_ZOMBIE_LARGE; // XXX: assert..?
             return zombie_tile;
     }
 }
