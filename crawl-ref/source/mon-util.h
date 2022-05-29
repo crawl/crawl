@@ -293,7 +293,6 @@ habitat_type mons_primary_habitat(const monster& mon);
 habitat_type mons_class_secondary_habitat(monster_type mc);
 
 bool mons_skeleton(monster_type mc);
-bool mons_zombifiable(monster_type mc);
 
 int max_corpse_chunks(monster_type mc);
 int mons_class_base_speed(monster_type mc);

@@ -1533,7 +1533,7 @@ static bool _good_zombie(monster_type base, monster_type cs,
         return false;
 
     // If zombie, monster must have a corpse.
-    if (cs == MONS_ZOMBIE && !mons_zombifiable(base))
+    if (cs == MONS_ZOMBIE && !mons_class_can_be_zombified(base))
         return false;
 
     return true;

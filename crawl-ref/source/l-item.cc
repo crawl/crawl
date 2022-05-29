@@ -651,48 +651,6 @@ IDEF(is_corpse)
     return 1;
 }
 
-/*** Is this a skeleton?
- * @field is_skeleton boolean
- */
-IDEF(is_skeleton)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_SKELETON));
-
-    return 1;
-}
-
-/*** Does this have a skeleton?
- * @field has_skeleton boolean false if it's not even a corpse
- */
-IDEF(has_skeleton)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_BODY)
-                         && mons_skeleton(item->mon_type)
-                        || item->is_type(OBJ_CORPSES, CORPSE_SKELETON));
-
-    return 1;
-}
-
-/*** Can this be a zombie?
- * @field can_zombify boolean
- */
-IDEF(can_zombify)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_BODY)
-                        && mons_zombifiable(item->mon_type));
-
-    return 1;
-}
-
 /*** Is this useless?
  * @field is_useless boolean
  */
@@ -1614,10 +1572,7 @@ static ItemAccessor item_attrs[] =
     { "is_throwable",      l_item_is_throwable },
     { "dropped",           l_item_dropped },
     { "is_melded",         l_item_is_melded },
-    { "is_skeleton",       l_item_is_skeleton },
     { "is_corpse",         l_item_is_corpse },
-    { "has_skeleton",      l_item_has_skeleton },
-    { "can_zombify",       l_item_can_zombify },
     { "is_useless",        l_item_is_useless },
     { "spells",            l_item_spells },
     { "artprops",          l_item_artprops },
