@@ -363,6 +363,7 @@
 {CONTROL('X'), CMD_MAP_WIZARD_FORGET},
 #endif
 
+// N.b. these cannot be rebound on webtiles
 // XX numpad number bindings?
 {CK_UP, CMD_MENU_UP},
 {'\'', CMD_MENU_DOWN}, // backwards compatibility
@@ -396,7 +397,7 @@
 {'_', CMD_MENU_HELP},
 {CK_MOUSE_B2, CMD_MENU_EXIT},
 {CK_MOUSE_CMD, CMD_MENU_EXIT},
-{ESCAPE, CMD_MENU_EXIT}, // should this be rebindable? Should any of these be rebindable?
+{ESCAPE, CMD_MENU_EXIT},
 {CONTROL('G'), CMD_MENU_EXIT},
 
 #ifdef USE_TILE
