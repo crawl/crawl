@@ -1604,7 +1604,7 @@ bool Menu::process_key(int keyin)
     }
 
     command_type cmd = CMD_NO_CMD;
-    if (!is_set(MF_NO_SELECT_QTY) && !is_set(MF_NOSELECT) && isadigit(keyin))
+    if (is_set(MF_SELECT_QTY) && !is_set(MF_NOSELECT) && isadigit(keyin))
     {
         // override cmd bindings for quantity digits
         if (num > 999)
@@ -1671,14 +1671,6 @@ bool Menu::process_key(int keyin)
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return false;
 
-        // if (!is_set(MF_NO_SELECT_QTY) && isadigit(keyin))
-        // {
-        //     if (num > 999)
-        //         num = -1;
-        //     num = (num == -1) ? keyin - '0' :
-        //                         num * 10 + keyin - '0';
-        // }
-
         select_items(keyin, num);
         get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
@@ -1704,7 +1696,7 @@ bool Menu::process_key(int keyin)
         update_more();
 
         if (flags & MF_ANYPRINTABLE
-            && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
+            && (!isadigit(keyin) || !is_set(MF_SELECT_QTY)))
         {
             return false;
         }

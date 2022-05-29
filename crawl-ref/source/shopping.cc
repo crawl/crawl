@@ -914,7 +914,7 @@ public:
 
 // XX why is this MF_QUIET_SELECT?
 ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase)
-    : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
+    : InvMenu(MF_MULTISELECT | MF_QUIET_SELECT
                 | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
       shop(_shop),
       pos(_pos),

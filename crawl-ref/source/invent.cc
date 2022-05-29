@@ -1040,13 +1040,16 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
 
         menu.load_items(items);
         int new_flags = noselect ? MF_NOSELECT
-                                 : MF_MULTISELECT | MF_ALLOW_FILTER;
+                            : MF_MULTISELECT | MF_ALLOW_FILTER;
 
         if (mtype == menu_type::sel_one)
         {
             new_flags |= MF_SINGLESELECT;
             new_flags &= ~MF_MULTISELECT;
         }
+
+        if (!!(new_flags & MF_MULTISELECT))
+            new_flags |= MF_SELECT_QTY;
 
         new_flags |= MF_ALLOW_FORMATTING | MF_ARROWS_SELECT;
         new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
@@ -1313,7 +1316,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                       menu_type::drop,
                       OSEL_ANY,
                       -1,
-                      MF_MULTISELECT | MF_ALLOW_FILTER,
+                      MF_MULTISELECT | MF_ALLOW_FILTER | MF_SELECT_QTY,
                       _drop_menu_titlefn,
                       &items,
                       &Options.drop_filter,
@@ -1795,7 +1798,7 @@ int prompt_invent_item(const char *prompt,
             vector< SelItem > items;
             const auto last_keyin = keyin;
             current_type_expected = keyin == '*' ? OSEL_ANY : type_expect;
-            int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY;
+            int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE;
             if (other_valid_char == '-')
                 mflags |= MF_SPECIAL_MINUS;
 
