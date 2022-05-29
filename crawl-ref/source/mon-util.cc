@@ -1675,6 +1675,7 @@ bool mons_class_can_be_zombified(monster_type mc)
     monster_type ms = mons_species(mc);
     return !invalid_monster_type(ms)
             && !mons_class_flag(mc, M_NO_ZOMBIE)
+            && !mons_class_flag(mc, M_INSUBSTANTIAL)
             && (mons_class_holiness(mc) & MH_NATURAL
                 || mons_class_can_leave_corpse(ms));
 }
