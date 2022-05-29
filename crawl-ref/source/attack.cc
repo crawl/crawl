@@ -1700,7 +1700,8 @@ void attack::player_stab_check()
         return;
     }
 
-    stab_type st = find_stab_type(&you, *defender);
+    const stab_type orig_st = find_stab_type(&you, *defender);
+    stab_type st = orig_st;
     // Find stab type is also used for displaying information about monsters,
     // so upgrade the stab type for !stab and the Spriggan's Knife here
     if (using_weapon()
@@ -1722,5 +1723,5 @@ void attack::player_stab_check()
     }
 
     if (stab_attempt)
-        count_action(CACT_STAB, st);
+        count_action(CACT_STAB, orig_st);
 }
