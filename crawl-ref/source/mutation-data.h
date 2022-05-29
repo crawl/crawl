@@ -1414,6 +1414,8 @@ static const mutation_def mut_data[] =
   {"Your large bone plates disappear.",
    "Your large bone plates recede somewhat.",
    "Your large bone plates recede somewhat."},
+
+    TILEG_MUT_LARGE_BONE_PLATES,
 },
 
 { MUT_MOLTEN_SCALES, 0, 3, mutflag::good, true,
@@ -1520,6 +1522,8 @@ static const mutation_def mut_data[] =
   {"Your skeletal structure returns to normal.",
    "Your skeletal structure densifies.",
    "Your skeletal structure densifies."},
+
+    TILEG_MUT_THIN_SKELETAL_STRUCTURE,
 },
 
 { MUT_YELLOW_SCALES, 0, 3, mutflag::good, true,
@@ -1554,6 +1558,8 @@ static const mutation_def mut_data[] =
   {"Your sharp scales disappear.",
    "Your sharp scales recede somewhat.",
    "Your sharp scales recede somewhat."},
+
+    TILEG_MUT_SHARP_SCALES,
 },
 
 { MUT_STURDY_FRAME, 2, 3, mutflag::good, true,

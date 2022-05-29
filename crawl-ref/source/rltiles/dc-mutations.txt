@@ -12,12 +12,21 @@ green_scales_3
 iridescent_scales_1 MUT_IRIDESCENT_SCALES
 iridescent_scales_2
 iridescent_scales_3
+large_bone_plates_1 MUT_LARGE_BONE_PLATES
+large_bone_plates_2
+large_bone_plates_3
 metallic_scales_1 MUT_THIN_METALLIC_SCALES
 metallic_scales_2
 metallic_scales_3
 red_scales_1 MUT_MOLTEN_SCALES
 red_scales_2
 red_scales_3
+sharp_scales_1 MUT_SHARP_SCALES
+sharp_scales_2
+sharp_scales_3
+thin_skeletal_structure_1 MUT_THIN_SKELETAL_STRUCTURE
+thin_skeletal_structure_2
+thin_skeletal_structure_3
 yellow_scales_1 MUT_YELLOW_SCALES
 yellow_scales_2
 yellow_scales_3
