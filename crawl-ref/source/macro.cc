@@ -1844,10 +1844,9 @@ bool is_synthetic_key(int key)
     case KEY_MACRO_ENABLE_MORE:
     case KEY_MACRO_DISABLE_MORE:
     case KEY_MACRO_MORE_PROTECT:
-#ifdef USE_TILE
     case CK_MOUSE_CMD:
+    case CK_MOUSE_MOVE:
     case CK_REDRAW:
-#endif
         return true;
     default:
         return false;
@@ -2035,6 +2034,33 @@ KeymapContext context_for_command(command_type cmd)
     return KMC_NONE;
 }
 
+static bool _allow_rebinding(int key, KeymapContext context)
+{
+    // CK_REDRAW, CK_MOUSE_CMD, CK_MOUSE_MOVE are covered by `is_synthetic_key`
+    if (context == KMC_MENU || context == KMC_TARGETING
+        || context == KMC_LEVELMAP)
+    {
+        // prevent rebinding certain keys in popups/menus that would break
+        // the UI too much. (These can still be modified with a keymap if you
+        // really do want to break things.)
+        switch (key)
+        {
+        CASE_ESCAPE
+        case CK_MOUSE_CLICK:
+        case CK_MOUSE_B2:
+#ifdef TOUCH_UI
+        case CK_TOUCH_DUMMY:
+#endif
+            return false;
+        default:
+            break;
+        }
+        // XX possibly need to prevent removing most default KMC_MENU bindings
+        // so as to not break webtiles?
+    }
+    return true;
+}
+
 void bind_command_to_key(command_type cmd, int key)
 {
     KeymapContext context = context_for_command(cmd);
@@ -2054,12 +2080,16 @@ void bind_command_to_key(command_type cmd, int key)
              command_name.c_str());
         return;
     }
-    else if (context == KMC_MENU)
+#ifdef USE_TILE_WEB
+    else if (context == KMC_MENU && tiles.is_controlled_from_web())
     {
-        // TODO: something less brute force?
-        mprf(MSGCH_ERROR, "Cannot rebind menu commands.");
+        // disable because they interact badly with webtiles client code.
+        // TODO: is there any way to get these to work on webtiles?
+        mprf(MSGCH_ERROR, "Ignoring menu bindkey of %s for webtiles client",
+            command_name.c_str());
         return;
     }
+#endif
 
     if (is_userfunction(key))
     {
@@ -2070,6 +2100,13 @@ void bind_command_to_key(command_type cmd, int key)
     if (is_synthetic_key(key))
     {
         mprf(MSGCH_ERROR, "Cannot bind synthetic keys to a command.");
+        return;
+    }
+
+    if (!_allow_rebinding(key, context))
+    {
+        mprf(MSGCH_ERROR, "Key %d in context %d cannot be rebound.",
+            key, (int) context);
         return;
     }
 
