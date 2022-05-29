@@ -1530,8 +1530,59 @@ bool Menu::process_command(command_type cmd)
     return ret;
 }
 
+static bool _key_is_minus(int keyin)
+{
+    if (keyin == '-'
+#ifndef USE_TILE_LOCAL
+        || keyin == CK_NUMPAD_SUBTRACT || keyin == CK_NUMPAD_SUBTRACT2
+#endif
+        )
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Menu::skip_process_command(int keyin)
+{
+    // TODO: autodetect if there is a menu item that uses a key that would
+    // otherwise be bound?
+    if (_key_is_minus(keyin) && !minus_is_pageup())
+        return true;
+    return false;
+}
+
+command_type Menu::get_command(int keyin)
+{
+    if (skip_process_command(keyin))
+        return CMD_NO_CMD;
+
+    // this is a `CASE_ESCAPE` case that the command mapping doesn't handle
+    // -- is it needed?
+    if (keyin == -1)
+        return CMD_MENU_EXIT;
+
+    return key_to_command(keyin, KMC_MENU);
+}
+
 bool Menu::process_key(int keyin)
 {
+    // overall sequence given keyin:
+    // 1. apply any keyfilter (currently: entirely unused!)
+    // 2. apply any pre_process transformation
+    // 3. try converting to a command (get_command, often overridden)
+    //    a. if the key is skipped (usually by a subclass), return CMD_NO_CMD
+    //    b. return the results of the key_to_command mapping
+    // 4. if this got a command, run the command
+    // 5. otherwise proceed to manual key handling on keyin
+    //
+    // n.b. superclasses can override process_key to preempt these steps as
+    // well. Various special cases, e.g. digits for quantity menus
+    //
+    // webtiles complication alert: most of the menu navigation key handling
+    // has a separate client-side implementation (for UI responsivenss), and
+    // this function may not be called for arbitrary client-side keys!
+
     if (!is_set(MF_SHOW_EMPTY) && items.empty())
     {
         lastch = keyin;
@@ -1553,9 +1604,7 @@ bool Menu::process_key(int keyin)
     }
 
     command_type cmd = CMD_NO_CMD;
-    if (keyin == -1)
-        cmd = CMD_MENU_EXIT;
-    else if (!is_set(MF_NO_SELECT_QTY) && !is_set(MF_NOSELECT) && isadigit(keyin))
+    if (!is_set(MF_NO_SELECT_QTY) && !is_set(MF_NOSELECT) && isadigit(keyin))
     {
         // override cmd bindings for quantity digits
         if (num > 999)
@@ -1564,7 +1613,7 @@ bool Menu::process_key(int keyin)
                             num * 10 + keyin - '0';
     }
     else
-        cmd = key_to_command(keyin, KMC_MENU);
+        cmd = get_command(keyin);
 
     if (cmd != CMD_NO_CMD)
         return process_command(cmd);
@@ -1749,6 +1798,9 @@ int Menu::get_first_visible(bool skip_init_headers) const
 
 bool Menu::is_hotkey(int i, int key)
 {
+    // TODO: other numpad keys?
+    if (_key_is_minus(key))
+        key = '-';
     bool ishotkey = items[i]->is_hotkey(key);
     return ishotkey && (!is_set(MF_SELECT_BY_PAGE) || in_page(i));
 }
@@ -1765,12 +1817,9 @@ void Menu::select_items(int key, int qty)
     {
         select_index(-1, -1);
     }
-    else if ((key == '-'
-#ifndef USE_TILE_LOCAL
-                || key == CK_NUMPAD_SUBTRACT || key == CK_NUMPAD_SUBTRACT2
-#endif
-            ) && !!(flags & MF_MULTISELECT)) // Clear selection. XX is there a singleselect menu where this should work?
+    else if (_key_is_minus(key) && !!(flags & MF_MULTISELECT))
     {
+        // Clear selection. XX is there a singleselect menu where this should work?
         select_index(-1, 0);
     }
     else

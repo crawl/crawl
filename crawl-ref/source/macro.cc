@@ -918,7 +918,7 @@ private:
 public:
     MacroEditMenu()
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP),
+                | MF_ARROWS_SELECT | MF_WRAP | MF_SPECIAL_MINUS),
           selected_new_key(false), keymc(KMC_NONE), edited_keymaps(false)
     {
         set_tag("macros");
@@ -1119,7 +1119,7 @@ public:
     public:
         MappingEditMenu(keyseq _key, keyseq _action, MacroEditMenu &_parent)
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
-                | MF_SHOW_EMPTY,
+                | MF_SHOW_EMPTY | MF_SPECIAL_MINUS,
                     "", KMC_MENU),
               key(_key), action(_action), abort(false),
               parent(_parent),
@@ -1445,12 +1445,11 @@ public:
         }
     }
 
-    int pre_process(int k) override
+    command_type get_command(int keyin) override
     {
-        // hack, let ? be help in this menu.
-        if (k == '?')
-            k = '_';
-        return k;
+        if (keyin == '?')
+            return CMD_MENU_HELP;
+        return Menu::get_command(keyin);
     }
 
     bool process_key(int keyin) override
@@ -1465,6 +1464,10 @@ public:
         case CK_ENTER:
         CASE_ESCAPE
         case '-': // menu item, always present
+#ifndef USE_TILE_LOCAL
+        case CK_NUMPAD_SUBTRACT:
+        case CK_NUMPAD_SUBTRACT2:
+#endif
         case '~': // menu item, always present
             // then check for a few other special cases the superclass needs
             // to handle
@@ -1480,7 +1483,7 @@ public:
 
         // then check if the key would do an important menu control command,
         // pass if necessary
-        command_type cmd = key_to_command(keyin, KMC_MENU);
+        command_type cmd = get_command(keyin);
         switch (cmd)
         {
             case CMD_MENU_PAGE_UP:
@@ -1492,7 +1495,7 @@ public:
             case CMD_MENU_EXIT:
             case CMD_MENU_HELP:
             case CMD_MENU_CYCLE_MODE: // somewhat weird defaults in this context?
-                return Menu::process_key(keyin);
+                return process_command(cmd);
             default:
                 break;
         }

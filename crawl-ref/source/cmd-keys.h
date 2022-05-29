@@ -374,7 +374,9 @@
 {CK_SHIFT_RIGHT, CMD_MENU_LINE_DOWN},
 {CK_PGUP, CMD_MENU_PAGE_UP},
 {'<', CMD_MENU_PAGE_UP},
-// XX what about '-'?
+{'-', CMD_MENU_PAGE_UP}, // manually overridden by many menus
+{-1018, CMD_MENU_PAGE_UP}, // numpad -
+{-1020, CMD_MENU_PAGE_UP}, // numpad -
 {' ', CMD_MENU_PAGE_DOWN}, // currently still can be overridden with hacks
 {CK_PGDN, CMD_MENU_PAGE_DOWN},
 {'>', CMD_MENU_PAGE_DOWN},
