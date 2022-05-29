@@ -1563,6 +1563,7 @@ bool Scroller::on_event(const Event& event)
     if (event.type() == Event::Type::KeyDown)
     {
         const auto key = static_cast<const KeyEvent&>(event).key();
+        // TODO: use CMD_MENU bindings here?
         switch (key)
         {
             case ' ': case '+': case CK_PGDN: case '>': case '\'':

@@ -638,6 +638,13 @@ private:
         return true;
     }
 
+    command_type get_command(int keyin) override
+    {
+        if (keyin == '?')
+            return CMD_MENU_HELP;
+        return Menu::get_command(keyin);
+    }
+
     virtual bool process_command(command_type cmd) override
     {
         bool entries_changed = false;
@@ -660,6 +667,7 @@ private:
             show_spell_library_help();
             break;
         case CMD_MENU_EXIT:
+            // if we are in a search, exit the search, not the menu
             // TODO: can this be generalized to the superclass?
             if (search_text.size())
             {
@@ -678,14 +686,6 @@ private:
             update_more();
         }
         return true;
-    }
-
-    int pre_process(int k) override
-    {
-        // hack, let ? be help in this menu.
-        if (k == '?')
-            k = '_';
-        return k;
     }
 
     colour_t entry_colour(const sortable_spell& entry)

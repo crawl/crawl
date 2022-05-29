@@ -2499,7 +2499,7 @@ namespace quiver
     public:
         ActionSelectMenu(action_cycler &_quiver, bool _allow_empty)
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                    | MF_ARROWS_SELECT | MF_WRAP),
+                    | MF_ARROWS_SELECT | MF_WRAP | MF_SPECIAL_MINUS),
               cur_quiver(_quiver), allow_empty(_allow_empty),
               any_spells(_any_spells_to_quiver()),
               any_abilities(_any_abils_to_quiver()),

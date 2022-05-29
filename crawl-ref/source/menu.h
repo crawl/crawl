@@ -375,6 +375,8 @@ public:
     bool title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag="");
 
     virtual bool process_key(int keyin);
+    virtual bool skip_process_command(int keyin);
+    virtual command_type get_command(int keyin);
     virtual bool process_command(command_type cmd);
 
 #ifdef USE_TILE_WEB
