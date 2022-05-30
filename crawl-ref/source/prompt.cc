@@ -93,11 +93,11 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
         pop.add_entry(n_me);
         if (ask_always)
             pop.add_entry(a_me);
-        if (allow_lowercase && default_answer == 'y')
+        if (allow_lowercase && default_answer == 'y' || default_answer == 'Y')
             pop.set_hovered(1);
-        else if (allow_lowercase && default_answer == 'n')
+        else if (allow_lowercase && default_answer == 'n' || default_answer == 'N')
             pop.set_hovered(2);
-        else if (ask_always && allow_lowercase && default_answer == 'a')
+        else if (ask_always && (allow_lowercase && default_answer == 'a' || default_answer == 'A'))
             pop.set_hovered(3);
         pop.on_single_selection = [&pop](const MenuEntry& item)
             {
