@@ -159,12 +159,9 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
             if (you.hp > threshold && !you.has_mutation(MUT_CONDENSATION_SHIELD))
                 return true;
         }
-        // Don't prompt for meph if we have clarity, unless at very low HP.
-        if (ctype == CLOUD_MEPHITIC && you.clarity(false)
-            && you.hp > 2 * you.time_taken / BASELINE_DELAY)
-        {
+        // Don't prompt for meph if we have clarity
+        if (ctype == CLOUD_MEPHITIC && you.clarity(false))
             return true;
-        }
 
         if (prompted)
             *prompted = true;
