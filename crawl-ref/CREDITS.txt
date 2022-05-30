@@ -338,7 +338,6 @@
     Sebastian Salman
     Petri Salminen
     Sandman25
-    Sastreii
     Brett Scarborough
     Roderick Schertler
     sdynet
