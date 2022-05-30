@@ -1044,11 +1044,6 @@ void Menu::set_flags(int new_flags)
 #endif
 }
 
-bool Menu::minus_is_pageup() const
-{
-    return !is_set(MF_MULTISELECT) && !is_set(MF_SPECIAL_MINUS);
-}
-
 void Menu::set_more(const formatted_string &fs)
 {
     m_keyhelp_more = false;

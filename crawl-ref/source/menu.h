@@ -274,7 +274,6 @@ enum MenuFlag
 
     MF_USE_TWO_COLUMNS  = 0x08000,   ///< Only valid for tiles menus
     MF_UNCANCEL         = 0x10000,   ///< Menu is uncancellable
-    MF_SPECIAL_MINUS    = 0x20000,   ///< '-' isn't PGUP or clear multiselect
     MF_ARROWS_SELECT    = 0x40000,   ///< arrow keys select, rather than scroll
 };
 
@@ -308,7 +307,6 @@ public:
     virtual bool is_set(int flag) const;
     void set_tag(const string& t) { tag = t; }
 
-    bool minus_is_pageup() const;
     // Sets a replacement for the default -more- string.
     void set_more(const formatted_string &more);
     void set_more(const string s);

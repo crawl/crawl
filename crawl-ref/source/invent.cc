@@ -1798,8 +1798,6 @@ int prompt_invent_item(const char *prompt,
             const auto last_keyin = keyin;
             current_type_expected = keyin == '*' ? OSEL_ANY : type_expect;
             int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY;
-            if (other_valid_char == '-')
-                mflags |= MF_SPECIAL_MINUS;
 
             while (true)
             {
