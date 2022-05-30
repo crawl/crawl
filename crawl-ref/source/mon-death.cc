@@ -1975,8 +1975,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
 
-        if (was_banished && !summoned_it && !hard_reset)
+        if (was_banished && !summoned_it && !hard_reset
+            && mons.has_ench(ENCH_ABJ)) // temp animated but not summoned
         {
+            // if this is set, it (in principle) allows the unrand to
+            // show up in the abyss. We don't want to set this for a banished
+            // permanent dancing weapon, which will show up as itself.
             if (is_unrandom_artefact(env.item[w_idx]))
                 set_unique_item_status(env.item[w_idx], UNIQ_LOST_IN_ABYSS);
 
