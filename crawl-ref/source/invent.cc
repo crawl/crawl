@@ -935,15 +935,6 @@ string InvMenu::help_key() const
 int InvMenu::getkey() const
 {
     auto mkey = lastch;
-#ifndef USE_TILE_LOCAL
-    // hackily normalize some numpad stuff. XX local tiles...
-    if (mkey == CK_NUMPAD_MULTIPLY)
-        mkey = '*';
-    else if (mkey == CK_NUMPAD_ENTER)
-        mkey = CK_ENTER;
-    else if (mkey == CK_NUMPAD_SUBTRACT || mkey == CK_NUMPAD_SUBTRACT2)
-        mkey = '-';
-#endif
 
     if (is_set(MF_ARROWS_SELECT) && mkey == CK_ENTER)
         return mkey;

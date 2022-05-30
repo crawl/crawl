@@ -922,6 +922,7 @@ public:
           selected_new_key(false), keymc(KMC_NONE), edited_keymaps(false)
     {
         set_tag("macros");
+        remap_numpad = false;
 #ifdef USE_TILE_LOCAL
         set_min_col_width(MIN_COLS);
 #endif
@@ -943,7 +944,7 @@ public:
                 }));
         if (get_map().size())
         {
-            add_entry(new MenuEntry("Clear all " + mode_name() + "s", '-',
+            MenuEntry *clear_entry = new MenuEntry("Clear all " + mode_name() + "s", '-',
                 [this](const MenuEntry &)
                     {
                         status_msg = "";
@@ -951,7 +952,13 @@ public:
                         if (item_count() > 0)
                             clear_all();
                         return true;
-                    }));
+                    });
+#ifndef USE_TILE_LOCAL
+            // manual numpad handling for this class
+            clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT);
+            clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT2);
+#endif
+            add_entry(clear_entry);
             add_entry(new MenuEntry("Current " + mode_name() + "s", MEL_SUBTITLE));
             for (auto &mapping : get_map())
             {
@@ -1119,13 +1126,13 @@ public:
     public:
         MappingEditMenu(keyseq _key, keyseq _action, MacroEditMenu &_parent)
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
-                | MF_SHOW_EMPTY | MF_SPECIAL_MINUS,
-                    "", KMC_MENU),
+                | MF_SHOW_EMPTY | MF_SPECIAL_MINUS, ""),
               key(_key), action(_action), abort(false),
               parent(_parent),
               doing_key_input(false), doing_raw_action_input(false)
         {
             set_tag("macro_mapping");
+            remap_numpad = false;
 #ifdef USE_TILE_LOCAL
             set_min_col_width(62); // based on `r` more width
 #endif
@@ -1465,6 +1472,7 @@ public:
         CASE_ESCAPE
         case '-': // menu item, always present
 #ifndef USE_TILE_LOCAL
+        // not generally remapping numpad, so have to manually handle these
         case CK_NUMPAD_SUBTRACT:
         case CK_NUMPAD_SUBTRACT2:
 #endif

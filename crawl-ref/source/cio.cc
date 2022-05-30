@@ -58,6 +58,51 @@ static keycode_type _numpad2vi(keycode_type key)
     return key;
 }
 
+keycode_type numpad_to_regular(keycode_type key, bool keypad)
+{
+    switch (key)
+    {
+#ifndef USE_TILE_LOCAL
+    case CK_NUMPAD_SUBTRACT:
+    case CK_NUMPAD_SUBTRACT2:
+        return '-';
+    case CK_NUMPAD_ADD:
+    case CK_NUMPAD_ADD2:
+        return '+';
+    case CK_NUMPAD_DECIMAL:
+        return '.';
+    case CK_NUMPAD_MULTIPLY:
+        return '*';
+    case CK_NUMPAD_DIVIDE:
+        return '/';
+    case CK_NUMPAD_ENTER:
+        return CK_ENTER;
+    case CK_NUMPAD_7:
+        return keypad ? CK_HOME : '7';
+    case CK_NUMPAD_8:
+        return keypad ? CK_UP : '8';
+    case CK_NUMPAD_9:
+        return keypad ? CK_PGUP : '9';
+    case CK_NUMPAD_4:
+        return keypad ? CK_LEFT : '4';
+    case CK_NUMPAD_5:
+        return '5';
+    case CK_NUMPAD_6:
+        return keypad ? CK_RIGHT : '6';
+    case CK_NUMPAD_1:
+        return keypad ? CK_END : '1';
+    case CK_NUMPAD_2:
+        return keypad ? CK_DOWN : '2';
+    case CK_NUMPAD_3:
+        return keypad ? CK_PGDN : '3';
+    case CK_NUMPAD_0:
+        return '0';
+#endif
+    default:
+        return key;
+    }
+}
+
 // Save and restore the cursor region.
 class unwind_cursor
 {
@@ -91,6 +136,16 @@ static inline int _control_safe(int c)
         return c; // anything else
 }
 
+static bool _check_numpad(int key, int tocheck, KeymapContext keymap)
+{
+    // collapse numpad keys, but only if there is no keybinding for a numpad
+    // key specifically.
+    // TODO: should this pattern be used basically everywhere?
+    const int remapped = numpad_to_regular(key);
+    return remapped == tocheck &&
+                (remapped == key || key_to_command(key, keymap) == CMD_NO_CMD);
+}
+
 int unmangle_direction_keys(int keyin, KeymapContext keymap,
                             bool allow_fake_modifiers)
 {
@@ -101,12 +156,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     if (allow_fake_modifiers && Options.use_modifier_prefix_keys)
     {
         /* can we say yuck? -- haranp */
-        if (keyin == '*'
-#ifndef USE_TILE_LOCAL
-            || keyin == CK_NUMPAD_MULTIPLY
-                && key_to_command(keyin, KMC_DEFAULT) == CMD_NO_CMD
-#endif
-            )
+        if (_check_numpad(keyin, '*', keymap))
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("CTRL");
@@ -117,12 +167,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
             keyin = _control_safe(_numpad2vi(keyin));
             webtiles_send_more_text("");
         }
-        else if (keyin == '/'
-#ifndef USE_TILE_LOCAL
-            || keyin == CK_NUMPAD_DIVIDE
-                && key_to_command(keyin, KMC_DEFAULT) == CMD_NO_CMD
-#endif
-            )
+        else if (_check_numpad(keyin, '/', keymap))
         {
             unwind_cursor saved(1, crawl_view.msgsz.y, GOTO_MSG);
             cprintf("SHIFT");

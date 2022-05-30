@@ -947,8 +947,8 @@ Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
     title2(nullptr), flags(_flags), tag(tagname),
     cur_page(1), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
-    alive(false), more_needs_init(true), last_hovered(-1), m_kmc(kmc),
-    m_filter(nullptr)
+    alive(false), more_needs_init(true), remap_numpad(true),
+    last_hovered(-1), m_kmc(kmc), m_filter(nullptr)
 {
     m_ui.menu = make_shared<UIMenu>(this);
     m_ui.scroller = make_shared<UIMenuScroller>();
@@ -1262,6 +1262,7 @@ void Menu::do_menu()
     m_ui.popup = make_shared<UIMenuPopup>(m_ui.vbox, this);
 
     m_ui.popup->on_keydown_event([this, &done](const KeyEvent& ev) {
+        int key = remap_numpad ? numpad_to_regular(ev.key()) : ev.key();
         if (m_filter)
         {
             if (ev.key() == '?' && _title_prompt_help_tag.size())
@@ -1272,7 +1273,7 @@ void Menu::do_menu()
                 return true;
             }
 
-            int key = m_filter->putkey(ev.key());
+            key = m_filter->putkey(ev.key());
 
             if (key == CK_ESCAPE)
                 m_filter->set_text("");
@@ -1286,7 +1287,7 @@ void Menu::do_menu()
             update_title();
             return true;
         }
-        done = !process_key(ev.key());
+        done = !process_key(key);
         return true;
     });
 #ifdef TOUCH_UI
@@ -1530,24 +1531,11 @@ bool Menu::process_command(command_type cmd)
     return ret;
 }
 
-static bool _key_is_minus(int keyin)
-{
-    if (keyin == '-'
-#ifndef USE_TILE_LOCAL
-        || keyin == CK_NUMPAD_SUBTRACT || keyin == CK_NUMPAD_SUBTRACT2
-#endif
-        )
-    {
-        return true;
-    }
-    return false;
-}
-
 bool Menu::skip_process_command(int keyin)
 {
     // TODO: autodetect if there is a menu item that uses a key that would
     // otherwise be bound?
-    if (_key_is_minus(keyin) && !minus_is_pageup())
+    if (keyin == '-' && !minus_is_pageup())
         return true;
     return false;
 }
@@ -1562,6 +1550,8 @@ command_type Menu::get_command(int keyin)
     if (keyin == -1)
         return CMD_MENU_EXIT;
 
+    // n.b. this explicitly ignores m_kmc, which is intended only for keymap
+    // purposes
     return key_to_command(keyin, KMC_MENU);
 }
 
@@ -1631,9 +1621,6 @@ bool Menu::process_key(int keyin)
         if (!is_set(MF_NOSELECT))
             break;
     case '.':
-#ifndef USE_TILE_LOCAL
-    case CK_NUMPAD_DECIMAL:
-#endif
         if (last_hovered != -1 && !!(flags & MF_MULTISELECT))
         {
             select_item_index(last_hovered, -1);
@@ -1652,9 +1639,6 @@ bool Menu::process_key(int keyin)
         // seemingly intentional fallthrough
 #endif
     case CK_ENTER:
-#ifndef USE_TILE_LOCAL
-    case CK_NUMPAD_ENTER:
-#endif
         // TODO: hover and multiselect?
         if ((flags & MF_SINGLESELECT) && last_hovered >= 0)
             select_item_index(last_hovered, 1);
@@ -1790,9 +1774,6 @@ int Menu::get_first_visible(bool skip_init_headers) const
 
 bool Menu::is_hotkey(int i, int key)
 {
-    // TODO: other numpad keys?
-    if (_key_is_minus(key))
-        key = '-';
     bool ishotkey = items[i]->is_hotkey(key);
     return ishotkey && (!is_set(MF_SELECT_BY_PAGE) || in_page(i));
 }
@@ -1801,15 +1782,11 @@ void Menu::select_items(int key, int qty)
 {
     if (key == ',' && !!(flags & MF_MULTISELECT)) // Select all or apply filter if there is one.
         select_index(-1, -2);
-    else if ((key == '*'
-#ifndef USE_TILE_LOCAL
-                || key == CK_NUMPAD_MULTIPLY
-#endif
-        ) && !!(flags & MF_MULTISELECT)) // Invert selection.
+    else if ((key == '*') && !!(flags & MF_MULTISELECT)) // Invert selection.
     {
         select_index(-1, -1);
     }
-    else if (_key_is_minus(key) && !!(flags & MF_MULTISELECT))
+    else if (key == '-' && !!(flags & MF_MULTISELECT))
     {
         // Clear selection. XX is there a singleselect menu where this should work?
         select_index(-1, 0);
