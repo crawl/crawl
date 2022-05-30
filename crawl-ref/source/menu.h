@@ -413,7 +413,7 @@ protected:
 
     bool alive;
     bool more_needs_init;
-    int manual_init_hover;
+    bool remap_numpad;
 
     int last_hovered;
     KeymapContext m_kmc;

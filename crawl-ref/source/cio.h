@@ -410,3 +410,4 @@ protected:
 typedef int keycode_type;
 
 keyfun_action keyfun_num_and_char(int &ch);
+keycode_type numpad_to_regular(keycode_type key, bool keypad=false);

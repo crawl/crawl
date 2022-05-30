@@ -364,7 +364,7 @@
 #endif
 
 // N.b. these cannot be rebound on webtiles
-// XX numpad number bindings?
+// numpad mappings are handled (by default) in Menu via numpad_to_regular
 {CK_UP, CMD_MENU_UP},
 {'\'', CMD_MENU_DOWN}, // backwards compatibility
 {CK_DOWN, CMD_MENU_DOWN},
@@ -375,14 +375,10 @@
 {CK_PGUP, CMD_MENU_PAGE_UP},
 {'<', CMD_MENU_PAGE_UP},
 {'-', CMD_MENU_PAGE_UP}, // manually overridden by many menus
-{-1018, CMD_MENU_PAGE_UP}, // numpad -
-{-1020, CMD_MENU_PAGE_UP}, // numpad -
 {' ', CMD_MENU_PAGE_DOWN}, // currently still can be overridden with hacks
 {CK_PGDN, CMD_MENU_PAGE_DOWN},
 {'>', CMD_MENU_PAGE_DOWN},
 {'+', CMD_MENU_PAGE_DOWN},
-{-1017, CMD_MENU_PAGE_DOWN}, // numpad +
-{-1016, CMD_MENU_PAGE_DOWN}, // numpad +
 {CK_HOME, CMD_MENU_SCROLL_TO_TOP},
 {CK_END, CMD_MENU_SCROLL_TO_END},
 {CONTROL('F'), CMD_MENU_SEARCH},

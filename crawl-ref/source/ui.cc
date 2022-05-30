@@ -1562,21 +1562,16 @@ bool Scroller::on_event(const Event& event)
     int delta = 0;
     if (event.type() == Event::Type::KeyDown)
     {
-        const auto key = static_cast<const KeyEvent&>(event).key();
+        const auto key = numpad_to_regular(
+                                    static_cast<const KeyEvent&>(event).key());
         // TODO: use CMD_MENU bindings here?
         switch (key)
         {
             case ' ': case '+': case CK_PGDN: case '>': case '\'':
-#ifndef USE_TILE_LOCAL
-            case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
-#endif
                 delta = m_region.height;
                 break;
 
             case '-': case CK_PGUP: case '<': case ';':
-#ifndef USE_TILE_LOCAL
-            case CK_NUMPAD_SUBTRACT: case CK_NUMPAD_SUBTRACT2:
-#endif
                 delta = -m_region.height;
                 break;
 
