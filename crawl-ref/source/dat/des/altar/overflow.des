@@ -5202,6 +5202,21 @@ c.......ccccccc.
 cccccccc........
 ENDMAP
 
+NAME:    nicolae_overflow_two_pavilions
+TAGS:    temple_overflow_generic_2 no_pool_fixup transparent
+SHUFFLE: DEFH
+SUBST:   DE : wl, FH : wl
+KPROP:   l = no_cloud_gen
+MAP
+DDDDDDD@FFFFFFF
+DcccccD.FcccccF
+DcEEEcD.FcHHHcF
+DcEB.......BHcF
+DcEEEcD.FcHHHcF
+DcccccD.FcccccF
+DDDDDDD@FFFFFFF
+ENDMAP
+
 NAME: minmay_overflow_temple_star_quad
 TAGS: temple_overflow_generic_3 transparent
 MAP
