@@ -1301,6 +1301,60 @@ xx'''NbWbb..xx
    xxxxxxxx
 ENDMAP
 
+# Now that most predefined books have been cut back to 3 spells,
+# there is a growing market for spellbooks with a little more thickness.
+NAME:   nicolae_shop_i_like_big_books
+TAGS:   transparent extra
+DEPTH:  D:4-, Depths, Elf, Snake
+KFEAT:  S = book shop type:Tremendous suffix:Tomes count:8 ; \
+            any randbook numspells:8
+KFEAT:  p = c
+COLOUR: p : blue / green / cyan / red / magenta / brown / lightblue / \
+            lightgreen / lightcyan / lightred / lightmagenta / yellow
+MAP
+...........
+.pppppppp..
+.cccccccpp.
+.......ccp.
+.......Scp.
+.......ccp.
+.cccccccpp.
+.pppppppp..
+...........
+ENDMAP
+
+NAME:  nicolae_shop_off_brand_orbs
+TAGS:  transparent extra no_tide
+DEPTH: D, Depths, Elf, Shoals, Snake
+# Generates 2-4 orbs with regular brands, 3-7 orbs with non-usual brands,
+# and a guaranteed orb of ponderousness, so you can ponder your orbs.
+: local regular = crawl.roll_dice( 2, 2 )
+: local offbrand = crawl.roll_dice( 2, 3 ) + 1
+: local totalcount = regular + offbrand + 1
+: local regularorbs = { "orb ego:light", "orb ego:wrath", "orb ego:mayhem",
+:   "orb ego:guile", "orb ego:energy" }
+: local offbrandorbs = { "orb ego:protection", "orb ego:resistance",
+:   "orb ego:fire_resistance", "orb ego:cold_resistance", "orb ego:willpower",
+:   "orb ego:poison_resistance", "orb ego:positive_energy", "orb ego:strength",
+:   "orb ego:dexterity", "orb ego:archmagi" }
+: local inventory =
+:   table.concat( util.random_subset( regularorbs, regular ), " | ") .. " | " ..
+:   table.concat( util.random_subset( offbrandorbs, offbrand ), " | ") ..
+:  " | orb ego:ponderousness"
+: kfeat("P = armour shop type:Unbelievable suffix:Orbs count:" .. totalcount ..
+:  " use_all ; " .. inventory )
+MAP
+ .......
+...mmm...
+..m...m..
+.m.....m.
+.m..P..m.
+.m.....m.
+..m...m..
+...mmm...
+ .......
+ENDMAP
+
 ###############################################################################
 # <<3>> Multi
 #       Not tagged shop, and has no threats. Contain possibly multiple shops in
