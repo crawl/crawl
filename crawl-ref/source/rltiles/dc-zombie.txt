@@ -77,6 +77,7 @@ zombie_yak MONS_ZOMBIE_YAK
 zombie_bear MONS_ZOMBIE_BEAR
 zombie_jelly MONS_ZOMBIE_JELLY
 zombie_orb MONS_ZOMBIE_ORB
+zombie_x MONS_ZOMBIE_X
 
 %sdir mon/undead/skeletons
 ## Skeletons
