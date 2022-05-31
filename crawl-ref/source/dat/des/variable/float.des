@@ -1411,6 +1411,133 @@ MAP
      ...                             ...
 ENDMAP
 
+NAME:    nicolae_integral_box
+TAGS:    transparent extra decor
+DEPTH:   D, Depths, Snake
+ORIENT:  float
+SHUFFLE: Pp/Pp/Pp/Qq, Rr/Rr/Rr/Ss
+SUBST:   PR : c, pr : _, QS : G, qs : c, H : cccG, F : TTT., T = TTTTTTVVVU
+CLEAR:   _
+MAP
+              ccc
+             cc..
+            cc..@
+           rc....  ppp
+           rR...HcccPcccccc
+           rc.............cc
+            cc......F......cc
+       rrr   cc.............cr
+      ccRcc   ccccccPcccH...Rr
+     cc...cc       ppp  ....cr
+    cc.....cc           @..cc
+    c.......c           ..cc   rrr
+    c...H.@.c           ccc   ccRcc
+    c...c                    cc...cc
+    c...c                   cc.....cc
+   pc...cp                  c.......c
+   pP.F.Pp                  c...H.@.c
+   pc...cp                  c...c
+    c...c                   c...c
+    c...c                  pc...cp
+c.@.H...c                  pP.F.Pp
+c.......c                  pc...cp
+cc.....cc                   c...c
+ cc...cc                    c...c
+  ccRcc   ccc           c.@.H...c
+   rrr   cc..           c.......c
+        cc..@           cc.....cc
+       rc....  ppp       cc...cc
+       rR...HcccPcccccc   ccRcc
+       rc.............cc   rrr
+        cc......F......cc
+         cc.............cr
+          ccccccPcccH...Rr
+               ppp  ....cr
+                    @..cc
+                    ..cc
+                    ccc
+ENDMAP
+
+NAME:   nicolae_kite_square_tiling_large
+TAGS:   transparent extra decor
+DEPTH:  D:4-, Depths
+ORIENT: float
+SUBST:  + : +++.
+MAP
+          xxc   cxx           xxc
+          +.x   x.+           +.x
+      xxcxx.x+x+x.xxcxx   xxcxx.x+x
+      +.......x.......+   +.......x
+  xxcxx.......c.......xxcxx.......c
+  +...+.......x.......+...+.......x
+cxx...xxcxx.x+x+x.xxcxx...xxcxx.x+x+x
+x.......x.+.x...x.+.x.......x.+.x...x
+x+x...x+x.xxc...cxx.x+x...x+x.xxc...c
+  x...x.....x...x.....x...x.....x...x
+  c...cxx.x+x...x+x.xxc...cxx.x+x...x+x
+  x...x.+.x.......x.+.x...x.+.x.......x
+  x+x+x.xxcxx...xxcxx.x+x+x.xxcxx...xxc
+    x.......+...+.......x.......+...+
+    c.......xxcxx.......c.......xxcxx
+    x.......+...+.......x.......+...+
+  x+x+x.xxcxx...xxcxx.x+x+x.xxcxx...xxc
+  x...x.+.x.......x.+.x...x.+.x.......x
+  c...cxx.x+x...x+x.xxc...cxx.x+x...x+x
+  x...x.....x...x.....x...x.....x...x
+x+x...x+x.xxc...cxx.x+x...x+x.xxc...c
+x.......x.+.x...x.+.x.......x.+.x...x
+cxx...xxcxx.x+x+x.xxcxx...xxcxx.x+x+x
+  +...+.......x.......+...+.......x
+  xxcxx.......c.......xxcxx.......c
+  +...+.......x.......+...+.......x
+cxx...xxcxx.x+x+x.xxcxx...xxcxx.x+x+x
+x.......x.+.x...x.+.x.......x.+.x...x
+x+x...x+x.xxc...cxx.x+x...x+x.xxc...c
+  x...x.....x...x.....x...x.....x...x
+  c...cxx.x+x...x+x.xxc...cxx.x+x...x+x
+  x...x.+.x.......x.+.x...x.+.x.......x
+  x+x+x.xxcxx...xxcxx.x+x+x.xxcxx...xxc
+    x.......+...+.......x.......+...+
+    c.......xxcxx.......c.......xxcxx
+    x.......+   +.......x.......+
+    x+x.xxcxx   xxcxx.x+x+x.xxcxx
+      x.+           +.x   x.+
+      cxx           xxc   cxx
+ENDMAP
+
+NAME:    nicolae_triple_integral
+TAGS:    transparent extra decor
+DEPTH:   D, Depths, Snake
+ORIENT:  float
+SHUFFLE: DE
+: if crawl.one_chance_in(3) and you.depth() > 1 then
+SUBST:   D = ({[
+: end
+: if crawl.one_chance_in(3) and you.depth_fraction() < 1 then
+SUBST:   E = )}]
+: end
+SUBST:   D : ..TTV, E : ..TTV, F : ..TTV, H : ..TTV, P : pppqq c:5 x:5, \
+         Q : qqqpp c:5 x:5, p : xxxc, q : xxxc
+MAP
+      ppPpp       qqQqq       ppPpp
+     pp...pp     qq...qq     pp...pp
+    pp..F..pp   qq..H..qq   pp..F..pp
+    p.......p   q.......q   p.......p
+    P...P.@.P   Q...Q.@.Q   P...P.@.P
+    p...p       q...q       p...p
+    p...p       q...q       p...p
+    p...p       q...q       p...p
+    P.D.P       Q.E.Q       P.D.P
+    p...p       q...q       p...p
+    p...p       q...q       p...p
+    p...p       q...q       p...p
+P.@.P...P   Q.@.Q...Q   P.@.P...P
+p.......p   q.......q   p.......p
+pp..F..pp   qq..H..qq   pp..F..pp
+ pp...pp     qq...qq     pp...pp
+  ppPpp       qqQqq       ppPpp
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
