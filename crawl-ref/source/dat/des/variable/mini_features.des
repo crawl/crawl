@@ -2956,6 +2956,137 @@ xx.xx
 xx@xx
 ENDMAP
 
+# https://www.conwaylife.com/forums/viewtopic.php?t=&p=140258#p140258
+NAME:  nicolae_eternal_life
+TAGS:  transparent extra decor
+DEPTH: D, Depths
+SUBST: c : ccccbv, x : xxxxmt
+MAP
+..cc.c..cc.c..cc.c..cc.c..
+..c.cc..c.cc..c.cc..c.cc..
+cc....cc....cc....cc....cc
+.c.xx..c.xx..c.xx..c.xx..c
+c..xx.c..xx.c..xx.c..xx.c.
+cc....cc....cc....cc....cc
+..cc.c..cc.c..cc.c..cc.c..
+..c.cc..c.cc..c.cc..c.cc..
+cc....cc....cc....cc....cc
+.c.xx..c.xx..c.xx..c.xx..c
+c..xx.c..xx.c..xx.c..xx.c.
+cc....cc....cc....cc....cc
+..cc.c..cc.c..cc.c..cc.c..
+..c.cc..c.cc..c.cc..c.cc..
+cc....cc....cc....cc....cc
+.c.xx..c.xx..c.xx..c.xx..c
+c..xx.c..xx.c..xx.c..xx.c.
+cc....cc....cc....cc....cc
+..cc.c..cc.c..cc.c..cc.c..
+..c.cc..c.cc..c.cc..c.cc..
+cc....cc....cc....cc....cc
+.c.xx..c.xx..c.xx..c.xx..c
+c..xx.c..xx.c..xx.c..xx.c.
+cc....cc....cc....cc....cc
+..cc.c..cc.c..cc.c..cc.c..
+..c.cc..c.cc..c.cc..c.cc..
+ENDMAP
+
+NAME:    nicolae_hexahallways
+TAGS:    transparent extra decor
+DEPTH:   D, Depths
+SHUFFLE: KL, MN, OP
+: if crawl.one_chance_in( 3 ) and you.depth() > 1 then
+SUBST:   K = ({[
+: end
+: if crawl.one_chance_in( 3 ) and you.depth_fraction() < 1 then
+SUBST:   L = )}]
+: end
+SUBST:   D : ....TV, E : ....TV, F : ....TV, H : ....tG, J : ....tG, \
+         K : ....tG, L : ....tG, Q : x+, M : x++, O : x++, NP : x
+MARKER:  + = lua:props_marker{ connected_exclude="true" }
+MAP
+            x+x       x+x
+           xx.xx     xx.xx
+          xx...xx   xx...xx
+      xx+xx..D..xx+xx..D..xx+xx
+     xx...xx...xx...xx...xx...xx
+    xx.....xx.xx.....xx.xx.....xx
+  x+x...H...M+O...J...O+M...H...x+x
+ xx.xx.....xx.xx.....xx.xx.....xx.xx
+xx...xx...xx...xx...xx...xx...xx...xx
++..F..xx+xx..E..xx+xx..E..xx+xx..F..+
+xx...xx...xx...xx...xx...xx...xx...xx
+ xx.xx.....xx.xx.....xx.xx.....xx.xx
+  x+Q...K...N+P...L...P+N...K...Q+x
+ xx.xx.....xx.xx.....xx.xx.....xx.xx
+xx...xx...xx...xx...xx...xx...xx...xx
++..F..xx+xx..E..xx+xx..E..xx+xx..F..+
+xx...xx...xx...xx...xx...xx...xx...xx
+ xx.xx.....xx.xx.....xx.xx.....xx.xx
+  x+x...H...M+O...J...O+M...H...x+x
+    xx.....xx.xx.....xx.xx.....xx
+     xx...xx...xx...xx...xx...xx
+      xx+xx..D..xx+xx..D..xx+xx
+          xx...xx   xx...xx
+           xx.xx     xx.xx
+            x+x       x+x
+ENDMAP
+
+NAME:    nicolae_kite_square_tiling_tiny
+TAGS:    transparent extra decor no_pool_fixup
+DEPTH:   D, Depths
+SHUFFLE: cbnvxtwl
+MAP
+      .....     ...
+    ...c.c... ...c.
+  ...b.....b...b....
+...c....b....c....b.
+.b...b.....b...b.....
+.......c.c.......c.c.
+ .c.c.......c.c.......
+ .....b...b.....b...b.
+  .b....c....b....c...
+ .....b...b.....b...b.
+ .c.c.......c.c.......
+.......c.c.......c.c.
+.b...b.....b...b.....
+...c....b....c....b.
+.b...b.....b...b.....
+.......c.c.......c.c.
+ .c.c.......c.c.......
+ .....b...b.....b...b.
+  .b....c....b....c...
+  ....b...b.....b...
+   .c... ...c.c...
+   ...     .....
+ENDMAP
+
+NAME:  nicolae_titane
+TAGS:  transparent decor
+DEPTH: D, Depths
+MAP
+    ..v..   .   ..
+  ....v...........
+  vv..v..vvv.vvv..
+ ...v..vv...v...v..
+ ...v...v...v...v...
+ ..vvv..v...v..vvv..
+..v...v..vvv..v...v..
+..v...v...v...v...v...
+.vv...v...v..vv...v...v
+v..vvv.vvv..v..vvv.vvv.
+v...........v..........
+v..vvv.vvv..v..vvv.vvv.
+.vv...v...v..vv...v...v
+..v...v...v...v...v...
+..v...v..vvv..v...v..
+ ..vvv..v...v..vvv..
+ ...v...v...v...v...
+ ...v..vv...v...v..
+  vv..v..vvv.vvv..
+  ....v...........
+    ..v..   .   ..
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
