@@ -680,6 +680,8 @@ void change_species_to(species_type sp)
     species_type old_sp = you.species;
     you.species = sp;
     you.chr_species_name = species::name(sp);
+    dprf("Species change: %s -> %s", species::name(old_sp).c_str(),
+        you.chr_species_name.c_str());
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];

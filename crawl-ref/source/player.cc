@@ -2586,7 +2586,9 @@ void calc_hp(bool scale, bool set)
 
     you.hp_max = get_real_hp(true, true);
 
-    if (scale)
+    // hp_max is not serialized, so fixup code that tries to trigger rescaling
+    // during load should not actually do it.
+    if (scale && old_max > 0)
     {
         int hp = you.hp * 100 + you.hit_points_regeneration;
         int new_max = you.hp_max;
