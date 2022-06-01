@@ -60,8 +60,5 @@ recommended_weapons:
   - SK_STAVES
   - SK_BOWS
   - SK_CROSSBOWS
-# start TAG_MAJOR_VERSION == 34
-create_enum: false
-# end TAG_MAJOR_VERSION
 
 walking_verb: Glid

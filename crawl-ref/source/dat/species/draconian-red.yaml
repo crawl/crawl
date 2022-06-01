@@ -37,6 +37,3 @@ mutations:
 fake_mutations:
   - long: You can breathe blasts of fire.
     short: breathe fire
-# start TAG_MAJOR_VERSION == 34
-create_enum: false
-# end TAG_MAJOR_VERSION

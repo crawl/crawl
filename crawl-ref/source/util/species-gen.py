@@ -145,7 +145,7 @@ class Species(MutableMapping):
         self['difficulty_priority'] = validate_int_range(difficulty_priority(
             s.get('difficulty_priority', 0)), 'difficulty_priority', 0, 1000)
         self['create_enum'] = validate_bool(
-                                    s.get('create_enum', True), 'create_enum')
+                                    s.get('create_enum', False), 'create_enum')
         self['walking_verb'] = quote_or_nullptr('walking_verb', s)
         self['altar_action'] = quote_or_nullptr('altar_action', s)
 
