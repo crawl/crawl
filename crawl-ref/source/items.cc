@@ -3480,11 +3480,11 @@ colour_t item_def::missile_colour() const
         case MI_LARGE_ROCK:
             return LIGHTGREY;
 #if TAG_MAJOR_VERSION == 34
-        case MI_ARROW:
         case MI_NEEDLE:
-        case MI_BOLT:
-        case MI_SLING_BULLET:
 #endif
+        case MI_ARROW:         // removed as an item, but don't crash
+        case MI_BOLT:          // removed as an item, but don't crash
+        case MI_SLING_BULLET:  // removed as an item, but don't crash
         case MI_DART:
             return WHITE;
         case MI_JAVELIN:
