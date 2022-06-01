@@ -47,8 +47,8 @@ Animate Dead spell
 
 For some time after casting this, living creatures killed by the caster will rise
 as zombies. The chance of reanimating a monster and the duration of the effect
-increase with spell power. Re-casting this spell will return zombies on the
-caster's floor to dust.
+increase with spell power. Re-casting this spell will return zombies to dust, as
+will leaving the floor.
 %%%%
 Apportation spell
 
