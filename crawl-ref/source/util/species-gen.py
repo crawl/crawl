@@ -357,6 +357,8 @@ def generate_aptitudes_data(s, template):
             aptitudes[apt] = 'UNUSABLE_SKILL'
         else:
             aptitudes[apt] = val
+    aptitudes['tag_major_version_opener'] = s['tag_major_version_opener']
+    aptitudes['tag_major_version_closer'] = s['tag_major_version_closer']
     return template.format(enum = s['enum'], **aptitudes)
 
 

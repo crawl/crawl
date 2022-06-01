@@ -1,3 +1,4 @@
+{tag_major_version_opener}
     {{{enum}, SK_FIGHTING,       {fighting}}},
     {{{enum}, SK_SHORT_BLADES,   {short_blades}}},
     {{{enum}, SK_LONG_BLADES,    {long_blades}}},
@@ -33,3 +34,4 @@
     {{{enum}, SK_TRAPS,          UNUSABLE_SKILL}},
     {{{enum}, SK_CHARMS,         UNUSABLE_SKILL}},
 #endif
+{tag_major_version_closer}
