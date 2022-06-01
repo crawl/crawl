@@ -27,6 +27,8 @@
 #endif
 #include "ui.h"
 
+// only used in fake shift/ctrl handling, I guess this is to really make sure
+// they work?
 static keycode_type _numpad2vi(keycode_type key)
 {
 #if defined(UNIX) && !defined(USE_TILE_LOCAL)
@@ -38,16 +40,16 @@ static keycode_type _numpad2vi(keycode_type key)
     case CK_DOWN:  key = 'j'; break;
     case CK_LEFT:  key = 'h'; break;
     case CK_RIGHT: key = 'l'; break;
-#if defined(UNIX) && !defined(USE_TILE_LOCAL)
-    case -1001:    key = 'b'; break;
-    case -1002:    key = 'j'; break;
-    case -1003:    key = 'n'; break;
-    case -1004:    key = 'h'; break;
-    case -1005:    key = '.'; break;
-    case -1006:    key = 'l'; break;
-    case -1007:    key = 'y'; break;
-    case -1008:    key = 'k'; break;
-    case -1009:    key = 'u'; break;
+#if defined(UNIX)
+    case CK_NUMPAD_1:    key = 'b'; break;
+    case CK_NUMPAD_2:    key = 'j'; break;
+    case CK_NUMPAD_3:    key = 'n'; break;
+    case CK_NUMPAD_4:    key = 'h'; break;
+    case CK_NUMPAD_5:    key = '.'; break;
+    case CK_NUMPAD_6:    key = 'l'; break;
+    case CK_NUMPAD_7:    key = 'y'; break;
+    case CK_NUMPAD_8:    key = 'k'; break;
+    case CK_NUMPAD_9:    key = 'u'; break;
 #endif
     }
     if (key >= '1' && key <= '9')
@@ -62,7 +64,6 @@ keycode_type numpad_to_regular(keycode_type key, bool keypad)
 {
     switch (key)
     {
-#ifndef USE_TILE_LOCAL
     case CK_NUMPAD_SUBTRACT:
     case CK_NUMPAD_SUBTRACT2:
         return '-';
@@ -75,6 +76,8 @@ keycode_type numpad_to_regular(keycode_type key, bool keypad)
         return '*';
     case CK_NUMPAD_DIVIDE:
         return '/';
+    case CK_NUMPAD_EQUALS:
+        return '=';
     case CK_NUMPAD_ENTER:
         return CK_ENTER;
     case CK_NUMPAD_7:
@@ -97,7 +100,6 @@ keycode_type numpad_to_regular(keycode_type key, bool keypad)
         return keypad ? CK_PGDN : '3';
     case CK_NUMPAD_0:
         return '0';
-#endif
     default:
         return key;
     }
@@ -128,10 +130,11 @@ private:
 // Uses int instead of char32_t to match the caller.
 static inline int _control_safe(int c)
 {
+    // XX not strictly accurate for local tiles
     if (c >= 'A'-1 && c < 'A'+' '-1) // ASCII letters and @ [ \ ] ^ _ `
-        return c-'A'+1;
+        return CONTROL(c);
     else if (c >= 'a' && c <= 'z') // ASCII letters
-        return c-'a'+1;
+        return LC_CONTROL(c);
     else
         return c; // anything else
 }

@@ -269,6 +269,12 @@ enum CHAR_ATTRIBUTES
 // it wants to be used in case labels.
 #define CONTROL(xxx)          ((xxx) - 'A' + 1)
 #define UNCONTROL(xxx)        ((xxx) + 'A' - 1)
+// our standard CONTROL macros are defined relative to capital letters, but
+// for SDL it is useful to be more general. For [a-z] these produce the same
+// result as CONTROL on [A-Z].
+// 'a' == SDLK_a
+#define LC_CONTROL(x) (x - 'a' + 1)
+#define LC_UNCONTROL(x) (x + 'a' - 1)
 
 #define ARRAYSZ(x) (sizeof(x) / sizeof(x[0]))
 #define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])
