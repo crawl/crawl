@@ -3222,13 +3222,33 @@ static void _tag_read_you(reader &th)
     // the meteorans generated in the meantime.
     if (th.getMinorVersion() < TAG_MINOR_METEORAN_ENUM)
     {
-        switch (you.species) {
-        case SP_METEORAN:
+        switch (you.species)
+        {
         case SP_MAYFLYTAUR:
+            if (you.mutation[MUT_SHORT_LIFESPAN])
+            {
+                final_species_cleanup = SP_METEORAN;
+                break;
+            }
+            // fallthrough
+        case SP_METEORAN:
             if (you.mutation[MUT_ROLL])
                 final_species_cleanup = SP_PALENTONGA;
             break;
         case SP_PALENTONGA:
+            if (you.mutation[MUT_SHORT_LIFESPAN])
+                final_species_cleanup = SP_METEORAN;
+            break;
+        default:
+            break;
+        }
+    }
+    // The initial fix implementation turned Me->My, fix those too.
+    else if (th.getMinorVersion() < TAG_MINOR_MY_ENUM)
+    {
+        switch (you.species)
+        {
+        case SP_MAYFLYTAUR:
             if (you.mutation[MUT_SHORT_LIFESPAN])
                 final_species_cleanup = SP_METEORAN;
             break;
