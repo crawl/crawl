@@ -4724,7 +4724,12 @@ bool invis_allowed(bool quiet, string *fail_reason)
     string msg;
     bool success = true;
 
-    if (you.haloed() && you.halo_radius() != -1)
+    if (you.has_mutation(MUT_GLOWING))
+    {
+        mpr("Your body glows too brightly to become invisible.");
+        success = false;
+    }
+    else if (you.haloed() && you.halo_radius() != -1)
     {
         vector<string> sources;
 
@@ -7062,16 +7067,18 @@ bool player::visible_to(const actor *looker) const
  * Is the player backlit?
  *
  * @param self_halo If true, ignore the player's self-halo.
+ * @param temp If true, include temporary sources of being backlit.
  * @returns True if the player is backlit.
 */
-bool player::backlit(bool self_halo) const
+bool player::backlit(bool self_halo, bool temp) const
 {
-    return player_severe_contamination()
-           || duration[DUR_CORONA]
-           || duration[DUR_LIQUID_FLAMES]
-           || duration[DUR_QUAD_DAMAGE]
-           || you.has_mutation(MUT_GLOWING)
-           || !umbraed() && haloed() && (self_halo || halo_radius() == -1);
+    return temp && (player_severe_contamination()
+                    || duration[DUR_CORONA]
+                    || duration[DUR_LIQUID_FLAMES]
+                    || duration[DUR_QUAD_DAMAGE]
+                    || !umbraed() && haloed()
+                       && (self_halo || halo_radius() == -1))
+           || you.has_mutation(MUT_GLOWING);
 }
 
 bool player::umbra() const

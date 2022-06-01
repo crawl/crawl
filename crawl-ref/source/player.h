@@ -798,7 +798,7 @@ public:
     bool cannot_act() const override;
     bool confused() const override;
     bool caught() const override;
-    bool backlit(bool self_halo = true) const override;
+    bool backlit(bool self_halo = true, bool temp = true) const override;
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;

@@ -2770,9 +2770,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
 
 static bool _invisibility_is_useless(const bool temp)
 {
-    if (temp)
-        return you.backlit();
-    return you.haloed() && will_have_passive(passive_t::halo);
+    // Always useless if you're a Meteoran or have a halo from TSO.
+    return you.backlit(temp)
+           || you.haloed() && will_have_passive(passive_t::halo);
 }
 
 /**

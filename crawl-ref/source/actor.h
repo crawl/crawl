@@ -326,7 +326,7 @@ public:
     //            and has a halo, returns false; so if you have a
     //            halo you're not affected by others' halos for this
     //            purpose)
-    virtual bool backlit(bool self_halo = true) const = 0;
+    virtual bool backlit(bool self_halo = true, bool temp = true) const = 0;
     virtual bool umbra() const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;
