@@ -641,6 +641,7 @@ static void unixcurses_defkeys()
     define_key("\033Om", 1018); // . // XX this is - on mac console? Also confirmed on linux as -
     define_key("\033On", 1019); // .
     define_key("\033Oo", 1020); // -
+    // missing: =
 
     // variants. Ugly curses won't allow us to return the same code...
     define_key("\033[1~", 1031); // Home
@@ -653,6 +654,8 @@ int unixcurses_get_vi_key(int keyin)
 {
     switch (-keyin)
     {
+    // TODO: should use cio.h constants, but I'm too scared to change this
+    // function
     // -1001..-1009: passed without change
     case 1031: return -1007;
     case 1034: return -1001;

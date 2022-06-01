@@ -874,12 +874,15 @@ void flush_input_buffer(int reason)
 
 static string _keyseq_desc(const keyseq &key)
 {
-    string r = keycode_is_printable(key[0])
-                ? keycode_to_name(key[0]).c_str()
-                : make_stringf("%s (%s)",
-                    vtostr(key).c_str(), keycode_to_name(key[0], false).c_str());
-    r = replace_all(r, "<", "<<");
-    return r;
+    string r = keycode_to_name(key[0], false);
+    if (!keycode_is_printable(key[0]))
+    {
+        if (r.empty())
+            r = vtostr(key);
+        else
+            r = make_stringf("%s (%s)", vtostr(key).c_str(), r.c_str());
+    }
+    return replace_all(r, "<", "<<");
 }
 
 static string _keyseq_action_desc(keyseq &action)
@@ -953,11 +956,10 @@ public:
                             clear_all();
                         return true;
                     });
-#ifndef USE_TILE_LOCAL
             // manual numpad handling for this class
             clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT);
             clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT2);
-#endif
+
             add_entry(clear_entry);
             add_entry(new MenuEntry("Current " + mode_name() + "s", MEL_SUBTITLE));
             for (auto &mapping : get_map())
@@ -1284,6 +1286,10 @@ public:
 
         bool process_key(int keyin)
         {
+            // rebinding mouse click generally won't work
+            // TODO: CK_MOUSE_Bn keys don't generally seem implemented
+            if (is_synthetic_key(keyin) || keyin == CK_MOUSE_CLICK)
+                return true;
             // stateful key processing:
             // * in raw action input mode, fill keys into raw_tmp
             // * in key input mode, fill exactly one key into `key`, either
@@ -1471,15 +1477,16 @@ public:
         case CK_ENTER:
         CASE_ESCAPE
         case '-': // menu item, always present
-#ifndef USE_TILE_LOCAL
         // not generally remapping numpad, so have to manually handle these
         case CK_NUMPAD_SUBTRACT:
         case CK_NUMPAD_SUBTRACT2:
-#endif
         case '~': // menu item, always present
             // then check for a few other special cases the superclass needs
             // to handle
             return Menu::process_key(keyin);
+        case CK_NUMPAD_ENTER:
+            // need to handle manually for this menu
+            return Menu::process_key(CK_ENTER);
         case CK_DELETE:
         case CK_BKSP:
             // non-menu-item hotkey specific to this menu
@@ -1713,48 +1720,67 @@ bool keycode_is_printable(int keycode)
 
 string keycode_to_name(int keycode, bool shorten)
 {
-    // this is printable, but it's very confusing to try to use ' ' to print it
-    // in circumstances where a name is called for
-    if (keycode == ' ')
-        return "Space";
-    // TODO: handling of alt keys in SDL is generally a mess, including here
-    // (they are basically just ignored)
-    if (keycode_is_printable(keycode))
-        return string(1, keycode);
-
-    // shift/ctrl-modified keys aside from shift-tab don't seem to work on mac
-    // console, and are somewhat spotty on webtiles.
-    const bool shift = (keycode >= CK_SHIFT_UP && keycode <= CK_SHIFT_PGDN);
-    const bool ctrl  = (keycode >= CK_CTRL_UP && keycode <= CK_CTRL_PGDN);
-
     // nb both of these use string literal concatenation
     #define CTRL_DESC(x) (shorten ? ("^" x) : ("Ctrl-" x))
     #define NP_DESC(x) (shorten ? ("NP" x) : ("Numpad " x))
 
     string prefix = "";
 
+    // ugh
+    if (keycode - CK_CMD_BASE < 256)
+    {
+        // could still also have alt on top of this
+        prefix = (shorten ? "Cmd-" : "Command-");
+        keycode -= CK_CMD_BASE;
+    }
+
+    if (keycode - CK_ALT_BASE >= CK_MIN_INTERNAL && keycode - CK_ALT_BASE <= 256)
+    {
+        prefix += "Alt-";
+        keycode -= CK_ALT_BASE;
+    }
+
+    // this is printable, but it's very confusing to try to use ' ' to print it
+    // in circumstances where a name is called for
+    if (keycode == ' ')
+        return prefix + "Space";
+
+    if (keycode_is_printable(keycode))
+        return prefix + string(1, keycode);
+
+    // shift/ctrl-modified keys aside from shift-tab don't seem to work on mac
+    // console, and are somewhat spotty on webtiles.
+    const bool shift = (keycode >= CK_SHIFT_UP && keycode <= CK_SHIFT_PGDN);
+    const bool ctrl  = (keycode >= CK_CTRL_UP && keycode <= CK_CTRL_PGDN);
+    const bool ctrlshift = (keycode >= CK_CTRL_SHIFT_UP && keycode <= CK_CTRL_SHIFT_PGDN);
+
     if (shift)
     {
         keycode -= (CK_SHIFT_UP - CK_UP);
-        prefix = "Shift-";
+        prefix += "Shift-";
     }
     else if (ctrl)
     {
         keycode -= (CK_CTRL_UP - CK_UP);
-        prefix = CTRL_DESC("");
+        prefix += CTRL_DESC("");
+    }
+    else if (ctrlshift)
+    {
+        keycode -= (CK_CTRL_SHIFT_UP - CK_UP);
+        prefix += CTRL_DESC("Shift-");
     }
 
     // placeholder
     switch (keycode)
     {
     case  0: return "NULL";
-    case  8: return "Backspace"; // CK_BKSP
-    case  9: return "Tab";
-    CASE_ESCAPE return "Esc";
+    case  8: return prefix + "Backspace"; // CK_BKSP
+    case  9: return prefix + "Tab";
+    CASE_ESCAPE return prefix + "Esc";
     case '\n':
     case '\r': // CK_ENTER
-        return "Enter";
-    case CK_DELETE: return "Del";
+        return prefix + "Enter";
+    case CK_DELETE: return prefix + "Del";
     case CK_UP:     return prefix+"Up";
     case CK_DOWN:   return prefix+"Down";
     case CK_LEFT:   return prefix+"Left";
@@ -1765,59 +1791,80 @@ string keycode_to_name(int keycode, bool shorten)
     case CK_CLEAR:  return prefix+"Clear";
     case CK_PGUP:   return prefix+"PgUp";
     case CK_PGDN:   return prefix+"PgDn";
-    case CK_SHIFT_TAB:    return "Shift-Tab";
-    case CK_CTRL_TAB:     return CTRL_DESC("Tab");
-    case CK_F0:     return "F0";
-    case CK_F1:     return "F1";
-    case CK_F2:     return "F2";
-    case CK_F3:     return "F3";
-    case CK_F4:     return "F4";
-    case CK_F5:     return "F5";
-    case CK_F6:     return "F6";
-    case CK_F7:     return "F7";
-    case CK_F8:     return "F8";
-    case CK_F9:     return "F9";
-    case CK_F10:    return "F10";
-    case CK_F11:    return "F11";
-    case CK_F12:    return "F12";
-#ifndef USE_TILE_LOCAL
-    case CK_NUMPAD_0: return NP_DESC("0");
-    case CK_NUMPAD_1: return NP_DESC("1");
-    case CK_NUMPAD_2: return NP_DESC("2");
-    case CK_NUMPAD_3: return NP_DESC("3");
-    case CK_NUMPAD_4: return NP_DESC("4");
-    case CK_NUMPAD_5: return NP_DESC("5");
-    case CK_NUMPAD_6: return NP_DESC("6");
-    case CK_NUMPAD_7: return NP_DESC("7");
-    case CK_NUMPAD_8: return NP_DESC("8");
-    case CK_NUMPAD_9: return NP_DESC("9");
+    // ugly manual handling for these
+    case CK_SHIFT_TAB:         return prefix + "Shift-Tab";
+    case CK_CTRL_TAB:          return prefix + CTRL_DESC("Tab");
+    case CK_CTRL_SHIFT_TAB:    return prefix + CTRL_DESC("Shift-Tab");
+    case CK_SHIFT_ENTER:       return prefix + "Shift-Enter";
+    case CK_CTRL_ENTER:        return prefix + CTRL_DESC("Enter");
+    case CK_CTRL_SHIFT_ENTER:  return prefix + CTRL_DESC("Shift-Enter");
+    case CK_SHIFT_BKSP:        return prefix + "Shift-Backspace";
+    case CK_CTRL_BKSP:         return prefix + CTRL_DESC("Backspace");
+    case CK_CTRL_SHIFT_BKSP:   return prefix + CTRL_DESC("Shift-Backspace");
+    case CK_SHIFT_ESCAPE:      return prefix + "Shift-Esc";
+    case CK_CTRL_ESCAPE:       return prefix + CTRL_DESC("Esc");
+    case CK_CTRL_SHIFT_ESCAPE: return prefix + CTRL_DESC("Shift-Esc");
+    case CK_SHIFT_DELETE:      return prefix + "Shift-Del";
+    case CK_CTRL_DELETE:       return prefix + CTRL_DESC("Del");
+    case CK_CTRL_SHIFT_DELETE: return prefix + CTRL_DESC("Shift-Del");
+    case CK_SHIFT_SPACE:       return prefix + "Shift-Space";
+    case CK_CTRL_SPACE:        return prefix + CTRL_DESC("Space");
+    case CK_CTRL_SHIFT_SPACE:  return prefix + CTRL_DESC("Shift-Space");
+    case CK_F0:     return prefix + "F0";
+    case CK_F1:     return prefix + "F1";
+    case CK_F2:     return prefix + "F2";
+    case CK_F3:     return prefix + "F3";
+    case CK_F4:     return prefix + "F4";
+    case CK_F5:     return prefix + "F5";
+    case CK_F6:     return prefix + "F6";
+    case CK_F7:     return prefix + "F7";
+    case CK_F8:     return prefix + "F8";
+    case CK_F9:     return prefix + "F9";
+    case CK_F10:    return prefix + "F10";
+    case CK_F11:    return prefix + "F11";
+    case CK_F12:    return prefix + "F12";
+    case CK_F13:    return prefix + "F13";
+    case CK_F14:    return prefix + "F14";
+    case CK_F15:    return prefix + "F15";
+    case CK_NUMPAD_0: return prefix + NP_DESC("0");
+    case CK_NUMPAD_1: return prefix + NP_DESC("1");
+    case CK_NUMPAD_2: return prefix + NP_DESC("2");
+    case CK_NUMPAD_3: return prefix + NP_DESC("3");
+    case CK_NUMPAD_4: return prefix + NP_DESC("4");
+    case CK_NUMPAD_5: return prefix + NP_DESC("5");
+    case CK_NUMPAD_6: return prefix + NP_DESC("6");
+    case CK_NUMPAD_7: return prefix + NP_DESC("7");
+    case CK_NUMPAD_8: return prefix + NP_DESC("8");
+    case CK_NUMPAD_9: return prefix + NP_DESC("9");
     // many of these may not actually work on any given local console:
     // TODO: confirm the names. Some stuff in libunix.cc appears to have
     // incorrect comments.
-    case CK_NUMPAD_MULTIPLY: return NP_DESC("*");
-    case CK_NUMPAD_ADD:      return NP_DESC("+");
-    case CK_NUMPAD_ADD2:     return NP_DESC("+"); // are there keyboards with both??
-    case CK_NUMPAD_SUBTRACT: return NP_DESC("-");
-    case CK_NUMPAD_SUBTRACT2: return NP_DESC("-");
-    case CK_NUMPAD_DECIMAL:  return NP_DESC(".");
-    case CK_NUMPAD_DIVIDE:   return NP_DESC("/");
-    case CK_NUMPAD_ENTER:    return NP_DESC("enter");
-#endif
+    case CK_NUMPAD_MULTIPLY: return prefix + NP_DESC("*");
+    case CK_NUMPAD_ADD:      return prefix + NP_DESC("+");
+    case CK_NUMPAD_ADD2:     return prefix + NP_DESC("+"); // are there keyboards with both??
+    case CK_NUMPAD_SUBTRACT: return prefix + NP_DESC("-");
+    case CK_NUMPAD_SUBTRACT2: return prefix + NP_DESC("-");
+    case CK_NUMPAD_DECIMAL:  return prefix + NP_DESC(".");
+    case CK_NUMPAD_DIVIDE:   return prefix + NP_DESC("/");
+    case CK_NUMPAD_ENTER:    return prefix + NP_DESC("enter");
+    case CK_NUMPAD_EQUALS:   return prefix + NP_DESC("=");
     default:
         if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
-            return make_stringf("%s%c", CTRL_DESC(""), UNCONTROL(keycode));
+            return make_stringf("%s%s%c", prefix.c_str(), CTRL_DESC(""), UNCONTROL(keycode));
 #ifdef USE_TILE_LOCAL
         // SDL allows control modifiers for some extra punctuation
-        else if (keycode < 0 && keycode > SDLK_EXCLAIM - SDLK_a + 1)
-            return make_stringf("%s%c", CTRL_DESC(""), (char) (keycode + SDLK_a - 1));
+        else if (keycode < 0 && keycode > LC_CONTROL(SDLK_EXCLAIM))
+            return make_stringf("%s%s%c", prefix.c_str(), CTRL_DESC(""), LC_UNCONTROL(keycode));
 
         // SDL uses 1 << 30 to indicate non-printable keys, crawl uses negative
         // numbers; convert back to plain SDL form
-        if (keycode < 0)
+        if (keycode < 0 && ((-keycode) & 1<<30))
             keycode = -keycode;
+        if (keycode < 0)
+            return prefix.empty() ? "" : prefix + "\uFFFD"; // �
         // SDL_GetKeyName strips capitalization, so we don't want to use it for
         // printable keys.
-        return string(SDL_GetKeyName(keycode));
+        return prefix + string(SDL_GetKeyName(keycode));
 #else
     {
         keyseq v;
@@ -1858,6 +1905,7 @@ bool is_synthetic_key(int key)
     case CK_MOUSE_CMD:
     case CK_MOUSE_MOVE:
     case CK_REDRAW:
+    case CK_RESIZE:
         return true;
     default:
         return false;
@@ -2140,11 +2188,6 @@ string command_to_string(command_type cmd, bool tutorial)
             result = make_stringf("uppercase %c", (char) key);
         else
             result = string(1, (char) key);
-    }
-    else if (key > 1000 && key <= 1009) // can this be removed?
-    {
-        const int numpad = (key - 1000);
-        result = make_stringf("Numpad %d", numpad);
     }
     else
         result = keycode_to_name(key, false);

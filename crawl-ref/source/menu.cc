@@ -1262,9 +1262,11 @@ void Menu::do_menu()
     m_ui.popup = make_shared<UIMenuPopup>(m_ui.vbox, this);
 
     m_ui.popup->on_keydown_event([this, &done](const KeyEvent& ev) {
-        int key = remap_numpad ? numpad_to_regular(ev.key()) : ev.key();
+        // uses numpad number keys for navigation
+        int key = remap_numpad ? numpad_to_regular(ev.key(), true) : ev.key();
         if (m_filter)
         {
+            fprintf(stderr, "filter key %d\n", key);
             if (ev.key() == '?' && _title_prompt_help_tag.size())
             {
                 // TODO: only useful for non-general prompts, is there another
@@ -1611,6 +1613,7 @@ bool Menu::process_key(int keyin)
     switch (keyin)
     {
     case CK_REDRAW:
+    case CK_RESIZE:
         return true;
 #ifndef TOUCH_UI
     case 0:
@@ -1783,9 +1786,7 @@ void Menu::select_items(int key, int qty)
     if (key == ',' && !!(flags & MF_MULTISELECT)) // Select all or apply filter if there is one.
         select_index(-1, -2);
     else if ((key == '*') && !!(flags & MF_MULTISELECT)) // Invert selection.
-    {
         select_index(-1, -1);
-    }
     else if (key == '-' && !!(flags & MF_MULTISELECT))
     {
         // Clear selection. XX is there a singleselect menu where this should work?

@@ -54,7 +54,7 @@ define(function() {
     var CK_CTRL_PGDN = val++
     var CK_CTRL_TAB = val++
 
-    // Mouse codes.
+    // Mouse codes. XX these don't match cio.h?
     val = -10009
     var CK_MOUSE_MOVE  = val++
     var CK_MOUSE_CMD = val++
