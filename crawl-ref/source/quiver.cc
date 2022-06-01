@@ -3073,11 +3073,10 @@ namespace quiver
     // Save/load
     // ----------------------------------------------------------------------
 
-    // legacy marshalling code, still semi-used
+    // legacy marshalling/unmarshalling code
+#if TAG_MAJOR_VERSION == 34
     static const short QUIVER_COOKIE = short(0xb015);
 
-    // legacy unmarshalling code
-#if TAG_MAJOR_VERSION == 34
     void ammo_history::load(reader& inf)
     {
         if (inf.getMinorVersion() >= TAG_MINOR_MOSTLY_REMOVE_AMMO)

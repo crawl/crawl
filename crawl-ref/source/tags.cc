@@ -936,6 +936,8 @@ static monster_type _fixup_monster_type(reader &th, monster_type x)
         AXED(MONS_SHADOW_IMP); // midge
         AXED(MONS_AGNES);      // Jozef
     }
+#else
+    UNUSED(th);
 #endif
 
     return x;
@@ -2557,6 +2559,7 @@ static void _fixup_species_mutations(mutation_type mut)
 static void _tag_read_you(reader &th)
 {
     int count;
+    UNUSED(_fixup_species_mutations); // prevent a tag upgrade warning
 
     // these `you` values come from the "chr" chunk, but aren't validated during
     // the reading of that chunk. Let's make sure they actually make sense...
