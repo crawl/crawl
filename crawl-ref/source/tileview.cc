@@ -1396,10 +1396,15 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     const map_cell& mc = env.map_knowledge(gc);
 
     bool print_blood = true;
-    if (mc.flags & MAP_UMBRAED)
+    if (mc.flags & MAP_HALOED)
+    {
+        if (mc.flags & MAP_UMBRAED)
+            cell.halo = HALO_NONE;
+        else
+            cell.halo = HALO_RANGE;
+    }
+    else if (mc.flags & MAP_UMBRAED)
         cell.halo = HALO_UMBRA;
-    else if (mc.flags & MAP_HALOED)
-        cell.halo = HALO_RANGE;
     else
         cell.halo = HALO_NONE;
 
