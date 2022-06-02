@@ -691,8 +691,8 @@ void change_species_to(species_type sp)
     {
         if (you.has_innate_mutation(static_cast<mutation_type>(i)))
         {
-            you.mutation[i] -= you.innate_mutation[i];
-            you.innate_mutation[i] = 0;
+            you.mutation[i] -= you.innate_mutation[i] - you.sacrifices[i];
+            you.innate_mutation[i] = you.sacrifices[i];
         }
         prev_muts[i] = you.mutation[i];
     }
