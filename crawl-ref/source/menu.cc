@@ -1266,7 +1266,6 @@ void Menu::do_menu()
         int key = remap_numpad ? numpad_to_regular(ev.key(), true) : ev.key();
         if (m_filter)
         {
-            fprintf(stderr, "filter key %d\n", key);
             if (ev.key() == '?' && _title_prompt_help_tag.size())
             {
                 // TODO: only useful for non-general prompts, is there another
