@@ -1288,7 +1288,7 @@ public:
         {
             // rebinding mouse click generally won't work
             // TODO: CK_MOUSE_Bn keys don't generally seem implemented
-            if (is_synthetic_key(keyin) || keyin == CK_MOUSE_CLICK)
+            if (is_synthetic_key(keyin) || keyin == CK_MOUSE_CLICK || keyin == 0)
                 return true;
             // stateful key processing:
             // * in raw action input mode, fill keys into raw_tmp
@@ -1471,6 +1471,7 @@ public:
         // special cases to the superclass unconditionally:
         switch (keyin)
         {
+        case 0:
         case CK_REDRAW:
         case CK_MOUSE_CLICK:
         case CK_MOUSE_B1:
@@ -1826,6 +1827,20 @@ string keycode_to_name(int keycode, bool shorten)
     case CK_F13:    return prefix + "F13";
     case CK_F14:    return prefix + "F14";
     case CK_F15:    return prefix + "F15";
+    // no keycode defined, but these are available on some terminals via
+    // shifted fn keys, e.g. on xterm and the like, shift-F1 is F13 etc.
+    // this won't necessarily match the actual key label on most keyboards/
+    // terms, but it will give some moderately useful and human readable label.
+    // TODO: define keycodes? see comments in cio.h.
+    case -280:      return prefix + "F16";
+    case -281:      return prefix + "F17";
+    case -282:      return prefix + "F18";
+    case -283:      return prefix + "F19";
+    case -284:      return prefix + "F20";
+    case -285:      return prefix + "F21";
+    case -286:      return prefix + "F22";
+    case -287:      return prefix + "F23";
+    case -288:      return prefix + "F24";
     case CK_NUMPAD_0: return prefix + NP_DESC("0");
     case CK_NUMPAD_1: return prefix + NP_DESC("1");
     case CK_NUMPAD_2: return prefix + NP_DESC("2");

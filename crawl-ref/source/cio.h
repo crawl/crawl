@@ -243,11 +243,11 @@ enum KEYS
     CK_NUMPAD_EQUALS   = -1021,
     CK_MIN_INTERNAL = CK_NUMPAD_EQUALS,
     CK_MIN_NUMPAD = CK_NUMPAD_EQUALS,
-    CK_NUMPAD_SUBTRACT2 = -1020,
+    CK_NUMPAD_SUBTRACT2 = -1020, // currently used by webtiles only. XX remove..
     CK_NUMPAD_DECIMAL  = -1019,
-    CK_NUMPAD_SUBTRACT = -1018, // ???
-    CK_NUMPAD_ADD2     = -1017,
-    CK_NUMPAD_ADD      = -1016, // ???
+    CK_NUMPAD_SUBTRACT = -1018,
+    CK_NUMPAD_ADD2     = -1017, // mac Terminal.app
+    CK_NUMPAD_ADD      = -1016, // normal
     CK_NUMPAD_MULTIPLY = -1015,
     CK_NUMPAD_DIVIDE   = -1012,
     CK_NUMPAD_ENTER    = -1010, // no idea how general this is
@@ -272,7 +272,11 @@ enum KEYS
 
 // ugly...
 // TODO: should crawl just use one of these internally and convert?
-// why stop at F15? (Previously, was F12)
+// why stop at F15? (Previously, was F12.) This is what SDL on mac goes up to...
+// TODO: maybe useful to extend the ncurses side further, since many terms
+// map shifted F-keys to higher values. E.g. mac iTerm (I think this is an
+// xterm convention?) maps shift-F1 to F13, etc. But this needs some testing
+// on windows as well.
 #if defined(TARGET_OS_WINDOWS) // windows console
     CK_F15 = -382, // -(VK_F15 | 256) // XX why...
 #else // ncurses console
