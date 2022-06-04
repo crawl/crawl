@@ -1001,7 +1001,7 @@ rest_wait_percent = 100
 
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
-        rest_wait_percent before moving.
+        rest_wait_percent before moving. This is always disabled for Meteorans.
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)

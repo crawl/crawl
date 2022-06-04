@@ -5346,11 +5346,13 @@ bool player::is_sufficiently_rested(bool starting) const
                                 static_cast<int>(activity_interrupt::full_hp)];
     return (!player_regenerates_hp()
                 || _should_stop_resting(hp, hp_max, !starting)
-                || !hp_interrupts)
+                || !hp_interrupts
+                || you.has_mutation(MUT_EXPLORE_REGEN))
         && (!player_regenerates_mp()
                 || _should_stop_resting(magic_points, max_magic_points, !starting)
                 || !Options.activity_interrupts["rest"][
-                                static_cast<int>(activity_interrupt::full_mp)])
+                                static_cast<int>(activity_interrupt::full_mp)]
+                || you.has_mutation(MUT_EXPLORE_REGEN))
         && (!you.duration[DUR_BARBS] || !hp_interrupts);
 }
 
