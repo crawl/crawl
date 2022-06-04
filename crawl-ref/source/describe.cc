@@ -5636,6 +5636,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
         tiles.json_write_int("fg_idx", t0);
         tiles.json_write_name("flag");
         tiles.write_tileidx(flag);
+        tiles.json_write_icons(status_icons_for(mi));
 
         if (t0 >= TILEP_MCACHE_START)
         {

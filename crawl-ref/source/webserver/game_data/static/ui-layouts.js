@@ -551,13 +551,14 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         else if (desc.fg_idx > 0 && desc.fg_idx <= main.MAIN_MAX)
         {
             renderer.draw_foreground(0, 0, { t: {
-                fg: { value: desc.fg_idx }, bg: 0,
+                fg: { value: desc.fg_idx }, bg: 0, icons: [],
             }}, describe_scale);
         }
 
         renderer.draw_foreground(0, 0, { t: {
             fg: enums.prepare_fg_flags(desc.flag),
             bg: 0,
+            icons: desc.icons,
         }}, describe_scale);
 
         for (var i = 0; i < $panes.length; i++)

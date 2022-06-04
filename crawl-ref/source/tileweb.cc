@@ -1636,15 +1636,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
         }
 
         if (next_pc.icons != current_pc.icons)
-        {
-            json_open_array("icons");
-            for (const tileidx_t icon : next_pc.icons)
-            {
-                json_write_comma(); // skipped for the first one
-                write_tileidx(icon);
-            }
-            json_close_array();
-        }
+            json_write_icons(next_pc.icons);
 
         if (next_pc.is_bloody != current_pc.is_bloody)
             json_write_bool("bloody", next_pc.is_bloody);
@@ -2539,6 +2531,17 @@ void TilesFramework::json_write_comma()
     if (last == '{' || last == '[' || last == ',' || last == ':')
         return;
     write_message(",");
+}
+
+void TilesFramework::json_write_icons(const set<tileidx_t> &icons)
+{
+    json_open_array("icons");
+    for (const tileidx_t icon : icons)
+    {
+        json_write_comma(); // skipped for the first one
+        write_tileidx(icon);
+    }
+    json_close_array();
 }
 
 void TilesFramework::json_write_name(const string& name)
