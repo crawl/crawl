@@ -1027,16 +1027,21 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 case icons.DRAIN:
                 case icons.MIGHT:
                 case icons.SWIFT:
+                case icons.DAZED:
                 case icons.HASTED:
                 case icons.SLOWED:
                 case icons.CORRODED:
                 case icons.INFESTED:
+                case icons.WEAKENED:
                 case icons.PETRIFIED:
                 case icons.PETRIFYING:
                 case icons.BOUND_SOUL:
                 case icons.POSSESSABLE:
+                case icons.PARTIALLY_CHARGED:
+                case icons.FULLY_CHARGED:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 6;
+                case icons.CONC_VENOM:
                 case icons.FIRE_CHAMP:
                 case icons.INNER_FLAME:
                 case icons.PAIN_MIRROR:
@@ -1044,6 +1049,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 7;
                 case icons.ANGUISH:
+                case icons.FIRE_VULN:
+                case icons.SIMULACRUM:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 8;
                 case icons.RECALL:
@@ -1051,6 +1058,11 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                     return 9;
                 case icons.BLIND:
                 case icons.SLOWLY_DYING:
+                case icons.WATERLOGGED:
+                case icons.STILL_WINDS:
+                case icons.ANTIMAGIC:
+                case icons.REPEL_MISSILES:
+                case icons.INJURY_BOND:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 10;
                 case icons.CONSTRICTED:
