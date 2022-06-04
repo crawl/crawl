@@ -407,7 +407,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_show_minihealthbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
-        new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), ""),
+        new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), "nasty"),
         new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/=([)}:|"),
         // disabled by default due to performance issues
         new BoolGameOption(SIMPLE_NAME(tile_water_anim), !USING_WEB_TILES),
@@ -1189,6 +1189,8 @@ void game_options::reset_options()
     for (GameOption* option : option_behaviour)
         option->reset();
 
+    // some option default values set in dat/defaults
+
     filename     = "unknown";
     basefilename = "unknown";
     line_num     = -1;
@@ -1227,6 +1229,7 @@ void game_options::reset_options()
     // Sort only pickup menus by default.
     sort_menus.clear();
     set_menu_sort("pickup: true");
+    set_menu_sort("inv: true : equipped, charged");
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
