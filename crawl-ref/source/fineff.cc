@@ -676,7 +676,7 @@ void make_derived_undead_fineff::fire()
         if (!undead)
             continue;
 
-        if (!message.empty() && !messaged)
+        if (!message.empty() && !messaged && you.can_see(*undead))
         {
             mpr(message);
             messaged = true;

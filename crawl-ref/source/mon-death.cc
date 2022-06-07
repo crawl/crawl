@@ -1444,7 +1444,7 @@ static void _corpse_rot(monster &mons, int pow)
 }
 
 static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
-                              bool was_visible, bool corpseworthy)
+                              bool in_los, bool corpseworthy)
 {
     // This is a hostile effect, and monsters are dirty cheaters. Sorry!
     if (mons.has_ench(ENCH_BOUND_SOUL))
@@ -1465,30 +1465,28 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
     if (!corpseworthy)
         return false;
 
-    if (was_visible)
+    // Yred takes priority over everything but Infestation.
+    // (Maybe Simulacrum should also be allowed? Or Infestation shouldn't?)
+    if (in_los && have_passive(passive_t::reaping))
     {
-        // Yred takes priority over everything but Infestation.
-        // (Maybe Simulacrum should also be allowed? Or Infestation shouldn't?)
-        if (have_passive(passive_t::reaping))
-        {
-            if (yred_reap_chance())
-                _yred_reap(mons, exploded);
-            return true;
-        }
+        if (yred_reap_chance())
+            _yred_reap(mons, exploded);
+        return true;
+    }
 
-        if (mons.has_ench(ENCH_SIMULACRUM) && !have_passive(passive_t::goldify_corpses))
-        {
-            const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
-            _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
-            return true;
-        }
+    if (mons.has_ench(ENCH_SIMULACRUM) && !have_passive(passive_t::goldify_corpses))
+    {
+        const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
+        _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
+        return true;
+    }
 
-        if (!exploded
-            && !have_passive(passive_t::goldify_corpses)
-            && (_animate_dead_reap(mons) || _reaping(mons)))
-        {
-            return true;
-        }
+    if (!exploded
+        && in_los
+        && !have_passive(passive_t::goldify_corpses)
+        && (_animate_dead_reap(mons) || _reaping(mons)))
+    {
+        return true;
     }
 
     if (!exploded
@@ -2530,12 +2528,13 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool corpse_consumed = false;
     if (!was_banished && !mons_reset)
     {
+        const bool in_los = you.see_cell(mons.pos());
         const bool wretch = mons.props.exists(KIKU_WRETCH_KEY);
         const bool corpseworthy = could_give_xp || wretch;
 
         // no doubling up with death channel and yred.
         // otherwise, death channel can work with other corpse-consuming spells.
-        if (was_visible
+        if (in_los
             && corpseworthy
             && you.duration[DUR_DEATH_CHANNEL]
             && !have_passive(passive_t::reaping))
@@ -2547,10 +2546,12 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
 
         corpse_consumed = _apply_necromancy(mons, !death_message, exploded,
-                                            was_visible, corpseworthy);
+                                            in_los, corpseworthy);
 
         // currently allowing this to stack with other death effects -hm
-        if (you.duration[DUR_CORPSE_ROT] && !have_passive(passive_t::goldify_corpses))
+        if (you.duration[DUR_CORPSE_ROT]
+            && in_los
+            && !have_passive(passive_t::goldify_corpses))
         {
             const int rot_pow = you.props[CORPSE_ROT_POWER_KEY].get_int();
             _corpse_rot(mons, rot_pow);
