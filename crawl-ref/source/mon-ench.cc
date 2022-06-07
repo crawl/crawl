@@ -1417,6 +1417,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WATERLOGGED:
     case ENCH_SIMULACRUM:
     case ENCH_NECROTIZE:
+    case ENCH_CONCENTRATE_VENOM:
         decay_enchantment(en);
         break;
 
