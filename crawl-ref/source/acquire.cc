@@ -1306,7 +1306,7 @@ int acquirement_create_item(object_class_type class_wanted,
         // immediately identifying evil weapons).
         // Note that Xom will happily give useless items!
         int oldflags = acq_item.flags;
-        acq_item.flags |= ISFLAG_KNOW_TYPE;
+        acq_item.flags |= ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES;
         if ((is_useless_item(acq_item, false) && agent != GOD_XOM)
             || god_hates_item(acq_item))
         {
