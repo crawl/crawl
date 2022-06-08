@@ -567,10 +567,18 @@ int getch_ck()
         }
 #endif
 
+        // TODO: what else should be added to this?
         switch (c)
         {
-        // [dshaligram] MacOS ncurses returns 127 for backspace.
         case 127:
+        // 127 is ASCII DEL, which some terminals (all mac, some linux) use for
+        // the backspace key. ncurses does not typically map this to
+        // KEY_BACKSPACE (though this may depend on TERM settings?). '\b' (^H)
+        // in contrast should be handled automatically. Note that ASCII DEL
+        // is distinct from the standard esc code for del, esc[3~, which
+        // reliably does get mapped to KEY_DC by ncurses. Some background:
+        //     https://invisible-island.net/xterm/xterm.faq.html#xterm_erase
+        // (I've never found documentation for the mac situation.)
         case -KEY_BACKSPACE: return CK_BKSP;
         case -KEY_DC:    return CK_DELETE;
         case -KEY_HOME:  return CK_HOME;
@@ -585,6 +593,13 @@ int getch_ck()
         case -KEY_RESIZE: return CK_RESIZE;
 #endif
         case -KEY_BTAB:  return CK_SHIFT_TAB;
+        case -KEY_SDC:   return CK_SHIFT_DELETE;
+#ifdef TARGET_OS_MACOSX
+        // not sure what's up with this, no ncurses constant? defining it only
+        // for mac to be cautious
+        case -515:       return CK_CTRL_DELETE;
+#endif
+
         // may or may not be defined depending on the terminal. Escape codes
         // are the xterm convention, other terminals may do different things
         // and ncurses may or may not handle them correctly.
@@ -658,10 +673,11 @@ static void unixcurses_defkeys()
 
 #ifdef TARGET_OS_MACOSX
     // force some mappings for function keys that work on mac Terminal.app with
-    // the default TERM value. These seem to be the rxvt escape codes, even
+    // the default TERM value.
+
+    // The following seem to be the rxvt escape codes, even
     // though Terminal.app defaults to xterm-256color.
     // TODO: would it be harmful to force this unconditionally?
-
     check_define_key("\033[25~", 277); // F13
     check_define_key("\033[26~", 278); // F14
     check_define_key("\033[28~", 279); // F15
@@ -669,6 +685,12 @@ static void unixcurses_defkeys()
     check_define_key("\033[31~", 281); // F17
     check_define_key("\033[32~", 282); // F18
     check_define_key("\033[33~", 283); // F19, highest key on a magic keyboard
+
+    // not sure exactly what's up with these, but they exist by default:
+    // ctrl bindings do too, but they are intercepted by macos
+    check_define_key("\033b", -(CK_LEFT + CK_ALT_BASE));
+    check_define_key("\033f", -(CK_RIGHT + CK_ALT_BASE));
+    // (sadly, only left and right have modifiers by default on Terminal.app)
 #endif
 #undef check_define_key
 

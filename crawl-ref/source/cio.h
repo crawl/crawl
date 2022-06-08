@@ -149,6 +149,11 @@ enum KEYS
     CK_TAB    = 9,
     CK_ESCAPE = ESCAPE,
 
+    // note: -256 through approx -600 are reserved for various ncurses keycodes,
+    // use at your own risk.
+    // For internal keycodes:
+    // we use >= -255 as a safe negative range where ascii+ chars are guaranteed
+    // to be treated as positive, and <= -1000 as another safe overflow range.
     CK_DELETE = -255,
 
     // This sequence of enums should not be rearranged.
