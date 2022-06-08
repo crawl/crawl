@@ -4193,7 +4193,7 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
     else if (piety_gain >= 29)
         return "a major";
     else if (piety_gain >= 21)
-        return "a significant";
+        return "a medium";
     else if (piety_gain >= 13)
         return "a modest";
     else
