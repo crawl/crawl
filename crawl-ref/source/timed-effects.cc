@@ -1346,7 +1346,7 @@ void incr_zot_clock()
             break;
         case 3:
             mprf("Zot has nearly found you. %s is approaching. Descend or flee this branch!",
-                 in_death_range ? "death" : "suffering");
+                 in_death_range ? "Death" : "Suffering");
             break;
     }
 
