@@ -1792,7 +1792,15 @@ static bool _give_kiku_gift(bool forced)
         while (chosen_spells.size() < 5);
     }
 
-    simple_god_message(" grants you a gift!");
+    bool new_spell = false;
+    for (auto spl : chosen_spells)
+        if (!you.spell_library[spl])
+            new_spell = true;
+
+    if (!new_spell)
+        simple_god_message(" has no new spells for you at this time.");
+    else
+        simple_god_message(" grants you a gift!");
     // included in default force_more_message
 
     sort(chosen_spells.begin(), chosen_spells.end(), _sort_spell_level);

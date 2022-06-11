@@ -1780,11 +1780,22 @@ bool kiku_gift_capstone_spells()
 {
     ASSERT(can_do_capstone_ability(you.religion));
 
-    vector<spell_type> spells = { SPELL_HAUNT,
-                                  SPELL_BORGNJORS_REVIVIFICATION,
-                                  SPELL_INFESTATION,
-                                  SPELL_NECROMUTATION,
-                                  SPELL_DEATHS_DOOR };
+    vector<spell_type> spells;
+    vector<spell_type> candidates = { SPELL_HAUNT,
+                                      SPELL_BORGNJORS_REVIVIFICATION,
+                                      SPELL_INFESTATION,
+                                      SPELL_NECROMUTATION,
+                                      SPELL_DEATHS_DOOR };
+
+    for (auto spell : candidates)
+        if (!spell_is_useless(spell, false))
+            spells.push_back(spell);
+
+    if (spells.empty())
+    {
+        simple_god_message(" has no more spells that you can make use of!");
+        return false;
+    }
 
     string msg = "Do you wish to receive knowledge of "
                  + comma_separated_fn(spells.begin(), spells.end(), spell_title)
