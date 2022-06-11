@@ -764,6 +764,7 @@ enum wand_type
     WAND_CLOUDS_REMOVED,
     WAND_SCATTERSHOT_REMOVED,
 #endif
+    WAND_LIGHT,
     NUM_WANDS
 };
 

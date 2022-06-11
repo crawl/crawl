@@ -596,11 +596,9 @@ i-acid WAND_ACID
 i-random_effects WAND_REMOVEME14
 i-disintegration WAND_DISINTEGRATION
 i-clouds WAND_REMOVEME13
-i-scattershot WAND_REMOVEME12 WAND_ID_LAST
+i-scattershot WAND_REMOVEME12
 # end TAG_MAJOR_VERSION
-# start TAG_MAJOR_VERSION == 35
-# i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
-# end TAG_MAJOR_VERSION
+i-lightning WAND_LIGHT WAND_ID_LAST
 
 ################# Skeletons
 %sdir item/food

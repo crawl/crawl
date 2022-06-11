@@ -535,5 +535,6 @@ enum spell_type : int
     SPELL_ANGUISH,
     SPELL_SHEZAS_DANCE,
     SPELL_NECROTIZE,
+    SPELL_BOLT_OF_LIGHT,
     NUM_SPELLS
 };

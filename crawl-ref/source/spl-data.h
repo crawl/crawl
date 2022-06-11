@@ -2614,6 +2614,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BOLT_OF_LIGHT, "Bolt of Light",
+    spschool::conjuration | spschool::fire | spschool::air,
+    spflag::dir_or_target | spflag::needs_tracer,
+    6,
+    200,
+    5, 5,
+    6, 0,
+    TILEG_LIGHTNING_BOLT,
+},
+
+{
     SPELL_SERPENT_OF_HELL_GEH_BREATH, "gehenna serpent of hell breath",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::noisy

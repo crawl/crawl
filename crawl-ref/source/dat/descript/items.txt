@@ -1310,6 +1310,11 @@ wand of iceblast
 A magical device which creates a loud explosion of ice shards, partially
 harming even creatures resistant to cold.
 %%%%
+wand of light
+
+A magical device which fires a ray of searing light, injuring and blinding
+those struck. Tougher monsters will recover their vision more quickly.
+%%%%
 wand of mindburst
 
 A magical device which launches a psychic attack on a target creature. If it

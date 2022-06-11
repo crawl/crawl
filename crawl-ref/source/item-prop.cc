@@ -1432,6 +1432,7 @@ int wand_charge_value(int type, int item_level)
     // with early, but aren't totally flooded with charges by late game.
     case WAND_ICEBLAST:
     case WAND_ACID:
+    case WAND_LIGHT:
     case WAND_CHARMING:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
@@ -1479,6 +1480,7 @@ bool is_offensive_wand(const item_def& item)
         return false;
 
     case WAND_ACID:
+    case WAND_LIGHT:
     case WAND_MINDBURST:
     case WAND_CHARMING:
     case WAND_FLAME:

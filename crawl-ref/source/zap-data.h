@@ -1418,6 +1418,23 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
+    ZAP_BOLT_OF_LIGHT,
+    "bolt of light",
+    200,
+    new calcdice_calculator<4, 13, 3, 5>,
+    new tohit_calculator<10, 1, 25>,
+    new dicedef_calculator<3, 16, 1, 17>,
+    new tohit_calculator<17, 1, 25>,
+    WHITE,
+    false,
+    BEAM_LIGHT,
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    6
+},
+
+{
     ZAP_UNRAVELLING,
     "unravelling",
     200,

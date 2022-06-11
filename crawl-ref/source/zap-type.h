@@ -121,5 +121,6 @@ enum zap_type
     ZAP_FLAME_WAVE,
     ZAP_ENFEEBLE,
     ZAP_NECROTIZE,
+    ZAP_BOLT_OF_LIGHT,
     NUM_ZAPS
 };

@@ -403,12 +403,13 @@ unsigned int item_value(item_def item, bool ident)
         else
         {
             // true if the wand is of a good type, a type with significant
-            // inherent value even when empty. Good wands are less expensive
-            // per charge.
+            // inherent value. Good wands are less expensive per charge.
+            // XXX: remove this logic? nonsense with stackable wands?
             bool good = false;
             switch (item.sub_type)
             {
             case WAND_ACID:
+            case WAND_LIGHT:
             case WAND_DIGGING:
                 valued += 80;
                 good = true;

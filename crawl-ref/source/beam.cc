@@ -605,6 +605,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
           5, BEAM_POLYMORPH,
          // Seen through miscast effects.
           5, BEAM_ACID,
+          5, BEAM_LIGHT,
           5, BEAM_DAMNATION,
           5, BEAM_STICKY_FLAME,
           5, BEAM_MINDBURST,
@@ -3896,6 +3897,9 @@ void bolt::affect_player()
 
     }
 
+    if (flavour == BEAM_LIGHT && one_chance_in(3))
+        confuse_player(random_range(2, 3));
+
     if (flavour == BEAM_MIASMA && final_dam > 0)
         was_affected = miasma_player(agent(), name);
 
@@ -4575,6 +4579,15 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     {
         simple_monster_message(*mon, " is paralysed.");
         mon->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent(), BASELINE_DELAY));
+    }
+
+    if (flavour == BEAM_LIGHT && !mon->has_ench(ENCH_BLIND))
+    {
+        const int dur = max(1, div_rand_round(54, mon->get_hit_dice())) * BASELINE_DELAY;
+        auto ench = mon_enchant(ENCH_BLIND, 1, agent(),
+                                random_range(dur, dur * 2));
+        if (mon->add_ench(ench))
+            simple_monster_message(*mon, " is blinded.");
     }
 }
 
@@ -6626,6 +6639,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_POISON:                return "poison";
     case BEAM_NEG:                   return "negative energy";
     case BEAM_ACID:                  return "acid";
+    case BEAM_LIGHT:                 return "light";
     case BEAM_MIASMA:                return "miasma";
     case BEAM_SPORE:                 return "spores";
     case BEAM_POISON_ARROW:          return "poison sting";
