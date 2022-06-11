@@ -3822,7 +3822,7 @@ static void _set_initial_god_piety()
         break;
 
     case GOD_RU:
-        you.piety = 10; // one moderate sacrifice should get you to *.
+        you.piety = 5; // one moderate sacrifice should get you to *.
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
 
@@ -3851,9 +3851,9 @@ static void _set_initial_god_piety()
         break;
 
     default:
-        you.piety = 15; // to prevent near instant excommunication
-        if (you.piety_max[you.religion] < 15)
-            you.piety_max[you.religion] = 15;
+        you.piety = 10; // to prevent near instant excommunication
+        if (you.piety_max[you.religion] < 10)
+            you.piety_max[you.religion] = 10;
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
         break;
@@ -4664,11 +4664,10 @@ int piety_rank(int piety)
 
 int piety_breakpoint(int i)
 {
-    int breakpoints[NUM_PIETY_STARS] = { 30, 50, 75, 100, 120, 160 };
     if (i >= NUM_PIETY_STARS || i < 0)
         return 255;
     else
-        return breakpoints[i];
+        return 25 * (i + 1);
 }
 
 int get_monster_tension(const monster& mons, god_type god)
