@@ -71,12 +71,19 @@ static void _monster_greeting(monster *mons, const string &key)
     mons_speaks_msg(mons, msg, MSGCH_TALK, silenced(mons->pos()));
 }
 
+// combine with MG_AUTOFOE
+static int _auto_autofoe(const actor *caster)
+{
+    return (!caster || caster->is_player())
+        ? int{MHITYOU}
+        : caster->as_monster()->foe;
+}
+
 static mgen_data _summon_data(const actor &caster, monster_type mtyp,
                               int dur, god_type god, spell_type spell)
 {
     return mgen_data(mtyp, BEH_COPY, caster.pos(),
-                     caster.is_player() ? int{MHITYOU}
-                                        : caster.as_monster()->foe,
+                     _auto_autofoe(&caster),
                      MG_AUTOFOE)
                      .set_summoned(&caster, dur, spell, god);
 }
@@ -570,8 +577,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 
     mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE,
                  caster ? caster->pos() : you.pos(),
-                 (caster && caster->is_monster()) ? ((monster*)caster)->foe
-                                                  : int{MHITYOU},
+                 _auto_autofoe(caster),
                  MG_AUTOFOE);
     mg.set_summoned(caster, caster ? dur : 0, SPELL_NO_SPELL, GOD_TROG);
 
@@ -2640,7 +2646,7 @@ bool summon_spider(const actor &agent, coord_def pos, god_type god,
                                                pow / 2, MONS_WOLF_SPIDER);
 
     monster *mons = create_monster(
-            mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_AUTOFOE)
+            mgen_data(mon, BEH_COPY, pos, _auto_autofoe(&agent), MG_AUTOFOE)
                       .set_summoned(&agent, 3, spell, god));
     if (mons)
         return true;
