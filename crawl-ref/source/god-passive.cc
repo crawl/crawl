@@ -478,11 +478,9 @@ int chei_stat_boost(int piety)
 {
     if (!have_passive(passive_t::stat_boost))
         return 0;
-    if (piety < piety_breakpoint(0))  // Since you've already begun to slow down.
-        return 1;
     if (piety >= piety_breakpoint(5))
         return 15;
-    return (piety - 10) / 10;
+    return max(piety / 10, 1);
 }
 
 // Eat from one random off-level item stack.
@@ -854,7 +852,7 @@ int qazlal_sh_boost(int piety)
     if (!have_passive(passive_t::storm_shield))
         return 0;
 
-    return min(piety, piety_breakpoint(5)) / 10;
+    return 1 + min(piety, piety_breakpoint(5)) / 10;
 }
 
 // Not actually passive, but placing it here so that it can be easily compared
