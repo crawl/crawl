@@ -1902,6 +1902,9 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     case transformation::shadow:
         drain_player(25, true, true);
+        if (you.duration[DUR_CORONA])
+            you.duration[DUR_CORONA] = 0;
+
         if (you.invisible())
             mpr("You fade into the shadows.");
         else

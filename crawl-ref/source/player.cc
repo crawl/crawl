@@ -7076,6 +7076,9 @@ bool player::visible_to(const actor *looker) const
 */
 bool player::backlit(bool self_halo, bool temp) const
 {
+    if (temp && form == transformation::shadow)
+        return false;
+
     return temp && (player_severe_contamination()
                     || duration[DUR_CORONA]
                     || duration[DUR_LIQUID_FLAMES]
@@ -7093,7 +7096,13 @@ bool player::umbra() const
 // This is the imperative version.
 void player::backlight()
 {
-    if (!duration[DUR_INVIS] && form != transformation::shadow)
+    if (form == transformation::shadow)
+    {
+        mpr("Shadows surge around you.");
+        return;
+    }
+
+    if (!duration[DUR_INVIS])
     {
         if (duration[DUR_CORONA])
             mpr("You glow brighter.");
