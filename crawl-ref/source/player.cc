@@ -4728,7 +4728,7 @@ bool invis_allowed(bool quiet, string *fail_reason)
 
     if (you.has_mutation(MUT_GLOWING))
     {
-        mpr("Your body glows too brightly to become invisible.");
+        msg = "Your body glows too brightly to become invisible.";
         success = false;
     }
     else if (you.haloed() && you.halo_radius() != -1)
