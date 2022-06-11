@@ -7099,13 +7099,11 @@ void player::backlight()
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");
-        increase_duration(DUR_CORONA, random_range(15, 35), 250);
     }
     else
-    {
         mpr("You feel strangely conspicuous.");
-        increase_duration(DUR_CORONA, random_range(3, 5), 250);
-    }
+
+    increase_duration(DUR_CORONA, random_range(15, 35), 250);
 }
 
 bool player::can_mutate() const
