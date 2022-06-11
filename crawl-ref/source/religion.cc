@@ -3700,7 +3700,7 @@ static void _apply_monk_bonus()
     else if (you_worship(GOD_YREDELEMNUL))
         give_yred_bonus_zombies(2); // top up to **
     else
-        gain_piety(35, 1, false, true);
+        gain_piety(40, 1, false, true);
 }
 
 /// Transfer some piety from an old good god to a new one, if applicable.
