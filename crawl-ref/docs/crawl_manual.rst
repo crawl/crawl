@@ -2121,9 +2121,7 @@ Elementalists
     provides powerful but difficult to direct spells.
 
   Earth Magic
-    is a versatile school, with destructive, debilitating and utility spells
-    available. Earth Elementalists start with the Sandblast spell, and some
-    stones to use with it.
+    offers direct effects, some destructive and some debilitating.
 
 Venom Mages
   Venom Mages specialise in poison magic, which is extremely useful in the

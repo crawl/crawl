@@ -2841,14 +2841,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return false;
 
     case OBJ_MISSILES:
-        if ((you.has_spell(SPELL_SANDBLAST)
-                || !you.num_turns && you.char_class == JOB_EARTH_ELEMENTALIST)
-                && item.sub_type == MI_STONE)
-        {
-            return false;
-        }
-
-        // Save for the above spell, all missiles are useless for felids.
+        // All missiles are useless for felids.
         if (you.has_mutation(MUT_NO_GRASPING))
             return true;
 

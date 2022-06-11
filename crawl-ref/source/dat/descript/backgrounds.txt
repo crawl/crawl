@@ -49,8 +49,8 @@ items helps them survive the dangerous journey upward.
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and carry stones to fuel the
-spell. More earthen spells are in their set of starting spells.
+Earth Elementalists know the Sandblast spell, and can later learn more earthen
+spells suitable for subtle stabbing or brute-force blasting.
 %%%%
 Enchanter
 

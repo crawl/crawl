@@ -60,8 +60,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const char **what, bool &hole);
 spret cast_fragmentation(int powc, const actor *caster,
                               const coord_def target, bool fail);
-pair<int, item_def *> sandblast_find_ammo();
-spret cast_sandblast(int powc, bolt &beam, bool fail);
 spret cast_polar_vortex(int powc, bool fail);
 void polar_vortex_damage(actor *caster, int dur);
 void cancel_polar_vortex(bool tloc = false);

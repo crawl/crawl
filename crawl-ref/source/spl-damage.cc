@@ -2584,45 +2584,6 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
     return spret::success;
 }
 
-pair<int, item_def *> sandblast_find_ammo()
-{
-    item_def *stone = nullptr;
-    int num_stones = 0;
-    for (item_def& i : you.inv)
-    {
-        if (i.is_type(OBJ_MISSILES, MI_STONE)
-            && check_warning_inscriptions(i, OPER_DESTROY))
-        {
-            num_stones += i.quantity;
-            stone = &i;
-        }
-    }
-    return make_pair(num_stones, stone);
-}
-
-spret cast_sandblast(int pow, bolt &beam, bool fail)
-{
-    auto ammo = sandblast_find_ammo();
-
-    if (ammo.first == 0 || !ammo.second)
-    {
-        mpr("You don't have any stones to cast with.");
-        return spret::abort;
-    }
-
-    const spret ret = zapping(ZAP_SANDBLAST, pow, beam, true, nullptr, fail);
-
-    if (ret == spret::success)
-    {
-        if (dec_inv_item_quantity(letter_to_index(ammo.second->slot), 1))
-            mpr("You now have no stones remaining.");
-        else if (!you.quiver_action.spell_is_quivered(SPELL_SANDBLAST))
-            mprf_nocap("%s", ammo.second->name(DESC_INVENTORY).c_str());
-    }
-
-    return ret;
-}
-
 static bool _elec_not_immune(const actor *act)
 {
     return act->res_elec() < 3 && !god_protects(act->as_monster());

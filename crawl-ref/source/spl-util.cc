@@ -1433,11 +1433,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
-    case SPELL_SANDBLAST:
-        if (temp && sandblast_find_ammo().first == 0)
-            return "you don't have any stones to cast with.";
-        break;
-
     case SPELL_NOXIOUS_BOG:
         if (temp && you.duration[DUR_NOXIOUS_BOG])
             return "you cannot sustain more bogs right now.";

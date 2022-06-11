@@ -4141,6 +4141,8 @@ bool handle_mon_spell(monster* mons)
     if (!(flags & MON_SPELL_INSTANT))
     {
         mons->lose_energy(EUT_SPELL);
+        if (spell_cast == SPELL_SANDBLAST)
+            mons->lose_energy(EUT_SPELL); // double slow!
         return true;
     }
 

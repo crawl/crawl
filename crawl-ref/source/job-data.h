@@ -166,7 +166,7 @@ static const map<job_type, job_def> job_data =
         SPELL_STONE_ARROW,
         SPELL_PETRIFY,
     },
-    { "stone q:30", "robe", "potion of magic", },
+    { "robe", "potion of magic", },
     WCHOICE_NONE,
     { { SK_TRANSMUTATIONS, 1 }, { SK_EARTH_MAGIC, 3 }, { SK_SPELLCASTING, 2 },
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, }

@@ -857,9 +857,6 @@ static void _handle_start_spells(const vector<spell_type> &spells)
             ++lvl_1s;
             to_memorise = s;
         }
-        // give stones for use with sandblast
-        if (s == SPELL_SANDBLAST)
-            newgame_make_item(OBJ_MISSILES, MI_STONE, 10 + random2avg(41, 5));
     }
     if (lvl_1s == 1 && !spell_is_useless(to_memorise, false, true))
         add_spell_to_memory(to_memorise);
