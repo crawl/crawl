@@ -1438,12 +1438,23 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     desc = out.str();
 }
 
+static bool _hide_moninfo_flag(monster_info_flags f)
+{
+    if (crawl_state.game_is_arena() &&
+        (f == MB_DISTRACTED_ONLY || f == MB_CANT_SEE_YOU))
+    {
+        // the wording on these doesn't make sense in the arena, so hide.
+        return true;
+    }
+    return false;
+}
+
 vector<string> monster_info::attributes() const
 {
     vector<string> v;
     for (auto& name : monster_info_flag_names)
     {
-        if (is(name.flag))
+        if (is(name.flag) && !_hide_moninfo_flag(name.flag))
         {
             // TODO: just use `do_mon_str_replacements`?
             v.push_back(replace_all(name.long_singular,
@@ -1919,6 +1930,8 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
 
     for (auto& name : monster_info_flag_names)
     {
+        if (_hide_moninfo_flag(name.flag))
+            continue;
         int num = 0;
         for (int j = start; j < start+count; j++)
         {
