@@ -7,12 +7,14 @@ enum beam_type                  // bolt::flavour
     BEAM_MISSILE,
     BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
+    BEAM_FIRST_RANDOM = BEAM_FIRE,
     BEAM_COLD,
     BEAM_MAGIC,
     BEAM_ELECTRICITY,
     BEAM_POISON,
     BEAM_NEG,
     BEAM_ACID,
+    BEAM_LAST_RANDOM = BEAM_ACID,
     BEAM_MIASMA,
     BEAM_WATER,
 

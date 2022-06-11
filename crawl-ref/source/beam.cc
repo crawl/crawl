@@ -852,7 +852,7 @@ void bolt::bounce()
 void bolt::fake_flavour()
 {
     if (real_flavour == BEAM_RANDOM)
-        flavour = static_cast<beam_type>(random_range(BEAM_FIRE, BEAM_ACID));
+        flavour = static_cast<beam_type>(random_range(BEAM_FIRST_RANDOM, BEAM_LAST_RANDOM));
     else if (real_flavour == BEAM_CHAOS)
         flavour = _chaos_beam_flavour(this);
     else if (real_flavour == BEAM_CRYSTAL && flavour == BEAM_CRYSTAL)
