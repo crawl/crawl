@@ -5641,11 +5641,14 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
 
     for (const string &specifier : split_string("/", spec))
     {
-        item_spec result;
-        if (parse_single_spec(result, specifier))
-            list.ilist.push_back(result);
-        else
+        item_spec parsed_spec;
+        if (!parse_single_spec(parsed_spec, specifier))
+        {
             dprf(DIAG_DNGN, "Failed to parse: %s", specifier.c_str());
+            continue;
+        }
+        if (!item_excluded_from_set(parsed_spec.base_type, parsed_spec.sub_type))
+            list.ilist.push_back(parsed_spec);
     }
 
     return list;

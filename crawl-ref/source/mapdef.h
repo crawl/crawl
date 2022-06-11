@@ -615,6 +615,8 @@ public:
     // Set this list to be a copy of the item_spec_slot in list.
     void set_from_slot(const item_list &list, int slot_index);
 
+    bool parse_single_spec(item_spec &result, string s);
+
 private:
     struct item_spec_slot
     {
@@ -629,7 +631,6 @@ private:
 private:
     item_spec item_by_specifier(const string &spec);
     item_spec_slot parse_item_spec(string spec);
-    bool parse_single_spec(item_spec &result, string s);
     int parse_acquirement_source(const string &source);
     void parse_raw_name(string name, item_spec &spec);
     void parse_random_by_class(string c, item_spec &spec);

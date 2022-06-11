@@ -1339,6 +1339,13 @@ MARKER:  ` = lua:fog_machine { cloud_type = "thin mist", \
                               delay = 100, size = 2, walk_dist = 1 }
 TILE:   G = dngn_gravestone
 : interest_check(_G)
+veto {{
+  if you.depth() < 7 then
+    return items.excluded_from_set("wand of charming")
+  else
+    return items.excluded_from_set("wand of paralysis")
+  end
+}}
 MAP
     ccccc
     c...c

@@ -796,3 +796,9 @@ enum food_type
     NUM_FOODS
 };
 #endif
+
+enum item_set_type
+{
+    ITEM_SET_HEX_WANDS,
+    NUM_ITEM_SET_TYPES
+};

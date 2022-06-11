@@ -278,6 +278,7 @@ static void _post_init(bool newc)
     calc_hp();
     calc_mp();
     shopping_list.refresh();
+    populate_excluded_items();
 
     run_map_local_preludes();
 

@@ -269,6 +269,7 @@ enum tag_minor_version
     TAG_MINOR_MOSTLY_REMOVE_AMMO,  // Remove most aspects of launcher ammo.
     TAG_MINOR_METEORAN_ENUM,       // Fix misordered enums.
     TAG_MINOR_MY_ENUM,             // Fix more misordered enums.
+    TAG_MINOR_WAND_SETS,           // Initialise wand generation sets.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

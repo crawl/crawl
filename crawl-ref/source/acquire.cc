@@ -640,12 +640,13 @@ static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
 static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
                                      int /*agent */)
 {
+    const auto hex_wand_type = (wand_type)item_for_set(ITEM_SET_HEX_WANDS);
+    const int hex_wand_weight = hex_wand_type == WAND_CHARMING
+                                && you.allies_forbidden() ? 0 : 20;
     vector<pair<wand_type, int>> weights = {
         { WAND_ACID,      20 },
         { WAND_ICEBLAST,  20 },
-        { WAND_CHARMING,  you.allies_forbidden() ? 0 : 10 },
-        { WAND_PARALYSIS, 10 },
-        { WAND_MINDBURST, 8 },
+        { hex_wand_type,  hex_wand_weight },
         { WAND_POLYMORPH, 5 },
         { WAND_DIGGING,   5 },
         { WAND_FLAME,     2 },

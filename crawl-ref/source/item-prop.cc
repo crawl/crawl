@@ -715,6 +715,16 @@ static const food_def Food_prop[] =
 };
 #endif
 
+struct item_set_def
+{
+    object_class_type cls;
+    vector<int> subtypes;
+};
+static const item_set_def item_sets[] =
+{
+    { OBJ_WANDS, { WAND_MINDBURST, WAND_CHARMING, WAND_PARALYSIS } },
+};
+
 // Must call this functions early on so that the above tables can
 // be accessed correctly.
 void init_properties()
@@ -2983,4 +2993,72 @@ int missile_base_price(missile_type type)
 int armour_base_price(armour_type type)
 {
     return Armour_prop[ Armour_index[type] ].price;
+}
+
+static string _item_set_key(item_set_type typ)
+{
+    return make_stringf("ITEM_SET_%d_CHOSEN", typ);
+}
+
+static int &_item_set_choice(item_set_type typ)
+{
+    return you.props[_item_set_key(typ)].get_int();
+}
+
+/// Some items are guaranteed to only generate in some games, and are
+/// mutually exclusive with other items within their set. Determine which
+/// will be generated in this game.
+void initialise_item_sets()
+{
+    for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
+    {
+        const item_set_type iset = (item_set_type)i;
+        const vector<int> &subtypes = item_sets[i].subtypes;
+        const int chosen_idx = random2(subtypes.size());
+        _item_set_choice(iset) = subtypes[chosen_idx];
+    }
+    populate_excluded_items();
+}
+
+/// What item for the given set is enabled for generation?
+int item_for_set(item_set_type typ)
+{
+    return _item_set_choice(typ);
+}
+
+static map<object_class_type, map<int, item_set_type>> excluded_items;
+
+void populate_excluded_items()
+{
+    excluded_items.clear();
+    for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
+    {
+        const item_set_def &isd = item_sets[i];
+        const auto iset = (item_set_type)i;
+        const int choice = _item_set_choice(iset);
+        for (int subtype : isd.subtypes)
+            if (subtype != choice)
+                excluded_items[isd.cls][subtype] = iset;
+    }
+}
+
+/// Is this item in an item set & not the one from that set chosen to generate this game?
+bool item_excluded_from_set(object_class_type type, int sub_type)
+{
+    if (crawl_state.game_is_tutorial())
+        return false;
+    return excluded_items[type].count(sub_type) > 0;
+}
+
+/**
+ * Is this item in an item set & not the one from that set chosen to generate this game,
+ * AND the player has seen the chosen item from this set?
+ */
+bool item_known_excluded_from_set(object_class_type type, int sub_type)
+{
+    if (!item_excluded_from_set(type, sub_type))
+        return false;
+    const item_set_type ist = excluded_items[type][sub_type];
+    const int chosen = _item_set_choice(ist);
+    return you.type_ids[item_sets[ist].cls][chosen];
 }

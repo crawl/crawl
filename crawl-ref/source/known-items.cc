@@ -372,6 +372,10 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
+            // Don't show items the player knows can't generate.
+            if (item_known_excluded_from_set((object_class_type)i, j))
+                continue;
+
             if (you.type_ids[i][j] != unknown_items) // logical xor
                 _add_fake_item(i, j, selected_items, items, !unknown_items);
             else

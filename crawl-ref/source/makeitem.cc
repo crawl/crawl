@@ -1234,15 +1234,14 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
  */
 static int _random_wand_subtype()
 {
+    const auto hex_wand_type = (wand_type)item_for_set(ITEM_SET_HEX_WANDS);
     // total weight 70 [arbitrary]
-    return random_choose_weighted(14, WAND_FLAME,
-                                  14, WAND_ICEBLAST,
-                                  8, WAND_POLYMORPH,
-                                  8, WAND_PARALYSIS,
-                                  8, WAND_ACID,
-                                  6, WAND_MINDBURST,
-                                  6, WAND_DIGGING,
-                                  5, WAND_CHARMING);
+    return random_choose_weighted(15, hex_wand_type,
+                                  15, WAND_FLAME,
+                                  15, WAND_ICEBLAST,
+                                  9, WAND_POLYMORPH,
+                                  9, WAND_ACID,
+                                  6, WAND_DIGGING);
 }
 
 /**

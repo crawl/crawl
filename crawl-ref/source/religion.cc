@@ -1444,6 +1444,7 @@ static int _pakellas_low_wand()
 
 static int _pakellas_high_wand()
 {
+    /// XXX TODO: support item sets
     vector<int> high_wands = {
         WAND_PARALYSIS,
         WAND_ICEBLAST,

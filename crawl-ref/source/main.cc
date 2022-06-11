@@ -603,11 +603,34 @@ static string _wanderer_spell_str()
                               });
 }
 
+static string _artificer_wands_str()
+{
+    return "the following wands: " +
+        comma_separated_fn(begin(you.inv), end(you.inv),
+                         [] (const item_def &item) -> string
+                         {
+                             return sub_type_string(item);
+                         }, ", and ", ", ",
+                         [] (const item_def &item) -> bool
+                         {
+                             return item.defined() && item.base_type == OBJ_WANDS;
+                         });
+}
+
+static string _get_equip_str()
+{
+    if (inv_count() == 0)
+        return "";
+    if (you.char_class == JOB_WANDERER)
+        return _wanderer_equip_str();
+    if (you.char_class == JOB_ARTIFICER)
+        return _artificer_wands_str();
+    return "";
+}
+
 static void _djinn_announce_spells()
 {
-    const string equip_str = (you.char_class == JOB_WANDERER
-                                 && inv_count() > 0) ? _wanderer_equip_str()
-                                                    : "";
+    const string equip_str =_get_equip_str();
     const string spell_str = you.spell_no ?
                                 "the following spells memorised: " + _wanderer_spell_str() :
                                 "";
@@ -616,6 +639,9 @@ static void _djinn_announce_spells()
 
     const string spacer = spell_str.empty() || equip_str.empty() ? "" : "; and ";
     mprf("You begin with %s%s%s.", equip_str.c_str(), spacer.c_str(), spell_str.c_str());
+
+    take_note(Note(NOTE_MESSAGE, 0, 0, you.your_name + " set off with " +
+                                       equip_str + spell_str + "."));
 }
 
 // Announce to the message log and make a note of the player's starting items,
@@ -650,8 +676,16 @@ static void _wanderer_note_equipment()
          spell_str.c_str(), library_str.c_str());
 
     const string combined_str = you.your_name + " set off with "
-                                + equip_str + spell_str + library_str;
+                                + equip_str + spell_str + library_str + ".";
     take_note(Note(NOTE_MESSAGE, 0, 0, combined_str));
+}
+
+static void _artificer_note_wands()
+{
+    const string wands = _artificer_wands_str();
+    mprf("You begin with %s.", wands.c_str());
+
+    take_note(Note(NOTE_MESSAGE, 0, 0, you.your_name + " set off with " + wands + "."));
 }
 
 /**
@@ -729,6 +763,8 @@ static void _take_starting_note()
         _djinn_announce_spells();
     else if (you.char_class == JOB_WANDERER)
         _wanderer_note_equipment();
+    else if (you.char_class == JOB_ARTIFICER)
+        _artificer_note_wands();
 
     notestr << "HP: " << you.hp << "/" << you.hp_max
             << " MP: " << you.magic_points << "/" << you.max_magic_points;

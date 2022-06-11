@@ -4054,6 +4054,8 @@ static void _tag_read_you(reader &th)
         you.props[VORTEX_POWER_KEY] = 150;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_WAND_SETS)
+        initialise_item_sets();
 #endif
 }
 
@@ -5481,7 +5483,6 @@ void unmarshallItem(reader &th, item_def &item)
         if (item.is_type(OBJ_ARMOUR, ARM_CENTAUR_BARDING))
             item.sub_type = ARM_BARDING;
     }
-
 #endif
 
     if (is_unrandom_artefact(item))

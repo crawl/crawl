@@ -21,6 +21,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "libutil.h"
+#include "mapdef.h" // item_spec
 #include "mon-util.h"
 #include "mpr.h"
 #include "output.h"
@@ -1534,6 +1535,24 @@ static int l_item_fire(lua_State *ls)
     PLUARET(boolean, you.turn_is_over);
 }
 
+LUAFN(l_item_excluded_from_set)
+{
+    ASSERT_DLUA;
+
+    const string &specifier = luaL_checkstring(ls, 1);
+    item_list il;
+    item_spec parsed_spec;
+    if (!il.parse_single_spec(parsed_spec, specifier))
+    {
+        luaL_error(ls, make_stringf("Invalid item spec '%s'.",
+                                    specifier.c_str()).c_str());
+    }
+    lua_pushboolean(ls, item_excluded_from_set(parsed_spec.base_type,
+                                               parsed_spec.sub_type));
+    return 1;
+}
+
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1632,6 +1651,7 @@ static const struct luaL_reg item_lib[] =
     { "shopping_list",     l_item_shopping_list },
     { "acquirement_items", l_item_acquirement_items },
     { "fire",              l_item_fire },
+    { "excluded_from_set", l_item_excluded_from_set },
     { nullptr, nullptr },
 };
 
