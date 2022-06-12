@@ -403,8 +403,12 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you.form == transformation::blade_hands && mut == MUT_PAWS)
         return mutation_activity_type::INACTIVE;
 
-    if (you.form == transformation::tree && mut == MUT_TELEPORT)
+    if (mut == MUT_TELEPORT
+        && (you.no_tele() || player_in_branch(BRANCH_ABYSS)))
+    {
         return mutation_activity_type::INACTIVE;
+    }
+
 #if TAG_MAJOR_VERSION == 34
     if ((you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
          && (mut == MUT_MANA_LINK || mut == MUT_MANA_REGENERATION))
