@@ -1192,7 +1192,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer,
     1,
     50,
-    3, 3,
+    4, 4,
     1, 0,
     TILEG_SANDBLAST,
 },
