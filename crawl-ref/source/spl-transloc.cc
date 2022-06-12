@@ -852,9 +852,6 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
 
     if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
-        if (teleportitis)
-            return false;
-
         if (!reason.empty())
             mpr(reason);
         abyss_teleport();

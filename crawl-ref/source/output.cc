@@ -2469,7 +2469,7 @@ static vector<formatted_string> _get_overview_resistances(
     {
         if (you.no_tele())
             out += _resist_composer("NoTele", cwidth, 1, 1, false) + "\n";
-        else if (player_teleport())
+        else if (get_teleportitis_level())
             out += _resist_composer("Rnd*Tele", cwidth, 1, 1, false) + "\n";
     }
 
