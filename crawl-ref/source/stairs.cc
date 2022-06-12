@@ -461,7 +461,7 @@ static void _gauntlet_effect()
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
-    if (player_teleport())
+    if (you.get_base_mutation_level(MUT_TELEPORT))
         mpr("You feel stable on this floor.");
 }
 

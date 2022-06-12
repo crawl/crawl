@@ -1068,15 +1068,17 @@ bool player_can_hear(const coord_def& p, int hear_distance)
            && you.pos().distance_from(p) <= hear_distance;
 }
 
-int player_teleport()
+int get_teleportitis_level()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    // Don't allow any form of teleportation in Sprint or Gauntlets.
-    if (crawl_state.game_is_sprint() || player_in_branch(BRANCH_GAUNTLET))
+    // Teleportitis doesn't trigger in Sprint, Abyss, or Gauntlets.
+    if (crawl_state.game_is_sprint() || player_in_branch(BRANCH_GAUNTLET)
+        || player_in_branch(BRANCH_ABYSS))
+    {
         return 0;
+    }
 
-    // Short-circuit rings of teleport to prevent spam.
     if (you.stasis())
         return 0;
 

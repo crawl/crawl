@@ -1033,7 +1033,7 @@ int player_speed();
 int player_spell_levels(bool floored = true);
 int player_total_spell_levels();
 
-int player_teleport();
+int get_teleportitis_level();
 
 int player_monster_detect_radius();
 

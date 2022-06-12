@@ -981,7 +981,7 @@ void player_reacts()
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
-        const int teleportitis_level = player_teleport();
+        const int teleportitis_level = get_teleportitis_level();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(false, true, "You feel strangely unstable.");
