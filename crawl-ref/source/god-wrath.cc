@@ -2024,7 +2024,15 @@ static bool _ignis_shaft()
     // e.g. d -> orc, orc -> elf..?
     if (!you.shaftable())
         return false;
+
     simple_god_message(" burns the ground from beneath your feet!", GOD_IGNIS);
+
+    // This way, if you're wearing the rDislodge boots, the other Ignis wrath
+    // effects won't become more prevalent, encouraging players to boot-swap
+    // while under Ignis wrath.
+    if (!you.resists_dislodge("falling"))
+        return true;
+
     ASSERT(you.do_shaft());
     return true;
 }

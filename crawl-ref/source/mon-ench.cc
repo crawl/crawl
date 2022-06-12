@@ -1153,91 +1153,86 @@ bool monster::clear_far_engulf(bool force)
 // Returns true if you resist the merfolk avatar's call.
 static bool _merfolk_avatar_movement_effect(const monster* mons)
 {
-    bool do_resist = (you.attribute[ATTR_HELD]
-                      || you.duration[DUR_TIME_STEP]
-                      || you.cannot_act()
-                      || you.clarity()
-                      || you.is_stationary());
-
-    if (!do_resist)
+    if (you.attribute[ATTR_HELD]
+        || you.duration[DUR_TIME_STEP]
+        || you.cannot_act()
+        || you.clarity()
+        || you.is_stationary()
+        || you.resists_dislodge("being lured by song"))
     {
-        // We use a beam tracer here since it is better at navigating
-        // obstructing walls than merely comparing our relative positions
-        bolt tracer;
-        tracer.pierce          = true;
-        tracer.affects_nothing = true;
-        tracer.target          = mons->pos();
-        tracer.source          = you.pos();
-        tracer.range           = LOS_RADIUS;
-        tracer.is_tracer       = true;
-        tracer.aimed_at_spot   = true;
-        tracer.fire();
-
-        const coord_def newpos = tracer.path_taken[0];
-
-        if (!in_bounds(newpos)
-            || is_feat_dangerous(env.grid(newpos))
-            || !you.can_pass_through_feat(env.grid(newpos))
-            || !cell_see_cell(mons->pos(), newpos, LOS_NO_TRANS))
-        {
-            do_resist = true;
-        }
-        else
-        {
-            bool swapping = false;
-            monster* mon = monster_at(newpos);
-            if (mon)
-            {
-                coord_def swapdest;
-                if (mon->wont_attack()
-                    && !mon->is_stationary()
-                    && !mons_is_projectile(*mon)
-                    && !mon->cannot_act()
-                    && !mon->asleep()
-                    && swap_check(mon, swapdest, true))
-                {
-                    swapping = true;
-                }
-                else if (!mon->submerged())
-                    do_resist = true;
-            }
-
-            if (!do_resist)
-            {
-                const coord_def oldpos = you.pos();
-                mpr("The pull of its song draws you forwards.");
-
-                if (swapping)
-                {
-                    if (monster_at(oldpos))
-                    {
-                        mprf("Something prevents you from swapping places "
-                             "with %s.",
-                             mon->name(DESC_THE).c_str());
-                        return do_resist;
-                    }
-
-                    int swap_mon = env.mgrid(newpos);
-                    // Pick the monster up.
-                    env.mgrid(newpos) = NON_MONSTER;
-                    mon->moveto(oldpos);
-
-                    // Plunk it down.
-                    env.mgrid(mon->pos()) = swap_mon;
-
-                    mprf("You swap places with %s.",
-                         mon->name(DESC_THE).c_str());
-                }
-                move_player_to_grid(newpos, true);
-                stop_delay(true);
-
-                if (swapping)
-                    mon->apply_location_effects(newpos);
-            }
-        }
+        return true;
     }
 
-    return do_resist;
+    // We use a beam tracer here since it is better at navigating
+    // obstructing walls than merely comparing our relative positions
+    bolt tracer;
+    tracer.pierce          = true;
+    tracer.affects_nothing = true;
+    tracer.target          = mons->pos();
+    tracer.source          = you.pos();
+    tracer.range           = LOS_RADIUS;
+    tracer.is_tracer       = true;
+    tracer.aimed_at_spot   = true;
+    tracer.fire();
+
+    const coord_def newpos = tracer.path_taken[0];
+
+    if (!in_bounds(newpos)
+        || is_feat_dangerous(env.grid(newpos))
+        || !you.can_pass_through_feat(env.grid(newpos))
+        || !cell_see_cell(mons->pos(), newpos, LOS_NO_TRANS))
+    {
+        return true;
+    }
+
+    bool swapping = false;
+    monster* mon = monster_at(newpos);
+    if (mon)
+    {
+        coord_def swapdest;
+        if (mon->wont_attack()
+            && !mon->is_stationary()
+            && !mons_is_projectile(*mon)
+            && !mon->cannot_act()
+            && !mon->asleep()
+            && swap_check(mon, swapdest, true))
+        {
+            swapping = true;
+        }
+        else if (!mon->submerged())
+            return true;
+    }
+
+    const coord_def oldpos = you.pos();
+    mpr("The pull of its song draws you forwards.");
+
+    if (swapping)
+    {
+        if (monster_at(oldpos))
+        {
+            mprf("Something prevents you from swapping places with %s.",
+                 mon->name(DESC_THE).c_str());
+            return false;
+        }
+
+        int swap_mon = env.mgrid(newpos);
+        // Pick the monster up.
+        env.mgrid(newpos) = NON_MONSTER;
+        mon->moveto(oldpos);
+
+        // Plunk it down.
+        env.mgrid(mon->pos()) = swap_mon;
+
+        mprf("You swap places with %s.",
+             mon->name(DESC_THE).c_str());
+    }
+    move_player_to_grid(newpos, true);
+    stop_delay(true);
+
+    if (swapping)
+        mon->apply_location_effects(newpos);
+
+    return false;
 }
 
 static void _merfolk_avatar_song(monster* mons)

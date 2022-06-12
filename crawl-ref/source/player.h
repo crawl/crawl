@@ -821,6 +821,7 @@ public:
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
     bool can_feel_fear(bool include_unknown) const override;
+    bool resists_dislodge(string event = "") const override;
 
     bool can_throw_large_rocks() const override;
     bool can_smell() const;

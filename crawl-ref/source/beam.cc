@@ -4593,8 +4593,12 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
 void bolt::knockback_actor(actor *act, int dam)
 {
-    if (!act || !can_knockback(*act, dam))
+    if (!act
+        || !can_knockback(*act, dam)
+        || act->resists_dislodge("being knocked back"))
+    {
         return;
+    }
 
     const int distance =
         (origin_spell == SPELL_FORCE_LANCE
@@ -6753,7 +6757,7 @@ bool bolt::can_knockback(const actor &act, int dam) const
  * Can this bolt pull an actor?
  *
  * If a bolt is capable of pulling actors and the given actor can be pulled,
- * return true.
+ * return true. May print messages.
  *
  * @param act The target actor. Check if the actor is non-stationary and not
  *            already adjacent.
@@ -6762,8 +6766,12 @@ bool bolt::can_knockback(const actor &act, int dam) const
 */
 bool bolt::can_pull(const actor &act, int dam) const
 {
-    if (act.is_stationary() || adjacent(source, act.pos()))
+    if (act.is_stationary()
+        || adjacent(source, act.pos())
+        || act.resists_dislodge("being pulled"))
+    {
         return false;
+    }
 
     return origin_spell == SPELL_HARPOON_SHOT && dam;
 }

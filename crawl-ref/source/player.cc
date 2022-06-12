@@ -6631,6 +6631,23 @@ void player::drain_stat(stat_type s, int amount)
     lose_stat(s, amount);
 }
 
+/**
+ * Checks to see whether the player can be dislodged by physical effects.
+ * This only accounts for the "mountain boots" unrand, not being stationary, etc.
+ *
+ * @param event A message to be printed if the player cannot be dislodged.
+ *               If empty, nothing will be printed.
+ * @return Whether the player can be moved.
+ */
+bool player::resists_dislodge(string event) const
+{
+    if (!player_equip_unrand(UNRAND_MOUNTAIN_BOOTS))
+        return false;
+    if (!event.empty())
+        mprf("Your boots keep you from %s.", event.c_str());
+    return true;
+}
+
 bool player::corrode_equipment(const char* corrosion_source, int degree)
 {
     // rCorr protects against 50% of corrosion.
@@ -7371,8 +7388,11 @@ bool player::shaftable(bool check_terrain) const
 // different effect from the player invokable ability.
 bool player::do_shaft(bool check_terrain)
 {
-    if (!shaftable(check_terrain))
+    if (!shaftable(check_terrain)
+        || resists_dislodge("falling into an unexpected shaft"))
+    {
         return false;
+    }
 
     // Ensure altars, items, and shops discovered at the moment
     // the player gets shafted are correctly registered.
@@ -7795,7 +7815,6 @@ void print_potion_heal_message()
     else if (_get_potion_heal_factor() < 2)
         mpr("Your system partially rejects the healing.");
 }
-
 
 bool player::can_potion_heal()
 {
