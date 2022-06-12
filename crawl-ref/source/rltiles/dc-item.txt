@@ -598,7 +598,9 @@ i-disintegration WAND_DISINTEGRATION
 i-clouds WAND_REMOVEME13
 i-scattershot WAND_REMOVEME12
 # end TAG_MAJOR_VERSION
-i-lightning WAND_LIGHT WAND_ID_LAST
+i-lightning WAND_LIGHT
+%sdir item/potion
+i-cancel WAND_QUICKSILVER WAND_ID_LAST
 
 ################# Skeletons
 %sdir item/food

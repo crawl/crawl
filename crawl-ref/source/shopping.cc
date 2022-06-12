@@ -410,6 +410,7 @@ unsigned int item_value(item_def item, bool ident)
             {
             case WAND_ACID:
             case WAND_LIGHT:
+            case WAND_QUICKSILVER:
             case WAND_DIGGING:
                 valued += 80;
                 good = true;
