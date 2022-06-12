@@ -1696,7 +1696,8 @@ bool mons_can_be_spectralised(const monster& mon, bool divine)
 {
     return mon.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
            && !mon.is_summoned()
-           && !testbits(mon.flags, MF_NO_REWARD)
+           && (!testbits(mon.flags, MF_NO_REWARD)
+               || mon.props.exists(KIKU_WRETCH_KEY))
            && mon.type != MONS_PANDEMONIUM_LORD
            && (mons_has_attacks(mon, true)
                || divine && mon.has_spells());
