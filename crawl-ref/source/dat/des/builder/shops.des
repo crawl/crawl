@@ -676,7 +676,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of blasting |\
    randbook disc:conjuration | book of storms | book of lightning | \
    wand of iceblast | wand of flame | wand of mindburst | \
-   condenser vane | staff of conjuration | \
+   condenser vane | staff of conjuration | wand of light | \
    wand of acid | lightning rod | phial of floods | scroll of immolation | \
    book of flames | book of fire | book of air | manual of conjurations | \
    manual of evocations
@@ -1087,7 +1087,8 @@ TAGS:    transparent
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KFEAT:   S = general shop type:Overcharged suffix:Wands greed:15 count:6 ; \
          wand of digging charges:11 | wand of iceblast charges:18 | \
-         wand of acid charges:18 | wand of charming charges:18 | \
+         wand of acid charges:18 | wand of light charges:18 | \
+         wand of charming charges:18 | \
          wand of paralysis charges:18 | wand of polymorph charges:18 | \
          wand of mindburst charges:30 | wand of flame charges:40
 SHUFFLE: bv/bc/cv/bm/vm/cm

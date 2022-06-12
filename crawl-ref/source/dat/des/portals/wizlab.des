@@ -1791,8 +1791,8 @@ kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
 KITEM:      d = scroll of summoning / w:5 scroll of torment / \
                 / any scroll w:20 / potion of haste \
                 / potion of heal wounds / any potion w:20
-KITEM:      e = wand of acid / wand of iceblast / ring of fire / ring of ice \
-                / randbook disc:summoning
+KITEM:      e = wand of acid / wand of light / wand of iceblast / \
+                ring of fire / ring of ice / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
                 / manual of summonings w:2 / any randart jewellery w:5 \
                 / cloak good_item w:5 / star_item w:25 / superb_item

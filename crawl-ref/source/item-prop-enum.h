@@ -801,5 +801,6 @@ enum food_type
 enum item_set_type
 {
     ITEM_SET_HEX_WANDS,
+    ITEM_SET_BEAM_WANDS,
     NUM_ITEM_SET_TYPES
 };

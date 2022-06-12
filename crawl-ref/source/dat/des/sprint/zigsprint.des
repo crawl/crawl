@@ -772,7 +772,8 @@ KITEM:    L = scroll of blinking q:3 ident:all, \
               scroll of identify q:5 ident:all, \
               scroll of fog q:7 ident:all, \
               scroll of amnesia q:4 ident:all
-KITEM:    N = wand of acid ident:all charges:7, \
+KITEM:    N = wand of acid ident:all charges:7 /\
+              wand of light ident:all charges:7, \
               wand of iceblast ident:all charges:7, \
               wand of mindburst ident:all charges:7
 KITEM:    P = ring of strength ident:all plus:6, \
