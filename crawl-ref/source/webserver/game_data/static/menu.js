@@ -875,6 +875,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         }
 
         // keycodes only: characters go in menu_keypress_handler
+        // TODO: this should interface somehow with key_conversion.js
         switch (event.which)
         {
         case 109: // numpad -
@@ -895,18 +896,24 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 35: // end
+            if (menu.tag == "macro_mapping")
+                break; // Treat input as raw, no need to scroll anyway
             scroll_bottom_to_item(menu.total_items - 1);
             if (menu.total_items > 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
                 set_hovered(next_hoverable_item(true, menu.total_items - 1, true));
             event.preventDefault();
             return false;
         case 36: // home
+            if (menu.tag == "macro_mapping")
+                break; // Treat input as raw, no need to scroll anyway
             scroll_to_item(0);
             if (menu.flags & enums.menu_flag.ARROWS_SELECT)
                 set_hovered(next_hoverable_item(false, 0, true));
             event.preventDefault();
             return false;
         case 38: // up
+            if (menu.tag == "macro_mapping")
+                break; // Treat input as raw, no need to scroll anyway
             if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(true);
             else
@@ -914,6 +921,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 40: // down
+            if (menu.tag == "macro_mapping")
+                break; // Treat input as raw, no need to scroll anyway
             if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(false);
             else
@@ -921,6 +930,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 37: // left
+            if (menu.tag == "macro_mapping")
+                break; // Treat input as raw, no need to scroll anyway
             if (event.shiftKey)
             {
                 line_up();
@@ -929,6 +940,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             }
             break;
         case 39: // right
+            if (menu.tag == "macro_mapping")
+                break; // Treat input as raw, no need to scroll anyway
             if (event.shiftKey)
             {
                 line_down();
