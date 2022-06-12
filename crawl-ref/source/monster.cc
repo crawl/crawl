@@ -5180,7 +5180,7 @@ bool monster::may_have_action_energy() const
 /// At the player's current movement speed, will they eventually outpace this monster?
 bool monster::outpaced_by_player() const
 {
-    return speed * you.time_taken < action_energy(EUT_MOVE) * BASELINE_DELAY;
+    return speed * you.time_taken < energy_cost(EUT_MOVE, 1, BASELINE_DELAY);
 }
 
 /// If a monster had enough energy to act this turn, change it so it doesn't.
@@ -5498,7 +5498,7 @@ int monster::action_energy(energy_use_type et) const
     return max(move_cost, 1);
 }
 
-int monster::energy_cost(energy_use_type et, int div, int mult)
+int monster::energy_cost(energy_use_type et, int div, int mult) const
 {
     int energy_loss  = div_round_up(mult * action_energy(et), div);
     if (has_ench(ENCH_PETRIFYING))
