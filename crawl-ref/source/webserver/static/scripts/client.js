@@ -235,7 +235,9 @@ function (exports, $, key_conversion, chat, comm) {
                                  so we handle it in keydown */
             (e.which == 9))   /* Tab gives a keypress in Opera even when it is
                                  suppressed in keydown */
+        {
             return;
+        }
 
         // Give the game a chance to handle the key
         if (!retrigger_event(e, "game_keypress"))
@@ -321,19 +323,18 @@ function (exports, $, key_conversion, chat, comm) {
         }
         if ($(document.activeElement).hasClass("text")) return;
 
+        // supposedly `e.code` is defined on some jquery versions? not ours,
+        // though.
+        var code = e.originalEvent.code ? e.originalEvent.code : e.code;
 
-        // normalize numpad keycodes. I just couldn't find a good way to do this
-        // across browsers aside from use of the modern `code` values, but our
-        // key handling is generally not well kitted-out for these. We use
-        // relatively (but not fully) standard keycodes here that later get
-        // mapped to crawl-internal values on current versions.
-        if (e.originalEvent.code // TODO: update jquery
-            && e.which >= 48 && e.which <= 57
-            // don't do this unless the key would be further handled -- these
-            // keycodes are otherwise dropped
-            && 96 in key_conversion.simple)
+        // normalize numpad keycodes for the sake of shift and ctrl mappings.
+        // This is because sometimes, for some events, browsers will send the
+        // non-numpad keycode for digits, and we want to consistently convert
+        // modified numpad codes. This is independent of key_conversion.codes.
+        // useful tool: https://keyjs.dev/#keyboard-events-inspector
+        if (code && (e.which >= 48 && e.which <= 57))
         {
-            switch (e.originalEvent.code)
+            switch (code)
             {
                 case "Numpad0": e.which = 96; break;
                 case "Numpad1": e.which = 97; break;
@@ -345,8 +346,6 @@ function (exports, $, key_conversion, chat, comm) {
                 case "Numpad7": e.which = 103; break;
                 case "Numpad8": e.which = 104; break;
                 case "Numpad9": e.which = 105; break;
-                // TODO: NumpadEqual behaves differently than other numpad
-                // keys, I'm leaving it alone for now
                 default: break;
             }
         }
@@ -364,7 +363,7 @@ function (exports, $, key_conversion, chat, comm) {
                     e.preventDefault();
                     location.hash = "#lobby";
                 }
-                else if (e.which == 123)
+                else if (e.which == 123) // F12
                 {
                     e.preventDefault();
                     chat.focus();
@@ -396,27 +395,53 @@ function (exports, $, key_conversion, chat, comm) {
                 send_keycode(key_conversion.shift[e.which]);
             }
         }
+        else if (e.ctrlKey && e.shiftKey && !e.altKey)
+        {
+            if (e.which in key_conversion.ctrlshift)
+            {
+                e.preventDefault();
+                send_keycode(key_conversion.ctrlshift[e.which]);
+            }
+        }
         else if (!e.ctrlKey && !e.shiftKey && e.altKey)
         {
             if (e.which < 32) return;
 
             e.preventDefault();
-            send_bytes([27, e.which]);
+            send_bytes([27, e.which]); // XX ???
         }
         else if (!e.ctrlKey && !e.shiftKey && !e.altKey)
         {
-            if (e.which == 123)
+            if (e.which == 123
+                || code && code == "F12") // probably unncessesary for now
             {
                 e.preventDefault();
                 chat.focus();
+            }
+            else if (key_conversion.codes // <- cache safety, remove someday
+                && key_conversion.code_conversion_enabled()
+                && code && code in key_conversion.codes)
+            {
+                e.preventDefault();
+                send_keycode(key_conversion.codes[code]);
             }
             else if (e.which in key_conversion.simple)
             {
                 e.preventDefault();
                 send_keycode(key_conversion.simple[e.which]);
             }
+            else if (e.which in key_conversion.legacy)
+            {
+                // for current versions, these should be entirely shadowed.
+                // pre-0.27: values here are used, see comments in
+                // key_conversion.js
+                // 0.27-0.28: game.js set these values in key_conversion.simple
+                // 0.29 onwards: key_conversion.codes preempts all of these
+                e.preventDefault();
+                send_keycode(key_conversion.legacy[e.which]);
+            }
             // else
-            //    log("Key: " + e.which);
+            //    log("Unhandled key: " + e.which + ", " + code);
         }
     }
 
