@@ -4583,6 +4583,12 @@ void bolt::knockback_actor(actor *act, int dam)
     if (!act || !can_knockback(*act, dam))
         return;
 
+    if (act->res_dislodge() && you.can_see(*act))
+    {
+        announce_rdislodge("being knocked back");
+        return;
+    }
+
     const int distance =
         (origin_spell == SPELL_FORCE_LANCE
          || origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
@@ -4666,6 +4672,12 @@ void bolt::pull_actor(actor *act, int dam)
 {
     if (!act || !can_pull(*act, dam))
         return;
+
+    if (act->res_dislodge() && you.can_see(*act))
+    {
+        announce_rdislodge("being pulled forward");
+        return;
+    }
 
     // How far we'll try to pull the actor to make them adjacent to the source.
     const int distance = (act->pos() - source).rdist() - 1;

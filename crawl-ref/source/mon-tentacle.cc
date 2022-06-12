@@ -797,7 +797,12 @@ void move_solo_tentacle(monster* tentacle)
         // Don't drag things that cannot move
         if (!constrictee->is_stationary())
         {
-            if (retract_found)
+            if (constrictee->res_dislodge())
+            {
+                        string tent = (tentacle->type == MONS_SNAPLASHER_VINE ? "vine" : "tentacle");
+                announce_rdislodge("being pulled by the " + tent);
+            }
+            else if (retract_found)
             {
                 if (constrictee->is_habitable(old_pos))
                 {
@@ -1055,7 +1060,14 @@ void move_child_tentacles(monster* mons)
             if (feat_has_solid_floor(env.grid(old_pos))
                 && constrictee->is_habitable(old_pos))
             {
-                pull_constrictee = true;
+                if (constrictee->res_dislodge())
+                {
+                    announce_rdislodge("being pulled by the tentacle");
+                }
+                else
+                {
+                    pull_constrictee = true;
+                }
             }
         }
 

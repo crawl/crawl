@@ -6631,6 +6631,14 @@ void player::drain_stat(stat_type s, int amount)
     lose_stat(s, amount);
 }
 
+bool player::res_dislodge() const
+{
+    // This doesn't include is_stationary(), because unlike is_stationary(),
+    // if the player can't move due to rDislodge, a message should still be
+    // displayed.
+    return player_equip_unrand(UNRAND_MOUNTAIN_BOOTS);
+}
+
 bool player::corrode_equipment(const char* corrosion_source, int degree)
 {
     // rCorr protects against 50% of corrosion.
@@ -7367,6 +7375,12 @@ bool player::do_shaft(bool check_terrain)
     if (!shaftable(check_terrain))
         return false;
 
+    if (res_dislodge())
+    {
+        announce_rdislodge("falling into an unexpected shaft");
+        return false;
+    }
+
     // Ensure altars, items, and shops discovered at the moment
     // the player gets shafted are correctly registered.
     maybe_update_stashes();
@@ -7787,6 +7801,15 @@ void print_potion_heal_message()
         mpr("Your system rejects the healing.");
     else if (_get_potion_heal_factor() < 2)
         mpr("Your system partially rejects the healing.");
+}
+
+
+// Since the only source of rDislodge is the unrand boots, and those can only
+// be worn by the player, this text assumes the player is the actor who is
+// being not dislodged and that the property comes from their boots.
+void announce_rdislodge(string source)
+{
+    mprf("Your boots keep you from %s!", source.c_str());
 }
 
 

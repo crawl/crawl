@@ -403,6 +403,7 @@ public:
     bool no_tele(bool blink = false) const override;
     bool res_corr(bool /*allow_random*/ = true, bool temp = true) const override;
     bool antimagic_susceptible() const override;
+        bool res_dislodge() const override { return false; }
 
     bool stasis() const override;
     bool cloud_immune(bool items = true) const override;

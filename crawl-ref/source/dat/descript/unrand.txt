@@ -736,3 +736,10 @@ A blue-steel amulet. Its creator, an exceedingly practical woman, designed it to
 provide powerful protection against mundane jabs, stabs and bites. It's worse than
 useless against fire and frost, but how often does anyone really need to worry
 about that?
+%%%%
+mountain boots
+
+These sturdy boots were created by an artificer who lived high up on a remote
+mountain peak, as protection against the mountain's near-constant avalanches,
+rockslides, and snowstorms. No force short of translocations magic will budge
+the wearer from their position.

@@ -782,6 +782,7 @@ public:
     bool no_tele(bool blink = false) const override;
     string no_tele_reason(bool blink = false) const;
     bool antimagic_susceptible() const override;
+        bool res_dislodge() const;
 
     bool res_corr(bool allow_random = true, bool temp = true) const override;
     bool clarity(bool items = true) const override;
@@ -1114,6 +1115,8 @@ bool player_regenerates_hp();
 bool player_regenerates_mp();
 
 void print_potion_heal_message();
+
+void announce_rdislodge(string source);
 
 void contaminate_player(int change, bool controlled = false, bool msg = true);
 

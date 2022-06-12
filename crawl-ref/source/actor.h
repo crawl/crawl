@@ -286,6 +286,7 @@ public:
     virtual bool no_tele(bool blink = false) const = 0;
     virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;
+    virtual bool res_dislodge() const = 0;
 
     virtual bool res_corr(bool /*allow_random*/ = true, bool temp = true) const;
     bool has_notele_item(vector<const item_def *> *matches = nullptr) const;
