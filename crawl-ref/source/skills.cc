@@ -1790,6 +1790,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_EARTH_MAGIC:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Iron Dragon";
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Rock Star";
             break;
 
         case SK_AIR_MAGIC:
