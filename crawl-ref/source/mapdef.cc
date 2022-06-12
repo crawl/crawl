@@ -5607,6 +5607,12 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
         spec.sub_type = NUM_JEWELLERY;
         return;
     }
+    if (c == "beam wand")
+    {
+        spec.base_type = OBJ_WANDS;
+        spec.sub_type = item_for_set(ITEM_SET_BEAM_WANDS);
+        return;
+    }
 
     error = make_stringf("Bad item class: '%s'", c.c_str());
 }

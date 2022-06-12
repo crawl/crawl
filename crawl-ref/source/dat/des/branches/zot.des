@@ -1110,7 +1110,7 @@ KMONS:   3 = guardian mummy ; randart fustibalus ego:chaos / \
              guardian mummy ; randart fustibalus / \
              guardian mummy ; randart longbow / \
              guardian mummy ; randart arbalest
-KMONS:   5 = guardian mummy ; wand of acid | wand of light | scroll of summoning
+KMONS:   5 = guardian mummy ; any beam wand | scroll of summoning
 KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
              randart chain mail | randart robe . scroll of summoning
 KMONS:   2468 = killer klown

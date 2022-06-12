@@ -513,8 +513,8 @@ KMONS: q = electric eel
 KFEAT: q = shallow_water
 KMONS: r = hydra simulacrum / fire dragon simulacrum / polar bear simulacrum /\
  wolf simulacrum / black mamba simulacrum
-KITEM: r = any, any, any, any, any, superb_item / w:1 wand of acid /\
- w:1 wand of mindburst / w:1 wand of light
+KITEM: r = any, any, any, any, any, superb_item / w:1 any beam wand /\
+ w:1 wand of mindburst
 KFEAT: _ = altar_fedhas
 KMONS: s = patrolling Urug
 KMONS: u = death drake
