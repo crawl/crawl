@@ -18,7 +18,6 @@
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
-#include "god-passive.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "melee-attack.h"
@@ -632,55 +631,29 @@ void avoided_death_fineff::fire()
 
 void infestation_death_fineff::fire()
 {
-    mgen_data bug = mgen_data(MONS_DEATH_SCARAB,
-                              BEH_FRIENDLY, posn,
-                              MHITYOU, MG_AUTOFOE);
-    bug.set_summoned(&you, 0, SPELL_INFESTATION);
-
-    int num_scarabs = 1;
-    if (have_passive(passive_t::bonus_undead)
-        && x_chance_in_y(200 + you.piety, 1600))
+    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
+                                                   BEH_FRIENDLY, posn,
+                                                   MHITYOU, MG_AUTOFOE)
+                                         .set_summoned(&you, 0,
+                                                       SPELL_INFESTATION),
+                                         false))
     {
-        ++num_scarabs;
-    }
+        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
 
-    int seen = 0;
-    for (int i = 0; i < num_scarabs; ++i)
-    {
-        if (monster *scarab = create_monster(bug, false))
+        if (you.see_cell(posn) || you.can_see(*scarab))
         {
-            scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
-            if (you.see_cell(posn) || you.can_see(*scarab))
-                seen++;
+            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
+                                       name.c_str());
         }
-    }
-
-    if (seen > 0)
-    {
-        mprf("%s %s from %s!",
-             seen == 1 ? "A scarab" : "Scarabs",
-             conjugate_verb("burst", seen > 1).c_str(),
-             name.c_str());
     }
 }
 
 void make_derived_undead_fineff::fire()
 {
-    int num_undead = have_passive(passive_t::bonus_undead)
-                     && mg.behaviour == BEH_FRIENDLY
-                     && x_chance_in_y(200 + you.piety, 1600) ? 2 : 1;
-    bool messaged = false;
-    for (int i = 0; i < num_undead; ++i)
+    if (monster *undead = create_monster(mg))
     {
-        monster *undead = create_monster(mg);
-        if (!undead)
-            continue;
-
-        if (!message.empty() && !messaged && you.can_see(*undead))
-        {
+        if (!message.empty() && you.can_see(*undead))
             mpr(message);
-            messaged = true;
-        }
 
         // If the original monster has been levelled up, its HD might be
         // different from its class HD, in which case its HP should be
@@ -705,7 +678,6 @@ void make_derived_undead_fineff::fire()
                 undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
             }
         }
-
         if (!agent.empty())
             mons_add_blame(undead, "animated by " + agent);
     }

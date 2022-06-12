@@ -86,8 +86,8 @@ Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in
 the powers of death. An evil god, Kikubaaqudgha requires worshippers to cause
 the death and destruction of as many creatures as possible. In exchange,
 Kikubaaqudgha offers great assistance to the aspiring necromancer: a supply of
-useful bodies, knowledge of dark magic, protection against necromantic backlash,
-and multiplication of the newly undead.
+useful bodies, knowledge of dark magic, and protection against necromantic
+backlash.
 %%%%
 Lugonu
 
@@ -321,9 +321,8 @@ touch.
 Kikubaaqudgha powers
 
 Kikubaaqudgha will enhance servants' necromantic prowess with gifts of
-Necromancy spells, and may cause their spells which raise undead servants to
-create more minions. Kikubaaqudgha will protect followers from the effects of
-necromantic miscasts, death curses, and may even shield them from unholy
+Necromancy spells. Kikubaaqudgha will protect followers from the effects of
+necromantic miscasts and death curses, and may even shield them from unholy
 torment. Followers can unearth dying wretches as necromantic fodder, and may
 invoke torment. Kikubaaqudgha will eventually allow followers to either receive
 knowledge of the most forbidden necromantic magic, or to have their weapon
@@ -560,9 +559,10 @@ of slime mutations stripped away from them.
 Kikubaaqudgha wrath
 
 Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
-are wracked with torment and afflicted with a host of other necromantic ailments.
-Further, Kikubaaqudgha's gifts become tainted; those that attempt to use necromantic
-magic to fend off wrath will find it backfiring on them when least expected.
+are wracked with torment and afflicted with a host of other necromantic
+ailments. Further, Kikubaaqudgha's gifts become tainted; those that attempt to
+use necromantic magic to fend off wrath will find it backfiring on them when
+least expected.
 %%%%
 Lugonu wrath
 
