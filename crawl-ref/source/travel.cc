@@ -1119,6 +1119,22 @@ command_type travel()
             }
         }
 
+// #define DEBUG_EXPLORE
+#ifdef DEBUG_EXPLORE
+        if (you.running.pos == you.pos())
+        {
+            mprf("Stopping explore at target %d,%d", you.running.pos.x, you.running.pos.y);
+            stop_running();
+            return CMD_NO_CMD;
+        }
+        else if (!_is_valid_explore_target(you.running.pos))
+        {
+            mprf("Stopping explore; everything in los of %d,%d is mapped", you.running.pos.x, you.running.pos.y);
+            stop_running();
+            return CMD_NO_CMD;
+        }
+#endif
+
         // Speed up explore by not doing a double-floodfill if we have
         // a valid target.
         if (!you.running.pos.x
@@ -1587,7 +1603,8 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 
         // The addition of explore_wall_bias makes items as interesting
         // as a room's perimeter (with one of four known adjacent walls).
-        if (Options.explore_wall_bias)
+        // XX why?
+        if (Options.explore_wall_bias > 0)
             dist += Options.explore_wall_bias * 3;
 
         greedy_dist = dist;
@@ -1647,22 +1664,39 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
                 if (Options.explore_wall_bias)
                 {
-                    dist += Options.explore_wall_bias * 4;
+                    // if we are penalizing open space, introduce a default
+                    // penalty of 4 walls and then downweight that. If we are
+                    // penalizing walls, just add on for each wall.
+                    if (Options.explore_wall_bias > 0)
+                        dist += Options.explore_wall_bias * 8;
 
                     // Favour squares directly adjacent to walls
-                    for (int dir = 0; dir < 8; dir += 2)
+                    // XX for some reason, historically this only looked at
+                    // cardinal directions. Why?
+                    for (int dir = 0; dir < 8; dir++)
                     {
                         const coord_def ddc = dc + Compass[dir];
 
                         if (feat_is_wall(env.map_knowledge(ddc).feat()))
                             dist -= Options.explore_wall_bias;
                     }
+
+                    if (Options.explore_wall_bias < 0 &&
+                        feat_is_wall(env.map_knowledge(dc).feat()))
+                    {
+                        // further penalize cases where the unseen square dc
+                        // is itself a wall
+                        dist -= Options.explore_wall_bias;
+                    }
                 }
 
                 // Replace old target if nearer (or less penalized)
+                // don't let dist get < 0
                 if (dist < unexplored_dist || unexplored_dist < 0)
                 {
                     unexplored_dist = dist;
+                    // somewhat confusing: `c` is probably actually explored,
+                    // but is adjacent to the good place we just found.
                     unexplored_place = c;
                 }
             }

@@ -330,7 +330,7 @@ const vector<GameOption*> game_options::build_options_list()
                           -1, 2000),
         new IntGameOption(SIMPLE_NAME(explore_delay), -1, -1, 2000),
         new IntGameOption(SIMPLE_NAME(explore_item_greed), 10, -1000, 1000),
-        new IntGameOption(SIMPLE_NAME(explore_wall_bias), 0, 0, 1000),
+        new IntGameOption(SIMPLE_NAME(explore_wall_bias), 0, -1000, 1000),
         new IntGameOption(SIMPLE_NAME(scroll_margin_x), 2, 0),
         new IntGameOption(SIMPLE_NAME(scroll_margin_y), 2, 0),
         new IntGameOption(SIMPLE_NAME(item_stack_summary_minimum), 4),

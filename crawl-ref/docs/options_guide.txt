@@ -894,7 +894,9 @@ explore_wall_bias = 0
         Adjusts how much autoexplore favours attempting to discover room
         perimeters and corners. At higher values, autoexplore will more
         heavily favour visiting squares that are next to walls; at 0 it
-        will not favour them at all.
+        will not favour them at all. At negative values it will prefer
+        to stay away from walls. Note that setting this to a non-0 value
+        generally makes it slower to completely explore a level.
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
