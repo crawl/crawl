@@ -119,10 +119,15 @@ namespace quiver
         }
         if (af_hp_check)
             mpr("You are too injured to fight recklessly!");
+        else if (af_mp_check && !you.has_mutation(MUT_HP_CASTING)
+            && you.magic_points == 0)
+        {
+            mpr("You are out of magic!");
+        }
         else if (af_mp_check)
         {
             mprf("You are too depleted to draw on your %s recklessly!",
-                you.has_mutation(MUT_HP_CASTING) ? "health" : "mana");
+                you.has_mutation(MUT_HP_CASTING) ? "health" : "magic");
         }
         return af_hp_check || af_mp_check;
     }
