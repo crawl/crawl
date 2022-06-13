@@ -5275,6 +5275,8 @@ bool item_list::parse_single_spec(item_spec& result, string s)
         result.props[USEFUL_KEY] = bool(true);
     if (strip_tag(s, "unobtainable"))
         result.props[UNOBTAINABLE_KEY] = true;
+    if (strip_tag(s, "no_exclude"))
+        result.props[NO_EXCLUDE_KEY] = true;
 
     const int mimic = strip_number_tag(s, "mimic:");
     if (mimic != TAG_UNFOUND)
@@ -5653,8 +5655,11 @@ item_list::item_spec_slot item_list::parse_item_spec(string spec)
             dprf(DIAG_DNGN, "Failed to parse: %s", specifier.c_str());
             continue;
         }
-        if (!item_excluded_from_set(parsed_spec.base_type, parsed_spec.sub_type))
+        if (parsed_spec.props.exists(NO_EXCLUDE_KEY)
+            || !item_excluded_from_set(parsed_spec.base_type, parsed_spec.sub_type))
+        {
             list.ilist.push_back(parsed_spec);
+        }
     }
 
     return list;

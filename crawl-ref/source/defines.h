@@ -354,6 +354,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define IDENT_KEY "ident"
 #define USEFUL_KEY "useful"
 #define UNOBTAINABLE_KEY "unobtainable"
+#define NO_EXCLUDE_KEY "no_exclude"
 #define NO_PICKUP_KEY "no_pickup"
 #define DBNAME_KEY "dbname"
 #define ITEM_TILE_NAME_KEY "item_tile_name"
