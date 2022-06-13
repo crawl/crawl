@@ -908,6 +908,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            && summon_can_attack(mon, p)
            && (friendly || !is_sanctuary(p))
            && !mons_is_firewood(*foe)
+           && !foe->props.exists(KIKU_WRETCH_KEY)
            || p == you.pos() && mon->has_ench(ENCH_INSANE);
 }
 
