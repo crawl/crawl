@@ -36,7 +36,7 @@ fake_mutations:
     short: almost no armour
 recommended_jobs:
   - JOB_TRANSMUTER
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
   - JOB_CONJURER
   - JOB_BRIGAND
   - JOB_FIRE_ELEMENTALIST

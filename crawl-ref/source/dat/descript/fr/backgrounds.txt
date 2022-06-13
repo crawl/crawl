@@ -124,7 +124,7 @@ Les Translocateurs commencent avec une arme de leur choix et un parchemin de
 clignotement. Ils peuvent apprendre des sorts du livre des Déplacements
 Spaciaux.
 %%%%
-Wizard
+Hedge Wizard
 
 Les magiciens commencent avec un livre de Magie Mineure, contenant un large
 panel de sortilèges. Ils ont plus de réserves magiques que n'importe quelle

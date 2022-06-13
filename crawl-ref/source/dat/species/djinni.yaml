@@ -54,7 +54,7 @@ fake_mutations:
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_TRANSMUTER
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
 recommended_weapons:
