@@ -582,7 +582,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         {
             const item = menu.items[i];
             const item_rect = item.elem[0].getBoundingClientRect();
-            if (item_rect.top >= top)
+            // +1 here is for float issues
+            if (item_rect.top + 1.0 >= top)
             {
                 menu.first_visible = i;
                 break;
@@ -594,7 +595,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         {
             const item = menu.items[i];
             const item_rect = item.elem[0].getBoundingClientRect();
-            if (item_rect.bottom >= bottom)
+            // -1 here is for float issues
+            if (item_rect.bottom - 1.0 >= bottom)
             {
                 // one after the last visible item
                 if (bottom - item_rect.top > 10)
