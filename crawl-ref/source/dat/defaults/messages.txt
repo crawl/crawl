@@ -147,6 +147,8 @@ force_more_message += You fall asleep
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss
 force_more_message += a gateway leading .* appears
+force_more_message += You detect the abyssal rune
+force_more_message += the detected abyssal rune vanishes
 force_more_message += Found .* abyssal rune of Zot
 
 # Water nymph stair temp-drowning - people seem to miss these...

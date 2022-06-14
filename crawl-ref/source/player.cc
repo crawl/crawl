@@ -2233,6 +2233,13 @@ void forget_map(bool rot)
         if (!env.map_knowledge(p).known() || you.see_cell(p))
             continue;
 
+        if (player_in_branch(BRANCH_ABYSS)
+            && env.map_knowledge(p).item()
+            && env.map_knowledge(p).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
+        {
+            continue;
+        }
+
         if (rot)
         {
             const int dist = grid_distance(you.pos(), p);
