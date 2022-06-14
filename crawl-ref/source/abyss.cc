@@ -241,6 +241,47 @@ static void _abyss_postvault_fixup()
     env.markers.activate_all();
 }
 
+static void _detect_abyssal_rune()
+{
+    bool detected = false;
+    bool removed = false;
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    {
+        bool just_detected = false;
+        for (stack_iterator si(*ri); si; ++si)
+        {
+            if (si->is_type(OBJ_RUNES, RUNE_ABYSSAL))
+            {
+                detected = just_detected = true;
+                const bool already = env.map_knowledge(*ri).item();
+                if (already
+                    && env.map_knowledge(*ri).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
+                {
+                    break;
+                }
+
+                env.map_knowledge(*ri).set_item(*si, already);
+                if (!you.see_cell(*ri))
+                    env.map_knowledge(*ri).flags |= MAP_DETECTED_ITEM;
+                mpr("The abyssal matter surrounding you shimmers strangely.");
+                mpr("You detect the abyssal rune!");
+            }
+        }
+
+        if (!just_detected && env.map_knowledge(*ri).item()
+            && env.map_knowledge(*ri).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
+        {
+            // visible check needed?
+            env.map_knowledge(*ri).clear_item();
+            removed = true;
+        }
+    }
+    // too bad (XX can this happen?)
+    if (removed && !detected)
+        mpr("The abyss shimmers again as the detected abyssal rune vanishes.");
+    // XX could do the xom check from here?
+}
+
 static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
 {
     bool result = false;
@@ -672,6 +713,11 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
 
     remove_markers_and_listeners_at(p);
 
+    if (env.map_knowledge(p).item()
+            && env.map_knowledge(p).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
+    {
+        mpr("The abyss shimmers again as the detected abyssal rune vanishes.");
+    }
     env.map_knowledge(p).clear();
     if (env.map_forgotten)
         (*env.map_forgotten)(p).clear();
@@ -1384,6 +1430,8 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
     _ensure_player_habitable(true);
 
+    _detect_abyssal_rune();
+
     // Abyss has a constant density.
     env.density = 0;
 }
@@ -1459,6 +1507,7 @@ static void abyss_area_shift()
     // TODO: should dactions be rerun at this point instead? That would cover
     // this particular case...
     gozag_detect_level_gold(false);
+    _detect_abyssal_rune();
 }
 
 void destroy_abyss()
@@ -1605,6 +1654,7 @@ retry:
     }
 
     setup_environment_effects();
+    _detect_abyssal_rune();
 }
 
 static void _increase_depth()
@@ -1691,6 +1741,7 @@ void abyss_teleport(bool wizard_tele)
     vault_list.insert(vault_list.end(),
                         level_vaults.begin(), level_vaults.end());
 
+    _detect_abyssal_rune();
     more();
 }
 
