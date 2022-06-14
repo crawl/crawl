@@ -22,6 +22,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "options.h"
 #include "prompt.h"
 #include "religion.h"
 #include "scroller.h"
@@ -30,6 +31,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
+#include "timed-effects.h"
 #include "travel.h"
 #include "unicode.h"
 
@@ -243,14 +245,19 @@ string overview_description_string(bool display)
     return disp.substr(0, disp.find_last_not_of('\n')+1);
 }
 
+// XX unify with other pad code
+static string _pad_cs(string colour_string, size_t width)
+{
+    const size_t buf_size
+            = formatted_string::parse_string(colour_string).tostring().size();
+    const int spaces = buf_size > width ? 0 : width - buf_size;
+
+    return colour_string + string(spaces, ' ');
+}
+
 // iterate through every dungeon branch, listing the ones which have been found
 static string _get_seen_branches(bool display)
 {
-    // Each branch entry takes up 26 spaces + 38 for tags.
-    const int width = 64;
-
-    int num_printed_branches = 0;
-    char buffer[100];
     string disp;
 
     disp += "\n<green>Branches:</green>";
@@ -260,6 +267,11 @@ static string _get_seen_branches(bool display)
                 "<white>?/b</white> for more information)";
     }
     disp += "\n";
+
+    const bool in_death_range = zot_clock_fatal();
+
+    bool zot_clock_shown = false;
+    vector<string> cells;
 
     for (branch_iterator it; it; ++it)
     {
@@ -275,43 +287,83 @@ static string _get_seen_branches(bool display)
             // that no longer has any stairs.
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
+            const int bzot = bezotting_level_in(branch);
+            const bool show_zot = lid.depth > 0 && !zot_immune()
+                            && (Options.always_show_zot
+                                || you.has_mutation(MUT_SHORT_LIFESPAN)
+                                || bzot > 0); // 1000 turns for non-Meteorae
 
             string entry_desc;
             for (auto lvl : stair_level[branch])
                 entry_desc += " " + lvl.describe(false, true);
 
-            // "D" is a little too short here.
-            const char *brname = (branch == BRANCH_DUNGEON
-                                  ? it->shortname
-                                  : it->abbrevname);
+            // "D" is a little too short here
+            // XX "Gauntlet" is too long
+            const char *brname = branch == BRANCH_DUNGEON
+                ? it->shortname : it->abbrevname;
 
             if (entry_desc.size() == 0 && branch != BRANCH_DUNGEON
                 && you.where_are_you != branch)
             {
                 // previously visited portal branches
-                snprintf(buffer, sizeof buffer,
+                cells.push_back(make_stringf(
                     "<yellow>%7s</yellow> <darkgrey>(visited)</darkgrey>",
-                    brname);
+                    brname));
             }
             else
             {
-                snprintf(buffer, sizeof buffer,
+                string zclock_desc;
+                if (show_zot)
+                {
+                    const int zturns = turns_until_zot_in(branch);
+                    zot_clock_shown = true;
+                    // bzot > 0 is not urgent enough for meteorae. (Should this
+                    // be even higher? They still get the overall warning on
+                    // this popup if they could die.)
+                    const bool urgent = in_death_range
+                                            && (bzot > 0 || zturns < 600);
+                    const char *zcol =
+                            urgent ? (bzot <= 2 ? "red" : "lightmagenta")
+                            // 3k is somewhat arbitrary, but looks better to
+                            // mostly gray this out for non-meteorae chars
+                            // with always_show_zot on:
+                          : bzot == 0 && zturns > 3000 ? "darkgrey"
+                          : bzot == 0 ? "lightgray"
+                          : bzot <= 1 ? "yellow"
+                          : bzot == 2 ? "red"
+                          : "lightmagenta"; // bezotting level 4 is not real
+                    zclock_desc = make_stringf(" Zot: <%s>%d%s</%s>",
+                                    zcol, zturns,
+                                    urgent ? "!" : "",
+                                    zcol);
+                }
+
+                const string main_desc = make_stringf(
                     "<yellow>%*s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
-                    branch == root_branch ? -7 : 7,
-                    brname, lid.depth, brdepth[branch], entry_desc.c_str());
+                    7,
+                    brname, lid.depth, brdepth[branch],
+                    entry_desc.c_str());
+                cells.push_back(_pad_cs(main_desc, 21) + zclock_desc);
             }
-
-            disp += buffer;
-            num_printed_branches++;
-
-            disp += (num_printed_branches % 3) == 0
-                    ? "\n"
-                    : string(max<int>(width - strlen(buffer), 0), ' ');
         }
     }
 
-    if (num_printed_branches % 3 != 0)
+    // is it too confusing to have two columnizations? But try as I might, the
+    // zot clock info just can't be crammed into 3 cols.
+    const int cols = zot_clock_shown ? 2 : 3;
+    const size_t width = 79 / cols;
+    int num_printed_branches = 0;
+    for (auto &cell : cells)
+    {
+        // how do we not yet have generic code for doing this
+        num_printed_branches++;
+        disp += _pad_cs(cell, width);
+        if (num_printed_branches % cols == 0)
+            disp += "\n";
+    }
+    if (num_printed_branches % cols != 0)
         disp += "\n";
+
     return disp;
 }
 
@@ -382,7 +434,13 @@ static string _get_unseen_branches()
 
 static string _get_branches(bool display)
 {
-    return _get_seen_branches(display) + _get_unseen_branches();
+    string r = _get_seen_branches(display) + _get_unseen_branches();
+
+    // XX does it make sense to show this unconditionally? Maybe for
+    // non-meteorans, should require a bezotting level of 1 or higher somewhere?
+    if (zot_clock_fatal())
+        r += "\n<red>You are so drained that the power of Zot will kill you!</red>\n";
+    return r;
 }
 
 // iterate through every god and display their altar's discovery state by colour

@@ -1209,6 +1209,14 @@ bool zot_immune()
     return player_has_orb() || you.zigs_completed;
 }
 
+// will the zot clock reaching 0 kill the player?
+bool zot_clock_fatal()
+{
+    return you.hp_max_adj_temp // are we drained at all?
+        && !zot_immune()
+        && get_real_hp(true, true) <= get_real_hp(true, false) / 10;
+}
+
 int turns_until_zot_in(branch_type br)
 {
     const int aut = (MAX_ZOT_CLOCK - _zot_clock_for(br));
@@ -1230,7 +1238,7 @@ static int _zot_lifespan_div()
 
 // A scale from 0 to 4 of how much danger the player is in of
 // reaching the end of the zot clock. 0 is no danger, 4 is dead.
-static int _bezotting_level_in(branch_type br)
+int bezotting_level_in(branch_type br)
 {
     if (!_zot_clock_active_in(br))
         return 0;
@@ -1251,14 +1259,14 @@ static int _bezotting_level_in(branch_type br)
 // reaching the end of the zot clock in their current branch.
 int bezotting_level()
 {
-    return _bezotting_level_in(you.where_are_you);
+    return bezotting_level_in(you.where_are_you);
 }
 
 // If the player was in the given branch, would they see warnings for
 // nearing the end of the zot clock?
 bool bezotted_in(branch_type br)
 {
-    return _bezotting_level_in(br) > 0;
+    return bezotting_level_in(br) > 0;
 }
 
 // Is the player seeing warnings about nearing the end of the zot clock?
@@ -1313,7 +1321,7 @@ void incr_zot_clock()
     if (!bezotted())
         return;
 
-    const bool in_death_range = get_real_hp(true, true) <= get_real_hp(true, false) / 10;
+    const bool in_death_range = zot_clock_fatal();
     if (_zot_clock() >= MAX_ZOT_CLOCK)
     {
         if (in_death_range)
