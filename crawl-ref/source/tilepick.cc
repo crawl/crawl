@@ -3125,6 +3125,8 @@ tileidx_t tileidx_bolt(const bolt &bolt)
             return TILE_BOLT_ICICLE + dir;
         else if (bolt.name == "searing ray")
             return TILE_BOLT_SEARING_RAY;
+        else if (bolt.name == "bolt of light")
+            return TILE_BOLT_LIGHT + dir;
         break;
 
     case LIGHTCYAN:
