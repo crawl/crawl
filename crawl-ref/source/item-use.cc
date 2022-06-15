@@ -1035,7 +1035,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             if (you.has_innate_mutation(MUT_TENTACLE_ARMS))
                 mpr("You need the rest of your tentacles for walking.");
             else if (you.has_mutation(MUT_QUADRUMANOUS))
-                mpr("You'd need six hand-pairs to do that!");
+                mpr("You'd need three hand-pairs to do that!");
             else
             {
                 // Singular hand should have already been handled above.
