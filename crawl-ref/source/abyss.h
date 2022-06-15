@@ -19,6 +19,8 @@ extern const coord_def ABYSS_CENTRE;
 const int EXIT_XP_COST = 10; // ref _reduce_abyss_xp_timer() for details
 // but it's equivalent to roughly half the recharge xp for an elemental evoker
 
+#define ABYSSAL_RUNE_LOC_KEY "abyssal_rune_loc"
+
 struct abyss_state
 {
     coord_def major_coord;
