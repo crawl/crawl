@@ -1079,19 +1079,19 @@ NSUBST: 0 = 4:1 / 2:2 / *:3
 FTILE:  "AO = floor_crystal_squares
 COLOUR: "O = lightmagenta
 MAP
-    """"""""
- ""..xxxAxx..
- "xxxx.xx1xx."
- .x0x.x0xx.xx"
-".xx.xxx.xx.x"
-"xx.xx3x.x0xx"
-"x.xx1O2xx.xx"
-"xx.xx4xx.xxx"
-".xx.xxxxx0xx"
- .x0x.x0x.xx."
- "xxxx.x.xx..
- ""..xxxxx..
-    """""""
+    ..."""..
+ ....xxxAxx..
+ .xxxx.xx1xx..
+ .x0x.x0xx.xx.
+..xx.xxx.xx.x.
+.xx.xx3x.x0xx.
+.x.xx1O2xx.xx.
+.xx.xx4xx.xxx.
+..xx.xxxxx0xx.
+ .x0x.x0x.xx..
+ .xxxx.x.xx..
+ ....xxxxx..
+    .......
 ENDMAP
 
 NAME:   evilmike_abyss_rune_tso_outpost
@@ -1134,13 +1134,13 @@ MAP
 6ccccGclcGcccc6
  .cOccclccccc.
   c+c0"l"0ccc
-"cc1ccclcccccc"
+.cc1ccclcccccc.
  .c4c0"l"0ccc.
   c5c clc ccc
-"cc.c0"l"0cccc"
+.cc.c0"l"0cccc.
  .c.ccclccccc.
   c.c0"l"0ccc
-"cc.ccclcccdcc"
+.cc.ccclcccdcc.
  .c+c2c!c5c+c.
   c 3 c1c 7 c
 6cc2 2+ +5 5cc6
@@ -1168,22 +1168,22 @@ SUBST:  c = ccccvb
 FTILE:  "A+@W48O = floor_crystal_squares
 COLOUR: "48 = lightmagenta
 MAP
- "cccccc4@4cccccc"
+ .cccccc4@4cccccc.
  cc .. ccAcc .. cc
-"c 44"" x5x ""44 c"
+.c 44"" x5x ""44 c.
 cc44nnn.c+c.nnn44cc
 c 4nn7n.....n7nn4 c
 c44+13n5.c.5n31+44c
 c 4nn2n.....n2nn4 c
 cc"4nnn.....nnn4"cc
-"c ......6...... c"
+.c ......6...... c.
  ccc "4nnnnn4" ccc
-  "cc84n2O2n48cc"
-   "c 4nn1nn4 c"
+  .cc84n2O2n48cc.
+   .c 4nn1nn4 c.
     cc44n+n44cc
-    "c 44444 c"
+    .c 44444 c.
      ccc 4 ccc
-      "ccccc"
+      .ccccc.
 ENDMAP
 
 # This theme is even more disparate than the literal vault combinations...
@@ -1217,10 +1217,10 @@ xaa1aaa1aaa1aaa1aaa1aaa1aax
 xa..'a'.'a'.'a'.'a'.'a'..ax
 aa.a'."a".'a'.'a'."a".'a.aa
 ..aaa1aaa1aaa1aaa1aaa1aaa..
- ..a.."a".'a'.'a'."a"..a..
+ ..a.."a".'a'"'a'."a"..a..
    .....................
         .....A......
-           ..@..
+           ""@""
 ENDMAP
 
 NAME:    nicolae_abyss_rune_star_stuff
@@ -1241,7 +1241,7 @@ NSUBST:  s = 2:1 / 2:2 / 2:3
 SUBST:   a = +, ' = A, DE = ., bdef = c
 SUBST:   c = cccxbv
 CLEAR:   "-_~
-FTILE:   1234O = floor_crystal_squares
+FTILE:   O = floor_crystal_squares
 COLOUR:  1234O = lightmagenta
 MAP
      4ccc4
@@ -1517,10 +1517,10 @@ FTILE:   .t23579ACE = floor_grass
 FTILE:   'a1 = floor_crystal_squares
 COLOUR:  '1 = lightmagenta
 MAP
-    ..'.'.
+    ......
   ....XXX....
  ..XWwtttwWX..
- .X.Tt.w.tT1X..'..
+ .X.Tt.w.tT1X.....
 ..WT.WXAXW.xxxxxxx.
 1.wt.tt'xxxxcccccx'
 .Xt.Xt3'x0--c6--cx.
@@ -1528,10 +1528,10 @@ aXtw...'+-U-+-O4cx1
 .Xt.Xt2'x6--c0--cx.
 1.wt.tt'xxxxcccccx'
 ..WT..XCX..xxxxxxx.
- .X.Tt.w.tT1X..'..
+ .X.Tt.w.tT1X.....
  ..XWwtttwWX..
   ....XXX....
-    ..'.'.
+    ......
 ENDMAP
 
 NAME:    evilmike_nicolae_abyss_rune_betentacled_crabyss
