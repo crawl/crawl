@@ -53,11 +53,11 @@
  #include "tilepick.h"
 #endif
 #include "tiles-build-specific.h"
-#include "timed-effects.h" // bezotted
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // bezotted
 
 static string _annotation_exclusion_warning(level_id next_level_id)
 {

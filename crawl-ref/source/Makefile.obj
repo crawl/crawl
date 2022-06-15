@@ -266,7 +266,8 @@ wizard.o \
 worley.o \
 xom.o \
 tilepick.o \
-tileview.o
+tileview.o \
+zot.o
 
 TILES_OBJECTS = \
 tiledoll.o \

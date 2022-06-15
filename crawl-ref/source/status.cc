@@ -26,9 +26,9 @@
 #include "stairs.h" // rise_through_ceiling
 #include "stringutil.h"
 #include "throw.h"
-#include "timed-effects.h" // bezotting_level
 #include "transform.h"
 #include "traps.h"
+#include "zot.h" // bezotting_level
 
 #include "duration-data.h"
 

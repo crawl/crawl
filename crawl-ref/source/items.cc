@@ -79,11 +79,11 @@
 #include "terrain.h"
 #include "throw.h"
 #include "tilepick.h"
-#include "timed-effects.h" // bezotted
 #include "travel.h"
 #include "viewchar.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // bezotted
 
 static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);

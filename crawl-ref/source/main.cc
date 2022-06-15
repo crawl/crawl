@@ -153,6 +153,7 @@
 #include "wiz-you.h" // FREEZE_TIME_KEY
 #include "wizard.h" // handle_wizard_command() and enter_explore_mode()
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
+#include "zot.h"
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed

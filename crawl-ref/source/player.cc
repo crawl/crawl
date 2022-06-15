@@ -84,13 +84,13 @@
  #include "tilepick.h"
  #include "tileview.h"
 #endif
-#include "timed-effects.h" // bezotting_level
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "wizard-option-type.h"
 #include "xom.h"
+#include "zot.h" // bezotting_level
 
 static void _pruneify()
 {

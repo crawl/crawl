@@ -30,10 +30,10 @@
 #include "stringutil.h"
 #include "state.h"
 #include "terrain.h"
-#include "timed-effects.h" // decr_zot_clock
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "zot.h" // decr_zot_clock
 
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.

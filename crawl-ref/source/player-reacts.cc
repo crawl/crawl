@@ -91,12 +91,12 @@
 #include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
-#include "timed-effects.h" // bezotting
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // bezotting
 
 /**
  * Decrement a duration by the given delay.

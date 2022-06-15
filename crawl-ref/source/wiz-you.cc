@@ -34,12 +34,12 @@
 #include "status.h"
 #include "stringutil.h"
 #include "tag-version.h"
-#include "timed-effects.h" // zot clock
 #include "transform.h"
 #include "ui.h"
 #include "unicode.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // zot clock
 
 #ifdef WIZARD
 

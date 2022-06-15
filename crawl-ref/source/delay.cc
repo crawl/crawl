@@ -63,11 +63,11 @@
 #include "stringutil.h"
 #include "teleport.h"
 #include "terrain.h"
-#include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "xom.h"
+#include "zot.h" // ZOT_CLOCK_PER_FLOOR
 
 int interrupt_block::interrupts_blocked = 0;
 

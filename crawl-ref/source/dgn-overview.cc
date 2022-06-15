@@ -31,9 +31,9 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
-#include "timed-effects.h"
 #include "travel.h"
 #include "unicode.h"
+#include "zot.h"
 
 enum annotation_menu_commands
 {

@@ -98,6 +98,7 @@
 #include "version.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>
