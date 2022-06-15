@@ -75,18 +75,21 @@ Dexterity and Stealth+.
 %%%%
 strong mutation
 
-Your muscles have grown unnaturally strong. Each level of this mutation
-provides +2 Strength.
+Your muscles have grown unnaturally strong. Each level of this mutation provides
++4 Strength, but the extra muscles slow your movements and thoughts, giving -1 to
+both your Intelligence and Dexterity for each level.
 %%%%
 clever mutation
 
-Your mind has become unnaturally acute. Each level of this mutation provides +2
-Intelligence.
+Your mind has become unnaturally acute. Each level of this mutation provides +4
+Intelligence, but all the blood flowing to your head weakens your constitution,
+giving -1 to both your Strength and Dexterity for each level.
 %%%%
 agile mutation
 
 Your reflexes have become unnaturally fast. Each level of this mutation
-provides +2 Dexterity.
+provides +4 Dexterity, but the rest of your body can't keep up with your speed,
+giving -1 to both your Strength and Intelligence for each level.
 %%%%
 weak mutation
 
