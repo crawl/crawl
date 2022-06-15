@@ -241,44 +241,82 @@ static void _abyss_postvault_fixup()
     env.markers.activate_all();
 }
 
-static void _detect_abyssal_rune()
+#define ABYSSAL_RUNE_LOC_KEY "abyssal_rune_loc"
+
+// returns whether the abyssal rune is at `p`, updating map knowledge as a
+// side-effect
+static bool _sync_rune_knowledge(coord_def p)
 {
-    bool detected = false;
-    bool removed = false;
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    if (!in_bounds(p))
+        return false;
+    // somewhat convoluted because to update map knowledge properly, we need
+    // an actual rune item
+    const bool already = env.map_knowledge(p).item();
+    const bool rune_memory = already && env.map_knowledge(p).item()->is_type(
+                                                    OBJ_RUNES, RUNE_ABYSSAL);
+    for (stack_iterator si(p); si; ++si)
     {
-        bool just_detected = false;
-        for (stack_iterator si(*ri); si; ++si)
+        if (si->is_type(OBJ_RUNES, RUNE_ABYSSAL))
         {
-            if (si->is_type(OBJ_RUNES, RUNE_ABYSSAL))
-            {
-                detected = just_detected = true;
-                const bool already = env.map_knowledge(*ri).item();
-                if (already
-                    && env.map_knowledge(*ri).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
-                {
-                    break;
-                }
+            // found! make sure map memory is up-to-date
+            if (!rune_memory)
+                env.map_knowledge(p).set_item(*si, already);
 
-                env.map_knowledge(*ri).set_item(*si, already);
-                if (!you.see_cell(*ri))
-                    env.map_knowledge(*ri).flags |= MAP_DETECTED_ITEM;
-                mpr("The abyssal matter surrounding you shimmers strangely.");
-                mpr("You detect the abyssal rune!");
-            }
-        }
-
-        if (!just_detected && env.map_knowledge(*ri).item()
-            && env.map_knowledge(*ri).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
-        {
-            // visible check needed?
-            env.map_knowledge(*ri).clear_item();
-            removed = true;
+            if (!you.see_cell(p))
+                env.map_knowledge(p).flags |= MAP_DETECTED_ITEM;
+            return true;
         }
     }
-    // too bad (XX can this happen?)
-    if (removed && !detected)
-        mpr("The abyss shimmers again as the detected abyssal rune vanishes.");
+    // no rune found, clear as needed
+    if (already && (!rune_memory
+                    || !!(env.map_knowledge(p).flags & MAP_MORE_ITEMS)))
+    {
+        // something else seems to have been there, clear the rune but leave
+        // a remnant
+        env.map_knowledge(p).set_detected_item();
+    }
+    else
+        env.map_knowledge(p).clear();
+    return false;
+}
+
+static void _detect_abyssal_rune()
+{
+    if (!you.props.exists(ABYSSAL_RUNE_LOC_KEY))
+        you.props[ABYSSAL_RUNE_LOC_KEY].get_coord() = coord_def(-1,-1);
+    coord_def &cur_loc = you.props[ABYSSAL_RUNE_LOC_KEY].get_coord();
+    const bool existed = in_bounds(cur_loc);
+    if (existed && _sync_rune_knowledge(cur_loc))
+        return; // still exists in the same place, no need to do anything more
+
+    // now we need to check if a new or moved rune appeared
+
+    bool detected = false;
+    cur_loc = coord_def(-1,-1);
+    // check if a new one generated
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    {
+        // sets map knowledge by side effect if found
+        if (_sync_rune_knowledge(*ri))
+        {
+            detected = true;
+            cur_loc = *ri;
+            break;
+        }
+    }
+
+    if (existed)
+    {
+        mprf("The abyss shimmers again as the detected "
+            "abyssal rune vanishes from your memory%s.",
+            detected ? " and reappears" : "");
+    }
+    else if (detected)
+    {
+        mpr("The abyssal matter surrounding you shimmers strangely.");
+        mpr("You detect the abyssal rune!");
+    }
+
     // XX could do the xom check from here?
 }
 
@@ -713,11 +751,6 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
 
     remove_markers_and_listeners_at(p);
 
-    if (env.map_knowledge(p).item()
-            && env.map_knowledge(p).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
-    {
-        mpr("The abyss shimmers again as the detected abyssal rune vanishes.");
-    }
     env.map_knowledge(p).clear();
     if (env.map_forgotten)
         (*env.map_forgotten)(p).clear();
