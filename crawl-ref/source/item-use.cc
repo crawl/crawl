@@ -605,7 +605,10 @@ bool can_wield(const item_def *weapon, bool say_reason,
 
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
     {
-        SAY(mpr("You can't wield that with only one hand."));
+        if (you.has_mutation(MUT_QUADRUMANOUS) && say_reason)
+            mpr("You can't wield that with only one hand-pair.");
+        else
+            SAY(mpr("You can't wield that with only one hand."));
         return false;
     }
 
@@ -1031,6 +1034,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (you.has_innate_mutation(MUT_TENTACLE_ARMS))
                 mpr("You need the rest of your tentacles for walking.");
+            else if (you.has_mutation(MUT_QUADRUMANOUS))
+                mpr("You'd need six hand-pairs to do that!");
             else
             {
                 // Singular hand should have already been handled above.

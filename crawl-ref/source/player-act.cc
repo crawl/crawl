@@ -360,10 +360,12 @@ item_def *player::weapon(int /* which_attack */) const
 // Give hands required to wield weapon.
 hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 {
-    if (you.has_mutation(MUT_QUADRUMANOUS))
+    if (you.has_mutation(MUT_QUADRUMANOUS)
+        && (!is_weapon(item) || is_weapon_wieldable(item, SIZE_MEDIUM)))
+    {
         return HANDS_ONE;
-    else
-        return actor::hands_reqd(item, base);
+    }
+    return actor::hands_reqd(item, base);
 }
 
 bool player::can_wield(const item_def& item, bool ignore_curse,
@@ -439,7 +441,8 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
-    if (!is_weapon_wieldable(item, bsize))
+    if (!is_weapon_wieldable(item, bsize)
+        && !you.has_mutation(MUT_QUADRUMANOUS))
     {
         if (!quiet)
             mpr("That's too large for you to wield.");
