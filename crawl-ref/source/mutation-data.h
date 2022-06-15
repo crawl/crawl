@@ -47,7 +47,7 @@ static const mutation_def mut_data[] =
   "strong",
 
   {"Your muscles are strong. (Str +4, Int/Dex-1)",
-   "Your muscles are very strong. (Str +8, Int/Dex-1)", ""},
+   "Your muscles are very strong. (Str +8, Int/Dex-2)", ""},
   {"", "", ""},
   {"", "", ""},
 },
@@ -56,7 +56,7 @@ static const mutation_def mut_data[] =
   "clever",
 
   {"Your mind is acute. (Int +4, Str/Dex-1)",
-   "Your mind is very acute. (Int +8, Str/Dex-1)", ""},
+   "Your mind is very acute. (Int +8, Str/Dex-2)", ""},
   {"", "", ""},
   {"", "", ""},
 },
