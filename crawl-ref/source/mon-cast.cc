@@ -3517,6 +3517,16 @@ static void _setup_ghostly_sacrifice_beam(bolt& beam, const monster& caster,
     beam.aimed_at_spot = true;  // to get noise to work properly
 }
 
+static bool _can_injury_bond(const monster &protector, const monster &protectee)
+{
+    return mons_atts_aligned(protector.temp_attitude(),
+                             protectee.temp_attitude())
+        && !protectee.has_ench(ENCH_CHARM)
+        && !protectee.has_ench(ENCH_HEXED)
+        && !protectee.has_ench(ENCH_INJURY_BOND)
+        && &protector != &protectee;
+}
+
 /**
  * Pick a simulacrum for seracfall
  *
@@ -6154,8 +6164,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         // FIXME: allies preservers vs the player
         for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
         {
-            if (mons_aligned(mons, *mi) && !mi->has_ench(ENCH_CHARM)
-                && !mi->has_ench(ENCH_HEXED) && *mi != mons)
+            if (_can_injury_bond(*mons, **mi))
             {
                 mon_enchant bond = mon_enchant(ENCH_INJURY_BOND, 1, mons,
                                                40 + random2(80));
@@ -7431,16 +7440,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
         return ai_action::good_or_bad(!find_battlesphere(mon));
 
     case SPELL_INJURY_BOND:
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (mons_aligned(mon, *mi) && !mi->has_ench(ENCH_CHARM)
-                && !mi->has_ench(ENCH_HEXED)
-                && *mi != mon && mon->see_cell_no_trans(mi->pos())
-                && !mi->has_ench(ENCH_INJURY_BOND))
-            {
+        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+            if (_can_injury_bond(*mon, **mi))
                 return ai_action::good(); // We found at least one target; that's enough.
-            }
-        }
         return ai_action::bad();
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
