@@ -241,8 +241,6 @@ static void _abyss_postvault_fixup()
     env.markers.activate_all();
 }
 
-#define ABYSSAL_RUNE_LOC_KEY "abyssal_rune_loc"
-
 // returns whether the abyssal rune is at `p`, updating map knowledge as a
 // side-effect
 static bool _sync_rune_knowledge(coord_def p)
