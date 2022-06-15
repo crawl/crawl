@@ -14,6 +14,7 @@
 #include "chardump.h"
 #include "colour.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
@@ -33,11 +34,14 @@
 #include "mon-death.h"
 #include "mon-transit.h" // untag_followers
 #include "movement.h"
+#include "mutation.h"
 #include "notes.h"
 #include "orb-type.h"
 #include "output.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
@@ -458,6 +462,43 @@ static void _gauntlet_effect()
 
     if (player_teleport())
         mpr("You feel stable on this floor.");
+}
+
+static void _hell_effects()
+{
+
+    // 50% chance at max piety
+    if (have_passive(passive_t::resist_hell_effects)
+        && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
+    {
+        simple_god_message("'s power protects you from the chaos of Hell!");
+        return;
+    }
+
+    const bool loud = one_chance_in(6) && !silenced(you.pos());
+    string msg = getMiscString(loud ? "hell_effect_noisy"
+                                    : "hell_effect_quiet");
+    if (msg.empty())
+        msg = "Something hellishly buggy happens.";
+
+    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
+    if (loud)
+        noisy(15, you.pos());
+
+    switch (random2(4))
+    {
+        case 0:
+            temp_mutate(RANDOM_BAD_MUTATION, "hell effect");
+            break;
+        case 1:
+            drain_player(100, true, true);
+            break;
+        case 2:
+            lose_stat(STAT_RANDOM, roll_dice(1, 5));
+            break;
+        default:
+            break;
+    }
 }
 
 static void _new_level_amuses_xom(dungeon_feature_type feat,
@@ -962,6 +1003,8 @@ void floor_transition(dungeon_feature_type how,
     new_level();
 
     moveto_location_effects(whence);
+    if (is_hell_subbranch(you.where_are_you))
+        _hell_effects();
 
     trackers_init_new_level();
 

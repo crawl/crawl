@@ -56,55 +56,6 @@
 #include "viewchar.h"
 #include "unwind.h"
 
-/**
- * Choose a random, spooky hell effect message, print it, and make a loud noise
- * if appropriate. (1/6 chance of loud noise.)
- */
-static void _hell_effect_noise()
-{
-    const bool loud = one_chance_in(6) && !silenced(you.pos());
-    string msg = getMiscString(loud ? "hell_effect_noisy"
-                                    : "hell_effect_quiet");
-    if (msg.empty())
-        msg = "Something hellishly buggy happens.";
-
-    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
-    if (loud)
-        noisy(15, you.pos());
-}
-
-/// Nasty things happen to people who spend too long in Hell.
-static void _hell_effects(int /*time_delta*/)
-{
-    if (!player_in_hell())
-        return;
-
-    // 50% chance at max piety
-    if (have_passive(passive_t::resist_hell_effects)
-        && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
-    {
-        simple_god_message("'s power protects you from the chaos of Hell!");
-        return;
-    }
-
-    _hell_effect_noise();
-
-    switch (random2(4))
-    {
-        case 0:
-            temp_mutate(RANDOM_BAD_MUTATION, "hell effect");
-            break;
-        case 1:
-            drain_player(100, true, true);
-            break;
-        case 2:
-            lose_stat(STAT_RANDOM, roll_dice(1, 5));
-            break;
-        default:
-            break;
-    }
-}
-
 static void _apply_contam_over_time()
 {
     int added_contamination = 0;
@@ -300,8 +251,8 @@ struct timed_effect
 static struct timed_effect timed_effects[] =
 {
     { rot_corpses,               200,   200, true  },
-    { _hell_effects,                 500,  1500, false },
 #if TAG_MAJOR_VERSION == 34
+    { nullptr,                         0,     0, false },
     { nullptr,                         0,     0, false },
 #endif
     { _check_contamination_effects,   70,   200, false },
