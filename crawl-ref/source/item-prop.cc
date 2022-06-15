@@ -722,7 +722,7 @@ struct item_set_def
 };
 static const item_set_def item_sets[] =
 {
-    { OBJ_WANDS, { WAND_MINDBURST, WAND_CHARMING, WAND_PARALYSIS } },
+    { OBJ_WANDS, { WAND_CHARMING, WAND_PARALYSIS } },
     { OBJ_WANDS, { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
 };
 

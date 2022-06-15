@@ -515,7 +515,7 @@ static void _wanderer_random_evokable()
         const auto hex_wand_type = (wand_type)item_for_set(ITEM_SET_HEX_WANDS);
         const auto beam_wand_type = (wand_type)item_for_set(ITEM_SET_BEAM_WANDS);
         wand_type selected_wand =
-              random_choose(hex_wand_type, hex_wand_type, WAND_POLYMORPH,
+              random_choose(hex_wand_type, WAND_MINDBURST, WAND_POLYMORPH,
                             WAND_FLAME, WAND_ICEBLAST, beam_wand_type);
         int charges;
         switch (selected_wand)
