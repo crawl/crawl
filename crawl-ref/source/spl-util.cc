@@ -1535,7 +1535,8 @@ bool spell_no_hostile_in_range(spell_type spell)
         {
             test_targ.target = *ri;
             const monster* mons = monster_at(*ri);
-            if (mons && cast_poisonous_vapours(0, test_targ, true, true)
+            if (mons && !mons->wont_attack()
+                && cast_poisonous_vapours(0, test_targ, true, true)
                                                             == spret::success)
             {
                 return false;
