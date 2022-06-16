@@ -2030,10 +2030,7 @@ static bool _ignis_shaft()
     // This way, if you're wearing the rDislodge boots, the other Ignis wrath
     // effects won't become more prevalent, encouraging players to boot-swap
     // while under Ignis wrath.
-    if (!you.resists_dislodge("falling"))
-        return true;
-
-    ASSERT(you.do_shaft());
+    ASSERT(you.resists_dislodge("falling") || you.do_shaft());
     return true;
 }
 
