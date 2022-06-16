@@ -1022,7 +1022,7 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 
     const int empty_space = airstrike_space_around(target, true);
 
-    int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7), 2);
+    int hurted = empty_space * 2 + random2avg(2 + div_rand_round(pow, 7), 2);
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
