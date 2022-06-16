@@ -1667,7 +1667,7 @@ OBJ:     OBJ_ARMOUR/ARM_BOOTS
 TILE:    urand_spider
 TILE_EQ: spider
 PLUS:    +3
-COLOUR:  ETC_PAKELLAS
+COLOUR:  ETC_MOUNTAIN
 COLD:    1
 BOOL:    special
 INSCRIP: rDislodge,
