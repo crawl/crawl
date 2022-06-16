@@ -795,14 +795,14 @@ As you explore the dungeon, your wounds will heal and your magic will replenish.
 inability to drink while threatened mutation
 
 When you are harmed, there is a chance that you will become temporarily unable
-to drink potions. The greater the damage done and the closer you are to death,
-the greater the odds.
+to drink potions. The greater the mutation level, damage done and the closer
+you are to death, the greater the odds.
 %%%%
 inability to read while threatened mutation
 
 When you are harmed, there is a chance that you will become temporarily unable
-to read. The greater the damage done and the closer you are to death, the
-greater the odds.
+to read. The greater the mutation level, damage done and the closer you are to
+death, the greater the odds.
 %%%%
 missing a hand mutation
 
