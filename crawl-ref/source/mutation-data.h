@@ -1848,12 +1848,18 @@ static const mutation_def mut_data[] =
   {"You can once more drink potions while threatened.", "", ""},
 },
 
-{ MUT_READ_SAFETY, 10, 1, mutflag::bad | mutflag::xom, false,
+{ MUT_READ_SAFETY, 7, 3, mutflag::bad | mutflag::xom, false,
   "inability to read while threatened",
 
-  {"You sometimes lose the ability to read scrolls when taking damage.", "", ""},
-  {"You lose the ability to read scrolls when threatened.", "", ""},
-  {"You can once more read scrolls while threatened.", "", ""},
+  {"You rarely lose the ability to read scrolls when taking damage.",
+   "You ocassionally lose the ability to read scrolls when taking damage.",
+   "You sometimes lose the ability to read scrolls when taking damage."},
+  {"You rarely lose the ability to read scrolls when threatened.",
+   "You lose the ability to read scrolls when threatened more often.", 
+   "You lose the ability to read scrolls when threatened more often."},
+  {"You can once more read scrolls while threatened.", 
+   "You lose the ability to read scrolls when threatened less often.",
+   "You lose the ability to read scrolls when threatened less often."},
 },
 
 { MUT_MISSING_HAND, 0, 1, mutflag::bad, false,

@@ -807,16 +807,20 @@ int do_shave_damage(int dam)
 }
 #endif
 
-// Determine what's threatening for purposes of sacrifice drink and reading.
-// the statuses are guaranteed not to happen if the incoming damage is less
-// than 5% max hp. Otherwise, they scale up with damage taken and with lower
-// health, becoming certain at 20% max health damage.
-static bool _is_damage_threatening (int damage_fraction_of_hp)
+// Determine what's threatening for purposes of sacrifice drink and no scroll
+// mutation. The statuses are guaranteed not to happen if the incoming damage
+// is less than 15/10/5% max hp based on the mutation tier. Otherwise, they 
+// scale up with damage taken and with lower health, becoming certain at 
+// 60/40/20% max health damage also based on the mutation tier.
+static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level = 3)
 {
+    const int safety_level = 4 - mut_level;
     const int hp_fraction = you.hp * 100 / you.hp_max;
-    return damage_fraction_of_hp > 5
-            && hp_fraction <= 85
-            && (damage_fraction_of_hp + random2(20) >= 20
+    const int safe_damage_fraction = 5 * safety_level;
+    const int scary_damage_fraction = 20 * safety_level;
+    return damage_fraction_of_hp > safe_damage_fraction
+            && hp_fraction <= 100 - scary_damage_fraction + safe_damage_fraction
+            && (damage_fraction_of_hp + random2(20) >= scary_damage_fraction
                 || random2(100) > hp_fraction);
 }
 
@@ -947,7 +951,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         // don't always trigger in unison when you have both.
         if (you.get_mutation_level(MUT_READ_SAFETY))
         {
-            if (_is_damage_threatening(damage_fraction_of_hp))
+            if (_is_damage_threatening(damage_fraction_of_hp,
+                                        you.get_mutation_level(MUT_READ_SAFETY)))
             {
                 if (!you.duration[DUR_NO_SCROLLS])
                     mpr("You feel threatened and lose the ability to read scrolls!");

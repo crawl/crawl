@@ -3957,10 +3957,13 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         // words and drink cut off a lot of options if taken together
         case ABIL_RU_SACRIFICE_DRINK:
-            if (you.get_mutation_level(MUT_READ_SAFETY))
+            // check innate mutation level to see if reading was sacrificed
+            if (you.get_innate_mutation_level(MUT_READ_SAFETY) == 3)
                 piety_gain += 10;
             break;
         case ABIL_RU_SACRIFICE_WORDS:
+            // less value if you already have the levels of the mutation
+            piety_gain -= 7 * you.get_mutation_level(MUT_READ_SAFETY); 
             if (you.get_mutation_level(MUT_DRINK_SAFETY))
                 piety_gain += 10;
             else if (you.get_mutation_level(MUT_NO_DRINK))
@@ -4219,7 +4222,18 @@ static const string _piety_asterisks(int piety)
 
 static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
-    perma_mutate(sacrifice, 1, "Ru sacrifice");
+    if (sacrifice == MUT_READ_SAFETY)
+    { 
+        // get MUT_READ_SAFETY to the cap instead of 1 level higher
+        perma_mutate(sacrifice,
+                    4 - you.get_mutation_level(MUT_READ_SAFETY),
+                    "Ru sacrifice");
+    }
+    else
+    {   
+        // regular case for other sacrifices
+        perma_mutate(sacrifice, 1, "Ru sacrifice");
+    }    
     you.sacrifices[sacrifice] += 1;
 }
 
