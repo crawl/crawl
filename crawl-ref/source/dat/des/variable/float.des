@@ -1510,10 +1510,10 @@ TAGS:    transparent extra decor
 DEPTH:   D, Depths, Snake
 ORIENT:  float
 SHUFFLE: DE
-: if crawl.one_chance_in( 3 ) and you.depth() > 1 then
+: if crawl.one_chance_in(3) and you.depth() > 1 then
 SUBST:   D = ({[
 : end
-: if crawl.one_chance_in( 3 ) and you.depth_fraction() < 1 then
+: if crawl.one_chance_in(3) and you.depth_fraction() < 1 then
 SUBST:   E = )}]
 : end
 SUBST:   D : ..TTV, E : ..TTV, F : ..TTV, H : ..TTV, P : pppqq c:5 x:5, \

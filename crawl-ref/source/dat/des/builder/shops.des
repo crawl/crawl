@@ -1309,8 +1309,7 @@ DEPTH:  D:4-, Depths, Elf, Snake
 KFEAT:  S = book shop type:Tremendous suffix:Tomes count:8 ; \
             any randbook numspells:8
 KFEAT:  p = c
-COLOUR: p : blue / green / cyan / red / magenta / brown / lightblue / \
-            lightgreen / lightcyan / lightred / lightmagenta / yellow
+COLOUR: p : blue / red / magenta / lightgreen / lightred / lightmagenta / yellow
 MAP
 ...........
 .pppppppp..

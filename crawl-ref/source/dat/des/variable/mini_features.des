@@ -2994,10 +2994,10 @@ NAME:    nicolae_hexahallways
 TAGS:    transparent extra decor
 DEPTH:   D, Depths
 SHUFFLE: KL, MN, OP
-: if crawl.one_chance_in( 3 ) and you.depth() > 1 then
+: if crawl.one_chance_in(3) and you.depth() > 1 then
 SUBST:   K = ({[
 : end
-: if crawl.one_chance_in( 3 ) and you.depth_fraction() < 1 then
+: if crawl.one_chance_in(3) and you.depth_fraction() < 1 then
 SUBST:   L = )}]
 : end
 SUBST:   D : ....TV, E : ....TV, F : ....TV, H : ....tG, J : ....tG, \
