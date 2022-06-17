@@ -1210,6 +1210,9 @@ int player_mp_regen()
         && you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
     {
         regen_amount += 40;
+        // grants a second pip on top of its base type
+        if (player_equip_unrand(UNRAND_VITALITY))
+            regen_amount += 40;
     }
 
     if (player_equip_unrand(UNRAND_POWER_GLOVES))

@@ -1184,9 +1184,11 @@ LIFE:     1
 BOOL:     poison, evil
 
 NAME:     amulet of Vitality
-OBJ:      OBJ_JEWELLERY/AMU_REGENERATION
-HP:       +15
+OBJ:      OBJ_JEWELLERY/AMU_MANA_REGENERATION
+INSCRIP:  RegenMP++
+REGEN:    2
 COLOUR:   ETC_MUTAGENIC
+BOOL:     skip_ego, evil
 TILE:     urand_vitality
 
 NAME:     autumn katana

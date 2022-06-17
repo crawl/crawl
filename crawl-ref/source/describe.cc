@@ -353,19 +353,20 @@ static vector<string> _randart_propnames(const item_def& item,
     const unrandart_entry *entry = nullptr;
     if (is_unrandom_artefact(item))
         entry = get_unrand_entry(item.unrand_idx);
+    const bool skip_ego = is_unrandom_artefact(item)
+                          && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
 
     // For randart jewellery, note the base jewellery type if it's not
     // covered by artefact_desc_properties()
     if (item.base_type == OBJ_JEWELLERY
-        && (item_ident(item, ISFLAG_KNOW_TYPE)))
+        && (item_ident(item, ISFLAG_KNOW_TYPE)) && !skip_ego)
     {
         const char* type = jewellery_base_ability_string(item.sub_type);
         if (*type)
             propnames.push_back(type);
     }
     else if (item_brand_known(item)
-             && !(is_unrandom_artefact(item) && entry
-                  && entry->flags & UNRAND_FLAG_SKIP_EGO))
+             && !skip_ego)
     {
         string ego;
         if (item.base_type == OBJ_WEAPONS)
