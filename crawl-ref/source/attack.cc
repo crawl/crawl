@@ -35,6 +35,7 @@
 #include "nearby-danger.h"
 #include "pronoun-type.h"
 #include "religion.h"
+#include "skills.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -375,6 +376,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     ASSERT(attacker);
 
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
+
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 

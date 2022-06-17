@@ -4,11 +4,13 @@
 
 #include "areas.h"
 #include "art-enum.h" // bearserk
+#include "artefact.h"
 #include "branch.h"
 #include "cloud.h"
 #include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
+#include "fight.h" // weapon_cleaves
 #include "god-abil.h"
 #include "god-passive.h"
 #include "item-prop.h"
@@ -658,10 +660,8 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_CLEAVE:
     {
         const item_def* weapon = you.weapon();
-
-        if (weapon && item_attack_skill(*weapon) == SK_AXES)
+        if (weapon && weapon_cleaves(*weapon))
             inf.light_colour = DARKGREY;
-
         break;
     }
 

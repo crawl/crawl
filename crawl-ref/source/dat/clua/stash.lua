@@ -52,7 +52,11 @@ function ch_stash_search_annotate_item(it)
 
   local skill = it.weap_skill
   if skill then
-    annot = annot .. "{" .. skill .. "} "
+    local skills = crawl.split(skill, ",")
+    for i = 1, #skills, 1
+    do
+        annot = annot .. "{" .. skills[i] .. "} "
+    end
     local hands = it.hands
     local hands_adj
     if hands == 2 then

@@ -770,7 +770,8 @@ bool force_player_cleave(coord_def target)
 
     if (!cleave_targets.empty())
     {
-        targeter_cleave hitfunc(&you, target);
+        const int range = player_equip_unrand(UNRAND_LOCHABER_AXE) ? 2 : 1;
+        targeter_cleave hitfunc(&you, target, range);
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
 
@@ -784,12 +785,20 @@ bool force_player_cleave(coord_def target)
 
 bool attack_cleaves(const actor &attacker, int which_attack)
 {
-    const item_def* weap = attacker.weapon(which_attack);
+    if (attacker.is_player()
+        && (you.form == transformation::storm || you.duration[DUR_CLEAVE]))
+    {
+        return true;
+    }
 
-    return weap && item_attack_skill(*weap) == SK_AXES
-        || attacker.is_player()
-            && (you.form == transformation::storm
-                || you.duration[DUR_CLEAVE]);
+    const item_def* weap = attacker.weapon(which_attack);
+    return weap && weapon_cleaves(*weap);
+}
+
+bool weapon_cleaves(const item_def &weap)
+{
+    return item_attack_skill(weap) == SK_AXES
+           || is_unrandom_artefact(weap, UNRAND_LOCHABER_AXE);
 }
 
 /**
@@ -812,25 +821,28 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
+    const item_def* weap = attacker.weapon(which_attack);
+
     if (attack_cleaves(attacker, which_attack))
     {
         const coord_def atk = attacker.pos();
-        coord_def atk_vector = def - atk;
-        const int dir = random_choose(-1, 1);
+        const bool lochaber = weap && is_unrandom_artefact(*weap, UNRAND_LOCHABER_AXE);
+        const int cleave_radius = lochaber ? 2 : 1;
 
-        for (int i = 0; i < 7; ++i)
+        for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
         {
-            atk_vector = rotate_adjacent(atk_vector, dir);
-
-            actor *target = actor_at(atk + atk_vector);
-            if (target && !_dont_harm(attacker, *target))
-                targets.push_back(target);
+            if (*di == def) continue; // no double jeopardy
+            actor *target = actor_at(*di);
+            if (!target || _dont_harm(attacker, *target))
+                continue;
+            if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
+                continue;
+            targets.push_back(target);
         }
     }
 
     // fake cleaving: gyre and gimble's extra attacks are implemented as
     // cleaving attacks on enemies already in `targets`
-    const item_def* weap = attacker.weapon(which_attack);
     if (weap && is_unrandom_artefact(*weap, UNRAND_GYRE))
     {
         list<actor*> new_targets;
@@ -856,10 +868,9 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            wu_jian_attack_type wu_jian_attack,
                            bool is_projected)
 {
+    const item_def* weap = attacker.weapon(attack_number);
     if (attacker.is_player())
     {
-        const item_def* weap = attacker.weapon(attack_number);
-
         if ((wu_jian_attack == WU_JIAN_ATTACK_WHIRLWIND
              || wu_jian_attack == WU_JIAN_ATTACK_WALL_JUMP
              || wu_jian_attack == WU_JIAN_ATTACK_TRIGGERED_AUX)
@@ -870,13 +881,15 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
             // worshiping Wu they'll be able to cleave their Wu attacks.
         }
     }
-
+    const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
 
         if (def && def->alive() && !_dont_harm(attacker, *def)
-            && (is_projected || adjacent(attacker.pos(), def->pos())))
+            && (is_projected
+                || adjacent(attacker.pos(), def->pos())
+                || reaching))
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);

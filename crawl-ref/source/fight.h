@@ -48,6 +48,7 @@ int stab_bonus_denom(stab_type stab);
 
 bool force_player_cleave(coord_def target);
 bool attack_cleaves(const actor &attacker, int which_attack = -1);
+bool weapon_cleaves(const item_def &item);
 void get_cleave_targets(const actor &attacker, const coord_def& def,
                         list<actor*> &targets, int which_attack = -1);
 void attack_cleave_targets(actor &attacker, list<actor*> &targets,

@@ -522,6 +522,7 @@ finisher FINISHER
 glaive_of_the_guard GLAIVE_OF_THE_GUARD
 wyrmbane WYRMBANE
 rift RIFT
+lochaber_axe LOCHABER_AXE
 ## staves
 elemental_staff ELEMENTAL_STAFF
 asmodeus ASMODEUS
