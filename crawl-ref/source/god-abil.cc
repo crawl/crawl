@@ -3903,7 +3903,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
     {
         case ABIL_RU_SACRIFICE_HEALTH:
             if (mut == MUT_FRAIL)
-                piety_gain += 20; // -health is pretty much always quite bad.
+                piety_gain += 10; // -health is pretty much always quite bad.
             else if (mut == MUT_PHYSICAL_VULNERABILITY)
                 piety_gain += 5; // -AC is a bit worse than -EV
             break;
@@ -3914,7 +3914,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                                        you.skill_rdiv(SK_SPELLCASTING, 1, 2));
             }
             else if (mut == MUT_WEAK_WILLED)
-                piety_gain += 38;
+                piety_gain += 35;
             else
                 piety_gain += 2 + _get_stat_piety(STAT_INT, 6)
                                 + you.skill_rdiv(SK_SPELLCASTING, 1, 2);
@@ -3985,17 +3985,21 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
             if (you.get_mutation_level(MUT_COWARDICE))
-                piety_gain += 12;
+                piety_gain += 6;
             // Ds are highly likely to miss at least one mutation. This isn't
             // absolutely certain, but it's very likely and they should still
             // get a bonus for the risk. Could check the exact mutation
             // schedule, but this seems too leaky.
-            // Dj are guaranteed to lose a spell each time, which is pretty sad too.
-            if (you.species == SP_DEMONSPAWN || you.species == SP_DJINNI)
-                piety_gain += 16;
+            // Dj are guaranteed to lose a spell for the first and third sac,
+            // which is pretty sad too.
+            if (you.species == SP_DEMONSPAWN
+                || you.species == SP_DJINNI && (you.get_mutation_level(MUT_INEXPERIENCED) % 2 == 0))
+            {
+                piety_gain += 10;
+            }
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
-            piety_gain += 12 * you.get_mutation_level(MUT_INEXPERIENCED);
+            piety_gain += 6 * you.get_mutation_level(MUT_INEXPERIENCED);
             break;
 
         default:

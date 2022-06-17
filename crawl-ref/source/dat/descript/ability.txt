@@ -661,8 +661,8 @@ Sacrifices a hand, causing you to lose the ability to use shields{{
 %%%%
 Sacrifice Experience ability
 
-Sacrifices some of your past experiences, causing you to lose two levels
-immediately and also to have the maximum level you can attain lowered by two.
+Sacrifices some of your past experiences, causing you to lose one level
+immediately and also to have the maximum level you can attain lowered by one.
 %%%%
 Sacrifice Skill ability
 
