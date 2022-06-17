@@ -1664,7 +1664,7 @@ COLD:    -2
 
 NAME:    mountain boots
 OBJ:     OBJ_ARMOUR/ARM_BOOTS
-TILE:    urand_spider
+TILE:    urand_mountain
 TILE_EQ: spider
 PLUS:    +3
 COLOUR:  ETC_MOUNTAIN
