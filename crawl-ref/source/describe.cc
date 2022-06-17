@@ -1388,28 +1388,37 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
 
     if (verbose)
     {
-        switch (item_attack_skill(item))
-        {
-        case SK_POLEARMS:
-            description += "\n\nIt can be evoked to extend its reach.";
-            break;
-        case SK_AXES:
-            description += "\n\nIt hits all enemies adjacent to the wielder";
-            if (!is_unrandom_artefact(item, UNRAND_WOE))
-                description += ", dealing less damage to those not targeted";
-            description += ".";
-            break;
-        case SK_SHORT_BLADES:
+            if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
             {
-                string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
-                                                           : "particularly";
-                description += "\n\nIt is " + adj + " good for stabbing"
-                               " helpless or unaware enemies.";
+                description += "\n\nIt can be evoked to extend its reach.";
+                description += "\n\nIt hits all enemies within 2 spaces of the wielder";
+                description += ", dealing less damage to those not targeted.";
             }
-            break;
-        default:
-            break;
-        }
+            else
+            {
+            switch (item_attack_skill(item))
+            {
+            case SK_POLEARMS:
+                description += "\n\nIt can be evoked to extend its reach.";
+                break;
+            case SK_AXES:
+                description += "\n\nIt hits all enemies adjacent to the wielder";
+                if (!is_unrandom_artefact(item, UNRAND_WOE))
+                    description += ", dealing less damage to those not targeted";
+                description += ".";
+                break;
+            case SK_SHORT_BLADES:
+                {
+                    string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
+                                                               : "particularly";
+                    description += "\n\nIt is " + adj + " good for stabbing"
+                                   " helpless or unaware enemies.";
+                }
+                break;
+            default:
+                break;
+            }
+            }
     }
 
     // ident known & no brand but still glowing
@@ -1577,12 +1586,16 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
             description += "weapon";
         description += " falls into the";
 
-        const skill_type skill = item_attack_skill(item);
+        if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+            description += " Polearms and Axes categories. ";
+        else
+        {
+            const skill_type skill = item_attack_skill(item);
 
-        description +=
-            make_stringf(" '%s' category. ",
-                         skill == SK_FIGHTING ? "buggy" : skill_name(skill));
-
+            description +=
+                make_stringf(" '%s' category. ",
+                             skill == SK_FIGHTING ? "buggy" : skill_name(skill));
+        }
         // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
 

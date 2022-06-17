@@ -2174,6 +2174,15 @@ int elemental_preference(spell_type spell, int scale)
     return preference;
 }
 
+// The lochaber axe uses the higher of your Polearms or Axes skill;
+// return which one to use. In case of a tie, defaults to Polearms.
+skill_type lochaber_skill()
+{
+    return you.skill(SK_AXES, 100, false, true) >
+           you.skill(SK_POLEARMS, 100, false, true) ?
+               SK_AXES : SK_POLEARMS;
+}
+
 void dump_skills(string &text)
 {
     for (uint8_t i = 0; i < NUM_SKILLS; i++)

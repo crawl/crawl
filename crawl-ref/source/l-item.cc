@@ -10,6 +10,7 @@
 
 #include "adjust.h"
 #include "artefact.h"
+#include "art-enum.h"
 #include "cluautil.h"
 #include "colour.h"
 #include "coord.h"
@@ -569,7 +570,10 @@ IDEF(weap_skill)
     if (skill == SK_FIGHTING)
         return 0;
 
-    lua_pushstring(ls, skill_name(skill));
+    if (is_unrandom_artefact(*item, UNRAND_LOCHABER_AXE))
+        lua_pushstring(ls, "Polearms,Axes");
+    else
+        lua_pushstring(ls, skill_name(skill));
     lua_pushnumber(ls, skill);
     return 2;
 }

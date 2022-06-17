@@ -4,6 +4,7 @@
 
 #include "areas.h"
 #include "art-enum.h" // bearserk
+#include "artefact.h"
 #include "branch.h"
 #include "cloud.h"
 #include "duration-type.h"
@@ -659,7 +660,8 @@ bool fill_status_info(int status, status_info& inf)
     {
         const item_def* weapon = you.weapon();
 
-        if (weapon && item_attack_skill(*weapon) == SK_AXES)
+        if (weapon && (item_attack_skill(*weapon) == SK_AXES ||
+                       is_unrandom_artefact(*weapon, UNRAND_LOCHABER_AXE)))
             inf.light_colour = DARKGREY;
 
         break;

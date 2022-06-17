@@ -11,6 +11,8 @@
 #include <algorithm>
 
 #include "ability.h"
+#include "art-enum.h"
+#include "artefact.h"
 #include "fight.h"
 #include "item-prop.h"
 #include "skills.h"
@@ -145,7 +147,10 @@ void practise_waiting()
 /// Skill training when the player uses the given weapon.
 static void _practise_weapon_use(const item_def &weapon)
 {
-    const skill_type weapon_skill = item_attack_skill(weapon);
+    // Handle the polearms side of the lochaber axe first,
+    // get the axe part later.
+    const skill_type weapon_skill = is_unrandom_artefact(weapon, UNRAND_LOCHABER_AXE) ?
+        SK_POLEARMS : item_attack_skill(weapon);
     const int mindelay_skill = weapon_min_delay_skill(weapon);
     const int your_skill = you.skills[weapon_skill];
     if (your_skill >= mindelay_skill)
@@ -157,6 +162,26 @@ static void _practise_weapon_use(const item_def &weapon)
             = 1 + div_rand_round(2 * (mindelay_skill - your_skill),
                                  mindelay_skill);
         exercise(weapon_skill, degree);
+    }
+
+    // The lochaber axe trains both polearms and axes. For now,
+    // train both skills equally until a better formula is found.
+    // The lochaber axe is treated as a polearm in the earlier part,
+    // this handles treating it as an axe. Fortunately, the
+    // mindelay skill will be the same for both skills.
+    if (is_unrandom_artefact(weapon, UNRAND_LOCHABER_AXE))
+    {
+        const int your_axes_skill = you.skills[SK_AXES];
+        if (your_axes_skill >= mindelay_skill)
+            exercise(SK_AXES, coinflip()); //1/2 past mindelay
+        else
+        {
+            // 3 at 0 skill, 2 at 1/2 mindelay skill, 1 at mindelay
+            const int degree
+                = 1 + div_rand_round(2 * (mindelay_skill - your_axes_skill),
+                                     mindelay_skill);
+            exercise(SK_AXES, degree);
+        }
     }
 
     if (coinflip())

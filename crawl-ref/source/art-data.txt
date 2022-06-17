@@ -1673,6 +1673,19 @@ BOOL:    special
 INSCRIP: rDislodge,
 DBRAND:  It prevents involuntary movement from physical forces.
 
+NAME:       lochaber axe
+OBJ:        OBJ_WEAPONS/WPN_BARDICHE
+TYPE:       lochaber axe
+TILE:       urand_lochaber_axe
+TILE_EQ:    lochaber_axe
+COLOUR:     ETC_IRON
+BRAND:      SPWPN_VORPAL
+PLUS:       +9
+BASE_ACC:   -1
+BASE_DAM:   +1
+BASE_DELAY: +1
+INSCRIP:    reach, cleave+
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

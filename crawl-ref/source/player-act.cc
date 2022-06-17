@@ -30,6 +30,7 @@
 #include "movement.h"
 #include "player-stats.h"
 #include "religion.h"
+#include "skills.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
 #include "state.h"
@@ -287,6 +288,7 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
     else if (melee_weapon_attack || ranged_weapon_attack)
     {
         const skill_type wpn_skill = item_attack_skill(*weap);
+
         // Cap skill contribution to mindelay skill, so that rounding
         // doesn't make speed brand benefit from higher skill.
         const int wpn_sklev = min(you.skill(wpn_skill, 10),

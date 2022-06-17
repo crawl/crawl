@@ -1767,7 +1767,10 @@ skill_type item_attack_skill(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
+        if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+            return lochaber_skill();
+        else
+            return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     case OBJ_STAVES:
         return SK_STAVES;
     case OBJ_MISSILES:
@@ -1883,6 +1886,13 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     const skill_type sk = item_attack_skill(item);
     if (sk != SK_FIGHTING)
         skills.insert(sk);
+
+    // The lochaber axe allows training both polearms and axes.
+    if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+    {
+        skills.insert(SK_POLEARMS);
+        skills.insert(SK_AXES);
+    }
 
     return !skills.empty();
 }
@@ -2023,7 +2033,8 @@ reach_type weapon_reach(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_RIFT))
         return REACH_THREE;
-    if (item_attack_skill(item) == SK_POLEARMS)
+    if (item_attack_skill(item) == SK_POLEARMS ||
+            is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
         return REACH_TWO;
     return REACH_NONE;
 }
