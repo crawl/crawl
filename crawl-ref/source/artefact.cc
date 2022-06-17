@@ -552,8 +552,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         // weapons already have slaying
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS;
-        // prevent properties that conflict with naga innates
-        case ARTP_POISON:
+        // prevent properties that barding-wearers already have
         case ARTP_SEE_INVISIBLE:
             return !item.is_type(OBJ_ARMOUR, ARM_BARDING);
         case ARTP_RAMPAGING:
