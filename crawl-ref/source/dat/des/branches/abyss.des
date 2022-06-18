@@ -1074,10 +1074,11 @@ MONS:   place:Abyss:$, silent spectre
 KMONS:  O = floating eye
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
+KFEAT:  " = runelight
 SUBST:  x = xxccn, . = ...W
 NSUBST: 0 = 4:1 / 2:2 / *:3
-FTILE:  "AO = floor_crystal_squares
-COLOUR: "O = lightmagenta
+FTILE:  AO = floor_crystal_squares
+COLOUR: O = lightmagenta
 MAP
     """"""""
  ""..xxxAxx..
@@ -1101,8 +1102,9 @@ MONS:   dancing weapon ; long sword ego:holy_wrath
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 KFEAT:  _ = altar_the_shining_one
-FTILE:  "A45OG = floor_crystal_squares
-COLOUR: "45OG = lightmagenta
+KFEAT:  " = runelight
+FTILE:  A45OG = floor_crystal_squares
+COLOUR: 45OG = lightmagenta
 MAP
 .......................
 ....."""ccc"5"cccccc...
@@ -1124,11 +1126,12 @@ ITEM:    potion of flight q:1 ident:type
 KMONS:   O = patrolling war gargoyle
 KITEM:   O = abyssal rune of Zot
 KFEAT:   A = stone_arch
+KFEAT:   "@6 = runelight
 SHUFFLE: 23 / 57
 SUBST:   ! = 2, 0 = 222234555
 KPROP:   l = no_cloud_gen
-FTILE:   "A@6O = floor_crystal_squares
-COLOUR:  "@6O = lightmagenta
+FTILE:   AO = floor_crystal_squares
+COLOUR:  O = lightmagenta
 MAP
     @d0A0d@
 6ccccGclcGcccc6
@@ -1163,10 +1166,11 @@ KMONS:  8 = titanic slime creature
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
 KFEAT:  n = iron_grate
+KFEAT:  " = runelight
 KFEAT:  1237 = shallow_water w:1 / . w:14
 SUBST:  c = ccccvb
-FTILE:  "A+@W48O = floor_crystal_squares
-COLOUR: "48 = lightmagenta
+FTILE:  A+@W48O = floor_crystal_squares
+COLOUR: 48 = lightmagenta
 MAP
  "cccccc4@4cccccc"
  cc .. ccAcc .. cc
@@ -1197,12 +1201,13 @@ KMONS:  O = queen bee
 KITEM:  O = abyssal rune of Zot
 KFEAT:  a = x
 KFEAT:  A = stone_arch
+KFEAT:  " = runelight
 NSUBST: 1 = 3:5 / 1:15 / 3:2 / 1:1 / 10 = 11. / * = .
 NSUBST: ' = 1:d / * = d:1 .:199
 TILE:   a = wall_wax
-FTILE:  "A4O = floor_crystal_squares
+FTILE:  A4O = floor_crystal_squares
 COLOUR: a = yellow
-COLOUR: "4O = lightmagenta
+COLOUR: 4O = lightmagenta
 MAP
           xxxxxxx
         xxxaaaaaxxxx
@@ -1232,6 +1237,7 @@ KMONS:   3 = tentacled starspawn
 KMONS:   4 = place:Abyss:$
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch
+KFEAT:   4 = runelight
 # Place an arch before the door, and place the rune on one of
 # the three most distant points from the entrance.
 SHUFFLE: Aa'Bb"Dd-Ee_Ff~ / Bb"Dd-Ee_Ff~Aa' / Dd-Ee_Ff~Aa'Bb" / \
@@ -1241,8 +1247,8 @@ NSUBST:  s = 2:1 / 2:2 / 2:3
 SUBST:   a = +, ' = A, DE = ., bdef = c
 SUBST:   c = cccxbv
 CLEAR:   "-_~
-FTILE:   1234O = floor_crystal_squares
-COLOUR:  1234O = lightmagenta
+FTILE:   123O = floor_crystal_squares
+COLOUR:  123O = lightmagenta
 MAP
      4ccc4
     cccBccc
@@ -1273,11 +1279,12 @@ KMONS:   0 = place:Abyss:$
 KMONS:   O = worldbinder
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch
+KFEAT:   " = runelight
 NSUBST:  0 = 1:0 / 1:9 / * = 09
 NSUBST:  X = 1:1 / 1:2 / 1:3 / * = 123"", Q = 1:6 / 1:7 / * = 67...
 SHUFFLE: 12, 45
-FTILE:   "A123O = floor_crystal_squares
-COLOUR:  "123O = lightmagenta
+FTILE:   A123O = floor_crystal_squares
+COLOUR:  123O = lightmagenta
 MAP
     ...
    ..c....
@@ -1309,8 +1316,8 @@ KMONS:  O = merfolk impaler
 KITEM:  O = abyssal rune of Zot
 KFEAT:  O = shallow_water
 KFEAT:  A = stone_arch
-FTILE:  A1234OwW = floor_crystal_squares
-COLOUR: 1 = lightmagenta
+KFEAT:  1 = runelight
+FTILE:  A234OwW = floor_crystal_squares
 MAP
 www1w1www
 www2w4www
@@ -1325,13 +1332,14 @@ MONS:   fire bat, chaos spawn, fire dragon / ice dragon, ogre mage
 KMONS:  OL = lich / ancient lich w:1 / dread lich w:1
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
+KFEAT:  ' = runelight
 NSUBST: L = 1:O / *:L
 MARKER: ! = lua:fog_machine { cloud_type = "seething chaos", \
             pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
             size = 1, walk_dist = 1, spread_rate = 16 }
 SUBST:  ! = V, X = x', x = xc, C : c.
-FTILE:  '@A+V1234LOx = floor_crystal_squares
-COLOUR: '@12LO = lightmagenta
+FTILE:  @A+V1234LOx = floor_crystal_squares
+COLOUR: @12LO = lightmagenta
 MAP
   cccccc X
  ccLccLcc
@@ -1367,19 +1375,20 @@ KMONS:  O = starcursed mass
 KITEM:  O = abyssal rune of Zot
 KFEAT:  _ = altar_lugonu
 KFEAT:  A = stone_arch
+KFEAT:  "@ = runelight
 SUBST:  X = c', c = ccv, N : nb.
 KPROP:  l = no_cloud_gen
-FTILE:  @A1234O+ = floor_crystal_squares
-COLOUR: @1234O = lightmagenta
+FTILE:  A1234O+ = floor_crystal_squares
+COLOUR: 1234O = lightmagenta
 MAP
  XbbbXXXXXXXXXX@
 XXb1bbbbbcccccc+
-XXbblblblccwc..c
+XXbblblblccwc..c"
 XXbb+......3...c
-Xbb4n.N...llb.cc
+Xbb4n.N...llb.cc"
 XbOnn.1_.3l2l3wcA
 Xbb4n.N...llb.cc
-XXbb+......3...c
+XXbb+......3...c"
 XXbblblblccwc..c
 XXb1bbbbbcccccc+
  XbbbXXXXXXXXXX@
@@ -1397,6 +1406,7 @@ ITEM:    potion of flight q:1 ident:type
 KITEM:   _ = abyssal rune of Zot
 KFEAT:   _ = altar_lugonu
 KFEAT:   A = stone_arch
+KFEAT:   " = runelight
 # Two rings of opposite sides on the inside / outside of the octagon lava moat,
 # with one to three (mostly two) pairs of opposite sides made floor or wall.
 SHUFFLE: HIJKL, MNOPQ
@@ -1404,8 +1414,8 @@ SUBST:   HIMN = l, J : ll. KL = ., O : llP, PQ : xxxxb, c : ccv
 NSUBST:  ' = 1:4 / 1:8 / 1 = 22248 / 10 = 2216 / *:., d = 1:dddd. / *:.
 MARKER:  F = lua:fog_machine { cloud_type = "translocational energy", \
              pow_max = 2, delay_min = 10, delay_max = 20, walk_dist = 0, size = 1 }
-FTILE:   "AF3579_OG+ = floor_crystal_squares
-COLOUR:  "F3579 = lightmagenta
+FTILE:   AF3579_OG+ = floor_crystal_squares
+COLOUR:  F3579 = lightmagenta
 MAP
   l".HIIIIIIIIJ."l
  l".HllllllllllJ."l
@@ -1434,9 +1444,10 @@ MONS:   tormentor / hellion / shadow demon / \
 KMONS:  3O = spatial maelstrom
 KITEM:  O = abyssal rune of Zot
 KFEAT:  A = stone_arch
+KFEAT:  " = runelight
 SUBST:  X : b", x = xv, n = nnnnnc, m = n
-FTILE:  "A123$Onc = floor_crystal_squares
-COLOUR: "123$O = lightmagenta
+FTILE:  A123$Onc = floor_crystal_squares
+COLOUR: 123$O = lightmagenta
 MAP
 ""xxxxxxxxxxxxxxxx
 .....1xxnnnnnnnnnxxx
@@ -1469,10 +1480,11 @@ KITEM:   5 = wand of flame / whip w:2 / hat mundane w:5
 KITEM:   6e = abyssal rune of zot mimic
 KITEM:   O = abyssal rune of zot
 KFEAT:   A = stone_arch
+KFEAT:   " = runelight
 SHUFFLE: 12
 SUBST:   X = xxxxc, c = cccvb
-FTILE:   "Ade456O = floor_crystal_squares
-COLOUR:  "de456O = lightmagenta
+FTILE:   Ade456O = floor_crystal_squares
+COLOUR:  de456O = lightmagenta
 MAP
     .....  . X ".@
   ........cXXXXX. X
@@ -1505,6 +1517,7 @@ KMONS:   H = water nymph
 KFEAT:   G = w
 KFEAT:   H = W
 KFEAT:   a = stone_arch
+KFEAT:   ' = runelight
 KITEM:   O = abyssal rune of Zot
 # Exclude one of the deep elves / tengu and one of the Forest denizens.
 SHUFFLE: 34 / 56 / 78, 90 / AB / CD / EF
@@ -1514,8 +1527,8 @@ RTILE:   x = wall_hall
 COLOUR:  x = elven_brick
 FTILE:   -+U4680BDFO = floor_hall
 FTILE:   .t23579ACE = floor_grass
-FTILE:   'a1 = floor_crystal_squares
-COLOUR:  '1 = lightmagenta
+FTILE:   a1 = floor_crystal_squares
+COLOUR:  1 = lightmagenta
 MAP
     ..'.'.
   ....XXX....
@@ -1546,10 +1559,11 @@ KITEM:   OP = abyssal rune of Zot
 KFEAT:   TS1P = W
 KFEAT:   K = w
 KFEAT:   A = stone_arch
+KFEAT:   " = runelight
 SHUFFLE: O1 / O1 / P'
 SUBST:   D : cw, ' = w
-FTILE:   "A23O = floor_crystal_squares
-COLOUR:  "23O = lightmagenta
+FTILE:   A23O = floor_crystal_squares
+COLOUR:  23O = lightmagenta
 MAP
   .............
   .cc.......cc.
@@ -1574,6 +1588,7 @@ TAGS:   abyss_rune unrand patrolling no_pool_fixup
 MONS:   neqoxec, glowing orange brain, orange crystal statue, very ugly thing
 MONS:   starcursed mass
 KITEM:  O = abyssal rune of Zot
+KFEAT:  " = runelight
 COLOUR: n = lightmagenta
 NSUBST: - = 4:d / 2=d. / ., . = 3:1 / 1:2 / 1:4 / 1:5 / 2=112 / 2=45..
 SUBST:  l : lw
@@ -1585,15 +1600,15 @@ MAP
   cccnccc
  cc-nOn-cc
  c.--n--.c
-cc.-n-n-.cc
+cc"-n-n-.cc
 c---...---c
 nll-...-lln
-n3l-...-l3n
-nll-...-lln
+n3l-.."-l3n
+nll-"..-lln
 n---...---n
-nn.......nn
- nn.....nn
-  nn...nn
+nn"......nn
+ nn...."nn
+  nn"."nn
 ENDMAP
 
 NAME:    gammafunk_abyss_rune_reverse_zot
@@ -1605,6 +1620,7 @@ MONS:    balrug / hellion / lorocyproca / tormentor / cacodemon / reaper \
          / blizzard demon / executioner / angel / daeva
 KMONS:   R = hellephant / ancient lich / dread lich / hell sentinel / profane servitor
 KITEM:   O = abyssal rune of Zot
+KFEAT:   " = runelight
 MARKER:  P = lua:transp_loc("reverse_zot_entry")
 MARKER:  Q = lua:transp_dest_loc("reverse_zot_entry")
 MARKER:  R = lua:transp_loc("reverse_zot_exit")
@@ -1619,7 +1635,7 @@ COLOUR:  c = lightmagenta
 COLOUR:  n@O012345. = magenta
 FTILE:   nc+@OPQRS012345. = floor_rough_magenta
 MAP
-         .@.
+         "@"
 cccccccccP.Sccccccccc
 ccAAAAcccnnncccCCCCcc
 cAAAAAAccnnnccCCCCCCc

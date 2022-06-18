@@ -352,6 +352,11 @@ A fountain of sparkling water
 
 A decorative fountain, flowing with brightly sparkling water.
 %%%%
+A runelight
+
+An unearthly, glittering light, floating and twisting in midair. A Rune of
+Zot is surely nearby, its power overspilling to cause this spectacular sight.
+%%%%
 # column_ruins
 A broken pillar
 

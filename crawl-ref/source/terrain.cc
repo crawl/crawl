@@ -941,7 +941,7 @@ FEATFN_MEMOIZED(feat_suppress_blood, feat)
     if (feat_is_tree(feat))
         return true;
 
-    if (feat == DNGN_DRY_FOUNTAIN)
+    if (feat == DNGN_DRY_FOUNTAIN || feat == DNGN_RUNELIGHT)
         return true;
 
     // covers shops and altars

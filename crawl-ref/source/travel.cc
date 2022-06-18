@@ -4773,6 +4773,10 @@ void explore_discoveries::found_feature(const coord_def &pos,
             marked_feats.push_back(desc + ".");
             return;
         }
+    } else if (feat == DNGN_RUNELIGHT)
+    {
+        runelights.emplace_back(cleaned_feature_description(pos), 1);
+        es_flags |= ES_RUNELIGHT;
     }
 }
 
@@ -4947,6 +4951,7 @@ bool explore_discoveries::stop_explore() const
     say_any(apply_quantities(stairs), "stair");
     say_any(apply_quantities(transporters), "transporter");
     say_any(apply_quantities(runed_doors), "runed door");
+    say_any(apply_quantities(runelights), "runelights");
 
     return true;
 }
