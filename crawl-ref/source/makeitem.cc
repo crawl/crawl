@@ -639,10 +639,8 @@ static void _generate_missile_item(item_def& item, int force_type,
     }
     else if (item.sub_type == MI_STONE)
     {
-        item.quantity = 1 + random2(7); // sequence points for random2
-        item.quantity += random2(10);
-        item.quantity += random2(12);
-        item.quantity += random2(10);
+        item.quantity = 1 + random2(5); // sequence point
+        item.quantity += random2(5);
         return;
     }
     else if (item.sub_type == MI_THROWING_NET) // no fancy nets, either

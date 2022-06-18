@@ -1977,7 +1977,8 @@ void populate_fake_projectile(const item_def &wep, item_def &fake_proj)
 bool ammo_always_destroyed(const item_def &missile)
 {
     const int brand = get_ammo_brand(missile);
-    return brand == SPMSL_CHAOS
+    return missile.sub_type == MI_STONE
+           || brand == SPMSL_CHAOS
            || brand == SPMSL_DISPERSAL
            || brand == SPMSL_EXPLODING;
 }
