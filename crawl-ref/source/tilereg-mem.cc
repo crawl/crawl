@@ -15,6 +15,7 @@
 #include "stringutil.h"
 #include "tile-inventory-flags.h"
 #include "tilepick.h"
+#include "tilereg-cmd.h"
 #include "tiles-build-specific.h"
 
 MemoriseRegion::MemoriseRegion(const TileRegionInit &init) : SpellRegion(init)
@@ -57,8 +58,11 @@ void MemoriseRegion::draw_tag()
 int MemoriseRegion::handle_mouse(wm_mouse_event &event)
 {
     unsigned int item_idx;
-    if (!place_cursor(event, item_idx))
+    if (!place_cursor(event, item_idx)
+        || tile_command_not_applicable(CMD_MEMORISE_SPELL))
+    {
         return 0;
+    }
 
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == wm_mouse_event::LEFT)
@@ -137,6 +141,9 @@ void MemoriseRegion::update()
     {
         const spell_type spell = spells[i];
 
+        if (you.hidden_spells.get(spell))
+            continue;
+
         InventoryTile desc;
         desc.tile     = tileidx_spell(spell);
         desc.idx      = (int) spell;
@@ -144,12 +151,13 @@ void MemoriseRegion::update()
 
         if (!can_learn_spell(true)
             || spell_difficulty(spell) > you.experience_level
-            || player_spell_levels() < spell_levels_required(spell))
+            || player_spell_levels() < spell_levels_required(spell)
+            || tile_command_not_applicable(CMD_MEMORISE_SPELL))
         {
             desc.flag |= TILEI_FLAG_INVALID;
         }
 
-        if (vehumet_is_offering(spell))
+        if (vehumet_is_offering(spell, true))
             desc.flag |= TILEI_FLAG_EQUIP;
 
         m_items.push_back(desc);

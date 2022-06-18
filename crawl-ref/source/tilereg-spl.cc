@@ -19,6 +19,7 @@
 #include "rltiles/tiledef-main.h"
 #include "tilepick.h"
 #include "tiles-build-specific.h"
+#include "tilereg-cmd.h"
 
 SpellRegion::SpellRegion(const TileRegionInit &init) : GridRegion(init)
 {
@@ -55,8 +56,11 @@ void SpellRegion::draw_tag()
 int SpellRegion::handle_mouse(wm_mouse_event &event)
 {
     unsigned int item_idx;
-    if (!place_cursor(event, item_idx))
+    if (!place_cursor(event, item_idx)
+        || tile_command_not_applicable(CMD_CAST_SPELL, true))
+    {
         return 0;
+    }
 
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == wm_mouse_event::LEFT)
@@ -67,7 +71,7 @@ int SpellRegion::handle_mouse(wm_mouse_event &event)
 
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
-        if (!cast_a_spell(false, spell))
+        if (cast_a_spell(false, spell) == spret::abort)
             flush_input_buffer(FLUSH_ON_FAILURE);
         return CK_MOUSE_CMD;
     }
@@ -208,8 +212,8 @@ void SpellRegion::update()
         desc.idx      = (int) spell;
         desc.quantity = spell_mana(spell);
 
-        if (spell_is_useless(spell, true, true)
-            || spell_mana(spell) > you.magic_points)
+        if (tile_command_not_applicable(CMD_CAST_SPELL, true)
+            || spell_is_useless(spell, true, true))
         {
             desc.flag |= TILEI_FLAG_INVALID;
         }

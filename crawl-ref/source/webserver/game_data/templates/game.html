@@ -20,6 +20,10 @@
 <div id="normal" style="display: none;">
   <div id="left_column">
     <canvas id="dungeon"></canvas>
+    <div id="mobile_input" style="display: none;">
+      <input autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" placeholder="Tap here for keyboard input"></input>
+    </div>
+    <canvas id="action-panel" class="action-panel hidden" style="display: none;"></canvas>
     <div id="message_pane">
       <div id="messages_container">
         <div id="messages"></div>
@@ -93,7 +97,7 @@
             <span id="stats_time" /></div>
         </div>
         <div style="float:left;width:100%;"><span class="stats_caption" id="stats_weapon_letter"></span>
-          <span id="stats_weapon_container"><span id="stats_launcher_quiver" /><span id="stats_weapon" /></span>
+          <span id="stats_weapon_container"><span id="stats_weapon" /></span>
         </div>
         <div id="stats_quiver_line" style="float:left;width:100%;"><span class="stats_caption" id="stats_quiver_letter"></span>
           <span id="stats_quiver" /></div>
@@ -346,6 +350,36 @@
         </div>
     </div>
 </div>
+
+<div id="action-panel-tooltip" style="display: none;"></div>
+<div id="action-panel-settings" style="display: none;">
+    <fieldset>
+        <legend>Orientation:</legend>
+        <div>
+            <input type="radio" class="text" id="action-orient-horizontal" name="action_panel_orientation" value="horizontal">
+            <label for="action-orient-horizontal">horizontal</label>
+        </div>
+        <div>
+            <input type="radio" class="text" id="action-orient-vertical" name="action_panel_orientation" value="vertical">
+            <label for="action-orient-vertical">vertical</label>
+        </div>
+    </fieldset>
+    <fieldset id="scale-set" class="option">
+        <legend>Scale, %:</legend>
+        <input type="number" class="text" id="scale-val" min="50" max="500" name="action_panel_scale" required>
+        <button class="reset" type="button" tabindex="-1">reset</button>
+    </fieldset>
+    <fieldset id="font-size-set" class="option">
+        <legend>Font size, px:</legend>
+        <input type="number" class="text" id="font-size-val" min="1" max="40" name="action_panel_font_size" required>
+        <button class="reset" type="button" tabindex="-1">reset</button>
+    </fieldset>
+    <div class="settings-buttons">
+        <button id="minimize-panel" type="button" tabindex="-1">Minimize</button>
+        <button id="close-settings" type="button" tabindex="-1">Close</button>
+    </div>
+</div>
+<div id="action-panel-placeholder" class="action-panel hidden" style="display: none;"><a href="javascript:">+</a></div>
 
 <div id="ui-stack"></div>
 

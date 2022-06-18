@@ -23,7 +23,7 @@ aptitudes:
   armour: -2
   dodging: -2
   stealth: -5
-  shields: -2
+  shields: -1
   spellcasting: -5
   conjurations: -3
   hexes: -4
@@ -53,15 +53,11 @@ mutations:
     MUT_SHAGGY_FUR: 1
 recommended_jobs:
   - JOB_FIGHTER
-  - JOB_MONK
-  - JOB_HUNTER
+  - JOB_GLADIATOR
   - JOB_BERSERKER
   - JOB_WARPER
   - JOB_EARTH_ELEMENTALIST
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_UNARMED_COMBAT
-# start TAG_MAJOR_VERSION == 34
-create_enum: false
-# end TAG_MAJOR_VERSION

@@ -6,9 +6,11 @@
 
 #pragma once
 
+#include "actor.h"
 #include "beh-type.h"
-#include "mon-util.h"
 #include "mgen-data.h"
+#include "mon-util.h"
+#include "monster.h"
 
 struct bolt;
 
@@ -54,6 +56,25 @@ public:
 protected:
     mirror_damage_fineff(const actor *attack, const actor *defend, int dam)
         : final_effect(attack, defend, coord_def()), damage(dam)
+    {
+    }
+    int damage;
+};
+
+class anguish_fineff : public final_effect
+{
+public:
+    bool mergeable(const final_effect &a) const override;
+    void merge(const final_effect &a) override;
+    void fire() override;
+
+    static void schedule(const actor *attack, int dam)
+    {
+        final_effect::schedule(new anguish_fineff(attack, dam));
+    }
+protected:
+    anguish_fineff(const actor *attack, int dam)
+        : final_effect(attack, nullptr, coord_def()), damage(dam)
     {
     }
     int damage;
@@ -335,19 +356,45 @@ public:
     void fire() override;
 
     static void schedule(coord_def pos, int revives, beh_type attitude,
-                         unsigned short foe)
+                         unsigned short foe, bool duel)
     {
-        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe));
+        final_effect::schedule(new bennu_revive_fineff(pos, revives, attitude, foe, duel));
     }
 protected:
     bennu_revive_fineff(coord_def pos, int _revives, beh_type _att,
-                        unsigned short _foe)
-        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe)
+                        unsigned short _foe, bool _duel)
+        : final_effect(0, 0, pos), revives(_revives), attitude(_att), foe(_foe),
+          duel(_duel)
     {
     }
     int revives;
     beh_type attitude;
     unsigned short foe;
+    bool duel;
+};
+
+class avoided_death_fineff : public final_effect
+{
+public:
+    // Each trigger is from the death of a different monster---no merging.
+    bool mergeable(const final_effect &) const override { return false; }
+    void fire() override;
+
+    static void schedule(monster * mons)
+    {
+        // pretend to be dead until our revival, to prevent
+        // sequencing errors from inadvertently making us change alignment
+        const int realhp = mons->hit_points;
+        mons->hit_points = -realhp;
+        mons->flags |= MF_PENDING_REVIVAL;
+        final_effect::schedule(new avoided_death_fineff(mons, realhp));
+    }
+protected:
+    avoided_death_fineff(const actor * _def, int _hp)
+        : final_effect(0, _def, coord_def()), hp(_hp)
+    {
+    }
+    int hp;
 };
 
 class infestation_death_fineff : public final_effect

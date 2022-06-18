@@ -9,6 +9,7 @@
 
 #include "ui.h"
 #include "tilefont.h"
+#include "libconsole.h"
 
 using std::vector;
 

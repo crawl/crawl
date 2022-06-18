@@ -206,7 +206,6 @@ TAGS:   tomb_entry no_monster_gen transparent
 MONS:   sphinx
 MONS:   w:1 mummy / w:9 guardian mummy
 MONS:   mummy priest
-SUBST:  ' = ~ .:50
 KFEAT:  O = enter_tomb
 MAP
 ........................
@@ -215,13 +214,13 @@ MAP
 ..cccccccccccccccccccc..
 ..cc....2...........cc..
 ..cc..............2.cc..
-..cc....cccccccccc''cc..
-..cc....c''''''''c''cc..
-..cc....c''ccccc'c''cc..
-..cc....c''cO'3''c''cc..
-..cc....c''ccccccc''cc..
-..cc.2..c''2''''''''cc..
-..cc....c'''''''''''cc..
+..cc....cccccccccc..cc..
+..cc....c........c..cc..
+..cc....c..ccccc.c..cc..
+..cc....c..cO.3..c..cc..
+..cc....c..ccccccc..cc..
+..cc.2..c..2........cc..
+..cc....c...........cc..
 ..cc....cccccccccccccc..
 ..cc................cc..
 ..cc....2......2....cc..
@@ -482,6 +481,7 @@ SUBST:    FIJKLMNOPQ = G
 # Add greater mummies and traps to the long hall. About 16 greater mummies and
 # 6 traps on-average.
 SUBST:    ' = 2:24 ^ .:210
+KFEAT:    ^ = alarm trap / net trap / zot trap / dispersal trap
 COLOUR:   FIJKLMNOPQ = yellow
 TILE:     FIJKL = dngn_sarcophagus_pedestal_left
 TILE:     MNOPQ = dngn_sarcophagus_pedestal_right

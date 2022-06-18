@@ -26,7 +26,7 @@ void update_cloud_knowledge();
  * @param clear_mons
  *  Clear monster knowledge?
  */
-void clear_map(bool clear_items = true, bool clear_mons = true);
+void clear_map(bool clear_items = false, bool clear_mons = true);
 
 /**
  * @brief If a travel trail exists, clear it; otherwise clear the map.

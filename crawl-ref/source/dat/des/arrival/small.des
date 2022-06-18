@@ -1388,15 +1388,15 @@ xxxxx{''1''('1ww'[x
 xxxxx1'''1'''11ww'x
 xxxx?x''w.11''??1'x
 xxx??x''''''''2'1'x
-xxx?ww''11'''''?w'x
-xxxxww?''''''''''xx
-xxx?w?11?'22'2'''.x
-xxx?w11?''''w2''''x
+xxx?WW''11'''''?w'x
+xxxxWW?''''''''''xx
+xxx?W?11?'22'2'''.x
+xxx?W11?''''w2''''x
 xxxx???''1''???''xx
 xxxxx?''1??''??'xxx
 xxxx?x'''''2?''"xxx
-xxxx?x'''2''''""xxx
-xxxx?w''''2''"""xxx
+xxxxWx'''2''''""xxx
+xxxx?W''''2''"""xxx
 xxxxx'22w""""""xxxx
 xxxxxxx""2"""""xxxx
 xxxxxxx""2""22xxxxx
@@ -1746,7 +1746,7 @@ xx...vvvv..'xxxx..
 x'.vvvvvvv....xx..
 x..vvvvvv..xx'.x..
 xx..vv....xxxxBx..
-x{x'...xx{xxxx.b..
+x{x'...xx{xxxxbb..
 xxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -2338,6 +2338,7 @@ ENDMAP
 NAME:    onia_arrival_zoo_common
 TAGS:    arrival no_trap_gen
 ORIENT:  float
+KPROP:   12345 = no_tele_into
 : if crawl.one_chance_in(10) then
 SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
@@ -2493,7 +2494,7 @@ TAGS:    arrival no_monster_gen
 WEIGHT:  3
 ORIENT:  southeast
 NSUBST:  V = 2:+ / 2=v+ / *:v
-NSUBST:  U = 2:+ / 2=v+ / *:v
+NSUBST:  U = 1:+ / 2=v+ / *:v
 SUBST:   ' = .W
 NSUBST:  { = 1:{ / *:.
 MAP
@@ -2512,7 +2513,7 @@ MAP
 'WwwUUUwwwV<>Vwwwx
 'WwwU<UwwwVVVVwwwx
 'WwwU>Uwwwwwwwwwwx
-'wwwUUUwwwwwwwwwwx
+'wwwU+Uwwwwwwwwwwx
 'wwwwWwwwwwwwwwwwx
 xxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2522,7 +2523,6 @@ ENDMAP
 NAME:    saegor_arrival_fortress
 TAGS:    arrival no_monster_gen no_pool_fixup
 ORIENT:  float
-MONS:    place:D:1 zombie
 KPROP:   W = no_tele_into
 NSUBST:  { = 1:{ / 1:> / *:.
 MAP
@@ -2533,13 +2533,13 @@ wc.....+.......+.....cw
 wcG...GccGc+cGccG...Gcw
 wccc+cccccc+cccccc+cccw
 wcWc.cctt.....ttcc.cWcw
-wttG.ctW...1...Wtc.Gttw
+wttG.ctW.......Wtc.Gttw
 wcWc.Gc.........cG.cWcw
 wccc.cc...WtW...cc.cccw
 @++..++...tGt...++..++@
 wccc.cc...WtW...cc.cccw
 wcWc.Gc.........cG.cWcw
-wttG.ctW...1...Wtc.Gttw
+wttG.ctW.......Wtc.Gttw
 wcWc.cctt.....ttcc.cWcw
 wccc+cccccc+cccccc+cccw
 wcG...GccGc+cGccG...Gcw
@@ -2653,6 +2653,7 @@ NAME:   sevenhm_arrival_forest_fort_small_1
 TAGS:   arrival no_monster_gen
 ORIENT: float
 WEIGHT: 1
+KPROP: 1 = no_tele_into
 NSUBST: { = { / T> , z = + / n+
 SUBST:  T = TTG
 : if crawl.one_chance_in(4) then
@@ -2682,6 +2683,7 @@ NAME:    sevenhm_arrival_forest_fort_small_2
 TAGS:    arrival no_pool_fixup no_monster_gen
 ORIENT:  float
 WEIGHT:  1
+KPROP: 1 = no_tele_into
 : if crawl.one_chance_in(4) then
 SUBST:   w : x, u : x, r : @
 : else
@@ -2923,12 +2925,13 @@ NAME:   lightli_arrival_windingriver
 ORIENT: float
 TAGS:   arrival no_monster_gen
 KMONS:  P = plant
-SUBST:  p = Pw
+KPROP:  q = no_tele_into
+SUBST:  p = Pw, q = Pw
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
-xpwppwppppppwppp.p.p...x
-xwwwwwwpppppwwppp..w...x
-xwwwwwwwpwpwwwwppwwwwp.x
+xqwqqwqqqqqqwqqp.p.p...x
+xwwwwwwqqqqqwwqpp..w...x
+xwwwwwwwqwqwwwwqpwwwwp.x
 xwwwwwwwwwwwwwwwwww..w.+
 xw.wwwwwwwwwwwwwww.....+
 xp..w..wwwww..www..p.t.x
@@ -3393,34 +3396,36 @@ ENDMAP
 
 ##############################################################
 NAME:   heliophobic_arrival_ceremonial_halls
-TAGS:   arrival no_monster_gen no_trap_gen
+TAGS:   arrival no_monster_gen no_trap_gen transparent
 ORIENT: float
 TILE:   c = wall_marble
 FTILE:  '+{cG = floor_marble
 COLOUR: 'cG = white
 SUBST:  ' = .
 MAP
-.....ccc+ccc.....
-.....cG'''Gc.....
-..c..cc'c'cc..c..
-.ccc.cG'c'Gc.ccc.
-.ccc.cc'c'cc.ccc.
-..c..cG'c'Gc..c..
-.....cc'c'cc.....
-ccccccG'''Gcccccc
-cGcGcGc'''cGcGcGc
-c'''''''''''''''c
-+'ccc'''{'''ccc'+
-c'''''''''''''''c
-cGcGcGc'''cGcGcGc
-ccccccG'''Gcccccc
-.....cc'c'cc.....
-..c..cG'c'Gc..c..
-.ccc.cc'c'cc.ccc.
-.ccc.cG'c'Gc.ccc.
-..c..cc'c'cc..c..
-.....cG'''Gc.....
-.....ccc+ccc.....
+ ........@........
+ .....ccc+ccc.....
+ .....cG'''Gc.....
+ ..c..cc'c'cc..c..
+ .ccc.cG'c'Gc.ccc.
+ .ccc.cc'c'cc.ccc.
+ ..c..cG'c'Gc..c..
+ .....cc'c'cc.....
+ ccccccG'''Gcccccc
+ cGcGcGc'''cGcGcGc
+ c'''''''''''''''c
+@+'ccc'''{'''ccc'+@
+ c'''''''''''''''c
+ cGcGcGc'''cGcGcGc
+ ccccccG'''Gcccccc
+ .....cc'c'cc.....
+ ..c..cG'c'Gc..c..
+ .ccc.cc'c'cc.ccc.
+ .ccc.cG'c'Gc.ccc.
+ ..c..cc'c'cc..c..
+ .....cG'''Gc.....
+ .....ccc+ccc.....
+ ........@........
 ENDMAP
 
 ##############################################################
@@ -3585,4 +3590,127 @@ xxxxxxxppprrrrrr.._-x
            x....___-x
            x--xxx--xx
            xxxxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:    dreamdust_arrival_beginning_and_end
+TAGS:    arrival no_monster_gen transparent
+TAGS:    no_rotate no_vmirror
+ORIENT:  float
+WEIGHT:  5
+COLOUR:  x = lightmagenta
+TILE:    x = wall_zot_lightmagenta
+FTILE:   .xgz{ = floor_rough_magenta
+KFEAT:   z = granite_statue
+TILE:    z = dngn_statue_orb
+KFEAT:   g = granite_statue
+TILE:    g = dngn_statue_orb_guardian
+MAP
+ xxxxxxxxxxx
+xxx.......xxx
+xx.........xx
+x.....g.....x
+@..g..z..g..@
+x...........x
+xx....{....xx
+xxx.......xxx
+ xxxxxxxxxxx
+ENDMAP
+
+NAME:    dreamdust_arrival_sigmund_warning
+TAGS:    arrival no_monster_gen transparent
+ORIENT:  float
+WEIGHT:  5
+TILE:    G = dngn_statue_sigmund
+: set_feature_name("granite_statue", "a statue of a dreadful foe")
+# Bunch of player species
+KITEM:   ? = palentonga skeleton / deep elf skeleton / demigod skeleton / \
+             demonspawn skeleton / draconian skeleton / felid skeleton / \
+             formicid skeleton / ghoul skeleton / gnoll skeleton / \
+             orc skeleton / human skeleton / kobold skeleton / \
+             merfolk skeleton / minotaur skeleton / naga skeleton / \
+             octopode skeleton / ogre skeleton / spriggan skeleton / \
+             tengu skeleton / troll skeleton
+MAP
+   vvv
+vvvv>vvvv
+vY.???.Yv
+v..?G?..v
+v..???..v
+v.l...l.v
+v.l.{.l.v
+v.l...l.v
+v.l...l.v
+v.l...l.v
+v.......v
+vvv...vvv
+ENDMAP
+
+##############################################################################
+# Most transpoter vaults are dangerous, especially for new players. Here's a
+# no-stress scenario in which they can try out transporters.
+NAME:    spicycebolla_arrival_transporter_tutorial
+TAGS:    arrival no_monster_gen no_pool_fixup
+ORIENT:  float
+SUBST:   a = wW, G : GATUVYt
+SHUFFLE: -!
+SUBST:   - : !:40 W
+COLOUR:  . : blue
+FTILE:   .GATUVYt>{EFJK : floor_pebble_blue
+MARKER:  E = lua:transp_loc("tut_entry")
+MARKER:  F = lua:transp_dest_loc("tut_entry")
+MARKER:  J = lua:transp_loc("tut_hatch")
+MARKER:  K = lua:transp_dest_loc("tut_hatch")
+MAP
+ aaaa@aaa
+awww!wwwwa
+www!wwwwwwa
+wwaW!Wawwww
+waW...Wawwa
+wW.E>K.Wwwwa
+waW.G.Wawwww
+wwaWWWawwwwa
+awwwwwwwwwwwa
+ awwwwaWWWaww
+ wwwwaW.G.Waw
+ awwwW.F{J.Ww
+  awwaW...Waw
+  wwwwaW-Waww
+  awwwwww-www
+   awwww-wwwa
+    aaa@aaaa
+ENDMAP
+
+##############################################################
+NAME:    spicycebolla_arrival_xxxplode
+TAGS:    arrival transparent
+ORIENT:  float
+SUBST:   X : tXXXX
+SHUFFLE: xX
+SUBST:   X:xX, X:.mw, x:xxvc, t:tttgw
+TILE:    t = dngn_tree_dead
+COLOUR:  t = darkgrey / brown
+: set_feature_name("tree", "dead tree")
+MAP
+    X           X
+   xxXxx  X  xxXxx
+  @xxxXxx . xxXxxx@
+ xx.xxxXx . xXxxx.xx
+Xxxx.xxXxx.xxXxx.xxxX
+ Xxxx.xxXx.xXxx.xxxX
+ xXxxx.xXx.xXx.xxxXx
+ xxXXxx.xx.xx.xxXXxx
+  xxxXXx.X.X.xXXxxx
+    xxxxX.X.Xxxxx
+ X.......X{X.......X
+    xxxxX.X.Xxxxx
+  xxxXXx.X.X.xXXxxx
+ xxXXxx.xx.xx.xxXXxx
+ xXxxx.xXx.xXx.xxxXx
+ Xxxx.xxXx.xXxx.xxxX
+Xxxx.xxXxx.xxXxx.xxxX
+ xx.xxxXx . xXxxx.xx
+  @xxxXxx . xxXxxx@
+   xxXxx  X  xxXxx
+    X           X
 ENDMAP

@@ -26,6 +26,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "item-use.h"
+#include "losglobal.h"
 #include "melee-attack.h"
 #include "message.h"
 #include "misc.h"
@@ -60,6 +61,28 @@
 int melee_confuse_chance(int HD)
 {
     return max(80 * (24 - HD) / 24, 0);
+}
+
+/**
+ * What is the player's to-hit for aux attacks, before randomization?
+ */
+int aux_to_hit()
+{
+    int to_hit = 1300
+                + you.dex() * 75
+                + you.skill(SK_FIGHTING, 30);
+    to_hit /= 100;
+
+    if (you.get_mutation_level(MUT_EYEBALLS))
+        to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
+
+    if (you.duration[DUR_VERTIGO])
+        to_hit -= 5;
+
+    to_hit += slaying_bonus();
+
+    return to_hit;
+
 }
 
 /**
@@ -105,19 +128,13 @@ int to_hit_pct(const monster_info& mi, attack &atk, bool melee)
  * Return the base to-hit bonus that a monster with the given HD gets.
  * @param hd               The hit dice (level) of the monster.
  * @param skilled    Does the monster have bonus to-hit from the fighter or archer flag?
- * @param ranged      Is this attack ranged or melee?
  *
  * @return         A base to-hit value, before equipment, statuses, etc.
  */
-int mon_to_hit_base(int hd, bool skilled, bool ranged)
+int mon_to_hit_base(int hd, bool skilled)
 {
-    if (ranged)
-    {
-        const int hd_mult = skilled ? 15 : 9;
-        return 18 + hd * hd_mult / 6;
-    }
-    const int hd_mult = skilled ? 25 : 15;
-    return 18 + hd * hd_mult / 10;
+    const int hd_mult = skilled ? 5 : 3;
+    return 18 + hd * hd_mult / 2;
 }
 
 int mon_shield_bypass(int hd)
@@ -200,8 +217,12 @@ static bool _autoswitch_to_melee()
     else
         return false;
 
-    if (!is_melee_weapon(you.inv[item_slot]))
+    if (!you.inv[item_slot].defined()
+        || !is_melee_weapon(you.inv[item_slot])
+        || needs_handle_warning(you.inv[item_slot], OPER_ATTACK, penance))
+    {
         return false;
+    }
 
     return wield_weapon(true, item_slot);
 }
@@ -360,60 +381,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
                 break;
         }
 
-        if (!simu && attacker->is_monster()
-            && mons_attack_spec(*attacker->as_monster(), attack_number, true)
-                   .flavour == AF_KITE
-            && attacker->as_monster()->foe_distance() == 1
-            && attacker->reach_range() == REACH_TWO
-            && x_chance_in_y(3, 5))
-        {
-            monster* mons = attacker->as_monster();
-            coord_def foepos = mons->get_foe()->pos();
-            coord_def hopspot = mons->pos() - (foepos - mons->pos()).sgn();
-
-            bool found = false;
-            if (!monster_habitable_grid(mons, env.grid(hopspot)) ||
-                actor_at(hopspot))
-            {
-                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-                {
-                    if (ai->distance_from(foepos) != 2)
-                        continue;
-                    else
-                    {
-                        if (monster_habitable_grid(mons, env.grid(*ai))
-                            && !actor_at(*ai))
-                        {
-                            hopspot = *ai;
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-                found = true;
-
-            if (found)
-            {
-                const bool could_see = you.can_see(*mons);
-                if (mons->move_to_pos(hopspot))
-                {
-                    if (could_see || you.can_see(*mons))
-                    {
-                        mprf("%s hops backward while attacking.",
-                             mons->name(DESC_THE, true).c_str());
-                    }
-                    mons->speed_increment -= 2; // Add a small extra delay
-                }
-            }
-        }
-
         melee_attack melee_attk(attacker, defender, attack_number,
                                 effective_attack_number);
 
-        if (simu)
-            melee_attk.simu = true;
+        melee_attk.simu = simu;
 
         // If the attack fails out, keep effective_attack_number up to
         // date so that we don't cause excess energy loss in monsters
@@ -566,6 +537,10 @@ static inline int get_resistible_fraction(beam_type flavour)
     case BEAM_ICE:
         return 40;
 
+    // 50/50 split of elec and sonic damage.
+    case BEAM_THUNDER:
+        return 50;
+
     case BEAM_LAVA:
         return 55;
 
@@ -594,11 +569,14 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_WATER:
             return defender->res_water_drowning();
         case BEAM_ELECTRICITY:
+        case BEAM_THUNDER:
+        case BEAM_STUN_BOLT:
             return defender->res_elec();
         case BEAM_NEG:
         case BEAM_PAIN:
         case BEAM_MALIGN_OFFERING:
         case BEAM_VAMPIRIC_DRAINING:
+        case BEAM_NECROTIZE:
             return defender->res_negative_energy();
         case BEAM_ACID:
             return defender->res_acid();
@@ -647,6 +625,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
         const bool immune_at_3_res = is_mon
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
+                                     || flavour == BEAM_NECROTIZE
                                      || flavour == BEAM_MALIGN_OFFERING
                                      || flavour == BEAM_VAMPIRIC_DRAINING
                                      || flavour == BEAM_HOLY
@@ -666,6 +645,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG
                      || flavour == BEAM_PAIN
+                     || flavour == BEAM_NECROTIZE
                      || flavour == BEAM_MALIGN_OFFERING
                      || flavour == BEAM_VAMPIRIC_DRAINING)
             {
@@ -808,8 +788,8 @@ bool attack_cleaves(const actor &attacker, int which_attack)
 
     return weap && item_attack_skill(*weap) == SK_AXES
         || attacker.is_player()
-               && (you.form == transformation::hydra && you.heads() > 1
-                   || you.duration[DUR_CLEAVE]);
+            && (you.form == transformation::storm
+                || you.duration[DUR_CLEAVE]);
 }
 
 /**
@@ -932,6 +912,9 @@ int weapon_min_delay_skill(const item_def &weapon)
 int weapon_min_delay(const item_def &weapon, bool check_speed)
 {
     const int base = property(weapon, PWPN_SPEED);
+    if (is_unrandom_artefact(weapon, UNRAND_WOODCUTTERS_AXE))
+        return base;
+
     int min_delay = base/2;
 
     // Short blades can get up to at least unarmed speed.
@@ -968,46 +951,6 @@ int mons_weapon_damage_rating(const item_def &launcher)
     return property(launcher, PWPN_DAMAGE) + launcher.plus;
 }
 
-// Returns a rough estimate of damage from firing/throwing missile.
-int mons_missile_damage(monster* mons, const item_def *launch,
-                        const item_def *missile)
-{
-    if (!missile || (!launch && !is_throwable(mons, *missile)))
-        return 0;
-
-    const int missile_damage = property(*missile, PWPN_DAMAGE) / 2 + 1;
-    const int launch_damage  = launch? property(*launch, PWPN_DAMAGE) : 0;
-    return max(0, launch_damage + missile_damage);
-}
-
-int mons_usable_missile(monster* mons, item_def **launcher)
-{
-    *launcher = nullptr;
-    item_def *launch = nullptr;
-    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
-    {
-        if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
-        {
-            if (is_range_weapon(*item))
-                launch = item;
-        }
-    }
-
-    const item_def *missiles = mons->missiles();
-    if (launch && missiles && !missiles->launched_by(*launch))
-        launch = nullptr;
-
-    const int fdam = mons_missile_damage(mons, launch, missiles);
-
-    if (!fdam)
-        return NON_ITEM;
-    else
-    {
-        *launcher = launch;
-        return missiles->index();
-    }
-}
-
 bool bad_attack(const monster *mon, string& adj, string& suffix,
                 bool& would_cause_penance, coord_def attack_pos)
 {
@@ -1026,13 +969,6 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
     if (is_sanctuary(mon->pos()) || is_sanctuary(attack_pos))
         suffix = ", despite your sanctuary";
-
-    if (you.duration[DUR_LIFESAVING]
-        && mon->holiness() & (MH_NATURAL | MH_PLANT))
-    {
-        suffix = " while asking for your life to be spared";
-        would_cause_penance = true;
-    }
 
     if (you_worship(GOD_JIYVA) && mons_is_slime(*mon)
         && !(mon->is_shapeshifter() && (mon->flags & MF_KNOWN_SHIFTER)))
@@ -1066,7 +1002,7 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
         return true;
     }
 
-    if (mon->neutral() && is_good_god(you.religion))
+    if (mon->neutral() && is_good_god(you.religion) && !mon->has_ench(ENCH_INSANE))
     {
         adj += "neutral ";
         if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_ELYVILON))
@@ -1213,51 +1149,145 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     }
 }
 
+string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
+{
+    if (get_resist(resists, MR_RES_POISON) <= 0
+        && you.duration[DUR_TOXIC_RADIANCE])
+    {
+        return "toxic aura";
+    }
+    if (you.duration[DUR_NOXIOUS_BOG] && !(flags & M_FLIES))
+        return "noxious bog";
+    if (you.duration[DUR_VORTEX])
+        return "polar vortex";
+    return "";
+}
+
 /**
- * Does the player have Olgreb's Toxic Radiance up that would/could cause
- * a hostile summon to be created? If so, prompt the player as to whether they
+ * Does the player have a hostile duration up that would/could cause
+ * a summon to be abjured? If so, prompt the player as to whether they
  * want to continue to create their summon. Note that this prompt is never a
  * penance prompt, because we don't cause penance when monsters enter line of
  * sight when OTR is active, regardless of how they entered LOS.
  *
- * @param verb    The verb to be used in the prompt. Defaults to "summon".
- * @return        True if the player wants to abort.
+ * @param resists   What does the summon resist?
+ * @param verb      The verb to be used in the prompt.
+ * @return          True if the player wants to abort.
  */
-bool otr_stop_summoning_prompt(string verb)
+bool stop_summoning_prompt(resists_t resists, string verb)
 {
-    if (!you.duration[DUR_TOXIC_RADIANCE])
+    if (crawl_state.disables[DIS_CONFIRMATIONS]
+        || crawl_state.which_god_acting() == GOD_XOM)
+    {
+        return false;
+    }
+
+    // TODO: take flags as well (or a set of monster types..?)
+    const string noun = stop_summoning_reason(resists, M_NO_FLAGS);
+    if (noun.empty())
         return false;
 
-    if (crawl_state.disables[DIS_CONFIRMATIONS])
-        return false;
-
-    if (crawl_state.which_god_acting() == GOD_XOM)
-        return false;
-
-    string prompt = make_stringf("Really %s while emitting a toxic aura?",
-                                 verb.c_str());
+    string prompt = make_stringf("Really %s while emitting a %s?",
+                                 verb.c_str(), noun.c_str());
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;
-    else
+
+    canned_msg(MSG_OK);
+    return true;
+}
+
+bool can_reach_attack_between(coord_def source, coord_def target,
+                              reach_type range)
+{
+    // The foe should be on the map (not stepped from time).
+    if (!in_bounds(target))
+        return false;
+
+    const coord_def delta(target - source);
+    const int grid_distance(delta.rdist());
+
+    // Unrand only - Rift is smite-targeted and up to 3 range.
+    if (range == REACH_THREE)
     {
-        canned_msg(MSG_OK);
+        return cell_see_cell(source, target, LOS_NO_TRANS)
+               && grid_distance > 1 && grid_distance <= range;
+    }
+
+    const coord_def first_middle(source + delta / 2);
+    const coord_def second_middle(target - delta / 2);
+
+    return grid_distance == range
+           // And with no dungeon furniture in the way of the reaching attack.
+           && (feat_is_reachable_past(env.grid(first_middle))
+               || feat_is_reachable_past(env.grid(second_middle)));
+}
+
+dice_def spines_damage(monster_type mon)
+{
+    if (mon == MONS_CACTUS_GIANT)
+        return dice_def(5, 8);
+    return dice_def(5, 4);
+}
+
+int archer_bonus_damage(int hd)
+{
+    return hd * 4 / 3;
+}
+
+/**
+ * Do weapons that use the given skill use strength or dex to increase damage?
+ */
+bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon)
+{
+    if (!using_weapon)
+        return true;
+    switch (wpn_skill)
+    {
+    case SK_LONG_BLADES:
+    case SK_SHORT_BLADES:
+    case SK_CROSSBOWS:
+    case SK_BOWS:
+    case SK_SLINGS:
+        return false;
+    default:
         return true;
     }
 }
 
-bool can_reach_attack_between(coord_def source, coord_def target)
+/**
+ * Apply the player's attributes to multiply damage dealt with the given weapon skill.
+ */
+int stat_modify_damage(int damage, skill_type wpn_skill, bool using_weapon)
 {
-    const coord_def delta(target - source);
-    const int grid_distance(delta.rdist());
-    const coord_def first_middle(source + delta / 2);
-    const coord_def second_middle(target - delta / 2);
+    // At 10 strength, damage is multiplied by 1.0
+    // Each point of strength over 10 increases this by 0.025 (2.5%),
+    // strength below 10 reduces the multiplied by the same amount.
+    // Minimum multiplier is 0.01 (1%) (reached at -30 str).
+    // Ranged weapons and short/long blades use dex instead.
+    const bool use_str = weapon_uses_strength(wpn_skill, using_weapon);
+    const int attr = use_str ? you.strength() : you.dex();
+    damage *= max(1.0, 75 + 2.5 * attr);
+    damage /= 100;
 
-    return grid_distance == 2
-        // And with no dungeon furniture in the way of the reaching
-        // attack;
-        && (feat_is_reachable_past(env.grid(first_middle))
-            || feat_is_reachable_past(env.grid(second_middle)))
-        // The foe should be on the map (not stepped from time).
-        && in_bounds(target);
+    return damage;
+}
+
+int apply_weapon_skill(int damage, skill_type wpn_skill, bool random)
+{
+    const int sklvl = you.skill(wpn_skill, 100);
+    damage *= 2500 + maybe_random2(sklvl + 1, random);
+    damage /= 2500;
+    return damage;
+}
+
+int apply_fighting_skill(int damage, bool aux, bool random)
+{
+    const int base = aux? 40 : 30;
+    const int sklvl = you.skill(SK_FIGHTING, 100);
+
+    damage *= base * 100 + maybe_random2(sklvl + 1, random);
+    damage /= base * 100;
+
+    return damage;
 }

@@ -175,28 +175,16 @@ diezmará la resiliencia de aquellos que puedan sentirlo.
 
 Kikubaaqudgha puede elegir entre protegerte de ello... o no.
 %%%%
-Animate Remains ability
-
-Reanimas a un cadáver o esqueleto y lo conviertes en tu seguidor. Date cuenta
-de que los zombies y los esqueletos no pueden dejar el nivel donde fueron
-creados.
-%%%%
-Recall Undead Slaves ability
+Recall Undead Harvest ability
 
 Llama a tus seguidores no muertos desde cualquier lugar de la mazmorra hasta ti
-%%%%
-Animate Dead ability
-
-Reanimas a todos los cadáveres o esqueletos y los conviertes en tus seguidores.
-Date cuenta de que los zombies y los esqueletos no pueden dejar el nivel donde
-fueron creados.
 %%%%
 Drain Life ability
 
 Sanas puntos de vida absorbiendo la fuerza vital de los monstruos alrededor de
 ti.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Marcas el alma de un monstruo vivo y con inteligencia como lista para ser
 tomada. Cuando el monstruo marcado muera, su alma será tuya.
@@ -208,10 +196,6 @@ esclavizar un alma cada vez. Además, la duración de la marca es dependiente de
 nivel de Invocaciones.
 
 Las almas esclavizadas pueden seguirte más allá del nivel donde fueron creadas.
-%%%%
-Animate Remains or Dead ability
-
-Si lees esta descripción, ha ocurrido un error en el programa.
 %%%%
 Heroism ability
 

@@ -140,7 +140,17 @@ static map_section_type _write_vault(map_def &mdef,
             break;
 
         if (!_resolve_map(place.map))
-            continue;
+        {
+            // for most fatal errors, there's no point in trying again. (This
+            // isn't 100% true, e.g. an error in an itemspec that's hidden
+            // behind a random roll may fix itself. But it's true enough that
+            // it's better on average to consider this map bugged and move
+            // on to another one in normal generation.)
+            if (crawl_state.last_builder_error_fatal)
+                break;
+            else
+                continue;
+        }
 
         // Must set size here, or minivaults will not be placed correctly.
         place.size = place.map.size();
@@ -179,7 +189,8 @@ static bool _resolve_map_lua(map_def &map)
             mapstat_report_error(map, err);
 #endif
         crawl_state.last_builder_error = err;
-        mprf(MSGCH_ERROR, "Lua error: %s", err.c_str());
+        crawl_state.last_builder_error_fatal = true;
+        mprf(MSGCH_ERROR, "Fatal lua error: %s", err.c_str());
         return false;
     }
 
@@ -188,10 +199,13 @@ static bool _resolve_map_lua(map_def &map)
     if (!err.empty())
     {
         crawl_state.last_builder_error = err;
-        mprf(MSGCH_ERROR, "Error: %s", err.c_str());
+        crawl_state.last_builder_error_fatal = true;
+        mprf(MSGCH_ERROR, "Map resolution error: %s", err.c_str());
         return false;
     }
 
+    // this is non-fatal: maps use validation to enforce basic placement
+    // constraints, and a failure here should mean retrying
     if (!map.test_lua_validate(false))
     {
         crawl_state.last_builder_error = make_stringf(
@@ -437,6 +451,15 @@ static bool _map_safe_vault_place(const map_def &map,
 
     const bool vault_can_replace_portals =
         map.has_tag("replace_portal");
+
+    // respect smaller builder levels
+    if (c.x < (GXM - dgn_builder_x()) / 2
+        || c.x + size.x - 1 > (GXM + dgn_builder_x()) / 2
+        || c.y < (GYM - dgn_builder_y()) / 2
+        || c.y + size.y - 1 > (GYM + dgn_builder_y()) / 2)
+    {
+        return false;
+    }
 
     const vector<string> &lines = map.map.get_lines();
     for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)

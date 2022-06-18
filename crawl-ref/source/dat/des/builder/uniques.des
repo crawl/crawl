@@ -96,6 +96,11 @@ ENDMAP
 # Uniques which can appear in the Dungeon (D):
 ################################################################################
 
+NAME:   uniq_amaemon
+DEPTH:  D:8-11, Lair:1-3
+WEIGHT: 5, 15(Lair)
+: place_unique(_G, "Amaemon band")
+
 NAME:   uniq_azrael
 DEPTH:  D:12-, Orc:$, Elf, !Elf:$, Snake, !Snake:$, Spider, !Spider:$
 : place_unique(_G, "Azrael band")
@@ -148,7 +153,7 @@ DEPTH:  D:3-6
 : place_unique(_G, "Grinder")
 
 NAME:   uniq_harold
-DEPTH:  D:7-11, Orc:1, Lair:1-2
+DEPTH:  D:9-11, Orc:1, Lair:1-2
 : place_unique(_G, "Harold")
 
 NAME:   uniq_ijyb
@@ -175,6 +180,10 @@ DEPTH:  D:10-, Orc, Lair:4-, Swamp:1, Shoals:1, Snake:1, Spider:1
 NAME:   uniq_kirke
 DEPTH:  D:12-, Lair:4-, Elf:1, Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Kirke band")
+
+NAME:   uniq_lodul
+DEPTH:  D:10-14
+: place_unique(_G, "Lodul band")
 
 NAME:   uniq_louise
 DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
@@ -224,10 +233,10 @@ NAME:   uniq_psyche
 DEPTH:  D:8-12
 : place_unique(_G, "Psyche")
 
-NAME:   uniq_purgy
+NAME:   uniq_pargi
 DEPTH:  D:3-4
 WEIGHT: 1
-: place_unique(_G, "Purgy")
+: place_unique(_G, "Pargi")
 
 NAME:   uniq_robin
 DEPTH:  D:2-4
@@ -276,17 +285,17 @@ DEPTH:  D:14-, Elf, !Elf:$, Snake, Spider
 ################################################################################
 
 NAME:   uniq_aizul
-DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults, !Vaults:$
+DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults, !Vaults:$
 DEPTH:  Crypt:1
 WEIGHT: 50(Snake), 10
 : place_unique(_G, "Aizul")
 
 NAME:   uniq_asterion
-DEPTH:  Depths:1-3, Elf, Snake, Spider, Vaults:1-3
+DEPTH:  Depths:1-2, Elf, Snake, Spider, Vaults:1-3
 : place_unique(_G, "Asterion")
 
 NAME:   uniq_bai_suzhen
-DEPTH:  Depths:1-3, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-
+DEPTH:  Depths:1-2, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-, Vaults:2-
 DEPTH:  Crypt
 : place_unique(_G, "Bai Suzhen")
 
@@ -302,12 +311,18 @@ MONS:   the Enchantress band
 : place_unique(_G, "the Enchantress band")
 
 NAME:   uniq_frederick
-DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
+DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Frederick")
 
 NAME:   uniq_jory
-DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
+DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Jory")
+
+NAME:   uniq_josephina
+# Higher weight to compensate for Josephine.
+WEIGHT: 15
+DEPTH:  Depths:2-, Zot:1-4, Crypt
+: place_unique(_G, "Josephina band")
 
 NAME:   uniq_margery
 # Higher WEIGHT to compensate for Maggie. Used objstat to calculate doubling the WEIGHT
@@ -318,7 +333,7 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt
 
 NAME:   uniq_mara
 DEPTH:  Depths, !Depths:$, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-
-DEPTH:  Vaults:2-, Crypt, Tomb
+DEPTH:  Vaults:2-
 : place_unique(_G, "Mara")
 
 NAME:   uniq_mennas
@@ -338,21 +353,28 @@ MAP
 ENDMAP
 
 NAME:   uniq_nikola
-DEPTH:  Depths:1-3, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
+DEPTH:  Depths:1-2, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Nikola")
+
+NAME:   uniq_parghit
+DEPTH:  Depths:3-, Zot:1-4
+: place_unique(_G, "Parghit")
 
 NAME:   uniq_saint_roka
 DEPTH:  Orc:$, Depths, Elf:2-, Snake:2-, Vaults, Crypt
 : place_unique(_G, "Saint Roka band")
 
 NAME:   uniq_sojobo
-DEPTH:  Depths, Vaults:2-, Crypt, Tomb
+DEPTH:  Depths, Vaults:2-, Crypt
 : place_unique(_G, "Sojobo band")
+
+NAME:   uniq_vv
+DEPTH:  Depths:2-, Zot:1-4, Crypt
+: place_unique(_G, "Vv")
 
 NAME:   uniq_xtahua
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Xtahua")
-
 
 ################################################################################
 # Uniques which appear in neither the Dungeon nor the Depths:
@@ -362,6 +384,10 @@ NAME:   uniq_donald
 DEPTH:  Swamp, Snake, Shoals, Spider, Slime, Vaults, !Vaults:$
 DEPTH:  Crypt, !Crypt:$, Elf, Orc:$
 : place_unique(_G, "Donald")
+
+NAME:   uniq_mlioglotl
+DEPTH:  Swamp, Snake, Shoals, Spider
+: place_unique(_G, "Mlioglotl")
 
 NAME:   uniq_vashnia
 DEPTH:  Snake:2-
@@ -397,6 +423,10 @@ DEPTH:  Tomb, Crypt
 NAME:   uniq_tiamat
 DEPTH:  Zot
 : place_unique(_G, "Tiamat band")
+
+NAME:   uniq_zenata
+DEPTH:  Vaults:1-4, Elf, Crypt
+: place_unique(_G, "Zenata")
 
 NAME:   uniq_cerebov
 DEPTH:  Pan

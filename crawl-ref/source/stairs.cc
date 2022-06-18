@@ -14,11 +14,14 @@
 #include "chardump.h"
 #include "colour.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "dungeon.h" // place_specific_trap
 #include "env.h"
 #include "files.h"
+#include "god-abil.h"
 #include "god-passive.h" // passive_t::slow_abyss
 #include "hints.h"
 #include "hiscores.h"
@@ -29,12 +32,16 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mon-death.h"
+#include "mon-transit.h" // untag_followers
 #include "movement.h"
+#include "mutation.h"
 #include "notes.h"
 #include "orb-type.h"
 #include "output.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
@@ -46,11 +53,11 @@
  #include "tilepick.h"
 #endif
 #include "tiles-build-specific.h"
-#include "timed-effects.h" // bezotted
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // bezotted
 
 static string _annotation_exclusion_warning(level_id next_level_id)
 {
@@ -225,7 +232,7 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
              you.airborne() ? "fly" : "go",
              going_up ? "up" : "down");
     }
-    else
+    else if (stair != DNGN_ALTAR_IGNIS)
     {
         mprf("You %s %swards.",
              you.airborne() ? "fly" : "climb",
@@ -453,8 +460,45 @@ static void _gauntlet_effect()
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
-    if (player_teleport(false))
+    if (player_teleport())
         mpr("You feel stable on this floor.");
+}
+
+static void _hell_effects()
+{
+
+    // 50% chance at max piety
+    if (have_passive(passive_t::resist_hell_effects)
+        && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
+    {
+        simple_god_message("'s power protects you from the chaos of Hell!");
+        return;
+    }
+
+    const bool loud = one_chance_in(6) && !silenced(you.pos());
+    string msg = getMiscString(loud ? "hell_effect_noisy"
+                                    : "hell_effect_quiet");
+    if (msg.empty())
+        msg = "Something hellishly buggy happens.";
+
+    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
+    if (loud)
+        noisy(15, you.pos());
+
+    switch (random2(4))
+    {
+        case 0:
+            temp_mutate(RANDOM_BAD_MUTATION, "hell effect");
+            break;
+        case 1:
+            drain_player(100, true, true);
+            break;
+        case 2:
+            lose_stat(STAT_RANDOM, roll_dice(1, 5));
+            break;
+        default:
+            break;
+    }
 }
 
 static void _new_level_amuses_xom(dungeon_feature_type feat,
@@ -540,7 +584,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
     // going up; everything else is going down. This mostly affects which way you
     // fall if confused.
     if (feat_is_bidirectional_portal(how))
-        going_up = (how == DNGN_ENTER_HELL && player_in_hell(false));
+        going_up = feat_is_hell_subbranch_exit(how);
 
     if (_stair_moves_pre(how))
         return dest;
@@ -636,6 +680,48 @@ static bool _level_transition_moves_player(level_id dest,
     return dest.is_valid() != trying_to_exit;
 }
 
+level_id level_above()
+{
+    if (crawl_state.game_is_sprint())
+        return level_id();
+    // can't re-enter old zig floors; they get regenerated
+    if (player_in_branch(BRANCH_ZIGGURAT))
+        return level_id();
+    if (you.depth > 1)
+        return level_id(you.where_are_you, you.depth - 1);
+    if (!is_connected_branch(you.where_are_you))
+        return level_id(); // no rocketing out of the abyss, portals, pan...
+    const level_id entry = brentry[you.where_are_you];
+    if (entry.is_valid())
+        return entry;
+    return level_id();
+}
+
+void rise_through_ceiling()
+{
+    const level_id whither = level_above();
+    if (!whither.is_valid())
+    {
+        mpr("In a burst of heat and light, you rocket briefly upward... "
+            "but you can't rise from here.");
+        return;
+    }
+
+    mpr("With a burst of heat and light, you rocket upward!");
+    untag_followers(); // XXX: is this needed?
+    floor_transition(DNGN_ALTAR_IGNIS /*hack*/, DNGN_ALTAR_IGNIS,
+                     whither, true, true, false, false);
+    you.clear_far_engulf();
+
+    // flavour! blow a hole through the floor
+    if (env.grid(you.pos()) == DNGN_FLOOR
+        && !trap_at(you.pos()) /*needed?*/
+        && is_valid_shaft_level())
+    {
+        place_specific_trap(you.pos(), TRAP_SHAFT);
+    }
+}
+
 /**
  * Transition to a different level.
  *
@@ -661,12 +747,16 @@ void floor_transition(dungeon_feature_type how,
 
     // Magical level changes (which currently only exist "downwards") need this.
     clear_trapping_net();
-    end_searing_ray();
+    end_wait_spells();
     you.stop_constricting_all();
     you.stop_being_constricted();
     you.clear_beholders();
     you.clear_fearmongers();
     dec_frozen_ramparts(you.duration[DUR_FROZEN_RAMPARTS]);
+    if (you.duration[DUR_OOZEMANCY])
+        jiyva_end_oozemancy();
+    if (you.duration[DUR_NOXIOUS_BOG])
+        you.duration[DUR_NOXIOUS_BOG] = 0;
 
     // Fire level-leaving trigger.
     leaving_level_now(how);
@@ -703,15 +793,15 @@ void floor_transition(dungeon_feature_type how,
 
     const coord_def stair_pos = you.pos();
 
+    // Note down whether we knew where we were going for descent timing.
+    const bool dest_known = !shaft && travel_cache.know_stair(stair_pos);
+
     if (how == DNGN_EXIT_DUNGEON)
     {
         you.depth = 0;
         mpr("You have escaped!");
-
-        if (player_has_orb())
-            ouch(INSTANT_DEATH, KILLED_BY_WINNING);
-
-        ouch(INSTANT_DEATH, KILLED_BY_LEAVING);
+        ouch(INSTANT_DEATH, player_has_orb() ? KILLED_BY_WINNING
+                                             : KILLED_BY_LEAVING);
     }
 
     if (how == DNGN_ENTER_ZIGGURAT)
@@ -769,7 +859,10 @@ void floor_transition(dungeon_feature_type how,
     case BRANCH_ABYSS:
         // There are no abyssal stairs that go up, so this whole case is only
         // when going down.
+        // -- unless you're a rocketeer!
         you.props.erase(ABYSS_SPAWNED_XP_EXIT_KEY);
+        if (old_level.depth > you.depth)
+            break;
         if (old_level.branch == BRANCH_ABYSS)
         {
             mprf(MSGCH_BANISHMENT, "You plunge deeper into the Abyss.");
@@ -828,6 +921,8 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot already knows this place too well. Descend or flee this branch!");
             else
                 mpr("Zot's attention fixes on you again. Descend or flee this branch!");
+            if (you.species == SP_METEORAN)
+                update_vision_range();
         }
         else if (was_bezotted)
         {
@@ -835,6 +930,8 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot has no power in the Abyss.");
             else
                 mpr("You feel Zot lose track of you.");
+            if (you.species == SP_METEORAN)
+                update_vision_range();
         }
 
         if (branch == BRANCH_GAUNTLET)
@@ -880,7 +977,8 @@ void floor_transition(dungeon_feature_type how,
         mpr("Beware, you cannot shaft yourself on this level.");
     }
 
-    const bool newlevel = load_level(how, LOAD_ENTER_LEVEL, old_level);
+    const auto speed = dest_known ? LOAD_ENTER_LEVEL : LOAD_ENTER_LEVEL_FAST;
+    const bool newlevel = load_level(how, speed, old_level);
 
     if (newlevel)
     {
@@ -895,11 +993,18 @@ void floor_transition(dungeon_feature_type how,
 
     you.turn_is_over = true;
 
+    // This save point is somewhat odd, in that it corresponds to
+    // a time when the player didn't have control. So, force a save after the
+    // next world_reacts. XX should this be later in this function? Or not
+    // here at all? (the hup check in save_game_state should be, though)
+    crawl_state.save_after_turn = true;
     save_game_state();
 
     new_level();
 
     moveto_location_effects(whence);
+    if (is_hell_subbranch(you.where_are_you))
+        _hell_effects();
 
     trackers_init_new_level();
 
@@ -1078,8 +1183,14 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
 #endif
 
     case DNGN_ENTER_HELL:
-        if (for_real && !player_in_hell())
+        if (for_real)
             brentry[BRANCH_VESTIBULE] = level_id::current();
+        return level_id(BRANCH_VESTIBULE);
+
+    case DNGN_EXIT_DIS:
+    case DNGN_EXIT_GEHENNA:
+    case DNGN_EXIT_COCYTUS:
+    case DNGN_EXIT_TARTARUS:
         return level_id(BRANCH_VESTIBULE);
 
     case DNGN_EXIT_ABYSS:
@@ -1191,16 +1302,14 @@ static void _update_level_state()
 void new_level(bool restore)
 {
     print_stats_level();
-#ifdef DGL_WHEREIS
-    whereis_record();
-#endif
+    update_whereis();
 
     _update_level_state();
 
     if (restore)
         return;
 
-    cancel_tornado();
+    cancel_polar_vortex();
 
     if (player_in_branch(BRANCH_ZIGGURAT))
         you.zig_max = max(you.zig_max, you.depth);

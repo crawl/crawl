@@ -20,6 +20,7 @@ void handle_real_time(chrono::time_point<chrono::system_clock> when
                       = chrono::system_clock::now());
 
 bool today_is_halloween();
+bool now_is_morning();
 
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);

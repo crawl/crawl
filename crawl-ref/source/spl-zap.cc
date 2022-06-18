@@ -24,6 +24,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_POISON_ARROW, ZAP_POISON_ARROW },
     { SPELL_IRON_SHOT, ZAP_IRON_SHOT },
     { SPELL_LIGHTNING_BOLT, ZAP_LIGHTNING_BOLT },
+    { SPELL_CHAIN_LIGHTNING, ZAP_CHAIN_LIGHTNING },
     { SPELL_BOLT_OF_MAGMA, ZAP_BOLT_OF_MAGMA },
     { SPELL_VENOM_BOLT, ZAP_VENOM_BOLT },
     { SPELL_BOLT_OF_DRAINING, ZAP_BOLT_OF_DRAINING },
@@ -39,7 +40,6 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     // Wizard mode only.
     { SPELL_PORKALATOR, ZAP_PORKALATOR },
     { SPELL_HURL_DAMNATION, ZAP_HURL_DAMNATION },
-    { SPELL_CORONA, ZAP_CORONA },
     { SPELL_CHARMING, ZAP_CHARMING },
     { SPELL_BANISHMENT, ZAP_BANISHMENT },
     { SPELL_SLOW, ZAP_SLOW },
@@ -52,7 +52,6 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_TELEPORT_OTHER, ZAP_TELEPORT_OTHER },
     { SPELL_INNER_FLAME, ZAP_INNER_FLAME },
     { SPELL_HASTE, ZAP_HASTE },
-    { SPELL_INVISIBILITY, ZAP_INVISIBILITY },
     { SPELL_DIG, ZAP_DIG },
     { SPELL_CRYSTAL_BOLT, ZAP_CRYSTAL_BOLT },
     { SPELL_TUKIMAS_DANCE, ZAP_TUKIMAS_DANCE },
@@ -69,6 +68,10 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SEARING_RAY, ZAP_SEARING_RAY },
     { SPELL_HAILSTORM, ZAP_HAILSTORM },
     { SPELL_ISKENDERUNS_MYSTIC_BLAST, ZAP_MYSTIC_BLAST },
+    { SPELL_FLAME_WAVE, ZAP_FLAME_WAVE },
+    { SPELL_ENFEEBLE, ZAP_ENFEEBLE },
+    { SPELL_NECROTIZE, ZAP_NECROTIZE },
+    { SPELL_BOLT_OF_LIGHT, ZAP_BOLT_OF_LIGHT },
 
     // monster-specific
     { SPELL_SLUG_DART, ZAP_SLUG_DART },
@@ -110,6 +113,9 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_ELECTRICAL_BOLT, ZAP_ELECTRICAL_BOLT },
     { SPELL_CALL_DOWN_LIGHTNING, ZAP_LIGHTNING_BOLT },
     { SPELL_FLAMING_CLOUD, ZAP_FLAMING_CLOUD },
+    { SPELL_STUNNING_BURST, ZAP_STUNNING_BURST },
+    { SPELL_SERACFALL, ZAP_ICEBLAST },
+    { SPELL_CORONA, ZAP_CORONA },
 
     // These are all for zap -> spell lookup.
     { SPELL_QUICKSILVER_BOLT, ZAP_QUICKSILVER_BOLT },
@@ -128,11 +134,34 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_HURL_SLUDGE, ZAP_HURL_SLUDGE },
 };
 
+// Some player abilities are internally zaps but don't go through
+// your_spels
+static pair<ability_type, zap_type> _abil_zaps[] =
+{
+    { ABIL_SPIT_POISON, ZAP_SPIT_POISON },
+    { ABIL_BREATHE_ACID, ZAP_BREATHE_ACID },
+    { ABIL_BREATHE_FIRE, ZAP_BREATHE_FIRE },
+    { ABIL_BREATHE_FROST, ZAP_BREATHE_FROST },
+    { ABIL_BREATHE_POISON, ZAP_BREATHE_POISON },
+    { ABIL_BREATHE_POWER, ZAP_BREATHE_POWER },
+    { ABIL_BREATHE_STEAM, ZAP_BREATHE_STEAM },
+    { ABIL_BREATHE_MEPHITIC, ZAP_BREATHE_MEPHITIC },
+};
+
 zap_type spell_to_zap(spell_type spell)
 {
     for (const auto &spzap : _spl_zaps)
         if (spzap.first == spell)
             return spzap.second;
+
+    return NUM_ZAPS;
+}
+
+zap_type ability_to_zap(ability_type abil)
+{
+    for (const auto &abzap : _abil_zaps)
+        if (abzap.first == abil)
+            return abzap.second;
 
     return NUM_ZAPS;
 }
@@ -150,8 +179,6 @@ int spell_zap_power(spell_type spell, int pow)
 {
     switch (spell)
     {
-    case SPELL_CORONA:
-        return pow + 10;
     case SPELL_HIBERNATION:
         return stepdown_value(pow * 9 / 10, 5, 35, 45, 50);
     default:
@@ -170,8 +197,6 @@ int spell_zap_power_cap(spell_type spell)
 
     switch (spell)
     {
-    case SPELL_CORONA:
-        return max<int>(cap - 10, 0);
     case SPELL_HIBERNATION:
         return 50;
     default:

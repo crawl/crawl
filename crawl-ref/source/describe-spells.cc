@@ -17,12 +17,13 @@
 #include "menu.h"
 #include "mon-book.h"
 #include "mon-cast.h"
+#include "mon-explode.h" // ball_lightning_damage
 #include "mon-project.h" // iood_damage
-#include "monster.h" // SEEN_SPELLS_KEY
 #include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "spl-damage.h"
+#include "spl-summoning.h" // mons_ball_lightning_hd
 #include "spl-util.h"
 #include "spl-zap.h"
 #include "stringutil.h"
@@ -33,6 +34,8 @@
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
+
+static string _effect_string(spell_type spell, const monster_info *mon_owner);
 
 /**
  * Returns a spellset containing the spells for the given item.
@@ -70,6 +73,19 @@ static string _ability_type_descriptor(mon_spell_slot_flag type)
     return lookup(descriptors, type, "buggy");
 }
 
+static const char* _abil_type_vuln_core(bool silencable, bool antimagicable)
+{
+    // No one gets confused by the rare spells that are hit by silence
+    // but not antimagic, AFAIK. Let's keep it simple.
+    if (!antimagicable)
+        return "silence";
+    if (silencable)
+        return "silence and antimagic";
+    // Explicitly clarify about spells that are hit by antimagic but
+    // NOT silence, since those confuse players nonstop.
+    return "antimagic (but not silence)";
+}
+
 /**
  * What type of effects is this spell type vulnerable to?
  *
@@ -86,10 +102,8 @@ static string _ability_type_vulnerabilities(mon_spell_slot_flag type)
     const bool antimagicable = type == MON_SPELL_WIZARD
                                || type == MON_SPELL_MAGICAL;
     ASSERT(silencable || antimagicable);
-    return make_stringf(", which are affected by%s%s%s",
-                        silencable ? " silence" : "",
-                        silencable && antimagicable ? " and" : "",
-                        antimagicable ? " antimagic" : "");
+    return make_stringf(", which are affected by %s",
+                        _abil_type_vuln_core(silencable, antimagicable));
 }
 
 /**
@@ -370,9 +384,17 @@ static dice_def _spell_damage(spell_type spell, int hd)
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
-            return iood_damage(pow, INFINITE_DISTANCE);
+            return iood_damage(pow, INFINITE_DISTANCE, false);
+        case SPELL_IRRADIATE:
+            return irradiate_damage(pow, false);
         case SPELL_GLACIATE:
             return glaciate_damage(pow, 3);
+        case SPELL_CONJURE_BALL_LIGHTNING:
+            return ball_lightning_damage(mons_ball_lightning_hd(pow, false));
+        case SPELL_ERUPTION:
+            return eruption_damage();
+        case SPELL_LRD:
+            return base_fragmentation_damage(pow);
         default:
             break;
     }
@@ -404,6 +426,8 @@ static colour_t _spell_colour(spell_type spell)
             return LIGHTBLUE;
         case SPELL_IOOD:
             return LIGHTMAGENTA;
+        case SPELL_ERUPTION:
+            return RED;
         default:
             break;
     }
@@ -434,10 +458,24 @@ static string _colourize(string base, colour_t col)
     return out;
 }
 
+static string _describe_living_spells(const monster_info &mon_owner)
+{
+    const spell_type spell = living_spell_type_for(mon_owner.type);
+    const int n = living_spell_count(spell, false);
+    const string base_desc = _effect_string(spell, &mon_owner);
+    const string desc = base_desc[0] == '(' ? base_desc : make_stringf("(%s)",
+            base_desc.c_str());
+    return make_stringf("%dx%s", n, desc.c_str());
+}
+
+
 static string _effect_string(spell_type spell, const monster_info *mon_owner)
 {
     if (!mon_owner)
         return "";
+
+    if (spell == SPELL_CONJURE_LIVING_SPELLS)
+        return _describe_living_spells(*mon_owner);
 
     const int hd = _spell_hd(spell, *mon_owner);
     if (!hd)
@@ -456,14 +494,11 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         }
         if (you.immune_to_hex(spell))
             return "(immune)";
-        return make_stringf("(%d%%)", hex_chance(spell, hd));
+        return make_stringf("(%d%%)", hex_chance(spell, mon_owner));
     }
 
-    if (spell == SPELL_CHAIN_LIGHTNING)
-    {
-        const int pow = mons_power_for_hd(spell, hd);
-        return make_stringf("(%s)", desc_chain_lightning_dam(pow).c_str());
-    }
+    if (spell == SPELL_SMITING)
+        return "7-17"; // sigh
 
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
@@ -471,7 +506,10 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     string mult = "";
     if (spell == SPELL_MARSHLIGHT)
         mult = "2x";
-    return make_stringf("(%s%dd%d)", mult.c_str(), dam.num, dam.size);
+    else if (spell == SPELL_CONJURE_BALL_LIGHTNING)
+        mult = "3x";
+    const char* asterisk = spell == SPELL_LRD ? "*" : "";
+    return make_stringf("(%s%dd%d%s)", mult.c_str(), dam.num, dam.size, asterisk);
 }
 
 /**
@@ -500,7 +538,9 @@ static void _describe_book(const spellbook_contents &book,
     if (source_item)
     {
         description.cprintf(
-            "\n Spells                           Type                      Level       Known");
+            "\n Spells                            Type                      Level");
+        if (crawl_state.need_save)
+            description.cprintf("       Known");
     }
     description.cprintf("\n");
 
@@ -531,7 +571,7 @@ static void _describe_book(const spellbook_contents &book,
         const int effect_len = effect_str.length();
         const int range_len = range_str.empty() ? 0 : 3;
         const int effect_range_space = effect_len && range_len ? 1 : 0;
-        const int chop_len = 29 - effect_len - range_len - effect_range_space;
+        const int chop_len = 30 - effect_len - range_len - effect_range_space;
 
         if (effect_len && !testbits(get_spell_flags(spell), spflag::WL_check))
             effect_str = _colourize(effect_str, _spell_colour(spell));
@@ -570,7 +610,7 @@ static void _describe_book(const spellbook_contents &book,
                          _spell_schools(spell);
 
         string known = "";
-        if (!mon_owner)
+        if (!mon_owner && crawl_state.need_save)
             known = you.spell_library[spell] ? "         yes" : "          no";
 
         description.cprintf("%s%d%s\n",
@@ -676,4 +716,26 @@ string describe_item_spells(const item_def &item)
     formatted_string description;
     describe_spellset(item_spellset(item), &item, description);
     return description.tostring();
+}
+
+/**
+ * Return a one-line description of the spells in the given item.
+ *
+ * @param item      The book in question.
+ * @return          A one-line listing of the spells in the given item,
+ *                  including names, schools & levels.
+ */
+string terse_spell_list(const item_def &item)
+{
+    vector<string> spell_descs;
+    for (auto spell : spells_in_book(item))
+    {
+        spell_descs.push_back(make_stringf("%s (L%d %s)",
+                                           spell_title(spell),
+                                           spell_difficulty(spell),
+                                           _spell_schools(spell).c_str()));
+    }
+    // could use comma_separated_fn and skip the intervening vec?
+    return "Spells: " + comma_separated_line(spell_descs.begin(),
+                                             spell_descs.end());
 }

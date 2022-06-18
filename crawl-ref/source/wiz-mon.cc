@@ -14,6 +14,7 @@
 #include "areas.h"
 #include "cloud.h"
 #include "colour.h"
+#include "command.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "directn.h"
@@ -52,10 +53,16 @@
 void wizard_create_spec_monster_name()
 {
     char specs[1024];
-    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec): ");
+    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec) (? for help): ");
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
+        return;
+    }
+
+    if (!strcmp(specs, "?"))
+    {
+        show_specific_help("wiz-monster");
         return;
     }
 
@@ -111,13 +118,6 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(type) && you.unique_creatures[type])
         you.unique_creatures.set(type, false);
 
-    if (mons_class_requires_band(type) && !mspec.band)
-    {
-        mprf(MSGCH_DIAGNOSTICS,
-             "That monster can only be created with a band.");
-        return;
-    }
-
     if (!dgn_place_monster(mspec, place, true, false))
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place monster.");
@@ -152,7 +152,7 @@ void wizard_create_spec_monster_name()
         monster    &mon = env.mons[idx];
         ghost_demon ghost;
 
-        ghost.name = "John Doe";
+        ghost.name = random_choose("John Doe", "Jane Doe", "Jay Doe");
 
         char input_str[80];
         msgwin_get_line("Make player ghost which species? (case-sensitive) ",
@@ -426,8 +426,7 @@ void debug_stethoscope(int mon)
          ((mons.attitude == ATT_HOSTILE)        ? "hostile" :
           (mons.attitude == ATT_FRIENDLY)       ? "friendly" :
           (mons.attitude == ATT_NEUTRAL)        ? "neutral" :
-          (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral":
-          (mons.attitude == ATT_STRICT_NEUTRAL) ? "strictly neutral"
+          (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral"
                                                 : "unknown alignment"));
 
     // Print stats and other info.

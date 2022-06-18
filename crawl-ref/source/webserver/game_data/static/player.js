@@ -15,7 +15,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
 
     var defense_boosters = {
         "ac": "ice-armoured|protected from physical damage|sanguine armoured"
-              + "|under a protective aura|curled up",
+              + "|under a protective aura|curled up|fiery-armoured",
         "ev": "agile|acrobatic|in a heavenly storm",
         "sh": "divinely shielded",
     }
@@ -42,8 +42,9 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             old_value = max;
         player["old_" + propname] = value;
         var increase = old_value < value;
+        // XX should both of these be floor?
         var full_bar = Math.round(10000 * (increase ? old_value : value) / max);
-        var change_bar = Math.round(10000 * Math.abs(old_value - value) / max);
+        var change_bar = Math.floor(10000 * Math.abs(old_value - value) / max);
         // Use poison_survival to display our remaining hp after poison expires.
         if (name == "hp")
         {
@@ -158,6 +159,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         else
             return String.fromCharCode("A".charCodeAt(0) + index - 26);
     }
+    player.index_to_letter = index_to_letter;
 
     function inventory_item_desc(index, parens=false)
     {
@@ -171,6 +173,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             elem.addClass("fg" + item.col);
         return elem;
     }
+    player.inventory_item_desc = inventory_item_desc;
 
     function wielded_weapon()
     {
@@ -223,7 +226,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
     {
         // FIXME: does this cover all ATTR_HELD cases?
         return player.has_status("paralysed|petrified|sleeping")
-               || player.has_status("confused|petrifying")
+               || player.has_status("confused")
                || player.has_status("held", 4);
     }
 
@@ -361,7 +364,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             $("#stats_gozag_gold").text("");
             $("#stats_gozag_gold_label").css("padding-left", "0");
         }
-        $("#stats_gozag_gold").toggleClass("boosted_stat", player.has_status("gold aura"));
+        $("#stats_gozag_gold").toggleClass("boosted_stat", !!player.has_status("gold aura"));
 
         $("#stats_species_god").text(species_god);
         $("#stats_piety").toggleClass("penance", !!player.penance);
@@ -386,6 +389,12 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         percentage_color("hp");
         percentage_color("mp");
         update_bar("hp");
+        // is there a better place to do this?
+        if (player.species == "Djinni")
+            $("#stats_mpline").hide();
+        else
+            $("#stats_mpline").show();
+
         update_bar("mp");
 
         update_defense("ac");
@@ -430,13 +439,6 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
             index_to_letter(player.equip[enums.equip.WEAPON]) + ")");
         $("#stats_weapon").html(wielded_weapon());
 
-        // show launcher ammo to the right of the weapon, if it isn't currently
-        // shown in the regular quiver
-        if (player.launcher_item >= 0 && player.launcher_item != player.quiver_item)
-            $("#stats_launcher_quiver").html(inventory_item_desc(player.launcher_item, true));
-        else
-            $("#stats_launcher_quiver").html("");
-
         $("#stats_quiver").html(quiver());
     }
 
@@ -446,8 +448,13 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
         {
             player.inv[i] = player.inv[i] || {};
             $.extend(player.inv[i], data.inv[i]);
+            player.inv[i].slot = Number(i); // XX why is i a string?
         }
         $.extend(player.equip, data.equip);
+
+        if (data.inv)
+            $("#action-panel").triggerHandler("update");
+
         delete data.equip;
         delete data.inv;
         delete data.msg;
@@ -514,7 +521,7 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
                 piety_rank: 0, penance: false,
                 status: [],
                 inv: {}, equip: {},
-                quiver_item: -1, launcher_item: -1,
+                quiver_item: -1,
                 unarmed_attack: "",
                 pos: {x: 0, y: 0},
                 wizard: 0,

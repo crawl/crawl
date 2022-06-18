@@ -2,7 +2,6 @@
 %startvalue TILE_MAIN_MAX main
 %prefix TILEP
 
-%include dc-demon.txt
 %include dc-mon.txt
 
 effect/net_trap TRAP_NET
@@ -41,21 +40,6 @@ halfling_m HALFLING
 halfling_f
 orc_f ORC
 orc_m
-%rim 0
-lorc_m0 LAVA_ORC
-lorc_f0
-lorc_m1 LAVA_ORC_HEAT
-lorc_m2
-lorc_m3
-lorc_m4
-lorc_m5
-lorc_m6
-lorc_f1
-lorc_f2
-lorc_f3
-lorc_f4
-lorc_f5
-lorc_f6
 %rim 1
 kobold_m KOBOLD
 kobold_f
@@ -75,6 +59,8 @@ naga_red_f
 naga_red_m
 ogre_m OGRE
 ogre_f
+meteoran_f METEORAN
+meteoran_m
 troll_f TROLL
 troll_m
 octopode1 OCTOPODE
@@ -144,8 +130,6 @@ merfolk_water_f MERFOLK_WATER
 merfolk_water_m
 vampire_f VAMPIRE
 vampire_m
-deep_dwarf_m DEEP_DWARF
-deep_dwarf_f
 gargoyle_m GARGOYLE
 gargoyle_f
 gargoyle_red_m
@@ -518,6 +502,7 @@ capt_cutlass CAPT_CUTLASS
 arc_blade ARC_BLADE
 gyre GYRE
 thermic_engine THERMIC_ENGINE
+throatcutter THROATCUTTER
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
@@ -555,6 +540,7 @@ blowgun_assassin BLOWGUN_ASSASSIN
 punk PUNK
 sniper SNIPER
 crossbow_fire FIERY_DEVIL
+condemnation CONDEMNATION
 zephyr ZEPHYR
 sceptre_of_torment SCEPTRE_OF_TORMENT
 # start TAG_MAJOR_VERSION == 34
@@ -828,6 +814,11 @@ tower_shield_quartered TOWER_SHIELD_QUARTERED
 tower_shield_teal TOWER_SHIELD_TEAL
 tower_shield_spiral TOWER_SHIELD_SPIRAL TOWER_SHIELD_LAST_NORM
 
+## orbs
+orb1 ORB1 ORB_FIRST
+orb2 ORB2
+orb3 ORB3 ORB_LAST
+
 ##unrand (or unique) shields
 buckler_spriggan BUCKLER_SPRIGGAN
 buckler_warlock BUCKLER_WARLOCK
@@ -1053,6 +1044,10 @@ turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
+hat_archer ARCHER
+hat_archer2 ARCHER2
+hat_explorer EXPLORER
+hat_explorer2 EXPLORER2
 
 ## Mutations
 horns1 HORNS1

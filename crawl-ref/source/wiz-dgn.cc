@@ -7,12 +7,14 @@
 
 #include "wiz-dgn.h"
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "branch.h"
 #include "coordit.h"
 #include "dactions.h"
 #include "delay.h"
 #include "describe.h"
+#include "directn.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
 #include "tile-env.h"
@@ -182,11 +184,10 @@ void wizard_interlevel_travel()
     _wizard_go_to_level(pos);
 }
 
-bool wizard_create_feature(const coord_def& pos)
+dungeon_feature_type wizard_select_feature(bool mimic, bool allow_fprop)
 {
-    const bool mimic = (pos != you.pos());
     char specs[256];
-    dungeon_feature_type feat;
+    // TODO: this sub-ui is very annoying to use
     if (mimic)
         mprf(MSGCH_PROMPT, "Create what kind of feature mimic? ");
     else
@@ -195,8 +196,10 @@ bool wizard_create_feature(const coord_def& pos)
     if (cancellable_get_line_autohist(specs, sizeof(specs)) || specs[0] == 0)
     {
         canned_msg(MSG_OK);
-        return false;
+        return DNGN_UNSEEN;
     }
+
+    dungeon_feature_type feat = DNGN_UNSEEN;
 
     if (int feat_num = atoi(specs))
         feat = static_cast<dungeon_feature_type>(feat_num);
@@ -212,7 +215,8 @@ bool wizard_create_feature(const coord_def& pos)
             if (matches.empty())
             {
                 const feature_property_type fprop(str_to_fprop(name));
-                if (fprop != FPROP_NONE)
+                // TODO: fix so that the ability can place fprops
+                if (fprop != FPROP_NONE && allow_fprop)
                 {
                     env.pgrid(you.pos()) |= fprop;
                     mprf("Set fprops \"%s\" at (%d,%d)",
@@ -223,7 +227,7 @@ bool wizard_create_feature(const coord_def& pos)
                     mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
                          name.c_str());
                 }
-                return false;
+                return DNGN_UNSEEN;
             }
 
             // Only one possible match, use that.
@@ -242,7 +246,8 @@ bool wizard_create_feature(const coord_def& pos)
                 // might be *LONG*.
                 mpr_comma_separated_list(prefix, matches, " and ", ", ",
                                          MSGCH_DIAGNOSTICS);
-                return wizard_create_feature(pos);
+                // TODO: no recursion
+                feat = wizard_select_feature(mimic);
             }
         }
     }
@@ -251,39 +256,90 @@ bool wizard_create_feature(const coord_def& pos)
         && !yesno("This isn't a valid feature mimic. Create it anyway? ",
                   true, 'n'))
     {
+        feat = DNGN_UNSEEN;
+    }
+    if (feat == DNGN_UNSEEN)
         canned_msg(MSG_OK);
-        return false;
-    }
+    return feat;
+}
 
-    if (feat == DNGN_ENTER_SHOP)
-        return debug_make_shop(pos);
+bool wizard_create_feature(const coord_def& pos, dungeon_feature_type feat, bool mimic)
+{
+    dist t;
+    t.target = pos;
+    return wizard_create_feature(t, feat, mimic);
+}
 
-    if (feat_is_trap(feat))
-        return debug_make_trap(pos);
-
-    tile_env.flv(pos).feat = 0;
-    tile_env.flv(pos).special = 0;
-    env.grid_colours(pos) = 0;
-    const dungeon_feature_type old_feat = env.grid(pos);
-    dungeon_terrain_changed(pos, feat, false, false, false, true);
-    // Update gate tiles, if existing.
-    if (feat_is_door(old_feat) || feat_is_door(feat))
+bool wizard_create_feature(dist &target, dungeon_feature_type feat, bool mimic)
+{
+    if (feat == DNGN_UNSEEN)
     {
-        const coord_def left  = pos - coord_def(1, 0);
-        const coord_def right = pos + coord_def(1, 0);
-        if (map_bounds(left) && feat_is_door(env.grid(left)))
-            tile_init_flavour(left);
-        if (map_bounds(right) && feat_is_door(env.grid(right)))
-            tile_init_flavour(right);
+        feat = wizard_select_feature(mimic, target.target == you.pos());
+        if (feat == DNGN_UNSEEN)
+            return false;
+        you.props[WIZ_LAST_FEATURE_TYPE_PROP] = static_cast<int>(feat);
     }
-    if (pos == you.pos() && cell_is_solid(pos))
-        you.wizmode_teleported_into_rock = true;
 
-    if (mimic)
-        env.level_map_mask(pos) |= MMT_MIMIC;
+    const bool targeting_mode = target.needs_targeting();
 
-    if (you.see_cell(pos))
-        view_update_at(pos);
+    do
+    {
+        if (targeting_mode)
+        {
+            // TODO: should this just toggle xray vision on?
+            viewwindow(true); // make sure los is up to date
+            direction_chooser_args args;
+            args.range = you.wizard_vision ? -1 : LOS_MAX_RANGE;
+            args.restricts = DIR_TARGET;
+            args.mode = TARG_ANY;
+            args.needs_path = false;
+            // TODO: a way to switch features while targeting?
+            args.top_prompt = make_stringf(
+                "Building '<w>%s</w>'.\n"
+                "[<w>.</w>] place feature and continue, "
+                "[<w>ret</w>] place and exit, [<w>esc</w>] exit.",
+                dungeon_feature_name(feat));
+
+            if (in_bounds(target.target))
+                args.default_place = target.target; // last placed position
+            if (you.wizard_vision)
+                args.unrestricted = true; // work with xray vision
+            direction(target, args);
+            if (target.isCancel || !target.isValid)
+                return false;
+        }
+        coord_def &pos = target.target;
+
+        if (feat == DNGN_ENTER_SHOP)
+            return debug_make_shop(pos);
+
+        if (feat_is_trap(feat))
+            return debug_make_trap(pos);
+
+        tile_env.flv(pos).feat = 0;
+        tile_env.flv(pos).special = 0;
+        env.grid_colours(pos) = 0;
+        const dungeon_feature_type old_feat = env.grid(pos);
+        dungeon_terrain_changed(pos, feat, false, false, false, true);
+        // Update gate tiles, if existing.
+        if (feat_is_door(old_feat) || feat_is_door(feat))
+        {
+            const coord_def left  = pos - coord_def(1, 0);
+            const coord_def right = pos + coord_def(1, 0);
+            if (map_bounds(left) && feat_is_door(env.grid(left)))
+                tile_init_flavour(left);
+            if (map_bounds(right) && feat_is_door(env.grid(right)))
+                tile_init_flavour(right);
+        }
+        if (pos == you.pos() && cell_is_solid(pos))
+            you.wizmode_teleported_into_rock = true;
+
+        if (mimic)
+            env.level_map_mask(pos) |= MMT_MIMIC;
+
+        if (you.see_cell(pos))
+            view_update_at(pos);
+    } while (targeting_mode && target.isEndpoint);
 
     return true;
 }
@@ -412,13 +468,7 @@ bool debug_make_trap(const coord_def& pos)
     if (spec == "random" || spec == "any")
         trap = TRAP_RANDOM;
 
-    for (int t =
-#if TAG_MAJOR_VERSION == 34
-            TRAP_DART
-#else
-            TRAP_ARROW
-#endif
-            ; t < NUM_TRAPS; ++t)
+    for (int t = TRAP_FIRST_TRAP; t < NUM_TRAPS; ++t)
     {
         const trap_type tr = static_cast<trap_type>(t);
         string tname       = lowercase_string(trap_name(tr));
@@ -455,7 +505,7 @@ bool debug_make_trap(const coord_def& pos)
     }
 
     place_specific_trap(you.pos(), trap);
-    mprf("Created %s, marked it undiscovered.",
+    mprf("Created %s.",
          (trap == TRAP_RANDOM)
             ? "a random trap"
             : trap_at(you.pos())->name(DESC_A).c_str());
@@ -582,6 +632,7 @@ static void debug_load_map_by_name(string name, bool primary)
     {
         if (toplace->orient == MAP_ENCOMPASS
             && !toplace->is_usable_in(level_id::current())
+            && !toplace->place.is_usable_in(level_id::current())
             && !yesno("Warning: this is an encompass vault not designed "
                        "for this location; placing it with &P may result in "
                        "crashes and save corruption. Continue?", true, 'y'))
@@ -591,14 +642,14 @@ static void debug_load_map_by_name(string name, bool primary)
             return;
         }
         if (toplace->is_minivault())
-            you.props["force_minivault"] = toplace->name;
+            you.props[FORCE_MINIVAULT_KEY] = toplace->name;
         else
-            you.props["force_map"] = toplace->name;
+            you.props[FORCE_MAP_KEY] = toplace->name;
         wizard_recreate_level();
-        you.props.erase("force_minivault");
-        you.props.erase("force_map");
+        you.props.erase(FORCE_MINIVAULT_KEY);
+        you.props.erase(FORCE_MAP_KEY);
 
-        // We just saved with you.props["force_map"] set; save again in
+        // We just saved with you.props[FORCE_MAP_KEY] set; save again in
         // case we crash (lest we have the property forever).
         if (!crawl_state.test)
             save_game_state();
@@ -797,13 +848,23 @@ void wizard_recreate_level()
     _wizard_level_target = lev;
     dungeon_feature_type stair_taken = DNGN_STONE_STAIRS_DOWN_I;
 
+    if (lev.branch == BRANCH_ABYSS)
+    {
+        // abyss generation is different, and regenerating the abyss
+        // with the below code leads to strange behavior
+        abyss_teleport(true);
+        return;
+    }
+
     if (lev.depth == 1 && lev != BRANCH_DUNGEON)
         stair_taken = branches[lev.branch].entry_stairs;
 
     leaving_level_now(stair_taken);
-    you.get_place_info().levels_seen--;
     delete_level(lev);
     const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);
+    if (you.get_place_info().levels_seen > 1)
+        you.get_place_info().levels_seen--; // this getting to 0 -> crashes
+
     tile_new_level(newlevel);
     if (!crawl_state.test)
         save_game_state();

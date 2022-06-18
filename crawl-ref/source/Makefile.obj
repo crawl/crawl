@@ -219,12 +219,11 @@ spl-goditem.o \
 spl-miscast.o \
 spl-monench.o \
 spl-other.o \
-spl-pick.o \
 spl-selfench.o \
 spl-summoning.o \
-spl-tornado.o \
 spl-transloc.o \
 spl-util.o \
+spl-vortex.o \
 spl-wpnench.o \
 spl-zap.o \
 sprint.o \
@@ -267,7 +266,8 @@ wizard.o \
 worley.o \
 xom.o \
 tilepick.o \
-tileview.o
+tileview.o \
+zot.o
 
 TILES_OBJECTS = \
 tiledoll.o \
@@ -360,7 +360,6 @@ command-type.h.o \
 compflag.h.o \
 conduct-type.h.o \
 config.h.o \
-confirm-butcher-type.h.o \
 confirm-prompt-type.h.o \
 coord-def.h.o \
 ctest.h.o \
@@ -422,9 +421,11 @@ job-type.h.o \
 KeymapContext.h.o \
 kill-category.h.o \
 killer-type.h.o \
+kill-dump-options-type.h.o \
 kill-method-type.h.o \
 known-items.h.o \
 lang-t.h.o \
+level-gen-type.h.o \
 level-id.h.o \
 level-state-type.h.o \
 lev-pand.h.o \
@@ -527,7 +528,6 @@ spl-goditem.h.o \
 spl-miscast.h.o \
 spl-monench.h.o \
 spl-other.h.o \
-spl-pick.h.o \
 spl-selfench.h.o \
 spl-summoning.h.o \
 spl-transloc.h.o \

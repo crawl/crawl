@@ -145,7 +145,7 @@ class Species(MutableMapping):
         self['difficulty_priority'] = validate_int_range(difficulty_priority(
             s.get('difficulty_priority', 0)), 'difficulty_priority', 0, 1000)
         self['create_enum'] = validate_bool(
-                                    s.get('create_enum', True), 'create_enum')
+                                    s.get('create_enum', False), 'create_enum')
         self['walking_verb'] = quote_or_nullptr('walking_verb', s)
         self['altar_action'] = quote_or_nullptr('altar_action', s)
 
@@ -183,7 +183,7 @@ ALL_APTITUDES = ('fighting', 'short_blades', 'long_blades', 'axes',
     'evocations')
 UNDEAD_TYPES = ('US_ALIVE', 'US_UNDEAD', 'US_SEMI_UNDEAD')
 SIZES = ('SIZE_TINY', 'SIZE_LITTLE', 'SIZE_SMALL', 'SIZE_MEDIUM', 'SIZE_LARGE',
-    'SIZE_BIG', 'SIZE_GIANT')
+    'SIZE_GIANT')
 ALL_STATS = ('str', 'int', 'dex')
 ALL_WEAPON_SKILLS = ('SK_SHORT_BLADES', 'SK_LONG_BLADES', 'SK_AXES',
     'SK_MACES_FLAILS', 'SK_POLEARMS', 'SK_STAVES', 'SK_SLINGS', 'SK_BOWS',
@@ -357,6 +357,8 @@ def generate_aptitudes_data(s, template):
             aptitudes[apt] = 'UNUSABLE_SKILL'
         else:
             aptitudes[apt] = val
+    aptitudes['tag_major_version_opener'] = s['tag_major_version_opener']
+    aptitudes['tag_major_version_closer'] = s['tag_major_version_closer']
     return template.format(enum = s['enum'], **aptitudes)
 
 

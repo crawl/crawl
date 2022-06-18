@@ -18,10 +18,10 @@ my %field_type = (
     AC       => "num",
     ANGRY    => "num",
     APPEAR   => "str",
+    ARCHMAGI => "bool",
     BASE_ACC => "num",
     BASE_DAM => "num",
     BASE_DELAY => "num",
-    BERSERK  => "bool",
     BLINK    => "bool",
     BRAND    => "enum",
     CHAOTIC  => "bool",
@@ -57,6 +57,7 @@ my %field_type = (
     NOTELEP  => "bool",
     NO_UPGRADE => "bool",
     POISON   => "bool",
+    RAMPAGE  => "bool",
     RANDAPP  => "bool",
     RCORR    => "bool",
     REGEN    => "num",
@@ -86,8 +87,6 @@ my %field_type = (
     world_reacts_func  => "func",
     melee_effects_func => "func",
     launch_func        => "func",
-    evoke_func         => "func",
-    targeted_evoke_func => "func",
 
     plus      => "num",
     plus2     => "num",
@@ -202,7 +201,7 @@ sub finish_art
         $funcs = {};
     }
 
-    foreach my $func_name (qw(equip unequip world_reacts targeted_evoke evoke melee_effects launch))
+    foreach my $func_name (qw(equip unequip world_reacts melee_effects launch))
     {
         my $val;
         if ($funcs->{$func_name})
@@ -531,30 +530,30 @@ my @art_order = (
     # it is no longer the case that TAG_MAJOR_VERSION == 34
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "WILL", "\n",
-    "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
+    "SEEINV", "INV", "FLY", "BLINK", "unused",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
     "MUTATE", "unused", "SLAY", "unused", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "RMSL", "unused", "REGEN", "unused", "NO_UPGRADE", "RCORR", "\n",
     "RMUT", "unused", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
-    "SH", "HARM", "\n",
+    "SH", "HARM", "RAMPAGE", "ARCHMAGI", "\n",
     "}",
 # end TAG_MAJOR_VERSION
 # start TAG_MAJOR_VERSION == 35
 #     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
 #     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "WILL", "\n",
-#     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
+#     "SEEINV", "INV", "FLY", "BLINK", "NOISES", "\n",
 #     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "\n",
 #     "MUTATE", "SLAY", "STEALTH", "MP", "\n",
 #     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
 #     "RMSL", "REGEN", "NO_UPGRADE", "RCORR", "\n",
 #     "RMUT", "CORRODE", "DRAIN", "SLOW", "FRAGILE", "\n",
-#     "SH", "HARM", "\n",
+#     "SH", "HARM", "RAMPAGE", "ARCHMAGI", "\n",
 #     "}",
 # end TAG_MAJOR_VERSION
 
     "equip_func", "unequip_func", "world_reacts_func", "melee_effects_func",
-    "launch_func", "evoke_func", "targeted_evoke_func"
+    "launch_func"
 );
 
 sub art_to_str
@@ -1039,8 +1038,6 @@ my %valid_func = (
     world_reacts  => 1,
     melee_effects => 1,
     launch        => 1,
-    evoke         => 1,
-    targeted_evoke => 1
 );
 
 sub read_funcs

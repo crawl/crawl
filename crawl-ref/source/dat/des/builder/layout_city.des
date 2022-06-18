@@ -12,21 +12,6 @@
 : crawl_require("dlua/layout/theme.lua")
 
 {{
-  -- TODO: Also used in layout_grids, maybe move to a library?
-  function padded_bounds(minpad,maxpad,bounds)
-    local x1,y1,x2,y2
-    if bounds ~= nil then
-      x1,y1,x2,y2 = bounds.x1,bounds.y1,bounds.x2,bounds.y2
-    else
-      local gxm,gym = dgn.max_bounds()
-      x1,y1,x2,y2 = 1,1,gxm-2,gym-2
-    end
-    return { x1 = x1 + crawl.random_range(minpad,maxpad),
-             y1 = y1 + crawl.random_range(minpad,maxpad),
-             x2 = x2 - crawl.random_range(minpad,maxpad),
-             y2 = y2 - crawl.random_range(minpad,maxpad) }
-  end
-
   function area_within(bounds, minx, miny, padx, pady)
     if padx == nil then padx = 0 end
     if pady == nil then pady = 0 end
@@ -74,7 +59,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
     minimum_size = crawl.random_range(3,6),
   }
 
-  local bounds = padded_bounds(2,10)
+  local bounds = omnigrid.padded_bounds(2,10)
   local grid = omnigrid.subdivide(bounds.x1,bounds.y1,bounds.x2,bounds.y2,grid_opts)
 
   local room_materials = crawl.one_chance_in(3)

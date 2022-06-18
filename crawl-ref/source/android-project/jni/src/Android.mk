@@ -232,7 +232,6 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/spl-miscast.cc \
     $(CRAWL_PATH)/spl-monench.cc \
     $(CRAWL_PATH)/spl-other.cc \
-    $(CRAWL_PATH)/spl-pick.cc \
     $(CRAWL_PATH)/spl-selfench.cc \
     $(CRAWL_PATH)/spl-summoning.cc \
     $(CRAWL_PATH)/spl-tornado.cc \

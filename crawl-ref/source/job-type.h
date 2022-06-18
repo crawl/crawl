@@ -6,7 +6,7 @@
 enum job_type
 {
     JOB_FIGHTER,
-    JOB_WIZARD,
+    JOB_HEDGE_WIZARD,
 #if TAG_MAJOR_VERSION == 34
     JOB_PRIEST,
 #endif
@@ -45,6 +45,7 @@ enum job_type
     JOB_JESTER,
 #endif
     JOB_DELVER,
+    JOB_CINDER_ACOLYTE,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

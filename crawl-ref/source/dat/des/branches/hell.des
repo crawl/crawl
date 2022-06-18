@@ -543,7 +543,9 @@ TAGS:   transparent no_pool_fixup uniq_hell_entry_tar
 WEIGHT: 5
 COLOUR: . = magenta
 FTILE:  .O = floor_infernal_blank
-NSUBST: w = 2=F / 4=F. / w
+NSUBST: w = 2=F / 2=F. / w
+# E is tiles not adjacent to walkable space
+NSUBST: E = 2=FE / E
 KMONS:  F = spectral caustic shrike
 KFEAT:  EFw = deep_water
 KMASK:  Ww = no_monster_gen
@@ -551,17 +553,17 @@ KMASK:  Ww = no_monster_gen
 : hell_entry_tier(_G, "low")
 MAP
       @
-   wwWwwww
-  wwWwwwwww
- wwwwWwwwwww
- wwwwwWwwwww
+   wwWwwEE
+  EwWwwEEEE
+ EEwwWwwEEEE
+ EwwwwWwwwwE
  wwWww.wwWww
 @WWwW.O.WwWw@
  wwwww.wwwwW
- wwwwWwwwwww
- wwwwwWwwwww
-  wwwwWwwww
-   wwwwWww
+ EEEwWwwEEww
+ EEEwwWwEEEE
+  EEEwWwwEE
+   EEwwWwE
       @
 ENDMAP
 
@@ -632,6 +634,157 @@ MAP
 ...vvvvvvvvv...vvv.
 ...................
 .........@.........
+ENDMAP
+
+# If you're dumb enough to go to the Hells this weekend, you're a big enough
+# schmuck to come to Big Baal Hell's Store!
+# Inspired by the NSFW classic: https://www.youtube.com/watch?v=4sZuN0xXWLc
+# Unlike Big Bill Hell's Cars, the items here are intended to be pretty good and
+# useful in the Hells, since a shop full of crappy items wouldn't be
+# particularly interesting, even if it was funny. However, to keep with the
+# spirit of Big Bill Hell, the prices are 666% of the usual. Thieves!
+NAME:   nicolae_hell_entry_big_baal_hell
+TAGS:   transparent no_item_gen patrolling
+ORIENT: float
+WEIGHT: 2
+{{
+  -- sells 11 items: 2 each from lists geared towards each Hell, 2 from a
+  -- generic list, and 1 from a list of holy wrath weapons
+
+  -- the Dis inventory focuses on damage/AC increases to counteract the
+  -- corrosion hell effect, rCorr for caustic shrikes, reflection for various
+  -- Dis projectiles, and enchant armour/weapon scrolls in bulk
+  local disinv = util.random_subset( { "any weapon good_item ego:vorpal",
+    "any weapon randart ego:vorpal", "ring of slaying randart",
+    "ring of protection randart", "any weapon good_item ego:protection",
+    "any weapon randart ego:protection", "crystal plate armour randart",
+    "gold dragon scales randart", "tower shield randart",
+    "ring of resist corrosion randart", "amulet of reflection randart",
+    "scroll of enchant weapon q:10", "scroll of enchant armour q:10",
+    "potion of might q:10", "randbook disc:conjuration slevels:12",
+    "randbook disc:earth slevels:12", "staff of earth",
+    "staff of conjuration" }, 2 )
+
+  -- the Gehenna inventory focuses on fire resistance and cold damage, and
+  -- some potions of invisibility since a lot of monsters there can't sInv,
+  -- and some tloc since you can't use blink/tele scrolls
+  local gehinv = util.random_subset( { "any weapon good_item ego:freezing",
+    "any weapon randart ego:freezing", "ring of protection from fire randart",
+    "ring of fire randart", "fire dragon scales randart",
+    "wand of iceblast charges:25", "any armour good_item ego:fire_resistance",
+    "any armour randart ego:fire_resistance", "potion of invisibility q:10",
+    "randbook disc:ice slevels:12", "randbook disc:translocation slevels:12",
+    "staff of fire" }, 2 )
+
+  -- the Cocytus inventory focuses on cold resistance and fire damage, and
+  -- throws in some willpower for narguns
+  local cocinv = util.random_subset( { "any weapon good_item ego:flaming",
+    "any weapon randart ego:flaming", "ring of protection from cold randart",
+    "ring of ice randart", "ice dragon scales randart",
+    "wand of flame charges:55", "any armour good_item ego:cold_resistance",
+    "any armour randart ego:cold_resistance", "ring of willpower randart",
+    "randbook disc:fire slevels:12", "staff of air", "staff of cold" }, 2 )
+
+  -- the Tartarus inventory focuses on increased willpower to counteract the
+  -- Will/2 hell effect, as well rN+ for theme, scrolls of fog in bulk to deal
+  -- with fear/mesmerise
+  local tarinv = util.random_subset( { "ring of willpower randart",
+    "ring of positive energy randart", "any armour randart ego:positive_energy",
+    "any armour randart ego:willpower", "pearl dragon scales randart",
+    "scroll of fog q:10", "any armour good_item ego:positive_energy",
+    "any armour good_item ego:willpower", "quicksilver dragon scales randart",
+    "staff of death" }, 2 )
+
+  -- Generically useful in all the Hells, a lot of scrolls and potions in bulk,
+  -- but also rings of rN+ and willpower, which are useful in all the Hells, and
+  -- up to two generic randarts/randbooks, as well as magic stuff and
+  -- assorted weapons, including demon weapons
+  local hellinv = util.random_subset( { "scroll of blinking q:10",
+    "scroll of magic mapping q:10", "scroll of silence q:10",
+    "scroll of summoning q:10", "scroll of teleportation q:10",
+    "potion of brilliance q:10",
+    "potion of cancellation q:10", "potion of curing q:10",
+    "potion of haste q:10","potion of heal wounds q:10", "potion of magic q:10",
+    "potion of experience", "potion of resistance q:10", "any weapon randart",
+    "any armour randart", "any jewellery randart", "any weapon randart",
+    "any armour randart", "any jewellery randart", "any wand charges:25",
+    "ring of positive energy randart", "ring of willpower randart",
+    "randbook good_item", "randbook good_item", "ring of wizardry randart",
+    "any magical staff", "scroll of acquirement", "any manual",
+    "demon trident randart", "demon whip randart", "demon blade randart",
+    "javelin ego:silver q:25", "any misc" }, 2)
+
+  -- one guaranteed randart weapon with holy wrath, including ranged weapons
+  local holyinv = util.random_subset( { "quick blade randart ego:holy_wrath",
+    "rapier randart ego:holy_wrath", "eudemon blade randart ego:holy_wrath",
+    "great sword randart ego:holy_wrath", "battleaxe randart ego:holy_wrath",
+    "executioner's axe randart ego:holy_wrath",
+    "trishula randart ego:holy_wrath", "sacred scourge randart ego:holy_wrath",
+    "eveningstar randart ego:holy_wrath", "bardiche randart ego:holy_wrath",
+    "lajatang randart ego:holy_wrath", "fustibalus randart ego:holy_wrath",
+    "longbow randart ego:holy_wrath", "arbalest randart ego:holy_wrath",
+    "hand crossbow randart ego:holy_wrath",
+    "triple crossbow randart ego:holy_wrath" }, 1 )
+
+   local fullinv = util.join( " | ", { util.join( " | ", disinv ),
+     util.join( " | ", gehinv ), util.join( " | ", cocinv ),
+     util.join( " | ", tarinv ), util.join( " | ", hellinv ), holyinv[1] } )
+
+   kfeat( "S = general shop name:Big_Baal_Hell type:Store suffix: count:11 " ..
+       "use_all greed:66 ; " .. fullinv )
+}}
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+KMONS: S = balrug band / hell knight band / jiangshi band / \
+           ancient champion band / deep troll shaman band / \
+           salamander tyrant band / wendigo band
+SUBST: L = l., ` = lx
+MAP
+  xxxx
+xxx``xxx
+x`llll`xxxx
+xllLLllll`xxx
+........lll`xx
+....T.T..Llllxx
+.....S.....Lllxx
+xll.T.T.....Ll`x
+x`l.......O.Ll`x
+xxllllllL...Ll`x
+ xx``x`llLLLllxx
+  xxxxx`lllll`x
+      xxx```xxx
+        xxxxx
+ENDMAP
+
+NAME:   nicolae_hell_entry_hellmouth_sunbeams
+TAGS:   transparent patrolling
+ORIENT: float
+WEIGHT: 5
+KMASK:  O = opaque
+KMONS:  1 = sun demon
+KMONS:  2 = shining eye / eye of devastation / great orb of eyes
+KMONS:  3 = hell hound / hell hog / hell beast / hellion
+NSUBST: - = 4=1 / 8=1. / 2=2 / 4=2. / 1=3 / 2=3. / .
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "high")
+MAP
+         ..@..
+         ..c..
+         .ccc.
+       ...ccc...
+     ...vv...vv...
+   ...vv..---..vv...
+....vv..-------..vv....
+.ccc..-----------..ccc.
+lccc---------------cccl
+lccc------lll------cccl
+llllvv----lOl----vvllll
+ lllllvv--lll--vvlllll
+ lllllllvv---vvlllllll
+  llllllllcccllllllll
+   lllllllccclllllll
+     lllllccclllll
+        lllllll
 ENDMAP
 
 ##############################################################################
@@ -725,7 +878,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-######################### Vestibule Tartarus
+################################################################################
+# Vestibule Tartarus
+
 NAME: vestibule_tar_old
 TAGS: vestibule_tar
 KFEAT: T = enter_tartarus
@@ -834,7 +989,91 @@ MAP
                ...
 ENDMAP
 
-######################### Vestibule Gehenna
+NAME:   vestibule_tar_nicolae_cwn_annwn
+TAGS:   vestibule_tar patrolling
+KMONS:  1D = doom hound / nothing
+KFEAT:  D = enter_tartarus
+TILE:   c = dngn_stone_dark
+MAP
+ccccccccccccccccccccccccccccccccc
+ cccccccccccccc...cccccccccccccc
+  ccccccccccc...D...ccccccccccc
+   ccccccccc.........ccccccccc
+    ccccccc...........ccccccc
+     cccccc..1.....1..cccccc
+      cccc....c.1.c....cccc
+       ccc.1..c...c..1.ccc
+        cc...cc...cc...cc
+         cc..c.....c..cc
+          cc.c..1..c.cc
+           ..cc...cc..
+            ..cc.cc..
+             .......
+              .....
+               ...
+ENDMAP
+
+NAME:   vestibule_tar_nicolae_miasmatic
+TAGS:   vestibule_tar
+KMONS:  J = tainted leviathan
+KMONS:  12 = putrid mouth
+KFEAT:  J = enter_tartarus
+NSUBST: D = + / x, E = + / x
+SUBST:  1 = 11., 2 = 22`
+FTILE:  `2+ = floor_black_cobalt
+TILE:   x = wall_cobalt_rock
+MAP
+...xxx`````````````````````xxx...
+ ...x```2```````2```````2```x...
+  .xxx`x`x`x`````````x`x`x`xxx.
+   .xxDxDxDxx```````xxExExExx.
+    .x.x.x.xxx`````xxx.x.x.x.
+     .......D```J```E.......
+      ...1.xxx`````xxx.1...
+       .....D```````E.....
+        ...xxx`x`x`xxx...
+         ...xxDxxxExx...
+          ...x.x.x.x...
+           ...........
+            .........
+             ...1...
+              .....
+               ...
+ENDMAP
+
+NAME:    vestibule_tar_nicolae_seven_gates_of_the_underworld
+TAGS:    vestibule_tar
+KMONS:   H = lich / halazid warlock / shadow dragon / bone dragon / revenant
+KMONS:   12 = ancient champion / skeletal warrior / phantasmal warrior / \
+              reaper / soul eater / shadow demon / shadow wraith / \
+              flayed ghost / putrid mouth
+KFEAT:   H = enter_tartarus
+SHUFFLE: DE/FH
+SUBST:   D = +, E = 1, F = c, 1 = 1 ':15, 2 = 22.
+FTILE:   +'H1 = floor_infernal_blank
+TILE:    c = dngn_stone_dark
+MAP
+ccccccccccccccccccccccccccccccccc
+ cc'''''''''+'''''''+'''''''''cc
+  cc''1'1'1'+'1'1'1'+'1'1'1''cc
+   cc'''''''+'''''''+'''''''cc
+    cc+++ccccccccccccccc+++cc
+     cc''''''c'''''+''''''cc
+      cc1'H'1c1'E'1+1'1'1cc
+       cc''''c'''''+''''cc
+        ccFFFccDDDccccccc
+         cc'''''''''''cc
+          cc''1'1'1''cc
+           cc'''''''cc
+            ccc+++ccc
+             G2.2.2G
+              .....
+               ...
+ENDMAP
+
+################################################################################
+# Vestibule Gehenna
+
 NAME: vestibule_geh_old
 TAGS: vestibule_geh
 KFEAT: G = enter_gehenna
@@ -948,7 +1187,91 @@ lllllllllccccccccccccccclllllllll
                ...
 ENDMAP
 
-######################### Vestibule Cocytus
+NAME:   vestibule_geh_nicolae_gehenna_overflowing
+TAGS:   vestibule_geh
+KMONS:  D = balrug band / hell knight band / hellephant
+KMONS:  1 = sun demon / smoke demon / hell hog / creeping inferno w:5
+KFEAT:  D = enter_gehenna
+NSUBST: F = . / L, H = . / L, J = . / L, K = . / L, M = . / L, N = . / L, \
+        L = 4=1 / 4=1L / L
+SUBST:  L = l.
+MAP
+lllllL..........l...Ll...LlllllL.
+ Lll....Lll....lDl...l.....lllL.
+  .FlF....Ll..LlllL..HlH.JlJ...
+   ..llll..FlllLlLlH...lll....
+    ....Flll....l..lKllH.Ll..
+     ....l.LlL..lL..l.......
+      .LlL...lL..l..KlllK..
+       .L.......llN.....lK
+        ...MlMllM.l.Nll..
+         .Ml.l....Nll.Nl
+          l..LllL...l..
+           .....l..Ll.
+            ...LlL.l.
+             ..lll..
+              .LlL.
+               ...
+ENDMAP
+
+NAME:    vestibule_geh_nicolae_lone_tower
+TAGS:    vestibule_geh
+KMONS:   D = balrug band / hell beast band / hell hog band / \
+             hell knight band w:5
+KFEAT:   D = enter_gehenna
+SHUFFLE: Pp/Qq/Rr/Ss
+SUBST:   P = +, p = ., QRS = c, qrs = l, L = l.
+TILE:    c = dngn_stone_wall_red
+FTILE:   +D' = floor_infernal_blank
+COLOUR:  c = red
+MAP
+.LllllllllL.....L.LL..LllllllllL.
+ .LllllllL..LllpppllL..LllllllL.
+  ..LllL...LllccPccllL...LllL..
+   .......Lllcc'''ccllL.......
+    ......Llcc'''''cclL......
+     ......sc'''''''cq......
+      ....LsS'''D'''QqL....
+       ....sc'''''''cq....
+        ..Llcc'''''cclL..
+         .Lllcc'''ccllL.
+          .LllccRccllL.
+           .LllrrrllL.
+            .LL.L.LL.
+             .......
+              .....
+               ...
+ENDMAP
+
+NAME:   vestibule_geh_nicolae_tongues_of_flame
+TAGS:   vestibule_geh
+KMONS:  D = stoker
+KMONS:  E = searing wretch
+KFEAT:  D = enter_gehenna
+NSUBST: D = D / l
+SUBST:  E = E., L = l.
+MAP
+lllllllllllllllllllllllllllllllll
+ lllDllllDlllDllDlllDllll.DllDll
+  ll..Lll.Ll.Llll.l.llllL.ll.ll
+   ll.ll..lll.llL.lL.lll.Lll.l
+    lEl.LlllLEllElllElll..lE.
+     ..l..ll..ll.ll...l.L.l.
+      L..E.l..l.ll.L.l.E.l.
+       .L..l.l.Ell..l..l..
+        ..l..l..ll..l....
+         ...El.L.llEl..L
+          .L..l..ll..l.
+           ....L.lL...
+            .L.E.l...
+             ...L..L
+              L....
+               ..L
+ENDMAP
+
+################################################################################
+# Vestibule Cocytus
+
 NAME: vestibule_coc_old
 TAGS: vestibule_coc
 KFEAT: C = enter_cocytus
@@ -1056,7 +1379,92 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
                .W.
 ENDMAP
 
-######################### Vestibule Dis
+NAME:   vestibule_coc_nicolae_advancing_glacier
+TAGS:   vestibule_coc no_pool_fixup
+KMONS:  D = frost giant / ice dragon / wendigo band
+KMONS:  1 = ice devil / blizzard demon
+KFEAT:  D = enter_cocytus
+KFEAT:  a = x
+SUBST:  - = aw., ` = aw, ~ = w.
+TILE:   a = wall_ice
+COLOUR: a = lightcyan
+MAP
+aaaaaaaaxxxxxxxxxxxxxxxxxaaaaaaaa
+ aaaaaaaaxxxxxxxxxxxxxxxaaaaaaaa
+  aaaaaaaaaxxxxxxxxxxxaaaaaaaaa
+   -aaaaaaaaaaxxxxxaaaaaaaaaa-
+    .-aaaaaaaaaaaaaaaaaaaaa-.
+     .-aaaaaaaaaaaaaaaaaaa-.
+      .-aaaaaaaaaaaaaaaaa-.
+       .-aaaaaaaaaaaaaaa-.
+        ..-aaaaaaaaaaa-..
+         ...w`aaaaa`w...
+          ..www`a`www..
+           .~wwwDwww~.
+            .~w~.~w~.
+             .~1.1~.
+              .....
+               ...
+ENDMAP
+
+NAME:   vestibule_coc_nicolae_freezer_leak
+TAGS:   vestibule_coc no_pool_fixup
+KMONS:  D = frost giant / ice dragon
+KMONS:  1 = blizzard demon / freezing wraith / simulacrum / ice devil
+KFEAT:  D = enter_cocytus
+SUBST:  - = `., ' = x`
+NSUBST: ` = 4=1 / 4=1` / `
+FTILE:  D1` = floor_frozen
+COLOUR: 1` = lightblue
+TILE:   x = wall_ice
+COLOUR: x = lightcyan
+MAP
+.-```............................
+ -`x`-.-``.-```-........-``-....
+  ```--````'xx'`--``--`''```...
+   ..-``.``x``````````'xx'``..
+    .--..`'x`D`'``--``'xx'`-.
+     ....``'```x`-..-``''`-.
+      .-``````xx``....-``-.
+       -`-.-`x``'`-.......
+        -...-```x'`-.....
+         ..-``-`'x``....
+          .-`-.-`x'`...
+           .--..-''-..
+            .....--..
+             .......
+              .....
+               ...
+ENDMAP
+
+NAME:  vestibule_coc_nicolae_polynya
+TAGS:  vestibule_coc no_pool_fixup
+KMONS: D = wendigo
+KMONS: 1 = simulacrum
+KFEAT: D = enter_cocytus
+SUBST: - = w., 1 = 1.
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ wwwwwwww-..1.....1...-wwwwwwwww
+  wwww-....-ww...ww-....-wwwwww
+   ww-..1.Wwwww.1www-.1..-wwww
+    ww....WWDwww..www.....www
+     ww...Wwwww-..ww-....-ww
+      ww-...ww...ww..1.-www
+       www-.1..-ww...-wwww
+        wwwwwwwww.1.-wwww
+         wwwwww-...-wwww
+          wwww...-wwwww
+           ww-.1.wwwww
+            ww...-www
+             ww...ww
+              w1..w
+               ...
+ENDMAP
+
+################################################################################
+# Vestibule Dis
+
 NAME: vestibule_dis_old
 TAGS: vestibule_dis
 KFEAT: D = enter_dis
@@ -1164,7 +1572,89 @@ MAP
                ...
 ENDMAP
 
-######################### Vestibule Geryon
+NAME:   vestibule_dis_nicolae_crystalline
+TAGS:   vestibule_dis patrolling
+KMONS:  D = crystal guardian
+KMONS:  1 = crystal echidna / orange crystal statue / iron golem / iron troll
+KFEAT:  D = enter_dis
+SUBST:  E = D-, - = ..b, 1 = 111.
+NSUBST: D = D / 3=111. / .
+TILE:   b = wall_emerald
+TILE:   v = dngn_metal_iron
+MAP
+vvbbbbbbbbbbbbbbbbbbbbbbbbbbbbbvv
+ vvbbbbbbbbbbDbEbEbDbbbbbbbbbbvv
+  vvbbbbbbbbDbDbEbDbDbbbbbbbbvv
+   vvbbbbbbDbEbEbEbEbDbbbbbbvv
+    vvbbbb-bDbDbEbDbDb-bbbbvv
+     vvbb.b.bDbEbEbDb.b.bbvv
+      vv-b1b-b-b-b-b-b1b-vv
+       -v-b.b.b.b.b.b.b-v-
+        .v-b1b.b-b.b1b-v.
+         .v-b.b.b.b.b-v.
+          .v.b1b-b1b.v.
+           .v-b-b-b-v.
+            .v-v-v-v.
+             .......
+              .....
+               ...
+ENDMAP
+
+NAME:  vestibule_dis_nicolae_girt_by_a_triple_wall
+TAGS:  vestibule_dis no_pool_fixup
+KMONS: D = war gargoyle / iron dragon / iron giant
+KMONS: 12 = iron troll / iron golem / rust devil
+KFEAT: D = enter_dis
+SUBST: 1 = 11'
+FTILE: +'D1 = floor_infernal_blank
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ vv1''''+''''v''D''v''''+''''1vv
+  vv''''+'1''v1'''1v''1'+''''vv
+   vv'''vv'''vv'1'vv'''vv'''vv
+    vv'''vv''1v+++v1''vv'''vv
+     vv'1'vv'''''''''vv'1'vv
+      vv'''vv'''1'''vv'''vv
+       vv'''vvvvvvvvv'''vv
+        vv'''''''''''''vv
+         vv''1'''''1''vv
+          vvvvv+++vvvvv
+           wwww...wwww
+            wwww.wwww
+             .......
+              .....
+               ...
+ENDMAP
+
+NAME:    vestibule_dis_nicolae_metal_as_hell
+TAGS:    vestibule_dis patrolling
+KMONS:   D = war gargoyle / iron dragon / ancient champion
+KMONS:   1 = iron golem / rust devil / reaper / iron troll
+KMONS:   2 = hellion
+KFEAT:   D = enter_dis
+KFEAT:   - = iron_grate
+SUBST:   1 = 111., 2 = 222.
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ vvvvvv...................vvvvvv
+  vvvvv.2...1...1...1...2.vvvvv
+   vvvv...................vvvv
+    vvv...v---v.2.v---v...vvv
+     .--...--.......--...--.
+      .--...--..D..--...--.
+       .--...--...--...--.
+        .-v.1.v---v.1.v-.
+         .--.........--.
+          .--...1...--.
+           .--.....--.
+            .-v...v-.
+             .......
+              .....
+               ...
+ENDMAP
+
+################################################################################
+# Vestibule Geryon
 NAME: vestibule_geryon_old
 TAGS: vestibule_geryon
 MONS: Geryon
@@ -1288,5 +1778,88 @@ MAP
     ....B....
      ...C...
       ..B..
+       ...
+ENDMAP
+
+NAME:    vestibule_geryon_nicolae_amphitheater
+TAGS:    vestibule_geryon
+MONS:    Geryon
+NSUBST:  1 = 1 / 0, < = { / <
+SHUFFLE: DE
+SUBST:   D = x, E = .
+MAP
+       ...
+      .....
+     .EDEDE.
+    xx.....xx
+   x1.......1x
+  .x...EDE...x.
+ .E...D...D...E.
+..D..E..<..E..D..
+..E..D.....D..E..
+..D..E.<.<.E..D..
+ .E...D...D...E.
+  .x...EDE...x.
+   x1.......1x
+    xx.....xx
+     .EDEDE.
+      .....
+       ...
+ENDMAP
+
+NAME:    vestibule_geryon_nicolae_diamonds
+TAGS:    vestibule_geryon
+MONS:    Geryon
+NSUBST:  < = { / <
+SHUFFLE: DE
+SUBST:   D : x, E : x.
+MAP
+       ...
+      .....
+     ...D...
+    ...E.E...
+   ...D.<.D...
+  .....E.E.....
+ ...D...D...D...
+...E.E.....E.E...
+..D.<.D.1.D.<.D..
+...E.E.....E.E...
+ ...D...D...D...
+  .....E.E.....
+   ...D.<.D...
+    ...E.E...
+     ...D...
+      .....
+       ...
+ENDMAP
+
+NAME:   vestibule_geryon_nicolae_swimming_pool
+TAGS:   vestibule_geryon no_pool_fixup
+KMONS:  1 = Geryon
+NSUBST: < = { / <
+SUBST:  L = l., D : x., E : x., F : x.
+: if crawl.one_chance_in( 3 ) then
+KFEAT:  1 = w
+SUBST:  l : w
+: else
+KFEAT:  1 = l
+: end
+MAP
+       ...
+      F...F
+     EF...FE
+    DE.....ED
+   DD.......DD
+  EE.<.LlL.<.EE
+ FF...LlllL...FF
+.....LlllllL.....
+.....lll1lll.....
+.....LlllllL.....
+ FF...LlllL...FF
+  EE.<.LlL.<.EE
+   DD.......DD
+    DE.....ED
+     EF...FE
+      F...F
        ...
 ENDMAP

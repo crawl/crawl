@@ -21,14 +21,6 @@
 
 using std::vector;
 
-enum class ev_ignore
-{
-    none       = 0,
-    helpless   = 1<<0,
-    unided     = 1<<1,
-};
-DEF_BITFIELD(ev_ignore_type, ev_ignore);
-
 struct bolt;
 
 class actor
@@ -117,12 +109,9 @@ public:
     virtual item_def *shield() const = 0;
     virtual item_def *slot_item(equipment_type eq,
                                 bool include_melded=false) const = 0;
-    virtual int wearing(equipment_type slot, int sub_type,
-                        bool calc_unid = true) const = 0;
-    virtual int wearing_ego(equipment_type slot, int sub_type,
-                            bool calc_unid = true) const = 0;
+    virtual int wearing(equipment_type slot, int sub_type) const = 0;
+    virtual int wearing_ego(equipment_type slot, int sub_type) const = 0;
     virtual int scan_artefacts(artefact_prop_type which_property,
-                               bool calc_unid = true,
                                vector<const item_def *> *matches = nullptr) const = 0;
 
     virtual hands_reqd_type hands_reqd(const item_def &item,
@@ -143,13 +132,6 @@ public:
                              bool ignore_transform = false,
                              bool quiet = true) const = 0;
 
-    virtual void lose_energy(energy_use_type, int /*div*/ = 1, int /*mult*/ = 1)
-    {
-    }
-    virtual void gain_energy(energy_use_type, int /*div*/ = 1, int /*mult*/ = 1)
-    {
-    }
-
     virtual string name(description_level_type type,
                         bool force_visible = false,
                         bool force_article = false) const = 0;
@@ -162,15 +144,11 @@ public:
 
     virtual bool fumbles_attack() = 0;
 
-    virtual bool fights_well_unarmed(int /*heavy_armour_penalty*/)
-    {
-        return true;
-    }
-    virtual void attacking(actor *other, bool ranged = false) = 0;
+    virtual void attacking(actor *other) = 0;
     virtual bool can_go_berserk() const = 0;
     virtual bool go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool berserk() const = 0;
-    virtual bool can_see_invisible(bool calc_unid = true) const = 0;
+    virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
     virtual bool nightvision() const = 0;
     virtual reach_type reach_range() const = 0;
@@ -228,11 +206,11 @@ public:
     virtual void expose_to_element(beam_type element, int strength = 0,
                                    bool slow_cold_blood = true) = 0;
     virtual void drain_stat(stat_type /*stat*/, int /*amount*/) { }
-    virtual void splash_with_acid(const actor* evildoer, int acid_strength = -1,
-                                  bool allow_corrosion = true,
-                                  const char* hurt_msg = nullptr) = 0;
+    virtual void splash_with_acid(actor *evildoer, int acid_strength) = 0;
+    virtual void acid_corrode(int acid_strength) = 0;
     virtual bool corrode_equipment(const char* corrosion_source = "the acid",
                                    int degree = 1) = 0;
+    virtual bool resists_dislodge(string /*event*/ = "") const { return false; };
 
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
@@ -240,6 +218,7 @@ public:
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
+    virtual bool can_feel_fear(bool include_unknown) const = 0;
 
     virtual int  skill(skill_type sk, int scale = 1, bool real = false,
                        bool temp = true) const = 0;
@@ -257,12 +236,12 @@ public:
 
     virtual bool can_throw_large_rocks() const = 0;
 
-    virtual int armour_class(bool calc_unid = true) const = 0;
+    virtual int armour_class() const = 0;
     virtual int gdr_perc() const = 0;
     int apply_ac(int damage, int max_damage = 0,
-                 ac_type ac_rule = ac_type::normal, int stab_bypass = 0,
+                 ac_type ac_rule = ac_type::normal,
                  bool for_real = true) const;
-    virtual int evasion(ev_ignore_type ign = ev_ignore::none,
+    virtual int evasion(bool ignore_helpless = false,
                         const actor *attacker = nullptr) const = 0;
     virtual bool shielded() const = 0;
     virtual int shield_bonus() const = 0;
@@ -275,8 +254,6 @@ public:
     virtual int unadjusted_body_armour_penalty() const = 0;
     virtual int adjusted_body_armour_penalty(int scale = 1) const = 0;
     virtual int adjusted_shield_penalty(int scale) const = 0;
-    virtual int armour_tohit_penalty(bool random_factor, int scale = 1) const = 0;
-    virtual int shield_tohit_penalty(bool random_factor, int scale = 1) const = 0;
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
@@ -285,11 +262,11 @@ public:
     virtual bool holy_wrath_susceptible() const;
     virtual bool is_holy() const = 0;
     virtual bool is_nonliving(bool temp = true) const = 0;
-    bool evil() const;
+    virtual bool evil() const;
     virtual int  how_chaotic(bool check_spells_god = false) const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
-    virtual int res_acid(bool calc_unid = true) const = 0;
+    virtual int res_acid() const = 0;
     virtual bool res_damnation() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_steam() const = 0;
@@ -297,45 +274,40 @@ public:
     virtual int res_elec() const = 0;
     virtual int res_poison(bool temp = true) const = 0;
     virtual bool res_miasma(bool temp = true) const = 0;
-    virtual int res_water_drowning() const = 0;
+    virtual bool res_water_drowning() const = 0;
     virtual bool res_sticky_flame() const = 0;
     virtual int res_holy_energy() const = 0;
     virtual int res_negative_energy(bool intrinsic_only = false) const = 0;
     virtual bool res_torment() const = 0;
-    virtual bool res_tornado() const = 0;
+    virtual bool res_polar_vortex() const = 0;
     virtual bool res_petrify(bool temp = true) const = 0;
     virtual int res_constrict() const = 0;
-    virtual int willpower(bool calc_unid = true) const = 0;
-    virtual int check_willpower(int power);
-    virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
-                         bool blink = false) const = 0;
+    virtual int willpower() const = 0;
+    virtual int check_willpower(const actor* source, int power);
+    virtual bool no_tele(bool blink = false) const = 0;
     virtual int inaccuracy() const;
     virtual bool antimagic_susceptible() const = 0;
 
-    virtual bool gourmand(bool, bool) const { return false; }
-
-    virtual bool res_corr(bool calc_unid = true, bool items = true) const;
-    bool has_notele_item(bool calc_unid = true,
-                         vector<const item_def *> *matches = nullptr) const;
+    virtual bool res_corr(bool /*allow_random*/ = true, bool temp = true) const;
+    bool has_notele_item(vector<const item_def *> *matches = nullptr) const;
     virtual bool stasis() const = 0;
-    virtual bool cloud_immune(bool calc_unid = true, bool items = true) const;
-    virtual bool angry(bool calc_unid = true, bool items = true) const;
-    virtual bool clarity(bool calc_unid = true, bool items = true) const;
-    virtual bool faith(bool calc_unid = true, bool items = true) const;
-    virtual int archmagi(bool calc_unid = true, bool items = true) const;
-    virtual int spec_evoke(bool calc_unid = true, bool items = true) const;
-    virtual bool no_cast(bool calc_unid = true, bool items = true) const;
-    virtual bool reflection(bool calc_unid = true, bool items = true) const;
-    virtual bool extra_harm(bool calc_unid = true, bool items = true) const;
+    virtual bool cloud_immune(bool items = true) const;
+    virtual int  angry(bool items = true) const;
+    virtual bool clarity(bool items = true) const;
+    virtual bool faith(bool items = true) const;
+    virtual int archmagi(bool items = true) const;
+    virtual int spec_evoke(bool items = true) const;
+    virtual bool no_cast(bool items = true) const;
+    virtual bool reflection(bool items = true) const;
+    virtual bool extra_harm(bool items = true) const;
 
-    virtual bool rmut_from_item(bool calc_unid = true) const;
-    virtual bool evokable_berserk(bool calc_unid = true) const;
-    virtual bool evokable_invis(bool calc_unid = true) const;
+    virtual bool rmut_from_item() const;
+    virtual bool evokable_invis() const;
 
     // Return an int so we know whether an item is the sole source.
-    virtual int equip_flight(bool calc_unid = true) const;
-    virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
-    virtual bool rampaging(bool calc_unid = true, bool items = true) const;
+    virtual int equip_flight() const;
+    virtual int spirit_shield(bool items = true) const;
+    virtual bool rampaging(bool items = true) const;
 
     virtual bool is_banished() const = 0;
     virtual bool is_web_immune() const = 0;
@@ -346,7 +318,6 @@ public:
     virtual int  dragon_level() const;
 
     virtual bool paralysed() const = 0;
-    virtual bool cannot_move() const = 0;
     virtual bool cannot_act() const = 0;
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
@@ -356,7 +327,7 @@ public:
     //            and has a halo, returns false; so if you have a
     //            halo you're not affected by others' halos for this
     //            purpose)
-    virtual bool backlit(bool self_halo = true) const = 0;
+    virtual bool backlit(bool self_halo = true, bool temp = true) const = 0;
     virtual bool umbra() const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;
@@ -383,11 +354,10 @@ public:
 
     virtual bool incapacitated() const
     {
-        return cannot_move()
+        return cannot_act()
             || asleep()
             || confused()
-            || caught()
-            || petrifying();
+            || caught();
     }
 
     virtual bool wont_attack() const = 0;
@@ -398,7 +368,7 @@ public:
 
     virtual bool     will_trigger_shaft() const;
     virtual level_id shaft_dest() const;
-    virtual bool     do_shaft() = 0;
+    virtual bool     do_shaft(bool check_terrain = true) = 0;
 
     coord_def position;
 

@@ -127,8 +127,8 @@ finished random 2
 %%%%
 finished random 3
 
-你可以通过IRC（因特网中继聊天）与其他Crawl玩家进行交流：请移步freenode
-(<w>irc.freenode.net</w>) 上的<w>##crawl</w> 频道。
+你可以通过IRC（因特网中继聊天）与其他Crawl玩家进行交流：请移步Libera
+(<w>irc.libera.chat</w>) 上的<w>#crawl</w> 频道。
 %%%%
 dissection reminder
 

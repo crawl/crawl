@@ -16,8 +16,8 @@ vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers are opportunists who start with three powerful wands and a club.
-They aim to scrounge their other equipment from the dungeon.
+Artificers start with a few magic wands and a club. They'll need to find better
+weapons and armour before their wands run out.
 %%%%
 Berserker
 
@@ -33,6 +33,11 @@ Chaos Knight
 Chaos Knights are playthings of the unpredictable Xom, and are subject to the
 god's constantly changing moods.
 %%%%
+Cinder Acolyte
+
+Cinder Acolytes worship Ignis, drawing upon the flame of a dying god until
+there is nothing left.
+%%%%
 Conjurer
 
 Conjurers confront problems with damaging spells.
@@ -44,13 +49,13 @@ items helps them survive the dangerous journey upward.
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and carry stones to fuel the
-spell. More earthen spells are in their set of starting spells.
+Earth Elementalists know the Sandblast spell, and can later learn more earthen
+spells suitable for subtle stabbing or brute-force blasting.
 %%%%
 Enchanter
 
-Enchanters use spells from the book of Maledictions to incapacitate their foes,
-and are equipped with an enchanted dagger.
+Enchanters know a variety of Hexes that can incapacitate their foes, and are
+equipped with an enchanted dagger and potions of invisibility.
 %%%%
 Fighter
 
@@ -59,13 +64,13 @@ choice and a potion of might.
 %%%%
 Fire Elementalist
 
-Fire Elementalists start with the book of Flames and know the Foxfire
-spell. Their other starting spells focus on destruction as well.
+Fire Elementalists have learned the Foxfire spell. Their other starting spells
+are likewise focused on fiery destruction.
 %%%%
 Gladiator
 
-Gladiators are ready for the arena with light armour, nets, and a weapon of
-their choice.
+Gladiators are ready for the arena with light armour, a weapon of their choice,
+and a few throwing weapons and nets.
 %%%%
 Hedge Wizard
 
@@ -75,7 +80,7 @@ bewildered foes.
 Hunter
 
 Hunters carry a ranged weapon of their choice, and are also equipped with light
-armour and a short sword.
+armour and a scroll of immolation.
 %%%%
 Ice Elementalist
 
@@ -84,13 +89,13 @@ library are quite versatile.
 %%%%
 Monk
 
-Monks start with a simple weapon of their choice, and gain additional piety
-with the first god they worship.
+Monks start with a simple weapon of their choice and a potion of divine ambrosia,
+and gain additional piety with the first god they worship.
 %%%%
 Necromancer
 
 Necromancers are wizards specializing in the practice of death magic. They
-start out with the Pain spell.
+start out with the Necrotize spell.
 %%%%
 Summoner
 
@@ -99,7 +104,8 @@ other Summonings spells in their library.
 %%%%
 Transmuter
 
-Transmuters learn spells to shift their form.
+Transmuters learn spells to shift their form, making them powerful unarmed
+fighters.
 %%%%
 Venom Mage
 
@@ -112,6 +118,6 @@ Wanderers start with random equipment and skills.
 %%%%
 Warper
 
-Warpers start with a weapon of their choice and a scroll of blinking. They
-begin with a number of Translocations spells in their library.
+Warpers start with a weapon of their choice, a scroll of blinking, boomerangs
+of dispersal, and some Translocation spells in their library.
 %%%%

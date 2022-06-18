@@ -150,11 +150,11 @@ public:
     }
 
     /**
-     * @return whether this is a stair travel delay, which are generally
-     * uninterruptible but are interrupted by teleport. Note that no stairs
-     * are necessarily involved.
+     * @return whether this is a delay which relocates the player,
+     * which are generally uninterruptible but are interrupted by teleport.
+     * Note that no stairs are necessarily involved.
      */
-    virtual bool is_stair_travel() const
+    virtual bool is_relocation() const
     {
         return is_stairs();
     }
@@ -239,6 +239,8 @@ class EquipOnDelay : public Delay
         mprf(MSGCH_MULTITURN_ACTION, "You continue putting on %s.",
              equip.name(DESC_YOUR).c_str());
     }
+
+    bool invalidated() override;
 
     void finish() override;
 public:
@@ -358,6 +360,11 @@ public:
     { }
 
     bool try_interrupt() override;
+
+    bool is_relocation() const override
+    {
+        return true;
+    }
 
     const char* name() const override
     {
@@ -635,7 +642,7 @@ public:
 
     bool try_interrupt() override;
 
-    bool is_stair_travel() const override
+    bool is_relocation() const override
     {
         return true;
     }

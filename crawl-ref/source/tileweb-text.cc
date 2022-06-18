@@ -93,8 +93,10 @@ void WebTextArea::put_character(char32_t chr, int fg, int bg, int x, int y)
 
 void WebTextArea::send(bool force)
 {
-    if (m_cbuf == nullptr) return;
-    if (!force && !m_dirty) return;
+    if (m_cbuf == nullptr)
+        return;
+    if (!force && !m_dirty)
+        return;
     m_dirty = false;
 
     int last_col = -1;

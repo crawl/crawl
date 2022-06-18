@@ -28,7 +28,7 @@ enum cloud_type
     CLOUD_RAIN,
     CLOUD_MUTAGENIC,
     CLOUD_MAGIC_TRAIL,
-    CLOUD_TORNADO,
+    CLOUD_VORTEX,
     CLOUD_DUST,
     CLOUD_SPECTRAL,
     CLOUD_ACID,
@@ -40,6 +40,7 @@ enum cloud_type
     CLOUD_GOLD_DUST,
     CLOUD_EMBERS,
     CLOUD_FLAME,
+    CLOUD_DEGENERATION,
     NUM_CLOUD_TYPES,
 
     // Random per-square.

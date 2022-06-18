@@ -12,7 +12,7 @@ the options about rebasing so you avoid making unnecessary merge commits.
 
 ## Team Discussion and Coordination
 
-Most development discussion happens on IRC in the \#\#crawl-dev on Freenode, so
+Most development discussion happens on IRC in the \#crawl-dev on Libera, so
 it's good to join and participate in that channel. Use the !tell command
 through Sequell to leave IRC messages to other team or community members you’re
 working with. The channel is also [*logged*](http://s-z.org/crawl-dev/#), if

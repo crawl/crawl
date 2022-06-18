@@ -17,7 +17,7 @@ aptitudes:
   armour: 1
   dodging: -1
   stealth: 3
-  shields: 2
+  shields: 3
   conjurations: -1
   hexes: 2
   translocations: -1
@@ -29,7 +29,7 @@ aptitudes:
   evocations: 1
 str: 12
 int: 7
-dex: 6
+dex: 9
 levelup_stat_frequency: 4
 levelup_stats:
   - str
@@ -54,10 +54,6 @@ recommended_weapons:
   - SK_MACES_FLAILS
   - SK_AXES
   - SK_POLEARMS
-  - SK_LONG_BLADES
   - SK_STAVES
   - SK_CROSSBOWS
   - SK_SLINGS
-# start TAG_MAJOR_VERSION == 34
-create_enum: false
-# end TAG_MAJOR_VERSION

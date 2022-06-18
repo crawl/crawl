@@ -164,14 +164,6 @@ The card depicts a screaming figure being tortured on the rack.
 
 Drawing this card will cause agonising injury to the user.
 %%%%
-# cards for wizmode testing (&c)
-the Stairs card
-
-The card depicts water flowing down a set of stairs.
-
-Drawing this card makes staircases slide towards or away from the user. It is a
-bug if one ever finds it in a deck.
-%%%%
 # buggy cards
 a buggy card
 

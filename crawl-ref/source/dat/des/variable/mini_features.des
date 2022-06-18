@@ -32,8 +32,11 @@ default-depth: D, Depths, Elf, Crypt
 ############################################################################
 
 NAME:   glass_columns_a
-DEPTH:  D, Depths, Elf, Crypt
+DEPTH:  D, Depths, Elf, Crypt, Dis
 TAGS:   serial_glass transparent extra allow_dup decor
+: if you.in_branch("Dis") then
+SUBST:  m = b
+: end
 WEIGHT: 5
 MAP
 .....
@@ -44,8 +47,11 @@ MAP
 ENDMAP
 
 NAME:   glass_columns_b
-DEPTH:  D, Depths, Elf, Crypt
+DEPTH:  D, Depths, Elf, Crypt, Dis
 TAGS:   serial_glass transparent extra allow_dup decor
+: if you.in_branch("Dis") then
+SUBST:  m = b
+: end
 WEIGHT: 3
 MAP
 .......
@@ -58,8 +64,11 @@ MAP
 ENDMAP
 
 NAME:   glass_columns_c
-DEPTH:  D, Depths, Elf, Crypt
+DEPTH:  D, Depths, Elf, Crypt, Dis
 TAGS:   serial_glass transparent extra allow_dup decor
+: if you.in_branch("Dis") then
+SUBST:  m = b
+: end
 WEIGHT: 2
 MAP
 .........
@@ -364,7 +373,10 @@ ENDMAP
 
 NAME:  minmay_strange_pillars
 TAGS:  serial_glass_rare transparent allow_dup extra decor
-DEPTH: D, Depths, Elf, Crypt
+DEPTH: D, Depths, Elf, Crypt, Dis
+: if you.in_branch("Dis") then
+SUBST:  m = b
+: end
 MAP
  ...   ...
 ..m.. ..m..
@@ -2101,14 +2113,14 @@ ENDMAP
 NAME:  kennysheep_flooded_box
 TAGS:  extra decor
 DEPTH: D, Depths
-SUBST: B : Bt
+SUBST: A : At
 : ks_random_setup(_G)
 MAP
  cccDccc
 ccwwEwwcc
 cwwwEwwwc
 cwwwEwwwc
-FHHHBHHHF
+FHHHAHHHF
 cwww.wwwc
 cwww.wwwc
 ccww.wwcc
@@ -2706,6 +2718,244 @@ xp.px
 xx@xx
 ENDMAP
 
+NAME:    nicolae_concentric_dashed_squares_mild
+TAGS:    transparent extra decor luniq_nicocondashsquares
+DEPTH:   D, Depths, Elf
+SHUFFLE: DEFHJ/ZZZZZ
+SUBST:   D : cnbvx, E : cnbvx, F : cnbvx, H : cnbvx, J : cnbvx, Z : cnbvx
+MAP
+JJ.JJJ.JJJ.JJJ.JJ
+J...............J
+..HH.HHH.HHH.HH..
+J.H...........H.J
+J...FF.FFF.FF...J
+J.H.F.......F.H.J
+..H...EE.EE...H..
+J.H.F.E...E.F.H.J
+J...F...D...F...J
+J.H.F.E...E.F.H.J
+..H...EE.EE...H..
+J.H.F.......F.H.J
+J...FF.FFF.FF...J
+J.H...........H.J
+..HH.HHH.HHH.HH..
+J...............J
+JJ.JJJ.JJJ.JJJ.JJ
+ENDMAP
+
+NAME:  nicolae_concentric_dashed_squares_wild
+TAGS:  transparent extra decor luniq_nicocondashsquares
+DEPTH: D, Depths, Elf
+SUBST: D : cnbvxtGTU, E : cnbvx, F : cnbvx, H : cnbvx, J : cnbvx, K : cnbvx, \
+       L : cnbvx, M : cnbvx, N : cnbvx, O : cnbvx, P : cnbvx, Q : cnbvx, \
+       R : cnbvx, S : cnbvx, Z : cnbvx, a : cnbvx, p : cnbvx
+MAP
+FF.MMM.LLL.KKK.JJ
+F...............J
+..EE.OOO.NNN.HH..
+S.E...........H.Q
+S...FF.PPP.JJ...Q
+S.a.F.......J.Z.Q
+..a...EE.HH...Z..
+R.a.p.E...H.p.Z.R
+R...p...D...p...R
+R.Z.p.H...E.p.a.R
+..Z...HH.EE...a..
+Q.Z.J.......F.a.S
+Q...JJ.PPP.FF...S
+Q.H...........E.S
+..HH.NNN.OOO.EE..
+J...............F
+JJ.KKK.LLL.MMM.FF
+ENDMAP
+
+NAME:    nicolae_elevator_lobby_asterisk
+TAGS:    transparent decor luniq_nicolobby
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$, Snake:2-, !Snake:$, Elf:2-, !Elf:$, \
+         Crypt:2-, !Crypt:$
+SHUFFLE: FJ, DE/FH
+NSUBST:  E = 1={ / 1=}
+SHUFFLE: {}/[]/()
+SUBST:   DJ = x, F = @, H = T
+MAP
+   xDDDx
+   x...xxxFFFx
+   x.E.xxx...J
+xxxx...xxx.H.J
+x............J
+x.G........xxx
+x..........xxx
+xxxx.......xxxx
+ xxx..........x
+ xxx........G.x
+ J............x
+ J.H.xxx...xxxx
+ J...xxx.E.x
+ xFFFxxx...x
+       xDDDx
+ENDMAP
+
+NAME:    nicolae_elevator_lobby_plus
+TAGS:    transparent decor luniq_nicolobby
+DEPTH:   D:2-, !D:$, Depths:2-, !Depths:$, Snake:2-, !Snake:$, Elf:2-, !Elf:$, \
+         Crypt:2-, !Crypt:$
+# Chance of X sets of real stairs (not escape hatches): 1=30%, 2=60%, 3=10%
+SHUFFLE: {}/[]/()/<>/<>, PQ/pq, RS/rs, !Z/yz, PR!/QSZ, DEF
+SUBST:   pqrsyz = ., PR! : +., QSZ : nc, D = ., E = G, F = T
+MAP
+    xxxxxx@@@xxxxxx
+    xccccc...cccccx
+    xc...c...c...cx
+    xc.(.c.F.c.}.cx
+xxxxxc...c...c...cxxxxx
+xcccccPQPc!Z!cPQPcccccx
+xc...P...R...R...P...cx
+xc.[.Q.D.S.E.S.D.Q.].cx
+xc...P...R...R...P...cx
+xcccccPQPc!Z!cPQPcccccx
+xxxxxc...c...c...cxxxxx
+    xc.{.c.F.c.).cx
+    xc...c...c...cx
+    xccccc...cccccx
+    xxxxxx@@@xxxxxx
+ENDMAP
+
+NAME:    nicolae_figureground_pulse
+TAGS:    transparent decor
+DEPTH:   D, Depths
+SHUFFLE: x.
+MAP
+          ....x....
+         ....xxx....
+        ....xxxxx....
+     ....x.xxxxxxx.x....
+........xxxxxxxxxxxxx........
+.....x.xxxxxxxxxxxxxxx.x.....
+..x.xxxxxxxxxxxxxxxxxxxxx.x..
+.xxxxxxxxxxxxxxxxxxxxxxxxxxx.
+..x.xxxxxxxxxxxxxxxxxxxxx.x..
+.....x.xxxxxxxxxxxxxxx.x.....
+........xxxxxxxxxxxxx........
+     ....x.xxxxxxx.x....
+        ....xxxxx....
+         ....xxx....
+          ....x....
+ENDMAP
+
+NAME:    nicolae_figureground_sparkle
+TAGS:    transparent decor
+DEPTH:   D, Depths
+SHUFFLE: x.
+MAP
+       ..x..
+      ..xxx..
+     ....x....
+    ....xxx....
+   ....xxxxx....
+  ......xxx......
+ ......xxxxx......
+....x.xxxxxxx.x....
+.x.xxxxxxxxxxxxx.x.
+xxxxxxxxxxxxxxxxxxx
+.x.xxxxxxxxxxxxx.x.
+....x.xxxxxxx.x....
+ ......xxxxx......
+  ......xxx......
+   ....xxxxx....
+    ....xxx....
+     ....x....
+      ..xxx..
+       ..x..
+ENDMAP
+
+NAME:    dreamdust_mushroom_princess
+TAGS:    extra decor transparent
+DEPTH:   D, Lair, Elf
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of a princess")
+SUBST:   p = ppp..
+KMONS:   p = fungus
+MAP
+  .....
+ ..ppp..
+..ppppp..
+.pp...pp.
+.pp.G.pp.
+.pp...pp.
+..ppppp..
+ ..ppp..
+  .....
+ENDMAP
+
+NAME:    dreamdust_princess_bridge
+TAGS:    extra decor transparent no_pool_fixup
+DEPTH:   D, Elf
+FTILE:   -G = floor_rough_white
+FTILE:   .bt = floor_grass
+COLOUR:  . = green
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of a princess")
+KMONS:   b = bush
+MAP
+ xxxxxxxxx
+ x.......x
+ x.t.-.t.x
+ x..-G-..x
+ x.t.-.t.x
+ xx.....xx
+ xxxb-bxxx
+  xxw-wxx
+xxxww-wwxxx
+xbwww-wwwbx
+@---------@
+xbwww-wwwbx
+xxxww-wwxxx
+  xxw-wxx
+   xb-bx
+   xx@xx
+ENDMAP
+
+NAME:    dreamdust_princess_corridor
+TAGS:    extra decor transparent
+DEPTH:   D, Elf
+TILE:    G = dngn_statue_princess
+: set_feature_name("granite_statue", "a statue of a princess")
+# Three variations
+: if crawl.one_chance_in(3) then
+FTILE:   .Gtp = floor_grass
+COLOUR:  .Gtp = green
+KMONS:   p = bush
+: elseif crawl.one_chance_in(2) then
+FTILE:   .Gtp = floor_dirt
+SUBST:   p = t
+COLOUR:  t = lightred / red / yellow
+TILE:    t = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow
+: else
+KFEAT:   t = demonic_tree
+FTILE:   .Gtp = floor_nerves_magenta
+COLOUR:  .Gtp = magenta
+KMONS:   p = demonic plant
+: end
+MAP
+xx@xx
+xx.xx
+xt.tx
+xp.px
+xt.tx
+xp.px
+xt.tx
+xp.px
+xG.Gx
+xp.px
+xt.tx
+xp.px
+xt.tx
+xp.px
+xt.tx
+xx.xx
+xx@xx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2939,8 +3189,8 @@ ENDMAP
 
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
-TAGS:   no_monster_gen extra
-ITEM:   stone w:15 / arrow / bolt / spear / any potion w:10
+TAGS:   no_monster_gen extra transparent
+ITEM:   stone w:15 / boomerang / spear / any potion w:10
 MAP
 x+xx
 xddx
@@ -2949,7 +3199,7 @@ xxxx
 ENDMAP
 
 NAME:    minmay_variable_closet
-TAGS:    extra
+TAGS:    extra transparent
 DEPTH:   D:9-, Depths
 ITEM:    any weapon, any missile, any armour, any scroll
 ITEM:    any jewellery, any potion, any book
@@ -2968,7 +3218,7 @@ ENDMAP
 
 NAME:   library_closet
 DEPTH:  D:9-, Depths, Elf, Crypt, Snake, Orc
-TAGS:   extra
+TAGS:   extra transparent
 WEIGHT: 5
 ITEM:   any book w:20 / any scroll / nothing
 MAP
@@ -2979,7 +3229,7 @@ xxxx
 ENDMAP
 
 NAME:   eino_small_chamber_without_monster
-TAGS:   allow_dup extra ruin_lair ruin_abyss
+TAGS:   allow_dup extra ruin_lair ruin_abyss transparent
 DEPTH:  D:4-, Depths, Lair, Abyss
 MAP
  xxxxx
@@ -2991,7 +3241,7 @@ xx...xx
 ENDMAP
 
 NAME:   eino_tiny_chamber
-TAGS:   allow_dup extra
+TAGS:   allow_dup extra transparent
 DEPTH:  D:2-, Depths, Elf, Crypt
 MAP
 xxxxx
@@ -3028,7 +3278,7 @@ ENDMAP
 NAME:   corexii_mini_fake_secret_closet
 DEPTH:  D:4-, Depths
 WEIGHT: 1
-TAGS:   no_monster_gen no_item_gen allow_dup extra
+TAGS:   no_monster_gen no_item_gen allow_dup extra transparent
 NSUBST: + = 1:+ / *:x, = = 1:+ / *:x
 SUBST:  d = %%%., e = **%.
 MAP
@@ -3039,7 +3289,7 @@ xxxxxxx
 ENDMAP
 
 NAME:   evilmike_butchery
-TAGS:   no_item_gen
+TAGS:   no_item_gen transparent
 DEPTH:  D:9-, Depths
 SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
@@ -3063,7 +3313,7 @@ ENDMAP
 NAME:   dk_vineyard_1
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
+TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 ITEM:   any potion / nothing
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
@@ -3085,7 +3335,7 @@ ENDMAP
 NAME:   dk_vineyard_2
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard extra
+TAGS:   no_item_gen no_monster_gen uniq_vineyard extra transparent
 ITEM:   any potion / nothing
 NSUBST: . = 4:d
 KFEAT:  w = shallow_water
@@ -3124,7 +3374,7 @@ ENDMAP
 NAME:   nicolae_wand_duel
 DEPTH:  D:6-
 WEIGHT: 1
-KITEM:  d = wand of acid / wand of iceblast / wand of flame
+KITEM:  d = any beam wand / wand of iceblast / wand of flame
 TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra transparent
 SUBST:  a = a A:4, b = b B:4
 KPROP:  ABd = bloody
@@ -3157,7 +3407,7 @@ ENDMAP
 
 NAME:    hellmonk_bongcloud_opening
 TAGS:    no_item_gen no_monster_gen no_trap_gen no_hmirror no_vmirror no_rotate
-TAGS:    decor extra
+TAGS:    decor extra transparent
 DEPTH:   D:5-, Depths, Orc, Elf
 ITEM:    piece from Xom's chessboard
 KFEAT:   H = G
@@ -3250,7 +3500,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_zen_rock_garden
-TAGS: no_monster_gen no_trap_gen no_item_gen extra decor
+TAGS: no_monster_gen no_trap_gen no_item_gen extra decor transparent
 DEPTH: D:4-12
 SUBST: Q = TPW, T = tP, P = p'', Y = W', Z = tW, ' = ':13 r:1
 FTILE: tp'r = floor_sand
@@ -3340,7 +3590,7 @@ xx.........xx
 ENDMAP
 
 NAME:  kennysheep_small_spiral
-TAGS:  extra decor
+TAGS:  extra decor transparent
 DEPTH: D, Depths, !D:$, !Depths:$
 : ks_random_setup(_G)
 MAP
@@ -3358,6 +3608,40 @@ cw.xxxxxxx.wc
 cw.........ED
 cwHwwwwwwwwwc
 ccFcccccccccc
+ENDMAP
+
+NAME:   dreamdust_deal_with_the_devil
+TAGS:   extra transparent no_item_gen
+DEPTH:  D:8-, Lair, Orc, Elf
+WEIGHT: 5
+SUBST:  ? : V Y t
+TILE:   G = dngn_statue_imp
+: set_feature_name("granite_statue", "a statue of an imp")
+TILE:   t = dngn_tree_dead
+: set_feature_name("tree", "a dead tree")
+FTILE:  .Gd = floor_demonic_red
+# Alluring items with drawbacks that might kill you
+ITEM:   scarf ego:harm w:30 / any armour good_item ego:ponderousness w:20 / \
+        leech / obsidian axe / robe of folly / maxwell's patent armour
+MAP
+?.?
+.G.
+.d.
+ .
+ENDMAP
+
+NAME:    dreamdust_wishing_well
+TAGS:    extra decor transparent no_pool_fixup
+DEPTH:   D, Depths, Elf
+SUBST:   $ = $.
+KITEM:   U = nothing / gold / scroll of acquirement w:1
+KFEAT:   U = fountain_sparkling
+MAP
+.....
+.$$$.
+.$U$.
+.$$$.
+.....
 ENDMAP
 
 ##########################################################################

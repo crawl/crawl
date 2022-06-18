@@ -120,16 +120,16 @@ syn keyword desOrientation preserve_wall
 " ITEM | KITEM (in mapdef.cc, without `random`)
 syn keyword desOrientation randbook any good_item star_item superb_item gold
 syn keyword desOrientation nothing syn keyword desOrientation acquire mundane
-syn keyword desOrientation damaged randart useful unobtainable
+syn keyword desOrientation damaged randart useful unobtainable no_exclude
 syn keyword desOrientation mimic no_mimic no_pickup no_uniq allow_uniq
 "Note: `rotting` removed here which often caught `rotting devil` but was
 "unused as item tag
 syn keyword desOrientation corpse skeleton never_decay
 
 " MONS | KMONS (in mapdef.cc)
-syn keyword desOrientation fix_slot priest_spells actual_spells god_gift
+syn keyword desOrientation priest_spells actual_spells god_gift
 syn keyword desOrientation generate_awake patrolling band hostile friendly
-syn keyword desOrientation good_neutral fellow_slime strict_neutral neutral
+syn keyword desOrientation good_neutral fellow_slime neutral
 "Note: `spectre` removed: mis-catches `silent spectre` but was unused as
 "modifier (`spectral` exists)
 syn keyword desOrientation base nonbase zombie skeleton simulacrum spectral
@@ -154,7 +154,7 @@ syn keyword desColour contained death unholy vehumet beogh crystal blood smoke
 syn keyword desColour contained slime jewel elven dwarven orcish flash kraken
 syn keyword desColour contained floor rock mist shimmer_blue decay silver gold
 syn keyword desColour contained iron bone elven_brick waves tree mangrove
-syn keyword desColour contained tornado liquefied orb_glow disjunction random
+syn keyword desColour contained vortex liquefied orb_glow disjunction random
 
 " TILE
 syn keyword desOrientation no_random
@@ -176,7 +176,7 @@ syn keyword desOrientation no_wall_fixup opaque no_trap_gen
 syn keyword desOrientation bloody highlight mold no_cloud_gen no_tele_into
 syn keyword desOrientation no_tide no_jiyva
 
-syn match desComment "^\s*#.*$&"
+syn match desComment "^\s*#.*$"
 
 "Note: `;` and `|` are necessary due to monster/randbook `spells:`,
 " `.` can be an empty spell slot and `'` is contained in certain spell names,

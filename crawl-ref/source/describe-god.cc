@@ -79,7 +79,7 @@ int god_favour_rank(god_type which_god)
 {
     if (which_god == GOD_GOZAG)
         return _gold_level();
-    else if (which_god == GOD_USKAYAW)
+    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
         return _invocations_level();
     else
         return _piety_level(you.piety);
@@ -159,8 +159,8 @@ static const char *divine_title[][8] =
         "Traumaturge",        "Battlemage",            "Warlock",                  "Luminary of Lethal Lore"},
 
     // Okawaru -- battle theme.
-    {"Coward",             "Struggler",             "Combatant",                "Warrior",
-        "Knight",             "Warmonger",             "Commander",                "Victor of a Thousand Battles"},
+    {"Coward",             "Struggler",             "Combatant",                "@Genus@-At-Arms",
+        "Knight",             "Myrmidon",             "Warmonger",                "Victor of a Thousand Battles"},
 
     // Makhleb -- chaos theme.
     {"Orderly",            "Spawn of Chaos",        "Disciple of Destruction",  "Fanfare of Bloodshed",
@@ -203,8 +203,8 @@ static const char *divine_title[][8] =
      "Contemplative",         "Epochal",               "Timeless",                 "@Adj@ Aeon"},
 
     // Ashenzari -- divination theme
-    {"Star-crossed",       "Cursed",                "Initiated",                "Soothsayer",
-        "Seer",               "Oracle",                "Illuminatus",              "Omniscient"},
+    {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
+        "Oracle",            "Illuminatus",            "Prince of Secrets",        "Omniscient"},
 
     // Dithmenos -- darkness theme
     {"Ember",              "Gloomy",                "Darkened",                 "Extinguished",
@@ -239,6 +239,10 @@ static const char *divine_title[][8] =
     // Wu Jian -- animal/chinese martial arts monk theme
     {"Wooden Rat",          "Young Dog",             "Young Crane",              "Young Tiger",
         "Young Dragon",     "Red Sash",               "Golden Sash",              "Sifu"},
+
+    // Ignis -- fire/candles theme
+    {"Extinguished",          "Last Ember",             "Glowing Coal",              "Thurifer",
+        "Hearthfire",     "Furnace",               "Raging Flame",              "Inferno"},
 };
 COMPILE_CHECK(ARRAYSZ(divine_title) == NUM_GODS);
 
@@ -247,7 +251,7 @@ string god_title(god_type which_god, species_type which_species, int piety)
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
-    else if (which_god == GOD_USKAYAW)
+    else if (which_god == GOD_USKAYAW || which_god == GOD_YREDELEMNUL)
         title = divine_title[which_god][_invocations_level()];
     else if (which_god == GOD_GOZAG)
         title = divine_title[which_god][_gold_level()];
@@ -545,7 +549,8 @@ static formatted_string _beogh_extra_description()
     bool has_named_followers = false;
     for (auto mons : followers)
     {
-        if (!mons->is_named()) continue;
+        if (!mons->is_named())
+            continue;
         has_named_followers = true;
 
         desc += mons->full_name(DESC_PLAIN);
@@ -722,7 +727,11 @@ static string _raw_penance_message(god_type which_god)
     if (penance > initial_penance / 4)
         return "%s's wrath is beginning to fade.";
     if (penance > 0)
+    {
+        if (which_god == GOD_IGNIS)
+            return "%s' wrath will not burn much longer.";
         return "%s is almost ready to forgive your sins.";
+    }
     return "%s is neutral towards you.";
 }
 
@@ -739,39 +748,6 @@ static string _god_penance_message(god_type which_god)
     const string message = _raw_penance_message(which_god);
     return make_stringf(message.c_str(),
                         uppercase_first(god_name(which_god)).c_str());
-}
-
-static int _lifesaving_chance(god_type which_god)
-{
-    const int default_prot_chance = 10 + you.piety/10; // chance * 100
-    if (which_god != GOD_ELYVILON)
-        return default_prot_chance;
-
-    switch (elyvilon_lifesaving())
-    {
-        case lifesaving_chance::sometimes:
-            return default_prot_chance + 100 - 3000/you.piety;
-        case lifesaving_chance::always:
-            return 100;
-        default:
-            return default_prot_chance;
-    }
-}
-
-static string _lifesave_desc(god_type which_god)
-{
-    if (which_god != you.religion)
-        return "";
-
-    switch (elyvilon_lifesaving())
-    {
-        case lifesaving_chance::sometimes:
-            return ", especially when called upon";
-        case lifesaving_chance::always:
-            return ", and always does so when called upon";
-        default:
-            return "";
-    }
 }
 
 /**
@@ -806,26 +782,27 @@ static formatted_string _describe_god_powers(god_type which_god)
     // mv: Some gods can protect you from harm.
     // The god isn't really protecting the player - only sometimes saving
     // their life.
-    if (god_gives_passive(which_god, passive_t::protect_from_harm))
+    if (god_gives_passive(which_god, passive_t::protect_from_harm)
+        || god_gives_passive(which_god, passive_t::lifesaving))
     {
         have_any = true;
 
         const char *how = "";
-        const string when = _lifesave_desc(which_god).c_str();
 
-        if (which_god == you.religion)
+        if (god_gives_passive(which_god, passive_t::lifesaving))
         {
-            const int prot_chance = _lifesaving_chance(which_god);
-            how = (prot_chance >= 85) ? "carefully " :
-                  (prot_chance >= 55) ? "often " :
-                  (prot_chance >= 25) ? "sometimes "
-                                      : "occasionally ";
+            how = (piety >= piety_breakpoint(5)) ? "carefully " :
+                  (piety >= piety_breakpoint(3)) ? "often " :
+                  (piety >= piety_breakpoint(1)) ? "sometimes "
+                                                 : "occasionally ";
         }
+        else
+            how = (piety >= piety_breakpoint(5)) ? "sometimes "
+                                                 : "occasionally ";
 
-        desc.cprintf("%s %sguards your life%s.\n",
+        desc.cprintf("%s %sguards your life.\n",
                 uppercase_first(god_name(which_god)).c_str(),
-                how,
-                when.c_str());
+                how);
     }
 
     switch (which_god)
@@ -874,23 +851,21 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
     }
 
-    case GOD_JIYVA:
-        have_any = true;
-        if (have_passive(passive_t::slime_feed))
-            desc.textcolour(god_colour(which_god));
-        else
-            desc.textcolour(DARKGREY);
-
-        if (have_passive(passive_t::slime_hp))
-            desc.cprintf("You gain magic and health when your fellow slimes consume items.\n");
-        else if (have_passive(passive_t::slime_mp))
-            desc.cprintf("You gain magic when your fellow slimes consume items.\n");
-
-        break;
-
     case GOD_FEDHAS:
         have_any = true;
         desc.cprintf("You can walk through plants and fire through allied plants.\n");
+        break;
+
+    case GOD_JIYVA:
+        have_any = true;
+        if (!have_passive(passive_t::jelly_regen))
+            desc.textcolour(DARKGREY);
+        else
+            desc.textcolour(god_colour(which_god));
+        desc.cprintf("Your health and magic regeneration is %saccelerated.\n",
+                     piety >= piety_breakpoint(5) ? "very greatly " :
+                     piety >= piety_breakpoint(3) ? "greatly " :
+                                                    "");
         break;
 
     case GOD_CHEIBRIADOS:
@@ -950,14 +925,18 @@ static formatted_string _describe_god_powers(god_type which_god)
         break;
 
     case GOD_HEPLIAKLQANA:
-        if (have_passive(passive_t::frail))
-            desc.textcolour(god_colour(which_god));
-        else
-            desc.textcolour(DARKGREY);
-
+        // XXX: move this logic back into the usual religion.cc god_powers block?
         have_any = true;
+    {
+        const auto textcol = have_passive(passive_t::frail) ? god_colour(which_god) : DARKGREY;
+        // We need to set textcolour before each line so that it'll display
+        // correctly in webtiles. (It works fine locally regardless.)
+        // Feature request: not this.
+        desc.textcolour(textcol);
         desc.cprintf("Your life essence is reduced. (-10%% HP)\n");
+        desc.textcolour(textcol);
         desc.cprintf("Your ancestor manifests to aid you.\n");
+    }
         break;
 
 #if TAG_MAJOR_VERSION == 34
@@ -988,6 +967,18 @@ static formatted_string _describe_god_powers(god_type which_god)
         desc.cprintf("You are protected from the effects of unwielding distortion weapons.\n");
         break;
 
+    case GOD_OKAWARU:
+        have_any = true;
+        desc.cprintf("%s requires that you fight alone, and prevents you from "
+                     "gaining allies.\n",
+                uppercase_first(god_name(which_god)).c_str());
+        break;
+
+    case GOD_IGNIS:
+        have_any = true;
+        desc.cprintf("You are resistant to fire.\n");
+        break;
+
     default:
         break;
     }
@@ -996,7 +987,7 @@ static formatted_string _describe_god_powers(god_type which_god)
     {
         // hack: don't mention the necronomicon alone unless it
         // wasn't already mentioned by the other description
-        if (power.abil == ABIL_KIKU_GIFT_NECRONOMICON
+        if (power.abil == ABIL_KIKU_GIFT_CAPSTONE_SPELLS
             && !you.has_mutation(MUT_NO_GRASPING))
         {
             continue;

@@ -99,7 +99,7 @@ function base_monster_setup(e)
            orc / scorpion / floating eye / skeleton /\
            zombie / river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
-           Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
+           Edmund / Ijyb / Grinder / Pikel band / Pargi / Terence / Menkaure /\
            Prince Ribbit")
   e.kmons("I = Erica / Erolcha / Eustachio / Gastronok / Grum band / Harold /\
            Joseph / Josephine band / Maurice / Psyche / Sonja / Urug")
@@ -162,7 +162,7 @@ function general_item_setup(e)
   e.kitem("^ = superb_item ident:all w:590 /\
           potion of heal wounds ident:all q:4 w:3 /\
           potion of haste ident:all q:4 w:3 /\
-          scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
+          scroll of fog w:1 ident:all /\
           potion of might ident:all w:2 /\
           scroll of acquirement q:1 w:1 ident:all /\
           scroll of enchant weapon ident:all q:4 w:2 /\
@@ -443,8 +443,6 @@ function armoury_setup(e)
           any armour good_item ident:all w:20")
   e.kitem("c = any weapon good_item ident:all")
   e.kitem("d = any armour good_item ident:all")
-  e.kitem("e = arrow q:50 mundane ident:all")
-  e.kitem("f = bolt q:50 mundane ident:all")
   e.subst("c = ccc(")
   e.subst("d = ddd[")
   e.lua_marker('~', props_marker {

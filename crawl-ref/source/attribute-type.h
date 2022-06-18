@@ -42,7 +42,7 @@ enum attribute_type
     ATTR_UNUSED3,            // old Beastly Appendage
 #endif
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
-    ATTR_EVOL_XP,              // XP gained since last evolved mutation
+    ATTR_EVOL_XP,              // XP needed for next [d]evolution mutation
     ATTR_LIFE_GAINED,          // XL when a felid gained a life.
     ATTR_TEMP_MUTATIONS,       // Number of temporary mutations the player has.
     ATTR_TEMP_MUT_XP,          // Amount of XP remaining before some temp muts

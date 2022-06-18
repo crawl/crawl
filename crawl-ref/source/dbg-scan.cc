@@ -622,12 +622,14 @@ void check_map_validity()
     dungeon_feature_type portal = DNGN_UNSEEN;
     if (player_in_branch(BRANCH_DEPTHS))
     {
-        if (you.depth == 3)
-            portal = DNGN_ENTER_PANDEMONIUM;
-        else if (you.depth == 4)
-            portal = DNGN_ENTER_ABYSS;
-        else if (you.depth == 2)
+        // TODO: centralize these numbers
+        // crosscheck with _add_missing_branches when changing
+        if (you.depth == 1)
             portal = DNGN_ENTER_HELL;
+        else if (you.depth == 2)
+            portal = DNGN_ENTER_PANDEMONIUM;
+        else if (you.depth == 3)
+            portal = DNGN_ENTER_ABYSS;
     }
 
     dungeon_feature_type exit = DNGN_UNSEEN;

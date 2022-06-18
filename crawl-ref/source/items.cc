@@ -60,6 +60,7 @@
 #include "player-equip.h"
 #include "player.h"
 #include "prompt.h"
+#include "potion.h"
 #include "quiver.h"
 #include "randbook.h"
 #include "religion.h"
@@ -78,46 +79,11 @@
 #include "terrain.h"
 #include "throw.h"
 #include "tilepick.h"
-#include "timed-effects.h" // bezotted
 #include "travel.h"
 #include "viewchar.h"
 #include "view.h"
 #include "xom.h"
-
-/**
- * Return an item's location (floor or inventory) and the corresponding env.item
- * int or inv slot referring to it.
- *
- * @param item_def An item in either env.item (the floor or monster inventory)
- *                 or you.inv.
- *
- * @return A pair containing bool and int. The bool is true for items in
- *         inventory, false for others. The int is the item's index in either
- *         you.inv or env.item.
- */
-
-pair<bool, int> item_int(item_def &item)
-{
-    if (in_inventory(item))
-        return make_pair(true, item.link);
-    return make_pair(false, item.index());
-}
-
-
-/**
- * Return an item_def& requested by an item's inv slot or env.item index.
- *
- * @param inv Is the item in inventory?
- * @param number The index of the item, either in you.inv (if inv == true)
- *               or in env.item (if inv == false).
- *
- * @return The item.
- */
-
-item_def& item_from_int(bool inv, int number)
-{
-    return inv ? you.inv[number] : env.item[number];
-}
+#include "zot.h" // bezotted
 
 static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
@@ -357,6 +323,11 @@ stack_iterator stack_iterator::operator++(int)
     return copy;
 }
 
+bool stack_iterator::operator==(const stack_iterator& rhs) const
+{
+    return cur_link == rhs.cur_link;
+}
+
 mon_inv_iterator::mon_inv_iterator(monster& _mon)
     : mon(_mon)
 {
@@ -484,6 +455,7 @@ void inc_inv_item_quantity(int obj, int amount)
 void inc_mitm_item_quantity(int obj, int amount)
 {
     env.item[obj].quantity += amount;
+    ASSERT(env.item[obj].defined());
 }
 
 void init_item(int item)
@@ -753,13 +725,24 @@ int count_movable_items(int obj)
  * @param[in] obj The location link; an index in env.item.
  * @param exclude_stationary If true, don't include stationary items.
 */
-vector<const item_def*> item_list_on_square(int obj)
+vector<item_def*> item_list_on_square(int obj)
+{
+    vector<item_def*> items;
+    for (stack_iterator si(obj); si; ++si)
+        items.push_back(& (*si));
+    return items;
+}
+
+// no overloading by return type, so some ugly code duplication. (There may be
+// cleverer template things to do.)
+vector<const item_def*> const_item_list_on_square(int obj)
 {
     vector<const item_def*> items;
     for (stack_iterator si(obj); si; ++si)
         items.push_back(& (*si));
     return items;
 }
+
 
 bool need_to_autopickup()
 {
@@ -820,18 +803,6 @@ static int _item_name_specialness(const item_def& item)
         return 1;
 
     return 0;
-}
-
-static void _maybe_give_corpse_hint(const item_def& item)
-{
-    if (!crawl_state.game_is_hints_tutorial())
-        return;
-
-    if (item.is_type(OBJ_CORPSES, CORPSE_BODY)
-        && you.has_spell(SPELL_ANIMATE_SKELETON))
-    {
-        learned_something_new(HINT_ANIMATE_CORPSE_SKELETON);
-    }
 }
 
 string item_message(vector<const item_def *> const &items)
@@ -895,7 +866,7 @@ void item_check()
 
     ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
 
-    auto items = item_list_on_square(you.visible_igrd(you.pos()));
+    auto items = const_item_list_on_square(you.visible_igrd(you.pos()));
 
     if (items.empty())
         return;
@@ -906,7 +877,6 @@ void item_check()
         const item_def& it(*items[0]);
         string name = menu_colour_item_name(it, DESC_A);
         strm << "You see here " << name << '.' << endl;
-        _maybe_give_corpse_hint(it);
         return;
     }
 
@@ -929,7 +899,6 @@ void item_check()
         int count = 0;
         for (const item_def *it : items)
         {
-            _maybe_give_corpse_hint(*it);
             if (it->base_type == OBJ_CORPSES)
                 continue;
 
@@ -969,17 +938,8 @@ void identify_item(item_def& item)
 static bool _id_floor_item(item_def &item)
 {
     if (item.base_type == OBJ_BOOKS)
-    {
-        if (fully_identified(item))
-            return false;
-
-        // fix autopickup for previously-unknown books (hack)
-        if (item_needs_autopickup(item))
-            item.props["needs_autopickup"] = true;
-        set_ident_flags(item, ISFLAG_IDENT_MASK);
         return true;
-    }
-    else if (item.base_type == OBJ_WANDS)
+    if (item.base_type == OBJ_WANDS)
     {
         if (!get_ident_type(item))
         {
@@ -999,8 +959,11 @@ static bool _id_floor_item(item_def &item)
 
         // autopickup hack for previously-unknown items
         if (item_needs_autopickup(item))
-            item.props["needs_autopickup"] = true;
+            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         identify_item(item);
+        // but skip ones that we discover to be useless
+        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+            item.props.erase(NEEDS_AUTOPICKUP_KEY);
         return true;
     }
 
@@ -1019,7 +982,8 @@ void pickup_menu(int item_link)
     int n_did_pickup   = 0;
     int n_tried_pickup = 0;
 
-    auto items = item_list_on_square(item_link);
+    // XX why is this const?
+    auto items = const_item_list_on_square(item_link);
     ASSERT(items.size());
 
     string prompt = "Pick up what? " + slot_description()
@@ -1712,8 +1676,8 @@ static void _got_item(item_def& item)
     shopping_list.cull_identical_items(item);
     item.flags |= ISFLAG_HANDLED;
 
-    if (item.props.exists("needs_autopickup"))
-        item.props.erase("needs_autopickup");
+    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
+        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 }
 
 void get_gold(const item_def& item, int quant, bool quiet)
@@ -1834,13 +1798,17 @@ static void _get_book(item_def& it)
     {
         if (you.has_mutation(MUT_INNATE_CASTER))
         {
-            mprf("%s burns to shimmering ash in your grasp.", it.name(DESC_THE).c_str());
+            mprf("%s burns to shimmering ash in your grasp.",
+                 it.name(DESC_THE).c_str());
             return;
         }
         mprf("You pick up %s and begin reading...", it.name(DESC_A).c_str());
 
         if (!library_add_spells(spells_in_book(it)))
             mpr("Unfortunately, you learned nothing new.");
+
+        taken_new_item(it.base_type);
+
         return;
     }
     // This is mainly for save compat: if a manual generated somehow that is not
@@ -1855,6 +1823,13 @@ static void _get_book(item_def& it)
         return;
     }
 
+    if (you.skills[sk] >= MAX_SKILL_LEVEL)
+    {
+        mprf("You pick up %s, but it has nothing more to teach you.",
+             it.name(DESC_A).c_str());
+        return;
+    }
+
     if (you.skill_manual_points[sk])
         mprf("You pick up another %s and continue studying.", it.name(DESC_PLAIN).c_str());
     else
@@ -1865,7 +1840,6 @@ static void _get_book(item_def& it)
 
 // Adds all books in the player's inventory to library.
 // Declared here for use by tags to load old saves.
-// Outside of loading old saves, only used at character creation.
 void add_held_books_to_library()
 {
     for (item_def& it : you.inv)
@@ -1876,6 +1850,13 @@ void add_held_books_to_library()
             destroy_item(it);
         }
     }
+}
+
+static void _give_abyssal_rune_xp()
+{
+    mpr("For a moment you glimpse the secrets of this dreadful place.");
+    potionlike_effect(POT_EXPERIENCE, 80);
+    level_change();
 }
 
 /**
@@ -1894,6 +1875,10 @@ static void _get_rune(const item_def& it, bool quiet)
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
         mprf("You pick up the %s rune and feel its power.",
              rune_type_name(it.sub_type));
+
+        if (it.sub_type == RUNE_ABYSSAL && !crawl_state.game_is_sprint())
+            _give_abyssal_rune_xp();
+
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
             mpr("You have collected all the runes! Now go and win!");
@@ -1972,6 +1957,7 @@ static bool _merge_stackable_item_into_inv(const item_def &it, int quant_got,
                                                     DESC_INVENTORY).c_str(),
                         quant_got);
         }
+        auto_assign_item_slot(you.inv[inv_slot]);
 
         return true;
     }
@@ -2118,11 +2104,7 @@ static int _place_item_in_free_slot(item_def &it, int quant_got,
     note_inscribe_item(item);
 
     if (crawl_state.game_is_hints())
-    {
         taken_new_item(item.base_type);
-        if (is_artefact(item))
-            learned_something_new(HINT_SEEN_RANDART);
-    }
 
     you.last_pickup[item.link] = quant_got;
     quiver::on_actions_changed(true);
@@ -2216,6 +2198,10 @@ void mark_items_non_pickup_at(const coord_def &pos)
     {
         env.item[item].flags |= ISFLAG_DROPPED;
         env.item[item].flags &= ~ISFLAG_THROWN;
+        // remove any force-pickup autoinscription, otherwise the full
+        // inventory pickup check gets stuck in a loop
+        env.item[item].inscription = replace_all(
+                                        env.item[item].inscription, "=g", "");
         item = env.item[item].link;
     }
 }
@@ -2493,15 +2479,27 @@ const item_def* top_item_at(const coord_def& where)
     return (link == NON_ITEM) ? nullptr : &env.item[link];
 }
 
-bool multiple_items_at(const coord_def& where)
+static bool _check_dangerous_drop(const item_def & item)
 {
-    int found_count = 0;
+    if (!feat_eliminates_items(env.grid(you.pos())))
+        return true;
 
-    for (stack_iterator si(where); si && found_count < 2; ++si)
-        ++found_count;
+    string prompt = "Are you sure you want to drop " + item.name(DESC_THE)
+                  + " into "
+                  + feature_description_at(you.pos(), false, DESC_A) + "? "
+                  + "You won't be able to retrieve "
+                  + (item.quantity == 1 ? "it." : "them.");
 
-    return found_count > 1;
+    // don't interrupt delays; this might do something strange to macros
+    // that trigger it, but the main way drops interact with delays is
+    // through multidrop and armour delays
+    if (yesno(prompt.c_str(), true, 'n', true, false))
+        return true;
+
+    canned_msg(MSG_OK);
+    return false;
 }
+
 
 /**
  * Drop an item, possibly starting up a delay to do so.
@@ -2514,10 +2512,14 @@ bool multiple_items_at(const coord_def& where)
  */
 bool drop_item(int item_dropped, int quant_drop)
 {
+
     item_def &item = you.inv[item_dropped];
 
     if (quant_drop < 0 || quant_drop > item.quantity)
         quant_drop = item.quantity;
+
+    if (!_check_dangerous_drop(item))
+        return false;
 
     if (item_dropped == you.equip[EQ_LEFT_RING]
      || item_dropped == you.equip[EQ_RIGHT_RING]
@@ -2740,7 +2742,7 @@ static void _disable_autopickup_for_starred_items(vector<SelItem> &items)
  */
 void drop()
 {
-    if (inv_count() < 1 && you.gold == 0)
+    if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
         return;
@@ -2908,10 +2910,10 @@ static int _autopickup_subtype(const item_def &item)
     case OBJ_STAVES:
         return item_type_known(item) ? item.sub_type : max_type;
     case OBJ_BOOKS:
-        if (item.sub_type == BOOK_MANUAL || item_type_known(item))
+        if (item.sub_type == BOOK_MANUAL)
             return item.sub_type;
         else
-            return max_type;
+            return 0;
 #if TAG_MAJOR_VERSION == 34
     case OBJ_RODS:
 #endif
@@ -2985,7 +2987,7 @@ bool item_needs_autopickup(const item_def &item, bool ignore_force)
     if (item.flags & ISFLAG_DROPPED)
         return false;
 
-    if (item.props.exists("needs_autopickup"))
+    if (item.props.exists(NEEDS_AUTOPICKUP_KEY))
         return true;
 
     return _is_option_autopickup(item, ignore_force);
@@ -3327,9 +3329,7 @@ equipment_type item_equip_slot(const item_def& item)
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
     return item_equip_slot(item) != EQ_NONE
-           || quiver_too
-                && (you.quiver_action.item_is_quivered(item)
-                    || you.launcher_action.item_is_quivered(item));
+           || quiver_too && you.quiver_action.item_is_quivered(item);
 }
 
 bool item_is_melded(const item_def& item)
@@ -3343,7 +3343,7 @@ bool item_is_melded(const item_def& item)
 
 bool item_def::has_spells() const
 {
-    return item_is_spellbook(*this) && item_type_known(*this);
+    return item_is_spellbook(*this);
 }
 
 bool item_def::cursed() const
@@ -3351,17 +3351,14 @@ bool item_def::cursed() const
     return flags & ISFLAG_CURSED;
 }
 
-bool item_def::launched_by(const item_def &launcher) const
-{
-    if (base_type != OBJ_MISSILES)
-        return false;
-    const missile_type mt = fires_ammo_type(launcher);
-    return sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET);
-}
-
 int item_def::index() const
 {
     return this - env.item.buffer();
+}
+
+bool valid_item_index(int i)
+{
+    return i >= 0 && i < MAX_ITEMS;
 }
 
 int item_def::armour_rating() const
@@ -3480,19 +3477,16 @@ colour_t item_def::missile_colour() const
     {
         case MI_STONE:
             return BROWN;
-        case MI_SLING_BULLET:
-            return CYAN;
         case MI_LARGE_ROCK:
             return LIGHTGREY;
-        case MI_ARROW:
-            return BLUE;
 #if TAG_MAJOR_VERSION == 34
         case MI_NEEDLE:
 #endif
+        case MI_ARROW:         // removed as an item, but don't crash
+        case MI_BOLT:          // removed as an item, but don't crash
+        case MI_SLING_BULLET:  // removed as an item, but don't crash
         case MI_DART:
             return WHITE;
-        case MI_BOLT:
-            return LIGHTBLUE;
         case MI_JAVELIN:
             return RED;
         case MI_THROWING_NET:
@@ -3524,10 +3518,12 @@ colour_t item_def::armour_colour() const
     {
         case ARM_CLOAK:
         case ARM_SCARF:
+        case ARM_CRYSTAL_PLATE_ARMOUR:
             return WHITE;
         case ARM_BARDING:
             return GREEN;
         case ARM_ROBE:
+        case ARM_ANIMAL_SKIN:
             return RED;
 #if TAG_MAJOR_VERSION == 34
         case ARM_CAP:
@@ -3541,14 +3537,12 @@ colour_t item_def::armour_colour() const
             return LIGHTBLUE;
         case ARM_LEATHER_ARMOUR:
             return BROWN;
-        case ARM_ANIMAL_SKIN:
-            return LIGHTGREY;
-        case ARM_CRYSTAL_PLATE_ARMOUR:
-            return WHITE;
         case ARM_KITE_SHIELD:
         case ARM_TOWER_SHIELD:
         case ARM_BUCKLER:
             return CYAN;
+        case ARM_ORB:
+            return LIGHTGREY;
         default:
             return LIGHTCYAN;
     }
@@ -4024,17 +4018,18 @@ bool item_type_has_unidentified(object_class_type base_type)
 
 // Checks whether the item is actually a good one.
 // TODO: check brands, etc.
-bool item_def::is_valid(bool iinfo) const
+bool item_def::is_valid(bool iinfo, bool error) const
 {
+    auto channel = error ? MSGCH_ERROR : MSGCH_DIAGNOSTICS;
     if (base_type == OBJ_DETECTED)
     {
         if (!iinfo)
-            dprf("weird detected item");
+            mprf(channel, "weird detected item");
         return iinfo;
     }
     else if (!defined())
     {
-        dprf("undefined");
+        mprf(channel, "undefined item");
         return false;
     }
     const int max_sub = get_max_subtype(base_type);
@@ -4043,22 +4038,22 @@ bool item_def::is_valid(bool iinfo) const
         if (!iinfo || sub_type > max_sub || !item_type_has_unidentified(base_type))
         {
             if (!iinfo)
-                dprf("weird subtype and no info");
+                mprf(channel, "weird item subtype and no info");
             if (sub_type > max_sub)
-                dprf("huge subtype");
+                mprf(channel, "huge item subtype");
             if (!item_type_has_unidentified(base_type))
-                dprf("unided item of a type that can't be");
+                mprf(channel, "unided item of a type that can't be");
             return false;
         }
     }
     if (get_colour() == 0)
     {
-        dprf("black item");
-        return false; // No black items.
+        mprf(channel, "item color invalid"); // 0 = BLACK and so invisible
+        return false;
     }
     if (!appearance_initialized())
     {
-        dprf("no rnd");
+        mprf(channel, "item has uninitialized rnd");
         return false; // no items with uninitialized rnd
     }
     return true;
@@ -4164,13 +4159,20 @@ static bool _book_from_spell(const char* specs, item_def &item)
     if (type == SPELL_NO_SPELL)
         return false;
 
-    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
-        for (spell_type sp : spellbook_template(static_cast<book_type>(i)))
+    for (int i = 0; i < NUM_BOOKS; ++i)
+    {
+        const auto bt = static_cast<book_type>(i);
+        if (!book_exists(bt))
+            continue;
+        for (spell_type sp : spellbook_template(bt))
+        {
             if (sp == type)
             {
                 item.sub_type = i;
                 return true;
             }
+        }
+    }
 
     return false;
 }
@@ -4313,8 +4315,10 @@ bool get_item_by_name(item_def *item, const char* specs,
             string buf_lwr = lowercase_string(buf);
             special_wanted = 0;
             size_t best_index = 10000;
+            const int brand_index = max(static_cast<int>(NUM_SPECIAL_WEAPONS),
+                                        static_cast<int>(NUM_SPECIAL_ARMOURS));
 
-            for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
+            for (int i = SPWPN_NORMAL + 1; i < brand_index; ++i)
             {
                 item->brand = i;
                 size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(buf_lwr);
@@ -4556,10 +4560,7 @@ item_def get_item_known_info(const item_def& item)
         ii.subtype_rnd = item.subtype_rnd;
         break;
     case OBJ_BOOKS:
-        if (item_type_known(item) || !item_is_spellbook(item))
-            ii.sub_type = item.sub_type;
-        else
-            ii.sub_type = NUM_BOOKS;
+        ii.sub_type = item.sub_type;
         ii.subtype_rnd = item.subtype_rnd;
         if (item.sub_type == BOOK_MANUAL && item_type_known(item))
             ii.skill = item.skill; // manual skill
@@ -4600,9 +4601,9 @@ item_def get_item_known_info(const item_def& item)
     static const char* copy_props[] =
     {
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
-        CORPSE_NAME_TYPE_KEY, "item_tile", "item_tile_name",
-        "worn_tile", "worn_tile_name", "needs_autopickup",
-        FORCED_ITEM_COLOUR_KEY,
+        CORPSE_NAME_TYPE_KEY, ITEM_TILE_KEY, ITEM_TILE_NAME_KEY,
+        WORN_TILE_KEY, WORN_TILE_NAME_KEY, NEEDS_AUTOPICKUP_KEY,
+        FORCED_ITEM_COLOUR_KEY, SPELL_LIST_KEY,
     };
     for (const char *prop : copy_props)
         if (item.props.exists(prop))
@@ -4704,13 +4705,13 @@ static void _identify_last_item(item_def &item)
         && (item.base_type == OBJ_STAVES
             || item.base_type == OBJ_JEWELLERY))
     {
-        item.props["needs_autopickup"] = true;
+        item.props[NEEDS_AUTOPICKUP_KEY] = true;
     }
 
-    set_ident_type(item, true);
+    set_ident_type(item, true, false);
 
-    if (item.props.exists("needs_autopickup") && is_useless_item(item))
-        item.props.erase("needs_autopickup");
+    if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+        item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
     const string class_name = item.base_type == OBJ_JEWELLERY ?
                                     item_base_name(item) :
@@ -4750,7 +4751,8 @@ bool maybe_identify_base_type(item_def &item)
 
     for (int i = item_base; i < item_count + item_base; i++)
     {
-        const bool identified = you.type_ids[item.base_type][i];
+        const bool identified = you.type_ids[item.base_type][i]
+                             || item_known_excluded_from_set(item.base_type, i);
         ident_count += identified ? 1 : 0;
     }
 

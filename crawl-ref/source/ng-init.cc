@@ -32,22 +32,10 @@
 
 static uint8_t _random_potion_description()
 {
-    int desc;
-
-    desc = random2(PDQ_NQUALS * PDC_NCOLOURS);
-
+    const int desc = random2(PDQ_NQUALS * PDC_NCOLOURS);
     if (coinflip())
-        desc %= PDC_NCOLOURS;
-
-    // nature and colour correspond to primary and secondary in
-    // item-name.cc.
-
-#if TAG_MAJOR_VERSION == 34
-    if (PCOLOUR(desc) == PDC_CLEAR) // only water can be clear, re-roll
-        return _random_potion_description();
-#endif
-
-    return desc;
+        return desc;
+    return desc % PDC_NCOLOURS;
 }
 
 // Determine starting depths of branches.
@@ -146,7 +134,22 @@ void initialise_temples()
 
         // Without all this find_glyph() returns 0.
         string err;
-        main_temple->load();
+        int tries = 2;
+        while (tries-- > 0)
+        {
+            try
+            {
+                main_temple->load();
+                break;
+            }
+            catch (map_load_exception &mload)
+            {
+                mprf(MSGCH_ERROR, "Failed to load map, reloading all maps (%s).",
+                     mload.what());
+                reread_maps();
+            }
+        }
+
         main_temple->reinit();
         err = main_temple->run_lua(true);
 

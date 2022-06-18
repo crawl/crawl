@@ -81,7 +81,7 @@ MAP
 ENDMAP
 
 NAME:   lemuel_altar_in_water2
-TAGS:   no_pool_fixup no_monster_gen decor extra
+TAGS:   no_pool_fixup no_monster_gen decor extra transparent
 DEPTH:  Lair, Snake, Swamp, Shoals
 WEIGHT: 1
 MAP
@@ -95,6 +95,7 @@ MAP
 ENDMAP
 
 NAME:  lemuel_oklob_altar
+TAGS:  transparent
 DEPTH: Lair, Snake, Shoals
 MONS:  oklob plant, plant
 MAP
@@ -123,7 +124,7 @@ ENDMAP
 
 NAME:   lemuel_upstairs_altar
 TAGS:   extra
-DEPTH:  Elf, Crypt
+DEPTH:  Elf, !Elf:$, Crypt, !Crypt:$
 ORIENT: float
 SUBST:  T:T., )=)}], c:ccx
 KMASK:  T = no_monster_gen
@@ -211,6 +212,7 @@ MONS:  rust devil / orange demon
 MONS:  hell beast / red devil
 MONS:  iron imp
 MONS:  hellion
+KPROP: 1234_ = no_tele_into
 SUBST: 2 = 23
 SUBST: 2 = 12
 SUBST: 3 = 3L
@@ -221,7 +223,6 @@ SUBST: L = l.
 SUBST: _ = _ P:1
 KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
 KFEAT: P = enter_abyss
-KPROP: 1234_ = no_tele_into
 MAP
 ....LLLLL.....
 ..LlllllllL...
@@ -242,7 +243,7 @@ ENDMAP
 # Dungeon runed door vault with a more varied monsters and loot, but still
 # respecting the kobolds + distortion/chaos theme. --gammafunk
 NAME:   due_chaos_kobolds
-TAGS:   patrolling no_monster_gen no_trap_gen
+TAGS:   patrolling no_monster_gen no_trap_gen transparent
 DEPTH:  D:3-
 ORIENT: float
 WEIGHT: 5

@@ -18,6 +18,10 @@
 # endif
 #endif
 
+#ifdef __HAIKU__
+#include <endian.h>
+#endif
+
 #ifndef htole32
  #if BYTE_ORDER == LITTLE_ENDIAN
   #define htole32(x) (x)

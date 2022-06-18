@@ -1,6 +1,6 @@
 # Security Policy for DCSS
 
-Last updated Apr 2020.
+Last updated Jan 2022.
 
 ## Supported Versions
 
@@ -9,9 +9,10 @@ stable version. At time of writing, this is:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.25-a  | :white_check_mark: |
-| 0.24.1  | :white_check_mark: |
-| <0.24.1 | :x:                |
+| 0.29-a  | :white_check_mark: |
+| 0.28-b  | :white_check_mark: |
+| 0.27.1  | :white_check_mark: |
+| <0.27.1 | :x:                |
 
 We may, if the vulnerability is severe and affects online play, attempt to
 patch earlier versions. Versions before around 0.14 do not reliably build any
@@ -24,7 +25,7 @@ up-to-date webtiles server is covered (e.g. in the python code).
 ## Reporting a Vulnerability
 
 Open an issue on github in this repository, or contact the devteam in
-`##crawl-dev` on freenode. If you would prefer to report the issue in private,
+`#crawl-dev` on Libera IRC. If you would prefer to report the issue in private,
 we recommend either contacting one of the currently active devs directly (e.g.
 via an IRC private message), or sending an email to [security@dcss.io] with a
 subject line including the phrase `dcss security report`. Currently this email

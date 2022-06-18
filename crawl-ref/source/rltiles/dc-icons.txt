@@ -37,7 +37,6 @@ sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
 constricted CONSTRICTED
 berserk BERSERK
-glowing GLOWING
 slowed SLOWED
 hasted HASTED
 might MIGHT
@@ -58,10 +57,26 @@ swift SWIFT
 vile_clutch VILE_CLUTCH
 possessable POSSESSABLE
 slowly_dying SLOWLY_DYING
+fire_champ FIRE_CHAMP
+anguish ANGUISH
+antimagic ANTIMAGIC
+concentrated_poison CONC_VENOM
+dazed DAZED
+fire_vulnerable FIRE_VULN
+injury_bond INJURY_BOND
+partially_charged PARTIALLY_CHARGED
+fully_charged FULLY_CHARGED
+repel_missiles REPEL_MISSILES
+simulacrum SIMULACRUM
+still_winds STILL_WINDS
+waterlogged WATERLOGGED
+weakened WEAKENED
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
 new_transporter NEW_TRANSPORTER
+
+ellipsis ELLIPSIS
 
 %sdir misc
 out_of_sight MESH

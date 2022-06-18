@@ -30,6 +30,7 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "nearby-danger.h" // Compass (for random_walk, CloudGenerator)
+#include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
@@ -94,7 +95,6 @@ static const cloud_data clouds[] = {
       GREEN,                                    // colour
       { TILE_CLOUD_MEPHITIC, CTVARY_DUR },      // tile
       BEAM_MEPHITIC,                            // beam_effect
-      {0, 3},                                   // base, random damage
     },
     // CLOUD_COLD,
     { "freezing vapour", "freezing vapours",    // terse, verbose name
@@ -225,9 +225,9 @@ static const cloud_data clouds[] = {
       ETC_MAGIC,                                // colour
       { TILE_CLOUD_MAGIC_TRAIL, CTVARY_DUR },   // tile
     },
-    // CLOUD_TORNADO,
-    { "raging winds", nullptr,                  // terse, verbose name
-      ETC_TORNADO,                              // colour
+    // CLOUD_VORTEX,
+    { "whirling frost", nullptr,                // terse, verbose name
+      ETC_VORTEX,                               // colour
       { TILE_ERROR },                           // tile
     },
     // CLOUD_DUST,
@@ -247,7 +247,7 @@ static const cloud_data clouds[] = {
       YELLOW,                                   // colour
       { TILE_CLOUD_ACID, CTVARY_DUR },          // dur
       BEAM_ACID,                                // beam_effect
-      NORMAL_CLOUD_DAM,                         // base, random damage
+      { 8, 22, true },                          // base, random damage
     },
     // CLOUD_STORM,
     { "thunder", "a thunderstorm",              // terse, verbose name
@@ -296,9 +296,16 @@ static const cloud_data clouds[] = {
         { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },
     },
     // CLOUD_FLAME,
-    { "wisps of flame", nullptr,          // terse, verbose name
-      ETC_FIRE,                                // colour
-      { TILE_CLOUD_FLAME, CTVARY_RANDOM },   // tile
+    { "wisps of flame", nullptr,                  // terse, verbose name
+      ETC_FIRE,                                   // colour
+      { TILE_CLOUD_FLAME, CTVARY_RANDOM },        // tile
+    },
+    // CLOUD_DEGENERATION,
+    { "degeneration",  nullptr,                   // terse, verbose name
+      ETC_DARK,                                   // colour
+      { TILE_CLOUD_DEGENERATION, CTVARY_NONE },   // tile
+      BEAM_NONE, {},                              // beam & damage
+      false,                                      // opacity
     },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
@@ -510,18 +517,19 @@ static bool _handle_conjure_flame(const cloud_struct &cloud)
         mpr("You smother the flame.");
         return false;
     }
-    else if (monster_at(cloud.pos))
+    const monster *mons = monster_at(cloud.pos);
+    if (mons && !mons_is_conjured(mons->type))
     {
         mprf("%s smothers the flame.",
              monster_at(cloud.pos)->name(DESC_THE).c_str());
         return false;
     }
-    else
-    {
-        mpr("The fire ignites!");
-        place_cloud(CLOUD_FIRE, cloud.pos, you.props["cflame_dur"], &you);
-        return true;
-    }
+
+    mpr("The fire ignites!");
+    const int dur = you.props[CFLAME_DUR_KEY].get_int();
+    place_cloud(CLOUD_FIRE, cloud.pos, dur, &you);
+    you.props.erase(CFLAME_DUR_KEY);
+    return true;
 }
 
 /**
@@ -641,15 +649,9 @@ static void _maybe_leave_water(const coord_def pos)
 {
     ASSERT_IN_BOUNDS(pos);
 
-    // Rain clouds can occasionally leave shallow water or deepen it:
-    // If we're near lava, chance of leaving water is lower;
-    // if we're near deep water already, chance of leaving water
-    // is slightly higher.
-    if (!one_chance_in((5 + count_neighbours(pos, DNGN_LAVA)) -
-                            count_neighbours(pos, DNGN_DEEP_WATER)))
-    {
+    // Rain clouds can occasionally leave shallow water or deepen it.
+    if (!one_chance_in(5))
         return;
-    }
 
     dungeon_feature_type feat = env.grid(pos);
 
@@ -751,7 +753,7 @@ static bool _cloud_is_stronger(cloud_type ct, const cloud_struct& cloud)
     return (is_harmless_cloud(cloud.type) &&
                 (!is_opaque_cloud(cloud.type) || is_opaque_cloud(ct)))
            || cloud.type == CLOUD_STEAM
-           || ct == CLOUD_TORNADO; // soon gone
+           || ct == CLOUD_VORTEX; // soon gone
 }
 
 /*
@@ -780,7 +782,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
         return;
 
     if (env.level_state & LSTATE_STILL_WINDS
-        && cl_type != CLOUD_TORNADO
+        && cl_type != CLOUD_VORTEX
         && cl_type != CLOUD_INK)
     {
         return;
@@ -862,13 +864,6 @@ cloud_type random_smoke_type()
     return random_choose(CLOUD_GREY_SMOKE, CLOUD_BLUE_SMOKE,
                          CLOUD_BLACK_SMOKE, CLOUD_PURPLE_SMOKE);
 }
-int max_cloud_damage(cloud_type cl_type, int power)
-{
-    cloud_struct cloud;
-    cloud.type = cl_type;
-    cloud.decay = power * 10;
-    return _actor_cloud_damage(&you, cloud, true);
-}
 
 // Returns true if the cloud type has negative side effects beyond
 // plain damage and inventory destruction effects.
@@ -879,6 +874,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_MEPHITIC:
     case CLOUD_MIASMA:
     case CLOUD_MUTAGENIC:
+    case CLOUD_DEGENERATION:
     case CLOUD_CHAOS:
     case CLOUD_PETRIFY:
     case CLOUD_ACID:
@@ -919,7 +915,9 @@ static int _cloud_base_damage(const actor *act,
 {
     const cloud_damage &dam = clouds[flavour].damage;
     const bool vs_player = act->is_player();
-    const int random_dam = _rand_dam(dam, vs_player);
+    const int random_dam = _rand_dam(dam, vs_player)
+    // Replicate the old acid_splash damage. Boy we hate players, huh?
+                         + (flavour == CLOUD_ACID && vs_player ? 12 : 0);
     const int base_dam = _base_dam(dam, vs_player);
     const int trials = dam.random/15 + 1;
 
@@ -971,15 +969,17 @@ bool actor_cloud_immune(const actor &act, cloud_type type)
         case CLOUD_PETRIFY:
             return act.res_petrify();
         case CLOUD_SPECTRAL:
-            return bool(act.holiness() & MH_UNDEAD);
+            return bool(act.holiness() & MH_UNDEAD)
+                   || act.is_player()
+                      && have_passive(passive_t::r_spectral_mist);
         case CLOUD_ACID:
             return act.res_acid() > 0;
         case CLOUD_STORM:
             return act.res_elec() >= 3;
         case CLOUD_NEGATIVE_ENERGY:
             return act.res_negative_energy() >= 3;
-        case CLOUD_TORNADO:
-            return act.res_tornado();
+        case CLOUD_VORTEX:
+            return act.res_polar_vortex();
         case CLOUD_RAIN:
             return !act.is_fiery();
         default:
@@ -1031,7 +1031,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     switch (cloud.type)
     {
     case CLOUD_RAIN:
-        return act->is_fiery()? 0 : WILL_INVULN;
+        return act->is_fiery() ? 0 : WILL_INVULN;
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->res_fire();
@@ -1181,6 +1181,15 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         }
         return false;
 
+    case CLOUD_DEGENERATION:
+        if (player && one_chance_in(4))
+        {
+            mpr("You feel yourself deteriorate.");
+            lose_stat(STAT_RANDOM, 1 + random2avg(4,2));
+            return true;
+        }
+        return false;
+
     case CLOUD_CHAOS:
         if (coinflip())
         {
@@ -1191,11 +1200,8 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         break;
 
     case CLOUD_ACID:
-    {
-        const actor* agent = cloud.agent();
-        act->splash_with_acid(agent, 5, true);
+        act->acid_corrode(5);
         return true;
-    }
 
     case CLOUD_NEGATIVE_ENERGY:
     {
@@ -1409,7 +1415,8 @@ string desc_cloud_damage(cloud_type cl_type, bool vs_player)
     const cloud_damage &dam_info = clouds[cl_type].damage;
     const int base = _base_dam(dam_info, vs_player);
     const int rand = _rand_dam(dam_info, vs_player);
-    if (rand == 0) {
+    if (rand == 0)
+    {
         if (base == 0)
             return "";
         return make_stringf("%d", base);
@@ -1441,8 +1448,8 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
         return false;
 
     // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
-    if (type == CLOUD_TORNADO)
-        return !you.duration[DUR_TORNADO] && !you.duration[DUR_TORNADO_COOLDOWN];
+    if (type == CLOUD_VORTEX)
+        return !you.duration[DUR_VORTEX] && !you.duration[DUR_VORTEX_COOLDOWN];
 
     if (accept_temp_resistances)
     {
@@ -1587,7 +1594,7 @@ bool is_harmless_cloud(cloud_type type)
            && clouds[type].damage.base == 0
            && clouds[type].damage.random == 0
            && !_cloud_has_negative_side_effects(type)
-           && type != CLOUD_TORNADO;
+           && type != CLOUD_VORTEX;
 }
 
 string cloud_type_name(cloud_type type, bool terse)
@@ -1808,7 +1815,7 @@ coord_def get_cloud_originator(const coord_def& pos)
     return agent->pos();
 }
 
-void remove_tornado_clouds(mid_t whose)
+void remove_vortex_clouds(mid_t whose)
 {
     // Needed to clean up after the end of tornado cooldown, so we can again
     // assume all "raging winds" clouds are harmful. This is needed only
@@ -1816,15 +1823,16 @@ void remove_tornado_clouds(mid_t whose)
     // cloud belongs to. If this changes, please remove this function. For
     // example, this approach doesn't work if we ever make Tornado a monster
     // spell (excluding immobile and mindless casters).
+    // XXX: this comment seems impossibly out of date? ^
 
     // We can't iterate over env.cloud directly because delete_cloud
     // will remove this cloud and invalidate our iterator.
-    vector<coord_def> tornados;
+    vector<coord_def> vortices;
     for (auto& entry : env.cloud)
-        if (entry.second.type == CLOUD_TORNADO && entry.second.source == whose)
-            tornados.push_back(entry.first);
+        if (entry.second.type == CLOUD_VORTEX && entry.second.source == whose)
+            vortices.push_back(entry.first);
 
-    for (auto pos : tornados)
+    for (auto pos : vortices)
         delete_cloud(pos);
 }
 

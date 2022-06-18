@@ -10,6 +10,9 @@ crawl_require('dlua/util.lua')
 -- Namespace for callbacks (just an aid to recognising callbacks, no magic)
 util.namespace('callback')
 
+dgn.wizlab_chance_percent = 5
+dgn.desolation_chance_percent = 5
+
 dgn.GXM, dgn.GYM = dgn.max_bounds()
 dgn.MAX_MONSTERS = dgn.max_monsters()
 
@@ -597,10 +600,9 @@ function dgn.place_maps(parameters)
       if map_placed_ok then
         n_placed = n_placed + 1
       else
-        if not parameters.die_on_error then
-          return nil
+        if parameters.die_on_error then
+          map_error(dgn.name(map))
         end
-        map_error(dgn.name(map))
       end
     else
       if not parameters.die_on_error then
@@ -663,10 +665,10 @@ dgn.good_scrolls = [[
     w:20  scroll of magic mapping no_pickup q:2 /
     w:40  scroll of amnesia no_pickup /
     w:15  scroll of amnesia no_pickup q:2 /
-    w:33  scroll of holy word no_pickup q:1 /
-    w:11  scroll of holy word no_pickup q:2 /
+    w:33  scroll of immolation no_pickup q:1 /
+    w:11  scroll of immolation no_pickup q:2 /
     w:30  scroll of silence no_pickup q:1 /
-    w:10   scroll of silence no_pickup q:2 /
+    w:10  scroll of silence no_pickup q:2 /
     w:11  scroll of acquirement no_pickup q:1 /
     w:4   scroll of acquirement no_pickup q:2 /
     w:1   scroll of acquirement no_pickup q:3 /
@@ -695,15 +697,15 @@ dgn.loot_scrolls = [[
     ]]
 
 dgn.loot_potions = [[
-    w:15  potion of haste /
-    w:15  potion of heal wounds /
-    w:10  potion of might /
-    w:10  potion of invisibility /
-    w:10  potion of magic /
-    w:10  potion of mutation /
+    w:16  potion of haste /
+    w:16  potion of heal wounds /
+    w:11  potion of might /
+    w:11  potion of invisibility /
+    w:11  potion of magic /
+    w:11  potion of mutation /
     w:8   potion of cancellation /
-    w:5   potion of brilliance /
-    w:5   potion of resistance /
+    w:7   potion of brilliance /
+    w:7   potion of resistance /
     w:2   potion of experience
     ]]
 
@@ -719,31 +721,50 @@ dgn.good_aux_armour = "cloak good_item / scarf / helmet good_item " ..
 dgn.randart_aux_armour = "cloak randart / helmet randart / hat randart " ..
     "/ pair of gloves randart / pair of boots randart"
 
--- Make an item definition that will randomly choose from combinations of the
--- given tables of weighted item types and optional egos.
---
--- @param items     A table or string giving the possible item types. If a
---                  string, all items will be of that type. If a table, the
---                  keys must be item type strings and the values integer
---                  weights. The resulting item definition will contain all
---                  combinations from the items and egos arguments based on
---                  weights from both tables.
--- @param egos      A string, a table, or nil giving the possible item egos. If
---                  a string, all items will have that ego. If a table, the
---                  keys must be ego strings and the values integer weights.
---                  The resulting item definition will contain all combinations
---                  from the items and egos arguments based on weights from
---                  both tables. If nil, no egos will be specified for the
---                  items.
--- @param args      An optional string of arguments to use on every item entry.
---                  Should not have leading or trailing whitespace. Most common
---                  use is for 'randart' or 'good_item', but any valid item
---                  definition modifier works.
--- @param separator An optional separator to use between the item entries.
---                  Defaults to '/', which is appropriate for ITEM statements.
---                  Use '|' if making statements for use with MONS or KMONS.
---
--- @returns         A string containing the item definition.
+
+--[[
+Add an argument to every entry in a given string already containing a set of
+entries joined by a separator. Can be used to add weights or other modifiers
+like good_item or randart to strings containing randomized monster and item
+definitions. This is useful when re-using a definition string for multiple
+statements. Note that no checks are done for the argument already existing, so
+this can't be used to re-weight entries that already have weights.
+
+@string entries A string of entries joined by a separator.
+@string arg An argument to add to each entry
+@string[opt="/"] separator The separator used to join entries in the string.
+@treturn string A string with each entry now having the supplied argument.
+]]
+function dgn.random_entry_arg(entries, arg, separator)
+    if separator == nil then
+        separator = "/"
+     end
+
+    return entries:gsub(separator, arg .. " " .. separator) .. " " .. arg
+end
+
+--[[
+Make an item definition that will randomly choose from combinations of the
+given tables of weighted item types and optional egos.
+
+@param items A string or table giving the possible item types. If a string,
+    all items will be of that type. If a table, the keys must be item type
+    strings and the values integer weights. The resulting item definition will
+    contain all combinations from the items and egos arguments based on weights
+    from both tables.
+@param[opt] egos A string, a table, or nil giving the possible item egos. If a
+    string, all items will have that ego. If a table, the keys must be ego
+    strings and the values integer weights. The resulting item definition will
+    contain all combinations from the items and egos arguments based on weights
+    from both tables. If nil, no egos will be specified for the items.
+@string[opt] args An optional string of arguments to use on every item entry.
+    Should not have leading or trailing whitespace. Most common use is for
+    'randart' or 'good_item', but any valid item definition modifier works.
+@string[opt='/'] separator An optional separator to use between the item
+    entries. Defaults to '/', which is appropriate for ITEM statements. Use '|'
+    if making statements for use with MONS or KMONS.
+@treturn string The item definition.
+]]
 function dgn.random_item_def(items, egos, args, separator)
     if type(items) == "string" then
         items = {[items] = 1}
@@ -800,10 +821,12 @@ function dgn.random_item_def(items, egos, args, separator)
     return item_def
 end
 
--- Weapon sets for vault monsters that need their weapons specialized in some
--- way. These are based on the sets defined in mon-gear.cc, but have more
--- variety more favourable weights for the better weapon types. To use this,
--- see the function dgn.monster_weapon() below.
+--[[
+Weapon sets for vault monsters that need their weapons specialized in some way.
+These are based on the sets defined in mon-gear.cc, but have more variety more
+favourable weights for the better weapon types. To use this, see the function
+dgn.monster_weapon() below.
+]]
 dgn.monster_weapons = {
     ["kobold"] =      {["dagger"] = 5, ["short sword"] = 10, ["rapier"] = 5,
                        ["whip"] = 10},
@@ -826,14 +849,30 @@ dgn.monster_weapons = {
                        ["mace"] = 10, ["flail"] = 10, ["morningstar"] = 5,
                        ["dire flail"] = 10, ["great mace"] = 5,
                        ["quarterstaff"] = 10},
+    ["warrior-1h"] =  { ["hand axe"] = 5, ["war axe"] = 10, ["broad axe"] = 5,
+                       ["spear"] = 5, ["trident"] = 10, ["whip"] = 5,
+                       ["mace"] = 10, ["flail"] = 10, ["morningstar"] = 5},
+    ["warrior-2h"] =  {["great sword"] = 10, ["battleaxe"] = 10,
+                       ["halberd"] = 10, ["glaive"] = 5,
+                       ["dire flail"] = 10, ["great mace"] = 5,
+                       ["quarterstaff"] = 10},
     ["knight"] =      {["scimitar"] = 15, ["demon blade"] = 5,
                        ["double sword"] = 5, ["great sword"] = 15,
-                       ["triple sword"] = 5, ["war axe"] = 5,
-                       ["broad axe"] = 10, ["battleaxe"] = 15,
-                       ["executioner's axe"] = 5, ["demon trident"] = 5,
-                       ["glaive"] = 10, ["bardiche"] = 5, ["morningstar"] = 10,
+                       ["triple sword"] = 5, ["broad axe"] = 10,
+                       ["battleaxe"] = 15, ["executioner's axe"] = 5,
+                       ["demon trident"] = 5, ["glaive"] = 10,
+                       ["bardiche"] = 5, ["morningstar"] = 10,
                        ["demon whip"] = 5, ["eveningstar"] = 5,
                        ["dire flail"] = 10, ["great mace"] = 10,
+                       ["lajatang"] = 5},
+    ["knight-1h"] =   {["scimitar"] = 30, ["demon blade"] = 5,
+                       ["double sword"] = 5, ["broad axe"] = 10,
+                       ["demon trident"] = 5, ["morningstar"] = 30,
+                       ["demon whip"] = 5, ["eveningstar"] = 5},
+    ["knight-2h"] =   {["great sword"] = 15, ["triple sword"] = 5,
+                       ["battleaxe"] = 15, ["executioner's axe"] = 5,
+                       ["glaive"] = 15, ["bardiche"] = 5,
+                       ["dire flail"] = 15, ["great mace"] = 10,
                        ["lajatang"] = 5},
 
     -- Spriggan sets. Rider gets a small chance for demon trident, and druid
@@ -848,7 +887,6 @@ dgn.monster_weapons = {
     ["defender"] =    {["rapier"] = 10, ["quick blade"] = 10,
                        ["morningstar"] = 10, ["demon whip"] = 10,
                        ["lajatang"] = 10},
-
     ["merfolk"] =     {["spear"] = 10, ["trident"] = 10, ["halberd"] = 5,
                        ["glaive"] = 5},
     ["impaler"] =     {["trident"] = 15, ["demon trident"] = 5},
@@ -858,26 +896,25 @@ dgn.monster_weapons = {
     ["blademaster"] = {["rapier"] = 20, ["quick blade"] = 5},
 }
 
--- Make a monster weapon equipment string based on the table of monster class
--- weapon weights in the dgn.monster_weapons table.
---
--- @param class     A string, which should be a key in the dgn.monster_weapons
---                  table.
--- @param egos      A string, a table, or nil giving the possible weapon egos.
---                  If a string, all weapons will have that ego. If a table,
---                  the keys must be ego strings and the values integer
---                  weights. The resulting weapon definition will contain all
---                  combinations from the items and egos arguments based on
---                  weights from both tables. If nil, no egos will be specified
---                  for the weapons.
--- @param args      An optional string of arguments to use on every weapon
---                  entry. Should not have leading or trailing whitespace.
---                  Most common use is for 'randart' or 'good_item', but any
---                  valid item definition modifier works.
---
--- @returns         A string containing the weapon definition. Append the
---                  resulting string to the monster definition after a
---                  semicolon.
+--[[
+Make a monster weapon equipment string for MONS/KMONS statements based on the
+table of monster class weapon weights in the dgn.monster_weapons table. Append
+the resulting string to the monster name after a semicolon, or after a period
+if defining a slot for an existing existing monster equipment section.
+
+@string class     A string, which should be a key in the dgn.monster_weapons
+    table.
+@param[opt] egos  A string, a table, or nil giving the possible weapon egos.
+    If a string, all weapons will have that ego. If a table, the keys must be
+    ego strings and the values integer weights. The resulting weapon definition
+    will contain all combinations from the items and egos arguments based on
+    weights from both tables. If nil, no egos will be specified for the
+    weapons.
+@string[opt] args An optional string of arguments to use on every weapon entry.
+    Should not have leading or trailing whitespace. Most common use is for
+    'randart' or 'good_item', but any valid item definition modifier works.
+@treturn string The weapon definition.
+]]
 function dgn.monster_weapon(class, egos, args)
     if dgn.monster_weapons[class] == nil then
         error("Unknown weapon class: " .. class)

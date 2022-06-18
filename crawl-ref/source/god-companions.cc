@@ -35,26 +35,26 @@ void add_companion(monster* mons)
     ASSERT(mons->alive());
     // Right now this is a special case for Saint Roka, but
     // future orcish uniques should behave in the same way.
-    mons->props["no_annotate"] = true;
+    mons->props[NO_ANNOTATE_KEY] = true;
     remove_unique_annotation(mons);
     companion_list[mons->mid] = companion(*mons);
 }
 
 void remove_companion(monster* mons)
 {
-    mons->props["no_annotate"] = false;
+    mons->props[NO_ANNOTATE_KEY] = false;
     set_unique_annotation(mons);
     companion_list.erase(mons->mid);
 }
 
-void remove_enslaved_soul_companion()
+void remove_bound_soul_companion()
 {
     for (auto &entry : companion_list)
     {
         monster* mons = monster_by_mid(entry.first);
         if (!mons)
             mons = &entry.second.mons.mons;
-        if (mons_enslaved_soul(*mons))
+        if (mons_bound_soul(*mons))
         {
             remove_companion(mons);
             return;

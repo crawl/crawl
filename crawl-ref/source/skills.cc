@@ -26,6 +26,7 @@
 #include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h" // now_is_morning
 #include "notes.h"
 #include "output.h"
 #include "random.h"
@@ -331,7 +332,7 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill, bool recalculate_o
     if (exsk == SK_FIGHTING)
         calc_hp(true, false);
 
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING || exsk == SK_EVOCATIONS)
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
         calc_mp();
 
     if (exsk == SK_DODGING || exsk == SK_ARMOUR)
@@ -1306,8 +1307,9 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         you.skill_manual_points[exsk] -= bonus;
         if (!you.skill_manual_points[exsk] && !simu && !crawl_state.simulating_xp_gain)
         {
-            mprf("You have finished your manual of %s and toss it away.",
-                 skill_name(exsk));
+            mprf("You have finished your manual of %s and %stoss it away.",
+                 skill_name(exsk),
+                 exsk == SK_THROWING ? "skilfully " : "");
         }
     }
 
@@ -1578,11 +1580,13 @@ bool player::set_training_target(const skill_type sk, const int target, bool ann
 
 const char *skill_name(skill_type which_skill)
 {
+    ASSERT(which_skill < NUM_SKILLS);
     return skill_titles[which_skill][0];
 }
 
 const char * skill_abbr(skill_type which_skill)
 {
+    ASSERT(which_skill < NUM_SKILLS);
     return skill_titles[which_skill][6];
 }
 
@@ -1690,6 +1694,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Prickly Pangolin";
             break;
 
+        case SK_MACES_FLAILS:
+            if (species == SP_METEORAN && skill_rank == 5)
+                result = now_is_morning() ? "Morning Star" : "Evening Star";
+            break;
+
         case SK_UNARMED_COMBAT:
             if (species == SP_FELID)
                 result = claw_and_tooth_titles[skill_rank];
@@ -1725,12 +1734,18 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Blood Saint";
             else if (species == SP_PALENTONGA && skill_rank == 5 && god == GOD_QAZLAL)
                 result = "Rolling Thunder";
+            else if (species == SP_PALENTONGA && skill_rank == 5 && is_good_god(god))
+                result = "Holy Roller";
             else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Forbidden One";
             else if (species == SP_VINE_STALKER && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Black Lotus";
             else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
                 result = "Rockslime";
+            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_ZIN)
+                result = "Silver Star"; // removed dc6d6fabc (0.15), ha!
+            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_DITHMENOS)
+                result = "Starry Night"; // what a miserable god choice... challenge!
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
@@ -1742,10 +1757,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
 
         case SK_BOWS:
             if (species::is_elven(species) && skill_rank == 5)
-            {
                 result = "Master Archer";
-                break;
-            }
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Shooting Star";
             break;
 
         case SK_SPELLCASTING:
@@ -1776,11 +1790,15 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_EARTH_MAGIC:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Iron Dragon";
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Rock Star";
             break;
 
         case SK_AIR_MAGIC:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Storm Dragon";
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Meteorite"; // meteorologist / star, ha
             break;
 
         case SK_POISON_MAGIC:
@@ -1796,6 +1814,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_TRANSLOCATIONS:
             if (species == SP_FORMICID && skill_rank == 5)
                 result = "Teletunneler";
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Black Hole";
             break;
 
         case SK_NECROMANCY:
@@ -1968,10 +1988,12 @@ bool is_useless_skill(skill_type skill)
     if (mut != skill_sac_muts.end() && you.has_mutation(mut->second))
         return true;
     // shields isn't in the big map because shields being useless doesn't
-    // imply that missing hand is meaningless.
+    // imply that missing hand is meaningless. likewise for summoning magic
+    // vs. ability to have friendlies at all.
     if (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND)
         || skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
                             && !you.has_innate_mutation(MUT_QUADRUMANOUS)
+        || skill == SK_SUMMONINGS && you.get_mutation_level(MUT_NO_LOVE)
     )
     {
         return true;
@@ -2019,23 +2041,46 @@ float apt_to_factor(int apt)
     return 1 / exp(log(2) * apt / APT_DOUBLE);
 }
 
+static int _modulo_skill_cost(int modulo_level)
+{
+    return 25 * modulo_level * (modulo_level + 1);
+}
+
+static bool exp_costs_initialized = false;
+static int _get_skill_cost_for(int level)
+{
+    static int skill_cost_table[28];
+    const int breakpoints[3] = { 9, 18, 26 };
+    if (!exp_costs_initialized)
+    {
+        for (int skill_level = 0; skill_level < 28; skill_level++)
+        {
+            skill_cost_table[skill_level] = _modulo_skill_cost(skill_level);
+            for (int break_idx = 0; break_idx < (int)ARRAYSZ(breakpoints); ++break_idx)
+            {
+                const int breakpoint = breakpoints[break_idx];
+                if (skill_level <= breakpoint)
+                    break;
+                skill_cost_table[skill_level] += _modulo_skill_cost(skill_level - breakpoint) / 2;
+            }
+        }
+        exp_costs_initialized = true;
+    }
+    return skill_cost_table[level];
+}
+
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
-    const int exp[28] =
-          { 0, 50, 150, 300, 500, 750,          // 0-5
-            1050, 1400, 1800, 2250, 2800,       // 6-10
-            3450, 4200, 5050, 6000, 7050,       // 11-15
-            8200, 9450, 10800, 12300, 13950,    // 16-20
-            15750, 17700, 19800, 22050, 24450,  // 21-25
-            27000, 29750 };
-
     ASSERT_RANGE(lev, 0, MAX_SKILL_LEVEL + 1);
-    return exp[lev] * species_apt_factor(sk, sp);
+    return _get_skill_cost_for(lev) * species_apt_factor(sk, sp);
 }
 
 int species_apt(skill_type skill, species_type species)
 {
     static bool spec_skills_initialised = false;
+
+    if (skill >= NUM_SKILLS)
+        return UNUSABLE_SKILL;
     if (!spec_skills_initialised)
     {
         // Setup sentinel values to find errors more easily.
@@ -2127,27 +2172,6 @@ int elemental_preference(spell_type spell, int scale)
         if (_skill_is_elemental(sk))
             preference += you.skill(sk, scale);
     return preference;
-}
-
-/**
- * Compare skill levels
- *
- * It compares the level of 2 skills, and breaks ties by using skill order.
- *
- * @param sk1 First skill.
- * @param sk2 Second skill.
- * @return Whether first skill is higher than second skill.
- */
-bool compare_skills(skill_type sk1, skill_type sk2)
-{
-    if (is_invalid_skill(sk1))
-        return false;
-    else if (is_invalid_skill(sk2))
-        return true;
-    else
-        return you.skill(sk1, 10, true) > you.skill(sk2, 10, true)
-               || you.skill(sk1, 10, true) == you.skill(sk2, 10, true)
-                  && you.skill_order[sk1] < you.skill_order[sk2];
 }
 
 void dump_skills(string &text)

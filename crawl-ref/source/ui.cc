@@ -1056,7 +1056,8 @@ void Image::_render()
 #ifdef USE_TILE_LOCAL
     scissor_stack.push(m_region);
     TileBuffer tb;
-    tb.set_tex(&tiles.get_image_manager()->m_textures[get_tile_texture(m_tile.tile)]);
+    tb.set_tex(&tiles.get_image_manager()->get_texture(
+                                            get_tile_texture(m_tile.tile)));
 
     for (int y = m_region.y; y < m_region.y+m_region.height; y+=m_th)
         for (int x = m_region.x; x < m_region.x+m_region.width; x+=m_tw)
@@ -1317,8 +1318,10 @@ void Grid::_render()
 
     for (auto const& child : m_child_info)
     {
-        if (child.pos.y < row_min) continue;
-        if (child.pos.y > row_max) break;
+        if (child.pos.y < row_min)
+            continue;
+        if (child.pos.y > row_max)
+            break;
         child.widget->render();
     }
 }
@@ -1498,7 +1501,8 @@ SizeReq Scroller::_get_preferred_size(Direction dim, int prosp_width)
         return { 0, 0 };
 
     SizeReq sr = m_child->get_preferred_size(dim, prosp_width);
-    if (dim) sr.min = 0; // can shrink to zero height
+    if (dim)
+        sr.min = 0; // can shrink to zero height
     return sr;
 }
 
@@ -1510,10 +1514,10 @@ void Scroller::_allocate_region()
     m_child->allocate_region(ch_reg);
 
 #ifdef USE_TILE_LOCAL
-    int shade_height = 12, ds = 4;
+    int shade_height = UI_SCROLLER_SHADE_SIZE, ds = 4;
     int shade_top = min({m_scroll/ds, shade_height, m_region.height/2});
     int shade_bot = min({(sr.nat-m_region.height-m_scroll)/ds, shade_height, m_region.height/2});
-    const VColour col_a(4, 2, 4, 0), col_b(4, 2, 4, 200);
+    const VColour col_a(4, 2, 4, 0), col_b(4, 2, 4, 150);
 
     m_shade_buf.clear();
     m_scrollbar_buf.clear();
@@ -1562,10 +1566,16 @@ bool Scroller::on_event(const Event& event)
         switch (key)
         {
             case ' ': case '+': case CK_PGDN: case '>': case '\'':
+#ifndef USE_TILE_LOCAL
+            case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
+#endif
                 delta = m_region.height;
                 break;
 
             case '-': case CK_PGUP: case '<': case ';':
+#ifndef USE_TILE_LOCAL
+            case CK_NUMPAD_SUBTRACT: case CK_NUMPAD_SUBTRACT2:
+#endif
                 delta = -m_region.height;
                 break;
 
@@ -1738,12 +1748,12 @@ void Checkbox::_render()
 
     const int x = m_region.x, y = m_region.y;
     TileBuffer tb;
-    tb.set_tex(&tiles.get_image_manager()->m_textures[TEX_GUI]);
+    tb.set_tex(&tiles.get_image_manager()->get_texture(TEX_GUI));
     tb.add(tile, x, y, 0, 0, false, check_h, 1.0, 1.0);
     tb.draw();
 #else
     cgotoxy(m_region.x+1, m_region.y+1, GOTO_CRT);
-    textbackground(has_focus ? LIGHTGREY : BLACK);
+    textbackground(has_focus ? default_hover_colour() : BLACK);
     cprintf("[ ]");
     if (m_checked)
     {
@@ -1981,6 +1991,13 @@ bool TextEntry::on_event(const Event& event)
     case Event::Type::KeyDown:
         {
             const auto key = static_cast<const KeyEvent&>(event).key();
+#ifdef USE_TILE_LOCAL
+            // exit a popup on right click with text entry focus. XX this seems
+            // like a bad way to handle it, but I'm not sure what a better way
+            // might be.
+            if (key == CK_MOUSE_CMD)
+                return false;
+#endif
             int ret = m_line_reader.process_key_core(key);
             if (ret == CK_ESCAPE || ret == 0)
                 ui::set_focused_widget(nullptr);
@@ -2349,8 +2366,9 @@ SizeReq Dungeon::_get_preferred_size(Direction dim, int /*prosp_width*/)
 PlayerDoll::PlayerDoll(dolls_data doll)
 {
     m_save_doll = doll;
+    const ImageManager *image = tiles.get_image_manager();
     for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].set_tex(&tiles.get_image_manager()->m_textures[i]);
+        m_tile_buf[i].set_tex(&image->get_texture(static_cast<TextureID>(i)));
     _pack_doll();
 }
 
@@ -3260,6 +3278,7 @@ void pump_events(int wait_event_timeout)
         {
             // triggers ui::resize:
             tiles.resize_event(event.resize.w, event.resize.h);
+            ui_root.needs_paint = true;
             break;
         }
 

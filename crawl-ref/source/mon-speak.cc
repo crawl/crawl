@@ -490,8 +490,8 @@ bool mons_speaks(monster* mons)
         prefixes.emplace_back("confused");
 
     // Allows monster speech to be altered slightly on-the-fly.
-    if (mons->props.exists("speech_prefix"))
-        prefixes.push_back(mons->props["speech_prefix"].get_string());
+    if (mons->props.exists(SPEECH_PREFIX_KEY))
+        prefixes.push_back(mons->props[SPEECH_PREFIX_KEY].get_string());
 
     const actor*    foe  = _get_foe(*mons);
     const monster* m_foe = foe ? foe->as_monster() : nullptr;
@@ -611,10 +611,10 @@ bool mons_speaks(monster* mons)
     }
     else
     {
-        if (msg.empty() && mons->props.exists("dbname"))
+        if (msg.empty() && mons->props.exists(DBNAME_KEY))
         {
             msg = _get_speak_string(prefixes,
-                                     mons->props["dbname"].get_string(),
+                                     mons->props[DBNAME_KEY].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
 
@@ -625,7 +625,7 @@ bool mons_speaks(monster* mons)
                 // the key with prefixes.
                 vector<string> faux_prefixes;
                 msg = _get_speak_string(faux_prefixes,
-                                     mons->props["dbname"].get_string(),
+                                     mons->props[DBNAME_KEY].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
             }
@@ -826,7 +826,7 @@ bool mons_speaks_msg(monster* mons, const string &msg,
     {
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
-        // warning to scare the player. In order to accommodate this
+        // warnings to scare the player. In order to accommodate this
         // intent, we're falsely categorizing various things in the
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr

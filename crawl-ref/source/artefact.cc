@@ -142,7 +142,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return false;
 
         if (artefact_property(item, ARTP_ANGRY)
-            || artefact_property(item, ARTP_BERSERK))
+            || artefact_property(item, ARTP_RAMPAGING))
         {
             return false;
         }
@@ -294,7 +294,7 @@ unique_item_status_type get_unique_item_status(int art)
     return you.unique_items[art - UNRAND_START];
 }
 
-static void _set_unique_item_status(int art, bool exists)
+static void _set_unique_item_existence(int art, bool exists)
 {
     ASSERT_RANGE(art, UNRAND_START + 1, UNRAND_LAST);
 
@@ -317,7 +317,10 @@ void set_unique_item_status(const item_def& item,
                             unique_item_status_type status)
 {
     if (item.flags & ISFLAG_UNRANDART)
-        _set_unique_item_status(item.unrand_idx, status);
+    {
+        ASSERT_RANGE(item.unrand_idx, UNRAND_START + 1, UNRAND_LAST);
+        you.unique_items[item.unrand_idx - UNRAND_START] = status;
+    }
 }
 
 /**
@@ -549,8 +552,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         // weapons already have slaying
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS;
-        // prevent properties that conflict with naga innates
-        case ARTP_POISON:
+        // prevent properties that barding-wearers already have
         case ARTP_SEE_INVISIBLE:
             return !item.is_type(OBJ_ARMOUR, ARM_BARDING);
         case ARTP_RAMPAGING:
@@ -568,7 +570,6 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_PREVENT_TELEPORTATION:
             return !extant_props[ARTP_BLINK] && non_swappable;
         // only on melee weapons
-        case ARTP_BERSERK:
         case ARTP_ANGRY:
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
@@ -587,6 +588,8 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
             return item_class != OBJ_ARMOUR
                    && (item_class != OBJ_JEWELLERY
                        || jewellery_is_amulet(item));
+        case ARTP_ARCHMAGI:
+            return item.is_type(OBJ_ARMOUR, ARM_ROBE);
         default:
             return true;
     }
@@ -661,9 +664,11 @@ static const artefact_prop_data artp_data[] =
         []() { return 1; }, nullptr, 0, 0 },
     { "+Blink", ARTP_VAL_BOOL, 15,  // ARTP_BLINK,
         []() { return 1; }, nullptr, 0, 0 },
-    { "+Rage", ARTP_VAL_BOOL, 15,   // ARTP_BERSERK,
+#if TAG_MAJOR_VERSION == 34
+    { "+Rage", ARTP_VAL_BOOL, 0,   // ARTP_BERSERK,
         []() { return 1; }, nullptr, 0, 0 },
-    { "*Noise", ARTP_VAL_POS, 25,    // ARTP_NOISE,
+#endif
+    { "*Noise", ARTP_VAL_POS, 30,    // ARTP_NOISE,
         nullptr, []() { return 2; }, 0, 0 },
     { "-Cast", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_SPELLCASTING,
         nullptr, []() { return 1; }, 0, 0 },
@@ -671,8 +676,8 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "-Tele", ARTP_VAL_BOOL, 25,   // ARTP_PREVENT_TELEPORTATION,
         nullptr, []() { return 1; }, 0, 0 },
-    { "*Rage", ARTP_VAL_POS, 25,    // ARTP_ANGRY,
-        nullptr, []() { return 5; }, 0, 0 },
+    { "*Rage", ARTP_VAL_POS, 30,    // ARTP_ANGRY,
+        nullptr, []() { return 20; }, 0, 0 },
 #if TAG_MAJOR_VERSION == 34
     { "Hungry", ARTP_VAL_POS, 0, nullptr, nullptr, 0, 0 },// ARTP_METABOLISM,
 #endif
@@ -720,12 +725,14 @@ static const artefact_prop_data artp_data[] =
         nullptr, []() { return 1; }, 0, 0 },
     { "*Slow", ARTP_VAL_BOOL, 25, // ARTP_SLOW,
         nullptr, []() { return 1; }, 0, 0 },
-    { "Fragile", ARTP_VAL_BOOL, 25, // ARTP_FRAGILE,
+    { "Fragile", ARTP_VAL_BOOL, 30, // ARTP_FRAGILE,
         nullptr, []() { return 1; }, 0, 0 },
     { "SH", ARTP_VAL_ANY, 0, nullptr, nullptr, 0, 0 }, // ARTP_SHIELDING,
     { "Harm", ARTP_VAL_BOOL, 25, // ARTP_HARM,
         []() {return 1;}, nullptr, 0, 0},
     { "Rampage", ARTP_VAL_BOOL, 25, // ARTP_RAMPAGING,
+        []() {return 1;}, nullptr, 0, 0},
+    { "Archmagi", ARTP_VAL_BOOL, 25, // ARTP_ARCHMAGI,
         []() {return 1;}, nullptr, 0, 0},
 };
 COMPILE_CHECK(ARRAYSZ(artp_data) == ARTP_NUM_PROPERTIES);
@@ -1004,6 +1011,7 @@ void artefact_properties(const item_def &item,
                          artefact_properties_t  &proprt)
 {
     ASSERT(is_artefact(item));
+    ASSERT(item.base_type != OBJ_BOOKS);
     ASSERT(item.props.exists(ARTEFACT_PROPS_KEY) || is_unrandom_artefact(item));
 
     if (item.props.exists(ARTEFACT_PROPS_KEY))
@@ -1029,8 +1037,8 @@ void artefact_properties(const item_def &item,
 int artefact_property(const item_def &item, artefact_prop_type prop)
 {
     ASSERT(is_artefact(item));
+    ASSERT(item.base_type != OBJ_BOOKS);
     ASSERT(item.props.exists(ARTEFACT_PROPS_KEY) || is_unrandom_artefact(item));
-
     if (item.props.exists(ARTEFACT_PROPS_KEY))
     {
         const CrawlVector &rap_vec =
@@ -1327,16 +1335,52 @@ const unrandart_entry* get_unrand_entry(int unrand_index)
         return &unranddata[unrand_index];
 }
 
-int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
+static int _preferred_max_level(int unrand_index)
 {
-    int ret = -1;
+    // TODO: turn this into a max preferred level field in art-data.txt
+    switch (unrand_index)
+    {
+    case UNRAND_DELATRAS_GLOVES:
+        return 6;
+    case UNRAND_WOODCUTTERS_AXE:
+    case UNRAND_MORG:
+    case UNRAND_THROATCUTTER:
+        return 9;
+    case UNRAND_DEVASTATOR:
+    case UNRAND_RATSKIN_CLOAK:
+    case UNRAND_KRYIAS:
+    case UNRAND_LEAR:
+    case UNRAND_OCTOPUS_KING:
+    case UNRAND_AUGMENTATION:
+    case UNRAND_MEEK:
+    case UNRAND_ELEMENTAL_VULNERABILITY:
+        return 11;
+    default:
+        return -1;
+    }
+}
+
+static int _unrand_weight(int unrand_index, int item_level)
+{
+    // Early-game unrands (with a preferred max depth != -1) are
+    // weighted higher within their depth and lower past it.
+    // Normal unrands have a flat weight at all depths.
+    const int pref_max_level = _preferred_max_level(unrand_index);
+    if (pref_max_level == -1)
+        return 10;
+    return item_level <= pref_max_level ? 100 : 1;
+}
+
+int find_okay_unrandart(uint8_t aclass, uint8_t atype, int item_level, bool in_abyss)
+{
+    int chosen_unrand_idx = -1;
 
     // Pick randomly among unrandarts with the proper
     // base_type and sub_type. This will rule out unrands that have already
     // placed as part of levelgen, but may find unrands that have been acquired.
     // because of this, the caller needs to properly set up a fallback randart
     // in some cases: see makeitem.cc:_setup_fallback_randart.
-    for (int i = 0, count = 0; i < NUM_UNRANDARTS; i++)
+    for (int i = 0, seen_weight = 0; i < NUM_UNRANDARTS; i++)
     {
         const int              index = i + UNRAND_START;
         const unrandart_entry* entry = &unranddata[i];
@@ -1351,7 +1395,8 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
         if (in_abyss && status != UNIQ_LOST_IN_ABYSS
             || !in_abyss && status != UNIQ_NOT_EXISTS
                // for acquired items, ignore them in the random calculations
-               // here and let fallback artefacts replace them.
+               // here and let fallback artefacts replace them. This is needed
+               // for seed stability.
                // TODO: abyss? double check trove
                && status != UNIQ_EXISTS_NONLEVELGEN)
         {
@@ -1379,13 +1424,13 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
             continue;
         }
 
-        count++;
-
-        if (one_chance_in(count))
-            ret = index;
+        const int weight = _unrand_weight(index, item_level);
+        seen_weight += weight;
+        if (x_chance_in_y(weight, seen_weight))
+            chosen_unrand_idx = index;
     }
 
-    return ret;
+    return chosen_unrand_idx;
 }
 
 int get_unrandart_num(const char *name)
@@ -1407,7 +1452,26 @@ int get_unrandart_num(const char *name)
         if (art == uname || art.find(quoted) != string::npos)
             return UNRAND_START + i;
     }
-    return SPWPN_NORMAL;
+    return 0;
+}
+
+int extant_unrandart_by_exact_name(string name)
+{
+    static map<string,int> cache;
+    if (cache.empty())
+    {
+        for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
+        {
+            const int id = UNRAND_START + i;
+            if (unranddata[i].flags & UNRAND_FLAG_NOGEN
+                && id != UNRAND_DRAGONSKIN /* ew */)
+            {
+                continue;
+            }
+            cache[lowercase_string(unranddata[i].name)] = id;
+        }
+    }
+    return lookup(cache, lowercase(name), 0);
 }
 
 static bool _randart_is_redundant(const item_def &item,
@@ -1510,7 +1574,9 @@ static bool _randart_is_conflicting(const item_def &item,
     // see also _artp_can_go_on_item
 
     if (proprt[ARTP_PREVENT_SPELLCASTING]
-        && proprt[ARTP_INTELLIGENCE] > 0 || proprt[ARTP_MAGICAL_POWER] > 0)
+        && (proprt[ARTP_INTELLIGENCE] > 0
+            || proprt[ARTP_MAGICAL_POWER] > 0
+            || proprt[ARTP_ARCHMAGI]))
     {
         return true;
     }
@@ -1682,14 +1748,14 @@ void make_ashenzari_randart(item_def &item)
     if (item.flags & ISFLAG_UNRANDART)
         return;
 
-    const int brand = item.brand;
+    const auto brand = item.brand;
 
     // Ash randarts get no props
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
     item.flags |= ISFLAG_KNOW_PROPERTIES;
 
-    if (item.brand != SPWPN_NORMAL)
+    if (brand != SPWPN_NORMAL)
         set_artefact_brand(item, brand);
 
     set_artefact_name(item, _ashenzari_artefact_name(item));
@@ -1765,7 +1831,7 @@ static void _make_octoring(item_def &item)
 
     // If there are any types left, unset the 'already found' flag
     if (you.octopus_king_rings != 0xff)
-        _set_unique_item_status(UNRAND_OCTOPUS_KING_RING, false);
+        _set_unique_item_existence(UNRAND_OCTOPUS_KING_RING, false);
 }
 
 bool make_item_unrandart(item_def &item, int unrand_index)
@@ -1786,7 +1852,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
     item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
 
-    _set_unique_item_status(unrand_index, true);
+    _set_unique_item_existence(unrand_index, true);
 
     if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);

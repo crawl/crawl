@@ -38,7 +38,7 @@ Both classical ASCII and tiles (GUI) versions of Crawl are available to [downloa
   * A community forum
 * The official [/r/dcss subreddit](https://www.reddit.com/r/dcss/)
 * [/r/roguelikes Discord](https://discord.gg/S5F2H32)
-* IRC: ##crawl on Freenode (or ##crawl-dev to chat development)
+* IRC: #crawl on Libera (or #crawl-dev to chat development)
 
 ## How you can help
 
@@ -50,15 +50,20 @@ the [contributor's guide](crawl-ref/docs/develop/contribution-process.md).
 
 At any time, there will be bugs -- finding and reporting them is a great help.
 Many of the online servers host the regularly updated development version. Bugs
-should be reported to [our bug tracker](https://crawl.develz.org/mantis/). Besides pointing out bugs, new ideas on how to improve interface or gameplay are welcome. These can be added to [the development wiki](https://crawl.develz.org/wiki/).
+should be reported to [our github issue
+tracker](https://github.com/crawl/crawl/issues). Thoughtful ideas on how to
+improve interface or gameplay are welcome, but it's often best to
+[discuss](#community) changes before opening an issue or pull request.
 
 ### Map making
-Crawl creates levels by combining many hand-made (but often randomised) maps, known as *vaults*. Making them is fun and
-easy. It's best to start with simple entry vaults: see [simple.des](crawl-ref/source/dat/des/arrival/simple.des) for examples. You can also read [the level-design manual](crawl-ref/docs/develop/levels/introduction.txt) for more help.
+Crawl creates levels by combining many hand-made (but often randomised) maps,
+known as *vaults*. Making them is fun and easy. It's best to start with simple
+entry vaults: see [simple.des](crawl-ref/source/dat/des/arrival/simple.des) for
+examples. You can also read [the level-design manual](crawl-ref/docs/develop/levels/introduction.txt) for more help.
 
-If you're ambitious, you can create new vaults for anywhere in the game. If you've
-made some vaults, you can test them on your own system (no compiling needed) and
-submit them to [our bug tracker](https://crawl.develz.org/mantis/).
+If you're ambitious, you can create new vaults for anywhere in the game. If
+you've made some vaults, you can test them on your own system (no compiling
+needed) and submit them via a github pull request. See the [contributor's guide](crawl-ref/docs/develop/contribution-process.md) for details.
 
 ### Monster Speech & Item Descriptions
 Monster speech provides a lot of flavour. Just like vaults, varied speech depends
@@ -71,7 +76,11 @@ them in [dat/descript/](crawl-ref/source/dat/descript/). The following conventio
 * Citations are okay, but try to stay away from the most generic ones.
 
 ### Tiles
-We're always open to improvements to existing tiles or variants of often-used tiles (eg floor tiles). If you want to give this a shot, please [contact us](#community) via forums or IRC. In case you drew some tiles of your own, you can submit them to [our bug tracker](https://crawl.develz.org/mantis/).
+We're always open to improvements to existing tiles or variants of often-used
+tiles (eg floor tiles). If you want to give this a shot, please [contact us](#community). In case you drew some tiles of your own, you can simply share
+them with a developer or submit them via a github pull request. See the
+[contributor's guide](crawl-ref/docs/develop/contribution-process.md) for
+details.
 
 ### Patches
 For developers (both existing & aspiring!), you can download/fork the source code and write patches. Bug fixes as well as new features are very much welcome.

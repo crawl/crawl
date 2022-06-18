@@ -3,12 +3,12 @@ airstrike AIRSTRIKE
 chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
 lightning_bolt LIGHTNING_BOLT
+maxwells MAXWELLS_COUPLING
 repel_missiles REPEL_MISSILES
 shock SHOCK
 silence SILENCE
 static_discharge STATIC_DISCHARGE
 swiftness SWIFTNESS
-tornado TORNADO
 
 %sdir gui/spells/conjuration
 iskenderuns_mystic_blast ISKENDERUNS_MYSTIC_BLAST
@@ -34,12 +34,14 @@ statue_form STATUE_FORM
 stone_arrow STONE_ARROW
 
 %sdir gui/spells/enchantment
+anguish ANGUISH
 berserker_rage BERSERKER_RAGE
 cause_fear CAUSE_FEAR
 confuse CONFUSE
 confusing_touch CONFUSING_TOUCH
 corona CORONA
 discord DISCORD
+enfeeble ENFEEBLE
 charming CHARMING
 haste HASTE
 invisibility INVISIBILITY
@@ -62,6 +64,8 @@ inner_flame INNER_FLAME
 ignition IGNITION
 starburst STARBURST
 foxfire FOXFIRE
+scorch SCORCH
+flame_wave FLAME_WAVE
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
@@ -77,6 +81,7 @@ ozocubus_refrigeration OZOCUBUS_REFRIGERATION
 throw_frost THROW_FROST
 frozen_ramparts FROZEN_RAMPARTS
 hailstorm HAILSTORM
+polar_vortex POLAR_VORTEX
 
 %sdir gui/spells/necromancy
 agony AGONY
@@ -92,6 +97,7 @@ excruciating_wounds EXCRUCIATING_WOUNDS
 haunt HAUNT
 necromutation NECROMUTATION
 pain PAIN
+necrotize NECROTIZE
 simulacrum SIMULACRUM
 sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT
@@ -132,6 +138,7 @@ summon_forest SUMMON_FOREST
 monstrous_menagerie MONSTROUS_MENAGERIE
 summon_mana_viper SUMMON_MANA_VIPER
 spellforged_servitor SPELLFORGED_SERVITOR
+summon_cactus_giant SUMMON_CACTUS_GIANT
 
 %sdir gui/spells/translocation
 apportation APPORTATION
@@ -149,7 +156,7 @@ manifold_assault MANIFOLD_ASSAULT
 blade_hands BLADE_HANDS
 beastly_appendage BEASTLY_APPENDAGE
 irradiate IRRADIATE
-hydra_form HYDRA_FORM
+storm_form STORM_FORM
 dragon_form DRAGON_FORM
 wereblood WEREBLOOD
 
@@ -211,11 +218,11 @@ summon_eyeballs SUMMON_EYEBALLS
 summon_hell_beast SUMMON_HELL_BEAST
 summon_minor_demon SUMMON_MINOR_DEMON
 summon_mushrooms SUMMON_MUSHROOMS
+summon_scorpions SUMMON_SCORPIONS
 summon_spectral_orcs SUMMON_SPECTRAL_ORCS
 summon_ufetubus SUMMON_UFETUBUS
 summon_undead SUMMON_UNDEAD
 summon_vermin SUMMON_VERMIN
-teleport TELEPORT
 wall_of_brambles WALL_OF_BRAMBLES
 water_elementals WATER_ELEMENTALS
 %back none
@@ -229,7 +236,7 @@ hurl_damnation HURL_DAMNATION
 beogh_smite SMITING
 elyvilon_heal_other HEAL_OTHER
 elyvilon_lesser_healing MINOR_HEALING
-elyvilon_greater_healing MAJOR_HEALING
+elyvilon_heal_self MAJOR_HEALING
 makhleb_major_destruction MAJOR_DESTRUCTION
 lugonu_banish BANISHMENT
 trog_hand TROGS_HAND

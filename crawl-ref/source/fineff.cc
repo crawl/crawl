@@ -58,6 +58,13 @@ bool mirror_damage_fineff::mergeable(const final_effect &fe) const
     return o && att == o->att && def == o->def;
 }
 
+bool anguish_fineff::mergeable(const final_effect &fe) const
+{
+    const anguish_fineff *o =
+        dynamic_cast<const anguish_fineff *>(&fe);
+    return o && att == o->att;
+}
+
 bool ru_retribution_fineff::mergeable(const final_effect &fe) const
 {
     const ru_retribution_fineff *o =
@@ -144,6 +151,15 @@ void mirror_damage_fineff::merge(const final_effect &fe)
     damage += mdfe->damage;
 }
 
+void anguish_fineff::merge(const final_effect &fe)
+{
+    const anguish_fineff *afe =
+        dynamic_cast<const anguish_fineff *>(&fe);
+    ASSERT(afe);
+    ASSERT(mergeable(*afe));
+    damage += afe->damage;
+}
+
 void ru_retribution_fineff::merge(const final_effect &fe)
 {
     const ru_retribution_fineff *mdfe =
@@ -198,7 +214,7 @@ void mirror_damage_fineff::fire()
         return;
     // defender being dead is ok, if we killed them we still suffer
 
-    god_acting gdact(GOD_YREDELEMNUL);
+    god_acting gdact(GOD_YREDELEMNUL); // XXX: remove?
 
     if (att == MID_PLAYER)
     {
@@ -213,22 +229,23 @@ void mirror_damage_fineff::fire()
             mpr("Your damage is reflected back at you!");
         ouch(damage, KILLED_BY_MIRROR_DAMAGE);
     }
-    else if (def == MID_PLAYER)
-    {
-        simple_god_message(" mirrors your injury!");
-
-        attack->hurt(&you, damage);
-
-        if (attack->alive())
-            print_wounds(*monster_by_mid(att));
-
-        lose_piety(isqrt_ceil(damage));
-    }
     else
     {
         simple_monster_message(*monster_by_mid(att), " suffers a backlash!");
         attack->hurt(defender(), damage);
     }
+}
+
+void anguish_fineff::fire()
+{
+    actor *attack = attacker();
+    if (!attack || !attack->alive())
+        return;
+
+    const string punct = attack_strength_punctuation(damage);
+    const string msg = make_stringf(" is wracked by anguish%s", punct.c_str());
+    simple_monster_message(*monster_by_mid(att), msg.c_str());
+    attack->hurt(monster_by_mid(MID_YOU_FAULTLESS), damage);
 }
 
 void ru_retribution_fineff::fire()
@@ -257,12 +274,12 @@ void trample_follow_fineff::fire()
 void blink_fineff::fire()
 {
     actor *defend = defender();
-    if (!defend || !defend->alive() || defend->no_tele(true, false))
+    if (!defend || !defend->alive() || defend->no_tele())
         return;
 
     // if we're doing 'blink with', only blink if we have a partner
     actor *pal = attacker();
-    if (pal && (!pal->alive() || pal->no_tele(true, false)))
+    if (pal && (!pal->alive() || pal->no_tele()))
         return;
 
     defend->blink();
@@ -270,7 +287,7 @@ void blink_fineff::fire()
         return;
 
     // Is something else also getting blinked?
-    if (!pal || !pal->alive() || pal->no_tele(true, false))
+    if (!pal || !pal->alive() || pal->no_tele())
         return;
 
     int cells_seen = 0;
@@ -293,7 +310,7 @@ void blink_fineff::fire()
 void teleport_fineff::fire()
 {
     actor *defend = defender();
-    if (defend && defend->alive() && !defend->no_tele(true, false))
+    if (defend && defend->alive() && !defend->no_tele())
         defend->teleport(true);
 }
 
@@ -595,7 +612,21 @@ void bennu_revive_fineff::fire()
                                                 res_visible ? MG_DONT_COME
                                                             : MG_NONE));
     if (newmons)
-        newmons->props["bennu_revives"].get_byte() = revives + 1;
+        newmons->props[BENNU_REVIVES_KEY].get_byte() = revives + 1;
+
+    // If we were dueling the original bennu, the duel continues.
+    if (duel)
+    {
+        newmons->props[OKAWARU_DUEL_TARGET_KEY] = true;
+        newmons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    }
+}
+
+void avoided_death_fineff::fire()
+{
+    ASSERT(defender() && defender()->is_monster());
+    defender()->as_monster()->hit_points = hp;
+    defender()->as_monster()->flags &= ~MF_PENDING_REVIVAL;
 }
 
 void infestation_death_fineff::fire()
@@ -621,7 +652,7 @@ void make_derived_undead_fineff::fire()
 {
     if (monster *undead = create_monster(mg))
     {
-        if (!message.empty())
+        if (!message.empty() && you.can_see(*undead))
             mpr(message);
 
         // If the original monster has been levelled up, its HD might be
@@ -637,12 +668,18 @@ void make_derived_undead_fineff::fire()
         if (!mg.mname.empty())
             name_zombie(*undead, mg.base_type, mg.mname);
 
-        undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
-        if (!agent.empty())
+        if (mg.god != GOD_YREDELEMNUL)
         {
-            mons_add_blame(undead,
-                "animated by " + agent);
+            if (undead->type == MONS_ZOMBIE)
+                undead->props[ANIMATE_DEAD_KEY] = true;
+            else
+            {
+                int dur = undead->type == MONS_SKELETON ? 3 : 5;
+                undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
+            }
         }
+        if (!agent.empty())
+            mons_add_blame(undead, "animated by " + agent);
     }
 }
 
@@ -730,7 +767,8 @@ void spectral_weapon_fineff::fire()
     {
         // Is it already in range?
         const reach_type sw_range = sw->reach_range();
-        if (sw_range > REACH_NONE && can_reach_attack_between(sw->pos(), target)
+        if (sw_range > REACH_NONE
+            && can_reach_attack_between(sw->pos(), target, sw_range)
             || adjacent(sw->pos(), target))
         {
             // Just attack.
@@ -753,9 +791,9 @@ void spectral_weapon_fineff::fire()
             continue;
         }
         // ... and only spaces the weapon could attack the defender from.
-        if (grid_distance(*ai, target) > 1 &&
-            (atk_range <= REACH_NONE ||
-             !can_reach_attack_between(*ai, target)))
+        if (grid_distance(*ai, target) > 1
+            && (atk_range <= REACH_NONE
+                || !can_reach_attack_between(*ai, target, atk_range)))
         {
             continue;
         }
@@ -797,7 +835,7 @@ void spectral_weapon_fineff::fire()
     melee_attk.attack();
 
     mons->summoner = atkr->mid;
-    atkr->props["spectral_weapon"].get_int() = mons->mid;
+    atkr->props[SPECTRAL_WEAPON_KEY].get_int() = mons->mid;
 }
 
 // Effects that occur after all other effects, even if the monster is dead.

@@ -260,7 +260,9 @@ static const map<spschool, miscast_datum> miscast_effects = {
                             break;
                         case ATT_GOOD_NEUTRAL:
                         case ATT_NEUTRAL:
-                        case ATT_STRICT_NEUTRAL:
+#if TAG_MAJOR_VERSION == 34
+                    case ATT_OLD_STRICT_NEUTRAL:
+#endif
                             data.behaviour = BEH_NEUTRAL;
                         break;
                     }
@@ -633,6 +635,14 @@ void miscast_effect(actor& target, actor* source, miscast_source_info mc_info,
 
     if (school == spschool::random)
         school = spschools_type::exponent(random2(SPSCHOOL_LAST_EXPONENT + 1));
+
+    // Don't summon friendly nameless horrors if they would always turn hostile.
+    if (source && source->is_player()
+        && school == spschool::summoning
+        && you.allies_forbidden())
+    {
+        return;
+    }
 
     miscast_datum effect =  miscast_effects.find(school)->second;
 

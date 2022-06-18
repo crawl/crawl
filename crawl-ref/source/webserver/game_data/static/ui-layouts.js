@@ -39,6 +39,13 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     function _fmt_spells_list(root, spellset, colour)
     {
         var $container = root.find("#spellset_placeholder");
+        // XX this container only seems to be added if there are spells, do
+        // we actually need to remove it again?
+        if ($container.length === 0 && spellset.length !== 0)
+        {
+            root.prepend("<div class='fg4'>Buggy spellset!</div>");
+            return;
+        }
         $container.attr("id", "").addClass("menu_contents spellset");
         if (spellset.length === 0)
         {
@@ -155,7 +162,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 var text = feat.body;
                 if (feat.quote)
                      text += "\n\n" + feat.quote;
-                $feat.find(".body").html(text);
+                $feat.find(".body").html(util.formatted_string_to_html(text));
             }
             else
                 $feat.find(".body").remove();
@@ -170,11 +177,64 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                 feat.tile.ymax, false, describe_scale);
             $popup.append($feat);
         });
+        if (desc.actions)
+        {
+            $popup.append("<div class=actions></div>");
+            $popup.find(".actions").html(clickify_actions(desc.actions));
+        }
+
         var s = scroller($popup[0]);
         $popup.on("keydown keypress", function (event) {
-            scroller_handle_key(s, event);
+            var key = String.fromCharCode(event.which);
+            if (key != "<" && key != ">") // XX not always
+                scroller_handle_key(s, event);
         });
         return $popup;
+    }
+
+    // Given some string like "e(v)oke", produce a span with the `data-hotkey`
+    // attribute set on that span. This auto-enables clicking. This will
+    // handle both a final period, and a sequence of prefix words that do not
+    // have a hotkey marked in them.
+    // TODO: it might be more robust to produce structured info on the server
+    // side...
+    function clickify_action(action_text)
+    {
+        var suffix = "";
+        var prefix = "";
+        // makes some assumptions about how this is joined...see describe.cc
+        // _actions_desc.
+        if (action_text.endsWith(".")) // could be more elegant...
+        {
+            suffix = ".";
+            action_text = action_text.slice(0, -1);
+        }
+        if (action_text.startsWith("or "))
+        {
+            prefix = "or ";
+            action_text = action_text.substr(3);
+        }
+        var hotkeys = action_text.match(/\(.\)/); // very inclusive for the key name
+        var data_attr = ""
+        if (hotkeys)
+            data_attr = " data-hotkey='" + hotkeys[0][1] + "'";
+        return prefix
+            + "<span" + data_attr + ">" + action_text + "</span>"
+            + suffix;
+    }
+
+    // Turn a list of actions like that found in the describe item popup into
+    // clickable links.
+    function clickify_actions(actions_text)
+    {
+        // assumes that the list is joined via ", ", including the final
+        // element. (I.e. this will break without the Oxford comma.)
+        var words = actions_text.split(", ");
+        var linkized = [];
+        words.forEach(function(w) {
+            linkized.push(clickify_action(w));
+        });
+        return linkized.join(", ");
     }
 
     function describe_item(desc)
@@ -188,8 +248,8 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         $popup.on("keydown keypress", function (event) {
             scroller_handle_key(s, event);
         });
-        if (desc.actions !== "")
-            $popup.find(".actions").html(desc.actions);
+        if (desc.actions)
+            $popup.find(".actions").html(clickify_actions(desc.actions));
         else
             $popup.find(".actions").remove();
 
@@ -491,13 +551,14 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         else if (desc.fg_idx > 0 && desc.fg_idx <= main.MAIN_MAX)
         {
             renderer.draw_foreground(0, 0, { t: {
-                fg: { value: desc.fg_idx }, bg: 0,
+                fg: { value: desc.fg_idx }, bg: 0, icons: [],
             }}, describe_scale);
         }
 
         renderer.draw_foreground(0, 0, { t: {
             fg: enums.prepare_fg_flags(desc.flag),
             bg: 0,
+            icons: desc.icons,
         }}, describe_scale);
 
         for (var i = 0; i < $panes.length; i++)
@@ -631,10 +692,14 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function scroller_scroll_page(scroller, dir)
     {
-        // var line_height = scroller_line_height(scroller);
+        var line_height = scroller_line_height(scroller);
         var contents = $(scroller.scrollElement);
-        var page_shift = contents[0].getBoundingClientRect().height;
-        // page_shift = Math.floor(page_shift / line_height) * line_height;
+        // XX this is a bit weird, maybe context[0] is the wrong thing to use?
+        // The -24 is to compensate for the top/bottom shades. In practice, the
+        // top line ends up a bit in the shade in long docs, possibly it should
+        // be adjusted for.
+        var page_shift = contents[0].getBoundingClientRect().height - 24;
+        page_shift = Math.floor(page_shift / line_height) * line_height;
         contents[0].scrollTop += page_shift * dir;
         update_server_scroll();
     }
@@ -938,8 +1003,18 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function recv_ui_push(msg)
     {
+        var popup = null
         var handler = ui_handlers[msg.type];
-        var popup = handler ? handler(msg) : $("<div>Unhandled UI type "+msg.type+"</div>");
+        try
+        {
+            popup = handler
+                ? handler(msg)
+                : $("<div>Unhandled UI type " + msg.type + "</div>");
+        }
+        catch (err)
+        {
+            popup = $("<div>Buggy UI of type " + msg.type + "</div>");
+        }
         ui.show_popup(popup, msg["ui-centred"], msg.generation_id);
     }
 

@@ -34,11 +34,12 @@
 #include "status.h"
 #include "stringutil.h"
 #include "tag-version.h"
-#include "timed-effects.h" // zot clock
 #include "transform.h"
+#include "ui.h"
 #include "unicode.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // zot clock
 
 #ifdef WIZARD
 
@@ -94,6 +95,9 @@ void wizard_suppress()
 {
     you.wizard = false;
     you.suppress_wizard = true;
+#ifdef USE_TILE_LOCAL
+    tiles.layout_statcol();
+#endif
     redraw_screen();
     update_screen();
 }
@@ -209,8 +213,9 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_WEAK] = 0;
         you.duration[DUR_NO_HOP] = 0;
         you.duration[DUR_LOCKED_DOWN] = 0;
-        you.props["corrosion_amount"] = 0;
+        you.props[CORROSION_KEY] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
+        you.duration[DUR_BLINKBOLT_COOLDOWN] = 0;
         delete_all_temp_mutations("Super heal");
         you.stat_loss.init(0);
         you.attribute[ATTR_STAT_LOSS_XP] = 0;
@@ -360,6 +365,8 @@ void wizard_exercise_skill()
 
     if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
+    else if (is_removed_skill(skill))
+        mpr("That skill was removed.");
     else
     {
         mpr("Exercising...");
@@ -371,6 +378,11 @@ void wizard_set_skill_level(skill_type skill)
 {
     if (skill == SK_NONE)
         skill = debug_prompt_for_skill("Which skill (by name)? ");
+
+    if (is_removed_skill(skill)){
+        mpr("That skill was removed.");
+        return;
+    }
 
     if (skill == SK_NONE)
     {
@@ -715,7 +727,7 @@ static void reset_ds_muts_from_schedule(int xl)
                 // there. delete_mutation won't delete mutations otherwise.
                 // This step doesn't affect temporary mutations.
                 you.innate_mutation[mut]--;
-                delete_mutation(mut, "level change", false, true, false, false);
+                delete_mutation(mut, "level change", false, true, false);
             }
             if (you.innate_mutation[mut] < innate_levels)
                 perma_mutate(mut, innate_levels - you.innate_mutation[mut], "level change");
@@ -825,6 +837,12 @@ void wizard_get_god_gift()
     if (you_worship(GOD_ASHENZARI))
     {
         ashenzari_offer_new_curse();
+        return;
+    }
+
+    if (you_worship(GOD_YREDELEMNUL))
+    {
+        give_yred_bonus_zombies(min(piety_rank() + 1, NUM_PIETY_STARS));
         return;
     }
 

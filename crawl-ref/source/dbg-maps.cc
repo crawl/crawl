@@ -501,9 +501,9 @@ bool mapstat_find_forced_map()
     }
 
     if (map->is_minivault())
-        you.props["force_minivault"] = map->name;
+        you.props[FORCE_MINIVAULT_KEY] = map->name;
     else
-        you.props["force_map"] = map->name;
+        you.props[FORCE_MAP_KEY] = map->name;
 
     return true;
 }

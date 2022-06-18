@@ -135,7 +135,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_CRYPT:
-        flv.wall  = TILE_WALL_BRICK_GRAY;
+        flv.wall  = TILE_ROCK_WALL_CRYPT;
         flv.floor = TILE_FLOOR_CRYPT;
         return;
 
@@ -256,7 +256,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_SEWER:
-        flv.wall  = TILE_WALL_PEBBLE_GREEN;
+        flv.wall  = TILE_WALL_OOZING;
         flv.floor = TILE_FLOOR_SLIME;
         return;
 
@@ -288,6 +288,11 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
     case BRANCH_DESOLATION:
         flv.floor = TILE_FLOOR_SALT;
         flv.wall = TILE_WALL_DESOLATION;
+        return;
+
+    case BRANCH_ARENA:
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
         return;
 
     case NUM_BRANCHES:
@@ -433,7 +438,8 @@ tileidx_t pick_dngn_tile(tileidx_t idx, int value, int domino)
     for (size_t i = 0; i < weights.size(); ++i)
     {
         rand -= weights[i];
-        if (rand < 0) return idx + i;
+        if (rand < 0)
+            return idx + i;
     }
 
     return idx;
@@ -868,8 +874,7 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
 
         if (is_unknown_stair(gc)
             && env.map_knowledge(gc).feat() != DNGN_ENTER_ZOT
-            && !(player_in_hell()
-                 && env.map_knowledge(gc).feat() == DNGN_ENTER_HELL))
+            && !feat_is_hell_subbranch_exit(env.map_knowledge(gc).feat()))
         {
             bg |= TILE_FLAG_NEW_STAIR;
         }
@@ -894,14 +899,8 @@ void tile_draw_floor()
             tile_env.bg(ep) = bg;
             tile_env.fg(ep) = 0;
             tile_env.cloud(ep) = 0;
+            tile_env.icons.erase(ep);
         }
-}
-
-void tile_clear_map(const coord_def& gc)
-{
-    tile_env.bk_fg(gc) = 0;
-    tile_env.bk_cloud(gc) = 0;
-    tiles.update_minimap(gc);
 }
 
 void tile_forget_map(const coord_def &gc)
@@ -1023,6 +1022,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
         return;
     }
     tile_env.fg(ep) = t;
+    tile_env.icons[ep] = status_icons_for(mon);
 
     // Add name tags.
     if (!mons_class_gives_xp(mon.type))
@@ -1056,11 +1056,6 @@ void tile_reset_fg(const coord_def &gc)
     tiles.update_minimap(gc);
 }
 
-void tile_reset_feat(const coord_def &gc)
-{
-    tile_env.bk_bg(gc) = tileidx_feature(gc);
-}
-
 static void _tile_place_cloud(const coord_def &gc, const cloud_info &cl)
 {
     if (you.see_cell(gc))
@@ -1079,8 +1074,10 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
 
     if (you.see_cell(gc))
     {
-        tile_env.fg(grid2show(gc)) = 0;
-        tile_env.cloud(grid2show(gc)) = 0;
+        const coord_def ep = grid2show(gc);
+        tile_env.fg(ep) = 0;
+        tile_env.cloud(ep) = 0;
+        tile_env.icons.erase(ep);
     }
 
     const map_cell& cell = env.map_knowledge(gc);
@@ -1164,12 +1161,13 @@ static bool _suppress_blood(tileidx_t bg_idx)
 // Specifically for vault-overwritten doors. We have three "sets" of tiles that
 // can be dealt with. The tile sets should have size 2, 3, 8, or 9. They are:
 //  2. Closed, open.
-//  3. Runed, closed, open.
+//  3. Closed, open, broken.
 //  8. Closed, open, gate left closed, gate middle closed, gate right closed,
 //     gate left open, gate middle open, gate right open.
 //  9. Runed, closed, open, gate left closed, gate middle closed, gate right
 //     closed, gate left open, gate middle open, gate right open.
-static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
+static int _get_door_offset(tileidx_t base_tile,
+                            bool opened, bool runed, bool broken,
                             int gateway_type)
 {
     int count = tile_dngn_count(base_tile);
@@ -1185,12 +1183,11 @@ static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
         ASSERT(!runed);
         return opened ? 1: 0;
     case 3:
-        if (opened)
+        if (broken)
             return 2;
-        else if (runed)
-            return 0;
-        else
+        if (opened)
             return 1;
+        return 0;
     case 8:
         ASSERT(!runed);
         // The closed door is at BASE_TILE for sets without runed doors
@@ -1242,6 +1239,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_DNGN_OPEN_DOOR_CRYPT;
         else if (orig == TILE_DNGN_CLOSED_DOOR)
             orig = TILE_DNGN_CLOSED_DOOR_CRYPT;
+        else if (orig == TILE_DNGN_BROKEN_DOOR)
+            orig = TILE_DNGN_BROKEN_DOOR_CRYPT;
     }
     else if (player_in_branch(BRANCH_TOMB))
     {
@@ -1296,6 +1295,27 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_VAULT;
     }
+    else if (player_in_branch(BRANCH_SPIDER))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SPIDER;
+    }
+    else if (player_in_branch(BRANCH_SNAKE))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SNAKE;
+    }
+    else if (player_in_branch(BRANCH_SWAMP)
+             || player_in_branch(BRANCH_SEWER))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_WALL_STONE_MOSSY;
+    }
+    else if (player_in_branch(BRANCH_SHOALS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SHOALS;
+    }
 
     if (orig == TILE_FLOOR_NORMAL)
         *bg = flv.floor;
@@ -1320,7 +1340,9 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         {
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);
             bool runed = (orig == TILE_DNGN_RUNED_DOOR);
-            int offset = _get_door_offset(override, opened, runed, flv.special);
+            bool broken = (orig == TILE_DNGN_BROKEN_DOOR);
+            int offset = _get_door_offset(override, opened, runed, broken,
+                                          flv.special);
             *bg = override + offset;
         }
         else
@@ -1378,10 +1400,15 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     const map_cell& mc = env.map_knowledge(gc);
 
     bool print_blood = true;
-    if (mc.flags & MAP_UMBRAED)
+    if (mc.flags & MAP_HALOED)
+    {
+        if (mc.flags & MAP_UMBRAED)
+            cell.halo = HALO_NONE;
+        else
+            cell.halo = HALO_RANGE;
+    }
+    else if (mc.flags & MAP_UMBRAED)
         cell.halo = HALO_UMBRA;
-    else if (mc.flags & MAP_HALOED)
-        cell.halo = HALO_RANGE;
     else
         cell.halo = HALO_NONE;
 

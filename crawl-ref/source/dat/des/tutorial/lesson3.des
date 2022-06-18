@@ -47,7 +47,7 @@ FTILE:   defgABC = tutorial_pad
 ITEM:    pair of boots mundane useful
 ITEM:    scroll of fog q:1
 ITEM:    scroll of fear q:1
-ITEM:    scimitar ego:venom
+ITEM:    flail ego:venom
 MONS:    goblin ; nothing
 MONS:    rat, giant cockroach, hobgoblin ; nothing
 MARKER:  d = lua:tutorial3.msg("armour")
@@ -117,7 +117,7 @@ COLOUR:  ABdefghi = lightblue
 FTILE:   ABdefghi = tutorial_pad
 RTILE:   c = wall_vines
 ITEM:    potion of curing q:1
-ITEM:    ratskin_cloak
+ITEM:    cloak_of_starlight
 ITEM:    wand of flame charges:9 ident:all
 ITEM:    wand of digging charges:15 ident:all
 ITEM:    amulet of faith
@@ -187,7 +187,7 @@ ITEM:    gold q:40
 ITEM:    gold q:220
 MONS:    gnoll ; flail ego:none | morningstar ego:none | spear ego:none . \
          leather armour | ring mail
-MONS:    crimson imp
+MONS:    ufetubus
 MONS:    orc ; scimitar ego:none | battleaxe ego:none | trident ego:none . \
          ring mail | chain mail
 MARKER:  d = lua:tutorial3.msg("gold");

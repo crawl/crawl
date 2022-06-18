@@ -92,18 +92,12 @@ kilkukrotnie zadając obrażenia nieumarłym i demonom. Wszystkie inne wrogie
 stwory także otrzymują obrażenia lecz nie tak silne. Nie wpływa na
 sprzymierzeńców.
 %%%%
-Animate Dead ability
-
-Zamienia wszystkie zwłoki i szkielety w twoim otoczeniu w kwiaty. Pamiętaj
-jednak że zombi i szkielety nie mogą opuścić poziomu na którym zostały
-stworzone.
-%%%%
 Drain Life ability
 
 Leczy twe punkty życia poprzez wyssanie siły życiowej z otaczających cię
 potworków.
 %%%%
-Enslave Soul ability
+Bind Soul ability
 
 Zaznacz duszę żyjącego inteligentnego potworka jako  owoc do zebrania. Gdy
 zaznaczony potworek zginie, jego dusza będzie twoja. Zniewolona dusza będzie
@@ -115,10 +109,6 @@ wywoływania.
 
 Zauważ,że zniewolona dusza podąża za tobą tylko na poziomie w którym została
 pojamna.
-%%%%
-Animate Remains or Dead ability
-
-Jeśli otrzymałeś ten opis, gdzieś wystąpił błąd.
 %%%%
 Heroism ability
 

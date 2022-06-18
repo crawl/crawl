@@ -8,7 +8,9 @@
 #include "spl-goditem.h"
 
 #include "art-enum.h"
+#include "attack.h"
 #include "cleansing-flame-source-type.h"
+#include "colour.h"
 #include "coordit.h"
 #include "database.h"
 #include "directn.h"
@@ -22,6 +24,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "level-state-type.h"
 #include "los.h"
 #include "mapdef.h"
 #include "mapmark.h"
@@ -30,8 +33,10 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-tentacle.h"
 #include "religion.h"
+#include "spl-clouds.h"
 #include "spl-util.h"
 #include "state.h"
 #include "status.h"
@@ -81,32 +86,29 @@ string unpacifiable_reason(const monster& mon)
  */
 string unpacifiable_reason(const monster_info& mi)
 {
-    // XXX: be more specific?
-    const string generic_reason = "You cannot pacify this monster!";
-
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mi.intel() <= I_BRAINLESS // no self-awareness
         || mons_is_tentacle_or_tentacle_segment(mi.type)) // body part
     {
-        return generic_reason;
+        return "You cannot pacify mindless monsters!";
     }
 
     const mon_holy_type holiness = mi.holi;
 
-    if (!(holiness & (MH_HOLY | MH_UNDEAD | MH_DEMONIC | MH_NATURAL)))
-        return generic_reason;
+    if (holiness & MH_NONLIVING)
+        return "You cannot pacify nonliving monsters!";
 
     if (mons_class_is_stationary(mi.type)) // not able to leave the level
-        return generic_reason;
+        return "You cannot pacify immobile monsters!";
 
-    if (mi.is(MB_SLEEPING)) // not aware of what is happening
+    if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT)) // unaware of what's happening
     {
-        return make_stringf("You cannot pacify this monster while %s %s "
-                            "sleeping!",
+        return make_stringf("You cannot pacify this monster while %s %s %s!",
                             mi.pronoun(PRONOUN_SUBJECTIVE),
                             conjugate_verb("are",
-                                           mi.pronoun_plurality()).c_str());
+                                           mi.pronoun_plurality()).c_str(),
+                            mi.is(MB_SLEEPING) ? "asleep" : "dormant");
     }
 
     // pacifiable, maybe!
@@ -283,6 +285,13 @@ bool heal_monster(monster& patient, int amount)
  * [0,sides), re-rolling if they come up the same, and taking a min if they
  * come up distinct. The formula below computes the probability of rolling two
  * numbers that are both large enough, minus the probability they are the same.
+ * This probability is the sum of the geometric series with base
+ *  a = ((s - t) ^2 - (s - t)) / s^2
+ * and ratio
+ *  r = 1 / s
+ *
+ *  (a is the probability of both die being unequal and winning, r is the
+ *   probability of both coming up equal.)
  *
  * The reason for the + 1 in the inequality is that if the die is only one
  * larger than monster hp, the min of two distinct rolls is guaranteed to lose.
@@ -295,8 +304,8 @@ static int _pacify_chance(const monster_info& mi, const int pow, int scale)
     if (sides <= target + 1)
         return 0;
 
-    return (scale * ((sides - target) * (sides - target) - sides))
-         / (sides * sides);
+    return (scale * ((sides - target) * (sides - target) - (sides - target)))
+         / (sides * sides - sides);
 }
 
 static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
@@ -312,7 +321,10 @@ static vector<string> _desc_pacify_chance(const monster_info& mi, const int pow)
     else
     {
         const int success = _pacify_chance(mi, pow, 100);
-        descs.push_back(make_stringf("chance to pacify: %d%%", success));
+        if (success == 0)
+            descs.push_back(make_stringf("chance to pacify: <<1%%"));
+        else
+            descs.push_back(make_stringf("chance to pacify: %d%%", success));
     }
     return descs;
 }
@@ -346,6 +358,7 @@ spret cast_healing(int pow, bool fail)
     monster* mons = monster_at(spd.target);
     if (!mons)
     {
+        fail_check();
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
@@ -422,13 +435,15 @@ bool player_is_cancellable()
 
 /**
  * Lists out the effects that will be removed by cancellation.
+ *
+ * @param debuffs_only   If true, contamination levels are unaffected.
  */
-string describe_player_cancellation()
+string describe_player_cancellation(bool debuffs_only)
 {
     vector<string> effects;
 
     // Try to clarify it doesn't remove all contam?
-    if (get_contamination_level())
+    if (!debuffs_only && get_contamination_level())
         effects.push_back("as magically contaminated");
 
     player_debuff_effects buffs;
@@ -460,24 +475,17 @@ string describe_player_cancellation()
     for (auto status : dispellable_statuses)
     {
         status_info inf;
-        if (fill_status_info(status, inf) && !inf.short_text.empty())
+        if (!fill_status_info(status, inf) || inf.short_text.empty())
+            continue;
+        if (status != STATUS_AIRBORNE)
         {
-            if (status == STATUS_AIRBORNE)
-            {
-                if (!you.attribute[ATTR_PERM_FLIGHT]
-                    && !you.racial_permanent_flight())
-                {
-                    effects.push_back("flying");
-                }
-                else
-                    effects.push_back("buoyant");
-            }
-            else
-            {
-                strip_suffix(inf.short_text, " (expiring)");
-                effects.push_back(inf.short_text);
-            }
+            strip_suffix(inf.short_text, " (expiring)");
+            effects.push_back(inf.short_text);
+            continue;
         }
+        if (you.attribute[ATTR_PERM_FLIGHT] || you.racial_permanent_flight())
+            continue;
+        effects.push_back("flying");
     }
 
     return comma_separated_line(begin(effects), end(effects), " or ");
@@ -531,8 +539,8 @@ void debuff_player()
         {
             len = 0;
             mprf(MSGCH_DURATION, "You are no longer on fire.");
-            you.props.erase("sticky_flame_aux");
-            you.props.erase("sticky_flame_source");
+            you.props.erase(STICKY_FLAME_AUX_KEY);
+            you.props.erase(STICKY_FLAMER_KEY);
         }
         else if (len > 1)
         {
@@ -544,7 +552,6 @@ void debuff_player()
     if (need_msg)
         mprf(MSGCH_WARN, "Your magical effects are unravelling.");
 }
-
 
 /**
   * What dispellable effects currently exist on a given monster?
@@ -576,7 +583,6 @@ static void _dispellable_monster_buffs(const monster &mon,
         buffs.push_back(ENCH_INVIS);
 }
 
-
 /**
  * Does a given monster have any buffs that can be removed?
  *
@@ -587,6 +593,11 @@ bool monster_is_debuffable(const monster &mon)
     vector<enchant_type> buffs;
     _dispellable_monster_buffs(mon, buffs);
     return !buffs.empty();
+}
+
+bool monster_can_be_unravelled(const monster& mon)
+{
+    return monster_is_debuffable(mon) || mon.is_summoned();
 }
 
 /**
@@ -602,7 +613,11 @@ void debuff_monster(monster &mon)
         return;
 
     for (enchant_type buff : buffs)
-        mon.del_ench(buff, true, true);
+        mon.del_ench(buff, true, buff != ENCH_PETRIFYING);
+    // We generally want to set effect = true so that enchantments get cleaned
+    // up - invisible monsters reappear, etc. However, the only thing that
+    // effect = true does for PETRIFYING is cause it to turn into
+    // ENCH_PETRIFIED. So... let's not do that. (Hacky, sorry!)
 
     simple_monster_message(mon, "'s magical effects unravel!");
 }
@@ -706,7 +721,7 @@ int detect_creatures(int pow, bool telepathic)
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
-    clear_map(false);
+    clear_map();
 
     for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
     {
@@ -724,22 +739,24 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
-static bool _do_imprison(int pow, const coord_def& where, bool zin)
+spret cast_tomb(int pow, actor* victim, int source, bool fail)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
     // up to 300 or so with godly assistance or end-level, and 1200
     // as more or less the theoretical maximum.
+    const coord_def& where = victim->pos();
     int number_built = 0;
 
+    // This is so dubious. Also duplicates khufu logic in mon-cast.cc.
     static const set<dungeon_feature_type> safe_tiles =
     {
         DNGN_SHALLOW_WATER, DNGN_DEEP_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR,
-        DNGN_OPEN_CLEAR_DOOR
+        DNGN_OPEN_CLEAR_DOOR, DNGN_BROKEN_DOOR
     };
 
+    bool zin = source == -GOD_ZIN;
     bool proceed;
-    monster *mon;
     string targname;
 
     vector<coord_def> veto_spots(8);
@@ -751,8 +768,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
     {
         // We need to get this now because we won't be able to see
         // the monster once the walls go up!
-        mon = monster_at(where);
-        targname = mon->name(DESC_THE);
+        targname = victim->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
 
@@ -798,12 +814,20 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         if (!success)
         {
-            mprf(none_vis ? "You briefly glimpse something next to %s."
-                        : "You need more space to imprison %s.",
-                targname.c_str());
-            return false;
+            if (none_vis)
+            {
+                fail_check();
+                mprf("You briefly glimpse something next to %s.",
+                     targname.c_str());
+                return spret::success;
+            }
+
+            mprf("You need more space to imprison %s.", targname.c_str());
+            return spret::abort;
         }
     }
+
+    fail_check();
 
     veto_spots = adj_spots;
     for (adjacent_iterator ai(where); ai; ++ai)
@@ -887,71 +911,54 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         you.update_beholders();
         you.update_fearmongers();
-        env.markers.clear_need_activate();
+        const int tomb_duration = BASELINE_DELAY * pow;
+        env.markers.add(new map_tomb_marker(where,
+                                            tomb_duration,
+                                            source,
+                                            victim->mindex()));
+        env.markers.clear_need_activate(); // doesn't need activation
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return number_built > 0;
+    return spret::success;
 }
 
-bool entomb(int pow)
-{
-    if (_do_imprison(pow, you.pos(), false))
-    {
-        const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(you.pos(),
-                                            tomb_duration,
-                                            you.mindex(),
-                                            you.mindex()));
-        env.markers.clear_need_activate(); // doesn't need activation
-        return true;
-    }
-
-    return false;
-}
-
-bool cast_imprison(int pow, monster* mons, int source)
-{
-    if (_do_imprison(pow, mons->pos(), true))
-    {
-        const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(mons->pos(),
-                                            tomb_duration,
-                                            source,
-                                            mons->mindex()));
-        env.markers.clear_need_activate(); // doesn't need activation
-        return true;
-    }
-
-    return false;
-}
-
-bool cast_smiting(int pow, monster* mons)
+spret cast_smiting(int pow, monster* mons, bool fail)
 {
     if (mons == nullptr || mons->submerged())
     {
+        fail_check();
         canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to invisible/submerged monsters.
-        return true;
+        return spret::success;
     }
 
     if (stop_attack_prompt(mons, false, you.pos()))
-        return false;
+        return spret::abort;
+
+    fail_check();
 
     god_conduct_trigger conducts[3];
     set_attack_conducts(conducts, *mons, you.can_see(*mons));
 
-    mprf("You smite %s!", mons->name(DESC_THE).c_str());
-    behaviour_event(mons, ME_ANNOY, &you);
-
     // damage at 0 Invo ranges from 9-12 (avg 10), to 9-72 (avg 40) at 27.
-    int damage_increment = div_rand_round(pow, 8);
-    mons->hurt(&you, 6 + roll_dice(3, damage_increment));
-    if (mons->alive())
-        print_wounds(*mons);
+    int damage = 6 + roll_dice(3, div_rand_round(pow, 8));
 
-    return true;
+    mprf("You smite %s%s",
+         mons->name(DESC_THE).c_str(),
+         attack_strength_punctuation(damage).c_str());
+
+    behaviour_event(mons, ME_ANNOY, &you);
+    mons->hurt(&you, damage);
+
+    if (mons->alive())
+    {
+        print_wounds(*mons);
+        you.pet_target = mons->mindex();
+    }
+
+    return spret::success;
 }
 
 void holy_word_player(holy_word_source_type source)
@@ -974,10 +981,6 @@ void holy_word_player(holy_word_source_type source)
 
     switch (source)
     {
-    case HOLY_WORD_SCROLL:
-        aux = "a scroll of holy word";
-        break;
-
     case HOLY_WORD_ZIN:
         aux = "Zin's holy word";
         break;
@@ -1019,13 +1022,6 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
             simple_monster_message(*mons, " is blasted by Zin's holy word!");
         else
             simple_monster_message(*mons, " convulses!");
-
-        if (attacker && attacker->is_player()
-            && source == HOLY_WORD_SCROLL
-            && item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD))
-        {
-            set_attack_conducts(conducts, *mons, you.can_see(*mons));
-        }
     }
     mons->hurt(attacker, hploss, BEAM_MISSILE);
 
@@ -1035,15 +1031,8 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     // Currently, holy word annoys the monsters it affects
     // because it can kill them, and because hostile
     // monsters don't use it.
-    // Tolerate unknown scroll, to not annoy Yred worshippers too much.
-    if (attacker != nullptr
-        && attacker != mons
-        && (attacker != &you
-            || source != HOLY_WORD_SCROLL
-            || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
-    {
+    if (attacker != nullptr && attacker != mons)
         behaviour_event(mons, ME_ANNOY, attacker);
-    }
 
     mons->add_ench(mon_enchant(ENCH_DAZED, 0, attacker,
                                (10 + random2(10)) * BASELINE_DELAY));
@@ -1059,8 +1048,13 @@ void holy_word(int pow, holy_word_source_type source, const coord_def& where,
              attacker->conj_verb("speak").c_str());
     }
 
-    for (radius_iterator ri(where, LOS_SOLID); ri; ++ri)
+    for (radius_iterator ri(where, LOS_SOLID, true); ri; ++ri)
         holy_word_monsters(*ri, pow, source, attacker);
+
+    // Sequencing so that we don't holy word a demonic guardian reacting to
+    // a player reading a holy word scroll on themselves (mantis 12600).
+    // (This probably can't happen anymore...?)
+    holy_word_monsters(where, pow, source, attacker);
 }
 
 void torment_player(const actor *attacker, torment_source_type taux)
@@ -1097,9 +1091,11 @@ void torment_player(const actor *attacker, torment_source_type taux)
                 hploss = 0;
                 simple_god_message(" shields you from torment!");
             }
-            else if (random2(250) < you.piety) // 24% to 80% chance
+            // Always give at least partial protection for invoked torment.
+            // 24% to 80% chance for other sources.
+            else if (random2(250) < you.piety || taux == TORMENT_KIKUBAAQUDGHA)
             {
-                hploss -= random2(hploss - 1);
+                hploss -= (1 + random2(hploss - 1));
                 simple_god_message(" partially shields you from torment!");
             }
         }
@@ -1112,7 +1108,6 @@ void torment_player(const actor *attacker, torment_source_type taux)
     }
 
     mpr("Your body is wracked with pain!");
-
 
     kill_method_type type = KILLED_BY_BEAM;
     if (crawl_state.is_god_acting())
@@ -1298,8 +1293,7 @@ void majin_bo_vampirism(monster &mon, int damage)
     dprf("Majin bo might trigger, dam: %d.", damage);
 
     if (damage < 1 || !actor_is_susceptible_to_vampirism(mon)
-        || you.hp == you.hp_max || you.duration[DUR_DEATHS_DOOR]
-        || x_chance_in_y(2, 5))
+        || you.hp == you.hp_max || you.duration[DUR_DEATHS_DOOR])
     {
         return;
     }
@@ -1312,4 +1306,57 @@ void majin_bo_vampirism(monster &mon, int damage)
         canned_msg(MSG_GAIN_HEALTH);
         inc_hp(hp_boost);
     }
+}
+
+/**
+ * Handle the dreamshard necklace.
+ **/
+void dreamshard_shatter()
+{
+    ASSERT(player_equip_unrand(UNRAND_DREAMSHARD_NECKLACE));
+
+    mpr("Your necklace shatters, unleashing a wave of protective dreams!");
+
+    for (int i = 0; i < 5; i++)
+    {
+        flash_view(UA_PLAYER, random_uncommon_colour());
+        scaled_delay(200);
+    }
+
+    vector<string> dreams;
+    if (you.heal(random_range(you.hp_max*0.5, you.hp_max)))
+        dreams.push_back("health");
+
+    if (!you.allies_forbidden())
+    {
+        const int num = 2 + random2(4);
+        int created = 0;
+        for (int i = 0; i < num; ++i)
+        {
+            mgen_data mg(RANDOM_COMPATIBLE_MONSTER, BEH_FRIENDLY, you.pos(),
+                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE | MG_NO_OOD);
+            mg.set_summoned(&you, 4, MON_SUMM_AID, GOD_NO_GOD);
+            if (create_monster(mg))
+                ++created;
+        }
+
+        if (created)
+            dreams.push_back("friendship");
+    }
+
+    if (!(env.level_state & LSTATE_STILL_WINDS))
+    {
+        dreams.push_back("clouds");
+        big_cloud(CLOUD_FLUFFY, &you, you.pos(), 50, 8 + random2(8));
+    }
+
+    mpr_comma_separated_list("You dream of ", dreams);
+
+    // when dreams spill out into reality it wakes you up
+    // put it here after the dream message so that a sleeping player who
+    // gets dreamsharded gets a nice message order
+    you.check_awaken(500);
+
+    dec_inv_item_quantity(you.slot_item(EQ_AMULET,1)->link, 1);
+    ash_check_bondage();
 }

@@ -81,7 +81,13 @@ function ($, comm, client, textinput, util, options) {
         if (msg.old_msgs)
             rollback(msg.old_msgs);
         if ("more" in msg)
+        {
             more = msg.more;
+            if ("more_text" in msg && msg.more_text.length > 0)
+                $("#more").text(msg.more_text);
+            else
+                $("#more").text("--more--");
+        }
         $("#more").toggle(more);
         if (msg.messages)
         {

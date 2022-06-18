@@ -61,42 +61,32 @@ void monster_drop_things(monster* mons,
     for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
     {
         int item = mons->inv[i];
+        if (item == NON_ITEM || !suitable(env.item[item]))
+            continue;
 
-        if (item != NON_ITEM && suitable(env.item[item]))
+        if (testbits(env.item[item].flags, ISFLAG_SUMMONED))
         {
-            const bool summoned_item =
-                testbits(env.item[item].flags, ISFLAG_SUMMONED);
-            if (summoned_item)
-            {
-                item_was_destroyed(env.item[item]);
-                destroy_item(item);
-            }
-            else
-            {
-                if (mark_item_origins && env.item[item].defined())
-                    origin_set_monster(env.item[item], mons);
-
-                env.item[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
-
-                if (env.item[item].props.exists("autoinscribe"))
-                {
-                    add_inscription(env.item[item],
-                        env.item[item].props["autoinscribe"].get_string());
-                    env.item[item].props.erase("autoinscribe");
-                }
-
-                // Unrands held by fixed monsters would give awfully redundant
-                // messages ("Cerebov hits you with the Sword of Cerebov."),
-                // thus delay identification until drop/death.
-                autoid_unrand(env.item[item]);
-
-                // If a monster is swimming, the items are ALREADY
-                // underwater.
-                move_item_to_grid(&item, mons->pos(), mons->swimming());
-            }
-
+            item_was_destroyed(env.item[item]);
+            destroy_item(item);
             mons->inv[i] = NON_ITEM;
+            continue;
         }
+
+        if (mark_item_origins && env.item[item].defined())
+            origin_set_monster(env.item[item], mons);
+
+        env.item[item].props[DROPPER_MID_KEY].get_int() = mons->mid;
+
+        if (env.item[item].props.exists("autoinscribe"))
+        {
+            add_inscription(env.item[item],
+                env.item[item].props["autoinscribe"].get_string());
+            env.item[item].props.erase("autoinscribe");
+        }
+
+        // If a monster is swimming, the items are ALREADY underwater.
+        move_item_to_grid(&item, mons->pos(), mons->swimming());
+        mons->inv[i] = NON_ITEM;
     }
 }
 
@@ -214,8 +204,8 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // Remove replacement tile, since it probably doesn't work for the
     // new monster.
-    mons->props.erase("monster_tile_name");
-    mons->props.erase("monster_tile");
+    mons->props.erase(MONSTER_TILE_NAME_KEY);
+    mons->props.erase(MONSTER_TILE_KEY);
 
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
@@ -299,12 +289,12 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     if (!mons->props.exists(ORIGINAL_TYPE_KEY))
     {
-        const monster_type type = mons_is_job(mons->type)
-                                ? draco_or_demonspawn_subspecies(*mons)
+        const monster_type type = mons_is_draconian_job(mons->type)
+                                ? draconian_subspecies(*mons)
                                 : mons->type;
         mons->props[ORIGINAL_TYPE_KEY].get_int() = type;
         if (mons->mons_species() == MONS_HYDRA)
-            mons->props["old_heads"].get_int() = mons->num_heads;
+            mons->props[OLD_HEADS_KEY].get_int() = mons->num_heads;
     }
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
@@ -333,19 +323,18 @@ void change_monster_type(monster* mons, monster_type targetc)
     }
 
     mons->mname = name;
-    mons->props["no_annotate"] = slimified && old_mon_unique;
-    mons->props.erase("dbname");
+    mons->props[NO_ANNOTATE_KEY] = slimified && old_mon_unique;
+    mons->props.erase(DBNAME_KEY);
 
     // Forget seen spells, since they are likely to have changed.
     mons->props.erase(SEEN_SPELLS_KEY);
 
     mons->flags = flags;
-    // Line above might clear melee and/or spell flags; restore.
+    // Line above might clear melee flags; restore.
     mons->bind_melee_flags();
-    mons->bind_spell_flags();
 
     // Forget various speech/shout Lua functions.
-    mons->props.erase("speech_prefix");
+    mons->props.erase(SPEECH_PREFIX_KEY);
 
     // Make sure we have a god if we've been polymorphed into a priest.
     mons->god = (mons->is_priest() && old_god == GOD_NO_GOD) ? GOD_NAMELESS
@@ -411,6 +400,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     // evaporating and reforming justifies this behaviour.
     mons->stop_constricting_all();
     mons->stop_being_constricted();
+    mons->clear_far_engulf(true);
 }
 
 // Is the new monster able to live in *any* habitat that the original
@@ -708,7 +698,7 @@ void slimify_monster(monster* mon)
 
     monster_polymorph(mon, target, PPT_SLIME);
 
-    mon->attitude = ATT_STRICT_NEUTRAL;
+    mon->attitude = ATT_GOOD_NEUTRAL;
 
     mons_make_god_gift(*mon, GOD_JIYVA);
 
@@ -725,10 +715,6 @@ void seen_monster(monster* mons)
 
     // id equipment (do this every time we see them, it may have changed)
     view_monster_equipment(mons);
-
-    item_def* weapon = mons->weapon();
-    if (weapon && is_range_weapon(*weapon))
-        mons->flags |= MF_SEEN_RANGED;
 
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;

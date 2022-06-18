@@ -67,6 +67,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "xom.h"
+#include "zot.h" // ZOT_CLOCK_PER_FLOOR
 
 int interrupt_block::interrupts_blocked = 0;
 
@@ -198,6 +199,9 @@ bool DescendingStairsDelay::try_interrupt()
 
 bool PasswallDelay::try_interrupt()
 {
+    // finish() can trigger interrupts, avoid a double message
+    if (interrupt_block::blocked())
+        return false;
     mpr("Your meditation is interrupted.");
     return true;
 }
@@ -240,7 +244,7 @@ bool RevivifyDelay::try_interrupt()
     return false;
 }
 
-void stop_delay(bool stop_stair_travel)
+void stop_delay(bool stop_relocations)
 {
     if (you.delay_queue.empty())
         return;
@@ -261,7 +265,7 @@ void stop_delay(bool stop_stair_travel)
     // list of delays before clearing it.
     _clear_pending_delays();
 
-    if ((!delay->is_stair_travel() || stop_stair_travel)
+    if ((!delay->is_relocation() || stop_relocations)
         && delay->try_interrupt())
     {
         _pop_delay();
@@ -364,7 +368,7 @@ void EquipOffDelay::start()
 
 void MemoriseDelay::start()
 {
-    if (vehumet_is_offering(spell))
+    if (vehumet_is_offering(spell, true))
     {
         string message = make_stringf(" grants you knowledge of %s.",
             spell_title(spell));
@@ -443,6 +447,31 @@ void BaseRunDelay::handle()
         if (want_clear_messages())
             clear_messages();
         process_command(cmd);
+        if (you.turn_is_over
+            && (you.running.is_any_travel() || you.running.is_rest()))
+        {
+            you.running.turns_passed++;
+            // sanity check: if we get up to a large number of turns on
+            // an explore, run, or rest delay, something is extremely buggy
+            // and we should both rescue the player, and generate a crash
+            // report. The thresholds are very heuristic:
+            // Rest delay, 700 turns. A maxed ogre at hp 1 with no regen bonus
+            // takes around 510 turns to heal fully.
+            // Travel delay, 2000. Just a big number that is quite a bit
+            // bigger than any travel delay I have been able to generate. If
+            // anyone can generate this on demand it should be raised. (Or
+            // eventually, removed?)
+            // For debuggers: runmode if negative is a meaningful delay type,
+            // but when positive is used as a counter, so if it's a very large
+            // number in the assert message, this is a wait delay
+
+            const int buggy_threshold = you.running.is_rest()
+                ? 700
+                : (ZOT_CLOCK_PER_FLOOR / BASELINE_DELAY / 3);
+            ASSERTM(you.running.turns_passed < buggy_threshold,
+                    "Excessive delay, %d turns passed, delay type %d",
+                    you.running.turns_passed, you.running.runmode);
+        }
     }
 
     if (!you.turn_is_over)
@@ -596,7 +625,12 @@ void JewelleryOnDelay::finish()
 #ifdef USE_SOUND
     parse_sound(WEAR_JEWELLERY_SOUND);
 #endif
-    puton_ring(jewellery, false, false);
+    puton_ring(jewellery, false, false, true);
+}
+
+bool EquipOnDelay::invalidated()
+{
+    return !equip.defined();
 }
 
 void EquipOnDelay::finish()
@@ -626,7 +660,9 @@ void EquipOffDelay::finish()
 {
     const bool is_amu = equip.base_type == OBJ_JEWELLERY;
     const equipment_type slot = is_amu ? EQ_AMULET : get_armour_slot(equip);
-    ASSERT(you.equip[slot] == equip.link);
+    ASSERTM(you.equip[slot] == equip.link,
+        "Mismatched link in EquipOffDelay::finish: slot is %d with link %d, link is %d",
+        slot, you.equip[slot], equip.link);
 
 #ifdef USE_SOUND
     parse_sound(is_amu ? REMOVE_JEWELLERY_SOUND : DEQUIP_ARMOUR_SOUND);
@@ -648,6 +684,9 @@ void MemoriseDelay::finish()
 
 void PasswallDelay::finish()
 {
+    // No interrupt message if our destination causes this delay to be
+    // interrupted
+    const interrupt_block block_double_message;
     mpr("You finish merging with the rock.");
     // included in default force_more_message
 
@@ -679,11 +718,8 @@ void PasswallDelay::finish()
     // Move any monsters out of the way.
     if (monster* m = monster_at(dest))
     {
-        // One square, a few squares, anywhere...
-        if (!m->shift() && !monster_blink(m, true))
-            monster_teleport(m, true, true);
-        // Might still fail.
-        if (monster_at(dest))
+        // One square only, this isn't a tloc spell!
+        if (!m->shift())
         {
             mpr("...and sense your way blocked. You quickly turn back.");
             redraw_screen();
@@ -708,6 +744,14 @@ void PasswallDelay::finish()
     // refactored in this way.
     you.update_beholders();
     you.update_fearmongers();
+
+    // in addition to missing player_reacts we miss world_reacts until after
+    // we act, missing out on a trap.
+    if (you.trapped)
+    {
+        do_trap_effects();
+        you.trapped = false;
+    }
 }
 
 void ShaftSelfDelay::finish()
@@ -748,7 +792,7 @@ void ExsanguinateDelay::finish()
     you.vampire_alive = false;
     you.redraw_status_lights = true;
     calc_hp(true);
-    mpr("Now bloodless.");
+    mpr("You become bloodless.");
     vampire_update_transformations();
 }
 
@@ -756,7 +800,7 @@ void RevivifyDelay::finish()
 {
     you.vampire_alive = true;
     you.redraw_status_lights = true;
-    mpr("Now alive.");
+    mpr("You return to life.");
     temp_mutate(MUT_FRAIL, "vampire revification");
     vampire_update_transformations();
 }
@@ -976,7 +1020,11 @@ static inline bool _monster_warning(activity_interrupt ai,
         // seen_monster
         view_monster_equipment(mon);
 
-        string text = getMiscString(mon->name(DESC_DBNAME) + " title");
+        string text;
+        if (mon->has_base_name())
+            text = getMiscString(mon->mname + " title");
+        else
+            text = getMiscString(mon->name(DESC_DBNAME) + " title");
         if (text.empty())
             text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
@@ -1027,7 +1075,7 @@ static inline bool _monster_warning(activity_interrupt ai,
             && !(mon->flags & MF_KNOWN_SHIFTER))
         {
             zin_id = true;
-            mon->props["zin_id"] = true;
+            mon->props[ZIN_ID_KEY] = true;
             discover_shifter(*mon);
             god_warning = uppercase_first(god_name(you.religion))
                           + " warns you: "
@@ -1080,11 +1128,8 @@ static inline bool _monster_warning(activity_interrupt ai,
                 }
             }
         }
-        if (you.has_mutation(MUT_SCREAM)
-            && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100))
-        {
+        if (should_shout_at_mons(*mon))
             yell(mon);
-        }
         mons_set_just_seen(mon);
     }
 
@@ -1222,7 +1267,7 @@ static const char *activity_interrupt_names[] =
 {
     "force", "keypress", "full_hp", "full_mp", "ancestor_hp", "message",
     "hp_loss", "stat", "monster", "monster_attack", "teleport", "hit_monster",
-    "sense_monster", "mimic"
+    "sense_monster", MIMIC_KEY
 };
 
 static const char *_activity_interrupt_name(activity_interrupt ai)

@@ -86,7 +86,7 @@ enum enchant_type
     ENCH_LIFE_TIMER,     // Minimum time demonic guardian must exist.
     ENCH_FLIGHT,
     ENCH_LIQUEFYING,
-    ENCH_TORNADO,
+    ENCH_POLAR_VORTEX,
     ENCH_FAKE_ABJURATION,
     ENCH_DAZED,          // Dazed - less chance of acting each turn.
     ENCH_MUTE,           // Silenced.
@@ -132,14 +132,16 @@ enum enchant_type
     ENCH_GRASPING_ROOTS,
     ENCH_SPELL_CHARGED,
     ENCH_FIRE_VULN,
-    ENCH_TORNADO_COOLDOWN,
+    ENCH_POLAR_VORTEX_COOLDOWN,
     ENCH_MERFOLK_AVATAR_SONG,
     ENCH_BARBS,
 #if TAG_MAJOR_VERSION == 34
     ENCH_BUILDING_CHARGE,
 #endif
     ENCH_POISON_VULN,
+#if TAG_MAJOR_VERSION == 34
     ENCH_ICEMAIL,
+#endif
     ENCH_AGILE,
     ENCH_FROZEN,
 #if TAG_MAJOR_VERSION == 34
@@ -183,9 +185,9 @@ enum enchant_type
     ENCH_RING_OF_THUNDER,
 #if TAG_MAJOR_VERSION == 34
     ENCH_WHIRLWIND_PINNED,
-#endif
     ENCH_VORTEX,
     ENCH_VORTEX_COOLDOWN,
+#endif
     ENCH_VILE_CLUTCH,
     ENCH_WATERLOGGED,
     ENCH_RING_OF_FLAMES,
@@ -197,6 +199,10 @@ enum enchant_type
     ENCH_RING_OF_ACID,
     ENCH_RING_OF_MIASMA,
     ENCH_CONCENTRATE_VENOM,
+    ENCH_FIRE_CHAMPION,
+    ENCH_ANGUISH,
+    ENCH_SIMULACRUM,
+    ENCH_NECROTIZE,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

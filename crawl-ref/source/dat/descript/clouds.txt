@@ -122,9 +122,10 @@ magical condensation cloud
 
 The wake of some highly concentrated magical energy, itself entirely harmless.
 %%%%
-raging winds cloud
+whirling frost cloud
 
-The winds of a raging tornado. It will deal severe damage to anyone within it.
+The winds of a polar vortex. It will deal severe damage to anyone within it,
+only partially mitigated by resistance to cold.
 %%%%
 sparse dust cloud
 
@@ -175,3 +176,8 @@ standing over it, but if left alone will ignite into a blazing cloud of flame.
 wisps of flame cloud
 
 A trail of sparks and wisps of flame. Atmospheric, but harmless.
+%%%%
+degeneration cloud
+
+A cloud formed from concentrated potions of degeneration. Creatures that venture
+into one will rapidly lose strength, dexterity, and intelligence.

@@ -14,6 +14,7 @@ enum fs_op_type
 {
     FSOP_COLOUR,
     FSOP_TEXT,
+    FSOP_BG,
 };
 
 class formatted_string
@@ -31,6 +32,7 @@ public:
     void cprintf(const string &s);
     void add_glyph(cglyph_t g);
     void textcolour(int colour);
+    void textbackground(int colour);
     formatted_string chop(int length, bool pad=false) const;
     formatted_string chop_bytes(int length) const;
     formatted_string substr_bytes(int pos, int length) const;
@@ -46,7 +48,6 @@ public:
     void swap(formatted_string& other);
 
     int width() const;
-    string html_dump() const;
 
     bool operator < (const formatted_string &other) const;
     bool operator == (const formatted_string &other) const;
@@ -69,7 +70,8 @@ private:
     int find_last_colour() const;
 
     static void parse_string1(const string &s, formatted_string &fs,
-                              vector<int> &colour_stack);
+                              vector<int> &colour_stack,
+                              vector<int> &bg_stack);
 
 public:
     struct fs_op
@@ -78,7 +80,8 @@ public:
         int colour;
         string text;
 
-        fs_op(int _colour) : type(FSOP_COLOUR), colour(_colour), text()
+        fs_op(int _colour, bool fg=true)
+            : type(fg ? FSOP_COLOUR : FSOP_BG), colour(_colour), text()
         {
         }
 
@@ -88,7 +91,9 @@ public:
 
         bool operator == (const fs_op &other) const
         {
-            return type == other.type && colour == other.colour && text == other.text;
+            return type == other.type
+                && colour == other.colour
+                && text == other.text;
         }
         void display() const;
     };

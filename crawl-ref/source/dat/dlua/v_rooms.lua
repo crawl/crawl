@@ -104,6 +104,8 @@ local function make_tagged_room(options,chosen)
   dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
   -- restore the original tags to mapdef, since this state is persistent
   dgn.tags(mapdef, nil)
+  -- TODO: if a vault is not tagged transparent, this addition is permanent
+  -- and affects any later placement outside vaults
   dgn.tags(mapdef, old_tags .. " transparent")
 
   local room_width,room_height = dgn.mapsize(map)
@@ -174,9 +176,31 @@ local function pick_room(e, options)
     end
     options.did_ghost_chance = true
   end
+  -- Roll the chance to pick a Wizlab vault room if we haven't done so.
+  if not options.did_wizlab_chance then
+    if crawl.x_chance_in_y(dgn.wizlab_chance_percent, 100) then
+      for i, r in ipairs(options.room_type_weights) do
+        if r.generator == "tagged" and r.tag == "vaults_wizlab" then
+          chosen = r
+        end
+      end
+    end
+    options.did_wizlab_chance = true
+  end
+  -- Roll the chance to pick a Desolation vault room if we haven't done so.
+  if not options.did_desolation_chance then
+    if crawl.x_chance_in_y(dgn.desolation_chance_percent, 100) then
+      for i, r in ipairs(options.room_type_weights) do
+        if r.generator == "tagged" and r.tag == "vaults_desolation" then
+          chosen = r
+        end
+      end
+    end
+    options.did_desolation_chance = true
+  end
 
-  -- We aren't choosing a ghost vault, so pick a generator from the weighted
-  -- table.
+  -- We aren't choosing a ghost vault or a vault for wizlab or desolation
+  -- portals, so pick a generator from the weighted table.
   if chosen == nil then
     chosen = util.random_weighted_from(weight_callback,
                                        options.room_type_weights)

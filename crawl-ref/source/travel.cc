@@ -129,9 +129,10 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
-#ifdef DEBUG_DIAGNOSTICS
-#define DEBUG_TRAVEL
-#endif
+// N.b. this #define only adds dprfs and so isn't very useful outside of a
+// debug build. It also makes long travel extremely slow when enabled on a
+// debug build.
+//#define DEBUG_TRAVEL
 
 /*
  * Warn if interlevel travel is going to take you outside levels in
@@ -256,10 +257,6 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
 {
     if (!ignore_player_traversability)
     {
-        // Don't auto travel through toxic bogs
-        if (grid == DNGN_TOXIC_BOG)
-            return false;
-
         // If the feature is in travel_avoid_terrain, respect that.
         if (forbidden_terrain[grid])
             return false;
@@ -276,8 +273,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
             return true;
 
         // Permanently flying players can cross most hostile terrain.
-        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA)
+        if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
+            || grid == DNGN_TOXIC_BOG)
+        {
             return you.permanent_flight();
+        }
     }
 
     return feat_is_traversable(grid, try_fallback);
@@ -674,6 +674,7 @@ static void _start_running()
 {
     _userdef_run_startrunning_hook();
     you.running.init_travel_speed();
+    you.running.turns_passed = 0;
     const bool unsafe = Options.travel_one_unsafe_move &&
                         (you.running == RMODE_TRAVEL
                          || you.running == RMODE_INTERLEVEL);
@@ -863,21 +864,61 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     {
         if (explore_stopped_pos == you.pos())
         {
+            stack_iterator stk(you.pos());
+            string wishlist = comma_separated_fn(stk, stack_iterator::end(),
+                    [] (const item_def & item) { return item.name(DESC_A); },
+                    " and ", ", ", bind(item_needs_autopickup, placeholders::_1,
+                                        false));
+            // XX [A] doesn't make sense for items being picked up only because
+            // of an =g inscription
             const string prompt =
-                make_stringf("Could not pick up %s here; shall I ignore %s?",
-                             tried_pickup == 1? "an item" : "some items",
-                             tried_pickup == 1? "it" : "them");
+                make_stringf("Could not pick up %s here; ([A]lways) ignore %s?",
+                             wishlist.c_str(),
+                             tried_pickup == 1 ? "it" : "them");
 
             // Make Escape => 'n' and stop run.
             explicit_keymap map;
             map[ESCAPE] = 'n';
             map[CONTROL('G')] = 'n';
-            if (yesno(prompt.c_str(), true, 'y', true, false, false, &map))
+            map[' '] = 'y';
+
+            // If response is Yes (1) or Always (2), mark items for no pickup
+            // If the response is Always, remove the item from autopickup
+            // Otherwise, stop autoexplore.
+            int response = yesno(prompt.c_str(), true, 'n', true, false,
+                                 false, &map, true, true);
+            switch (response)
             {
-                mark_items_non_pickup_at(you.pos());
-                // Don't stop explore.
-                return;
+                case 2:
+                {
+                    vector<string> ap_disabled;
+                    for (stack_iterator si(you.pos()); si; ++si)
+                    {
+                        if (!item_needs_autopickup(*si)
+                            || item_autopickup_level(*si) == AP_FORCE_OFF)
+                        {
+                            continue;
+                        }
+
+                        set_item_autopickup(*si, AP_FORCE_OFF);
+                        ap_disabled.push_back(pluralise(si->name(DESC_DBNAME)));
+                    }
+
+                    if (!ap_disabled.empty())
+                    {
+                        mprf("Autopickup disabled for %s.",
+                             comma_separated_line(ap_disabled.begin(),
+                                                  ap_disabled.end()).c_str());
+                    }
+                }
+                // intentional fallthrough
+                case 1:
+                    mark_items_non_pickup_at(you.pos());
+                    return;
+                default:
+                    break;
             }
+
             canned_msg(MSG_OK);
         }
         explore_stopped_pos = you.pos();
@@ -932,7 +973,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
     }
 
     // Check whether this step puts us adjacent to any grid we haven't ever
-    // seen or any non-wall grid we cannot currently see.
+    // seen
     //
     // .tx      Moving onto t puts us adjacent to an unseen grid.
     // ?#@      --> Pick x instead.
@@ -941,9 +982,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
     {
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
-            if (!you.see_cell(*ai)
-                && (!env.map_knowledge(*ai).seen()
-                    || !feat_is_wall(env.map_knowledge(*ai).feat())))
+            if (!you.see_cell(*ai) && !env.map_knowledge(*ai).seen())
             {
                 unseen = *ai;
                 break;
@@ -1080,6 +1119,22 @@ command_type travel()
             }
         }
 
+// #define DEBUG_EXPLORE
+#ifdef DEBUG_EXPLORE
+        if (you.running.pos == you.pos())
+        {
+            mprf("Stopping explore at target %d,%d", you.running.pos.x, you.running.pos.y);
+            stop_running();
+            return CMD_NO_CMD;
+        }
+        else if (!_is_valid_explore_target(you.running.pos))
+        {
+            mprf("Stopping explore; everything in los of %d,%d is mapped", you.running.pos.x, you.running.pos.y);
+            stop_running();
+            return CMD_NO_CMD;
+        }
+#endif
+
         // Speed up explore by not doing a double-floodfill if we have
         // a valid target.
         if (!you.running.pos.x
@@ -1129,7 +1184,7 @@ command_type travel()
                 if (lev && lev->needs_stop(newpos))
                 {
                     explore_stopped_pos = newpos;
-                    stop_running();
+                    stop_running(false);
                     return direction_to_command(*move_x, *move_y);
                 }
             }
@@ -1548,7 +1603,8 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 
         // The addition of explore_wall_bias makes items as interesting
         // as a room's perimeter (with one of four known adjacent walls).
-        if (Options.explore_wall_bias)
+        // XX why?
+        if (Options.explore_wall_bias > 0)
             dist += Options.explore_wall_bias * 3;
 
         greedy_dist = dist;
@@ -1608,22 +1664,39 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
                 if (Options.explore_wall_bias)
                 {
-                    dist += Options.explore_wall_bias * 4;
+                    // if we are penalizing open space, introduce a default
+                    // penalty of 4 walls and then downweight that. If we are
+                    // penalizing walls, just add on for each wall.
+                    if (Options.explore_wall_bias > 0)
+                        dist += Options.explore_wall_bias * 8;
 
                     // Favour squares directly adjacent to walls
-                    for (int dir = 0; dir < 8; dir += 2)
+                    // XX for some reason, historically this only looked at
+                    // cardinal directions. Why?
+                    for (int dir = 0; dir < 8; dir++)
                     {
                         const coord_def ddc = dc + Compass[dir];
 
                         if (feat_is_wall(env.map_knowledge(ddc).feat()))
                             dist -= Options.explore_wall_bias;
                     }
+
+                    if (Options.explore_wall_bias < 0 &&
+                        feat_is_wall(env.map_knowledge(dc).feat()))
+                    {
+                        // further penalize cases where the unseen square dc
+                        // is itself a wall
+                        dist -= Options.explore_wall_bias;
+                    }
                 }
 
                 // Replace old target if nearer (or less penalized)
+                // don't let dist get < 0
                 if (dist < unexplored_dist || unexplored_dist < 0)
                 {
                     unexplored_dist = dist;
+                    // somewhat confusing: `c` is probably actually explored,
+                    // but is adjacent to the good place we just found.
                     unexplored_place = c;
                 }
             }
@@ -2263,6 +2336,7 @@ static god_type _god_from_initial(const char god_initial)
         case 'F': return GOD_FEDHAS;
         case 'G': return GOD_GOZAG;
         case 'H': return GOD_HEPLIAKLQANA;
+        case 'I': return GOD_IGNIS;
         case 'J': return GOD_JIYVA;
         case 'K': return GOD_KIKUBAAQUDGHA;
         case 'L': return GOD_LUGONU;
@@ -2331,6 +2405,9 @@ static level_pos _prompt_travel_altar()
         for (const god_type god : god_list)
         {
             if (!nearest_altars[god].is_valid())
+                continue;
+
+            if (is_unavailable_god(god))
                 continue;
 
             // "The Shining One" is too long to keep the same G menu layout
@@ -4303,7 +4380,7 @@ bool can_travel_interlevel()
 // Shift-running and resting.
 
 runrest::runrest()
-    : runmode(0), mp(0), hp(0), pos(0,0)
+    : runmode(0), mp(0), hp(0), pos(0,0), turns_passed(0)
 {
 }
 
@@ -4318,6 +4395,7 @@ void runrest::initialise(int dir, int mode)
     notified_hp_full = false;
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
+    turns_passed = 0;
     init_travel_speed();
 
     if (dir == RDIR_REST)
@@ -4540,6 +4618,7 @@ void runrest::clear()
     runmode = RMODE_NOT_RUNNING;
     pos.reset();
     mp = hp = travel_speed = 0;
+    turns_passed = 0;
     notified_hp_full = false;
     notified_mp_full = false;
     notified_ancestor_hp_full = false;
@@ -4587,7 +4666,7 @@ bool explore_discoveries::merge_feature(
 static bool _feat_is_branchlike(dungeon_feature_type feat)
 {
     return feat_is_branch_entrance(feat)
-        || feat == DNGN_ENTER_HELL
+        || feat_is_hell_subbranch_exit(feat)
         || feat == DNGN_ENTER_ABYSS
         || feat == DNGN_EXIT_THROUGH_ABYSS
         || feat == DNGN_ENTER_PANDEMONIUM;
@@ -4922,18 +5001,15 @@ static int _adjacent_cmd(const coord_def &gc, bool force)
             continue;
 
         int cmd = cmd_array[i];
-        if (force)
+        if (!force)
+            return cmd;
+        const dungeon_feature_type feat = env.grid(gc);
+        if ((feat == DNGN_OPEN_DOOR || feat == DNGN_OPEN_CLEAR_DOOR)
+            && !env.map_knowledge(gc).monsterinfo())
         {
-            if (feat_is_open_door(env.grid(gc))
-                && !env.map_knowledge(gc).monsterinfo())
-            {
-                cmd += CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;
-            }
-            else
-                cmd += CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
+            return CMD_CLOSE_DOOR_LEFT - CMD_MOVE_LEFT;
         }
-
-        return cmd;
+        return cmd + CMD_ATTACK_LEFT - CMD_MOVE_LEFT;
     }
 
     return CK_MOUSE_CMD;
@@ -4985,7 +5061,7 @@ bool check_for_interesting_features()
     // Scan through the shadow map, compare it with the actual map, and if
     // there are any squares of the shadow map that have just been
     // discovered and contain an item, or have an interesting dungeon
-    // feature, stop exploring.
+    // feature, announce the discovery and return true.
     explore_discoveries discoveries;
     for (vision_iterator ri(you); ri; ++ri)
     {

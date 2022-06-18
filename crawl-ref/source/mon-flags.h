@@ -56,7 +56,8 @@ enum monclass_flag_type : uint64_t
     /// monster is stationary
     M_STATIONARY        = BIT(14),
 
-                        //BIT(15), // was M_BLOOD_SCENT
+    /// monster is immune to webs
+    M_WEB_IMMUNE        = BIT(15),
 
     /// susceptible to cold; drainable by vampires, splashes blood when hit
     M_COLD_BLOOD        = BIT(16),
@@ -149,8 +150,7 @@ enum monclass_flag_type : uint64_t
     /// derived undead can't be randomly generated
     M_NO_GEN_DERIVED    = BIT(47),
 
-    /// only generate when bands are permitted
-    M_REQUIRE_BAND      = BIT(48),
+                        //BIT(48), // was M_REQUIRE_BAND
 
                         //BIT(49), // was M_HYBRID
 
@@ -179,6 +179,7 @@ enum monclass_flag_type : uint64_t
     /// is surrounded by a ring of clouds. Only one can be active at a time!
     M_THUNDER_RING      = BIT(58),
     M_FIRE_RING         = BIT(59),
+    M_MIASMA_RING       = BIT(60),
 };
 DEF_BITFIELD(monclass_flags_t, monclass_flag_type);
 
@@ -220,9 +221,8 @@ enum monster_flag_type : uint64_t
     /// Consider this monster to have MH_UNDEAD holiness, regardless
     /// of its actual type
     MF_FAKE_UNDEAD        = BIT(13),
-    /// An undead monster soul enslaved by
-    /// Yredelemnul's power
-    MF_ENSLAVED_SOUL      = BIT(14),
+
+    MF_PENDING_REVIVAL    = BIT(14),
 
     /// mname is a suffix.
     MF_NAME_SUFFIX        = BIT(15),
@@ -272,8 +272,8 @@ enum monster_flag_type : uint64_t
     MF_SENSED             = BIT(33),
     /// mname should not be used for corpses
     MF_NAME_NOCORPSE      = BIT(34),
-    /// known to have a ranged attack
-    MF_SEEN_RANGED        = BIT(35),
+
+    // MF_SEEN_RANGED     = BIT(35), // was known to have a ranged attack
 
     /// this monster has been polymorphed.
     MF_POLYMORPHED        = BIT(36),

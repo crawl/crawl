@@ -319,14 +319,6 @@ int div_rand_round(int num, int den)
         return num / den;
 }
 
-// Converts a double to an integer by randomly rounding.
-// Currently does not handle negative inputs.
-int rand_round(double x)
-{
-    ASSERT(x >= 0);
-    return int(x) + decimal_chance(fmod(x, 1.0));
-}
-
 int div_round_up(int num, int den)
 {
     return num / den + (num % den != 0);
@@ -356,24 +348,6 @@ int biased_random2(int max, int n)
         if (x_chance_in_y(n, n + max - 1 - i))
             return i;
     return 0;
-}
-
-// originally designed to randomise evasion -
-// values are slightly lowered near (max) and
-// approach an upper limit somewhere near (limit/2)
-// [0, max]
-int random2limit(int max, int limit)
-{
-    int sum = 0;
-
-    if (max < 1)
-        return 0;
-
-    for (int i = 0; i < max; i++)
-        if (random2(limit) >= i)
-            sum++;
-
-    return sum;
 }
 
 /** Sample from a binomial distribution.

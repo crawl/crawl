@@ -29,7 +29,7 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
         $("#chat_history").append(msg.html() + "<br>");
         if (atBottom)
             histcon.scrollTop = histcon.scrollHeight;
-        if ($("#chat_body").css("display") === "none")
+        if ($("#chat_body").css("display") === "none" && !data.meta)
         {
             new_message_count++;
             update_message_count();
@@ -113,8 +113,8 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
                 $("#chat_input").val(message);
             }
         }
-        // Esc key to return to game.
-        else if (e.which == 27)
+        // Esc key or F12 again to return to game.
+        else if (e.which == 27 || e.which == 123)
         {
             e.preventDefault();
             e.stopPropagation();
@@ -131,7 +131,7 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
             $("#chat_body").slideDown(200);
             new_message_count = 0;
             update_message_count();
-            $("#message_count").html("(Esc: back to game)");
+            $("#message_count").html("(Esc: close)");
             $('#chat_history_container').scrollTop($('#chat_history_container')[0].scrollHeight);
         }
         else

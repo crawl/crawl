@@ -95,7 +95,7 @@ const Branch branches[NUM_BRANCHES] =
       "Spider Nest", "the Spider Nest", "Spider",
       nullptr,
       BROWN, YELLOW,
-      'N', { RUNE_SPIDER }, branch_noise::quiet, DEFAULT_MON_DIE_SIZE },
+      'N', { RUNE_SPIDER }, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 
     { BRANCH_SLIME, BRANCH_LAIR, 5, 6, 5, 17,
       brflag::no_items | brflag::dangerous_end | brflag::spotty,
@@ -140,7 +140,7 @@ const Branch branches[NUM_BRANCHES] =
       'W', { RUNE_TOMB }, branch_noise::quiet, DEFAULT_MON_DIE_SIZE },
 #if TAG_MAJOR_VERSION > 34
 
-    { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 5, 22,
+    { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 4, 22,
       brflag::none,
       DNGN_ENTER_DEPTHS, DNGN_EXIT_DEPTHS, NUM_FEATURES,
       "Depths", "the Depths", "Depths",
@@ -159,37 +159,37 @@ const Branch branches[NUM_BRANCHES] =
 
     { BRANCH_DIS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
-      DNGN_ENTER_DIS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
+      DNGN_ENTER_DIS, DNGN_EXIT_DIS, DNGN_EXIT_DIS,
       "Dis", "the Iron City of Dis", "Dis",
-      nullptr,
+      "An ancient malice corrodes your equipment.",
       CYAN, BROWN,
       'I', { RUNE_DIS }, branch_noise::normal, HELL_MON_DIE_SIZE },
 
     { BRANCH_GEHENNA, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
-      DNGN_ENTER_GEHENNA, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
+      DNGN_ENTER_GEHENNA, DNGN_EXIT_GEHENNA, DNGN_EXIT_GEHENNA,
       "Gehenna", "Gehenna", "Geh",
-      nullptr,
+      "Your scrolls appear blurry in the acrid smoke.",
       BROWN, RED,
       'G', { RUNE_GEHENNA }, branch_noise::normal, HELL_MON_DIE_SIZE },
 
     { BRANCH_COCYTUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
-      DNGN_ENTER_COCYTUS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
+      DNGN_ENTER_COCYTUS, DNGN_EXIT_COCYTUS, DNGN_EXIT_COCYTUS,
       "Cocytus", "Cocytus", "Coc",
-      nullptr,
+      "Your potions freeze solid in the terrible cold.",
       LIGHTBLUE, LIGHTCYAN,
       'X', { RUNE_COCYTUS }, branch_noise::normal, HELL_MON_DIE_SIZE },
 
     { BRANCH_TARTARUS, BRANCH_VESTIBULE, 1, 1, 7, 28,
       brflag::no_items | brflag::dangerous_end,
-      DNGN_ENTER_TARTARUS, DNGN_ENTER_HELL, DNGN_ENTER_HELL,
+      DNGN_ENTER_TARTARUS, DNGN_EXIT_TARTARUS, DNGN_EXIT_TARTARUS,
       "Tartarus", "Tartarus", "Tar",
-      nullptr,
+      "This decaying realm drains your will.",
       MAGENTA, MAGENTA,
       'Y', { RUNE_TARTARUS }, branch_noise::normal, HELL_MON_DIE_SIZE },
 
-    { BRANCH_ZOT, BRANCH_DEPTHS, 5, 5, 5, 27,
+    { BRANCH_ZOT, BRANCH_DEPTHS, 4, 4, 5, 27,
       brflag::dangerous_end,
       DNGN_ENTER_ZOT, DNGN_EXIT_ZOT, NUM_FEATURES,
       "Zot", "the Realm of Zot", "Zot",
@@ -209,7 +209,7 @@ const Branch branches[NUM_BRANCHES] =
 #endif
 
     { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 5, 24,
-      brflag::no_x_level_travel | brflag::no_map,
+      brflag::no_x_level_travel | brflag::no_map | brflag::no_items,
       DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS, DNGN_FLOOR, // can't get trapped in abyss
       "Abyss", "the Abyss", "Abyss",
       nullptr,
@@ -226,7 +226,7 @@ const Branch branches[NUM_BRANCHES] =
       'R', { RUNE_DEMONIC, RUNE_MNOLEG, RUNE_LOM_LOBON, RUNE_CEREBOV,
              RUNE_GLOORX_VLOQ }, branch_noise::normal, 8 },
 
-    { BRANCH_ZIGGURAT, BRANCH_DEPTHS, 1, 5, 27, 27,
+    { BRANCH_ZIGGURAT, BRANCH_DEPTHS, 1, 4, 27, 27,
       brflag::no_x_level_travel | brflag::no_items,
       DNGN_ENTER_ZIGGURAT, DNGN_EXIT_ZIGGURAT, DNGN_FLOOR,
       "Ziggurat", "a ziggurat", "Zig",
@@ -334,7 +334,7 @@ const Branch branches[NUM_BRANCHES] =
 #endif
 #if TAG_MAJOR_VERSION == 34
 
-    { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 5, 22,
+    { BRANCH_DEPTHS, BRANCH_DUNGEON, 15, 15, 4, 22,
       brflag::none,
       DNGN_ENTER_DEPTHS, DNGN_EXIT_DEPTHS, NUM_FEATURES,
       "Depths", "the Depths", "Depths",
@@ -363,6 +363,18 @@ const Branch branches[NUM_BRANCHES] =
       "Gauntlet", "a Gauntlet", "Gauntlet",
       "You enter a gauntlet!",
       BLACK, BLACK,
+      '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+#endif
+
+    { BRANCH_ARENA, NUM_BRANCHES, -1, -1, 1, 0,
+      brflag::no_x_level_travel | brflag::no_items,
+      DNGN_ENTER_ARENA, DNGN_EXIT_ARENA, NUM_FEATURES,
+      "Arena", "the Arena", "Arena",
+      "You enter Okawaru's Arena!",
+      BLACK, BLACK,
+#if TAG_MAJOR_VERSION == 34
+      '"', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+#else
       '!', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 #endif
 };

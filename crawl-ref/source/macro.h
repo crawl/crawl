@@ -48,7 +48,8 @@ int getch_with_command_macros();  // keymaps and macros (ie for commands)
 
 void flush_input_buffer(int reason);
 
-void macro_add_query();
+void macro_quick_add();
+void macro_menu();
 void macro_init();
 void macro_save();
 
@@ -58,7 +59,6 @@ void macro_userfn(const char *keys, const char *registryname);
 
 // Add macro-expanded keys to the end or start of the keyboard buffer.
 void macro_sendkeys_end_add_expanded(int key);
-void macro_sendkeys_end_add_cmd(command_type cmd);
 
 // [ds] Unless you know what you're doing, prefer macro_sendkeys_add_expanded
 // to direct calls to macro_buf_add for pre-expanded key sequences.
@@ -111,9 +111,8 @@ void init_keybindings();
 command_type name_to_command(string name);
 string  command_to_name(command_type cmd);
 
-int function_keycode_fixup(int keycode);
 bool keycode_is_printable(int keycode);
-string keycode_to_name(int keycode);
+string keycode_to_name(int keycode, bool shorten = true);
 string keyseq_to_str(const keyseq &seq);
 keyseq parse_keyseq(string s);
 

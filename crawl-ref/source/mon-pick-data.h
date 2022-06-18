@@ -2,7 +2,60 @@
 
 #include "tag-version.h"
 
-static const pop_entry pop_d[] =
+// This is done to avoid duplicating the Depths list and can be
+// changed once TAG_MAJOR_VERSION > 35
+#define POP_DEPTHS \
+{ /* Depths (OOD cap: 13)*/ \
+  { -3,  3,  250, SEMI, MONS_RAKSHASA },\
+  { -3,  3,  100, SEMI, MONS_WIZARD },\
+  { -3,  3,  100, SEMI, MONS_NECROMANCER },\
+  { -3,  9,  250, PEAK, MONS_FIRE_GIANT },\
+  { -3,  9,  260, PEAK, MONS_FROST_GIANT },\
+  { -3,  9,   70, PEAK, MONS_HELL_KNIGHT },\
+  { -3,  9,  100, PEAK, MONS_VAMPIRE_KNIGHT },\
+  {  0,  2,  300, FALL, MONS_UGLY_THING },\
+  {  0,  5,  180, FLAT, MONS_DEEP_TROLL_SHAMAN },\
+  {  0,  5,  180, FLAT, MONS_DEEP_TROLL_EARTH_MAGE },\
+  {  0,  5,  295, FLAT, MONS_FIRE_DRAGON },\
+  {  0,  5,  295, FLAT, MONS_ICE_DRAGON },\
+  {  0,  5,  250, FLAT, MONS_VERY_UGLY_THING },\
+  {  0,  5,  100, FLAT, MONS_GLOWING_ORANGE_BRAIN },\
+  {  0,  6,  100, FALL, MONS_VAMPIRE_MAGE },\
+  {  0,  6,  200, FALL, MONS_TENGU_WARRIOR },\
+  {  0,  6,  100, FALL, MONS_TENGU_CONJURER },\
+  {  0,  7,  600, FALL, MONS_STONE_GIANT },\
+  {  0,  7,  370, FALL, MONS_ETTIN },\
+  {  0,  9,  100, SEMI, MONS_SPARK_WASP },\
+  {  0, 11,   60, FLAT, MONS_LICH },\
+  {  0, 11,   40, FLAT, MONS_FLAYED_GHOST },\
+  {  0, 13,   80, SEMI, MONS_GLOWING_SHAPESHIFTER },\
+  {  0, 13,   80, SEMI, MONS_TENGU_REAVER },\
+  {  0, 13,   60, SEMI, MONS_SPHINX },\
+  {  1,  7,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },\
+  {  1,  7,  185, SEMI, MONS_SPRIGGAN_BERSERKER },\
+  {  1,  9,   25, FLAT, MONS_FLOATING_EYE },\
+  {  2, 13,   45, FLAT, MONS_SPRIGGAN_DEFENDER },\
+  {  3, 13,   80, SEMI, MONS_TENTACLED_MONSTROSITY },\
+  {  3, 13,   40, FLAT, MONS_STORM_DRAGON },\
+  {  3, 13,   40, FLAT, MONS_SHADOW_DRAGON },\
+  {  3, 13,   20, FLAT, MONS_QUICKSILVER_DRAGON },\
+  {  3, 13,   40, FLAT, MONS_IRON_DRAGON },\
+  {  3, 13,   80, SEMI, MONS_GOLDEN_DRAGON },\
+  {  3, 13,   50, RISE, MONS_FROSTBOUND_TOME },\
+  {  3, 13,   50, RISE, MONS_EARTHEN_TOME },\
+  {  3, 13,   50, RISE, MONS_CRYSTAL_TOME },\
+  {  3, 13,   50, RISE, MONS_DIVINE_TOME },\
+  {  4, 13,   50, FLAT, MONS_JUGGERNAUT },\
+  {  4, 13,   50, FLAT, MONS_CAUSTIC_SHRIKE },\
+  {  5, 13,   50, FLAT, MONS_TITAN },\
+  {  9, 13,   10, FLAT, MONS_ANCIENT_LICH },\
+  {  9, 13,   10, FLAT, MONS_DREAD_LICH },\
+}
+
+// This list must be in the same order as the branch-type enum values.
+static const vector<pop_entry> population[] =
+{
+
 { // Dungeon (OOD cap: 27)
 
 // The weakest of the weak.
@@ -19,8 +72,8 @@ static const pop_entry pop_d[] =
   {  1,  4, 1000, FLAT, MONS_ENDOPLASM },
   {  1,  3,  350, FLAT, MONS_DART_SLUG },
   {  1,  3,  500, FLAT, MONS_QUOKKA },
-  {  1,  3,  350, FLAT, MONS_JACKAL },
-  {  4,  5,  350, FALL, MONS_JACKAL },
+  {  1,  3,  200, FLAT, MONS_JACKAL },
+  {  4,  5,  200, FALL, MONS_JACKAL },
   {  4,  5,  500, FALL, MONS_QUOKKA },
   {  4,  5,  350, FALL, MONS_DART_SLUG },
   {  1,  8,  200, PEAK, MONS_GNOLL },
@@ -34,10 +87,9 @@ static const pop_entry pop_d[] =
   {  4,  7,  800, PEAK, MONS_SCORPION },
   {  4,  7, 1000, PEAK, MONS_HOUND },
   {  4,  7,  350, PEAK, MONS_UFETUBUS },
-  {  4,  7,  800, PEAK, MONS_OGRE },
+  {  4,  7,  500, PEAK, MONS_OGRE },
   {  4,  7, 1000, PEAK, MONS_IGUANA },
   {  4,  7,  350, PEAK, MONS_PHANTOM },
-  {  4,  7, 1000, FLAT, MONS_SKELETON },
   {  4,  8,  500, PEAK, MONS_JELLY },
   {  4,  8,  350, PEAK, MONS_NECROPHAGE },
   {  4,  8,  350, PEAK, MONS_BLACK_BEAR },
@@ -49,23 +101,22 @@ static const pop_entry pop_d[] =
   {  5,  8,  500, PEAK, MONS_WHITE_IMP },
   {  5,  8,  300, PEAK, MONS_SHADOW_IMP },
   {  5,  8,  500, PEAK, MONS_ICE_BEAST },
-  {  5,  8,  500, PEAK, MONS_SKY_BEAST },
-  {  5,  9,  500, PEAK, MONS_WATER_MOCCASIN },
-  {  5, 11, 1000, FLAT, MONS_ZOMBIE },
-  {  5, 13,  800, PEAK, MONS_CENTAUR },
+  {  5,  9,  400, PEAK, MONS_WATER_MOCCASIN },
+  {  5, 13,  600, PEAK, MONS_CENTAUR },
   {  5, 13,  200, PEAK, MONS_GNOLL_SERGEANT },
 
+  {  6,  8,  500, PEAK, MONS_SKY_BEAST },
   {  6,  9, 1000, PEAK, MONS_BULLFROG },
   {  6, 10,  500, PEAK, MONS_WIGHT },
   {  6, 10,  350, PEAK, MONS_STEAM_DRAGON },
   {  6, 11,  500, PEAK, MONS_KOBOLD_BRIGAND },
-  {  6, 12,  800, PEAK, MONS_ORC_WARRIOR },
+  {  6, 12,  600, PEAK, MONS_ORC_WARRIOR },
   {  7, 11,  500, PEAK, MONS_KILLER_BEE },
   {  7, 11,  200, PEAK, MONS_HORNET },
   {  7, 11,  350, PEAK, MONS_WYVERN },
   {  8, 12,  800, PEAK, MONS_YAK },
   {  8, 14,  350, PEAK, MONS_ACID_DRAGON },
-  {  8, 14,  800, PEAK, MONS_TWO_HEADED_OGRE },
+  {  8, 14,  600, PEAK, MONS_TWO_HEADED_OGRE },
   {  9, 13,  350, PEAK, MONS_SHADOW },
   {  9, 14,  200, PEAK, MONS_KOBOLD_DEMONOLOGIST },
   {  9, 14,  500, PEAK, MONS_WRAITH },
@@ -80,12 +131,12 @@ static const pop_entry pop_d[] =
   { 11, 21,  825, SEMI, MONS_CYCLOPS },
   { 11, 21,  285, PEAK, MONS_BASILISK },
   { 11, 21,  192, PEAK, MONS_SKELETAL_WARRIOR },
-  { 11, 21,  192, PEAK, MONS_DEATH_KNIGHT },
   { 11, 23,  540, SEMI, MONS_HYDRA },
   { 11, 23,  540, SEMI, MONS_BOULDER_BEETLE},
   { 12, 19,  475, SEMI, MONS_DEEP_ELF_FIRE_MAGE },
   { 12, 22,  440, FALL, MONS_SLIME_CREATURE },
   { 13, 20,  150, SEMI, MONS_MELIAI },
+  { 13, 21,  192, PEAK, MONS_DEATH_KNIGHT },
   { 13, 21,   89, PEAK, MONS_RAKSHASA },
   { 13, 17,  925, FLAT, MONS_CENTAUR_WARRIOR },
   { 18, 23,  925, FALL, MONS_CENTAUR_WARRIOR },
@@ -141,15 +192,11 @@ static const pop_entry pop_d[] =
   { 25, 27,   12, RISE, MONS_CRYSTAL_GUARDIAN },
   { 27, 27,   18, FLAT, MONS_SHADOW_DRAGON },
   { 27, 27,    8, FLAT, MONS_IRON_DRAGON },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_temple[] =
 { // Temple
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_orc[] =
 { // Orcish Mines
   {  1,  4,  384, FLAT, MONS_NO_MONSTER },
   {  1,  4,  192, FLAT, MONS_ORC_WARRIOR },
@@ -170,10 +217,8 @@ static const pop_entry pop_orc[] =
   {  1,  4,    8, FLAT, MONS_CYCLOPS },
   {  1,  4,    4, FLAT, MONS_ETTIN },
   {  3,  4,    4, FLAT, MONS_STONE_GIANT },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_elf[] =
 { // Elven Halls (OOD cap: 7)
   {  1,  5,   50, FLAT, MONS_ORC_HIGH_PRIEST },
   {  1,  6,   50, FLAT, MONS_ORC_SORCERER },
@@ -196,10 +241,8 @@ static const pop_entry pop_elf[] =
   {  6,  7,   10, RISE, MONS_DEEP_ELF_MASTER_ARCHER },
   {  1,  6,  150, FLAT, MONS_SHAPESHIFTER },
   {  1,  6,   65, SEMI, MONS_GLOWING_SHAPESHIFTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 #if TAG_MAJOR_VERSION == 34
-static const pop_entry pop_dwarf[] =
 { // Dwarven Hall
   {  1,  1, 1000, FLAT, MONS_DEEP_DWARF },
   {  1,  1,  690, FLAT, MONS_DEATH_KNIGHT },
@@ -213,27 +256,13 @@ static const pop_entry pop_dwarf[] =
   {  1,  1,    3, FLAT, MONS_SHADOW_WRAITH },
   {  1,  1,    8, FLAT, MONS_EIDOLON },
   {  1,  1,    8, FLAT, MONS_PHANTASMAL_WARRIOR },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_blade[] =
-{ // Hall of Blades
-  {  1,  1, 1000, FLAT, MONS_DANCING_WEAPON },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_lab[] =
-{ // Labyrinth
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 #endif
 
-static const pop_entry pop_lair[] =
 { // Lair (OOD cap: 12)
   {  1,  5, 4500, FLAT, MONS_NO_MONSTER }, // Roughly old D:1-4 chaff weight
   { -1,  5,  100, SEMI, MONS_BLACK_BEAR },
   { -1,  7,  310, SEMI, MONS_BASILISK },
-  { -1, 11,  490, SEMI, MONS_HYDRA },
   {  0,  4,   24, PEAK, MONS_SCORPION },
   {  0,  6,  310, SEMI, MONS_WOLF },
   {  0,  9,  290, PEAK, MONS_RIME_DRAKE },
@@ -247,6 +276,7 @@ static const pop_entry pop_lair[] =
   {  1,  6,  615, FLAT, MONS_KOMODO_DRAGON },
   {  1,  8,   50, PEAK, MONS_HELL_RAT },
   {  1,  8,  150, SEMI, MONS_POLAR_BEAR },
+  {  1, 11,  400, SEMI, MONS_HYDRA },
   {  2,  5,   16, PEAK, MONS_HORNET },
   {  2,  5,   50, PEAK, MONS_STEAM_DRAGON },
   {  2,  7,   25, PEAK, MONS_OKLOB_PLANT },
@@ -266,10 +296,8 @@ static const pop_entry pop_lair[] =
   { 11, 12,   32, FLAT, MONS_MANTICORE },
   { 11, 12,   32, FLAT, MONS_ANACONDA },
   { 11, 12,   32, FLAT, MONS_WOLF_SPIDER },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_swamp[] =
 { // Swamp
   // Trying to keep total around 10000 on each floor, roughly.
   // Easy enemies:
@@ -320,12 +348,10 @@ static const pop_entry pop_swamp[] =
   {  5,  7, 1000, FLAT, MONS_SPRIGGAN_AIR_MAGE },
   {  5,  7, 1000, FLAT, MONS_SPRIGGAN_BERSERKER },
   {  5,  7, 1000, FLAT, MONS_DEATH_DRAKE }, // not that bad but very mean
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_shoals[] =
 { // Shoals
-  { -2,  4,   89, SEMI, MONS_CENTAUR },
+  {  0,  3,   89, SEMI, MONS_CENTAUR_WARRIOR },
   {  0,  3,  355, SEMI, MONS_FAUN },
   {  0,  6,  300, SEMI, MONS_WATER_NYMPH },
   {  0,  6,  170, SEMI, MONS_MERFOLK_AVATAR },
@@ -344,10 +370,8 @@ static const pop_entry pop_shoals[] =
   {  1,  7,  135, PEAK, MONS_MERFOLK_JAVELINEER },
   {  1,  7,  110, PEAK, MONS_ALLIGATOR_SNAPPING_TURTLE },
   {  2,  4,  190, SEMI, MONS_SATYR },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_snake[] =
 { // Snake Pit
   { -4,  4,  750, SEMI, MONS_NAGA },
   {  0,  4,  215, SEMI, MONS_SALAMANDER },
@@ -363,30 +387,64 @@ static const pop_entry pop_snake[] =
   {  2,  5,  110, PEAK, MONS_SALAMANDER_MYSTIC },
   {  2,  8,  145, SEMI, MONS_NAGARAJA },
   {  2,  8,  100, SEMI, MONS_SALAMANDER_TYRANT },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_spider[] =
 { // Spider Nest
-  { -1,  4,  260, RISE, MONS_HORNET },
-  { -1,  6,   89, SEMI, MONS_BOULDER_BEETLE },
-  { -1,  9,  765, SEMI, MONS_DEMONIC_CRAWLER },
-  {  1,  4,  955, FLAT, MONS_WOLF_SPIDER },
-  {  1,  4,  985, FLAT, MONS_JUMPING_SPIDER },
-  {  1,  4,  910, FLAT, MONS_TARANTELLA },
-  {  1,  4, 1045, FLAT, MONS_REDBACK },
-  {  1,  4,  550, FLAT, MONS_ORB_SPIDER },
-  {  1,  6,  100, FLAT, MONS_TORPOR_SNAIL },
-  {  1,  6,  190, SEMI, MONS_EMPEROR_SCORPION },
-  {  1,  6,  155, SEMI, MONS_MOTH_OF_WRATH },
-  {  1,  9,  300, SEMI, MONS_ENTROPY_WEAVER },
-  {  1,  9,  200, PEAK, MONS_GHOST_MOTH },
-  {  2,  4,   12, FLAT, MONS_MELIAI },
-  {  2, 10,  260, PEAK, MONS_SPARK_WASP },
-  { 0,0,0,FLAT,MONS_0 }
-};
+  // Easy enemies:
+  {  1,  4,   200, FLAT, MONS_BOULDER_BEETLE },
+  {  1,  4,   100, FALL, MONS_BOULDER_BEETLE },
+  {  1,  4,   800, FLAT, MONS_REDBACK },
+  {  1,  4,   800, FALL, MONS_REDBACK },
+  {  1,  4,   500, FLAT, MONS_JUMPING_SPIDER },
+  {  1,  4,   900, FALL, MONS_JUMPING_SPIDER },
+  {  1,  4,   600, FLAT, MONS_TARANTELLA },
+  {  1,  4,   500, FALL, MONS_TARANTELLA },
+  {  1,  4,   500, FLAT, MONS_CULICIVORA },
+  {  1,  4,   500, FALL, MONS_CULICIVORA },
+  {  1,  4,   700, FLAT, MONS_DEMONIC_CRAWLER },
+  {  1,  4,   300, FALL, MONS_DEMONIC_CRAWLER },
+  // Harder enemies:
+  {  1,  4,   625, FLAT, MONS_WOLF_SPIDER },
+  {  1,  4,   525, RISE, MONS_WOLF_SPIDER },
+  {  1,  4,   400, FLAT, MONS_TORPOR_SNAIL },
+  {  1,  4,   200, RISE, MONS_TORPOR_SNAIL },
+  {  1,  4,   325, FLAT, MONS_ENTROPY_WEAVER },
+  {  1,  4,   325, RISE, MONS_ENTROPY_WEAVER },
+  {  1,  4,   200, FLAT, MONS_RADROACH },
+  {  1,  4,   200, RISE, MONS_RADROACH },
+  {  1,  4,   525, FLAT, MONS_PHARAOH_ANT },
+  {  1,  4,   425, RISE, MONS_PHARAOH_ANT },
+  {  1,  4,   200, FLAT, MONS_MOTH_OF_WRATH },
+  {  1,  4,   250, RISE, MONS_MOTH_OF_WRATH },
+  {  1,  4,   525, FLAT, MONS_STEELBARB_WORM },
+  {  1,  4,   325, RISE, MONS_STEELBARB_WORM },
+  {  1,  4,   200, FLAT, MONS_ORB_SPIDER },
+  {  1,  4,   350, RISE, MONS_ORB_SPIDER },
+  // Top-tier threats:
+  {  1,  4,   100, FLAT, MONS_GHOST_MOTH },
+  {  1,  4,   175, RISE, MONS_GHOST_MOTH },
+  {  1,  4,   100, FLAT, MONS_EMPEROR_SCORPION },
+  {  1,  4,   175, RISE, MONS_EMPEROR_SCORPION },
+  {  1,  4,   100, FLAT, MONS_BROODMOTHER },
+  {  1,  4,   150, RISE, MONS_BROODMOTHER },
+  {  1,  4,   75,  FLAT, MONS_JOROGUMO },
+  {  1,  4,   150, RISE, MONS_JOROGUMO },
+  {  1,  4,   50,  FLAT, MONS_MELIAI },
+  {  1,  4,   150, RISE, MONS_MELIAI },
+  {  1,  4,   100, FLAT, MONS_SUN_MOTH },
+  {  1,  4,   150, RISE, MONS_SUN_MOTH },
+  {  1,  4,   75,  FLAT, MONS_SPARK_WASP },
+  {  1,  4,   150, RISE, MONS_SPARK_WASP },
+  // OODs
+  {  5,  7,   1500,  FLAT, MONS_SPARK_WASP },
+  {  5,  7,   1500,  FLAT, MONS_JOROGUMO },
+  {  5,  7,   1500,  FLAT, MONS_RADROACH },
+  {  5,  7,   1500,  FLAT, MONS_BROODMOTHER },
+  {  5,  7,   1750,  FLAT, MONS_GHOST_MOTH },
+  {  5,  7,   1750,  FLAT, MONS_EMPEROR_SCORPION },
+  {  5,  7,   500,   FLAT, MONS_DEATH_SCARAB },
+},
 
-static const pop_entry pop_slime[] =
 { // Slime Pits
   {  1,  5, 2000, FLAT, MONS_SLIME_CREATURE },
   {  1,  5, 1000, FLAT, MONS_ACID_BLOB },
@@ -399,10 +457,8 @@ static const pop_entry pop_slime[] =
   {  1,  8,  390, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  2,  5,  100, RISE, MONS_GLOWING_ORANGE_BRAIN },
   {  2,  8,   50, SEMI, MONS_FLOATING_EYE },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_vaults[] =
 { // The Vaults (OOD cap: 12)
   // Vaults is essentially split in two: Vaults 1-4, the 'normal' part,
   // and Vaults:5, the final challenge.
@@ -414,13 +470,14 @@ static const pop_entry pop_vaults[] =
   {  1,  4,  200, FALL, MONS_BOULDER_BEETLE },
   {  1,  4,  175, FALL, MONS_HARPY },
   {  1,  4,  100, FALL, MONS_BOGGART },
+  {  1,  4,  600, FALL, MONS_LINDWURM },
 
-  {  1,  4,  200, FLAT, MONS_IRONBOUND_BEASTMASTER },
-  {  1,  4,  800, FALL, MONS_IRONBOUND_BEASTMASTER },
+  {  1,  4,  200, FLAT, MONS_DIRE_ELEPHANT },
+  {  1,  4,  200, FALL, MONS_DIRE_ELEPHANT },
   {  1,  4,  400, FLAT, MONS_SLIME_CREATURE },
   {  1,  4,  400, FALL, MONS_SLIME_CREATURE },
-  {  1,  4, 1250, FLAT, MONS_VAULT_SENTINEL },
   // Harder enemies:
+  {  1,  4, 1250, FLAT, MONS_VAULT_SENTINEL },
   {  1,  4,  150, FLAT, MONS_ENTROPY_WEAVER },
   {  1,  4, 1200, FLAT, MONS_IRONBOUND_CONVOKER },
   {  1,  4, 1200, FLAT, MONS_IRONBOUND_PRESERVER },
@@ -429,14 +486,14 @@ static const pop_entry pop_vaults[] =
   {  1,  4,  525, RISE, MONS_VAULT_WARDEN },
   {  1,  4,  500, FLAT, MONS_IRONBOUND_THUNDERHULK },
   {  1,  4,  200, RISE, MONS_IRONBOUND_THUNDERHULK },
-  {  1,  4,  150, FLAT, MONS_GREAT_ORB_OF_EYES },
-  {  1,  4,  150, RISE, MONS_GREAT_ORB_OF_EYES },
+  {  1,  4,  325, FLAT, MONS_GREAT_ORB_OF_EYES },
+  {  1,  4,  325, RISE, MONS_GREAT_ORB_OF_EYES },
   {  1,  4,   50, FLAT, MONS_GLOWING_ORANGE_BRAIN },
   {  1,  4,   50, RISE, MONS_GLOWING_ORANGE_BRAIN },
   {  1,  4,  150, FLAT, MONS_VERY_UGLY_THING },
   {  1,  4,  100, RISE, MONS_VERY_UGLY_THING },
-  {  1,  4,  525, FLAT, MONS_WIZARD },
-  {  1,  4,  525, RISE, MONS_WIZARD },
+  {  1,  4,  350, FLAT, MONS_WIZARD },
+  {  1,  4,  350, RISE, MONS_WIZARD },
   {  1,  4,   75, FLAT, MONS_NECROMANCER },
   {  1,  4,   75, RISE, MONS_NECROMANCER },
   {  1,  4,  500, FLAT, MONS_YAKTAUR_CAPTAIN },
@@ -505,10 +562,14 @@ static const pop_entry pop_vaults[] =
   {  5, 12,   45, RISE, MONS_IRON_DRAGON },
   {  5, 12,   45, RISE, MONS_ANCIENT_LICH },
   {  5, 12,   45, RISE, MONS_DREAD_LICH },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_crypt[] =
+#if TAG_MAJOR_VERSION == 34
+{ // Hall of Blades
+  {  1,  1, 1000, FLAT, MONS_DANCING_WEAPON },
+},
+#endif
+
 { // Crypt (OOD cap: 5)
   { -4,  3,   45, PEAK, MONS_FLYING_SKULL },
   { -4,  3,   75, SEMI, MONS_NECROMANCER },
@@ -533,10 +594,8 @@ static const pop_entry pop_crypt[] =
   {  2,  7,   55, PEAK, MONS_LICH },
   {  3,  7,   15, PEAK, MONS_ANCIENT_LICH },
   {  3,  7,   15, PEAK, MONS_DREAD_LICH },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_tomb[] =
 { // Tomb (OOD cap: 5)
   {  1,  5,  200, FLAT, MONS_SKELETON },
   {  1,  5,  185, FLAT, MONS_ZOMBIE },
@@ -552,10 +611,11 @@ static const pop_entry pop_tomb[] =
   {  1,  5,  250, FLAT, MONS_USHABTI },
   {  1,  5,  150, FLAT, MONS_DEATH_SCARAB },
   {  3,  5,   12, SEMI, MONS_BENNU },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
+#if TAG_MAJOR_VERSION > 34
+POP_DEPTHS,
+#endif
 
-static const pop_entry pop_hell[] =
 { // Hell
   {  1,  1,   89, FLAT, MONS_HELL_RAT },
   {  1,  1,   89, FLAT, MONS_DEMONIC_CRAWLER },
@@ -578,155 +638,113 @@ static const pop_entry pop_hell[] =
   {  1,  1,   52, FLAT, MONS_BLIZZARD_DEMON },
   {  1,  1,   52, FLAT, MONS_BALRUG },
   {  1,  1,   52, FLAT, MONS_CACODEMON },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_dis[] =
+// Hell branches: OOD Cap 14
+// "cross-hell" threats (good for regular rolls, fall off and
+// let branch flavour take over as depth goes 8-12)
+#define CROSS_HELL_POP \
+  {  1,  7,  100, FLAT, MONS_HELLION },\
+  {  8, 12,  100, FALL, MONS_HELLION },\
+  {  1,  7,  100, FLAT, MONS_TORMENTOR },\
+  {  8, 12,  100, FALL, MONS_TORMENTOR },\
+  {  1, 12,   10, FLAT, MONS_ANCIENT_LICH },\
+  {  1, 12,   10, FLAT, MONS_DREAD_LICH }
+
 { // Dis
-  {  1,  7, 2000, FLAT, MONS_ZOMBIE },
-  {  1, 12,  270, FALL, MONS_SKELETON },
-  {  1,  7,  136, FALL, MONS_NECROPHAGE },
-  {  1,  7,  420, FALL, MONS_MUMMY },
-  {  1,  7,   66, FALL, MONS_PHANTOM },
-  {  1,  6,  420, FALL, MONS_WIGHT },
-  {  1,  7,  475, SEMI, MONS_WRAITH },
-  {  1,  5,  625, FALL, MONS_SHADOW },
-  {  1,  7,  260, FALL, MONS_FLYING_SKULL },
-  {  1,  7,  192, SEMI, MONS_FREEZING_WRAITH },
-  {  1, 12,  515, FALL, MONS_SKELETAL_WARRIOR },
-  {  1,  7,  160, PEAK, MONS_PHANTASMAL_WARRIOR },
-  {  1,  7,  136, SEMI, MONS_FLAYED_GHOST },
-  {  1,  9,   89, PEAK, MONS_BONE_DRAGON },
-  {  1,  7,   25, PEAK, MONS_LICH },
-//{  4,  6,    4, SEMI, MONS_ANCIENT_LICH },
-  {  1,  7,   25, FLAT, MONS_EFREET },
-  {  1, 12,  440, FALL, MONS_HELL_HOUND },
-  {  1,  7,   89, FALL, MONS_HELL_HOG },
-  {  1,  7,   25, FALL, MONS_HELL_KNIGHT },
-  {  1,  7, 1000, FLAT, MONS_IRON_IMP },
-  {  1,  2,    8, FALL, MONS_CRIMSON_IMP },
-  {  1,  7, 1000, FLAT, MONS_RUST_DEVIL },
-  {  1,  7,  540, FALL, MONS_RED_DEVIL },
-  {  1,  7,  335, FLAT, MONS_ICE_DEVIL },
-  {  1,  7,   25, PEAK, MONS_SOUL_EATER },
-  {  1,  7,  900, FLAT, MONS_REAPER },
-  {  1,  7,  775, FLAT, MONS_TORMENTOR },
-  {  1,  7,  300, FLAT, MONS_HELLION },
-  {  4,  7,    4, FLAT, MONS_BRIMSTONE_FIEND },
-  {  2,  8,   25, PEAK, MONS_IRON_DRAGON },
-  {  1, 12,   60, FALL, MONS_IRON_GOLEM },
-  {  1,  7,   25, PEAK, MONS_DANCING_WEAPON },
-  {  1,  7,  270, RISE, MONS_IRON_GIANT },
-  { 0,0,0,FLAT,MONS_0 }
-};
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  500, FALL, MONS_ANCIENT_CHAMPION },
+  {  1,  7,  125, FLAT, MONS_ANCIENT_CHAMPION },
+  {  1,  5,  400, FALL, MONS_WAR_GARGOYLE },
+  {  1,  7,  100, FLAT, MONS_WAR_GARGOYLE },
+  {  1,  5,  100, FALL, MONS_IRON_DRAGON },
+  {  1,  7,   25, FLAT, MONS_IRON_DRAGON },
+  // "branch flavour" threats
+  {  1,  7,  300, SEMI, MONS_IRON_GOLEM },
+  {  7, 14,  300, FALL, MONS_IRON_GOLEM },
+  {  1,  7,  200, SEMI, MONS_CAUSTIC_SHRIKE },
+  {  7, 14,  200, FALL, MONS_CAUSTIC_SHRIKE },
+  {  1,  7,  300, SEMI, MONS_QUICKSILVER_ELEMENTAL },
+  {  7, 14,  300, FALL, MONS_QUICKSILVER_ELEMENTAL },
+  {  1,  7,  200, SEMI, MONS_CRYSTAL_ECHIDNA },
+  {  7, 14,  200, FALL, MONS_CRYSTAL_ECHIDNA },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_HELL_SENTINEL },
+  {  8, 14,  400, FLAT, MONS_HELL_SENTINEL },
+  {  1, 14,  400, RISE, MONS_IRON_GIANT },
+},
 
-static const pop_entry pop_geh[] =
 { // Gehenna
-  {  1,  7, 1950, FLAT, MONS_SKELETON },
-  {  1,  7, 1950, FLAT, MONS_ZOMBIE },
-  {  1,  7,  215, FALL, MONS_PHANTOM },
-  {  1,  7,  515, FALL, MONS_NECROPHAGE },
-  {  1,  7,  690, FALL, MONS_WIGHT },
-  {  0,  7,  570, FLAT, MONS_WRAITH },
-  {  1,  7,  705, FALL, MONS_SHADOW },
-  {  1,  7,  385, FLAT, MONS_FLYING_SKULL },
-  {  1,  9,   89, PEAK, MONS_PHANTASMAL_WARRIOR },
-  {  1,  7,  215, FLAT, MONS_FLAYED_GHOST },
-  {  2,  8,   25, PEAK, MONS_BONE_DRAGON },
-  {  1,  9,  136, SEMI, MONS_LICH },
-  {  4,  7,    2, FLAT, MONS_ANCIENT_LICH },
-  {  2,  6,  215, FLAT, MONS_EFREET },
-  { -1,  7,  515, PEAK, MONS_HELL_KNIGHT },
-  {  1,  7,  350, FLAT, MONS_HELL_HOUND },
-  {  1,  7,  300, FLAT, MONS_HELL_HOG },
-  {  1,  7,  192, FALL, MONS_CRIMSON_IMP },
-  {  1, 12,  690, FALL, MONS_RED_DEVIL },
-  { -1,  7,   89, PEAK, MONS_RUST_DEVIL },
-  {  3,  7,    8, PEAK, MONS_SOUL_EATER },
-  {  1,  7,  590, FLAT, MONS_HELLION },
-  {  1,  7,  365, FLAT, MONS_TORMENTOR },
-  {  1,  7,  192, FLAT, MONS_BALRUG },
-  {  1,  9,  385, SEMI, MONS_REAPER },
-  {  3,  7,   14, SEMI, MONS_HELL_SENTINEL },
-  {  3,  7,    8, PEAK, MONS_BRIMSTONE_FIEND },
-  {  1,  7,   46, FALL, MONS_FIRE_BAT },
-  {  2,  6,    8, PEAK, MONS_FIRE_CRAB },
-  {  1,  7,   30, FLAT, MONS_IRON_GOLEM },
-  { 0,0,0,FLAT,MONS_0 }
-};
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  400, FALL, MONS_HELL_HOG },
+  {  1,  7,  100, FLAT, MONS_HELL_HOG },
+  {  1,  5,  400, FALL, MONS_FIRE_GIANT },
+  {  1,  7,  100, FLAT, MONS_FIRE_GIANT },
+  {  1,  5,  200, FALL, MONS_SALAMANDER_TYRANT },
+  {  1,  7,   50, FLAT, MONS_SALAMANDER_TYRANT },
+  // "branch flavour" threats
+  {  1,  7,  450, SEMI, MONS_BALRUG },
+  {  7, 14,  450, FALL, MONS_BALRUG },
+  {  1,  7,  450, SEMI, MONS_SEARING_WRETCH },
+  {  7, 14,  450, FALL, MONS_SEARING_WRETCH },
+  // cut these off for deep super-ood
+  {  1, 12,   70, FLAT, MONS_STOKER },
+  {  1, 12,   30, FLAT, MONS_CREEPING_INFERNO },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_HELLEPHANT },
+  {  8, 14,  400, FLAT, MONS_HELLEPHANT },
+  {  1, 14,  400, RISE, MONS_BRIMSTONE_FIEND },
+},
 
-static const pop_entry pop_coc[] =
 { // Cocytus
-  {  1,  7, 1915, FLAT, MONS_SKELETON },
-  {  1,  7, 1915, FLAT, MONS_ZOMBIE },
-  {  1,  7,   70, FALL, MONS_SIMULACRUM },
-  {  1,  5,  136, FALL, MONS_PHANTOM },
-  { -1,  7,  260, SEMI, MONS_MUMMY },
-  {  1,  7,  136, FALL, MONS_NECROPHAGE },
-  {  1,  7,  420, FALL, MONS_WIGHT },
-  { -1,  7,  560, SEMI, MONS_WRAITH },
-  {  1,  6,  625, FALL, MONS_SHADOW },
-  {  1,  7,  970, FLAT, MONS_FREEZING_WRAITH },
-  {  1,  7,  640, SEMI, MONS_FLYING_SKULL },
-  {  1,  7,  515, FLAT, MONS_SKELETAL_WARRIOR },
-  {  1,  7,   89, PEAK, MONS_PHANTASMAL_WARRIOR },
-  {  2,  7,   35, FLAT, MONS_BONE_DRAGON },
-  {  2,  8,   35, PEAK, MONS_LICH },
-  {  3,  7,    8, PEAK, MONS_ANCIENT_LICH },
-  {  1,  7,  890, FLAT, MONS_WHITE_IMP },
-  {  1,  7,  890, FLAT, MONS_ICE_DEVIL },
-  {  1,  7,   81, PEAK, MONS_SOUL_EATER },
-  {  1,  7,  285, FLAT, MONS_TORMENTOR },
-  {  1,  7,  192, FLAT, MONS_BLIZZARD_DEMON },
-  {  1,  7,  455, RISE, MONS_REAPER },
-  {  1,  7,  955, FALL, MONS_ICE_BEAST },
-  {  1,  7,  305, FLAT, MONS_ICE_DRAGON },
-  {  1,  7,  270, RISE, MONS_SHARD_SHRIKE },
-  { 0,0,0,FLAT,MONS_0 }
-};
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  800, FALL, MONS_SIMULACRUM },
+  {  1,  7,  200, FLAT, MONS_SIMULACRUM },
+  {  1,  7,  100, FALL, MONS_FREEZING_WRAITH },
+  {  1,  7,   25, FLAT, MONS_FREEZING_WRAITH },
+  {  1,  7,  100, FALL, MONS_FROST_GIANT },
+  {  1,  7,   25, FLAT, MONS_FROST_GIANT },
+  // "branch flavour" threats
+  {  1,  7,  200, PEAK, MONS_TITAN }, // Antaeus brought pals
+  {  1,  7,   50, FLAT, MONS_AZURE_JELLY },
+  // don't include our guests in ood rolls
+  {  1,  7,  375, SEMI, MONS_WENDIGO },
+  {  7, 14,  500, FALL, MONS_WENDIGO },
+  {  1,  7,  375, SEMI, MONS_NARGUN },
+  {  7, 14,  500, FALL, MONS_NARGUN },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_ICE_FIEND },
+  {  8, 14,  400, FLAT, MONS_ICE_FIEND },
+  {  1, 14,  400, RISE, MONS_SHARD_SHRIKE },
+},
 
-static const pop_entry pop_tar[] =
 { // Tartarus
-  {  1,  7, 2000, FLAT, MONS_SKELETON },
-  {  1,  7, 2000, FLAT, MONS_ZOMBIE },
-  {  1,  7,   70, PEAK, MONS_SIMULACRUM },
-  {  1,  7,  850, SEMI, MONS_NECROPHAGE },
-  {  1,  7,  935, FLAT, MONS_NECROPHAGE },
-  {  1,  7,  990, FLAT, MONS_SHADOW },
-  {  1,  7,  550, SEMI, MONS_WRAITH },
-  {  1,  7,  550, FALL, MONS_PHANTOM },
-  {  1,  7,  835, FALL, MONS_WIGHT },
-  {  1,  7,  200, FLAT, MONS_VAMPIRE_MAGE },
-  {  1,  7,  200, FLAT, MONS_VAMPIRE_KNIGHT },
-  {  1,  7,  570, FLAT, MONS_FLYING_SKULL },
-  {  1,  7,  690, SEMI, MONS_FREEZING_WRAITH },
-  {  1,  7,  420, FLAT, MONS_PHANTASMAL_WARRIOR },
-  {  1,  7, 1000, FLAT, MONS_SKELETAL_WARRIOR },
-  {  1,  7,  192, FLAT, MONS_FLAYED_GHOST },
-  {  1,  7,  260, FLAT, MONS_SILENT_SPECTRE },
-  {  1,  7,  334, FLAT, MONS_BONE_DRAGON },
-  {  1,  9,  125, PEAK, MONS_LICH },
-  {  3,  7,   11, PEAK, MONS_ANCIENT_LICH },
-  {  1,  7,  550, FALL, MONS_HELL_HOUND },
-  {  1,  7,  729, FLAT, MONS_DOOM_HOUND },
-  {  1,  7,   46, FALL, MONS_HELL_KNIGHT },
-  {  1,  7,   35, PEAK, MONS_NECROMANCER },
-  {  1,  7,   89, FALL, MONS_CRIMSON_IMP },
-  {  1,  7, 1000, FLAT, MONS_SHADOW_IMP },
-  {  1,  7,   40, PEAK, MONS_RED_DEVIL },
-  {  1,  7,  245, SEMI, MONS_ICE_DEVIL },
-  {  1,  9,  260, SEMI, MONS_SOUL_EATER },
-  {  1,  7,  860, FLAT, MONS_REAPER },
-  {  1,  7,  365, FLAT, MONS_TORMENTOR },
-  {  1,  7,  365, FLAT, MONS_HELLION },
-  {  1,  7,  365, FLAT, MONS_SHADOW_DEMON },
-  {  1,  7,  230, SEMI, MONS_GHOST_CRAB },
-  {  1,  7,   89, FLAT, MONS_DEATH_DRAKE },
-  {  1,  7,   89, SEMI, MONS_SHADOW_DRAGON },
-  { 0,0,0,FLAT,MONS_0 }
-};
+  CROSS_HELL_POP,
+  // "basic" monsters
+  {  1,  5,  800, FALL, MONS_SPECTRAL_THING },
+  {  1,  7,  200, FLAT, MONS_SPECTRAL_THING },
+  {  1,  5,  100, FALL, MONS_SHADOW_WRAITH },
+  {  1,  7,   25, FLAT, MONS_SHADOW_WRAITH },
+  {  1,  5,  100, FALL, MONS_EIDOLON },
+  {  1,  7,   25, FLAT, MONS_EIDOLON },
+  // "branch flavour" threats
+  {  1,  7,  200, SEMI, MONS_PROFANE_SERVITOR },
+  {  1,  7,  150, SEMI, MONS_BONE_DRAGON },
+  {  7, 14,  400, FALL, MONS_BONE_DRAGON },
+  {  1,  7,  300, SEMI, MONS_DOOM_HOUND },
+  {  7, 14,  300, FALL, MONS_DOOM_HOUND },
+  {  1,  7,  300, SEMI, MONS_PUTRID_MOUTH },
+  {  7, 14,  300, FALL, MONS_PUTRID_MOUTH },
+  {  1, 12,   50, FLAT, MONS_SILENT_SPECTRE },
+  // "top tier" signature threats
+  {  1,  7,  400, RISE, MONS_TAINTED_LEVIATHAN },
+  {  8, 14,  400, FLAT, MONS_TAINTED_LEVIATHAN },
+  {  1, 14,  400, RISE, MONS_TZITZIMITL },
+},
 
-static const pop_entry pop_zot[] =
 { // Zot
   {  1,  5,  970, FLAT, MONS_MOTH_OF_WRATH },
   {  1,  5,  192, RISE, MONS_GHOST_MOTH },
@@ -752,10 +770,8 @@ static const pop_entry pop_zot[] =
   {  1,  5,  515, FLAT, MONS_TENTACLED_MONSTROSITY },
   {  1,  5,   89, FALL, MONS_ELECTRIC_GOLEM },
   {  1,  5,   42, FLAT, MONS_ORB_OF_FIRE },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 #if TAG_MAJOR_VERSION == 34
-static const pop_entry pop_forest[] =
 { // Forest
   {  1,  5,  120, FALL, MONS_WOLF },
   {  1,  5,   35, FALL, MONS_BLACK_BEAR },
@@ -779,11 +795,9 @@ static const pop_entry pop_forest[] =
   {  1,  6,   85, SEMI, MONS_ANACONDA },
   {  1,  9,  100, PEAK, MONS_THORN_HUNTER },
   {  1,  5,  125, FLAT, MONS_BUTTERFLY },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 #endif
 
-static const pop_entry pop_abyss[] =
 { // Abyss
   {  1,  5,   50, FLAT, MONS_SHAPESHIFTER },
   {  1, 10,   10, SEMI, MONS_GLOWING_SHAPESHIFTER },
@@ -891,7 +905,7 @@ static const pop_entry pop_abyss[] =
   {  1,  5,    3, FLAT, MONS_DRACONIAN_ANNIHILATOR },
   {  1,  5,    3, FLAT, MONS_DRACONIAN_KNIGHT },
   {  1,  5,    3, FLAT, MONS_DRACONIAN_SCORCHER },
-  {  3,  5,    1, FLAT, MONS_CORRUPTER },
+  {  3,  5,    1, FLAT, MONS_DEMONSPAWN_CORRUPTER },
   // Misc
   {  1,  5,    8, FLAT, MONS_DEATH_DRAKE },
   {  1,  5,    2, FLAT, MONS_SHADOW_DRAGON },
@@ -913,10 +927,8 @@ static const pop_entry pop_abyss[] =
   {  1,  5,   11, FLAT, MONS_ANGEL },
   {  1,  5,   14, FLAT, MONS_DAEVA },
   {  1,  5,    8, FLAT, MONS_OPHAN },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_pan[] =
 { // Pandemonium - only used for 1 in 40 random Pan spawns (the rest are drawn
   // from each floor's monster list), and for the Orb run (where monsters are
   // picked randomly without checking rarity).
@@ -940,8 +952,8 @@ static const pop_entry pop_pan[] =
   {  1,  1, 1000, FLAT, MONS_YNOXINUL },
   {  1,  1,  400, FLAT, MONS_NEQOXEC },
   {  1,  1,  900, FLAT, MONS_SMOKE_DEMON },
-  {  1,  1,  335, FLAT, MONS_SUN_DEMON },
-  {  1,  1,  335, FLAT, MONS_SOUL_EATER },
+  {  1,  1,  535, FLAT, MONS_SUN_DEMON },
+  {  1,  1,  535, FLAT, MONS_SOUL_EATER },
   {  1,  1,  192, FLAT, MONS_CHAOS_SPAWN },
   {  1,  1, 1000, FLAT, MONS_BALRUG },
   {  1,  1, 1000, FLAT, MONS_BLIZZARD_DEMON },
@@ -951,59 +963,37 @@ static const pop_entry pop_pan[] =
   {  1,  1,  335, FLAT, MONS_TORMENTOR },
   {  1,  1,  335, FLAT, MONS_REAPER },
   {  1,  1,  335, FLAT, MONS_SHADOW_DEMON },
-  {  1,  1,  335, FLAT, MONS_HELL_BEAST },
-  {  1,  1,  335, FLAT, MONS_LOROCYPROCA },
+  {  1,  1,  535, FLAT, MONS_HELL_BEAST },
+  {  1,  1,  535, FLAT, MONS_LOROCYPROCA },
   {  1,  1, 1000, FLAT, MONS_EXECUTIONER },
   {  1,  1,  335, FLAT, MONS_BRIMSTONE_FIEND },
   {  1,  1,  335, FLAT, MONS_ICE_FIEND },
   {  1,  1,  335, FLAT, MONS_HELL_SENTINEL },
   {  1,  1,  335, FLAT, MONS_TZITZIMITL },
   {  1,  1,    8, FLAT, MONS_PROFANE_SERVITOR },
-  {  1,  1,  250, FLAT, MONS_MONSTROUS_DEMONSPAWN },
-  {  1,  1,  250, FLAT, MONS_GELID_DEMONSPAWN },
-  {  1,  1,  250, FLAT, MONS_INFERNAL_DEMONSPAWN },
-  {  1,  1,  250, FLAT, MONS_TORTUROUS_DEMONSPAWN },
-  {  1,  1,  625, FLAT, MONS_BLOOD_SAINT },
-  {  1,  1,  625, FLAT, MONS_WARMONGER },
-  {  1,  1,  625, FLAT, MONS_CORRUPTER },
-  {  1,  1,  625, FLAT, MONS_BLACK_SUN },
+  {  1,  1,  675, FLAT, MONS_DEMONSPAWN_BLOOD_SAINT },
+  {  1,  1,  675, FLAT, MONS_DEMONSPAWN_WARMONGER },
+  {  1,  1,  675, FLAT, MONS_DEMONSPAWN_CORRUPTER },
+  {  1,  1,  675, FLAT, MONS_DEMONSPAWN_BLACK_SUN },
   {  1,  1,   50, FLAT, MONS_ANGEL },
   {  1,  1,   40, FLAT, MONS_CHERUB },
   {  1,  1,   25, FLAT, MONS_DAEVA },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_zig[] =
 { // Ziggurat
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_gauntlet[] =
-{ // Gauntlet
-  { 0,0,0,FLAT,MONS_0 }
-};
+#if TAG_MAJOR_VERSION == 34
+{ // Labyrinth
+},
+#endif
 
-static const pop_entry pop_bazaar[] =
 { // Bazaar
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_trove[] =
 { // Trove
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_desolation[] =
-{ // Desolation
-  {  1,  1, 1200, FLAT, MONS_SALTLING },
-  {  1,  1,   50, FLAT, MONS_DANCING_WEAPON },
-  {  1,  1,   50, FLAT, MONS_MOLTEN_GARGOYLE },
-  {  1,  1,   50, FLAT, MONS_CRYSTAL_GUARDIAN },
-  {  1,  1,   50, FLAT, MONS_IMPERIAL_MYRMIDON },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_sewer[] =
 { // Sewer
   {  1,  1, 1000, FLAT, MONS_FRILLED_LIZARD },
   {  1,  1,  515, FLAT, MONS_QUOKKA },
@@ -1013,27 +1003,26 @@ static const pop_entry pop_sewer[] =
   {  1,  1,  515, FLAT, MONS_WORM },
   {  1,  1,  515, FLAT, MONS_ENDOPLASM },
   {  1,  1,  515, FLAT, MONS_GIANT_COCKROACH },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_ossuary[] =
 { // Ossuary
   {  1,  1,   89, FLAT, MONS_MUMMY },
   {  1,  1,  515, FLAT, MONS_SKELETON },
   {  1,  1,  515, FLAT, MONS_ZOMBIE },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_bailey[] =
 { // Bailey
   {  1,  1,  515, FLAT, MONS_GNOLL },
   {  1,  1,  515, FLAT, MONS_ORC },
   {  1,  1,  260, FLAT, MONS_ORC_WARRIOR },
   {  1,  1,   25, FLAT, MONS_ORC_KNIGHT },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_icecv[] =
+#if TAG_MAJOR_VERSION > 34
+{ // Gauntlet
+},
+#endif
+
 { // Ice Cave
   {  1,  1,   89, FLAT, MONS_YAK },
   {  1,  1,   89, FLAT, MONS_POLAR_BEAR },
@@ -1043,10 +1032,8 @@ static const pop_entry pop_icecv[] =
   {  1,  1,  515, FLAT, MONS_RIME_DRAKE },
   {  1,  1,  260, FLAT, MONS_FREEZING_WRAITH },
   {  1,  1, 1030, FLAT, MONS_SIMULACRUM },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_volcano[] =
 { // Volcano
   {  1,  1,  515, FLAT, MONS_SALAMANDER },
   {  1,  1,  515, FLAT, MONS_HELL_HOUND },
@@ -1057,483 +1044,284 @@ static const pop_entry pop_volcano[] =
   {  1,  1,  515, FLAT, MONS_FIRE_ELEMENTAL },
   {  1,  1,  385, FLAT, MONS_GARGOYLE },
   {  1,  1,  515, FLAT, MONS_MOLTEN_GARGOYLE },
-  { 0,0,0,FLAT,MONS_0 }
-};
+},
 
-static const pop_entry pop_wizlab[] =
 { // Wizlab
-  { 0,0,0,FLAT,MONS_0 }
+},
+
+#if TAG_MAJOR_VERSION == 34
+POP_DEPTHS,
+#endif
+
+{ // Desolation
+  {  1,  1, 1200, FLAT, MONS_SALTLING },
+  {  1,  1,   50, FLAT, MONS_DANCING_WEAPON },
+  {  1,  1,   50, FLAT, MONS_MOLTEN_GARGOYLE },
+  {  1,  1,   50, FLAT, MONS_CRYSTAL_GUARDIAN },
+  {  1,  1,   50, FLAT, MONS_IMPERIAL_MYRMIDON },
+},
+
+#if TAG_MAJOR_VERSION == 34
+{ // Gauntlet
+},
+#endif
+
+{ // Arena
+},
+
 };
 
-static const pop_entry pop_depths[] =
-{ // Depths (OOD cap: 14)
-  { -2,  4,  250, SEMI, MONS_RAKSHASA },
-  { -2,  4,  100, SEMI, MONS_WIZARD },
-  { -2,  4,  100, SEMI, MONS_NECROMANCER },
-  { -2, 10,  250, PEAK, MONS_FIRE_GIANT },
-  { -2, 10,  260, PEAK, MONS_FROST_GIANT },
-  { -2, 10,   70, PEAK, MONS_HELL_KNIGHT },
-  { -2, 10,  100, PEAK, MONS_VAMPIRE_KNIGHT },
-  {  1,  3,  300, FALL, MONS_UGLY_THING },
-  {  1,  6,  180, FLAT, MONS_DEEP_TROLL_SHAMAN },
-  {  1,  6,  180, FLAT, MONS_DEEP_TROLL_EARTH_MAGE },
-  {  1,  6,  295, FLAT, MONS_FIRE_DRAGON },
-  {  1,  6,  295, FLAT, MONS_ICE_DRAGON },
-  {  1,  6,  250, FLAT, MONS_VERY_UGLY_THING },
-  {  1,  6,  225, FLAT, MONS_GREAT_ORB_OF_EYES },
-  {  1,  6,  100, FLAT, MONS_GLOWING_ORANGE_BRAIN },
-  {  1,  7,  100, FALL, MONS_VAMPIRE_MAGE },
-  {  1,  7,  200, FALL, MONS_TENGU_WARRIOR },
-  {  1,  7,  100, FALL, MONS_TENGU_CONJURER },
-  {  1,  8,  600, FALL, MONS_STONE_GIANT },
-  {  1,  8,  370, FALL, MONS_ETTIN },
-  {  1, 10,  100, SEMI, MONS_SPARK_WASP },
-  {  1, 12,   60, FLAT, MONS_LICH },
-  {  1, 12,   40, FLAT, MONS_FLAYED_GHOST },
-  {  1, 14,   80, SEMI, MONS_GLOWING_SHAPESHIFTER },
-  {  1, 14,   80, SEMI, MONS_TENGU_REAVER },
-  {  1, 14,   60, SEMI, MONS_SPHINX },
-  {  2,  8,  135, SEMI, MONS_SPRIGGAN_AIR_MAGE },
-  {  2,  8,  185, SEMI, MONS_SPRIGGAN_BERSERKER },
-  {  2, 10,   25, FLAT, MONS_FLOATING_EYE },
-  {  3, 14,   45, FLAT, MONS_SPRIGGAN_DEFENDER },
-  {  4, 14,   80, SEMI, MONS_TENTACLED_MONSTROSITY },
-  {  4, 14,   40, FLAT, MONS_STORM_DRAGON },
-  {  4, 14,   40, FLAT, MONS_SHADOW_DRAGON },
-  {  4, 14,   20, FLAT, MONS_QUICKSILVER_DRAGON },
-  {  4, 14,   40, FLAT, MONS_IRON_DRAGON },
-  {  4, 14,   80, SEMI, MONS_GOLDEN_DRAGON },
-  {  4, 14,   50, RISE, MONS_DEEP_ELF_HIGH_PRIEST },
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_DEMONOLOGIST },
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_ANNIHILATOR },
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_SORCERER },
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_DEATH_MAGE },
-  {  4, 14,   25, RISE, MONS_DEEP_ELF_ELEMENTALIST },
-  {  5, 14,   50, FLAT, MONS_JUGGERNAUT },
-  {  5, 14,   50, FLAT, MONS_CAUSTIC_SHRIKE },
-  {  6, 14,   50, FLAT, MONS_TITAN },
-  { 10, 14,   10, FLAT, MONS_ANCIENT_LICH },
-  { 10, 14,   10, FLAT, MONS_DREAD_LICH },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-struct population_list
-{
-    const pop_entry *pop;
-    int count;
-};
-
-// This list must be in the same order as the branch-type enum values.
-//
-// In C++ prior to C++11, we can't have an array of pointers to initialized
-// arrays of different sizes without declaring individual arrays as
-// standalone symbols first. Thus this fugly list.
-// Statically defined counts are merely an inconsequential nicety, no need
-// to preserve them.
-#define POP(x) { pop_##x, ARRAYSZ(pop_##x) - 1 }
-static const population_list population[] =
-{
-    POP(d),
-    POP(temple),
-    POP(orc),
-    POP(elf),
-#if TAG_MAJOR_VERSION == 34
-    POP(dwarf),
-#endif
-    POP(lair),
-    POP(swamp),
-    POP(shoals),
-    POP(snake),
-    POP(spider),
-    POP(slime),
-    POP(vaults),
-#if TAG_MAJOR_VERSION == 34
-    POP(blade),
-#endif
-    POP(crypt),
-    POP(tomb),
-#if TAG_MAJOR_VERSION > 34
-    POP(depths),
-#endif
-    POP(hell),
-    POP(dis),
-    POP(geh),
-    POP(coc),
-    POP(tar),
-    POP(zot),
-#if TAG_MAJOR_VERSION == 34
-    POP(forest),
-#endif
-    POP(abyss),
-    POP(pan),
-    POP(zig),
-#if TAG_MAJOR_VERSION == 34
-    POP(lab),
-#endif
-    POP(bazaar),
-    POP(trove),
-    POP(sewer),
-    POP(ossuary),
-    POP(bailey),
-#if TAG_MAJOR_VERSION > 34
-    POP(gauntlet),
-#endif
-    POP(icecv),
-    POP(volcano),
-    POP(wizlab),
-#if TAG_MAJOR_VERSION == 34
-    POP(depths),
-#endif
-    POP(desolation),
-#if TAG_MAJOR_VERSION == 34
-    POP(gauntlet),
-#endif
-};
 COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);
 
-// Lists for picking zombies from.
-
-static const pop_entry pop_generic_late_zombie[] =
-{ // Extended generic zombie bases
-  {  1,  27,  110, FLAT, MONS_ETTIN },
-  {  1,  27,  105, FLAT, MONS_FIRE_GIANT },
-  {  1,  27,  105, FLAT, MONS_FROST_GIANT },
-  {  1,  27,  105, FLAT, MONS_STONE_GIANT },
-  {  1,  27,  100, FLAT, MONS_TITAN },
-  {  1,  27,   80, FLAT, MONS_FIRE_DRAGON },
-  {  1,  27,   80, FLAT, MONS_ICE_DRAGON },
-  {  1,  27,   80, FLAT, MONS_STORM_DRAGON },
-  {  1,  27,   80, FLAT, MONS_SHADOW_DRAGON },
-  {  1,  27,   80, FLAT, MONS_IRON_DRAGON },
-  {  1,  27,   80, FLAT, MONS_QUICKSILVER_DRAGON },
-  {  1,  27,   65, FLAT, MONS_GOLDEN_DRAGON },
-  {  1,  27,   80, FLAT, MONS_DIRE_ELEPHANT },
-  {  1,  27,   45, FLAT, MONS_CANE_TOAD },
-  {  1,  27,   25, FLAT, MONS_CATOBLEPAS },
-  {  1,  27,   90, FLAT, MONS_HYDRA },
-  {  1,  27,   30, FLAT, MONS_SWAMP_DRAGON },
-  {  1,  27,   30, FLAT, MONS_ALLIGATOR },
-  {  1,  27,   85, FLAT, MONS_ANACONDA },
-  {  1,  27,   35, FLAT, MONS_BLACK_MAMBA },
-  {  1,  27,   30, FLAT, MONS_SHOCK_SERPENT },
-  {  1,  27,   75, FLAT, MONS_SNAPPING_TURTLE },
-  {  1,  27,   45, FLAT, MONS_HARPY },
-  {  1,  27,   30, FLAT, MONS_MANTICORE },
-  {  1,  27,   80, FLAT, MONS_WOLF_SPIDER },
-  {  1,  27,   35, FLAT, MONS_EMPEROR_SCORPION },
-  {  1,  27,   35, FLAT, MONS_GHOST_MOTH },
-  {  1,  27,   10, FLAT, MONS_CENTAUR },
-  {  1,  27,   12, FLAT, MONS_ELF },
-  {  1,  27,   27, FLAT, MONS_HUMAN },
-  {  1,  27,   10, FLAT, MONS_KOBOLD },
-  {  1,  27,   10, FLAT, MONS_MERFOLK },
-  {  1,  27,   10, FLAT, MONS_NAGA },
-  {  1,  27,   10, FLAT, MONS_OGRE },
-  {  1,  27,   12, FLAT, MONS_ORC },
-  {  1,  27,   10, FLAT, MONS_SPRIGGAN },
-  {  1,  27,   10, FLAT, MONS_TENGU },
-  {  1,  27,   10, FLAT, MONS_TROLL },
-  {  1,  27,    1, FLAT, MONS_BLACK_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_YELLOW_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_GREEN_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_PURPLE_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_RED_DRACONIAN },
-  {  1,  27,    1, FLAT, MONS_WHITE_DRACONIAN },
-  {  1,  27,    5, FLAT, MONS_MINOTAUR },
-  {  1,  27,    1, FLAT, MONS_MONSTROUS_DEMONSPAWN },
-  {  1,  27,    1, FLAT, MONS_INFERNAL_DEMONSPAWN },
-  {  1,  27,    1, FLAT, MONS_GELID_DEMONSPAWN },
-  {  1,  27,    1, FLAT, MONS_TORTUROUS_DEMONSPAWN },
-  { 0,0,0,FLAT,MONS_0 }
+static const vector<pop_entry> pop_generic_late_zombie =
+{ // Extended generic zombie bases. Pop range caps at 15 (for the deepest hell)
+  // Due to how zombie picking works, this starts with Crypt:1 monsters
+  // being picked from depth 5. Hells start picking from depth 7, though
+  // usually depth 8.
+  // Constrictors
+  {  5,  15,  500, FLAT, MONS_ANACONDA },
+  {  5,  15,  500, FLAT, MONS_NAGA_WARRIOR },
+  {  5,  15,  500, FLAT, MONS_NAGARAJA },
+  // Tramplers
+  {  5,   8,  222, FALL, MONS_FIRE_DRAGON },
+  {  5,   8,  222, FALL, MONS_ICE_DRAGON },
+  {  5,   8,  222, FALL, MONS_SWAMP_DRAGON },
+  {  5,   8,  222, FLAT, MONS_SHADOW_DRAGON },
+  {  5,   8,  222, FLAT, MONS_STORM_DRAGON },
+  {  5,  15,  222, FLAT, MONS_IRON_DRAGON },
+  {  5,  15,  222, RISE, MONS_GOLDEN_DRAGON },
+  {  5,  15,  222, RISE, MONS_PEARL_DRAGON },
+  {  5,  15,  666, FLAT, MONS_DIRE_ELEPHANT },
+  {  5,  15,  666, FLAT, MONS_HELLEPHANT },
+  // Hard hitters
+  {  7,  15,  500, RISE, MONS_IRON_GIANT },
+  {  5,  15,  500, FLAT, MONS_TITAN },
+  {  5,  15,  500, FLAT, MONS_ETTIN },
+  {  5,  15,  500, FALL, MONS_STONE_GIANT },
+  {  5,  15,  250, FLAT, MONS_HYDRA },
+  {  5,   8,  100, FALL, MONS_EMPEROR_SCORPION },
+  {  5,   8,  100, FALL, MONS_CATOBLEPAS },
+  {  5,  10,  250, FLAT, MONS_ALLIGATOR_SNAPPING_TURTLE },
+  // Mostly enemy variety for Crypt (rough player parallels for some species
+  // not represented elsewhere in this list; classed monsters for hard hits)
+  {  5,   9,   72, FALL, MONS_DRACONIAN_MONK },
+  {  5,   9,   72, FALL, MONS_ORC_WARLORD },
+  {  5,   9,   72, FALL, MONS_TENGU_REAVER },
+  {  5,   9,   72, FALL, MONS_MINOTAUR },
+  {  5,   9,   72, FALL, MONS_DEMONSPAWN },
+  {  5,   9,   72, FALL, MONS_DEEP_ELF_BLADEMASTER },
+  {  5,   9,   72, FALL, MONS_MERFOLK_IMPALER },
+  {  5,   9,   72, FALL, MONS_VAULT_WARDEN },
+  {  5,   9,   72, FALL, MONS_DEEP_TROLL },
+  {  5,   9,   72, FALL, MONS_TWO_HEADED_OGRE },
+  // Fast mons, base move speed >=13 (more weight here)
+  {  5,  15,  722, RISE, MONS_QUICKSILVER_DRAGON },
+  {  5,  15, 1000, RISE, MONS_JUGGERNAUT },
+  {  5,   9,  500, FALL, MONS_FENSTRIDER_WITCH },
+  {  5,   9,  500, FALL, MONS_BLACK_MAMBA },
+  {  5,  15, 1500, RISE, MONS_CAUSTIC_SHRIKE },
+  {  8,  15, 1500, RISE, MONS_SHARD_SHRIKE },
+  {  5,   9, 1000, FLAT, MONS_CENTAUR_WARRIOR },
+  {  5,  15, 1500, FLAT, MONS_SPRIGGAN_DEFENDER },
+  {  5,  15, 1500, FLAT, MONS_HARPY },
+  {  5,   9,  500, FLAT, MONS_BUNYIP },
 };
 
-// This list must be in the same order as the branch-type enum values.
-static const population_list population_zombie[] =
-{
-    POP(d),
-    POP(temple),
-    POP(orc),
-    POP(elf),
-#if TAG_MAJOR_VERSION == 34
-    POP(dwarf),
-#endif
-    POP(lair),
-    POP(swamp),
-    POP(shoals),
-    POP(snake),
-    POP(spider),
-    POP(slime),
-    POP(vaults),
-#if TAG_MAJOR_VERSION == 34
-    POP(blade),
-#endif
-    POP(generic_late_zombie), // Crypt
-    POP(generic_late_zombie), // Tomb
-#if TAG_MAJOR_VERSION > 34
-    POP(depths),
-#endif
-    POP(generic_late_zombie), // Vestibule
-    POP(generic_late_zombie), // Dis
-    POP(generic_late_zombie), // Geh
-    POP(generic_late_zombie), // Coc
-    POP(generic_late_zombie), // Tar
-    POP(zot),
-#if TAG_MAJOR_VERSION == 34
-    POP(forest),
-#endif
-    POP(generic_late_zombie), // Abyss
-    POP(generic_late_zombie), // Pan
-    POP(zig),
-#if TAG_MAJOR_VERSION == 34
-    POP(lab),
-#endif
-    POP(bazaar),
-    POP(trove),
-    POP(sewer),
-    POP(ossuary),
-    POP(bailey),
-#if TAG_MAJOR_VERSION > 34
-    POP(gauntlet),
-#endif
-    POP(icecv),
-    POP(volcano),
-    POP(wizlab),
-#if TAG_MAJOR_VERSION == 34
-    POP(depths),
-#endif
-    POP(desolation),
-#if TAG_MAJOR_VERSION == 34
-    POP(gauntlet),
-#endif
-};
-COMPILE_CHECK(ARRAYSZ(population_zombie) == NUM_BRANCHES);
-
-static const pop_entry pop_water_generic[] =
-{ // Generic water monsters
-  {  1,  27,  150, FLAT, MONS_ELECTRIC_EEL },
-  {  1,  27,  500, FLAT, MONS_NO_MONSTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_water_d[] =
-{ // Dungeon water monsters
-  {  5,  16,   60, FLAT, MONS_ELECTRIC_EEL },
-  {  7,  16,  185, PEAK, MONS_ELECTRIC_EEL },
-  {  11, 27,  600, RISE, MONS_WATER_ELEMENTAL },
-  {  5,  22,  130, FLAT, MONS_NO_MONSTER },
-  {  9,  32,  250, SEMI, MONS_NO_MONSTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_water_depths[] =
-{ // Depths water monsters
-  {  1,  6,   600, FLAT, MONS_WATER_ELEMENTAL },
-  {  1,  6,    45, FLAT, MONS_MERFOLK_IMPALER },
-  {  1,  6,    45, FLAT, MONS_MERFOLK_JAVELINEER },
-  {  1,  6,   200, FALL, MONS_NO_MONSTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_water_swamp[] =
-{ // Swamp water monsters
-  {  1,  4,   400, FLAT, MONS_SWAMP_WORM },
-  {  1,  4,   100, FLAT, MONS_TYRANT_LEECH },
-  {  1,  4,   100, FLAT, MONS_ALLIGATOR },
-  {  1,  4,  1050, FLAT, MONS_NO_MONSTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_water_snake[] =
-{ // Snake water monsters
-  {  1,   4,  100, FALL, MONS_ELECTRIC_EEL },
-  {  0,   4,  200, RISE, MONS_SEA_SNAKE },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_water_hell[] =
-{ // Hell branch water monsters
-  {  1,  7,   150, FLAT, MONS_CANE_TOAD },
-  {  1,  7,   120, FLAT, MONS_ALLIGATOR },
-  {  1,  7,   130, FLAT, MONS_ANACONDA },
-  {  1,  7,   230, FLAT, MONS_HYDRA },
-  {  1,  7,    37, FLAT, MONS_KRAKEN },
-  {  1,  7,   115, FLAT, MONS_WATER_ELEMENTAL },
-  {  0,  8,    74, RISE, MONS_ELEMENTAL_WELLSPRING },
-  { 0,0,0,FLAT,MONS_0 }
-};
+#define GENERIC_WATER_POP { \
+  {  1,  27,  150, FLAT, MONS_ELECTRIC_EEL }, \
+  {  1,  27,  500, FLAT, MONS_NO_MONSTER }, \
+}
+#define HELL_WATER_POP {\
+  {  0,  8,   100, FLAT, MONS_SIMULACRUM },\
+  {  0,  8,   100, RISE, MONS_ELEMENTAL_WELLSPRING },\
+  {  0,  6,   200, FALL, MONS_NO_MONSTER },\
+}
+// This is done to avoid duplicating the Depths list and can be
+// changed once TAG_MAJOR_VERSION > 35
+#define DEPTHS_WATER_POP {\
+  {  1,  6,   600, FLAT, MONS_WATER_ELEMENTAL },\
+  {  1,  6,    45, FLAT, MONS_MERFOLK_IMPALER },\
+  {  1,  6,    45, FLAT, MONS_MERFOLK_JAVELINEER },\
+  {  1,  6,   200, FALL, MONS_NO_MONSTER },\
+}
 
 // This list must be in the same order as the branch-type enum values.
 // Shoals, Abyss, Pan, Zot, D:1-5 liquid monsters are blocked in dungeon.cc
-static const population_list population_water[] =
+static const vector<pop_entry> population_water[] =
 {
-    POP(water_d),
-    POP(water_generic), // Temple
-    POP(water_generic), // Orc
-    POP(water_generic), // Elf
+    { // Dungeon water monsters
+      {  5,  16,   60, FLAT, MONS_ELECTRIC_EEL },
+      {  7,  16,  185, PEAK, MONS_ELECTRIC_EEL },
+      {  11, 27,  600, RISE, MONS_WATER_ELEMENTAL },
+      {  5,  22,  130, FLAT, MONS_NO_MONSTER },
+      {  9,  32,  250, SEMI, MONS_NO_MONSTER },
+    },
+    GENERIC_WATER_POP, // Temple
+    GENERIC_WATER_POP, // Orc
+    GENERIC_WATER_POP, // Elf
 #if TAG_MAJOR_VERSION == 34
-    POP(water_generic), // Dwarf
+    GENERIC_WATER_POP, // Dwarf
 #endif
-    POP(water_generic), // Lair
-    POP(water_swamp),
-    POP(water_generic), // Shoals
-    POP(water_snake),
-    POP(water_generic), // Spider
-    POP(water_generic), // Slime
-    POP(water_generic), // Vaults
+    GENERIC_WATER_POP, // Lair
+    { // Swamp water monsters
+      {  1,  4,   400, FLAT, MONS_SWAMP_WORM },
+      {  1,  4,   100, FLAT, MONS_TYRANT_LEECH },
+      {  1,  4,   100, FLAT, MONS_ALLIGATOR },
+      {  1,  4,  1050, FLAT, MONS_NO_MONSTER },
+    },
+    GENERIC_WATER_POP, // Shoals
+    { // Snake water monsters
+      {  1,   4,  100, FALL, MONS_ELECTRIC_EEL },
+      {  0,   4,  200, RISE, MONS_SEA_SNAKE },
+    },
+    GENERIC_WATER_POP, // Spider
+    GENERIC_WATER_POP, // Slime
+    GENERIC_WATER_POP, // Vaults
 #if TAG_MAJOR_VERSION == 34
-    POP(water_generic), // Blade
+    GENERIC_WATER_POP, // Blade
 #endif
-    POP(water_generic), // Crypt
-    POP(water_generic), // Tomb
+    GENERIC_WATER_POP, // Crypt
+    GENERIC_WATER_POP, // Tomb
 #if TAG_MAJOR_VERSION > 34
-    POP(water_depths),
+    DEPTHS_WATER_POP,
 #endif
-    POP(water_hell), // Vestibule
-    POP(water_hell), // Dis
-    POP(water_hell), // Geh
-    POP(water_hell), // Coc
-    POP(water_hell), // Tar
-    POP(water_generic), // Zot
+    HELL_WATER_POP, // Vestibule
+    HELL_WATER_POP, // Dis
+    HELL_WATER_POP, // Geh
+    HELL_WATER_POP, // Coc
+    HELL_WATER_POP, // Tar
+    GENERIC_WATER_POP, // Zot
 #if TAG_MAJOR_VERSION == 34
-    POP(water_generic), // Forest
+    GENERIC_WATER_POP, // Forest
 #endif
-    POP(water_generic), // Abyss
-    POP(water_generic), // Pan
-    POP(water_generic), // Zig
+    GENERIC_WATER_POP, // Abyss
+    GENERIC_WATER_POP, // Pan
+    GENERIC_WATER_POP, // Zig
 #if TAG_MAJOR_VERSION == 34
-    POP(water_generic), // Lab
+    GENERIC_WATER_POP, // Lab
 #endif
-    POP(water_generic), // Bazaar
-    POP(water_generic), // Trove
-    POP(water_generic), // Sewer
-    POP(water_generic), // Ossuary
-    POP(water_generic), // Bailey
+    GENERIC_WATER_POP, // Bazaar
+    GENERIC_WATER_POP, // Trove
+    GENERIC_WATER_POP, // Sewer
+    GENERIC_WATER_POP, // Ossuary
+    GENERIC_WATER_POP, // Bailey
 #if TAG_MAJOR_VERSION > 34
-    POP(water_generic), // Gauntlet
+    GENERIC_WATER_POP, // Gauntlet
 #endif
-    POP(water_generic), // IceCv
-    POP(water_generic), // Volcano
-    POP(water_generic), // WizLab
+    GENERIC_WATER_POP, // IceCv
+    GENERIC_WATER_POP, // Volcano
+    GENERIC_WATER_POP, // WizLab
 #if TAG_MAJOR_VERSION == 34
-    POP(water_depths),
+    DEPTHS_WATER_POP,
 #endif
-    POP(water_generic), // Desolation
+    GENERIC_WATER_POP, // Desolation
 #if TAG_MAJOR_VERSION == 34
-    POP(water_generic), // Gauntlet
+    GENERIC_WATER_POP, // Gauntlet
 #endif
+    GENERIC_WATER_POP, // Arena
 };
 COMPILE_CHECK(ARRAYSZ(population_water) == NUM_BRANCHES);
 
-static const pop_entry pop_lava_generic[] =
-{ // Generic lava monsters
-  {  1,  27,  100, FLAT, MONS_FIRE_BAT },
-  {  1,  27,  100, FLAT, MONS_FIRE_ELEMENTAL },
-  {  1,  27,   50, FLAT, MONS_MOLTEN_GARGOYLE },
-  {  1,  27,   50, FLAT, MONS_FIRE_VORTEX },
-  {  1,  27,  145, FLAT, MONS_LAVA_SNAKE },
-  {  1,  27,   15, FLAT, MONS_SALAMANDER },
-  {  1,  27,  290, FLAT, MONS_NO_MONSTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
+#define GENERIC_LAVA_POP {\
+  {  1,  27,  100, FLAT, MONS_FIRE_BAT },\
+  {  1,  27,  100, FLAT, MONS_FIRE_ELEMENTAL },\
+  {  1,  27,   50, FLAT, MONS_MOLTEN_GARGOYLE },\
+  {  1,  27,   50, FLAT, MONS_FIRE_VORTEX },\
+  {  1,  27,  145, FLAT, MONS_LAVA_SNAKE },\
+  {  1,  27,   15, FLAT, MONS_SALAMANDER },\
+  {  1,  27,  290, FLAT, MONS_NO_MONSTER },\
+}
 
-static const pop_entry pop_lava_d[] =
-{ // Dungeon lava monsters
-  {  7,  27,  145, FLAT, MONS_LAVA_SNAKE },
-  {  11, 27,  290, RISE, MONS_FIRE_ELEMENTAL },
-  {  11, 27,  145, RISE, MONS_MOLTEN_GARGOYLE },
-  {  11, 27,  145, RISE, MONS_FIRE_VORTEX },
-  {  7,  27,  290, FLAT, MONS_NO_MONSTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
+#define HELL_LAVA_POP {\
+  {  1,  8,   300, FALL, MONS_FIRE_VORTEX },\
+  {  1,  7,    50, RISE, MONS_STOKER },\
+  {  1,  7,    50, FLAT, MONS_CREEPING_INFERNO },\
+  {  1,  7,   100, FLAT, MONS_NO_MONSTER },\
+}
 
-static const pop_entry pop_lava_snake[] =
-{ // Snake lava monsters
-  {  1,   4,  200, FLAT, MONS_LAVA_SNAKE },
-  {  1,   4,  200, FLAT, MONS_SALAMANDER },
-  {  0,   6,  65,  SEMI, MONS_SALAMANDER_MYSTIC },
-  {  0,   6,  25,  RISE, MONS_SALAMANDER_TYRANT },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_lava_depths[] =
-{ // Depths lava monsters
-  {  1,  6,   22, FALL, MONS_FIRE_ELEMENTAL },
-  {  1,  6,   22, FALL, MONS_FIRE_BAT },
-  {  1,  6,   11, FALL, MONS_FIRE_VORTEX },
-  {  1,  6,   11, FALL, MONS_MOLTEN_GARGOYLE },
-  {  1,  6,   60, FLAT, MONS_SALAMANDER },
-  {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },
-  {  1,  8,   40, RISE, MONS_SALAMANDER_TYRANT },
-  {  1,  6,  400, FLAT, MONS_NO_MONSTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_lava_hell[] =
-{ // Hell branch lava monsters
-  {  1,  8,   300, FALL, MONS_FIRE_ELEMENTAL },
-  {  1,  6,    25, FALL, MONS_MOLTEN_GARGOYLE },
-  {  1,  7,    25, FLAT, MONS_SMOKE_DEMON },
-  {  1,  7,   100, FLAT, MONS_NO_MONSTER },
-  { 0,0,0,FLAT,MONS_0 }
-};
+// This is done to avoid duplicating the Depths list and can be
+// changed once TAG_MAJOR_VERSION > 35
+#define DEPTHS_LAVA_POP {\
+  {  1,  6,   22, FALL, MONS_FIRE_ELEMENTAL },\
+  {  1,  6,   22, FALL, MONS_FIRE_BAT },\
+  {  1,  6,   11, FALL, MONS_FIRE_VORTEX },\
+  {  1,  6,   11, FALL, MONS_MOLTEN_GARGOYLE },\
+  {  1,  6,   60, FLAT, MONS_SALAMANDER },\
+  {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },\
+  {  1,  8,   40, RISE, MONS_SALAMANDER_TYRANT },\
+  {  1,  6,  400, FLAT, MONS_NO_MONSTER },\
+}
 
 // This list must be in the same order as the branch-type enum values.
-static const population_list population_lava[] =
+static const vector<pop_entry> population_lava[] =
 {
-    POP(lava_d),
-    POP(lava_generic), // Temple
-    POP(lava_generic), // Orc
-    POP(lava_generic), // Elf
+    { // Dungeon lava monsters
+      {  7,  27,  145, FLAT, MONS_LAVA_SNAKE },
+      {  11, 27,  290, RISE, MONS_FIRE_ELEMENTAL },
+      {  11, 27,  145, RISE, MONS_MOLTEN_GARGOYLE },
+      {  11, 27,  145, RISE, MONS_FIRE_VORTEX },
+      {  7,  27,  290, FLAT, MONS_NO_MONSTER },
+    },
+    GENERIC_LAVA_POP, // Temple
+    GENERIC_LAVA_POP, // Orc
+    GENERIC_LAVA_POP, // Elf
 #if TAG_MAJOR_VERSION == 34
-    POP(lava_generic), // Dwarf
+    GENERIC_LAVA_POP, // Dwarf
 #endif
-    POP(lava_generic), // Lair
-    POP(lava_generic), // Swamp
-    POP(lava_generic), // Shoals
-    POP(lava_snake),
-    POP(lava_generic), // Spider
-    POP(lava_generic), // Slime
-    POP(lava_generic), // Vaults
+    GENERIC_LAVA_POP, // Lair
+    GENERIC_LAVA_POP, // Swamp
+    GENERIC_LAVA_POP, // Shoals
+    { // Snake lava monsters
+      {  1,   4,  200, FLAT, MONS_LAVA_SNAKE },
+      {  1,   4,  200, FLAT, MONS_SALAMANDER },
+      {  0,   6,  65,  SEMI, MONS_SALAMANDER_MYSTIC },
+      {  0,   6,  25,  RISE, MONS_SALAMANDER_TYRANT },
+    },
+    GENERIC_LAVA_POP, // Spider
+    GENERIC_LAVA_POP, // Slime
+    GENERIC_LAVA_POP, // Vaults
 #if TAG_MAJOR_VERSION == 34
-    POP(lava_generic), // Blade
+    GENERIC_LAVA_POP, // Blade
 #endif
-    POP(lava_generic), // Crypt
-    POP(lava_generic), // Tomb
+    GENERIC_LAVA_POP, // Crypt
+    GENERIC_LAVA_POP, // Tomb
 #if TAG_MAJOR_VERSION > 34
-    POP(lava_depths),
+    DEPTHS_LAVA_POP,
 #endif
-    POP(lava_hell), // Vestibule
-    POP(lava_hell), // Dis
-    POP(lava_hell), // Geh
-    POP(lava_hell), // Coc
-    POP(lava_hell), // Tar
-    POP(lava_generic), // Zot
+    HELL_LAVA_POP, // Vestibule
+    HELL_LAVA_POP, // Dis
+    HELL_LAVA_POP, // Geh
+    HELL_LAVA_POP, // Coc
+    HELL_LAVA_POP, // Tar
+    GENERIC_LAVA_POP, // Zot
 #if TAG_MAJOR_VERSION == 34
-    POP(lava_generic), // Forest
+    GENERIC_LAVA_POP, // Forest
 #endif
-    POP(lava_generic), // Abyss
-    POP(lava_generic), // Pan
-    POP(lava_generic), // Zig
+    GENERIC_LAVA_POP, // Abyss
+    GENERIC_LAVA_POP, // Pan
+    GENERIC_LAVA_POP, // Zig
 #if TAG_MAJOR_VERSION == 34
-    POP(lava_generic), // Lab
+    GENERIC_LAVA_POP, // Lab
 #endif
-    POP(lava_generic), // Bazaar
-    POP(lava_generic), // Trove
-    POP(lava_generic), // Sewer
-    POP(lava_generic), // Ossuary
-    POP(lava_generic), // Bailey
+    GENERIC_LAVA_POP, // Bazaar
+    GENERIC_LAVA_POP, // Trove
+    GENERIC_LAVA_POP, // Sewer
+    GENERIC_LAVA_POP, // Ossuary
+    GENERIC_LAVA_POP, // Bailey
 #if TAG_MAJOR_VERSION > 34
-    POP(lava_generic), // Gauntlet
+    GENERIC_LAVA_POP, // Gauntlet
 #endif
-    POP(lava_generic), // IceCv
-    POP(lava_generic), // Volcano
-    POP(lava_generic), // WizLab
+    GENERIC_LAVA_POP, // IceCv
+    GENERIC_LAVA_POP, // Volcano
+    GENERIC_LAVA_POP, // WizLab
 #if TAG_MAJOR_VERSION == 34
-    POP(lava_depths),
+    DEPTHS_LAVA_POP,
 #endif
-    POP(lava_generic), // Desolation
+    GENERIC_LAVA_POP, // Desolation
 #if TAG_MAJOR_VERSION == 34
-    POP(lava_generic), // Gauntlet
+    GENERIC_LAVA_POP, // Gauntlet
 #endif
+    GENERIC_LAVA_POP, // Arena
 };
+
 COMPILE_CHECK(ARRAYSZ(population_lava) == NUM_BRANCHES);

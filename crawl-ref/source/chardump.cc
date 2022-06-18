@@ -216,21 +216,13 @@ static void _sdump_header(dump_params &par)
 #endif
     par.text += " character file.\n\n";
 
-    if (you.fully_seeded
-#ifdef DGAMELAUNCH
-        && (par.se // for online games, show seed for a dead char
-            || you.wizard
-            || crawl_state.type == GAME_TYPE_CUSTOM_SEED)
-#endif
-        )
-    {
+    if (you.fully_seeded && crawl_state.seed_is_known())
         par.text += seed_description() + "\n\n";
-    }
 }
 
 static void _sdump_stats(dump_params &par)
 {
-    par.text += dump_overview_screen(par.full_id);
+    par.text += dump_overview_screen();
     par.text += "\n\n";
 }
 
@@ -594,7 +586,7 @@ static void _sdump_lua(dump_params &par)
 
 string chardump_desc(const item_def& item)
 {
-    string desc = get_item_description(item, false, true);
+    string desc = get_item_description(item, IDM_DUMP);
     string outs;
 
     outs.reserve(desc.length() + 32);
@@ -1257,7 +1249,7 @@ static const char* _stab_names[] =
     "Betrayed ally",
 };
 
-static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
+static const char* _aux_attack_names[] =
 {
     "No attack",
     "Constrict",
@@ -1265,11 +1257,13 @@ static const char* _aux_attack_names[1 + UNAT_LAST_ATTACK] =
     "Headbutt",
     "Peck",
     "Tailslap",
+    "Touch",
     "Punch",
     "Bite",
     "Pseudopods",
     "Tentacles",
 };
+COMPILE_CHECK(ARRAYSZ(_aux_attack_names) == NUM_UNARMED_ATTACKS);
 
 static string _describe_action_subtype(caction_type type, int compound_subtype)
 {
@@ -1618,10 +1612,14 @@ void dump_map(FILE *fp, bool debug, bool dist, bool log)
             for (int j = Y_BOUND_1; j <= Y_BOUND_2; j++)
                 if (env.map_knowledge[i][j].known())
                 {
-                    if (i > max_x) max_x = i;
-                    if (i < min_x) min_x = i;
-                    if (j > max_y) max_y = j;
-                    if (j < min_y) min_y = j;
+                    if (i > max_x)
+                        max_x = i;
+                    if (i < min_x)
+                        min_x = i;
+                    if (j > max_y)
+                        max_y = j;
+                    if (j < min_y)
+                        min_y = j;
                 }
 
         for (int y = min_y; y <= max_y; ++y)
@@ -1735,7 +1733,7 @@ void display_char_dump()
 #ifdef DGL_WHEREIS
 ///////////////////////////////////////////////////////////////////////////
 // whereis player
-void whereis_record(const char *status)
+void whereis_record(const xlog_fields &xl)
 {
     const string file_name = morgue_directory()
                              + strip_filename_unsafe_chars(you.your_name)
@@ -1744,9 +1742,7 @@ void whereis_record(const char *status)
     if (FILE *handle = fopen_replace(file_name.c_str()))
     {
         // no need to bother with supporting ancient charsets for DGL
-        fprintf(handle, "%s:status=%s\n",
-                xlog_status_line().c_str(),
-                status? status : "");
+        fprintf(handle, "%s\n", xl.xlog_line().c_str());
         fclose(handle);
     }
 }

@@ -21,6 +21,7 @@
 #include "items.h"
 #include "item-use.h"
 #include "libutil.h"
+#include "mapdef.h" // item_spec
 #include "mon-util.h"
 #include "mpr.h"
 #include "output.h"
@@ -651,48 +652,6 @@ IDEF(is_corpse)
     return 1;
 }
 
-/*** Is this a skeleton?
- * @field is_skeleton boolean
- */
-IDEF(is_skeleton)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_SKELETON));
-
-    return 1;
-}
-
-/*** Does this have a skeleton?
- * @field has_skeleton boolean false if it's not even a corpse
- */
-IDEF(has_skeleton)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_BODY)
-                         && mons_skeleton(item->mon_type)
-                        || item->is_type(OBJ_CORPSES, CORPSE_SKELETON));
-
-    return 1;
-}
-
-/*** Can this be a zombie?
- * @field can_zombify boolean
- */
-IDEF(can_zombify)
-{
-    if (!item || !item->defined())
-        return 0;
-
-    lua_pushboolean(ls, item->is_type(OBJ_CORPSES, CORPSE_BODY)
-                        && mons_zombifiable(item->mon_type));
-
-    return 1;
-}
-
 /*** Is this useless?
  * @field is_useless boolean
  */
@@ -835,7 +794,8 @@ IDEF(spells)
 IDEF(artprops)
 {
     if (!item || !item->defined() || !is_artefact(*item)
-        || !item_ident(*item, ISFLAG_KNOW_PROPERTIES))
+        || !item_ident(*item, ISFLAG_KNOW_PROPERTIES)
+        || item->base_type == OBJ_BOOKS)
     {
         return 0;
     }
@@ -973,7 +933,7 @@ IDEF(description)
     if (!item || !item->defined())
         return 0;
 
-    lua_pushstring(ls, get_item_description(*item, true, false).c_str());
+    lua_pushstring(ls, get_item_description(*item).c_str());
 
     return 1;
 }
@@ -1575,6 +1535,24 @@ static int l_item_fire(lua_State *ls)
     PLUARET(boolean, you.turn_is_over);
 }
 
+LUAFN(l_item_excluded_from_set)
+{
+    ASSERT_DLUA;
+
+    const string &specifier = luaL_checkstring(ls, 1);
+    item_list il;
+    item_spec parsed_spec;
+    if (!il.parse_single_spec(parsed_spec, specifier))
+    {
+        luaL_error(ls, make_stringf("Invalid item spec '%s'.",
+                                    specifier.c_str()).c_str());
+    }
+    lua_pushboolean(ls, item_excluded_from_set(parsed_spec.base_type,
+                                               parsed_spec.sub_type));
+    return 1;
+}
+
+
 struct ItemAccessor
 {
     const char *attribute;
@@ -1587,7 +1565,7 @@ static ItemAccessor item_attrs[] =
     { "branded",           l_item_branded },
     { "god_gift",          l_item_god_gift },
     { "fully_identified",  l_item_fully_identified },
-    { "plus",              l_item_plus },
+    { PLUS_KEY,              l_item_plus },
     { "plus2",             l_item_plus2 },
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
@@ -1613,10 +1591,7 @@ static ItemAccessor item_attrs[] =
     { "is_throwable",      l_item_is_throwable },
     { "dropped",           l_item_dropped },
     { "is_melded",         l_item_is_melded },
-    { "is_skeleton",       l_item_is_skeleton },
     { "is_corpse",         l_item_is_corpse },
-    { "has_skeleton",      l_item_has_skeleton },
-    { "can_zombify",       l_item_can_zombify },
     { "is_useless",        l_item_is_useless },
     { "spells",            l_item_spells },
     { "artprops",          l_item_artprops },
@@ -1676,6 +1651,7 @@ static const struct luaL_reg item_lib[] =
     { "shopping_list",     l_item_shopping_list },
     { "acquirement_items", l_item_acquirement_items },
     { "fire",              l_item_fire },
+    { "excluded_from_set", l_item_excluded_from_set },
     { nullptr, nullptr },
 };
 

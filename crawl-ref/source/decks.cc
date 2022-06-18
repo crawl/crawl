@@ -51,7 +51,6 @@
 #include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-monench.h"
-#include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -118,13 +117,12 @@ struct deck_type_data
 static map<deck_type, deck_type_data> all_decks =
 {
     { DECK_OF_ESCAPE, {
-        "escape", "mainly dealing with various forms of escape.",
+        "escape", "which may bring the user to safety or impede their foes.",
         deck_of_escape,
         13,
     } },
     { DECK_OF_DESTRUCTION, {
-        "destruction", "most of which hurl death and destruction "
-            "at one's foes (or, if unlucky, at oneself).",
+        "destruction", "which hurl death and destruction with wild abandon.",
         deck_of_destruction,
         26,
     } },
@@ -154,7 +152,6 @@ const char* card_name(card_type card)
     case CARD_VELOCITY:        return "Velocity";
     case CARD_EXILE:           return "Exile";
     case CARD_ELIXIR:          return "the Elixir";
-    case CARD_STAIRS:          return "the Stairs";
     case CARD_TOMB:            return "the Tomb";
     case CARD_WILD_MAGIC:      return "Wild Magic";
     case CARD_ELEMENTS:        return "the Elements";
@@ -177,10 +174,26 @@ const char* card_name(card_type card)
 #if TAG_MAJOR_VERSION == 34
     case CARD_FAMINE_REMOVED:
     case CARD_SHAFT_REMOVED:
+    case CARD_STAIRS_REMOVED:
 #endif
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
+}
+
+bool card_is_removed(card_type card)
+{
+    switch (card)
+    {
+#if TAG_MAJOR_VERSION == 34
+case CARD_FAMINE_REMOVED:
+case CARD_SHAFT_REMOVED:
+case CARD_STAIRS_REMOVED:
+        return true;
+#endif
+    default:
+        return false;
+    }
 }
 
 card_type name_to_card(string name)
@@ -503,7 +516,7 @@ static char _deck_hotkey(deck_type deck)
 static deck_type _choose_deck(const string title = "Draw")
 {
     ToggleableMenu deck_menu(MF_SINGLESELECT
-            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION);
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(make_stringf("%s which deck?        "
@@ -610,8 +623,14 @@ bool deck_draw(deck_type deck)
     return true;
 }
 
-bool deck_stack()
+spret deck_stack(bool fail)
 {
+    if (crawl_state.is_replaying_keys())
+    {
+        crawl_state.cancel_cmd_all("You can't repeat Stack Five.");
+        return spret::abort;
+    }
+
     int total_cards = 0;
 
     for (int i = FIRST_PLAYER_DECK; i <= LAST_PLAYER_DECK; ++i)
@@ -620,25 +639,28 @@ bool deck_stack()
     if (deck_cards(DECK_STACK) && !yesno("Replace your current stack?",
                                           false, 0))
     {
-        return false;
+        canned_msg(MSG_OK);
+        return spret::abort;
     }
 
     if (!total_cards)
     {
         mpr("You are out of cards!");
-        return false;
+        return spret::abort;
     }
 
     if (total_cards < 5 && !yesno("You have fewer than five cards, "
                                   "stack them anyway?", false, 0))
     {
         canned_msg(MSG_OK);
-        return false;
+        return spret::abort;
     }
+
+    fail_check();
 
     you.props[NEMELEX_STACK_KEY].get_vector().clear();
     run_uncancel(UNC_STACK_FIVE, min(total_cards, 5));
-    return true;
+    return spret::success;
 }
 
 class StackFiveMenu : public Menu
@@ -647,7 +669,7 @@ class StackFiveMenu : public Menu
     CrawlVector& draws;
 public:
     StackFiveMenu(CrawlVector& d)
-        : Menu(MF_NOSELECT | MF_UNCANCEL | MF_ALWAYS_SHOW_MORE), draws(d) {};
+        : Menu(MF_NOSELECT | MF_UNCANCEL), draws(d) {};
 };
 
 bool StackFiveMenu::process_key(int keyin)
@@ -672,12 +694,12 @@ bool StackFiveMenu::process_key(int keyin)
                 swap(draws[i], draws[j]);
                 swap(items[i]->text, items[j]->text);
                 items[j]->colour = LIGHTGREY;
-                select_item_index(i, 0, false); // this also updates the item
-                select_item_index(j, 0, false);
+                select_item_index(i, 0); // this also updates the item
+                select_item_index(j, 0);
                 return true;
             }
         items[i]->colour = WHITE;
-        select_item_index(i, 1, false);
+        select_item_index(i, 1);
     }
     else
         Menu::process_key(keyin);
@@ -687,7 +709,7 @@ bool StackFiveMenu::process_key(int keyin)
 static void _draw_stack(int to_stack)
 {
     ToggleableMenu deck_menu(MF_SINGLESELECT | MF_UNCANCEL
-            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ALWAYS_SHOW_MORE);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION);
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry("Draw which deck?        "
@@ -812,59 +834,69 @@ bool stack_five(int to_stack)
 }
 
 // Draw the top four cards of an deck and play them all.
-// Return false if the operation was failed/aborted along the way.
-bool deck_deal()
+// Return spret::abort if the operation was failed/aborted along the way.
+spret deck_deal(bool fail)
 {
     deck_type choice = _choose_deck("Deal");
 
     if (choice == NUM_DECKS)
-        return false;
+        return spret::abort;
 
     int num_cards = deck_cards(choice);
 
     if (!num_cards)
     {
         mpr("That deck is empty!");
-        return false;
+        return spret::abort;
     }
+
+    fail_check();
 
     const int num_to_deal = min(num_cards, 4);
 
     for (int i = 0; i < num_to_deal; ++i)
         _evoke_deck(choice, true);
 
-    return true;
+    return spret::success;
 }
 
 // Draw the next three cards, discard two and pick one.
-bool deck_triple_draw()
+spret deck_triple_draw(bool fail)
 {
+    if (crawl_state.is_replaying_keys())
+    {
+        crawl_state.cancel_cmd_all("You can't repeat Triple Draw.");
+        return spret::abort;
+    }
+
     deck_type choice = _choose_deck();
 
     if (choice == NUM_DECKS)
-        return false;
+        return spret::abort;
 
     int num_cards = deck_cards(choice);
 
     if (!num_cards)
     {
         mpr("That deck is empty!");
-        return false;
+        return spret::abort;
     }
 
     if (num_cards < 3 && !yesno("There's fewer than three cards, "
                                 "still triple draw?", false, 0))
     {
         canned_msg(MSG_OK);
-        return false;
+        return spret::abort;
     }
+
+    fail_check();
 
     if (num_cards == 1)
     {
         // Only one card to draw, so just draw it.
         mpr("There's only one card left!");
         _evoke_deck(choice);
-        return true;
+        return spret::success;
     }
 
     const int num_to_draw = min(num_cards, 3);
@@ -878,7 +910,7 @@ bool deck_triple_draw()
         draw.push_back(_random_card(choice));
 
     run_uncancel(UNC_DRAW_THREE, 0);
-    return true;
+    return spret::success;
 }
 
 bool draw_three()
@@ -1026,46 +1058,6 @@ static void _exile_card(int power)
         else
             mon_to_banish->banish(&you);
     }
-}
-
-static int stair_draw_count = 0;
-
-// This does not describe an actual card. Instead, it only exists to test
-// the stair movement effect in wizard mode ("&c stairs").
-static void _stairs_card(int /*power*/)
-{
-    you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
-    you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
-
-    if (feat_stair_direction(env.grid(you.pos())) == CMD_NO_CMD)
-        you.duration[DUR_REPEL_STAIRS_MOVE]  = 1000;
-    else
-        you.duration[DUR_REPEL_STAIRS_CLIMB] =  500; // more annoying
-
-    vector<coord_def> stairs_avail;
-
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT, true); ri; ++ri)
-    {
-        dungeon_feature_type feat = env.grid(*ri);
-        if (feat_stair_direction(feat) != CMD_NO_CMD
-            && feat != DNGN_ENTER_SHOP)
-        {
-            stairs_avail.push_back(*ri);
-        }
-    }
-
-    if (stairs_avail.empty())
-    {
-        mpr("No stairs available to move.");
-        return;
-    }
-
-    shuffle_array(stairs_avail);
-
-    for (coord_def stair : stairs_avail)
-        move_stair(stair, stair_draw_count % 2, false);
-
-    stair_draw_count++;
 }
 
 static monster* _friendly(monster_type mt, int dur)
@@ -1338,13 +1330,9 @@ static void _summon_bee(int power)
 static void _summon_rangers(int power)
 {
     const int power_level = _get_power_level(power);
-    const monster_type dctr  = random_choose(MONS_CENTAUR, MONS_YAKTAUR),
-                       dctr2 = random_choose(MONS_CENTAUR_WARRIOR, MONS_FAUN),
-                       dctr3 = random_choose(MONS_YAKTAUR_CAPTAIN,
-                                             MONS_NAGA_SHARPSHOOTER),
-                       dctr4 = random_choose(MONS_SATYR,
-                                             MONS_MERFOLK_JAVELINEER,
-                                             MONS_DEEP_ELF_MASTER_ARCHER);
+    const monster_type dctr = MONS_CENTAUR_WARRIOR,
+                       dctr2 = MONS_NAGA_SHARPSHOOTER,
+                       dctr3 = MONS_DEEP_ELF_MASTER_ARCHER;
 
     const monster_type base_choice = power_level == 2 ? dctr2 :
                                                         dctr;
@@ -1354,7 +1342,7 @@ static void _summon_rangers(int power)
     const bool extra_monster = coinflip();
 
     if (!extra_monster && power_level > 0)
-        placed_choice = power_level == 2 ? dctr4 : dctr3;
+        placed_choice = power_level == 2 ? dctr3 : dctr2;
 
     for (int i = 0; i < 1 + extra_monster; ++i)
         _friendly(base_choice, 5 - power_level);
@@ -1399,13 +1387,13 @@ static void _storm_card(int power)
 {
     const int power_level = _get_power_level(power);
 
-    wind_blast(&you, (power_level + 1) * 66, coord_def(), true);
+    wind_blast(&you, (power_level + 1) * 66, coord_def());
     redraw_screen(); // Update monster positions
     update_screen();
 
     // 1-3, 4-6, 7-9
     const int max_explosions = random_range((power_level * 3) + 1, (power_level + 1) * 3);
-    // Select targets based on simultaneously running max_explosions resivoir
+    // Select targets based on simultaneously running max_explosions reservoir
     // samples from the radius iterator over valid targets.
     //
     // Once the possible targets are drawn, the result is deduplicated into a
@@ -1624,8 +1612,6 @@ void card_effect(card_type which_card,
     case CARD_VELOCITY:         _velocity_card(power); break;
     case CARD_EXILE:            _exile_card(power); break;
     case CARD_ELIXIR:           _elixir_card(power); break;
-    case CARD_STAIRS:           _stairs_card(power); break;
-    case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
     case CARD_WRAITH:           drain_player(power / 4, false, true); break;
     case CARD_WRATH:            _godly_wrath(); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power); break;
@@ -1646,6 +1632,10 @@ void card_effect(card_type which_card,
         _damaging_card(which_card, power, dealt);
         break;
 
+    case CARD_TOMB:
+        cast_tomb(10 + power/20 + random2(power/4), &you, you.mindex(), false);
+        break;
+
     case CARD_SWINE:
         if (transform(5 + power/10 + random2(power/10), transformation::pig, true))
             you.transform_uncancellable = true;
@@ -1656,6 +1646,7 @@ void card_effect(card_type which_card,
 #if TAG_MAJOR_VERSION == 34
     case CARD_FAMINE_REMOVED:
     case CARD_SHAFT_REMOVED:
+    case CARD_STAIRS_REMOVED:
 #endif
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.

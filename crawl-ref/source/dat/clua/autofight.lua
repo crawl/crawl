@@ -144,6 +144,10 @@ local function choose_move_towards(ax, ay, bx, by, square_func)
       return nil
     elseif abs(ax+mx) > los_radius or abs(ay+my) > los_radius then
       return nil
+    elseif not view.cell_see_cell(ax + mx, ay + my, ax + dx, ay + dy) then
+      -- we know that dx,dy is currently in view, so if there is a path at all,
+      -- there must be a path where it remains in view.
+      return nil
     elseif square_func(ax+mx, ay+my) then
       return {mx,my}
     else
@@ -152,8 +156,11 @@ local function choose_move_towards(ax, ay, bx, by, square_func)
   end
   if abs(dx) > abs(dy) then
     if abs(dy) == 1 then
+      -- at distance one, there's no need to adjust y position
       move = try_move(sign(dx), 0)
     end
+    -- first try diagonal. Not sure why? Also, sign(0)=0, so these two checks
+    -- are equivalent in that case.
     if move == nil then move = try_move(sign(dx), sign(dy)) end
     if move == nil then move = try_move(sign(dx), 0) end
     if move == nil and abs(dx) > abs(dy)+1 then
@@ -164,10 +171,12 @@ local function choose_move_towards(ax, ay, bx, by, square_func)
     end
     if move == nil then move = try_move(0, sign(dy)) end
   elseif abs(dx) == abs(dy) then
+    -- exact diagonal
     move = try_move(sign(dx), sign(dy))
     if move == nil then move = try_move(sign(dx), 0) end
     if move == nil then move = try_move(0, sign(dy)) end
   else
+    -- symmetric case to first condition, i.e. abs(dy) > abs(dx)
     if abs(dx) == 1 then
       move = try_move(0, sign(dy))
     end
@@ -278,7 +287,7 @@ end
 local function is_candidate_for_attack(x,y)
   m = monster.get_monster_at(x, y)
   --if m then crawl.mpr("Checking: (" .. x .. "," .. y .. ") " .. m:name()) end
-  if not m or m:attitude() ~= ATT_HOSTILE then
+  if not m then
     return false
   end
   if m:name() == "butterfly"
@@ -292,7 +301,11 @@ local function is_candidate_for_attack(x,y)
     end
     return false
   end
-  return true
+  if m:attitude() == ATT_HOSTILE
+      or m:attitude() == ATT_NEUTRAL and m:is("insane") then
+    return true
+  end
+  return false
 end
 
 local function get_target(no_move)
@@ -322,12 +335,12 @@ local function attack_fire(x,y)
     crawl.do_targeted_command("CMD_FIRE", x, y, AUTOFIGHT_FIRE_STOP)
   else
     -- fire a wielded launcher
-    crawl.do_targeted_command("CMD_EVOKE_WIELDED", x, y, AUTOFIGHT_FIRE_STOP)
+    crawl.do_targeted_command("CMD_PRIMARY_ATTACK", x, y, AUTOFIGHT_FIRE_STOP)
   end
 end
 
 local function attack_reach(x,y)
-  crawl.do_targeted_command("CMD_EVOKE_WIELDED", x, y, true)
+  crawl.do_targeted_command("CMD_PRIMARY_ATTACK", x, y, true)
 end
 
 local function attack_melee(x,y)

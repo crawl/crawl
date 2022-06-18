@@ -366,7 +366,7 @@ static bool _reroll_random(newgame_def& ng)
     auto popup = make_shared<ui::Popup>(move(vbox));
 
     bool done = false;
-    char c;
+    int c;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         c = ev.key();
         return done = true;
@@ -381,7 +381,9 @@ static bool _reroll_random(newgame_def& ng)
 #endif
     ui::run_layout(move(popup), done);
 
-    if (key_is_escape(c) || toalower(c) == 'q' || crawl_state.seen_hups)
+    // XX mouse interface in local tiles for `y` -- right now right click does
+    // `q` only
+    if (key_is_escape(c) || c == CK_MOUSE_CMD || toalower(c) == 'q' || crawl_state.seen_hups)
         game_ended(game_exit::abort);
     return toalower(c) == 'n' || c == '\t' || c == '!' || c == '#';
 }
@@ -410,7 +412,7 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
     // Apologies to non-public servers.
     if (ng.type == GAME_TYPE_NORMAL)
     {
-        if (!yesno("Trunk games don't count for the tournament, you want "
+        if (!yesno("Trunk doesn't count for the tournament, you want "
                    TOURNEY ". Play trunk anyway? (Y/N)", false, 'n'))
         {
             game_ended(game_exit::abort);
@@ -697,7 +699,7 @@ static keyfun_action _keyfun_seed_input(int &ch)
     // lose focus. (TODO: maybe handle this better in TextEntry somehow?)
     if (ch == CONTROL('K') || ch == CONTROL('D') || ch == CONTROL('W') ||
             ch == CONTROL('U') || ch == CONTROL('A') || ch == CONTROL('E') ||
-            ch == CK_BKSP || ch == CK_ESCAPE ||
+            ch == CK_BKSP || ch == CK_ESCAPE || ch == CK_MOUSE_CMD ||
             ch < 0 || // this should get all other special keys
             isadigit(ch))
     {
@@ -891,7 +893,8 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
 
     auto pregen_check = make_shared<ui::Checkbox>();
     pregen_check->set_sync_id("pregenerate");
-    pregen_check->set_checked(choice.pregenerate = Options.pregen_dungeon);
+    choice.pregenerate = Options.pregen_dungeon == level_gen_type::full;
+    pregen_check->set_checked(choice.pregenerate);
     pregen_check->set_visible(show_pregen_toggle);
     pregen_check->set_child(make_shared<ui::Text>("Fully pregenerate the dungeon"));
     box->add_child(pregen_check);
@@ -937,7 +940,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
             return false;
         }
 #endif
-        else if (key_is_escape(key))
+        else if (key_is_escape(key) || key == CK_MOUSE_CMD)
             return done = cancel = true;
         return false;
     });
@@ -964,7 +967,10 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         game_ended(game_exit::abort);
 
     Options.seed = choice.seed = tmp_seed;
-    Options.pregen_dungeon = choice.pregenerate = pregen_check->checked();
+    choice.pregenerate = pregen_check->checked();
+    if (choice.pregenerate)
+        Options.pregen_dungeon = level_gen_type::full; // XX don't do this
+    // otherwise, let (potentially default) option decide
 }
 
 // Read a choice of game into ng.
@@ -975,6 +981,8 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 {
 #ifdef USE_TILE_WEB
     tiles.set_ui_state(UI_CRT);
+    // send some minimal where info, in case there is a lingering .where file
+    update_whereis_chargen(choice.name);
 #endif
 
     clrscr();
@@ -1084,13 +1092,14 @@ static job_group jobs_order[] =
     },
     {
         "Adventurer",
-        coord_def(0, 7), 20,
+        coord_def(0, 6), 20,
         { JOB_ARTIFICER, JOB_WANDERER, JOB_DELVER, }
     },
     {
         "Zealot",
         coord_def(1, 0), 25,
-        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT }
+        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CINDER_ACOLYTE,
+          JOB_CHAOS_KNIGHT }
     },
     {
         "Warrior-mage",
@@ -1101,7 +1110,7 @@ static job_group jobs_order[] =
     {
         "Mage",
         coord_def(2, 0), 22,
-        { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
+        { JOB_HEDGE_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
           JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
           JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE }
     }
@@ -1513,6 +1522,9 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
         if (job == JOB_UNKNOWN)
             break;
 
+        if (job == JOB_DELVER && ng.type == GAME_TYPE_SPRINT)
+            continue;
+
         if (ng.species != SP_UNKNOWN
             && _job_allowed(ng.species, job) == CC_BANNED)
         {
@@ -1557,6 +1569,9 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
     {
         if (this_species == SP_UNKNOWN)
             break;
+
+        if (this_species == SP_METEORAN && ng.type == GAME_TYPE_SPRINT)
+            continue;
 
         if (ng.job == JOB_UNKNOWN && !species::is_starting_species(this_species))
             continue;
@@ -1653,65 +1668,24 @@ static void _construct_weapon_menu(const newgame_def& ng,
     };
     vector<weapon_menu_item> choices;
 
-    string thrown_name;
-
     for (unsigned int i = 0; i < weapons.size(); ++i)
     {
         weapon_type wpn_type = weapons[i].first;
 
-        switch (wpn_type)
+        if (wpn_type == WPN_UNARMED)
         {
-        case WPN_UNARMED:
             choices.emplace_back(SK_UNARMED_COMBAT,
                         species::has_claws(ng.species) ? "claws" : "unarmed");
-            break;
-        case WPN_THROWN:
-        {
-            // We don't support choosing among multiple thrown weapons.
-            tileidx_t tile = 0;
-            if (species::can_throw_large_rocks(ng.species))
-            {
-                thrown_name = "large rocks";
-#ifdef USE_TILE
-                tile = TILE_MI_LARGE_ROCK;
-#endif
-            }
-            else if (species::size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
-            {
-                thrown_name = "boomerangs";
-#ifdef USE_TILE
-                tile = TILE_MI_BOOMERANG;
-#endif
-            }
-            else
-            {
-                thrown_name = "javelins";
-#ifdef USE_TILE
-                tile = TILE_MI_JAVELIN;
-#endif
-            }
-            choices.emplace_back(SK_THROWING,
-                    thrown_name + " and throwing nets", tile);
-            break;
-        }
-        default:
+        } else {
             string text = weapon_base_name(wpn_type);
             item_def dummy;
             dummy.base_type = OBJ_WEAPONS;
             dummy.sub_type = wpn_type;
-            if (is_ranged_weapon_type(wpn_type))
-            {
-                text += " and ";
-                text += wpn_type == WPN_HUNTING_SLING ? ammo_name(MI_SLING_BULLET)
-                                                      : ammo_name(wpn_type);
-                text += "s";
-            }
             choices.emplace_back(item_attack_skill(dummy), text
 #ifdef USE_TILE
                     , tileidx_item(dummy)
 #endif
             );
-            break;
         }
     }
 
@@ -1733,11 +1707,6 @@ static void _construct_weapon_menu(const newgame_def& ng,
         tile_stack->flex_grow = 0;
         hbox->add_child(tile_stack);
 
-        if (choice.skill == SK_THROWING)
-        {
-            tile_stack->add_child(make_shared<Image>(
-                    tile_def(TILE_MI_THROWING_NET)));
-        }
         if (choice.skill == SK_UNARMED_COMBAT)
         {
 #ifndef USE_TILE_WEB
@@ -1803,11 +1772,9 @@ static void _construct_weapon_menu(const newgame_def& ng,
     {
         string text = "Tab - ";
 
-        ASSERT(defweapon != WPN_THROWN || thrown_name != "");
         text += defweapon == WPN_RANDOM  ? "Random" :
                 defweapon == WPN_VIABLE  ? "Recommended" :
                 defweapon == WPN_UNARMED ? "unarmed" :
-                defweapon == WPN_THROWN  ? thrown_name :
                 weapon_base_name(defweapon);
 
         _add_menu_sub_item(sub_items, 1, 2, text,
@@ -1937,7 +1904,7 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
     return ret;
 }
 
-static weapon_type _starting_weapon_upgrade(weapon_type wp, job_type job,
+weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
                                             species_type species)
 {
     const bool fighter = job == JOB_FIGHTER;
@@ -1967,10 +1934,11 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
     vector<weapon_choice> weapons;
     if (job_gets_ranged_weapons(ng.job))
     {
-        weapon_type startwep[4] = { WPN_THROWN, WPN_HUNTING_SLING,
-                                    WPN_SHORTBOW, WPN_HAND_CROSSBOW };
+        weapon_type startwep[3] = { WPN_HUNTING_SLING,
+                                    WPN_SHORTBOW,
+                                    WPN_HAND_CROSSBOW };
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 3; i++)
         {
             weapon_choice wp;
             wp.first = startwep[i];
@@ -1991,7 +1959,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def& ng)
             wp.first = startwep[i];
             if (job_gets_good_weapons(ng.job))
             {
-                wp.first = _starting_weapon_upgrade(wp.first, ng.job,
+                wp.first = starting_weapon_upgrade(wp.first, ng.job,
                                                     ng.species);
             }
 
@@ -2294,6 +2262,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
 #endif
                 end(0);
                 break;
+            case CK_MOUSE_CMD:
             CASE_ESCAPE
                 return done = cancel = true;
                 break;

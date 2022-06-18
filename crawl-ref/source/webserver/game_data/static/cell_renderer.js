@@ -1,7 +1,8 @@
-define(["jquery", "./view_data", "./tileinfo-main", "./tileinfo-player",
-        "./tileinfo-icons", "./tileinfo-dngn", "./enums", "./map_knowledge",
-        "./tileinfos", "./player", "./options", "contrib/jquery.json"],
-function ($, view_data, main, tileinfo_player, icons, dngn, enums,
+define(["jquery", "./view_data", "./tileinfo-gui", "./tileinfo-main",
+        "./tileinfo-player", "./tileinfo-icons", "./tileinfo-dngn", "./enums",
+        "./map_knowledge", "./tileinfos", "./player", "./options",
+        "contrib/jquery.json"],
+function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
           map_knowledge, tileinfos, player, options) {
     "use strict";
 
@@ -211,6 +212,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             cell.fg = enums.prepare_fg_flags(cell.fg || 0);
             cell.bg = enums.prepare_bg_flags(cell.bg || 0);
             cell.cloud = enums.prepare_fg_flags(cell.cloud || 0);
+            cell.icons = cell.icons || [];
             cell.flv = cell.flv || {};
             cell.flv.f = cell.flv.f || 0;
             cell.flv.s = cell.flv.s || 0;
@@ -219,7 +221,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
             if (options.get("tile_display_mode") == "glyphs")
             {
-                this.render_glyph(x, y, map_cell);
+                this.render_glyph(x, y, map_cell, false);
 
                 this.render_cursors(cx, cy, x, y);
                 this.draw_ray(x, y, cell);
@@ -501,8 +503,9 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        render_glyph: function (x, y, map_cell, omit_bg)
+        render_glyph: function (x, y, map_cell, omit_bg, square)
         {
+            // `map_cell` can be anything as long as it provides `col` and `g`
             var col = split_term_colour(map_cell.col);
             if (omit_bg && col.attr == enums.CHATTR.REVERSE)
                 col.attr = 0;
@@ -530,7 +533,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.rect(x, y, this.cell_width, this.cell_height);
                 this.ctx.clip();
 
-                if (options.get("tile_display_mode") == "hybrid")
+                if (square)
                 {
                     this.ctx.textAlign = "center";
                     this.ctx.textBaseline = "middle";
@@ -705,20 +708,36 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     this.draw_blood_overlay(x, y, cell, bg_idx > dngn.FLOOR_MAX);
 
                 // Draw overlays
+                var ray_tile = 0;
                 if (cell.ov)
                 {
                     $.each(cell.ov, function (i, overlay)
-                           {
-                               if (overlay > dngn.DNGN_MAX)
-                                   return;
-                               else if (overlay &&
-                                   (bg_idx < dngn.DNGN_FIRST_TRANSPARENT ||
-                                    overlay > dngn.FLOOR_MAX))
-                               {
-                                   renderer.draw_dngn(overlay, x, y);
-                               }
-                           });
+                        {
+                            if (overlay > dngn.DNGN_MAX)
+                                return;
+                            else if (overlay == dngn.RAY
+                                    || overlay == dngn.RAY_MULTI
+                                    || overlay == dngn.RAY_OUT_OF_RANGE)
+                            {
+                                // these need to be drawn last because of the
+                                // way alpha blending happens here, but for
+                                // hard-to-change reasons they are assembled on
+                                // the server side in the wrong order. (In local
+                                // tiles it's ok to blend them in any order.)
+                                // assumption: only one can appear on any tile.
+                                // TODO: a more general fix for this issue?
+                                ray_tile = overlay;
+                            }
+                            else if (overlay &&
+                                (bg_idx < dngn.DNGN_FIRST_TRANSPARENT ||
+                                 overlay > dngn.FLOOR_MAX))
+                            {
+                                renderer.draw_dngn(overlay, x, y);
+                            }
+                        });
                 }
+                if (ray_tile)
+                    renderer.draw_dngn(ray_tile, x, y);
 
                 if (!bg.UNSEEN)
                 {
@@ -855,7 +874,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
             else if (options.get("tile_display_mode") == "hybrid")
             {
-                this.render_glyph(x, y, map_cell, true);
+                this.render_glyph(x, y, map_cell, true, true);
                 this.draw_ray(x, y, cell);
                 img_scale = undefined; // TODO: make this work?
             }
@@ -869,13 +888,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             if (fg.S_UNDER)
                 this.draw_icon(icons.SOMETHING_UNDER, x, y, undefined, undefined, img_scale);
 
-            if (fg.MIMIC_INEPT)
-                this.draw_icon(icons.INEPT_MIMIC, x, y, undefined, undefined, img_scale);
-            else if (fg.MIMIC)
-                this.draw_icon(icons.MIMIC, x, y, undefined, undefined, img_scale);
-            else if (fg.MIMIC_RAVEN)
-                this.draw_icon(icons.RAVENOUS_MIMIC, x, y, undefined, undefined, img_scale);
-
             // Pet mark
             if (fg.PET)
                 this.draw_icon(icons.FRIENDLY, x, y, undefined, undefined, img_scale);
@@ -883,13 +895,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.GOOD_NEUTRAL, x, y, undefined, undefined, img_scale);
             else if (fg.NEUTRAL)
                 this.draw_icon(icons.NEUTRAL, x, y, undefined, undefined, img_scale);
-
-            //These icons are in the lower right, so status_shift doesn't need changing.
-            if (fg.BERSERK)
-                this.draw_icon(icons.BERSERK, x, y, undefined, undefined, img_scale);
-            if (fg.IDEALISED)
-                this.draw_icon(icons.IDEALISED, x, y, undefined, undefined, img_scale);
-
 
             var status_shift = 0;
             if (fg.STAB)
@@ -924,114 +929,10 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                 status_shift += 5;
             }
 
-            if (fg.STICKY_FLAME)
+            for (var i = 0; i < cell.icons.length; ++i)
             {
-                this.draw_icon(icons.STICKY_FLAME, x, y, -status_shift, 0, img_scale);
-                status_shift += 7;
+                status_shift += this.draw_icon_type(cell.icons[i], x, y, -status_shift, 0, img_scale);
             }
-            if (fg.INNER_FLAME)
-            {
-                this.draw_icon(icons.INNER_FLAME, x, y, -status_shift, 0, img_scale);
-                status_shift += 7;
-            }
-            if (fg.CONSTRICTED)
-            {
-                this.draw_icon(icons.CONSTRICTED, x, y, -status_shift, 0, img_scale);
-                status_shift += 11;
-            }
-            if (fg.VILE_CLUTCH)
-            {
-                this.draw_icon(icons.VILE_CLUTCH, x, y, -status_shift, 0, img_scale);
-                status_shift += 11;
-            }
-            if (fg.POSSESSABLE)
-            {
-                this.draw_icon(icons.POSSESSABLE, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.GLOWING)
-            {
-                this.draw_icon(icons.GLOWING, x, y, -status_shift, 0, img_scale);
-                status_shift += 8;
-            }
-            if (fg.SWIFT)
-            {
-                this.draw_icon(icons.SWIFT, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.HASTED)
-            {
-                this.draw_icon(icons.HASTED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.SLOWED)
-            {
-                this.draw_icon(icons.SLOWED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.MIGHT)
-            {
-                this.draw_icon(icons.MIGHT, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.CORRODED)
-            {
-                this.draw_icon(icons.CORRODED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.DRAIN)
-            {
-                this.draw_icon(icons.DRAIN, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.PAIN_MIRROR)
-            {
-                this.draw_icon(icons.PAIN_MIRROR, x, y, -status_shift, 0, img_scale);
-                status_shift += 7;
-            }
-            if (fg.PETRIFYING)
-            {
-                this.draw_icon(icons.PETRIFYING, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.PETRIFIED)
-            {
-                this.draw_icon(icons.PETRIFIED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.BLIND)
-            {
-                this.draw_icon(icons.BLIND, x, y, -status_shift, 0, img_scale);
-                status_shift += 10;
-            }
-            if (fg.BOUND_SOUL)
-            {
-                this.draw_icon(icons.BOUND_SOUL, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.INFESTED)
-            {
-                this.draw_icon(icons.INFESTED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.RECALL)
-            {
-                this.draw_icon(icons.RECALL, x, y, -status_shift, 0, img_scale);
-                status_shift += 9;
-            }
-            if (fg.SLOWLY_DYING)
-            {
-                this.draw_icon(icons.SLOWLY_DYING, x, y, -status_shift, 0, img_scale);
-                status_shift += 10;
-            }
-
-            // Anim. weap. and summoned might overlap, but that's okay
-            if (fg.ANIM_WEP)
-                this.draw_icon(icons.ANIMATED_WEAPON, x, y, undefined, undefined, img_scale);
-            if (fg.SUMMONED)
-                this.draw_icon(icons.SUMMONED, x, y, undefined, undefined, img_scale);
-            if (fg.PERM_SUMMON)
-                this.draw_icon(icons.PERM_SUMMON, x, y, undefined, undefined, img_scale);
 
             if (bg.UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MESH, x, y, undefined, undefined, img_scale);
@@ -1110,6 +1011,66 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
+        draw_icon_type: function(idx, x, y, ofsx, ofsy, img_scale)
+        {
+            switch (idx)
+            {
+                //These icons are in the lower right, so status_shift doesn't need changing.
+                case icons.BERSERK:
+                case icons.IDEALISED:
+                // Anim. weap. and summoned might overlap, but that's okay
+                case icons.SUMMONED:
+                case icons.PERM_SUMMON:
+                case icons.ANIMATED_WEAPON:
+                    this.draw_icon(idx, x, y, undefined, undefined, img_scale);
+                    return 0;
+                case icons.DRAIN:
+                case icons.MIGHT:
+                case icons.SWIFT:
+                case icons.DAZED:
+                case icons.HASTED:
+                case icons.SLOWED:
+                case icons.CORRODED:
+                case icons.INFESTED:
+                case icons.WEAKENED:
+                case icons.PETRIFIED:
+                case icons.PETRIFYING:
+                case icons.BOUND_SOUL:
+                case icons.POSSESSABLE:
+                case icons.PARTIALLY_CHARGED:
+                case icons.FULLY_CHARGED:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 6;
+                case icons.CONC_VENOM:
+                case icons.FIRE_CHAMP:
+                case icons.INNER_FLAME:
+                case icons.PAIN_MIRROR:
+                case icons.STICKY_FLAME:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 7;
+                case icons.ANGUISH:
+                case icons.FIRE_VULN:
+                case icons.SIMULACRUM:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 8;
+                case icons.RECALL:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 9;
+                case icons.BLIND:
+                case icons.SLOWLY_DYING:
+                case icons.WATERLOGGED:
+                case icons.STILL_WINDS:
+                case icons.ANTIMAGIC:
+                case icons.REPEL_MISSILES:
+                case icons.INJURY_BOND:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 10;
+                case icons.CONSTRICTED:
+                case icons.VILE_CLUTCH:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 11;
+            }
+        },
 
         // Helper functions for drawing from specific textures
         draw_tile: function(idx, x, y, mod, ofsx, ofsy, y_max, centre, img_scale)
@@ -1118,7 +1079,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             var img = get_img(mod.get_img(idx));
             if (!info)
             {
-                throw ("Tile not found: " + idx);
+                throw new Error("Tile not found: " + idx);
             }
 
             // this somewhat convoluted approach is to avoid fp scaling
@@ -1157,10 +1118,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             var h = info.ey - info.sy;
 
             this.ctx.imageSmoothingEnabled = options.get("tile_filter_scaling");
-            this.ctx.webkitImageSmoothingEnabled =
-                options.get("tile_filter_scaling");
-            this.ctx.mozImageSmoothingEnabled =
-                options.get("tile_filter_scaling");
             this.ctx.drawImage(img,
                                info.sx, info.sy + sy - pos_sy_adjust,
                                w, h + ey - pos_ey_adjust,
@@ -1173,6 +1130,13 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         draw_dngn: function(idx, x, y, img_scale)
         {
             this.draw_tile(idx, x, y, dngn,
+                undefined, undefined, undefined, undefined,
+                img_scale);
+        },
+
+        draw_gui: function(idx, x, y, img_scale)
+        {
+            this.draw_tile(idx, x, y, gui,
                 undefined, undefined, undefined, undefined,
                 img_scale);
         },
@@ -1196,6 +1160,26 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             this.draw_tile(idx, x, y, icons, ofsx, ofsy,
                 undefined, undefined,
                 img_scale);
+        },
+
+        draw_quantity: function(qty, x, y, font)
+        {
+            qty = Math.max(0, Math.min(999, qty));
+
+            this.ctx.fillStyle = "white";
+            this.ctx.font = font;
+
+            this.ctx.shadowColor = "black";
+            this.ctx.shadowBlur = 2;
+            this.ctx.shadowOffsetX = 1;
+            this.ctx.shadowOffsetY = 1;
+            this.ctx.textAlign = "left";
+            this.ctx.textBaseline = "top";
+            // XX this way of doing device scaling is v ugly
+            var ratio = window.devicePixelRatio;
+            this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            this.ctx.fillText(qty, (x + 2) / ratio, (y + 2) / ratio);
+            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
         },
 
         draw_from_texture: function (idx, x, y, tex, ofsx, ofsy, y_max, centre, img_scale)

@@ -83,6 +83,9 @@ function ch_stash_search_annotate_item(it)
       end
       annot = annot .. "} "
     else
+      if it.ego_type_terse == "Fly" then
+        annot = annot .. "{flight} "
+      end
       annot = annot .. "{" .. it.ego_type_terse .. "} "
     end
   end

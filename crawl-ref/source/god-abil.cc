@@ -25,6 +25,7 @@
 #include "curse-type.h"
 #include "dactions.h"
 #include "database.h"
+#include "delay.h"
 #include "describe.h"
 #include "dgn-overview.h"
 #include "directn.h"
@@ -77,8 +78,8 @@
 #include "spl-monench.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "spl-wpnench.h"
 #include "sprint.h"
+#include "stairs.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
@@ -103,7 +104,9 @@ static bool _player_sacrificed_arcana();
  */
 bool can_do_capstone_ability(god_type god)
 {
-   return in_good_standing(god, 5) && !you.one_time_ability_used[god];
+    // Worshippers of Ignis can use their capstone with any amount of piety
+    int pbreak = (god == GOD_IGNIS) ? -1 : 5;
+    return in_good_standing(god, pbreak) && !you.one_time_ability_used[god];
 }
 
 static const char *_god_blessing_description(god_type god)
@@ -146,9 +149,12 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     }
 
     item_def& wpn(you.inv[item_slot]);
-    // Only TSO allows blessing ranged weapons.
-    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH, true))
+    // TSO and KIKU allow blessing ranged weapons, but LUGONU does not.
+    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH
+                                                                  || brand == SPWPN_PAIN, true))
+    {
         return false;
+    }
 
     string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
                        + " ";
@@ -163,12 +169,6 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     {
         canned_msg(MSG_OK);
         return false;
-    }
-
-    if (you.duration[DUR_EXCRUCIATING_WOUNDS]) // just in case
-    {
-        ASSERT(you.weapon());
-        end_weapon_brand(*you.weapon());
     }
 
     string old_name = wpn.name(DESC_A);
@@ -208,8 +208,13 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
         holy_word(100, HOLY_WORD_TSO, you.pos(), true);
         // Un-bloodify surrounding squares.
         for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_SOLID); ri; ++ri)
+        {
             if (is_bloodcovered(*ri))
                 env.pgrid(*ri) &= ~FPROP_BLOODY;
+
+            if (env.grid(*ri) == DNGN_FOUNTAIN_BLOOD)
+                dungeon_terrain_changed(*ri, DNGN_FOUNTAIN_BLUE);
+        }
     }
     else if (god == GOD_KIKUBAAQUDGHA)
     {
@@ -239,7 +244,7 @@ bool zin_donate_gold()
 {
     if (you.gold == 0)
     {
-        mpr("You don't have anything to sacrifice.");
+        mpr("You have nothing to donate!");
         return false;
     }
 
@@ -266,7 +271,7 @@ bool zin_donate_gold()
     if (donation < 1)
     {
         simple_god_message(" finds your generosity lacking.");
-        return false;
+        return true;
     }
 
     you.duration[DUR_PIETY_POOL] += donation;
@@ -472,15 +477,15 @@ static const char * const book_of_zin[][3] =
 
 static const char * const sinner_text[] =
 {
+    "unbelievers",
+    "heretics",
+    "guilty",
     "hordes of the Abyss",
     "bastard children of Xom",
     "amorphous wretches",
     "fetid masses",
     "agents of filth",
     "squalid dregs",
-    "unbelievers",
-    "heretics",
-    "guilty",
     "legions of the damned",
     "servants of Hell",
     "forces of darkness",
@@ -489,15 +494,15 @@ static const char * const sinner_text[] =
 // First column is adjective, then noun.
 static const char * const sin_text[][2] =
 {
+    { "unfaithful",   "unfaithfulness" },
+    { "disloyal",     "disloyalty" },
+    { "doubting",     "doubt" },
     { "chaotic",      "chaos" },
     { "discordant",   "discord" },
     { "anarchic",     "anarchy" },
     { "unclean",      "uncleanliness" },
     { "impure",       "impurity" },
     { "contaminated", "contamination" },
-    { "unfaithful",   "unfaithfulness" },
-    { "disloyal",     "disloyalty" },
-    { "doubting",     "doubt" },
     { "profane",      "profanity" },
     { "blasphemous",  "blasphemy" },
     { "sacrilegious", "sacrilege" },
@@ -506,15 +511,15 @@ static const char * const sin_text[][2] =
 // First column is adjective, then noun.
 static const char * const virtue_text[][2] =
 {
+    { "faithful",  "faithfulness" },
+    { "loyal",     "loyalty" },
+    { "believing", "belief" },
     { "ordered",   "order" },
     { "harmonic",  "harmony" },
     { "lawful",    "lawfulness" },
     { "clean",     "cleanliness" },
     { "pure",      "purity" },
     { "hygienic",  "hygiene" },
-    { "faithful",  "faithfulness" },
-    { "loyal",     "loyalty" },
-    { "believing", "belief" },
     { "reverent",  "reverence" },
     { "pious",     "piety" },
     { "obedient",  "obedience" },
@@ -750,6 +755,23 @@ bool zin_check_able_to_recite(bool quiet)
     }
 
     return true;
+}
+
+vector<coord_def> find_recite_targets()
+{
+    vector<coord_def> result;
+    recite_counts eligibility;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (you.can_see(**mi)
+            && zin_check_recite_to_single_monster(*mi, eligibility,
+                                                  true) == RE_ELIGIBLE)
+        {
+            result.push_back((*mi)->pos());
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -1181,9 +1203,7 @@ bool zin_recite_to_single_monster(const coord_def& where)
 static void _zin_saltify(monster* mon)
 {
     const coord_def where = mon->pos();
-    const monster_type pillar_type =
-        mons_is_zombified(*mon) ? mons_zombie_base(*mon)
-                                : mons_species(mon->type);
+    const monster_type pillar_type = mons_species(mons_base_type(*mon));
     const int hd = mon->get_hit_dice();
 
     simple_monster_message(*mon, " is turned into a pillar of salt by the wrath of Zin!");
@@ -1235,27 +1255,30 @@ void zin_remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
-bool zin_remove_all_mutations()
+spret zin_imprison(const coord_def& target, bool fail)
 {
-    ASSERT(you.how_mutated());
-    ASSERT(can_do_capstone_ability(you.religion));
-
-    if (!yesno("Do you wish to cure all of your mutations?", true, 'n'))
+    monster* mons = monster_at(target);
+    if (mons == nullptr || !you.can_see(*mons))
     {
-        canned_msg(MSG_OK);
-        return false;
+        mpr("You can see no monster there to imprison!");
+        return spret::abort;
     }
-    flash_view(UA_PLAYER, WHITE);
-#ifndef USE_TILE_LOCAL
-    // Allow extra time for the flash to linger.
-    scaled_delay(1000);
-#endif
 
-    you.one_time_ability_used.set(GOD_ZIN);
-    take_note(Note(NOTE_GOD_GIFT, you.religion));
-    simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations("Zin's power");
-    return true;
+    if (mons_is_firewood(*mons) || mons_is_conjured(mons->type))
+    {
+        mpr("You cannot imprison that!");
+        return spret::abort;
+    }
+
+    if (mons->friendly() || mons->good_neutral())
+    {
+        mpr("You cannot imprison a law-abiding creature!");
+        return spret::abort;
+    }
+
+    int power = 3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26);
+
+    return cast_tomb(power, mons, -GOD_ZIN, fail);
 }
 
 void zin_sanctuary()
@@ -1332,38 +1355,30 @@ void elyvilon_purification()
     you.redraw_evasion = true;
 }
 
-bool elyvilon_divine_vigour()
+void elyvilon_divine_vigour()
 {
-    bool success = false;
+    if (you.duration[DUR_DIVINE_VIGOUR])
+        return;
 
-    if (!you.duration[DUR_DIVINE_VIGOUR])
+    mprf("%s grants you divine vigour.",
+         god_name(GOD_ELYVILON).c_str());
+
+    const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
+    const int old_hp_max = you.hp_max;
+    const int old_mp_max = you.max_magic_points;
+    you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
+    you.set_duration(DUR_DIVINE_VIGOUR,
+                     40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
+
+    calc_hp();
+    inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
+    calc_mp();
+    if (old_mp_max > 0)
     {
-        mprf("%s grants you divine vigour.",
-             god_name(GOD_ELYVILON).c_str());
-
-        const int vigour_amt = 1 + you.skill_rdiv(SK_INVOCATIONS, 1, 3);
-        const int old_hp_max = you.hp_max;
-        const int old_mp_max = you.max_magic_points;
-        you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
-        you.set_duration(DUR_DIVINE_VIGOUR,
-                         40 + you.skill_rdiv(SK_INVOCATIONS, 5, 2));
-
-        calc_hp();
-        inc_hp((you.hp_max * you.hp + old_hp_max - 1)/old_hp_max - you.hp);
-        calc_mp();
-        if (old_mp_max > 0)
-        {
-            inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
-                     / old_mp_max
-                   - you.magic_points);
-        }
-
-        success = true;
+        inc_mp((you.max_magic_points * you.magic_points + old_mp_max - 1)
+                 / old_mp_max
+               - you.magic_points);
     }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return success;
 }
 
 void elyvilon_remove_divine_vigour()
@@ -1388,7 +1403,7 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_LRD
         || spell == SPELL_SANDBLAST
         || spell == SPELL_AIRSTRIKE
-        || spell == SPELL_TORNADO
+        || spell == SPELL_POLAR_VORTEX
         || spell == SPELL_FREEZE
         || spell == SPELL_IGNITE_POISON
         || spell == SPELL_OZOCUBUS_REFRIGERATION
@@ -1397,9 +1412,10 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_INNER_FLAME
         || spell == SPELL_IGNITION
         || spell == SPELL_FROZEN_RAMPARTS
-        || spell == SPELL_ABSOLUTE_ZERO
+        || spell == SPELL_MAXWELLS_COUPLING
         || spell == SPELL_NOXIOUS_BOG
-        || spell == SPELL_POISONOUS_VAPOURS)
+        || spell == SPELL_POISONOUS_VAPOURS
+        || spell == SPELL_SCORCH)
     {
         return true;
     }
@@ -1518,7 +1534,10 @@ bool beogh_gift_item()
     direction(spd, args);
 
     if (!spd.isValid)
+    {
+        canned_msg(MSG_OK);
         return false;
+    }
 
     monster* mons = monster_at(spd.target);
     if (!beogh_can_gift_items_to(mons, false))
@@ -1535,7 +1554,7 @@ bool beogh_gift_item()
 
     item_def& gift = you.inv[item_slot];
 
-    const bool shield = is_shield(gift);
+    const bool shield = is_offhand(gift);
     const bool body_armour = gift.base_type == OBJ_ARMOUR
                              && get_armour_slot(gift) == EQ_BODY_ARMOUR;
     const bool weapon = gift.base_type == OBJ_WEAPONS;
@@ -1584,10 +1603,6 @@ bool beogh_gift_item()
     }
     if (use_alt_slot)
         mons->swap_weapons();
-
-    dprf("is_ranged weap: %d", range_weapon);
-    if (range_weapon)
-        gift_ammo_to_orc(mons);
 
     if (shield)
         mons->props[BEOGH_SH_GIFT_KEY] = true;
@@ -1663,51 +1678,20 @@ bool beogh_resurrect()
     return true;
 }
 
-bool jiyva_remove_bad_mutation()
+bool yred_can_bind_soul(monster* mon)
 {
-    if (!you.how_mutated())
-    {
-        mpr("You have no bad mutations to be cured!");
-        return false;
-    }
-
-    // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, "Jiyva's power", true, false, true, true))
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return false;
-    }
-
-    mpr("You feel cleansed.");
-    return true;
+    return mons_can_be_spectralised(*mon, true)
+           && !mons_bound_body_and_soul(*mon)
+           && mon->attitude != ATT_FRIENDLY;
 }
 
-bool yred_injury_mirror()
-{
-    return in_good_standing(GOD_YREDELEMNUL, 1)
-           && you.duration[DUR_MIRROR_DAMAGE]
-           && crawl_state.which_god_acting() != GOD_YREDELEMNUL;
-}
-
-bool yred_can_enslave_soul(monster* mon)
-{
-    return (mon->holiness() & MH_NATURAL
-            || mon->holiness() & MH_DEMONIC
-            || mon->holiness() & MH_HOLY)
-           && !mon->is_summoned()
-           && !mons_enslaved_body_and_soul(*mon)
-           && mon->attitude != ATT_FRIENDLY
-           && mons_intel(*mon) >= I_HUMAN
-           && mon->type != MONS_PANDEMONIUM_LORD;
-}
-
-void yred_make_enslaved_soul(monster* mon, bool force_hostile)
+void yred_make_bound_soul(monster* mon, bool force_hostile)
 {
     ASSERT(mon); // XXX: change to monster &mon
-    ASSERT(mons_enslaved_body_and_soul(*mon));
+    ASSERT(mons_bound_body_and_soul(*mon));
 
     add_daction(DACT_OLD_CHARMD_SOULS_POOF);
-    remove_enslaved_soul_companion();
+    remove_bound_soul_companion();
 
     const string whose = you.can_see(*mon) ? apostrophise(mon->name(DESC_THE))
                                            : mon->pronoun(PRONOUN_POSSESSIVE);
@@ -1743,7 +1727,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
-    define_zombie(mon, mon->type, MONS_SPECTRAL_THING);
+    define_zombie(mon, mon->type, MONS_BOUND_SOUL);
 
     // If the original monster has been levelled up, its HD might be different
     // from its class HD, in which case its HP should be rerolled to match.
@@ -1753,10 +1737,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
         roll_zombie_hp(mon);
     }
 
-    mon->colour = ETC_UNHOLY;
-
     mon->flags |= MF_NO_REWARD;
-    mon->flags |= MF_ENSLAVED_SOUL;
 
     // If the original monster type has melee abilities, make sure
     // its spectral thing has them as well.
@@ -1776,6 +1757,8 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
     behaviour_event(mon, ME_ALERT, force_hostile ? &you : 0);
 
+    mons_att_changed(mon);
+
     mon->stop_constricting_all();
     mon->stop_being_constricted();
 
@@ -1786,135 +1769,46 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
         invalidate_agrid();
     }
 
+    // schedule our actual revival for the end of this combat round
+    avoided_death_fineff::schedule(mon);
+
     mprf("%s soul %s.", whose.c_str(),
          !force_hostile ? "is now yours" : "fights you");
 }
 
-bool kiku_receive_corpses(int pow)
-{
-    // pow = necromancy * 4, ranges from 0 to 108
-    dprf("kiku_receive_corpses() power: %d", pow);
-
-    // Kiku gives branch-appropriate corpses (like shadow creatures).
-    // 1d2 at 0 Nec, up to 8 at 27 Nec.
-    int expected_extra_corpses = 1 + random2(2) + random2(pow / 18);
-    int corpse_delivery_radius = 1;
-
-    // We should get the same number of corpses
-    // in a hallway as in an open room.
-    int spaces_for_corpses = 0;
-    for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_SQUARE,
-                            LOS_NO_TRANS, true); ri; ++ri)
-    {
-        if (mons_class_can_pass(MONS_HUMAN, env.grid(*ri)))
-            spaces_for_corpses++;
-    }
-    // floating over lava, heavy tomb abuse, etc
-    if (!spaces_for_corpses)
-        spaces_for_corpses++;
-
-    int percent_chance_a_square_receives_extra_corpse = // can be > 100
-        int(float(expected_extra_corpses) / float(spaces_for_corpses) * 100.0);
-
-    int corpses_created = 0;
-
-    for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_SQUARE,
-                            LOS_NO_TRANS); ri; ++ri)
-    {
-        bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, env.grid(*ri));
-        bool square_is_player_square = (*ri == you.pos());
-        bool square_gets_corpse =
-            random2(100) < percent_chance_a_square_receives_extra_corpse
-            || square_is_player_square && random2(100) < 97;
-
-        if (!square_is_walkable || !square_gets_corpse)
-            continue;
-
-        corpses_created++;
-
-        // Find an appropriate monster corpse for level and power.
-        const int adjusted_power = min(pow / 4, random2(random2(pow)));
-        // Pick a place based on the power. This may be below the branch's
-        // start, that's ok.
-        const level_id lev(you.where_are_you, adjusted_power
-                           - absdungeon_depth(you.where_are_you, 0));
-        const monster_type mon_type = pick_local_corpsey_monster(lev);
-        ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
-
-        // Create corpse object.
-        monster dummy;
-        dummy.type = mon_type;
-        define_monster(dummy);
-        dummy.position = *ri;
-
-        item_def* corpse = place_monster_corpse(dummy, true);
-        if (!corpse)
-            continue;
-
-        // Higher piety means fresher corpses.
-        int rottedness = 200 -
-            (!one_chance_in(10) ? random2(200 - you.piety)
-                                : random2(100 + random2(75)));
-        corpse->freshness = rottedness;
-    }
-
-    if (corpses_created)
-    {
-        if (you_worship(GOD_KIKUBAAQUDGHA))
-        {
-            simple_god_message(corpses_created > 1 ? " delivers you corpses!"
-                                                   : " delivers you a corpse!");
-        }
-        maybe_update_stashes();
-        return true;
-    }
-    else
-    {
-        if (you_worship(GOD_KIKUBAAQUDGHA))
-            simple_god_message(" can find no cadavers for you!");
-        return false;
-    }
-}
-
-/**
- * Destroy a corpse at the player's location
- *
- * @return  True if a corpse was destroyed, false otherwise.
-*/
-bool kiku_take_corpse()
-{
-    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = env.item[i].link)
-    {
-        item_def &item(env.item[i]);
-
-        if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-            continue;
-        item_was_destroyed(item);
-        destroy_item(i);
-        return true;
-    }
-
-    return false;
-}
-
-bool kiku_gift_necronomicon()
+bool kiku_gift_capstone_spells()
 {
     ASSERT(can_do_capstone_ability(you.religion));
 
-    if (!yesno("Do you wish to receive a Necronomicon?", true, 'n'))
+    vector<spell_type> spells;
+    vector<spell_type> candidates = { SPELL_HAUNT,
+                                      SPELL_BORGNJORS_REVIVIFICATION,
+                                      SPELL_INFESTATION,
+                                      SPELL_NECROMUTATION,
+                                      SPELL_DEATHS_DOOR };
+
+    for (auto spell : candidates)
+        if (!spell_is_useless(spell, false))
+            spells.push_back(spell);
+
+    if (spells.empty())
+    {
+        simple_god_message(" has no more spells that you can make use of!");
+        return false;
+    }
+
+    string msg = "Do you wish to receive knowledge of "
+                 + comma_separated_fn(spells.begin(), spells.end(), spell_title)
+                 + "?";
+
+    if (!yesno(msg.c_str(), true, 'n'))
     {
         canned_msg(MSG_OK);
         return false;
     }
-    int thing_created = items(true, OBJ_BOOKS, BOOK_NECRONOMICON, 1, 0,
-                              you.religion);
-    if (thing_created == NON_ITEM
-        || !move_item_to_grid(&thing_created, you.pos()))
-    {
-        return false;
-    }
-    set_ident_type(env.item[thing_created], true);
-    simple_god_message(" grants you a gift!");
+
+    simple_god_message(" grants you forbidden knowledge!");
+    library_add_spells(spells);
     flash_view(UA_PLAYER, RED);
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
@@ -1953,40 +1847,21 @@ bool fedhas_passthrough(const monster_info* target)
                || target->attitude != ATT_HOSTILE);
 }
 
-static bool _lugonu_warp_monster(monster& mon, int pow)
+static bool _lugonu_warp_monster(monster& mon)
 {
-    if (coinflip())
+    // XXX: should this ignore mon.no_tele(), as with the player?
+    if (mon.wont_attack() || mon.no_tele() || coinflip())
         return false;
 
-    if (!mon.friendly())
-        behaviour_event(&mon, ME_ANNOY, &you);
-
-    mon.hurt(&you, 1 + random2(pow / 6));
-
-    if (mon.alive() && !mon.no_tele(true, false))
-        mon.blink();
-
+    mon.blink();
     return true;
-}
-
-static void _lugonu_warp_area(int pow)
-{
-    apply_monsters_around_square([pow] (monster& mon) {
-        return _lugonu_warp_monster(mon, pow);
-    }, you.pos());
 }
 
 void lugonu_bend_space()
 {
-    const int pow = 4 + skill_bump(SK_INVOCATIONS);
-    const bool area_warp = random2(pow) > 9;
-
-    mprf("Space bends %saround you!", area_warp ? "sharply " : "");
-
-    if (area_warp)
-        _lugonu_warp_area(pow);
-
+    mpr("Space bends violently around you!");
     uncontrolled_blink(true);
+    apply_monsters_around_square(_lugonu_warp_monster, you.pos());
 }
 
 void cheibriados_time_bend(int pow)
@@ -2037,7 +1912,7 @@ static int _slouch_damage(monster *mon)
 static bool _slouchable(coord_def where)
 {
     monster* mon = monster_at(where);
-    if (mon == nullptr || mon->is_stationary() || mon->cannot_move()
+    if (mon == nullptr || mon->is_stationary() || mon->cannot_act()
         || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(*mon))
     {
@@ -2070,7 +1945,7 @@ static int _slouch_monsters(coord_def where)
     return 1;
 }
 
-bool cheibriados_slouch()
+spret cheibriados_slouch(bool fail)
 {
     int count = apply_area_visible(_slouchable, you.pos());
     if (!count)
@@ -2078,18 +1953,20 @@ bool cheibriados_slouch()
                    true, 'n'))
         {
             canned_msg(MSG_OK);
-            return false;
+            return spret::abort;
         }
 
     targeter_radius hitfunc(&you, LOS_DEFAULT);
-    if (stop_attack_prompt(hitfunc, "harm", _act_slouchable))
-        return false;
+    if (stop_attack_prompt(hitfunc, "Slouch", _act_slouchable))
+        return spret::abort;
+
+    fail_check();
 
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
     apply_area_visible(_slouch_monsters, you.pos());
-    return true;
+    return spret::success;
 }
 
 static void _run_time_step()
@@ -2282,7 +2159,7 @@ string desc_curse_skills(const CrawlStoreValue& curse)
 static void _choose_curse_knowledge()
 {
     // This loop choses two available skills without replacement,
-    // it is a two element version of a resivoir sampling algorithm.
+    // it is a two element version of a reservoir sampling algorithm.
     //
     // If Ashenzari curses need some fancier weighting this is the
     // place to do that weighting.
@@ -2537,7 +2414,7 @@ void spare_beogh_convert()
     }
 }
 
-bool dithmenos_shadow_step()
+spret dithmenos_shadow_step(bool fail)
 {
     // You can shadow-step anywhere within your umbra.
     ASSERT(you.umbra_radius() > -1);
@@ -2555,7 +2432,10 @@ bool dithmenos_shadow_step()
     dist sdirect;
     direction(sdirect, args);
     if (!sdirect.isValid || tgt.landing_site.origin())
-        return false;
+    {
+        canned_msg(MSG_OK);
+        return spret::abort;
+    }
 
     // Check for hazards.
     bool zot_trap_prompted = false,
@@ -2569,7 +2449,8 @@ bool dithmenos_shadow_step()
         if (!cloud_prompted
             && !check_moveto_cloud(site, "shadow step", &cloud_prompted))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
 
         if (!zot_trap_prompted)
@@ -2580,8 +2461,8 @@ bool dithmenos_shadow_step()
                 if (!check_moveto_trap(site, "shadow step",
                                        &trap_prompted))
                 {
-                    you.turn_is_over = false;
-                    return false;
+                    canned_msg(MSG_OK);
+                    return spret::abort;
                 }
                 zot_trap_prompted = true;
             }
@@ -2589,8 +2470,8 @@ bool dithmenos_shadow_step()
                      && !check_moveto_trap(site, "shadow step",
                                            &trap_prompted))
             {
-                you.turn_is_over = false;
-                return false;
+                canned_msg(MSG_OK);
+                return spret::abort;
             }
         }
 
@@ -2598,16 +2479,20 @@ bool dithmenos_shadow_step()
             && !check_moveto_exclusion(site, "shadow step",
                                        &exclusion_prompted))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
 
         if (!terrain_prompted
             && !check_moveto_terrain(site, "shadow step", "",
                                      &terrain_prompted))
         {
-            return false;
+            canned_msg(MSG_OK);
+            return spret::abort;
         }
     }
+
+    fail_check();
 
     const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
@@ -2615,7 +2500,7 @@ bool dithmenos_shadow_step()
     if (!you.move_to_pos(tgt.landing_site))
     {
         mpr("Something blocks your shadow step.");
-        return true;
+        return spret::success;
     }
 
     const actor *victim = actor_at(sdirect.target);
@@ -2625,7 +2510,7 @@ bool dithmenos_shadow_step()
     // This helps to evade splash upon landing on water.
     moveto_location_effects(env.grid(old_pos), true, old_pos);
 
-    return true;
+    return spret::success;
 }
 
 static potion_type _gozag_potion_list[][4] =
@@ -2723,9 +2608,13 @@ bool gozag_potion_petition()
                 you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
                 pots[i] = &you.props[key].get_vector();
 
-                ADD_POTIONS(*pots[i], _gozag_potion_list);
-                if (coinflip())
+                do
+                {
                     ADD_POTIONS(*pots[i], _gozag_potion_list);
+                    if (coinflip())
+                        ADD_POTIONS(*pots[i], _gozag_potion_list);
+                }
+                while (pots[i]->empty());
 
                 for (const CrawlStoreValue& store : *pots[i])
                 {
@@ -3394,10 +3283,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         if (!adj && max_radius > 1)
             chance -= 100;
         if (adj && max_radius > 1 || x_chance_in_y(chance, 100))
-        {
-            if (beam.flavour == BEAM_FRAG || !cell_is_solid(*ri))
-                affected.push_back(*ri);
-        }
+           affected.push_back(*ri);
     }
     if (!quiet)
         shuffle_array(affected);
@@ -3425,7 +3311,6 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
         mprf(MSGCH_GOD, "%s", message.c_str());
     }
 
-    int wall_count = 0;
     beam.animate = false; // already drawn
 
     for (coord_def pos : affected)
@@ -3453,46 +3338,30 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
                                 &you);
                 }
                 break;
-            case BEAM_FRAG:
-                if (((env.grid(pos) == DNGN_ROCK_WALL
-                     || env.grid(pos) == DNGN_CLEAR_ROCK_WALL
-                     || env.grid(pos) == DNGN_SLIMY_WALL)
-                     && x_chance_in_y(pow / 4, 100)
-                    || feat_is_door(env.grid(pos))
-                    || env.grid(pos) == DNGN_GRATE))
-                {
-                    noisy(30, pos);
-                    destroy_wall(pos);
-                    wall_count++;
-                }
-                break;
             default:
                 break;
         }
     }
 
-    if (wall_count && !quiet)
-        mpr("Ka-crash!");
-
     return spret::success;
 }
 
-spret qazlal_elemental_force(bool fail)
-{
-    static const map<cloud_type, monster_type> elemental_clouds = {
-        { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
-        { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
-        { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
-        { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
-        { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
-        { CLOUD_PETRIFY,        MONS_EARTH_ELEMENTAL },
-        { CLOUD_BLACK_SMOKE,    MONS_AIR_ELEMENTAL },
-        { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
-        { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
-        { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
-        { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
-    };
+static const map<cloud_type, monster_type> elemental_clouds = {
+    { CLOUD_FIRE,           MONS_FIRE_ELEMENTAL },
+    { CLOUD_FOREST_FIRE,    MONS_FIRE_ELEMENTAL },
+    { CLOUD_COLD,           MONS_WATER_ELEMENTAL },
+    { CLOUD_RAIN,           MONS_WATER_ELEMENTAL },
+    { CLOUD_DUST,           MONS_EARTH_ELEMENTAL },
+    { CLOUD_PETRIFY,        MONS_EARTH_ELEMENTAL },
+    { CLOUD_BLACK_SMOKE,    MONS_AIR_ELEMENTAL },
+    { CLOUD_GREY_SMOKE,     MONS_AIR_ELEMENTAL },
+    { CLOUD_BLUE_SMOKE,     MONS_AIR_ELEMENTAL },
+    { CLOUD_PURPLE_SMOKE,   MONS_AIR_ELEMENTAL },
+    { CLOUD_STORM,          MONS_AIR_ELEMENTAL },
+};
 
+vector<coord_def> find_elemental_targets()
+{
     vector<coord_def> targets;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_SQUARE, true); ri; ++ri)
     {
@@ -3505,6 +3374,12 @@ spret qazlal_elemental_force(bool fail)
             targets.push_back(*ri);
     }
 
+    return targets;
+}
+
+spret qazlal_elemental_force(bool fail)
+{
+    vector<coord_def> targets = find_elemental_targets();
     if (targets.empty())
     {
         mpr("You can't see any clouds you can empower.");
@@ -3549,7 +3424,7 @@ spret qazlal_elemental_force(bool fail)
     return spret::success;
 }
 
-bool qazlal_disaster_area()
+spret qazlal_disaster_area(bool fail)
 {
     bool friendlies = false;
     vector<coord_def> targets;
@@ -3586,7 +3461,7 @@ bool qazlal_disaster_area()
     if (targets.empty())
     {
         mpr("There isn't enough space here!");
-        return false;
+        return spret::abort;
     }
 
     if (friendlies
@@ -3594,8 +3469,10 @@ bool qazlal_disaster_area()
                   "them?", true, 'n'))
     {
         canned_msg(MSG_OK);
-        return false;
+        return spret::abort;
     }
+
+    fail_check();
 
     mprf(MSGCH_GOD, "Nature churns violently around you!");
 
@@ -3620,7 +3497,7 @@ bool qazlal_disaster_area()
     }
     scaled_delay(200);
 
-    return true;
+    return spret::success;
 }
 
 static map<ability_type, const sacrifice_def *> sacrifice_data_map;
@@ -3728,12 +3605,8 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
 
     // Vampires can't get inhibited regeneration for some reason related
     // to their existing regen silliness.
-    // Neither can deep dwarf, for obvious reasons.
-    if (mut == MUT_INHIBITED_REGENERATION
-        && you.has_mutation(MUT_VAMPIRISM))
-    {
+    if (mut == MUT_INHIBITED_REGENERATION && you.has_mutation(MUT_VAMPIRISM))
         return false;
-    }
 
     // demonspawn can't get frail if they have a robust facet
     if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
@@ -4030,7 +3903,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
     {
         case ABIL_RU_SACRIFICE_HEALTH:
             if (mut == MUT_FRAIL)
-                piety_gain += 20; // -health is pretty much always quite bad.
+                piety_gain += 10; // -health is pretty much always quite bad.
             else if (mut == MUT_PHYSICAL_VULNERABILITY)
                 piety_gain += 5; // -AC is a bit worse than -EV
             break;
@@ -4041,7 +3914,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                                        you.skill_rdiv(SK_SPELLCASTING, 1, 2));
             }
             else if (mut == MUT_WEAK_WILLED)
-                piety_gain += 38;
+                piety_gain += 35;
             else
                 piety_gain += 2 + _get_stat_piety(STAT_INT, 6)
                                 + you.skill_rdiv(SK_SPELLCASTING, 1, 2);
@@ -4112,17 +3985,21 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
             if (you.get_mutation_level(MUT_COWARDICE))
-                piety_gain += 12;
+                piety_gain += 6;
             // Ds are highly likely to miss at least one mutation. This isn't
             // absolutely certain, but it's very likely and they should still
             // get a bonus for the risk. Could check the exact mutation
             // schedule, but this seems too leaky.
-            // Dj are guaranteed to lose a spell each time, which is pretty sad too.
-            if (you.species == SP_DEMONSPAWN || you.species == SP_DJINNI)
-                piety_gain += 16;
+            // Dj are guaranteed to lose a spell for the first and third sac,
+            // which is pretty sad too.
+            if (you.species == SP_DEMONSPAWN
+                || you.species == SP_DJINNI && (you.get_mutation_level(MUT_INEXPERIENCED) % 2 == 0))
+            {
+                piety_gain += 10;
+            }
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
-            piety_gain += 12 * you.get_mutation_level(MUT_INEXPERIENCED);
+            piety_gain += 6 * you.get_mutation_level(MUT_INEXPERIENCED);
             break;
 
         default:
@@ -4331,7 +4208,7 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
     else if (piety_gain >= 29)
         return "a major";
     else if (piety_gain >= 21)
-        return "a significant";
+        return "a medium";
     else if (piety_gain >= 13)
         return "a modest";
     else
@@ -4383,7 +4260,7 @@ static void _extra_sacrifice_code(ability_type sac)
         item_def* const weapon = you.slot_item(EQ_WEAPON, true);
         item_def* const ring = you.slot_item(sac_ring_slot, true);
         int ring_inv_slot = you.equip[sac_ring_slot];
-        bool open_ring_slot = false;
+        equipment_type open_ring_slot = EQ_NONE;
 
         // Drop your shield if there is one
         if (shield != nullptr)
@@ -4411,20 +4288,22 @@ static void _extra_sacrifice_code(ability_type sac)
             for (const auto &eq : ring_slots)
                 if (!you.slot_item(eq, true))
                 {
-                    open_ring_slot = true;
+                    open_ring_slot = eq;
                     break;
                 }
 
+            const bool can_keep = open_ring_slot != EQ_NONE;
+
             mprf("You can no longer wear %s!",
                 ring->name(DESC_YOUR).c_str());
-            unequip_item(sac_ring_slot, true, true);
-            if (open_ring_slot)
+            unequip_item(sac_ring_slot, true, can_keep);
+            if (can_keep)
             {
                 mprf("You put %s back on %s %s!",
                      ring->name(DESC_YOUR).c_str(),
                      (ring_slots.size() > 1 ? "another" : "your other"),
                      you.hand_name(true).c_str());
-                puton_ring(ring_inv_slot, false, false);
+                equip_item(open_ring_slot, ring_inv_slot, false, true);
             }
         }
     }
@@ -4636,13 +4515,13 @@ bool ru_do_sacrifice(ability_type sac)
 
     // Update how many Ru sacrifices you have. This is used to avoid giving the
     // player extra silver damage.
-    if (you.props.exists("num_sacrifice_muts"))
+    if (you.props.exists(NUM_SACRIFICES_KEY))
     {
-        you.props["num_sacrifice_muts"] = num_sacrifices +
-            you.props["num_sacrifice_muts"].get_int();
+        you.props[NUM_SACRIFICES_KEY] = num_sacrifices +
+            you.props[NUM_SACRIFICES_KEY].get_int();
     }
     else
-        you.props["num_sacrifice_muts"] = num_sacrifices;
+        you.props[NUM_SACRIFICES_KEY] = num_sacrifices;
 
     // Actually give the piety for this sacrifice.
     set_piety(min(piety_breakpoint(5), you.piety + piety_gain));
@@ -4745,10 +4624,10 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
 //Your chance of eligiblity scales with piety.
 bool will_ru_retaliate()
 {
-    // Scales up to a 25% chance of retribution
+    // Scales up to a 20% chance of retribution
     return have_passive(passive_t::upgraded_aura_of_power)
            && crawl_state.which_god_acting() != GOD_RU
-           && one_chance_in(div_rand_round(640, you.piety));
+           && one_chance_in(div_rand_round(800, you.piety));
 }
 
 // Power of retribution increases with damage, decreases with monster HD.
@@ -4835,11 +4714,9 @@ bool ru_power_leap()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat power leap.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("You can't repeat Power Leap.");
         return false;
     }
     if (you.is_nervous())
@@ -4854,7 +4731,7 @@ bool ru_power_leap()
     while (1)
     {
         direction_chooser_args args;
-        args.restricts = DIR_LEAP;
+        args.restricts = DIR_ENFORCE_RANGE;
         args.mode = TARG_ANY;
         args.range = 3;
         args.needs_path = false;
@@ -4873,7 +4750,10 @@ bool ru_power_leap()
         }
 
         if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
             return false;         // early return
+        }
 
         monster* beholder = you.get_beholder(beam.target);
         if (beholder)
@@ -5062,6 +4942,7 @@ bool ru_apocalypse()
         if (!yesno("There are no visible enemies. Unleash your apocalypse anyway?",
             true, 'n'))
         {
+            canned_msg(MSG_OK);
             return false;
         }
     }
@@ -5071,94 +4952,6 @@ bool ru_apocalypse()
     drain_player(100, false, true);
     return true;
 }
-
-#if TAG_MAJOR_VERSION == 34
-/**
- * Calculate the effective power of a surged hex wand.
- * Works by iterating over the possible rolls from random2avg().
- * A much nicer way of computing this would be appreciated.
- *
- * @param   pow The base power.
- * @returns     The effective spellpower of a hex wand.
- */
-int pakellas_effective_hex_power(int pow)
-{
-    if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
-        return pow;
-
-    if (you.magic_points == 0)
-        return 0;
-
-    const int die_size = you.piety * 9 / piety_breakpoint(5);
-    const int max_roll = max(3, 2 * die_size);
-    vector<int> rolls(max_roll + 1, 0);
-
-    // i is the first random2(); j is the second random2()
-    int i = 0;
-    for (; i < die_size; i++)
-        for (int j = 0; j < die_size; j++)
-        {
-            // This should be the same as the formula in pakellas_device_surge()
-            int roll = min(you.magic_points,
-                              min(9,
-                                  max(3,
-                                      1 + (i + j) / 2)));
-            rolls[roll] = rolls[roll] + 1;
-        }
-
-    if (die_size == 0)
-        rolls[min(3, you.magic_points)] = 1;
-
-    int total_pow = 0;
-    int weight = 0;
-
-    for (i = 1; i <= max_roll; i++)
-    {
-        if (i > 9)
-            break;
-
-        int base_sev = i / 3;
-        int mod = i % 3;
-        int base_power = (base_sev == 0)
-            ? 0 // fizzle
-            : stepdown_spellpower(100*apply_enhancement(pow, base_sev));
-        weight += 3 * rolls[i];
-        total_pow +=
-            rolls[i] *
-            (base_power * (3 - mod)
-             + stepdown_spellpower(100*apply_enhancement(pow, base_sev+1))
-               * mod);
-    }
-    total_pow /= weight;
-    return total_pow;
-}
-
-/**
- * Trigger a readied Device Surge, spending MP to multiply evocations power.
- *
- * @return  A number of enhancers (!) to multiply evo power by.
- */
-int pakellas_surge_devices()
-{
-    if (!you_worship(GOD_PAKELLAS) || !you.duration[DUR_DEVICE_SURGE])
-        return 0;
-
-    // XXX TODO: support djinn here (HP_CASTING, pay_mp, etc)
-    const int mp = min(you.magic_points, min(9, max(3,
-                       1 + random2avg(you.piety * 9 / piety_breakpoint(5),
-                                      2))));
-
-    const int severity = div_rand_round(mp, 3);
-    drain_mp(mp);
-    you.duration[DUR_DEVICE_SURGE] = 0;
-    if (severity == 0)
-    {
-        mprf(MSGCH_GOD, "The surge fizzles.");
-        return -1;
-    }
-    return severity;
-}
-#endif
 
 static bool _mons_stompable(const monster &mons)
 {
@@ -5195,7 +4988,7 @@ bool uskayaw_stomp()
     }, you.pos());
 
     // XXX: this 'friendlies' wording feels a little odd, but we do use it in a
-    // a few places already; see spl_tornado.cc, disaster area, etc.
+    // a few places already; see spl-vortex.cc, disaster area, etc.
     if (friendlies
         && !yesno("There are friendlies around, "
                   "are you sure you want to hurt them?",
@@ -5215,11 +5008,9 @@ bool uskayaw_line_pass()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat line pass.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("You can't repeat Line Pass.");
         return false;
     }
 
@@ -5247,7 +5038,7 @@ bool uskayaw_line_pass()
 
         direction_chooser_args args;
         args.hitfunc = hitfunc.get();
-        args.restricts = DIR_LEAP;
+        args.restricts = DIR_ENFORCE_RANGE;
         args.mode = TARG_ANY;
         args.needs_path = false;
         args.top_prompt = "Aiming: <white>Line Pass</white>";
@@ -5351,11 +5142,9 @@ spret uskayaw_grand_finale(bool fail)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("No encores!");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("No encores!");
         return spret::abort;
     }
 
@@ -5382,7 +5171,10 @@ spret uskayaw_grand_finale(bool fail)
         }
 
         if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
             return spret::abort;   // early return
+        }
 
         mons = monster_at(beam.target);
         if (!mons || !you.can_see(*mons))
@@ -5914,11 +5706,9 @@ spret wu_jian_wall_jump_ability()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (crawl_state.is_repeating_cmd())
+    if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cant_cmd_repeat("You can't repeat a wall jump.");
-        crawl_state.cancel_cmd_again();
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_all("You can't repeat a wall jump.");
         return spret::abort;
     }
 
@@ -5989,7 +5779,10 @@ spret wu_jian_wall_jump_ability()
         }
 
         if (!beam.isValid || beam.target == you.pos())
+        {
+            canned_msg(MSG_OK);
             return spret::abort; // early return
+        }
 
         if (wu_jian_can_wall_jump(beam.target, wj_error))
             break;
@@ -6020,6 +5813,80 @@ void wu_jian_heavenly_storm()
     invalidate_agrid(true);
 }
 
+bool okawaru_duel_active()
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->props.exists(OKAWARU_DUEL_CURRENT_KEY))
+            return true;
+    }
+
+    return false;
+}
+
+spret okawaru_duel(const coord_def& target, bool fail)
+{
+    monster* mons = monster_at(target);
+    if (!mons || !you.can_see(*mons))
+    {
+        mpr("You can see no monster there to duel!");
+        return spret::abort;
+    }
+
+    if (mons_is_firewood(*mons)
+        || mons_is_conjured(mons->type)
+        || mons_is_tentacle_or_tentacle_segment(mons->type)
+        || mons_primary_habitat(*mons) == HT_LAVA
+        || mons_primary_habitat(*mons) == HT_WATER
+        || mons->wont_attack())
+    {
+        mpr("You cannot duel that!");
+        return spret::abort;
+    }
+
+    if (mons_threat_level(*mons) < MTHRT_TOUGH)
+    {
+        simple_monster_message(*mons, " is not worthy to be dueled!");
+        return spret::abort;
+    }
+
+    if (mons->is_illusion())
+    {
+        fail_check();
+        mprf("You challenge %s to single combat, but %s is merely a clone!",
+             mons->name(DESC_THE).c_str(),
+             mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
+        // Still costs a turn to gain the information.
+        return spret::success;
+    }
+    // Check this after everything else so as not to waste a turn when trying
+    // to duel a clone that's already invalid to be dueled for other reasons.
+    else if (mons->is_summoned())
+    {
+        mpr("You cannot duel that!");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    mprf("You enter into single combat with %s!",
+         mons->name(DESC_THE).c_str());
+
+    behaviour_event(mons, ME_ALERT, &you);
+    mons->props[OKAWARU_DUEL_TARGET_KEY] = true;
+    mons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    mons->set_transit(level_id(BRANCH_ARENA));
+    mons->destroy_inventory();
+    if (mons_is_elven_twin(mons))
+        elven_twin_died(mons, true, KILL_YOU, MID_PLAYER);
+    monster_cleanup(mons);
+
+    stop_delay(true);
+    down_stairs(DNGN_ENTER_ARENA);
+
+    return spret::success;
+}
+
 void okawaru_remove_heroism()
 {
     mprf(MSGCH_DURATION, "You feel like a meek peon again.");
@@ -6032,4 +5899,80 @@ void okawaru_remove_finesse()
 {
     mprf(MSGCH_DURATION, "%s", you.hands_act("slow", "down.").c_str());
     you.duration[DUR_FINESSE] = 0;
+}
+
+// End a duel, and send the duel target back with the player if it's still
+// alive.
+void okawaru_end_duel()
+{
+    ASSERT(player_in_branch(BRANCH_ARENA));
+    if (okawaru_duel_active())
+    {
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->props.exists(OKAWARU_DUEL_CURRENT_KEY))
+            {
+                mi->props.erase(OKAWARU_DUEL_CURRENT_KEY);
+                mi->props[OKAWARU_DUEL_ABANDONED_KEY] = true;
+                mi->set_transit(current_level_parent());
+                mi->destroy_inventory();
+                monster_cleanup(*mi);
+            }
+        }
+    }
+
+    mpr("You are returned from the Arena.");
+    stop_delay(true);
+    down_stairs(DNGN_EXIT_ARENA);
+}
+
+vector<coord_def> find_slimeable_walls()
+{
+    vector<coord_def> walls;
+
+    for (radius_iterator ri(you.pos(), 4, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
+    {
+        if (feat_is_wall(env.grid(*ri))
+            && !feat_is_permarock(env.grid(*ri))
+            && env.grid(*ri) != DNGN_SLIMY_WALL)
+        {
+            walls.push_back(*ri);
+        }
+    }
+
+    return walls;
+}
+
+spret jiyva_oozemancy(bool fail)
+{
+    vector<coord_def> walls = find_slimeable_walls();
+
+    if (walls.empty())
+    {
+        mpr("There are no walls around you to affect.");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    const int dur = 10 + random2avg(you.piety / 8, 2);
+
+    for (auto pos : walls)
+    {
+        temp_change_terrain(pos, DNGN_SLIMY_WALL, dur * BASELINE_DELAY,
+                            TERRAIN_CHANGE_SLIME);
+    }
+
+    you.increase_duration(DUR_OOZEMANCY, dur);
+    mpr("Slime begins to ooze from the nearby walls!");
+
+    return spret::success;
+}
+
+void jiyva_end_oozemancy()
+{
+    you.duration[DUR_OOZEMANCY] = 0;
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (env.grid(*ri) == DNGN_SLIMY_WALL && is_temp_terrain(*ri))
+            revert_terrain_change(*ri, TERRAIN_CHANGE_SLIME);
 }

@@ -30,7 +30,6 @@
 **/
 static bool _orb_noise(const coord_def& where, int loudness)
 {
-    // XXX: Fake noisy doesn't work. Oops.
     fake_noisy(loudness, where);
 
     if (silenced(where))

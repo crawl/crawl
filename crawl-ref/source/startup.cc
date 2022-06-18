@@ -62,6 +62,7 @@
  #include "windowmanager.h"
 #endif
 #include "ui.h"
+#include "version.h"
 
 using namespace ui;
 
@@ -137,7 +138,9 @@ static void _initialize()
     _loading_message("Loading spells and features...");
     init_feat_desc_cache();
     init_spell_name_cache();
-    init_spell_rarities();
+#ifdef DEBUG
+    validate_spellbooks();
+#endif
 
     // Read special levels and vaults.
     _loading_message("Loading maps...");
@@ -254,6 +257,11 @@ static void _post_init(bool newc)
     // case there are any early game warning messages to be logged.
 #ifdef USE_TILE
     tiles.resize();
+
+#ifdef USE_TILE_WEB
+    if (!newc)
+        sync_last_milestone();
+#endif
 #endif
 
     clua.load_persist();
@@ -270,13 +278,18 @@ static void _post_init(bool newc)
     calc_hp();
     calc_mp();
     shopping_list.refresh();
+    populate_excluded_items();
 
     run_map_local_preludes();
 
     if (newc)
     {
-        if (Options.pregen_dungeon && crawl_state.game_standard_levelgen())
+        // n.b. temple already generated in setup_game at this point
+        if (Options.pregen_dungeon == level_gen_type::full
+            && crawl_state.game_standard_levelgen())
+        {
             pregen_dungeon(level_id(NUM_BRANCHES, -1));
+        }
 
         you.entering_level = false;
         you.transit_stair = DNGN_UNSEEN;
@@ -292,6 +305,11 @@ static void _post_init(bool newc)
     level_id old_level;
     old_level.branch = NUM_BRANCHES;
 
+#ifdef USE_TILE_WEB
+    if (tiles.get_ui_state() == UI_CRT)
+        tiles.set_ui_state(UI_NORMAL);
+#endif
+
     load_level(you.entering_level ? you.transit_stair :
                you.char_class == JOB_DELVER ? DNGN_STONE_STAIRS_UP_I : DNGN_STONE_STAIRS_DOWN_I,
                you.entering_level ? LOAD_ENTER_LEVEL :
@@ -304,10 +322,6 @@ static void _post_init(bool newc)
         save_level(level_id::current());
     }
 
-#ifdef DEBUG_DIAGNOSTICS
-    // Debug compiles display a lot of "hidden" information, so we auto-wiz.
-    you.wizard = true;
-#endif
 #ifdef WIZARD
     // Save-less games are pointless except for tests.
     if (Options.no_save)
@@ -337,6 +351,10 @@ static void _post_init(bool newc)
 
     read_init_file(true);
     Options.fixup_options();
+    read_startup_prefs();
+#ifdef USE_TILE_WEB
+    tiles.send_options();
+#endif
 
     // In case Lua changed the character set.
     init_char_table(Options.char_set);
@@ -350,12 +368,17 @@ static void _post_init(bool newc)
 #endif
     update_player_symbol();
 
+    if (newc)
+        quiver::on_newchar(); // needs to happen after init file is read
+
     draw_border();
     new_level(!newc);
     update_turn_count();
     update_vision_range();
     init_exclusion_los();
     ash_check_bondage();
+    if (you.prev_save_version != Version::Long)
+        check_if_everything_is_identified();
 
     trackers_init_new_level();
 

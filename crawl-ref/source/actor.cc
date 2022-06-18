@@ -2,6 +2,7 @@
 
 #include "actor.h"
 
+#include <cmath>
 #include <sstream>
 
 #include "act-iter.h"
@@ -116,12 +117,15 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::check_willpower(int power)
+int actor::check_willpower(const actor* source, int power)
 {
-    const int wl = willpower();
+    int wl = willpower();
 
     if (wl == WILL_INVULN)
         return 100;
+
+    if (source && source->wearing_ego(EQ_ALL_ARMOUR, SPARM_GUILE))
+        wl = guile_adjust_willpower(wl);
 
     const int adj_pow = ench_power_stepdown(power);
 
@@ -206,15 +210,15 @@ int actor::inaccuracy() const
     return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
 }
 
-bool actor::res_corr(bool calc_unid, bool items) const
+bool actor::res_corr(bool /*allow_random*/, bool temp) const
 {
-    return items && (wearing(EQ_RINGS, RING_RESIST_CORROSION, calc_unid)
-                     || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR, calc_unid)
-                     || scan_artefacts(ARTP_RCORR, calc_unid)
-                     || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION, calc_unid));
+    return temp && (wearing(EQ_RINGS, RING_RESIST_CORROSION)
+                    || wearing(EQ_BODY_ARMOUR, ARM_ACID_DRAGON_ARMOUR)
+                    || scan_artefacts(ARTP_RCORR)
+                    || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION));
 }
 
-bool actor::cloud_immune(bool /*calc_unid*/, bool items) const
+bool actor::cloud_immune(bool items) const
 {
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR);
     return items && body_armour
@@ -230,101 +234,101 @@ bool actor::holy_wrath_susceptible() const
 // not an actor is capable of teleporting, only whether they are specifically
 // under the influence of the "notele" effect. See actor::no_tele() for a
 // superset of this function.
-bool actor::has_notele_item(bool calc_unid, vector<const item_def *> *matches) const
+bool actor::has_notele_item(vector<const item_def *> *matches) const
 {
-    return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid, matches);
+    return scan_artefacts(ARTP_PREVENT_TELEPORTATION, matches);
 }
 
-bool actor::angry(bool calc_unid, bool items) const
+int actor::angry(bool items) const
 {
-    return items && scan_artefacts(ARTP_ANGRY, calc_unid);
-}
+    int anger = 0;
+    if (is_player())
+        anger += pow(3, you.get_mutation_level(MUT_BERSERK) - 1);
 
-bool actor::clarity(bool calc_unid, bool items) const
-{
-    return items && scan_artefacts(ARTP_CLARITY, calc_unid);
-}
-
-bool actor::faith(bool calc_unid, bool items) const
-{
-    return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
-}
-
-int actor::archmagi(bool calc_unid, bool items) const
-{
     if (!items)
-        return 0;
+        return anger;
 
-    return wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI, calc_unid);
+    return anger + 20 * wearing_ego(EQ_ALL_ARMOUR, SPARM_RAGE)
+                 + scan_artefacts(ARTP_ANGRY);
+}
+
+bool actor::clarity(bool items) const
+{
+    return items && scan_artefacts(ARTP_CLARITY);
+}
+
+bool actor::faith(bool items) const
+{
+    return items && wearing(EQ_AMULET, AMU_FAITH);
+}
+
+int actor::archmagi(bool items) const
+{
+    return items ? wearing_ego(EQ_ALL_ARMOUR, SPARM_ARCHMAGI)
+                   + scan_artefacts(ARTP_ARCHMAGI) : 0;
 }
 
 /**
  * Indicates if the actor has an active evocations enhancer.
  *
- * @param calc_unid Whether to identify unknown items that enhance evocations.
  * @param items Whether to count item powers.
  * @return The number of levels of evocations enhancement this actor has.
  */
-int actor::spec_evoke(bool calc_unid, bool items) const
+int actor::spec_evoke(bool items) const
 {
-    UNUSED(calc_unid);
     UNUSED(items);
     return 0;
 }
 
-bool actor::no_cast(bool calc_unid, bool items) const
+bool actor::no_cast(bool items) const
 {
-    return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING, calc_unid);
+    return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING);
 }
 
-bool actor::reflection(bool calc_unid, bool items) const
-{
-    return items && wearing(EQ_AMULET, AMU_REFLECTION, calc_unid);
-}
-
-bool actor::extra_harm(bool calc_unid, bool items) const
+bool actor::reflection(bool items) const
 {
     return items &&
-           (wearing_ego(EQ_CLOAK, SPARM_HARM, calc_unid)
-            || scan_artefacts(ARTP_HARM, calc_unid));
+           (wearing(EQ_AMULET, AMU_REFLECTION)
+            || wearing_ego(EQ_ALL_ARMOUR, SPARM_REFLECTION));
 }
 
-bool actor::rmut_from_item(bool calc_unid) const
+bool actor::extra_harm(bool items) const
 {
-    return scan_artefacts(ARTP_RMUT, calc_unid);
+    return items &&
+           (wearing_ego(EQ_CLOAK, SPARM_HARM) || scan_artefacts(ARTP_HARM));
 }
 
-bool actor::evokable_berserk(bool calc_unid) const
+bool actor::rmut_from_item() const
 {
-    return scan_artefacts(ARTP_BERSERK, calc_unid);
+    return scan_artefacts(ARTP_RMUT);
 }
 
-bool actor::evokable_invis(bool calc_unid) const
+bool actor::evokable_invis() const
 {
-    return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY, calc_unid)
-           || scan_artefacts(ARTP_INVISIBLE, calc_unid);
+    return wearing_ego(EQ_CLOAK, SPARM_INVISIBILITY)
+           || scan_artefacts(ARTP_INVISIBLE);
 }
 
 // Return an int so we know whether an item is the sole source.
-int actor::equip_flight(bool calc_unid) const
+int actor::equip_flight() const
 {
     if (is_player() && get_form()->forbids_flight())
         return 0;
 
     // For the player, this is cached on ATTR_PERM_FLIGHT
-    return wearing(EQ_RINGS, RING_FLIGHT, calc_unid)
-           + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING, calc_unid)
-           + scan_artefacts(ARTP_FLY, calc_unid);
+    return wearing(EQ_RINGS, RING_FLIGHT)
+           + wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
+           + scan_artefacts(ARTP_FLY);
 }
 
-int actor::spirit_shield(bool calc_unid, bool items) const
+int actor::spirit_shield(bool items) const
 {
     int ss = 0;
 
     if (items)
     {
-        ss += wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD, calc_unid);
-        ss += wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid);
+        ss += wearing_ego(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD);
+        ss += wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT);
     }
 
     if (is_player())
@@ -333,18 +337,17 @@ int actor::spirit_shield(bool calc_unid, bool items) const
     return ss;
 }
 
-bool actor::rampaging(bool calc_unid, bool items) const
+bool actor::rampaging(bool items) const
 {
     return items &&
-           (wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING, calc_unid)
-            || scan_artefacts(ARTP_RAMPAGING, calc_unid)
+           (wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING)
+            || scan_artefacts(ARTP_RAMPAGING)
             || is_player() && player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS));
 }
 
-int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
-                    int stab_bypass, bool for_real) const
+int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) const
 {
-    int ac = max(armour_class() - stab_bypass, 0);
+    int ac = max(armour_class(), 0);
     int gdr = gdr_perc();
     int saved = 0;
     switch (ac_rule)
@@ -352,7 +355,6 @@ int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
     case ac_type::none:
         return damage; // no GDR, too
     case ac_type::proportional:
-        ASSERT(stab_bypass == 0);
         saved = damage - apply_chunked_AC(damage, ac);
         saved = max(saved, div_rand_round(max_damage * gdr, 100));
         return max(damage - saved, 0);
@@ -727,10 +729,6 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
 
-    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_MONSTER, "",
-                           "", false);
-    DIAG_ONLY(const int infdam = damage);
-
     string exclamations;
     if (damage <= 0 && is_player()
         && you.can_see(defender))
@@ -782,6 +780,10 @@ void actor::constriction_damage_defender(actor &defender, int duration)
 #endif
              exclamations.c_str());
     }
+
+    damage = defender.hurt(this, damage, BEAM_MISSILE, KILLED_BY_CONSTRICTION, "",
+                           "", false);
+    DIAG_ONLY(const int infdam = damage);
 
     dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
          name(DESC_PLAIN, true).c_str(),
@@ -973,14 +975,19 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         const string othername = other->name(DESC_A, true);
         if (other->alive() && !god_prot_other)
         {
-            other->hurt(agent, other->apply_ac(damage.roll()),
-                        BEAM_MISSILE, KILLED_BY_COLLISION,
+            const int dam = other->apply_ac(damage.roll());
+            other->hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
                         othername, thisname);
+            if (dam && other->is_monster())
+                print_wounds(*other->as_monster());
         }
         if (alive() && !god_prot)
         {
-            hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
-                 KILLED_BY_COLLISION, thisname, othername);
+            const int dam = apply_ac(damage.roll());
+            hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
+                 thisname, othername);
+            if (dam && is_monster())
+                print_wounds(*as_monster());
         }
         return;
     }
@@ -1008,15 +1015,18 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 
     if (!god_prot)
     {
-        hurt(agent, apply_ac(damage.roll()), BEAM_MISSILE,
-             KILLED_BY_COLLISION, "", feature_description_at(newpos));
+        const int dam = apply_ac(damage.roll());
+        hurt(agent, dam, BEAM_MISSILE, KILLED_BY_COLLISION,
+             "", feature_description_at(newpos));
+        if (dam && is_monster())
+            print_wounds(*as_monster());
     }
 }
 
 /// Is this creature despised by the so-called 'good gods'?
 bool actor::evil() const
 {
-    return bool(holiness() & (MH_UNDEAD | MH_DEMONIC | MH_EVIL));
+    return bool(holiness() & (MH_UNDEAD | MH_DEMONIC));
 }
 
 /**

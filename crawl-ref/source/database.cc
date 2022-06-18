@@ -84,7 +84,8 @@ static TextDB AllDBs[] =
             "cards.txt",
             "commands.txt",
             "clouds.txt",
-            "status.txt" }),
+            "status.txt",
+            "mutations.txt", }),
 
     TextDB("gamestart", "descript/",
           { "species.txt",
@@ -232,23 +233,27 @@ bool TextDB::_needs_update() const
     {
         string full_input_path = _directory + file;
         full_input_path = datafile_path(full_input_path, !_parent);
+        // packagers who mess with mtime beware: you shouldn't put the db in
+        // a shared folder, as a fixed mtime will break this check.
         time_t mtime = file_modtime(full_input_path);
-#ifdef __ANDROID__
-        if (file_exists(full_input_path))
-#else
-        if (mtime)
-#endif
-            no_files = false;
-        char buf[20];
-        snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
-        ts += buf;
+        const bool exists = file_exists(full_input_path);
+        if (exists || !_parent)
+        {
+            if (exists)
+                no_files = false;
+            char buf[20];
+            snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
+            ts += buf;
+        }
     }
 
-    if (no_files && timestamp.empty())
+    if (no_files)
     {
         // No point in empty databases, although for simplicity keep ones
         // for disappeared translations for now.
-        ASSERT(_parent);
+        ASSERTM(_parent,
+            "No readable database files in `%s` (internal error).",
+            _directory.c_str());
         TextDB *en = _parent;
         delete en->translation; // ie, ourself
         en->translation = 0;
@@ -299,16 +304,11 @@ void TextDB::_regenerate_db()
         full_input_path = datafile_path(full_input_path, !_parent);
         char buf[20];
         time_t mtime = file_modtime(full_input_path);
-        snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
-        ts += buf;
-        if (
-#ifdef __ANDROID__
-            file_exists(full_input_path)
-#else
-            mtime
-#endif
+        if (file_exists(full_input_path)
             || !_parent) // english is mandatory
         {
+            snprintf(buf, sizeof(buf), ":%" PRId64, (int64_t)mtime);
+            ts += buf;
             _store_text_db(full_input_path, _db);
         }
     }

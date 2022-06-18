@@ -49,8 +49,10 @@ vector<job_type> playable_jobs()
 vector<species_type> playable_species()
 {
     auto species = species::get_all_species();
-    erase_if(species, [&](species_type sp)
-                                { return !species::is_starting_species(sp); });
+    erase_if(species, [&](species_type sp) {
+        return sp == SP_METEORAN && crawl_state.game_is_sprint()
+            || !species::is_starting_species(sp);
+    });
     return species;
 }
 
@@ -70,17 +72,6 @@ vector<string> stringify(const Coll &c, S stringify)
     vector<string> result;
     std::transform(c.begin(), c.end(), std::back_inserter(result), stringify);
     return result;
-}
-
-vector<string> playable_job_names()
-{
-    return stringify(playable_jobs(), get_job_name);
-}
-
-vector<string> playable_species_names()
-{
-    return stringify(playable_species(),
-                     [](species_type sp) { return species::name(sp); });
 }
 
 vector<string> playable_combo_names()

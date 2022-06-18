@@ -117,7 +117,7 @@ Warper
 I distorsori cominciano con un'arma a scelta e una pergamena di Lampeggio.
 Possono imparare incantesimi dal Libro delle Traslocazioni dello Spazio.
 %%%%
-Wizard
+Hedge Wizard
 
 I maghi cominciano con il Libro della Magia Minore che contiene una gamma di
 incantesimi piuttosto diversi. Hanno la riserva magica più grande di ogni altro

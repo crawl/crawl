@@ -74,7 +74,7 @@ int spell_power_cap(spell_type spell);
 int spell_range(spell_type spell, int pow, bool allow_bonus = true,
                 bool ignore_shadows = false);
 int spell_noise(spell_type spell);
-int spell_effect_noise(spell_type spell, bool random = true);
+int spell_effect_noise(spell_type spell);
 
 const char *get_spell_target_prompt(spell_type which_spell);
 tileidx_t get_spell_tile(spell_type which_spell);
@@ -125,8 +125,6 @@ spschool skill2spell_type(skill_type spell_skill);
 skill_type arcane_mutation_to_skill(mutation_type mutation);
 bool cannot_use_schools(spschools_type schools);
 
-bool spell_is_form(spell_type spell) PURE;
-
 bool casting_is_useless(spell_type spell, bool temp);
 string casting_uselessness_reason(spell_type spell, bool temp);
 bool spell_is_useless(spell_type spell, bool temp = true,
@@ -145,3 +143,5 @@ bool spell_is_soh_breath(spell_type spell);
 const vector<spell_type> *soh_breath_spells(spell_type spell);
 
 bool spell_removed(spell_type spell);
+
+void end_wait_spells(bool quiet = false);

@@ -30,17 +30,18 @@
     Enne Walker
 
 * The administrators of public crawl servers, both present:
-    John Boyle (crawl.berotato.org)
     Jan Anders Bremer (underhound.eu)
     Rax E. Dillon (crawl.akrasiac.org)
+    dplusplus (lazy-life.ddo.jp)
+    floraline (crawl.kelbi.org)
     Wongi Hong (webzook.net / kr.dobrazupa.org)
     Alex Jurkiewicz (crawl.project357.org)
     Marc H. Thoben (crawl.develz.org)
-    dplusplus (lazy-life.ddo.jp)
-    floraline (crawl.kelbi.org)
     Namanix (crawl.xtahua.com)
+    ZureaL (cbro.berotato.org)
   and past:
     Jan Anders Bremer (crawl.lantea.net)
+    John Boyle (crawl.berotato.org)
     joosa (rl.heh.fi)
     Medar, Zkyp (crawl.xtahua.com)
     Aleksi Miikkael Luukkonen (crawl.lantea.net)
@@ -76,6 +77,7 @@
   Crawl Stone Soup:
     Eugene Abramchuk
     achuah
+    Santiago Acosta
     AdamPG
     Brent Adams
     Mike Adams
@@ -86,9 +88,11 @@
     Warwick Allison
     aMcNicky
     AndSDev
+    Antern
     Austin Appleby
     araganzar
     argonaut
+    ArmiesAndCastles
     Juha Arpiainen
     Arxale
     John 'Poor Yurik' Attea
@@ -96,6 +100,7 @@
     Steve 'nfogravity' Balady
     Max Bane
     G. Bailey
+    Alexei Barnes
     Beargit
     Bill Beher
     Alexander Beisig
@@ -104,6 +109,7 @@
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
+    Elliott Bernstein
     Bloax
     Terje Bø
     Erik Inge Bolsø
@@ -125,6 +131,7 @@
     Cedor
     Cerol
     Marcelo Cerri
+    Zachary Chandler
     Rahul Chandra
     Joe Childers
     Thom Chiovoloni
@@ -138,18 +145,24 @@
     Aaron Curtis
     Simon Curtis
     cut1less
+    Matthew Daley
     David Damerell
     Paul Dejean
     Denzi
+    Ed Dewey
+    dicedlemming
     Lothar Dierkes
+    dilly
     Doesnty
     Mark 'Palyth' Donahue
     Kevin Donnelly
     drachereborn
+    DreamDust
     Mike Drinen
     DrKe
     Kieron Dunbar
     Russell Dunk
+    Ebonnov
     John 'Elwin' Edwards
     elliott
     Micha Elsner
@@ -157,13 +170,14 @@
     Erich Erstu
     Higor Eurípedes
     Christopher Evenstar
+    Robert Faulk
     Floodkiller
     floraline
     Brett Foster
     Kyle Fox
+    Perry Fraser
     freepotion
     Chris Galardi
-    Yitao Gao
     GenericPseudonym
     Ge0ff
     Joshua Gelbard
@@ -173,6 +187,7 @@
     Ben Goetter
     Aaron Golden
     Ed Gonzalez
+    Gopall
     Goratrix
     Rob Grant
     John Greenberg
@@ -184,13 +199,13 @@
     Tomas Krag Hansen
     Taylor Hedberg
     Anders Heggestøyl
-    hellmonk
     Alex Henry
     R. Dan Henry
     Max 'Ploomutoo' Hon-Anderson
     Chris Honey
     Sylvia 'Onia' Hörnke
     Benoit Hudson
+    Hurricos
     Iainuki
     ICC
     Icy Lich
@@ -201,6 +216,7 @@
     Jeekaroose
     Nick Johnstone
     Mikko Juola
+    Zhang Kai
     Kurt Kartaltepe
     Dominic Kempf
     Dominic 'dk' Kexel
@@ -228,6 +244,7 @@
     Sami Liedes
     Dom 'Bodrick' Light
     Lightli
+    Kiëd Llaentenn
     Mark Lodato
     Matthew Ludivico
     Rob Lund
@@ -255,6 +272,7 @@
     Mintice
     Byrel Mitchell
     Yer Mivvaggah
+    Monkooky
     Shawn M Moore
     Muffindrake
     Akinori Musha
@@ -263,7 +281,6 @@
     nagdon
     Naruni
     neofelis
-    nicolae
     nirrattner
     Jonathon Nooner
     NormalPerson7
@@ -277,6 +294,8 @@
     John Olender
     Aaron Olowin
     Andrew O'Neill
+    Oneirical
+    Justin Clark Ong
     Yuuma Oohara
     Julian Ospald
     Malwyn P
@@ -293,6 +312,7 @@
     Poroing
     Iago Porto
     Alexander Posch
+    Brian Power
     psywombats
     pubby
     Ashley Elizabeth Raine
@@ -318,7 +338,6 @@
     Sebastian Salman
     Petri Salminen
     Sandman25
-    Sastreii
     Brett Scarborough
     Roderick Schertler
     sdynet
@@ -358,8 +377,8 @@
     Chris Terenzi
     Jared 'Twinge' Tinney
     Matt Titus
+    Jonathan Klabunde Tomer
     Tommy
-    ukdong99
     Sean VanMeter
     Mikko Vepsäläinen
     vla22
@@ -401,6 +420,7 @@ The Dungeon Crawl Stone Soup development team is:
     Michael Gagno
     gammafunk
     Shayne Halvorson
+    hellmonk
     Brendan Hickey
     Aidan Holm
     Pete Hurst
@@ -418,12 +438,14 @@ The Dungeon Crawl Stone Soup development team is:
     Neil Middleton
     Seve Monahan
     Neil Moore
+    nicolae
     Steven Noonan
     Stefan O'Rear
     Charles Otto
     Aaron Pixton
     David Ploog
     Sage
+    Sastreii
     Marc H. Thoben
     Chris West
     Samuel Wilson
