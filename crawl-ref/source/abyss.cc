@@ -179,7 +179,7 @@ static int _abyssal_rune_roll()
 
     const double depth = you.depth + god_favoured;
 
-    return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
+    return (int) pow(100.0, depth/6);
 }
 
 static void _abyss_fixup_vault(const vault_placement *vp)
@@ -387,7 +387,8 @@ static int _banished_depth(const int power)
     // you can do about that.
     const int maxdepth = div_rand_round((power + 5), 6);
     const int mindepth = (4 * power + 7) / 23;
-    return min(5, max(1, random_range(mindepth, maxdepth)));
+    const int bottom = brdepth[BRANCH_ABYSS];
+    return min(bottom, max(1, random_range(mindepth, maxdepth)));
 }
 
 void banished(const string &who, const int power)

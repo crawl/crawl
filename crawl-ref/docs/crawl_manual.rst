@@ -523,7 +523,7 @@ which is scored separately. Playing games with the same seed value, as long as
 the game version is constant, should (within certain parameters) lead to the
 same dungeon. The entire connected dungeon will be determined by the game
 seed, including dungeon layout, monster placement, and items. Portal vaults
-and chaotic zones such as the abyss are not guaranteed to be the same, and the
+and chaotic zones such as the Abyss are not guaranteed to be the same, and the
 placement of rare unique artefacts may vary depending on certain player
 actions.
 

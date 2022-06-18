@@ -4540,8 +4540,8 @@ static void _tag_read_you_dungeon(reader &th)
 #if TAG_MAJOR_VERSION == 34
     // Deepen the Abyss; this is okay since new abyssal stairs will be
     // generated as the place shifts.
-    if (crawl_state.game_is_normal() && th.getMinorVersion() <= TAG_MINOR_ORIG_MONNUM)
-        brdepth[BRANCH_ABYSS] = 5;
+    if (crawl_state.game_is_normal() && th.getMinorVersion() <= TAG_MINOR_ABYSS_SEVEN)
+        brdepth[BRANCH_ABYSS] = 7;
 #endif
 
     ASSERT(you.depth <= brdepth[you.where_are_you]);
