@@ -766,6 +766,18 @@ void floor_transition(dungeon_feature_type how,
     // Fire level-leaving trigger.
     leaving_level_now(how);
 
+    // Fix this up now so the milestones and notes report the correct
+    // destination floor.
+    if (whither.branch == BRANCH_ABYSS)
+    {
+        if (!you.props.exists(ABYSS_MIN_DEPTH_KEY))
+            you.props[ABYSS_MIN_DEPTH_KEY] = 1;
+
+        whither.depth = max(you.props[ABYSS_MIN_DEPTH_KEY].get_int(),
+                            whither.depth);
+        you.props[ABYSS_MIN_DEPTH_KEY] = whither.depth;
+    }
+
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
     if (!forced && whence == DNGN_ENTER_ABYSS)
