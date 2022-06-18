@@ -1199,10 +1199,22 @@ static string _describe_brand(brand_type brand)
     }
 }
 
+static string _describe_missile_brand(const item_def &item)
+{
+     const string brand_name = missile_brand_name(item, MBN_BRAND);
+
+     if (brand_name.empty())
+         return brand_name;
+
+     return " + " + uppercase_first(brand_name);
+}
+
 static string _damage_rating(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_WOE))
         return "\nDamage rating: your enemies will bleed and die for Makhleb.";
+
+    const bool thrown = item.base_type == OBJ_MISSILES;
 
     const int base_dam = property(item, PWPN_DAMAGE);
     const skill_type skill = _item_training_skill(item);
@@ -1216,7 +1228,7 @@ static string _damage_rating(const item_def &item)
         plusses += item.plus;
 
     brand_type brand = SPWPN_NORMAL;
-    if (item_type_known(item))
+    if (item_type_known(item) && !thrown)
         brand = get_weapon_brand(item);
 
     const int DAM_RATE_SCALE = 100;
@@ -1246,7 +1258,8 @@ static string _damage_rating(const item_def &item)
         use_str ? "Str" : "Dex",
         skill_mult,
         plusses_desc.c_str(),
-        _describe_brand(brand).c_str());
+        thrown ? _describe_missile_brand(item).c_str()
+               : _describe_brand(brand).c_str());
 }
 
 static void _append_weapon_stats(string &description, const item_def &item)
@@ -1701,6 +1714,9 @@ static string _describe_ammo(const item_def &item)
         }
         if (below_target)
             _append_skill_target_desc(description, SK_THROWING, target_skill);
+
+        if (!is_useless_item(item))
+            description += _damage_rating(item);
     }
 
     if (ammo_always_destroyed(item))
