@@ -763,7 +763,7 @@ one of the most fearsome denizens of any of the Hells.
 %%%%
 broodmother
 
-A massive spider swollen with eggs. Its innumerable offspring are always at its
+A giant spider swollen with eggs. Its innumerable offspring are always at its
 call.
 %%%%
 burning bush
@@ -1182,7 +1182,7 @@ An elf, a member of an ancient fey race.
 emperor scorpion
 
 A giant scorpion with a massive barb on its tail dripping deadly venom. It is
-one of the largest arachnids known to exist.
+one of the largest arachnids known.
 %%%%
 endoplasm
 
@@ -2781,8 +2781,8 @@ A strong wild canine, with sharp teeth and a healthy appetite.
 %%%%
 wolf spider
 
-A hairy fast-moving hunting spider with vicious mandibles. It roams the dungeon
-in search of prey, which it kills with its deadly venom.
+A hairy fast-moving hunting spider with vicious mandibles, the size of a wolf.
+It roams the dungeon in search of prey, which it kills with its deadly venom.
 %%%%
 worldbinder
 

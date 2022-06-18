@@ -150,6 +150,22 @@ __HISS seen
 
 SOUND:@The_monster@ hisses angrily.
 %%%%
+__SKITTER unseen
+
+SOUND:You hear a skittering sound.
+%%%%
+__SKITTER seen
+
+SOUND:@The_monster@'s many legs skitter.
+%%%%
+__FAINT_SKITTER unseen
+
+SOUND:You hear a faint skittering sound.
+%%%%
+__FAINT_SKITTER seen
+
+SOUND:@The_monster@'s many legs skitter faintly.
+%%%%
 __SQUEAL unseen
 
 SOUND:You hear an angry squeal.

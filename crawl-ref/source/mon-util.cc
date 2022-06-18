@@ -1340,6 +1340,8 @@ int get_shout_noise_level(const shout_type shout)
     case S_SILENT:
         return 0;
     case S_HISS:
+    case S_SKITTER:
+    case S_FAINT_SKITTER:
     case S_VERY_SOFT:
         return 4;
     case S_SOFT:
@@ -4440,6 +4442,8 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "croaks",
         "growls",
         "hisses",
+        "skitters",
+        "skitters faintly",
         "sneers",       // S_DEMON_TAUNT
         "says",         // S_CHERUB -- they just speak normally.
         "squeals",

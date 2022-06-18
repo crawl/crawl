@@ -254,7 +254,9 @@ enum shout_type
     S_GURGLE,               // gurgle
     S_CROAK,                // frog croak
     S_GROWL,                // for bears
-    S_HISS,                 // for reptiles & arachnids. quiet!
+    S_HISS,                 // for reptiles, quiet!
+    S_SKITTER,              // medium+ arachnids and similar
+    S_FAINT_SKITTER,        // little/small arachnids/insects, quiet!
     S_DEMON_TAUNT,          // for pandemonium lords
     S_CHERUB,               // for cherubs
     S_SQUEAL,               // pigs
