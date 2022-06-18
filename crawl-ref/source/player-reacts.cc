@@ -659,10 +659,8 @@ static void _decrement_durations()
     // (killing monsters, offering items, ...) might be confusing for characters
     // of other religions.
     // For now, though, keep information about what happened hidden.
-    if (you.piety < MAX_PIETY
-        && you.duration[DUR_PIETY_POOL] > 0
-        && one_chance_in(5)
-        && !player_in_branch(BRANCH_ABYSS))
+    if (you.piety < MAX_PIETY && you.duration[DUR_PIETY_POOL] > 0
+        && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;
         gain_piety(1, 1);

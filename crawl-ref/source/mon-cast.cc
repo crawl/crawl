@@ -3161,11 +3161,11 @@ static void _corrupting_pulse(monster *mons)
         flash_view_delay(UA_MONSTER, MAGENTA, 300, &hitfunc);
 
         if (!is_sanctuary(you.pos())
-            && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID)
-            && one_chance_in(you.how_mutated(false, true, true)
-                             - you.how_mutated(false, true, false)))
+            && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID))
         {
-            temp_mutate(RANDOM_CORRUPT_MUTATION, "wretched star");
+            int num_mutations = one_chance_in(4) ? 2 : 1;
+            for (int i = 0; i < num_mutations; ++i)
+                temp_mutate(RANDOM_CORRUPT_MUTATION, "wretched star");
         }
     }
 

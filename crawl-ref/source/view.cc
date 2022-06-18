@@ -1084,7 +1084,6 @@ static update_flags player_view_update_at(const coord_def &gc)
         if (!crawl_state.game_is_arena()
             && cell_triggers_conduct(gc)
             && !player_in_branch(BRANCH_TEMPLE)
-            && !player_in_branch(BRANCH_ABYSS)
             && !(player_in_branch(BRANCH_SLIME) && you_worship(GOD_JIYVA)))
         {
             did_god_conduct(DID_EXPLORATION, 2500);

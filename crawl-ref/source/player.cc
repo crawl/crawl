@@ -2455,7 +2455,7 @@ unsigned int gain_exp(unsigned int exp_gained)
 
     you.experience_pool += exp_gained;
 
-    if (player_under_penance(GOD_HEPLIAKLQANA) || player_in_branch(BRANCH_ABYSS))
+    if (player_under_penance(GOD_HEPLIAKLQANA))
         return 0; // no XP for you!
 
     const unsigned int max_gain = (unsigned int)MAX_EXP_TOTAL - you.experience;
@@ -2471,13 +2471,6 @@ void apply_exp()
         return;
 
     you.experience_pool = 0;
-
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        // no progress to any XP gated effects either
-        _reduce_abyss_xp_timer(exp_gained);
-        return;
-    }
 
     // xp-gated effects that don't use sprint inflation
     _handle_xp_penance(exp_gained);
@@ -2496,6 +2489,7 @@ void apply_exp()
     _handle_stat_loss(skill_xp);
     _handle_temp_mutation(skill_xp);
     _recharge_xp_evokers(skill_xp);
+    _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))

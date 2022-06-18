@@ -2581,8 +2581,7 @@ int piety_scale(int piety)
 /** Gain or lose piety to reach a certain value.
  *
  * If the player cannot gain piety (because they worship Xom, Gozag, or
- * no god), their piety will be unchanged. Ignores the Abyss's piety
- * restrictions.
+ * no god), their piety will be unchanged.
  *
  * @param piety The new piety value.
  * @pre piety is between 0 and MAX_PIETY, inclusive.
@@ -2604,7 +2603,7 @@ void set_piety(int piety)
         diff = piety - you.piety;
         if (diff > 0)
         {
-            if (!gain_piety(diff, 1, false, true))
+            if (!gain_piety(diff, 1, false))
                 break;
         }
         else if (diff < 0)
@@ -2783,13 +2782,11 @@ static void _gain_piety_point()
  * @param original_gain The numerator of the nominal piety gain.
  * @param denominator The denominator of the nominal piety gain.
  * @param should_scale_piety Should the piety gain be scaled by faith/Sprint?
- * @param force Should the piety gain be allowed even in the Abyss?
  * @return True if something happened, or if another call with the same
  *   arguments might cause something to happen (because of random number
  *   rolls).
  */
-bool gain_piety(int original_gain, int denominator, bool should_scale_piety,
-                bool force)
+bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
 {
     if (original_gain <= 0)
         return false;
@@ -2801,10 +2798,6 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety,
     {
         return false;
     }
-
-    // Regular piety can't be gained in the Abyss.
-    if (!force && player_in_branch(BRANCH_ABYSS) && !you_worship(GOD_USKAYAW))
-        return false;
 
     int pgn = should_scale_piety ? piety_scale(original_gain) : original_gain;
 
@@ -3704,12 +3697,12 @@ static void _apply_monk_bonus()
         ashenzari_offer_new_curse();
         you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 19;
     }
-    else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does
-        gain_piety(15, 1, false, true); // nothing of value and looks weird.
+    else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
+        gain_piety(15, 1, false); // of value with this god and looks weird.
     else if (you_worship(GOD_YREDELEMNUL))
         give_yred_bonus_zombies(2); // top up to **
     else
-        gain_piety(35, 1, false, true);
+        gain_piety(35, 1, false);
 }
 
 /// Transfer some piety from an old good god to a new one, if applicable.
@@ -3744,7 +3737,7 @@ static void _transfer_good_god_piety()
     // Give a piety bonus when switching between good gods, or back to the
     // same good god.
     if (old_piety > piety_breakpoint(0))
-        gain_piety(old_piety - piety_breakpoint(0), 2, false, true);
+        gain_piety(old_piety - piety_breakpoint(0), 2, false);
 }
 
 
@@ -4004,7 +3997,7 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_GOZAG, _join_gozag },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
-            gain_piety(20, 1, false, true);  // allow access to first power
+            gain_piety(20, 1, false);  // allow instant access to first power
     }},
     { GOD_OKAWARU, _join_okawaru },
 #if TAG_MAJOR_VERSION == 34

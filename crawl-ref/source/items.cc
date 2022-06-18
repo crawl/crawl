@@ -60,7 +60,6 @@
 #include "player-equip.h"
 #include "player.h"
 #include "prompt.h"
-#include "potion.h"
 #include "quiver.h"
 #include "randbook.h"
 #include "religion.h"
@@ -1852,13 +1851,6 @@ void add_held_books_to_library()
     }
 }
 
-static void _give_abyssal_rune_xp()
-{
-    mpr("For a moment you glimpse the secrets of this dreadful place.");
-    potionlike_effect(POT_EXPERIENCE, 80);
-    level_change();
-}
-
 /**
  * Place a rune into the player's inventory.
  *
@@ -1875,10 +1867,6 @@ static void _get_rune(const item_def& it, bool quiet)
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
         mprf("You pick up the %s rune and feel its power.",
              rune_type_name(it.sub_type));
-
-        if (it.sub_type == RUNE_ABYSSAL && !crawl_state.game_is_sprint())
-            _give_abyssal_rune_xp();
-
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
             mpr("You have collected all the runes! Now go and win!");

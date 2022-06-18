@@ -1590,7 +1590,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_WRETCHED_STAR,
       {
        { SPELL_FORCE_LANCE, 60, MON_SPELL_MAGICAL },
-       { SPELL_CORRUPTING_PULSE, 15, MON_SPELL_MAGICAL },
+       { SPELL_CORRUPTING_PULSE, 40, MON_SPELL_MAGICAL },
       }
     },
 
