@@ -160,11 +160,8 @@ blowgun2
 sling1 WPN_SLING
 sling2
 sling3
-%rim 0
-fustibalus1 WPN_FUSTIBALUS
-fustibalus2
-fustibalus3
 
+%rim 0
 shortbow1 WPN_SHORTBOW
 shortbow2
 shortbow3

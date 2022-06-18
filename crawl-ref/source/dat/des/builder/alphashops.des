@@ -99,8 +99,7 @@
        "book of frost", "falchion", "fire dragon scales", "potion of flight",
        "ring of fire", "scroll of fear", "staff of fire", "fen folio",
        "ring of flight", "scroll of fog", "wand of flame",
-       "manual of fighting", "amulet of faith", "manual of fire magic",
-       "fustibalus" }
+       "manual of fighting", "amulet of faith", "manual of fire magic" }
 
       elseif s == "G" then i = { "amulet of guardian spirit", "giant club",
        "giant spiked club", "book of geomancy",

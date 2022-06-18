@@ -552,11 +552,6 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
-fustibalus
-
-A length of wood with a reinforced sling at one end, able to fire projectiles
-at high velocity.
-%%%%
 giant club
 
 A giant lump of wood.

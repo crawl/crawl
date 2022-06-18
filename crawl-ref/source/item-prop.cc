@@ -633,9 +633,11 @@ static const weapon_def Weapon_prop[] =
     { WPN_HAND_CROSSBOW,     "hand crossbow",      14,  3, 18,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
         DAMV_NON_MELEE, 0, 10, 35, RANGED_BRANDS },
+#if TAG_MAJOR_VERSION == 34
     { WPN_FUSTIBALUS,        "fustibalus",         10, -2, 16,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_SMALL, MI_SLING_BULLET,
-        DAMV_NON_MELEE, 0, 2, 150, RANGED_BRANDS },
+        DAMV_NON_MELEE, 0, 0, 150, RANGED_BRANDS },
+#endif
 
     { WPN_SHORTBOW,          "shortbow",            9,  2, 15,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS, MI_ARROW,

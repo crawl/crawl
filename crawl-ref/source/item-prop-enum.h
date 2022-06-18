@@ -635,7 +635,6 @@ enum weapon_type
 
 #if TAG_MAJOR_VERSION > 34
     WPN_SLING,
-    WPN_FUSTIBALUS,
 #endif
 
     WPN_DEMON_WHIP,
