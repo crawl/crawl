@@ -476,9 +476,11 @@ BRAND:   SPWPN_SPEED
 DBRAND:  It may eviscerate those it strikes, slaying them instantly, with a
  decreasing chance against stronger foes.
 
-NAME:    sling "Punk"
-OBJ:     OBJ_WEAPONS/WPN_FUSTIBALUS
+NAME:    greatsling "Punk"
+OBJ:     OBJ_WEAPONS/WPN_SLING
+TYPE:    greatsling
 PLUS:    +3
+BASE_DAM: +3
 COLOUR:  ETC_SLIME
 TILE:    urand_punk
 TILE_EQ: punk
