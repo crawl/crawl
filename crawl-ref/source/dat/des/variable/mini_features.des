@@ -2113,14 +2113,14 @@ ENDMAP
 NAME:  kennysheep_flooded_box
 TAGS:  extra decor
 DEPTH: D, Depths
-SUBST: B : Bt
+SUBST: A : At
 : ks_random_setup(_G)
 MAP
  cccDccc
 ccwwEwwcc
 cwwwEwwwc
 cwwwEwwwc
-FHHHBHHHF
+FHHHAHHHF
 cwww.wwwc
 cwww.wwwc
 ccww.wwcc
