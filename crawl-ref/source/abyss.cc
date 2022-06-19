@@ -280,6 +280,11 @@ static bool _sync_rune_knowledge(coord_def p)
 
 static void _detect_abyssal_rune()
 {
+    // Don't print misleading messages about the rune disappearing
+    // after you already picked it up.
+    if (you.runes[RUNE_ABYSSAL])
+        return;
+
     if (!you.props.exists(ABYSSAL_RUNE_LOC_KEY))
         you.props[ABYSSAL_RUNE_LOC_KEY].get_coord() = coord_def(-1,-1);
     coord_def &cur_loc = you.props[ABYSSAL_RUNE_LOC_KEY].get_coord();
