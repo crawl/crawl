@@ -213,11 +213,7 @@ public:
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> training_targets; ///< Training targets, scaled by 10 (so [0,270]).  0 means no target.
     int experience_pool; ///< XP waiting to be applied.
-
-    /// track skill points gained by crosstraining
-    FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>  skill_order;
-
     /// manuals
     FixedVector<unsigned int, NUM_SKILLS>  skill_manual_points;
 

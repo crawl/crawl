@@ -1467,8 +1467,6 @@ void set_skill_level(skill_type skill, double amount)
     double level;
     modf(amount, &level);
 
-    you.ct_skill_points[skill] = 0;
-
     skill_diff diffs = skill_level_to_diffs(skill, amount);
 
     you.skills[skill] = level;
@@ -2214,7 +2212,6 @@ void skill_state::save()
     training            = you.training;
     skill_points        = you.skill_points;
     training_targets    = you.training_targets;
-    ct_skill_points     = you.ct_skill_points;
     skill_cost_level    = you.skill_cost_level;
     skill_order         = you.skill_order;
     auto_training       = you.auto_training;
@@ -2238,7 +2235,6 @@ void skill_state::restore_levels()
 {
     you.skills                      = skills;
     you.skill_points                = skill_points;
-    you.ct_skill_points             = ct_skill_points;
     you.skill_cost_level            = skill_cost_level;
     you.skill_order                 = skill_order;
     you.exp_available               = exp_available;

@@ -271,6 +271,7 @@ enum tag_minor_version
     TAG_MINOR_MY_ENUM,             // Fix more misordered enums.
     TAG_MINOR_WAND_SETS,           // Initialise wand generation sets.
     TAG_MINOR_ABYSS_SEVEN,         // Deepen the abyss to 7 floors.
+    TAG_MINOR_REMOVE_CT_SKILLS,    // Remove the very long-unused ct skills.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
