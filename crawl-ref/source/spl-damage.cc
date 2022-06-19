@@ -1842,8 +1842,12 @@ dice_def irradiate_damage(int pow, bool random)
 static int _irradiate_cell(coord_def where, int pow, const actor &agent)
 {
     actor *act = actor_at(where);
-    if (!act || !act->alive())
+    if (!act || !act->alive()
+        || act->is_monster() && mons_is_conjured(act->as_monster()->type))
+    {
         return 0;
+    }
+
     const bool hitting_player = act->is_player();
 
     const dice_def dam_dice = irradiate_damage(pow);
@@ -1892,6 +1896,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     auto vulnerable = [&caster](const actor *act) -> bool
     {
         return !act->is_player()
+               && !mons_is_conjured(act->as_monster()->type)
                && !god_protects(&caster, act->as_monster());
     };
 
