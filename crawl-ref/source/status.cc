@@ -662,7 +662,9 @@ bool fill_status_info(int status, status_info& inf)
 
         if (weapon && (item_attack_skill(*weapon) == SK_AXES ||
                        is_unrandom_artefact(*weapon, UNRAND_LOCHABER_AXE)))
+        {
             inf.light_colour = DARKGREY;
+        }
 
         break;
     }

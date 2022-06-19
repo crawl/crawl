@@ -3252,10 +3252,8 @@ static void _display_attack_delay()
     else
         delay = you.attack_delay(nullptr, false).expected();
 
-    const skill_type wpn_skill = item_attack_skill(*weapon);
-
     const bool at_min_delay = weapon
-                              && you.skill(wpn_skill)
+                              && you.skill(item_attack_skill(*weapon))
                                  >= weapon_min_delay_skill(*weapon);
     const bool shield_penalty = you.adjusted_shield_penalty() > 0;
     const bool armour_penalty = is_slowed_by_armour(weapon)
