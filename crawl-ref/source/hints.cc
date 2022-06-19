@@ -776,9 +776,7 @@ void hints_gained_new_skill(skill_type skill)
         break;
 
     // Ranged skills.
-    case SK_SLINGS:
-    case SK_BOWS:
-    case SK_CROSSBOWS:
+    case SK_RANGED_WEAPONS:
         learned_something_new(HINT_GAINED_RANGED_SKILL);
         break;
 
@@ -1216,8 +1214,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         if (Hints.hints_type == HINT_RANGER_CHAR)
         {
-            text << "\nAs you're already trained in Bows, you don't really "
-                    "need another type of ranged attack.";
+            text << "\nAs you're already trained in Ranged Weapons, you don't "
+                    "really need another type of ranged attack.";
         }
         else if (Hints.hints_type == HINT_MAGIC_CHAR)
         {
@@ -1646,10 +1644,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_GAINED_RANGED_SKILL:
-        text << "Being skilled in a particular type of ranged attack will let "
-                "you deal more damage when using the appropriate weapons. It "
-                "is usually best to concentrate on one type of ranged attack "
-                "(including spells).";
+        text << "Being skilled with ranged weapons will let you deal slightly "
+                "more damage and attack significantly faster with them. "
+                "Remember that wearing heavy armour makes you attack more "
+                "slowly with ranged weapons.";
         break;
 
     case HINT_CHOOSE_STAT:
@@ -2806,7 +2804,7 @@ string hints_describe_item(const item_def &item)
 
                 // Maybe this is a launching weapon?
                 if (is_range_weapon(item))
-                    best_wpskill = best_skill(SK_SLINGS, SK_THROWING);
+                    best_wpskill = SK_THROWING;
                 else
                     best_wpskill = best_skill(SK_SHORT_BLADES, SK_STAVES);
 

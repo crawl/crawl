@@ -16,9 +16,7 @@ aptitudes:
   maces_and_flails: False
   polearms: False
   staves: False
-  slings: False
-  bows: False
-  crossbows: False
+  ranged weapons: False
   throwing: False
   armour: False
   dodging: 3

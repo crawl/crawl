@@ -13,9 +13,7 @@ aptitudes:
   maces_and_flails: -1
   polearms: -1
   staves: -2
-  slings: 4
-  bows: 1
-  crossbows: 1
+  ranged weapons: 3
   armour: 1
   dodging: 1
   stealth: 2
@@ -43,4 +41,3 @@ recommended_weapons:
   - SK_SHORT_BLADES
   - SK_LONG_BLADES
   - SK_AXES
-  - SK_SLINGS

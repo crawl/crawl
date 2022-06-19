@@ -243,6 +243,8 @@ sub load_aptitudes
                 next if $skill eq "Stabbing";
                 next if $skill eq "Traps";
                 next if $skill eq "Charms";
+                next if $skill eq "Crossbows";
+                next if $skill eq "Slings";
                 die "$skillfile:$.: Unknown skill: $skill\n"
                     unless $SKILL_ABBR{$skill};
                 die "$skillfile:$.: Repeated skill def $1 for $species.\n"

@@ -369,9 +369,7 @@ namespace quiver
 
         string quiver_verb() const override
         {
-            const item_def *weapon = get_launcher();
-            return weapon && item_attack_skill(*weapon) == SK_SLINGS
-                                                        ? "fire" : "shoot";
+            return "fire";
         }
 
         formatted_string quiver_description(bool short_desc=false) const override

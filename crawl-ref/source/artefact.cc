@@ -468,7 +468,7 @@ static void _add_randart_weapon_brand(const item_def &item,
             4, SPWPN_FLAMING,
             4, SPWPN_FREEZING);
 
-        if (item_attack_skill(item) == SK_CROSSBOWS)
+        if (is_crossbow(item))
         {
             // Penetration and electrocution are only allowed on
             // crossbows. This may change in future.

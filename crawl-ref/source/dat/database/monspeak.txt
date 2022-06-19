@@ -1099,11 +1099,15 @@ VISUAL:@The_monster@ whirls a spectral sling over @possessive@ head.
 
 @_generic_ranged_@
 %%%%
-Bows player ghost
+Ranged Weapons player ghost
 
 @_generic_ranged_@
 
 @The_monster@ says, "Do you have an apple? I have a shot I want to try."
+
+VISUAL:@The_monster@ whirls a spectral sling over @possessive@ head.
+
+VISUAL:@The_monster@ [struggles to reload|effortlessly reloads] @possessive@ weapon.
 %%%%
 Crossbows player ghost
 

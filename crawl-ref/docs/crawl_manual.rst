@@ -1666,8 +1666,8 @@ Kobolds (Ko)
   suited to lurking in the darkness of the Dungeon, and have a reduced range of
   vision which also reduces the range at which they can be seen by enemies.
 
-  They are competent in combat, especially with short blades, maces or
-  crossbows, and are comfortable with all forms of magic. They are also very
+  They are competent in combat, especially with short blades, maces or ranged
+  weapons, and are comfortable with all forms of magic. They are also very
   adept at using magical devices. Their small size makes them unable to wield
   large weapons, but they are agile and stealthy, and advance in levels as
   quickly as Humans.
@@ -1732,8 +1732,8 @@ Deep Elves (DE)
    in darkness underground. There, they developed their mental powers, evolving
    a natural gift for all forms of magic, and adapted physically to their new
    environment, becoming weaker and losing all colouration. They are poor at
-   melee combat and physical defense, although they are capable at using bows in
-   ranged combat.
+   melee combat and physical defense, although they are capable at using bows
+   and other ranged weapons.
 
 Ogres (Og)
   Ogres are huge, chunky creatures who are very strong and robust, but are not
@@ -2192,27 +2192,15 @@ headbutt) are not affected by the Unarmed Combat skill.
 Ranged combat skills
 ========================================
 
-There are a number of individual weapon skills for missile weapons:
-
-  * Throwing
-  * Bows
-  * Crossbows
-  * Slings
-
-Throwing is the skill for all things hurled without a launcher: boomerangs,
-javelins, nets, darts, etc. The other skills refer to various types of ranged
-weapons.
+Ranged Weapons is the skill for bows, crossbows, and slings, whereas Throwing
+governs all things hurled without a launcher: boomerangs, javelins, nets,
+darts, etc.
 
 Just as with melee weapons, ranged weapon skills and throwing skills increase
 the speed at which you attack, along with slightly increasing your accuracy
 and damage. Missile weapons, unlike melee or throwing weapons, are slowed by
 wearing heavy armour. Increasing your Strength and Armour skill will partially
 mitigate this.
-
-Since the motion of using a sling and throwing a stone are somewhat similar,
-these skills crosstrain:
-
-  * Throwing and Slings
 
 Magic skills
 ========================================

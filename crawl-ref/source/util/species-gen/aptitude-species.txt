@@ -6,9 +6,7 @@
     {{{enum}, SK_MACES_FLAILS,   {maces_and_flails}}},
     {{{enum}, SK_POLEARMS,       {polearms}}},
     {{{enum}, SK_STAVES,         {staves}}},
-    {{{enum}, SK_SLINGS,         {slings}}},
-    {{{enum}, SK_BOWS,           {bows}}},
-    {{{enum}, SK_CROSSBOWS,      {crossbows}}},
+    {{{enum}, SK_RANGED_WEAPONS, {ranged weapons}}},
     {{{enum}, SK_THROWING,       {throwing}}},
     {{{enum}, SK_ARMOUR,         {armour}}},
     {{{enum}, SK_DODGING,        {dodging}}},
@@ -33,5 +31,7 @@
     {{{enum}, SK_STABBING,       UNUSABLE_SKILL}},
     {{{enum}, SK_TRAPS,          UNUSABLE_SKILL}},
     {{{enum}, SK_CHARMS,         UNUSABLE_SKILL}},
+    {{{enum}, SK_SLINGS,         UNUSABLE_SKILL}},
+    {{{enum}, SK_CROSSBOWS,      UNUSABLE_SKILL}},
 #endif
 {tag_major_version_closer}

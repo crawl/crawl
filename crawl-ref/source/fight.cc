@@ -941,7 +941,7 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
         min_delay = 7;
 
     // ...except crossbows...
-    if (item_attack_skill(weapon) == SK_CROSSBOWS && min_delay < 10)
+    if (is_crossbow(weapon) && min_delay < 10)
         min_delay = 10;
 
     // ... and unless it would take more than skill 27 to get there.
@@ -1261,9 +1261,7 @@ bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon)
     {
     case SK_LONG_BLADES:
     case SK_SHORT_BLADES:
-    case SK_CROSSBOWS:
-    case SK_BOWS:
-    case SK_SLINGS:
+    case SK_RANGED_WEAPONS:
         return false;
     default:
         return true;

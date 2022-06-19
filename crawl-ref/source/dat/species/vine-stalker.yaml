@@ -16,9 +16,7 @@ aptitudes:
   maces_and_flails: -1
   polearms: -1
   staves: -1
-  slings: -1
-  bows: -1
-  crossbows: -1
+  ranged weapons: -1
   throwing: -1
   armour: -2
   dodging: -2
@@ -56,7 +54,5 @@ recommended_weapons:
   - SK_POLEARMS
   - SK_LONG_BLADES
   - SK_STAVES
-  - SK_BOWS
-  - SK_CROSSBOWS
 
 walking_verb: Stalk

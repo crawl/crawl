@@ -11,9 +11,7 @@ aptitudes:
   hp: 2
   mp_mod: 0
   mr: 5
-  slings: -1
-  bows: -1
-  crossbows: -1
+  ranged weapons: -1
   throwing: -1
   armour: -2
   dodging: -2

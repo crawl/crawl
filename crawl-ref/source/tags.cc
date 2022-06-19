@@ -2955,6 +2955,24 @@ static void _tag_read_you(reader &th)
     you.skill_cost_level = 0;
     check_skill_cost_change();
 
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_MERGE_RANGED)
+    {
+        you.skill_points[SK_RANGED_WEAPONS] += you.skill_points[SK_CROSSBOWS]
+                                             + you.skill_points[SK_SLINGS];
+        you.train[SK_RANGED_WEAPONS] = max(you.train[SK_RANGED_WEAPONS],
+                                           max(you.train[SK_CROSSBOWS],
+                                               you.train[SK_SLINGS]));
+        you.train_alt[SK_RANGED_WEAPONS] = max(you.train_alt[SK_RANGED_WEAPONS],
+                                               max(you.train_alt[SK_CROSSBOWS],
+                                                   you.train_alt[SK_SLINGS]));
+        you.training_targets[SK_RANGED_WEAPONS] = max(you.training_targets[SK_RANGED_WEAPONS],
+                                                      max(you.training_targets[SK_CROSSBOWS],
+                                                          you.training_targets[SK_SLINGS]));
+        fixup_skills(); // XXX scary!
+    }
+#endif
+
     EAT_CANARY;
 
     // how many durations?

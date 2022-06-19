@@ -1051,8 +1051,7 @@ KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
         throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 | \
         hunting sling | fustibalus | shortbow | longbow | \
         hand crossbow | arbalest | triple crossbow | \
-        manual of throwing w:1 | manual of slings w:1 | manual of bows w:1 | \
-        manual of crossbows w:1
+        manual of throwing w:1 | manual of ranged weapons w:1
 NSUBST: D = E / D
 SUBST:  ' = H .:25
 MAP

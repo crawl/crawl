@@ -13,9 +13,7 @@ aptitudes:
   short_blades: -1
   long_blades: -1
   maces_and_flails: -1
-  slings: -3
-  bows: -3
-  crossbows: -3
+  ranged weapons: -3
   armour: -2
   dodging: -1
   stealth: -2

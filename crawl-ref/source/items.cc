@@ -3427,14 +3427,10 @@ colour_t item_def::weapon_colour() const
 
     switch (item_attack_skill(*this))
     {
-        case SK_BOWS:
+        case SK_RANGED_WEAPONS:
             return BLUE;
-        case SK_CROSSBOWS:
-            return LIGHTBLUE;
         case SK_THROWING:
             return WHITE;
-        case SK_SLINGS:
-            return BROWN;
         case SK_SHORT_BLADES:
             return CYAN;
         case SK_LONG_BLADES:

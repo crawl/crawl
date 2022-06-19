@@ -3272,9 +3272,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_MACES_FLAILS:   ch = TILEG_MACES_FLAILS_ON; break;
     case SK_POLEARMS:       ch = TILEG_POLEARMS_ON; break;
     case SK_STAVES:         ch = TILEG_STAVES_ON; break;
-    case SK_SLINGS:         ch = TILEG_SLINGS_ON; break;
-    case SK_BOWS:           ch = TILEG_BOWS_ON; break;
-    case SK_CROSSBOWS:      ch = TILEG_CROSSBOWS_ON; break;
+    case SK_RANGED_WEAPONS: ch = TILEG_RANGED_WEAPONS_ON; break;
     case SK_THROWING:       ch = TILEG_THROWING_ON; break;
     case SK_ARMOUR:         ch = TILEG_ARMOUR_ON; break;
     case SK_DODGING:        ch = TILEG_DODGING_ON; break;

@@ -16,8 +16,7 @@ aptitudes:
   maces_and_flails: 1
   polearms: 1
   staves: 1
-  bows: 1
-  crossbows: 1
+  ranged weapons: 1
   armour: 1
   dodging: 1
   stealth: 1
@@ -58,7 +57,5 @@ recommended_weapons:
   - SK_POLEARMS
   - SK_LONG_BLADES
   - SK_STAVES
-  - SK_BOWS
-  - SK_CROSSBOWS
 
 walking_verb: Glid

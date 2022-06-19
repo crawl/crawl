@@ -16,7 +16,6 @@ aptitudes:
   long_blades: -1
   axes: -1
   polearms: -1
-  slings: -1
   throwing: -1
   armour: 1
   dodging: -2
@@ -63,5 +62,3 @@ recommended_jobs:
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_STAVES
-  - SK_BOWS
-  - SK_CROSSBOWS

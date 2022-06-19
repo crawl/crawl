@@ -628,27 +628,27 @@ static const weapon_def Weapon_prop[] =
 #endif
 
     { WPN_HUNTING_SLING,     "hunting sling",       7,  0, 15,
-        SK_SLINGS,       SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
     { WPN_FUSTIBALUS,        "fustibalus",         10, -2, 16,
-        SK_SLINGS,       SIZE_LITTLE, SIZE_SMALL, MI_SLING_BULLET,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_SMALL, MI_SLING_BULLET,
         DAMV_NON_MELEE, 2, 99, 150, RANGED_BRANDS },
 
     { WPN_HAND_CROSSBOW,     "hand crossbow",       8,  3, 15,
-        SK_CROSSBOWS,    SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
         DAMV_NON_MELEE, 7, 10, 35, RANGED_BRANDS },
     { WPN_ARBALEST,          "arbalest",           15,  0, 18,
-        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 5, 10, 45, RANGED_BRANDS },
     { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    21, -2, 23,
-        SK_CROSSBOWS,    SIZE_SMALL, NUM_SIZE_LEVELS, MI_BOLT,
+        SK_RANGED_WEAPONS,   SIZE_SMALL, NUM_SIZE_LEVELS, MI_BOLT,
         DAMV_NON_MELEE, 0, 2, 100, RANGED_BRANDS },
 
     { WPN_SHORTBOW,          "shortbow",            9,  2, 15,
-        SK_BOWS,         SIZE_LITTLE, NUM_SIZE_LEVELS, MI_ARROW,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 8, 10, 30, RANGED_BRANDS },
     { WPN_LONGBOW,           "longbow",            13,  0, 18,
-        SK_BOWS,         SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_ARROW,
+        SK_RANGED_WEAPONS,   SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 2, 10, 45, RANGED_BRANDS },
 };
 
@@ -1931,6 +1931,20 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 bool is_range_weapon(const item_def &item)
 {
     return is_weapon(item) && is_ranged_weapon_type(item.sub_type);
+}
+
+bool is_crossbow(const item_def &item)
+{
+    if (!is_weapon(item)) return false;
+    switch (item.sub_type)
+    {
+    case WPN_HAND_CROSSBOW:
+    case WPN_ARBALEST:
+    case WPN_TRIPLE_CROSSBOW:
+        return true;
+    default:
+        return false;
+    }
 }
 
 bool is_slowed_by_armour(const item_def *item)

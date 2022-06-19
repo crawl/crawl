@@ -712,11 +712,6 @@ static map<string, weapon_type> _special_weapon_map = {
     // interpret it as a quarterstaff.
     {"staff",       WPN_QUARTERSTAFF},
 
-    // These weapons' base names have changed; we want to interpret the old
-    // names correctly.
-    {"sling",       WPN_HUNTING_SLING},
-    {"crossbow",    WPN_HAND_CROSSBOW},
-
     // Pseudo-weapons.
     {"unarmed",     WPN_UNARMED},
     {"claws",       WPN_UNARMED},

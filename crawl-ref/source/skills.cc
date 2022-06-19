@@ -74,9 +74,13 @@ static const char *skill_titles[NUM_SKILLS][7] =
     {"Maces & Flails", "Cudgeller",     "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher", "M&F"},
     {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine", "Pla"},
     {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff", "Stv"},
+#if TAG_MAJOR_VERSION == 34
     {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult", "Slg"},
-    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@",  "Bws"},
+#endif
+    {"Ranged Weapons", "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@",  "Rng"},
+#if TAG_MAJOR_VERSION == 34
     {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest", "Crb"},
+#endif
     {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Adj@ Ballista", "Thr"},
     {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable", "Arm"},
     {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible",   "Ddg"},
@@ -1753,7 +1757,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             }
             break;
 
-        case SK_BOWS:
+        case SK_RANGED_WEAPONS:
             if (species::is_elven(species) && skill_rank == 5)
                 result = "Master Archer";
             else if (species == SP_METEORAN && skill_rank == 5)
@@ -1943,8 +1947,17 @@ void init_skill_order()
 bool is_removed_skill(skill_type skill)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (skill == SK_STABBING || skill == SK_TRAPS || skill == SK_CHARMS)
+    switch (skill)
+    {
+    case SK_STABBING:
+    case SK_TRAPS:
+    case SK_CHARMS:
+    case SK_SLINGS:
+    case SK_CROSSBOWS:
         return true;
+    default:
+        break;
+    }
 #else
     UNUSED(skill);
 #endif
@@ -1989,10 +2002,7 @@ bool is_useless_skill(skill_type skill)
     // imply that missing hand is meaningless. likewise for summoning magic
     // vs. ability to have friendlies at all.
     if (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND)
-        || skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
-                            && !you.has_innate_mutation(MUT_QUADRUMANOUS)
-        || skill == SK_SUMMONINGS && you.get_mutation_level(MUT_NO_LOVE)
-    )
+        || skill == SK_SUMMONINGS && you.get_mutation_level(MUT_NO_LOVE))
     {
         return true;
     }
@@ -2121,10 +2131,6 @@ vector<skill_type> get_crosstrain_skills(skill_type sk)
     case SK_MACES_FLAILS:
     case SK_POLEARMS:
         return { SK_AXES, SK_STAVES };
-    case SK_SLINGS:
-        return { SK_THROWING };
-    case SK_THROWING:
-        return { SK_SLINGS };
     default:
         return {};
     }
