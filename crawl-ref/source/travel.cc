@@ -4773,7 +4773,8 @@ void explore_discoveries::found_feature(const coord_def &pos,
             marked_feats.push_back(desc + ".");
             return;
         }
-    } else if (feat == DNGN_RUNELIGHT)
+    }
+    else if (feat == DNGN_RUNELIGHT)
     {
         runelights.emplace_back(cleaned_feature_description(pos), 1);
         es_flags |= ES_RUNELIGHT;
