@@ -934,7 +934,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { NUM_WEAPONS,                  8 }, }; // 1/9 chance of ranged weapon
 
     static const map<monster_type, mon_weapon_spec> secondary_weapon_specs = {
-        { MONS_JOSEPH, { { { WPN_HUNTING_SLING, 1 } } } },
+        { MONS_JOSEPH, { { { WPN_SLING, 1 } } } },
         { MONS_DEEP_ELF_ARCHER, // XXX: merge w/centaur warrior primary?
             { { { WPN_SHORTBOW,         2 },
                 { WPN_LONGBOW,          1 },
@@ -961,13 +961,13 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { { { WPN_ARBALEST,                 1 },
                 { NUM_WEAPONS,                  2 },
         } } },
-        { MONS_FAUN, { { { WPN_HUNTING_SLING, 1 } } } },
+        { MONS_FAUN, { { { WPN_SLING, 1 } } } },
         { MONS_SATYR,
             { { { WPN_FUSTIBALUS,               1 },
                 { WPN_LONGBOW,                  2 },
         } } },
         { MONS_CHERUB,
-            { { { WPN_HUNTING_SLING,            1 },
+            { { { WPN_SLING,            1 },
                 { WPN_FUSTIBALUS,               1 },
                 { WPN_SHORTBOW,                 1 },
                 { WPN_LONGBOW,                  1 },
@@ -1039,7 +1039,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         if (!melee_only && one_chance_in(12) && level)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_HUNTING_SLING;
+            item.sub_type  = WPN_SLING;
             break;
         }
         break;

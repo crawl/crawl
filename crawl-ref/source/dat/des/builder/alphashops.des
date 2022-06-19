@@ -109,7 +109,7 @@
        "great wizards, vol. vii" }
 
       elseif s == "H" then i = { "halberd", "hand axe",
-       "hand crossbow", "hunting sling", "potion of heal wounds",
+       "hand crossbow", "potion of heal wounds",
        "potion of haste", "manual of hexes", "hat",
        "helmet", "book of hexes", "book of the hunter" }
 
@@ -161,7 +161,7 @@
        "book of spatial translocations", "scroll of silence",
        "shortbow", "manual of staves", "steam dragon scales",
        "shadow dragon scales", "storm dragon scales", "swamp dragon scales",
-       "manual of short blades", "manual of shields",
+       "manual of short blades", "manual of shields", "sling",
        "manual of spellcasting", "manual of summonings", "stone",
        "book of storms", "book of sloth", "book of the senses",
        "book of spectacle", "book of the spheres", "book of scorching" }

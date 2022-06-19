@@ -1703,7 +1703,7 @@ TAGS:    no_tide no_pool_fixup water_ok
 ITEM:    * / |
 ITEM:    book of hexes / book of misfortune / book of debilitation / \
          randbook disc:hexes / shortbow good_item / longbow good_item / \
-         hunting sling good_item / fustibalus good_item
+         sling good_item / fustibalus good_item
 ITEM:    wand of charming / wand of paralysis / phial of floods / any wand
 ITEM:    scroll of vulnerability / scroll of fear / any scroll / any potion
 KMONS:   1 = eleionoma

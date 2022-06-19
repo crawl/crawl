@@ -2311,7 +2311,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
 #if TAG_MAJOR_VERSION == 34
     case WPN_BLOWGUN:               return TILE_WPN_BLOWGUN;
 #endif
-    case WPN_HUNTING_SLING:         return TILE_WPN_HUNTING_SLING;
+    case WPN_SLING:         return TILE_WPN_SLING;
     case WPN_FUSTIBALUS:            return TILE_WPN_FUSTIBALUS;
     case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
     case WPN_HAND_CROSSBOW:         return TILE_WPN_HAND_CROSSBOW;

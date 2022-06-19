@@ -732,7 +732,7 @@ axe_blood AXE_BLOOD
 axe_short AXE_SHORT
 
 ## launchers
-sling HUNTING_SLING
+sling SLING
 fustibalus FUSTIBALUS
 bow BOW
 bow_two BOW2

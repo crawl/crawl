@@ -2263,7 +2263,7 @@ ENDMAP
 
 NAME:  nicolae_blade_bullseye
 TAGS:  no_item_gen
-KMONS: 2 = patrolling dancing weapon ; hunting sling | fustibalus w:5 | \
+KMONS: 2 = patrolling dancing weapon ; sling | fustibalus w:5 | \
            shortbow | longbow w:5 | hand crossbow | arbalest w:7 | \
            triple crossbow w:5
 : elven_blade_entry(_G)

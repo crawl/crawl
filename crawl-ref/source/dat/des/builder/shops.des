@@ -540,7 +540,7 @@ KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle /
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
-         w:15 stone | w:15 large rock | w:8 hunting sling | w:1 fustibalus | \
+         w:15 stone | w:15 large rock | w:8 sling | w:1 fustibalus | \
          w:7 tin of tremorstones | w:8 wand of digging | \
          w:5 randbook disc:earth | w:2 book of the earth | \
          w:2 book of geomancy | w:2 book of iron | w:2 book of the moon | \
@@ -1049,7 +1049,7 @@ KITEM:  E = throwing net q:1
 # The slightly-higher weights go to the better weapons, because I'm nice.
 KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
         throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 | \
-        hunting sling | fustibalus | shortbow | longbow | \
+        sling | fustibalus | shortbow | longbow | \
         hand crossbow | arbalest | triple crossbow | \
         manual of throwing w:1 | manual of ranged weapons w:1
 NSUBST: D = E / D

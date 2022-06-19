@@ -157,7 +157,7 @@ staff_mummy WPN_STAFF_MUMMY
 blowgun1 WPN_BLOWGUN
 blowgun2
 
-sling1 WPN_HUNTING_SLING
+sling1 WPN_SLING
 sling2
 sling3
 %rim 0

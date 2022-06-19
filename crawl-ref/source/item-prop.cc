@@ -627,7 +627,7 @@ static const weapon_def Weapon_prop[] =
         DAMV_NON_MELEE, 0, 0, 0, {}, },
 #endif
 
-    { WPN_HUNTING_SLING,     "hunting sling",       7,  0, 15,
+    { WPN_SLING,             "sling",       7,  0, 15,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
     { WPN_FUSTIBALUS,        "fustibalus",         10, -2, 16,

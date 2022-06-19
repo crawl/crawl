@@ -634,7 +634,7 @@ enum weapon_type
     WPN_LONGBOW,
 
 #if TAG_MAJOR_VERSION > 34
-    WPN_HUNTING_SLING,
+    WPN_SLING,
     WPN_FUSTIBALUS,
 #endif
 
@@ -656,7 +656,7 @@ enum weapon_type
     WPN_LAJATANG,
 
 #if TAG_MAJOR_VERSION == 34
-    WPN_HUNTING_SLING,
+    WPN_SLING,
 
     WPN_BLESSED_FALCHION,
     WPN_BLESSED_LONG_SWORD,

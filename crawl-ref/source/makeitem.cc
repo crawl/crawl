@@ -152,7 +152,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     }
     else
     {
-        return random_choose(WPN_HUNTING_SLING,
+        return random_choose(WPN_SLING,
                              WPN_SPEAR,
                              WPN_HAND_AXE,
                              WPN_MACE,
