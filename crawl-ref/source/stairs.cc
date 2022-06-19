@@ -280,11 +280,7 @@ void leaving_level_now(dungeon_feature_type stair_used)
         auto &vault_list =  you.vault_list[level_id::current()];
         vault_list.push_back("[exit]");
 #endif
-        // XX can this go somewhere else?
-        coord_def &cur_loc = you.props[ABYSSAL_RUNE_LOC_KEY].get_coord();
-        if (in_bounds(cur_loc))
-            mpr("Your memory of the abyssal rune fades away.");
-        cur_loc = coord_def(-1,-1);
+        clear_abyssal_rune_knowledge();
     }
 
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());

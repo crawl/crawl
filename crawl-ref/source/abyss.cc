@@ -278,12 +278,23 @@ static bool _sync_rune_knowledge(coord_def p)
     return false;
 }
 
+void clear_abyssal_rune_knowledge()
+{
+    coord_def &cur_loc = you.props[ABYSSAL_RUNE_LOC_KEY].get_coord();
+    if (in_bounds(cur_loc) && !you.runes[RUNE_ABYSSAL])
+        mpr("Your memory of the abyssal rune fades away.");
+    cur_loc = coord_def(-1,-1);
+}
+
 static void _detect_abyssal_rune()
 {
     // Don't print misleading messages about the rune disappearing
     // after you already picked it up.
     if (you.runes[RUNE_ABYSSAL])
+    {
+        clear_abyssal_rune_knowledge();
         return;
+    }
 
     if (!you.props.exists(ABYSSAL_RUNE_LOC_KEY))
         you.props[ABYSSAL_RUNE_LOC_KEY].get_coord() = coord_def(-1,-1);
