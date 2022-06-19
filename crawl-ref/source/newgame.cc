@@ -1932,41 +1932,22 @@ weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
 static vector<weapon_choice> _get_weapons(const newgame_def& ng)
 {
     vector<weapon_choice> weapons;
-    if (job_gets_ranged_weapons(ng.job))
+    weapon_type startwep[7] = { WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE,
+                                WPN_SPEAR, WPN_FALCHION, WPN_QUARTERSTAFF,
+                                WPN_UNARMED };
+    for (int i = 0; i < 7; ++i)
     {
-        weapon_type startwep[3] = { WPN_HUNTING_SLING,
-                                    WPN_SHORTBOW,
-                                    WPN_HAND_CROSSBOW };
-
-        for (int i = 0; i < 3; i++)
+        weapon_choice wp;
+        wp.first = startwep[i];
+        if (job_gets_good_weapons(ng.job))
         {
-            weapon_choice wp;
-            wp.first = startwep[i];
-
-            wp.second = weapon_restriction(wp.first, ng);
-            if (wp.second != CC_BANNED)
-                weapons.push_back(wp);
+            wp.first = starting_weapon_upgrade(wp.first, ng.job,
+                                                ng.species);
         }
-    }
-    else
-    {
-        weapon_type startwep[7] = { WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE,
-                                    WPN_SPEAR, WPN_FALCHION, WPN_QUARTERSTAFF,
-                                    WPN_UNARMED };
-        for (int i = 0; i < 7; ++i)
-        {
-            weapon_choice wp;
-            wp.first = startwep[i];
-            if (job_gets_good_weapons(ng.job))
-            {
-                wp.first = starting_weapon_upgrade(wp.first, ng.job,
-                                                    ng.species);
-            }
 
-            wp.second = weapon_restriction(wp.first, ng);
-            if (wp.second != CC_BANNED)
-                weapons.push_back(wp);
-        }
+        wp.second = weapon_restriction(wp.first, ng);
+        if (wp.second != CC_BANNED)
+            weapons.push_back(wp);
     }
     return weapons;
 }

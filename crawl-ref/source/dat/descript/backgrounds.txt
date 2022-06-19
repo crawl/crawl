@@ -11,7 +11,7 @@ Air Magic spells provides them with the flexibility to survive.
 %%%%
 Arcane Marksman
 
-Arcane Marksmen carry ranged weapons, and use magic to make their foes more
+Arcane Marksmen carry a shortbow, and use magic to make their foes more
 vulnerable to attacks from afar.
 %%%%
 Artificer
@@ -79,8 +79,7 @@ bewildered foes.
 %%%%
 Hunter
 
-Hunters carry a ranged weapon of their choice, and are also equipped with light
-armour and a scroll of immolation.
+Hunters carry a shortbow, light armour and a scroll of immolation.
 %%%%
 Ice Elementalist
 

@@ -1984,8 +1984,7 @@ Monks
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
-  starts with a ranged weapon of their choice, a scroll of immolation, and a
-  set of leathers.
+  starts with a shortbow, a scroll of immolation, and a set of leathers.
 
 Brigands
   A Brigand is a shady character who is especially good at killing, using
@@ -2066,8 +2065,8 @@ Warpers
 Arcane Marksmen
   Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
   attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with a ranged weapon of their choice, some spells to
-  support its use, a scroll of vulnerability to help those spells, and a robe.
+  They begin the game with a shortbow, some spells to support its use, a scroll
+  of vulnerability to help those spells, and a robe.
 
 Enchanters
   The Enchanter specialises in the subtle art of hexes. Instead of directly

@@ -11,7 +11,6 @@ enum weapon_choice
     WCHOICE_NONE,   ///< No weapon choice
     WCHOICE_PLAIN,  ///< Normal weapon choice
     WCHOICE_GOOD,   ///< Chooses from "good" weapons
-    WCHOICE_RANGED, ///< Choice of ranged weapon
 };
 
 struct job_def
@@ -75,8 +74,8 @@ static const map<job_type, job_def> job_data =
         SPELL_PORTAL_PROJECTILE,
         SPELL_CAUSE_FEAR,
     },
-    { "robe", "scroll of vulnerability" },
-    WCHOICE_RANGED,
+    { "robe", "scroll of vulnerability", "shortbow" },
+    WCHOICE_NONE,
     { { SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 1 },
       { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
 } },
@@ -234,8 +233,8 @@ static const map<job_type, job_def> job_data =
     3, 1, 8,
     { SP_HILL_ORC, SP_MINOTAUR, SP_GNOLL, SP_KOBOLD, SP_SPRIGGAN, },
     { },
-    { "leather armour", "scroll of immolation" },
-    WCHOICE_RANGED,
+    { "leather armour", "scroll of immolation", "shortbow plus:1" },
+    WCHOICE_NONE,
     { { SK_FIGHTING, 2 }, { SK_DODGING, 2 }, { SK_STEALTH, 1 },
       { SK_WEAPON, 4 }, },
 } },
