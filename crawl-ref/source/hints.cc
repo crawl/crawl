@@ -948,6 +948,11 @@ void hints_first_item(const item_def &item)
         return;
 
     if (!Hints.hints_events[HINT_SEEN_FIRST_OBJECT]
+#ifdef USE_TILE
+        || item.base_type == OBJ_CORPSES
+        // Don't show hints for corpses - they're purely decorative.
+        // In console, it's less obvious what's happening, so hint anyway.
+#endif
         || Hints.hints_just_triggered)
     {
         return;
