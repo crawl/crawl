@@ -809,15 +809,14 @@ int do_shave_damage(int dam)
 
 // Determine what's threatening for purposes of no drink and no scroll mutation.
 // The statuses are guaranteed not to happen if the incoming damage is less
-// than 15/10/5% max hp and if the remaining hp is higher than 40/60/80%
-// based on the mutation tier. Otherwise, they scale up with damage taken and
-// with lower health, becoming certain at 60/40/20% max health damage.
+// than 12/5% max hp and if the remaining hp is higher than 50/80% based on the
+// mutation tier. Otherwise, they scale up with damage taken and with lower
+// health, becoming certain at 50/20% max health damage.
 static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level)
 {
-    const int safety_level = 4 - mut_level;
     const int hp_fraction = you.hp * 100 / you.hp_max;
-    const int safe_damage_fraction = 5 * safety_level;
-    const int scary_damage_fraction = 20 * safety_level;
+    const int safe_damage_fraction = mut_level == 1 ? 12 : 5;
+    const int scary_damage_fraction = mut_level == 1 ? 50 : 5;
     return damage_fraction_of_hp > safe_damage_fraction
             && hp_fraction <= 100 - scary_damage_fraction + safe_damage_fraction
             && (damage_fraction_of_hp + random2(scary_damage_fraction) >= scary_damage_fraction
