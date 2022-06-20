@@ -3966,7 +3966,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
         case ABIL_RU_SACRIFICE_WORDS:
             // less value if you already have some levels of the mutation
             piety_gain -= 7 * you.get_mutation_level(MUT_READ_SAFETY); 
-            if (you.get_mutation_level(MUT_DRINK_SAFETY))
+            if (you.get_innate_mutation_level(MUT_DRINK_SAFETY) == 3)
                 piety_gain += 10;
             else if (you.get_mutation_level(MUT_NO_DRINK))
                 piety_gain += 15; // extra bad for mummies
