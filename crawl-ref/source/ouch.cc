@@ -820,7 +820,7 @@ static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level = 3
     const int scary_damage_fraction = 20 * safety_level;
     return damage_fraction_of_hp > safe_damage_fraction
             && hp_fraction <= 100 - scary_damage_fraction + safe_damage_fraction
-            && (damage_fraction_of_hp + random2(20) >= scary_damage_fraction
+            && (damage_fraction_of_hp + random2(safety_level * 20) >= scary_damage_fraction
                 || random2(100) > hp_fraction);
 }
 
