@@ -2169,3 +2169,67 @@ xxlllllll0.c.cc+cc.c0.0c0.0ccccccc.0Wwwwxxxwwxxxxxxxxxxxxxxxxxxxxxxxx
 xllllccccccc.......cs6.c.6scxxxxccccccccxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxcccccccccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+##################################################
+NAME:   hellmonk_orc_salted
+TAGS:   no_item_gen no_monster_gen
+PLACE:  Orc:$
+WEIGHT: 5
+ORIENT: southwest
+MONS:   saltling, orc-shaped pillar of salt
+MONS:   orc knight w:30 / two-headed ogre / troll / \
+        orc sorcerer w:15 / cyclops / ettin w:2 / stone giant w:1
+MONS:   orc knight band / orc warlord band w:5
+KMONS:  _ = orc high priest
+SUBST:  ' = ."", ; = c", ! = x:3 .
+NSUBST: " = 28 = 1""" / 96 = 2""" / *=", 3 = 2:3 / * = 3...., 4 = 2:4 / 3
+KFEAT:  _ = altar_beogh
+KFEAT:  p = abandoned_shop
+KFEAT:  S = any shop
+FTILE:  ";p12 = FLOOR_SALT
+COLOUR: ";p12 = LIGHTGREY
+MAP
+           !!!!!@@@!!!!!
+       !!!!!...........!!!!!
+    !!!!...................!!!!
+    !.........................!
+    !..!!!!..;;;''';;;..!!!!..!
+    !.!!!..;;;""""""";;;..!!!.!
+    !.!!.;;;""""";""""";;;.!!.!
+   !!.!.;;"""""";;;"""""";;.!.!!
+   !..!.;"""""""";"""""""";.!..!
+   !.!.;;"""";""""""";"""";;.!.!
+   !.!.;"""";;""""""";;"""";.!.!
+   !.!.;""";;;""";""";;;""";.!.!
+   !.!.;"""""""";;;"""""""";.!.!
+   !.!.;""";;;""";""";;;""";.!.!
+   !.!.;"""";;""""""";;"""";.!.!
+   !.!.;;"""";""""""";"""";;.!.!
+   !.!!.;"""""""";"""""""";.!!.!
+   !..!.;;"""""";;;"""""";;.!..!
+   !!..!.;;;""""";""""";;;.!..!!
+xxxxx..!!..;;;pp"""pp;;;..!!..!
+xxxxx.!!.!!..;;;;;;;;;..!!!!!.!
+xxxxx3!!!.!!!.........!!.!.!!3!
+xxxxx..!.!!!!!!!..!!!!!!!.!!!.!
+xxxxx..!!!.!.!.!!!!.!.!!.!!!!.!
+xxxxx..!.!!.!.!.!!.!.!.!!!.!!.!
+xxxxx..3!!.!xxxx!!xxxxx.!!!!..!
+xxxxxxx...3....xxxx......3....x
+xxxxxxxx3xx.....3..........xxxx
+xxxxxxx..xx.............xx.xxxx
+xxxxxxx..xxx.....3.....xx33xxxx
+xxxxxxx3xxxxx.33xxx33.xxxx+xxxx
+xxxxxxx++xxxxxxxxxxxxxxxx..xxxx
+x33.xxx..xxxxxx3.3xxxx.3...xxxxx
+x3..+...3x.3.x.....xxx...3.xxxxxx
+x4..+.3..+...+..4..+3+..xxxx3S3xx
+xS3.xxxxxx.3.x..3..xxx...3.x.3.xx
+xxxxxxxxxxxxxxx3.3xxxx3.3..x...xx
+             xx...xxxxxxx.3xx..xx
+             x.....xxx.3.....4.xx
+             x3.4.3xxx....3x..xxx
+             xS.3.Sxxxxxxxxxxxxxx
+             xx._.xx
+             xxxxxxx
+ENDMAP
