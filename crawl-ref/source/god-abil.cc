@@ -4226,7 +4226,7 @@ static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
     if (sacrifice == MUT_READ_SAFETY || sacrifice == MUT_DRINK_SAFETY)
     { 
-        // get the safety mutation to the cap instead of 1 level higher
+        // get the safety mutation to the cap instead of just making permanent
         perma_mutate(sacrifice,
                     4 - you.get_mutation_level(sacrifice),
                     "Ru sacrifice");
