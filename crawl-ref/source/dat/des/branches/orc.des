@@ -2187,6 +2187,8 @@ KFEAT:  _ = altar_beogh
 KFEAT:  p = abandoned_shop
 KFEAT:  S = any shop
 FTILE:  ";p12 = FLOOR_SALT
+COLOUR: ";p12 = LIGHTGREY
+
 MAP
            !!!!!@@@!!!!!
        !!!!!...........!!!!!
