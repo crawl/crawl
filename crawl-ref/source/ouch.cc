@@ -812,7 +812,7 @@ int do_shave_damage(int dam)
 // is less than 15/10/5% max hp based on the mutation tier. Otherwise, they 
 // scale up with damage taken and with lower health, becoming certain at 
 // 60/40/20% max health damage also based on the mutation tier.
-static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level = 3)
+static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level)
 {
     const int safety_level = 4 - mut_level;
     const int hp_fraction = you.hp * 100 / you.hp_max;
@@ -963,7 +963,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         if (you.get_mutation_level(MUT_DRINK_SAFETY))
         {
-            if (_is_damage_threatening(damage_fraction_of_hp))
+            if (_is_damage_threatening(damage_fraction_of_hp,
+                                        you.get_mutation_level(MUT_DRINK_SAFETY)))
             {
                 if (!you.duration[DUR_NO_POTIONS])
                     mpr("You feel threatened and lose the ability to drink potions!");

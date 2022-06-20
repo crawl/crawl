@@ -1840,12 +1840,18 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_DRINK_SAFETY, 0, 1, mutflag::bad, false,
+{ MUT_DRINK_SAFETY, 7, 3, mutflag::bad, false,
   "inability to drink while threatened",
 
-  {"You sometimes lose the ability to drink potions when taking damage.", "", ""},
-  {"You lose the ability to drink potions when threatened.", "", ""},
-  {"You can once more drink potions while threatened.", "", ""},
+  {"You ocassionally lose the ability to drink potions when taking damage.",
+   "You sometimes lose the ability to drink potions when taking damage.",
+   "You often lose the ability to drink potions when taking damage."},
+  {"You ocassionally lose the ability to drink potions when threatened.",
+   "You lose the ability to drink potions when threatened more often.", 
+   "You lose the ability to drink potions when threatened more often."},
+  {"You can once more drink potions while threatened.", 
+   "You lose the ability to drink potions when threatened less often.",
+   "You lose the ability to drink potions when threatened less often."},
 },
 
 { MUT_READ_SAFETY, 7, 3, mutflag::bad | mutflag::xom, false,
