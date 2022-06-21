@@ -791,8 +791,13 @@ bool attack_cleaves(const actor &attacker, int which_attack)
     }
 
     const item_def* weap = attacker.weapon(which_attack);
-    return weap && (item_attack_skill(*weap) == SK_AXES
-                    || is_unrandom_artefact(*weap, UNRAND_LOCHABER_AXE));
+    return weap && weapon_cleaves(*weap);
+}
+
+bool weapon_cleaves(const item_def &weap)
+{
+    return item_attack_skill(weap) == SK_AXES
+           || is_unrandom_artefact(weap, UNRAND_LOCHABER_AXE);
 }
 
 /**
