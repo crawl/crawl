@@ -1,9 +1,25 @@
-Stone Soup 0.29-a0 (through 0.29-a0-274-g17cd264cf)
+Stone Soup 0.29-a0 (through 0.29-a0-653-gd47aff673)
 ---------------------------------------------------
 
 Branches, Environment
 ---------------------
 - Zombies and skeletons are removed from normal Dungeon spawns.
+- Dungeon shafts attempt to send the player to a location outside of LOS of
+  monsters.
+- Using un-explored stairs and hatches is now fast.
+- The Zot clock now applies very heavy draining the first time it trips, and
+  gives the player an additional set of turns. Only at very low max HP will it
+  outright kill the player.
+- Timed hell effects no longer apply on a timer, and instead have a chance to
+  apply on each level entry.
+- The Abyssal rune is better indicated: the "special tile" indicating the rune
+  is replaced by its own feature type, the runelight. When the abyssal rune
+  generates its rough direction is indicated on the map.
+- Piety and experience are once again awarded in the Abyss.
+- When entering the abyss by any means, the player is sent at least as deep as
+  their previous deepest abyss depth.
+- The Abyss is now 7 levels deep, with the depths beyond A:5 full of very tough
+  monsters.
 
 Character
 ---------
@@ -11,7 +27,8 @@ Character
 - Gladiators add a single throwing weapon (javelin, large rock, or boomerang)
   to their starting kit.
 - Monks start with a potion of ambrosia.
-- Hunters no longer start with a short sword and gain a scroll of immolation.
+- Hunters no longer start with a short sword and gain a scroll of immolation,
+  as well as greater dexterity.
 - Brigands get an additional poisoned & curare dart.
 - Artificers trade their chesspiece for 9 iceblast charges.
 - Wanderers get an additional random potion or scroll.
@@ -21,15 +38,36 @@ Character
 - Warpers sart with two more dispersal boomerangs (a total of 7).
 - Arkane Markspersons start with a scroll of vulnerability.
 - Enchanters start with a second potion of invisibility.
+- Necromancers start with the new spell Necrotize in stead of Animate Skeleton
+  and Pain
 - Kobold crossbows aptitude is increased to +3.
 - Merfolk polearms aptitude is decreased to +3, and long blades aptitude
   increased +2.
 - Mummy necromancy enhancers now arrive at XL 3 and 13.
-- Unrandart tweaks:
-  - the Glaive of the Guard is reduced to +5.
-  - the arbalest "Damnation"'s explosions now do 2d14 damage.
-  - Gyre & Gimble are increased to +12.
-  - The Woodcutter's axe is now a battleaxe.
+- Demonspawn demonic touch damage is doubled.
+- New species: Meteoran. Meteorae have an exciting variety of bonuses:
+    - great attributes and aptitudes across the board
+    - passive mapping
+    - exploration healing, regaining HP and MP when viewing new territory
+  In exchange, they have one big downside: instead of getting 6,000 turns of
+  Zot clock for each floor, they get 600!
+- Formicids' base dexterity is increased by 3.
+- Formicids can again wield giant (spiked) clubs.
+- Positive stat mutations now give +4 to the primary stat and -1 to the other
+  two.
+
+
+Gods
+----
+- Kikubaaqudgha is overhauled for corpseless necromancy:
+  - The pain brand can be applied to ranged weapons.
+  - Torment no longer requires a corpse sacrifice.
+  - Corpse Delivery is removed and replaced with Unearth Wretches, which
+    summons some paralysed, 1 HP, 0 will monsters that die in a few turns, to
+    use Necromancy spells on.
+- Lugonu's Bend Space is adjusted. It no longer does damage, and makes a better
+  effort to blink monsters away from the destination.
+- Uskayaw grants piety for ally damage.
 
 Items
 -----
@@ -37,7 +75,33 @@ Items
   ammunition.
 - Launcher, long blade, and short blade damage now scale with Dex.
 - Launcher attack delay is increased by armour penalties.
-- Spriggans can no longer wield triple crossbows, and fustibali are 2-handed
+- Spriggans can no longer wield triple crossbows, and fustibali are 2-handed.
+- New item: scroll of poison. When read the scroll of poison fills every
+  unoccupied space on the screen with poison clouds for 10-20 turns.
+- +MP items remove MP when they are taken off.
+- Stones always mulch when thrown.
+- New wand: Light. Fires a bolt of blinding light, checking AC and EV but no
+  resists and blinds what it hits, damage identical to acid.
+- New wand: Quicksilver. Fires a quicksilver bolt, dispelling targets it hits.
+  Does slightly more damage than acid.
+- Some wands are now grouped into sets, and only one item from the set will
+  generate in a given game. The sets are:
+  - Paralysis and Charming
+  - Acid, Light, and Quicksilver
+- New unrand: the +8 trishula "Condemnation" {holy, Anguish Fly rN+}.
+  Inflicts 4-8 turns of the Anguish status on targets it hits.
+- New unrand: the +3 mountain boots {steadfast, rC+}. Prevent the player from
+  being involuntarily moved by physical means (trampling, shafts, tentacles,
+  etc.).
+- New unrand: the +5 lochaber axe, which cleaves through all foes in a radius
+  of 2 for each swing and uses the higer of the player's Polearms or Axes skill.
+- Unrandart tweaks:
+  - the Glaive of the Guard is reduced to +5.
+  - the arbalest "Damnation"'s explosions now do 2d14 damage.
+  - Gyre & Gimble are increased to +12.
+  - The Woodcutter's axe is now a battleaxe.
+  - the amulet of Vitality now gives two pips each of Regen and RegenMP, and is
+    now evil.
 
 
 Monsters
@@ -46,22 +110,46 @@ Monsters
 - Monsters gain a 1/3 chance to gain a free attack on a player moving away from
   them. Wu Jian martial attacks & rampaging give immunity, and monsters that
   don't move fast enough to follow you can't attack.
+- Animated Armour now flies.
 - New uniques:
   - Parghit the Mighty, an "alt-timeline" version of Pargi with extremely high
-    regeneration and enchanted golden dragon scales. Appears in Depths, Zot,
-    Crypt, and Tomb.
+    regeneration and enchanted golden dragon scales. Appears in late Depths and
+    Zot.
   - Josephina the Ice-Lich, an "alt-timeline" version of Josephine with
     Seracfall and a band of simulacra along side Ghostly Fireball. Appears in
-    late Vaults, Depths, Zot, Crypt, and Tomb.
+    Depths, Zot, and Crypt.
   - Amaemon the Diabolical Poisoner, a poison-themed demonspawn unique
     appearing with a band of orange demons in mid-D, early Lair, and Orc:1.
   - Lodul the Thundrous, an ironbound thunderhulk sent to patrol outside the
     Vaults, in late D, with a band of 2-headed ogres.
   - Vv the Exile, an fire/ice spellcaster with Creeping Frost, Eruption, and
-    Pyroclastic Surge, appearing in Depths, Zot, Crypt, and Tomb.
+    Pyroclastic Surge, appearing in Depths, Crypt, and Zot.
   - Zenata, Seeker of Sheza, with Resonance Strike and a new spell Sheza's
     Dance, which summons dancing weapons, as well as a high-tier weapon with
-    some plusses. Appears searching Depths, Zot, Crypt, and Tomb.
+    some plusses. Appears searching Vaults:1-4, Elf, and Crypt.
+  - Grunn the Punished, an "alt-timeline" undead version of Grum, with a pack
+    of doom hounds. Appears in Depths, Crypt, and Zot.
+
+Spells
+------
+- Animate Dead now gives a duration, and for the duration killed natural
+  monsters (and monsters of non-natural holiness with corpses) have a
+  power-dependent chance to become zombies. The zombies are permanent as long
+  as the player is on the level, and are destroyed by a subsequent cast of
+  Animate Dead.
+- Simulacrum is now a smite-targeted spell that gives an irresistable status.
+  Monsters that die with this status spawn a power-dependent number of
+  simulacra.
+- Corpse Rot is now Level 4 Necromancy/Poison/Air. When cast it produces miasma
+  for each corpse-producing monster killed in sight, scaling with power.
+- Death Channel cannot be re-cast while active.
+- New Spell: Necrotize (L1 Necromancy). Necrotize deals damage identically to
+  the old Pain spell, but additionally gives the monster a short-lived status
+  that causes it to animate as a skeleton on death (if it has a skeleton).
+- Sandblast no longer uses stones as ammo. Instead it takes twice as long to
+  cast as a normal spell, and has its range increased by one.
+- Airstrike's bonus from empty space is doubled.
+- Removed: Animate Skeleton, Pain, Excruciating Wounds
 
 Stone Soup 0.28.0 (20220203)
 ----------------------------
