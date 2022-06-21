@@ -610,7 +610,6 @@ public:
     bool empty() const { return items.empty(); }
 
     string add_item(const string &spec, bool fix = false);
-    string set_item(int index, const string &spec);
 
     // Set this list to be a copy of the item_spec_slot in list.
     void set_from_slot(const item_list &list, int slot_index);
