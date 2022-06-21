@@ -1679,8 +1679,7 @@ TYPE:       lochaber axe
 TILE:       urand_lochaber_axe
 TILE_EQ:    lochaber_axe
 COLOUR:     ETC_IRON
-BRAND:      SPWPN_VORPAL
-PLUS:       +9
+PLUS:       +5
 BASE_ACC:   -1
 BASE_DAM:   +1
 BASE_DELAY: +1
