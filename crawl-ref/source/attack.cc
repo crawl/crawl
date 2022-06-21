@@ -377,10 +377,6 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
 
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
 
-    // Monsters don't get to use the player's skills, so they default to
-    // using polearms skill for the lochaber axe, in the event where that matters.
-    if (!attacker->is_player() && weapon && is_unrandom_artefact(*weapon, UNRAND_LOCHABER_AXE))
-        wpn_skill = SK_POLEARMS;
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
