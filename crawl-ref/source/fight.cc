@@ -784,13 +784,15 @@ bool force_player_cleave(coord_def target)
 
 bool attack_cleaves(const actor &attacker, int which_attack)
 {
-    const item_def* weap = attacker.weapon(which_attack);
+    if (attacker.is_player()
+        && (you.form == transformation::storm || you.duration[DUR_CLEAVE]))
+    {
+        return true;
+    }
 
+    const item_def* weap = attacker.weapon(which_attack);
     return weap && (item_attack_skill(*weap) == SK_AXES
-                    || is_unrandom_artefact(*weap, UNRAND_LOCHABER_AXE))
-            || attacker.is_player()
-               && (you.form == transformation::storm
-                   || you.duration[DUR_CLEAVE]);
+                    || is_unrandom_artefact(*weap, UNRAND_LOCHABER_AXE));
 }
 
 /**
