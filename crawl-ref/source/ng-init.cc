@@ -116,11 +116,20 @@ void initialise_temples()
     {
         altar_count = 9 + random2avg(13,2);
         const string vault_tag = make_stringf("temple_altars_%d", altar_count);
-        main_temple
-            = const_cast<map_def*>(random_map_for_tag(vault_tag, false));
+        while (true)
+        {
+            main_temple
+                = const_cast<map_def*>(random_map_for_tag(vault_tag, false));
 
-        if (main_temple == nullptr)
-            end(1, false, "No temple of size %d", altar_count);
+            if (main_temple == nullptr)
+                end(1, false, "No temple of size %d", altar_count);
+
+            for (const auto &tag : main_temple->get_tags())
+                if (starts_with(tag, "temple_rare"))
+                    continue;
+
+            break;
+        }
     }
 
     you.props[TEMPLE_SIZE_KEY] = altar_count;
