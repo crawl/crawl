@@ -1254,14 +1254,8 @@ bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
 static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
 {
     // Don't pick up items that would interfere with our special ability
-    // Include the lochaber axe specifically, otherwise red devils would
-    // never pick it up if the player had higher Axes skill. No doubt this
-    // would lead to degenerate strategies.
     if (mons->type == MONS_RED_DEVIL)
-    {
-        return (item_attack_skill(weapon) == SK_POLEARMS) ||
-                is_unrandom_artefact(weapon, UNRAND_LOCHABER_AXE);
-    }
+        return item_attack_skill(weapon) == SK_POLEARMS;
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
