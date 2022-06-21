@@ -92,104 +92,40 @@ void initialise_temples()
 {
     //////////////////////////////////////////
     // First determine main temple map to use.
-    level_id ecumenical(BRANCH_TEMPLE, 1);
-
     map_def *main_temple = nullptr;
-    for (int i = 0; i < 10; i++)
-    {
-        int altar_count = 0;
+    int altar_count = 0;
 
-        main_temple
-            = const_cast<map_def*>(random_map_for_place(ecumenical, false));
+    if (one_chance_in(100))
+    {
+        main_temple = const_cast<map_def*>(random_map_for_tag("temple_rare"));
 
         if (main_temple == nullptr)
-            end(1, false, "No temples?!");
+            end(1, false, "No valid rare temples.");
 
-        if (main_temple->has_tag("temple_variable"))
+        for (const auto &tag : main_temple->get_tags())
         {
-            vector<int> sizes;
-            for (const auto &tag : main_temple->get_tags())
+            if (starts_with(tag, "temple_altars_"))
             {
-                if (starts_with(tag, "temple_altars_"))
-                {
-                    sizes.push_back(
-                        atoi(tag_without_prefix(tag,
-                                                "temple_altars_").c_str()));
-                }
-            }
-            if (sizes.empty())
-            {
-                mprf(MSGCH_ERROR,
-                     "Temple %s set as variable but has no sizes.",
-                     main_temple->name.c_str());
-                main_temple = nullptr;
-                continue;
-            }
-            altar_count =
-                you.props[TEMPLE_SIZE_KEY].get_int() =
-                    sizes[random2(sizes.size())];
-        }
-
-        dgn_map_parameters mp(make_stringf("temple_altars_%d", altar_count));
-
-        // Without all this find_glyph() returns 0.
-        string err;
-        int tries = 2;
-        while (tries-- > 0)
-        {
-            try
-            {
-                main_temple->load();
-                break;
-            }
-            catch (map_load_exception &mload)
-            {
-                mprf(MSGCH_ERROR, "Failed to load map, reloading all maps (%s).",
-                     mload.what());
-                reread_maps();
+                altar_count =
+                    atoi(tag_without_prefix(tag,
+                                            "temple_altars_").c_str());
             }
         }
-
-        main_temple->reinit();
-        err = main_temple->run_lua(true);
-
-        if (!err.empty())
-        {
-            mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
-                 err.c_str());
-            main_temple = nullptr;
-            you.props.erase(TEMPLE_SIZE_KEY);
-            continue;
-        }
-
-        main_temple->fixup();
-        err = main_temple->resolve();
-
-        if (!err.empty())
-        {
-            mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
-                 err.c_str());
-            main_temple = nullptr;
-            you.props.erase(TEMPLE_SIZE_KEY);
-            continue;
-        }
-        break;
     }
-
-    if (main_temple == nullptr)
-        end(1, false, "No valid temples.");
-
-    you.props[TEMPLE_MAP_KEY] = main_temple->name;
-
-    const vector<coord_def> altar_coords
-        = main_temple->find_glyph('B');
-    const unsigned int main_temple_size = altar_coords.size();
-
-    if (main_temple_size == 0)
+    else
     {
-        end(1, false, "Main temple '%s' has no altars",
-            main_temple->name.c_str());
+        altar_count = 9 + random2avg(13,2);
+        const string vault_tag = make_stringf("temple_altars_%d", altar_count);
+        main_temple
+            = const_cast<map_def*>(random_map_for_tag(vault_tag, false));
+
+        if (main_temple == nullptr)
+            end(1, false, "No temple of size %d", altar_count);
     }
+
+    you.props[TEMPLE_SIZE_KEY] = altar_count;
+    you.props[TEMPLE_MAP_KEY] = main_temple->name;
+    const unsigned int main_temple_size = altar_count;
 
 #ifdef DEBUG_TEMPLES
     mprf(MSGCH_DIAGNOSTICS, "Chose main temple %s, size %u",
