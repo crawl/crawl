@@ -600,8 +600,10 @@ namespace quiver
             // Xom can give you cleaving status while wielding a reaching
             // weapon, just use the reach targeter for this case. (TODO:
             // show cleave effect in targeter.)
-            if (attack_cleaves(you, -1) && reach_range < REACH_TWO)
-                hitfunc = make_unique<targeter_cleave>(&you, you.pos());
+            if (is_unrandom_artefact(*weapon), UNRAND_LOCHABER_AXE)
+                hitfunc = make_unique<targeter_cleave>(&you, you.pos(), 2);
+            else if (attack_cleaves(you, -1) && reach_range < REACH_TWO)
+                hitfunc = make_unique<targeter_cleave>(&you, you.pos(), 1);
             else
                 hitfunc = make_unique<targeter_reach>(&you, reach_range);
             args.hitfunc = hitfunc.get();

@@ -770,7 +770,8 @@ bool force_player_cleave(coord_def target)
 
     if (!cleave_targets.empty())
     {
-        targeter_cleave hitfunc(&you, target);
+        const int range = player_equip_unrand(UNRAND_LOCHABER_AXE) ? 2 : 1;
+        targeter_cleave hitfunc(&you, target, range);
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
 

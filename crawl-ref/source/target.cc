@@ -953,17 +953,18 @@ aff_type targeter_reach::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_cleave::targeter_cleave(const actor* act, coord_def target)
+targeter_cleave::targeter_cleave(const actor* act, coord_def target, int rng)
 {
     ASSERT(act);
     agent = act;
     origin = act->pos();
+    range = rng;
     set_aim(target);
 }
 
 bool targeter_cleave::valid_aim(coord_def a)
 {
-    if ((origin - a).rdist() > 1)
+    if ((origin - a).rdist() > range)
         return notify_fail("Your weapon can't reach that far!");
     return true;
 }

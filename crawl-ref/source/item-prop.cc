@@ -1756,6 +1756,18 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
 }
 
 /**
+ * Which skill should the lochaber axe use?
+ *
+ * @return The higher of your Polearms and Axes skills.
+ */
+static skill_type _lochaber_skill()
+{
+    return you.skill(SK_AXES, 100, false, true) >
+           you.skill(SK_POLEARMS, 100, false, true) ?
+               SK_AXES : SK_POLEARMS;
+}
+
+/**
  * Returns the skill used by the given item to attack.
  *
  * @param item  The item under consideration.
@@ -1768,7 +1780,7 @@ skill_type item_attack_skill(const item_def &item)
     {
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
-            return lochaber_skill();
+            return _lochaber_skill();
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     case OBJ_STAVES:
         return SK_STAVES;
