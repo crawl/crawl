@@ -669,8 +669,10 @@ namespace quiver
             // Check for a monster in the way. If there is one, it blocks the reaching
             // attack 50% of the time, and the attack tries to hit it if it is hostile.
             // REACH_THREE entails smite targeting; this is a bit hacky in that
-            // this is entirely for the sake of UNRAND_RIFT.
-            if (reach_range < REACH_THREE && (x_distance > 1 || y_distance > 1))
+            // this is entirely for the sake of UNRAND_RIFT. Likewise the lochaber axe.
+            if (reach_range < REACH_THREE
+                && !player_equip_unrand(UNRAND_LOCHABER_AXE)
+                && (x_distance > 1 || y_distance > 1))
             {
                 const int x_first_middle = you.pos().x + (delta.x) / 2;
                 const int y_first_middle = you.pos().y + (delta.y) / 2;
