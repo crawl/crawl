@@ -4863,7 +4863,9 @@ string item_list::add_item(const string &spec, bool fix)
             pick_item(sp);
         }
 
-        items.push_back(sp);
+        // If the only item here was an excluded item, we'll get an empty list.
+        if (!sp.ilist.empty())
+            items.push_back(sp);
     }
 
     return error;
