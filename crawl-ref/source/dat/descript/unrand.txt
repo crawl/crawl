@@ -737,7 +737,7 @@ provide powerful protection against mundane jabs, stabs and bites. It's worse th
 useless against fire and frost, but how often does anyone really need to worry
 about that?
 %%%%
-mountain boots
+boots of the Mountain
 
 These sturdy boots were created by an artificer who lived high up on a remote
 mountain peak, as protection against the mountain's near-constant avalanches,

@@ -1664,7 +1664,8 @@ BOOL:    poison
 FIRE:    -2
 COLD:    -2
 
-NAME:    mountain boots
+ENUM:    MOUNTAIN_BOOTS
+NAME:    boots of the Mountain
 OBJ:     OBJ_ARMOUR/ARM_BOOTS
 TILE:    urand_mountain
 TILE_EQ: spider
@@ -1672,8 +1673,9 @@ PLUS:    +3
 COLOUR:  ETC_MOUNTAIN
 COLD:    1
 BOOL:    special
-INSCRIP: rDislodge,
-DBRAND:  It prevents involuntary movement from physical forces.
+INSCRIP: steadfast,
+DBRAND:  It prevents involuntary movement, except for blinking,
+ teleportation, or banishment.
 
 # This entry must always be last.
 ENUM:   DUMMY2
