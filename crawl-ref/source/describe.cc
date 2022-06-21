@@ -1367,6 +1367,27 @@ static string _handedness_string(const item_def &item)
 
 }
 
+static string _category_string(const item_def &item)
+{
+    if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+        return ""; // handled in art-data DBRAND
+
+    string description = "";
+    description += "This ";
+    if (is_unrandom_artefact(item))
+        description += get_artefact_base_name(item);
+    else
+        description += "weapon";
+    description += " falls into the";
+
+    const skill_type skill = item_attack_skill(item);
+
+    description +=
+        make_stringf(" '%s' category. ",
+                     skill == SK_FIGHTING ? "buggy" : skill_name(skill));
+    return description;
+}
+
 static string _describe_weapon(const item_def &item, bool verbose, bool monster)
 {
     string description;
@@ -1386,39 +1407,30 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
                           ? get_weapon_brand(item) : SPWPN_NORMAL;
     const int damtype = get_vorpal_type(item);
 
-    if (verbose)
+    if (verbose && !is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
     {
-            if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+        switch (item_attack_skill(item))
+        {
+        case SK_POLEARMS:
+            description += "\n\nIt can be evoked to extend its reach.";
+            break;
+        case SK_AXES:
+            description += "\n\nIt hits all enemies adjacent to the wielder";
+            if (!is_unrandom_artefact(item, UNRAND_WOE))
+                description += ", dealing less damage to those not targeted";
+            description += ".";
+            break;
+        case SK_SHORT_BLADES:
             {
-                description += "\n\nIt can be evoked to extend its reach.";
-                description += "\n\nIt hits all enemies within 2 spaces of the wielder";
-                description += ", dealing less damage to those not targeted.";
+                string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
+                                                           : "particularly";
+                description += "\n\nIt is " + adj + " good for stabbing"
+                               " helpless or unaware enemies.";
             }
-            else
-            {
-            switch (item_attack_skill(item))
-            {
-            case SK_POLEARMS:
-                description += "\n\nIt can be evoked to extend its reach.";
-                break;
-            case SK_AXES:
-                description += "\n\nIt hits all enemies adjacent to the wielder";
-                if (!is_unrandom_artefact(item, UNRAND_WOE))
-                    description += ", dealing less damage to those not targeted";
-                description += ".";
-                break;
-            case SK_SHORT_BLADES:
-                {
-                    string adj = (item.sub_type == WPN_DAGGER) ? "extremely"
-                                                               : "particularly";
-                    description += "\n\nIt is " + adj + " good for stabbing"
-                                   " helpless or unaware enemies.";
-                }
-                break;
-            default:
-                break;
-            }
-            }
+            break;
+        default:
+            break;
+        }
     }
 
     // ident known & no brand but still glowing
@@ -1579,23 +1591,8 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
 
     if (verbose)
     {
-        description += "\n\nThis ";
-        if (is_unrandom_artefact(item))
-            description += get_artefact_base_name(item);
-        else
-            description += "weapon";
-        description += " falls into the";
+        description += "\n\n" + _category_string(item);
 
-        if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
-            description += " Polearms and Axes categories. ";
-        else
-        {
-            const skill_type skill = item_attack_skill(item);
-
-            description +=
-                make_stringf(" '%s' category. ",
-                             skill == SK_FIGHTING ? "buggy" : skill_name(skill));
-        }
         // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
 

@@ -747,8 +747,4 @@ the wearer from their position.
 lochaber axe
 
 This brutal weapon, long thought lost to history, combines the extended reach
-of a polearm with the cleaving sharpness of an axe. With a single swing, it
-will slice through everything within your reach. Because of its similarity to
-both types of weapons, either the Polearms skill or the Axes skill can be used
-to wield it. (The higher skill is used; there is no need or benefit for
-training both.)
+of a polearm with the cleaving sharpness of an axe.
