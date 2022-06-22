@@ -898,6 +898,9 @@ enum monster_type                      // env.mons[].type
     MONS_VV,
     MONS_ZENATA,
     MONS_GRUNN,
+    MONS_CIRI,
+    MONS_GERALT,
+    MONS_YENNEFER,
 #endif
     // Sprint uniques:
     MONS_CHUCK,
@@ -1175,6 +1178,9 @@ enum monster_type                      // env.mons[].type
     MONS_ZENATA,
     MONS_METEORAN,
     MONS_GRUNN,
+    MONS_CIRI,
+    MONS_GERALT,
+    MONS_YENNEFER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
