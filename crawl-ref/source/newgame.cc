@@ -1924,6 +1924,8 @@ weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
         return fighter && size <= SIZE_SMALL  ? wp : WPN_TRIDENT;
     case WPN_FALCHION:
         return WPN_LONG_SWORD;
+    case WPN_SLING:
+        return WPN_SHORTBOW;
     default:
         return wp;
     }

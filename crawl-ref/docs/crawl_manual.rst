@@ -2065,8 +2065,8 @@ Warpers
 Arcane Marksmen
   Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
   attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with a shortbow, some spells to support its use, a scroll
-  of vulnerability to help those spells, and a robe.
+  They begin the game with a sling, some spells to support its use, a scroll of
+  vulnerability to help those spells, and a robe.
 
 Enchanters
   The Enchanter specialises in the subtle art of hexes. Instead of directly

@@ -77,9 +77,7 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
         break;
 
     case SK_RANGED_WEAPONS:
-        sub_type = WPN_SHORTBOW;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
+        sub_type = WPN_SLING;
         break;
 
     default:
