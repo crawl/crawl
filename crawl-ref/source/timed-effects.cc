@@ -289,9 +289,14 @@ void handle_time()
     {
         spawn_random_monsters();
         if (player_in_branch(BRANCH_ABYSS))
-          for (int i = 1; i < you.depth; ++i)
+        {
+            // Ramp up spawn rate dramatically after Abyss:5.
+            const int chances = you.depth < 5 ? you.depth
+                                              : 5 + (you.depth - 5) * 5;
+            for (int i = 1; i < chances; ++i)
                 if (x_chance_in_y(i, 5))
                     spawn_random_monsters();
+        }
     }
 
     // Abyss maprot.

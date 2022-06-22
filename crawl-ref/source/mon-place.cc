@@ -326,7 +326,11 @@ void spawn_random_monsters()
 
     // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
     // players that get banished there on the orb run.
-    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS))
+    // ...except in the deep Abyss!
+    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)
+        || player_in_branch(BRANCH_ABYSS)
+           && you.depth > 5
+           && one_chance_in(10 / (you.depth - 5)))
     {
         dprf(DIAG_MONPLACE, "Placing monster, rate: %d, turns here: %d",
              rate, env.turns_on_level);
