@@ -378,7 +378,7 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt
 
 NAME:   uniq_grunn
 DEPTH:  Depths:2-, Zot:1-4, Crypt
-: place_unique(_G, "Grunn")
+: place_unique(_G, "Grunn band")
 
 ################################################################################
 # Uniques which appear in neither the Dungeon nor the Depths:
