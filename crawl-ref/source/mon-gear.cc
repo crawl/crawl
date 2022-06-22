@@ -1020,19 +1020,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     {
     case MONS_KOBOLD:
     case MONS_KOBOLD_BRIGAND:
-        if (one_chance_in(30) && level > 2)
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_HAND_CROSSBOW;
-            break;
-        }
-        else     // give hand weapon
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = random_choose(WPN_DAGGER,      WPN_DAGGER,
-                                           WPN_SHORT_SWORD, WPN_SHORT_SWORD,
-                                           WPN_CLUB,        WPN_WHIP);
-        }
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose(WPN_DAGGER,      WPN_DAGGER,
+                                       WPN_SHORT_SWORD, WPN_SHORT_SWORD,
+                                       WPN_CLUB,        WPN_WHIP);
         break;
 
     case MONS_GOBLIN:
