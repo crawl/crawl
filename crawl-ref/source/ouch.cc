@@ -816,7 +816,7 @@ static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level)
 {
     const int hp_fraction = you.hp * 100 / you.hp_max;
     const int safe_damage_fraction = mut_level == 1 ? 12 : 5;
-    const int scary_damage_fraction = mut_level == 1 ? 50 : 5;
+    const int scary_damage_fraction = mut_level == 1 ? 50 : 20;
     return damage_fraction_of_hp > safe_damage_fraction
             && hp_fraction <= 100 - scary_damage_fraction + safe_damage_fraction
             && (damage_fraction_of_hp + random2(scary_damage_fraction) >= scary_damage_fraction
