@@ -3969,6 +3969,84 @@ ccQ..gh.hg..Lcc
    ccccccccc
 ENDMAP
 
+# 6, 8, or 10 gods.
+NAME:   hellmonk_temple_micro_hex
+TAGS:   temple_altars_6 temple_altars_8 temple_altars_10
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(_G, 10)
+: if altar_count == "6" then
+SUBST:  D = B, EF = G
+: elseif altar_count == "8" then
+SUBST:  DE = B, F = G
+: elseif altar_count == "10" then
+SUBST:  DEF = B
+:else
+SUBST:  DEF = B
+:end
+FTILE: 'T{ = floor_frozen
+FTILE: .BG = floor_w_marble
+COLOUR: 'T{ = blue
+COLOUR: .B = white
+MAP
+    ccccccc
+   ccD...Dcc
+  cc.......cc
+ ccE...'...Fcc
+cc....'''....cc
+cD...''{''...Dc
+cc....'''....cc
+ ccF...'...Ecc
+  cc.......cc
+   ccD...Dcc
+    ccccccc
+ENDMAP
+
+# 8, 9, 12, or 13 gods.
+NAME:   hellmonk_temple_forest_ring
+TAGS:   temple_altars_8 temple_altars_9 temple_altars_12 temple_altars_13
+PLACE:  Temple
+ORIENT: encompass
+NSUBST: A = 1:{ / *:AG
+NSUBST: + = 1:+ / *:c
+: if altar_count == "8" then
+SUBST:  E = B
+SUBST:  +DFH = c
+: elseif altar_count == "9" then
+SUBST:  EF = B, D = ., H:AG
+: elseif altar_count == "12" then
+SUBST:  EH = B, D = ., F = AGT
+: else
+SUBST:  EFH = B, D = .
+: end
+FTILE:  .+{ABGTt = floor_grass
+COLOUR: .+{ABGTt = green
+MAP
+   tttt         tttt
+   tE.tt       tt.Et
+   tt..tt     tt..tt
+tttttt..tt   tt..tttttt
+tEttttt..ttttt..tttttEt
+t..ttttt...A...ttttt..t
+tt..ttt........tttt..tt
+ tt..t....c+c...tt..tt
+  tt....cccDccc....tt
+   tt...cHDDDHc...tt
+    t..ccDDDDDcc..t
+    tA.+DDDFDDD+.At
+    t..ccDDDDDcc..t
+   tt...cHDDDHc...tt
+  tt....cccDccc....tt
+ tt..tt...c+c....t..tt
+tt..tttt........ttt..tt
+t..ttttt...A...ttttt..t
+tEttttt..ttttt..tttttEt
+tttttt..tt   tt..tttttt
+   tt..tt     tt..tt
+   tE.tt       tt.Et
+   tttt         tttt
+ENDMAP
+
 #####################################################################
 # <<7>> Rare temples, picked outside of the usual size roll framework
 # Non-temple gods, Temples not suitable for selection within the usual
