@@ -305,6 +305,11 @@ NAME:   uniq_boris
 DEPTH:  Depths:3-, Vaults:2-, Crypt, Tomb
 : place_unique(_G, "Boris")
 
+NAME:   uniq_ciri
+DEPTH:  D:2
+WEIGHT: 5000
+: place_unique(_G, "Ciri band")
+
 NAME:   uniq_enchantress
 DEPTH:  Depths
 MONS:   the Enchantress band
