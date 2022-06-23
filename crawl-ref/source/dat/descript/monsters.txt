@@ -85,6 +85,13 @@ Chuck
 Chuck the stone giant loves rocks, the bigger the better! Over the years, he
 has managed to amass quite the collection, including some rare, enchanted ones.
 %%%%
+Ciri
+
+Though she is a formidable fighter on her own, this Child of the Elder Blood
+poses a greater danger because of her mastery of interdimensional energy, which
+allows her to summon powerful allies from other realms. Besides this she is
+protected by her adopted family, Geralt and Yennefer.
+%%%%
 Crazy Yiuf
 
 A withered old gnoll with a long silver beard, wielding a quarterstaff and
@@ -192,6 +199,13 @@ A voracious and surprisingly intelligent slug, devoted to eating everything and
 everyone he comes across, with a pointed hat perched rakishly atop his head. He
 acquired the hat the same way he acquired his intelligence and his knowledge of
 spells: by consuming their former owner, a powerful wizard.
+%%%%
+Geralt
+
+The Trial of Grasses endowed this mutant with various combat enhancements,
+including poison resistance and rapid healing. He is truly a dangerous melee
+combatant, though he also has limited command of translocational energies.
+He will stop at nothing to protect his adopted family, Ciri and Yennefer.
 %%%%
 Geryon
 
@@ -520,6 +534,11 @@ it is, she's not talking...
 Xtahua
 
 An ancient and mighty dragon.
+%%%%
+Yennefer
+
+This mistress of translocation is fearlessly dedicated to her adopted family,
+Ciri and Geralt.
 %%%%
 Zenata
 
