@@ -68,6 +68,8 @@ Gods
 - Lugonu's Bend Space is adjusted. It no longer does damage, and makes a better
   effort to blink monsters away from the destination.
 - Uskayaw grants piety for ally damage.
+- Ru's Sacrifice Experience now loses only one XL per instance. Its piety
+  value and that of several other sacrifices are rebalanced.
 
 Items
 -----

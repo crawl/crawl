@@ -2091,9 +2091,9 @@ static const mutation_def mut_data[] =
 { MUT_INEXPERIENCED, 0, 3, mutflag::bad, false,
     "inexperienced",
 
-    {"You are somewhat inexperienced. (-2 XL)",
-     "You are inexperienced. (-4 XL)",
-     "You are extremely inexperienced. (-6 XL)"},
+    {"You are somewhat inexperienced. (-1 XL)",
+     "You are inexperienced. (-2 XL)",
+     "You are extremely inexperienced. (-3 XL)"},
     {"You feel less experienced.",
      "You feel less experienced.",
      "You feel less experienced."},
