@@ -522,6 +522,8 @@ static void _wanderer_random_evokable()
         {
         // completely nuts
         case WAND_ACID:
+        case WAND_LIGHT:
+        case WAND_QUICKSILVER:
         case WAND_ICEBLAST:
             charges = 2 + random2(3);
         break;
