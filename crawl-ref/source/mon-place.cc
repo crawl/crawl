@@ -1871,6 +1871,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_ILSUIW,          { {}, {{ BAND_ILSUIW, {3, 6}, true }}}},
     { MONS_AZRAEL,          { {}, {{ BAND_AZRAEL, {4, 9}, true }}}},
     { MONS_DUVESSA,         { {}, {{ BAND_DUVESSA, {1, 2} }}}},
+    { MONS_CIRI,            { {}, {{ BAND_CIRI, {2, 3} }}}},
     { MONS_KHUFU,           { {}, {{ BAND_KHUFU, {3, 4}, true }}}},
     { MONS_GOLDEN_EYE,      { {}, {{ BAND_GOLDEN_EYE, {1, 6} }}}},
     { MONS_PIKEL,           { {}, {{ BAND_PIKEL, {4, 5}, true }}}},
@@ -2189,6 +2190,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
     { BAND_POLYPHEMUS,          {{{MONS_CATOBLEPAS, 1}},
 
                                  {{MONS_DEATH_YAK, 1}}}},
+    { BAND_CIRI,                {{{MONS_GERALT, 1}},
+                                 {{MONS_YENNEFER, 1}}}},
     { BAND_VERY_UGLY_THINGS,    {{{MONS_UGLY_THING, 3},
                                   {MONS_VERY_UGLY_THING, 4}}}},
     { BAND_GOLEMS,              {{{MONS_WAR_GARGOYLE, 1},
