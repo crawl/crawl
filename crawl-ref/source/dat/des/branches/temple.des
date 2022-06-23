@@ -3979,11 +3979,9 @@ ORIENT: encompass
 SUBST:  D = B, EF = G
 : elseif altar_count == "8" then
 SUBST:  DE = B, F = G
-: elseif altar_count == "10" then
+: else
 SUBST:  DEF = B
-:else
-SUBST:  DEF = B
-:end
+: end
 FTILE: 'T{ = floor_frozen
 FTILE: .BG = floor_w_marble
 COLOUR: 'T{ = blue
@@ -4009,6 +4007,7 @@ PLACE:  Temple
 ORIENT: encompass
 NSUBST: A = 1:{ / *:AG
 NSUBST: + = 1:+ / *:c
+: local altar_count = get_altar_count(_G, 13)
 : if altar_count == "8" then
 SUBST:  E = B
 SUBST:  +DFH = c
