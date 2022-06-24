@@ -1666,12 +1666,14 @@ void generate_abyss()
     check_map_validity();
 
     // If we're starting out in the Abyss, make sure the starting grid is
-    // an exit.
+    // an exit, and place an altar near by for flavour.
     // Otherwise, we start out on floor and there's a chance there's an
     // altar near-by.
     if (player_in_starting_abyss())
     {
         env.grid(ABYSS_CENTRE) = DNGN_EXIT_ABYSS;
+        _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
+                            DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
     }
     else
     {
