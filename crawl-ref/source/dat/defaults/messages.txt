@@ -107,6 +107,7 @@ force_more_message += Zot draws nearer
 force_more_message += Zot has nearly found you
 force_more_message += Zot already knows
 force_more_message += Zot's attention fixes on you
+force_more_message += Zot's power touches on you
 
 ## Reduce chance of draining because flight or form runs out:
 force_more_message += ^Careful!
