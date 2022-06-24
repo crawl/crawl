@@ -4100,6 +4100,54 @@ cc...nn'''''''nn...cc
         ccccc
 ENDMAP
 
+# any odd number of gods from 7-19
+NAME:   hellmonk_temple_divided_pantheon
+TAGS:   temple_altars_7 temple_altars_9 temple_altars_11 temple_altars_13
+TAGS:   temple_altars_15 temple_altars_17 temple_altars_19
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  DRQ' = floor_infernal
+FTILE:  EJK- = floor_w_marble
+FTILE:  {SHGPBL. = floor_limestone
+COLOUR: DRQ' = red
+COLOUR: EJK- = white
+COLOUR: {SHGPBL. = yellow
+: local altar_count = get_altar_count(_G, 19)
+: local half_count = (altar_count - 1) / 2
+: nsubst ("D = " .. half_count .. ":B / *:'")
+: nsubst ("E = " .. half_count .. ":B / *:-")
+MARKER:  P = lua:transp_loc("pantheon_dark_entry")
+MARKER:  Q = lua:transp_dest_loc("pantheon_dark_entry")
+MARKER:  R = lua:transp_loc("pantheon_dark_exit")
+MARKER:  S = lua:transp_dest_loc("pantheon_dark_exit")
+MARKER:  H = lua:transp_loc("pantheon_light_entry")
+MARKER:  J = lua:transp_dest_loc("pantheon_light_entry")
+MARKER:  K = lua:transp_loc("pantheon_light_exit")
+MARKER:  L = lua:transp_dest_loc("pantheon_light_exit")
+MAP
+      ccccccc
+     ccc.B.ccc
+    ccDn...nEcc
+   cc''n...n--cc
+cccc'''n...n---cccc
+ccD'''Dn...nE---Ecc
+c''''''n...n------c
+c''D'''n...n--E---c
+c''''''n...n------c
+c'''''RnS.HnJ-----c
+cD'''''nG.Gn-----Ec
+c'''''QnP.LnK-----c
+c''D'''n...n--E---c
+c''''''n...n------c
+c'''''Dn...nE-----c
+ccD''''n...n----Ecc
+cccc'''n...n---cccc
+   cc''n...n--cc
+    ccDn.{.nEcc
+     ccc...ccc
+      ccccccc
+ENDMAP
+
 #####################################################################
 # <<7>> Rare temples, picked outside of the usual size roll framework
 # Non-temple gods, Temples not suitable for selection within the usual
