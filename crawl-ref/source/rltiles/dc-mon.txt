@@ -406,6 +406,7 @@ warmonger MONS_DEMONSPAWN_WARMONGER
 corrupter MONS_DEMONSPAWN_CORRUPTER
 black_sun MONS_DEMONSPAWN_BLACK_SUN
 mon/unique/amaemon MONS_AMAEMON
+mon/unique/geralt MONS_GERALT
 ## From the Wucad Mu wizard laboratory
 %sdir mon/vault
 demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK
@@ -993,6 +994,7 @@ duvessa MONS_DUVESSA
 duvessa2
 fannar MONS_FANNAR
 head_instructor MONS_HEADMASTER
+yennefer MONS_YENNEFER
 %rim 1
 %sdir mon/humanoids/elves
 elf MONS_ELF
@@ -1068,6 +1070,7 @@ spriggan_air_mage MONS_SPRIGGAN_AIR_MAGE
 mon/unique/enchantress MONS_THE_ENCHANTRESS
 mon/unique/agnes MONS_AGNES
 mon/unique/agnes_staveless MONS_AGNES_STAVELESS
+mon/unique/ciri MONS_CIRI
 
 ## Merfolk ('m')
 # note: water tiles must be immediately after base tiles
