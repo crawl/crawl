@@ -868,6 +868,8 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            wu_jian_attack_type wu_jian_attack,
                            bool is_projected)
 {
+    if (!attacker.alive())
+        return;
     const item_def* weap = attacker.weapon(attack_number);
     if (attacker.is_player())
     {
