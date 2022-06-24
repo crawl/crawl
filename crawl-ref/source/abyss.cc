@@ -427,16 +427,17 @@ void banished(const string &who, const int power)
     }
 
     const int depth = _banished_depth(power);
-    const string what = make_stringf("Cast into level %d of the Abyss", depth)
-                      + _who_banished(who);
-    take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
 
     stop_delay(true);
     run_animation(ANIMATION_BANISH, UA_BRANCH_ENTRY, false);
     push_features_to_abyss();
     floor_transition(DNGN_ENTER_ABYSS, orig_terrain(you.pos()),
                      level_id(BRANCH_ABYSS, depth), true);
-    // This is an honest abyss entry, mark milestone
+    // This is an honest abyss entry, mark milestone and take note
+    // floor_transition might change our final destination in the abyss
+    const string what = make_stringf("Cast into level %d of the Abyss",
+                                     you.depth) + _who_banished(who);
+    take_note(Note(NOTE_MESSAGE, 0, 0, what), true);
     mark_milestone("abyss.enter",
         "was cast into the Abyss!" + _who_banished(who), "parent");
 
