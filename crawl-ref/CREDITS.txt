@@ -101,6 +101,7 @@
     Max Bane
     G. Bailey
     Alexei Barnes
+    Spencer Baugh
     Beargit
     Bill Beher
     Alexander Beisig
@@ -193,6 +194,7 @@
     John Greenberg
     GreyKnight
     Joshua Gross
+    Pat '4Hooves2Appendages' H
     Brian Haase
     Sophie Hamilton
     Chris Hamons
@@ -277,6 +279,7 @@
     Muffindrake
     Akinori Musha
     Mushboom
+    Rosstin Murphy
     Eva Myers
     nagdon
     Naruni
@@ -305,6 +308,7 @@
     William Parker
     Pedro
     Pekkekke
+    Rytis Petronis
     Arlen Phillips
     pikaro
     Lemuel Pitkin
