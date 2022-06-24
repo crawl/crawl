@@ -4383,3 +4383,44 @@ ccP.....................^cc
         cccccLccccc
             ccc
 ENDMAP
+
+# every god in the game
+NAME:   hellmonk_choose_your_character
+TAGS:   temple_rare temple_altars_22 no_rotate no_vmirror no_hmirror
+PLACE:  Temple
+ORIENT: encompass
+WEIGHT: 1
+NSUBST: B = 1:L / 1:J / 1:I / 1:O / *:B
+KFEAT:  L = altar_lugonu
+KFEAT:  J = altar_jiyva
+KFEAT:  I = altar_ignis
+KFEAT:  O = altar_beogh
+KFEAT:  E = altar_ecumenical
+KFEAT:  + = closed_clear_door
+FTILE:  .+ = floor_pebble_darkgray
+FTILE:  BLJIOE = floor_rough_red
+COLOUR: .+ = darkgrey
+COLOUR: BLJIOE = red
+MAP
+ccccccccccccccccccc
+c.................c
+c.nnnnnnnnnnnnnnn.c
+c.nBnBnBnBnBnBnBn.c
+c.n+n+n+n+n+n+n+n.c
+c.................c
+c.nnnnnnnnnnnnnnn.c
+c.nBnBnBnBnBnBnBn.c
+c.n+n+n+n+n+n+n+n.c
+c.................c
+c.nnnnnnnnnnnnnnn.c
+c.nBnBnBnBnBnBnBn.c
+c.n+n+n+n+n+n+n+n.c
+c.................c
+c.nnnnnnnnnnn.nnn.c
+c.nBnBnBnBnBn.nEn.c
+c.n+n+n+n+n+n.n+n.c
+c.................c
+c..............{..c
+c.................c
+ccccccccccccccccccc
+ENDMAP
