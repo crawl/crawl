@@ -80,6 +80,9 @@ fabled
 
 fabulous
 
+w:5
+fantabulous
+
 glorious
 
 incredible
@@ -129,6 +132,8 @@ The @_great_adj_@ Orb of Zot lies far below, as if waiting for you to find it.
 Below lies the Orb of Zot, rumoured to be powerful enough to resurrect a god...
 
 The Orb of Zot is coveted for many reasons. Will you seize it for your own?
+
+A smirking vizier told you that the Orb of Zot is just within this dungeon.
 %%%%
 # things that surround us on Halloween
 _halloween_things_
