@@ -1656,6 +1656,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_YENNEFER,
+      {
+       { SPELL_BLINK_ALLIES_AWAY, 10, MON_SPELL_WIZARD },
+       { SPELL_MESMERISE, 20, MON_SPELL_WIZARD },
+       { SPELL_HURL_DAMNATION, 20, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
+      } 
+    },
+
     // ('g') Small humanoids.
     {  MST_ROBIN,
       {
@@ -1693,6 +1701,17 @@ static const mon_spellbook mspell_list[] =
        { SPELL_HASTE, 11, MON_SPELL_WIZARD },
        { SPELL_REPEL_MISSILES, 11, MON_SPELL_WIZARD },
       }
+    },
+
+    {  MST_CIRI,
+      {
+       { SPELL_WARNING_CRY, 40, MON_SPELL_VOCAL | MON_SPELL_BREATH },
+       { SPELL_MALIGN_GATEWAY, 30, MON_SPELL_NATURAL },
+       { SPELL_FORCEFUL_INVITATION, 30, MON_SPELL_NATURAL },
+       { SPELL_SUMMON_DRAKES, 20, MON_SPELL_NATURAL },
+       { SPELL_PLANEREND, 20, MON_SPELL_NATURAL },
+       { SPELL_METAL_SPLINTERS, 20, MON_SPELL_NATURAL },
+      } 
     },
 
     // ('m') Merfolk and friends.
@@ -1986,6 +2005,15 @@ static const mon_spellbook mspell_list[] =
         { SPELL_CONCENTRATE_VENOM, 30, MON_SPELL_WIZARD },
         { SPELL_SUMMON_SCORPIONS, 15, MON_SPELL_WIZARD },
       }
+    },
+
+    {  MST_GERALT,
+      {
+       { SPELL_REPEL_MISSILES, 10, MON_SPELL_WIZARD },
+       { SPELL_FORCE_LANCE, 20, MON_SPELL_WIZARD },
+       { SPELL_BERSERKER_RAGE, 20, MON_SPELL_NATURAL },
+       { SPELL_MIGHT, 10, MON_SPELL_NATURAL },
+      } 
     },
 
     // ('8') Statues.
