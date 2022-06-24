@@ -4773,6 +4773,9 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item.props[WORN_TILE_NAME_KEY] = props[WORN_TILE_NAME_KEY].get_string();
     bind_item_tile(item);
 
+    if (props.exists(ITEM_CUSTOM_DESC_KEY))
+        item.props[ITEM_CUSTOM_DESC_KEY] = true;
+
     if (!monster)
     {
         if (props.exists(MIMIC_KEY))
@@ -4833,6 +4836,13 @@ static object_class_type _concretize_type(const item_spec &spec)
     return spec.base_type;
 }
 
+static string _get_custom_name(const item_spec &spec)
+{
+    if (spec.props.exists(ITEM_NAME_KEY))
+        return spec.props[ITEM_NAME_KEY].get_string();
+    return "";
+}
+
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
                    int dgn_level)
@@ -4864,7 +4874,8 @@ int dgn_place_item(const item_spec &spec,
             else
             {
                 item_made = items(spec.allow_uniques, base_type,
-                                  spec.sub_type, level, spec.ego);
+                                  spec.sub_type, level, spec.ego, NO_AGENT,
+                                  _get_custom_name(spec));
 
                 if (spec.level == ISPEC_MUNDANE)
                     squash_plusses(item_made);
@@ -4961,8 +4972,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
             else
             {
                 item_made = items(spec.allow_uniques, spec.base_type,
-                                  spec.sub_type, item_level,
-                                  spec.ego);
+                                  spec.sub_type, item_level, spec.ego, NO_AGENT,
+                                  _get_custom_name(spec));
 
                 if (spec.level == ISPEC_MUNDANE)
                     squash_plusses(item_made);

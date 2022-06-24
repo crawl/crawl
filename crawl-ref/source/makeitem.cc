@@ -1763,7 +1763,8 @@ int items(bool allow_uniques,
           int force_type,
           int item_level,
           int force_ego,
-          int agent)
+          int agent,
+          string custom_name)
 {
     rng::subgenerator item_rng;
 
@@ -1849,6 +1850,9 @@ int items(bool allow_uniques,
         _setup_fallback_randart(unrand_id, item, force_type, item_level);
         allow_uniques = false;
     }
+
+    if (!custom_name.empty())
+        item.props[ITEM_NAME_KEY] = custom_name;
 
     // Determine sub_type accordingly. {dlb}
     switch (item.base_type)

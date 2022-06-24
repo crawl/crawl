@@ -17,6 +17,8 @@ struct bolt;
 
 void init_properties();
 
+#define ITEM_NAME_KEY "name"
+#define ITEM_CUSTOM_DESC_KEY "custom_desc"
 
 typedef uint32_t armflags_t;
 #define ard(flg, lev) (armflags_t)((flg) * ((lev) & 7))
@@ -235,7 +237,7 @@ int weapon_base_price(weapon_type type) PURE;
 int missile_base_price(missile_type type) PURE;
 int armour_base_price(armour_type type) PURE;
 
-string item_base_name(const item_def &item);
+string item_base_name(const item_def &item, bool dbname = false);
 string item_base_name(object_class_type type, int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
