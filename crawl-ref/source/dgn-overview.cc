@@ -331,7 +331,7 @@ static string _get_seen_branches(bool display)
                           : bzot == 0 ? "lightgray"
                           : bzot <= 1 ? "yellow"
                           : bzot == 2 ? "red"
-                          : "lightmagenta"; // bezotting level 4 is not real
+                          : "lightmagenta";
                     zclock_desc = make_stringf(" Zot: <%s>%d%s</%s>",
                                     zcol, zturns,
                                     urgent ? "!" : "",

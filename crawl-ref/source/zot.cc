@@ -99,16 +99,14 @@ static int _zot_lifespan_div()
     return you.has_mutation(MUT_SHORT_LIFESPAN) ? 10 : 1;
 }
 
-// A scale from 0 to 4 of how much danger the player is in of
-// reaching the end of the zot clock. 0 is no danger, 4 is dead.
+// A scale from 0 to 3 of how much danger the player is in of
+// reaching the end of the zot clock. 0 is no danger, 3 is almost dead.
 int bezotting_level_in(branch_type br)
 {
     if (!_zot_clock_active_in(br))
         return 0;
 
     const int remaining_turns = turns_until_zot_in(br) * _zot_lifespan_div();
-    if (remaining_turns <= 0)
-        return 4;
     if (remaining_turns < 100)
         return 3;
     if (remaining_turns < 500)
