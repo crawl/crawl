@@ -2287,6 +2287,8 @@ static tileidx_t _tileidx_wyrmbane(int plus)
 
 static tileidx_t _tileidx_weapon_base(const item_def &item)
 {
+    if (item.props.exists(ITEM_TILE_KEY))
+        return item.props[ITEM_TILE_KEY].get_short();
     switch (item.sub_type)
     {
     case WPN_DAGGER:                return TILE_WPN_DAGGER;
@@ -2437,6 +2439,9 @@ static tileidx_t _tileidx_missile(const item_def &item)
 
 static tileidx_t _tileidx_armour_base(const item_def &item)
 {
+    if (item.props.exists(ITEM_TILE_KEY))
+        return item.props[ITEM_TILE_KEY].get_short();
+
     int type  = item.sub_type;
     switch (type)
     {
@@ -2748,13 +2753,16 @@ static tileidx_t _tileidx_gold(const item_def &item)
 
 tileidx_t tileidx_item(const item_def &item)
 {
-    if (item.props.exists(ITEM_TILE_KEY))
-        return item.props[ITEM_TILE_KEY].get_short();
-
     const int clas        = item.base_type;
     const int type        = item.sub_type;
     const int subtype_rnd = item.subtype_rnd;
     const int rnd         = item.rnd;
+
+    if (item.props.exists(ITEM_TILE_KEY)
+        && clas != OBJ_WEAPONS && clas != OBJ_ARMOUR)
+    {
+        return item.props[ITEM_TILE_KEY].get_short();
+    }
 
     switch (clas)
     {

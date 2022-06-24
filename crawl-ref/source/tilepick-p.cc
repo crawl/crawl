@@ -35,9 +35,6 @@ static tileidx_t _mon_mod(tileidx_t tile, int offset)
 
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
-    if (item.props.exists(WORN_TILE_KEY))
-        return item.props[WORN_TILE_KEY].get_short();
-
     if (item.base_type == OBJ_STAVES)
     {
         int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
@@ -259,6 +256,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 
     default: tile = 0;
     }
+
+    if (item.props.exists(WORN_TILE_KEY))
+        tile = item.props[WORN_TILE_KEY].get_short();
 
     return tile ? tileidx_enchant_equ(item, tile, true) : 0;
 }
