@@ -838,6 +838,21 @@ static void _handle_movement(monster* mons)
         mmov.reset();
 }
 
+static void _update_item_knowledge(object_class_type base_type, int sub_type)
+{
+    // Identify a scroll or potion and apply inscriptions if necessary.
+    if (set_ident_type(base_type, sub_type, true))
+    {
+        // Assign the inventory letter according to the item_slot option.
+        for (auto &item : you.inv)
+            if (item.base_type == base_type && item.sub_type == sub_type)
+            {
+                auto_assign_item_slot(item);
+                break;
+            }
+    }
+}
+
 static bool _handle_potion(monster& mons)
 {
     item_def* potion = mons.mslot_item(MSLOT_POTION);
@@ -865,7 +880,7 @@ static bool _handle_potion(monster& mons)
 
         // Drink the potion, and identify it.
         if (mons.drink_potion_effect(ptype) && was_visible)
-            set_ident_type(OBJ_POTIONS, ptype, true);
+            _update_item_knowledge(OBJ_POTIONS, ptype);
 
         // Remove it from inventory.
         if (dec_mitm_item_quantity(potion->index(), 1))
@@ -1037,7 +1052,7 @@ static bool _handle_scroll(monster& mons)
             mons.inv[MSLOT_SCROLL] = NON_ITEM;
 
         if (was_visible)
-            set_ident_type(OBJ_SCROLLS, scroll_type, true);
+            _update_item_knowledge(OBJ_SCROLLS, scroll_type);
 
         mons.lose_energy(EUT_ITEM);
     }
