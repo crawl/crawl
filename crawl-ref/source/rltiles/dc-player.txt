@@ -617,6 +617,10 @@ morningstar MORNINGSTAR
 morningstar2
 eveningstar EVENINGSTAR
 eveningstar2
+hammer HAMMER
+hammer2
+hammer_one HAMMER1
+hammer_two HAMMER2
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
 sacred_scourge SACRED_SCOURGE

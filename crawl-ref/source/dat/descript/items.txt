@@ -610,6 +610,10 @@ halberd
 A polearm consisting of an axe blade topped with a spike, mounted on a long
 shaft.
 %%%%
+hammer
+
+A blunt striking weapon, essentially equivalent to a mace.
+%%%%
 hand axe
 
 A small axe.

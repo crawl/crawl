@@ -527,7 +527,7 @@ DEPTH:   D:2-7
 TAGS:    place_unique no_monster_gen no_item_gen
 MONS:    Crazy Yiuf
 MONS:    fungus / bush w:1
-ITEM:    mace
+ITEM:    mace tile:wpn_hammer wtile:hammer name:hammer custom_desc
 # Randomisation 1: Some chance for a gate.
 SHUFFLE: Bb/Aa
 SUBST:   B=;, b=;
