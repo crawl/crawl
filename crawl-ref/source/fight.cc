@@ -1306,3 +1306,10 @@ int apply_fighting_skill(int damage, bool aux, bool random)
 
     return damage;
 }
+
+int throwing_base_damage_bonus(const item_def &proj)
+{
+    // Stones get half bonus; everything else gets full bonus.
+    return div_rand_round(you.skill_rdiv(SK_THROWING)
+                          * min(4, property(proj, PWPN_DAMAGE)), 4);
+}

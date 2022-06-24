@@ -329,10 +329,7 @@ int ranged_attack::calc_base_unarmed_damage()
 {
     if (clumsy_throwing())
         return 0;
-
-    // Stones get half bonus; everything else gets full bonus.
-    return div_rand_round(you.skill_rdiv(wpn_skill)
-                          * min(4, property(*projectile, PWPN_DAMAGE)), 4);
+    return throwing_base_damage_bonus(*projectile);
 }
 
 int ranged_attack::calc_mon_to_hit_base()

@@ -1216,7 +1216,10 @@ static string _damage_rating(const item_def &item)
 
     const bool thrown = item.base_type == OBJ_MISSILES;
 
-    const int base_dam = property(item, PWPN_DAMAGE);
+    int base_dam = property(item, PWPN_DAMAGE);
+    // TODO: we should include the bonus base damage separately in the display.
+    if (thrown)
+        base_dam += throwing_base_damage_bonus(item);
     const skill_type skill = _item_training_skill(item);
     const int stat_mult = stat_modify_damage(100, skill, true);
     const bool use_str = weapon_uses_strength(skill, true);
