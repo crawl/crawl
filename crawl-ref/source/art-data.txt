@@ -295,7 +295,11 @@ DBRAND:  It occasionally heals its wielder for the full amount of damage dealt
  when it wounds a living foe.
 
 NAME:    scythe of Curses
-OBJ:     OBJ_WEAPONS/WPN_SCYTHE
+OBJ:     OBJ_WEAPONS/WPN_HALBERD
+FALLBACK: OBJ_WEAPONS/WPN_BARDICHE
+TYPE:    scythe
+BASE_DAM: +1
+BASE_DELAY: +5
 PLUS:    +13
 COLOUR:  ETC_DEATH
 TILE:    spwpn_scythe_of_curses
@@ -458,7 +462,11 @@ INT:      5
 WILL:     1
 
 NAME:    scythe "Finisher"
-OBJ:     OBJ_WEAPONS/WPN_SCYTHE
+OBJ:     OBJ_WEAPONS/WPN_HALBERD
+FALLBACK: OBJ_WEAPONS/WPN_BARDICHE
+TYPE:    scythe
+BASE_DAM: +1
+BASE_DELAY: +5
 INSCRIP: eviscerate
 PLUS:    +5
 COLOUR:  ETC_DARK
