@@ -1129,7 +1129,8 @@ those fully immune to such effects.
 %%%%
 scythe
 
-A farm implement, usually only used by untrained mobs in combat.
+A farm implement, usually only used by untrained mobs in combat. In practice,
+it's quite similar to a halberd.
 %%%%
 shortbow
 

@@ -628,8 +628,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_IRONBOUND_CONVOKER,      { IRON_WEAPONS } },
         { MONS_IRONBOUND_PRESERVER,     { IRON_WEAPONS } },
-        { MONS_SIGMUND, { { { WPN_SCYTHE, 1 } } } },
-        { MONS_REAPER, { { { WPN_SCYTHE, 1 } }, {}, {}, 1 } },
+        { MONS_SIGMUND, { { { WPN_HALBERD, 1 } } } },
+        { MONS_REAPER, { { { WPN_HALBERD, 1 } }, {}, {}, 1 } },
         { MONS_BALRUG, { { { WPN_DEMON_WHIP, 1 } } } },
         { MONS_RED_DEVIL,
             { { { WPN_TRIDENT,          4 },
@@ -994,6 +994,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
 
     string floor_tile = "";
     string equip_tile = "";
+    string custom_name = "";
 
     item_def item;
     item.base_type = OBJ_UNASSIGNED;
@@ -1225,6 +1226,13 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             make_item_unrandart(item, UNRAND_CURSES);
         break;
 
+    case MONS_SIGMUND:
+    case MONS_REAPER:
+        custom_name = "scythe";
+        floor_tile  = "wpn_scythe";
+        equip_tile  = "scythe";
+        break;
+
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
     case MONS_ANCESTOR_KNIGHT:
@@ -1256,7 +1264,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     // and subtype and create a new item. - bwr
     const int thing_created =
         ((force_item) ? get_mitm_slot() : items(false, xitc, xitt, level,
-                                                item.brand));
+                                                item.brand, NO_AGENT,
+                                                custom_name));
 
     if (thing_created == NON_ITEM)
         return NON_ITEM;
