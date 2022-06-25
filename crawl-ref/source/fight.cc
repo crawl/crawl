@@ -770,7 +770,8 @@ bool force_player_cleave(coord_def target)
 
     if (!cleave_targets.empty())
     {
-        const int range = player_equip_unrand(UNRAND_LOCHABER_AXE) ? 2 : 1;
+        // Rift is too funky and hence gets no special treatment.
+        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
         targeter_cleave hitfunc(&you, target, range);
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
@@ -826,8 +827,7 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (attack_cleaves(attacker, which_attack))
     {
         const coord_def atk = attacker.pos();
-        const bool lochaber = weap && is_unrandom_artefact(*weap, UNRAND_LOCHABER_AXE);
-        const int cleave_radius = lochaber ? 2 : 1;
+        const int cleave_radius = weap && weapon_reach(*weap) == REACH_TWO ? 2 : 1;
 
         for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
         {

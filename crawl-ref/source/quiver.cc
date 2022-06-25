@@ -597,13 +597,11 @@ namespace quiver
             args.self = confirm_prompt_type::cancel;
 
             unique_ptr<targeter> hitfunc;
-            // Xom can give you cleaving status while wielding a reaching
-            // weapon, just use the reach targeter for this case. (TODO:
-            // show cleave effect in targeter.)
-            if (weapon && is_unrandom_artefact(*weapon, UNRAND_LOCHABER_AXE))
-                hitfunc = make_unique<targeter_cleave>(&you, you.pos(), 2);
-            else if (attack_cleaves(you, -1) && reach_range < REACH_TWO)
-                hitfunc = make_unique<targeter_cleave>(&you, you.pos(), 1);
+            if (attack_cleaves(you, -1))
+            {
+                const int range = reach_range == REACH_TWO ? 2 : 1;
+                hitfunc = make_unique<targeter_cleave>(&you, you.pos(), range);
+            }
             else
                 hitfunc = make_unique<targeter_reach>(&you, reach_range);
             args.hitfunc = hitfunc.get();
@@ -669,9 +667,11 @@ namespace quiver
             // Check for a monster in the way. If there is one, it blocks the reaching
             // attack 50% of the time, and the attack tries to hit it if it is hostile.
             // REACH_THREE entails smite targeting; this is a bit hacky in that
-            // this is entirely for the sake of UNRAND_RIFT. Likewise the lochaber axe.
+            // this is entirely for the sake of UNRAND_RIFT.
+            // Cleaving reaches also will never fail to miss, since the player can
+            // just attack another target in most cases to hit both.
             if (reach_range < REACH_THREE
-                && !player_equip_unrand(UNRAND_LOCHABER_AXE)
+                && !attack_cleaves(you)
                 && (x_distance > 1 || y_distance > 1))
             {
                 const int x_first_middle = you.pos().x + (delta.x) / 2;

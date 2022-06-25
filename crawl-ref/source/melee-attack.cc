@@ -186,7 +186,7 @@ bool melee_attack::handle_phase_attempted()
         }
         else if (!cleave_targets.empty())
         {
-            const int range = player_equip_unrand(UNRAND_LOCHABER_AXE) ? 2 : 1;
+            const int range = you.reach_range() == REACH_TWO ? 2 : 1;
             targeter_cleave hitfunc(attacker, defender->pos(), range);
             if (stop_attack_prompt(hitfunc, "attack"))
             {
