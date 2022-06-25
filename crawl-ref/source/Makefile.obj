@@ -392,6 +392,7 @@ enum.h.o \
 equipment-type.h.o \
 errors.h.o \
 externs.h.o \
+explore-greedy-options.h.o \
 fight.h.o \
 filter-enum.h.o \
 fineff.h.o \

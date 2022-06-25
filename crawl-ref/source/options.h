@@ -9,6 +9,7 @@
 #include "char-set-type.h"
 #include "confirm-prompt-type.h"
 #include "easy-confirm-type.h"
+#include "explore-greedy-options.h"
 #include "feature.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
@@ -407,6 +408,9 @@ public:
     vector<text_pattern> explore_stop_pickup_ignore;
 
     bool        explore_greedy;    // Explore goes after items as well.
+
+    // Set what type of items explore_greedy visits.
+    explore_greedy_options explore_greedy_visit;
 
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;

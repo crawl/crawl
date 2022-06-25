@@ -37,6 +37,7 @@
 #include "dlua.h"
 #include "end.h"
 #include "errors.h"
+#include "explore-greedy-options.h"
 #include "files.h"
 #include "game-options.h"
 #include "ghost.h"
@@ -262,6 +263,12 @@ const vector<GameOption*> game_options::build_options_list()
              {"backward", SS_BACKWARD}}),
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
+        new MultipleChoiceGameOption<explore_greedy_options>(
+            SIMPLE_NAME(explore_greedy_visit),
+            explore_greedy_options::EG_PILE,
+            {{"pile", explore_greedy_options::EG_PILE},
+             {"enchanted", explore_greedy_options::EG_ENCHANTED},
+             {"both", explore_greedy_options::EG_BOTH}}),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new BoolGameOption(SIMPLE_NAME(travel_one_unsafe_move), false),
