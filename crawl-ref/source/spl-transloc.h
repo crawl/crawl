@@ -45,7 +45,7 @@ bool fatal_attraction(const coord_def& pos, const actor *agent, int pow);
 spret cast_gravitas(int pow, const coord_def& where, bool fail);
 
 bool beckon(actor &beckoned, const bolt &path);
-void attract_monsters();
+void attract_monsters(int delay);
 vector<monster *> find_chaos_targets(bool just_check = false);
 spret word_of_chaos(int pow, bool fail);
 spret blinkbolt(int power, bolt &beam, bool fail);

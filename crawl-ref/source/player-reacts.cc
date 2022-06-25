@@ -211,7 +211,7 @@ static void _decrement_attraction(int delay)
     if (!you.duration[DUR_ATTRACTIVE])
         return;
 
-    attract_monsters();
+    attract_monsters(delay);
     if (_decrement_a_duration(DUR_ATTRACTIVE, delay))
         mpr("You feel less attractive to monsters.");
 }
