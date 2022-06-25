@@ -1459,7 +1459,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
 
     const string cosmetic_text
         = show_cosmetic ? _cosmetic_text(weap, ignore_flags) : "";
-    const string base_name = item_base_name(weap, dbname);
+    const string base_name = item_base_name(weap);
     const string name_with_ego
         = know_ego ? weapon_brand_desc(base_name.c_str(), weap, terse)
         : base_name;
@@ -1602,7 +1602,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             }
         }
 
-        buff << item_base_name(*this, dbname);
+        buff << item_base_name(*this);
 
         if (know_ego && !is_artefact(*this))
         {

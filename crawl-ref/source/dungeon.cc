@@ -4773,9 +4773,6 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item.props[WORN_TILE_NAME_KEY] = props[WORN_TILE_NAME_KEY].get_string();
     bind_item_tile(item);
 
-    if (props.exists(ITEM_CUSTOM_DESC_KEY))
-        item.props[ITEM_CUSTOM_DESC_KEY] = true;
-
     if (!monster)
     {
         if (props.exists(MIMIC_KEY))

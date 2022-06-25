@@ -577,9 +577,8 @@ ITEM:     (list of items, separated by comma)
             worn (player/monster doll) tiles. Generally you'd want to set
             both to ensure they match.
           * "name:" will override the item's type name (e.g. 'scythe' or 'ring').
-            If "custom_desc" is set, or if the item is not a weapon or armour, you
-            will need to add a new description. This feature is intended to support
-            only legacy flavour, i.e. scythes & hammers; don't use it.
+            You will need to add a new description. This feature is intended to
+            support only legacy flavour, i.e. scythes & hammers - don't use this.
 
           WARNING: While checks are done to make sure that an armour ego
           isn't given to a weapon, a weapon ego to a missile, and so on, and

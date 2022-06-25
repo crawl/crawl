@@ -5276,8 +5276,6 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     const string custom_name = strip_tag_prefix(s, "name:");
     if (!custom_name.empty())
         result.props[ITEM_NAME_KEY] = custom_name;
-    if (strip_tag(s, "custom_desc"))
-        result.props[ITEM_CUSTOM_DESC_KEY] = true;
 
     const int plus = strip_number_tag(s, "plus:");
     if (plus != TAG_UNFOUND)

@@ -2788,13 +2788,10 @@ int guile_adjust_willpower(int wl)
     return max(0, wl - 2 * WL_PIP);
 }
 
-string item_base_name(const item_def &item, bool dbname)
+string item_base_name(const item_def &item)
 {
-    if (item.props.exists(ITEM_NAME_KEY)
-        && (!dbname || item.props.exists(ITEM_CUSTOM_DESC_KEY)))
-    {
+    if (item.props.exists(ITEM_NAME_KEY))
         return item.props[ITEM_NAME_KEY].get_string();
-    }
     return item_base_name(item.base_type, item.sub_type);
 }
 
