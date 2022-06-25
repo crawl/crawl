@@ -412,6 +412,11 @@ namespace quiver
             else
                 return { };
         }
+
+        void save(CrawlHashTable &save_target) const override
+        {
+            save_target["type"] = "ranged_action";
+        }
     };
 
     // class isn't intended for quivering per se. Rather, it's a wrapper on
@@ -1959,6 +1964,8 @@ namespace quiver
             return make_shared<fumble_action>(param);
         else if (type == "melee_action")
             return make_shared<melee_action>();
+        else if (type == "ranged_action")
+            return make_shared<ranged_action>();
         else
             return make_shared<action>();
     }
