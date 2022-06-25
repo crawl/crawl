@@ -1258,7 +1258,7 @@ NSUBST:  123 = 2=.
 KMONS:   1 = blork the orc ; quarterstaff good_item . robe \
              / orc wizard ; quarterstaff good_item . robe \
              , orc wizard ; quarterstaff good_item . robe
-KMONS:   2 = sigmund; halberd name:scythe tile:wpn_scythe wtile:scythe ego:draining . robe \
+KMONS:   2 = sigmund; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:draining . robe \
              / kobold brigand ; dagger ego:draining . wand of charming \
              , kobold brigand ; dagger ego:draining . wand of charming
 KMONS:   3 = edmund ; flail good_item . kite shield . chain mail \

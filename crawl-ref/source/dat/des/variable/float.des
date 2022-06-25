@@ -3333,7 +3333,7 @@ MONS: emperor scorpion / w:8 green death / w:3 ghost moth
 : else
 MONS: skeletal warrior ; long sword ego:venom | broad axe ego:venom \
       | halberd ego:venom
-MONS: reaper ; halberd name:scythe tile:wpn_scythe wtile:scythe ego:venom / \
+MONS: reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:venom /\
       w:8 green death / ancient champion ; great mace ego:venom | \
       battleaxe ego:venom | glaive ego:venom
 : end

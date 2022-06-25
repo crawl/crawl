@@ -5273,7 +5273,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
     if (charges >= 0)
         result.props[CHARGES_KEY].get_int() = charges;
 
-    const string custom_name = strip_tag_prefix(s, "name:");
+    const string custom_name = strip_tag_prefix(s, "itemname:");
     if (!custom_name.empty())
         result.props[ITEM_NAME_KEY] = custom_name;
 

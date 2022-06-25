@@ -1301,13 +1301,13 @@ ENDMAP
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
 DEPTH:   D:4-8
-MONS:    gnoll ; halberd name:scythe tile:wpn_scythe wtile:scythe . robe, \
-         hobgoblin ; halberd name:scythe tile:wpn_scythe wtile:scythe . robe, \
-         orc ; halberd name:scythe tile:wpn_scythe wtile:scythe . robe
+MONS:    gnoll ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe, \
+         hobgoblin ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe, \
+         orc ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe
 SUBST:   n = 1:20 n:5
-KMONS:   n = Sigmund, gnoll ; halberd name:scythe tile:wpn_scythe wtile:scythe . robe / \
-             hobgoblin ; halberd name:scythe tile:wpn_scythe wtile:scythe . robe / \
-             orc ; halberd name:scythe tile:wpn_scythe wtile:scythe . robe
+KMONS:   n = Sigmund, gnoll ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe / \
+             hobgoblin ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe / \
+             orc ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe
 SHUFFLE: x+1 / x+1 / x+1 / y-5
 SUBST:   - = y , y = 5, 5 = 1..
 SUBST:   1 : 123444, 4 = 1223.., 1 = 1., 3 = 33.
@@ -2122,7 +2122,7 @@ NAME: sigmund_edmund_badplayer
 TAGS: no_item_gen no_monster_gen no_pool_fixup no_trap_gen transparent
 DEPTH: D:4-7
 KITEM: ( = flail / any armour
-KITEM: s = halberd name:scythe tile:wpn_scythe wtile:scythe / robe
+KITEM: s = halberd itemname:scythe tile:wpn_scythe wtile:scythe / robe
 KMONS: S = Sigmund
 KMONS: E = Edmund
 MONS: plant w:25 / bush w:25 / nothing w:50
