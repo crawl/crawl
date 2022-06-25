@@ -288,7 +288,9 @@ void Stash::update()
         if (si->base_type == OBJ_STAVES
             || si->flags & ISFLAG_COSMETIC_MASK
             || si->flags & ISFLAG_ARTEFACT_MASK)
+        {
             enchanted_item_on_square = true;
+        }
     }
 
     const bool pile_greed = static_cast<int>(items.size()) > 1
