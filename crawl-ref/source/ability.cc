@@ -2040,6 +2040,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_IGNIS_RISING_FLAME:
         return _can_rising_flame(quiet);
 
+    case ABIL_DIG:
+        return form_keeps_mutations();
+
     default:
         return true;
     }
