@@ -1329,7 +1329,8 @@ ORIENT: float
 MONS: fire dragon skeleton / quicksilver dragon skeleton w:5 \
       / golden dragon skeleton w:2
 MONS: flayed ghost w:5 / phantasmal warrior, skeletal warrior
-MONS: hell knight / necromancer w:2, bone dragon, reaper ; scythe ego:flaming
+MONS: hell knight / necromancer w:2, bone dragon, \ 
+      reaper ; halberd name:scythe tile:wpn_scythe wtile:scythe ego:flaming
 MONS: lich
 KMONS: A = fire dragon skeleton / quicksilver dragon skeleton w:5 \
            / golden dragon skeleton w:2

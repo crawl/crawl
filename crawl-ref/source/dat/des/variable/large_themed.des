@@ -2362,7 +2362,8 @@ MONS:   freezing wraith / death yak
 MONS:   ettin simulacrum / hydra simulacrum / golden dragon simulacrum \
         / caustic shrike simulacrum
 MONS:   bog body / ice dragon / white very ugly thing / frost giant \
-        / reaper ; scythe ego:freezing / blizzard demon
+        / reaper ; halberd name:scythe tile:wpn_scythe wtile:scythe ego:freezing \
+        / blizzard demon
 SUBST:  3 = 3G
 # Depths
 : else
@@ -2370,7 +2371,8 @@ MONS:   ice dragon / white very ugly thing / freezing wraith / simulacrum
 MONS:   ettin simulacrum / spriggan defender simulacrum \
         / golden dragon simulacrum / caustic shrike simulacrum
 MONS:   orange crystal statue
-MONS:   frost giant / reaper ; scythe ego:freezing / blizzard demon
+MONS:   frost giant / reaper ; halberd name:scythe tile:wpn_scythe wtile:scythe ego:freezing \
+        / blizzard demon
 MONS:   titan / wendigo / nargun
 MONS:   ice fiend / shard shrike band
 : end

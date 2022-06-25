@@ -3333,9 +3333,9 @@ MONS: emperor scorpion / w:8 green death / w:3 ghost moth
 : else
 MONS: skeletal warrior ; long sword ego:venom | broad axe ego:venom \
       | halberd ego:venom
-MONS: reaper ; scythe ego:venom / w:8 green death \
-      / ancient champion ; great mace ego:venom | battleaxe ego:venom \
-      | glaive ego:venom
+MONS: reaper ; halberd name:scythe tile:wpn_scythe wtile:scythe ego:venom / \
+      w:8 green death / ancient champion ; great mace ego:venom | \
+      battleaxe ego:venom | glaive ego:venom
 : end
 KMONS: A = lich
 KFEAT: A = stone_arch
@@ -3579,7 +3579,7 @@ DEPTH:   Depths:2-, !Depths:$
 ORIENT:  float
 # The dances of angels and devils, of blessed birds and antagonist serpents...
 # and perhaps the stinger plunging into the poor toro de lidia?
-MONS:    dancing weapon ; scythe ego:antimagic
+MONS:    dancing weapon ; glaive ego:antimagic
 MONS:    cherub, rakshasa, angel / daeva, balrug / blizzard demon
 MONS:    caustic shrike, shadow dragon
 KMONS:   8 = tengu reaver

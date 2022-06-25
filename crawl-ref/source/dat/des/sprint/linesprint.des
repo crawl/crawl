@@ -594,8 +594,6 @@ KITEM:    b = battleaxe plus:4 ego:none ident:all /\
     broad axe plus:3 good_item ident:all /\
     glaive plus:4 ego:none ident:all /\
     glaive plus:2 good_item ident:all /\
-    scythe plus:9 ego:none ident:all /\
-    scythe plus:6 good_item ident:all /\
     bardiche plus:2 ego:none ident:all /\
     bardiche plus:0 good_item ident:all /\
     demon trident plus:4 ego:none ident:all /\
@@ -808,8 +806,6 @@ KITEM:    b = battleaxe plus:5 good_item ident:all /\
     broad axe plus:5 randart ident:all w:5 /\
     glaive plus:5 good_item ident:all /\
     glaive plus:5 randart ident:all w:5 /\
-    scythe plus:11 good_item ident:all /\
-    scythe plus:11 randart ident:all w:5 /\
     bardiche plus:5 good_item ident:all /\
     bardiche plus:5 randart ident:all w:5 /\
     demon trident plus:5 good_item ident:all /\

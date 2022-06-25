@@ -859,7 +859,7 @@ MONS:   gnoll sergeant ; halberd | glaive | bardiche w:1 . \
 MONS:   gnoll shaman ; spear | trident | halberd . \
             ring mail | scale mail
 MONS:   hound, wolf
-KMONS:  R = grum, gnoll sergeant ; scythe ego:speed . plate armour
+KMONS:  R = grum, gnoll sergeant ; halberd . plate armour
 ITEM:   any good_item
 FTILE:  4't = floor_grass
 KFEAT:  ' = floor
