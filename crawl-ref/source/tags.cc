@@ -3444,6 +3444,15 @@ static void _tag_read_you(reader &th)
             you.mutation[MUT_NO_POTION_HEAL] = 2;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_RECOMPRESS_BADMUTS)
+    {
+        if (you.mutation[MUT_BERSERK] > 2)
+            you.mutation[MUT_BERSERK] = 2;
+
+        if (you.mutation[MUT_TELEPORT] > 2)
+            you.mutation[MUT_TELEPORT] = 2;
+    }
+
     // fully clean up any removed mutations
     for (auto m : get_removed_mutations())
         _clear_mutation(m);

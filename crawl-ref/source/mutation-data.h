@@ -295,20 +295,20 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_TELEPORT, 3, 3, mutflag::bad, false,
+{ MUT_TELEPORT, 3, 2, mutflag::bad, false,
   "teleportitis",
 
   {"You are occasionally teleported next to monsters.",
-   "You are sometimes teleported next to monsters.",
-   "You are often teleported next to monsters."},
+   "You are often teleported next to monsters.",
+   ""},
 
   {"You feel weirdly uncertain.",
    "You feel even more weirdly uncertain.",
-   "You feel even more weirdly uncertain."},
+   ""},
 
   {"You feel stable.",
    "You feel stable.",
-   "You feel stable."},
+   ""},
 },
 
 { MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
@@ -504,20 +504,20 @@ static const mutation_def mut_data[] =
     TILEG_MUT_CLARITY
 },
 
-{ MUT_BERSERK, 7, 3, mutflag::bad, false,
+{ MUT_BERSERK, 7, 2, mutflag::bad, false,
   "berserk",
 
-  {"You tend to lose your temper in combat.",
-   "You often lose your temper in combat.",
-   "You have an uncontrollable temper."},
+  {"You sometimes lose your temper in combat.",
+   "You have an uncontrollable temper.",
+   ""},
 
   {"You feel a little pissed off.",
-   "You feel angry.",
-   "You feel extremely angry at everything!"},
+   "You feel extremely angry at everything!",
+   ""},
 
   {"You feel a little more calm.",
    "You feel a little less angry.",
-   "You feel a little less angry."},
+   ""},
 },
 
 { MUT_DETERIORATION, 10, 2, mutflag::bad | mutflag::xom, false,
