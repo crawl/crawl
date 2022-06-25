@@ -46,8 +46,8 @@ static const mutation_def mut_data[] =
 { MUT_STRONG, 7, 2, mutflag::good, false,
   "strong",
 
-  {"Your muscles are strong. (Str +4, Int/Dex-1)",
-   "Your muscles are very strong. (Str +8, Int/Dex-2)", ""},
+  {"Your muscles are strong. (Str +4, Int/Dex -1)",
+   "Your muscles are very strong. (Str +8, Int/Dex -2)", ""},
   {"", "", ""},
   {"", "", ""},
 },
@@ -55,8 +55,8 @@ static const mutation_def mut_data[] =
 { MUT_CLEVER, 7, 2, mutflag::good, false,
   "clever",
 
-  {"Your mind is acute. (Int +4, Str/Dex-1)",
-   "Your mind is very acute. (Int +8, Str/Dex-2)", ""},
+  {"Your mind is acute. (Int +4, Str/Dex -1)",
+   "Your mind is very acute. (Int +8, Str/Dex -2)", ""},
   {"", "", ""},
   {"", "", ""},
 },
@@ -64,8 +64,8 @@ static const mutation_def mut_data[] =
 { MUT_AGILE, 7, 2, mutflag::good, false,
   "agile",
 
-  {"You are agile. (Dex +4, Int/Str-1)",
-   "You are very agile. (Dex +8, Int/Str-2)", ""},
+  {"You are agile. (Dex +4, Str/Int -1)",
+   "You are very agile. (Dex +8, Str/Int -2)", ""},
   {"", "", ""},
   {"", "", ""},
 },
