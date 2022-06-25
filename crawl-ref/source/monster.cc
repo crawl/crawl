@@ -1267,11 +1267,6 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         weapon_type wtype = (weapon.base_type == OBJ_WEAPONS) ?
             (weapon_type)weapon.sub_type : NUM_WEAPONS;
 
-        // We might allow Sigmund to pick up a better scythe if he finds
-        // one...
-        if (mons->type == MONS_SIGMUND)
-            return wtype == WPN_SCYTHE;
-
         // Crazy Yiuf's got MONUSE_STARTING_EQUIPMENT right now, but
         // in case that ever changes we don't want him to switch away
         // from his quarterstaff of chaos.
@@ -1433,6 +1428,9 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
         {
             if (is_range_weapon(*weap))
                 continue;
+
+            if (type == MONS_SIGMUND)
+                continue; // The scythe is a classic. Stick with it.
 
             // Don't swap from a signature weapon to a non-signature one.
             if (!_is_signature_weapon(this, item)

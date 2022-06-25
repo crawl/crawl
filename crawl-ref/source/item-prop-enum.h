@@ -647,7 +647,9 @@ enum weapon_type
     WPN_TRIPLE_SWORD,
 
     WPN_DEMON_TRIDENT,
+#if TAG_MAJOR_VERSION == 34
     WPN_SCYTHE,
+#endif
 
     WPN_STAFF,          // Just used for the weapon stats for magical staves.
     WPN_QUARTERSTAFF,
