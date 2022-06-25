@@ -122,6 +122,7 @@ simulacrum_naga MONS_SIMULACRUM_NAGA
 simulacrum_snake MONS_SIMULACRUM_SNAKE
 simulacrum_lizard MONS_SIMULACRUM_LIZARD
 simulacrum_spider MONS_SIMULACRUM_SPIDER
+simulacrum_slime MONS_SIMULACRUM_SLIME
 simulacrum_dragon MONS_SIMULACRUM_DRAGON
 simulacrum_kraken MONS_SIMULACRUM_KRAKEN
 simulacrum_drake MONS_SIMULACRUM_DRAKE
