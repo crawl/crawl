@@ -4189,6 +4189,49 @@ cccc-----------ccc
       ccccccc    
 ENDMAP
 
+# 6, 8, 10, or 12 gods.
+NAME:   hellmonk_temple_flake
+TAGS:   temple_altars_6 temple_altars_8 temple_altars_10 temple_altars_12
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(_G, 12)
+: if altar_count == "6" then
+SUBST:  EF = B, D = .
+: elseif altar_count == "8" then
+SUBST:  DF = B, E = .
+: elseif altar_count == "10" then
+SUBST:  DE = B, F = .
+: else
+SUBST:  DEF = B
+: end
+TILE:   c = wall_icy_stone
+FTILE:  .B{ = floor_ice
+MAP
+          ccc                                      
+         ccDcc                                     
+    cccc c...c cccc                                
+    cE.c cc.cc c.Ec                                
+ccccc..cccc.c cc..ccccc                            
+cD.cccc.ccc.ccc.cccc.Dc                            
+c.c..ccc.cc.cc.ccc..c.c                            
+ccccc..cc.c.c.cc..ccccc                            
+    ccc.........ccc                                 
+  ccccccc.....ccccccc                              
+ cc.cccc.......cccc.cc                             
+ cF........{........Fc                             
+ cc.cccc.......cccc.cc                             
+  ccccccc.....ccccccc                              
+ cccccc...c.c...ccc                                
+ccccc..cc.c.c.cc..ccccc                            
+c.c..ccc.cc.cc.ccc..c.c                            
+cD.cccc.ccc.ccc.cccc.Dc                            
+ccccc..cccc.cccc..ccccc                            
+    cE.c cc.cc c.Ec                                
+    cccc c...c cccc                                
+         ccDcc                                     
+          ccc     
+ENDMAP          
+
 #####################################################################
 # <<7>> Rare temples, picked outside of the usual size roll framework
 # Non-temple gods, Temples not suitable for selection within the usual
