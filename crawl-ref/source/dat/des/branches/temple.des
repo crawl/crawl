@@ -4278,7 +4278,50 @@ c.....cccccc.......cccc
 cc...cc    ccE...Ecc                                   
  ccccc      cc.F.cc                                    
              ccccc         
-ENDMAP             
+ENDMAP 
+
+# 6, 7, 8, 12, or 15 gods.
+NAME:   hellmonk_temple_two_chambers
+TAGS:   temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_12
+TAGS:   temple_altars_15
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  ;DK = floor_limestone
+FTILE:  -FJ = floor_marble
+: local altar_count = get_altar_count(_G, 15)
+: if altar_count == "6" then
+SUBST:  D = B, F = K
+: elseif altar_count == "7" then
+SUBST:  DK = B, F = K
+: elseif altar_count == "8" then
+SUBST:  FJ = B, D = J
+: elseif altar_count == "12" then
+SUBST:  DF = B
+: else
+SUBST:  DFJK = B
+: end
+SUBST:  J:TG, K:tVGA
+MAP
+  ccccccc                                    
+ ccD;;;Dcc                                   
+cc;;;;;;;cc                                  
+c;;;;;;;;;c                                  
+cD;;;K;;;Dc                                  
+c;;;;;;;;;c                                  
+cc;;;;;;;cc                                  
+ ccD;;;Dcc                                   
+  ccc;ccc                                    
+    c{c                                      
+  ccc-ccc                                    
+ ccF---Fcc                                   
+cc-------cc                                  
+c---------c                                  
+cF--J-J--Fc                                  
+c---------c                                  
+cc-------cc                                  
+ ccF---Fcc                                   
+  ccccccc  
+ENDMAP  
 
 #####################################################################
 # <<7>> Rare temples, picked outside of the usual size roll framework
