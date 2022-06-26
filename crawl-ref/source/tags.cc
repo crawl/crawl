@@ -2958,8 +2958,13 @@ static void _tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_MERGE_RANGED)
     {
-        you.skill_points[SK_RANGED_WEAPONS] += you.skill_points[SK_CROSSBOWS]
-                                             + you.skill_points[SK_SLINGS];
+        // should be a check for MUT_DISTRIBUTED_SKILL_TRAINING but
+        // I don't remember if muts have been unmarshalled here.
+        if (you.species != SP_GNOLL)
+        {
+            you.skill_points[SK_RANGED_WEAPONS] += you.skill_points[SK_CROSSBOWS]
+                                                 + you.skill_points[SK_SLINGS];
+        }
         you.train[SK_RANGED_WEAPONS] = max(you.train[SK_RANGED_WEAPONS],
                                            max(you.train[SK_CROSSBOWS],
                                                you.train[SK_SLINGS]));
