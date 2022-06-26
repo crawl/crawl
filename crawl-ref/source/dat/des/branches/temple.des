@@ -4171,22 +4171,22 @@ MAP
       ccccccc
     ccc--J--ccc
    cc---------cc
-cccc-----------ccc                                      
-c-------nnnnn----cc                                      
-c--J---nnD.DnnJ---cc                                      
-c-----nn.....nn----cc                                      
-cnnnnnnE.....Enn----cc                                      
-cT.T.T.........nn----cc                                      
-c.{.......F....Hn---J-c                                      
-cT.T.T.........nn----cc                                     
-cnnnnnnE.....Enn----cc                                      
-c-----nn.....nnJ---cc                                      
-c--J---nnD.Dnn----cc                                     
-c-------nnnnn----cc                                      
-cccc-----------ccc     
-   cc---------cc  
+cccc-----------ccc
+c-------nnnnn----cc
+c--J---nnD.DnnJ---cc
+c-----nn.....nn----cc
+cnnnnnnE.....Enn----cc
+cT.T.T.........nn----cc
+c.{.......F....Hn---J-c
+cT.T.T.........nn----cc
+cnnnnnnE.....Enn----cc
+c-----nn.....nnJ---cc
+c--J---nnD.Dnn----cc
+c-------nnnnn----cc
+cccc-----------ccc
+   cc---------cc
     ccc--J--ccc
-      ccccccc    
+      ccccccc
 ENDMAP
 
 # 6, 8, 10, or 12 gods.
@@ -4207,30 +4207,30 @@ SUBST:  DEF = B
 TILE:   c = wall_icy_stone
 FTILE:  .B{ = floor_ice
 MAP
-          ccc                                      
-         ccDcc                                     
-    cccc c...c cccc                                
-    cE.c cc.cc c.Ec                                
-ccccc..cccc.c cc..ccccc                            
-cD.cccc.ccc.ccc.cccc.Dc                            
-c.c..ccc.cc.cc.ccc..c.c                            
-ccccc..cc.c.c.cc..ccccc                            
-    ccc.........ccc                                 
-  ccccccc.....ccccccc                              
- cc.cccc.......cccc.cc                             
- cF........{........Fc                             
- cc.cccc.......cccc.cc                             
-  ccccccc.....ccccccc                              
- cccccc...c.c...ccc                                
-ccccc..cc.c.c.cc..ccccc                            
-c.c..ccc.cc.cc.ccc..c.c                            
-cD.cccc.ccc.ccc.cccc.Dc                            
-ccccc..cccc.cccc..ccccc                            
-    cE.c cc.cc c.Ec                                
-    cccc c...c cccc                                
-         ccDcc                                     
-          ccc     
-ENDMAP          
+          ccc
+         ccDcc
+    cccc c...c cccc
+    cE.c cc.cc c.Ec
+ccccc..cccc.c cc..ccccc
+cD.cccc.ccc.ccc.cccc.Dc
+c.c..ccc.cc.cc.ccc..c.c
+ccccc..cc.c.c.cc..ccccc
+    ccc.........ccc
+  ccccccc.....ccccccc
+ cc.cccc.......cccc.cc
+ cF........{........Fc
+ cc.cccc.......cccc.cc
+  ccccccc.....ccccccc
+ cccccc...c.c...ccc
+ccccc..cc.c.c.cc..ccccc
+c.c..ccc.cc.cc.ccc..c.c
+cD.cccc.ccc.ccc.cccc.Dc
+ccccc..cccc.cccc..ccccc
+    cE.c cc.cc c.Ec
+    cccc c...c cccc
+         ccDcc
+          ccc
+ENDMAP
 
 # 6 to 10 gods.
 NAME:   hellmonk_temple_beads
@@ -4243,42 +4243,42 @@ SUBST:  -:c........
 : nsubst ("D = " .. altar_count .. ":B / *:tGTbbVn")
 SUBST:  E:GG., F:G..
 MAP
- ccccc    ccccc    ccccc                               
-cc...cc  cc...cc  cc...cc                              
-c.....cccc.....cccc.....c                              
-c..D........D........D..c                              
-c.....cccc.....cccc.....c                              
-cc...cccccc...cccccc...cc                              
- cc.ccccccccccccccccc.cc                               
-  c.ccccccccccccccccc.c                                
-  c.ccccccccccccccccc.c                                
- cc.ccccccccccccccccc.cc                               
-cc...cccccc...cccccc...cc                              
-c.....cccc.....cccc.....c                              
-c..D........D..cccc..D..c                              
-c.....cccc.....cccc.....c                              
-cc...cc  cc...cccccc...cc                              
- ccccc    cc.cccccccc.cc                               
-           c.cccccccc.c                                
-           c.cccccccc.c                                
- ccccc    cc.cccccccc.cc                               
-cc...cc  cc...cccccc...cc                              
-c.....cccc.....cccc.....c                              
-c..D........D..cccc..D..c                              
-c.....cccc.....cccc.....c                              
-cc...cccccc...cccccc...cc                              
- cc.ccccccccccccccccc.cc                               
-  c.ccccccccccccccccc-c                                
-  c.ccccccccccccccccc-c                                
- cc.cccccccccc.F.cccc-c                                
-cc...ccccccccE...Eccc-c                                
-c.....cccccc.......cc-c                                
-c..D...........{....--c                                
-c.....cccccc.......cccc                                
-cc...cc    ccE...Ecc                                   
- ccccc      cc.F.cc                                    
-             ccccc         
-ENDMAP 
+ ccccc    ccccc    ccccc
+cc...cc  cc...cc  cc...cc
+c.....cccc.....cccc.....c
+c..D........D........D..c
+c.....cccc.....cccc.....c
+cc...cccccc...cccccc...cc
+ cc.ccccccccccccccccc.cc
+  c.ccccccccccccccccc.c
+  c.ccccccccccccccccc.c
+ cc.ccccccccccccccccc.cc
+cc...cccccc...cccccc...cc
+c.....cccc.....cccc.....c
+c..D........D..cccc..D..c
+c.....cccc.....cccc.....c
+cc...cc  cc...cccccc...cc
+ ccccc    cc.cccccccc.cc
+           c.cccccccc.c
+           c.cccccccc.c
+ ccccc    cc.cccccccc.cc
+cc...cc  cc...cccccc...cc
+c.....cccc.....cccc.....c
+c..D........D..cccc..D..c
+c.....cccc.....cccc.....c
+cc...cccccc...cccccc...cc
+ cc.ccccccccccccccccc.cc
+  c.ccccccccccccccccc-c
+  c.ccccccccccccccccc-c
+ cc.cccccccccc.F.cccc-c
+cc...ccccccccE...Eccc-c
+c.....cccccc.......cc-c
+c..D...........{....--c
+c.....cccccc.......cccc
+cc...cc    ccE...Ecc
+ ccccc      cc.F.cc
+             ccccc
+ENDMAP
 
 # 6, 7, 8, 12, or 15 gods.
 NAME:   hellmonk_temple_two_chambers
@@ -4302,26 +4302,26 @@ SUBST:  DFJK = B
 : end
 SUBST:  J:TG, K:tVGA
 MAP
-  ccccccc                                    
- ccD;;;Dcc                                   
-cc;;;;;;;cc                                  
-c;;;;;;;;;c                                  
-cD;;;K;;;Dc                                  
-c;;;;;;;;;c                                  
-cc;;;;;;;cc                                  
- ccD;;;Dcc                                   
-  ccc;ccc                                    
-    c{c                                      
-  ccc-ccc                                    
- ccF---Fcc                                   
-cc-------cc                                  
-c---------c                                  
-cF--J-J--Fc                                  
-c---------c                                  
-cc-------cc                                  
- ccF---Fcc                                   
-  ccccccc  
-ENDMAP  
+  ccccccc
+ ccD;;;Dcc
+cc;;;;;;;cc
+c;;;;;;;;;c
+cD;;;K;;;Dc
+c;;;;;;;;;c
+cc;;;;;;;cc
+ ccD;;;Dcc
+  ccc;ccc
+    c{c
+  ccc-ccc
+ ccF---Fcc
+cc-------cc
+c---------c
+cF--J-J--Fc
+c---------c
+cc-------cc
+ ccF---Fcc
+  ccccccc
+ENDMAP
 
 #####################################################################
 # <<7>> Rare temples, picked outside of the usual size roll framework
