@@ -4148,6 +4148,47 @@ cccc'''n...n---cccc
       ccccccc
 ENDMAP
 
+# 6, 8, 9, or 10 gods.
+NAME:   hellmonk_temple_rainy
+TAGS:   temple_altars_6 temple_altars_8 temple_altars_9 temple_altars_10
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(_G, 10)
+: if altar_count == "6" then
+SUBST:  DFH = B, E = T
+: elseif altar_count == "8" then
+SUBST:  DE = B, FH = T
+: elseif altar_count == "9" then
+SUBST:  DEH = B, F = T
+:else
+SUBST:  DEFH = B
+: end
+MARKER: J = lua:fog_machine { cloud_type = "rain", \
+             pow_min = 30, pow_max = 50, delay = 5, start_clouds = 3, \
+             size = 4, walk_dist = 2, spread_rate = 100, excl_rad = 0 }
+KPROP:  J- = no_tele_into
+MAP
+      ccccccc
+    ccc--J--ccc
+   cc---------cc
+cccc-----------ccc                                      
+c-------nnnnn----cc                                      
+c--J---nnD.DnnJ---cc                                      
+c-----nn.....nn----cc                                      
+cnnnnnnE.....Enn----cc                                      
+cT.T.T.........nn----cc                                      
+c.{.......F....Hn---J-c                                      
+cT.T.T.........nn----cc                                     
+cnnnnnnE.....Enn----cc                                      
+c-----nn.....nnJ---cc                                      
+c--J---nnD.Dnn----cc                                     
+c-------nnnnn----cc                                      
+cccc-----------ccc     
+   cc---------cc  
+    ccc--J--ccc
+      ccccccc    
+ENDMAP
+
 #####################################################################
 # <<7>> Rare temples, picked outside of the usual size roll framework
 # Non-temple gods, Temples not suitable for selection within the usual
