@@ -2974,7 +2974,8 @@ static void _tag_read_you(reader &th)
         you.training_targets[SK_RANGED_WEAPONS] = max(you.training_targets[SK_RANGED_WEAPONS],
                                                       max(you.training_targets[SK_CROSSBOWS],
                                                           you.training_targets[SK_SLINGS]));
-        fixup_skills(); // XXX scary!
+        // We'll call fixup_skills() later, but we can't yet because
+        // we need to get our mutations set up properly first.
     }
 #endif
 
@@ -3470,6 +3471,9 @@ static void _tag_read_you(reader &th)
 
     if (th.getMinorVersion() < TAG_MINOR_EVOLUTION_XP)
         set_evolution_mut_xp(you.has_mutation(MUT_DEVOLUTION));
+
+    if (th.getMinorVersion() < TAG_MINOR_MERGE_RANGED)
+        fixup_skills(); // We can only call this once mutations are loaded.
 #endif
 
     count = unmarshallUByte(th);
