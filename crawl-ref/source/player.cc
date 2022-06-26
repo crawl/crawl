@@ -6783,6 +6783,7 @@ void player::paralyse(const actor *who, int str, string source)
 
     paralysis = min(str, 13) * BASELINE_DELAY;
 
+    stop_delay(true, true);
     stop_directly_constricting_all(false);
     end_wait_spells();
     redraw_armour_class = true;
@@ -6837,6 +6838,7 @@ bool player::fully_petrify(bool /*quiet*/)
     mpr("You have turned to stone.");
     _pruneify();
 
+    stop_delay(true, true);
     end_wait_spells();
 
     return true;
@@ -7343,7 +7345,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
 
     stop_directly_constricting_all(false);
     end_wait_spells();
-    stop_delay();
+    stop_delay(true, true);
     flash_view(UA_MONSTER, DARKGREY);
 
     // As above, do this after redraw.

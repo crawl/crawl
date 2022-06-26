@@ -118,7 +118,7 @@ static void _clear_pending_delays(size_t after_index = 1)
     }
 }
 
-bool MemoriseDelay::try_interrupt()
+bool MemoriseDelay::try_interrupt(bool /*force*/)
 {
     // Losing work here is okay... having to start from
     // scratch is a reasonable behaviour. -- bwr
@@ -126,7 +126,7 @@ bool MemoriseDelay::try_interrupt()
     return true;
 }
 
-bool MultidropDelay::try_interrupt()
+bool MultidropDelay::try_interrupt(bool /*force*/)
 {
     // No work lost
     if (!items.empty())
@@ -134,7 +134,7 @@ bool MultidropDelay::try_interrupt()
     return true;
 }
 
-bool BaseRunDelay::try_interrupt()
+bool BaseRunDelay::try_interrupt(bool /*force*/)
 {
     // Keep things consistent, otherwise disturbing phenomena can occur.
     if (you.running)
@@ -145,7 +145,7 @@ bool BaseRunDelay::try_interrupt()
     return true;
 }
 
-bool MacroDelay::try_interrupt()
+bool MacroDelay::try_interrupt(bool /*force*/)
 {
     // Always interruptible.
     return true;
@@ -153,51 +153,69 @@ bool MacroDelay::try_interrupt()
     // to the Lua function, it can't do damage.
 }
 
-bool EquipOnDelay::try_interrupt()
+bool EquipOnDelay::try_interrupt(bool force)
 {
-    if (duration > 1 && !was_prompted)
+    bool interrupt = false;
+
+    if (force)
+        interrupt = true;
+    else if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep equipping yourself?", false, 0, false))
         {
-            mprf("You stop putting on your %s.", _eq_category(equip).c_str());
-            return true;
+            interrupt = true;
         }
         else
             was_prompted = true;
     }
+
+    if (interrupt)
+    {
+        mprf("You stop putting on your %s.", _eq_category(equip).c_str());
+        return true;
+    }
     return false;
 }
 
-bool EquipOffDelay::try_interrupt()
+bool EquipOffDelay::try_interrupt(bool force)
 {
-    if (duration > 1 && !was_prompted)
+    bool interrupt = false;
+
+    if (force)
+        interrupt = true;
+    else if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep disrobing?", false, 0, false))
         {
-            mprf("You stop removing your %s.", _eq_category(equip).c_str());
-            return true;
+            interrupt = true;
         }
         else
             was_prompted = true;
     }
+
+    if (interrupt)
+    {
+        mprf("You stop removing your %s.", _eq_category(equip).c_str());
+        return true;
+    }
     return false;
 }
 
-bool AscendingStairsDelay::try_interrupt()
+bool AscendingStairsDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop ascending the stairs.");
     return true;  // short... and probably what people want
 }
 
-bool DescendingStairsDelay::try_interrupt()
+bool DescendingStairsDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop descending the stairs.");
     return true;  // short... and probably what people want
 }
 
-bool PasswallDelay::try_interrupt()
+bool PasswallDelay::try_interrupt(bool /*force*/)
 {
     // finish() can trigger interrupts, avoid a double message
     if (interrupt_block::blocked())
@@ -206,45 +224,63 @@ bool PasswallDelay::try_interrupt()
     return true;
 }
 
-bool ShaftSelfDelay::try_interrupt()
+bool ShaftSelfDelay::try_interrupt(bool /*force*/)
 {
     mpr("You stop digging.");
     return true;
 }
 
-bool ExsanguinateDelay::try_interrupt()
+bool ExsanguinateDelay::try_interrupt(bool force)
 {
-    if (duration > 1 && !was_prompted)
+    bool interrupt = false;
+
+    if (force)
+        interrupt = true;
+    else if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Keep bloodletting?", false, 0, false))
         {
-            mpr("You stop emptying yourself of blood.");
-            return true;
+            interrupt = true;
         }
         else
             was_prompted = true;
     }
+
+    if (interrupt)
+    {
+        mpr("You stop emptying yourself of blood.");
+        return true;
+    }
     return false;
 }
 
-bool RevivifyDelay::try_interrupt()
+bool RevivifyDelay::try_interrupt(bool force)
 {
-    if (duration > 1 && !was_prompted)
+    bool interrupt = false;
+
+    if (force)
+        interrupt = true;
+    else if (duration > 1 && !was_prompted)
     {
         if (!crawl_state.disables[DIS_CONFIRMATIONS]
             && !yesno("Continue your ritual?", false, 0, false))
         {
-            mpr("You stop revivifying.");
-            return true;
+            interrupt = true;
         }
         else
             was_prompted = true;
     }
+
+    if (interrupt)
+    {
+        mpr("You stop revivifying.");
+        return true;
+    }
     return false;
 }
 
-void stop_delay(bool stop_relocations)
+void stop_delay(bool stop_relocations, bool force)
 {
     if (you.delay_queue.empty())
         return;
@@ -266,7 +302,7 @@ void stop_delay(bool stop_relocations)
     _clear_pending_delays();
 
     if ((!delay->is_relocation() || stop_relocations)
-        && delay->try_interrupt())
+        && delay->try_interrupt(force))
     {
         _pop_delay();
     }
