@@ -2037,6 +2037,15 @@ meliai
  boundless earth.”
     -Hesiod, _Theogony_, 182-187, trans. H.G. Evelyn-White. 1920
 %%%%
+Mephitic Cloud spell
+
+"For the past few years Asiatic cholera had shown a strong tendency to spread.
+ Its source was the hot, moist swamps of the delta of the Ganges, where it bred
+ in the mephitic air of that primeval island-jungle, among whose bamboo thickets
+ the tiger crouches, where life of every sort flourishes in rankest abundance,
+ and only man avoids the spot."
+    -Thomas Mann, _Diaries_.
+%%%%
 merfolk
 
 “Again at length my thought reviving came,
@@ -3631,7 +3640,18 @@ wand of acid
 %%%%
 wand of charming
 
-<Charm spell>
+"But it isn't charm as veneer, as facilitating ooze or unguent,
+but charm that identifies and goes out to meet itself in others
+wherever it may be met with."
+    -Michael Hofmann, "Hell, he'll be be frozen stiff!"
+
+“He held up his hand, and they all stopped, and I thought he seemed to be
+ saying, ‘All these lives will I give you, ay, and many more and greater,
+ through countless ages, if you will fall down and worship me!’ And then a red
+ cloud, like the colour of blood, seemed to close over my eyes, and before I
+ knew what I was doing, I found myself opening the sash and saying to Him,
+ ‘Come in, Lord and Master!’”
+    -Bram Stoker, _Dracula_. 1897.
 %%%%
 wand of digging
 
