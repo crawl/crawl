@@ -10,13 +10,17 @@
 // include more conditional includes here.
 #ifdef USE_SDL
 # ifdef USE_GLES
-#  ifdef __ANDROID__
+#  if defined(__ANDROID__) || defined(DCSS_IOS)
 #   include <SDL.h>
 #  else
 #   include <SDL2/SDL.h>
 #   include <SDL_gles.h>
 #  endif
-#  include <GLES/gl.h>
+#  if defined(DCSS_IOS)
+#   include <OpenGLES/ES1/gl.h>
+#  else
+#   include <GLES/gl.h>
+#  endif
 # else
 #  include <SDL_opengl.h>
 #  if defined(__MACOSX__)
@@ -66,7 +70,7 @@ namespace opengl
             return "GL_INVALID_VALUE";
         case GL_INVALID_OPERATION:
             return "GL_INVALID_OPERATION";
-#ifndef __ANDROID__
+#if !defined(__ANDROID__) && !defined(DCSS_IOS)
         case GL_INVALID_FRAMEBUFFER_OPERATION:
             return "GL_INVALID_FRAMEBUFFER_OPERATION";
 #endif
@@ -325,7 +329,7 @@ void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz,
 
     // For ease, vertex positions are pixel positions.
 #ifdef USE_GLES
-# ifdef __ANDROID__
+#if defined(__ANDROID__) || defined(DCSS_IOS)
     glOrthof(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
 # else
     glOrthox(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
@@ -365,7 +369,7 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
                                    int xoffset, int yoffset)
 {
     // Assumptions...
-#ifdef __ANDROID__
+#if defined(__ANDROID__) || defined(DCSS_IOS)
     const GLenum bpp = GL_RGBA;
 #else
     const unsigned int bpp = 4;
@@ -431,7 +435,7 @@ void OGLStateManager::reset_view_for_redraw()
 
 bool OGLStateManager::glDebug(const char* msg) const
 {
-#if defined(__ANDROID__) || defined(DEBUG_DIAGNOSTICS)
+#if defined(__ANDROID__) || defined(DEBUG_DIAGNOSTICS) || defined(DCSS_IOS)
     int e = glGetError();
     if (e > 0)
     {
@@ -624,7 +628,7 @@ void OGLShapeBuffer::clear()
 
 bool OGLShapeBuffer::glDebug(const char* msg) const
 {
-#if defined(__ANDROID__) || defined(DEBUG_DIAGNOSTICS)
+#if defined(__ANDROID__) || defined(DEBUG_DIAGNOSTICS) || defined(DCSS_IOS)
     int e = glGetError();
     if (e > 0)
     {

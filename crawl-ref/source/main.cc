@@ -234,7 +234,11 @@ static void _startup_asserts()
 __attribute__((externally_visible))
 # endif
 #endif
+#if defined(DCSS_IOS)
+int DCSS_main(int argc, char *argv[])
+#else
 int main(int argc, char *argv[])
+#endif
 {
 #ifdef DGAMELAUNCH
     // avoid commas instead of dots, etc, on CDO
@@ -2257,8 +2261,10 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_REVEAL_OPTIONS:
         // TODO: implement for other OSs
         // TODO: add a way of triggering this from the main menu
+#if !defined(DCSS_IOS)
         system(make_stringf("/usr/bin/open -R '%s'",
                                             Options.filename.c_str()).c_str());
+#endif
         break;
 #endif
     case CMD_SHOW_CHARACTER_DUMP:

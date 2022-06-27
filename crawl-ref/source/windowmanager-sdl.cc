@@ -13,7 +13,7 @@
 # include <android/log.h>
 # include <SDL_mixer.h>
 #else
-# ifdef TARGET_COMPILER_VC
+# if defined(TARGET_COMPILER_VC) || defined(DCSS_IOS)
 #  include <SDL.h>
 # else
 #  include <SDL2/SDL.h>
@@ -488,7 +488,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
     _desktop_width = display_mode.w;
     _desktop_height = display_mode.h;
 
-#ifdef __ANDROID__
+#if defined(__ANDROID__) || defined(DCSS_IOS)
     SDL_StartTextInput();
     Options.game_scale = min(_desktop_width, _desktop_height)/1080+1;
     // Request OpenGL ES 1.0 context

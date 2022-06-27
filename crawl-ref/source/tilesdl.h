@@ -218,6 +218,10 @@ public:
     int to_lines(int num_tiles, int tile_height = TILE_Y);
 
     int handle_mouse(wm_mouse_event &event);
+    
+    void unloadTextures( void );
+    void reloadTextures( void );
+    void setInBackground( bool );
 
     void grid_to_screen(const coord_def &gc, coord_def *pc) const;
 
@@ -344,6 +348,7 @@ protected:
         mouse_mode mode;
     };
     cursor_loc m_cur_loc;
+    bool m_inBackground;
 };
 
 // Main interface for tiles functions

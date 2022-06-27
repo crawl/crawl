@@ -71,6 +71,10 @@
 // Another option might be to not include this at all. However, it can get
 // indirectly included by SDL headers, so it's better to handle it up front.
 #include <TargetConditionals.h>
+#if defined(USE_SDL)
+// this is to prevent breaking SDL because we had undefined TARGET_CPU_ARM
+#include <SDL.h>
+#endif
 #if defined(TARGET_OS_WINDOWS) && !TARGET_OS_WINDOWS
 #  undef TARGET_OS_WINDOWS
 #endif
