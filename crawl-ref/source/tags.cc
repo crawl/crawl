@@ -5523,6 +5523,11 @@ void unmarshallItem(reader &th, item_def &item)
     if (is_unrandom_artefact(item))
         setup_unrandart(item, false);
 
+#if TAG_MAJOR_VERSION == 34
+    if (item.is_type(OBJ_WEAPONS, WPN_FUSTIBALUS))
+        item.sub_type = WPN_HAND_CROSSBOW;
+#endif
+
     bind_item_tile(item);
 }
 
