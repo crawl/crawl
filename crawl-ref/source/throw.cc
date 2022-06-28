@@ -610,8 +610,12 @@ static void _throw_noise(actor* act, const item_def &ammo)
 // refactored to be a method of quiver::ammo_action.
 void throw_it(quiver::action &a)
 {
-    const int ammo_slot = a.get_item();
-    item_def *launcher = a.get_launcher();
+    const item_def *launcher = a.get_launcher();
+    // launchers have get_item set to the launcher. But, if we are tossing
+    // the launcher itself, get_launcher() will be nullptr.
+    // XX can this api be simplified now that projectiles and launchers are
+    // completely distinct?
+    const int ammo_slot = launcher ? -1 : a.get_item();
 
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
@@ -661,11 +665,9 @@ void throw_it(quiver::action &a)
 
     item_def fake_proj;
     item_def& thrown = fake_proj;
-    if (ammo_slot == -1)
-    {
-        ASSERT(launcher);
+    if (launcher)
         populate_fake_projectile(*launcher, fake_proj);
-    } else
+    else
         thrown = you.inv[ammo_slot];
     ASSERT(thrown.defined());
 
