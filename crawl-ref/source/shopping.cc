@@ -563,26 +563,23 @@ unsigned int item_value(item_def item, bool ident)
             // Variable-strength rings.
             if (jewellery_type_has_plusses(item.sub_type))
             {
-                // Formula: price = kn(n+1) / 2, where k depends on the subtype,
+                // Formula: price = kn(n+1) / 2, where k is 40,
                 // n is the power. (The base variable is equal to 2n.)
                 int base = 0;
-                int coefficient = 0;
-                if (item.sub_type == RING_SLAYING)
-                    base = 3 * item.plus;
-                else
-                    base = 2 * item.plus;
 
                 switch (item.sub_type)
                 {
                 case RING_SLAYING:
+                    base = 3 * item.plus;
+                    break;
                 case RING_PROTECTION:
                 case RING_EVASION:
-                    coefficient = 40;
+                    base = 2 * item.plus;
                     break;
                 case RING_STRENGTH:
                 case RING_DEXTERITY:
                 case RING_INTELLIGENCE:
-                    coefficient = 30;
+                    base = item.plus * 4 / 3;
                     break;
                 default:
                     break;
@@ -591,7 +588,7 @@ unsigned int item_value(item_def item, bool ident)
                 if (base <= 0)
                     valued += 25 * base;
                 else
-                    valued += (coefficient * base * (base + 1)) / 8;
+                    valued += 5 * base * (base + 1);
             }
             else
             {
