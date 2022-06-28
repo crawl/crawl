@@ -149,14 +149,13 @@ bool player::floundering() const
  */
 bool player::extra_balanced() const
 {
-    const dungeon_feature_type grid = env.grid(pos());
     // trees are balanced everywhere they can inhabit.
     return form == transformation::tree
-        // Species or forms with large bodies (e.g. nagas) are ok in shallow
-        // water. (N.b. all large form sizes can swim anyways, and also
-        // giant sized creatures can automatically swim, so the form part is a
-        // bit academic at the moment.)
-        || grid == DNGN_SHALLOW_WATER && body_size(PSIZE_BODY) >= SIZE_LARGE;
+        // Species or forms with large bodies (e.g. nagas) are ok in water.
+        // (N.b. all large form sizes can swim anyways, and also giant sized
+        // creatures can automatically swim, so the form part is a bit
+        // academic at the moment.)
+        || body_size(PSIZE_BODY) >= SIZE_LARGE;
 }
 
 int player::get_hit_dice() const

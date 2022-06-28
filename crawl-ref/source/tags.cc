@@ -2974,7 +2974,8 @@ static void _tag_read_you(reader &th)
         you.training_targets[SK_RANGED_WEAPONS] = max(you.training_targets[SK_RANGED_WEAPONS],
                                                       max(you.training_targets[SK_CROSSBOWS],
                                                           you.training_targets[SK_SLINGS]));
-        fixup_skills(); // XXX scary!
+        // fixup_skills is called at the end of loading a character, in
+        // _post_init
     }
 #endif
 
@@ -5521,6 +5522,11 @@ void unmarshallItem(reader &th, item_def &item)
 
     if (is_unrandom_artefact(item))
         setup_unrandart(item, false);
+
+#if TAG_MAJOR_VERSION == 34
+    if (item.is_type(OBJ_WEAPONS, WPN_FUSTIBALUS))
+        item.sub_type = WPN_HAND_CROSSBOW;
+#endif
 
     bind_item_tile(item);
 }

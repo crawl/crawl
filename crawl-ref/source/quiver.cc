@@ -367,6 +367,11 @@ namespace quiver
             return you.weapon();
         }
 
+        int get_item() const override
+        {
+            return you.equip[EQ_WEAPON];
+        };
+
         string quiver_verb() const override
         {
             return "fire";
@@ -1975,6 +1980,9 @@ namespace quiver
         // Felids have no use for launchers or ammo.
         if (you.has_mutation(MUT_NO_GRASPING))
             return make_shared<ammo_action>(-1);
+
+        if (you.weapon() && is_range_weapon(*you.weapon()))
+            return make_shared<ranged_action>();
 
         vector<int> order;
         _get_item_fire_order(order, false, false);

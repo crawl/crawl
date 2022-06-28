@@ -345,7 +345,7 @@ void trj_spawn_fineff::fire()
     for (int i = 0; i < tospawn; ++i)
     {
         const monster_type jelly = royal_jelly_ejectable_monster();
-        coord_def jpos = find_newmons_square_contiguous(jelly, posn);
+        coord_def jpos = find_newmons_square_contiguous(jelly, posn, 3, false);
         if (!in_bounds(jpos))
             continue;
 

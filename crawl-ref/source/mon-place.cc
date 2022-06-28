@@ -2673,11 +2673,11 @@ static dungeon_feature_type _monster_secondary_habitat_feature(monster_type mc)
     return habitat2grid(mons_class_secondary_habitat(mc));
 }
 
-static bool _valid_spot(coord_def pos)
+static bool _valid_spot(coord_def pos, bool check_mask=true)
 {
     if (actor_at(pos))
         return false;
-    if (env.level_map_mask(pos) & MMT_NO_MONS)
+    if (check_mask && env.level_map_mask(pos) & MMT_NO_MONS)
         return false;
     return true;
 }
@@ -2690,15 +2690,17 @@ private:
 
     int best_distance;
     int nfound;
+    bool levelgen;
 public:
     // Terrain that we can't spawn on, but that we can skip through.
     set<dungeon_feature_type> passable;
 public:
     newmons_square_find(dungeon_feature_type grdw,
                         const coord_def &pos,
-                        int maxdist = 0)
+                        int maxdist = 0,
+                        bool _levelgen=true)
         :  feat_wanted(grdw), maxdistance(maxdist),
-           best_distance(0), nfound(0)
+           best_distance(0), nfound(0), levelgen(_levelgen)
     {
         start = pos;
     }
@@ -2726,7 +2728,7 @@ public:
                 good_square(dc);
             return false;
         }
-        if (_valid_spot(dc) && one_chance_in(++nfound))
+        if (_valid_spot(dc, levelgen) && one_chance_in(++nfound))
         {
             greedy_dist = traveled_distance;
             greedy_place = dc;
@@ -2742,7 +2744,8 @@ public:
 // through only contiguous squares of habitable terrain.
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
-                                         int distance)
+                                         int distance,
+                                         bool levelgen)
 {
     coord_def p;
 
@@ -2751,7 +2754,7 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
     const dungeon_feature_type feat_nonpreferred =
         _monster_secondary_habitat_feature(mons_class);
 
-    newmons_square_find nmpfind(feat_preferred, start, distance);
+    newmons_square_find nmpfind(feat_preferred, start, distance, levelgen);
     const coord_def pp = nmpfind.pathfind();
     p = pp;
 
