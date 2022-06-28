@@ -149,7 +149,6 @@ bool player::floundering() const
  */
 bool player::extra_balanced() const
 {
-    const dungeon_feature_type grid = env.grid(pos());
     // trees are balanced everywhere they can inhabit.
     return form == transformation::tree
         // Species or forms with large bodies (e.g. nagas) are ok in water.
