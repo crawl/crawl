@@ -7561,9 +7561,10 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_THROW_BARBS:
     case SPELL_HARPOON_SHOT:
-        // Don't fire barbs in melee range.
+        // Don't fire if we can hit.
         ASSERT(foe);
-        return ai_action::good_or_bad(!adjacent(mon->pos(), foe->pos()));
+        return ai_action::good_or_bad(grid_distance(mon->pos(), foe->pos())
+                                      > mon->reach_range());
 
     case SPELL_BATTLECRY:
         return ai_action::good_or_bad(_battle_cry(*mon, true));
