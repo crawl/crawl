@@ -693,8 +693,8 @@ TILE:     urand_spriggans_knife
 TILE_EQ:  spriggans_knife
 EV:       4
 STEALTH:  1
-DESCRIP:  It is more effective when stabbing unaware enemies, treating them as
- though they were completely helpless.
+DESCRIP:  It is more effective when stabbing unaware enemies, sometimes treating
+ them as though they were completely helpless.
 
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
