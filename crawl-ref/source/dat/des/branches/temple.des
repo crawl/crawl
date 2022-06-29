@@ -3985,7 +3985,7 @@ SUBST:  DEF = B
 FTILE: 'T{ = floor_frozen
 FTILE: .BG = floor_w_marble
 COLOUR: 'T{ = blue
-COLOUR: .B = white
+COLOUR: . = white
 MAP
     ccccccc
    ccD...Dcc
@@ -4019,7 +4019,7 @@ SUBST:  EH = B, D = ., F = AGT
 SUBST:  EFH = B, D = .
 : end
 FTILE:  .+{ABGTt = floor_grass
-COLOUR: .+{ABGTt = green
+COLOUR: . = green
 MAP
    tttt         tttt
    tE.tt       tt.Et
@@ -4109,9 +4109,9 @@ ORIENT: encompass
 FTILE:  DRQ' = floor_infernal
 FTILE:  EJK- = floor_w_marble
 FTILE:  {SHGPBL. = floor_limestone
-COLOUR: DRQ' = red
-COLOUR: EJK- = white
-COLOUR: {SHGPBL. = yellow
+COLOUR: ' = red
+COLOUR: - = white
+COLOUR: G. = yellow
 : local altar_count = get_altar_count(_G, 19)
 : local half_count = (altar_count - 1) / 2
 : nsubst ("D = " .. half_count .. ":B / *:'")
@@ -4205,7 +4205,9 @@ SUBST:  DE = B, F = .
 SUBST:  DEF = B
 : end
 TILE:   c = wall_icy_stone
+COLOUR:  c = white
 FTILE:  .B{ = floor_ice
+COLOUR: . = blue
 MAP
           ccc
          ccDcc
