@@ -114,7 +114,14 @@ void initialise_temples()
     }
     else
     {
-        altar_count = 9 + random2avg(13,2);
+        // distribution of altar count has a mean at 13.5, with the extremes
+        // occuring approximately 2.5% of the time each (a much thicker tail
+        // than using 6 + random2avg(16,2)).
+        if (coinflip())
+            altar_count = max(6, 5 + random2max(9, 2));
+        else
+            altar_count = min(21, 14 + random2min(9, 2));
+
         const string vault_tag = make_stringf("temple_altars_%d", altar_count);
         do
         {
