@@ -2039,12 +2039,16 @@ meliai
 %%%%
 Mephitic Cloud spell
 
-"For the past few years Asiatic cholera had shown a strong tendency to spread.
- Its source was the hot, moist swamps of the delta of the Ganges, where it bred
- in the mephitic air of that primeval island-jungle, among whose bamboo thickets
- the tiger crouches, where life of every sort flourishes in rankest abundance,
- and only man avoids the spot."
-    -Thomas Mann, _Diaries_.
+“Seit mehreren Jahren schon hatte die indische Cholera eine verstärkte
+ Neigung zur Ausbreitung und Wanderung an den Tag gelegt. Erzeugt aus
+ den warmen Moraesten des Ganges-Deltas, aufgestiegen mit dem
+ mephitischen Odem jener üppig-untauglichen, von Menschen gemiedenen
+ Urwelt- und Inselwildnis, in deren Bambusdickichten der Tiger kauert,
+ hatte die Seuche in ganz Hindustan andauernd und ungewöhnlich heftig
+ gewütet, hatte östlich nach China, westlich nach Afghanistan und
+ Persien übergegriffen und, den Hauptstraßen des Karawanenverkehrs
+ folgend, ihre Schrecken bis Astrachan, ja selbst bis Moskau getragen.”
+    -Thomas Mann, _Der Tod in Venedig_, 1911.
 %%%%
 merfolk
 
@@ -3614,7 +3618,7 @@ vine stalker
 %%%%
 Vv
 
-"Beside the man stands a woman - of sorts. Her emulation of the human gender is
+“Beside the man stands a woman - of sorts. Her emulation of the human gender is
  only superficial, a courtesy. Likewise the loose drapelike dress she wears is
  not cloth. She has simply shaped a portion of her stiff substance to suit the
  preferences of the fragile, mortal creatures among whom she currently moves.
@@ -3624,8 +3628,8 @@ Vv
  When she turns to the man - slowly; stone eaters are slow aboveground, except
  when they aren't - this movement pushes her beyond artful beauty into something
  altogether different. The man has grown used to it, but even so, he does not
- look at her. He does not want revulsion to spoil the moment."
-    -N.K. Jemisin, "The Fifth Season". 2015.
+ look at her. He does not want revulsion to spoil the moment.”
+    -N.K. Jemisin, “The Fifth Season”. 2015.
 %%%%
 wand
 
@@ -3640,10 +3644,10 @@ wand of acid
 %%%%
 wand of charming
 
-"But it isn't charm as veneer, as facilitating ooze or unguent,
+“But it isn't charm as veneer, as facilitating ooze or unguent,
  but charm that identifies and goes out to meet itself in others
- wherever it may be met with."
-    -Michael Hofmann, "Hell, he'll be be frozen stiff!"
+ wherever it may be met with.”
+    -Michael Hofmann, “Hell, he'll be frozen stiff!”, LRB, 2022.
 
 “He held up his hand, and they all stopped, and I thought he seemed to be
  saying, ‘All these lives will I give you, ay, and many more and greater,
