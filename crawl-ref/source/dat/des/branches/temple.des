@@ -4576,8 +4576,6 @@ KFEAT:  E = altar_ecumenical
 KFEAT:  + = closed_clear_door
 FTILE:  .+ = floor_pebble_darkgray
 FTILE:  BLJIOE = floor_rough_red
-COLOUR: .+ = darkgrey
-COLOUR: BLJIOE = red
 MAP
 ccccccccccccccccccc
 c.................c
