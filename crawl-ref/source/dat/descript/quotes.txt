@@ -149,7 +149,7 @@ A gateway back into the Dungeon
  With reason hath deep silence and demur
  Seized us, though undismayed. Long is the way
  And hard, that out of Hell leads up to light.”
-    -John Milton, _Paradise Lost_. 1674 (2nd Ed.)
+    -John Milton, _Paradise Lost_. 1674 (2nd Ed.).
 %%%%
 A gateway to Hell
 
@@ -242,7 +242,7 @@ A shaft
  arriving at the bottom it gets a slight shock and walks away, provided
  that the ground is fairly soft. A rat is killed, a man is broken, a
  horse splashes.”
-    -J.B.S. Haldane, “On Being The Right Size”. March 1926
+    -J.B.S. Haldane, “On Being The Right Size”. March 1926.
 %%%%
 A staircase leading out of the dungeon
 
@@ -250,7 +250,7 @@ A staircase leading out of the dungeon
  And the end of all our exploring
  Will be to arrive where we started
  And know the place for the first time.”
-    -T.S. Eliot, “Little Gidding”, _Four Quartets_. 1943
+    -T.S. Eliot, “Little Gidding”, _Four Quartets_. 1943.
 %%%%
 A staircase to the Ecumenical Temple
 
@@ -271,7 +271,7 @@ A staircase to the Shoals
 A staircase to the Tomb
 
 “A tomb now suffices him for whom the world was not enough.”
-    -Alexander the Great's epitaph
+    -Alexander the Great's epitaph.
 %%%%
 A stormy altar of Qazlal
 
@@ -325,10 +325,10 @@ Antaeus
     -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
     trans. Sir James George Frazer, 1913.
 
-"The head foreman in the mine, called Antaeus,
+“The head foreman in the mine, called Antaeus,
  was an obese giant with a thick black beard
- who actually seemed to draw his strength from Mother Earth."
-    -Primo Levi, "The Periodic Table". 1975.
+ who actually seemed to draw his strength from Mother Earth.”
+    -Primo Levi, “The Periodic Table”. 1975.
 %%%%
 arbalest
 
@@ -363,7 +363,7 @@ Awaken Forest spell
  — Thor: From a splinter that she got bravely fighting an elm!
  • Hel: Trees are inanimate plants, you buffoon!
  — Thor: Bravery knows no limits!
-    -Rich Burlew, Order of the Stick, #874
+    -Rich Burlew, _Order of the Stick_, #874.
 %%%%
 Azrael
 
@@ -437,7 +437,7 @@ Chain Lightning spell
 
 “The trouble ain't that there is too many fools,
  but that the lightning ain't distributed right.”
-    -traditionally attributed to Samuel Clemens
+    -traditionally attributed to Samuel Clemens.
 %%%%
 Charm spell
 
@@ -456,7 +456,7 @@ Cigotuvi's Monster
  eyes they may be called, were fixed on me. His jaws opened,
  and he muttered some inarticulate sounds, while a grin
  wrinkled his cheeks.”
-    -Mary Shelley, “Frankenstein”
+    -Mary Shelley, _Frankenstein_. 1818.
 %%%%
 Cloud Mage
 
@@ -513,7 +513,7 @@ Desolation
  voice
  a pitiful
  song.”
-    -Pablo Neruda, "Ode to Salt", 1957.
+    -Pablo Neruda, “Ode to Salt”, 1957.
      trans. Philip Levine, published 2013
 %%%%
 Dispater
@@ -556,7 +556,7 @@ Elven Halls
  want to find snakes look for them behind words that have changed their meaning.
  No one ever said elves are _nice_.
  Elves are _bad_.”
-    -Terry Pratchett, _Lords and Ladies_. 1992
+    -Terry Pratchett, _Lords and Ladies_. 1992.
 %%%%
 Edmund
 
@@ -580,7 +580,7 @@ Fire Storm spell
 
 “Some have said there is no subtlety to destruction. You know what? They're
  dead.”
-    -Jaya Ballard, task mage (Magic: the Gathering)
+    -Jaya Ballard, task mage (Magic: the Gathering).
 %%%%
 Frederick
 
@@ -620,7 +620,7 @@ Khufu
 “And then I looked farther, beyond the pallid line of the sands, and I saw a
  Pyramid of gold, the wonder Khufu had built. As a golden wonder it saluted me,
  as a golden thing it greeted me, as a golden miracle I shall remember it.”
-    -Robert Hichens, _The Spell of Egypt_
+    -Robert Hichens, _The Spell of Egypt_. 1910.
 %%%%
 Killer Klown
 
@@ -1127,7 +1127,7 @@ calcifying dust cloud
  Your shadow at morning striding behind you
  Or your shadow at evening rising to meet you;
  I will show you fear in a handful of dust.”
-    -T.S. Eliot, "The Waste Land". 1922
+    -T.S. Eliot, “The Waste Land”. 1922
 %%%%
 catoblepas
 
@@ -2300,8 +2300,8 @@ Orb Guardian
  First we gonna rock, then we gonna roll
  Then we let it pop, go, let it go
  X gon' give it to ya, he gon' give it to ya
- X gon' give it to ya, he gon' give it to ya”
-    -DMX, "X Gon' Give It To Ya". 2002
+ X gon' give it to ya, he gon' give it to ya
+    -DMX, “X Gon' Give It To Ya”. 2002
 %%%%
 orb of fire
 
@@ -2322,8 +2322,8 @@ pandemonium lord
 %%%%
 Parghit
 
-"What are you going to do with that big bat? Gonna hit me? Better make it
- count. Better make it hurt. Better kill me in one shot."
+“What are you going to do with that big bat? Gonna hit me? Better make it
+ count. Better make it hurt. Better kill me in one shot.”
    -Mr. Baseball, @MisterBaseball5 Twitter. 2017
 %%%%
 Passwall spell
@@ -3172,7 +3172,7 @@ spellforged servitor
  Your toys have gone berserk
  It's an illusion
  You cannot shirk”
-    -Siouxsie and the Banshees, "Spellbound"
+    -Siouxsie and the Banshees, “Spellbound”
 %%%%
 Spellforged Servitor spell
 
@@ -3605,7 +3605,7 @@ vine stalker
 %%%%
 Vv
 
-"Beside the man stands a woman - of sorts. Her emulation of the human gender is
+“Beside the man stands a woman - of sorts. Her emulation of the human gender is
  only superficial, a courtesy. Likewise the loose drapelike dress she wears is
  not cloth. She has simply shaped a portion of her stiff substance to suit the
  preferences of the fragile, mortal creatures among whom she currently moves.
@@ -3615,8 +3615,8 @@ Vv
  When she turns to the man - slowly; stone eaters are slow aboveground, except
  when they aren't - this movement pushes her beyond artful beauty into something
  altogether different. The man has grown used to it, but even so, he does not
- look at her. He does not want revulsion to spoil the moment."
-    -N.K. Jemisin, "The Fifth Season". 2015.
+ look at her. He does not want revulsion to spoil the moment.”
+    -N.K. Jemisin, “The Fifth Season”. 2015.
 %%%%
 wand
 
@@ -3637,7 +3637,7 @@ wand of digging
 
 “Great holes secretly are digged where earth’s pores ought to suffice, and
  things have learnt to walk that ought to crawl.”
-    -H.P. Lovecraft, "The Festival". 1925
+    -H.P. Lovecraft, “The Festival”. 1925
 %%%%
 wand of mindburst
 
