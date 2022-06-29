@@ -3969,6 +3969,362 @@ ccQ..gh.hg..Lcc
    ccccccccc
 ENDMAP
 
+# 6, 8, or 10 gods.
+NAME:   hellmonk_temple_micro_hex
+TAGS:   temple_altars_6 temple_altars_8 temple_altars_10
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(_G, 10)
+: if altar_count == "6" then
+SUBST:  D = B, EF = G
+: elseif altar_count == "8" then
+SUBST:  DE = B, F = G
+: else
+SUBST:  DEF = B
+: end
+FTILE: 'T{ = floor_frozen
+FTILE: .BG = floor_w_marble
+COLOUR: 'T{ = blue
+COLOUR: . = white
+MAP
+    ccccccc
+   ccD...Dcc
+  cc.......cc
+ ccE...'...Fcc
+cc....'''....cc
+cD...''{''...Dc
+cc....'''....cc
+ ccF...'...Ecc
+  cc.......cc
+   ccD...Dcc
+    ccccccc
+ENDMAP
+
+# 8, 9, 12, or 13 gods.
+NAME:   hellmonk_temple_forest_ring
+TAGS:   temple_altars_8 temple_altars_9 temple_altars_12 temple_altars_13
+PLACE:  Temple
+ORIENT: encompass
+NSUBST: A = 1:{ / *:AG
+NSUBST: + = 1:+ / *:c
+: local altar_count = get_altar_count(_G, 13)
+: if altar_count == "8" then
+SUBST:  E = B
+SUBST:  +DFH = c
+: elseif altar_count == "9" then
+SUBST:  EF = B, D = ., H:AG
+: elseif altar_count == "12" then
+SUBST:  EH = B, D = ., F = AGT
+: else
+SUBST:  EFH = B, D = .
+: end
+FTILE:  .+{ABGTt = floor_grass
+COLOUR: . = green
+MAP
+   tttt         tttt
+   tE.tt       tt.Et
+   tt..tt     tt..tt
+tttttt..tt   tt..tttttt
+tEttttt..ttttt..tttttEt
+t..ttttt...A...ttttt..t
+tt..ttt........tttt..tt
+ tt..t....c+c...tt..tt
+  tt....cccDccc....tt
+   tt...cHDDDHc...tt
+    t..ccDDDDDcc..t
+    tA.+DDDFDDD+.At
+    t..ccDDDDDcc..t
+   tt...cHDDDHc...tt
+  tt....cccDccc....tt
+ tt..tt...c+c....t..tt
+tt..tttt........ttt..tt
+t..ttttt...A...ttttt..t
+tEttttt..ttttt..tttttEt
+tttttt..tt   tt..tttttt
+   tt..tt     tt..tt
+   tE.tt       tt.Et
+   tttt         tttt
+ENDMAP
+
+# 7, 8, 11, 15, or 19 gods.
+NAME:   hellmonk_temple_of_storms
+TAGS:   temple_altars_7 temple_altars_8 temple_altars_11 temple_altars_15
+TAGS:   temple_altars_19
+PLACE:  Temple
+ORIENT: encompass
+: if crawl.one_chance_in(25) then
+KMONS:  J = diamond obelisk
+: else
+MARKER: J = lua:fog_machine { cloud_type = "thunder", \
+             pow_min = 30, pow_max = 50, delay = 5, start_clouds = 3, \
+             size = 4, walk_dist = 1, spread_rate = 100, excl_rad = 0 }
+: end
+: local altar_count = get_altar_count(_G, 19)
+: if altar_count == "7" then
+SUBST:  DE = B, FHI:G.
+: elseif altar_count == "8" then
+SUBST:  FH = B, DEI:G.
+: elseif altar_count == "11" then
+SUBST:  DFH = B, EI:G.
+: elseif altar_count == "15" then
+SUBST:  DEFH = B, I:G.
+:else
+SUBST:  DEFHI = B
+: end
+KPROP:  J' = no_tele_into
+FTILE:  J' = floor_sand
+COLOUR: J' = yellow
+MAP
+        ccccc
+     cccc.{.cccc
+    ccH.......Hcc
+   cc...........cc
+  ccE...........Ecc
+  c...............c
+ cc....nnnnnnn....cc
+ cF...nn'''''nn...Fc
+cc...nn'''''''nn...cc
+cI...n'''''''''n...Ic
+c....n'''''''''n....c
+cD...n''''J''''n...Dc
+c....n'''''''''n....c
+cI...n'''''''''n...Ic
+cc...nn'''''''nn...cc
+ cF...nn'''''nn...Fc
+ cc....nnnnnnn....cc
+  c...............c
+  ccE...........Ecc
+   cc...........cc
+    ccH.......Hcc
+     cccc.D.cccc
+        ccccc
+ENDMAP
+
+# any odd number of gods from 7-19
+NAME:   hellmonk_temple_divided_pantheon
+TAGS:   temple_altars_7 temple_altars_9 temple_altars_11 temple_altars_13
+TAGS:   temple_altars_15 temple_altars_17 temple_altars_19
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  DRQ' = floor_infernal
+FTILE:  EJK- = floor_w_marble
+FTILE:  {SHGPBL. = floor_limestone
+COLOUR: ' = red
+COLOUR: - = white
+COLOUR: G. = yellow
+: local altar_count = get_altar_count(_G, 19)
+: local half_count = (altar_count - 1) / 2
+: nsubst ("D = " .. half_count .. ":B / *:'")
+: nsubst ("E = " .. half_count .. ":B / *:-")
+MARKER:  P = lua:transp_loc("pantheon_dark_entry")
+MARKER:  Q = lua:transp_dest_loc("pantheon_dark_entry")
+MARKER:  R = lua:transp_loc("pantheon_dark_exit")
+MARKER:  S = lua:transp_dest_loc("pantheon_dark_exit")
+MARKER:  H = lua:transp_loc("pantheon_light_entry")
+MARKER:  J = lua:transp_dest_loc("pantheon_light_entry")
+MARKER:  K = lua:transp_loc("pantheon_light_exit")
+MARKER:  L = lua:transp_dest_loc("pantheon_light_exit")
+MAP
+      ccccccc
+     ccc.B.ccc
+    ccDn...nEcc
+   cc''n...n--cc
+cccc'''n...n---cccc
+ccD'''Dn...nE---Ecc
+c''''''n...n------c
+c''D'''n...n--E---c
+c''''''n...n------c
+c'''''RnS.HnJ-----c
+cD'''''nG.Gn-----Ec
+c'''''QnP.LnK-----c
+c''D'''n...n--E---c
+c''''''n...n------c
+c'''''Dn...nE-----c
+ccD''''n...n----Ecc
+cccc'''n...n---cccc
+   cc''n...n--cc
+    ccDn.{.nEcc
+     ccc...ccc
+      ccccccc
+ENDMAP
+
+# 6, 8, 9, or 10 gods.
+NAME:   hellmonk_temple_rainy
+TAGS:   temple_altars_6 temple_altars_8 temple_altars_9 temple_altars_10
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(_G, 10)
+: if altar_count == "6" then
+SUBST:  DFH = B, E = T
+: elseif altar_count == "8" then
+SUBST:  DE = B, FH = T
+: elseif altar_count == "9" then
+SUBST:  DEH = B, F = T
+:else
+SUBST:  DEFH = B
+: end
+MARKER: J = lua:fog_machine { cloud_type = "rain", \
+             pow_min = 30, pow_max = 50, delay = 5, start_clouds = 3, \
+             size = 4, walk_dist = 2, spread_rate = 100, excl_rad = 0 }
+KPROP:  J- = no_tele_into
+MAP
+      ccccccc
+    ccc--J--ccc
+   cc---------cc
+cccc-----------ccc
+c-------nnnnn----cc
+c--J---nnD.DnnJ---cc
+c-----nn.....nn----cc
+cnnnnnnE.....Enn----cc
+cT.T.T.........nn----cc
+c.{.......F....Hn---J-c
+cT.T.T.........nn----cc
+cnnnnnnE.....Enn----cc
+c-----nn.....nnJ---cc
+c--J---nnD.Dnn----cc
+c-------nnnnn----cc
+cccc-----------ccc
+   cc---------cc
+    ccc--J--ccc
+      ccccccc
+ENDMAP
+
+# 6, 8, 10, or 12 gods.
+NAME:   hellmonk_temple_flake
+TAGS:   temple_altars_6 temple_altars_8 temple_altars_10 temple_altars_12
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(_G, 12)
+: if altar_count == "6" then
+SUBST:  EF = B, D = .
+: elseif altar_count == "8" then
+SUBST:  DF = B, E = .
+: elseif altar_count == "10" then
+SUBST:  DE = B, F = .
+: else
+SUBST:  DEF = B
+: end
+TILE:   c = wall_icy_stone
+COLOUR:  c = white
+FTILE:  .B{ = floor_ice
+COLOUR: . = blue
+MAP
+          ccc
+         ccDcc
+    cccc c...c cccc
+    cE.c cc.cc c.Ec
+ccccc..cccc.c cc..ccccc
+cD.cccc.ccc.ccc.cccc.Dc
+c.c..ccc.cc.cc.ccc..c.c
+ccccc..cc.c.c.cc..ccccc
+    ccc.........ccc
+  ccccccc.....ccccccc
+ cc.cccc.......cccc.cc
+ cF........{........Fc
+ cc.cccc.......cccc.cc
+  ccccccc.....ccccccc
+ cccccc...c.c...ccc
+ccccc..cc.c.c.cc..ccccc
+c.c..ccc.cc.cc.ccc..c.c
+cD.cccc.ccc.ccc.cccc.Dc
+ccccc..cccc.cccc..ccccc
+    cE.c cc.cc c.Ec
+    cccc c...c cccc
+         ccDcc
+          ccc
+ENDMAP
+
+# 6 to 10 gods.
+NAME:   hellmonk_temple_beads
+TAGS:   temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
+TAGS:   temple_altars_10
+PLACE:  Temple
+ORIENT: encompass
+SUBST:  -:c........
+: local altar_count = get_altar_count(_G, 10)
+: nsubst ("D = " .. altar_count .. ":B / *:tGTbbVn")
+SUBST:  E:GG., F:G..
+MAP
+ ccccc    ccccc    ccccc
+cc...cc  cc...cc  cc...cc
+c.....cccc.....cccc.....c
+c..D........D........D..c
+c.....cccc.....cccc.....c
+cc...cccccc...cccccc...cc
+ cc.ccccccccccccccccc.cc
+  c.ccccccccccccccccc.c
+  c.ccccccccccccccccc.c
+ cc.ccccccccccccccccc.cc
+cc...cccccc...cccccc...cc
+c.....cccc.....cccc.....c
+c..D........D..cccc..D..c
+c.....cccc.....cccc.....c
+cc...cc  cc...cccccc...cc
+ ccccc    cc.cccccccc.cc
+           c.cccccccc.c
+           c.cccccccc.c
+ ccccc    cc.cccccccc.cc
+cc...cc  cc...cccccc...cc
+c.....cccc.....cccc.....c
+c..D........D..cccc..D..c
+c.....cccc.....cccc.....c
+cc...cccccc...cccccc...cc
+ cc.ccccccccccccccccc.cc
+  c.ccccccccccccccccc-c
+  c.ccccccccccccccccc-c
+ cc.cccccccccc.F.cccc-c
+cc...ccccccccE...Eccc-c
+c.....cccccc.......cc-c
+c..D...........{....--c
+c.....cccccc.......cccc
+cc...cc    ccE...Ecc
+ ccccc      cc.F.cc
+             ccccc
+ENDMAP
+
+# 6, 7, 8, 12, or 15 gods.
+NAME:   hellmonk_temple_two_chambers
+TAGS:   temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_12
+TAGS:   temple_altars_15
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  ;DK = floor_limestone
+FTILE:  -FJ = floor_marble
+: local altar_count = get_altar_count(_G, 15)
+: if altar_count == "6" then
+SUBST:  D = B, F = K
+: elseif altar_count == "7" then
+SUBST:  DK = B, F = K
+: elseif altar_count == "8" then
+SUBST:  FJ = B, D = J
+: elseif altar_count == "12" then
+SUBST:  DF = B
+: else
+SUBST:  DFJK = B
+: end
+SUBST:  J:TG, K:tVGA
+MAP
+  ccccccc
+ ccD;;;Dcc
+cc;;;;;;;cc
+c;;;;;;;;;c
+cD;;;K;;;Dc
+c;;;;;;;;;c
+cc;;;;;;;cc
+ ccD;;;Dcc
+  ccc;ccc
+    c{c
+  ccc-ccc
+ ccF---Fcc
+cc-------cc
+c---------c
+cF--J-J--Fc
+c---------c
+cc-------cc
+ ccF---Fcc
+  ccccccc
+ENDMAP
+
 #####################################################################
 # <<7>> Rare temples, picked outside of the usual size roll framework
 # Non-temple gods, Temples not suitable for selection within the usual
@@ -4203,4 +4559,43 @@ ccP.....................^cc
        ccLccPBPccLcc
         cccccLccccc
             ccc
+ENDMAP
+
+# every god in the game
+NAME:   hellmonk_choose_your_character
+TAGS:   temple_rare temple_altars_22 no_rotate no_vmirror no_hmirror
+PLACE:  Temple
+ORIENT: encompass
+WEIGHT: 1
+NSUBST: B = 1:L / 1:J / 1:I / 1:O / *:B
+KFEAT:  L = altar_lugonu
+KFEAT:  J = altar_jiyva
+KFEAT:  I = altar_ignis
+KFEAT:  O = altar_beogh
+KFEAT:  E = altar_ecumenical
+KFEAT:  + = closed_clear_door
+FTILE:  .+ = floor_pebble_darkgray
+FTILE:  BLJIOE = floor_rough_red
+MAP
+ccccccccccccccccccc
+c.................c
+c.nnnnnnnnnnnnnnn.c
+c.nBnBnBnBnBnBnBn.c
+c.n+n+n+n+n+n+n+n.c
+c.................c
+c.nnnnnnnnnnnnnnn.c
+c.nBnBnBnBnBnBnBn.c
+c.n+n+n+n+n+n+n+n.c
+c.................c
+c.nnnnnnnnnnnnnnn.c
+c.nBnBnBnBnBnBnBn.c
+c.n+n+n+n+n+n+n+n.c
+c.................c
+c.nnnnnnnnnnn.nnn.c
+c.nBnBnBnBnBn.nEn.c
+c.n+n+n+n+n+n.n+n.c
+c.................c
+c..............{..c
+c.................c
+ccccccccccccccccccc
 ENDMAP
