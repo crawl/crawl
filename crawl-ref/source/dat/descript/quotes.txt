@@ -2037,6 +2037,19 @@ meliai
  boundless earth.”
     -Hesiod, _Theogony_, 182-187, trans. H.G. Evelyn-White. 1920
 %%%%
+Mephitic Cloud spell
+
+“Seit mehreren Jahren schon hatte die indische Cholera eine verstärkte
+ Neigung zur Ausbreitung und Wanderung an den Tag gelegt. Erzeugt aus
+ den warmen Moraesten des Ganges-Deltas, aufgestiegen mit dem
+ mephitischen Odem jener üppig-untauglichen, von Menschen gemiedenen
+ Urwelt- und Inselwildnis, in deren Bambusdickichten der Tiger kauert,
+ hatte die Seuche in ganz Hindustan andauernd und ungewöhnlich heftig
+ gewütet, hatte östlich nach China, westlich nach Afghanistan und
+ Persien übergegriffen und, den Hauptstraßen des Karawanenverkehrs
+ folgend, ihre Schrecken bis Astrachan, ja selbst bis Moskau getragen.”
+    -Thomas Mann, _Der Tod in Venedig_, 1911.
+%%%%
 merfolk
 
 “Again at length my thought reviving came,
@@ -3631,7 +3644,19 @@ wand of acid
 %%%%
 wand of charming
 
-<Charm spell>
+“But it isn't charm as veneer, as facilitating ooze or unguent,
+ but charm that identifies and goes out to meet itself in others
+ wherever it may be met with.”
+    -Michael Hofmann, “Hell, he'll be frozen stiff!”, London Review of Books,
+     2022.
+
+“He held up his hand, and they all stopped, and I thought he seemed to be
+ saying, ‘All these lives will I give you, ay, and many more and greater,
+ through countless ages, if you will fall down and worship me!’ And then a red
+ cloud, like the colour of blood, seemed to close over my eyes, and before I
+ knew what I was doing, I found myself opening the sash and saying to Him,
+ ‘Come in, Lord and Master!’”
+    -Bram Stoker, _Dracula_. 1897.
 %%%%
 wand of digging
 
