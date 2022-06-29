@@ -286,7 +286,7 @@ MAP
       x.x
       x.x
 xxxxxxx.xxxxxxx
-x.............x
+@.............@
 xxxxxxx.xxxxxxx
       x.x
       x.x
@@ -302,6 +302,7 @@ ENDMAP
 NAME:   lemuel_arrival_lava_pool
 TAGS:   arrival no_monster_gen
 ORIENT: float
+ITEM:   stone
 MAP
     xxxxxxx
    xx..{..xx
@@ -310,9 +311,9 @@ MAP
    x.......x
    x..lll..x
    x.lllll.x
-   x.ll%ll.x
+   x.lldll.x
    x.ll>ll.x
-   x.ll%ll.x
+   x.lldll.x
    x.lllll.x
    x..lll..x
   xx.......xx
