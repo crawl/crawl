@@ -4632,7 +4632,7 @@ NAME:    ebering_the_none_and_only
 TAGS:    temple_rare temple_altars_0 temple_overflow_no_god
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  200000
+WEIGHT:  2
 NSUBST:  . = 2 = GG. / 8 = ^. / ._
 KFEAT:   ^ = web
 COLOUR:  G = white
