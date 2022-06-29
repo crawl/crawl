@@ -4335,6 +4335,7 @@ ENDMAP
 # - Lugonu temple: 1 map
 # - Jiyva temple: 2 maps
 # - Ignis temple: 2 maps
+# - Extreme altar counts: 3 maps
 
 # 9
 # plus 6 to 12 altars to Lugonu.
@@ -4598,4 +4599,57 @@ c.................c
 c..............{..c
 c.................c
 ccccccccccccccccccc
+ENDMAP
+
+# exactly one (1) god
+NAME:        ebering_the_one_and_only
+TAGS:        temple_rare temple_altars_1
+PLACE:       Temple
+ORIENT:      encompass
+WEIGHT:      7
+{{
+    local templecol = util.random_from({ "blue", "cyan", "green", "yellow",
+                                         "red", "magenta", "white", "lightblue",
+                                         "lightcyan", "lightgreen", "lightred",
+                                         "lightmagenta" })
+    lfloorcol(templecol)
+    lfloortile("floor_pebble_" .. templecol)
+    colour("Gb = " .. templecol)
+}}
+MAP
+bbbbb
+b.{.b
+b...b
+bGBGb
+bbbbb
+ENDMAP
+
+# the Temple is an important landmark, but what if it's only that, a temple
+# to GOD_NO_GOD.
+# XXX: the temple_overflow_no_god tag is so the validator accepts this map
+# without an altar, it is not an overflow.
+NAME:    ebering_the_none_and_only
+TAGS:    temple_rare temple_altars_0 temple_overflow_no_god
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  200000
+NSUBST:  . = 2 = GG. / 8 = ^. / ._
+KFEAT:   ^ = web
+COLOUR:  G = white
+TILE:    G = dngn_crumbled_column
+COLOUR:  _ = brown
+FTILE:   _G = floor_rough_brown
+: set_feature_name("granite_statue", "broken pillar")
+: set_feature_name("stone_wall", "defaced carved stone wall")
+epilogue{{
+    crawl.mpr("The air is stale and forgotten.")
+}}
+MAP
+ ccccc
+cc...cc
+c.....c
+c..{..c
+c.....c
+cc...cc
+ ccccc
 ENDMAP
