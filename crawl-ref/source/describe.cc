@@ -2033,8 +2033,10 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && _you_are_wearing_item(item)
         && is_slowed_by_armour(you.weapon()))
     {
-        description += "\n\nWith your current strength and Armour skill, "
-                       "it slows attacks with missile weapons (like "
+        // TODO: why doesn't this show shield effect? Reconcile with
+        // _display_attack_delay
+        description += "\n\nYour current strength and Armour skill "
+                       "slows attacks with missile weapons (like "
                         + you.weapon()->name(DESC_YOUR) + ") ";
         if (aevp >= DELAY_SCALE)
             description += make_stringf("by %.1f.", aevp / (10.0f * DELAY_SCALE));

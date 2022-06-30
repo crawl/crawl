@@ -3267,6 +3267,8 @@ static void _display_attack_delay()
     string penalty_msg = "";
     if (shield_penalty || armour_penalty)
     {
+        // TODO: add amount, as in item description (see _describe_armour)
+        // double parens are awkward
         penalty_msg =
             make_stringf( " (and is slowed by your %s)",
                          shield_penalty && armour_penalty ? "shield and armour" :
