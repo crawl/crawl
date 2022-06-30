@@ -264,8 +264,7 @@ static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }
 static string mi_calc_airstrike_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_AIRSTRIKE, mons->get_hit_dice());
-    const int base = FLAT_AIRSTRIKE_DAMAGE + 3; // lol legacy
-    return make_stringf("%d-%d", base, airstrike_base_max_damage(pow));
+    return make_stringf("%d-%d+", base, airstrike_base_max_damage(pow));
 }
 
 static string mi_calc_glaciate_damage(monster* mons)
