@@ -5040,7 +5040,7 @@ VISUAL:@The_monster@ adjusts @possessive@ apparatus.
 
 @The_monster@ winks @at_foe@ and says, "Everything have price."
 
-@The_monster@ says, "All wealth is product of labor."
+@The_monster@ says, "All wealth is product of labour."
 
 @The_monster@ says, "Productive ogre is happy ogre."
 
