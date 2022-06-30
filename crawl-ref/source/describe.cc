@@ -1216,10 +1216,8 @@ static string _damage_rating(const item_def &item)
 
     const bool thrown = item.base_type == OBJ_MISSILES;
 
-    int base_dam = property(item, PWPN_DAMAGE);
-    // TODO: we should include the bonus base damage separately in the display.
-    if (thrown)
-        base_dam += throwing_base_damage_bonus(item);
+    const int base_dam = property(item, PWPN_DAMAGE);
+    const int extra_base_dam = thrown ? throwing_base_damage_bonus(item) : 0;
     const skill_type skill = _item_training_skill(item);
     const int stat_mult = stat_modify_damage(100, skill, true);
     const bool use_str = weapon_uses_strength(skill, true);
@@ -1235,12 +1233,15 @@ static string _damage_rating(const item_def &item)
         brand = get_weapon_brand(item);
 
     const int DAM_RATE_SCALE = 100;
-    int rating = base_dam * DAM_RATE_SCALE;
+    int rating = (base_dam + extra_base_dam) * DAM_RATE_SCALE;
     rating = stat_modify_damage(rating, skill, true);
     rating = apply_weapon_skill(rating, skill, false);
     rating = apply_fighting_skill(rating, false, false);
     rating /= DAM_RATE_SCALE;
     rating += plusses;
+
+    const string base_dam_desc = thrown ? make_stringf("[%d + %d (Thrw)]", base_dam, extra_base_dam)
+                                        : make_stringf("%d", base_dam);
 
     string plusses_desc;
     if (plusses)
@@ -1257,10 +1258,11 @@ static string _damage_rating(const item_def &item)
         = is_unrandom_artefact(item, UNRAND_DAMNATION) ? " + Damn"
           : thrown ? _describe_missile_brand(item)
                    : _describe_brand(brand);
+
     return make_stringf(
-        "\nDamage rating: %d (Base %d x %d%% (%s) x %d%% (Skill)%s)%s.",
+        "\nDamage rating: %d (Base %s x %d%% (%s) x %d%% (Skill)%s)%s.",
         rating,
-        base_dam,
+        base_dam_desc.c_str(),
         stat_mult,
         use_str ? "Str" : "Dex",
         skill_mult,
