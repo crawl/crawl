@@ -1253,6 +1253,10 @@ static string _damage_rating(const item_def &item)
                                                          : "Slay");
     }
 
+    const string brand_desc
+        = is_unrandom_artefact(item, UNRAND_DAMNATION) ? " + Damn"
+          : thrown ? _describe_missile_brand(item)
+                   : _describe_brand(brand);
     return make_stringf(
         "\nDamage rating: %d (Base %d x %d%% (%s) x %d%% (Skill)%s)%s.",
         rating,
@@ -1261,8 +1265,7 @@ static string _damage_rating(const item_def &item)
         use_str ? "Str" : "Dex",
         skill_mult,
         plusses_desc.c_str(),
-        thrown ? _describe_missile_brand(item).c_str()
-               : _describe_brand(brand).c_str());
+        brand_desc.c_str());
 }
 
 static void _append_weapon_stats(string &description, const item_def &item)
@@ -1349,7 +1352,7 @@ static void _append_weapon_stats(string &description, const item_def &item)
         description += ".";
     }
 
-    if (want_player_stats && !is_unrandom_artefact(item, UNRAND_DAMNATION))
+    if (want_player_stats)
         description += _damage_rating(item);
 }
 
