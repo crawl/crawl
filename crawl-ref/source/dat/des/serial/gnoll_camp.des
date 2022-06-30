@@ -30,7 +30,7 @@ WEIGHT: 8
 KMASK:  w = no_monster_gen
 MONS:   gnoll
 MONS:   gnoll ; stone q:10 | boomerang q:3 | throwing net q:3 / nothing
-MONS:   gnoll shaman
+MONS:   bouda
 MONS:   gnoll sergeant
 MONS:   jackal / hound / wolf w:1
 MAP
@@ -57,7 +57,7 @@ TAGS:   serial_gnoll_camp patrolling
 WEIGHT: 8
 MONS:   gnoll
 MONS:   gnoll ; stone q:10 | boomerang q:3 | throwing net q:3
-MONS:   gnoll shaman
+MONS:   bouda
 MONS:   gnoll sergeant
 MONS:   jackal w:20 / hound / wolf w:1 / nothing w:5
 MAP
@@ -108,7 +108,7 @@ TAGS:   serial_gnoll_camp patrolling uniq_gnoll_camp_huts
 #       Place monsters randomly: 6 gnolls, 2 sergeants, 2 shamans and 4 dogs.
 NSUBST: . = 7:1 / 1:2 / 2:3 / 4:4 / *:.
 MONS:   gnoll
-MONS:   gnoll shaman
+MONS:   bouda
 MONS:   gnoll sergeant
 MONS:   jackal / hound / wolf w:1
 MAP
@@ -138,7 +138,7 @@ WEIGHT: 8
 #       Place monsters randomly: 4 gnolls, 2 sergeants, 2 shamans and 4 dogs.
 NSUBST: . = 5:1 / 1:2 / 2:3 / 4:4 / *:.
 MONS:   gnoll
-MONS:   gnoll shaman
+MONS:   bouda
 MONS:   gnoll sergeant
 MONS:   jackal / hound / wolf w:1
 MONS:   gnoll ; stone q:10 | boomerang q:3 | throwing net q:3
@@ -175,7 +175,7 @@ NAME:    gnoll_camp_mini_basic
 TAGS:    serial_gnoll_camp patrolling allow_dup
 SHUFFLE: 34
 MONS:    gnoll, jackal / hound / wolf w:1
-MONS:    gnoll shaman
+MONS:    bouda
 MONS:    gnoll sergeant
 MAP
 .............
@@ -260,7 +260,7 @@ NAME:    gnoll_camp_mini_house
 TAGS:    serial_gnoll_camp patrolling allow_dup
 SHUFFLE: 23
 MONS:    gnoll
-MONS:    gnoll shaman
+MONS:    bouda
 MONS:    gnoll sergeant
 MONS:    hound / wolf w:2
 MAP
@@ -283,7 +283,7 @@ TAGS:    serial_gnoll_camp patrolling allow_dup
 WEIGHT:  20
 SHUFFLE: 123
 MONS:    gnoll
-MONS:    gnoll shaman
+MONS:    bouda
 MONS:    gnoll sergeant
 MAP
 ........

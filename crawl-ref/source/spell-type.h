@@ -536,5 +536,6 @@ enum spell_type : int
     SPELL_SHEZAS_DANCE,
     SPELL_NECROTIZE,
     SPELL_BOLT_OF_LIGHT,
+    SPELL_HUNTING_CALL,
     NUM_SPELLS
 };
