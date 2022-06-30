@@ -799,18 +799,6 @@ void hints_gained_new_skill(skill_type skill)
     }
 }
 
-#ifndef USE_TILE
-// As safely as possible, colourize the passed glyph.
-// Stringizes it and handles quoting "<".
-static string _colourize_glyph(int col, unsigned ch)
-{
-    cglyph_t g;
-    g.col = col;
-    g.ch = ch;
-    return glyph_to_tagstr(g);
-}
-#endif
-
 static bool _mons_is_highlighted(const monster* mons)
 {
     return mons->friendly()
@@ -1136,10 +1124,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_ARMOUR:
         print_hint("HINT_SEEN_ARMOUR");
-        break;
-
-    case HINT_SEEN_RANDART:
-        print_hint("HINT_SEEN_RANDART");
         break;
 
     case HINT_SEEN_JEWELLERY:

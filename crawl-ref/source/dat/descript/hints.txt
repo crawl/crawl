@@ -310,11 +310,6 @@ properties from your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory.
     end
 }}
 %%%%
-HINT_SEEN_RANDART
-
-Weapons and armour that have unusual descriptions like this are much more likely
-to be of higher enchantment or have special properties, good or bad.
-%%%%
 HINT_SEEN_JEWELLERY
 
 You have picked up a piece of jewellery, either a ring
