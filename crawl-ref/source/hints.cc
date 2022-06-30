@@ -1456,24 +1456,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_NEW_ABILITY_GOD:
-        switch (you.religion)
-        {
-        // Gods where first granted ability is passive.
-        case GOD_ASHENZARI:
-        case GOD_BEOGH:
-        case GOD_MAKHLEB:
-        case GOD_VEHUMET:
-        case GOD_XOM:
-        case GOD_SHINING_ONE:
-            // TODO: update me
-            print_hint("HINT_NEW_ABILITY_GOD_PASSIVE");
-            break;
-
-        // Gods where first granted ability is active.
-        default:
+        if (get_god_abilities(true, false).size())
             print_hint("HINT_NEW_ABILITY_GOD_ACTIVE");
-            break;
-        }
+        else
+            print_hint("HINT_NEW_ABILITY_GOD_PASSIVE");
         break;
 
     case HINT_NEW_ABILITY_ITEM:
