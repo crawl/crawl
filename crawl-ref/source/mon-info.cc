@@ -780,11 +780,12 @@ monster_info::monster_info(const monster* m, int milev)
     constricting_name.clear();
 
     // Name of what this monster is directly constricted by, if any
-    if (m->is_directly_constricted())
+    const auto constr_typ = m->get_constrict_type();
+    if (constr_typ == CONSTRICT_MELEE)
     {
         const actor * const constrictor = actor_by_mid(m->constricted_by);
         ASSERT(constrictor);
-        constrictor_name = (constrictor->constriction_does_damage(true) ?
+        constrictor_name = (constrictor->constriction_does_damage(constr_typ) ?
                             "constricted by " : "held by ")
                            + constrictor->name(_article_for(constrictor),
                                                true);
@@ -794,12 +795,12 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->constricting)
     {
         const char *participle =
-            m->constriction_does_damage(true) ? "constricting " : "holding ";
+            m->constriction_does_damage(CONSTRICT_MELEE) ? "constricting " : "holding ";
         for (const auto &entry : *m->constricting)
         {
             const actor* const constrictee = actor_by_mid(entry.first);
 
-            if (constrictee && constrictee->is_directly_constricted())
+            if (constrictee && constrictee->get_constrict_type() == CONSTRICT_MELEE)
             {
                 constricting_name.push_back(participle
                                             + constrictee->name(

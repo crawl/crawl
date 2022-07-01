@@ -1924,7 +1924,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         you.stop_directly_constricting_all(false);
 
     // Stop being constricted if we are now too large, or are now immune.
-    if (you.is_directly_constricted())
+    if (you.get_constrict_type() == CONSTRICT_MELEE)
     {
         actor* const constrictor = actor_by_mid(you.constricted_by);
         ASSERT(constrictor);
@@ -2120,7 +2120,7 @@ void untransform(bool skip_move)
     }
 
     // Stop being constricted if we are now too large.
-    if (you.is_directly_constricted())
+    if (you.get_constrict_type() == CONSTRICT_MELEE)
     {
         actor* const constrictor = actor_by_mid(you.constricted_by);
         if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))

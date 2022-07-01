@@ -2976,7 +2976,7 @@ bool bolt::harmless_to_player() const
         return player_res_poison(false) >= 3;
 
     case BEAM_ROOTS:
-        return mons_att_wont_attack(attitude) || !agent()->can_constrict(&you, false);
+        return mons_att_wont_attack(attitude) || !agent()->can_constrict(you, CONSTRICT_ROOTS);
 
     default:
         return false;
@@ -5301,7 +5301,10 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
     case BEAM_VILE_CLUTCH:
     case BEAM_ROOTS:
         ASSERT(agent);
-        rc = !mons_aligned(agent, mon) && agent->can_constrict(mon, false);
+    {
+        const auto constr_typ = flavour == BEAM_ROOTS ? CONSTRICT_ROOTS : CONSTRICT_BVC;
+        rc = !mons_aligned(agent, mon) && agent->can_constrict(*mon, constr_typ);
+    }
         break;
 
     // These are special allies whose loyalty can't be so easily bent

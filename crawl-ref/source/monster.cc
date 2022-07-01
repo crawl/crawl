@@ -2831,10 +2831,11 @@ bool monster::has_damage_type(int dam_type)
     return false;
 }
 
-int monster::constriction_damage(bool direct) const
+int monster::constriction_damage(constrict_type typ) const
 {
-    if (direct)
+    switch (typ)
     {
+    case CONSTRICT_MELEE:
         for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         {
             const mon_attack_def attack = mons_attack_spec(*this, i);
@@ -2842,16 +2843,12 @@ int monster::constriction_damage(bool direct) const
                 return attack.damage;
         }
         return -1;
+    case CONSTRICT_ROOTS:
+        return roll_dice(2, div_rand_round(40 +
+                    mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
+    default:
+        return 0;
     }
-
-    // The only monster spell that's a source of indirect constriction.
-    return roll_dice(2, div_rand_round(40 +
-                mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
-}
-
-bool monster::constriction_does_damage(bool direct) const
-{
-    return constriction_damage(direct) > 0;
 }
 
 /** Return true if the monster temporarily confused. False for butterflies, or

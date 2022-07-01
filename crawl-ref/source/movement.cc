@@ -226,7 +226,7 @@ void remove_water_hold()
 static void _clear_constriction_data()
 {
     you.stop_directly_constricting_all(true);
-    if (you.is_directly_constricted())
+    if (you.get_constrict_type() == CONSTRICT_MELEE)
         you.stop_being_constricted();
 }
 

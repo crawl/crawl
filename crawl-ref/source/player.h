@@ -613,8 +613,8 @@ public:
                              bool rescale = true) const override;
     random_var  attack_delay_with(const item_def *projectile, bool rescale,
                                   const item_def *weapon) const;
-    int         constriction_damage(bool direct) const override;
-    bool        constriction_does_damage(bool /* direct */) const override
+    int         constriction_damage(constrict_type typ) const override;
+    bool        constriction_does_damage(constrict_type /* typ */) const override
                     { return true; };
 
     int       has_claws(bool allow_tran = true) const override;

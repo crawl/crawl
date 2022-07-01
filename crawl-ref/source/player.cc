@@ -7543,9 +7543,10 @@ bool player::attempt_escape(int attempts)
     ASSERT(themonst);
     escape_attempts += attempts;
 
-    const bool direct = is_directly_constricted();
-    const string object = direct ? themonst->name(DESC_ITS, true)
-                                 : "the roots'";
+    const auto constr_typ = get_constrict_type();
+    const string object
+        = constr_typ == CONSTRICT_ROOTS ? "the roots"
+                                        : themonst->name(DESC_ITS, true);
     // player breaks free if (4+n)d13 >= 5d(8+HD/4)
     const int escape_score = roll_dice(4 + escape_attempts, 13);
     if (escape_score
@@ -7554,7 +7555,7 @@ bool player::attempt_escape(int attempts)
         mprf("You escape %s grasp.", object.c_str());
 
         // Stun the monster to prevent it from constricting again right away.
-        if (direct)
+        if (constr_typ == CONSTRICT_MELEE)
             themonst->speed_increment -= 5;
 
         stop_being_constricted(true);
@@ -7694,7 +7695,8 @@ static string _constriction_description()
                               num_free_tentacles > 1 ? "s" : "");
     }
 
-    if (you.is_directly_constricted())
+    const auto constr_typ = you.get_constrict_type();
+    if (constr_typ == CONSTRICT_MELEE)
     {
         const monster * const constrictor = monster_by_mid(you.constricted_by);
         ASSERT(constrictor);
@@ -7703,7 +7705,7 @@ static string _constriction_description()
             cinfo += "\n";
 
         cinfo += make_stringf("You are being %s by %s.",
-                              constrictor->constriction_does_damage(true) ?
+                              constrictor->constriction_does_damage(constr_typ) ?
                                   "held" : "constricted",
                               constrictor->name(DESC_A).c_str());
     }
@@ -7715,7 +7717,7 @@ static string _constriction_description()
             monster *whom = monster_by_mid(entry.first);
             ASSERT(whom);
 
-            if (!whom->is_directly_constricted())
+            if (!whom->get_constrict_type() == CONSTRICT_MELEE)
                 continue;
 
             c_name.push_back(whom->name(DESC_A));

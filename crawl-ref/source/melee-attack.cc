@@ -96,7 +96,7 @@ bool melee_attack::handle_phase_attempted()
     if (defender && (!adjacent(attack_position, defender->pos())
                      && !can_reach())
         || attk_flavour == AF_CRUSH
-           && (!attacker->can_constrict(defender, true)
+           && (!attacker->can_constrict(*defender, CONSTRICT_MELEE)
                || attacker->is_monster() && attacker->mid == MID_PLAYER))
     {
         --effective_attack_number;
@@ -437,7 +437,7 @@ void melee_attack::do_ooze_engulf()
         && you.has_mutation(MUT_ENGULF)
         && defender->alive()
         && !defender->as_monster()->has_ench(ENCH_WATER_HOLD)
-        && attacker->can_constrict(defender, true, true)
+        && attacker->can_engulf(*defender)
         && coinflip())
     {
         defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD, 1,
@@ -1255,7 +1255,7 @@ bool melee_attack::player_aux_unarmed()
         // Determine and set damage and attack words.
         player_aux_setup(atk);
 
-        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender, true))
+        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
             continue;
 
         to_hit = random2(aux_to_hit());
@@ -2879,7 +2879,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_ENGULF:
         if (!crawl_state.player_moving  // Won't work while player is moving
             && x_chance_in_y(2, 3)
-            && attacker->can_constrict(defender, true, true))
+            && attacker->can_engulf(*defender))
         {
             const bool watery = attacker->type != MONS_QUICKSILVER_OOZE;
             if (defender->is_player() && !you.duration[DUR_WATER_HOLD])

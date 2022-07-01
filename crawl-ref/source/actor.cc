@@ -527,7 +527,7 @@ void actor::stop_directly_constricting_all(bool intentional, bool quiet)
     {
         const actor * const constrictee = actor_by_mid(entry.first);
         if (_invalid_constricting_map_entry(constrictee)
-            || constrictee->is_directly_constricted())
+            || constrictee->get_constrict_type() == CONSTRICT_MELEE)
         {
             need_cleared.push_back(entry.first);
         }
@@ -586,7 +586,7 @@ bool actor::has_invalid_constrictor(bool move) const
 
     // Direct constriction (e.g. by nagas and octopode players or AT_CONSTRICT)
     // must happen between adjacent squares.
-    if (is_directly_constricted())
+    if (get_constrict_type() == CONSTRICT_MELEE)
         return !ignoring_player && !adjacent(attacker->pos(), pos());
 
     // Indirect constriction requires the defender not to move.
@@ -655,13 +655,23 @@ bool actor::is_constricted() const
     return constricted_by;
 }
 
-bool actor::is_directly_constricted() const
+/// Is this actor currently being constricted? If so, in what way?
+constrict_type actor::get_constrict_type() const
 {
-    return is_constricted()
-        && (is_player() && !you.duration[DUR_GRASPING_ROOTS]
-            || is_monster()
-               && !as_monster()->has_ench(ENCH_VILE_CLUTCH)
-               && !as_monster()->has_ench(ENCH_GRASPING_ROOTS));
+    if (!is_constricted())
+        return CONSTRICT_NONE;
+    if (is_player())
+    {
+        if (you.duration[DUR_GRASPING_ROOTS])
+            return CONSTRICT_ROOTS;
+        return CONSTRICT_MELEE;
+    }
+    const monster* mon = as_monster();
+    if (mon->has_ench(ENCH_VILE_CLUTCH))
+        return CONSTRICT_BVC;
+    if (mon->has_ench(ENCH_GRASPING_ROOTS))
+        return CONSTRICT_ROOTS;
+    return CONSTRICT_MELEE;
 }
 
 void actor::accum_has_constricted()
@@ -673,26 +683,30 @@ void actor::accum_has_constricted()
         entry.second += you.time_taken;
 }
 
-bool actor::can_constrict(const actor* defender, bool direct, bool engulf) const
+bool actor::can_engulf(const actor &defender) const
 {
-    ASSERT(defender); // XXX: change to actor &defender
+    return can_see(defender)
+        && !confused()
+        && body_size(PSIZE_BODY) >= defender.body_size(PSIZE_BODY)
+        && defender.res_constrict() < 3
+        && adjacent(pos(), defender.pos());
+}
 
-    if (direct)
+bool actor::can_constrict(const actor &defender, constrict_type typ) const
+{
+    if (defender.is_constricted())
+        return false;
+
+    if (typ == CONSTRICT_MELEE)
     {
-        return (!is_constricting() || has_usable_tentacle() || engulf)
-               && (!defender->is_constricted() || engulf)
-               && can_see(*defender)
-               && !confused()
-               && body_size(PSIZE_BODY) >= defender->body_size(PSIZE_BODY)
-               && defender->res_constrict() < 3
-               && adjacent(pos(), defender->pos());
+        return can_engulf(defender)
+            && (!is_constricting() || has_usable_tentacle());
     }
 
-    return can_see(*defender)
-        && !defender->is_constricted()
-        && defender->res_constrict() < 3
+    return can_see(defender)
+        && defender.res_constrict() < 3
         // All current indrect forms of constriction require reachable ground.
-        && feat_has_solid_floor(env.grid(defender->pos()));
+        && feat_has_solid_floor(env.grid(defender.pos()));
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -712,15 +726,13 @@ bool actor::can_constrict(const actor* defender, bool direct, bool engulf) const
  */
 void actor::constriction_damage_defender(actor &defender, int duration)
 {
-    const bool direct = defender.is_directly_constricted();
-    const bool vile_clutch = !direct && defender.as_monster()
-        && defender.as_monster()->has_ench(ENCH_VILE_CLUTCH);
-    int damage = constriction_damage(direct);
+    const auto typ = defender.get_constrict_type();
+    int damage = constriction_damage(typ);
 
     DIAG_ONLY(const int basedam = damage);
     damage += div_rand_round(damage * stepdown((float)duration, 50.0),
                              BASELINE_DELAY * 5);
-    if (is_player() && direct)
+    if (is_player() && typ == CONSTRICT_MELEE)
         damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
 
     DIAG_ONLY(const int durdam = damage);
@@ -742,20 +754,23 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     {
         string attacker_desc;
         bool force_plural = false;
-        if (vile_clutch)
+        switch (typ)
         {
+        case CONSTRICT_BVC:
             attacker_desc = "The zombie hands";
             force_plural = true;
-        }
-        else if (!direct)
-        {
+            break;
+        case CONSTRICT_ROOTS:
             attacker_desc = "The grasping roots";
             force_plural = true;
+            break;
+        default:
+            if (is_player())
+                attacker_desc = "You";
+            else
+                attacker_desc = name(DESC_THE);
+            break;
         }
-        else if (is_player())
-            attacker_desc = "You";
-        else
-            attacker_desc = name(DESC_THE);
 
         mprf("%s %s %s%s%s", attacker_desc.c_str(),
              force_plural ? "constrict"
@@ -820,6 +835,11 @@ void actor::handle_constriction()
     }
 
     clear_invalid_constrictions();
+}
+
+bool actor::constriction_does_damage(constrict_type typ) const
+{
+    return constriction_damage(typ) > 0;
 }
 
 string actor::describe_props() const

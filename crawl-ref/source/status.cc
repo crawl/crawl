@@ -416,7 +416,7 @@ bool fill_status_info(int status, status_info& inf)
             ASSERT(cstr);
 
             const bool damage =
-                cstr->constriction_does_damage(you.is_directly_constricted());
+                cstr->constriction_does_damage(you.get_constrict_type());
 
             inf.light_colour = YELLOW;
             inf.light_text   = damage ? "Constr"      : "Held";

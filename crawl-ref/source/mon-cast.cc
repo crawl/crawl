@@ -492,7 +492,8 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
         {
             const actor* foe = caster.get_foe();
             ASSERT(foe);
-            return ai_action::good_or_impossible(caster.can_constrict(foe, false));
+            return ai_action::good_or_impossible(caster.can_constrict(*foe,
+                                                                      CONSTRICT_ROOTS));
         }, _cast_grasping_roots, } },
     { SPELL_ABJURATION, {
         _mons_will_abjure,

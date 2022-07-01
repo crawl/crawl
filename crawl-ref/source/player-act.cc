@@ -870,17 +870,22 @@ bool player::shove(const char* feat_name)
 /*
  * Calculate base constriction damage.
  *
- * @param direct True if this is for direct constriction, false otherwise (e.g.
- *               Borg's Vile Clutch), false otherwise.
+ * @param typ   The type of constriction the player is doing -
+ *              direct (ala Naga/Octopode), BVC, etc.
  * @returns The base damage.
  */
-int player::constriction_damage(bool direct) const
+int player::constriction_damage(constrict_type typ) const
 {
-    if (direct)
+    switch (typ)
+    {
+    case CONSTRICT_BVC:
+        return roll_dice(2, div_rand_round(70 +
+                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
+        // TODO: roots
+    default:
         return roll_dice(2, div_rand_round(strength(), 5));
+    }
 
-    return roll_dice(2, div_rand_round(70 +
-               you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
 }
 
 bool player::is_dragonkind() const
