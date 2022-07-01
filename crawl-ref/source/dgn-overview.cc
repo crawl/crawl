@@ -477,6 +477,9 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
 
     for (const god_type god : gods)
     {
+        if (!player_can_join_god(god, false))
+            continue;
+
         // for each god, look through the notable altars list for a match
         bool has_altar_been_seen = false;
         for (const auto &entry : altars_present)
