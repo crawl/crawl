@@ -1429,7 +1429,7 @@ mp_warning = 0
         channel when the player's magic points drop below this
         percentage of their maximum (use 0 to turn off these messages).
 
-hp_colour = 50:yellow, 25:red
+hp_colour = 70:yellow, 40:red
         (List option)
         hp_colour colours your Health appropriately in the status
         display. In the default setting, your health will appear in

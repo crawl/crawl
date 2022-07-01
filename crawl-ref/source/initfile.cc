@@ -360,7 +360,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
         new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
-                                  "50:yellow, 25:red", _first_greater),
+                                  "70:yellow, 40:red", _first_greater),
         new ColourThresholdOption(mp_colour, {"mp_colour", "mp_color"},
                                   "50:yellow, 25:red", _first_greater),
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
