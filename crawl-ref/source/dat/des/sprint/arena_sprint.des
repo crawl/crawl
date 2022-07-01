@@ -1010,7 +1010,7 @@ KFEAT:  p = altar_uskayaw
 KFEAT:  q = altar_wu_jian
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
-            wand of iceblast charges:5 ident:all, \
+            any blast wand charges:5 ident:all, \
             any beam wand charges:5 ident:all, \
             potion of resistance ident:all, gold q:200
 KFEAT:  { = {

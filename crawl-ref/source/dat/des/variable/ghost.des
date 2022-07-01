@@ -1744,11 +1744,11 @@ KFEAT:  q = W
 KMONS:  O = player ghost
 MONS:   kobold, kobold brigand, kobold demonologist
 KMONS:  D = kobold ; dart ego:poisoned . dagger | short sword | whip
-KMONS:  E = kobold ; wand of flame | any beam wand | wand of iceblast \
+KMONS:  E = kobold ; wand of flame | any beam wand | any blast wand \
                 | wand of mindburst | wand of polymorph | wand of charming \
                 | wand of paralysis . dagger | short sword | whip
 KMONS:  F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
-                . wand of flame | any beam wand | wand of iceblast \
+                . wand of flame | any beam wand | any blast wand \
                 | wand of mindburst | wand of polymorph | wand of charming \
                 | wand of paralysis . dagger | short sword | whip
 # Define some kobolds with more general nasty ego weapons.

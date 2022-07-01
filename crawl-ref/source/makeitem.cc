@@ -1214,9 +1214,10 @@ static int _random_wand_subtype()
 {
     const auto hex_wand_type = (wand_type)item_for_set(ITEM_SET_HEX_WANDS);
     const auto beam_wand_type = (wand_type)item_for_set(ITEM_SET_BEAM_WANDS);
+    const auto blast_wand_type = (wand_type)item_for_set(ITEM_SET_BLAST_WANDS);
     // total weight 70 [arbitrary]
     return random_choose_weighted(14, WAND_FLAME,
-                                  14, WAND_ICEBLAST,
+                                  14, blast_wand_type,
                                   14, hex_wand_type,
                                   9, beam_wand_type,
                                   7, WAND_POLYMORPH,

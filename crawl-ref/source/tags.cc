@@ -4089,8 +4089,7 @@ static void _tag_read_you(reader &th)
         you.props[VORTEX_POWER_KEY] = 150;
     }
 
-    if (th.getMinorVersion() < TAG_MINOR_WAND_SETS)
-        initialise_item_sets();
+    initialise_item_sets();
 #endif
 }
 

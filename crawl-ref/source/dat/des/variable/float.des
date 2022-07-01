@@ -4908,7 +4908,7 @@ DEPTH:  D:3-13
 ORIENT: float
 KMASK:  LM = no_item_gen
 ITEM:   wand of flame
-ITEM:   wand of iceblast / any beam wand
+ITEM:   any blast wand / any beam wand
 ITEM:   wand of mindburst / wand of paralysis \
         / wand of charming / wand of polymorph w:5
 MONS: shadow imp, orc priest, kobold demonologist

@@ -675,7 +675,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
    book of blasting |\
    randbook disc:conjuration | book of storms | book of lightning | \
-   wand of iceblast | wand of flame | wand of mindburst | \
+   any blast wand | wand of flame | wand of mindburst | \
    condenser vane | staff of conjuration | any beam wand | \
    lightning rod | phial of floods | scroll of immolation | \
    book of flames | book of fire | book of air | manual of conjurations | \
@@ -705,6 +705,8 @@ KPROP: l = no_cloud_gen
 MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
             pow_min = 100, pow_max = 100, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
+# XXX: we should replace iceblast with something else when it's not
+# in this game's chosen item set.
 {{
   local evocables = {"wand of flame","wand of iceblast",
                      "lightning rod","tin of tremorstones"}
@@ -1084,7 +1086,7 @@ NAME:    nicolae_shop_overcharged_wands
 TAGS:    transparent
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KFEAT:   S = general shop type:Overcharged suffix:Wands greed:15 count:6 ; \
-         wand of digging charges:11 | wand of iceblast charges:18 | \
+         wand of digging charges:11 | any blast wand charges:18 | \
          any beam wand charges:18 | wand of charming charges:18 | \
          wand of paralysis charges:18 | wand of polymorph charges:18 | \
          wand of mindburst charges:30 | wand of flame charges:40

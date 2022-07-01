@@ -1857,7 +1857,7 @@ kfeat("F = general shop name:" .. owner .. " type:Merfolk suffix:Magic ; \
       amulet of the acrobat | randbook disc:poison | randbook disc:hexes | \
       randbook disc:ice | randbook disc:summoning | phial of floods | \
       condenser vane | lightning rod | wand of charming | wand of iceblast | \
-      randbook disc:transmutation" )
+      wand of roots | randbook disc:transmutation" )
 -- If you're not a merfolk and can't get to the shops on your own, the owner
 -- will be more than happy to help make arrangements. With an additional
 -- convenience fee, of course. (The scroll is for if you get stuck.)

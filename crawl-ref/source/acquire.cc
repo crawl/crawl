@@ -642,11 +642,12 @@ static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/,
 {
     const auto hex_wand_type = (wand_type)item_for_set(ITEM_SET_HEX_WANDS);
     const auto beam_wand_type = (wand_type)item_for_set(ITEM_SET_BEAM_WANDS);
+    const auto blast_wand_type = (wand_type)item_for_set(ITEM_SET_BLAST_WANDS);
     const int hex_wand_weight = hex_wand_type == WAND_CHARMING
                                 && you.allies_forbidden() ? 0 : 20;
     vector<pair<wand_type, int>> weights = {
         { beam_wand_type, 20 },
-        { WAND_ICEBLAST,  20 },
+        { blast_wand_type, 20 },
         { hex_wand_type,  hex_wand_weight },
         { WAND_MINDBURST, 8 },
         { WAND_POLYMORPH, 5 },

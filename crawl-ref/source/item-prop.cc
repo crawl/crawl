@@ -728,7 +728,9 @@ static const item_set_def item_sets[] =
 {
     { OBJ_WANDS, { WAND_CHARMING, WAND_PARALYSIS } },
     { OBJ_WANDS, { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
+    { OBJ_WANDS, { WAND_ICEBLAST, WAND_ROOTS } },
 };
+COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 
 // Must call this functions early on so that the above tables can
 // be accessed correctly.
@@ -3064,6 +3066,10 @@ void initialise_item_sets()
     for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
     {
         const item_set_type iset = (item_set_type)i;
+#if TAG_MAJOR_VERSION == 34
+        if (you.props.exists(_item_set_key(iset)))
+            continue;
+#endif
         const vector<int> &subtypes = item_sets[i].subtypes;
         const int chosen_idx = random2(subtypes.size());
         _item_set_choice(iset) = subtypes[chosen_idx];

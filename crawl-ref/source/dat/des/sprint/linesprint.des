@@ -218,7 +218,7 @@ KITEM:    a = potion of curing q:4 ident:all, \
               potion of magic q:2 ident:all
 KITEM:    b = scroll of blinking q:1 ident:all, \
               scroll of amnesia q:2 ident:all
-KITEM:    d = wand of iceblast charges:10 ident:all /\
+KITEM:    d = any blast wand charges:10 ident:all /\
               any beam wand charges:10 ident:all, \
 KITEM:    e = rapier plus:2 ego:electrocution ident:all /\
            rapier plus:2 ego:draining ident:all /\

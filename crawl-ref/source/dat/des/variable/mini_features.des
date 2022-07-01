@@ -3701,7 +3701,7 @@ ENDMAP
 NAME:   nicolae_wand_duel
 DEPTH:  D:6-
 WEIGHT: 1
-KITEM:  d = any beam wand / wand of iceblast / wand of flame
+KITEM:  d = any beam wand / any blast wand / wand of flame
 TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra transparent
 SUBST:  a = a A:4, b = b B:4
 KPROP:  ABd = bloody
