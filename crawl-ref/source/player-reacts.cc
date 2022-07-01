@@ -955,7 +955,8 @@ static void _regenerate_hp_and_mp(int delay)
 static void _handle_wereblood()
 {
     if (you.duration[DUR_WEREBLOOD]
-        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int(), 9))
+        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int(), 9)
+        && !silenced(you.pos()))
     {
         // Keep the spam down
         if (you.props[WEREBLOOD_KEY].get_int() < 3 || one_chance_in(5))
