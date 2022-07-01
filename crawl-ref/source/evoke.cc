@@ -54,6 +54,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h" // FASTROOT_POWER_KEY
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -233,6 +234,8 @@ void zap_wand(int slot, dist *_target)
 
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
+    if (spell == SPELL_FASTROOT)
+        you.props[FASTROOT_POWER_KEY] = power; // we may cancel, but that's fine
 
     spret ret = your_spells(spell, power, false, &wand, _target);
 

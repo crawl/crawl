@@ -7,6 +7,7 @@ class actor;
 class monster;
 
 #define VILE_CLUTCH_POWER_KEY "vile_clutch_power"
+#define FASTROOT_POWER_KEY "fastroot_power"
 
 int englaciate(coord_def where, int pow, actor *agent);
 spret cast_englaciation(int pow, bool fail);
