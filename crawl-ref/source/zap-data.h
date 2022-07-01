@@ -604,6 +604,23 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
 },
 
 {
+    ZAP_FASTROOT,
+    "",
+    200,
+    nullptr,
+    nullptr,
+    nullptr,
+    nullptr,
+    BROWN,
+    true,
+    BEAM_ROOTS,
+    DCHAR_FIRED_BURST,
+    false,
+    true,
+    0 // Noise comes from explosion
+},
+
+{
     ZAP_FIREBALL,
     "fireball",
     200,

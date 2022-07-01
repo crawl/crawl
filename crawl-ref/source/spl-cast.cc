@@ -1206,10 +1206,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     switch (spell)
     {
     case SPELL_FIREBALL:
-        return make_unique<targeter_beam>(&you, range, ZAP_FIREBALL, pow,
-                                          1, 1);
     case SPELL_ICEBLAST:
-        return make_unique<targeter_beam>(&you, range, ZAP_ICEBLAST, pow,
+    case SPELL_FASTROOT:
+        return make_unique<targeter_beam>(&you, range, spell_to_zap(spell), pow,
                                           1, 1);
     case SPELL_HURL_DAMNATION:
         return make_unique<targeter_beam>(&you, range, ZAP_HURL_DAMNATION, pow,

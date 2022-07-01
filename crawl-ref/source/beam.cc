@@ -229,6 +229,9 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_MAGIC:
         elem = ETC_MAGIC;
         break;
+    case BEAM_ROOTS:
+        elem = ETC_EARTH;
+        break;
     default:
         elem = ETC_ENCHANT;
         break;
@@ -1282,7 +1285,8 @@ void bolt::do_fire()
 
         path_taken.push_back(pos());
 
-        if (!affects_nothing)
+        // Roots only have an effect during explosions.
+        if (!affects_nothing && flavour != BEAM_ROOTS)
             affect_cell();
 
         if (range_used() > range)
@@ -2971,6 +2975,9 @@ bool bolt::harmless_to_player() const
     case BEAM_VIRULENCE:
         return player_res_poison(false) >= 3;
 
+    case BEAM_ROOTS:
+        return mons_att_wont_attack(attitude) || !agent()->can_constrict(&you, false);
+
     default:
         return false;
     }
@@ -3271,6 +3278,10 @@ void bolt::affect_player_enchantment(bool resistible)
         return;
     }
 
+    // No friendly fire from roots.
+    if (flavour == BEAM_ROOTS && mons_att_wont_attack(attitude))
+        return;
+
     // You didn't resist it.
     if (animate)
         _ench_animation(effect_known ? real_flavour : BEAM_MAGIC);
@@ -3500,6 +3511,15 @@ void bolt::affect_player_enchantment(bool resistible)
         }
         else
             canned_msg(MSG_YOU_UNAFFECTED);
+        break;
+    }
+
+    case BEAM_ROOTS:
+    {
+        const int turns = 2 + random2avg(div_rand_round(ench_power, 10), 2);
+        dprf("Roots duration: %d", turns);
+        grasp_with_roots(*agent(), you, turns);
+        obvious_effect = true;
         break;
     }
 
@@ -4125,7 +4145,7 @@ void bolt::update_hurt_or_helped(monster* mon)
 void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
     // Only count tracers as hitting creatures they could potentially affect
-    if (ench_flavour_affects_monster(flavour, mon, true)
+    if (ench_flavour_affects_monster(agent(), flavour, mon, true)
         && !(has_saving_throw() && mons_invuln_will(*mon)))
     {
         // Update friend or foe encountered.
@@ -5177,6 +5197,7 @@ bool bolt::has_saving_throw() const
     case BEAM_INFESTATION:
     case BEAM_IRRESISTIBLE_CONFUSION:
     case BEAM_VILE_CLUTCH:
+    case BEAM_ROOTS:
     case BEAM_VAMPIRIC_DRAINING:
     case BEAM_CONCENTRATE_VENOM:
     case BEAM_ENFEEBLE:
@@ -5190,8 +5211,8 @@ bool bolt::has_saving_throw() const
     }
 }
 
-bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
-                                  bool intrinsic_only)
+bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
+                                  const monster* mon, bool intrinsic_only)
 {
     bool rc = true;
     switch (flavour)
@@ -5278,7 +5299,9 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         break;
 
     case BEAM_VILE_CLUTCH:
-        rc = !mons_aligned(&you, mon) && you.can_constrict(mon, false);
+    case BEAM_ROOTS:
+        ASSERT(agent);
+        rc = !mons_aligned(agent, mon) && agent->can_constrict(mon, false);
         break;
 
     // These are special allies whose loyalty can't be so easily bent
@@ -5351,7 +5374,7 @@ bool enchant_monster_invisible(monster* mon, const string &how)
 mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
 {
     // Early out if the enchantment is meaningless.
-    if (!ench_flavour_affects_monster(flavour, mon))
+    if (!ench_flavour_affects_monster(agent(), flavour, mon))
         return MON_UNAFFECTED;
 
     // Check willpower.
@@ -5896,6 +5919,15 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
     }
 
+    case BEAM_ROOTS:
+    {
+        const int turns = 2 + random2avg(div_rand_round(ench_power, 10), 2);
+        dprf("Roots duration: %d", turns);
+        grasp_with_roots(*agent(), *mon, turns);
+        obvious_effect = true;
+        return MON_AFFECTED;
+    }
+
     case BEAM_CONCENTRATE_VENOM:
         dprf("trying to ench");
         if (!mon->has_ench(ENCH_CONCENTRATE_VENOM)
@@ -5930,7 +5962,8 @@ int bolt::range_used_on_hit() const
     // These beams fully penetrate regardless of anything else.
     if (flavour == BEAM_DAMNATION
         || flavour == BEAM_DIGGING
-        || flavour == BEAM_VILE_CLUTCH)
+        || flavour == BEAM_VILE_CLUTCH
+        || flavour == BEAM_ROOTS)
     {
         return 0;
     }
@@ -6003,6 +6036,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_FLAME_WAVE, {
         "A wave of flame ripples out!",
         "the roar of flame",
+    } },
+    { SPELL_FASTROOT, {
+        "The roots erupt in riotous growth!",
+        "creaking and crackling",
     } },
 };
 
@@ -6426,6 +6463,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_BECKONING:
         case BEAM_INFESTATION:
         case BEAM_VILE_CLUTCH:
+        case BEAM_ROOTS:
         case BEAM_SLOW:
         case BEAM_PARALYSIS:
         case BEAM_PETRIFY:
@@ -6437,7 +6475,7 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_MINDBURST:
         case BEAM_VAMPIRIC_DRAINING:
         case BEAM_ENFEEBLE:
-            return ench_flavour_affects_monster(flavour, mon);
+            return ench_flavour_affects_monster(agent(), flavour, mon);
         case BEAM_TUKIMAS_DANCE:
             return tukima_affects(*mon); // XXX: move to ench_flavour_affects?
         case BEAM_UNRAVELLING:
@@ -6714,6 +6752,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_CONCENTRATE_VENOM:     return "concentrate venom";
     case BEAM_ENFEEBLE:              return "enfeeble";
     case BEAM_NECROTIZE:             return "necrotize";
+    case BEAM_ROOTS:                 return "roots";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

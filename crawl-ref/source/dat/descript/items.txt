@@ -1337,6 +1337,13 @@ wand of quicksilver
 A magical device which fires a beam of destructive energy, dispelling
 enchantments on creatures struck.
 %%%%
+wand of roots
+
+A magical device which fires a magical seed, entangling its target and adjacent
+foes in quick-growing tree roots. Those entangled will be immobilized and take
+increasing damage over time until they escape or the roots wither away. The roots
+will only sprout from solid ground.
+%%%%
 war axe
 
 A military axe with a long haft and a single-bladed head.

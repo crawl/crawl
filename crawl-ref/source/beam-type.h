@@ -80,6 +80,7 @@ enum beam_type                  // bolt::flavour
     BEAM_INFESTATION,
     BEAM_AGONY,
     BEAM_VILE_CLUTCH,
+    BEAM_ROOTS,
     BEAM_VAMPIRIC_DRAINING,
     BEAM_CONCENTRATE_VENOM,
     BEAM_ENFEEBLE,

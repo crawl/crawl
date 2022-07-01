@@ -324,8 +324,8 @@ bool enchant_actor_with_flavour(actor* victim, const actor *atk,
 
 bool enchant_monster_invisible(monster* mon, const string &how);
 
-bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
-                                                  bool intrinsic_only = false);
+bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
+                                  const monster* mon, bool intrinsic_only = false);
 spret mass_enchantment(enchant_type wh_enchant, int pow,
                             bool fail = false);
 int ench_power_stepdown(int pow);

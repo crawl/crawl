@@ -3173,6 +3173,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_FASTROOT, "Fastroot",
+    spschool::hexes | spschool::earth,
+    spflag::dir_or_target | spflag::needs_tracer,
+    5,
+    200,
+    5, 5,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
     SPELL_HARPOON_SHOT, "Harpoon Shot",
     spschool::conjuration | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,

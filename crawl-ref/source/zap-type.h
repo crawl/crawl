@@ -122,5 +122,6 @@ enum zap_type
     ZAP_ENFEEBLE,
     ZAP_NECROTIZE,
     ZAP_BOLT_OF_LIGHT,
+    ZAP_FASTROOT,
     NUM_ZAPS
 };

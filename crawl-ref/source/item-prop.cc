@@ -1436,6 +1436,7 @@ int wand_charge_value(int type, int item_level)
     // Decrease charge generation later on so that players get wands to play
     // with early, but aren't totally flooded with charges by late game.
     case WAND_ICEBLAST:
+    case WAND_ROOTS:
     case WAND_ACID:
     case WAND_LIGHT:
     case WAND_QUICKSILVER:
@@ -1492,6 +1493,7 @@ bool is_offensive_wand(const item_def& item)
     case WAND_CHARMING:
     case WAND_FLAME:
     case WAND_ICEBLAST:
+    case WAND_ROOTS:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
         return true;

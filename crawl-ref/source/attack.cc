@@ -1511,7 +1511,7 @@ bool attack::apply_damage_brand(const char *what)
                 you.duration[DUR_CONFUSING_TOUCH] = 0;
                 obvious_effect = false;
             }
-            else if (!ench_flavour_affects_monster(beam_temp.flavour, mon)
+            else if (!ench_flavour_affects_monster(attacker, beam_temp.flavour, mon)
                      || mons_invuln_will(*mon))
             {
                 mprf("%s is completely immune to your confusing touch!",

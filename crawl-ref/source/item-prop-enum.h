@@ -767,6 +767,7 @@ enum wand_type
 #endif
     WAND_LIGHT,
     WAND_QUICKSILVER,
+    WAND_ROOTS,
     NUM_WANDS
 };
 

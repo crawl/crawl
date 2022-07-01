@@ -537,5 +537,6 @@ enum spell_type : int
     SPELL_NECROTIZE,
     SPELL_BOLT_OF_LIGHT,
     SPELL_HUNTING_CALL,
+    SPELL_FASTROOT,
     NUM_SPELLS
 };
