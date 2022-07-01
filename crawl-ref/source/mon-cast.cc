@@ -814,17 +814,7 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
                 mons_spellpower(caster, SPELL_GRASPING_ROOTS), 10), 2);
     dprf("Grasping roots turns: %d", turns);
     mpr("Roots burst forth from the earth!");
-    if (foe->is_player())
-    {
-        you.increase_duration(DUR_GRASPING_ROOTS, turns);
-        caster.start_constricting(you);
-        mprf(MSGCH_WARN, "The grasping roots grab you!");
-    }
-    else
-    {
-        foe->as_monster()->add_ench(mon_enchant(ENCH_GRASPING_ROOTS, 0, &caster,
-                    turns * BASELINE_DELAY));
-    }
+    grasp_with_roots(caster, *foe, turns);
 }
 
 /// Is the given full-LOS attack spell worth casting for the given monster?

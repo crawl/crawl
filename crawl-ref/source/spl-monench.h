@@ -18,3 +18,4 @@ bool enfeeble_monster(monster &mon, int pow);
 string mons_simulacrum_immune_reason(const monster *mons);
 spret cast_simulacrum(coord_def target, int pow, bool fail);
 spret cast_vile_clutch(int pow, bolt &beam, bool fail);
+void grasp_with_roots(actor &caster, actor &target, int turns);

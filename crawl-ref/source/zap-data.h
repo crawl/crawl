@@ -620,6 +620,7 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     0 // Noise comes from explosion
 },
 
+
 {
     ZAP_FLAME_WAVE,
     "flame wave",

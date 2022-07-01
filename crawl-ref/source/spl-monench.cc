@@ -208,3 +208,19 @@ spret cast_simulacrum(coord_def target, int pow, bool fail)
     mons->props[SIMULACRUM_POWER_KEY] = pow;
     return spret::success;
 }
+
+void grasp_with_roots(actor &caster, actor &target, int turns)
+{
+    if (target.is_player())
+    {
+        you.increase_duration(DUR_GRASPING_ROOTS, turns);
+        caster.start_constricting(you);
+        mprf(MSGCH_WARN, "The grasping roots grab you!");
+    }
+    else
+    {
+        auto ench = mon_enchant(ENCH_GRASPING_ROOTS, 0, &caster,
+                                turns * BASELINE_DELAY);
+        target.as_monster()->add_ench(ench);
+    }
+}
