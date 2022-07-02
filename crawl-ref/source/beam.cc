@@ -3278,10 +3278,6 @@ void bolt::affect_player_enchantment(bool resistible)
         return;
     }
 
-    // No friendly fire from roots.
-    if (flavour == BEAM_ROOTS && mons_att_wont_attack(attitude))
-        return;
-
     // You didn't resist it.
     if (animate)
         _ench_animation(effect_known ? real_flavour : BEAM_MAGIC);
@@ -3516,6 +3512,11 @@ void bolt::affect_player_enchantment(bool resistible)
 
     case BEAM_ROOTS:
     {
+        // No friendly fire from roots.
+        if (mons_att_wont_attack(attitude))
+            return;
+        if (!agent()->can_constrict(you, CONSTRICT_ROOTS))
+            return;
         const int turns = 2 + random2avg(div_rand_round(ench_power, 10), 2);
         dprf("Roots duration: %d", turns);
         grasp_with_roots(*agent(), you, turns);
