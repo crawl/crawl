@@ -5886,6 +5886,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
     behaviour_event(mons, ME_ALERT, &you);
     mons->props[OKAWARU_DUEL_TARGET_KEY] = true;
     mons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    mons->stop_being_constricted();
     mons->set_transit(level_id(BRANCH_ARENA));
     mons->destroy_inventory();
     if (mons_is_elven_twin(mons))
@@ -5925,6 +5926,7 @@ void okawaru_end_duel()
             {
                 mi->props.erase(OKAWARU_DUEL_CURRENT_KEY);
                 mi->props[OKAWARU_DUEL_ABANDONED_KEY] = true;
+                mi->stop_being_constricted();
                 mi->set_transit(current_level_parent());
                 mi->destroy_inventory();
                 monster_cleanup(*mi);
