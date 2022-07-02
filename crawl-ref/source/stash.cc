@@ -286,8 +286,7 @@ void Stash::update()
         if (!(si->flags & ISFLAG_UNOBTAINABLE))
             add_item(*si);
 
-        if (si->base_type == OBJ_STAVES
-            || si->flags & ISFLAG_COSMETIC_MASK)
+        if (si->base_type == OBJ_STAVES || si->flags & ISFLAG_COSMETIC_MASK)
             glowing_item_on_square = true;
 
         if (si->flags & ISFLAG_ARTEFACT_MASK)
