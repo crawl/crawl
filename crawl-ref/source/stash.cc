@@ -288,14 +288,10 @@ void Stash::update()
 
         if (si->base_type == OBJ_STAVES
             || si->flags & ISFLAG_COSMETIC_MASK)
-        {
             glowing_item_on_square = true;
-        }
 
         if (si->flags & ISFLAG_ARTEFACT_MASK)
-        {
             artefact_item_on_square = true;
-        }      
     }
 
     const bool stack_greed      =  static_cast<int>(items.size()) > 1
