@@ -409,8 +409,7 @@ public:
 
     bool        explore_greedy;    // Explore goes after items as well.
 
-    // Set what type of items explore_greedy visits.
-    explore_greedy_options explore_greedy_visit;
+    int explore_greedy_visit; // Set what type of items explore_greedy visits.
 
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
@@ -699,6 +698,7 @@ private:
                          bool prepend = false);
     void do_kill_map(const string &from, const string &to);
     int  read_explore_stop_conditions(const string &) const;
+    int  read_explore_greedy_visit_conditions(const string &) const;
     use_animations_type read_use_animations(const string &) const;
 
     void split_parse(const string &s, const string &separator,

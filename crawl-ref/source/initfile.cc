@@ -263,12 +263,6 @@ const vector<GameOption*> game_options::build_options_list()
              {"backward", SS_BACKWARD}}),
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
-        new MultipleChoiceGameOption<explore_greedy_options>(
-            SIMPLE_NAME(explore_greedy_visit),
-            explore_greedy_options::EG_PILE,
-            {{"pile", explore_greedy_options::EG_PILE},
-             {"enchanted", explore_greedy_options::EG_ENCHANTED},
-             {"both", explore_greedy_options::EG_BOTH}}),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
         new BoolGameOption(SIMPLE_NAME(travel_one_unsafe_move), false),
@@ -1242,6 +1236,8 @@ void game_options::reset_options()
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_TRANSPORTER | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
+
+    explore_greedy_visit    = (EG_GLOWING | EG_ARTEFACT);
 
     dump_item_origins      = IODS_ARTEFACTS;
 
@@ -2650,6 +2646,28 @@ int game_options::read_explore_stop_conditions(const string &field) const
     return conditions;
 }
 
+int game_options::read_explore_greedy_visit_conditions(const string &field) const
+{
+    int conditions = 0;
+    vector<string> stops = split_string(",", field);
+    for (const string &stop : stops)
+    {
+        const string c = replace_all_of(stop, " ", "_");
+        if (c == "glowing" || c == "glowing_item"
+                 || c == "glowing_items")
+        {
+            conditions |= EG_GLOWING;
+        }
+        else if (c == "artefact" || c == "artefacts"
+                 || c == "artifact" || c == "artifacts")
+            conditions |= EG_ARTEFACT;
+        else if (c == "stack" || c == "stacks"
+                 || c == "pile" || c == "piles")
+            conditions |= EG_STACK;
+    }
+    return conditions;
+}
+
 // Note the distinction between:
 // 1. aliases "ae := autopickup_exception" "ae += useless_item"
 //    stored in game_options.aliases.
@@ -3631,6 +3649,17 @@ void game_options::read_option_line(const string &str, bool runscript)
             explore_stop &= ~new_conditions;
         else
             explore_stop |= new_conditions;
+    }
+    else if (key == "explore_greedy_visit")
+    {
+        if (plain)
+            explore_greedy_visit = EG_NONE;
+
+        const int new_conditions = read_explore_greedy_visit_conditions(field);
+        if (minus_equal)
+            explore_greedy_visit &= ~new_conditions;
+        else
+            explore_greedy_visit |= new_conditions;
     }
     else if (key == "sound" || key == "hold_sound")
     {

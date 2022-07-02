@@ -829,14 +829,20 @@ explore_greedy = true
         otherwise identical to regular explore. Explore greed is
         disabled if autopickup is off (Ctrl-A).
 
-explore_greedy_visit = (pile | enchanted | both)
-        By default greedy explore travels to piles of items on each
-        square in addition to items that are eligible for autopickup
-        this setting allows to also/only go to enchanted items instead.
-        By choosing "enchanted" greedy exploration will ignore piles
-        of mundane items and only visit the squares which contain
-        enchanted items. Choosing "both" will visit piles if they
-        contain enchanted items or not and singular enchanted items.
+explore_greedy_visit = artefacts,glowing_item
+explore_greedy_visit += stacks
+        (List option)
+        Greedy exploration will visit squares with items based on
+        these conditions.
+
+        stacks: makes explore_greedy visit stacks even if they don't
+        necessarily have target auto pickup items
+
+        glowing_items: makes explore_greedy visit glowing_items,
+        even if not in a stack
+
+        artefacts: makes explore_greedy visit artefacts, even
+        if not in a stack
 
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
@@ -3139,3 +3145,7 @@ Set a separate glyph for unvisited stairs and transporters:
     feature += stone staircase leading up {<,x25C2}
     feature += stone staircase leading down {>,x25B8}
     feature += transporter {xA9, x25CE}
+
+Visit squares with stacks of items when exploring to print all newly
+encountered items:
+    explore_greedy_visit += stacks
