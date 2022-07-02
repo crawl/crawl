@@ -2554,7 +2554,7 @@ ENDMAP
 NAME:   nicolae_nh_ransacked_shop
 TAGS:   transparent patrolling no_item_gen
 DEPTH:  D:4-10
-KITEM:  1d = any armour no_uniq w:90 / any weapon no_uniq / nothing w:25
+KITEM:  1d = any armour no_uniq w:9 / any weapon no_uniq w:1 / nothing w:40
 KMONS:  1 = orc priest band / orc wizard band / orc warrior band / \
             kobold brigand band
 KFEAT:  + = broken_door / +
@@ -3085,12 +3085,17 @@ ENDMAP
 # Another NetHack-inspired vault, based on the top floor of Vlad's Tower.
 NAME:  nicolae_nh_vlads_tower
 TAGS:  transparent patrolling
-DEPTH: D:10-, Crypt
+DEPTH: D:11-, Crypt
 KITEM: | = |
 KITEM: _ = *
 KITEM: 1 = %
+: if you.absdepth() < 13 then
+KMONS: _ = vampire mage
+KMONS: 1 = vampire
+: else
 KMONS: _ = vampire mage / vampire knight
 KMONS: 1 = vampire / jiangshi
+: end
 KFEAT: _ = altar_dithmenos / altar_kikubaaqudgha / altar_makhleb / \
            altar_yredelemnul
 MAP
