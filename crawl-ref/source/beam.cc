@@ -3043,6 +3043,9 @@ void bolt::tracer_affect_player()
     if (flavour == BEAM_UNRAVELLING && player_is_debuffable())
         is_explosion = true;
 
+    if (flavour == BEAM_ROOTS && !agent()->can_constrict(you, CONSTRICT_ROOTS))
+        return; // this should probably go elsewhere
+
     // Check whether thrower can see player, unless thrower == player.
     if (YOU_KILL(thrower))
     {
