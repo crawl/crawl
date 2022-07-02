@@ -333,8 +333,9 @@ static string _join_strings(const string &a, const string &b)
 
 static string _hundreds_in_words(unsigned num)
 {
-    unsigned dreds = num / 100, tens = num % 100;
-    string sdreds = dreds? _tens_in_words(dreds) + " hundred" : "";
+    unsigned dreds = num / 100, tens = num % 100, ones = num % 10;
+    string sdreds = dreds? _tens_in_words(dreds) +
+    ((tens || ones)? " hundred and" : " hundred") : "";
     string stens  = tens? _tens_in_words(tens) : "";
     return _join_strings(sdreds, stens);
 }
