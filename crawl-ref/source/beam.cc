@@ -1286,7 +1286,14 @@ void bolt::do_fire()
         path_taken.push_back(pos());
 
         // Roots only have an effect during explosions.
-        if (!affects_nothing && flavour != BEAM_ROOTS)
+        if (flavour == BEAM_ROOTS)
+        {
+            if (cell_is_solid(pos()))
+                affect_wall();
+            if (actor_at(pos()))
+                finish_beam();
+        }
+        else if (!affects_nothing)
             affect_cell();
 
         if (range_used() > range)
