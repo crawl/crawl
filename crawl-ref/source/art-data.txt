@@ -1020,7 +1020,7 @@ TILE_EQ: glove_white
 DEX:     3
 VALUE:   400
 DESCRIP: It allows the wearer to riposte with melee
- weapons, swiftly retaliating against missed or blocked attacks.
+ weapons, swiftly retaliating against missed or blocked melee attacks.
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
