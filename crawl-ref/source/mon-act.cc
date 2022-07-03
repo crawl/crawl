@@ -2127,15 +2127,12 @@ static void _torpor_snail_slow(monster* mons)
     // XXX: might be nice to refactor together with _ancient_zyme_sicken().
     // XXX: also with torpor_slowed().... so many duplicated checks :(
 
-    if (is_sanctuary(mons->pos())
-        || mons->attitude != ATT_HOSTILE
-        || mons->has_ench(ENCH_CHARM))
-    {
+    if (is_sanctuary(mons->pos()))
         return;
-    }
 
     if (!is_sanctuary(you.pos())
         && !you.stasis()
+        && !mons->wont_attack()
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
         if (!you.duration[DUR_SLOW])
