@@ -1219,7 +1219,7 @@ statue_form_humanoid TRAN_STATUE_HUMANOID
 statue_form_palentonga TRAN_STATUE_PALENTONGA
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
-statue_form_djinn TRAN_STATUE_DJINN
+statue_form_djinni TRAN_STATUE_DJINN
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
