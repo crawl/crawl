@@ -829,7 +829,7 @@ explore_greedy = true
         otherwise identical to regular explore. Explore greed is
         disabled if autopickup is off (Ctrl-A).
 
-explore_greedy_visit = artefacts,glowing_item
+explore_greedy_visit = artefacts,glowing_items
 explore_greedy_visit += stacks
         (List option)
         Greedy exploration will visit squares with items based on
