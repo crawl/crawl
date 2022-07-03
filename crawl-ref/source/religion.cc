@@ -1747,7 +1747,7 @@ static bool _give_kiku_gift(bool forced)
     // complement the bonus undead passive.
     if (first_gift)
     {
-        chosen_spells.push_back(SPELL_NECROTIZE);
+        chosen_spells.push_back(SPELL_NECROTISE);
         do
         {
             spell = random_choose(SPELL_SUBLIMATION_OF_BLOOD,

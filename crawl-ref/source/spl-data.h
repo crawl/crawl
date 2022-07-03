@@ -560,14 +560,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_NECROTIZE, "Necrotize",
+    SPELL_NECROTISE, "Necrotise",
     spschool::necromancy,
     spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
     1,
     25,
     5, 5,
     1, 0,
-    TILEG_NECROTIZE,
+    TILEG_NECROTISE,
 },
 
 {

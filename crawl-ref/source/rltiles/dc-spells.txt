@@ -97,7 +97,7 @@ excruciating_wounds EXCRUCIATING_WOUNDS
 haunt HAUNT
 necromutation NECROMUTATION
 pain PAIN
-necrotize NECROTIZE
+necrotise NECROTISE
 simulacrum SIMULACRUM
 sublimation_of_blood SUBLIMATION_OF_BLOOD
 symbol_of_torment SYMBOL_OF_TORMENT

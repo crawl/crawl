@@ -28,7 +28,7 @@ TEST_CASE( "When setting book spell list", "[single-file]" ) {
         init_spell_descs();
         vector<spell_type> spells = {
             SPELL_FREEZE,
-            SPELL_NECROTIZE,
+            SPELL_NECROTISE,
             SPELL_APPORTATION,
             SPELL_SUMMON_SMALL_MAMMAL,
             SPELL_MAGIC_DART,

@@ -94,7 +94,7 @@ and gain additional piety with the first god they worship.
 Necromancer
 
 Necromancers are wizards specializing in the practice of death magic. They
-start out with the Necrotize spell.
+start out with the Necrotise spell.
 %%%%
 Summoner
 

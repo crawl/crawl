@@ -140,7 +140,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Necromancy
-    SPELL_NECROTIZE,
+    SPELL_NECROTISE,
     SPELL_VAMPIRIC_DRAINING,
     SPELL_AGONY,
 },
@@ -223,7 +223,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Cantrips
-    SPELL_NECROTIZE,
+    SPELL_NECROTISE,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
 },
@@ -328,7 +328,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 #if TAG_MAJOR_VERSION == 34
 { // Book of Pain
-    SPELL_NECROTIZE,
+    SPELL_NECROTISE,
     SPELL_AGONY,
 },
 #endif

@@ -1491,11 +1491,11 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
 
     if (!exploded
         && !have_passive(passive_t::goldify_corpses)
-        && mons.has_ench(ENCH_NECROTIZE))
+        && mons.has_ench(ENCH_NECROTISE))
     {
         _make_derived_undead(&mons, quiet, MONS_SKELETON,
                                  BEH_FRIENDLY,
-                                 SPELL_NECROTIZE,
+                                 SPELL_NECROTISE,
                                  GOD_NO_GOD);
         return true;
     }
@@ -2293,7 +2293,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     // Death Channel
                     else if (mons.type == MONS_SPECTRAL_THING)
                         simple_monster_message(mons, " fades into mist!");
-                    // Necrotize/Animate Dead/Infestation
+                    // Necrotise/Animate Dead/Infestation
                     else if (mons.type == MONS_ZOMBIE
                              || mons.type == MONS_SKELETON
                              || mons.type == MONS_DEATH_SCARAB)

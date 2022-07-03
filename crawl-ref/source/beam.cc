@@ -206,7 +206,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_AGONY:
     case BEAM_VILE_CLUTCH:
     case BEAM_VAMPIRIC_DRAINING:
-    case BEAM_NECROTIZE:
+    case BEAM_NECROTISE:
         elem = ETC_UNHOLY;
         break;
     case BEAM_DISPEL_UNDEAD:
@@ -5253,7 +5253,7 @@ bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
         break;
 
     case BEAM_PAIN:
-    case BEAM_NECROTIZE:
+    case BEAM_NECROTISE:
         rc = mon->res_negative_energy(intrinsic_only) < 3;
         break;
 
@@ -5523,7 +5523,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
     }
 
-    case BEAM_NECROTIZE:
+    case BEAM_NECROTISE:
     {
         const int dam = resist_adjust_damage(mon, flavour, damage.roll());
         if (!dam)
@@ -5538,7 +5538,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (mons_can_be_zombified(*mon)
             && !mons_class_flag(mon->type, M_NO_SKELETON))
         {
-            mon->add_ench(mon_enchant(ENCH_NECROTIZE, 0, agent(), 1));
+            mon->add_ench(mon_enchant(ENCH_NECROTISE, 0, agent(), 1));
         }
         mon->hurt(agent(), dam, flavour);
         return MON_AFFECTED;
@@ -6467,8 +6467,8 @@ bool bolt::nasty_to(const monster* mon) const
         case BEAM_INNER_FLAME:
             // Co-aligned inner flame is fine.
             return !mons_aligned(mon, agent());
-        case BEAM_NECROTIZE:
-            // HACK: we want to warn when players accidentally aim necrotize
+        case BEAM_NECROTISE:
+            // HACK: we want to warn when players accidentally aim necrotise
             // through their skeletal allies. So mark it harmful to pals.
             if (mons_aligned(mon, agent()))
                 return true;
@@ -6765,7 +6765,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_VAMPIRIC_DRAINING:     return "vampiric draining";
     case BEAM_CONCENTRATE_VENOM:     return "concentrate venom";
     case BEAM_ENFEEBLE:              return "enfeeble";
-    case BEAM_NECROTIZE:             return "necrotize";
+    case BEAM_NECROTISE:             return "necrotise";
     case BEAM_ROOTS:                 return "roots";
 
     case NUM_BEAMS:                  die("invalid beam type");
