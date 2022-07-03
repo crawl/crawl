@@ -393,6 +393,11 @@ NAME:   uniq_mlioglotl
 DEPTH:  Swamp, Snake, Shoals, Spider
 : place_unique(_G, "Mlioglotl")
 
+NAME:   uniq_calida
+DEPTH:  Snake:2-
+WEIGHT: 50
+: place_unique(_G, "Calida band")
+
 NAME:   uniq_vashnia
 DEPTH:  Snake:2-
 WEIGHT: 50

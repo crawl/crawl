@@ -1914,6 +1914,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_DEMONSPAWN_CORRUPTER, { {}, {{ BAND_CORRUPTER, {1, 3} }}}},
     { MONS_DEMONSPAWN_BLACK_SUN, { {}, {{ BAND_BLACK_SUN, {1, 3} }}}},
     { MONS_VASHNIA,         { {}, {{ BAND_VASHNIA, {3, 6}, true }}}},
+    { MONS_CALIDA,         { {}, {{ BAND_CALIDA, {3, 6}, true }}}},
     { MONS_ROBIN,           { {}, {{ BAND_ROBIN, {10, 13}, true }}}},
     { MONS_RAKSHASA,        { {2, 0, []() {
         return branch_has_monsters(you.where_are_you)
@@ -2325,8 +2326,12 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
 
     { BAND_SALAMANDER_ELITES,   {{{MONS_SALAMANDER_MYSTIC, 1},
                                   {MONS_SALAMANDER, 1}},
-
                                  {{MONS_SALAMANDER, 1}}}},
+
+    { BAND_CALIDA,              {{{MONS_SALAMANDER_MYSTIC, 1}},
+                                 {{MONS_NAGA_RITUALIST, 1}},
+                                 {{MONS_SALAMANDER, 1}}}},
+
     { BAND_ROBIN,               {{{MONS_GOBLIN, 3},
                                   {MONS_HOBGOBLIN, 1}}}},
 

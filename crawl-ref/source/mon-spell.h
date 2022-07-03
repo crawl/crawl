@@ -1899,6 +1899,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_CALIDA,
+      {
+       { SPELL_IGNITE_POISON, 55, MON_SPELL_WIZARD },
+       { SPELL_MEPHITIC_CLOUD, 22, MON_SPELL_WIZARD },
+       { SPELL_POISON_ARROW, 22, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('O') Lodul.
     {  MST_LODUL,
       {
