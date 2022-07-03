@@ -7717,7 +7717,7 @@ static string _constriction_description()
             monster *whom = monster_by_mid(entry.first);
             ASSERT(whom);
 
-            if (!whom->get_constrict_type() == CONSTRICT_MELEE)
+            if (whom->get_constrict_type() != CONSTRICT_MELEE)
                 continue;
 
             c_name.push_back(whom->name(DESC_A));
