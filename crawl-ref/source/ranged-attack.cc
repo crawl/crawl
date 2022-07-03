@@ -29,8 +29,7 @@
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
-      projectile(proj), teleport(tele), orig_to_hit(0),
-      should_alert_defender(true)
+      projectile(proj), teleport(tele), orig_to_hit(0)
 {
     if (is_launcher_ammo(*projectile))
         weapon = attacker->weapon(0); // else null
@@ -126,8 +125,7 @@ bool ranged_attack::attack()
             handle_phase_dodged();
     }
 
-    if (should_alert_defender)
-        alert_defender();
+    alert_defender();
 
     if (!defender->alive())
         handle_phase_killed();
@@ -283,8 +281,7 @@ bool ranged_attack::handle_phase_hit()
     }
 
     // XXX: unify this with melee_attack's code
-    if (attacker->is_player() && defender->is_monster()
-        && should_alert_defender)
+    if (attacker->is_player() && defender->is_monster())
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
                         coord_def());
