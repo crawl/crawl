@@ -174,6 +174,8 @@ protected:
 
     void stab_message();
 
+    void handle_noise(const coord_def & pos);
+
     string atk_name(description_level_type desc);
     string def_name(description_level_type desc);
     string wep_name(description_level_type desc = DESC_YOUR,

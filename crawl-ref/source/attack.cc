@@ -35,6 +35,7 @@
 #include "nearby-danger.h"
 #include "pronoun-type.h"
 #include "religion.h"
+#include "shout.h"
 #include "skills.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1713,4 +1714,21 @@ void attack::player_stab_check()
 
     if (stab_attempt)
         count_action(CACT_STAB, orig_st);
+}
+
+void attack::handle_noise(const coord_def & pos)
+{
+    // Successful stabs make no noise.
+    if (stab_attempt)
+        return;
+
+    int loudness = damage_done / 4;
+
+    // All non-stab attacks make some noise.
+    loudness = max(1, loudness);
+
+    // Cap noise at shouting volume.
+    loudness = min(12, loudness);
+
+    noisy(loudness, pos, attacker->mid);
 }

@@ -118,9 +118,6 @@ private:
     /* Output methods */
     void set_attack_verb(int damage) override;
     void announce_hit() override;
-
-    /* Misc methods */
-    void handle_noise(const coord_def & pos);
 private:
     // Monster-attack specific stuff
     bool mons_attack_effects() override;

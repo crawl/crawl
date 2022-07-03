@@ -125,6 +125,10 @@ bool ranged_attack::attack()
             handle_phase_dodged();
     }
 
+    // Don't crash on banishment (from eg chaos).
+    if (!defender->pos().origin())
+        handle_noise(defender->pos());
+
     alert_defender();
 
     if (!defender->alive())

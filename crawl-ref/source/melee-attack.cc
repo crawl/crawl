@@ -1801,23 +1801,6 @@ bool melee_attack::player_monattk_hit_effects()
     return true;
 }
 
-void melee_attack::handle_noise(const coord_def & pos)
-{
-    // Successful stabs make no noise.
-    if (stab_attempt)
-        return;
-
-    int loudness = damage_done / 4;
-
-    // All non-stab melee attacks make some noise.
-    loudness = max(1, loudness);
-
-    // Cap melee noise at shouting volume.
-    loudness = min(12, loudness);
-
-    noisy(loudness, pos, attacker->mid);
-}
-
 /**
  * If appropriate, chop a head off the defender. (Usually a hydra.)
  *
