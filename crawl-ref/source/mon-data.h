@@ -1023,7 +1023,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_BOUDA, 'g', WHITE, "bouda",
+    MONS_GNOLL_BOUDA, 'g', WHITE, "gnoll bouda",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     10, MONS_GNOLL, MONS_GNOLL, MH_NATURAL, 20,
@@ -1032,7 +1032,7 @@ static monsterentry mondata[] =
     2, 9, MST_BOUDA, true, S_SHOUT,
     I_HUMAN, HT_LAND, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM, MON_SHAPE_HUMANOID,
-    {TILEP_MONS_BOUDA}, TILE_ERROR
+    {TILEP_MONS_GNOLL_BOUDA}, TILE_ERROR
 },
 
 {

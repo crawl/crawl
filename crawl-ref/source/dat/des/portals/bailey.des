@@ -856,7 +856,7 @@ MONS:   gnoll ; spear | trident | halberd . \
             throwing net | nothing
 MONS:   gnoll sergeant ; halberd | glaive | bardiche w:1 . \
             chain mail w:20 | plate armour | crystal plate armour w:1
-MONS:   bouda ; spear | trident | halberd . \
+MONS:   gnoll bouda ; spear | trident | halberd . \
             ring mail | scale mail
 MONS:   hound, wolf
 KMONS:  R = grum, gnoll sergeant ; halberd . plate armour

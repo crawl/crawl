@@ -378,7 +378,7 @@ enum monster_type                      // env.mons[].type
     MONS_GOBLIN,
     MONS_HOBGOBLIN,
     MONS_GNOLL,
-    MONS_BOUDA,
+    MONS_GNOLL_BOUDA,
     MONS_GNOLL_SERGEANT,
     MONS_BOGGART,
     MONS_KOBOLD,
