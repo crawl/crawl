@@ -37,6 +37,7 @@
 #include "dlua.h"
 #include "end.h"
 #include "errors.h"
+#include "explore-greedy-options.h"
 #include "files.h"
 #include "game-options.h"
 #include "ghost.h"
@@ -1230,6 +1231,8 @@ void game_options::reset_options()
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_TRANSPORTER | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
+
+    explore_greedy_visit    = (EG_GLOWING | EG_ARTEFACT);
 
     dump_item_origins      = IODS_ARTEFACTS;
 
@@ -2638,6 +2641,28 @@ int game_options::read_explore_stop_conditions(const string &field) const
     return conditions;
 }
 
+int game_options::read_explore_greedy_visit_conditions(const string &field) const
+{
+    int conditions = 0;
+    vector<string> stops = split_string(",", field);
+    for (const string &stop : stops)
+    {
+        const string c = replace_all_of(stop, " ", "_");
+        if (c == "glowing" || c == "glowing_item"
+                 || c == "glowing_items")
+        {
+            conditions |= EG_GLOWING;
+        }
+        else if (c == "artefact" || c == "artefacts"
+                 || c == "artifact" || c == "artifacts")
+            conditions |= EG_ARTEFACT;
+        else if (c == "stack" || c == "stacks"
+                 || c == "pile" || c == "piles")
+            conditions |= EG_STACK;
+    }
+    return conditions;
+}
+
 // Note the distinction between:
 // 1. aliases "ae := autopickup_exception" "ae += useless_item"
 //    stored in game_options.aliases.
@@ -3619,6 +3644,17 @@ void game_options::read_option_line(const string &str, bool runscript)
             explore_stop &= ~new_conditions;
         else
             explore_stop |= new_conditions;
+    }
+    else if (key == "explore_greedy_visit")
+    {
+        if (plain)
+            explore_greedy_visit = EG_NONE;
+
+        const int new_conditions = read_explore_greedy_visit_conditions(field);
+        if (minus_equal)
+            explore_greedy_visit &= ~new_conditions;
+        else
+            explore_greedy_visit |= new_conditions;
     }
     else if (key == "sound" || key == "hold_sound")
     {

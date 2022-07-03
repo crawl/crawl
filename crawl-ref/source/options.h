@@ -9,6 +9,7 @@
 #include "char-set-type.h"
 #include "confirm-prompt-type.h"
 #include "easy-confirm-type.h"
+#include "explore-greedy-options.h"
 #include "feature.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
@@ -408,6 +409,8 @@ public:
 
     bool        explore_greedy;    // Explore goes after items as well.
 
+    int explore_greedy_visit; // Set what type of items explore_greedy visits.
+
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
 
@@ -695,6 +698,7 @@ private:
                          bool prepend = false);
     void do_kill_map(const string &from, const string &to);
     int  read_explore_stop_conditions(const string &) const;
+    int  read_explore_greedy_visit_conditions(const string &) const;
     use_animations_type read_use_animations(const string &) const;
 
     void split_parse(const string &s, const string &separator,
