@@ -1239,3 +1239,54 @@ ccccccccccccc+++ccccccccccccc
              cWc
              ccc
 ENDMAP
+
+NAME:   ossuary_hellmonk_silent_tomb
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen
+MONS:   silent spectre
+MONS:   wight / wraith w:2 / mummy w:3
+MONS:   centaur zombie w:20 / water moccasin zombie / scorpion zombie /\
+        bullfrog zombie / scorpion w:2
+MONS:   goblin zombie / hobgoblin zombie / adder zombie / orc zombie /\
+        gnoll zombie / ogre zombie w:3 / human zombie w:1
+ITEM:   any potion w:15 / any scroll w:15 / gold w:6 / any armour w:1
+NSUBST: ~ = 2:4 / 12 = 4... / *:.
+NSUBST: - = 2:4 / 12 = 4... / 4 = 3... / *:.
+NSUBST: ' = 1:3 / 1:4 / 4 = 3... / 12 = 4... / *:.
+NSUBST: ! = 2:3 / 1:4 / 8 = 3... / 8 = 4... / *:.
+SUBST:  G : G:100 V T D:4 Y:1
+KFEAT:  D = petrified_tree
+: ossuary_setup_features(_G)
+MAP
+   ccccccccccccccccccccc
+  cc--------ccc''''''''cc
+ cc---------ccc'''''''''cc
+cc-----------+'''''''''''cc
+c------------+''''''''''''c
+c----G-------+'''''''G''''c
+c---GcG----ccccc''''GcG'''c
+c----G---ccccccccc'''G''''c
+c-------ccccccccccc'''''''c
+c------ccccccccccccc''''''c
+c------ccccccccccccc''''''c
+c-----ccccccccccccccc'''''c
+ccc---ccccccccccccccc'''ccc
+ccc+++ccccccn1ncccccc+++ccc
+ccc~~~cccccdnnndccccc!!!ccc
+c~~~~~ccccddd<dddcccc!!!!!c
+c~~~~~~ccccdddddcccc!!!!!!c
+c~~~~~~cccccdddccccc!!!!!!c
+c~~~~~~~ccccc2ccccc!!!!!!!c
+c~~~~G~~~cccc.cccc!!!G!!!!c
+c~~~GcG~~~~cc.cc!!!!GcG!!!c
+c~~~~G~~~~~~c+c!!!!!!G!!!!c
+c~~~~~~~~~~~c.!!!!!!!!!!!!c
+cc~~~~~~~~~~c.!!!!!!!!!!!cc
+ cc~~~~~~~~~c.!!!!!!!!!!cc
+  cc~~~~~~~~c.!!!!!!!!!cc
+   cccccc+++cccccccccccc
+       c....<c
+       c....Ac
+       ccccccc
+ENDMAP
