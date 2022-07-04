@@ -246,6 +246,7 @@
     Sami Liedes
     Dom 'Bodrick' Light
     Lightli
+    Lewis R. Liu
     Kiëd Llaentenn
     Mark Lodato
     Matthew Ludivico
@@ -328,6 +329,7 @@
     Tobias Rehbein
     Remsleep
     Chris Rendle-Short
+    Reono
     Ryan Riegel
     riverfiend
     RjY
