@@ -631,8 +631,8 @@ mon_holy_type holiness_by_name(string name)
     lowercase(name);
     for (const auto bit : mon_holy_type::range())
     {
-        if (name == holiness_name(mon_holy_type::exponent(bit)))
-            return mon_holy_type::exponent(bit);
+        if (name == holiness_name(bit))
+            return bit;
     }
     return MH_NONE;
 }
