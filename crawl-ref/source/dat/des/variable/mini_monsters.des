@@ -1229,6 +1229,35 @@ x<<xxxxxxxxxxxxxxxxxxcx
 x&&xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# I'd apologize for this pun, but I'm not actually sorry.
+NAME:    nicolae_half_adder
+TAGS:    transparent patrolling
+DEPTH:   D:2-6
+KMONS:   1 = adder
+KFEAT:   !O = c
+SHUFFLE: pqrs/O!!O/!O!O/!!O!
+SUBST:   pqrs = O
+: nsubst( "1 = " .. you.depth() .. "=1 / 1=1. / ." )
+TILE:    ! = DNGN_TRANSPARENT_STONE_WHITE
+TILE:    O = DNGN_TRANSPARENT_STONE_DARKGRAY
+COLOUR:  ! = white
+COLOUR:  O = darkgrey
+MAP
+.....................
+..p.........c.c....1.
+.pppppppppppcpcc..r..
+..p.p.1..1..1.%ccrrr.
+.1...p....qqcqcc..r..
+....1.p..q.1c.c..1...
+.......pq............
+.......qp............
+....1.q..p.1cccc.1...
+.1...q....ppccccc.s..
+..q.q.1..1..1.%ccsss.
+.qqqqqqqqqqqccccc.s..
+..q.........cccc...1.
+.....................
+ENDMAP
 
 ###############################################################################
 #
