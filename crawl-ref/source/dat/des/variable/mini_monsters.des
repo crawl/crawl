@@ -1259,6 +1259,47 @@ MAP
 .....................
 ENDMAP
 
+# A similar idea didn't cut it as a Swamp rune vault, so let's resurrect it as
+# a lower-Dungeon vault. The gimmick, of course, is that each room has
+# 27 hydra heads, just arranged on a different number of hydra bodies.
+# Only places if this game doesn't have Swamp. This way, there's no incentive
+# to dive down through D in the hopes of finding this vault before the Swamp
+# end is generated to keep the Lernaean Hydra from being generated in the
+# rune vault.
+NAME:   nicolae_hydra_factorization
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:12-
+veto {{
+   return (crawl.game_started() and dgn.br_exists("Swamp"))
+}}
+# You can see the loot room from just outside the front door to the
+# Lernaean Hydra room (assuming you have at least 6 LOS range), so you can
+# decide if you want to go in. The loot is geared towards good stuff,
+# including a guaranteed randart, because otherwise who would go in?
+KITEM:  * = nothing / |, |, |, |, |, gold good_item, \
+            any armour randart / any weapon randart / any jewellery randart
+KMONS:  P = one-headed hydra
+KMONS:  Q = three-headed hydra
+KMONS:  R = nine-headed hydra
+KMONS:  S = the Lernaean Hydra
+KFEAT:  PQRS` = . / W w:5
+KFEAT:  t = mangrove
+SUBST:  L = tp, M = tq, N = tr, O = ts
+NSUBST: p = 27:P / `, q = 9:Q / `, r = 3:R / `, s = 1:S / `
+MAP
+ccccccccccc
+cpppppppppccccccccc
+cppLLpLLppcMqqqqqMccccccc
+cpLLLpLLLpcqMMqMMqcrNrNrccccc
+cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
+=ppppLpppp=qqMtMqq=rNtNr=sss=*c
+cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
+cpLLLpLLLpcqMMqMMqcrNrNrccccc
+cppLLpLLppcMqqqqqMccccccc
+cpppppppppccccccccc
+ccccccccccc
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
