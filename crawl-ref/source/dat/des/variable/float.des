@@ -11419,3 +11419,82 @@ ccc++ccc
 ..t..t..
  ..@@..
 ENDMAP
+
+NAME:   nicolae_fronds_of_death
+TAGS:   transparent patrolling
+DEPTH:  D:12-, Depths
+ORIENT: float
+SUBST:  0 = ....0009, 9 = .....99998, % = %%%%***|
+MAP
+ccccc                 ccccc
+cG%%ccc             ccc%%Gc
+c%..v9ccc         ccc9v..%c
+c%.8..+9ccc @@@ ccc9+..8.%c
+ccv...v.+9ccc.ccc9+.v...vcc
+ c9..9..x.+0c+c0+.x..9..9c
+ cc+v...v.x.+.+.x.v...v+cc
+  c9...0..x.x.x.x..0...9c
+  cc+xv...v0x.x0v...vx+cc
+   c9....0..x.x..0....9c
+   cc+xxv...v0v...vxx+cc
+    c0..0..0...0..0...c
+   @cc+xxxv.....vxxx+cc@
+   @.+....0..G..0....+.@
+   @cc+xxxv.....vxxx+cc@
+    c0..0..0...0..0..0c
+   cc+xxv...v0v...vxx+cc
+   c9....0..x.x..0....9c
+  cc+xv...v0x.x0v...vx+cc
+  c9...0..x.x.x.x..0...9c
+ cc+v...v.x.+.+.x.v...v+cc
+ c8..9..x.+.c+c.+.x..9..8c
+ccv...v.+9ccc.ccc9+.v...vcc
+c%.8..+9ccc @@@ ccc9+..8.%c
+c%..v8ccc         ccc8v..%c
+cG%%ccc             ccc%%Gc
+ccccc                 ccccc
+ENDMAP
+
+NAME:   nicolae_herringbone
+TAGS:   transparent patrolling
+DEPTH:  Depths
+ORIENT: float
+SUBST:  T = .U V:30 T:130, - = |**%%%$$$$, \
+        0 = .:50 0, 9 = .:50 9, 8 = .:50 8
+MAP
+      c           c           c
+     ccc         ccc         ccc
+    cc-cc       cc-cc       cc-cc
+   cc-..cc     cc-..cc     cc-..cc
+  cc-....cc   cc-....cc   cc-....cc
+ cc-.888..cc cc-.888..cc cc-.888..cc
+cc-..8T8...ccc-..8T8...ccc-..8T8...cc
+ cc..888....ccc..888....ccc..888....cc
+  cc......9..ccc......9..ccc......9..cc
+   cc....999..ccc....999..ccc....999..cc
+    cc..99T99..ccc..99T99..ccc..99T99..cc
+     cc..999..0.ccc..999..0.ccc..999..0.cc
+      cc..9..000.ccc..9..000.ccc..9..000.cc
+       cc...00000.ccc...00000.ccc...00000.cc
+        cc.000T000.ccc.000T000.ccc.000T000.cc
+       cc+c.00000.c+c+c.00000.c+c+c.00000.c+cc
+      cc.c+c.000.c+c.c+c.000.c+c.c+c.000.c+c.cc
+     cc...c+c.0.c+c.0.c+c.0.c+c.0.c+c.0.c+c.0.cc
+    cc..0..c+c.c+c.000.c+c.c+c.000.c+c.c+c.000.cc
+   cc..000..c+c+c.00000.c+c+c.00000.c+c+c.00000.cc
+  cc@.00T00..ccc.000T000.ccc.000T000.ccc.000T000.cc
+     @.000..ccc...00000.ccc...00000.ccc...00000.cc
+      @.0..ccc..9..000.ccc..9..000.ccc..9..000.cc
+       @..ccc..999..0.ccc..999..0.ccc..999..0.cc
+        @ccc..99T99..ccc..99T99..ccc..99T99..cc
+        ccc....999..ccc....999..ccc....999..cc
+        cc......9..ccc......9..ccc......9..cc
+       cc..888....ccc..888....ccc..888....cc
+      cc-..8T8...ccc-..8T8...ccc-..8T8...cc
+       cc-.888..cc cc-.888..cc cc-.888..cc
+        cc-....cc   cc-....cc   cc-....cc
+         cc-..cc     cc-..cc     cc-..cc
+          cc-cc       cc-cc       cc-cc
+           ccc         ccc         ccc
+            c           c           c
+ENDMAP
