@@ -2558,7 +2558,7 @@ const char *fail_severity_adjs[] =
     "dangerous",
     "quite dangerous",
     "extremely dangerous",
-    "potentially lethal",
+    "astonishingly dangerous",
 };
 COMPILE_CHECK(ARRAYSZ(fail_severity_adjs) > 3);
 
