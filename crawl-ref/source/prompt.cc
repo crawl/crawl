@@ -99,12 +99,6 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
             pop.set_hovered(2);
         else if (ask_always && (allow_lowercase && default_answer == 'a' || default_answer == 'A'))
             pop.set_hovered(3);
-        pop.on_single_selection = [&pop](const MenuEntry& item)
-            {
-                if (item.hotkeys.size())
-                    return pop.process_key(item.hotkeys[0]);
-                return false;
-            };
     }
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
@@ -115,7 +109,10 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
             if (use_popup)
             {
                 pop.show();
-                tmp = pop.getkey();
+                auto answer = pop.selected_entries();
+                if (answer.size() && answer[0]->hotkeys.size())
+                    tmp = answer[0]->hotkeys[0];
+                // otherwise, leave as ESCAPE
             }
             else
             {

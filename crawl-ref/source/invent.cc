@@ -349,6 +349,18 @@ void InvMenu::set_title(const string &s)
                            title_annotate));
 }
 
+bool InvMenu::skip_process_command(int keyin)
+{
+    switch (keyin)
+    {
+    case '?':
+    case '!':
+        // item type shortcuts
+        return true;
+    }
+    return Menu::skip_process_command(keyin);
+}
+
 int InvMenu::pre_process(int key)
 {
     if (type == menu_type::drop && key == '\\')
@@ -1113,7 +1125,7 @@ bool item_is_selected(const item_def &i, int selector)
 
     case OSEL_BLESSABLE_WEAPON:
         return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE)
-                                                                          || you_worship(GOD_KIKUBAAQUDGHA), true);
+                    || you_worship(GOD_KIKUBAAQUDGHA), true);
 
     case OSEL_BEOGH_GIFT:
         return (itype == OBJ_WEAPONS

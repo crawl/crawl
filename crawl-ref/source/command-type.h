@@ -317,8 +317,18 @@ enum command_type
     CMD_MENU_CYCLE_MODE_REVERSE,
     CMD_MENU_CYCLE_HEADERS,
     CMD_MENU_HELP,
+    CMD_MENU_SELECT, // e.g. select + accept
     CMD_MENU_EXIT,
     CMD_MAX_MENU = CMD_MENU_EXIT,
+
+    // allow multiselect keybinds to override default menu keybinds
+    CMD_MENU_ACCEPT_SELECTION,
+    CMD_MIN_MENU_MS = CMD_MENU_ACCEPT_SELECTION,
+    CMD_MENU_SELECT_ALL,
+    CMD_MENU_CLEAR_SELECTION,
+    CMD_MENU_INVERT_SELECTION,
+    CMD_MENU_TOGGLE_SELECTED,
+    CMD_MAX_MENU_MS = CMD_MENU_TOGGLE_SELECTED,
 
 #ifdef USE_TILE
     // Tile doll editing screen

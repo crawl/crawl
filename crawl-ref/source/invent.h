@@ -203,6 +203,7 @@ protected:
     void do_preselect(InvEntry *ie);
     void select_item_index(int idx, int qty) override;
     int pre_process(int key) override;
+    bool skip_process_command(int keyin) override;
     virtual bool is_selectable(int index) const override;
     virtual string help_key() const override;
 
