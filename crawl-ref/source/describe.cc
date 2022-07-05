@@ -3720,7 +3720,7 @@ static string _miscast_damage_string(spell_type spell)
         { spschool::summoning, "summons a nameless horror" },
         { spschool::transmutation, "further contaminates you" },
         { spschool::translocation, "anchors you in place" },
-        { spschool::hexes, "slows you and hastes foes" },
+        { spschool::hexes, "slows you" },
     };
 
     spschools_type disciplines = get_spell_disciplines(spell);

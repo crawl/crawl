@@ -7,7 +7,6 @@
 
 #include "spl-miscast.h"
 
-#include "act-iter.h" // actor_near_iterator
 #include "attack.h"
 #include "beam-type.h"
 #include "fight.h"
@@ -203,10 +202,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
             },
             [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
                 int dam, string /*cause*/) {
-                for (actor_near_iterator ai(target.pos(), LOS_NO_TRANS); ai; ++ai)
-                    if (!mons_atts_aligned(ai->temp_attitude(), target.temp_attitude()))
-                        enchant_actor_with_flavour(*ai, source, BEAM_HASTE, dam);
-
                 target.slow_down(source, dam);
             }
         },
