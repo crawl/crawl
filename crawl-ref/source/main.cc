@@ -1382,7 +1382,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         }
         break;
     case DNGN_ENTER_ZOT:
-        if (runes_in_pack() < 3)
+        if (runes_in_pack() < 3 && !crawl_state.game_is_descent())
         {
             mpr("You need at least three runes to enter the Realm of Zot.");
             return false;
@@ -1635,6 +1635,8 @@ static void _take_stairs(bool down)
         tag_followers(); // Only those beside us right now can follow.
         if (down)
             start_delay<DescendingStairsDelay>(1);
+        else if (crawl_state.game_is_descent())
+            up_stairs();
         else
             start_delay<AscendingStairsDelay>(1);
         id_floor_items();
@@ -2554,6 +2556,9 @@ void world_reacts()
     reset_show_terrain();
 
     crawl_state.clear_mon_acting();
+
+    if (you.time_taken)
+        descent_crumble_stairs();
 
     if (!crawl_state.game_is_arena())
     {

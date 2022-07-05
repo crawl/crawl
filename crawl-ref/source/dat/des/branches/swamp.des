@@ -1003,7 +1003,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_swamp_ascending_descending
-TAGS:    transparent decor no_pool_fixup
+TAGS:    transparent decor no_pool_fixup no_descent
 ORIENT:  float
 : if you.depth() == 1 then
 SUBST:   P = p, Q = q, R = r, S = s, Z = z
@@ -1024,7 +1024,7 @@ SSSSSSSSS
 ENDMAP
 
 NAME:    nicolae_swamp_ascending_descending_big
-TAGS:    transparent decor no_pool_fixup
+TAGS:    transparent decor no_pool_fixup no_descent
 ORIENT:  float
 SUBST:   D = PQ, E = QR, F = RS, _ = S_
 : if you.depth() == 1 then

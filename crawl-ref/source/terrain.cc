@@ -31,6 +31,7 @@
 #include "items.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "map-knowledge.h" // set_terrain_visible
 #include "mapmark.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -653,6 +654,17 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
            && feat != DNGN_EXIT_VAULTS
            && feat != DNGN_EXIT_HELL
            && feat != DNGN_ENTER_HELL;
+}
+/** Will this stair-like feature stick around after the player stops using it? (In descent mode?)
+ */
+bool feat_is_descent_exitable(dungeon_feature_type feat)
+{
+    return feat == DNGN_EXIT_DUNGEON
+           || feat == DNGN_EXIT_HELL
+           || feat == DNGN_EXIT_COCYTUS
+           || feat == DNGN_EXIT_GEHENNA
+           || feat == DNGN_EXIT_TARTARUS
+           || feat == DNGN_EXIT_DIS;
 }
 
 /** Is this feature a type of fountain?
@@ -2467,5 +2479,63 @@ void ice_wall_damage(monster &mons, int delay)
             behaviour_event(&mons, ME_WHACK, &you);
             mons.expose_to_element(BEAM_COLD, orig_dam);
         }
+    }
+}
+
+static bool _feat_is_descent_upstairs(dungeon_feature_type feat)
+{
+    if (feat_is_descent_exitable(feat))
+        return false;
+
+    return feat_is_stone_stair_up(feat)
+        || feat_is_branch_exit(feat)
+        || feat == DNGN_EXIT_VAULTS
+        || feat == DNGN_EXIT_ZOT
+        || feat == DNGN_ESCAPE_HATCH_UP;
+}
+
+void descent_crumble_stairs()
+{
+    if (!crawl_state.game_is_descent() || env.properties.exists(DESCENT_STAIRS_KEY))
+        return;
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        dungeon_feature_type feat = env.grid(*ri);
+        if (_feat_is_descent_upstairs(feat))
+        {
+            dungeon_terrain_changed(*ri, DNGN_FLOOR);
+            if (you.see_cell(*ri))
+                mpr("The exit collapses.");
+        }
+    }
+
+    env.properties[DESCENT_STAIRS_KEY] = true;
+}
+
+static void _descent_reveal_around(coord_def p)
+{
+    force_show_update_at(p);
+    view_update_at(p);
+
+    for (radius_iterator ri(p, you.current_vision, C_SQUARE); ri; ++ri)
+    {
+        if (cell_see_cell_nocache(p, *ri))
+        {
+            force_show_update_at(*ri);
+            set_terrain_visible(*ri);
+            view_update_at(*ri);
+        }
+    }
+}
+
+void descent_reveal_stairs()
+{
+    // possible this should be in another file.
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        dungeon_feature_type feat = env.grid(*ri);
+        if (_feat_is_descent_upstairs(feat))
+            _descent_reveal_around(*ri);
     }
 }

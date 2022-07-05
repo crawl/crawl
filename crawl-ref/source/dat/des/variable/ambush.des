@@ -23,7 +23,7 @@ NAME:     evilmike_ambush
 DEPTH:    Lair, Depths, !Depths:$, Elf, !Elf:$, Snake, !Snake:$, \
           Dis, !Dis:$, Geh, !Geh:$, Tar, !Tar:$, Coc, !Coc:$, \
           Zot, !Zot:$, Crypt, !Crypt:$
-TAGS:     allow_dup transparent
+TAGS:     allow_dup transparent no_descent
 KMONS:    P = bush / burning bush w:1
 SUBVAULT: = : evilmike_ambush_outer
 SUBVAULT: - : evilmike_ambush_inner

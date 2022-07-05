@@ -1087,21 +1087,36 @@ void ShopMenu::purchase_selected()
     const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
     update_help();
     const formatted_string old_more = more;
-    if (cost > you.gold)
+    const bool too_expensive = (cost > you.gold);
+    if (too_expensive)
     {
-        more = formatted_string::parse_string(make_stringf(
-                   "<%s>You don't have enough money.</%s>\n",
-                   col.c_str(),
-                   col.c_str()));
-        more += old_more;
-        update_more();
-        return;
+        if (!crawl_state.game_is_descent())
+        {
+            more = formatted_string::parse_string(make_stringf(
+                    "<%s>You don't have enough money.</%s>\n",
+                    col.c_str(),
+                    col.c_str()));
+            more += old_more;
+            update_more();
+            return;
+        }
+        else if (you.props.exists(DESCENT_DEBT_KEY))
+        {
+            more = formatted_string::parse_string(make_stringf(
+                    "<%s>You're in debt! Pay it off first.</%s>\n",
+                    col.c_str(),
+                    col.c_str()));
+            more += old_more;
+            update_more();
+            return;
+        }
     }
     more = formatted_string::parse_string(make_stringf(
-               "<%s>Purchase items%s for %d gold? (%s/N)</%s>\n",
+               "<%s>Purchase items%s for %d gold? %s (%s/N)</%s>\n",
                col.c_str(),
                buying_from_list ? " in shopping list" : "",
                cost,
+               too_expensive ? "This will put you in debt!" : "",
                Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
                col.c_str()));
     more += old_more;
@@ -1133,7 +1148,7 @@ void ShopMenu::purchase_selected()
         const int i = static_cast<item_def*>(entry->data) - shop.stock.data();
         item_def& item(shop.stock[i]);
         // Can happen if the price changes due to id status
-        if (item_price(item, shop) > you.gold)
+        if (item_price(item, shop) > you.gold && !crawl_state.game_is_descent())
             continue;
         const int quant = item.quantity;
 

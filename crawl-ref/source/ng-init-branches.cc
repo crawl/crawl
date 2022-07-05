@@ -5,6 +5,7 @@
 
 #include "branch.h"
 #include "random.h"
+#include "state.h"
 
 void initialise_brentry()
 {
@@ -17,12 +18,13 @@ FixedVector<level_id, NUM_BRANCHES> create_brentry()
 
     for (branch_iterator it; it; ++it)
     {
-        if (!skip_branch_brentry(it))
-        {
-            candidate_brentry[it->id] = level_id(it->parent_branch,
-                                       random_range(it->mindepth,
-                                                    it->maxdepth));
-        }
+        if (skip_branch_brentry(it))
+            continue;
+        if (crawl_state.game_is_descent() && it->id == BRANCH_CRYPT)
+            continue; // EVIL HACK - otherwise we get double crypt entrances in Vaults
+
+        const int depth = random_range(it->mindepth, it->maxdepth);
+        candidate_brentry[it->id] = level_id(it->parent_branch, depth);
     }
 
     vector<branch_type> disabled_branch = random_choose_disabled_branches();

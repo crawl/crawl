@@ -1121,6 +1121,9 @@ static void _print_malev()
  */
 void do_trap_effects()
 {
+    if (crawl_state.game_is_descent())
+        return;
+
     // Try to shaft, teleport, or alarm the player.
 
     // We figure out which possibilities are allowed before picking which happens
@@ -1201,6 +1204,10 @@ level_id generic_shaft_dest(level_id place)
     // Shafts drop you 1/2/3 levels with equal chance.
     // 33.3% for 1, 2, 3 from D:3, less before
     place.depth += 1 + random2(min(place.depth, 3));
+
+    // In descent, instead always drop one floor. Too brutal otherwise.
+    if (crawl_state.game_is_descent())
+        place.depth = curr_depth + 1;
 
     if (place.depth > max_depth)
         place.depth = max_depth;

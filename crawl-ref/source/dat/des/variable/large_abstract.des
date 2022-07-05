@@ -456,6 +456,7 @@ ENDMAP
 # Impenetrable vault
 #
 NAME:   impenetrable_vault
+TAGS:   no_descent
 DEPTH:  Depths:2-, !Depths:$
 ORIENT: southeast
 KMASK:   - = !opaque
@@ -710,6 +711,7 @@ ENDMAP
 NAME:    minmay_connected_triangles_in_corner
 ORIENT:  southeast
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
+TAGS:    no_descent
 SHUFFLE: ([{)]}, 890, |*%$
 SUBST:   c : cv
 KMASK:   - = !opaque
@@ -830,6 +832,7 @@ ENDMAP
 
 NAME:    minmay_nested_s
 ORIENT:  southwest
+TAGS:    no_descent
 DEPTH:   D:12-, !D:$, Depths, !Depths:$
 SUBST:   c : cv
 SHUFFLE: ([{, )]}
@@ -1098,6 +1101,7 @@ ENDMAP
 
 NAME:    minmay_broken_ring
 ORIENT:  northwest
+TAGS:    no_descent
 DEPTH:   Depths
 SHUFFLE: |*
 SUBST:   y : z:50 .:50 xcvbn8GTUVY

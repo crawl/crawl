@@ -481,7 +481,8 @@ static bool _build_level_vetoable(bool enable_random_maps)
 
     _dgn_set_floor_colours();
 
-    if (crawl_state.game_standard_levelgen()
+    if (crawl_state.game_has_random_floors()
+        && !crawl_state.game_is_descent()
         && !_valid_dungeon_level())
     {
         return false;
@@ -1245,6 +1246,46 @@ static void _fixup_pandemonium_stairs()
             _set_grd(*ri, DNGN_TRANSIT_PANDEMONIUM);
         }
     }
+}
+
+static void _fixup_descent_hatches()
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+        if (env.grid(*ri) == DNGN_ESCAPE_HATCH_UP)
+            _set_grd(*ri, DNGN_FLOOR);
+}
+
+static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
+                                                      unsigned mask = MMT_VAULT)
+{
+    coord_def place = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
+    if (player_in_branch(BRANCH_SLIME))
+    {
+        int tries = 100;
+        while (!place.origin()  // stop if we fail to find floor.
+               && (dgn_has_adjacent_feat(place, DNGN_ROCK_WALL)
+                   || dgn_has_adjacent_feat(place, DNGN_SLIMY_WALL))
+               && tries-- > 0)
+        {
+            place = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
+        }
+
+        if (tries < 0)  // tries == 0 means we succeeded on the last attempt
+            place.reset();
+    }
+    if (place.origin())
+        throw dgn_veto_exception("Cannot place feature at random floor square.");
+    else
+        _set_grd(place, feat);
+}
+
+static void _place_dungeon_exit()
+{
+    if (!player_in_branch(BRANCH_ZOT) || !at_branch_bottom())
+        return;
+
+    _dgn_place_feature_at_random_floor_square(
+                static_cast<dungeon_feature_type>(DNGN_EXIT_DUNGEON));
 }
 
 static void _mask_vault(const vault_placement &place, unsigned mask,
@@ -2197,8 +2238,10 @@ static bool _add_connecting_escape_hatches()
         return true;
 
     // Veto D:1 or Pan if there are disconnected areas.
+    // Veto any  non-abyss descent level with disconnected areas
     if (player_in_branch(BRANCH_PANDEMONIUM)
-        || (player_in_branch(BRANCH_DUNGEON) && you.depth == 1))
+        || (player_in_branch(BRANCH_DUNGEON) && you.depth == 1)
+        || (crawl_state.game_is_descent() && !player_in_branch(BRANCH_ABYSS)))
     {
         // Allow == 0 in case the entire level is one opaque vault.
         return dgn_count_disconnected_zones(false) <= 1;
@@ -2685,7 +2728,7 @@ static void _build_dungeon_level()
 
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
-    if (crawl_state.game_standard_levelgen())
+    if (crawl_state.game_has_random_floors())
     {
         if (place_vaults)
         {
@@ -2755,6 +2798,12 @@ static void _build_dungeon_level()
 
     if (player_in_hell())
         _fixup_hell_stairs();
+
+    if (crawl_state.game_is_descent())
+    {
+        _fixup_descent_hatches();
+        _place_dungeon_exit();
+    }
 }
 
 static void _dgn_set_floor_colours()
@@ -3548,30 +3597,6 @@ static void _place_traps()
     }
 }
 
-static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
-                                                      unsigned mask = MMT_VAULT)
-{
-    coord_def place = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
-    if (player_in_branch(BRANCH_SLIME))
-    {
-        int tries = 100;
-        while (!place.origin()  // stop if we fail to find floor.
-               && (dgn_has_adjacent_feat(place, DNGN_ROCK_WALL)
-                   || dgn_has_adjacent_feat(place, DNGN_SLIMY_WALL))
-               && tries-- > 0)
-        {
-            place = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
-        }
-
-        if (tries < 0)  // tries == 0 means we succeeded on the last attempt
-            place.reset();
-    }
-    if (place.origin())
-        throw dgn_veto_exception("Cannot place feature at random floor square.");
-    else
-        _set_grd(place, feat);
-}
-
 // Create randomly-placed stone stairs.
 void dgn_place_stone_stairs(bool maybe_place_hatches)
 {
@@ -3732,6 +3757,15 @@ static bool _place_vault_by_tag(const string &tag)
     return _build_secondary_vault(vault);
 }
 
+static bool _in_descent_parent(branch_type branch)
+{
+    vector<branch_type> parents = descent_parents(branch);
+    for (branch_type parent : parents)
+        if (player_in_branch(parent))
+            return true;
+    return false;
+}
+
 static void _place_branch_entrances(bool use_vaults)
 {
     // Find what branch entrances are already placed, and what branch
@@ -3746,7 +3780,8 @@ static void _place_branch_entrances(bool use_vaults)
             && !is_hell_subbranch(it->id)
             && ((you.depth >= it->mindepth
                  && you.depth <= it->maxdepth)
-                || level_id::current() == brentry[it->id]))
+                || level_id::current() == brentry[it->id]
+                || crawl_state.game_is_descent()))
         {
             could_be_placed = true;
         }
@@ -3780,9 +3815,22 @@ static void _place_branch_entrances(bool use_vaults)
         if (is_hell_branch(it->id) || branch_entrance_placed[it->id])
             continue;
 
-        if (it->entry_stairs != NUM_FEATURES
-            && player_in_branch(parent_branch(it->id))
-            && level_id::current() == brentry[it->id])
+        bool brentry_allowed = false;
+
+        if (crawl_state.game_is_descent())
+        {
+            brentry_allowed = it->entry_stairs != NUM_FEATURES
+                && _in_descent_parent(it->id)
+                && at_branch_bottom();
+        }
+        else
+        {
+            brentry_allowed = it->entry_stairs != NUM_FEATURES
+                && player_in_branch(parent_branch(it->id))
+                && level_id::current() == brentry[it->id];
+        }
+
+        if (brentry_allowed)
         {
             // Placing a stair.
             dprf(DIAG_DNGN, "Placing stair to %s", it->shortname);
@@ -4444,6 +4492,9 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
         if (player_in_branch(BRANCH_PANDEMONIUM) && dgn_zones > 1)
             throw dgn_veto_exception("Pan map with disconnected zones");
     }
+
+    if (crawl_state.game_is_descent() && vault->get_tags_unsorted().count("no_descent"))
+        throw dgn_veto_exception("Illegal map for descent");
 
     unwind_var<string> placing(env.placing_vault, vault->name);
 

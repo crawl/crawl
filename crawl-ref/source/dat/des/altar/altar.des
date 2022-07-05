@@ -59,7 +59,7 @@ ENDMAP
 NAME:   lemuel_altar_in_water
 DEPTH:  Swamp, Shoals
 WEIGHT: 9
-TAGS:   transparent no_monster_gen no_rotate decor extra
+TAGS:   transparent no_monster_gen no_rotate decor extra no_descent
 : local brnd = crawl.random2(13)
 : if not is_validating() and brnd <= 10 then
 TAGS:   no_pool_fixup
@@ -123,7 +123,7 @@ MAP
 ENDMAP
 
 NAME:   lemuel_upstairs_altar
-TAGS:   extra
+TAGS:   extra no_descent
 DEPTH:  Elf, !Elf:$, Crypt, !Crypt:$
 ORIENT: float
 SUBST:  T:T., )=)}], c:ccx
@@ -173,7 +173,7 @@ ENDMAP
 
 NAME:  lemuel_angel_altar
 DEPTH: Depths
-TAGS:  no_trap_gen
+TAGS:  no_trap_gen no_descent
 MONS: patrolling Daeva / patrolling Angel
 KFEAT:  n = iron_grate
 KFEAT: _ = altar_elyvilon / altar_zin / altar_the_shining_one
@@ -207,7 +207,7 @@ ENDMAP
 #
 NAME:  lemuel_hellish_altar
 DEPTH: Crypt, Geh
-TAGS:  no_monster_gen
+TAGS:  no_monster_gen no_descent
 MONS:  rust devil / orange demon
 MONS:  hell beast / red devil
 MONS:  iron imp

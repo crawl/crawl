@@ -2245,7 +2245,7 @@ ENDMAP
 # A sealed arena. The walls are usually thick enough
 # to make this only accessible from the floor below.
 NAME:   kennysheep_catoblepas_arena
-TAGS:   no_monster_gen ruin
+TAGS:   no_monster_gen ruin no_descent
 DEPTH:  Lair:3-, !Lair:$
 MONS:   catoblepas
 NSUBST: d = 4=%* / 3:0 / *:.
