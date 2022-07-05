@@ -196,23 +196,27 @@ public:
     SpellMenu()
         : ToggleableMenu(MF_SINGLESELECT | MF_ANYPRINTABLE
             | MF_NO_WRAP_ROWS | MF_ALLOW_FORMATTING
-            | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_PRESELECTED) {}
+            | MF_ARROWS_SELECT | MF_INIT_HOVER) {}
 protected:
-    virtual void select_items(int key, int qty = -1) override
+    bool process_command(command_type c) override
     {
-        // If menu_arrow_control is false, cast the last-cast spell on <enter>
-        if (!(flags & MF_ARROWS_SELECT) && key == CK_ENTER)
+        get_selected(&sel);
+        // if there's a preselected item, and no current selection, select it.
+        // for arrow selection, the hover starts on the preselected item so no
+        // special handling is needed.
+        if (c == CMD_MENU_SELECT && !(flags & MF_ARROWS_SELECT)
+            && sel.empty())
         {
             for (size_t i = 0; i < items.size(); ++i)
             {
                 if (static_cast<SpellMenuEntry*>(items[i])->preselected)
                 {
-                    select_index(i, qty);
-                    return;
+                    select_index(i, 1);
+                    break;
                 }
             }
         }
-        ToggleableMenu::select_items(key, qty);
+        return ToggleableMenu::process_command(c);
     }
 };
 

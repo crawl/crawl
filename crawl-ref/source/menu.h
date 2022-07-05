@@ -269,7 +269,7 @@ enum MenuFlag
     MF_TOGGLE_ACTION    = 0x00400,   ///< ToggleableMenu toggles action as well
     MF_NO_WRAP_ROWS     = 0x00800,   ///< For menus used as tables (eg. ability)
     MF_START_AT_END     = 0x01000,   ///< Scroll to end of list
-    MF_PRESELECTED      = 0x02000,   ///< Has a preselected entry.
+
     MF_QUIET_SELECT     = 0x04000,   ///< No selection box and no count.
 
     MF_USE_TWO_COLUMNS  = 0x08000,   ///< Only valid for tiles menus
@@ -309,7 +309,7 @@ public:
     virtual bool is_set(int flag) const;
     void set_tag(const string& t) { tag = t; }
 
-    bool minus_is_pageup() const;
+    bool minus_is_command() const;
     // Sets a replacement for the default -more- string.
     void set_more(const formatted_string &more);
     void set_more(const string s);
@@ -457,12 +457,13 @@ protected:
     int next_block_from(int index, bool forward, bool wrap) const;
 
     virtual int pre_process(int key);
-    virtual int post_process(int key);
 
     void deselect_all(bool update_view = true);
     virtual void select_items(int key, int qty = -1);
     virtual void select_item_index(int idx, int qty);
     void select_index(int index, int qty = -1);
+    int hotkey_to_index(int key, bool primary_only);
+    bool process_selection();
 
     bool is_hotkey(int index, int key);
     virtual bool is_selectable(int index) const;

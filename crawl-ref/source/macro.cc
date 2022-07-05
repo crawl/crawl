@@ -62,6 +62,7 @@ typedef map<keyseq,keyseq> macromap;
 static macromap Keymaps[KMC_CONTEXT_COUNT];
 static macromap Macros;
 
+// does this need to have all maps for real?
 static macromap *all_maps[] =
 {
     &Keymaps[KMC_DEFAULT],
@@ -2100,6 +2101,9 @@ KeymapContext context_for_command(command_type cmd)
     if (cmd >= CMD_MIN_MENU && cmd <= CMD_MAX_MENU)
         return KMC_MENU;
 
+    if (cmd >= CMD_MIN_MENU_MS && cmd <= CMD_MAX_MENU_MS)
+        return KMC_MENU_MULTISELECT;
+
 #ifdef USE_TILE
     if (cmd >= CMD_MIN_DOLL && cmd <= CMD_MAX_DOLL)
         return KMC_DOLL;
@@ -2111,8 +2115,8 @@ KeymapContext context_for_command(command_type cmd)
 static bool _allow_rebinding(int key, KeymapContext context)
 {
     // CK_REDRAW, CK_MOUSE_CMD, CK_MOUSE_MOVE are covered by `is_synthetic_key`
-    if (context == KMC_MENU || context == KMC_TARGETING
-        || context == KMC_LEVELMAP)
+    if (context == KMC_MENU || context == KMC_MENU_MULTISELECT
+        || context == KMC_TARGETING || context == KMC_LEVELMAP)
     {
         // prevent rebinding certain keys in popups/menus that would break
         // the UI too much. (These can still be modified with a keymap if you
@@ -2155,7 +2159,8 @@ void bind_command_to_key(command_type cmd, int key)
         return;
     }
 #ifdef USE_TILE_WEB
-    else if (context == KMC_MENU && tiles.is_controlled_from_web())
+    else if ((context == KMC_MENU || context == KMC_MENU_MULTISELECT)
+        && tiles.is_controlled_from_web())
     {
         // disable because they interact badly with webtiles client code.
         // TODO: is there any way to get these to work on webtiles?

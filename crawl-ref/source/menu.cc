@@ -1044,9 +1044,10 @@ void Menu::set_flags(int new_flags)
 #endif
 }
 
-bool Menu::minus_is_pageup() const
+bool Menu::minus_is_command() const
 {
-    return !is_set(MF_MULTISELECT) && !is_set(MF_SPECIAL_MINUS);
+    // TODO: remove?
+    return is_set(MF_MULTISELECT) || !is_set(MF_SPECIAL_MINUS);
 }
 
 void Menu::set_more(const formatted_string &fs)
@@ -1150,12 +1151,13 @@ string Menu::get_keyhelp(bool scrollable) const
             navigation +=
                 "[<w>.</w>|<w>Space</w>] toggle selected    ";
         }
-        navigation += make_stringf(
-                "[<w>Ret</w>] %s "
-                "(%zu chosen)"
-                "</lightgrey>",
-            chosen_count == 0 ? "cancel" : "accept",
-            chosen_count);
+        if (chosen_count)
+        {
+            navigation += make_stringf(
+                    "[<w>Ret</w>] accept (%zu chosen)"
+                    "</lightgrey>",
+                chosen_count);
+        }
     }
     // XX this is present on non-scrolling multiselect keyhelps mostly for
     // aesthetic reasons, but maybe it could change with hover?
@@ -1341,11 +1343,6 @@ int Menu::pre_process(int k)
     return k;
 }
 
-int Menu::post_process(int k)
-{
-    return k;
-}
-
 bool Menu::filter_with_regex(const char *re)
 {
     text_pattern tpat(re, true);
@@ -1422,6 +1419,34 @@ bool Menu::cycle_mode(bool forward)
     update_title();
     update_more();
     return true;
+}
+
+bool Menu::process_selection()
+{
+    // update selection
+    get_selected(&sel);
+    bool ret = sel.empty();
+    // if it's non-empty, and we are in a singleselect menu, try to run any
+    // associated on_select functions
+    if (!!(flags & MF_SINGLESELECT) && !ret)
+    {
+        // singleselect: try running any on_select calls
+        MenuEntry *item = sel[0];
+        ret = false;
+        if (item->on_select)
+            ret = item->on_select(*item);
+        else if (on_single_selection) // currently, no menus use both
+            ret = on_single_selection(*item);
+        // the UI for singleselect menus behaves oddly if anything is
+        // selected when it runs, because select acts as a toggle. So
+        // if the selection has been processed and the menu is
+        // continuing, clear the selection.
+        // TODO: this is a fairly clumsy api for menus that are
+        // trying to *do* something.
+        if (ret)
+            deselect_all();
+    }
+    return ret;
 }
 
 bool Menu::process_command(command_type cmd)
@@ -1512,13 +1537,60 @@ bool Menu::process_command(command_type cmd)
         if (!help_key().empty())
             show_specific_help(help_key());
         break;
+    case CMD_MENU_ACCEPT_SELECTION:
+        ASSERT(is_set(MF_MULTISELECT));
+        get_selected(&sel);
+        ret = sel.empty(); // only exit if there is a selection, otherwise noop
+        break;
+    case CMD_MENU_SELECT:
+        // select + accept. Note that this will work in multiselect mode to do
+        // a quick accept if something is hovered, but is currently preempted by
+        // CMD_MENU_ACCEPT_SELECTION above.
+        if (is_set(MF_NOSELECT))
+            break; // or crash?
+        // try selecting a hovered item
+        if (last_hovered >= 0)
+            select_item_index(last_hovered, 1);
+        ret = process_selection();
+        break;
+
     case CMD_MENU_EXIT:
         sel.clear();
         lastch = ESCAPE; // XX is this correct?
         ret = is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
         break;
+    case CMD_MENU_TOGGLE_SELECTED:
+        // toggle the currently hovered item, if any. Noop if no hover.
+        ASSERT(is_set(MF_MULTISELECT));
+        if (last_hovered >= 0)
+        {
+            select_item_index(last_hovered, -1);
+            get_selected(&sel);
+        }
+        break;
+    case CMD_MENU_SELECT_ALL: // Select all or apply filter if there is one.
+        ASSERT(is_set(MF_MULTISELECT));
+        select_index(-1, -2);
+        break;
+    case CMD_MENU_INVERT_SELECTION:
+        ASSERT(is_set(MF_MULTISELECT));
+        select_index(-1, -1);
+        get_selected(&sel);
+        break;
+    case CMD_MENU_CLEAR_SELECTION:
+        ASSERT(is_set(MF_MULTISELECT));
+        select_index(-1, 0); // XX is there a singleselect menu where this should work?
+        break;
+
     default:
         break;
+    }
+
+    if (ret)
+    {
+        // is this overkill to always do?
+        update_title();
+        update_more();
     }
 
     if (cmd != CMD_NO_CMD)
@@ -1536,7 +1608,7 @@ bool Menu::skip_process_command(int keyin)
 {
     // TODO: autodetect if there is a menu item that uses a key that would
     // otherwise be bound?
-    if (keyin == '-' && !minus_is_pageup())
+    if (keyin == '-' && !minus_is_command())
         return true;
     return false;
 }
@@ -1550,6 +1622,15 @@ command_type Menu::get_command(int keyin)
     // -- is it needed?
     if (keyin == -1)
         return CMD_MENU_EXIT;
+
+    // for multiselect menus, we first check in the multiselect-specific keymap,
+    // and if this doesn't find anything, the general menu keymap.
+    if (is_set(MF_MULTISELECT))
+    {
+        const command_type c = key_to_command(keyin, KMC_MENU_MULTISELECT);
+        if (c != CMD_NO_CMD)
+            return c;
+    }
 
     // n.b. this explicitly ignores m_kmc, which is intended only for keymap
     // purposes
@@ -1607,7 +1688,10 @@ bool Menu::process_key(int keyin)
         cmd = get_command(keyin);
 
     if (cmd != CMD_NO_CMD)
+    {
+        lastch = keyin; // TODO: remove lastch
         return process_command(cmd);
+    }
 
     switch (keyin)
     {
@@ -1620,38 +1704,24 @@ bool Menu::process_key(int keyin)
 #endif
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
-        if (!is_set(MF_NOSELECT))
-            break;
-    case '.':
-        if (last_hovered != -1 && !!(flags & MF_MULTISELECT))
-        {
-            select_item_index(last_hovered, -1);
-            get_selected(&sel);
-            update_title();
-            update_more();
-        }
+        // alert: tiles mouse clicks are not handled here! they are translated
+        // to hotkeys by lower-level tiles code and then dealt with in
+        // `m_ui.popup->on_keydown_event`.
+        // TODO: fix this insanity
         break;
-
 
 #ifdef TOUCH_UI
     case CK_TOUCH_DUMMY:  // mouse click in top/bottom region of menu
     case 0:               // do the same as <enter> key
         if (!(flags & MF_MULTISELECT)) // bail out if not a multi-select
             return true;
+        return process_command(CMD_MENU_SELECT); // TODO: is this right??
         // seemingly intentional fallthrough
 #endif
-    case CK_ENTER:
-        // TODO: hover and multiselect?
-        if ((flags & MF_SINGLESELECT) && last_hovered >= 0)
-            select_item_index(last_hovered, 1);
-        else if (!(flags & MF_PRESELECTED) || !sel.empty())
-            return false;
-        // else fall through
     default:
         // Even if we do return early, lastch needs to be set first,
         // as it's sometimes checked when leaving a menu.
-        keyin  = post_process(keyin);
-        lastch = keyin;
+        lastch = keyin; // TODO: remove lastch?
 
         // If no selection at all is allowed, exit now.
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
@@ -1659,33 +1729,24 @@ bool Menu::process_key(int keyin)
 
         select_items(keyin, num);
         get_selected(&sel);
-        if (sel.size() == 1 && (flags & MF_SINGLESELECT))
+        // we have received what should be a menu item hotkey. Activate that
+        // menu item.
+        if (is_set(MF_SINGLESELECT))
         {
-            MenuEntry *item = sel[0];
-            bool result = false;
-            if (item->on_select)
-                result = item->on_select(*item);
-            else if (on_single_selection) // currently, no menus use both
-                result = on_single_selection(*item);
-            // the UI for singleselect menus behaves oddly if anything is
-            // selected when it runs, because select acts as a toggle. So
-            // if the selection has been processed and the menu is
-            // continuing, clear the selection.
-            // TODO: this is a fairly clumsy api for menus that are
-            // trying to *do* something.
-            if (result)
-                deselect_all();
-            return result;
+            if (last_hovered >= 0)
+                last_hovered = hotkey_to_index(keyin, false);
+            return process_selection();
+        }
+
+        if (is_set(MF_ANYPRINTABLE)
+            && (!isadigit(keyin) || !is_set(MF_SELECT_QTY)))
+        {
+            // TODO: should this behavior be made to coexist with multiselect?
+            return false;
         }
 
         update_title();
         update_more();
-
-        if (flags & MF_ANYPRINTABLE
-            && (!isadigit(keyin) || !is_set(MF_SELECT_QTY)))
-        {
-            return false;
-        }
 
         break;
     }
@@ -1703,13 +1764,12 @@ bool Menu::process_key(int keyin)
     return true;
 }
 
-string Menu::get_select_count_string(int count) const
+string Menu::get_select_count_string(int) const
 {
     string ret;
     if (f_selitem)
         ret = f_selitem(&sel);
-    else if (count)
-        ret = make_stringf(" (%d selected)", count); // XX is this ever used?
+    // count is shown in footer now
 
     return ret + string(max(12 - (int)ret.size(), 0), ' ');
 }
@@ -1780,69 +1840,70 @@ bool Menu::is_hotkey(int i, int key)
     return ishotkey && (!is_set(MF_SELECT_BY_PAGE) || in_page(i));
 }
 
+/// find the first item (if any) that has hotkey `key`.
+int Menu::hotkey_to_index(int key, bool primary_only)
+{
+    const int first_entry = get_first_visible();
+    const int final = items.size();
+
+    // Process all items, in case user hits hotkey for an
+    // item not on the current page.
+
+    // We have to use some hackery to handle items that share
+    // the same hotkey (as for pickup when there's a stack of
+    // >52 items). If there are duplicate hotkeys, the items
+    // are usually separated by at least a page, so we should
+    // only select the item on the current page. We use only
+    // one loop, but we look through the menu starting with the first
+    // visible item, and check to see if we've matched an item
+    // by its primary hotkey (hotkeys[0] for multiple-selection
+    // menus), in which case we stop selecting further items. If
+    // not, we loop around back to the beginning.
+    for (int i = 0; i < final; ++i)
+    {
+        const int index = (i + first_entry) % final;
+        if (is_hotkey(index, key)
+            && (!primary_only || items[index]->hotkeys[0] == key))
+        {
+            return index;
+        }
+    }
+    return -1;
+}
+
 void Menu::select_items(int key, int qty)
 {
-    if (key == ',' && !!(flags & MF_MULTISELECT)) // Select all or apply filter if there is one.
-        select_index(-1, -2);
-    else if ((key == '*') && !!(flags & MF_MULTISELECT)) // Invert selection.
-        select_index(-1, -1);
-    else if (key == '-' && !!(flags & MF_MULTISELECT))
+    const int index = hotkey_to_index(key, !is_set(MF_SINGLESELECT));
+    if (index >= 0)
     {
-        // Clear selection. XX is there a singleselect menu where this should work?
-        select_index(-1, 0);
+        // XX for some singleselect menus, only snapping might be
+        // better. (E.g. inventory)
+        select_index(index, qty);
+        set_hovered(index);
+        return;
     }
-    else
+
+    // no primary hotkeys found, check secondary hotkeys for multiselect
+    if (is_set(MF_MULTISELECT))
     {
-        int first_entry = get_first_visible(), final = items.size();
-
-        // Process all items, in case user hits hotkey for an
-        // item not on the current page.
-
-        // We have to use some hackery to handle items that share
-        // the same hotkey (as for pickup when there's a stack of
-        // >52 items). If there are duplicate hotkeys, the items
-        // are usually separated by at least a page, so we should
-        // only select the item on the current page. We use only
-        // one loop, but we look through the menu starting with the first
-        // visible item, and check to see if we've matched an item
-        // by its primary hotkey (hotkeys[0] for multiple-selection
-        // menus), in which case we stop selecting further items. If
-        // not, we loop around back to the beginning.
-        for (int i = 0; i < final; ++i)
-        {
-            const int index = (i + first_entry) % final;
-            if (is_hotkey(index, key) && (items[index]->hotkeys[0] == key
-                                          || is_set(MF_SINGLESELECT)))
+        // store the first and last indices that a multi-item hotkey selects
+        int last_snap = -1;
+        int first_snap = -1;
+        for (int i = 0; i < static_cast<int>(items.size()); ++i)
+            if (is_hotkey(i, key))
             {
-                // XX for some singleselect menus, only snapping might be
-                // better. (E.g. inventory)
-                select_index(index, qty);
-                set_hovered(index);
-                return;
+                if (first_snap < 0)
+                    first_snap = i;
+                last_snap = i;
+                select_index(i, qty);
             }
-        }
 
-        // no primary hotkeys found, check secondary hotkeys for multiselect
-        if (is_set(MF_MULTISELECT))
+        if (first_snap >= 0)
         {
-            int last_snap = -1;
-            int first_snap = -1;
-            for (int i = 0; i < final; ++i)
-                if (is_hotkey(i, key))
-                {
-                    if (first_snap < 0)
-                        first_snap = i;
-                    last_snap = i;
-                    select_index(i, qty);
-                }
-
-            if (first_snap >= 0)
-            {
-                // try to ensure as much of the selection as possible is in
-                // view by snapping twice
-                snap_in_page(last_snap);
-                set_hovered(first_snap);
-            }
+            // try to ensure as much of the selection as possible is in
+            // view by snapping twice
+            snap_in_page(last_snap);
+            set_hovered(first_snap);
         }
     }
 }
@@ -1854,13 +1915,14 @@ bool MenuEntry::selected() const
 
 // -1: Invert
 // -2: Select all
+// TODO: fix this mess
 void MenuEntry::select(int qty)
 {
     if (on_select && quantity == 0)
         selected_qty = 1; // hacky, assume quantity is not relevant
     else if (qty == -2)
         selected_qty = quantity;
-    else if (selected())
+    else if (selected()) // always inverts any positive selection??
         selected_qty = 0;
     else if (quantity)
         selected_qty = (qty == -1 ? quantity : qty);
@@ -2229,6 +2291,11 @@ void Menu::select_item_index(int idx, int qty)
 #endif
 }
 
+// index = -1, do special action depending on qty
+//    qty =  0: clear selection
+//    qty = -1: invert selection
+//    qty = -2: select all
+// TODO: refactor in a better way
 void Menu::select_index(int index, int qty)
 {
     int first_vis = get_first_visible();
