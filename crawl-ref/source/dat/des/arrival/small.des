@@ -3788,7 +3788,7 @@ MAP
 ENDMAP
 
 NAME:    spicycebolla_arrival_ecumenical
-TAGS:    arrival uniq_ecumenical_altar transparent
+TAGS:    arrival uniq_ecumenical_altar transparent no_descent
 KMASK:   -_Tt)n = opaque
 ORIENT:  float
 KFEAT:   _ = altar_ecumenical

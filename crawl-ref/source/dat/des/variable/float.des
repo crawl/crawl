@@ -98,7 +98,7 @@ default-depth: D:12-, Depths, !Depths:$
 ###############################################################################
 
 NAME:   firewood_loft
-TAGS:   extra
+TAGS:   extra no_descent
 DEPTH:  D, !D:$, Depths, !Depths:$
 ORIENT: float
 WEIGHT: 5
@@ -941,7 +941,7 @@ xxxxxxxxxxx.''@'.xxxxxxxxxxxxxx
 ENDMAP
 
 NAME:  minmay_weird_star
-TAGS:  no_pool_fixup no_monster_gen
+TAGS:  no_pool_fixup no_monster_gen no_descent
 DEPTH:  D:8-, !D:$
 ORIENT: float
 MONS:  plant
@@ -1680,6 +1680,7 @@ ENDMAP
 # Earth elementals (formerly Stone Golems)
 #
 NAME:   minmay_stone_box
+TAGS:   no_descent
 DEPTH:  D:10-
 ORIENT: float
 WEIGHT: 5
@@ -1702,7 +1703,7 @@ ENDMAP
 # Skeleton sneak attack
 #
 NAME:   minmay_skeletal_surprise
-TAGS:   no_monster_gen no_item_gen
+TAGS:   no_monster_gen no_item_gen no_descent
 DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   ancient champion
@@ -2668,7 +2669,7 @@ ENDMAP
 #
 NAME:    lemuel_ice_spiral_2
 TAGS:    uniq_spiral layout_rooms layout_city
-TAGS:    no_item_gen no_monster_gen no_tele_into
+TAGS:    no_item_gen no_monster_gen no_tele_into no_descent
 DEPTH:   D:5-
 ORIENT:  float
 SUBST:   * : *$
@@ -2691,6 +2692,7 @@ ENDMAP
 #
 NAME:   lemuel_flame_loot_2
 DEPTH:  D:9-, !D:$, Depths, !Depths:$
+TAGS:   no_descent
 ORIENT: float
 WEIGHT: 5
 KMASK:  12* = no_monster_gen
@@ -3698,7 +3700,7 @@ ENDMAP
 
 
 NAME:    hangedman_elemental_death_ray
-TAGS:    transparent patrolling
+TAGS:    transparent patrolling no_descent
 DEPTH:   Depths, !Depths:$
 ORIENT:  float
 MONS:    necromancer ; \
@@ -4185,7 +4187,7 @@ ENDMAP
 
 NAME: cheibrodos_iron_armory
 DEPTH: D:5-10
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen no_descent
 ORIENT: float
 MONS: rust devil, orc warrior
 ITEM: scimitar / w:1 scimitar good_item, halberd / w:1 halberd good_item
@@ -4302,7 +4304,7 @@ ENDMAP
 
 NAME: cheibrodos_quadrivalence
 DEPTH: D:12-, Depths
-TAGS: no_item_gen no_monster_gen no_pool_fixup
+TAGS: no_item_gen no_monster_gen no_pool_fixup no_descent
 ORIENT: float
 : if you.in_branch("Depths") then
 MONS: smoke demon / sun demon, balrug / w:2 nothing
@@ -4737,7 +4739,7 @@ txxxq'''.m....s....m.```qxxxt
 ENDMAP
 
 NAME:    gammafunk_sealed_library
-TAGS:    no_monster_gen no_trap_gen transparent
+TAGS:    no_monster_gen no_trap_gen transparent no_descent
 # Allow placement in Vaults as a room.
 TAGS:    vaults_hard preserve_wall passable
 DEPTH:   Crypt, D:12-, Depths, Elf, Snake, Vaults, Zot
@@ -4829,7 +4831,7 @@ MAP
 ENDMAP
 
 NAME:    gammafunk_jiyva_shrine
-TAGS:    no_monster_gen no_trap_gen
+TAGS:    no_monster_gen no_trap_gen no_descent
 DEPTH:   D:8-, Depths
 ORIENT:  float
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
@@ -4885,7 +4887,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_beogh_shrine
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen no_descent
 DEPTH:  D:7-, Orc
 ORIENT: float
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
@@ -4945,7 +4947,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_corrupted_shrine
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen no_descent
 DEPTH:  D:7-, Depths, Abyss
 ORIENT: float
 : item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
@@ -5013,7 +5015,7 @@ cc''nc...cn''cc
 ENDMAP
 
 NAME:   gammafunk_steamed_eel
-TAGS:   no_monster_gen no_trap_gen no_tele_into no_pool_fixup
+TAGS:   no_monster_gen no_trap_gen no_tele_into no_pool_fixup no_descent
 DEPTH:  D:3-9
 ORIENT: float
 KMONS:  p = plant
@@ -5039,7 +5041,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_wand_slinger
-TAGS:   no_monster_gen no_trap_gen no_tele_into no_pool_fixup
+TAGS:   no_monster_gen no_trap_gen no_tele_into no_pool_fixup no_descent
 DEPTH:  D:3-13
 ORIENT: float
 KMASK:  LM = no_item_gen
@@ -5175,7 +5177,7 @@ ccccccccccc
 ENDMAP
 
 NAME:   gammafunk_cloud_chamber
-TAGS:   no_monster_gen no_trap_gen no_tele_into
+TAGS:   no_monster_gen no_trap_gen no_tele_into no_descent
 DEPTH:  D:4-, Lair
 ORIENT: float
 KMASK:  -'DE12 = no_item_gen
@@ -5326,7 +5328,7 @@ ccccc---kkk---ccccc
 ENDMAP
 
 NAME:   gammafunk_worm_tunnel
-TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen
+TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen no_descent
 DEPTH:  Lair, D:10-, Swamp
 ORIENT: float
 : item(dgn.good_aux_armour)
@@ -5562,7 +5564,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_boulding_lane
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen no_descent
 DEPTH:  D:8-, Lair, Spider
 ORIENT: float
 ITEM:   pair of boots ego:rampaging ident:all
@@ -5904,7 +5906,7 @@ ENDMAP
 
 ###############################################################################
 NAME:    dreamdust_wu_jian_sword_trials
-TAGS:    no_monster_gen no_item_gen
+TAGS:    no_monster_gen no_item_gen no_descent
 ORIENT:  float
 DEPTH:   D:12-, Orc, Elf
 COLOUR:  t = lightred / red w:3
@@ -6019,7 +6021,7 @@ MAP
 ENDMAP
 
 NAME:    dreamdust_tengu_aerie
-TAGS:    no_monster_gen no_item_gen no_pool_fixup
+TAGS:    no_monster_gen no_item_gen no_pool_fixup no_descent
 DEPTH:   Depths, !Depths:$
 ORIENT:  float
 TILE:    G = dngn_statue_tengu
@@ -6112,7 +6114,7 @@ ENDMAP
 ##############################################################################
 # Elevator
 NAME:    lemuel_elevator
-TAGS:    allow_dup extra luniq_staircase
+TAGS:    allow_dup extra luniq_staircase no_descent
 DEPTH:   D:2-, !D:$, Elf:2, Crypt:2-, !Crypt:$, Zot:2-, !Zot:$
 ORIENT:  float
 WEIGHT:  10 (D), 5
@@ -6187,6 +6189,7 @@ ENDMAP
 ##############################################################################
 # Klotski a.k.a. what we learned from the elders.
 NAME:    minmay_klotski
+TAGS:    no_descent
 SHUFFLE: }])>
 DEPTH:   D:6-12
 ORIENT:  float
@@ -6362,6 +6365,7 @@ ENDMAP
 ##############################################################################
 # An old-fashioned vault, by Lemuel
 NAME:  lemuel_traditional_vault
+TAGS:  no_descent
 DEPTH: D:12-, Depths
 ORIENT: float
 SUBST: 9 = 9 0 8:2
@@ -6399,7 +6403,7 @@ ENDMAP
 # An Ice Statue vault
 NAME:    lemuel_ice_statue
 MONS:    ice statue
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup no_descent
 ORIENT:  float
 DEPTH:   D:7-
 SUBST:   * : *$
@@ -6471,6 +6475,7 @@ ENDMAP
 # and the walls are always diggable then.
 #
 NAME:    dpeg_oklob_shooting_range
+TAGS:    no_descent
 DEPTH:   Depths, !Depths:$, Lair:2-, Elf:2-
 WEIGHT:  2
 ORIENT:  float
@@ -6655,6 +6660,7 @@ ENDMAP
 ##############################################################################
 # Inaccessible box (evilmike)
 NAME:   evilmike_inaccessible_box
+TAGS:   no_descent
 DEPTH:  Depths
 ORIENT: float
 SUBST:  x : xxxm
@@ -6807,6 +6813,7 @@ ENDMAP
 ##############################################################################
 
 NAME:    hangedman_arrow_trap
+TAGS:    no_descent
 ORIENT:  float
 DEPTH:   D:12-, !D:$, Depths:2-, !Depths:$
 MAP
@@ -8041,6 +8048,7 @@ ENDMAP
 
 NAME:   minmay_diamond_stairs
 DEPTH:  D:8-, !D:$, Depths:2-, !Depths:$
+TAGS:   no_descent
 ORIENT: float
 SUBST:  x : x:7 c:3, c : c:8 v:1 b:1
 SUBST:  F : .:40 GTUb
@@ -9135,7 +9143,7 @@ ENDMAP
 
 NAME:   kennysheep_funnel
 ORIENT: float
-TAGS:   no_trap_gen no_monster_gen
+TAGS:   no_trap_gen no_monster_gen no_descent
 DEPTH:  D:12-, !D:$, Depths:2-, !Depths:$
 MAP
     ccc
@@ -9300,7 +9308,7 @@ ENDMAP
 
 NAME: cheibrodos_birdhouse
 DEPTH: Depths, !Depths:$
-TAGS: no_item_gen no_monster_gen no_pool_fixup
+TAGS: no_item_gen no_monster_gen no_pool_fixup no_descent
 ORIENT: float
 MONS: tengu warrior, tengu conjurer, tengu reaver
 KFEAT: m = iron_grate
@@ -9962,6 +9970,7 @@ cccccc@cccccc
 ENDMAP
 
 NAME:   minmay_gate_of_8
+TAGS:   no_descent
 DEPTH:  D:8-, Depths
 ORIENT: float
 KMONS:  8 = 8
@@ -10228,7 +10237,7 @@ ENDMAP
 
 NAME: cheibrodos_elevator_heist
 DEPTH: D:8-,!D:$
-TAGS: no_item_gen no_monster_gen
+TAGS: no_item_gen no_monster_gen no_descent
 ORIENT: float
 MAP
 vvvvvvvvvvvvvvvvv
@@ -10433,7 +10442,7 @@ x.___x-;x..x;.``xw
 ENDMAP
 
 NAME:   gammafunk_sealed_arena
-TAGS:   no_monster_gen no_trap_gen transparent
+TAGS:   no_monster_gen no_trap_gen transparent no_descent
 # Allow placement in Vaults as a room.
 TAGS:   vaults_hard preserve_wall passable
 DEPTH:  Crypt, D:8-, Depths, Elf, Shoals, Snake, Spider, Swamp, Vaults, Zot
@@ -10484,7 +10493,7 @@ MAP
 ENDMAP
 
 NAME:    gammafunk_its_a_trap
-TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen transparent
+TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen transparent no_descent
 # Allow placement in the Vaults branch as a room.
 TAGS:    vaults_hard passable
 DEPTH:   Crypt, D:14-, Depths, Elf, Snake, Pan, Vaults, Zot
@@ -10548,7 +10557,7 @@ MAP
 ENDMAP
 
 NAME:   gammafunk_dig_for_victory
-TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen transparent
+TAGS:   no_monster_gen no_trap_gen no_tele_into no_item_gen transparent no_descent
 # Allow placement in the Vaults branch as a room.
 TAGS:   vaults_hard passable
 # This must not place on a branch end so it can place a downhatch.
@@ -10630,7 +10639,7 @@ MAP
 ENDMAP
 
 NAME:    emtedronai_trogs_sanctum
-TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen transparent
+TAGS:    no_monster_gen no_trap_gen no_tele_into no_item_gen transparent no_descent
 # Allow placement in the Vaults branch as a room.
 TAGS:    vaults_hard passable
 DEPTH:   D:13-, Orc, Depths, Vaults

@@ -549,7 +549,7 @@ ENDMAP
 # Ghost lake
 NAME:  weyrava_ghost_lake
 DEPTH: Crypt
-TAGS:  no_monster_gen no_item_gen
+TAGS:  no_monster_gen no_item_gen no_descent
 MONS:  flying skull
 MONS:  skeletal warrior ; long sword . kite shield . w:6 any beam wand | nothing /\
        skeletal warrior ; battleaxe | halberd . w:7 any beam wand | nothing
@@ -1169,7 +1169,7 @@ ENDMAP
 
 NAME: nicolae_crypt_cryptocurrency
 DEPTH: Crypt
-TAGS: extra decor no_item_gen no_trap_gen no_monster_gen
+TAGS: extra decor no_item_gen no_trap_gen no_monster_gen no_descent
 KPROP: $-c = no_tele_into
 KMASK: .@ = !opaque
 KITEM: $ = $ / $ good_item w:3

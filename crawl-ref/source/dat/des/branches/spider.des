@@ -490,7 +490,7 @@ ENDMAP
 NAME:   nicolae_spider_cling_halls
 DEPTH:  Spider:2-, !Spider:$
 ORIENT: float
-TAGS:   no_pool_fixup extra
+TAGS:   no_pool_fixup extra no_descent
 NSUBST: D = 2=w / x, E = 2=w / x, F = 2=w / x
 SUBST:  ' = ..wx, . = W...., [ = [{()}], H = x_, J = xw
 KMASK:  Ww = no_monster_gen
@@ -515,7 +515,7 @@ HxxxxxxxxxxxxxH
 ENDMAP
 
 NAME:    nicolae_spider_cling_ruins
-TAGS:    no_pool_fixup extra
+TAGS:    no_pool_fixup extra no_descent
 DEPTH:   Spider:2-
 SHUFFLE: [{(
 NSUBST:  D = wx / x, E = wx / x, F = wx / x, H = wx / x
@@ -1317,7 +1317,7 @@ ENDMAP
 NAME:    lemuel_spider_zombies
 DEPTH:   Spider, !Spider:$
 ORIENT:  float
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen no_descent
 MONS:    redback zombie / wolf spider zombie / tarantella zombie /\
             culicivora zombie
 MONS:    necromancer

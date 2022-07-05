@@ -646,7 +646,7 @@ ENDMAP
 #
 NAME:   lemuel_lich_library
 DEPTH:  Zot, !Zot:$
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen no_descent
 MONS:   flying skull, lich, ancient lich / dread lich, necromancer
 MONS:   vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
@@ -924,7 +924,7 @@ ENDMAP
 NAME:    minmay_elemental_castle
 ORIENT:  southwest
 DEPTH:   Zot, !Zot:$
-TAGS:    no_rotate
+TAGS:    no_rotate no_descent
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
@@ -1655,7 +1655,7 @@ ENDMAP
 ##########################################################################
 
 NAME:    hangedman_zot_spectrum
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen no_descent
 DEPTH:   Zot, !Zot:$
 KMONS:   A = red very ugly thing
 KMONS:   B = red draconian
@@ -2841,7 +2841,7 @@ MAP
 ENDMAP
 
 NAME:   hellmonk_greenhouse_of_terror
-TAGS:   no_monster_gen
+TAGS:   no_monster_gen no_descent
 DEPTH:  Zot:2-4
 MONS:   orb of fire, bush
 NSUBST: . = 1:1 / .

@@ -108,7 +108,7 @@ T.T
 ENDMAP
 
 NAME:   shop_statue
-TAGS:   allow_dup extra shop
+TAGS:   allow_dup extra shop no_descent
 KFEAT:  O = any shop
 MAP
 @G.O.<.G@
@@ -154,7 +154,7 @@ b.b
 ENDMAP
 
 NAME: nicolae_shop_statue_plus
-TAGS: allow_dup extra shop
+TAGS: allow_dup extra shop no_descent
 KFEAT: O = any shop
 MAP
    @
@@ -395,7 +395,7 @@ D.}.O.{.D
 ENDMAP
 
 NAME:  nicolae_take_the_stairs
-TAGS:  shop extra
+TAGS:  shop extra no_descent
 DEPTH: D:4-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Snake, !Snake:$, \
        Elf, !Elf:$
 KFEAT: O = any shop
@@ -1143,7 +1143,7 @@ ENDMAP
 # Get away from it all.
 NAME: nicolae_island_escapes
 DEPTH: D:7-, !D:$, Depths, !Depths:$, Shoals, !Shoals:$, Swamp, !Swamp:$
-TAGS: no_item_gen no_monster_gen water_ok no_tide no_pool_fixup
+TAGS: no_item_gen no_monster_gen water_ok no_tide no_pool_fixup no_descent
 WEIGHT: 5
 SHUFFLE: Aa/Bb
 SUBST: Aa = t, B = ..t, b = .
@@ -2032,7 +2032,7 @@ ENDMAP
 
 # 3 shops, on different "floors"
 NAME:  nicolae_shop_distant_corner_stores
-TAGS:  transparent luniq_floating_shops extra
+TAGS:  transparent luniq_floating_shops extra no_descent
 DEPTH: D:4-, !D:$, Depths:2-, !Depths:$
 KFEAT: Ss = any shop
 KMASK: {[()]}T`s = opaque

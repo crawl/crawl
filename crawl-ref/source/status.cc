@@ -7,6 +7,7 @@
 #include "artefact.h"
 #include "branch.h"
 #include "cloud.h"
+#include "dungeon.h" // DESCENT_STAIRS_KEY
 #include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
@@ -26,6 +27,7 @@
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
 #include "stairs.h" // rise_through_ceiling
+#include "state.h" // crawl_state
 #include "stringutil.h"
 #include "throw.h"
 #include "transform.h"
@@ -246,6 +248,27 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text   = "Mesm";
             inf.short_text   = "mesmerised";
             inf.long_text    = "You are mesmerised.";
+        }
+        break;
+
+    case STATUS_PEEKING:
+        if (crawl_state.game_is_descent() && !env.properties.exists(DESCENT_STAIRS_KEY))
+        {
+            inf.light_colour = WHITE;
+            inf.light_text   = "Peek";
+            inf.short_text   = "peeking";
+            inf.long_text    = "You are peeking down the stairs.";
+        }
+        break;
+
+    case STATUS_IN_DEBT:
+        if (you.props.exists(DESCENT_DEBT_KEY))
+        {
+            inf.light_colour = RED;
+            inf.light_text = make_stringf("Debt (%d)",
+                          you.props[DESCENT_DEBT_KEY].get_int());
+            inf.short_text   = "in debt";
+            inf.long_text    = "You are in debt. Gold earned will pay it off.";
         }
         break;
 

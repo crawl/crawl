@@ -13,7 +13,7 @@
 default-depth:  Depths, !Depths:$
 
 NAME:   grated_community_mu
-TAGS:   no_rotate no_monster_gen no_item_gen
+TAGS:   no_rotate no_monster_gen no_item_gen no_descent
 ORIENT: north
 MONS:   patrolling vault guard, patrolling wolf, patrolling centaur warrior
 MONS:   generate_awake lemure, kobold

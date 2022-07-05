@@ -1011,7 +1011,7 @@ wwwWwWww
 ENDMAP
 
 NAME:   minmay_snake_river
-TAGS:   no_monster_gen generate_awake
+TAGS:   no_monster_gen generate_awake no_descent
 ORIENT: south
 KITEM:  2 = * / nothing
 KITEM:  3 = |
@@ -1360,7 +1360,7 @@ x..YY.xxx..YY.xxxxxxxxx.@.
 ENDMAP
 
 NAME:    nicolae_snake_salamander_stairs
-TAGS:    no_monster_gen
+TAGS:    no_monster_gen no_descent
 DEPTH:   Snake, !Snake:$
 : if you.depth() < 2 then
 KMONS:   1 = salamander mystic / salamander tyrant w:5
@@ -1457,6 +1457,7 @@ MAP
 ENDMAP
 
 NAME:    nicolae_snake_attic_fulla_snakes
+TAGS:    no_descent
 DEPTH:   Snake, !Snake:$
 ORIENT:  northeast
 KITEM:   2 = *

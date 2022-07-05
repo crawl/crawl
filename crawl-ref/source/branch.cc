@@ -5,6 +5,7 @@
 
 #include "item-name.h"
 #include "player.h"
+#include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "travel.h"
@@ -169,6 +170,15 @@ vector<branch_type> random_choose_disabled_branches()
     for (int i=0; i < number_of_branch_swap_pairs; i++)
         disabled_branch.push_back(swap_branches[i][random_choose(0,1)]);
 
+    // Descent mode disables some other branches for dungeon structure reasons
+    if (crawl_state.game_is_descent())
+    {
+        disabled_branch.push_back(BRANCH_TEMPLE);
+        disabled_branch.push_back(BRANCH_TOMB);
+        you.props[DESCENT_WATER_BRANCH_KEY] = random_choose(BRANCH_SWAMP, BRANCH_SHOALS);
+        you.props[DESCENT_POIS_BRANCH_KEY] = random_choose(BRANCH_SPIDER, BRANCH_SNAKE);
+    }
+
     return disabled_branch;
 }
 
@@ -293,6 +303,11 @@ branch_type parent_branch(branch_type branch)
         return brentry[branch].branch;
     // If it's not in the game, use the default parent.
     return branches[branch].parent_branch;
+}
+
+vector<branch_type> descent_parents(branch_type branch)
+{
+    return branches[branch].descent_parents;
 }
 
 /**

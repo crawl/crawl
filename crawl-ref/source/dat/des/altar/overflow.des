@@ -237,7 +237,7 @@ ENDMAP
 
 NAME:   ashenzari_conservatory_becter
 TAGS:   temple_overflow_1 temple_overflow_ashenzari transparent decor
-TAGS:   uniq_altar_ashenzari
+TAGS:   uniq_altar_ashenzari no_descent
 KFEAT:  _ = altar_ashenzari
 : interest_check(_G)
 MAP
@@ -848,7 +848,7 @@ ENDMAP
 
 NAME:  fedhas_ov_isle_minmay
 TAGS:  temple_overflow_1 temple_overflow_fedhas uniq_altar_fedhas no_monster_gen
-TAGS:  transparent
+TAGS:  transparent no_descent
 DEPTH: D, !D:$
 MONS:  plant / bush w:5
 SUBST: 1 = 111t'''
@@ -3123,7 +3123,7 @@ ENDMAP
 # You can also get to them in other ways, of course, which is why most of the
 # weapons are just plain.
 NAME:   nicolae_wu_jian_glorious_leap
-TAGS:   temple_overflow_wu_jian temple_overflow_1 no_trap_gen
+TAGS:   temple_overflow_wu_jian temple_overflow_1 no_trap_gen no_descent
 TAGS:   uniq_altar_wu_jian
 WEIGHT: 5
 KITEM:  I = any weapon level:-2
@@ -3269,7 +3269,7 @@ MAP
 ENDMAP
 
 NAME:    xom_shifter_show
-TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom
+TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom no_descent
 DEPTH:   D:7-
 MONS:    shapeshifter hd:1
 KFEAT:   _ = altar_xom
@@ -3313,7 +3313,7 @@ ENDMAP
 # not guaranteed to be fully navigable, so not transparent. It would be better
 # for avoiding vetoes if this guaranteed a path somehow...
 NAME:    xom_redecorated
-TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom decor
+TAGS:    temple_overflow_1 temple_overflow_xom uniq_altar_xom decor no_descent
 SUBST:   c = ccbbbv
 NSUBST:  . = 2=^ / .
 SUBST:   . = lWwtm_~......
@@ -3585,7 +3585,7 @@ ENDMAP
 
 NAME:   zin_treasury
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
-TAGS:   uniq_altar_zin
+TAGS:   uniq_altar_zin no_descent
 KFEAT:  _ = altar_zin
 KFEAT:  m = iron_grate
 KPROP:  $ = no_tele_into
@@ -3633,7 +3633,7 @@ ENDMAP
 
 NAME:   zin_scriptorium
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_zin
-TAGS:   uniq_altar_zin
+TAGS:   uniq_altar_zin no_descent
 ITEM:   any scroll
 KFEAT:  _ = altar_zin
 KFEAT:  m = iron_grate
@@ -4343,7 +4343,7 @@ ENDMAP
 
 NAME:   gammafunk_temple_of_torment
 WEIGHT: 2
-TAGS:   no_monster_gen no_trap_gen temple_overflow_2
+TAGS:   no_monster_gen no_trap_gen temple_overflow_2 no_descent
 TAGS:   temple_overflow_kikubaaqudgha temple_overflow_yredelemnul
 : if you.depth() <= 4 then
 MONS: zombie / skeleton
@@ -4517,7 +4517,7 @@ ENDMAP
 # General overflow vault, can be used for all gods.
 NAME:     general_overflow_altar
 WEIGHT:   10
-TAGS:     no_monster_gen no_pool_fixup temple_overflow_generic_1
+TAGS:     no_monster_gen no_pool_fixup temple_overflow_generic_1 no_descent
 SHUFFLE:  xXY / xXY / xXY / abc
 SHUFFLE:  XY
 SUBST:    X=+, Y=x, a=w, b=w, c=w
@@ -4642,7 +4642,7 @@ xx..pxp..xx
 ENDMAP
 
 NAME:  lemuel_tele_altar
-TAGS:  temple_overflow_generic_1 transparent decor
+TAGS:  temple_overflow_generic_1 transparent decor no_descent
 SUBST: D = ^ x
 KFEAT: ^ = teleport trap
 KMASK: 'B = opaque
@@ -4954,7 +4954,7 @@ ENDMAP
 # The player can choose the ecumenical altar, or risk going downstairs and then
 # coming back up for the known god.
 NAME:    nicolae_overflow_ecumenical_swirl
-TAGS:    temple_overflow_generic_1 transparent
+TAGS:    temple_overflow_generic_1 transparent no_descent
 DEPTH:   D:3
 KFEAT:   _ = altar_ecumenical
 KFEAT:   ~! = T
@@ -4987,7 +4987,7 @@ ENDMAP
 # Technically, you can also prove your dedication by burning a teleport scroll
 # instead of dropping down a level, which I guess is also acceptable.
 NAME:   nicolae_overflow_prove_your_dedication
-TAGS:   temple_overflow_generic_1 transparent
+TAGS:   temple_overflow_generic_1 transparent no_descent
 DEPTH:  !D:$, !Depths:$
 KFEAT:  F : G w:20 / T / U
 KMASK:  `E>FB = opaque
@@ -5599,7 +5599,7 @@ ENDMAP
 
 NAME: nicolae_overflow_hidden_temple
 TAGS: temple_overflow_generic_5 temple_overflow_generic_4 temple_overflow_generic_3 \
-      temple_overflow_generic_2 temple_overflow_generic_1 no_monster_gen
+      temple_overflow_generic_2 temple_overflow_generic_1 no_monster_gen no_descent
 {{
   local altarcount = 1
   if is_validating() then
@@ -5789,7 +5789,7 @@ ENDMAP
 
 NAME: gammafunk_temple_overflow_arena
 TAGS: temple_overflow_generic_3 temple_overflow_generic_2
-TAGS: temple_overflow_generic_1 no_monster_gen no_trap_gen no_tele_into
+TAGS: temple_overflow_generic_1 no_monster_gen no_trap_gen no_tele_into no_descent
 WEIGHT: 1
 {{
   local altarcount = 3

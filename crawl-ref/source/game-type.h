@@ -1,5 +1,7 @@
 #pragma once
 
+// removing from or reordering this enum will break the save browser, not
+// just save compat
 enum game_type
 {
     GAME_TYPE_UNSPECIFIED,
@@ -12,5 +14,6 @@ enum game_type
     GAME_TYPE_INSTRUCTIONS,
     GAME_TYPE_HIGH_SCORES,
     GAME_TYPE_CUSTOM_SEED,
+    GAME_TYPE_DESCENT,
     NUM_GAME_TYPE
 };

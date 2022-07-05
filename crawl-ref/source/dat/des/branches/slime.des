@@ -441,7 +441,7 @@ ENDMAP
 
 NAME: nicolae_slime_round_cave
 DEPTH: Slime:2-, !Slime:$
-TAGS: no_monster_gen
+TAGS: no_monster_gen no_descent
 SHUFFLE: {}/()/[]
 NSUBST: a = X / .
 SUBST: X = x., z = x_, 0 = 0009.., 9 = 9998

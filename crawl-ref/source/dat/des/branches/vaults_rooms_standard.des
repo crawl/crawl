@@ -1668,7 +1668,7 @@ ENDMAP
 
 NAME: nicolae_vaults_sealed_display
 WEIGHT: 5
-TAGS: vaults_room no_windows
+TAGS: vaults_room no_windows no_descent
 KMASK: >* = no_monster_gen
 KMONS: 0 = 0 band / 0
 MAP

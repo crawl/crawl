@@ -15,6 +15,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "hints.h"
+#include "initfile.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
@@ -552,9 +553,14 @@ bool game_state::player_is_dead() const
     return updating_scores && !need_save;
 }
 
-bool game_state::game_standard_levelgen() const
+bool game_state::game_has_random_floors() const
 {
-    return game_is_normal() || game_is_hints();
+    return game_is_normal() || game_is_hints() || game_is_descent();
+}
+
+bool game_state::game_saves_prefs() const
+{
+    return game_is_normal() || game_is_hints() || game_is_descent();
 }
 
 bool game_state::game_is_valid_type() const
@@ -593,6 +599,12 @@ bool game_state::game_is_hints() const
     return type == GAME_TYPE_HINTS;
 }
 
+bool game_state::game_is_descent() const
+{
+    ASSERT(game_is_valid_type());
+    return type == GAME_TYPE_DESCENT;
+}
+
 bool game_state::game_is_hints_tutorial() const
 {
     return game_is_hints() || game_is_tutorial();
@@ -621,6 +633,8 @@ string game_state::game_type_name_for(game_type _type)
         return "Arena";
     case GAME_TYPE_SPRINT:
         return "Dungeon Sprint";
+    case GAME_TYPE_DESCENT:
+        return "Descent";
     case NUM_GAME_TYPE:
         return "Unknown";
     }
@@ -649,13 +663,15 @@ string game_state::game_savedir_path() const
 
 string game_state::game_type_qualifier() const
 {
-    if (type == GAME_TYPE_CUSTOM_SEED)
-        return "-seeded";
-    if (crawl_state.game_is_sprint())
-        return "-sprint";
-    if (crawl_state.game_is_tutorial())
-        return "-tutorial";
-    if (crawl_state.game_is_hints())
-        return "-hints";
-    return "";
+    switch (type)
+    {
+    case GAME_TYPE_CUSTOM_SEED:
+    case GAME_TYPE_SPRINT:
+    case GAME_TYPE_HINTS:
+    case GAME_TYPE_TUTORIAL:
+    case GAME_TYPE_DESCENT:
+        return "-" + gametype_to_str(type);
+    default:
+        return "";
+    }
 }

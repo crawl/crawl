@@ -220,7 +220,6 @@ public:
     void dump();
     bool player_is_dead() const;
 
-    bool game_standard_levelgen() const;
     bool game_is_valid_type() const;
     bool game_is_normal() const;
     bool game_is_tutorial() const;
@@ -228,6 +227,10 @@ public:
     bool game_is_sprint() const;
     bool game_is_hints() const;
     bool game_is_hints_tutorial() const;
+    bool game_is_descent() const;
+
+    bool game_has_random_floors() const;
+    bool game_saves_prefs() const;
 
     bool seed_is_known() const;
 

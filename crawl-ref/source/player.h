@@ -52,6 +52,9 @@
 #define PETRIFIED_BY_KEY "petrified_by"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
 #define DREAMSHARD_KEY "dreamshard"
+#define DESCENT_DEBT_KEY "descent_debt"
+#define DESCENT_WATER_BRANCH_KEY "descent_water_branch"
+#define DESCENT_POIS_BRANCH_KEY "descent_poison_branch"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
