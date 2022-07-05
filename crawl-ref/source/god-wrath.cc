@@ -530,7 +530,7 @@ static int _makhleb_num_greater_servants()
                            + random2(you.experience_level / 2);
 
     if (severity > 13)
-        return 2 + random2(you.experience_level / 5 - 2); // up to 6 at XL27
+        return 2 + random2((you.experience_level - 2) / 5); // up to 6 at XL27
     else if (severity > 7 && !one_chance_in(5))
         return 1;
     return 0;
