@@ -629,7 +629,7 @@ spret palentonga_charge(bool fail, dist *target)
 
     remove_water_hold();
     move_player_to_grid(dest_pos, true);
-    noisy(12, you.pos());
+    noisy(4, you.pos());
     apply_barbs_damage();
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
