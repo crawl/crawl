@@ -292,6 +292,10 @@ class UIMenuMore;
 
 #define NUMBUFSIZ 10
 
+#define MENU_SELECT_CLEAR 0
+#define MENU_SELECT_INVERT -1
+#define MENU_SELECT_ALL -2
+
 class Menu
 {
     friend class UIMenu;
