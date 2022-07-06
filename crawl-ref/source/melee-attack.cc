@@ -898,7 +898,7 @@ public:
     AuxAttackType(int _damage, int _chance, string _name) :
     damage(_damage), chance(_chance), name(_name) { };
 public:
-    virtual int get_damage() const { return damage; };
+    virtual int get_damage(bool /*random*/) const { return damage; };
     virtual int get_brand() const { return SPWPN_NORMAL; };
     virtual string get_name() const { return name; };
     virtual string get_verb() const { return get_name(); };
@@ -932,7 +932,7 @@ public:
     AuxKick()
     : AuxAttackType(5, 100, "kick") { };
 
-    int get_damage() const override
+    int get_damage(bool /*random*/) const override
     {
         if (you.has_usable_hooves())
         {
@@ -974,7 +974,7 @@ public:
     AuxHeadbutt()
     : AuxAttackType(5, 67, "headbutt") { };
 
-    int get_damage() const override
+    int get_damage(bool /*random*/) const override
     {
         return damage + you.get_mutation_level(MUT_HORNS) * 3;
     }
@@ -993,7 +993,7 @@ public:
     AuxTailslap()
     : AuxAttackType(6, 50, "tail-slap") { };
 
-    int get_damage() const override
+    int get_damage(bool /*random*/) const override
     {
         return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1)
                       + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4
@@ -1015,7 +1015,7 @@ public:
     AuxPunch()
     : AuxAttackType(5, 0, "punch") { };
 
-    int get_damage() const override
+    int get_damage(bool random) const override
     {
         const int base_dam = damage + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2);
 
@@ -1023,7 +1023,13 @@ public:
             return base_dam + 6;
 
         if (you.has_usable_claws())
-            return base_dam + roll_dice(you.has_claws(), 3);
+        {
+            const int claws = you.has_claws();
+            const int die_size = 3;
+            // Don't use maybe_roll_dice because we want max, not mean.
+            return base_dam + (random ? roll_dice(claws, die_size)
+                                      : claws * die_size);
+        }
 
         return base_dam;
     }
@@ -1057,12 +1063,16 @@ public:
     AuxBite()
     : AuxAttackType(1, 40, "bite") { };
 
-    int get_damage() const override
+    int get_damage(bool random) const override
     {
         const int fang_damage = damage + you.has_usable_fangs() * 2;
 
         if (you.get_mutation_level(MUT_ANTIMAGIC_BITE))
-            return fang_damage + div_rand_round(you.get_hit_dice(), 3);
+        {
+            const int hd = you.get_hit_dice();
+            const int denom = 3;
+            return fang_damage + (random ? div_rand_round(hd, denom) : hd / denom);
+        }
 
         return fang_damage;
     }
@@ -1092,7 +1102,7 @@ public:
     AuxPseudopods()
     : AuxAttackType(4, 67, "bludgeon") { };
 
-    int get_damage() const override
+    int get_damage(bool /*random*/) const override
     {
         return damage * you.has_usable_pseudopods();
     }
@@ -1112,10 +1122,10 @@ public:
     AuxTouch()
     : AuxAttackType(6, 40, "touch") { };
 
-    int get_damage() const override
+    int get_damage(bool random) const override
     {
-        return damage
-               + random2(1 + you.get_mutation_level(MUT_DEMONIC_TOUCH) * 4);
+        const int max = you.get_mutation_level(MUT_DEMONIC_TOUCH) * 4;
+        return damage + (random ? random2(max + 1) : max);
     }
 
     int get_brand() const override
@@ -1170,7 +1180,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     ASSERT(atk <= UNAT_LAST_ATTACK);
     const AuxAttackType* const aux = aux_attack_types[atk - UNAT_FIRST_ATTACK];
 
-    aux_damage = aux->get_damage();
+    aux_damage = aux->get_damage(true);
     damage_brand = (brand_type)aux->get_brand();
     aux_attack = aux->get_name();
     aux_verb = aux->get_verb();
@@ -3262,7 +3272,7 @@ void melee_attack::do_minotaur_retaliation()
         return;
 
     // Use the same damage formula as a regular headbutt.
-    int dmg = AUX_HEADBUTT.get_damage();
+    int dmg = AUX_HEADBUTT.get_damage(true);
     dmg = stat_modify_damage(dmg, SK_UNARMED_COMBAT, false);
     dmg = random2(dmg);
     dmg = apply_fighting_skill(dmg, true, true);
@@ -3691,7 +3701,7 @@ string aux_attack_desc(mutation_type mut)
         return make_stringf("\nTrigger chance:  %d%%\n"
                               "Base damage:     %d\n\n",
                             _minotaur_headbutt_chance(),
-                            AUX_HEADBUTT.get_damage());
+                            AUX_HEADBUTT.get_damage(false));
     default:
         return "";
     }
@@ -3715,5 +3725,5 @@ string AuxAttackType::describe() const
                           "Base damage:     %d\n\n",
                         get_chance(),
                         to_hit_pips.c_str(),
-                        get_damage());
+                        get_damage(false));
 }
