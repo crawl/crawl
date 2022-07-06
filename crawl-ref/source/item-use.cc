@@ -86,9 +86,12 @@ class UseItemMenu : public InvMenu
     void clear() override;
 
 public:
+    UseItemMenu(operation_types oper, int selector, const char* prompt);
+
     bool display_all;
     bool is_inventory;
     int item_type_filter;
+    operation_types oper;
 
     int last_inv_pos;
 
@@ -96,37 +99,77 @@ public:
     vector<const item_def*> item_inv;
     vector<const item_def*> item_floor;
 
-    // Constructor
-    // Requires int for item filter.
-    // Accepts:
-    //      OBJ_POTIONS
-    //      OBJ_SCROLLS
-    //      OSEL_WIELD
-    //      OBJ_ARMOUR
-    UseItemMenu(int selector, const char* prompt);
-
     void toggle_display_all();
     void toggle_inv_or_floor();
     void set_hovered(int hovered, bool force=false) override;
     bool cycle_headers(bool=true) override;
+
+    bool empty_check() const;
 
 private:
     MenuEntry *inv_header;
     MenuEntry *floor_header;
 };
 
-UseItemMenu::UseItemMenu(int item_type, const char* prompt)
+string _default_use_title(operation_types oper)
+{
+    switch (oper)
+    {
+    case OPER_WIELD:
+        return "Wield which item (- for none, * to show all)?";
+    case OPER_WEAR:
+        return "Wear which item (* to show all)?";
+    case OPER_PUTON:
+        return "Put on which piece of jewellery (* to show all)?";
+    case OPER_QUAFF:
+        return "Drink which item (* to show all)?";
+    case OPER_READ:
+        return "Read which item (* to show all)?";
+    default:
+        return "buggy";
+    }
+}
+
+int _default_osel(operation_types oper)
+{
+    switch (oper)
+    {
+    case OPER_WIELD:
+        return OSEL_WIELD; // XX is this different from OBJ_WEAPONS any more?
+    case OPER_WEAR:
+        return OBJ_ARMOUR;
+    case OPER_PUTON:
+        return OBJ_JEWELLERY;
+    case OPER_QUAFF:
+        return OBJ_POTIONS;
+    case OPER_READ:
+        return OBJ_SCROLLS;
+    default:
+        return OSEL_ANY; // buggy?
+    }
+}
+
+
+UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
+                                    const char* prompt=nullptr)
     : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER),
                             display_all(false), is_inventory(true),
-      item_type_filter(item_type), last_inv_pos(-1),
+      item_type_filter(item_type), oper(_oper), last_inv_pos(-1),
       inv_header(nullptr), floor_header(nullptr)
 {
     set_tag("use_item");
-    set_title(prompt);
+    if (prompt)
+        set_title(prompt);
+    else
+        set_title(_default_use_title(oper));
+    // see `item_is_selected` for more on what can be used for item_type.
+    if (item_type_filter == OSEL_ANY)
+        item_type_filter = _default_osel(oper);
+
     populate_list();
     populate_menu();
-    // start hover on an actual item, rather than - if present
-    if (item_type_filter == OSEL_WIELD && item_inv.size() > 0)
+    // start hover on wielded item, if there is one, otherwise on -
+    if (oper == OPER_WIELD && item_inv.size() > 0 && you.weapon())
         set_hovered(1);
 }
 
@@ -163,6 +206,18 @@ void UseItemMenu::populate_list()
     }
 }
 
+bool UseItemMenu::empty_check() const
+{
+    // (if choosing weapons, then bare hands are always a possibility)
+    if (oper != OPER_WIELD && !any_items_of_type(item_type_filter, -1, true))
+    {
+        mprf(MSGCH_PROMPT, "%s",
+            no_selectables_message(item_type_filter).c_str());
+        return true;
+    }
+    return false;
+}
+
 static void _note_tele_cancel(MenuEntry* entry)
 {
     auto ie = dynamic_cast<InvEntry *>(entry);
@@ -184,7 +239,7 @@ void UseItemMenu::populate_menu()
 
     // Entry for unarmed. Hotkey works for either subsection, though selecting
     // it (currently) enables the inv section.
-    if (item_type_filter == OSEL_WIELD)
+    if (oper == OPER_WIELD)
     {
         string hands_string = you.unarmed_attack_name("Unarmed");
         if (!you.weapon())
@@ -254,7 +309,7 @@ void UseItemMenu::populate_menu()
     if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
     {
         if (is_inventory && last_hovered > last_inv_pos)
-            set_hovered(item_type_filter == OSEL_WIELD ? 1 : 0);
+            set_hovered(oper == OPER_WIELD ? 1 : 0);
         else if (!is_inventory && last_hovered <= last_inv_pos)
             set_hovered(last_inv_pos + 1);
     }
@@ -263,7 +318,7 @@ void UseItemMenu::populate_menu()
 void UseItemMenu::update_sections()
 {
     // never disable the unwield button
-    int i = item_type_filter == OSEL_WIELD ? 1 : 0;
+    int i = oper == OPER_WIELD ? 1 : 0;
     for (; i <= last_inv_pos; i++)
         if (items[i]->level == MEL_ITEM)
             items[i]->set_enabled(is_inventory);
@@ -283,8 +338,8 @@ void UseItemMenu::update_sections()
                 if (Options.easy_floor_use && item_floor.size() == 1)
                 {
                     floor_header->text += string(" (',' to ") +
-                        (item_type_filter == OBJ_ARMOUR ? "wear)"
-                       : item_type_filter == OSEL_WIELD ? "wield)"
+                        (oper == OPER_WEAR ? "wear)"
+                       : oper == OPER_WIELD ? "wield)"
                        : "use)");
                 }
                 else
@@ -360,12 +415,32 @@ void UseItemMenu::set_hovered(int hovered, bool force)
 
 bool UseItemMenu::process_key(int key)
 {
-    if (isadigit(key) || key == '*' || key == '\\' || key == ','
-        || key == '-' && item_type_filter == OSEL_WIELD)
+    if (isadigit(key)
+        || key == '-' && oper == OPER_WIELD)
     {
         lastch = key;
         return false;
     }
+
+    if (key == '*')
+    {
+        toggle_display_all();
+        return true;
+    }
+    else if (key == '\\')
+    {
+        check_item_knowledge();
+        return true;
+    }
+    else if (key == ','
+        && Options.easy_floor_use && item_floor.size() == 1
+        && (is_inventory || item_inv.empty()))
+    {
+        // TODO: should this go with CMD_MENU_CYCLE_HEADERS instead of `,`?
+        lastch = ','; // XX don't use keycode for this
+        return false;
+    }
+
     return Menu::process_key(key);
 }
 
@@ -378,7 +453,7 @@ bool UseItemMenu::process_key(int key)
  * false is returned. If something is successfully choosen, then true is
  * returned, and at function exit the parameter target points to the object the
  * player chose or to nullptr if the player chose to wield bare hands (this is
- * only possible if item_type is OSEL_WIELD).
+ * only possible if oper is OPER_WIELD).
  *
  * @param target A pointer by reference to indicate the object selected.
  * @param item_type The object_class_type or OSEL_* of items to list.
@@ -391,26 +466,22 @@ bool UseItemMenu::process_key(int key)
  * @return boolean true if something was chosen, false if the process failed and
  *                 no choice was made
  */
-bool use_an_item(item_def *&target, int item_type, operation_types oper,
+bool use_an_item(item_def *&target, operation_types oper, int item_type,
                       const char* prompt, function<bool ()> allowcancel)
 {
+    UseItemMenu menu(oper, item_type, prompt);
+
     // First bail if there's nothing appropriate to choose in inv or on floor
-    // (if choosing weapons, then bare hands are always a possibility)
-    if (item_type != OSEL_WIELD && !any_items_of_type(item_type, -1, true))
-    {
-        mprf(MSGCH_PROMPT, "%s",
-             no_selectables_message(item_type).c_str());
+    if (menu.empty_check())
         return false;
-    }
 
     bool choice_made = false;
     item_def *tmp_tgt = nullptr; // We'll change target only if the player
                                  // actually chooses
 
-    // Init the menu
-    UseItemMenu menu(item_type, prompt);
-
-    // XX let the menu run its input loop
+    // XX fully let the menu run its input loop
+    // right now this exists because of the cancel check, used only for scrolls'
+    // "really abort and waste a scroll" prompt.
     while (true)
     {
         vector<MenuEntry*> sel = menu.show(true);
@@ -419,39 +490,23 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
         // Handle inscribed item keys
         if (isadigit(keyin))
         {
-        // This allows you to select stuff by inscription that is not on the
-        // screen, but only if you couldn't by default use it for that operation
-        // anyway. It's a bit weird, but it does save a '*' keypress for
-        // bread-swingers.
+            // select by inscription
+            // This allows you to select stuff by inscription that is not on the
+            // screen, but only if you couldn't by default use it for that
+            // operation anyway. It's a bit weird, but it does save a '*'
+            // keypress for bread-swingers.
             tmp_tgt = digit_inscription_to_item(keyin, oper);
             if (tmp_tgt)
                 choice_made = true;
         }
-        else if (keyin == '*')
-        {
-            menu.toggle_display_all();
-            continue;
-        }
         else if (keyin == ',')
         {
-            if (Options.easy_floor_use && menu.item_floor.size() == 1
-                && (menu.is_inventory || menu.item_inv.empty()))
-            {
-                choice_made = true;
-                tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
-            }
-            else
-            {
-                menu.cycle_headers();
-                continue;
-            }
+            // first floor item
+            ASSERT(!menu.item_floor.empty());
+            choice_made = true;
+            tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
         }
-        else if (keyin == '\\')
-        {
-            check_item_knowledge();
-            continue;
-        }
-        else if (keyin == '-' && menu.item_type_filter == OSEL_WIELD)
+        else if (keyin == '-' && menu.oper == OPER_WIELD)
         {
             choice_made = true;
             tmp_tgt = nullptr;
@@ -469,27 +524,26 @@ bool use_an_item(item_def *&target, int item_type, operation_types oper,
         update_screen();
         // For weapons, armour, and jewellery this is handled in wield_weapon,
         // wear_armour, and _puton_item after selection
-        if (item_type != OSEL_WIELD && item_type != OBJ_ARMOUR
-            && item_type != OBJ_JEWELLERY && choice_made && tmp_tgt
+        if (menu.oper != OPER_WIELD && menu.oper != OPER_WEAR
+            && menu.oper != OPER_PUTON
+            && choice_made && tmp_tgt
             && !check_warning_inscriptions(*tmp_tgt, oper))
         {
             choice_made = false;
         }
 
-        if (choice_made)
-            break;
-        else if (allowcancel())
+        if (!choice_made)
         {
+            if (!allowcancel())
+                continue;
             prompt_failed(PROMPT_ABORT);
-            break;
         }
-        else
-            continue;
+        break;
     }
     if (choice_made)
         target = tmp_tgt;
 
-    ASSERT(!choice_made || target || item_type == OSEL_WIELD);
+    ASSERT(!choice_made || target || menu.oper == OPER_WIELD);
     return choice_made;
 }
 
@@ -724,11 +778,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     // Prompt if not using the auto swap command
         if (!auto_wield)
         {
-            if (!use_an_item(to_wield, OSEL_WIELD, OPER_WIELD, "Wield "
-                             "which item (- for none, * to show all)?"))
-            {
+            if (!use_an_item(to_wield, OPER_WIELD))
                 return false;
-            }
+
     // We abort if trying to wield from the floor with full inventory. We could
     // try something more sophisticated, e.g., drop the currently held weapon,
     // but that's surely not always what's wanted, and the problem persists if
@@ -1234,11 +1286,9 @@ bool wear_armour(int item)
 
     if (item == -1)
     {
-        if (!use_an_item(to_wear, OBJ_ARMOUR, OPER_WEAR,
-                         "Wear which item (* to show all)?"))
-        {
+        if (!use_an_item(to_wear, OPER_WEAR))
             return false;
-        }
+
         // use_an_item on armour should never return true and leave to_wear
         // nullptr
         if (to_wear->pos != ITEM_IN_INVENTORY
@@ -2163,11 +2213,8 @@ bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions,
     item_def *to_puton_ptr = nullptr;
     if (slot == -1)
     {
-        if (!use_an_item(to_puton_ptr, OBJ_JEWELLERY, OPER_PUTON,
-                        "Put on which piece of jewellery (* to show all)?"))
-        {
+        if (!use_an_item(to_puton_ptr, OPER_PUTON))
             return false;
-        }
     }
     else
         to_puton_ptr = &you.inv[slot];
@@ -2374,7 +2421,7 @@ void drink(item_def* potion)
 
     if (!potion)
     {
-        if (!use_an_item(potion, OBJ_POTIONS, OPER_QUAFF, "Drink which item (* to show all)?"))
+        if (!use_an_item(potion, OPER_QUAFF))
             return;
     }
 
@@ -2620,7 +2667,7 @@ static item_def* _choose_target_item_for_scroll(bool scroll_known, object_select
     item_def *target = nullptr;
     bool success = false;
 
-    success = use_an_item(target, selector, OPER_ANY, prompt,
+    success = use_an_item(target, OPER_ANY, selector, prompt,
                        [=]()
                        {
                            if (scroll_known
@@ -3220,7 +3267,7 @@ void read(item_def* scroll, dist *target)
     if (!scroll && failure_reason.empty())
     {
         // player can currently read, but no scroll was provided
-        if (!use_an_item(scroll, OBJ_SCROLLS, OPER_READ, "Read which item (* to show all)?"))
+        if (!use_an_item(scroll, OPER_READ))
             return;
         failure_reason = cannot_read_item_reason(scroll);
     }
