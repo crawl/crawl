@@ -1550,7 +1550,7 @@ bool Menu::process_command(command_type cmd)
             break; // or crash?
         // try selecting a hovered item
         if (last_hovered >= 0)
-            select_item_index(last_hovered, 1);
+            select_item_index(last_hovered, MENU_SELECT_ALL);
         ret = process_selection();
         break;
 
@@ -1564,22 +1564,22 @@ bool Menu::process_command(command_type cmd)
         ASSERT(is_set(MF_MULTISELECT));
         if (last_hovered >= 0)
         {
-            select_item_index(last_hovered, -1);
+            select_item_index(last_hovered, MENU_SELECT_INVERT);
             get_selected(&sel);
         }
         break;
     case CMD_MENU_SELECT_ALL: // Select all or apply filter if there is one.
         ASSERT(is_set(MF_MULTISELECT));
-        select_index(-1, -2);
+        select_index(-1, MENU_SELECT_ALL);
         break;
     case CMD_MENU_INVERT_SELECTION:
         ASSERT(is_set(MF_MULTISELECT));
-        select_index(-1, -1);
+        select_index(-1, MENU_SELECT_INVERT);
         get_selected(&sel);
         break;
     case CMD_MENU_CLEAR_SELECTION:
         ASSERT(is_set(MF_MULTISELECT));
-        select_index(-1, 0); // XX is there a singleselect menu where this should work?
+        select_index(-1, MENU_SELECT_CLEAR); // XX is there a singleselect menu where this should work?
         break;
 
     default:
@@ -1913,19 +1913,20 @@ bool MenuEntry::selected() const
     return selected_qty > 0 && (quantity || on_select);
 }
 
-// -1: Invert
-// -2: Select all
+// -1: Invert (MENU_SELECT_INVERT; used only in multiselect)
+// -2: Select all (MENU_SELECT_ALL)
+// a menu can be selected either if it defines a quantity, or an on_select
+// function.
 // TODO: fix this mess
 void MenuEntry::select(int qty)
 {
-    if (on_select && quantity == 0)
-        selected_qty = 1; // hacky, assume quantity is not relevant
-    else if (qty == -2)
-        selected_qty = quantity;
-    else if (selected()) // always inverts any positive selection??
-        selected_qty = 0;
-    else if (quantity)
-        selected_qty = (qty == -1 ? quantity : qty);
+    const int real_max = quantity == 0 && on_select ? 1 : quantity;
+    if (qty == MENU_SELECT_ALL)
+        selected_qty = real_max;
+    else if (qty == MENU_SELECT_INVERT)
+        selected_qty = selected() ? 0 : real_max;
+    else
+        selected_qty = min(qty, real_max);
 }
 
 string MenuEntry::_get_text_preface() const
@@ -2292,9 +2293,9 @@ void Menu::select_item_index(int idx, int qty)
 }
 
 // index = -1, do special action depending on qty
-//    qty =  0: clear selection
-//    qty = -1: invert selection
-//    qty = -2: select all
+//    qty =  0 (MENU_SELECT_CLEAR): clear selection
+//    qty = -1 (MENU_SELECT_INVERT): invert selection
+//    qty = -2 (MENU_SELECT_ALL): select all or apply filter
 // TODO: refactor in a better way
 void Menu::select_index(int index, int qty)
 {
@@ -2314,7 +2315,7 @@ void Menu::select_index(int index, int qty)
                     continue;
                 }
                 if (is_hotkey(i, items[i]->hotkeys[0])
-                    && (qty != -2 || is_selectable(i)))
+                    && (qty != MENU_SELECT_ALL || is_selectable(i)))
                 {
                     select_item_index(i, qty);
                 }
