@@ -105,7 +105,7 @@ end
 local function have_quiver_action(no_move)
   return ((AUTOFIGHT_THROW or no_move and AUTOFIGHT_THROW_NOMOVE)
           and you.quiver_valid(1) and you.quiver_enabled(1)
-          -- TODO: palentonga roll passes the following check, which may be
+          -- TODO: armataur roll passes the following check, which may be
           -- counterintuitive for the nomove case
           and you.quiver_allows_autofight()
           and (not you.quiver_uses_mp() or not AUTOMAGIC_FIGHT or not af_mp_is_low()))

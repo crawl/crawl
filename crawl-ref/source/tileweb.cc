@@ -1459,7 +1459,7 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
     }
 
     const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_PALENTONGA);
+                                        TILEP_BASE_ARMATAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED

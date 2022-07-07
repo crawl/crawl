@@ -5788,7 +5788,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
     const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
 
     // The deformed don't fit into body armour very well.
-    // (This includes nagas and palentongas.)
+    // (This includes nagas and armataurs.)
     if (get_armour_slot(armour) == EQ_BODY_ARMOUR
             && (get_mutation_level(MUT_DEFORMED)
                 || get_mutation_level(MUT_PSEUDOPODS)))
@@ -6122,7 +6122,7 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     AC += sanguine_armour_bonus();
 
     if (you.has_mutation(MUT_CURL)
-        && you.props[PALENTONGA_CURL_KEY].get_bool())
+        && you.props[ARMATAUR_CURL_KEY].get_bool())
     {
         AC += 7 * scale;
     }

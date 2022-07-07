@@ -461,7 +461,7 @@ tileidx_t tilep_equ_boots(const item_def &item)
     {
         if (you.species == SP_NAGA)
             return TILEP_BOOTS_NAGA_BARDING + min(etype, 3);
-        // placeholder for palentonga
+        // placeholder for armataur
         return TILEP_BOOTS_CENTAUR_BARDING + min(etype, 3);
     }
 
@@ -628,11 +628,11 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_PURPLE_DRACONIAN:
     case SP_PALE_DRACONIAN:
         return TILEP_BASE_DRACONIAN + _draconian_colour(sp, level);
-    case SP_PALENTONGA:
+    case SP_ARMATAUR:
 #if TAG_MAJOR_VERSION == 34
     case SP_CENTAUR:
 #endif
-        return TILEP_BASE_PALENTONGA;
+        return TILEP_BASE_ARMATAUR;
     case SP_METEORAN:
         return TILEP_BASE_METEORAN;
     case SP_DEMIGOD:
@@ -1021,7 +1021,7 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_NAGA;
     }
-    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_PALENTONGA))
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_ARMATAUR))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;

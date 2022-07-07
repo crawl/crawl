@@ -54,7 +54,7 @@ enum ability_type
     ABIL_SHAFT_SELF,
     // Barachim
     ABIL_HOP,
-    // Palentongas
+    // Armataurs
     ABIL_ROLLING_CHARGE,
     // Air Walk
     ABIL_BLINKBOLT,

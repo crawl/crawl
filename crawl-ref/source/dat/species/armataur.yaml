@@ -1,6 +1,7 @@
-enum: SP_PALENTONGA
-monster: MONS_PALENTONGA
-name: "Palentonga"
+enum: SP_ARMATAUR
+monster: MONS_ARMATAUR
+name: "Armataur"
+short_name: "AT"
 difficulty: Simple
 difficulty_priority: 60
 species_flags:
@@ -36,7 +37,7 @@ aptitudes:
   earth_magic: -1
   poison_magic: -2
   invocations: 1
-  evocations: -1
+  evocations: 0
 size: large
 str: 13
 int: 8

@@ -2799,12 +2799,12 @@ static void _do_wait_spells()
     handle_flame_wave();
 }
 
-// palentongas uncurl at the start of the turn
+// armataurs uncurl at the start of the turn
 static void _uncurl()
 {
-    if (you.props[PALENTONGA_CURL_KEY].get_bool())
+    if (you.props[ARMATAUR_CURL_KEY].get_bool())
     {
-        you.props[PALENTONGA_CURL_KEY] = false;
+        you.props[ARMATAUR_CURL_KEY] = false;
         you.redraw_armour_class = true;
     }
 }

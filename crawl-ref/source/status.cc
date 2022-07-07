@@ -239,7 +239,7 @@ bool fill_status_info(int status, status_info& inf)
         break;
 
     case STATUS_CURL:
-        if (you.props[PALENTONGA_CURL_KEY].get_bool())
+        if (you.props[ARMATAUR_CURL_KEY].get_bool())
         {
             inf.light_text = "Curl";
             inf.light_colour = BLUE;

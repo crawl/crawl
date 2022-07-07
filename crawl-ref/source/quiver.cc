@@ -1384,10 +1384,10 @@ namespace quiver
 
         if (abil == ABIL_ROLLING_CHARGE)
         {
-            // Use a version of the palentonga charge range check that
+            // Use a version of the armataur charge range check that
             // ignores things like butterflies, so that autofight doesn't get
             // tripped up.
-            return palentonga_charge_possible(quiet, false);
+            return armataur_charge_possible(quiet, false);
         }
 
         if (get_dist_to_nearest_monster() > ability_range(abil)

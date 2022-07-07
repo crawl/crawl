@@ -269,7 +269,7 @@ Willpower
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Kobolds are small; Ogres and Trolls are large; Nagas and Palentongas are large
+  Kobolds are small; Ogres and Trolls are large; Nagas and Armataurs are large
   with a medium torso; all other species are medium-sized. Many transmutations
   will change your size. Size affects your evasion: the smaller your character,
   the more evasive it is. On the other hand, characters of larger than medium
@@ -1564,12 +1564,12 @@ Merfolk (Mf)
   still remains. The instability of their own morphogenic matrix has made them
   very accomplished transmuters, but most other magic seems foreign to them.
 
-Palentongas (Pa)
-  The Palentongas are a large, scaled mammalian species, walking on four feet
+Armataurs (AT)
+  The Armataurs are a large, scaled mammalian species, walking on four feet
   and swinging a powerful tail behind them. Their elephant-back armies
   terrorize the lands outside the Dungeon.
 
-  Palentongas are best known for their powerful roll attack, curling up and
+  Armataurs are best known for their powerful roll attack, curling up and
   rolling into a crashing melee attack against nearby foes. They're well suited
   to melee combat and to casting supportive spells, but they're significantly
   worse at other forms of combat and advance quite slowly in experience levels.
@@ -1827,7 +1827,7 @@ Nagas (Na)
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
-  Palentongas, their body shape also prevents them from gaining full protection
+  Armataurs, their body shape also prevents them from gaining full protection
   from body armour. A Naga's biggest forte is stealth: Nagas are very good at
   moving unnoticed. Their tails eventually grow strong enough to constrict
   their foes in combat.
@@ -2183,7 +2183,7 @@ powerful attack when unarmed and also to punch with the off hand as an
 additional melee attack. The Unarmed Combat skill continues to increase your
 attack speed while unarmed until it can be raised no more.
 
-Note that auxiliary attacks (such as a Palentonga's tail-slap or a Minotaur's
+Note that auxiliary attacks (such as a Armataur's tail-slap or a Minotaur's
 headbutt) are not affected by the Unarmed Combat skill.
 
 Ranged combat skills

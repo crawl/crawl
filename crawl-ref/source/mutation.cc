@@ -1769,7 +1769,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (!you.has_innate_mutation(MUT_SPIT_POISON) && mutat == MUT_SPIT_POISON)
         return true;
 
-    // Only Palentonga can go on a roll.
+    // Only Armataur can go on a roll.
     if (!you.has_innate_mutation(MUT_ROLL) && mutat == MUT_ROLL)
         return true;
 
