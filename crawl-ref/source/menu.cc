@@ -63,6 +63,41 @@
 #include "windowmanager.h"
 #endif
 
+// Menu and subclasses: one of the main higher-level UI elements in dcss. The
+// inventory screen is a prototypical use of this style of menu.
+//
+// Class hierarchy for Menu (many of these also subclass MenuEntry):
+//
+// Menu (menu.cc/h): possible to use directly, but rare, e.g. y/n prompts
+// | \-ToggleableMenu (menu.cc/h): ability menu, decks menu
+// |   \-SpellMenu (spl-cast.cc): spell casting menu
+// |
+// |\--InvMenu (invent.cc/h): most inventory/inv selection menus aside from
+// |   |                      what the subclasses do. (Including take off
+// |   |                      jewellery and remove armour.)
+// |   |\--AcquireMenu (acquire.cc): acquirement
+// |   |\--UseItemMenu (item-use.cc): scrolls, potions, put on jewellery, wear
+// |   |                              armour, wield, scroll item selection
+// |   |                              (e.g. brand, enchant)
+// |   |\--KnownMenu (known-items.cc): known/unknown items
+// |   \---ShopMenu (shopping.cc): buying in shops
+// |
+// |\--ShoppingListMenu (shopping.cc): shopping lists (`$`)
+// |\--StashSearchMenu (stash.cc): stash searches (ctrl-f)
+// |\--ActionSelectMenu (quiver.cc): quiver action selection
+// |\--SpellLibraryMenu (spl-book.cc): memorize menu
+// |\--GameMenu (main.cc): game menu
+// |\--MacroEditMenu (macro.cc): macro editing overall menu
+// |\--MappingEditMenu (macro.cc): single macro mapping editing
+// |\--LookupHelpMenu (lookup-help.cc): help lookup, e.g. `?/`
+// |\--DescMenu (lookup-help.cc): submenu for choosing between search results
+// |\--MutationMenu (mutation.cc): view info about mutations (`A`)
+// \---StackFiveMenu (decks.cc): menu for the stack five ability
+//
+// Unfortunately, PrecisionMenu is something entirely different (used for the
+// skill menu), as is OuterMenu (local builds main menu, character/background
+// selection, hi scores). PrecisionMenu is deprecated.
+
 using namespace ui;
 
 class UIMenu : public Widget
