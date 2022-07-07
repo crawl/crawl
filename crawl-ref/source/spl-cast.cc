@@ -204,8 +204,8 @@ protected:
         // if there's a preselected item, and no current selection, select it.
         // for arrow selection, the hover starts on the preselected item so no
         // special handling is needed.
-        if (c == CMD_MENU_SELECT && !(flags & MF_ARROWS_SELECT)
-            && sel.empty())
+        if (menu_action == ACT_EXECUTE && c == CMD_MENU_SELECT
+            && !(flags & MF_ARROWS_SELECT) && sel.empty())
         {
             for (size_t i = 0; i < items.size(); ++i)
             {
@@ -217,6 +217,14 @@ protected:
             }
         }
         return ToggleableMenu::process_command(c);
+    }
+
+    bool examine_index(int i) override
+    {
+        ASSERT(i >= 0 && i < static_cast<int>(items.size()));
+        if (items[0]->hotkeys.size())
+            describe_spell(get_spell_by_letter(items[0]->hotkeys[0]), nullptr);
+        return true;
     }
 };
 
@@ -241,6 +249,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     }
     spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
+    // TODO: change to `,`, add toggling with `!`, add help string, etc...
     spell_menu.add_toggle_key('!');
 
     string more_str = "<lightgrey>Press '<w>!</w>' ";
@@ -250,8 +259,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         more_str += "or '<w>I</w>' ";
     }
     // TODO: should allow toggling between execute and examine
-    if (!viewing)
-        spell_menu.menu_action = Menu::ACT_EXECUTE;
+    spell_menu.menu_action = viewing ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
     more_str += "to toggle spell view.</lightgrey>";
     spell_menu.set_more(formatted_string::parse_string(more_str));
 
@@ -283,19 +291,11 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.set_hovered(initial_hover);
 
     int choice = 0;
-    spell_menu.on_single_selection = [&choice, &spell_menu](const MenuEntry& item)
+    spell_menu.on_single_selection = [&choice](const MenuEntry& item)
     {
         ASSERT(item.hotkeys.size() == 1);
-        if (spell_menu.menu_action == Menu::ACT_EXAMINE)
-        {
-            describe_spell(get_spell_by_letter(item.hotkeys[0]), nullptr);
-            return true;
-        }
-        else
-        {
-            choice = item.hotkeys[0];
-            return false;
-        }
+        choice = item.hotkeys[0];
+        return false;
     };
 
     spell_menu.show();

@@ -1372,10 +1372,8 @@ class AcquireMenu : public InvMenu
 
     void init_entries();
     string get_keyhelp(bool unused) const override;
-    bool acquire_selected();
-
-    virtual bool process_key(int keyin) override;
-
+    bool examine_index(int i) override;
+    bool skip_process_command(int keyin) override;
 public:
     AcquireMenu(CrawlVector &aitems);
 };
@@ -1414,6 +1412,7 @@ AcquireMenu::AcquireMenu(CrawlVector &aitems)
       acq_items(aitems)
 {
     menu_action = ACT_EXECUTE;
+    action_cycle = CYCLE_TOGGLE;
     set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
 
     set_tag("acquirement");
@@ -1421,50 +1420,6 @@ AcquireMenu::AcquireMenu(CrawlVector &aitems)
     init_entries();
 
     set_title("Choose an item to acquire.");
-}
-
-void AcquireMenu::init_entries()
-{
-    menu_letter ckey = 'a';
-    for (item_def& item : acq_items)
-    {
-        auto newentry = make_unique<AcquireEntry>(item);
-        newentry->hotkeys.clear();
-        newentry->add_hotkey(ckey++);
-        add_entry(move(newentry));
-    }
-}
-
-string AcquireMenu::get_keyhelp(bool) const
-{
-    string help;
-    vector<MenuEntry*> selected = selected_entries();
-    if (selected.size() == 1 && menu_action == ACT_EXECUTE)
-    {
-        auto& entry = *selected[0];
-        const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
-        help = make_stringf(
-               "<%s>Acquire %s? (%s/N)</%s>\n",
-               col.c_str(),
-               entry.text.c_str(),
-               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
-               col.c_str());
-    }
-    else
-        help = "\n";
-    // looks better with a margin:
-    help += string(MIN_COLS, ' ') + '\n';
-
-    help += make_stringf(
-        //[!] acquire|examine item  [a-i] select item to acquire
-        //[Esc/R-Click] exit
-        "<lightgrey>%s  %s %s</lightgrey>",
-        menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
-                                     "[<w>!</w>] acquire|<w>examine</w> items",
-        hyphenated_hotkey_letters(item_count(), 'a').c_str(),
-        menu_action == ACT_EXECUTE ? "select item for acquirement"
-                                   : "examine item");
-    return pad_more_with(help, "<lightgrey>[<w>Esc</w>] exit</lightgrey>", MIN_COLS);
 }
 
 static void _create_acquirement_item(item_def &item)
@@ -1499,67 +1454,88 @@ static void _create_acquirement_item(item_def &item)
     you.props.erase(ACQUIRE_ITEMS_KEY);
 }
 
-bool AcquireMenu::acquire_selected()
+void AcquireMenu::init_entries()
 {
-    vector<MenuEntry*> selected = selected_entries();
-    ASSERT(selected.size() == 1);
-    auto& entry = *selected[0];
-
-    // update the more with a y/n prompt
-    update_more();
-
-    if (!yesno(nullptr, true, 'n', false, false, true))
+    menu_letter ckey = 'a';
+    for (item_def& item : acq_items)
     {
-        deselect_all();
-        update_more(); // go back to the regular more
-        return true;
+        auto newentry = make_unique<AcquireEntry>(item);
+        newentry->hotkeys.clear();
+        newentry->add_hotkey(ckey++);
+        add_entry(move(newentry));
     }
 
-    item_def &acq_item = *static_cast<item_def*>(entry.data);
-    _create_acquirement_item(acq_item);
-
-    return false;
-}
-
-bool AcquireMenu::process_key(int keyin)
-{
-    switch (keyin)
+    on_single_selection = [this](const MenuEntry& item)
     {
-    case '!':
-    case '?':
-        if (menu_action == ACT_EXECUTE)
-            menu_action = ACT_EXAMINE;
-        else
-            menu_action = ACT_EXECUTE;
+        // update the more with a y/n prompt
         update_more();
-        return true;
-    default:
-        break;
-    }
 
-    const bool ret = InvMenu::process_key(keyin);
-    auto selected = selected_entries();
-    if (selected.size() == 1)
-    {
-        if (menu_action == ACT_EXAMINE)
+        if (!yesno(nullptr, true, 'n', false, false, true))
         {
-            // Use a copy to set flags that make the description better
-            // See the similar code in shopping.cc for details about const
-            // hygene
-            item_def &item = *static_cast<item_def*>(selected[0]->data);
-
-            item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
-                           | ISFLAG_NOTED_GET);
-            describe_item_popup(item);
             deselect_all();
-
+            update_more(); // go back to the regular more
             return true;
         }
-        else
-            return acquire_selected();
+
+        item_def &acq_item = *static_cast<item_def*>(item.data);
+        _create_acquirement_item(acq_item);
+
+        return false;
+    };
+}
+
+string AcquireMenu::get_keyhelp(bool) const
+{
+    string help;
+    vector<MenuEntry*> selected = selected_entries();
+    if (selected.size() == 1 && menu_action == ACT_EXECUTE)
+    {
+        auto& entry = *selected[0];
+        const string col = colour_to_str(channel_to_colour(MSGCH_PROMPT));
+        help = make_stringf(
+               "<%s>Acquire %s? (%s/N)</%s>\n",
+               col.c_str(),
+               entry.text.c_str(),
+               Options.easy_confirm == easy_confirm_type::none ? "Y" : "y",
+               col.c_str());
     }
     else
-        return ret;
+        help = "\n";
+    // looks better with a margin:
+    help += string(MIN_COLS, ' ') + '\n';
+
+    help += make_stringf(
+        //[!] acquire|examine item  [a-i] select item to acquire
+        //[Esc/R-Click] exit
+        "<lightgrey>%s  %s %s</lightgrey>",
+        menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
+                                     "[<w>!</w>] acquire|<w>examine</w> items",
+        hyphenated_hotkey_letters(item_count(), 'a').c_str(),
+        menu_action == ACT_EXECUTE ? "select item for acquirement"
+                                   : "examine item");
+    return pad_more_with(help, "<lightgrey>[<w>Esc</w>] exit</lightgrey>", MIN_COLS);
+}
+
+bool AcquireMenu::examine_index(int i)
+{
+    ASSERT(i >= 0 && i < static_cast<int>(items.size()));
+    // Use a copy to set flags that make the description better
+    // See the similar code in shopping.cc for details about const
+    // hygene
+    item_def &item = *static_cast<item_def*>(items[i]->data);
+
+    item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
+                   | ISFLAG_NOTED_GET);
+    describe_item_popup(item);
+    deselect_all();
+
+    return true;
+}
+
+bool AcquireMenu::skip_process_command(int keyin)
+{
+    // Bypass InvMenu::skip_process_command, which disables ! and ?
+    return Menu::skip_process_command(keyin);
 }
 
 static item_def _acquirement_item_def(object_class_type item_type)

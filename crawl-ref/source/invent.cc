@@ -306,6 +306,7 @@ InvMenu::InvMenu(int mflags)
         type(menu_type::invlist), pre_select(nullptr),
         title_annotate(nullptr), _mode_special_drop(false)
 {
+    menu_action = ACT_EXAMINE; // default
 #ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
         set_flags(get_flags() | MF_USE_TWO_COLUMNS);
@@ -320,6 +321,7 @@ bool InvMenu::mode_special_drop() const
 void InvMenu::set_type(menu_type t)
 {
     type = t;
+    menu_action = t == menu_type::describe ? ACT_EXAMINE : ACT_EXECUTE;
 }
 
 void InvMenu::set_title_annotator(invtitle_annotator afn)
@@ -408,6 +410,20 @@ void InvMenu::select_item_index(int idx, int qty)
         ie->set_star(!ie->has_star());
     }
     Menu::select_item_index(idx, qty);
+}
+
+bool InvMenu::examine_index(int i)
+{
+    // default behavior: examine inv item. You must override if your items
+    // come from somewhere else, or this will cause crashes!
+    if (i >= 0 && i < static_cast<int>(items.size()) && items[i]->hotkeys.size())
+    {
+        unsigned char select = items[i]->hotkeys[0];
+        const int invidx = letter_to_index(select);
+        ASSERT(you.inv[invidx].defined());
+        return describe_item(you.inv[invidx]);
+    }
+    return true;
 }
 
 void InvEntry::set_star(bool val)
@@ -1237,15 +1253,7 @@ void display_inventory()
 {
     InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
     menu.load_inv_items(OSEL_ANY, -1);
-    menu.set_type(menu_type::invlist);
-
-    menu.on_single_selection = [](const MenuEntry& item)
-    {
-        unsigned char select = item.hotkeys[0];
-        const int invidx = letter_to_index(select);
-        ASSERT(you.inv[invidx].defined());
-        return describe_item(you.inv[invidx]);
-    };
+    menu.set_type(menu_type::describe);
 
     menu.show(true);
     if (!crawl_state.doing_prev_cmd_again)

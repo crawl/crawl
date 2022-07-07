@@ -99,6 +99,7 @@ protected:
             // page), ignore Ctrl-D. Likewise if the last key was
             // Ctrl-D (we have already disarmed Ctrl-D for the next
             // keypress by resetting lastch).
+            // TODO: a way of resetting everything to default?
             if (flags & (MF_SINGLESELECT | MF_MULTISELECT) && !resetting)
             {
                 lastch = CONTROL('D');

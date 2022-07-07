@@ -515,8 +515,10 @@ static char _deck_hotkey(deck_type deck)
 
 static deck_type _choose_deck(const string title = "Draw")
 {
+    // TODO: refactor this into a subclass?
     ToggleableMenu deck_menu(MF_SINGLESELECT
-            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION
+            | MF_ARROWS_SELECT | MF_INIT_HOVER);
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(make_stringf("%s which deck?        "
@@ -553,16 +555,17 @@ static deck_type _choose_deck(const string title = "Draw")
     }
 
     int ret = NUM_DECKS;
-    deck_menu.on_single_selection = [&deck_menu, &ret](const MenuEntry& sel)
+    deck_menu.on_examine = [](const MenuEntry& sel)
+    {
+        int selected = *(static_cast<int*>(sel.data));
+        describe_deck((deck_type) selected);
+        return true;
+    };
+    deck_menu.on_single_selection = [&ret](const MenuEntry& sel)
     {
         ASSERT(sel.hotkeys.size() == 1);
-        int selected = *(static_cast<int*>(sel.data));
-
-        if (deck_menu.menu_action == Menu::ACT_EXAMINE)
-            describe_deck((deck_type) selected);
-        else
-            ret = *(static_cast<int*>(sel.data));
-        return deck_menu.menu_action == Menu::ACT_EXAMINE;
+        ret = *(static_cast<int*>(sel.data));
+        return false;
     };
     deck_menu.show(false);
     if (!crawl_state.doing_prev_cmd_again)
@@ -668,8 +671,12 @@ class StackFiveMenu : public Menu
     virtual bool process_key(int keyin) override;
     CrawlVector& draws;
 public:
+    // TODO: is there a sensible way to implement hover / mouse support for
+    // this?
     StackFiveMenu(CrawlVector& d)
-        : Menu(MF_NOSELECT | MF_UNCANCEL), draws(d) {};
+        : Menu(MF_NOSELECT | MF_UNCANCEL),
+        draws(d)
+    {};
 };
 
 bool StackFiveMenu::process_key(int keyin)
@@ -702,14 +709,16 @@ bool StackFiveMenu::process_key(int keyin)
         select_item_index(i, 1);
     }
     else
-        Menu::process_key(keyin);
+        Menu::process_key(keyin); // intentionally do not return here
     return true;
 }
 
 static void _draw_stack(int to_stack)
 {
+    // TODO: refactor into its own subclass?
     ToggleableMenu deck_menu(MF_SINGLESELECT | MF_UNCANCEL
-            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION);
+            | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION
+            | MF_ARROWS_SELECT | MF_INIT_HOVER);
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry("Draw which deck?        "
@@ -758,6 +767,15 @@ static void _draw_stack(int to_stack)
         me->add_tile(tile_def(TILEG_NEMELEX_DECK + i - FIRST_PLAYER_DECK + 1));
         deck_menu.add_entry(me);
     }
+
+    deck_menu.on_examine = [](const MenuEntry& sel)
+    {
+        // what's up with these casts
+        deck_type selected = (deck_type) *(static_cast<int*>(sel.data));
+        describe_deck(selected);
+        return true;
+    };
+
     deck_menu.on_single_selection = [&deck_menu, &stack, to_stack](const MenuEntry& sel)
     {
         ASSERT(sel.hotkeys.size() == 1);
@@ -766,32 +784,27 @@ static void _draw_stack(int to_stack)
         ToggleableMenuEntry* me =
             static_cast<ToggleableMenuEntry*>(deck_menu.selected_entries()[0]);
 
-        if (deck_menu.menu_action == Menu::ACT_EXAMINE)
-            describe_deck(selected);
-        else
+        string status;
+        if (deck_cards(selected))
         {
-            string status;
-            if (deck_cards(selected))
-            {
-                you.props[deck_name(selected)]--;
-                me->text = deck_status(selected);
-                me->alt_text = deck_status(selected);
+            you.props[deck_name(selected)]--;
+            me->text = deck_status(selected);
+            me->alt_text = deck_status(selected);
 
-                card_type draw = _random_card(selected);
-                stack.push_back(draw);
-            }
-            else
-                status = "<lightred>That deck is empty!</lightred> ";
-
-            if (stack.size() > 0)
-                status += "Drawn so far: " + stack_contents();
-            deck_menu.set_more(formatted_string::parse_string(
-                       status + "\n" +
-                       "Press '<w>!</w>' or '<w>?</w>' to toggle "
-                       "between deck selection and description."));
+            card_type draw = _random_card(selected);
+            stack.push_back(draw);
         }
-        return stack.size() < to_stack
-               || deck_menu.menu_action == Menu::ACT_EXAMINE;
+        else
+            status = "<lightred>That deck is empty!</lightred> ";
+
+        if (stack.size() > 0)
+            status += "Drawn so far: " + stack_contents();
+        deck_menu.set_more(formatted_string::parse_string(
+                   status + "\n" +
+                   "Press '<w>!</w>' or '<w>?</w>' to toggle "
+                   "between deck selection and description."));
+
+        return stack.size() < to_stack;
     };
     deck_menu.show(false);
 }
@@ -800,6 +813,7 @@ bool stack_five(int to_stack)
 {
     auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
 
+    // TODO: this loop makes me sad
     while (stack.size() < to_stack)
     {
         if (crawl_state.seen_hups)

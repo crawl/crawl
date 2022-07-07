@@ -367,7 +367,6 @@
 // N.b. these cannot be rebound on webtiles
 // numpad mappings are handled (by default) in Menu via numpad_to_regular
 {CK_UP, CMD_MENU_UP},
-{'\'', CMD_MENU_DOWN}, // backwards compatibility
 {CK_DOWN, CMD_MENU_DOWN},
 {CK_SHIFT_UP, CMD_MENU_LINE_UP},
 {CK_SHIFT_DOWN, CMD_MENU_LINE_DOWN},
@@ -395,6 +394,8 @@
 {',', CMD_MENU_CYCLE_HEADERS},
 {'_', CMD_MENU_HELP},
 {CK_ENTER, CMD_MENU_SELECT},
+{'\\', CMD_MENU_EXAMINE},
+{'\'', CMD_MENU_EXAMINE},
 {CK_MOUSE_B2, CMD_MENU_EXIT},
 {CK_MOUSE_CMD, CMD_MENU_EXIT},
 {ESCAPE, CMD_MENU_EXIT},
