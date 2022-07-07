@@ -22,7 +22,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
-#include "god-abil.h" // fedhas_passthrough for palentonga charge
+#include "god-abil.h" // fedhas_passthrough for armataur charge
 #include "item-prop.h"
 #include "items.h"
 #include "level-state-type.h"
@@ -30,12 +30,12 @@
 #include "los.h"
 #include "losglobal.h"
 #include "losparam.h"
-#include "melee-attack.h" // palentonga charge
+#include "melee-attack.h" // armataur charge
 #include "message.h"
 #include "mon-behv.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
-#include "movement.h" // palentonga charge
+#include "movement.h" // armataur charge
 #include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"
@@ -596,10 +596,10 @@ static void _charge_cloud_trail(const coord_def pos)
         place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
 }
 
-bool palentonga_charge_possible(bool quiet, bool allow_safe_monsters)
+bool armataur_charge_possible(bool quiet, bool allow_safe_monsters)
 {
     // general movement conditions are checked in ability.cc:_check_ability_possible
-    targeter_charge tgt(&you, palentonga_charge_range());
+    targeter_charge tgt(&you, armataur_charge_range());
     for (monster_near_iterator mi(&you); mi; ++mi)
         if (tgt.valid_aim(mi->pos())
             && (allow_safe_monsters || !mons_is_safe(*mi, false) || mons_class_is_test(mi->type)))
@@ -611,7 +611,7 @@ bool palentonga_charge_possible(bool quiet, bool allow_safe_monsters)
     return false;
 }
 
-int palentonga_charge_range()
+int armataur_charge_range()
 {
     return 3 + you.get_mutation_level(MUT_ROLL);
 }
@@ -623,13 +623,13 @@ int palentonga_charge_range()
  *                      therefore fail after selecting a target)
  * @return              Whether the charge succeeded, aborted, or was miscast.
  */
-spret palentonga_charge(bool fail, dist *target)
+spret armataur_charge(bool fail, dist *target)
 {
     const coord_def initial_pos = you.pos();
 
     vector<coord_def> target_path;
-    targeter_charge tgt(&you, palentonga_charge_range());
-    if (!_find_charge_target(target_path, palentonga_charge_range(), &tgt, target))
+    targeter_charge tgt(&you, armataur_charge_range());
+    if (!_find_charge_target(target_path, armataur_charge_range(), &tgt, target))
         return spret::abort;
 
     fail_check();

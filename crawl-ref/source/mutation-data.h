@@ -940,7 +940,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-// Palentonga only
+// Armataur only
 { MUT_ROLL, 8, 3, mutflag::good, true,
   "roll",
 

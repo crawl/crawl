@@ -823,11 +823,11 @@ static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level)
                 || random2(100) > hp_fraction);
 }
 
-// Palentongas curl up after the first time they've been hit in a round.
+// Armataurs curl up after the first time they've been hit in a round.
 static void _consider_curling(kill_method_type death_type)
 {
     if (!you.has_mutation(MUT_CURL)
-        || you.props[PALENTONGA_CURL_KEY].get_bool())
+        || you.props[ARMATAUR_CURL_KEY].get_bool())
     {
         return;
     }
@@ -851,7 +851,7 @@ static void _consider_curling(kill_method_type death_type)
             return;
     }
 
-    you.props[PALENTONGA_CURL_KEY] = true;
+    you.props[ARMATAUR_CURL_KEY] = true;
     you.redraw_armour_class = true;
 }
 

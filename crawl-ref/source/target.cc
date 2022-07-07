@@ -119,7 +119,7 @@ targeting_iterator targeter::affected_iterator(aff_type threshold)
     return targeting_iterator(*this, threshold);
 }
 
-// Is the given location a valid endpoint for a Palentonga charge?
+// Is the given location a valid endpoint for a Armataur charge?
 // That is, is there an enemy there which is visible to the player and
 // is not firewood? If not, why not?
 // Note that this does NOT handle checking the intervening path for
@@ -146,7 +146,7 @@ static bool _ok_charge_target(coord_def a)
 }
 
 // Can a player (for targeting purposes) charge through a given grid
-// with a Palentonga rolling charge?
+// with a Armataur rolling charge?
 // We only check for monsters, not terrain.
 bool can_charge_through_mons(coord_def a)
 {

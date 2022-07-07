@@ -706,7 +706,7 @@ int ability_range(ability_type abil)
             range = frog_hop_range();
             break;
         case ABIL_ROLLING_CHARGE:
-            range = palentonga_charge_range();
+            range = armataur_charge_range();
             break;
         case ABIL_DITHMENOS_SHADOW_STEP:
             range = you.umbra_radius();
@@ -1886,7 +1886,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_ROLLING_CHARGE:
         return _can_movement_ability(quiet) &&
-                                palentonga_charge_possible(quiet, true);
+                                armataur_charge_possible(quiet, true);
 
     case ABIL_WORD_OF_CHAOS:
         if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
@@ -2539,7 +2539,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_ROLLING_CHARGE:
         if (_can_movement_ability(false))
-            return palentonga_charge(fail, target);
+            return armataur_charge(fail, target);
         else
             return spret::abort;
 

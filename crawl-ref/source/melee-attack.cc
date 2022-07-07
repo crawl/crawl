@@ -1449,7 +1449,7 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     // martial damage modifier (wu jian)
     damage = martial_damage_mod(damage);
 
-    // Palentonga rolling charge bonus
+    // Armataur rolling charge bonus
     if (roll_dist > 0)
     {
         // + 1/3rd base per distance rolled, up to double at dist 3.

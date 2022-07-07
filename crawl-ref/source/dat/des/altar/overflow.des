@@ -154,7 +154,7 @@ function species_mock(e)
     return "tentacled monstrosity"
   elseif you.race() == "Ogre" then
     return "ettin skeleton"
-  elseif you.race() == "Palentonga" then
+  elseif you.race() == "Armataur" then
     return "rat"
   elseif you.race() == "Spriggan" then
     return "unseen horror"

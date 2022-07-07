@@ -1386,7 +1386,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 if (you.has_mutation(MUT_CONSTRICTING_TAIL))
                     mpr("You have no legs!");
                 else
-                    mpr("Boots don't fit your feet!"); // palentonga
+                    mpr("Boots don't fit your feet!"); // armataur
             }
             return false;
         }

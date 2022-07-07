@@ -117,7 +117,7 @@ draconian_purple DRACONIAN_PURPLE
 draconian_red DRACONIAN_RED
 draconian_white DRACONIAN_WHITE DRACONIAN_LAST
 
-palentonga_red_f PALENTONGA
+palentonga_red_f ARMATAUR
 palentonga_red_m
 palentonga_f
 palentonga_m

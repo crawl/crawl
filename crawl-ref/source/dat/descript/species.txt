@@ -102,10 +102,9 @@ Ogre
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 Not merely brutes, they are also quite capable spellcasters.
 %%%%
-Palentonga
+Armataur
 
-Scaled mammals the size of horses, Palentongas are able to launch powerful
-rolling charges.
+Scaled mammals the size of horses, Armataurs can launch powerful rolling charges.
 %%%%
 Spriggan
 
