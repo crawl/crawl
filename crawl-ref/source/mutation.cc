@@ -1127,7 +1127,8 @@ private:
     bool blood;
 public:
     MutationMenu()
-        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING),
+        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
+            | MF_ARROWS_SELECT),
           fakemuts(_get_fakemuts(false)),
           muts( _get_ordered_mutations()),
           blood(false)
@@ -1135,16 +1136,9 @@ public:
         set_highlighter(nullptr);
         set_title(new MenuEntry("Innate Abilities, Weirdness & Mutations",
                                 MEL_TITLE));
+        menu_action = ACT_EXAMINE;
         update_entries();
         update_more();
-        on_single_selection = [](const MenuEntry& item)
-        {
-            if (!item.data)
-                return true;
-            const mutation_type mut = *((mutation_type*)(item.data));
-            describe_mutation(mut);
-            return true;
-        };
     }
 
 private:
@@ -1290,6 +1284,18 @@ private:
         default:
             return Menu::process_key(keyin);
         }
+    }
+
+    bool examine_index(int i) override
+    {
+        ASSERT(i >= 0 && i < static_cast<int>(items.size()));
+        if (items[i]->data)
+        {
+            // XX don't use C casts
+            const mutation_type mut = *((mutation_type*)(items[i]->data));
+            describe_mutation(mut);
+        }
+        return true;
     }
 };
 

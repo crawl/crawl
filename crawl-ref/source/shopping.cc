@@ -845,11 +845,16 @@ class ShopMenu : public InvMenu
     void update_help();
     void resort();
     void purchase_selected();
-    void describe(size_t i);
 
     bool cycle_mode(bool) override;
 
     virtual bool process_key(int keyin) override;
+    bool process_command(command_type cmd) override;
+
+protected:
+    void select_item_index(int idx, int qty = MENU_SELECT_INVERT) override;
+    bool examine_index(int i) override;
+    bool skip_process_command(int keyin) override;
 
 public:
     bool bought_something = false;
@@ -1194,9 +1199,9 @@ void ShopMenu::resort()
         items[i]->hotkeys[0] = index_to_letter(i);
 }
 
-void ShopMenu::describe(size_t i)
+bool ShopMenu::examine_index(int i)
 {
-    ASSERT(i < items.size());
+    ASSERT(i < static_cast<int>(items.size()));
     // A hack to make the description more useful.
     // The default copy constructor is non-const for item_def,
     // so we need this violation of const hygene to tweak the flags
@@ -1210,6 +1215,7 @@ void ShopMenu::describe(size_t i)
                        | ISFLAG_NOTED_GET);
     }
     describe_item_popup(item);
+    return true;
 }
 
 bool ShopMenu::cycle_mode(bool)
@@ -1227,20 +1233,37 @@ bool ShopMenu::cycle_mode(bool)
     return false;
 }
 
+void ShopMenu::select_item_index(int idx, int qty)
+{
+    if (!can_purchase)
+        return; // do nothing
+    InvMenu::select_item_index(idx, qty);
+}
+
+bool ShopMenu::process_command(command_type cmd)
+{
+    switch (cmd)
+    {
+    case CMD_MENU_ACCEPT_SELECTION:
+        if (can_purchase)
+            purchase_selected();
+        return true;
+    default:
+        break;
+    }
+    return InvMenu::process_command(cmd);
+}
+
+bool ShopMenu::skip_process_command(int keyin)
+{
+    // Bypass InvMenu::skip_process_command, which disables ! and ?
+    return Menu::skip_process_command(keyin);
+}
+
 bool ShopMenu::process_key(int keyin)
 {
     switch (keyin)
     {
-    case CK_ENTER:
-        if (menu_action == ACT_EXECUTE)
-        {
-            if (can_purchase)
-                purchase_selected();
-        }
-        else if (last_hovered >= 0)
-            describe(last_hovered);
-
-        return true;
     case '$':
     {
         // XX maybe add highlighted item if no selection?
@@ -1274,21 +1297,11 @@ bool ShopMenu::process_key(int keyin)
         update_help();
         update_menu(true);
         return true;
-    case '.':
-        if (!can_purchase)
-            return true; // XX describe?
-        break;
     default:
         break;
     }
 
-    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size()
-        && menu_action == ACT_EXAMINE)
-    {
-        describe(letter_to_index(keyin));
-        return true;
-    }
-    else if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
+    if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
     {
         const auto index = letter_to_index(keyin) % 26;
         auto entry = dynamic_cast<ShopEntry*>(items[index]);
@@ -2084,10 +2097,14 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 class ShoppingListMenu : public Menu
 {
 public:
-    ShoppingListMenu()
+    ShoppingListMenu(ShoppingList &_list)
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
-            | MF_INIT_HOVER) {}
-    bool view_only {false};
+            | MF_INIT_HOVER),
+        view_only(false), list(_list)
+    {}
+
+    bool view_only;
+    ShoppingList &list;
 
     string get_keyhelp(bool) const override
     {
@@ -2126,6 +2143,7 @@ public:
 
 protected:
     virtual formatted_string calc_title() override;
+    bool examine_index(int i) override;
 };
 
 formatted_string ShoppingListMenu::calc_title()
@@ -2204,12 +2222,36 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
     }
 }
 
+bool ShoppingListMenu::examine_index(int i)
+{
+    ASSERT(i >= 0 && i < static_cast<int>(items.size()));
+    const CrawlHashTable* thing =
+                        static_cast<const CrawlHashTable *>(items[i]->data);
+    const bool is_item = list.thing_is_item(*thing);
+
+    if (is_item)
+    {
+        const item_def &item = list.get_thing_item(*thing);
+        describe_item_popup(item);
+    }
+    else // not an item, so we only stored a description.
+    {
+        // HACK: Assume it's some kind of portal vault.
+        const string info = make_stringf(
+                     "%s with an entry fee of %d gold pieces.",
+                     list.describe_thing(*thing, DESC_A).c_str(),
+                     (int) list.thing_cost(*thing));
+        show_description(info.c_str());
+    }
+    return true;
+}
+
 void ShoppingList::display(bool view_only)
 {
     if (list->empty())
         return;
 
-    ShoppingListMenu shopmenu;
+    ShoppingListMenu shopmenu(*this);
     shopmenu.view_only = view_only;
     shopmenu.set_tag("shop");
     shopmenu.menu_action  = view_only ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
@@ -2227,8 +2269,6 @@ void ShoppingList::display(bool view_only)
     {
         const CrawlHashTable* thing =
             static_cast<const CrawlHashTable *>(sel.data);
-
-        const bool is_item = thing_is_item(*thing);
 
         if (shopmenu.menu_action == Menu::ACT_EXECUTE)
         {
@@ -2248,23 +2288,6 @@ void ShoppingList::display(bool view_only)
             const level_pos lp(thing_pos(*thing));
             start_translevel_travel(lp);
             return false;
-        }
-        else if (shopmenu.menu_action == Menu::ACT_EXAMINE)
-        {
-            if (is_item)
-            {
-                const item_def &item = get_thing_item(*thing);
-                describe_item_popup(item);
-            }
-            else // not an item, so we only stored a description.
-            {
-                // HACK: Assume it's some kind of portal vault.
-                const string info = make_stringf(
-                             "%s with an entry fee of %d gold pieces.",
-                             describe_thing(*thing, DESC_A).c_str(),
-                             (int) thing_cost(*thing));
-                show_description(info.c_str());
-            }
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
         {
@@ -2404,6 +2427,7 @@ unordered_set<int> ShoppingList::find_thing(const string &desc, const level_pos 
     return result;
 }
 
+// XX these don't need to be member functions
 bool ShoppingList::thing_is_item(const CrawlHashTable& thing)
 {
     return thing.exists(SHOPPING_THING_ITEM_KEY);

@@ -3479,6 +3479,7 @@ static void _pay_ability_costs(const ability_def& abil)
 
 int choose_ability_menu(const vector<talent>& talents)
 {
+    // TODO: refactor this into a proper subclass
     ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ARROWS_SELECT
             | MF_INIT_HOVER);
@@ -3584,16 +3585,19 @@ int choose_ability_menu(const vector<talent>& talents)
     }
 
     int ret = -1;
-    abil_menu.on_single_selection = [&abil_menu, &talents, &ret](const MenuEntry& sel)
+    abil_menu.on_examine = [&talents](const MenuEntry& sel)
     {
         ASSERT(sel.hotkeys.size() == 1);
         int selected = *(static_cast<int*>(sel.data));
 
-        if (abil_menu.menu_action == Menu::ACT_EXAMINE)
-            _print_talent_description(talents[selected]);
-        else
-            ret = *(static_cast<int*>(sel.data));
-        return abil_menu.menu_action == Menu::ACT_EXAMINE;
+        _print_talent_description(talents[selected]);
+        return true;
+    };
+    abil_menu.on_single_selection = [&ret](const MenuEntry& sel)
+    {
+        ASSERT(sel.hotkeys.size() == 1);
+        ret = *(static_cast<int*>(sel.data));
+        return false;
     };
     abil_menu.show(false);
     if (!crawl_state.doing_prev_cmd_again)

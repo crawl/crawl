@@ -364,6 +364,7 @@ public:
     selitem_tfn      f_selitem;
     keyfilter_tfn    f_keyfilter;
     function<bool(const MenuEntry&)> on_single_selection;
+    function<bool(const MenuEntry&)> on_examine;
     function<bool()> on_show;
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
@@ -463,9 +464,11 @@ protected:
     virtual int pre_process(int key);
 
     void deselect_all(bool update_view = true);
-    virtual void select_items(int key, int qty = -1);
-    virtual void select_item_index(int idx, int qty);
+    virtual void select_items(int key, int qty = MENU_SELECT_INVERT); // XX why is the default invert?
+    virtual void select_item_index(int idx, int qty = MENU_SELECT_INVERT);
     void select_index(int index, int qty = -1);
+    virtual bool examine_index(int i);
+    bool examine_by_key(int keyin);
     int hotkey_to_index(int key, bool primary_only);
     bool process_selection();
 

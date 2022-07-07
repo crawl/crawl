@@ -318,6 +318,7 @@ enum command_type
     CMD_MENU_CYCLE_HEADERS,
     CMD_MENU_HELP,
     CMD_MENU_SELECT, // e.g. select + accept
+    CMD_MENU_EXAMINE, // used internally for relevant menus, doesn't need a binding
     CMD_MENU_EXIT,
     CMD_MAX_MENU = CMD_MENU_EXIT,
 

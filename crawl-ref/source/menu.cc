@@ -69,8 +69,8 @@
 // Class hierarchy for Menu (many of these also subclass MenuEntry):
 //
 // Menu (menu.cc/h): possible to use directly, but rare, e.g. y/n prompts
-// | \-ToggleableMenu (menu.cc/h): ability menu, decks menu
-// |   \-SpellMenu (spl-cast.cc): spell casting menu
+// | \-ToggleableMenu (menu.cc/h): ability menu, various deck menus
+// |   \-SpellMenu (spl-cast.cc): spell casting / spell view menu
 // |
 // |\--InvMenu (invent.cc/h): most inventory/inv selection menus aside from
 // |   |                      what the subclasses do. (Including take off
@@ -978,7 +978,7 @@ void UIMenu::pack_buffers()
 
 Menu::Menu(int _flags, const string& tagname, KeymapContext kmc)
   : f_selitem(nullptr), f_keyfilter(nullptr),
-    action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(nullptr),
+    action_cycle(CYCLE_NONE), menu_action(ACT_EXECUTE), title(nullptr),
     title2(nullptr), flags(_flags), tag(tagname),
     cur_page(1), items(), sel(),
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
@@ -1456,6 +1456,9 @@ bool Menu::cycle_mode(bool forward)
     return true;
 }
 
+/// Given some (possibly empty) selection, run any associated on_select or
+/// on_single_selection triggers, and return whether the menu loop should
+/// continue running. These triggers only happen for singleselect menus.
 bool Menu::process_selection()
 {
     // update selection
@@ -1591,7 +1594,7 @@ bool Menu::process_command(command_type cmd)
 
     case CMD_MENU_EXIT:
         sel.clear();
-        lastch = ESCAPE; // XX is this correct?
+        lastch = CK_ESCAPE; // XX is this correct?
         ret = is_set(MF_UNCANCEL) && !crawl_state.seen_hups;
         break;
     case CMD_MENU_TOGGLE_SELECTED:
@@ -1615,6 +1618,11 @@ bool Menu::process_command(command_type cmd)
     case CMD_MENU_CLEAR_SELECTION:
         ASSERT(is_set(MF_MULTISELECT));
         select_index(-1, MENU_SELECT_CLEAR); // XX is there a singleselect menu where this should work?
+        break;
+
+    case CMD_MENU_EXAMINE:
+        if (last_hovered >= 0)
+            ret = examine_index(last_hovered);
         break;
 
     default:
@@ -1648,6 +1656,19 @@ bool Menu::skip_process_command(int keyin)
     return false;
 }
 
+static bool _cmd_converts_to_examine(command_type c)
+{
+    switch (c)
+    {
+    case CMD_MENU_SELECT:
+    case CMD_MENU_ACCEPT_SELECTION:
+    case CMD_MENU_TOGGLE_SELECTED:
+        return true;
+    default:
+        return false;
+    }
+}
+
 command_type Menu::get_command(int keyin)
 {
     if (skip_process_command(keyin))
@@ -1662,14 +1683,24 @@ command_type Menu::get_command(int keyin)
     // and if this doesn't find anything, the general menu keymap.
     if (is_set(MF_MULTISELECT))
     {
-        const command_type c = key_to_command(keyin, KMC_MENU_MULTISELECT);
-        if (c != CMD_NO_CMD)
-            return c;
+        // relies on subclasses to actually implement an examine behavior
+        command_type cmd = key_to_command(keyin, KMC_MENU_MULTISELECT);
+        if (menu_action == ACT_EXAMINE && _cmd_converts_to_examine(cmd))
+            cmd = CMD_MENU_EXAMINE;
+
+        if (cmd != CMD_NO_CMD)
+            return cmd;
     }
 
     // n.b. this explicitly ignores m_kmc, which is intended only for keymap
     // purposes
-    return key_to_command(keyin, KMC_MENU);
+    command_type cmd = key_to_command(keyin, KMC_MENU);
+
+    // relies on subclasses to actually implement an examine behavior
+    if (menu_action == ACT_EXAMINE && _cmd_converts_to_examine(cmd))
+        cmd = CMD_MENU_EXAMINE;
+
+    return cmd;
 }
 
 bool Menu::process_key(int keyin)
@@ -1757,21 +1788,23 @@ bool Menu::process_key(int keyin)
         // Even if we do return early, lastch needs to be set first,
         // as it's sometimes checked when leaving a menu.
         lastch = keyin; // TODO: remove lastch?
+        const int key_index = hotkey_to_index(keyin, false);
 
         // If no selection at all is allowed, exit now.
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return false;
 
+        if (menu_action == ACT_EXAMINE && key_index >= 0)
+            return examine_by_key(keyin);
+
+        // Update either single or multiselect; noop if keyin isn't a hotkey.
+        // Updates hover.
         select_items(keyin, num);
         get_selected(&sel);
         // we have received what should be a menu item hotkey. Activate that
         // menu item.
-        if (is_set(MF_SINGLESELECT))
-        {
-            if (last_hovered >= 0)
-                last_hovered = hotkey_to_index(keyin, false);
+        if (is_set(MF_SINGLESELECT) && key_index >= 0)
             return process_selection();
-        }
 
         if (is_set(MF_ANYPRINTABLE)
             && (!isadigit(keyin) || !is_set(MF_SELECT_QTY)))
@@ -1941,6 +1974,25 @@ void Menu::select_items(int key, int qty)
             set_hovered(first_snap);
         }
     }
+}
+
+bool Menu::examine_index(int i)
+{
+    ASSERT(i >= 0 && i < static_cast<int>(items.size()));
+    if (on_examine)
+        return on_examine(*items[i]);
+    return true;
+}
+
+bool Menu::examine_by_key(int keyin)
+{
+    const int index = hotkey_to_index(keyin, !is_set(MF_SINGLESELECT));
+    if (index >= 0)
+    {
+        set_hovered(index);
+        return examine_index(index);
+    }
+    return true;
 }
 
 bool MenuEntry::selected() const
@@ -2498,11 +2550,14 @@ void Menu::update_title()
     {
         const bool first = (action_cycle == CYCLE_NONE
                             || menu_action == ACT_EXECUTE);
-        if (!first)
-            ASSERT(title2);
 
-        auto col = item_colour(first ? title : title2);
-        string text = (first ? title->get_text() : title2->get_text());
+        // if title2 is set, use it as an alt title; otherwise don't change
+        // titles
+        const auto *t = first ? title
+                              : title2 ? title2 : title;
+
+        auto col = item_colour(t);
+        string text = t->get_text();
 
         fs.textcolour(col);
 
@@ -3258,6 +3313,8 @@ string get_linebreak_string(const string& s, int maxcol)
     return r;
 }
 
+// TODO: do away with this somehow? Maybe this whole subclass isn't really
+// needed?
 int ToggleableMenu::pre_process(int key)
 {
 #ifdef TOUCH_UI

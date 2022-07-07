@@ -158,6 +158,7 @@ UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
       inv_header(nullptr), floor_header(nullptr)
 {
     set_tag("use_item");
+    menu_action = ACT_EXECUTE;
     if (prompt)
         set_title(prompt);
     else
@@ -415,6 +416,7 @@ void UseItemMenu::set_hovered(int hovered, bool force)
 
 bool UseItemMenu::process_key(int key)
 {
+    // TODO: should check inscriptions here
     if (isadigit(key)
         || key == '-' && oper == OPER_WIELD)
     {

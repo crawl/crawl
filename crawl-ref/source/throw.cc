@@ -280,17 +280,17 @@ static shared_ptr<quiver::action> _fire_prompt_for_item()
     if (launchables)
     {
         slot = prompt_invent_item(
-                    "Fire/throw which item? ([<w>*</w>] to toggle full inventory view, [<w>\\</w>] to toss any item)",
+                    "Fire/throw which item? ([<w>*</w>] to toggle full inventory view, [<w>-</w>] to toss any item)",
                     menu_type::invlist,
                     OSEL_LAUNCHING, OPER_FIRE,
                     invprompt_flag::no_warning // warning handled in quiver
                         | invprompt_flag::hide_known,
-                    '\\');
+                    '-');
     }
 
     if (slot == PROMPT_GOT_SPECIAL)
     {
-        // very rudimentary...could at least do `\\` as a toggle
+        // very rudimentary...could at least do `-` as a toggle
         slot = prompt_invent_item(launchables
                                     ? "Throw/toss which item?"
                                     : "Toss away which item?",
