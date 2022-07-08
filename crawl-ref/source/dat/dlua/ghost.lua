@@ -263,7 +263,7 @@ function setup_xom_dancing_weapon(e)
     elseif you.absdepth() < 14 then
         base_weapons = {"rapier", "long sword", "scimitar", "flail",
                         "morningstar", "dire flail", "war axe", "broad axe",
-                        "trident", "halberd", "scythe", "quarterstaff"}
+                        "trident", "halberd", "quarterstaff"}
         good_weapons = {"great sword", "great mace", "battleaxe", "glaive"}
         great_weapons = {"quick blade", "demon blade", "double sword",
                          "triple sword", "demon whip", "eveningstar",
@@ -275,7 +275,7 @@ function setup_xom_dancing_weapon(e)
     else
         base_weapons = {"rapier", "scimitar", "great sword", "morningstar",
                         "dire flail", "great mace", "war axe", "broad axe",
-                        "battleaxe", "halberd", "scythe", "glaive",
+                        "battleaxe", "halberd", "glaive",
                         "quarterstaff"}
         good_weapons = {}
         great_weapons = {"quick blade", "demon blade", "double sword",
