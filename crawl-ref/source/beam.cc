@@ -1285,8 +1285,12 @@ void bolt::do_fire()
             if (cell_is_solid(pos()))
                 affect_wall();
             const actor *victim = actor_at(pos());
-            if (victim && (!is_tracer || agent()->can_see(*victim)))
+            if (victim
+                && !ignores_monster(victim->as_monster())
+                && (!is_tracer || agent()->can_see(*victim)))
+            {
                 finish_beam();
+            }
         }
         else if (!affects_nothing)
             affect_cell();
