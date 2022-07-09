@@ -1237,10 +1237,19 @@ private:
             MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
             ++hotkey;
             me->data = &mut;
+#ifdef USE_TILE_WEB
+            // This is a horrible hack. There's a bug where webtiles will
+            // carry over mutation icons from the main mutation menu to the
+            // vampirism menu. Rather than fix it, I've turned it off here.
+            // I'm very sorry.
+            if (!you.has_mutation(MUT_VAMPIRISM))
+#endif
 #ifdef USE_TILE
-            const tileidx_t tile = get_mutation_tile(mut);
-            if (tile != 0)
-                me->add_tile(tile_def(tile + you.get_mutation_level(mut, false) - 1));
+            {
+                const tileidx_t tile = get_mutation_tile(mut);
+                if (tile != 0)
+                    me->add_tile(tile_def(tile + you.get_mutation_level(mut, false) - 1));
+            }
 #endif
             add_entry(me);
         }

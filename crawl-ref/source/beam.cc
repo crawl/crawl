@@ -1285,8 +1285,12 @@ void bolt::do_fire()
             if (cell_is_solid(pos()))
                 affect_wall();
             const actor *victim = actor_at(pos());
-            if (victim && (!is_tracer || agent()->can_see(*victim)))
+            if (victim
+                && !ignores_monster(victim->as_monster())
+                && (!is_tracer || agent()->can_see(*victim)))
+            {
                 finish_beam();
+            }
         }
         else if (!affects_nothing)
             affect_cell();
@@ -4707,7 +4711,7 @@ void bolt::knockback_actor(actor *act, int dam)
 
 void bolt::pull_actor(actor *act, int dam)
 {
-    if (!act || !can_pull(*act, dam))
+    if (!act || !can_pull(*act, dam) || act->resists_dislodge("being pulled"))
         return;
 
     // How far we'll try to pull the actor to make them adjacent to the source.
@@ -6814,12 +6818,8 @@ bool bolt::can_knockback(const actor &act, int dam) const
 */
 bool bolt::can_pull(const actor &act, int dam) const
 {
-    if (act.is_stationary()
-        || adjacent(source, act.pos())
-        || act.resists_dislodge("being pulled"))
-    {
+    if (act.is_stationary() || adjacent(source, act.pos()))
         return false;
-    }
 
     return origin_spell == SPELL_HARPOON_SHOT && dam;
 }
