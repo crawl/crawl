@@ -291,7 +291,7 @@ static bool _zin_remove_good_mutations()
     {
         // Ensure that only good mutations are removed.
         if (delete_mutation(RANDOM_GOOD_MUTATION, _god_wrath_name(god),
-                               failMsg, false, true))
+                            failMsg, false, true))
         {
             success = true;
         }
