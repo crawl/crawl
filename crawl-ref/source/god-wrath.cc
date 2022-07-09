@@ -286,11 +286,11 @@ static void _zin_remove_good_mutations()
 
     bool failMsg = true;
 
-    for (int i = 7; i >= 0; --i)
+    int how_many = binomial(7, 75, 100); // same avg, var as old bernoullis
+    for (int i = how_many; i >= 0; --i)
     {
         // Ensure that only good mutations are removed.
-        if (i <= random2(10)
-            && delete_mutation(RANDOM_GOOD_MUTATION, _god_wrath_name(god),
+        if (delete_mutation(RANDOM_GOOD_MUTATION, _god_wrath_name(god),
                                failMsg, false, true))
         {
             success = true;
