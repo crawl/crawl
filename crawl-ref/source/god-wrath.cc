@@ -316,7 +316,7 @@ static bool _zin_retribution()
     {
     case 0:
     case 1: // remove good mutations or deliberately fall through
-        if(_zin_remove_good_mutations())
+        if (_zin_remove_good_mutations())
             break;
     case 2:
     case 3:
