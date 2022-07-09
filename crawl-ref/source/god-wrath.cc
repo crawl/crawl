@@ -274,10 +274,10 @@ static bool _tso_retribution()
     return true;
 }
 
-static void _zin_remove_good_mutations()
+static bool _zin_remove_good_mutations()
 {
     if (!you.how_mutated())
-        return;
+        return true; // This was checked in _zin_retribution().
 
     const god_type god = GOD_ZIN;
     bool success = false;
@@ -301,6 +301,7 @@ static void _zin_remove_good_mutations()
 
     if (success && !you.how_mutated())
         simple_god_message(" rids your body of chaos!", god);
+    return success;
 }
 
 static bool _zin_retribution()
@@ -309,13 +310,17 @@ static bool _zin_retribution()
     const god_type god = GOD_ZIN;
 
     // If not mutated, do something else instead.
-    const int punishment = you.how_mutated() ? random2(6) : random2(4);
+    const int punishment = you.how_mutated() ? random2(6) : random2(4) + 2;
 
     switch (punishment)
     {
     case 0:
-    case 1:
-    case 2: // recital
+    case 1: // remove good mutations or deliberately fall through
+        if(_zin_remove_good_mutations())
+            break;
+    case 2:
+    case 3:
+    case 4: // recital
         simple_god_message(" recites the Axioms of Law to you!", god);
         switch (random2(3))
         {
@@ -330,13 +335,9 @@ static bool _zin_retribution()
             return false;
         }
         break;
-    case 3: // noisiness
+    case 5: // noisiness
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
         noisy(25, you.pos()); // same as scroll of noise
-        break;
-    case 4:
-    case 5: // remove good mutations
-        _zin_remove_good_mutations();
         break;
     }
     return true;
