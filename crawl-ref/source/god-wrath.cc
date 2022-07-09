@@ -387,11 +387,8 @@ static bool _cheibriados_retribution()
             dec_penance(god, 1); // and fall-through.
     // Medium tension
     case 2:
-        if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
-        {
-            mprf(MSGCH_WARN, "You feel the world leave you behind!");
-            slow_player(100);
-        }
+        mprf(MSGCH_WARN, "You feel the world leave you behind!");
+        slow_player(91 + random2(10));
         break;
     // Low/no tension; lose stats.
     case 1:
@@ -791,11 +788,8 @@ static bool _trog_retribution()
 
         case 4:
         case 5:
-            if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
-            {
-                mprf(MSGCH_WARN, "You suddenly feel lethargic!");
-                slow_player(100);
-            }
+            mprf(MSGCH_WARN, "You suddenly feel lethargic!");
+            slow_player(91 + random2(10));
             break;
         }
     }
@@ -2249,12 +2243,8 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
         }
         else
         {
-            if (you.duration[DUR_SLOW] < 180 * BASELINE_DELAY)
-            {
-                mprf(MSGCH_WARN, "The divine experience drains your vigour!");
-
-                slow_player(random2(20));
-            }
+            mprf(MSGCH_WARN, "The divine experience drains your vigour!");
+            slow_player(random2(20));
         }
     }
 
