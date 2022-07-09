@@ -1021,7 +1021,7 @@ static void _lugonu_minion_retribution()
     // if this is major wrath, summon a few minions; 0 below xl9, 0-3 at xl 27.
     // otherwise, summon around 1 + xl/7 minions, maxing at 6 at xl 21.
     const int how_many = (major ? random2(you.experience_level / 9 + 1)
-                                : max(random2(3) + you.experience_level / 7),
+                                : max(random2(3) + you.experience_level / 7,
                                       1));
 
     // did we successfully summon any minions? (potentially set true below)
