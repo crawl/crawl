@@ -1242,7 +1242,6 @@ static void _jiyva_summon_slimes()
         MONS_GREAT_ORB_OF_EYES,
         MONS_SHINING_EYE,
         MONS_GLOWING_ORANGE_BRAIN,
-        MONS_JELLY,
         MONS_ROCKSLIME,
         MONS_QUICKSILVER_OOZE,
         MONS_ACID_BLOB,
