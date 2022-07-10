@@ -78,16 +78,16 @@ void fiery_armour()
     if (you.duration[DUR_FIERY_ARMOUR])
         mpr("Your cloak of flame flares fiercely!");
     else if (you.duration[DUR_ICY_ARMOUR]
-        || you.form == transformation::ice_beast
-        || player_icemail_armour_class())
+             || you.form == transformation::ice_beast
+             || player_icemail_armour_class())
     {
         mprf("A sizzling cloak of flame settles atop your ic%s.",
              you.form == transformation::ice_beast ? "e" : "y armour");
         // TODO: add corresponding inverse message for casting ozo's etc
         // while DUR_FIERY_ARMOUR is active (maybe..?)
-    } else {
-        mpr("A protective cloak of flame settles atop you.");
     }
+    else
+        mpr("A protective cloak of flame settles atop you.");
 
     you.increase_duration(DUR_FIERY_ARMOUR, random_range(110, 140), 1500);
     you.redraw_armour_class = true;
