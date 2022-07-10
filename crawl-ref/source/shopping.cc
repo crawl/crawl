@@ -495,20 +495,17 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 520;
                 break;
 
-            case SCR_BRAND_WEAPON:
-                valued += 200;
-                break;
-
             case SCR_SUMMONING:
+            case SCR_TORMENT:
+            case SCR_SILENCE:
+            case SCR_BRAND_WEAPON:
                 valued += 95;
                 break;
 
             case SCR_BLINKING:
             case SCR_ENCHANT_ARMOUR:
             case SCR_ENCHANT_WEAPON:
-            case SCR_TORMENT:
-            case SCR_SILENCE:
-            case SCR_VULNERABILITY:
+            case SCR_MAGIC_MAPPING:
                 valued += 75;
                 break;
 
@@ -516,15 +513,15 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_FEAR:
             case SCR_IMMOLATION:
             case SCR_POISON:
-            case SCR_MAGIC_MAPPING:
-                valued += 35;
+            case SCR_VULNERABILITY:
+            case SCR_FOG:
+                valued += 40;
                 break;
 
             case SCR_TELEPORTATION:
                 valued += 30;
                 break;
 
-            case SCR_FOG:
             case SCR_IDENTIFY:
 #if TAG_MAJOR_VERSION == 34
             case SCR_CURSE_ARMOUR:
