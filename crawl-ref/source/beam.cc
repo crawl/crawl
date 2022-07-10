@@ -294,7 +294,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.source_id     = MID_PLAYER;
     pbolt.attitude      = ATT_FRIENDLY;
     pbolt.thrower       = KILL_YOU_MISSILE;
-
+    pbolt.overshoot_prompt = false;
 
     // Init tracer variables.
     pbolt.friend_info.reset();
@@ -329,6 +329,9 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
         you.turn_is_over = false;
         return false;
     }
+
+    if (pbolt.friendly_past_target)
+        pbolt.aimed_at_spot = true;
 
     // Set to non-tracing for actual firing.
     pbolt.is_tracer = false;
@@ -4263,6 +4266,15 @@ void bolt::handle_stop_attack_prompt(monster* mon)
         || is_harmless(mon)
         || friend_info.dont_stop && foe_info.dont_stop)
     {
+        return;
+    }
+
+    // If prompts for overshooting the target are disabled, instead
+    // just let the caller know that there was something there. They
+    // should be resposible and keep the player from shooting friends.
+    if (passed_target && !overshoot_prompt && you.can_see(*mon))
+    {
+        friendly_past_target = true;
         return;
     }
 
