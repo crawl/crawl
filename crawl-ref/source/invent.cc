@@ -1724,6 +1724,8 @@ bool check_warning_inscriptions(const item_def& item,
  * @param flags            See comments on invent_prompt_flags.
  * @param other_valid_char A character that, if not '\0', will cause
  *                         PROMPT_GOT_SPECIAL to be returned when pressed.
+ * @param type_out         Output: OSEL_ANY if the user was in `*`, type_expect
+ *                         otherwise. Ignored if nullptr.
  *
  * @return  the inventory slot of an item or one of the following special values
  *          - PROMPT_ABORT:       if the player hits escape.
@@ -1734,7 +1736,8 @@ int prompt_invent_item(const char *prompt,
                        menu_type mtype, int type_expect,
                        operation_types oper,
                        invent_prompt_flags flags,
-                       const char other_valid_char)
+                       const char other_valid_char,
+                       int *type_out)
 {
     const bool do_warning = !(flags & invprompt_flag::no_warning);
     const bool allow_list_known = !(flags & invprompt_flag::hide_known);
@@ -1912,6 +1915,8 @@ int prompt_invent_item(const char *prompt,
             need_prompt = false;
         }
     }
+    if (type_out)
+        *type_out = current_type_expected;
 
     return ret;
 }

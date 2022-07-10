@@ -50,7 +50,6 @@
 #include "view.h"
 
 static shared_ptr<quiver::action> _fire_prompt_for_item();
-static bool _fire_validate_item(int selected, string& err);
 static int  _get_dart_chance(const int hd);
 
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
@@ -276,52 +275,26 @@ static shared_ptr<quiver::action> _fire_prompt_for_item()
 #endif
 
     const bool launchables = any_items_of_type(OSEL_LAUNCHING);
-    int slot = PROMPT_GOT_SPECIAL;
-    if (launchables)
-    {
-        slot = prompt_invent_item(
-                    "Fire/throw which item? ([<w>*</w>] to toggle full inventory view, [<w>-</w>] to toss any item)",
-                    menu_type::invlist,
-                    OSEL_LAUNCHING, OPER_FIRE,
-                    invprompt_flag::no_warning // warning handled in quiver
-                        | invprompt_flag::hide_known,
-                    '-');
-    }
+    int slot = -1;
+    const string title = launchables
+            ? "<lightgray>Fire/throw which item? ([<w>*</w>] to toss any item)<lightgray>"
+            : "<lightgray>Toss away which item?<lightgray>";
+    int selector = launchables ? OSEL_LAUNCHING : OSEL_ANY;
+    // TODO: the output api here is awkward, and it would also be nice to change
+    // the title in `*` mode.
+    slot = prompt_invent_item(
+                title.c_str(),
+                menu_type::invlist,
+                selector, OPER_FIRE,
+                invprompt_flag::no_warning // warning handled in quiver
+                    | invprompt_flag::hide_known,
+                '\0',
+                &selector);
 
-    if (slot == PROMPT_GOT_SPECIAL)
-    {
-        // very rudimentary...could at least do `-` as a toggle
-        slot = prompt_invent_item(launchables
-                                    ? "Throw/toss which item?"
-                                    : "Toss away which item?",
-                    menu_type::invlist,
-                    OSEL_ANY, OPER_FIRE,
-                    invprompt_flag::no_warning
-                            | invprompt_flag::hide_known);
-        return quiver::ammo_to_action(slot, true); // neg values are ok
-    }
-
-    return (you.weapon() && you.weapon()->link == slot && is_range_weapon(*you.weapon()))
+    const bool weapon_fires = you.weapon() && is_range_weapon(*you.weapon());
+    return (weapon_fires && you.weapon()->link == slot && selector != OSEL_ANY)
             ? quiver::get_primary_action() // XX quiver::launching_to_action(slot)?
             : quiver::ammo_to_action(slot, true);
-}
-
-// Returns false and err text if this item can't be fired.
-static bool _fire_validate_item(int slot, string &err)
-{
-    if (slot == you.equip[EQ_WEAPON]
-        && is_weapon(you.inv[slot])
-        && you.inv[slot].cursed())
-    {
-        err = "That weapon is stuck to your " + you.hand_name(false) + "!";
-        return false;
-    }
-    else if (item_is_worn(slot))
-    {
-        err = "You are wearing that object!";
-        return false;
-    }
-    return true;
 }
 
 // Returns true if warning is given.
@@ -426,21 +399,22 @@ void throw_item_no_quiver(dist *target)
     }
 
     // first find an action
-    string warn;
     auto a = _fire_prompt_for_item();
 
     // handles slot == -1
     if (!a || !a->is_valid())
     {
-        canned_msg(MSG_OK);
+        string warn;
+        if (a && a->get_item() >= 0
+                    && !quiver::toss_validate_item(a->get_item(), &warn))
+        {
+            mpr(warn);
+        }
+        else
+            canned_msg(MSG_OK);
         return;
     }
 
-    if (a->get_item() >= 0 && !_fire_validate_item(a->get_item(), warn))
-    {
-        mpr(warn);
-        return;
-    }
     // This is kind of inelegant, but the following has two effects:
     // * For interactive targeting, use the action_cycler interface, which is
     //   more general (though right now this generality is mostly unused).
