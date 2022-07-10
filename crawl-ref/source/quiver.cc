@@ -1017,6 +1017,34 @@ namespace quiver
 
     };
 
+    bool toss_validate_item(int slot, string *err)
+    {
+        // misc tossing restrictions go here
+
+        // No tossing cursed weapons.
+        // this check would be safe to remove, but it's useful for
+        // messaging purposes to see that the action is invalid. (It's
+        // otherwise handled by the unwield call.)
+        if (slot == you.equip[EQ_WEAPON]
+            && is_weapon(you.inv[slot])
+            && you.inv[slot].cursed())
+        {
+            if (err)
+                *err = "That weapon is stuck to your " + you.hand_name(false) + "!";
+            return false;
+        }
+
+        // make people manually take stuff off if they want to toss it
+        // (weapons are still ok for some reason)
+        if (item_is_worn(slot))
+        {
+            if (err)
+                *err = "You are wearing that object!";
+            return false;
+        }
+        return true;
+    }
+
     // for fumble throwing / tossing
     struct fumble_action : public ammo_action
     {
@@ -1028,12 +1056,7 @@ namespace quiver
 
         bool launch_type_check() const override
         {
-            return true;
-        }
-
-        bool is_valid() const override
-        {
-            return item_action::is_valid() && !you.has_mutation(MUT_NO_GRASPING);
+            return toss_validate_item(item_slot);
         }
     };
 
@@ -2331,10 +2354,6 @@ namespace quiver
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return nullptr;
 
-        // is this legacy(?) check needed? Maybe only relevant for fumble throwing?
-        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
-            if (you.equip[i] == slot)
-                return make_shared<ammo_action>(-1);
 
         shared_ptr<action> a = nullptr;
         // use ammo as the fallback -- may well end up invalid
