@@ -707,6 +707,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_TORMENT:            return "torment";
     case SCR_IMMOLATION:         return "immolation";
     case SCR_POISON:             return "poison";
+    case SCR_BUTTERFLIES:        return "butterflies";
     case SCR_BLINKING:           return "blinking";
     case SCR_MAGIC_MAPPING:      return "magic mapping";
     case SCR_FOG:                return "fog";
@@ -2923,6 +2924,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_BRAND_WEAPON:
             return you.has_mutation(MUT_NO_GRASPING);
         case SCR_SUMMONING:
+        case SCR_BUTTERFLIES:
             return you.allies_forbidden();
         case SCR_FOG:
         case SCR_POISON:

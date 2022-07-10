@@ -3474,6 +3474,10 @@ void read(item_def* scroll, dist *target)
                         && alreadyknown;
         break;
 
+    case SCR_BUTTERFLIES:
+        cancel_scroll = summon_butterflies() == spret::abort && alreadyknown;
+        break;
+
     case SCR_FOG:
     {
         if (alreadyknown && (env.level_state & LSTATE_STILL_WINDS))

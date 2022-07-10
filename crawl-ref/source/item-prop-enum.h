@@ -444,6 +444,7 @@ enum scroll_type
     SCR_CURSE_JEWELLERY,
 #endif
     SCR_POISON,
+    SCR_BUTTERFLIES,
     NUM_SCROLLS
 };
 

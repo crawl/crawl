@@ -515,6 +515,7 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_POISON:
             case SCR_VULNERABILITY:
             case SCR_FOG:
+            case SCR_BUTTERFLIES:
                 valued += 40;
                 break;
 

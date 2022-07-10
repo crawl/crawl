@@ -1041,6 +1041,42 @@ spret cast_summon_demon(int pow)
     return spret::success;
 }
 
+spret summon_butterflies()
+{
+    const string reason = stop_summoning_reason(MR_NO_FLAGS, M_FLIES);
+    if (reason != "")
+    {
+        string prompt = make_stringf("Really summon butterflies while emitting a %s?",
+                                     reason.c_str());
+
+        if (yesno(prompt.c_str(), false, 'n'))
+            return spret::abort;
+
+        canned_msg(MSG_OK);
+    }
+
+    // XXX: dedup with Xom, or change number?
+    const int how_many = random_range(10, 20);
+    bool success = false;
+    for (int i = 0; i < how_many; ++i)
+    {
+        if (create_monster(_pal_data(MONS_BUTTERFLY, 3, GOD_NO_GOD,
+                                     SPELL_SUMMON_BUTTERFLIES)))
+        {
+            success = true;
+        }
+    }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+    else if (silenced(you.pos()))
+        mpr("The fluttering of tiny wings stirs the air.");
+    else
+        mpr("You hear the tinkle of a tiny bell.");
+
+    return spret::success;
+}
+
 spret summon_shadow_creatures()
 {
     // Hard to predict what resistances might come from this.
