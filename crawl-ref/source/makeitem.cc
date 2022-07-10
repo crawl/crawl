@@ -1351,6 +1351,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
         {
             const scroll_type scr = (scroll_type) i;
 
+            // Only generate the scroll types chosen for this game.
+            if (item_excluded_from_set(OBJ_SCROLLS, scr))
+                continue;
+
             // No teleportation or noise in Sprint.
             if (crawl_state.game_is_sprint()
                 && (scr == SCR_TELEPORTATION || scr == SCR_NOISE))

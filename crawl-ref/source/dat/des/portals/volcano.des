@@ -1224,7 +1224,7 @@ NAME:   hellmonk_smoking_crater
 TAGS:   no_item_gen no_monster_gen
 ORIENT: encompass
 WEIGHT: 20
-KITEM:  4 = scroll of fog q:2 ident:all w:20 / cloak of the thief w:1
+KITEM:  4 = scroll of fog q:2 ident:all w:20 / condensation vane / cloak of the thief w:1
 MONS:   steam dragon / steam dragon / smoke demon / hell hound
 MONS:   sun demon, lindwurm
 KMONS:  4 = fire dragon

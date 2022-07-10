@@ -162,7 +162,7 @@ function general_item_setup(e)
   e.kitem("^ = superb_item ident:all w:590 /\
           potion of heal wounds ident:all q:4 w:3 /\
           potion of haste ident:all q:4 w:3 /\
-          scroll of fog w:1 ident:all /\
+          any concealment scroll w:1 ident:all /\
           potion of might ident:all w:2 /\
           scroll of acquirement q:1 w:1 ident:all /\
           scroll of enchant weapon ident:all q:4 w:2 /\
@@ -178,7 +178,7 @@ function general_item_setup(e)
           potion of brilliance ident:all / potion of berserk rage ident:all /\
           potion of mutation ident:all")
   e.kitem("? = scroll of blinking ident:all / scroll of identify ident:all /\
-          scroll of fog ident:all / scroll of fear ident:all /\
+          any concealment scroll ident:all / scroll of fear ident:all /\
           scroll of enchant weapon ident:all q:2 /\
           scroll of enchant armour ident:all q:2")
   e.kitem(") = battleaxe plus:9 good_item ident:all /\

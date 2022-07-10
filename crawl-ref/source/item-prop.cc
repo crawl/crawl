@@ -726,9 +726,10 @@ struct item_set_def
 };
 static const item_set_def item_sets[] =
 {
-    { OBJ_WANDS, { WAND_CHARMING, WAND_PARALYSIS } },
-    { OBJ_WANDS, { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
-    { OBJ_WANDS, { WAND_ICEBLAST, WAND_ROOTS } },
+    { OBJ_WANDS,    { WAND_CHARMING, WAND_PARALYSIS } },
+    { OBJ_WANDS,    { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
+    { OBJ_WANDS,    { WAND_ICEBLAST, WAND_ROOTS } },
+    { OBJ_SCROLLS,  { SCR_FOG, SCR_BUTTERFLIES } },
 };
 COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 
