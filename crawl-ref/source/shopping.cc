@@ -79,7 +79,7 @@ int artefact_value(const item_def &item)
     // This should probably be more complex... but this isn't so bad:
     ret += 6 * prop[ARTP_AC]
            + 6 * prop[ARTP_EVASION]
-           + 4 * prop[ARTP_SHIELDING]
+           + 5 * prop[ARTP_SHIELDING]
            + 6 * prop[ARTP_SLAYING]
            + 3 * prop[ARTP_STRENGTH]
            + 3 * prop[ARTP_INTELLIGENCE]
@@ -99,7 +99,7 @@ int artefact_value(const item_def &item)
         ret -= 10;
 
     if (prop[ARTP_WILLPOWER] > 0)
-        ret += 4 + 4 * prop[ARTP_WILLPOWER];
+        ret += 4 + 4 * (prop[ARTP_WILLPOWER] * prop[ARTP_WILLPOWER]);
     else if (prop[ARTP_WILLPOWER] < 0)
         ret -= 6;
 
@@ -151,7 +151,7 @@ int artefact_value(const item_def &item)
         ret -= 5;
 
     if (prop[ARTP_PREVENT_TELEPORTATION])
-        ret -= 8;
+        ret -= 10;
 
     if (prop[ARTP_PREVENT_SPELLCASTING])
         ret -= 10;
