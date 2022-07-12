@@ -4274,7 +4274,10 @@ void bolt::handle_stop_attack_prompt(monster* mon)
     // should be resposible and keep the player from shooting friends.
     if (passed_target && !overshoot_prompt && you.can_see(*mon))
     {
-        friendly_past_target = true;
+        string adj, suffix;
+        bool penance;
+        if (bad_attack(mon, adj, suffix, penance, target))
+            friendly_past_target = true;
         return;
     }
 
