@@ -8,6 +8,7 @@
 {{
 -- Call this function, with the default being the top parameter,
 -- for any temple with variable altar totals.
+-- Note that it returns a string, not a number!
 function get_altar_count(e, default)
   local params = dgn.map_parameters()
   local count = "";
@@ -3893,7 +3894,7 @@ PLACE:   Temple
 ORIENT:  encompass
 SHUFFLE: DEFHJKLMNOPQRSZ/PQLRMHSNJEZOKFD/ZOSKNRFJMQDEHLP
 : local altar_count = get_altar_count(e, 14)
-: if     altar_count == 6 then                               -- 6
+: if     altar_count == "6" then                            -- 6
 :   if crawl.coinflip() then
 SHUFFLE: DPZ/JMN
 SUBST:   DPZ = {, JMNHKR = B, EFLOQS = a
@@ -3901,25 +3902,25 @@ SUBST:   DPZ = {, JMNHKR = B, EFLOQS = a
 SHUFFLE: DPZ/JMN/HKR
 SUBST:   DPZ = {, EFLOQS = B, JMN = a, HKR = p
 :   end
-: elseif altar_count == 7 then                               -- 7
+: elseif altar_count == "7" then                            -- 7
 SUBST:   R = {, EFHJKMN = B, D = a, LO = p, PZ = q, QS = r
-: elseif altar_count == 8 then                               -- 8
+: elseif altar_count == "8" then                            -- 8
 SUBST:   D = {, HJKPQRSZ = B, EF = a, LO = p, MN = q
-: elseif altar_count == 9 then                               -- 9
+: elseif altar_count == "9" then                            -- 9
 SHUFFLE: DPZ/JMN
 SUBST:   DPZ = {, EHLFKOQRS = B, JMN = a
-: elseif altar_count == 10 then                              -- 10
+: elseif altar_count == "10" then                           -- 10
 SUBST:   R = {, DEFHJKLMNO = B, PZ = a, QS = p
-: elseif altar_count == 11 then                              -- 11
+: elseif altar_count == "11" then                           -- 11
 SHUFFLE: DR
 SUBST:   D = {, EFHKLOPQRSZ = B, JMN = a
-: elseif altar_count == 12 then                              -- 12
+: elseif altar_count == "12" then                           -- 12
 SHUFFLE: DPZ/JMN
 SUBST:   DPZ = {, EFHJKLMNOQRS = B
-: elseif altar_count == 13 then                              -- 13
+: elseif altar_count == "13" then                           -- 13
 SHUFFLE: DJ/KP
 SUBST:   D = {, EFHKLMNOPQRSZ = B, J = a
-: else --altar_count == 14                                   -- 14
+: else --altar_count == "14"                                -- 14
 SHUFFLE: DR
 SUBST:   D = {, EFHJKLMNOPQRSZ = B
 : end
@@ -3960,19 +3961,19 @@ PLACE:   Temple
 ORIENT:  encompass
 SHUFFLE: DFHJ
 : local altar_count = get_altar_count(e, 20)
-: if altar_count == 12 then       -- 12
+: if altar_count == "12" then       -- 12
 :   if crawl.coinflip() then
 SUBST: DE = B, FHJ = T
 :   else
 SUBST: DFH = B, EJ = T
 :   end
-: elseif altar_count == 16 then   -- 16
+: elseif altar_count == "16" then   -- 16
 :   if crawl.coinflip() then
 SUBST: DEF = B, JH = T
 :   else
 SUBST: DFHJ = B, E = T
 :   end
-: else                            -- 20
+: else                              -- 20
 SUBST: DEFH = B, J = T
 : end
 MAP
@@ -4031,20 +4032,18 @@ PLACE:   Temple
 ORIENT:  encompass
 SHUFFLE: DF
 : local altar_count = get_altar_count(e, 16)
-: if altar_count % 4 == 2 then       -- 6, 14
+: if tonumber(altar_count) % 4 == 2 then       -- 6, 14
 NSUBST:  D = 1:{ / <
 SUBST:   !- = w
-: elseif altar_count % 4 == 3 then   -- 7, 15
+: elseif tonumber(altar_count) % 4 == 3 then   -- 7, 15
 NSUBST:  D = 1:{ / B
 SUBST:   !- = w
-: else                               -- 8, 16
+: else                                         -- 8, 16
 SUBST:   ! = {, - = `
 FTILE:   ` = floor_vault
 COLOUR:  ` = blue
 : end
-# I don't know why the level builder didn't like this next line without
-# the "tonumber" function, but it didn't, so here it is.
-: if tonumber(altar_count) < 10 then -- 6, 7, 8
+: if tonumber(altar_count) < 10 then           -- 6, 7, 8
 SUBST:   EHKM : GGGTTTUVY
 : end
 SUBST:   DEFHJKLM = B
@@ -4089,13 +4088,13 @@ TAGS:   no_pool_fixup temple_altars_6 temple_altars_8 temple_altars_10 \
 PLACE:  Temple
 ORIENT: encompass
 : local altar_count = get_altar_count(e, 18)
-: if altar_count == 6 then
+: if altar_count == "6" then
 SUBST:  DF = B, E : GU, HJ = .
-: elseif altar_count == 8 then
+: elseif altar_count == "8" then
 SUBST:  HJ = B, DEF = .
-: elseif altar_count == 10 then
+: elseif altar_count == "10" then
 SUBST:  DEF = B, HJ = .
-: elseif altar_count == 14 then
+: elseif altar_count == "14" then
 SUBST:  DFHJ = B, E : GU
 : else
 SUBST:  DEFHJ = B
@@ -4812,7 +4811,7 @@ KFEAT:   roygbiv = n
 KFEAT:   ' = .
 SHUFFLE: roygbiv / vroygbi / ivroygb / bivroyg / gbivroy / ygbivro / oygbivr
 : local altar_count = get_altar_count(e, 14)
-: if altar_count == 7 then
+: if altar_count == "7" then
 SUBST:   LO = !, M = ., N = B
 : else
 SUBST:   L = ., MN = !, O = B
@@ -4892,15 +4891,15 @@ SHUFFLE: PQ/SR, pq/sr
 : local altar_count = get_altar_count(e, 21)
 : -- dice variable is used for picking variations later
 : local dice = crawl.roll_dice(1, 6)
-: if     altar_count == 6 then        -- 6
+: if     altar_count == "6" then        -- 6
 SUBST:   Zz = B, PpRr = U, QqSs = .
-: elseif altar_count == 9 then        -- 9
+: elseif altar_count == "9" then        -- 9
 :   if dice <= 3 then
 SUBST:   PR = B, pr = U, QSZqsz = .
 :   else
 SUBST:   PSz = B, Zps = U, QRqr = .
 :   end
-: elseif altar_count == 12 then       -- 12
+: elseif altar_count == "12" then       -- 12
 :   if dice <= 2 then
 SUBST:   QR = B, psz = U, PSZqr = .
 :   elseif dice <= 4 then
@@ -4908,13 +4907,13 @@ SUBST:   PRz = B, Zpr = U, SQsq = .
 :   else
 SUBST:   PSps = B, QRqr = U, Zz = .
 :   end
-: elseif altar_count == 15 then       -- 15
+: elseif altar_count == "15" then       -- 15
 :   if dice <= 3 then
 SUBST:   PRps = B, QSqr = U, Zz = .
 :   else
 SUBST:   QRS = B, psz = U, PZqr = .
 :   end
-: elseif altar_count == 18 then       -- 18
+: elseif altar_count == "18" then       -- 18
 :   if dice <= 2 then
 SUBST:   PRpr = B, Zz = U, QSqs = .
 :   elseif dice <= 4 then
