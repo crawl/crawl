@@ -949,19 +949,19 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
     case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_SPRIGGAN_DEFENDER:
-    case TILEP_MONS_SPRIGGAN_BERSERKER:
         *ofs_x = 2;
         *ofs_y = 3;
         break;
 
     case TILEP_MONS_SPRIGGAN_DRUID:
+    case TILEP_MONS_SPRIGGAN_BERSERKER:
         *ofs_x = 2;
         *ofs_y = -4;
         break;
 
     case TILEP_MONS_SPRIGGAN_AIR_MAGE:
         *ofs_x = 2;
-        *ofs_y = -9;
+        *ofs_y = -1;
         break;
 
     case TILEP_MONS_THE_ENCHANTRESS:
@@ -1064,8 +1064,8 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
     case TILEP_MONS_DEEP_ELF_AIR_MAGE:
     case TILEP_MONS_DEEP_ELF_FIRE_MAGE:
-        *ofs_x = 3;
-        *ofs_y = -7;
+        *ofs_x = 2;
+        *ofs_y = 0;
         break;
 
     case TILEP_MONS_ORB_OF_FIRE:
