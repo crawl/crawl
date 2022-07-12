@@ -1346,6 +1346,11 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
             return TILEP_MONS_SKELETON_HYDRA
                    + (z_tile - TILEP_MONS_ZOMBIE_HYDRA);
         }
+        if (tile_player_basetile(z_tile) == TILEP_MONS_LERNAEAN_HYDRA_ZOMBIE)
+        {
+            return TILEP_MONS_LERNAEAN_HYDRA_SKELETON
+                   + (z_tile - TILEP_MONS_LERNAEAN_HYDRA_ZOMBIE);
+        }
     }
     return TILEP_MONS_SKELETON_SMALL;
 }
@@ -1366,7 +1371,8 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
 
     // hydras get special casing
 
-    if (subtype == MONS_LERNAEAN_HYDRA && mon.type == MONS_ZOMBIE)
+    if (subtype == MONS_LERNAEAN_HYDRA && (mon.type == MONS_ZOMBIE
+                                           || mon.type == MONS_SKELETON))
     {
         // Step down the number of heads to get the appropriate tile:
         // for the last five heads, use tiles 1-5, for greater amounts
