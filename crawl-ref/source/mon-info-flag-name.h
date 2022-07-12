@@ -132,4 +132,5 @@ static const vector<monster_info_flag_name> monster_info_flag_names = {
     { MB_ANTIMAGIC, "magic disrupted", "magic disrupted", "magic disrupted"},
     { MB_ANGUISH, "anguished", "anguished", "anguished"},
     { MB_SIMULACRUM, "simulacrum", "simulacrum", "simulacrum"},
+    { MB_REFLECTING, "reflecting", "reflecting blocked projectiles", "reflecting"},
 };

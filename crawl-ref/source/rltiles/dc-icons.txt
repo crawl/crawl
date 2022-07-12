@@ -71,6 +71,7 @@ simulacrum SIMULACRUM
 still_winds STILL_WINDS
 waterlogged WATERLOGGED
 weakened WEAKENED
+reflect REFLECTING
 
 something_under SOMETHING_UNDER
 new_stair NEW_STAIR
