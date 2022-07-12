@@ -729,6 +729,7 @@ void throw_it(quiver::action &a)
             pbolt.friend_info.reset();
             pbolt.foe_ratio = 100;
             pbolt.is_tracer = true;
+            pbolt.overshoot_prompt = false;
 
             pbolt.fire();
 
@@ -736,6 +737,8 @@ void throw_it(quiver::action &a)
 
             pbolt.hit    = 0;
             pbolt.damage = dice_def();
+            if (pbolt.friendly_past_target)
+                pbolt.aimed_at_spot = true;
         }
     }
 

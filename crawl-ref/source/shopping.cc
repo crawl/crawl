@@ -79,7 +79,7 @@ int artefact_value(const item_def &item)
     // This should probably be more complex... but this isn't so bad:
     ret += 6 * prop[ARTP_AC]
            + 6 * prop[ARTP_EVASION]
-           + 4 * prop[ARTP_SHIELDING]
+           + 5 * prop[ARTP_SHIELDING]
            + 6 * prop[ARTP_SLAYING]
            + 3 * prop[ARTP_STRENGTH]
            + 3 * prop[ARTP_INTELLIGENCE]
@@ -99,7 +99,7 @@ int artefact_value(const item_def &item)
         ret -= 10;
 
     if (prop[ARTP_WILLPOWER] > 0)
-        ret += 4 + 4 * prop[ARTP_WILLPOWER];
+        ret += 4 + 4 * (prop[ARTP_WILLPOWER] * prop[ARTP_WILLPOWER]);
     else if (prop[ARTP_WILLPOWER] < 0)
         ret -= 6;
 
@@ -151,7 +151,7 @@ int artefact_value(const item_def &item)
         ret -= 5;
 
     if (prop[ARTP_PREVENT_TELEPORTATION])
-        ret -= 8;
+        ret -= 10;
 
     if (prop[ARTP_PREVENT_SPELLCASTING])
         ret -= 10;
@@ -402,48 +402,34 @@ unsigned int item_value(item_def item, bool ident)
             valued += 40;
         else
         {
-            // true if the wand is of a good type, a type with significant
-            // inherent value. Good wands are less expensive per charge.
-            // XXX: remove this logic? nonsense with stackable wands?
-            bool good = false;
             switch (item.sub_type)
             {
             case WAND_ACID:
             case WAND_LIGHT:
             case WAND_QUICKSILVER:
             case WAND_DIGGING:
-                valued += 80;
-                good = true;
+                valued += 42 * item.plus;
                 break;
 
             case WAND_ICEBLAST:
             case WAND_ROOTS:
-            case WAND_MINDBURST:
-                valued += 40;
-                good = true;
+            case WAND_CHARMING:
+            case WAND_PARALYSIS:
+                valued += 24 * item.plus;
                 break;
 
-            case WAND_CHARMING:
             case WAND_POLYMORPH:
-            case WAND_PARALYSIS:
-                valued += 20;
+            case WAND_MINDBURST:
+                valued += 14 * item.plus;
                 break;
 
             case WAND_FLAME:
-                valued += 10;
+                valued += 7 * item.plus;
                 break;
 
             default:
-                valued += 6;
+                valued += 4 * item.plus;
                 break;
-            }
-
-            if (item_ident(item, ISFLAG_KNOW_PLUSES))
-            {
-                if (good)
-                    valued += (valued * item.plus) / 4;
-                else
-                    valued += (valued * item.plus) / 2;
             }
         }
         break;
@@ -509,20 +495,17 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 520;
                 break;
 
-            case SCR_BRAND_WEAPON:
-                valued += 200;
-                break;
-
             case SCR_SUMMONING:
+            case SCR_TORMENT:
+            case SCR_SILENCE:
+            case SCR_BRAND_WEAPON:
                 valued += 95;
                 break;
 
             case SCR_BLINKING:
             case SCR_ENCHANT_ARMOUR:
             case SCR_ENCHANT_WEAPON:
-            case SCR_TORMENT:
-            case SCR_SILENCE:
-            case SCR_VULNERABILITY:
+            case SCR_MAGIC_MAPPING:
                 valued += 75;
                 break;
 
@@ -530,15 +513,15 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_FEAR:
             case SCR_IMMOLATION:
             case SCR_POISON:
-            case SCR_MAGIC_MAPPING:
-                valued += 35;
+            case SCR_VULNERABILITY:
+            case SCR_FOG:
+                valued += 40;
                 break;
 
             case SCR_TELEPORTATION:
                 valued += 30;
                 break;
 
-            case SCR_FOG:
             case SCR_IDENTIFY:
 #if TAG_MAJOR_VERSION == 34
             case SCR_CURSE_ARMOUR:

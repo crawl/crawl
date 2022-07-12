@@ -294,6 +294,9 @@ void blink_fineff::fire()
     coord_def target;
     for (fair_adjacent_iterator ai(defend->pos()); ai; ++ai)
     {
+        // No blinking into teleport closets.
+        if (testbits(env.pgrid(*ai), FPROP_NO_TELE_INTO))
+            continue;
         // XXX: allow fedhasites to be blinked into plants?
         if (actor_at(*ai) || !pal->is_habitable(*ai))
             continue;

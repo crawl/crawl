@@ -91,6 +91,13 @@ function hard_axe_fighter(e)
                            ring mail | scale mail | chain mail | plate armour")
 end
 
+function orc_warlord_with_axe(e)
+  e.mons("orc warlord ; \
+          battleaxe good_item | broad axe good_item | \
+          executioner's axe good_item w:1 . \
+          chain mail w:20 | plate armour | crystal plate armour w:1")
+end
+
 -- Polearms.
 function orc_with_polearm(e)
   e.mons("orc ; \
@@ -112,10 +119,9 @@ function orc_knight_with_polearm(e)
           crystal plate armour w:1")
 end
 
--- defined but not used, since the depth for the current entry vaults is 7-14
 function orc_warlord_with_polearm(e)
   e.mons("orc warlord ; \
-          halberd | glaive | bardiche w:1 . \
+          halberd good_item | glaive good_item | bardiche good_item w:1 . \
           chain mail w:20 | plate armour | crystal plate armour w:1")
 end
 
@@ -565,7 +571,7 @@ ITEM:   potion of experience ident:type q:1 /\
         scroll of acquirement ident:type q:1
 : easy_axe_fighter(_G)
 : hard_axe_fighter(_G)
-MONS:   orc warlord
+: orc_warlord_with_axe(_G)
 : bailey_setup(_G)
 SUBST:  I = t., 1 = 11.
 NSUBST: 2 = 3:2 / *=2.
@@ -1003,8 +1009,7 @@ ITEM:   potion of experience ident:type q:1 / \
 : easy_axe_fighter(_G)
 : kobold_axe_returning(_G)
 : hard_axe_fighter(_G)
-MONS:   orc warlord ; war axe | broad axe w:2 | battleaxe w:1 . \
-            ring mail | scale mail | chain mail | plate armour
+: orc_warlord_with_axe(_G)
 : bailey_setup(_G)
 SUBST:  1 = 1.., 2 = 22.
 NSUBST: 3 = 2:3 / * = 3.
