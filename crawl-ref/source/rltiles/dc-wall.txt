@@ -571,6 +571,13 @@ wall_vines4
 wall_vines5
 wall_vines6
 
+studio0 WALL_STUDIO
+studio1
+studio2
+studio3
+studio4
+studio5
+
 # These 15 variants are referenced from tileview.cc
 pebble_red0 WALL_PEBBLE WALL_PEBBLE_RED
 pebble_red1
