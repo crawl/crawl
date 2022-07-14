@@ -1779,9 +1779,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
         pbolt.aux_source = pbolt.name;
     else
         pbolt.aux_source.clear();
-    // Dial down damage from wands, to spare early players.
-    if (evoke)
-        pbolt.damage.size = div_rand_round(pbolt.damage.size * 2, 3);
 
     return true;
 }
