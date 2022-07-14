@@ -1199,6 +1199,7 @@ INSCRIP:  RegenMP++
 REGEN:    2
 COLOUR:   ETC_MUTAGENIC
 BOOL:     skip_ego, evil
+VALUE:    1000
 TILE:     urand_vitality
 
 NAME:     autumn katana
