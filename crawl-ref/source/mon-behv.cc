@@ -1449,6 +1449,7 @@ static bool _mons_attacks_outside_los(const monster &mon)
     return !mon.is_summoned()
         && !mon.has_ench(ENCH_FAKE_ABJURATION)
         && !mon.has_ench(ENCH_PORTAL_PACIFIED)
+        && mon.god != GOD_YREDELEMNUL
         && !mons_is_hepliaklqana_ancestor(mon.type)
         && !mon.props.exists(ANIMATE_DEAD_KEY);
 }
