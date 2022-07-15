@@ -1287,7 +1287,6 @@ MAP
            ....
 ENDMAP
 
-
 NAME:   doesnt_abyss_rune_brain_food
 TAGS:   abyss_rune unrand patrolling no_pool_fixup
 MONS:   neqoxec, glowing orange brain, orange crystal statue, very ugly thing
@@ -1400,6 +1399,47 @@ MAP
   -....-..-.--@
    3    PP P F A
                 3
+ENDMAP
+
+# Xom angels & daevas can spawn in the Abyss,
+# this seemed like the next logical step.
+NAME:   skrybe_abyss_rune_heretic_angels
+TAGS:   abyss_rune unrand
+MONS:   daeva god:Xom ; scimitar ego:chaos w:5 | demon blade ego:chaos w:1 | \
+                        eudemon blade | scimitar ego:holy_wrath | \
+                        long sword ego:holy_wrath w:20 . tower shield
+MONS:   angel god:Xom ; whip ego:chaos w:5 | demon whip ego:chaos w:1 | \
+                        sacred scourge | whip ego:holy_wrath w:30 . robe
+MONS:   holy swine
+MONS:   dancing weapon ; eudemon blade ego:holy_wrath w:2 | \
+                         scimitar ego:holy_wrath
+MONS:   large abomination, cacodemon / cacodemon band, apocalypse crab
+KITEM:  O = abyssal rune of Zot
+KFEAT:  _ = altar_xom
+KFEAT:  " = runelight
+NSUBST: A = 1:2 / 1:123 / 2 = 122 / *:.
+NSUBST: X = 1:3 / 1:5 / 1:6 / 4 = 33455 / *:.
+COLOUR: c = white
+TILE:   c = wall_church
+MAP
+"."..........""....""
+.ccccccccccccccccccc"
+"cO...ttX...tt..t..c.
+.c._...7t..t....t..c.
+.c..1...t..t.....ttc.
+.c...ccccccccc++cccc.
+.ct..ctt....t..Acc.c.
+.ct7.ctX...t...cc..c.
+.cXt.c...tX...cc...c.
+.c..tc..ttt..c+..t.c.
+"c..tc..Xt..cc..t..+"
+"c.t.c.t...cc..tA..+"
+.ct..ct...+c..t..t.c.
+.ct..c...cc..tA.t..c.
+.c.t.+..cc..t..t.Xtc.
+"c..t+Acc........tXc"
+.cccccccccccc++ccccc.
+"."..........""..."."
 ENDMAP
 
 ########################################
