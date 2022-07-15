@@ -53,7 +53,7 @@ function rr_split_channel(s)
     local channel = -1
     if chi and chi > 1 then
         local chstr = string.sub(s, 1, chi - 1)
-        channel = crawl.msgch_num(chstr)
+        channel = crawl.msgch_num(chstr) -- may return nil on error
     end
 
     local sor = s
@@ -99,6 +99,10 @@ end
 
 function rr_add_message(s, v, mode)
     local channel, str = rr_split_channel(s)
+    if channel == nil then
+        crawl.mpr("Bad channel name for runrest: '" .. s .. "'", "error")
+        return -- skip entirely
+    end
     local filter = crawl.message_filter(str, channel)
     if mode < 0 then
         for k, p in pairs (g_rr_ignored) do

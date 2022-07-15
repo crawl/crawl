@@ -35,7 +35,6 @@
 #include "spl-clouds.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "spl-wpnench.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "xom.h"
@@ -109,7 +108,16 @@ bool unequip_item(equipment_type slot, bool msg, bool skip_effects)
         you.equip[slot] = -1;
 
         if (you.melded[slot])
+        {
             you.melded.set(slot, false);
+            if (!skip_effects)
+            {
+                // Cursed items should always be destroyed on unequip.
+                item_def& item = you.inv[item_slot];
+                if (item.cursed())
+                    destroy_item(item);
+            }
+        }
         else if (!skip_effects)
             unequip_effect(slot, item_slot, false, msg);
 
@@ -349,9 +357,7 @@ static void _unequip_artefact_effect(item_def &item,
     ASSERT(is_artefact(item));
 
     artefact_properties_t proprt;
-    artefact_known_props_t known;
     artefact_properties(item, proprt);
-    artefact_known_properties(item, known);
     const bool msg = !show_msgs || *show_msgs;
 
     if (proprt[ARTP_AC] || proprt[ARTP_SHIELDING])
@@ -363,10 +369,14 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_HP])
         _calc_hp_artefact();
 
-    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
+    if (proprt[ARTP_MAGICAL_POWER] && !you.has_mutation(MUT_HP_CASTING))
     {
-        canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_DECREASE
-                                                  : MSG_MANA_INCREASE);
+        const bool gives_mp = proprt[ARTP_MAGICAL_POWER] > 0;
+        if (msg)
+            canned_msg(gives_mp ? MSG_MANA_DECREASE : MSG_MANA_INCREASE);
+        if (gives_mp)
+            pay_mp(proprt[ARTP_MAGICAL_POWER]);
+        calc_mp();
     }
 
     notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     true);
@@ -375,9 +385,6 @@ static void _unequip_artefact_effect(item_def &item,
 
     if (proprt[ARTP_FLY] != 0)
         land_player();
-
-    if (proprt[ARTP_MAGICAL_POWER])
-        calc_mp();
 
     if (proprt[ARTP_CONTAM] && !meld)
     {
@@ -698,12 +705,6 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                 mprf("%s stops oozing corrosive slime.", msg.c_str());
                 break;
             }
-
-            if (you.duration[DUR_EXCRUCIATING_WOUNDS])
-            {
-                ASSERT(real_item.defined());
-                end_weapon_brand(real_item, true);
-            }
         }
     }
 
@@ -953,8 +954,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         if (!you.spirit_shield())
         {
             mpr("You feel strangely alone.");
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_DEEP_DWARF)
                 mpr("Your magic begins regenerating once more.");
+#endif
         }
         break;
 
@@ -1265,7 +1268,10 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
 
     case RING_MAGICAL_POWER:
         if (!you.has_mutation(MUT_HP_CASTING))
+        {
             canned_msg(MSG_MANA_DECREASE);
+            pay_mp(9);
+        }
         break;
 
     case AMU_FAITH:
@@ -1273,10 +1279,12 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
             _remove_amulet_of_faith(item);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case AMU_GUARDIAN_SPIRIT:
         if (you.species == SP_DEEP_DWARF && player_regenerates_mp())
             mpr("Your magic begins regenerating once more.");
         break;
+#endif
 
     case AMU_MANA_REGENERATION:
         if (!meld)

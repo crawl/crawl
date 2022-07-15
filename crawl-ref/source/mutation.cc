@@ -403,8 +403,12 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you.form == transformation::blade_hands && mut == MUT_PAWS)
         return mutation_activity_type::INACTIVE;
 
-    if (you.form == transformation::tree && mut == MUT_TELEPORT)
+    if (mut == MUT_TELEPORT
+        && (you.no_tele() || player_in_branch(BRANCH_ABYSS)))
+    {
         return mutation_activity_type::INACTIVE;
+    }
+
 #if TAG_MAJOR_VERSION == 34
     if ((you_worship(GOD_PAKELLAS) || player_under_penance(GOD_PAKELLAS))
          && (mut == MUT_MANA_LINK || mut == MUT_MANA_REGENERATION))
@@ -465,6 +469,11 @@ static string _dragon_abil(string desc, bool terse=false)
     const bool supp = form_changed_physiology()
                             && you.form != transformation::dragon;
     return _annotate_form_based(desc, supp, terse);
+}
+
+tileidx_t get_mutation_tile(mutation_type mut)
+{
+    return _get_mutation_def(mut).tile;
 }
 
 /*
@@ -1228,6 +1237,20 @@ private:
             MenuEntry* me = new MenuEntry(desc, MEL_ITEM, 1, hotkey);
             ++hotkey;
             me->data = &mut;
+#ifdef USE_TILE_WEB
+            // This is a horrible hack. There's a bug where webtiles will
+            // carry over mutation icons from the main mutation menu to the
+            // vampirism menu. Rather than fix it, I've turned it off here.
+            // I'm very sorry.
+            if (!you.has_mutation(MUT_VAMPIRISM))
+#endif
+#ifdef USE_TILE
+            {
+                const tileidx_t tile = get_mutation_tile(mut);
+                if (tile != 0)
+                    me->add_tile(tile_def(tile + you.get_mutation_level(mut, false) - 1));
+            }
+#endif
             add_entry(me);
         }
 

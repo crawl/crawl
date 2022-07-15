@@ -295,7 +295,11 @@ DBRAND:  It occasionally heals its wielder for the full amount of damage dealt
  when it wounds a living foe.
 
 NAME:    scythe of Curses
-OBJ:     OBJ_WEAPONS/WPN_SCYTHE
+OBJ:     OBJ_WEAPONS/WPN_HALBERD
+FALLBACK: OBJ_WEAPONS/WPN_BARDICHE
+TYPE:    scythe
+BASE_DAM: +1
+BASE_DELAY: +5
 PLUS:    +13
 COLOUR:  ETC_DEATH
 TILE:    spwpn_scythe_of_curses
@@ -458,7 +462,11 @@ INT:      5
 WILL:     1
 
 NAME:    scythe "Finisher"
-OBJ:     OBJ_WEAPONS/WPN_SCYTHE
+OBJ:     OBJ_WEAPONS/WPN_HALBERD
+FALLBACK: OBJ_WEAPONS/WPN_BARDICHE
+TYPE:    scythe
+BASE_DAM: +1
+BASE_DELAY: +5
 INSCRIP: eviscerate
 PLUS:    +5
 COLOUR:  ETC_DARK
@@ -468,9 +476,11 @@ BRAND:   SPWPN_SPEED
 DBRAND:  It may eviscerate those it strikes, slaying them instantly, with a
  decreasing chance against stronger foes.
 
-NAME:    sling "Punk"
-OBJ:     OBJ_WEAPONS/WPN_FUSTIBALUS
+NAME:    greatsling "Punk"
+OBJ:     OBJ_WEAPONS/WPN_SLING
+TYPE:    greatsling
 PLUS:    +3
+BASE_DAM: +3
 COLOUR:  ETC_SLIME
 TILE:    urand_punk
 TILE_EQ: punk
@@ -527,7 +537,7 @@ DESCRIP:  Whenever the wielder enters a berserk rage, their allies are
  berserked alongside them.
 
 NAME:    arbalest "Damnation"
-INSCRIP: damnation,
+INSCRIP: damnation
 OBJ:     OBJ_WEAPONS/WPN_ARBALEST
 FB_BRAND: SPWPN_FLAMING
 PLUS:    +6
@@ -683,8 +693,8 @@ TILE:     urand_spriggans_knife
 TILE_EQ:  spriggans_knife
 EV:       4
 STEALTH:  1
-DESCRIP:  It is more effective when stabbing unaware enemies, treating them as
- though they were completely helpless.
+DESCRIP:  It is more effective when stabbing unaware enemies, sometimes treating
+ them as though they were completely helpless.
 
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
@@ -867,7 +877,7 @@ INSCRIP:  Detection Stab+
 PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_hood_assassin
-TILE_EQ:  hood_purple
+TILE_EQ:  hood_assassin
 STEALTH:  2
 VALUE:    600
 DESCRIP:  It allows the wearer to sense nearby creatures.
@@ -1010,7 +1020,7 @@ TILE_EQ: glove_white
 DEX:     3
 VALUE:   400
 DESCRIP: It allows the wearer to riposte with melee
- weapons, swiftly retaliating against missed attacks.
+ weapons, swiftly retaliating against missed or blocked melee attacks.
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -1184,9 +1194,12 @@ LIFE:     1
 BOOL:     poison, evil
 
 NAME:     amulet of Vitality
-OBJ:      OBJ_JEWELLERY/AMU_REGENERATION
-HP:       +15
+OBJ:      OBJ_JEWELLERY/AMU_MANA_REGENERATION
+INSCRIP:  RegenMP++
+REGEN:    2
 COLOUR:   ETC_MUTAGENIC
+BOOL:     skip_ego, evil
+VALUE:    1000
 TILE:     urand_vitality
 
 NAME:     autumn katana
@@ -1238,11 +1251,10 @@ NAME:     ring of the Octopus King
 OBJ:      OBJ_JEWELLERY/RING_FIRST_RING
 COLOUR:   ETC_WATER
 TILE:     urand_octoring
-AC:       1
-EV:       1
-STR:      1
-INT:      1
-DEX:      1
+AC:       +2
+EV:       +2
+SH:       +2
+HP:       +2
 BOOL:     unided, no_upgrade
 
 # Meatsprint only. The type is adjusted to the biggest two-handed axe the
@@ -1639,6 +1651,55 @@ TILE_EQ:    staff_mage_two
 BRAND:      SPWPN_PROTECTION
 INSCRIP:    meekguard
 DBRAND:     It provides extra protection to wielders with little health.
+
+ENUM:     CONDEMNATION
+NAME:     trishula "Condemnation"
+OBJ:      OBJ_WEAPONS/WPN_TRISHULA
+PLUS:     8
+COLOUR:   ETC_HOLY
+BRAND:    SPWPN_HOLY_WRATH
+LIFE:     1
+BOOL:     fly, noises
+INSCRIP:  anguish,
+DBRAND:   It inflicts anguish, making its victims' attacks reflect back on
+ them.
+TILE:    urand_condemnation
+TILE_EQ: condemnation
+
+NAME:    amulet of Elemental Vulnerability
+OBJ:     OBJ_JEWELLERY/AMU_NOTHING
+COLOUR:  ETC_VEHUMET
+TILE:    urand_elemental_vulnerability
+AC:      8
+BOOL:    poison
+FIRE:    -2
+COLD:    -2
+
+NAME:    mountain boots
+OBJ:     OBJ_ARMOUR/ARM_BOOTS
+TILE:    urand_mountain
+TILE_EQ: spider
+PLUS:    +3
+COLOUR:  ETC_MOUNTAIN
+COLD:    1
+BOOL:    special
+INSCRIP: steadfast,
+DBRAND:  It prevents involuntary movement, except for blinking,
+ teleportation, or banishment.
+
+NAME:       lochaber axe
+OBJ:        OBJ_WEAPONS/WPN_BARDICHE
+TYPE:       lochaber axe
+TILE:       urand_lochaber_axe
+TILE_EQ:    lochaber_axe
+COLOUR:     ETC_IRON
+PLUS:       +5
+BASE_ACC:   -1
+BASE_DAM:   +1
+BASE_DELAY: +1
+INSCRIP:    reach-cleave, poleaxe
+DBRAND:     It can be evoked to extend its reach, and strikes at all foes within reach, dealing less damage to those not targeted.
++It uses either Axes or Polearms skill, whichever is higher.
 
 # This entry must always be last.
 ENUM:   DUMMY2

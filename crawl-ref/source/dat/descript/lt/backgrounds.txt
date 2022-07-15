@@ -99,7 +99,7 @@ Warper
 Keliautojai Erdve pradeda su pačių pasirinktu ginklu ir Mirktelėjimo ritiniu.
 Jie gali išmokti burtažodžius iš Erdvinių Perkėlimų knygos.
 %%%%
-Wizard
+Hedge Wizard
 
 Burtininkai pradeda su Smulkiosios Magijos knyga, turinčia pluoštą burtažodžių.
 Jų magijos atsargos diesnės nei bet kurios kitos profesijos.

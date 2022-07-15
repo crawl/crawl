@@ -21,7 +21,7 @@ TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     m_mouse_tab(-1),
     m_use_small_layout(false),
     m_is_deactivated(false),
-    m_buf_gui(&init.im->m_textures[TEX_GUI])
+    m_buf_gui(&init.im->get_texture(TEX_GUI))
 {
 }
 

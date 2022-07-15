@@ -127,6 +127,11 @@ static void _level_place_followers(m_transit_list &m)
 static void _place_lost_ones(void (*placefn)(m_transit_list &ml))
 {
     level_id c = level_id::current();
+    if (c.branch == BRANCH_ABYSS)
+    {
+        c.depth = 1; // All monsters transiting to abyss are placed in Abyss:1.
+                     // Look, don't ask me.
+    }
 
     monsters_in_transit::iterator i = the_lost_ones.find(c);
     if (i == the_lost_ones.end())

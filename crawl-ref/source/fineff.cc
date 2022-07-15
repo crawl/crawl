@@ -294,6 +294,9 @@ void blink_fineff::fire()
     coord_def target;
     for (fair_adjacent_iterator ai(defend->pos()); ai; ++ai)
     {
+        // No blinking into teleport closets.
+        if (testbits(env.pgrid(*ai), FPROP_NO_TELE_INTO))
+            continue;
         // XXX: allow fedhasites to be blinked into plants?
         if (actor_at(*ai) || !pal->is_habitable(*ai))
             continue;
@@ -345,7 +348,7 @@ void trj_spawn_fineff::fire()
     for (int i = 0; i < tospawn; ++i)
     {
         const monster_type jelly = royal_jelly_ejectable_monster();
-        coord_def jpos = find_newmons_square_contiguous(jelly, posn);
+        coord_def jpos = find_newmons_square_contiguous(jelly, posn, 3, false);
         if (!in_bounds(jpos))
             continue;
 
@@ -652,7 +655,7 @@ void make_derived_undead_fineff::fire()
 {
     if (monster *undead = create_monster(mg))
     {
-        if (!message.empty())
+        if (!message.empty() && you.can_see(*undead))
             mpr(message);
 
         // If the original monster has been levelled up, its HD might be
@@ -669,12 +672,17 @@ void make_derived_undead_fineff::fire()
             name_zombie(*undead, mg.base_type, mg.mname);
 
         if (mg.god != GOD_YREDELEMNUL)
-            undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
-        if (!agent.empty())
         {
-            mons_add_blame(undead,
-                "animated by " + agent);
+            if (undead->type == MONS_ZOMBIE)
+                undead->props[ANIMATE_DEAD_KEY] = true;
+            else
+            {
+                int dur = undead->type == MONS_SKELETON ? 3 : 5;
+                undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
+            }
         }
+        if (!agent.empty())
+            mons_add_blame(undead, "animated by " + agent);
     }
 }
 

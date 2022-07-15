@@ -22,6 +22,7 @@
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
+#include "spl-monench.h" // mons_simulacrum_immune_reason
 #include "spl-other.h"
 #include "spl-transloc.h"
 #include "stringutil.h"
@@ -697,6 +698,30 @@ bool targeter_transference::valid_aim(coord_def a)
     return true;
 }
 
+targeter_inner_flame::targeter_inner_flame(const actor* act, int r) :
+    targeter_smite(act, r, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_inner_flame::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+    return mons_inner_flame_immune_reason(monster_at(a)).empty();
+}
+
+targeter_simulacrum::targeter_simulacrum(const actor* act, int r) :
+    targeter_smite(act, r, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_simulacrum::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+    return mons_simulacrum_immune_reason(monster_at(a)).empty();
+}
+
 targeter_unravelling::targeter_unravelling()
     : targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
 {
@@ -928,17 +953,18 @@ aff_type targeter_reach::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_cleave::targeter_cleave(const actor* act, coord_def target)
+targeter_cleave::targeter_cleave(const actor* act, coord_def target, int rng)
 {
     ASSERT(act);
     agent = act;
     origin = act->pos();
+    range = rng;
     set_aim(target);
 }
 
 bool targeter_cleave::valid_aim(coord_def a)
 {
-    if ((origin - a).rdist() > 1)
+    if ((origin - a).rdist() > range)
         return notify_fail("Your weapon can't reach that far!");
     return true;
 }

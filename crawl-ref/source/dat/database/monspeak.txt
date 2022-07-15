@@ -1099,11 +1099,15 @@ VISUAL:@The_monster@ whirls a spectral sling over @possessive@ head.
 
 @_generic_ranged_@
 %%%%
-Bows player ghost
+Ranged Weapons player ghost
 
 @_generic_ranged_@
 
 @The_monster@ says, "Do you have an apple? I have a shot I want to try."
+
+VISUAL:@The_monster@ whirls a spectral sling over @possessive@ head.
+
+VISUAL:@The_monster@ [struggles to reload|effortlessly reloads] @possessive@ weapon.
 %%%%
 Crossbows player ghost
 
@@ -4044,6 +4048,14 @@ _Erolcha_rare_
 @The_monster@ screams @at_foe@, "Erolcha happy to kill you!"
 
 @The_monster@ screams @at_foe@, "Erolcha angry!"
+%%%%
+Erolcha banished
+
+__NONE
+
+w:1
+@The_monster@ screams, "Wait! Erolcha supposed to do that!"
+
 ## END Erolcha ##
 %%%%
 ############ EUSTACHIO ### apprentice summoner, has funny ideas about honour
@@ -4371,7 +4383,10 @@ VISUAL:@The_monster@ is momentarily distracted by a flea in @possessive@ coat.
 
 @The_monster@ @_Grum_verb_@ @at_foe@, "Me and @_Grum_dog_name_@ will play fetch with your bones!"
 
+@The_monster@ @_Grum_verb_@, "Who's a good boy? That's right, @_Grum_dog_name_@... you are!"
+
 # stupid dog pun
+
 @The_monster@ @_Grum_verb_@ @at_foe@, "You will fight me? This will be... rough!"
 
 @The_monster@ shouts, "Release the hounds!"
@@ -4393,26 +4408,76 @@ barks
 %%%%
 _Grum_dog_name_
 
+Bowser
+
+Cujo
+
+Duke
+
 Fido
+
+Fluffy
+
+Junior
+
+King
+
+Lady
+
+Pluto
 
 Rex
 
 Rover
 
+Sparky
+
 Spot
 
 Spike
 
-Duke
 
-Junior
 
-Sparky
 
-Pluto
 
-Cujo
 ## END Grum ##
+%%%%
+############ GRUNN ### Grum has fallen on hard times
+Grunn
+
+@_Grunn_common_@
+
+w:2
+@_Grunn_rare_@
+%%%%
+_Grunn_common_
+
+# All of the common Grum lines are fine, so let's use em.
+@_Grum_common_@
+%%%%
+_Grunn_rare_
+
+VISUAL:One of @the_monster@'s claws falls out.
+
+VISUAL:@The_monster@ pats at a spot of missing fur and sighs.
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "My dogs and I will have a feast tonight..."
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "I don't need to eat anymore, but I'll make an exception for you."
+
+@The_monster@ asks, "What kind of bones do @player_genus_plural@ have? My dogs are dying to find out." @player_only@
+
+@The_monster@ looks @at_foe@ and @_Grum_verb_@, "Time to put down the runt of the litter."
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "Me and @_Grum_dog_name_@ will play fetch with your bones!"
+
+@The_monster@ shouts, "Faster, @_Grum_dog_name_@! Kill! Kill!"
+
+@The_monster@ lets out out a long, sad whine.
+
+@The_monster@ says, "Selling your soul isn't that bad. What the hell, right?"
+
+@The_monster@ moans, "It's cold... so cold."
 %%%%
 ############ HAROLD ### A middle aged man, anxious to retire after killing you.
 Harold
@@ -4930,7 +4995,12 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 
 @The_monster@ shouts @at_foe@, "You pig! I'll make you look the way you deserve."
 
+@The_monster@ whispers @to_foe@, "You'd look cute with a curly little tail."
+
+@The_monster@ whispers @to_foe@, "No @player_genus@ can resist me..."
+
 @_wizard_common_spell_@
+
 @_fake_spell_effect_@
 ### END Kirke ###
 %%%%
@@ -4965,6 +5035,21 @@ VISUAL:@The_monster@ adjusts @possessive@ apparatus.
 @The_monster@ shouts, "Zap! Ha ha ha, made you jump."
 
 @The_monster@ roars, "I Iron Bound! You Brass... Trash!"
+
+@The_monster@ grins wickedly and says, "Money make world go round."
+
+@The_monster@ winks @at_foe@ and says, "Everything have price."
+
+@The_monster@ says, "All wealth is product of labour."
+
+@The_monster@ says, "Productive ogre is happy ogre."
+
+@The_monster@ says, "I proud of my employees."
+
+@The_monster@ says, "Lodul motto: Secure Vault? My fault!"
+
+@The_monster@ frowns @at_foe@ and says, "You violating area security."
+## END Lodul ##
 %%%%
 ############ LOUISE ### A sorceress driven mad by the abyss
 Louise
@@ -5005,7 +5090,14 @@ _Louise_rare_
 @The_monster@ says, "Who do you take me for, some common mercenary?"
 
 @The_monster@ says, "It's the perfect time of year for a holiday!"
-### END Louise
+%%%%
+Louise banished
+
+__NONE
+
+w:1
+@The_monster@ says, "I've come back once... I'll do it again!"
+## END Louise ##
 %%%%
 ############ Maggie ### Younger Margery
 Maggie
@@ -5153,6 +5245,8 @@ VISUAL:@The_monster@ looks very self-confident.
 @The_monster@ screams @at_foe@, "Nothing can help you."
 
 @The_monster@ screams @at_foe@, "Death is my middle name!"
+
+@The_monster@ screams @at_foe@, "I've slain countless dragons!"
 
 @The_monster@ screams, "The ORB is only a tale, but I will kill you anyway!" @player_only@
 ## END Margery
@@ -5676,6 +5770,14 @@ VISUAL:@The_monster@ looks around for something heavy to throw at @foe@.
 
 #I suppose this line may not fit if the player is of certain species...
 @The_monster@ says @to_foe@, "@Foe_genus@ for dinner? Sounds delicious!"
+%%%%
+Polyphemus killed
+
+w:50
+__NONE
+
+w:1
+@The_monster@ bellows, "You've tricked me!"
 ## END Polyphemus ##
 %%%%
 ############ PRINCE RIBBIT ### Prince turned into frog
@@ -6080,6 +6182,35 @@ _Sigmund_rare_
 VISUAL:@The_monster@ smiles chillingly.
 ## END Sigmund ##
 %%%%
+
+############ SNORG ### An insatiable troll
+Snorg
+
+@_Snorg_common_@
+
+w:2
+@_Snorg_rare_@
+%%%%
+_Snorg_common_
+
+VISUAL:@The_monster@ pats @possessive@ sizable gut.
+
+VISUAL:@The_monster@ beckons gently.
+
+VISUAL:@The_monster@ smiles kindly.
+
+VISUAL:A flash of anger passes briefly over @The_monster@'s face.
+
+VISUAL:@The_monster@ draws @possessive@ long claws delicately across @possessive@ gut.
+%%%%
+_Snorg_rare_
+
+@The_monster@ remarks @to_foe@, "Ah, I'm absolutely famished!"
+
+@The_monster@ remarks @to_foe@, "Ah, I could eat a centaur!"
+## END Snorg
+%%%%
+
 ############ SOJOBO ### tengu queen
 Sojobo
 
@@ -6087,6 +6218,10 @@ Sojobo
 
 w:5
 @_Sojobo_rare_@
+
+w:2
+@_Sojobo_advice_@
+
 %%%%
 _Sojobo_common_
 
@@ -6107,6 +6242,34 @@ _Sojobo_rare_
 @The_monster@ barks @at_foe@, "Your form is terrible!"
 
 @The_monster@ sneers @at_foe@, "There are one thousand and one flaws in your strategy!"
+
+%%%%
+_Sojobo_advice_
+
+# Sojobo was said to train warriors, in order to oppose Buddhism and create a more warlike world
+# Paraphrasings from Sun Tzu's 'The Art of War'. Good DCSS advice!
+
+@The_monster@ says @to_foe@, "Appear weak when you are strong, and strong when you are weak."
+
+@The_monster@ says @to_foe@, "Know thy enemy, and know thyself."
+
+@The_monster@ says @to_foe@, "Let your plans be as dark and impenetrable as the night."
+
+@The_monster@ says @to_foe@, "All warfare is based on deception."
+
+@The_monster@ says @to_foe@, "The wise warrior avoids unnecessary battles."
+
+@The_monster@ says @to_foe@, "The whole secret lies in confusing the enemy."
+
+@The_monster@ says @to_foe@, "Avoid what is strong, and strike at what is weak."
+
+@The_monster@ says @to_foe@, "Attack is the secret of defense."
+
+@The_monster@ says @to_foe@, "The expert in battle moves the enemy, and is not moved by them."
+
+@The_monster@ says @to_foe@, "Appear where you are not expected."
+
+@The_monster@ says @to_foe@, "Ponder and deliberate before you make a move."
 ## END Sojobo
 %%%%
 ############ SONJA ### female kobold assassin

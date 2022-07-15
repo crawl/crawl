@@ -44,13 +44,13 @@
 #include "mon-movetarget.h"
 #include "mon-place.h"
 #include "mon-speak.h"
+#include "place.h" // absdungeon_depth
 #include "player-equip.h"
 #include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
-#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "state.h"
 #include "stepdown.h"
@@ -71,12 +71,19 @@ static void _monster_greeting(monster *mons, const string &key)
     mons_speaks_msg(mons, msg, MSGCH_TALK, silenced(mons->pos()));
 }
 
+// combine with MG_AUTOFOE
+static int _auto_autofoe(const actor *caster)
+{
+    return (!caster || caster->is_player())
+        ? int{MHITYOU}
+        : caster->as_monster()->foe;
+}
+
 static mgen_data _summon_data(const actor &caster, monster_type mtyp,
                               int dur, god_type god, spell_type spell)
 {
     return mgen_data(mtyp, BEH_COPY, caster.pos(),
-                     caster.is_player() ? int{MHITYOU}
-                                        : caster.as_monster()->foe,
+                     _auto_autofoe(&caster),
                      MG_AUTOFOE)
                      .set_summoned(&caster, dur, spell, god);
 }
@@ -570,8 +577,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 
     mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE,
                  caster ? caster->pos() : you.pos(),
-                 (caster && caster->is_monster()) ? ((monster*)caster)->foe
-                                                  : int{MHITYOU},
+                 _auto_autofoe(caster),
                  MG_AUTOFOE);
     mg.set_summoned(caster, caster ? dur : 0, SPELL_NO_SPELL, GOD_TROG);
 
@@ -1334,500 +1340,6 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
     }
 
     you.duration[DUR_FORESTED] = duration;
-
-    return spret::success;
-}
-
-static bool _animatable_remains(const item_def& item)
-{
-    return item.base_type == OBJ_CORPSES
-        && mons_class_can_be_zombified(item.mon_type)
-        // the above allows spectrals/etc
-        && (mons_zombifiable(item.mon_type)
-            || mons_skeleton(item.mon_type));
-}
-
-vector<coord_def> simple_find_corpses()
-{
-    vector<coord_def> result;
-    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
-    {
-        for (stack_iterator si(*ri, true); si; ++si)
-        {
-            if (_animatable_remains(*si))
-            {
-                result.push_back(*ri);
-                break;
-            }
-        }
-    }
-
-    return result;
-}
-
-/**
- * Equip the dearly departed with its ex-possessions.
- *
- * This excludes holy items (not wieldable by the undead, and items which were
- * dropped onto the square, so the player can't equip their undead slaves with
- * items of their choice.
- *
- * @param a      where to pull items from
- * @param corpse the corpse of the dead monster.
- * @param mon    the zombie/skeleton/etc. being reequipped.
- */
-static void _equip_undead(const coord_def &a, const item_def& corpse, monster *mon)
-{
-    if (!corpse.props.exists(MONSTER_MID))
-        return;
-    for (stack_iterator si(a); si; ++si)
-    {
-        if (!si->props.exists(DROPPER_MID_KEY)
-            || si->props[DROPPER_MID_KEY].get_int()
-               != corpse.props[MONSTER_MID].get_int())
-        {
-            continue;
-        }
-
-        // Don't equip the undead with holy items.
-        if (is_holy_item(*si))
-            continue;
-
-        // Stupid undead can't use most items.
-        if (si->base_type != OBJ_WEAPONS
-            && si->base_type != OBJ_STAVES
-            && si->base_type != OBJ_ARMOUR
-            || is_range_weapon(*si))
-        {
-            continue;
-        }
-
-        unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->pickup_item(*si, false, true);
-    }
-}
-
-// Displays message when raising dead with Animate Skeleton or Animate Dead.
-static void _display_undead_motions(int motions)
-{
-    vector<const char *> motions_list;
-
-    // Check bitfield from _raise_remains for types of corpse(s) being animated.
-    if (motions & DEAD_ARE_WALKING)
-        motions_list.push_back("walking");
-    if (motions & DEAD_ARE_HOPPING)
-        motions_list.push_back("hopping");
-    if (motions & DEAD_ARE_SWIMMING)
-        motions_list.push_back("swimming");
-    if (motions & DEAD_ARE_FLYING)
-        motions_list.push_back("flying");
-    if (motions & DEAD_ARE_SLITHERING)
-        motions_list.push_back("slithering");
-    if (motions & DEAD_ARE_CRAWLING)
-        motions_list.push_back("crawling");
-
-    // Prevents the message from getting too long and spammy.
-    if (motions_list.size() > 3)
-        mpr("The dead have arisen!");
-    else
-    {
-        mprf("The dead are %s!", comma_separated_line(motions_list.begin(),
-             motions_list.end()).c_str());
-    }
-}
-
-static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
-                           int pow,
-                           unsigned short hitting, actor *as, string nas,
-                           god_type god, bool actual, bool apply_lovelessness,
-                           monster **raised, int* motions_r)
-{
-    if (raised)
-        *raised = 0;
-
-    const item_def& item = env.item[corps];
-
-    if (!_animatable_remains(item))
-        return false;
-
-    if (!actual)
-        return true;
-
-    monster_type zombie_type = item.mon_type;
-    // hack: don't re-froggify poor prince ribbit after death
-    if (zombie_type == MONS_PRINCE_RIBBIT)
-        zombie_type = MONS_HUMAN;
-
-    int hd = (item.props.exists(MONSTER_HIT_DICE)) ?
-              item.props[MONSTER_HIT_DICE].get_short() : 0;
-
-    // Save the corpse name before because it can get destroyed if it is
-    // being drained and the raising interrupts it.
-    monster_flags_t name_type;
-    string name;
-    if (is_named_corpse(item))
-        name = get_corpse_name(item, &name_type);
-
-    monster_type mon = item.sub_type == CORPSE_BODY ? MONS_ZOMBIE
-                                                    : MONS_SKELETON;
-    monster_type monnum = static_cast<monster_type>(item.orig_monnum);
-    // hack: don't re-froggify poor prince ribbit after death
-    if (monnum == MONS_PRINCE_RIBBIT)
-        monnum = MONS_HUMAN;
-
-    if (mon == MONS_ZOMBIE && !mons_zombifiable(zombie_type))
-    {
-        ASSERT(mons_skeleton(zombie_type));
-        mon = MONS_SKELETON;
-    }
-
-    // Use the original monster type as the zombified type here, to get
-    // the proper stats from it.
-    mgen_data mg(mon, beha, pos, hitting,
-                 MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE);
-    mg.set_summoned(as, 0, 0, god);
-    mg.set_base(monnum);
-
-    if (item.props.exists(CORPSE_HEADS))
-    {
-        // Headless hydras cannot be raised, sorry.
-        if (item.props[CORPSE_HEADS].get_short() == 0)
-        {
-            if (you.see_cell(pos))
-            {
-                mprf("The headless hydra %s sways and immediately collapses!",
-                     item.sub_type == CORPSE_BODY ? "corpse" : "skeleton");
-            }
-            return false;
-        }
-        mg.props[MGEN_NUM_HEADS] = item.props[CORPSE_HEADS].get_short();
-    }
-
-    // No experience for monsters animated by god wrath or the Sword of
-    // Zonguldrok.
-    if (!nas.empty())
-        mg.extra_flags |= MF_NO_REWARD;
-
-    mg.non_actor_summoner = nas;
-
-    monster *mons = create_monster(mg);
-
-    if (raised)
-        *raised = mons;
-
-    if (!mons)
-        return false;
-
-    if (god == GOD_NO_GOD) // only Yred dead-raising lasts forever.
-        mons->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 4));
-
-    // If the original monster has been levelled up, its HD might be different
-    // from its class HD. For player spells the hd is scaled with spellpower.
-    if (nas.empty())
-        hd = div_rand_round(hd * (100 + pow), 300);
-    if (mons->get_experience_level() != hd)
-    {
-        mons->set_hit_dice(max(hd, 1));
-        roll_zombie_hp(mons);
-    }
-
-    if (!name.empty()
-        && (!name_type || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
-    {
-        name_zombie(*mons, monnum, name);
-    }
-
-    // Re-equip the zombie.
-    if (mons_class_itemuse(monnum) >= MONUSE_STARTING_EQUIPMENT)
-        _equip_undead(pos, item, mons);
-
-    // Destroy the monster's corpse, as it's no longer needed.
-    item_was_destroyed(item);
-    destroy_item(corps);
-
-    if (apply_lovelessness)
-        check_lovelessness(*mons);
-
-    // Bitfield for motions - determines text displayed when animating dead.
-    // XXX: could this use monster shape in some way?
-    if (mons_class_primary_habitat(zombie_type)    == HT_WATER
-        || mons_class_primary_habitat(zombie_type) == HT_LAVA)
-    {
-        *motions_r |= DEAD_ARE_SWIMMING;
-    }
-    else if (mons_class_flag(zombie_type, M_FLIES))
-        *motions_r |= DEAD_ARE_FLYING;
-    else if (mons_genus(zombie_type)    == MONS_SNAKE
-             || mons_genus(zombie_type) == MONS_NAGA
-             || mons_genus(zombie_type) == MONS_SALAMANDER
-             || mons_genus(zombie_type) == MONS_GUARDIAN_SERPENT
-             || mons_genus(zombie_type) == MONS_ELEPHANT_SLUG
-             || mons_genus(zombie_type) == MONS_TYRANT_LEECH
-             || mons_genus(zombie_type) == MONS_WORM)
-    {
-        *motions_r |= DEAD_ARE_SLITHERING;
-    }
-    else if (mons_genus(zombie_type)    == MONS_FROG
-             || mons_genus(zombie_type) == MONS_QUOKKA)
-    {
-        *motions_r |= DEAD_ARE_HOPPING;
-    }
-    else if (mons_base_char(zombie_type) == 's') // many genera
-        *motions_r |= DEAD_ARE_CRAWLING;
-    else
-        *motions_r |= DEAD_ARE_WALKING;
-
-    return true;
-}
-
-// This is called for Animate Skeleton and from animate_dead.
-int animate_remains(const coord_def &a, corpse_type class_allowed,
-                    beh_type beha, int pow, unsigned short hitting,
-                    actor *as, string nas,
-                    god_type god, bool actual,
-                    bool quiet, bool apply_lovelessness,
-                    monster** mon, int* motions_r)
-{
-    if (is_sanctuary(a))
-        return 0;
-
-    if (env.grid(a) == DNGN_DEEP_WATER)
-        return 0; // trapped in davy jones' locker...
-
-    int number_found = 0;
-    bool any_success = false;
-    int motions = 0;
-
-    // Search all the items on the ground for a corpse.
-    for (stack_iterator si(a, true); si; ++si)
-    {
-        if (si->base_type != OBJ_CORPSES)
-            continue;
-
-        if (class_allowed != CORPSE_BODY && si->sub_type != CORPSE_SKELETON)
-            continue;
-
-        number_found++;
-
-        if (!_animatable_remains(*si))
-            continue;
-
-        const bool success = _raise_remains(a, si.index(), beha, pow,
-                                            hitting, as, nas, god, actual,
-                                            apply_lovelessness, mon, &motions);
-
-        if (actual && success)
-        {
-            if (!quiet && you.see_cell(a))
-                _display_undead_motions(motions);
-        }
-
-        any_success |= success;
-
-        break;
-    }
-
-    if (motions_r && you.see_cell(a))
-        *motions_r |= motions;
-
-    if (number_found == 0)
-        return -1;
-
-    if (!any_success)
-        return 0;
-
-    return 1;
-}
-
-int animate_dead(actor *caster, int pow, beh_type beha,
-                 unsigned short hitting, actor *as, string nas, god_type god,
-                 bool actual)
-{
-    int number_raised = 0;
-    int number_seen   = 0;
-    int motions       = 0;
-
-    for (radius_iterator ri(caster->pos(), LOS_NO_TRANS); ri; ++ri)
-    {
-        // There may be many corpses on the same spot.
-        while (animate_remains(*ri, CORPSE_BODY, beha, pow, hitting,
-                               as, nas, god,
-                               actual, true, true, 0, &motions) > 0)
-        {
-            number_raised++;
-            if (you.see_cell(*ri))
-                number_seen++;
-
-            // For the tracer, we don't care about exact count (and the
-            // corpse is not gone).
-            if (!actual)
-                break;
-        }
-    }
-
-    if (actual && number_seen > 0)
-        _display_undead_motions(motions);
-
-    return number_raised;
-}
-
-vector<coord_def> find_animatable_skeletons(coord_def c)
-{
-    vector<coord_def> result;
-    for (radius_iterator ri(c, LOS_NO_TRANS); ri; ++ri)
-    {
-        for (stack_iterator si(*ri, true); si; ++si)
-        {
-            if (si->base_type == OBJ_CORPSES
-                && mons_class_can_be_zombified(si->mon_type)
-                && mons_skeleton(si->mon_type))
-            {
-                result.push_back(*ri);
-                break;
-            }
-        }
-    }
-    return result;
-}
-
-spret cast_animate_skeleton(int pow, god_type god, bool fail)
-{
-    if (stop_summoning_prompt(MR_RES_POISON, "raise the dead"))
-        return spret::abort;
-
-    vector<coord_def> skeletons = find_animatable_skeletons(you.pos());
-    if (skeletons.empty())
-        return spret::abort;
-
-    fail_check();
-
-    canned_msg(MSG_ANIMATE_REMAINS);
-
-    const coord_def skel_loc = skeletons[random2(skeletons.size())];
-
-    for (stack_iterator si(skel_loc, true); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES
-            && mons_class_can_be_zombified(si->mon_type)
-            && mons_skeleton(si->mon_type))
-        {
-            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-            {
-                butcher_corpse(*si);
-                mpr("Before your eyes, flesh is ripped from the corpse!");
-                // Only convert the top one.
-            }
-
-            const int animate_skel_result =
-                animate_remains(skel_loc, CORPSE_SKELETON, BEH_FRIENDLY,
-                                pow, MHITYOU, &you, "", god);
-
-            if (animate_skel_result != -1)
-            {
-                if (animate_skel_result == 0)
-                    mpr("...but the skeleton had no space to rise!");
-                return spret::success;
-            }
-        }
-    }
-
-    canned_msg(MSG_NOTHING_HAPPENS);
-
-    return spret::success;
-}
-
-spret cast_animate_dead(int pow, god_type god, bool fail)
-{
-    if (stop_summoning_prompt(MR_RES_POISON, "raise the dead"))
-        return spret::abort;
-
-    fail_check();
-    canned_msg(MSG_CALL_DEAD);
-
-    if (!animate_dead(&you, pow, BEH_FRIENDLY, MHITYOU, &you, "", god))
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return spret::success;
-}
-
-// returns an item index, or -1 on failure
-int find_simulacrable_corpse(coord_def c)
-{
-    int co = -1;
-    for (stack_iterator si(c, true); si; ++si)
-    {
-        if (si->is_type(OBJ_CORPSES, CORPSE_BODY)
-            && mons_class_can_be_zombified(si->mon_type))
-        {
-            co = si->index();
-        }
-    }
-    return co;
-}
-
-/**
- * Have the player cast simulacrum.
- *
- * @param pow The spell power.
- * @param god The god casting the spell.
- * @param fail If true, return spret::fail unless the spell is aborted.
- * @return spret::abort if no viable corpse was at the player's location,
- *         otherwise spret::success or spret::fail based on fail.
- */
-spret cast_simulacrum(int pow, god_type god, bool fail)
-{
-    if (stop_summoning_prompt(MR_RES_POISON, "raise the dead"))
-        return spret::abort;
-
-    int co = find_simulacrable_corpse(you.pos());
-
-    if (co < 0)
-        return spret::abort;
-
-    fail_check();
-    canned_msg(MSG_ANIMATE_REMAINS);
-
-    item_def& corpse = env.item[co];
-    // How many simulacra can this particular monster give at maximum.
-    int num_sim  = 1 + random2(max_corpse_chunks(corpse.mon_type));
-    num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
-
-    mgen_data mg = _pal_data(MONS_SIMULACRUM, 0, god, SPELL_SIMULACRUM);
-    mg.set_base(corpse.mon_type);
-
-    // Can't create more than the max for the monster.
-    int how_many = min(8, 4 + random2(pow) / 20);
-    how_many = min<int>(how_many, num_sim);
-
-    if (corpse.props.exists(CORPSE_HEADS))
-    {
-        // Avoid headless hydras. Unlike Animate Dead, still consume the flesh.
-        if (corpse.props[CORPSE_HEADS].get_short() == 0)
-        {
-            // No monster to conj_verb with :(
-            mprf("The headless hydra simulacr%s immediately collapse%s into snow!",
-                 how_many == 1 ? "um" : "a", how_many == 1 ? "s" : "");
-            if (!turn_corpse_into_skeleton(corpse))
-                butcher_corpse(corpse, false);
-            return spret::success;
-        }
-        mg.props[MGEN_NUM_HEADS] = corpse.props[CORPSE_HEADS].get_short();
-    }
-
-    int count = 0;
-    for (int i = 0; i < how_many; ++i)
-    {
-        if (monster *sim = create_monster(mg))
-        {
-            count++;
-            sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 4));
-        }
-    }
-
-    if (!count)
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else if (!turn_corpse_into_skeleton(corpse))
-        butcher_corpse(corpse, false);
 
     return spret::success;
 }
@@ -2628,6 +2140,7 @@ static const map<spell_type, summon_cap> summonsdata =
     { SPELL_SUMMON_TZITZIMITL,        { 0, 3 } },
     { SPELL_SUMMON_HELL_SENTINEL,     { 0, 3 } },
     { SPELL_CONJURE_LIVING_SPELLS,    { 0, 6 } },
+    { SPELL_SHEZAS_DANCE,             { 0, 6 } },
 };
 
 bool summons_are_capped(spell_type spell)
@@ -2971,7 +2484,52 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return spret::success;
+}
 
+void kiku_unearth_wretches()
+{
+    const int pow = you.skill(SK_NECROMANCY, 6);
+    const int min_wretches = 2;
+    const int max_wretches = min_wretches + div_rand_round(pow, 27); // 8 max
+    const int wretches = random_range(min_wretches, max_wretches);
+    bool created = false;
+    for (int i = 0; i < wretches; ++i)
+    {
+        // choose a type
+        const int typ_pow = you.skill(SK_NECROMANCY, 4);
+        const int adjusted_power = min(typ_pow / 4, random2(random2(typ_pow)));
+        const level_id lev(you.where_are_you, adjusted_power
+                           - absdungeon_depth(you.where_are_you, 0));
+        const monster_type mon_type = pick_local_corpsey_monster(lev);
+        ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
+        // place a monster
+        mgen_data mg(mon_type,
+                     BEH_HOSTILE, // so players don't have attack prompts
+                     you.pos(),
+                     MHITNOT);
+        mg.extra_flags = MF_NO_REWARD // ?
+                       | MF_NO_REGEN;
+        mg.props[KIKU_WRETCH_KEY] = true;
+
+        monster *mon = create_monster(mg);
+        if (!mon)
+            continue;
+
+        created = true;
+        mons_add_blame(mon, "unearthed by the player character");
+        mon->hit_points = 1;
+        mon->props[ALWAYS_CORPSE_KEY] = true;
+        mon->props[KIKU_WRETCH_KEY] = true;
+
+        // Die in 2-3 turns.
+        mon->add_ench(mon_enchant(ENCH_SLOWLY_DYING, 1, nullptr,
+                                   20 + random2(10)));
+        mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, &you, 9999));
+    }
+    if (!created)
+        simple_god_message(" has no space to call forth the wretched!");
+    else
+        simple_god_message(" calls piteous wretches from the earth!");
 }
 
 static bool _create_foxfire(const actor &agent, coord_def pos,
@@ -3088,7 +2646,7 @@ bool summon_spider(const actor &agent, coord_def pos, god_type god,
                                                pow / 2, MONS_WOLF_SPIDER);
 
     monster *mons = create_monster(
-            mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_AUTOFOE)
+            mgen_data(mon, BEH_COPY, pos, _auto_autofoe(&agent), MG_AUTOFOE)
                       .set_summoned(&agent, 3, spell, god));
     if (mons)
         return true;

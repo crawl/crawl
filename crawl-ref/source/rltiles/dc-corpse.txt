@@ -199,6 +199,7 @@ orcs/orc CORPSE_ORC
 
 ## Human shaped ('p')
 halfling CORPSE_HALFLING
+meteoran CORPSE_METEORAN
 %sdir mon/humanoids/humans
 human CORPSE_HUMAN
 killer_klown_blue CORPSE_KILLER_KLOWN

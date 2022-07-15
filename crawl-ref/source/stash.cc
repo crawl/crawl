@@ -276,6 +276,8 @@ void Stash::update()
     item_def *pitem = &env.item[you.visible_igrd(pos)];
     hints_first_item(*pitem);
 
+    bool glowing_item_on_square = false;
+    bool artefact_item_on_square = false;
     // Now, grab all items on that square and fill our vector
     for (stack_iterator si(pos, true); si; ++si)
     {
@@ -283,10 +285,23 @@ void Stash::update()
         maybe_identify_base_type(*si);
         if (!(si->flags & ISFLAG_UNOBTAINABLE))
             add_item(*si);
+
+        if (si->base_type == OBJ_STAVES || si->flags & ISFLAG_COSMETIC_MASK)
+            glowing_item_on_square = true;
+
+        if (si->flags & ISFLAG_ARTEFACT_MASK)
+            artefact_item_on_square = true;
     }
 
+    const bool stack_greed      =  static_cast<int>(items.size()) > 1
+                                && (Options.explore_greedy_visit & EG_STACK);
+    const bool glowing_greed    =  glowing_item_on_square
+                                && (Options.explore_greedy_visit & EG_GLOWING);
+    const bool artefact_greed   = artefact_item_on_square
+                                && (Options.explore_greedy_visit & EG_ARTEFACT);
+
     visited = pos == you.pos()
-              || static_cast<int>(items.size()) == 1
+              || !(stack_greed || glowing_greed || artefact_greed)
               || static_cast<int>(items.size()) == previous_size && visited;
 }
 

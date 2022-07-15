@@ -181,32 +181,6 @@ define(function () {
     fg_flags.flags.NET          = 0x00400000;
     // 0x00800000 is used in the POISON 2-bit exclusive flags
     fg_flags.flags.WEB          = 0x01000000;
-    fg_flags.flags.ANGUISH      = 0x02000000;
-    fg_flags.flags.STICKY_FLAME = 0x04000000;
-    fg_flags.flags.BERSERK      = 0x08000000;
-    fg_flags.flags.INNER_FLAME  = 0x10000000;
-    fg_flags.flags.CONSTRICTED  = 0x20000000;
-    fg_flags.flags.SLOWED       = [0, 0x080];
-    fg_flags.flags.PAIN_MIRROR  = [0, 0x100];
-    fg_flags.flags.HASTED       = [0, 0x200];
-    fg_flags.flags.MIGHT        = [0, 0x400];
-    fg_flags.flags.PETRIFYING   = [0, 0x800];
-    fg_flags.flags.PETRIFIED    = [0, 0x1000];
-    fg_flags.flags.BLIND        = [0, 0x2000];
-    fg_flags.flags.ANIM_WEP     = [0, 0x4000];
-    fg_flags.flags.SUMMONED     = [0, 0x8000];
-    fg_flags.flags.PERM_SUMMON  = [0, 0x10000];
-    fg_flags.flags.FIRE_CHAMP   = [0, 0x20000];
-    fg_flags.flags.RECALL       = [0, 0x40000];
-    fg_flags.flags.DRAIN        = [0, 0x80000];
-    fg_flags.flags.IDEALISED    = [0, 0x100000];
-    fg_flags.flags.BOUND_SOUL   = [0, 0x200000];
-    fg_flags.flags.INFESTED     = [0, 0x400000];
-    fg_flags.flags.CORRODED     = [0, 0x800000];
-    fg_flags.flags.SWIFT        = [0, 0x1000000];
-    fg_flags.flags.SLOWLY_DYING = [0, 0x2000000];
-    fg_flags.flags.VILE_CLUTCH  = [0, 0x4000000];
-    fg_flags.flags.POSSESSABLE  = [0, 0x8000000];
 
     // Three levels of poison in 2 bits.
     fg_flags.exclusive_flags.push({

@@ -186,15 +186,13 @@ vector<string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
     vector<string> descs;
     item_def* item = active_item();
     item_def fake_proj;
-    if (!item)
+    const item_def *launcher = action.get_launcher();
+    if (launcher && is_range_weapon(*launcher))
     {
-        const item_def *launcher = action.get_launcher();
-        if (!launcher || !is_range_weapon(*launcher))
-            return descs;
         populate_fake_projectile(*launcher, fake_proj);
         item = &fake_proj;
     }
-    if (!targeted() || item->base_type != OBJ_MISSILES)
+    if (!targeted() || !item || item->base_type != OBJ_MISSILES)
         return descs;
 
     ranged_attack attk(&you, nullptr, item, is_pproj_active());
@@ -562,38 +560,27 @@ static void _throw_noise(actor* act, const item_def &ammo)
     if (launcher == nullptr || !is_range_weapon(*launcher))
         return; // moooom, players are tossing their weapons again
 
-    int         level = 0;
     const char* msg   = nullptr;
 
     // XXX: move both sound levels & messages into item-prop.cc?
     switch (launcher->sub_type)
     {
-    case WPN_HUNTING_SLING:
-        level = 1;
+    case WPN_SLING:
         msg   = "You hear a whirring sound.";
         break;
-    case WPN_FUSTIBALUS:
-        level = 3;
-        msg   = "You hear a loud whirring sound.";
-        break;
     case WPN_SHORTBOW:
-        level = 5;
         msg   = "You hear a twanging sound.";
         break;
     case WPN_LONGBOW:
-        level = 6;
         msg   = "You hear a loud twanging sound.";
         break;
     case WPN_HAND_CROSSBOW:
-        level = 2;
         msg   = "You hear a quiet thunk.";
         break;
     case WPN_ARBALEST:
-        level = 7;
         msg   = "You hear a thunk.";
         break;
     case WPN_TRIPLE_CROSSBOW:
-        level = 9;
         msg   = "You hear a triplet of thunks.";
         break;
 
@@ -605,7 +592,7 @@ static void _throw_noise(actor* act, const item_def &ammo)
     if (act->is_player() || you.can_see(*act))
         msg = nullptr;
 
-    noisy(level, act->pos(), msg, act->mid);
+    noisy(7, act->pos(), msg, act->mid);
 }
 
 // throw_it - handles player throwing/firing only. Monster throwing is handled
@@ -614,8 +601,12 @@ static void _throw_noise(actor* act, const item_def &ammo)
 // refactored to be a method of quiver::ammo_action.
 void throw_it(quiver::action &a)
 {
-    const int ammo_slot = a.get_item();
-    item_def *launcher = a.get_launcher();
+    const item_def *launcher = a.get_launcher();
+    // launchers have get_item set to the launcher. But, if we are tossing
+    // the launcher itself, get_launcher() will be nullptr.
+    // XX can this api be simplified now that projectiles and launchers are
+    // completely distinct?
+    const int ammo_slot = launcher ? -1 : a.get_item();
 
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
@@ -665,11 +656,9 @@ void throw_it(quiver::action &a)
 
     item_def fake_proj;
     item_def& thrown = fake_proj;
-    if (ammo_slot == -1)
-    {
-        ASSERT(launcher);
+    if (launcher)
         populate_fake_projectile(*launcher, fake_proj);
-    } else
+    else
         thrown = you.inv[ammo_slot];
     ASSERT(thrown.defined());
 
@@ -740,6 +729,7 @@ void throw_it(quiver::action &a)
             pbolt.friend_info.reset();
             pbolt.foe_ratio = 100;
             pbolt.is_tracer = true;
+            pbolt.overshoot_prompt = false;
 
             pbolt.fire();
 
@@ -747,6 +737,8 @@ void throw_it(quiver::action &a)
 
             pbolt.hit    = 0;
             pbolt.damage = dice_def();
+            if (pbolt.friendly_past_target)
+                pbolt.aimed_at_spot = true;
         }
     }
 

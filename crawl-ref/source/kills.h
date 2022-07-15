@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "enum.h"
+#include "kill-dump-options-type.h"
 
 class monster;
 struct monster_info;
@@ -180,11 +181,4 @@ private:
 private:
     void add_kill_info(string &, vector<kill_exp> &,
                        int count, const char *c, bool separator) const;
-};
-
-enum KILL_DUMP_OPTIONS
-{
-    KDO_NO_PLACES,          // Don't dump places at all
-    KDO_ONE_PLACE,          // Show places only for single kills and uniques.
-    KDO_ALL_PLACES,         // Show all available place information
 };

@@ -337,7 +337,7 @@ public:
     bool set_scroll(int index);
     bool in_page(int index, bool strict=false) const;
     bool snap_in_page(int index);
-    int get_first_visible() const;
+    int get_first_visible(bool skip_init_headers=false) const;
     bool item_visible(int index);
 
     virtual int getkey() const { return lastch; }

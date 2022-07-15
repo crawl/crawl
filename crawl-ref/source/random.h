@@ -85,6 +85,8 @@ int random_range(int low, int high, int nrolls);
 double random_real();
 
 int random2avg(int max, int rolls);
+int random2min(int max, int rolls);
+int random2max(int ran, int rolls);
 int biased_random2(int max, int n);
 int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale = 100);
 bool bernoulli(double n_trials, double trial_prob);

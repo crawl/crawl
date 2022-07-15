@@ -864,8 +864,7 @@ KMONS:      | = ancient lich / dread lich / royal mummy w:20
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
 KITEM:      | = scroll of acquirement q:1 ident:type / scroll of enchant weapon q:3 ident:type /\
-                scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type, \
-                scroll of holy word q:2 ident:type
+                scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type
 :           elseif lrnd == 1 then
 KITEM:      % = any armour
 KITEM:      * = any good_item armour
@@ -1789,11 +1788,11 @@ wizname = crawl.make_name()
 kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
       .. string.gsub(wizname, " ", "_") .. " ; majin-bo")
 }}
-KITEM:      d = scroll of summoning / scroll of holy word \
-                / w:5 scroll of torment / any scroll w:20 / potion of haste \
+KITEM:      d = scroll of summoning / w:5 scroll of torment / \
+                / any scroll w:20 / potion of haste \
                 / potion of heal wounds / any potion w:20
-KITEM:      e = wand of acid / wand of iceblast / ring of fire / ring of ice \
-                / randbook disc:summoning
+KITEM:      e = any beam wand / any blast wand / \
+                ring of fire / ring of ice / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
                 / manual of summonings w:2 / any randart jewellery w:5 \
                 / cloak good_item w:5 / star_item w:25 / superb_item
@@ -2383,11 +2382,11 @@ ITEM:   hat good_item / pair of boots good_item / scarf good_item /\
         any book w:35 / any armour good_item w:5
 ITEM:   phantom mirror
 MONS:   rakshasa, dancing weapon
-MONS:   dancing weapon; fustibalus ego:flaming w:15 /\
-        dancing weapon; fustibalus ego:freezing w:15 /\
-        dancing weapon; fustibalus ego:venom /\
-        dancing weapon; fustibalus ego:electrocution w:2 /\
-        dancing weapon; fustibalus randart ego:speed w:1 /\
+MONS:   dancing weapon; hand crossbow ego:flaming w:15 /\
+        dancing weapon; hand crossbow ego:freezing w:15 /\
+        dancing weapon; hand crossbow ego:venom /\
+        dancing weapon; hand crossbow ego:electrocution w:2 /\
+        dancing weapon; hand crossbow randart ego:speed w:1 /\
         dancing weapon; longbow ego:flaming w:15 /\
         dancing weapon; longbow ego:freezing w:15 /\
         dancing weapon; longbow ego:venom /\

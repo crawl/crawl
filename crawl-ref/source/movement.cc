@@ -226,7 +226,7 @@ void remove_water_hold()
 static void _clear_constriction_data()
 {
     you.stop_directly_constricting_all(true);
-    if (you.is_directly_constricted())
+    if (you.get_constrict_type() == CONSTRICT_MELEE)
         you.stop_being_constricted();
 }
 
@@ -253,6 +253,8 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
             || mon->confused()
             || mon->incapacitated()
             || mons_is_fleeing(*mon)
+            || mon->is_constricted() && (mon->constricted_by != MID_PLAYER
+                                         || mon->get_constrict_type() != CONSTRICT_MELEE)
             || !mon->can_see(you)
             // only let monsters attack if they might follow you
             || !mon->may_have_action_energy() || mon->is_stationary()

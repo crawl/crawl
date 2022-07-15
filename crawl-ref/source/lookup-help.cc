@@ -35,6 +35,7 @@
 #include "message.h"
 #include "mon-info.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -472,6 +473,11 @@ static bool _status_filter(string key, string /*body*/)
     return !strip_suffix(lowercase(key), " status");
 }
 
+static bool _mutation_filter(string key, string /*body*/)
+{
+    return !strip_suffix(lowercase(key), " mutation");
+}
+
 
 static void _recap_mon_keys(vector<string> &keys)
 {
@@ -604,6 +610,17 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     return new MonsterMenuEntry(title, &mslot, letter);
 }
 
+static bool _make_item_fake_unrandart(item_def &item, int unrand_index)
+{
+    // fill in the item info without marking the unrand as actually generated
+    // use API rather than unwinds so that sanity checks don't need to be
+    // duplicated
+    const auto prior_status = get_unique_item_status(unrand_index);
+    const bool r = make_item_unrandart(item, unrand_index);
+    set_unique_item_status(item, prior_status);
+    return r;
+}
+
 /**
  * Generate a ?/I menu entry. (ref. _simple_menu_gen()).
  */
@@ -613,7 +630,7 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
     item_def item;
     item_kind kind = item_kind_by_name(key);
     if (kind.base_type == OBJ_UNASSIGNED)
-        make_item_unrandart(item, extant_unrandart_by_exact_name(key));
+        _make_item_fake_unrandart(item, extant_unrandart_by_exact_name(key));
     else
         get_item_by_name(&item, key.c_str(), kind.base_type);
     item_colour(item);
@@ -740,6 +757,24 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     fake_cloud_info.colour = me->colour;
     const tileidx_t idx = tileidx_cloud(fake_cloud_info);
     me->add_tile(tile_def(idx));
+
+    return me;
+}
+
+/**
+ * Generate a ?/U menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _mut_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+
+    const mutation_type mut = mutation_from_name(str, false);
+    if (mut == NUM_MUTATIONS)
+        return me;
+
+    const tileidx_t tile = get_mutation_tile(mut);
+    if (tile)
+        me->add_tile(tile_def(tile + mutation_max_levels(mut) - 1));
 
     return me;
 }
@@ -1080,7 +1115,7 @@ static int _describe_item(const string &key, const string &suffix,
         const int unrand_idx = extant_unrandart_by_exact_name(item_name);
         if (!unrand_idx)
             die("Unable to get item %s by name", key.c_str());
-        make_item_unrandart(item, unrand_idx);
+        _make_item_fake_unrandart(item, unrand_idx);
     }
     describe_item_popup(item);
     return 0;
@@ -1258,6 +1293,9 @@ static const vector<LookupType> lookup_types = {
     LookupType('T', "status", nullptr, _status_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_generic, lookup_type::db_suffix),
+    LookupType('U', "mutation", nullptr, _mutation_filter,
+               nullptr, nullptr, _mut_menu_gen,
+               _describe_generic, lookup_type::db_suffix),
 };
 
 /**
@@ -1378,7 +1416,6 @@ bool find_description_of_type(lookup_help_type lht)
     ASSERT(lht >= 0 && lht < NUM_LOOKUP_HELP_TYPES);
     string response;
     bool done = lookup_types[lht].find_description(response);
-    dprf("response: '%s'", response.c_str());
     if (!response.empty() && response != "Okay, then.") // TODO: ...
         _show_type_response(response);
     return done;
@@ -1502,6 +1539,11 @@ private:
 
 void keyhelp_query_descriptions(command_type where_from)
 {
-    LookupHelpMenu m(where_from);
-    m.show();
+    rng::generator rng(rng::UI);
+
+    // force a sequence point
+    {
+        LookupHelpMenu m(where_from);
+        m.show();
+    }
 }

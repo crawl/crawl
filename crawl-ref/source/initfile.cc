@@ -37,6 +37,7 @@
 #include "dlua.h"
 #include "end.h"
 #include "errors.h"
+#include "explore-greedy-options.h"
 #include "files.h"
 #include "game-options.h"
 #include "ghost.h"
@@ -112,6 +113,10 @@ game_options Options;
 static string _get_save_path(string subdir);
 static string _supported_language_listing();
 
+static bool _force_allow_wizard();
+static bool _force_allow_explore();
+
+
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
     return l.first < r.first;
@@ -154,14 +159,32 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
 #endif
 
+// TODO: better organize this list somehow?
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
     vector<GameOption*> options = {
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
+        new MultipleChoiceGameOption<int>(
+            autopickup_on, {"default_autopickup"},
+            1,
+            {{"true", 1}, // XX this would be better as an enum
+             {"false", 0}}, true),
         new BoolGameOption(SIMPLE_NAME(default_show_all_skills), false),
+        new MultipleChoiceGameOption<skill_focus_mode>(
+            SIMPLE_NAME(skill_focus),
+            SKM_FOCUS_ON,
+            {{"true", SKM_FOCUS_ON},
+             {"false", SKM_FOCUS_OFF},
+             {"toggle", SKM_FOCUS_TOGGLE}}, true),
         new BoolGameOption(SIMPLE_NAME(read_persist_options), false),
         new BoolGameOption(SIMPLE_NAME(auto_switch), false),
         new BoolGameOption(SIMPLE_NAME(suppress_startup_errors), false),
         new BoolGameOption(SIMPLE_NAME(simple_targeting), false),
+        new MultipleChoiceGameOption<confirm_prompt_type>(
+            SIMPLE_NAME(allow_self_target),
+            confirm_prompt_type::prompt,
+            {{"true", confirm_prompt_type::none},
+             {"false", confirm_prompt_type::cancel},
+             {"prompt", confirm_prompt_type::prompt}}, true),
         new BoolGameOption(easy_unequip,
                            { "easy_unequip", "easy_armour", "easy_armor" },
                            true),
@@ -177,6 +200,11 @@ const vector<GameOption*> game_options::build_options_list()
             MB_FALSE, {{"false", MB_FALSE},
                        {"true", MB_MAYBE},
                        {"force", MB_TRUE}}, true),
+        new MultipleChoiceGameOption<char_set_type>(
+            SIMPLE_NAME(char_set),
+            CSET_DEFAULT,
+            {{"default", CSET_DEFAULT},
+             {"ascii", CSET_ASCII}}),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_background), false),
         new BoolGameOption(SIMPLE_NAME(best_effort_brighten_foreground), true),
         new BoolGameOption(SIMPLE_NAME(allow_extended_colours), true),
@@ -212,6 +240,13 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
         new BoolGameOption(SIMPLE_NAME(small_more), false),
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
+        new MultipleChoiceGameOption<maybe_bool>(
+            SIMPLE_NAME(show_god_gift),
+            MB_MAYBE, {{"false", MB_FALSE},
+                       {"unid", MB_MAYBE},
+                       {"unident", MB_MAYBE},
+                       {"unidentified", MB_MAYBE},
+                       {"true", MB_TRUE}}, true),
         new BoolGameOption(SIMPLE_NAME(show_travel_trail), USING_DGL),
         new BoolGameOption(SIMPLE_NAME(use_fake_cursor), USING_UNIX ),
         new BoolGameOption(SIMPLE_NAME(use_fake_player_cursor), true),
@@ -221,6 +256,11 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(spell_menu), false),
         new BoolGameOption(SIMPLE_NAME(easy_floor_use), false),
         new BoolGameOption(SIMPLE_NAME(bad_item_prompt), true),
+        new MultipleChoiceGameOption<slot_select_mode>(
+            SIMPLE_NAME(assign_item_slot),
+            SS_FORWARD,
+            {{"forward", SS_FORWARD},
+             {"backward", SS_BACKWARD}}),
         new BoolGameOption(SIMPLE_NAME(dos_use_background_intensity), true),
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
@@ -291,14 +331,29 @@ const vector<GameOption*> game_options::build_options_list()
                           -1, 2000),
         new IntGameOption(SIMPLE_NAME(explore_delay), -1, -1, 2000),
         new IntGameOption(SIMPLE_NAME(explore_item_greed), 10, -1000, 1000),
-        new IntGameOption(SIMPLE_NAME(explore_wall_bias), 0, 0, 1000),
+        new IntGameOption(SIMPLE_NAME(explore_wall_bias), 0, -1000, 1000),
         new IntGameOption(SIMPLE_NAME(scroll_margin_x), 2, 0),
         new IntGameOption(SIMPLE_NAME(scroll_margin_y), 2, 0),
         new IntGameOption(SIMPLE_NAME(item_stack_summary_minimum), 4),
         new IntGameOption(SIMPLE_NAME(level_map_cursor_step), 7, 1, 50),
         new IntGameOption(SIMPLE_NAME(dump_item_origin_price), -1, -1),
         new IntGameOption(SIMPLE_NAME(dump_message_count), 40),
+        new MultipleChoiceGameOption<kill_dump_options>(
+            SIMPLE_NAME(dump_kill_places),
+            KDO_ONE_PLACE,
+            {{"none", KDO_NO_PLACES},
+             {"false", KDO_NO_PLACES},
+             {"all", KDO_ALL_PLACES},
+             {"single", KDO_ONE_PLACE},
+             {"one", KDO_ONE_PLACE},
+             {"true", KDO_ONE_PLACE}}, true),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
+        new MultipleChoiceGameOption<easy_confirm_type>(
+            SIMPLE_NAME(easy_confirm),
+            easy_confirm_type::safe,
+            {{"none", easy_confirm_type::none},
+             {"safe", easy_confirm_type::safe},
+             {"all", easy_confirm_type::all}}),
         new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_messages)),
@@ -306,7 +361,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
         new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
-                                  "50:yellow, 25:red", _first_greater),
+                                  "70:yellow, 40:red", _first_greater),
         new ColourThresholdOption(mp_colour, {"mp_colour", "mp_color"},
                                   "50:yellow, 25:red", _first_greater),
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
@@ -320,8 +375,20 @@ const vector<GameOption*> game_options::build_options_list()
              {"false", travel_open_doors_type::_false},
              {"true", travel_open_doors_type::_true}}),
 
+        new MultipleChoiceGameOption<level_gen_type>(
+            SIMPLE_NAME(pregen_dungeon),
+            level_gen_type::incremental,
+            {{"incremental", level_gen_type::incremental},
+#ifndef DGAMELAUNCH
+             {"true", level_gen_type::full},
+             {"full", level_gen_type::full},
+#endif
+             {"classic", level_gen_type::classic},
+             {"false", level_gen_type::classic}
+            }, true),
+
 #ifdef DGL_SIMPLE_MESSAGING
-        new BoolGameOption(SIMPLE_NAME(messaging), false),
+        new BoolGameOption(SIMPLE_NAME(messaging), true),
 #endif
 #ifndef DGAMELAUNCH
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
@@ -341,7 +408,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_show_minihealthbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
-        new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), ""),
+        new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), "nasty"),
         new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/=([)}:|"),
         // disabled by default due to performance issues
         new BoolGameOption(SIMPLE_NAME(tile_water_anim), !USING_WEB_TILES),
@@ -404,6 +471,27 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT),
         new BoolGameOption(SIMPLE_NAME(tile_single_column_menus), true),
         new IntGameOption(SIMPLE_NAME(tile_sidebar_pixels), 32, 1, INT_MAX),
+        new MultipleChoiceGameOption<screen_mode>(
+            SIMPLE_NAME(tile_full_screen),
+            SCREENMODE_AUTO,
+            {{"true", SCREENMODE_FULL},
+             {"false", SCREENMODE_WINDOW},
+             {"maybe", SCREENMODE_AUTO},
+             {"auto", SCREENMODE_AUTO}}, true),
+        new MultipleChoiceGameOption<maybe_bool>(
+            SIMPLE_NAME(tile_use_small_layout),
+            MB_MAYBE,
+#ifdef TOUCH_UI
+            {{"true", MB_TRUE},
+             {"false", MB_FALSE},
+             {"maybe", MB_MAYBE},
+             {"auto", MB_MAYBE}}, true
+#else
+            // this option is unsupported, undocumented, and fairly crashy.
+            // XX do something about this.
+            {}
+#endif
+            ),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
@@ -430,10 +518,52 @@ const vector<GameOption*> game_options::build_options_list()
             {{"horizontal", "horizontal"}, {"vertical", "vertical"}}),
         new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600),
         new BoolGameOption(SIMPLE_NAME(action_panel_glyphs), false),
+        new MultipleChoiceGameOption<string>(
+            SIMPLE_NAME(tile_display_mode),
+            "tiles",
+            {{"tiles", "tiles"},
+             {"glyph", "glyphs"},
+             {"glyphs", "glyphs"},
+             {"hybrid", "hybrid"}}),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
 #endif
+        // see post-processing in fixup_options that handles the interaction
+        // with CLOs for the following two options:
+        new MultipleChoiceGameOption<wizard_option_type>(
+            SIMPLE_NAME(wiz_mode),
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+            WIZ_NEVER,
+#elif defined(DEBUG_DIAGNOSTICS)
+            WIZ_YES, // default debug build games to wizmode. Can be overridden in rc
+#else
+            WIZ_NO,
+#endif
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+            {}, // setting in rc is disabled
+#else
+            {{"true", WIZ_YES},
+             {"false", WIZ_NO},
+             {"never", WIZ_NEVER}},
+#endif
+             true),
+        new MultipleChoiceGameOption<wizard_option_type>(
+            SIMPLE_NAME(explore_mode),
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+            WIZ_NEVER,
+#else
+            WIZ_NO,
+#endif
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+            {}, // setting in rc is disabled
+#else
+            {{"true", WIZ_YES},
+             {"false", WIZ_NO},
+             {"never", WIZ_NEVER}},
+#endif
+             true),
+
 #ifdef WIZARD
         new BoolGameOption(SIMPLE_NAME(fsim_csv), false),
         new ListGameOption<string>(SIMPLE_NAME(fsim_scale)),
@@ -582,11 +712,6 @@ static map<string, weapon_type> _special_weapon_map = {
     // "staff" normally refers to a magical staff, but here we want to
     // interpret it as a quarterstaff.
     {"staff",       WPN_QUARTERSTAFF},
-
-    // These weapons' base names have changed; we want to interpret the old
-    // names correctly.
-    {"sling",       WPN_HUNTING_SLING},
-    {"crossbow",    WPN_HAND_CROSSBOW},
 
     // Pseudo-weapons.
     {"unarmed",     WPN_UNARMED},
@@ -1060,6 +1185,8 @@ void game_options::reset_options()
     for (GameOption* option : option_behaviour)
         option->reset();
 
+    // some option default values set in dat/defaults
+
     filename     = "unknown";
     basefilename = "unknown";
     line_num     = -1;
@@ -1082,18 +1209,7 @@ void game_options::reset_options()
 
     additional_macro_files.clear();
 
-#ifdef DGL_SIMPLE_MESSAGING
-    messaging = true;
-#endif
-
-    autopickup_on    = 1;
-
     game = newgame_def();
-
-    char_set      = CSET_DEFAULT;
-
-    incremental_pregen = true;
-    pregen_dungeon = false;
 
     // set it to the .crawlrc default
     autopickups.reset();
@@ -1104,29 +1220,20 @@ void game_options::reset_options()
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
 
-    easy_confirm           = easy_confirm_type::safe;
-    allow_self_target      = confirm_prompt_type::prompt;
-    skill_focus            = SKM_FOCUS_ON;
-
     user_note_prefix       = "";
-
-    arena_dump_msgs        = false;
-    arena_dump_msgs_all    = false;
-    arena_list_eq          = false;
 
     // Sort only pickup menus by default.
     sort_menus.clear();
     set_menu_sort("pickup: true");
-
-    assign_item_slot       = SS_FORWARD;
-    show_god_gift          = MB_MAYBE;
+    set_menu_sort("inv: true : equipped, charged");
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_TRANSPORTER | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
 
-    dump_kill_places       = KDO_ONE_PLACE;
+    explore_greedy_visit    = (EG_GLOWING | EG_ARTEFACT);
+
     dump_item_origins      = IODS_ARTEFACTS;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
@@ -1169,12 +1276,8 @@ void game_options::reset_options()
           ABIL_RU_APOCALYPSE, ABIL_LUGONU_CORRUPT, ABIL_IGNIS_FOXFIRE };
     always_use_static_ability_targeters = false;
 
-    // These are only used internally, and only from the commandline:
-    // XXX: These need a better place.
-    sc_entries             = 0;
-    sc_format              = -1;
-
 #ifdef DGAMELAUNCH
+    // not settable via rc on DGL, so no Options object to initialize them
     restart_after_game = MB_FALSE;
     restart_after_save = false;
     newgame_after_quit = false;
@@ -1187,32 +1290,7 @@ void game_options::reset_options()
 #endif
 #endif
 
-#ifdef WIZARD
-#  ifdef DGAMELAUNCH
-    if (wiz_mode != WIZ_NO)
-    {
-        wiz_mode         = WIZ_NEVER;
-        explore_mode     = WIZ_NEVER;
-    }
-#  else
-#    ifdef DEBUG_DIAGNOSTICS
-    // Most of the time in debug builds, you want to be using wizmode anyways.
-    // This can be overridden by an explicit rc setting.
-    wiz_mode             = WIZ_YES;
-#    else
-    wiz_mode             = WIZ_NO;
-#    endif
-    explore_mode         = WIZ_NO;
-#  endif
-#endif
     terp_files.clear();
-
-#ifdef USE_TILE_LOCAL
-
-    // window layout
-    tile_full_screen      = SCREENMODE_AUTO;
-    tile_use_small_layout = MB_MAYBE;
-#endif
 
 #ifdef USE_TILE
     // XXX: arena may now be chosen after options are read.
@@ -1230,8 +1308,6 @@ void game_options::reset_options()
 #endif
 
 #ifdef USE_TILE_WEB
-    tile_display_mode = "tiles";
-
     action_panel.clear();
     action_panel.emplace_back(OBJ_WANDS);
     action_panel.emplace_back(OBJ_SCROLLS);
@@ -2107,7 +2183,9 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
     : seed(0), seed_from_rc(0),
-    no_save(false), no_player_bones(false), language(lang_t::EN),
+    no_save(false), no_player_bones(false),
+    sc_entries(0), sc_format(-1),
+    language(lang_t::EN),
     lang_name(nullptr),
     prefs_dirty(false)
 {
@@ -2341,6 +2419,18 @@ void game_options::fixup_options()
 
     if (!check_mkdir("Morgue directory", &morgue_dir))
         end(1, false, "Cannot create morgue directory '%s'", morgue_dir.c_str());
+
+#ifdef WIZARD
+    // Let CLOs override wiz/explore disabling (including the option being
+    // disabled on dgamelaunch builds)
+    if (_force_allow_wizard() && wiz_mode == WIZ_NEVER)
+        wiz_mode = WIZ_NO;
+    if ((_force_allow_wizard() || _force_allow_explore())
+                                            && explore_mode == WIZ_NEVER)
+    {
+        explore_mode = WIZ_NO;
+    }
+#endif
 }
 
 static int _str_to_killcategory(const string &s)
@@ -2414,6 +2504,12 @@ void game_options::set_player_tile(const string &field)
         const monster_type m = _mons_class_by_string(fields[1]);
         if (m == MONS_0)
             report_error("Unknown monster: \"%s\"", fields[1].c_str());
+        else if (mons_class_is_animated_object(m) || mons_is_sensed(m))
+        {
+            report_error(
+                "Can't use that monster as a mons: player tile, sorry: \"%s\"",
+                fields[1].c_str());
+        }
         else
         {
             tile_use_monster = m;
@@ -2541,6 +2637,28 @@ int game_options::read_explore_stop_conditions(const string &field) const
             conditions |= ES_ARTEFACT;
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
+    }
+    return conditions;
+}
+
+int game_options::read_explore_greedy_visit_conditions(const string &field) const
+{
+    int conditions = 0;
+    vector<string> stops = split_string(",", field);
+    for (const string &stop : stops)
+    {
+        const string c = replace_all_of(stop, " ", "_");
+        if (c == "glowing" || c == "glowing_item"
+                 || c == "glowing_items")
+        {
+            conditions |= EG_GLOWING;
+        }
+        else if (c == "artefact" || c == "artefacts"
+                 || c == "artifact" || c == "artifacts")
+            conditions |= EG_ARTEFACT;
+        else if (c == "stack" || c == "stacks"
+                 || c == "pile" || c == "piles")
+            conditions |= EG_STACK;
     }
     return conditions;
 }
@@ -3006,15 +3124,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.name = field;
     }
 #endif
-    else if (key == "char_set")
-    {
-        if (field == "ascii")
-            char_set = CSET_ASCII;
-        else if (field == "default")
-            char_set = CSET_DEFAULT;
-        else
-            report_error("Bad character set, using default: %s\n", field.c_str());
-    }
     else if (key == "language")
     {
         if (!set_lang(field.c_str()))
@@ -3026,32 +3135,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "fake_lang")
         set_fake_langs(field);
-    else if (key == "default_autopickup")
-    {
-        if (read_bool(field, true))
-            autopickup_on = 1;
-        else
-            autopickup_on = 0;
-    }
-    else if (key == "easy_confirm")
-    {
-        // decide when to allow both 'Y'/'N' and 'y'/'n' on yesno() prompts
-        if (field == "none")
-            easy_confirm = easy_confirm_type::none;
-        else if (field == "safe")
-            easy_confirm = easy_confirm_type::safe;
-        else if (field == "all")
-            easy_confirm = easy_confirm_type::all;
-    }
-    else if (key == "allow_self_target")
-    {
-        if (field == "yes")
-            allow_self_target = confirm_prompt_type::none;
-        else if (field == "no")
-            allow_self_target = confirm_prompt_type::cancel;
-        else if (field == "prompt")
-            allow_self_target = confirm_prompt_type::prompt;
-    }
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
@@ -3206,28 +3289,10 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             report_error("Bad fire item start index: %s\n", field.c_str());
     }
-    else if (key == "assign_item_slot")
-    {
-        if (field == "forward")
-            assign_item_slot = SS_FORWARD;
-        else if (field == "backward")
-            assign_item_slot = SS_BACKWARD;
-    }
 #ifndef DGAMELAUNCH
     else if (key == "restart_after_game")
         restart_after_game = read_maybe_bool(field);
 #endif
-    else if (key == "show_god_gift")
-    {
-        if (field == "yes")
-            show_god_gift = MB_TRUE;
-        else if (field == "unid" || field == "unident" || field == "unidentified")
-            show_god_gift = MB_MAYBE;
-        else if (field == "no")
-            show_god_gift = MB_FALSE;
-        else
-            report_error("Unknown show_god_gift value: %s\n", field.c_str());
-    }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal, caret_equal);
     else if (key == "fire_order_spell" && runscript)
@@ -3278,15 +3343,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         // field is already cleaned up from trim_string()
         user_note_prefix = orig_field;
     }
-    else if (key == "skill_focus")
-    {
-        if (field == "toggle")
-            skill_focus = SKM_FOCUS_TOGGLE;
-        else if (read_bool(field, true))
-            skill_focus = SKM_FOCUS_ON;
-        else
-            skill_focus = SKM_FOCUS_OFF;
-    }
     else if (key == "flush")
     {
         if (subkey == "failure")
@@ -3309,37 +3365,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             flush_input[FLUSH_LUA]
                 = read_bool(field, flush_input[FLUSH_LUA]);
         }
-    }
-    else if (key == "wiz_mode")
-    {
-        // wiz_mode is recognised as a legal key in all compiles -- bwr
-#ifdef WIZARD
-    #ifndef DGAMELAUNCH
-        if (field == "never")
-            wiz_mode = WIZ_NEVER;
-        else if (field == "no")
-            wiz_mode = WIZ_NO;
-        else if (field == "yes")
-            wiz_mode = WIZ_YES;
-        else
-            report_error("Unknown wiz_mode option: %s\n", field.c_str());
-    #endif
-#endif
-    }
-    else if (key == "explore_mode")
-    {
-#ifdef WIZARD
-    #ifndef DGAMELAUNCH
-        if (field == "never")
-            explore_mode = WIZ_NEVER;
-        else if (field == "no")
-            explore_mode = WIZ_NO;
-        else if (field == "yes")
-            explore_mode = WIZ_YES;
-        else
-            report_error("Unknown explore_mode option: %s\n", field.c_str());
-    #endif
-#endif
     }
     else if (key == "ban_pickup")
     {
@@ -3620,6 +3645,17 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             explore_stop |= new_conditions;
     }
+    else if (key == "explore_greedy_visit")
+    {
+        if (plain)
+            explore_greedy_visit = EG_NONE;
+
+        const int new_conditions = read_explore_greedy_visit_conditions(field);
+        if (minus_equal)
+            explore_greedy_visit &= ~new_conditions;
+        else
+            explore_greedy_visit |= new_conditions;
+    }
     else if (key == "sound" || key == "hold_sound")
     {
         if (plain)
@@ -3710,12 +3746,6 @@ void game_options::read_option_line(const string &str, bool runscript)
 
         new_dump_fields(field, !minus_equal, caret_equal);
     }
-    else if (key == "dump_kill_places")
-    {
-        dump_kill_places = (field == "none" ? KDO_NO_PLACES :
-                            field == "all"  ? KDO_ALL_PLACES
-                                            : KDO_ONE_PLACE);
-    }
     else if (key == "kill_map")
     {
         // TODO: treat this as a map option (e.g. kill_map.you = friendly)
@@ -3792,18 +3822,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             report_error(possible_error.c_str(), orig_field.c_str());
     }
 #ifdef USE_TILE
-#ifdef USE_TILE_LOCAL
-    else if (key == "tile_full_screen")
-    {
-        const maybe_bool fs_val = read_maybe_bool(field);
-        if (fs_val == MB_TRUE)
-            tile_full_screen = SCREENMODE_FULL;
-        else if (fs_val == MB_FALSE)
-            tile_full_screen = SCREENMODE_WINDOW;
-        else
-            tile_full_screen = SCREENMODE_AUTO;
-    }
-#endif // USE_TILE_LOCAL
 #ifdef TOUCH_UI
     else if (key == "tile_use_small_layout")
         tile_use_small_layout = read_maybe_bool(field);
@@ -3821,19 +3839,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         set_tile_offsets(field, true);
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
-#ifdef USE_TILE_WEB
-    else if (key == "tile_display_mode")
-    {
-        if (field == "tiles" || field == "glyphs" || field == "hybrid")
-            tile_display_mode = field;
-        else
-        {
-            mprf(MSGCH_ERROR, "Unknown value for tile_display_mode: '%s'"
-                              " (possible values: tiles/glyphs/hybrid",
-                                                                field.c_str());
-        }
-    }
-#endif
 #endif // USE_TILE
 
     else if (key == "bindkey")
@@ -3857,34 +3862,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             // first crack, so don't overwrite it here.
             if (!seed_from_rc)
                 seed_from_rc = tmp_seed;
-        }
-    }
-    else if (key == "pregen_dungeon")
-    {
-        // TODO: probably convert the underlying values to some kind of enum
-        // TODO: store these options in a save?
-        if (field == "true" || field == "full")
-        {
-#ifdef DGAMELAUNCH
-            report_error(
-                "Full pregeneration is not allowed on this build of crawl.");
-#else
-            pregen_dungeon = true;
-            incremental_pregen = true; // still affects loading games not
-                                       // started with full pregen
-#endif
-        }
-        else if (field == "incremental")
-        {
-            pregen_dungeon = false;
-            incremental_pregen = true;
-        }
-        else if (field == "false" || field == "classic")
-            pregen_dungeon = incremental_pregen = false;
-        else
-        {
-            report_error("Unknown value '%s' for pregen_dungeon.",
-                                                            field.c_str());
         }
     }
 #ifdef USE_TILE
@@ -4386,8 +4363,33 @@ static const char *cmd_ops[] =
 #endif
 };
 
-static const int num_cmd_ops = CLO_NOPS;
-static bool arg_seen[num_cmd_ops];
+
+#define num_cmd_ops CLO_NOPS
+
+static bool& _arg_seen(commandline_option_type c)
+{
+    static bool arg_seen[num_cmd_ops];
+    static bool arg_seen_init = false;
+    if (!arg_seen_init)
+    {
+        for (int i = 0; i < num_cmd_ops; i++)
+            arg_seen[i] = false;
+        arg_seen_init = true;
+    }
+    return arg_seen[c];
+}
+
+// set these checks up so they can be forward-declared without reordering the
+// whole file
+static bool _force_allow_wizard()
+{
+    return _arg_seen(CLO_WIZARD);
+}
+
+static bool _force_allow_explore()
+{
+    return _arg_seen(CLO_EXPLORE);
+}
 
 static string _find_executable_path()
 {
@@ -5167,7 +5169,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
     // initialise
     for (int i = 0; i < num_cmd_ops; i++)
-         arg_seen[i] = false;
+         _arg_seen(static_cast<commandline_option_type>(i)) = false;
 
     if (SysEnv.cmd_args.empty())
     {
@@ -5228,14 +5230,14 @@ bool parse_args(int argc, char **argv, bool rc_only)
         }
 
         // Disallow options specified more than once.
-        if (arg_seen[o])
+        if (_arg_seen(static_cast<commandline_option_type>(o)))
         {
             fprintf(stderr, "Duplicate option: %s\n\n", argv[current]);
             return false;
         }
 
         // Set arg to 'seen'.
-        arg_seen[o] = true;
+        _arg_seen(static_cast<commandline_option_type>(o)) = true;
 
         // Partially parse next argument.
         bool next_is_param = false;
@@ -5552,7 +5554,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_PREGEN:
-            Options.pregen_dungeon = true;
+            Options.pregen_dungeon = level_gen_type::full;
             break;
 
         case CLO_SPRINT:
@@ -5572,20 +5574,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_TUTORIAL:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_TUTORIAL;
-            break;
-
-        case CLO_WIZARD:
-#ifdef WIZARD
-            if (!rc_only)
-                Options.wiz_mode = WIZ_NO;
-#endif
-            break;
-
-        case CLO_EXPLORE:
-#ifdef WIZARD
-            if (!rc_only)
-                Options.explore_mode = WIZ_NO;
-#endif
             break;
 
         case CLO_NO_SAVE:
@@ -5650,7 +5638,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             nextUsed = true;
 
             // Can be used multiple times.
-            arg_seen[o] = false;
+            _arg_seen(static_cast<commandline_option_type>(o)) = false;
             break;
 
         case CLO_EXTRA_OPT_LAST:
@@ -5665,7 +5653,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             nextUsed = true;
 
             // Can be used multiple times.
-            arg_seen[o] = false;
+            _arg_seen(static_cast<commandline_option_type>(o)) = false;
             break;
         }
 

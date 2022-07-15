@@ -136,7 +136,7 @@ it before discarding it in a fit of rage.
 
 The blade looses a low keen as it cuts through the air.
 %%%%
-sling "Punk"
+greatsling "Punk"
 
 A sling made of weird green leather, oozing corrosive slime. Originally the
 weapon of a notorious mischief-maker and general scamp, it's since fallen into
@@ -722,3 +722,29 @@ staff of the Meek
 A sacred relic of the Monks of St. Lee, followers of the renunciate archmage. Just
 as St. Lee sought to atone for the destruction his spells wrought by protecting
 others, so his staff protects its wielder.
+%%%%
+trishula "Condemnation"
+
+A weapon to bring forth guilt from the guilty. It was first wielded by the archangel
+Lucreil, who, on seeing the suffering of the first mortals, led them as an army
+against the cruelty of the gods. The ragged survivors of Lucriel's army took this
+weapon with them into the wilderness, the sole remnant of an archangel's virtue.
+%%%%
+amulet of Elemental Vulnerability
+
+A blue-steel amulet. Its creator, an exceedingly practical woman, designed it to
+provide powerful protection against mundane jabs, stabs and bites. It's worse than
+useless against fire and frost, but how often does anyone really need to worry
+about that?
+%%%%
+mountain boots
+
+These sturdy boots were created by an artificer who lived high up on a remote
+mountain peak, as protection against the mountain's near-constant avalanches,
+rockslides, and snowstorms. No force short of translocations magic will budge
+the wearer from their position.
+%%%%
+lochaber axe
+
+This brutal weapon, long thought lost to history, combines the extended reach
+of a polearm with the cleaving sharpness of an axe.

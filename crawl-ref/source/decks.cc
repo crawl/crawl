@@ -51,7 +51,6 @@
 #include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-monench.h"
-#include "spl-wpnench.h"
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"

@@ -76,9 +76,11 @@ public:
 #endif
     {
 #ifdef USE_TILE_LOCAL
-        const ImageManager *m_image = tiles.get_image_manager();
+        // this seems ... non-ideal?? (pattern occurs in a few other places,
+        // precision menu, playerdoll, ...)
+        const ImageManager *image = tiles.get_image_manager();
         for (int i = 0; i < TEX_MAX; i++)
-            m_tile_buf[i].set_tex(&m_image->m_textures[i]);
+            m_tile_buf[i].set_tex(&image->get_texture(static_cast<TextureID>(i)));
 #else
         expand_h = true;
 #endif
@@ -101,6 +103,7 @@ public:
     int get_min_col_width() { return m_min_col_width; }
 
     void set_initial_scroll(int i) { m_force_scroll = i; }
+    int get_scroll_context() { return m_scroll_context + m_scroll_context / 2; }
 
     void update_item(int index);
     void update_items();
@@ -126,6 +129,7 @@ protected:
 
     int m_force_scroll = -1; // in rows, no pixels
     bool m_initial_hover_snap = false;
+    int m_scroll_context = 0;
 
 #ifdef USE_TILE_LOCAL
     void do_layout(int mw, int num_columns);
@@ -305,6 +309,7 @@ void UIMenu::do_layout(int mw, int num_columns)
         if (column == 0)
         {
             row_height += row_height == 0 ? 0 : 2*item_pad;
+            m_scroll_context = max(m_scroll_context, row_height);
             height += row_height;
             row_heights.push_back(height);
             row_height = 0;
@@ -370,6 +375,7 @@ void UIMenu::do_layout(int mw, int num_columns)
         }
     }
     row_height += row_height == 0 ? 0 : 2*item_pad;
+    m_scroll_context = max(m_scroll_context, row_height);
     height += row_height;
     row_heights.push_back(height);
     column_width += 2*item_pad;
@@ -1432,8 +1438,12 @@ bool Menu::process_key(int keyin)
 #ifdef USE_TILE_WEB
     const int old_vis_first = get_first_visible();
 #endif
-    if (keyin == ' ' && !!(flags & MF_MULTISELECT))
+    if (keyin == ' '
+        && !!(flags & MF_MULTISELECT) && !!(flags & MF_ARROWS_SELECT))
+    {
+        // XX allow customizing this mapping
         keyin = '.';
+    }
 
     switch (keyin)
     {
@@ -1669,16 +1679,25 @@ void Menu::deselect_all(bool update_view)
 
 
 
-int Menu::get_first_visible() const
+int Menu::get_first_visible(bool skip_init_headers) const
 {
     int y = m_ui.scroller->get_scroll();
-    for (int i = 0; i < (int) items.size(); i++)
+    for (int i = 0; i < static_cast<int>(items.size()); i++)
     {
-        // why does this use y2? It can lead to partially visible items in tiles
-        int item_y2;
-        m_ui.menu->get_item_region(i, nullptr, &item_y2);
-        if (item_y2 > y)
+        int item_y1;
+        m_ui.menu->get_item_region(i, &item_y1, nullptr);
+        if (item_y1 >= y)
+        {
+            if (skip_init_headers
+                && (items[i]->level == MEL_TITLE
+                    || items[i]->level == MEL_SUBTITLE))
+            {
+                // when using this to determine e.g. scroll position, it is
+                // useful to ignore visible headers
+                continue;
+            }
             return i;
+        }
     }
     return items.size();
 }
@@ -2410,7 +2429,7 @@ bool Menu::set_scroll(int index)
     const int vpy = m_ui.scroller->get_scroll();
     m_ui.scroller->set_scroll(y1
 #ifdef USE_TILE_LOCAL
-            - UI_SCROLLER_SHADE_SIZE
+            - UI_SCROLLER_SHADE_SIZE / 2
 #endif
             );
 
@@ -2481,7 +2500,7 @@ bool Menu::snap_in_page(int index)
         // scroll up
         m_ui.scroller->set_scroll(y2 - vph
 #ifdef USE_TILE_LOCAL
-            + UI_SCROLLER_SHADE_SIZE
+            + UI_SCROLLER_SHADE_SIZE / 2
 #endif
             );
     }
@@ -2490,7 +2509,7 @@ bool Menu::snap_in_page(int index)
         // scroll down
         m_ui.scroller->set_scroll(y1
 #ifdef USE_TILE_LOCAL
-            - UI_SCROLLER_SHADE_SIZE
+            - UI_SCROLLER_SHADE_SIZE / 2
 #endif
             );
     }
@@ -2506,8 +2525,8 @@ bool Menu::page_down()
         last_hovered = 0;
     // preserve relative position
     if (last_hovered >= 0 && in_page(last_hovered))
-        new_hover = last_hovered - get_first_visible();
-    int dy = m_ui.scroller->get_region().height;
+        new_hover = last_hovered - get_first_visible(true);
+    int dy = m_ui.scroller->get_region().height - m_ui.menu->get_scroll_context();
     int y = m_ui.scroller->get_scroll();
     bool at_bottom = y+dy >= m_ui.menu->get_region().height;
     // don't scroll further if the last item is already visible
@@ -2519,10 +2538,10 @@ bool Menu::page_down()
     if (new_hover >= 0)
     {
         // if pgdn wouldn't change the hover, move it to the last element
-        if (is_set(MF_ARROWS_SELECT) && get_first_visible() + new_hover == last_hovered)
+        if (is_set(MF_ARROWS_SELECT) && get_first_visible(true) + new_hover == last_hovered)
             set_hovered(items.size() - 1);
         else
-            set_hovered(get_first_visible() + new_hover);
+            set_hovered(get_first_visible(true) + new_hover);
         if (items[last_hovered]->level != MEL_ITEM)
             cycle_hover(true); // reverse so we don't overshoot
     }
@@ -2540,16 +2559,16 @@ bool Menu::page_up()
     if (is_set(MF_ARROWS_SELECT) && last_hovered < 0)
         last_hovered = 0;
     if (last_hovered >= 0 && in_page(last_hovered))
-        new_hover = last_hovered - get_first_visible();
-    int dy = m_ui.scroller->get_region().height;
+        new_hover = last_hovered - get_first_visible(true);
+    int dy = m_ui.scroller->get_region().height - m_ui.menu->get_scroll_context();
     int y = m_ui.scroller->get_scroll();
     m_ui.scroller->set_scroll(y-dy);
     if (new_hover >= 0)
     {
         // if pgup wouldn't change the hover, select the first element
-        if (is_set(MF_ARROWS_SELECT) && get_first_visible() + new_hover == last_hovered)
+        if (is_set(MF_ARROWS_SELECT) && get_first_visible(true) + new_hover == last_hovered)
             new_hover = 0;
-        set_hovered(get_first_visible() + new_hover);
+        set_hovered(get_first_visible(true) + new_hover);
         if (items[last_hovered]->level != MEL_ITEM)
             cycle_hover(); // forward so we don't overshoot
     }

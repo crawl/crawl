@@ -58,6 +58,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-damage.h"
+#include "spl-other.h"
 #include "spl-summoning.h"
 #include "sprint.h" // SPRINT_MULTIPLIER
 #include "state.h"
@@ -1149,6 +1150,42 @@ static string _killer_type_name(killer_type killer)
     die("invalid killer type");
 }
 
+static string _derived_undead_message(const monster &mons, monster_type which_z,
+                                      const char* mist)
+{
+    switch (which_z)
+    {
+    case MONS_SPECTRAL_THING:
+    case MONS_SIMULACRUM:
+        // XXX: print immediately instead?
+        return make_stringf("A %s mist starts to gather...", mist);
+    case MONS_SKELETON:
+    case MONS_ZOMBIE:
+        break;
+    default:
+        return "A buggy dead thing appears!";
+    }
+
+    const auto habitat = mons_class_primary_habitat(mons.type);
+    if (habitat == HT_WATER || habitat == HT_LAVA)
+        return "The dead are swimming!";
+
+    if (mons_class_flag(mons.type, M_FLIES))
+        return "The dead are flying!";
+
+    const auto shape = get_mon_shape(mons);
+    if (shape == MON_SHAPE_SNAKE || shape == MON_SHAPE_SNAIL)
+        return "The dead are slithering!";
+    if (shape == MON_SHAPE_ARACHNID || shape == MON_SHAPE_CENTIPEDE)
+        return "The dead are crawling!"; // to say nothing of creeping
+
+    const monster_type genus = mons_genus(mons.type);
+    if (genus == MONS_FROG || genus == MONS_QUOKKA)
+        return "The dead are hopping!";
+
+    return "The dead are walking!"; // a classic for sure
+}
+
 /**
  * Make derived undead out of a dying/dead monster.
  *
@@ -1163,11 +1200,15 @@ static void _make_derived_undead(monster* mons, bool quiet,
                                  monster_type which_z, beh_type beh,
                                  spell_type spell, god_type god)
 {
+    bool requires_corpse = which_z == MONS_ZOMBIE || which_z == MONS_SKELETON;
     // This function is used by several different sorts of things, each with
     // their own validity conditions that are enforced here
-    // - Death Channel and Yred reaping of unzombifiable things:
-    if (which_z == MONS_SPECTRAL_THING && !mons_can_be_spectralised(*mons))
+    // - Simulacrum, Death Channel and Yred reaping of unzombifiable things:
+    if (!requires_corpse
+        && !mons_can_be_spectralised(*mons, god == GOD_YREDELEMNUL))
+    {
         return;
+    }
     // - Monster Bind Souls
     if (spell == SPELL_BIND_SOULS && !(mons->holiness() & MH_NATURAL
                                        && mons_can_be_zombified(*mons)))
@@ -1175,7 +1216,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
         return;
     }
     // - all other reaping (brand, chaos, and Yred)
-    if (which_z != MONS_SPECTRAL_THING && !mons_can_be_zombified(*mons))
+    if (requires_corpse && !mons_can_be_zombified(*mons))
         return;
 
     // Use the original monster type as the zombified type here, to
@@ -1209,7 +1250,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
         // No undead 0-headed hydras, sorry.
         if (mons->heads() == 0)
         {
-            if (!quiet)
+            if (!quiet && which_z != MONS_SKELETON)
                 mprf("A %s mist gathers momentarily, then fades.", mist);
             return;
         }
@@ -1225,13 +1266,20 @@ static void _make_derived_undead(monster* mons, bool quiet,
             agent_name = agent->as_monster()->full_name(DESC_A);
     }
 
-    string monster_name = "";
-
-    string message = quiet ? "" :
-        make_stringf("A %s mist starts to gather...", mist);
-
+    const string message = quiet ? "" : _derived_undead_message(*mons, which_z, mist);
     make_derived_undead_fineff::schedule(mons->pos(), mg,
             mons->get_experience_level(), agent_name, message);
+}
+
+static void _make_simulacra(monster* mons, int pow, god_type god)
+{
+    const int count = 1 + random2(1 + div_rand_round(pow, 20));
+    for (int i = 0; i < count; ++i)
+    {
+        _make_derived_undead(mons, false, MONS_SIMULACRUM, BEH_FRIENDLY,
+                SPELL_SIMULACRUM, god);
+    }
+    mpr("A freezing mist starts to gather...");
 }
 
 static void _druid_final_boon(const monster* mons)
@@ -1318,14 +1366,28 @@ static void _yred_reap(monster &mons, bool expl)
                          SPELL_NO_SPELL, you.religion);
 }
 
+static bool _animate_dead_reap(monster &mons)
+{
+    if (!you.duration[DUR_ANIMATE_DEAD])
+        return false;
+    const int pow = you.props[ANIMATE_DEAD_POWER_KEY].get_int();
+    if (!x_chance_in_y(150 + pow/2, 200))
+        return false;
+
+    _make_derived_undead(&mons, false, MONS_ZOMBIE, BEH_FRIENDLY,
+                         SPELL_ANIMATE_DEAD, GOD_NO_GOD);
+    return true;
+}
+
 static bool _reaping(monster &mons)
 {
     if (!mons.props.exists(REAPING_DAMAGE_KEY))
         return false;
 
     int rd = mons.props[REAPING_DAMAGE_KEY].get_int();
-    dprf("Reaping chance: %d/%d", rd, mons.damage_total);
-    if (!x_chance_in_y(rd, mons.damage_total))
+    const int denom = mons.damage_total * 2;
+    dprf("Reaping chance: %d/%d", rd, denom);
+    if (!x_chance_in_y(rd, denom))
         return false;
 
     actor *killer = actor_by_mid(mons.props[REAPER_KEY].get_int());
@@ -1334,6 +1396,110 @@ static bool _reaping(monster &mons)
     if (killer->is_player() && you.allies_forbidden())
         return false;
     return _mons_reaped(*killer, mons);
+}
+
+static bool _try_place_miasma_at(coord_def p)
+{
+    if (cell_is_solid(p))
+        return false;
+
+    cloud_struct *cl = cloud_at(p);
+    if (cl && !is_harmless_cloud(cl->type))
+        return false;
+
+    place_cloud(CLOUD_MIASMA, p, 2 + random2avg(8, 2), &you);
+    return true;
+}
+
+static void _corpse_rot(monster &mons, int pow)
+{
+    if (!mons_can_be_zombified(mons))
+        return;
+
+    coord_def center = you.pos();
+    int rot = 1 + random2(1 + div_rand_round(pow, 25));
+
+    for (fair_adjacent_iterator ai(center); ai; ++ai)
+    {
+        if (_try_place_miasma_at(*ai))
+        {
+            --rot;
+            if (!rot)
+                return;
+        }
+    }
+
+    // Continue out to radius 2 if radius 1 is full
+    for (distance_iterator di(center, true, true, 2); di; ++di)
+    {
+        if (_try_place_miasma_at(*di))
+        {
+            --rot;
+            if (!rot)
+                return;
+        }
+    }
+
+    mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
+}
+
+static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
+                              bool in_los, bool corpseworthy)
+{
+    // This is a hostile effect, and monsters are dirty cheaters. Sorry!
+    if (mons.has_ench(ENCH_BOUND_SOUL))
+    {
+        _make_derived_undead(&mons, quiet, MONS_SIMULACRUM,
+                             SAME_ATTITUDE(&mons),
+                             SPELL_BIND_SOULS, GOD_NO_GOD);
+        return true;
+    }
+
+    // Players' corpse-consuming effects. Go from best to worst.
+    if (mons.has_ench(ENCH_INFESTATION))
+    {
+        _infestation_create_scarab(&mons);
+        return true;
+    }
+
+    if (!corpseworthy)
+        return false;
+
+    // Yred takes priority over everything but Infestation.
+    // (Maybe Simulacrum should also be allowed? Or Infestation shouldn't?)
+    if (in_los && have_passive(passive_t::reaping))
+    {
+        if (yred_reap_chance())
+            _yred_reap(mons, exploded);
+        return true;
+    }
+
+    if (mons.has_ench(ENCH_SIMULACRUM) && !have_passive(passive_t::goldify_corpses))
+    {
+        const int simu_pow = mons.props[SIMULACRUM_POWER_KEY].get_int();
+        _make_simulacra(&mons, simu_pow, GOD_NO_GOD);
+        return true;
+    }
+
+    if (!exploded
+        && in_los
+        && !have_passive(passive_t::goldify_corpses)
+        && (_animate_dead_reap(mons) || _reaping(mons)))
+    {
+        return true;
+    }
+
+    if (!exploded
+        && !have_passive(passive_t::goldify_corpses)
+        && mons.has_ench(ENCH_NECROTISE))
+    {
+        _make_derived_undead(&mons, quiet, MONS_SKELETON,
+                                 BEH_FRIENDLY,
+                                 SPELL_NECROTISE,
+                                 GOD_NO_GOD);
+        return true;
+    }
+    return false;
 }
 
 static bool _god_will_bless_follower(monster* victim)
@@ -1504,6 +1670,42 @@ bool mons_will_goldify(const monster &mons)
                    && !player_in_branch(BRANCH_ABYSS);
 }
 
+#if TAG_MAJOR_VERSION == 34
+static void _pakellas_excess_mp(int mp_heal)
+{
+    if (!have_passive(passive_t::bottle_mp)
+        || !mp_heal
+        || !you.can_drink(false))
+    {
+        return;
+    }
+
+    simple_god_message(" collects the excess magic power.");
+    you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
+
+    if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
+        && (feat_has_solid_floor(env.grid(you.pos()))
+            || (feat_is_watery(env.grid(you.pos()))
+                && species::likes_water(you.species))))
+    {
+        int thing_created = items(true, OBJ_POTIONS,
+                                  POT_MAGIC, 1, 0,
+                                  GOD_PAKELLAS);
+        if (thing_created != NON_ITEM)
+        {
+            move_item_to_grid(&thing_created, you.pos(), true);
+            env.item[thing_created].quantity = 1;
+            env.item[thing_created].flags |= ISFLAG_KNOW_TYPE;
+            // not a conventional gift, but use the same
+            // messaging
+            simple_god_message(" grants you a gift!");
+            you.attribute[ATTR_PAKELLAS_EXTRA_MP]
+                += POT_MAGIC_MP;
+        }
+    }
+}
+#endif
+
 /**
  * Kill off a monster.
  *
@@ -1604,8 +1806,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     const bool hard_reset    = testbits(mons.flags, MF_HARD_RESET);
     const bool timeout       = killer == KILL_TIMEOUT;
     const bool fake_abjure   = mons.has_ench(ENCH_FAKE_ABJURATION);
-    const bool could_give_xp = mons_gives_xp(mons, you);
-    const bool gives_real_xp = could_give_xp && !player_in_branch(BRANCH_ABYSS);
+    const bool gives_player_xp = mons_gives_xp(mons, you);
     bool drop_items          = !hard_reset;
     const bool submerged     = mons.submerged();
     bool in_transit          = false;
@@ -1777,7 +1978,10 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!was_banished && !summoned_it && !silent && !hard_reset)
         {
             // Under Gozag, permanent dancing weapons get turned to gold.
-            if (have_passive(passive_t::goldify_corpses))
+            // Exception: Tukima'd weapons; we don't want to trickily punish Gozagites
+            // for using Tukima's Dance.
+            if (have_passive(passive_t::goldify_corpses)
+                && !mons.props.exists(TUKIMA_WEAPON))
             {
                 if (mons_will_goldify(mons))
                 {
@@ -1804,8 +2008,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
         }
 
-        if (was_banished && !summoned_it && !hard_reset)
+        if (was_banished && !summoned_it && !hard_reset
+            && mons.has_ench(ENCH_ABJ)) // temp animated but not summoned
         {
+            // if this is set, it (in principle) allows the unrand to
+            // show up in the abyss. We don't want to set this for a banished
+            // permanent dancing weapon, which will show up as itself.
             if (is_unrandom_artefact(env.item[w_idx]))
                 set_unique_item_status(env.item[w_idx], UNIQ_LOST_IN_ABYSS);
 
@@ -1870,7 +2078,7 @@ item_def* monster_die(monster& mons, killer_type killer,
     // relevant avatars are adjusted by now to KILL_YOU and are counted.
     if (you.duration[DUR_WEREBLOOD]
         && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
-        && could_give_xp)
+        && gives_player_xp)
     {
         const int wereblood_bonus = you.props[WEREBLOOD_KEY].get_int();
         if (wereblood_bonus <= 8) // cap at +9 slay
@@ -1920,7 +2128,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             {
                 // If this monster would otherwise give xp but didn't because
                 // it grants no reward or was neutral, give a message.
-                if (!gives_real_xp
+                if (!gives_player_xp
                     && mons_class_gives_xp(mons.type)
                     && !summoned
                     && !fake_abjure
@@ -1931,106 +2139,73 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
 
             // Killing triggers hints mode lesson.
-            if (gives_real_xp)
+            if (gives_player_xp)
                 _hints_inspect_kill();
 
-            _fire_kill_conducts(mons, killer, killer_index, gives_real_xp);
+            _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
+            int hp_heal = 0, mp_heal = 0;
             // Divine and innate health and mana restoration doesn't happen when
             // killing born-friendly monsters.
-            if (could_give_xp
-                && !mons_is_object(mons.type)
-                && (you.has_mutation(MUT_DEVOUR_ON_KILL)
-                    || (have_passive(passive_t::restore_hp)
-                        || have_passive(passive_t::mp_on_kill)
-                        || have_passive(passive_t::restore_hp_mp_vs_evil)
-                           && mons.evil())
-                       && !player_under_penance()
-                       && (random2(you.piety) >= piety_breakpoint(0))
-#if TAG_MAJOR_VERSION == 34
-                    || you_worship(GOD_PAKELLAS)
-#endif
-                   )
-                )
+            const bool valid_heal_source = gives_player_xp
+                && !mons_is_object(mons.type);
+            const bool can_divine_heal = valid_heal_source
+                && !player_under_penance()
+                && random2(you.piety) >= piety_breakpoint(0);
+
+            if (valid_heal_source
+                && you.has_mutation(MUT_DEVOUR_ON_KILL)
+                && mons.holiness() & (MH_NATURAL | MH_PLANT)
+                && coinflip())
             {
-                int hp_heal = 0, mp_heal = 0;
-
-                if (have_passive(passive_t::restore_hp))
-                {
-                    hp_heal = (1 + mons.get_experience_level()) / 2
-                            + random2(mons.get_experience_level() / 2);
-                }
-                if (you.has_mutation(MUT_DEVOUR_ON_KILL)
-                    && mons.holiness() & (MH_NATURAL | MH_PLANT)
-                    && coinflip())
-                {
-                    hp_heal += 1 + random2avg(1 + you.experience_level, 3);
-                }
-                if (have_passive(passive_t::restore_hp_mp_vs_evil))
-                {
-                    hp_heal = random2(1 + 2 * mons.get_experience_level());
-                    mp_heal = random2(2 + mons.get_experience_level() / 3);
-                }
-
-                if (have_passive(passive_t::mp_on_kill))
-                {
-                    mp_heal = 1 + random2(mons.get_experience_level() / 2);
-#if TAG_MAJOR_VERSION == 34
-                    if (you.religion == GOD_PAKELLAS)
-                        mp_heal = random2(2 + mons.get_experience_level() / 6);
-#endif
-                }
-
-                if (hp_heal && you.hp < you.hp_max
-                    && !you.duration[DUR_DEATHS_DOOR])
-                {
-                    canned_msg(MSG_GAIN_HEALTH);
-                    inc_hp(hp_heal);
-                }
-
-                if (mp_heal && you.magic_points < you.max_magic_points)
-                {
-                    int tmp = min(you.max_magic_points - you.magic_points,
-                                  mp_heal);
-                    canned_msg(MSG_GAIN_MAGIC);
-                    inc_mp(mp_heal);
-                    mp_heal -= tmp;
-                }
-
-#if TAG_MAJOR_VERSION == 34
-                // perhaps this should go to its own function
-                if (mp_heal
-                    && have_passive(passive_t::bottle_mp)
-                    && you.can_drink(false))
-                {
-                    simple_god_message(" collects the excess magic power.");
-                    you.attribute[ATTR_PAKELLAS_EXTRA_MP] -= mp_heal;
-
-                    if (you.attribute[ATTR_PAKELLAS_EXTRA_MP] <= 0
-                        && (feat_has_solid_floor(env.grid(you.pos()))
-                            || feat_is_watery(env.grid(you.pos()))
-                               && species::likes_water(you.species)))
-                    {
-                        int thing_created = items(true, OBJ_POTIONS,
-                                                  POT_MAGIC, 1, 0,
-                                                  GOD_PAKELLAS);
-                        if (thing_created != NON_ITEM)
-                        {
-                            move_item_to_grid(&thing_created, you.pos(), true);
-                            env.item[thing_created].quantity = 1;
-                            env.item[thing_created].flags |= ISFLAG_KNOW_TYPE;
-                            // not a conventional gift, but use the same
-                            // messaging
-                            simple_god_message(" grants you a gift!");
-                            you.attribute[ATTR_PAKELLAS_EXTRA_MP]
-                                += POT_MAGIC_MP;
-                        }
-                    }
-                }
-#endif
+                hp_heal += 1 + random2avg(1 + you.experience_level, 3);
             }
 
-            if (gives_real_xp && you_worship(GOD_RU) && you.piety < 200
+            if (can_divine_heal && have_passive(passive_t::restore_hp))
+            {
+                hp_heal += (1 + mons.get_experience_level()) / 2
+                        + random2(mons.get_experience_level() / 2);
+            }
+            if (can_divine_heal
+                && have_passive(passive_t::restore_hp_mp_vs_evil)
+                && mons.evil())
+            {
+                hp_heal += random2(1 + 2 * mons.get_experience_level());
+                mp_heal += random2(2 + mons.get_experience_level() / 3);
+            }
+            if (can_divine_heal && have_passive(passive_t::mp_on_kill))
+                mp_heal += 1 + random2(mons.get_experience_level() / 2);
+#if TAG_MAJOR_VERSION == 34
+            if (can_divine_heal && you_worship(GOD_PAKELLAS))
+                mp_heal += random2(2 + mons.get_experience_level() / 6);
+#endif
+
+            if (hp_heal && you.hp < you.hp_max
+                && !you.duration[DUR_DEATHS_DOOR])
+            {
+                canned_msg(MSG_GAIN_HEALTH);
+                inc_hp(hp_heal);
+            }
+
+#if TAG_MAJOR_VERSION > 34
+            if (mp_heal && you.magic_points < you.max_magic_points)
+            {
+                canned_msg(MSG_GAIN_MAGIC);
+                inc_mp(mp_heal);
+            }
+#elif TAG_MAJOR_VERSION == 34
+            if (mp_heal && you.magic_points < you.max_magic_points)
+            {
+                int tmp = min(you.max_magic_points - you.magic_points,
+                              mp_heal);
+                canned_msg(MSG_GAIN_MAGIC);
+                inc_mp(mp_heal);
+                mp_heal -= tmp;
+                _pakellas_excess_mp(mp_heal);
+            }
+#endif
+
+            if (gives_player_xp && you_worship(GOD_RU) && you.piety < 200
                 && one_chance_in(2))
             {
                 ASSERT(you.props.exists(RU_SACRIFICE_PROGRESS_KEY));
@@ -2040,14 +2215,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             }
 
             // Randomly bless a follower.
-            if (could_give_xp
+            if (gives_player_xp
                 && !mons_is_object(mons.type)
                 && _god_will_bless_follower(&mons))
             {
-                bless_follower(nullptr, you.religion, false, gives_real_xp);
+                bless_follower();
             }
 
-            if (could_give_xp
+            if (gives_player_xp
                 && !mons_is_object(mons.type)
                 && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
             {
@@ -2072,12 +2247,12 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (crawl_state.game_is_arena())
                 break;
 
-            _fire_kill_conducts(mons, killer, killer_index, gives_real_xp);
+            _fire_kill_conducts(mons, killer, killer_index, gives_player_xp);
 
             // Trying to prevent summoning abuse here, so we're trying to
             // prevent summoned creatures from being done_good kills. Only
             // affects creatures which were friendly when summoned.
-            if (!could_give_xp
+            if (!gives_player_xp
                 || !pet_kill
                 || !anon && invalid_monster_index(killer_index))
             {
@@ -2092,7 +2267,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 && _god_will_bless_follower(&mons))
             {
                 // Randomly bless the follower who killed.
-                bless_follower(killer_mon, you.religion, false, gives_real_xp);
+                bless_follower(killer_mon);
                 if (killer_mon->wearing_ego(EQ_ALL_ARMOUR, SPARM_MAYHEM))
                     _orb_of_mayhem(*killer_mon, mons);
             }
@@ -2118,7 +2293,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                     // Death Channel
                     else if (mons.type == MONS_SPECTRAL_THING)
                         simple_monster_message(mons, " fades into mist!");
-                    // Animate Skeleton/Animate Dead/Infestation
+                    // Necrotise/Animate Dead/Infestation
                     else if (mons.type == MONS_ZOMBIE
                              || mons.type == MONS_SKELETON
                              || mons.type == MONS_DEATH_SCARAB)
@@ -2355,37 +2530,35 @@ item_def* monster_die(monster& mons, killer_type killer,
     bool corpse_consumed = false;
     if (!was_banished && !mons_reset)
     {
-        if (mons.has_ench(ENCH_INFESTATION))
-            _infestation_create_scarab(&mons);
+        const bool in_los = you.see_cell(mons.pos());
+        const bool wretch = mons.props.exists(KIKU_WRETCH_KEY);
+        const bool corpseworthy = gives_player_xp || wretch;
 
-        // Yred worship and death channel aren't stronger than this enchantment
-        if (mons.has_ench(ENCH_BOUND_SOUL))
+        // no doubling up with death channel and yred.
+        // otherwise, death channel can work with other corpse-consuming spells.
+        if (in_los
+            && corpseworthy
+            && you.duration[DUR_DEATH_CHANNEL]
+            && !have_passive(passive_t::reaping))
         {
-            _make_derived_undead(&mons, !death_message, MONS_SIMULACRUM,
-                                 SAME_ATTITUDE(&mons),
-                                 SPELL_BIND_SOULS, GOD_NO_GOD);
-            corpse_consumed = true;
-        }
-        else if (was_visible && could_give_xp)
-        {
-            // no doubling up with yred and death channel
-            if (have_passive(passive_t::reaping))
-            {
-                if (yred_reap_chance())
-                    _yred_reap(mons, exploded);
-                corpse_consumed = true;
-            }
-            else if (you.duration[DUR_DEATH_CHANNEL])
-            {
-                _make_derived_undead(&mons, !death_message, MONS_SPECTRAL_THING,
-                                     BEH_FRIENDLY,
-                                     SPELL_DEATH_CHANNEL,
-                                     static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
-            }
+            _make_derived_undead(&mons, !death_message, MONS_SPECTRAL_THING,
+                                 BEH_FRIENDLY,
+                                 SPELL_DEATH_CHANNEL,
+                                 static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]));
         }
 
-        if (!corpse_consumed && coinflip() && _reaping(mons))
-            corpse_consumed = true;
+        corpse_consumed = _apply_necromancy(mons, !death_message, exploded,
+                                            in_los, corpseworthy);
+
+        // currently allowing this to stack with other death effects -hm
+        if (you.duration[DUR_CORPSE_ROT]
+            && in_los
+            && corpseworthy
+            && !have_passive(passive_t::goldify_corpses))
+        {
+            const int rot_pow = you.props[CORPSE_ROT_POWER_KEY].get_int();
+            _corpse_rot(mons, rot_pow);
+        }
     }
 
     if (!wizard && !submerged && !was_banished)
@@ -2413,13 +2586,13 @@ item_def* monster_die(monster& mons, killer_type killer,
     if (!mons.is_summoned() && mons.type == MONS_PHARAOH_ANT)
         _pharaoh_ant_bind_souls(&mons);
 
-    const unsigned int player_xp = could_give_xp
+    const unsigned int player_xp = gives_player_xp
         ? _calc_player_experience(&mons) : 0;
     const unsigned int monster_xp = _calc_monster_experience(&mons, killer,
                                                              killer_index);
 
     // Player Powered by Death
-    if (could_give_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
+    if (gives_player_xp && you.get_mutation_level(MUT_POWERED_BY_DEATH)
         && (killer == KILL_YOU
             || killer == KILL_YOU_MISSILE
             || killer == KILL_YOU_CONF
@@ -2495,8 +2668,11 @@ item_def* monster_die(monster& mons, killer_type killer,
         if (!silent && !wizard)
             _special_corpse_messaging(mons);
         // message ordering... :(
-        if (corpse->base_type == OBJ_CORPSES) // not gold
+        if (corpse->base_type == OBJ_CORPSES // not gold
+            && !mons.props.exists(KIKU_WRETCH_KEY))
+        {
             _maybe_drop_monster_organ(*corpse, silent);
+        }
     }
 
     ASSERT(mons.type != MONS_NO_MONSTER);

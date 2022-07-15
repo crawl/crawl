@@ -1118,9 +1118,14 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.real_hp_max, max_max_hp, "real_hp_max");
     _update_int(force_full, c.mp, you.magic_points, "mp");
     _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
+#if TAG_MAJOR_VERSION == 34
     _update_int(force_full, c.dd_real_mp_max,
                 you.species == SP_DEEP_DWARF ? get_real_mp(false) : 0,
                 "dd_real_mp_max");
+#else
+    // TODO: clean up the JS that uses this
+    _update_int(force_full, c.dd_real_mp_max, 0, "dd_real_mp_max");
+#endif
 
     _update_int(force_full, c.poison_survival, max(0, poison_survival()),
                 "poison_survival");
@@ -1629,6 +1634,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
             json_write_name("cloud");
             write_tileidx(next_pc.cloud);
         }
+
+        if (next_pc.icons != current_pc.icons)
+            json_write_icons(next_pc.icons);
 
         if (next_pc.is_bloody != current_pc.is_bloody)
             json_write_bool("bloody", next_pc.is_bloody);
@@ -2523,6 +2531,17 @@ void TilesFramework::json_write_comma()
     if (last == '{' || last == '[' || last == ',' || last == ':')
         return;
     write_message(",");
+}
+
+void TilesFramework::json_write_icons(const set<tileidx_t> &icons)
+{
+    json_open_array("icons");
+    for (const tileidx_t icon : icons)
+    {
+        json_write_comma(); // skipped for the first one
+        write_tileidx(icon);
+    }
+    json_close_array();
 }
 
 void TilesFramework::json_write_name(const string& name)

@@ -613,7 +613,7 @@ TAGS:     no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:   encompass
 MONS:     tengu conjurer / salamander tyrant / deep elf elementalist / \
           hell knight / rakshasa w:5 ; robe . wand of iceblast | \
-              wand of acid . trident ego:freezing | trident ego:flaming
+              any beam wand . trident ego:freezing | trident ego:flaming
 MONS:     fire dragon w:5 / fire dragon perm_ench:shapeshifter w:5 / \
           ice dragon w:5 / ice dragon perm_ench:shapeshifter w:5 / \
           very ugly thing w:20 / spark wasp / iron dragon / \

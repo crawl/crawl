@@ -941,7 +941,7 @@ FEATFN_MEMOIZED(feat_suppress_blood, feat)
     if (feat_is_tree(feat))
         return true;
 
-    if (feat == DNGN_DRY_FOUNTAIN)
+    if (feat == DNGN_DRY_FOUNTAIN || feat == DNGN_RUNELIGHT)
         return true;
 
     // covers shops and altars
@@ -2256,7 +2256,7 @@ vector<coord_def> get_push_spaces(const coord_def& pos, bool push_actor,
     if (push_actor)
     {
         act = actor_at(pos);
-        if (!act || act->is_stationary())
+        if (!act || act->is_stationary() || act->resists_dislodge())
             return results;
     }
 

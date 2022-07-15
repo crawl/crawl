@@ -372,7 +372,14 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (you.type_ids[i][j] != unknown_items) // logical xor
+            const bool known = you.type_ids[i][j];
+
+            // Don't show items the player knows can't generate.
+            // (unless they *have* generated, ha...)
+            if (!known && item_known_excluded_from_set((object_class_type)i, j))
+                continue;
+
+            if (known != unknown_items) // logical xor
                 _add_fake_item(i, j, selected_items, items, !unknown_items);
             else
                 all_items_known = false;
@@ -429,6 +436,11 @@ void check_item_knowledge(bool unknown_items)
             }
             _add_fake_item(OBJ_MISCELLANY, i, selected_items, items_misc);
         }
+
+        // N.b. NUM_BOOKS drastically exceeds MAX_SUBTYPES, but it doesn't
+        // matter for force_autopickup purposes because we only use 0 and
+        // BOOK_MANUAL
+        COMPILE_CHECK(BOOK_MANUAL < MAX_SUBTYPES);
 
         // Misc.
         static const pair<object_class_type, int> misc_list[] =

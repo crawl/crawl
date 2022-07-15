@@ -481,6 +481,8 @@ string no_selectables_message(int item_selector)
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return "You aren't wearing any piece of uncursed jewellery.";
 #endif
+    case OSEL_WORN_ARMOUR:
+        return "You aren't wearing any pieces of armour.";
     case OSEL_BRANDABLE_WEAPON:
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
@@ -1116,7 +1118,8 @@ bool item_is_selected(const item_def &i, int selector)
                    || i.plus < MAX_WPN_ENCHANT);
 
     case OSEL_BLESSABLE_WEAPON:
-        return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
+        return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE)
+                                                                          || you_worship(GOD_KIKUBAAQUDGHA), true);
 
     case OSEL_BEOGH_GIFT:
         return (itype == OBJ_WEAPONS

@@ -70,18 +70,16 @@
 
       elseif s == "B" then i = { "bardiche", "battleaxe",
        "book of burglary", "box of beasts", "book of blasting",
-       "book of blood",
+       "book of blood", "buckler", "boomerang",
        "broad axe", "pair of boots", "potion of berserk rage",
        "potion of brilliance",
-       "scroll of blinking", "scroll of brand weapon",
-       "manual of bows", "buckler", "boomerang" }
+       "scroll of blinking", "scroll of brand weapon" }
 
       elseif s == "C" then i = { "book of callings", "book of cantrips",
        "club", "book of changes", "book of conjurations",
        "chain mail", "cloak", "crystal plate armour", "potion of cancellation",
        "staff of cold", "staff of conjuration", "book of callings",
-       "book of chaos",
-       "manual of crossbows", "manual of conjurations",
+       "book of chaos", "manual of conjurations",
        "potion of curing", "condenser vane", "wand of charming" }
 
       elseif s == "D" then i = { "book of death", "book of debilitation",
@@ -101,8 +99,7 @@
        "book of frost", "falchion", "fire dragon scales", "potion of flight",
        "ring of fire", "scroll of fear", "staff of fire", "fen folio",
        "ring of flight", "scroll of fog", "wand of flame",
-       "manual of fighting", "amulet of faith", "manual of fire magic",
-       "fustibalus" }
+       "manual of fighting", "amulet of faith", "manual of fire magic" }
 
       elseif s == "G" then i = { "amulet of guardian spirit", "giant club",
        "giant spiked club", "book of geomancy",
@@ -111,8 +108,8 @@
        "great wizards, vol. vii" }
 
       elseif s == "H" then i = { "halberd", "hand axe",
-       "hand crossbow", "hunting sling", "potion of heal wounds",
-       "potion of haste", "scroll of holy word", "manual of hexes", "hat",
+       "hand crossbow", "potion of heal wounds",
+       "potion of haste", "manual of hexes", "hat",
        "helmet", "book of hexes", "book of the hunter" }
 
       elseif s == "I" then i = { "ring of ice",
@@ -127,7 +124,7 @@
 
       elseif s == "L" then i = { "manual of long blades", "large rock",
        "leather armour", "long sword", "potion of lignification", "lajatang",
-       "longbow", "lightning rod", "book of lightning" }
+       "longbow", "lightning rod", "book of lightning", "wand of light" }
 
       elseif s == "M" then i = { "manual of maces & flails",
        "book of minor magic", "book of misfortune", "book of maledictions",
@@ -145,13 +142,14 @@
        "plate armour", "ring of poison resistance", "manual of polearms",
        "wand of polymorph", "ring of positive energy", "ring of protection",
        "manual of poison magic", "wand of paralysis",
-       "ring of protection from fire", "staff of poison",
-       "ring of protection from cold", "book of pain" }
+       "ring of protection from fire", "staff of poison", "scroll of poison",
+       "ring of protection from cold" }
 
       elseif s == "Q" then i = { "quarterstaff", "quicksilver dragon scales",
        "quick blade" }
 
       elseif s == "R" then i = { "amulet of reflection",
+       "manual of ranged weapons", "wand of roots",
        "amulet of regeneration", "rapier", "ring of resist corrosion",
        "potion of resistance", "robe", "ring mail", "book of rime" }
 
@@ -159,10 +157,10 @@
        "scale mail", "book of storms", "book of the sky",
        "ring of see invisible", "ring of slaying", "spear",
        "ring of strength", "manual of stealth", "scroll of summoning",
-       "scythe", "book of spatial translocations", "scroll of silence",
+       "book of spatial translocations", "scroll of silence",
        "shortbow", "manual of staves", "steam dragon scales",
        "shadow dragon scales", "storm dragon scales", "swamp dragon scales",
-       "manual of short blades", "manual of slings", "manual of shields",
+       "manual of short blades", "manual of shields", "sling",
        "manual of spellcasting", "manual of summonings", "stone",
        "book of storms", "book of sloth", "book of the senses",
        "book of spectacle", "book of the spheres", "book of scorching" }

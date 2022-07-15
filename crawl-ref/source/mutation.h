@@ -10,6 +10,7 @@
 
 #include "equipment-type.h"
 #include "mutation-type.h"
+#include "externs.h"
 
 using std::vector;
 
@@ -91,5 +92,7 @@ void reset_powered_by_death_duration();
 
 bool delete_all_temp_mutations(const string &reason);
 bool delete_temp_mutation();
+
+tileidx_t get_mutation_tile(mutation_type mut);
 
 void set_evolution_mut_xp(bool malignant);

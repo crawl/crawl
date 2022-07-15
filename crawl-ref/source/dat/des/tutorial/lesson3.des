@@ -121,7 +121,7 @@ ITEM:    cloak_of_starlight
 ITEM:    wand of flame charges:9 ident:all
 ITEM:    wand of digging charges:15 ident:all
 ITEM:    amulet of faith
-MONS:    goblin ; hunting sling ego:none . stone q:30 . dagger \
+MONS:    goblin ; sling ego:none . stone q:30 . dagger \
          ego:none
 MONS:    gnoll ; spear mundane
 MARKER:  A = lua:tutorial3.msg("trap")

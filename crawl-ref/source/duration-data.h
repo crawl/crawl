@@ -8,13 +8,6 @@
 #include "god-passive.h"
 #include "tag-version.h"
 
-static void _end_weapon_brand()
-{
-    you.duration[DUR_EXCRUCIATING_WOUNDS] = 1;
-    ASSERT(you.weapon());
-    end_weapon_brand(*you.weapon(), true);
-}
-
 static void _end_invis()
 {
     if (you.invisible())
@@ -36,6 +29,19 @@ static void _end_death_channel()
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_SPECTRAL_THING && mi->summoner == MID_PLAYER)
+        {
+            mon_enchant abj = mi->get_ench(ENCH_FAKE_ABJURATION);
+            abj.duration = 0;
+            mi->update_ench(abj);
+        }
+    }
+}
+
+static void _end_animate_dead()
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_ZOMBIE && mi->summoner == MID_PLAYER)
         {
             mon_enchant abj = mi->get_ench(ENCH_FAKE_ABJURATION);
             abj.duration = 0;
@@ -107,8 +113,10 @@ struct duration_def
     duration_type dur;
     int    light_colour; ///< Base colour for status light.
     const char *light_text; ///< Text for the status light.
-    const char *short_text; ///< Text for @ line on the % screen and morgues.
-                            ///< Should be an adjective.
+    const char *short_text; ///< Adjective text for cancellation potion
+                            ///< descriptions (e.g. "If you drink this now, you
+                            ///< will no longer be swift/mighty/on fire.") Also
+                            ///< used for the @ line on the % screen and morgue.
     const char *name_text;  ///< Text used in wizmode &^D. If empty, use the
                             ///< short_text.
     const char *long_text;  ///< Text for the @ message.
@@ -570,6 +578,18 @@ static const duration_def duration_data[] =
       "on blink cooldown", "blink cooldown",
       "You are unable to blink.", D_NO_FLAGS,
       {{ "You feel stable enough to blink again."}}},
+    { DUR_ANIMATE_DEAD,
+      MAGENTA, "Reap",
+      "animating dead", "animating dead",
+      "You are reanimating the dead.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your reaping aura expires.", _end_animate_dead },
+      { "Your reaping aura is weakening.", 1 }}, 6},
+    { DUR_CORPSE_ROT,
+      MAGENTA, "Rot",
+      "producing miasma", "corpse rot",
+      "You are producing miasma from the slain.", D_DISPELLABLE | D_EXPIRES,
+      {{ "Your miasmic aura fades." },
+      { "Your miasmic aura is weakening.", 1 }}, 6},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -586,8 +606,6 @@ static const duration_def duration_data[] =
     { DUR_POISONING, 0, "", "", "poisoning", "", D_NO_FLAGS},
     { DUR_PIETY_POOL, 0, "", "", "piety pool", "", D_NO_FLAGS},
     { DUR_TRANSFORMATION, 0, "", "", "transformation", "", D_DISPELLABLE /*but special-cased*/, {}, 10},
-    { DUR_EXCRUCIATING_WOUNDS, 0, "", "", "excruciating wounds", "", D_DISPELLABLE,
-      {{ "", _end_weapon_brand }}},
     { DUR_DEMONIC_GUARDIAN, 0, "", "", "demonic guardian", "", D_NO_FLAGS, {{""}}},
     { DUR_POWERED_BY_DEATH, 0, "", "", "pbd", "", D_NO_FLAGS},
         { DUR_REPEL_STAIRS_MOVE, 0, "", "", "repel stairs move", "", D_NO_FLAGS, {{""}}},
@@ -682,5 +700,6 @@ static const duration_def duration_data[] =
     { DUR_LIFESAVING, 0, "", "", "old lifesaving", "", D_NO_FLAGS},
     { DUR_MIRROR_DAMAGE, 0, "", "", "old injury mirror", "", D_NO_FLAGS},
     { DUR_SHAFT_IMMUNITY, 0, "", "", "old shaft immunity", "", D_NO_FLAGS, {{""}}},
+    { DUR_EXCRUCIATING_WOUNDS, 0, "", "", "old excruciating wounds", "", D_NO_FLAGS },
 #endif
 };

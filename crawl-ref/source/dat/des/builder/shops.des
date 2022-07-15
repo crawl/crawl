@@ -514,7 +514,7 @@ TAGS:    no_monster_gen transparent
 DEPTH:   D:4-, Depths
 MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
-         w:8 dart ego:poisoned | w:4 dart ego:curare | \
+         w:8 dart ego:poisoned | w:4 dart ego:curare | w:5 scroll of poison | \
          w:3 ring of poison resistance | w:6 randbook disc:poison | \
          w:2 staff of poison | w:4 any weapon ego:venom | \
          w:4 any armour ego:poison_resistance | w:1 swamp dragon scales
@@ -540,7 +540,7 @@ KMONS:   2 = stone giant / catoblepas / deep troll earth mage / boulder beetle /
              iron dragon w:4
 ITEM:    stone
 KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
-         w:15 stone | w:15 large rock | w:8 hunting sling | w:1 fustibalus | \
+         w:15 stone | w:15 large rock | w:8 sling | \
          w:7 tin of tremorstones | w:8 wand of digging | \
          w:5 randbook disc:earth | w:2 book of the earth | \
          w:2 book of geomancy | w:2 book of iron | w:2 book of the moon | \
@@ -597,7 +597,7 @@ SUBST: G : YlG
 :   any weapon ego:vampirism | any weapon ego:chaos w:1 | demon blade w:5 | \
 :   demon trident w:5 | demon whip w:5 | scroll of torment | staff of death | \
 :   book of necromancy | book of death | book of unlife | \
-:   book of pain | book of decay | \
+:   book of decay | \
 :   randbook disc:necromancy w:5 | necronomicon w:1 | grand grimoire w:1 | \
 :   sceptre_of_torment w:1 | scythe_of_curses w:1 | majin-bo w:1 | \
 :   black_knights_barding w:1 | obsidian_axe w:1 | damnation w:1 | \
@@ -623,9 +623,8 @@ SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | \
    boomerang ego:silver w:2 | javelin ego:silver w:2 | \
-   any weapon ego:holy_wrath | scroll of holy word |\
-   amulet of faith w:2 | ring of positive energy w:5 |\
-   any armour ego:positive_energy w:5
+   any weapon ego:holy_wrath | any armour ego:positive_energy w:5 |\
+   amulet of faith w:2 | ring of positive energy w:5
 : if not you.in_branch("D") then
 KFEAT: _ = altar_the_shining_one / altar_zin / altar_elyvilon
 : end
@@ -676,9 +675,9 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of conjurations | book of power | book of annihilations | \
    book of blasting |\
    randbook disc:conjuration | book of storms | book of lightning | \
-   wand of iceblast | wand of flame | wand of mindburst | \
-   condenser vane | staff of conjuration | \
-   wand of acid | lightning rod | phial of floods | scroll of immolation | \
+   any blast wand | wand of flame | wand of mindburst | \
+   condenser vane | staff of conjuration | any beam wand | \
+   lightning rod | phial of floods | scroll of immolation | \
    book of flames | book of fire | book of air | manual of conjurations | \
    manual of evocations
 FTILE: ' = floor_rough_red
@@ -706,6 +705,8 @@ KPROP: l = no_cloud_gen
 MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
             pow_min = 100, pow_max = 100, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
+# XXX: we should replace iceblast with something else when it's not
+# in this game's chosen item set.
 {{
   local evocables = {"wand of flame","wand of iceblast",
                      "lightning rod","tin of tremorstones"}
@@ -833,7 +834,7 @@ KFEAT:  S = weapon shop type:Hydra suffix:Hut count:7 ; falchion ego:flaming | \
     long sword ego:flaming | scimitar ego:flaming | great sword ego:flaming | \
     hand axe ego:flaming | broad axe ego:flaming | war axe ego:flaming | \
     battleaxe ego:flaming | lajatang ego:flaming | halberd ego:flaming | \
-    scythe ego:flaming | glaive ego:flaming | hand crossbow ego:freezing | \
+    glaive ego:flaming | hand crossbow ego:freezing | \
     arbalest ego:freezing | shortbow ego:freezing | longbow ego:freezing
 FTILE:  -1wP = floor_lair
 COLOUR: -1 = brown
@@ -865,7 +866,7 @@ KFEAT:   S = general shop type:Lightly-Used suffix:Armoury ; \
              damaged ego:none demon trident | \
              damaged ego:none bardiche | \
              damaged ego:none lajatang | \
-             damaged ego:none fustibalus | \
+             damaged ego:none hand crossbow | \
              damaged ego:none triple crossbow | \
              damaged ego:none longbow | \
              damaged ego:none crystal plate armour | \
@@ -1002,7 +1003,7 @@ KFEAT:  S = general shop type:Last-Chance suffix:Deals greed:0 count:7 ; \
  any ring randart w:15 | any amulet randart w:15 | quick blade randart | \
  pearl dragon scales randart | executioner's axe randart | \
  triple sword randart | triple crossbow randart | longbow randart | \
- fustibalus randart | bardiche randart | eveningstar randart | \
+ hand crossbow randart | bardiche randart | eveningstar randart | \
  crystal plate armour randart | any armour good_item randart w:50
 MAP
   t
@@ -1049,11 +1050,9 @@ KITEM:  E = throwing net q:1
 # Launchers are weighted so they have the same total weight as the projectiles.
 # The slightly-higher weights go to the better weapons, because I'm nice.
 KFEAT:  S = weapon shop type:Firing suffix:Range ; dart w:14 | \
-        throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 | \
-        hunting sling | fustibalus | shortbow | longbow | \
-        hand crossbow | arbalest | triple crossbow | \
-        manual of throwing w:1 | manual of slings w:1 | manual of bows w:1 | \
-        manual of crossbows w:1
+        throwing net w:14 | boomerang  w:14 | javelin w:14 | large rock w:14 \
+        | sling | shortbow | longbow | hand crossbow | arbalest | \
+        triple crossbow | manual of throwing w:1 | manual of ranged weapons w:1
 NSUBST: D = E / D
 SUBST:  ' = H .:25
 MAP
@@ -1087,8 +1086,8 @@ NAME:    nicolae_shop_overcharged_wands
 TAGS:    transparent
 DEPTH:   D:4-, Depths, Orc, Elf, Shoals, Snake, Vaults
 KFEAT:   S = general shop type:Overcharged suffix:Wands greed:15 count:6 ; \
-         wand of digging charges:11 | wand of iceblast charges:18 | \
-         wand of acid charges:18 | wand of charming charges:18 | \
+         wand of digging charges:11 | any blast wand charges:18 | \
+         any beam wand charges:18 | wand of charming charges:18 | \
          wand of paralysis charges:18 | wand of polymorph charges:18 | \
          wand of mindburst charges:30 | wand of flame charges:40
 SHUFFLE: bv/bc/cv/bm/vm/cm
@@ -1300,6 +1299,40 @@ xx'''NbWbb..xx
  xx...bb...xx
   xx......xx
    xxxxxxxx
+ENDMAP
+
+# Now that most predefined books have been cut back to 3 spells,
+# there is a growing market for spellbooks with a little more thickness.
+NAME:   nicolae_shop_i_like_big_books
+TAGS:   transparent extra
+DEPTH:  D:4-, Depths, Elf, Snake
+KFEAT:  S = book shop type:Tremendous suffix:Tomes count:8 ; \
+            any randbook numspells:8
+KFEAT:  p = c
+COLOUR: p : blue / red / magenta / lightgreen / lightred / lightmagenta / yellow
+MAP
+...........
+.pppppppp..
+.cccccccpp.
+.......ccp.
+.......Scp.
+.......ccp.
+.cccccccpp.
+.pppppppp..
+...........
+ENDMAP
+
+NAME:  nicolae_shop_vocational
+TAGS:  transparent
+DEPTH: D, Depths, Orc, Elf, Shoals, Snake, Vaults
+KFEAT: S = book shop type:Vocational suffix:Training count:2 use_all ; \
+           manual of invocations | manual of evocations
+MAP
+.......
+.T...T.
+...S...
+.T...T.
+.......
 ENDMAP
 
 ###############################################################################

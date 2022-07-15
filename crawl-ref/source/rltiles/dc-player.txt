@@ -2,7 +2,6 @@
 %startvalue TILE_MAIN_MAX main
 %prefix TILEP
 
-%include dc-demon.txt
 %include dc-mon.txt
 
 effect/net_trap TRAP_NET
@@ -41,21 +40,6 @@ halfling_m HALFLING
 halfling_f
 orc_f ORC
 orc_m
-%rim 0
-lorc_m0 LAVA_ORC
-lorc_f0
-lorc_m1 LAVA_ORC_HEAT
-lorc_m2
-lorc_m3
-lorc_m4
-lorc_m5
-lorc_m6
-lorc_f1
-lorc_f2
-lorc_f3
-lorc_f4
-lorc_f5
-lorc_f6
 %rim 1
 kobold_m KOBOLD
 kobold_f
@@ -75,6 +59,8 @@ naga_red_f
 naga_red_m
 ogre_m OGRE
 ogre_f
+meteoran_f METEORAN
+meteoran_m
 troll_f TROLL
 troll_m
 octopode1 OCTOPODE
@@ -144,8 +130,6 @@ merfolk_water_f MERFOLK_WATER
 merfolk_water_m
 vampire_f VAMPIRE
 vampire_m
-deep_dwarf_m DEEP_DWARF
-deep_dwarf_f
 gargoyle_m GARGOYLE
 gargoyle_f
 gargoyle_red_m
@@ -538,6 +522,7 @@ finisher FINISHER
 glaive_of_the_guard GLAIVE_OF_THE_GUARD
 wyrmbane WYRMBANE
 rift RIFT
+lochaber_axe LOCHABER_AXE
 ## staves
 elemental_staff ELEMENTAL_STAFF
 asmodeus ASMODEUS
@@ -556,6 +541,7 @@ blowgun_assassin BLOWGUN_ASSASSIN
 punk PUNK
 sniper SNIPER
 crossbow_fire FIERY_DEVIL
+condemnation CONDEMNATION
 zephyr ZEPHYR
 sceptre_of_torment SCEPTRE_OF_TORMENT
 # start TAG_MAJOR_VERSION == 34
@@ -631,6 +617,10 @@ morningstar MORNINGSTAR
 morningstar2
 eveningstar EVENINGSTAR
 eveningstar2
+hammer HAMMER
+hammer2
+hammer_one HAMMER1
+hammer_two HAMMER2
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
 sacred_scourge SACRED_SCOURGE
@@ -742,8 +732,7 @@ axe_blood AXE_BLOOD
 axe_short AXE_SHORT
 
 ## launchers
-sling HUNTING_SLING
-fustibalus FUSTIBALUS
+sling SLING
 bow BOW
 bow_two BOW2
 bow_three BOW3
@@ -1156,6 +1145,7 @@ hood_ybrown HOOD_YBROWN
 hood_green HOOD_GREEN
 ninja_black MASK_NINJA_BLACK
 hood_purple HOOD_PURPLE
+hood_assassin HOOD_ASSASSIN
 %end_ctg
 
 # draconian wings and heads, need same order as draconians

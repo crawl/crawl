@@ -202,11 +202,6 @@ static const map<spschool, miscast_datum> miscast_effects = {
             },
             [] (actor& target, actor* source, miscast_source_info /*mc_info*/,
                 int dam, string /*cause*/) {
-                if (target.is_player())
-                    debuff_player();
-                else
-                    debuff_monster(*target.as_monster());
-
                 target.slow_down(source, dam);
             }
         },

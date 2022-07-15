@@ -869,6 +869,8 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
                     [] (const item_def & item) { return item.name(DESC_A); },
                     " and ", ", ", bind(item_needs_autopickup, placeholders::_1,
                                         false));
+            // XX [A] doesn't make sense for items being picked up only because
+            // of an =g inscription
             const string prompt =
                 make_stringf("Could not pick up %s here; ([A]lways) ignore %s?",
                              wishlist.c_str(),
@@ -1116,6 +1118,22 @@ command_type travel()
                 return CMD_GO_UPSTAIRS;
             }
         }
+
+// #define DEBUG_EXPLORE
+#ifdef DEBUG_EXPLORE
+        if (you.running.pos == you.pos())
+        {
+            mprf("Stopping explore at target %d,%d", you.running.pos.x, you.running.pos.y);
+            stop_running();
+            return CMD_NO_CMD;
+        }
+        else if (!_is_valid_explore_target(you.running.pos))
+        {
+            mprf("Stopping explore; everything in los of %d,%d is mapped", you.running.pos.x, you.running.pos.y);
+            stop_running();
+            return CMD_NO_CMD;
+        }
+#endif
 
         // Speed up explore by not doing a double-floodfill if we have
         // a valid target.
@@ -1585,7 +1603,8 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 
         // The addition of explore_wall_bias makes items as interesting
         // as a room's perimeter (with one of four known adjacent walls).
-        if (Options.explore_wall_bias)
+        // XX why?
+        if (Options.explore_wall_bias > 0)
             dist += Options.explore_wall_bias * 3;
 
         greedy_dist = dist;
@@ -1645,22 +1664,39 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
                 if (Options.explore_wall_bias)
                 {
-                    dist += Options.explore_wall_bias * 4;
+                    // if we are penalizing open space, introduce a default
+                    // penalty of 4 walls and then downweight that. If we are
+                    // penalizing walls, just add on for each wall.
+                    if (Options.explore_wall_bias > 0)
+                        dist += Options.explore_wall_bias * 8;
 
                     // Favour squares directly adjacent to walls
-                    for (int dir = 0; dir < 8; dir += 2)
+                    // XX for some reason, historically this only looked at
+                    // cardinal directions. Why?
+                    for (int dir = 0; dir < 8; dir++)
                     {
                         const coord_def ddc = dc + Compass[dir];
 
                         if (feat_is_wall(env.map_knowledge(ddc).feat()))
                             dist -= Options.explore_wall_bias;
                     }
+
+                    if (Options.explore_wall_bias < 0 &&
+                        feat_is_wall(env.map_knowledge(dc).feat()))
+                    {
+                        // further penalize cases where the unseen square dc
+                        // is itself a wall
+                        dist -= Options.explore_wall_bias;
+                    }
                 }
 
                 // Replace old target if nearer (or less penalized)
+                // don't let dist get < 0
                 if (dist < unexplored_dist || unexplored_dist < 0)
                 {
                     unexplored_dist = dist;
+                    // somewhat confusing: `c` is probably actually explored,
+                    // but is adjacent to the good place we just found.
                     unexplored_place = c;
                 }
             }
@@ -4738,6 +4774,11 @@ void explore_discoveries::found_feature(const coord_def &pos,
             return;
         }
     }
+    else if (feat == DNGN_RUNELIGHT)
+    {
+        runelights.emplace_back(cleaned_feature_description(pos), 1);
+        es_flags |= ES_RUNELIGHT;
+    }
 }
 
 void explore_discoveries::add_stair(
@@ -4911,6 +4952,7 @@ bool explore_discoveries::stop_explore() const
     say_any(apply_quantities(stairs), "stair");
     say_any(apply_quantities(transporters), "transporter");
     say_any(apply_quantities(runed_doors), "runed door");
+    say_any(apply_quantities(runelights), "runelights");
 
     return true;
 }

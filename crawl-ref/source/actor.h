@@ -5,6 +5,7 @@
 #include "artefact-prop-type.h"
 #include "beam-type.h"
 #include "conduct-type.h"
+#include "constrict-type.h"
 #include "energy-use-type.h"
 #include "equipment-type.h"
 #include "god-type.h"
@@ -210,6 +211,7 @@ public:
     virtual void acid_corrode(int acid_strength) = 0;
     virtual bool corrode_equipment(const char* corrosion_source = "the acid",
                                    int degree = 1) = 0;
+    virtual bool resists_dislodge(string /*event*/ = "") const { return false; };
 
     virtual bool can_hibernate(bool holi_only = false,
                                bool intrinsic_only = false) const;
@@ -326,7 +328,7 @@ public:
     //            and has a halo, returns false; so if you have a
     //            halo you're not affected by others' halos for this
     //            purpose)
-    virtual bool backlit(bool self_halo = true) const = 0;
+    virtual bool backlit(bool self_halo = true, bool temp = true) const = 0;
     virtual bool umbra() const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;
@@ -394,19 +396,19 @@ public:
                                         bool quiet = false);
     void stop_being_constricted(bool quiet = false);
 
-    bool can_constrict(const actor* defender, bool direct,
-                       bool engulf = false) const;
+    bool can_constrict(const actor &defender, constrict_type typ) const;
+    bool can_engulf(const actor &defender) const;
     bool has_invalid_constrictor(bool move = false) const;
     void clear_invalid_constrictions(bool move = false);
     void accum_has_constricted();
     void handle_constriction();
     bool is_constricted() const;
-    bool is_directly_constricted() const;
+    constrict_type get_constrict_type() const;
     bool is_constricting() const;
     int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
-    virtual int constriction_damage(bool direct) const = 0;
-    virtual bool constriction_does_damage(bool direct) const = 0;
+    virtual int constriction_damage(constrict_type typ) const = 0;
+    virtual bool constriction_does_damage(constrict_type typ) const;
     virtual bool clear_far_engulf(bool force = false) = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.

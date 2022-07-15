@@ -973,7 +973,7 @@ Curse-Bearer
 Soothsayer
 
 Unmoving One
-%%%
+%%%%
 _ashenzari_heavens_
 
 Cosmos

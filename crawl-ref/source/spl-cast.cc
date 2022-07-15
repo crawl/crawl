@@ -393,9 +393,6 @@ int raw_spell_fail(spell_type spell)
                       / 262144, 0);
 
     chance2 += get_form()->spellcasting_penalty;
-    if (you.duration[DUR_EXCRUCIATING_WOUNDS])
-        chance2 += 10; // same as spider form
-
     chance2 -= 2 * you.get_mutation_level(MUT_SUBDUED_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * you.get_mutation_level(MUT_ANTI_WIZARDRY);
@@ -690,13 +687,18 @@ static void _handle_channeling(int cost)
 
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 
+    const int skillcheck = you.skill(SK_EVOCATIONS) - cost;
+
     // The chance of backfiring goes down with evo skill and up with cost.
-    if (!one_chance_in(max(you.skill(SK_EVOCATIONS) - cost, 1)))
+    if (!one_chance_in(max(skillcheck, 1)))
     {
         mpr("Magical energy flows into your mind!");
         inc_mp(cost, true);
         return;
     }
+
+    if (skillcheck <= 1)
+        mprf(MSGCH_WARN, "You lack the skill to channel this much energy!");
 
     mpr(random_choose("Weird images run through your mind.",
                       "Your head hurts.",
@@ -1037,14 +1039,6 @@ static void _spellcasting_side_effects(spell_type spell, god_type god,
 
     if (god == GOD_NO_GOD)
     {
-        // Casting pain costs 1 hp.
-        // Deep Dwarves' damage reduction always blocks at least 1 hp.
-        if (spell == SPELL_PAIN
-            && (you.species != SP_DEEP_DWARF && !you.res_torment()))
-        {
-            dec_hp(1, false);
-        }
-
         if (you.duration[DUR_SAP_MAGIC] && !fake_spell)
         {
             mprf(MSGCH_WARN, "You lose access to your magic!");
@@ -1206,25 +1200,15 @@ static vector<coord_def> _simple_find_all_hostiles()
     return result;
 }
 
-// wrapper around the simulacrum corpse check
-static vector<coord_def> _find_simulacrable_corpses(const coord_def &c)
-{
-    vector<coord_def> result;
-    if (find_simulacrable_corpse(c) >= 0)
-        result.push_back(c);
-    return result;
-}
-
 // TODO: refactor into target.cc, move custom classes out of target.h
 unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
 {
     switch (spell)
     {
     case SPELL_FIREBALL:
-        return make_unique<targeter_beam>(&you, range, ZAP_FIREBALL, pow,
-                                          1, 1);
     case SPELL_ICEBLAST:
-        return make_unique<targeter_beam>(&you, range, ZAP_ICEBLAST, pow,
+    case SPELL_FASTROOT:
+        return make_unique<targeter_beam>(&you, range, spell_to_zap(spell), pow,
                                           1, 1);
     case SPELL_HURL_DAMNATION:
         return make_unique<targeter_beam>(&you, range, ZAP_HURL_DAMNATION, pow,
@@ -1274,8 +1258,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, range, 0, 1);
     case SPELL_STARBURST:
         return make_unique<targeter_starburst>(&you, range, pow);
-    case SPELL_CORPSE_ROT:
-        return make_unique<targeter_corpse_rot>();
     case SPELL_IRRADIATE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
@@ -1293,7 +1275,9 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_maybe_radius>(&you, LOS_SOLID_SEE, range,
                                                   0, 1);
     case SPELL_INNER_FLAME:
-        return make_unique<targeter_smite>(&you, range);
+        return make_unique<targeter_inner_flame>(&you, range);
+    case SPELL_SIMULACRUM:
+        return make_unique<targeter_simulacrum>(&you, range);
     case SPELL_LEDAS_LIQUEFACTION:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS,
                                             liquefaction_max_range(pow),
@@ -1317,7 +1301,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_CONJURE_FLAME:
-    case SPELL_EXCRUCIATING_WOUNDS:
     case SPELL_PORTAL_PROJECTILE:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
@@ -1373,12 +1356,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUMMON_FOREST:
         return make_unique<targeter_radius>(&you, LOS_NO_TRANS, LOS_RADIUS, 0, 2);
 
-    case SPELL_ANIMATE_SKELETON:
-        return make_unique<targeter_multiposition>(&you, find_animatable_skeletons(you.pos()), AFF_MAYBE);
-    case SPELL_ANIMATE_DEAD:
-        return make_unique<targeter_multiposition>(&you, simple_find_corpses(), AFF_YES);
-    case SPELL_SIMULACRUM:
-        return make_unique<targeter_multiposition>(&you, _find_simulacrable_corpses(you.pos()), AFF_YES);
     case SPELL_BLINK:
         return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case SPELL_MANIFOLD_ASSAULT:
@@ -2154,9 +2131,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_FREEZE:
         return cast_freeze(powc, monster_at(target), fail);
 
-    case SPELL_SANDBLAST:
-        return cast_sandblast(powc, beam, fail);
-
     case SPELL_IOOD:
         return cast_iood(&you, powc, &beam, 0, 0, MHITNOT, fail);
 
@@ -2292,14 +2266,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_SUMMON_FOREST:
         return cast_summon_forest(&you, powc, god, fail);
 
-    case SPELL_ANIMATE_SKELETON:
-        return cast_animate_skeleton(powc, god, fail);
-
     case SPELL_ANIMATE_DEAD:
-        return cast_animate_dead(powc, god, fail);
-
-    case SPELL_SIMULACRUM:
-        return cast_simulacrum(powc, god, fail);
+        return cast_animate_dead(powc, fail);
 
     case SPELL_HAUNT:
         return cast_haunt(powc, beam.target, god, fail);
@@ -2344,8 +2312,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BORGNJORS_VILE_CLUTCH:
         return cast_vile_clutch(powc, beam, fail);
 
-    case SPELL_EXCRUCIATING_WOUNDS:
-        return cast_excruciating_wounds(powc, fail);
+    case SPELL_CORPSE_ROT:
+        return cast_corpse_rot(powc, fail);
 
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:
@@ -2416,9 +2384,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_MANIFOLD_ASSAULT:
         return cast_manifold_assault(powc, fail);
 
-    case SPELL_CORPSE_ROT:
-        return cast_corpse_rot(powc, fail);
-
     case SPELL_GOLUBRIAS_PASSAGE:
         return cast_golubrias_passage(powc, beam.target, fail);
 
@@ -2433,6 +2398,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_INNER_FLAME:
         return cast_inner_flame(spd.target, powc, fail);
+
+    case SPELL_SIMULACRUM:
+        return cast_simulacrum(spd.target, powc, fail);
 
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
@@ -2459,6 +2427,10 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // because they will crash as a player zap).
     case SPELL_DRAIN_LIFE:
         return spret::none;
+
+    case SPELL_SANDBLAST:
+        you.time_taken *= 2;
+        break; // fallthrough to zaps
 
     default:
         if (spell_removed(spell))
@@ -2586,7 +2558,7 @@ const char *fail_severity_adjs[] =
     "dangerous",
     "quite dangerous",
     "extremely dangerous",
-    "potentially lethal",
+    "astonishingly dangerous",
 };
 COMPILE_CHECK(ARRAYSZ(fail_severity_adjs) > 3);
 
@@ -2763,11 +2735,21 @@ string spell_damage_string(spell_type spell, bool evoked)
     switch (spell)
     {
         case SPELL_MAXWELLS_COUPLING:
-            return "∞";
+            return Options.char_set == CSET_ASCII ? "death" : "\u221e"; //"∞"
         case SPELL_CONJURE_FLAME:
             return desc_cloud_damage(CLOUD_FIRE, false);
         case SPELL_FREEZING_CLOUD:
             return desc_cloud_damage(CLOUD_COLD, false);
+        case SPELL_DISCHARGE:
+        {
+            int max = discharge_max_damage(_spell_power(spell, evoked));
+            return make_stringf("%d-%d/arc", FLAT_DISCHARGE_ARC_DAMAGE, max);
+        }
+        case SPELL_AIRSTRIKE:
+        {
+            int max = airstrike_base_max_damage(_spell_power(spell, evoked));
+            return make_stringf("0-%d+", max);
+        }
         default:
             break;
     }
@@ -2923,6 +2905,6 @@ void do_demonic_magic(int pow, int rank)
             continue;
 
         if (mons->check_willpower(&you, pow) <= 0)
-            mons->paralyse(&you, 1 + roll_dice(1,4));
+            mons->paralyse(&you, random_range(2, 5));
     }
 }

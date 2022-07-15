@@ -96,7 +96,7 @@ bool melee_attack::handle_phase_attempted()
     if (defender && (!adjacent(attack_position, defender->pos())
                      && !can_reach())
         || attk_flavour == AF_CRUSH
-           && (!attacker->can_constrict(defender, true)
+           && (!attacker->can_constrict(*defender, CONSTRICT_MELEE)
                || attacker->is_monster() && attacker->mid == MID_PLAYER))
     {
         --effective_attack_number;
@@ -186,7 +186,8 @@ bool melee_attack::handle_phase_attempted()
         }
         else if (!cleave_targets.empty())
         {
-            targeter_cleave hitfunc(attacker, defender->pos());
+            const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+            targeter_cleave hitfunc(attacker, defender->pos(), range);
             if (stop_attack_prompt(hitfunc, "attack"))
             {
                 cancel_attack = true;
@@ -360,12 +361,7 @@ bool melee_attack::handle_phase_dodged()
 
         if (defender->is_player())
         {
-            const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
-                && (!defender->weapon()
-                    || is_melee_weapon(*defender->weapon()));
-            if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
-                riposte();
-
+            maybe_riposte();
             // Retaliations can kill!
             if (!attacker->alive())
                 return false;
@@ -373,6 +369,15 @@ bool melee_attack::handle_phase_dodged()
     }
 
     return true;
+}
+
+void melee_attack::maybe_riposte()
+{
+    const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
+        && (!defender->weapon()
+            || is_melee_weapon(*defender->weapon()));
+    if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
+        riposte();
 }
 
 void melee_attack::apply_black_mark_effects()
@@ -432,7 +437,7 @@ void melee_attack::do_ooze_engulf()
         && you.has_mutation(MUT_ENGULF)
         && defender->alive()
         && !defender->as_monster()->has_ench(ENCH_WATER_HOLD)
-        && attacker->can_constrict(defender, true, true)
+        && attacker->can_engulf(*defender)
         && coinflip())
     {
         defender->as_monster()->add_ench(mon_enchant(ENCH_WATER_HOLD, 1,
@@ -788,7 +793,15 @@ bool melee_attack::attack()
     }
 
     if (shield_blocked)
+    {
         handle_phase_blocked();
+        maybe_riposte();
+        if (!attacker->alive())
+        {
+            handle_phase_end();
+            return false;
+        }
+    }
     else
     {
         if (attacker != defender
@@ -885,7 +898,7 @@ public:
     AuxAttackType(int _damage, int _chance, string _name) :
     damage(_damage), chance(_chance), name(_name) { };
 public:
-    virtual int get_damage() const { return damage; };
+    virtual int get_damage(bool /*random*/) const { return damage; };
     virtual int get_brand() const { return SPWPN_NORMAL; };
     virtual string get_name() const { return name; };
     virtual string get_verb() const { return get_name(); };
@@ -919,7 +932,7 @@ public:
     AuxKick()
     : AuxAttackType(5, 100, "kick") { };
 
-    int get_damage() const override
+    int get_damage(bool /*random*/) const override
     {
         if (you.has_usable_hooves())
         {
@@ -961,7 +974,7 @@ public:
     AuxHeadbutt()
     : AuxAttackType(5, 67, "headbutt") { };
 
-    int get_damage() const override
+    int get_damage(bool /*random*/) const override
     {
         return damage + you.get_mutation_level(MUT_HORNS) * 3;
     }
@@ -980,7 +993,7 @@ public:
     AuxTailslap()
     : AuxAttackType(6, 50, "tail-slap") { };
 
-    int get_damage() const override
+    int get_damage(bool /*random*/) const override
     {
         return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1)
                       + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4
@@ -1002,7 +1015,7 @@ public:
     AuxPunch()
     : AuxAttackType(5, 0, "punch") { };
 
-    int get_damage() const override
+    int get_damage(bool random) const override
     {
         const int base_dam = damage + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 2);
 
@@ -1010,7 +1023,13 @@ public:
             return base_dam + 6;
 
         if (you.has_usable_claws())
-            return base_dam + roll_dice(you.has_claws(), 3);
+        {
+            const int claws = you.has_claws();
+            const int die_size = 3;
+            // Don't use maybe_roll_dice because we want max, not mean.
+            return base_dam + (random ? roll_dice(claws, die_size)
+                                      : claws * die_size);
+        }
 
         return base_dam;
     }
@@ -1044,12 +1063,16 @@ public:
     AuxBite()
     : AuxAttackType(1, 40, "bite") { };
 
-    int get_damage() const override
+    int get_damage(bool random) const override
     {
         const int fang_damage = damage + you.has_usable_fangs() * 2;
 
         if (you.get_mutation_level(MUT_ANTIMAGIC_BITE))
-            return fang_damage + div_rand_round(you.get_hit_dice(), 3);
+        {
+            const int hd = you.get_hit_dice();
+            const int denom = 3;
+            return fang_damage + (random ? div_rand_round(hd, denom) : hd / denom);
+        }
 
         return fang_damage;
     }
@@ -1079,7 +1102,7 @@ public:
     AuxPseudopods()
     : AuxAttackType(4, 67, "bludgeon") { };
 
-    int get_damage() const override
+    int get_damage(bool /*random*/) const override
     {
         return damage * you.has_usable_pseudopods();
     }
@@ -1097,12 +1120,12 @@ class AuxTouch: public AuxAttackType
 {
 public:
     AuxTouch()
-    : AuxAttackType(3, 40, "touch") { };
+    : AuxAttackType(6, 40, "touch") { };
 
-    int get_damage() const override
+    int get_damage(bool random) const override
     {
-        return damage
-               + random2(1 + you.get_mutation_level(MUT_DEMONIC_TOUCH) * 2);
+        const int max = you.get_mutation_level(MUT_DEMONIC_TOUCH) * 4;
+        return damage + (random ? random2(max + 1) : max);
     }
 
     int get_brand() const override
@@ -1157,7 +1180,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     ASSERT(atk <= UNAT_LAST_ATTACK);
     const AuxAttackType* const aux = aux_attack_types[atk - UNAT_FIRST_ATTACK];
 
-    aux_damage = aux->get_damage();
+    aux_damage = aux->get_damage(true);
     damage_brand = (brand_type)aux->get_brand();
     aux_attack = aux->get_name();
     aux_verb = aux->get_verb();
@@ -1242,7 +1265,7 @@ bool melee_attack::player_aux_unarmed()
         // Determine and set damage and attack words.
         player_aux_setup(atk);
 
-        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(defender, true))
+        if (atk == UNAT_CONSTRICT && !attacker->can_constrict(*defender, CONSTRICT_MELEE))
             continue;
 
         to_hit = random2(aux_to_hit());
@@ -1786,23 +1809,6 @@ bool melee_attack::player_monattk_hit_effects()
         return false;
 
     return true;
-}
-
-void melee_attack::handle_noise(const coord_def & pos)
-{
-    // Successful stabs make no noise.
-    if (stab_attempt)
-        return;
-
-    int loudness = damage_done / 4;
-
-    // All non-stab melee attacks make some noise.
-    loudness = max(1, loudness);
-
-    // Cap melee noise at shouting volume.
-    loudness = min(12, loudness);
-
-    noisy(loudness, pos, attacker->mid);
 }
 
 /**
@@ -2755,6 +2761,7 @@ void melee_attack::mons_apply_attack_flavour()
         defender->corrode_equipment(atk_name(DESC_THE).c_str());
         break;
 
+    case AF_RIFT:
     case AF_DISTORT:
         distortion_affects_defender();
         break;
@@ -2865,7 +2872,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_ENGULF:
         if (!crawl_state.player_moving  // Won't work while player is moving
             && x_chance_in_y(2, 3)
-            && attacker->can_constrict(defender, true, true))
+            && attacker->can_engulf(*defender))
         {
             const bool watery = attacker->type != MONS_QUICKSILVER_OOZE;
             if (defender->is_player() && !you.duration[DUR_WATER_HOLD])
@@ -3265,7 +3272,7 @@ void melee_attack::do_minotaur_retaliation()
         return;
 
     // Use the same damage formula as a regular headbutt.
-    int dmg = AUX_HEADBUTT.get_damage();
+    int dmg = AUX_HEADBUTT.get_damage(true);
     dmg = stat_modify_damage(dmg, SK_UNARMED_COMBAT, false);
     dmg = random2(dmg);
     dmg = apply_fighting_skill(dmg, true, true);
@@ -3350,7 +3357,8 @@ bool melee_attack::do_knockback(bool trample)
         || actor_at(new_pos)
         // Prevent trample/drown combo when flight is expiring
         || defender->is_player() && need_expiration_warning(new_pos)
-        || defender->is_constricted())
+        || defender->is_constricted()
+        || defender->resists_dislodge(needs_message ? "being knocked back" : ""))
     {
         if (needs_message)
         {
@@ -3693,7 +3701,7 @@ string aux_attack_desc(mutation_type mut)
         return make_stringf("\nTrigger chance:  %d%%\n"
                               "Base damage:     %d\n\n",
                             _minotaur_headbutt_chance(),
-                            AUX_HEADBUTT.get_damage());
+                            AUX_HEADBUTT.get_damage(false));
     default:
         return "";
     }
@@ -3717,5 +3725,5 @@ string AuxAttackType::describe() const
                           "Base damage:     %d\n\n",
                         get_chance(),
                         to_hit_pips.c_str(),
-                        get_damage());
+                        get_damage(false));
 }

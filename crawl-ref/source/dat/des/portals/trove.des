@@ -236,8 +236,8 @@ function trove.good_scroll (e)
              scroll of magic mapping w:8 / scroll of blinking /
              scroll of silence w:2 / scroll of acquirement w:1 /
              scroll of teleportation w:20 / scroll of vulnerability w:2 /
-             scroll of holy word w:8 / scroll of fog w:8 /
-             scroll of torment w:8 / scroll of summoning w:1 ]])
+             scroll of fog w:8 / scroll of torment w:8 /
+             scroll of summoning w:1 ]])
 end
 
 function trove.place_fog(e, type, strength)

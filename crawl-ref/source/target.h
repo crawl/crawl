@@ -112,6 +112,20 @@ public:
     bool valid_aim(coord_def a) override;
 };
 
+class targeter_inner_flame : public targeter_smite
+{
+public:
+    targeter_inner_flame(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+};
+
+class targeter_simulacrum : public targeter_smite
+{
+public:
+    targeter_simulacrum(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+};
+
 class targeter_unravelling : public targeter_smite
 {
 public:
@@ -160,12 +174,13 @@ public:
 class targeter_cleave : public targeter
 {
 public:
-    targeter_cleave(const actor* act, coord_def target);
+    targeter_cleave(const actor* act, coord_def target, int range);
     aff_type is_affected(coord_def loc) override;
     bool valid_aim(coord_def) override;
     bool set_aim(coord_def a) override;
 private:
     set<coord_def> targets;
+    int range;
 };
 
 class targeter_cloud : public targeter

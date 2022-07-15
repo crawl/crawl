@@ -4,7 +4,7 @@ enum conduct_type
 {
     DID_NOTHING,
     DID_EVIL,                             // hated by good gods
-    DID_HOLY,                             // holy wrath, holy word scrolls
+    DID_HOLY,                             // holy wrath
     DID_ATTACK_HOLY,
     DID_ATTACK_NEUTRAL,
     DID_ATTACK_FRIEND,

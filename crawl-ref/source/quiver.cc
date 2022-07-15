@@ -119,10 +119,15 @@ namespace quiver
         }
         if (af_hp_check)
             mpr("You are too injured to fight recklessly!");
+        else if (af_mp_check && !you.has_mutation(MUT_HP_CASTING)
+            && you.magic_points == 0)
+        {
+            mpr("You are out of magic!");
+        }
         else if (af_mp_check)
         {
             mprf("You are too depleted to draw on your %s recklessly!",
-                you.has_mutation(MUT_HP_CASTING) ? "health" : "mana");
+                you.has_mutation(MUT_HP_CASTING) ? "health" : "magic");
         }
         return af_hp_check || af_mp_check;
     }
@@ -362,11 +367,14 @@ namespace quiver
             return you.weapon();
         }
 
+        int get_item() const override
+        {
+            return you.equip[EQ_WEAPON];
+        };
+
         string quiver_verb() const override
         {
-            const item_def *weapon = get_launcher();
-            return weapon && item_attack_skill(*weapon) == SK_SLINGS
-                                                        ? "fire" : "shoot";
+            return "fire";
         }
 
         formatted_string quiver_description(bool short_desc=false) const override
@@ -408,6 +416,11 @@ namespace quiver
                 return { make_shared<ranged_action>() };
             else
                 return { };
+        }
+
+        void save(CrawlHashTable &save_target) const override
+        {
+            save_target["type"] = "ranged_action";
         }
     };
 
@@ -592,11 +605,11 @@ namespace quiver
             args.self = confirm_prompt_type::cancel;
 
             unique_ptr<targeter> hitfunc;
-            // Xom can give you cleaving status while wielding a reaching
-            // weapon, just use the reach targeter for this case. (TODO:
-            // show cleave effect in targeter.)
-            if (attack_cleaves(you, -1) && reach_range < REACH_TWO)
-                hitfunc = make_unique<targeter_cleave>(&you, you.pos());
+            if (attack_cleaves(you, -1))
+            {
+                const int range = reach_range == REACH_TWO ? 2 : 1;
+                hitfunc = make_unique<targeter_cleave>(&you, you.pos(), range);
+            }
             else
                 hitfunc = make_unique<targeter_reach>(&you, reach_range);
             args.hitfunc = hitfunc.get();
@@ -663,7 +676,11 @@ namespace quiver
             // attack 50% of the time, and the attack tries to hit it if it is hostile.
             // REACH_THREE entails smite targeting; this is a bit hacky in that
             // this is entirely for the sake of UNRAND_RIFT.
-            if (reach_range < REACH_THREE && (x_distance > 1 || y_distance > 1))
+            // Cleaving reaches also will never fail to miss, since the player can
+            // just attack another target in most cases to hit both.
+            if (reach_range < REACH_THREE
+                && !attack_cleaves(you)
+                && (x_distance > 1 || y_distance > 1))
             {
                 const int x_first_middle = you.pos().x + (delta.x) / 2;
                 const int y_first_middle = you.pos().y + (delta.y) / 2;
@@ -1237,8 +1254,6 @@ namespace quiver
             // TODO: is showing the spell letter useful?
             qdesc.cprintf("%s", spell == SPELL_MAXWELLS_COUPLING ?
                                 "Capacitive Coupling" : spell_title(spell));
-            if (spell == SPELL_SANDBLAST)
-                qdesc.cprintf(" (stones: %d)", sandblast_find_ammo().first);
 
             if (fail_severity(spell) > 0)
             {
@@ -1954,6 +1969,8 @@ namespace quiver
             return make_shared<fumble_action>(param);
         else if (type == "melee_action")
             return make_shared<melee_action>();
+        else if (type == "ranged_action")
+            return make_shared<ranged_action>();
         else
             return make_shared<action>();
     }
@@ -1963,6 +1980,9 @@ namespace quiver
         // Felids have no use for launchers or ammo.
         if (you.has_mutation(MUT_NO_GRASPING))
             return make_shared<ammo_action>(-1);
+
+        if (you.weapon() && is_range_weapon(*you.weapon()))
+            return make_shared<ranged_action>();
 
         vector<int> order;
         _get_item_fire_order(order, false, false);
@@ -3073,11 +3093,10 @@ namespace quiver
     // Save/load
     // ----------------------------------------------------------------------
 
-    // legacy marshalling code, still semi-used
+    // legacy marshalling/unmarshalling code
+#if TAG_MAJOR_VERSION == 34
     static const short QUIVER_COOKIE = short(0xb015);
 
-    // legacy unmarshalling code
-#if TAG_MAJOR_VERSION == 34
     void ammo_history::load(reader& inf)
     {
         if (inf.getMinorVersion() >= TAG_MINOR_MOSTLY_REMOVE_AMMO)
@@ -3125,27 +3144,6 @@ namespace quiver
     {
         // look for something fun to quiver
         you.quiver_action.cycle();
-
-        // if the player has sandblast, cycle() quivered throwing stones,
-        // and they have the spell in their fire order, override quivering
-        // throwing stones with sandblast. This is very custom, but also
-        // removes a pretty annoying issue for EE starts. (In principle, maybe
-        // this should only happen if sandblast would be next? But this would
-        // only come up for unusual Wn starts I think.)
-        if (you.has_spell(SPELL_SANDBLAST)
-            && Options.fire_order_spell.count(SPELL_SANDBLAST))
-        {
-            auto sb_ammo = sandblast_find_ammo();
-            if (sb_ammo.first > 0 && sb_ammo.second
-                && sb_ammo.second->link == you.quiver_action.get()->get_item())
-            {
-                int fire_flags = 0x0;
-                for (const auto &f : Options.fire_order)
-                    fire_flags |= f;
-                if (fire_flags & FIRE_SPELL)
-                    you.quiver_action.set(quiver::spell_to_action(SPELL_SANDBLAST));
-            }
-        }
     }
 }
 

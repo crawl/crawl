@@ -123,6 +123,10 @@ Grum title
 
 Grum the Hunter
 %%%%
+Grunn title
+
+Grunn the Punished
+%%%%
 Harold title
 
 Harold the Weathered

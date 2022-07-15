@@ -642,15 +642,6 @@ static bool _kikubaaqudgha_retribution()
     god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
                                : "Kikubaaqudgha's malice focuses upon you.");
 
-    if (!_count_corpses_in_los(nullptr) || random2(you.experience_level) > 4)
-    {
-        // Either zombies, or corpse rot + skeletons.
-        kiku_receive_corpses(you.experience_level * 4);
-
-        if (coinflip())
-            corpse_rot();
-    }
-
     if (x_chance_in_y(you.experience_level, 27))
     {
         // torment, or 3 death curses of maximum power
@@ -675,11 +666,6 @@ static bool _kikubaaqudgha_retribution()
                             _god_wrath_name(god), you.experience_level);
         }
     }
-
-    // Every act of retribution causes corpses in view to rise against
-    // you.
-    animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
-                 _god_wrath_name(god), god);
 
     return true;
 }
@@ -2038,8 +2024,13 @@ static bool _ignis_shaft()
     // e.g. d -> orc, orc -> elf..?
     if (!you.shaftable())
         return false;
+
     simple_god_message(" burns the ground from beneath your feet!", GOD_IGNIS);
-    ASSERT(you.do_shaft());
+
+    // This way, if you're wearing the rDislodge boots, the other Ignis wrath
+    // effects won't become more prevalent, encouraging players to boot-swap
+    // while under Ignis wrath.
+    ASSERT(you.resists_dislodge("falling") || you.do_shaft());
     return true;
 }
 

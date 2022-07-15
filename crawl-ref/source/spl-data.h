@@ -539,9 +539,9 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ANIMATE_DEAD, "Animate Dead",
     spschool::necromancy,
-    spflag::area | spflag::neutral | spflag::utility,
+    spflag::helpful | spflag::utility | spflag::selfench,
     4,
-    200,
+    100,
     -1, -1,
     3, 0,
     TILEG_ANIMATE_DEAD,
@@ -550,7 +550,8 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_PAIN, "Pain",
     spschool::necromancy,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check
+        | spflag::monster,
     1,
     25,
     5, 5,
@@ -559,9 +560,20 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_NECROTISE, "Necrotise",
+    spschool::necromancy,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::WL_check,
+    1,
+    25,
+    5, 5,
+    1, 0,
+    TILEG_NECROTISE,
+},
+
+{
     SPELL_ANIMATE_SKELETON, "Animate Skeleton",
     spschool::necromancy,
-    spflag::utility,
+    spflag::utility | spflag::monster,
     1,
     50,
     -1, -1,
@@ -785,10 +797,10 @@ static const struct spell_desc spelldata[] =
 
 {
     SPELL_CORPSE_ROT, "Corpse Rot",
-    spschool::necromancy | spschool::air,
-    spflag::area | spflag::neutral | spflag::unclean,
-    2,
-    50,
+    spschool::necromancy | spschool::air | spschool::poison,
+    spflag::helpful | spflag::utility | spflag::selfench | spflag::unclean,
+    4,
+    100,
     -1, -1,
     2, 0,
     TILEG_CORPSE_ROT,
@@ -1180,7 +1192,7 @@ static const struct spell_desc spelldata[] =
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer,
     1,
     50,
-    3, 3,
+    4, 4,
     1, 0,
     TILEG_SANDBLAST,
 },
@@ -1188,10 +1200,10 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_SIMULACRUM, "Simulacrum",
     spschool::ice | spschool::necromancy,
-    spflag::none,
+    spflag::dir_or_target | spflag::needs_tracer,
     6,
     200,
-    -1, -1,
+    LOS_RADIUS, LOS_RADIUS,
     5, 0,
     TILEG_SIMULACRUM,
 },
@@ -1216,17 +1228,6 @@ static const struct spell_desc spelldata[] =
     -1, -1,
     25, 10,
     TILEG_CHAIN_LIGHTNING,
-},
-
-{
-    SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
-    spschool::necromancy,
-    spflag::helpful,
-    5,
-    200,
-    -1, -1,
-    5, 5,
-    TILEG_EXCRUCIATING_WOUNDS,
 },
 
 {
@@ -1438,7 +1439,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_QUICKSILVER_BOLT, "Quicksilver Bolt",
     spschool::conjuration,
-    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
+    spflag::dir_or_target | spflag::needs_tracer,
     5,
     200,
     LOS_RADIUS, LOS_RADIUS,
@@ -2613,6 +2614,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BOLT_OF_LIGHT, "Bolt of Light",
+    spschool::conjuration | spschool::fire | spschool::air,
+    spflag::dir_or_target | spflag::needs_tracer,
+    6,
+    200,
+    5, 5,
+    6, 0,
+    TILEG_LIGHTNING_BOLT,
+},
+
+{
     SPELL_SERPENT_OF_HELL_GEH_BREATH, "gehenna serpent of hell breath",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::noisy
@@ -2749,6 +2761,17 @@ static const struct spell_desc spelldata[] =
     0,
     -1, -1,
     25, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
+},
+
+{
+    SPELL_HUNTING_CALL, "Hunting Call",
+    spschool::hexes,
+    spflag::area | spflag::monster | spflag::selfench,
+    6,
+    0,
+    -1, -1,
+    5, 0,
     TILEG_GENERIC_MONSTER_SPELL,
 },
 
@@ -3147,6 +3170,17 @@ static const struct spell_desc spelldata[] =
     6, 6,
     5, 4,
     TILEG_BORGNJORS_VILE_CLUTCH,
+},
+
+{
+    SPELL_FASTROOT, "Fastroot",
+    spschool::hexes | spschool::earth,
+    spflag::dir_or_target | spflag::needs_tracer,
+    5,
+    200,
+    5, 5,
+    5, 0,
+    TILEG_GENERIC_MONSTER_SPELL,
 },
 
 {
@@ -3647,6 +3681,7 @@ AXED_SPELL(SPELL_VORTEX, "Vortex")
 AXED_SPELL(SPELL_GOAD_BEASTS, "Goad Beasts")
 AXED_SPELL(SPELL_TELEPORT_SELF, "Teleport Self")
 AXED_SPELL(SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe")
+AXED_SPELL(SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds")
 #endif
 
 };

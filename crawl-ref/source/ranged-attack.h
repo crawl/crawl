@@ -59,7 +59,6 @@ private:
     const item_def *projectile;
     bool teleport;
     int orig_to_hit;
-    bool should_alert_defender;
 };
 
 ranged_attack build_attack_for(actor &act, const item_def *weapon);

@@ -991,6 +991,8 @@ int airstrike_space_around(coord_def target, bool count_unseen)
     return empty_space;
 }
 
+static const int AIRSTRIKE_POWER_DIV = 7;
+
 spret cast_airstrike(int pow, coord_def target, bool fail)
 {
     if (cell_is_solid(target))
@@ -1022,7 +1024,7 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 
     const int empty_space = airstrike_space_around(target, true);
 
-    int hurted = 5 + empty_space + random2avg(2 + div_rand_round(pow, 7), 2);
+    int hurted = empty_space * 2 + random2avg(2 + div_rand_round(pow, AIRSTRIKE_POWER_DIV), 2);
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
@@ -1039,6 +1041,13 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
         you.pet_target = mons->mindex();
 
     return spret::success;
+}
+
+// maximum damage before accounting for empty space
+// used for damage display
+int airstrike_base_max_damage(int pow)
+{
+    return 1 + (pow + AIRSTRIKE_POWER_DIV - 1) / AIRSTRIKE_POWER_DIV;
 }
 
 dice_def base_fragmentation_damage(int pow)
@@ -1828,7 +1837,7 @@ vector<coord_def> find_near_hostiles(int range)
 dice_def irradiate_damage(int pow, bool random)
 {
     const int dice = 3;
-    const int max_dam = 40 + (random ? div_rand_round(pow, 2) : pow / 2);
+    const int max_dam = 35 + (random ? div_rand_round(pow, 2) : pow / 2);
     return calc_dice(dice, max_dam, random);
 }
 
@@ -1842,8 +1851,12 @@ dice_def irradiate_damage(int pow, bool random)
 static int _irradiate_cell(coord_def where, int pow, const actor &agent)
 {
     actor *act = actor_at(where);
-    if (!act || !act->alive())
+    if (!act || !act->alive()
+        || act->is_monster() && mons_is_conjured(act->as_monster()->type))
+    {
         return 0;
+    }
+
     const bool hitting_player = act->is_player();
 
     const dice_def dam_dice = irradiate_damage(pow);
@@ -1892,6 +1905,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     auto vulnerable = [&caster](const actor *act) -> bool
     {
         return !act->is_player()
+               && !mons_is_conjured(act->as_monster()->type)
                && !god_protects(&caster, act->as_monster());
     };
 
@@ -2426,17 +2440,24 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
     return spret::success;
 }
 
+static const int DISCHARGE_POWER_DIV = 8;
+
 static int _discharge_monsters(const coord_def &where, int pow,
-                               const actor &agent)
+                               const actor &agent, int remaining)
 {
     actor* victim = actor_at(where);
 
     if (!victim || !victim->alive())
         return 0;
 
-    int damage = (&agent == victim) ? 1 + random2(3 + pow / 15)
-                                    : 3 + random2(5 + pow / 10
-                                                  + (random2(pow) / 10));
+    int damage = 0;
+    if (&agent == victim)
+        damage = 1 + random2(2 + div_rand_round(pow, 15));
+    else
+    {
+        damage = FLAT_DISCHARGE_ARC_DAMAGE
+                 + random2(4 + div_rand_round(pow, DISCHARGE_POWER_DIV));
+    }
 
     bolt beam;
     beam.flavour    = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
@@ -2456,7 +2477,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
     if (victim->is_player())
     {
-        damage = 1 + random2(3 + pow / 15);
+        damage = 1 + random2(2 + div_rand_round(pow,15));
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
@@ -2495,13 +2516,12 @@ static int _discharge_monsters(const coord_def &where, int pow,
             mons->hurt(agent.as_monster(), damage);
     }
 
-    // Recursion to give us chain-lightning -- bwr
-    // Low power slight chance added for low power characters -- bwr
-    if ((pow >= 10 && !one_chance_in(4)) || (pow >= 3 && one_chance_in(10)))
+    // Recursion to give us chain-lightning
+    if (remaining > 0)
     {
-        pow /= random_range(2, 3);
-        damage += apply_random_around_square([pow, &agent] (coord_def where2) {
-            return _discharge_monsters(where2, pow, agent);
+        damage += apply_random_around_square([pow, &agent, remaining]
+                                            (coord_def where2) {
+            return _discharge_monsters(where2, pow, agent, remaining -1);
         }, where, true, 1);
     }
     else if (damage > 0)
@@ -2555,10 +2575,11 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
 
     fail_check();
 
-    const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
+    const int num_targs = 1 + random2(2 + div_rand_round(pow,20));
     const int dam =
         apply_random_around_square([pow, &agent] (coord_def target) {
-            return _discharge_monsters(target, pow, agent);
+            return _discharge_monsters(target, pow, agent,
+                        1 + random2(2 + div_rand_round(pow, 20)));
         }, agent.pos(), true, num_targs);
 
     dprf("Arcs: %d Damage: %d", num_targs, dam);
@@ -2584,43 +2605,10 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
     return spret::success;
 }
 
-pair<int, item_def *> sandblast_find_ammo()
+int discharge_max_damage(int pow)
 {
-    item_def *stone = nullptr;
-    int num_stones = 0;
-    for (item_def& i : you.inv)
-    {
-        if (i.is_type(OBJ_MISSILES, MI_STONE)
-            && check_warning_inscriptions(i, OPER_DESTROY))
-        {
-            num_stones += i.quantity;
-            stone = &i;
-        }
-    }
-    return make_pair(num_stones, stone);
-}
-
-spret cast_sandblast(int pow, bolt &beam, bool fail)
-{
-    auto ammo = sandblast_find_ammo();
-
-    if (ammo.first == 0 || !ammo.second)
-    {
-        mpr("You don't have any stones to cast with.");
-        return spret::abort;
-    }
-
-    const spret ret = zapping(ZAP_SANDBLAST, pow, beam, true, nullptr, fail);
-
-    if (ret == spret::success)
-    {
-        if (dec_inv_item_quantity(letter_to_index(ammo.second->slot), 1))
-            mpr("You now have no stones remaining.");
-        else if (!you.quiver_action.spell_is_quivered(SPELL_SANDBLAST))
-            mprf_nocap("%s", ammo.second->name(DESC_INVENTORY).c_str());
-    }
-
-    return ret;
+    return FLAT_DISCHARGE_ARC_DAMAGE
+           + (pow + DISCHARGE_POWER_DIV - 1) / DISCHARGE_POWER_DIV;
 }
 
 static bool _elec_not_immune(const actor *act)
@@ -3136,6 +3124,27 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
     return spret::success;
 }
 
+// XXX: this should take a monster_info.
+string mons_inner_flame_immune_reason(const monster *mons)
+{
+    if (!mons || !you.can_see(*mons))
+        return "You can't see anything there.";
+
+    if (mons->has_ench(ENCH_INNER_FLAME))
+    {
+        return make_stringf("%s is already burning with an inner flame!",
+                            mons->name(DESC_THE).c_str());
+    }
+
+    if (mons->willpower() == WILL_INVULN)
+    {
+        return make_stringf("%s has infinite will and cannot be affected.",
+                            mons->name(DESC_THE).c_str());
+    }
+
+    return "";
+}
+
 spret cast_inner_flame(coord_def target, int pow, bool fail)
 {
     if (cell_is_solid(target))
@@ -3145,21 +3154,12 @@ spret cast_inner_flame(coord_def target, int pow, bool fail)
     }
 
     const monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
+    const string immune_reason = mons_inner_flame_immune_reason(mons);
+    if (!immune_reason.empty())
     {
-        mpr("You can't see anything there.");
+        mprf("%s", immune_reason.c_str());
         return spret::abort;
     }
-
-    if (mons->has_ench(ENCH_INNER_FLAME))
-    {
-        mprf("%s is already burning with an inner flame!",
-             mons->name(DESC_THE).c_str());
-        return spret::abort;
-    }
-
-    if (stop_attack_prompt(mons, false, you.pos()))
-        return spret::abort;
 
     bolt beam;
     beam.source = mons->pos();

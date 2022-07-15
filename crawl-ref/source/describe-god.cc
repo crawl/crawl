@@ -203,8 +203,8 @@ static const char *divine_title[][8] =
      "Contemplative",         "Epochal",               "Timeless",                 "@Adj@ Aeon"},
 
     // Ashenzari -- divination theme
-    {"Star-crossed",       "Cursed",                "Initiated",                "Soothsayer",
-        "Seer",               "Oracle",                "Illuminatus",              "Omniscient"},
+    {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
+        "Oracle",            "Illuminatus",            "Prince of Secrets",        "Omniscient"},
 
     // Dithmenos -- darkness theme
     {"Ember",              "Gloomy",                "Darkened",                 "Extinguished",
@@ -817,6 +817,14 @@ static formatted_string _describe_god_powers(god_type which_god)
                                              "occasionally";
 
         desc.cprintf("%s %s shields you from chaos.\n",
+                uppercase_first(god_name(which_god)).c_str(), how);
+
+        how =
+            (piety >= piety_breakpoint(5)) ? "often" :
+            (piety >= piety_breakpoint(3)) ? "sometimes" :
+            (piety >= piety_breakpoint(1)) ? "occasionally" :
+                                             "rarely";
+        desc.cprintf("%s %s shields you from Hell.\n",
                 uppercase_first(god_name(which_god)).c_str(), how);
         break;
     }

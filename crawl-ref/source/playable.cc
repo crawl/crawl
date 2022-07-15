@@ -49,8 +49,10 @@ vector<job_type> playable_jobs()
 vector<species_type> playable_species()
 {
     auto species = species::get_all_species();
-    erase_if(species, [&](species_type sp)
-                                { return !species::is_starting_species(sp); });
+    erase_if(species, [&](species_type sp) {
+        return sp == SP_METEORAN && crawl_state.game_is_sprint()
+            || !species::is_starting_species(sp);
+    });
     return species;
 }
 

@@ -377,7 +377,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_GNOLL:
     case TILEP_MONS_CRAZY_YIUF:
     case TILEP_MONS_GRUM:
-    case TILEP_MONS_GNOLL_SHAMAN:
+    case TILEP_MONS_GRUNN:
+    case TILEP_MONS_GNOLL_BOUDA:
         *ofs_x = -3;
         *ofs_y = 0;
         break;
@@ -1484,17 +1485,19 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
             m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SPEAR;
         break;
 
-    case SK_BOWS:
+    case SK_RANGED_WEAPONS:
         m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_BOW2;
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case SK_CROSSBOWS:
         m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_ARBALEST;
         break;
 
     case SK_SLINGS:
-        m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_HUNTING_SLING;
+        m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SLING;
         break;
+#endif
 
     case SK_UNARMED_COMBAT:
     default:

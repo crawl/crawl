@@ -899,6 +899,7 @@ void tile_draw_floor()
             tile_env.bg(ep) = bg;
             tile_env.fg(ep) = 0;
             tile_env.cloud(ep) = 0;
+            tile_env.icons.erase(ep);
         }
 }
 
@@ -1021,6 +1022,7 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
         return;
     }
     tile_env.fg(ep) = t;
+    tile_env.icons[ep] = status_icons_for(mon);
 
     // Add name tags.
     if (!mons_class_gives_xp(mon.type))
@@ -1072,8 +1074,10 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
 
     if (you.see_cell(gc))
     {
-        tile_env.fg(grid2show(gc)) = 0;
-        tile_env.cloud(grid2show(gc)) = 0;
+        const coord_def ep = grid2show(gc);
+        tile_env.fg(ep) = 0;
+        tile_env.cloud(ep) = 0;
+        tile_env.icons.erase(ep);
     }
 
     const map_cell& cell = env.map_knowledge(gc);
@@ -1396,10 +1400,15 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     const map_cell& mc = env.map_knowledge(gc);
 
     bool print_blood = true;
-    if (mc.flags & MAP_UMBRAED)
+    if (mc.flags & MAP_HALOED)
+    {
+        if (mc.flags & MAP_UMBRAED)
+            cell.halo = HALO_NONE;
+        else
+            cell.halo = HALO_RANGE;
+    }
+    else if (mc.flags & MAP_UMBRAED)
         cell.halo = HALO_UMBRA;
-    else if (mc.flags & MAP_HALOED)
-        cell.halo = HALO_RANGE;
     else
         cell.halo = HALO_NONE;
 

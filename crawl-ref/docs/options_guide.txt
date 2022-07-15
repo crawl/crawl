@@ -43,14 +43,14 @@ The contents of this text are:
                 scroll_margin, always_show_exclusions
 3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
-                explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_wall_bias, travel_key_stop, travel_one_unsafe_move,
-                tc_reachable, tc_dangerous, tc_disconnected, tc_excluded,
-                tc_exclude_circle, runrest_ignore_message,
-                runrest_stop_message, interrupt_<delay>, delay_safe_poison,
-                runrest_ignore_monster, rest_wait_both, rest_wait_ancestor,
-                rest_wait_percent, explore_auto_rest, auto_exclude,
-                travel_open_doors
+                explore_greedy, explore_greedy_visit, explore_stop,
+                explore_stop_pickup_ignore, explore_wall_bias, travel_key_stop,
+                travel_one_unsafe_move, tc_reachable, tc_dangerous,
+                tc_disconnected, tc_excluded, tc_exclude_circle,
+                runrest_ignore_message, runrest_stop_message,
+                interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
+                rest_wait_both, rest_wait_ancestor, rest_wait_percent,
+                explore_auto_rest, auto_exclude, travel_open_doors
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
@@ -381,7 +381,7 @@ species += (Human |...| Vampire | random | viable), <species>, ...
 
 background += (Fighter |...| Wanderer | random | viable), <background>, ...
         (List option)
-        Here again the abbreviations (Fi, Wz, AK, etc.) can be used. The same
+        Here again the abbreviations (Fi, HW, AK, etc.) can be used. The same
         caveat applies to "viable": it is only really meaningful if the
         species option is also set. Specifying multiple backgrounds causes
         one to be selected at random from the given species. The combo option
@@ -440,16 +440,22 @@ game_seed = none
         unsigned 64 bit integer.
 
 pregen_dungeon = incremental
+        This setting determines the level generation mode for new games, which
+        interacts with random seeding (see the "Seeded play" section of the
+        manual). In order to generate a stable dungeon from a seed, levels need
+        to be generated in a consistent order. The recommended setting of
+        `incremental` will generate levels as needed when entering a new level
+        so that the game always generates levels in the same order, potentially
+        catching up when skipping levels in the standard order.
+
         When set to `true` or `full`, the game will pregenerate the entire
         connected dungeon when starting a new character. This leads to
-        deterministic dungeon generation relative to a particular game seed, at
-        the cost of a slow game start. If set to `incremental`, the game will
-        generate levels as needed so that it always generates them in the same
-        order, also producing a deterministic dungeon. You still may encounter
-        variation in bazaars, the abyss, pandemonium, and ziggurats, and for
-        incremental pregeneration, artefacts. When set to `false` or `classic`,
-        the game will generate all levels on level entry, as was the rule before
-        0.23. Some servers may disallow full pregeneration.
+        deterministic dungeon generation relative to a particular game seed,
+        and no load times when entering levels, but at the cost of a slow game
+        start. Some servers may disallow full pregeneration for online play.
+
+        When set to `false` or `classic`, the game will generate all levels on level entry, as was the rule before 0.23. Dungeons will not be stable
+        given a seed with this option.
 
 2-  File System.
 ================
@@ -823,6 +829,21 @@ explore_greedy = true
         otherwise identical to regular explore. Explore greed is
         disabled if autopickup is off (Ctrl-A).
 
+explore_greedy_visit = artefacts,glowing_items
+explore_greedy_visit += stacks
+        (List option)
+        Greedy exploration will visit squares with items based on
+        these conditions.
+
+        stacks: makes explore_greedy visit stacks even if they don't
+        necessarily have target auto pickup items
+
+        glowing_items: makes explore_greedy visit glowing_items,
+        even if not in a stack
+
+        artefacts: makes explore_greedy visit artefacts, even
+        if not in a stack
+
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
         (List option)
@@ -888,7 +909,9 @@ explore_wall_bias = 0
         Adjusts how much autoexplore favours attempting to discover room
         perimeters and corners. At higher values, autoexplore will more
         heavily favour visiting squares that are next to walls; at 0 it
-        will not favour them at all.
+        will not favour them at all. At negative values it will prefer
+        to stay away from walls. Note that setting this to a non-0 value
+        generally makes it slower to completely explore a level.
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
@@ -995,7 +1018,7 @@ rest_wait_percent = 100
 
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
-        rest_wait_percent before moving.
+        rest_wait_percent before moving. This is always disabled for Meteorans.
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
@@ -1421,7 +1444,7 @@ mp_warning = 0
         channel when the player's magic points drop below this
         percentage of their maximum (use 0 to turn off these messages).
 
-hp_colour = 50:yellow, 25:red
+hp_colour = 70:yellow, 40:red
         (List option)
         hp_colour colours your Health appropriately in the status
         display. In the default setting, your health will appear in
@@ -2424,8 +2447,8 @@ dump_kill_places = (none | all | single)
         In the Vanquished Creatures list, this option controls how the
         locations of each kill are displayed. Use 'none' to suppress
         place display altogether, 'all' to display all known (up to 5)
-        kill places, anything else to the default of showing kill places
-        only for single kills
+        kill places, and 'single' to use the default of showing kill
+        places only for single kills.
 
 dump_item_origins = artefacts
         The game remembers where you find items. If you want this item
@@ -3122,3 +3145,7 @@ Set a separate glyph for unvisited stairs and transporters:
     feature += stone staircase leading up {<,x25C2}
     feature += stone staircase leading down {>,x25B8}
     feature += transporter {xA9, x25CE}
+
+Visit squares with stacks of items when exploring to print all newly
+encountered items:
+    explore_greedy_visit += stacks

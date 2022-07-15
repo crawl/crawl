@@ -181,85 +181,6 @@ void big_cloud(cloud_type cl_type, const actor *agent,
                      cl_type, agent, spread_rate, -1);
 }
 
-spret cast_corpse_rot(int pow, bool fail)
-{
-    fail_check();
-    return corpse_rot(&you, pow);
-}
-
-spret corpse_rot(actor* caster, int pow, bool actual)
-{
-    // If there is no caster (god wrath), centre the effect on the player.
-    const coord_def center = caster ? caster->pos() : you.pos();
-    bool saw_rot = false;
-    int did_rot = 0;
-
-    for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
-    {
-        for (stack_iterator si(*ri); si; ++si)
-            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-            {
-                if (!actual)
-                    return spret::success;
-                // Found a corpse. Skeletonise it if possible.
-                if (!mons_skeleton(si->mon_type))
-                {
-                    item_was_destroyed(*si);
-                    destroy_item(si->index());
-                }
-                else
-                    turn_corpse_into_skeleton(*si);
-
-                if (!saw_rot && you.see_cell(*ri))
-                    saw_rot = true;
-
-                ++did_rot;
-
-                // Chance to get an extra cloud per corpse (50% at max power).
-                if (x_chance_in_y(pow, 100))
-                    ++did_rot;
-            }
-    }
-    if (!actual)
-        return spret::abort;
-
-    for (fair_adjacent_iterator ai(center); ai; ++ai)
-    {
-        if (did_rot == 0)
-            break;
-
-        if (cell_is_solid(*ai) || cloud_at(*ai))
-            continue;
-
-        place_cloud(CLOUD_MIASMA, *ai, 2 + random2avg(8, 2), caster);
-        --did_rot;
-    }
-
-    // Continue out to radius 2 if there are still corpses available.
-    if (did_rot)
-    {
-        for (distance_iterator di(center, true, true, 2); di; ++di)
-        {
-            if (did_rot == 0)
-                break;
-
-            if (cell_is_solid(*di) || cloud_at(*di))
-                continue;
-
-            place_cloud(CLOUD_MIASMA, *di, 2 + random2avg(8, 2), caster);
-            --did_rot;
-        }
-    }
-
-    // Abort the spell for players; monsters and wrath fail silently
-    if (saw_rot)
-        mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
-    else if (!caster || caster->is_player())
-        return spret::abort;
-
-    return spret::success;
-}
-
 void holy_flames(monster* caster, actor* defender)
 {
     const coord_def pos = defender->pos();
@@ -290,4 +211,39 @@ void holy_flames(monster* caster, actor* defender)
             simple_monster_message(*defender->as_monster(),
                                    " is surrounded by blessed fire!");
     }
+}
+
+spret scroll_of_poison(bool scroll_unknown)
+{
+    int created = 0;
+    bool unknown_unseen = false;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (cell_is_solid(*ri))
+            continue;
+        if (cloud_type_at(*ri) != CLOUD_NONE)
+            continue;
+        const actor* act = actor_at(*ri);
+        if (act != nullptr)
+        {
+            unknown_unseen = unknown_unseen || !you.can_see(*act);
+            continue;
+        }
+
+        place_cloud(CLOUD_POISON, *ri, 10 + random2(11), &you);
+        ++created;
+    }
+
+    if (created > 0)
+    {
+        mpr("The air fills with toxic fumes!");
+        return spret::success;
+    }
+    if (!scroll_unknown && !unknown_unseen)
+    {
+        mpr("There's no open space to fill with poison.");
+        return spret::abort;
+    }
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return spret::fail;
 }

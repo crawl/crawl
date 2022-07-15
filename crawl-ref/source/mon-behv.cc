@@ -326,7 +326,7 @@ void handle_behaviour(monster* mon)
     {
         if (you.pet_target != MHITNOT)
             mon->foe = you.pet_target;
-        else if (mons_class_is_stationary(mon->type))
+        else
             set_nearest_monster_foe(mon);
     }
 
@@ -675,7 +675,7 @@ void handle_behaviour(monster* mon)
             // Batty monsters don't automatically reseek so that
             // they'll flitter away, we'll reset them just before
             // they get movement in handle_monsters() instead. -- bwr
-            if (proxFoe && !mons_is_batty(*mon) || mons_foe_is_marked(*mon))
+            if ((proxFoe || mons_foe_is_marked(*mon)) && !mons_is_batty(*mon))
             {
                 new_beh = BEH_SEEK;
                 break;
@@ -908,6 +908,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
            && summon_can_attack(mon, p)
            && (friendly || !is_sanctuary(p))
            && !mons_is_firewood(*foe)
+           && !foe->props.exists(KIKU_WRETCH_KEY)
            || p == you.pos() && mon->has_ench(ENCH_INSANE);
 }
 
@@ -1443,16 +1444,23 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
     return weapon && item_attack_skill(*weapon) == SK_POLEARMS;
 }
 
+static bool _mons_attacks_outside_los(const monster &mon)
+{
+    return !mon.is_summoned()
+        && !mon.has_ench(ENCH_FAKE_ABJURATION)
+        && !mon.has_ench(ENCH_PORTAL_PACIFIED)
+        && mon.god != GOD_YREDELEMNUL
+        && !mons_is_hepliaklqana_ancestor(mon.type)
+        && !mon.props.exists(ANIMATE_DEAD_KEY);
+}
+
 // Friendly summons can't attack out of the player's LOS, it's too abusable.
 bool summon_can_attack(const monster* mons)
 {
     return crawl_state.game_is_arena()
-           || !mons->friendly()
-           || !mons->is_summoned()
-              && !mons->has_ench(ENCH_FAKE_ABJURATION)
-              && !mons->has_ench(ENCH_PORTAL_PACIFIED)
-              && !mons_is_hepliaklqana_ancestor(mons->type)
-           || you.see_cell_no_trans(mons->pos());
+        || !mons->friendly()
+        || _mons_attacks_outside_los(*mons)
+        || you.see_cell_no_trans(mons->pos());
 }
 
 bool summon_can_attack(const monster* mons, const coord_def &p)
@@ -1465,11 +1473,8 @@ bool summon_can_attack(const monster* mons, const coord_def &p)
         return false;
 
     if (!mons->friendly()
-        || !mons->is_summoned()
-            && !mons->has_ench(ENCH_FAKE_ABJURATION)
-            && !mons_is_hepliaklqana_ancestor(mons->type)
-            && !mons->has_ench(ENCH_PORTAL_PACIFIED)
-            && mons->type != MONS_FOXFIRE)
+        // XXX: can we merge foxfire in?
+        || _mons_attacks_outside_los(*mons) && mons->type != MONS_FOXFIRE)
     {
         return true;
     }

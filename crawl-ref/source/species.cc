@@ -68,13 +68,15 @@ namespace species
         return SP_UNKNOWN;
     }
 
-    /// Does loose, non-case-sensitive lookup of a species based on a string
+    /// Does loose, non-case-sensitive lookup of a species based on a string,
+    /// prioritizing non-removed species
     species_type from_str_loose(const string &species, bool initial_only)
     {
         // XX consolidate with from_str?
         string spec = lowercase_string(species);
 
         species_type sp = SP_UNKNOWN;
+        species_type removed = SP_UNKNOWN;
 
         for (int i = 0; i < NUM_SPECIES; ++i)
         {
@@ -84,18 +86,26 @@ namespace species
             string::size_type pos = sp_name.find(spec);
             if (pos != string::npos)
             {
-                if (pos == 0)
+                if (is_removed(si))
                 {
-                    // We prefer prefixes over partial matches.
-                    sp = si;
-                    break;
+                    // first matching removed species
+                    if (removed == SP_UNKNOWN && (!initial_only || pos == 0))
+                        removed = si;
+                    // otherwise, we already found a matching removed species
                 }
-                else if (!initial_only)
+                else if (pos == 0 || !initial_only)
+                {
                     sp = si;
+                    // We prefer prefixes over partial matches.
+                    if (pos == 0)
+                        break;
+                }
             }
         }
-
-        return sp;
+        if (sp != SP_UNKNOWN)
+            return sp;
+        else
+            return removed;
     }
 
 
@@ -680,6 +690,8 @@ void change_species_to(species_type sp)
     species_type old_sp = you.species;
     you.species = sp;
     you.chr_species_name = species::name(sp);
+    dprf("Species change: %s -> %s", species::name(old_sp).c_str(),
+        you.chr_species_name.c_str());
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
@@ -689,8 +701,8 @@ void change_species_to(species_type sp)
     {
         if (you.has_innate_mutation(static_cast<mutation_type>(i)))
         {
-            you.mutation[i] -= you.innate_mutation[i];
-            you.innate_mutation[i] = 0;
+            you.mutation[i] -= you.innate_mutation[i] - you.sacrifices[i];
+            you.innate_mutation[i] = you.sacrifices[i];
         }
         prev_muts[i] = you.mutation[i];
     }

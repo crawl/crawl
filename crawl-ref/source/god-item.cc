@@ -56,8 +56,6 @@ static bool _is_book_type(const item_def& item,
 
 bool is_holy_item(const item_def& item, bool calc_unid)
 {
-    bool retval = false;
-
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry* entry = get_unrand_entry(item.unrand_idx);
@@ -74,19 +72,7 @@ bool is_holy_item(const item_def& item, bool calc_unid)
             return get_weapon_brand(item) == SPWPN_HOLY_WRATH;
     }
 
-    if (!calc_unid && !item_type_known(item))
-        return false;
-
-    switch (item.base_type)
-    {
-    case OBJ_SCROLLS:
-        retval = (item.sub_type == SCR_HOLY_WORD);
-        break;
-    default:
-        break;
-    }
-
-    return retval;
+    return false;
 }
 
 bool is_potentially_evil_item(const item_def& item, bool calc_unid)

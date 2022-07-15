@@ -30,10 +30,10 @@
 #include "stringutil.h"
 #include "state.h"
 #include "terrain.h"
-#include "timed-effects.h" // decr_zot_clock
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "zot.h" // decr_zot_clock
 
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.
@@ -147,6 +147,10 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                            // Assuming that there are no water-only/lava-only
                            // monsters capable of throwing or zapping wands.
                            || !mons_can_hurt_player(mon)));
+
+    // is this overkill? The main goal here is to disable or interrupt rests
+    // and waits when there is an inhibiting monster in view
+    is_safe = is_safe && !regeneration_is_inhibited(mon);
 
     if (consider_user_options)
     {
@@ -382,10 +386,14 @@ bool player_in_a_dangerous_place(bool *invis)
     return gen_threat > logexp * 1.3 || hi_threat > logexp / 2;
 }
 
-void bring_to_safety()
+/// Returns true iff the player moved, or something moved.
+bool bring_to_safety()
 {
     if (player_in_branch(BRANCH_ABYSS))
-        return abyss_teleport();
+    {
+        abyss_teleport();
+        return true;
+    }
 
     coord_def best_pos, pos;
     double min_threat = DBL_MAX;
@@ -402,19 +410,13 @@ void bring_to_safety()
             || cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
+            || slime_wall_neighbour(pos)
             || crawl_state.game_is_sprint()
                && grid_distance(pos, you.pos()) > 8)
         {
             tries++;
             continue;
         }
-
-        for (adjacent_iterator ai(pos); ai; ++ai)
-            if (env.grid(*ai) == DNGN_SLIMY_WALL)
-            {
-                tries++;
-                continue;
-            }
 
         bool junk;
         double gen_threat = 0.0, hi_threat = 0.0;
@@ -429,8 +431,11 @@ void bring_to_safety()
         tries += 1000;
     }
 
-    if (min_threat < DBL_MAX)
-        you.moveto(best_pos);
+    if (min_threat == DBL_MAX)
+        return false;
+
+    you.moveto(best_pos);
+    return true;
 }
 
 // This includes ALL afflictions, unlike wizard/Xom revive.
@@ -454,7 +459,7 @@ void revive()
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     you.attribute[ATTR_SERPENTS_LASH] = 0;
-    decr_zot_clock();
+    decr_zot_clock(true);
     you.los_noise_level = 0;
     you.los_noise_last_turn = 0; // silence in death
 

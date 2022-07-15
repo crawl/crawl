@@ -474,7 +474,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { MONS_OGRE_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGA_MAGE,               { GNOLL_WEAPONS } },
         { MONS_NAGARAJA,            { GNOLL_WEAPONS } },
-        { MONS_GNOLL_SHAMAN,
+        { MONS_GNOLL_BOUDA,
             { { { WPN_CLUB,             1 },
                 { WPN_WHIP,             1 },
         } } },
@@ -492,6 +492,10 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_HALBERD,          1 },
                 { WPN_GLAIVE,           1 },
         }, { 1, -2, 1 } } },
+        { MONS_GRUNN,
+            { { { WPN_GLAIVE,            2 },
+                { WPN_BARDICHE,          1 },
+        }, { 1, 4, 9 }, { { SPWPN_DRAINING, 1 } } } },
         { MONS_CRAZY_YIUF,
             { { { WPN_QUARTERSTAFF, 1 } },
             { 1, 2, 4 },
@@ -525,7 +529,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } },
         { MONS_AMAEMON, {
             { { WPN_DEMON_WHIP,       1 } },
-              {}, { { SPWPN_VENOM, 1 } } } },
+              { 1, -2, 1 }, { { SPWPN_VENOM, 1 } } } },
         { MONS_MARA,
             { { { WPN_DEMON_WHIP,       1 },
                 { WPN_DEMON_TRIDENT,    1 },
@@ -624,8 +628,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         } } },
         { MONS_IRONBOUND_CONVOKER,      { IRON_WEAPONS } },
         { MONS_IRONBOUND_PRESERVER,     { IRON_WEAPONS } },
-        { MONS_SIGMUND, { { { WPN_SCYTHE, 1 } } } },
-        { MONS_REAPER, { { { WPN_SCYTHE, 1 } }, {}, {}, 1 } },
+        { MONS_SIGMUND, { { { WPN_HALBERD, 1 } } } },
+        { MONS_REAPER, { { { WPN_HALBERD, 1 } }, {}, {}, 1 } },
         { MONS_BALRUG, { { { WPN_DEMON_WHIP, 1 } } } },
         { MONS_RED_DEVIL,
             { { { WPN_TRIDENT,          4 },
@@ -677,8 +681,11 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             { 1, 1, 3 },
             { { SPWPN_FLAMING, 1 } }
         } },
-        { MONS_YAKTAUR, { { { WPN_ARBALEST, 1 } } } },
-        { MONS_YAKTAUR_CAPTAIN, { { { WPN_ARBALEST, 1 } } } },
+        { MONS_YAKTAUR,         { { { WPN_ARBALEST, 1 } } } },
+        { MONS_YAKTAUR_CAPTAIN, { {
+            { WPN_ARBALEST,      19 },
+            { WPN_HAND_CROSSBOW, 1  },
+        } } },
         { MONS_EFREET,                  EFREET_WSPEC },
         { MONS_ERICA,                   EFREET_WSPEC },
         { MONS_AZRAEL,                  EFREET_WSPEC },
@@ -930,9 +937,9 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
         { NUM_WEAPONS,                  8 }, }; // 1/9 chance of ranged weapon
 
     static const map<monster_type, mon_weapon_spec> secondary_weapon_specs = {
-        { MONS_JOSEPH, { { { WPN_HUNTING_SLING, 1 } } } },
+        { MONS_JOSEPH, { { { WPN_SLING, 1 } } } },
         { MONS_DEEP_ELF_ARCHER, // XXX: merge w/centaur warrior primary?
-            { { { WPN_SHORTBOW,         2 },
+            { { { WPN_SHORTBOW,         3 },
                 { WPN_LONGBOW,          1 },
         } } },
         { MONS_VASHNIA,
@@ -940,31 +947,29 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
                 { WPN_ARBALEST,         1 },
         } } },
         { MONS_NAGA_SHARPSHOOTER,
-            { { { WPN_ARBALEST,         3 },
-                { WPN_SHORTBOW,         2 },
+            { { { WPN_SHORTBOW,         4 },
+                { WPN_ARBALEST,         2 },
                 { WPN_LONGBOW,          1 }
         } } },
         { MONS_VAULT_WARDEN,            { ORC_KNIGHT_BOWS } },
         { MONS_ORC_WARLORD,             { ORC_KNIGHT_BOWS } },
         { MONS_SAINT_ROKA,              { ORC_KNIGHT_BOWS } },
         { MONS_ORC_KNIGHT,              { ORC_KNIGHT_BOWS } },
+        { MONS_ORC_WARRIOR,             { ORC_KNIGHT_BOWS } },
         { MONS_TENGU_WARRIOR,
-            { { { WPN_LONGBOW,                  1 },
-                { WPN_ARBALEST,                 1 },
-                { NUM_WEAPONS,                  16 }, // 1/9 chance of weap
+            { { { WPN_ARBALEST,                 3 },
+                { WPN_LONGBOW,                  1 },
+                { NUM_WEAPONS,                  32 }, // 1/9 chance of weap
         } } },
         { MONS_VAULT_SENTINEL,
-            { { { WPN_ARBALEST,                 1 },
-                { NUM_WEAPONS,                  2 },
+            { { { WPN_ARBALEST,                 19 },
+                { WPN_HAND_CROSSBOW,            1 },
+                { NUM_WEAPONS,                  40 },
         } } },
-        { MONS_FAUN, { { { WPN_HUNTING_SLING, 1 } } } },
-        { MONS_SATYR,
-            { { { WPN_FUSTIBALUS,               1 },
-                { WPN_LONGBOW,                  2 },
-        } } },
+        { MONS_FAUN, { { { WPN_SLING, 1 } } } },
+        { MONS_SATYR, { { { WPN_LONGBOW, 1 } } } },
         { MONS_CHERUB,
-            { { { WPN_HUNTING_SLING,            1 },
-                { WPN_FUSTIBALUS,               1 },
+            { { { WPN_SLING,                    1 },
                 { WPN_SHORTBOW,                 1 },
                 { WPN_LONGBOW,                  1 },
         } } },
@@ -990,6 +995,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
 
     string floor_tile = "";
     string equip_tile = "";
+    string custom_name = "";
 
     item_def item;
     item.base_type = OBJ_UNASSIGNED;
@@ -1015,26 +1021,17 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     {
     case MONS_KOBOLD:
     case MONS_KOBOLD_BRIGAND:
-        if (one_chance_in(30) && level > 2)
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_HAND_CROSSBOW;
-            break;
-        }
-        else     // give hand weapon
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = random_choose(WPN_DAGGER,      WPN_DAGGER,
-                                           WPN_SHORT_SWORD, WPN_SHORT_SWORD,
-                                           WPN_CLUB,        WPN_WHIP);
-        }
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose(WPN_DAGGER,      WPN_DAGGER,
+                                       WPN_SHORT_SWORD, WPN_SHORT_SWORD,
+                                       WPN_CLUB,        WPN_WHIP);
         break;
 
     case MONS_GOBLIN:
         if (!melee_only && one_chance_in(12) && level)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_HUNTING_SLING;
+            item.sub_type  = WPN_SLING;
             break;
         }
         break;
@@ -1216,6 +1213,17 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
             force_item = true;
         }
         break;
+    case MONS_GRUNN:
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_CURSES))
+            make_item_unrandart(item, UNRAND_CURSES);
+        break;
+
+    case MONS_SIGMUND:
+    case MONS_REAPER:
+        custom_name = "scythe";
+        floor_tile  = "wpn_scythe";
+        equip_tile  = "scythe";
+        break;
 
     case MONS_ANCESTOR_HEXER:
     case MONS_ANCESTOR_BATTLEMAGE:
@@ -1248,7 +1256,8 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     // and subtype and create a new item. - bwr
     const int thing_created =
         ((force_item) ? get_mitm_slot() : items(false, xitc, xitt, level,
-                                                item.brand));
+                                                item.brand, NO_AGENT,
+                                                custom_name));
 
     if (thing_created == NON_ITEM)
         return NON_ITEM;
@@ -1751,7 +1760,7 @@ int make_mons_armour(monster_type type, int level)
         item.sub_type  = ARM_ROBE;
         break;
 
-    case MONS_GNOLL_SHAMAN:
+    case MONS_GNOLL_BOUDA:
     case MONS_MELIAI:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_ROBE, ARM_LEATHER_ARMOUR);
@@ -1789,6 +1798,7 @@ int make_mons_armour(monster_type type, int level)
     case MONS_ROBIN:
     case MONS_SPRIGGAN_BERSERKER:
     case MONS_IRONBOUND_THUNDERHULK:
+    case MONS_GRUNN:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ANIMAL_SKIN;
         break;

@@ -71,7 +71,6 @@
 #include "spl-miscast.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
-#include "spl-wpnench.h"
 #include "stash.h"
 #include "state.h"
 #include "stringutil.h" // to_string on Cygwin
@@ -354,19 +353,20 @@ static vector<string> _randart_propnames(const item_def& item,
     const unrandart_entry *entry = nullptr;
     if (is_unrandom_artefact(item))
         entry = get_unrand_entry(item.unrand_idx);
+    const bool skip_ego = is_unrandom_artefact(item)
+                          && entry && entry->flags & UNRAND_FLAG_SKIP_EGO;
 
     // For randart jewellery, note the base jewellery type if it's not
     // covered by artefact_desc_properties()
     if (item.base_type == OBJ_JEWELLERY
-        && (item_ident(item, ISFLAG_KNOW_TYPE)))
+        && (item_ident(item, ISFLAG_KNOW_TYPE)) && !skip_ego)
     {
         const char* type = jewellery_base_ability_string(item.sub_type);
         if (*type)
             propnames.push_back(type);
     }
     else if (item_brand_known(item)
-             && !(is_unrandom_artefact(item) && entry
-                  && entry->flags & UNRAND_FLAG_SKIP_EGO))
+             && !skip_ego)
     {
         string ego;
         if (item.base_type == OBJ_WEAPONS)
@@ -1178,15 +1178,6 @@ static void _append_skill_target_desc(string &description, skill_type skill,
     }
 }
 
-static int _get_delay(const item_def &item)
-{
-    if (!is_range_weapon(item))
-        return you.attack_delay_with(nullptr, false, &item).expected();
-    item_def fake_proj;
-    populate_fake_projectile(item, fake_proj);
-    return you.attack_delay_with(&fake_proj, false, &item).expected();
-}
-
 static string _describe_brand(brand_type brand)
 {
     switch (brand) {
@@ -1208,9 +1199,25 @@ static string _describe_brand(brand_type brand)
     }
 }
 
+static string _describe_missile_brand(const item_def &item)
+{
+     const string brand_name = missile_brand_name(item, MBN_BRAND);
+
+     if (brand_name.empty())
+         return brand_name;
+
+     return " + " + uppercase_first(brand_name);
+}
+
 static string _damage_rating(const item_def &item)
 {
+    if (is_unrandom_artefact(item, UNRAND_WOE))
+        return "\nDamage rating: your enemies will bleed and die for Makhleb.";
+
+    const bool thrown = item.base_type == OBJ_MISSILES;
+
     const int base_dam = property(item, PWPN_DAMAGE);
+    const int extra_base_dam = thrown ? throwing_base_damage_bonus(item) : 0;
     const skill_type skill = _item_training_skill(item);
     const int stat_mult = stat_modify_damage(100, skill, true);
     const bool use_str = weapon_uses_strength(skill, true);
@@ -1222,20 +1229,19 @@ static string _damage_rating(const item_def &item)
         plusses += item.plus;
 
     brand_type brand = SPWPN_NORMAL;
-    if (item_type_known(item))
+    if (item_type_known(item) && !thrown)
         brand = get_weapon_brand(item);
 
     const int DAM_RATE_SCALE = 100;
-    int rating = base_dam * DAM_RATE_SCALE;
+    int rating = (base_dam + extra_base_dam) * DAM_RATE_SCALE;
     rating = stat_modify_damage(rating, skill, true);
     rating = apply_weapon_skill(rating, skill, false);
     rating = apply_fighting_skill(rating, false, false);
-    rating += plusses * DAM_RATE_SCALE;
-
-    const int delay = _get_delay(item);
-    const int rating_per_time = (rating * 10 / delay) / DAM_RATE_SCALE;
-
     rating /= DAM_RATE_SCALE;
+    rating += plusses;
+
+    const string base_dam_desc = thrown ? make_stringf("[%d + %d (Thrw)]", base_dam, extra_base_dam)
+                                        : make_stringf("%d", base_dam);
 
     string plusses_desc;
     if (plusses)
@@ -1248,18 +1254,20 @@ static string _damage_rating(const item_def &item)
                                                          : "Slay");
     }
 
-    const string overall = make_stringf(
-        "\nDamage rating: %d (%d/hit / %d.%d delay/hit)%s",
-        rating_per_time, rating, delay/10, delay % 10,
-        _describe_brand(brand).c_str());
-    const string per_hit = make_stringf(
-        "\n  (Per hit: Base %d x %d%% (%s) x %d%% (Skill)%s)",
-        base_dam,
+    const string brand_desc
+        = is_unrandom_artefact(item, UNRAND_DAMNATION) ? " + Damn"
+          : thrown ? _describe_missile_brand(item)
+                   : _describe_brand(brand);
+
+    return make_stringf(
+        "\nDamage rating: %d (Base %s x %d%% (%s) x %d%% (Skill)%s)%s.",
+        rating,
+        base_dam_desc.c_str(),
         stat_mult,
         use_str ? "Str" : "Dex",
         skill_mult,
-        plusses_desc.c_str());
-    return overall + per_hit;
+        plusses_desc.c_str(),
+        brand_desc.c_str());
 }
 
 static void _append_weapon_stats(string &description, const item_def &item)
@@ -1283,14 +1291,28 @@ static void _append_weapon_stats(string &description, const item_def &item)
             skill_name(staff_skill(static_cast<stave_type>(item.sub_type))));
     }
 
+    if (is_unrandom_artefact(item, UNRAND_WOE))
+    {
+        const char *inf = Options.char_set == CSET_ASCII ? "inf" : "\u221e"; //"∞"
+        description += make_stringf(
+            "Base accuracy: %s  Base damage: %s  ",
+            inf,
+            inf);
+    }
+    else
+    {
+        description += make_stringf(
+            "Base accuracy: %+d  Base damage: %d  ",
+            property(item, PWPN_HIT),
+            base_dam);
+    }
+
     description += make_stringf(
-    "Base accuracy: %+d  Base damage: %d  Base attack delay: %.1f"
-    "\nThis weapon's minimum attack delay (%.1f) is reached at skill level %d.",
-        property(item, PWPN_HIT),
-        base_dam,
-        (float) property(item, PWPN_SPEED) / 10,
-        (float) weapon_min_delay(item, item_brand_known(item)) / 10,
-        mindelay_skill / 10);
+        "Base attack delay: %.1f\n"
+        "This weapon's minimum attack delay (%.1f) is reached at skill level %d.",
+            (float) property(item, PWPN_SPEED) / 10,
+            (float) weapon_min_delay(item, item_brand_known(item)) / 10,
+            mindelay_skill / 10);
 
     const bool want_player_stats = !is_useless_item(item) && crawl_state.need_save;
     if (want_player_stats)
@@ -1367,6 +1389,27 @@ static string _handedness_string(const item_def &item)
 
 }
 
+static string _category_string(const item_def &item)
+{
+    if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+        return ""; // handled in art-data DBRAND
+
+    string description = "";
+    description += "This ";
+    if (is_unrandom_artefact(item))
+        description += get_artefact_base_name(item);
+    else
+        description += "weapon";
+    description += " falls into the";
+
+    const skill_type skill = item_attack_skill(item);
+
+    description +=
+        make_stringf(" '%s' category. ",
+                     skill == SK_FIGHTING ? "buggy" : skill_name(skill));
+    return description;
+}
+
 static string _describe_weapon(const item_def &item, bool verbose, bool monster)
 {
     string description;
@@ -1386,7 +1429,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
                           ? get_weapon_brand(item) : SPWPN_NORMAL;
     const int damtype = get_vorpal_type(item);
 
-    if (verbose)
+    if (verbose && !is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
     {
         switch (item_attack_skill(item))
         {
@@ -1394,8 +1437,10 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
             description += "\n\nIt can be evoked to extend its reach.";
             break;
         case SK_AXES:
-            description += "\n\nIt hits all enemies adjacent to the wielder, "
-                           "dealing less damage to those not targeted.";
+            description += "\n\nIt hits all enemies adjacent to the wielder";
+            if (!is_unrandom_artefact(item, UNRAND_WOE))
+                description += ", dealing less damage to those not targeted";
+            description += ".";
             break;
         case SK_SHORT_BLADES:
             {
@@ -1562,38 +1607,13 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         }
     }
 
-    if (you.duration[DUR_EXCRUCIATING_WOUNDS] && &item == you.weapon())
-    {
-        description += "\nIt is temporarily rebranded; it is actually ";
-        if ((int) you.props[ORIGINAL_BRAND_KEY] == SPWPN_NORMAL)
-            description += "an unbranded weapon.";
-        else
-        {
-            brand_type original = static_cast<brand_type>(
-                you.props[ORIGINAL_BRAND_KEY].get_int());
-            description += article_a(
-                weapon_brand_desc("weapon", item, false, original) + ".", true);
-        }
-    }
-
     string art_desc = _artefact_descrip(item);
     if (!art_desc.empty())
         description += "\n\n" + art_desc;
 
     if (verbose)
     {
-        description += "\n\nThis ";
-        if (is_unrandom_artefact(item))
-            description += get_artefact_base_name(item);
-        else
-            description += "weapon";
-        description += " falls into the";
-
-        const skill_type skill = item_attack_skill(item);
-
-        description +=
-            make_stringf(" '%s' category. ",
-                         skill == SK_FIGHTING ? "buggy" : skill_name(skill));
+        description += "\n\n" + _category_string(item);
 
         // XX this is shown for felids, does that actually make sense?
         description += _handedness_string(item);
@@ -1712,6 +1732,9 @@ static string _describe_ammo(const item_def &item)
         }
         if (below_target)
             _append_skill_target_desc(description, SK_THROWING, target_skill);
+
+        if (!is_useless_item(item))
+            description += _damage_rating(item);
     }
 
     if (ammo_always_destroyed(item))
@@ -2015,8 +2038,10 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
         && _you_are_wearing_item(item)
         && is_slowed_by_armour(you.weapon()))
     {
-        description += "\n\nWith your current strength and Armour skill, "
-                       "it slows attacks with missile weapons (like "
+        // TODO: why doesn't this show shield effect? Reconcile with
+        // _display_attack_delay
+        description += "\n\nYour current strength and Armour skill "
+                       "slows attacks with missile weapons (like "
                         + you.weapon()->name(DESC_YOUR) + ") ";
         if (aevp >= DELAY_SCALE)
             description += make_stringf("by %.1f.", aevp / (10.0f * DELAY_SCALE));
@@ -3695,7 +3720,7 @@ static string _miscast_damage_string(spell_type spell)
         { spschool::summoning, "summons a nameless horror" },
         { spschool::transmutation, "further contaminates you" },
         { spschool::translocation, "anchors you in place" },
-        { spschool::hexes, "debuffs and slows you" },
+        { spschool::hexes, "slows you" },
     };
 
     spschools_type disciplines = get_spell_disciplines(spell);
@@ -4194,7 +4219,9 @@ static const char* _special_flavour_prefix(attack_flavour flavour)
  */
 static const char* _flavour_range_desc(attack_flavour flavour)
 {
-    if (flavour_has_reach(flavour))
+    if (flavour == AF_RIFT)
+        return " from a great distance";
+    else if (flavour_has_reach(flavour))
         return " from a distance";
     return "";
 }
@@ -4242,6 +4269,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_TRAMPLE,           "knock back the defender" },
         { AF_REACH_STING,       "cause poisoning" },
         { AF_REACH_TONGUE,      "deal extra acid damage" },
+        { AF_RIFT,              "cause wild translocation effects" },
         { AF_WEAKNESS,          "cause weakness" },
         { AF_BARBS,             "embed barbs" },
         { AF_SPIDER,            "summon a spider" },
@@ -4704,7 +4732,9 @@ static void _describe_monster_wl(const monster_info& mi, ostringstream &result)
 {
     if (mi.willpower() == WILL_INVULN)
     {
-        result << "  Will: ∞\n";
+        result << (Options.char_set == CSET_ASCII
+                        ? "  Will: \u221e\n" // ∞
+                        : "  Will: inf\n");
         return;
     }
 
@@ -5646,6 +5676,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
         tiles.json_write_int("fg_idx", t0);
         tiles.json_write_name("flag");
         tiles.write_tileidx(flag);
+        tiles.json_write_icons(status_icons_for(mi));
 
         if (t0 >= TILEP_MCACHE_START)
         {

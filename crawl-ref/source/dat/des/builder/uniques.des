@@ -376,6 +376,10 @@ NAME:   uniq_xtahua
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Xtahua")
 
+NAME:   uniq_grunn
+DEPTH:  Depths:2-, Zot:1-4, Crypt
+: place_unique(_G, "Grunn band")
+
 ################################################################################
 # Uniques which appear in neither the Dungeon nor the Depths:
 ################################################################################
@@ -523,7 +527,7 @@ DEPTH:   D:2-7
 TAGS:    place_unique no_monster_gen no_item_gen
 MONS:    Crazy Yiuf
 MONS:    fungus / bush w:1
-ITEM:    mace
+ITEM:    mace tile:wpn_hammer wtile:hammer itemname:hammer
 # Randomisation 1: Some chance for a gate.
 SHUFFLE: Bb/Aa
 SUBST:   B=;, b=;

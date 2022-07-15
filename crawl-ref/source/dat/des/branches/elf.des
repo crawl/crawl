@@ -1518,7 +1518,7 @@ KITEM: " = shortbow / longbow / shortbow good_item / longbow good_item / \
            pair of gloves ego:hurling / pair of gloves ego:dexterity / \
            pair of gloves plus:1 / pair of gloves plus:2 / \
            scarf ego:repulsion / scarf w:4 / amulet of reflection / \
-           any amulet w:3 / gold good_item / manual of bows w:3
+           any amulet w:3 / gold good_item / manual of ranged weapons w:3
 KMONS: D = training dummy
 MONS:  deep elf archer / nothing w:5
 MONS:  deep elf master archer
@@ -2263,9 +2263,8 @@ ENDMAP
 
 NAME:  nicolae_blade_bullseye
 TAGS:  no_item_gen
-KMONS: 2 = patrolling dancing weapon ; hunting sling | fustibalus w:5 | \
-           shortbow | longbow w:5 | hand crossbow | arbalest w:7 | \
-           triple crossbow w:5
+KMONS: 2 = patrolling dancing weapon ; sling | shortbow | longbow w:5 | \
+           hand crossbow w:5 | arbalest | triple crossbow w:5
 : elven_blade_entry(_G)
 MAP
       =

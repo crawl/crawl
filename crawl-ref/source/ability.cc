@@ -334,8 +334,10 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::none }, // range special-cased
         { ABIL_BLINKBOLT, "Blinkbolt",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::none },
+#if TAG_MAJOR_VERSION == 34
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
+#endif
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, -1, {}, abflag::none },
 
@@ -377,8 +379,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
 
         // Kikubaaqudgha
-        { ABIL_KIKU_RECEIVE_CORPSES, "Receive Corpses",
-            3, 0, 2, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
+        { ABIL_KIKU_UNEARTH_WRETCHES, "Unearth Wretches",
+            3, 0, 4, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_KIKU_TORMENT, "Torment",
             4, 0, 8, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge",
@@ -849,8 +851,10 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::variable_mp)
         ret += ", MP";
 
+#if TAG_MAJOR_VERSION == 34
     if (ability == ABIL_HEAL_WOUNDS)
         ret += make_stringf(", Permanent MP (%d left)", get_real_mp(false));
+#endif
 
     if (ability == ABIL_TRAN_BAT)
     {
@@ -1034,12 +1038,14 @@ static const string _detailed_cost_description(ability_type ability)
         ret << ".";
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (abil.ability == ABIL_HEAL_WOUNDS)
     {
         ASSERT(!have_cost); // validate just in case this ever changes
         return "This ability has a chance of reducing your maximum magic "
                "capacity when used.";
     }
+#endif
 
     return ret.str();
 }
@@ -1719,15 +1725,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_KIKU_TORMENT:
-        if (!kiku_take_corpse(true))
-        {
-            if (!quiet)
-                mpr("There are no nearby corpses to sacrifice!");
-            return false;
-        }
-        return true;
-
     case ABIL_LUGONU_ABYSS_EXIT:
         if (!player_in_branch(BRANCH_ABYSS))
         {
@@ -1864,6 +1861,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         if (you.hp == you.hp_max)
         {
@@ -1884,6 +1882,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
         }
         return true;
+#endif
 
     case ABIL_SHAFT_SELF:
         return you.can_do_shaft_ability(quiet);
@@ -2041,6 +2040,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_IGNIS_RISING_FLAME:
         return _can_rising_flame(quiet);
 
+    case ABIL_DIG:
+        return form_keeps_mutations();
+
     default:
         return true;
     }
@@ -2092,8 +2094,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_WU_JIAN_HEAVENLY_STORM:
         return make_unique<targeter_radius>(&you, LOS_SOLID, 2);
-    case ABIL_KIKU_RECEIVE_CORPSES:
-        return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
     case ABIL_CHEIBRIADOS_TIME_BEND:
     case ABIL_USKAYAW_STOMP:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
@@ -2134,6 +2134,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_TROG_BROTHERS_IN_ARMS:
+    case ABIL_KIKU_UNEARTH_WRETCHES:
     case ABIL_YRED_DARK_BARGAIN:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 2, 0, 1);
     case ABIL_IGNIS_FOXFIRE:
@@ -2144,7 +2145,9 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_EXSANGUINATE:
     case ABIL_REVIVIFY:
     case ABIL_SHAFT_SELF:
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
+#endif
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_END_TRANSFORMATION:
     case ABIL_ZIN_VITALISATION:
@@ -2491,6 +2494,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)
     {
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         fail_check();
         if (one_chance_in(4))
@@ -2500,6 +2504,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         }
         potionlike_effect(POT_HEAL_WOUNDS, 40);
         break;
+#endif
 
     case ABIL_DIG:
         if (!you.digging)
@@ -2751,18 +2756,13 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         break;
 
-    case ABIL_KIKU_RECEIVE_CORPSES:
+    case ABIL_KIKU_UNEARTH_WRETCHES:
         fail_check();
-        kiku_receive_corpses(you.skill(SK_NECROMANCY, 4));
+        kiku_unearth_wretches();
         break;
 
     case ABIL_KIKU_TORMENT:
         fail_check();
-        if (!kiku_take_corpse()) // Should always succeed.
-        {
-            mpr("There are no nearby corpses to sacrifice!");
-            return spret::success;
-        }
         simple_god_message(" torments the living!");
         torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
         break;
@@ -3668,8 +3668,10 @@ bool player_has_ability(ability_type abil, bool include_unusable)
 
     switch (abil)
     {
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         return you.species == SP_DEEP_DWARF;
+#endif
     case ABIL_SHAFT_SELF:
         if (crawl_state.game_is_sprint() || brdepth[you.where_are_you] == 1)
             return false;
@@ -3751,7 +3753,10 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
 
     // TODO: can we just iterate over ability_type?
     vector<ability_type> check_order =
-        { ABIL_HEAL_WOUNDS,
+        {
+#if TAG_MAJOR_VERSION == 34
+            ABIL_HEAL_WOUNDS,
+#endif
             ABIL_DIG,
             ABIL_SHAFT_SELF,
             ABIL_HOP,

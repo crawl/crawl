@@ -602,9 +602,6 @@ spret palentonga_charge(bool fail, dist *target)
     if (fedhas_passthrough(target_mons))
         target_mons = nullptr;
     ASSERT(target_mons != nullptr);
-    // Are you actually moving forward?
-    if (grid_distance(you.pos(), target_pos) > 1 || !target_mons)
-        mpr("You roll forward with a clatter of scales!");
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -620,6 +617,15 @@ spret palentonga_charge(bool fail, dist *target)
         }
     }
     const coord_def dest_pos = target_path.at(target_path.size() - 2);
+
+    // Are you actually moving forward? XXX: revisit this check
+    if (grid_distance(you.pos(), target_pos) > 1 || !target_mons)
+    {
+        if (silenced(dest_pos))
+            mpr("You roll forward in eerie silence!");
+        else
+            mpr("You roll forward with a clatter of scales!");
+    }
 
     remove_water_hold();
     move_player_to_grid(dest_pos, true);
@@ -846,9 +852,6 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
 
     if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
-        if (teleportitis)
-            return false;
-
         if (!reason.empty())
             mpr(reason);
         abyss_teleport();
@@ -1607,7 +1610,7 @@ static bool _can_move_mons_to(const monster &mons, coord_def pos)
 /**
   * Attempt to pull nearby monsters toward the player.
  */
-void attract_monsters()
+void attract_monsters(int delay)
 {
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1627,7 +1630,7 @@ void attract_monsters()
         if (!find_ray(mi->pos(), you.pos(), ray, opc_solid))
             continue;
 
-        const int max_move = 3;
+        const int max_move = div_rand_round(3 * delay, BASELINE_DELAY);
         for (int i = 0; i < max_move && i < orig_dist - 1; i++)
             ray.advance();
 

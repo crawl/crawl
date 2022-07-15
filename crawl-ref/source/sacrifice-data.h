@@ -161,7 +161,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your experiences",
   "sacrificed experience",
 
-  40,
+  35,
   SK_NONE,
   nullptr,
   []() { return you.experience_level > RU_SAC_XP_LEVELS; }
@@ -181,7 +181,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice an eye",
   "sacrificed an eye",
 
-  20,
+  25,
   SK_NONE,
   nullptr,
   nullptr,
