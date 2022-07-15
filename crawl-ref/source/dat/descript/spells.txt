@@ -463,9 +463,9 @@ together.
 Dispersal spell
 
 Teleports away any creatures within a short distance of the caster. Any
-creature that resists the effect will still be irresistibly blinked a shorter
-distance, and any monster it affects at all has a chance of being confused by
-the warping of space.
+creature with the Will to resist will still be irresistibly blinked a shorter
+distance, and any monster it affects at all has a separate Will-based chance
+of being confused by the warping of space.
 %%%%
 Doom Howl spell
 
