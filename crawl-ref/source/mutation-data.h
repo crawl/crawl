@@ -1840,7 +1840,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_DRINK_SAFETY, 7, 2, mutflag::bad | mutflag::xom, false,
+{ MUT_DRINK_SAFETY, 7, 2, mutflag::bad, false,
   "inability to drink while threatened",
 
   {"You occasionally lose the ability to drink potions when taking damage.",
@@ -1854,7 +1854,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_READ_SAFETY, 7, 2, mutflag::bad | mutflag::xom, false,
+{ MUT_READ_SAFETY, 7, 2, mutflag::bad, false,
   "inability to read while threatened",
 
   {"You occasionally lose the ability to read scrolls when taking damage.",
