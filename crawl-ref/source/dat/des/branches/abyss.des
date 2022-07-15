@@ -1306,6 +1306,45 @@ MAP
            ....
 ENDMAP
 
+# Xom angels/daevas can spawn in the Abyss,
+# this seemed like the next logical step.
+NAME:   skrybe_abyss_rune_heretic_angels
+TAGS:   abyss_rune unrand
+MONS:   daeva w:5 god:xom ; scimitar ego:chaos | demon blade ego:chaos w:2 . \
+        tower shield / daeva god:xom
+MONS:   holy swine
+MONS:   angel w:5 god:xom ; whip ego:chaos | demon whip ego:chaos w:2 . \
+        robe / angel god:xom
+MONS:   dancing weapon ; eudemon blade w:2 ego:holy_wrath | \
+        scimitar ego:holy_wrath
+MONS:   large abomination, cacodemon band, apocalypse crab
+KFEAT:  _ = altar_xom
+KFEAT:  " = runelight
+KITEM:  O = abyssal rune of Zot
+NSUBST: A = 1:3 / 3=13 / *:. , X = 1:6 / 1:5 / 1:2 / 5=52 4:5 / *:.
+COLOUR: c = white
+TILE:   c = wall_church
+MAP
+"......"......"....."
+.ccccccccccccccccccc.
+.cO...tt7...tt..t..c.
+.c._...1t..t....t..c.
+.c.....Xt..t.....ttc.
+.c...ccccccccc++cccc"
+"ct..ctt....t..Acc.c.
+.ctX.ct....t...cc..c.
+.c.t1c..XtX...cc...c.
+.c.7tc..ttt..c+..t.c.
+.c..tc..Xt..ccAXt..+"
+.c.t.c.t...ccAXt...+"
+"ct..ct...+c.Xt..t.c.
+.ct..c...cc..t..t..c.
+.c.t.+..cc..t..t..tc.
+.c..t+Acc........t.c.
+.cccccccccccc++ccccc.
+"......".....""....."
+ENDMAP
+
 ########################################
 # Combined abyssal rune vaults, because we were collecting a lot
 # and standardizing difficulty was easier with consolidation.
