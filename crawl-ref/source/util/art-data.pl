@@ -87,6 +87,7 @@ my %field_type = (
     world_reacts_func  => "func",
     melee_effects_func => "func",
     launch_func        => "func",
+    death_effects_func => "func",
 
     plus      => "num",
     plus2     => "num",
@@ -201,7 +202,7 @@ sub finish_art
         $funcs = {};
     }
 
-    foreach my $func_name (qw(equip unequip world_reacts melee_effects launch))
+    foreach my $func_name (qw(equip unequip world_reacts melee_effects launch death_effects))
     {
         my $val;
         if ($funcs->{$func_name})
@@ -553,7 +554,7 @@ my @art_order = (
 # end TAG_MAJOR_VERSION
 
     "equip_func", "unequip_func", "world_reacts_func", "melee_effects_func",
-    "launch_func"
+    "launch_func", "death_effects_func"
 );
 
 sub art_to_str
@@ -1038,6 +1039,7 @@ my %valid_func = (
     world_reacts  => 1,
     melee_effects => 1,
     launch        => 1,
+    death_effects => 1,
 );
 
 sub read_funcs

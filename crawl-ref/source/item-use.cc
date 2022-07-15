@@ -3010,6 +3010,13 @@ bool drink(item_def* potion)
         }
     }
 
+    // Drinking with hostile visible mons nearby resets unrand "Victory" stats.
+    if (player_equip_unrand(UNRAND_VICTORY)
+        && there_are_monsters_nearby(true, true, false))
+    {
+        you.props[VICTORY_CONDUCT_KEY] = true;
+    }
+
     // We'll need this later, after destroying the item.
     const bool was_exp = potion->sub_type == POT_EXPERIENCE;
     if (in_inventory(*potion))
@@ -4048,6 +4055,13 @@ bool read(item_def* scroll, dist *target)
             // since there are no *really* bad scrolls, merely useless ones).
             xom_is_stimulated(bad_effect ? 100 : 50);
         }
+    }
+
+    // Reading with hostile visible mons nearby resets unrand "Victory" stats.
+    if (player_equip_unrand(UNRAND_VICTORY)
+        && there_are_monsters_nearby(true, true, false))
+    {
+        you.props[VICTORY_CONDUCT_KEY] = true;
     }
 
     if (!alreadyknown)
