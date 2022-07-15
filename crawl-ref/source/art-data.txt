@@ -1727,6 +1727,22 @@ TILE:     urand_force_lance
 TILE_EQ:  force_lance
 DBRAND:   It sometimes knocks back enemies it hits.
 
+NAME:     toga "Victory"
+OBJ:      OBJ_ARMOUR/ARM_ROBE
+PLUS:     +0 # varies with kills and consumable use
+SLAY:     +0 # also variable
+COLOUR:   LIGHTCYAN
+TILE:     urand_victor
+TILE_EQ:  arwen
+INSCRIP:  *victory,
+BOOL:     clarity, no_upgrade
+VALUE:    600
+DBRAND:   When the wearer kills a threatening monster, it has a chance to gain
+ +1 AC and +1 Slay, capping at +10.
++
++When the wearer uses a scroll or a potion, its AC and Slay bonuses reset to +0.
+ Unequipping it also resets its bonuses to +0.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

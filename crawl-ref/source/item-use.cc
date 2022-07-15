@@ -2815,6 +2815,9 @@ bool drink(item_def* potion)
         }
     }
 
+    if (player_equip_unrand(UNRAND_VICTORY))
+        you.props[VICTORY_CONDUCT_KEY] = true;
+
     // We'll need this later, after destroying the item.
     const bool was_exp = potion->sub_type == POT_EXPERIENCE;
     if (in_inventory(*potion))
@@ -3854,6 +3857,9 @@ bool read(item_def* scroll, dist *target)
             xom_is_stimulated(bad_effect ? 100 : 50);
         }
     }
+
+    if (player_equip_unrand(UNRAND_VICTORY))
+        you.props[VICTORY_CONDUCT_KEY] = true;
 
     if (!alreadyknown)
         auto_assign_item_slot(*scroll);

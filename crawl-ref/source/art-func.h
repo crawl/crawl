@@ -1677,6 +1677,7 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
 }
 
 ///////////////////////////////////////////////////
+
 static void _VITALITY_world_reacts(item_def */*item*/)
 {
     // once it starts regenerating you, you're doin evil
@@ -1684,5 +1685,74 @@ static void _VITALITY_world_reacts(item_def */*item*/)
         || you.activated[EQ_AMULET])
     {
         did_god_conduct(DID_EVIL, 1);
+    }
+}
+
+///////////////////////////////////////////////////
+
+static void _reset_victory_stats(item_def *item)
+{
+    int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
+    if (bonus_stats > 0)
+    {
+        mprf("<darkgrey>Your toga \"victory\" stops glowing.</darkgrey>");
+        bonus_stats = 0;
+        item->plus = get_unrand_entry(item->unrand_idx)->plus;
+        artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
+    }
+
+    you.redraw_armour_class = true;
+}
+
+static void _VICTORY_unequip(item_def *item, bool */*show_msgs*/)
+{
+    _reset_victory_stats(item);
+}
+
+#define VICTORY_STAT_CAP 10
+
+static void _VICTORY_melee_effects(item_def *item, actor* attacker,
+                                 actor* defender, bool mondied, int /*dam*/)
+{
+    if (!defender || !mondied)
+        return;
+
+    // No bonuses for killing friendlies, neutrals, or summons.
+    if (attacker->is_player()
+        && defender->is_monster()
+        && mondied
+        && !mons_aligned(attacker, defender)
+        && !defender->as_monster()->neutral()
+        && !defender->is_summoned())
+    {
+        const mon_threat_level_type threat = mons_threat_level(*defender->as_monster());
+
+        // Increased chance of victory bonus from more dangerous mons:
+        // 100% from nasties, 25% from tough, 10% from easy, 0% from trivial.
+        // Remember, the player is fighting them without potions or scrolls!
+        if (threat == MTHRT_NASTY
+            || (threat == MTHRT_TOUGH && x_chance_in_y(1, 4))
+            || (threat == MTHRT_EASY && x_chance_in_y(1, 10)))
+        {
+            int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
+            if (bonus_stats < VICTORY_STAT_CAP)
+            {
+                bonus_stats++;
+                item->plus = bonus_stats;
+                artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
+                mprf("<yellow>Your toga \"victory\" glows.</yellow>");
+
+                you.redraw_armour_class = true;
+            }
+        }
+    }
+}
+
+static void _VICTORY_world_reacts(item_def *item)
+{
+    if (you.props.exists(VICTORY_CONDUCT_KEY))
+    {
+        _reset_victory_stats(item);
+        you.props.erase(VICTORY_CONDUCT_KEY);
     }
 }

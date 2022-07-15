@@ -17,6 +17,8 @@
 
 #define DAMNATION_BOLT_KEY "damnation_bolt"
 #define EMBRACE_ARMOUR_KEY "embrace_armour"
+#define VICTORY_STAT_KEY    "victory_stat"
+#define VICTORY_CONDUCT_KEY "victory_conduct"
 
 struct bolt;
 
