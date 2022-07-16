@@ -5890,7 +5890,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
     mons->set_transit(level_id(BRANCH_ARENA));
     mons->destroy_inventory();
     if (mons_is_elven_twin(mons))
-        elven_twin_died(mons, true, KILL_YOU, MID_PLAYER);
+        elven_twin_died(mons, false, KILL_YOU, MID_PLAYER);
     monster_cleanup(mons);
 
     stop_delay(true);
