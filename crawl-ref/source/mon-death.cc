@@ -1665,9 +1665,7 @@ bool mons_will_goldify(const monster &mons)
     // Under Gozag, monsters turn into gold on death.
     // Temporary Tukima's Dance weapons stay as weapons (no free gold),
     // permanent dancing weapons turn to gold like other monsters.
-    return have_passive(passive_t::goldify_corpses)
-                   && mons_gives_xp(mons, you)
-                   && !player_in_branch(BRANCH_ABYSS);
+    return have_passive(passive_t::goldify_corpses) && mons_gives_xp(mons, you);
 }
 
 #if TAG_MAJOR_VERSION == 34
@@ -1991,7 +1989,7 @@ item_def* monster_die(monster& mons, killer_type killer,
                 }
                 else
                 {
-                    // something is suppressing goldify, e.g. abyss
+                    // something(??) is suppressing goldify
                     simple_monster_message(mons,
                                        " briefly glints gold and then vanishes.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
