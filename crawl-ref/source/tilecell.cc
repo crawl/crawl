@@ -476,17 +476,12 @@ static void _pack_wall_shadows(const coord_def &gc, crawl_view_buffer& vbuf,
 
 static bool _is_seen_slimy_wall(const coord_def& gc, crawl_view_buffer &vbuf)
 {
-    const auto feat = _safe_feat(gc, vbuf);
-
-    return feat == DNGN_SLIMY_WALL;
+    return _safe_feat(gc, vbuf) == DNGN_SLIMY_WALL;
 }
 
 static bool _is_seen_icy_wall(const coord_def& gc, crawl_view_buffer &vbuf)
 {
-    if (gc.x < 0 || gc.x >= vbuf.size().x || gc.y < 0 || gc.y >= vbuf.size().y)
-        return false;
-
-    return feat_is_wall(vbuf(gc).tile.map_knowledge.feat())
+    return feat_is_wall(_safe_feat(gc, vbuf))
            && vbuf(gc).tile.map_knowledge.flags & MAP_ICY;
 }
 
