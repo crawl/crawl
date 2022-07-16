@@ -2671,3 +2671,28 @@ MAP
 .....@.....
 ...........
 ENDMAP
+
+NAME:   hellmonk_ghost_time_enough
+TAGS:   transparent no_item_gen
+DEPTH:  Depths
+ORIENT: float
+KMONS:  O = player ghost
+MONS:   walking crystal tome / walking earthen tome / walking frostbound tome /\
+        walking divine tome
+ITEM:   any book good_item / any manual w:1
+NSUBST: - = 3:d / 5 = d. / 2:1 / *=1.
+TILE:   c = wall_studio
+: ghost_setup(_G)
+MAP
+...............
+.nnnnnnnnnnnnn.
+.n-....-....-n.
+.n.ccc...ccc.n.
+.n-...-.-...-n.
+.n.ccc...ccc.n.
+.n..-..-..-..n.
+.n.ccc.O.ccc.n.
+.n-.........-n.
+.nnnnn===nnnnn.
+...............
+ENDMAP
