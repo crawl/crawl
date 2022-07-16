@@ -1994,8 +1994,9 @@ item_def* monster_die(monster& mons, killer_type killer,
                                        " briefly glints gold and then vanishes.",
                                        MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
-                killer = KILL_RESET;
-                // why does this not set silent?
+                drop_items = false;
+                silent = true;
+                did_death_message = true;
             }
             else
             {
