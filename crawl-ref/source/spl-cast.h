@@ -93,7 +93,6 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
                 const string &title = "Your Spells");
 int raw_spell_fail(spell_type spell);
-int stepdown_spellpower(int power, int scale = 1);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
                      int scale = 1);
@@ -102,8 +101,6 @@ int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true,
 
 spret cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL,
                    dist *_target = nullptr, bool force_failure = false);
-
-int apply_enhancement(const int initial_power, const int enhancer_levels);
 
 void inspect_spells();
 bool can_cast_spells(bool quiet = false);

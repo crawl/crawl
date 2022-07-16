@@ -83,6 +83,8 @@
 #include "viewchar.h" // stringize_glyph
 
 static int _spell_enhancement(spell_type spell);
+static int _apply_enhancement(const int initial_power,
+                              const int enhancer_levels);
 static string _spell_failure_rate_description(spell_type spell);
 
 void surge_power(const int enhanced)
@@ -414,7 +416,7 @@ int raw_spell_fail(spell_type spell)
  *        1, which returns a regular spellpower. 1000 gives you millis, 100
  *        centis.
  */
-int stepdown_spellpower(int power, int scale)
+static int _stepdown_spellpower(int power, int scale)
 {
     // use millis internally
     ASSERT_RANGE(scale, 1, 1000);
@@ -482,7 +484,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
         // [dshaligram] Enhancers don't affect fail rates any more, only spell
         // power. Note that this does not affect Vehumet's boost in castability.
-        power = apply_enhancement(power, _spell_enhancement(spell));
+        power = _apply_enhancement(power, _spell_enhancement(spell));
 
         // Wild magic boosts spell power but decreases success rate.
         power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
@@ -501,7 +503,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
         // at this point, `power` is assumed to be basically in centis.
         // apply a stepdown, and scale.
-        power = stepdown_spellpower(power, scale);
+        power = _stepdown_spellpower(power, scale);
     }
 
     const int cap = spell_power_cap(spell);
@@ -566,7 +568,8 @@ static int _spell_enhancement(spell_type spell)
  * @param enhancer_levels   The number of enhancements levels to apply.
  * @return                  The power of the spell with enhancers considered.
  */
-int apply_enhancement(const int initial_power, const int enhancer_levels)
+static int _apply_enhancement(const int initial_power,
+                              const int enhancer_levels)
 {
     int power = initial_power;
 
@@ -1947,10 +1950,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     }
 
     if (evoked_wand)
-    {
-        powc = player_adjust_evoc_power(powc);
         surge_power_wand(wand_mp_cost());
-    }
     else if (actual_spell)
         surge_power(_spell_enhancement(spell));
 
