@@ -570,14 +570,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
         if (env.level_state & LSTATE_ICY_WALL
             && env.map_knowledge(gc).flags & MAP_ICY)
         {
-            for (adjacent_iterator ai(gc); ai; ++ai)
-            {
-                if (feat_is_wall(env.map_knowledge(*ai).feat())
-                    && env.map_knowledge(*ai).flags & MAP_ICY)
-                {
-                    return TILE_FLOOR_ICY;
-                }
-            }
+            return TILE_FLOOR_ICY;
         }
         // deliberate fall-through
     case DNGN_ROCK_WALL:
