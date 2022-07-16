@@ -4094,16 +4094,8 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
     if (god_punishes_spell(spell, god))
         return true;
 
-    switch (god)
-    {
-    case GOD_CHEIBRIADOS:
-        if (is_hasty_spell(spell))
-            return true;
-        break;
-    default:
-        break;
-    }
-    return false;
+    // (this is literally only Discord as of July 2022... simplify?)
+    return god == GOD_CHEIBRIADOS && is_hasty_spell(spell);
 }
 
 /**

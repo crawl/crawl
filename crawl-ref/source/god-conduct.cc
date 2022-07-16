@@ -1144,7 +1144,7 @@ void did_hurt_conduct(conduct_type thing_done,
 /**
  * Will this god definitely be upset if you cast this spell?
  *
- * This is as opposed to a likelihood, such as TSO's relationship with PArrow.
+ * This is as opposed to a likelihood.
  * TODO: deduplicate with spl-cast.cc:_spellcasting_god_conduct
  *
  * @param spell the spell to be cast
