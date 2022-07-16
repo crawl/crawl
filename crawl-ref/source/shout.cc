@@ -675,6 +675,44 @@ static bool _issue_order(int keyn, int &mons_targd)
     return true;
 }
 
+static string _allies_who_cant_see_invis()
+{
+    size_t ally_count = 0;
+    vector<monster*> non_sinv_allies;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!_follows_orders(*mi))
+            continue;
+        ++ally_count;
+        if (!mi->can_see_invisible())
+            non_sinv_allies.push_back(*mi);
+    }
+
+    if (non_sinv_allies.empty())
+        return "";
+
+    if (non_sinv_allies.size() == 1)
+        return non_sinv_allies[0]->name(DESC_YOUR);
+    if (non_sinv_allies.size() < ally_count)
+        return "some of your allies";
+    return "your allies";
+}
+
+static void _check_unseen_target(int mindex)
+{
+    const monster &target = env.mons[mindex];
+    if (!target.invisible())
+        return;
+
+    const string allies = _allies_who_cant_see_invis();
+    if (allies.empty())
+        return;
+    mprf("%s is invisible, and %s can't see %s.",
+         target.name(DESC_THE).c_str(),
+         allies.c_str(),
+         target.pronoun(PRONOUN_OBJECTIVE).c_str());
+}
+
 /**
  * Prompt the player to either change their allies' orders or to shout.
  *
@@ -709,7 +747,10 @@ void issue_orders()
     _set_friendly_foes(keyn == 's' || keyn == 'w');
 
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
+    {
         mpr("Attack!");
+        _check_unseen_target(mons_targd);
+    }
 }
 
 /**
