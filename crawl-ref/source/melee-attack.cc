@@ -122,8 +122,11 @@ bool melee_attack::player_unrand_bad_attempt()
         targeter_smite hitfunc(attacker, 1, 1, 1, false);
         hitfunc.set_aim(defender->pos());
 
-        return stop_attack_prompt(hitfunc, "attack", nullptr, nullptr,
-                                  defender->as_monster());
+        return stop_attack_prompt(hitfunc, "attack",
+                                  [](const actor *act)
+                                  {
+                                      return !god_protects(act->as_monster());
+                                  }, nullptr, defender->as_monster());
     }
     else if (is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
              || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
@@ -144,7 +147,8 @@ bool melee_attack::player_unrand_bad_attempt()
         return stop_attack_prompt(hitfunc, "attack",
                                [] (const actor *m)
                                {
-                                   return !m->res_torment();
+                                   return !m->res_torment()
+                                       && !god_protects(m->as_monster());
                                },
                                   nullptr, defender->as_monster());
     }
