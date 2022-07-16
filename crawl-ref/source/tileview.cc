@@ -1488,7 +1488,8 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
                 break;
             }
     }
-    else if (env.level_state & LSTATE_ICY_WALL)
+    else if (env.level_state & LSTATE_ICY_WALL
+             && env.map_knowledge(gc).flags & MAP_ICY)
     {
         for (adjacent_iterator ai(gc); ai; ++ai)
         {

@@ -567,7 +567,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
                 if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
                     return TILE_FLOOR_SLIME_ACIDIC;
 
-        if (env.level_state & LSTATE_ICY_WALL)
+        if (env.level_state & LSTATE_ICY_WALL
+            && env.map_knowledge(gc).flags & MAP_ICY)
         {
             for (adjacent_iterator ai(gc); ai; ++ai)
             {
