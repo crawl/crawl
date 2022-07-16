@@ -707,6 +707,9 @@ void slimify_monster(monster* mon)
     mon->del_ench(ENCH_SHAPESHIFTER);
 
     mons_att_changed(mon);
+
+    if (mons_is_elven_twin(mon))
+        elven_twin_died(mon, false, KILL_YOU, MID_PLAYER);
 }
 
 void seen_monster(monster* mons)

@@ -3195,7 +3195,9 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 
     // Okay, let them climb stairs now.
     mons->props[CAN_CLIMB_KEY] = true;
-    if (!in_transit)
+    if (is_fellow_slime(*twin))
+        mons->props[SPEECH_PREFIX_KEY] = "twin_slimified";
+    else if (!in_transit)
         mons->props[SPEECH_PREFIX_KEY] = "twin_died";
     else
         mons->props[SPEECH_PREFIX_KEY] = "twin_banished";
@@ -3331,9 +3333,13 @@ void elven_twins_unpacify(monster* twin)
     if (!mons)
         return;
 
-    // Don't consider already un-neutralised monsters.
-    if (!mons->neutral() || mons->has_ench(ENCH_INSANE))
+    // Don't consider already un-neutralised monsters or slimified twins.
+    if (!mons->neutral() || mons->has_ench(ENCH_INSANE)
+        || is_fellow_slime(*mons))
+    {
         return;
+    }
+
     simple_monster_message(*mons, " gets angry again!");
 
     behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
