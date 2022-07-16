@@ -153,6 +153,8 @@ private:
     void player_announce_aux_hit();
     void player_warn_miss();
     void player_weapon_upsets_god();
+    bool bad_attempt();
+    bool player_unrand_bad_attempt();
     void _defender_die();
 
     // Added in, were previously static methods of fight.cc
