@@ -1941,7 +1941,8 @@ bool is_range_weapon(const item_def &item)
 
 bool is_crossbow(const item_def &item)
 {
-    if (!is_weapon(item)) return false;
+    if (!is_weapon(item))
+        return false;
     switch (item.sub_type)
     {
     case WPN_HAND_CROSSBOW:
