@@ -4096,7 +4096,7 @@ MAP
 ENDMAP
 
 NAME:   lemuel_another_geyser
-DEPTH:  D, Depths, Lair
+DEPTH:  D:6-, Depths, Lair
 TAGS:   uniq_geyser no_monster_gen layout_rooms transparent
 MONS:   nothing,nothing
 MARKER: 1 = lua:fog_machine { cloud_type="steam", \
