@@ -1725,7 +1725,7 @@ static void _do_rest()
         return;
     }
 
-    if (i_feel_safe())
+    if (i_feel_safe() && can_rest_here())
     {
         if (you.is_sufficiently_rested(true) && ancestor_full_hp())
         {
@@ -2112,7 +2112,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_SAFE_WAIT:
-        if (!i_feel_safe(true))
+        if (!i_feel_safe(true) && can_rest_here())
             break;
         // else fall-through
     case CMD_WAIT:
