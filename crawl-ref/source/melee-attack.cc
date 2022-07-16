@@ -1366,17 +1366,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
                 antimagic_affects_defender(damage_done * 32);
 
-                // MP drain suppressed under Pakellas, but antimagic still applies.
-                if (!have_passive(passive_t::no_mp_regen) || spell_user)
-                {
-                    mprf("You %s %s %s.",
-                         have_passive(passive_t::no_mp_regen) ? "disrupt" : "drain",
-                         defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                         spell_user ? "magic" : "power");
-                }
+                mprf("You drain %s %s.",
+                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     spell_user ? "magic" : "power");
 
-                if (!have_passive(passive_t::no_mp_regen)
-                    && you.magic_points != you.max_magic_points
+                if (you.magic_points != you.max_magic_points
                     && !defender->as_monster()->is_summoned()
                     && !mons_is_firewood(*defender->as_monster()))
                 {

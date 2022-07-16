@@ -79,7 +79,7 @@ static const char *conducts[] =
     "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
     "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary",
     "Kill Artificial", "Exploration", "Seen Monster",
-    "Sacrificed Love", "Channel", "Hurt Foe", "Use Wizardly Item",
+    "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -409,12 +409,7 @@ static peeve_map divine_peeves[] =
     peeve_map(),
 #if TAG_MAJOR_VERSION == 34
     // GOD_PAKELLAS
-    {
-        { DID_CHANNEL, {
-            "you channel magical energy", true,
-            1, 1,
-        } },
-    },
+    peeve_map(),
 #endif
     // GOD_USKAYAW,
     peeve_map(),

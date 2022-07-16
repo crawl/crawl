@@ -1541,11 +1541,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (needs_notele_warning(item, oper))
         return true;
 
-    if (oper == OPER_ATTACK && god_hates_item(item)
-#if TAG_MAJOR_VERSION == 34
-        && !you_worship(GOD_PAKELLAS)
-#endif
-       )
+    if (oper == OPER_ATTACK && god_hates_item(item))
     {
         penance = true;
         return true;

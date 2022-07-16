@@ -3023,13 +3023,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                        && regeneration_is_inhibited());
 
         case AMU_MANA_REGENERATION:
-#if TAG_MAJOR_VERSION == 34
-            if (have_passive(passive_t::no_mp_regen)
-                || player_under_penance(GOD_PAKELLAS))
-            {
-                return true;
-            }
-#endif
             return !you.max_magic_points;
 
         case RING_MAGICAL_POWER:

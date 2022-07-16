@@ -1019,18 +1019,6 @@ bool evoke_check(int slot, bool quiet)
             }
     }
 
-#if TAG_MAJOR_VERSION == 34
-    if (player_under_penance(GOD_PAKELLAS))
-    {
-        if (!quiet)
-        {
-            simple_god_message("'s wrath prevents you from evoking devices!",
-                           GOD_PAKELLAS);
-        }
-        return false;
-    }
-#endif
-
     if (you.get_mutation_level(MUT_NO_ARTIFICE))
     {
         if (!quiet)
