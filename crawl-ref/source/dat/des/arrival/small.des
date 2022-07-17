@@ -3943,3 +3943,26 @@ MAP
    ...........
      .......
 ENDMAP
+
+NAME:   hellmonk_arrival_library
+TAGS:   arrival transparent
+ORIENT: float
+SHUFFLE: DE, FH
+SUBST:  E = ccc., H = ccc., G:Gc
+TILE:   c = wall_studio
+FTILE:  .+G>{ = floor_studio
+MAP
+cccccccccccc
+c{.........c
+c.ccccccccDc
+c.c........c
+c.c.>.cccccc
+c.c........c
+c.c.c.ccccHc
+c.c.c.c....c
+c.c.c.c.G.cc
+c.c.c.c....+@
+c.E.c.F.c..+@
+ccccccccc++c
+         @@
+ENDMAP
