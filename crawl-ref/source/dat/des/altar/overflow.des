@@ -2568,6 +2568,29 @@ xxww.nv1vn.wwxx
        @
 ENDMAP
 
+NAME:   hellmonk_sif_muna_bookshelves
+TAGS:   temple_overflow_sif_muna temple_overflow_1 uniq_altar_sif_muna
+TAGS:   transparent decor
+DEPTH:  D, Elf, Depths
+KFEAT:  _ = altar_sif_muna
+TILE:   c = wall_studio
+FTILE:  ._c = floor_studio
+MAP
+   xxxxx
+  xxcccxx
+ xxc...cxx
+xxc.....cxx
+xc.......cx
+xc..c.c..cx
+xc.......cx
+xc..._...cx
+xc.......cx
+xc..c.c..cx
+xc.......cx
+xxc.....cxx
+ xxc...cxx
+  xx@@@xx
+ENDMAP
 
 ### Trog overflow altars ######################################################
 
@@ -4500,6 +4523,47 @@ xxxxx...xx
   xx...xx
   x@@@xx
 ENDMAP
+
+NAME:   hellmonk_overflow_destroyed_library
+TAGS:   temple_overflow_2 temple_overflow_trog temple_overflow_sif_muna
+TAGS:   no_item_gen no_monster_gen transparent
+KFEAT:  E = altar_trog
+KFEAT:  F = altar_sif_muna
+KFEAT:  J = closed_clear_door
+KFEAT:  H = iron_grate
+ITEM:   any book
+NSUBST: D = 1:c / *=c......
+SUBST:  -:Hmm., J:JJ., l:Lll
+MARKER:  L = lua:fog_machine { cloud_type = "flame", delay = 10, \
+                  pow_min = 100, pow_max = 100, size = 1, walk_dist = 0, \
+                  excl_rad = 0 }
+TILE:   c = wall_studio
+MAP
+      @
+    xx+xx
+    x...x
+   xx...xx
+  xxD...Dxx
+ xxD.....Dxx
+ xD.......Dx
+ xD..DDD..Dx
+xxD..DlD..Dxx
+xD....E....Dx
+xx.DD...DD.xx
+xx----J----xx
+xx.ccc.ccc.xx
+xc....F....cx
+xxc..cdc..cxx
+ xc..ccc..cx
+ xc.......cx
+ xxc.....cxx
+  xxc...cxx
+   xx...xx
+    x...x
+    xx+xx
+      @
+ENDMAP
+
 
 ### Variable overflow altars ##################################################
 
