@@ -501,7 +501,9 @@ static void _catchup_monster_moves(monster* mon, int turns)
     if (mon->asleep() || mon->paralysed())
         return;
 
-
+    // Don't shift towards timestepped players.
+    if (mon->target.origin())
+        return;
 
     const int mon_turns = (turns * mon->speed) / 10;
     const int moves = min(mon_turns, 50);

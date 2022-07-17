@@ -2021,8 +2021,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
     you.time_taken = 10;
     _run_time_step();
-    // Update corpses, etc. This does also shift monsters, but only by
-    // a tiny bit.
+    // Update corpses, etc.
     update_level(pow * 10);
 
 #ifndef USE_TILE_LOCAL

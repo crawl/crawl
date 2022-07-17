@@ -4724,7 +4724,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 bool mons_foe_is_marked(const monster& mon)
 {
     if (mon.foe == MHITYOU)
-        return you.duration[DUR_SENTINEL_MARK];
+        return you.duration[DUR_SENTINEL_MARK] && in_bounds(you.pos());
     else
         return false;
 }
