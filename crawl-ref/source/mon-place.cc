@@ -304,12 +304,12 @@ void spawn_random_monsters()
     if (crawl_state.disables[DIS_SPAWNS])
         return;
 
-    if (crawl_state.game_is_arena()
-        || (crawl_state.game_is_sprint()
-            && player_in_connected_branch()
-            && you.chapter == CHAPTER_ORB_HUNTING)
-        // Spawns no longer occur outside the Orb run in connected branches.
-        || !player_on_orb_run() && player_in_connected_branch())
+    if (crawl_state.game_is_arena())
+        return;
+
+    if (!player_on_orb_run()
+        && !player_in_branch(BRANCH_ABYSS)
+        && !player_in_branch(BRANCH_PANDEMONIUM))
     {
         return;
     }
