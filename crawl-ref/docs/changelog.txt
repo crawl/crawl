@@ -1,4 +1,4 @@
-Stone Soup 0.29-a0 (through 0.29-a0-653-gd47aff673)
+Stone Soup 0.29-a0 (through 0.29-a0-875-g74bf5736c)
 ---------------------------------------------------
 
 Branches, Environment
@@ -20,6 +20,8 @@ Branches, Environment
   their previous deepest abyss depth.
 - The Abyss is now 7 levels deep, with the depths beyond A:5 full of very tough
   monsters.
+- Temple sizes now range from 6 to 21 altars, with a small chance of rare
+  temples with 0, 1, or 22 temple-god altars.
 
 Character
 ---------
@@ -28,15 +30,15 @@ Character
   to their starting kit.
 - Monks start with a potion of ambrosia.
 - Hunters no longer start with a short sword and gain a scroll of immolation,
-  as well as greater dexterity.
+  as well as greater dexterity. All hunters start with a shortbow.
 - Brigands get an additional poisoned & curare dart.
 - Artificers trade their chesspiece for 9 iceblast charges.
 - Wanderers get an additional random potion or scroll.
-- Abyssal Knights start with more piety.
+- Abyssal Knights start with more piety and standing on the abyss exit.
 - Chaos Knights start with a piece from Xom's chessboard.
 - Transmuters start with a potion of lignification.
 - Warpers sart with two more dispersal boomerangs (a total of 7).
-- Arkane Markspersons start with a scroll of vulnerability.
+- Arkane Markspersons start with a scroll of vulnerability and a sling.
 - Enchanters start with a second potion of invisibility.
 - Necromancers start with the new spell Necrotize in stead of Animate Skeleton
   and Pain
@@ -55,6 +57,11 @@ Character
 - Formicids can again wield giant (spiked) clubs.
 - Positive stat mutations now give +4 to the primary stat and -1 to the other
   two.
+- The -Scroll and -Potion mutations are now regular 2-tier mutations in the bad
+  mutation pool. The Ru sacrifice corresponds to the 2nd tier.
+- Teleportitis and Berserkitis are reduced to 2-tier mutations.
+- The Bows, Crossbows, and Slings skills are combined into a single Ranged
+  Combat skill.
 
 
 Gods
@@ -73,11 +80,13 @@ Gods
 
 Items
 -----
-- Launcher ammunition is removed, and launcher stats adjusted for unlimited
-  ammunition.
+- Launcher ammunition is removed. and launcher stats adjusted for unlimited
+- Launchers all use the Ranged Combat skill.
 - Launcher, long blade, and short blade damage now scale with Dex.
 - Launcher attack delay is increased by armour penalties.
-- Spriggans can no longer wield triple crossbows, and fustibali are 2-handed.
+- Spriggans can no longer wield triple crossbows.
+- Launcher stats are adjusted in light of the above changes.
+- Fustibali are removed. Hunting slings are renamed to slings.
 - New item: scroll of poison. When read the scroll of poison fills every
   unoccupied space on the screen with poison clouds for 10-20 turns.
 - +MP items remove MP when they are taken off.
@@ -86,8 +95,11 @@ Items
   resists and blinds what it hits, damage identical to acid.
 - New wand: Quicksilver. Fires a quicksilver bolt, dispelling targets it hits.
   Does slightly more damage than acid.
+- New wand: Roots. Fires a 3x3 ball of roots, constricting targets like BVC or
+  grasping roots.
 - Some wands are now grouped into sets, and only one item from the set will
   generate in a given game. The sets are:
+  - Iceblast and Roots
   - Paralysis and Charming
   - Acid, Light, and Quicksilver
 - New unrand: the +8 trishula "Condemnation" {holy, Anguish Fly rN+}.
@@ -97,6 +109,9 @@ Items
   etc.).
 - New unrand: the +5 lochaber axe, which cleaves through all foes in a radius
   of 2 for each swing and uses the higer of the player's Polearms or Axes skill.
+- Items can have vault-redefined skins. Yuif now has hammers again (renamed
+  maces). Sigmund and Reapers' scythes are now renamed halberds.
+- Scythes, other than the unrand scythes, are removed.
 - Unrandart tweaks:
   - the Glaive of the Guard is reduced to +5.
   - the arbalest "Damnation"'s explosions now do 2d14 damage.
@@ -113,6 +128,10 @@ Monsters
   them. Wu Jian martial attacks & rampaging give immunity, and monsters that
   don't move fast enough to follow you can't attack.
 - Animated Armour now flies.
+- New monster: starflower. A stationary plant with harpoon shot and reaching
+  distortion melee. Found guarding the exit or the rune in the abyss.
+- Gnoll shamen are renamed gnoll bouda, and have a new spell set.
+- Monster wand power is reduced.
 - New uniques:
   - Parghit the Mighty, an "alt-timeline" version of Pargi with extremely high
     regeneration and enchanted golden dragon scales. Appears in late Depths and
@@ -151,6 +170,7 @@ Spells
 - Sandblast no longer uses stones as ammo. Instead it takes twice as long to
   cast as a normal spell, and has its range increased by one.
 - Airstrike's bonus from empty space is doubled.
+- Hex miscasts now only slow the player, instead of also cancelling effects.
 - Removed: Animate Skeleton, Pain, Excruciating Wounds
 
 Stone Soup 0.28.0 (20220203)
