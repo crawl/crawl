@@ -1539,28 +1539,6 @@ void dgn_reset_level(bool enable_random_maps)
     // Lose all listeners.
     dungeon_events.clear();
 
-    // Set default random monster generation rate (smaller is more often,
-    // except that 0 == no random monsters).
-    if (player_in_branch(BRANCH_TEMPLE)
-        && !player_on_orb_run() // except for the Orb run
-        || crawl_state.game_is_tutorial())
-    {
-        // No random monsters in tutorial or ecu temple
-        env.spawn_random_rate = 0;
-    }
-    else if (player_in_connected_branch()
-             || (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)))
-        env.spawn_random_rate = 240;
-    else if (player_in_branch(BRANCH_ABYSS)
-             || player_in_branch(BRANCH_PANDEMONIUM))
-    {
-        // Abyss spawn rate is set for those characters that start out in the
-        // Abyss; otherwise the number is ignored in the Abyss.
-        env.spawn_random_rate = 50;
-    }
-    else
-        // No random monsters in portal vaults if we don't have the orb.
-        env.spawn_random_rate = 0;
     env.density = 0;
     env.forest_awoken_until = 0;
 

@@ -303,40 +303,6 @@ void debug_list_monsters()
     }
 }
 
-void wizard_spawn_control()
-{
-    // 50 spots are reserved for non-wandering monsters.
-    int max_spawn = MAX_MONSTERS - 50;
-    for (monster_iterator mi; mi; ++mi)
-        if (mi->alive())
-            max_spawn--;
-
-    if (max_spawn <= 0)
-    {
-        mprf(MSGCH_PROMPT, "Level already filled with monsters, "
-                           "get rid of some of them first.");
-        return;
-    }
-
-    mprf(MSGCH_PROMPT, "Spawn how many random monsters (max %d)? ",
-         max_spawn);
-
-    if (cancellable_get_line(specs, sizeof(specs)))
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    const int num = min(atoi(specs), max_spawn);
-    if (num <= 0)
-        return;
-
-    mprf("Spawning %i monster%s.", num, num == 1 ? "" : "s");
-
-    for (int i = 0; i < num; ++i)
-        spawn_random_monsters();
-}
-
 static const char* ht_names[] =
 {
     "land",

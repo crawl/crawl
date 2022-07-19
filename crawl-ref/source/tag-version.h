@@ -274,6 +274,7 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_CT_SKILLS,    // Remove the very long-unused ct skills.
     TAG_MINOR_MERGE_RANGED,        // Merge all ranged weapon skills together.
     TAG_MINOR_RECOMPRESS_BADMUTS,  // Reduce some more mutations to 2 levels.
+    TAG_MINOR_SPAWN_RATE,          // Remove the env.spawn_random_rate field.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

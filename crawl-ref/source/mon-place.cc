@@ -274,14 +274,30 @@ static void _apply_ood(level_id &place)
     }
 }
 
+/**
+ * Rate at which random monsters spawn, with lower numbers making
+ * them spawn more often (5 or less causes one to spawn about every
+ * 5 turns). 0 stops random generation.
+ */
+static int _get_monster_spawn_rate()
+{
+    if (player_in_branch(BRANCH_ABYSS))
+    {
+        if (player_in_starting_abyss())
+            return 50;
+        return 5 * (have_passive(passive_t::slow_abyss) ? 2 : 1);
+    }
+
+    if (player_on_orb_run())
+        return have_passive(passive_t::slow_orb_run) ? 36 : 18;
+
+    return 50;
+}
+
 //#define DEBUG_MON_CREATION
 
 /**
  * Spawn random monsters.
-
- * The spawn rate defaults to the current env.spawn_random_rate for the branch,
- * but is modified by whether the player is in the abyss and on what level, as
- * well as whether the player has the orb.
  */
 void spawn_random_monsters()
 {
@@ -301,32 +317,14 @@ void spawn_random_monsters()
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in spawn_random_monsters()");
 #endif
-    int rate = env.spawn_random_rate;
-    if (!rate)
-    {
-#ifdef DEBUG_MON_CREATION
-        mprf(MSGCH_DIAGNOSTICS, "random monster gen turned off");
-#endif
-        return;
-    }
 
-    if (player_on_orb_run())
-        rate = have_passive(passive_t::slow_orb_run) ? 36 : 18;
-
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        if (!player_in_starting_abyss())
-            rate = 5;
-        if (have_passive(passive_t::slow_abyss))
-            rate *= 2;
-    }
-
+    const int rate = _get_monster_spawn_rate();
     if (!x_chance_in_y(5, rate))
         return;
 
     // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
     // players that get banished there on the orb run.
-    // ...except in the deep Abyss!
+    // ...but in the deep abyss, do spawn nearby monsters sometimes!
     if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)
         || player_in_branch(BRANCH_ABYSS)
            && you.depth > 5
