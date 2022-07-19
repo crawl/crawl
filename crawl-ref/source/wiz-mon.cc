@@ -305,68 +305,36 @@ void debug_list_monsters()
 
 void wizard_spawn_control()
 {
-    mprf(MSGCH_PROMPT, "(c)hange spawn rate or (s)pawn monsters? ");
-    const int c = toalower(getchm());
+    // 50 spots are reserved for non-wandering monsters.
+    int max_spawn = MAX_MONSTERS - 50;
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->alive())
+            max_spawn--;
 
-    char specs[256];
-    bool done = false;
-
-    if (c == 'c')
+    if (max_spawn <= 0)
     {
-        mprf(MSGCH_PROMPT, "Set monster spawn rate to what? (now %d, lower value = higher rate) ",
-             env.spawn_random_rate);
-
-        if (!cancellable_get_line(specs, sizeof(specs)))
-        {
-            const int rate = atoi(specs);
-            if (rate || specs[0] == '0')
-            {
-                mprf("Setting monster spawn rate to %i.", rate);
-                env.spawn_random_rate = rate;
-                done = true;
-            }
-        }
-    }
-    else if (c == 's')
-    {
-        // 50 spots are reserved for non-wandering monsters.
-        int max_spawn = MAX_MONSTERS - 50;
-        for (monster_iterator mi; mi; ++mi)
-            if (mi->alive())
-                max_spawn--;
-
-        if (max_spawn <= 0)
-        {
-            mprf(MSGCH_PROMPT, "Level already filled with monsters, "
-                               "get rid of some of them first.");
-            return;
-        }
-
-        mprf(MSGCH_PROMPT, "Spawn how many random monsters (max %d)? ",
-             max_spawn);
-
-        if (!cancellable_get_line(specs, sizeof(specs)))
-        {
-            const int num = min(atoi(specs), max_spawn);
-            if (num > 0)
-            {
-                mprf("Spawning %i monster%s.", num, num == 1 ? "" : "s");
-                int curr_rate = env.spawn_random_rate;
-                // Each call to spawn_random_monsters() will spawn one with
-                // the rate at 5 or less.
-                env.spawn_random_rate = 5;
-
-                for (int i = 0; i < num; ++i)
-                    spawn_random_monsters();
-
-                env.spawn_random_rate = curr_rate;
-                done = true;
-            }
-        }
+        mprf(MSGCH_PROMPT, "Level already filled with monsters, "
+                           "get rid of some of them first.");
+        return;
     }
 
-    if (!done)
+    mprf(MSGCH_PROMPT, "Spawn how many random monsters (max %d)? ",
+         max_spawn);
+
+    if (cancellable_get_line(specs, sizeof(specs)))
+    {
         canned_msg(MSG_OK);
+        return;
+    }
+
+    const int num = min(atoi(specs), max_spawn);
+    if (num <= 0)
+        return;
+
+    mprf("Spawning %i monster%s.", num, num == 1 ? "" : "s");
+
+    for (int i = 0; i < num; ++i)
+        spawn_random_monsters();
 }
 
 static const char* ht_names[] =
