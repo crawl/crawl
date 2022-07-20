@@ -721,15 +721,16 @@ static const food_def Food_prop[] =
 
 struct item_set_def
 {
+    string name;
     object_class_type cls;
     vector<int> subtypes;
 };
 static const item_set_def item_sets[] =
 {
-    { OBJ_WANDS,    { WAND_CHARMING, WAND_PARALYSIS } },
-    { OBJ_WANDS,    { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
-    { OBJ_WANDS,    { WAND_ICEBLAST, WAND_ROOTS } },
-    { OBJ_SCROLLS,  { SCR_FOG, SCR_BUTTERFLIES } },
+    { "hex wand",           OBJ_WANDS,    { WAND_CHARMING, WAND_PARALYSIS } },
+    { "beam wand",          OBJ_WANDS,    { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
+    { "blast wand",         OBJ_WANDS,    { WAND_ICEBLAST, WAND_ROOTS } },
+    { "concealment scroll", OBJ_SCROLLS,  { SCR_FOG, SCR_BUTTERFLIES } },
 };
 COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 
@@ -3121,4 +3122,22 @@ bool item_known_excluded_from_set(object_class_type type, int sub_type)
     const item_set_type ist = excluded_items[type][sub_type];
     const int chosen = _item_set_choice(ist);
     return you.type_ids[item_sets[ist].cls][chosen];
+}
+
+item_set_type item_set_by_name(string name)
+{
+    // We could cache this if we wanted to.
+    for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
+        if (item_sets[i].name == name)
+            return (item_set_type)i;
+    return NUM_ITEM_SET_TYPES;
+}
+
+string item_name_for_set(item_set_type typ)
+{
+    ASSERT(typ >= 0 && typ < NUM_ITEM_SET_TYPES);
+    item_def it;
+    it.base_type = item_sets[typ].cls;
+    it.sub_type = item_for_set(typ);
+    return sub_type_string(it, true);
 }

@@ -715,7 +715,7 @@ i-amnesia SCR_AMNESIA
 i-curse-jewellery SCR_CURSE_JEWELLERY
 # end TAG_MAJOR_VERSION
 %back scroll-brown
-i-poison SCR_POISON 
+i-poison SCR_POISON
 %back scroll-grey
 i-random_uselessness SCR_BUTTERFLIES SCR_ID_LAST
 %back none

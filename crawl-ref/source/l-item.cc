@@ -1554,9 +1554,27 @@ LUAFN(l_item_excluded_from_set)
     {
         luaL_error(ls, make_stringf("Invalid item spec '%s'.",
                                     specifier.c_str()).c_str());
+        return 0;
     }
     lua_pushboolean(ls, item_excluded_from_set(parsed_spec.base_type,
                                                parsed_spec.sub_type));
+    return 1;
+}
+
+LUAFN(l_item_for_set)
+{
+    ASSERT_DLUA;
+
+    const string &setname = luaL_checkstring(ls, 1);
+    const item_set_type iset = item_set_by_name(setname);
+    if (iset == NUM_ITEM_SET_TYPES)
+    {
+        luaL_error(ls, make_stringf("Invalid item set name '%s'.",
+                                    setname.c_str()).c_str());
+        return 0;
+    }
+
+    lua_pushstring(ls, item_name_for_set(iset).c_str());
     return 1;
 }
 
@@ -1659,7 +1677,9 @@ static const struct luaL_reg item_lib[] =
     { "shopping_list",     l_item_shopping_list },
     { "acquirement_items", l_item_acquirement_items },
     { "fire",              l_item_fire },
+
     { "excluded_from_set", l_item_excluded_from_set },
+    { "item_for_set",      l_item_for_set },
     { nullptr, nullptr },
 };
 
