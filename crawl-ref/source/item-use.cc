@@ -3183,6 +3183,7 @@ static unique_ptr<targeter> _get_scroll_targeter(scroll_type which_scroll)
     {
     case SCR_FEAR:
         return find_spell_targeter(SPELL_CAUSE_FEAR, 1000, LOS_RADIUS);
+    case SCR_BUTTERFLIES: // close enough...
     case SCR_SUMMONING:
         // TODO: shadow creatures targeter doesn't handle band placement very
         // well, and this is more obvious with the scroll
@@ -3243,6 +3244,7 @@ bool scroll_has_targeter(scroll_type which_scroll)
     case SCR_BLINKING:
     case SCR_FEAR:
     case SCR_SUMMONING:
+    case SCR_BUTTERFLIES:
     case SCR_VULNERABILITY:
     case SCR_IMMOLATION:
     case SCR_POISON:
@@ -3264,8 +3266,12 @@ bool scroll_hostile_check(scroll_type which_scroll)
         return false;
 
     // no hostile check
-    if (which_scroll == SCR_SUMMONING || which_scroll == SCR_BLINKING)
+    if (which_scroll == SCR_SUMMONING
+        || which_scroll == SCR_BLINKING
+        || which_scroll == SCR_BUTTERFLIES)
+    {
         return true;
+    }
 
     unique_ptr<targeter> hitfunc = _get_scroll_targeter(which_scroll);
     if (!hitfunc)
