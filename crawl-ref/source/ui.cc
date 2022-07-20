@@ -177,7 +177,7 @@ MouseEvent::MouseEvent(Event::Type _type, const wm_mouse_event& wm_ev) : Event(_
 }
 #endif
 
-FocusEvent::FocusEvent(Event::Type type) : Event(type)
+FocusEvent::FocusEvent(Event::Type typ) : Event(typ)
 {
 }
 

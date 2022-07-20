@@ -1905,17 +1905,17 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 // This uses data provided by pathfind(), so that needs to be called first.
 int travel_pathfind::explore_status()
 {
-    int explore_status = 0;
+    int status = 0;
 
     const coord_def greed = greedy_place;
     if (greed.x || greed.y)
-        explore_status |= EST_GREED_UNFULFILLED;
+        status |= EST_GREED_UNFULFILLED;
 
     const coord_def unexplored = unexplored_place;
     if (unexplored.x || unexplored.y || !unreachables.empty())
-        explore_status |= EST_PARTLY_EXPLORED;
+        status |= EST_PARTLY_EXPLORED;
 
-    return explore_status;
+    return status;
 }
 
 

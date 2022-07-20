@@ -4808,7 +4808,7 @@ static void _bones_merge(const vector<string> files, const string out_name)
     {
         auto ghosts = load_bones_file(filename, false);
         auto end = ghosts.end();
-        if (out.size() + ghosts.size() > MAX_GHOSTS)
+        if (out.size() + ghosts.size() > (uint)MAX_GHOSTS)
         {
             //cout << "ghosts " << out.size() + ghosts.size() - MAX_GHOSTS;
             cout << "Too many ghosts! Capping merge at " << MAX_GHOSTS << "\n";

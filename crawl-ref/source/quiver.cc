@@ -2001,8 +2001,8 @@ namespace quiver
 
     void action_cycler::save(const string key) const
     {
-        auto &target = you.props[key].get_table();
-        get()->save(target);
+        auto &targ = you.props[key].get_table();
+        get()->save(targ);
         CrawlVector &history_vec = you.props[key]["history"].get_vector();
         history_vec.clear();
         for (auto &a : history)
@@ -2025,8 +2025,8 @@ namespace quiver
             save(key);
         }
 
-        auto &target = you.props[key].get_table();
-        set(_load_action(target));
+        auto &targ = you.props[key].get_table();
+        set(_load_action(targ));
         CrawlVector &history_vec = you.props[key]["history"].get_vector();
         history.clear();
         for (auto &val : history_vec)
@@ -2670,7 +2670,7 @@ namespace quiver
             // present
             const bool show_headers = (!actions.empty() + !spell_actions.empty()
                                         + !abil_actions.empty()) > 1;
-            const auto item_count = actions.size();
+            const auto it_count = actions.size();
             const auto spell_count = spell_actions.size();
             actions.insert(actions.end(), spell_actions.begin(), spell_actions.end());
             actions.insert(actions.end(), abil_actions.begin(), abil_actions.end());
@@ -2681,10 +2681,10 @@ namespace quiver
                             " <lightgrey>([<w>,</w>] to cycle)</lightgrey>";
 
             first_item = 0;
-            first_spell = item_count;
+            first_spell = it_count;
             first_abil = first_spell + spell_count;
 
-            if (item_count && show_headers)
+            if (it_count && show_headers)
             {
                 add_entry(
                     new MenuEntry("<lightcyan>Items</lightcyan>" + keyhelp,
@@ -2697,7 +2697,7 @@ namespace quiver
             {
                 if (i == 0)
                     first_item = items.size();
-                if (i == item_count && spell_count && show_headers)
+                if (i == it_count && spell_count && show_headers)
                 {
                     add_entry(
                         new MenuEntry("<lightcyan>Spells</lightcyan>" + keyhelp,
@@ -2705,7 +2705,7 @@ namespace quiver
                     first_spell += 1;
                     first_abil += 1;
                 }
-                else if (i == item_count + spell_count && show_headers)
+                else if (i == it_count + spell_count && show_headers)
                 {
                     add_entry(
                         new MenuEntry("<lightcyan>Abilities</lightcyan>" + keyhelp,
