@@ -1049,10 +1049,11 @@ spret summon_butterflies()
         string prompt = make_stringf("Really summon butterflies while emitting a %s?",
                                      reason.c_str());
 
-        if (yesno(prompt.c_str(), false, 'n'))
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
             return spret::abort;
-
-        canned_msg(MSG_OK);
+        }
     }
 
     // XXX: dedup with Xom, or change number?
