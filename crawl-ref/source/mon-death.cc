@@ -2944,6 +2944,11 @@ string summoned_poof_msg(const monster* mons, bool plural)
         no_chaos = true;
         break;
 
+    case MON_SUMM_BUTTERFLIES:
+        msg      = "disappear%s in a burst of colours";
+        no_chaos = true;
+        break;
+
     case MON_SUMM_CHAOS:
         msg = "degenerate%s into a cloud of primal chaos";
         break;

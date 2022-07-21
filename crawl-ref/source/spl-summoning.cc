@@ -1061,11 +1061,12 @@ spret summon_butterflies()
     bool success = false;
     for (int i = 0; i < how_many; ++i)
     {
-        if (create_monster(_pal_data(MONS_BUTTERFLY, 3, GOD_NO_GOD,
-                                     SPELL_SUMMON_BUTTERFLIES)))
-        {
+        mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
+                            MG_AUTOFOE);
+        butterfly.set_summoned(&you, 3, MON_SUMM_BUTTERFLIES);
+
+        if (create_monster(butterfly))
             success = true;
-        }
     }
 
     if (!success)
