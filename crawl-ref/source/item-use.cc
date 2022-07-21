@@ -3037,6 +3037,12 @@ string cannot_read_item_reason(const item_def *item)
         case SCR_IDENTIFY:
             return _no_items_reason(OSEL_UNIDENT, true);
 
+        case SCR_SUMMONING:
+        case SCR_BUTTERFLIES:
+            if (you.allies_forbidden())
+                return "You cannot coerce anything to answer your summons.";
+            return "";
+
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON:
             if (!you.weapon())
