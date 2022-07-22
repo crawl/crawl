@@ -1055,6 +1055,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                     return 8;
                 case icons.RECALL:
                 case icons.REFLECTING:
+                case icons.TELEPORTING:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 9;
                 case icons.BLIND:
