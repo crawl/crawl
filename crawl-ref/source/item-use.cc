@@ -1046,6 +1046,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
+    const string mut_block = mut_blocks_item_reason(item, false);
+    if (!mut_block.empty())
+    {
+        if (verbose)
+            mprf("%s", mut_block.c_str());
+        return false;
+    }
+
     // Lear's hauberk covers also head, hands and legs.
     if (is_unrandom_artefact(item, UNRAND_LEAR))
     {
@@ -1060,26 +1068,6 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
                 mpr("You have no feet.");
-            return false;
-        }
-
-        if (you.get_mutation_level(MUT_CLAWS, !ignore_temporary) >= 3
-            || you.get_mutation_level(MUT_DEMONIC_TOUCH,
-                                      !ignore_temporary) >= 3)
-        {
-            if (verbose)
-            {
-                mprf("The hauberk won't fit your %s.",
-                     you.hand_name(true).c_str());
-            }
-            return false;
-        }
-
-        if (you.get_mutation_level(MUT_HORNS, !ignore_temporary) >= 3
-            || you.get_mutation_level(MUT_ANTENNAE, !ignore_temporary) >= 3)
-        {
-            if (verbose)
-                mpr("The hauberk won't fit your head.");
             return false;
         }
 
@@ -1148,42 +1136,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return false;
     }
 
-    if (sub_type == ARM_GLOVES)
-    {
-        if (you.has_claws(false) == 3)
-        {
-            if (verbose)
-            {
-                mprf("You can't wear gloves with your huge claw%s!",
-                     you.arm_count() == 1 ? "" : "s");
-            }
-            return false;
-        }
-
-        if (you.get_mutation_level(MUT_DEMONIC_TOUCH) == 3)
-        {
-            if (verbose)
-                mpr("Your demonic touch would destroy the gloves!");
-            return false;
-        }
-    }
-
     if (sub_type == ARM_BOOTS)
     {
-        if (you.get_mutation_level(MUT_HOOVES, false) == 3)
-        {
-            if (verbose)
-                mpr("You can't wear boots with hooves!");
-            return false;
-        }
-
-        if (you.has_talons(false) == 3)
-        {
-            if (verbose)
-                mpr("Boots don't fit your talons!");
-            return false;
-        }
-
         if (you.wear_barding())
         {
             if (verbose)
@@ -1202,78 +1156,21 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You don't currently have feet!");
             return false;
         }
-
-        if (you.get_mutation_level(MUT_FLOAT))
-        {
-            if (verbose)
-                mpr("You have no feet!"); // or legs
-            return false;
-        }
     }
 
-    if (slot == EQ_HELMET)
+    if (slot == EQ_HELMET && !is_hard_helmet(item))
     {
-        // Horns 3 & Antennae 3 mutations disallow all headgear
-        if (you.get_mutation_level(MUT_HORNS, false) == 3)
+        if (species::is_draconian(you.species))
         {
             if (verbose)
-                mpr("You can't wear any headgear with your large horns!");
+                mpr("You can't wear that with your reptilian head.");
             return false;
         }
 
-        if (you.get_mutation_level(MUT_ANTENNAE, false) == 3)
+        if (you.species == SP_OCTOPODE)
         {
             if (verbose)
-                mpr("You can't wear any headgear with your large antennae!");
-            return false;
-        }
-
-        // Soft helmets (caps and wizard hats) always fit, otherwise.
-        if (is_hard_helmet(item))
-        {
-            if (you.get_mutation_level(MUT_HORNS, false))
-            {
-                if (verbose)
-                    mpr("You can't wear that with your horns!");
-                return false;
-            }
-
-            if (you.get_mutation_level(MUT_BEAK, false))
-            {
-                if (verbose)
-                    mpr("You can't wear that with your beak!");
-                return false;
-            }
-
-            if (you.get_mutation_level(MUT_ANTENNAE, false))
-            {
-                if (verbose)
-                    mpr("You can't wear that with your antennae!");
-                return false;
-            }
-
-            if (species::is_draconian(you.species))
-            {
-                if (verbose)
-                    mpr("You can't wear that with your reptilian head.");
-                return false;
-            }
-
-            if (you.species == SP_OCTOPODE)
-            {
-                if (verbose)
-                    mpr("You can't wear that!");
-                return false;
-            }
-        }
-    }
-
-    if (slot == EQ_CLOAK)
-    {
-        if (you.get_mutation_level(MUT_WEAKNESS_STINGER) == 3)
-        {
-            if (verbose)
-                mpr("You can't wear that with your sharp stinger!");
+                mpr("You can't wear that!");
             return false;
         }
     }
