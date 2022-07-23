@@ -1994,7 +1994,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     if (physiology_mutation_conflict(mutat))
         return false;
 
-    if (_ashenzari_blocks(mutat))
+    if (mutclass != MUTCLASS_INNATE && _ashenzari_blocks(mutat))
         return false;
 
     const mutation_def& mdef = _get_mutation_def(mutat);
