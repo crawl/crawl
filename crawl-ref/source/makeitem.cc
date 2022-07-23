@@ -523,6 +523,9 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_LARGE_ROCK:
         rc = SPMSL_NORMAL;
         break;
+    case MI_BOOMERANG:
+        rc = SPMSL_NORMAL;
+        break;
     case MI_DART:
         // Curare is special cased, all the others aren't.
         if (got_curare_roll(item_level))
@@ -538,10 +541,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         break;
     case MI_JAVELIN:
         rc = random_choose_weighted(90, SPMSL_SILVER,
-                                    nw, SPMSL_NORMAL);
-        break;
-    case MI_BOOMERANG:
-        rc = random_choose_weighted(30, SPMSL_SILVER,
                                     nw, SPMSL_NORMAL);
         break;
     }
@@ -611,7 +610,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_CHAOS:
         return type == MI_BOOMERANG || type == MI_JAVELIN;
     case SPMSL_SILVER:
-        return type == MI_JAVELIN || type == MI_BOOMERANG;
+        return type == MI_JAVELIN;
     default: break;
     }
 
