@@ -673,7 +673,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRACONIAN_MONK, 'q', GREEN, "draconian monk",
+    MONS_DRACONIAN_MONK, 'q', LIGHTGREEN, "draconian monk",
     M_FIGHTER | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
@@ -688,7 +688,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRACONIAN_SHIFTER, 'q', MAGENTA, "draconian shifter",
+    MONS_DRACONIAN_SHIFTER, 'q', LIGHTMAGENTA, "draconian shifter",
     M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
@@ -716,7 +716,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRACONIAN_KNIGHT, 'q', BLUE, "draconian knight",
+    MONS_DRACONIAN_KNIGHT, 'q', LIGHTBLUE, "draconian knight",
     M_FIGHTER | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, 40,
