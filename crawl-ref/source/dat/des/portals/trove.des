@@ -100,10 +100,16 @@ function trove.get_trove_item(e, value, base_item)
   local prices = {
        {base="scroll", type="acquirement", quant=2},
        {base="scroll", type="fear", quant=2+d(3)+d(3)},
-       {base="scroll", type=items.item_for_set("concealment scroll"), quant=2+d(3)+d(3)},
        {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot"},
        {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
        {base="miscellaneous", type="horn of Geryon"} }
+
+  if you.god() ~= "Okawaru"
+     or items.item_for_set("concealment scroll") ~= "butterflies" then
+    table.insert(prices,
+                 {base="scroll", type=items.item_for_set("concealment scroll"),
+                  quant=2+d(3)+d(3)})
+  end
 
   local wpn = {
        {base="weapon", type="demon whip", quant=2+d(3)+d(3)},
