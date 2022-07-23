@@ -1449,7 +1449,7 @@ ENDMAP
 NAME:   minmay_unpleasant_kobolds
 TAGS:   transparent
 DEPTH:  D:6-
-MONS:   kobold ; boomerang ego:dispersal q:2 / w:3 kobold brigand ; boomerang ego:dispersal q:4
+MONS:   kobold ; dart ego:dispersal q:2 / w:3 kobold brigand ; dart ego:dispersal q:4
 MONS:   kobold ; boomerang ego:silver q:2 / w:3 kobold brigand ; boomerang ego:silver q:4
 MONS:   kobold ; dart ego:curare q:1 / \
         w:3 kobold brigand ; dart ego:curare q:2

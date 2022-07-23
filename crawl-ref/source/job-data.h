@@ -369,7 +369,7 @@ static const map<job_type, job_def> job_data =
         SPELL_TELEPORT_OTHER,
         SPELL_MANIFOLD_ASSAULT,
     },
-    { "leather armour", "scroll of blinking", "boomerang ego:dispersal q:7" },
+    { "leather armour", "scroll of blinking", "dart ego:dispersal q:7" },
     WCHOICE_PLAIN,
     { { SK_FIGHTING, 2 }, { SK_ARMOUR, 1 }, { SK_DODGING, 2 },
       { SK_SPELLCASTING, 2 }, { SK_TRANSLOCATIONS, 3 }, { SK_THROWING, 1 },

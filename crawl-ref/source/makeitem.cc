@@ -533,6 +533,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
         rc = random_choose_weighted(60, SPMSL_BLINDING,
                                     20, SPMSL_FRENZY,
+                                    20, SPMSL_DISPERSAL,
                                     pw, SPMSL_POISONED);
         break;
     case MI_JAVELIN:
@@ -541,7 +542,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         break;
     case MI_BOOMERANG:
         rc = random_choose_weighted(30, SPMSL_SILVER,
-                                    30, SPMSL_DISPERSAL,
                                     nw, SPMSL_NORMAL);
         break;
     }
@@ -579,6 +579,7 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     case SPMSL_PARALYSIS:
 #endif
     case SPMSL_FRENZY:
+    case SPMSL_DISPERSAL:
         return type == MI_DART;
 
     case SPMSL_BLINDING:
@@ -609,8 +610,6 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
         return false;
     case SPMSL_CHAOS:
         return type == MI_BOOMERANG || type == MI_JAVELIN;
-    case SPMSL_DISPERSAL:
-        return type == MI_BOOMERANG;
     case SPMSL_SILVER:
         return type == MI_JAVELIN || type == MI_BOOMERANG;
     default: break;
