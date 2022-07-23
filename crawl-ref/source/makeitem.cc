@@ -493,14 +493,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         return static_cast<special_missile_type>(item.brand);
 
     special_missile_type rc = SPMSL_NORMAL;
-
-    // Weight of SPMSL_NORMAL
-    // Gifts from Trog/Oka can be unbranded boomerangs/javelins
-    // but not poisoned darts
-    int nw = item_level >= ISPEC_GOOD_ITEM ?   0 :
-             item_level == ISPEC_GIFT      ? 120
-                                           : random2(2000 - 55 * item_level);
-
     // Weight of SPMSL_POISONED
     int pw = item_level >= ISPEC_GIFT ? 0 : random2(2000 - 55 * item_level);
 
@@ -514,6 +506,9 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_BOOMERANG:
         rc = SPMSL_NORMAL;
         break;
+    case MI_JAVELIN:
+        rc = SPMSL_SILVER;
+        break;
     case MI_DART:
         // Curare is special cased, all the others aren't.
         if (got_curare_roll(item_level))
@@ -526,10 +521,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     20, SPMSL_FRENZY,
                                     20, SPMSL_DISPERSAL,
                                     pw, SPMSL_POISONED);
-        break;
-    case MI_JAVELIN:
-        rc = random_choose_weighted(90, SPMSL_SILVER,
-                                    nw, SPMSL_NORMAL);
         break;
     }
 
