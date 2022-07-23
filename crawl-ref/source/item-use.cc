@@ -1158,7 +1158,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
-    if (slot == EQ_HELMET && !is_hard_helmet(item))
+    if (is_hard_helmet(item))
     {
         if (species::is_draconian(you.species))
         {
