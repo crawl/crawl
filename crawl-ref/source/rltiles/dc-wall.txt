@@ -1086,6 +1086,11 @@ hell10
 hell11
 
 %weight 10
+bmaus_stone_wall0 WALL_BORG_STONE
+bmaus_stone_wall1
+bmaus_stone_wall2
+bmaus_stone_wall3
+
 ice_wall0 WALL_ICE
 ice_wall1
 ice_wall2
