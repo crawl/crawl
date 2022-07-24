@@ -57,6 +57,30 @@ naga_blue_f
 naga_blue_m
 naga_red_f
 naga_red_m
+naga_bushfire_f
+naga_bushfire_m
+naga_cave_f
+naga_cave_m
+naga_deep_f
+naga_deep_m
+naga_dune_f
+naga_dune_m
+naga_milksnake_f
+naga_milksnake_m
+naga_orange_f
+naga_orange_m
+naga_purple_f
+naga_purple_m
+naga_rattlesnake_f
+naga_rattlesnake_m
+naga_river_f
+naga_river_m
+naga_shadow_f
+naga_shadow_m
+naga_stream_f
+naga_stream_m
+naga_swamp_f
+naga_swamp_m
 ogre_m OGRE
 ogre_f
 meteoran_f METEORAN
