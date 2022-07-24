@@ -247,6 +247,7 @@
     Dom 'Bodrick' Light
     Lightli
     Lewis R. Liu
+    Lyre
     Kiëd Llaentenn
     Mark Lodato
     Matthew Ludivico
