@@ -570,8 +570,8 @@ TILE:    urand_eos
 TILE_EQ: eos
 BRAND:   SPWPN_ELECTROCUTION
 BOOL:    elec
-DESCRIP: It grants its wielder a halo, increasing accuracy against those within
- it.
+DESCRIP: It grants its wielder a halo, revealing invisible creatures and
+ increasing accuracy against all within it other than the wielder.
 
 # start TAG_MAJOR_VERSION == 34
 # Was "spear of Voo-Doo". In the African origin, there is a distinction

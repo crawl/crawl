@@ -7079,7 +7079,7 @@ bool player::visible_to(const actor *looker) const
 /**
  * Is the player backlit?
  *
- * @param self_halo If true, ignore the player's self-halo.
+ * @param self_halo If false, ignore the player's self-halo.
  * @param temp If true, include temporary sources of being backlit.
  * @returns True if the player is backlit.
 */
