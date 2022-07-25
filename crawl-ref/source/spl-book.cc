@@ -706,6 +706,7 @@ private:
         // try to keep the hover on the current spell. (Maybe this is too
         // complicated?)
         ASSERT(last_hovered < static_cast<int>(items.size()));
+        int new_hover = last_hovered;
         const spell_type hovered_spell =
             last_hovered >= 0 && items[last_hovered]->data
                 ? *static_cast<spell_type *>(items[last_hovered]->data)
@@ -715,7 +716,6 @@ private:
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
         text_pattern pat(search_text, true);
-        int new_hover = 0;
         for (auto& spell : spells)
         {
             if (!search_text.empty()

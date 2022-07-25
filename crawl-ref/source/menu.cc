@@ -1944,10 +1944,9 @@ void Menu::select_items(int key, int qty)
     const int index = hotkey_to_index(key, !is_set(MF_SINGLESELECT));
     if (index >= 0)
     {
-        // XX for some singleselect menus, only snapping might be
-        // better. (E.g. inventory)
         select_index(index, qty);
-        set_hovered(index);
+        if (is_set(MF_MULTISELECT))
+            set_hovered(index);
         return;
     }
 
@@ -2989,8 +2988,11 @@ void Menu::webtiles_scroll(int first, int hover)
     if (m_ui.scroller->get_scroll() != item_y)
     {
         m_ui.scroller->set_scroll(item_y);
-        set_hovered(hover);
-        // TODO: can the snap in set_hovered ever do anything weird in this call?
+        // The `set_hovered` call here will trigger a snap, which is a way
+        // for the server to get out of sync with the client. We therefore
+        // only call it if the hover has actually changed on the client side.
+        if (last_hovered != hover)
+            set_hovered(hover);
         webtiles_update_scroll_pos();
         ui::force_render();
     }
