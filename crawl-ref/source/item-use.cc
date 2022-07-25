@@ -152,7 +152,7 @@ int _default_osel(operation_types oper)
 
 UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
                                     const char* prompt=nullptr)
-    : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER),
+    : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_ALLOW_FORMATTING),
                             display_all(false), is_inventory(true),
       item_type_filter(item_type), oper(_oper), last_inv_pos(-1),
       inv_header(nullptr), floor_header(nullptr)
@@ -326,27 +326,32 @@ void UseItemMenu::update_sections()
     for (; i < static_cast<int>(items.size()); i++)
         if (items[i]->level == MEL_ITEM)
             items[i]->set_enabled(!is_inventory);
+    const string cycle_hint = make_stringf(" (%s to select)",
+            menu_keyhelp_cmd(CMD_MENU_CYCLE_HEADERS).c_str());
+
+    // a `,` will trigger quick activation, rather than cycle headers
+    const bool easy_floor = Options.easy_floor_use && item_floor.size() == 1
+        && (is_inventory || !inv_header);
     if (inv_header)
     {
         inv_header->text = "Inventory Items";
         if (!is_inventory)
-            inv_header->text += " (',' to select)";
-        if (floor_header)
+            inv_header->text += cycle_hint;
+    }
+
+    if (floor_header)
+    {
+        floor_header->text = "Floor Items";
+        if (easy_floor)
         {
-            floor_header->text = "Floor Items";
-            if (is_inventory)
-            {
-                if (Options.easy_floor_use && item_floor.size() == 1)
-                {
-                    floor_header->text += string(" (',' to ") +
-                        (oper == OPER_WEAR ? "wear)"
-                       : oper == OPER_WIELD ? "wield)"
-                       : "use)");
-                }
-                else
-                    floor_header->text += " (',' to select)";
-            }
+            floor_header->text += make_stringf(" (%s to %s)",
+                    menu_keyhelp_cmd(CMD_MENU_CYCLE_HEADERS).c_str(),
+                        (oper == OPER_WEAR ? "wear"
+                        : oper == OPER_WIELD ? "wield"
+                        : "use"));
         }
+        else if (is_inventory)
+            floor_header->text += cycle_hint;
     }
 
     update_menu(true);

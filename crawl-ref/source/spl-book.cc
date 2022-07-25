@@ -562,7 +562,7 @@ private:
 
         const string act = you.divine_exegesis ? "Cast" : "Memorise";
         // line 2
-        desc << "[<w>!</w>] ";
+        desc << menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) << " ";
         desc << ( current_action == action::cast
                             ? "<w>Cast</w>|Describe|Hide|Show"
                  : current_action == action::memorise
@@ -572,11 +572,11 @@ private:
                  : current_action == action::hide
                             ? act + "|Describe|<w>Hide</w>|Show"
                  : act + "|Describe|Hide|<w>Show</w>");
-        desc << "   [<w>Ctrl-f</w>] search"
-                "   [<w>?</w>] help";
+        desc << "   " << menu_keyhelp_cmd(CMD_MENU_SEARCH) << " search"
+                "   [<w>?</w>] help"; // XX hardcoded for this menu
 
         if (search_text.size())
-            return pad_more_with(desc.str(), "[<w>Esc</w>] clear");
+            return pad_more_with(desc.str(), "[<w>Esc</w>] clear"); // esc is harcoded for this case
         else
             return pad_more_with_esc(desc.str());
     }

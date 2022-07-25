@@ -1144,10 +1144,48 @@ string pad_more_with(const string &s, const string &pad, int min_width)
         min_width).to_colour_string();
 }
 
+static string _keyhelp_format_key(const string &s)
+{
+    return make_stringf("[<w>%s</w>]", s.c_str());
+}
+
+string menu_keyhelp_select_keys()
+{
+    const string up = command_to_string(CMD_MENU_UP);
+    const string down = command_to_string(CMD_MENU_DOWN);
+    return make_stringf("[<w>%s</w>|<w>%s</w>]", up.c_str(), down.c_str());
+}
+
+static string _command_to_string(command_type cmd)
+{
+    return replace_all(command_to_string(cmd), "<", "<<");
+}
+
 // standardized formatting for this
 string pad_more_with_esc(const string &s)
 {
-    return pad_more_with(s, "[<w>Esc</w>] close");
+    return pad_more_with(s, menu_keyhelp_cmd(CMD_MENU_EXIT) + " exit");
+}
+
+string menu_keyhelp_cmd(command_type cmd)
+{
+    if (cmd == CMD_MENU_PAGE_UP || cmd == CMD_MENU_PAGE_DOWN)
+    {
+        // always show < and > as secondary keys, if they are defined
+        const string primary = _command_to_string(cmd);
+        const string secondary_key = cmd == CMD_MENU_PAGE_UP ? "<<" : ">";
+        string secondary;
+        if (primary != secondary_key && key_to_command(secondary_key[0], KMC_MENU) == cmd)
+            secondary = make_stringf("|<w>%s</w>", secondary_key.c_str());
+        return make_stringf("[<w>%s</w>%s]", primary.c_str(), secondary.c_str());
+    }
+    else if (cmd == CMD_MENU_TOGGLE_SELECTED)
+    {
+        // TODO: fix once space is not hardcoded
+        return make_stringf("[<w>%s</w>|<w>Space</w>]", _command_to_string(cmd).c_str());
+    }
+    else
+        return _keyhelp_format_key(_command_to_string(cmd));
 }
 
 string Menu::get_keyhelp(bool scrollable) const
@@ -1161,16 +1199,16 @@ string Menu::get_keyhelp(bool scrollable) const
 
     string navigation = "<lightgrey>";
     if (is_set(MF_ARROWS_SELECT))
-        navigation += "[<w>Up</w>|<w>Down</w>] select  ";
+        navigation += menu_keyhelp_select_keys() + " select  ";
 
     if (scrollable)
     {
         navigation +=
-            "[<w>PgDn</w>|<w>></w>] page down  "
-            "[<w>PgUp</w>|<w><<</w>] page up  ";
+            menu_keyhelp_cmd(CMD_MENU_PAGE_DOWN) + " page down  "
+            + menu_keyhelp_cmd(CMD_MENU_PAGE_UP) + " page up  ";
     }
     if (!is_set(MF_MULTISELECT))
-        navigation += "[<w>Esc</w>] close";
+        navigation += menu_keyhelp_cmd(CMD_MENU_EXIT) + " exit";
     navigation += "</lightgrey>";
     if (is_set(MF_MULTISELECT))
     {
@@ -1183,13 +1221,14 @@ string Menu::get_keyhelp(bool scrollable) const
                 "Letters toggle    ";
         if (is_set(MF_ARROWS_SELECT))
         {
-            navigation +=
-                "[<w>.</w>|<w>Space</w>] toggle selected    ";
+            navigation += menu_keyhelp_cmd(CMD_MENU_TOGGLE_SELECTED)
+                + " toggle selected    ";
         }
         if (chosen_count)
         {
-            navigation += make_stringf(
-                    "[<w>Ret</w>] accept (%zu chosen)"
+            navigation += menu_keyhelp_cmd(CMD_MENU_ACCEPT_SELECTION)
+                + make_stringf(
+                    " accept (%zu chosen)"
                     "</lightgrey>",
                 chosen_count);
         }

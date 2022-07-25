@@ -121,37 +121,35 @@ protected:
             if (scrollable)
             {
                 navigation +=
-                    "[<w>PgDn</w>|<w>></w>] page down"
-                    "  [<w>PgUp</w>|<w><<</w>] page up";
+                    menu_keyhelp_cmd(CMD_MENU_PAGE_DOWN) + " page down  "
+                    + menu_keyhelp_cmd(CMD_MENU_PAGE_UP) + " page up  ";
             }
-            // navigation += "</lightgrey>";
-            navigation += "  [<w>Esc</w>|<w>Ret</w>] close"
-                          "  [<w>-</w>] recognised"
-                          "</lightgrey>";
+            navigation += "[<w>-</w>] recognised  "
+                            + menu_keyhelp_cmd(CMD_MENU_EXIT) + " exit"
+                            "</lightgrey>";
         }
         else
         {
             // very similar to the MF_MULTISELECT case for regular Menus, but
             // various differences require an override
-            navigation = "<lightgrey>"
-                         "[<w>Up</w>|<w>Down</w>] select";
+            navigation = "<lightgrey>" + menu_keyhelp_select_keys()
+                         + " select  ";
 
             if (scrollable)
             {
                 navigation +=
-                    "  [<w>PgDn</w>|<w>></w>] page down"
-                    "  [<w>PgUp</w>|<w><<</w>] page up";
+                    menu_keyhelp_cmd(CMD_MENU_PAGE_DOWN) + " page down  "
+                    + menu_keyhelp_cmd(CMD_MENU_PAGE_UP) + " page up  ";
             }
             navigation += "</lightgrey>";
-            navigation = pad_more_with(navigation,
-                                    "[<w>Esc</w>|<w>Ret</w>] close", MIN_COLS);
+            navigation = pad_more_with_esc(navigation);
             navigation +=
                     "\n<lightgrey>"
                     "Letters toggle autopickup  ";
             if (is_set(MF_ARROWS_SELECT))
             {
-                navigation +=
-                    "[<w>.</w>|<w>Space</w>] toggle selected  ";
+                navigation += menu_keyhelp_cmd(CMD_MENU_TOGGLE_SELECTED)
+                    + " toggle selected  ";
             }
 
             if (!all_items_known)

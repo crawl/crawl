@@ -372,23 +372,23 @@
 {CK_SHIFT_DOWN, CMD_MENU_LINE_DOWN},
 {CK_SHIFT_LEFT, CMD_MENU_LINE_UP}, // some terms don't have shift-up/down available by default
 {CK_SHIFT_RIGHT, CMD_MENU_LINE_DOWN},
-{CK_PGUP, CMD_MENU_PAGE_UP},
 {'<', CMD_MENU_PAGE_UP},
 {'-', CMD_MENU_PAGE_UP}, // manually overridden by many menus
+{CK_PGUP, CMD_MENU_PAGE_UP},
 {' ', CMD_MENU_PAGE_DOWN}, // currently still can be overridden with hacks
-{CK_PGDN, CMD_MENU_PAGE_DOWN},
 {'>', CMD_MENU_PAGE_DOWN},
 {'+', CMD_MENU_PAGE_DOWN},
+{CK_PGDN, CMD_MENU_PAGE_DOWN},
 {CK_HOME, CMD_MENU_SCROLL_TO_TOP},
 {CK_END, CMD_MENU_SCROLL_TO_END},
 {CONTROL('F'), CMD_MENU_SEARCH},
-{'!', CMD_MENU_CYCLE_MODE},
 {'?', CMD_MENU_CYCLE_MODE}, // XX why do we use this for cycle. Sometimes overridden for help
+{'!', CMD_MENU_CYCLE_MODE},
 #ifdef TOUCH_UI
 {CK_TOUCH_DUMMY, CMD_MENU_CYCLE_MODE}, // is this correct??
 #endif
-{CONTROL('I'), CMD_MENU_CYCLE_MODE}, // tab
 {CK_RIGHT, CMD_MENU_CYCLE_MODE},
+{CONTROL('I'), CMD_MENU_CYCLE_MODE}, // tab
 {CK_SHIFT_TAB, CMD_MENU_CYCLE_MODE_REVERSE},
 {CK_LEFT, CMD_MENU_CYCLE_MODE_REVERSE},
 {',', CMD_MENU_CYCLE_HEADERS},
@@ -398,8 +398,8 @@
 {'\'', CMD_MENU_EXAMINE},
 {CK_MOUSE_B2, CMD_MENU_EXIT},
 {CK_MOUSE_CMD, CMD_MENU_EXIT},
-{ESCAPE, CMD_MENU_EXIT},
 {CONTROL('G'), CMD_MENU_EXIT},
+{ESCAPE, CMD_MENU_EXIT},
 
 // multiselect-specific:
 {CK_ENTER, CMD_MENU_ACCEPT_SELECTION},

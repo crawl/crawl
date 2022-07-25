@@ -2580,7 +2580,8 @@ namespace quiver
                 s += "[<w>^</w>] all abilities  ";
 
 
-            string mode = make_stringf("[<w>!</w>] focus mode: %s",
+            string mode = make_stringf("%s focus mode: %s",
+                menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE).c_str(),
                 focus_mode == Focus::NONE ? "<w>off</w>|on"
                                           : "off|<w>on</w>");;
 
@@ -2697,7 +2698,8 @@ namespace quiver
             // this key shortcut does still work without arrow selection, but
             // it typically doesn't do much in this menu.
             const string keyhelp =
-                            " <lightgrey>([<w>,</w>] to cycle)</lightgrey>";
+                make_stringf(" <lightgrey>(%s to cycle)</lightgrey>",
+                            menu_keyhelp_cmd(CMD_MENU_CYCLE_HEADERS).c_str());
 
             first_item = 0;
             first_spell = it_count;

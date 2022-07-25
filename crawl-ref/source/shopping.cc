@@ -970,7 +970,11 @@ int ShopMenu::selected_cost(bool use_shopping_list) const
 
 void ShopMenu::update_help()
 {
-    // TODO: convert to a regular keyhelp
+    // TODO: convert to a regular keyhelp, make less painful
+
+    //You have 2000 gold pieces. After the purchase, you will have 1802 gold pieces.
+    //[Esc] exit          [Tab] buy|examine items     [a-j] mark item for purchase
+    //[/] sort (type)     [Enter] buy marked items    [A-J] put item on shopping list
     string top_line = make_stringf("<yellow>You have %d gold piece%s.",
                                    you.gold,
                                    you.gold != 1 ? "s" : "");
@@ -1004,35 +1008,52 @@ void ShopMenu::update_help()
                                 && (!can_purchase ||
                                     no_selection && !from_shopping_list)
                 || menu_action == ACT_EXAMINE && !is_set(MF_ARROWS_SELECT);
-    const string action_desc =
-            no_action                    ? " " "     "  "                   "
-            : menu_action == ACT_EXAMINE ? "[<w>Enter</w>] describe         "
-            : from_shopping_list         ? "[<w>Enter</w>] buy shopping list"
-                                         : "[<w>Enter</w>] buy marked items ";
+    const string action_key = no_action ? "       " // max: "[Enter]"
+        : menu_keyhelp_cmd(CMD_MENU_ACCEPT_SELECTION);
+    const string action_desc = action_key +
+            (no_action                   ? "                  "
+            : menu_action == ACT_EXAMINE ? " describe         "
+            : from_shopping_list         ? " buy shopping list"
+                                         : " buy marked items ");
 
     // XX swap shopping list / select by letter?
-    set_more(formatted_string::parse_string(top_line + make_stringf(
-        //You have 0 gold pieces.
-        //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
-        //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
-#if defined(USE_TILE_LOCAL) && !defined(TOUCH_UI)
-        "[<w>Esc</w>/<w>R-Click</w>] exit  "
-#else
-        //               "/R-Click"
-        "[<w>Esc</w>] exit          "
-#endif
-        "%s      %s %s\n"
-        "[<w>/</w>] sort (%s)%s  %s  %s put item on shopping list",
-        !can_purchase ? " " " "  "  " "       "  "          " :
-        menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
-                                     "[<w>!</w>] buy|<w>examine</w> items",
+    const string mode_desc = !can_purchase ? ""
+        : menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE)
+            + (menu_action == ACT_EXECUTE ? " <w>buy</w>|examine items"
+                                          : " buy|<w>examine</w> items");
+    string m = menu_keyhelp_cmd(CMD_MENU_EXIT)+ " exit          ";
+    m += mode_desc;
+    m = pad_more_with(m, make_stringf("%s %s",
         hyphenated_hotkey_letters(item_count(), 'a').c_str(),
-        menu_action == ACT_EXECUTE ? "mark item for purchase" : "examine item",
+        menu_action == ACT_EXECUTE ? "mark item for purchase   "
+                                   : "examine item             "));
+    m += make_stringf("\n[<w>/</w>] sort (%s)%s  %s",
         shopping_order_names[order],
-        // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
-        action_desc.c_str(),
-        hyphenated_hotkey_letters(item_count(), 'A').c_str())));
+        action_desc.c_str());
+
+    m = pad_more_with(m, hyphenated_hotkey_letters(item_count(), 'A')
+                                  + " put item on shopping list");
+    set_more(formatted_string::parse_string(top_line + m));
+
+    // set_more(formatted_string::parse_string(top_line
+    //     + make_stringf(
+
+
+    //     "%s exit  "
+    //     "%s      %s %s\n"
+    //     "[<w>/</w>] sort (%s)%s  %s  %s put item on shopping list",
+    //     menu_keyhelp_cmd(CMD_MENU_EXIT).c_str(),
+    //     !can_purchase ?              " " " "  "  " "       "  "          " :
+    //     menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
+    //                                  "[<w>!</w>] buy|<w>examine</w> items",
+    //     hyphenated_hotkey_letters(item_count(), 'a').c_str(),
+    //     menu_action == ACT_EXECUTE ? "mark item for purchase" : "examine item",
+    //     shopping_order_names[order],
+    //     // strwidth("default")
+    //     string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
+    //     action_desc.c_str(),
+    //     hyphenated_hotkey_letters(item_count(), 'A').c_str())));
 }
 
 void ShopMenu::purchase_selected()
@@ -2108,23 +2129,24 @@ public:
 
     string get_keyhelp(bool) const override
     {
-        string s = make_stringf("<yellow>You have %d gold pieces</yellow>\n", you.gold);
+        string s = make_stringf("<yellow>You have %d gold pieces</yellow>\n"
+                                "<lightgrey>", you.gold);
 
         if (view_only)
-            s += "<lightgrey>Choose to examine item  ";
+            s += "Choose to examine item  ";
         else
         {
-            s += "<lightgrey>[<w>!</w>] ";
+            s += menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE);
             switch (menu_action)
             {
             case ACT_EXECUTE:
-                s += "<w>travel</w>|examine|delete";
+                s += " <w>travel</w>|examine|delete";
                 break;
             case ACT_EXAMINE:
-                s += "travel|<w>examine</w>|delete";
+                s += " travel|<w>examine</w>|delete";
                 break;
             default:
-                s += "travel|examine|<w>delete</w>";
+                s += " travel|examine|<w>delete</w>";
                 break;
             }
 
@@ -2136,7 +2158,7 @@ public:
             s += hyphenated_hotkey_letters(items.size(), 'a')
                     + " choose item</lightgray>";
         }
-        return pad_more_with(s, "<lightgrey>[<w>Esc</w>] exit</lightgrey>");
+        return pad_more_with_esc(s);
     }
 
     friend class ShoppingList;
