@@ -1043,6 +1043,13 @@ spret cast_summon_demon(int pow)
 
 spret summon_butterflies()
 {
+    // Just fizzle instead of creating hostile butterflies.
+    if (you.allies_forbidden())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
     const string reason = stop_summoning_reason(MR_NO_FLAGS, M_FLIES);
     if (reason != "")
     {
