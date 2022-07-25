@@ -81,6 +81,7 @@ Gods
 Items
 -----
 - Launcher ammunition is removed. and launcher stats adjusted for unlimited
+  ammunition.
 - Launchers all use the Ranged Combat skill.
 - Launcher, long blade, and short blade damage now scale with Dex.
 - Launcher attack delay is increased by armour penalties.
