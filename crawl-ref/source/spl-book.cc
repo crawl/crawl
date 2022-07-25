@@ -705,6 +705,7 @@ private:
     {
         // try to keep the hover on the current spell. (Maybe this is too
         // complicated?)
+        ASSERT(last_hovered < static_cast<int>(items.size()));
         const spell_type hovered_spell =
             last_hovered >= 0 && items[last_hovered]->data
                 ? *static_cast<spell_type *>(items[last_hovered]->data)
