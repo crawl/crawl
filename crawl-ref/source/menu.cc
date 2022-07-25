@@ -2448,8 +2448,12 @@ void Menu::update_menu(bool update_entries)
 {
     m_ui.menu->update_items();
     update_title();
+    // sanitize hover in case items have changed. The first check here handles
+    // a mouse hover case that set_hovered will not.
+    if (!is_set(MF_ARROWS_SELECT) && last_hovered >= static_cast<int>(items.size()))
+        last_hovered = -1;
     if (last_hovered >= 0)
-        set_hovered(last_hovered); // sanitize in case items have changed
+        set_hovered(last_hovered);
 
     if (!alive)
         return;
