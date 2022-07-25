@@ -1988,7 +1988,9 @@ void check_if_everything_is_identified()
 
         for (const auto s : all_item_subtypes(t))
         {
-            if (!item_type_known(t, s) && unidentified++)
+            if (!item_type_known(t, s)
+                && !item_known_excluded_from_set(t, s)
+                && unidentified++)
             {
                 you.props.erase(IDENTIFIED_ALL_KEY);
                 return;
