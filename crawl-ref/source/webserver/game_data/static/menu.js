@@ -221,6 +221,24 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             add_hover_class(menu.last_hovered);
     }
 
+    function prepare_hoverable_item(item)
+    {
+        // TODO: mouse movement over a menu item after hover has been moved
+        // off it by arrows isn't enough to restore hover; moving the
+        // mouse cursor in and out is needed. Worth addressing?
+        item.elem.hover(
+            function() {
+                mouse_set_hovered($(this).index());
+            }, function() {
+                // XX if this uses mouse_set_hovered, the timing seems
+                // to be extremely flaky w.r.t. a new hover.
+                if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
+                    set_hovered(-1);
+                // otherwise, keep the hover unless mousenter moves it into
+                // a new cell
+            });
+    }
+
     function prepare_item_range(start, end, container)
     {
         // Guarantees that the given (inclusive) range of item indices
@@ -267,21 +285,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             var elem = $("<li>...</li>");
             elem.data("item", item);
             elem.addClass("placeholder");
-            // TODO: mouse movement over a menu item after hover has been moved
-            // off it by arrows isn't enough to restore hover; moving the
-            // mouse cursor in and out is needed. Worth addressing?
-            elem.hover(
-                function() {
-                    mouse_set_hovered($(this).index());
-                }, function() {
-                    // XX if this uses mouse_set_hovered, the timing seems
-                    // to be extremely flaky w.r.t. a new hover.
-                    if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
-                        set_hovered(-1);
-                    // otherwise, keep the hover unless mousenter moves it into
-                    // a new cell
-                });
             item.elem = elem;
+            prepare_hoverable_item(item);
 
             if (anchor)
                 anchor.before(elem);
@@ -793,6 +798,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             container.empty();
             $.each(menu.items, function(i, item) {
                 item.elem.data("item", item);
+                prepare_hoverable_item(item);
                 container.append(item.elem);
             });
         }
@@ -846,6 +852,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             scroll_bottom_to_item(menu.last_visible, true);
         else if (menu.first_visible)
             scroll_to_item(menu.first_visible, true);
+        else
+            update_visible_indices();
 
         update_more();
     }
