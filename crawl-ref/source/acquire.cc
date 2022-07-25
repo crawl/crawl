@@ -1507,13 +1507,14 @@ string AcquireMenu::get_keyhelp(bool) const
     help += make_stringf(
         //[!] acquire|examine item  [a-i] select item to acquire
         //[Esc/R-Click] exit
-        "<lightgrey>%s  %s %s</lightgrey>",
-        menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>acquire</w>|examine items" :
-                                     "[<w>!</w>] acquire|<w>examine</w> items",
+        "<lightgrey>%s%s  %s %s</lightgrey>",
+        menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE).c_str(),
+        menu_action == ACT_EXECUTE ? " <w>acquire</w>|examine items" :
+                                     " acquire|<w>examine</w> items",
         hyphenated_hotkey_letters(item_count(), 'a').c_str(),
         menu_action == ACT_EXECUTE ? "select item for acquirement"
                                    : "examine item");
-    return pad_more_with(help, "<lightgrey>[<w>Esc</w>] exit</lightgrey>", MIN_COLS);
+    return pad_more_with_esc(help);
 }
 
 bool AcquireMenu::examine_index(int i)
