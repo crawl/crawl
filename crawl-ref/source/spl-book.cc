@@ -600,11 +600,15 @@ private:
                 case action::hide:
                     current_action = action::unhide;
                     entries_changed = true;
+                    if (last_hovered >= 0 && is_set(MF_ARROWS_SELECT))
+                        last_hovered = 0;
                     break;
                 case action::unhide:
                     current_action = you.divine_exegesis ? action::cast
                                                           : action::memorise;
                     entries_changed = true;
+                    if (last_hovered >= 0 && is_set(MF_ARROWS_SELECT))
+                        last_hovered = 0;
                     break;
             }
         }
@@ -616,6 +620,8 @@ private:
                 case action::memorise:
                     current_action = action::unhide;
                     entries_changed = true;
+                    if (last_hovered >= 0 && is_set(MF_ARROWS_SELECT))
+                        last_hovered = 0;
                     break;
                 case action::describe:
                     current_action = you.divine_exegesis ? action::cast
@@ -628,6 +634,8 @@ private:
                 case action::unhide:
                     current_action = action::hide;
                     entries_changed = true;
+                    if (last_hovered >= 0 && is_set(MF_ARROWS_SELECT))
+                        last_hovered = 0;
                     break;
             }
         }
@@ -792,7 +800,7 @@ private:
 
 public:
     SpellLibraryMenu(spell_list& list)
-        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
                 | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_SHOW_EMPTY
                 // To have the ctrl-f menu show up in webtiles
                 | MF_ALLOW_FILTER, "spell"),
@@ -829,6 +837,15 @@ public:
 
         update_entries();
         update_more();
+
+        on_examine = [](const MenuEntry& item)
+        {
+            const spell_type spell = *static_cast<spell_type*>(item.data);
+            ASSERT(is_valid_spell(spell));
+            describe_spell(spell, nullptr);
+            return true;
+        };
+
         on_single_selection = [this](const MenuEntry& item)
         {
             const spell_type spell = *static_cast<spell_type*>(item.data);
@@ -840,8 +857,9 @@ public:
             case action::cast:
                 return false;
             case action::describe:
-                describe_spell(spell, nullptr);
-                break;
+                // n.b. skip superclass handling of ACT_EXAMINE, since we
+                // do not use `menu_action` in this class
+                return on_examine(item);
             case action::hide:
             case action::unhide:
                 you.hidden_spells.set(spell, !you.hidden_spells.get(spell));
