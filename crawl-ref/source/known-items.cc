@@ -59,6 +59,12 @@ protected:
         return "known-menu";
     }
 
+    bool examine_index(int) override
+    {
+        // disable behavior from InvMenu
+        return true;
+    }
+
     bool process_key(int key) override
     {
         bool resetting = (lastch == CONTROL('D'));
@@ -85,12 +91,14 @@ protected:
             key = ',';
             break;
 
-        case '-':
+        case '-': // TODO: assimilate to CMD_MENU_CYCLE_MODE?
         case '\\':
             if (all_items_known)
                 return true; // skip process_key for '-', it's confusing
         case CK_ENTER:
         CASE_ESCAPE
+            if (resetting)
+                return true;
             lastch = key;
             return false;
 
@@ -99,12 +107,11 @@ protected:
             // page), ignore Ctrl-D. Likewise if the last key was
             // Ctrl-D (we have already disarmed Ctrl-D for the next
             // keypress by resetting lastch).
-            // TODO: a way of resetting everything to default?
             if (flags & (MF_SINGLESELECT | MF_MULTISELECT) && !resetting)
             {
                 lastch = CONTROL('D');
                 temp_title = title->text;
-                set_title("Select to reset item to default: ");
+                set_title("Select to reset item to default ([*] for all): ");
             }
 
             return true;
