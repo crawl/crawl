@@ -3841,7 +3841,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_tag_pref = _str_to_tag_pref(field.c_str());
 #endif // USE_TILE
 
-    else if (key == "bindkey")
+    else if (key == "bindkey" && runscript)
         _bindkey(field);
     else if (key == "constant")
     {
