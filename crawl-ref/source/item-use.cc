@@ -84,6 +84,7 @@ class UseItemMenu : public InvMenu
     bool process_key(int key) override;
     void update_sections();
     void clear() override;
+    bool examine_index(int i) override;
 
 public:
     UseItemMenu(operation_types oper, int selector, const char* prompt);
@@ -416,6 +417,21 @@ void UseItemMenu::set_hovered(int hovered, bool force)
         {
             toggle_inv_or_floor();
         }
+    }
+}
+
+bool UseItemMenu::examine_index(int i)
+{
+    if (oper == OPER_WIELD && i == 0)
+        return true; // no description implemented
+    else if (is_inventory)
+        return InvMenu::examine_index(i);
+    else // floor item
+    {
+        auto ie = dynamic_cast<InvEntry *>(items[i]);
+        auto desc_tgt = const_cast<item_def*>(ie->item);
+        ASSERT(desc_tgt);
+        return describe_item(*desc_tgt);
     }
 }
 
