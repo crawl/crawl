@@ -1007,14 +1007,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             paging();
             event.preventDefault();
             return false;
-        case "'": // legacy thing
-            if (menu.flags & enums.menu_flag.ARROWS_SELECT)
-            {
-                cycle_hover(false);
-                event.preventDefault();
-                return false;
-            }
-            break;
         }
 
         if (update_server_scroll_timeout)
