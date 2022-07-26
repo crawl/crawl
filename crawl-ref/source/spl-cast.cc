@@ -2426,10 +2426,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_DRAIN_LIFE:
         return spret::none;
 
-    case SPELL_SANDBLAST:
-        you.time_taken *= 2;
-        break; // fallthrough to zaps
-
     default:
         if (spell_removed(spell))
         {
@@ -2443,8 +2439,12 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)
     {
-        return zapping(zap, spell_zap_power(spell, powc), beam, true, nullptr,
-                       fail);
+        const spret zap_effect = zapping(zap, spell_zap_power(spell, powc),
+                                         beam, true, nullptr, fail);
+        if (zap_effect == spret::success && spell == SPELL_SANDBLAST)
+            you.time_taken *= 2;
+
+        return zap_effect;
     }
 
     return spret::none;
