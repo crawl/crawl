@@ -3968,7 +3968,7 @@ int get_contamination_level()
         return 4;
     if (glow > 5000)
         return 3;
-    if (glow > 3500) // An indicator that using another contamination-causing
+    if (glow > 3000) // An indicator that using another contamination-causing
         return 2;    // ability might risk causing yellow glow.
     if (glow > 0)
         return 1;

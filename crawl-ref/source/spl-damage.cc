@@ -1942,7 +1942,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     }, caster.pos(), true, 8);
 
     if (caster.is_player())
-        contaminate_player(1000 + random2(500));
+        contaminate_player(1250 + random2(750));
     return spret::success;
 }
 
