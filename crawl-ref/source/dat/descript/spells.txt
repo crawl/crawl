@@ -1665,6 +1665,12 @@ Trog's Hand spell
 
 <Trog's Hand ability>
 %%%%
+Kiss of Death spell
+
+Conjures forth a fragment of the caster's essence and twists it into a fragment
+of death, painfully draining the victim. The caster, too, will find their health
+reduced, until they gain enough experience to recover.
+%%%%
 Tukima's Dance spell
 
 Animates the weapon of a targeted foe, ripping it from their hands and causing

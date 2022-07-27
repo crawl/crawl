@@ -312,6 +312,22 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     return choice;
 }
 
+// Effects that happen after spells which are otherwise simple zaps.
+static void _apply_post_zap_effect(spell_type spell)
+{
+    switch (spell)
+    {
+    case SPELL_SANDBLAST:
+        you.time_taken = you.time_taken * 3 / 2;
+        break;
+    case SPELL_KISS_OF_DEATH:
+        drain_player(100, true, true);
+        break;
+    default:
+        break;
+    }
+}
+
 static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 {
     int fail_reduce = 100;
@@ -2046,8 +2062,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     {
     case spret::success:
     {
-        if (spell == SPELL_SANDBLAST)
-            you.time_taken = you.time_taken * 3 / 2;
+        _apply_post_zap_effect(spell);
 
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 
@@ -2457,7 +2472,10 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // Finally, try zaps.
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)
-        return zapping(zap, spell_zap_power(spell, powc), beam, true, nullptr, fail);
+    {
+        return zapping(zap, spell_zap_power(spell, powc),
+                       beam, true, nullptr, fail);
+    }
 
     return spret::none;
 }

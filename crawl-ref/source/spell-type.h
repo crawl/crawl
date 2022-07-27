@@ -541,5 +541,6 @@ enum spell_type : int
     SPELL_BLASTSPARK,
     SPELL_ROT,
     SPELL_ARCJOLT,
+    SPELL_KISS_OF_DEATH,
     NUM_SPELLS
 };
