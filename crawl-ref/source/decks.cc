@@ -529,12 +529,15 @@ static deck_type _choose_deck(const string title = "Draw")
         deck_menu.set_title(me, true, true);
     }
     deck_menu.set_tag("deck");
-    deck_menu.add_toggle_key('!');
-    deck_menu.add_toggle_key('?');
+    deck_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE);
+    deck_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE_REVERSE);
+    // help here amounts to describing decks:
+    deck_menu.add_toggle_from_command(CMD_MENU_HELP);
     deck_menu.menu_action = Menu::ACT_EXECUTE;
 
+    // XX proper keyhelp
     deck_menu.set_more(formatted_string::parse_string(
-                       "Press '<w>!</w>' or '<w>?</w>' to toggle "
+        menu_keyhelp_cmd(CMD_MENU_HELP) + " toggle "
                        "between deck selection and description."));
 
     int numbers[NUM_DECKS];
@@ -729,8 +732,8 @@ static void _draw_stack(int to_stack)
         deck_menu.set_title(me, true, true);
     }
     deck_menu.set_tag("deck");
-    deck_menu.add_toggle_key('!');
-    deck_menu.add_toggle_key('?');
+    deck_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE);
+    deck_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE_REVERSE);
     deck_menu.menu_action = Menu::ACT_EXECUTE;
 
     auto& stack = you.props[NEMELEX_STACK_KEY].get_vector();
@@ -740,14 +743,14 @@ static void _draw_stack(int to_stack)
             string status = "Drawn so far: " + stack_contents();
             deck_menu.set_more(formatted_string::parse_string(
                        status + "\n" +
-                       "Press '<w>!</w>' or '<w>?</w>' to toggle "
+                       menu_keyhelp_cmd(CMD_MENU_HELP) + " toggle "
                        "between deck selection and description."));
     }
     else
     {
         deck_menu.set_more(formatted_string::parse_string(
-                           "Press '<w>!</w>' or '<w>?</w>' to toggle "
-                           "between deck selection and description."));
+            menu_keyhelp_cmd(CMD_MENU_HELP) + " toggle "
+                       "between deck selection and description."));
     }
 
     int numbers[NUM_DECKS];

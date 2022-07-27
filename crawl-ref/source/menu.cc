@@ -3358,6 +3358,15 @@ string get_linebreak_string(const string& s, int maxcol)
     return r;
 }
 
+void ToggleableMenu::add_toggle_from_command(command_type cmd)
+{
+    // use this to align toggle with a command, e.g. CMD_MENU_CYCLE_MODE
+    // XX do away with ToggleableMenu and just use Menu code for this?
+    const vector<int> keys = command_to_keys(cmd);
+    for (auto k : keys)
+        add_toggle_key(k);
+}
+
 // TODO: do away with this somehow? Maybe this whole subclass isn't really
 // needed?
 int ToggleableMenu::pre_process(int key)
