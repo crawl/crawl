@@ -356,7 +356,9 @@ string formatted_string::tostring(int s, int e) const
 
 string formatted_string::to_colour_string() const
 {
-    string st;
+    // this is necessary because of the default of LIGHTGRAY in last_colour.
+    // (If this were changed to write closing tags, it might not be?)
+    string st = "<lightgray>";
     const int size = ops.size();
     for (int i = 0; i < size; ++i)
     {
