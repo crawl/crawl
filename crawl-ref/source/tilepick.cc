@@ -1546,16 +1546,6 @@ tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset)
 }
 
 #ifdef USE_TILE
-// actually, a triangle wave, but it's up to the actual tiles
-static tileidx_t _mon_sinus(tileidx_t tile)
-{
-    int count = tile_player_count(tile);
-    ASSERT(count > 0);
-    ASSERT(count > 1); // technically, staying put would work
-    int n = you.frame_no % (2 * count - 2);
-    return (n < count) ? (tile + n) : (tile + 2 * count - 2 - n);
-}
-
 static tileidx_t _mon_cycle(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
@@ -1829,12 +1819,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         return _tileidx_monster_zombified(mon);
 
     if (mon.props.exists(MONSTER_TILE_KEY))
-    {
-        tileidx_t t = mon.props[MONSTER_TILE_KEY].get_short();
-        if (t == TILEP_MONS_HELL_WIZARD)
-            return _mon_sinus(t);
-        return t;
-    }
+        return mon.props[MONSTER_TILE_KEY].get_short();
 
     int tile_num = 0;
     if (mon.props.exists(TILE_NUM_KEY))

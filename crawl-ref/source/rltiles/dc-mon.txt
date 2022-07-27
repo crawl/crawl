@@ -636,11 +636,9 @@ killer_klown_purple
 killer_klown_red
 killer_klown_yellow
 %sdir mon/vault
-## From a Lair ending
+## From an Abyss rune vault
 %rim 0
-hell_wizard_50 MONS_HELL_WIZARD
-hell_wizard_75
-hell_wizard_100
+mad_acolyte_of_lugonu MONS_MAD_ACOLYTE_OF_LUGONU
 %rim 1
 ## From the Cigotuvi wizlab
 deformed_human MONS_DEFORMED_HUMAN
