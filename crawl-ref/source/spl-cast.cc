@@ -249,19 +249,24 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     }
     spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
-    // TODO: change to `,`, add toggling with `!`, add help string, etc...
-    spell_menu.add_toggle_key('!');
+    // TODO: add toggling to describe mode with `?`, add help string, etc...
+    spell_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE);
+    spell_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE_REVERSE);
 
-    string more_str = "<lightgrey>Press '<w>!</w>' ";
+    string more_str = make_stringf("<lightgrey>Select a spell to %s</lightgrey>",
+        (viewing ? "describe" : "cast"));
+    string toggle_desc = menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE);
     if (toggle_with_I)
     {
+        // why `I`?
         spell_menu.add_toggle_key('I');
-        more_str += "or '<w>I</w>' ";
+        toggle_desc += "/[<w>I</w>]";
     }
+    toggle_desc += " toggle spell headers";
+    more_str = pad_more_with(more_str, toggle_desc);
+    spell_menu.set_more(formatted_string::parse_string(more_str));
     // TODO: should allow toggling between execute and examine
     spell_menu.menu_action = viewing ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
-    more_str += "to toggle spell view.</lightgrey>";
-    spell_menu.set_more(formatted_string::parse_string(more_str));
 
     int initial_hover = 0;
     for (int i = 0; i < 52; ++i)
