@@ -652,11 +652,32 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function title_prompt(data)
     {
         var prompt;
+
+        var restore = function () {
+            if (!client.is_watching || !client.is_watching())
+                $("#title_prompt").blur();
+            menu.elem.find(".menu_title").removeClass("raw_input_mode");
+            update_title();
+        };
+
+        // manual close from server side: used for raw input mode
+        if (data && data.close)
+        {
+            restore();
+            return;
+        }
+
+        var title = menu.elem.find(".menu_title");
+        if (data && data.raw)
+        {
+            title.addClass("raw_input_mode")
+            return; // everything else is handled manually, including exiting
+        }
+
         if (!data || !data.prompt)
             prompt = "Select what? (regex) ";
         else
             prompt = data.prompt;
-        var title = menu.elem.find(".menu_title")
         title.html(prompt);
         var input = $("<input id='title_prompt' class='text title_prompt' type='text'>");
         title.append(input);
@@ -664,13 +685,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         // unclear to me exactly why a timeout is needed but it seems to be
         if (!client.is_watching || !client.is_watching())
             setTimeout(function () { input.focus(); }, 50);
-
-
-        var restore = function () {
-            if (!client.is_watching || !client.is_watching())
-                input.blur();
-            update_title();
-        };
 
         // escape handling: ESC is intercepted in ui.js and triggers blur(), so
         // can't be handled directly here
@@ -868,6 +882,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         schedule_server_scroll();
     }
 
+    function raw_arrow_keys()
+    {
+        return menu.tag == "macro_mapping" && $(".raw_input_mode").length;
+    }
+
     function menu_keydown_handler(event)
     {
         if (!menu || menu.type === "crt") return;
@@ -891,20 +910,20 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 break;
             // otherwise, fall through to pageup:
         case 33: // page up
-            if (menu.tag == "macro_mapping")
+            if (raw_arrow_keys())
                 break; // Treat input as raw, no need to scroll anyway
             paging(true);
             event.preventDefault();
             return false;
         case 107: // numpad +
         case 34: // page down
-            if (menu.tag == "macro_mapping")
-                break; // Treat input as raw, no need to scroll anyway
+            if (raw_arrow_keys())
+                break;
             paging();
             event.preventDefault();
             return false;
         case 35: // end
-            if (menu.tag == "macro_mapping")
+            if (raw_arrow_keys())
                 break; // Treat input as raw, no need to scroll anyway
             scroll_bottom_to_item(menu.total_items - 1);
             if (menu.total_items > 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
@@ -912,7 +931,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 36: // home
-            if (menu.tag == "macro_mapping")
+            if (raw_arrow_keys())
                 break; // Treat input as raw, no need to scroll anyway
             scroll_to_item(0);
             if (menu.flags & enums.menu_flag.ARROWS_SELECT)
@@ -920,7 +939,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 38: // up
-            if (menu.tag == "macro_mapping")
+            if (raw_arrow_keys())
                 break; // Treat input as raw, no need to scroll anyway
             if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(true);
@@ -929,7 +948,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 40: // down
-            if (menu.tag == "macro_mapping")
+            if (raw_arrow_keys())
                 break; // Treat input as raw, no need to scroll anyway
             if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(false);
@@ -938,7 +957,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 37: // left
-            if (menu.tag == "macro_mapping")
+            if (raw_arrow_keys())
                 break; // Treat input as raw, no need to scroll anyway
             if (event.shiftKey)
             {
@@ -948,7 +967,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             }
             break;
         case 39: // right
-            if (menu.tag == "macro_mapping")
+            if (raw_arrow_keys())
                 break; // Treat input as raw, no need to scroll anyway
             if (event.shiftKey)
             {

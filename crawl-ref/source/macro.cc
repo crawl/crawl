@@ -1033,17 +1033,14 @@ public:
         // there's much less use-case for editing keymaps in-game, so hide the
         // details by default
         string mode_hint = edited_keymaps
-            ? "cycle mode: " + join_strings(result.begin(), result.end(), "|")
-            : "edit keymaps";
+            ? " cycle mode: " + join_strings(result.begin(), result.end(), "|")
+            : " edit keymaps";
 
         set_more(formatted_string::parse_string(
             status_msg + "\n"
             "Arrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help\n"
-            "[<w>!</w>"
-#ifdef USE_TILE_LOCAL
-            "/<w>Right-click</w>"
-#endif
-            "] " + mode_hint));
+            + menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE)
+            + mode_hint));
 
     }
 
@@ -1246,6 +1243,14 @@ public:
             set_title(new MenuEntry(prompt, MEL_TITLE));
             set_more("Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.");
             update_menu(true);
+#ifdef USE_TILE_WEB
+            // put the javascript menu mode in raw input mode
+            tiles.json_open_object();
+            tiles.json_write_string("msg", "title_prompt");
+            tiles.json_write_bool("raw", true);
+            tiles.json_close_object();
+            tiles.finish_message();
+#endif
             doing_raw_action_input = true;
         }
 
@@ -1307,6 +1312,13 @@ public:
                     raw_tmp.clear();
                     set_more("");
                     reset_key_prompt();
+#ifdef USE_TILE_WEB
+                    tiles.json_open_object();
+                    tiles.json_write_string("msg", "title_prompt");
+                    tiles.json_write_bool("close", true);
+                    tiles.json_close_object();
+                    tiles.finish_message();
+#endif
                     return true;
                 }
                 else if (keyin == '\r' || keyin == '\n')
@@ -1512,6 +1524,7 @@ public:
             case CMD_MENU_EXIT:
             case CMD_MENU_HELP:
             case CMD_MENU_CYCLE_MODE: // somewhat weird defaults in this context?
+            case CMD_MENU_CYCLE_MODE_REVERSE:
                 return process_command(cmd);
             default:
                 break;
