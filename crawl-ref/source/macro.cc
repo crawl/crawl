@@ -2100,6 +2100,20 @@ int command_to_key(command_type cmd)
     return lookup(_cmds_to_keys[context], cmd, '\0');
 }
 
+vector<int> command_to_keys(command_type cmd)
+{
+    KeymapContext context = context_for_command(cmd);
+    vector<int> result;
+
+    if (context == KMC_NONE)
+        return result;
+
+    for (auto pair : _cmds_to_keys[context])
+        if (pair.first == cmd)
+            result.push_back(pair.second);
+    return result;
+}
+
 KeymapContext context_for_command(command_type cmd)
 {
     if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)

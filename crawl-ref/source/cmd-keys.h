@@ -382,7 +382,6 @@
 {CK_HOME, CMD_MENU_SCROLL_TO_TOP},
 {CK_END, CMD_MENU_SCROLL_TO_END},
 {CONTROL('F'), CMD_MENU_SEARCH},
-{'?', CMD_MENU_CYCLE_MODE}, // XX why do we use this for cycle. Sometimes overridden for help
 {CK_RIGHT, CMD_MENU_CYCLE_MODE},
 {'!', CMD_MENU_CYCLE_MODE},
 #ifdef TOUCH_UI
@@ -391,6 +390,7 @@
 {CK_LEFT, CMD_MENU_CYCLE_MODE_REVERSE},
 {',', CMD_MENU_CYCLE_HEADERS},
 {'_', CMD_MENU_HELP},
+{'?', CMD_MENU_HELP}, // overridden in item menus
 {CK_ENTER, CMD_MENU_SELECT},
 {'\\', CMD_MENU_EXAMINE},
 {'\'', CMD_MENU_EXAMINE},

@@ -488,6 +488,7 @@ public:
     ToggleableMenu(int _flags = MF_MULTISELECT)
         : Menu(_flags) {}
     void add_toggle_key(int newkey) { toggle_keys.push_back(newkey); }
+    void add_toggle_from_command(command_type cmd);
 protected:
     virtual int pre_process(int key) override;
 

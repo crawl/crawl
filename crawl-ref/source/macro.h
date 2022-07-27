@@ -118,6 +118,7 @@ keyseq parse_keyseq(string s);
 
 command_type  key_to_command(int key, KeymapContext context);
 int           command_to_key(command_type cmd);
+vector<int> command_to_keys(command_type cmd);
 
 KeymapContext context_for_command(command_type cmd);
 

@@ -3506,8 +3506,10 @@ int choose_ability_menu(const vector<talent>& talents)
                                 MEL_TITLE), true, true);
 #endif
     abil_menu.set_tag("ability");
-    abil_menu.add_toggle_key('!');
-    abil_menu.add_toggle_key('?');
+    abil_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE);
+    abil_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE_REVERSE);
+    // help here amounts to describing abilities:
+    abil_menu.add_toggle_from_command(CMD_MENU_HELP);
     abil_menu.menu_action = Menu::ACT_EXECUTE;
 
     if (crawl_state.game_is_hints())
@@ -3519,8 +3521,8 @@ int choose_ability_menu(const vector<talent>& talents)
     else
     {
         abil_menu.set_more(formatted_string::parse_string(
-                           "Press '<w>!</w>' or '<w>?</w>' to toggle "
-                           "between ability selection and description."));
+            menu_keyhelp_cmd(CMD_MENU_HELP) + " toggle "
+                       "between ability selection and description."));
     }
 
     int numbers[52];
