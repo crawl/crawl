@@ -3593,6 +3593,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_KISS_OF_DEATH, "Kiss of Death",
+    spschool::conjuration | spschool::necromancy,
+    spflag::dir_or_target | spflag::not_self,
+    1,
+    25,
+    1, 1,
+    1, 0,
+    TILEG_ERROR,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

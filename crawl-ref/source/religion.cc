@@ -1574,7 +1574,8 @@ static bool _give_kiku_gift(bool forced)
     if (first_gift)
     {
         chosen_spells.push_back(SPELL_NECROTISE);
-        vector<spell_type> further_options = {SPELL_SUBLIMATION_OF_BLOOD,
+        vector<spell_type> further_options = {SPELL_KISS_OF_DEATH,
+                                              SPELL_SUBLIMATION_OF_BLOOD,
                                               SPELL_ROT,
                                               SPELL_VAMPIRIC_DRAINING,
                                               SPELL_ANGUISH,

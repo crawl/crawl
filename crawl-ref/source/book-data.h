@@ -51,8 +51,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Flames
     SPELL_FOXFIRE,
-    SPELL_BLASTSPARK,
     SPELL_INNER_FLAME,
+    SPELL_STICKY_FLAME,
     SPELL_FLAME_WAVE,
 },
 
@@ -69,6 +69,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Fire
+    SPELL_FOXFIRE,
     SPELL_FIREBALL,
     SPELL_STARBURST,
     SPELL_IGNITION,
@@ -112,7 +113,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Misfortune
-    SPELL_CONFUSING_TOUCH,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_ENFEEBLE,
 },
@@ -443,8 +443,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Touch
-    SPELL_DISCHARGE,
-    SPELL_STICKY_FLAME,
+    SPELL_KISS_OF_DEATH,
+    SPELL_CONFUSING_TOUCH,
     SPELL_DISPEL_UNDEAD,
 },
 
@@ -473,6 +473,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Trismegistus Codex
+    SPELL_BLASTSPARK,
     SPELL_IGNITE_POISON,
     SPELL_MEPHITIC_CLOUD,
     SPELL_FREEZING_CLOUD,
