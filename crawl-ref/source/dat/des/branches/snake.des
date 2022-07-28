@@ -2035,6 +2035,37 @@ xxxccccG222Gccccxxxx
      xxxxxxxxx
 ENDMAP
 
+NAME:  nicolae_snake_the_dead_are_slithering
+TAGS:  transparent
+DEPTH: Snake
+# No zombies, because "zombie" doesn't begin with "s".
+KMONS: S = naga simulacrum / naga warrior simulacrum / anaconda simulacrum / \
+           guardian serpent simulacrum / sea snake simulacrum
+KMONS: s = naga spectre / naga warrior spectre / anaconda spectre / \
+           guardian serpent spectre / sea snake spectre
+KMONS: ` = naga skeleton / naga warrior skeleton / anaconda skeleton / \
+           guardian serpent skeleton / sea snake skeleton
+SUBST: z = SSss`.....
+MAP
+      xxxxx
+     xxx..x
+    xxx...+
+    xxx...x
+    xxx...xxxxx
+    xx.zzz.xxxxx
+xx+xx.zzzzz.xxxxx
+x....zzzzzzz...xx
+x....zzzzzzz....x
+xx...zzzzzzz....x
+xxxxx.zzzzz.xx+xx
+ xxxxx.zzz.xx
+  xxxxx...xxx
+      x...xxx
+      +...xxx
+      x..xxx
+      xxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Snake ending vaults
