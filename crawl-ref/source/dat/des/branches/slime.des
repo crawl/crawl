@@ -239,6 +239,21 @@ MAP
   .........
 ENDMAP
 
+NAME:  nicolae_slime_entry_field_trip
+TAGS:  slime_entry transparent
+KMONS: F = fungus
+KMONS: JO_ = jelly / nothing w:5
+KFEAT: O = enter_slime_pits
+KFEAT: _ = altar_jiyva / G w:5
+: dgn.delayed_decay(_G, 'd', 'human skeleton')
+MAP
+...J..J...
+....FF....
+.O.FddF._.
+....FF....
+...J..J...
+ENDMAP
+
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
