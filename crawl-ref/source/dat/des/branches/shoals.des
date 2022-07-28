@@ -2335,6 +2335,160 @@ swwwwwwwwwwwwwwww
 swwwwwwwwwwwwww
 ENDMAP
 
+NAME:  nicolae_shoals_bring_sunscreen
+TAGS:  transparent water_ok no_tide
+DEPTH: Shoals:2-
+KMONS: S = sun demon / sun moth
+SUBST: { = {[(, x = cxx..., S = S:7 .:6, _ = _.
+CLEAR: _
+MAP
+      _....._
+    _........._
+    ...S...S...
+   _..........._
+ _..S...xxx...S.._
+ ......xxcxx......
+_.......xxx......._
+..S..x.......x..S..
+....xxx.....xxx....
+....xcx..{..xcx....
+....xxx.....xxx....
+..S..x.......x..S..
+_.......xxx......._
+ ......xxcxx......
+ _..S...xxx...S.._
+   _..........._
+    ...S...S...
+    _........._
+      _....._
+ENDMAP
+
+NAME:   nicolae_shoals_offshore_bank_account
+TAGS:   water_ok no_pool_fixup transparent
+DEPTH:  Shoals
+ORIENT: west
+KITEM:  pr = $ w:100 / any jewellery
+KITEM:  q = $ w:50 / $ good_item w:30 / any jewellery good_item / \
+            any weapon good_item w:2 / any armour good_item w:2
+KMONS:  p = merfolk siren / nothing w:60
+KMONS:  q = merfolk impaler / merfolk javelineer / merfolk aquamancer / \
+            nothing w:30
+KMONS:  r = water nymph
+KFEAT:  ~ = open_sea
+KPROP:  =`pqr = no_tele_into
+KPROP:  =`pqr = no_tide
+KMASK:  =`pqr = opaque
+KMASK:  =`pqr = no_trap_gen
+KMASK:  =`pqr = no_monster_gen
+SUBST:  M = w_, N = wwW.
+CLEAR:  _
+MAP
+      MwwM
+    MwwwwwwM
+  MwwwwwwwwwwM
+~wwwwwwwwwwwwwwM
+~wwwwwwwwwwwwwwwwM
+~wwwwwcwwwcwwwwwwww
+~wwwwcccccccwwwwwNN
+~wwwcccqqqcccwwwN...
+~wwwwc`pppqcwwwN.....
+~wwww=`prpqcwwwN....@
+~wwwwc`pppqcwwwN.....
+~wwwcccqqqcccwwwN...
+~wwwwcccccccwwwwwNN
+~wwwwwcwwwcwwwwwwww
+~wwwwwwwwwwwwwwwwM
+~wwwwwwwwwwwwwwM
+  MwwwwwwwwwwM
+    MwwwwwwM
+      MwwM
+ENDMAP
+
+NAME:   nicolae_shoals_snakes_on_a_beach
+TAGS:   water_ok transparent patrolling no_pool_fixup
+DEPTH:  Shoals
+ORIENT: float
+# Someone left their gear in the changing room.
+KITEM:  Z = barding / barding good_item, long sword / short sword / \
+            battleaxe / halberd / glaive / mace / dire flail / war axe / \
+            morningstar
+# Some people like having a little something to read or drink on the beach.
+KITEM:  12 = nothing w:50 / any book w:5 / any scroll / any potion
+# 1/3 chance of rudely walking in on a naga changing.
+KMONS:  z = naga ; nothing / nothing w:20
+KMONS:  1 = naga w:20 / naga warrior / nothing w:15
+KMONS:  2 = naga sharpshooter band / naga mage band / nagaraja
+NSUBST: 1 = 1=2 / 2=21 / 1..
+SUBST:  - = x., _ = w_, M = wW
+KPROP:  `Zz+ = no_tide
+KMASK:  `Zz+ = no_monster_gen
+CLEAR:  _
+MAP
+          __
+         www_
+         www_
+     xxxwwwww__
+    xxxxwwwwwww_
+   xx-MMwwwwwww_
+   xx-.Mwwwwwwww__
+  xxx-.MMwwwwwwwww_
+  xx-...MMMwwwwwww_
+ xxx-.....Mwwwwwwww__
+ xxx-.1...MMwwwwwwwww_
+ xxxx-.....MMMwwwwwww_
+  xxx-..1....Mwwwwwwww__
+   xx-.......MMwwwwwwwww_
+    xx-...1...MMMwwwwwww_
+    xxx-........Mwwwwwwww__
+   xxxx-.....1..MMwwwwwwwww_
+  @xxx-....1.....MMMwwwwwww_
+ @.xxx-..1.........Mwwwwwww
+@..xx-......1..1...MMwwww
+x...x-.1.--.......1.Mxxxx
+xx..xx..-xx-c+cc-..-xxxx
+xx-..-..xxxxcz`cx--xxxx
+xxx-...-xxxxc`Zcxxxxxx
+ xxxx--xxxxxccccxxxx
+    xxxxxxxxxxxxxx
+        xxxxxxx
+ENDMAP
+
+NAME:    nicolae_shoals_songs
+TAGS:    no_pool_fixup water_ok
+DEPTH:   Shoals:2-
+KMONS:   M = merfolk siren
+KMONS:   N = merfolk avatar
+KMONS:   S = satyr
+KFEAT:   N = w
+SUBST:   ' = xx", " = WW., - = Www, ` = _x
+NSUBST:  N = N / w, < = { / [[< / ((< / <, p = M / 1=M. / 1=MS... / ., \
+         q = M / 1=M. / 1=MS... / ., r = S / 1=S. / 1=SM... / .
+SHUFFLE: {[(
+CLEAR:   _
+MAP
+        `x++x`
+       `xx''xx`
+       xx'rr'xx
+      `xxr..rxx`
+      xxx."".xxx
+    `xxx'"WW"'xxx`
+  `xxxxx'"WW"'xxxxx`
+ `xxxx''"W--W"''xxxx`
+`xx'p.""W-ww-W"".q'xx`
+xx'p."WW-wNNw-WW".q'xx
+xx'p."WW-wNNw-WW".q'xx
+`xx'p.""W-ww-W"".q'xx`
+ `xxxx''"W--W"''xxxx`
+  `xxxxx'"WW"'xxxxx`
+    `xxx'"WW"'xxx`
+      xxx."".xxx
+      `xx.<<.xx`
+       xx'<<'xx
+       `xx''xx`
+        `xxxx`
+         `xx`
+ENDMAP
+
 ###############################################################################
 #
 # <<4>> Shoals ending vaults
