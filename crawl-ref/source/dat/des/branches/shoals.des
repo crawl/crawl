@@ -739,6 +739,67 @@ cc..cc.....cc..cc
      ccccccc
 ENDMAP
 
+NAME:   nicolae_shoals_aurelia_aurita
+TAGS:   transparent no_tide
+DEPTH:  Shoals
+ORIENT: float
+KFEAT:  @ = W
+MAP
+@W     wwwwwww      @
+ WW  wwwwcccwwww   WW
+  W wwwwccWccwwwwWWW
+  WWwwwccWwWccwwWW
+  wWWWwcWwwwWcwwWww
+ wwwwWWccWwWccwWWwww
+ wwwwwWwcWwWcWWWwwww
+wwwcccWWwwwwWWwcccwww
+wwccWccWWWwwWwccWccww
+wccWwWWwwWWWWwWWwWccw
+wcWwwwwwwWWWwwwwwwWcw
+wccWwWWwWWWWwwWWwWccw
+wwccWccwWwwWWWccWccww
+wwwcccwWWwwwwWWcccwww
+ wwwwWWWcWwWcwWwwwww
+ wwwWWwccWwWccWWwwww
+  wwWwwcWwwwWcwWWWw
+   WWwwccWwWccwwwWW
+ WWWwwwwccWccwwww W
+WW   wwwwcccwwww  WW
+@      wwwwwww     W@
+ENDMAP
+
+NAME:    nicolae_shoals_gull_way
+TAGS:    transparent water_ok
+DEPTH:   Shoals
+SHUFFLE: DEFHJKLMN
+SUBST:   H : H`, J : J`, K : K`
+NSUBST:  D = + / c, E = + / c, F = + / c, H = + / c, J = + / c, K = + / c, \
+         P = 2=+ / 2=n / +c / nc / c, Q = + / n / +c / nc / c
+SUBST:   _ = _w, LMN = `
+KPROP:   +` = no_tide
+CLEAR:   _
+MAP
+cccPccccPcccPccc+cc
+c`````F```E```D```c
+c`````F```E```D```c
+P`````F```E```D```c
+c`````F```E```D```c
+c`````F```E```D```c
+cHHHHHcc+cccQcccQcc
+P`````c............ _______
+c`````Q.wwwwwwwwwwwwwwwwwww____
+cJJJJJc.wwwwwwwwwwwwwwwwwwwwwww____
+c`````Q.wwwwwwwwwwwwwwwwwww____
+P`````c............ _______
+cKKKKKcc+cccQcccQcc
+c`````L```M```N```c
+c`````L```M```N```c
+P`````L```M```N```c
+c`````L```M```N```c
+c`````L```M```N```c
+cccPccccPcccPccc+cc
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Monster-placing vaults.
