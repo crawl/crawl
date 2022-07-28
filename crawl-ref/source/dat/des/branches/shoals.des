@@ -221,6 +221,63 @@ MAP
 ....xxxxxxx...@
 ENDMAP
 
+NAME:  nicolae_shoals_entry_flooding
+TAGS:  shoals_entry patrolling transparent
+KMONS: ON = water nymph
+KFEAT: O = enter_shoals
+SUBST: x = x`, ` = W., N = N .:80
+MAP
+ .........
+...xx`xx...
+..xxx`xxx..
+.xxxWWWxxx.
+.xxWNNNWxx.
+.``WNONW``.
+.xxWNNNWxx.
+.xxxWWWxxx.
+..xxx`xxx..
+...xx`xx...
+ .........
+ENDMAP
+
+NAME:  nicolae_shoals_entry_how_ready_are_you
+TAGS:  shoals_entry transparent no_pool_fixup
+KMONS: K = kraken
+KFEAT: K = w
+KFEAT: O = enter_shoals
+SUBST: M = wwx, _ = x_
+CLEAR: _
+MAP
+_______________
+xxxxxxxxxxxxxxx
+x..........cccx
+x..MMMMMMM..ccx
+x..MwwwwwM...cx
+=..MwwwwwM...n.
+=..MwwKwwM..On@
+=..MwwwwwM...n.
+x..MwwwwwM...cx
+x..MMMMMMM..ccx
+x..........cccx
+xxxxxxxxxxxxxxx
+_______________
+ENDMAP
+
+NAME:  nicolae_shoals_entry_roost
+TAGS:  shoals_entry patrolling transparent
+KMONS: OH = harpy
+KFEAT: O = enter_shoals
+SUBST: ` = .W, H = H..
+MAP
+```````
+`WWWWW`
+`WxHxW`
+`WHOHW`
+`WxHxW`
+`WWWWW`
+```````
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
