@@ -95,14 +95,19 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             this.y_scale = this.cell_height / 32;
         },
 
-        glyph_mode_font_name: function ()
+        glyph_mode_font_name: function (scale)
         {
             var glyph_scale;
-            if (this.ui_state == enums.ui.VIEW_MAP)
-                glyph_scale = options.get("tile_map_scale");
+            if (scale)
+                glyph_scale = scale * 100;
             else
-                glyph_scale = options.get("tile_viewport_scale");
-            glyph_scale = ((glyph_scale - 100) / 2 + 100) * window.devicePixelRatio;
+            {
+                if (this.ui_state == enums.ui.VIEW_MAP)
+                    glyph_scale = options.get("tile_map_scale");
+                else
+                    glyph_scale = options.get("tile_viewport_scale");
+                glyph_scale = ((glyph_scale - 100) / 2 + 100);
+            }
 
             return (Math.floor(this.glyph_mode_font_size * glyph_scale / 100)
                 + "px " + this.glyph_mode_font);
@@ -503,42 +508,49 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        render_glyph: function (x, y, map_cell, omit_bg, square)
+        render_glyph: function (x, y, map_cell, omit_bg, square, scale)
         {
             // `map_cell` can be anything as long as it provides `col` and `g`
             var col = split_term_colour(map_cell.col);
             if (omit_bg && col.attr == enums.CHATTR.REVERSE)
                 col.attr = 0;
             term_colour_apply_attributes(col);
+            var w = this.cell_width;
+            var h = this.cell_height;
+            if (scale)
+            {
+                // assume x and y are already scaled...
+                w = w * scale;
+                h = h * scale;
+            }
 
             var prefix = "";
             if (col.attr == enums.CHATTR.BOLD)
-            {
                 prefix = "bold ";
-            }
 
             if (!omit_bg)
             {
                 this.ctx.fillStyle = bg_term_colours[col.bg];
-                this.ctx.fillRect(x, y, this.cell_width, this.cell_height);
+                this.ctx.fillRect(x, y, w, h);
             }
             this.ctx.fillStyle = fg_term_colours[col.fg];
-            this.ctx.font = prefix + this.glyph_mode_font_name();
+            this.ctx.font = prefix + this.glyph_mode_font_name(scale);
 
             this.ctx.save();
 
             try
             {
                 this.ctx.beginPath();
-                this.ctx.rect(x, y, this.cell_width, this.cell_height);
+                this.ctx.rect(x, y, w, h);
                 this.ctx.clip();
 
                 if (square)
                 {
                     this.ctx.textAlign = "center";
                     this.ctx.textBaseline = "middle";
-                    this.ctx.fillText(map_cell.g, x + this.cell_width/2,
-                                        y + this.cell_height/2);
+                    this.ctx.fillText(map_cell.g,
+                                        Math.floor(x + w/2),
+                                        Math.floor(y + h/2));
                 }
                 else
                 {
@@ -1179,11 +1191,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             this.ctx.shadowOffsetY = 1;
             this.ctx.textAlign = "left";
             this.ctx.textBaseline = "top";
-            // XX this way of doing device scaling is v ugly
-            var ratio = window.devicePixelRatio;
-            this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-            this.ctx.fillText(qty, (x + 2) / ratio, (y + 2) / ratio);
-            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+            this.ctx.fillText(qty, (x + 2), (y + 2));
         },
 
         draw_from_texture: function (idx, x, y, tex, ofsx, ofsy, y_max, centre, img_scale)

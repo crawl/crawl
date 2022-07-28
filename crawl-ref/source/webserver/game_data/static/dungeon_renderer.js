@@ -93,13 +93,9 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
             }
             else
             {
-                // The canvas is scaled by devicePixelRatio (see util.js), so the
-                // cell dimensions need to be similarly scaled for purposes of
-                // getting the selected cell.
-                var ratio = window.devicePixelRatio;
                 var loc = {
-                    x: Math.round(ev.clientX / (this.cell_width / ratio) + this.view.x - 0.5),
-                    y: Math.round(ev.clientY / (this.cell_height / ratio) + this.view.y - 0.5)
+                    x: Math.round(ev.clientX / this.cell_width + this.view.x - 0.5),
+                    y: Math.round(ev.clientY / this.cell_height + this.view.y - 0.5)
                 };
 
                 view_data.place_cursor(enums.CURSOR_MOUSE, loc);
@@ -219,13 +215,28 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
             if (w > 0 && h > 0)
             {
                 var floor = Math.floor;
-                this.ctx.drawImage(this.element,
-                                   floor(sx * cw),
-                                   floor(sy * ch),
-                                   w, h,
-                                   floor(dx * cw),
-                                   floor(dy * ch),
-                                   w, h);
+                this.ctx.save();
+                try {
+                    // this is ugly, but I have not managed to figure out if
+                    // there's a way to get this to work if this.ctx (which
+                    // is the canvas for the source image) has a scale. So
+                    // use the device pixel ratio manually.
+                    this.ctx.resetTransform();
+                    const ratio = window.devicePixelRatio;
+                    this.ctx.drawImage(this.element,
+                                   Math.floor(sx * cw * ratio),
+                                   Math.floor(sy * ch * ratio),
+                                   Math.floor(w * ratio),
+                                   Math.floor(h * ratio),
+                                   Math.floor(dx * cw * ratio),
+                                   Math.floor(dy * ch * ratio),
+                                   Math.floor(w * ratio),
+                                   Math.floor(h * ratio));
+                }
+                finally
+                {
+                    this.ctx.restore();
+                }
             }
 
             // Render cells that came into view
@@ -252,7 +263,6 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
 
         fit_to: function(width, height, min_diameter)
         {
-            var ratio = window.devicePixelRatio;
             var scale;
             if (this.ui_state == enums.ui.VIEW_MAP)
                 scale = options.get("tile_map_scale");
@@ -261,8 +271,8 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
             var tile_size = Math.floor(options.get("tile_cell_pixels")
                                 * scale / 100);
             var cell_size = {
-                w: Math.floor(tile_size * ratio),
-                h: Math.floor(tile_size * ratio)
+                w: Math.floor(tile_size),
+                h: Math.floor(tile_size)
             };
 
             if (options.get("tile_display_mode") == "glyphs")
@@ -271,20 +281,20 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
                 this.set_cell_size(this.glyph_mode_font_width,
                                     this.glyph_mode_line_height);
             }
-            else if ((min_diameter * cell_size.w / ratio > width)
-                || (min_diameter * cell_size.h / ratio > height))
+            else if ((min_diameter * cell_size.w > width)
+                || (min_diameter * cell_size.h > height))
             {
                 // scale down if necessary, so that los is in view
-                var rescale = Math.min(width * ratio / (min_diameter * cell_size.w),
-                                     height * ratio / (min_diameter * cell_size.h));
+                var rescale = Math.min(width / (min_diameter * cell_size.w),
+                                     height / (min_diameter * cell_size.h));
                 this.set_cell_size(Math.floor(cell_size.w * rescale),
                                    Math.floor(cell_size.h * rescale));
             }
             else
                 this.set_cell_size(cell_size.w, cell_size.h);
 
-            var view_width = Math.floor(width * ratio / this.cell_width);
-            var view_height = Math.floor(height * ratio / this.cell_height);
+            var view_width = Math.floor(width / this.cell_width);
+            var view_height = Math.floor(height / this.cell_height);
             this.set_size(view_width, view_height);
         },
 
