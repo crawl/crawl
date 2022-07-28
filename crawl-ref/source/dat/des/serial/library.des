@@ -1,0 +1,572 @@
+# Library by hellmonk.
+#
+# Library is a serial vault for D, Elf, Snake, and Depths, placing on D:4 or
+# lower. Library vaults may place spellcaster type monsters and book loot.
+#
+# Most library vaults are small niches and alcoves or rooms of varying sizes.
+# All vaults use wall_studio tiles.
+
+NAME:   serial_library
+TAGS:   allow_dup extra luniq_serial decor nolayout_encompass
+DEPTH:  D:4-, Depths, Snake, Elf
+CHANCE: 0.5%
+{{
+  local c = 4 + crawl.random2(6) + crawl.random2(4)
+  hook("post_place", function()
+    dgn.place_maps{tag="hellmonk_serial_library", count=c}
+  end)
+}}
+
+NAME:   serial_library_room_a
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+FTILE:  .+ = floor_studio
+MAP
+xxxxx
+xcccx
+x...x
+x...x
+x...x
+xx+xx
+  @
+ENDMAP
+
+NAME:   serial_library_room_b
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+FTILE:  .+ = floor_studio
+MAP
+  xxx
+ xcccx
+xx...xx
+xc...cx
+xx...xx
+ xx+xx
+   @
+ENDMAP
+
+NAME:   serial_library_room_c
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+FTILE:  .+ = floor_studio
+MAP
+xxxxxxxxx
+xcccccccx
+xc.....cx
+xc.....cx
+xcc...ccx
+xxxx+xxxx
+    @
+ENDMAP
+
+NAME:   serial_library_hallway_a
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+FTILE:  .+ = floor_studio
+MAP
+   @
+ xx+xx
+ x...x
+xx...xx
+xc...cx
+xc...cx
+xc...cx
+xc...cx
+xc...cx
+xc...cx
+xc...cx
+xx...xx
+ x...x
+ xx+xx
+   @
+ENDMAP
+
+NAME:   serial_library_hallway_b
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+MAP
+  @@
+xx..xx
+xc..cx
+xc..cx
+xc..cx
+xc..cx
+xc..cx
+xx..xx
+  @@
+ENDMAP
+
+NAME:   serial_library_angled_corner
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+MAP
+     xxxxxx
+    xc....@
+   xc.....@
+  xc..
+ xc..
+xc..
+x..
+x..
+x..
+x..
+x@@
+ENDMAP
+
+NAME:   serial_library_small_corner
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+MAP
+xxxxxx
+xccxxx
+xc...@
+xx..
+xx.
+xx@
+ENDMAP
+
+NAME:   serial_library_small_alcove
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+ITEM:   any book / any manual w:1
+SUBST:  d = d:1 .:50
+TILE:   c = wall_studio
+MAP
+xxxxxxx
+xcccccx
+xc..dcx
+  @@@
+ENDMAP
+
+NAME:   serial_library_recessed_alcove
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+ITEM:   any book / any manual w:1
+NSUBST:  c = 1:d / *:c
+SUBST:   d = d:1 c:25 .:25
+TILE:   c = wall_studio
+MAP
+xxxxxx
+xccccxxxxxx
+xc...xxxxxx
+xc.........@
+xcccx.
+xxxxx.
+   xx.
+   xx.
+   xx.
+   xx.
+   xx.
+     @
+ENDMAP
+
+NAME:   serial_library_layered_room
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+FTILE:  .+ = floor_studio
+MAP
+        @
+cccccccc+c
+c........c
+c.c+cccc.c
+c.c....c.c
+c.c.cc.c.c
+c.c.cc.c.c
+c.c....c.c
+c.cccc+c.c
+c........c
+c+cccccccc
+ @
+ENDMAP
+
+NAME:   serial_library_u_bend
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+MAP
+xxxxxxxxxx
+xccccccccx
+xc......cx
+xc......cx
+xc..cc..cx
+xc..cc..cx
+xc..cc..cx
+xx..xx..xx
+xx..xx..xx
+xx@@xx@@xx
+ENDMAP
+
+NAME:   serial_library_h_bend
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+MAP
+xx@@xx@@xx
+xx..xx..xx
+xc..cc..cx
+xc..cc..cx
+xc......cx
+xc......cx
+xc..cc..cx
+xc..cc..cx
+xx..xx..xx
+xx@@xx@@xx
+ENDMAP
+
+NAME:   serial_library_junction
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+MAP
+  c@@c
+ cc..cc
+ccc..ccc
+@......@
+@......@
+ cccccc
+  cccc
+   cc
+ENDMAP
+
+NAME:   serial_library_semicircle
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+SUBST:  t: x:50 c:15 t:10 v:5
+TILE:   c = wall_studio
+MAP
+    ccccccc
+ cccc.....cccc
+cc...........cc
+c...ttttttt...c
+c..tt     tt..c
+ENDMAP
+
+NAME:   serial_library_open_cross
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+MAP
+    ..c..
+    c...c
+    c...c
+    .....
+.cc..c.c..cc.
+....c...c....
+c...........c
+....c...c....
+.cc..c.c..cc.
+    .....
+    c...c
+    c...c
+    ..c..
+ENDMAP
+
+NAME:   serial_library_long_bookcase
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+FTILE:  .+ = floor_studio
+MAP
+xxxxxxxx
+x......x
+x......x
+x..cc..x
+x......x
+x......x
+x..cc..x
+x......x
+x......x
+x..cc..x
+x......x
+x......x
+x..cc..x
+x......x
+x......x
+x..cc..x
+x......x
+xxx++xxx
+   @@
+ENDMAP
+
+NAME:   serial_library_open_square_a
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+SUBST:  T = T:50 c:20 t:5 G:5 V:5 b:5 Y:1
+TILE:   c = wall_studio
+MAP
+.......
+.c.c.c.
+.......
+.c.T.c.
+.......
+.c.c.c.
+.......
+ENDMAP
+
+NAME:   serial_library_open_square_b
+TAGS:   hellmonk_serial_library allow_dup extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+KFEAT:  B = altar_sif_muna
+SUBST:  T = T:75 c:25 t:5 G:5 V:5 B:1
+TILE:   c = wall_studio
+MAP
+.........
+.cc...cc.
+.cc...cc.
+.........
+....T....
+.........
+.cc...cc.
+.cc...cc.
+.........
+ENDMAP
+
+NAME:   serial_library_statue_hall
+TAGS:   hellmonk_serial_library extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+KFEAT:  D = altar_sif_muna
+KITEM:  D = any book
+: if you.absdepth() < 10 then
+SUBST:  D = G:25 D:5 n:1
+: end
+TILE:   c = wall_studio
+MAP
+xxxxxxx
+xxcccxx
+xccDccx
+xc...cx
+xx...xx
+xx...xx
+xG...Gx
+xx...xx
+xx...xx
+xG...Gx
+xx...xx
+xx...xx
+xG...Gx
+xx...xx
+xx@@@xx
+ENDMAP
+
+NAME:   serial_library_double_dead_end
+TAGS:   hellmonk_serial_library extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+ITEM:   any book
+SUBST:  d = d.
+TILE:   c = wall_studio
+MAP
+xxxxx
+xGxcx
+x.xdx
+x.x.x
+x.x.x
+x.x.x
+x.x.x
+x.x.x
+x@@@x
+ENDMAP
+
+NAME:   serial_library_big_corner
+TAGS:   hellmonk_serial_library extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+MAP
+     cccc
+    cccccc
+   cc....cc
+  cc......cc
+ cc...cc...cc
+cc...cccc...cc
+cc..cccccc....
+cc..cccccc...
+cc...cccc...
+ cc...cc...
+  cc......
+   cc....
+    cc..
+ENDMAP
+
+NAME:   serial_library_filled_rooms
+TAGS:   hellmonk_serial_library extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+ITEM:   any book
+NSUBST: c = 1:dc / *:c
+TILE:   c = wall_studio
+MAP
+xxxxxxxxxxxxxxxxx
+xcxcxcxcxcxcxcxcx
+x+x+x+x+x+x+x+x+x
+ ...............
+ENDMAP
+
+NAME:   serial_library_reading_circle
+TAGS:   hellmonk_serial_library extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+TILE:   c = wall_studio
+MAP
+   .....
+  ..ccc..
+ .cc...cc.
+..c.....c..
+.c...c...c.
+.c..ccc..c.
+.c...c...c.
+..c.....c..
+ .cc...cc.
+  ..ccc..
+   .....
+ENDMAP
+
+NAME:   serial_library_secret_room
+TAGS:   hellmonk_serial_library extra decor
+DEPTH:  D:4-, Depths, Snake, Elf
+ITEM:   any book
+TILE:   c = wall_studio
+FTILE:  .+ = floor_studio
+SUBST:  d = d.
+MAP
+    xxx
+xxxxx>xx
+xcccc+cx
+xc..c.cx
+xc..d.cx
+xc....cx
+xc....cx
+xcc..ccx
+xxx++xxx
+   @@
+ENDMAP
+
+NAME:   serial_library_metal_room
+TAGS:   hellmonk_serial_library extra
+DEPTH:  D:4-, Depths, Snake, Elf
+ITEM:   any book good_item
+NSUBST: . = 2:1 / 8=1... / *:.
+: if you.absdepth() < 7 then
+SUBST:  1 = 89000
+:elseif you.absdepth() < 12 then
+MONS:   kobold demonologist / vampire / deep elf pyromancer
+:elseif you.in_branch("D") then
+MONS:   tengu conjurer / wizard / boggart / ogre mage / necromancer /\
+        deep elf zephyrmancer / rakshasa w:3
+:elseif you.in_branch("Snake") then
+MONS:   nagaraja / salamander tyrant / guardian serpent w:5
+:elseif you.in_branch("Elf") then
+MONS:   deep elf annihilator / deep elf death mage / deep elf sorcerer /\
+        deep elf demonologist
+:else
+MONS:   walking crystal tome / walking divine tome / walking earthen tome /\
+        walking frostbound tome
+: end
+TILE:   c = wall_studio
+FTILE:  .1+ = floor_studio
+MAP
+vvvvvvvvvvv
+vd.......dv
+vcccc.ccccv
+v.........v
+vcccc.ccccv
+v.........v
+vcccc.ccccv
+v.........v
+vcccc.ccccv
+v.........v
+vcccc.ccccv
+v.........v
+vvvvv+vvvvv
+     @
+ENDMAP
+
+NAME:   serial_library_octagon
+TAGS:   hellmonk_serial_library extra
+DEPTH:  D:4-, Depths, Snake, Elf
+ITEM:   any book good_item, any manual
+: if you.absdepth() < 7 then
+SUBST:  d = ddde, 1 = 8990000
+:elseif you.absdepth() < 12 then
+SUBST:  d = dddddde
+MONS:   kobold demonologist / vampire / deep elf pyromancer
+:elseif you.in_branch("D") then
+MONS:   tengu conjurer / wizard / boggart / ogre mage / necromancer /\
+        deep elf zephyrmancer
+:elseif you.in_branch("Snake") then
+MONS:   nagaraja / salamander tyrant
+:elseif you.in_branch("Elf") then
+MONS:   deep elf annihilator / deep elf death mage / deep elf sorcerer /\
+        deep elf demonologist
+:else
+MONS:   walking crystal tome / walking divine tome / walking earthen tome /\
+        walking frostbound tome / lich / ancient lich / dread lich /\
+        tengu reaver / vampire knight
+: end
+SHUFFLE: DE
+SUBST:  D = c
+TILE:   c = wall_studio
+FTILE:  .1d890+ = floor_studio
+MAP
+     ccccccccc
+    cc...d...cc
+   cc...E.E...cc
+  cc..cDcDcDc..cc
+ cc.1.E.E.E.E.1.cc
+cc....E.E.E.E....cc
+c..ccccDcDcDcccc..c
+c.......E.E.......c
+c.EEEEEEE.EEEEEEE.c
+cd.DDDDDDcDDDDDD.dc
+c.EEEEEEE.EEEEEEE.c
+c.......E.E.......c
+c..ccccDcDcDcccc..c
+cc....E.E.E.E....cc
+ cc.1.E.E.E.E.1.cc
+  cc..cDcDcDc..cc
+   cc...E.E...cc
+    cc.......cc
+     ccc+++ccc
+        @@@
+ENDMAP
+
+NAME:   serial_library_narrow_alcove
+TAGS:   hellmonk_serial_library extra
+DEPTH:  D:4-, Depths, Snake, Elf
+KFEAT:  B = altar_sif_muna
+ITEM:   any book good_item, any manual
+: if you.absdepth() < 7 then
+SUBST:  B = cGT, d = de, 1 = 89000
+:elseif you.absdepth() < 12 then
+SUBST:  d = ddde
+MONS:   kobold demonologist / vampire / deep elf pyromancer
+:elseif you.in_branch("D") then
+MONS:   tengu conjurer / wizard / boggart / ogre mage / necromancer /\
+        deep elf zephyrmancer
+:elseif you.in_branch("Snake") then
+MONS:   nagaraja / salamander tyrant
+:elseif you.in_branch("Elf") then
+MONS:   deep elf annihilator / deep elf death mage / deep elf sorcerer /\
+        deep elf demonologist / deep elf elementalist
+:else
+MONS:   walking crystal tome / walking divine tome / walking earthen tome /\
+        walking frostbound tome
+: end
+TILE:   c = wall_studio
+MAP
+   xxxxx
+  xxcccxx
+ xxccBccxx
+xxcc...ccxx
+xcc.cdc.ccx
+xc.ccccc.cx
+xcc.c.c.ccx
+xxcc.1.ccxx
+xxxc...cxxx
+  xx...xx
+   x@@@x
+ENDMAP
