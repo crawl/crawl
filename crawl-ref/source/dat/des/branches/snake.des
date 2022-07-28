@@ -673,6 +673,24 @@ xx...........xxx.....xxx........'@
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# https://www.youtube.com/watch?v=RmzgObMCicw
+NAME:  nicolae_snake_flat_spine
+TAGS:  transparent extra
+DEPTH: Snake
+MAP
+        .....................
+    ......cc.cc.cc.cc.cc.cc....
+......cc.c..c..c..c..c..c..cc...
+..cc.c..c..c..c..c..c..c..c..cc.
+..c..c..c..c..c..c..c..c..c..c..
+cccccccccccccccccccccccccccccccc
+..c..c..c..c..c..c..c..c..c..c..
+..cc.c..c..c..c..c..c..c..c..cc.
+......cc.c..c..c..c..c..c..cc...
+    ......cc.cc.cc.cc.cc.cc....
+        .....................
+ENDMAP
+
 ################################################################################
 # Gridmaze is a series of decor vaults inspired by the layout_grid_maze variant
 # that have two-block-thick walls with rounded corners. The cleared notches
