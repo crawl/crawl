@@ -259,6 +259,33 @@ xxx....x.x.x.x....xxx
         xxxxx
 ENDMAP
 
+NAME:    nicolae_spider_entry_lesser_pyramids
+TAGS:    spider_entry transparent patrolling
+KMONS:   Os = pharaoh ant
+KMONS:   S = wolf spider / redback / tarantella / jumping spider
+KFEAT:   O = enter_spider_nest
+NSUBST:  S = 3=S / 3=SSss.
+SUBST:   x = xx.
+MAP
+       ...
+       .x.
+      ..x..
+      .xxx.
+     .......
+     .x.S.x.
+    ..x...x..
+    .xxx.xxx.
+   ...........
+   .x.S...S.x.
+  ..x.......x..
+  .xxx..O..xxx.
+ ...............
+ .x.S.x.S.x.S.x.
+..x...x...x...x..
+.xxx.xxx.xxx.xxx.
+.................
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
