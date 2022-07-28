@@ -163,6 +163,43 @@ xx---.---xx
  xxxx@xxxx
 ENDMAP
 
+NAME:   nicolae_snake_entry_squirm
+TAGS:   snake_entry patrolling transparent
+KMONS:  OT = naga
+KFEAT:  O = enter_snake_pit
+KFEAT:  T = T
+MAP
+xxxxxxxxxxxxxxx
+xxxxxxxxxxxx.xx
+xxx...xxxxx...x
+x...T..xxx....@
+x.O.....x...x.@
+x...T......xxx@
+xxx...x...xxxxx
+xxxxxxxx.xxxxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nicolae_snake_entry_warm_welcome
+TAGS:   snake_entry patrolling transparent
+KMONS:  L = lava snake
+KMONS:  O = salamander
+KFEAT:  O = enter_snake_pit
+KFEAT:  l = l
+SUBST:  ` = lx, - = l.
+NSUBST: l = 2=L / 2=Ll / l
+MAP
+  xxxxxx
+ xx`lllxx
+xx`l--llxx
+x.--...llx
+@....O.llx
+x.--...llx
+xx`l--llxx
+ xx`lllxx
+  xxxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
