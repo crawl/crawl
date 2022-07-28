@@ -252,6 +252,31 @@ tt--ttt---ttt
      ttttt
 ENDMAP
 
+NAME:   nicolae_swamp_entry_spooky
+TAGS:   swamp_entry patrolling transparent
+KMONS:  s = spectral thing
+KMONS:  O = ghost crab
+KFEAT:  O = enter_swamp
+KFEAT:  t = mangrove
+NSUBST: O = O / .
+SUBST:  - = t., s = s., . = ....W
+MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
+                              size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+      xxxxxx
+    xxxttttxx
+  xxxttt--tttt
+xxxttt-s..s-ttt
+xttt-.s.--.s..@
+xtO..s.-tt-.s.@
+xtO..s.-tt-.s.@
+xttt-.s.--.s..@
+xxxttt-s..s-ttt
+  xxxttt--tttt
+    xxxttttxx
+      xxxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
