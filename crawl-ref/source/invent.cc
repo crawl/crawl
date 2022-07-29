@@ -1251,7 +1251,7 @@ static unsigned char _invent_select(const char *title = nullptr,
 
 void display_inventory()
 {
-    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
+    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL);
     menu.load_inv_items(OSEL_ANY, -1);
     menu.set_type(menu_type::describe);
 
@@ -1812,7 +1812,7 @@ int prompt_invent_item(const char *prompt,
             vector< SelItem > items;
             const auto last_keyin = keyin;
             current_type_expected = keyin == '*' ? OSEL_ANY : type_expect;
-            int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE;
+            int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_SECONDARY_SCROLL;
             if (other_valid_char == '-')
                 mflags |= MF_SPECIAL_MINUS;
 
