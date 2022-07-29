@@ -112,7 +112,7 @@ private:
     MenuEntry *floor_header;
 };
 
-string _default_use_title(operation_types oper)
+static string _default_use_title(operation_types oper)
 {
     switch (oper)
     {
@@ -131,7 +131,7 @@ string _default_use_title(operation_types oper)
     }
 }
 
-int _default_osel(operation_types oper)
+static int _default_osel(operation_types oper)
 {
     switch (oper)
     {
