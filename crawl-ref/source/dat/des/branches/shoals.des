@@ -2404,24 +2404,30 @@ MAP
       MwwM
 ENDMAP
 
-NAME:   nicolae_shoals_snakes_on_a_beach
+NAME:   nicolae_shoals_deep_elves_summer_vacation
 TAGS:   water_ok transparent patrolling no_pool_fixup
 DEPTH:  Shoals
 ORIENT: float
 # Someone left their gear in the changing room.
-KITEM:  Z = barding / barding good_item, long sword / short sword / \
-            battleaxe / halberd / glaive / mace / dire flail / war axe / \
-            morningstar
+KITEM:  P = leather armour / ring mail / scale mail / chain mail, \
+             long sword / short sword / rapier / dagger, \
+             buckler / nothing w:20
 # Some people like having a little something to read or drink on the beach.
-KITEM:  12 = nothing w:50 / any book w:5 / any scroll / any potion
-# 1/3 chance of rudely walking in on a naga changing.
-KMONS:  z = naga ; nothing / nothing w:20
-KMONS:  1 = naga w:20 / naga warrior / nothing w:15
-KMONS:  2 = naga sharpshooter band / naga mage band / nagaraja
-NSUBST: 1 = 1=2 / 2=21 / 1..
+KITEM:  12 = nothing w:30 / any book / any scroll / any potion
+# Deep elves have to bring the high-strength sunscreen. At least one potion
+# of resistance is guaranteed in the changing room.
+KITEM:  s = potion of resistance ident:all
+# 1/3 chance of rudely walking in on a deep elf changing.
+KMONS:  p = deep elf knight ; nothing / nothing w:20
+KMONS:  1 = deep elf pyromancer w:20 / deep elf zephyrmancer w:20 / \
+            deep elf archer / deep elf knight / \
+            deep elf archer band w:5 / deep elf knight band w:5
+KMONS:  2 = deep elf death mage / deep elf sorcerer / \
+            deep elf annihilator / deep elf demonologist
+NSUBST: 1 = 1=2 / 1=21 / 2=1 / 1..
 SUBST:  - = x., _ = w_, M = wW
-KPROP:  `Zz+ = no_tide
-KMASK:  `Zz+ = no_monster_gen
+KPROP:  `Pps+ = no_tide
+KMASK:  `Pps+ = no_monster_gen
 CLEAR:  _
 MAP
           __
@@ -2431,23 +2437,23 @@ MAP
     xxxxwwwwwww_
    xx-MMwwwwwww_
    xx-.Mwwwwwwww__
-  xxx-.MMwwwwwwwww_
-  xx-...MMMwwwwwww_
+  xxx-1MMwwwwwwwww_
+  xx-S..MMMwwwwwww_
  xxx-.....Mwwwwwwww__
  xxx-.1...MMwwwwwwwww_
- xxxx-.....MMMwwwwwww_
+ xxxx-..S..MMMwwwwwww_
   xxx-..1....Mwwwwwwww__
-   xx-.......MMwwwwwwwww_
+   xx-1......MMwwwwwwwww_
     xx-...1...MMMwwwwwww_
-    xxx-........Mwwwwwwww__
-   xxxx-.....1..MMwwwwwwwww_
-  @xxx-....1.....MMMwwwwwww_
+    xxx-.S......Mwwwwwwww__
+   xxxx-1....1..MMwwwwwwwww_
+  @xxx-....1S..1.MMMwwwwwww_
  @.xxx-..1.........Mwwwwwww
-@..xx-......1..1...MMwwww
-x...x-.1.--.......1.Mxxxx
-xx..xx..-xx-c+cc-..-xxxx
-xx-..-..xxxxcz`cx--xxxx
-xxx-...-xxxxc`Zcxxxxxx
+@..xx-S.....1...1..MMwwww
+x...x-...--...S...1.Mxxxx
+xx..xx..-xx-c+cc-.S-xxxx
+xx-..-..xxxxcp`cx--xxxx
+xxx-...-xxxxcsPcxxxxxx
  xxxx--xxxxxccccxxxx
     xxxxxxxxxxxxxx
         xxxxxxx
