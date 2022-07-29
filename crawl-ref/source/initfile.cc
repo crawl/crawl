@@ -272,6 +272,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
+        new BoolGameOption(SIMPLE_NAME(reduce_beam_redraw), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),

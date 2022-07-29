@@ -798,6 +798,11 @@ void bolt::draw(const coord_def& p, bool force_refresh)
                                              : element_colour(colour);
     view_add_glyph_overlay(p, {glyph, c});
 #endif
+    // If reduce_beam_redraw is set, the redraw is unnecesary and
+    // should be done only once outside the loop calling the bolt::draw
+    if (Options.reduce_beam_redraw)
+        return;
+
     // to avoid redraws, set force_refresh = false, and draw_delay = 0. This
     // will still force a refresh if there is a draw_delay regardless of the
     // param, because a delay on drawing is pretty meaningless without a
@@ -1343,6 +1348,13 @@ void bolt::do_fire()
         noise_generated = false;
 
         ray.advance();
+    }
+
+    if (Options.reduce_beam_redraw)
+    {
+        viewwindow(false);
+        update_screen();
+        scaled_delay(15 + draw_delay);
     }
 
     if (!map_bounds(pos()))
