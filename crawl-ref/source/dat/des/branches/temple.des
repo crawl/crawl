@@ -2671,7 +2671,7 @@ KFEAT:   _ = B
 COLOUR:  d' = white
 COLOUR:  - = brown
 FTILE:   GBD'PNLRQK = floor_pebble_white
-FTILE:   HBpnlrq- = floor_pebble_brown
+FTILE:   Hpnlrq-_ = floor_pebble_brown
 SUBST:   c : cvb
 MAP
 cccccccccccc
@@ -2683,7 +2683,7 @@ c{-'-'B'-'.c
 c.'-'-P-'-.c
 c.-'-'-'-'.c
 c.PpPp'pPp.c
-c.rNlQBLnR.c
+c.rNlQ_LnR.c
 c..........c
 cccccccccccc
 ENDMAP
