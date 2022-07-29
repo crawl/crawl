@@ -2588,7 +2588,14 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
     if (dam > 0)
     {
         if (Options.use_animations & UA_BEAM)
+        {
+            if (Options.reduce_beam_redraw)
+            {
+                viewwindow(false);
+                update_screen();
+            }
             scaled_delay(100);
+        }
     }
     else
     {
@@ -2812,6 +2819,11 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
             beam.draw(entry.first);
         }
 
+        if (Options.reduce_beam_redraw)
+        {
+            viewwindow(false);
+            update_screen();
+        }
         scaled_delay(200);
     }
 
@@ -3609,10 +3621,17 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
                 beam.draw(entry.first);
             }
-            scaled_delay(25);
+
+            if (!Options.reduce_beam_redraw)
+                scaled_delay(25);
         }
 
-        scaled_delay(100);
+        if (Options.reduce_beam_redraw)
+        {
+            viewwindow(false);
+            update_screen();
+            scaled_delay(100);
+        }
     }
 
     if (you.can_see(*caster) || caster->is_player())

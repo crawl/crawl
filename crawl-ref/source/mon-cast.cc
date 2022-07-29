@@ -5441,6 +5441,15 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
         for (coord_def pos : affected)
         {
             beam.draw(pos);
+            //No need to delay if we are not refreshing
+            if (!Options.reduce_beam_redraw)
+                scaled_delay(25);
+        }
+
+        if (Options.reduce_beam_redraw)
+        {
+            viewwindow(false);
+            update_screen();
             scaled_delay(25);
         }
     }

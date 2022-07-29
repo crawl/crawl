@@ -3280,7 +3280,7 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     for (coord_def pos : affected)
         beam.draw(pos, false);
 
-    if (quiet)
+    if (quiet || Options.reduce_beam_redraw)
     {
         // When `quiet`, refresh the view after each complete draw pass.
         // why this call dance to refresh? I just copied it from bolt::draw
