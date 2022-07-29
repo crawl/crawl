@@ -269,7 +269,7 @@ enum MenuFlag
     MF_TOGGLE_ACTION    = 0x00400,   ///< ToggleableMenu toggles action as well
     MF_NO_WRAP_ROWS     = 0x00800,   ///< For menus used as tables (eg. ability)
     MF_START_AT_END     = 0x01000,   ///< Scroll to end of list
-
+    MF_SECONDARY_SCROLL = 0x02000,   ///< Secondary hotkeys scroll, rather than select
     MF_QUIET_SELECT     = 0x04000,   ///< No selection box and no count.
 
     MF_USE_TWO_COLUMNS  = 0x08000,   ///< Only valid for tiles menus
@@ -470,6 +470,7 @@ protected:
     virtual bool examine_index(int i);
     bool examine_by_key(int keyin);
     int hotkey_to_index(int key, bool primary_only);
+    pair<int,int> hotkey_range(int key);
     bool process_selection();
 
     bool is_hotkey(int index, int key);

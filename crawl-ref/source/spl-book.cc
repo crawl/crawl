@@ -859,7 +859,10 @@ public:
             case action::describe:
                 // n.b. skip superclass handling of ACT_EXAMINE, since we
                 // do not use `menu_action` in this class
-                return on_examine(item);
+                // hacky: call this by hotkey in order to trigger some side
+                // effects...
+                if (item.hotkeys.size())
+                    return examine_by_key(item.hotkeys[0]);
             case action::hide:
             case action::unhide:
                 you.hidden_spells.set(spell, !you.hidden_spells.get(spell));

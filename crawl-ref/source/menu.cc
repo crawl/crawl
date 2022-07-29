@@ -1827,11 +1827,23 @@ bool Menu::process_key(int keyin)
         // Even if we do return early, lastch needs to be set first,
         // as it's sometimes checked when leaving a menu.
         lastch = keyin; // TODO: remove lastch?
+        const int primary_index = hotkey_to_index(keyin, true);
         const int key_index = hotkey_to_index(keyin, false);
 
         // If no selection at all is allowed, exit now.
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return false;
+
+        if (is_set(MF_SECONDARY_SCROLL) && primary_index < 0 && key_index >= 0)
+        {
+            auto snap_range = hotkey_range(keyin);
+            snap_in_page(snap_range.second);
+            set_hovered(snap_range.first);
+#ifdef USE_TILE_WEB
+            webtiles_update_scroll_pos(true);
+#endif
+            return true;
+        }
 
         if (menu_action == ACT_EXAMINE && key_index >= 0)
             return examine_by_key(keyin);
@@ -1843,7 +1855,12 @@ bool Menu::process_key(int keyin)
         // we have received what should be a menu item hotkey. Activate that
         // menu item.
         if (is_set(MF_SINGLESELECT) && key_index >= 0)
+        {
+#ifdef USE_TILE_WEB
+            webtiles_update_scroll_pos(true);
+#endif
             return process_selection();
+        }
 
         if (is_set(MF_ANYPRINTABLE)
             && (!isadigit(keyin) || !is_set(MF_SELECT_QTY)))
@@ -1978,12 +1995,28 @@ int Menu::hotkey_to_index(int key, bool primary_only)
     return -1;
 }
 
+pair<int,int> Menu::hotkey_range(int key)
+{
+    int first = -1;
+    int last = -1;
+    for (int i = 0; i < static_cast<int>(items.size()); ++i)
+        if (is_hotkey(i, key))
+        {
+            if (first < 0)
+                first = i;
+            last = i;
+        }
+    return make_pair(first, last);
+}
+
 void Menu::select_items(int key, int qty)
 {
     const int index = hotkey_to_index(key, !is_set(MF_SINGLESELECT));
     if (index >= 0)
     {
         select_index(index, qty);
+        // XX should this update hover generally? This approach is tailored
+        // towards avoiding a weirdness with just the memorize menu...
         if (is_set(MF_MULTISELECT))
             set_hovered(index);
         return;
@@ -1992,24 +2025,19 @@ void Menu::select_items(int key, int qty)
     // no primary hotkeys found, check secondary hotkeys for multiselect
     if (is_set(MF_MULTISELECT))
     {
-        // store the first and last indices that a multi-item hotkey selects
-        int last_snap = -1;
-        int first_snap = -1;
-        for (int i = 0; i < static_cast<int>(items.size()); ++i)
-            if (is_hotkey(i, key))
-            {
-                if (first_snap < 0)
-                    first_snap = i;
-                last_snap = i;
-                select_index(i, qty);
-            }
-
-        if (first_snap >= 0)
+        auto snap_range = hotkey_range(key);
+        if (snap_range.first >= 0)
         {
+            for (int i = snap_range.first; i <= snap_range.second; ++i)
+                if (is_hotkey(i, key))
+                    select_index(i, qty);
             // try to ensure as much of the selection as possible is in
             // view by snapping twice
-            snap_in_page(last_snap);
-            set_hovered(first_snap);
+            snap_in_page(snap_range.second);
+            set_hovered(snap_range.first);
+#ifdef USE_TILE_WEB
+            webtiles_update_scroll_pos(true);
+#endif
         }
     }
 }
@@ -2028,6 +2056,9 @@ bool Menu::examine_by_key(int keyin)
     if (index >= 0)
     {
         set_hovered(index);
+#ifdef USE_TILE_WEB
+        webtiles_update_scroll_pos(true);
+#endif
         return examine_index(index);
     }
     return true;
@@ -3030,7 +3061,7 @@ void Menu::webtiles_scroll(int first, int hover)
         // The `set_hovered` call here will trigger a snap, which is a way
         // for the server to get out of sync with the client. We therefore
         // only call it if the hover has actually changed on the client side.
-        if (last_hovered != hover)
+        // if (last_hovered != hover)
             set_hovered(hover);
         webtiles_update_scroll_pos();
         ui::force_render();
