@@ -2656,8 +2656,8 @@ y.....................................y
 yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 ENDMAP
 
-NAME:    sentei_xom_chess_challenge
-TAGS:    temple_altars_17 no_hmirror no_vmirror no_rotate temple_overflow_no_god
+NAME:    sentei_temple_godly_chess
+TAGS:    temple_altars_17 no_hmirror no_vmirror no_rotate
 PLACE:   Temple
 ORIENT:  encompass
 KFEAT:   PpLlNnRrQq = granite_statue
@@ -2667,30 +2667,23 @@ TILE:    Ll = dngn_statue_tengu
 TILE:    Rr = dngn_statue_orb_guardian
 TILE:    Qq = dngn_statue_ancient_evil
 : set_feature_name("granite_statue", "a statue of a chess piece")
-KFEAT:   K = altar_xom
-KFEAT:   H = G
-KFEAT:   _a = altar_zin / altar_the_shining_one / altar_kikubaaqudgha / \
-             altar_yredelemnul / altar_vehumet / altar_okawaru / \
-             altar_makhleb / altar_sif_muna / altar_trog / altar_elyvilon / \
-             altar_nemelex_xobeh / altar_fedhas / altar_cheibriados / \
-             altar_ashenzari / altar_dithmenos / altar_gozag / altar_ru / \
-             altar_qazlal / altar_uskayaw / altar_hepliaklqana / altar_wu_jian
+KFEAT:   _ = B
 COLOUR:  d' = white
 COLOUR:  - = brown
-FTILE:   GBD'PNLRQK_ = floor_pebble_white
-FTILE:   HBpnlrq-b = floor_pebble_brown
+FTILE:   GBD'PNLRQK = floor_pebble_white
+FTILE:   HBpnlrq- = floor_pebble_brown
 SUBST:   c : cvb
 MAP
 cccccccccccc
 c..........c
-c._a_a_a_a.c
-c.a_a_-_a_.c
+c._B_B_B_B.c
+c.B_B_-_B_.c
 c.'-'-'-'-.c
-c{-'-'a'-'.c
+c{-'-'B'-'.c
 c.'-'-P-'-.c
 c.-'-'-'-'.c
-c.PpPpKpPp.c
-c.rNlQ-LnR.c
+c.PpPp'pPp.c
+c.rNlQBLnR.c
 c..........c
 cccccccccccc
 ENDMAP
