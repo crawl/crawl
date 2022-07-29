@@ -222,8 +222,8 @@ protected:
     bool examine_index(int i) override
     {
         ASSERT(i >= 0 && i < static_cast<int>(items.size()));
-        if (items[0]->hotkeys.size())
-            describe_spell(get_spell_by_letter(items[0]->hotkeys[0]), nullptr);
+        if (items[i]->hotkeys.size())
+            describe_spell(get_spell_by_letter(items[i]->hotkeys[0]), nullptr);
         return true;
     }
 };
