@@ -1789,6 +1789,7 @@ skill_type item_attack_skill(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        ASSERT_RANGE(item.sub_type, 0, NUM_WEAPONS);
         if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
             return _lochaber_skill();
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
