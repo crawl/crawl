@@ -485,7 +485,14 @@ formatted_string formatted_string::substr_bytes(int pos, int length) const
 
 formatted_string formatted_string::trim() const
 {
-    return parse_string(trimmed_string(to_colour_string()));
+    string nocolor = tostring();
+    auto left_trim = nocolor.find_first_not_of(" \t\n\r");
+    // in principle this should preserve the colors I guess, but it's a lot
+    // easier not to do that...
+    if (left_trim == string::npos)
+        return formatted_string();
+    auto right_trim = nocolor.find_last_not_of(" \t\n\r");
+    return substr_bytes(left_trim, right_trim - left_trim + 1);
 }
 
 void formatted_string::del_char()
