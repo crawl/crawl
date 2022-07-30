@@ -3245,8 +3245,11 @@ void pump_events(int wait_event_timeout)
         // since these can come in faster than crawl can redraw.
         if (event.type == WME_MOUSEMOTION && wm->next_event_is(WME_MOUSEMOTION))
             continue;
-        if (event.type == WME_KEYDOWN && event.key.keysym.sym == 0)
+        if (event.type == WME_KEYDOWN
+            && (event.key.keysym.sym == 0 || event.key.keysym.sym == CK_NO_KEY))
+        {
             continue;
+        }
 
         // translate any key events with the current keymap
         if (event.type == WME_KEYDOWN)

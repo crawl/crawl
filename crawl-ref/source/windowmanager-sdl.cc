@@ -934,6 +934,8 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
         if (event->key.keysym.sym != CK_NO_KEY)
             return ret;
         // textinput event was suppressed, don't return the event.
+        // N.b. it is still possible to return CK_NO_KEY via an SDL_TEXTINPUT
+        // event below.
     }
 
     if (!SDL_WaitEventTimeout(&sdlevent, timeout))
