@@ -836,7 +836,10 @@ bool UIMenu::on_event(const Event& ev)
         && event.button() == MouseEvent::Button::Left)
     {
         m_mouse_pressed = true;
-        _queue_allocation();
+        do_layout(m_region.width, m_num_columns);
+        update_hovered_entry(true);
+        pack_buffers();
+        _expose();
     }
     else if (event.type() == Event::Type::MouseUp
             && event.button() == MouseEvent::Button::Left
