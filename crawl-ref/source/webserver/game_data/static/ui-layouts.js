@@ -879,9 +879,14 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     $button.append($canvas);
                 }
                 $.each(button.labels || [button.label], function (i, label) {
+                    // TODO: this has somewhat weird behavior if multiple spans
+                    // are produced from the formatted string...should they
+                    // really have a flex-grow property?
                     var $lbl = $(util.formatted_string_to_html(label)).css("flex-grow", "1");
                     $button.append($lbl);
                 });
+                // at least remove empty spans because of the above issue:
+                $button.find("span:empty").remove();
                 $button.attr("style", "grid-row:"+(button.y+1)+"; grid-column:"+(button.x+1)+";");
                 $descriptions.append("<span class='pane'> " + button.description + "</span>");
                 $button.attr("data-description-index", $descriptions.children().length - 1);
