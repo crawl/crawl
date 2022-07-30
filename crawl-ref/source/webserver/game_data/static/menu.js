@@ -884,7 +884,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function raw_arrow_keys()
     {
-        return menu.tag == "macro_mapping" && $(".raw_input_mode").length;
+        return menu.tag == "macro_mapping"
+            && ($(".raw_input_mode").length // raw input mode is up
+                || menu.items.length == 0); // new binding input mode
     }
 
     function menu_keydown_handler(event)
