@@ -2405,7 +2405,7 @@ KFEAT:   ~ = closed_clear_door
 SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 2...
 NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 1:4 / *= 42.., A = 1:< / *:A
 NSUBST:     5 = 1:5 / *:5.
-TILE:       c = wall_stone_dark
+TILE:       c = wall_marble_tukima
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_w_marble
 :           set_random_mon_list("dancing weapon / rakshasa")
