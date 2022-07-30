@@ -2186,6 +2186,8 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_INJURY_BOND, TILEI_INJURY_BOND },
     { MB_REFLECTING, TILEI_REFLECTING },
     { MB_TELEPORTING, TILEI_TELEPORTING },
+    { MB_EMPOWERED_SPELLS, TILEI_BRILLIANCE },
+    { MB_RESISTANCE, TILEI_RESISTANCE },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
