@@ -1226,7 +1226,7 @@ void SkillMenu::init_button_row()
         m_middle_button->add_hotkey('=');
         m_middle_button->set_id(SKM_SET_TARGET);
         m_middle_button->set_highlight_colour(YELLOW);
-        add_item(m_middle_button, 27, m_pos);
+        add_item(m_middle_button, 24, m_pos);
 
         // right button is either blank or shows target clearing options.
         m_clear_targets_button = new FormattedTextItem();
