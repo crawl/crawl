@@ -145,7 +145,9 @@ meliai MONS_MELIAI
 ## Lizards ('l')
 frilled_lizard MONS_FRILLED_LIZARD
 iguana MONS_IGUANA
+%rim 0
 basilisk MONS_BASILISK
+%rim 1
 komodo_dragon MONS_KOMODO_DRAGON
 
 ## Slugs ('w')
