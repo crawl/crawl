@@ -414,8 +414,10 @@ void InvMenu::select_item_index(int idx, int qty)
 
 bool InvMenu::examine_index(int i)
 {
-    // default behavior: examine inv item. You must override if your items
-    // come from somewhere else, or this will cause crashes!
+    if (on_examine)
+        return Menu::examine_index(i);
+    // default behavior: examine inv item. You must override or use on_examine
+    // if your items come from somewhere else, or this will cause crashes!
     if (i >= 0 && i < static_cast<int>(items.size()) && items[i]->hotkeys.size())
     {
         unsigned char select = items[i]->hotkeys[0];

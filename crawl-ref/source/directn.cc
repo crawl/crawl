@@ -544,6 +544,24 @@ public:
     }
 };
 
+// XX this probably shouldn't use InvMenu, why does it?
+class DescMenu : public InvMenu
+{
+public:
+    DescMenu()
+        : InvMenu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                        | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE
+                        | MF_INIT_HOVER)
+    { }
+
+    // TODO: move more stuff into this class
+    bool skip_process_command(int) override
+    {
+        // override InvMenu behavior
+        return false;
+    }
+};
+
 static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                                      vector<item_def *> const &list_items,
                                      vector<coord_def> const &list_features,
@@ -552,8 +570,7 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
                                      bool full_view = false,
                                      string title = "")
 {
-    InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                        | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
+    DescMenu desc_menu;
 
     string title_secondary;
 
@@ -575,12 +592,16 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         }
         title = "Visible " + title;
         if (examine_only)
-            title += " (select to examine)";
+            title += "<lightgray> (select to examine)</lightgray>";
         else
         {
-            title_secondary = title + " (select to examine, '!' to "
-              + selectverb + "):";
-            title += " (select to " + selectverb + ", '!' to examine):";
+            title_secondary = title
+                + "<lightgray> (select to examine, "
+                + menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE)
+                + " to " + selectverb + ")</lightgray>";
+            title += "<lightgray> (select to " + selectverb + ", "
+                + menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE)
+                + " to examine)</lightgray>";
         }
     }
 
@@ -725,7 +746,8 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
 
     coord_def target(-1, -1);
 
-    desc_menu.on_single_selection = [&desc_menu, &target](const MenuEntry& sel)
+    // XX code duplication
+    desc_menu.on_examine = [&target](const MenuEntry& sel)
     {
         target = coord_def(-1, -1);
         // HACK: quantity == 1: monsters, quantity == 2: items
@@ -744,31 +766,21 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
 #endif
 
-            if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
-            {
-                // View database entry.
-                describe_monsters(*m);
-                redraw_screen();
-                update_screen();
-                clear_messages();
-            }
-            else // ACT_EXECUTE -> view/travel
-                target = m->pos;
+            // View database entry.
+            describe_monsters(*m);
+            redraw_screen();
+            update_screen();
+            clear_messages();
         }
         else if (quant == 2)
         {
             // Get selected item.
             item_def* i = static_cast<item_def*>(sel.data);
-            if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
+            if (!describe_item(*i))
             {
-                if (!describe_item(*i))
-                {
-                    target = coord_def(-1, -1);
-                    return false;
-                }
+                target = coord_def(-1, -1);
+                return false;
             }
-            else // ACT_EXECUTE -> view/travel
-                target = i->pos;
         }
         else
         {
@@ -777,12 +789,47 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
             const int x = (num - y)/100;
             coord_def c(x,y);
 
-            if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
-                describe_feature_wide(c, true);
-            else // ACT_EXECUTE -> view/travel
-                target = c;
+            describe_feature_wide(c, true);
         }
-        return desc_menu.menu_action == InvMenu::ACT_EXAMINE;
+        return true;
+    };
+
+    desc_menu.on_single_selection = [&target](const MenuEntry& sel)
+    {
+        target = coord_def(-1, -1);
+        // HACK: quantity == 1: monsters, quantity == 2: items
+        const int quant = sel.quantity;
+        if (quant == 1)
+        {
+            // Get selected monster.
+            monster_info* m = static_cast<monster_info* >(sel.data);
+
+#ifdef USE_TILE
+            // Highlight selected monster on the screen.
+            const coord_def gc(m->pos);
+            tiles.place_cursor(CURSOR_TUTORIAL, gc);
+            const string &desc = get_terse_square_desc(gc);
+            tiles.clear_text_tags(TAG_TUTORIAL);
+            tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
+#endif
+            target = m->pos;
+        }
+        else if (quant == 2)
+        {
+            // Get selected item.
+            item_def* i = static_cast<item_def*>(sel.data);
+            target = i->pos;
+        }
+        else
+        {
+            const int num = quant - 3;
+            const int y = num % 100;
+            const int x = (num - y)/100;
+            coord_def c(x,y);
+
+            target = c;
+        }
+        return false;
     };
     desc_menu.show();
     redraw_screen();
