@@ -2897,16 +2897,16 @@ static void _bindkey(string field)
         wchars.push_back(wc);
     }
 
-    int key;
-
-    // TODO: Function keys.
     if (wchars.size() == 0)
     {
         mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
              field.c_str());
         return;
     }
-    else if (wchars.size() == 1)
+
+    int key;
+
+    if (wchars.size() == 1)
         key = wchars[0];
     else if (wchars[0] == '\\')
     {
