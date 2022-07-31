@@ -606,9 +606,19 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     if (actual && YOU_KILL(beam.thrower) && mon_targ)
         set_attack_conducts(conducts, *mon_targ, you.can_see(target));
 
-    int hurted = actual ? beam.damage.roll()
-                        // Tracers use the average for damage calculations.
-                        : (1 + beam.damage.num * beam.damage.size) / 2;
+    int hurted;
+    if (actual)
+    {
+        hurted = beam.damage.roll();
+        hurted = max(0, target.apply_ac(hurted));
+    }
+    else
+    {
+        // Tracers use the average for damage calculations.
+        hurted = (1 + beam.damage.num * beam.damage.size) / 2;
+        hurted = max(0, hurted - target.armour_class() / 2);
+    }
+
     const bool doFlavour = actual && beam.origin_spell != SPELL_DRAIN_LIFE;
     if (mon_targ)
         hurted = mons_adjust_flavoured(mon_targ, beam, hurted, doFlavour);
@@ -3824,9 +3834,9 @@ void end_frozen_ramparts()
 
 dice_def ramparts_damage(int pow, bool random)
 {
-    int size = 2 + pow / 5;
+    int size = 8 + pow / 5;
     if (random)
-        size = 2 + div_rand_round(pow, 5);
+        size = 8 + div_rand_round(pow, 5);
     return dice_def(1, size);
 }
 
