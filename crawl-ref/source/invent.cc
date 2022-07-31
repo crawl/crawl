@@ -1160,7 +1160,19 @@ bool item_is_selected(const item_def &i, int selector)
             && !jewellery_is_amulet(i);
 
     case OSEL_QUIVER_ACTION:
-        return in_inventory(i) && quiver::slot_to_action(i.link)->is_valid();
+        if (in_inventory(i))
+        {
+            auto a = quiver::slot_to_action(i.link);
+            // lots of things can be activated via the quiver, but don't have
+            // a targeter -- ignore these.
+            // However, we do want to allow selecting ammo/launchers under
+            // confusion...
+            // XX should the primary weapon be allowed here?
+            return a->is_valid()
+                && (a->is_targeted()
+                    || you.confused() && item_is_selected(i, OSEL_LAUNCHING));
+        }
+        return false;
     case OSEL_QUIVER_ACTION_FORCE:
         return in_inventory(i) && quiver::slot_to_action(i.link, true)->is_valid();
 
@@ -1739,6 +1751,7 @@ int prompt_invent_item(const char *prompt,
                        operation_types oper,
                        invent_prompt_flags flags,
                        const char other_valid_char,
+                       const char *view_all_prompt,
                        int *type_out)
 {
     const bool do_warning = !(flags & invprompt_flag::no_warning);
@@ -1774,6 +1787,9 @@ int prompt_invent_item(const char *prompt,
             keyin = '*';
     }
 
+    if (keyin == '*')
+        current_type_expected = OSEL_ANY;
+
     // ugh, why is this done manually
     while (true)
     {
@@ -1786,7 +1802,8 @@ int prompt_invent_item(const char *prompt,
         if (need_prompt)
         {
             mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
-                 prompt);
+                 current_type_expected == OSEL_ANY && view_all_prompt
+                 ? view_all_prompt : prompt);
         }
         else
             flush_prev_message();
@@ -1820,8 +1837,10 @@ int prompt_invent_item(const char *prompt,
 
             while (true)
             {
-                keyin = _invent_select(prompt, mtype, current_type_expected, -1,
-                                       mflags, nullptr, &items);
+                keyin = _invent_select(
+                    current_type_expected == OSEL_ANY && view_all_prompt
+                        ? view_all_prompt : prompt,
+                    mtype, current_type_expected, -1, mflags, nullptr, &items);
 
                 if (allow_list_known && keyin == '\\')
                 {
@@ -1845,6 +1864,7 @@ int prompt_invent_item(const char *prompt,
                 // let `*` act as a toggle. This is a slightly wacky
                 // implementation in that '?' as a toggle does something
                 // entirely different...
+                // need_prompt = view_all_prompt;
                 need_prompt = need_getch = false;
                 if (last_keyin == '*')
                     keyin = '?';

@@ -202,6 +202,7 @@ int prompt_invent_item(const char *prompt,
                        operation_types oper = OPER_ANY,
                        invent_prompt_flags flags = invprompt_flag::none,
                        const char other_valid_char = '\0',
+                       const char *view_all_prompt = nullptr,
                        int *type_out = nullptr);
 
 vector<SelItem> select_items(
