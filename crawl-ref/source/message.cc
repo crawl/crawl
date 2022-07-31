@@ -1893,6 +1893,7 @@ static void readkey_more(bool user_forced)
         }
     }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
+           && keypress != CK_NUMPAD_ENTER
            && !key_is_escape(keypress)
 #ifdef TOUCH_UI
            && keypress != CK_MOUSE_CLICK);

@@ -650,6 +650,7 @@ int line_reader::process_key_core(int ch)
         buffer[0] = '\0';
         return 0;
     }
+    ch = numpad_to_regular(ch); // is this overkill?
 
     if (keyfn)
     {
@@ -931,6 +932,7 @@ void line_reader::insert_char_at_cursor(int ch)
 
 int line_reader::process_key(int ch)
 {
+
     switch (ch)
     {
     CASE_ESCAPE
