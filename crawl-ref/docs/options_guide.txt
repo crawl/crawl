@@ -2013,7 +2013,9 @@ macros += M \{9} za
         A, Shift-A or Tab keys). The third argument describes the macro or
         keymap action and consists the command sequence to be associated with
         the second argument. (for example "zap" for zapping the spell in slot a
-        at the previous target).
+        at the previous target). Function keys, numpad keys, and navigation
+        keys can be entered via text keycodes (examples: \{F2}, \{NP-},
+        \{PgUp}, \{Down}, etc).
 
         If you have any macros/keymaps in your rc file, they will automatically
         be saved to your macro.txt file on load, silently overriding any
@@ -2048,7 +2050,9 @@ bindkey = [^D] CMD_BUTCHER
         that key. You can bind several commands to the same key, as long
         as they take effect in different areas of the game, i.e. one
         targeting command and one for the main game. Likewise, you can
-        bind the same command to different keys.
+        bind the same command to different keys. You can use the \{} syntax
+        from macro binds to write keycodes, and keycodes like "F1", "NP+",
+        and "Down" can appear directly in [].
         For a full list of possible commands, see keybind.txt.
 
 3-n     Tiles Options.

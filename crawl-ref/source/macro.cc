@@ -257,21 +257,128 @@ static void buf2keyseq(const char *buff, keyseq &k)
     }
 }
 
-static int read_key_code(string s)
+static int _name_to_keycode(string s)
+{
+    // brute-force partial inversion of keycode_to_name. This could probably
+    // be done much more elegantly via a map or similar..
+    // Does not handle modifier keys besides ctrl (TODO)
+    const string lower = lowercase(s);
+    if (s[0] == '^' && s.size() == 2)
+    {
+        // ^A = 1, etc.
+        return 1 + toupper_safe(s[1]) - 'A';
+    }
+    if (starts_with(lower, "np") && s.size() == 3)
+    {
+        switch (s[2])
+        {
+        case '0': return CK_NUMPAD_0;
+        case '1': return CK_NUMPAD_1;
+        case '2': return CK_NUMPAD_2;
+        case '3': return CK_NUMPAD_3;
+        case '4': return CK_NUMPAD_4;
+        case '5': return CK_NUMPAD_5;
+        case '6': return CK_NUMPAD_6;
+        case '7': return CK_NUMPAD_7;
+        case '8': return CK_NUMPAD_8;
+        case '9': return CK_NUMPAD_9;
+        case '*': return CK_NUMPAD_MULTIPLY;
+        case '+': return CK_NUMPAD_ADD;
+        case '-': return CK_NUMPAD_SUBTRACT;
+        case '.': return CK_NUMPAD_DECIMAL;
+        case '/': return CK_NUMPAD_DIVIDE;
+        case '=': return CK_NUMPAD_EQUALS;
+        default:
+            return CK_NO_KEY;
+        }
+    }
+    else if (lower == "npenter")
+        return CK_NUMPAD_ENTER;
+    else if (starts_with(lowercase(s), "f") && s.size() == 2)
+    {
+        switch (s[1])
+        {
+        case '0': return CK_F0;
+        case '1': return CK_F1;
+        case '2': return CK_F2;
+        case '3': return CK_F3;
+        case '4': return CK_F4;
+        case '5': return CK_F5;
+        case '6': return CK_F6;
+        case '7': return CK_F7;
+        case '8': return CK_F8;
+        case '9': return CK_F9;
+        default:
+            return CK_NO_KEY;
+        }
+    }
+    else if (starts_with(lower, "f1") && s.size() == 3)
+    {
+        switch (s[1])
+        {
+        case '0': return CK_F10;
+        case '1': return CK_F11;
+        case '2': return CK_F12;
+        case '3': return CK_F13;
+        case '4': return CK_F14;
+        case '5': return CK_F15;
+        case '6': return -280;
+        case '7': return -281;
+        case '8': return -282;
+        case '9': return -283;
+        default:
+            return CK_NO_KEY;
+        }
+    }
+    else if (lower == "backspace")
+        return CK_BKSP;
+    else if (lower == "tab")
+        return CK_TAB;
+    else if (lower == "esc")
+        return CK_ESCAPE;
+    else if (lower == "enter")
+        return CK_ENTER;
+    else if (lower == "del")
+        return CK_DELETE;
+    else if (lower == "up")
+        return CK_UP;
+    else if (lower == "down")
+        return CK_DOWN;
+    else if (lower == "left")
+        return CK_LEFT;
+    else if (lower == "right")
+        return CK_RIGHT;
+    else if (lower == "ins")
+        return CK_INSERT;
+    else if (lower == "home")
+        return CK_HOME;
+    else if (lower == "end")
+        return CK_END;
+    else if (lower == "clear")
+        return CK_CLEAR;
+    else if (lower == "pgup")
+        return CK_PGUP;
+    else if (lower == "pgdn")
+        return CK_PGDN;
+
+    return CK_NO_KEY;
+}
+
+int read_key_code(string s)
 {
     if (s.empty())
         return 0;
+
+    // try human-readable variants
+    int key = _name_to_keycode(s);
+    if (key != CK_NO_KEY)
+        return key;
 
     int base = 10;
     if (s[0] == 'x')
     {
         s = s.substr(1);
         base = 16;
-    }
-    else if (s[0] == '^')
-    {
-        // ^A = 1, etc.
-        return 1 + toupper_safe(s[1]) - 'A';
     }
 
     char *tail;
