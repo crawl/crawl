@@ -1436,6 +1436,9 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
             (*overlay)(x, y).keyspec_idx = idx;
         }
 
+    dprf(DIAG_DNGN, "Merged subvault '%s' at %d,%d x %d,%d",
+        vmap.name.c_str(), vtl.x, vtl.y, vbr.x, vbr.y);
+
     return map_corner_t(vtl, vbr);
 }
 
