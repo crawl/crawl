@@ -1577,6 +1577,29 @@ bool targeter_shadow_step::has_additional_sites(coord_def a)
     return temp_sites.size();
 }
 
+aff_type targeter_refrig::is_affected(coord_def loc)
+{
+    if (!targeter_radius::is_affected(loc))
+        return AFF_NO;
+    const actor* act = actor_at(loc);
+    if (!act || act->is_player())
+        return AFF_NO;
+
+    int adj = 0;
+    for (adjacent_iterator ai(loc); ai; ++ai)
+        if (actor_at(*ai))
+            ++adj;
+    switch (adj)
+    {
+    case 0:
+        return AFF_MULTIPLE;
+    case 1:
+        return AFF_YES;
+    default:
+        return AFF_MAYBE;
+    }
+}
+
 targeter_cone::targeter_cone(const actor *act, int r)
 {
     ASSERT(act);

@@ -1050,8 +1050,9 @@ higher the encumbrance rating of the caster's armour.
 %%%%
 Ozocubu's Refrigeration spell
 
-Drains heat from the caster and their surroundings, harming all creatures not
-resistant to cold. It prevents the caster from using potions for a brief time.
+Turns the air bitterly cold, freezing all other creatures in line of sight.
+This is less effective against creatures packed tightly together - those
+adjacent to others will be partly insulated from the cold, taking less damage.
 %%%%
 Pain spell
 

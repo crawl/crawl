@@ -1315,6 +1315,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
 
     // LOS radius:
     case SPELL_OZOCUBUS_REFRIGERATION:
+        return make_unique<targeter_refrig>(&you);
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS,
                                                   LOS_RADIUS, 0, 1);

@@ -648,6 +648,30 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
     return hurted;
 }
 
+static int _count_adj_actors(coord_def pos)
+{
+    int adj_count = 0;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+        if (actor_at(*ai))
+            ++adj_count;
+    return adj_count;
+}
+
+static int _ozo_adj_dam(int base_dam, int adj_actors, bool actual)
+{
+    switch (adj_actors) {
+    case 0:
+        return base_dam;
+    case 1:
+        if (actual)
+            return div_rand_round(3 * base_dam, 4);
+        return 3 * base_dam / 4;
+    default:
+        if (actual)
+            return div_rand_round(base_dam, 2);
+        return base_dam / 2;
+    }
+}
 
 static spret _cast_los_attack_spell(spell_type spell, int pow,
                                          const actor* agent, bool actual,
@@ -681,8 +705,6 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             prompt_verb = "refrigerate";
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
-                       // Players don't get immunity with rC+++.
-                       && (act->is_player() || act->res_cold() < 3)
                        && !god_protects(caster, act->as_monster());
             };
             break;
@@ -734,12 +756,6 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
             mpr(player_msg);
             flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
-
-            if (spell == SPELL_OZOCUBUS_REFRIGERATION)
-            {
-                mpr("You feel very cold.");
-                you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
-            }
         }
         else
         {
@@ -756,19 +772,27 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
     }
 
     vector<actor *> affected_actors;
+    map<actor*, int> ozo_adj_count;
 
     for (actor_near_iterator ai((agent ? agent : &you)->pos(), LOS_NO_TRANS);
          ai; ++ai)
     {
         if (!actual && !agent->can_see(**ai))
             continue;
+        if (!(*vulnerable)(agent, *ai))
+            continue;
 
         if ((*vulnerable)(agent, *ai))
             affected_actors.push_back(*ai);
+
+        // For perf, don't count when running tracers.
+        if (spell == SPELL_OZOCUBUS_REFRIGERATION)
+            ozo_adj_count[*ai] = actual ? _count_adj_actors(ai->pos()) : 0;
     }
 
     const int avg_damage = (1 + beam.damage.num * beam.damage.size) / 2;
     int total_damage = 0;
+    const int base_dam_size = beam.damage.size;
 
     for (auto a : affected_actors)
     {
@@ -776,6 +800,9 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         // a bunch of ballistomycete spores that blow each other up.
         if (!a->alive())
             continue;
+
+        if (spell == SPELL_OZOCUBUS_REFRIGERATION)
+            beam.damage.size = _ozo_adj_dam(base_dam_size, ozo_adj_count[a], actual);
 
         int this_damage = _los_spell_damage_actor(agent, *a, beam, actual);
         total_damage += this_damage;
