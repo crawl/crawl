@@ -85,6 +85,16 @@ class UseItemMenu : public InvMenu
     void update_sections();
     void clear() override;
     bool examine_index(int i) override;
+    bool cycle_mode(bool forward) override;
+    string get_keyhelp(bool scrollable) const override;
+
+    bool skip_process_command(int keyin) override
+    {
+        // override superclass behavior for everything except id menu
+        if (keyin == '!' && item_type_filter != OSEL_UNIDENT)
+            return false;
+        return InvMenu::skip_process_command(keyin);
+    }
 
 public:
     UseItemMenu(operation_types oper, int selector, const char* prompt);
@@ -117,15 +127,15 @@ static string _default_use_title(operation_types oper)
     switch (oper)
     {
     case OPER_WIELD:
-        return "Wield which item (- for none, * to show all)?";
+        return "Wield which item (- for none)?";
     case OPER_WEAR:
-        return "Wear which item (* to show all)?";
+        return "Wear which item?";
     case OPER_PUTON:
-        return "Put on which piece of jewellery (* to show all)?";
+        return "Put on which piece of jewellery?";
     case OPER_QUAFF:
-        return "Drink which item (* to show all)?";
+        return "Drink which item?";
     case OPER_READ:
-        return "Read which item (* to show all)?";
+        return "Read which item?";
     default:
         return "buggy";
     }
@@ -150,6 +160,58 @@ static int _default_osel(operation_types oper)
     }
 }
 
+static vector<operation_types> _oper_to_mode(operation_types o)
+{
+    static const vector<operation_types> wearables = {OPER_WIELD, OPER_WEAR, OPER_PUTON};
+    static const vector<operation_types> usables = {OPER_READ, OPER_QUAFF};
+
+    // return a copy
+    vector<operation_types> result;
+    if (find(wearables.begin(), wearables.end(), o) != wearables.end())
+        result = wearables;
+    else if (find(usables.begin(), usables.end(), o) != usables.end())
+        result = usables;
+
+    return result;
+}
+
+bool UseItemMenu::cycle_mode(bool forward)
+{
+    auto starting_oper = oper;
+    auto starting_hover = last_hovered;
+    // a bit silly to rebuild this every time
+    auto modes = _oper_to_mode(oper);
+    if (modes.empty())
+        return false;
+    // find the current position in the cycle
+    while (modes.front() != oper)
+        rotate(modes.begin(), modes.begin() + 1, modes.end());
+
+    // try to find another mode that works
+    do
+    {
+        rotate(modes.begin(),
+            forward ? modes.begin() + 1 : modes.begin() + modes.size() - 1,
+            modes.end());
+        oper = modes.front();
+        item_type_filter = _default_osel(oper);
+
+        clear();
+        populate_list();
+        populate_menu();
+        update_sections();
+        set_title(_default_use_title(oper));
+        set_hovered(starting_hover);
+        // fixup hover in case headings have moved
+        if (last_hovered >= 0 && items[last_hovered]->level != MEL_ITEM)
+            if (is_set(MF_ARROWS_SELECT))
+                cycle_hover();
+            else
+                set_hovered(-1);
+    } while (items.size() == 0 && oper != starting_oper);
+
+    return oper != starting_hover;
+}
 
 UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
                                     const char* prompt=nullptr)
@@ -370,11 +432,15 @@ void UseItemMenu::clear()
 
 void UseItemMenu::toggle_display_all()
 {
+    // don't allow identifying already id'd items, etc
+    if (oper == OPER_ANY)
+        return;
     clear();
     display_all = !display_all;
     populate_list();
     populate_menu();
     update_sections();
+    update_more();
 }
 
 void UseItemMenu::toggle_inv_or_floor()
@@ -433,6 +499,17 @@ bool UseItemMenu::examine_index(int i)
         ASSERT(desc_tgt);
         return describe_item(*desc_tgt);
     }
+}
+
+string UseItemMenu::get_keyhelp(bool) const
+{
+    string r;
+    if (oper == OPER_ANY)
+        return r; // `*` is disabled for identify, enchant
+    // TODO: show cycle mode information, once this feature is more baked
+    r += "[<w>*</w>] ";
+    r += (display_all ? "show appropriate" : "show all");
+    return r;
 }
 
 bool UseItemMenu::process_key(int key)
