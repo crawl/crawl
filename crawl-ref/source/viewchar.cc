@@ -19,6 +19,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
          U'\x2229', //∩
             U'\x2320', //⌠
             U'\x2248', //≈
+            '~', // sadly, ∼ (U+223C, not ascii ~) and ≃ are not in WGL4
             '8',  '{',
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)
          U'\x2302', //⌂ // CP437 but "optional" in WGL4
@@ -69,7 +70,7 @@ static const char32_t dchar_table[NUM_CSET][NUM_DCHAR_TYPES] =
         // wall .. altar
          '#',  '#',  '*',  '.',  ',', '\'',  '+',  '^',  '>',  '<',  '#',  '_',
         // arch .. item_wand
-        '\\',  '}',  '~',  '8',  '{',  '{',  '{',  '}',  ')',  '[',  '/',
+        '\\',  '}',  '~', '~', '8',  '{',  '{',  '{',  '}',  ')',  '[',  '/',
 #if TAG_MAJOR_VERSION == 34
         '%', // food
 #endif
@@ -103,8 +104,9 @@ dungeon_char_type dchar_by_name(const string &name)
     {
         "wall", "permawall", "wall_magic", "floor", "floor_magic", "door_open",
         "door_closed", "trap", "stairs_down", "stairs_up", "grate", "altar",
-        "arch", "fountain", "wavy", "statue", "invis_exposed", "item_detected",
-        "item_orb", "item_rune", "item_weapon", "item_armour", "item_wand",
+        "arch", "fountain", "wavy", "shallow_wavy", "statue", "invis_exposed",
+        "item_detected", "item_orb", "item_rune", "item_weapon", "item_armour",
+        "item_wand",
 #if TAG_MAJOR_VERSION == 34
         "item_food",
 #endif
