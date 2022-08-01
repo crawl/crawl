@@ -4380,12 +4380,8 @@ static string _monster_attacks_description(const monster_info& mi)
         const mon_attack_info &info = attack_count.first;
         const mon_attack_def &attack = info.definition;
 
-        const string weapon_name =
-              info.weapon ? info.weapon->name(DESC_PLAIN).c_str()
-            : ghost_brand_name(special_flavour, mi.type).c_str();
-        const string weapon_note = weapon_name.size() ?
-            make_stringf(" plus %s %s",
-                        mi.pronoun(PRONOUN_POSSESSIVE), weapon_name.c_str())
+        const string weapon_note = info.weapon ?
+            make_stringf(" with %s weapon", mi.pronoun(PRONOUN_POSSESSIVE))
             : "";
 
         const string count_desc =
@@ -4404,14 +4400,26 @@ static string _monster_attacks_description(const monster_info& mi)
         }
 
         int dam = attack.damage;
+        if (info.weapon)
+        {
+            dam += property(*info.weapon, PWPN_DAMAGE);
+            // Enchant is rolled separately, so doesn't change the max.
+            if (info.weapon->plus > 0)
+                dam += info.weapon->plus;
+        }
+
+        const brand_type brand = info.weapon ? get_weapon_brand(*info.weapon)
+                                             : special_flavour;
+        const string brand_desc = _describe_brand(brand);
 
         // Damage is listed in parentheses for attacks with a flavour
         // description, but not for plain attacks.
         bool has_flavour = !_flavour_base_desc(attack.flavour).empty();
         const string damage_desc =
-            make_stringf("%sfor up to %d damage%s%s%s",
+            make_stringf("%sfor up to %d damage%s%s%s%s",
                          has_flavour ? "(" : "",
                          dam,
+                         brand_desc.c_str(),
                          attack_count.second > 1 ? " each" : "",
                          weapon_note.c_str(),
                          has_flavour ? ")" : "");
