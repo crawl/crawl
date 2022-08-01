@@ -1195,3 +1195,185 @@ E...................xx.................E
 E..............................S.......E
 EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 ENDMAP
+
+# Generates 16 branded weapons.
+NAME:    nicolae_trove_branded_display_cases
+veto  {{ return crawl.game_started()
+           and (trove.weapon_skills() < trove.spell_skills()
+             or trove.weapon_skills() < you.base_skill("Unarmed Combat"))
+           and not crawl.one_chance_in(3) }}
+ORIENT:  encompass
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
+KITEM:   D = any weapon randart ego:electrocution / \
+             any useful weapon good_item ego:electrocution / \
+             any weapon ego:electrocution w:2
+KITEM:   E = any weapon randart ego:flaming / \
+             any useful weapon good_item ego:flaming / \
+             any weapon ego:flaming w:2
+KITEM:   F = any weapon randart ego:freezing / \
+             any useful weapon good_item ego:freezing / \
+             any weapon ego:freezing w:2
+KITEM:   H = any weapon randart ego:speed / \
+             any useful weapon good_item ego:speed / \
+             any weapon ego:speed w:2
+KITEM:   J = any weapon randart ego:venom / \
+             any useful weapon good_item ego:venom / \
+             any weapon ego:venom w:2
+KITEM:   K = any weapon randart ego:vorpal / \
+             any useful weapon good_item ego:vorpal / \
+             any weapon ego:vorpal w:2
+KITEM:   L = any weapon randart ego:holy_wrath / \
+             any useful weapon good_item ego:holy_wrath / \
+             any weapon ego:holy_wrath w:2
+KFEAT:   + = closed_clear_door
+SHUFFLE: DEFHJKL
+: trove.setup_features(_G)
+MAP
+xxxxxxxxxxxxxxxxxx
+x................x
+x.....mmmmmm.....x
+x..G..mDDDDm..G..x
+x.....m++++m.....x
+x................x
+x.mmm........mmm.x
+x.mH+..G..<..+Em.x
+x.mH+........+Em.x
+x.mH+........+Em.x
+x.mH+..A..G..+Em.x
+x.mmm........mmm.x
+x................x
+x.....m++++m.....x
+x..G..mFFFFm..G..x
+x.....mmmmmm.....x
+x................x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Generates 10 bardings. Rather than use a ton of "no_species_XX" tags, which
+# would need to be maintained for every future new species, this just vetos on
+# player species, so only barding-wearing species will see it.
+NAME:    nicolae_trove_exclusive_bardings
+veto    {{ return crawl.game_started()
+           and you.race() != "Naga"
+           and you.race() != "Palentonga") }}
+TAGS:    no_item_gen no_monster_gen allow_dup
+ORIENT:  encompass
+KITEM:   D = barding randart good_item / barding good_item / barding w:2
+SHUFFLE: TG
+: trove.setup_features(_G)
+MAP
+xxxxxxxxxxxxxxxxx
+xxxxxx.....xxxxxx
+xxxxxx..A..xxxxxx
+xxxxxx.....xxxxxx
+xxxxx...T...xxxxx
+xxxx.........xxxx
+xxD.....G.....Dxx
+xD.............Dx
+xD..T.G.T.G.T..Dx
+xD.............Dx
+xxD.....G.....Dxx
+xxxx.........xxxx
+xxxxx...T...xxxxx
+xxxxxx.....xxxxxx
+xxxxxx..<..xxxxxx
+xxxxxx.....xxxxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 20 items of no particular item class.
+NAME:   nicolae_trove_general_collection
+TAGS:   no_item_gen no_monster_gen allow_dup
+ORIENT: encompass
+KITEM:  d = acquire any / any useful good_item / any w:2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+x.G.G.xdxdxdxdxdx.G.G.x
+x.....................x
+x.....xdxdxdxdxdx.....x
+x..A..xxxxxxxxxxx..<..x
+x.....xdxdxdxdxdx.....x
+x.....................x
+x.G.G.xdxdxdxdxdx.G.G.x
+xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Generates 18 items useful for an Octopode: hats, amulets, and of course rings.
+NAME:   nicolae_trove_octotrove
+TAGS:   no_item_gen no_monster_gen allow_dup no_pool_fixup
+ORIENT: encompass
+KITEM:  D = any useful amulet good_item / any randart amulet / any amulet w:2
+KITEM:  E = useful hat good_item / hat randart / hat w:2
+KITEM:  F = any useful ring good_item / any randart ring / any ring w:2
+KFEAT:  ~ = open_sea
+: trove.setup_features(_G)
+: set_border_fill_type('open_sea')
+MAP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwww...wwEEEEEwwF..wwwwwwwww~
+~wwwwwwwww.w.w.......www.wwwwwwwww~
+~wwwwwwwwwFw...DDDDD.....wwwwwwwww~
+~wwwwwwwwwwwww.......wwwwwwwwwwwww~
+~wwwwwwwwww....A...<......wwwwwwww~
+~wwwwwwww...ww.......wwww.wwwwwwww~
+~wwwwwwww.wwww.w...w...wF.wwwwwwww~
+~wwwwwwwwFwwww.w.w.www.wwwwwwwwwww~
+~wwwwwwwwwwF.w.w.w.www..wwwwwwwwww~
+~wwwwwwwwwww...w.w...ww.Fwwwwwwwww~
+~wwwwwwwwwwwwwww.www.wwwwwwwwwwwww~
+~wwwwwwwwwwwwF...wwF.wwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ENDMAP
+
+# Generates 20 auxiliary armours, and a diagram of where they go.
+NAME:   nicolae_trove_personal_accessories
+TAGS:   no_rotate no_vmirror no_item_gen no_monster_gen allow_dup \
+        no_species_fe no_species_op
+ORIENT: encompass
+KITEM:  P = helmet good_item w:40 / hat good_item w:40 / helmet / hat
+KITEM:  Q = pair of gloves good_item w:40 / pair of gloves
+KITEM:  R = pair of boots good_item w:40 / pair of boots
+KITEM:  S = buckler good_item w:40 / kite shield good_item w:40 / \
+            tower shield good_item w:40 / orb good_item w:40 / buckler / \
+            kite shield / tower shield / orb
+KITEM:  Z = cloak good_item w:160 / scarf good_item w:40 / cloak w:40 / scarf
+: trove.setup_features(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxPPxxxxxxxxx
+xxxxxxxxP..Pxxxxxxxx
+xxxxxxxx....xxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxxx++xxxxxxxxx
+xxxxxxxxZZZZxxxxxxxx
+xQQ....+....+....SSx
+xQQ....+....+....SSx
+xxxxxxxx++++xxxxxxxx
+xxxxxxxx....xxxxxxxx
+xxxxxxxx.A<.xxxxxxxx
+xxxxxxxx....xxxxxxxx
+xxxxxxxxx++xxxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxxx..xxxxxxxxx
+xxxxxxxx....xxxxxxxx
+xxxxxxxxRRRRxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
