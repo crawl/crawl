@@ -1582,13 +1582,16 @@ aff_type targeter_refrig::is_affected(coord_def loc)
     if (!targeter_radius::is_affected(loc))
         return AFF_NO;
     const actor* act = actor_at(loc);
-    if (!act || act->is_player())
+    if (!act || act == agent || !agent->can_see(*act))
         return AFF_NO;
 
     int adj = 0;
     for (adjacent_iterator ai(loc); ai; ++ai)
-        if (actor_at(*ai))
+    {
+        const actor* adj_act = actor_at(*ai);
+        if (adj_act && agent->can_see(*adj_act))
             ++adj;
+    }
     switch (adj)
     {
     case 0:
