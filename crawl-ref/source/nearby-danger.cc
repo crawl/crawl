@@ -336,7 +336,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     return false;
 }
 
-bool can_rest_here()
+bool can_rest_here(bool announce)
 {
     // XXX: consider doing a check for whether your regen is *ever* inhibited
     // before iterating over each monster.
@@ -356,7 +356,8 @@ bool can_rest_here()
     if (announcement.empty())
         return true;
 
-    _announce_monsters(announcement, visible);
+    if (announce)
+        _announce_monsters(announcement, visible);
     return false;
 }
 
