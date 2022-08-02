@@ -2755,8 +2755,8 @@ string spell_damage_string(spell_type spell, bool evoked)
         }
         case SPELL_AIRSTRIKE:
         {
-            int max = airstrike_base_max_damage(_spell_power(spell, evoked));
-            return make_stringf("0-%d+", max);
+            dice_def dice = base_airstrike_damage(_spell_power(spell, evoked));
+            return describe_airstrike_dam(dice);
         }
         default:
             break;

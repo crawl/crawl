@@ -934,8 +934,6 @@ int airstrike_space_around(coord_def target, bool count_unseen)
     return empty_space;
 }
 
-static const int AIRSTRIKE_POWER_DIV = 7;
-
 spret cast_airstrike(int pow, coord_def target, bool fail)
 {
     if (cell_is_solid(target))
@@ -967,7 +965,9 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 
     const int empty_space = airstrike_space_around(target, true);
 
-    int hurted = empty_space * 2 + random2avg(2 + div_rand_round(pow, AIRSTRIKE_POWER_DIV), 2);
+    dice_def to_roll = base_airstrike_damage(pow, true);
+    to_roll.size += empty_space * AIRSTRIKE_PER_SPACE_BONUS;
+    int hurted = to_roll.roll();
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
@@ -988,9 +988,17 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 
 // maximum damage before accounting for empty space
 // used for damage display
-int airstrike_base_max_damage(int pow)
+dice_def base_airstrike_damage(int pow, bool random)
 {
-    return 1 + (pow + AIRSTRIKE_POWER_DIV - 1) / AIRSTRIKE_POWER_DIV;
+    if (random)
+        return dice_def(2, div_rand_round(pow, 14));
+    return dice_def(2, (pow + 13) / 14);
+}
+
+string describe_airstrike_dam(dice_def dice)
+{
+    return make_stringf("%dd(%d-%d)", dice.num, dice.size,
+                        dice.size + MAX_AIRSTRIKE_BONUS);
 }
 
 dice_def base_fragmentation_damage(int pow)
