@@ -3948,8 +3948,9 @@ TILE:   t = dngn_tree_dead
 : set_feature_name("tree", "a dead tree")
 FTILE:  .Gd = floor_demonic_red
 # Alluring items with drawbacks that might kill you
-ITEM:   scarf ego:harm w:30 / any armour good_item ego:ponderousness w:20 / \
-        leech / obsidian axe / robe of folly / maxwell's patent armour
+ITEM:   scarf ego:harm w:30 / plate armour good_item ego:ponderousness / \
+        crystal plate armour good_item ego:ponderousness / leech / \
+        obsidian axe / robe of folly / maxwell's patent armour
 MAP
 ?.?
 .G.
