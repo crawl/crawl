@@ -3873,9 +3873,9 @@ void end_frozen_ramparts()
 
 dice_def ramparts_damage(int pow, bool random)
 {
-    int size = 8 + pow / 5;
+    int size = 1 + pow * 3 / 10;
     if (random)
-        size = 8 + div_rand_round(pow, 5);
+        size = 1 + div_rand_round(pow * 3, 10);
     return dice_def(1, size);
 }
 
