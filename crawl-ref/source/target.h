@@ -240,8 +240,8 @@ public:
 class targeter_refrig : public targeter_radius
 {
 public:
-    targeter_refrig(actor *agent)
-        : targeter_radius(agent, LOS_NO_TRANS, LOS_RADIUS, 0, 1)
+    targeter_refrig(actor *act)
+        : targeter_radius(act, LOS_NO_TRANS, LOS_RADIUS, 0, 1)
     { }
 
     aff_type is_affected(coord_def loc) override;

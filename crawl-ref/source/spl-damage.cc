@@ -662,7 +662,8 @@ static int _count_adj_actors(coord_def pos)
 
 static int _ozo_adj_dam(int base_dam, int adj_actors, bool actual)
 {
-    switch (adj_actors) {
+    switch (adj_actors)
+    {
     case 0:
         return base_dam;
     case 1:
