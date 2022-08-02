@@ -652,8 +652,11 @@ static int _count_adj_actors(coord_def pos)
 {
     int adj_count = 0;
     for (adjacent_iterator ai(pos); ai; ++ai)
-        if (actor_at(*ai))
+    {
+        const actor* act = actor_at(*ai);
+        if (act && !mons_is_conjured(act->type))
             ++adj_count;
+    }
     return adj_count;
 }
 
