@@ -1395,7 +1395,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
         // fallthrough
-    case SPELL_POISONOUS_VAPOURS:
     case SPELL_CONJURE_FLAME:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:

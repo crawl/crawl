@@ -365,6 +365,8 @@ static const mutation_def mut_data[] =
   {"You have supernaturally acute eyesight. (SInv)", "", ""},
   {"Your vision sharpens.", "", ""},
   {"Your vision seems duller.", "", ""},
+
+  TILEG_MUT_ACUTE_VISION,
 },
 
 { MUT_DEFORMED, 8, 1,
@@ -733,6 +735,8 @@ static const mutation_def mut_data[] =
   {"The horns on your head shrink away.",
    "The horns on your head shrink a bit.",
    "The horns on your head shrink a bit."},
+
+  TILEG_MUT_HORNS,
 },
 
 { MUT_BEAK, 1, 1, mutflag::good, true,
@@ -807,6 +811,8 @@ static const mutation_def mut_data[] =
   {"The antennae on your head shrink away.",
    "The antennae on your head shrink a bit.",
    "The antennae on your head shrink a bit."},
+
+  TILEG_MUT_ANTENNAE,
 },
 
 { MUT_TALONS, 5, 3, mutflag::good, true,
@@ -1094,6 +1100,8 @@ static const mutation_def mut_data[] =
   {"You feel slightly disoriented.",
    "You feel slightly disoriented.",
    "You feel slightly disoriented."},
+
+  TILEG_MUT_PASSIVE_MAPPING,
 },
 
 { MUT_ICEMAIL, 0, 2, mutflag::good, false,

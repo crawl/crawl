@@ -268,18 +268,6 @@ int actor::archmagi(bool items) const
                    + scan_artefacts(ARTP_ARCHMAGI) : 0;
 }
 
-/**
- * Indicates if the actor has an active evocations enhancer.
- *
- * @param items Whether to count item powers.
- * @return The number of levels of evocations enhancement this actor has.
- */
-int actor::spec_evoke(bool items) const
-{
-    UNUSED(items);
-    return 0;
-}
-
 bool actor::no_cast(bool items) const
 {
     return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING);

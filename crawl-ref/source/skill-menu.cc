@@ -1226,16 +1226,12 @@ void SkillMenu::init_button_row()
         m_middle_button->add_hotkey('=');
         m_middle_button->set_id(SKM_SET_TARGET);
         m_middle_button->set_highlight_colour(YELLOW);
-        add_item(m_middle_button, 27, m_pos);
+        add_item(m_middle_button, 24, m_pos);
 
         // right button is either blank or shows target clearing options.
         m_clear_targets_button = new FormattedTextItem();
         m_clear_targets_button->set_id(SKM_CLEAR_TARGETS);
         m_clear_targets_button->add_hotkey('-');
-#ifndef USE_TILE_LOCAL
-        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT);
-        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT2);
-#endif
         m_clear_targets_button->set_highlight_colour(YELLOW);
         add_item(m_clear_targets_button, 25, m_pos);
         refresh_button_row();
@@ -1249,9 +1245,6 @@ void SkillMenu::init_switches()
     {
         sw = new SkillMenuSwitch("mode", '/');
         m_switches[SKM_MODE] = sw;
-#ifndef USE_TILE_LOCAL
-        sw->add_hotkey(CK_NUMPAD_DIVIDE);
-#endif
         sw->add(SKM_MODE_AUTO);
         if (!is_set(SKMF_SPECIAL) && !is_set(SKMF_SIMPLE))
             sw->add(SKM_MODE_MANUAL);
@@ -1278,9 +1271,6 @@ void SkillMenu::init_switches()
         add_item(sw, sw->size(), m_pos);
 
         sw = new SkillMenuSwitch("skills", '*');
-#ifndef USE_TILE_LOCAL
-        sw->add_hotkey(CK_NUMPAD_MULTIPLY);
-#endif
         m_switches[SKM_SHOW] = sw;
         sw->add(SKM_SHOW_DEFAULT);
         if (!is_set(SKMF_SIMPLE))
@@ -1738,7 +1728,7 @@ void skill_menu(int flag, int exp)
     auto popup = make_shared<ui::Popup>(skill_menu_ui);
 
     skill_menu_ui->on_keydown_event([&done, &skill_menu_ui](const KeyEvent& ev) {
-        const auto keyn = ev.key();
+        const auto keyn = numpad_to_regular(ev.key(), true);
 
         skill_menu_ui->_expose();
 
@@ -1750,10 +1740,6 @@ void skill_menu(int flag, int exp)
             case CK_DOWN:
             case CK_LEFT:
             case CK_RIGHT:
-            case 1004:
-            case 1002:
-            case 1008:
-            case 1006:
                 return true;
             case CK_ENTER:
                 if (!skm.is_set(SKMF_EXPERIENCE))

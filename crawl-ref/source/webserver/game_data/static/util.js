@@ -118,6 +118,7 @@ function () {
             filtered += "</span>";
         if (bg_open)
             filtered += "</span>";
+        // TODO: eliminate empty spans?
         return filtered;
     }
 

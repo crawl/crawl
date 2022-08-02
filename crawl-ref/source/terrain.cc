@@ -2440,7 +2440,8 @@ void ice_wall_damage(monster &mons, int delay)
 
     const int pow = you.props[FROZEN_RAMPARTS_POWER_KEY].get_int();
     const int undelayed_dam = ramparts_damage(pow).roll();
-    const int orig_dam = div_rand_round(delay * undelayed_dam, BASELINE_DELAY);
+    const int post_ac_dam = mons.apply_ac(undelayed_dam);
+    const int orig_dam = div_rand_round(delay * post_ac_dam, BASELINE_DELAY);
 
     bolt beam;
     beam.flavour = BEAM_COLD;

@@ -237,6 +237,16 @@ public:
     }
 };
 
+class targeter_refrig : public targeter_radius
+{
+public:
+    targeter_refrig(actor *act)
+        : targeter_radius(act, LOS_NO_TRANS, LOS_RADIUS, 0, 1)
+    { }
+
+    aff_type is_affected(coord_def loc) override;
+};
+
 class targeter_flame_wave : public targeter_radius
 {
 public:

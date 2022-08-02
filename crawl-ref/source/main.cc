@@ -1241,7 +1241,7 @@ static void _input()
         // binding, your turn may be ended by the first invoke of the
         // macro.
         if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
-            process_command(cmd, real_prev_cmd);
+            ::process_command(cmd, real_prev_cmd);
 
         repeat_again_rec.paused = true;
 
@@ -1725,7 +1725,7 @@ static void _do_rest()
         return;
     }
 
-    if (i_feel_safe())
+    if (i_feel_safe() && can_rest_here(true))
     {
         if (you.is_sufficiently_rested(true) && ancestor_full_hp())
         {
@@ -1899,7 +1899,11 @@ public:
     command_type cmd;
     GameMenu()
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER),
+                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER
+#ifdef USE_TILE_LOCAL
+                | MF_SPECIAL_MINUS // doll editor (why?)
+#endif
+                ),
           cmd(CMD_NO_CMD)
     {
         set_tag("game_menu");
@@ -1917,7 +1921,7 @@ public:
                 {
                     // recurse
                     if (c->cmd != CMD_NO_CMD)
-                        process_command(c->cmd, CMD_GAME_MENU);
+                        ::process_command(c->cmd, CMD_GAME_MENU);
                     return true;
                 }
                 // otherwise, exit menu and process in the main process_command call
@@ -1926,6 +1930,13 @@ public:
             }
             return true;
         };
+    }
+
+    bool skip_process_command(int keyin) override
+    {
+        if (keyin == '?')
+            return true; // hotkeyed
+        return Menu::skip_process_command(keyin);
     }
 
     void fill_entries()
@@ -2112,7 +2123,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_SAFE_WAIT:
-        if (!i_feel_safe(true))
+        if (!i_feel_safe(true) && can_rest_here(true))
             break;
         // else fall-through
     case CMD_WAIT:
@@ -2136,7 +2147,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_REMOVE_ARMOUR:        takeoff_armour();         break;
     case CMD_REMOVE_JEWELLERY:     remove_ring();            break;
     case CMD_SHOUT:                issue_orders();           break;
-    case CMD_THROW_ITEM_NO_QUIVER: throw_item_no_quiver();   break;
+    case CMD_FIRE_ITEM_NO_QUIVER:  fire_item_no_quiver();    break;
     case CMD_WEAPON_SWAP:          wield_weapon(true);       break;
     case CMD_WEAR_ARMOUR:          wear_armour();            break;
     case CMD_WEAR_JEWELLERY:       puton_ring();             break;

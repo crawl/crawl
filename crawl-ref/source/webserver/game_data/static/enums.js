@@ -279,7 +279,7 @@ define(function () {
     mf.NOSELECT         = 0x0001;
     mf.SINGLESELECT     = 0x0002;
     mf.MULTISELECT      = 0x0004;
-    mf.NO_SELECT_QTY    = 0x0008;
+    mf.SELECT_QTY       = 0x0008;
     mf.ANYPRINTABLE     = 0x0010;
     mf.SELECT_BY_PAGE   = 0x0020;
     mf.INIT_HOVER       = 0x0040;

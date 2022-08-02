@@ -177,7 +177,7 @@ MouseEvent::MouseEvent(Event::Type _type, const wm_mouse_event& wm_ev) : Event(_
 }
 #endif
 
-FocusEvent::FocusEvent(Event::Type type) : Event(type)
+FocusEvent::FocusEvent(Event::Type typ) : Event(typ)
 {
 }
 
@@ -1562,20 +1562,16 @@ bool Scroller::on_event(const Event& event)
     int delta = 0;
     if (event.type() == Event::Type::KeyDown)
     {
-        const auto key = static_cast<const KeyEvent&>(event).key();
+        const auto key = numpad_to_regular(
+                                    static_cast<const KeyEvent&>(event).key());
+        // TODO: use CMD_MENU bindings here?
         switch (key)
         {
             case ' ': case '+': case CK_PGDN: case '>': case '\'':
-#ifndef USE_TILE_LOCAL
-            case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
-#endif
                 delta = m_region.height;
                 break;
 
             case '-': case CK_PGUP: case '<': case ';':
-#ifndef USE_TILE_LOCAL
-            case CK_NUMPAD_SUBTRACT: case CK_NUMPAD_SUBTRACT2:
-#endif
                 delta = -m_region.height;
                 break;
 
@@ -3249,8 +3245,11 @@ void pump_events(int wait_event_timeout)
         // since these can come in faster than crawl can redraw.
         if (event.type == WME_MOUSEMOTION && wm->next_event_is(WME_MOUSEMOTION))
             continue;
-        if (event.type == WME_KEYDOWN && event.key.keysym.sym == 0)
+        if (event.type == WME_KEYDOWN
+            && (event.key.keysym.sym == 0 || event.key.keysym.sym == CK_NO_KEY))
+        {
             continue;
+        }
 
         // translate any key events with the current keymap
         if (event.type == WME_KEYDOWN)

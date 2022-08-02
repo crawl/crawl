@@ -72,7 +72,7 @@
        "book of burglary", "box of beasts", "book of blasting",
        "book of blood", "buckler", "boomerang",
        "broad axe", "pair of boots", "potion of berserk rage",
-       "potion of brilliance",
+       "potion of brilliance", "scroll of butterflies",
        "scroll of blinking", "scroll of brand weapon" }
 
       elseif s == "C" then i = { "book of callings", "book of cantrips",

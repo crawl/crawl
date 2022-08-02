@@ -50,7 +50,6 @@
 #include "view.h"
 
 static shared_ptr<quiver::action> _fire_prompt_for_item();
-static bool _fire_validate_item(int selected, string& err);
 static int  _get_dart_chance(const int hd);
 
 bool is_penetrating_attack(const actor& attacker, const item_def* weapon,
@@ -114,6 +113,14 @@ private:
 // could be moved out of here if fire_target_behaviour is exposed.
 void untargeted_fire(quiver::action &a)
 {
+    if (!a.is_enabled())
+    {
+        // should this happen for targeted actions too?
+        a.target.isValid = false;
+        // trigger() is called for messaging in action_cycler::do_target
+        return;
+    }
+
     fire_target_behaviour beh(a);
 
     direction_chooser_args args;
@@ -160,7 +167,10 @@ void fire_target_behaviour::set_prompt()
         internal_prompt = action.quiver_description().tostring();
 
         if (!targeted())
-            internal_prompt = string("Non-targeted ") + lowercase_first(internal_prompt);
+        {
+            internal_prompt = make_stringf("Non-targeted %s",
+                lowercase_first(internal_prompt).c_str());
+        }
     }
 
     // Write it out.
@@ -275,53 +285,46 @@ static shared_ptr<quiver::action> _fire_prompt_for_item()
     parse_sound(FIRE_PROMPT_SOUND);
 #endif
 
-    const bool launchables = any_items_of_type(OSEL_LAUNCHING);
-    int slot = PROMPT_GOT_SPECIAL;
-    if (launchables)
+    const bool fireables = any_items_of_type(OSEL_QUIVER_ACTION);
+    if (!fireables)
     {
-        slot = prompt_invent_item(
-                    "Fire/throw which item? ([<w>*</w>] to toggle full inventory view, [<w>\\</w>] to toss any item)",
-                    menu_type::invlist,
-                    OSEL_LAUNCHING, OPER_FIRE,
-                    invprompt_flag::no_warning // warning handled in quiver
-                        | invprompt_flag::hide_known,
-                    '\\');
+        // TODO: right now disabled but valid items don't trigger this;
+        // possibly they should get a similar message? They all do print a
+        // more specific message if you try to use them, and some have a
+        // prompt or the like (e.g. scroll of fear).
+        mpr("You have nothing you can fire or use right now.");
+        return make_shared<quiver::action>(); // hack: prevent "Ok, then."
     }
 
-    if (slot == PROMPT_GOT_SPECIAL)
-    {
-        // very rudimentary...could at least do `\\` as a toggle
-        slot = prompt_invent_item(launchables
-                                    ? "Throw/toss which item?"
-                                    : "Toss away which item?",
-                    menu_type::invlist,
-                    OSEL_ANY, OPER_FIRE,
-                    invprompt_flag::no_warning
-                            | invprompt_flag::hide_known);
-        return quiver::ammo_to_action(slot, true); // neg values are ok
-    }
+    // does it actually make sense that felid can't toss things?
+    const bool can_throw = !you.has_mutation(MUT_NO_GRASPING)
+        && !fire_warn_if_impossible(true, you.weapon()); // forms
 
-    return (you.weapon() && you.weapon()->link == slot && is_range_weapon(*you.weapon()))
-            ? quiver::get_primary_action() // XX quiver::launching_to_action(slot)?
-            : quiver::ammo_to_action(slot, true);
-}
+    int slot = -1;
+    const string title = make_stringf(
+        "<lightgray>Fire%s/use which item?%s</lightgray>",
+        (can_throw ? "/throw" : ""),
+        (can_throw ? " ([<w>*</w>] to toss any item)" : ""));
+    const string alt_title =
+        "<lightgray>Toss away which item?</lightgray>";
+    int selector = fireables ? OSEL_QUIVER_ACTION : OSEL_ANY;
+    // TODO: the output api here is awkward
+    // TODO: it would be nice if items with disabled actions got grayed out
+    slot = prompt_invent_item(
+                title.c_str(),
+                menu_type::invlist,
+                selector, OPER_FIRE,
+                invprompt_flag::no_warning // warning handled in quiver
+                    | invprompt_flag::hide_known,
+                '\0',
+                can_throw ? alt_title.c_str() : nullptr,
+                &selector);
+    if (slot == -1)
+        return nullptr;
 
-// Returns false and err text if this item can't be fired.
-static bool _fire_validate_item(int slot, string &err)
-{
-    if (slot == you.equip[EQ_WEAPON]
-        && is_weapon(you.inv[slot])
-        && you.inv[slot].cursed())
-    {
-        err = "That weapon is stuck to your " + you.hand_name(false) + "!";
-        return false;
-    }
-    else if (item_is_worn(slot))
-    {
-        err = "You are wearing that object!";
-        return false;
-    }
-    return true;
+    return selector == OSEL_ANY && can_throw
+        ? quiver::ammo_to_action(slot, true) // throw/toss only
+        : quiver::slot_to_action(slot, false); // use
 }
 
 // Returns true if warning is given.
@@ -379,8 +382,8 @@ class ammo_only_action_cycler : public quiver::action_cycler
 public:
     // TODO: this could be much fancier, and perhaps allow reselecting an item
     // once you are already in this interface. As it is, this class exists to
-    // keep the general quiver ui from appearing under throw_item_no_quiver.
-    // Possibly refactor most of throw_item_no_quiver into this class?
+    // keep the general quiver ui from appearing under fire_item_no_quiver.
+    // Possibly refactor most of fire_item_no_quiver into this class?
 
     ammo_only_action_cycler()
         : quiver::action_cycler::action_cycler()
@@ -401,21 +404,16 @@ public:
 
 // Basically does what throwing used to do: throw/fire an item without changing
 // the quiver.
-void throw_item_no_quiver(dist *target)
+// TODO: move to quiver.cc?
+void fire_item_no_quiver(dist *target)
 {
     dist targ_local;
     if (!target)
         target = &targ_local;
 
-    if (you.has_mutation(MUT_NO_GRASPING))
+    if (you.berserk())
     {
-        mpr("You can't grasp things well enough to throw or fire them.");
-        return;
-    }
-
-    if (fire_warn_if_impossible(false, you.weapon()))
-    {
-        flush_input_buffer(FLUSH_ON_FAILURE);
+        canned_msg(MSG_TOO_BERSERK);
         return;
     }
 
@@ -426,21 +424,22 @@ void throw_item_no_quiver(dist *target)
     }
 
     // first find an action
-    string warn;
     auto a = _fire_prompt_for_item();
 
     // handles slot == -1
     if (!a || !a->is_valid())
     {
-        canned_msg(MSG_OK);
+        string warn;
+        if (a && a->get_item() >= 0
+                    && !quiver::toss_validate_item(a->get_item(), &warn))
+        {
+            mpr(warn);
+        }
+        else if (!a)
+            canned_msg(MSG_OK);
         return;
     }
 
-    if (a->get_item() >= 0 && !_fire_validate_item(a->get_item(), warn))
-    {
-        mpr(warn);
-        return;
-    }
     // This is kind of inelegant, but the following has two effects:
     // * For interactive targeting, use the action_cycler interface, which is
     //   more general (though right now this generality is mostly unused).

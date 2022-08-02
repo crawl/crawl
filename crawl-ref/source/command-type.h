@@ -66,7 +66,7 @@ enum command_type
     CMD_WEAPON_SWAP,
     CMD_FIRE,
     CMD_QUIVER_ITEM,
-    CMD_THROW_ITEM_NO_QUIVER,
+    CMD_FIRE_ITEM_NO_QUIVER,
     CMD_WEAR_ARMOUR,
     CMD_REMOVE_ARMOUR,
     CMD_WEAR_JEWELLERY,
@@ -302,6 +302,34 @@ enum command_type
     CMD_TARGET_MOUSE_SELECT,
     CMD_TARGET_HELP,
     CMD_MAX_TARGET = CMD_TARGET_HELP,
+
+    CMD_MENU_UP,      // move hover or menu scroll, depending on options
+    CMD_MIN_MENU = CMD_MENU_UP,
+    CMD_MENU_DOWN,
+    CMD_MENU_LINE_UP, // move menu scroll no matter what
+    CMD_MENU_LINE_DOWN,
+    CMD_MENU_PAGE_UP,
+    CMD_MENU_PAGE_DOWN,
+    CMD_MENU_SCROLL_TO_TOP,
+    CMD_MENU_SCROLL_TO_END,
+    CMD_MENU_SEARCH,
+    CMD_MENU_CYCLE_MODE,
+    CMD_MENU_CYCLE_MODE_REVERSE,
+    CMD_MENU_CYCLE_HEADERS,
+    CMD_MENU_HELP,
+    CMD_MENU_SELECT, // e.g. select + accept
+    CMD_MENU_EXAMINE, // used internally for relevant menus, doesn't need a binding
+    CMD_MENU_EXIT,
+    CMD_MAX_MENU = CMD_MENU_EXIT,
+
+    // allow multiselect keybinds to override default menu keybinds
+    CMD_MENU_ACCEPT_SELECTION,
+    CMD_MIN_MENU_MS = CMD_MENU_ACCEPT_SELECTION,
+    CMD_MENU_SELECT_ALL,
+    CMD_MENU_CLEAR_SELECTION,
+    CMD_MENU_INVERT_SELECTION,
+    CMD_MENU_TOGGLE_SELECTED,
+    CMD_MAX_MENU_MS = CMD_MENU_TOGGLE_SELECTED,
 
 #ifdef USE_TILE
     // Tile doll editing screen

@@ -3748,6 +3748,14 @@ VISUAL:@The_monster@ shakes with grief.
 
 @The_monster@ says, "She won't be lost forever!"
 %%%%
+twin_slimified Dowan
+
+VISUAL:@The_monster@ shakes with grief.
+
+@The_monster@ says, "I will find a way to undo this!"
+
+@The_monster@ says, "Turn her back! At once!"
+%%%%
 Dowan
 
 @_Dowan_common_@

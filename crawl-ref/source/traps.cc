@@ -514,6 +514,8 @@ void trap_def::trigger(actor& triggerer)
             place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &triggerer);
             trap_destroyed = true;
             know_trap_destroyed = you_trigger;
+            if (you_trigger)
+                id_floor_items();
         }
         else if (you_trigger)
         {

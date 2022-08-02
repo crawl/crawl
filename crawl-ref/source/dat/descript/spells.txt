@@ -654,14 +654,11 @@ Conjures up a large cloud of lethally cold vapour.
 %%%%
 Frozen Ramparts spell
 
-Encases surrounding walls with ice for a short time as long as the caster
-refrains from moving. Victims that wander near the icy walls will be damaged,
-and this may temporarily slow cold-blooded creatures. The damage dealt bypasses
-any armour the target may have. Each victim is only ever affected by one icy
-wall at a time.
+Encases surrounding walls with ice for a short time. Foes that wander near the
+icy walls will be damaged, and this may temporarily slow cold-blooded creatures.
+Each victim is only ever affected by one icy wall at a time.
 
-The caster and any allies can safely remain near icy walls. The ice will crack
-and fall away if the caster moves to a new position.
+The ice will crack and fall away if the caster moves to a new position.
 %%%%
 Fulminant Prism spell
 
@@ -1053,9 +1050,9 @@ higher the encumbrance rating of the caster's armour.
 %%%%
 Ozocubu's Refrigeration spell
 
-Drains heat from the caster and their surroundings, causing harm to all
-creatures not resistant to cold and bypassing any armour the targets may have.
-It prevents the caster from using potions for a brief duration.
+Turns the air bitterly cold, freezing all other creatures in line of sight.
+This is less effective against creatures packed tightly together - those
+adjacent to others will be partly insulated from the cold, taking less damage.
 %%%%
 Pain spell
 

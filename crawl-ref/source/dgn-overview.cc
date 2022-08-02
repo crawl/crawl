@@ -343,7 +343,7 @@ static string _get_seen_branches(bool display)
                     7,
                     brname, lid.depth, brdepth[branch],
                     entry_desc.c_str());
-                cells.push_back(_pad_cs(main_desc, 21) + zclock_desc);
+                cells.push_back(_pad_cs(main_desc, 22) + zclock_desc);
             }
         }
     }

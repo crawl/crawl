@@ -179,6 +179,7 @@ bool tile_command_not_applicable(const command_type cmd, bool safe)
     switch (cmd)
     {
     case CMD_REST:
+        return !safe || !can_rest_here();
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
     case CMD_MEMORISE_SPELL:

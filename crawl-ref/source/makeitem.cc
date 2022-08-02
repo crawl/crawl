@@ -118,6 +118,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     if (one_chance_in(30) && x_chance_in_y(item_level + 3, 100))
     {
         return random_choose(WPN_LAJATANG,
+                             WPN_HAND_CROSSBOW,
                              WPN_TRIPLE_CROSSBOW,
                              WPN_DEMON_WHIP,
                              WPN_DEMON_BLADE,
@@ -1350,6 +1351,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
         for (int i = 0; i < NUM_SCROLLS; ++i)
         {
             const scroll_type scr = (scroll_type) i;
+
+            // Only generate the scroll types chosen for this game.
+            if (item_excluded_from_set(OBJ_SCROLLS, scr))
+                continue;
 
             // No teleportation or noise in Sprint.
             if (crawl_state.game_is_sprint()

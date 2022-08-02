@@ -356,7 +356,9 @@ string formatted_string::tostring(int s, int e) const
 
 string formatted_string::to_colour_string() const
 {
-    string st;
+    // this is necessary because of the default of LIGHTGRAY in last_colour.
+    // (If this were changed to write closing tags, it might not be?)
+    string st = "<lightgray>";
     const int size = ops.size();
     for (int i = 0; i < size; ++i)
     {
@@ -483,7 +485,14 @@ formatted_string formatted_string::substr_bytes(int pos, int length) const
 
 formatted_string formatted_string::trim() const
 {
-    return parse_string(trimmed_string(to_colour_string()));
+    string nocolor = tostring();
+    auto left_trim = nocolor.find_first_not_of(" \t\n\r");
+    // in principle this should preserve the colors I guess, but it's a lot
+    // easier not to do that...
+    if (left_trim == string::npos)
+        return formatted_string();
+    auto right_trim = nocolor.find_last_not_of(" \t\n\r");
+    return substr_bytes(left_trim, right_trim - left_trim + 1);
 }
 
 void formatted_string::del_char()

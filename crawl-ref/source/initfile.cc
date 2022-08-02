@@ -2897,29 +2897,17 @@ static void _bindkey(string field)
         wchars.push_back(wc);
     }
 
-    int key;
-
-    // TODO: Function keys.
     if (wchars.size() == 0)
     {
         mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
              field.c_str());
         return;
     }
-    else if (wchars.size() == 1)
-        key = wchars[0];
-    else if (wchars.size() == 2)
-    {
-        // Ctrl + non-ascii is meaningless here.
-        if (wchars[0] != '^' || wchars[1] > 127)
-        {
-            mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
-                 key_str.c_str(), field.c_str());
-            return;
-        }
 
-        key = CONTROL(wchars[1]);
-    }
+    int key;
+
+    if (wchars.size() == 1)
+        key = wchars[0];
     else if (wchars[0] == '\\')
     {
         // does this need to validate non-widechars?
@@ -2931,11 +2919,18 @@ static void _bindkey(string field)
         }
         key = ks[0];
     }
-    else
+    else if (wchars.size() > 1)
     {
-        mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
-             key_str.c_str(), field.c_str());
-        return;
+        // XX probably would be safe to directly check for numbers?
+        // don't use the wide char version for this part
+        // Try to read a human-readable keycode. `^` sequences handled here.
+        key = read_key_code(key_str);
+        if (key == CK_NO_KEY)
+        {
+            mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
+                 key_str.c_str(), field.c_str());
+            return;
+        }
     }
 
     const size_t start_name = field.find_first_not_of(' ', end_bracket + 1);
@@ -3841,7 +3836,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_tag_pref = _str_to_tag_pref(field.c_str());
 #endif // USE_TILE
 
-    else if (key == "bindkey")
+    else if (key == "bindkey" && runscript)
         _bindkey(field);
     else if (key == "constant")
     {

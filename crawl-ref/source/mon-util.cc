@@ -3674,8 +3674,15 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
         return true;
 
     for (const mon_spell_slot &slot : mon.spells)
-        if (_ms_ranged_spell(slot.spell, attack_only, ench_too) && mons_spell_range(mon, slot.spell) > 1)
+    {
+        if (slot.spell == SPELL_CREATE_TENTACLES)
             return true;
+        if (_ms_ranged_spell(slot.spell, attack_only, ench_too)
+            && mons_spell_range(mon, slot.spell) > 1)
+        {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -4724,7 +4731,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 bool mons_foe_is_marked(const monster& mon)
 {
     if (mon.foe == MHITYOU)
-        return you.duration[DUR_SENTINEL_MARK];
+        return you.duration[DUR_SENTINEL_MARK] && in_bounds(you.pos());
     else
         return false;
 }

@@ -1050,14 +1050,17 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                     return 7;
                 case icons.ANGUISH:
                 case icons.FIRE_VULN:
+                case icons.RESISTANCE:
                 case icons.SIMULACRUM:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 8;
                 case icons.RECALL:
                 case icons.REFLECTING:
+                case icons.TELEPORTING:
                     this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
                     return 9;
                 case icons.BLIND:
+                case icons.BRILLIANCE:
                 case icons.SLOWLY_DYING:
                 case icons.WATERLOGGED:
                 case icons.STILL_WINDS:

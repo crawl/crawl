@@ -1017,6 +1017,34 @@ namespace quiver
 
     };
 
+    bool toss_validate_item(int slot, string *err)
+    {
+        // misc tossing restrictions go here
+
+        // No tossing cursed weapons.
+        // this check would be safe to remove, but it's useful for
+        // messaging purposes to see that the action is invalid. (It's
+        // otherwise handled by the unwield call.)
+        if (slot == you.equip[EQ_WEAPON]
+            && is_weapon(you.inv[slot])
+            && you.inv[slot].cursed())
+        {
+            if (err)
+                *err = "That weapon is stuck to your " + you.hand_name(false) + "!";
+            return false;
+        }
+
+        // make people manually take stuff off if they want to toss it
+        // (weapons are still ok for some reason)
+        if (item_is_worn(slot))
+        {
+            if (err)
+                *err = "You are wearing that object!";
+            return false;
+        }
+        return true;
+    }
+
     // for fumble throwing / tossing
     struct fumble_action : public ammo_action
     {
@@ -1028,12 +1056,7 @@ namespace quiver
 
         bool launch_type_check() const override
         {
-            return true;
-        }
-
-        bool is_valid() const override
-        {
-            return item_action::is_valid() && !you.has_mutation(MUT_NO_GRASPING);
+            return toss_validate_item(item_slot);
         }
     };
 
@@ -2001,8 +2024,8 @@ namespace quiver
 
     void action_cycler::save(const string key) const
     {
-        auto &target = you.props[key].get_table();
-        get()->save(target);
+        auto &targ = you.props[key].get_table();
+        get()->save(targ);
         CrawlVector &history_vec = you.props[key]["history"].get_vector();
         history_vec.clear();
         for (auto &a : history)
@@ -2025,8 +2048,8 @@ namespace quiver
             save(key);
         }
 
-        auto &target = you.props[key].get_table();
-        set(_load_action(target));
+        auto &targ = you.props[key].get_table();
+        set(_load_action(targ));
         CrawlVector &history_vec = you.props[key]["history"].get_vector();
         history.clear();
         for (auto &val : history_vec)
@@ -2331,10 +2354,6 @@ namespace quiver
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return nullptr;
 
-        // is this legacy(?) check needed? Maybe only relevant for fumble throwing?
-        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
-            if (you.equip[i] == slot)
-                return make_shared<ammo_action>(-1);
 
         shared_ptr<action> a = nullptr;
         // use ammo as the fallback -- may well end up invalid
@@ -2499,7 +2518,7 @@ namespace quiver
     public:
         ActionSelectMenu(action_cycler &_quiver, bool _allow_empty)
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                    | MF_ARROWS_SELECT | MF_WRAP),
+                    | MF_ARROWS_SELECT | MF_WRAP | MF_SPECIAL_MINUS),
               cur_quiver(_quiver), allow_empty(_allow_empty),
               any_spells(_any_spells_to_quiver()),
               any_abilities(_any_abils_to_quiver()),
@@ -2561,7 +2580,8 @@ namespace quiver
                 s += "[<w>^</w>] all abilities  ";
 
 
-            string mode = make_stringf("[<w>!</w>] focus mode: %s",
+            string mode = make_stringf("%s focus mode: %s",
+                menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE).c_str(),
                 focus_mode == Focus::NONE ? "<w>off</w>|on"
                                           : "off|<w>on</w>");;
 
@@ -2670,7 +2690,7 @@ namespace quiver
             // present
             const bool show_headers = (!actions.empty() + !spell_actions.empty()
                                         + !abil_actions.empty()) > 1;
-            const auto item_count = actions.size();
+            const auto it_count = actions.size();
             const auto spell_count = spell_actions.size();
             actions.insert(actions.end(), spell_actions.begin(), spell_actions.end());
             actions.insert(actions.end(), abil_actions.begin(), abil_actions.end());
@@ -2678,13 +2698,14 @@ namespace quiver
             // this key shortcut does still work without arrow selection, but
             // it typically doesn't do much in this menu.
             const string keyhelp =
-                            " <lightgrey>([<w>,</w>] to cycle)</lightgrey>";
+                make_stringf(" <lightgrey>(%s to cycle)</lightgrey>",
+                            menu_keyhelp_cmd(CMD_MENU_CYCLE_HEADERS).c_str());
 
             first_item = 0;
-            first_spell = item_count;
+            first_spell = it_count;
             first_abil = first_spell + spell_count;
 
-            if (item_count && show_headers)
+            if (it_count && show_headers)
             {
                 add_entry(
                     new MenuEntry("<lightcyan>Items</lightcyan>" + keyhelp,
@@ -2697,7 +2718,7 @@ namespace quiver
             {
                 if (i == 0)
                     first_item = items.size();
-                if (i == item_count && spell_count && show_headers)
+                if (i == it_count && spell_count && show_headers)
                 {
                     add_entry(
                         new MenuEntry("<lightcyan>Spells</lightcyan>" + keyhelp,
@@ -2705,7 +2726,7 @@ namespace quiver
                     first_spell += 1;
                     first_abil += 1;
                 }
-                else if (i == item_count + spell_count && show_headers)
+                else if (i == it_count + spell_count && show_headers)
                 {
                     add_entry(
                         new MenuEntry("<lightcyan>Abilities</lightcyan>" + keyhelp,
@@ -2795,6 +2816,47 @@ namespace quiver
                 || !set_to_quiver(make_shared<ability_action>(talents[selected].which));
         }
 
+        bool cycle_headers(bool forward) override
+        {
+            // TODO: implement direction
+            if (!forward)
+                return false;
+            if (!is_set(MF_ARROWS_SELECT))
+            {
+                last_hovered = -1; // suppress any mouse hover
+                // need to manually focus mode for this case
+                // can this be generalized?
+                if (focus_mode == Focus::ITEM)
+                {
+                    focus_mode = Focus::SPELL;
+                    if (!item_visible(first_spell))
+                        set_scroll(first_spell);
+                }
+                else if (focus_mode == Focus::SPELL)
+                {
+                    focus_mode = Focus::ABIL;
+                    if (!item_visible(first_abil))
+                        set_scroll(first_abil);
+                }
+                else if (focus_mode == Focus::ABIL)
+                {
+                    if (!item_visible(first_item))
+                        set_scroll(first_item);
+                    focus_mode = Focus::ITEM;
+                }
+                sync_focus();
+                return true;
+            }
+            else
+                return Menu::cycle_headers(forward);
+        }
+
+        bool cycle_mode(bool) override
+        {
+            toggle_focus_mode();
+            return true;
+        }
+
         bool process_key(int key) override
         {
             // TODO: some kind of view action option?
@@ -2804,42 +2866,6 @@ namespace quiver
                 // TODO maybe drop this messaging?
                 mprf("Clearing quiver.");
                 return false;
-            }
-            else if (key == ',')
-            {
-                if (!is_set(MF_ARROWS_SELECT))
-                {
-                    last_hovered = -1; // suppress any mouse hover
-                    // need to manually focus mode for this case
-                    // can this be generalized?
-                    if (focus_mode == Focus::ITEM)
-                    {
-                        focus_mode = Focus::SPELL;
-                        if (!item_visible(first_spell))
-                            set_scroll(first_spell);
-                    }
-                    else if (focus_mode == Focus::SPELL)
-                    {
-                        focus_mode = Focus::ABIL;
-                        if (!item_visible(first_abil))
-                            set_scroll(first_abil);
-                    }
-                    else if (focus_mode == Focus::ABIL)
-                    {
-                        if (!item_visible(first_item))
-                            set_scroll(first_item);
-                        focus_mode = Focus::ITEM;
-                    }
-                    sync_focus();
-                }
-                else
-                    cycle_headers();
-                return true;
-            }
-            else if (key == '!')
-            {
-                toggle_focus_mode();
-                return true;
             }
             else if (isadigit(key))
             {

@@ -59,6 +59,12 @@ protected:
         return "known-menu";
     }
 
+    bool examine_index(int) override
+    {
+        // disable behavior from InvMenu
+        return true;
+    }
+
     bool process_key(int key) override
     {
         bool resetting = (lastch == CONTROL('D'));
@@ -85,12 +91,14 @@ protected:
             key = ',';
             break;
 
-        case '-':
+        case '-': // TODO: assimilate to CMD_MENU_CYCLE_MODE?
         case '\\':
             if (all_items_known)
                 return true; // skip process_key for '-', it's confusing
         case CK_ENTER:
         CASE_ESCAPE
+            if (resetting)
+                return true;
             lastch = key;
             return false;
 
@@ -103,7 +111,7 @@ protected:
             {
                 lastch = CONTROL('D');
                 temp_title = title->text;
-                set_title("Select to reset item to default: ");
+                set_title("Select to reset item to default ([*] for all): ");
             }
 
             return true;
@@ -120,37 +128,35 @@ protected:
             if (scrollable)
             {
                 navigation +=
-                    "[<w>PgDn</w>|<w>></w>] page down"
-                    "  [<w>PgUp</w>|<w><<</w>] page up";
+                    menu_keyhelp_cmd(CMD_MENU_PAGE_DOWN) + " page down  "
+                    + menu_keyhelp_cmd(CMD_MENU_PAGE_UP) + " page up  ";
             }
-            // navigation += "</lightgrey>";
-            navigation += "  [<w>Esc</w>|<w>Ret</w>] close"
-                          "  [<w>-</w>] recognised"
-                          "</lightgrey>";
+            navigation += "[<w>-</w>] recognised  "
+                            + menu_keyhelp_cmd(CMD_MENU_EXIT) + " exit"
+                            "</lightgrey>";
         }
         else
         {
             // very similar to the MF_MULTISELECT case for regular Menus, but
             // various differences require an override
-            navigation = "<lightgrey>"
-                         "[<w>Up</w>|<w>Down</w>] select";
+            navigation = "<lightgrey>" + menu_keyhelp_select_keys()
+                         + " select  ";
 
             if (scrollable)
             {
                 navigation +=
-                    "  [<w>PgDn</w>|<w>></w>] page down"
-                    "  [<w>PgUp</w>|<w><<</w>] page up";
+                    menu_keyhelp_cmd(CMD_MENU_PAGE_DOWN) + " page down  "
+                    + menu_keyhelp_cmd(CMD_MENU_PAGE_UP) + " page up  ";
             }
             navigation += "</lightgrey>";
-            navigation = pad_more_with(navigation,
-                                    "[<w>Esc</w>|<w>Ret</w>] close", MIN_COLS);
+            navigation = pad_more_with_esc(navigation);
             navigation +=
                     "\n<lightgrey>"
                     "Letters toggle autopickup  ";
             if (is_set(MF_ARROWS_SELECT))
             {
-                navigation +=
-                    "[<w>.</w>|<w>Space</w>] toggle selected  ";
+                navigation += menu_keyhelp_cmd(CMD_MENU_TOGGLE_SELECTED)
+                    + " toggle selected  ";
             }
 
             if (!all_items_known)

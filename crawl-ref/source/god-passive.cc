@@ -390,15 +390,7 @@ static const vector<god_passive> god_passives[] =
 
 #if TAG_MAJOR_VERSION == 34
     // Pakellas
-    {
-        { -1, passive_t::no_mp_regen,
-              "GOD NOW prevents you from regenerating your magical power" },
-        { -1, passive_t::mp_on_kill, "have a chance to gain magical power from"
-                                     " killing" },
-        {  1, passive_t::bottle_mp,
-              "GOD NOW collects and distills excess magic from your kills"
-        },
-    },
+    { },
 #endif
 
     // Uskayaw

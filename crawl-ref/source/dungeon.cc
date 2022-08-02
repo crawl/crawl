@@ -48,6 +48,7 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-pick.h"
@@ -276,6 +277,8 @@ bool builder(bool enable_random_maps)
     // and accessible via &ctrl-l without this #define.
     msg::suppress quiet(MSGCH_DIAGNOSTICS);
 #endif
+    // you can use msg::force_stderr for doing debugging in automated scripts
+    // here; usually you want to condition it to a specific level.
 
     // Re-check whether we're in a valid place, it leads to obscure errors
     // otherwise.
@@ -1287,13 +1290,12 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         else
             _mask_vault(place, MMT_VAULT);
 
-        if (place.map.has_tag("passable"))
+        if (place.map.has_tag("passable") && player_in_branch(BRANCH_VAULTS))
         {
             // Ignore outside of Vaults -- creates too many bugs otherwise.
             // This tag is mainly to allow transporter vaults to work with
             // Vaults layout code.
-            if (player_in_branch(BRANCH_VAULTS))
-                _mask_vault(place, MMT_PASSABLE);
+            _mask_vault(place, MMT_PASSABLE);
         }
         else if (!transparent)
         {
@@ -1539,28 +1541,6 @@ void dgn_reset_level(bool enable_random_maps)
     // Lose all listeners.
     dungeon_events.clear();
 
-    // Set default random monster generation rate (smaller is more often,
-    // except that 0 == no random monsters).
-    if (player_in_branch(BRANCH_TEMPLE)
-        && !player_on_orb_run() // except for the Orb run
-        || crawl_state.game_is_tutorial())
-    {
-        // No random monsters in tutorial or ecu temple
-        env.spawn_random_rate = 0;
-    }
-    else if (player_in_connected_branch()
-             || (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)))
-        env.spawn_random_rate = 240;
-    else if (player_in_branch(BRANCH_ABYSS)
-             || player_in_branch(BRANCH_PANDEMONIUM))
-    {
-        // Abyss spawn rate is set for those characters that start out in the
-        // Abyss; otherwise the number is ignored in the Abyss.
-        env.spawn_random_rate = 50;
-    }
-    else
-        // No random monsters in portal vaults if we don't have the orb.
-        env.spawn_random_rate = 0;
     env.density = 0;
     env.forest_awoken_until = 0;
 

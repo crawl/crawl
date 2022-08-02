@@ -591,63 +591,8 @@ static bool _drain_lifeable(const actor* agent, const actor* act)
              || mons && m && mons_atts_aligned(mons->attitude, m->attitude));
 }
 
-static void _los_spell_pre_damage_monsters(const actor* agent,
-                                           vector<monster *> affected_monsters,
-                                           const char *verb)
-{
-    // Filter out affected monsters that we don't know for sure are there
-    vector<monster*> seen_monsters;
-    for (monster *mon : affected_monsters)
-        if (you.can_see(*mon))
-            seen_monsters.push_back(mon);
-
-    if (!seen_monsters.empty())
-    {
-        counted_monster_list mons_list =
-            counted_monster_list(seen_monsters);
-        const string message = make_stringf("%s %s %s.",
-                mons_list.describe(DESC_THE).c_str(),
-                conjugate_verb("be", mons_list.count() > 1).c_str(), verb);
-        if (strwidth(message) < get_number_of_cols() - 2)
-            mpr(message);
-        else
-        {
-            // Exclamation mark to suggest that a lot of creatures were
-            // affected.
-            mprf("The monsters around %s are %s!",
-                agent && agent->is_monster() && you.can_see(*agent)
-                ? agent->as_monster()->name(DESC_THE).c_str()
-                : "you", verb);
-        }
-    }
-}
-
-static int _los_spell_damage_player(const actor* agent, bolt &beam,
-                                    bool actual)
-{
-    int hurted = actual ? beam.damage.roll()
-                        // Monsters use the average for foe calculations.
-                        : (1 + beam.damage.num * beam.damage.size) / 2;
-    hurted = check_your_resists(hurted, beam.flavour, beam.name, 0,
-            // Drain life doesn't apply drain effects.
-            actual && beam.origin_spell != SPELL_DRAIN_LIFE);
-    if (actual && hurted > 0)
-    {
-
-        if (agent && !agent->is_player())
-        {
-            ouch(hurted, KILLED_BY_BEAM, agent->mid,
-                 make_stringf("by %s", beam.name.c_str()).c_str(), true,
-                 agent->as_monster()->name(DESC_A).c_str());
-            you.expose_to_element(beam.flavour, 5);
-        }
-    }
-
-    return hurted;
-}
-
-static int _los_spell_damage_monster(const actor* agent, monster &target,
-                                     bolt &beam, bool actual)
+static int _los_spell_damage_actor(const actor* agent, actor &target,
+                                   bolt &beam, bool actual)
 {
 
     beam.thrower = (agent && agent->is_player()) ? KILL_YOU :
@@ -656,23 +601,36 @@ static int _los_spell_damage_monster(const actor* agent, monster &target,
 
     // Set conducts here. The monster needs to be alive when this is done, and
     // mons_adjust_flavoured() could kill it.
+    monster *mon_targ = target.as_monster();
     god_conduct_trigger conducts[3];
-    if (actual && YOU_KILL(beam.thrower))
-        set_attack_conducts(conducts, target, you.can_see(target));
+    if (actual && YOU_KILL(beam.thrower) && mon_targ)
+        set_attack_conducts(conducts, *mon_targ, you.can_see(target));
 
-    int hurted = actual ? beam.damage.roll()
-                        // Tracers use the average for damage calculations.
-                        : (1 + beam.damage.num * beam.damage.size) / 2;
-    hurted = mons_adjust_flavoured(&target, beam, hurted,
-                 // Drain life doesn't apply drain effects.
-                 actual && beam.origin_spell != SPELL_DRAIN_LIFE);
+    int hurted;
+    if (actual)
+    {
+        hurted = beam.damage.roll();
+        hurted = max(0, target.apply_ac(hurted));
+    }
+    else
+    {
+        // Tracers use the average for damage calculations.
+        hurted = (1 + beam.damage.num * beam.damage.size) / 2;
+        hurted = max(0, hurted - target.armour_class() / 2);
+    }
+
+    const bool doFlavour = actual && beam.origin_spell != SPELL_DRAIN_LIFE;
+    if (mon_targ)
+        hurted = mons_adjust_flavoured(mon_targ, beam, hurted, doFlavour);
+    else
+        hurted = check_your_resists(hurted, beam.flavour, beam.name, 0, doFlavour);
     dprf("damage done: %d", hurted);
 
     if (actual)
     {
-        if (YOU_KILL(beam.thrower))
+        if (YOU_KILL(beam.thrower) && mon_targ)
         {
-            _player_hurt_monster(target, hurted, beam.flavour, false);
+            _player_hurt_monster(*mon_targ, hurted, beam.flavour, false);
             if (target.alive())
                 you.pet_target = target.mindex();
         }
@@ -687,13 +645,37 @@ static int _los_spell_damage_monster(const actor* agent, monster &target,
         }
     }
 
-    // So that summons don't restore HP.
-    if (beam.origin_spell == SPELL_DRAIN_LIFE && target.is_summoned())
-        return 0;
-
     return hurted;
 }
 
+static int _count_adj_actors(coord_def pos)
+{
+    int adj_count = 0;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        const actor* act = actor_at(*ai);
+        if (act && !mons_is_conjured(act->type))
+            ++adj_count;
+    }
+    return adj_count;
+}
+
+static int _ozo_adj_dam(int base_dam, int adj_actors, bool actual)
+{
+    switch (adj_actors)
+    {
+    case 0:
+        return base_dam;
+    case 1:
+        if (actual)
+            return div_rand_round(3 * base_dam, 4);
+        return 3 * base_dam / 4;
+    default:
+        if (actual)
+            return div_rand_round(base_dam, 2);
+        return base_dam / 2;
+    }
+}
 
 static spret _cast_los_attack_spell(spell_type spell, int pow,
                                          const actor* agent, bool actual,
@@ -713,7 +695,7 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
     const char *player_msg = nullptr, *global_msg = nullptr,
                *mons_vis_msg = nullptr, *mons_invis_msg = nullptr,
-               *verb = nullptr, *prompt_verb = nullptr;
+               *prompt_verb = nullptr;
     bool (*vulnerable)(const actor *, const actor *) = nullptr;
 
     switch (spell)
@@ -724,12 +706,9 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             mons_vis_msg = " drains the heat from the surrounding"
                            " environment!";
             mons_invis_msg = "The ambient heat is drained!";
-            verb = "frozen";
             prompt_verb = "refrigerate";
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
-                       // Players don't get immunity with rC+++.
-                       && (act->is_player() || act->res_cold() < 3)
                        && !god_protects(caster, act->as_monster());
             };
             break;
@@ -740,7 +719,6 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
                          " surroundings.";
             mons_vis_msg = " draws from the surrounding life force!";
             mons_invis_msg = "The surrounding life force dissipates!";
-            verb = "drained of life";
             prompt_verb = "drain life";
             vulnerable = &_drain_lifeable;
             break;
@@ -750,7 +728,6 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             global_msg = "Something sends a blast of sound all around you.";
             mons_vis_msg = " sends a blast of sound all around you!";
             mons_invis_msg = "Sound blasts the surrounding area!";
-            verb = "blasted";
             // prompt_verb = "sing" The singing sword prompts in melee-attack
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
@@ -783,12 +760,6 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
 
             mpr(player_msg);
             flash_view_delay(UA_PLAYER, beam.colour, 300, &hitfunc);
-
-            if (spell == SPELL_OZOCUBUS_REFRIGERATION)
-            {
-                mpr("You feel very cold.");
-                you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
-            }
         }
         else
         {
@@ -804,86 +775,59 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
         }
     }
 
-    bool affects_you = false;
-    vector<monster *> affected_monsters;
+    vector<actor *> affected_actors;
+    map<actor*, int> ozo_adj_count;
 
     for (actor_near_iterator ai((agent ? agent : &you)->pos(), LOS_NO_TRANS);
          ai; ++ai)
     {
         if (!actual && !agent->can_see(**ai))
             continue;
+        if (!(*vulnerable)(agent, *ai))
+            continue;
 
         if ((*vulnerable)(agent, *ai))
-        {
-            if (ai->is_player())
-                affects_you = true;
-            else if (*ai != agent)
-                affected_monsters.push_back(ai->as_monster());
-        }
+            affected_actors.push_back(*ai);
+
+        // For perf, don't count when running tracers.
+        if (spell == SPELL_OZOCUBUS_REFRIGERATION)
+            ozo_adj_count[*ai] = actual ? _count_adj_actors(ai->pos()) : 0;
     }
 
     const int avg_damage = (1 + beam.damage.num * beam.damage.size) / 2;
     int total_damage = 0;
-    // XXX: This ordering is kind of broken; it's to preserve the message
-    // order from the original behaviour in the case of refrigerate.
-    if (affects_you)
-    {
-        total_damage = _los_spell_damage_player(agent, beam, actual);
-        if (!actual && mons)
-        {
-            if (mons->wont_attack())
-            {
-                beam.friend_info.count++;
-                beam.friend_info.power +=
-                    (you.get_experience_level() * total_damage / avg_damage);
-            }
-            else
-            {
-                beam.foe_info.count++;
-                beam.foe_info.power +=
-                    (you.get_experience_level() * total_damage / avg_damage);
-            }
-        }
-    }
+    const int base_dam_size = beam.damage.size;
 
-    if (actual && !affected_monsters.empty())
-        _los_spell_pre_damage_monsters(agent, affected_monsters, verb);
-
-    for (auto m : affected_monsters)
+    for (auto a : affected_actors)
     {
         // Watch out for invalidation. Example: Ozocubu's refrigeration on
         // a bunch of ballistomycete spores that blow each other up.
-        if (!m->alive())
+        if (!a->alive())
             continue;
 
-        int this_damage = _los_spell_damage_monster(agent, *m, beam, actual);
+        if (spell == SPELL_OZOCUBUS_REFRIGERATION)
+            beam.damage.size = _ozo_adj_dam(base_dam_size, ozo_adj_count[a], actual);
+
+        int this_damage = _los_spell_damage_actor(agent, *a, beam, actual);
         total_damage += this_damage;
 
-        if (!actual)
+        if (actual || !this_damage)
+            continue;
+
+        if (a->is_monster() && !mons_is_threatening(*a->as_monster()))
+            continue;
+
+        if (!agent || !mons_aligned(a, agent))
         {
-            if (mons)
-            {
-                if (mons_atts_aligned(m->attitude, mons->attitude))
-                {
-                    beam.friend_info.count++;
-                    beam.friend_info.power +=
-                        (m->get_hit_dice() * this_damage / avg_damage);
-                }
-                else
-                {
-                    beam.foe_info.count++;
-                    beam.foe_info.power +=
-                        (m->get_hit_dice() * this_damage / avg_damage);
-                }
-            }
-            else if (player_caster
-                     && this_damage
-                     && !m->wont_attack()
-                     && mons_is_threatening(*m))
-            {
-                beam.foe_info.count++;
-                beam.foe_info.power++;
-            }
+            beam.foe_info.count++;
+            beam.foe_info.power +=
+                (a->get_hit_dice() * this_damage / avg_damage);
+        }
+        else
+        {
+            beam.friend_info.count++;
+            beam.friend_info.power +=
+                (a->get_hit_dice() * this_damage / avg_damage);
         }
     }
 
@@ -991,8 +935,6 @@ int airstrike_space_around(coord_def target, bool count_unseen)
     return empty_space;
 }
 
-static const int AIRSTRIKE_POWER_DIV = 7;
-
 spret cast_airstrike(int pow, coord_def target, bool fail)
 {
     if (cell_is_solid(target))
@@ -1024,7 +966,9 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 
     const int empty_space = airstrike_space_around(target, true);
 
-    int hurted = empty_space * 2 + random2avg(2 + div_rand_round(pow, AIRSTRIKE_POWER_DIV), 2);
+    dice_def to_roll = base_airstrike_damage(pow, true);
+    to_roll.size += empty_space * AIRSTRIKE_PER_SPACE_BONUS;
+    int hurted = to_roll.roll();
 #ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
 #endif
@@ -1045,9 +989,17 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
 
 // maximum damage before accounting for empty space
 // used for damage display
-int airstrike_base_max_damage(int pow)
+dice_def base_airstrike_damage(int pow, bool random)
 {
-    return 1 + (pow + AIRSTRIKE_POWER_DIV - 1) / AIRSTRIKE_POWER_DIV;
+    if (random)
+        return dice_def(2, div_rand_round(pow, 14));
+    return dice_def(2, (pow + 13) / 14);
+}
+
+string describe_airstrike_dam(dice_def dice)
+{
+    return make_stringf("%dd(%d-%d)", dice.num, dice.size,
+                        dice.size + MAX_AIRSTRIKE_BONUS);
 }
 
 dice_def base_fragmentation_damage(int pow)
@@ -1942,7 +1894,7 @@ spret cast_irradiate(int powc, actor &caster, bool fail)
     }, caster.pos(), true, 8);
 
     if (caster.is_player())
-        contaminate_player(1000 + random2(500));
+        contaminate_player(1250 + random2(750));
     return spret::success;
 }
 
@@ -3921,9 +3873,9 @@ void end_frozen_ramparts()
 
 dice_def ramparts_damage(int pow, bool random)
 {
-    int size = 2 + pow / 5;
+    int size = 8 + pow / 5;
     if (random)
-        size = 2 + div_rand_round(pow, 5);
+        size = 8 + div_rand_round(pow, 5);
     return dice_def(1, size);
 }
 

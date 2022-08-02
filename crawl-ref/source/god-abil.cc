@@ -2021,8 +2021,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
     you.time_taken = 10;
     _run_time_step();
-    // Update corpses, etc. This does also shift monsters, but only by
-    // a tiny bit.
+    // Update corpses, etc.
     update_level(pow * 10);
 
 #ifndef USE_TILE_LOCAL
@@ -5890,7 +5889,7 @@ spret okawaru_duel(const coord_def& target, bool fail)
     mons->set_transit(level_id(BRANCH_ARENA));
     mons->destroy_inventory();
     if (mons_is_elven_twin(mons))
-        elven_twin_died(mons, true, KILL_YOU, MID_PLAYER);
+        elven_twin_died(mons, false, KILL_YOU, MID_PLAYER);
     monster_cleanup(mons);
 
     stop_delay(true);

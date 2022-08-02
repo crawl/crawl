@@ -239,14 +239,14 @@ static feature_def feat_defs[] =
 
 {
     DNGN_SHALLOW_WATER, "some shallow water", "shallow_water",
-    DCHAR_WAVY, NUM_DCHAR_TYPES,
+    DCHAR_SHALLOW_WAVY, NUM_DCHAR_TYPES,
     COLOUR_IS(CYAN),
     FFT_NONE, MF_WATER,
 },
 
 {
     DNGN_TOXIC_BOG, "a toxic bog", "toxic_bog",
-    DCHAR_WAVY, NUM_DCHAR_TYPES,
+    DCHAR_SHALLOW_WAVY, NUM_DCHAR_TYPES,
     COLOUR_IS(ETC_POISON),
     FFT_NONE, MF_WATER,
 },

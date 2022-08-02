@@ -41,5 +41,16 @@ robust_3
 fangs_1 MUT_FANGS
 fangs_2
 fangs_3
+horns_1 MUT_HORNS
+horns_2
+horns_3
+antennae_1 MUT_ANTENNAE
+antennae_2
+antennae_3
+
+passive_mapping_1 MUT_PASSIVE_MAPPING
+passive_mapping_2
+passive_mapping_3
 
 clarity MUT_CLARITY
+acute_vision MUT_ACUTE_VISION

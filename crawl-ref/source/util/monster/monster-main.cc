@@ -264,7 +264,8 @@ static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }
 static string mi_calc_airstrike_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_AIRSTRIKE, mons->get_hit_dice());
-    return make_stringf("0-%d+", airstrike_base_max_damage(pow));
+    dice_def dice = base_airstrike_damage(pow);
+    return describe_airstrike_dam(dice);
 }
 
 static string mi_calc_glaciate_damage(monster* mons)

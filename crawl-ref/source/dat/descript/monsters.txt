@@ -413,7 +413,7 @@ An unusually weak troll.
 %%%%
 Parghit
 
-An unusually strong troll, his wiry frame scarred by many against-the-odds
+An unusually strong troll, his thick frame scarred by many against-the-odds
 victories. He has been wounded so many times that his body has adapted, and now
 heals almost instantly. His necklace of troll claws is a memento of those who
 underestimated him.
@@ -3176,7 +3176,7 @@ perceived vice overshadows its goodness.
 %%%%
 zot statue
 
-An profoundly disturbing statue, hewn from a single piece of dark gabbro
+A profoundly disturbing statue, hewn from a single piece of dark gabbro
 scintillating with tiny crystals. It is impossible to tell whether it is
 intended to represent some creature or personage, or to be completely abstract.
 %%%%

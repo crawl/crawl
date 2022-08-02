@@ -145,7 +145,9 @@ meliai MONS_MELIAI
 ## Lizards ('l')
 frilled_lizard MONS_FRILLED_LIZARD
 iguana MONS_IGUANA
+%rim 0
 basilisk MONS_BASILISK
+%rim 1
 komodo_dragon MONS_KOMODO_DRAGON
 
 ## Slugs ('w')
@@ -636,11 +638,9 @@ killer_klown_purple
 killer_klown_red
 killer_klown_yellow
 %sdir mon/vault
-## From a Lair ending
+## From an Abyss rune vault
 %rim 0
-hell_wizard_50 MONS_HELL_WIZARD
-hell_wizard_75
-hell_wizard_100
+mad_acolyte_of_lugonu MONS_MAD_ACOLYTE_OF_LUGONU
 %rim 1
 ## From the Cigotuvi wizlab
 deformed_human MONS_DEFORMED_HUMAN
@@ -926,7 +926,9 @@ bush_burning MONS_BUSH_BURNING
 %rim 1
 oklob_sapling MONS_OKLOB_SAPLING
 oklob_plant MONS_OKLOB_PLANT
-starflower MONS_STARFLOWER
+starflower_0 MONS_STARFLOWER
+starflower_1
+starflower_2
 %rim 0
 thorn_hunter MONS_THORN_HUNTER
 treant MONS_TREANT

@@ -2176,10 +2176,13 @@ void merfolk_start_swimming(bool stepped)
         mpr("...but don't expect to remain undetected.");
 
     you.fishtail = true;
-    remove_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
-    ash_check_bondage();
+    if (!you.melded[EQ_BOOTS])
+    {
+        remove_one_equip(EQ_BOOTS);
+        ash_check_bondage();
+    }
 
 #ifdef USE_TILE
     init_player_doll();
@@ -2190,11 +2193,15 @@ void merfolk_stop_swimming()
 {
     if (!you.fishtail)
         return;
+
     you.fishtail = false;
-    unmeld_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
-    ash_check_bondage();
+    if (!_init_equipment_removal(you.form).count(EQ_BOOTS))
+    {
+        unmeld_one_equip(EQ_BOOTS);
+        ash_check_bondage();
+    }
 
 #ifdef USE_TILE
     init_player_doll();

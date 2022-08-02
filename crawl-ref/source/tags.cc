@@ -4816,8 +4816,6 @@ static void _tag_construct_level(writer &th)
     marshallCoord(th, env.sanctuary_pos);
     marshallByte(th, env.sanctuary_time);
 
-    marshallInt(th, env.spawn_random_rate);
-
     env.markers.write(th);
     env.properties.write(th);
 
@@ -6410,7 +6408,10 @@ static void _tag_read_level(reader &th)
     env.sanctuary_pos  = unmarshallCoord(th);
     env.sanctuary_time = unmarshallByte(th);
 
-    env.spawn_random_rate = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_SPAWN_RATE)
+        unmarshallInt(th); // was env.spawn_random_rate
+#endif
 
     env.markers.read(th);
 #if TAG_MAJOR_VERSION == 34

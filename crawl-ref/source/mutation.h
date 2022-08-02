@@ -90,6 +90,8 @@ bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();
 void reset_powered_by_death_duration();
 
+string mut_blocks_item_reason(const item_def &item, bool temp);
+
 bool delete_all_temp_mutations(const string &reason);
 bool delete_temp_mutation();
 

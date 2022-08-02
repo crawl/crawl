@@ -14,6 +14,8 @@ class dist;
 
 const int DEFAULT_SHATTER_DICE = 3;
 const int FLAT_DISCHARGE_ARC_DAMAGE = 3;
+const int AIRSTRIKE_PER_SPACE_BONUS = 2;
+const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
 
 #define COUPLING_TIME_KEY "maxwells_charge_time"
 #define FLAME_WAVE_KEY "flame_waves"
@@ -41,7 +43,8 @@ spret cast_freeze(int pow, monster* mons, bool fail);
 dice_def freeze_damage(int pow);
 spret cast_airstrike(int pow, coord_def target, bool fail);
 int airstrike_space_around(coord_def target, bool count_invis);
-int airstrike_base_max_damage(int pow);
+dice_def base_airstrike_damage(int pow, bool random = false);
+string describe_airstrike_dam(dice_def dice);
 spret cast_shatter(int pow, bool fail);
 dice_def shatter_damage(int pow, monster *mons = nullptr);
 int terrain_shatter_chance(coord_def where, const actor &agent);

@@ -38,7 +38,7 @@ aptitudes:
   invocations: 1
   evocations: -1
 size: large
-str: 11
+str: 13
 int: 8
 dex: 5
 levelup_stat_frequency: 4

@@ -721,14 +721,16 @@ static const food_def Food_prop[] =
 
 struct item_set_def
 {
+    string name;
     object_class_type cls;
     vector<int> subtypes;
 };
 static const item_set_def item_sets[] =
 {
-    { OBJ_WANDS, { WAND_CHARMING, WAND_PARALYSIS } },
-    { OBJ_WANDS, { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
-    { OBJ_WANDS, { WAND_ICEBLAST, WAND_ROOTS } },
+    { "hex wand",           OBJ_WANDS,    { WAND_CHARMING, WAND_PARALYSIS } },
+    { "beam wand",          OBJ_WANDS,    { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
+    { "blast wand",         OBJ_WANDS,    { WAND_ICEBLAST, WAND_ROOTS } },
+    { "concealment scroll", OBJ_SCROLLS,  { SCR_FOG, SCR_BUTTERFLIES } },
 };
 COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 
@@ -1787,6 +1789,7 @@ skill_type item_attack_skill(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        ASSERT_RANGE(item.sub_type, 0, NUM_WEAPONS);
         if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
             return _lochaber_skill();
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
@@ -1941,7 +1944,8 @@ bool is_range_weapon(const item_def &item)
 
 bool is_crossbow(const item_def &item)
 {
-    if (!is_weapon(item)) return false;
+    if (!is_weapon(item))
+        return false;
     switch (item.sub_type)
     {
     case WPN_HAND_CROSSBOW:
@@ -2201,6 +2205,7 @@ static map<scroll_type, item_rarity_type> _scroll_rarity = {
     { SCR_MAGIC_MAPPING,  RARITY_UNCOMMON },
     { SCR_FEAR,           RARITY_UNCOMMON },
     { SCR_FOG,            RARITY_UNCOMMON },
+    { SCR_BUTTERFLIES,    RARITY_UNCOMMON },
     { SCR_BLINKING,       RARITY_UNCOMMON },
     { SCR_IMMOLATION,     RARITY_UNCOMMON },
     { SCR_POISON,         RARITY_UNCOMMON },
@@ -3118,4 +3123,22 @@ bool item_known_excluded_from_set(object_class_type type, int sub_type)
     const item_set_type ist = excluded_items[type][sub_type];
     const int chosen = _item_set_choice(ist);
     return you.type_ids[item_sets[ist].cls][chosen];
+}
+
+item_set_type item_set_by_name(string name)
+{
+    // We could cache this if we wanted to.
+    for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
+        if (item_sets[i].name == name)
+            return (item_set_type)i;
+    return NUM_ITEM_SET_TYPES;
+}
+
+string item_name_for_set(item_set_type typ)
+{
+    ASSERT(typ >= 0 && typ < NUM_ITEM_SET_TYPES);
+    item_def it;
+    it.base_type = item_sets[typ].cls;
+    it.sub_type = item_for_set(typ);
+    return sub_type_string(it, true);
 }

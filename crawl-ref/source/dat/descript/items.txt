@@ -1040,6 +1040,10 @@ spectral, vampiric or chaos brand.
 Ranged weapons will commonly be branded with the vorpal, flaming, freezing or
 venom brand, and rarely with the electrocution or chaos brand.
 %%%%
+scroll of butterflies
+
+A scroll that surrounds its user with a flight of beautiful butterflies.
+%%%%
 scroll of enchant armour
 
 A scroll that places an enchantment on a piece of armour chosen by the reader.

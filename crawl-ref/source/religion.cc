@@ -705,22 +705,10 @@ void dec_penance(god_type god, int val)
                      mi->del_ench(ENCH_AWAKEN_FOREST);
             }
         }
-        else
+        else if (god == GOD_HEPLIAKLQANA)
         {
-#if TAG_MAJOR_VERSION == 34
-            if (god == GOD_PAKELLAS)
-            {
-                // Penance just ended w/o worshipping Pakellas;
-                // notify the player that MP regeneration will start again.
-                mprf(MSGCH_GOD, god, "You begin regenerating magic.");
-            }
-            else
-#endif
-            if (god == GOD_HEPLIAKLQANA)
-            {
-                calc_hp(); // frailty ends
-                mprf(MSGCH_GOD, god, "Your full life essence returns.");
-            }
+            calc_hp(); // frailty ends
+            mprf(MSGCH_GOD, god, "Your full life essence returns.");
         }
     }
     else
@@ -1234,33 +1222,6 @@ static bool _give_nemelex_gift(bool forced = false)
     return true;
 }
 
-#if TAG_MAJOR_VERSION == 34
-/**
- * From the given list of items, return a random unseen item, if there are any.
- * Otherwise, just return any of them at random.
- *
- * If we cared, we could make this a template function to return more specific
- * types than 'int'. (That's probably not important, though.)
- *
- * @param item_types        A list of item types to choose from.
- * @param seen_func         How to tell whether the item was seen.
- * @return                  A random item type; e.g. WAND_ACID.
- */
-static int _preferably_unseen_item(const vector<int> &item_types,
-                                   function<bool(int)> seen_func)
-{
-    ASSERT(item_types.size());
-    vector<int> unseen;
-    for (auto item : item_types)
-        if (!seen_func(item))
-            unseen.emplace_back(item);
-
-    if (unseen.size())
-        return unseen[random2(unseen.size())];
-    return item_types[random2(item_types.size())];
-}
-#endif
-
 static bool _jiyva_mutate()
 {
     simple_god_message(" alters your body.");
@@ -1424,141 +1385,6 @@ static set<spell_type> _vehumet_get_spell_gifts()
     }
     return offers;
 }
-
-#if TAG_MAJOR_VERSION == 34
-/// Has the player ID'd the given type of wand?
-static bool _seen_wand(int wand)
-{
-    return get_ident_type(OBJ_WANDS, wand);
-}
-
-static int _pakellas_low_wand()
-{
-    static const vector<int> low_wands = {
-        WAND_FLAME,
-        WAND_POLYMORPH,
-    };
-
-    return _preferably_unseen_item(low_wands, _seen_wand);
-}
-
-static int _pakellas_high_wand()
-{
-    /// XXX TODO: support item sets
-    vector<int> high_wands = {
-        WAND_PARALYSIS,
-        WAND_ICEBLAST,
-        WAND_ACID,
-    };
-    if (!you.allies_forbidden())
-        high_wands.emplace_back(WAND_CHARMING);
-
-    return _preferably_unseen_item(high_wands, _seen_wand);
-}
-
-static int _pakellas_low_misc()
-{
-    // Limited uses, so any of these are fine even if they've been seen before.
-    return random_choose(MISC_BOX_OF_BEASTS,
-                         MISC_PHANTOM_MIRROR);
-}
-
-static int _pakellas_high_misc()
-{
-    static const vector<int> high_miscs = {
-        MISC_PHIAL_OF_FLOODS,
-        MISC_LIGHTNING_ROD,
-    };
-
-    return _preferably_unseen_item(high_miscs, [](int misc) {
-        return you.seen_misc[misc];
-    });
-}
-
-static bool _give_pakellas_gift()
-{
-    // Break early if giving a gift now means it would be lost.
-    if (feat_eliminates_items(env.grid(you.pos())))
-        return false;
-
-    bool success = false;
-    object_class_type basetype = OBJ_UNASSIGNED;
-    int subtype = -1;
-
-    if (you.piety >= piety_breakpoint(0)
-        && you.num_total_gifts[GOD_PAKELLAS] == 0)
-    {
-        basetype = OBJ_WANDS;
-        subtype = _pakellas_low_wand();
-    }
-    else if (you.piety >= piety_breakpoint(1)
-             && you.num_total_gifts[GOD_PAKELLAS] == 1)
-    {
-        // All the evoker options here are summon-based, so give another
-        // low-level wand instead under Sacrifice Love.
-        if (you.allies_forbidden())
-        {
-            basetype = OBJ_WANDS;
-            subtype = _pakellas_low_wand();
-        }
-        else
-        {
-            basetype = OBJ_MISCELLANY;
-            subtype = _pakellas_low_misc();
-        }
-    }
-    else if (you.piety >= piety_breakpoint(2)
-             && you.num_total_gifts[GOD_PAKELLAS] == 2)
-    {
-        basetype = OBJ_WANDS;
-        subtype = _pakellas_high_wand();
-    }
-    else if (you.piety >= piety_breakpoint(3)
-             && you.num_total_gifts[GOD_PAKELLAS] == 3)
-    {
-        basetype = OBJ_MISCELLANY;
-        subtype = _pakellas_high_misc();
-    }
-    else if (you.piety >= piety_breakpoint(4)
-             && you.num_total_gifts[GOD_PAKELLAS] == 4)
-    {
-        basetype = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
-        subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
-                                          : _pakellas_high_misc();
-    }
-
-    if (basetype == OBJ_UNASSIGNED)
-        return false;
-    else
-    {
-        ASSERT(subtype >= 0);
-        int thing_created = items(true, basetype, subtype, 1, 0,
-                                  you.religion);
-
-        if (thing_created == NON_ITEM)
-            return false;
-
-        move_item_to_grid(&thing_created, you.pos(), true);
-
-        if (thing_created != NON_ITEM)
-            success = true;
-    }
-
-    if (success)
-    {
-        simple_god_message(" grants you a gift!");
-        // included in default force_more_message
-
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
-
-        return true;
-    }
-
-    return false;
-}
-#endif
 
 static bool _give_trog_oka_gift(bool forced)
 {
@@ -2316,12 +2142,6 @@ bool do_god_gift(bool forced)
         case GOD_NEMELEX_XOBEH:
             success = _give_nemelex_gift(forced);
             break;
-
-#if TAG_MAJOR_VERSION == 34
-        case GOD_PAKELLAS:
-            success = _give_pakellas_gift();
-            break;
-#endif
 
         case GOD_OKAWARU:
         case GOD_TROG:
@@ -3361,8 +3181,6 @@ void excommunication(bool voluntary, god_type new_god)
 
 #if TAG_MAJOR_VERSION == 34
     case GOD_PAKELLAS:
-        simple_god_message(" continues to block your magic from regenerating.",
-                           old_god);
         you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
@@ -3558,14 +3376,6 @@ bool player_can_join_god(god_type which_god, bool temp)
     {
         return false;
     }
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.get_base_mutation_level(MUT_NO_ARTIFICE, true, temp, temp)
-        && which_god == GOD_PAKELLAS)
-    {
-        return false;
-    }
-#endif
 
     return !temp || _transformed_player_can_join_god(which_god);
 }
@@ -3966,15 +3776,6 @@ static void _join_zin()
     }
 }
 
-#if TAG_MAJOR_VERSION == 34
-// Setup when becoming an overworked assistant to Pakellas.
-static void _join_pakellas()
-{
-    mprf(MSGCH_GOD, "You stop regenerating magic.");
-    you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
-}
-#endif
-
 // Setup for joining the easygoing followers of Cheibriados.
 static void _join_cheibriados()
 {
@@ -4000,9 +3801,6 @@ static const map<god_type, function<void ()>> on_join = {
             gain_piety(20, 1, false);  // allow instant access to first power
     }},
     { GOD_OKAWARU, _join_okawaru },
-#if TAG_MAJOR_VERSION == 34
-    { GOD_PAKELLAS, _join_pakellas },
-#endif
     { GOD_RU, _join_ru },
     { GOD_TROG, join_trog_skills },
     { GOD_ZIN, _join_zin },
@@ -4129,14 +3927,6 @@ void god_pitch(god_type which_god)
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
         }
-#if TAG_MAJOR_VERSION == 34
-        else if (you.get_mutation_level(MUT_NO_ARTIFICE)
-                 && which_god == GOD_PAKELLAS)
-        {
-            simple_god_message(" does not accept worship from those who are "
-                               "unable to use magical devices!", which_god);
-        }
-#endif
         else if (!_transformed_player_can_join_god(which_god))
         {
             simple_god_message(" says: How dare you approach in such a "
@@ -4304,22 +4094,8 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
     if (god_punishes_spell(spell, god))
         return true;
 
-    switch (god)
-    {
-    case GOD_CHEIBRIADOS:
-        if (is_hasty_spell(spell))
-            return true;
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case GOD_PAKELLAS:
-        if (spell == SPELL_SUBLIMATION_OF_BLOOD)
-            return true;
-        break;
-#endif
-    default:
-        break;
-    }
-    return false;
+    // (this is literally only Discord as of July 2022... simplify?)
+    return god == GOD_CHEIBRIADOS && is_hasty_spell(spell);
 }
 
 /**

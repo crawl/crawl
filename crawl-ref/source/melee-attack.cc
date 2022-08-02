@@ -90,6 +90,88 @@ bool melee_attack::can_reach()
            || is_projected;
 }
 
+bool melee_attack::bad_attempt()
+{
+    if (!attacker->is_player() || !defender || !defender->is_monster())
+        return false;
+
+    if (player_unrand_bad_attempt())
+        return true;
+
+    if (!cleave_targets.empty())
+    {
+        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        targeter_cleave hitfunc(attacker, defender->pos(), range);
+        return stop_attack_prompt(hitfunc, "attack");
+    }
+
+    return stop_attack_prompt(defender->as_monster(), false, attack_position);
+}
+
+bool melee_attack::player_unrand_bad_attempt()
+{
+    // Unrands with secondary effects that can harm nearby friendlies.
+    // Don't prompt for confirmation (and leak information about the
+    // monster's position) if the player can't see the monster.
+    if (!weapon || !you.can_see(*defender))
+        return false;
+
+    if (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
+    {
+
+        targeter_smite hitfunc(attacker, 1, 1, 1, false);
+        hitfunc.set_aim(defender->pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                                  [](const actor *act)
+                                  {
+                                      return !god_protects(act->as_monster());
+                                  }, nullptr, defender->as_monster());
+    }
+    else if (is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
+             || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
+                && !silenced(you.pos()))
+    {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !god_protects(act->as_monster());
+                               }, nullptr, defender->as_monster());
+    }
+    if (is_unrandom_artefact(*weapon, UNRAND_TORMENT))
+    {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [] (const actor *m)
+                               {
+                                   return !m->res_torment()
+                                       && !god_protects(m->as_monster());
+                               },
+                                  nullptr, defender->as_monster());
+    }
+    if (is_unrandom_artefact(*weapon, UNRAND_ARC_BLADE))
+    {
+        vector<const actor *> exclude;
+        return !safe_discharge(defender->pos(), exclude);
+    }
+    if (is_unrandom_artefact(*weapon, UNRAND_POWER))
+    {
+        targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
+        hitfunc.beam.aimed_at_spot = false;
+        hitfunc.set_aim(defender->pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !god_protects(act->as_monster());
+                               }, nullptr, defender->as_monster());
+    }
+    return false;
+}
+
 bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
@@ -104,102 +186,10 @@ bool melee_attack::handle_phase_attempted()
         return false;
     }
 
-    if (attacker->is_player() && defender && defender->is_monster())
+    if (bad_attempt())
     {
-        // Unrands with secondary effects that can harm nearby friendlies.
-        // Don't prompt for confirmation (and leak information about the
-        // monster's position) if the player can't see the monster.
-        if (weapon && is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR)
-            && you.can_see(*defender))
-        {
-
-            targeter_smite hitfunc(attacker, 1, 1, 1, false);
-            hitfunc.set_aim(defender->pos());
-
-            if (stop_attack_prompt(hitfunc, "attack", nullptr, nullptr,
-                                   defender->as_monster()))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (weapon &&
-                ((is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
-                  && !silenced(you.pos()))
-                 || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY))
-                 && you.can_see(*defender))
-        {
-            targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
-            if (stop_attack_prompt(hitfunc, "attack",
-                                   [](const actor *act)
-                                   {
-                                       return !god_protects(act->as_monster());
-                                   }, nullptr, defender->as_monster()))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_TORMENT)
-                 && you.can_see(*defender))
-        {
-            targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
-            if (stop_attack_prompt(hitfunc, "attack",
-                                   [] (const actor *m)
-                                   {
-                                       return !m->res_torment();
-                                   },
-                                   nullptr, defender->as_monster()))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_ARC_BLADE)
-                 && you.can_see(*defender))
-        {
-            vector<const actor *> exclude;
-            if (!safe_discharge(defender->pos(), exclude))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_POWER)
-                 && you.can_see(*defender))
-        {
-            targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
-            hitfunc.beam.aimed_at_spot = false;
-            hitfunc.set_aim(defender->pos());
-
-            if (stop_attack_prompt(hitfunc, "attack",
-                                   [](const actor *act)
-                                   {
-                                       return !god_protects(act->as_monster());
-                                   }, nullptr, defender->as_monster()))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (!cleave_targets.empty())
-        {
-            const int range = you.reach_range() == REACH_TWO ? 2 : 1;
-            targeter_cleave hitfunc(attacker, defender->pos(), range);
-            if (stop_attack_prompt(hitfunc, "attack"))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (stop_attack_prompt(defender->as_monster(), false,
-                                    attack_position))
-        {
-            cancel_attack = true;
-            return false;
-        }
+        cancel_attack = true;
+        return false;
     }
 
     if (attacker->is_player())
@@ -1376,17 +1366,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
                 antimagic_affects_defender(damage_done * 32);
 
-                // MP drain suppressed under Pakellas, but antimagic still applies.
-                if (!have_passive(passive_t::no_mp_regen) || spell_user)
-                {
-                    mprf("You %s %s %s.",
-                         have_passive(passive_t::no_mp_regen) ? "disrupt" : "drain",
-                         defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                         spell_user ? "magic" : "power");
-                }
+                mprf("You drain %s %s.",
+                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     spell_user ? "magic" : "power");
 
-                if (!have_passive(passive_t::no_mp_regen)
-                    && you.magic_points != you.max_magic_points
+                if (you.magic_points != you.max_magic_points
                     && !defender->as_monster()->is_summoned()
                     && !mons_is_firewood(*defender->as_monster()))
                 {

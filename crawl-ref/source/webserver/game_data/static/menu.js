@@ -221,6 +221,24 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             add_hover_class(menu.last_hovered);
     }
 
+    function prepare_hoverable_item(item)
+    {
+        // TODO: mouse movement over a menu item after hover has been moved
+        // off it by arrows isn't enough to restore hover; moving the
+        // mouse cursor in and out is needed. Worth addressing?
+        item.elem.hover(
+            function() {
+                mouse_set_hovered($(this).index());
+            }, function() {
+                // XX if this uses mouse_set_hovered, the timing seems
+                // to be extremely flaky w.r.t. a new hover.
+                if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
+                    set_hovered(-1);
+                // otherwise, keep the hover unless mousenter moves it into
+                // a new cell
+            });
+    }
+
     function prepare_item_range(start, end, container)
     {
         // Guarantees that the given (inclusive) range of item indices
@@ -267,21 +285,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             var elem = $("<li>...</li>");
             elem.data("item", item);
             elem.addClass("placeholder");
-            // TODO: mouse movement over a menu item after hover has been moved
-            // off it by arrows isn't enough to restore hover; moving the
-            // mouse cursor in and out is needed. Worth addressing?
-            elem.hover(
-                function() {
-                    mouse_set_hovered($(this).index());
-                }, function() {
-                    // XX if this uses mouse_set_hovered, the timing seems
-                    // to be extremely flaky w.r.t. a new hover.
-                    if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
-                        set_hovered(-1);
-                    // otherwise, keep the hover unless mousenter moves it into
-                    // a new cell
-                });
             item.elem = elem;
+            prepare_hoverable_item(item);
 
             if (anchor)
                 anchor.before(elem);
@@ -647,11 +652,32 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function title_prompt(data)
     {
         var prompt;
+
+        var restore = function () {
+            if (!client.is_watching || !client.is_watching())
+                $("#title_prompt").blur();
+            menu.elem.find(".menu_title").removeClass("raw_input_mode");
+            update_title();
+        };
+
+        // manual close from server side: used for raw input mode
+        if (data && data.close)
+        {
+            restore();
+            return;
+        }
+
+        var title = menu.elem.find(".menu_title");
+        if (data && data.raw)
+        {
+            title.addClass("raw_input_mode")
+            return; // everything else is handled manually, including exiting
+        }
+
         if (!data || !data.prompt)
             prompt = "Select what? (regex) ";
         else
             prompt = data.prompt;
-        var title = menu.elem.find(".menu_title")
         title.html(prompt);
         var input = $("<input id='title_prompt' class='text title_prompt' type='text'>");
         title.append(input);
@@ -659,13 +685,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         // unclear to me exactly why a timeout is needed but it seems to be
         if (!client.is_watching || !client.is_watching())
             setTimeout(function () { input.focus(); }, 50);
-
-
-        var restore = function () {
-            if (!client.is_watching || !client.is_watching())
-                input.blur();
-            update_title();
-        };
 
         // escape handling: ESC is intercepted in ui.js and triggers blur(), so
         // can't be handled directly here
@@ -793,6 +812,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             container.empty();
             $.each(menu.items, function(i, item) {
                 item.elem.data("item", item);
+                prepare_hoverable_item(item);
                 container.append(item.elem);
             });
         }
@@ -846,6 +866,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             scroll_bottom_to_item(menu.last_visible, true);
         else if (menu.first_visible)
             scroll_to_item(menu.first_visible, true);
+        else
+            update_visible_indices();
 
         update_more();
     }
@@ -858,6 +880,13 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
         update_visible_indices();
         schedule_server_scroll();
+    }
+
+    function raw_arrow_keys()
+    {
+        return menu.tag == "macro_mapping"
+            && ($(".raw_input_mode").length // raw input mode is up
+                || menu.items.length == 0); // new binding input mode
     }
 
     function menu_keydown_handler(event)
@@ -875,6 +904,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         }
 
         // keycodes only: characters go in menu_keypress_handler
+        // TODO: this should interface somehow with key_conversion.js
         switch (event.which)
         {
         case 109: // numpad -
@@ -882,31 +912,37 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 break;
             // otherwise, fall through to pageup:
         case 33: // page up
-            if (menu.tag == "macro_mapping")
+            if (raw_arrow_keys())
                 break; // Treat input as raw, no need to scroll anyway
             paging(true);
             event.preventDefault();
             return false;
         case 107: // numpad +
         case 34: // page down
-            if (menu.tag == "macro_mapping")
-                break; // Treat input as raw, no need to scroll anyway
+            if (raw_arrow_keys())
+                break;
             paging();
             event.preventDefault();
             return false;
         case 35: // end
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             scroll_bottom_to_item(menu.total_items - 1);
             if (menu.total_items > 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
                 set_hovered(next_hoverable_item(true, menu.total_items - 1, true));
             event.preventDefault();
             return false;
         case 36: // home
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             scroll_to_item(0);
             if (menu.flags & enums.menu_flag.ARROWS_SELECT)
                 set_hovered(next_hoverable_item(false, 0, true));
             event.preventDefault();
             return false;
         case 38: // up
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(true);
             else
@@ -914,6 +950,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 40: // down
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(false);
             else
@@ -921,6 +959,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 37: // left
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             if (event.shiftKey)
             {
                 line_up();
@@ -929,6 +969,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             }
             break;
         case 39: // right
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             if (event.shiftKey)
             {
                 line_down();
@@ -986,14 +1028,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             paging();
             event.preventDefault();
             return false;
-        case "'": // legacy thing
-            if (menu.flags & enums.menu_flag.ARROWS_SELECT)
-            {
-                cycle_hover(false);
-                event.preventDefault();
-                return false;
-            }
-            break;
         }
 
         if (update_server_scroll_timeout)

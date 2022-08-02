@@ -396,8 +396,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
         case SPELL_LRD:
             return base_fragmentation_damage(pow);
         case SPELL_AIRSTRIKE:
-            // XXX: not actually dice
-            return dice_def(1, airstrike_base_max_damage(pow));
+            return base_airstrike_damage(pow);
         default:
             break;
     }
@@ -509,7 +508,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
         return "";
     string mult = "";
     if (spell == SPELL_AIRSTRIKE)
-        return make_stringf("(0-%d+)", dam.size);
+        return describe_airstrike_dam(dam);
     if (spell == SPELL_MARSHLIGHT)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)

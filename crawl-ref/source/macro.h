@@ -115,9 +115,11 @@ bool keycode_is_printable(int keycode);
 string keycode_to_name(int keycode, bool shorten = true);
 string keyseq_to_str(const keyseq &seq);
 keyseq parse_keyseq(string s);
+int read_key_code(string s);
 
 command_type  key_to_command(int key, KeymapContext context);
 int           command_to_key(command_type cmd);
+vector<int> command_to_keys(command_type cmd);
 
 KeymapContext context_for_command(command_type cmd);
 
