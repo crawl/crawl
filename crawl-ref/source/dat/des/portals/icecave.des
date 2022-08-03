@@ -125,28 +125,28 @@ simulacrum in terms of speed, attack strength, or number of attacks.
 function simulacrum_monsters()
     local mons = {}
     if dgn.persist.ice_cave_hard then
-        mons["mocking"] = "deep troll simulacrum / minotaur simulacrum \
-             / entropy weaver simulacrum / spriggan defender simulacrum"
+        mons["mocking"] = "deep troll simulacrum / minotaur simulacrum" ..
+            " / spriggan defender simulacrum"
     else
-        mons["mocking"] = "two-headed ogre simulacrum / troll simulacrum \
-            / naga simulacrum / spriggan simulacrum"
+        mons["mocking"] = "two-headed ogre simulacrum / troll simulacrum" ..
+            " / naga simulacrum / spriggan simulacrum"
     end
 
     if dgn.persist.ice_cave_hard then
-        mons["savage"] = "lindwurm simulacrum / dire elephant simulacrum  \
-            / alligator simulacrum / harpy simulacrum / anaconda simulacrum"
+        mons["savage"] = "lindwurm simulacrum / dire elephant simulacrum" ..
+            " / alligator simulacrum / harpy simulacrum / anaconda simulacrum"
     else
-        mons["savage"] = "wolf simulacrum / elephant simulacrum  \
-            / polar bear simulacrum / cane toad simulacrum \
-            / death yak simulacrum"
+        mons["savage"] = "wolf simulacrum / elephant simulacrum" ..
+            " / polar bear simulacrum / cane toad simulacrum" ..
+            " / death yak simulacrum"
     end
 
     if dgn.persist.ice_cave_hard then
-        mons["cruel"] = "ettin simulacrum / hydra simulacrum \
-            / golden dragon simulacrum / caustic shrike simulacrum"
+        mons["cruel"] = "ettin simulacrum / 7-headed hydra simulacrum" ..
+            " / golden dragon simulacrum / caustic shrike simulacrum"
     else
-        mons["cruel"] = "dire elephant simulacrum / harpy simulacrum \
-            / anaconda simulacrum / entropy weaver simulacrum"
+        mons["cruel"] = "dire elephant simulacrum / harpy simulacrum" ..
+            " / anaconda simulacrum / 3-headed hydra simulacrum"
     end
 
     return mons
@@ -1567,25 +1567,24 @@ SHUFFLE: qrs
 # For easy ice cave, use ice statues,
 # boss slimes, including a rockslime.
 : if dgn.persist.ice_cave_hard then
-MONS:    ugly thing simulacrum / demonic crawler simulacrum \
-         / entropy weaver simulacrum / very ugly thing simulacrum
+MONS:    glowing shapeshifter simulacrum / slime creature simulacrum \
+         / great orb of eyes simulacrum
 MONS:    orange crystal statue, slime creature band, quicksilver ooze
 MONS:    azure jelly, rockslime
 {{
-set_random_mon_list("ugly thing simulacrum w:15" ..
-    " / demonic crawler simulacrum w:15 / entropy weaver simulacrum w:15" ..
-    " / very ugly thing simulacrum w:15 / slime creature w:40" ..
-    " / quicksilver ooze w:20 / azure jelly")
+set_random_mon_list("glowing shapeshifter simulacrum w:20" ..
+    " / slime creature simulacrum w:20 / great orb of eyes simulacrum w:20" ..
+    " / slime creature w:40 / quicksilver ooze w:20 / azure jelly")
 }}
 SUBST:   p = 4, q = 455, r = 5, s = 6
 : else
-MONS:    glowing shapeshifter simulacrum / ugly thing simulacrum \
-         / demonic crawler simulacrum / entropy weaver simulacrum
+MONS:    shapeshifter simulacrum / glowing shapeshifter simulacrum \
+         / slime creature simulacrum / great orb of eyes simulacrum
 MONS:    ice statue, slime creature band, quicksilver ooze, azure jelly
 {{
-set_random_mon_list("glowing shapeshifter simulacrum" ..
-    " / ugly thing simulacrum / demonic crawler simulacrum" ..
-    " / entropy weaver simulacrum / slime creature w:20 / quicksilver ooze")
+set_random_mon_list("shapeshifter simulacrum" ..
+    " / glowing shapeshifter simulacrum / slime creature simulacrum" ..
+    " / great orb of eyes simulacrum / slime creature w:20 / quicksilver ooze")
 }}
 SUBST:   q = 34455
 :end
