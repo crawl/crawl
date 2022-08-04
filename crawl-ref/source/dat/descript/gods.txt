@@ -500,9 +500,8 @@ Cheibriados wrath
 
 Offenders against Cheibriados will find their movements remain slow while
 the attention of Cheibriados remains upon them, and will frequently have any
-magical hasting stripped away. They may also become further slowed and
-exhausted, be put to sleep, or have wild and unpredictable magical effects from
-the depths of time unleashed upon them.
+magical hasting stripped away. They may also become further slowed, be put
+to sleep, or have their bodies decay.
 %%%%
 Dithmenos wrath
 
@@ -515,7 +514,8 @@ to hide; or find themselves smothered in shadow and sleeping, perhaps forever.
 Elyvilon wrath
 
 Elyvilon is not a god known for wrath. Still, those earning Elyvilon's ire will
-find the Healer occasionally protecting their foes from death.
+find the Healer occasionally protecting their foes from their attacks, and even
+from death.
 %%%%
 Fedhas wrath
 
@@ -664,10 +664,10 @@ remains; the unfaithful are rewarded just as the faithful are punished.
 Yredelemnul wrath
 
 Those who anger Yredelemnul find themselves beset by legions of the dead.
-Novice adventurers will be assaulted by zombies and skeletons; veterans by
-the strongest of Yredelemnul's undead servants. The victims' own undead
-servants desert them and crumble into dust. A variety of necromantic maladies
-also afflict those stricken by Yredelemnul's wrath.
+Novice adventurers will be assaulted by zombies and skeletons; veterans by the
+strongest of Yredelemnul's undead servants. The victims' own undead servants
+desert them and crumble into dust. Yredelemnul's ire may instead drain the lives
+of the unfaithful.
 %%%%
 Zin wrath
 
