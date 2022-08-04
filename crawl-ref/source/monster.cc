@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include <cmath>
 #include <algorithm>
 #include <functional>
 #include <queue>
@@ -4218,15 +4219,15 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
-        // Apply damage multipliers for scarf of harm
+        // Apply damage multipliers for harm
         if (amount != INSTANT_DEATH)
         {
-            // +30% damage when the opponent has harm
+            // +30% damage if opp has one level of harm, +45% with two
             if (agent && agent->extra_harm())
-                amount = amount * 13 / 10;
-            // +20% damage when self has harm
+                amount = amount * (100 + 15 * (agent->extra_harm() + 1)) / 100;
+            // +20% damage if you have one level of harm, +30% with two
             else if (extra_harm())
-                amount = amount * 6 / 5;
+                amount = amount * (10 + extra_harm() + 1) / 10;
         }
 
         // Apply damage multipliers for quad damage

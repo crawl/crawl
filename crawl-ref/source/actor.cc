@@ -281,10 +281,14 @@ bool actor::reflection(bool items) const
             || wearing_ego(EQ_ALL_ARMOUR, SPARM_REFLECTION));
 }
 
-bool actor::extra_harm(bool items) const
+int actor::extra_harm(bool items) const
 {
-    return items &&
-           (wearing_ego(EQ_CLOAK, SPARM_HARM) || scan_artefacts(ARTP_HARM));
+    if (!items)
+        return 0;
+
+    int harm = wearing_ego(EQ_CLOAK, SPARM_HARM) + scan_artefacts(ARTP_HARM);
+
+    return harm > 2 ? 2 : harm;
 }
 
 bool actor::rmut_from_item() const

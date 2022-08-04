@@ -2505,6 +2505,18 @@ static string _resist_composer(const char * name, int spacing, int value,
     return out;
 }
 
+static string _harm(int spacing)
+{
+    string out;
+    const int harm = you.extra_harm();
+    out += _determine_colour_string(harm, 2, false);
+    out += chop_string("Harm", spacing);
+    out += !harm     ? "." :
+           harm == 1 ? "+" :
+                       "!";
+    return out;
+}
+
 static vector<formatted_string> _get_overview_resistances(
     vector<char> &equip_chars, int sw)
 {
@@ -2576,8 +2588,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int reflect = you.reflection();
     out += _resist_composer("Reflect", cwidth, reflect) + "\n";
 
-    const int harm = you.extra_harm();
-    out += _resist_composer("Harm", cwidth, harm) + "\n";
+    out += _harm(cwidth) + "\n";
 
     const int rampage = you.rampaging();
     const string rampage_name = you.has_mutation(MUT_ROLLPAGE) ? "Roll" :
