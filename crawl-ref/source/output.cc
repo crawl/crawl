@@ -2445,7 +2445,7 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("Reflect", cwidth, reflect) + "\n";
 
     const int harm = you.extra_harm();
-    out += _resist_composer("Harm", cwidth, harm) + "\n";
+    out += _resist_composer("Harm", cwidth, harm, harm) + "\n";
 
     const int rampage = you.rampaging();
     out += _resist_composer("Rampage", cwidth, rampage, 1, true,

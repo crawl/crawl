@@ -771,11 +771,12 @@ static void _wizard_restore_life()
 static int _apply_extra_harm(int dam, mid_t source)
 {
     monster* damager = monster_by_mid(source);
-    // Don't check for monster amulet if there source isn't a monster
+    // +30% damage per level of harm the opponent has
     if (damager && damager->extra_harm())
-        return dam * 13 / 10; // +30% damage when the opponent has harm
+        return dam * pow((float)13 / 10, damager->extra_harm());
+    // +20% damage per level of harm you have
     else if (you.extra_harm())
-        return dam * 6 / 5; // +20% damage when you have harm
+        return dam * pow((float)6 / 5, you.extra_harm());
 
     return dam;
 }
