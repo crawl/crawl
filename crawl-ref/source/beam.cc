@@ -5550,7 +5550,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             obvious_effect = true;
         }
         if (mons_can_be_zombified(*mon)
-            && !mons_class_flag(mon->type, M_NO_SKELETON))
+            && !mons_class_flag(mon->type, M_NO_SKELETON)
+            && !you.allies_forbidden())
         {
             mon->add_ench(mon_enchant(ENCH_NECROTISE, 0, agent(), 1));
         }
