@@ -322,28 +322,6 @@ void spawn_random_monsters()
     if (!x_chance_in_y(5, rate))
         return;
 
-    // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
-    // players that get banished there on the orb run.
-    // ...but in the deep abyss, do spawn nearby monsters sometimes!
-    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)
-        || player_in_branch(BRANCH_ABYSS)
-           && you.depth > 5
-           && one_chance_in(10 / (you.depth - 5)))
-    {
-        dprf(DIAG_MONPLACE, "Placing monster, rate: %d, turns here: %d",
-             rate, env.turns_on_level);
-
-        mgen_data mg(WANDERING_MONSTER);
-        mg.proximity = PROX_CLOSE_TO_PLAYER;
-        mg.foe = MHITYOU;
-        // Don't count orb run spawns in the xp_by_level dump
-        mg.xp_tracking = XP_UNTRACKED;
-        mons_place(mg);
-        viewwindow();
-        update_screen();
-        return;
-    }
-
     mgen_data mg(WANDERING_MONSTER);
     if (player_in_branch(BRANCH_PANDEMONIUM)
         && !env.properties.exists("vault_mon_weights")
@@ -351,6 +329,25 @@ void spawn_random_monsters()
     {
         mg.cls = env.mons_alloc[random2(PAN_MONS_ALLOC)];
         mg.flags |= MG_PERMIT_BANDS;
+    }
+
+    // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
+    // players that get banished there on the orb run.
+    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS))
+    {
+        mg.proximity = PROX_CLOSE_TO_PLAYER;
+        mg.foe = MHITYOU;
+        // Don't count orb run spawns in the xp_by_level dump
+        mg.xp_tracking = XP_UNTRACKED;
+    }
+
+    // Deep Abyss can also do orbrun-style spawns in LOS.
+    if (player_in_branch(BRANCH_ABYSS)
+        && you.depth > 5
+        && one_chance_in(10 / (you.depth - 5)))
+    {
+        mg.proximity = PROX_CLOSE_TO_PLAYER;
+        mg.foe = MHITYOU;
     }
 
     mons_place(mg);
