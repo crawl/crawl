@@ -6548,7 +6548,7 @@ _Zenata_rare_
 # SHODAN!
 @The_monster@ scoffs, "How can you challenge a perfect, immortal machine?"
 
-@The_monsters@ wonders, "When I cut you open, what secrets will I find?"
+@The_monster@ wonders, "When I cut you open, what secrets will I find?"
 
 @The_monster@ mutters, "I can hear her whispering... but she's dead. She's dead!"
 
