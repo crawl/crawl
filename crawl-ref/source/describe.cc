@@ -1178,6 +1178,24 @@ static void _append_skill_target_desc(string &description, skill_type skill,
     }
 }
 
+static int _get_delay(const item_def &item)
+{
+    if (!is_range_weapon(item))
+        return you.attack_delay_with(nullptr, false, &item).expected();
+    item_def fake_proj;
+    populate_fake_projectile(item, fake_proj);
+    return you.attack_delay_with(&fake_proj, false, &item).expected();
+}
+
+static string _desc_attack_delay(const item_def &item)
+{
+    const int base_delay = property(item, PWPN_SPEED);
+    const int cur_delay = _get_delay(item);
+    if (base_delay == cur_delay)
+        return "";
+    return make_stringf("\n    Current attack delay: %.1f.", (float)cur_delay / 10);
+}
+
 static string _describe_brand(brand_type brand)
 {
     switch (brand) {
@@ -1355,7 +1373,10 @@ static void _append_weapon_stats(string &description, const item_def &item)
     }
 
     if (want_player_stats)
+    {
+        description += _desc_attack_delay(item);
         description += _damage_rating(item);
+    }
 }
 
 static string _handedness_string(const item_def &item)
