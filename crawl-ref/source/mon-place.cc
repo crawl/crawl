@@ -753,21 +753,19 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 #endif
     }
 
-    if (player_in_branch(BRANCH_ABYSS) && !mg.summoner
-        && in_bounds(mon->pos())
-        && !(mg.extra_flags & MF_WAS_IN_VIEW)
-        && !cell_is_solid(mon->pos()))
+    if (player_in_branch(BRANCH_ABYSS)
+        && !mg.summoner
+        && !(mg.extra_flags & MF_WAS_IN_VIEW))
     {
-        big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
-    }
+        if (in_bounds(mon->pos()) && !cell_is_solid(mon->pos()))
+            big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
 
-    if (player_in_branch(BRANCH_ABYSS) && you.can_see(*mon)
+        if (you.can_see(*mon)
              && !crawl_state.generating_level
-             && !mg.summoner
-             && !crawl_state.is_god_acting()
-             && !(mon->flags & MF_WAS_IN_VIEW)) // is this possible?
-    {
-        mon->seen_context = SC_ABYSS;
+             && !crawl_state.is_god_acting())
+        {
+            mon->seen_context = SC_ABYSS;
+        }
     }
 
     // Now, forget about banding if the first placement failed, or there are
