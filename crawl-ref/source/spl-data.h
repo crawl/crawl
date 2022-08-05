@@ -127,6 +127,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ARCJOLT, "Arcjolt",
+    spschool::conjuration | spschool::air,
+    spflag::area,
+    5,
+    200,
+    5, 5,
+    5, 15,
+    TILEG_STATIC_DISCHARGE, // TODO
+},
+
+{
     SPELL_BLINKBOLT, "Blinkbolt",
     spschool::air | spschool::translocation,
     spflag::dir_or_target | spflag::monster | spflag::noisy

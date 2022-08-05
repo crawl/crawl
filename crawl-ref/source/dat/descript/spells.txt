@@ -59,6 +59,12 @@ caster's position.
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
 %%%%
+Arcjolt spell
+
+Blasts electricity through everything in range and connected to the caster,
+either by adjacency or via a chain of other creatures or metal walls. The
+damage dealt partially bypasses armour.
+%%%%
 Aura of Brilliance spell
 
 Empowers the magic of nearby wizard allies of the caster, allowing them to

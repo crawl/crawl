@@ -101,6 +101,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Lightning
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
+    SPELL_ARCJOLT,
     SPELL_MAXWELLS_COUPLING,
 },
 
@@ -218,6 +219,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Power
     SPELL_BATTLESPHERE,
+    SPELL_ARCJOLT,
     SPELL_IRON_SHOT,
     SPELL_SPELLFORGED_SERVITOR,
 },

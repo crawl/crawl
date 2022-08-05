@@ -1272,6 +1272,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
                           // all potentially affected monsters?
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
+    case SPELL_ARCJOLT:
+        return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, pow, false));
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -2179,6 +2181,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_DISCHARGE:
         return cast_discharge(powc, you, fail);
 
+    case SPELL_ARCJOLT:
+        return cast_arcjolt(powc, you, fail);
+
     case SPELL_CHAIN_LIGHTNING:
         return cast_chain_lightning(powc, you, fail);
 
@@ -2726,6 +2731,8 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
             return ramparts_damage(power, false);
         case SPELL_LRD:
             return base_fragmentation_damage(power);
+        case SPELL_ARCJOLT:
+            return arcjolt_damage(power);
         default:
             break;
     }
