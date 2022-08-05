@@ -742,9 +742,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (chose_ood_monster)
         mon->props[MON_OOD_KEY].get_bool() = true;
 
-    if (mg.needs_patrol_point()
-        || (mon->type == MONS_ALLIGATOR
-            && !testbits(mon->flags, MF_BAND_MEMBER)))
+    if (mg.needs_patrol_point())
     {
         mon->patrol_point = mon->pos();
 #ifdef DEBUG_PATHFIND
