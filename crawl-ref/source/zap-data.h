@@ -1419,6 +1419,23 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
+    ZAP_UNSTABLE_MISSILE,
+    "crystal missile",
+    100,
+    new calcdice_calculator<3, 33, 3, 8>,
+    new tohit_calculator<11, 1, 8>,
+    nullptr,
+    nullptr,
+    GREEN,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_MISSILE,
+    false,
+    false,
+    3
+},
+
+{
     ZAP_CRYSTAL_BOLT,
     "crystal bolt",
     200,

@@ -125,5 +125,6 @@ enum zap_type
     ZAP_FASTROOT,
     ZAP_BLASTSPARK,
     ZAP_KISS_OF_DEATH,
+    ZAP_UNSTABLE_MISSILE,
     NUM_ZAPS
 };

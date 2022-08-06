@@ -3604,6 +3604,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_UNSTABLE_MISSILE, "Yara's Unstable Missile",
+    spschool::conjuration | spschool::transmutation,
+    spflag::dir_or_target | spflag::needs_tracer,
+    3,
+    100,
+    6, 6,
+    3, 0,
+    TILEG_STONE_ARROW, // TODO
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

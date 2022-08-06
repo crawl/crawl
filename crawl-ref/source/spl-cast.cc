@@ -323,6 +323,9 @@ static void _apply_post_zap_effect(spell_type spell)
     case SPELL_KISS_OF_DEATH:
         drain_player(100, true, true);
         break;
+    case SPELL_UNSTABLE_MISSILE:
+        contaminate_player(random_range(3000, 4500));
+        break;
     default:
         break;
     }

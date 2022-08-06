@@ -1751,6 +1751,14 @@ Word of Recall spell
 Recalls intelligent allies from elsewhere on the same level to the caster,
 after a short delay.
 %%%%
+Yara's Unstable Missile spell
+
+Conjures a shard of magical crystal and destabilizes one side of it, sending
+it hurtling toward its victim at lethal speed while spraying magical radiation
+back onto its caster. It's safe to cast once, but repeated castings in short
+succession can leave the caster dangerously contaminated. The crystal can
+bounce off walls of any kind.
+%%%%
 Yara's Violent Unravelling spell
 
 If cast upon a creature already blessed (or cursed) with magical enchantments,

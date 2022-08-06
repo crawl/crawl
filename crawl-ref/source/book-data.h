@@ -269,6 +269,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Alchemy
     SPELL_SUBLIMATION_OF_BLOOD,
+    SPELL_UNSTABLE_MISSILE,
     SPELL_PETRIFY,
     SPELL_IRRADIATE,
 },
@@ -324,6 +325,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Book of Armaments
     SPELL_STONE_ARROW,
+    SPELL_UNSTABLE_MISSILE,
     SPELL_ANIMATE_ARMOUR,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
 },
