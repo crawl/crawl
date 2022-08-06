@@ -1471,6 +1471,7 @@ static spell_type servitor_spells[] =
     SPELL_BOLT_OF_COLD, // left in for frederick
     SPELL_LIGHTNING_BOLT,
     SPELL_FIREBALL,
+    SPELL_ARCJOLT,
     SPELL_STONE_ARROW,
     SPELL_LRD,
     SPELL_AIRSTRIKE,
