@@ -74,7 +74,7 @@ static const map<job_type, job_def> job_data =
         SPELL_PORTAL_PROJECTILE,
         SPELL_CAUSE_FEAR,
     },
-    { "robe", "scroll of vulnerability", "sling plus:1" },
+    { "robe", "scroll of poison", "sling plus:1" },
     WCHOICE_NONE,
     { { SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 1 },
       { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
