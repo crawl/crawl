@@ -3961,6 +3961,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_DELVER;
         case JOB_HEXSLINGER:
             return TILEG_JOB_HEXSLINGER;
+        case JOB_REAVER:
+            return TILEG_JOB_REAVER;
         case JOB_CINDER_ACOLYTE:
             return TILEG_JOB_CINDER_ACOLYTE;
         default:

@@ -91,6 +91,11 @@ Necromancer
 Necromancers are wizards specializing in the practice of death magic. They
 start out with the Necrotise spell.
 %%%%
+Reaver
+
+Reavers start with a weapon of their choice and deadly magic to supplement it
+when in need. They start with the Kiss of Death spell.
+%%%%
 Summoner
 
 Summoners are able to cast Summon Small Mammal from the start, and begin with

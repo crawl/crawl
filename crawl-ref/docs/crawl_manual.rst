@@ -2066,6 +2066,11 @@ Enchanters
   finish the helpless creatures in combat. The Enchanter begins with a lightly
   enchanted dagger, a robe, potions of invisibility, and a selection of hexes.
 
+Reaver
+  Reavers have an assortment of powerful, but highly situational, conjurations
+  to draw upon when their skill in melee is insufficient. They start with a
+  simple weapon of their choice and leather armour.
+
 Mage backgrounds
 ================
 
