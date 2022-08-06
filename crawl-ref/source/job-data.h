@@ -237,7 +237,7 @@ static const map<job_type, job_def> job_data =
         SPELL_FREEZE,
         SPELL_FROZEN_RAMPARTS,
         SPELL_OZOCUBUS_ARMOUR,
-        SPELL_HAILSTORM,
+        SPELL_SUMMON_ICE_BEAST,
     },
     { "robe", "potion of magic" },
     WCHOICE_NONE,
