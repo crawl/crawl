@@ -131,7 +131,8 @@ TilesFramework::~TilesFramework()
 bool TilesFramework::fonts_initialized()
 {
     // TODO should in principle check the m_fonts vector as well
-    return m_crt_font && m_msg_font && m_stat_font && m_tip_font && m_lbl_font;
+    return m_crt_font && m_msg_font && m_stat_font && m_tip_font && m_lbl_font
+        && m_glyph_font;
 }
 
 static void _init_consoles()
@@ -355,6 +356,9 @@ bool TilesFramework::initialise()
                               Options.tile_font_tip_size, true);
     m_lbl_font    = load_font(Options.tile_font_lbl_file.c_str(),
                               Options.tile_font_lbl_size, true);
+    // XX separate option?
+    m_glyph_font  = load_font(Options.tile_font_crt_file.c_str(),
+                              Options.tile_font_crt_size, true, false);
 
     if (!fonts_initialized())
         return false;
@@ -434,14 +438,15 @@ void TilesFramework::reconfigure_fonts()
 }
 
 FontWrapper* TilesFramework::load_font(const char *font_file, int font_size,
-                              bool default_on_fail)
+                              bool default_on_fail, bool use_cached)
 {
-    for (unsigned int i = 0; i < m_fonts.size(); i++)
-    {
-        font_info &finfo = m_fonts[i];
-        if (finfo.name == font_file && finfo.size == font_size)
-            return finfo.font;
-    }
+    if (use_cached)
+        for (unsigned int i = 0; i < m_fonts.size(); i++)
+        {
+            font_info &finfo = m_fonts[i];
+            if (finfo.name == font_file && finfo.size == font_size)
+                return finfo.font;
+        }
 
     FontWrapper *font = FontWrapper::create();
 
@@ -1460,6 +1465,11 @@ void TilesFramework::toggle_inventory_display()
 void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
 {
     m_region_tile->place_cursor(type, gc);
+}
+
+void TilesFramework::grid_to_screen(const coord_def &gc, coord_def *pc) const
+{
+    m_region_tile->to_screen_coords(gc, pc);
 }
 
 void TilesFramework::clear_text_tags(text_tag_type type)

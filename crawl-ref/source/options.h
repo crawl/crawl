@@ -559,6 +559,8 @@ public:
     VColour     tile_transporter_landing_col;
     VColour     tile_explore_horizon_col;
 
+    string      tile_display_mode;
+
     VColour     tile_window_col;
 #ifdef USE_TILE_LOCAL
     int         game_scale;
@@ -624,7 +626,6 @@ public:
     pair<int, int> tile_shield_offsets;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
-    string      tile_display_mode;
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
     bool        tile_web_mouse_control;

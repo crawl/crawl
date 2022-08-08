@@ -395,7 +395,6 @@ void direction_chooser::describe_cell() const
     flush_prev_message();
 }
 
-#ifndef USE_TILE_LOCAL
 static cglyph_t _get_ray_glyph(const coord_def& pos, int colour, int glych,
                                int mcol)
 {
@@ -415,7 +414,6 @@ static cglyph_t _get_ray_glyph(const coord_def& pos, int colour, int glych,
     return {static_cast<char32_t>(glych),
             static_cast<unsigned short>(real_colour(colour))};
 }
-#endif
 
 // Unseen monsters in shallow water show a "strange disturbance".
 // (Unless flying!)
@@ -1253,7 +1251,6 @@ static tileidx_t _tileidx_aff_type(aff_type aff)
 }
 #endif
 
-#ifndef USE_TILE_LOCAL
 static colour_t _colour_aff_type(aff_type aff, bool target)
 {
     if (aff < 0)
@@ -1269,7 +1266,6 @@ static colour_t _colour_aff_type(aff_type aff, bool target)
     else
         die("unhandled aff %d", aff);
 }
-#endif
 
 static void _draw_ray_cell(screen_cell_t& cell, coord_def p, bool on_target,
                            aff_type aff)
@@ -1279,13 +1275,11 @@ static void _draw_ray_cell(screen_cell_t& cell, coord_def p, bool on_target,
     cell.tile.dngn_overlay[cell.tile.num_dngn_overlay++] =
         _tileidx_aff_type(aff);
 #endif
-#ifndef USE_TILE_LOCAL
     const auto bcol = _colour_aff_type(aff, on_target);
     const auto mbcol = on_target ? bcol : bcol | COLFLAG_REVERSE;
     const auto cglyph = _get_ray_glyph(p, bcol, '*', mbcol);
     cell.glyph = cglyph.ch;
     cell.colour = cglyph.col;
-#endif
 }
 
 void direction_chooser_renderer::render(crawl_view_buffer& vbuf)
@@ -1348,12 +1342,10 @@ void direction_chooser::draw_beam(crawl_view_buffer &vbuf)
         cell.tile.dngn_overlay[cell.tile.num_dngn_overlay++] =
             inrange ? TILE_RAY : TILE_RAY_OUT_OF_RANGE;
 #endif
-#ifndef USE_TILE_LOCAL
         const auto bcol = inrange ? MAGENTA : DARKGREY;
         const auto cglyph = _get_ray_glyph(p, bcol, '*', bcol| COLFLAG_REVERSE);
         cell.glyph = cglyph.ch;
         cell.colour = cglyph.col;
-#endif
     }
     textcolour(LIGHTGREY);
 

@@ -2359,8 +2359,10 @@ tile_layout_priority = minimap, inventory, command, spell, monster
 tile_display_mode = (tiles | glyphs | hybrid)
         Controls how the dungeon is rendered. You can use normal tiles (default)
         or make it look like the console version by using glyphs. Hybrid
-        overlays icons on top of the glyph view.
-        This option is only available on WebTiles.
+        overlays icons on top of the glyph view and uses a square tile aspect
+        ratio.
+
+        This option is only available on local tiles and webtiles.
 
 tile_level_map_hide_messages = true
 tile_level_map_hide_sidebar = false
