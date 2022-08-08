@@ -1401,7 +1401,8 @@ public:
         {
             // rebinding mouse click generally won't work
             // TODO: CK_MOUSE_Bn keys don't generally seem implemented
-            if (is_synthetic_key(keyin) || keyin == CK_MOUSE_CLICK
+            if (is_synthetic_key(keyin)
+                || keyin == CK_MOUSE_B2
                 || keyin == 0 || keyin == CK_NO_KEY)
             {
                 return true;
@@ -1416,6 +1417,8 @@ public:
             // and so are handled in the superclass
             if (doing_raw_action_input)
             {
+                if (keyin == CK_MOUSE_CLICK || keyin == CK_MOUSE_B1 || keyin == CK_MOUSE_B2)
+                    return true;
                 if (keyin == ESCAPE || keyin == CONTROL('G'))
                 {
                     doing_raw_action_input = false;
@@ -1446,8 +1449,10 @@ public:
             }
             else if (doing_key_input)
             {
+                if (keyin == CK_MOUSE_CLICK || keyin == CK_MOUSE_B1 || keyin == CK_MOUSE_B2)
+                    return true;
                 doing_key_input = false;
-                if (keyin == ESCAPE || keyin == CONTROL('G') || keyin == CK_MOUSE_B2)
+                if (keyin == ESCAPE || keyin == CONTROL('G'))
                 {
                     abort = true;
                     return false;

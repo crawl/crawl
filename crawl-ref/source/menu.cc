@@ -161,6 +161,7 @@ protected:
     Menu *m_menu;
     int m_height; // set by do_layout()
     int m_hover_idx = -1;
+    int m_real_hover_idx = -1;
     int m_min_col_width = -1;
 
     int m_force_scroll = -1; // in rows, no pixels
@@ -733,6 +734,7 @@ void UIMenu::_allocate_region()
 void UIMenu::set_hovered_entry(int i)
 {
     m_hover_idx = i;
+
 #ifdef USE_TILE_LOCAL
     if (row_heights.size() > 0) // check for initial layout
         pack_buffers();
@@ -766,6 +768,7 @@ void UIMenu::update_hovered_entry(bool force)
                 m_menu->set_hovered(i, force); // give menu a chance to change state
             else if (me->hotkeys_count())
                 m_hover_idx = i;
+            m_real_hover_idx = i;
             return;
         }
     }
@@ -776,6 +779,7 @@ void UIMenu::update_hovered_entry(bool force)
             m_menu->set_hovered(-1, force);
         else
             m_hover_idx = -1;
+        m_real_hover_idx = -1;
     }
 }
 
@@ -816,6 +820,7 @@ bool UIMenu::on_event(const Event& ev)
         m_mouse_pressed = false;
         if (!(m_menu->is_set(MF_ARROWS_SELECT)))
             m_hover_idx = -1;
+        m_real_hover_idx = -1;
         do_layout(m_region.width, m_num_columns);
         pack_buffers();
         _expose();
@@ -833,7 +838,8 @@ bool UIMenu::on_event(const Event& ev)
 
     int key = -1;
     if (event.type() ==  Event::Type::MouseDown
-        && event.button() == MouseEvent::Button::Left)
+        && (event.button() == MouseEvent::Button::Left
+            || event.button() == MouseEvent::Button::Right))
     {
         m_mouse_pressed = true;
         do_layout(m_region.width, m_num_columns);
@@ -842,12 +848,16 @@ bool UIMenu::on_event(const Event& ev)
         _expose();
     }
     else if (event.type() == Event::Type::MouseUp
-            && event.button() == MouseEvent::Button::Left
+            && (event.button() == MouseEvent::Button::Left
+                || event.button() == MouseEvent::Button::Right)
             && m_mouse_pressed)
     {
-        int entry = m_hover_idx;
+        // use the "real" hover idx, a menu item that the mouse is currently
+        // positioned over.
+        int entry = m_real_hover_idx;
         if (entry != -1 && m_menu->items[entry]->hotkeys_count() > 0)
-            key = m_menu->items[entry]->hotkeys[0];
+            key = event.button() == MouseEvent::Button::Left ? CK_MOUSE_B1 : CK_MOUSE_B2;
+
         m_mouse_pressed = false;
         _queue_allocation();
     }
@@ -1722,6 +1732,19 @@ command_type Menu::get_command(int keyin)
     if (keyin == -1)
         return CMD_MENU_EXIT;
 
+    // mouse clicks from UIMenu with a menu item selected
+    if (keyin == CK_MOUSE_B1)
+    {
+        command_type cmd = is_set(MF_MULTISELECT)
+                            ? CMD_MENU_TOGGLE_SELECTED : CMD_MENU_SELECT;
+        if (menu_action == ACT_EXAMINE && _cmd_converts_to_examine(cmd))
+            cmd = CMD_MENU_EXAMINE;
+
+        return cmd;
+    }
+    else if (keyin == CK_MOUSE_B2)
+        return CMD_MENU_EXAMINE;
+
     // for multiselect menus, we first check in the multiselect-specific keymap,
     // and if this doesn't find anything, the general menu keymap.
     if (is_set(MF_MULTISELECT))
@@ -1812,12 +1835,8 @@ bool Menu::process_key(int keyin)
     case 0:
         return true;
 #endif
-    case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
-        // alert: tiles mouse clicks are not handled here! they are translated
-        // to hotkeys by lower-level tiles code and then dealt with in
-        // `m_ui.popup->on_keydown_event`.
-        // TODO: fix this insanity
+        // click event from ui.cc
         break;
 
 #ifdef TOUCH_UI
