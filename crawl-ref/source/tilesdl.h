@@ -211,16 +211,19 @@ public:
     FontWrapper* get_stat_font() const { return m_stat_font; }
     FontWrapper* get_tip_font() const { return m_tip_font; }
     FontWrapper* get_lbl_font() const { return m_lbl_font; }
+    FontWrapper* get_glyph_font() const { return m_glyph_font; }
 
     const ImageManager* get_image_manager() { return m_image; }
     int to_lines(int num_tiles, int tile_height = TILE_Y);
 
     int handle_mouse(wm_mouse_event &event);
 
+    void grid_to_screen(const coord_def &gc, coord_def *pc) const;
+
 protected:
     void reconfigure_fonts();
     FontWrapper* load_font(const char *font_file, int font_size,
-                  bool default_on_fail);
+                  bool default_on_fail, bool use_cached=true);
 
     bool m_map_mode_enabled;
 
@@ -290,6 +293,7 @@ protected:
     FontWrapper* m_stat_font = nullptr;
     FontWrapper* m_tip_font = nullptr;
     FontWrapper* m_lbl_font = nullptr;
+    FontWrapper* m_glyph_font = nullptr;
 
     int m_tab_margin;
     int m_stat_col;
