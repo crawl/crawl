@@ -358,8 +358,8 @@ string formatted_string::to_colour_string() const
 {
     // this is necessary because of the default of LIGHTGRAY in last_colour.
     // (If this were changed to write closing tags, it might not be?)
-    string st = "<lightgray>";
     const int size = ops.size();
+    string st = size > 0 && ops[0].type == FSOP_TEXT ? "<lightgray>" : "";
     for (int i = 0; i < size; ++i)
     {
         switch (ops[i].type)
