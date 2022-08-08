@@ -1804,6 +1804,7 @@ bool Menu::process_key(int keyin)
 
     switch (keyin)
     {
+    case CK_NO_KEY:
     case CK_REDRAW:
     case CK_RESIZE:
         return true;

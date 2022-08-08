@@ -1401,8 +1401,11 @@ public:
         {
             // rebinding mouse click generally won't work
             // TODO: CK_MOUSE_Bn keys don't generally seem implemented
-            if (is_synthetic_key(keyin) || keyin == CK_MOUSE_CLICK || keyin == 0)
+            if (is_synthetic_key(keyin) || keyin == CK_MOUSE_CLICK
+                || keyin == 0 || keyin == CK_NO_KEY)
+            {
                 return true;
+            }
             // stateful key processing:
             // * in raw action input mode, fill keys into raw_tmp
             // * in key input mode, fill exactly one key into `key`, either
