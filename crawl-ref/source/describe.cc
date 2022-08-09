@@ -1208,6 +1208,7 @@ static string _describe_brand(brand_type brand)
     case SPWPN_FREEZING:
     case SPWPN_PAIN:
     case SPWPN_VORPAL:
+    case SPWPN_VENOM:
     {
         const string brand_name = uppercase_first(brand_type_name(brand, true));
         return make_stringf(" + %s", brand_name.c_str());
@@ -1219,6 +1220,16 @@ static string _describe_brand(brand_type brand)
 
 static string _describe_missile_brand(const item_def &item)
 {
+    switch (item.brand)
+    {
+    case SPMSL_POISONED:
+    case SPMSL_CURARE:
+    case SPMSL_SILVER:
+    case SPMSL_CHAOS:
+        break;
+    default: // Other brands don't deal extra damage.
+        return "";
+    }
      const string brand_name = missile_brand_name(item, MBN_BRAND);
 
      if (brand_name.empty())
