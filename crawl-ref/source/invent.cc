@@ -966,8 +966,11 @@ int InvMenu::getkey() const
 {
     auto mkey = lastch;
 
-    if (is_set(MF_ARROWS_SELECT) && mkey == CK_ENTER)
+    if (is_set(MF_ARROWS_SELECT) && mkey == CK_ENTER
+        || mkey == CK_MOUSE_B1)
+    {
         return mkey;
+    }
     if (type == menu_type::know && mkey == 0) // ??
         return mkey;
 
@@ -1230,7 +1233,7 @@ bool any_items_of_type(int selector, int excluded_slot, bool inspect_floor)
 
 // Use title = nullptr for stock Inventory title
 // type = menu_type::drop allows the multidrop toggle
-static unsigned char _invent_select(const char *title = nullptr,
+static int _invent_select(const char *title = nullptr,
                                     menu_type type = menu_type::invlist,
                                     int item_selector = OSEL_ANY,
                                     int excluded_slot = -1,
@@ -1768,13 +1771,13 @@ int prompt_invent_item(const char *prompt,
         return PROMPT_NOTHING;
     }
 
-    unsigned char  keyin = 0;
-    int            ret = PROMPT_ABORT;
+    int keyin = 0;
+    int ret = PROMPT_ABORT;
 
     int current_type_expected = type_expect;
-    bool           need_redraw = false;
-    bool           need_prompt = true;
-    bool           need_getch  = true;
+    bool need_redraw = false;
+    bool need_prompt = true;
+    bool need_getch  = true;
 
     if (auto_list)
     {
@@ -1872,9 +1875,11 @@ int prompt_invent_item(const char *prompt,
                     keyin = '*';
                 continue;
             }
-            else if (keyin == CK_ENTER && items.size() > 0)
+            else if ((keyin == CK_ENTER || keyin == CK_MOUSE_B1) && items.size() > 0)
             {
                 // hacky, but lets the inscription checks below trip
+                // TODO: this code should not rely on keyin, it breaks cmd
+                // bindings
                 keyin = items[0].slot;
             }
             else if (other_valid_char != 0 && keyin == other_valid_char)
