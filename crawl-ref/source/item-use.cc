@@ -79,7 +79,8 @@
 
 class UseItemMenu : public InvMenu
 {
-    void populate_list();
+    bool init_modes();
+    bool populate_list(bool check_only=false);
     void populate_menu();
     bool process_key(int key) override;
     void update_sections();
@@ -120,6 +121,7 @@ public:
 private:
     MenuEntry *inv_header;
     MenuEntry *floor_header;
+    vector<operation_types> available_modes;
 };
 
 static string _default_use_title(operation_types oper)
@@ -140,6 +142,21 @@ static string _default_use_title(operation_types oper)
         return "buggy";
     }
 }
+
+static string _oper_name(operation_types oper)
+{
+    switch (oper)
+    {
+    case OPER_WIELD: return "wield";
+    case OPER_WEAR:  return "wear";
+    case OPER_PUTON: return "put on";
+    case OPER_QUAFF: return "quaff";
+    case OPER_READ:  return "read";
+    default:
+        return "buggy";
+    }
+}
+
 
 static int _default_osel(operation_types oper)
 {
@@ -175,42 +192,57 @@ static vector<operation_types> _oper_to_mode(operation_types o)
     return result;
 }
 
+bool UseItemMenu::init_modes()
+{
+    available_modes = _oper_to_mode(oper);
+    if (available_modes.empty())
+        return false;
+
+    unwind_var<operation_types> cur_oper(oper);
+    unwind_var<int> cur_filter(item_type_filter);
+
+    erase_if(available_modes, [this](operation_types o) {
+        oper = o;
+        item_type_filter = _default_osel(oper);
+        return !populate_list(true);
+    });
+
+    return available_modes.size() > 0;
+}
+
 bool UseItemMenu::cycle_mode(bool forward)
 {
-    auto starting_oper = oper;
-    auto starting_hover = last_hovered;
-    // a bit silly to rebuild this every time
-    auto modes = _oper_to_mode(oper);
-    if (modes.empty())
+    if (available_modes.size() <= 1)
         return false;
-    // find the current position in the cycle
-    while (modes.front() != oper)
-        rotate(modes.begin(), modes.begin() + 1, modes.end());
 
-    // try to find another mode that works
-    do
-    {
-        rotate(modes.begin(),
-            forward ? modes.begin() + 1 : modes.begin() + modes.size() - 1,
-            modes.end());
-        oper = modes.front();
-        item_type_filter = _default_osel(oper);
+    auto it = find(available_modes.begin(), available_modes.end(), oper);
+    if (it == available_modes.end())
+        return false; // or assert?
 
-        clear();
-        populate_list();
-        populate_menu();
-        update_sections();
-        set_title(_default_use_title(oper));
-        set_hovered(starting_hover);
-        // fixup hover in case headings have moved
-        if (last_hovered >= 0 && items[last_hovered]->level != MEL_ITEM)
-            if (is_set(MF_ARROWS_SELECT))
-                cycle_hover();
-            else
-                set_hovered(-1);
-    } while (items.size() == 0 && oper != starting_oper);
+    // ugly iterator clock math
+    if (forward)
+        it = it + 1 == available_modes.end() ? available_modes.begin() : it + 1;
+    else
+        it = it == available_modes.begin() ? available_modes.end() - 1 : it - 1;
 
-    return oper != starting_hover;
+    oper = *it;
+
+    auto starting_hover = last_hovered;
+    item_type_filter = _default_osel(oper);
+
+    clear();
+    populate_list();
+    populate_menu();
+    update_sections();
+    set_title(_default_use_title(oper));
+    set_hovered(starting_hover);
+    // fixup hover in case headings have moved
+    if (last_hovered >= 0 && items[last_hovered]->level != MEL_ITEM)
+        if (is_set(MF_ARROWS_SELECT))
+            cycle_hover();
+        else
+            set_hovered(-1);
+    return true;
 }
 
 UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
@@ -230,6 +262,7 @@ UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
     if (item_type_filter == OSEL_ANY)
         item_type_filter = _default_osel(oper);
 
+    init_modes();
     populate_list();
     populate_menu();
     // start hover on wielded item, if there is one, otherwise on -
@@ -237,37 +270,43 @@ UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
         set_hovered(1);
 }
 
-void UseItemMenu::populate_list()
+bool UseItemMenu::populate_list(bool check_only)
 {
+    if (check_only && oper == OPER_WIELD)
+        return true; // any char can go unarmed
+
     // Load inv items first
     for (const auto &item : you.inv)
     {
-        if (item.defined())
+        if (item.defined()
+            && (display_all || item_is_selected(item, item_type_filter)))
+        {
+            if (check_only)
+                return true;
             item_inv.push_back(&item);
+        }
     }
     // Load floor items...
-    item_floor = const_item_list_on_square(you.visible_igrd(you.pos()));
-    // ...only stuff that can go into your inventory though
-    erase_if(item_floor, [=](const item_def* it)
-    {
-        // Did we get them all...?
-        return !it->defined() || item_is_stationary(*it) || item_is_orb(*it)
-            || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
-            || it->base_type == OBJ_RUNES;
-    });
+    vector<const item_def*> floor = const_item_list_on_square(
+                                                you.visible_igrd(you.pos()));
 
-    // Filter by type
-    if (!display_all)
+    for (const auto *it : floor)
     {
-        erase_if(item_inv, [=](const item_def* item)
+        // ...only stuff that can go into your inventory though
+        if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
+            || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
+            || it->base_type == OBJ_RUNES)
         {
-            return !item_is_selected(*item, item_type_filter);
-        });
-        erase_if(item_floor, [=](const item_def* item)
-        {
-            return !item_is_selected(*item, item_type_filter);
-        });
+            continue;
+        }
+        if (!display_all && !item_is_selected(*it, item_type_filter))
+            continue;
+        if (check_only)
+            return true;
+        item_floor.push_back(it);
     }
+
+    return !check_only && (item_inv.size() > 0 || item_floor.size() > 0);
 }
 
 bool UseItemMenu::empty_check() const
@@ -389,7 +428,7 @@ void UseItemMenu::update_sections()
     for (; i < static_cast<int>(items.size()); i++)
         if (items[i]->level == MEL_ITEM)
             items[i]->set_enabled(!is_inventory);
-    const string cycle_hint = make_stringf(" (%s to select)",
+    const string cycle_hint = make_stringf("<lightgray> (%s to select)</lightgray>",
             menu_keyhelp_cmd(CMD_MENU_CYCLE_HEADERS).c_str());
 
     // a `,` will trigger quick activation, rather than cycle headers
@@ -506,6 +545,22 @@ string UseItemMenu::get_keyhelp(bool) const
     string r;
     if (oper == OPER_ANY)
         return r; // `*` is disabled for identify, enchant
+
+    if (available_modes.size() > 1)
+    {
+        vector<string> mode_names;
+        for (const auto &o : available_modes)
+        {
+            string n = _oper_name(o);
+            if (o == oper)
+                n = "<w>" + n + "</w>";
+            mode_names.push_back(n);
+        }
+        r += menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) + " "
+            + join_strings(mode_names.begin(), mode_names.end(), "|")
+            + "   ";
+    }
+
     // TODO: show cycle mode information, once this feature is more baked
     r += "[<w>*</w>] ";
     r += (display_all ? "show appropriate" : "show all");
