@@ -4905,7 +4905,7 @@ template <class C> void explore_discoveries::say_any(
     if (message.width() >= get_number_of_cols())
         mprf("Found %s %s.", number_in_words(size).c_str(), category);
     else
-        mpr(message);
+        formatted_mpr(message);
 }
 
 vector<string> explore_discoveries::apply_quantities(

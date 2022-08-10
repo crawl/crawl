@@ -100,13 +100,11 @@ void do_message_print(msg_channel_type channel, int param, bool cap,
                              bool nojoin, const char *format, va_list argp);
 
 void mpr(const string &text);
+// static inline void mpr(const char *text) { mpr(string(text)); }
 void mpr_nojoin(msg_channel_type channel, string text);
 
-// see also formatted_mpr in message.h (XX why do both exist)
-static inline void mpr(const formatted_string &text)
-{
-    mpr(text.to_colour_string());
-}
+// prevent implicit cast from formatted_string, use formatted_mpr instead
+void mpr(const formatted_string &) = delete;
 
 // 4.1-style mpr, currently named mprf for minimal disruption.
 void mprf(msg_channel_type channel, int param, PRINTF(2, ));
