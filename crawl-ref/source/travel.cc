@@ -4899,13 +4899,13 @@ template <class C> void explore_discoveries::say_any(
         return;
     }
 
-    const auto message = formatted_string::parse_string("Found " +
-                           comma_separated_line(coll.begin(), coll.end()) + ".");
+    const auto message = "Found " +
+                           comma_separated_line(coll.begin(), coll.end()) + ".";
 
-    if (message.width() >= get_number_of_cols())
+    if (formatted_string::parse_string(message).width() >= get_number_of_cols())
         mprf("Found %s %s.", number_in_words(size).c_str(), category);
     else
-        formatted_mpr(message);
+        mpr(message);
 }
 
 vector<string> explore_discoveries::apply_quantities(

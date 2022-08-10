@@ -1548,7 +1548,10 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     msg_colour_type colour = prepare_message(text, channel, param);
 
     string col = colour_to_str(colour_msg(colour));
-    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
+    // lack of a closing tag is intentional: this is a valid color string and
+    // makes fewer assumptions about `text` this way.
+    // TODO: this doesn't override any opening color in `text`...
+    text = "<" + col + ">" + text; // XXX
 
     msg::_append_to_tees(text + "\n", channel);
 
