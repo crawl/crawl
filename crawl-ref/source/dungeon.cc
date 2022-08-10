@@ -5757,13 +5757,6 @@ static dungeon_feature_type _pick_an_altar()
     return altar_for_god(god);
 }
 
-static bool _shop_sells_antiques(shop_type type)
-{
-    return type == SHOP_WEAPON_ANTIQUE
-            || type == SHOP_ARMOUR_ANTIQUE
-            || type == SHOP_GENERAL_ANTIQUE;
-}
-
 void place_spec_shop(const coord_def& where, shop_type force_type)
 {
     shop_spec spec(force_type);
@@ -5772,7 +5765,7 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
-    if (_shop_sells_antiques(shop))
+    if (!shoptype_identifies_stock(shop))
     {
         const int rand = random2avg(19, 2);
         return 15 + rand + random2(level_number);
@@ -5855,7 +5848,7 @@ static int _shop_num_items(const shop_spec &spec)
  */
 static int _choose_shop_item_level(shop_type shop_type_, int level_number)
 {
-    const int shop_multiplier = _shop_sells_antiques(shop_type_) ? 3 : 2;
+    const int shop_multiplier = shoptype_identifies_stock(shop_type_) ? 2 : 3;
     const int base_level = level_number
                             + random2((level_number + 1) * shop_multiplier);
 
@@ -5985,7 +5978,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         stocked[item.sub_type]++;
 
     // Identify the item, unless we don't do that.
-    if (!_shop_sells_antiques(shop_type_))
+    if (shoptype_identifies_stock(shop_type_))
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     // Now move it into the shop!
