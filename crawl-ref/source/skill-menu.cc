@@ -132,12 +132,10 @@ bool SkillMenuEntry::is_selectable(bool)
     if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return false;
 
-    if (!_show_skill(m_sk, skm.get_state(SKM_SHOW)))
-        return false;
-
     if (mastered())
         return false;
 
+    // if it's visible at this point, it's selectable.
     return true;
 }
 
@@ -688,6 +686,14 @@ void SkillMenu::init_experience()
     if (is_set(SKMF_EXPERIENCE) && !m_skill_backup.state_saved())
     {
         m_skill_backup.save();
+        if (you.auto_training)
+            for (int i = 0; i < NUM_SKILLS; ++i)
+            {
+                // only enable currently autotraining skills, not all skills
+                const skill_type sk = skill_type(i);
+                if (!you.training[sk])
+                    you.train[sk] = TRAINING_DISABLED;
+            }
         you.auto_training = false;
         reset_training();
         you.clear_training_targets();
@@ -1512,7 +1518,13 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
     {
         int letter;
         letter = hotkeys[0];
-        MenuItem* next_item = m_ff->find_item_by_hotkey(++letter);
+        ASSERT(letter != '9'); // if you get here, make the skill menu smaller
+        if (letter == 'z')
+            letter = '0';
+        else
+            ++letter;
+
+        MenuItem* next_item = m_ff->find_item_by_hotkey(letter);
         if (next_item != nullptr)
         {
             if (m_ff->get_active_item() != nullptr && keyn == CK_ENTER)
