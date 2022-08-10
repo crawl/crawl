@@ -595,7 +595,7 @@ public:
         }
         else
         {
-            const string shown_more = get_text().to_colour_string();
+            const string shown_more = get_text().to_colour_string(LIGHTGRAY);
             tiles.json_write_string("more", shown_more);
             tiles.json_write_string("alt_more", shown_more);
         }
@@ -1155,7 +1155,7 @@ string pad_more_with(const string &s, const string &pad, int min_width)
     return pad_more_with(
         formatted_string::parse_string(s),
         formatted_string::parse_string(pad),
-        min_width).to_colour_string();
+        min_width).to_colour_string(LIGHTGRAY);
 }
 
 static string _keyhelp_format_key(const string &s)
@@ -3195,7 +3195,7 @@ void Menu::webtiles_write_title() const
 {
     // the title object only exists for backwards compatibility
     tiles.json_open_object("title");
-    tiles.json_write_string("text", _webtiles_title.to_colour_string());
+    tiles.json_write_string("text", _webtiles_title.to_colour_string(LIGHTGRAY));
     tiles.json_close_object("title");
 }
 

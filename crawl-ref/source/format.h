@@ -26,7 +26,7 @@ public:
     operator string() const;
     void display(int start = 0, int end = -1) const;
     string tostring(int start = 0, int end = -1) const;
-    string to_colour_string() const;
+    string to_colour_string(int default_colour=COLOUR_INHERIT) const;
 
     void cprintf(PRINTF(1, ));
     void cprintf(const string &s);

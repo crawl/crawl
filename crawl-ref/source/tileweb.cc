@@ -1242,7 +1242,7 @@ void TilesFramework::_send_player(bool force_full)
                 (int8_t) you.quiver_action.get()->get_item(), "quiver_item");
 
     _update_string(force_full, c.quiver_desc,
-                you.quiver_action.get()->quiver_description().to_colour_string(),
+                you.quiver_action.get()->quiver_description().to_colour_string(LIGHTGRAY),
                 "quiver_desc");
 
     _update_string(force_full, c.unarmed_attack,

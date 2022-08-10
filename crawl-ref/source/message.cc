@@ -1688,7 +1688,7 @@ int msgwin_get_line(string prompt, char *buf, int len,
 
 #ifdef USE_TILE_WEB
         tiles.json_open_object();
-        tiles.json_write_string("prompt", colour_prompt.to_colour_string());
+        tiles.json_write_string("prompt", colour_prompt.to_colour_string(colour_msg(colour)));
         tiles.push_ui_layout("msgwin-get-line", 0);
         popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
@@ -2314,6 +2314,8 @@ void set_msg_dump_file(FILE* file)
     _msg_dump_file = file;
 }
 
+// XX unclear why we have both this and an overload of mpr that takes a
+// formatted_string
 void formatted_mpr(const formatted_string& fs,
                    msg_channel_type channel, int param)
 {

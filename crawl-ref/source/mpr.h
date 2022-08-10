@@ -102,6 +102,7 @@ void do_message_print(msg_channel_type channel, int param, bool cap,
 void mpr(const string &text);
 void mpr_nojoin(msg_channel_type channel, string text);
 
+// see also formatted_mpr in message.h (XX why do both exist)
 static inline void mpr(const formatted_string &text)
 {
     mpr(text.to_colour_string());

@@ -3434,7 +3434,7 @@ command_type describe_item_popup(const item_def &item,
     formatted_string spells_desc;
     describe_spellset(spells, &item, spells_desc, nullptr);
 #ifdef USE_TILE_WEB
-    string desc_without_spells = fs_desc.to_colour_string();
+    string desc_without_spells = fs_desc.to_colour_string(LIGHTGRAY);
 #endif
     fs_desc += spells_desc;
 
