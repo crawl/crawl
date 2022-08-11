@@ -6495,6 +6495,12 @@ static void _tag_read_level(reader &th)
             if (type == RANDOM_MOBILE_MONSTER || type == RANDOM_COMPATIBLE_MONSTER)
                 type_vec[i] = RANDOM_DRACONIAN;
         }
+        // ensure that these exist to satisfy some ASSERTs
+        props[VAULT_MON_BASES_KEY].get_vector();
+        props[VAULT_MON_WEIGHTS_KEY].get_vector();
+        props[VAULT_MON_BANDS_KEY].get_vector();
+        props[VAULT_MON_PLACES_KEY].get_vector();
+
     }
 
 #endif
