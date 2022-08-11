@@ -221,11 +221,12 @@ MAP
 ....xxxxxxx...@
 ENDMAP
 
-NAME:  nicolae_shoals_entry_flooding
-TAGS:  shoals_entry patrolling transparent
-KMONS: ON = water nymph
-KFEAT: O = enter_shoals
-SUBST: x = x`, ` = W., N = N .:80
+NAME:   nicolae_shoals_entry_flooding
+TAGS:   shoals_entry patrolling transparent
+KMONS:  ON = water nymph
+KFEAT:  O = enter_shoals
+NSUBST: N = 2=N` / `
+SUBST:  x = x`, ` = W.
 MAP
  .........
 ...xx`xx...
@@ -238,29 +239,6 @@ MAP
 ..xxx`xxx..
 ...xx`xx...
  .........
-ENDMAP
-
-NAME:  nicolae_shoals_entry_how_ready_are_you
-TAGS:  shoals_entry transparent no_pool_fixup
-KMONS: K = kraken
-KFEAT: K = w
-KFEAT: O = enter_shoals
-SUBST: M = wwx, _ = x_
-CLEAR: _
-MAP
-_______________
-xxxxxxxxxxxxxxx
-x..........cccx
-x..MMMMMMM..ccx
-x..MwwwwwM...cx
-=..MwwwwwM...n.
-=..MwwKwwM..On@
-=..MwwwwwM...n.
-x..MwwwwwM...cx
-x..MMMMMMM..ccx
-x..........cccx
-xxxxxxxxxxxxxxx
-_______________
 ENDMAP
 
 NAME:  nicolae_shoals_entry_roost
@@ -2335,11 +2313,13 @@ swwwwwwwwwwwwwwww
 swwwwwwwwwwwwww
 ENDMAP
 
-NAME:  nicolae_shoals_bring_sunscreen
-TAGS:  transparent water_ok no_tide
-DEPTH: Shoals:2-
-KMONS: S = sun demon / sun moth
-SUBST: { = {[(, x = cxx..., S = S:7 .:6, _ = _.
+NAME:   nicolae_shoals_bring_sunscreen
+TAGS:   transparent water_ok no_tide
+DEPTH:  Shoals:2-
+KMONS:  D = sun demon
+KMONS:  M = sun moth
+SUBST:  { = {[(, x = cxx..., _ = _.
+NSUBST: S = M / 2=MDD / 2=D / 2=D. / .
 CLEAR: _
 MAP
       _....._

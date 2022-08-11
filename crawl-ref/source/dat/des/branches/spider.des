@@ -261,10 +261,10 @@ ENDMAP
 
 NAME:    nicolae_spider_entry_lesser_pyramids
 TAGS:    spider_entry transparent patrolling
-KMONS:   Os = pharaoh ant
-KMONS:   S = wolf spider / redback / tarantella / jumping spider
+KMONS:   O = pharaoh ant
+KMONS:   S = redback / tarantella / jumping spider
 KFEAT:   O = enter_spider_nest
-NSUBST:  S = 3=S / 3=SSss.
+NSUBST:  S = 2=S / 2=S. / .
 SUBST:   x = xx.
 MAP
        ...
@@ -2213,7 +2213,7 @@ DEPTH:  Spider
 KMONS:  R = radroach
 KMONS:  S = sun moth
 NSUBST: q = R / S / p
-SUBST:  x = xxx., p = R:15 S:15 ..
+SUBST:  x = xxx., p = RS....
 MAP
     .......
    ..xx.xx..

@@ -3057,7 +3057,9 @@ KMONS:   1 = kraken
 KFEAT:   @ = . / W
 KFEAT:   1 = w
 SHUFFLE: LMN, OPQ, RSZ
+NSUBST:  `- = 2=H / 2=H. / .
 SUBST:   LOR = @, MNPQSZ = t, - = .W, ` = wW, D = tww
+: dgn.delayed_decay(_G, 'H', 'hydra skeleton')
 MAP
      LLLLM
    ZZLLLLMMM
@@ -3079,7 +3081,7 @@ ENDMAP
 NAME:    nicolae_swamp_vermiculated
 TAGS:    transparent patrolling
 DEPTH:   Swamp
-KMONS:   ~ = steelbarb worm / swamp worm / tyrant leech
+KMONS:   ~ = steelbarb worm w:5 / swamp worm / tyrant leech
 KFEAT:   ~ = . w:50 / W
 SHUFFLE: DEFH
 NSUBST:  D = 1:@, E = 1:@, DEFH = 3=@. / .
