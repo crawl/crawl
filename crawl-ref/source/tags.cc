@@ -3938,7 +3938,17 @@ static void _tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     }
 
-    if (th.getMinorVersion() >= TAG_MINOR_SEEDS)
+
+    if (th.getMinorVersion() < TAG_MINOR_SEEDS)
+    {
+        // XX code duplication
+        you.game_seed = rng::get_uint64();
+        dprf("Upgrading from ancient unseeded game.");
+        crawl_state.seed = you.game_seed;
+        you.fully_seeded = false;
+        you.deterministic_levelgen = false; // TAG_MINOR_INCREMENTAL_PREGEN fixup
+    }
+    else
     {
 #endif
     count = unmarshallUByte(th);
@@ -3951,6 +3961,7 @@ static void _tag_read_you(reader &th)
         dprf("Upgrading from unseeded game.");
         crawl_state.seed = you.game_seed;
         you.fully_seeded = false;
+        you.deterministic_levelgen = false; // TAG_MINOR_INCREMENTAL_PREGEN fixup
         for (int i = 1; i < count; i++)
             unmarshallInt(th);
     }
