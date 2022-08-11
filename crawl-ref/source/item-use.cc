@@ -3825,6 +3825,11 @@ void tile_item_pickup(int idx, bool part)
 
 void tile_item_drop(int idx, bool partdrop)
 {
+    if (!check_warning_inscriptions(you.inv[idx], OPER_DROP))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
     int quantity = you.inv[idx].quantity;
     if (partdrop && quantity > 1)
     {

@@ -3351,7 +3351,13 @@ static bool _do_action(item_def &item, const command_type action)
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);                break;
     case CMD_WEAR_JEWELLERY:   puton_ring(slot);                    break;
     case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);             break;
-    case CMD_DROP:             drop_item(slot, item.quantity);      break;
+    case CMD_DROP:
+        // TODO: it would be better if the inscription was checked before the
+        // popup closes, but that is hard
+        if (!check_warning_inscriptions(you.inv[slot], OPER_DROP))
+            return true;
+        drop_item(slot, item.quantity);
+        break;
     case CMD_ADJUST_INVENTORY: adjust_item(slot);                   break;
     case CMD_EVOKE:            evoke_item(slot);                    break;
     default:
