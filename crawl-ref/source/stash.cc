@@ -293,7 +293,8 @@ void Stash::update()
             artefact_item_on_square = true;
     }
 
-    const bool stack_greed      =  static_cast<int>(items.size()) > 1
+    int current_size = items.size();
+    const bool stack_greed      =  current_size > 1
                                 && (Options.explore_greedy_visit & EG_STACK);
     const bool glowing_greed    =  glowing_item_on_square
                                 && (Options.explore_greedy_visit & EG_GLOWING);
@@ -302,7 +303,7 @@ void Stash::update()
 
     visited = pos == you.pos()
               || !(stack_greed || glowing_greed || artefact_greed)
-              || static_cast<int>(items.size()) == previous_size && visited;
+              || current_size <= previous_size && visited;
 }
 
 static bool _is_rottable(const item_def &item)
