@@ -3058,6 +3058,11 @@ static string _item_set_key(item_set_type typ)
     return make_stringf("ITEM_SET_%d_CHOSEN", typ);
 }
 
+static string _item_set_id_key(item_set_type typ)
+{
+    return make_stringf("ITEM_SET_%d_UNIDED", typ);
+}
+
 static int &_item_set_choice(item_set_type typ)
 {
     return you.props[_item_set_key(typ)].get_int();
@@ -3079,7 +3084,7 @@ void initialise_item_sets()
         const int chosen_idx = random2(subtypes.size());
         _item_set_choice(iset) = subtypes[chosen_idx];
     }
-    populate_excluded_items();
+    populate_sets_by_obj_type();
 }
 
 /// What item for the given set is enabled for generation?
@@ -3088,28 +3093,64 @@ int item_for_set(item_set_type typ)
     return _item_set_choice(typ);
 }
 
-static map<object_class_type, map<int, item_set_type>> excluded_items;
+static map<object_class_type, map<int, item_set_type>> sets_by_obj_type;
 
-void populate_excluded_items()
+void populate_sets_by_obj_type()
 {
-    excluded_items.clear();
+    sets_by_obj_type.clear();
     for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
     {
         const item_set_def &isd = item_sets[i];
         const auto iset = (item_set_type)i;
-        const int choice = _item_set_choice(iset);
         for (int subtype : isd.subtypes)
-            if (subtype != choice)
-                excluded_items[isd.cls][subtype] = iset;
+            sets_by_obj_type[isd.cls][subtype] = iset;
     }
+}
+
+/// What item set is this item in, if any?
+static item_set_type _get_set_for_item(object_class_type type, int sub_type)
+{
+    if (crawl_state.game_is_tutorial())
+        return NUM_ITEM_SET_TYPES;
+    return sets_by_obj_type[type][sub_type];
+}
+
+/// Mark items types that start in your inventory as only semi-known,
+/// so that players can't tell which items will spawn in sets the start of
+/// the game by checking their item knowledge screen.
+void mark_inventory_sets_unknown()
+{
+    for (auto &item : you.inv)
+    {
+        if (!item.defined())
+            continue;
+
+        const auto ist = _get_set_for_item(item.base_type, item.sub_type);
+        if (ist != NUM_ITEM_SET_TYPES)
+            you.props[_item_set_id_key(ist)] = false;
+    }
+}
+
+/// Clear the 'semi-known' status from set items found in the starting set
+/// now that the player has found one in the wild, thus giving them real info
+/// about what item sets will generate.
+void maybe_mark_set_known(object_class_type type, int sub_type)
+{
+    const auto ist = _get_set_for_item(type, sub_type);
+    if (ist == NUM_ITEM_SET_TYPES)
+        return;
+    const string key = _item_set_id_key(ist);
+    if (you.props.exists(key))
+        you.props.erase(key);
 }
 
 /// Is this item in an item set & not the one from that set chosen to generate this game?
 bool item_excluded_from_set(object_class_type type, int sub_type)
 {
-    if (crawl_state.game_is_tutorial())
+    const item_set_type ist = _get_set_for_item(type, sub_type);
+    if (ist == NUM_ITEM_SET_TYPES)
         return false;
-    return excluded_items[type].count(sub_type) > 0;
+    return _item_set_choice(ist) != sub_type;
 }
 
 /**
@@ -3118,10 +3159,16 @@ bool item_excluded_from_set(object_class_type type, int sub_type)
  */
 bool item_known_excluded_from_set(object_class_type type, int sub_type)
 {
-    if (!item_excluded_from_set(type, sub_type))
+    const item_set_type ist = _get_set_for_item(type, sub_type);
+    if (ist == NUM_ITEM_SET_TYPES)
         return false;
-    const item_set_type ist = excluded_items[type][sub_type];
+    // Don't factor in starting items.
+    if (you.props.exists(_item_set_id_key(ist)))
+        return false;
+
     const int chosen = _item_set_choice(ist);
+    if (chosen == sub_type)
+        return false;
     return you.type_ids[item_sets[ist].cls][chosen];
 }
 

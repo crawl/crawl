@@ -2041,6 +2041,7 @@ bool set_ident_type(object_class_type basetype, int subtype, bool identify,
         return false;
 
     you.type_ids[basetype][subtype] = identify;
+    maybe_mark_set_known(basetype, subtype);
     request_autoinscribe();
 
     // Our item knowledge changed in a way that could possibly affect shop
