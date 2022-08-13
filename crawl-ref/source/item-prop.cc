@@ -3112,7 +3112,10 @@ static item_set_type _get_set_for_item(object_class_type type, int sub_type)
 {
     if (crawl_state.game_is_tutorial())
         return NUM_ITEM_SET_TYPES;
-    return sets_by_obj_type[type][sub_type];
+    auto &by_subtype = sets_by_obj_type[type];
+    if (by_subtype.count(sub_type) == 0)
+        return NUM_ITEM_SET_TYPES;
+    return by_subtype[sub_type];
 }
 
 /// Mark items types that start in your inventory as only semi-known,
