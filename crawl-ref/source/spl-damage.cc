@@ -668,12 +668,12 @@ static int _ozo_adj_dam(int base_dam, int adj_actors, bool actual)
         return base_dam;
     case 1:
         if (actual)
-            return div_rand_round(3 * base_dam, 4);
-        return 3 * base_dam / 4;
+            return div_rand_round(2 * base_dam, 3);
+        return 2 * base_dam / 3;
     default:
         if (actual)
-            return div_rand_round(base_dam, 2);
-        return base_dam / 2;
+            return div_rand_round(base_dam, 3);
+        return base_dam / 3;
     }
 }
 
