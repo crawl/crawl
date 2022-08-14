@@ -75,6 +75,7 @@ Character
    - The -Scroll and -Potion mutations are now regular 2-tier mutations in
      the bad mutation pool. The Ru sacrifice corresponds to the 2nd tier.
    - Teleportitis and Berserkitis are reduced to 2-tier mutations
+ - Deep Dwarves are removed.
 
 Gods
 ----
