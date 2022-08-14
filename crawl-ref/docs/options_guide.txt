@@ -837,7 +837,7 @@ explore_greedy_visit += stacks
         Greedy exploration will visit squares with items based on
         these conditions.
 
-        stacks: makes explore_greedy visit stacks even if they don't
+        stacks: makes explore_greedy visit all stacks even if they don't
         necessarily have target auto pickup items
 
         glowing_items: makes explore_greedy visit glowing_items,
