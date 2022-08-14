@@ -1,4 +1,4 @@
-Stone Soup 0.29-a0 (through 0.29-a0-875-g74bf5736c)
+Stone Soup 0.29-a0 (through 0.29-a0-1033-gb6c65ffae6)
 ---------------------------------------------------
 
 Branches, Environment
@@ -38,7 +38,7 @@ Character
 - Chaos Knights start with a piece from Xom's chessboard.
 - Transmuters start with a potion of lignification.
 - Warpers sart with two more dispersal boomerangs (a total of 7).
-- Arkane Markspersons start with a scroll of vulnerability and a sling.
+- Arkane Markspersons start with a scroll of poison and a +1 sling.
 - Enchanters start with a second potion of invisibility.
 - Necromancers start with the new spell Necrotize in stead of Animate Skeleton
   and Pain
@@ -55,6 +55,8 @@ Character
   Zot clock for each floor, they get 600!
 - Formicids' base dexterity is increased by 3.
 - Formicids can again wield giant (spiked) clubs.
+- Palentongas' base dexterity is increased by 2, and their roll attack noise is
+  reduced by two-thirds.
 - Positive stat mutations now give +4 to the primary stat and -1 to the other
   two.
 - The -Scroll and -Potion mutations are now regular 2-tier mutations in the bad
@@ -90,6 +92,8 @@ Items
 - Fustibali are removed. Hunting slings are renamed to slings.
 - New item: scroll of poison. When read the scroll of poison fills every
   unoccupied space on the screen with poison clouds for 10-20 turns.
+- New item: scroll of butterflies, which summons a large cloud of butterflies.
+  Alternates with scrolls of fog - each game will contain one or the other.
 - +MP items remove MP when they are taken off.
 - Stones always mulch when thrown.
 - New wand: Light. Fires a bolt of blinding light, checking AC and EV but no
@@ -169,10 +173,15 @@ Spells
   the old Pain spell, but additionally gives the monster a short-lived status
   that causes it to animate as a skeleton on death (if it has a skeleton).
 - Sandblast no longer uses stones as ammo. Instead it takes twice as long to
-  cast as a normal spell, and has its range increased by one.
+  cast as a normal spell, and has its range and accuracy increased.
 - Airstrike's bonus from empty space is doubled.
+- Irradiate now causes dangerous contamination in 3-4 casts (was 4-5).
+- Flame Wave and Sticky Flame now do roughly 25% more damage.
+- Ozocubu's Refrigeration and Freezing Ramparts now check AC, but do more
+  damage. Refrigeration also now does reduced damage to creatures adjacent to
+  others, but no longer applies -Potion to the caster.
 - Hex miscasts now only slow the player, instead of also cancelling effects.
-- Removed: Animate Skeleton, Pain, Excruciating Wounds
+- Removed: Animate Skeleton, Pain, Excruciating Wounds.
 
 Stone Soup 0.28.0 (20220203)
 ----------------------------
