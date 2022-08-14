@@ -87,7 +87,7 @@ static const map<job_type, job_def> job_data =
     { },
     { "club", "leather armour", "wand of flame charges:15",
       "wand of charming charges:15 no_exclude",
-      "wand of iceblast charges:9 no_exclude" },
+      "wand of iceblast charges:5 no_exclude" },
     WCHOICE_NONE,
     { { SK_EVOCATIONS, 3 }, { SK_DODGING, 1 }, { SK_FIGHTING, 1 },
       { SK_ARMOUR, 1 }, { SK_STEALTH, 1 }, },
