@@ -11,7 +11,7 @@ Highlights
 
 Branches, Environment
 ---------------------
-- The Abyss has been reworked.
+* The Abyss has been reworked.
   - Piety and experience are once again awarded in the Abyss.
   - When the abyssal rune generates, it's announced and appears on the map.
   - New decorative 'runelight' features now indicate the rune is close by.
@@ -19,24 +19,24 @@ Branches, Environment
     swarming the player with dangerous foes.
   - When entering the abyss by any means, the player is sent at least as deep
     as their previous deepest abyss depth.
-- Dungeon shafts try not to send the player directly into monsters' sight.
-- All descents of new stairs and hatches are now fast, not just one per floor.
-- Zombies and skeletons are removed from normal Dungeon spawns.
-- Temple sizes now range from 6 to 21 altars, with a small chance of rare
+* Dungeon shafts try not to send the player directly into monsters' sight.
+* All descents of new stairs and hatches are now fast, not just one per floor.
+* Zombies and skeletons are removed from normal Dungeon spawns.
+* Temple sizes now range from 6 to 21 altars, with a small chance of rare
   temples with 0, 1, or 22 temple-god altars.
-- The Zot clock now only instantly kills the player if they're extremely badly
+* The Zot clock now only instantly kills the player if they're extremely badly
   drained. Otherwise, it applies very heavy draining and refreshes the clock.
-- 'Hell effect' events fire on entering floors, instead of on a timer.
+* 'Hell effect' events fire on entering floors, instead of on a timer.
 
 Character
 ---------
-- New species: Meteoran, stars fallen to earth in human form. Features:
+* New species: Meteoran, stars fallen to earth in human form. Features:
   - Strong attributes and very strong skill aptitudes.
   - Exploration healing, regaining HP and MP when viewing new territory.
   - Passive mapping of the dungeon around them.
   - Hunted by darkness: only 600 turns per floor until Zot catches them
     (instead of the usual 6,000).
-- Many backgrounds start with new consumable items:
+* Many backgrounds start with new consumable items:
   - All 'mage' backgrounds now start with a potion of magic.
   - Gladiators add a single throwing weapon (javelin, large rock, or boomerang)
     to their starting kit.
@@ -50,16 +50,16 @@ Character
   - Transmuters start with a potion of lignification.
   - Warpers start with two more dispersal boomerangs (a total of 7).
   - Enchanters start with a second potion of invisibility.
-- Ranged weapons are streamlined:
+* Ranged weapons are streamlined:
   - The Bows, Crossbows, and Slings skills are combined into a single Ranged
     Combat skill. Most species have aptitudes equal to their best previous
     ranged aptitude.
   - Hunters always start with a shortbow, and no longer have a short sword.
     They have higher dexterity and lower strength and intelligence.
   - Arcane Marksmen always start with a +1 sling.
-- Necromancers start with the new spell Necrotize instead of Animate Skeleton
+* Necromancers start with the new spell Necrotize instead of Animate Skeleton
   and Pain.
-- Some species were tweaked:
+* Some species were tweaked:
   - Merfolk polearms aptitude is decreased to +3, and long blades aptitude
     increased to +2.
   - Mummy necromancy enhancers now arrive at XL 3 and 13.
@@ -79,29 +79,29 @@ Character
 
 Gods
 ----
-- Kikubaaqudgha is overhauled:
+* Kikubaaqudgha is overhauled:
   - Corpse Delivery is removed and replaced with Unearth Wretches, which
     summons paralysed, 1 HP, 0 Will monsters that die in a few turns.
     Necromantic fodder...
   - Torment no longer requires a corpse sacrifice.
   - The pain brand can be applied to ranged weapons.
-- Lugonu's Bend Space is adjusted. It no longer does damage, and makes a better
+* Lugonu's Bend Space is adjusted. It no longer does damage, and makes a better
   effort to blink monsters away from the destination.
-- Uskayaw grants piety for damaging enemy summons.
-- Ru's Sacrifice Experience now only takes one XL (was two).
-- Various Ru sacrifices (including Experience) have their piety values tweaked.
+* Uskayaw grants piety for damaging enemy summons.
+* Ru's Sacrifice Experience now only takes one XL (was two).
+* Various Ru sacrifices (including Experience) have their piety values tweaked.
 
 Items
 -----
-- Ranged weapons are streamlined:
+* Ranged weapons are streamlined:
   - Launchers no longer use ammunition.
   - Launcher attack delay is increased by armour penalties.
   - Fustibali are removed. Hunting slings are renamed to slings.
   - Launchers have had their stats adjusted across the board. In particular,
     hand crossbows are made much rarer and more powerful.
   - Launchers all use the Ranged Combat skill.
-- Launcher, long blade, and short blade damage scale with Dex instead of Str.
-- New concept: "alternate items". Some item types are grouped into 'sets',
+* Launcher, long blade, and short blade damage scale with Dex instead of Str.
+* New concept: "alternate items". Some item types are grouped into 'sets',
   and only one type from each 'set' can generate in a game. Background
   starting items ignore this.
   - New item: scroll of butterflies, which summons a large cloud of
@@ -113,31 +113,31 @@ Items
   - New wand: Roots: Fires a 3x3 ball of roots, constricting enemies in the
     radius. Alternates with iceblast.
   - Wands of paralysis now alternate with wands of charming.
-- New item: scroll of poison. When read the scroll of poison fills every
+* New item: scroll of poison. When read the scroll of poison fills every
   unoccupied space on the screen with poison clouds for 10-20 turns.
-- New unrands:
+* New unrands:
   - The +8 trishula "Condemnation" {holy, Anguish Fly rN+}. Inflicts 4-8 turns
     of Anguish on those hit, making them take damage when dealing it.
   - The +3 mountain boots {steadfast, rC+}. Prevents the player from being
     involuntarily moved by physical means (trampling, shafts, harpoons, etc.).
   - New unrand: the +5 lochaber axe, which cleaves through all foes in reaching
     range. Uses the higher of the player's Polearms and Axes skill.
-- Items can have vault-redefined skins. Yuif now has hammers again (renamed
+* Items can have vault-redefined skins. Yuif now has hammers again (renamed
   maces). Sigmund and Reapers' scythes are now renamed halberds.
-- +MP items remove MP when they are taken off.
-- Stones always mulch when thrown.
-- Unrandart tweaks:
+* +MP items remove MP when they are taken off.
+* Stones always mulch when thrown.
+* Unrandart tweaks:
   - the Glaive of the Guard is reduced to +5.
   - the arbalest "Damnation"'s explosions now do 2d14 damage (was 3d14).
   - Gyre & Gimble are increased to +12.
   - The Woodcutter's axe is now a battleaxe.
   - the amulet of Vitality now gives two pips each of Regen and RegenMP, and is
     now evil.
-- Scrolls of holy word are removed.
+* Scrolls of holy word are removed.
 
 Monsters
 --------
-- New uniques:
+* New uniques:
   - Amaemon the Diabolical Poisoner, a poison-themed demonspawn unique
     appearing with a band of orange demons in mid-D, early Lair, and Orc:1.
   - Lodul the Thundrous, an ironbound thunderhulk sent to patrol outside the
@@ -155,19 +155,19 @@ Monsters
     of doom hounds. Appears in Depths, Crypt, and Zot.
   - Vv the Exile, an fire/ice spellcaster with Creeping Frost, Eruption, and
     Pyroclastic Surge. Appears in Depths, Crypt, and Zot.
-- Monster move energy is no longer randomized.
-- Monsters gain a 1/3 chance to gain a free attack on a player moving away from
+* Monster move energy is no longer randomized.
+* Monsters gain a 1/3 chance to gain a free attack on a player moving away from
   them. Wu Jian martial attacks & rampaging give immunity, and monsters that
   don't move fast enough to follow you can't attack.
-- New monster: starflower, a stationary plant with harpoon shot and reaching
+* New monster: starflower, a stationary plant with harpoon shot and reaching
   distortion melee. Found guarding valuable places in the abyss.
-- Gnoll shamans are renamed gnoll bouda, and have a new spell set.
-- Animated Armour now flies.
-- Monster wand power is reduced.
+* Gnoll shamans are renamed gnoll bouda, and have a new spell set.
+* Animated Armour now flies.
+* Monster wand power is reduced.
 
 Spells
 ------
-- Necromancy reworked:
+* Necromancy reworked:
   - New Spell: Necrotize (L1 Necromancy). Necrotize deals damage identically to
     the old Pain spell, but additionally gives the monster a short-lived status
     that causes it to animate as a skeleton on death (if it has a skeleton).
@@ -180,16 +180,16 @@ Spells
   - Corpse Rot is now Level 4 Necromancy/Poison/Air. For a duration after being
     cast, dead monsters have a chance of producing deadly miasma.
   - Death Channel cannot be re-cast while active.
-- Sandblast no longer uses stones as ammo. Instead, it takes twice as long to
+* Sandblast no longer uses stones as ammo. Instead, it takes twice as long to
   cast as a normal spell. Its range and accuracy are increased.
-- Airstrike's damage bonus from empty space around the target is doubled.
-- Irradiate now causes dangerous contamination in 3-4 casts (was 4-5).
-- Flame Wave and Sticky Flame now do roughly 25% more damage.
-- Ozocubu's Refrigeration and Freezing Ramparts now check AC, but do more
+* Airstrike's damage bonus from empty space around the target is doubled.
+* Irradiate now causes dangerous contamination in 3-4 casts (was 4-5).
+* Flame Wave and Sticky Flame now do roughly 25% more damage.
+* Ozocubu's Refrigeration and Freezing Ramparts now check AC, but do more
   damage. Refrigeration also now does reduced damage to creatures adjacent to
   others, but no longer applies -Potion to the caster.
-- Hex miscasts now only slow the player, instead of also cancelling effects.
-- Removed: Animate Skeleton, Pain, Excruciating Wounds.
+* Hex miscasts now only slow the player, instead of also cancelling effects.
+* Removed: Animate Skeleton, Pain, Excruciating Wounds.
 
 Stone Soup 0.28.0 (20220203)
 ----------------------------
