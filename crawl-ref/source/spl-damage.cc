@@ -645,6 +645,10 @@ static int _los_spell_damage_actor(const actor* agent, actor &target,
         }
     }
 
+    // So that summons don't restore HP.
+    if (beam.origin_spell == SPELL_DRAIN_LIFE && target.is_summoned())
+        return 0;
+
     return hurted;
 }
 
