@@ -2171,7 +2171,6 @@ void TextEntry::LineReader::killword()
 
     bool foundwc = false;
     char *word = cur;
-    int ew = 0;
     while (1)
     {
         char *np = prev_glyph(word, buffer);
@@ -2186,7 +2185,6 @@ void TextEntry::LineReader::killword()
             break;
 
         word = np;
-        ew += wcwidth(c);
     }
     memmove(word, cur, strlen(cur) + 1);
     length -= cur - word;
