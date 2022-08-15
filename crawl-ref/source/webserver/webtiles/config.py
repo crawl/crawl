@@ -4,6 +4,8 @@
 import collections
 import os.path
 import logging
+import sys
+import yaml
 
 from webtiles import load_games
 
@@ -16,6 +18,22 @@ source_module = None
 class ConfigModuleWrapper(object):
     def __init__(self, module):
         self.module = module
+
+        self._load_override_file(os.path.join(
+            self.get("server_path", ""),
+            "config.yml"))
+
+    def _load_override_file(self, path):
+        if not os.path.isfile(path):
+            return
+        with open(path) as f:
+            override_data = yaml.safe_load(f)
+            if not isinstance(override_data, dict):
+                sys.exit("config.yml must be a map")
+            for key, value in override_data.items():
+                if key == 'games':
+                    sys.exit("Can't override 'games' in override_file. Use games.d/ instead.")
+                setattr(self.module, key, value)
 
     def get(self, key, default):
         return getattr(self.module, key, default)

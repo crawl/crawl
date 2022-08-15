@@ -1,3 +1,10 @@
+# ### Server Operators ###
+# If you want to customise any settings in this file, create config.yml and
+# write your overrides in there. This file is version controlled, so you'll get
+# merge conflicts if you modify this file and later attempt to pull upstream
+# updates.
+#
+# ### Developers ###
 # Warning! Servers will not update or merge with the version controlled copy of
 # this file, so any parameters here should be presented as recommendations or
 # documentation of the default, not a default value, and option name changes
@@ -21,7 +28,7 @@ import os
 
 import yaml
 
-# directory to look for `games.d` files among other things.
+# Where to look for `games.d/`, `config.yml`, and other things.
 server_path = os.path.dirname(os.path.abspath(__file__))
 
 # dgl_mode = True
