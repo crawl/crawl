@@ -82,13 +82,13 @@ ENDMAP
 NAME:    kb_arrival_jail
 TAGS:    arrival no_monster_gen no_trap_gen
 ORIENT:  north
-SUBST:   - = apqrsuyzDEFHJKLMNOPQRSZ
-SHUFFLE: apqrsuyzDEFHJKLMNOPQRSZ
-KPROP:   apqrsuyzDEFHJKLMNOPQRSZ = no_tele_into
-KMASK:   apqrsuyzDEFHJKLMNOPQRSZ = no_item_gen
+SUBST:   - = apqrsuyzDEFHJKLMNOPQRSTZ
+SHUFFLE: apqrsuyzDEFHJKLMNOPQRSTZ
+KPROP:   apqrsuyzDEFHJKLMNOPQRSTZ = no_tele_into
+KMASK:   apqrsuyzDEFHJKLMNOPQRSTZ = no_item_gen
 KMONS:   a = human ; nothing
 KMONS:   p = elf ; nothing
-KMONS:   q = dwarf ; nothing
+KMONS:   q = meteoran ; nothing
 KMONS:   r = orc ; nothing
 KMONS:   s = merfolk ; nothing
 KMONS:   u = naga ; nothing
@@ -108,6 +108,7 @@ KMONS:   P = demigod ; nothing
 KMONS:   Q = octopode ; nothing
 KMONS:   R = formicid ; nothing
 KMONS:   S = gargoyle ; nothing
+KMONS:   T = palentonga ; nothing
 KMONS:   Z = vine stalker ; nothing
 MAP
  ccccc
