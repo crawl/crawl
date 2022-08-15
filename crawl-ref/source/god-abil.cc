@@ -2551,6 +2551,8 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
             continue;
         if (*which == POT_MAGIC && you.has_mutation(MUT_HP_CASTING))
             continue;
+        if (*which == POT_INVISIBILITY && you.has_mutation(MUT_GLOWING))
+            continue;
         if (*which == POT_LIGNIFY && you.undead_state(false) == US_UNDEAD)
             continue;
 
