@@ -282,13 +282,6 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
     }
 }
 
-static void _apply_pre_move_effects(coord_def new_pos)
-{
-    remove_water_hold();
-    _clear_constriction_data();
-    _trigger_opportunity_attacks(new_pos);
-}
-
 bool apply_cloud_trail(const coord_def old_pos)
 {
     if (you.duration[DUR_CLOUD_TRAIL])
@@ -1140,7 +1133,10 @@ void move_player_action(coord_def move)
         // when confusion causes no move.
         if (you.pos() != targ && targ_pass)
         {
-            _apply_pre_move_effects(targ);
+            remove_water_hold();
+            _clear_constriction_data();
+            if (!swap)
+                _trigger_opportunity_attacks(targ);
             // Check nothing weird happened during opportunity attacks.
             if (!you.pending_revival)
             {
