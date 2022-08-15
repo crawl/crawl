@@ -73,7 +73,8 @@ game_data_no_cache = True
 # Game configs
 # You can define game configs in two ways:
 # 1. As *.yml files in `games.d/`. (preferred)
-# 2. With a dictionary `games` in this file (for dgamelaunch servers).
+# 2. With a dictionary `games` in this file (for dgamelaunch-config servers).
+use_game_yaml = True # Set to False (or leave unset) to disable method 1 above.
 #    (use of an OrderedDict (pre python 3.6) is necessary to show the lobby in
 #    a stable order.)
 games = collections.OrderedDict([])

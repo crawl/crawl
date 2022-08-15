@@ -183,7 +183,10 @@ def load_game_data():
     # TODO: should the `load_games` module be refactored into config?
     global games
     games = get('games', collections.OrderedDict())
-    games = load_games.load_games(games)
+    if get('use_game_yaml', False):
+        games = load_games.load_games(games)
+    else:
+        logging.warn("Config setting use_game_yaml is False/unset, won't load game definitions in games.d/")
     # TODO: check_games here or in validate?
     if len(games) == 0:
         raise ValueError("No games defined!")
