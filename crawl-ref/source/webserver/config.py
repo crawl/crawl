@@ -74,36 +74,12 @@ game_data_no_cache = True
 # watch_socket_dirs = False
 
 # Game configs
-#
 # You can define game configs in two ways:
-# 1. With a static dictionary `games`
-# 2. As extra games to append to this list from `load_games.load_games` (which
-#    by default loads games as defined in `games.d/*.yaml`).
-
-# Example of a games dictionary:
-# use of an OrderedDict (pre python 3.6) is necessary to show the lobby in
-# a stable order.
-games = collections.OrderedDict([
-    ("dcss-web-trunk", dict(
-        name = "Play trunk",
-        crawl_binary = "./crawl",
-        rcfile_path = "./rcs/",
-        macro_path = "./rcs/",
-        morgue_path = "./rcs/%n",
-        inprogress_path = "./rcs/running",
-        ttyrec_path = "./rcs/ttyrecs/%n",
-        socket_path = "./rcs",
-        client_path = "./webserver/game_data/",
-        # dir_path = ".",
-        # cwd = ".",
-        morgue_url = None,
-        show_save_info = True,
-        allowed_with_hold = True,
-        # milestone_path = "./rcs/milestones",
-        send_json_options = True,
-        # env = {"LANG": "en_US.UTF8"},
-        )),
-])
+# 1. As *.yml files in `games.d/`. (preferred)
+# 2. With a dictionary `games` in this file (for dgamelaunch servers).
+#    (use of an OrderedDict (pre python 3.6) is necessary to show the lobby in
+#    a stable order.)
+games = collections.OrderedDict([])
 
 
 dgl_status_file = "./rcs/status"
