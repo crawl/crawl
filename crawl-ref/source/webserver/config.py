@@ -63,19 +63,12 @@ game_data_no_cache = True
 # Watch socket dirs for games not started by the server
 # watch_socket_dirs = False
 
-# use_game_yaml = True
-
 # Game configs
 #
 # You can define game configs in two ways:
 # 1. With a static dictionary `games`
 # 2. As extra games to append to this list from `load_games.load_games` (which
 #    by default loads games as defined in `games.d/*.yaml`).
-#
-# All options in this config are documented in games.d/base.yaml.
-# the directory name can be changed with `games_config_dir`, and set to None
-# to disable yaml loading.
-# games_config_dir = None
 
 # Example of a games dictionary:
 # use of an OrderedDict (pre python 3.6) is necessary to show the lobby in

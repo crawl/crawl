@@ -85,7 +85,6 @@ defaults = {
     },
     'server_socket_path': None,
     'watch_socket_dirs': False,
-    'use_game_yaml': True,
     'milestone_file': [],
     'status_file_update_rate': 5,
     'lobby_update_rate': 2,
@@ -166,8 +165,7 @@ def load_game_data():
     # TODO: should the `load_games` module be refactored into config?
     global games
     games = get('games', collections.OrderedDict())
-    if get('use_game_yaml', False):
-        games = load_games.load_games(games)
+    games = load_games.load_games(games)
     # TODO: check_games here or in validate?
     if len(games) == 0:
         raise ValueError("No games defined!")
