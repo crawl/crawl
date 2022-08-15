@@ -3,9 +3,9 @@
 # %n in paths and urls is replaced by the current username.
 games:
   # id must be unique for each game
-  - id: seeded-web-trunk
+  - id: dcss-web-trunk
     # The name for this game, displayed on the webtiles HTML interface
-    name: Custom seed
+    name: Play trunk
     # Games are called with the following argv:
     # [
     #   $crawl_binary,
@@ -69,9 +69,9 @@ games:
     # # Array of extra options to add to the start of the DCSS command. Prefer
     # # using 'options' unless the ordering is critical.
     # pre_options: []
-    # Array of extra options to add to the DCSS command.
-    options:
-      - -seed
+    # # Array of extra options to add to the DCSS command.
+    # options:
+    #   - -seed
     # # Map of extra environment variables to set when executing the DCSS command.
     # # All env vars from the webtiles server environment are automatically
     # # inherited.
@@ -90,6 +90,23 @@ games:
     # send_json_options is a legacy option. Always include this set to 'true'.
     # (Or submit a PR to remove it.)
     send_json_options: True
+  # id must be unique for each game
+  - id: seeded-web-trunk
+    name: Custom seed
+    crawl_binary: ./crawl
+    rcfile_path: ./rcs/
+    macro_path: ./rcs/
+    morgue_path: ./rcs/%n
+    socket_path: ./rcs
+    inprogress_path: ./rcs/running
+    ttyrec_path: ./rcs/ttyrecs/%n
+    client_path: ./webserver/game_data/
+    morgue_url: None
+    show_save_info: True
+    allowed_with_hold: True
+    send_json_options: True
+    options:
+      - -seed
   - id: tut-web-trunk
     name: Tutorial
     crawl_binary: ./crawl
