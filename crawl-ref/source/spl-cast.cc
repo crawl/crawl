@@ -2043,6 +2043,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     {
     case spret::success:
     {
+        if (spell == SPELL_SANDBLAST)
+            you.time_taken = you.time_taken * 3 / 2;
+
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 
         if ((demonic_magic == 3 && evoked_wand)
@@ -2448,14 +2451,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // Finally, try zaps.
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)
-    {
-        const spret zap_effect = zapping(zap, spell_zap_power(spell, powc),
-                                         beam, true, nullptr, fail);
-        if (zap_effect == spret::success && spell == SPELL_SANDBLAST)
-            you.time_taken *= 2;
-
-        return zap_effect;
-    }
+        return zapping(zap, spell_zap_power(spell, powc), beam, true, nullptr, fail);
 
     return spret::none;
 }

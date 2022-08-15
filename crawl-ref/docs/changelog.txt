@@ -180,8 +180,8 @@ Spells
   - Corpse Rot is now Level 4 Necromancy/Poison/Air. For a duration after being
     cast, dead monsters have a chance of producing deadly miasma.
   - Death Channel cannot be re-cast while active.
-* Sandblast no longer uses stones as ammo. Instead, it takes twice as long to
-  cast as a normal spell. Its range and accuracy are increased.
+* Sandblast no longer uses stones as ammo. Instead, it takes half again as long
+  to cast as a normal spell. Its range and accuracy are increased.
 * Airstrike's damage bonus from empty space around the target is doubled.
 * Irradiate now causes dangerous contamination in 3-4 casts (was 4-5).
 * Flame Wave and Sticky Flame now do roughly 25% more damage.
