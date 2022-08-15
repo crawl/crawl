@@ -191,6 +191,17 @@ Spells
 * Hex miscasts now only slow the player, instead of also cancelling effects.
 * Removed: Animate Skeleton, Pain, Excruciating Wounds.
 
+Tiles
+-----
+* Some mutations now have associated art.
+* Many more status effects (e.g. Dazed, rF-) now have associated icons.
+* Monsters with Reflect (e.g. from a shield) now display an icon.
+* All species now have new statue form tiles.
+* Many new alternate tiles for Djinni and Nagas.
+* The Lernaean Hydra now has unique tiles when skeletonized.
+* Borgnjor's Mausoleum and Tukima's Studio have new environmental art.
+* Runed door tiles have been reworked for greater visibility.
+
 Stone Soup 0.28.0 (20220203)
 ----------------------------
 
