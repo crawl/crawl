@@ -5659,9 +5659,11 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
     {
         string s;
         for (int ix = tpd_min.x; ix <= tpd_max.x; ix++)
+        {
             s += (travel_point_distance[ix][iy] == -1000
                     ? "   X" // starting point
                     : make_stringf(" %3d", travel_point_distance[ix][iy]));
+        }
         dprf("(%2d)%s", iy, s.c_str());
     }
 #endif
