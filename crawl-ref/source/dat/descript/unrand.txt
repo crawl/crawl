@@ -726,7 +726,7 @@ others, so his staff protects its wielder.
 trishula "Condemnation"
 
 A weapon to bring forth guilt from the guilty. It was first wielded by the archangel
-Lucreil, who, on seeing the suffering of the first mortals, led them as an army
+Lucriel, who, on seeing the suffering of the first mortals, led them as an army
 against the cruelty of the gods. The ragged survivors of Lucriel's army took this
 weapon with them into the wilderness, the sole remnant of an archangel's virtue.
 %%%%
