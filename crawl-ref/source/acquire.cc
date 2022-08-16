@@ -1245,8 +1245,15 @@ int acquirement_create_item(object_class_type class_wanted,
             acq_item.plus = max(static_cast<int>(acq_item.plus), 3 + random2(3));
         else if (class_wanted == OBJ_GOLD)
             acq_item.quantity = random_range(200, 1400, 2);
-        else if (class_wanted == OBJ_MISSILES && !divine)
-            acq_item.quantity *= 5;
+        else if (class_wanted == OBJ_MISSILES)
+        {
+            // TODO: consider doubling the gift timeout instead of adjusting
+            // gift quantity. That'd be an Oka nerf, but maybe it's fine?
+            if (divine)
+                acq_item.quantity = max(1, acq_item.quantity / 2);
+            else
+                acq_item.quantity *= 5;
+        }
         else if (quant > 1)
             acq_item.quantity = quant;
 
