@@ -3344,7 +3344,7 @@ bool mons_is_confused(const monster& m, bool class_too)
 
 bool mons_is_wandering(const monster& m)
 {
-    return m.behaviour == BEH_WANDER;
+    return m.behaviour == BEH_WANDER || m.behaviour == BEH_BATTY;
 }
 
 bool mons_is_seeking(const monster& m)

@@ -135,7 +135,7 @@ void seen_monsters_react(int stealth)
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if ((mi->asleep() || mons_is_wandering(**mi))
+        if ((mi->asleep() || mi->behaviour == BEH_WANDER)
             && check_awaken(*mi, stealth))
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
