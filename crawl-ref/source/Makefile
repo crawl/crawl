@@ -210,6 +210,7 @@ HOST := $(shell sh -c 'cc -dumpmachine || echo unknown')
 ARCH := $(HOST)
 
 ifdef CROSSHOST
+	# XX is there a way of integrating this with mac cross-compiling?
 	ARCH := $(CROSSHOST)
 	ifneq (,$(shell which $(ARCH)-pkg-config 2>/dev/null))
 	  PKGCONFIG = $(ARCH)-pkg-config
@@ -330,6 +331,7 @@ endif
 # Should be the first rule, but must come after $(GAME) is set.
 all: greet check-fonts $(GAME) docs webserver
 
+# XX these are set wrong on mac cross-compiling
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
 LIBSDL2 := contrib/install/$(ARCH)/lib/libSDL2.a
 LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
@@ -485,12 +487,15 @@ CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 CXX += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 endif
 
+ifdef BUILD_OLD_UNIVERSAL
+# XX remove?
 ifndef CROSSHOST
 # Don't need a universal build of host tools, so use DEPCC.
 HOSTCC = $(DEPCC)
 HOSTCXX = $(DEPCXX)
 export HOSTCC
 export HOSTCXX
+endif
 endif
 
 endif # MacOS
