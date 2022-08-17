@@ -216,9 +216,9 @@ Interface and Options
     targeter, such as scrolls of fear).
   - In menus for equipping and using items, a toggle allows switching between
     item type.
-  - In most menus that allow examining or describing a menu entry, entries can
-    be examined without changing the menu mode by using the `'` key, or by right
-    clicking (local tiles only).
+  - In most menus that list items, or allow describing a menu entry, entries can
+    be described without changing the menu mode by using the `'` key, or by
+    right clicking (tiles only).
   - Item type hotkeys in the inventory now scroll, instead of select.
   - The `*` menu for Firing is now used to select items to toss away.
 * The branch overview menu now shows zot clock values when they are low.

@@ -48,8 +48,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (item_selectable(item))
         {
             elem.addClass("selectable");
-            elem.off("click.menu_item");
-            elem.on("click.menu_item", item_click_handler);
+            elem.off("click.menu_item").off("contextmenu.menu_item");
+            elem.on("click.menu_item", item_click_handler)
+                .on("contextmenu.menu_item", item_click_handler);
         }
 
         if (item.tiles && item.tiles.length > 0
@@ -1044,14 +1045,24 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (menu.flags & enums.menu_flag.ARROWS_SELECT)
         {
             set_hovered($(this).index()); // should be unnecesssary?
-            // TODO: send a select event, keycode is rather ad hoc here
+            // TODO: send a select event, keycode is very ad hoc here
             if (menu.flags & enums.menu_flag.SINGLESELECT)
-                comm.send_message("key", { keycode: 13 });
+            {
+                if (event.which == 1)
+                    comm.send_message("key", { keycode: 13 });
+                else if (event.which == 3)
+                    comm.send_message("input", { text: '\'' });
+            }
             else if (menu.flags & enums.menu_flag.MULTISELECT)
-                comm.send_message("key", { keycode: 32 });
+            {
+                if (event.which == 1)
+                    comm.send_message("key", { keycode: 32 });
+                else if (event.which == 3)
+                    comm.send_message("input", { text: '\'' });
+            }
         }
-        // TODO: it would be better not to rely on hotkeys here as well
-        else if (item.hotkeys && item.hotkeys.length)
+        // TODO: don't rely on hotkeys here
+        else if (item.hotkeys && item.hotkeys.length && event.which == 1)
             comm.send_message("key", { keycode: item.hotkeys[0] });
     }
 
