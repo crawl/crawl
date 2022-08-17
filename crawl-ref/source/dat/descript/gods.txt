@@ -676,17 +676,19 @@ their enemies alerted, and their senses confounded by the
 axioms of Law; confusion, fainting and complete paralysis will be their lot.
 %%%%
 Wu Jian extra
-  .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
-  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
+# any god extra screens need :nowrap
+:nowrap
+  .......       .......  (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O..  extra damage.
   .......       .......
 
-  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
-  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. Multiple adjacent
-  .......       ....... foes can be attacked simultaneously this way.
+  .......       ...<lightred>@</lightred>...  (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
+  ...<lightred>@</lightred>O..  -->  ....O..  an enemy to strike them lightly. Multiple adjacent
+  .......       .......  foes can be attacked simultaneously this way.
 
-  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and
-  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
-  ..#....       ..#.... takes two turns. Activated via the (a)bility menu.
+  ..#....       ..#....  (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and strike
+  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>.  enemies adjacent to the landing spot. Vaulting takes
+  ..#....       ..#....  two turns. Activated via the (a)bility menu.
 
 These prevent enemies from getting free attacks on you while you move away.
 You cannot launch martial attacks while digging, rampaging or rolling.
