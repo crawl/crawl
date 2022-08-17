@@ -1976,6 +1976,9 @@ package-windows-zips: package-windows-tiles package-windows-console
 # building binaries for each target and then merging them with the `lipo`
 # utility.
 
+# Note: cross-compiling tiles on mac requires pkg-config and libpng to be
+# installed, e.g. via homebrew
+
 # XX parameterise these in some less dumb way
 # these two targets rely heavily on passing flags to submakes
 crawl-x86_64-apple-macos10.7:
