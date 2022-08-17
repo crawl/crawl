@@ -1284,7 +1284,7 @@ One's servants.
 troll leather armour
 
 The stiff and knobbly skin of a troll. It magically regenerates its wearer's
-flesh.
+flesh, once attuned to the wearer's body at full health.
 %%%%
 the unrestrained analects
 
