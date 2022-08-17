@@ -50,7 +50,7 @@ Character
   - Transmuters start with a potion of lignification.
   - Warpers start with two more dispersal boomerangs (a total of 7).
   - Enchanters start with a second potion of invisibility.
-* Ranged weapons are streamlined:
+* Ranged weapon skills and starts are streamlined (see also "Items" below):
   - The Bows, Crossbows, and Slings skills are combined into a single Ranged
     Combat skill. Most species have aptitudes equal to their best previous
     ranged aptitude.
@@ -93,7 +93,7 @@ Gods
 
 Items
 -----
-* Ranged weapons are streamlined:
+* Ranged weapons are streamlined (see also "Character" above):
   - Launchers no longer use ammunition.
   - Launcher attack delay is increased by armour penalties.
   - Fustibali are removed. Hunting slings are renamed to slings.
@@ -201,6 +201,27 @@ Tiles
 * The Lernaean Hydra now has unique tiles when skeletonized.
 * Borgnjor's Mausoleum and Tukima's Studio have new environmental art.
 * Runed door tiles have been reworked for greater visibility.
+
+Interface and Options
+---------------------
+* Common menu navigation commands are mapped via `CMD_MENU_...` commands, and
+  can be rebound by `bindkey` options (local tiles/console only)
+* Keycodes for rebinding keys are now the same across all builds.
+* Keybinds, macros, and keymaps now accept human-readable key names for many
+  special keys (e.g. "F1", "NP." for numpad `.`, etc.)
+* Numpad keys can now be bound separately in all builds.
+* Improvements to specific menus:
+  - The `F`ire menu now allows selecting any item with a targeter (including
+    items that don't show the targeter by default but but do have a useful
+    targeter, such as scrolls of fear).
+  - In menus for equipping and using items, a toggle allows switching between
+    item type.
+  - In most menus that allow examining or describing a menu entry, entries can
+    be examined without changing the menu mode by using the `'` key, or by right
+    clicking (local tiles only).
+  - Item type hotkeys in the inventory now scroll, instead of select.
+  - The `*` menu for Firing is now used to select items to toss away.
+* The branch overview menu now shows zot clock values when they are low.
 
 Stone Soup 0.28.0 (20220203)
 ----------------------------
