@@ -208,6 +208,8 @@ CHANCE: 80% (Abyss:2)
 CHANCE: 70% (Abyss:3)
 CHANCE: 60% (Abyss:4)
 CHANCE: 50% (Abyss:5)
+CHANCE: 40% (Abyss:6)
+CHANCE: 30% (Abyss:7)
 
 NAME: abyss_rune_dummy
 TAGS: abyss_rune unrand dummy
@@ -221,6 +223,8 @@ CHANCE: 90% (Abyss:2)
 CHANCE: 85% (Abyss:3)
 CHANCE: 80% (Abyss:4)
 CHANCE: 75% (Abyss:5)
+CHANCE: 70% (Abyss:6)
+CHANCE: 65% (Abyss:7)
 
 NAME:    abyss_fake_exit
 TAGS:    allow_dup

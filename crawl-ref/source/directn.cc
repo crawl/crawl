@@ -2092,7 +2092,7 @@ void direction_chooser::describe_target()
     if (!map_bounds(target()) || !env.map_knowledge(target()).known())
         return;
     if (full_describe_square(target(), false))
-        force_cancel = true;
+        moves.isCancel = force_cancel = true;
     need_all_redraw = true;
 }
 

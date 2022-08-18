@@ -1303,12 +1303,6 @@ void no_ability_msg()
             mpr("Sorry, you cannot become a bat while alive.");
         }
     }
-    else if (you.get_mutation_level(MUT_TENGU_FLIGHT)
-             || you.get_mutation_level(MUT_BIG_WINGS))
-    {
-        if (you.airborne())
-            mpr("You're already flying!");
-    }
     else
         mpr("Sorry, you're not good enough to have a special ability.");
 }

@@ -345,6 +345,7 @@ static void _setup_tutorial_miscs()
 static void _give_basic_knowledge()
 {
     identify_inventory();
+    mark_inventory_sets_unknown();
 
     // Removed item types are handled in _set_removed_types_as_identified.
 }

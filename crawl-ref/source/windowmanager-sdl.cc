@@ -67,6 +67,14 @@ void WindowManager::shutdown()
 static unsigned char _kmod_to_mod(int modifier)
 {
     unsigned char mod = 0;
+#ifdef TARGET_OS_WINDOWS
+    // AltGr looks like right alt + left ctrl on Windows. Don't treat it as
+    // a modifier at all.
+    // TODO: linux?
+    if (testbits(modifier, KMOD_RALT | KMOD_LCTRL))
+        return 0;
+#endif
+
     if (modifier & KMOD_SHIFT)
         mod |= TILES_MOD_SHIFT;
     if (modifier & KMOD_CTRL)

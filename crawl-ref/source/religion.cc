@@ -161,9 +161,9 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Okawaru
         {   { 1, ABIL_OKAWARU_HEROISM, "gain great but temporary skills" },
-            { 3, "Okawaru will now gift you ammunition as you gain piety.",
-                 "Okawaru will no longer gift you ammunition.",
-                 "Okawaru will gift you ammunition as you gain piety." },
+            { 3, "Okawaru will now gift you throwing weapons as you gain piety.",
+                 "Okawaru will no longer gift you throwing weapons.",
+                 "Okawaru will gift you throwing weapons as you gain piety." },
             { 4, ABIL_OKAWARU_FINESSE, "speed up your combat" },
             { 5, ABIL_OKAWARU_DUEL, "enter into single combat with a foe"},
             { 5, "Okawaru will now gift you equipment as you gain piety.",
@@ -1401,9 +1401,9 @@ static bool _give_trog_oka_gift(bool forced)
                                 || (you.piety >= piety_breakpoint(4)
                                     && random2(you.piety) > 120
                                     && one_chance_in(4));
-    // Oka can gift missiles, but if equipment is successful, we choose
+    // Oka can gift throwing weapons, but if equipment is successful, we choose
     // equipment unless the gift was forced by wizard mode. In that case,
-    // missiles, weapons, and armour all get equal weight below.
+    // throwing weapons, other weapons, and armour all get equal weight below.
     const bool want_missiles = you_worship(GOD_OKAWARU)
                                && (forced
                                    || !want_equipment && _want_missile_gift());
@@ -1424,7 +1424,7 @@ static bool _give_trog_oka_gift(bool forced)
     switch (gift_type)
     {
     case OBJ_MISSILES:
-        simple_god_message(" grants you ammunition!");
+        simple_god_message(" grants you throwing weapons!");
         break;
     case OBJ_WEAPONS:
         simple_god_message(" grants you a weapon!");

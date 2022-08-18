@@ -758,6 +758,7 @@ minotaur MONS_MINOTAUR
 %rim 0
 jorogumo MONS_JOROGUMO
 fenstrider_witch MONS_FENSTRIDER_WITCH
+palentonga MONS_PALENTONGA
 %rim 1
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER

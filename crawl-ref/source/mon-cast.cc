@@ -5229,7 +5229,7 @@ dice_def resonance_strike_base_damage(const monster &mons)
 
 static const int MIN_DREAM_SUCCESS_POWER = 25;
 
-static void _sheep_message(int num_sheep, int sleep_pow, actor& foe)
+static void _sheep_message(int num_sheep, int sleep_pow, bool seen, actor& foe)
 {
     string message;
 
@@ -5251,44 +5251,73 @@ static void _sheep_message(int num_sheep, int sleep_pow, actor& foe)
                                num_sheep == 1 ? "s its" : " their");
     }
 
-    // Messaging for non-player targets
-    if (!foe.is_player() && you.see_cell(foe.pos()))
+    if (foe.is_player())
     {
-        const char* pluralize = num_sheep == 1 ? "s": "";
-        const string foe_name = foe.name(DESC_THE);
-        if (sleep_pow)
+        const char* drowsy = sleep_pow ? " You feel drowsy..." : "";
+        if (!seen)
         {
-            mprf(foe.as_monster()->friendly() ? MSGCH_FRIEND_SPELL
-                                              : MSGCH_MONSTER_SPELL,
-                 "As the sheep sparkle%s and sway%s, %s falls asleep.",
-                 pluralize,
-                 pluralize,
-                 foe_name.c_str());
+            mprf(MSGCH_MONSTER_SPELL,
+                 "Motes of dream dust float from an unseen source.%s",
+                 drowsy);
+            return;
         }
-        else // if dust strength failure for non-player
+        mprf(MSGCH_MONSTER_SPELL, "%s%s", message.c_str(), drowsy);
+        return;
+    }
+
+    if (!you.see_cell(foe.pos()))
+        return;
+
+    const string foe_name = foe.name(DESC_THE);
+    const auto chan = foe.as_monster()->friendly() ? MSGCH_MONSTER_SPELL
+                                                   : MSGCH_FRIEND_SPELL;
+    if (!seen)
+    {
+        if (!sleep_pow)
         {
-            mprf(foe.as_monster()->friendly() ? MSGCH_FRIEND_SPELL
-                                              : MSGCH_MONSTER_SPELL,
-                 "The dream sheep attempt%s to lull %s to sleep.",
-                 pluralize,
-                 foe_name.c_str());
+            mprf(chan, "Motes of dream dust float from an unseen source.");
             mprf("%s is unaffected.", foe_name.c_str());
+            return;
         }
+
+        mprf(chan,
+             "As motes of dream dust float from an unseen source, %s falls asleep.",
+             foe_name.c_str());
+        return;
     }
-    else if (foe.is_player())
+
+    const char* pluralize = num_sheep == 1 ? "s": "";
+    if (sleep_pow)
     {
-        mprf(MSGCH_MONSTER_SPELL, "%s%s", message.c_str(),
-             sleep_pow ? " You feel drowsy..." : "");
+        mprf(chan,
+             "As the sheep sparkle%s and sway%s, %s falls asleep.",
+             pluralize,
+             pluralize,
+             foe_name.c_str());
+        return;
     }
+
+    mprf(chan,
+         "The dream sheep attempt%s to lull %s to sleep.",
+         pluralize,
+         foe_name.c_str());
+    mprf("%s is unaffected.", foe_name.c_str());
 }
 
 static void _dream_sheep_sleep(monster& mons, actor& foe)
 {
     // Shepherd the dream sheep.
     int num_sheep = 0;
+    bool seen = false;
     for (monster_near_iterator mi(foe.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
         if (mi->type == MONS_DREAM_SHEEP)
+        {
             num_sheep++;
+            if (!seen && you.can_see(**mi))
+                seen = true;
+        }
+    }
 
     // The correlation between amount of sheep and duration of
     // sleep is randomised, but bounds are 5 to 20 turns of sleep.
@@ -5300,7 +5329,7 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
         sleep_pow = 0;
 
     // Communicate with the player.
-    _sheep_message(num_sheep, sleep_pow, foe);
+    _sheep_message(num_sheep, sleep_pow, seen, foe);
 
     // Put the player to sleep.
     if (sleep_pow)

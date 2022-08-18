@@ -48,7 +48,7 @@ struct player_info
     string species;
     string god;
     bool under_penance;
-    uint8_t piety_rank;
+    int piety_rank;
 
     uint8_t form;
 

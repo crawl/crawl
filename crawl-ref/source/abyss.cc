@@ -416,7 +416,7 @@ void banished(const string &who, const int power)
             down_stairs(DNGN_ABYSSAL_STAIR);
         else
         {
-            // On Abyss:5 we can't go deeper; cause a shift to a new area
+            // On Abyss:$ we can't go deeper; cause a shift to a new area
             mprf(MSGCH_BANISHMENT, "You are banished to a different region of the Abyss.");
             abyss_teleport();
         }

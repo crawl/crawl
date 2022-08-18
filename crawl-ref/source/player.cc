@@ -2348,11 +2348,13 @@ static void _reduce_abyss_xp_timer(int exp)
         max(min((int)exp_needed(you.experience_level+1, 0) / 7,
                 you.experience_level * 425),
             you.experience_level*2 + 15) / 5;
+    // Reduce abyss exit spawns in the Deep Abyss (J:6+) to preserve challenge.
+    const int depth_factor = max(1, you.depth - 4);
 
     if (!you.props.exists(ABYSS_STAIR_XP_KEY))
         you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
     const int reqd_xp = you.props[ABYSS_STAIR_XP_KEY].get_int();
-    const int new_req = reqd_xp - div_rand_round(exp, xp_factor);
+    const int new_req = reqd_xp - div_rand_round(exp, xp_factor * depth_factor);
     dprf("reducing xp timer from %d to %d (factor = %d)",
          reqd_xp, new_req, xp_factor);
     you.props[ABYSS_STAIR_XP_KEY].get_int() = new_req;

@@ -664,8 +664,6 @@ int TilesFramework::getch_ck()
 #endif
                 break;
             case WME_KEYDOWN:
-                if (event.key.keysym.sym == CK_NO_KEY)
-                    break;
                 key        = event.key.keysym.sym;
                 m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
 

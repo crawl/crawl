@@ -420,8 +420,8 @@ it, and may scurry out to assist the wearer.
 %%%%
 shield of the Gong
 
-A heavy bronze gong that can be worn as a shield. According to some mystics,
-beating on such a gong can grant the wearer spiritual protection.
+A heavy bronze gong that can be worn as a shield. Locked away in a temple for
+many years, its bearer is shielded by decades of accumulated prayer.
 %%%%
 amulet of the Air
 
@@ -726,7 +726,7 @@ others, so his staff protects its wielder.
 trishula "Condemnation"
 
 A weapon to bring forth guilt from the guilty. It was first wielded by the archangel
-Lucreil, who, on seeing the suffering of the first mortals, led them as an army
+Lucriel, who, on seeing the suffering of the first mortals, led them as an army
 against the cruelty of the gods. The ragged survivors of Lucriel's army took this
 weapon with them into the wilderness, the sole remnant of an archangel's virtue.
 %%%%

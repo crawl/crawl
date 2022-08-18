@@ -615,7 +615,7 @@ animated armour
 
 The sweat and toil of the armourer working leather and steel infuses a spirit
 into their creation, a unique spark within every cuirass, pauldron and vambrace.
-A skilled wizard can draw those those sparks together, allowing their armour to
+A skilled wizard can draw those sparks together, allowing their armour to
 protect its wearer in a more aggressive fashion than armour customarily does.
 %%%%
 apis

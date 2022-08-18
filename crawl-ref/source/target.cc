@@ -37,13 +37,6 @@ static string _wallmsg(coord_def c)
     return "There is " + article_a(wall) + " there.";
 }
 
-static void _copy_explosion_map(explosion_map &source, explosion_map &dest)
-{
-    for (int i = 0; i < source.width(); i++)
-        for (int j = 0; j < source.height(); j++)
-            dest[i][j] = source[i][j];
-}
-
 bool targeter::set_aim(coord_def a)
 {
     // This matches a condition in direction_chooser::move_is_ok().
@@ -84,6 +77,46 @@ bool targeter::anyone_there(coord_def loc)
 bool targeter::affects_monster(const monster_info& /*mon*/)
 {
     return true; //TODO: false
+}
+
+static inline bool _ti_should_iterate(aff_type cur_aff, aff_type threshold)
+{
+    return cur_aff == AFF_NO
+            || threshold != AFF_MAYBE && cur_aff == AFF_MAYBE;
+}
+
+targeting_iterator::targeting_iterator(targeter &t, aff_type _threshold)
+            : rectangle_iterator(t.origin, get_los_radius(), true),
+            tgt(t), threshold(_threshold)
+{
+    if (_ti_should_iterate(is_affected(), threshold))
+        operator ++();
+}
+
+void targeting_iterator::operator ++()
+{
+    // superclass will still iterate if past the end; not sure why,
+    // but mimic that behavior here
+    aff_type cur_aff;
+    do
+    {
+        rectangle_iterator::operator++();
+        cur_aff = is_affected();
+    }
+    while (operator bool() && _ti_should_iterate(cur_aff, threshold));
+}
+
+aff_type targeting_iterator::is_affected()
+{
+    return in_bounds(**this) && operator bool()
+                                        ? tgt.is_affected(**this) : AFF_NO;
+}
+
+// @param threshold AFF_YES: iterate over only AFF_YES squares. AFF_MAYBE:
+//                  iterate over both AFF_YES and AFF_MAYBE squares.
+targeting_iterator targeter::affected_iterator(aff_type threshold)
+{
+    return targeting_iterator(*this, threshold);
 }
 
 // Is the given location a valid endpoint for a Palentonga charge?
@@ -266,7 +299,7 @@ void targeter_beam::set_explosion_aim(bolt tempbeam)
     tempbeam.determine_affected_cells(exp_map_min, coord_def(), 0,
                                       min_expl_rad, true, true);
     if (max_expl_rad == min_expl_rad)
-        _copy_explosion_map(exp_map_min, exp_map_max);
+        exp_map_max = exp_map_min;
     else
     {
         exp_map_max.init(INT_MAX);
@@ -464,7 +497,7 @@ bool targeter_smite::set_aim(coord_def a)
         beam.determine_affected_cells(exp_map_min, coord_def(), 0,
                                       exp_range_min, true, true);
         if (exp_range_min == exp_range_max)
-            _copy_explosion_map(exp_map_min, exp_map_max);
+            exp_map_max = exp_map_min;
         else
         {
             exp_map_max.init(INT_MAX);
@@ -787,7 +820,7 @@ bool targeter_unravelling::set_aim(coord_def a)
     exp_map_min.init(INT_MAX);
     beam.determine_affected_cells(exp_map_min, coord_def(), 0,
                                   exp_range_min, true, true);
-    _copy_explosion_map(exp_map_min, exp_map_max);
+    exp_map_max = exp_map_min;
 
     return true;
 }
@@ -905,7 +938,7 @@ bool targeter_fragment::set_aim(coord_def a)
             exp_range_min, true, true);
 
     // Min and max ranges are always identical.
-    _copy_explosion_map(exp_map_min, exp_map_max);
+    exp_map_max = exp_map_min;
 
     return true;
 }

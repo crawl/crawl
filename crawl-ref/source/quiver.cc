@@ -80,6 +80,8 @@ namespace quiver
         {
             return MB_FALSE;
         }
+        // n.b. here for completeness, this is actually handled by dodgy
+        // ancient fire order code...
         if (strstr(you.inv[slot].inscription.c_str(), cycling ? "+F" : "+f"))
             return MB_TRUE;
         return MB_MAYBE;
@@ -286,11 +288,9 @@ namespace quiver
                 continue;
 
             // =F prevents item from being in fire order.
-            if (!ignore_inscription_etc
-                    && _fireorder_inscription_ok(i_inv, true) == MB_FALSE)
-            {
+            const maybe_bool i_check = _fireorder_inscription_ok(i_inv, true);
+            if (!ignore_inscription_etc && i_check == MB_FALSE)
                 continue;
-            }
 
             for (unsigned int i_flags = 0; i_flags < Options.fire_order.size();
                  i_flags++)
@@ -2068,7 +2068,12 @@ namespace quiver
         for (auto it = history.rbegin(); it != history.rend(); ++it)
         {
             if ((*it) && (*it)->is_valid())
+            {
+                if (_fireorder_inscription_ok((*it)->get_item(), false) == MB_FALSE)
+                    continue;
+
                 return *it;
+            }
         }
         return nullptr;
     }
@@ -2319,15 +2324,22 @@ namespace quiver
     {
         if (!get()->is_valid())
         {
+            // XX should find_replacement respect +f?
             auto r = get()->find_replacement();
-            if (r && r->is_valid())
+            if (r && r->is_valid()
+                && _fireorder_inscription_ok(r->get_item(), false) != MB_FALSE)
+            {
                 set(r, true);
+            }
         }
         else if (check_autoswitch && autoswitched)
         {
             auto r = ammo_to_action(you.m_quiver_history.get_last_ammo());
-            if (r && r->is_valid())
+            if (r && r->is_valid()
+                && _fireorder_inscription_ok(r->get_item(), false) != MB_FALSE)
+            {
                 set(r);
+            }
         }
         set_needs_redraw();
     }
@@ -3155,8 +3167,12 @@ namespace quiver
 
     void on_weapon_changed()
     {
-        if (Options.launcher_autoquiver && you.weapon() && is_range_weapon(*you.weapon()))
+        if (Options.launcher_autoquiver && you.weapon()
+            && is_range_weapon(*you.weapon())
+            && _fireorder_inscription_ok(you.equip[EQ_WEAPON], false) != MB_FALSE)
+        {
             you.quiver_action.set(get_primary_action());
+        }
 
         if (!you.quiver_action.get()->is_valid())
         {
@@ -3186,6 +3202,7 @@ static bool _item_matches(const item_def &item, fire_type types, bool manual)
     // of is_valid code...
     ASSERT(item.defined());
 
+    // XX code duplication with _fireorder_inscription_ok
     if (types & FIRE_INSCRIBED)
         if (item.inscription.find(manual ? "+F" : "+f", 0) != string::npos)
             return true;

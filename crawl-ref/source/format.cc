@@ -354,12 +354,18 @@ string formatted_string::tostring(int s, int e) const
     return st;
 }
 
-string formatted_string::to_colour_string() const
+string formatted_string::to_colour_string(int default_colour) const
 {
-    // this is necessary because of the default of LIGHTGRAY in last_colour.
-    // (If this were changed to write closing tags, it might not be?)
-    string st = "<lightgray>";
+    // Setting a default colour is sometimes necessary because of the implicit
+    // default of LIGHTGRAY in various places for the first text op.
     const int size = ops.size();
+    string st;
+    if (default_colour != COLOUR_INHERIT && size > 0 && ops[0].type == FSOP_TEXT)
+    {
+        st += "<";
+        st += colour_to_str(default_colour);
+        st += ">";
+    }
     for (int i = 0; i < size; ++i)
     {
         switch (ops[i].type)
@@ -383,6 +389,7 @@ string formatted_string::to_colour_string() const
         }
         // apparently don't write any closing tags (which the parser can handle)
         case FSOP_COLOUR:
+            // XX is this really the best way to do this?
             st += "<";
             st += colour_to_str(ops[i].colour);
             st += ">";

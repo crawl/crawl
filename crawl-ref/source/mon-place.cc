@@ -322,28 +322,6 @@ void spawn_random_monsters()
     if (!x_chance_in_y(5, rate))
         return;
 
-    // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
-    // players that get banished there on the orb run.
-    // ...but in the deep abyss, do spawn nearby monsters sometimes!
-    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)
-        || player_in_branch(BRANCH_ABYSS)
-           && you.depth > 5
-           && one_chance_in(10 / (you.depth - 5)))
-    {
-        dprf(DIAG_MONPLACE, "Placing monster, rate: %d, turns here: %d",
-             rate, env.turns_on_level);
-
-        mgen_data mg(WANDERING_MONSTER);
-        mg.proximity = PROX_CLOSE_TO_PLAYER;
-        mg.foe = MHITYOU;
-        // Don't count orb run spawns in the xp_by_level dump
-        mg.xp_tracking = XP_UNTRACKED;
-        mons_place(mg);
-        viewwindow();
-        update_screen();
-        return;
-    }
-
     mgen_data mg(WANDERING_MONSTER);
     if (player_in_branch(BRANCH_PANDEMONIUM)
         && !env.properties.exists("vault_mon_weights")
@@ -351,6 +329,25 @@ void spawn_random_monsters()
     {
         mg.cls = env.mons_alloc[random2(PAN_MONS_ALLOC)];
         mg.flags |= MG_PERMIT_BANDS;
+    }
+
+    // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
+    // players that get banished there on the orb run.
+    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS))
+    {
+        mg.proximity = PROX_CLOSE_TO_PLAYER;
+        mg.foe = MHITYOU;
+        // Don't count orb run spawns in the xp_by_level dump
+        mg.xp_tracking = XP_UNTRACKED;
+    }
+
+    // Deep Abyss can also do orbrun-style spawns in LOS.
+    if (player_in_branch(BRANCH_ABYSS)
+        && you.depth > 5
+        && one_chance_in(10 / (you.depth - 5)))
+    {
+        mg.proximity = PROX_CLOSE_TO_PLAYER;
+        mg.foe = MHITYOU;
     }
 
     mons_place(mg);
@@ -742,9 +739,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (chose_ood_monster)
         mon->props[MON_OOD_KEY].get_bool() = true;
 
-    if (mg.needs_patrol_point()
-        || (mon->type == MONS_ALLIGATOR
-            && !testbits(mon->flags, MF_BAND_MEMBER)))
+    if (mg.needs_patrol_point())
     {
         mon->patrol_point = mon->pos();
 #ifdef DEBUG_PATHFIND
@@ -753,21 +748,19 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 #endif
     }
 
-    if (player_in_branch(BRANCH_ABYSS) && !mg.summoner
-        && in_bounds(mon->pos())
-        && !(mg.extra_flags & MF_WAS_IN_VIEW)
-        && !cell_is_solid(mon->pos()))
+    if (player_in_branch(BRANCH_ABYSS)
+        && !mg.summoner
+        && !(mg.extra_flags & MF_WAS_IN_VIEW))
     {
-        big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
-    }
+        if (in_bounds(mon->pos()) && !cell_is_solid(mon->pos()))
+            big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
 
-    if (player_in_branch(BRANCH_ABYSS) && you.can_see(*mon)
+        if (you.can_see(*mon)
              && !crawl_state.generating_level
-             && !mg.summoner
-             && !crawl_state.is_god_acting()
-             && !(mon->flags & MF_WAS_IN_VIEW)) // is this possible?
-    {
-        mon->seen_context = SC_ABYSS;
+             && !crawl_state.is_god_acting())
+        {
+            mon->seen_context = SC_ABYSS;
+        }
     }
 
     // Now, forget about banding if the first placement failed, or there are

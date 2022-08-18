@@ -2656,6 +2656,40 @@ y.....................................y
 yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 ENDMAP
 
+NAME:    sentei_temple_godly_chess
+TAGS:    temple_altars_17 no_hmirror no_vmirror no_rotate
+PLACE:   Temple
+ORIENT:  encompass
+KFEAT:   PpLlNnRrQq = granite_statue
+TILE:    Pp = dngn_statue_imp
+TILE:    Nn = dngn_statue_centaur
+TILE:    Ll = dngn_statue_tengu
+TILE:    Rr = dngn_statue_orb_guardian
+TILE:    Qq = dngn_statue_ancient_evil
+: set_feature_name("granite_statue", "a statue of a chess piece")
+KFEAT:   _ = B
+SHUFFLE: ce
+SUBST:   c = -, e = B
+COLOUR:  d' = white
+COLOUR:  - = brown
+FTILE:   GD'PNLRQK_ = floor_pebble_white
+FTILE:   Hpnlrq-B = floor_pebble_brown
+SUBST:   x : cvb
+MAP
+xxxxxxxxxxxx
+x..........x
+x._B_B_B_B.x
+x.B_e_c_B_.x
+x.'-'-'-'-.x
+x{-'c'e'-'.x
+x.'-'-P-'-.x
+x.-'-'-'-'.x
+x.PpPp'pPp.x
+x.rNlQBLnR.x
+x..........x
+xxxxxxxxxxxx
+ENDMAP
+
 ##############################################################################
 # <<5>> Twenty-one gods.
 

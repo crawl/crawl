@@ -5575,22 +5575,39 @@ static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
         {
             continue;
         }
-        cur.insert(cur.begin() + random2(cur.size()), *ai);
+        // randomize the order in which we visit orthogonal directions
+        cur.insert(cur.begin() + random2(cur.size() + 1), *ai);
     }
     for (auto cc : cur)
     {
         coords.insert(cc);
 
         const coord_def dp = cc - c;
+        // pack the orthogonal coord dp into an int in a slightly silly way.
+        // 0, -1: 11
+        // 0, 1:  9
+        // -1, 0: 14
+        // 1, 0:  6
         travel_point_distance[cc.x][cc.y] = (-dp.x + 2) * 4 + (-dp.y + 2);
     }
 }
+
+// #define DEBUG_JTD
+
+// pathfinding from `from` to `to` using only orthogonal directions, and
+// avoiding `mapmask`. Used by many layouts to ensure connectivity with
+// rogue-ish hallways. Also used in some layouts where hallways aren't really
+// the goal (e.g. shoals), there by a direct call to the pathfinding. Also used
+// to connect to vault entrances.
 
 // Resets travel_point_distance
 vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
                                              const coord_def &to,
                                              uint32_t mapmask)
 {
+    // isolate this rng to keep layouts that use it more stable -- it has an
+    // arbitrary number of draws, so is quite unpredictable otherwise
+    rng::subgenerator jtd_rng;
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     const coord_comparator comp(to);
     coord_set coords(comp);
@@ -5600,7 +5617,9 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
     while (true)
     {
         int &tpd = travel_point_distance[curr.x][curr.y];
-        tpd = !tpd? -1000 : -tpd;
+        // flip the sign of the path we are actually following. Used paths end
+        // up negative, unused paths, positive. -1000 is the starting point.
+        tpd = !tpd ? -1000 : -tpd;
 
         if (curr == to)
             break;
@@ -5617,18 +5636,72 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
     if (curr != to)
         return path;
 
+#ifdef DEBUG_JTD
+    // dprfs the travel_point_distance grid found by the above loop
+    string head;
+    coord_def tpd_min(1000,1000);
+    coord_def tpd_max(0,0);
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (travel_point_distance[ri->x][ri->y] != 0)
+        {
+            tpd_min.x = min(ri->x, tpd_min.x);
+            tpd_min.y = min(ri->y, tpd_min.y);
+            tpd_max.x = max(ri->x, tpd_max.x);
+            tpd_max.y = max(ri->y, tpd_max.y);
+        }
+    }
+    for (int ix = tpd_min.x; ix <= tpd_max.x; ix++)
+        head += make_stringf("(%2d)", ix);
+    dprf("/////%s", head.c_str()); // `/`s are there to prevent a split
+
+    for (int iy = tpd_min.y; iy <= tpd_max.y; iy++)
+    {
+        string s;
+        for (int ix = tpd_min.x; ix <= tpd_max.x; ix++)
+        {
+            s += (travel_point_distance[ix][iy] == -1000
+                    ? "   X" // starting point
+                    : make_stringf(" %3d", travel_point_distance[ix][iy]));
+        }
+        dprf("(%2d)%s", iy, s.c_str());
+    }
+#endif
+
+    // traverse the path found above (indicated by negative values) *in reverse
+    // order*.
     while (curr != from)
     {
         if (!map_masked(curr, mapmask))
+        {
             path.push_back(curr);
+#ifdef DEBUG_JTD
+            env.pgrid(curr) |= FPROP_HIGHLIGHT;
+#endif
+        }
 
         const int dist = travel_point_distance[curr.x][curr.y];
         ASSERT(dist < 0);
         ASSERT(dist != -1000);
+        // unpack the (orthogonal) direction to move from an int. There's an
+        // intentional sign flip here since are moving in reverse. Note that
+        // this also relies on some silly int rounding to simplify reversing
+        // the packing formula from _jtd_init_surrounds.
+        // original => packed => unpacked
+        // 0, -1    => 11     => 0,1
+        // 0, 1     => 9      => 0,-1
+        // -1, 0    => 14     => 1,0
+        // 1, 0     => 6      => -1,0
         curr += coord_def(-dist / 4 - 2, (-dist % 4) - 2);
+
     }
     if (!map_masked(curr, mapmask))
+    {
+#ifdef DEBUG_JTD
+        env.pgrid(curr) |= FPROP_HIGHLIGHT;
+#endif
         path.push_back(curr);
+    }
 
     return path;
 }
@@ -5757,13 +5830,6 @@ static dungeon_feature_type _pick_an_altar()
     return altar_for_god(god);
 }
 
-static bool _shop_sells_antiques(shop_type type)
-{
-    return type == SHOP_WEAPON_ANTIQUE
-            || type == SHOP_ARMOUR_ANTIQUE
-            || type == SHOP_GENERAL_ANTIQUE;
-}
-
 void place_spec_shop(const coord_def& where, shop_type force_type)
 {
     shop_spec spec(force_type);
@@ -5772,7 +5838,7 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
-    if (_shop_sells_antiques(shop))
+    if (!shoptype_identifies_stock(shop))
     {
         const int rand = random2avg(19, 2);
         return 15 + rand + random2(level_number);
@@ -5855,7 +5921,7 @@ static int _shop_num_items(const shop_spec &spec)
  */
 static int _choose_shop_item_level(shop_type shop_type_, int level_number)
 {
-    const int shop_multiplier = _shop_sells_antiques(shop_type_) ? 3 : 2;
+    const int shop_multiplier = shoptype_identifies_stock(shop_type_) ? 2 : 3;
     const int base_level = level_number
                             + random2((level_number + 1) * shop_multiplier);
 
@@ -5985,7 +6051,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         stocked[item.sub_type]++;
 
     // Identify the item, unless we don't do that.
-    if (!_shop_sells_antiques(shop_type_))
+    if (shoptype_identifies_stock(shop_type_))
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     // Now move it into the shop!

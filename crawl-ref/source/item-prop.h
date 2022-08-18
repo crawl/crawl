@@ -243,7 +243,9 @@ const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 
 void initialise_item_sets();
-void populate_excluded_items();
+void populate_sets_by_obj_type();
+void mark_inventory_sets_unknown();
+void maybe_mark_set_known(object_class_type type, int sub_type);
 int item_for_set(item_set_type typ);
 bool item_excluded_from_set(object_class_type type, int sub_type);
 bool item_known_excluded_from_set(object_class_type type, int sub_type);

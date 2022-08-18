@@ -769,8 +769,12 @@ static void _start_running(int dir, int mode)
     if (Hints.hints_events[HINT_SHIFT_RUN] && mode == RMODE_START)
         Hints.hints_events[HINT_SHIFT_RUN] = false;
 
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true)
+        || !can_rest_here(true)
+            && (mode == RMODE_REST_DURATION || mode == RMODE_WAIT_DURATION))
+    {
         return;
+    }
 
     const coord_def next_pos = you.pos() + Compass[dir];
 
@@ -1725,7 +1729,7 @@ static void _do_rest()
         return;
     }
 
-    if (i_feel_safe() && can_rest_here(true))
+    if (i_feel_safe() && can_rest_here())
     {
         if (you.is_sufficiently_rested(true) && ancestor_full_hp())
         {
@@ -1736,6 +1740,9 @@ static void _do_rest()
         else
             mpr("You start resting.");
     }
+    // intentional fallthrough for else case! Messaging is handled in
+    // _start_running, update the corresponding conditional there if you
+    // change this one.
 
     _start_running(RDIR_REST, RMODE_REST_DURATION);
 }

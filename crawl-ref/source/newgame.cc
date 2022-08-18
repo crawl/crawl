@@ -374,7 +374,7 @@ static bool _reroll_random(newgame_def& ng)
 
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
-    tiles.json_write_string("prompt", prompt.to_colour_string());
+    tiles.json_write_string("prompt", prompt.to_colour_string(LIGHTGREY));
     tiles.send_doll(doll, false, false);
     tiles.push_ui_layout("newgame-random-combo", 0);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
@@ -1433,7 +1433,7 @@ void UINewGameMenu::_allocate_region()
 #ifdef USE_TILE_WEB
 void UINewGameMenu::serialize()
 {
-    tiles.json_write_string("title", welcome.to_colour_string());
+    tiles.json_write_string("title", welcome.to_colour_string(LIGHTGREY));
     m_main_items->serialize("main-items");
     m_sub_items->serialize("sub-items");
 }
@@ -1891,8 +1891,8 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
-    tiles.json_write_string("title", title->get_text().to_colour_string());
-    tiles.json_write_string("prompt", prompt->get_text().to_colour_string());
+    tiles.json_write_string("title", title->get_text().to_colour_string(LIGHTGREY));
+    tiles.json_write_string("prompt", prompt->get_text().to_colour_string(LIGHTGREY));
     main_items->serialize("main-items");
     sub_items->serialize("sub-items");
     tiles.send_doll(doll, false, false);
@@ -2259,7 +2259,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     });
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
-    tiles.json_write_string("title", welcome.to_colour_string());
+    tiles.json_write_string("title", welcome.to_colour_string(LIGHTGREY));
     main_items->serialize("main-items");
     sub_items->serialize("sub-items");
     tiles.push_ui_layout("newgame-choice", 1);

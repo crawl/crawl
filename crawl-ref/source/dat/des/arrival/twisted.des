@@ -82,63 +82,64 @@ ENDMAP
 NAME:    kb_arrival_jail
 TAGS:    arrival no_monster_gen no_trap_gen
 ORIENT:  north
-SHUFFLE: ABCDEGHIKLMNOPQRSTUVWXY
-KFEAT:   ABCDEGHIKLMNOPQRSTUVWXY = floor
-KPROP:   ABCDEGHIKLMNOPQRSTUVWXY = no_tele_into
-KMASK:   ABCDEGHIKLMNOPQRSTUVWXY = no_item_gen
-KMONS:   A = human ; nothing
-KMONS:   B = elf ; nothing
-KMONS:   C = dwarf ; nothing
-KMONS:   D = orc ; nothing
-KMONS:   E = merfolk ; nothing
-KMONS:   G = kobold ; nothing
-KMONS:   H = spriggan ; nothing
-KMONS:   I = naga ; nothing
-KMONS:   K = ogre ; nothing
-KMONS:   L = troll
-KMONS:   M = minotaur ; nothing
-KMONS:   N = tengu ; nothing
-KMONS:   O = draconian ; nothing
-KMONS:   P = demonspawn ; nothing
-KMONS:   Q = mummy
-KMONS:   R = felid
-KMONS:   S = ghoul
-KMONS:   T = vampire spells:. ; nothing
-KMONS:   U = demigod ; nothing
-KMONS:   V = octopode ; nothing
-KMONS:   W = formicid ; nothing
-KMONS:   X = gargoyle ; nothing
-KMONS:   Y = vine stalker ; nothing
+SUBST:   - = apqrsuyzDEFHJKLMNOPQRSTZ
+SHUFFLE: apqrsuyzDEFHJKLMNOPQRSTZ
+KPROP:   apqrsuyzDEFHJKLMNOPQRSTZ = no_tele_into
+KMASK:   apqrsuyzDEFHJKLMNOPQRSTZ = no_item_gen
+KMONS:   a = human ; nothing
+KMONS:   p = elf ; nothing
+KMONS:   q = meteoran ; nothing
+KMONS:   r = orc ; nothing
+KMONS:   s = merfolk ; nothing
+KMONS:   u = naga ; nothing
+KMONS:   y = kobold ; nothing
+KMONS:   z = spriggan ; nothing
+KMONS:   D = ogre ; nothing
+KMONS:   E = troll
+KMONS:   F = minotaur ; nothing
+KMONS:   H = tengu ; nothing
+KMONS:   J = draconian ; nothing
+KMONS:   K = demonspawn ; nothing
+KMONS:   L = mummy
+KMONS:   M = felid
+KMONS:   N = ghoul
+KMONS:   O = vampire spells:. ; nothing
+KMONS:   P = demigod ; nothing
+KMONS:   Q = octopode ; nothing
+KMONS:   R = formicid ; nothing
+KMONS:   S = gargoyle ; nothing
+KMONS:   T = palentonga ; nothing
+KMONS:   Z = vine stalker ; nothing
 MAP
  ccccc
  c.{.c
  c...c
 ccc+ccc
-cAn.nBc
+can.npc
 ccc.ccc
-cCn.nDc
+cqn.nrc
 ccc.ccc
-cEn.nFc
+csn.nuc
 ccc.ccc
-cGn.nHc
+cyn.nzc
 ccc.ccc
-cIn.nJc
+cDn.nEc
 ccc.ccc
-cKn.nLc
+cFn.nHc
 ccc.ccc
-cMn.nNc
+cJn.nKc
 ccc.ccc
-cOn.nPc
+cLn.nMc
 ccc.ccc
-cQn.nRc
+cNn.nOc
 ccc.ccc
-cSn.nTc
+cPn.nQc
 ccc.ccc
-cUn.nVc
+cRn.nSc
 ccc.ccc
-cWn.nXc
+cZn.n-c
 ccc.ccc
-cYn.nZc
+c-n.n-c
 ccc+ccc
   c@c
 ENDMAP

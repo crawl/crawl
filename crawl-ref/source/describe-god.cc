@@ -1175,15 +1175,15 @@ static void _send_god_ui(god_type god, bool is_altar)
     tiles.json_write_string("favour", you_worship(god) ?
             _describe_favour(god) : _god_penance_message(god));
     tiles.json_write_string("powers_list",
-            _describe_god_powers(god).to_colour_string());
+            _describe_god_powers(god).to_colour_string(LIGHTGREY));
     tiles.json_write_string("info_table", "");
 
     tiles.json_write_string("powers",
-            _detailed_god_description(god).to_colour_string());
+            _detailed_god_description(god).to_colour_string(LIGHTGREY));
     tiles.json_write_string("wrath",
-            _god_wrath_description(god).to_colour_string());
+            _god_wrath_description(god).to_colour_string(LIGHTGREY));
     tiles.json_write_string("extra",
-            _god_extra_description(god).to_colour_string());
+            _god_extra_description(god).to_colour_string(LIGHTGREY));
     tiles.json_write_string("service_fee",
             _god_service_fee_description(god));
     tiles.push_ui_layout("describe-god", 1);
