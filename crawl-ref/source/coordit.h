@@ -19,7 +19,7 @@ public:
     coord_def operator *() const PURE;
     const coord_def* operator->() const PURE;
 
-    void operator ++ ();
+    virtual void operator ++ ();
     void operator ++ (int);
 private:
     coord_def current, topleft, bottomright;

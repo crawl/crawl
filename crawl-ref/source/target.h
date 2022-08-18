@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "beam.h"
+#include "coordit.h"
 #include "los-type.h"
 #include "reach-type.h"
 
@@ -20,6 +21,22 @@ enum aff_type // sign and non-zeroness matters
     // just keep AFF_YES the minimal "bright" value.
     AFF_LANDING,     // Valid shadow step landing site
     AFF_MULTIPLE,    // Passes through multiple times
+};
+
+class targeter;
+
+// radius_iterator might be better, but the code is too incomprehensible
+// to subclass
+class targeting_iterator : public rectangle_iterator
+{
+public:
+    targeting_iterator(targeter &t, aff_type _threshold);
+    void operator ++() override;
+    aff_type is_affected();
+
+private:
+    targeter &tgt;
+    aff_type threshold;
 };
 
 class targeter
@@ -42,6 +59,8 @@ public:
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool can_affect_unseen();
     virtual bool affects_monster(const monster_info& mon);
+
+    targeting_iterator affected_iterator(aff_type threshold = AFF_YES);
 protected:
     bool anyone_there(coord_def loc);
 };
