@@ -203,8 +203,8 @@ static const char *divine_title[][8] =
      "Contemplative",         "Epochal",               "Timeless",                 "@Adj@ Aeon"},
 
     // Ashenzari -- divination theme
-    {"Star-crossed",       "Cursed",                "Initiated",                "Soothsayer",
-        "Seer",               "Oracle",                "Illuminatus",              "Omniscient"},
+    {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
+        "Oracle",            "Illuminatus",            "Prince of Secrets",        "Omniscient"},
 
     // Dithmenos -- darkness theme
     {"Ember",              "Gloomy",                "Darkened",                 "Extinguished",
@@ -818,6 +818,14 @@ static formatted_string _describe_god_powers(god_type which_god)
 
         desc.cprintf("%s %s shields you from chaos.\n",
                 uppercase_first(god_name(which_god)).c_str(), how);
+
+        how =
+            (piety >= piety_breakpoint(5)) ? "often" :
+            (piety >= piety_breakpoint(3)) ? "sometimes" :
+            (piety >= piety_breakpoint(1)) ? "occasionally" :
+                                             "rarely";
+        desc.cprintf("%s %s shields you from Hell.\n",
+                uppercase_first(god_name(which_god)).c_str(), how);
         break;
     }
 
@@ -938,29 +946,6 @@ static formatted_string _describe_god_powers(god_type which_god)
         desc.cprintf("Your ancestor manifests to aid you.\n");
     }
         break;
-
-#if TAG_MAJOR_VERSION == 34
-    case GOD_PAKELLAS:
-    {
-        have_any = true;
-        desc.cprintf("%s prevents your magic from regenerating.\n",
-                uppercase_first(god_name(which_god)).c_str());
-        desc.cprintf("%s identifies device charges for you.\n",
-                uppercase_first(god_name(which_god)).c_str());
-        if (you.can_drink(false))
-        {
-            if (have_passive(passive_t::bottle_mp))
-                desc.textcolour(god_colour(which_god));
-            else
-                desc.textcolour(DARKGREY);
-
-            desc.cprintf("%s will collect and distill excess magic from your "
-                    "kills.\n",
-                    uppercase_first(god_name(which_god)).c_str());
-        }
-        break;
-    }
-#endif
 
     case GOD_LUGONU:
         have_any = true;
@@ -1190,15 +1175,15 @@ static void _send_god_ui(god_type god, bool is_altar)
     tiles.json_write_string("favour", you_worship(god) ?
             _describe_favour(god) : _god_penance_message(god));
     tiles.json_write_string("powers_list",
-            _describe_god_powers(god).to_colour_string());
+            _describe_god_powers(god).to_colour_string(LIGHTGREY));
     tiles.json_write_string("info_table", "");
 
     tiles.json_write_string("powers",
-            _detailed_god_description(god).to_colour_string());
+            _detailed_god_description(god).to_colour_string(LIGHTGREY));
     tiles.json_write_string("wrath",
-            _god_wrath_description(god).to_colour_string());
+            _god_wrath_description(god).to_colour_string(LIGHTGREY));
     tiles.json_write_string("extra",
-            _god_extra_description(god).to_colour_string());
+            _god_extra_description(god).to_colour_string(LIGHTGREY));
     tiles.json_write_string("service_fee",
             _god_service_fee_description(god));
     tiles.push_ui_layout("describe-god", 1);

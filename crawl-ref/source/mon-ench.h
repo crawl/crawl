@@ -8,6 +8,8 @@
 #define MAX_ENCH_DEGREE_DEFAULT  4
 #define MAX_ENCH_DEGREE_ABJURATION  6
 
+#define SIMULACRUM_POWER_KEY "simulacrum power"
+
 class actor;
 class monster;
 

@@ -132,12 +132,10 @@ bool SkillMenuEntry::is_selectable(bool)
     if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return false;
 
-    if (!_show_skill(m_sk, skm.get_state(SKM_SHOW)))
-        return false;
-
     if (mastered())
         return false;
 
+    // if it's visible at this point, it's selectable.
     return true;
 }
 
@@ -688,6 +686,14 @@ void SkillMenu::init_experience()
     if (is_set(SKMF_EXPERIENCE) && !m_skill_backup.state_saved())
     {
         m_skill_backup.save();
+        if (you.auto_training)
+            for (int i = 0; i < NUM_SKILLS; ++i)
+            {
+                // only enable currently autotraining skills, not all skills
+                const skill_type sk = skill_type(i);
+                if (!you.training[sk])
+                    you.train[sk] = TRAINING_DISABLED;
+            }
         you.auto_training = false;
         reset_training();
         you.clear_training_targets();
@@ -1226,16 +1232,12 @@ void SkillMenu::init_button_row()
         m_middle_button->add_hotkey('=');
         m_middle_button->set_id(SKM_SET_TARGET);
         m_middle_button->set_highlight_colour(YELLOW);
-        add_item(m_middle_button, 27, m_pos);
+        add_item(m_middle_button, 24, m_pos);
 
         // right button is either blank or shows target clearing options.
         m_clear_targets_button = new FormattedTextItem();
         m_clear_targets_button->set_id(SKM_CLEAR_TARGETS);
         m_clear_targets_button->add_hotkey('-');
-#ifndef USE_TILE_LOCAL
-        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT);
-        m_clear_targets_button->add_hotkey(CK_NUMPAD_SUBTRACT2);
-#endif
         m_clear_targets_button->set_highlight_colour(YELLOW);
         add_item(m_clear_targets_button, 25, m_pos);
         refresh_button_row();
@@ -1249,9 +1251,6 @@ void SkillMenu::init_switches()
     {
         sw = new SkillMenuSwitch("mode", '/');
         m_switches[SKM_MODE] = sw;
-#ifndef USE_TILE_LOCAL
-        sw->add_hotkey(CK_NUMPAD_DIVIDE);
-#endif
         sw->add(SKM_MODE_AUTO);
         if (!is_set(SKMF_SPECIAL) && !is_set(SKMF_SIMPLE))
             sw->add(SKM_MODE_MANUAL);
@@ -1278,9 +1277,6 @@ void SkillMenu::init_switches()
         add_item(sw, sw->size(), m_pos);
 
         sw = new SkillMenuSwitch("skills", '*');
-#ifndef USE_TILE_LOCAL
-        sw->add_hotkey(CK_NUMPAD_MULTIPLY);
-#endif
         m_switches[SKM_SHOW] = sw;
         sw->add(SKM_SHOW_DEFAULT);
         if (!is_set(SKMF_SIMPLE))
@@ -1522,7 +1518,13 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
     {
         int letter;
         letter = hotkeys[0];
-        MenuItem* next_item = m_ff->find_item_by_hotkey(++letter);
+        ASSERT(letter != '9'); // if you get here, make the skill menu smaller
+        if (letter == 'z')
+            letter = '0';
+        else
+            ++letter;
+
+        MenuItem* next_item = m_ff->find_item_by_hotkey(letter);
         if (next_item != nullptr)
         {
             if (m_ff->get_active_item() != nullptr && keyn == CK_ENTER)
@@ -1738,7 +1740,7 @@ void skill_menu(int flag, int exp)
     auto popup = make_shared<ui::Popup>(skill_menu_ui);
 
     skill_menu_ui->on_keydown_event([&done, &skill_menu_ui](const KeyEvent& ev) {
-        const auto keyn = ev.key();
+        const auto keyn = numpad_to_regular(ev.key(), true);
 
         skill_menu_ui->_expose();
 
@@ -1750,10 +1752,6 @@ void skill_menu(int flag, int exp)
             case CK_DOWN:
             case CK_LEFT:
             case CK_RIGHT:
-            case 1004:
-            case 1002:
-            case 1008:
-            case 1006:
                 return true;
             case CK_ENTER:
                 if (!skm.is_set(SKMF_EXPERIENCE))

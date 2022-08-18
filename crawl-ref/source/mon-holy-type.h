@@ -11,5 +11,8 @@ enum mon_holy_type_flags
     MH_DEMONIC           = 1<<3,
     MH_NONLIVING         = 1<<4, // golems and other constructs
     MH_PLANT             = 1<<5,
+    MH_LAST = MH_PLANT,
 };
-DEF_BITFIELD(mon_holy_type, mon_holy_type_flags, 7);
+DEF_BITFIELD(mon_holy_type, mon_holy_type_flags, 5);
+COMPILE_CHECK(mon_holy_type::exponent(mon_holy_type::last_exponent)
+                                            == mon_holy_type_flags::MH_LAST);

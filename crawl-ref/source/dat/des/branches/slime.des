@@ -44,29 +44,20 @@ end
 # Slime Pit entry vaults
 ##############################################################################
 
-# Weight balancer
-NAME:  slime_dummy
-TAGS:  slime_entry
-KFEAT: O = enter_slime_pits
-MAP
-O
-ENDMAP
-
-# Slime entries featuring an altar to Jiyva
-NAME:   slime_altar_1
+NAME:   slime_entry_1
 TAGS:   slime_entry
-WEIGHT: 30
-KFEAT:  Z = altar_jiyva
+WEIGHT: 40
+KFEAT:  _ = altar_jiyva / floor w:5
 KFEAT:  O = enter_slime_pits
 MAP
 ....
-.OZ.
+.O_.
 ....
 ENDMAP
 
-NAME:   slime_altar_2
+NAME:   slime_entry_2
 TAGS:   slime_entry
-KFEAT:  _ = altar_jiyva
+KFEAT:  _ = altar_jiyva / floor w:5
 KPROP:  1O_ = no_tele_into
 SUBST:  1 : 111223
 NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
@@ -82,11 +73,11 @@ c111m.
 ccccc
 ENDMAP
 
-NAME:  dpeg_slime_entry_enclosed_altar
+NAME:  dpeg_slime_entry_enclosed
 TAGS:  slime_entry
 KFEAT: O = enter_slime_pits
 KFEAT: S = slimy_wall
-KFEAT: _ = altar_jiyva
+KFEAT: _ = altar_jiyva / floor w:5
 MAP
   .....
  .ccccc.
@@ -106,6 +97,7 @@ WEIGHT: 2
 MONS:   eye of devastation, floating eye
 KFEAT:  O = enter_slime_pits
 KFEAT:  S = slimy_wall
+KFEAT:  _ = altar_jiyva / floor w:5
 MAP
  ....   ....
 ..xx..x..xx..
@@ -114,7 +106,7 @@ MAP
 ..x.S...S.x..
  ...........
  xxS.1O2.Sxx
- ...........
+ ....._.....
 ..x.S...S.x..
 .xxx.....xxx.
 .xxxx.x.xxxx.
@@ -126,6 +118,7 @@ NAME:   minmay_slime_entry_pillars
 TAGS:   slime_entry ruin_lair
 MONS:   jelly / slime creature
 KFEAT:  O = enter_slime_pits
+KFEAT:  _ = altar_jiyva / floor w:5
 MAP
 ...........
 .ccc...ccc.
@@ -133,7 +126,7 @@ MAP
 .ccc...ccc.
 ...........
 ..1..O..1..
-...........
+....._.....
 .ccc...ccc.
 .ccc.1.ccc.
 .ccc...ccc.
@@ -146,13 +139,14 @@ TAGS:   slime_entry ruin_lair
 WEIGHT: 5
 MONS:   jelly / endoplasm w:1 / nothing w:1
 KFEAT:  O = enter_slime_pits
+KFEAT:  _ = altar_jiyva / floor w:5
 MAP
 .............
 .xxxxx.xxxxx.
 .xxx1x.x11xx.
 .xx11x.xx1xx.
 .xx1x...x1xx.
-.xxxx....xxx.
+.xxxx.._.xxx.
 ......O......
 .xxxx...xxxx.
 .xx1.x.x.1xx.
@@ -165,7 +159,10 @@ ENDMAP
 NAME:   minmay_slime_entry_oklob_open
 TAGS:   slime_entry
 WEIGHT: 5
+NSUBST: 1 = 1:_ / *:1
 MONS:   oklob plant / nothing w:20
+KMONS:  _ = oklob plant / nothing w:20
+KFEAT:  _ = altar_jiyva / floor w:5
 KFEAT:  O = enter_slime_pits
 MAP
  .....
@@ -184,12 +181,13 @@ WEIGHT: 5
 MONS:   oklob plant / nothing w:20
 KFEAT:  O = enter_slime_pits
 KFEAT:  S = slimy_wall
+KFEAT:  _ = altar_jiyva / floor w:5
 MAP
 xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx......xxxxxx
 xxSSxx...........xxxx
 xxS111......xx....xxx
-xSS.11....xxxx....xxx
+xSS.11_...xxxx....xxx
 xS..O11.xxxxx....xxxx
 xSS..1xxxxxx.....xxxx
 xxSSSSxxxxx.....xxxxx
@@ -204,11 +202,12 @@ ORIENT: northwest
 WEIGHT: 5
 KFEAT:  O = enter_slime_pits
 KFEAT:  S = slimy_wall
+KFEAT:  _ = altar_jiyva / floor w:5
 MAP
 xxxxxxxxxxx
 xSSSxxxxxx
 xS...xxxx
-xS.O...xx
+xS.O_..xx
 xxxxxx.xx
 xxxx....x
 xxx...xx.
@@ -223,6 +222,7 @@ SUBST: A = x, BCD = .
 KFEAT: O = enter_slime_pits
 KMONS: 1 = endoplasm / jelly / nothing
 KFEAT: x = slimy_wall
+KFEAT: _ = altar_jiyva / floor w:5
 MAP
   .........
  ...........
@@ -231,7 +231,7 @@ MAP
 ....B.1.B....
 ..DC.1.1.CD..
 ..AB1.O.1BA..
-..DC.1.1.CD..
+..DC.1_1.CD..
 ....B.1.B....
 ...A.CBC.A...
 .....DAD.....

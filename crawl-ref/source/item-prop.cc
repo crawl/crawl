@@ -30,7 +30,6 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills.h"
-#include "spl-wpnench.h"
 #include "stringutil.h"
 #include "tag-version.h"
 #include "terrain.h"
@@ -472,13 +471,13 @@ static const weapon_def Weapon_prop[] =
             { SPWPN_DISTORTION,      1 },
             { SPWPN_ANTIMAGIC,       1 },
         }},
-    { WPN_QUICK_BLADE,       "quick blade",         5,  6,  7,
+    { WPN_QUICK_BLADE,       "quick blade",         4,  6,  7,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_PIERCING, 0, 2, 150, {} },
-    { WPN_SHORT_SWORD,       "short sword",         6,  4, 11,
+    { WPN_SHORT_SWORD,       "short sword",         5,  4, 11,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_PIERCING, 8, 10, 30, SBL_BRANDS },
-    { WPN_RAPIER,           "rapier",               8,  4, 12,
+    { WPN_RAPIER,           "rapier",               7,  4, 12,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_PIERCING, 8, 10, 40, SBL_BRANDS },
 #if TAG_MAJOR_VERSION == 34
@@ -571,9 +570,11 @@ static const weapon_def Weapon_prop[] =
     { WPN_HALBERD,           "halberd",            13, -3, 15,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS,  MI_NONE,
         DAMV_CHOPPING | DAM_PIERCE, 5, 10, 40, POLEARM_BRANDS },
+#if TAG_MAJOR_VERSION == 34
     { WPN_SCYTHE,            "scythe",             14, -4, 20,
         SK_POLEARMS,     SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_NONE,
-        DAMV_SLICING, 2, 0, 30, POLEARM_BRANDS },
+        DAMV_SLICING, 0, 0, 0, POLEARM_BRANDS },
+#endif
     { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13,
         SK_POLEARMS,     SIZE_LITTLE, SIZE_MEDIUM, MI_NONE,
         DAMV_PIERCING, 0, 2, 150, DEMON_BRANDS },
@@ -626,29 +627,31 @@ static const weapon_def Weapon_prop[] =
         DAMV_NON_MELEE, 0, 0, 0, {}, },
 #endif
 
-    { WPN_HUNTING_SLING,     "hunting sling",       7,  0, 15,
-        SK_SLINGS,       SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
+    { WPN_SLING,             "sling",               7,  0, 14,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
+    { WPN_HAND_CROSSBOW,     "hand crossbow",      17,  3, 18,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
+        DAMV_NON_MELEE, 0, 10, 35, RANGED_BRANDS },
+#if TAG_MAJOR_VERSION == 34
     { WPN_FUSTIBALUS,        "fustibalus",         10, -2, 16,
-        SK_SLINGS,       SIZE_LITTLE, SIZE_SMALL, MI_SLING_BULLET,
-        DAMV_NON_MELEE, 2, 99, 150, RANGED_BRANDS },
-
-    { WPN_HAND_CROSSBOW,     "hand crossbow",       8,  3, 15,
-        SK_CROSSBOWS,    SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
-        DAMV_NON_MELEE, 7, 10, 35, RANGED_BRANDS },
-    { WPN_ARBALEST,          "arbalest",           15,  0, 18,
-        SK_CROSSBOWS,    SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
-        DAMV_NON_MELEE, 5, 10, 45, RANGED_BRANDS },
-    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    21, -2, 23,
-        SK_CROSSBOWS,    SIZE_SMALL, NUM_SIZE_LEVELS, MI_BOLT,
-        DAMV_NON_MELEE, 0, 2, 100, RANGED_BRANDS },
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_SMALL, MI_SLING_BULLET,
+        DAMV_NON_MELEE, 0, 0, 150, RANGED_BRANDS },
+#endif
 
     { WPN_SHORTBOW,          "shortbow",            9,  2, 15,
-        SK_BOWS,         SIZE_LITTLE, NUM_SIZE_LEVELS, MI_ARROW,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS, MI_ARROW,
         DAMV_NON_MELEE, 8, 10, 30, RANGED_BRANDS },
-    { WPN_LONGBOW,           "longbow",            13,  0, 18,
-        SK_BOWS,         SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_ARROW,
-        DAMV_NON_MELEE, 2, 10, 45, RANGED_BRANDS },
+    { WPN_ARBALEST,          "arbalest",           17, -2, 19,
+        SK_RANGED_WEAPONS,   SIZE_LITTLE, NUM_SIZE_LEVELS, MI_BOLT,
+        DAMV_NON_MELEE, 5, 10, 45, RANGED_BRANDS },
+    { WPN_LONGBOW,           "longbow",            12,  0, 17,
+        SK_RANGED_WEAPONS,   SIZE_MEDIUM, NUM_SIZE_LEVELS, MI_ARROW,
+        DAMV_NON_MELEE, 2, 10, 65, RANGED_BRANDS },
+    { WPN_TRIPLE_CROSSBOW,   "triple crossbow",    23, -2, 23,
+        SK_RANGED_WEAPONS,   SIZE_SMALL, NUM_SIZE_LEVELS, MI_BOLT,
+        DAMV_NON_MELEE, 0, 2, 100, RANGED_BRANDS },
+
 };
 
 struct missile_def
@@ -715,6 +718,21 @@ static const food_def Food_prop[] =
     { FOOD_PIZZA,        "buggy fruit",  1500,     0,     0 },
 };
 #endif
+
+struct item_set_def
+{
+    string name;
+    object_class_type cls;
+    vector<int> subtypes;
+};
+static const item_set_def item_sets[] =
+{
+    { "hex wand",           OBJ_WANDS,    { WAND_CHARMING, WAND_PARALYSIS } },
+    { "beam wand",          OBJ_WANDS,    { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
+    { "blast wand",         OBJ_WANDS,    { WAND_ICEBLAST, WAND_ROOTS } },
+    { "concealment scroll", OBJ_SCROLLS,  { SCR_FOG, SCR_BUTTERFLIES } },
+};
+COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 
 // Must call this functions early on so that the above tables can
 // be accessed correctly.
@@ -787,6 +805,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_BOOKS,     BOOK_AKASHIC_RECORD },
     { OBJ_BOOKS,     BOOK_BATTLE },
     { OBJ_BOOKS,     BOOK_STONE },
+    { OBJ_BOOKS,     BOOK_PAIN },
     { OBJ_RODS,      ROD_VENOM },
     { OBJ_RODS,      ROD_WARDING },
     { OBJ_RODS,      ROD_DESTRUCTION },
@@ -805,6 +824,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_SCROLLS,   SCR_CURSE_JEWELLERY },
     { OBJ_SCROLLS,   SCR_REMOVE_CURSE },
     { OBJ_SCROLLS,   SCR_RANDOM_USELESSNESS },
+    { OBJ_SCROLLS,   SCR_HOLY_WORD },
     { OBJ_WANDS,     WAND_MAGIC_DARTS_REMOVED },
     { OBJ_WANDS,     WAND_FROST_REMOVED },
     { OBJ_WANDS,     WAND_FIRE_REMOVED },
@@ -1420,7 +1440,10 @@ int wand_charge_value(int type, int item_level)
     // Decrease charge generation later on so that players get wands to play
     // with early, but aren't totally flooded with charges by late game.
     case WAND_ICEBLAST:
+    case WAND_ROOTS:
     case WAND_ACID:
+    case WAND_LIGHT:
+    case WAND_QUICKSILVER:
     case WAND_CHARMING:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
@@ -1468,10 +1491,13 @@ bool is_offensive_wand(const item_def& item)
         return false;
 
     case WAND_ACID:
+    case WAND_LIGHT:
+    case WAND_QUICKSILVER:
     case WAND_MINDBURST:
     case WAND_CHARMING:
     case WAND_FLAME:
     case WAND_ICEBLAST:
+    case WAND_ROOTS:
     case WAND_PARALYSIS:
     case WAND_POLYMORPH:
         return true;
@@ -1740,6 +1766,18 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
 }
 
 /**
+ * Which skill should the lochaber axe use?
+ *
+ * @return The higher of your Polearms and Axes skills.
+ */
+static skill_type _lochaber_skill()
+{
+    return you.skill(SK_AXES, 100, false, true) >
+           you.skill(SK_POLEARMS, 100, false, true) ?
+               SK_AXES : SK_POLEARMS;
+}
+
+/**
  * Returns the skill used by the given item to attack.
  *
  * @param item  The item under consideration.
@@ -1751,6 +1789,9 @@ skill_type item_attack_skill(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        ASSERT_RANGE(item.sub_type, 0, NUM_WEAPONS);
+        if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+            return _lochaber_skill();
         return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     case OBJ_STAVES:
         return SK_STAVES;
@@ -1868,6 +1909,12 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     if (sk != SK_FIGHTING)
         skills.insert(sk);
 
+    if (is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+    {
+        skills.insert(SK_POLEARMS);
+        skills.insert(SK_AXES);
+    }
+
     return !skills.empty();
 }
 
@@ -1893,6 +1940,21 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 bool is_range_weapon(const item_def &item)
 {
     return is_weapon(item) && is_ranged_weapon_type(item.sub_type);
+}
+
+bool is_crossbow(const item_def &item)
+{
+    if (!is_weapon(item))
+        return false;
+    switch (item.sub_type)
+    {
+    case WPN_HAND_CROSSBOW:
+    case WPN_ARBALEST:
+    case WPN_TRIPLE_CROSSBOW:
+        return true;
+    default:
+        return false;
+    }
 }
 
 bool is_slowed_by_armour(const item_def *item)
@@ -1961,7 +2023,8 @@ void populate_fake_projectile(const item_def &wep, item_def &fake_proj)
 bool ammo_always_destroyed(const item_def &missile)
 {
     const int brand = get_ammo_brand(missile);
-    return brand == SPMSL_CHAOS
+    return missile.sub_type == MI_STONE
+           || brand == SPMSL_CHAOS
            || brand == SPMSL_DISPERSAL
            || brand == SPMSL_EXPLODING;
 }
@@ -2007,8 +2070,11 @@ reach_type weapon_reach(const item_def &item)
 {
     if (is_unrandom_artefact(item, UNRAND_RIFT))
         return REACH_THREE;
-    if (item_attack_skill(item) == SK_POLEARMS)
+    if (item_attack_skill(item) == SK_POLEARMS
+        || is_unrandom_artefact(item, UNRAND_LOCHABER_AXE))
+    {
         return REACH_TWO;
+    }
     return REACH_NONE;
 }
 
@@ -2139,14 +2205,15 @@ static map<scroll_type, item_rarity_type> _scroll_rarity = {
     { SCR_MAGIC_MAPPING,  RARITY_UNCOMMON },
     { SCR_FEAR,           RARITY_UNCOMMON },
     { SCR_FOG,            RARITY_UNCOMMON },
+    { SCR_BUTTERFLIES,    RARITY_UNCOMMON },
     { SCR_BLINKING,       RARITY_UNCOMMON },
     { SCR_IMMOLATION,     RARITY_UNCOMMON },
+    { SCR_POISON,         RARITY_UNCOMMON },
     { SCR_VULNERABILITY,  RARITY_UNCOMMON },
     { SCR_SUMMONING,      RARITY_RARE },
     { SCR_SILENCE,        RARITY_RARE },
     { SCR_BRAND_WEAPON,   RARITY_RARE },
     { SCR_TORMENT,        RARITY_RARE },
-    { SCR_HOLY_WORD,      RARITY_RARE },
     { SCR_ACQUIREMENT,    RARITY_VERY_RARE },
 };
 
@@ -2750,6 +2817,8 @@ int guile_adjust_willpower(int wl)
 
 string item_base_name(const item_def &item)
 {
+    if (item.props.exists(ITEM_NAME_KEY))
+        return item.props[ITEM_NAME_KEY].get_string();
     return item_base_name(item.base_type, item.sub_type);
 }
 
@@ -2982,4 +3051,144 @@ int missile_base_price(missile_type type)
 int armour_base_price(armour_type type)
 {
     return Armour_prop[ Armour_index[type] ].price;
+}
+
+static string _item_set_key(item_set_type typ)
+{
+    return make_stringf("ITEM_SET_%d_CHOSEN", typ);
+}
+
+static string _item_set_id_key(item_set_type typ)
+{
+    return make_stringf("ITEM_SET_%d_UNIDED", typ);
+}
+
+static int &_item_set_choice(item_set_type typ)
+{
+    return you.props[_item_set_key(typ)].get_int();
+}
+
+/// Some items are guaranteed to only generate in some games, and are
+/// mutually exclusive with other items within their set. Determine which
+/// will be generated in this game.
+void initialise_item_sets()
+{
+    for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
+    {
+        const item_set_type iset = (item_set_type)i;
+#if TAG_MAJOR_VERSION == 34
+        if (you.props.exists(_item_set_key(iset)))
+            continue;
+#endif
+        const vector<int> &subtypes = item_sets[i].subtypes;
+        const int chosen_idx = random2(subtypes.size());
+        _item_set_choice(iset) = subtypes[chosen_idx];
+    }
+    populate_sets_by_obj_type();
+}
+
+/// What item for the given set is enabled for generation?
+int item_for_set(item_set_type typ)
+{
+    return _item_set_choice(typ);
+}
+
+static map<object_class_type, map<int, item_set_type>> sets_by_obj_type;
+
+void populate_sets_by_obj_type()
+{
+    sets_by_obj_type.clear();
+    for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
+    {
+        const item_set_def &isd = item_sets[i];
+        const auto iset = (item_set_type)i;
+        for (int subtype : isd.subtypes)
+            sets_by_obj_type[isd.cls][subtype] = iset;
+    }
+}
+
+/// What item set is this item in, if any?
+static item_set_type _get_set_for_item(object_class_type type, int sub_type)
+{
+    if (crawl_state.game_is_tutorial())
+        return NUM_ITEM_SET_TYPES;
+    auto &by_subtype = sets_by_obj_type[type];
+    if (by_subtype.count(sub_type) == 0)
+        return NUM_ITEM_SET_TYPES;
+    return by_subtype[sub_type];
+}
+
+/// Mark items types that start in your inventory as only semi-known,
+/// so that players can't tell which items will spawn in sets the start of
+/// the game by checking their item knowledge screen.
+void mark_inventory_sets_unknown()
+{
+    for (auto &item : you.inv)
+    {
+        if (!item.defined())
+            continue;
+
+        const auto ist = _get_set_for_item(item.base_type, item.sub_type);
+        if (ist != NUM_ITEM_SET_TYPES)
+            you.props[_item_set_id_key(ist)] = false;
+    }
+}
+
+/// Clear the 'semi-known' status from set items found in the starting set
+/// now that the player has found one in the wild, thus giving them real info
+/// about what item sets will generate.
+void maybe_mark_set_known(object_class_type type, int sub_type)
+{
+    const auto ist = _get_set_for_item(type, sub_type);
+    if (ist == NUM_ITEM_SET_TYPES)
+        return;
+    const string key = _item_set_id_key(ist);
+    if (you.props.exists(key))
+        you.props.erase(key);
+}
+
+/// Is this item in an item set & not the one from that set chosen to generate this game?
+bool item_excluded_from_set(object_class_type type, int sub_type)
+{
+    const item_set_type ist = _get_set_for_item(type, sub_type);
+    if (ist == NUM_ITEM_SET_TYPES)
+        return false;
+    return _item_set_choice(ist) != sub_type;
+}
+
+/**
+ * Is this item in an item set & not the one from that set chosen to generate this game,
+ * AND the player has seen the chosen item from this set?
+ */
+bool item_known_excluded_from_set(object_class_type type, int sub_type)
+{
+    const item_set_type ist = _get_set_for_item(type, sub_type);
+    if (ist == NUM_ITEM_SET_TYPES)
+        return false;
+    // Don't factor in starting items.
+    if (you.props.exists(_item_set_id_key(ist)))
+        return false;
+
+    const int chosen = _item_set_choice(ist);
+    if (chosen == sub_type)
+        return false;
+    return you.type_ids[item_sets[ist].cls][chosen];
+}
+
+item_set_type item_set_by_name(string name)
+{
+    // We could cache this if we wanted to.
+    for (int i = 0; i < NUM_ITEM_SET_TYPES; ++i)
+        if (item_sets[i].name == name)
+            return (item_set_type)i;
+    return NUM_ITEM_SET_TYPES;
+}
+
+string item_name_for_set(item_set_type typ)
+{
+    ASSERT(typ >= 0 && typ < NUM_ITEM_SET_TYPES);
+    item_def it;
+    it.base_type = item_sets[typ].cls;
+    it.sub_type = item_for_set(typ);
+    return sub_type_string(it, true);
 }

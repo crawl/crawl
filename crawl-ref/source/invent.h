@@ -14,41 +14,10 @@
 #include "item-name.h"
 #include "item-prop-enum.h"
 #include "menu.h"
+#include "object-selector-type.h"
 #include "operation-types.h"
 #include "tag-version.h"
 
-enum object_selector
-{
-    OSEL_ANY                     =  -1,
-    OSEL_WIELD                   =  -2,
-    OSEL_UNIDENT                 =  -3,
-#if TAG_MAJOR_VERSION == 34
-    OSEL_RECHARGE                =  -4,
-#endif
-    OSEL_ENCHANTABLE_ARMOUR      =  -5,
-    OSEL_BEOGH_GIFT              =  -6,
-#if TAG_MAJOR_VERSION == 34
-    OSEL_DRAW_DECK               =  -7,
-#endif
-    OSEL_LAUNCHING               =  -8,
-    OSEL_EVOKABLE                =  -9,
-    OSEL_WORN_ARMOUR             = -10,
-    OSEL_CURSED_WORN             = -11,
-#if TAG_MAJOR_VERSION == 34
-    OSEL_UNCURSED_WORN_ARMOUR    = -12,
-    OSEL_UNCURSED_WORN_JEWELLERY = -13,
-#endif
-    OSEL_BRANDABLE_WEAPON        = -14,
-    OSEL_ENCHANTABLE_WEAPON      = -15,
-    OSEL_BLESSABLE_WEAPON        = -16,
-    OSEL_CURSABLE                = -17, // Items that are worn and cursable
-#if TAG_MAJOR_VERSION == 34
-    OSEL_DIVINE_RECHARGE         = -18,
-#endif
-    OSEL_UNCURSED_WORN_RINGS     = -19,
-    OSEL_QUIVER_ACTION           = -20,
-    OSEL_QUIVER_ACTION_FORCE     = -21,
-};
 
 /// Behaviour flags for prompt_invent_item().
 enum class invprompt_flag
@@ -202,7 +171,9 @@ public:
 protected:
     void do_preselect(InvEntry *ie);
     void select_item_index(int idx, int qty) override;
+    bool examine_index(int i) override;
     int pre_process(int key) override;
+    virtual bool skip_process_command(int keyin) override;
     virtual bool is_selectable(int index) const override;
     virtual string help_key() const override;
 
@@ -230,7 +201,9 @@ int prompt_invent_item(const char *prompt,
                        int type_expect,
                        operation_types oper = OPER_ANY,
                        invent_prompt_flags flags = invprompt_flag::none,
-                       const char other_valid_char = '\0');
+                       const char other_valid_char = '\0',
+                       const char *view_all_prompt = nullptr,
+                       int *type_out = nullptr);
 
 vector<SelItem> select_items(
                         const vector<const item_def*> &items,

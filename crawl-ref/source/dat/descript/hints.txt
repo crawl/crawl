@@ -201,15 +201,733 @@ and divine abilities, by typing
 HINT_SEEN_FIRST_OBJECT
 
 That <console>$1 </console>is an item. If you move there and press
-<input>$cmd[CMD_PICKUP]</input><tiles>, or <input>left-click</input> on it in
-your inventory</tiles>, you will pick it up.<console> Generally, items
+<input>$cmd[CMD_PICKUP]</input><localtiles>, or <input>left-click</input> on it
+in your inventory</localtiles>, you will pick it up.<console> Generally, items
 are shown by non-letter symbols like <w>%?!"=()[</w>.</console> Some
 objects<tiles>, marked with a green frame,</tiles> will be picked up
 automatically.
 
-Once it is in your inventory, you can drop it again with <tiles>a
+Once it is in your inventory, you can drop it again with <localtiles>a
 <input>Shift-left-click</input>. Whenever you <input>right-click</input> on an
-item</tiles><console><input>$cmd[CMD_DROP]</input>. Any time you look at an
+item</localtiles><console><input>$cmd[CMD_DROP]</input>. Any time you look at an
 item in your inventory (<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>,
 you can read about its properties and its description.
+%%%%
+HINT_SEEN_POTION
+
+You have picked up your first potion<console> ('<w>$item[potion]</w>')</console>.
+<localtiles>Simply <w>left-click</w> on it, or press</localtiles>
+<nomouse>Press</nomouse> <w>$cmd[CMD_QUAFF]</w> to quaff it.
+
+Once you've identified a potion, either with a scroll of identification or by
+drinking it, you'll automatically recognize all other potions of the same type;
+this means it's sometimes useful to drink potions just to identify them.
+%%%%
+HINT_SEEN_SCROLL
+
+You have picked up your first scroll<console> ('<w>$item[scroll]</w>')</console>.
+<localtiles>Simply <w>left-click</w> on it, or press</localtiles>
+<nomouse>Press</nomouse> <w>$cmd[CMD_READ]</w> to read it.
+
+Once you've identified a scroll, either with a scroll of identification or by
+reading it, you'll automatically recognize all other scrolls of the same type;
+this means it's sometimes useful to read scrolls just to identify them.
+%%%%
+HINT_SEEN_WAND
+
+You have picked up your first wand<console> ('<w>$item[wand]</w>')</console>.
+<localtiles>Simply <w>left-click</w> on it, or press</localtiles>
+<nomouse>Press</nomouse> <w>$cmd[CMD_EVOKE]</w> to evoke it.
+
+If you find more wands of the same type, they'll merge into this wand and add
+charges to it.
+%%%%
+HINT_SEEN_SPBOOK
+
+You have picked up a book<console> ('<w>$item[book]</w>')</console>. On pickup,
+its spells are immediately added to your library. You'll be able to memorise
+spells from it via <w>$cmd[CMD_MEMORISE_SPELL]</w>, and cast them with
+<w>$cmd[CMD_CAST_SPELL]</w>.
+{{
+    if you.god() == "Trog" then
+        return "Trog hates it when you memorise or study magic, though!"
+    end
+}}
+%%%%
+HINT_SEEN_WEAPON
+
+This is the first weapon<console> ('<w>$item[weapon]</w>')</console> you've
+picked up. Use <w>$cmd[CMD_WIELD_WEAPON]</w><localtiles> or
+<w>left-click</w> on it</localtiles> to wield it, but be aware that this
+weapon might train a different skill from your current one. You can view the
+weapon's properties from your
+<w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory<localtiles> or by
+<w>right-clicking</w> on it</localtiles>.
+
+{{
+    if crawl.hints_type() == "berserk" then
+        return "You should probably stick with axes. Checking other axes'"
+               .. " enchantments can be worthwhile, though!"
+    end
+}}
+%%%%
+HINT_SEEN_MISSILES
+
+This is the first stack of missiles<console> ('<w>$item[missile]</w>')</console>
+you've picked up. Missiles like boomerangs and throwing nets can be thrown by
+hand, and become more effective as you train the Throwing skill.
+<localtiles><w>Right-click</w> on</localtiles><nomouse>Select</nomouse>
+the item in your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory to see more
+information.
+
+{{
+    if crawl.hints_type() = "hunter" then
+        return "As you're already trained in Ranged Weapons, you don't really "
+               .. "need another type of ranged attack."
+    elseif crawl.hints_type() = "magic" then
+        return "However, as a spellslinger, you don't really need another type"
+               .. " of ranged attack."
+    else
+        return "";
+    end
+}}
+%%%%
+HINT_SEEN_ARMOUR
+
+This is the first piece of armour<console> ('<w>$item[armour]</w>')</console>
+you've picked up. <localtiles>You can click on it to wear it, and click again
+to remove it. <w>Right-clicking</w> on it will give more information.
+</localtiles><nomouse>Use <w>$cmd[CMD_WEAR_ARMOUR]</w> to wear it and
+<w>$cmd[CMD_REMOVE_ARMOUR]</w> to take it off again. You can view its
+properties from your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory.
+</nomouse>
+
+{{
+    if you.get_base_mutation_level("horns") > 0 then
+        return "Note that because of your horns you will be unable to wear"
+               .. " helmets. (Press <w>$cmd[CMD_DISPLAY_MUTATIONS]</w> to see"
+               .. " a list of your mutations and innate abilities.)"
+    end
+}}
+%%%%
+HINT_SEEN_JEWELLERY
+
+You have picked up a piece of jewellery, either a ring
+<console>('<w>$item[jewellery]</w>') </console>or an
+amulet<console> ('<w>$item[amulet]</w>')</console>.
+<nomouse>Press <w>$cmd[CMD_WEAR_JEWELLERY]</w> to put it on and
+<w>$cmd[CMD_REMOVE_JEWELLERY]</w> to remove it. You can view its properties
+from your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory.</nomouse>
+<localtiles>You can click on it to put it on, and click again to remove it. By
+<w>right-clicking</w> on it, you can view its properties.</localtiles>
+%%%%
+HINT_SEEN_MISC
+
+This is a curious object indeed. You can play around with it to find out what
+it does by <localtiles>clicking on it to e<w>$cmd[CMD_EVOKE]</w>oke </localtiles>
+<nomouse>e<w>$cmd[CMD_EVOKE]</w>oking </nomouse>it. As usual, selecting it from
+your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory might give you more information.
+%%%%
+HINT_SEEN_STAFF
+
+You have picked up a magic staff<console> ('<w>$item[magical staff]</w>')</console>.
+It must be <w>$cmd[CMD_WIELD_WEAPON]</w>ielded to be of use. Magicians use
+staves to increase their power in certain spell schools. It can also be used as
+a weapon.<localtiles> You can wield a staff by <w>left-clicking</w>.</localtiles>
+%%%%
+HINT_SEEN_GOLD
+
+You have picked up your first pile of gold<console>
+('<yellow>$item[gold]</yellow>')</console>. Press <w>$cmd[CMD_LIST_GOLD]</w> to
+see how much you have. Gold is used in shops you'll find as you explore.
+%%%%
+HINT_SEEN_STAIRS
+
+These<console> '$1'</console> are downstairs. You can enter the next (deeper)
+level by following them down (<w>$cmd[CMD_GO_DOWNSTAIRS]</w>). To return to this
+level, press <w>$cmd[CMD_GO_UPSTAIRS]</w> while standing on the upstairs. When
+you take new stairs, you get a free action; after that, monsters get to move
+first.
+
+<localtiles>Alternatively, you can <w>left-click</w> on stairs you're standing
+on to use them.</localtiles>
+%%%%
+HINT_SEEN_ESCAPE_HATCH
+
+This<console> '$1'</console> is an escape hatch. You can use it to leave a
+level with <w>$cmd[CMD_GO_UPSTAIRS]</w> and <w>$cmd[CMD_GO_DOWNSTAIRS]</w>
+respectively<localtiles> (or by<w>left-clicking</w>)</localtiles>, like stairs;
+unlike stairs, however, hatches are a one-way trip, so be careful when
+descending!
+%%%%
+HINT_SEEN_BRANCH
+
+This<console> '$1'</console> is the entrance to a different branch of the
+dungeon. Each branch has different terrain and monsters, and some contain
+entrances to other branches. You can learn more by examining this
+entrance<localtiles> by hovering your mouse over its tile</localtiles><nomouse
+by pressing <w>$cmd[CMD_LOOK_AROUND]</w> and moving the cursor onto it."
+
+Some branches will be much safer and more rewarding than your current branch.
+Others can be very dangerous, better visited when your character is more
+powerful.
+%%%%
+HINT_SEEN_PORTAL
+
+This<console> '$1'</console> is a portal to an optional level, offering extra
+loot in exchange for extra danger. There's no penalty for skipping it, but the
+portal will disappear if you wait, so you have to decide now if you want to risk
+it.
+%%%%
+HINT_SEEN_BAZAAR_PORTAL
+
+This<console> '$1'</console> is a portal to an inter-dimensional bazaar filled
+with shops. It will disappear if you don't enter it soon, so hurry.
+%%%%
+HINT_SEEN_PORTAL_2
+
+You can enter a portal just like a set of stairs, by standing on it and
+<localtiles><w>clicking</w> or </localtiles>pressing
+<w>$cmd[CMD_GO_DOWNSTAIRS]</w>. To return, find <tiles>a similar looking portal.
+</tiles><console>another $1 - but NOT the ancient stone arch you'll start out
+on!</console>
+%%%%
+HINT_STAIR_BRAND
+
+<tiles>A small symbol on a stair tile signifies that there are items in that
+position that you may want to check out.</tiles>
+<console>If any items are covering stairs or an escape hatch, then that will
+be indicated by highlighting the <w><<</w> or <w>></w> symbol, instead of hiding
+the stair symbol with an item glyph.</console>
+%%%%
+HINT_HEAP_BRAND
+
+<tiles>A small symbol on an item tile signifies that there is at least one other
+item in the same heap that you may want to check out.</tiles>
+<console>If two or more items are on a single square, then the square will be
+highlighted, and the symbol for the item on the top of the heap will be shown.
+</console>
+%%%%
+HINT_TRAP_BRAND
+
+<console>If any items are covering a trap, then that will be indicated by
+highlighting the <w>^</w> symbol, instead of hiding the trap symbol with an item
+glyph.</console>
+%%%%
+HINT_SEEN_TRAP
+
+You just discovered a trap. You'll occasionally find these nasty
+constructions.
+%%%%
+HINT_SEEN_ALTAR
+
+That<console> $1</console> is an altar.
+<localtiles>By <w>right-clicking</w> on it with your mouse</localtiles>
+<nomouse>If you target the altar with <w>$cmd[CMD_LOOK_AROUND]</w>, then press
+<w>$cmd[CMD_TARGET_DESCRIBE]</w></nomouse> you can get a short description.
+
+Press <w>$cmd[CMD_GO_UPSTAIRS]</w> or <w>$cmd[CMD_GO_DOWNSTAIRS]</w> while
+standing on the square to join the faith or read some information about the god
+in question. Before taking up the corresponding faith you'll be asked for
+confirmation.
+
+{{
+    if you.god() == "No God" and crawl.hints_type() == "magic" then
+        return "The simplest god for an inexperienced conjurer is probably "
+               .. "Vehumet, though many other gods, like Sif Muna, can also "
+               .. "work well."
+    end
+}}
+%%%%
+HINT_SEEN_SHOP
+
+That<console> $1</console> is a shop. You can enter it by typing
+<w>$cmd[CMD_GO_UPSTAIRS]</w> or <w>$cmd[CMD_GO_DOWNSTAIRS]</w>
+<tiles>, or by <w>left-clicking</w> on it<tiles>
+while standing on the square.
+
+If there's anything you want which you can't afford yet, you can hold
+<w>Shift</w> and press the corresponding letter to put it on your shopping list.
+The game will then remind you when you gather enough gold to buy it.
+%%%%
+HINT_SEEN_DOOR
+
+That<console> $1</console> is a closed door. You can open it by walking into it.
+Sometimes it is useful to close a door. Do so by <nomouse>pressing
+<w>$cmd[CMD_CLOSE_DOOR]</w> while next to it. If there are several doors, you
+will then be prompted for a direction.</nomouse><localtiles>clicking on the door
+while next to it.</localtiles>
+%%%%
+HINT_SEEN_RUNED_DOOR
+
+That<console> $1</console> is a runed door, which is probably in front of
+something unusually dangerous. Monsters will never open it. If you do, the runes
+will be broken, and it will become a normal door
+%%%%
+HINT_KILLED_MONSTER
+
+Congratulations, your character just gained experience by killing this monster!
+This will raise some of your skills, making you more deadly.
+{{
+    if you.god() == "Trog" then
+        return "Also, most kills will grant you favour in the eyes of Trog."
+    end
+}}
+%%%%
+HINT_NEW_LEVEL
+
+Well done! Reaching a new experience level is always a nice event. You get more
+health and magic points, and occasionally increases to your attributes:
+strength, intelligence, and dexterity.
+
+{{
+    if crawl.hints_type() == "magic" then
+        return "Gaining an experience level also lets you learn more difficult"
+               .. " spells. You can memorise a second spell with"
+               .. " <w>$cmd[CMD_MEMORISE_SPELL]</w><tiles> or by"
+               .. " <w>clicking</w> on it in the memorisation tab</tiles>."
+    end
+}}
+%%%%
+HINT_SKILL_RAISE
+
+One of your skills just reached a milestone. The skills you use are
+automatically trained whenever you gain experience, by killing monsters. By
+default, experience goes to skills you actively use. To view or manage your
+skills, type <w>$cmd[CMD_DISPLAY_SKILLS]</w><localtiles> or click on the skill
+tab in the bottom-right</localtiles>.
+%%%%
+HINT_GAINED_MAGICAL_SKILL
+
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+that school. Many spells belong to a combination of several schools, in which
+case the average skill in these schools will determine spellcasting success and
+power.
+%%%%
+HINT_GAINED_MELEE_SKILL
+
+Being skilled with a particular type of weapon will make you deal slightly more
+damage and attack significantly faster with all weapons of that type. It's a
+good idea to focus on just one weapon type, usually one you start with, though
+finding a particularly good weapon may justify a switch.
+%%%%
+HINT_GAINED_RANGED_SKILL
+
+Being skilled with ranged weapons will let you deal slightly more damage and
+attack significantly faster with them. Remember that wearing heavy armour makes
+you attack more slowly with ranged weapons.
+%%%%
+HINT_CHOOSE_STAT
+
+Upon gaining levels 3, 9, 15, etc., you get to choose an attribute to raise:
+strength, intelligence, or dexterity.
+
+<w>Strength</w> makes heavy armour less cumbersome and slightly increases most
+weapons' damage.
+
+<w>Intelligence</w> makes your spells more reliable and powerful.
+
+<w>Dexterity</w> increases your evasion and stealth, and slightly increases the
+damage of blades and ranged weapons.
+# Also shields.
+%%%%
+HINT_MALEVOLENCE
+
+As you explore the dungeon and reveal new tiles, bad things will sometimes
+rnadomly happen to you. When this happens, pause, think carefully, and be ready
+to use consumables or abilities. Fight to survive!"
+%%%%
+HINT_OPPORTUNITY_ATTACK
+
+When you move away from an enemy, they have a small (1/3) chance of taking
+advantage and launching a free attack. Repositioning and retreating is often
+still good, but keep an eye out for those extra attacks.
+%%%%
+HINT_YOU_ENCHANTED
+
+Enchantments of all types can befall you temporarily.
+Brief descriptions of these appear at the lower end of the stats area.
+Press <w>$cmd[CMD_DISPLAY_CHARACTER_STATUS]</w> for more details. You can search
+for full enchantment descriptions by pressing <w>$cmd[CMD_DISPLAY_COMMANDS]/T</w>.
+%%%%
+HINT_YOU_POISON
+
+Poison will rapidly reduce your health. You can wait it out with
+<w>$cmd[CMD_REST]</w>, but if you're in combat or lethally poisoned, you'll
+probably want to quaff a potion of curing.
+%%%%
+HINT_MULTI_PICKUP
+
+There are a lot of items here. You choose what to pick up from a menu:
+press <w>$cmd[CMD_PICKUP]</w><localtiles> or <w>click</w> on the player
+doll</localtiles> to enter the pickup menu. To leave the menu, confirm your
+selection with <w>Enter</w>.
+%%%%
+HINT_FULL_INVENTORY
+
+Sadly, your inventory is limited to 52 items, and it appears your knapsack is
+full. However, this is easy enough to rectify: simply <w>$cmd[CMD_DROP]</w>rop
+some of the stuff you don't need right now. In the drop menu you can then
+comfortably select which items to drop by pressing their inventory
+letter<localtiles>, or by clicking on them</localtiles>.
+%%%%
+HINT_SHIFT_RUN
+
+Walking around takes fewer keystrokes if you press <w>Shift-direction</w> or
+<w>/ direction</w>. That will let you run until a monster comes into sight or
+your character sees something interesting.
+%%%%
+HINT_MAP_VIEW
+
+As you explore a level, orientation can become difficult. Press
+<w>$cmd[CMD_DISPLAY_MAP]</w> to bring up the level map. Typing <w>?</w> shows
+the list of level map commands. Most importantly, moving the cursor to a spot
+and pressing <w>.</w> or <w>Enter</w> lets your character move there on its own.
+
+<localtiles>Also, clicking on the right-side minimap with your <w>right mouse
+button</w> will zoom into that dungeon area. Clicking with the <w>left mouse
+button</w> instead will let you move there.</localtiles>
+%%%%
+HINT_AUTO_EXPLORE
+
+Fully exploring a level and picking up all the interesting looking items can be
+tedious. To save on this tedium you can press <w>$cmd[CMD_EXPLORE]</w> to
+auto-explore, which will automatically explore unmapped regions, automatically
+pick up interesting items, and stop if a monster or interesting dungeon feature
+(stairs, altar, etc.) is encountered.
+%%%%
+HINT_DONE_EXPLORE
+
+Hey, you've finished exploring the dungeon on this level! You can search for
+stairs from the level map (<w>$cmd[CMD_DISPLAY_MAP]</w>) by pressing <w>></w>.
+The cursor will jump to the nearest staircase, and by pressing <w>.</w> or
+<w>Enter</w> your character can move there, too. Each level of Crawl has three
+<console>white </console>up and three <console>white </console>down stairs.
+Unexplored parts can often be accessed via another level.
+%%%%
+HINT_AUTO_EXCLUSION
+
+To prevent autotravel or autoexplore taking you into dangerous territory, you
+can set travel exclusions by entering the map view (<w>$cmd[CMD_DISPLAY_MAP]</w>)
+and then toggling the exclusion radius on the monster position with <w>e</w>.
+To make this easier, some immobile monsters listed in the <w>auto_exclude</w>
+option (such as this one) are considered dangerous enough to warrant an
+automatic setting of an exclusion. It will be automatically cleared if you
+manage to kill the monster. You could also manually remove the exclusion with
+<w>$cmd[CMD_DISPLAY_MAP]ee</w> but unless you remove this monster from the
+auto_exclude list, the exclusion will be reset the next turn.
+%%%%
+HINT_HEALING_POTIONS
+
+Your health is getting dangerously low. Retreating and/or quaffing a potion of
+heal wounds or curing might be a good idea.
+%%%%
+HINT_NEED_HEALING
+
+If you're low on health or magic and there's no urgent need to move, you can
+rest for a bit. Ideally, you should retreat to an area you've already explored
+and cleared of monsters before resting, since resting on the edge of the
+explored terrain increases the risk of rest being interrupted by a wandering
+monster. Press <w>$cmd[CMD_REST]</w> or <w>shift-numpad-5</w>
+<localtiles>, or click on the 'rest' button,</localtiles> to do so.
+%%%%
+HINT_NEED_POISON_HEALING
+
+You are lethally poisoned, so now would be a good time to
+<w>$cmd[CMD_QUAFF]</w>uaff a potion of heal wounds or, better yet, a potion of
+curing. If you have seen neither of these so far, try unknown potions in your
+inventory. Good luck!
+%%%%
+HINT_INVISIBLE_DANGER
+
+Fighting against a monster you cannot see is difficult. If you don't have a
+source of see invisibility, you can find invisible monsters by luring them into
+shallow water, opaque clouds (from a scroll of fog), or a corridor, where their
+movements will be more predictable. If things go south, try teleporting out, or
+leaving the level entirely!
+%%%%
+HINT_NEED_HEALING_INVIS
+
+You recently noticed an invisible monster, so unless you killed it or left the
+scene, resting might not be safe. If you still need to replenish your health or
+magic, you'll have to quaff an appropriate potion. For normal resting you will
+first have to get away from the danger.
+%%%%
+HINT_CAN_BERSERK
+
+Against particularly difficult foes, you should use your Berserk
+<w>$cmd[CMD_USE_ABILITY]</w>bility. Killing monsters while berserking makes it
+last longer.
+%%%%
+HINT_POSTBERSERK
+
+Berserking is extremely exhausting! Afterwards you are slowed down, and you
+won't be able to berserk again until enough time passes for your exhaustion to
+fade.
+%%%%
+HINT_RUN_AWAY_1
+
+Whenever your health is very low and you're in danger of dying, check your
+options carefully. Often, retreat or use of some item might be a viable
+alternative to fighting on.
+%%%%
+HINT_LAST_MINUTE_BERSERK
+
+With Trog's support, you can use your Berserk ability
+(<w>$cmd[CMD_USE_ABILITY]</w>) to temporarily gain more health and greater
+strength. Bear in mind that berserking at the last minute is often risky,
+and prevents you from using items to escape!
+%%%%
+HINT_RUN_AWAY_2
+
+If retreating to another level, keep in mind that monsters may follow you if
+they're standing right next to you when you start climbing or descending the
+stairs. And even if you've managed to shake them off, they'll still be there
+when you come back, so you might want to use a different set of stairs when you
+return.
+%%%%
+HINT_RETREAT_CASTER
+
+Without magical power you're unable to cast spells. While melee is a
+possibility, that's not where your strengths lie, so retreat (if possible) might
+be the better option.
+%%%%
+HINT_ADVISE_USE_WAND
+
+\nOr you could e<w>$cmd[CMD_EVOKE]</w>oke a wand to harm or weaken your foes.
+%%%%
+HINT_YOU_MUTATED
+
+Mutations can be good or bad. Potions of mutation are the most common way to
+remove bad mutations, though they can also give you new ones. Check your
+mutations with <w>$cmd[CMD_DISPLAY_MUTATIONS]</w>.
+%%%%
+HINT_NEW_ABILITY_GOD_PASSIVE
+
+You just gained a divine ability. Press <w>$cmd[CMD_DISPLAY_RELIGION]</w>
+<localtiles> or press <w>Shift</w> and <w>right-click</w> on the player
+tile</localtiles> to take a look at your abilities.
+%%%%
+HINT_NEW_ABILITY_GOD_ACTIVE
+
+You just gained a divine ability. Press <w>$cmd[CMD_USE_ABILITY]</w> to take a
+look at your abilities or to use one of them.
+%%%%
+HINT_NEW_ABILITY_ITEM
+
+That item you just equipped granted you a new ability. Press
+<w>$cmd[CMD_USE_ABILITY]</w><localtiles> (or <w>click</w> in the <w>command
+panel</w>)</localtiles> to take a look at your abilities or to use one of them.
+%%%%
+HINT_ITEM_FLIGHT
+
+Flight will allow you to cross deep water or lava. Items that allow you to fly
+will activate automatically when worn.
+%%%%
+HINT_ITEM_RESISTANCES
+
+Equipping this item affects your resistances. Check the overview screen
+(<w>$cmd[CMD_RESISTS_SCREEN]</w><localtiles> or click on the <w>character
+overview button</w> in the command panel</localtiles>) for details.
+%%%%
+HINT_GOD_DISPLEASED
+
+Uh-oh, $1 is growing displeased because your piety is running low. Possibly this
+is the case because you're committing heretical acts, because $1 finds your
+worship lacking, or a combination of the two. If your piety goes to zero, then
+you'll be excommunicated. Better get cracking on raising your piety, and/or stop
+annoying your god. In any case, you'd better reread the religious description.
+To do so, press <w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles> or press
+<w>Shift</w> and <w>right-click</w> on your avatar</localtiles>.
+%%%%
+HINT_WIELD_WEAPON
+
+You can easily switch back to your weapon in slot a by
+pressing <w>$cmd[CMD_WEAPON_SWAP]</w>. To change the slot of an item, press
+<w>$cmd[CMD_ADJUST_INVENTORY]i</w> and choose the appropriate slots.
+%%%%
+HINT_FLEEING_MONSTER
+
+Now that monster is scared of you! Note that you do not absolutely have to
+follow it. Rather, you can let it run away. Sometimes, though, it can be useful
+to attack a fleeing creature by throwing something after it. If you have any
+stones in your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory, you can look at one
+of them to read an explanation of how to do this.
+%%%%
+HINT_MONSTER_BRAND
+
+That monster looks a bit unusual. You might wish to examine it a bit more
+closely by <localtiles>hovering your mouse over its tile.</localtiles>
+<nomouse>pressing <w>$cmd[CMD_LOOK_AROUND]</w> and moving the cursor onto its
+square.</nomouse>
+%%%%
+HINT_MONSTER_FRIENDLY
+
+That monster is friendly to you and will attack your enemies. You can command
+your allies by pressing <w>$cmd[CMD_SHOUT]</w>.
+%%%%
+HINT_TEMPORARILY_FRIENDLY
+
+However, it is only <w>temporarily</w> friendly, and will become dangerous
+again when this friendliness wears off.
+%%%%
+HINT_MONSTER_SHOUTED_UNSEEN
+
+Uh-oh, some monster noticed you, either one that's around a corner or one that's
+invisible. Plus, the noise it made will alert other monsters in the vicinity,
+who will come to check out what the commotion was about.
+%%%%
+HINT_MONSTER_SHOUTED_SEEN
+
+Uh-oh, that monster noticed you! Plus, the noise it made will alert other
+monsters in the vicinity, who will come to check out what the commotion
+was about.
+%%%%
+HINT_MONSTER_NO_SHOUT
+
+Uh-oh, that monster noticed you! Fortunately, it didn't make any noise, but many
+monsters do make noise when they notice you. That will alert other monsters in
+the area, who will come to check out what the commotion was about.
+%%%%
+HINT_MONSTER_LEFT_LOS
+
+$1 didn't vanish, but merely moved onto a square which you can't currently see.
+It's still nearby, unless something happens to it in the short amount of time
+it's out of sight.
+%%%%
+HINT_SEEN_ZERO_EXP_MON
+
+That<console> $1</console> is $2. While <w>technically</w> a monster, it's
+more like dungeon furniture, since it's harmless and doesn't move. If it's in
+your way you can attack and kill it like other monsters, but you won't get any
+experience for doing so.
+%%%%
+HINT_ABYSS
+
+Uh-oh, you've wound up in the Abyss! The Abyss is a special place where you
+cannot remember or map where you've been; it is filled with nasty monsters, and
+you're probably going to die.
+
+To increase your chances of survival until you can find the exit<console> (a
+flickering <w>$1</w>)</console>, keep moving, don't fight any of the monsters,
+and don't chase after items on the ground. If monsters are closing in, try to
+use items and abilities to get away.
+%%%%
+HINT_SPELL_MISCAST_EFFECTS
+
+Miscasting a spell can have nasty consequences, particularly for the more
+difficult spells. Your chance of successfully casting a spell increases with
+your magic skills, and can also be improved with the help of some items. Use
+the <w>$cmd[CMD_DISPLAY_SPELLS]</w> command<localtiles> or mouse over the spell
+tiles</localtiles> to check your current failure rates.
+%%%%
+HINT_YOU_MISCAST
+
+You just miscast a spell.
+%%%%
+HINT_MISCAST_ARMOUR
+
+Wearing heavy body armour or using a shield, especially a large one, can
+severely hamper your spellcasting abilities. You can check the effect of this
+by comparing the failure rates on the <w>$cmd[CMD_CAST_SPELL]\?</w> screen with
+and without the item being worn.
+%%%%
+HINT_MISCAST_CONTAMINATION_AND_MP
+
+If the spellcasting success chance is high (which can be checked by entering
+<w>$cmd[CMD_CAST_SPELL]\?</w> or <w>$cmd[CMD_DISPLAY_SPELLS]</w>) then a miscast
+merely means the spell is not working, along with a harmless side effect.
+However, for spells with a high failure rate, there's a chance of contaminating
+yourself with magical energy, plus a chance of an additional harmful side
+effect. Normally this isn't a problem, since magical contamination bleeds off
+over time, but if you're repeatedly contaminated in a short amount of time
+you'll mutate or suffer from other ill side effects.
+
+Note that a miscast spell will still consume the full amount of MP that a
+successfully cast spell would.
+%%%%
+HINT_GLOWING
+
+You've accumulated so much magical contamination that you're glowing! You
+usually acquire magical contamination from using some powerful magics, like
+invisibility, or from miscasting spells.
+
+%%%%
+HINT_CONTAMINATION_MILD
+
+As long as the status only shows in grey nothing will actually happen as a
+result of it, but as you continue suffusing yourself with magical contamination
+you'll eventually start glowing for real, which can have nasty effects, such as
+mutating you or dealing direct damage. In addition, glowing is going to make you
+much more noticeable.
+%%%%
+HINT_CONTAMINATION_SEVERE
+
+This normally isn't a problem as contamination slowly bleeds off on its own, but
+it seems that you've accumulated so much contamination over a short amount of
+time that it can have nasty effects, such as mutating you or dealing direct
+damage. In addition, glowing is going to make you much more noticeable.
+%%%%
+HINT_YOU_RESIST
+
+Most attacks in Crawl are defended against by your AC. Some, like fire or
+draining attacks, can be further reduced by specific resistances. Other magical
+effects, such as Slow or Confusion hexes, are resisted by your Willpower.
+You'll find items that increase both kinds of resistances.
+
+To view your current set of resistances, <localtiles><w>right-click</w> on the
+player avatar, or </localtiles>press <w>$cmd[CMD_RESISTS_SCREEN]</w>.
+%%%%
+HINT_CAUGHT_IN_NET
+
+While you are held in a net, you cannot move around or engage monsters in
+combat. Instead, any movement you take is counted as an attempt to struggle free
+from the net.
+{{
+    if crawl.hints_type() == "magic" then
+        return "Note that casting spells is still very much possible, as is"
+               .. " using wands, scrolls and potions."
+    else
+        return "Note that using wands, scrolls and potions is still very much"
+               .. " possible."
+    end
+}}
+%%%%
+HINT_YOU_SILENCE
+
+While you are silenced, you cannot cast spells, read scrolls or use divine
+invocations. The same is true for any monster within the effect radius. The
+field of silence (recognizable by <tiles>the special-looking frame tiles</tiles>
+<console>different-coloured floor squares</console>) is always centered on you
+and will move along with you. The radius will gradually shrink, eventually
+making you the only one affected, before the effect fades entirely.
+%%%%
+HINT_AUTOPICKUP_THROWN
+
+When stepping on items you've thrown, they will be picked up automatically.
+%%%%
+HINT_GAINED_SPELLCASTING
+
+As your Spellcasting skill increases, you will be able to memorise more spells,
+and will have somewhat more MP. You'll also beomce lsightly better at casting
+all kinds of spells.
+
+Press <w>$cmd[CMD_DISPLAY_SKILLS]</w> <localtiles>(or click on the <w>skill
+button </w>in the command panel)</localtiles>to have a look at your skills and
+manage their training.
+%%%%
+HINT_FUMBLING_SHALLOW_WATER
+
+Fighting in shallow water will sometimes cause you to slip and fumble your
+attack. If possible, try to fight on firm ground.
+%%%%
+HINT_CLOUD_WARNING
+
+Rather than step into this cloud and hurt yourself, you should either wait for a
+few turns to see if it vanishes (with <w>$cmd[CMD_WAIT]</w>), or just step
+around it.
+%%%%
+HINT_FOUND_UNKNOWN
+
+You've found something new (but I don't know what)!
 %%%%

@@ -40,6 +40,13 @@ public:
         init(def);
     }
 
+    FixedArray(const FixedArray &other)
+    {
+        for (int i = 0; i < width(); i++)
+            for (int j = 0; j < height(); j++)
+                (*this)[i][j] = other[i][j];
+    }
+
 public:
     // ----- Size -----
     bool empty() const { return WIDTH == 0 || HEIGHT == 0; }

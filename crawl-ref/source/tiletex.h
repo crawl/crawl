@@ -53,8 +53,8 @@ public:
     TilesTexture();
 
     void set_info(int max, tile_info_func *info);
-    inline const tile_info &get_info(tileidx_t idx) const;
-    inline bool get_coords(tileidx_t idx, int ofs_x, int ofs_y,
+    const tile_info &get_info(tileidx_t idx) const;
+    bool get_coords(tileidx_t idx, int ofs_x, int ofs_y,
                            float &pos_sx, float &pos_sy,
                            float &pos_ex, float &pos_ey,
                            float &tex_sx, float &tex_sy,
@@ -67,56 +67,6 @@ protected:
     tile_info_func *m_info_func;
 };
 
-inline const tile_info &TilesTexture::get_info(tileidx_t idx) const
-{
-    ASSERT(m_info_func);
-    return m_info_func(idx);
-}
-
-inline bool TilesTexture::get_coords(tileidx_t idx, int ofs_x, int ofs_y,
-                                     float &pos_sx, float &pos_sy,
-                                     float &pos_ex, float &pos_ey,
-                                     float &tex_sx, float &tex_sy,
-                                     float &tex_ex, float &tex_ey,
-                                     bool centre, int ymin, int ymax,
-                                     float tile_x, float tile_y) const
-{
-    const tile_info &inf = get_info(idx);
-
-    float fwidth  = m_width;
-    float fheight = m_height;
-
-    // Centre tiles on x, but allow taller tiles to extend upwards.
-    int size_ox = centre ? TILE_X / 2 - inf.width / 2 : 0;
-    int size_oy = centre ? TILE_Y - inf.height : 0;
-
-    int pos_sy_adjust = ofs_y + inf.offset_y + size_oy;
-    int pos_ey_adjust = pos_sy_adjust + inf.ey - inf.sy;
-
-    int sy = pos_sy_adjust;
-    if (ymin >= 0)
-        sy = max(ymin, sy);
-
-    int ey = pos_ey_adjust;
-    if (ymax >= 0)
-        ey = min(ymax, ey);
-
-    // Nothing to draw.
-    if (sy >= ey)
-        return false;
-
-    pos_sx += (ofs_x + inf.offset_x + size_ox) / tile_x;
-    pos_sy += sy / tile_y;
-    pos_ex = pos_sx + (inf.ex - inf.sx) / tile_x;
-    pos_ey = pos_sy + (ey - sy) / tile_y;
-
-    tex_sx = inf.sx / fwidth;
-    tex_sy = (inf.sy + sy - pos_sy_adjust) / fheight;
-    tex_ex = inf.ex / fwidth;
-    tex_ey = (inf.ey + ey - pos_ey_adjust) / fheight;
-
-    return true;
-}
 
 class ImageManager
 {
@@ -127,7 +77,10 @@ public:
     bool load_textures(bool need_mips);
     void unload_textures();
     inline const tile_info &tile_def_info(tile_def tile) const;
+    const TilesTexture &get_texture(TextureID t) const;
 
+private:
+    // XX just use vector??
     FixedVector<TilesTexture, TEX_MAX> m_textures;
 };
 

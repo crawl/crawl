@@ -941,7 +941,7 @@ FEATFN_MEMOIZED(feat_suppress_blood, feat)
     if (feat_is_tree(feat))
         return true;
 
-    if (feat == DNGN_DRY_FOUNTAIN)
+    if (feat == DNGN_DRY_FOUNTAIN || feat == DNGN_RUNELIGHT)
         return true;
 
     // covers shops and altars
@@ -2256,7 +2256,7 @@ vector<coord_def> get_push_spaces(const coord_def& pos, bool push_actor,
     if (push_actor)
     {
         act = actor_at(pos);
-        if (!act || act->is_stationary())
+        if (!act || act->is_stationary() || act->resists_dislodge())
             return results;
     }
 
@@ -2440,7 +2440,8 @@ void ice_wall_damage(monster &mons, int delay)
 
     const int pow = you.props[FROZEN_RAMPARTS_POWER_KEY].get_int();
     const int undelayed_dam = ramparts_damage(pow).roll();
-    const int orig_dam = div_rand_round(delay * undelayed_dam, BASELINE_DELAY);
+    const int post_ac_dam = mons.apply_ac(undelayed_dam);
+    const int orig_dam = div_rand_round(delay * post_ac_dam, BASELINE_DELAY);
 
     bolt beam;
     beam.flavour = BEAM_COLD;

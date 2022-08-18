@@ -90,6 +90,7 @@
 #include "view.h"
 #include "wizard-option-type.h"
 #include "xom.h"
+#include "zot.h" // bezotting_level
 
 static void _pruneify()
 {
@@ -159,12 +160,9 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
             if (you.hp > threshold && !you.has_mutation(MUT_CONDENSATION_SHIELD))
                 return true;
         }
-        // Don't prompt for meph if we have clarity, unless at very low HP.
-        if (ctype == CLOUD_MEPHITIC && you.clarity(false)
-            && you.hp > 2 * you.time_taken / BASELINE_DELAY)
-        {
+        // Don't prompt for meph if we have clarity
+        if (ctype == CLOUD_MEPHITIC && you.clarity(false))
             return true;
-        }
 
         if (prompted)
             *prompted = true;
@@ -711,6 +709,9 @@ void update_vision_range()
     // penalizing players with low LOS from items, don't shrink normal_vision.
     you.current_vision = you.normal_vision;
 
+    if (you.species == SP_METEORAN)
+        you.current_vision -= max(0, (bezotting_level() - 1) * 2); // spooky fx
+
     // scarf of shadows gives -1.
     if (you.wearing_ego(EQ_CLOAK, SPARM_SHADOWS))
         you.current_vision -= 1;
@@ -1067,15 +1068,17 @@ bool player_can_hear(const coord_def& p, int hear_distance)
            && you.pos().distance_from(p) <= hear_distance;
 }
 
-int player_teleport()
+int get_teleportitis_level()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    // Don't allow any form of teleportation in Sprint or Gauntlets.
-    if (crawl_state.game_is_sprint() || player_in_branch(BRANCH_GAUNTLET))
+    // Teleportitis doesn't trigger in Sprint, Abyss, or Gauntlets.
+    if (crawl_state.game_is_sprint() || player_in_branch(BRANCH_GAUNTLET)
+        || player_in_branch(BRANCH_ABYSS))
+    {
         return 0;
+    }
 
-    // Short-circuit rings of teleport to prevent spam.
     if (you.stasis())
         return 0;
 
@@ -1085,7 +1088,7 @@ int player_teleport()
     tp += 8 * you.scan_artefacts(ARTP_CAUSE_TELEPORTATION);
 
     // mutations
-    tp += you.get_mutation_level(MUT_TELEPORT) * 4;
+    tp += you.get_mutation_level(MUT_TELEPORT) * 6;
 
     return tp;
 }
@@ -1124,24 +1127,30 @@ static int _player_bonus_regen()
     return rr;
 }
 
+static bool _mons_inhibits_regen(const monster &m)
+{
+    return mons_is_threatening(m)
+                && !m.wont_attack()
+                && !m.neutral()
+                && !m.submerged();
+}
+
 /// Is the player's hp regeneration inhibited by nearby monsters?
-bool regeneration_is_inhibited()
+/// If the optional monster argument is provided, instead check whether that
+/// specific monster inhibits regeneration.
+bool regeneration_is_inhibited(const monster *m)
 {
     // used mainly for resting: don't add anything here that can be waited off
     if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
         || you.duration[DUR_COLLAPSE]
         || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
     {
-        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        {
-            if (mons_is_threatening(**mi)
-                && !mi->wont_attack()
-                && !mi->neutral()
-                && !mi->submerged())
-            {
-                return true;
-            }
-        }
+        if (m)
+            return _mons_inhibits_regen(*m);
+        else
+            for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+                if (_mons_inhibits_regen(**mi))
+                    return true;
     }
 
     return false;
@@ -1203,6 +1212,9 @@ int player_mp_regen()
         && you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1)
     {
         regen_amount += 40;
+        // grants a second pip on top of its base type
+        if (player_equip_unrand(UNRAND_VITALITY))
+            regen_amount += 40;
     }
 
     if (player_equip_unrand(UNRAND_POWER_GLOVES))
@@ -1837,20 +1849,6 @@ int player_movement_speed()
     return mv;
 }
 
-/**
- * Multiply the power of some evocation per the player's current evocations
- * enhancers.
- *
- * @param power         The base power of the evocation.
- * @param enhancers     Bonus enhancers to evocations (pak device surge).
- * @return              A modified power value.
- */
-int player_adjust_evoc_power(const int power, int enhancers)
-{
-    const int total_enhancers = you.spec_evoke() + enhancers;
-    return stepdown_spellpower(100 *apply_enhancement(power, total_enhancers));
-}
-
 // This function differs from the above in that it's used to set the
 // initial time_taken value for the turn. Everything else (movement,
 // spellcasting, combat) applies a ratio to this value.
@@ -2226,6 +2224,13 @@ void forget_map(bool rot)
         if (!env.map_knowledge(p).known() || you.see_cell(p))
             continue;
 
+        if (player_in_branch(BRANCH_ABYSS)
+            && env.map_knowledge(p).item()
+            && env.map_knowledge(p).item()->is_type(OBJ_RUNES, RUNE_ABYSSAL))
+        {
+            continue;
+        }
+
         if (rot)
         {
             const int dist = grid_distance(you.pos(), p);
@@ -2343,11 +2348,13 @@ static void _reduce_abyss_xp_timer(int exp)
         max(min((int)exp_needed(you.experience_level+1, 0) / 7,
                 you.experience_level * 425),
             you.experience_level*2 + 15) / 5;
+    // Reduce abyss exit spawns in the Deep Abyss (J:6+) to preserve challenge.
+    const int depth_factor = max(1, you.depth - 4);
 
     if (!you.props.exists(ABYSS_STAIR_XP_KEY))
         you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
     const int reqd_xp = you.props[ABYSS_STAIR_XP_KEY].get_int();
-    const int new_req = reqd_xp - div_rand_round(exp, xp_factor);
+    const int new_req = reqd_xp - div_rand_round(exp, xp_factor * depth_factor);
     dprf("reducing xp timer from %d to %d (factor = %d)",
          reqd_xp, new_req, xp_factor);
     you.props[ABYSS_STAIR_XP_KEY].get_int() = new_req;
@@ -2445,7 +2452,7 @@ unsigned int gain_exp(unsigned int exp_gained)
 
     you.experience_pool += exp_gained;
 
-    if (player_under_penance(GOD_HEPLIAKLQANA) || player_in_branch(BRANCH_ABYSS))
+    if (player_under_penance(GOD_HEPLIAKLQANA))
         return 0; // no XP for you!
 
     const unsigned int max_gain = (unsigned int)MAX_EXP_TOTAL - you.experience;
@@ -2461,13 +2468,6 @@ void apply_exp()
         return;
 
     you.experience_pool = 0;
-
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        // no progress to any XP gated effects either
-        _reduce_abyss_xp_timer(exp_gained);
-        return;
-    }
 
     // xp-gated effects that don't use sprint inflation
     _handle_xp_penance(exp_gained);
@@ -2486,6 +2486,7 @@ void apply_exp()
     _handle_stat_loss(skill_xp);
     _handle_temp_mutation(skill_xp);
     _recharge_xp_evokers(skill_xp);
+    _reduce_abyss_xp_timer(skill_xp);
     _handle_hp_drain(skill_xp);
 
     if (player_under_penance(GOD_HEPLIAKLQANA))
@@ -2562,9 +2563,9 @@ static int _rest_trigger_level(int max)
     return (max * Options.rest_wait_percent) / 100;
 }
 
-static bool _should_stop_resting(int cur, int max)
+static bool _should_stop_resting(int cur, int max, bool check_opts=true)
 {
-    return cur == max || cur == _rest_trigger_level(max);
+    return cur == max || check_opts && cur == _rest_trigger_level(max);
 }
 
 /**
@@ -2579,7 +2580,9 @@ void calc_hp(bool scale, bool set)
 
     you.hp_max = get_real_hp(true, true);
 
-    if (scale)
+    // hp_max is not serialized, so fixup code that tries to trigger rescaling
+    // during load should not actually do it.
+    if (scale && old_max > 0)
     {
         int hp = you.hp * 100 + you.hit_points_regeneration;
         int new_max = you.hp_max;
@@ -3252,6 +3255,8 @@ static void _display_attack_delay()
     string penalty_msg = "";
     if (shield_penalty || armour_penalty)
     {
+        // TODO: add amount, as in item description (see _describe_armour)
+        // double parens are awkward
         penalty_msg =
             make_stringf( " (and is slowed by your %s)",
                          shield_penalty && armour_penalty ? "shield and armour" :
@@ -3942,13 +3947,10 @@ bool player_regenerates_mp()
     // Djinn don't do the whole "mp" thing.
     if (you.has_mutation(MUT_HP_CASTING))
         return false;
+#if TAG_MAJOR_VERSION == 34
     // Don't let DD use guardian spirit for free HP, since their
     // damage shaving is enough. (due, dpeg)
     if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
-        return false;
-#if TAG_MAJOR_VERSION == 34
-    // Pakellas blocks MP regeneration.
-    if (have_passive(passive_t::no_mp_regen) || player_under_penance(GOD_PAKELLAS))
         return false;
 #endif
     return true;
@@ -3968,7 +3970,7 @@ int get_contamination_level()
         return 4;
     if (glow > 5000)
         return 3;
-    if (glow > 3500) // An indicator that using another contamination-causing
+    if (glow > 3000) // An indicator that using another contamination-causing
         return 2;    // ability might risk causing yellow glow.
     if (glow > 0)
         return 1;
@@ -4129,12 +4131,11 @@ bool confuse_player(int amount, bool quiet, bool force)
     return true;
 }
 
-void paralyse_player(string source, int amount)
+void paralyse_player(string source)
 {
-    if (!amount)
-        amount = 2 + random2(6 + you.duration[DUR_PARALYSIS] / BASELINE_DELAY);
-
-    you.paralyse(nullptr, amount, source);
+    const int cur_para = you.duration[DUR_PARALYSIS] / BASELINE_DELAY;
+    const int dur = random_range(2, 5 + cur_para);
+    you.paralyse(nullptr, dur, source);
 }
 
 bool poison_player(int amount, string source, string source_aux, bool force)
@@ -4192,10 +4193,12 @@ int get_player_poisoning()
 {
     if (player_res_poison() >= 3)
         return 0;
+#if TAG_MAJOR_VERSION == 34
     // Approximate the effect of damage shaving by giving the first
     // 25 points of poison damage for 'free'
     if (can_shave_damage())
         return max(0, (you.duration[DUR_POISONING] / 1000) - 25);
+#endif
     return you.duration[DUR_POISONING] / 1000;
 }
 
@@ -4275,6 +4278,7 @@ void handle_player_poison(int delay)
     int dmg = (you.duration[DUR_POISONING] / 1000)
                - ((you.duration[DUR_POISONING] - decrease) / 1000);
 
+#if TAG_MAJOR_VERSION == 34
     // Approximate old damage shaving by giving immunity to small amounts
     // of poison. Stronger poison will do the same damage as for non-DD
     // until it goes below the threshold, which is a bit weird, but
@@ -4286,6 +4290,7 @@ void handle_player_poison(int delay)
         if (dmg < 0)
             dmg = 0;
     }
+#endif
 
     msg_channel_type channel = MSGCH_PLAIN;
     const char *adj = "";
@@ -4354,18 +4359,28 @@ int poison_survival()
         return you.hp;
     const int rr = player_regen();
     const bool chei = have_passive(passive_t::slow_poison);
+#if TAG_MAJOR_VERSION == 34
     const bool dd = can_shave_damage();
+#endif
     const int amount = you.duration[DUR_POISONING];
     const double full_aut = _poison_dur_to_aut(amount);
     // Calculate the poison amount at which regen starts to beat poison.
     double min_poison_rate = poison_min_hp_aut;
+#if TAG_MAJOR_VERSION == 34
     if (dd)
         min_poison_rate = 25.0/poison_denom;
+#endif
     if (chei)
         min_poison_rate /= 1.5;
     int regen_beats_poison;
     if (rr <= (int) min_poison_rate)
-        regen_beats_poison = dd ? 25000 : 0;
+    {
+        regen_beats_poison =
+#if TAG_MAJOR_VERSION == 34
+         dd ? 25000 :
+#endif
+              0;
+    }
     else
     {
         regen_beats_poison = poison_denom * 10.0 * rr;
@@ -4704,7 +4719,12 @@ bool invis_allowed(bool quiet, string *fail_reason)
     string msg;
     bool success = true;
 
-    if (you.haloed() && you.halo_radius() != -1)
+    if (you.has_mutation(MUT_GLOWING))
+    {
+        msg = "Your body glows too brightly to become invisible.";
+        success = false;
+    }
+    else if (you.haloed() && you.halo_radius() != -1)
     {
         vector<string> sources;
 
@@ -5186,7 +5206,6 @@ void player::init_skills()
     training.init(0);
     can_currently_train.reset();
     skill_points.init(0);
-    ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
     skill_manual_points.init(0);
     training_targets.init(0);
@@ -5308,14 +5327,25 @@ bool player::is_banished() const
     return banished;
 }
 
-bool player::is_sufficiently_rested() const
+bool player::is_sufficiently_rested(bool starting) const
 {
-    // Only return false if resting will actually help.
+    // Only return false if resting will actually help. Anything here should
+    // explicitly trigger an appropriate activity interrupt to prevent infinite
+    // resting (and shouldn't just rely on a message interrupt).
+    // if an interrupt is disabled, we don't count it at all for resting. (So
+    // if someone disables all these interrupts, resting becomes impossible.)
+    const bool hp_interrupts = Options.activity_interrupts["rest"][
+                                static_cast<int>(activity_interrupt::full_hp)];
     return (!player_regenerates_hp()
-                || _should_stop_resting(hp, hp_max))
+                || _should_stop_resting(hp, hp_max, !starting)
+                || !hp_interrupts
+                || you.has_mutation(MUT_EXPLORE_REGEN))
         && (!player_regenerates_mp()
-                || _should_stop_resting(magic_points, max_magic_points))
-        && !you.duration[DUR_BARBS];
+                || _should_stop_resting(magic_points, max_magic_points, !starting)
+                || !Options.activity_interrupts["rest"][
+                                static_cast<int>(activity_interrupt::full_mp)]
+                || you.has_mutation(MUT_EXPLORE_REGEN))
+        && (!you.duration[DUR_BARBS] || !hp_interrupts);
 }
 
 bool player::in_water() const
@@ -6593,6 +6623,23 @@ void player::drain_stat(stat_type s, int amount)
     lose_stat(s, amount);
 }
 
+/**
+ * Checks to see whether the player can be dislodged by physical effects.
+ * This only accounts for the "mountain boots" unrand, not being stationary, etc.
+ *
+ * @param event A message to be printed if the player cannot be dislodged.
+ *               If empty, nothing will be printed.
+ * @return Whether the player can be moved.
+ */
+bool player::resists_dislodge(string event) const
+{
+    if (!player_equip_unrand(UNRAND_MOUNTAIN_BOOTS))
+        return false;
+    if (!event.empty())
+        mprf("Your boots keep you from %s.", event.c_str());
+    return true;
+}
+
 bool player::corrode_equipment(const char* corrosion_source, int degree)
 {
     // rCorr protects against 50% of corrosion.
@@ -6721,6 +6768,7 @@ void player::paralyse(const actor *who, int str, string source)
 
     paralysis = min(str, 13) * BASELINE_DELAY;
 
+    stop_delay(true, true);
     stop_directly_constricting_all(false);
     end_wait_spells();
     redraw_armour_class = true;
@@ -6775,6 +6823,7 @@ bool player::fully_petrify(bool /*quiet*/)
     mpr("You have turned to stone.");
     _pruneify();
 
+    stop_delay(true, true);
     end_wait_spells();
 
     return true;
@@ -7032,16 +7081,22 @@ bool player::visible_to(const actor *looker) const
 /**
  * Is the player backlit?
  *
- * @param self_halo If true, ignore the player's self-halo.
+ * @param self_halo If false, ignore the player's self-halo.
+ * @param temp If true, include temporary sources of being backlit.
  * @returns True if the player is backlit.
 */
-bool player::backlit(bool self_halo) const
+bool player::backlit(bool self_halo, bool temp) const
 {
-    return player_severe_contamination()
-           || duration[DUR_CORONA]
-           || duration[DUR_LIQUID_FLAMES]
-           || duration[DUR_QUAD_DAMAGE]
-           || !umbraed() && haloed() && (self_halo || halo_radius() == -1);
+    if (temp && form == transformation::shadow)
+        return false;
+
+    return temp && (player_severe_contamination()
+                    || duration[DUR_CORONA]
+                    || duration[DUR_LIQUID_FLAMES]
+                    || duration[DUR_QUAD_DAMAGE]
+                    || !umbraed() && haloed()
+                       && (self_halo || halo_radius() == -1))
+           || you.has_mutation(MUT_GLOWING);
 }
 
 bool player::umbra() const
@@ -7052,19 +7107,23 @@ bool player::umbra() const
 // This is the imperative version.
 void player::backlight()
 {
-    if (!duration[DUR_INVIS] && form != transformation::shadow)
+    if (form == transformation::shadow)
+    {
+        mpr("Shadows surge around you.");
+        return;
+    }
+
+    if (!duration[DUR_INVIS])
     {
         if (duration[DUR_CORONA])
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");
-        increase_duration(DUR_CORONA, random_range(15, 35), 250);
     }
     else
-    {
         mpr("You feel strangely conspicuous.");
-        increase_duration(DUR_CORONA, random_range(3, 5), 250);
-    }
+
+    increase_duration(DUR_CORONA, random_range(15, 35), 250);
 }
 
 bool player::can_mutate() const
@@ -7271,7 +7330,7 @@ void player::put_to_sleep(actor*, int power, bool hibernate)
 
     stop_directly_constricting_all(false);
     end_wait_spells();
-    stop_delay();
+    stop_delay(true, true);
     flash_view(UA_MONSTER, DARKGREY);
 
     // As above, do this after redraw.
@@ -7323,8 +7382,11 @@ bool player::shaftable(bool check_terrain) const
 // different effect from the player invokable ability.
 bool player::do_shaft(bool check_terrain)
 {
-    if (!shaftable(check_terrain))
+    if (!shaftable(check_terrain)
+        || resists_dislodge("falling into an unexpected shaft"))
+    {
         return false;
+    }
 
     // Ensure altars, items, and shops discovered at the moment
     // the player gets shafted are correctly registered.
@@ -7466,9 +7528,10 @@ bool player::attempt_escape(int attempts)
     ASSERT(themonst);
     escape_attempts += attempts;
 
-    const bool direct = is_directly_constricted();
-    const string object = direct ? themonst->name(DESC_ITS, true)
-                                 : "the roots'";
+    const auto constr_typ = get_constrict_type();
+    const string object
+        = constr_typ == CONSTRICT_ROOTS ? "the roots"
+                                        : themonst->name(DESC_ITS, true);
     // player breaks free if (4+n)d13 >= 5d(8+HD/4)
     const int escape_score = roll_dice(4 + escape_attempts, 13);
     if (escape_score
@@ -7477,7 +7540,7 @@ bool player::attempt_escape(int attempts)
         mprf("You escape %s grasp.", object.c_str());
 
         // Stun the monster to prevent it from constricting again right away.
-        if (direct)
+        if (constr_typ == CONSTRICT_MELEE)
             themonst->speed_increment -= 5;
 
         stop_being_constricted(true);
@@ -7617,7 +7680,8 @@ static string _constriction_description()
                               num_free_tentacles > 1 ? "s" : "");
     }
 
-    if (you.is_directly_constricted())
+    const auto constr_typ = you.get_constrict_type();
+    if (constr_typ == CONSTRICT_MELEE)
     {
         const monster * const constrictor = monster_by_mid(you.constricted_by);
         ASSERT(constrictor);
@@ -7626,7 +7690,7 @@ static string _constriction_description()
             cinfo += "\n";
 
         cinfo += make_stringf("You are being %s by %s.",
-                              constrictor->constriction_does_damage(true) ?
+                              constrictor->constriction_does_damage(constr_typ) ?
                                   "held" : "constricted",
                               constrictor->name(DESC_A).c_str());
     }
@@ -7638,7 +7702,7 @@ static string _constriction_description()
             monster *whom = monster_by_mid(entry.first);
             ASSERT(whom);
 
-            if (!whom->is_directly_constricted())
+            if (whom->get_constrict_type() != CONSTRICT_MELEE)
                 continue;
 
             c_name.push_back(whom->name(DESC_A));
@@ -7747,7 +7811,6 @@ void print_potion_heal_message()
     else if (_get_potion_heal_factor() < 2)
         mpr("Your system partially rejects the healing.");
 }
-
 
 bool player::can_potion_heal()
 {

@@ -20,6 +20,7 @@ enum load_mode_type
     LOAD_START_GAME,            // game has just begun
     LOAD_RESTART_GAME,          // loaded savefile
     LOAD_ENTER_LEVEL,           // entered a level normally
+    LOAD_ENTER_LEVEL_FAST,      // entered a level through new stairs/etc
     LOAD_VISITOR,               // Visitor pattern to see all levels
 };
 

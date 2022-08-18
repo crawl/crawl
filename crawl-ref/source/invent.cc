@@ -306,6 +306,7 @@ InvMenu::InvMenu(int mflags)
         type(menu_type::invlist), pre_select(nullptr),
         title_annotate(nullptr), _mode_special_drop(false)
 {
+    menu_action = ACT_EXAMINE; // default
 #ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
         set_flags(get_flags() | MF_USE_TWO_COLUMNS);
@@ -320,6 +321,7 @@ bool InvMenu::mode_special_drop() const
 void InvMenu::set_type(menu_type t)
 {
     type = t;
+    menu_action = t == menu_type::describe ? ACT_EXAMINE : ACT_EXECUTE;
 }
 
 void InvMenu::set_title_annotator(invtitle_annotator afn)
@@ -347,6 +349,18 @@ void InvMenu::set_title(const string &s)
     set_title(new InvTitle(this, s.empty() ? "Inventory: " + slot_description()
                                            : s,
                            title_annotate));
+}
+
+bool InvMenu::skip_process_command(int keyin)
+{
+    switch (keyin)
+    {
+    case '?':
+    case '!':
+        // item type shortcuts
+        return true;
+    }
+    return Menu::skip_process_command(keyin);
 }
 
 int InvMenu::pre_process(int key)
@@ -396,6 +410,22 @@ void InvMenu::select_item_index(int idx, int qty)
         ie->set_star(!ie->has_star());
     }
     Menu::select_item_index(idx, qty);
+}
+
+bool InvMenu::examine_index(int i)
+{
+    if (on_examine)
+        return Menu::examine_index(i);
+    // default behavior: examine inv item. You must override or use on_examine
+    // if your items come from somewhere else, or this will cause crashes!
+    if (i >= 0 && i < static_cast<int>(items.size()) && items[i]->hotkeys.size())
+    {
+        unsigned char select = items[i]->hotkeys[0];
+        const int invidx = letter_to_index(select);
+        ASSERT(you.inv[invidx].defined());
+        return describe_item(you.inv[invidx]);
+    }
+    return true;
 }
 
 void InvEntry::set_star(bool val)
@@ -481,6 +511,8 @@ string no_selectables_message(int item_selector)
     case OSEL_UNCURSED_WORN_JEWELLERY:
         return "You aren't wearing any piece of uncursed jewellery.";
 #endif
+    case OSEL_WORN_ARMOUR:
+        return "You aren't wearing any pieces of armour.";
     case OSEL_BRANDABLE_WEAPON:
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
@@ -933,18 +965,12 @@ string InvMenu::help_key() const
 int InvMenu::getkey() const
 {
     auto mkey = lastch;
-#ifndef USE_TILE_LOCAL
-    // hackily normalize some numpad stuff. XX local tiles...
-    if (mkey == CK_NUMPAD_MULTIPLY)
-        mkey = '*';
-    else if (mkey == CK_NUMPAD_ENTER)
-        mkey = CK_ENTER;
-    else if (mkey == CK_NUMPAD_SUBTRACT || mkey == CK_NUMPAD_SUBTRACT2)
-        mkey = '-';
-#endif
 
-    if (is_set(MF_ARROWS_SELECT) && mkey == CK_ENTER)
+    if (is_set(MF_ARROWS_SELECT) && mkey == CK_ENTER
+        || mkey == CK_MOUSE_B1)
+    {
         return mkey;
+    }
     if (type == menu_type::know && mkey == 0) // ??
         return mkey;
 
@@ -1038,13 +1064,16 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
 
         menu.load_items(items);
         int new_flags = noselect ? MF_NOSELECT
-                                 : MF_MULTISELECT | MF_ALLOW_FILTER;
+                            : MF_MULTISELECT | MF_ALLOW_FILTER;
 
         if (mtype == menu_type::sel_one)
         {
             new_flags |= MF_SINGLESELECT;
             new_flags &= ~MF_MULTISELECT;
         }
+
+        if (!!(new_flags & MF_MULTISELECT))
+            new_flags |= MF_SELECT_QTY;
 
         new_flags |= MF_ALLOW_FORMATTING | MF_ARROWS_SELECT;
         new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
@@ -1116,7 +1145,8 @@ bool item_is_selected(const item_def &i, int selector)
                    || i.plus < MAX_WPN_ENCHANT);
 
     case OSEL_BLESSABLE_WEAPON:
-        return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
+        return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE)
+                    || you_worship(GOD_KIKUBAAQUDGHA), true);
 
     case OSEL_BEOGH_GIFT:
         return (itype == OBJ_WEAPONS
@@ -1133,7 +1163,19 @@ bool item_is_selected(const item_def &i, int selector)
             && !jewellery_is_amulet(i);
 
     case OSEL_QUIVER_ACTION:
-        return in_inventory(i) && quiver::slot_to_action(i.link)->is_valid();
+        if (in_inventory(i))
+        {
+            auto a = quiver::slot_to_action(i.link);
+            // lots of things can be activated via the quiver, but don't have
+            // a targeter -- ignore these.
+            // However, we do want to allow selecting ammo/launchers under
+            // confusion...
+            // XX should the primary weapon be allowed here?
+            return a->is_valid()
+                && (a->is_targeted()
+                    || you.confused() && item_is_selected(i, OSEL_LAUNCHING));
+        }
+        return false;
     case OSEL_QUIVER_ACTION_FORCE:
         return in_inventory(i) && quiver::slot_to_action(i.link, true)->is_valid();
 
@@ -1191,7 +1233,7 @@ bool any_items_of_type(int selector, int excluded_slot, bool inspect_floor)
 
 // Use title = nullptr for stock Inventory title
 // type = menu_type::drop allows the multidrop toggle
-static unsigned char _invent_select(const char *title = nullptr,
+static int _invent_select(const char *title = nullptr,
                                     menu_type type = menu_type::invlist,
                                     int item_selector = OSEL_ANY,
                                     int excluded_slot = -1,
@@ -1226,17 +1268,9 @@ static unsigned char _invent_select(const char *title = nullptr,
 
 void display_inventory()
 {
-    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING);
+    InvMenu menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_SECONDARY_SCROLL);
     menu.load_inv_items(OSEL_ANY, -1);
-    menu.set_type(menu_type::invlist);
-
-    menu.on_single_selection = [](const MenuEntry& item)
-    {
-        unsigned char select = item.hotkeys[0];
-        const int invidx = letter_to_index(select);
-        ASSERT(you.inv[invidx].defined());
-        return describe_item(you.inv[invidx]);
-    };
+    menu.set_type(menu_type::describe);
 
     menu.show(true);
     if (!crawl_state.doing_prev_cmd_again)
@@ -1310,7 +1344,7 @@ vector<SelItem> prompt_drop_items(const vector<SelItem> &preselected_items)
                       menu_type::drop,
                       OSEL_ANY,
                       -1,
-                      MF_MULTISELECT | MF_ALLOW_FILTER,
+                      MF_MULTISELECT | MF_ALLOW_FILTER | MF_SELECT_QTY,
                       _drop_menu_titlefn,
                       &items,
                       &Options.drop_filter,
@@ -1538,11 +1572,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (needs_notele_warning(item, oper))
         return true;
 
-    if (oper == OPER_ATTACK && god_hates_item(item)
-#if TAG_MAJOR_VERSION == 34
-        && !you_worship(GOD_PAKELLAS)
-#endif
-       )
+    if (oper == OPER_ATTACK && god_hates_item(item))
     {
         penance = true;
         return true;
@@ -1711,6 +1741,8 @@ bool check_warning_inscriptions(const item_def& item,
  * @param flags            See comments on invent_prompt_flags.
  * @param other_valid_char A character that, if not '\0', will cause
  *                         PROMPT_GOT_SPECIAL to be returned when pressed.
+ * @param type_out         Output: OSEL_ANY if the user was in `*`, type_expect
+ *                         otherwise. Ignored if nullptr.
  *
  * @return  the inventory slot of an item or one of the following special values
  *          - PROMPT_ABORT:       if the player hits escape.
@@ -1721,7 +1753,9 @@ int prompt_invent_item(const char *prompt,
                        menu_type mtype, int type_expect,
                        operation_types oper,
                        invent_prompt_flags flags,
-                       const char other_valid_char)
+                       const char other_valid_char,
+                       const char *view_all_prompt,
+                       int *type_out)
 {
     const bool do_warning = !(flags & invprompt_flag::no_warning);
     const bool allow_list_known = !(flags & invprompt_flag::hide_known);
@@ -1737,13 +1771,13 @@ int prompt_invent_item(const char *prompt,
         return PROMPT_NOTHING;
     }
 
-    unsigned char  keyin = 0;
-    int            ret = PROMPT_ABORT;
+    int keyin = 0;
+    int ret = PROMPT_ABORT;
 
     int current_type_expected = type_expect;
-    bool           need_redraw = false;
-    bool           need_prompt = true;
-    bool           need_getch  = true;
+    bool need_redraw = false;
+    bool need_prompt = true;
+    bool need_getch  = true;
 
     if (auto_list)
     {
@@ -1755,6 +1789,9 @@ int prompt_invent_item(const char *prompt,
         else
             keyin = '*';
     }
+
+    if (keyin == '*')
+        current_type_expected = OSEL_ANY;
 
     // ugh, why is this done manually
     while (true)
@@ -1768,7 +1805,8 @@ int prompt_invent_item(const char *prompt,
         if (need_prompt)
         {
             mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
-                 prompt);
+                 current_type_expected == OSEL_ANY && view_all_prompt
+                 ? view_all_prompt : prompt);
         }
         else
             flush_prev_message();
@@ -1796,14 +1834,16 @@ int prompt_invent_item(const char *prompt,
             vector< SelItem > items;
             const auto last_keyin = keyin;
             current_type_expected = keyin == '*' ? OSEL_ANY : type_expect;
-            int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY;
+            int mflags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_SECONDARY_SCROLL;
             if (other_valid_char == '-')
                 mflags |= MF_SPECIAL_MINUS;
 
             while (true)
             {
-                keyin = _invent_select(prompt, mtype, current_type_expected, -1,
-                                       mflags, nullptr, &items);
+                keyin = _invent_select(
+                    current_type_expected == OSEL_ANY && view_all_prompt
+                        ? view_all_prompt : prompt,
+                    mtype, current_type_expected, -1, mflags, nullptr, &items);
 
                 if (allow_list_known && keyin == '\\')
                 {
@@ -1827,6 +1867,7 @@ int prompt_invent_item(const char *prompt,
                 // let `*` act as a toggle. This is a slightly wacky
                 // implementation in that '?' as a toggle does something
                 // entirely different...
+                // need_prompt = view_all_prompt;
                 need_prompt = need_getch = false;
                 if (last_keyin == '*')
                     keyin = '?';
@@ -1834,9 +1875,11 @@ int prompt_invent_item(const char *prompt,
                     keyin = '*';
                 continue;
             }
-            else if (keyin == CK_ENTER && items.size() > 0)
+            else if ((keyin == CK_ENTER || keyin == CK_MOUSE_B1) && items.size() > 0)
             {
                 // hacky, but lets the inscription checks below trip
+                // TODO: this code should not rely on keyin, it breaks cmd
+                // bindings
                 keyin = items[0].slot;
             }
             else if (other_valid_char != 0 && keyin == other_valid_char)
@@ -1899,6 +1942,8 @@ int prompt_invent_item(const char *prompt,
             need_prompt = false;
         }
     }
+    if (type_out)
+        *type_out = current_type_expected;
 
     return ret;
 }

@@ -478,7 +478,6 @@ LUAFN(debug_check_moncasts)
         SPELL_CALL_CANINE_FAMILIAR,
         SPELL_DISPERSAL,
         SPELL_INTOXICATE,
-        SPELL_EXCRUCIATING_WOUNDS,
         SPELL_BEASTLY_APPENDAGE,
         SPELL_DISJUNCTION,
         SPELL_WEREBLOOD,
@@ -519,6 +518,7 @@ LUAFN(debug_check_moncasts)
         SPELL_FLAME_WAVE,
         SPELL_ENFEEBLE,
         SPELL_ANGUISH,
+        SPELL_NECROTISE,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)

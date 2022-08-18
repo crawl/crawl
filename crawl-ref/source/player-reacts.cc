@@ -91,12 +91,12 @@
 #include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
-#include "timed-effects.h" // bezotting
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // bezotting
 
 /**
  * Decrement a duration by the given delay.
@@ -211,7 +211,7 @@ static void _decrement_attraction(int delay)
     if (!you.duration[DUR_ATTRACTIVE])
         return;
 
-    attract_monsters();
+    attract_monsters(delay);
     if (_decrement_a_duration(DUR_ATTRACTIVE, delay))
         mpr("You feel less attractive to monsters.");
 }
@@ -659,10 +659,8 @@ static void _decrement_durations()
     // (killing monsters, offering items, ...) might be confusing for characters
     // of other religions.
     // For now, though, keep information about what happened hidden.
-    if (you.piety < MAX_PIETY
-        && you.duration[DUR_PIETY_POOL] > 0
-        && one_chance_in(5)
-        && !player_in_branch(BRANCH_ABYSS))
+    if (you.piety < MAX_PIETY && you.duration[DUR_PIETY_POOL] > 0
+        && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;
         gain_piety(1, 1);
@@ -859,8 +857,11 @@ static void _update_equipment_attunement_by_health()
                     item_slot_name(static_cast<equipment_type>(slot)) :
                     "armour");
 
-            if (slot == EQ_GLOVES || slot == EQ_BOOTS)
+            if (slot == EQ_BOOTS && arm.sub_type != ARM_BARDING
+                || slot == EQ_GLOVES)
+            {
                 plural = true;
+            }
             you.activated.set(slot);
         }
     }
@@ -954,7 +955,8 @@ static void _regenerate_hp_and_mp(int delay)
 static void _handle_wereblood()
 {
     if (you.duration[DUR_WEREBLOOD]
-        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int(), 9))
+        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int(), 9)
+        && !silenced(you.pos()))
     {
         // Keep the spam down
         if (you.props[WEREBLOOD_KEY].get_int() < 3 || one_chance_in(5))
@@ -983,7 +985,7 @@ void player_reacts()
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
-        const int teleportitis_level = player_teleport();
+        const int teleportitis_level = get_teleportitis_level();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(false, true, "You feel strangely unstable.");
@@ -1056,5 +1058,11 @@ void extract_manticore_spikes(const char* endmsg)
         you.attribute[ATTR_BARBS_POW] = 0;
 
         you.props.erase(BARBS_MOVE_KEY);
+
+        // somewhat hacky: ensure that a rest delay can get the right interrupt
+        // check when barbs are removed, and all other rest stop conditions are
+        // satisfied
+        if (you.is_sufficiently_rested())
+            interrupt_activity(activity_interrupt::full_hp);
     }
 }

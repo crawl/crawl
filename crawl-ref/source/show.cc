@@ -175,7 +175,9 @@ static void _update_feat_at(const coord_def &gp)
     // so we can properly recolor both.
     if (env.level_state & LSTATE_ICY_WALL
         && (is_icecovered(gp)
-            || !feat_is_wall(feat) && count_adjacent_icy_walls(gp)))
+            || !feat_is_wall(feat)
+                && count_adjacent_icy_walls(gp)
+                && you.see_cell_no_trans(gp)))
     {
         env.map_knowledge(gp).flags |= MAP_ICY;
     }

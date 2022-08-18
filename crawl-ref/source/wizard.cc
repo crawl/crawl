@@ -139,7 +139,7 @@ static void _do_wizard_command(int wiz_command)
     case CONTROL('Q'): wizard_toggle_dprf(); break;
 
     case 'r': wizard_change_species(); break;
-    case 'R': wizard_spawn_control(); break;
+    case 'R':
     case CONTROL('R'): wizard_recreate_level(); break;
 
     case 's':
@@ -442,7 +442,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<yellow>Builder debugging</yellow>\n"
                        "<w>L</w>      place a vault by name\n"
                        "<w>P</w>      create a level based on a vault\n"
-                       "<w>Ctrl-R</w> regenerate current level\n"
+                       "<w>R</w> regenerate current level\n"
                        "<w>Ctrl-A</w> generate new Abyss area\n"
                        "<w>K</w>      mark all vaults as unused\n"
                        "<w>:</w>      find branches and overflow\n"
@@ -465,7 +465,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>e</w>      trigger explore traps\n"
                        "<w>Ctrl-B</w> banish yourself to the Abyss\n"
                        "<w>Ctrl-S</w> change Abyss speed\n"
-                       "<w>R</w>      change monster spawn rate\n"
                        "<w>Ctrl-W</w> change Shoals' tide speed\n",
                        true);
 

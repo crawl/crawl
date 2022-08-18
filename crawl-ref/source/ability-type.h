@@ -46,9 +46,9 @@ enum ability_type
     ABIL_REVIVIFY,
 #if TAG_MAJOR_VERSION == 34
     ABIL_BOTTLE_BLOOD,
-#endif
     // Deep Dwarves
     ABIL_HEAL_WOUNDS,
+#endif
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
@@ -109,10 +109,13 @@ enum ability_type
     ABIL_TSO_SUMMON_DIVINE_WARRIOR,
     ABIL_TSO_BLESS_WEAPON,
     // Kiku
+#if TAG_MAJOR_VERSION == 34
     ABIL_KIKU_RECEIVE_CORPSES = 1020,
+#endif
     ABIL_KIKU_TORMENT,
     ABIL_KIKU_BLESS_WEAPON,
     ABIL_KIKU_GIFT_CAPSTONE_SPELLS,
+    ABIL_KIKU_UNEARTH_WRETCHES,
     // Yredelemnul
 #if TAG_MAJOR_VERSION == 34
     ABIL_YRED_INJURY_MIRROR = 1030,

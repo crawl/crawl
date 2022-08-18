@@ -15,9 +15,7 @@ aptitudes:
   maces_and_flails: 8
   polearms: 8
   staves: 8
-  slings: 8
-  bows: 8
-  crossbows: 8
+  ranged weapons: 8
   throwing: 8
   armour: 8
   dodging: 8

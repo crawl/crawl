@@ -14,4 +14,3 @@
 void rot_corpses(int elapsedTime);
 
 bool turn_corpse_into_skeleton(item_def &item);
-void butcher_corpse(item_def &item, bool skeleton = true);

@@ -88,7 +88,7 @@ int formatted_scroller::show()
     m_scroller->expand_v = true;
 #endif
     auto text = make_shared<Text>();
-    formatted_string c = formatted_string::parse_string(contents.to_colour_string());
+    formatted_string c = formatted_string::parse_string(contents.to_colour_string(LIGHTGRAY));
     text->set_text(c);
     text->set_highlight_pattern(highlight, true);
     text->set_wrap_text(!(m_flags & FS_PREWRAPPED_TEXT));
@@ -118,7 +118,7 @@ int formatted_scroller::show()
             text->set_text(contents);
 #ifdef USE_TILE_WEB
             tiles.json_open_object();
-            tiles.json_write_string("text", contents.to_colour_string());
+            tiles.json_write_string("text", contents.to_colour_string(LIGHTGRAY));
             tiles.json_write_string("highlight", highlight);
             tiles.ui_state_change("formatted-scroller", 0);
 #endif
@@ -140,9 +140,9 @@ int formatted_scroller::show()
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
     tiles.json_write_string("tag", m_tag);
-    tiles.json_write_string("text", contents.to_colour_string());
+    tiles.json_write_string("text", contents.to_colour_string(LIGHTGRAY));
     tiles.json_write_string("highlight", highlight);
-    tiles.json_write_string("more", m_more.to_colour_string());
+    tiles.json_write_string("more", m_more.to_colour_string(LIGHTGRAY));
     tiles.json_write_bool("start_at_end", m_flags & FS_START_AT_END);
     tiles.push_ui_layout("formatted-scroller", 2);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });

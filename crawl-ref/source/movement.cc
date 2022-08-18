@@ -226,7 +226,7 @@ void remove_water_hold()
 static void _clear_constriction_data()
 {
     you.stop_directly_constricting_all(true);
-    if (you.is_directly_constricted())
+    if (you.get_constrict_type() == CONSTRICT_MELEE)
         you.stop_being_constricted();
 }
 
@@ -253,6 +253,8 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
             || mon->confused()
             || mon->incapacitated()
             || mons_is_fleeing(*mon)
+            || mon->is_constricted() && (mon->constricted_by != MID_PLAYER
+                                         || mon->get_constrict_type() != CONSTRICT_MELEE)
             || !mon->can_see(you)
             // only let monsters attack if they might follow you
             || !mon->may_have_action_energy() || mon->is_stationary()
@@ -278,13 +280,6 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
         if (you.pending_revival || you.pos() != orig_pos)
             return;
     }
-}
-
-static void _apply_pre_move_effects(coord_def new_pos)
-{
-    remove_water_hold();
-    _clear_constriction_data();
-    _trigger_opportunity_attacks(new_pos);
 }
 
 bool apply_cloud_trail(const coord_def old_pos)
@@ -1138,7 +1133,10 @@ void move_player_action(coord_def move)
         // when confusion causes no move.
         if (you.pos() != targ && targ_pass)
         {
-            _apply_pre_move_effects(targ);
+            remove_water_hold();
+            _clear_constriction_data();
+            if (!swap)
+                _trigger_opportunity_attacks(targ);
             // Check nothing weird happened during opportunity attacks.
             if (!you.pending_revival)
             {

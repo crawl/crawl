@@ -375,8 +375,12 @@ Staircases and Portals
 You can make your way between levels by using staircases, which appear as ">"
 (down) and "<" (up), by pressing the '>' or '<' keys. It is important to know
 that most monsters adjacent to you will follow when you change levels; this
-holds both for hostile and allied monsters. Notable exceptions are zombies and
-other mindless undead, who are too stupid to properly operate stairs.
+holds both for hostile and allied monsters. Notable exceptions are zombies
+and other mindless undead, who are too stupid to properly operate stairs.
+
+When taking stairs with an unknown destination, you are guaranteed a chance to
+move before any adjacent monsters. When taking stairs that you've already seen
+the other side of, monsters will be alert and get a chance to move before you.
 
 If you ascend an up staircase on level one, you will leave the dungeon forever;
 if you are carrying the magical Orb of Zot, you win the game by doing this.
@@ -494,8 +498,9 @@ Zot
 ========================================
 
 No one knows who or what Zot is: demon, god, wizard, something else entirely?
-But adventurers seeking the Orb will, in turn, be hunted by Zot, and if it
-finds them, their existence will end.
+But adventurers seeking the Orb will, in turn, be hunted by Zot. If it finds
+them, it will first drain their life and then, once they are sufficiently
+reduced, it will end their existence.
 
 Zot is very slow moving, and can only sense adventurers once they've spent an
 inordinately long time in one area of the dungeon. Even once this happens,
@@ -518,7 +523,7 @@ which is scored separately. Playing games with the same seed value, as long as
 the game version is constant, should (within certain parameters) lead to the
 same dungeon. The entire connected dungeon will be determined by the game
 seed, including dungeon layout, monster placement, and items. Portal vaults
-and chaotic zones such as the abyss are not guaranteed to be the same, and the
+and chaotic zones such as the Abyss are not guaranteed to be the same, and the
 placement of rare unique artefacts may vary depending on certain player
 actions.
 
@@ -1469,9 +1474,9 @@ learn how to play, into three categories: *Simple*, *Intermediate*, and
 *Advanced*. These categories do not necessarily align with difficulty for an
 experienced Crawl player, but rather are intended as an indication of to what
 degree a species has unusual or complex mechanics, or requires deeper/wider
-knowledge of how the game works. (For example, Deep Dwarves have one of the
-higher win rates of all species, but are classified as "Intermediate" because
-their no-healing mechanic takes some adapting to, and has non-trivial
+knowledge of how the game works. (For example, Djinn have one of the higher
+win rates of all species, but are classified as "Intermediate" because
+their no-mp/no-books mechanic takes some adapting to, and has non-trivial
 interactions with background and god choice.) Despite being the outcome of a
 discussion among many players, these categorizations definitely have a
 subjective element to them, and you shouldn't take them to be limiting!
@@ -1661,8 +1666,8 @@ Kobolds (Ko)
   suited to lurking in the darkness of the Dungeon, and have a reduced range of
   vision which also reduces the range at which they can be seen by enemies.
 
-  They are competent in combat, especially with short blades, maces or
-  crossbows, and are comfortable with all forms of magic. They are also very
+  They are competent in combat, especially with short blades, maces or ranged
+  weapons, and are comfortable with all forms of magic. They are also very
   adept at using magical devices. Their small size makes them unable to wield
   large weapons, but they are agile and stealthy, and advance in levels as
   quickly as Humans.
@@ -1727,8 +1732,8 @@ Deep Elves (DE)
    in darkness underground. There, they developed their mental powers, evolving
    a natural gift for all forms of magic, and adapted physically to their new
    environment, becoming weaker and losing all colouration. They are poor at
-   melee combat and physical defense, although they are capable at using bows in
-   ranged combat.
+   melee combat and physical defense, although they are capable at using bows
+   and other ranged weapons.
 
 Ogres (Og)
   Ogres are huge, chunky creatures who are very strong and robust, but are not
@@ -1740,25 +1745,6 @@ Ogres (Og)
   Ogres are proficient at using all types of melee weapons, but all
   sophisticated forms of missile combat are awkward for them. They are, however,
   good at throwing things, in particular boulders.
-
-Deep Dwarves (DD)
-  Deep Dwarves are short, hardy people who, unlike their extinct surface
-  relatives, never left the underground homelands. Living there for countless
-  generations made them turn pale and lose all ability to regenerate health
-  over time, or to have their rate of regeneration hastened by any effects.
-  Deep Dwarves can instead draw on their magical essence to heal, but doing so
-  will gradually deplete their maximum reserves of magic. They are passively
-  able to reduce all incoming damage, and their empathy with the earth allows
-  them to sense their surroundings; these abilities increase in power as they
-  gain experience levels.
-
-  Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
-  damage. Offensively, they are skilled users of axes, crossbows, and slings.
-  Deep Dwarves are highly spiritual beings, often portrayed as actual spirits
-  by outsiders; because of this, their skill with Invocations is great, and
-  they often rely on divine assistance for healing. They are most at home with
-  the magic of earth and death, eventually gaining some resistance to the dark
-  powers of necromancy.
 
 Advanced Species
 ================
@@ -1893,6 +1879,14 @@ Barachim (Ba)
   slow-moving, and the long sight-lines that their heritage creates can be a
   major disadvantage, but they can master almost any skill.
 
+Meteorae (Me)
+  Meteorae are the people of the heavens, fallen to earth. They possess exceptional
+  skills, an uncanny sense for the space around them, and the ability to recover
+  health and magic as they explore the dungeon. However, as creatures clearly not
+  native to the world, they are easy prey for the dark forces that hunt adventurers
+  - they have one-tenth as much time as normal before Zot finds them. (See the
+  section on 'Zot' for more.)
+
 Mummies (Mu)
   These are undead creatures who travel into the depths in search of revenge,
   redemption, or just because they want to.
@@ -1990,8 +1984,7 @@ Monks
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
-  starts with a ranged weapon of their choice, a scroll of immolation, and a
-  set of leathers.
+  starts with a shortbow, a scroll of immolation, and a set of leathers.
 
 Brigands
   A Brigand is a shady character who is especially good at killing, using
@@ -2072,8 +2065,8 @@ Warpers
 Arcane Marksmen
   Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
   attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with a ranged weapon of their choice, some spells to
-  support its use, a scroll of vulnerability to help those spells, and a robe.
+  They begin the game with a sling, some spells to support its use, a scroll of
+  poison to keep foes at a distance, and a robe.
 
 Enchanters
   The Enchanter specialises in the subtle art of hexes. Instead of directly
@@ -2127,9 +2120,7 @@ Elementalists
     provides powerful but difficult to direct spells.
 
   Earth Magic
-    is a versatile school, with destructive, debilitating and utility spells
-    available. Earth Elementalists start with the Sandblast spell, and some
-    stones to use with it.
+    offers direct effects, some destructive and some debilitating.
 
 Venom Mages
   Venom Mages specialise in poison magic, which is extremely useful in the
@@ -2201,27 +2192,15 @@ headbutt) are not affected by the Unarmed Combat skill.
 Ranged combat skills
 ========================================
 
-There are a number of individual weapon skills for missile weapons:
-
-  * Throwing
-  * Bows
-  * Crossbows
-  * Slings
-
-Throwing is the skill for all things hurled without a launcher: boomerangs,
-javelins, nets, darts, etc. The other skills refer to various types of ranged
-weapons.
+Ranged Weapons is the skill for bows, crossbows, and slings, whereas Throwing
+governs all things hurled without a launcher: boomerangs, javelins, nets,
+darts, etc.
 
 Just as with melee weapons, ranged weapon skills and throwing skills increase
 the speed at which you attack, along with slightly increasing your accuracy
 and damage. Missile weapons, unlike melee or throwing weapons, are slowed by
 wearing heavy armour. Increasing your Strength and Armour skill will partially
 mitigate this.
-
-Since the motion of using a sling and throwing a stone are somewhat similar,
-these skills crosstrain:
-
-  * Throwing and Slings
 
 Magic skills
 ========================================

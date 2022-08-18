@@ -210,6 +210,9 @@ enum monster_info_flags
     MB_DISTRACTED_ONLY,
     MB_CANT_SEE_YOU,
     MB_UNBLINDABLE,
+    MB_SIMULACRUM,
+    MB_REFLECTING,
+    MB_TELEPORTING,
     NUM_MB_FLAGS
 };
 

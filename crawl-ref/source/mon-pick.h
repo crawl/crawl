@@ -17,6 +17,7 @@ typedef bool (*mon_pick_pos_vetoer)(monster_type, coord_def);
 bool monster_in_population(branch_type branch, monster_type m, bool check_noncore=true);
 int monster_probability(level_id place, monster_type m);
 int monster_pop_depth_avg(branch_type branch, monster_type m);
+int monster_how_ood(branch_type branch, int depth, monster_type m);
 
 monster_type pick_monster(level_id place, mon_pick_vetoer veto = nullptr);
 monster_type pick_monster_from(const vector<pop_entry>& fpop, int depth,

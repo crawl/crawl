@@ -22,6 +22,7 @@
 #include "player.h"
 #include "prompt.h"
 #include "religion.h"
+#include "spl-other.h"
 #include "spl-util.h"
 #include "stringutil.h"
 #include "terrain.h"
@@ -243,5 +244,17 @@ spret cast_transform(int pow, transformation which_trans, bool fail)
 
     fail_check();
     transform(pow, which_trans);
+    return spret::success;
+}
+
+spret cast_corpse_rot(int pow, bool fail)
+{
+    fail_check();
+    mpr("You radiate decay.");
+
+    you.increase_duration(DUR_CORPSE_ROT,
+                            10 + random2(1 + div_rand_round(pow * 3, 5)), 50);
+    you.props[CORPSE_ROT_POWER_KEY] = pow;
+
     return spret::success;
 }

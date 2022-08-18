@@ -48,7 +48,7 @@ struct player_info
     string species;
     string god;
     bool under_penance;
-    uint8_t piety_rank;
+    int piety_rank;
 
     uint8_t form;
 
@@ -191,6 +191,7 @@ public:
     void json_write_null(const string& name);
     void json_write_string(const string& value);
     void json_write_string(const string& name, const string& value);
+    void json_write_icons(const set<tileidx_t> &icons);
     /* Causes the current object/array to be erased if it is closed
        with erase_if_empty without writing any other content after
        this call */

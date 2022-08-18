@@ -590,12 +590,13 @@ public:
      */
     string transform_message(transformation previous_trans) const override
     {
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             return "You inwardly fear your resemblance to a lawn ornament.";
-        else if (you.species == SP_GARGOYLE)
+#endif
+        if (you.species == SP_GARGOYLE)
             return "Your body stiffens and grows slower.";
-        else
-            return Form::transform_message(previous_trans);
+        return Form::transform_message(previous_trans);
     }
 
     /**
@@ -1901,6 +1902,9 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     case transformation::shadow:
         drain_player(25, true, true);
+        if (you.duration[DUR_CORONA])
+            you.duration[DUR_CORONA] = 0;
+
         if (you.invisible())
             mpr("You fade into the shadows.");
         else
@@ -1920,7 +1924,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         you.stop_directly_constricting_all(false);
 
     // Stop being constricted if we are now too large, or are now immune.
-    if (you.is_directly_constricted())
+    if (you.get_constrict_type() == CONSTRICT_MELEE)
     {
         actor* const constrictor = actor_by_mid(you.constricted_by);
         ASSERT(constrictor);
@@ -2116,7 +2120,7 @@ void untransform(bool skip_move)
     }
 
     // Stop being constricted if we are now too large.
-    if (you.is_directly_constricted())
+    if (you.get_constrict_type() == CONSTRICT_MELEE)
     {
         actor* const constrictor = actor_by_mid(you.constricted_by);
         if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
@@ -2172,10 +2176,13 @@ void merfolk_start_swimming(bool stepped)
         mpr("...but don't expect to remain undetected.");
 
     you.fishtail = true;
-    remove_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
-    ash_check_bondage();
+    if (!you.melded[EQ_BOOTS])
+    {
+        remove_one_equip(EQ_BOOTS);
+        ash_check_bondage();
+    }
 
 #ifdef USE_TILE
     init_player_doll();
@@ -2186,11 +2193,15 @@ void merfolk_stop_swimming()
 {
     if (!you.fishtail)
         return;
+
     you.fishtail = false;
-    unmeld_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
-    ash_check_bondage();
+    if (!_init_equipment_removal(you.form).count(EQ_BOOTS))
+    {
+        unmeld_one_equip(EQ_BOOTS);
+        ash_check_bondage();
+    }
 
 #ifdef USE_TILE
     init_player_doll();

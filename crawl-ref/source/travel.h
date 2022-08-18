@@ -182,7 +182,7 @@ enum explore_stop_type
     ES_GREEDY_VISITED_ITEM_STACK = 0x00040,
 
     // Explored into view of a stair, shop, altar, portal, glowing
-    // item, artefact, or branch entrance.
+    // item, artefact, or branch entrance.... etc.
     ES_STAIR                     = 0x00080,
     ES_SHOP                      = 0x00100,
     ES_ALTAR                     = 0x00200,
@@ -193,6 +193,7 @@ enum explore_stop_type
     ES_BRANCH                    = 0x04000,
     ES_RUNED_DOOR                = 0x08000,
     ES_TRANSPORTER               = 0x10000,
+    ES_RUNELIGHT                 = 0x20000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -236,6 +237,7 @@ private:
     vector< named_thing<int> > altars;
     vector< named_thing<int> > runed_doors;
     vector< named_thing<int> > transporters;
+    vector< named_thing<int> > runelights;
 
     vector<string> marker_msgs;
     vector<string> marked_feats;

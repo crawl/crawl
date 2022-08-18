@@ -17,7 +17,6 @@
 
 using std::vector;
 
-const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
 
 #define MAX_DAMAGE_COUNTER 10000
@@ -35,6 +34,8 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 /// has a given hound already used up its howl?
 #define DOOM_HOUND_HOWLED_KEY "doom_hound_howled"
+#define KIKU_WRETCH_KEY "kiku_wretch"
+#define ANIMATE_DEAD_KEY "animate_dead"
 
 #define DROPPER_MID_KEY "dropper_mid"
 
@@ -207,7 +208,7 @@ public:
     bool lose_ench_duration(const mon_enchant &e, int levels);
     bool lose_ench_levels(const mon_enchant &e, int lev, bool infinite = false);
     void lose_energy(energy_use_type et, int div = 1, int mult = 1);
-    int energy_cost(energy_use_type et, int div = 1, int mult = 1);
+    int energy_cost(energy_use_type et, int div = 1, int mult = 1) const;
 
     void scale_hp(int num, int den);
     bool gain_exp(int exp, int max_levels_to_gain = 2);
@@ -425,7 +426,7 @@ public:
     bool confused_by_you() const;
     bool caught() const override;
     bool asleep() const override;
-    bool backlit(bool self_halo = true) const override;
+    bool backlit(bool self_halo = true, bool /*temp*/ = true) const override;
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
@@ -454,8 +455,7 @@ public:
 
     bool has_attack_flavour(int flavour) const;
     bool has_damage_type(int dam_type);
-    int constriction_damage(bool direct) const override;
-    bool constriction_does_damage(bool direct) const override;
+    int constriction_damage(constrict_type typ) const override;
 
     bool can_throw_large_rocks() const override;
     bool can_speak();

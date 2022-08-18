@@ -213,11 +213,7 @@ public:
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> training_targets; ///< Training targets, scaled by 10 (so [0,270]).  0 means no target.
     int experience_pool; ///< XP waiting to be applied.
-
-    /// track skill points gained by crosstraining
-    FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>  skill_order;
-
     /// manuals
     FixedVector<unsigned int, NUM_SKILLS>  skill_manual_points;
 
@@ -509,7 +505,7 @@ public:
     bool can_water_walk() const;
     int visible_igrd(const coord_def&) const;
     bool is_banished() const override;
-    bool is_sufficiently_rested() const; // Up to rest_wait_percent HP and MP.
+    bool is_sufficiently_rested(bool starting=false) const; // Up to rest_wait_percent HP and MP.
     bool is_web_immune() const override;
     bool cannot_speak() const;
     bool invisible() const override;
@@ -617,8 +613,8 @@ public:
                              bool rescale = true) const override;
     random_var  attack_delay_with(const item_def *projectile, bool rescale,
                                   const item_def *weapon) const;
-    int         constriction_damage(bool direct) const override;
-    bool        constriction_does_damage(bool /* direct */) const override
+    int         constriction_damage(constrict_type typ) const override;
+    bool        constriction_does_damage(constrict_type /* typ */) const override
                     { return true; };
 
     int       has_claws(bool allow_tran = true) const override;
@@ -798,7 +794,7 @@ public:
     bool cannot_act() const override;
     bool confused() const override;
     bool caught() const override;
-    bool backlit(bool self_halo = true) const override;
+    bool backlit(bool self_halo = true, bool temp = true) const override;
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
@@ -821,6 +817,7 @@ public:
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
     bool can_feel_fear(bool include_unknown) const override;
+    bool resists_dislodge(string event = "") const override;
 
     bool can_throw_large_rocks() const override;
     bool can_smell() const;
@@ -993,7 +990,7 @@ int player_wizardry(spell_type spell);
 int player_prot_life(bool allow_random = true, bool temp = true,
                      bool items = true);
 
-bool regeneration_is_inhibited();
+bool regeneration_is_inhibited(const monster *m=nullptr);
 int player_regen();
 int player_mp_regen();
 
@@ -1029,14 +1026,12 @@ int player_spec_hex();
 int player_spec_poison();
 int player_spec_summ();
 
-int player_adjust_evoc_power(const int power, int enhancers = 0);
-
 int player_speed();
 
 int player_spell_levels(bool floored = true);
 int player_total_spell_levels();
 
-int player_teleport();
+int get_teleportitis_level();
 
 int player_monster_detect_radius();
 
@@ -1121,7 +1116,7 @@ bool confuse_player(int amount, bool quiet = false, bool force = false);
 
 bool poison_player(int amount, string source, string source_aux = "",
                    bool force = false);
-void paralyse_player(string source, int amount = 0);
+void paralyse_player(string source);
 void handle_player_poison(int delay);
 void reduce_player_poison(int amount);
 int get_player_poisoning();

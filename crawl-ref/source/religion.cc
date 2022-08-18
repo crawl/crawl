@@ -121,14 +121,15 @@ const vector<vector<god_power>> & get_all_god_powers()
         },
 
         // Kikubaaqudgha
-        {   { 1, ABIL_KIKU_RECEIVE_CORPSES, "receive cadavers from Kikubaaqudgha" },
+        {
+            { 1, ABIL_KIKU_UNEARTH_WRETCHES, "bring forth the wretched and dying" },
             { 2, "Kikubaaqudgha is now protecting you from necromantic miscasts and death curses.",
                  "Kikubaaqudgha will no longer protect you from necromantic miscasts or death curses.",
                  "Kikubaaqudgha protects you from necromantic miscasts and death curses." },
             { 4, "Kikubaaqudgha is now protecting you from unholy torment.",
                  "Kikubaaqudgha will no longer protect you from unholy torment.",
                  "Kikubaaqudgha protects you from unholy torment." },
-            { 5, ABIL_KIKU_TORMENT, "invoke torment by sacrificing a corpse" },
+            { 5, ABIL_KIKU_TORMENT, "invoke torment" },
             { 7, ABIL_KIKU_BLESS_WEAPON,
                  "Kikubaaqudgha will grant you forbidden knowledge or bloody your weapon with pain... once.",
                  "Kikubaaqudgha is no longer ready to enhance your necromancy." },
@@ -160,9 +161,9 @@ const vector<vector<god_power>> & get_all_god_powers()
 
         // Okawaru
         {   { 1, ABIL_OKAWARU_HEROISM, "gain great but temporary skills" },
-            { 3, "Okawaru will now gift you ammunition as you gain piety.",
-                 "Okawaru will no longer gift you ammunition.",
-                 "Okawaru will gift you ammunition as you gain piety." },
+            { 3, "Okawaru will now gift you throwing weapons as you gain piety.",
+                 "Okawaru will no longer gift you throwing weapons.",
+                 "Okawaru will gift you throwing weapons as you gain piety." },
             { 4, ABIL_OKAWARU_FINESSE, "speed up your combat" },
             { 5, ABIL_OKAWARU_DUEL, "enter into single combat with a foe"},
             { 5, "Okawaru will now gift you equipment as you gain piety.",
@@ -704,22 +705,10 @@ void dec_penance(god_type god, int val)
                      mi->del_ench(ENCH_AWAKEN_FOREST);
             }
         }
-        else
+        else if (god == GOD_HEPLIAKLQANA)
         {
-#if TAG_MAJOR_VERSION == 34
-            if (god == GOD_PAKELLAS)
-            {
-                // Penance just ended w/o worshipping Pakellas;
-                // notify the player that MP regeneration will start again.
-                mprf(MSGCH_GOD, god, "You begin regenerating magic.");
-            }
-            else
-#endif
-            if (god == GOD_HEPLIAKLQANA)
-            {
-                calc_hp(); // frailty ends
-                mprf(MSGCH_GOD, god, "Your full life essence returns.");
-            }
+            calc_hp(); // frailty ends
+            mprf(MSGCH_GOD, god, "Your full life essence returns.");
         }
     }
     else
@@ -1192,14 +1181,10 @@ bool pay_yred_souls(unsigned int how_many, bool just_check)
 
 static bool _want_missile_gift()
 {
-    skill_type sk = best_skill(SK_SLINGS, SK_THROWING);
-    // Default to throwing if all missile skills are at zero.
-    if (you.skills[sk] == 0)
-        sk = SK_THROWING;
     return you.piety >= piety_breakpoint(2)
            && random2(you.piety) > 70
            && one_chance_in(8)
-           && x_chance_in_y(1 + you.skills[sk], 12);
+           && x_chance_in_y(1 + you.skills[SK_THROWING], 12);
 }
 
 static bool _want_nemelex_gift()
@@ -1236,33 +1221,6 @@ static bool _give_nemelex_gift(bool forced = false)
     take_note(Note(NOTE_GOD_GIFT, you.religion));
     return true;
 }
-
-#if TAG_MAJOR_VERSION == 34
-/**
- * From the given list of items, return a random unseen item, if there are any.
- * Otherwise, just return any of them at random.
- *
- * If we cared, we could make this a template function to return more specific
- * types than 'int'. (That's probably not important, though.)
- *
- * @param item_types        A list of item types to choose from.
- * @param seen_func         How to tell whether the item was seen.
- * @return                  A random item type; e.g. WAND_ACID.
- */
-static int _preferably_unseen_item(const vector<int> &item_types,
-                                   function<bool(int)> seen_func)
-{
-    ASSERT(item_types.size());
-    vector<int> unseen;
-    for (auto item : item_types)
-        if (!seen_func(item))
-            unseen.emplace_back(item);
-
-    if (unseen.size())
-        return unseen[random2(unseen.size())];
-    return item_types[random2(item_types.size())];
-}
-#endif
 
 static bool _jiyva_mutate()
 {
@@ -1428,140 +1386,6 @@ static set<spell_type> _vehumet_get_spell_gifts()
     return offers;
 }
 
-#if TAG_MAJOR_VERSION == 34
-/// Has the player ID'd the given type of wand?
-static bool _seen_wand(int wand)
-{
-    return get_ident_type(OBJ_WANDS, wand);
-}
-
-static int _pakellas_low_wand()
-{
-    static const vector<int> low_wands = {
-        WAND_FLAME,
-        WAND_POLYMORPH,
-    };
-
-    return _preferably_unseen_item(low_wands, _seen_wand);
-}
-
-static int _pakellas_high_wand()
-{
-    vector<int> high_wands = {
-        WAND_PARALYSIS,
-        WAND_ICEBLAST,
-        WAND_ACID,
-    };
-    if (!you.allies_forbidden())
-        high_wands.emplace_back(WAND_CHARMING);
-
-    return _preferably_unseen_item(high_wands, _seen_wand);
-}
-
-static int _pakellas_low_misc()
-{
-    // Limited uses, so any of these are fine even if they've been seen before.
-    return random_choose(MISC_BOX_OF_BEASTS,
-                         MISC_PHANTOM_MIRROR);
-}
-
-static int _pakellas_high_misc()
-{
-    static const vector<int> high_miscs = {
-        MISC_PHIAL_OF_FLOODS,
-        MISC_LIGHTNING_ROD,
-    };
-
-    return _preferably_unseen_item(high_miscs, [](int misc) {
-        return you.seen_misc[misc];
-    });
-}
-
-static bool _give_pakellas_gift()
-{
-    // Break early if giving a gift now means it would be lost.
-    if (feat_eliminates_items(env.grid(you.pos())))
-        return false;
-
-    bool success = false;
-    object_class_type basetype = OBJ_UNASSIGNED;
-    int subtype = -1;
-
-    if (you.piety >= piety_breakpoint(0)
-        && you.num_total_gifts[GOD_PAKELLAS] == 0)
-    {
-        basetype = OBJ_WANDS;
-        subtype = _pakellas_low_wand();
-    }
-    else if (you.piety >= piety_breakpoint(1)
-             && you.num_total_gifts[GOD_PAKELLAS] == 1)
-    {
-        // All the evoker options here are summon-based, so give another
-        // low-level wand instead under Sacrifice Love.
-        if (you.allies_forbidden())
-        {
-            basetype = OBJ_WANDS;
-            subtype = _pakellas_low_wand();
-        }
-        else
-        {
-            basetype = OBJ_MISCELLANY;
-            subtype = _pakellas_low_misc();
-        }
-    }
-    else if (you.piety >= piety_breakpoint(2)
-             && you.num_total_gifts[GOD_PAKELLAS] == 2)
-    {
-        basetype = OBJ_WANDS;
-        subtype = _pakellas_high_wand();
-    }
-    else if (you.piety >= piety_breakpoint(3)
-             && you.num_total_gifts[GOD_PAKELLAS] == 3)
-    {
-        basetype = OBJ_MISCELLANY;
-        subtype = _pakellas_high_misc();
-    }
-    else if (you.piety >= piety_breakpoint(4)
-             && you.num_total_gifts[GOD_PAKELLAS] == 4)
-    {
-        basetype = random_choose(OBJ_WANDS, OBJ_MISCELLANY);
-        subtype = (basetype == OBJ_WANDS) ? _pakellas_high_wand()
-                                          : _pakellas_high_misc();
-    }
-
-    if (basetype == OBJ_UNASSIGNED)
-        return false;
-    else
-    {
-        ASSERT(subtype >= 0);
-        int thing_created = items(true, basetype, subtype, 1, 0,
-                                  you.religion);
-
-        if (thing_created == NON_ITEM)
-            return false;
-
-        move_item_to_grid(&thing_created, you.pos(), true);
-
-        if (thing_created != NON_ITEM)
-            success = true;
-    }
-
-    if (success)
-    {
-        simple_god_message(" grants you a gift!");
-        // included in default force_more_message
-
-        you.num_current_gifts[you.religion]++;
-        you.num_total_gifts[you.religion]++;
-        take_note(Note(NOTE_GOD_GIFT, you.religion));
-
-        return true;
-    }
-
-    return false;
-}
-#endif
-
 static bool _give_trog_oka_gift(bool forced)
 {
     // Break early if giving a gift now means it would be lost.
@@ -1577,9 +1401,9 @@ static bool _give_trog_oka_gift(bool forced)
                                 || (you.piety >= piety_breakpoint(4)
                                     && random2(you.piety) > 120
                                     && one_chance_in(4));
-    // Oka can gift missiles, but if equipment is successful, we choose
+    // Oka can gift throwing weapons, but if equipment is successful, we choose
     // equipment unless the gift was forced by wizard mode. In that case,
-    // missiles, weapons, and armour all get equal weight below.
+    // throwing weapons, other weapons, and armour all get equal weight below.
     const bool want_missiles = you_worship(GOD_OKAWARU)
                                && (forced
                                    || !want_equipment && _want_missile_gift());
@@ -1600,7 +1424,7 @@ static bool _give_trog_oka_gift(bool forced)
     switch (gift_type)
     {
     case OBJ_MISSILES:
-        simple_god_message(" grants you ammunition!");
+        simple_god_message(" grants you throwing weapons!");
         break;
     case OBJ_WEAPONS:
         simple_god_message(" grants you a weapon!");
@@ -1745,18 +1569,18 @@ static bool _give_kiku_gift(bool forced)
     vector<spell_type> chosen_spells;
     spell_type spell;
 
-    // Each set should guarantee the player at least one corpse-using spell, to
-    // complement Receive Corpses.
+    // The first set should guarantee the player at least one ally spell, to
+    // complement the bonus undead passive.
     if (first_gift)
     {
-        chosen_spells.push_back(SPELL_ANIMATE_SKELETON);
+        chosen_spells.push_back(SPELL_NECROTISE);
         do
         {
-            spell = random_choose(SPELL_PAIN,
-                                  SPELL_CORPSE_ROT,
-                                  SPELL_SUBLIMATION_OF_BLOOD,
+            spell = random_choose(SPELL_SUBLIMATION_OF_BLOOD,
                                   SPELL_VAMPIRIC_DRAINING,
-                                  SPELL_AGONY);
+                                  SPELL_ANGUISH,
+                                  SPELL_ANIMATE_DEAD
+                                  );
 
             if (!you.can_bleed(false) && spell == SPELL_SUBLIMATION_OF_BLOOD)
                 spell = SPELL_NO_SPELL;
@@ -1774,21 +1598,14 @@ static bool _give_kiku_gift(bool forced)
     }
     else
     {
-        chosen_spells.push_back(SPELL_ANIMATE_DEAD);
         do
         {
-            spell = random_choose(SPELL_ANGUISH,
-                                  SPELL_DISPEL_UNDEAD,
+            spell = random_choose(SPELL_DISPEL_UNDEAD,
+                                  SPELL_CORPSE_ROT,
+                                  SPELL_AGONY,
                                   SPELL_BORGNJORS_VILE_CLUTCH,
-                                  SPELL_EXCRUCIATING_WOUNDS,
                                   SPELL_DEATH_CHANNEL,
                                   SPELL_SIMULACRUM);
-
-            if (you.has_mutation(MUT_NO_GRASPING)
-                && spell == SPELL_EXCRUCIATING_WOUNDS)
-            {
-                spell = SPELL_NO_SPELL;
-            }
 
             if (find(begin(chosen_spells), end(chosen_spells), spell)
                 != end(chosen_spells))
@@ -1802,7 +1619,15 @@ static bool _give_kiku_gift(bool forced)
         while (chosen_spells.size() < 5);
     }
 
-    simple_god_message(" grants you a gift!");
+    bool new_spell = false;
+    for (auto spl : chosen_spells)
+        if (!you.spell_library[spl])
+            new_spell = true;
+
+    if (!new_spell)
+        simple_god_message(" has no new spells for you at this time.");
+    else
+        simple_god_message(" grants you a gift!");
     // included in default force_more_message
 
     sort(chosen_spells.begin(), chosen_spells.end(), _sort_spell_level);
@@ -2318,12 +2143,6 @@ bool do_god_gift(bool forced)
             success = _give_nemelex_gift(forced);
             break;
 
-#if TAG_MAJOR_VERSION == 34
-        case GOD_PAKELLAS:
-            success = _give_pakellas_gift();
-            break;
-#endif
-
         case GOD_OKAWARU:
         case GOD_TROG:
             success = _give_trog_oka_gift(forced);
@@ -2582,8 +2401,7 @@ int piety_scale(int piety)
 /** Gain or lose piety to reach a certain value.
  *
  * If the player cannot gain piety (because they worship Xom, Gozag, or
- * no god), their piety will be unchanged. Ignores the Abyss's piety
- * restrictions.
+ * no god), their piety will be unchanged.
  *
  * @param piety The new piety value.
  * @pre piety is between 0 and MAX_PIETY, inclusive.
@@ -2605,7 +2423,7 @@ void set_piety(int piety)
         diff = piety - you.piety;
         if (diff > 0)
         {
-            if (!gain_piety(diff, 1, false, true))
+            if (!gain_piety(diff, 1, false))
                 break;
         }
         else if (diff < 0)
@@ -2784,13 +2602,11 @@ static void _gain_piety_point()
  * @param original_gain The numerator of the nominal piety gain.
  * @param denominator The denominator of the nominal piety gain.
  * @param should_scale_piety Should the piety gain be scaled by faith/Sprint?
- * @param force Should the piety gain be allowed even in the Abyss?
  * @return True if something happened, or if another call with the same
  *   arguments might cause something to happen (because of random number
  *   rolls).
  */
-bool gain_piety(int original_gain, int denominator, bool should_scale_piety,
-                bool force)
+bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
 {
     if (original_gain <= 0)
         return false;
@@ -2802,10 +2618,6 @@ bool gain_piety(int original_gain, int denominator, bool should_scale_piety,
     {
         return false;
     }
-
-    // Regular piety can't be gained in the Abyss.
-    if (!force && player_in_branch(BRANCH_ABYSS) && !you_worship(GOD_USKAYAW))
-        return false;
 
     int pgn = should_scale_piety ? piety_scale(original_gain) : original_gain;
 
@@ -3369,8 +3181,6 @@ void excommunication(bool voluntary, god_type new_god)
 
 #if TAG_MAJOR_VERSION == 34
     case GOD_PAKELLAS:
-        simple_god_message(" continues to block your magic from regenerating.",
-                           old_god);
         you.exp_docked[old_god] = excom_xp_docked();
         you.exp_docked_total[old_god] = you.exp_docked[old_god];
         break;
@@ -3567,14 +3377,6 @@ bool player_can_join_god(god_type which_god, bool temp)
         return false;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    if (you.get_base_mutation_level(MUT_NO_ARTIFICE, true, temp, temp)
-        && which_god == GOD_PAKELLAS)
-    {
-        return false;
-    }
-#endif
-
     return !temp || _transformed_player_can_join_god(which_god);
 }
 
@@ -3705,12 +3507,12 @@ static void _apply_monk_bonus()
         ashenzari_offer_new_curse();
         you.props[ASHENZARI_CURSE_PROGRESS_KEY] = 19;
     }
-    else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does
-        gain_piety(15, 1, false, true); // nothing of value and looks weird.
+    else if (you_worship(GOD_USKAYAW))  // Gaining piety past this point does nothing
+        gain_piety(15, 1, false); // of value with this god and looks weird.
     else if (you_worship(GOD_YREDELEMNUL))
         give_yred_bonus_zombies(2); // top up to **
     else
-        gain_piety(35, 1, false, true);
+        gain_piety(35, 1, false);
 }
 
 /// Transfer some piety from an old good god to a new one, if applicable.
@@ -3745,7 +3547,7 @@ static void _transfer_good_god_piety()
     // Give a piety bonus when switching between good gods, or back to the
     // same good god.
     if (old_piety > piety_breakpoint(0))
-        gain_piety(old_piety - piety_breakpoint(0), 2, false, true);
+        gain_piety(old_piety - piety_breakpoint(0), 2, false);
 }
 
 
@@ -3974,15 +3776,6 @@ static void _join_zin()
     }
 }
 
-#if TAG_MAJOR_VERSION == 34
-// Setup when becoming an overworked assistant to Pakellas.
-static void _join_pakellas()
-{
-    mprf(MSGCH_GOD, "You stop regenerating magic.");
-    you.attribute[ATTR_PAKELLAS_EXTRA_MP] = POT_MAGIC_MP;
-}
-#endif
-
 // Setup for joining the easygoing followers of Cheibriados.
 static void _join_cheibriados()
 {
@@ -4005,12 +3798,9 @@ static const map<god_type, function<void ()>> on_join = {
     { GOD_GOZAG, _join_gozag },
     { GOD_LUGONU, []() {
         if (you.worshipped[GOD_LUGONU] == 0)
-            gain_piety(20, 1, false, true);  // allow access to first power
+            gain_piety(20, 1, false);  // allow instant access to first power
     }},
     { GOD_OKAWARU, _join_okawaru },
-#if TAG_MAJOR_VERSION == 34
-    { GOD_PAKELLAS, _join_pakellas },
-#endif
     { GOD_RU, _join_ru },
     { GOD_TROG, join_trog_skills },
     { GOD_ZIN, _join_zin },
@@ -4137,14 +3927,6 @@ void god_pitch(god_type which_god)
             simple_god_message(" does not accept worship from the loveless!",
                                which_god);
         }
-#if TAG_MAJOR_VERSION == 34
-        else if (you.get_mutation_level(MUT_NO_ARTIFICE)
-                 && which_god == GOD_PAKELLAS)
-        {
-            simple_god_message(" does not accept worship from those who are "
-                               "unable to use magical devices!", which_god);
-        }
-#endif
         else if (!_transformed_player_can_join_god(which_god))
         {
             simple_god_message(" says: How dare you approach in such a "
@@ -4312,22 +4094,8 @@ bool god_hates_spell(spell_type spell, god_type god, bool fake_spell)
     if (god_punishes_spell(spell, god))
         return true;
 
-    switch (god)
-    {
-    case GOD_CHEIBRIADOS:
-        if (is_hasty_spell(spell))
-            return true;
-        break;
-#if TAG_MAJOR_VERSION == 34
-    case GOD_PAKELLAS:
-        if (spell == SPELL_SUBLIMATION_OF_BLOOD)
-            return true;
-        break;
-#endif
-    default:
-        break;
-    }
-    return false;
+    // (this is literally only Discord as of July 2022... simplify?)
+    return god == GOD_CHEIBRIADOS && is_hasty_spell(spell);
 }
 
 /**

@@ -653,8 +653,8 @@ dgn.good_scrolls = [[
     w:85  scroll of teleportation no_pickup /
     w:45  scroll of teleportation no_pickup q:2 /
     w:10  scroll of teleportation no_pickup q:3 /
-    w:85  scroll of fog no_pickup /
-    w:33  scroll of fog no_pickup q:2 /
+    w:85  any concealment scroll no_pickup /
+    w:33  any concealment scroll no_pickup q:2 /
     w:95  scroll of enchant weapon no_pickup /
     w:40  scroll of enchant weapon no_pickup q:2 /
     w:54  scroll of blinking no_pickup /
@@ -665,8 +665,8 @@ dgn.good_scrolls = [[
     w:20  scroll of magic mapping no_pickup q:2 /
     w:40  scroll of amnesia no_pickup /
     w:15  scroll of amnesia no_pickup q:2 /
-    w:33  scroll of holy word no_pickup q:1 /
-    w:11  scroll of holy word no_pickup q:2 /
+    w:33  scroll of immolation no_pickup q:1 /
+    w:11  scroll of immolation no_pickup q:2 /
     w:30  scroll of silence no_pickup q:1 /
     w:10  scroll of silence no_pickup q:2 /
     w:11  scroll of acquirement no_pickup q:1 /
@@ -685,7 +685,7 @@ dgn.good_scrolls = [[
 -- 100 weight.
 dgn.loot_scrolls = [[
     w:15  scroll of teleportation /
-    w:15  scroll of fog /
+    w:15  any concealment scroll /
     w:15  scroll of fear /
     w:10  scroll of blinking /
     w:10  scroll of summoning /

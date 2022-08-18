@@ -231,15 +231,6 @@ enum class passive_t
     /// Enemies that inflict damage upon you will sometime receive a detrimental status effect
     upgraded_aura_of_power,
 
-    /// Pakellas prevents you from regenerating your mana reserve
-    no_mp_regen,
-
-    /// Pakellas identifies wands and rods
-    identify_devices,
-
-    /// Pakellas collects and distills extra MP from your kills
-    bottle_mp,
-
     /// Hep's transfer drains enemies adjacent to the effect's target
     transfer_drain,
 

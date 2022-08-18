@@ -57,7 +57,7 @@ NAME:    minmay_goblin_kobold_castle
 TAGS:    no_rotate
 ORIENT:  north
 DEPTH:   D:3-6
-MONS:    goblin; hunting sling / hobgoblin w:2; hunting sling / nothing
+MONS:    goblin; sling / hobgoblin w:2; sling / nothing
 MONS:    goblin; club / hobgoblin; club / gnoll w:3; club | spear / nothing
 MONS:    kobold; stone / nothing
 MONS:    kobold; club w:18 / kobold brigand w:1 / gnoll w:3; club | spear / nothing
@@ -999,6 +999,7 @@ NAME:   evilmike_makhleb_hellhole
 TAGS:   no_monster_gen
 ORIENT: southeast
 DEPTH:  D:13-, !D:$, Depths, !Depths:$
+KPROP:  Pq- = no_tele_into
 ITEM:   demon blade good_item / demon whip good_item / demon trident good_item
 : item(dgn.loot_potions)
 # depth controls the number of greater servants... amount ranges from 1 to 3
@@ -1018,6 +1019,7 @@ NSUBST: 1 = 11., 2 = 22., D = 3
 KFEAT:  4 = altar_makhleb
 KFEAT:  a = v
 KFEAT:  p = iron_grate
+KFEAT:  q = l
 NSUBST: * = 2=| / *
 SUBST:  Z = Y, Y = Y:4 V:1
 SUBST:  v = v:6 a:1, . = .:7 ':1
@@ -1052,9 +1054,9 @@ MAP
           xv.1..2..vdl3""xxxx""1""xxxxllxxx
           xv.vvv.1.ve'1vx"xxxx"xxx"xxxxll"x
           xv.vvvv..vvpvvx"xx""xxxx"xxxxl>"x
-          xv$vvvv..v'P'vxx""xxx"x"xxxxx"""x
-          xv**vvv1.vPlPvxx"xxxxx"xxxxx"""xx
-          xv**$....v'P'vxx"1xxxxx""1""xxx"x
+          xv$vvvv..v-P-vxx""xxx"x"xxxxx"""x
+          xv**vvv1.vPqPvxx"xxxxx"xxxxx"""xx
+          xv**$....v-P-vxx"1xxxxx""1""xxx"x
           xvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -1489,9 +1491,9 @@ ORIENT: northeast
 TAGS:   no_monster_gen transparent
 DEPTH:  D:7-14
 KFEAT:  W = open_sea
-MONS:   ogre, orc warrior, gnoll shaman, centaur, kobold brigand
+MONS:   ogre, orc warrior, gnoll bouda, centaur, kobold brigand
 KMONS:  8 = orc warrior band
-KMONS:  9 = gnoll shaman band
+KMONS:  9 = gnoll bouda band
 KMONS:  p = plant
 KMONS:  P = fungus
 FTILE: ' = floor_sand
@@ -1611,7 +1613,7 @@ DEPTH:  D:3-4
   end
   kmons("O = " .. boss)
 }}
-MONS:   goblin, goblin ; hunting sling, jackal
+MONS:   goblin, goblin ; sling, jackal
 NSUBST: . = 1:0 / 3:3 / *:.
 MAP
 xxxxxxxxxxxxxxxxxxx
@@ -1695,7 +1697,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:6-9
 MONS:   kobold / hound w:5 / gnoll / hobgoblin, \
         kobold brigand / orc warrior w:5 / ogre / gnoll sergeant, \
-        orc priest / orc wizard / gnoll shaman / centaur
+        orc priest / orc wizard / gnoll bouda / centaur
 NSUBST: . = 4:2 / 20:1 / 5:3
 NSUBST: . = 8:% / 2:* / 10:$
 FTILE: 'pt = floor_grass
@@ -2360,7 +2362,8 @@ MONS:   freezing wraith / death yak
 MONS:   ettin simulacrum / hydra simulacrum / golden dragon simulacrum \
         / caustic shrike simulacrum
 MONS:   bog body / ice dragon / white very ugly thing / frost giant \
-        / reaper ; scythe ego:freezing / blizzard demon
+        / reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
+        ego:freezing / blizzard demon
 SUBST:  3 = 3G
 # Depths
 : else
@@ -2368,7 +2371,8 @@ MONS:   ice dragon / white very ugly thing / freezing wraith / simulacrum
 MONS:   ettin simulacrum / spriggan defender simulacrum \
         / golden dragon simulacrum / caustic shrike simulacrum
 MONS:   orange crystal statue
-MONS:   frost giant / reaper ; scythe ego:freezing / blizzard demon
+MONS:   frost giant / reaper ; halberd itemname:scythe tile:wpn_scythe \
+        wtile:scythe ego:freezing / blizzard demon
 MONS:   titan / wendigo / nargun
 MONS:   ice fiend / shard shrike band
 : end

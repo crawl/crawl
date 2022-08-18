@@ -199,6 +199,7 @@ orcs/orc CORPSE_ORC
 
 ## Human shaped ('p')
 halfling CORPSE_HALFLING
+meteoran CORPSE_METEORAN
 %sdir mon/humanoids/humans
 human CORPSE_HUMAN
 killer_klown_blue CORPSE_KILLER_KLOWN
@@ -272,6 +273,7 @@ fenstrider_witch CORPSE_FENSTRIDER_WITCH
 sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
 jorogumo CORPSE_JOROGUMO
+palentonga CORPSE_PALENTONGA
 mon/unique/arachne_staveless CORPSE_ARACHNE
 %sdir mon/mutantbeast
 base3 CORPSE_MUTANT_BEAST

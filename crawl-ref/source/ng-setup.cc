@@ -173,22 +173,6 @@ item_def* newgame_make_item(object_class_type base,
     return &item;
 }
 
-static void _give_ranged_weapon(weapon_type weapon, int plus)
-{
-    ASSERT(weapon != NUM_WEAPONS);
-
-    switch (weapon)
-    {
-    case WPN_SHORTBOW:
-    case WPN_HAND_CROSSBOW:
-    case WPN_HUNTING_SLING:
-        newgame_make_item(OBJ_WEAPONS, weapon, 1, plus);
-        break;
-    default:
-        break;
-    }
-}
-
 static void _give_throwing_ammo()
 {
     if (species::can_throw_large_rocks(you.species))
@@ -309,8 +293,6 @@ void give_items_skills(const newgame_def& ng)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
     else if (you.char_class == JOB_CINDER_ACOLYTE)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, -1, SPWPN_FLAMING);
-    else if (job_gets_ranged_weapons(you.char_class))
-        _give_ranged_weapon(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
     else if (job_has_weapon_choice(you.char_class))
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
@@ -363,6 +345,7 @@ static void _setup_tutorial_miscs()
 static void _give_basic_knowledge()
 {
     identify_inventory();
+    mark_inventory_sets_unknown();
 
     // Removed item types are handled in _set_removed_types_as_identified.
 }
@@ -502,13 +485,18 @@ static void _setup_generic(const newgame_def& ng,
     rng::reset(); // initialize rng from Options.seed
     _init_player();
     you.game_seed = crawl_state.seed;
-    you.deterministic_levelgen = Options.incremental_pregen;
+    you.deterministic_levelgen =
+                            Options.pregen_dungeon != level_gen_type::classic;
 
 #if TAG_MAJOR_VERSION == 34
     // Avoid the remove_dead_shops() Gozag fixup in new games: see
     // ShoppingList::item_type_identified().
     you.props[REMOVED_DEAD_SHOPS_KEY] = true;
 #endif
+
+    // Needs to happen before we give the player items, so that item specs
+    // in job descriptions can be parsed safely.
+    initialise_item_sets();
 
     // Needs to happen before we give the player items, so that it's safe to
     // check whether those items need to be removed from their shopping list.
@@ -618,6 +606,9 @@ static void _setup_generic(const newgame_def& ng,
 
     // pregen temple -- it's quick and easy, and this prevents a popup from
     // happening. This needs to happen after you.save is created.
-    if (normal_dungeon_setup && !pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
+    if (normal_dungeon_setup && you.deterministic_levelgen &&
+        !pregen_dungeon(level_id(BRANCH_TEMPLE, 1)))
+    {
         die("Builder failure while trying to generate temple!");
+    }
 }

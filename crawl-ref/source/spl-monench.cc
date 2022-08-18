@@ -8,9 +8,11 @@
 
 #include "spl-monench.h"
 
+#include "english.h" // apostrophise
 #include "env.h"
 #include "message.h"
 #include "spl-util.h"
+#include "stringutil.h" // make_stringf
 #include "terrain.h"
 
 int englaciate(coord_def where, int pow, actor *agent)
@@ -164,4 +166,61 @@ spret cast_vile_clutch(int pow, bolt &beam, bool fail)
         you.props[VILE_CLUTCH_POWER_KEY].get_int() = pow;
 
     return result;
+}
+
+string mons_simulacrum_immune_reason(const monster *mons)
+{
+    if (!mons || !you.can_see(*mons))
+        return "You can't see anything there.";
+
+    if (mons->has_ench(ENCH_SIMULACRUM))
+    {
+        return make_stringf("%s's soul is already gripped in ice!",
+                            mons->name(DESC_THE).c_str());
+    }
+
+    if (!mons_can_be_spectralised(*mons))
+        return "You can't make simulacra of that!";
+
+    return "";
+}
+
+spret cast_simulacrum(coord_def target, int pow, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(target);
+    const string immune_reason = mons_simulacrum_immune_reason(mons);
+    if (!immune_reason.empty())
+    {
+        mprf("%s", immune_reason.c_str());
+        return spret::abort;
+    }
+
+    fail_check();
+    int dur = 20 + random2(1 + div_rand_round(pow, 10));
+    mprf("You freeze %s soul.", apostrophise(mons->name(DESC_THE)).c_str());
+    mons->add_ench(mon_enchant(ENCH_SIMULACRUM, 0, &you, dur * BASELINE_DELAY));
+    mons->props[SIMULACRUM_POWER_KEY] = pow;
+    return spret::success;
+}
+
+void grasp_with_roots(actor &caster, actor &target, int turns)
+{
+    if (target.is_player())
+    {
+        you.increase_duration(DUR_GRASPING_ROOTS, turns);
+        caster.start_constricting(you);
+        mprf(MSGCH_WARN, "The grasping roots grab you!");
+    }
+    else
+    {
+        auto ench = mon_enchant(ENCH_GRASPING_ROOTS, 0, &caster,
+                                turns * BASELINE_DELAY);
+        target.as_monster()->add_ench(ench);
+    }
 }

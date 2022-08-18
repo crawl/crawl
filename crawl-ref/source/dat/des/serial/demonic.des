@@ -1,0 +1,120 @@
+# "Demonic" by ebering
+#
+# Serial vault to include more demons in early D, to give 4s and 3s some love
+
+{{
+function init_demonic(e)
+  e.tags('serial_demonic')
+  e.tags('extra')
+  e.tags('allow_dup')
+  e.weight('2')
+  e.kprop('_ = bloody')
+
+  e.subst('S = ......S')
+  e.lua_marker('S', fog_machine { pow_max = 10, delay_min = 10, delay_max = 10,
+                                  size = 2, start_clouds = 1,
+                                  cloud_type = "translocational energy" })
+  e.subst('S = .')
+
+  if you.absdepth() <= 8 then
+    e.kmons('._ = ufetubus / white imp / shadow imp / w:5 quasit / w:300 nothing')
+  elseif you.absdepth() <= 12 then
+    e.kmons('._ = w:10 quasit / w:30 any common demon /  w:300 nothing')
+  else
+    e.kmons('._ = w:60 any common demon / w:300 nothing')
+  end
+  e.kmons('P = demonic plant')
+  e.kfeat('t = demonic_tree')
+end
+}}
+
+NAME:   serial_demonic
+DEPTH:  D:4-
+TAGS:   extra luniq_serial nolayout_encompass
+CHANCE: 1%
+{{
+  local c = 4 + crawl.random2(3) * crawl.random2(4)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_demonic", count=c}
+  end)
+}}
+
+###############################################################################
+
+NAME:   serial_demonic_a
+SUBST:  . = ...._
+KPROP:  _ = bloody
+: init_demonic(_G)
+MAP
+.....
+.....
+..S..
+.....
+.....
+ENDMAP
+
+NAME:   serial_demonic_b
+SUBST:  . = ...tP
+: init_demonic(_G)
+MAP
+....
+....
+.S..
+....
+ENDMAP
+
+NAME:   serial_demonic_c
+SUBST:  . = _.......ttPP
+: init_demonic(_G)
+MAP
+....
+....
+....
+....
+ENDMAP
+
+NAME:   serial_demonic_d
+SUBST:  _ = .__
+SUBST:  . = ......_
+SUBST:  A = AAAAY
+: init_demonic(_G)
+MAP
+.....
+.___.
+._A_.
+.___.
+.....
+ENDMAP
+
+NAME:   serial_demonic_e
+SUBST:  . = ........__ttPPY
+: init_demonic(_G)
+MAP
+....
+..S.
+....
+....
+ENDMAP
+
+NAME:   serial_demonic_f
+SUBST:  . = .......__ttPP
+SUBST:  w = .wwW
+: init_demonic(_G)
+MAP
+..S...
+.wwww.
+wWWWww
+.wWWW.
+.wwww.
+....S.
+ENDMAP
+
+NAME:   serial_demonic_g
+SUBST:  . = ..__PP
+: init_demonic(_G)
+MAP
+....
+.ll.
+.ll.
+...S
+ENDMAP

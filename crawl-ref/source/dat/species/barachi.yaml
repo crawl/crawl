@@ -3,8 +3,8 @@ monster: MONS_BARACHI
 name: "Barachi"
 adjective: "Barachian"
 genus: "Frog"
-difficulty: Advanced
-difficulty_priority: 30
+difficulty: Intermediate
+difficulty_priority: 20
 species_flags:
   - SPF_NO_HAIR
 aptitudes:
@@ -53,6 +53,3 @@ recommended_jobs:
   - JOB_ARCANE_MARKSMAN
   - JOB_SUMMONER
   - JOB_ICE_ELEMENTALIST
-# start TAG_MAJOR_VERSION == 34
-create_enum: false
-# end TAG_MAJOR_VERSION

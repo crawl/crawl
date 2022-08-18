@@ -17,7 +17,6 @@ void practise_stabbing();
 void practise_using_ability(ability_type abil);
 void practise_casting(spell_type spell, bool success);
 void practise_evoking(int degree = 1);
-void practise_using_deck();
 
 void practise_being_hit();
 void practise_being_attacked();

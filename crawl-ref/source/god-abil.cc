@@ -78,7 +78,6 @@
 #include "spl-monench.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
-#include "spl-wpnench.h"
 #include "sprint.h"
 #include "stairs.h"
 #include "state.h"
@@ -150,9 +149,12 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     }
 
     item_def& wpn(you.inv[item_slot]);
-    // Only TSO allows blessing ranged weapons.
-    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH, true))
+    // TSO and KIKU allow blessing ranged weapons, but LUGONU does not.
+    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH
+                                                                  || brand == SPWPN_PAIN, true))
+    {
         return false;
+    }
 
     string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
                        + " ";
@@ -167,12 +169,6 @@ bool bless_weapon(god_type god, brand_type brand, colour_t colour)
     {
         canned_msg(MSG_OK);
         return false;
-    }
-
-    if (you.duration[DUR_EXCRUCIATING_WOUNDS]) // just in case
-    {
-        ASSERT(you.weapon());
-        end_weapon_brand(*you.weapon());
     }
 
     string old_name = wpn.name(DESC_A);
@@ -1684,7 +1680,7 @@ bool beogh_resurrect()
 
 bool yred_can_bind_soul(monster* mon)
 {
-    return mons_can_be_spectralised(*mon)
+    return mons_can_be_spectralised(*mon, true)
            && !mons_bound_body_and_soul(*mon)
            && mon->attitude != ATT_FRIENDLY;
 }
@@ -1780,129 +1776,26 @@ void yred_make_bound_soul(monster* mon, bool force_hostile)
          !force_hostile ? "is now yours" : "fights you");
 }
 
-bool kiku_receive_corpses(int pow)
-{
-    // pow = necromancy * 4, ranges from 0 to 108
-    dprf("kiku_receive_corpses() power: %d", pow);
-
-    // Kiku gives branch-appropriate corpses (like shadow creatures).
-    // 1d2 at 0 Nec, up to 8 at 27 Nec.
-    int expected_extra_corpses = 1 + random2(2) + random2(pow / 18);
-    int corpse_delivery_radius = 1;
-
-    // We should get the same number of corpses
-    // in a hallway as in an open room.
-    int spaces_for_corpses = 0;
-    for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_SQUARE,
-                            LOS_NO_TRANS, true); ri; ++ri)
-    {
-        if (mons_class_can_pass(MONS_HUMAN, env.grid(*ri)))
-            spaces_for_corpses++;
-    }
-    // floating over lava, heavy tomb abuse, etc
-    if (!spaces_for_corpses)
-        spaces_for_corpses++;
-
-    int percent_chance_a_square_receives_extra_corpse = // can be > 100
-        int(float(expected_extra_corpses) / float(spaces_for_corpses) * 100.0);
-
-    int corpses_created = 0;
-
-    for (radius_iterator ri(you.pos(), corpse_delivery_radius, C_SQUARE,
-                            LOS_NO_TRANS); ri; ++ri)
-    {
-        bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, env.grid(*ri));
-        bool square_is_player_square = (*ri == you.pos());
-        bool square_gets_corpse =
-            random2(100) < percent_chance_a_square_receives_extra_corpse
-            || square_is_player_square && random2(100) < 97;
-
-        if (!square_is_walkable || !square_gets_corpse)
-            continue;
-
-        corpses_created++;
-
-        // Find an appropriate monster corpse for level and power.
-        const int adjusted_power = min(pow / 4, random2(random2(pow)));
-        // Pick a place based on the power. This may be below the branch's
-        // start, that's ok.
-        const level_id lev(you.where_are_you, adjusted_power
-                           - absdungeon_depth(you.where_are_you, 0));
-        const monster_type mon_type = pick_local_corpsey_monster(lev);
-        ASSERT(mons_class_can_be_zombified(mons_species(mon_type)));
-
-        // Create corpse object.
-        monster dummy;
-        dummy.type = mon_type;
-        define_monster(dummy);
-        dummy.position = *ri;
-
-        item_def* corpse = place_monster_corpse(dummy, true);
-        if (!corpse)
-            continue;
-
-        // Higher piety means fresher corpses.
-        int rottedness = 200 -
-            (!one_chance_in(10) ? random2(200 - you.piety)
-                                : random2(100 + random2(75)));
-        corpse->freshness = rottedness;
-    }
-
-    if (corpses_created)
-    {
-        if (you_worship(GOD_KIKUBAAQUDGHA))
-        {
-            simple_god_message(corpses_created > 1 ? " delivers you corpses!"
-                                                   : " delivers you a corpse!");
-        }
-        maybe_update_stashes();
-        return true;
-    }
-    else
-    {
-        if (you_worship(GOD_KIKUBAAQUDGHA))
-            simple_god_message(" can find no cadavers for you!");
-        return false;
-    }
-}
-
-/**
- * Destroy a corpse at or adjacent to the player's location
- *
- * @param just_check True if just checking whether the ability is possible,
- *                   false if we should go ahead and destroy a corpse.
- * @return           True if a corpse was available, false otherwise.
-*/
-bool kiku_take_corpse(bool just_check)
-{
-    for (fair_adjacent_iterator ai(you.pos(), false); ai; ++ai)
-    {
-        for (stack_iterator si(*ai, true); si; ++si)
-        {
-            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
-                continue;
-
-            if (just_check)
-                return true;
-
-            item_was_destroyed(*si);
-            destroy_item(si->index());
-            return true;
-        }
-    }
-
-    return false;
-}
-
 bool kiku_gift_capstone_spells()
 {
     ASSERT(can_do_capstone_ability(you.religion));
 
-    vector<spell_type> spells = { SPELL_HAUNT,
-                                  SPELL_BORGNJORS_REVIVIFICATION,
-                                  SPELL_INFESTATION,
-                                  SPELL_NECROMUTATION,
-                                  SPELL_DEATHS_DOOR };
+    vector<spell_type> spells;
+    vector<spell_type> candidates = { SPELL_HAUNT,
+                                      SPELL_BORGNJORS_REVIVIFICATION,
+                                      SPELL_INFESTATION,
+                                      SPELL_NECROMUTATION,
+                                      SPELL_DEATHS_DOOR };
+
+    for (auto spell : candidates)
+        if (!spell_is_useless(spell, false))
+            spells.push_back(spell);
+
+    if (spells.empty())
+    {
+        simple_god_message(" has no more spells that you can make use of!");
+        return false;
+    }
 
     string msg = "Do you wish to receive knowledge of "
                  + comma_separated_fn(spells.begin(), spells.end(), spell_title)
@@ -2128,8 +2021,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
     you.time_taken = 10;
     _run_time_step();
-    // Update corpses, etc. This does also shift monsters, but only by
-    // a tiny bit.
+    // Update corpses, etc.
     update_level(pow * 10);
 
 #ifndef USE_TILE_LOCAL
@@ -2167,8 +2059,9 @@ static map<curse_type, curse_data> _ashenzari_curses =
             SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
     } },
     { CURSE_RANGED, {
+        // XXX: merge with evocations..?
         "Ranged Combat", "Range",
-        { SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_THROWING },
+        { SK_RANGED_WEAPONS, SK_THROWING },
     } },
     { CURSE_ELEMENTS, {
         "Elements", "Elem",
@@ -2657,6 +2550,8 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
         if (*which == POT_HASTE && you.stasis())
             continue;
         if (*which == POT_MAGIC && you.has_mutation(MUT_HP_CASTING))
+            continue;
+        if (*which == POT_INVISIBILITY && you.has_mutation(MUT_GLOWING))
             continue;
         if (*which == POT_LIGNIFY && you.undead_state(false) == US_UNDEAD)
             continue;
@@ -3712,12 +3607,8 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
 
     // Vampires can't get inhibited regeneration for some reason related
     // to their existing regen silliness.
-    // Neither can deep dwarf, for obvious reasons.
-    if (mut == MUT_INHIBITED_REGENERATION
-        && you.has_mutation(MUT_VAMPIRISM))
-    {
+    if (mut == MUT_INHIBITED_REGENERATION && you.has_mutation(MUT_VAMPIRISM))
         return false;
-    }
 
     // demonspawn can't get frail if they have a robust facet
     if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
@@ -3934,14 +3825,11 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     const sacrifice_def &sac_def = _get_sacrifice_def(sacrifice);
 
     piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
-    if (sacrifice == ABIL_RU_SACRIFICE_HAND)
+    if (sacrifice == ABIL_RU_SACRIFICE_HAND
+        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
     {
         // No one-handed staves for small races.
-        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-            piety_gain += _piety_for_skill(SK_STAVES);
-        // No one-handed bows.
-        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
-            piety_gain += _piety_for_skill(SK_BOWS);
+        piety_gain += _piety_for_skill(SK_STAVES);
     }
     return piety_gain;
 }
@@ -4014,7 +3902,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
     {
         case ABIL_RU_SACRIFICE_HEALTH:
             if (mut == MUT_FRAIL)
-                piety_gain += 20; // -health is pretty much always quite bad.
+                piety_gain += 10; // -health is pretty much always quite bad.
             else if (mut == MUT_PHYSICAL_VULNERABILITY)
                 piety_gain += 5; // -AC is a bit worse than -EV
             break;
@@ -4025,7 +3913,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                                        you.skill_rdiv(SK_SPELLCASTING, 1, 2));
             }
             else if (mut == MUT_WEAK_WILLED)
-                piety_gain += 38;
+                piety_gain += 35;
             else
                 piety_gain += 2 + _get_stat_piety(STAT_INT, 6)
                                 + you.skill_rdiv(SK_SPELLCASTING, 1, 2);
@@ -4068,11 +3956,16 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         // words and drink cut off a lot of options if taken together
         case ABIL_RU_SACRIFICE_DRINK:
-            if (you.get_mutation_level(MUT_READ_SAFETY))
+            // less value if you already have some levels of the mutation
+            piety_gain -= 10 * you.get_mutation_level(MUT_DRINK_SAFETY);
+            // check innate mutation level to see if reading was sacrificed
+            if (you.get_innate_mutation_level(MUT_READ_SAFETY) == 2)
                 piety_gain += 10;
             break;
         case ABIL_RU_SACRIFICE_WORDS:
-            if (you.get_mutation_level(MUT_DRINK_SAFETY))
+            // less value if you already have some levels of the mutation
+            piety_gain -= 10 * you.get_mutation_level(MUT_READ_SAFETY);
+            if (you.get_innate_mutation_level(MUT_DRINK_SAFETY) == 2)
                 piety_gain += 10;
             else if (you.get_mutation_level(MUT_NO_DRINK))
                 piety_gain += 15; // extra bad for mummies
@@ -4096,17 +3989,21 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
             if (you.get_mutation_level(MUT_COWARDICE))
-                piety_gain += 12;
+                piety_gain += 6;
             // Ds are highly likely to miss at least one mutation. This isn't
             // absolutely certain, but it's very likely and they should still
             // get a bonus for the risk. Could check the exact mutation
             // schedule, but this seems too leaky.
-            // Dj are guaranteed to lose a spell each time, which is pretty sad too.
-            if (you.species == SP_DEMONSPAWN || you.species == SP_DJINNI)
-                piety_gain += 16;
+            // Dj are guaranteed to lose a spell for the first and third sac,
+            // which is pretty sad too.
+            if (you.species == SP_DEMONSPAWN
+                || you.species == SP_DJINNI && (you.get_mutation_level(MUT_INEXPERIENCED) % 2 == 0))
+            {
+                piety_gain += 10;
+            }
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
-            piety_gain += 12 * you.get_mutation_level(MUT_INEXPERIENCED);
+            piety_gain += 6 * you.get_mutation_level(MUT_INEXPERIENCED);
             break;
 
         default:
@@ -4315,7 +4212,7 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
     else if (piety_gain >= 29)
         return "a major";
     else if (piety_gain >= 21)
-        return "a significant";
+        return "a medium";
     else if (piety_gain >= 13)
         return "a modest";
     else
@@ -4330,7 +4227,18 @@ static const string _piety_asterisks(int piety)
 
 static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
-    perma_mutate(sacrifice, 1, "Ru sacrifice");
+    if (sacrifice == MUT_READ_SAFETY || sacrifice == MUT_DRINK_SAFETY)
+    {
+        // get the safety mutation to the cap instead of 1 level higher
+        perma_mutate(sacrifice,
+                    3 - you.get_mutation_level(sacrifice),
+                    "Ru sacrifice");
+    }
+    else
+    {
+        // regular case for other sacrifices
+        perma_mutate(sacrifice, 1, "Ru sacrifice");
+    }
     you.sacrifices[sacrifice] += 1;
 }
 
@@ -4605,14 +4513,11 @@ bool ru_do_sacrifice(ability_type sac)
     // Maybe this should go in _extra_sacrifice_code, but it would be
     // inconsistent for the milestone to have reduced Shields skill
     // but not the others.
-    if (sac == ABIL_RU_SACRIFICE_HAND)
+    if (sac == ABIL_RU_SACRIFICE_HAND
+        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
     {
         // No one-handed staves for small races.
-        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-            _ru_kill_skill(SK_STAVES);
-        // No one-handed bows.
-        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
-            _ru_kill_skill(SK_BOWS);
+        _ru_kill_skill(SK_STAVES);
     }
 
     mark_milestone("sacrifice", mile_text);
@@ -5982,10 +5887,11 @@ spret okawaru_duel(const coord_def& target, bool fail)
     behaviour_event(mons, ME_ALERT, &you);
     mons->props[OKAWARU_DUEL_TARGET_KEY] = true;
     mons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    mons->stop_being_constricted();
     mons->set_transit(level_id(BRANCH_ARENA));
     mons->destroy_inventory();
     if (mons_is_elven_twin(mons))
-        elven_twin_died(mons, true, KILL_YOU, MID_PLAYER);
+        elven_twin_died(mons, false, KILL_YOU, MID_PLAYER);
     monster_cleanup(mons);
 
     stop_delay(true);
@@ -6021,6 +5927,7 @@ void okawaru_end_duel()
             {
                 mi->props.erase(OKAWARU_DUEL_CURRENT_KEY);
                 mi->props[OKAWARU_DUEL_ABANDONED_KEY] = true;
+                mi->stop_being_constricted();
                 mi->set_transit(current_level_parent());
                 mi->destroy_inventory();
                 monster_cleanup(*mi);

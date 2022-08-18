@@ -54,6 +54,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h" // FASTROOT_POWER_KEY
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -84,8 +85,7 @@ static bool _evoke_horn_of_geryon()
     noisy(15, you.pos()); // same as hell effect noise
     did_god_conduct(DID_EVIL, 3);
     int num = 1;
-    const int adjusted_power =
-        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10));
+    const int adjusted_power = you.skill(SK_EVOCATIONS, 10);
     if (adjusted_power + random2(90) > 130)
         ++num;
     if (adjusted_power + random2(90) > 180)
@@ -142,11 +142,9 @@ static void _spray_lightning(int range, int power)
  */
 static bool _lightning_rod(dist *preselect)
 {
-    const int power =
-        player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
-
-    const spret ret = your_spells(SPELL_THUNDERBOLT, power, false,
-                                                        nullptr, preselect);
+    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
+    const spret ret = your_spells(SPELL_THUNDERBOLT, power, false, nullptr,
+                                  preselect);
 
     if (ret == spret::abort)
         return false;
@@ -233,6 +231,8 @@ void zap_wand(int slot, dist *_target)
 
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
+    if (spell == SPELL_FASTROOT)
+        you.props[FASTROOT_POWER_KEY] = power; // we may cancel, but that's fine
 
     spret ret = your_spells(spell, power, false, &wand, _target);
 
@@ -295,9 +295,7 @@ static bool _box_of_beasts()
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
     int rnd_factor = random2(7);
     rnd_factor -= random2(7);
-    const int hd_min = min(27,
-                           player_adjust_evoc_power(you.skill(SK_EVOCATIONS)
-                                                    + rnd_factor));
+    const int hd_min = min(27, you.skill(SK_EVOCATIONS) + rnd_factor);
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
@@ -390,7 +388,8 @@ void wind_blast(actor* agent, int pow, coord_def target)
             || ai->pos().distance_from(agent->pos()) > radius
             || ai->pos() == agent->pos() // so it's never aimed_at_feet
             || !target.origin()
-               && _angle_between(agent->pos(), target, ai->pos()) > PI/4.0)
+               && _angle_between(agent->pos(), target, ai->pos()) > PI/4.0
+            || ai->resists_dislodge("being blown about by the wind"))
         {
             continue;
         }
@@ -614,8 +613,8 @@ static bool _phial_of_floods(dist *target)
         target = &target_local;
     bolt beam;
 
-    const int base_pow = 10 + you.skill(SK_EVOCATIONS, 4); // placeholder?
-    zappy(ZAP_PRIMAL_WAVE, base_pow, false, beam);
+    const int power = 10 + you.skill(SK_EVOCATIONS, 4);
+    zappy(ZAP_PRIMAL_WAVE, power, false, beam);
     beam.range = LOS_RADIUS;
     beam.aimed_at_spot = true;
 
@@ -625,13 +624,10 @@ static bool _phial_of_floods(dist *target)
     args.top_prompt = "Aim the phial where?";
 
     if (spell_direction(*target, beam, &args)
-        && player_tracer(ZAP_PRIMAL_WAVE, base_pow, beam))
+        && player_tracer(ZAP_PRIMAL_WAVE, power, beam))
     {
-        const int power = player_adjust_evoc_power(base_pow);
-        // use real power to recalc hit/dam
         zappy(ZAP_PRIMAL_WAVE, power, false, beam);
         beam.fire();
-
         return true;
     }
 
@@ -681,10 +677,8 @@ static spret _phantom_mirror(dist *target)
         canned_msg(MSG_NOTHING_HAPPENS);
         return spret::fail;
     }
-    const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3));
-    int dur = min(6, max(1,
-                         player_adjust_evoc_power(
-                             you.skill(SK_EVOCATIONS, 1) / 4 + 1)
+    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
+    int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
                          * (100 - victim->check_willpower(&you, power)) / 100));
 
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
@@ -811,8 +805,7 @@ static spret _tremorstone()
     static const int SPREAD = 1;
     static const int RANGE = RADIUS + SPREAD;
     const int pow = 15 + you.skill(SK_EVOCATIONS);
-    const int adjust_pow = player_adjust_evoc_power(pow);
-    const int num_explosions = _tremorstone_count(adjust_pow);
+    const int num_explosions = _tremorstone_count(pow);
 
     beam.source_id  = MID_PLAYER;
     beam.thrower    = KILL_YOU;
@@ -867,10 +860,9 @@ static spret _condenser()
     }
 
     const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
-    const int adjust_pow = min(110,player_adjust_evoc_power(pow));
 
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
-    cloud_type cloud = cloud_picker.pick(condenser_clouds, adjust_pow, CLOUD_NONE);
+    cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
     vector<coord_def> target_cells;
     bool see_targets = false;
@@ -913,7 +905,7 @@ static spret _condenser()
     for (auto p : target_cells)
     {
         const int cloud_power = 5
-            + random2avg(12 + div_rand_round(adjust_pow * 3, 4), 3);
+            + random2avg(12 + div_rand_round(pow * 3, 4), 3);
         place_cloud(cloud, p, cloud_power, &you);
     }
 
@@ -929,7 +921,7 @@ static bool _xoms_chessboard()
 
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->friendly() || mi->neutral())
+        if (mi->friendly() || mi->neutral() && !mi->has_ench(ENCH_INSANE))
             continue;
         if (mons_is_firewood(**mi))
             continue;
@@ -947,8 +939,7 @@ static bool _xoms_chessboard()
         return false;
     }
 
-    const int power =
-        player_adjust_evoc_power(15 + you.skill(SK_EVOCATIONS, 7) / 2);
+    const int power = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
 
     mpr("You make a move on Xom's chessboard...");
 
@@ -1014,18 +1005,6 @@ bool evoke_check(int slot, bool quiet)
                 return true;
             }
     }
-
-#if TAG_MAJOR_VERSION == 34
-    if (player_under_penance(GOD_PAKELLAS))
-    {
-        if (!quiet)
-        {
-            simple_god_message("'s wrath prevents you from evoking devices!",
-                           GOD_PAKELLAS);
-        }
-        return false;
-    }
-#endif
 
     if (you.get_mutation_level(MUT_NO_ARTIFICE))
     {

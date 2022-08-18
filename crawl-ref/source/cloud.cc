@@ -1540,9 +1540,11 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         const int base_damage = _cloud_damage_calc(dam_info.random,
                                                    max(1, dam_info.random / 9),
                                                    dam_info.base, false);
+        // Add in an arbitrary proxy for poison damage from poison clouds.
+        const int bonus_dam = cloud.type == CLOUD_POISON ? roll_dice(3, 4) : 0;
         const int damage = resist_adjust_damage(mons,
                                                 clouds[cloud.type].beam_effect,
-                                                base_damage);
+                                                base_damage + bonus_dam);
         const int hp_threshold = damage * 3;
 
         // intelligent monsters want a larger margin of safety

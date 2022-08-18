@@ -7,6 +7,7 @@ enum KeymapContext
     KMC_TARGETING,       // Only during 'x' and other targeting modes
     KMC_CONFIRM,         // When being asked y/n/q questions
     KMC_MENU,            // For menus
+    KMC_MENU_MULTISELECT, // Multi-select-specific commands
 #ifdef USE_TILE
     KMC_DOLL,            // For the tiles doll menu editing screen
 #endif

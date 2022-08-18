@@ -395,6 +395,8 @@ static dice_def _spell_damage(spell_type spell, int hd)
             return eruption_damage();
         case SPELL_LRD:
             return base_fragmentation_damage(pow);
+        case SPELL_AIRSTRIKE:
+            return base_airstrike_damage(pow);
         default:
             break;
     }
@@ -500,10 +502,13 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
     if (spell == SPELL_SMITING)
         return "7-17"; // sigh
 
+
     const dice_def dam = _spell_damage(spell, hd);
     if (dam.num == 0 || dam.size == 0)
         return "";
     string mult = "";
+    if (spell == SPELL_AIRSTRIKE)
+        return describe_airstrike_dam(dam);
     if (spell == SPELL_MARSHLIGHT)
         mult = "2x";
     else if (spell == SPELL_CONJURE_BALL_LIGHTNING)

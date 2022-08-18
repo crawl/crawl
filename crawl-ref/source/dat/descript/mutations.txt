@@ -75,18 +75,21 @@ Dexterity and Stealth+.
 %%%%
 strong mutation
 
-Your muscles have grown unnaturally strong. Each level of this mutation
-provides +2 Strength.
+Your muscles have grown unnaturally strong. Each level of this mutation provides
++4 Strength, but the extra muscles slow your movements and thoughts, giving -1 to
+both your Intelligence and Dexterity for each level.
 %%%%
 clever mutation
 
-Your mind has become unnaturally acute. Each level of this mutation provides +2
-Intelligence.
+Your mind has become unnaturally acute. Each level of this mutation provides +4
+Intelligence, but all the blood flowing to your head weakens your constitution,
+giving -1 to both your Strength and Dexterity for each level.
 %%%%
 agile mutation
 
 Your reflexes have become unnaturally fast. Each level of this mutation
-provides +2 Dexterity.
+provides +4 Dexterity, but the rest of your body can't keep up with your speed,
+giving -1 to both your Strength and Intelligence for each level.
 %%%%
 weak mutation
 
@@ -649,8 +652,10 @@ damage in the same way as a human with a short blade might.
 four strong arms mutation
 
 You have two pairs of two arms, allowing you to wield two-handed weapons with
-one pair and a shield with the other. The secondary arms in each pair are oddly
-shaped, preventing you from wearing an extra set of gloves or magical rings.
+one pair and a shield with the other. You can even wield extremely large
+weapons like giant clubs, though this takes both arm-pairs. The secondary arms
+in each pair are oddly shaped, preventing you from wearing an extra set of
+gloves or magical rings.
 %%%%
 retaliatory headbutt mutation
 
@@ -772,18 +777,32 @@ engulf mutation
 Your melee attacks may engulf living foes that are your size or smaller.
 Those foes will be silenced and unable to breathe.
 %%%%
-# ------ Ru sacrifices ------
-inability to drink while threatened mutation
+otherworldly mutation
 
-When you are harmed, there is a chance that you will become temporarily unable
-to drink potions. The greater the damage done and the closer you are to death,
-the greater the odds.
+You are foreign to this world, easily perceived by dark forces. You have only
+one-tenth the normal time on each dungeon floor before Zot finds and ends you.
 %%%%
-inability to read while threatened mutation
+glowing mutation
+
+You glow in the dark. Foes hit you more often, your stealth is badly impaired,
+and your outline is easily seen even while you are otherwise invisible.
+%%%%
+explore regen mutation
+
+As you explore the dungeon, your wounds will heal and your magic will replenish.
+%%%%
+# ------ Ru sacrifices ------
+inability to drink after injury mutation
 
 When you are harmed, there is a chance that you will become temporarily unable
-to read. The greater the damage done and the closer you are to death, the
-greater the odds.
+to drink potions. The greater the mutation level, damage done and the closer
+you are to death, the greater the odds.
+%%%%
+inability to read after injury mutation
+
+When you are harmed, there is a chance that you will become temporarily unable
+to read. The greater the mutation level, damage done and the closer you are to
+death, the greater the odds.
 %%%%
 missing a hand mutation
 
