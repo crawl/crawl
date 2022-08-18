@@ -21,6 +21,7 @@ Branches, Environment
     as their previous deepest abyss depth.
 * Dungeon shafts try not to send the player directly into monsters' sight.
 * All descents of new stairs and hatches are now fast, not just one per floor.
+* The Lair is now 5 levels long (was 6).
 * Zombies and skeletons are removed from normal Dungeon spawns.
 * Temple sizes now range from 6 to 21 altars, with a small chance of rare
   temples with 0, 1, or 22 temple-god altars.
@@ -100,9 +101,9 @@ Interface and Options
   special keys (e.g. "F1", "NP." for numpad `.`, etc.)
 * Numpad keys can now be bound separately in all builds.
 * Improvements to specific menus:
-  - The `F`ire menu now allows selecting any item with a targeter (including
-    items that don't show the targeter by default but but do have a useful
-    targeter, such as scrolls of fear).
+  - The `F`ire menu now allows selecting any item with a targeter. This includes
+    items that don't show the targeter by default but do have a useful targeter,
+    such as scrolls of fear.
   - In menus for equipping and using items, a toggle allows switching between
     item type.
   - In most menus that list items, or allow describing a menu entry, entries can
