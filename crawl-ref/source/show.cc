@@ -433,9 +433,7 @@ static void _update_monster(monster* mons)
         mons->ensure_has_client_id();
         monster_info mi(mons);
         if ( you.can_see(*mons) )
-        {
             mi.turns = you.num_turns;
-        }
         env.map_knowledge(gp).set_monster(mi);
         return;
     }
