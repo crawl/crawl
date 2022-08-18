@@ -113,7 +113,11 @@ class TerminalRecorder(object):
 
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
-            buf = os.read(fd, BUFSIZ)
+            try:
+                buf = os.read(fd, BUFSIZ)
+            except (OSError, IOError):
+                self.poll() # fd probably closed?
+                return
 
             if len(buf) > 0:
                 self.write_ttyrec_chunk(buf)
