@@ -189,10 +189,6 @@ static bool _loadlev_populate_stair_distances(const level_pos &target);
 static void _populate_stair_distances(const level_pos &target);
 static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c, bool autopickup);
-static bool _is_travelsafe_square(const coord_def& c,
-                                  bool ignore_hostile = false,
-                                  bool ignore_danger = false,
-                                  bool try_fallback = false);
 
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
 // squares as also for undiscovered traps.
@@ -433,9 +429,9 @@ public:
             {
                 const coord_def p(*ri);
                 cell_travel_safety &ts(safegrid(p));
-                ts.safe = _is_travelsafe_square(p, false);
+                ts.safe = is_travelsafe_square(p, false);
                 ts.safe_if_ignoring_hostile_terrain =
-                    _is_travelsafe_square(p, true);
+                    is_travelsafe_square(p, true);
             }
             _travel_safe_grid = move(tsgrid);
         }
@@ -459,7 +455,7 @@ bool is_stair_exclusion(const coord_def &p)
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
-static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
+bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
                                   bool ignore_danger, bool try_fallback)
 {
     if (!in_bounds(c))
@@ -1001,7 +997,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
             // that autoexplore will still sometimes move you next to a
             // previously unseen monster but the same would happen by manual
             // movement, so I don't think we need to worry about this. (jpeg)
-            if (!_is_travelsafe_square(new_dest)
+            if (!is_travelsafe_square(new_dest)
                 || !feat_is_traversable_now(env.map_knowledge(new_dest).feat()))
             {
                 new_dest = dest;
@@ -1406,7 +1402,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
     if (!floodout
-        && !_is_travelsafe_square(start, false, ignore_danger, true)
+        && !is_travelsafe_square(start, false, ignore_danger, true)
         && !is_trap(start))          // player likes pain
     {
         return coord_def();
@@ -1593,7 +1589,7 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
         && is_greed_inducing_square(c)
-        && _is_travelsafe_square(c, ignore_hostile, ignore_danger))
+        && is_travelsafe_square(c, ignore_hostile, ignore_danger))
     {
         int dist = traveled_distance;
 
@@ -1750,7 +1746,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
         return true;
     }
-    else if (!_is_travelsafe_square(dc, ignore_hostile, ignore_danger, try_fallback))
+    else if (!is_travelsafe_square(dc, ignore_hostile, ignore_danger, try_fallback))
     {
         // This point is not okay to travel on, but if this is a
         // trap, we'll want to put it on the feature vector anyway.
@@ -3237,7 +3233,7 @@ void start_travel(const coord_def& p)
     if (!in_bounds(p))
         return;
 
-    if (!_is_travelsafe_square(p, true))
+    if (!is_travelsafe_square(p, true))
         return;
 
     you.travel_x = p.x;
