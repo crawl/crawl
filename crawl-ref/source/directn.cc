@@ -2678,7 +2678,7 @@ bool full_describe_square(const coord_def &c, bool cleanup)
             _full_describe_menu(list_mons, list_items, list_features, "", true,
                     false, you.see_cell(c) ? "What do you want to examine?"
                                            : "What do you want to remember?");
-        if (describe_result == coord_def(-1, -1))
+        if (describe_result != coord_def(-1, -1))
             return true; // something happened, we want to exit
     }
     else if (quantity == 1)
