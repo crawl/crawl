@@ -430,10 +430,9 @@ static void _update_monster(monster* mons)
     {
         mons->ensure_has_client_id();
         monster_info mi(mons);
-        if( you.can_see(*mons) )
+        if ( you.can_see(*mons) )
         {
             mi.turns = you.num_turns;
-            // mprf("set turns %d,%d %s to %d", mons->pos().x, mons->pos().y, mons->name(DESC_THE).c_str(), mi.turns);
         }
         env.map_knowledge(gp).set_monster(mi);
         return;
