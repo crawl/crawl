@@ -110,6 +110,11 @@ MIRET1(number, threat, threat)
  * @function mname
  */
 MIRET1(string, mname, mname.c_str())
+/*** Monster turns counter (when you first saw it).
+ * @treturn int
+ * @function type
+ */
+MIRET1(number, turns, turns)
 /*** Monster type enum value as in monster_type.h.
  * @treturn int
  * @function type
@@ -492,7 +497,7 @@ LUAFN(moninf_get_is)
 }
 
 /*** Get the monster's flags.
- * Returns all flags set for the moster, as a list of flag names.
+ * Returns all flags set for the monster, as a list of flag names.
  * @treturn array
  * @function flags
  */
@@ -680,6 +685,40 @@ LUAFN(moninf_get_can_traverse)
     return 1;
 }
 
+/*** Returns the monster's items as an array of items.
+ * @treturn array
+ * @function items
+ */
+LUAFN(moninf_get_items)
+{
+    MONINF(ls, 1, mi);
+    lua_newtable(ls);
+    int index = 0;
+    for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        item_def* item = mi->inv[i].get();
+        if (item)
+        {
+            clua_push_item(ls, item);
+            lua_rawseti(ls, -2, ++index);
+        }
+
+    }
+    return 1;
+}
+
+/*** What's the monster's maximum range with a weapon, spell, or wand?
+ * @treturn int
+ * @function range
+ */
+LUAFN(moninf_get_range)
+{
+    MONINF(ls, 1, mi);
+
+    lua_pushnumber(ls, mi->range());
+    return 1;
+}
+
 /*** How far can the monster reach with their melee weapon?
  * @treturn int
  * @function reach_range
@@ -805,6 +844,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(number),
     MIREG(colour),
     MIREG(mname),
+    MIREG(turns),
     MIREG(is),
     MIREG(flags),
     MIREG(is_safe),
@@ -819,6 +859,8 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_constricting_you),
     MIREG(can_be_constricted),
     MIREG(can_traverse),
+    MIREG(items),
+    MIREG(range),
     MIREG(reach_range),
     MIREG(is_unique),
     MIREG(is_stationary),

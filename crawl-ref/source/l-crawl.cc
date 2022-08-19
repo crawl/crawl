@@ -125,7 +125,7 @@ LUAFN(crawl_stderr)
     return 0;
 }
 
-/*** Print to the debugging channel, which is desplayed only for debug builds.
+/*** Print to the debugging channel, which is displayed only for debug builds.
  * @tparam string text
  * @function dpr
  */

@@ -351,6 +351,8 @@ void mons_pacify(monster& mon, mon_attitude_type att = ATT_GOOD_NEUTRAL,
 bool mons_should_fire(bolt &beam, bool ignore_good_idea = false);
 
 bool mons_has_los_ability(monster_type mon_type);
+bool ms_ranged_spell(spell_type monspell, bool attack_only = false,
+                     bool ench_too = true);
 bool mons_has_ranged_spell(const monster& mon, bool attack_only = false,
                            bool ench_too = true);
 bool mons_has_ranged_attack(const monster& mon);
