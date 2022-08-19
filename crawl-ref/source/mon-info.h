@@ -303,6 +303,7 @@ struct monster_info_base
     bool sleepwalking;
     bool backlit;
     bool umbraed;
+    int last_seen_at_turn;
 
     mid_t client_id;
     mid_t summoner_id;
@@ -433,6 +434,7 @@ struct monster_info : public monster_info_base
 
     bool wields_two_weapons() const;
     bool can_regenerate() const;
+    int range() const;
     reach_type reach_range(bool items = true) const;
 
     size_type body_size() const;

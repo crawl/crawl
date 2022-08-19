@@ -32,13 +32,16 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-book.h"
+#include "mon-cast.h"
 #include "mon-death.h" // ELVEN_IS_ENERGIZED_KEY
 #include "mon-info-flag-name.h"
 #include "mon-tentacle.h"
+#include "mon-util.h"
 #include "nearby-danger.h"
 #include "options.h"
 #include "religion.h"
 #include "skills.h"
+#include "spl-book.h"
 #include "spl-goditem.h" // dispellable_enchantments
 #include "spl-summoning.h"
 #include "state.h"
@@ -402,6 +405,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     client_id = MID_NOBODY;
     summoner_id = MID_NOBODY;
+    last_seen_at_turn = -1;
 }
 
 static description_level_type _article_for(const actor* a)
@@ -878,6 +882,7 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     client_id = m->get_client_id();
+    last_seen_at_turn = you.num_turns;
 }
 
 /// Player-known max HP information for a monster: "about 55", "243".
@@ -1708,6 +1713,31 @@ bool monster_info::wields_two_weapons() const
 bool monster_info::can_regenerate() const
 {
     return !is(MB_NO_REGEN);
+}
+
+int monster_info::range() const
+{
+    int range = reach_range(true);
+    // wielding ranged weapon?
+    const item_def *weapon = inv[MSLOT_WEAPON].get();
+    if (weapon && is_range_weapon(*weapon))
+        range = LOS_DEFAULT_RANGE;
+    // quivering something?
+    const item_def *missile = inv[MSLOT_MISSILE].get();
+    if (missile)
+        range = LOS_DEFAULT_RANGE;
+    // ranged attack spells?
+    const vector<mon_spell_slot> &unique_slots = get_unique_spells(*this);
+    for (const auto& slot : unique_slots)
+        if (ms_ranged_spell(slot.spell, true, true))
+            range = max(range, mons_spell_range_for_hd(slot.spell, hd));
+    // has attack wand?
+    const item_def *wand = inv[MSLOT_WAND].get();
+    if (wand && is_offensive_wand(*wand)) {
+        const spell_type spell = spell_in_wand(static_cast<wand_type>(wand->sub_type));
+        range = max(range, calc_spell_range(spell, spell_power_cap(spell), true, true));
+    }
+    return range;
 }
 
 reach_type monster_info::reach_range(bool items) const
