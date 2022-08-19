@@ -138,7 +138,7 @@ LUARET1(you_poison_survival, number, poison_survival())
  * @treturn int
  * @function corrosion
  */
-LUARET1(you_corrosion, number, you.props["corrosion_amount"].get_int())
+LUARET1(you_corrosion, number, you.corrosion_amount())
 /*** Strength.
  * @treturn int current strength
  * @treturn int max strength
@@ -242,9 +242,9 @@ LUARET1(you_stealth_pips, number, stealth_pips())
  * @treturn int number of WL pips
  * @function willpower
  */
-LUARET1(you_willpower, number, player_willpower(false) / WL_PIP)
+LUARET1(you_willpower, number, player_willpower() / WL_PIP)
 /*** Drowning resistance (rDrown).
- * @treturn int resistance level
+ * @treturn boolean
  * @function res_drowning
  */
 LUARET1(you_res_drowning, boolean, you.res_water_drowning())
@@ -252,18 +252,18 @@ LUARET1(you_res_drowning, boolean, you.res_water_drowning())
  * @treturn int resistance level
  * @function res_mutation
  */
-LUARET1(you_res_mutation, number, you.rmut_from_item(false) ? 1 : 0)
+LUARET1(you_res_mutation, number, you.rmut_from_item() ? 1 : 0)
 /*** See invisible (sInv).
  * @treturn boolean
  * @function see_invisible
  */
-LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
+LUARET1(you_see_invisible, boolean, you.can_see_invisible())
 /*** Guardian spirit.
  * Returns a number for backwards compatibility.
  * @treturn int
  * @function spirit_shield
  */
-LUARET1(you_spirit_shield, number, you.spirit_shield(false) ? 1 : 0)
+LUARET1(you_spirit_shield, number, you.spirit_shield() ? 1 : 0)
 /*** Corrosion resistance (rCorr).
  * @treturn int resistance level
  * @function res_corr
@@ -418,7 +418,7 @@ LUARET1(you_silenced, boolean, silenced(you.pos()))
  * @treturn boolean
  * @function sick
  */
-LUARET1(you_sick, boolean, you.disease)
+LUARET1(you_sick, boolean, you.duration[DUR_SICKNESS])
 /*** Are you contaminated?
  * @treturn number
  * @function contaminated
@@ -439,9 +439,6 @@ LUARET1(you_deaths, number, you.deaths)
  * @function lives
  */
 LUARET1(you_lives, number, you.lives)
-#if TAG_MAJOR_VERSION == 34
-LUARET1(you_antimagic, boolean, you.duration[DUR_ANTIMAGIC])
-#endif
 
 /*** Where are you?
  * @treturn string
@@ -805,6 +802,36 @@ static int l_you_abil_table(lua_State *ls)
         lua_pushstring(ls, buf);
         lua_pushstring(ls, ability_name(tal.which));
         lua_rawset(ls, -3);
+    }
+    return 1;
+}
+
+
+/*** Get the current state of item identification as a list of strings.
+ * @treturn table The list of names of known identifiable items.
+ * @function known_items
+ */
+static int you_known_items(lua_State *ls)
+{
+    lua_newtable(ls);
+    int index = 0;
+    for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
+    {
+        object_class_type basetype = (object_class_type)ii;
+        if (!item_type_has_ids(basetype))
+            continue;
+        for (const auto subtype : all_item_subtypes(basetype))
+        {
+            if (basetype == OBJ_JEWELLERY && subtype >= NUM_RINGS && subtype < AMU_FIRST_AMULET)
+                continue;
+            if (you.type_ids[basetype][subtype]) {
+                item_def it = item_def();
+                it.base_type = basetype;
+                it.sub_type  = subtype;
+                lua_pushstring(ls, it.name(DESC_PLAIN, true).c_str());
+                lua_rawseti(ls, -2, ++index);
+            }
+        }
     }
     return 1;
 }
@@ -1177,32 +1204,23 @@ LUAFN(you_status)
 
 LUAFN(you_quiver_valid)
 {
-    // 0 = launcher quiver
-    // 1 = regular quiver
-    // this order is slightly weird but is aimed at forward compatibility
-    const int q_num = luaL_safe_checkint(ls, 1);
-    auto &q = q_num == 0 ? you.launcher_action : you.quiver_action;
-    PLUARET(boolean, !q.is_empty() && q.get()->is_valid());
+    PLUARET(boolean, !you.quiver_action.is_empty()
+                   && you.quiver_action.get()->is_valid());
 }
 
 LUAFN(you_quiver_enabled)
 {
-    // 0 = launcher quiver
-    // 1 = regular quiver
-    const int q_num = luaL_safe_checkint(ls, 1);
-    auto &q = q_num == 0 ? you.launcher_action : you.quiver_action;
-    PLUARET(boolean, !q.is_empty() && q.get()->is_enabled());
+    PLUARET(boolean, !you.quiver_action.is_empty()
+                   && you.quiver_action.get()->is_enabled());
 }
 
 LUAFN(you_quiver_uses_mp)
 {
-    // ignore launcher quiver here
     PLUARET(boolean, quiver::get_secondary_action()->uses_mp());
 }
 
 LUAFN(you_quiver_allows_autofight)
 {
-    // don't bother with launcher quiver
     PLUARET(boolean, quiver::get_secondary_action()->allow_autofight());
 }
 
@@ -1220,6 +1238,7 @@ static const struct luaL_reg you_clib[] =
     { "abilities"   , l_you_abils },
     { "ability_letters", l_you_abil_letters },
     { "ability_table", l_you_abil_table },
+    { "known_items" , you_known_items },
     { "name"        , you_name },
     { "race"        , you_race },
     { "hand"        , you_hand },
@@ -1301,9 +1320,6 @@ static const struct luaL_reg you_clib[] =
     { "under_penance", you_under_penance },
     { "constricted",  you_constricted },
     { "constricting", you_constricting },
-#if TAG_MAJOR_VERSION == 34
-    { "antimagic",    you_antimagic },
-#endif
     { "status",       you_status },
     { "immune_to_hex", you_immune_to_hex },
 
@@ -1600,7 +1616,9 @@ LUAFN(you_init)
     PLUARET(string, skill_name(item_attack_skill(OBJ_WEAPONS, ng.weapon)));
 }
 
+#ifdef WIZARD
 LUAWRAP(you_enter_wizard_mode, you.wizard = true)
+#endif
 
 LUARET1(you_exp_needed, number, exp_needed(luaL_safe_checkint(ls, 1)))
 LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1))

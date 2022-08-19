@@ -39,16 +39,13 @@ trap_def* trap_at(const coord_def& where);
 trap_type get_trap_type(const coord_def& where);
 
 bool is_valid_shaft_level();
-bool is_valid_shaft_effect_level();
 void roll_trap_effects();
 void do_trap_effects();
 level_id generic_shaft_dest(level_id place);
 
 int       trap_rate_for_place();
 trap_type random_trap_for_place(bool dispersal_ok = true);
-trap_type random_vault_trap();
 
-int count_traps(trap_type ttyp);
 void place_webs(int num);
 bool ensnare(actor *fly);
 void leave_web(bool quiet = false);
@@ -56,3 +53,6 @@ void monster_web_cleanup(const monster &mons, bool quiet = false);
 void stop_being_held();
 
 bool is_regular_trap(trap_type trap);
+#if TAG_MAJOR_VERSION == 34
+bool is_removed_trap(trap_type trap);
+#endif

@@ -105,6 +105,11 @@ struct bolt
 
     int    draw_delay = 15;       // delay used when drawing beam.
     int    explode_delay = 50;    // delay when drawing explosions.
+    bool   redraw_per_cell = true; // whether to force a redraw after every cell
+                                   // drawn during an animation. Not for
+                                   // explosions.
+                                   // TODO: why can't this behavior follow
+                                   // from draw_delay == 0?
 
     bolt*  special_explosion = nullptr; // For exploding with a different
                                         // flavour/damage/etc than the beam
@@ -148,6 +153,8 @@ struct bolt
     bool beam_cancelled = false;  // stop_attack_prompt() returned true
     bool dont_stop_player = false; // player answered self target prompt with 'y'
     bool dont_stop_trees = false; // player answered tree-burning prompt with 'y'
+    bool overshoot_prompt = true; // warn when an ally is past the target
+    bool friendly_past_target = false; // we fired and found something past the target
 
     int       bounces = 0;        // # times beam bounced off walls
     coord_def bounce_pos = {0,0}; // position of latest wall bounce,
@@ -212,6 +219,8 @@ public:
     void determine_affected_cells(explosion_map& m, const coord_def& delta,
                                   int count, int r,
                                   bool stop_at_statues, bool stop_at_walls);
+
+    bool self_targeted() const;
 
     // Setup.
     void fake_flavour();
@@ -317,8 +326,8 @@ bool enchant_actor_with_flavour(actor* victim, const actor *atk,
 
 bool enchant_monster_invisible(monster* mon, const string &how);
 
-bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
-                                                  bool intrinsic_only = false);
+bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
+                                  const monster* mon, bool intrinsic_only = false);
 spret mass_enchantment(enchant_type wh_enchant, int pow,
                             bool fail = false);
 int ench_power_stepdown(int pow);
@@ -338,7 +347,7 @@ spret zapping(zap_type ztype, int power, bolt &pbolt,
                    bool fail = false);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
 
-vector<coord_def> create_feat_splash(coord_def center, int radius, int num, int dur);
+set<coord_def> create_feat_splash(coord_def center, int radius, int num, int dur);
 
 void init_zap_index();
 void clear_zap_info_on_exit();

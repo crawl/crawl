@@ -10,6 +10,7 @@
 
 #include "ng-restr.h"
 
+#include "item-prop.h" // item_attack_skill
 #include "jobs.h"
 #include "mutation-type.h"
 #include "newgame.h"
@@ -32,6 +33,7 @@ static bool _banned_combination(job_type job, species_type species)
         && (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT
             || job == JOB_ABYSSAL_KNIGHT
+            || job == JOB_CINDER_ACOLYTE
             || job == JOB_MONK))
     {
         return true;
@@ -89,14 +91,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     if (species::mutation_level(ng.species, MUT_NO_GRASPING) && wpn != WPN_UNARMED)
         return CC_BANNED;
 
-    // These recommend short blades because they're good at stabbing,
-    // but the fighter's armour hinders that.
-    if ((ng.species == SP_NAGA || ng.species == SP_VAMPIRE)
-         && ng.job == JOB_FIGHTER && wpn == WPN_RAPIER)
-    {
-        return CC_RESTRICTED;
-    }
-
     if (wpn == WPN_QUARTERSTAFF && ng.job != JOB_GLADIATOR
         && !(ng.job == JOB_FIGHTER
              // formicids are allowed to have shield + quarterstaff
@@ -105,15 +99,15 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         return CC_BANNED;
     }
 
-    // Javelins are always good, boomerangs not so much.
-    if (wpn == WPN_THROWN)
+    if (species::recommends_weapon(ng.species, wpn)
+        // Don't recommend short blades for fighters - stabbing and heavy
+        // armour + no stab enablers aren't an amazing combo.
+        && (ng.job != JOB_FIGHTER
+            || wpn == WPN_UNARMED
+            || item_attack_skill(OBJ_WEAPONS, wpn) != SK_SHORT_BLADES))
     {
-        return species::size(ng.species) >= SIZE_MEDIUM ? CC_UNRESTRICTED
-                                                       : CC_RESTRICTED;
-    }
-
-    if (species::recommends_weapon(ng.species, wpn))
         return CC_UNRESTRICTED;
+    }
 
     return CC_RESTRICTED;
 }

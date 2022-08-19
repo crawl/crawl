@@ -388,6 +388,15 @@ slime_stone1
 slime_stone2
 slime_stone3
 
+rock_wall_crypt0 ROCK_WALL_CRYPT
+%weight 2
+rock_wall_crypt1
+%weight 3
+rock_wall_crypt2
+%weight 2
+rock_wall_crypt3
+
+%weight 10
 tomb0 WALL_TOMB
 tomb1
 tomb2
@@ -416,6 +425,40 @@ vault_stone12
 vault_stone13
 vault_stone14
 vault_stone15
+
+# ssssssss
+%weight 10
+wall_stone_spider0 STONE_WALL_SPIDER
+%weight 5
+wall_stone_spider1
+%weight 1
+wall_stone_spider2
+wall_stone_spider3
+
+# sss (more snakeishly)
+%weight 10
+wall_stone_snake0 STONE_WALL_SNAKE
+%weight 3
+wall_stone_snake1
+wall_stone_snake2
+wall_stone_snake3
+
+# sss (like the tide rolling over sand)
+%weight 2
+wall_stone_shoals0 STONE_WALL_SHOALS
+wall_stone_shoals1
+%weight 4
+wall_stone_shoals2
+wall_stone_shoals3
+%weight 10
+wall_stone_shoals4
+
+wall_oozing0 WALL_OOZING
+wall_oozing1
+%weight 4
+wall_oozing2
+wall_oozing3
+%weight 10
 
 zot_blue0 WALL_ZOT WALL_ZOT_BLUE
 zot_blue1
@@ -527,6 +570,13 @@ wall_vines3
 wall_vines4
 wall_vines5
 wall_vines6
+
+studio0 WALL_STUDIO
+studio1
+studio2
+studio3
+studio4
+studio5
 
 # These 15 variants are referenced from tileview.cc
 pebble_red0 WALL_PEBBLE WALL_PEBBLE_RED
@@ -657,6 +707,16 @@ marble_wall10
 marble_wall11
 marble_wall12
 
+%weight 10
+tukima_marble_wall0 WALL_MARBLE_TUKIMA
+tukima_marble_wall1
+tukima_marble_wall2
+tukima_marble_wall3
+%weight 1
+tukima_marble_wall4
+tukima_marble_wall5
+tukima_marble_wall6
+
 %weight 5
 sandstone_wall0 WALL_SANDSTONE
 sandstone_wall1
@@ -678,11 +738,13 @@ volcanic_wall4
 volcanic_wall5
 volcanic_wall6
 
-%variation WALL_VOLCANIC blue
-%hue 0 240
-%lum -10 240
-%repeat WALL_VOLCANIC WALL_VOLCANIC_BLUE
-%resetcol
+wall_moon0 WALL_MOON
+wall_moon1
+wall_moon2
+wall_moon3
+wall_moon4
+wall_moon5
+wall_moon6
 
 %weight 5
 crystal_wall00 WALL_CRYSTAL_SQUARES
@@ -752,6 +814,13 @@ stone_dark0 WALL_STONE_DARK
 stone_dark1
 stone_dark2
 stone_dark3
+
+stone_mossy0 WALL_STONE_MOSSY
+stone_mossy1
+%weight 3
+stone_mossy2
+stone_mossy3
+%weight 10
 
 # For the Doroklohe WizLab
 stone_black_marked0 WALL_STONE_BLACK_MARKED
@@ -1027,6 +1096,11 @@ hell10
 hell11
 
 %weight 10
+bmaus_stone_wall0 WALL_BORG_STONE
+bmaus_stone_wall1
+bmaus_stone_wall2
+bmaus_stone_wall3
+
 ice_wall0 WALL_ICE
 ice_wall1
 ice_wall2

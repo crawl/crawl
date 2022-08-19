@@ -67,17 +67,28 @@ void WindowManager::shutdown()
 static unsigned char _kmod_to_mod(int modifier)
 {
     unsigned char mod = 0;
+#ifdef TARGET_OS_WINDOWS
+    // AltGr looks like right alt + left ctrl on Windows. Don't treat it as
+    // a modifier at all.
+    // TODO: linux?
+    if (testbits(modifier, KMOD_RALT | KMOD_LCTRL))
+        return 0;
+#endif
+
     if (modifier & KMOD_SHIFT)
         mod |= TILES_MOD_SHIFT;
     if (modifier & KMOD_CTRL)
         mod |= TILES_MOD_CTRL;
     if (modifier & KMOD_LALT)
         mod |= TILES_MOD_ALT;
+    if (modifier & KMOD_GUI)
+        mod |= TILES_MOD_CMD;
     return mod;
 }
 
 static unsigned char _get_modifiers(SDL_Keysym &keysym)
 {
+    // if keysym *is* a modifier key, return that
     switch (keysym.sym)
     {
     case SDLK_LSHIFT:
@@ -92,7 +103,11 @@ static unsigned char _get_modifiers(SDL_Keysym &keysym)
     case SDLK_RALT:
         return TILES_MOD_ALT;
         break;
+    case SDLK_LGUI:
+    case SDLK_RGUI:
+        return TILES_MOD_CMD;
     default:
+        // otherwise, return a mask
         return _kmod_to_mod(keysym.mod);
     }
 }
@@ -127,16 +142,127 @@ static void _translate_window_event(const SDL_WindowEvent &sdl_event,
     }
 }
 
+static int _apply_alt(int key, int mod)
+{
+    // TODO: alt handling remains fairly broken
+#ifdef TARGET_OS_MACOSX
+    // mac: there's also a textinput event, suppress the keysym handling.
+    // TODO: something better?
+    if ((mod == TILES_MOD_ALT) && key >= 0 && key < 128)
+        return 0;
+#endif
+    // don't mess with SDL internal special keycodes
+    if (key > 0 && !!(key & (1<<30)))
+        return key;
+    // TODO: does this work on windows / linux?
+    if ((mod & TILES_MOD_ALT) && key > CK_NO_KEY)
+        key = key + CK_ALT_BASE;
+
+    if ((mod & TILES_MOD_CMD) && key > CK_NO_KEY)
+        key += CK_CMD_BASE;
+    return key;
+}
+
+static int _apply_ctrlshift(int key, int mod)
+{
+    if (!(mod & (TILES_MOD_SHIFT | TILES_MOD_CTRL)))
+        return key;
+    const bool shift = bool(mod & TILES_MOD_SHIFT);
+    const bool ctrl = bool(mod & TILES_MOD_CTRL);
+
+    const int nav_key_offset =
+          shift && ctrl ? CK_CTRL_SHIFT_UP - CK_UP
+        : ctrl          ? CK_CTRL_UP - CK_UP
+        : shift         ? CK_SHIFT_UP - CK_UP
+        : 0;
+
+    const int extra_nav_key_offset =
+          shift && ctrl ? CK_CTRL_SHIFT_ENTER - CK_ENTER_PLACEHOLDER
+        : ctrl          ? CK_CTRL_ENTER - CK_ENTER_PLACEHOLDER
+        : shift         ? CK_SHIFT_ENTER - CK_ENTER_PLACEHOLDER
+        : 0;
+
+    // internal keycodes for various modified special keys. We handle ones that
+    // have ascii codes case-by-case, and then handle regular navigation keys
+    // more generally. All of these have ctrl, shift, and ctrl-shift variants.
+    // TODO: alt?
+    if (key == CK_TAB)
+        return CK_TAB_PLACEHOLDER + nav_key_offset;
+    else if (key == CK_ENTER)
+        return CK_ENTER_PLACEHOLDER + extra_nav_key_offset;
+    else if (key == CK_BKSP)
+        return CK_BKSP_PLACEHOLDER + extra_nav_key_offset;
+    else if (key == CK_ESCAPE)
+        return CK_ESCAPE_PLACEHOLDER + extra_nav_key_offset;
+    else if (key == CK_DELETE)
+        return CK_DELETE_PLACEHOLDER + extra_nav_key_offset;
+    else if (key == ' ')
+        return CK_SPACE_PLACEHOLDER + extra_nav_key_offset;
+    else if (key >= CK_UP && key <= CK_TAB_PLACEHOLDER)
+        return key + nav_key_offset;
+
+    if (key >= CK_MIN_NUMPAD && key <= CK_MAX_NUMPAD)
+    {
+        // special case handling of enter, we don't have modified variants
+        // of the numpad key, so fall back on regular enter. (unmodified case
+        // already returned.)
+        if (key == CK_NUMPAD_ENTER)
+            return CK_ENTER_PLACEHOLDER + extra_nav_key_offset;
+
+        // hacky: for modified numpad numbers, turn them into the
+        // corresponding nav key. (E.g. shift+9 turns into shift+pgup.) This
+        // is basically because we need a way for modified move commands to
+        // work.
+        // XX previous versions mapped even unmodified numpad keys on
+        // tiles to their nav equivalents, would this be better?
+        return _apply_ctrlshift(numpad_to_regular(key, true), mod);
+    }
+
+    // TILES_SDL extended ctrl keys
+    // doing this for anything less than `a` is pretty bizarre, but it has
+    // worked this way for some time without producing any issues it seems.
+    // Most of the bizarre keycodes this produces on a US keyboard are negative
+    // and don't conflict with any internal keycodes.
+    // TODO: previously this was also applied to 1<<30 keycodes...
+    if (key >= SDLK_EXCLAIM && key < 128 && ctrl)
+        return LC_CONTROL(key);
+
+    return key;
+}
+
+static int _apply_modifiers(int key, int mod)
+{
+    // overall fairly weird. The goal is to turn key-modifier combos into
+    // distinct keycodes where appropriate. Keycodes were a mistake, tell your
+    // friends
+    //
+    // Alt: handled by systematically shifting keycodes by -3000. This means
+    // that all Alt keycodes are negative, in an otherwise unused range between
+    // around -4500 and -3256. Does not apply to synthetic mouse keycodes, or
+    // to SDL-internal keycodes that have the 1<<30 bit set.
+    //
+    // Ctrl: For various special keys, use crawl-internal keycodes that are
+    // defined similarly to how the special keys' base keycodes are defined
+    // (generally between -200 and -1500). For ascii keys (for SDL we go down
+    // much lower than is normally done for this...) use the regular ascii
+    // ctrl mapping scheme (aka keycode - 'a'). For anything else, currently
+    // no ctrl scheme defined.
+    //
+    // Shift: For various special keys, use crawl-internal keycodes as for
+    // ctrl. There are also explicit ctrl-shift variants defined. For ascii,
+    // shift does what you'd expect based on the keyboard. Otherwise, no impact
+    // of shift modifier.
+    //
+    // Command (mac): handled like Alt, but with a shift of -20000. This leaves
+    // room for the alt shift + everything else.
+    return _apply_alt(_apply_ctrlshift(key, mod), mod);
+}
+
 static int _translate_keysym(SDL_Keysym &keysym)
 {
     // This function returns the key that was hit. Returning zero implies that
     // the keypress (e.g. hitting shift on its own) should be eaten and not
-    // handled.
-
-    const int shift_offset = CK_SHIFT_UP - CK_UP;
-    const int ctrl_offset  = CK_CTRL_UP - CK_UP;
-
-    const int mod = _get_modifiers(keysym);
+    // handled, or that it is an unmodified ascii(ish) key.
 
 #ifdef TARGET_OS_WINDOWS
     // AltGr looks like right alt + left ctrl on Windows. Let the input
@@ -146,51 +272,43 @@ static int _translate_keysym(SDL_Keysym &keysym)
         return 0;
 #endif
 
-    // XX: this comment isn't very accurate, for example many SDL keycodes are
-    //     |d with 1<<30, and the alt stuff here is just a mess.
-    // This is arbitrary, but here's the current mappings.
-    // 0-256: ASCII, Crawl arrow keys
-    // 0-1k : Other SDL keys (F1, Windows keys, etc...) and modifiers
-    // 1k-3k: Non-ASCII with modifiers other than just shift or just ctrl.
-    // 3k+  : ASCII with the left alt modifier.
-
-    int offset = mod ? 1000 + 256 * mod : 0;
-    int numpad_offset = 0;
-    if (mod == TILES_MOD_CTRL)
-        numpad_offset = ctrl_offset;
-    else if (mod == TILES_MOD_SHIFT)
-        numpad_offset = shift_offset;
-    else
-        numpad_offset = offset;
-
     switch (keysym.sym)
     {
-    case SDLK_RETURN:
-    case SDLK_KP_ENTER:
-        return CK_ENTER + offset;
-    case SDLK_BACKSPACE:
-        return CK_BKSP + offset;
-    case SDLK_AC_BACK:
-    case SDLK_ESCAPE:
-        return CK_ESCAPE + offset;
-    case SDLK_DELETE:
-    case SDLK_KP_PERIOD:
-        return CK_DELETE + offset;
-
     case SDLK_LSHIFT:
     case SDLK_RSHIFT:
     case SDLK_LCTRL:
     case SDLK_RCTRL:
     case SDLK_LALT:
     case SDLK_RALT:
-    case SDLK_LGUI:
+    case SDLK_LGUI: // mac command keys
     case SDLK_RGUI:
-    case SDLK_NUMLOCKCLEAR:
+    case SDLK_NUMLOCKCLEAR: // may sometimes be clear, but sometimes numlock
     case SDLK_CAPSLOCK:
     case SDLK_SCROLLLOCK:
     case SDLK_MODE:
         // Don't handle these.
         return 0;
+    default:
+        break;
+    }
+
+    const int mod = _get_modifiers(keysym);
+
+    //int offset = mod ? 1000 + 256 * mod : 0;
+
+    // check for various direct mappings for the base keysym
+    int mapped = 0;
+    switch (keysym.sym)
+    {
+    case SDLK_KP_ENTER:   mapped = CK_NUMPAD_ENTER; break;
+    case SDLK_RETURN:     mapped = CK_ENTER; break;
+    case SDLK_BACKSPACE:  mapped = CK_BKSP; break;
+    case SDLK_AC_BACK:
+    case SDLK_ESCAPE:     mapped = CK_ESCAPE; break;
+    case SDLK_KP_PERIOD:
+    case SDLK_KP_DECIMAL: mapped = CK_NUMPAD_DECIMAL; break;
+    case SDLK_DELETE:     mapped = CK_DELETE; break;
+
 
     case SDLK_F1:
     case SDLK_F2:
@@ -207,75 +325,59 @@ static int _translate_keysym(SDL_Keysym &keysym)
     case SDLK_F13:
     case SDLK_F14:
     case SDLK_F15:
-    case SDLK_HELP:
-    case SDLK_PRINTSCREEN:
-    case SDLK_SYSREQ:
-    case SDLK_PAUSE:
-    case SDLK_MENU:
-    case SDLK_POWER:
-    case SDLK_UNDO:
-        ASSERT_RANGE(keysym.sym, SDLK_F1, SDLK_UNDO + 1);
-        return -(keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
+        // F-keys are negative keysyms, so invert
+        // XX ctrl + F-keys?
+        mapped = CK_F1 - (keysym.sym - SDLK_F1);
+        break;
 
-        // Hack. libw32c overloads clear with '5' too.
-    case SDLK_KP_5:
-        return CK_CLEAR + numpad_offset;
+    // TODO: previous versions did something wacky here for SDLK_HELP,
+    // SDLK_PRINTSCREEN, SDLK_SYSREQ, SDLK_PAUSE, SDLK_MENU, SDLK_POWER,
+    // SDLK_UNDO. These are still allowed but cannot receive modifiers. Do
+    // players actually want ctrl-menu etc?
 
-    case SDLK_KP_8:
-    case SDLK_UP:
-        return CK_UP + numpad_offset;
-    case SDLK_KP_2:
-    case SDLK_DOWN:
-        return CK_DOWN + numpad_offset;
-    case SDLK_KP_4:
-    case SDLK_LEFT:
-        return CK_LEFT + numpad_offset;
-    case SDLK_KP_6:
-    case SDLK_RIGHT:
-        return CK_RIGHT + numpad_offset;
-    case SDLK_KP_0:
-    case SDLK_INSERT:
-        return CK_INSERT + numpad_offset;
-    case SDLK_KP_7:
-    case SDLK_HOME:
-        return CK_HOME + numpad_offset;
-    case SDLK_KP_1:
-    case SDLK_END:
-        return CK_END + numpad_offset;
-    case SDLK_CLEAR:
-        return CK_CLEAR + numpad_offset;
-    case SDLK_KP_9:
-    case SDLK_PAGEUP:
-        return CK_PGUP + numpad_offset;
-    case SDLK_KP_3:
-    case SDLK_PAGEDOWN:
-        return CK_PGDN + numpad_offset;
-    case SDLK_TAB:
-        if (numpad_offset) // keep tab a tab
-            return CK_TAB_TILE + numpad_offset;
-        return SDLK_TAB;
-#ifdef TOUCH_UI
-    // used for zoom in/out
-    case SDLK_KP_PLUS:
-        return CK_NUMPAD_PLUS;
-    case SDLK_KP_MINUS:
-        return CK_NUMPAD_MINUS;
-#endif
+    // everything below here translates unmodified versions into crawl-internal
+    // keycodes, see cio.h
+
+    // TODO: previous versions of this mapped keypad 5 to CLEAR for some reason..
+    case SDLK_KP_0:        mapped = CK_NUMPAD_0; break;
+    case SDLK_KP_1:        mapped = CK_NUMPAD_1; break;
+    case SDLK_KP_2:        mapped = CK_NUMPAD_2; break;
+    case SDLK_KP_3:        mapped = CK_NUMPAD_3; break;
+    case SDLK_KP_4:        mapped = CK_NUMPAD_4; break;
+    case SDLK_KP_5:        mapped = CK_NUMPAD_5; break;
+    case SDLK_KP_6:        mapped = CK_NUMPAD_6; break;
+    case SDLK_KP_7:        mapped = CK_NUMPAD_7; break;
+    case SDLK_KP_8:        mapped = CK_NUMPAD_8; break;
+    case SDLK_KP_9:        mapped = CK_NUMPAD_9; break;
+    case SDLK_UP:          mapped = CK_UP; break;
+    case SDLK_DOWN:        mapped = CK_DOWN; break;
+    case SDLK_LEFT:        mapped = CK_LEFT; break;
+    case SDLK_RIGHT:       mapped = CK_RIGHT; break;
+    case SDLK_INSERT:      mapped = CK_INSERT; break;
+    case SDLK_HOME:        mapped = CK_HOME; break;
+    case SDLK_END:         mapped = CK_END; break;
+    case SDLK_CLEAR:       mapped = CK_CLEAR; break;
+    case SDLK_PAGEUP:      mapped = CK_PGUP; break;
+    case SDLK_PAGEDOWN:    mapped = CK_PGDN; break;
+    case SDLK_TAB:         mapped = CK_TAB; break;
+    case SDLK_KP_PLUS:     mapped = CK_NUMPAD_ADD; break;
+    case SDLK_KP_MINUS:    mapped = CK_NUMPAD_SUBTRACT; break;
+    case SDLK_KP_MULTIPLY: mapped = CK_NUMPAD_MULTIPLY; break;
+    case SDLK_KP_DIVIDE:   mapped = CK_NUMPAD_DIVIDE; break;
+    case SDLK_KP_EQUALS:   mapped = CK_NUMPAD_EQUALS; break;
     default:
         break;
     }
+    if (mapped != 0)
+        return _apply_modifiers(mapped, mod);
 
-    if (!(mod & (TILES_MOD_CTRL | TILES_MOD_ALT)))
+    // don't set a keysym for anything without a modifier key past here
+    // TODO: pass 1<<30 SDL keycodes that are left back as keycodes?
+    if (!(mod & (TILES_MOD_CTRL | TILES_MOD_ALT | TILES_MOD_CMD)))
         return 0;
 
-    int ret = keysym.sym;
-
-    if (mod & TILES_MOD_ALT && keysym.sym >= 128)
-        ret -= 3000; // ???
-    if (mod & TILES_MOD_CTRL)
-        ret -= SDLK_a - 1; // XXX: this might break for strange keysyms
-
-    return ret;
+    // mostly regular ascii, and SDL weird stuff left.
+    return _apply_modifiers(keysym.sym, mod);
 }
 
 static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
@@ -440,10 +542,12 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
     else
     {
-        int x = Options.tile_window_width;
         int y = Options.tile_window_height;
+        int x = Options.tile_window_width;
         x = (x > 0) ? x : _desktop_width + x;
         y = (y > 0) ? y : _desktop_height + y;
+        if (Options.tile_window_ratio > 0)
+            x = min(x, y * Options.tile_window_ratio / 1000);
 #ifdef TOUCH_UI
         // allow *much* smaller windows than default, primarily for testing
         // touch_ui features in an x86 build
@@ -644,28 +748,9 @@ unsigned int SDLWrapper::get_ticks() const
     return SDL_GetTicks();
 }
 
-tiles_key_mod SDLWrapper::get_mod_state() const
+unsigned char SDLWrapper::get_mod_state() const
 {
-    SDL_Keymod mod = SDL_GetModState();
-
-    switch (mod)
-    {
-    case KMOD_LSHIFT:
-    case KMOD_RSHIFT:
-        return TILES_MOD_SHIFT;
-        break;
-    case KMOD_LCTRL:
-    case KMOD_RCTRL:
-        return TILES_MOD_CTRL;
-        break;
-    case KMOD_LALT:
-    case KMOD_RALT:
-        return TILES_MOD_ALT;
-        break;
-    case KMOD_NONE:
-    default:
-        return TILES_MOD_NONE;
-    }
+    return _kmod_to_mod(SDL_GetModState());
 }
 
 void SDLWrapper::set_mod_state(tiles_key_mod mod)
@@ -801,6 +886,13 @@ static char32_t _key_suppresses_textinput(int keycode)
     case SDLK_PAGEDOWN:
         result_char = '3';
         break;
+    case SDLK_KP_PERIOD:
+    case SDLK_DELETE:      result_char = '.'; break;
+    case SDLK_KP_MULTIPLY: result_char = '*'; break;
+    case SDLK_KP_DIVIDE:   result_char = '/'; break;
+    case SDLK_KP_EQUALS:   result_char = '='; break;
+    case SDLK_KP_PLUS:     result_char = '+'; break;
+    case SDLK_KP_MINUS:    result_char = '-'; break;
     }
     if (result_char)
         utf8towc(&result, &result_char);
@@ -822,14 +914,11 @@ int SDLWrapper::send_textinput(wm_event *event)
         // this is relevant only for ctrl-- and ctrl-= bindings at the moment,
         // and I'm somewhat nervous about blocking genuine text entry via the alt
         // key, so for the moment this only blacklists text events with ctrl held
-        bool nontext_modifier_held = wm->get_mod_state() == TILES_MOD_CTRL;
+        bool nontext_modifier_held = wm->get_mod_state() & TILES_MOD_CTRL;
 
         bool should_suppress = prev_keycode && _key_suppresses_textinput(prev_keycode) == wc;
         if (nontext_modifier_held || should_suppress)
         {
-            // this needs to return something, or the event loop in
-            // TilesFramework::getch_ck will block. Currently, CK_NO_KEY
-            // is handled in macro.cc:_getch_mul.
             prev_keycode = 0;
             if (!m_textinput_queue.empty())
                 continue;
@@ -839,6 +928,7 @@ int SDLWrapper::send_textinput(wm_event *event)
         event->key.keysym.sym = wc;
     }
     while (false);
+
     return 1;
 }
 
@@ -847,7 +937,14 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
     SDL_Event sdlevent;
 
     if (!m_textinput_queue.empty())
-        return send_textinput(event);
+    {
+        int ret = send_textinput(event);
+        if (event->key.keysym.sym != CK_NO_KEY)
+            return ret;
+        // textinput event was suppressed, don't return the event.
+        // N.b. it is still possible to return CK_NO_KEY via an SDL_TEXTINPUT
+        // event below.
+    }
 
     if (!SDL_WaitEventTimeout(&sdlevent, timeout))
         return 0;
@@ -871,6 +968,8 @@ int SDLWrapper::wait_event(wm_event *event, int timeout)
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
         event->key.keysym.unicode = sdlevent.key.keysym.sym; // ???
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
+        // n.b. for many "regular" keypresses, a SDL_TEXTINPUT is produced
+        // instead. For some cases (e.g. alt-combos), both may be produced.
 
         if (!event->key.keysym.unicode && event->key.keysym.sym > 0)
             return 0;

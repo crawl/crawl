@@ -11,7 +11,7 @@ explorer.generation_order = {
                 "D:1",
                 "D:2", "D:3", "D:4", "D:5", "D:6", "D:7", "D:8", "D:9",
                 "D:10", "D:11", "D:12", "D:13", "D:14", "D:15",
-                "Lair:1", "Lair:2", "Lair:3", "Lair:4", "Lair:5", "Lair:6",
+                "Lair:1", "Lair:2", "Lair:3", "Lair:4", "Lair:5",
                 "Orc:1", "Orc:2",
                 "Spider:1", "Spider:2", "Spider:3", "Spider:4",
                 "Snake:1", "Snake:2", "Snake:3", "Snake:4",
@@ -19,7 +19,7 @@ explorer.generation_order = {
                 "Swamp:1", "Swamp:2", "Swamp:3", "Swamp:4",
                 "Vaults:1", "Vaults:2", "Vaults:3", "Vaults:4", "Vaults:5",
                 "Crypt:1", "Crypt:2", "Crypt:3",
-                "Depths:1", "Depths:2", "Depths:3", "Depths:4", "Depths:5",
+                "Depths:1", "Depths:2", "Depths:3", "Depths:4",
                 "Hell",
                 "Elf:1", "Elf:2", "Elf:3",
                 "Zot:1", "Zot:2", "Zot:3", "Zot:4", "Zot:5",
@@ -212,11 +212,7 @@ function explorer.feat_interesting(feat_name)
     if string.find(feat_name, "altar_") == 1 then
         return true
     elseif string.find(feat_name, "enter_") == 1 then -- could be more selective
-        if explorer.in_hell() then
-            return feat_name ~= "enter_hell"
-        else
-            return true
-        end
+        return true
     elseif feat_name == "transporter" or string.find(feat_name, "runed_") then
         return true
     end

@@ -100,7 +100,7 @@ jobs:
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
         working-directory: .github/workflows
       - name: Cache compilation
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.ccache
           key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-${{ github.sha }}
@@ -146,12 +146,10 @@ jobs:
     strategy:
       matrix:
         build_type:
-          - tiles
-          - console
-          # These rules need an os 11.0 runner, which is not yet publicly available.
-          # https://github.com/actions/virtual-environments/issues/2486
-          #- tiles-universal
-          #- console-universal
+          # `tiles` and `console` can be used as build types to build a
+          # non-universal (x86_64, unless there are ever arm runners) binary
+          - tiles-universal
+          - console-universal
         build_opts:
           - ""
           - TILES=y
@@ -180,9 +178,10 @@ jobs:
           git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
       - name: Install Dependencies
         run: |
+          brew install pkg-config libpng
           sudo pip3 install PyYAML
       - name: Cache compilation
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.ccache
           key: ccache-macos-clang-${{ matrix.build_type }}-${{ github.sha }}
@@ -241,13 +240,13 @@ jobs:
         run: ./deps.py --crosscompile
         working-directory: .github/workflows
       - name: Cache compilation
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.ccache
-          key: ccache-mingw64-${{ matrix.build_type }}-${{ github.sha }}
+          key: ccache-key2-mingw64-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
-            ccache-mingw64-${{ matrix.build_type }}-
-            ccache-mingw64-
+            ccache-key2-mingw64-${{ matrix.build_type }}-
+            ccache-key2-mingw64-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
       - name: "Setup ccache: prepend path"
@@ -305,7 +304,7 @@ jobs:
         run: ./deps.py --coverage
         working-directory: .github/workflows
       - name: Cache compilation
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.ccache
           key: ccache-catch2-${{ github.sha }}
@@ -404,7 +403,7 @@ jobs:
         run: ./deps.py --compiler ${{ matrix.compiler }} --build-opts "${{ matrix.build_opts }}" --debug-opts "${{ matrix.debug }}"
         working-directory: .github/workflows
       - name: Cache compilation
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.ccache
           key: ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ github.sha }}
@@ -427,7 +426,7 @@ jobs:
         run: ccache -s
 
   notify_irc:
-    name: "Notify ##crawl-dev of build failure"
+    name: "Notify #crawl-dev of build failure"
     needs:
       - linting
       - build_linux
@@ -458,6 +457,7 @@ jobs:
           echo "::set-output name=message::${message}"
       - uses: rectalogic/notify-irc@v1
         with:
+          server: irc.libera.chat
           channel: ${{ secrets.IRC_CHANNEL }}
           nickname: dcss-ci
           message: ${{ steps.message.outputs.message }}

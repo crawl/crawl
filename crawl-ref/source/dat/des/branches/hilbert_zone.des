@@ -245,8 +245,6 @@ SUBVAULT: E : nico_hilbert_41
 SUBVAULT: F : nico_hilbert_41
 SUBVAULT: H : nico_hilbert_61
 SUBVAULT: J : nico_hilbert_61
-SUBVAULT: K : nico_hilbert_21
-SUBVAULT: L : nico_hilbert_21
 : nicolae_spider_hilbert_setup( _G )
 MAP
 -...........-...........-
@@ -256,9 +254,9 @@ MAP
 .EEEEEEE.DDDDDDD.FFFFFFF.
 .-EEEEE-.-DDDDD-.-FFFFF-.
 .-xEEEx-.-xDDDx-.-xFFFx-.
-.---E-K-.-K-D-L-.-L-F---.
--....KKKKKKK.LLLLLLL....-
-.---H-K-H-K---L-J-L-J---.
+.---E-x-.---D---.-x-F---.
+-....-x-.........-x-....-
+.---H-x-H-------J-x-J---.
 .-xHHHxHHHxxxxxJJJxJJJx-.
 .-HHHHHHHHH---JJJJJJJJJ-.
 .HHHHHHHHHHH.JJJJJJJJJJJ.
@@ -302,7 +300,7 @@ MAP
 .-x-L-HHHHH-.-FFFFF-.-x-.
 .-xLLLxHHHx-.-xFFFx-.-x-.
 .-LLLLL-H---.---F-x-.---.
-.LLLLLLL....-....-x--...-
+.LLLLLLL....-....-x-....-
 .-LLLLL-----------x-----.
 .-xLLLxxxxxxxxxxxxxxxxx-.
 .---L-------------------.

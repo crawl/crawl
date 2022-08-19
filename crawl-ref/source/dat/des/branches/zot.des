@@ -72,7 +72,9 @@ function callback.grunt_zot_stairs_overgrown_oklobify(data, triggerable,
   local targets = dgn.find_marker_positions_by_prop("oklobify", 1)
   for _, pos in ipairs(targets) do
     local mons = dgn.mons_at(pos.x, pos.y)
-    if mons ~= nil and mons.name ~= "oklob plant" then
+    if mons ~= nil and
+       (mons.name == "plant" or mons.name == "fungus"
+        or mons.name == "bush") then
       possible[#possible + 1] = pos
     end
   end
@@ -788,7 +790,7 @@ NAME:   lemuel_draconian_sentries
 DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
-MONS:   red draconian scorcher / green draconian stormcaller / yellow draconian stormcaller
+MONS:   draconian scorcher w:5 / draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
@@ -814,7 +816,7 @@ NAME:   lemuel_draconian_sentries_small
 DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
-MONS:   red draconian scorcher / green draconian stormcaller / yellow draconian stormcaller
+MONS:   draconian scorcher w:5 / draconian stormcaller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
@@ -987,14 +989,17 @@ TAGS:    no_rotate
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
 SUBST:   F = 3
-ITEM:    lightning rod, book of air, staff of air, book of the sky
+ITEM:    lightning rod, book of lightning, staff of air, book of storms
 : elseif crawl.coinflip() then
 MONS:    frost giant, ice dragon
 KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
               walk_dist = 0, spread_rate= 0 }
-ITEM:    wand of iceblast, staff of cold, book of frost, book of ice
+# XXX: we should replace iceblast with something else when it's not
+# in this game's chosen item set.
+ITEM:    wand of iceblast, staff of cold, book of winter, \
+         ozocubu's autobiography
 SUBST:   w = l
 SUBST:   W = l..
 : else
@@ -1003,7 +1008,7 @@ KMONS:   F = balrug
 MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
               pow_max = 15, delay = 10, size = 2, walk_dist = 0, \
               spread_rate= 0 }
-ITEM:    book of the dragon, staff of fire, book of flames, book of fire
+ITEM:    book of the dragon, staff of fire, book of fire, book of annihilations
 : end
 SUBST:   1 = 112.
 SUBST:   2 = 221.
@@ -1098,16 +1103,15 @@ WEIGHT:  3
 KMONS:   1 = guardian mummy ; randart dire flail ego:chaos | \
              randart great mace ego:chaos | randart battleaxe ego:chaos| \
              randart great sword ego:chaos | randart glaive ego:chaos | \
-             randart scythe ego:chaos | randart dire flail | \
-             randart great mace | randart battleaxe | randart great sword | \
-             randart glaive | randart scythe
-KMONS:   3 = guardian mummy ; randart fustibalus ego:chaos . sling bullet / \
-             guardian mummy ; randart longbow ego:chaos . arrow / \
-             guardian mummy ; randart triple crossbow . bolt / \
-             guardian mummy ; randart fustibalus . sling bullet / \
-             guardian mummy ; randart longbow . arrow / \
-             guardian mummy ; randart arbalest . bolt
-KMONS:   5 = guardian mummy ; wand of acid | scroll of summoning
+             randart dire flail | randart great mace | randart battleaxe | \
+             randart great sword | randart glaive
+KMONS:   3 = guardian mummy ; randart hand crossbow ego:chaos / \
+             guardian mummy ; randart longbow ego:chaos / \
+             guardian mummy ; randart triple crossbow / \
+             guardian mummy ; randart hand crossbow / \
+             guardian mummy ; randart longbow / \
+             guardian mummy ; randart arbalest
+KMONS:   5 = guardian mummy ; any beam wand | scroll of summoning
 KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
              randart chain mail | randart robe . scroll of summoning
 KMONS:   2468 = killer klown
@@ -1716,19 +1720,19 @@ TAGS:    no_monster_gen
 DEPTH:   Zot, !Zot:$
 KMONS:   A = red very ugly thing
 KMONS:   B = red draconian
-KMONS:   C = balrug / nonbase red draconian w:6
+KMONS:   C = balrug / red draconian scorcher w:6
 KMONS:   D = cyan very ugly thing
 KMONS:   E = black draconian
-KMONS:   F = electric golem / nonbase black draconian w:6
+KMONS:   F = electric golem / black draconian knight w:6
 KMONS:   G = green very ugly thing
 KMONS:   H = green draconian
-KMONS:   I = green death / nonbase green draconian w:6
+KMONS:   I = green death / green draconian monk w:6
 KMONS:   J = white very ugly thing
 KMONS:   K = white draconian
-KMONS:   L = shard shrike / nonbase white draconian w:6
+KMONS:   L = shard shrike / white draconian stormcaller w:6
 KMONS:   M = brown very ugly thing
 KMONS:   N = yellow draconian
-KMONS:   O = acid blob / nonbase yellow draconian w:6
+KMONS:   O = acid blob / yellow draconian annihilator w:6
 KMONS:   Z = golden dragon / killer klown / Tiamat, golden dragon / killer klown
 KITEM:   BEHKN = $ w:15 / % w:25 / *
 KITEM:   z = any good_item
@@ -2251,8 +2255,8 @@ TAGS: transparent no_pool_fixup patrolling
 SHUFFLE: Gg/Gg/Gg/Hh, Pp/Pp/Pp/Qq
 SUBST: GP = x, g = r, p = c, HQ = @, hq = .
 COLOUR: r = red, c = blue
-KMONS: R = nonbase red draconian
-KMONS: C = nonbase white draconian
+KMONS: R = red draconian scorcher
+KMONS: C = white draconian stormcaller
 KMONS: D = fire dragon
 KMONS: I = ice dragon
 KFEAT: r = c
@@ -2344,7 +2348,7 @@ MONS:    very ugly thing w:20 / deep elf annihilator w:15 / \
 MONS:    curse skull w:15 / apocalypse crab / lorocyproca / acid blob
 MONS:    butterfly
 ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
-ITEM:    sling bullet q:1 no_pickup, tin of tremorstones no_pickup
+ITEM:    orb, tin of tremorstones no_pickup
 # Altars obliquely refer to those temple maps.
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / C w:20
 KFEAT:   ~ = zot trap
@@ -2444,7 +2448,7 @@ MONS:   patrolling black draconian annihilator ; cloak good_item . \
 KMONS:  zZ = ball lightning
 KMONS:  O = diamond obelisk
 KMONS:  S = lightning spire
-ITEM:   lightning rod, book of the sky
+ITEM:   lightning rod, book of lightning
 ITEM:   quick blade ego:electrocution good_item ident:type w:5 / \
         double sword ego:electrocution good_item ident:type w:5 / \
         executioner's axe ego:electrocution good_item ident:type w:5 / \
@@ -2681,8 +2685,8 @@ SUBST:   < = {[(
 KFEAT:   ^ = alarm trap / zot trap
 # The possible acts:
 MONS:    red draconian scorcher, red draconian, juggernaut
-MONS:    tentacled monstrosity, ancient lich / dread lich, electric golem
-MONS:    draconian
+MONS:    tentacled monstrosity, ancient lich, electric golem
+MONS:    purple draconian
 SHUFFLE: ABCDEFHI
 # Fire breathers: Red draconians, with some scorchers
 NSUBST:  A = 3 = 112 / 9 = 2. / *:.
@@ -2690,7 +2694,7 @@ NSUBST:  A = 3 = 112 / 9 = 2. / *:.
 NSUBST:  B = 3 / 8 = 4. / *:.
 # The Magic act: An Ancient Lich and elec golems
 NSUBST:  C = 5 / 6 / 2 = 6. / *:.
-# The Acrobats: pale draconians, with some monks, and nets
+# The Acrobats: grey draconians, with some monks, and nets
 NSUBST:  D = 3 = qqp / 9 = p. / 9 = - / *:.
 KMONS:   p = grey draconian
 KMONS:   q = grey draconian monk
@@ -2705,7 +2709,7 @@ KMONS:   s = quicksilver dragon / storm dragon / \
 NSUBST:  F = 8 = z. / 1 = y .:50 / *:.
 KMONS:   y = curse toe
 KMONS:   z = death cob
-# The Jugglers:  draconian shifters and draconians
+# The Jugglers:  draconian shifters and purple draconians
 NSUBST:  H = 3 = aa7 / 9 = 7. / *:.
 KMONS:   a = draconian shifter
 # Those laffy daffy Klowns
@@ -2731,6 +2735,92 @@ xxAAAAAxxxxl..BBBBB..lxxxxCCCCCxx
              ..m^m..
              ..m7m..
              @@mmm@@
+ENDMAP
+
+##############################################################################
+NAME:    hangedman_player_shredder
+TAGS:    transparent no_monster_gen no_item_gen no_pool_fixup
+DEPTH:   Zot:1-4
+SHUFFLE: abcdefghij / bacdegfhij / bcadeghfij / bcdaeghifj / bcdeaghijf, ghij, ^~
+SUBST:   a = +, bcde = v, fgh = %, i = P, j = p
+NSUBST:  } : 1:P / 1:p / *:%, p : 1:P / *:%
+SHUFFLE: HI, PQRS|, 0246' / 1357", 0246', 1357", 02468ACE, 13579BDF
+NSUBST:  P = 1:{ / 1:} / 1 : [:1 ]:1 %:16, Q = 1:{ / 1 : [:8 <:1 / 1 : (:1 %:8
+NSUBST:  RS = 1:} / 1 : ]:8 >:1 / 1 : ):1 %:8
+SUBST:   I = G, ~ : wv., ` : wv., ^ = ., % : %:9 .:1, % = %:499 |:1
+KMONS:   01 = ghost moth
+KMONS:   23 = golden dragon
+KMONS:   4567 = nonbase draconian
+KMONS:   89 = killer klown
+KMONS:   AB = curse toe
+KMONS:   CD = electric golem
+KMONS:   E = orb of fire
+KMONS:   F = ancient lich / dread lich
+KMONS:   ! = base draconian w:30 ; cloak . great sword good_item | \
+             battleaxe good_item | bardiche good_item | great mace good_item / \
+             fire dragon / ice dragon / storm dragon / bone dragon w:5
+KMONS:   ? = moth of wrath / death cob w:2 / guardian mummy w:2
+KITEM:   % = % / * w:2
+KMONS:   H = iron dragon
+MAP
+.........................
+.vv...vv+vv...vv+vv...vv.
+.vvv+vv.!.vv+vv.!.vv+vvv.
+.vv.!.vvbvv.!.vvdvv.!.vv.
+.vvvavv%g%vvcvv%i%vvevvv.
+.vv%f%vv+vv%h%vv+vv%j%vv.
+.vvv+vv.2.vv+vv.6.vv+vvv.
+.vv.0.v...v.4.v...v.'.vv.
+.vv...vv+vv...vv+vv...vv.
+.vvv+vv...vv+vv...vv+vvv.
+.vv...................vv.
+?vv..~`^I~`^.~`^.~`^H.vv?
+.vv.H^`~.^`~.^`~I^`~..vv.
+.vv...................vv.
+.vvv+vv...vv+vv...vv+vvv.
+.vv...vv+vv...vv+vv...vv.
+.vv.1.v...v.5.v...v.".vv.
+.vvv+vv.3.vv+vv.7.vv+vvv.
+.vv%}%vv+vv%}%vv+vv%}%vv.
+.vvvvvv%}%vvvvv%}%vvvvvv.
+.vv.G.vvvvv.G.vvvvv.G.vv.
+............?............
+ENDMAP
+
+NAME:   dreamdust_zin_vs_xom
+TAGS:   no_monster_gen
+ORIENT: float
+DEPTH:  Zot
+COLOUR: v = white
+TILE:   v = dngn_metal_wall_white
+FTILE:  _`1 = floor_w_marble
+KFEAT:  _ = altar_zin
+TILE:   G = dngn_statue_angel
+KMONS:  s = killer klown-shaped pillar of salt
+KMONS:  f = butterfly
+MONS:   angel god:zin dbname:zin_angel
+MONS:   killer klown
+MONS:   chaos spawn
+MONS:   glowing shapeshifter
+KFEAT:  O = altar_xom
+KFEAT:  ^ = dispersal trap
+NSUBST: - = 4=s / 4=s- / -
+NSUBST: ? = O / 2=^ / 2=2 / 2=2? / 2=t / ?
+SUBST:  ? = ":400 n:30 x:40 v b ^
+SUBST:  " = ":200 W:100 O:30 f 3 4 T U V Y
+COLOUR: " = random
+MAP
+xxxxxxxxx@xxxxxxxxx
+x........."?"?"?"?x
+x.......---"?"?"?"x
+xvvvvnG.---?"?"?"?x
+xv`1`vv.---"?"?"?"x
+xv_`1`1.---?"?"?"?x
+xv`1`vv.---"?"?"?"x
+xvvvvnG.---?"?"?"?x
+x.......---"?"?"?"x
+x........."?"?"?"?x
+xxxxxxxxx@xxxxxxxxx
 ENDMAP
 
 ##############################################################################

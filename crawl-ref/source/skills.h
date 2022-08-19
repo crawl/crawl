@@ -24,7 +24,6 @@ struct skill_state
     FixedVector<unsigned int, NUM_SKILLS> training;
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> training_targets;
-    FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>      skill_order;
     FixedVector<unsigned int, NUM_SKILLS> skill_manual_points;
     int skill_cost_level;
@@ -123,7 +122,6 @@ unsigned int skill_exp_needed(int lev, skill_type sk,
 skill_diff skill_level_to_diffs(skill_type skill, double amount,
     int scaled_training=100, bool base_only=true);
 
-bool compare_skills(skill_type sk1, skill_type sk2);
 vector<skill_type> get_crosstrain_skills(skill_type sk);
 int get_crosstrain_points(skill_type sk);
 
@@ -142,16 +140,19 @@ bool check_training_targets();
 static const skill_type skill_display_order[] =
 {
     SK_TITLE,
-    SK_FIGHTING, SK_SHORT_BLADES, SK_LONG_BLADES,
+    SK_FIGHTING,
+
+    SK_BLANK_LINE,
+
     SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT,
 
     SK_BLANK_LINE,
 
-    SK_BOWS, SK_CROSSBOWS, SK_THROWING, SK_SLINGS,
+    SK_SHORT_BLADES, SK_LONG_BLADES, SK_RANGED_WEAPONS,
 
     SK_BLANK_LINE,
 
-    SK_ARMOUR, SK_DODGING, SK_SHIELDS,
+    SK_ARMOUR, SK_DODGING, SK_SHIELDS, SK_STEALTH,
 
     SK_COLUMN_BREAK, SK_TITLE,
 
@@ -159,9 +160,9 @@ static const skill_type skill_display_order[] =
     SK_NECROMANCY, SK_TRANSLOCATIONS, SK_TRANSMUTATIONS,
     SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_POISON_MAGIC,
 
-    SK_BLANK_LINE, SK_BLANK_LINE,
+    SK_BLANK_LINE,
 
-    SK_INVOCATIONS, SK_EVOCATIONS, SK_STEALTH,
+    SK_INVOCATIONS, SK_EVOCATIONS, SK_THROWING,
 
     SK_COLUMN_BREAK,
 };

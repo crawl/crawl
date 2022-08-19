@@ -73,7 +73,6 @@ namespace rng
 
 bool coinflip();
 int div_rand_round(int num, int den);
-int rand_round(double x);
 int div_round_up(int num, int den);
 bool one_chance_in(int a_million);
 bool x_chance_in_y(int x, int y);
@@ -86,8 +85,9 @@ int random_range(int low, int high, int nrolls);
 double random_real();
 
 int random2avg(int max, int rolls);
+int random2min(int max, int rolls);
+int random2max(int ran, int rolls);
 int biased_random2(int max, int n);
-int random2limit(int max, int limit);
 int binomial(unsigned n_trials, unsigned trial_prob, unsigned scale = 100);
 bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);

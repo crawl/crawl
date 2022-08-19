@@ -81,8 +81,6 @@ void roll_zombie_hp(monster* mon);
 
 void define_zombie(monster* mon, monster_type ztype, monster_type cs);
 
-bool downgrade_zombie_to_skeleton(monster* mon);
-
 class level_id;
 
 monster_type pick_random_monster(level_id place,
@@ -96,25 +94,21 @@ bool mons_can_hate(monster_type type);
 void check_lovelessness(monster &mon);
 
 bool find_habitable_spot_near(const coord_def& where, monster_type mon_type,
-                              int radius, bool allow_centre, coord_def& empty,
-                              const monster* viable_mon = nullptr);
+                              int radius, bool allow_centre, coord_def& empty);
 
 monster_type random_demon_by_tier(int tier);
 monster_type summon_any_demon(monster_type dct, bool use_local_demons = false);
-
-bool drac_colour_incompatible(int drac, int colour);
 
 bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid);
 bool monster_habitable_grid(monster_type mt, dungeon_feature_type actual_grid,
                             dungeon_feature_type wanted_grid = DNGN_UNSEEN);
 bool monster_can_submerge(const monster* mon, dungeon_feature_type grid);
-coord_def find_newmons_square(monster_type mons_class, const coord_def &p,
-                              const monster* viable_mon = nullptr);
+coord_def find_newmons_square(monster_type mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
-                                         int maxdistance = 3);
-bool can_spawn_mushrooms(coord_def where);
+                                         int maxdistance = 3,
+                                         bool levelgen=true);
 
 void spawn_random_monsters();
 

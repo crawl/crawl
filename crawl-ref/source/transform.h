@@ -10,11 +10,12 @@
 #include "enum.h"
 #include "player.h"
 
-#define HYDRA_FORM_HEADS_KEY "hydra_form_heads"
 #define MAX_HYDRA_HEADS 20
 
 #define APPENDAGE_KEY "beastly_appendages"
 #define APPENDAGE_LEVEL 2
+
+#define AIRFORM_POWER_KEY "airform_power"
 
 enum form_capability
 {
@@ -193,8 +194,6 @@ public:
 
     /// has blood (used for sublimation and bloodsplatters)
     const form_capability can_bleed;
-    /// see player::is_unbreathing
-    const bool breathes;
     /// "Used to mark forms which keep most form-based mutations."
     const bool keeps_mutations;
     // ugh
@@ -300,7 +299,7 @@ void unmeld_one_equip(equipment_type eq);
 
 monster_type transform_mons();
 string blade_parts(bool terse = false);
-void set_hydra_form_heads(int heads);
+void set_airform_power(int pow);
 const char* transform_name(transformation form = you.form);
 
 int form_hp_mod();
@@ -311,3 +310,4 @@ void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 void vampire_update_transformations();
 int form_base_movespeed(transformation tran);
+bool draconian_dragon_exception();

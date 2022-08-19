@@ -46,10 +46,11 @@ function TimedMessaging:init(tmarker, cm, verbose)
 
   if not self.range_adjectives then
     self.range_adjectives = {
-      { 30, 'very distant' },
-      { 15, 'distant' },
-      { 7, '$F nearby' },
-      { 0, '$F' }
+      { 28, 'very distant' },
+      { 21, 'distant' },
+      { 14, '$F nearby' },
+      { 7,  '$F very nearby' },
+      { 0,  '$F' }
     }
   end
 

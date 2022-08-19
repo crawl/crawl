@@ -33,7 +33,7 @@
 -- pow_max: The maximum power of each cloud; must be provided.
 -- pow_rolls: The number of rolls of [pow_min, pow_max], with the average
 --     value uses; increasing the values makes the average value more likely
---     and extreme values less likely. Defaults to 1.
+--     and extreme values less likely. Defaults to 3.
 -- delay, delay_min and delay_max: The delay between laying down one cloud
 --     and the next.  10 is equal to normal-speed player turn. Either
 --     delay or delay_max and delay_min must be provided. Providing just

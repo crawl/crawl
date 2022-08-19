@@ -189,6 +189,12 @@ static void _adjust_ability()
 
 void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 {
+    int new_quiver = -1;
+    if (you.quiver_action.item_is_quivered(from_slot))
+        new_quiver = to_slot;
+    else if (you.quiver_action.item_is_quivered(to_slot))
+        new_quiver = from_slot;
+
     // Swap items.
     item_def tmp = you.inv[to_slot];
     you.inv[to_slot]   = you.inv[from_slot];
@@ -209,6 +215,10 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
         else if (you.equip[i] == to_slot)
             you.equip[i] = from_slot;
     }
+
+    if (new_quiver >= 0)
+        you.quiver_action.replace(quiver::slot_to_action(new_quiver, true));
+    you.m_quiver_history.maybe_swap(from_slot, to_slot);
 
     if (verbose)
     {

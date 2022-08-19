@@ -61,7 +61,7 @@ bool cloud_is_yours_at(const coord_def &pos);
 
 void delete_all_clouds();
 void delete_cloud(coord_def p);
-void remove_tornado_clouds(mid_t whose);
+void remove_vortex_clouds(mid_t whose);
 void move_cloud(coord_def src, coord_def newpos);
 void swap_clouds(coord_def p1, coord_def p2);
 
@@ -77,7 +77,6 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget,
 
 void manage_clouds();
 void run_cloud_spreaders(int dur);
-int max_cloud_damage(cloud_type cl_type, int power = -1);
 string desc_cloud_damage(cloud_type cl_type, bool vs_player);
 int actor_apply_cloud(actor *act);
 bool actor_cloud_immune(const actor &act, const cloud_struct &cloud);

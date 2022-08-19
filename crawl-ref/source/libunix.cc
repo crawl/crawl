@@ -100,7 +100,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background = f
  * @brief Change the foreground colour and returns the resulting curses info.
  *
  * @param col
- *  An internal color with attached brand.
+ *  An internal color with attached highlight.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
@@ -111,7 +111,7 @@ static curses_style curs_attr_bg(int col);
  * @brief Change the background colour and returns the resulting curses info.
  *
  * @param col
- *  An internal color with attached brand.
+ *  An internal color with attached highlight.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
@@ -122,19 +122,19 @@ static curses_style curs_attr_fg(int col);
  * @brief Get curses attributes for the passed internal color combination.
  *
  * Performs colour mapping for both default colours as well as the color map.
- * Additionally, this function takes into consideration a passed brand.
+ * Additionally, this function takes into consideration a passed highlight.
  *
  * @param fg
  *  The internal colour for the foreground.
  * @param bg
  *  The internal colour for the background.
- * @param brand
- *  Internal color branding information.
+ * @param highlight
+ *  Internal color highlighting information.
  *
  *  @return
  *   Returns the character attributes and colour pair index.
  */
-static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand);
+static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int highlight);
 
 /**
  * @brief Returns a curses color pair index for the passed fg/bg combo.
@@ -567,10 +567,18 @@ int getch_ck()
         }
 #endif
 
+        // TODO: what else should be added to this?
         switch (c)
         {
-        // [dshaligram] MacOS ncurses returns 127 for backspace.
         case 127:
+        // 127 is ASCII DEL, which some terminals (all mac, some linux) use for
+        // the backspace key. ncurses does not typically map this to
+        // KEY_BACKSPACE (though this may depend on TERM settings?). '\b' (^H)
+        // in contrast should be handled automatically. Note that ASCII DEL
+        // is distinct from the standard esc code for del, esc[3~, which
+        // reliably does get mapped to KEY_DC by ncurses. Some background:
+        //     https://invisible-island.net/xterm/xterm.faq.html#xterm_erase
+        // (I've never found documentation for the mac situation.)
         case -KEY_BACKSPACE: return CK_BKSP;
         case -KEY_DC:    return CK_DELETE;
         case -KEY_HOME:  return CK_HOME;
@@ -584,7 +592,21 @@ int getch_ck()
 #ifdef KEY_RESIZE
         case -KEY_RESIZE: return CK_RESIZE;
 #endif
-        case -KEY_BTAB: return CK_SHIFT_TAB;
+        case -KEY_BTAB:  return CK_SHIFT_TAB;
+        case -KEY_SDC:   return CK_SHIFT_DELETE;
+#ifdef TARGET_OS_MACOSX
+        // not sure what's up with this, no ncurses constant? defining it only
+        // for mac to be cautious
+        case -515:       return CK_CTRL_DELETE;
+#endif
+
+        // may or may not be defined depending on the terminal. Escape codes
+        // are the xterm convention, other terminals may do different things
+        // and ncurses may or may not handle them correctly.
+        case -KEY_SR:    return CK_SHIFT_UP;     // \033[1;2A
+        case -KEY_SLEFT: return CK_SHIFT_LEFT;   // \033[1;2D
+        case -KEY_SRIGHT: return CK_SHIFT_RIGHT; // \033[1;2C
+        case -KEY_SF:    return CK_SHIFT_DOWN;   // \033[1;2B
         default:         return c;
         }
     }
@@ -599,6 +621,14 @@ static void unix_handle_terminal_resize()
 static void unixcurses_defkeys()
 {
 #ifdef NCURSES_VERSION
+    // To debug these on a specific terminal, you can use `cat -v` to see what
+    // escape codes are being printed. To some degree it's better to let ncurses
+    // do what it can rather than hard-coding things, but that doesn't always
+    // work.
+    // cool trick: `printf '\033[?1061h\033='; cat -v` initializes application
+    // mode if the terminal supports it. (For some terminals, it may need to
+    // be explicitly allowed, or enable via numlock.)
+
     // keypad 0-9 (only if the "application mode" was successfully initialised)
     define_key("\033Op", 1000);
     define_key("\033Oq", 1001);
@@ -612,27 +642,60 @@ static void unixcurses_defkeys()
     define_key("\033Oy", 1009);
 
     // non-arrow keypad keys (for macros)
-    define_key("\033OM", 1010); // Enter
+    define_key("\033OM", 1010); // keypad enter
 
-    // TODO: I don't know under what context these are mapped to numpad keys,
-    // but they are *much* more commonly used for F1-F4. So don't
-    // unconditionally define these. I don't trust anything else in this
-    // function either, but most of it is a bit hard to test. Possibly the
-    // conditional define here should at least be generalized?
+    // TODO: I don't know under what context these four are mapped to numpad
+    // keys, but they are *much* more commonly used for F1-F4. So don't
+    // unconditionally define these. But these mappings have been around for
+    // a while, so I'm hesitant to remove them...
 #define check_define_key(s, n) if (!key_defined(s)) define_key(s, n)
     check_define_key("\033OP", 1011); // NumLock
     check_define_key("\033OQ", 1012); // /
     check_define_key("\033OR", 1013); // *
     check_define_key("\033OS", 1014); // -
-#undef check_define_key
+
+    // TODO: these could probably use further verification on linux
+    // notes:
+    // * this code doesn't like to map multiple esc sequences to the same
+    //   keycode. However, doing so works fine on my testing on mac, on
+    //   current ncurses. Why would this be bad?
+    // * mac Terminal.app even in application mode does not shift =/*
+    // * historically, several comments here were wrong on my testing, but
+    //   they could be right somewhere. The current key descriptions are
+    //   accurate as far as I can tell.
     define_key("\033Oj", 1015); // *
-    define_key("\033Ok", 1016); // +
-    define_key("\033Ol", 1017); // +
-    define_key("\033Om", 1018); // .
+    define_key("\033Ok", 1016); // + (probably everything else except mac terminal)
+    define_key("\033Ol", 1017); // + (mac terminal application mode)
+    define_key("\033Om", 1018); // -
     define_key("\033On", 1019); // .
-    define_key("\033Oo", 1020); // -
+    define_key("\033Oo", 1012); // / (may conflict with the above define?)
+    define_key("\033OX", 1021); // =, at least on mac console
+
+#ifdef TARGET_OS_MACOSX
+    // force some mappings for function keys that work on mac Terminal.app with
+    // the default TERM value.
+
+    // The following seem to be the rxvt escape codes, even
+    // though Terminal.app defaults to xterm-256color.
+    // TODO: would it be harmful to force this unconditionally?
+    check_define_key("\033[25~", 277); // F13
+    check_define_key("\033[26~", 278); // F14
+    check_define_key("\033[28~", 279); // F15
+    check_define_key("\033[29~", 280); // F16
+    check_define_key("\033[31~", 281); // F17
+    check_define_key("\033[32~", 282); // F18
+    check_define_key("\033[33~", 283); // F19, highest key on a magic keyboard
+
+    // not sure exactly what's up with these, but they exist by default:
+    // ctrl bindings do too, but they are intercepted by macos
+    check_define_key("\033b", -(CK_LEFT + CK_ALT_BASE));
+    check_define_key("\033f", -(CK_RIGHT + CK_ALT_BASE));
+    // (sadly, only left and right have modifiers by default on Terminal.app)
+#endif
+#undef check_define_key
 
     // variants. Ugly curses won't allow us to return the same code...
+    // TODO: the above comment seems to be wrong for current ncurses?
     define_key("\033[1~", 1031); // Home
     define_key("\033[4~", 1034); // End
     define_key("\033[E",  1040); // center arrow
@@ -643,6 +706,8 @@ int unixcurses_get_vi_key(int keyin)
 {
     switch (-keyin)
     {
+    // TODO: should use cio.h constants, but I'm too scared to change this
+    // function
     // -1001..-1009: passed without change
     case 1031: return -1007;
     case 1034: return -1001;
@@ -909,15 +974,15 @@ bool is_cursor_enabled()
     return cursor_is_enabled;
 }
 
-static inline unsigned get_brand(int col)
+static inline unsigned get_highlight(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
-           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
-           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
-           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
-           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
-           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
-           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
            (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
                                             : unsigned{CHATTR_NORMAL};
 }
@@ -956,7 +1021,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
         // curses typically uses WA_BOLD to give bright foreground colour,
         // but various termcaps may disagree
         if ((fg_curses & COLFLAG_CURSES_BRIGHTEN)
-            && (Options.bold_brightens_foreground
+            && (Options.bold_brightens_foreground != MB_FALSE
                 || Options.best_effort_brighten_foreground))
         {
             style.attr |= WA_BOLD;
@@ -970,6 +1035,11 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
         {
             style.attr |= WA_BLINK;
         }
+    }
+    else if (Options.bold_brightens_foreground == MB_TRUE
+                && (fg_curses & COLFLAG_CURSES_BRIGHTEN))
+    {
+        style.attr |= WA_BOLD;
     }
 
     if (monochrome_output_requested)
@@ -990,31 +1060,31 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
 static curses_style curs_attr_bg(int col)
 {
     BG_COL = static_cast<COLOURS>(col & 0x00ff);
-    return curs_attr_mapped(FG_COL, BG_COL, get_brand(col));
+    return curs_attr_mapped(FG_COL, BG_COL, get_highlight(col));
 }
 
 // see declaration
 static curses_style curs_attr_fg(int col)
 {
     FG_COL = static_cast<COLOURS>(col & 0x00ff);
-    return curs_attr_mapped(FG_COL, BG_COL, get_brand(col));
+    return curs_attr_mapped(FG_COL, BG_COL, get_highlight(col));
 }
 
 // see declaration
-static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand)
+static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int highlight)
 {
     COLOURS fg_mod = fg;
     COLOURS bg_mod = bg;
     attr_t flags = 0;
 
     // calculate which curses flags we need...
-    if (brand != CHATTR_NORMAL)
+    if (highlight != CHATTR_NORMAL)
     {
-        flags |= convert_to_curses_style(brand);
+        flags |= convert_to_curses_style(highlight);
 
         // Allow highlights to override the current background color.
-        if ((brand & CHATTR_ATTRMASK) == CHATTR_HILITE)
-            bg_mod = static_cast<COLOURS>((brand & CHATTR_COLMASK) >> 8);
+        if ((highlight & CHATTR_ATTRMASK) == CHATTR_HILITE)
+            bg_mod = static_cast<COLOURS>((highlight & CHATTR_COLMASK) >> 8);
     }
 
     // Respect color remapping.
@@ -1038,7 +1108,7 @@ static curses_style curs_attr_mapped(COLOURS fg, COLOURS bg, int brand)
     ret.attr |= flags;
 
     // Reverse color manually to ensure correct brightening attrs.
-    if ((brand & CHATTR_ATTRMASK) == CHATTR_REVERSE)
+    if ((highlight & CHATTR_ATTRMASK) == CHATTR_REVERSE)
         return flip_colour(ret);
 
     return ret;
@@ -1121,6 +1191,27 @@ static bool curs_can_use_extended_colors()
     return Options.allow_extended_colours && COLORS >= NUM_TERM_COLOURS;
 }
 
+lib_display_info::lib_display_info()
+    : type(
+#ifdef USE_TILE_WEB
+        "Console/Webtiles"
+#elif defined(USE_TILE_LOCAL)
+        "SDL Tiles"
+#else
+        "Console"
+#endif
+        ),
+    term(termname()),
+    fg_colors(
+        (curs_can_use_extended_colors()
+                || Options.bold_brightens_foreground != MB_FALSE)
+        ? 16 : 8),
+    bg_colors(
+        (curs_can_use_extended_colors() || Options.blink_brightens_background)
+        ? 16 : 8)
+{
+}
+
 // see declaration
 static bool curs_color_combo_has_pair(short fg, short bg)
 {
@@ -1154,10 +1245,17 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     short fg_default_to_compare = fg_default;
     short bg_default_to_compare = bg_default;
 
-    // Adjust the expected output color depending on the game options.
+    // Adjust the brighten bits of the expected output color depending on the
+    // game options, so we are doing an apples to apples comparison. If we
+    // aren't using extended colors, *and* we aren't applying a bold to
+    // brighten, then brightened colors are guaranteed not to be different
+    // than unbrightened colors. With just a `best_effort..` option set, don't
+    // undo brightening as it isn't assumed to be safe. It is this
+    // transformation that can result in black on black if a player incorrectly
+    // sets one of these options.
     if (!curs_can_use_extended_colors())
     {
-        if (!Options.bold_brightens_foreground)
+        if (Options.bold_brightens_foreground == MB_FALSE)
         {
             fg_to_compare = fg & ~COLFLAG_CURSES_BRIGHTEN;
             fg_default_to_compare = fg_default & ~COLFLAG_CURSES_BRIGHTEN;
@@ -1390,6 +1488,22 @@ void textcolour(int col)
 #endif
 }
 
+COLOURS default_hover_colour()
+{
+    // DARKGREY backgrounds go to black with 8 colors. I think this is
+    // generally what we want, rather than applying a workaround (like the
+    // DARKGREY -> BLUE foreground trick), but this means that using a
+    // DARKGREY hover, which arguably looks better in 16colors, won't work.
+    // DARKGREY is also not safe under bold_brightens_foreground, since a
+    // terminal that supports this won't necessarily handle a bold background.
+
+    // n.b. if your menu uses just one color, and you set that as the hover,
+    // you will get automatic color inversion. That is generally the safest
+    // option where possible.
+    return (curs_can_use_extended_colors() || Options.blink_brightens_background)
+                 ? DARKGREY : BLUE;
+}
+
 void textbackground(int col)
 {
     const auto style = curs_attr_bg(col);
@@ -1519,8 +1633,10 @@ static curses_style flip_colour(curses_style style)
             {
                 style.attr |= WA_BLINK;
             }
+            // XX I don't *think* this logic should apply for
+            // bold_brightens_foreground = force...
             if ((bg & COLFLAG_CURSES_BRIGHTEN)
-                && (Options.bold_brightens_foreground
+                && (Options.bold_brightens_foreground != MB_FALSE
                     || Options.best_effort_brighten_foreground))
             {
                 style.attr |= WA_BOLD;

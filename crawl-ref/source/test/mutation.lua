@@ -63,8 +63,8 @@ local function test_basic_mutation_stuff()
     assert(not you.mutate("spit poison", "basic mutation test")) -- only for nagas
     -- could add other species conditions here using you.change_species
 
-    assert(you.mutate("talons", "basic mutation test"))
-    assert(not you.mutate("hooves", "basic mutation test")) -- covered by physiology conflict
+    assert(you.mutate("antennae", "basic mutation test"))
+    assert(not you.mutate("horns", "basic mutation test")) -- covered by physiology conflict
 
     print_mutstate("basic results: ")
     you.delete_all_mutations("mutation test")
@@ -88,7 +88,7 @@ end
 
 -- TODO: better way to do this in lua so that it doesn't duplicate code
 local function simulate_mutation_pot()
-    remove = crawl.random_range(2, 4)
+    remove = crawl.random_range(2, 3)
     add = crawl.random_range(1, 3)
     for i=1, remove do
         you.delete_mutation("any", "mutation test")
@@ -96,7 +96,9 @@ local function simulate_mutation_pot()
     for i=1, add do
         you.mutate("any", "mutation test", false)
     end
-    you.mutate("good", "mutation test", false)
+    if crawl.coinflip() then
+        you.mutate("good", "mutation test", false)
+    end
 end
 
 -- simulate drinking `iterations` mutation potions in a row, a bunch of times

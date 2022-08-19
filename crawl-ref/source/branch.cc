@@ -59,6 +59,7 @@ static const branch_type logical_branch_order[] = {
     BRANCH_WIZLAB,
     BRANCH_DESOLATION,
     BRANCH_GAUNTLET,
+    BRANCH_ARENA,
 };
 COMPILE_CHECK(ARRAYSZ(logical_branch_order) == NUM_BRANCHES);
 
@@ -67,6 +68,7 @@ static const branch_type danger_branch_order[] = {
     BRANCH_TEMPLE,
     BRANCH_BAZAAR,
     BRANCH_TROVE,
+    BRANCH_ARENA,
     BRANCH_DUNGEON,
     BRANCH_SEWER,
     BRANCH_OSSUARY,
@@ -297,8 +299,7 @@ int runes_for_branch(branch_type branch)
 {
     switch (branch)
     {
-    case BRANCH_VAULTS:   return VAULTS_ENTRY_RUNES;
-    case BRANCH_ZIGGURAT: return ZIG_ENTRY_RUNES;
+    case BRANCH_VAULTS:   return 1;
     case BRANCH_ZOT:      return ZOT_ENTRY_RUNES;
     default:              return 0;
     }
@@ -318,16 +319,9 @@ string branch_noise_desc(branch_type br)
     {
         desc = "This branch is ";
         if (noise > 0)
-        {
-            desc += make_stringf("very noisy, and so sound travels much less "
-                                 "far.");
-        }
+            desc += "noisy: sounds don't travel as far here.";
         else
-        {
-            desc += make_stringf("unnaturally silent, and so sound travels "
-                                 "much further.");
-
-        }
+            desc += "unnaturally silent: sounds travel farther here.";
     }
 
     return desc;

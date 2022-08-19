@@ -1941,12 +1941,6 @@ function intrinsic_evil()
   return false
 end
 
--- not exactly gourmand, but close enough
-function intrinsic_gourmand()
-  return (you.race() == "Kobold" or you.race() == "Troll"
-          or you.race() == "Felid")
-end
-
 function intrinsic_undead()
   return (you.race() == "Ghoul" or you.race() == "Mummy"
           or you.race() == "Vampire")
@@ -6179,7 +6173,7 @@ function plan_new_travel()
   if where == "D:11" and not util.contains(c_persist.branches_entered, "L") then
     travel_destination = "L"
   end
-  if where == "Lair:6" then
+  if where == "Lair:5" then
     if travel.find_deepest_explored("D") == 15 and easy_runes() < 2 then
       travel_destination = choose_lair_rune_branch()
     elseif game_status == "slime" then
@@ -6231,7 +6225,7 @@ function plan_new_travel()
       travel_destination = "L"
     end
   end
-  if where == "Depths:5" then
+  if where == "Depths:4" then
     if game_status == "zot" then
       travel_destination = "Z"
     elseif game_status == "hells" then
@@ -6976,7 +6970,7 @@ function plan_dig_grate()
   local grate_count_needed = 3
   if where:find("Zot") then
     grate_mon_list = {"draconian stormcaller", "draconian scorcher"}
-  elseif where == "Depths:5" then
+  elseif where == "Depths:4" then
     grate_mon_list = {"draconian stormcaller", "draconian scorcher",
                       "angel", "daeva", "lich", "eye"}
   elseif where:find("Depths") then

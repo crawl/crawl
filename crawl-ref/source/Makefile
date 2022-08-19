@@ -210,6 +210,7 @@ HOST := $(shell sh -c 'cc -dumpmachine || echo unknown')
 ARCH := $(HOST)
 
 ifdef CROSSHOST
+	# XX is there a way of integrating this with mac cross-compiling?
 	ARCH := $(CROSSHOST)
 	ifneq (,$(shell which $(ARCH)-pkg-config 2>/dev/null))
 	  PKGCONFIG = $(ARCH)-pkg-config
@@ -249,6 +250,7 @@ ifdef msys
 	NEED_LIBW32C = YesPlease
 	BUILD_PCRE = YesPlease
 	BUILD_ZLIB = YesPlease
+	BUILD_SQLITE = YesPlease
 	SOUND = YesPlease
 	DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
 	EXTRA_LIBS += -lwinmm
@@ -329,6 +331,7 @@ endif
 # Should be the first rule, but must come after $(GAME) is set.
 all: greet check-fonts $(GAME) docs webserver
 
+# XX these are set wrong on mac cross-compiling
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
 LIBSDL2 := contrib/install/$(ARCH)/lib/libSDL2.a
 LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
@@ -382,7 +385,9 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 else
 ifndef ANDROID
+ifneq ($(uname_S),Haiku)
 EXTRA_LIBS += -pthread
+endif
 endif
 endif
 
@@ -482,12 +487,15 @@ CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 CXX += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 endif
 
+ifdef BUILD_OLD_UNIVERSAL
+# XX remove?
 ifndef CROSSHOST
 # Don't need a universal build of host tools, so use DEPCC.
 HOSTCC = $(DEPCC)
 HOSTCXX = $(DEPCXX)
 export HOSTCC
 export HOSTCXX
+endif
 endif
 
 endif # MacOS
@@ -1205,6 +1213,20 @@ INCLUDES_L += -isystem contrib/install/$(ARCH)/include
 LIBS += -Lcontrib/install/$(ARCH)/lib
 endif
 
+ifdef APPLE_PLATFORM
+# workaround: mac clang hardcodes (as far as I can tell) `-I /usr/local/include`
+# into the include path. Homebrew also installs into this directory. So a user
+# that has homebrew installed will get includes from there rather than contribs,
+# leading to build failures. This workaround relies on that if both -I and
+# -isystem are defined for the same path, then the -I version is ignored, which
+# effectively demotes this include path below the contrib -isystem paths.
+# TODO: it's not clear to me that using -isystem for contribs is at all the
+# right thing to do, since they are libraries we control, aren't actually
+# system libraries, and always take lower precedence than any -I that might be
+# caused by environment variables.
+INCLUDES_L += -isystem /usr/local/include
+endif
+
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 
 
@@ -1274,10 +1296,11 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             white_noise_grabbing_the_orb pooryurik_knight \
             psiweapon_roxanne baconkid_gastronok baconkid_mnoleg \
             peileppe_bloax_eye baconkid_duvessa_dowan ploomutoo_ijyb \
-	    froggy_thunder_fist_nikola froggy_rune_and_run_failed_on_dis \
-	    froggy_natasha_and_boris froggy_jiyva_felid \
-	    froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
-	    e_m_fields sastrei_chei anon_octopus_wizard
+            froggy_thunder_fist_nikola froggy_rune_and_run_failed_on_dis \
+            froggy_natasha_and_boris froggy_jiyva_felid \
+            froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
+            e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu \
+            kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
@@ -1952,6 +1975,9 @@ package-windows-zips: package-windows-tiles package-windows-console
 # relative to my current knowledge of how this can be done: it requires
 # building binaries for each target and then merging them with the `lipo`
 # utility.
+
+# Note: cross-compiling tiles on mac requires pkg-config and libpng to be
+# installed, e.g. via homebrew
 
 # XX parameterise these in some less dumb way
 # these two targets rely heavily on passing flags to submakes

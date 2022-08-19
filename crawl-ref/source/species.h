@@ -51,7 +51,7 @@ namespace species
     bool can_throw_large_rocks(species_type species);
     bool wears_barding(species_type species);
     bool has_claws(species_type species);
-    bool is_unbreathing(species_type species);
+    bool is_nonliving(species_type species);
     bool can_swim(species_type species);
     bool likes_water(species_type species);
     size_type size(species_type species, size_part_type psize = PSIZE_TORSO);
@@ -71,7 +71,6 @@ namespace species
     int get_hp_modifier(species_type species);
     int get_mp_modifier(species_type species);
     int get_wl_modifier(species_type species);
-    int get_stat_gain_multiplier(species_type species);
     bool has_low_str(species_type species);
     bool recommends_job(species_type species, job_type job);
     bool recommends_weapon(species_type species, weapon_type wpn);

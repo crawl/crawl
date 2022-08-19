@@ -254,9 +254,12 @@ void SubmergedTileBuffer::add_masked(tileidx_t idx, int x, int y, int z,
                                     int alpha_above, int alpha_below,
                                     int water_level)
 {
-    if (!water_level) water_level = m_water_level;
-    m_below_water.add(idx, x, y, z, ox, oy, water_level, ymax, alpha_above, alpha_below);
-    m_above_water.add(idx, x, y, z, ox, oy, -1, water_level, alpha_above, alpha_above);
+    if (!water_level)
+        water_level = m_water_level;
+    m_below_water.add(idx, x, y, z, ox, oy, water_level, ymax, alpha_above,
+                      alpha_below);
+    m_above_water.add(idx, x, y, z, ox, oy, -1, water_level, alpha_above,
+                      alpha_above);
 }
 
 // Adds a tile with a specified alpha value

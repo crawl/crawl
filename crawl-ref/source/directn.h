@@ -127,6 +127,7 @@ public:
     direction_chooser(dist& moves, const direction_chooser_args& args);
     bool noninteractive();
     bool choose_direction();
+    string target_description() const;
 
 private:
     void update_validity();
@@ -287,6 +288,7 @@ private:
 
     bool unrestricted;
 public:
+    bool force_cancel;
     // TODO: fix the weird behaviour that led to this hack
     bool needs_path;            // Determine a ray while we're at it?
 };
@@ -304,7 +306,7 @@ void direction(dist &moves, const direction_chooser_args& args);
 
 string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
-void full_describe_square(const coord_def &c, bool cleanup = true);
+bool full_describe_square(const coord_def &c, bool cleanup = true);
 void get_square_desc(const coord_def &c, describe_info &inf);
 
 void describe_floor();
@@ -327,5 +329,10 @@ vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 void full_describe_view();
 void do_look_around(const coord_def &whence = coord_def(0, 0));
 bool get_look_position(coord_def *c);
+
+#ifdef USE_TILE
+bool targeting_mouse_select(const coord_def &gc);
+bool targeting_mouse_move(const coord_def &gc);
+#endif
 
 extern const struct coord_def Compass[9];

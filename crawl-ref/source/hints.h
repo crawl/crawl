@@ -44,8 +44,10 @@ enum hints_event_type
     HINT_SEEN_WEAPON,
     HINT_SEEN_MISSILES,
     HINT_SEEN_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     HINT_SEEN_RANDART,
     HINT_SEEN_CARRION,
+#endif
     HINT_SEEN_GOLD,
     // encountered dungeon features
     HINT_SEEN_STAIRS,
@@ -60,7 +62,7 @@ enum hints_event_type
     // other 'first events'
     HINT_SEEN_MONSTER,
     HINT_SEEN_ZERO_EXP_MON,
-    HINT_MONSTER_BRAND,
+    HINT_MONSTER_HIGHLIGHT,
     HINT_MONSTER_FRIENDLY,
     HINT_MONSTER_SHOUT,
     HINT_MONSTER_LEFT_LOS,
@@ -73,9 +75,13 @@ enum hints_event_type
     HINT_CHOOSE_STAT,
     HINT_MAKE_CHUNKS,
     HINT_NEW_ABILITY_GOD,
+#if TAG_MAJOR_VERSION == 34
     HINT_NEW_ABILITY_MUT,
+#endif
     HINT_NEW_ABILITY_ITEM,
+#if TAG_MAJOR_VERSION == 34
     HINT_FLEEING_MONSTER,
+#endif
     HINT_CONVERT,
     HINT_GOD_DISPLEASED,
     HINT_EXCOMMUNICATE,
@@ -85,8 +91,9 @@ enum hints_event_type
     // status changes
     HINT_YOU_ENCHANTED,
     HINT_YOU_POISON,
+#if TAG_MAJOR_VERSION == 34
     HINT_YOU_CURSED,
-    HINT_YOU_HUNGRY,
+#endif
     HINT_YOU_STARVING,
     HINT_YOU_MUTATED,
     HINT_CAN_BERSERK,
@@ -110,21 +117,27 @@ enum hints_event_type
     HINT_AUTO_EXPLORE,
     HINT_DONE_EXPLORE,
     HINT_AUTO_EXCLUSION,
-    HINT_STAIR_BRAND,
-    HINT_HEAP_BRAND,
-    HINT_TRAP_BRAND,
+    HINT_STAIR_HIGHLIGHT,
+    HINT_HEAP_HIGHLIGHT,
+    HINT_TRAP_HIGHLIGHT,
     HINT_LOAD_SAVED_GAME,
     // for the tutorial
     HINT_AUTOPICKUP_THROWN,
     HINT_TARGET_NO_FOE,
+#if TAG_MAJOR_VERSION == 34
     HINT_REMOVED_CURSE,
+#endif
     HINT_ITEM_RESISTANCES,
     HINT_HEALING_POTIONS,
     HINT_GAINED_SPELLCASTING,
     HINT_FUMBLING_SHALLOW_WATER,
     HINT_CLOUD_WARNING,
+#if TAG_MAJOR_VERSION == 34
     HINT_ANIMATE_CORPSE_SKELETON,
+#endif
     HINT_SEEN_WEB,
+    HINT_MALEVOLENCE,
+    HINT_OPPORTUNITY_ATTACK,
     HINT_EVENTS_NUM
 };
 
@@ -141,6 +154,8 @@ void hints_death_screen();
 void hints_finished();
 
 void hints_healing_check();
+
+void hint_replace_cmds(string &s);
 
 void taken_new_item(object_class_type item_type);
 void hints_gained_new_skill(skill_type skill);

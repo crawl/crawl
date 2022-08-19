@@ -53,6 +53,7 @@ struct game_state
 
     bool io_inited;         // Is curses or the equivalent initialised?
     bool need_save;         // Set to true when game can be saved, false when the game ends.
+    bool save_after_turn;
     bool game_started;      // Set to true when a game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
@@ -109,6 +110,8 @@ struct game_state
     int             prev_cmd_repeat_goal;
     bool            cmd_repeat_started_unsafe;
     int             lua_calls_no_turn;
+    bool            lua_script_killed;
+    bool            lua_ready_throttled;
     bool            stat_gain_prompt;
 
     bool            simulating_xp_gain; // is the skill menu in xp potion mode?
@@ -121,6 +124,8 @@ struct game_state
     bool title_screen; // ignored unless USE_TILE_LOCAL is defined
 
     bool invisible_targeting;
+
+    bool player_moving;
 
     // Area beyond which view should be darkened,  0 = disabled.
     targeter *darken_range;
@@ -146,6 +151,7 @@ struct game_state
     bool nonempty_buffer_flush_errors;
 
     string last_builder_error;
+    bool last_builder_error_fatal;
 
 protected:
     void reset_cmd_repeat();
@@ -213,6 +219,8 @@ public:
     bool game_is_sprint() const;
     bool game_is_hints() const;
     bool game_is_hints_tutorial() const;
+
+    bool seed_is_known() const;
 
     // Save subdirectory used for games such as Sprint.
     string game_type_name() const;

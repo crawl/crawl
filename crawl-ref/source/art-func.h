@@ -22,6 +22,7 @@
 
 #define ART_FUNC_H
 
+#include "act-iter.h"      // For autumn katana
 #include "areas.h"         // For silenced() and invalidate_agrid()
 #include "attack.h"        // For attack_strength_punctuation()
 #include "beam.h"          // For Lajatang of Order's silver damage
@@ -33,8 +34,8 @@
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
 #include "god-conduct.h"   // did_god_conduct
-#include "god-passive.h"   // passive_t::want_curses
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
+#include "melee-attack.h"  // For autumn katana
 #include "message.h"
 #include "monster.h"
 #include "mon-death.h"     // For demon axe's SAME_ATTITUDE
@@ -52,6 +53,7 @@
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
+#include "unwind.h"        // For autumn katana
 #include "view.h"          // For arc blade's discharge effect
 
 // prop recording whether the singing sword has said hello yet
@@ -80,56 +82,6 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
 /*******************
  * Unrand functions.
  *******************/
-
-static bool _evoke_sceptre_of_asmodeus()
-{
-    if (you.get_mutation_level(MUT_NO_LOVE))
-    {
-        mpr("You are hated by all, and nothing answers your call!");
-        return false;
-    }
-
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))
-        return false;
-
-    const monster_type mon = random_choose_weighted(
-                                   3, MONS_BALRUG,
-                                   2, MONS_HELLION,
-                                   1, MONS_BRIMSTONE_FIEND);
-
-    mgen_data mg(mon, BEH_CHARMED, you.pos(), MHITYOU,
-                 MG_FORCE_BEH, you.religion);
-    mg.set_summoned(&you, 0, 0);
-    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-    monster *m = create_monster(mg);
-
-    if (m)
-    {
-        mpr("The sceptre summons one of its servants.");
-        did_god_conduct(DID_EVIL, 3);
-
-        m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
-
-        mpr("You don't feel so good about this...");
-    }
-    else
-        mpr("The air shimmers briefly.");
-
-    return true;
-}
-
-static bool _ASMODEUS_evoke(item_def */*item*/, bool* did_work,
-                            bool* /*unevokable*/)
-{
-    if (_evoke_sceptre_of_asmodeus())
-    {
-        *did_work = true;
-        practise_evoking(1);
-    }
-
-    return false;
-}
 
 ////////////////////////////////////////////////////
 static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
@@ -162,6 +114,34 @@ static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
+static void _CONDEMNATION_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    if (!unmeld && you.species == SP_BARACHI)
+        _equip_mpr(show_msgs, "You feel a strange sense of familiarity.");
+}
+
+static void _CONDEMNATION_unequip(item_def */*item*/, bool *show_msgs)
+{
+    if (you.species == SP_BARACHI)
+        _equip_mpr(show_msgs, "You feel oddly sad, like being parted from an old friend.");
+}
+
+static void _CONDEMNATION_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                        actor* defender, bool mondied, int dam)
+{
+    if (!dam || mondied || defender->is_player())
+        return;
+    monster *mons = defender->as_monster();
+    if (mons_intel(*mons) <= I_BRAINLESS)
+        return;
+    const int dur = random_range(40, 80);
+    const bool was_guilty = mons->has_ench(ENCH_ANGUISH);
+    if (mons->add_ench(mon_enchant(ENCH_ANGUISH, 0, attacker, dur)) && !was_guilty)
+        simple_monster_message(*mons, " is haunted by guilt!");
+}
+
+////////////////////////////////////////////////////
+
 static void _CURSES_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
@@ -174,58 +154,8 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
 {
     if (attacker->is_player())
         did_god_conduct(DID_EVIL, 3);
-    if (!mondied && defender->holiness() == MH_NATURAL)
+    if (!mondied && defender->holiness() & (MH_NATURAL | MH_PLANT))
         death_curse(*defender, attacker, "the scythe of Curses", min(dam, 27));
-}
-
-/////////////////////////////////////////////////////
-
-static bool _DISPATER_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
-{
-    int hp_cost = 14;
-    int mp_cost = 4;
-    if (you.has_mutation(MUT_HP_CASTING))
-    {
-        hp_cost += mp_cost;
-        mp_cost = 0;
-    }
-
-    if (!enough_hp(hp_cost, true))
-    {
-        mpr("You're too close to death to use this item.");
-        *unevokable = true;
-        return true;
-    }
-
-    if (!enough_mp(mp_cost, false))
-    {
-        *unevokable = true;
-        return true;
-    }
-
-    *did_work = true;
-    pay_hp(hp_cost);
-    pay_mp(mp_cost);
-
-    int power = you.skill(SK_EVOCATIONS, 8);
-
-    if (your_spells(SPELL_HURL_DAMNATION, power, false, nullptr, target)
-        == spret::abort)
-    {
-        *unevokable = true;
-        refund_hp(hp_cost);
-        refund_mp(mp_cost);
-
-        redraw_screen();
-        update_screen();
-        return false;
-    }
-
-    mpr("You feel the staff feeding on your energy!");
-    finalize_mp_cost(hp_cost);
-    practise_evoking(random_range(1, 2));
-
-    return false;
 }
 
 ////////////////////////////////////////////////////
@@ -252,6 +182,50 @@ static void _FINISHER_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
+static void _THROATCUTTER_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                        actor* defender, bool mondied, int /*dam*/)
+{
+    // Can't kill a monster that's already dead.
+    // Don't insta-kill the player
+    if (mondied || defender->is_player())
+        return;
+
+    // Chance to insta-kill based on HP.
+    // (Effectively extra AC-ignoring damage, sort of.)
+    if (defender->stat_hp() <= 20 && one_chance_in(3))
+    {
+        monster* mons = defender->as_monster();
+        if (you.can_see(*attacker))
+        {
+            const bool plural = attacker->is_monster();
+            switch (get_mon_shape(mons_genus(mons->type)))
+            {
+            case MON_SHAPE_PLANT:
+            case MON_SHAPE_ORB:
+            case MON_SHAPE_BLOB:
+            case MON_SHAPE_MISC:
+                mprf("%s put%s %s out of %s misery!",
+                     attacker->name(DESC_THE).c_str(),
+                     plural ? "s" : "",
+                     mons->name(DESC_THE).c_str(),
+                     mons->pronoun(PRONOUN_POSSESSIVE).c_str());
+                break;
+            default: // yes, even fungi have heads :)
+                mprf("%s behead%s %s%s!",
+                     attacker->name(DESC_THE).c_str(),
+                     plural ? "s" : "",
+                     mons->name(DESC_THE).c_str(),
+                     mons->heads() > 1 ? " thoroughly" : "");
+            }
+        }
+        if (mons->num_heads > 1)
+            mons->num_heads = 1; // mass chop those hydra heads
+        mons->hurt(attacker, INSTANT_DEATH);
+    }
+}
+
+////////////////////////////////////////////////////
+
 // XXX: Staff giving a boost to poison spells is hardcoded in
 // player_spec_poison()
 
@@ -269,54 +243,6 @@ static void _OLGREB_unequip(item_def */*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "The smell of chlorine vanishes.");
     else
         _equip_mpr(show_msgs, "The staff's sickly green glow vanishes.");
-}
-
-// this isn't targeted, but using the targeted version lets the olgreb static
-// targeter work
-static bool _OLGREB_targeted_evoke(item_def */*item*/, bool* did_work, bool* unevokable, dist* target)
-{
-    const int cost = 4;
-
-    if (you.has_mutation(MUT_HP_CASTING))
-    {
-        if (!enough_hp(cost, true))
-        {
-            mpr("You're too close to death to use this item.");
-            *unevokable = true;
-            return true;
-        }
-    }
-    else if (!enough_mp(cost, false))
-    {
-        *unevokable = true;
-        return true;
-    }
-
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 600))
-        return false;
-
-    *did_work = true;
-    pay_mp(cost);
-
-    int power = div_rand_round(20 + you.skill(SK_EVOCATIONS, 20), 4);
-
-    // Allow aborting (for example if friendlies are nearby).
-    if (your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false, nullptr,
-        target) == spret::abort)
-    {
-        *unevokable = true;
-        refund_mp(cost);
-
-        redraw_screen();
-        update_screen();
-        return false;
-    }
-
-    finalize_mp_cost();
-    practise_evoking(1);
-    did_god_conduct(DID_WIZARDLY_ITEM, 10);
-
-    return false;
 }
 
 // Based on melee_attack::staff_damage(), but using only evocations skill.
@@ -468,13 +394,16 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
 
 static void _PRUNE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    _equip_mpr(show_msgs, "You feel pruney.");
+    if (you.undead_state() == US_ALIVE)
+        _equip_mpr(show_msgs, "You struggle to resist the curse of the Prune...");
+    else
+        _equip_mpr(show_msgs, "The curse of the Prune has no hold on the dead.");
 }
 
-static void _PRUNE_world_reacts(item_def */*item*/)
+static void _PRUNE_unequip(item_def */*item*/, bool *show_msgs)
 {
-    if (one_chance_in(10))
-        did_god_conduct(DID_CHAOS, 1);
+    if (you.undead_state() == US_ALIVE)
+        _equip_mpr(show_msgs, "The curse of the Prune lifts from you.");
 }
 
 ////////////////////////////////////////////////////
@@ -493,7 +422,7 @@ static void _LIGHTNING_SCALES_unequip(item_def */*item*/, bool *show_msgs)
 
 static void _TORMENT_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    _equip_mpr(show_msgs, "A terribly searing pain shoots up your arm!");
+    _equip_mpr(show_msgs, "A terrible, searing pain shoots up your arm!");
 }
 
 static void _TORMENT_melee_effects(item_def* /*weapon*/, actor* attacker,
@@ -508,7 +437,8 @@ static void _TORMENT_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 static void _TROG_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 {
-    _equip_mpr(show_msgs, "You feel bloodthirsty!");
+    _equip_mpr(show_msgs, "You feel the exhaustion of battles past.");
+    player_end_berserk();
 }
 
 static void _TROG_unequip(item_def */*item*/, bool *show_msgs)
@@ -596,8 +526,8 @@ static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
                           SAME_ATTITUDE(mons), mons->pos(), mons->foe)
                 .set_summoned(mons, 6, SPELL_SUMMON_DEMON));
         }
-        else
-            cast_summon_demon(50+random2(100));
+        else if (!you.allies_forbidden())
+            cast_summon_demon(50 + random2(100));
     }
 }
 
@@ -896,7 +826,6 @@ static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
     ASSERT(beam->item
            && beam->item->base_type == OBJ_MISSILES
            && !is_artefact(*(beam->item)));
-    beam->item->special = SPMSL_EXPLODING; // so that it mulches
     beam->item->props[DAMNATION_BOLT_KEY].get_bool() = true;
 
     beam->name    = "damnation bolt";
@@ -907,7 +836,7 @@ static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
     bolt *expl   = new bolt(*beam);
     expl->flavour = BEAM_DAMNATION;
     expl->is_explosion = true;
-    expl->damage = dice_def(3, 14);
+    expl->damage = dice_def(2, 14);
     expl->name   = "damnation";
 
     beam->special_explosion = expl;
@@ -1443,10 +1372,23 @@ static void _BATTLE_unequip(item_def */*item*/, bool */*show_msgs*/)
 
 static void _BATTLE_world_reacts(item_def */*item*/)
 {
-    if (!find_battlesphere(&you) && there_are_monsters_nearby(true, true, false))
+    if (!find_battlesphere(&you)
+        && there_are_monsters_nearby(true, true, false)
+        && stop_summoning_reason(MR_RES_POISON, M_FLIES).empty())
     {
-        your_spells(SPELL_BATTLESPHERE, 0, false);
+        cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE, true),
+                          GOD_NO_GOD, false);
         did_god_conduct(DID_WIZARDLY_ITEM, 10);
+    }
+}
+
+static void _BATTLE_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                  actor* /*defender*/, bool /*mondied*/, int /*dam*/)
+{
+    if (attacker)
+    {
+        aim_battlesphere(attacker, SPELL_MAGIC_DART);
+        trigger_battlesphere(attacker);
     }
 }
 
@@ -1584,7 +1526,7 @@ static void _GUARD_unequip(item_def * /* item */, bool * show_msgs)
     monster *spectral_weapon = find_spectral_weapon(&you);
     if (spectral_weapon)
     {
-        _equip_mpr(show_msgs, "Your spectral weapon disappears as you unwield.");
+        _equip_mpr(show_msgs, "Your spectral weapon disappears.");
         end_spectral_weapon(spectral_weapon, false, true);
     }
 }
@@ -1603,8 +1545,132 @@ static void _WUCAD_MU_equip(item_def */*item*/, bool *show_msgs,
 
 ////////////////////////////////////////////////////
 
-static void _SEVEN_LEAGUE_BOOTS_equip(item_def */*item*/, bool *show_msgs,
+static void _SEVEN_LEAGUE_BOOTS_equip(item_def * /*item*/, bool *show_msgs,
                                       bool /*unmeld*/)
 {
     _equip_mpr(show_msgs, "You feel ready to stride towards your foes.");
+}
+
+static void _SEVEN_LEAGUE_BOOTS_unequip(item_def * /*item*/, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "You no longer feel ready to stride towards your "
+                          "foes.");
+}
+
+////////////////////////////////////////////////////
+
+static void _RCLOUDS_world_reacts(item_def */*item*/)
+{
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_SOLID); ri; ++ri)
+    {
+        monster* m = monster_at(*ri);
+        if (m && !m->wont_attack() && mons_is_threatening(*m)
+            && !cell_is_solid(*ri) && !cloud_at(*ri)
+            && one_chance_in(7))
+        {
+            mprf("Storm clouds gather above %s.", m->name(DESC_THE).c_str());
+            place_cloud(CLOUD_STORM, *ri, random_range(4, 8), &you);
+        }
+    }
+}
+
+////////////////////////////////////////////////////
+
+static void _POWER_GLOVES_equip(item_def * /*item*/, bool *show_msgs,
+                                bool /*unmeld*/)
+{
+    if (you.has_mutation(MUT_HP_CASTING))
+    {
+        _equip_mpr(show_msgs, "The gloves are unable to connect with your "
+                              "magical essence.");
+    }
+    else
+        _equip_mpr(show_msgs, "You feel an incredible surge of magic.");
+}
+
+static void _POWER_GLOVES_unequip(item_def * /*item*/, bool *show_msgs)
+{
+    if (!you.has_mutation(MUT_HP_CASTING))
+        _equip_mpr(show_msgs, "The surge of magic dissipates.");
+}
+
+static void _DREAMSHARD_NECKLACE_equip(item_def * /*item*/, bool *show_msgs,
+                                      bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You feel a whimsical energy watch over you.");
+}
+
+static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs)
+{
+    _equip_mpr(show_msgs, "The world feels relentlessly logical and grey.");
+}
+
+//
+
+static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
+    actor* defender, bool /*mondied*/, int /*dam*/)
+{
+    // HACK: yes this is in a header but it's only included once
+    static bool _slicing = false;
+
+    if (!one_chance_in(5) || _slicing || !defender)
+        return;
+
+    unwind_bool nonrecursive_space(_slicing, true);
+
+    vector<actor *> targets;
+    for (actor_near_iterator ai(attacker, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (defender->pos() == ai->pos())
+            continue;
+
+        if (mons_aligned(attacker, *ai))
+            continue;
+        if (attacker->is_player()
+            && (ai->wont_attack()
+                || mons_attitude(*ai->as_monster()) == ATT_NEUTRAL))
+        {
+            continue;
+        }
+        if (ai->is_monster() && (mons_is_firewood(*ai->as_monster())
+                                 || mons_is_projectile(*ai->as_monster())))
+        {
+            continue;
+        }
+        targets.emplace_back(*ai);
+    }
+
+    if (targets.empty())
+        return;
+
+    mprf("%s slice%s through the folds of space itself!",
+         attacker->name(DESC_THE).c_str(),
+         attacker->is_player() ? "" : "s");
+
+    // Save the time taken by the player before slicing, was set by the
+    // melee_attack that called us or left over from the player's previous turn
+    unwind_var<int> initial_time(you.time_taken);
+
+    shuffle_array(targets);
+    const size_t max_targets = 4;
+    for (size_t i = 0; i < max_targets && i < targets.size(); i++)
+    {
+        melee_attack atk(attacker, targets[i]);
+        atk.is_projected = true;
+        atk.attack();
+
+        if (!attacker->alive())
+            break;
+    }
+}
+
+///////////////////////////////////////////////////
+static void _VITALITY_world_reacts(item_def */*item*/)
+{
+    // once it starts regenerating you, you're doin evil
+    if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1
+        || you.activated[EQ_AMULET])
+    {
+        did_god_conduct(DID_EVIL, 1);
+    }
 }

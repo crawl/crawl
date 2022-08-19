@@ -99,9 +99,9 @@ static const vector<spell_type> _xom_random_spells =
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_CAUSE_FEAR,
     SPELL_INTOXICATE,
-    SPELL_SHADOW_CREATURES,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_STATUE_FORM,
+    SPELL_SUMMON_CACTUS,
     SPELL_DISPERSAL,
     SPELL_ENGLACIATION,
     SPELL_DEATH_CHANNEL,
@@ -474,7 +474,7 @@ static bool _teleportation_check()
     if (crawl_state.game_is_sprint())
         return false;
 
-    return !you.no_tele(false, false);
+    return !you.no_tele();
 }
 
 static bool _transformation_check(const spell_type spell)
@@ -494,11 +494,11 @@ static bool _transformation_check(const spell_type spell)
     case SPELL_ICE_FORM:
         tran = transformation::ice_beast;
         break;
-    case SPELL_HYDRA_FORM:
-        tran = transformation::hydra;
-        break;
     case SPELL_DRAGON_FORM:
         tran = transformation::dragon;
+        break;
+    case SPELL_STORM_FORM:
+        tran = transformation::storm;
         break;
     case SPELL_NECROMUTATION:
         tran = transformation::lich;
@@ -629,6 +629,9 @@ static void _try_brand_switch(const int item_index)
     if (get_weapon_brand(item) == SPWPN_NORMAL)
         return;
 
+    // TODO: shared code with _do_chaos_upgrade
+    mprf("%s erupts in a glittering mayhem of colour.",
+                            item.name(DESC_THE, false, false, false).c_str());
     if (is_random_artefact(item))
         artefact_set_property(item, ARTP_BRAND, SPWPN_CHAOS);
     else
@@ -646,6 +649,8 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         god_speaks(GOD_XOM, "\"No, never mind.\"");
         return;
     }
+    else if (base == OBJ_ARMOUR && subtype == ARM_ORB && one_chance_in(4))
+        god_speaks(GOD_XOM, _get_xom_speech("orb gift").c_str());
 
     _try_brand_switch(thing_created);
 
@@ -714,8 +719,7 @@ static bool _choose_enchantable_monster(const monster& mon)
            && !mons_invuln_will(mon);
 }
 
-static bool _is_chaos_upgradeable(const item_def &item,
-                                  const monster* mon)
+static bool _is_chaos_upgradeable(const item_def &item)
 {
     // Since Xom is a god, he is capable of changing randarts, but not
     // other artefacts.
@@ -764,21 +768,8 @@ static bool _is_chaos_upgradeable(const item_def &item,
         if (get_ammo_brand(item) == SPMSL_NORMAL)
             return true;
     }
-    else
-    {
-        // If the weapon is a launcher, and the monster is either out
-        // of ammo or is carrying javelins, then don't bother upgrading
-        // the launcher.
-        if (is_range_weapon(item)
-            && (mon->inv[MSLOT_MISSILE] == NON_ITEM
-                || !has_launcher(env.item[mon->inv[MSLOT_MISSILE]])))
-        {
-            return false;
-        }
-
-        if (get_weapon_brand(item) == SPWPN_NORMAL)
-            return true;
-    }
+    else if (get_weapon_brand(item) == SPWPN_NORMAL)
+        return true;
 
     return false;
 }
@@ -833,7 +824,7 @@ static bool _choose_chaos_upgrade(const monster& mon)
         if (is_chaotic_item(item))
             return false;
 
-        if (_is_chaos_upgradeable(item, &mon))
+        if (_is_chaos_upgradeable(item))
         {
             if (item.base_type != OBJ_MISSILES)
                 return true;
@@ -841,7 +832,7 @@ static bool _choose_chaos_upgrade(const monster& mon)
             // If, for some weird reason, a monster is carrying a bow
             // and javelins, then branding the javelins is okay, since
             // they won't be fired by the bow.
-            if (!special_launcher || !has_launcher(item))
+            if (!special_launcher || is_throwable(&mon, item))
                 return true;
         }
 
@@ -872,18 +863,11 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     {
         seen = true;
 
-        description_level_type desc = mon->friendly() ? DESC_YOUR :
-                                                        DESC_THE;
-        string msg = apostrophise(mon->name(desc));
-
-        msg += " ";
-
-        msg += item.name(DESC_PLAIN, false, false, false);
-
-        msg += " is briefly surrounded by a scintillating aura of "
-               "random colours.";
-
-        mpr(msg);
+        const description_level_type desc = mon->friendly() ? DESC_YOUR
+                                                            : DESC_THE;
+        mprf("%s %s erupts in a glittering mayhem of colour.",
+            apostrophise(mon->name(desc)).c_str(),
+            item.name(DESC_PLAIN, false, false, false).c_str());
     }
 
     const int brand = (item.base_type == OBJ_WEAPONS) ? (int) SPWPN_CHAOS
@@ -970,11 +954,15 @@ static void _xom_do_potion(int /*sever*/)
     }
     while (!get_potion_effect(pot)->can_quaff()); // ugh
 
+    // Experience uses default power, other potions get bonus power.
+    // Curing, heal wounds, magic and berserk rage ignore power.
+    const int pow = pot == POT_EXPERIENCE ? 40 : 150;
+
     god_speaks(GOD_XOM, _get_xom_speech("potion effect").c_str());
 
     _note_potion_effect(pot);
 
-    get_potion_effect(pot)->effect(true, 150);
+    get_potion_effect(pot)->effect(true, pow);
 
     level_change(); // need this for !xp - see mantis #3245
 }
@@ -1262,7 +1250,7 @@ static int _xom_random_stickable(const int HD)
     static const int arr[] =
     {
         WPN_CLUB,    WPN_SPEAR,      WPN_TRIDENT,      WPN_HALBERD,
-        WPN_SCYTHE,  WPN_GLAIVE,     WPN_QUARTERSTAFF,
+        WPN_GLAIVE,     WPN_QUARTERSTAFF,
         WPN_SHORTBOW,   WPN_LONGBOW,      WPN_GIANT_CLUB,
         WPN_GIANT_SPIKED_CLUB
     };
@@ -1308,12 +1296,11 @@ static void _xom_snakes_to_sticks(int /*sever*/)
             action = true;
         }
 
-        const object_class_type base_type = x_chance_in_y(3,5) ? OBJ_MISSILES
-                                                               : OBJ_WEAPONS;
+        const object_class_type base_type = coinflip() ? OBJ_MISSILES
+                                                       : OBJ_WEAPONS;
 
         const int sub_type =
-            (base_type == OBJ_MISSILES ?
-             (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
+            (base_type == OBJ_MISSILES ? MI_JAVELIN
              : _xom_random_stickable(mi->get_experience_level()));
 
         int item_slot = items(false, base_type, sub_type,
@@ -2146,7 +2133,7 @@ static void _xom_chaos_upgrade(int /*sever*/)
     for (int i = 0; i < 3 && !rc; ++i)
     {
         item_def* const item = mon->mslot_item(slots[i]);
-        if (item && _is_chaos_upgradeable(*item, mon))
+        if (item && _is_chaos_upgradeable(*item))
         {
             _do_chaos_upgrade(*item, mon);
             rc = true;
@@ -2844,7 +2831,7 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
     }
 
     if (tension > random2(5) && x_chance_in_y(7, sever)
-        && !you.get_mutation_level(MUT_NO_LOVE))
+        && !you.allies_forbidden())
     {
         return XOM_GOOD_SINGLE_ALLY;
     }
@@ -2858,13 +2845,13 @@ static xom_event_type _xom_choose_good_action(int sever, int tension)
         return XOM_GOOD_SNAKES;
 
     if (tension > random2(10) && x_chance_in_y(10, sever)
-        && !you.get_mutation_level(MUT_NO_LOVE))
+        && !you.allies_forbidden())
     {
         return XOM_GOOD_ALLIES;
     }
     if (tension > random2(8) && x_chance_in_y(11, sever)
         && _find_monster_with_animateable_weapon()
-        && !you.get_mutation_level(MUT_NO_LOVE))
+        && !you.allies_forbidden())
     {
         return XOM_GOOD_ANIMATE_MON_WPN;
     }
@@ -3423,6 +3410,7 @@ static void _xom_good_teleport(int /*sever*/)
     {
         count++;
         you_teleport_now();
+        maybe_update_stashes();
         more();
         if (one_chance_in(10) || count >= 7 + random2(5))
             break;
@@ -3453,6 +3441,7 @@ static void _xom_bad_teleport(int /*sever*/)
     do
     {
         you_teleport_now();
+        maybe_update_stashes();
         more();
         if (count++ >= 7 + random2(5))
             break;
@@ -3676,7 +3665,7 @@ void debug_xom_effects()
     const int tension       = get_tension(GOD_XOM);
 
     fprintf(ostat, "---- STARTING XOM DEBUG TESTING ----\n");
-    fprintf(ostat, "%s\n", dump_overview_screen(false).c_str());
+    fprintf(ostat, "%s\n", dump_overview_screen().c_str());
     fprintf(ostat, "%s\n", screenshot().c_str());
     fprintf(ostat, "%s\n", _list_exploration_estimate().c_str());
     fprintf(ostat, "%s\n", mpr_monster_list().c_str());

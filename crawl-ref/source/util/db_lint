@@ -190,8 +190,8 @@ my @monspeak_at_at = at_at_replaces("mon-util.cc", "do_mon_str_replacements");
 
 my @gods = ("the Shining One", "Sif Muna","Nemelex Xobeh", "Wu Jian", qw(
             Ashenzari Beogh Cheibriados Dithmenos Elyvilon Fedhas Gozag
-            Hepliaklqana Jiyva Kikubaaqudgha Lugonu Makhleb Okawaru Pakellas
-            Qazlal Ru Trog Uskayaw Vehumet Xom Yredelemnul Zin));
+            Hepliaklqana Ignis Jiyva Kikubaaqudgha Lugonu Makhleb Okawaru
+            Pakellas Qazlal Ru Trog Uskayaw Vehumet Xom Yredelemnul Zin));
 
 sub godspeak_keys()
 {
@@ -210,7 +210,7 @@ sub godspeak_keys()
         $keys{"$_ penance"}=1;
         $keys{"$_ prayer"}=1;
     }
-    $keys{$_}=1 for ("Pakellas death", "recite_closure");
+    $keys{$_}=1 for ("Pakellas death", "recite_closure", "Ignis elemental wrath");
     return keys %keys;
 }
 __________________________________________________________________________();

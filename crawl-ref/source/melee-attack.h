@@ -15,6 +15,7 @@ enum unarmed_attack_type
     UNAT_HEADBUTT,
     UNAT_PECK,
     UNAT_TAILSLAP,
+    UNAT_TOUCH,
     UNAT_PUNCH,
     UNAT_BITE,
     UNAT_PSEUDOPODS,
@@ -50,7 +51,8 @@ public:
     // Applies attack damage and other effects.
     bool attack();
     int calc_to_hit(bool random) override;
-    int post_roll_to_hit_modifiers(int mhit, bool random) override;
+    int post_roll_to_hit_modifiers(int mhit, bool random,
+                                   bool aux = false) override;
 
     static void chaos_affect_actor(actor *victim);
 
@@ -99,8 +101,13 @@ private:
     void do_passive_heat();
 #endif
     void emit_foul_stench();
-    /* Race Effects */
+
+    /* Divine Effect */
+    void do_fiery_armour_burn();
+
+    /* Retaliation Effects */
     void do_minotaur_retaliation();
+    void maybe_riposte();
 
     /* Item Effects */
     void do_starlight();
@@ -111,9 +118,6 @@ private:
     /* Output methods */
     void set_attack_verb(int damage) override;
     void announce_hit() override;
-
-    /* Misc methods */
-    void handle_noise(const coord_def & pos);
 private:
     // Monster-attack specific stuff
     bool mons_attack_effects() override;
@@ -137,7 +141,7 @@ private:
     bool player_aux_apply(unarmed_attack_type atk);
 
     int  player_apply_misc_modifiers(int damage) override;
-    int  player_apply_final_multipliers(int damage) override;
+    int  player_apply_final_multipliers(int damage, bool aux = false) override;
 
     void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();
@@ -147,17 +151,19 @@ private:
     void player_stab_check() override;
     bool player_good_stab() override;
     void player_announce_aux_hit();
-    string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
+    bool bad_attempt();
+    bool player_unrand_bad_attempt();
     void _defender_die();
 
     // Added in, were previously static methods of fight.cc
     bool _extra_aux_attack(unarmed_attack_type atk);
-    int calc_your_to_hit_unarmed();
     bool _player_vampire_draws_blood(const monster* mon, const int damage,
                                      bool needs_bite_msg = false);
     bool _vamp_wants_blood_from_monster(const monster* mon);
 
     bool can_reach();
 };
+
+string aux_attack_desc(mutation_type mut);

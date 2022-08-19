@@ -59,7 +59,7 @@ spret conjure_flame(int pow, bool fail)
     }
     else
     {
-        you.props["cflame_dur"] = min(5 + (random2(pow)/2)
+        you.props[CFLAME_DUR_KEY] = min(5 + (random2(pow)/2)
                                                + (random2(pow)/2), 23);
         place_cloud(CLOUD_EMBERS, you.pos(), 1, &you);
         // Create a cloud for the time it takes to cast plus 1 aut, so that no
@@ -67,64 +67,9 @@ spret conjure_flame(int pow, bool fail)
         // action.
         cloud = cloud_at(you.pos());
         cloud->decay = player_speed() + 1;
-        mpr("The fire begins to smolder!");
+        mpr("The fire begins to smoulder!");
     }
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), you.pos());
-
-    return spret::success;
-}
-
-spret cast_poisonous_vapours(int pow, const dist &beam, bool fail)
-{
-    if (cell_is_solid(beam.target))
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return spret::abort;
-    }
-
-    monster* mons = monster_at(beam.target);
-    if (!mons || !you.can_see(*mons))
-    {
-        mpr("You see nothing there to target!");
-        return spret::abort;
-    }
-
-    if (actor_cloud_immune(*mons, CLOUD_POISON) && mons->observable())
-    {
-        mprf("%s cannot be affected by poisonous vapours!",
-             mons->name(DESC_THE).c_str());
-        return spret::abort;
-    }
-
-    if (stop_attack_prompt(mons, false, you.pos()))
-        return spret::abort;
-
-    cloud_struct* cloud = cloud_at(beam.target);
-    if (cloud && cloud->type != CLOUD_POISON)
-    {
-        // XXX: consider replacing the cloud instead?
-        mpr("There's already a cloud there!");
-        return spret::abort;
-    }
-
-    fail_check();
-
-    const int cloud_duration = max(random2(pow + 1) / 10, 1); // in dekaauts
-    if (cloud)
-    {
-        // Reinforce the cloud.
-        mpr("The poisonous vapours increase!");
-        // in this case, we're using auts
-        cloud->decay += cloud_duration * BASELINE_DELAY;
-        cloud->set_whose(KC_YOU);
-    }
-    else
-    {
-        place_cloud(CLOUD_POISON, beam.target, cloud_duration, &you);
-        mprf("Poisonous vapours surround %s!", mons->name(DESC_THE).c_str());
-    }
-
-    behaviour_event(mons, ME_WHACK, &you);
 
     return spret::success;
 }
@@ -236,68 +181,6 @@ void big_cloud(cloud_type cl_type, const actor *agent,
                      cl_type, agent, spread_rate, -1);
 }
 
-spret cast_corpse_rot(bool fail)
-{
-    fail_check();
-    return corpse_rot(&you);
-}
-
-spret corpse_rot(actor* caster, bool actual)
-{
-    // If there is no caster (god wrath), centre the effect on the player.
-    const coord_def center = caster ? caster->pos() : you.pos();
-    bool saw_rot = false;
-    int did_rot = 0;
-
-    for (radius_iterator ri(center, LOS_NO_TRANS); ri; ++ri)
-    {
-        for (stack_iterator si(*ri); si; ++si)
-            if (si->is_type(OBJ_CORPSES, CORPSE_BODY))
-            {
-                if (!actual)
-                    return spret::success;
-                // Found a corpse. Skeletonise it if possible.
-                if (!mons_skeleton(si->mon_type))
-                {
-                    item_was_destroyed(*si);
-                    destroy_item(si->index());
-                }
-                else
-                    turn_corpse_into_skeleton(*si);
-
-                if (!saw_rot && you.see_cell(*ri))
-                    saw_rot = true;
-
-                ++did_rot;
-
-                // Don't look for more corpses here.
-                break;
-            }
-    }
-    if (!actual)
-        return spret::abort;
-
-    for (fair_adjacent_iterator ai(center); ai; ++ai)
-    {
-        if (did_rot == 0)
-            break;
-
-        if (cell_is_solid(*ai))
-            continue;
-
-        place_cloud(CLOUD_MIASMA, *ai, 2+random2avg(8, 2),caster);
-        --did_rot;
-    }
-
-    // Abort the spell for players; monsters and wrath fail silently
-    if (saw_rot)
-        mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
-    else if (!caster || caster->is_player())
-        return spret::abort;
-
-    return spret::success;
-}
-
 void holy_flames(monster* caster, actor* defender)
 {
     const coord_def pos = defender->pos();
@@ -328,4 +211,39 @@ void holy_flames(monster* caster, actor* defender)
             simple_monster_message(*defender->as_monster(),
                                    " is surrounded by blessed fire!");
     }
+}
+
+spret scroll_of_poison(bool scroll_unknown)
+{
+    int created = 0;
+    bool unknown_unseen = false;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        if (cell_is_solid(*ri))
+            continue;
+        if (cloud_type_at(*ri) != CLOUD_NONE)
+            continue;
+        const actor* act = actor_at(*ri);
+        if (act != nullptr)
+        {
+            unknown_unseen = unknown_unseen || !you.can_see(*act);
+            continue;
+        }
+
+        place_cloud(CLOUD_POISON, *ri, 10 + random2(11), &you);
+        ++created;
+    }
+
+    if (created > 0)
+    {
+        mpr("The air fills with toxic fumes!");
+        return spret::success;
+    }
+    if (!scroll_unknown && !unknown_unseen)
+    {
+        mpr("There's no open space to fill with poison.");
+        return spret::abort;
+    }
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return spret::fail;
 }

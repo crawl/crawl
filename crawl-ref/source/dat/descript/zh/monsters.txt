@@ -238,7 +238,7 @@ Psyche
 
 一个金发的法师，似乎是被悲伤和罪恶感逼得半疯了，在四处晃悠。
 %%%%
-Purgy
+Pargi
 
 一个特别瘦小的巨魔。
 
@@ -773,7 +773,7 @@ gnoll sergeant
 一群豺狼人的首领。它壮硕的身躯上满是伤痕；很显然，
 它是靠多年的苦战才爬到今天的地位的。
 %%%%
-gnoll shaman
+gnoll bouda
 
 一个枯槁又狡猾的老豺狼人。它发出的奇怪吠声能让其他豺狼人陷入狂暴之中。
 %%%%
@@ -1752,8 +1752,8 @@ withered plant
 
 这株植物的生命力已被吸干，然而它的躯壳仍然完好。它的尸体就一直在这里，
 没有被食草动物吃掉——本来喜欢吃植物的小动物对它却避之惟恐不及。而且，
-看上去这株植物死了已经有好几 {{ if you.branch() == "Crypt" or you.branch() ==
-"Tomb" then return "个世纪"; else return "年"; end }} 了。
+看上去这株植物死了已经有好几 {{ if you.branch("Crypt") or you.branch("Tomb")
+then return "个世纪"; else return "年"; end }} 了。
 %%%%
 zot statue
 

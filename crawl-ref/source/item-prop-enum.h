@@ -49,6 +49,9 @@ enum armour_type
     ARM_KITE_SHIELD,
     ARM_TOWER_SHIELD,
     ARM_LAST_SHIELD = ARM_TOWER_SHIELD,
+#if TAG_MAJOR_VERSION > 34
+    ARM_ORB,
+#endif
 
 #if TAG_MAJOR_VERSION == 34
     ARM_CRYSTAL_PLATE_ARMOUR,
@@ -109,6 +112,7 @@ enum armour_type
     ARM_QUICKSILVER_DRAGON_HIDE,
     ARM_QUICKSILVER_DRAGON_ARMOUR,
     ARM_SCARF,
+    ARM_ORB,
 #endif
 
     NUM_ARMOURS
@@ -122,7 +126,6 @@ enum armour_property_type
 
 const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
-const int SP_UNKNOWN_BRAND = 31; // seen_weapon/armour is a 32-bit bitfield
 
 // Be sure to update _debug_acquirement_stats and _str_to_ego to match.
 enum brand_type // item_def.special
@@ -176,10 +179,11 @@ enum brand_type // item_def.special
 #if TAG_MAJOR_VERSION > 34
     SPWPN_CONFUSE, // Confusing Touch only for the moment
 #endif
+    SPWPN_WEAKNESS,
+    SPWPN_VULNERABILITY,
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
 };
-COMPILE_CHECK(NUM_SPECIAL_WEAPONS <= SP_UNKNOWN_BRAND);
 
 enum corpse_type
 {
@@ -431,14 +435,16 @@ enum scroll_type
 #if TAG_MAJOR_VERSION == 34
     SCR_RECHARGING,
     SCR_ENCHANT_WEAPON_III,
-#endif
     SCR_HOLY_WORD,
+#endif
     SCR_VULNERABILITY,
     SCR_SILENCE,
     SCR_AMNESIA,
 #if TAG_MAJOR_VERSION == 34
     SCR_CURSE_JEWELLERY,
 #endif
+    SCR_POISON,
+    SCR_BUTTERFLIES,
     NUM_SCROLLS
 };
 
@@ -469,7 +475,7 @@ enum special_armour_type
     SPARM_PRESERVATION,
     SPARM_REFLECTION,
     SPARM_SPIRIT_SHIELD,
-    SPARM_ARCHERY,
+    SPARM_HURLING,
 #if TAG_MAJOR_VERSION == 34
     SPARM_JUMPING,
 #endif
@@ -480,11 +486,15 @@ enum special_armour_type
     SPARM_HARM,
     SPARM_SHADOWS,
     SPARM_RAMPAGING,
+    SPARM_INFUSION,
+    SPARM_LIGHT,
+    SPARM_RAGE,
+    SPARM_MAYHEM,
+    SPARM_GUILE,
+    SPARM_ENERGY,
     NUM_REAL_SPECIAL_ARMOURS,
     NUM_SPECIAL_ARMOURS,
 };
-// We have space for 32 brands in the bitfield.
-COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND);
 
 // Be sure to update _str_to_ego to match.
 enum special_missile_type // to separate from weapons in general {dlb}
@@ -625,8 +635,7 @@ enum weapon_type
     WPN_LONGBOW,
 
 #if TAG_MAJOR_VERSION > 34
-    WPN_HUNTING_SLING,
-    WPN_FUSTIBALUS,
+    WPN_SLING,
 #endif
 
     WPN_DEMON_WHIP,
@@ -638,14 +647,16 @@ enum weapon_type
     WPN_TRIPLE_SWORD,
 
     WPN_DEMON_TRIDENT,
+#if TAG_MAJOR_VERSION == 34
     WPN_SCYTHE,
+#endif
 
     WPN_STAFF,          // Just used for the weapon stats for magical staves.
     WPN_QUARTERSTAFF,
     WPN_LAJATANG,
 
 #if TAG_MAJOR_VERSION == 34
-    WPN_HUNTING_SLING,
+    WPN_SLING,
 
     WPN_BLESSED_FALCHION,
     WPN_BLESSED_LONG_SWORD,
@@ -675,9 +686,6 @@ enum weapon_type
     WPN_UNKNOWN,
     WPN_RANDOM,
     WPN_VIABLE,
-
-// thrown weapons (for hunter weapon selection) - rocks, javelins, boomerangs
-    WPN_THROWN,
 };
 
 enum weapon_property_type
@@ -758,6 +766,9 @@ enum wand_type
     WAND_CLOUDS_REMOVED,
     WAND_SCATTERSHOT_REMOVED,
 #endif
+    WAND_LIGHT,
+    WAND_QUICKSILVER,
+    WAND_ROOTS,
     NUM_WANDS
 };
 
@@ -790,3 +801,12 @@ enum food_type
     NUM_FOODS
 };
 #endif
+
+enum item_set_type
+{
+    ITEM_SET_HEX_WANDS,
+    ITEM_SET_BEAM_WANDS,
+    ITEM_SET_BLAST_WANDS,
+    ITEM_SET_CONCEAL_SCROLLS,
+    NUM_ITEM_SET_TYPES
+};

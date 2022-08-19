@@ -446,6 +446,14 @@ void create_sanctuary(const coord_def& center, int time)
 
         env.pgrid(pos) &= ~(FPROP_BLOODY);
 
+        if (env.grid(pos) == DNGN_FOUNTAIN_BLOOD)
+        {
+            if (you.see_cell(pos))
+                blood_count++;
+
+            dungeon_terrain_changed(pos, DNGN_FOUNTAIN_BLUE);
+        }
+
         // Scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and
         // move towards the player.
@@ -505,7 +513,7 @@ void create_sanctuary(const coord_def& center, int time)
 // dur starts at 10 (low power) and is capped at 100
 // maximal range: 5
 // last 6 turns: range 0, hence only the player affected
-static int _shrinking_aoe_range(int dur)
+int shrinking_aoe_range(int dur)
 {
     if (dur <= 0)
         return -1;
@@ -518,7 +526,7 @@ static int _shrinking_aoe_range(int dur)
 
 int player::silence_radius() const
 {
-    return _shrinking_aoe_range(duration[DUR_SILENCE]);
+    return shrinking_aoe_range(duration[DUR_SILENCE]);
 }
 
 int player::demon_silence_radius() const
@@ -540,7 +548,7 @@ int monster::silence_radius() const
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY
                        * max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
-    return _shrinking_aoe_range(moddur);
+    return shrinking_aoe_range(moddur);
 }
 
 int monster::demon_silence_radius() const
@@ -588,6 +596,8 @@ int player::halo_radius() const
 
     if (player_equip_unrand(UNRAND_EOS))
         size = max(size, 3);
+    else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+        size = max(size, 3);
     else if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         size = max(size, 2);
 
@@ -612,6 +622,7 @@ static int _mons_class_halo_radius(monster_type type)
     case MONS_SERAPH:
         return 7; // highest rank among sentient ones
     case MONS_HOLY_SWINE:
+    case MONS_SUN_MOTH:
         return 1;  // only notionally holy
     case MONS_MENNAS:
         return 2;  // ???  Low on grace or what?
@@ -628,6 +639,9 @@ int monster::halo_radius() const
     if (weap && is_unrandom_artefact(*weap, UNRAND_EOS))
         size = 3;
 
+    if (wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+        size = 3;
+
     if (!(holiness() & MH_HOLY))
         return size;
 
@@ -640,7 +654,7 @@ int monster::halo_radius() const
 
 int player::liquefying_radius() const
 {
-    return _shrinking_aoe_range(duration[DUR_LIQUEFYING]);
+    return shrinking_aoe_range(duration[DUR_LIQUEFYING]);
 }
 
 int monster::liquefying_radius() const
@@ -651,7 +665,7 @@ int monster::liquefying_radius() const
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY *
         max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
-    return _shrinking_aoe_range(moddur);
+    return shrinking_aoe_range(moddur);
 }
 
 bool liquefied(const coord_def& p, bool check_actual)
@@ -762,7 +776,7 @@ int monster::umbra_radius() const
         return -1;
 
     // Enslaved holies get an umbra.
-    if (mons_enslaved_soul(*this))
+    if (mons_bound_soul(*this))
         return _mons_class_halo_radius(base_monster);
 
     switch (type)

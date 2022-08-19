@@ -89,7 +89,7 @@ local function make_tagged_room(options,chosen)
   -- screw with our attempts to understand and position the vault later; and hardwire transparency because lack of it can fail a whole layout
   -- TODO: Store these tags on the room first so we can actually support them down the line ...
   local old_tags = dgn.tags(mapdef)
-  dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent")
+  dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate passable")
   -- Resolve the map so we can find its width / height
   local map, vplace = dgn.resolve_map(mapdef,false)
   local room,room_width,room_height
@@ -104,7 +104,9 @@ local function make_tagged_room(options,chosen)
   dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
   -- restore the original tags to mapdef, since this state is persistent
   dgn.tags(mapdef, nil)
-  dgn.tags(mapdef, old_tags .. " transparent")
+  -- TODO: if a vault is not tagged passable, this addition is permanent; does
+  -- it affect anything?
+  dgn.tags(mapdef, old_tags .. " passable")
 
   local room_width,room_height = dgn.mapsize(map)
   local veto = false
@@ -174,9 +176,31 @@ local function pick_room(e, options)
     end
     options.did_ghost_chance = true
   end
+  -- Roll the chance to pick a Wizlab vault room if we haven't done so.
+  if not options.did_wizlab_chance then
+    if crawl.x_chance_in_y(dgn.wizlab_chance_percent, 100) then
+      for i, r in ipairs(options.room_type_weights) do
+        if r.generator == "tagged" and r.tag == "vaults_wizlab" then
+          chosen = r
+        end
+      end
+    end
+    options.did_wizlab_chance = true
+  end
+  -- Roll the chance to pick a Desolation vault room if we haven't done so.
+  if not options.did_desolation_chance then
+    if crawl.x_chance_in_y(dgn.desolation_chance_percent, 100) then
+      for i, r in ipairs(options.room_type_weights) do
+        if r.generator == "tagged" and r.tag == "vaults_desolation" then
+          chosen = r
+        end
+      end
+    end
+    options.did_desolation_chance = true
+  end
 
-  -- We aren't choosing a ghost vault, so pick a generator from the weighted
-  -- table.
+  -- We aren't choosing a ghost vault or a vault for wizlab or desolation
+  -- portals, so pick a generator from the weighted table.
   if chosen == nil then
     chosen = util.random_weighted_from(weight_callback,
                                        options.room_type_weights)

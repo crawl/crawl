@@ -132,12 +132,10 @@ bool SkillMenuEntry::is_selectable(bool)
     if (you.has_mutation(MUT_DISTRIBUTED_TRAINING))
         return false;
 
-    if (!_show_skill(m_sk, skm.get_state(SKM_SHOW)))
-        return false;
-
     if (mastered())
         return false;
 
+    // if it's visible at this point, it's selectable.
     return true;
 }
 
@@ -688,6 +686,14 @@ void SkillMenu::init_experience()
     if (is_set(SKMF_EXPERIENCE) && !m_skill_backup.state_saved())
     {
         m_skill_backup.save();
+        if (you.auto_training)
+            for (int i = 0; i < NUM_SKILLS; ++i)
+            {
+                // only enable currently autotraining skills, not all skills
+                const skill_type sk = skill_type(i);
+                if (!you.training[sk])
+                    you.train[sk] = TRAINING_DISABLED;
+            }
         you.auto_training = false;
         reset_training();
         you.clear_training_targets();
@@ -1016,10 +1022,9 @@ skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
         {
         case SKM_MODE:  return SKM_MODE_MANUAL;
         case SKM_DO:    return SKM_DO_FOCUS;
-        case SKM_SHOW:  return SKM_SHOW_DEFAULT;
-        case SKM_LEVEL: return SKM_LEVEL_NORMAL;
         case SKM_VIEW:  return SKM_VIEW_NEW_LEVEL;
-        default:        return SKM_NONE;
+        default:        return !m_switches[sw] ? SKM_NONE
+                                               : m_switches[sw]->get_state();
         }
     }
     else if (!m_switches[sw])
@@ -1123,6 +1128,9 @@ void SkillMenu::toggle(skill_menu_switch sw)
     {
     case SKM_MODE:
         you.auto_training = !you.auto_training;
+        // TODO: these are probably now redundant
+        Options.default_manual_training = !you.auto_training;
+        Options.prefs_dirty = true;
 
         // Switch the skill train state with the saved version.
         tmp = you.train;
@@ -1224,7 +1232,7 @@ void SkillMenu::init_button_row()
         m_middle_button->add_hotkey('=');
         m_middle_button->set_id(SKM_SET_TARGET);
         m_middle_button->set_highlight_colour(YELLOW);
-        add_item(m_middle_button, 27, m_pos);
+        add_item(m_middle_button, 24, m_pos);
 
         // right button is either blank or shows target clearing options.
         m_clear_targets_button = new FormattedTextItem();
@@ -1271,7 +1279,7 @@ void SkillMenu::init_switches()
         sw = new SkillMenuSwitch("skills", '*');
         m_switches[SKM_SHOW] = sw;
         sw->add(SKM_SHOW_DEFAULT);
-        if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
+        if (!is_set(SKMF_SIMPLE))
         {
             sw->add(SKM_SHOW_ALL);
             if (Options.default_show_all_skills)
@@ -1303,10 +1311,10 @@ void SkillMenu::init_switches()
 
         if (!you.auto_training)
             sw->set_state(SKM_VIEW_COST);
-    }
 
-    if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
-        sw->add(SKM_VIEW_TARGETS);
+        if (!you.has_mutation(MUT_DISTRIBUTED_TRAINING))
+            sw->add(SKM_VIEW_TARGETS);
+    }
 
     if (you.wizard)
     {
@@ -1510,7 +1518,13 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
     {
         int letter;
         letter = hotkeys[0];
-        MenuItem* next_item = m_ff->find_item_by_hotkey(++letter);
+        ASSERT(letter != '9'); // if you get here, make the skill menu smaller
+        if (letter == 'z')
+            letter = '0';
+        else
+            ++letter;
+
+        MenuItem* next_item = m_ff->find_item_by_hotkey(letter);
         if (next_item != nullptr)
         {
             if (m_ff->get_active_item() != nullptr && keyn == CK_ENTER)
@@ -1526,7 +1540,7 @@ void SkillMenu::set_title()
     string t;
     if (is_set(SKMF_EXPERIENCE))
     {
-        t = "You have quaffed a potion of experience. "
+        t = "You have gained great experience. "
             "Select the skills to train.";
     }
 
@@ -1726,7 +1740,7 @@ void skill_menu(int flag, int exp)
     auto popup = make_shared<ui::Popup>(skill_menu_ui);
 
     skill_menu_ui->on_keydown_event([&done, &skill_menu_ui](const KeyEvent& ev) {
-        const auto keyn = ev.key();
+        const auto keyn = numpad_to_regular(ev.key(), true);
 
         skill_menu_ui->_expose();
 
@@ -1738,10 +1752,6 @@ void skill_menu(int flag, int exp)
             case CK_DOWN:
             case CK_LEFT:
             case CK_RIGHT:
-            case 1004:
-            case 1002:
-            case 1008:
-            case 1006:
                 return true;
             case CK_ENTER:
                 if (!skm.is_set(SKMF_EXPERIENCE))

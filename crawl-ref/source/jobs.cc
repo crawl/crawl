@@ -9,6 +9,7 @@
 #include "ng-setup.h"
 #include "playable.h"
 #include "player.h"
+#include "spl-book.h"
 #include "stringutil.h"
 
 #include "job-data.h"
@@ -75,18 +76,6 @@ void job_stat_init(job_type job)
     you.base_stats[STAT_STR] += _job_def(job).s;
     you.base_stats[STAT_INT] += _job_def(job).i;
     you.base_stats[STAT_DEX] += _job_def(job).d;
-
-    if (job == JOB_WANDERER)
-    {
-        for (int i = 0; i < 12; i++)
-        {
-            const auto stat = random_choose_weighted(
-                    you.base_stats[STAT_STR] > 17 ? 1 : 2, STAT_STR,
-                    you.base_stats[STAT_INT] > 17 ? 1 : 2, STAT_INT,
-                    you.base_stats[STAT_DEX] > 17 ? 1 : 2, STAT_DEX);
-            you.base_stats[stat]++;
-        }
-    }
 }
 
 bool job_has_weapon_choice(job_type job)
@@ -99,11 +88,6 @@ bool job_gets_good_weapons(job_type job)
     return _job_def(job).wchoice == WCHOICE_GOOD;
 }
 
-bool job_gets_ranged_weapons(job_type job)
-{
-    return _job_def(job).wchoice == WCHOICE_RANGED;
-}
-
 void give_job_equipment(job_type job)
 {
     item_list items;
@@ -113,10 +97,10 @@ void give_job_equipment(job_type job)
     {
         const item_spec spec = items.get_item(i);
         int plus = 0;
-        if (spec.props.exists("charges"))
-            plus = spec.props["charges"];
-        if (spec.props.exists("plus"))
-            plus = spec.props["plus"];
+        if (spec.props.exists(CHARGES_KEY))
+            plus = spec.props[CHARGES_KEY];
+        if (spec.props.exists(PLUS_KEY))
+            plus = spec.props[PLUS_KEY];
         newgame_make_item(spec.base_type, spec.sub_type, max(spec.qty, 1),
                           plus, spec.ego);
     }
@@ -136,12 +120,14 @@ void give_job_skills(job_type job)
             //XXX: WTF?
             if (you.has_mutation(MUT_NO_GRASPING) && job == JOB_FIGHTER)
                 amount += 2;
-            // Don't give throwing hunters Short Blades skill.
-            if (job_gets_ranged_weapons(job) && !(weap && is_range_weapon(*weap)))
-                skill = SK_THROWING;
         }
         you.skills[skill] += amount;
     }
+}
+
+vector<spell_type> get_job_spells(job_type job)
+{
+    return _job_def(job).library;
 }
 
 void debug_jobdata()

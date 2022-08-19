@@ -29,15 +29,15 @@
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
-      projectile(proj), teleport(tele), orig_to_hit(0),
-      should_alert_defender(true), launch_type(launch_retval::BUGGY)
+      projectile(proj), teleport(tele), orig_to_hit(0)
 {
+    if (is_launcher_ammo(*projectile))
+        weapon = attacker->weapon(0); // else null
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
 
     string proj_name = projectile->name(DESC_PLAIN);
     // init launch type early, so we can use it later in the constructor
-    launch_type = is_launched(attacker, weapon, *projectile);
 
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
@@ -46,36 +46,24 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         kill_type = KILLED_BY_SELF_AIMED;
         aux_source = proj_name;
     }
-    else if (launch_type == launch_retval::LAUNCHED)
-    {
-        aux_source = make_stringf("Shot with a%s %s by %s",
-                 (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
-                 attacker->name(DESC_A).c_str());
-    }
-    else
+    else if (throwing())
     {
         aux_source = make_stringf("Hit by a%s %s thrown by %s",
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
                  attacker->name(DESC_A).c_str());
     }
+    else
+    {
+        aux_source = make_stringf("Shot with a%s %s by %s",
+                 (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
+                 attacker->name(DESC_A).c_str());
+    }
 
     needs_message = defender_visible;
-
-    if (!using_weapon())
-        wpn_skill = SK_THROWING;
 }
 
-// Duplicates describe.cc:_apply_defender_effects().
-int ranged_attack::calc_to_hit(bool random)
-{
-    int mhit = attack::calc_to_hit(random);
-    if (mhit == AUTOMATIC_HIT)
-        return AUTOMATIC_HIT;
-
-    return mhit;
-}
-
-int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
+int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random,
+                                              bool /*aux*/)
 {
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 
@@ -108,7 +96,7 @@ bool ranged_attack::attack()
         return true;
     }
 
-    const int ev = defender->evasion(ev_ignore::none, attacker);
+    const int ev = defender->evasion(false, attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
     bool shield_blocked = attack_shield_blocked(false);
 
@@ -137,8 +125,11 @@ bool ranged_attack::attack()
             handle_phase_dodged();
     }
 
-    if (should_alert_defender)
-        alert_defender();
+    // Don't crash on banishment (from eg chaos).
+    if (!defender->pos().origin())
+        handle_noise(defender->pos());
+
+    alert_defender();
 
     if (!defender->alive())
         handle_phase_killed();
@@ -157,7 +148,7 @@ bool ranged_attack::attack()
 // XXX: Are there any cases where this might fail?
 bool ranged_attack::handle_phase_attempted()
 {
-    attacker->attacking(defender, true);
+    attacker->attacking(defender);
     attack_occurred = true;
 
     return true;
@@ -169,30 +160,22 @@ bool ranged_attack::handle_phase_blocked()
     string punctuation = ".";
     string verb = "block";
 
-    const bool reflected_by_shield = defender_shield
-                                     && is_shield(*defender_shield)
-                                     && shield_reflects(*defender_shield);
-    if (reflected_by_shield || defender->reflection())
+    if (defender->reflection())
     {
         reflected = true;
         verb = "reflect";
         if (defender->observable())
         {
-            if (reflected_by_shield)
+            if (defender_shield && shield_reflects(*defender_shield))
             {
                 punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
                               + " " + defender_shield->name(DESC_PLAIN).c_str()
                               + "!";
-                ident_reflector(defender_shield);
             }
             else
             {
                 punctuation = " off an invisible shield around "
                             + defender->pronoun(PRONOUN_OBJECTIVE) + "!";
-
-                item_def *amulet = defender->slot_item(EQ_AMULET, false);
-                if (amulet)
-                   ident_reflector(amulet);
             }
         }
         else
@@ -217,7 +200,7 @@ bool ranged_attack::handle_phase_dodged()
 {
     did_hit = false;
 
-    const int ev = defender->evasion(ev_ignore::none, attacker);
+    const int ev = defender->evasion(false, attacker);
 
     const int orig_ev_margin =
         test_hit(orig_to_hit, ev, !attacker->is_player());
@@ -225,10 +208,7 @@ bool ranged_attack::handle_phase_dodged()
     if (defender->missile_repulsion() && orig_ev_margin >= 0)
     {
         if (needs_message && defender_visible)
-        {
             mprf("%s is repelled.", projectile->name(DESC_THE).c_str());
-            defender->ablate_repulsion();
-        }
 
         if (defender->is_player())
             count_action(CACT_DODGE, DODGE_REPEL);
@@ -289,7 +269,7 @@ bool ranged_attack::handle_phase_hit()
         }
     }
 
-    if ((using_weapon() || launch_type == launch_retval::THROWN)
+    if ((using_weapon() || throwing())
         && (!defender->is_player() || !you.pending_revival))
     {
         if (using_weapon()
@@ -305,8 +285,7 @@ bool ranged_attack::handle_phase_hit()
     }
 
     // XXX: unify this with melee_attack's code
-    if (attacker->is_player() && defender->is_monster()
-        && should_alert_defender)
+    if (attacker->is_player() && defender->is_monster())
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
                         coord_def());
@@ -315,17 +294,24 @@ bool ranged_attack::handle_phase_hit()
     return true;
 }
 
+bool ranged_attack::throwing() const
+{
+    return SK_THROWING == wpn_skill;
+}
+
 bool ranged_attack::using_weapon() const
 {
-    return weapon && (launch_type == launch_retval::LAUNCHED
-                     || launch_type == launch_retval::BUGGY // not initialized
-                         && is_launched(attacker, weapon, *projectile)
-                            == launch_retval::LAUNCHED);
+    return weapon && !throwing();
+}
+
+bool ranged_attack::clumsy_throwing() const
+{
+    return projectile->base_type != OBJ_MISSILES;
 }
 
 int ranged_attack::weapon_damage()
 {
-    if (launch_type == launch_retval::FUMBLED)
+    if (clumsy_throwing())
         return 0;
 
     int dam = property(*projectile, PWPN_DAMAGE);
@@ -342,21 +328,15 @@ int ranged_attack::weapon_damage()
  */
 int ranged_attack::calc_base_unarmed_damage()
 {
-    // No damage bonus for throwing non-throwing weapons.
-    if (launch_type == launch_retval::FUMBLED)
+    if (clumsy_throwing())
         return 0;
-
-    int damage = you.skill_rdiv(wpn_skill);
-
-    // Stones get half bonus; everything else gets full bonus.
-    return div_rand_round(damage
-                          * min(4, property(*projectile, PWPN_DAMAGE)), 4);
+    return throwing_base_damage_bonus(*projectile);
 }
 
 int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
-    return mon_to_hit_base(attacker->get_hit_dice(), attacker->as_monster()->is_archer(), true);
+    return mon_to_hit_base(attacker->get_hit_dice(), attacker->as_monster()->is_archer());
 }
 
 int ranged_attack::apply_damage_modifiers(int damage)
@@ -364,7 +344,7 @@ int ranged_attack::apply_damage_modifiers(int damage)
     ASSERT(attacker->is_monster());
     if (attacker->as_monster()->is_archer())
     {
-        const int bonus = attacker->get_hit_dice() * 4 / 3;
+        const int bonus = archer_bonus_damage(attacker->get_hit_dice());
         damage += random2avg(bonus, 2);
     }
     return damage;
@@ -451,7 +431,7 @@ special_missile_type ranged_attack::random_chaos_missile_brand()
                 susceptible = false;
             break;
         case SPMSL_DISPERSAL:
-            if (defender->no_tele(true, false, true))
+            if (defender->no_tele(true))
                 susceptible = false;
             break;
         case SPMSL_FRENZY:
@@ -571,10 +551,9 @@ int ranged_attack::dart_duration_roll(special_missile_type type)
     // high HD shooters and too ignorable from low ones.
     if (defender->is_player())
         return 5 + random2(5);
-    else if (type == SPMSL_POISONED) // Player poison needles
+    if (type == SPMSL_POISONED) // Player poison needles
         return random2(3 + base_power * 2);
-    else
-        return 5 + random2(base_power);
+    return 5 + random2(base_power);
 }
 
 bool ranged_attack::apply_missile_brand()
@@ -640,7 +619,7 @@ bool ranged_attack::apply_missile_brand()
         obvious_effect = curare_actor(attacker, defender,
                                       damage_done,
                                       projectile->name(DESC_PLAIN),
-                                      atk_name(DESC_PLAIN));
+                                      atk_name(DESC_A));
         break;
     case SPMSL_CHAOS:
         chaos_affects_defender();
@@ -648,7 +627,7 @@ bool ranged_attack::apply_missile_brand()
     case SPMSL_DISPERSAL:
         if (damage_done > 0)
         {
-            if (defender->no_tele(true, true))
+            if (defender->no_tele())
             {
                 if (defender->is_player())
                     canned_msg(MSG_STRANGE_STASIS);

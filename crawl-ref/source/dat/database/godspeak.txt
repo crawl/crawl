@@ -39,6 +39,16 @@ Xom smiles on you.
 
 "Catch!"
 %%%%
+# gifting you an orb
+Xom orb gift
+
+"Is this the Orb you wanted?"
+
+"Many adventurers have sought this Orb."
+
+w:3
+"Ponder my incredible Orb!"
+%%%%
 ####################
 # friendly summons
 ####################
@@ -87,6 +97,17 @@ Xom alters the dungeon around you.
 ##################
 # Xom nastiness
 ##################
+# miscast strength 0, mostly harmless
+Xom zero miscast effect
+
+Xom almost notices you.
+
+Xom's attention almost turns to you for a moment.
+
+Xom's power almost touches on you for a moment.
+
+You almost hear Xom's maniacal laughter.
+%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
@@ -456,6 +477,9 @@ else
     return "plaything"
 end
 }}
+######################################
+# Miscellaneous god messages.
+######################################
 %%%%
 recite_closure
 
@@ -478,6 +502,26 @@ w:5
 
 w:3
 "In fire! In pain!"
+%%%%
+Ignis elemental wrath
+
+"Attack, my last stalwart servants!"
+
+Ignis wails with rage, and rains down burning fury!
+
+Ignis calls forth spirits of fire to unmake you!
+
+"Burn! Burn until nothing is left!"
+
+"These will know how to inflict the punishment due to you!"
+
+"Betrayer! Apostate! Perish!"
+
+w:5
+"With a thousand fires I burned cities, but these will suffice for you!"
+
+w:5
+"My hands, my teeth, my burning tears: these will never betray me!"
 %%%%
 ######################################
 # Welcome messages on game restoration
@@ -533,6 +577,10 @@ Gozag says: Greed is good.
 Hepliaklqana welcome
 
 Hepliaklqana says: Your past becomes your present!
+%%%%
+Ignis welcome
+
+The flames of Ignis gently warm you.
 %%%%
 Jiyva welcome
 
@@ -771,3 +819,25 @@ Zin welcome
 
 Zin says: Spread the light, my child.
 %%%%
+Zot death
+
+# hm, is Zot a god..?
+Zot has found you!
+
+Zot unmakes you!
+
+Zot excises you from existence.
+
+Zot touches you for a single instant, and you cease to be.
+
+w:5
+Zot's tendrils burst from within you!
+
+w:3
+Zot's will forges a new reality, without you in it.
+
+w:3
+Zot snuffs you out like a light.
+
+w:3
+Zot's power takes hold, and you dissolve into a dark mist.

@@ -73,7 +73,7 @@ public:
         return get(i);
     }
 
-    inline void set(unsigned int i, bool value = true)
+    inline virtual void set(unsigned int i, bool value = true)
     {
 #ifdef ASSERTS
         if (i >= SIZE)

@@ -26,6 +26,7 @@
 
 using std::vector;
 
+class xlog_fields;
 class Menu;
 
 enum WebtilesUIState
@@ -47,7 +48,7 @@ struct player_info
     string species;
     string god;
     bool under_penance;
-    uint8_t piety_rank;
+    int piety_rank;
 
     uint8_t form;
 
@@ -82,7 +83,6 @@ struct player_info
     FixedVector<item_def, ENDOFPACK> inv;
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
-    int8_t launcher_item;
     string quiver_desc;
     string unarmed_attack;
     uint8_t unarmed_attack_colour;
@@ -191,6 +191,7 @@ public:
     void json_write_null(const string& name);
     void json_write_string(const string& value);
     void json_write_string(const string& name, const string& value);
+    void json_write_icons(const set<tileidx_t> &icons);
     /* Causes the current object/array to be erased if it is closed
        with erase_if_empty without writing any other content after
        this call */
@@ -215,6 +216,8 @@ public:
     void zoom_dungeon(bool in);
 
     void send_doll(const dolls_data &doll, bool submerged, bool ghost);
+    void send_milestone(const xlog_fields &xl);
+    void send_options();
 
 protected:
     int m_sock;
@@ -307,7 +310,6 @@ protected:
     player_info m_current_player_info;
 
     void _send_version();
-    void _send_options();
     void _send_layout();
 
     void _send_everything();

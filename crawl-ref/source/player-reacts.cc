@@ -91,12 +91,12 @@
 #include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
-#include "timed-effects.h" // bezotting
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // bezotting
 
 /**
  * Decrement a duration by the given delay.
@@ -121,37 +121,37 @@
 
 static bool _decrement_a_duration(duration_type dur, int delay,
                                  const char* endmsg = nullptr,
-                                 int midloss = 0,
-                                 const char* midmsg = nullptr,
+                                 int exploss = 0,
+                                 const char* expmsg = nullptr,
                                  msg_channel_type chan = MSGCH_DURATION)
 {
     ASSERT(you.duration[dur] >= 0);
     if (you.duration[dur] == 0)
         return false;
 
-    ASSERT(!midloss || midmsg != nullptr);
-    const int midpoint = duration_expire_point(dur);
-    ASSERTM(!midloss || midloss * BASELINE_DELAY < midpoint,
-            "midpoint delay loss %d not less than duration midpoint %d",
-            midloss * BASELINE_DELAY, midpoint);
+    ASSERT(!exploss || expmsg != nullptr);
+    const int exppoint = duration_expire_point(dur);
+    ASSERTM(!exploss || exploss * BASELINE_DELAY < exppoint,
+            "expiration delay loss %d not less than duration expiration point %d",
+            exploss * BASELINE_DELAY, exppoint);
 
     const int old_dur = you.duration[dur];
     you.duration[dur] -= delay;
 
-    // If we cross the midpoint, handle midloss and print the midpoint message.
-    if (you.duration[dur] <= midpoint && old_dur > midpoint)
+    // If we start expiring, handle exploss and print the exppoint message.
+    if (you.duration[dur] <= exppoint && old_dur > exppoint)
     {
-        you.duration[dur] -= midloss * BASELINE_DELAY;
-        if (midmsg)
+        you.duration[dur] -= exploss * BASELINE_DELAY;
+        if (expmsg)
         {
             // Make sure the player has a turn to react to the midpoint
             // message.
             if (you.duration[dur] <= 0)
                 you.duration[dur] = 1;
             if (need_expiration_warning(dur))
-                mprf(MSGCH_DANGER, "Careful! %s", midmsg);
+                mprf(MSGCH_DANGER, "Careful! %s", expmsg);
             else
-                mprf(chan, "%s", midmsg);
+                mprf(chan, "%s", expmsg);
         }
     }
 
@@ -171,6 +171,7 @@ static void _decrement_petrification(int delay)
 {
     if (_decrement_a_duration(DUR_PETRIFIED, delay) && !you.paralysed())
     {
+        you.redraw_armour_class = true;
         you.redraw_evasion = true;
         // implicit assumption: all races that can be petrified are made of
         // flesh when not petrified. (Unfortunately, species::skin_name doesn't
@@ -210,7 +211,7 @@ static void _decrement_attraction(int delay)
     if (!you.duration[DUR_ATTRACTIVE])
         return;
 
-    attract_monsters();
+    attract_monsters(delay);
     if (_decrement_a_duration(DUR_ATTRACTIVE, delay))
         mpr("You feel less attractive to monsters.");
 }
@@ -226,6 +227,7 @@ static void _decrement_paralysis(int delay)
         if (!you.duration[DUR_PARALYSIS] && !you.petrified())
         {
             mprf(MSGCH_DURATION, "You can move again.");
+            you.redraw_armour_class = true;
             you.redraw_evasion = true;
             you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
             * BASELINE_DELAY;
@@ -468,6 +470,7 @@ static bool _check_recite()
     {
         mprf(MSGCH_DURATION, "Your recitation is interrupted.");
         you.duration[DUR_RECITE] = 0;
+        you.set_duration(DUR_RECITE_COOLDOWN, 1 + random2(10) + random2(30));
         return false;
     }
     return true;
@@ -506,6 +509,7 @@ static void _handle_recitation(int step)
                 speech << ' ' << closure;
         }
         mprf(MSGCH_DURATION, "You finish reciting %s", speech.str().c_str());
+        you.set_duration(DUR_RECITE_COOLDOWN, 1 + random2(10) + random2(30));
     }
 }
 
@@ -536,9 +540,9 @@ static void _try_to_respawn_ancestor()
 static void _decrement_simple_duration(duration_type dur, int delay)
 {
     if (_decrement_a_duration(dur, delay, duration_end_message(dur),
-                             duration_mid_offset(dur),
-                             duration_mid_message(dur),
-                             duration_mid_chan(dur)))
+                             duration_expire_offset(dur),
+                             duration_expire_message(dur),
+                             duration_expire_chan(dur)))
     {
         duration_end_effect(dur);
     }
@@ -673,13 +677,13 @@ static void _decrement_durations()
         disjunction_spell();
 
     // Should expire before flight.
-    if (you.duration[DUR_TORNADO])
+    if (you.duration[DUR_VORTEX])
     {
-        tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
-        if (_decrement_a_duration(DUR_TORNADO, delay,
+        polar_vortex_damage(&you, min(delay, you.duration[DUR_VORTEX]));
+        if (_decrement_a_duration(DUR_VORTEX, delay,
                                   "The winds around you start to calm down."))
         {
-            you.duration[DUR_TORNADO_COOLDOWN] = random_range(35, 45);
+            you.duration[DUR_VORTEX_COOLDOWN] = random_range(35, 45);
         }
     }
 
@@ -775,9 +779,8 @@ static void _decrement_durations()
     dec_elixir_player(delay);
     dec_frozen_ramparts(delay);
 
-    if (!you.cannot_move()
-        && !you.confused()
-        && !you.asleep())
+    if (!you.cannot_act()
+        && !you.confused())
     {
         extract_manticore_spikes(
             make_stringf("You %s the barbed spikes from your body.",
@@ -785,17 +788,20 @@ static void _decrement_durations()
     }
 
     if (!you.duration[DUR_ANCESTOR_DELAY]
-        && in_good_standing(GOD_HEPLIAKLQANA)
+        && have_passive(passive_t::frail)
         && hepliaklqana_ancestor() == MID_NOBODY)
     {
         _try_to_respawn_ancestor();
     }
+
+    okawaru_handle_duel();
 
     const bool sanguine_armour_is_valid = sanguine_armour_valid();
     if (sanguine_armour_is_valid)
         activate_sanguine_armour();
     else if (!sanguine_armour_is_valid && you.duration[DUR_SANGUINE_ARMOUR])
         you.duration[DUR_SANGUINE_ARMOUR] = 1; // expire
+    refresh_meek_bonus();
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
     {
@@ -851,8 +857,11 @@ static void _update_equipment_attunement_by_health()
                     item_slot_name(static_cast<equipment_type>(slot)) :
                     "armour");
 
-            if (slot == EQ_GLOVES || slot == EQ_BOOTS)
+            if (slot == EQ_BOOTS && arm.sub_type != ARM_BARDING
+                || slot == EQ_GLOVES)
+            {
                 plural = true;
+            }
             you.activated.set(slot);
         }
     }
@@ -881,7 +890,7 @@ static void _update_mana_regen_amulet_attunement()
                 "regenerate magic more quickly.");
         }
     }
-    else
+    else if (!you.melded[EQ_AMULET])
         you.props[MANA_REGEN_AMULET_ACTIVE] = 0;
 }
 
@@ -946,7 +955,8 @@ static void _regenerate_hp_and_mp(int delay)
 static void _handle_wereblood()
 {
     if (you.duration[DUR_WEREBLOOD]
-        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int(), 9))
+        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int(), 9)
+        && !silenced(you.pos()))
     {
         // Keep the spam down
         if (you.props[WEREBLOOD_KEY].get_int() < 3 || one_chance_in(5))
@@ -975,7 +985,7 @@ void player_reacts()
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
-        const int teleportitis_level = player_teleport();
+        const int teleportitis_level = get_teleportitis_level();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(false, true, "You feel strangely unstable.");
@@ -990,8 +1000,6 @@ void player_reacts()
             if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
                 save_game(false);
         }
-        else if (you.form == transformation::wisp && !you.stasis())
-            uncontrolled_blink();
     }
 
     abyss_maybe_spawn_xp_exit();
@@ -1017,7 +1025,6 @@ void player_reacts()
 
     _regenerate_hp_and_mp(you.time_taken);
 
-    dec_disease_player(you.time_taken);
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
 
@@ -1051,5 +1058,11 @@ void extract_manticore_spikes(const char* endmsg)
         you.attribute[ATTR_BARBS_POW] = 0;
 
         you.props.erase(BARBS_MOVE_KEY);
+
+        // somewhat hacky: ensure that a rest delay can get the right interrupt
+        // check when barbs are removed, and all other rest stop conditions are
+        // satisfied
+        if (you.is_sufficiently_rested())
+            interrupt_activity(activity_interrupt::full_hp);
     }
 }

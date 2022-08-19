@@ -81,6 +81,7 @@ dungeon_feature_type altar_for_god(god_type god);
 
 bool feat_is_altar(dungeon_feature_type feat);
 bool feat_is_player_altar(dungeon_feature_type grid);
+bool feat_is_hell_subbranch_exit(dungeon_feature_type feat);
 
 bool feat_is_branch_entrance(dungeon_feature_type feat);
 bool feat_is_branch_exit(dungeon_feature_type feat);
@@ -100,7 +101,6 @@ bool feat_suppress_blood(dungeon_feature_type feat);
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
 
 void find_connected_identical(const coord_def& d, set<coord_def>& out, bool known_only = false);
-coord_def get_random_stair();
 
 bool slime_wall_neighbour(const coord_def& c);
 int count_adjacent_slime_walls(const coord_def &pos);
@@ -153,7 +153,7 @@ bool is_boring_terrain(dungeon_feature_type feat);
 dungeon_feature_type orig_terrain(coord_def pos);
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type = TERRAIN_CHANGE_GENERIC,
-                         const monster* mon = nullptr);
+                         int mid = MID_NOBODY);
 bool revert_terrain_change(coord_def pos, terrain_change_type ctype);
 bool is_temp_terrain(coord_def pos);
 
@@ -168,5 +168,6 @@ coord_def push_actor_from(const coord_def& pos, const vector<coord_def>* exclude
 
 void dgn_close_door(const coord_def &dest);
 void dgn_open_door(const coord_def &dest);
+void dgn_break_door(const coord_def &dest);
 
 void ice_wall_damage(monster &victim, int delay);

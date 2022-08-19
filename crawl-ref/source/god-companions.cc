@@ -35,26 +35,26 @@ void add_companion(monster* mons)
     ASSERT(mons->alive());
     // Right now this is a special case for Saint Roka, but
     // future orcish uniques should behave in the same way.
-    mons->props["no_annotate"] = true;
+    mons->props[NO_ANNOTATE_KEY] = true;
     remove_unique_annotation(mons);
     companion_list[mons->mid] = companion(*mons);
 }
 
 void remove_companion(monster* mons)
 {
-    mons->props["no_annotate"] = false;
+    mons->props[NO_ANNOTATE_KEY] = false;
     set_unique_annotation(mons);
     companion_list.erase(mons->mid);
 }
 
-void remove_enslaved_soul_companion()
+void remove_bound_soul_companion()
 {
     for (auto &entry : companion_list)
     {
         monster* mons = monster_by_mid(entry.first);
         if (!mons)
             mons = &entry.second.mons.mons;
-        if (mons_enslaved_soul(*mons))
+        if (mons_bound_soul(*mons))
         {
             remove_companion(mons);
             return;
@@ -154,27 +154,25 @@ bool recall_offlevel_ally(mid_t mid)
         return true; // still successfully recalled!
 
     // Catch up time for off-level monsters
-    // (We move the player away so that we don't get expiry
-    // messages for things that supposed wore off ages ago)
-    const coord_def old_pos = you.pos();
-    you.moveto(coord_def(0, 0));
-
-    int turns = you.elapsed_time - comp->timestamp;
-    // Note: these are auts, not turns, thus healing is 10 times as fast as
-    // for other monsters, confusion goes away after a single turn, etc.
-
-    mons->heal(div_rand_round(turns * mons->off_level_regen_rate(), 100));
-
-    if (turns >= 10 && mons->alive())
+    // (Suppress messages so that we don't get expiry messages for things that
+    // supposedly wore off ages ago)
     {
-        // Remove confusion manually (so that the monster
-        // doesn't blink after being recalled)
-        mons->del_ench(ENCH_CONFUSION, true);
-        mons->timeout_enchantments(turns / 10);
+        msg::suppress msg;
+
+        int turns = you.elapsed_time - comp->timestamp;
+        // Note: these are auts, not turns, thus healing is 10 times as fast as
+        // for other monsters, confusion goes away after a single turn, etc.
+
+        mons->heal(div_rand_round(turns * mons->off_level_regen_rate(), 100));
+
+        if (turns >= 10 && mons->alive())
+        {
+            // Remove confusion manually (so that the monster
+            // doesn't blink after being recalled)
+            mons->del_ench(ENCH_CONFUSION, true);
+            mons->timeout_enchantments(turns / 10);
+        }
     }
-    you.moveto(old_pos);
-    // Do this after returning the player to the proper position
-    // because it uses player position
     recall_orders(mons);
 
     return true;

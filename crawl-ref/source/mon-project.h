@@ -14,4 +14,4 @@ spret cast_iood(actor *caster, int pow, bolt *beam,
 void cast_iood_burst(int pow, coord_def target);
 bool iood_act(monster& mon, bool no_trail = false);
 void iood_catchup(monster* mon, int turns);
-dice_def iood_damage(int pow, int dist);
+dice_def iood_damage(int pow, int dist, bool random = true);

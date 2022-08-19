@@ -213,7 +213,8 @@ mset(spec_fn(function ()
   local d = math.max(6, you.depth() * 2 + you.zigs_completed() - 2)
   local e = math.max(1, you.depth() + you.zigs_completed() - 18)
   return "place:Snake:$ w:125 / naga sharpshooter w:5 / guardian serpent w:5 / " ..
-         "nagaraja w:" .. d .. " / quicksilver dragon w:" .. e
+         "salamander tyrant w:" .. d .. " / nagaraja w:" .. d .. " / " ..
+         "quicksilver dragon w:" .. e
 end))
 
 mset(spec_fn(function ()
@@ -248,7 +249,8 @@ end))
 mset(spec_fn(function ()
   local d = 5 + 5 * you.zigs_completed()
   return "place:Slime:$ w:1500 / floating eye w:" .. d .. " / " ..
-         "azure jelly w:" .. d * 5 .. " / acid blob w:" .. d * 14
+         "azure jelly w:" .. d .. " / quicksilver ooze w:" .. d .. " / " ..
+         "rockslime w:" .. d * 3 .. " / acid blob w:" .. d * 14
 end))
 
 mset(spec_fn(function ()
@@ -296,7 +298,7 @@ end))
 
 mset(spec_fn(function ()
   local d = 10 + you.zigs_completed() * 10
-  return "place:Abyss:$ w:1920 / corrupter w:" .. d * 2 .. " / " ..
+  return "place:Abyss:$ w:1920 / demonspawn corrupter w:" .. d * 2 .. " / " ..
          "starcursed mass w:" .. d * 2 .. " / wretched star w:" .. d * 2 .. " / " ..
          "bone dragon w:" .. d .. " / lich w:" .. d
 end))
@@ -400,8 +402,9 @@ mset(with_props(spec_fn(function ()
   local f = math.max(1, you.depth() + you.zigs_completed() - 5)
   return "soul eater w:" .. d .. " / phantasmal warrior w:" .. d .. " / " ..
          "deep elf death mage w:2 / shadow dragon w:4 / ghost crab w:4 / " ..
-         "eidolon w:" .. e .. " / revenant w:" .. e .. " / black sun w:4 / " ..
-         "curse skull w:4 / curse toe w:2 / player ghost w:" .. f
+         "eidolon w:" .. e .. " / revenant w:" .. e .. " / " ..
+         "demonspawn black sun w:4 / curse skull w:4 / curse toe w:2 / " ..
+         "player ghost w:" .. f
 end), { weight = 2 }))
 
 mset(with_props(spec_fn(function ()
@@ -450,17 +453,22 @@ mset(with_props(spec_fn(function ()
          "deep elf annihilator w:" .. d .. " / deep elf sorcerer w:" .. d .. " / " ..
          "tengu reaver w:" .. d .. " / draconian knight w:" .. d - 5 .. " / " ..
          "draconian scorcher w:" .. d - 5 .. " / lich w:" .. d - 5 .. " / " ..
-         "ancient lich w:" .. d - 5 .. " / blood saint w:" .. d .. " / " ..
+         "ancient lich w:" .. d - 5 .. " / demonspawn blood saint w:" .. d .. " / " ..
          "draconian annihilator w:" .. e
 end), { weight = 2 }))
 
 local pan_lord_fn = zig_monster_fn("pandemonium lord")
-local pan_critter_fn = zig_monster_fn("place:Pan w:" .. math.max(10, 100 - you.zigs_completed() * 4) ..
-                                      " / greater demon w:100 / nonbase demonspawn w:40")
+local pan_critter_fn = zig_monster_fn(
+         "place:Pan w:" .. math.max(10, 100 - you.zigs_completed() * 4) .. " / " ..
+         "greater demon w:100 / demonspawn black sun / " ..
+         "demonspawn blood saint / demonspawn corrupter / " ..
+         "demonspawn warmonger")
 
 local function mons_panlord_gen(x, y, nth)
   if nth == 1 then
-    dgn.set_random_mon_list("place:Pan / greater demon / nonbase demonspawn w:4")
+    dgn.set_random_mon_list("place:Pan / greater demon / " ..
+         "demonspawn black sun w:1 / demonspawn blood saint w:1 / " ..
+         "demonspawn corrupter w:1 / demonspawn warmonger w:1")
     return pan_lord_fn(x, y)
   else
     return pan_critter_fn(x, y)

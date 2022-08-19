@@ -26,6 +26,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h"
+#include "los.h"
 #include "map-knowledge.h"
 #include "melee-attack.h"
 #include "message.h"
@@ -191,7 +192,9 @@ static const vector<god_passive> god_passives[] =
 
     // Yredelemnul
     {
-        {  3, passive_t::nightvision, "can NOW see well in the dark" },
+        {  -1, passive_t::reaping, "can NOW harvest souls to fight along side you" },
+        {  -1, passive_t::nightvision, "can NOW see well in the dark" },
+        {  -1, passive_t::r_spectral_mist, "are NOW immune to spectral mist" },
     },
 
     // Xom
@@ -209,7 +212,8 @@ static const vector<god_passive> god_passives[] =
 
     // Okawaru
     {
-        // None
+        { -1, passive_t::no_allies,
+              "are NOW prevented from gaining allies" },
     },
 
     // Makhleb
@@ -226,8 +230,7 @@ static const vector<god_passive> god_passives[] =
               "GOD NOW protects your allies from abjuration"
         },
         {  0, passive_t::extend_berserk,
-              "can NOW maintain berserk longer, and are less likely to pass out",
-              "can NOW maintain berserk as long, and are more likely to pass out"
+              "GOD NOW extends your berserk rage on killing"
         },
     },
 
@@ -238,8 +241,8 @@ static const vector<god_passive> god_passives[] =
 
     // Elyvilon
     {
-        { -1, passive_t::protect_from_harm,
-              "GOD sometimes watches over you",
+        { -1, passive_t::lifesaving,
+              "GOD carefully watches over you",
               "GOD no longer watches over you"
         },
         { -1, passive_t::protect_ally,
@@ -274,26 +277,16 @@ static const vector<god_passive> god_passives[] =
         { -1, passive_t::neutral_slimes,
               "Slimes and eye monsters are NOW neutral towards you" },
         { -1, passive_t::jellies_army,
-              "GOD NOW summons jellies to protect you" },
+              "GOD NOW summons slimes to protect you" },
         { -1, passive_t::jelly_eating,
-              "GOD NOW allows jellies to devour items" },
-        { -1, passive_t::fluid_stats,
-              "GOD NOW adjusts your attributes periodically" },
+              "GOD NOW allows slimes to devour items" },
         {  0, passive_t::slime_wall_immune,
               "are NOW immune to slime covered walls" },
-        {  2, passive_t::slime_feed,
-              "Your fellow slimes NOW consume items" },
-        {  3, passive_t::resist_corrosion,
+        {  1, passive_t::jelly_regen,
+              "GOD NOW accelerates your HP and MP regeneration" },
+        {  2, passive_t::resist_corrosion,
               "GOD NOW protects you from corrosion" },
-        {  4, passive_t::slime_mp,
-              "Items consumed by your fellow slimes NOW restore"
-              " your magical power"
-        },
-        {  5, passive_t::slime_hp,
-              "Items consumed by your fellow slimes NOW restore"
-              " your health"
-        },
-        {  6, passive_t::spawn_slimes_on_hit,
+        {  5, passive_t::spawn_slimes_on_hit,
               "spawn slimes when struck by massive blows" },
         {  6, passive_t::unlock_slime_vaults,
               "GOD NOW grants you access to the hidden treasures"
@@ -329,21 +322,20 @@ static const vector<god_passive> god_passives[] =
         {  0, passive_t::slow_zot,
               "GOD will NOW slow Zot's hunt for you"
         },
-        {  1, passive_t::slow_poison, "process poison slowly" },
+        {  0, passive_t::slow_poison, "process poison slowly" },
     },
 
     // Ashenzari
     {
         { -1, passive_t::want_curses, "prefer cursed items" },
-        { -1, passive_t::detect_portals, "sense portals" },
-        { -1, passive_t::identify_items, "sense the properties of items" },
+        {  0, passive_t::detect_portals, "sense portals" },
         {  0, passive_t::auto_map, "have improved mapping abilities" },
         {  0, passive_t::detect_montier, "sense threats" },
         {  0, passive_t::detect_items, "sense items" },
-        {  0, passive_t::avoid_traps,
-              "avoid traps" },
         {  0, passive_t::bondage_skill_boost,
               "get a skill boost from cursed items" },
+        {  1, passive_t::identify_items, "sense the properties of items" },
+        {  1, passive_t::avoid_traps, "avoid traps" },
         {  2, passive_t::sinv, "are NOW clear of vision" },
         {  3, passive_t::clarity, "are NOW clear of mind" },
         {  4, passive_t::xray_vision, "GOD NOW grants you astral sight" },
@@ -398,15 +390,7 @@ static const vector<god_passive> god_passives[] =
 
 #if TAG_MAJOR_VERSION == 34
     // Pakellas
-    {
-        { -1, passive_t::no_mp_regen,
-              "GOD NOW prevents you from regenerating your magical power" },
-        { -1, passive_t::mp_on_kill, "have a chance to gain magical power from"
-                                     " killing" },
-        {  1, passive_t::bottle_mp,
-              "GOD NOW collects and distills excess magic from your kills"
-        },
-    },
+    { },
 #endif
 
     // Uskayaw
@@ -414,7 +398,7 @@ static const vector<god_passive> god_passives[] =
 
     // Hepliaklqana
     {
-        { -1, passive_t::frail,
+        {  1, passive_t::frail,
               "GOD NOW siphons a part of your essence into your ancestor" },
         {  5, passive_t::transfer_drain,
               "drain nearby creatures when transferring your ancestor" },
@@ -426,6 +410,11 @@ static const vector<god_passive> god_passives[] =
         { 1, passive_t::wu_jian_whirlwind, "lightly attack monsters by moving around them." },
         { 2, passive_t::wu_jian_wall_jump, "perform airborne attacks in an area by jumping off a solid obstacle." },
     },
+
+    // Ignis
+    {
+        { 0, passive_t::resist_fire, "resist fire." },
+    }, // TODO
 };
 COMPILE_CHECK(ARRAYSZ(god_passives) == NUM_GODS);
 
@@ -536,10 +525,7 @@ void jiyva_eat_offlevel_items()
                 dprf("Eating %s on %s",
                      si->name(DESC_PLAIN).c_str(), lid.describe().c_str());
 
-                // Needs a message now to explain possible hp or mp
-                // gain from jiyva_slurp_bonus()
                 mpr("You hear a distant slurping noise.");
-                jiyva_slurp_item_stack(*si);
                 item_was_destroyed(*si);
                 destroy_item(si.index());
             }
@@ -554,7 +540,7 @@ int ash_scry_radius()
         return 0;
 
     // Radius 2 starting at 4* increasing to 4 at 6*
-    return piety_rank() - 2;
+    return min(piety_rank() - 2, get_los_radius());
 }
 
 static bool _two_handed()
@@ -656,7 +642,7 @@ bool god_id_item(item_def& item, bool silent)
         if ((item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_STAVES)
             && item_needs_autopickup(item))
         {
-            item.props["needs_autopickup"] = true;
+            item.props[NEEDS_AUTOPICKUP_KEY] = true;
         }
         set_ident_type(item, true);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -666,8 +652,8 @@ bool god_id_item(item_def& item, bool silent)
 
     if (ided & ~old_ided)
     {
-        if (item.props.exists("needs_autopickup") && is_useless_item(item))
-            item.props.erase("needs_autopickup");
+        if (item.props.exists(NEEDS_AUTOPICKUP_KEY) && is_useless_item(item))
+            item.props.erase(NEEDS_AUTOPICKUP_KEY);
 
         if (&item == you.weapon())
             you.wield_change = true;
@@ -690,6 +676,10 @@ static bool is_ash_portal(dungeon_feature_type feat)
     switch (feat)
     {
     case DNGN_ENTER_HELL:
+    case DNGN_EXIT_DIS:
+    case DNGN_EXIT_GEHENNA:
+    case DNGN_EXIT_COCYTUS:
+    case DNGN_EXIT_TARTARUS:
     case DNGN_ENTER_ABYSS: // for completeness
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
@@ -774,16 +764,18 @@ bool ash_has_skill_boost(skill_type sk)
 unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill)
 {
     unsigned int skill_points = 0;
+    const int scale = 10;
+    const int skill_boost = scale * (you.skill_boost[sk] * 3 + 2) / 2;
 
-    skill_points += (you.skill_boost[sk] * 2 + 1) * (piety_rank() + 1)
-                    * max(scaled_skill, 1) * species_apt_factor(sk);
+    skill_points += skill_boost * (piety_rank() + 1) * max(scaled_skill, 1)
+                    * species_apt_factor(sk) / scale;
     return skill_points;
 }
 
 int ash_skill_boost(skill_type sk, int scale)
 {
     // It gives a bonus to skill points. The formula is:
-    // ( curses * 2 + 1 ) * (piety_rank + 1) * skill_level
+    // ( curses * 3 / 2 + 1 ) * (piety_rank + 1) * skill_level
 
     unsigned int skill_points = you.skill_points[sk]
                   + get_crosstrain_points(sk)
@@ -796,26 +788,6 @@ int ash_skill_boost(skill_type sk, int scale)
     level = level * scale + get_skill_progress(sk, level, skill_points, scale);
 
     return min(level, MAX_SKILL_LEVEL * scale);
-}
-
-int gozag_gold_in_los(actor *whom)
-{
-    if (!have_passive(passive_t::gold_aura))
-        return 0;
-
-    int gold_count = 0;
-
-    for (radius_iterator ri(whom->pos(), LOS_RADIUS, C_SQUARE, LOS_DEFAULT);
-         ri; ++ri)
-    {
-        for (stack_iterator j(*ri); j; ++j)
-        {
-            if (j->base_type == OBJ_GOLD)
-                ++gold_count;
-        }
-    }
-
-    return gold_count;
 }
 
 void gozag_detect_level_gold(bool count)
@@ -981,6 +953,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
             descript = "cold";
             break;
         case BEAM_ELECTRICITY:
+        case BEAM_THUNDER:
             what = BEAM_ELECTRICITY;
             dur = DUR_QAZLAL_ELEC_RES;
             descript = "electricity";
@@ -1038,14 +1011,14 @@ void qazlal_element_adapt(beam_type flavour, int strength)
  *
  * @return bool Whether or not whether the worshipper will attempt to interfere.
  */
-bool does_ru_wanna_redirect(monster* mon)
+bool does_ru_wanna_redirect(const monster &mon)
 {
     return have_passive(passive_t::aura_of_power)
-            && !mon->friendly()
-            && you.see_cell_no_trans(mon->pos())
-            && !mons_is_firewood(*mon)
-            && !mon->submerged()
-            && !mons_is_projectile(mon->type);
+            && !mon.friendly()
+            && you.see_cell_no_trans(mon.pos())
+            && !mons_is_firewood(mon)
+            && !mon.submerged()
+            && !mons_is_projectile(mon.type);
 }
 
 /**
@@ -1213,26 +1186,28 @@ void dithmenos_shadow_throw(const dist &d, const item_def &item)
     if (!mon)
         return;
 
-    int ammo_index = get_mitm_slot(10);
-    if (ammo_index != NON_ITEM)
+    const int ammo_index = get_mitm_slot(10);
+    if (ammo_index == NON_ITEM)
     {
-        item_def& new_item = env.item[ammo_index];
-        new_item.base_type = item.base_type;
-        new_item.sub_type  = item.sub_type;
-        new_item.quantity  = 1;
-        new_item.rnd = 1;
-        new_item.flags    |= ISFLAG_SUMMONED;
-        mon->inv[MSLOT_MISSILE] = ammo_index;
-
-        mon->target = clamp_in_bounds(d.target);
-
-        bolt beem;
-        beem.set_target(d);
-        setup_monster_throw_beam(mon, beem);
-        beem.item = &env.item[mon->inv[MSLOT_MISSILE]];
-        mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
+        shadow_monster_reset(mon);
+        return;
     }
 
+    item_def& new_item = env.item[ammo_index];
+    new_item.base_type = item.base_type;
+    new_item.sub_type  = item.sub_type;
+    new_item.quantity  = 1;
+    new_item.rnd = 1;
+    new_item.flags    |= ISFLAG_SUMMONED;
+    mon->inv[MSLOT_MISSILE] = ammo_index;
+
+    mon->target = clamp_in_bounds(d.target);
+
+    bolt beem;
+    beem.set_target(d);
+    setup_monster_throw_beam(mon, beem);
+    beem.item = &new_item;
+    mons_throw(mon, beem);
     shadow_monster_reset(mon);
 }
 
@@ -1400,14 +1375,17 @@ static int _wu_jian_number_of_attacks(bool wall_jump)
                           attack_delay * BASELINE_DELAY);
 }
 
-static bool _wu_jian_lunge(const coord_def& old_pos)
+static bool _wu_jian_lunge(coord_def old_pos, coord_def new_pos,
+                           bool check_only)
 {
-    coord_def lunge_direction = (you.pos() - old_pos).sgn();
-    coord_def potential_target = you.pos() + lunge_direction;
+    coord_def lunge_direction = (new_pos - old_pos).sgn();
+    coord_def potential_target = new_pos + lunge_direction;
     monster* mons = monster_at(potential_target);
 
     if (!mons || !_can_attack_martial(mons) || !mons->alive())
         return false;
+    if (check_only)
+        return true;
 
     if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY))
         _wu_jian_increment_heavenly_storm();
@@ -1456,13 +1434,12 @@ static vector<monster*> _get_whirlwind_targets(coord_def pos)
     return targets;
 }
 
-static bool _wu_jian_whirlwind(const coord_def& old_pos)
+static bool _wu_jian_whirlwind(coord_def old_pos, coord_def new_pos,
+                               bool check_only)
 {
-    bool did_at_least_one_attack = false;
-
-    const vector<monster*> targets = _get_whirlwind_targets(you.pos());
+    const vector<monster*> targets = _get_whirlwind_targets(new_pos);
     if (targets.empty())
-        return did_at_least_one_attack;
+        return false;
 
     const vector<monster*> old_targets = _get_whirlwind_targets(old_pos);
     vector<monster*> common_targets;
@@ -1470,6 +1447,10 @@ static bool _wu_jian_whirlwind(const coord_def& old_pos)
                      old_targets.begin(), old_targets.end(),
                      back_inserter(common_targets));
 
+    if (check_only)
+        return !common_targets.empty();
+
+    bool did_at_least_one_attack = false;
     for (auto mons : common_targets)
     {
         if (!mons->alive())
@@ -1506,28 +1487,33 @@ static bool _wu_jian_whirlwind(const coord_def& old_pos)
             whirlwind.wu_jian_attack = WU_JIAN_ATTACK_WHIRLWIND;
             whirlwind.wu_jian_number_of_targets = common_targets.size();
             whirlwind.attack();
-            if (!did_at_least_one_attack)
-              did_at_least_one_attack = true;
+            did_at_least_one_attack = true;
         }
     }
 
     return did_at_least_one_attack;
 }
 
-static bool _wu_jian_trigger_martial_arts(const coord_def& old_pos)
+static bool _wu_jian_trigger_martial_arts(coord_def old_pos,
+                                          coord_def new_pos,
+                                          bool check_only = false)
 {
-    bool did_wu_jian_attacks = false;
+    if (new_pos == old_pos
+        || you.duration[DUR_CONF]
+        || you.weapon() && !is_melee_weapon(*you.weapon()))
+    {
+        return false;
+    }
 
-    if (you.pos() == old_pos || you.duration[DUR_CONF])
-        return did_wu_jian_attacks;
+    bool attacked = false;
 
     if (have_passive(passive_t::wu_jian_lunge))
-        did_wu_jian_attacks = _wu_jian_lunge(old_pos);
+        attacked = _wu_jian_lunge(old_pos, new_pos, check_only);
 
     if (have_passive(passive_t::wu_jian_whirlwind))
-        did_wu_jian_attacks |= _wu_jian_whirlwind(old_pos);
+        attacked |= _wu_jian_whirlwind(old_pos, new_pos, check_only);
 
-    return did_wu_jian_attacks;
+    return attacked;
 }
 
 void wu_jian_wall_jump_effects()
@@ -1584,17 +1570,21 @@ void wu_jian_wall_jump_effects()
 }
 
 bool wu_jian_post_move_effects(bool did_wall_jump,
-                               const coord_def& initial_position)
+                               const coord_def& old_pos)
 {
-    bool did_wu_jian_attacks = false;
-
+    bool attacked = false;
     if (!did_wall_jump)
-        did_wu_jian_attacks = _wu_jian_trigger_martial_arts(initial_position);
+        attacked = _wu_jian_trigger_martial_arts(old_pos, you.pos());
 
     if (you.turn_is_over)
-        _wu_jian_trigger_serpents_lash(initial_position, did_wall_jump);
+        _wu_jian_trigger_serpents_lash(old_pos, did_wall_jump);
 
-    return did_wu_jian_attacks;
+    return attacked;
+}
+
+bool wu_jian_move_triggers_attacks(coord_def new_pos)
+{
+    return _wu_jian_trigger_martial_arts(you.pos(), new_pos, true);
 }
 
 /**
@@ -1693,4 +1683,21 @@ void uskayaw_bonds_audience()
     }
     else // Reset the timer because we didn't actually execute.
         you.props[USKAYAW_BOND_TIMER] = 0;
+}
+
+// Clean up after a duel ends. If we're still in the Arena, start a timer to
+// kick the player back out (after they've had some time to loot), and if
+// we've left the Arena via the gate, clear the timer.
+void okawaru_handle_duel()
+{
+    if (player_in_branch(BRANCH_ARENA)
+        && !okawaru_duel_active()
+        && !you.duration[DUR_DUEL_COMPLETE])
+    {
+        you.set_duration(DUR_DUEL_COMPLETE, random_range(15, 25));
+    }
+
+    if (!player_in_branch(BRANCH_ARENA) && you.duration[DUR_DUEL_COMPLETE])
+        you.duration[DUR_DUEL_COMPLETE] = 0;
+
 }

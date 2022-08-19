@@ -181,32 +181,6 @@ define(function () {
     fg_flags.flags.NET          = 0x00400000;
     // 0x00800000 is used in the POISON 2-bit exclusive flags
     fg_flags.flags.WEB          = 0x01000000;
-    fg_flags.flags.GLOWING      = 0x02000000;
-    fg_flags.flags.STICKY_FLAME = 0x04000000;
-    fg_flags.flags.BERSERK      = 0x08000000;
-    fg_flags.flags.INNER_FLAME  = 0x10000000;
-    fg_flags.flags.CONSTRICTED  = 0x20000000;
-    fg_flags.flags.SLOWED       = [0, 0x080];
-    fg_flags.flags.PAIN_MIRROR  = [0, 0x100];
-    fg_flags.flags.HASTED       = [0, 0x200];
-    fg_flags.flags.MIGHT        = [0, 0x400];
-    fg_flags.flags.PETRIFYING   = [0, 0x800];
-    fg_flags.flags.PETRIFIED    = [0, 0x1000];
-    fg_flags.flags.BLIND        = [0, 0x2000];
-    fg_flags.flags.ANIM_WEP     = [0, 0x4000];
-    fg_flags.flags.SUMMONED     = [0, 0x8000];
-    fg_flags.flags.PERM_SUMMON  = [0, 0x10000];
-    // 0x20000 was DEATHS_DOOR
-    fg_flags.flags.RECALL       = [0, 0x40000];
-    fg_flags.flags.DRAIN        = [0, 0x80000];
-    fg_flags.flags.IDEALISED    = [0, 0x100000];
-    fg_flags.flags.BOUND_SOUL   = [0, 0x200000];
-    fg_flags.flags.INFESTED     = [0, 0x400000];
-    fg_flags.flags.CORRODED     = [0, 0x800000];
-    fg_flags.flags.SWIFT        = [0, 0x1000000];
-    fg_flags.flags.SLOWLY_DYING = [0, 0x2000000];
-    fg_flags.flags.VILE_CLUTCH  = [0, 0x4000000];
-    fg_flags.flags.POSSESSABLE  = [0, 0x8000000];
 
     // Three levels of poison in 2 bits.
     fg_flags.exclusive_flags.push({
@@ -300,20 +274,24 @@ define(function () {
     }
 
     // Menu flags -- see menu.h
+    // many things here are unimplemented
     var mf = {};
     mf.NOSELECT         = 0x0001;
     mf.SINGLESELECT     = 0x0002;
     mf.MULTISELECT      = 0x0004;
-    mf.NO_SELECT_QTY    = 0x0008;
+    mf.SELECT_QTY       = 0x0008;
     mf.ANYPRINTABLE     = 0x0010;
     mf.SELECT_BY_PAGE   = 0x0020;
-    mf.ALWAYS_SHOW_MORE = 0x0040;
-    mf.NOWRAP           = 0x0080;
+    mf.INIT_HOVER       = 0x0040;
+    mf.WRAP             = 0x0080;
     mf.ALLOW_FILTER     = 0x0100;
     mf.ALLOW_FORMATTING = 0x0200;
     mf.SHOW_PAGENUMBERS = 0x0400;
-    mf.START_AT_END     = 0x2000;
-    mf.PRESELECTED      = 0x4000;
+    // ...
+    mf.START_AT_END     = 0x1000;
+    mf.PRESELECTED      = 0x2000;
+    // ...
+    mf.ARROWS_SELECT    = 0x40000;
     exports.menu_flag = mf;
 
     val = 0;

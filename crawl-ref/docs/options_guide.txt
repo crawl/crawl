@@ -1,10 +1,10 @@
 Guide to Crawl's options
 ========================
 
-This document explains all of the options in the latest version of
-Dungeon Crawl Stone Soup. If you get stuck or some things don't seem to
-work properly, ask for help in ##crawl on freenode, or on the Crawl
-forums at http://crawl.develz.org/tavern/.
+This document explains all of the options in the latest version of Dungeon
+Crawl Stone Soup. If you get stuck or some things don't seem to work properly,
+ask for help in any of the community discussion resources described at
+http://crawl.develz.org/.
 
 The contents of this text are:
 
@@ -26,13 +26,14 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 pickup_thrown, assign_item_slot, pickup_menu_limit,
-                drop_filter, auto_hide_spells
+                drop_filter
 3-b     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour
-3-c     Branding (Item and Monster Highlighting).
-                friend_brand, neutral_brand, stab_brand, may_stab_brand,
-                heap_brand, feature_item_brand, trap_item_brand
+3-c     Dungeon View Item and Monster Highlighting.
+                friend_highlight, neutral_highlight, stab_highlight,
+                may_stab_highlight, heap_highlight, feature_item_highlight,
+                trap_item_highlight
 3-d     Level Map Functions.
                 level_map_cursor_step
 3-e     Viewport Display Options.
@@ -42,26 +43,28 @@ The contents of this text are:
                 scroll_margin, always_show_exclusions
 3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
-                explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_wall_bias, travel_key_stop, travel_one_unsafe_move,
-                tc_reachable, tc_dangerous, tc_disconnected, tc_excluded,
-                tc_exclude_circle, runrest_ignore_message,
-                runrest_stop_message, interrupt_<delay>, delay_safe_poison,
-                runrest_ignore_monster, rest_wait_both, rest_wait_ancestor,
-                rest_wait_percent, explore_auto_rest, auto_exclude
+                explore_greedy, explore_greedy_visit, explore_stop,
+                explore_stop_pickup_ignore, explore_wall_bias, travel_key_stop,
+                travel_one_unsafe_move, tc_reachable, tc_dangerous,
+                tc_disconnected, tc_excluded, tc_exclude_circle,
+                runrest_ignore_message, runrest_stop_message,
+                interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
+                rest_wait_both, rest_wait_ancestor, rest_wait_percent,
+                explore_auto_rest, auto_exclude, travel_open_doors
 3-g     Command Enhancements.
-                auto_switch, travel_open_doors, easy_unequip, equip_unequip,
-                jewellery_prompt, easy_confirm, simple_targeting,
-                allow_self_target, easy_quit_item_prompts, ability_menu,
-                easy_floor_use, sort_menus, spell_slot, item_slot,
+                auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
+                easy_confirm, simple_targeting, force_spell_targeter,
+                force_ability_targeter, allow_self_target, ability_menu,
+                spell_menu, easy_floor_use, sort_menus, spell_slot, item_slot,
                 ability_slot, autofight_stop, autofight_warning,
                 autofight_throw, autofight_throw_nomove, autofight_fire_stop,
                 autofight_caught, autofight_wait, autofight_prompt_range,
                 automagic_enable, automagic_slot, automagic_fight,
                 automagic_stop, fail_severity_to_confirm, easy_door,
                 warn_hatches, enable_recast_spell, confirm_action,
-                regex_search, autopickup_search, bad_item_prompt
-3-h     Message and Display Improvements.
+                regex_search, autopickup_search, bad_item_prompt,
+                auto_hide_spells, menu_arrow_control
+3-h     Message and Display Enhancements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
@@ -73,11 +76,16 @@ The contents of this text are:
                 show_travel_trail, skill_focus, default_show_all_skills,
                 monster_list_colour, view_delay, use_animations,
                 darken_beyond_range, force_more_message, flash_screen_message,
-                cloud_status, always_show_zot
-3-i     Colours (messages and menus)
+                cloud_status, always_show_zot, action_panel,
+                action_panel_filter, action_panel_show_unidentified,
+                action_panel_scale, action_panel_orientation,
+                action_panel_font_family, action_panel_font_size
+3-i     Colours (messages and menus).
                 menu_colour, message_colour
-3-j     Missiles.
-                fire_items_start, fire_order
+3-j     Quivers, firing, and ammo.
+                fire_items_start, fire_order, fire_order_spell,
+                fire_order_ability, fail_severity_to_quiver,
+                quiver_menu_focus
 3-k     Message Channels.
                 plain, prompt, god, duration, danger, warning, recovery,
                 talk, talk_visual, timed_portal, sound, intrinsic_gain,
@@ -106,8 +114,9 @@ The contents of this text are:
                 tile_runrest_rate, tile_key_repeat_delay, tile_tooltip_ms,
                 tile_tag_pref, tile_window_width, tile_window_height,
                 tile_map_pixels, tile_viewport_scale, tile_map_scale,
-                tile_cell_pixels, tile_filter_scaling, tile_force_overlay,
-                tile_overlay_col, tile_overlay_alpha_percent, tile_full_screen,
+                tile_cell_pixels, tile_sidebar_pixels, tile_filter_scaling,
+                tile_force_overlay, tile_overlay_col,
+                tile_overlay_alpha_percent, tile_full_screen,
                 tile_single_column_menus, tile_font_crt_file,
                 tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
                 tile_font_lbl_file, tile_font_crt_family,
@@ -122,7 +131,7 @@ The contents of this text are:
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
                 tile_weapon_offsets, tile_shield_offsets,
-                tile_web_mouse_control
+                tile_web_mouse_control, tile_web_mobile_input_helper
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -164,10 +173,22 @@ The contents of this text are:
 0-  Generalities on options.
 ============================
 
+The standard way of adjusting an option from the default is to manually
+set it in your options file; see (0-a) and (0-c) below for details. A small
+number of options are saved automatically from their current values in the
+relevant in-game user interface; these are marked with "(persistent)" in
+their documentation and can be overridden by a manual setting in the
+options file.
+
 0-a     Standard and additional option files.
 ---------------------------------------------
 
-Crawl uses the first file of the following list as its option file:
+In online play, choose "edit rc" from the webtiles game selection screen,
+or enter the rc file editor via ssh.
+
+In offline play, Crawl uses the first file of the following list as its option
+file:
+
 * settings/init.txt
 * init.txt (in the Crawl directory)
 * .crawlrc (in the Unix home directory)
@@ -176,7 +197,8 @@ Alternatively, you can use the command line option
     -rc <file>
 which tells Crawl to use precisely that file.
 
-On the starting screen, Crawl tells you which init file it uses, if any.
+On the starting screen, Crawl tells you which init file it uses, if any. The
+Crawl directory location is system-specific.
 
 It is possible to include additional files within the options file via
     include = <file>
@@ -359,7 +381,7 @@ species += (Human |...| Vampire | random | viable), <species>, ...
 
 background += (Fighter |...| Wanderer | random | viable), <background>, ...
         (List option)
-        Here again the abbreviations (Fi, Wz, AK, etc.) can be used. The same
+        Here again the abbreviations (Fi, HW, AK, etc.) can be used. The same
         caveat applies to "viable": it is only really meaningful if the
         species option is also set. Specifying multiple backgrounds causes
         one to be selected at random from the given species. The combo option
@@ -397,18 +419,17 @@ name_bypasses_menu = true
         menu and jump right to a game or character selection (if there is no
         save).
 
-default_manual_training = false
+default_manual_training = false (persistent)
         When set to true, new characters will start with skill training
         set to manual mode instead of automatic mode. This will also set the
         [!] selection on the skill (m) menu to "cost" by default, instead of
         "training".
 
 autopickup_starting_ammo = true
-        When set, at game start, autopickup is forced on (as per the \
-        menu) for the player's starting ammunition type (including stones
-        for Earth Elementalists and arrows for Transmuters). Even when this
-        option is set, autopickup of those items can be disabled from the
-        \ menu once the game has begun.
+        When set, at game start, autopickup is forced on (as per the \ menu)
+        for the player's starting ammunition type (including stones for Earth
+        Elementalists). Even when this option is set, autopickup of those items
+        can be disabled from the \ menu once the game has begun.
 
 game_seed = none
         A number indicating the seed to initialize the random number generator
@@ -419,38 +440,50 @@ game_seed = none
         unsigned 64 bit integer.
 
 pregen_dungeon = incremental
+        This setting determines the level generation mode for new games, which
+        interacts with random seeding (see the "Seeded play" section of the
+        manual). In order to generate a stable dungeon from a seed, levels need
+        to be generated in a consistent order. The recommended setting of
+        `incremental` will generate levels as needed when entering a new level
+        so that the game always generates levels in the same order, potentially
+        catching up when skipping levels in the standard order.
+
         When set to `true` or `full`, the game will pregenerate the entire
         connected dungeon when starting a new character. This leads to
-        deterministic dungeon generation relative to a particular game seed, at
-        the cost of a slow game start. If set to `incremental`, the game will
-        generate levels as needed so that it always generates them in the same
-        order, also producing a deterministic dungeon. You still may encounter
-        variation in bazaars, the abyss, pandemonium, and ziggurats, and for
-        incremental pregeneration, artefacts. When set to `false` or `classic`,
-        the game will generate all levels on level entry, as was the rule before
-        0.23. Some servers may disallow full pregeneration.
+        deterministic dungeon generation relative to a particular game seed,
+        and no load times when entering levels, but at the cost of a slow game
+        start. Some servers may disallow full pregeneration for online play.
+
+        When set to `false` or `classic`, the game will generate all levels on level entry, as was the rule before 0.23. Dungeons will not be stable
+        given a seed with this option.
 
 2-  File System.
 ================
 
+The following directory options may be ignored or overridden on some systems
+and builds. For example, they cannot be set in an rc file for online play. They
+can also be set via the command line.
+
 crawl_dir = <path>
-        The path used for the relative paths when looking for other
-        files. Defaults to the directory that contains the Crawl
-        executable.
+        A path to be used for the relative paths when looking for other
+        files. The default for this value is dependent on the system and
+        build type. This option can also be set the `CRAWL_DIR` environment
+        variable. When set, this will override the following three directory
+        options if they have been previously set.
 
-morgue_dir = morgue
+save_dir = saves/
+        Directory where saves and bones are stored. A relative path
+        will be interpreted relative to the value of `crawl_dir`.
+
+morgue_dir = morgues/
         Directory where morgue dumps files (morgue*.txt and
-        morgue*.lst) as well as character dumps files are written.
+        morgue*.lst) as well as character dumps files are written. A relative
+        path will be interpreted relative to the value of `crawl_dir`.
 
-save_dir = saves
-        Directory where saves and bones are stored. This option may be
-        ignored depending on the settings used to compile Crawl, but
-        should be honoured for the official Crawl binaries.
-
-macro_dir = settings/
+macro_dir = <path>
         Directory for reading macro.txt.
-        For tile games, wininit.txt will also be stored here.
-        It should end with the path delimiter.
+        It should end with the path delimiter. The default value for this
+        is dependent on system and build type.
 
 sound ^= <regex>:<path to sound file>, <regex>:<path>,
         (Requires "Sound support"; check your version info)
@@ -516,9 +549,8 @@ autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
         (Ordered list option)
         A set of regexes that force matching items to be picked up (if
         prefixed with <), or never picked up (if prefixed with >).
-        Excludes (>) take precedence over includes (<), so if the same
-        item is matched by both an exclude and an include, it will not
-        be subject to autopickup.
+        The list is order sensitive: the first matching rule will be applied to
+        an item.
 
         An example:
              autopickup_exceptions += <curare-tipped dart
@@ -596,10 +628,6 @@ drop_filter += <regex>, <regex>, ...
         set/clear selection of items that match the filter
         expression(s).
 
-auto_hide_spells = false
-        When set to true, spells added to the library will automatically be
-        hidden.
-
 3-b     Passive Sightings (detected or remembered entities).
 ------------------------------------------------------------
 
@@ -612,13 +640,14 @@ detected_item_colour = green
 remembered_monster_colour = darkgrey
         The colour for monsters you have seen before.
 
-3-c     Branding (Item and monster highlighting).
+3-c     Dungeon View Item and monster highlighting
 -------------------------------------------------
 
-Branding refers to displaying particular monsters (e.g. summons) or
-items in a special way; special as in reversing fore- and background.
-There are several branding choices (these will not work everywhere; it
-depends on OS and terminal):
+These options allow controlling the way certain monsters and items are shown
+in console dungeon view, by changing their colour or reversing fore- and
+background. There are several highlighting choices (these will not work
+everywhere; it depends on OS and terminal):
+   none             -- disable highlighting for the category
    standout         -- often the same as reverse, might be underline or
                        dim
    bold             -- used by colour curses for brightening foreground
@@ -628,52 +657,49 @@ depends on OS and terminal):
    reverse          -- this will probably work
    dim              -- probably no effect
    underline        -- this will probably work
-   highlight:colour -- set background colour of branded monsters to
+   highlight:colour -- set background colour of highlighted monsters to
                        "colour"
 The last can be abbreviated to hi:colour.
 See part DOS and Windows (5-b) for dos_use_background_intensity.
 
-By default, only two of the item brands are active (and set to reverse):
-   heap_brand, feature_item_brand
-They can be deactivated by setting them to "none".
+Previously these options were named `..._brand`, and the old names are
+available for backwards-compatibility.
 
-friend_brand = hi:green
-        Brand friends in some way. This is very helpful for summoners. The
+friend_highlight = hi:green
+        Highlight friends in some way. This is very helpful for summoners. The
         default setting shows friends with a green background. If the friend is
         itself green, it'll show up as black on green.
 
-neutral_brand = hi:lightgrey
-        Brand neutral monsters in some way. Useful both to get out of
+neutral_highlight = hi:lightgrey
+        Highlight neutral monsters in some way. Useful both to get out of
         a neutral monster's path, and to avoid accidentally killing it.
         The default setting shows neutrals with a dark grey background. Since
         there are no darkgrey monster glyphs anymore, this works fine.
 
-stab_brand = hi:blue
-        Some deities object to you stabbing monsters. Certain backgrounds
-        specialise in stabbing monsters. Still other characters are
-        happy if they spot a monster before the monster spots them. In
-        all these cases, it helps to identify monsters that are unaware
-        of the character (and hence susceptible to being stabbed) without
-        using the 'x' command. All the normal 'brand' options apply.
+stab_highlight = hi:blue
+        This option highlights monsters that are fully unaware of the player
+        and therefore are will not attack, and are guaranteed to take stab
+        damage if attacked appropriately by the player.
 
-may_stab_brand = hi:yellow
-        Stabbing may be possible even if the monster is not asleep (if
-        it's confused or distracted, for instance). This option brands
-        monsters that you *might* be able to stab.
+may_stab_highlight = hi:brown
+        This option highlights monsters that are having trouble paying
+        attention to the player by, for example, being confused or
+        distracted. These monsters may be able to be stabbed, depending
+        on Stealth and weapon skill levels and various other factors, and will
+        (at least) have trouble attacking the player with their current status.
 
-heap_brand = reverse
-        Brand heaps of items (more than one item or stack).
+heap_highlight = reverse
+        Highlights heaps of items (more than one item or stack).
 
-feature_item_brand = reverse
-        Brands features (stairs, shops, altars) that would otherwise be
-        hidden by items. If you use this brand, the items on the square
-        are hidden by the feature symbol and the feature symbol is
-        branded.
+feature_item_highlight = reverse
+        Highlights features (stairs, shops, altars) that would otherwise be
+        hidden by items. If you use this option, the item glyph(s) on the
+        square are hidden by the feature symbol.
 
-trap_item_brand = reverse
-        Brands traps that would otherwise be hidden by items. If you
-        use this brand, the items on the square are hidden by the trap
-        symbol (^) and the trap symbol is branded.
+trap_item_highlights = reverse
+        Highlights traps that would otherwise be hidden by items. If you
+        use this option, the item glyph(s) on the square are hidden by the trap
+        symbol (^).
 
 3-d     Level Map Functions.
 ----------------------------
@@ -803,6 +829,21 @@ explore_greedy = true
         otherwise identical to regular explore. Explore greed is
         disabled if autopickup is off (Ctrl-A).
 
+explore_greedy_visit = artefacts,glowing_items
+explore_greedy_visit += stacks
+        (List option)
+        Greedy exploration will visit squares with items based on
+        these conditions.
+
+        stacks: makes explore_greedy visit stacks even if they don't
+        necessarily have target auto pickup items
+
+        glowing_items: makes explore_greedy visit glowing_items,
+        even if not in a stack
+
+        artefacts: makes explore_greedy visit artefacts, even
+        if not in a stack
+
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
         (List option)
@@ -868,7 +909,9 @@ explore_wall_bias = 0
         Adjusts how much autoexplore favours attempting to discover room
         perimeters and corners. At higher values, autoexplore will more
         heavily favour visiting squares that are next to walls; at 0 it
-        will not favour them at all.
+        will not favour them at all. At negative values it will prefer
+        to stay away from walls. Note that setting this to a non-0 value
+        generally makes it slower to completely explore a level.
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
@@ -894,28 +937,33 @@ tc_exclude_circle = red
           excluded_circle: the colour for travel exclusions apart from
                            centre
 
-runrest_ignore_message += <regex>, <regex>, ...
-runrest_stop_message += <regex>, <regex>, ...
+runrest_ignore_message ^= <regex>, <regex>, ...
+runrest_stop_message ^= <regex>, <regex>, ...
         (List option)
-        Use these to force messages to interrupt travel and resting, or
-        not. These are matched against full message text. To limit a
-        substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 3-k below on Message
-        Channels). For instance, if you want travel to stop when you're
-        hit by divine retribution, you could use:
-             runrest_stop_message += god:wrath finds you
+        Use these to force messages to interrupt travel and resting, or not.
+        These are matched against full message text. To limit a substring
+        match to a message channel, prefix the substring with the channel name
+        and a colon (see section 3-k below on Message Channels). For instance,
+        if you want travel to stop when you're hit by divine retribution, you
+        could use:
+             runrest_stop_message ^= god:wrath finds you
+
         Or to remind yourself to renew expiring spells:
-             runrest_stop_message += Your transformation is almost over
-             runrest_stop_message += You are starting to lose your buoyancy
+             runrest_stop_message ^= Your transformation is almost over
+             runrest_stop_message ^= You are starting to lose your buoyancy
+
         Or you can explicitly ignore some messages:
-             runrest_ignore_message += pleased with you,exalted
+             runrest_ignore_message ^= pleased with you,exalted
 
-        Note that monster talk and dungeon noises already do not
-        interrupt running or resting, by default.
+        Note that monster talk and dungeon noises already do not interrupt
+        running or resting, by default.
 
-        Multiple lines can be used. The earliest match among both
-        ignore and stop messages overrides later lines. The file
-        runrest_messages.txt contains a number of default settings.
+        Multiple lines can be used. The earliest match among both ignore and
+        stop messages overrides later lines. The file runrest_messages.txt
+        contains a number of default settings. These options accept `^=` to
+        prepend and `+=` to add; the former is necessary in order to override
+        defaults, including overriding defaults for `ignore` matches with
+        `stop` matches and vice versa.
 
         Resetting either option has the effect of resetting both.
 
@@ -970,7 +1018,7 @@ rest_wait_percent = 100
 
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
-        rest_wait_percent before moving.
+        rest_wait_percent before moving. This is always disabled for Meteorans.
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
@@ -979,14 +1027,6 @@ auto_exclude += <monster name>, <monster name>, ...
         automatically set centred on this monster, meaning autoexplore won't
         ever bring you into its line of sight. If the monster dies or wakes up
         while you are in sight, this exclusion is automatically removed again.
-
-3-g     Command Enhancements.
------------------------------
-
-auto_switch = false
-        This option will allow you to automatically switch to an appropriate
-        weapon when attacking in melee, as long as the one you are wielding
-        and the one you switch to are both in slot 'a' or 'b'.
 
 travel_open_doors = (avoid | approach | open)
         Configure how autoexplore/travel interacts with doors.
@@ -997,6 +1037,16 @@ travel_open_doors = (avoid | approach | open)
                    in front of any door in its path.
             open = Autoexplore/travel will open doors. (default)
         This does not affect runed doors, which are always avoided.
+
+3-g     Command Enhancements.
+-----------------------------
+
+auto_switch = false
+        This option will allow you to automatically switch to an appropriate
+        weapon when attacking in melee, as long as the one you are wielding
+        and the one you switch to are both in slot 'a' or 'b'. An "appropriate"
+        weapon is one that is intended for melee, not inscribed with a
+        non-attack inscription (`!a`), and not hated by the player's god.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.
@@ -1030,8 +1080,10 @@ simple_targeting = false
         while avoiding the player. This applies to target selection when
         zapping as well as autotarget selection for quivered spells.
 
-force_targeter = hailstorm, starburst, frozen ramparts, absolute zero, ignition,
-                 eringya's noxious bog
+force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
+                       eringya's noxious bog, cause fear, alistair's
+                       intoxication, discord, dispersal, metabolic englaciation,
+                       dazzling flash, flame wave, anguish
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -1040,8 +1092,20 @@ force_targeter = hailstorm, starburst, frozen ramparts, absolute zero, ignition,
         the list (however constructed) will be ignored, and targeters will
         be shown with every spell.
 
+force_ability_targeter = sanctuary, cleansing flame, word of chaos, recite,
+                         elemental force, oozemancy, breathe lightning, torment,
+                         drain life, slouch, disaster area, apocalypse,
+                         corrupt, foxfire swarm
+        Force showing a targeter for the listed abilities when activating them
+        normally, even if the ability isn't targeted. This for practical
+        purposes only has an effect on statically targeted abilities, such as
+        the ones in the default value; it is particularly useful for abilities
+        with an unusual targeting pattern. If "all" appears in the options list,
+        the rest of the list (however constructed) will be ignored, and
+        targeters will be shown with every ability.
+
 allow_self_target = prompt
-        Allow targeting yourself with risky magic (e.g., the spell Bolt of Magma
+        Allow targeting yourself with risky magic (e.g., the spell Stone Arrow
         or a wand of paralysis.) Values: (yes | no | prompt).
         When set to 'yes', you are a valid target. When set to 'no', you cannot
         target yourself with such spells. When set to 'prompt' (the default),
@@ -1049,16 +1113,16 @@ allow_self_target = prompt
         effect on area-effect spells, such as Mephitic Cloud, where you are
         always a valid target.
 
-easy_quit_item_prompts = true
-        Setting this option to true allows the quitting of item listing
-        with Space (as well as Escape, which always works). These lists
-        are essentially all of those that are requesting an inventory
-        item and accept '?' and '*'. The identify list will never easy
-        quit.
-
 ability_menu = true
         Always show the full-screen 'a'bility menu. If false, 'a' prompts
         in the message area, and the menu can be seen with '?' or '*'.
+
+        Setting this option to false has no effect in Android tiles builds.
+
+spell_menu = false
+        If set to true, the full-screen spell selection menu will always be
+        shown when using 'z'. If false, 'z' prompts in the message area, and
+        the menu can be seen with '?' or '*'.
 
         Setting this option to false has no effect in Android tiles builds.
 
@@ -1356,7 +1420,17 @@ autopickup_search = false
 bad_item_prompt = true
         Ask for confirmation before using bad or dangerous scrolls and potions.
 
-3-h     Messages and Display Enhancements.
+auto_hide_spells = false
+        When set to true, spells added to the library will automatically be
+        hidden.
+
+menu_arrow_control = true
+        If set to false, disable using arrow keys to control menu selection.
+        This has no effect on mouse interactions with menus, and only affects
+        menus that use hotkeys for selection. (E.g. the main menu for local
+        play is not affected.)
+
+3-h     Message and Display Enhancements.
 ------------------------------------------
 
 hp_warning = 10
@@ -1370,7 +1444,7 @@ mp_warning = 0
         channel when the player's magic points drop below this
         percentage of their maximum (use 0 to turn off these messages).
 
-hp_colour = 50:yellow, 25:red
+hp_colour = 70:yellow, 40:red
         (List option)
         hp_colour colours your Health appropriately in the status
         display. In the default setting, your health will appear in
@@ -1534,8 +1608,8 @@ default_show_all_skills = false
         even untrained and untrainable ones. As usual, '*' toggles back to
         trainable mode. This option does not affect hints and tutorial games.
 
-monster_list_colour += <key>:<colour>, <key>:<colour>
-monster_list_colour -= <key>
+monster_list_colour = friendly:green, neutral:brown, good_neutral:brown
+monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lightred
         (List option)
         Change the colours used to display monster names in the monster list.
         Valid keys, and their default colours, are:
@@ -1544,7 +1618,6 @@ monster_list_colour -= <key>
              friendly       - green
              neutral        - brown ("indifferent")
              good_neutral   - brown ("peaceful")
-             strict_neutral - brown ("fellow slime")
 
            Threat levels for hostile monsters:
              trivial        - darkgrey
@@ -1555,21 +1628,17 @@ monster_list_colour -= <key>
          Removing a key with -= currently has the same effect as setting its
          colour to lightgrey.
 
-         Note that, for TSO worshippers, monsters whom it is forbidden to
-         attack will appear in the "evil colour" (magenta by default)
-         regardless of this option.
-
 view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
         attacks and invocations with visual effects.
 
-use_animations -= beam, range, hp, monster_in_sight, pickup, monster, player,
-                  branch_entry
+use_animations = beam, range, hp, monster_in_sight, pickup, monster, player
+use_animations += branch_entry
         Controls whether or not to run special animations, such as when being
         banished. All animations are enabled by default, and the categories
         that can be enabled/disabled independently are:
 
-          beam             - Animation for casting a beam spell or throwing a
+          beam             - Animation for casting a beam spell or firing a
                              ranged weapon.
           range            - Flashes the screen with an overlay indicating the
                              actual range of an attempted spell, if there are
@@ -1600,8 +1669,10 @@ force_more_message += <regex>, <regex>
         (List option)
         Any message that contains a regex specified here will enforce a
         --More-- prompt, so it can be used to highlight really important
-        events. This option ignores the show_more option.
-        The syntax is identical to that of runrest_ignore_message (3-f).
+        events. This option ignores the show_more option. This option will
+        not interrupt travel delays by default; use runrest_stop_message
+        for that instead. The syntax is identical to that of
+        runrest_ignore_message (3-f).
 
 flash_screen_message += <regex>, <regex>
         (List option)
@@ -1618,6 +1689,53 @@ cloud_status = true
 always_show_zot = false
         Whether to show the "Zot" status light at all times, even when you've
         got plenty of time left.
+
+action_panel_show = true
+        Whether to show or hide the action panel. This option is automatically
+        saved between games, and is only available on Webtiles.
+
+action_panel = /?!}
+        The above is the default list of items to show on the action panel.
+        The valid symbols are
+        ?       Scrolls
+        !       Potions
+        }       Misc. items
+        /       Wands
+        If set to an empty string, the panel will be hidden entirely. The order
+        of item types in this option determines the order of item types in the
+        action panel; sub-order is determined by inventory letter. This option
+        is only available on Webtiles.
+
+action_panel_filter += <regex>, <regex>, ...
+        (List option)
+        Any item matching the filter expression(s) will not be shown on the
+        action panel. This option is only available on Webtiles.
+        The file dat/defaults/misc.txt contains default settings.
+
+action_panel_show_unidentified = false
+        When set to true, the action panel will show unidentified scrolls
+        and potions. This option is only available on Webtiles.
+
+action_panel_scale = 100 (persistent)
+        A percentage scale factor to apply to the action panel. This option is
+        automatically saved between games, and only available on Webtiles.
+
+action_panel_orientation = horizontal (persistent)
+        (values: horizontal | vertical)
+        When set to 'horizontal', the action panel will be placed along the top
+        edge of the screen. When set to 'vertical', the panel will be placed
+        along the left edge. This option is automatically saved between games,
+        and is only available on Webtiles.
+
+action_panel_font_family = monospace (persistent)
+action_panel_font_size = 16 (persistent)
+        Font used for displaying quantities of items in the action panel.
+        The size option is automatically saved between games, and both are only
+        available on Webtiles.
+
+action_panel_glyphs = false
+        If set to true, show glyphs instead of tiles in the action panel. This
+        option is only available on webtiles.
 
 3-i     Colours (messages and menus)
 -----------------
@@ -1728,17 +1846,37 @@ fire_order  = launcher, throwing, inscribed, spell, evokable, ability
         higher priority. Absent action types are not used when cycling
         the quiver. This option also affects autoquivering on game start.
 
-        'launcher' refers to firing the appropriate missile for a
-        wielded weapon (i.e. crossbow, bow, sling). 'throwing' refers to
-        all throwing ammo. Specific throwing ammo types can be refered to
-        by name ('javelin', 'boomerang', 'stone', 'rock', 'net', 'dart'),
-        but order of these only affects order internal to throwing ammo
-        types; 'inscribed' can also be used to control the order of ammo
-        that has been inscribed with "+f". See the "Inscriptions" section of
-        Crawl's manual for more information about inscriptions. Ammo types
-        can be separated with a "/" to indicate that inventory order should
-        determine cycle order. Order within types is determined by letter
+        'launcher' refers to firing a wielded ranged weapon (i.e. crossbow,
+        bow, sling). 'throwing' refers to all throwing ammo. Specific throwing
+        ammo types can be refered to by name ('javelin', 'boomerang', 'stone',
+        'rock', 'net', 'dart'), but order of these only affects order internal
+        to throwing ammo types; 'inscribed' can also be used to control the
+        order of ammo that has been inscribed with "+f". See the "Inscriptions"
+        section of Crawl's manual for more information about inscriptions. Ammo
+        types can be separated with a "/" to indicate that inventory order
+        should determine cycle order. Order within types is determined by letter
         order in the relevant submenu (e.g. inventory for throwing, etc).
+
+fire_order_spell = all
+        (list option)
+        This allows you to exclude or include spells from the fire order by
+        name. Order within spells is determined by letter assignment, this
+        only controls what is in the list. This can be a comma separated list
+        of spells by name, and supports += and -=. It allows two special values:
+        'all' is shorthand for all spells, and 'attack' is shorthand for the
+        list of spells that are considered damage spells for autofight
+        purposes; see autofight_throw for more information.
+
+fire_order_ability = all
+fire_order_ability -= berserk
+        (list option)
+        This allows you to exclude or include abilities from the fire order by
+        name. Order within abilities is determined by letter assignment, this
+        only controls what is in the list. This can be a comma separated list
+        of abilities by name, and supports += and -=. It allows two special
+        values: 'all' is shorthand for all spells, and 'attack' is shorthand for
+        the list of abilities that are considered damage spells for autofight
+        purposes; see autofight_throw for more information.
 
 fail_severity_to_quiver = 2
         Exclude spells with this miscast level or higher from quiver cycling
@@ -1747,12 +1885,17 @@ fail_severity_to_quiver = 2
         miscast values.
 
 launcher_autoquiver = true
-        If set to true, change the main quiver to launcher ammo on wielding
-        that launcher; if set to false, the main quiver is unaffected by
-        wielding a launcher. (Firing via tab or `v` still work.). This also
-        affects rare artefacts that may be evoked.
+        If set to true, change the quiver to the launcher on wielding it;
+        if set to false, the quiver is unchanged on wielding a launcher.
+        (Firing via tab or `v` will still work.).
 
-(See also pickup_thrown in 3-a, and the various autofight settings in 3-g.)
+quiver_menu_focus = false (persistent)
+        If set to true, start the quiver menu in "focused" mode where action
+        lettering is drawn from item/spell/ability lettering and only one of
+        these can be selected at a time. Otherwise, any action can be selected
+        from the menu, but lettering is not stable in this menu. This option
+        is persistent so that the current value in the quiver menu is saved
+        across games and automatically reloaded unless set explicitly.
 
 3-k     Message Channels.
 -------------------------
@@ -1849,19 +1992,30 @@ macros += M \{9} za
         This options adds a macro or keymap.
 
         Each definition consists of exactly three arguments separated by
-        spaces. The first one describes whether it is a macro or a keymap:
-        "M" macro,
-        "K"  default context keymap,
-        "K1" level-map context keymap,
-        "K2" targeting context keymap
-        "K3" confirmation context keymap.
+        spaces. The first one describes whether it is a macro or a keymap.
+        Keymaps are generally most useful for renaming keys entirely and are
+        processed before macros. If you don't know which to use, you probably
+        want a macro.
+
+        "M" macros (processed when entering game commands)
+
+        Specialized keymap contexts:
+        "K1" level-map context keymap (during the `X` view only)
+        "K2" targeting context keymap (during targeting and `x` view)
+        "K3" confirmation context keymap (when responding to a y/n prompt)
+        "K4" menu context keymap (all menus, except the skill menu)
+
+        Default keymap context:
+        "K" default context keymap (any other context)
 
         The second argument describes the trigger key and consists the
         character or keycode of that key (for example 'a', 'A' or \{9} for the
         A, Shift-A or Tab keys). The third argument describes the macro or
         keymap action and consists the command sequence to be associated with
         the second argument. (for example "zap" for zapping the spell in slot a
-        at the previous target).
+        at the previous target). Function keys, numpad keys, and navigation
+        keys can be entered via text keycodes (examples: \{F2}, \{NP-},
+        \{PgUp}, \{Down}, etc).
 
         If you have any macros/keymaps in your rc file, they will automatically
         be saved to your macro.txt file on load, silently overriding any
@@ -1896,7 +2050,9 @@ bindkey = [^D] CMD_BUTCHER
         that key. You can bind several commands to the same key, as long
         as they take effect in different areas of the game, i.e. one
         targeting command and one for the main game. Likewise, you can
-        bind the same command to different keys.
+        bind the same command to different keys. You can use the \{} syntax
+        from macro binds to write keycodes, and keycodes like "F1", "NP+",
+        and "Down" can appear directly in [].
         For a full list of possible commands, see keybind.txt.
 
 3-n     Tiles Options.
@@ -2014,11 +2170,25 @@ tile_tag_pref = (none| named | enemy | tutorial )
                        and of named enemy monsters
         Examples for named monsters are uniques and ghosts.
 
-tile_window_width  = -90
 tile_window_height = -90
-        The width and height of the window, in pixels. If set to zero, it
-        will auto-size the window. If set to a negative number (default), it
-        will use the screen's resolution, minus the given value.
+tile_window_width  = -90
+        Options for setting the width and height of the window, in pixels. When
+        positive, these set the window size directly. When set to 0, the window
+        is auto-sized. When set to a negative number, these values will be
+        interpreted as the screen's resolution minus the given value. The width
+        may be overridden by `tile_window_ratio`, below, in which case
+        `tile_window_width` is used as a maximum width. On some window
+        managers, the position of OS user interface elements may enforce
+        smaller values for these. For example, on MacOS the window will not
+        overlap with the dock or menu bar.
+
+tile_window_ratio  = 1618
+        When set to a positive value, tiles will use this value to determine
+        the window width as a ratio of the window height, scaled by 1000. In
+        particular: w = h * tile_window_ratio / 1000.
+        If this value is set, `tile_window_width` is used as a maximum width.
+        The minimum width is determined by UI layout. This value is ignored in
+        full screen mode. Set to a value <= 0 to disable.
 
 game_scale = 1
         An integer scale value between 1 and 8 that will increase the size of
@@ -2039,21 +2209,27 @@ tile_viewport_scale = 1.0
         A scale factor to apply to the dungeon view. The minimum value is 0.2
         and the maximum value is determined by resolution; zoom will be capped
         so that at a minimum, your line of sight is always visible. This can
-        also be adjusted in-game in local tiles with ctrl-'-' and ctrl-'='.
+        also be adjusted in-game in local tiles with ctrl-'-' and ctrl-'='
+        (or ctrl-'+' on some keyboards).
 
 tile_map_scale = 0.6
         A scale factor to apply to the dungeon view in map mode (X). This can
         also be adjusted in map mode in tiles with '{' and '}', as well as in
-        local tiles with ctrl-'-' and ctrl-'='.
+        local tiles with ctrl-'-' and ctrl-'=' (or ctrl-'+' on some keyboards).
 
 tile_cell_pixels = 32
         The width and height of tiles in the dungeon view at 1.0 scale, in
         (logical) pixels. This is a legacy option, and it is recommended that
         you adjust scaling via tile_viewport_scale instead.
 
+tile_sidebar_pixels = 32
+        The width and height of tiles in the local tiles sidebar view,
+        in (logical) pixels.
+
 tile_filter_scaling = false
-        Used in conjunction with tile_cell_pixels. Setting it to true filters
-        the textures resulting in a smoother but blurrier image.
+        Used in conjunction with tile_cell_pixels or tile_sidebar_pixels.
+        Setting it to true filters the textures resulting in a smoother but
+        blurrier image.
 
 tile_force_overlay = false
         Setting this option to true will force the message window to appear as
@@ -2159,10 +2335,10 @@ tile_show_player_species = false
         If enabled, displays the player using the monster tile for her species,
         instead of using the normal doll and showing equipment.
 
-tile_show_threat_levels = none
+tile_show_threat_levels = nasty
         This option controls which monsters will be highlighted with their
         threat level. Valid levels include: trivial, easy, tough, nasty.
-        You can specify multiple levels at once.
+        You can specify multiple levels at once, or 'none'.
 
 tile_layout_priority = minimap, inventory, command, spell, monster
         (Ordered list option)
@@ -2236,6 +2412,13 @@ tile_web_mouse_control = true
         WebTiles. Regardless of the value of the setting, the minimap will
         respond to mouse control.
 
+tile_web_mobile_input_helper = auto
+        This option controls an optional auxiliary input field in the WebTiles
+        interface that can be focused to enable the vitual keyboard on mobile
+        devices. When set to true or false, the field is manually enabled or
+        disabled. When set to auto, the field is only shown on devices with
+        a touch screen.
+
 4-  Character Dump.
 ===================
 
@@ -2268,8 +2451,8 @@ dump_kill_places = (none | all | single)
         In the Vanquished Creatures list, this option controls how the
         locations of each kill are displayed. Use 'none' to suppress
         place display altogether, 'all' to display all known (up to 5)
-        kill places, anything else to the default of showing kill places
-        only for single kills
+        kill places, and 'single' to use the default of showing kill
+        places only for single kills.
 
 dump_item_origins = artefacts
         The game remembers where you find items. If you want this item
@@ -2686,6 +2869,10 @@ fake_lang = <lang1>[,<lang2>[,...]]
 read_persist_options = false
         When set to true, the game will read additional options from
         the lua variable c_persist.options if it contains a string.
+        This option has no effect unless explicitly used in scripting.
+        This option is persistent so that the current value as set in
+        the skill menu is saved across games and automatically reloaded,
+        unless set explicitly.
 
 5-b     DOS and Windows.
 ------------------------
@@ -2693,13 +2880,47 @@ read_persist_options = false
 dos_use_background_intensity = false
         On DOS and Windows, if you're using a console that can do
         high-intensity background colours, set this option to true for
-        superior friend-branding. If your console doesn't like this
+        superior friend-highlighting. If your console doesn't like this
         option, some friendly monsters will appear as blinking
         characters (and setting this option to false may be advisable to
         preserve your sanity in such cases).
 
 5-c     Unix.
 -------------
+allow_extended_colours = true
+        Atempt to use more than the eight basic terminal colours for crawl's
+        bright colours. Most modern terminals should use this setting. If
+        successful, this puts console into 16-color mode.
+
+        If this option is enabled and there are enough colours available in
+        the terminal, use the terminal's extended colour palette directly for
+        internal colours.
+
+        An appropriate TERM environment variable must be set for this option to
+        function as expected for capable terminals. For example:
+          * XTerm, MacOS Terminal, or iTerm: xterm-256color
+          * gnome-terminal: vte-256color
+          * PuTTY: putty-256color
+            (set in 'Connection->Data->Terminal-type string')
+
+        If these conditions are not met, crawl will fall back to 8-colour mode
+        and use character attributes to render bright colours, with dark blue
+        as a "fallback" color for rendering dark grey on black. In 8-colour
+        mode, one of the following options may be better.
+
+bold_brightens_foreground = false
+        For 8-colour mode, assume that a bold text attribute will end up
+        brightening the foreground colour. If set to `force` instead of `true`,
+        bright colours will be bolded even in 16-colour mode. Otherwise,
+        this option is ignored when running in 16-colour mode via
+        allow_extended_colours.
+
+        If enabled in 8 color mode on a terminal where the assumption that bold
+        changes the color does not hold, this will result in invisible glyphs
+        for normal/bright colour combos of the same base colour. For example,
+        in the dungeon display, if squares that are out of line of sight appear
+        black, you should not set this to `true`.
+
 blink_brightens_background = false
         For 8-colour mode, assume that a blink text attribute will end up
         brightening the background colour.
@@ -2710,12 +2931,6 @@ blink_brightens_background = false
 
         This option is ignored when running in 16-colour mode via
         allow_extended_colours.
-
-bold_brightens_foreground = false
-        For 8-colour mode, assume that a bold text attribute will end up
-        brightening the foreground colour.
-
-        See blink_brightens_background for more information.
 
 best_effort_brighten_background = false
         If set to true, try to brighten a background colour using blink even if
@@ -2738,24 +2953,6 @@ best_effort_brighten_foreground = true
 
         This option is ignored when running in 16-colour mode via
         allow_extended_colours.
-
-allow_extended_colours = false
-        Allow an *attempt* to use more than the eight basic terminal colours
-        for crawl's bright colours.
-
-        If this option is enabled and there are enough colours available in
-        the terminal, use the terminal's extended colour palette directly for
-        internal colours.
-
-        An appropriate TERM environment variable must be set for this option to
-        function as expected for capable terminals. For example:
-          * XTerm: xterm-256color
-          * gnome-terminal: vte-256color
-          * PuTTY: putty-256color
-            (set in 'Connection->Data->Terminal-type string')
-
-        If these conditions are not met, crawl will fall back to 8-colour mode
-        and use character attributes to render bright colours.
 
 background_colour = black
         Sets the default background colour by name (defaults to BLACK).
@@ -2952,3 +3149,7 @@ Set a separate glyph for unvisited stairs and transporters:
     feature += stone staircase leading up {<,x25C2}
     feature += stone staircase leading down {>,x25B8}
     feature += transporter {xA9, x25CE}
+
+Visit squares with stacks of items when exploring to print all newly
+encountered items:
+    explore_greedy_visit += stacks

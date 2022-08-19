@@ -21,3 +21,5 @@ void down_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
 void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN, bool update_travel_cache = true);
 void new_level(bool restore = false);
 void leaving_level_now(dungeon_feature_type stair_used);
+void rise_through_ceiling();
+level_id level_above();

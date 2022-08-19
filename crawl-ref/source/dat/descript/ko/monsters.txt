@@ -271,7 +271,7 @@ Psyche
 
 금발의 마법사로, 슬픔과 죄책감에 반쯤 미친 채 던전을 떠돌고 있다.
 %%%%
-Purgy
+Pargi
 
 이상할 정도로 비쩍 마른 트롤이다.
 
@@ -928,7 +928,7 @@ gnoll sergeant
 놀 부대를 지휘하는 장군이다. 몸에 새겨진 수많은 상처를 보아하니 어떻게 그
 자리를 차지했는지 짐작할 수 있을 것 같다.
 %%%%
-gnoll shaman
+gnoll bouda
 
 초췌한 늙은 놀이며, 현명하지만 사악하다. 그가 웅얼거리는 이상한 주문과 포효는
 다른 놀들을 광포하게 만든다.
@@ -2166,8 +2166,8 @@ withered plant
 
 그 형태는 유지하고 있지만, 생명력이 모조리 사라진 식물이다. 다른 짐승들에게
 먹히지 않고 죽은 몸이 그대로 유지되었는데, 자연적으로 부패해 짐승들이 그 주변을
-피하기 때문이다. 또한, 이 식물은 죽은 지 {{ if you.branch() == "Crypt" or
-you.branch() == "Tomb" then return "수 세기"; else return "몇 년"; end }}
+피하기 때문이다. 또한, 이 식물은 죽은 지 {{ if you.branch("Crypt") or
+you.branch("Tomb") then return "수 세기"; else return "몇 년"; end }}
 은(는) 되는 것 같다.
 %%%%
 zin angel

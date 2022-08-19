@@ -73,11 +73,6 @@ struct crawl_environment
     // Sort of like player::attribute
     CrawlHashTable properties;
 
-    // Rate at which random monsters spawn, with lower numbers making
-    // them spawn more often (5 or less causes one to spawn about every
-    // 5 turns). Set to 0 to stop random generation.
-    int spawn_random_rate;
-
     // Time when level was saved (hence we write out you.elapsed_time
     // (but load it back to env.elapsed_time); used during level load
     int elapsed_time;
@@ -95,6 +90,7 @@ struct crawl_environment
     coord_def orb_pos;
     int sanctuary_time;
     int forest_awoken_until;
+    bool forest_is_hostile;
     int density;
     int absdepth0;
 

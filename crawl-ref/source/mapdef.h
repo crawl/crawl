@@ -610,10 +610,11 @@ public:
     bool empty() const { return items.empty(); }
 
     string add_item(const string &spec, bool fix = false);
-    string set_item(int index, const string &spec);
 
     // Set this list to be a copy of the item_spec_slot in list.
     void set_from_slot(const item_list &list, int slot_index);
+
+    bool parse_single_spec(item_spec &result, string s);
 
 private:
     struct item_spec_slot
@@ -629,7 +630,6 @@ private:
 private:
     item_spec item_by_specifier(const string &spec);
     item_spec_slot parse_item_spec(string spec);
-    bool parse_single_spec(item_spec &result, string s);
     int parse_acquirement_source(const string &source);
     void parse_raw_name(string name, item_spec &spec);
     void parse_random_by_class(string c, item_spec &spec);
@@ -735,7 +735,6 @@ private:
 private:
     mons_spec mons_by_name(string name) const;
     mons_spec drac_monspec(string name) const;
-    mons_spec demonspawn_monspec(string name) const;
     mons_spec soh_monspec(string name) const;
     void get_zombie_type(string s, mons_spec &spec) const;
     mons_spec get_hydra_spec(const string &name) const;
@@ -1154,13 +1153,13 @@ public:
 
     ::map<dungeon_feature_type, string> feat_renames;
     vector<subvault_place> subvault_places;
+    string          file;
 
 private:
     unordered_set<string>     tags;
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;
     mutable long    cache_offset;
-    string          file;
     string          cache_name;
 
     typedef Matrix<bool> subvault_mask;

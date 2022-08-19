@@ -50,6 +50,6 @@ jeśli żaden plik nie zostanie znaleziony.
 %%%%
 finished random 3
 
-Możesz poprosić o pomoc innych graczy na <w>##crawl</w> kanale IRC na freenode
-(<w>irc.freenode.net</w>).
+Możesz poprosić o pomoc innych graczy na <w>#crawl</w> kanale IRC na Libera
+(<w>irc.libera.chat</w>).
 %%%%

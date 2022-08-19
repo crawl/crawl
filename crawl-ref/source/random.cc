@@ -319,14 +319,6 @@ int div_rand_round(int num, int den)
         return num / den;
 }
 
-// Converts a double to an integer by randomly rounding.
-// Currently does not handle negative inputs.
-int rand_round(double x)
-{
-    ASSERT(x >= 0);
-    return int(x) + decimal_chance(fmod(x, 1.0));
-}
-
 int div_round_up(int num, int den)
 {
     return num / den + (num % den != 0);
@@ -345,6 +337,24 @@ int random2avg(int max, int rolls)
     return sum / rolls;
 }
 
+int random2min(int max, int rolls)
+{
+    int res = random2(max);
+    for (int i = 0; i < (rolls -1); i++)
+        res = min(res, random2(max));
+
+    return res;
+}
+
+int random2max(int ran, int rolls)
+{
+    int res = random2(ran);
+    for (int i = 0; i < (rolls -1); i++)
+        res = max(res, random2(ran));
+
+    return res;
+}
+
 // biased_random2() takes values in the same range [0, max) as random2() but
 // with mean value (max - 1)/(n + 1) biased towards the bottom end.
 // This can be thought of as the smallest of n _distinct_ random integers
@@ -356,24 +366,6 @@ int biased_random2(int max, int n)
         if (x_chance_in_y(n, n + max - 1 - i))
             return i;
     return 0;
-}
-
-// originally designed to randomise evasion -
-// values are slightly lowered near (max) and
-// approach an upper limit somewhere near (limit/2)
-// [0, max]
-int random2limit(int max, int limit)
-{
-    int sum = 0;
-
-    if (max < 1)
-        return 0;
-
-    for (int i = 0; i < max; i++)
-        if (random2(limit) >= i)
-            sum++;
-
-    return sum;
 }
 
 /** Sample from a binomial distribution.

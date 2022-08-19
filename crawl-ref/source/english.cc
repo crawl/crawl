@@ -16,7 +16,7 @@
 
 const char * const standard_plural_qualifiers[] =
 {
-    " of ", " labelled ", nullptr
+    " of ", " labelled ", " from ", nullptr
 };
 
 bool is_vowel(const char32_t chr)
@@ -78,6 +78,8 @@ string pluralise(const string &name, const char * const qualifiers[],
         return name.substr(0, name.length() - 1) + "es";
     else if (name == "catoblepas")
         return "catoblepae";
+    else if (name == "meteoran")
+        return "meteorae";
     else if (ends_with(name, "s"))
         return name;
     else if (ends_with(name, "y"))
@@ -163,6 +165,10 @@ string pluralise(const string &name, const char * const qualifiers[],
         // Tzitzimitl -> Tzitzimimeh (correct Nahuatl pluralisation)
         return name.substr(0, name.length() - 2) + "meh";
     }
+    // "<name>'s ghost" -> "ghosts called <name>".
+    pos = name.find("'s ghost");
+    if (string::npos != pos)
+            return string(name, 0, pos).insert(0, "ghosts called ");
 
     return name + "s";
 }
@@ -280,6 +286,22 @@ const char *decline_pronoun(gender_type gender, pronoun_type variant)
     return _pronoun_declension[gender][variant];
 }
 
+// Takes a lowercase verb stem like "walk", "glid" or "wriggl"
+// (as could be used for "walking", "gliding", or "wriggler")
+// and turn it into the present tense form.
+// TODO: make this more general. (Does english have rules?)
+string walk_verb_to_present(string verb)
+{
+    if (verb == "wriggl")
+        return "wriggle";
+    if (verb == "glid")
+    {
+        return "walk"; // it's a lie! tengu only get this
+                       // verb when they can't fly!
+    }
+    return verb;
+}
+
 static string _tens_in_words(unsigned num)
 {
     static const char *numbers[] =
@@ -311,8 +333,9 @@ static string _join_strings(const string &a, const string &b)
 
 static string _hundreds_in_words(unsigned num)
 {
-    unsigned dreds = num / 100, tens = num % 100;
-    string sdreds = dreds? _tens_in_words(dreds) + " hundred" : "";
+    unsigned dreds = num / 100, tens = num % 100, ones = num % 10;
+    string sdreds = dreds? _tens_in_words(dreds) +
+    ((tens || ones)? " hundred and" : " hundred") : "";
     string stens  = tens? _tens_in_words(tens) : "";
     return _join_strings(sdreds, stens);
 }
@@ -396,7 +419,8 @@ string apply_description(description_level_type desc, const string &name,
     }
 }
 
-string thing_do_grammar(description_level_type dtype, string desc)
+string thing_do_grammar(description_level_type dtype, string desc,
+                        bool ignore_case)
 {
     // Avoid double articles.
     if (starts_with(desc, "the ") || starts_with(desc, "The ")
@@ -408,7 +432,7 @@ string thing_do_grammar(description_level_type dtype, string desc)
             dtype = DESC_PLAIN;
     }
 
-    if (dtype == DESC_PLAIN || isupper(desc[0]))
+    if (dtype == DESC_PLAIN || !ignore_case && isupper(desc[0]))
         return desc;
 
     switch (dtype)
@@ -422,18 +446,4 @@ string thing_do_grammar(description_level_type dtype, string desc)
     default:
         return desc;
     }
-}
-
-string get_desc_quantity(const int quant, const int total, const string &whose)
-{
-    if (total == quant)
-        return uppercase_first(whose);
-    else if (quant == 1)
-        return "One of " + whose;
-    else if (quant == 2)
-        return "Two of " + whose;
-    else if (quant >= total * 3 / 4)
-        return "Most of " + whose;
-    else
-        return "Some of " + whose;
 }

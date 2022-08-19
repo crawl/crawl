@@ -1,8 +1,8 @@
 Developers on IRC
 =================
 
-Some of the Crawl developers hang out on the ##crawl-dev IRC channel on
-freenode (irc://freenode/##crawl-dev). You can ask them development related
+Some of the Crawl developers hang out on the #crawl-dev IRC channel on Libera
+(ircs://irc.libera.chat:6697/#crawl). You can ask them development related
 questions. Users with +v are the people with commit access.
 
 If you have a patch which is ready to commit, submitting it as a GitHub Pull

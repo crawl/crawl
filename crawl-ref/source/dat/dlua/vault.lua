@@ -56,7 +56,7 @@ function ks_random_setup(e, norandomexits)
     --q is used as a placeholder for trees to keep them from being
     -- re-selected in the next step.
     e.subst("w : w.")
-    e.subst("w : wwwWWqt")
+    e.subst("w : wwwWWqq")
     --room setups:
     --0 : doodads replaced with walls
     --1 : walls replaced with water/lava or removed. doodads may or may not be walls
@@ -84,28 +84,27 @@ function ks_random_setup(e, norandomexits)
     end
 end
 
--- the Serpent should appear in exactly one hell end
--- XXX: are things like shafts going to break this?
-function hell_branches_remaining()
-   local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
-   local ret = #hell_branches
-   for _, branch in ipairs(hell_branches) do
-      if travel.find_deepest_explored(branch) == 7 then
-         ret = ret - 1
-      end
-   end
-   return ret
+function soh_hangout()
+  if dgn.persist.soh_hangout == nil then
+    local hell_branches = { "Geh", "Coc", "Dis", "Tar" }
+    dgn.persist.soh_hangout = util.random_from(hell_branches)
+  end
+  return dgn.persist.soh_hangout
 end
 
+-- the Serpent should appear in exactly one hell end. Vaults that call this
+-- should guarantee that `D` is present.
 function serpent_of_hell_setup(e)
-   if not you.uniques("the Serpent of Hell") and
-      crawl.one_chance_in(hell_branches_remaining()) then
-      e.kmons('D = the Serpent of Hell')
-   end
+  local b = soh_hangout()
+  if not you.uniques("the Serpent of Hell")
+        and you.in_branch(b)
+        and you.depth() == dgn.br_depth(b) then
+    e.kmons('D = the Serpent of Hell')
+  end
 end
 
 -- Guarantee two rare base types with a brand
-function halls_of_blades_weapon(e)
+function hall_of_blades_weapon(e)
   local long_blade_type = crawl.one_chance_in(2) and "double sword"
                                                   or "triple sword"
   local types = {"quick blade", long_blade_type,
@@ -148,4 +147,30 @@ function door_vault_setup(e)
   e.lua_marker('a',
                props_marker { stop_explore="strange structure made of doors" })
   e.kfeat("a = runed_door")
+end
+
+--[[
+Set up a KMONS for a master elementalist vault-defined monster. This monster
+will have either the elemental staff or a staff of air and a robe of
+resistance, so it has all of the elemental resistances.
+
+@tab e The map environment.
+@string glyph The glyph on which to define the KMONS.
+]]
+function master_elementalist_setup(e, glyph, ele_staff)
+    local equip_def = " ; elemental staff . robe ego:willpower good_item"
+    -- Don't want to use the fallback here, so we can know to give resistance
+    -- ego robe if the elemental staff isn't available.
+    if you.unrands("elemental staff") then
+        equip_def = " ; staff of air . robe ego:resistance good_item"
+    end
+
+    e.kmons(glyph .. " = wizard hd:18 name:master_elementalist n_rpl" ..
+        " n_des n_noc tile:mons_master_elementalist" ..
+        " spells:lehudib's_crystal_spear.11.wizard;" ..
+            "chain_lightning.11.wizard;" ..
+            "fire_storm.11.wizard;" ..
+            "ozocubu's_refrigeration.11.wizard;" ..
+            "haste.11.wizard;" ..
+            "repel_missiles.11.wizard" .. equip_def)
 end

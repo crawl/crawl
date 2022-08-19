@@ -31,6 +31,8 @@
 #include <string>
 #include <vector>
 
+// TODO: these includes look not very general relative to how other files
+// approach it...
 #ifdef USE_TILE_LOCAL
 #include <SDL.h>
 #include <SDL_keycode.h>
@@ -60,6 +62,7 @@ typedef map<keyseq,keyseq> macromap;
 static macromap Keymaps[KMC_CONTEXT_COUNT];
 static macromap Macros;
 
+// does this need to have all maps for real?
 static macromap *all_maps[] =
 {
     &Keymaps[KMC_DEFAULT],
@@ -254,52 +257,128 @@ static void buf2keyseq(const char *buff, keyseq &k)
     }
 }
 
-int function_keycode_fixup(int keycode)
+static int _name_to_keycode(string s)
 {
-    // is this harmless on windows console?
-#if !defined(USE_TILE_LOCAL) && TAG_MAJOR_VERSION == 34
-    // For many years, dcss has (accidentally, it seems) used these keycodes
-    // for function keys, because of a patch from 2009 that mapped some common
-    // terminal escape codes for F1-F4 to 1011-1014 under the belief (??) that
-    // these were used for some numpad keys. In webtiles code, these keycodes
-    // are even hardcoded in to the non-versioned part of the js code, so it's
-    // extremely hard to change. So we do this somewhat horrible fixup to deal
-    // with the complicated history. TODO: remove some day
-    switch (keycode)
+    // brute-force partial inversion of keycode_to_name. This could probably
+    // be done much more elegantly via a map or similar..
+    // Does not handle modifier keys besides ctrl (TODO)
+    const string lower = lowercase(s);
+    if (s[0] == '^' && s.size() == 2)
     {
-    case -1011: return CK_F1;
-    case -1012: return CK_F2;
-    case -1013: return CK_F3;
-    case -1014: return CK_F4;
-    case -1015: return CK_F5;
-    case -1016: return CK_F6;
-    case -1017: return CK_F7;
-    case -1018: return CK_F8;
-    case -1019: return CK_F9;
-    case -1020: return CK_F10;
-    default:
-        return keycode;
+        // ^A = 1, etc.
+        return 1 + toupper_safe(s[1]) - 'A';
     }
-#else
-    return keycode;
-#endif
+    if (starts_with(lower, "np") && s.size() == 3)
+    {
+        switch (s[2])
+        {
+        case '0': return CK_NUMPAD_0;
+        case '1': return CK_NUMPAD_1;
+        case '2': return CK_NUMPAD_2;
+        case '3': return CK_NUMPAD_3;
+        case '4': return CK_NUMPAD_4;
+        case '5': return CK_NUMPAD_5;
+        case '6': return CK_NUMPAD_6;
+        case '7': return CK_NUMPAD_7;
+        case '8': return CK_NUMPAD_8;
+        case '9': return CK_NUMPAD_9;
+        case '*': return CK_NUMPAD_MULTIPLY;
+        case '+': return CK_NUMPAD_ADD;
+        case '-': return CK_NUMPAD_SUBTRACT;
+        case '.': return CK_NUMPAD_DECIMAL;
+        case '/': return CK_NUMPAD_DIVIDE;
+        case '=': return CK_NUMPAD_EQUALS;
+        default:
+            return CK_NO_KEY;
+        }
+    }
+    else if (lower == "npenter")
+        return CK_NUMPAD_ENTER;
+    else if (starts_with(lowercase(s), "f") && s.size() == 2)
+    {
+        switch (s[1])
+        {
+        case '0': return CK_F0;
+        case '1': return CK_F1;
+        case '2': return CK_F2;
+        case '3': return CK_F3;
+        case '4': return CK_F4;
+        case '5': return CK_F5;
+        case '6': return CK_F6;
+        case '7': return CK_F7;
+        case '8': return CK_F8;
+        case '9': return CK_F9;
+        default:
+            return CK_NO_KEY;
+        }
+    }
+    else if (starts_with(lower, "f1") && s.size() == 3)
+    {
+        switch (s[1])
+        {
+        case '0': return CK_F10;
+        case '1': return CK_F11;
+        case '2': return CK_F12;
+        case '3': return CK_F13;
+        case '4': return CK_F14;
+        case '5': return CK_F15;
+        case '6': return -280;
+        case '7': return -281;
+        case '8': return -282;
+        case '9': return -283;
+        default:
+            return CK_NO_KEY;
+        }
+    }
+    else if (lower == "backspace")
+        return CK_BKSP;
+    else if (lower == "tab")
+        return CK_TAB;
+    else if (lower == "esc")
+        return CK_ESCAPE;
+    else if (lower == "enter")
+        return CK_ENTER;
+    else if (lower == "del")
+        return CK_DELETE;
+    else if (lower == "up")
+        return CK_UP;
+    else if (lower == "down")
+        return CK_DOWN;
+    else if (lower == "left")
+        return CK_LEFT;
+    else if (lower == "right")
+        return CK_RIGHT;
+    else if (lower == "ins")
+        return CK_INSERT;
+    else if (lower == "home")
+        return CK_HOME;
+    else if (lower == "end")
+        return CK_END;
+    else if (lower == "clear")
+        return CK_CLEAR;
+    else if (lower == "pgup")
+        return CK_PGUP;
+    else if (lower == "pgdn")
+        return CK_PGDN;
+
+    return CK_NO_KEY;
 }
 
-static int read_key_code(string s)
+int read_key_code(string s)
 {
     if (s.empty())
         return 0;
+
+    // try human-readable variants
+    int key = _name_to_keycode(s);
+    if (key != CK_NO_KEY)
+        return key;
 
     int base = 10;
     if (s[0] == 'x')
     {
         s = s.substr(1);
         base = 16;
-    }
-    else if (s[0] == '^')
-    {
-        // ^A = 1, etc.
-        return 1 + toupper_safe(s[1]) - 'A';
     }
 
     char *tail;
@@ -367,7 +446,7 @@ keyseq parse_keyseq(string s)
             }
             else
             {
-                const int key = function_keycode_fixup(read_key_code(arg));
+                const int key = read_key_code(arg);
                 v.push_back(key);
             }
 
@@ -461,19 +540,6 @@ static void _macro_inject_sent_keys()
         macro_buf_add(SendKeysBuffer, false, true);
         SendKeysBuffer.clear();
     }
-}
-
-/*
- * Safely add a command to the end of the sendkeys keybuffer.
- */
-void macro_sendkeys_end_add_cmd(command_type cmd)
-{
-    ASSERT_RANGE(cmd, CMD_NO_CMD + 1, CMD_MIN_SYNTHETIC);
-
-    // There should be plenty of room between the synthetic keys
-    // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
-    // command_type to fit (currently 1000 through 2069).
-    macro_sendkeys_end_add_expanded(-((int) cmd));
 }
 
 /*
@@ -914,331 +980,703 @@ void flush_input_buffer(int reason)
     }
 }
 
-static string _macro_prompt_string(const string &macro_type)
+static string _keyseq_desc(const keyseq &key)
 {
-    return make_stringf("Input %s action: ", macro_type.c_str());
-}
-
-static void _macro_prompt(const string &macro_type)
-{
-    msgwin_prompt(_macro_prompt_string(macro_type));
-}
-
-static void _input_action_raw(const string &macro_type, keyseq* action)
-{
-    _macro_prompt(macro_type);
-    const int x = wherex();
-    const int y = wherey();
-    bool done = false;
-
-    while (!done)
+    string r = keycode_to_name(key[0], false);
+    if (!keycode_is_printable(key[0]))
     {
-        cgotoxy(x, y);
-        cprintf("%s", vtostr(*action).c_str());
-
-        int input = getch_ck();
-
-        switch (input)
-        {
-        CASE_ESCAPE
-            done = true;
-            *action = keyseq();
-            break;
-
-        case '\n':
-        case '\r':
-            done = true;
-            break;
-
-        default:
-            action->push_back(input);
-            break;
-        }
+        if (r.empty())
+            r = vtostr(key);
+        else
+            r = make_stringf("%s (%s)", vtostr(key).c_str(), r.c_str());
     }
-
-    msgwin_reply(vtostr(*action));
+    return replace_all(r, "<", "<<");
 }
 
-static void _input_action_text(const string &macro_type, keyseq* action)
+static string _keyseq_action_desc(keyseq &action)
 {
-    char buff[1024];
-    msgwin_get_line_autohist(_macro_prompt_string(macro_type),
-                             buff, sizeof(buff));
-    *action = parse_keyseq(buff);
+    if (action.empty())
+        return "<red>[none]</red>";
+
+    string action_str = vtostr(action);
+    action_str = replace_all(action_str, "<", "<<");
+    return action_str;
 }
 
-static string _macro_type_name(bool keymap, KeymapContext keymc)
+static string _keyseq_action_desc(const keyseq &key, macromap &mapref)
 {
-    return make_stringf("%s%s",
-                        keymap ? (keymc == KMC_DEFAULT    ? "default " :
-                                  keymc == KMC_LEVELMAP   ? "level-map " :
-                                  keymc == KMC_TARGETING  ? "targeting " :
-                                  keymc == KMC_CONFIRM    ? "confirm " :
-                                  keymc == KMC_MENU       ? "menu "
-                                  : "buggy") : "",
-                        (keymap ? "keymap" : "macro"));
+    if (!mapref.count(key))
+    {
+        keyseq empty;
+        return _keyseq_action_desc(empty);
+    }
+    else
+        return _keyseq_action_desc(mapref[key]);
 }
 
 class MacroEditMenu : public Menu
 {
+private:
+    const vector<pair<KeymapContext,string>> modes =
+        { { KMC_NONE, "macros" }, // not actually what KMC_NONE means
+          { KMC_DEFAULT, "default" },
+          { KMC_MENU, "menu" },
+          { KMC_LEVELMAP, "level" },
+          { KMC_TARGETING, "targeting" },
+          { KMC_CONFIRM, "confirmation" }
+        };
+
 public:
-    MacroEditMenu(macromap &_mapref, bool _keymap, KeymapContext _keymc)
-        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING),
-          selected_new_key(false),
-          mapref(_mapref), keymc(_keymc), is_keymap(_keymap)
+    MacroEditMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                | MF_ARROWS_SELECT | MF_WRAP | MF_SPECIAL_MINUS),
+          selected_new_key(false), keymc(KMC_NONE), edited_keymaps(false)
     {
         set_tag("macros");
-        action_cycle = Menu::CYCLE_TOGGLE;
+        remap_numpad = false;
+#ifdef USE_TILE_LOCAL
+        set_min_col_width(MIN_COLS);
+#endif
+        action_cycle = Menu::CYCLE_NONE;
         menu_action  = Menu::ACT_EXECUTE;
+        set_title(new MenuEntry("", MEL_TITLE));
+    }
+
+    void fill_entries(int set_hover_keycode=0)
+    {
+        // TODO: this seems like somehow it should involve ui::Switcher, but I
+        // have no idea how to use that class with a Menu
+        clear();
+        add_entry(new MenuEntry("Create/edit " + mode_name() + " from key", '~',
+            [this](const MenuEntry &)
+                {
+                    edit_mapping(keyseq());
+                    return true;
+                }));
+        if (get_map().size())
+        {
+            MenuEntry *clear_entry = new MenuEntry("Clear all " + mode_name() + "s", '-',
+                [this](const MenuEntry &)
+                    {
+                        status_msg = "";
+                        update_macro_more();
+                        if (item_count() > 0)
+                            clear_all();
+                        return true;
+                    });
+            // manual numpad handling for this class
+            clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT);
+            clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT2);
+
+            add_entry(clear_entry);
+            add_entry(new MenuEntry("Current " + mode_name() + "s", MEL_SUBTITLE));
+            for (auto &mapping : get_map())
+            {
+                // TODO: indicate if macro is from rc file somehow?
+                string action_str = vtostr(mapping.second);
+                action_str = replace_all(action_str, "<", "<<");
+                MenuEntry *me = new MenuEntry(action_str, (int) mapping.first[0],
+                    [this](const MenuEntry &item)
+                    {
+                        if (item.data)
+                            edit_mapping(*static_cast<keyseq *>(item.data));
+                        return true;
+                    });
+                me->data = (void *) &mapping.first;
+                add_entry(me);
+                if (set_hover_keycode == mapping.first[0])
+                    last_hovered = item_count() - 1;
+            }
+        }
+        // update more in case menu changes between empty and non-empty
+        update_macro_more();
+        update_menu(true); // necessary to update webtiles menu
+        if (last_hovered == -1)
+            cycle_hover();
+    }
+
+    bool cycle_mode(bool forward) override
+    {
+        if (!forward) // XX implement reverse
+            return false;
+        auto it = modes.begin();
+        for (; it != modes.end(); it++)
+            if (it->first == keymc)
+                break;
+        if (it == modes.end())
+            keymc = KMC_NONE;
+        else
+        {
+            it++;
+            if (it == modes.end())
+                keymc = KMC_NONE;
+            else
+                keymc = it->first;
+        }
+        status_msg = "";
+        update_title();
+        fill_entries();
+        return true;
+    }
+
+    KeymapContext get_mode() const
+    {
+        return keymc;
+    }
+
+    void update_macro_more()
+    {
+        vector<string> result;
+        for (auto m : modes)
+            if (keymc == m.first)
+                result.push_back("<w>" + m.second + "</w>");
+            else
+                result.push_back(m.second);
+
+        string hint;
+        if (keymc != KMC_NONE)
+            edited_keymaps = true;
+
+        // there's much less use-case for editing keymaps in-game, so hide the
+        // details by default
+        string mode_hint = edited_keymaps
+            ? " cycle mode: " + join_strings(result.begin(), result.end(), "|")
+            : " edit keymaps";
+
+        set_more(formatted_string::parse_string(
+            status_msg + "\n"
+            "Arrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help\n"
+            + menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE)
+            + mode_hint));
+
+    }
+
+    string mode_name()
+    {
+        // XX less stupid implementation
+        switch (keymc)
+        {
+        case KMC_NONE: return "macro";
+        case KMC_DEFAULT: return "regular keymap";
+        case KMC_MENU: return "menu keymap";
+        case KMC_TARGETING: return "targeting keymap";
+        case KMC_LEVELMAP: return "level map keymap";
+        case KMC_CONFIRM: return "confirmation keymap";
+        default: return "buggy keymap";
+        }
     }
 
     virtual formatted_string calc_title() override
     {
-        return formatted_string::parse_string("Editing <w>"
-            + _macro_type_name(is_keymap, keymc) + "</w>. <w>[Enter]</w> to add/edit by key, <w>-</w> to clear all, other keys add");
+        return formatted_string::parse_string(
+            "Editing <w>" + mode_name() + "s</w>.");
+    }
+
+    void clear_all()
+    {
+        const string clear_prompt = make_stringf("Really clear all %ss?",
+                mode_name().c_str());
+        if (yesno(clear_prompt.c_str(), true, 'N'))
+        {
+            get_map() = macromap();
+            status_msg = "All " + mode_name() + "s cleared!";
+            crawl_state.unsaved_macros = true;
+            fill_entries();
+        }
+    }
+
+    macromap &get_map()
+    {
+        return keymc != KMC_NONE ? Keymaps[keymc] : Macros;
+    }
+
+    void clear_mapping(keyseq key)
+    {
+        macromap &mapref = get_map();
+        if (!mapref.count(key))
+            return;
+
+        const int keycode = key[0];
+        string key_str = keycode_is_printable(keycode)
+            ? keycode_to_name(keycode, false).c_str()
+            : make_stringf("%s (%s)",
+                    vtostr(key).c_str(), keycode_to_name(keycode, false).c_str());
+        string action_str = vtostr(mapref[key]);
+
+        action_str = replace_all(action_str, "<", "<<");
+        key_str = replace_all(key_str, "<", "<<");
+
+        status_msg = make_stringf("Cleared %s '%s' => '%s'.",
+                    mode_name().c_str(),
+                    key_str.c_str(),
+                 action_str.c_str());
+
+        macro_del(mapref, key);
+        crawl_state.unsaved_macros = true;
+        fill_entries();
+    }
+
+    void clear_hovered()
+    {
+        if (last_hovered < 0)
+            return;
+        keyseq *_key_chosen = static_cast<keyseq *>(items[last_hovered]->data);
+        if (!_key_chosen)
+            return;
+
+        // TODO: add a quick undo key?
+        clear_mapping(*_key_chosen);
+    }
+
+    class MappingEditMenu : public Menu
+    {
+    public:
+        MappingEditMenu(keyseq _key, keyseq _action, MacroEditMenu &_parent)
+            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
+                | MF_SHOW_EMPTY | MF_SPECIAL_MINUS, ""),
+              key(_key), action(_action), abort(false),
+              parent(_parent),
+              doing_key_input(false), doing_raw_action_input(false)
+        {
+            set_tag("macro_mapping");
+            remap_numpad = false;
+#ifdef USE_TILE_LOCAL
+            set_min_col_width(62); // based on `r` more width
+#endif
+            set_more(string(""));
+            if (key.size() == 0)
+                initialize_needs_key();
+            else if (action.size() == 0)
+            {
+                reset_key_prompt();
+                on_show = [this]()
+                {
+                    if (edit_action())
+                        return false;
+                    initialize_with_key();
+                    update_menu(true);
+                    return true;
+                };
+            }
+            else
+                initialize_with_key();
+        }
+
+        /// show the menu and edit a mapping
+        /// @return whether a mapping was set
+        bool input_mapping()
+        {
+            show();
+            return !abort;
+        }
+
+        /// Initialize the menu to accept key input immediately on show
+        void initialize_needs_key()
+        {
+            clear();
+            key.clear();
+            set_more(string(""));
+            prompt = make_stringf(
+                "Input trigger key to edit or create a %s:",
+                parent.mode_name().c_str());
+            set_title(new MenuEntry(prompt, MEL_TITLE));
+            set_more("<lightgray>([<w>~</w>] to enter by keycode)</lightgray>");
+            doing_key_input = true;
+        }
+
+        void reset_key_prompt()
+        {
+            prompt = make_stringf("Current %s for %s: %s",
+                        parent.mode_name().c_str(),
+                        _keyseq_desc(key).c_str(),
+                        _keyseq_action_desc(action).c_str());
+
+            set_title(new MenuEntry(prompt + "\n", MEL_TITLE));
+        }
+
+        /// Initialize the menu for key editing, given some key to edit
+        void initialize_with_key()
+        {
+            ASSERT(key.size());
+            clear();
+            reset_key_prompt();
+            set_more(string(""));
+
+            add_entry(new MenuEntry("redefine", 'r',
+                [this](const MenuEntry &)
+                {
+                    set_more("");
+                    return !edit_action();
+                }));
+
+            add_entry(new MenuEntry("redefine with raw key entry", 'R',
+                [this](const MenuEntry &)
+                {
+                    set_more("");
+                    edit_action_raw();
+                    return true;
+                }));
+
+            if (!action.empty())
+            {
+                add_entry(new MenuEntry("clear", 'c',
+                    [this](const MenuEntry &)
+                    {
+                        action.clear();
+                        return false;
+                    }));
+            }
+
+            add_entry(new MenuEntry("abort", 'a',
+                [this](const MenuEntry &)
+                {
+                    abort = true;
+                    return false;
+                }));
+
+            if (last_hovered == -1)
+                cycle_hover();
+        }
+
+        /// Enter raw input mode for keymaps -- allows mapping to any key
+        /// except enter and esc
+        void edit_action_raw()
+        {
+            prompt = make_stringf(
+                "<w>%s</w>\nInput (raw) new %s for %s: ",
+                        prompt.c_str(),
+                        parent.mode_name().c_str(),
+                        _keyseq_desc(key).c_str());
+            set_title(new MenuEntry(prompt, MEL_TITLE));
+            set_more("Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.");
+            update_menu(true);
+#ifdef USE_TILE_WEB
+            // put the javascript menu mode in raw input mode
+            tiles.json_open_object();
+            tiles.json_write_string("msg", "title_prompt");
+            tiles.json_write_bool("raw", true);
+            tiles.json_close_object();
+            tiles.finish_message();
+#endif
+            doing_raw_action_input = true;
+        }
+
+        /// edit an action, using title_prompt for text entry
+        /// @return true if an action was fully set
+        bool edit_action()
+        {
+            char buff[1024];
+            const string edit_prompt = make_stringf("<w>%s</w>\nInput new %s for %s:",
+                        prompt.c_str(),
+                        parent.mode_name().c_str(),
+                        _keyseq_desc(key).c_str());
+
+            int old_last_hovered = last_hovered;
+            set_hovered(-1);
+            set_more("Input a key sequence. Use <w>\\{n}</w> to enter keycode <w>n</w>. [<w>esc</w>] for menu");
+            if (!title_prompt(buff, sizeof(buff), edit_prompt.c_str()))
+            {
+                set_hovered(old_last_hovered);
+                set_more("");
+                // line reader success code is 0
+                return lastch == 0;
+            }
+
+            keyseq new_action = parse_keyseq(buff);
+            // it's still possible to get a blank keyseq by having parsing
+            // issues with backslashes, for example
+            if (!new_action.size())
+            {
+                set_more(make_stringf("Parsing error in key sequence '%s'", buff));
+                return true;
+            }
+            set_hovered(old_last_hovered);
+            action = new_action;
+            reset_key_prompt();
+            update_menu(true);
+            return true;
+        }
+
+        bool process_key(int keyin)
+        {
+            // rebinding mouse click generally won't work
+            // TODO: CK_MOUSE_Bn keys don't generally seem implemented
+            if (is_synthetic_key(keyin)
+                || keyin == CK_MOUSE_B2
+                || keyin == 0 || keyin == CK_NO_KEY)
+            {
+                return true;
+            }
+            // stateful key processing:
+            // * in raw action input mode, fill keys into raw_tmp
+            // * in key input mode, fill exactly one key into `key`, either
+            //   by key entry or keycode
+            // * otherwise, use normal menu key handling
+            //
+            // regular action input as well as keycode entry use title_prompt,
+            // and so are handled in the superclass
+            if (doing_raw_action_input)
+            {
+                if (keyin == CK_MOUSE_CLICK || keyin == CK_MOUSE_B1 || keyin == CK_MOUSE_B2)
+                    return true;
+                if (keyin == ESCAPE || keyin == CONTROL('G'))
+                {
+                    doing_raw_action_input = false;
+                    raw_tmp.clear();
+                    set_more("");
+                    reset_key_prompt();
+#ifdef USE_TILE_WEB
+                    tiles.json_open_object();
+                    tiles.json_write_string("msg", "title_prompt");
+                    tiles.json_write_bool("close", true);
+                    tiles.json_close_object();
+                    tiles.finish_message();
+#endif
+                    return true;
+                }
+                else if (keyin == '\r' || keyin == '\n')
+                {
+                    doing_raw_action_input = false;
+                    if (raw_tmp.size() && raw_tmp[0] != 0)
+                        action = raw_tmp;
+                    set_more("");
+                    reset_key_prompt();
+                    return true;
+                }
+                raw_tmp.push_back(keyin);
+                set_title(new MenuEntry(prompt + vtostr(raw_tmp)));
+                return true;
+            }
+            else if (doing_key_input)
+            {
+                if (keyin == CK_MOUSE_CLICK || keyin == CK_MOUSE_B1 || keyin == CK_MOUSE_B2)
+                    return true;
+                doing_key_input = false;
+                if (keyin == ESCAPE || keyin == CONTROL('G'))
+                {
+                    abort = true;
+                    return false;
+                }
+                else if (keyin == '~')
+                {
+                    char buff[10];
+                    set_more("[<w>?</w>] Keycode help. "
+                        "Quick reference: 8: [<w>bksp</w>], "
+                        "9: [<w>tab</w>], 13: [<w>enter</w>], 27: [<w>esc</w>]"
+                        );
+                    if (!title_prompt(buff, sizeof(buff),
+                        "Enter keycode by number:"
+#ifndef USE_TILE_LOCAL
+                        , "console-keycodes"
+#endif
+                        ))
+                    {
+                        abort = true;
+                        return false;
+                    }
+                    keyin = read_key_code(string(buff));
+                    if (keyin == 0)
+                    {
+                        abort = true;
+                        return false;
+                    }
+                }
+
+                // intercept one key, and store it in `key`
+                key.push_back(keyin); // TODO: vs _getch_mul?
+                // switch to editing state and reinit the menu
+                macromap &mapref = parent.get_map();
+                if (!mapref.count(key))
+                    action.clear();
+                else
+                    action = mapref[key];
+                // if the mapping is new, edit immediately
+                if (action.empty())
+                {
+                    prompt = make_stringf("%s %s", prompt.c_str(),
+                                                    _keyseq_desc(key).c_str());
+                    if (edit_action())
+                        return false;
+                }
+                // TODO: this drops to the mapping edit menu at this point. It
+                // would be faster to go back to the main macro menu, but this
+                // allows the player to cancel. Which is better?
+                initialize_with_key();
+                update_menu(true);
+                return true;
+            }
+
+            if (keyin == '?')
+            {
+                show_specific_helps({ "macro-menu"
+#ifndef USE_TILE_LOCAL
+                    , "console-keycodes"
+#endif
+                    });
+            }
+            else if (keyin == 'a')
+                return false; // legacy key
+            return Menu::process_key(keyin);
+        }
+
+        keyseq key;
+        keyseq action;
+        bool abort;
+    protected:
+        MacroEditMenu &parent;
+        keyseq raw_tmp;
+        bool doing_key_input;
+        bool doing_raw_action_input;
+        string prompt;
+    };
+
+    bool edit_mapping(keyseq key)
+    {
+        status_msg = "";
+        update_macro_more();
+
+        const bool existed = get_map().count(key);
+
+        MappingEditMenu pop = MappingEditMenu(key,
+            existed ? get_map()[key] : keyseq(), *this);
+        if (pop.input_mapping())
+        {
+            if (pop.action.size()
+                && (!get_map().count(pop.key) || get_map()[pop.key] != pop.action))
+            {
+                macro_add(get_map(), pop.key, pop.action);
+                status_msg = make_stringf("%s %s '%s' => '%s'.",
+                    existed ? "Redefined" : "Created",
+                    mode_name().c_str(),
+                    _keyseq_desc(pop.key).c_str(),
+                    _keyseq_action_desc(pop.key, get_map()).c_str());
+                crawl_state.unsaved_macros = true;
+            }
+            else if (!pop.action.size())
+                clear_mapping(pop.key);
+            if (pop.key.size())
+                fill_entries(pop.key[0]);
+            // else, we aborted
+        }
+
+        return false;
+    }
+
+    void add_mapping_from_last()
+    {
+        keyseq key;
+        key.push_back(lastch);
+        // XX could this jump right into editing?
+        edit_mapping(key);
+    }
+
+    bool process_command(command_type cmd) override
+    {
+        switch (cmd)
+        {
+        case CMD_MENU_HELP:
+            show_specific_helps({ "macro-menu"
+#ifndef USE_TILE_LOCAL
+                    , "console-keycodes"
+#endif
+                    });
+            return true;
+        default:
+            return Menu::process_command(cmd);
+        }
+    }
+
+    command_type get_command(int keyin) override
+    {
+        if (keyin == '?')
+            return CMD_MENU_HELP;
+        return Menu::get_command(keyin);
     }
 
     bool process_key(int keyin) override
     {
-        if (keyin == CK_ENTER || keyin == '-')
-        {
-            lastch = keyin;
-            return false;
-        }
+        // this menu overrides most superclass keyhandling. First pass some
+        // special cases to the superclass unconditionally:
         switch (keyin)
         {
+        case 0:
         case CK_REDRAW:
-        case CK_MOUSE_B2:
-        case CK_MOUSE_CMD:
-        CASE_ESCAPE
-        case ' ': case CK_PGDN: case '>': case '+':
-        case CK_MOUSE_B1:
         case CK_MOUSE_CLICK:
-        case CK_PGUP: case '<':
-        case CK_UP:
-        case CK_DOWN:
-        case CK_HOME:
-        case CK_END:
-            return Menu::process_key(keyin);
-        default:
-            selected_new_key = true;
-            // fallthrough
+        case CK_MOUSE_B1:
         case CK_ENTER:
-        case '-':
-            lastch = keyin;
-            return false;
+        CASE_ESCAPE
+        case '-': // menu item, always present
+        // not generally remapping numpad, so have to manually handle these
+        case CK_NUMPAD_SUBTRACT:
+        case CK_NUMPAD_SUBTRACT2:
+        case '~': // menu item, always present
+            // then check for a few other special cases the superclass needs
+            // to handle
+            return Menu::process_key(keyin);
+        case CK_NUMPAD_ENTER:
+            // need to handle manually for this menu
+            return Menu::process_key(CK_ENTER);
+        case CK_DELETE:
+        case CK_BKSP:
+            // non-menu-item hotkey specific to this menu
+            clear_hovered();
+            return true;
+        default:
+            break;
         }
+
+        // then check if the key would do an important menu control command,
+        // pass if necessary
+        command_type cmd = get_command(keyin);
+        switch (cmd)
+        {
+            case CMD_MENU_PAGE_UP:
+            case CMD_MENU_PAGE_DOWN:
+            case CMD_MENU_UP:
+            case CMD_MENU_DOWN:
+            case CMD_MENU_SCROLL_TO_TOP:
+            case CMD_MENU_SCROLL_TO_END:
+            case CMD_MENU_EXIT:
+            case CMD_MENU_HELP:
+            case CMD_MENU_CYCLE_MODE: // somewhat weird defaults in this context?
+            case CMD_MENU_CYCLE_MODE_REVERSE:
+                return process_command(cmd);
+            default:
+                break;
+        }
+
+        // finally, handle any other key. Handles opening a submenu both if
+        // a mapping exists, and if it doesn't.
+        lastch = keyin;
+        add_mapping_from_last();
+        return true;
     }
+
     bool selected_new_key;
+    string status_msg;
 protected:
-    macromap &mapref;
     KeymapContext keymc;
-    bool is_keymap;
+    bool edited_keymaps;
 };
 
-void macro_add_query()
+void macro_quick_add()
 {
-    int input;
-    bool keymap = false;
-    KeymapContext keymc = KMC_DEFAULT;
-
-    // TODO: roll this all into a single menu with subsections
-
-    clear_messages();
-    // TODO: add a (r)eset option in case you mess up?
-    mprf(MSGCH_PROMPT, "(m)acro, keymap "
-                       "[(k) default, (x) level-map, (t)argeting, "
-                       "(c)onfirm, m(e)nu], (s)ave? ");
-    input = getch_ck();
-    int low = toalower(input);
-
-    if (low == 'k')
-    {
-        keymap = true;
-        keymc  = KMC_DEFAULT;
-    }
-    else if (low == 'x')
-    {
-        keymap = true;
-        keymc  = KMC_LEVELMAP;
-    }
-    else if (low == 't')
-    {
-        keymap = true;
-        keymc  = KMC_TARGETING;
-    }
-    else if (low == 'c')
-    {
-        keymap = true;
-        keymc  = KMC_CONFIRM;
-    }
-    else if (low == 'e')
-    {
-        keymap = true;
-        keymc  = KMC_MENU;
-    }
-    else if (low == 'm')
-        keymap = false;
-    else if (input == 's')
-    {
-        mpr("Saving macros.");
-        macro_save();
-        return;
-    }
+    MacroEditMenu menu;
+    keyseq empty;
+    menu.edit_mapping(empty);
+    if (menu.status_msg.size())
+        mpr(menu.status_msg);
     else
-    {
-        mpr("Aborting.");
-        return;
-    }
+        canned_msg(MSG_OK);
+}
 
-    // reference to the appropriate mapping
-    macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
+void macro_menu()
+{
+    MacroEditMenu menu;
+    menu.fill_entries();
 
-    MacroEditMenu menu(mapref, keymap, keymc);
-    menu.set_title(new MenuEntry("", MEL_TITLE));
-    for (auto &mapping : mapref)
-    {
-        // TODO: indicate if macro is from rc file somehow?
-        string action_str = vtostr(mapping.second);
-        action_str = replace_all(action_str, "<", "<<");
-        MenuEntry *me = new MenuEntry(action_str,
-                                                MEL_ITEM, 1,
-                                                (int) mapping.first[0]);
-        me->data = (void *) &mapping.first;
-        menu.add_entry(me);
-    }
-
-    keyseq *key_chosen = nullptr;
-    menu.on_single_selection = [&key_chosen](const MenuEntry& item)
-    {
-        key_chosen = static_cast<keyseq *>(item.data);
-        return false;
-    };
     menu.show();
 
-    keyseq key;
-
-    mouse_control mc(MOUSE_MODE_MACRO);
-    const string macro_type = _macro_type_name(keymap, keymc);
-
-    if (!key_chosen)
-    {
-        if (menu.getkey() == CK_ENTER)
-        {
-            const string trigger_prompt = make_stringf(
-                "Input %s trigger key (<white>\\</white> to enter by keycode): ",
-                macro_type.c_str());
-            msgwin_prompt(trigger_prompt);
-            key = _getch_mul();
-            if (key[0] == '\\')
-            {
-                msgwin_reply("keycode");
-                key.clear();
-                char buf[20];
-                msgwin_get_line("Input keycode: ", buf, sizeof(buf));
-                key.push_back(read_key_code(string(buf)));
-                if (key[0] == 0)
-                {
-                    canned_msg(MSG_OK);
-                    return;
-                }
-            }
-            else
-                msgwin_reply(vtostr(key));
-        }
-        else if (menu.getkey() == '-')
-        {
-            const string clear_prompt = make_stringf("Really clear all %ss?",
-                macro_type.c_str());
-            if (yesno(clear_prompt.c_str(), false, 'N'))
-            {
-                mapref = macromap();
-                mprf("All %ss cleared!", macro_type.c_str());
-                crawl_state.unsaved_macros = true;
-            }
-            else
-                canned_msg(MSG_OK);
-            return;
-        }
-        else if (menu.selected_new_key)
-            key.push_back(menu.getkey());
-        else
-            return;
-    }
-    else
-        key = *key_chosen;
-
-    // TODO: menu-ify (or at least do in a popup) the rest of this stuff:
-
-    string key_str = keycode_is_printable(key[0])
-        ? keycode_to_name(key[0]).c_str()
-        : make_stringf("%s (%s)",
-                vtostr(key).c_str(), keycode_to_name(key[0]).c_str());
-    key_str = replace_all(key_str, "<", "<<");
-
-    const bool starts_empty = !mapref.count(key) || mapref[key].empty();
-    string action_str;
-    if (!starts_empty)
-    {
-        action_str = vtostr(mapref[key]);
-        action_str = replace_all(action_str, "<", "<<");
-    }
-    else
-        action_str = "<red>[none]</red>";
-
-    mprf(MSGCH_WARN, "Current Action for %s: %s",
-                                key_str.c_str(), action_str.c_str());
-    mprf(MSGCH_PROMPT, "Do you wish to (r)edefine, %s%sor (a)bort? ",
-        keymap ? "" : "redefine (R)aw, ",
-        starts_empty ? "" : "(c)lear, ");
-
-    input = getch_ck();
-
-    input = toalower(input);
-    if (!starts_empty && input == 'c')
-    {
-        mprf("Cleared %s '%s' => '%s'.",
-             macro_type.c_str(),
-             key_str.c_str(),
-             action_str.c_str());
-        macro_del(mapref, key);
-        crawl_state.unsaved_macros = true;
-        return;
-    }
-    else if (input != 'r' && input != 'R')
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-
-    keyseq action;
-    if (input == 'R' && !keymap) // why isn't raw input mode used for keymaps?
-        _input_action_raw(macro_type, &action);
-    else
-        _input_action_text(macro_type, &action);
-
-    if (action.empty())
-    {
-        const bool deleted_macro = macro_del(mapref, key);
-        if (deleted_macro)
-        {
-            mprf("Deleted %s for '%s'.",
-                 macro_type.c_str(),
-                 key_str.c_str());
-        }
-        else
-            canned_msg(MSG_OK);
-    }
-    else
-    {
-        string new_action_str = vtostr(action);
-        new_action_str = replace_all(new_action_str, "<", "<<");
-        macro_add(mapref, key, action);
-        mprf("Created %s '%s' => '%s'.",
-             macro_type.c_str(), key_str.c_str(), new_action_str.c_str());
-    }
-
-    crawl_state.unsaved_macros = true;
     redraw_screen();
     update_screen();
 }
@@ -1344,7 +1782,7 @@ string read_rc_file_macro(const string& field)
     const int second_space = key_and_action.find(' ');
 
     if (second_space < 0)
-        return "Cannot parse marcos += %s , there are only two arguments";
+        return "Cannot parse macros += %s , there are only two arguments";
 
     const string macro_key_string = key_and_action.substr(0, second_space);
     const string action_string = key_and_action.substr((second_space + 1));
@@ -1364,6 +1802,7 @@ string read_rc_file_macro(const string& field)
     return "";
 }
 
+#ifdef DEBUG
 // useful for debugging
 string keyseq_to_str(const keyseq &seq)
 {
@@ -1381,6 +1820,7 @@ string keyseq_to_str(const keyseq &seq)
     return s.size() == 0 ? s : s.substr(0, s.size() - 2);
 
 }
+#endif
 
 bool keycode_is_printable(int keycode)
 {
@@ -1408,91 +1848,177 @@ bool keycode_is_printable(int keycode)
     }
 }
 
-string keycode_to_name(int keycode)
+string keycode_to_name(int keycode, bool shorten)
 {
+    // nb both of these use string literal concatenation
+    #define CTRL_DESC(x) (shorten ? ("^" x) : ("Ctrl-" x))
+    #define NP_DESC(x) (shorten ? ("NP" x) : ("Numpad " x))
+
+    string prefix = "";
+
+    // ugh
+    if (keycode - CK_CMD_BASE < 256)
+    {
+        // could still also have alt on top of this
+        prefix = (shorten ? "Cmd-" : "Command-");
+        keycode -= CK_CMD_BASE;
+    }
+
+    if (keycode - CK_ALT_BASE >= CK_MIN_INTERNAL && keycode - CK_ALT_BASE <= 256)
+    {
+        prefix += "Alt-";
+        keycode -= CK_ALT_BASE;
+    }
+
     // this is printable, but it's very confusing to try to use ' ' to print it
     // in circumstances where a name is called for
     if (keycode == ' ')
-        return "Space";
-    // TODO: handling of alt keys in SDL is generally a mess, including here
-    // (they are basically just ignored)
+        return prefix + "Space";
+
     if (keycode_is_printable(keycode))
-        return string(1, keycode);
+        return prefix + string(1, keycode);
+
+    // shift/ctrl-modified keys aside from shift-tab don't seem to work on mac
+    // console, and are somewhat spotty on webtiles.
+    const bool shift = (keycode >= CK_SHIFT_UP && keycode <= CK_SHIFT_PGDN);
+    const bool ctrl  = (keycode >= CK_CTRL_UP && keycode <= CK_CTRL_PGDN);
+    const bool ctrlshift = (keycode >= CK_CTRL_SHIFT_UP && keycode <= CK_CTRL_SHIFT_PGDN);
+
+    if (shift)
+    {
+        keycode -= (CK_SHIFT_UP - CK_UP);
+        prefix += "Shift-";
+    }
+    else if (ctrl)
+    {
+        keycode -= (CK_CTRL_UP - CK_UP);
+        prefix += CTRL_DESC("");
+    }
+    else if (ctrlshift)
+    {
+        keycode -= (CK_CTRL_SHIFT_UP - CK_UP);
+        prefix += CTRL_DESC("Shift-");
+    }
 
     // placeholder
     switch (keycode)
     {
     case  0: return "NULL";
-    case  8: return "Backspace"; // CK_BKSP
-    case  9: return "Tab";
-    case 27: return "Esc";
+    case  8: return prefix + "Backspace"; // CK_BKSP
+    case  9: return prefix + "Tab";
+    CASE_ESCAPE return prefix + "Esc";
     case '\n':
     case '\r': // CK_ENTER
-        return "Enter";
-    case CK_DELETE: return "Del";
-    case CK_UP:     return "Up";
-    case CK_DOWN:   return "Down";
-    case CK_LEFT:   return "Left";
-    case CK_RIGHT:  return "Right";
-    case CK_INSERT: return "Ins";
-    case CK_HOME:   return "Home";
-    case CK_CLEAR:  return "Clear";
-    case CK_PGUP:   return "PgUp";
-    case CK_PGDN:   return "PgDn";
-    // shift/ctrl-modified keys aside from shift-tab don't seem to work on mac
-    // console, and are somewhat spotty on webtiles.
-    case CK_SHIFT_UP:     return "Shift-Up";
-    case CK_SHIFT_DOWN:   return "Shift-Down";
-    case CK_SHIFT_LEFT:   return "Shift-Left";
-    case CK_SHIFT_RIGHT:  return "Shift-Right";
-    case CK_SHIFT_INSERT: return "Shift-Ins";
-    case CK_SHIFT_HOME:   return "Shift-Home";
-    case CK_SHIFT_CLEAR:  return "Shift-Clear";
-    case CK_SHIFT_PGUP:   return "Shift-PgUp";
-    case CK_SHIFT_PGDN:   return "Shift-PgDn";
-    case CK_SHIFT_TAB:    return "Shift-Tab";
-    case CK_CTRL_UP:      return "^Up";
-    case CK_CTRL_DOWN:    return "^Down";
-    case CK_CTRL_LEFT:    return "^Left";
-    case CK_CTRL_RIGHT:   return "^Right";
-    case CK_CTRL_INSERT:  return "^Ins";
-    case CK_CTRL_HOME:    return "^Home";
-    case CK_CTRL_CLEAR:   return "^Clear";
-    case CK_CTRL_PGUP:    return "^PgUp";
-    case CK_CTRL_PGDN:    return "^PgDn";
-    case CK_CTRL_TAB:     return "^Tab";
-    case CK_F0:     return "F0";
-    case CK_F1:     return "F1";
-    case CK_F2:     return "F2";
-    case CK_F3:     return "F3";
-    case CK_F4:     return "F4";
-    case CK_F5:     return "F5";
-    case CK_F6:     return "F6";
-    case CK_F7:     return "F7";
-    case CK_F8:     return "F8";
-    case CK_F9:     return "F9";
-    case CK_F10:    return "F10";
-    case CK_F11:    return "F11";
-    case CK_F12:    return "F12";
+        return prefix + "Enter";
+    case CK_DELETE: return prefix + "Del";
+    case CK_UP:     return prefix+"Up";
+    case CK_DOWN:   return prefix+"Down";
+    case CK_LEFT:   return prefix+"Left";
+    case CK_RIGHT:  return prefix+"Right";
+    case CK_INSERT: return prefix+"Ins";
+    case CK_HOME:   return prefix+"Home";
+    case CK_END:    return prefix+"End";
+    case CK_CLEAR:  return prefix+"Clear";
+    case CK_PGUP:   return prefix+"PgUp";
+    case CK_PGDN:   return prefix+"PgDn";
+    // ugly manual handling for these
+    case CK_SHIFT_TAB:         return prefix + "Shift-Tab";
+    case CK_CTRL_TAB:          return prefix + CTRL_DESC("Tab");
+    case CK_CTRL_SHIFT_TAB:    return prefix + CTRL_DESC("Shift-Tab");
+    case CK_SHIFT_ENTER:       return prefix + "Shift-Enter";
+    case CK_CTRL_ENTER:        return prefix + CTRL_DESC("Enter");
+    case CK_CTRL_SHIFT_ENTER:  return prefix + CTRL_DESC("Shift-Enter");
+    case CK_SHIFT_BKSP:        return prefix + "Shift-Backspace";
+    case CK_CTRL_BKSP:         return prefix + CTRL_DESC("Backspace");
+    case CK_CTRL_SHIFT_BKSP:   return prefix + CTRL_DESC("Shift-Backspace");
+    case CK_SHIFT_ESCAPE:      return prefix + "Shift-Esc";
+    case CK_CTRL_ESCAPE:       return prefix + CTRL_DESC("Esc");
+    case CK_CTRL_SHIFT_ESCAPE: return prefix + CTRL_DESC("Shift-Esc");
+    case CK_SHIFT_DELETE:      return prefix + "Shift-Del";
+    case CK_CTRL_DELETE:       return prefix + CTRL_DESC("Del");
+    case CK_CTRL_SHIFT_DELETE: return prefix + CTRL_DESC("Shift-Del");
+    case CK_SHIFT_SPACE:       return prefix + "Shift-Space";
+    case CK_CTRL_SPACE:        return prefix + CTRL_DESC("Space");
+    case CK_CTRL_SHIFT_SPACE:  return prefix + CTRL_DESC("Shift-Space");
+    case CK_F0:     return prefix + "F0";
+    case CK_F1:     return prefix + "F1";
+    case CK_F2:     return prefix + "F2";
+    case CK_F3:     return prefix + "F3";
+    case CK_F4:     return prefix + "F4";
+    case CK_F5:     return prefix + "F5";
+    case CK_F6:     return prefix + "F6";
+    case CK_F7:     return prefix + "F7";
+    case CK_F8:     return prefix + "F8";
+    case CK_F9:     return prefix + "F9";
+    case CK_F10:    return prefix + "F10";
+    case CK_F11:    return prefix + "F11";
+    case CK_F12:    return prefix + "F12";
+    case CK_F13:    return prefix + "F13";
+    case CK_F14:    return prefix + "F14";
+    case CK_F15:    return prefix + "F15";
+    // no keycode defined, but these are available on some terminals via
+    // shifted fn keys, e.g. on xterm and the like, shift-F1 is F13 etc.
+    // this won't necessarily match the actual key label on most keyboards/
+    // terms, but it will give some moderately useful and human readable label.
+    // TODO: define keycodes? see comments in cio.h.
+    case -280:      return prefix + "F16";
+    case -281:      return prefix + "F17";
+    case -282:      return prefix + "F18";
+    case -283:      return prefix + "F19";
+    case -284:      return prefix + "F20";
+    case -285:      return prefix + "F21";
+    case -286:      return prefix + "F22";
+    case -287:      return prefix + "F23";
+    case -288:      return prefix + "F24";
+    case CK_NUMPAD_0: return prefix + NP_DESC("0");
+    case CK_NUMPAD_1: return prefix + NP_DESC("1");
+    case CK_NUMPAD_2: return prefix + NP_DESC("2");
+    case CK_NUMPAD_3: return prefix + NP_DESC("3");
+    case CK_NUMPAD_4: return prefix + NP_DESC("4");
+    case CK_NUMPAD_5: return prefix + NP_DESC("5");
+    case CK_NUMPAD_6: return prefix + NP_DESC("6");
+    case CK_NUMPAD_7: return prefix + NP_DESC("7");
+    case CK_NUMPAD_8: return prefix + NP_DESC("8");
+    case CK_NUMPAD_9: return prefix + NP_DESC("9");
+    // many of these may not actually work on any given local console:
+    // TODO: confirm the names. Some stuff in libunix.cc appears to have
+    // incorrect comments.
+    case CK_NUMPAD_MULTIPLY: return prefix + NP_DESC("*");
+    case CK_NUMPAD_ADD:      return prefix + NP_DESC("+");
+    case CK_NUMPAD_ADD2:     return prefix + NP_DESC("+"); // are there keyboards with both??
+    case CK_NUMPAD_SUBTRACT: return prefix + NP_DESC("-");
+    case CK_NUMPAD_SUBTRACT2: return prefix + NP_DESC("-");
+    case CK_NUMPAD_DECIMAL:  return prefix + NP_DESC(".");
+    case CK_NUMPAD_DIVIDE:   return prefix + NP_DESC("/");
+    case CK_NUMPAD_ENTER:    return prefix + NP_DESC("enter");
+    case CK_NUMPAD_EQUALS:   return prefix + NP_DESC("=");
     default:
+        if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
+            return make_stringf("%s%s%c", prefix.c_str(), CTRL_DESC(""), UNCONTROL(keycode));
 #ifdef USE_TILE_LOCAL
+        // SDL allows control modifiers for some extra punctuation
+        else if (keycode < 0 && keycode > LC_CONTROL(SDLK_EXCLAIM))
+            return make_stringf("%s%s%c", prefix.c_str(), CTRL_DESC(""), LC_UNCONTROL(keycode));
+
         // SDL uses 1 << 30 to indicate non-printable keys, crawl uses negative
         // numbers; convert back to plain SDL form
-        if (keycode < 0)
+        if (keycode < 0 && ((-keycode) & 1<<30))
             keycode = -keycode;
+        if (keycode < 0)
+            return prefix.empty() ? "" : prefix + "\uFFFD"; // �
         // SDL_GetKeyName strips capitalization, so we don't want to use it for
         // printable keys.
-        return string(SDL_GetKeyName(keycode));
+        return prefix + string(SDL_GetKeyName(keycode));
 #else
     {
-        if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
-            return make_stringf("^%c", UNCONTROL(keycode));
-
         keyseq v;
         v.push_back(keycode);
         return vtostr(v);
     }
 #endif
+
+#undef CTRL_DESC
+#undef NP_DESC
     }
 }
 
@@ -1520,10 +2046,10 @@ bool is_synthetic_key(int key)
     case KEY_MACRO_ENABLE_MORE:
     case KEY_MACRO_DISABLE_MORE:
     case KEY_MACRO_MORE_PROTECT:
-#ifdef USE_TILE
     case CK_MOUSE_CMD:
+    case CK_MOUSE_MOVE:
     case CK_REDRAW:
-#endif
+    case CK_RESIZE:
         return true;
     default:
         return false;
@@ -1689,6 +2215,20 @@ int command_to_key(command_type cmd)
     return lookup(_cmds_to_keys[context], cmd, '\0');
 }
 
+vector<int> command_to_keys(command_type cmd)
+{
+    KeymapContext context = context_for_command(cmd);
+    vector<int> result;
+
+    if (context == KMC_NONE)
+        return result;
+
+    for (auto pair : _cmds_to_keys[context])
+        if (pair.first == cmd)
+            result.push_back(pair.second);
+    return result;
+}
+
 KeymapContext context_for_command(command_type cmd)
 {
     if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
@@ -1700,12 +2240,45 @@ KeymapContext context_for_command(command_type cmd)
     if (cmd >= CMD_MIN_TARGET && cmd <= CMD_MAX_TARGET)
         return KMC_TARGETING;
 
+    if (cmd >= CMD_MIN_MENU && cmd <= CMD_MAX_MENU)
+        return KMC_MENU;
+
+    if (cmd >= CMD_MIN_MENU_MS && cmd <= CMD_MAX_MENU_MS)
+        return KMC_MENU_MULTISELECT;
+
 #ifdef USE_TILE
     if (cmd >= CMD_MIN_DOLL && cmd <= CMD_MAX_DOLL)
         return KMC_DOLL;
 #endif
 
     return KMC_NONE;
+}
+
+static bool _allow_rebinding(int key, KeymapContext context)
+{
+    // CK_REDRAW, CK_MOUSE_CMD, CK_MOUSE_MOVE are covered by `is_synthetic_key`
+    if (context == KMC_MENU || context == KMC_MENU_MULTISELECT
+        || context == KMC_TARGETING || context == KMC_LEVELMAP)
+    {
+        // prevent rebinding certain keys in popups/menus that would break
+        // the UI too much. (These can still be modified with a keymap if you
+        // really do want to break things.)
+        switch (key)
+        {
+        CASE_ESCAPE
+        case CK_MOUSE_CLICK:
+        case CK_MOUSE_B2:
+#ifdef TOUCH_UI
+        case CK_TOUCH_DUMMY:
+#endif
+            return false;
+        default:
+            break;
+        }
+        // XX possibly need to prevent removing most default KMC_MENU bindings
+        // so as to not break webtiles?
+    }
+    return true;
 }
 
 void bind_command_to_key(command_type cmd, int key)
@@ -1727,6 +2300,17 @@ void bind_command_to_key(command_type cmd, int key)
              command_name.c_str());
         return;
     }
+#ifdef USE_TILE_WEB
+    else if ((context == KMC_MENU || context == KMC_MENU_MULTISELECT)
+        && tiles.is_controlled_from_web())
+    {
+        // disable because they interact badly with webtiles client code.
+        // TODO: is there any way to get these to work on webtiles?
+        mprf(MSGCH_ERROR, "Ignoring menu bindkey of %s for webtiles client",
+            command_name.c_str());
+        return;
+    }
+#endif
 
     if (is_userfunction(key))
     {
@@ -1740,6 +2324,13 @@ void bind_command_to_key(command_type cmd, int key)
         return;
     }
 
+    if (!_allow_rebinding(key, context))
+    {
+        mprf(MSGCH_ERROR, "Key %d in context %d cannot be rebound.",
+            key, (int) context);
+        return;
+    }
+
     // We're good.
     key_to_cmd_map &key_map = _keys_to_cmds[context];
     cmd_to_key_map &cmd_map = _cmds_to_keys[context];
@@ -1748,52 +2339,9 @@ void bind_command_to_key(command_type cmd, int key)
     cmd_map[cmd] = key;
 }
 
-static string _special_keys_to_string(int key)
-{
-    const bool shift = (key >= CK_SHIFT_UP && key <= CK_SHIFT_PGDN);
-    const bool ctrl  = (key >= CK_CTRL_UP && key <= CK_CTRL_PGDN);
-
-    string cmd = "";
-
-    if (shift)
-    {
-        key -= (CK_SHIFT_UP - CK_UP);
-        cmd = "Shift-";
-    }
-    else if (ctrl)
-    {
-        key -= (CK_CTRL_UP - CK_UP);
-        cmd = "Ctrl-";
-    }
-
-    switch (key)
-    {
-    case CK_ENTER:  cmd += "Enter"; break;
-    case CK_BKSP:   cmd += "Backspace"; break;
-    CASE_ESCAPE     cmd += "Esc"; break;
-    case CK_DELETE: cmd += "Del"; break;
-    case CK_UP:     cmd += "Up"; break;
-    case CK_DOWN:   cmd += "Down"; break;
-    case CK_LEFT:   cmd += "Left"; break;
-    case CK_RIGHT:  cmd += "Right"; break;
-    case CK_INSERT: cmd += "Ins"; break;
-    case CK_HOME:   cmd += "Home"; break;
-    case CK_END:    cmd += "End"; break;
-    case CK_CLEAR:  cmd += "Clear"; break;
-    case CK_PGUP:   cmd += "PgUp"; break;
-    case CK_PGDN:   cmd += "PgDn"; break;
-    }
-
-    return cmd;
-}
-
 string command_to_string(command_type cmd, bool tutorial)
 {
     const int key = command_to_key(cmd);
-
-    const string desc = _special_keys_to_string(key);
-    if (!desc.empty())
-        return desc;
 
     string result;
     if (key >= 32 && key < 256)
@@ -1803,24 +2351,8 @@ string command_to_string(command_type cmd, bool tutorial)
         else
             result = string(1, (char) key);
     }
-    else if (key > 1000 && key <= 1009)
-    {
-        const int numpad = (key - 1000);
-        result = make_stringf("Numpad %d", numpad);
-    }
-#ifdef USE_TILE_LOCAL
-    // SDL allows control modifiers for some extra punctuation
-    else if (key < 0 && key > SDLK_EXCLAIM - SDLK_a + 1)
-        result = make_stringf("Ctrl-%c", (char) (key + SDLK_a - 1));
-#endif
     else
-    {
-        const int ch = key + 'A' - 1;
-        if (ch >= 'A' && ch <= 'Z')
-            result = make_stringf("Ctrl-%c", (char) ch);
-        else
-            result = to_string(key);
-    }
+        result = keycode_to_name(key, false);
 
     return result;
 }

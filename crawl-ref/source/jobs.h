@@ -5,6 +5,7 @@
 #include "item-prop-enum.h"
 #include "job-type.h"
 #include "species-type.h"
+#include "spell-type.h"
 
 using std::vector;
 
@@ -17,9 +18,9 @@ vector<species_type> job_recommended_species(job_type job);
 
 bool job_has_weapon_choice(job_type job);
 bool job_gets_good_weapons(job_type job);
-bool job_gets_ranged_weapons(job_type job);
 void give_job_equipment(job_type job);
 void give_job_skills(job_type job);
+vector<spell_type> get_job_spells(job_type job);
 
 void job_stat_init(job_type job);
 

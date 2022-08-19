@@ -1610,26 +1610,3 @@ x..           ..x
 .....x.....x.....
  ...xxx...xxx...
 ENDMAP
-
-# Not Minivault 9 (by Mu.)
-NAME:   vaults_not_door_vault_mu
-TAGS:   vaults_empty
-WEIGHT: 1
-KMONS:  12 = butterfly
-: door_vault_setup(_G)
-MAP
-..............
-..............
-..aaaaaaaaaa..
-..a++++++++a..
-..a++++++++a..
-..a++1111++a..
- .a++1221++a..
-..a++1221++a..
-..a++1111++a..
-..a++++++++a..
-..a++++++++a..
-..aaaaaaaaaa..
-..............
-..............
-ENDMAP

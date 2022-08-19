@@ -4,7 +4,7 @@ The following is a step-by-step guide for how to proceed through the releasing
 process. For minor releases (0.X.y), steps 0 and 1 have already been done, so
 for those the list begins with step 3.
 
-0. Delay branching until all features are there and announce on CRD.
+0. Delay branching until all features are there and announce in #crawl-dev.
 
    It makes little sense to cherry-pick actual features, or even a major amount
    of bug fixes. If there are features not meant for the release, please put

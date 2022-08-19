@@ -52,7 +52,11 @@ function ch_stash_search_annotate_item(it)
 
   local skill = it.weap_skill
   if skill then
-    annot = annot .. "{" .. skill .. "} "
+    local skills = crawl.split(skill, ",")
+    for i = 1, #skills, 1
+    do
+        annot = annot .. "{" .. skills[i] .. "} "
+    end
     local hands = it.hands
     local hands_adj
     if hands == 2 then
@@ -83,11 +87,15 @@ function ch_stash_search_annotate_item(it)
       end
       annot = annot .. "} "
     else
+      if it.ego_type_terse == "Fly" then
+        annot = annot .. "{flight} "
+      end
       annot = annot .. "{" .. it.ego_type_terse .. "} "
     end
   end
 
   if it.class(true) == "magical staff" and not it.artefact then
+    annot = annot .. "{weapon} "
     local props = {
       ["air"] = "rElec",
       ["cold"] = "rC+",

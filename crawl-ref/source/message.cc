@@ -15,9 +15,7 @@
 #include "hints.h"
 #include "initfile.h"
 #include "libutil.h"
-#ifdef WIZARD
- #include "luaterp.h"
-#endif
+#include "luaterp.h"
 #include "menu.h"
 #include "monster.h"
 #include "mon-util.h"
@@ -896,7 +894,8 @@ public:
 #ifdef USE_TILE_WEB
     void send()
     {
-        if (unsent == 0 || (send_ignore_one && unsent == 1)) return;
+        if (unsent == 0 || (send_ignore_one && unsent == 1))
+            return;
 
         if (client_rollback > 0)
         {
@@ -944,8 +943,22 @@ void webtiles_send_messages()
     tiles.json_close_object(true);
     tiles.finish_message();
 }
+
+void webtiles_send_more_text(string txt)
+{
+    if (!crawl_state.io_inited || !crawl_state.game_started)
+        return;
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "msgs");
+    tiles.json_treat_as_empty();
+    tiles.json_write_bool("more", txt.size());
+    tiles.json_write_string("more_text", txt);
+    tiles.json_close_object(true);
+    tiles.finish_message();
+}
+
 #else
-void webtiles_send_messages() { }
+void webtiles_send_more_text(string) { }
 #endif
 
 static FILE* _msg_dump_file = nullptr;
@@ -1493,6 +1506,8 @@ static int _last_msg_turn = -1; // Turn of last message.
 static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
                  bool cap)
 {
+    static bool _doing_c_message_hook = false;
+
     rng::generator rng(rng::UI);
 
     if (_msg_dump_file != nullptr)
@@ -1533,7 +1548,10 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     msg_colour_type colour = prepare_message(text, channel, param);
 
     string col = colour_to_str(colour_msg(colour));
-    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
+    // lack of a closing tag is intentional: this is a valid color string and
+    // makes fewer assumptions about `text` this way.
+    // TODO: this doesn't override any opening color in `text`...
+    text = "<" + col + ">" + text; // XXX
 
     msg::_append_to_tees(text + "\n", channel);
 
@@ -1544,7 +1562,15 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
         return;
     }
 
-    clua.callfn("c_message", "ss", text.c_str(), channel_to_str(channel).c_str());
+    // TODO: running this hook from here is still pretty crazy, maybe it should
+    // be batched and done in the main game loop? But doing it this way at least
+    // does let us directly detect recursion.
+    if (!_doing_c_message_hook)
+    {
+        unwind_bool no_reentry(_doing_c_message_hook, true);
+        clua.callfn("c_message", "ss", text.c_str(),
+                                        channel_to_str(channel).c_str());
+    }
 
     bool domore = _check_more(text, channel);
     bool do_flash_screen = _check_flash_screen(text, channel);
@@ -1665,7 +1691,7 @@ int msgwin_get_line(string prompt, char *buf, int len,
 
 #ifdef USE_TILE_WEB
         tiles.json_open_object();
-        tiles.json_write_string("prompt", colour_prompt.to_colour_string());
+        tiles.json_write_string("prompt", colour_prompt.to_colour_string(colour_msg(colour)));
         tiles.push_ui_layout("msgwin-get-line", 0);
         popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
@@ -1870,6 +1896,7 @@ static void readkey_more(bool user_forced)
         }
     }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
+           && keypress != CK_NUMPAD_ENTER
            && !key_is_escape(keypress)
 #ifdef TOUCH_UI
            && keypress != CK_MOUSE_CLICK);
@@ -2023,9 +2050,6 @@ void canned_msg(canned_message_type which_message)
         case MSG_DISORIENTED:
             mpr("You feel momentarily disoriented.");
             break;
-        case MSG_TOO_HUNGRY:
-            mpr("You're too hungry.");
-            break;
         case MSG_DETECT_NOTHING:
             mpr("You detect nothing.");
             break;
@@ -2168,23 +2192,6 @@ string get_last_messages(int mcount, bool full)
     return text;
 }
 
-void get_recent_messages(vector<string> &mess,
-                         vector<msg_channel_type> &chan)
-{
-    flush_prev_message();
-
-    const store_t& msgs = buffer.get_store();
-    int mcount = NUM_STORED_MESSAGES;
-    for (int i = -1; mcount > 0; --i, --mcount)
-    {
-        const message_line msg = msgs[i];
-        if (!msg)
-            break;
-        mess.push_back(msg.pure_text_with_repeats());
-        chan.push_back(msg.channel);
-    }
-}
-
 bool recent_error_messages()
 {
     // TODO: track whether player has seen error messages so this can be
@@ -2310,6 +2317,8 @@ void set_msg_dump_file(FILE* file)
     _msg_dump_file = file;
 }
 
+// XX unclear why we have both this and an overload of mpr that takes a
+// formatted_string
 void formatted_mpr(const formatted_string& fs,
                    msg_channel_type channel, int param)
 {

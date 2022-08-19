@@ -13,13 +13,10 @@ aptitudes:
   short_blades: -1
   long_blades: -1
   maces_and_flails: -1
-  slings: -3
-  bows: -3
-  crossbows: -3
+  ranged weapons: -3
   armour: -2
   dodging: -1
   stealth: -2
-  shields: -1
   unarmed_combat: -1
   spellcasting: 1
   conjurations: -1
@@ -46,16 +43,14 @@ mutations:
   1:
     MUT_TOUGH_SKIN: 1
 recommended_jobs:
-  - JOB_HUNTER
+  - JOB_GLADIATOR
   - JOB_BERSERKER
-  - JOB_ARCANE_MARKSMAN
-  - JOB_WIZARD
+  - JOB_CINDER_ACOLYTE
+  - JOB_HEDGE_WIZARD
+  - JOB_AIR_ELEMENTALIST
   - JOB_FIRE_ELEMENTALIST
 recommended_weapons:
   - SK_MACES_FLAILS
   - SK_POLEARMS
   - SK_STAVES
   - SK_AXES
-# start TAG_MAJOR_VERSION == 34
-create_enum: false
-# end TAG_MAJOR_VERSION

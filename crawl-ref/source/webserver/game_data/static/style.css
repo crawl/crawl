@@ -1,6 +1,14 @@
 body {
     margin: 0px;
     overflow: hidden;
+    text-size-adjust: none;
+}
+
+canvas {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #lobby {
@@ -47,9 +55,6 @@ body {
 }
 #stats_piety {
     color: #fce94f; /* yellow */
-}
-#stats_gozag_gold{
-    color: #babdb6; /* lightgray */
 }
 #stats_piety.penance {
     color: #a40000; /* red */
@@ -197,14 +202,6 @@ body {
     margin-right:0.5em;
 }
 
-/* float this to the right of the weapon display */
-#stats_launcher_quiver
-{
-    float: right;
-    display: block;
-    margin-left: 0.2em;
-}
-
 #stats_weapon
 {
     white-space: nowrap;
@@ -303,8 +300,7 @@ body {
 }
 
 #monster_list .good_neutral,
-#monster_list .neutral,
-#monster_list .strict_neutral {
+#monster_list .neutral, {
     color: #8f5902; /* brown */
 }
 
@@ -470,7 +466,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.001);
 }
 
-.menu_contents li.selectable:hover {
+.menu_contents li.hovered {
     background: rgba(255,255,255,0.15);
     cursor: pointer;
     color: white;
@@ -485,11 +481,11 @@ body {
     color: darkgray;
 }
 
-.menu .pattern_select {
+.menu .title_prompt {
     height: 1em;
     border: 0;
-    padding: 0;
-    margin: 0;
+    padding: 0px 2px 0px 2px;
+    margin: 0px 0px 0px 4px;
     font-family: monospace;
     font-size: 16px;
 }
@@ -628,6 +624,10 @@ body {
     white-space: pre-wrap;
 }
 
+.describe-feature .actions span[data-hotkey]:hover {
+    background: #555;
+}
+
 .describe-item {
     max-width: 80ch;
     display: -webkit-box;
@@ -661,6 +661,9 @@ body {
 .describe-item > .actions {
     margin-top: 15px;
     color: cyan;
+}
+.describe-item > .actions span[data-hotkey]:hover {
+    background: #555;
 }
 
 .describe-spell {
@@ -1033,7 +1036,7 @@ body {
 
 .ui-popup-outer {
     margin: 50px;
-    max-height: calc(100vh - 100px);
+    max-height: calc(95vh - 100px);
 
     padding: 20px;
     background-color: #040204;
@@ -1052,7 +1055,7 @@ body {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    max-height: calc(100vh - 100px - 46px); /* for IE11 */
+    max-height: calc(95vh - 100px - 46px); /* for IE11 */
 }
 .ui-popup-inner:after {
     display: block;
@@ -1126,10 +1129,10 @@ body {
     }
     .ui-popup-outer {
         margin: 20px;
-        max-height: calc(100vh - 40px);
+        max-height: calc(95vh - 40px);
     }
     .ui-popup-inner {
-        max-height: calc(100vh - 40px - 46px);
+        max-height: calc(95vh - 40px - 46px);
     }
 }
 
@@ -1338,4 +1341,130 @@ body {
     padding: 4px 8px;
     font-family: monospace;
     cursor: pointer;
+}
+
+/* action panel */
+#action-panel {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    border: 2px solid #7d623c;
+    border-radius: 3px;
+}
+
+#action-panel-tooltip
+{
+    position: absolute;
+    display: table;
+    left: 0px;
+    right: 0px;
+    border: 1px solid #7d623c;
+    background: rgba(0, 0, 0, 0.85);
+    font-size: small;
+    padding: 5px;
+}
+
+/* makes the hidden panel or its placeholder immune to $.show() */
+.action-panel.hidden {
+    display: none !important;
+}
+
+#action-panel-placeholder {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    border: 1px solid #7d623c;
+
+    background: rgba(0, 0, 0, 0.85);
+    width: 1em;
+    text-align: center;
+    font-size: small;
+    padding: 5px;
+}
+
+#action-panel-placeholder a {
+    text-decoration: none;
+}
+
+#action-panel-settings {
+    position: absolute;
+    background: black;
+    color: #babdb6;
+    border: 2px solid #7d623c;
+    padding: 2px;
+    font-size: 16px;
+    font-family: monospace;
+}
+
+#action-panel-settings fieldset {
+    border-width: 1px;
+    margin: 0px 2px 2px 2px;
+    padding: 5px 5px 10px 5px;
+}
+
+#action-panel-settings fieldset legend
+{
+    margin: 0px;
+    padding: 0px;
+    border-bottom: 0px;
+}
+
+#action-panel-settings button,input {
+    display: inline;
+    color: black;
+}
+
+fieldset.option {
+    display: flex;
+    justify-content: space-around;
+}
+
+div.settings-buttons {
+    display: flex;
+}
+
+#action-panel-settings input[type=number] {
+    width: 100px;
+    font: 14px monospace;
+}
+
+#action-panel-settings input[type=number]:invalid {
+    border: 2px solid red;
+}
+
+fieldset.option button {
+    margin-left: 4px;
+    min-width: 30%;
+}
+
+#settings-note {
+    inline-size: 180px;
+    display: inline-block;
+    font-size: smaller;
+    padding: 0.5em;
+}
+
+div.settings-buttons button {
+    width: 50%;
+    margin: 2px;
+}
+
+#mobile_input {
+    position: relative;
+    height: 0px;
+    bottom: 25px;
+}
+
+#mobile_input input {
+    background: rgba(0, 0, 0, 0.5);
+    color: #A2A2A280;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #62626280;
+    height: 13px;
+    caret-color: transparent;
+}
+
+#mobile_input input:focus {
+    outline: none;
 }

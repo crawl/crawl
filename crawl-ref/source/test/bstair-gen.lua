@@ -19,5 +19,6 @@ end
 
 test_branch_stair_places(niters,
                  { { "Depths:$", "enter_zot" },
-                   { "Depths:3", "enter_pandemonium" },
-                   { "Depths:2", "enter_hell" } })
+                   { "Depths:3", "enter_abyss" },
+                   { "Depths:2", "enter_pandemonium" },
+                   { "Depths:1", "enter_hell" } })

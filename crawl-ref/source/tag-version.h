@@ -258,6 +258,23 @@ enum tag_minor_version
     TAG_MINOR_UNCURSE,             // Remove curses from items
     TAG_MINOR_NEW_ASHENZARI,       // New Ashenzari
     TAG_MINOR_COMPRESS_BADMUTS,    // Reduce some mutations to 2 levels
+    TAG_MINOR_NEW_TREES,           // New tree types
+    TAG_MINOR_DISEASE,             // Turn disease into a normal duration
+    TAG_MINOR_BOOK_UNID,           // Remove book ID.
+    TAG_MINOR_EVOLUTION_XP,        // Invert the meaning of ATTR_EVOL_XP.
+    TAG_MINOR_ZOT_ENTRY_FIXUP,     // Fixup Zot branch entry for shorter Depths
+    TAG_MINOR_VORTEX_POWER,        // Store polar vortex power on cast.
+    TAG_MINOR_CUT_STRICT_NEUTRAL,  // Merge strict_neutral with good_neutral
+    TAG_MINOR_SPLIT_HELL_GATE,     // Split "enter" and "leave branch" features.
+    TAG_MINOR_MOSTLY_REMOVE_AMMO,  // Remove most aspects of launcher ammo.
+    TAG_MINOR_METEORAN_ENUM,       // Fix misordered enums.
+    TAG_MINOR_MY_ENUM,             // Fix more misordered enums.
+    TAG_MINOR_WAND_SETS,           // Initialise wand generation sets.
+    TAG_MINOR_ABYSS_SEVEN,         // Deepen the abyss to 7 floors.
+    TAG_MINOR_REMOVE_CT_SKILLS,    // Remove the very long-unused ct skills.
+    TAG_MINOR_MERGE_RANGED,        // Merge all ranged weapon skills together.
+    TAG_MINOR_RECOMPRESS_BADMUTS,  // Reduce some more mutations to 2 levels.
+    TAG_MINOR_SPAWN_RATE,          // Remove the env.spawn_random_rate field.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -68,7 +68,7 @@ function theme.room_material(wall_type)
 
     wall_type = wall_type or 'x'
 
-    if you.branch() == "Dis" then
+    if you.in_branch("Dis") then
         return 'x'  -- Will be converted to metal
     elseif crawl.one_chance_in(250) then
         return 'b'
@@ -88,7 +88,7 @@ function theme.add_gehenna_buildings(e)
 
     local depth_fraction = you.depth_fraction()
     local border = 4
-    local gxm, gym = dgn.max_bounds()
+    local gxm, gym = dgn.builder_bounds()
     local right  = gxm - 1 - border
     local bottom = gym - 1 - border
     local size_max = 6 + 4 * depth_fraction

@@ -43,6 +43,10 @@ Regen status
 You regenerate health at an unnaturally fast rate. This is only shown for
 temporary regeneration.
 %%%%
+-Regen status
+
+Your health has stopped regenerating due to the presence of nearby monsters.
+%%%%
 RMsl status
 
 You repel missiles, improving your chance to evade them.
@@ -61,13 +65,20 @@ Berserk status
 You are hasted, deal increased damage in combat, and have increased health, but
 are unable to make most actions other than moving and attacking. The status
 will wear off very quickly unless you are attacking monsters, and when it
-expires you will be slowed and unable to berserk again for a short duration,
-and may be paralysed temporarily as well.
+expires you will be slowed and unable to berserk again for a short duration.
 %%%%
 -Berserk status
 
 You are recovering from your berserk rage, and are unable to berserk again for
 a short duration.
+%%%%
+Bearserk status
+
+You are filled with barbearic rage! You are hasted, deal grizzly damage, and
+have greatly increased health, but find it impawsible to do much other than
+move and maul foes. You'll bid furwell to this status very quickly unless you
+are attacking, and when it expires you will be slowed and unable to bearserk
+again for a short duration.
 %%%%
 Pois status
 
@@ -173,8 +184,7 @@ without taking damage.
 %%%%
 Sick status
 
-You have been sickened, and your health will no longer regenerate. Sickness can
-be cured immediately by potions of curing.
+You have been sickened, and your health will no longer regenerate.
 %%%%
 Vertigo status
 
@@ -194,7 +204,7 @@ lost to the flaying.
 %%%%
 Weak status
 
-Your physical attacks do less damage.
+Your melee attacks do 25% less damage.
 %%%%
 Frozen status
 
@@ -202,15 +212,18 @@ You are covered in ice, and your movement speed is reduced.
 %%%%
 Sap status
 
-Your magic is sapped. Each time you cast a spell, there is a chance of the
-severity of the effect increasing, which causes your spellcasting success rate
-to fall.
+Your magic is sapped. Casting a spell will cause you to lose access to your
+magic, briefly preventing you from casting any further spells.
+%%%%
+-Cast status
+
+You are unable to cast spells.
 %%%%
 Brainless status
 
 Your intelligence has fallen to 0. You are slowed, cannot cast or memorise
-spells, and will usually fail when attempting to read scrolls. The status will
-persist for a short while even after recovering your intelligence.
+spells, and cannot read scrolls. The status will persist for a short while even
+after recovering your intelligence.
 %%%%
 Clumsy status
 
@@ -220,13 +233,13 @@ while even after recovering your dexterity.
 %%%%
 Collapse status
 
-Your strength has fallen to 0. You are slowed, and your health regeneration is
-greatly reduced. The status will persist for a short while even after
+Your strength has fallen to 0. You are slowed, and you do not regenerate health
+while monsters are visible. The status will persist for a short while even after
 recovering your strength.
 %%%%
 DChan status
 
-You are channeling the dead, causing any living creatures killed in your
+You are channelling the dead, causing any living creatures killed in your
 vicinity to be raised as spectral servants.
 %%%%
 Vit status
@@ -310,19 +323,14 @@ Stealth status
 
 Your stealth is greatly increased.
 %%%%
-Mirror status
+Vortex status
 
-You are reflecting any damage taken to your attackers, reducing piety depending
-on the amount of damage dealt.
-%%%%
-Tornado status
-
-You are in the eye of a mighty hurricane. After the tornado fades, it cannot be
+You are in the eye of a mighty ice storm. After the vortex fades, it cannot be
 called forth again for a short time.
 %%%%
--Tornado status
+-Vortex status
 
-You are surrounded by unstable winds, and cannot recast Tornado for a short
+You are surrounded by unstable winds, and cannot recast Polar Vortex for a short
 duration.
 %%%%
 Liquid status
@@ -338,11 +346,10 @@ Finesse status
 
 Your combat speed is greatly increased.
 %%%%
-Prot status
+Duel status
 
-You are beseeching Elyvilon to save your life. If you are mortally wounded, the
-Healer may undo the killing blow. Killing others while asking for divine
-protection will cause penance.
+You are duelling a foe in Okawaru's Arena, and will be returned whence you came
+if you are victorious.
 %%%%
 Disjoin status
 
@@ -351,8 +358,8 @@ randomly blinked away from you.
 %%%%
 Slay status
 
-You have the blood of a were-beast, providing bonuses to your ranged and melee
-attacks which increase every time you slay a foe in combat.
+You have the blood of a were-beast, healing you and providing bonuses to
+your ranged and melee attacks which increase every time you slay a foe.
 %%%%
 Toxic status
 
@@ -454,7 +461,7 @@ You are unable to cast spells.
 %%%%
 Channel status
 
-You are channeling magical energy.
+You are channelling magical energy.
 %%%%
 Spider status
 
@@ -476,8 +483,8 @@ Statue status
 
 You have been transformed into a slow but extremely robust stone statue.
 Your melee damage, both unarmed and with weapons, is substantially increased.
-Your stone body is insulated from electricity and gains resistance to poison,
-and negative energy.
+Your stone body is immune to poison and miasma, and gains resistance to
+electricity and negative energy.
 
 Any equipped body armour, gloves and boots are melded.
 %%%%
@@ -522,6 +529,15 @@ Dragon status
     return desc
 }} Your melee attacks deal incredible damage, and you are much more robust but
 less evasive.
+
+Any equipped weapons and armour are melded.
+%%%%
+Storm status
+
+You have been transformed into a lightning-filled tempest. Your melee attacks
+are strengthened and electrified, and strike all adjacent foes. You gain flight,
+increased evasion, immunity to poison and miasma, and resistance to electricity.
+You gain the ability to launch yourself at foes as a lightning bolt.
 
 Any equipped weapons and armour are melded.
 %%%%
@@ -574,15 +590,15 @@ Tree status
 
 You have been transformed into a tree and are rooted to the ground, unable to
 move or teleport. You have minimal evasion but increased health and natural
-armour, and are resistant to poison and immune to negative energy.
+armour, and are resistant to poison and immune to torment.
 
 Any equipped cloak, helmet, gloves, boots and body armour are melded.
 %%%%
 Wisp status
 
-You have been transformed into an insubstantial wisp of gas. You move quickly
-and are highly evasive, and you occasionally blink at random. You are resistant
-to fire, cold, electricity and acid, and immune to poison, and negative energy.
+You have been transformed into an insubstantial wisp of gas. You are highly
+evasive and are resistant to fire, cold, electricity and acid, and immune to
+poison, and negative energy.
 
 Any equipped weapons, armour and jewellery are melded, and you are unable to
 cast spells. The effectiveness of your melee attacks while in this form is based
@@ -608,15 +624,6 @@ infinite willpower. However, your ability to deal damage in melee and with
 ranged attacks is halved, your spellcasting power is greatly hampered, and your
 maximum health is further drained when taking damage.
 %%%%
-Hydra status
-
-You have been transformed into an amphibious, many-headed hydra. Your multiple
-heads strike in all directions when attacking, and edible foes that are slain
-are instantly consumed for nutrition and health. You are naturally robust, and
-resistant to poison.
-
-Any equipped weapons and armour are melded.
-%%%%
 Orb status
 
 You are near (or perhaps holding) the Orb of Zot, whose energies disrupt
@@ -631,11 +638,18 @@ casting spells, are fine.)
 %%%%
 Ray status
 
-You are currently channeling a ray of searing magical energy. Pressing . will
-maintain and intensify the ray, at the cost of 1 MP per turn; any other action,
-including recasting the spell, will end it.
+You are currently channelling a ray of searing magical energy. Pressing
+<w>.</w> or <w>s</w> to wait in place will maintain and intensify the ray, at
+the cost of 1 MP per turn. Any other action, including recasting the spell,
+will end it.
+%%%%
+Ray+ status
 
-# XXX: also cover Ray+, Ray++?
+<Ray status>
+%%%%
+Ray++ status
+
+<Ray status>
 %%%%
 Lash status
 
@@ -643,7 +657,7 @@ You are moving at supernatural speed, causing movement actions to become
 instant. Any martial attacks made while moving in this way deal increased
 damage and never miss.
 %%%%
-Storm status
+Heavenly status
 
 You are surrounded by a storm of heavenly clouds. While the storm rages, your
 evasion and combat accuracy and damage are substantially increased, and
@@ -722,18 +736,14 @@ Water status
     return "You are currently " .. verb .. " " .. feat .. "."
 }}
 %%%%
--Wiz status
-
-Your control over your magic has been sapped.
-%%%%
 Attr status
 
-Enemies are magically pulled toward you.
+Enemies are magically translocated toward you. (This won't wake them up.)
 %%%%
 Zot status
 
-You have spent too much time in one branch, allowing the malevolent entity Zot to
-notice you. If you spend the indicated number of turns in the branch without
+You have spent too much time in one branch, allowing the malevolent power of Zot
+to notice you. If you spend the indicated number of turns in the branch without
 descending to a new floor, Zot will find and consume you.
 %%%%
 Zot count status
@@ -746,4 +756,59 @@ Curl status
 After being struck by an attack, you reflexively curled up, protecting yourself
 against subsequent strikes. You are now emerging from that defensive curl and
 will receive no further protection until after you are struck again.
+%%%%
+rF0 status
+
+The wrath of Ignis prevents you from resisting fire.
+%%%%
+-Blink status
+
+You are unstable and cannot cast Blink or activate evoked blink abilities
+for a short period of time. Powerful sources of translocation magic such as
+scrolls of blinking ignore this limitation, as do external sources of blinking
+outside of your control.
+%%%%
+-Bbolt status
+
+You are recovering from becoming lightning, and are unable to blinkbolt again
+for a short duration.
+%%%%
+Charge- status
+
+You are currently channeling electrical charge. Pressing <w>.</w> or <w>s</w>
+to wait in place will maintain and continue this process until it discharges.
+Any other action, including recasting the spell, will dissipate the charge
+harmlessly.
+%%%%
+Charge/ status
+
+<Charge- status>
+%%%%
+Charge\ status
+
+<Charge- status>
+%%%%
+Charge| status
+
+<Charge- status>
+%%%%
+Wave status
+
+You are currently channeling waves of flames. Pressing <w>.</w> or <w>s</w>
+to wait in place will maintain and intensify the waves, at the cost of 1 MP per
+turn. Any other action, including recasting the spell, will end it.
+%%%%
+Wave+ status
+
+<Wave status>
+%%%%
+Ramparts
+
+You are encasing nearby walls in ice. The ice will crack and fall away if you
+move to a new position.
+%%%%
+Bog
+
+You are creating a toxic bog in the nearby area. You cannot sustain this
+transformation in areas out of your line of sight.
 %%%%

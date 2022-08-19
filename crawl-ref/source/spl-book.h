@@ -20,23 +20,22 @@ using std::vector;
 
 class formatted_string;
 
-int  book_rarity(book_type which_book);
-int  spell_rarity(spell_type which_spell);
-bool is_rare_book(book_type type);
-void init_spell_rarities();
+bool book_exists(book_type which_book);
+#ifdef DEBUG
+void validate_spellbooks();
+#endif
 bool is_player_spell(spell_type which_spell);
 bool is_player_book_spell(spell_type which_spell);
 bool is_wand_spell(spell_type spell);
 
 bool book_has_title(const item_def &book);
 
-bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool player_has_available_spells();
 bool learn_spell();
 bool learn_spell(spell_type spell, bool wizard = false, bool interactive = true);
 
-bool library_add_spells(vector<spell_type> spells);
+bool library_add_spells(vector<spell_type> spells, bool quiet = false);
 
 string desc_cannot_memorise_reason(spell_type spell);
 
@@ -49,3 +48,5 @@ bool has_spells_to_memorise(bool silent = true);
 vector<spell_type> get_sorted_spell_list(bool silent = false,
                                          bool memorise_only = true);
 spret divine_exegesis(bool fail);
+
+book_type choose_book_type(int item_level);

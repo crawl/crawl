@@ -17,8 +17,8 @@ using namespace ui;
 
 DollEditRegion::DollEditRegion(ImageManager *im, FontWrapper *font) :
     m_font_buf(font),
-    m_tile_buf(&im->m_textures[TEX_PLAYER], 17),
-    m_cur_buf(&im->m_textures[TEX_PLAYER], 17)
+    m_tile_buf(&im->get_texture(TEX_PLAYER), 17),
+    m_cur_buf(&im->get_texture(TEX_PLAYER), 17)
 {
     sx = sy = 0;
     dx = dy = 32;

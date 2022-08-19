@@ -102,9 +102,9 @@ public:
     colour_t colour;
     vector<int> hotkeys;
     MenuEntryLevel level;
-    bool preselected;
     bool indent_no_hotkeys;
     void *data;
+    function<bool(const MenuEntry&)> on_select;
 
 #ifdef USE_TILE
     vector<tile_def> tiles;
@@ -114,12 +114,13 @@ public:
     MenuEntry(const string &txt = string(),
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
-               int hotk = 0,
-               bool preselect = false) :
+               int hotk = 0) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
-        hotkeys(), level(lev), preselected(preselect),
+        hotkeys(), level(lev),
         indent_no_hotkeys(false),
-        data(nullptr)
+        data(nullptr),
+        on_select(nullptr),
+        m_enabled(true)
     {
         colour = (lev == MEL_ITEM     ?  MENU_ITEM_STOCK_COLOUR :
                   lev == MEL_SUBTITLE ?  BLUE  :
@@ -127,7 +128,19 @@ public:
         if (hotk)
             hotkeys.push_back(hotk);
     }
+
+    // n.b. select code requires that the qty value be >0 (TODO, why)
+    MenuEntry(const string &txt, int hotk,
+                        function<bool(const MenuEntry&)> action)
+        : MenuEntry(txt, MEL_ITEM, 1, hotk)
+    {
+        on_select = action;
+    }
+
     virtual ~MenuEntry() { }
+
+    bool is_enabled() const { return m_enabled; }
+    void set_enabled(bool b) { m_enabled = b; }
 
     bool operator<(const MenuEntry& rhs) const
     {
@@ -142,37 +155,30 @@ public:
 
     bool is_hotkey(int key) const
     {
-        return find(hotkeys.begin(), hotkeys.end(), key) != hotkeys.end();
+        return is_enabled()
+            && find(hotkeys.begin(), hotkeys.end(), key) != hotkeys.end();
+    }
+
+    int hotkeys_count() const
+    {
+        return is_enabled() ? static_cast<int>(hotkeys.size()) : 0;
     }
 
     bool is_primary_hotkey(int key) const
     {
-        return hotkeys.size() && hotkeys[0] == key;
+        return hotkeys_count() && hotkeys.size() && hotkeys[0] == key;
     }
 
-    virtual string get_text(const bool unused = false) const;
+    virtual string get_text() const;
+    void wrap_text(int width=MIN_COLS);
 
     virtual int highlight_colour() const
     {
         return menu_colour(get_text(), "", tag);
     }
 
-    virtual bool selected() const
-    {
-        return selected_qty > 0 && quantity;
-    }
-
-    // -1: Invert
-    // -2: Select all
-    virtual void select(int qty = -1)
-    {
-        if (qty == -2)
-            selected_qty = quantity;
-        else if (selected())
-            selected_qty = 0;
-        else if (quantity)
-            selected_qty = (qty == -1 ? quantity : qty);
-    }
+    virtual bool selected() const;
+    virtual void select(int qty = -1);
 
     virtual string get_filter_text() const
     {
@@ -182,6 +188,10 @@ public:
     virtual bool get_tiles(vector<tile_def>& tileset) const;
 
     virtual void add_tile(tile_def tile);
+
+protected:
+    virtual string _get_text_preface() const;
+    bool m_enabled;
 };
 
 class ToggleableMenuEntry : public MenuEntry
@@ -192,9 +202,8 @@ public:
     ToggleableMenuEntry(const string &txt = string(),
                         const string &alt_txt = string(),
                         MenuEntryLevel lev = MEL_ITEM,
-                        int qty = 0, int hotk = 0,
-                        bool preselect = false) :
-        MenuEntry(txt, lev, qty, hotk, preselect), alt_text(alt_txt) {}
+                        int qty = 0, int hotk = 0) :
+        MenuEntry(txt, lev, qty, hotk), alt_text(alt_txt) {}
 
     void toggle() { text.swap(alt_text); }
 };
@@ -241,17 +250,18 @@ public:
     virtual ~MenuHighlighter() { }
 };
 
+// if you update this, update mf in enums.js
 enum MenuFlag
 {
     MF_NOSELECT         = 0x00001,   ///< No selection is permitted
     MF_SINGLESELECT     = 0x00002,   ///< Select just one item
     MF_MULTISELECT      = 0x00004,   ///< Select multiple items
-    MF_NO_SELECT_QTY    = 0x00008,   ///< Disallow partial selections
+    MF_SELECT_QTY       = 0x00008,   ///< Allow partial selections by quantity
     MF_ANYPRINTABLE     = 0x00010,   ///< Any printable character is valid, and
                                      ///< closes the menu.
     MF_SELECT_BY_PAGE   = 0x00020,   ///< Allow selections to occur only on
                                      ///< currently-visible page.
-    MF_ALWAYS_SHOW_MORE = 0x00040,   ///< Always show the -more- footer
+    MF_INIT_HOVER       = 0x00040,   ///< Show the hover on initial display
     MF_WRAP             = 0x00080,   ///< Paging past the end will wrap back.
     MF_ALLOW_FILTER     = 0x00100,   ///< Control-F will ask for regex and
                                      ///< select the appropriate items.
@@ -259,12 +269,14 @@ enum MenuFlag
     MF_TOGGLE_ACTION    = 0x00400,   ///< ToggleableMenu toggles action as well
     MF_NO_WRAP_ROWS     = 0x00800,   ///< For menus used as tables (eg. ability)
     MF_START_AT_END     = 0x01000,   ///< Scroll to end of list
-    MF_PRESELECTED      = 0x02000,   ///< Has a preselected entry.
+    MF_SECONDARY_SCROLL = 0x02000,   ///< Secondary hotkeys scroll, rather than select
     MF_QUIET_SELECT     = 0x04000,   ///< No selection box and no count.
 
     MF_USE_TWO_COLUMNS  = 0x08000,   ///< Only valid for tiles menus
     MF_UNCANCEL         = 0x10000,   ///< Menu is uncancellable
     MF_SPECIAL_MINUS    = 0x20000,   ///< '-' isn't PGUP or clear multiselect
+    MF_ARROWS_SELECT    = 0x40000,   ///< arrow keys select, rather than scroll
+    MF_SHOW_EMPTY       = 0x80000,   ///< don't auto-exit empty menus
 };
 
 class UIMenu;
@@ -280,6 +292,10 @@ class UIMenuMore;
 
 #define NUMBUFSIZ 10
 
+#define MENU_SELECT_CLEAR 0
+#define MENU_SELECT_INVERT -1
+#define MENU_SELECT_ALL -2
+
 class Menu
 {
     friend class UIMenu;
@@ -290,19 +306,22 @@ public:
     virtual ~Menu();
 
     // Remove all items from the Menu, leave title intact.
-    void clear();
+    virtual void clear();
 
     virtual void set_flags(int new_flags);
     int  get_flags() const        { return flags; }
     virtual bool is_set(int flag) const;
     void set_tag(const string& t) { tag = t; }
 
-    bool minus_is_pageup() const;
+    bool minus_is_command() const;
     // Sets a replacement for the default -more- string.
     void set_more(const formatted_string &more);
+    void set_more(const string s);
     // Shows a stock message about scrolling the menu instead of -more-
     void set_more();
     const formatted_string &get_more() const { return more; }
+    virtual string get_keyhelp(bool scrollable) const;
+    void set_min_col_width(int w);
 
     void set_highlighter(MenuHighlighter *h);
     void set_title(MenuEntry *e, bool first = true, bool indent = false);
@@ -312,7 +331,6 @@ public:
         add_entry(entry.release());
     }
     void get_selected(vector<MenuEntry*> *sel) const;
-    virtual int get_cursor() const;
 
     void set_select_filter(vector<text_pattern> filter)
     {
@@ -320,6 +338,12 @@ public:
     }
 
     void update_menu(bool update_entries = false);
+    virtual void set_hovered(int index, bool force=false);
+    bool set_scroll(int index);
+    bool in_page(int index, bool strict=false) const;
+    bool snap_in_page(int index);
+    int get_first_visible(bool skip_init_headers=false) const;
+    bool item_visible(int index);
 
     virtual int getkey() const { return lastch; }
 
@@ -340,16 +364,34 @@ public:
     selitem_tfn      f_selitem;
     keyfilter_tfn    f_keyfilter;
     function<bool(const MenuEntry&)> on_single_selection;
+    function<bool(const MenuEntry&)> on_examine;
+    function<bool()> on_show;
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
+    void cycle_hover(bool reverse=false);
+    virtual bool page_down();
+    virtual bool line_down();
+    virtual bool page_up();
+    virtual bool line_up();
+    virtual bool cycle_headers(bool forward=true);
+    virtual bool cycle_mode(bool forward=true);
+
+    bool title_prompt(char linebuf[], int bufsz, const char* prompt, string help_tag="");
+
+    virtual bool process_key(int keyin);
+    virtual bool skip_process_command(int keyin);
+    virtual command_type get_command(int keyin);
+    virtual bool process_command(command_type cmd);
 
 #ifdef USE_TILE_WEB
     void webtiles_write_menu(bool replace = false) const;
-    void webtiles_scroll(int first);
+    void webtiles_scroll(int first, int hover);
     void webtiles_handle_item_request(int start, int end);
 #endif
 protected:
+    string _title_prompt_help_tag;
+
     MenuEntry *title;
     MenuEntry *title2;
     bool m_indent_title;
@@ -375,8 +417,10 @@ protected:
     int lastch;
 
     bool alive;
+    bool more_needs_init;
+    bool remap_numpad;
 
-    int last_selected;
+    int last_hovered;
     KeymapContext m_kmc;
 
     resumable_line_reader *m_filter;
@@ -391,7 +435,6 @@ protected:
         shared_ptr<ui::Box> vbox;
     } m_ui;
 
-protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   string &line, bool check_eol);
     void do_menu();
@@ -404,7 +447,7 @@ protected:
     void webtiles_update_items(int start, int end) const;
     void webtiles_update_item(int index) const;
     void webtiles_update_title() const;
-    void webtiles_update_scroll_pos() const;
+    void webtiles_update_scroll_pos(bool force=false) const;
 
     virtual void webtiles_write_title() const;
     virtual void webtiles_write_item(const MenuEntry *me) const;
@@ -415,33 +458,27 @@ protected:
 
     virtual formatted_string calc_title();
     void update_more();
-    virtual bool page_down();
-    virtual bool line_down();
-    virtual bool page_up();
-    virtual bool line_up();
+    pair<int,int> get_header_block(int index) const;
+    int next_block_from(int index, bool forward, bool wrap) const;
 
     virtual int pre_process(int key);
-    virtual int post_process(int key);
-
-    bool in_page(int index) const;
-    int get_first_visible() const;
 
     void deselect_all(bool update_view = true);
-    virtual void select_items(int key, int qty = -1);
-    virtual void select_item_index(int idx, int qty, bool draw_cursor = true);
+    virtual void select_items(int key, int qty = MENU_SELECT_INVERT); // XX why is the default invert?
+    virtual void select_item_index(int idx, int qty = MENU_SELECT_INVERT);
     void select_index(int index, int qty = -1);
+    virtual bool examine_index(int i);
+    bool examine_by_key(int keyin);
+    int hotkey_to_index(int key, bool primary_only);
+    pair<int,int> hotkey_range(int key);
+    bool process_selection();
 
     bool is_hotkey(int index, int key);
     virtual bool is_selectable(int index) const;
 
-    bool title_prompt(char linebuf[], int bufsz, const char* prompt);
-
-    virtual bool process_key(int keyin);
-
     virtual string help_key() const { return ""; }
 
     virtual void update_title();
-protected:
     bool filter_with_regex(const char *re);
 };
 
@@ -452,6 +489,7 @@ public:
     ToggleableMenu(int _flags = MF_MULTISELECT)
         : Menu(_flags) {}
     void add_toggle_key(int newkey) { toggle_keys.push_back(newkey); }
+    void add_toggle_from_command(command_type cmd);
 protected:
     virtual int pre_process(int key) override;
 
@@ -495,5 +533,12 @@ private:
     vector<formatted_string> flines;
 };
 
-int linebreak_string(string& s, int maxcol, bool indent = false);
+int linebreak_string(string& s, int maxcol, bool indent = false, int force_indent=-1);
 string get_linebreak_string(const string& s, int maxcol);
+formatted_string pad_more_with(formatted_string s,
+                                    const formatted_string &pad, int min_width=MIN_COLS);
+string pad_more_with(const string &s, const string &pad, int min_width=MIN_COLS);
+string pad_more_with_esc(const string &s);
+string menu_keyhelp_cmd(command_type cmd);
+string menu_keyhelp_select_keys();
+string hyphenated_hotkey_letters(int how_many, char first);

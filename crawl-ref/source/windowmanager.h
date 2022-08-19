@@ -150,7 +150,7 @@ public:
     // Environment state functions
     virtual void set_window_title(const char *title) = 0;
     virtual bool set_window_icon(const char* icon_name) = 0;
-    virtual tiles_key_mod get_mod_state() const = 0;
+    virtual unsigned char get_mod_state() const = 0;
     virtual void set_mod_state(tiles_key_mod mod) = 0;
     virtual void set_mouse_cursor(mouse_cursor_type id) = 0;
     virtual unsigned short get_mouse_state(int *x, int *y) const = 0;

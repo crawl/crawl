@@ -10,8 +10,7 @@ msc += $danger:drains you
 msc += $danger:feel drained
 msc += $danger:strangely .*stable
 msc += $danger:curare-tipped.*hits you
-msc += $danger:Space warps.* around you
-msc += $danger:Space bends around you
+msc += $danger:Space warps( horribly)? around you
 msc += $danger:sense of stasis
 msc += $danger:clumsily bash
 msc += $danger:goes berserk!
@@ -62,14 +61,15 @@ msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
 msc += $warning:This .* contains the .* runes? of Zot
-msc += $warning:They guard the .* runes? of Zot
+msc += $warning:guards? the .* runes? of Zot
+msc += $warning:rune of Zot may be found here
 msc += $warning:Beware\, you cannot shaft yourself on this level
 
 # Unimportant messages and combat clutter
 #
 msc += $boring:You start (resting|waiting)
 msc += $boring:Unknown command
-msc += $boring:disappears? in a puff of smoke
+msc += $boring:disappears? in a (puff of smoke|burst of colours)
 msc += $boring:dissolves? into (sparkling lights|shadows)
 msc += $boring:(crumbles|melts) away\.
 msc += $boring:returns to the deep
@@ -99,8 +99,6 @@ force_more_message += breaks free of your control
 force_more_message += doesn't seem very happy
 force_more_message += You rejoin the land of the living
 force_more_message += You cannot cast spells when silenced
-force_more_message += You don't have the energy to cast that spell
-force_more_message += You don't have the energy to cast any spells
 force_more_message += This is a scroll of acquirement
 
 ## Zot is coming!
@@ -109,6 +107,7 @@ force_more_message += Zot draws nearer
 force_more_message += Zot has nearly found you
 force_more_message += Zot already knows
 force_more_message += Zot's attention fixes on you
+force_more_message += Zot's power touches on you
 
 ## Reduce chance of draining because flight or form runs out:
 force_more_message += ^Careful!
@@ -149,6 +148,8 @@ force_more_message += You fall asleep
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss
 force_more_message += a gateway leading .* appears
+force_more_message += You detect the abyssal rune
+force_more_message += the detected abyssal rune vanishes
 force_more_message += Found .* abyssal rune of Zot
 
 # Water nymph stair temp-drowning - people seem to miss these...

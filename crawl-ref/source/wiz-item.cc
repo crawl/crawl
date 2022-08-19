@@ -50,9 +50,9 @@
 #ifdef WIZARD
 static void _make_all_books()
 {
-    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
+    for (int i = 0; i < NUM_BOOKS; ++i)
     {
-        if (item_type_removed(OBJ_BOOKS, i))
+        if (!book_exists((book_type)i))
             continue;
         int thing = items(false, OBJ_BOOKS, i, 0, 0, AQ_WIZMODE);
         if (thing == NON_ITEM)
@@ -875,7 +875,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     int randbook_spells = 0;
 
     int subtype_quants[256];
-    int ego_quants[NUM_SPECIAL_WEAPONS];
+    int ego_quants[256];
 
     memset(subtype_quants, 0, sizeof(subtype_quants));
     memset(ego_quants, 0, sizeof(ego_quants));
@@ -1034,9 +1034,8 @@ static void _debug_acquirement_stats(FILE *ostat)
             if (!you_can_memorise(spell))
                 continue;
 
-            // Only use spells available in books you might find lying about
-            // the dungeon.
-            if (spell_rarity(spell) == -1)
+            // Only use actual player spells.
+            if (!is_player_book_spell(spell))
                 continue;
 
             const bool seen = you.spell_library[spell];
@@ -1119,6 +1118,8 @@ static void _debug_acquirement_stats(FILE *ostat)
 #if TAG_MAJOR_VERSION > 34
             "confuse",
 #endif
+            "weak",
+            "vuln",
             "debug randart",
         };
         COMPILE_CHECK(ARRAYSZ(names) == NUM_SPECIAL_WEAPONS);
@@ -1143,7 +1144,9 @@ static void _debug_acquirement_stats(FILE *ostat)
         const char* names[] =
         {
             "normal",
+#if TAG_MAJOR_VERSION == 34
             "running",
+#endif
             "fire resistance",
             "cold resistance",
             "poison resistance",
@@ -1163,7 +1166,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "preservation",
             "reflection",
             "spirit shield",
-            "archery",
+            "hurling",
 #if TAG_MAJOR_VERSION == 34
             "jumping",
 #endif
@@ -1172,8 +1175,17 @@ static void _debug_acquirement_stats(FILE *ostat)
             "cloud immunity",
 #endif
             "harm",
+            "shadows",
             "rampaging",
+            "infusion",
+            "light",
+            "rage",
+            "mayhem",
+            "guile",
+            "energy",
+            "INVALID",
         };
+        COMPILE_CHECK(ARRAYSZ(names) == NUM_SPECIAL_ARMOURS);
 
         const int non_art = acq_calls - num_arts;
         for (int i = 0; i < NUM_SPECIAL_ARMOURS; ++i)
@@ -1476,7 +1488,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_INVISIBLE",
         "ARTP_FLY",
         "ARTP_BLINK",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_BERSERK",
+#endif
         "ARTP_NOISE",
         "ARTP_PREVENT_SPELLCASTING",
         "ARTP_CAUSE_TELEPORTATION",
@@ -1521,6 +1535,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_SHIELDING",
         "ARTP_HARM",
         "ARTP_RAMPAGING",
+        "ARTP_ARCHMAGI",
     };
     COMPILE_CHECK(ARRAYSZ(rap_names) == ARTP_NUM_PROPERTIES);
 

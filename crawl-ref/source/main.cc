@@ -87,8 +87,8 @@
 #include "known-items.h"
 #include "level-state-type.h"
 #include "libutil.h"
-#include "luaterp.h"
 #include "lookup-help.h"
+#include "luaterp.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "map-knowledge.h"
@@ -135,8 +135,8 @@
 #include "throw.h"
 #ifdef USE_TILE
  #include "rltiles/tiledef-dngn.h"
- #include "tilepick.h"
 #endif
+#include "tilepick.h"
 #include "timed-effects.h"
 #include "transform.h"
 #include "traps.h"
@@ -153,6 +153,7 @@
 #include "wiz-you.h" // FREEZE_TIME_KEY
 #include "wizard.h" // handle_wizard_command() and enter_explore_mode()
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
+#include "zot.h"
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -192,7 +193,7 @@ static void _launch_game_loop();
 NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty();
-static void _do_searing_ray();
+static void _do_wait_spells();
 static void _uncurl();
 static void _input();
 
@@ -364,6 +365,7 @@ static void _reset_game()
     clear_message_window();
     note_list.clear();
     msg::deinitialise_mpr_streams();
+    quiver::reset_state();
 
 #ifdef USE_TILE_LOCAL
     // [ds] Don't show the title screen again, just go back to
@@ -570,6 +572,7 @@ static void _show_commandline_options_help()
 #endif
     puts("  -playable-json   list playable species, jobs, and character combos.");
     puts("  -branches-json   list branch data.");
+    puts("  -no-player-bones do not write player's info to bones files.");
 
 #if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
     text_popup(help, L"Dungeon Crawl command line help");
@@ -601,11 +604,18 @@ static string _wanderer_spell_str()
                               });
 }
 
+static string _get_equip_str()
+{
+    if (inv_count() == 0)
+        return "";
+    if (you.char_class == JOB_WANDERER)
+        return _wanderer_equip_str();
+    return "";
+}
+
 static void _djinn_announce_spells()
 {
-    const string equip_str = you.char_class == JOB_WANDERER ?
-                                        _wanderer_equip_str():
-                                        "";
+    const string equip_str =_get_equip_str();
     const string spell_str = you.spell_no ?
                                 "the following spells memorised: " + _wanderer_spell_str() :
                                 "";
@@ -614,24 +624,31 @@ static void _djinn_announce_spells()
 
     const string spacer = spell_str.empty() || equip_str.empty() ? "" : "; and ";
     mprf("You begin with %s%s%s.", equip_str.c_str(), spacer.c_str(), spell_str.c_str());
+
+    take_note(Note(NOTE_MESSAGE, 0, 0, you.your_name + " set off with " +
+                                       equip_str + spell_str + "."));
 }
 
 // Announce to the message log and make a note of the player's starting items,
 // spells and spell library
 static void _wanderer_note_equipment()
 {
-    const string equip_str = _wanderer_equip_str();
+    const string equip_str = inv_count() > 0 ? _wanderer_equip_str() : "";
+
+    const string eq_spacer = equip_str.empty() ? "" : "; and ";
 
     // Wanderers start with at most 1 spell memorised.
     const string spell_str =
         !you.spell_no ? "" :
-        "; and the following spell memorised: "
+        eq_spacer + "the following spell memorised: "
         + _wanderer_spell_str();
+
+    const string spell_spacer = spell_str.empty() && equip_str.empty() ? "" : "; and ";
 
     auto const library = get_sorted_spell_list(true, true);
     const string library_str =
         !library.size() ? "" :
-        "; and the following spells available to memorise: "
+        spell_spacer + "the following spells available to memorise: "
         + comma_separated_fn(library.begin(), library.end(),
                              [] (const spell_type spell) -> string
                              {
@@ -644,7 +661,7 @@ static void _wanderer_note_equipment()
          spell_str.c_str(), library_str.c_str());
 
     const string combined_str = you.your_name + " set off with "
-                                + equip_str + spell_str + library_str;
+                                + equip_str + spell_str + library_str + ".";
     take_note(Note(NOTE_MESSAGE, 0, 0, combined_str));
 }
 
@@ -752,8 +769,12 @@ static void _start_running(int dir, int mode)
     if (Hints.hints_events[HINT_SHIFT_RUN] && mode == RMODE_START)
         Hints.hints_events[HINT_SHIFT_RUN] = false;
 
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true)
+        || !can_rest_here(true)
+            && (mode == RMODE_REST_DURATION || mode == RMODE_WAIT_DURATION))
+    {
         return;
+    }
 
     const coord_def next_pos = you.pos() + Compass[dir];
 
@@ -828,6 +849,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_REPLAY_MESSAGES:
     case CMD_REDRAW_SCREEN:
     case CMD_MACRO_ADD:
+    case CMD_MACRO_MENU:
     case CMD_SAVE_GAME:
     case CMD_SAVE_GAME_NOW:
     case CMD_SUSPEND_GAME:
@@ -1107,11 +1129,20 @@ static void _input()
     if (you_are_delayed()
         && !dynamic_cast<MacroProcessKeyDelay*>(current_delay().get()))
     {
-        end_searing_ray();
+        end_wait_spells();
         handle_delay();
 
+        // Some delays set you.turn_is_over.
+
+        bool time_is_frozen = false;
+
+#ifdef WIZARD
+        if (you.props.exists(FREEZE_TIME_KEY))
+            time_is_frozen = true;
+#endif
+
         // Some delays reset you.time_taken.
-        if (you.time_taken || you.turn_is_over)
+        if (!time_is_frozen && (you.time_taken || you.turn_is_over))
         {
             if (you.berserk())
                 _do_berserk_no_combat_penalty();
@@ -1148,10 +1179,25 @@ static void _input()
         {
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
-            else
+            else if (!crawl_state.lua_ready_throttled)
             {
                 if (!clua.callfn("ready", 0, 0) && !clua.error.empty())
+                {
+                    // if ready() has been killed once, it is considered
+                    // buggy and should not run again. Note: the sequencing is
+                    // important here, because mprs trigger the c_message hook,
+                    // so this state variable needs to be checked immediately.
+                    if (crawl_state.lua_script_killed)
+                        crawl_state.lua_ready_throttled = true;
+
                     mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                    if (crawl_state.lua_ready_throttled)
+                    {
+                        mprf(MSGCH_ERROR, "Banning ready() after %d throttles",
+                            CLua::MAX_THROTTLE_SLEEPS);
+                    }
+
+                }
             }
         }
 
@@ -1199,7 +1245,7 @@ static void _input()
         // binding, your turn may be ended by the first invoke of the
         // macro.
         if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
-            process_command(cmd, real_prev_cmd);
+            ::process_command(cmd, real_prev_cmd);
 
         repeat_again_rec.paused = true;
 
@@ -1233,7 +1279,7 @@ static void _input()
         if (you.apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
 
-        _do_searing_ray();
+        _do_wait_spells();
         _uncurl();
 
         world_reacts();
@@ -1448,7 +1494,7 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
             canned_msg(MSG_OK);
             return false;
         }
-      }
+    }
 
     // Escaping.
     if (!down && ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
@@ -1467,9 +1513,22 @@ static bool _prompt_stairs(dungeon_feature_type ygrd, bool down, bool shaft)
     if (Options.warn_hatches)
     {
         if (feat_is_escape_hatch(ygrd))
-            return yesno("Really go through this one-way escape hatch?", true, 'n');
+        {
+            if (!yesno("Really go through this one-way escape hatch?", true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        }
+
         if (down && shaft) // voluntary shaft usage
-            return yesno("Really dive through this shaft in the floor?", true, 'n');
+        {
+            if (!yesno("Really dive through this shaft in the floor?", true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return false;
+            }
+        }
     }
 
     return true;
@@ -1516,7 +1575,7 @@ static void _take_transporter()
             li->update_transporter(old_pos, you.pos());
             explored_tracked_feature(DNGN_TRANSPORTER);
         }
-        cancel_tornado();
+        cancel_polar_vortex();
         mpr("You enter the transporter and appear at another place.");
         id_floor_items();
     }
@@ -1609,10 +1668,10 @@ static void _experience_check()
         perc = (you.experience - exp_needed(xl)) * 100
              / (exp_needed(xl + 1) - exp_needed(xl));
         perc = (nl - xl) * 100 - perc;
-        mprf(you.lives < 2 ?
-             "You'll get an extra life in %d.%02d levels' worth of XP." :
-             "If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
-             perc / 100, perc % 100);
+        you.lives < 2 ?
+             mprf("You'll get an extra life in %d.%02d levels' worth of XP.", perc / 100, perc % 100) :
+             mprf("If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
+             (perc / 100) + 1 , perc % 100);
     }
 
     handle_real_time();
@@ -1641,26 +1700,6 @@ static void _experience_check()
 #endif
 }
 
-static void _do_remove_armour()
-{
-    if (you.has_mutation(MUT_NO_ARMOUR))
-    {
-        mprf("You can't remove your %s, sorry.",
-                            species::skin_name(you.species).c_str());
-        return;
-    }
-
-    if (!form_can_wear())
-    {
-        mpr("You can't wear or remove anything in your present form.");
-        return;
-    }
-
-    int index = 0;
-    if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
-        takeoff_armour(index);
-}
-
 static void _toggle_travel_speed()
 {
     you.travel_ally_pace = !you.travel_ally_pace;
@@ -1675,12 +1714,24 @@ static void _toggle_travel_speed()
 
 static void _do_rest()
 {
-    if (i_feel_safe())
+
+#ifdef WIZARD
+    if (you.props.exists(FREEZE_TIME_KEY))
     {
-        if ((you.hp == you.hp_max || !player_regenerates_hp())
-            && (you.magic_points == you.max_magic_points
-                || !player_regenerates_mp())
-            && ancestor_full_hp())
+        mprf(MSGCH_WARN, "Cannot rest while time is frozen.");
+        return;
+    }
+#endif
+
+    if (bezotted() && !yesno("Really rest while Zot is near?", false, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    if (i_feel_safe() && can_rest_here())
+    {
+        if (you.is_sufficiently_rested(true) && ancestor_full_hp())
         {
             mpr("You start waiting.");
             _start_running(RDIR_REST, RMODE_WAIT_DURATION);
@@ -1689,6 +1740,9 @@ static void _do_rest()
         else
             mpr("You start resting.");
     }
+    // intentional fallthrough for else case! Messaging is handled in
+    // _start_running, update the corresponding conditional there if you
+    // change this one.
 
     _start_running(RDIR_REST, RMODE_REST_DURATION);
 }
@@ -1719,19 +1773,21 @@ static void _do_display_map()
 static void _do_cycle_quiver(int dir)
 {
     const bool changed = you.quiver_action.cycle(dir);
-    you.launcher_action.set(you.quiver_action.get());
     quiver::set_needs_redraw();
 
     const bool valid = you.quiver_action.get()->is_valid();
 
     if (!changed || !valid)
     {
-        const bool others = quiver::menu_size() > (valid ? 1 : 0);
-        // Things could be excluded from this via inscriptions, custom
-        // fire_order, or setting fire_items_start.
+        // `others`: there are quiverable but uncyclable actions.
+        // Things could be excluded from cycling via inscriptions, custom
+        // fire_order, or setting fire_items_start, and still available from
+        // the menu. This messaging still excludes stuff that requires
+        // force-quivering, e.g. zigfigs
+        const bool others = !valid && quiver::anything_to_quiver();
         mprf("No %squiver actions available for cycling.%s",
             valid ? "other " : "",
-            others ? " Use <white>Q</white> to select from all actions."
+            others ? " Use [<white>Q</white>] to select from all actions."
                    : "");
     }
 }
@@ -1825,6 +1881,114 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
         mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
 }
 
+class GameMenu : public Menu
+{
+// this could be easily generalized for other menus that select among commands
+// if it's ever needed
+public:
+    class CmdMenuEntry : public MenuEntry
+    {
+    public:
+        CmdMenuEntry(string label, MenuEntryLevel _level, int hotk=0,
+                                                command_type _cmd=CMD_NO_CMD,
+                                                bool _uses_popup=true)
+            : MenuEntry(label, _level, 1, hotk), cmd(_cmd),
+              uses_popup(_uses_popup)
+        {
+            if (tileidx_command(cmd) != TILEG_TODO)
+                add_tile(tileidx_command(cmd));
+        }
+
+        command_type cmd;
+        bool uses_popup;
+    };
+
+    command_type cmd;
+    GameMenu()
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER
+#ifdef USE_TILE_LOCAL
+                | MF_SPECIAL_MINUS // doll editor (why?)
+#endif
+                ),
+          cmd(CMD_NO_CMD)
+    {
+        set_tag("game_menu");
+        action_cycle = Menu::CYCLE_NONE;
+        menu_action  = Menu::ACT_EXECUTE;
+        set_title(new MenuEntry(
+            string("<w>" CRAWL " ") + Version::Long + "</w>",
+            MEL_TITLE));
+        on_single_selection = [this](const MenuEntry& item)
+        {
+            const CmdMenuEntry *c = dynamic_cast<const CmdMenuEntry *>(&item);
+            if (c)
+            {
+                if (c->uses_popup)
+                {
+                    // recurse
+                    if (c->cmd != CMD_NO_CMD)
+                        ::process_command(c->cmd, CMD_GAME_MENU);
+                    return true;
+                }
+                // otherwise, exit menu and process in the main process_command call
+                cmd = c->cmd;
+                return false;
+            }
+            return true;
+        };
+    }
+
+    bool skip_process_command(int keyin) override
+    {
+        if (keyin == '?')
+            return true; // hotkeyed
+        return Menu::skip_process_command(keyin);
+    }
+
+    void fill_entries()
+    {
+        clear();
+        add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
+        add_entry(new CmdMenuEntry("Return to game", MEL_ITEM, CK_ESCAPE,
+            CMD_NO_CMD, false));
+        items[1]->add_tile(tileidx_command(CMD_GAME_MENU));
+        // n.b. CMD_SAVE_GAME_NOW crashes on returning to the main menu if we
+        // don't exit out of this popup now, not sure why
+        add_entry(new CmdMenuEntry(
+            (crawl_should_restart(game_exit::save)
+                            ? "Save and return to main menu"
+                            : "Save and exit"),
+            MEL_ITEM, 'S', CMD_SAVE_GAME_NOW, false));
+        add_entry(new CmdMenuEntry("Generate and view character dump",
+            MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
+#ifdef USE_TILE_LOCAL
+        add_entry(new CmdMenuEntry("Edit player tile",
+            MEL_ITEM, '-', CMD_EDIT_PLAYER_TILE));
+#endif
+        add_entry(new CmdMenuEntry("Edit macros",
+            MEL_ITEM, '~', CMD_MACRO_MENU));
+        add_entry(new CmdMenuEntry("Help and manual",
+            MEL_ITEM, '?', CMD_DISPLAY_COMMANDS));
+        add_entry(new CmdMenuEntry("Lookup info",
+            MEL_ITEM, '/', CMD_LOOKUP_HELP));
+#ifdef TARGET_OS_MACOSX
+        add_entry(new CmdMenuEntry("Show options file in finder",
+            MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
+#endif
+        add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
+        add_entry(new CmdMenuEntry(
+                            "Quit and <lightred>abandon character</lightred>",
+            MEL_ITEM, 'Q', CMD_QUIT, false));
+    }
+
+    vector<MenuEntry *> show(bool reuse_selections = false) override
+    {
+        fill_entries();
+        return Menu::show(reuse_selections);
+    }
+};
+
 // Note that in some actions, you don't want to clear afterwards.
 // e.g. list_jewellery, etc.
 // calling this directly will not record the command for later replay; if you
@@ -1832,6 +1996,15 @@ static void _handle_autofight(command_type cmd, command_type prev_cmd)
 void process_command(command_type cmd, command_type prev_cmd)
 {
     you.apply_berserk_penalty = true;
+
+    if (cmd == CMD_GAME_MENU)
+    {
+        GameMenu m;
+        m.show();
+        if (m.cmd == CMD_NO_CMD)
+            return;
+        cmd = m.cmd;
+    }
 
     switch (cmd)
     {
@@ -1905,7 +2078,8 @@ void process_command(command_type cmd, command_type prev_cmd)
     // Repeat commands.
     case CMD_REPEAT_CMD:     _do_cmd_repeat();  break;
     case CMD_PREV_CMD_AGAIN: _do_prev_cmd_again(); break;
-    case CMD_MACRO_ADD:      macro_add_query();    break;
+    case CMD_MACRO_ADD:      macro_quick_add();    break;
+    case CMD_MACRO_MENU:     macro_menu();    break;
 
     // Toggle commands.
     case CMD_DISABLE_MORE: crawl_state.show_more_prompt = false; break;
@@ -1956,7 +2130,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_SAFE_WAIT:
-        if (!i_feel_safe(true))
+        if (!i_feel_safe(true) && can_rest_here(true))
             break;
         // else fall-through
     case CMD_WAIT:
@@ -1977,16 +2151,15 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_LOOK_AROUND:          do_look_around();         break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read();                   break;
-    case CMD_REMOVE_ARMOUR:        _do_remove_armour();      break;
+    case CMD_REMOVE_ARMOUR:        takeoff_armour();         break;
     case CMD_REMOVE_JEWELLERY:     remove_ring();            break;
     case CMD_SHOUT:                issue_orders();           break;
-    case CMD_THROW_ITEM_NO_QUIVER: throw_item_no_quiver();   break;
+    case CMD_FIRE_ITEM_NO_QUIVER:  fire_item_no_quiver();    break;
     case CMD_WEAPON_SWAP:          wield_weapon(true);       break;
     case CMD_WEAR_ARMOUR:          wear_armour();            break;
-    case CMD_WEAR_JEWELLERY:       puton_ring(-1);           break;
+    case CMD_WEAR_JEWELLERY:       puton_ring();             break;
     case CMD_WIELD_WEAPON:         wield_weapon(false);      break;
     case CMD_ZAP_WAND:             zap_wand();               break;
-
     case CMD_DROP:
         drop();
         break;
@@ -2003,12 +2176,6 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_PRIMARY_ATTACK:
         quiver::get_primary_action()->trigger();
         if (!you.turn_is_over)
-            flush_input_buffer(FLUSH_ON_FAILURE);
-        break;
-
-    case CMD_EVOKE_WIELDED:
-    case CMD_FORCE_EVOKE_WIELDED:
-        if (!evoke_item(you.equip[EQ_WEAPON]))
             flush_input_buffer(FLUSH_ON_FAILURE);
         break;
 
@@ -2063,7 +2230,10 @@ void process_command(command_type cmd, command_type prev_cmd)
         update_screen();
         break;
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
-    case CMD_LOOKUP_HELP:           keyhelp_query_descriptions();      break;
+    case CMD_LOOKUP_HELP:
+        keyhelp_query_descriptions(prev_cmd == CMD_GAME_MENU
+                                                ? prev_cmd : CMD_NO_CMD);
+        break;
 
     case CMD_DISPLAY_RELIGION:
     {
@@ -2080,6 +2250,15 @@ void process_command(command_type cmd, command_type prev_cmd)
 #endif
         break;
 
+#ifdef TARGET_OS_MACOSX
+    case CMD_REVEAL_OPTIONS:
+        // TODO: implement for other OSs
+        // TODO: add a way of triggering this from the main menu
+        system(make_stringf("/usr/bin/open -R '%s'",
+                                            Options.filename.c_str()).c_str());
+        break;
+#endif
+    case CMD_SHOW_CHARACTER_DUMP:
     case CMD_CHARACTER_DUMP:
         if (!dump_char(you.your_name))
             mpr("Char dump unsuccessful! Sorry about that.");
@@ -2087,6 +2266,8 @@ void process_command(command_type cmd, command_type prev_cmd)
         else
             tiles.send_dump_info("command", you.your_name);
 #endif
+        if (cmd == CMD_SHOW_CHARACTER_DUMP)
+            display_char_dump();
         break;
 
         // Travel commands.
@@ -2357,6 +2538,9 @@ void world_reacts()
         update_screen();
     }
 
+    // prevent monsters wandering into view and picking up an item before
+    // our next prep_input
+    maybe_update_stashes();
     update_monsters_in_view();
 
     reset_show_terrain();
@@ -2391,6 +2575,10 @@ void world_reacts()
     abyss_morph();
     apply_noises();
     handle_monsters(true);
+
+    // Monsters can schedule final effects, too!
+    // (mostly by exploding)
+    fire_final_effects();
 
     _check_banished();
 
@@ -2453,12 +2641,14 @@ void world_reacts()
         update_turn_count();
         msgwin_new_turn();
         crawl_state.lua_calls_no_turn = 0;
-        if (crawl_state.game_is_sprint()
-            && !(you.num_turns % 256)
+        if ((crawl_state.game_is_sprint() && !(you.num_turns % 256)
+                || crawl_state.save_after_turn)
             && !you_are_delayed()
             && !crawl_state.disables[DIS_SAVE_CHECKPOINTS])
         {
             // Resting makes the saving quite random, but meh.
+            crawl_state.save_after_turn = false;
+            save_level(level_id::current());
             save_game(false);
         }
     }
@@ -2597,24 +2787,16 @@ static void _do_berserk_no_combat_penalty()
     return;
 }
 
-// Fire the next searing ray stage if we have taken no other action this turn,
-// otherwise cancel
-static void _do_searing_ray()
+/**
+ * Update damaging spells that are channeled by waiting.
+ * These only update when the player actively waits with CMD_WAIT,
+ * so should not be moved to world_reacts().
+ */
+static void _do_wait_spells()
 {
-    if (you.attribute[ATTR_SEARING_RAY] == 0)
-        return;
-
-    // Convert prepping value into stage one value (so it can fire next turn)
-    if (you.attribute[ATTR_SEARING_RAY] == -1)
-    {
-        you.attribute[ATTR_SEARING_RAY] = 1;
-        return;
-    }
-
-    if (crawl_state.prev_cmd == CMD_WAIT)
-        handle_searing_ray();
-    else
-        end_searing_ray();
+    handle_searing_ray();
+    handle_maxwells_coupling();
+    handle_flame_wave();
 }
 
 // palentongas uncurl at the start of the turn

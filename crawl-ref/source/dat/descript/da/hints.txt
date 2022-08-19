@@ -146,7 +146,7 @@ brokker sig, hvis det ikke kan nogen af de filer.
 finished random 3
 
 Du kan spørge andre Crawl-spillere til råds i IRC-kanalen (Internet Relay Chat)
-<w>##crawl</w> på freenode-serveren (<w>irc.freenode.net</w>).
+<w>#crawl</w> på Libera-serveren (<w>irc.libera.chat</w>).
 %%%%
 dissection reminder
 

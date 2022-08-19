@@ -68,13 +68,15 @@ namespace species
         return SP_UNKNOWN;
     }
 
-    /// Does loose, non-case-sensitive lookup of a species based on a string
+    /// Does loose, non-case-sensitive lookup of a species based on a string,
+    /// prioritizing non-removed species
     species_type from_str_loose(const string &species, bool initial_only)
     {
         // XX consolidate with from_str?
         string spec = lowercase_string(species);
 
         species_type sp = SP_UNKNOWN;
+        species_type removed = SP_UNKNOWN;
 
         for (int i = 0; i < NUM_SPECIES; ++i)
         {
@@ -84,18 +86,26 @@ namespace species
             string::size_type pos = sp_name.find(spec);
             if (pos != string::npos)
             {
-                if (pos == 0)
+                if (is_removed(si))
                 {
-                    // We prefer prefixes over partial matches.
-                    sp = si;
-                    break;
+                    // first matching removed species
+                    if (removed == SP_UNKNOWN && (!initial_only || pos == 0))
+                        removed = si;
+                    // otherwise, we already found a matching removed species
                 }
-                else if (!initial_only)
+                else if (pos == 0 || !initial_only)
+                {
                     sp = si;
+                    // We prefer prefixes over partial matches.
+                    if (pos == 0)
+                        break;
+                }
             }
         }
-
-        return sp;
+        if (sp != SP_UNKNOWN)
+            return sp;
+        else
+            return removed;
     }
 
 
@@ -275,7 +285,7 @@ namespace species
 
     bool wears_barding(species_type species)
     {
-        return bool(get_species_def(species).flags & SPF_SMALL_TORSO);
+        return bool(get_species_def(species).flags & SPF_BARDING);
     }
 
     bool has_claws(species_type species)
@@ -283,9 +293,10 @@ namespace species
         return mutation_level(species, MUT_CLAWS) == 1;
     }
 
-    bool is_unbreathing(species_type species)
+    bool is_nonliving(species_type species)
     {
-        return mutation_level(species, MUT_UNBREATHING);
+        // XXX: move to data?
+        return species == SP_GARGOYLE || species == SP_DJINNI;
     }
 
     bool can_swim(species_type species)
@@ -296,8 +307,7 @@ namespace species
     bool likes_water(species_type species)
     {
         return can_swim(species)
-               || get_species_def(species).habitat == HT_AMPHIBIOUS
-               || mutation_level(species, MUT_UNBREATHING, 2);
+               || get_species_def(species).habitat == HT_AMPHIBIOUS;
     }
 
     size_type size(species_type species, size_part_type psize)
@@ -535,13 +545,6 @@ namespace species
         return get_species_def(species).wl_mod;
     }
 
-    int get_stat_gain_multiplier(species_type species)
-    {
-        // TODO: is this worth dataifying? Currently matters only for
-        // player-stats.cc:attribute_increase
-        return species == SP_DEMIGOD ? 4 : 1;
-    }
-
     /**
      *  Does this species have (relatively) low strength?
      *  Used to generate the title for UC ghosts.
@@ -565,7 +568,6 @@ namespace species
     bool recommends_weapon(species_type species, weapon_type wpn)
     {
         const skill_type sk =
-              wpn == WPN_THROWN  ? SK_THROWING :
               wpn == WPN_UNARMED ? SK_UNARMED_COMBAT :
                                    item_attack_skill(OBJ_WEAPONS, wpn);
 
@@ -653,10 +655,7 @@ void species_stat_gain(species_type species)
 {
     const species_def& sd = get_species_def(species);
     if (sd.level_stats.size() > 0 && you.experience_level % sd.how_often == 0)
-    {
-        modify_stat(*random_iterator(sd.level_stats),
-                        species::get_stat_gain_multiplier(species), false);
-    }
+        modify_stat(*random_iterator(sd.level_stats), 1, false);
 }
 
 static void _swap_equip(equipment_type a, equipment_type b)
@@ -691,6 +690,8 @@ void change_species_to(species_type sp)
     species_type old_sp = you.species;
     you.species = sp;
     you.chr_species_name = species::name(sp);
+    dprf("Species change: %s -> %s", species::name(old_sp).c_str(),
+        you.chr_species_name.c_str());
 
     // Change permanent mutations, but preserve non-permanent ones.
     uint8_t prev_muts[NUM_MUTATIONS];
@@ -700,8 +701,8 @@ void change_species_to(species_type sp)
     {
         if (you.has_innate_mutation(static_cast<mutation_type>(i)))
         {
-            you.mutation[i] -= you.innate_mutation[i];
-            you.innate_mutation[i] = 0;
+            you.mutation[i] -= you.innate_mutation[i] - you.sacrifices[i];
+            you.innate_mutation[i] = you.sacrifices[i];
         }
         prev_muts[i] = you.mutation[i];
     }

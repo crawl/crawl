@@ -20,12 +20,45 @@ struct talent
     bool is_invocation;
 };
 
+enum class abflag
+{
+    none                = 0x00000000,
+    breath              = 0x00000001, // ability uses DUR_BREATH_WEAPON
+    delay               = 0x00000002, // ability has its own delay
+    pain                = 0x00000004, // ability must hurt player (ie torment)
+    piety               = 0x00000008, // ability has its own piety cost
+    exhaustion          = 0x00000010, // fails if you.exhausted
+    instant             = 0x00000020, // doesn't take time to use
+    conf_ok             = 0x00000040, // can use even if confused
+    variable_mp         = 0x00000080, // costs a variable amount of MP
+    curse               = 0x00000100, // Destroys a cursed item
+    max_hp_drain        = 0x00000200, // drains max hit points
+    gold                = 0x00000400, // costs gold
+    sacrifice           = 0x00000800, // sacrifice (Ru)
+    hostile             = 0x00001000, // failure summons a hostile (Makhleb)
+    berserk_ok          = 0x00002000, // can use even if berserk
+    card                = 0x00004000, // deck drawing (Nemelex)
+    quiet_fail          = 0x00008000, // no message on failure
+    souls               = 0x00010000, // ability costs reaped allies
+
+    // targeting flags
+    dir_or_target       = 0x10000000, // uses DIR_NONE targeting
+    target              = 0x20000000, // uses DIR_TARGET targeting
+    targeting_mask      = abflag::dir_or_target | abflag::target,
+    not_self            = 0x40000000, // can't be self-targeted
+};
+DEF_BITFIELD(ability_flags, abflag);
+
 class dist;
 
+vector<ability_type> get_defined_abilities();
 skill_type invo_skill(god_type god = you.religion);
 int get_gold_cost(ability_type ability);
+string nemelex_card_text(ability_type ability);
 const string make_cost_description(ability_type ability);
 unsigned int ability_mp_cost(ability_type abil);
+int ability_range(ability_type abil);
+ability_flags get_ability_flags(ability_type ability);
 talent get_talent(ability_type ability, bool check_confused);
 const char* ability_name(ability_type ability);
 vector<const char*> get_ability_names();
@@ -38,8 +71,11 @@ int abil_skill_weight(ability_type abil);
 void no_ability_msg();
 bool activate_ability();
 bool check_ability_possible(const ability_type ability, bool quiet = false);
-bool activate_talent(const talent& tal, dist *target=nullptr);
+bool ability_has_targeter(ability_type abil);
+unique_ptr<targeter> find_ability_targeter(ability_type ability);
+bool activate_talent(const talent& tal, dist *target = nullptr);
 bool is_religious_ability(ability_type abil);
+bool is_card_ability(ability_type abil);
 bool player_has_ability(ability_type abil, bool include_unusable = false);
 vector<talent> your_talents(bool check_confused, bool include_unusable = false,
                                         bool ignore_piety = false);

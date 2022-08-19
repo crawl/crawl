@@ -20,6 +20,7 @@ w:7
 w:7
 @_anger_name_@
 %%%%
+# "Power" is not literally here, to prevent generating conflicts with the unrand
 _power_name_
 
 Big Damage
@@ -43,8 +44,6 @@ Magnificence
 Mastery
 
 Might
-
-Power
 
 Success
 
@@ -122,10 +121,20 @@ _anger_possessive_
 the Extremely Mad
 
 the Absolute Madman
+
+the Incandescent
+
+the Furious
+
+the Howling One
+
+the Gibberer
+
+the Hated
+
+the Scorned
 %%%%
 _battle_or_war_
-
-Battle
 
 Crusades
 
@@ -714,8 +723,6 @@ Distraction
 
 Extremism
 
-Forced Transition
-
 Havoc
 
 Imbalance
@@ -992,7 +999,7 @@ Embarrassment
 
 Flawed Execution
 
-Foul Odors
+Foul Odours
 
 Frustration
 
@@ -1074,6 +1081,8 @@ Atheism
 Autotheism
 
 Cynicism
+
+Disestablishmentarianism
 
 Dogma
 
@@ -1506,8 +1515,6 @@ _real_weapon_name_
 Arbiter
 
 Arcanum
-
-Banisher
 
 Concordance
 

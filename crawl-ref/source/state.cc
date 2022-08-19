@@ -30,7 +30,8 @@ game_state::game_state()
       terminal_resized(false), last_winch(0),
       seed(0),
       io_inited(false),
-      need_save(false), game_started(false), saving_game(false),
+      need_save(false), save_after_turn(false),
+      game_started(false), saving_game(false),
       updating_scores(false),
 #ifndef USE_TILE_LOCAL
       smallterm(false),
@@ -51,16 +52,20 @@ game_state::game_state()
       show_more_prompt(true), terminal_resize_handler(nullptr),
       terminal_resize_check(nullptr), doing_prev_cmd_again(false),
       prev_cmd(CMD_NO_CMD), repeat_cmd(CMD_NO_CMD),
-      cmd_repeat_started_unsafe(false), lua_calls_no_turn(0),
+      cmd_repeat_started_unsafe(false),
+      lua_calls_no_turn(0), lua_script_killed(false),
+      lua_ready_throttled(false),
       stat_gain_prompt(false), simulating_xp_gain(false),
       level_annotation_shown(false),
       viewport_monster_hp(false), viewport_weapons(false),
       tiles_disabled(false),
       title_screen(true),
       invisible_targeting(false),
+      player_moving(false),
       darken_range(nullptr), unsaved_macros(false), disables(),
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),
+      last_builder_error_fatal(false),
       mon_act(nullptr)
 {
     reset_cmd_repeat();
@@ -204,7 +209,6 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
 
     switch (ai)
     {
-    case activity_interrupt::hungry:
     case activity_interrupt::teleport:
     case activity_interrupt::force:
     case activity_interrupt::hp_loss:
@@ -619,6 +623,20 @@ string game_state::game_type_name_for(game_type _type)
     case NUM_GAME_TYPE:
         return "Unknown";
     }
+}
+
+bool game_state::seed_is_known() const
+{
+#ifdef DGAMELAUNCH
+    return player_is_dead()
+# ifdef WIZARD
+        || you.wizard
+# endif
+        || type == GAME_TYPE_CUSTOM_SEED;
+#else
+    //offline: it's visible to do what you want with it.
+    return true;
+#endif
 }
 
 string game_state::game_savedir_path() const

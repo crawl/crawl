@@ -38,7 +38,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_WORDS, MUT_READ_SAFETY,
-  "sacrifice your ability to read while threatened",
+  "sacrifice your ability to read when badly injured",
   "sacrificed words",
 
   30,
@@ -48,7 +48,7 @@ static const sacrifice_def sac_data[] =
 },
 
 { ABIL_RU_SACRIFICE_DRINK, MUT_DRINK_SAFETY,
-  "sacrifice your ability to drink while threatened",
+  "sacrifice your ability to drink when badly injured",
   "sacrificed drink",
 
   30,
@@ -101,7 +101,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your ability to be loved",
   "sacrificed love",
 
-  35,
+  40,
   SK_SUMMONINGS,
   nullptr,
   nullptr,
@@ -161,7 +161,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your experiences",
   "sacrificed experience",
 
-  50,
+  35,
   SK_NONE,
   nullptr,
   []() { return you.experience_level > RU_SAC_XP_LEVELS; }
@@ -171,7 +171,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your skill",
   "sacrificed skill",
 
-  40,
+  30,
   SK_NONE,
   nullptr,
   nullptr,
@@ -181,7 +181,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice an eye",
   "sacrificed an eye",
 
-  20,
+  25,
   SK_NONE,
   nullptr,
   nullptr,
@@ -191,7 +191,7 @@ static const sacrifice_def sac_data[] =
   "sacrifice your resistance to extreme temperatures",
   "sacrificed resistance",
 
-  60,
+  50,
   SK_NONE,
   nullptr,
   nullptr,

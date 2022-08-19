@@ -10,6 +10,7 @@
 #include <functional>
 
 #include "ability.h"
+#include "artefact.h"
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
@@ -34,10 +35,12 @@
 #include "message.h"
 #include "mon-info.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
 #include "rltiles/tiledef-main.h"
+#include "scroller.h"
 #include "skills.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -109,6 +112,7 @@ public:
      */
     bool no_search() const { return simple_key_fetch != nullptr; }
 
+    bool find_description(string &response) const;
     int describe(const string &key, bool exact_match = false) const;
 
 public:
@@ -347,6 +351,17 @@ static vector<string> _get_monster_keys(char32_t showchar)
     return mon_keys;
 }
 
+static vector<string> _get_card_keys()
+{
+    vector<string> names;
+    for (int i = 0; i < NUM_CARDS; ++i)
+    {
+        card_type card = static_cast<card_type>(i);
+        if (!card_is_removed(card))
+            names.push_back(make_stringf("%s card", card_name(card)));
+    }
+    return names;
+}
 
 static vector<string> _get_god_keys()
 {
@@ -434,28 +449,13 @@ static bool _spell_filter(string key, string /*body*/)
 
 static bool _item_filter(string key, string /*body*/)
 {
-    return item_kind_by_name(key).base_type == OBJ_UNASSIGNED;
+    return item_kind_by_name(key).base_type == OBJ_UNASSIGNED
+        && !extant_unrandart_by_exact_name(key);
 }
 
 static bool _feature_filter(string key, string /*body*/)
 {
     return feat_by_desc(key) == DNGN_UNSEEN;
-}
-
-static bool _card_filter(string key, string /*body*/)
-{
-    lowercase(key);
-
-    // Every card description contains the keyword "card".
-    if (!strip_suffix(key, "card"))
-        return true;
-
-    for (int i = 0; i < NUM_CARDS; ++i)
-    {
-        if (key == lowercase_string(card_name(static_cast<card_type>(i))))
-            return false;
-    }
-    return true;
 }
 
 static bool _ability_filter(string key, string /*body*/)
@@ -473,6 +473,11 @@ static bool _status_filter(string key, string /*body*/)
     return !strip_suffix(lowercase(key), " status");
 }
 
+static bool _mutation_filter(string key, string /*body*/)
+{
+    return !strip_suffix(lowercase(key), " mutation");
+}
+
 
 static void _recap_mon_keys(vector<string> &keys)
 {
@@ -483,6 +488,16 @@ static void _recap_mon_keys(vector<string> &keys)
             monster_type type = get_monster_by_name(keys[i]);
             keys[i] = mons_type_name(type, DESC_PLAIN);
         }
+    }
+}
+
+static void _recap_item_keys(vector<string> &keys)
+{
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        const int unrand_idx = extant_unrandart_by_exact_name(keys[i]);
+        if (unrand_idx)
+            keys[i] = get_unrand_entry(unrand_idx)->name; // fix capitalization
     }
 }
 
@@ -530,24 +545,6 @@ static void _recap_feat_keys(vector<string> &keys)
     }
 }
 
-static void _recap_card_keys(vector<string> &keys)
-{
-    for (unsigned int i = 0, size = keys.size(); i < size; i++)
-    {
-        lowercase(keys[i]);
-
-        for (int j = 0; j < NUM_CARDS; ++j)
-        {
-            card_type card = static_cast<card_type>(j);
-            if (keys[i] == lowercase_string(card_name(card)) + " card")
-            {
-                keys[i] = string(card_name(card)) + " card";
-                break;
-            }
-        }
-    }
-}
-
 /**
  * Make a basic, no-frills ?/<foo> menu entry.
  *
@@ -585,7 +582,7 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
         base_type = MONS_GOBLIN;
 
     monster_info fake_mon(m_type, base_type);
-    fake_mon.props["fake"] = true;
+    fake_mon.props[FAKE_MON_KEY] = true;
 
     mslot = fake_mon;
 
@@ -613,6 +610,17 @@ static MenuEntry* _monster_menu_gen(char letter, const string &str,
     return new MonsterMenuEntry(title, &mslot, letter);
 }
 
+static bool _make_item_fake_unrandart(item_def &item, int unrand_index)
+{
+    // fill in the item info without marking the unrand as actually generated
+    // use API rather than unwinds so that sanity checks don't need to be
+    // duplicated
+    const auto prior_status = get_unique_item_status(unrand_index);
+    const bool r = make_item_unrandart(item, unrand_index);
+    set_unique_item_status(item, prior_status);
+    return r;
+}
+
 /**
  * Generate a ?/I menu entry. (ref. _simple_menu_gen()).
  */
@@ -621,7 +629,10 @@ static MenuEntry* _item_menu_gen(char letter, const string &str, string &key)
     MenuEntry* me = _simple_menu_gen(letter, str, key);
     item_def item;
     item_kind kind = item_kind_by_name(key);
-    get_item_by_name(&item, key.c_str(), kind.base_type);
+    if (kind.base_type == OBJ_UNASSIGNED)
+        _make_item_fake_unrandart(item, extant_unrandart_by_exact_name(key));
+    else
+        get_item_by_name(&item, key.c_str(), kind.base_type);
     item_colour(item);
     tileidx_t idx = tileidx_item(get_item_known_info(item));
     tileidx_t base_item = tileidx_known_base_item(idx);
@@ -750,6 +761,24 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     return me;
 }
 
+/**
+ * Generate a ?/U menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _mut_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+
+    const mutation_type mut = mutation_from_name(str, false);
+    if (mut == NUM_MUTATIONS)
+        return me;
+
+    const tileidx_t tile = get_mutation_tile(mut);
+    if (tile)
+        me->add_tile(tile_def(tile + mutation_max_levels(mut) - 1));
+
+    return me;
+}
+
 
 /**
  * How should this type be expressed in the prompt string?
@@ -817,7 +846,8 @@ static string _mons_desc_key(monster_type type)
 void LookupType::display_keys(vector<string> &key_list) const
 {
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-            | MF_NO_SELECT_QTY | MF_USE_TWO_COLUMNS , toggleable_sort());
+                | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT,
+            toggleable_sort());
     desc_menu.set_tag("description");
 
     // XXX: ugh
@@ -976,8 +1006,6 @@ static int _describe_monster(const string &key, const string &suffix,
     // one at random as this does?
     if (mons_is_draconian_job(mon_num))
         base_type = random_draconian_monster_species();
-    else if (mons_is_demonspawn_job(mon_num))
-        base_type = random_demonspawn_monster_species();
     monster_info mi(mon_num, base_type);
     // Avoid slime creature being described as "buggy"
     if (mi.type == MONS_SLIME_CREATURE)
@@ -1000,7 +1028,7 @@ static int _describe_spell(const string &key, const string &suffix,
     const string spell_name = key.substr(0, key.size() - suffix.size());
     const spell_type spell = spell_by_name(spell_name, true);
     ASSERT(spell != SPELL_NO_SPELL);
-    describe_spell(spell, nullptr, nullptr, true);
+    describe_spell(spell);
     return 0;
 }
 
@@ -1083,7 +1111,12 @@ static int _describe_item(const string &key, const string &suffix,
     const string item_name = key.substr(0, key.size() - suffix.size());
     item_def item;
     if (!get_item_by_exact_name(item, item_name.c_str()))
-        die("Unable to get item %s by name", key.c_str());
+    {
+        const int unrand_idx = extant_unrandart_by_exact_name(item_name);
+        if (!unrand_idx)
+            die("Unable to get item %s by name", key.c_str());
+        _make_item_fake_unrandart(item, unrand_idx);
+    }
     describe_item_popup(item);
     return 0;
 }
@@ -1239,10 +1272,10 @@ static const vector<LookupType> lookup_types = {
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_ability, lookup_type::db_suffix),
-    LookupType('C', "card", _recap_card_keys, _card_filter,
-               nullptr, nullptr, _card_menu_gen,
+    LookupType('C', "card", nullptr, nullptr,
+               nullptr, _get_card_keys, _card_menu_gen,
                _describe_card, lookup_type::db_suffix),
-    LookupType('I', "item", nullptr, _item_filter,
+    LookupType('I', "item", _recap_item_keys, _item_filter,
                item_name_list_for_glyph, nullptr, _item_menu_gen,
                _describe_item, lookup_type::none),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
@@ -1260,6 +1293,9 @@ static const vector<LookupType> lookup_types = {
     LookupType('T', "status", nullptr, _status_filter,
                nullptr, nullptr, _simple_menu_gen,
                _describe_generic, lookup_type::db_suffix),
+    LookupType('U', "mutation", nullptr, _mutation_filter,
+               nullptr, nullptr, _mut_menu_gen,
+               _describe_generic, lookup_type::db_suffix),
 };
 
 /**
@@ -1267,13 +1303,28 @@ static const vector<LookupType> lookup_types = {
  */
 static map<char, const LookupType*> _build_lookup_type_map()
 {
+    ASSERT(lookup_types.size() == NUM_LOOKUP_HELP_TYPES);
     map<char, const LookupType*> lookup_map;
-    for (const auto &lookup : lookup_types)
-        lookup_map[lookup.symbol] = &lookup;
+    for (auto &lt : lookup_types)
+        lookup_map[lt.symbol] = &lt;
     return lookup_map;
 }
 static const map<char, const LookupType*> _lookup_types_by_symbol
     = _build_lookup_type_map();
+
+/// Return the display name (lowercase) for the given lookup type.
+string lookup_help_type_name(lookup_help_type lht)
+{
+    ASSERT(lht >= 0 && lht < NUM_LOOKUP_HELP_TYPES);
+    return lookup_types[lht].type;
+}
+
+/// Return the hotkey character for the given lookup type.
+char lookup_help_type_shortcut(lookup_help_type lht)
+{
+    ASSERT(lht >= 0 && lht < NUM_LOOKUP_HELP_TYPES);
+    return lookup_types[lht].symbol;
+}
 
 /**
  * Prompt the player for a search string for the given lookup type.
@@ -1343,82 +1394,45 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
     {
         if (by_symbol)
             return "No " + plur_type + " with symbol '" + regex + "'.";
-        return "No matching " + plur_type + ".";
+        return make_stringf("No matching %s for search string '%s'.",
+            plur_type.c_str(), regex.c_str());
     }
 
     // we're good!
     return "";
 }
 
-static int _lookup_prompt()
+static void _show_type_response(string response)
 {
-    // TODO: show this + the regex prompt in the same menu?
-#ifdef TOUCH_UI
-    bool use_popup = true;
-#else
-    bool use_popup = !crawl_state.need_save || ui::has_layout();
-#endif
+    // possibly overkill, but this renders very reliably
+    formatted_scroller fs(FS_EASY_EXIT);
+    fs.set_more();
+    fs.add_text(response);
+    fs.show();
+}
 
-    int ch = -1;
-    const string lookup_type_prompts =
-        comma_separated_fn(lookup_types.begin(), lookup_types.end(),
-                           mem_fn(&LookupType::prompt_string), " or ");
-    if (use_popup)
-    {
-        string prompt = make_stringf("Describe a %s? ",
-                                                lookup_type_prompts.c_str());
-        linebreak_string(prompt, 72);
-
-#ifdef USE_TILE_WEB
-        tiles_crt_popup show_as_popup;
-        tiles.set_ui_state(UI_CRT);
-#endif
-        auto prompt_ui =
-                make_shared<ui::Text>(formatted_string::parse_string(prompt));
-        auto popup = make_shared<ui::Popup>(prompt_ui);
-        bool done = false;
-
-        popup->on_keydown_event([&](const ui::KeyEvent& ev) {
-            ch = ev.key();
-            return done = true;
-        });
-
-        mouse_control mc(MOUSE_MODE_MORE);
-        ui::run_layout(move(popup), done);
-    }
-    else
-    {
-        mprf(MSGCH_PROMPT, "Describe a %s? ", lookup_type_prompts.c_str());
-
-        {
-            cursor_control con(true);
-            ch = getchm();
-        }
-    }
-    return toupper_safe(ch);
+bool find_description_of_type(lookup_help_type lht)
+{
+    ASSERT(lht >= 0 && lht < NUM_LOOKUP_HELP_TYPES);
+    string response;
+    bool done = lookup_types[lht].find_description(response);
+    if (!response.empty() && response != "Okay, then.") // TODO: ...
+        _show_type_response(response);
+    return done;
 }
 
 /**
- * Run an iteration of ?/.
+ * Run an iteration of ?/ for the given lookup type.
  *
  * @param response[out]   A response to input, to print before the next iter.
  * @return                true if the ?/ loop should continue
  *                        false if it should return control to the caller
  */
-static bool _find_description(string &response)
+bool LookupType::find_description(string &response) const
 {
-    int ch = _lookup_prompt();
-    const LookupType * const *lookup_type_ptr
-        = map_find(_lookup_types_by_symbol, ch);
-    if (!lookup_type_ptr)
-        return false;
-
-    ASSERT(*lookup_type_ptr);
-    const LookupType ltype = **lookup_type_ptr;
-
-    const bool want_regex = !(ltype.no_search());
+    const bool want_regex = !no_search();
     const string regex = want_regex ?
-                         _prompt_for_regex(ltype, response) :
+                         _prompt_for_regex(*this, response) :
                          "";
 
     if (!response.empty())
@@ -1431,58 +1445,105 @@ static bool _find_description(string &response)
         return true;
     }
 
-
     // Try to get an exact match first.
-    const bool exact_match = _exact_lookup_match(ltype, regex);
+    const bool exact_match = _exact_lookup_match(*this, regex);
 
-    vector<string> key_list = ltype.matching_keys(regex);
+    vector<string> key_list = matching_keys(regex);
 
-    const bool by_symbol = ltype.supports_glyph_lookup()
-                           && regex.size() == 1;
-    const string type = lowercase_string(ltype.type);
-    response = _keylist_invalid_reason(key_list, type, regex, by_symbol);
+    const bool by_symbol = supports_glyph_lookup() && regex.size() == 1;
+    response = _keylist_invalid_reason(key_list, lowercase_string(type),
+                                       regex, by_symbol);
     if (!response.empty())
         return true;
 
     if (key_list.size() == 1)
     {
-        ltype.describe(key_list[0]);
+        describe(key_list[0]);
         return true;
     }
 
-    if (exact_match && ltype.describe(regex, true) != ' ')
+    if (exact_match && describe(regex, true) != ' ')
         return true;
 
-    if (!(ltype.flags & lookup_type::disable_sort))
+    if (!(flags & lookup_type::disable_sort))
         sort(key_list.begin(), key_list.end());
 
-    ltype.display_keys(key_list);
+    display_keys(key_list);
     return true;
 }
 
-/**
- * Run the ?/ loop, repeatedly prompting the player to query for monsters,
- * etc, until they indicate they're done.
- */
-void keyhelp_query_descriptions()
+class LookupHelpMenu : public Menu
 {
-    string response;
-    while (true)
+public:
+    class LookupHelpMenuEntry : public MenuEntry
     {
-        redraw_screen();
-        update_screen();
+    public:
+        LookupHelpMenuEntry(lookup_help_type lht)
+        : MenuEntry(uppercase_first(lookup_help_type_name(lht)),
+                    MEL_ITEM, 1, tolower(lookup_help_type_shortcut(lht))),
+          typ(lht)
+        {
+            // TODO: tiles!
+        }
 
-        if (!response.empty())
-            mprf(MSGCH_PROMPT, "%s", response.c_str());
-        response = "";
+        lookup_help_type typ;
+    };
 
-        if (!_find_description(response))
-            break;
-
-        clear_messages();
+    LookupHelpMenu(command_type where_from=CMD_NO_CMD)
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                | MF_ARROWS_SELECT | MF_WRAP),
+          back_cmd(where_from)
+    {
+        action_cycle = Menu::CYCLE_NONE;
+        menu_action  = Menu::ACT_EXECUTE;
+        set_title(new MenuEntry("Lookup information about:", MEL_TITLE));
+        on_single_selection = [](const MenuEntry& item)
+        {
+            const LookupHelpMenuEntry *lhme
+                        = dynamic_cast<const LookupHelpMenuEntry *>(&item);
+            if (!lhme)
+                return false; // back button
+            find_description_of_type(lhme->typ);
+            return true;
+        };
     }
 
-    viewwindow();
-    update_screen();
-    mpr("Okay, then.");
+    void fill_entries()
+    {
+        clear();
+        // XX `?/esc` doesn't go back to the main help menu, possibly should
+        const string back = back_cmd == CMD_GAME_MENU
+                                ? "Back to game menu"
+                                : "Exit help lookup";
+        auto back_button = new MenuEntry(back, MEL_ITEM, 1, CK_ESCAPE);
+        if (back_cmd != CMD_NO_CMD)
+            back_button->add_tile(tileidx_command(back_cmd));
+
+        for (int i = FIRST_LOOKUP_HELP_TYPE; i < NUM_LOOKUP_HELP_TYPES; ++i)
+            add_entry(new LookupHelpMenuEntry((lookup_help_type)i));
+
+        add_entry(new MenuEntry("", MEL_SUBTITLE));
+        add_entry(back_button);
+    }
+
+    vector<MenuEntry *> show(bool reuse_selections = false) override
+    {
+        fill_entries();
+        cycle_hover();
+        return Menu::show(reuse_selections);
+    }
+
+private:
+    command_type back_cmd;
+};
+
+void keyhelp_query_descriptions(command_type where_from)
+{
+    rng::generator rng(rng::UI);
+
+    // force a sequence point
+    {
+        LookupHelpMenu m(where_from);
+        m.show();
+    }
 }

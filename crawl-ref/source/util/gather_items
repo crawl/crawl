@@ -72,6 +72,14 @@ Young Poisoner's Handbook
 Grand Grimoire
 Necronomicon
 Fen Folio
+Everburning Encyclopedia
+Ozocubu's Autobiography
+Inescapable Atlas
+There-And-Back Book
+Great Wizards, Vol. II
+Great Wizards, Vol. VII
+Trismegistus Codex
+the Unrestrained Analects
 END
 
 $items{"decaying skeleton"} = 1 if $db;

@@ -17,6 +17,8 @@ demon_body_thin
 demon_body_caterpillar
 demon_body_skeletal
 demon_body_mantis
+# XX demon snakes are taller than the other tiles, leading to inefficient
+# packing
 demon_body_snake
 
 %variation DEMON_BODY red

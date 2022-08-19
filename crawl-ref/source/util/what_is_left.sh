@@ -45,7 +45,7 @@ echo approx_spells_monster: `process_cmd spl-data.h | grep -e "spflag::monster" 
 # in 0.2 and 0.1, items were in enum.h, and this doesn't handle that
 item_file=$(test -e item-prop-enum.h && echo item-prop-enum.h || test -e itemprop-enum.h && echo itemprop-enum.h || echo itemprop.h)
 echo armours: `process_cmd $item_file | grep " ARM_" | grep -v -e ARM_FIRST -e ARM_LAST | wc -l`
-echo weapons: `process_cmd $item_file | grep " WPN_" | grep -v -e WPN_UNKNOWN -e WPN_RANDOM -e WPN_VIABLE -e WPN_THROWN -e WPN_UNARMED | wc -l`
+echo weapons: `process_cmd $item_file | grep " WPN_" | grep -v -e WPN_UNKNOWN -e WPN_RANDOM -e WPN_VIABLE -e WPN_UNARMED | wc -l`
 echo brands: `process_cmd $item_file | grep " SPWPN_" | grep -v -e MAX_GHOST_BRAND -e FORBID_BRAND -e DEBUG_RANDART | wc -l`
 jewel_ring=`process_cmd $item_file | grep " RING_"  | grep -v -e RING_FIRST | wc -l`
 jewel_amu=`process_cmd $item_file | grep " AMU_" | grep -v -e AMU_FIRST | wc -l`

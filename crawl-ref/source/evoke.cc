@@ -54,6 +54,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h" // FASTROOT_POWER_KEY
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -80,17 +81,11 @@ static bool _evoke_horn_of_geryon()
         return false;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
+    noisy(15, you.pos()); // same as hell effect noise
     did_god_conduct(DID_EVIL, 3);
     int num = 1;
-    const int adjusted_power =
-        player_adjust_evoc_power(you.skill(SK_EVOCATIONS, 10), surge);
+    const int adjusted_power = you.skill(SK_EVOCATIONS, 10);
     if (adjusted_power + random2(90) > 130)
         ++num;
     if (adjusted_power + random2(90) > 180)
@@ -117,7 +112,7 @@ static bool _evoke_horn_of_geryon()
 }
 
 /**
- * Spray lightning in all directions. (Randomly: shock, lightning bolt, OoE.)
+ * Spray lightning in all directions. (Randomly lightning bolt or OoE.)
  *
  * @param range         The range of the beams. (As with all beams, eventually
  *                      capped at LOS.)
@@ -125,9 +120,8 @@ static bool _evoke_horn_of_geryon()
  */
 static void _spray_lightning(int range, int power)
 {
-    const zap_type which_zap = random_choose(ZAP_SHOCK,
-                                             ZAP_LIGHTNING_BOLT,
-                                             ZAP_ORB_OF_ELECTRICITY);
+    const zap_type zap = random_choose_weighted(3, ZAP_LIGHTNING_BOLT,
+                                                2, ZAP_ORB_OF_ELECTRICITY);
 
     bolt beam;
     // range has no tracer, so randomness is ok
@@ -137,7 +131,7 @@ static void _spray_lightning(int range, int power)
     beam.target.x += random2(13) - 6;
     beam.target.y += random2(13) - 6;
     // Non-controlleable, so no player tracer.
-    zapping(which_zap, power, beam);
+    zapping(zap, power, beam);
 }
 
 /**
@@ -148,23 +142,9 @@ static void _spray_lightning(int range, int power)
  */
 static bool _lightning_rod(dist *preselect)
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
-    const int power =
-        player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3), surge);
-
-    const spret ret = your_spells(SPELL_THUNDERBOLT, power, false,
-                                                        nullptr, preselect);
+    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
+    const spret ret = your_spells(SPELL_THUNDERBOLT, power, false, nullptr,
+                                  preselect);
 
     if (ret == spret::abort)
         return false;
@@ -251,6 +231,8 @@ void zap_wand(int slot, dist *_target)
 
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
+    if (spell == SPELL_FASTROOT)
+        you.props[FASTROOT_POWER_KEY] = power; // we may cancel, but that's fine
 
     spret ret = your_spells(spell, power, false, &wand, _target);
 
@@ -308,21 +290,12 @@ string manual_skill_names(bool short_text)
 
 static bool _box_of_beasts()
 {
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
     mpr("You open the lid...");
 
     // two rolls to reduce std deviation - +-6 so can get < max even at 27 sk
     int rnd_factor = random2(7);
     rnd_factor -= random2(7);
-    const int hd_min = min(27,
-                           player_adjust_evoc_power(
-                               you.skill(SK_EVOCATIONS)
-                               + rnd_factor, surge));
+    const int hd_min = min(27, you.skill(SK_EVOCATIONS) + rnd_factor);
     const int tier = mutant_beast_tier(hd_min);
     ASSERT(tier < NUM_BEAST_TIERS);
 
@@ -350,7 +323,8 @@ static bool _box_of_beasts()
 
 static bool _make_zig(item_def &zig)
 {
-    if (feat_is_critical(env.grid(you.pos())))
+    if (feat_is_critical(env.grid(you.pos()))
+        || player_in_branch(BRANCH_ARENA))
     {
         mpr("You can't place a gateway to a ziggurat here.");
         return false;
@@ -378,7 +352,7 @@ static int _gale_push_dist(const actor* agent, const actor* victim, int pow)
 
     if (victim->body_size(PSIZE_BODY) < SIZE_MEDIUM)
         dist++;
-    else if (victim->body_size(PSIZE_BODY) > SIZE_BIG)
+    else if (victim->body_size(PSIZE_BODY) > SIZE_LARGE)
         dist /= 2;
     else if (victim->body_size(PSIZE_BODY) > SIZE_MEDIUM)
         dist -= 1;
@@ -402,7 +376,7 @@ static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
     return min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
 }
 
-void wind_blast(actor* agent, int pow, coord_def target, bool card)
+void wind_blast(actor* agent, int pow, coord_def target)
 {
     vector<actor *> act_list;
 
@@ -414,7 +388,8 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
             || ai->pos().distance_from(agent->pos()) > radius
             || ai->pos() == agent->pos() // so it's never aimed_at_feet
             || !target.origin()
-               && _angle_between(agent->pos(), target, ai->pos()) > PI/4.0)
+               && _angle_between(agent->pos(), target, ai->pos()) > PI/4.0
+            || ai->resists_dislodge("being blown about by the wind"))
         {
             continue;
         }
@@ -575,12 +550,11 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
     if (agent->is_player())
     {
-        const string source = card ? "card" : "fan";
-
+        // Nemelex card only.
         if (pow > 120)
-            mprf("A mighty gale blasts forth from the %s!", source.c_str());
+            mpr("A mighty gale blasts forth from the card!");
         else
-            mprf("A fierce wind blows from the %s.", source.c_str());
+            mpr("A fierce wind blows from the card.");
     }
 
     noisy(8, agent->pos());
@@ -634,26 +608,13 @@ void wind_blast(actor* agent, int pow, coord_def target, bool card)
 
 static bool _phial_of_floods(dist *target)
 {
-    // TODO: code duplication with your_spells
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
     dist target_local;
     if (!target)
         target = &target_local;
     bolt beam;
 
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
-    const int base_pow = 10 + you.skill(SK_EVOCATIONS, 4); // placeholder?
-    zappy(ZAP_PRIMAL_WAVE, base_pow, false, beam);
+    const int power = 10 + you.skill(SK_EVOCATIONS, 4);
+    zappy(ZAP_PRIMAL_WAVE, power, false, beam);
     beam.range = LOS_RADIUS;
     beam.aimed_at_spot = true;
 
@@ -663,19 +624,10 @@ static bool _phial_of_floods(dist *target)
     args.top_prompt = "Aim the phial where?";
 
     if (spell_direction(*target, beam, &args)
-        && player_tracer(ZAP_PRIMAL_WAVE, base_pow, beam))
+        && player_tracer(ZAP_PRIMAL_WAVE, power, beam))
     {
-#if TAG_MAJOR_VERSION == 34
-        const int surge = pakellas_surge_devices();
-        surge_power(you.spec_evoke() + surge);
-#else
-        const int surge = 0;
-#endif
-        const int power = player_adjust_evoc_power(base_pow, surge);
-        // use real power to recalc hit/dam
         zappy(ZAP_PRIMAL_WAVE, power, false, beam);
         beam.fire();
-
         return true;
     }
 
@@ -719,26 +671,15 @@ static spret _phantom_mirror(dist *target)
         return spret::abort;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
-
     monster* mon = clone_mons(victim, true, nullptr, ATT_FRIENDLY);
     if (!mon)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return spret::fail;
     }
-    const int power = player_adjust_evoc_power(5 + you.skill(SK_EVOCATIONS, 3),
-                                               surge);
-    int dur = min(6, max(1,
-                         player_adjust_evoc_power(
-                             you.skill(SK_EVOCATIONS, 1) / 4 + 1,
-                             surge)
-                         * (100 - victim->check_willpower(power)) / 100));
+    const int power = 5 + you.skill(SK_EVOCATIONS, 3);
+    int dur = min(6, max(1, (you.skill(SK_EVOCATIONS, 1) / 4 + 1)
+                         * (100 - victim->check_willpower(&you, power)) / 100));
 
     mon->mark_summoned(dur, true, SPELL_PHANTOM_MIRROR);
 
@@ -761,8 +702,7 @@ static spret _phantom_mirror(dist *target)
 static bool _valid_tremorstone_target(const monster &m)
 {
     return !mons_is_firewood(m)
-        && !(have_passive(passive_t::shoot_through_plants)
-                                && fedhas_protects(&m))
+        && !god_protects(&m)
         && !always_shoot_through_monster(&you, m);
 }
 
@@ -858,12 +798,6 @@ static int _tremorstone_count(int pow)
  */
 static spret _tremorstone()
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return spret::abort;
-    }
-
     bool see_target;
     bolt beam;
 
@@ -871,8 +805,7 @@ static spret _tremorstone()
     static const int SPREAD = 1;
     static const int RANGE = RADIUS + SPREAD;
     const int pow = 15 + you.skill(SK_EVOCATIONS);
-    const int adjust_pow = player_adjust_evoc_power(pow);
-    const int num_explosions = _tremorstone_count(adjust_pow);
+    const int num_explosions = _tremorstone_count(pow);
 
     beam.source_id  = MID_PLAYER;
     beam.thrower    = KILL_YOU;
@@ -907,7 +840,7 @@ static spret _tremorstone()
     return spret::success;
 }
 
-random_pick_entry<cloud_type> condenser_clouds[] =
+static const vector<random_pick_entry<cloud_type>> condenser_clouds =
 {
   { 0,   50, 200, FALL, CLOUD_MEPHITIC },
   { 0,  100, 125, PEAK, CLOUD_FIRE },
@@ -916,17 +849,10 @@ random_pick_entry<cloud_type> condenser_clouds[] =
   { 0,  110, 50, RISE, CLOUD_NEGATIVE_ENERGY },
   { 0,  110, 50, RISE, CLOUD_STORM },
   { 0,  110, 50, RISE, CLOUD_ACID },
-  { 0,0,0,FLAT,CLOUD_NONE }
 };
 
 static spret _condenser()
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return spret::abort;
-    }
-
     if (env.level_state & LSTATE_STILL_WINDS)
     {
         mpr("The air is too still to form clouds.");
@@ -934,10 +860,9 @@ static spret _condenser()
     }
 
     const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
-    const int adjust_pow = min(110,player_adjust_evoc_power(pow));
 
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
-    cloud_type cloud = cloud_picker.pick(condenser_clouds, adjust_pow, CLOUD_NONE);
+    cloud_type cloud = cloud_picker.pick(condenser_clouds, pow, CLOUD_NONE);
 
     vector<coord_def> target_cells;
     bool see_targets = false;
@@ -980,7 +905,7 @@ static spret _condenser()
     for (auto p : target_cells)
     {
         const int cloud_power = 5
-            + random2avg(12 + div_rand_round(adjust_pow * 3, 4), 3);
+            + random2avg(12 + div_rand_round(pow * 3, 4), 3);
         place_cloud(cloud, p, cloud_power, &you);
     }
 
@@ -991,18 +916,12 @@ static spret _condenser()
 
 static bool _xoms_chessboard()
 {
-    if (you.confused())
-    {
-        canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
     vector<monster *> targets;
     bool see_target = false;
 
     for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->friendly() || mi->neutral())
+        if (mi->friendly() || mi->neutral() && !mi->has_ench(ENCH_INSANE))
             continue;
         if (mons_is_firewood(**mi))
             continue;
@@ -1020,15 +939,7 @@ static bool _xoms_chessboard()
         return false;
     }
 
-#if TAG_MAJOR_VERSION == 34
-    const int surge = pakellas_surge_devices();
-    surge_power(you.spec_evoke() + surge);
-#else
-    const int surge = 0;
-#endif
-
-    const int power =
-        player_adjust_evoc_power(15 + you.skill(SK_EVOCATIONS, 7) / 2, surge);
+    const int power = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
 
     mpr("You make a move on Xom's chessboard...");
 
@@ -1042,6 +953,7 @@ static bool _xoms_chessboard()
     const monster * target = *random_iterator(targets);
     beam.source = target->pos();
     beam.target = target->pos();
+    beam.set_agent(&you);
 
     // List of possible effects. Mostly debuffs, a few buffs to keep it
     // exciting
@@ -1078,52 +990,6 @@ bool evoke_check(int slot, bool quiet)
         return false;
     }
 
-    // TODO: are these reaching checks necessary any more?
-    // is slot a wielded reaching weapon, or if no slot, is the player wielding
-    // a reaching weapon?
-    const bool wielded = you.weapon()
-                         && (slot != -1 && slot == you.equip[EQ_WEAPON]
-                                || slot == -1 && you.equip[EQ_WEAPON] >= 0);
-    const bool reaching = wielded
-                          && weapon_reach(*you.weapon()) > REACH_NONE;
-
-    // ammo checks are done below, this is the precondition for messaging
-    // about ranged failures
-    const bool ranged = wielded && is_range_weapon(*you.weapon());
-
-    if ((reaching || ranged) && you.melded[EQ_WEAPON])
-    {
-        if (!quiet)
-            canned_msg(MSG_PRESENT_FORM);
-        return false;
-    }
-
-    if (you.berserk() && !reaching)
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
-    if (you.confused() && !ranged) // attack is ok under confusion, but not reaching
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-    if (ranged && i && (you.launcher_action.is_empty()
-                    || !you.launcher_action.get()->is_valid()))
-    {
-        if (!quiet)
-        {
-            // XX messaging should be unified with actual launching code
-            mprf("You do not have any ammo quivered for %s.",
-                                    you.weapon()->name(DESC_YOUR).c_str());
-        }
-        return false;
-    }
-    if (reaching || ranged)
-        return true;
-
     // is this supposed to be allowed under confusion?
     if (i && i->base_type == OBJ_MISCELLANY && i->sub_type == MISC_ZIGGURAT)
         return true;
@@ -1140,22 +1006,24 @@ bool evoke_check(int slot, bool quiet)
             }
     }
 
-#if TAG_MAJOR_VERSION == 34
-    if (player_under_penance(GOD_PAKELLAS))
-    {
-        if (!quiet)
-        {
-            simple_god_message("'s wrath prevents you from evoking devices!",
-                           GOD_PAKELLAS);
-        }
-        return false;
-    }
-#endif
-
     if (you.get_mutation_level(MUT_NO_ARTIFICE))
     {
         if (!quiet)
             mpr("You cannot evoke magical items.");
+        return false;
+    }
+
+    if (you.confused())
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_CONFUSED);
+        return false;
+    }
+
+    if (you.berserk())
+    {
+        if (!quiet)
+            canned_msg(MSG_TOO_BERSERK);
         return false;
     }
 
@@ -1204,36 +1072,13 @@ bool evoke_item(int slot, dist *preselect)
 
     item_def& item = you.inv[slot];
     // Also handles messages.
-    if (!item_is_evokable(item, true, false, true) || !evoke_check(slot))
+    if (!item_is_evokable(item, true) || !evoke_check(slot))
         return false;
 
     bool did_work   = false;  // "Nothing happens" message
     bool unevokable = false;
 
-    const unrandart_entry *entry = is_unrandom_artefact(item)
-        ? get_unrand_entry(item.unrand_idx) : nullptr;
-
-    if (entry && (entry->evoke_func || entry->targeted_evoke_func))
-    {
-        ASSERT(item_is_equipped(item));
-
-        bool qret;
-        // only use one of these, prioritizing the targeted version. In
-        // principle we could call them both?
-        ASSERT(!(entry->evoke_func && entry->targeted_evoke_func)); // probably should be in art-data.pl
-        if (entry->targeted_evoke_func)
-            qret = entry->targeted_evoke_func(&item, &did_work, &unevokable, preselect);
-        else
-            qret = entry->evoke_func(&item, &did_work, &unevokable);
-
-        if (!unevokable)
-            count_action(CACT_EVOKE, item.unrand_idx);
-
-        // what even _is_ this return value?
-        if (qret)
-            return did_work;
-    }
-    else switch (item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WANDS:
         zap_wand(slot, preselect);

@@ -12,7 +12,7 @@ function base_monster_setup(e)
   e.kmons("A = goblin / frilled lizard / giant cockroach / endoplasm / ball python /\
            bat / kobold / rat / gnoll band /\
            hobgoblin / jackal band / worm / adder / quokka /\
-           gnoll shaman band / orc band / orc priest band /\
+           gnoll bouda band / orc band / orc priest band /\
            floating eye / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
@@ -99,7 +99,7 @@ function base_monster_setup(e)
            orc / scorpion / floating eye / skeleton /\
            zombie / river rat / ufetubus")
   e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
-           Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
+           Edmund / Ijyb / Grinder / Pikel band / Pargi / Terence / Menkaure /\
            Prince Ribbit")
   e.kmons("I = Erica / Erolcha / Eustachio / Gastronok / Grum band / Harold /\
            Joseph / Josephine band / Maurice / Psyche / Sonja / Urug")
@@ -162,7 +162,7 @@ function general_item_setup(e)
   e.kitem("^ = superb_item ident:all w:590 /\
           potion of heal wounds ident:all q:4 w:3 /\
           potion of haste ident:all q:4 w:3 /\
-          scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
+          any concealment scroll w:1 ident:all /\
           potion of might ident:all w:2 /\
           scroll of acquirement q:1 w:1 ident:all /\
           scroll of enchant weapon ident:all q:4 w:2 /\
@@ -178,7 +178,7 @@ function general_item_setup(e)
           potion of brilliance ident:all / potion of berserk rage ident:all /\
           potion of mutation ident:all")
   e.kitem("? = scroll of blinking ident:all / scroll of identify ident:all /\
-          scroll of fog ident:all / scroll of fear ident:all /\
+          any concealment scroll ident:all / scroll of fear ident:all /\
           scroll of enchant weapon ident:all q:2 /\
           scroll of enchant armour ident:all q:2")
   e.kitem(") = battleaxe plus:9 good_item ident:all /\
@@ -189,8 +189,6 @@ function general_item_setup(e)
     broad axe plus:9 randart ident:all /\
     glaive plus:9 good_item ident:all /\
     glaive plus:7 randart ident:all /\
-    scythe plus:11 good_item ident:all /\
-    scythe plus:9 randart ident:all /\
     bardiche plus:7 good_item ident:all /\
     bardiche plus:5 randart ident:all /\
     demon trident plus:9 good_item ident:all /\
@@ -252,8 +250,6 @@ function general_item_setup(e)
     broad axe plus:6 good_item ident:all /\
     glaive plus:6 ego:none ident:all /\
     glaive plus:3 good_item ident:all /\
-    scythe plus:9 ego:none ident:all /\
-    scythe plus:6 good_item ident:all /\
     bardiche plus:3 ego:none ident:all /\
     bardiche plus:0 good_item ident:all /\
     demon trident plus:6 ego:none ident:all /\
@@ -443,8 +439,6 @@ function armoury_setup(e)
           any armour good_item ident:all w:20")
   e.kitem("c = any weapon good_item ident:all")
   e.kitem("d = any armour good_item ident:all")
-  e.kitem("e = arrow q:50 mundane ident:all")
-  e.kitem("f = bolt q:50 mundane ident:all")
   e.subst("c = ccc(")
   e.subst("d = ddd[")
   e.lua_marker('~', props_marker {

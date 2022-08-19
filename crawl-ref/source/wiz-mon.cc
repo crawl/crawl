@@ -14,6 +14,7 @@
 #include "areas.h"
 #include "cloud.h"
 #include "colour.h"
+#include "command.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "directn.h"
@@ -52,10 +53,16 @@
 void wizard_create_spec_monster_name()
 {
     char specs[1024];
-    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec): ");
+    mprf(MSGCH_PROMPT, "Enter monster name (or MONS spec) (? for help): ");
     if (cancellable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
+        return;
+    }
+
+    if (!strcmp(specs, "?"))
+    {
+        show_specific_help("wiz-monster");
         return;
     }
 
@@ -111,13 +118,6 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(type) && you.unique_creatures[type])
         you.unique_creatures.set(type, false);
 
-    if (mons_class_requires_band(type) && !mspec.band)
-    {
-        mprf(MSGCH_DIAGNOSTICS,
-             "That monster can only be created with a band.");
-        return;
-    }
-
     if (!dgn_place_monster(mspec, place, true, false))
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place monster.");
@@ -152,7 +152,7 @@ void wizard_create_spec_monster_name()
         monster    &mon = env.mons[idx];
         ghost_demon ghost;
 
-        ghost.name = "John Doe";
+        ghost.name = random_choose("John Doe", "Jane Doe", "Jay Doe");
 
         char input_str[80];
         msgwin_get_line("Make player ghost which species? (case-sensitive) ",
@@ -303,72 +303,6 @@ void debug_list_monsters()
     }
 }
 
-void wizard_spawn_control()
-{
-    mprf(MSGCH_PROMPT, "(c)hange spawn rate or (s)pawn monsters? ");
-    const int c = toalower(getchm());
-
-    char specs[256];
-    bool done = false;
-
-    if (c == 'c')
-    {
-        mprf(MSGCH_PROMPT, "Set monster spawn rate to what? (now %d, lower value = higher rate) ",
-             env.spawn_random_rate);
-
-        if (!cancellable_get_line(specs, sizeof(specs)))
-        {
-            const int rate = atoi(specs);
-            if (rate || specs[0] == '0')
-            {
-                mprf("Setting monster spawn rate to %i.", rate);
-                env.spawn_random_rate = rate;
-                done = true;
-            }
-        }
-    }
-    else if (c == 's')
-    {
-        // 50 spots are reserved for non-wandering monsters.
-        int max_spawn = MAX_MONSTERS - 50;
-        for (monster_iterator mi; mi; ++mi)
-            if (mi->alive())
-                max_spawn--;
-
-        if (max_spawn <= 0)
-        {
-            mprf(MSGCH_PROMPT, "Level already filled with monsters, "
-                               "get rid of some of them first.");
-            return;
-        }
-
-        mprf(MSGCH_PROMPT, "Spawn how many random monsters (max %d)? ",
-             max_spawn);
-
-        if (!cancellable_get_line(specs, sizeof(specs)))
-        {
-            const int num = min(atoi(specs), max_spawn);
-            if (num > 0)
-            {
-                mprf("Spawning %i monster%s.", num, num == 1 ? "" : "s");
-                int curr_rate = env.spawn_random_rate;
-                // Each call to spawn_random_monsters() will spawn one with
-                // the rate at 5 or less.
-                env.spawn_random_rate = 5;
-
-                for (int i = 0; i < num; ++i)
-                    spawn_random_monsters();
-
-                env.spawn_random_rate = curr_rate;
-                done = true;
-            }
-        }
-    }
-
-    if (!done)
-        canned_msg(MSG_OK);
-}
-
 static const char* ht_names[] =
 {
     "land",
@@ -426,8 +360,7 @@ void debug_stethoscope(int mon)
          ((mons.attitude == ATT_HOSTILE)        ? "hostile" :
           (mons.attitude == ATT_FRIENDLY)       ? "friendly" :
           (mons.attitude == ATT_NEUTRAL)        ? "neutral" :
-          (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral":
-          (mons.attitude == ATT_STRICT_NEUTRAL) ? "strictly neutral"
+          (mons.attitude == ATT_GOOD_NEUTRAL)   ? "good neutral"
                                                 : "unknown alignment"));
 
     // Print stats and other info.

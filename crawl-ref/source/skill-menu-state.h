@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum skill_menu_state
 {
     SKM_NONE,

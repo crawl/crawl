@@ -17,6 +17,7 @@ struct bolt;
 
 void init_properties();
 
+#define ITEM_NAME_KEY "name"
 
 typedef uint32_t armflags_t;
 #define ard(flg, lev) (armflags_t)((flg) * ((lev) & 7))
@@ -43,6 +44,16 @@ enum armour_flag
     // vulnerabilities
     ARMF_VUL_FIRE           = ard(ARMF_RES_FIRE, -1),
     ARMF_VUL_COLD           = ard(ARMF_RES_COLD, -1),
+};
+
+enum item_rarity_type
+{
+    RARITY_NONE,
+    RARITY_VERY_RARE,
+    RARITY_RARE,
+    RARITY_UNCOMMON,
+    RARITY_COMMON,
+    RARITY_VERY_COMMON,
 };
 
 #define AMU_REFLECT_SH 5*2
@@ -75,7 +86,6 @@ bool fully_identified(const item_def &item) PURE;
 void     set_equip_desc(item_def &item, iflags_t flags);
 iflags_t get_equip_desc(const item_def &item) PURE;
 
-bool  is_helmet(const item_def &item) PURE;
 bool  is_hard_helmet(const item_def &item) PURE;
 
 // ego items:
@@ -107,7 +117,7 @@ int fit_armour_size(const item_def &item, size_type size) PURE;
 bool check_armour_size(const item_def &item, size_type size) PURE;
 bool check_armour_size(armour_type sub_type, size_type size) PURE;
 
-int wand_charge_value(int type) PURE;
+int wand_charge_value(int type, int item_level = 1) PURE;
 #if TAG_MAJOR_VERSION == 34
 bool is_known_empty_wand(const item_def &item) PURE;
 #endif
@@ -115,10 +125,12 @@ bool is_offensive_wand(const item_def &item) PURE;
 bool is_enchantable_armour(const item_def &arm, bool unknown = false) PURE;
 
 bool is_shield(const item_def &item) PURE;
+bool is_offhand(const item_def &item) PURE;
 bool is_shield_incompatible(const item_def &weapon,
                             const item_def *shield = nullptr) PURE;
 bool shield_reflects(const item_def &shield) PURE;
-void ident_reflector(item_def *item);
+
+int guile_adjust_willpower(int wl) PURE;
 
 // Only works for armour/weapons/missiles
 // weapon functions:
@@ -151,18 +163,17 @@ skill_type item_attack_skill(const item_def &item) PURE;
 skill_type item_attack_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
 bool staff_uses_evocations(const item_def &item);
+skill_type staff_skill(stave_type s);
 bool item_skills(const item_def &item, set<skill_type> &skills);
 
 // launcher and ammo functions:
 bool is_range_weapon(const item_def &item) PURE;
-missile_type fires_ammo_type(const item_def &item) PURE;
+bool is_crossbow(const item_def &item) PURE;
+bool is_slowed_by_armour(const item_def *item) PURE;
 const char *ammo_name(missile_type ammo) IMMUTABLE;
-const char *ammo_name(const item_def &bow) PURE;
-const char *ammo_name(const weapon_type bow) PURE;
-bool has_launcher(const item_def &ammo) PURE;
 bool is_throwable(const actor *actor, const item_def &wpn) PURE;
-launch_retval is_launched(const actor *actor, const item_def *launcher,
-                          const item_def &missile) PURE;
+bool is_launcher_ammo(const item_def &wpn) PURE;
+launch_retval is_launched(const actor *actor, const item_def &missile) PURE;
 
 bool ammo_always_destroyed(const item_def &missile) PURE;
 bool ammo_never_destroyed(const item_def &missile) PURE;
@@ -189,11 +200,9 @@ int evoker_max_charges(int evoker_type);
 bool jewellery_type_has_plusses(int jewel_type) PURE;
 bool jewellery_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
-#if TAG_MAJOR_VERSION == 34
 
-// food functions:
-bool is_real_food(food_type food) PURE;
-#endif
+item_rarity_type consumable_rarity(const item_def &item);
+item_rarity_type consumable_rarity(object_class_type base_type, int sub_type);
 
 // generic item property functions:
 int armour_type_prop(const uint8_t arm, const armour_flag prop) PURE;
@@ -205,7 +214,6 @@ int get_armour_res_elec(const item_def &arm, bool check_artp) PURE;
 int get_armour_life_protection(const item_def &arm, bool check_artp) PURE;
 int get_armour_willpower(const item_def &arm, bool check_artp) PURE;
 int get_armour_res_corr(const item_def &arm) PURE;
-int get_armour_repel_missiles(const item_def &arm, bool check_artp) PURE;
 bool get_armour_see_invisible(const item_def &arm, bool check_artp) PURE;
 bool get_armour_rampaging(const item_def &arm, bool check_artp) PURE;
 
@@ -234,7 +242,17 @@ string item_base_name(object_class_type type, int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 
-void seen_item(const item_def &item);
+void initialise_item_sets();
+void populate_sets_by_obj_type();
+void mark_inventory_sets_unknown();
+void maybe_mark_set_known(object_class_type type, int sub_type);
+int item_for_set(item_set_type typ);
+bool item_excluded_from_set(object_class_type type, int sub_type);
+bool item_known_excluded_from_set(object_class_type type, int sub_type);
+item_set_type item_set_by_name(string name);
+string item_name_for_set(item_set_type typ);
+
+void seen_item(item_def &item);
 
 static inline bool is_weapon(const item_def &item)
 {
@@ -250,3 +268,5 @@ inline constexpr bool item_type_is_equipment(object_class_type base_type)
 void remove_whitespace(string &str);
 
 void auto_id_inventory();
+
+void populate_fake_projectile(const item_def &wep, item_def &fake_proj);

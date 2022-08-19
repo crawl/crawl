@@ -119,7 +119,7 @@ Los urdidores comienzan con un arma de que hayan elegido y un pergamino de
 «Blinking». Pueden aprender los hechizos contenidos en el libro de
 Translocaciones Espaciales.
 %%%%
-Wizard
+Hedge Wizard
 
 Los magos comienzan con un Libro de Magia Menor, conteniendo una amplia gama de
 hechizos. Tienen más reservas mágicas que cualquier otro rol.

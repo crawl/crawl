@@ -40,6 +40,10 @@ static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
         return false;
     }
 
+    // Please don't autoexclude your friends. It'll hurt their feelings.
+    if (mon->wont_attack())
+        return false;
+
     if (mon->is_stationary())
         return !sleepy;
 

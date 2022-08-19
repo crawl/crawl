@@ -8,6 +8,7 @@
 #include "branch.h"
 #include "cluautil.h"
 #include "coord.h"
+#include "env.h"
 #include "player.h"
 #include "terrain.h"
 #include "travel.h"
@@ -47,7 +48,7 @@ LUAFN(l_set_exclude)
  * Uses player-centered coordinates
  * @tparam int x
  * @tparam int y
- * @function del_eclude
+ * @function del_exclude
  */
 LUAFN(l_del_exclude)
 {
@@ -59,6 +60,25 @@ LUAFN(l_del_exclude)
         return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
     del_exclude(p);
     return 0;
+}
+
+/*** Test for exclusion.
+ * Uses player-centered coordinates
+ * @tparam int x
+ * @tparam int y
+ * @treturn boolean
+ * @function is_excluded
+ */
+LUAFN(l_is_excluded)
+{
+    coord_def s;
+    s.x = luaL_safe_checkint(ls, 1);
+    s.y = luaL_safe_checkint(ls, 2);
+    const coord_def p = player2grid(s);
+    if (!_in_map_bounds(p))
+        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
+    PLUARET(boolean, is_excluded(p));
+    return 1;
 }
 
 /*** Can we get across this without swimming or flying?
@@ -142,15 +162,47 @@ LUAFN(l_set_waypoint)
     return 0;
 }
 
+/*** Clears the travel trail.
+ * Call crawl.redraw_screen afterward to see changes.
+ * @function clear_travel_trail
+ */
+static int l_clear_travel_trail(lua_State*)
+{
+    clear_travel_trail();
+    return 0;
+}
+
+/*** Set travel_trail on a cell
+ * Call crawl.redraw_screen afterward to see changes.
+ * Uses player-centered coordinates.
+ * @tparam int x
+ * @tparam int y
+ * @function set_travel_trail
+ */
+LUAFN(l_set_travel_trail)
+{
+    coord_def s;
+    s.x = luaL_safe_checkint(ls, 1);
+    s.y = luaL_safe_checkint(ls, 2);
+    const coord_def p = player2grid(s);
+    if (!_in_map_bounds(p))
+        return luaL_error(ls, "Coordinates out of bounds: (%d, %d)", s.x, s.y);
+    env.travel_trail.push_back(p);
+    return 0;
+}
+
 static const struct luaL_reg travel_lib[] =
 {
     { "set_exclude", l_set_exclude },
     { "del_exclude", l_del_exclude },
+    { "is_excluded", l_is_excluded },
     { "feature_traversable", l_feature_is_traversable },
     { "feature_solid", l_feature_is_solid },
     { "find_deepest_explored", l_find_deepest_explored },
     { "waypoint_delta", l_waypoint_delta },
     { "set_waypoint", l_set_waypoint },
+    { "clear_travel_trail", l_clear_travel_trail },
+    { "set_travel_trail", l_set_travel_trail },
 
     { nullptr, nullptr }
 };

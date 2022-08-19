@@ -36,7 +36,7 @@
 #include "travel.h"
 #include "version.h"
 #include "view.h"
-#
+
 #if defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW)
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
@@ -647,6 +647,8 @@ void do_crash_dump()
             "\n- A description of what you were doing when this crash occurred.\n\n",
             name, get_savedir_filename(you.your_name).c_str());
     errno = 0;
+    // TODO: this freopen of stderr persists into a recursive crash, making it
+    // hard to directly log in webtiles...
     FILE* file = crawl_state.test ? stderr : freopen(name, "a+", stderr);
 
     // The errno values are only relevant when the function in
@@ -805,12 +807,6 @@ NORETURN static void _BreakStrToDebugger(const char *mesg, bool assert)
     OutputDebugString(mesg);
     if (IsDebuggerPresent())
         DebugBreak();
-#endif
-
-#if defined(TARGET_OS_MACOSX)
-// raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
-    int* p = nullptr;           // but this gives us a stack crawl...
-    *p = 0;
 #endif
 
     // MSVCRT's abort() give's a funny message ...

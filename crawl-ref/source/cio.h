@@ -146,8 +146,14 @@ enum KEYS
 {
     CK_ENTER  = '\r',
     CK_BKSP   = 8,
+    CK_TAB    = 9,
     CK_ESCAPE = ESCAPE,
 
+    // note: -256 through approx -600 are reserved for various ncurses keycodes,
+    // use at your own risk.
+    // For internal keycodes:
+    // we use >= -255 as a safe negative range where ascii+ chars are guaranteed
+    // to be treated as positive, and <= -1000 as another safe overflow range.
     CK_DELETE = -255,
 
     // This sequence of enums should not be rearranged.
@@ -164,7 +170,7 @@ enum KEYS
 
     CK_PGUP,
     CK_PGDN,
-    CK_TAB_TILE, // unused
+    CK_TAB_PLACEHOLDER, // unused, here only as an offset
 
     CK_SHIFT_UP,
     CK_SHIFT_DOWN,
@@ -196,21 +202,94 @@ enum KEYS
     CK_CTRL_PGDN,
     CK_CTRL_TAB,
 
+    CK_CTRL_SHIFT_UP,
+    CK_CTRL_SHIFT_DOWN,
+    CK_CTRL_SHIFT_LEFT,
+    CK_CTRL_SHIFT_RIGHT,
+
+    CK_CTRL_SHIFT_INSERT,
+
+    CK_CTRL_SHIFT_HOME,
+    CK_CTRL_SHIFT_END,
+    CK_CTRL_SHIFT_CLEAR,
+
+    CK_CTRL_SHIFT_PGUP,
+    CK_CTRL_SHIFT_PGDN,
+    CK_CTRL_SHIFT_TAB,
+
+    // a bunch of stuff added later than the above list, generalizing on how
+    // tab is handled
+    CK_ENTER_PLACEHOLDER,
+    CK_BKSP_PLACEHOLDER,
+    CK_ESCAPE_PLACEHOLDER,
+    CK_DELETE_PLACEHOLDER,
+    CK_SPACE_PLACEHOLDER,
+    CK_SHIFT_ENTER,
+    CK_SHIFT_BKSP,
+    CK_SHIFT_ESCAPE,
+    CK_SHIFT_DELETE,
+    CK_SHIFT_SPACE, // probably hard to enter, but still need a placeholder
+    CK_CTRL_ENTER,
+    CK_CTRL_BKSP,
+    CK_CTRL_ESCAPE,
+    CK_CTRL_DELETE,
+    CK_CTRL_SPACE,
+    CK_CTRL_SHIFT_ENTER,
+    CK_CTRL_SHIFT_BKSP,
+    CK_CTRL_SHIFT_ESCAPE,
+    CK_CTRL_SHIFT_DELETE,
+    CK_CTRL_SHIFT_SPACE,
+
+    CK_MAX_INTERNAL = CK_CTRL_SHIFT_DELETE,
+
+    // numpad keys are still a mess; see unixcurses_defkeys for the source of
+    // some of these bindings. On local console, in my testing, most of the
+    // non-numerics still translate as regular versions of their keys.
+    CK_NUMPAD_EQUALS   = -1021,
+    CK_MIN_INTERNAL = CK_NUMPAD_EQUALS,
+    CK_MIN_NUMPAD = CK_NUMPAD_EQUALS,
+    CK_NUMPAD_SUBTRACT2 = -1020, // currently used by webtiles only. XX remove..
+    CK_NUMPAD_DECIMAL  = -1019,
+    CK_NUMPAD_SUBTRACT = -1018,
+    CK_NUMPAD_ADD2     = -1017, // mac Terminal.app
+    CK_NUMPAD_ADD      = -1016, // normal
+    CK_NUMPAD_MULTIPLY = -1015,
+    CK_NUMPAD_DIVIDE   = -1012,
+    CK_NUMPAD_ENTER    = -1010, // no idea how general this is
+    // the numbers themselves are a bit more sane
+    CK_NUMPAD_9 = -1009,
+    CK_NUMPAD_8,
+    CK_NUMPAD_7,
+    CK_NUMPAD_6,
+    CK_NUMPAD_5,
+    CK_NUMPAD_4,
+    CK_NUMPAD_3,
+    CK_NUMPAD_2,
+    CK_NUMPAD_1,
+    CK_NUMPAD_0,
+    CK_MAX_NUMPAD = CK_NUMPAD_0,
+
 #ifdef TOUCH_UI
-    // extra numpad keys for zoom
-    CK_NUMPAD_PLUS,
-    CK_NUMPAD_MINUS,
+    // TODO remove
+    CK_NUMPAD_PLUS = CK_NUMPAD_ADD,
+    CK_NUMPAD_MINUS = CK_NUMPAD_SUBTRACT,
 #endif
 
 // ugly...
 // TODO: should crawl just use one of these internally and convert?
-#ifdef USE_TILE_LOCAL
-    CK_F12 = -SDLK_F12,
-#elif defined(TARGET_OS_WINDOWS) // windows console
-    CK_F12 = -379, // -(VK_F12 | 256) // XX ...
+// why stop at F15? (Previously, was F12.) This is what SDL on mac goes up to...
+// TODO: maybe useful to extend the ncurses side further, since many terms
+// map shifted F-keys to higher values. E.g. mac iTerm (I think this is an
+// xterm convention?) maps shift-F1 to F13, etc. But this needs some testing
+// on windows as well.
+#if defined(TARGET_OS_WINDOWS) // windows console
+    CK_F15 = -382, // -(VK_F15 | 256) // XX why...
 #else // ncurses console
-    CK_F12 = -276, // -KEY_F12 from ncurses
+    CK_F15 = -279, // -KEY_F15 from ncurses
 #endif
+    CK_F14,
+    CK_F13,
+    CK_F12,
     CK_F11,
     CK_F10,
     CK_F9,
@@ -221,7 +300,7 @@ enum KEYS
     CK_F4,
     CK_F3,
     CK_F2,
-    CK_F1, // -265, aka -KEY_F1
+    CK_F1, // (ncurses) -265, aka -KEY_F1
     CK_F0, // is this actually used?
 
     // Mouse codes.
@@ -237,8 +316,13 @@ enum KEYS
     CK_REDRAW, // no-op to force redraws of things
     CK_RESIZE,
 
-    CK_NO_KEY // so that the handle_mouse loop can be broken from early (for
+    CK_NO_KEY, // so that the handle_mouse loop can be broken from early (for
               // popups), and otherwise for keys to ignore
+
+    // SDL only, both fairly arbitrary
+    // ugh
+    CK_ALT_BASE = -3000,
+    CK_CMD_BASE = -20000,
 };
 
 class cursor_control
@@ -300,6 +384,7 @@ public:
     void set_colour(COLOURS fg, COLOURS bg);
     void set_location(coord_def loc);
 
+    string get_prompt();
     void set_prompt(string p);
 
     void insert_char_at_cursor(int ch);
@@ -383,3 +468,4 @@ protected:
 typedef int keycode_type;
 
 keyfun_action keyfun_num_and_char(int &ch);
+keycode_type numpad_to_regular(keycode_type key, bool keypad=false);

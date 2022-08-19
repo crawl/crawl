@@ -35,6 +35,10 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "jobs.h"
+#ifdef USE_TILE_WEB
+# include "json.h"
+# include "json-wrapper.h"
+#endif
 #include "kills.h"
 #include "libutil.h"
 #include "menu.h"
@@ -661,7 +665,7 @@ static const char *kill_method_names[] =
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
     "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
-    "collision", "zot",
+    "collision", "zot", "constriction",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -1359,7 +1363,8 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             || death_type == KILLED_BY_SPINES
             || death_type == KILLED_BY_WATER
             || death_type == KILLED_BY_BEING_THROWN
-            || death_type == KILLED_BY_COLLISION)
+            || death_type == KILLED_BY_COLLISION
+            || death_type == KILLED_BY_CONSTRICTION)
         && monster_by_mid(death_source))
     {
         const monster* mons = monster_by_mid(death_source);
@@ -1382,8 +1387,8 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
             }
 
             // Setting this is redundant for dancing weapons, however
-            // we do care about the above indentification. -- bwr
-            if (mons->type != MONS_DANCING_WEAPON)
+            // we do care about the above identification. -- bwr
+            if (!mons_class_is_animated_weapon(mons->type))
                 auxkilldata = env.item[mons->inv[MSLOT_WEAPON]].name(DESC_A);
         }
 
@@ -1418,9 +1423,9 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
         if (mons_is_unique(mons->type))
             death_source_flags.insert("unique");
 
-        if (mons->props.exists("blame"))
+        if (mons->props.exists(BLAME_KEY))
         {
-            const CrawlVector& blame = mons->props["blame"].get_vector();
+            const CrawlVector& blame = mons->props[BLAME_KEY].get_vector();
 
             indirectkiller = blame[blame.size() - 1].get_string();
             _strip_to(indirectkiller, " by ");
@@ -1466,14 +1471,14 @@ void scorefile_entry::init_death_cause(int dam, mid_t dsrc,
 
     if (death_type == KILLED_BY_POISON)
     {
-        death_source_name = you.props["poisoner"].get_string();
-        auxkilldata = you.props["poison_aux"].get_string();
+        death_source_name = you.props[POISONER_KEY].get_string();
+        auxkilldata = you.props[POISON_AUX_KEY].get_string();
     }
 
     if (death_type == KILLED_BY_BURNING)
     {
-        death_source_name = you.props["sticky_flame_source"].get_string();
-        auxkilldata = you.props["sticky_flame_aux"].get_string();
+        death_source_name = you.props[STICKY_FLAMER_KEY].get_string();
+        auxkilldata = you.props[STICKY_FLAME_AUX_KEY].get_string();
     }
 }
 
@@ -2280,7 +2285,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
             desc += "stupidity";
         else if (race >= 0 && // not a removed race
-                 species::is_unbreathing(static_cast<species_type>(race)))
+                 (species::is_undead(static_cast<species_type>(race))
+                  || species::is_nonliving(static_cast<species_type>(race))))
         {
             desc += "Forgot to exist";
         }
@@ -2627,6 +2633,14 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         desc += terse ? "Zot" : "Tarried too long and was consumed by Zot";
         break;
 
+    case KILLED_BY_CONSTRICTION:
+        if (terse)
+            desc += "constriction";
+        else
+            desc += "Constricted to death by " + death_source_desc();
+        needs_damage = true;
+        break;
+
     default:
         desc += terse? "program bug" : "Nibbled to death by software bugs";
         break;
@@ -2737,6 +2751,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                 if (!semiverbose)
                 {
                     desc += auxkilldata == "damnation" ? "... with " :
+                         auxkilldata == "creeping frost" ? "... by " :
                             (is_vowel(auxkilldata[0])) ? "... with an "
                                                        : "... with a ";
                     desc += auxkilldata;
@@ -2960,8 +2975,49 @@ string xlog_fields::xlog_line() const
     return line;
 }
 
+#ifdef USE_TILE_WEB
+JsonWrapper xlog_fields::xlog_json() const
+{
+    JsonWrapper j(json_mkobject());
+
+    for (const pair<string, string> &f : fields)
+    {
+        // Don't write empty fields.
+        if (f.second.empty())
+            continue;
+
+        json_append_member(j.node, f.first.c_str(),
+                                    json_mkstring(f.second.c_str()));
+    }
+    return j;
+}
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 // Milestones
+
+#define LAST_MILESTONE_PROP "last_milestone"
+#define LAST_MILESTONE_TYPE_PROP "last_milestone_type"
+#define LAST_MILESTONE_TURN_PROP "last_milestone_turn"
+
+#if defined(USE_TILE_WEB)
+void sync_last_milestone()
+{
+    if (!you.props.exists(LAST_MILESTONE_TURN_PROP))
+        return; // no milestones yet
+    // send webtiles an extremely minimal milestone bundle -- just enough for
+    // the sake of the lobby on game start.
+    xlog_fields xl;
+    xl.add_field("type", "%s",
+                    you.props[LAST_MILESTONE_TYPE_PROP].get_string().c_str());
+    xl.add_field("milestone", "%s",
+                    you.props[LAST_MILESTONE_PROP].get_string().c_str());
+    xl.add_field("turn", "%d", you.props[LAST_MILESTONE_TURN_PROP].get_int());
+    xl.add_field("status", "milestone_only");
+
+    tiles.send_milestone(xl);
+}
+#endif
 
 /**
  * @brief Record the player reaching a milestone, if ::DGL_MILESTONES is defined.
@@ -2970,21 +3026,21 @@ string xlog_fields::xlog_line() const
 void mark_milestone(const string &type, const string &milestone,
                     const string &origin_level, time_t milestone_time)
 {
-#ifdef DGL_MILESTONES
-    static string lasttype, lastmilestone;
-    static long lastturn = -1;
+#if defined(USE_TILE_WEB) || defined(DGL_MILESTONES)
+    // save previous milestone info in you.props, so that we know whether
+    // this is new info
+    string &lastmilestone = you.props[LAST_MILESTONE_PROP].get_string();
+    string &lasttype = you.props[LAST_MILESTONE_TYPE_PROP].get_string();
+    if (!you.props.exists(LAST_MILESTONE_TURN_PROP))
+        you.props[LAST_MILESTONE_TURN_PROP] = -1;
+    int &lastturn = you.props[LAST_MILESTONE_TURN_PROP].get_int();
 
     if (crawl_state.game_is_arena()
         || !crawl_state.need_save
         // Suppress duplicate milestones on the same turn.
         || (lastturn == you.num_turns
             && lasttype == type
-            && lastmilestone == milestone)
-#ifndef SCORE_WIZARD_CHARACTERS
-        // Don't mark normal milestones in wizmode or explore mode
-        || (type != "crash" && (you.wizard || you.suppress_wizard || you.explore))
-#endif
-        )
+            && lastmilestone == milestone))
     {
         return;
     }
@@ -2993,8 +3049,6 @@ void mark_milestone(const string &type, const string &milestone,
     lastmilestone = milestone;
     lastturn      = you.num_turns;
 
-    const string milestone_file = catpath(
-        Options.save_dir, "milestones" + crawl_state.game_type_qualifier());
     const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
@@ -3011,24 +3065,75 @@ void mark_milestone(const string &type, const string &milestone,
                                     : se.get_death_time()).c_str());
     xl.add_field("type", "%s", type.c_str());
     xl.add_field("milestone", "%s", milestone.c_str());
+#ifdef USE_TILE_WEB
+    if (!crawl_state.game_crashed)
+        tiles.send_milestone(xl);
+#endif
+#ifdef DGL_MILESTONES
+#ifndef SCORE_WIZARD_CHARACTERS
+    // Don't mark normal milestones in wizmode or explore mode, when writing
+    // a dgl milestone file. (We do still send these milestones to the webtiles
+    // process.)
+    if (type != "crash" && (you.wizard || you.suppress_wizard || you.explore))
+        return;
+#endif
+
     const string xlog_line = xl.xlog_line();
+    const string milestone_file = catpath(
+        Options.save_dir, "milestones" + crawl_state.game_type_qualifier());
     if (FILE *fp = lk_open("a", milestone_file))
     {
         fprintf(fp, "%s\n", xlog_line.c_str());
         lk_close(fp);
     }
+#endif
 #else
     UNUSED(type, milestone, origin_level, milestone_time);
-#endif // DGL_MILESTONES
+#endif // USE_TILE_WEB
 }
 
-#ifdef DGL_WHEREIS
-string xlog_status_line()
+#if defined(USE_TILE_WEB) || defined(DGL_WHEREIS)
+static xlog_fields _xlog_status(const char *status)
 {
     const scorefile_entry se(0, MID_NOBODY, KILL_MISC, nullptr);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
     xl.add_field("time", "%s", make_date_string(time(nullptr)).c_str());
+    xl.add_field("status", "%s", status ? status : "");
     return xl.xlog_line();
 }
-#endif // DGL_WHEREIS
+#endif
+
+#ifdef USE_TILE_WEB
+void update_whereis_chargen(string name)
+{
+    // whereis info to indicate that character generation is happening
+    // scorefile_entry is very crashy pre-game, so just do some basic
+    // init here. We set the name manually because it is not yet set in `you`.
+    // TODO: make scorefile_entry more robust
+    if (!name.size())
+        return;
+    xlog_fields xl;
+    xl.add_field("name", "%s", name.c_str());
+    xl.add_field("lvl", "%d", 0);
+    xl.add_field("time", "%s", make_date_string(time(nullptr)).c_str());
+    xl.add_field("status", "chargen");
+    xl.add_field("milestone", "started generating a character.");
+    tiles.send_milestone(xl);
+}
+#endif
+
+void update_whereis(const char *status)
+{
+#if defined(USE_TILE_WEB) || defined(DGL_WHEREIS)
+    xlog_fields xl = _xlog_status(status);
+#ifdef USE_TILE_WEB
+    tiles.send_milestone(xl);
+#endif
+#ifdef DGL_WHEREIS
+    whereis_record(xl);
+#endif
+#else
+    UNUSED(status);
+#endif
+}

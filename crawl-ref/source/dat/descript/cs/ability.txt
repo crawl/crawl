@@ -7,20 +7,6 @@ Breathe Frost ability
 
 Dýchenout výbuch mrazu na cílené monstrum.
 %%%%
-Animate Remains ability
-
-Oživit jednu mrtvolu, nebo kostru, jako následovníka. Všimněte si, že zombie a
-kostlivci nemůžou opustit úroveň, na které byly vytvořeny.
-%%%%
-Animate Dead ability
-
-Oživit všechny mrtvoly a kostry ve vašem okolí, jako následovníky. Všimněte si,
-že zombie a kostlivci nemůžou opustit úroveň, na které byly vytvořeny.
-%%%%
-Animate Remains or Dead ability
-
-Pokud dostanete tento popis, jedná se o chybu.
-%%%%
 Banish ability
 
 Pokoušet vyhnat monstrum do propasti.

@@ -235,7 +235,9 @@ function (exports, $, key_conversion, chat, comm) {
                                  so we handle it in keydown */
             (e.which == 9))   /* Tab gives a keypress in Opera even when it is
                                  suppressed in keydown */
+        {
             return;
+        }
 
         // Give the game a chance to handle the key
         if (!retrigger_event(e, "game_keypress"))
@@ -321,6 +323,33 @@ function (exports, $, key_conversion, chat, comm) {
         }
         if ($(document.activeElement).hasClass("text")) return;
 
+        // supposedly `e.code` is defined on some jquery versions? not ours,
+        // though.
+        var code = e.originalEvent.code ? e.originalEvent.code : e.code;
+
+        // normalize numpad keycodes for the sake of shift and ctrl mappings.
+        // This is because sometimes, for some events, browsers will send the
+        // non-numpad keycode for digits, and we want to consistently convert
+        // modified numpad codes. This is independent of key_conversion.codes.
+        // useful tool: https://keyjs.dev/#keyboard-events-inspector
+        if (code && (e.which >= 48 && e.which <= 57))
+        {
+            switch (code)
+            {
+                case "Numpad0": e.which = 96; break;
+                case "Numpad1": e.which = 97; break;
+                case "Numpad2": e.which = 98; break;
+                case "Numpad3": e.which = 99; break;
+                case "Numpad4": e.which = 100; break;
+                case "Numpad5": e.which = 101; break;
+                case "Numpad6": e.which = 102; break;
+                case "Numpad7": e.which = 103; break;
+                case "Numpad8": e.which = 104; break;
+                case "Numpad9": e.which = 105; break;
+                default: break;
+            }
+        }
+
         // Give the game a chance to handle the key
         if (!retrigger_event(e, "game_keydown"))
             return;
@@ -334,7 +363,7 @@ function (exports, $, key_conversion, chat, comm) {
                     e.preventDefault();
                     location.hash = "#lobby";
                 }
-                else if (e.which == 123)
+                else if (e.which == 123) // F12
                 {
                     e.preventDefault();
                     chat.focus();
@@ -366,27 +395,53 @@ function (exports, $, key_conversion, chat, comm) {
                 send_keycode(key_conversion.shift[e.which]);
             }
         }
+        else if (e.ctrlKey && e.shiftKey && !e.altKey)
+        {
+            if (e.which in key_conversion.ctrlshift)
+            {
+                e.preventDefault();
+                send_keycode(key_conversion.ctrlshift[e.which]);
+            }
+        }
         else if (!e.ctrlKey && !e.shiftKey && e.altKey)
         {
             if (e.which < 32) return;
 
             e.preventDefault();
-            send_bytes([27, e.which]);
+            send_bytes([27, e.which]); // XX ???
         }
         else if (!e.ctrlKey && !e.shiftKey && !e.altKey)
         {
-            if (e.which == 123)
+            if (e.which == 123
+                || code && code == "F12") // probably unncessesary for now
             {
                 e.preventDefault();
                 chat.focus();
+            }
+            else if (key_conversion.codes // <- cache safety, remove someday
+                && key_conversion.code_conversion_enabled()
+                && code && code in key_conversion.codes)
+            {
+                e.preventDefault();
+                send_keycode(key_conversion.codes[code]);
             }
             else if (e.which in key_conversion.simple)
             {
                 e.preventDefault();
                 send_keycode(key_conversion.simple[e.which]);
             }
-            //else
-            //    log("Key: " + e.which);
+            else if (e.which in key_conversion.legacy)
+            {
+                // for current versions, these should be entirely shadowed.
+                // pre-0.27: values here are used, see comments in
+                // key_conversion.js
+                // 0.27-0.28: game.js set these values in key_conversion.simple
+                // 0.29 onwards: key_conversion.codes preempts all of these
+                e.preventDefault();
+                send_keycode(key_conversion.legacy[e.which]);
+            }
+            // else
+            //    log("Unhandled key: " + e.which + ", " + code);
         }
     }
 
@@ -429,9 +484,18 @@ function (exports, $, key_conversion, chat, comm) {
         return false;
     }
 
-    function login_failed()
+    function auth_error(data)
     {
-        $("#login_message").html("Login failed.");
+        var reason = data.reason;
+        if (reason)
+            $("#login_message").html(reason);
+        else
+            $("#login_message").html("Login failed.");
+    }
+
+    function login_failed(data)
+    {
+        auth_error(data);
         $("#login_form").show();
         $("#reg_link").show();
         $("#forgot_link").show();
@@ -484,7 +548,13 @@ function (exports, $, key_conversion, chat, comm) {
         return $.cookie("login");
     }
 
-    function logout()
+    function handle_logout(data)
+    {
+        logout(false);
+        auth_error(data);
+    }
+
+    function logout(force_reload=true)
     {
         if (get_login_cookie())
         {
@@ -495,9 +565,22 @@ function (exports, $, key_conversion, chat, comm) {
         }
         current_user = null;
         admin_user = false;
+        $("#login_form").show();
+        $("#reg_link").show();
+        $("#forgot_link").show();
+        $('#chem_link').hide();
+        $('#chpw_link').hide();
+        $("#logout_link").hide();
+        $("#account_restricted").hide();
+        $("#play_now").html("");
+
         $("#admin_panel_button").hide();
         $("#admin_panel").hide();
-        location.reload();
+        // unless this results from a player click directly, it'll prompt the
+        // player. So we skip it for a logout message from the server. This
+        // *should* be ok, maybe with some glitches.
+        if (force_reload)
+            location.reload();
     }
 
     function toggle_admin_panel()
@@ -638,6 +721,8 @@ function (exports, $, key_conversion, chat, comm) {
             case "error":
                 return possessive(watched_name)
                        + " game was terminated due to an error.";
+            case "disconnect":
+                return watched_name + " has been disconnected.";
             default:
                 return possessive(watched_name) + " game ended unexpectedly."
                        + (reason != "unknown" ? " (" + reason + ")" : "");
@@ -658,6 +743,8 @@ function (exports, $, key_conversion, chat, comm) {
                 return "Unfortunately your game crashed.";
             case "error":
                 return "Unfortunately your game terminated due to an error.";
+            case "disconnect":
+                return "You have been disconnected.";
             default:
                 return "Unfortunately your game ended unexpectedly."
                        + (reason != "unknown" ? " (" + reason + ")" : "");
@@ -980,6 +1067,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#game").html('<div id="crt" style="display: none;"></div>');
 
         chat.clear();
+        key_conversion.reset_keycodes();
 
         watching = false;
     }
@@ -1016,6 +1104,16 @@ function (exports, $, key_conversion, chat, comm) {
     function go_admin()
     {
         $("#admin_panel").show();
+    }
+
+    function set_account_hold()
+    {
+        $("#account_restricted").show();
+    }
+
+    function clear_account_hold()
+    {
+        $("#account_restricted").hide();
     }
 
     function login_required(data)
@@ -1068,6 +1166,13 @@ function (exports, $, key_conversion, chat, comm) {
         set("xl", data.xl);
         set("char", data.char);
         set("place", data.place);
+        if (data.turn && data.dur)
+        {
+            set("turn", data.turn);
+            set("dur", format_duration(parseInt(data.dur)));
+
+            new_list.removeClass("no_game_times");
+        }
         set("god", data.god || "");
         set("title", data.title);
         set("idle_time", format_idle_time(data.idle_time));
@@ -1145,7 +1250,33 @@ function (exports, $, key_conversion, chat, comm) {
 
     function make_watch_link(data)
     {
-        return "<a href='#watch-" + data.username + "'></a>";
+        if (data.username.startsWith("[account hold]"))
+            return "<b></b>"; // don't linkify, watching disabled
+        else
+            return "<a href='#watch-" + data.username + "'></a>";
+    }
+
+    function format_duration(seconds)
+    {
+        var elem = $("<span></span>");
+        if (seconds == 0)
+        {
+            elem.text("");
+        }
+        else if (seconds < 60)
+        {
+            elem.text(seconds + "s");
+        }
+        else if (seconds < (60 * 60))
+        {
+            elem.text(Math.floor(seconds / 60) + "m");
+        }
+        else
+        {
+            elem.text(Math.floor(seconds / (60 * 60)) + "h " +
+                (Math.floor(seconds / 60) % 60) + "m");
+        }
+        return elem;
     }
 
     function format_idle_time(seconds)
@@ -1157,15 +1288,15 @@ function (exports, $, key_conversion, chat, comm) {
         }
         else if (seconds < 120)
         {
-            elem.text(seconds + " s");
+            elem.text(seconds + "s");
         }
         else if (seconds < (60 * 60))
         {
-            elem.text(Math.round(seconds / 60) + " min");
+            elem.text(Math.round(seconds / 60) + "m");
         }
         else
         {
-            elem.text(Math.round(seconds / (60 * 60)) + " h");
+            elem.text(Math.round(seconds / (60 * 60)) + "h");
         }
         return elem;
     }
@@ -1430,6 +1561,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         "go_lobby": go_lobby,
         "go_admin": go_admin,
+        "set_account_hold": set_account_hold,
+        "clear_account_hold": clear_account_hold,
         "login_required": login_required,
         "game_started": crawl_started,
         "game_ended": crawl_ended,
@@ -1437,6 +1570,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         "login_success": logged_in,
         "login_fail": login_failed,
+        "auth_error": auth_error,
+        "logout": handle_logout,
         "login_cookie": set_login_cookie,
         "register_fail": register_failed,
         "start_change_email": start_change_email,

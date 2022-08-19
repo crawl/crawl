@@ -105,30 +105,3 @@ bool turn_corpse_into_skeleton(item_def &item)
     item.props.erase(FORCED_ITEM_COLOUR_KEY);
     return true;
 }
-
-static void _bleed_monster_corpse(const item_def &corpse)
-{
-    const coord_def pos = item_pos(corpse);
-    if (!pos.origin())
-    {
-        const int max_chunks = max_corpse_chunks(corpse.mon_type);
-        bleed_onto_floor(pos, corpse.mon_type, max_chunks, true);
-    }
-}
-
-void butcher_corpse(item_def &item, bool skeleton)
-{
-    item_was_destroyed(item);
-    if (!mons_skeleton(item.mon_type))
-        skeleton = false;
-    if (skeleton)
-    {
-        _bleed_monster_corpse(item);
-        turn_corpse_into_skeleton(item);
-    }
-    else
-    {
-        _bleed_monster_corpse(item);
-        destroy_item(item.index());
-    }
-}
