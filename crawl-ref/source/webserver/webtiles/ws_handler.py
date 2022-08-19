@@ -725,8 +725,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.init_user(login_callback)
 
     def login(self, username, password):
-        real_username, fail_reason = userdb.user_passwd_match(username, password)
-        if real_username and fail_reason is None:
+        success, real_username, fail_reason = userdb.user_passwd_match(username, password)
+        if success and real_username:
             self.logger.info("User %s logging in from %s.",
                                         real_username, self.request.remote_ip)
             self.do_login(real_username)
@@ -735,7 +735,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                             real_username, self.request.remote_ip, fail_reason)
             self.send_message("login_fail", reason = fail_reason)
         else:
-            self.logger.warning("Failed login for user %s  (IP: %s).", username,
+            self.logger.warning("Failed login for user %s (IP: %s).", username,
                             self.request.remote_ip)
             self.send_message("login_fail")
 
@@ -914,7 +914,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     reason="Account restricted; change password unavailable.")
             return
 
-        if not userdb.user_passwd_match(self.username, cur_password):
+        if not userdb.user_passwd_match(self.username, cur_password)[0]:
             self.send_message("change_password_fail", reason = "Your password didn't match.")
             self.logger.info("Non-matching current password during password change for %s", self.username)
             return

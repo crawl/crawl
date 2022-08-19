@@ -122,7 +122,8 @@ def get_user_info(username):  # type: (str) -> Optional[Tuple[int, str, int]]
 
 
 def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[str, str]]
-    """Returns the correctly cased username and a reason for failure."""
+    """Returns whether the check succeeded, the correctly cased username and a
+    reason for failure."""
     passwd = passwd[0:config.get('max_passwd_length')]
 
     # TODO: this all gets recollected when get_user_info is called shortly
@@ -140,12 +141,11 @@ def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[s
 
     # a banned player should never return true for the password check
     if result and dgl_is_banned(result[2]):
-        return result[0], 'Account is disabled.'
+        return False, result[0], 'Account is disabled.'
     elif result and crypt.crypt(passwd, result[1]) == result[1]:
-        return result[0], None
+        return True, result[0], None
     else:
-        return None, None
-
+        return False, None, None
 
 def ensure_user_db_exists():  # type: () -> None
     if os.path.exists(config.get('password_db')):
@@ -246,7 +246,7 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
 
     return None
 
-def change_password(userid, passwd):
+def change_password(user_id, passwd):
     if passwd == "":
         return "The password can't be empty."
 
@@ -254,24 +254,24 @@ def change_password(userid, passwd):
 
     with crawl_db(config.get('password_db')) as db:
         query = """
-            SELECT id, flags
+            SELECT flags
             FROM dglusers
-            WHERE username=?
+            WHERE id=?
             COLLATE NOCASE
         """
-        db.c.execute(query, (username,))
+        db.c.execute(query, (user_id,))
         result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
         if not result:
-            return "Invalid username!"
-        if (result[1] & DGLACCT_PASSWD_LOCK):
+            return "Invalid account!"
+        if (result[0] & DGLACCT_PASSWD_LOCK):
             return "Account has a password lock!"
 
         db.c.execute("update dglusers set password=? where id=?",
-                     (crypted_pw, userid))
+                     (crypted_pw, user_id))
         # invalidate any recovery tokens that might exist, even for normal
         # password changes:
         db.c.execute("delete from recovery_tokens where user_id=?",
-                     (userid,))
+                     (user_id,))
         db.conn.commit()
 
     return None
@@ -284,16 +284,16 @@ def change_email(user_id, email):  # type: (str, str) -> Optional[str]
 
     with crawl_db(config.get('password_db')) as db:
         query = """
-            SELECT id, flags
+            SELECT flags
             FROM dglusers
-            WHERE username=?
+            WHERE id=?
             COLLATE NOCASE
         """
-        db.c.execute(query, (username,))
+        db.c.execute(query, (user_id,))
         result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
         if not result:
-            return "Invalid username!"
-        if result[1] & DGLACCT_EMAIL_LOCK:
+            return "Invalid account!"
+        if result[0] & DGLACCT_EMAIL_LOCK:
             return "Account has an email lock!"
         db.c.execute("update dglusers set email=? where id=?", (email, user_id))
         db.conn.commit()
