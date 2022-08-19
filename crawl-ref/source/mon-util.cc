@@ -3619,8 +3619,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
  *                      etc).
  * @return              Whether the given spell should be considered 'ranged'.
  */
-static bool ms_ranged_spell(spell_type monspell, bool attack_only = false,
-                             bool ench_too = true)
+static bool ms_ranged_spell(spell_type monspell, bool attack_only, bool ench_too)
 {
     // summoning spells are usable from ranged, but not direct attacks.
     if (spell_typematch(monspell, spschool::summoning)
