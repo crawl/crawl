@@ -2627,6 +2627,11 @@ mon_spellbook_type get_spellbook(const monster_info &mon)
 vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
                                mon_spell_slot_flags flags)
 {
+    vector<mon_spell_slot> slots;
+    // the rest of this function crashes if mi has no spells
+    if (!mi.has_spells())
+        return slots;
+
     // No entry for MST_GHOST
     COMPILE_CHECK(ARRAYSZ(mspell_list) == NUM_MSTYPES - 1);
 
@@ -2637,8 +2642,6 @@ vector<mon_spell_slot> get_unique_spells(const monster_info &mi,
     for (msidx = 0; msidx < ARRAYSZ(mspell_list); ++msidx)
         if (mspell_list[msidx].type == book)
             break;
-
-    vector<mon_spell_slot> slots;
 
     if (mons_genus(mi.type) == MONS_DRACONIAN)
     {
@@ -3616,7 +3619,7 @@ bool mons_should_fire(bolt &beam, bool ignore_good_idea)
  *                      etc).
  * @return              Whether the given spell should be considered 'ranged'.
  */
-static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
+static bool ms_ranged_spell(spell_type monspell, bool attack_only = false,
                              bool ench_too = true)
 {
     // summoning spells are usable from ranged, but not direct attacks.
@@ -3677,7 +3680,7 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
     {
         if (slot.spell == SPELL_CREATE_TENTACLES)
             return true;
-        if (_ms_ranged_spell(slot.spell, attack_only, ench_too)
+        if (ms_ranged_spell(slot.spell, attack_only, ench_too)
             && mons_spell_range(mon, slot.spell) > 1)
         {
             return true;

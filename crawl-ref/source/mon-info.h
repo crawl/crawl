@@ -258,6 +258,7 @@ struct monster_info_base
     mon_attack_def attack[MAX_NUM_ATTACKS];
     bool can_go_frenzy;
     bool can_feel_fear;
+    int turns;
 
     uint32_t client_id;
 };
@@ -276,7 +277,7 @@ struct monster_info : public monster_info_base
 #define MILEV_ALL 0
 #define MILEV_SKIP_SAFE -1
 #define MILEV_NAME -2
-    monster_info() { client_id = 0; }
+    monster_info() { turns = 0; client_id = 0; }
     explicit monster_info(const monster* m, int level = MILEV_ALL);
     explicit monster_info(monster_type p_type,
                           monster_type p_base_type = MONS_NO_MONSTER);
@@ -385,6 +386,7 @@ struct monster_info : public monster_info_base
 
     bool wields_two_weapons() const;
     bool can_regenerate() const;
+    int range() const;
     reach_type reach_range(bool items = true) const;
 
     size_type body_size() const;
