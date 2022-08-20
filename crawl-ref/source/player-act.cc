@@ -513,7 +513,9 @@ static string _hand_name_singular(bool temp)
     if (you.has_usable_claws())
         return "claw";
 
-    if (you.has_usable_tentacles())
+    // Storm Form inactivates tentacle constriction, but an octopode's
+    // electric body still maintains similar anatomy.
+    if (you.has_usable_tentacles(you.form != transformation::storm))
         return "tentacle";
 
     // Storm Form inactivates the paws mutation, but graphically, a Felid's
