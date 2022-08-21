@@ -1563,7 +1563,7 @@ bool Scroller::on_event(const Event& event)
     if (event.type() == Event::Type::KeyDown)
     {
         const auto key = numpad_to_regular(
-                                    static_cast<const KeyEvent&>(event).key());
+                            static_cast<const KeyEvent&>(event).key(), true);
         // TODO: use CMD_MENU bindings here?
         switch (key)
         {
