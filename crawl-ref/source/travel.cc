@@ -2245,7 +2245,7 @@ static int _prompt_travel_branch(int prompt_flags)
         mprf(MSGCH_PROMPT, "Where to? %s",
              shortcuts.c_str());
 
-        int keyin = get_ch();
+        int keyin = numpad_to_regular(get_ch());
         switch (keyin)
         {
         CASE_ESCAPE
