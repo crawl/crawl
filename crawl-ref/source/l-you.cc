@@ -1144,14 +1144,10 @@ LUAFN(you_get_training_target)
  */
 LUAFN(you_set_training_target)
 {
-    string sk_name = luaL_checkstring(ls, 1);
-    skill_type sk = str_to_skill(sk_name);
-    if (sk == SK_NONE)
-    {
-        string err = make_stringf("Unknown skill name `%s`", sk_name.c_str());
-        return luaL_argerror(ls, 1, err.c_str());
-    }
-    else if (!you.set_training_target(sk, luaL_checknumber(ls, 2), true))
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
+    if (!you.set_training_target(sk, luaL_checknumber(ls, 2), true))
         return 0; // not a full-on error
     return 1;
 }
@@ -1163,13 +1159,9 @@ LUAFN(you_set_training_target)
  */
 LUAFN(you_skill_cost)
 {
-    string sk_name = luaL_checkstring(ls, 1);
-    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
-    {
-        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
-        return luaL_argerror(ls, 1, err.c_str());
-    }
+        return 0;
     float cost = scaled_skill_cost(sk);
     if (cost == 0)
     {
@@ -1635,10 +1627,10 @@ LUAWRAP(you_enter_wizard_mode, you.wizard = true)
 #endif
 
 LUARET1(you_exp_needed, number, exp_needed(luaL_safe_checkint(ls, 1)))
-LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1))
+LUAWRAP(you_exercise, exercise(l_skill(ls), 1))
 LUARET1(you_skill_cost_level, number, you.skill_cost_level)
 LUARET1(you_skill_points, number,
-        you.skill_points[str_to_skill(luaL_checkstring(ls, 1))])
+        you.skill_points[l_skill(ls)])
 LUARET1(you_zigs_completed, number, you.zigs_completed)
 
 static const struct luaL_reg you_dlib[] =
