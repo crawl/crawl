@@ -46,6 +46,23 @@
 #include "travel.h"
 #include "wiz-you.h"
 
+
+/*** Helper function to get a skill by name or raise an error
+ * @treturn skill_type
+ */
+static skill_type l_skill(lua_State *ls)
+{
+    string sk_name = luaL_checkstring(ls, 1);
+    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    if (sk > NUM_SKILLS)
+    {
+        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
+        luaL_argerror(ls, 1, err.c_str());
+    }
+    return sk;
+}
+
+
 //
 // Bindings to get information on the player (clua).
 //
@@ -175,14 +192,10 @@ LUARET1(you_xl_progress, number, get_exp_progress())
  */
 LUAFN(you_skill_progress)
 {
-    string sk_name = luaL_checkstring(ls, 1);
-    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
-    {
-        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
-        return luaL_argerror(ls, 1, err.c_str());
-    }
-    PLUARET(number, get_skill_percentage(str_to_skill(lua_tostring(ls, 1))));
+        return 0;
+    PLUARET(number, get_skill_percentage(sk));
 }
 
 /*** Can a skill be trained?
@@ -192,13 +205,9 @@ LUAFN(you_skill_progress)
  */
 LUAFN(you_can_train_skill)
 {
-    string sk_name = luaL_checkstring(ls, 1);
-    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    skill_type sk = l_skill(ls);
     if (sk > NUM_SKILLS)
-    {
-        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
-        return luaL_argerror(ls, 1, err.c_str());
-    }
+        return 0;
     PLUARET(boolean, you.can_currently_train[sk]);
 }
 
@@ -1066,8 +1075,9 @@ LUAFN(you_is_level_on_stack)
  */
 LUAFN(you_skill)
 {
-    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
-
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
     PLUARET(number, you.skill(sk, 10) * 0.1);
 }
 
@@ -1078,8 +1088,9 @@ LUAFN(you_skill)
  */
 LUAFN(you_base_skill)
 {
-    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
-
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
     PLUARET(number, you.skill(sk, 10, true) * 0.1);
 }
 
@@ -1098,7 +1109,9 @@ LUAFN(you_base_skill)
  */
 LUAFN(you_train_skill)
 {
-    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
     if (lua_gettop(ls) >= 2 && can_enable_skill(sk))
     {
         you.train[sk] = min(max((training_status)luaL_safe_checkint(ls, 2),
@@ -1117,14 +1130,9 @@ LUAFN(you_train_skill)
  */
 LUAFN(you_get_training_target)
 {
-    string sk_name = luaL_checkstring(ls, 1);
-    skill_type sk = str_to_skill(sk_name);
-    if (sk == SK_NONE)
-    {
-        string err = make_stringf("Unknown skill name `%s`", sk_name.c_str());
-        return luaL_argerror(ls, 1, err.c_str());
-    }
-
+    skill_type sk = l_skill(ls);
+    if (sk > NUM_SKILLS)
+        return 0;
     PLUARET(number, (double) you.get_training_target(sk) * 0.1);
 }
 
@@ -1155,7 +1163,13 @@ LUAFN(you_set_training_target)
  */
 LUAFN(you_skill_cost)
 {
-    skill_type sk = str_to_skill_safe(luaL_checkstring(ls, 1));
+    string sk_name = luaL_checkstring(ls, 1);
+    skill_type sk = str_to_skill(lua_tostring(ls, 1));
+    if (sk > NUM_SKILLS)
+    {
+        string err = make_stringf("Unknown skill name `%s`.", sk_name.c_str());
+        return luaL_argerror(ls, 1, err.c_str());
+    }
     float cost = scaled_skill_cost(sk);
     if (cost == 0)
     {

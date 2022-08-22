@@ -122,7 +122,7 @@ Items
   - Fustibali are removed. Hunting slings are renamed to slings.
   - Launchers have had their stats adjusted across the board. In particular,
     hand crossbows are made much rarer and more powerful.
-  - Launchers all use the Ranged Combat skill.
+  - Launchers all use the Ranged Weapons skill.
 * Launcher, long blade, and short blade damage scale with Dex instead of Str.
 * New concept: "alternate items". Some item types are grouped into 'sets',
   and only one type from each 'set' can generate in a game. Background
