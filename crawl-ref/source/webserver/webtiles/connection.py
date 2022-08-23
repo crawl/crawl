@@ -37,7 +37,7 @@ class WebtilesSocketConnection(object):
             return
 
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-        self.socket.settimeout(10)
+        self.socket.setblocking(False)
 
         # Set close-on-exec
         flags = fcntl.fcntl(self.socket.fileno(), fcntl.F_GETFD)
