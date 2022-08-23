@@ -841,6 +841,8 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
     if (actual)
         return spret::success;
 
+    if (player_caster)
+        return beam.foe_info.count ? spret::success : spret::abort;
     return mons_should_fire(beam) ? spret::success : spret::abort;
 }
 
