@@ -43,6 +43,21 @@ def update_global_status():
 # lobbies that need updating
 game_lobby_cache = set() # type: Set[CrawlProcessHandlerBase]
 
+def describe_sockets():
+    slist = list(sockets)
+    lobby = [s for s in slist if s.is_in_lobby()]
+    lobby_count = len(lobby)
+    # anon connections are either in the lobby or spectating
+    anon_lobby = len([s for s in lobby if not s.username])
+    anon_specs = len([s for s in slist if not s.username]) - anon_lobby
+    playing = [s for s in slist if s.is_running()]
+    player_count = len(playing)
+    idle_count = len([s for s in playing if s.process.is_idle()])
+    spec_count = len([s for s in slist if s.watched_game])
+
+    return "%d connections: %d playing (%d idle), %d watching (%d anon), %d in lobby (%d anon)" % (
+        len(slist), player_count, idle_count, spec_count, anon_specs, lobby_count, anon_lobby)
+
 def do_lobby_updates():
     global game_lobby_cache
     lobby_sockets = [s for s in list(sockets) if s.is_in_lobby()]
@@ -71,6 +86,23 @@ def do_periodic_lobby_updates():
     do_lobby_updates()
     rate = config.get('lobby_update_rate')
     IOLoop.current().add_timeout(time.time() + rate, do_periodic_lobby_updates)
+
+load_logging_enabled = False
+def do_load_logging(start = False):
+    global load_logging_enabled
+    if start and load_logging_enabled:
+        # don't start multiple timeouts
+        return
+    rate = config.get('load_logging_rate')
+    if rate:
+        load_logging_enabled = True
+        if not start:
+            # don't log on startup call
+            logging.info(describe_sockets())
+        IOLoop.current().add_timeout(time.time() + rate, do_load_logging)
+    else:
+        # config disables load logging, no timeout
+        load_logging_enabled = False
 
 def update_all_lobbys(game):
     global game_lobby_cache

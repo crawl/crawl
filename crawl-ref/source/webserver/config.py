@@ -43,6 +43,9 @@ bind_port = 8080
 #     "format": "%(asctime)s %(levelname)s: %(message)s"
 # }
 
+# sometimes useful for debugging:
+# logging.getLogger('asyncio').setLevel(logging.DEBUG)
+
 password_db = "./webserver/passwd.db3"
 # Uncomment and change if you want this db somewhere separate from the
 # password_db location.
@@ -234,6 +237,9 @@ player_url = None
 # comment it out.
 # If not explicitly set, this defaults to False.
 hup_reloads_config = True
+
+# set to do periodic logging of user load
+# load_logging_rate = 10 # seconds
 
 # Only for development:
 # This is insecure; do not set development_mode = True in production!

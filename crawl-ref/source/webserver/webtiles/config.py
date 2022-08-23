@@ -47,6 +47,11 @@ def init_config_from_module(module):
     admin_password_reset = get('admin_password_reset')
 
 
+def init_config_timeouts():
+    from webtiles import ws_handler
+    # anything added here should be robust to reload()...
+    ws_handler.do_load_logging(True)
+
 def reload():
     global source_file, source_module
     try:
@@ -60,6 +65,7 @@ def reload():
         # explicit setting. XX is there anything to do about this?
         reload(source_module)
         init_config_from_module(source_module)
+        init_config_timeouts()
         try:
             load_game_data()
         except ValueError:
@@ -108,6 +114,7 @@ defaults = {
     'live_debug': False,
     'lobby_update_rate': 2,
     'games_config_dir': 'games.d',
+    'load_logging_rate': 0,
 }
 
 def get(key, default=None):
