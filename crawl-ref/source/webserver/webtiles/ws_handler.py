@@ -124,6 +124,8 @@ def global_announce(text):
     for socket in list(sockets):
         socket.send_announcement(text)
 
+_dgl_dir_check = False
+
 @util.note_blocking_fun
 def write_dgl_status_file():
     process_info = ["%s#%s#%s#0x0#%s#%s#" %
@@ -135,12 +137,15 @@ def write_dgl_status_file():
                         if socket.username and socket.show_in_lobby()]
     try:
         status_target = config.get('dgl_status_file')
-        status_dir = os.path.dirname(status_target)
-        # generally created by other things sooner or later, but if we don't do
-        # this preemptively here, there's lot of warnings until that happens.
-        if not os.path.exists(status_dir):
-            os.makedirs(status_dir)
-            logging.warning("Creating dgl status file location '%s'", status_dir)
+        global _dgl_dir_check
+        if not _dgl_dir_check:
+            status_dir = os.path.dirname(status_target)
+            # generally created by other things sooner or later, but if we don't do
+            # this preemptively here, there's lot of warnings until that happens.
+            if not os.path.exists(status_dir):
+                os.makedirs(status_dir)
+                logging.warning("Creating dgl status file location '%s'", status_dir)
+            _dgl_dir_check = True
         with open(status_target, "w") as f:
             f.write("\n".join(process_info))
     except (OSError, IOError) as e:
