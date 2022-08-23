@@ -7,6 +7,8 @@ import tornado
 import tornado.ioloop
 from tornado.ioloop import IOLoop
 
+from webtiles import util
+
 BUFSIZ = 1024
 
 def _set_nonblocking(fd):
@@ -39,6 +41,7 @@ def check_output(call, callback):
                 data.append(buf)
             callback(tornado.escape.to_unicode(b"".join(data)), p.returncode)
 
+    @util.note_blocking_fun
     def _handle_read(fd, events):
         if events & IOLoop.READ:
             try:

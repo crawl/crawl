@@ -124,6 +124,7 @@ def global_announce(text):
     for socket in list(sockets):
         socket.send_announcement(text)
 
+@util.note_blocking_fun
 def write_dgl_status_file():
     process_info = ["%s#%s#%s#0x0#%s#%s#" %
                             (socket.username, socket.game_id,
@@ -1057,6 +1058,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             contents = ''
         self.send_message("rcfile_contents", contents = contents)
 
+    @util.note_blocking_fun
     def set_rc(self, game_id, contents):
         rcfile_path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
                                      self.username, config.games[game_id])
@@ -1115,6 +1117,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                 excerpt, trunc,
                                 exc_info=True)
 
+    @util.note_blocking_fun
     def flush_messages(self):
         # type: () -> bool
         if self.client_closed or len(self.message_queue) == 0:

@@ -239,7 +239,8 @@ player_url = None
 hup_reloads_config = True
 
 # set to do periodic logging of user load
-# load_logging_rate = 10 # seconds
+# load_logging_rate = 10 # seconds, set to 0 to explicitly disable
+# slow_callback_alert = 0.25 # seconds, set to None to explicitly disable
 
 # Only for development:
 # This is insecure; do not set development_mode = True in production!

@@ -13,7 +13,7 @@ from tornado.escape import to_unicode
 from tornado.escape import utf8
 from tornado.ioloop import IOLoop
 
-from webtiles import config
+from webtiles import config, util
 
 
 class WebtilesSocketConnection(object):
@@ -78,6 +78,7 @@ class WebtilesSocketConnection(object):
 
         self.send_message(utf8(msg))
 
+    @util.note_blocking_fun
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
             data = self.socket.recv(128 * 1024, socket.MSG_DONTWAIT)

@@ -48,8 +48,9 @@ def init_config_from_module(module):
 
 
 def init_config_timeouts():
-    from webtiles import ws_handler
+    from webtiles import ws_handler, util
     # anything added here should be robust to reload()...
+    util.set_slow_callback_logging(get('slow_callback_alert'))
     ws_handler.do_load_logging(True)
 
 def reload():
@@ -115,6 +116,7 @@ defaults = {
     'lobby_update_rate': 2,
     'games_config_dir': 'games.d',
     'load_logging_rate': 0,
+    'slow_callback_alert': None,
 }
 
 def get(key, default=None):
