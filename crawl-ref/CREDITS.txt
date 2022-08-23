@@ -312,7 +312,6 @@
     Pekkekke
     Rytis Petronis
     Arlen Phillips
-    PhilosopherOpposite
     pikaro
     Lemuel Pitkin
     Paul Pollack
@@ -339,6 +338,7 @@
     Andy Roche
     rockygargoyle
     Will Rogers
+    RollingRubic
     Nate Rook
     David Rose
     runrin
