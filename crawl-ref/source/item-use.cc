@@ -3395,7 +3395,7 @@ bool scroll_hostile_check(scroll_type which_scroll)
         if (which_scroll == SCR_POISON)
         {
             monster_info mi(mon);
-            if (!(mi.mresists & MR_RES_POISON))
+            if (get_resist(mi.mresists, MR_RES_POISON) <= 0)
                 return true;
         }
 
