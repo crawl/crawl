@@ -55,6 +55,13 @@ def note_blocking(desc):
     cached_blocking_ctx.desc = desc
     return cached_blocking_ctx
 
+def annotate_blocking_note(a):
+    global last_blocking_description
+    if last_blocking_description:
+        last_blocking_description += a
+    for i in range(len(blocking_description)):
+        blocking_description[i] += a
+
 # corresponding decorator, automatically uses function name
 def note_blocking_fun(f):
     try:

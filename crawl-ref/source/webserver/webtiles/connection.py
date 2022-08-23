@@ -25,6 +25,7 @@ class WebtilesSocketConnection(object):
         self.socketpath = None
         self.open = False
         self.close_callback = None
+        self.username = ""
 
         self.msg_buffer = None
 
@@ -107,6 +108,7 @@ class WebtilesSocketConnection(object):
 
     @util.note_blocking_fun
     def send_message(self, data): # type: (str) -> None
+        util.annotate_blocking_note(" sendto: " + self.username)
         start = datetime.now()
         try:
             self.socket.sendto(utf8(data), self.crawl_socketpath)

@@ -824,6 +824,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.conn = WebtilesSocketConnection(self.socketpath, self.logger)
         self.conn.message_callback = self._on_socket_message
         self.conn.close_callback = self._on_socket_close
+        self.conn.username = self.username
         self.conn.connect(primary)
 
     @util.note_blocking_fun
