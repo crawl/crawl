@@ -70,7 +70,8 @@ def handle_new_socket(path, event):
         try:
             process.connect(abspath)
         except ConnectionRefusedError:
-            self.logger.error("Crawl process socket connection refused for %s, socketpath '%s'.",
+            process.logger.error(
+                "Crawl process socket connection refused for %s, socketpath '%s'.",
                 game_info["id"], abspath, exc_info=True)
             del processes[abspath]
             return
