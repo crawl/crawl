@@ -233,7 +233,9 @@ static void _clear_constriction_data()
 static void _trigger_opportunity_attacks(coord_def new_pos)
 {
     if (you.attribute[ATTR_SERPENTS_LASH]          // too fast!
-        || wu_jian_move_triggers_attacks(new_pos)) // too cool!
+        || wu_jian_move_triggers_attacks(new_pos)  // too cool!
+        || is_sanctuary(you.pos())                 // Zin protects!
+        || is_sanctuary(new_pos))                  // .. very generously.
     {
         return;
     }
@@ -258,6 +260,8 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
             || !mon->can_see(you)
             // only let monsters attack if they might follow you
             || !mon->may_have_action_energy() || mon->is_stationary()
+            // Zin protects!
+            || is_sanctuary(mon->pos())
             // creates some weird bugs
             || mons_self_destructs(*mon)
             // monsters that are slower than you mayn't attack
