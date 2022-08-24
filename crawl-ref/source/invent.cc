@@ -416,10 +416,20 @@ bool InvMenu::examine_index(int i)
 {
     if (on_examine)
         return Menu::examine_index(i);
-    // default behavior: examine inv item. You must override or use on_examine
-    // if your items come from somewhere else, or this will cause crashes!
-    if (i >= 0 && i < static_cast<int>(items.size()) && items[i]->hotkeys.size())
+    else if (type == menu_type::pickup)
     {
+        auto ie = dynamic_cast<InvEntry *>(items[i]);
+        if (ie)
+        {
+            auto desc_tgt = const_cast<item_def*>(ie->item);
+            ASSERT(desc_tgt);
+            return describe_item(*desc_tgt);
+        }
+    }
+    else if (i >= 0 && i < static_cast<int>(items.size()) && items[i]->hotkeys.size())
+    {
+        // default behavior: examine inv item. You must override or use on_examine
+        // if your items come from somewhere else, or this will cause crashes!
         unsigned char select = items[i]->hotkeys[0];
         const int invidx = letter_to_index(select);
         ASSERT(you.inv[invidx].defined());
