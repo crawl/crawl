@@ -336,6 +336,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return "no-compression"
         return None
 
+    @util.note_blocking_fun
     def open(self):
         compression = "on"
         if isinstance(self.ws_connection, getattr(tornado.websocket, "WebSocketProtocol76", ())):
@@ -392,6 +393,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.queue_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
 
+    @util.note_blocking_fun
     def send_lobby(self):
         self.send_lobby_data()
         self.send_lobby_html()
@@ -429,12 +431,15 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     # collect save info for the player from all binaries that support save
     # info json. Cached on self.save_info. This is asynchronously done using
     # a somewhat involved callback chain.
+    @util.note_blocking_fun
     def collect_save_info(self, final_callback):
         if not self.username:
             return
 
         # this code would be much simpler refactored using async
+        @util.note_blocking_fun
         def build_callback(game_key, call, next_callback):
+            @util.note_blocking_fun
             def update_save_info(data, returncode):
                 global sockets
                 if not self in sockets:
@@ -488,6 +493,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         callback()
 
+    @util.note_blocking_fun
     def send_lobby_html(self):
         # Rerender Banner
         # TODO: don't really need to do this every time the lobby is loaded?
@@ -499,6 +505,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
         def disable_check(s):
             return s == "[slot full]"
+        @util.note_blocking_fun
         def send_game_links():
             global sockets
             if not self in sockets:
@@ -584,6 +591,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         # start.
         return "allowed_with_hold" not in game or game["allowed_with_hold"]
 
+    @util.note_blocking_fun
     def start_crawl(self, game_id):
         if config.get('dgl_mode') and game_id not in config.games:
             self.go_lobby()
@@ -651,6 +659,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     update_all_lobbys(self.process)
                 update_global_status()
 
+    @util.note_blocking_fun
     def _on_crawl_end(self):
         if config.get('dgl_mode'):
             remove_in_lobbys(self.process)
@@ -686,6 +695,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # The last crawl process has ended, now we can go
             IOLoop.current().stop()
 
+    @util.note_blocking_fun
     def init_user(self, callback):
         # this would be more cleanly implemented with wait_for_exit, but I
         # can't get code for that to work in a way that supports all currently
@@ -724,6 +734,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.is_running():
             self.process.stop()
 
+    @util.note_blocking_fun
     def do_login(self, username):
         self.username = username
         self.user_flags = None
@@ -736,6 +747,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("login_fail", reason=fail_reason)
             return
 
+        @util.note_blocking_fun
         def login_callback(result):
             success = result == 0
             if not success:
