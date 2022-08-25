@@ -229,7 +229,6 @@ protected:
 
     bool m_fullscreen;
     bool m_need_redraw;
-    bool m_show_tab_icons;
 
     int TAB_ABILITY;
     int TAB_COMMAND;

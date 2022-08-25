@@ -116,7 +116,6 @@ TilesFramework::TilesFramework() :
     m_windowsz(1024, 768),
     m_fullscreen(false),
     m_need_redraw(false),
-    m_show_tab_icons(true),
     m_active_layer(LAYER_CRT),
     m_mouse(-1, -1),
     m_last_tick_redraw(0)
@@ -400,13 +399,6 @@ bool TilesFramework::initialise()
     TAB_NAVIGATION = m_region_tab->push_tab_region(m_region_cmd_map,
                                                    TILEG_TAB_NAVIGATION);
     m_region_tab->activate_tab(TAB_ITEM);
-    if (tiles.is_using_small_layout())
-    {
-        // the layout crashes with no previous active tab
-        m_region_tab->deactivate_tab();
-        m_show_tab_icons = false;
-        m_region_tab->set_tab_icons_visibility(m_show_tab_icons);
-    }
 
     m_region_msg  = new MessageRegion(m_msg_font);
     m_region_stat = new StatRegion(m_stat_font);
@@ -863,6 +855,8 @@ void TilesFramework::do_layout()
     else
     {
         // normal layout code
+        m_region_tab->set_small_layout(false, m_windowsz);
+        m_region_tab->resize_to_fit(m_windowsz.x, m_windowsz.y);
 
         const int sidebar_min_pw = m_region_stat->grid_width_to_pixels(
                                                                 stat_width);
@@ -996,7 +990,18 @@ void TilesFramework::do_layout()
 
 bool TilesFramework::is_using_small_layout()
 {
-    return Options.tile_use_small_layout == MB_TRUE;
+    if (Options.tile_use_small_layout == MB_MAYBE)
+#ifndef __ANDROID__
+        // Rough estimation of the minimum usable window size
+        //   - width > stats font size * 28 + msg font size * 30
+        //   - height > tabs area size (192) + stats font size * 14
+        // Not using Options.tile_font_xxx_size because it's reset on new game
+        return m_windowsz.x < m_fonts[2].size*28+m_fonts[1].size*30 || m_windowsz.y < 192+m_fonts[2].size*14;
+#else
+        return true;
+#endif
+    else
+        return Options.tile_use_small_layout;
 }
 
 #define ZOOM_INC 10
@@ -1027,8 +1032,7 @@ void TilesFramework::deactivate_tab()
 
 void TilesFramework::toggle_tab_icons()
 {
-    m_show_tab_icons = !m_show_tab_icons;
-    m_region_tab->set_tab_icons_visibility(m_show_tab_icons);
+    m_region_tab->toggle_tab_icons();
     resize();
     redraw_screen();
     update_screen();

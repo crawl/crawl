@@ -30,7 +30,7 @@ TabbedRegion::~TabbedRegion()
 
 void TabbedRegion::set_icon_pos(int idx)
 {
-    if (!m_tabs[idx].enabled)
+    if (!m_tabs[idx].enabled && !m_use_small_layout)
         return;
 
     int start_y = 0;
@@ -83,6 +83,8 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     inf.min_y = 0;
     inf.max_y = 0;
     inf.height = 0;
+    inf.orig_dx = 0;
+    inf.orig_dy = 0;
     inf.enabled = true;
     m_tabs.push_back(inf);
 
@@ -91,6 +93,7 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     const tile_info &tinf = tile_gui_info(actual_tile_tab);
     _icon_width = max((int)tinf.width, ox);
     ox = _icon_width;
+    _show_tab_icons = false;
 
     // All tabs should be the same size.
     for (int i = 1; i < TAB_OFS_MAX; ++i)
@@ -105,6 +108,8 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     m_tabs[idx].cmd = cmd;
     m_tabs[idx].tile_tab = tile_tab;
     m_tabs[idx].height = tinf.height;
+    m_tabs[idx].orig_dx = reg->dx;
+    m_tabs[idx].orig_dy = reg->dy;
     set_icon_pos(idx);
 
     recalculate();
@@ -133,17 +138,12 @@ void TabbedRegion::activate_tab(int idx)
     if (invalid_index(idx))
         return;
 
-    if (!m_tabs[idx].enabled)
+    if (!m_tabs[idx].enabled && !m_use_small_layout)
         return;
 
     if (m_active == idx)
-        if (m_use_small_layout)
-        {
-            if (!m_is_deactivated)
-                return deactivate_tab();
-        }
-        else
-            return;
+        if (m_use_small_layout && !m_is_deactivated)
+            return deactivate_tab();
 
     m_active = idx;
     m_dirty  = true;
@@ -224,7 +224,7 @@ bool TabbedRegion::active_is_valid() const
 {
     if (invalid_index(m_active))
         return false;
-    if (!m_tabs[m_active].enabled)
+    if (!m_tabs[m_active].enabled && !m_use_small_layout)
         return false;
     if (!m_tabs[m_active].reg)
         return false;
@@ -256,7 +256,7 @@ void TabbedRegion::pack_buffers()
     for (int i = 0; i < (int)m_tabs.size(); ++i)
     {
         int ofs;
-        if (!m_tabs[i].enabled)
+        if (!m_tabs[i].enabled && !m_use_small_layout)
             continue;
         else if (m_active == i)
             ofs = TAB_OFS_SELECTED;
@@ -318,7 +318,7 @@ int TabbedRegion::min_height_for_items() const
 {
     for (int i = (int)m_tabs.size()-1; i >= 0; --i)
     {
-        if (m_tabs[i].enabled)
+        if (m_tabs[i].enabled || m_use_small_layout)
             return m_tabs[i].max_y;
     }
     return 0;
@@ -340,6 +340,11 @@ void TabbedRegion::on_resize()
             reg_sx = 0;
             tab.reg->dx = dx;
             tab.reg->dy = dy;
+        }
+        else
+        {
+            tab.reg->dx = tab.orig_dx;
+            tab.reg->dy = tab.orig_dy;
         }
 
         tab.reg->place(reg_sx, reg_sy);
@@ -455,22 +460,43 @@ int TabbedRegion::find_tab(string tab_name) const
 
 void TabbedRegion::set_small_layout(bool use_small_layout, const coord_def &windowsz)
 {
-    m_use_small_layout = use_small_layout;
-    reset_icons(0);
+    if (m_use_small_layout != use_small_layout)
+    {
+        activate_tab(0);
+        if (use_small_layout)
+        {
+            deactivate_tab();
+            if (!_show_tab_icons)
+                ox = 0;
+        }
+        else
+            ox = _icon_width;
+        m_use_small_layout = use_small_layout;
+    }
 
     if (m_tabs.size() == 0 || !use_small_layout)
-        return;
+    {
+        dx = 32;
+        dy = 32;
+    }
+    else
+    {
+        // original dx (32) * region height (240) / num tabs (7) / height of tab (20)
+        int scale = (32-1) * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
+        scale /= 2; // half size fits better
+        dx = scale;
+        dy = scale;
+    }
 
-    // original dx (32) * region height (240) / num tabs (7) / height of tab (20)
-    int scale = (32-1) * windowsz.y/num_tabs()/m_tabs[m_active].height -1;
-    scale /= 2; // half size fits better
-    dx = scale;
-    dy = scale;
+    reset_icons(0);
+    m_dirty = true;
+    tiles.set_need_redraw();
 }
 
-void TabbedRegion::set_tab_icons_visibility(bool show_tab_icons)
+void TabbedRegion::toggle_tab_icons()
 {
-    if (show_tab_icons)
+    _show_tab_icons = !_show_tab_icons;
+    if (_show_tab_icons)
       ox = _icon_width;
     else
       ox = 0;

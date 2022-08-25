@@ -1211,14 +1211,9 @@ void game_options::reset_options()
     terp_files.clear();
 
 #ifdef USE_TILE_LOCAL
-
     // window layout
     tile_full_screen      = SCREENMODE_AUTO;
-# ifndef __ANDROID__
     tile_use_small_layout = MB_MAYBE;
-# else
-    tile_use_small_layout = MB_TRUE;
-# endif
 #endif
 
 #ifdef USE_TILE

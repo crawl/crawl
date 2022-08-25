@@ -176,6 +176,8 @@ static void _cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
     bool super_small = _low_vertical_space();
     if (_is_using_small_layout())
         TOUCH_UI_STATE = (touchui_states)((x<<8)+y);
+    else
+        TOUCH_UI_STATE = TOUCH_S_INIT;
     switch (TOUCH_UI_STATE)
     {
         case TOUCH_V_HP:
