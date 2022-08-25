@@ -3875,8 +3875,6 @@ void god_pitch(god_type which_god)
     }
     // these are included in default force_more_message
 
-    const int fee = (which_god == GOD_GOZAG) ? gozag_service_fee() : 0;
-
     // Note: using worship we could make some gods not allow followers to
     // return, or not allow worshippers from other religions. - bwr
 
@@ -3884,39 +3882,7 @@ void god_pitch(god_type which_god)
     if (!player_can_join_god(which_god))
     {
         you.turn_is_over = false;
-        if (which_god == GOD_GOZAG)
-        {
-            simple_god_message(" does not accept service from beggars like you!",
-                               which_god);
-            if (you.gold == 0)
-            {
-                mprf("The service fee for joining is currently %d gold; you have"
-                     " none.", fee);
-            }
-            else
-            {
-                mprf("The service fee for joining is currently %d gold; you only"
-                     " have %d.", fee, you.gold);
-            }
-        }
-        else if (you.get_mutation_level(MUT_NO_LOVE)
-                 && _god_rejects_loveless(which_god))
-        {
-            simple_god_message(" does not accept worship from the loveless!",
-                               which_god);
-        }
-        else if (!_transformed_player_can_join_god(which_god))
-        {
-            simple_god_message(" says: How dare you approach in such a "
-                               "loathsome form!",
-                               which_god);
-        }
-        else
-        {
-            simple_god_message(" does not accept worship from those such as"
-                               " you!",
-                               which_god);
-        }
+        print_god_rejection(which_god);
         return;
     }
 
@@ -3935,6 +3901,43 @@ void god_pitch(god_type which_god)
         redraw_screen();
         update_screen();
     }
+}
+
+void print_god_rejection(god_type which_god)
+{
+
+    if (which_god == GOD_GOZAG)
+    {
+        simple_god_message(" does not accept service from beggars like you!",
+                           which_god);
+        const int fee = gozag_service_fee();
+        if (you.gold == 0)
+        {
+            mprf("The service fee for joining is currently %d gold; you have"
+                 " none.", fee);
+        }
+        else
+        {
+            mprf("The service fee for joining is currently %d gold; you only"
+                 " have %d.", fee, you.gold);
+        }
+        return;
+    }
+    if (you.get_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
+    {
+        simple_god_message(" does not accept worship from the loveless!",
+                           which_god);
+        return;
+    }
+    if (!_transformed_player_can_join_god(which_god))
+    {
+        simple_god_message(" says: How dare you approach in such a loathsome "
+                           "form!", which_god);
+        return;
+    }
+
+    simple_god_message(" does not accept worship from those such as you!",
+                       which_god);
 }
 
 /** Ask the user for a god by name.
@@ -3965,6 +3968,33 @@ god_type choose_god(god_type def_god)
     return find_earliest_match(spec, GOD_NO_GOD, NUM_GODS,
                                always_true<god_type>,
                                bind(god_name, placeholders::_1, false));
+}
+
+static void _choose_ecu_gods(CrawlVector &gods)
+{
+    vector<god_type> possible_gods;
+    for (int i = GOD_NO_GOD + 1; i < NUM_GODS; ++i)
+    {
+        const god_type god = static_cast<god_type>(i);
+        if (!is_unavailable_god(god) && player_can_join_god(god, false))
+            possible_gods.push_back(god);
+    }
+    shuffle_array(possible_gods); // inefficient but who cares
+    for (int i = 0; i < 3 && i < int(possible_gods.size()); ++i)
+        gods.push_back(possible_gods[i]);
+}
+
+/// Returns a list of gods the player might get from the ecu altar at the given position.
+vector<god_type> get_ecu_gods(coord_def pos)
+{
+    const string key = make_stringf("ecu-%d,%d", pos.x, pos.y);
+    CrawlVector &saved_gods = env.properties[key].get_vector();
+    if (saved_gods.empty())
+        _choose_ecu_gods(saved_gods);
+    vector<god_type> gods;
+    for (int i = 0; i < int(saved_gods.size()); ++i)
+        gods.push_back(static_cast<god_type>(saved_gods[i].get_int()));
+    return gods;
 }
 
 int had_gods()
