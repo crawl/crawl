@@ -1611,7 +1611,7 @@ static const mon_spellbook mspell_list[] =
     // (';') Walking Tomes.
     { MST_WALKING_TOME,
       {
-       { SPELL_CONJURE_LIVING_SPELLS, 60, MON_SPELL_MAGICAL },
+       { SPELL_CONJURE_LIVING_SPELLS, 60, MON_SPELL_WIZARD },
       }
     },
 
