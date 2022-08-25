@@ -1115,7 +1115,7 @@ static const struct spell_desc spelldata[] =
     5,
     200,
     -1, -1,
-    4, 0,
+    0, 0,
     TILEG_SILENCE,
 },
 
