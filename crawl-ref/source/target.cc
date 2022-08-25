@@ -1628,6 +1628,8 @@ aff_type targeter_refrig::is_affected(coord_def loc)
     const actor* act = actor_at(loc);
     if (!act || act == agent || !agent->can_see(*act))
         return AFF_NO;
+    if (god_protects(agent, act->as_monster(), true))
+        return AFF_NO;
 
     int adj = 0;
     for (adjacent_iterator ai(loc); ai; ++ai)
