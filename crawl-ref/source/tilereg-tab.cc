@@ -93,7 +93,11 @@ int TabbedRegion::_push_tab(GridRegion *reg, command_type cmd, tileidx_t tile_ta
     const tile_info &tinf = tile_gui_info(actual_tile_tab);
     _icon_width = max((int)tinf.width, ox);
     ox = _icon_width;
+#ifndef __ANDROID__
+    _show_tab_icons = true;
+#else
     _show_tab_icons = false;
+#endif
 
     // All tabs should be the same size.
     for (int i = 1; i < TAB_OFS_MAX; ++i)
