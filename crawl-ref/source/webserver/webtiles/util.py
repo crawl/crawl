@@ -23,6 +23,15 @@ except ImportError:
 # happens, it is terrible at identifying what tornado 6+ is actually doing at
 # the time.
 
+# backwards compatibility for python 2.7, remove this some day
+_asyncio_available = True
+try:
+    f.__qualname__ # for good measure..
+    from asyncio.base_events import _format_handle
+    import asyncio.events
+except:
+    _asyncio_available = False
+
 # note: this is somewhat wacky because the slow callback logging code will
 # always run *after* this context manager has exited, but we do sometimes want
 # to nest them. TODO: could timing be done directly in this?
@@ -56,19 +65,22 @@ def note_blocking(desc):
     return cached_blocking_ctx
 
 def annotate_blocking_note(a):
-    global last_blocking_description
+    global last_blocking_description, blocking_description, _asyncio_available
+    if not _asyncio_available:
+        return # don't bother if no asyncio
     if last_blocking_description:
         last_blocking_description += a
+        # sanity check: don't let this accrue infinitely if it is called wrong
+        last_blocking_description = last_blocking_description[:100]
     for i in range(len(blocking_description)):
         blocking_description[i] += a
 
 # corresponding decorator, automatically uses function name
 def note_blocking_fun(f):
-    try:
-        f.__qualname__
-    except:
-        # ancient python version
+    global _asyncio_available
+    if not _asyncio_available:
         return f
+
     def wrapped(*args, **kwargs):
         with note_blocking(f.__qualname__):
             return f(*args, **kwargs)
@@ -84,11 +96,8 @@ _original_asyncio_run = None
 #   https://gitlab.com/quantlane/libs/aiodebug
 # License: Apache 2.0
 def set_slow_callback_logging(slow_duration):
-    try:
-        from asyncio.base_events import _format_handle
-        import asyncio.events
-    except:
-        # legacy compat: old enough that there's no asyncio
+    global _asyncio_available
+    if not _asyncio_available:
         return
 
     from webtiles import ws_handler

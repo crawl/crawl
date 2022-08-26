@@ -604,6 +604,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.stop_watching()
                 self.send_message("login_required", game = game_params["name"])
                 return
+            util.annotate_blocking_note(" user: " + self.username)
 
         if self.process:
             # ignore multiple requests for the same game, can happen when
@@ -737,6 +738,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     @util.note_blocking_fun
     def do_login(self, username):
         self.username = username
+        util.annotate_blocking_note(" user: " + self.username)
         self.user_flags = None
         if not self.update_db_info():
             # XX consolidate with other ban check / login fail code somehow.
