@@ -23,9 +23,12 @@ except ImportError:
 # happens, it is terrible at identifying what tornado 6+ is actually doing at
 # the time.
 
-# backwards compatibility for python 2.7, remove this some day
+# backwards compatibility for python 2.7, remove this some day. Disables the
+# manual blocking diagnostic code if we are this old.
 _asyncio_available = True
 try:
+    def f():
+        pass
     f.__qualname__ # for good measure..
     from asyncio.base_events import _format_handle
     import asyncio.events
