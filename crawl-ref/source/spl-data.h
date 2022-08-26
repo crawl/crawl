@@ -1146,7 +1146,7 @@ static const struct spell_desc spelldata[] =
     spschool::conjuration | spschool::air,
     spflag::area,
     2,
-    50,
+    100,
     1, 1,
     3, 0,
     TILEG_STATIC_DISCHARGE,
