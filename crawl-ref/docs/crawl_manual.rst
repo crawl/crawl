@@ -1893,11 +1893,11 @@ Mummies (Mu)
   redemption, or just because they want to.
 
   Mummies progress slowly in levels, half again as slowly as Humans in all
-  skills except fighting, spellcasting and necromancy. As they increase in
-  levels, they become increasingly in touch with the powers of death, but cannot
-  use some types of necromancy which only affect living creatures. The side
-  effects of necromantic magic tend to be relatively harmless to Mummies.
-  However, their desiccated bodies are highly flammable. They also cannot drink.
+  skills except fighting, spellcasting and necromancy. The sacred embalming
+  rituals that brought them into unlife also grant them a special connection
+  with the divine, and as they increase in levels, they become increasingly
+  in touch with the powers of death. However, their desiccated bodies are
+  highly flammable. They also cannot drink.
 
   Like other undead, mummies are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not

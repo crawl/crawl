@@ -3360,6 +3360,11 @@ bool player::clarity(bool items) const
     return actor::clarity(items);
 }
 
+bool player::faith(bool items) const
+{
+    return you.has_mutation(MUT_FAITH) || actor::faith(items);
+}
+
 /// Does the player have permastasis?
 bool player::stasis() const
 {

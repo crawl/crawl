@@ -3013,6 +3013,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         case AMU_FAITH:
             return (you.has_mutation(MUT_FORLORN) && !you.religion) // ??
+                    || you.has_mutation(MUT_FAITH)
                     || !ignore_faith_reason().empty();
 
         case AMU_GUARDIAN_SPIRIT:

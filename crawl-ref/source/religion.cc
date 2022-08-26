@@ -768,7 +768,8 @@ bool ignis_is_dead()
 /// Is there any penalty from your god for removing an amulet of faith?
 bool faith_has_penalty()
 {
-    return ignore_faith_reason().empty()
+    return !you.has_mutation(MUT_FAITH)
+        && ignore_faith_reason().empty()
         && !you_worship(GOD_XOM)
         && !you_worship(GOD_NO_GOD);
 }
@@ -3364,6 +3365,7 @@ static void _god_welcome_handle_gear()
     // Check for amulets of faith.
     item_def *amulet = you.slot_item(EQ_AMULET, false);
     if (amulet && amulet->sub_type == AMU_FAITH
+        && !you.has_mutation(MUT_FAITH)
         && ignore_faith_reason().empty())
     {
         mprf(MSGCH_GOD, "Your amulet flashes!");
