@@ -951,7 +951,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_RED;
             break;
 
-        case JOB_ARCANE_MARKSMAN:
+        case JOB_HEXSLINGER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
             parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_SARUMAN;

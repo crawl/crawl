@@ -9,11 +9,6 @@ Air Elementalist
 Air Elementalists have learned the Shock spell. Later on, their selection of
 Air Magic spells provides them with the flexibility to survive.
 %%%%
-Arcane Marksman
-
-Arcane Marksmen carry a sling, and use magic to make their foes more
-vulnerable to attacks from afar.
-%%%%
 Artificer
 
 Artificers start with a few magic wands and a club. They'll need to find better
@@ -80,6 +75,11 @@ bewildered foes.
 Hunter
 
 Hunters carry a shortbow, light armour and a scroll of immolation.
+%%%%
+Hexslinger
+
+Hexslingers carry a sling, and use hex magic to make their foes more vulnerable
+to attacks from afar.
 %%%%
 Ice Elementalist
 

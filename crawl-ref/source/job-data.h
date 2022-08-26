@@ -64,22 +64,6 @@ static const map<job_type, job_def> job_data =
       { SK_DODGING, 2 }, { SK_STEALTH, 2 }, },
 } },
 
-{ JOB_ARCANE_MARKSMAN, {
-    "AM", "Arcane Marksman",
-    2, 5, 5,
-    { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_GNOLL },
-    {
-        SPELL_SLOW,
-        SPELL_INNER_FLAME,
-        SPELL_PORTAL_PROJECTILE,
-        SPELL_CAUSE_FEAR,
-    },
-    { "robe", "scroll of poison", "sling plus:1" },
-    WCHOICE_NONE,
-    { { SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 1 },
-      { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
-} },
-
 { JOB_ARTIFICER, {
     "Ar", "Artificer",
     4, 3, 5,
@@ -227,6 +211,22 @@ static const map<job_type, job_def> job_data =
     WCHOICE_GOOD,
     { { SK_FIGHTING, 2 }, { SK_THROWING, 2 }, { SK_DODGING, 3 },
       { SK_WEAPON, 3}, },
+} },
+
+{ JOB_HEXSLINGER, {
+    "HS", "Hexslinger",
+    2, 5, 5,
+    { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_GNOLL },
+    {
+        SPELL_SLOW,
+        SPELL_INNER_FLAME,
+        SPELL_PORTAL_PROJECTILE,
+        SPELL_CAUSE_FEAR,
+    },
+    { "robe", "scroll of poison", "sling plus:1" },
+    WCHOICE_NONE,
+    { { SK_FIGHTING, 1 }, { SK_DODGING, 2 }, { SK_SPELLCASTING, 1 },
+      { SK_HEXES, 3 }, { SK_WEAPON, 2 }, },
 } },
 
 { JOB_HUNTER, {

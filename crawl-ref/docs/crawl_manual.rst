@@ -2063,10 +2063,9 @@ Warpers
   of translocation spells, some dispersal boomerangs, a simple weapon of their
   choice, and leather armour.
 
-Arcane Marksmen
-  Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
-  attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with a sling, some spells to support its use, a scroll of
+Hexslinger
+  Hexslingers use debilitating spells to assist their ranged attacks. They
+  begin the game with a sling, some spells to support its use, a scroll of
   poison to keep foes at a distance, and a robe.
 
 Enchanters
