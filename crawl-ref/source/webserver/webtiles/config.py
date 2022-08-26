@@ -54,29 +54,31 @@ def init_config_timeouts():
     ws_handler.do_load_logging(True)
 
 def reload():
-    global source_file, source_module
-    try:
-        logging.warning("Reloading config from %s", source_file)
+    from webtiles import util
+    with util.note_blocking("config.reload"):
+        global source_file, source_module
         try:
-            from importlib import reload
+            logging.warning("Reloading config from %s", source_file)
+            try:
+                from importlib import reload
+            except:
+                from imp import reload
+            # major caveat: this will not reset the namespace before doing the
+            # reload. So to return something to the default value requires an
+            # explicit setting. XX is there anything to do about this?
+            reload(source_module)
+            init_config_from_module(source_module)
+            init_config_timeouts()
+            try:
+                load_game_data()
+            except ValueError:
+                logging.error("Game data reload failed!", exc_info=True)
+                # if you get to here, game data is probably messed up. But there's
+                # nothing to be done, probably...
+            # XX it might be good to revalidate here, but I'm not sure how to
+            # recover from errors
         except:
-            from imp import reload
-        # major caveat: this will not reset the namespace before doing the
-        # reload. So to return something to the default value requires an
-        # explicit setting. XX is there anything to do about this?
-        reload(source_module)
-        init_config_from_module(source_module)
-        init_config_timeouts()
-        try:
-            load_game_data()
-        except ValueError:
-            logging.error("Game data reload failed!", exc_info=True)
-            # if you get to here, game data is probably messed up. But there's
-            # nothing to be done, probably...
-        # XX it might be good to revalidate here, but I'm not sure how to
-        # recover from errors
-    except:
-        logging.error("Config reload failed!", exc_info=True)
+            logging.error("Config reload failed!", exc_info=True)
 
 
 server_path = None
