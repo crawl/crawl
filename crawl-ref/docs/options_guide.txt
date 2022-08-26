@@ -2149,8 +2149,8 @@ tile_window_ratio  = 1618
         The minimum width is determined by UI layout. This value is ignored in
         full screen mode. Set to a value <= 0 to disable.
 
-tile_window_minimum = true
-        Limit the minimum window size. It should only be disabled for testing
+tile_window_limit_size = true
+        Limits the minimum window size. It should only be disabled for testing
         purposes.
 
 game_scale = 1
