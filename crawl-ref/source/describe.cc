@@ -2068,6 +2068,7 @@ static string _describe_armour(const item_def &item, bool verbose, bool monster)
     if (crawl_state.need_save
         && verbose
         && aevp
+        && !is_shield(item)
         && _you_are_wearing_item(item)
         && is_slowed_by_armour(you.weapon()))
     {
