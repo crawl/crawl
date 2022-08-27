@@ -302,6 +302,9 @@ public class SDLActivity extends Activity {
         }
 
         SDLActivity.handleNativeState();
+
+        // CRAWL HACK: Force screen update
+        updateScreen();
     }
 
     @Override
@@ -766,6 +769,14 @@ public class SDLActivity extends Activity {
         return mScreenKeyboardShown;
     }
 
+    // CRAWL HACK: Function to force a screen update
+    public static void updateScreen() {
+        SDLActivity.onNativeKeyDown(KeyEvent.KEYCODE_CTRL_LEFT);
+        SDLActivity.onNativeKeyDown(KeyEvent.KEYCODE_R);
+        SDLActivity.onNativeKeyUp(KeyEvent.KEYCODE_R);
+        SDLActivity.onNativeKeyUp(KeyEvent.KEYCODE_CTRL_LEFT);
+    }
+
     public static boolean isTextInputEvent(KeyEvent event) {
 
         // Key pressed with Ctrl should be sent as SDL_KEYDOWN/SDL_KEYUP and not SDL_TEXTINPUT
@@ -1140,6 +1151,9 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     // Keep track of the surface size to normalize touch events
     protected static float mWidth, mHeight;
 
+    // CRAWL HACK: Last resize event time
+    protected static long lastResize = 0L;
+
     // CRAWL HACK: Keep track of scroll status
     protected static boolean scrolling;
 
@@ -1211,6 +1225,17 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     public void surfaceChanged(SurfaceHolder holder,
                                int format, int width, int height) {
         Log.v("SDL", "surfaceChanged()");
+
+        // CRAWL HACK: Wait if we just processed the last event to make sure it's over
+        long currentTime = System.currentTimeMillis();
+        long delay = 1000 - (currentTime - lastResize);
+        if (delay > 0) {
+            try{
+                Log.v("SDL", "wait for "+delay);
+                Thread.sleep(delay);
+            } catch(InterruptedException e) {}
+        }
+        lastResize = currentTime;
 
         int sdlFormat = 0x15151002; // SDL_PIXELFORMAT_RGB565 by default
         switch (format) {
@@ -1304,6 +1329,9 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         SDLActivity.onNativeSurfaceChanged();
 
         SDLActivity.handleNativeState();
+
+        // CRAWL HACK: Force screen update
+        SDLActivity.updateScreen();
     }
 
     // Key events
