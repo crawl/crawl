@@ -1737,6 +1737,7 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     int res_margin = mons->check_willpower(&you, pow);
     if (res_margin > 0)
     {
+        behaviour_event(mons, ME_ALERT, &you);
         if (simple_monster_message(*mons,
                 mons->resist_margin_phrase(res_margin).c_str()))
         {
