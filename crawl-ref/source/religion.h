@@ -50,8 +50,7 @@ void dec_penance(god_type god, int val);
 void excommunication(bool voluntary = false, god_type new_god = GOD_NO_GOD);
 int excom_xp_docked();
 
-bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true,
-                bool force = false);
+bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
@@ -133,7 +132,7 @@ bool is_fellow_slime(const monster& mon);
 bool is_follower(const monster& mon);
 
 // Vehumet gift interface.
-bool vehumet_is_offering(spell_type spell);
+bool vehumet_is_offering(spell_type spell, bool only = false);
 void vehumet_accept_gift(spell_type spell);
 
 mgen_data hepliaklqana_ancestor_gen_data();

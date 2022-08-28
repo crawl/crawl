@@ -26,6 +26,30 @@ lernaean_hydra07
 lernaean_hydra08
 lernaean_hydra09
 lernaean_hydra10
+# This is exceptionally here so as to be grouped with the large monsters
+%sdir mon/undead/zombies
+zombie_lernaean_hydra01 MONS_LERNAEAN_HYDRA_ZOMBIE
+zombie_lernaean_hydra02
+zombie_lernaean_hydra03
+zombie_lernaean_hydra04
+zombie_lernaean_hydra05
+zombie_lernaean_hydra06
+zombie_lernaean_hydra07
+zombie_lernaean_hydra08
+zombie_lernaean_hydra09
+zombie_lernaean_hydra10
+%sdir mon/undead/skeletons
+skeleton_lernaean_hydra01 MONS_LERNAEAN_HYDRA_SKELETON
+skeleton_lernaean_hydra02
+skeleton_lernaean_hydra03
+skeleton_lernaean_hydra04
+skeleton_lernaean_hydra05
+skeleton_lernaean_hydra06
+skeleton_lernaean_hydra07
+skeleton_lernaean_hydra08
+skeleton_lernaean_hydra09
+skeleton_lernaean_hydra10
+%sdir mon/unique
 royal_jelly MONS_ROYAL_JELLY
 serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA
 serpent_of_hell-coc MONS_SERPENT_OF_HELL_COCYTUS
@@ -49,6 +73,8 @@ meat_hydra MONS_MEAT_HYDRA
 scourge MONS_SCOURGE
 meatlord MONS_MEATLORD
 unspeakable MONS_UNSPEAKABLE
+
+%include dc-demon.txt
 
 ### Animals
 %sdir mon/animals
@@ -119,13 +145,20 @@ meliai MONS_MELIAI
 ## Lizards ('l')
 frilled_lizard MONS_FRILLED_LIZARD
 iguana MONS_IGUANA
+%rim 0
 basilisk MONS_BASILISK
+%rim 1
 komodo_dragon MONS_KOMODO_DRAGON
 
 ## Slugs ('w')
 %sdir mon/unique
 %rim 0
 gastronok MONS_GASTRONOK
+gastronok1
+gastronok2
+kit_karsonok
+shaolinok
+sideburnok
 
 ## Rodents ('r')
 %sdir mon/animals
@@ -385,6 +418,7 @@ blood_saint MONS_DEMONSPAWN_BLOOD_SAINT
 warmonger MONS_DEMONSPAWN_WARMONGER
 corrupter MONS_DEMONSPAWN_CORRUPTER
 black_sun MONS_DEMONSPAWN_BLACK_SUN
+mon/unique/amaemon MONS_AMAEMON
 ## From the Wucad Mu wizard laboratory
 %sdir mon/vault
 demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK
@@ -451,8 +485,10 @@ octopode MONS_OCTOPODE
 %sdir mon/animals
 bunyip MONS_BUNYIP
 
-## Golems ('8')
+## Golems ('9')
 %rim 0
+%sdir mon/unique
+vv MONS_VV
 %sdir mon/nonliving
 crystal_guardian MONS_CRYSTAL_GUARDIAN
 electric_golem MONS_ELECTRIC_GOLEM
@@ -469,7 +505,7 @@ toenail_golem MONS_TOENAIL_GOLEM
 flesh_golem MONS_FLESH_GOLEM
 %rim 1
 
-## Statues and statue-like things (also '8')
+## Statues and statue-like things ('8')
 %sdir mon/unique
 roxanne MONS_ROXANNE
 %sdir mon/statues
@@ -551,7 +587,10 @@ frederick MONS_FREDERICK
 harold MONS_HAROLD
 jessica MONS_JESSICA
 joseph MONS_JOSEPH
+%rim 0
+josephina MONS_JOSEPHINA
 josephine MONS_JOSEPHINE
+%rim 1
 kirke MONS_KIRKE
 louise MONS_LOUISE
 maggie MONS_MAGGIE
@@ -563,6 +602,7 @@ nikola MONS_NIKOLA
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
+zenata MONS_ZENATA
 %rim 1
 terence MONS_TERENCE
 
@@ -598,11 +638,9 @@ killer_klown_purple
 killer_klown_red
 killer_klown_yellow
 %sdir mon/vault
-## From a Lair ending
+## From an Abyss rune vault
 %rim 0
-hell_wizard_50 MONS_HELL_WIZARD
-hell_wizard_75
-hell_wizard_100
+mad_acolyte_of_lugonu MONS_MAD_ACOLYTE_OF_LUGONU
 %rim 1
 ## From the Cigotuvi wizlab
 deformed_human MONS_DEFORMED_HUMAN
@@ -619,6 +657,7 @@ master_elementalist MONS_MASTER_ELEMENTALIST
 halfling MONS_HALFLING
 %rim 0
 demigod MONS_DEMIGOD
+meteoran MONS_METEORAN
 
 ## Angels ('A')
 %sdir mon/holy
@@ -719,6 +758,7 @@ minotaur MONS_MINOTAUR
 %rim 0
 jorogumo MONS_JOROGUMO
 fenstrider_witch MONS_FENSTRIDER_WITCH
+palentonga MONS_PALENTONGA
 %rim 1
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
@@ -853,6 +893,7 @@ guardian_serpent MONS_GUARDIAN_SERPENT
 %sdir mon/unique
 %rim 0
 erolcha MONS_EROLCHA
+lodul MONS_LODUL
 %rim 1
 %sdir mon/humanoids
 ogre MONS_OGRE
@@ -886,6 +927,9 @@ bush_burning MONS_BUSH_BURNING
 %rim 1
 oklob_sapling MONS_OKLOB_SAPLING
 oklob_plant MONS_OKLOB_PLANT
+starflower_0 MONS_STARFLOWER
+starflower_1
+starflower_2
 %rim 0
 thorn_hunter MONS_THORN_HUNTER
 treant MONS_TREANT
@@ -896,6 +940,7 @@ vine_stalker MONS_VINE_STALKER
 ## Trolls ('T')
 %sdir mon/unique
 pargi MONS_PARGI
+parghit MONS_PARGHIT
 snorg MONS_SNORG
 %sdir mon/humanoids
 troll MONS_TROLL
@@ -1012,6 +1057,7 @@ robin MONS_ROBIN
 %rim 1
 crazy_yiuf MONS_CRAZY_YIUF
 grum MONS_GRUM
+grunn MONS_GRUNN
 %sdir mon/humanoids
 %rim 0
 goblin MONS_GOBLIN
@@ -1019,7 +1065,7 @@ goblin MONS_GOBLIN
 hobgoblin MONS_HOBGOBLIN
 %rim 0
 gnoll MONS_GNOLL
-gnoll_shaman MONS_GNOLL_SHAMAN
+gnoll_shaman MONS_GNOLL_BOUDA
 gnoll_sergeant MONS_GNOLL_SERGEANT
 %rim 1
 boggart MONS_BOGGART
@@ -1187,7 +1233,7 @@ statue_form_humanoid TRAN_STATUE_HUMANOID
 statue_form_palentonga TRAN_STATUE_PALENTONGA
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
-statue_form_djinn TRAN_STATUE_DJINN
+statue_form_djinni TRAN_STATUE_DJINN
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
@@ -1238,9 +1284,4 @@ polymoth MONS_POLYMOTH
 %rim 0
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT
-gastronok1 MONS_GASTRONOK_MUSTACHE
-gastronok2 MONS_GASTRONOK_CLEANSHAVEN
-kit_karsonok MONS_GASTRONOK_HANDLEBAR
-shaolinok MONS_GASTRONOK_FU_MANCHU
-sideburnok MONS_GASTRONOK_SIDEBURNS
 anubis_guard MONS_ANUBIS_GUARD

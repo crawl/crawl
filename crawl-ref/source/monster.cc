@@ -394,19 +394,14 @@ int monster::damage_type(int which_attack)
  * Return the delay caused by attacking with weapon and projectile.
  *
  * @param projectile    The projectile to be fired/thrown, if any.
- * @return              The time taken by an attack with the monster's weapon
- *                      and the given projectile, in aut.
+ * @return            The time taken by an attack with the monster's weapon
+ *                    and the given projectile, in aut.
  */
 random_var monster::attack_delay(const item_def *projectile,
                                  bool /*rescale*/) const
 {
     const item_def* weap = weapon();
-
-    const bool use_unarmed =
-        (projectile) ? is_launched(this, weap, *projectile) != launch_retval::LAUNCHED
-                     : !weap;
-
-    if (use_unarmed || !weap)
+    if (!weap || (projectile && is_throwable(this, *projectile)))
         return random_var(10);
 
     random_var delay(10);
@@ -683,6 +678,7 @@ bool monster::can_throw_large_rocks() const
            || species == MONS_STONE_GIANT
            || species == MONS_CYCLOPS
            || species == MONS_OGRE
+           || type == MONS_PARGHIT // he's stronger than your average troll
            || mons_bound_soul(*this);
 }
 
@@ -745,12 +741,6 @@ void monster::bind_melee_flags()
         flags |= MF_ARCHER;
 }
 
-void monster::bind_spell_flags()
-{
-    if (!mons_is_ghost_demon(type) && mons_has_ranged_spell(*this))
-        flags |= MF_SEEN_RANGED;
-}
-
 static bool _needs_ranged_attack(const monster* mon)
 {
     // Prevent monsters that have conjurations from grabbing missiles.
@@ -770,36 +760,7 @@ static bool _needs_ranged_attack(const monster* mon)
 
 bool monster::can_use_missile(const item_def &item) const
 {
-    // Don't allow monsters to pick up missiles without the corresponding
-    // launcher. The opposite is okay, and sufficient wandering will
-    // hopefully take the monster to a stack of appropriate missiles.
-
-    if (!_needs_ranged_attack(this))
-        return false;
-
-    if (item.base_type == OBJ_WEAPONS
-        || item.base_type == OBJ_MISSILES && !has_launcher(item))
-    {
-        return is_throwable(this, item);
-    }
-
-    if (item.base_type != OBJ_MISSILES)
-        return false;
-
-    // Stones are allowed even without launcher.
-    if (item.sub_type == MI_STONE)
-        return true;
-
-    item_def *launch;
-    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
-    {
-        launch = mslot_item(static_cast<mon_inv_type>(i));
-        if (launch && item.launched_by(*launch))
-            return true;
-    }
-
-    // No fitting launcher in inventory.
-    return false;
+    return _needs_ranged_attack(this) && is_throwable(this, item);
 }
 
 /**
@@ -1081,13 +1042,6 @@ void monster::lose_pickup_energy()
 
 void monster::pickup_message(const item_def &item)
 {
-    if (is_range_weapon(item)
-        || is_throwable(this, item)
-        || item.base_type == OBJ_MISSILES)
-    {
-        flags |= MF_SEEN_RANGED;
-    }
-
     mprf("%s picks up %s.",
          name(DESC_THE).c_str(),
          item.base_type == OBJ_GOLD ? "some gold"
@@ -1148,7 +1102,8 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
     }
 
     // Similarly, monsters won't pick up shields if they're
-    // wielding (or alt-wielding) a two-handed weapon.
+    // wielding (or alt-wielding) a two-handed weapon, or
+    // wielding two weapons.
     if (slot == MSLOT_SHIELD)
     {
         const item_def* wpn = mslot_item(MSLOT_WEAPON);
@@ -1156,6 +1111,8 @@ bool monster::pickup(item_def &item, mon_inv_type slot, bool msg)
         if (wpn && hands_reqd(*wpn) == HANDS_TWO)
             return false;
         if (alt && hands_reqd(*alt) == HANDS_TWO)
+            return false;
+        if (mons_wields_two_weapons(*this) && wpn && alt)
             return false;
     }
 
@@ -1265,39 +1222,33 @@ bool monster::drop_item(mon_inv_type eslot, bool msg)
 
 bool monster::pickup_launcher(item_def &launch, bool msg, bool force)
 {
-    // Don't allow monsters to pick up launchers that would also
-    // refuse to pick up the matching ammo.
     if (!force && !_needs_ranged_attack(this))
         return false;
 
-    // Don't allow monsters to switch to another type of launcher
-    // as that would require them to also drop their ammunition
-    // and then try to find ammunition for their new launcher.
-    // However, they may switch to another launcher if they're
-    // out of ammo. (jpeg)
     const int mdam_rating = mons_weapon_damage_rating(launch);
-    const missile_type mt = fires_ammo_type(launch);
-    mon_inv_type eslot = NUM_MONSTER_SLOTS;
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         auto slot = static_cast<mon_inv_type>(i);
-        if (const item_def *elaunch = mslot_item(slot))
-        {
-            if (!is_range_weapon(*elaunch))
-                continue;
+        const item_def *old_weapon = mslot_item(slot);
+        if (!old_weapon)
+            return pickup(launch, slot, msg);
 
-            return (fires_ammo_type(*elaunch) == mt || !missiles())
-                   && (mons_weapon_damage_rating(*elaunch) < mdam_rating
-                       || mons_weapon_damage_rating(*elaunch) == mdam_rating
-                          && get_weapon_brand(*elaunch) == SPWPN_NORMAL
-                          && get_weapon_brand(launch) != SPWPN_NORMAL)
-                   && drop_item(slot, msg) && pickup(launch, slot, msg);
+        // If the old weapon is better than the new one, or just as
+        // good and with as good a brand, don't bother swapping.
+        const int old_rating = mons_weapon_damage_rating(*old_weapon);
+        if (old_rating > mdam_rating)
+            continue;
+        if (old_rating == mdam_rating
+            && (get_weapon_brand(*old_weapon) != SPWPN_NORMAL
+                || get_weapon_brand(launch) == SPWPN_NORMAL))
+        {
+            continue;
         }
-        else
-            eslot = slot;
+        if (drop_item(slot, msg))
+            return pickup(launch, slot, msg);
     }
 
-    return eslot == NUM_MONSTER_SLOTS ? false : pickup(launch, eslot, msg);
+    return false;
 }
 
 static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
@@ -1315,11 +1266,6 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
     {
         weapon_type wtype = (weapon.base_type == OBJ_WEAPONS) ?
             (weapon_type)weapon.sub_type : NUM_WEAPONS;
-
-        // We might allow Sigmund to pick up a better scythe if he finds
-        // one...
-        if (mons->type == MONS_SIGMUND)
-            return wtype == WPN_SCYTHE;
 
         // Crazy Yiuf's got MONUSE_STARTING_EQUIPMENT right now, but
         // in case that ever changes we don't want him to switch away
@@ -1388,6 +1334,10 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
             return wtype == WPN_DEMON_BLADE || wtype == WPN_DEMON_WHIP
                 || wtype == WPN_DEMON_TRIDENT;
         }
+
+        // Amaemon's venom whip is part of his whole schtick!
+        if (mons->type == MONS_AMAEMON)
+            return wtype == WPN_DEMON_WHIP;
 
         // Donald kept dropping his shield. I hate that.
         if (mons->type == MONS_DONALD)
@@ -1478,6 +1428,9 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
         {
             if (is_range_weapon(*weap))
                 continue;
+
+            if (type == MONS_SIGMUND)
+                continue; // The scythe is a classic. Stick with it.
 
             // Don't swap from a signature weapon to a non-signature one.
             if (!_is_signature_weapon(this, item)
@@ -1586,9 +1539,9 @@ bool monster::wants_weapon(const item_def &weap) const
 
 bool monster::wants_armour(const item_def &item) const
 {
-    // Monsters that are capable of dual wielding won't pick up shields.
+    // Monsters that are capable of dual wielding won't pick up shields or orbs.
     // Neither will monsters that are already wielding a two-hander.
-    if (is_shield(item)
+    if (is_offhand(item)
         && (mons_wields_two_weapons(*this)
             || mslot_item(MSLOT_WEAPON)
                && hands_reqd(*mslot_item(MSLOT_WEAPON))
@@ -1598,7 +1551,7 @@ bool monster::wants_armour(const item_def &item) const
     }
 
     // Don't pick up new armour if we've been gifted something by the player.
-    if (is_shield(item) && props.exists(BEOGH_SH_GIFT_KEY))
+    if (is_offhand(item) && props.exists(BEOGH_SH_GIFT_KEY))
         return false;
     else if (props.exists(BEOGH_ARM_GIFT_KEY))
         return false;
@@ -1936,43 +1889,15 @@ bool monster::pickup_missile(item_def &item, bool msg, bool force)
     if (!force && !can_use_missile(item))
         return false;
 
-    if (miss)
-    {
-        item_def *launch;
-        for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
-        {
-            launch = mslot_item(static_cast<mon_inv_type>(i));
-            if (launch)
-            {
-                const int item_brand = get_ammo_brand(item);
-                // If this ammunition is better, drop the old ones.
-                // Don't upgrade to ammunition whose brand cancels the
-                // launcher brand or doesn't improve it further.
-                // Don't drop huge stacks for tiny stacks.
-                if (item.launched_by(*launch)
-                    && (!miss->launched_by(*launch)
-                        || item.sub_type == MI_SLING_BULLET
-                           && miss->sub_type == MI_STONE
-                        || get_ammo_brand(*miss) == SPMSL_NORMAL
-                           && item_brand != SPMSL_NORMAL)
-                    && item.quantity * 2 > miss->quantity)
-                {
-                    if (!drop_item(MSLOT_MISSILE, msg))
-                        return false;
-                    break;
-                }
-            }
-        }
-
         // Allow upgrading throwing weapon brands (XXX: improve this!)
-        if (item.sub_type == miss->sub_type
-            && (item.sub_type == MI_BOOMERANG || item.sub_type == MI_JAVELIN)
-            && get_ammo_brand(*miss) == SPMSL_NORMAL
-            && get_ammo_brand(item) != SPMSL_NORMAL)
-        {
-            if (!drop_item(MSLOT_MISSILE, msg))
-                return false;
-        }
+    if (miss
+        && item.sub_type == miss->sub_type
+        && (item.sub_type == MI_BOOMERANG || item.sub_type == MI_JAVELIN)
+        && get_ammo_brand(*miss) == SPMSL_NORMAL
+        && get_ammo_brand(item) != SPMSL_NORMAL)
+    {
+        if (!drop_item(MSLOT_MISSILE, msg))
+            return false;
     }
 
     return pickup(item, MSLOT_MISSILE, msg);
@@ -2906,10 +2831,11 @@ bool monster::has_damage_type(int dam_type)
     return false;
 }
 
-int monster::constriction_damage(bool direct) const
+int monster::constriction_damage(constrict_type typ) const
 {
-    if (direct)
+    switch (typ)
     {
+    case CONSTRICT_MELEE:
         for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         {
             const mon_attack_def attack = mons_attack_spec(*this, i);
@@ -2917,16 +2843,12 @@ int monster::constriction_damage(bool direct) const
                 return attack.damage;
         }
         return -1;
+    case CONSTRICT_ROOTS:
+        return roll_dice(2, div_rand_round(40 +
+                    mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
+    default:
+        return 0;
     }
-
-    // The only monster spell that's a source of indirect constriction.
-    return roll_dice(2, div_rand_round(40 +
-                mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
-}
-
-bool monster::constriction_does_damage(bool direct) const
-{
-    return constriction_damage(direct) > 0;
 }
 
 /** Return true if the monster temporarily confused. False for butterflies, or
@@ -2970,7 +2892,7 @@ bool monster::asleep() const
     return behaviour == BEH_SLEEP;
 }
 
-bool monster::backlit(bool self_halo) const
+bool monster::backlit(bool self_halo, bool /*temp*/) const
 {
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
         || has_ench(ENCH_SILVER_CORONA))
@@ -3023,6 +2945,8 @@ int monster::off_level_regen_rate() const
     if (!mons_can_regenerate(*this))
         return 0;
 
+    if (type == MONS_PARGHIT)
+        return 2700; // whoosh
     if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
         return 100;
     // Capped at 0.1 hp/turn.
@@ -3932,6 +3856,10 @@ int monster::willpower() const
     if (mons_invuln_will(*this))
         return WILL_INVULN;
 
+    // alas, ye foolish wretches...
+    if (props.exists(KIKU_WRETCH_KEY))
+        return 0;
+
     const item_def *arm = mslot_item(MSLOT_ARMOUR);
     if (arm && is_unrandom_artefact(*arm, UNRAND_FOLLY))
         return 0;
@@ -4321,7 +4249,9 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         // Hurt conducts -- pain bond is exempted for balance/gameplay reasons.
         // Damage over time effects are excluded for similar reasons.
-        if (agent && agent->is_player() && mons_gives_xp(*this, *agent)
+        if (agent && agent->is_player()
+            && mons_class_gives_xp(type)
+            && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_INSANE))
             && flavour != BEAM_SHARED_PAIN
             && flavour != BEAM_STICKY_FLAME
             && kill_type != KILLED_BY_POISON
@@ -4483,7 +4413,6 @@ void monster::ghost_init(bool need_pos)
         find_place_to_live();
 
     bind_melee_flags();
-    bind_spell_flags(); // does this even do anything on ghosts?
 }
 
 void monster::uglything_init(bool only_mutate)
@@ -5238,6 +5167,18 @@ bool monster::has_action_energy() const
     return speed_increment >= ENERGY_THRESHOLD;
 }
 
+bool monster::may_have_action_energy() const
+{
+    const int max_gain = (speed * you.time_taken + 9) / BASELINE_DELAY;
+    return speed_increment + max_gain >= ENERGY_THRESHOLD;
+}
+
+/// At the player's current movement speed, will they eventually outpace this monster?
+bool monster::outpaced_by_player() const
+{
+    return speed * you.time_taken < energy_cost(EUT_MOVE, 1, BASELINE_DELAY);
+}
+
 /// If a monster had enough energy to act this turn, change it so it doesn't.
 void monster::drain_action_energy()
 {
@@ -5553,7 +5494,7 @@ int monster::action_energy(energy_use_type et) const
     return max(move_cost, 1);
 }
 
-int monster::energy_cost(energy_use_type et, int div, int mult)
+int monster::energy_cost(energy_use_type et, int div, int mult) const
 {
     int energy_loss  = div_round_up(mult * action_energy(et), div);
     if (has_ench(ENCH_PETRIFYING))
@@ -5570,9 +5511,6 @@ int monster::energy_cost(energy_use_type et, int div, int mult)
 void monster::lose_energy(energy_use_type et, int div, int mult)
 {
     speed_increment -= energy_cost(et, div, mult);
-    // Awful old random energy logic. TODO: REMOVEME
-    if ((et == EUT_MOVE || et == EUT_SWIM) && (!friendly() || foe != MHITYOU))
-        speed_increment -= random2(3) - 1;
 }
 
 /**
@@ -5944,7 +5882,12 @@ reach_type monster::reach_range() const
     {
         const mon_attack_def attk(mons_attack_spec(*this, i));
         if (flavour_has_reach(attk.flavour) && attk.damage)
-            range = REACH_TWO;
+        {
+            if (attk.flavour == AF_RIFT)
+                range = REACH_THREE;
+            else
+                range = max(REACH_TWO, range);
+        }
     }
 
     const item_def *wpn = primary_weapon();

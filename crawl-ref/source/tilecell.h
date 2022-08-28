@@ -23,6 +23,7 @@ struct packed_cell
     tileidx_t bg;
     tile_flavour flv;
     tileidx_t cloud;
+    set<tileidx_t> icons;
 
     // This is directly copied from env.map_knowledge by viewwindow()
     map_cell map_knowledge;

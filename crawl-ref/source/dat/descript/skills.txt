@@ -64,38 +64,23 @@ weapons of this type, as well as increasing your accuracy and damage with them.
 Being skilled with Staves increases your effectiveness with Maces & Flails and
 Polearms, and vice versa.
 %%%%
-Slings
+Ranged Weapons
 
-Being skilled with Slings will let you deal more damage when using the
-appropriate launcher and ammunition.
-
-Being skilled with Slings increases your effectiveness in Throwing, and vice
-versa.
-%%%%
-Bows
-
-Being skilled with Bows will let you deal more damage when using the
-appropriate launcher and ammunition.
-%%%%
-Crossbows
-
-Being skilled with Crossbows will let you deal more damage when using the
-appropriate launcher and ammunition.
+Being skilled with Ranged Weapons will let you attack more quickly with all
+bows, crossbows and slings, as well as increasing your accuracy and damage with
+them.
 %%%%
 Throwing
 
 Training Throwing will make thrown weapons (such as javelins) more effective.
 In particular, it makes boomerangs more likely to return to their thrower,
 and makes certain magical darts more likely to have an effect.
-
-Being skilled in Throwing increases your effectiveness with Slings, and vice
-versa.
 %%%%
 Armour
 
 Armour skill multiplies the AC gained from wearing armour of all kinds, both
-from body armour and cloaks, gloves, etc. It also slightly lessens spellcasting
-penalties from heavy armour.
+from body armour and cloaks, gloves, etc. It also slightly lessens penalties
+to spellcasting and ranged weapon speed from heavy armour.
 %%%%
 Dodging
 

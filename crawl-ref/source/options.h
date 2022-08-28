@@ -9,19 +9,24 @@
 #include "char-set-type.h"
 #include "confirm-prompt-type.h"
 #include "easy-confirm-type.h"
+#include "explore-greedy-options.h"
 #include "feature.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
+#include "kill-dump-options-type.h"
 #include "lang-t.h"
+#include "level-gen-type.h"
 #include "maybe-bool.h"
 #include "mpr.h"
 #include "newgame-def.h"
 #include "pattern.h"
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
+#include "slot-select-mode.h"
 #include "spell-type.h"
 #include "tag-pref.h"
 #include "travel-open-doors-type.h"
+#include "wizard-option-type.h"
 
 using std::vector;
 
@@ -179,8 +184,7 @@ public:
 
     uint64_t    seed;           // Non-random games.
     uint64_t    seed_from_rc;
-    bool        pregen_dungeon; // Is the dungeon completely generated at the beginning?
-    bool        incremental_pregen; // Does the dungeon always generate in a specified order?
+    level_gen_type pregen_dungeon;
 
 #ifdef DGL_SIMPLE_MESSAGING
     bool        messaging;      // Check for messages.
@@ -224,7 +228,7 @@ public:
     // Whether exclusions and exclusion radius are visible in the viewport.
     bool        always_show_exclusions;
 
-    int         autopickup_on;
+    int         autopickup_on; // can be -1, 0, or 1. XX refactor as enum
     bool        autopickup_starting_ammo;
     bool        default_manual_training;
     bool        default_show_all_skills;
@@ -303,8 +307,8 @@ public:
     vector<unsigned> fire_order;  // missile search order for 'f' command
     unordered_set<spell_type, hash<int>> fire_order_spell;
     unordered_set<ability_type, hash<int>> fire_order_ability;
-    bool        launcher_autoquiver; // whether to autoquiver launcher ammo on wield
     bool        quiver_menu_focus;
+    bool        launcher_autoquiver;
 
     unordered_set<int> force_spell_targeter; // spell types to always use a
                                              // targeter for
@@ -319,12 +323,12 @@ public:
     char_set_type  char_set;
     FixedVector<char32_t, NUM_DCHAR_TYPES> char_table;
 
-#ifdef WIZARD
-    int            wiz_mode;      // no, never, start in wiz mode
-    int            explore_mode;  // no, never, start in explore mode
-#endif
+    wizard_option_type wiz_mode;      // no, never, start in wiz mode
+    wizard_option_type explore_mode;  // no, never, start in explore mode
+
     vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files
+    bool           no_player_bones;   // don't save player's info in bones files
 
     // internal use only:
     int         sc_entries;      // # of score entries
@@ -405,6 +409,8 @@ public:
 
     bool        explore_greedy;    // Explore goes after items as well.
 
+    int explore_greedy_visit; // Set what type of items explore_greedy visits.
+
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
 
@@ -426,7 +432,7 @@ public:
     vector<menu_sort_condition> sort_menus;
 
     bool        dump_on_save;       // Automatically dump character when saving.
-    int         dump_kill_places;   // How to dump place information for kills.
+    kill_dump_options dump_kill_places;   // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
 
     int         dump_item_origins;  // Show where items came from?
@@ -443,7 +449,7 @@ public:
     bool        easy_floor_use;     // , selects the floor item if there's 1
     bool        bad_item_prompt;    // Confirm before using a bad consumable
 
-    int         assign_item_slot;   // How free slots are assigned
+    slot_select_mode assign_item_slot;   // How free slots are assigned
     maybe_bool  show_god_gift;      // Show {god gift} in item names
 
     maybe_bool  restart_after_game; // If true, Crawl will not close on game-end
@@ -589,6 +595,7 @@ public:
     bool        tile_window_limit_size;
     maybe_bool  tile_use_small_layout;
 #endif
+    int         tile_sidebar_pixels;
     int         tile_cell_pixels;
     int         tile_viewport_scale;
     int         tile_map_scale;
@@ -692,6 +699,7 @@ private:
                          bool prepend = false);
     void do_kill_map(const string &from, const string &to);
     int  read_explore_stop_conditions(const string &) const;
+    int  read_explore_greedy_visit_conditions(const string &) const;
     use_animations_type read_use_animations(const string &) const;
 
     void split_parse(const string &s, const string &separator,

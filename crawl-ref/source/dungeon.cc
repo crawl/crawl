@@ -48,6 +48,7 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-pick.h"
@@ -276,6 +277,8 @@ bool builder(bool enable_random_maps)
     // and accessible via &ctrl-l without this #define.
     msg::suppress quiet(MSGCH_DIAGNOSTICS);
 #endif
+    // you can use msg::force_stderr for doing debugging in automated scripts
+    // here; usually you want to condition it to a specific level.
 
     // Re-check whether we're in a valid place, it leads to obscure errors
     // otherwise.
@@ -1287,13 +1290,12 @@ dgn_register_place(const vault_placement &place, bool register_vault)
         else
             _mask_vault(place, MMT_VAULT);
 
-        if (place.map.has_tag("passable"))
+        if (place.map.has_tag("passable") && player_in_branch(BRANCH_VAULTS))
         {
             // Ignore outside of Vaults -- creates too many bugs otherwise.
             // This tag is mainly to allow transporter vaults to work with
             // Vaults layout code.
-            if (player_in_branch(BRANCH_VAULTS))
-                _mask_vault(place, MMT_PASSABLE);
+            _mask_vault(place, MMT_PASSABLE);
         }
         else if (!transparent)
         {
@@ -1539,28 +1541,6 @@ void dgn_reset_level(bool enable_random_maps)
     // Lose all listeners.
     dungeon_events.clear();
 
-    // Set default random monster generation rate (smaller is more often,
-    // except that 0 == no random monsters).
-    if (player_in_branch(BRANCH_TEMPLE)
-        && !player_on_orb_run() // except for the Orb run
-        || crawl_state.game_is_tutorial())
-    {
-        // No random monsters in tutorial or ecu temple
-        env.spawn_random_rate = 0;
-    }
-    else if (player_in_connected_branch()
-             || (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS)))
-        env.spawn_random_rate = 240;
-    else if (player_in_branch(BRANCH_ABYSS)
-             || player_in_branch(BRANCH_PANDEMONIUM))
-    {
-        // Abyss spawn rate is set for those characters that start out in the
-        // Abyss; otherwise the number is ignored in the Abyss.
-        env.spawn_random_rate = 50;
-    }
-    else
-        // No random monsters in portal vaults if we don't have the orb.
-        env.spawn_random_rate = 0;
     env.density = 0;
     env.forest_awoken_until = 0;
 
@@ -1583,11 +1563,9 @@ static int _num_items_wanted(int absdepth0)
     if (branches[you.where_are_you].branch_flags & brflag::no_items)
         return 0;
     else if (absdepth0 > 5 && one_chance_in(500 - 5 * absdepth0))
-        return 10 + random2avg(85, 2); // rich level!
-    else if (absdepth0 < 3)
-        return 3 + roll_dice(3, 7); // thin loot on early floors
+        return 9 + random2avg(84, 2); // rich level!
     else
-        return 3 + roll_dice(3, 10);
+        return 4 + roll_dice(3, 9);
 }
 
 static int _mon_die_size()
@@ -4799,63 +4777,66 @@ static object_class_type _superb_object_class()
             10, OBJ_MISCELLANY);
 }
 
+static int _concretize_level(int spec_level, int dgn_level)
+{
+    if (spec_level >= 0)
+        return spec_level;
+
+    if (dgn_level == INVALID_ABSDEPTH)
+        dgn_level = env.absdepth0;
+
+    switch (spec_level)
+    {
+    case ISPEC_DAMAGED:
+    case ISPEC_BAD:
+    case ISPEC_RANDART:
+        return spec_level;
+    case ISPEC_STAR:
+        return 5 + dgn_level * 2;
+    case ISPEC_SUPERB:
+        return ISPEC_GOOD_ITEM;
+    default:
+        return dgn_level;
+    }
+}
+
+static object_class_type _concretize_type(const item_spec &spec)
+{
+    if (spec.base_type != OBJ_RANDOM)
+        return spec.base_type;
+    if (spec.props.exists(MIMIC_KEY))
+        return get_random_item_mimic_type();
+    if (spec.level == ISPEC_SUPERB)
+        return _superb_object_class();
+    if (spec.level == ISPEC_ACQUIREMENT)
+        return shuffled_acquirement_classes(false)[0];
+    return spec.base_type;
+}
+
+static string _get_custom_name(const item_spec &spec)
+{
+    if (spec.props.exists(ITEM_NAME_KEY))
+        return spec.props[ITEM_NAME_KEY].get_string();
+    return "";
+}
+
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
-                   int level)
+                   int dgn_level)
 {
     // Dummy object?
     if (spec.base_type == OBJ_UNASSIGNED)
         return NON_ITEM;
 
-    if (level == INVALID_ABSDEPTH)
-        level = env.absdepth0;
-
-    object_class_type base_type = spec.base_type;
-    bool acquire = false;
-
-    if (spec.level >= 0)
-        level = spec.level;
-    else
-    {
-        bool adjust_type = false;
-        switch (spec.level)
-        {
-        case ISPEC_DAMAGED:
-        case ISPEC_BAD:
-        case ISPEC_RANDART:
-            level = spec.level;
-            break;
-        case ISPEC_STAR:
-            level = 5 + level * 2;
-            break;
-        case ISPEC_SUPERB:
-            adjust_type = true;
-            level = ISPEC_GOOD_ITEM;
-            break;
-        case ISPEC_ACQUIREMENT:
-            adjust_type = true;
-            acquire = true;
-            break;
-        default:
-            break;
-        }
-
-        if (spec.props.exists(MIMIC_KEY) && base_type == OBJ_RANDOM)
-            base_type = get_random_item_mimic_type();
-        else if (adjust_type && base_type == OBJ_RANDOM)
-        {
-            base_type = acquire ? shuffled_acquirement_classes(false)[0]
-                                : _superb_object_class();
-        }
-    }
+    const int level = _concretize_level(spec.level, dgn_level);
+    const object_class_type base_type = _concretize_type(spec);
 
     int useless_tries = 0;
-
     while (true)
     {
         int item_made = NON_ITEM;
 
-        if (acquire)
+        if (spec.level == ISPEC_ACQUIREMENT)
         {
             item_made = acquirement_create_item(base_type,
                                                 spec.acquirement_source,
@@ -4870,7 +4851,8 @@ int dgn_place_item(const item_spec &spec,
             else
             {
                 item_made = items(spec.allow_uniques, base_type,
-                                  spec.sub_type, level, spec.ego);
+                                  spec.sub_type, level, spec.ego, NO_AGENT,
+                                  _get_custom_name(spec));
 
                 if (spec.level == ISPEC_MUNDANE)
                     squash_plusses(item_made);
@@ -4879,29 +4861,24 @@ int dgn_place_item(const item_spec &spec,
 
         if (item_made == NON_ITEM || item_made == -1)
             return NON_ITEM;
-        else
-        {
-            item_def &item(env.item[item_made]);
-            item.pos = where;
 
-            if (_apply_item_props(item, spec, (useless_tries >= 10), false))
-            {
-                dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
-                    env.item[item_made].name(DESC_INVENTORY, false, true).c_str(),
-                    where.x, where.y);
-                env.level_map_mask(where) |= MMT_NO_TRAP;
-                return item_made;
-            }
-            else
-            {
-                // _apply_item_props will not generate a rune you already have,
-                // so don't bother looping.
-                if (base_type == OBJ_RUNES)
-                    return NON_ITEM;
-                useless_tries++;
-            }
+        item_def &item(env.item[item_made]);
+        item.pos = where;
+
+        if (_apply_item_props(item, spec, useless_tries >= 10, false))
+        {
+            dprf(DIAG_DNGN, "vault spec: placing %s at %d,%d",
+                env.item[item_made].name(DESC_INVENTORY, false, true).c_str(),
+                where.x, where.y);
+            env.level_map_mask(where) |= MMT_NO_TRAP;
+            return item_made;
         }
 
+        // _apply_item_props will not generate a rune you already have,
+        // so don't bother looping.
+        if (base_type == OBJ_RUNES)
+            return NON_ITEM;
+        useless_tries++;
     }
 
 }
@@ -4926,24 +4903,6 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
 
     const item_spec spec = sitems.get_item(index);
     dgn_place_item(spec, where);
-}
-
-static void _give_animated_weapon_ammo(monster &mon)
-{
-    const item_def *launcher = mon.launcher();
-    if (!launcher)
-        return;
-
-    const item_def *missiles = mon.missiles();
-    if (missiles && missiles->launched_by(*launcher))
-        return;
-
-    const int ammo_type = fires_ammo_type(*launcher);
-    const int thing_created = items(false, OBJ_MISSILES, ammo_type, 1);
-    if (thing_created == NON_ITEM)
-        return;
-
-    give_specific_item(&mon, thing_created);
 }
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
@@ -4979,30 +4938,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
                 spec.ego = SP_FORBID_EGO;
         }
 
-        int item_level = mspec.place.absdepth();
-
-        if (spec.level >= 0)
-            item_level = spec.level;
-        else
-        {
-            // TODO: merge this with the equivalent switch in dgn_place_item,
-            // and maybe even handle ISPEC_ACQUIREMENT.
-            switch (spec.level)
-            {
-            case ISPEC_STAR:
-                item_level = 5 + item_level * 2;
-                break;
-            case ISPEC_SUPERB:
-                item_level = ISPEC_GOOD_ITEM;
-                break;
-            case ISPEC_DAMAGED:
-            case ISPEC_BAD:
-            case ISPEC_RANDART:
-                item_level = spec.level;
-                break;
-            }
-        }
-
+        const int item_level = _concretize_level(spec.level,
+                                                 mspec.place.absdepth());
         for (int useless_tries = 0; true; useless_tries++)
         {
             int item_made;
@@ -5012,8 +4949,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
             else
             {
                 item_made = items(spec.allow_uniques, spec.base_type,
-                                  spec.sub_type, item_level,
-                                  spec.ego);
+                                  spec.sub_type, item_level, spec.ego, NO_AGENT,
+                                  _get_custom_name(spec));
 
                 if (spec.level == ISPEC_MUNDANE)
                     squash_plusses(item_made);
@@ -5043,11 +4980,6 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec, monster *mon)
     {
         mon->swap_weapons(MB_FALSE);
     }
-
-    // Make dancing launchers less pathetic.
-    // XX this should be done on creation, not placement?
-    if (mons_class_is_animated_weapon(mon->type))
-        _give_animated_weapon_ammo(*mon);
 }
 
 static bool _should_veto_unique(monster_type type)
@@ -5083,12 +5015,29 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         if (brdepth[mspec.place.branch] > 1)
         {
             if (type == RANDOM_SUPER_OOD)
-                mspec.place.depth = mspec.place.depth * 2 + 4; // TODO: why?
-            else if (type == RANDOM_MODERATE_OOD)
-                mspec.place.depth += 5;
+            {
+                // Super OODs use 2*depth + 4 which goes very deep, generating
+                // a guaranteed "boss" for vaultsmiths to use. In dungeon it
+                // ramps up slowly from 2*depth in the range D:1-8 (becoming
+                // deeper than a moderate OOD a from D:6-) to the full meaning
+                // at D:12.
+                int plus = 4;
+                if (mspec.place.branch == BRANCH_DUNGEON)
+                    plus = max(0, min(mspec.place.depth - 8, 4));
 
-            if (mspec.place.branch == BRANCH_DUNGEON && starting_depth <= 8)
-                mspec.place.depth = min(mspec.place.depth, starting_depth * 2);
+                mspec.place.depth = mspec.place.depth * 2 + plus;
+            }
+            else if (type == RANDOM_MODERATE_OOD)
+            {
+                mspec.place.depth += 5;
+                // From D:1-4 moderate OODs are capped at depth * 2, starting
+                // on D:5 this cap no longer does anything.
+                if (mspec.place.branch == BRANCH_DUNGEON)
+                {
+                    mspec.place.depth = min(mspec.place.depth,
+                                            starting_depth * 2);
+                }
+            }
         }
         fuzz_ood = false;
         type = RANDOM_MONSTER;
@@ -5626,22 +5575,39 @@ static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
         {
             continue;
         }
-        cur.insert(cur.begin() + random2(cur.size()), *ai);
+        // randomize the order in which we visit orthogonal directions
+        cur.insert(cur.begin() + random2(cur.size() + 1), *ai);
     }
     for (auto cc : cur)
     {
         coords.insert(cc);
 
         const coord_def dp = cc - c;
+        // pack the orthogonal coord dp into an int in a slightly silly way.
+        // 0, -1: 11
+        // 0, 1:  9
+        // -1, 0: 14
+        // 1, 0:  6
         travel_point_distance[cc.x][cc.y] = (-dp.x + 2) * 4 + (-dp.y + 2);
     }
 }
+
+// #define DEBUG_JTD
+
+// pathfinding from `from` to `to` using only orthogonal directions, and
+// avoiding `mapmask`. Used by many layouts to ensure connectivity with
+// rogue-ish hallways. Also used in some layouts where hallways aren't really
+// the goal (e.g. shoals), there by a direct call to the pathfinding. Also used
+// to connect to vault entrances.
 
 // Resets travel_point_distance
 vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
                                              const coord_def &to,
                                              uint32_t mapmask)
 {
+    // isolate this rng to keep layouts that use it more stable -- it has an
+    // arbitrary number of draws, so is quite unpredictable otherwise
+    rng::subgenerator jtd_rng;
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     const coord_comparator comp(to);
     coord_set coords(comp);
@@ -5651,7 +5617,9 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
     while (true)
     {
         int &tpd = travel_point_distance[curr.x][curr.y];
-        tpd = !tpd? -1000 : -tpd;
+        // flip the sign of the path we are actually following. Used paths end
+        // up negative, unused paths, positive. -1000 is the starting point.
+        tpd = !tpd ? -1000 : -tpd;
 
         if (curr == to)
             break;
@@ -5668,18 +5636,72 @@ vector<coord_def> dgn_join_the_dots_pathfind(const coord_def &from,
     if (curr != to)
         return path;
 
+#ifdef DEBUG_JTD
+    // dprfs the travel_point_distance grid found by the above loop
+    string head;
+    coord_def tpd_min(1000,1000);
+    coord_def tpd_max(0,0);
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (travel_point_distance[ri->x][ri->y] != 0)
+        {
+            tpd_min.x = min(ri->x, tpd_min.x);
+            tpd_min.y = min(ri->y, tpd_min.y);
+            tpd_max.x = max(ri->x, tpd_max.x);
+            tpd_max.y = max(ri->y, tpd_max.y);
+        }
+    }
+    for (int ix = tpd_min.x; ix <= tpd_max.x; ix++)
+        head += make_stringf("(%2d)", ix);
+    dprf("/////%s", head.c_str()); // `/`s are there to prevent a split
+
+    for (int iy = tpd_min.y; iy <= tpd_max.y; iy++)
+    {
+        string s;
+        for (int ix = tpd_min.x; ix <= tpd_max.x; ix++)
+        {
+            s += (travel_point_distance[ix][iy] == -1000
+                    ? "   X" // starting point
+                    : make_stringf(" %3d", travel_point_distance[ix][iy]));
+        }
+        dprf("(%2d)%s", iy, s.c_str());
+    }
+#endif
+
+    // traverse the path found above (indicated by negative values) *in reverse
+    // order*.
     while (curr != from)
     {
         if (!map_masked(curr, mapmask))
+        {
             path.push_back(curr);
+#ifdef DEBUG_JTD
+            env.pgrid(curr) |= FPROP_HIGHLIGHT;
+#endif
+        }
 
         const int dist = travel_point_distance[curr.x][curr.y];
         ASSERT(dist < 0);
         ASSERT(dist != -1000);
+        // unpack the (orthogonal) direction to move from an int. There's an
+        // intentional sign flip here since are moving in reverse. Note that
+        // this also relies on some silly int rounding to simplify reversing
+        // the packing formula from _jtd_init_surrounds.
+        // original => packed => unpacked
+        // 0, -1    => 11     => 0,1
+        // 0, 1     => 9      => 0,-1
+        // -1, 0    => 14     => 1,0
+        // 1, 0     => 6      => -1,0
         curr += coord_def(-dist / 4 - 2, (-dist % 4) - 2);
+
     }
     if (!map_masked(curr, mapmask))
+    {
+#ifdef DEBUG_JTD
+        env.pgrid(curr) |= FPROP_HIGHLIGHT;
+#endif
         path.push_back(curr);
+    }
 
     return path;
 }
@@ -5808,13 +5830,6 @@ static dungeon_feature_type _pick_an_altar()
     return altar_for_god(god);
 }
 
-static bool _shop_sells_antiques(shop_type type)
-{
-    return type == SHOP_WEAPON_ANTIQUE
-            || type == SHOP_ARMOUR_ANTIQUE
-            || type == SHOP_GENERAL_ANTIQUE;
-}
-
 void place_spec_shop(const coord_def& where, shop_type force_type)
 {
     shop_spec spec(force_type);
@@ -5823,7 +5838,7 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
-    if (_shop_sells_antiques(shop))
+    if (!shoptype_identifies_stock(shop))
     {
         const int rand = random2avg(19, 2);
         return 15 + rand + random2(level_number);
@@ -5906,7 +5921,7 @@ static int _shop_num_items(const shop_spec &spec)
  */
 static int _choose_shop_item_level(shop_type shop_type_, int level_number)
 {
-    const int shop_multiplier = _shop_sells_antiques(shop_type_) ? 3 : 2;
+    const int shop_multiplier = shoptype_identifies_stock(shop_type_) ? 2 : 3;
     const int base_level = level_number
                             + random2((level_number + 1) * shop_multiplier);
 
@@ -6036,7 +6051,7 @@ static void _stock_shop_item(int j, shop_type shop_type_,
         stocked[item.sub_type]++;
 
     // Identify the item, unless we don't do that.
-    if (!_shop_sells_antiques(shop_type_))
+    if (shoptype_identifies_stock(shop_type_))
         set_ident_flags(item, ISFLAG_IDENT_MASK);
 
     // Now move it into the shop!

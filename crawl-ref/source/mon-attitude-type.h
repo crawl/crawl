@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tag-version.h"
+
 enum mon_attitude_type
 {
     ATT_HOSTILE,                       // 0, default in most cases

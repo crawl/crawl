@@ -29,15 +29,15 @@
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
-      projectile(proj), teleport(tele), orig_to_hit(0),
-      should_alert_defender(true), launch_type(launch_retval::BUGGY)
+      projectile(proj), teleport(tele), orig_to_hit(0)
 {
+    if (is_launcher_ammo(*projectile))
+        weapon = attacker->weapon(0); // else null
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
 
     string proj_name = projectile->name(DESC_PLAIN);
     // init launch type early, so we can use it later in the constructor
-    launch_type = is_launched(attacker, weapon, *projectile);
 
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
@@ -46,23 +46,20 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         kill_type = KILLED_BY_SELF_AIMED;
         aux_source = proj_name;
     }
-    else if (launch_type == launch_retval::LAUNCHED)
-    {
-        aux_source = make_stringf("Shot with a%s %s by %s",
-                 (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
-                 attacker->name(DESC_A).c_str());
-    }
-    else
+    else if (throwing())
     {
         aux_source = make_stringf("Hit by a%s %s thrown by %s",
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
                  attacker->name(DESC_A).c_str());
     }
+    else
+    {
+        aux_source = make_stringf("Shot with a%s %s by %s",
+                 (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),
+                 attacker->name(DESC_A).c_str());
+    }
 
     needs_message = defender_visible;
-
-    if (!using_weapon())
-        wpn_skill = SK_THROWING;
 }
 
 int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random,
@@ -128,8 +125,11 @@ bool ranged_attack::attack()
             handle_phase_dodged();
     }
 
-    if (should_alert_defender)
-        alert_defender();
+    // Don't crash on banishment (from eg chaos).
+    if (!defender->pos().origin())
+        handle_noise(defender->pos());
+
+    alert_defender();
 
     if (!defender->alive())
         handle_phase_killed();
@@ -269,7 +269,7 @@ bool ranged_attack::handle_phase_hit()
         }
     }
 
-    if ((using_weapon() || launch_type == launch_retval::THROWN)
+    if ((using_weapon() || throwing())
         && (!defender->is_player() || !you.pending_revival))
     {
         if (using_weapon()
@@ -285,8 +285,7 @@ bool ranged_attack::handle_phase_hit()
     }
 
     // XXX: unify this with melee_attack's code
-    if (attacker->is_player() && defender->is_monster()
-        && should_alert_defender)
+    if (attacker->is_player() && defender->is_monster())
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
                         coord_def());
@@ -295,17 +294,24 @@ bool ranged_attack::handle_phase_hit()
     return true;
 }
 
+bool ranged_attack::throwing() const
+{
+    return SK_THROWING == wpn_skill;
+}
+
 bool ranged_attack::using_weapon() const
 {
-    return weapon && (launch_type == launch_retval::LAUNCHED
-                     || launch_type == launch_retval::BUGGY // not initialized
-                         && is_launched(attacker, weapon, *projectile)
-                            == launch_retval::LAUNCHED);
+    return weapon && !throwing();
+}
+
+bool ranged_attack::clumsy_throwing() const
+{
+    return projectile->base_type != OBJ_MISSILES;
 }
 
 int ranged_attack::weapon_damage()
 {
-    if (launch_type == launch_retval::FUMBLED)
+    if (clumsy_throwing())
         return 0;
 
     int dam = property(*projectile, PWPN_DAMAGE);
@@ -322,15 +328,9 @@ int ranged_attack::weapon_damage()
  */
 int ranged_attack::calc_base_unarmed_damage()
 {
-    // No damage bonus for throwing non-throwing weapons.
-    if (launch_type == launch_retval::FUMBLED)
+    if (clumsy_throwing())
         return 0;
-
-    int damage = you.skill_rdiv(wpn_skill);
-
-    // Stones get half bonus; everything else gets full bonus.
-    return div_rand_round(damage
-                          * min(4, property(*projectile, PWPN_DAMAGE)), 4);
+    return throwing_base_damage_bonus(*projectile);
 }
 
 int ranged_attack::calc_mon_to_hit_base()
@@ -551,10 +551,9 @@ int ranged_attack::dart_duration_roll(special_missile_type type)
     // high HD shooters and too ignorable from low ones.
     if (defender->is_player())
         return 5 + random2(5);
-    else if (type == SPMSL_POISONED) // Player poison needles
+    if (type == SPMSL_POISONED) // Player poison needles
         return random2(3 + base_power * 2);
-    else
-        return 5 + random2(base_power);
+    return 5 + random2(base_power);
 }
 
 bool ranged_attack::apply_missile_brand()

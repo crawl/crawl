@@ -35,6 +35,8 @@
 #include "nearby-danger.h"
 #include "pronoun-type.h"
 #include "religion.h"
+#include "shout.h"
+#include "skills.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -373,9 +375,9 @@ string attack::anon_pronoun(pronoun_type pron)
 void attack::init_attack(skill_type unarmed_skill, int attack_number)
 {
     ASSERT(attacker);
-    weapon          = attacker->weapon(attack_number);
 
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
+
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
@@ -477,10 +479,14 @@ bool attack::distortion_affects_defender()
         NONE
     };
 
+    // Don't banish or blink the player during aoops, for sanity.
+    const int banish_weight = crawl_state.player_moving ? 0 : 5;
+    const int blink_weight = crawl_state.player_moving ? 0 : 20;
+
     const disto_effect choice = random_choose_weighted(35, SMALL_DMG,
                                                        25, BIG_DMG,
-                                                       5,  BANISH,
-                                                       20, BLINK,
+                                                       banish_weight, BANISH,
+                                                       blink_weight, BLINK,
                                                        15,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
@@ -941,20 +947,7 @@ void attack::stab_message()
 
     switch (stab_bonus)
     {
-    case 6:     // big melee, monster surrounded/not paying attention
-        if (coinflip())
-        {
-            mprf("You %s %s from a blind spot!",
-                  you.has_mutation(MUT_PAWS) ? "pounce on" : "strike",
-                  defender->name(DESC_THE).c_str());
-        }
-        else
-        {
-            mprf("You catch %s momentarily off-guard.",
-                  defender->name(DESC_THE).c_str());
-        }
-        break;
-    case 4:     // confused/fleeing
+    case 4:     // confused/fleeing/distracted
         if (!one_chance_in(3))
         {
             mprf("You catch %s completely off-guard!",
@@ -967,7 +960,6 @@ void attack::stab_message()
                   defender->name(DESC_THE).c_str());
         }
         break;
-    case 2:
     case 1:
         if (you.has_mutation(MUT_PAWS) && coinflip())
         {
@@ -1042,39 +1034,6 @@ string attack::defender_name(bool allow_reflexive)
         return actor_pronoun(attacker, PRONOUN_REFLEXIVE, attacker_visible);
     else
         return def_name(DESC_THE);
-}
-
-int attack::player_stat_modify_damage(int damage)
-{
-    // At 10 strength, damage is multiplied by 1.0
-    // Each point of strength over 10 increases this by 0.025 (2.5%),
-    // strength below 10 reduces the multiplied by the same amount.
-    // Minimum multiplier is 0.01 (1%) (reached at -30 str).
-    damage *= max(1.0, 75 + 2.5 * you.strength());
-    damage /= 100;
-
-    return damage;
-}
-
-int attack::player_apply_weapon_skill(int damage)
-{
-    if (using_weapon())
-    {
-        damage *= 2500 + (random2(you.skill(wpn_skill, 100) + 1));
-        damage /= 2500;
-    }
-
-    return damage;
-}
-
-int attack::player_apply_fighting_skill(int damage, bool aux)
-{
-    const int base = aux? 40 : 30;
-
-    damage *= base * 100 + (random2(you.skill(SK_FIGHTING, 100) + 1));
-    damage /= base * 100;
-
-    return damage;
 }
 
 int attack::player_apply_misc_modifiers(int damage)
@@ -1218,12 +1177,13 @@ int attack::calc_damage()
         potential_damage = using_weapon() || wpn_skill == SK_THROWING
             ? weapon_damage() : calc_base_unarmed_damage();
 
-        potential_damage = player_stat_modify_damage(potential_damage);
+        potential_damage = stat_modify_damage(potential_damage, wpn_skill, using_weapon());
 
         damage = random2(potential_damage+1);
 
-        damage = player_apply_weapon_skill(damage);
-        damage = player_apply_fighting_skill(damage, false);
+        if (using_weapon())
+            damage = apply_weapon_skill(damage, wpn_skill, true);
+        damage = apply_fighting_skill(damage, false, true);
         damage = player_apply_misc_modifiers(damage);
         damage = player_apply_slaying_bonuses(damage, false);
         damage = player_stab(damage);
@@ -1556,7 +1516,7 @@ bool attack::apply_damage_brand(const char *what)
                 you.duration[DUR_CONFUSING_TOUCH] = 0;
                 obvious_effect = false;
             }
-            else if (!ench_flavour_affects_monster(beam_temp.flavour, mon)
+            else if (!ench_flavour_affects_monster(attacker, beam_temp.flavour, mon)
                      || mons_invuln_will(*mon))
             {
                 mprf("%s is completely immune to your confusing touch!",
@@ -1733,12 +1693,14 @@ void attack::player_stab_check()
         return;
     }
 
-    stab_type st = find_stab_type(&you, *defender);
+    const stab_type orig_st = find_stab_type(&you, *defender);
+    stab_type st = orig_st;
     // Find stab type is also used for displaying information about monsters,
     // so upgrade the stab type for !stab and the Spriggan's Knife here
     if (using_weapon()
         && is_unrandom_artefact(*weapon, UNRAND_SPRIGGANS_KNIFE)
-        && st != STAB_NO_STAB)
+        && st != STAB_NO_STAB
+        && coinflip())
     {
         st = STAB_SLEEPING;
     }
@@ -1755,5 +1717,22 @@ void attack::player_stab_check()
     }
 
     if (stab_attempt)
-        count_action(CACT_STAB, st);
+        count_action(CACT_STAB, orig_st);
+}
+
+void attack::handle_noise(const coord_def & pos)
+{
+    // Successful stabs make no noise.
+    if (stab_attempt)
+        return;
+
+    int loudness = damage_done / 4;
+
+    // All non-stab attacks make some noise.
+    loudness = max(1, loudness);
+
+    // Cap noise at shouting volume.
+    loudness = min(12, loudness);
+
+    noisy(loudness, pos, attacker->mid);
 }

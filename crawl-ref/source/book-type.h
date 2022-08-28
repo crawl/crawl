@@ -74,7 +74,9 @@ enum book_type
     BOOK_WINTER,
     BOOK_SPHERES,
     BOOK_ARMAMENTS,
+#if TAG_MAJOR_VERSION == 34
     BOOK_PAIN,
+#endif
     BOOK_DECAY,
     BOOK_DISPLACEMENT,
     BOOK_RIME,

@@ -82,6 +82,11 @@ games:
     # (With a lot of binaries, it isn't necessarily recommended yet to blanket
     # enable this, as it can slow down a player's lobby loading.)
     show_save_info: True
+    # Is this game mode allowed for accounts with an account hold? Note:
+    # account holds use features for preventing bones file generation that
+    # may not be supported on older versions of crawl. If unset, this defaults
+    # to True.
+    allowed_with_hold: True
     # send_json_options is a legacy option. Always include this set to 'true'.
     # (Or submit a PR to remove it.)
     send_json_options: True
@@ -100,6 +105,7 @@ games:
     morgue_url: None
     # milestone_path: ./rcs/milestones
     show_save_info: True
+    allowed_with_hold: True
     send_json_options: True
     options:
       - -tutorial
@@ -120,6 +126,7 @@ games:
     morgue_url: None
     # milestone_path: ./rcs/milestones
     show_save_info: True
+    allowed_with_hold: True
     send_json_options: True
     options:
       - -sprint

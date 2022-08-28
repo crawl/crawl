@@ -218,12 +218,12 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('g') Small humanoids.
-    {  MST_GNOLL_SHAMAN,
+    {  MST_BOUDA,
       {
-       { SPELL_CORONA, 11, MON_SPELL_PRIEST },
-       { SPELL_HEAL_OTHER, 21, MON_SPELL_PRIEST },
-       { SPELL_HASTE_OTHER, 11, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 11, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
+       { SPELL_HEAL_OTHER, 20, MON_SPELL_PRIEST },
+       { SPELL_MINOR_HEALING, 20, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
+       { SPELL_WEAKENING_GAZE, 20, MON_SPELL_PRIEST | MON_SPELL_INSTANT },
+       { SPELL_HUNTING_CALL, 50, MON_SPELL_VOCAL },
       }
     },
 
@@ -440,9 +440,9 @@ static const mon_spellbook mspell_list[] =
 
     {  MST_HELL_KNIGHT,
       {
-       { SPELL_BOLT_OF_FIRE, 17, MON_SPELL_WIZARD },
-       { SPELL_BLINK, 10, MON_SPELL_WIZARD | MON_SPELL_EMERGENCY },
-       { SPELL_HASTE, 26, MON_SPELL_WIZARD },
+       { SPELL_BOLT_OF_FIRE, 17, MON_SPELL_PRIEST },
+       { SPELL_BLINK, 10, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
+       { SPELL_HASTE, 26, MON_SPELL_PRIEST },
       }
     },
 
@@ -1133,6 +1133,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_STARFLOWER,
+      {
+       { SPELL_HARPOON_SHOT, 80, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('Q') Tengu.
     {  MST_TENGU_CONJURER,
       {
@@ -1590,7 +1596,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_WRETCHED_STAR,
       {
        { SPELL_FORCE_LANCE, 60, MON_SPELL_MAGICAL },
-       { SPELL_CORRUPTING_PULSE, 15, MON_SPELL_MAGICAL },
+       { SPELL_CORRUPTING_PULSE, 40, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1612,6 +1618,14 @@ static const mon_spellbook mspell_list[] =
     // ---------------------
     // Uniques' spellbooks
     // ---------------------
+
+    // ('a') "Ancients".
+    {  MST_ZENATA,
+      {
+       { SPELL_RESONANCE_STRIKE, 40, MON_SPELL_WIZARD },
+       { SPELL_SHEZAS_DANCE, 30, MON_SPELL_WIZARD },
+      }
+    },
 
     // ('c') Centaurs and such.
     {  MST_NESSOS,
@@ -1885,6 +1899,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('O') Lodul.
+    {  MST_LODUL,
+      {
+       { SPELL_CALL_DOWN_LIGHTNING, 40, MON_SPELL_MAGICAL },
+      }
+    },
+
     // ('Q') Tengu.
     {  MST_SOJOBO,
       {
@@ -1965,6 +1986,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('6') Demonspawn.
+    {  MST_AMAEMON,
+      {
+        { SPELL_CONCENTRATE_VENOM, 30, MON_SPELL_WIZARD },
+        { SPELL_SUMMON_SCORPIONS, 15, MON_SPELL_WIZARD },
+      }
+    },
+
     // ('8') Statues.
     { MST_ROXANNE,
       {
@@ -1972,6 +2001,15 @@ static const mon_spellbook mspell_list[] =
        { SPELL_IRON_SHOT, 13, MON_SPELL_WIZARD },
        { SPELL_LEHUDIBS_CRYSTAL_SPEAR, 13, MON_SPELL_WIZARD },
        { SPELL_BLINK_OTHER_CLOSE, 13, MON_SPELL_WIZARD },
+      }
+    },
+
+    // ('9') Mobile constructs.
+    {  MST_VV,
+      {
+       { SPELL_ERUPTION, 25, MON_SPELL_MAGICAL },
+       { SPELL_PYROCLASTIC_SURGE, 50, MON_SPELL_MAGICAL },
+       { SPELL_CREEPING_FROST, 25, MON_SPELL_MAGICAL },
       }
     },
 
@@ -2023,6 +2061,15 @@ static const mon_spellbook mspell_list[] =
        { SPELL_VAMPIRIC_DRAINING, 12, MON_SPELL_WIZARD },
        { SPELL_GHOSTLY_FIREBALL, 24, MON_SPELL_WIZARD },
        { SPELL_DISPEL_UNDEAD_RANGE, 12, MON_SPELL_WIZARD },
+      }
+    },
+
+    {  MST_JOSEPHINA,
+      {
+       { SPELL_SERACFALL, 36, MON_SPELL_WIZARD },
+       { SPELL_GHOSTLY_FIREBALL, 24, MON_SPELL_WIZARD },
+       { SPELL_BIND_SOULS, 24, MON_SPELL_WIZARD },
+       { SPELL_FLASH_FREEZE, 12, MON_SPELL_WIZARD },
       }
     },
 

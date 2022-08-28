@@ -294,7 +294,7 @@ unique_item_status_type get_unique_item_status(int art)
     return you.unique_items[art - UNRAND_START];
 }
 
-static void _set_unique_item_status(int art, bool exists)
+static void _set_unique_item_existence(int art, bool exists)
 {
     ASSERT_RANGE(art, UNRAND_START + 1, UNRAND_LAST);
 
@@ -317,7 +317,10 @@ void set_unique_item_status(const item_def& item,
                             unique_item_status_type status)
 {
     if (item.flags & ISFLAG_UNRANDART)
-        _set_unique_item_status(item.unrand_idx, status);
+    {
+        ASSERT_RANGE(item.unrand_idx, UNRAND_START + 1, UNRAND_LAST);
+        you.unique_items[item.unrand_idx - UNRAND_START] = status;
+    }
 }
 
 /**
@@ -465,7 +468,7 @@ static void _add_randart_weapon_brand(const item_def &item,
             4, SPWPN_FLAMING,
             4, SPWPN_FREEZING);
 
-        if (item_attack_skill(item) == SK_CROSSBOWS)
+        if (is_crossbow(item))
         {
             // Penetration and electrocution are only allowed on
             // crossbows. This may change in future.
@@ -549,8 +552,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         // weapons already have slaying
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS;
-        // prevent properties that conflict with naga innates
-        case ARTP_POISON:
+        // prevent properties that barding-wearers already have
         case ARTP_SEE_INVISIBLE:
             return !item.is_type(OBJ_ARMOUR, ARM_BARDING);
         case ARTP_RAMPAGING:
@@ -1351,6 +1353,7 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_OCTOPUS_KING:
     case UNRAND_AUGMENTATION:
     case UNRAND_MEEK:
+    case UNRAND_ELEMENTAL_VULNERABILITY:
         return 11;
     default:
         return -1;
@@ -1449,7 +1452,26 @@ int get_unrandart_num(const char *name)
         if (art == uname || art.find(quoted) != string::npos)
             return UNRAND_START + i;
     }
-    return SPWPN_NORMAL;
+    return 0;
+}
+
+int extant_unrandart_by_exact_name(string name)
+{
+    static map<string,int> cache;
+    if (cache.empty())
+    {
+        for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
+        {
+            const int id = UNRAND_START + i;
+            if (unranddata[i].flags & UNRAND_FLAG_NOGEN
+                && id != UNRAND_DRAGONSKIN /* ew */)
+            {
+                continue;
+            }
+            cache[lowercase_string(unranddata[i].name)] = id;
+        }
+    }
+    return lookup(cache, lowercase(name), 0);
 }
 
 static bool _randart_is_redundant(const item_def &item,
@@ -1726,14 +1748,14 @@ void make_ashenzari_randart(item_def &item)
     if (item.flags & ISFLAG_UNRANDART)
         return;
 
-    const int brand = item.brand;
+    const auto brand = item.brand;
 
     // Ash randarts get no props
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
     item.flags |= ISFLAG_KNOW_PROPERTIES;
 
-    if (item.brand != SPWPN_NORMAL)
+    if (brand != SPWPN_NORMAL)
         set_artefact_brand(item, brand);
 
     set_artefact_name(item, _ashenzari_artefact_name(item));
@@ -1809,7 +1831,7 @@ static void _make_octoring(item_def &item)
 
     // If there are any types left, unset the 'already found' flag
     if (you.octopus_king_rings != 0xff)
-        _set_unique_item_status(UNRAND_OCTOPUS_KING_RING, false);
+        _set_unique_item_existence(UNRAND_OCTOPUS_KING_RING, false);
 }
 
 bool make_item_unrandart(item_def &item, int unrand_index)
@@ -1830,7 +1852,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
     item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
 
-    _set_unique_item_status(unrand_index, true);
+    _set_unique_item_existence(unrand_index, true);
 
     if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);

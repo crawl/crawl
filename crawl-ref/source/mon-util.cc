@@ -631,8 +631,8 @@ mon_holy_type holiness_by_name(string name)
     lowercase(name);
     for (const auto bit : mon_holy_type::range())
     {
-        if (name == holiness_name(mon_holy_type::exponent(bit)))
-            return mon_holy_type::exponent(bit);
+        if (name == holiness_name(bit))
+            return bit;
     }
     return MH_NONE;
 }
@@ -1340,6 +1340,8 @@ int get_shout_noise_level(const shout_type shout)
     case S_SILENT:
         return 0;
     case S_HISS:
+    case S_SKITTER:
+    case S_FAINT_SKITTER:
     case S_VERY_SOFT:
         return 4;
     case S_SOFT:
@@ -1674,21 +1676,33 @@ bool mons_class_can_be_zombified(monster_type mc)
 {
     monster_type ms = mons_species(mc);
     return !invalid_monster_type(ms)
-           && mons_class_can_leave_corpse(ms);
+            && !mons_class_flag(mc, M_NO_ZOMBIE)
+            && !mons_class_flag(mc, M_INSUBSTANTIAL)
+            && !mons_is_tentacle_or_tentacle_segment(mc)
+            && (mons_class_holiness(mc) & MH_NATURAL
+                || mons_class_can_leave_corpse(ms));
 }
 
 bool mons_can_be_zombified(const monster& mon)
 {
     return mons_class_can_be_zombified(mon.type)
            && !mon.is_summoned()
-           && !mons_bound_body_and_soul(mon);
+           && !mons_bound_body_and_soul(mon)
+           && mons_has_attacks(mon, true);
 }
 
-bool mons_can_be_spectralised(const monster& mon)
+// Does this monster have a soul that can be used for necromancy (Death
+// Channel, Simulacrum, Yredelemnul's Bind Soul)? For Bind Soul, allow
+// monsters with no attacks if they have some spells to use.
+bool mons_can_be_spectralised(const monster& mon, bool divine)
 {
     return mon.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
            && !mon.is_summoned()
-           && mon.type != MONS_PANDEMONIUM_LORD;
+           && (!testbits(mon.flags, MF_NO_REWARD)
+               || mon.props.exists(KIKU_WRETCH_KEY))
+           && mon.type != MONS_PANDEMONIUM_LORD
+           && (mons_has_attacks(mon, true)
+               || divine && mon.has_spells());
 }
 
 bool mons_class_can_use_stairs(monster_type mc)
@@ -2187,6 +2201,7 @@ bool flavour_has_reach(attack_flavour flavour)
         case AF_REACH:
         case AF_REACH_STING:
         case AF_REACH_TONGUE:
+        case AF_RIFT:
             return true;
         default:
             return false;
@@ -2201,11 +2216,6 @@ bool mons_invuln_will(const monster& mon)
 bool mons_skeleton(monster_type mc)
 {
     return !mons_class_flag(mc, M_NO_SKELETON);
-}
-
-bool mons_zombifiable(monster_type mc)
-{
-    return !mons_class_flag(mc, M_NO_ZOMBIE) && mons_zombie_size(mc);
 }
 
 bool mons_flattens_trees(const monster& mon)
@@ -2836,7 +2846,6 @@ void define_monster(monster& mons, bool friendly)
     mons.bind_melee_flags();
 
     mons_load_spells(mons);
-    mons.bind_spell_flags();
 
     // Reset monster enchantments.
     mons.enchantments.clear();
@@ -2852,7 +2861,6 @@ void define_monster(monster& mons, bool friendly)
         mons.set_ghost(ghost);
         mons.ghost_demon_init();
         mons.bind_melee_flags();
-        mons.bind_spell_flags();
         break;
     }
 
@@ -3310,6 +3318,14 @@ bool mons_self_destructs(const monster& m)
     return mons_blows_up(m) || mons_destroyed_on_impact(m);
 }
 
+/// Does this monster trigger your shoutitis? (Random.)
+bool should_shout_at_mons(const monster &m)
+{
+    return !mons_is_tentacle_or_tentacle_segment(m.type)
+        && !mons_is_conjured(m.type)
+        && x_chance_in_y(you.get_mutation_level(MUT_SCREAM) * 6, 100);
+}
+
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
     return fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL;
@@ -3658,28 +3674,22 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
         return true;
 
     for (const mon_spell_slot &slot : mon.spells)
-        if (_ms_ranged_spell(slot.spell, attack_only, ench_too) && mons_spell_range(mon, slot.spell) > 1)
+    {
+        if (slot.spell == SPELL_CREATE_TENTACLES)
             return true;
+        if (_ms_ranged_spell(slot.spell, attack_only, ench_too)
+            && mons_spell_range(mon, slot.spell) > 1)
+        {
+            return true;
+        }
+    }
 
     return false;
 }
 
 static bool _mons_has_usable_ranged_weapon(const monster* mon)
 {
-    // Ugh.
-    const item_def *weapon  = mon->launcher();
-    const item_def *primary = mon->mslot_item(MSLOT_WEAPON);
-    const item_def *missile = mon->missiles();
-
-    // We don't have a usable ranged weapon if a different cursed weapon
-    // is presently equipped.
-    if (weapon != primary && primary && primary->cursed())
-        return false;
-
-    if (!missile)
-        return false;
-
-    return is_launched(mon, weapon, *missile) != launch_retval::FUMBLED;
+    return mon->launcher() != nullptr;
 }
 
 static bool _mons_has_attack_wand(const monster& mon)
@@ -3748,6 +3758,7 @@ static const spell_type smitey_spells[] = {
     SPELL_AIRSTRIKE,
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_CALL_DOWN_DAMNATION,
+    SPELL_CALL_DOWN_LIGHTNING,
     SPELL_FIRE_STORM,
     SPELL_SHATTER,
     SPELL_POLAR_VORTEX,          // dubious
@@ -4439,6 +4450,8 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "croaks",
         "growls",
         "hisses",
+        "skitters",
+        "skitters faintly",
         "sneers",       // S_DEMON_TAUNT
         "says",         // S_CHERUB -- they just speak normally.
         "squeals",
@@ -4521,13 +4534,11 @@ tileidx_t get_mon_base_tile(monster_type mc)
  *              (by individual monster instance, or whether they're in water,
  *              etc)
  */
-#ifdef USE_TILE
 mon_type_tile_variation get_mon_tile_variation(monster_type mc)
 {
     ASSERT_smc();
     return smc->tile.variation;
 }
-#endif
 
 /**
  * What's the normal tile for corpses of a given monster type?
@@ -4689,6 +4700,9 @@ const char* mons_class_name(monster_type mc)
 mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 {
     const monster& threat = get_tentacle_head(mon);
+    if (threat.props.exists(KIKU_WRETCH_KEY))
+        return MTHRT_TRIVIAL; // ignores 'real', sorry...
+
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
     const int tension = exper_value(threat, real, true) / (1 + factor);
 
@@ -4717,7 +4731,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 bool mons_foe_is_marked(const monster& mon)
 {
     if (mon.foe == MHITYOU)
-        return you.duration[DUR_SENTINEL_MARK];
+        return you.duration[DUR_SENTINEL_MARK] && in_bounds(you.pos());
     else
         return false;
 }
@@ -5022,13 +5036,13 @@ bool mons_is_player_shadow(const monster& mon)
 }
 
 // Zero-damage attacks with special effects (constriction, drowning, pure fire,
-// etc.) aren't counted, since this is used to decide whether the monster can
-// go berserk or be weakened, both of which require an attack with non-zero
-// base damage.
-bool mons_has_attacks(const monster& mon)
+// etc.) aren't counted by default, since this is used to decide whether the
+// monster can go berserk or be weakened, both of which require an attack with
+// non-zero base damage.
+bool mons_has_attacks(const monster& mon, bool allow_damageless)
 {
     const mon_attack_def attk = mons_attack_spec(mon, 0);
-    return attk.type != AT_NONE && attk.damage > 0;
+    return attk.type != AT_NONE && (allow_damageless || attk.damage > 0);
 }
 
 // The default suitable() function for choose_random_nearby_monster().

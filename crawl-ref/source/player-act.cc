@@ -149,14 +149,13 @@ bool player::floundering() const
  */
 bool player::extra_balanced() const
 {
-    const dungeon_feature_type grid = env.grid(pos());
     // trees are balanced everywhere they can inhabit.
     return form == transformation::tree
-        // Species or forms with large bodies (e.g. nagas) are ok in shallow
-        // water. (N.b. all large form sizes can swim anyways, and also
-        // giant sized creatures can automatically swim, so the form part is a
-        // bit academic at the moment.)
-        || grid == DNGN_SHALLOW_WATER && body_size(PSIZE_BODY) >= SIZE_LARGE;
+        // Species or forms with large bodies (e.g. nagas) are ok in water.
+        // (N.b. all large form sizes can swim anyways, and also giant sized
+        // creatures can automatically swim, so the form part is a bit
+        // academic at the moment.)
+        || body_size(PSIZE_BODY) >= SIZE_LARGE;
 }
 
 int player::get_hit_dice() const
@@ -235,24 +234,37 @@ brand_type player::damage_brand(int)
 
 
 /**
- * Return the delay caused by attacking with your weapon and this projectile.
+ * Return the delay caused by attacking with your weapon or this projectile.
  *
- * @param projectile  The projectile to be fired/thrown, if any.
- * @param rescale     Whether to re-scale the time to account for the fact that
- *                    finesse doesn't stack with haste.
- * @return            A random_var representing the range of possible values of
- *                    attack delay. It can be casted to an int, in which case
- *                    its value is determined by the appropriate rolls.
+ * @param projectile  The projectile to be thrown, if any.
+ * @param rescale         Whether to re-scale the time to account for the fact that
+ *                   finesse doesn't stack with haste.
+ * @return           A random_var representing the range of possible values of
+ *                   attack delay. It can be casted to an int, in which case
+ *                   its value is determined by the appropriate rolls.
  */
 random_var player::attack_delay(const item_def *projectile, bool rescale) const
 {
-    const item_def* weap = weapon();
+    return attack_delay_with(projectile, rescale, weapon());
+}
+
+random_var player::attack_delay_with(const item_def *projectile, bool rescale,
+                                     const item_def *weap) const
+{
+    // The delay for swinging non-weapons and tossing non-missiles.
     random_var attk_delay(15);
     // a semi-arbitrary multiplier, to minimize loss of precision from integer
     // math.
     const int DELAY_SCALE = 20;
 
-    if (projectile && is_launched(this, weap, *projectile) == launch_retval::THROWN)
+    const bool throwing = projectile && is_throwable(this, *projectile);
+    const bool unarmed_attack = !weap && !projectile;
+    const bool melee_weapon_attack = !projectile
+                                     && weap
+                                     && is_melee_weapon(*weap);
+    const bool ranged_weapon_attack = projectile
+                                      && is_launcher_ammo(*projectile);
+    if (throwing)
     {
         // Thrown weapons use 10 + projectile damage to determine base delay.
         const skill_type wpn_skill = SK_THROWING;
@@ -265,15 +277,13 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
         attk_delay = rv::max(attk_delay,
                 random_var(FASTEST_PLAYER_THROWING_SPEED));
     }
-    else if (!projectile && !weap)
+    else if (unarmed_attack)
     {
         int sk = form_uses_xl() ? experience_level * 10 :
                                   skill(SK_UNARMED_COMBAT, 10);
         attk_delay = random_var(10) - div_rand_round(random_var(sk), 27*2);
     }
-    else if (weap &&
-             (projectile ? projectile->launched_by(*weap)
-                         : is_melee_weapon(*weap)))
+    else if (melee_weapon_attack || ranged_weapon_attack)
     {
         const skill_type wpn_skill = item_attack_skill(*weap);
         // Cap skill contribution to mindelay skill, so that rounding
@@ -296,6 +306,15 @@ random_var player::attack_delay(const item_def *projectile, bool rescale) const
     attk_delay +=
         div_rand_round(random_var(adjusted_shield_penalty(DELAY_SCALE)),
                        DELAY_SCALE);
+
+    // Slow attacks with ranged weapons, but not clumsy bashes.
+    // Don't slow throwing attacks while holding a ranged weapon.
+    // Don't slow tossing.
+    if (ranged_weapon_attack && is_slowed_by_armour(weap))
+    {
+        const int aevp = you.adjusted_body_armour_penalty(DELAY_SCALE);
+        attk_delay += div_rand_round(random_var(aevp), DELAY_SCALE);
+    }
 
     if (you.duration[DUR_FINESSE])
     {
@@ -340,10 +359,12 @@ item_def *player::weapon(int /* which_attack */) const
 // Give hands required to wield weapon.
 hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 {
-    if (you.has_mutation(MUT_QUADRUMANOUS))
+    if (you.has_mutation(MUT_QUADRUMANOUS)
+        && (!is_weapon(item) || is_weapon_wieldable(item, SIZE_MEDIUM)))
+    {
         return HANDS_ONE;
-    else
-        return actor::hands_reqd(item, base);
+    }
+    return actor::hands_reqd(item, base);
 }
 
 bool player::can_wield(const item_def& item, bool ignore_curse,
@@ -419,7 +440,8 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
-    if (!is_weapon_wieldable(item, bsize))
+    if (!is_weapon_wieldable(item, bsize)
+        && !you.has_mutation(MUT_QUADRUMANOUS))
     {
         if (!quiet)
             mpr("That's too large for you to wield.");
@@ -848,17 +870,26 @@ bool player::shove(const char* feat_name)
 /*
  * Calculate base constriction damage.
  *
- * @param direct True if this is for direct constriction, false otherwise (e.g.
- *               Borg's Vile Clutch), false otherwise.
+ * @param typ   The type of constriction the player is doing -
+ *              direct (ala Naga/Octopode), BVC, etc.
  * @returns The base damage.
  */
-int player::constriction_damage(bool direct) const
+int player::constriction_damage(constrict_type typ) const
 {
-    if (direct)
+    switch (typ)
+    {
+    case CONSTRICT_BVC:
+        return roll_dice(2, div_rand_round(70 +
+                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
+    case CONSTRICT_ROOTS:
+        // Assume we're using the wand.
+        // Min power 2d4, max power ~2d14 (also ramps over time)
+        return roll_dice(2, div_rand_round(25 +
+                    you.props[FASTROOT_POWER_KEY].get_int(), 10));
+    default:
         return roll_dice(2, div_rand_round(strength(), 5));
+    }
 
-    return roll_dice(2, div_rand_round(70 +
-               you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
 }
 
 bool player::is_dragonkind() const

@@ -88,7 +88,8 @@ KPROP:   l = no_cloud_gen
 KMONS:   1 = ice fiend
 KMONS:   2 = wendigo band / nargun
 KMONS:   34 = frost giant / shard shrike w:5
-KMONS:   56 = reaper ; scythe ego:freezing ident:type
+KMONS:   56 = reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
+         ego:freezing ident:type
 KMONS:   7 = simulacrum
 SUBST:   l = w, W = .
 :  else

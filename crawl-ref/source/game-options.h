@@ -361,6 +361,11 @@ public:
     string loadFromString(const std::string &field, rc_line_type ltyp) override
     {
         string normalized = field;
+        if (!choices.size())
+        {
+            return make_stringf("Option %s is disabled in this build.",
+                name().c_str());
+        }
         if (normalize_bools)
         {
             if (field == "1" || field == "yes")
@@ -372,6 +377,7 @@ public:
         const T *choice = map_find(choices, normalized);
         if (choice == 0)
         {
+
             string all_choices = comma_separated_fn(choices.begin(),
                 choices.end(), [] (const pair<string, T> &p) {return p.first;},
                 " or ");

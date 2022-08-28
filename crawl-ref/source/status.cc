@@ -3,11 +3,14 @@
 #include "status.h"
 
 #include "areas.h"
+#include "art-enum.h" // bearserk
+#include "artefact.h"
 #include "branch.h"
 #include "cloud.h"
 #include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
+#include "fight.h" // weapon_cleaves
 #include "god-abil.h"
 #include "god-passive.h"
 #include "item-prop.h"
@@ -22,13 +25,12 @@
 #include "spl-damage.h" // COUPLING_TIME_KEY
 #include "spl-summoning.h" // NEXT_DOOM_HOUND_KEY in duration-data
 #include "spl-transloc.h" // for you_teleport_now() in duration-data
-#include "spl-wpnench.h" // for _end_weapon_brand() in duration-data
 #include "stairs.h" // rise_through_ceiling
 #include "stringutil.h"
 #include "throw.h"
-#include "timed-effects.h" // bezotting_level
 #include "transform.h"
 #include "traps.h"
+#include "zot.h" // bezotting_level
 
 #include "duration-data.h"
 
@@ -205,18 +207,19 @@ bool fill_status_info(int status, status_info& inf)
                           (-1 * you.props[FLAY_DAMAGE_KEY].get_int()));
         break;
 
+    case DUR_BERSERK:
+        if (player_equip_unrand(UNRAND_BEAR_SPIRIT))
+            inf.light_text = "Bearserk";
+        break;
+
     case STATUS_NO_POTIONS:
-        // Don't double the light if under a duration
-        if (!player_in_branch(BRANCH_COCYTUS) || you.duration[DUR_NO_POTIONS])
-            break;
-        // use -Potion as a base
-        _fill_inf_from_ddef(DUR_NO_POTIONS, inf);
-        inf.short_text = "frozen potions";
-        inf.long_text  = "Your potions are frozen solid.";
-        // intentional fallthrough
-    case DUR_NO_POTIONS:
-        if (!you.can_drink(false))
-            inf.light_colour = DARKGREY;
+        if (you.duration[DUR_NO_POTIONS] || player_in_branch(BRANCH_COCYTUS))
+        {
+            inf.light_colour = !you.can_drink(false) ? DARKGREY : RED;
+            inf.light_text   = "-Potion";
+            inf.short_text   = "unable to drink";
+            inf.long_text    = "You cannot drink potions.";
+        }
         break;
 
     case DUR_SWIFTNESS:
@@ -413,7 +416,7 @@ bool fill_status_info(int status, status_info& inf)
             ASSERT(cstr);
 
             const bool damage =
-                cstr->constriction_does_damage(you.is_directly_constricted());
+                cstr->constriction_does_damage(you.get_constrict_type());
 
             inf.light_colour = YELLOW;
             inf.light_text   = damage ? "Constr"      : "Held";
@@ -657,10 +660,8 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_CLEAVE:
     {
         const item_def* weapon = you.weapon();
-
-        if (weapon && item_attack_skill(*weapon) == SK_AXES)
+        if (weapon && weapon_cleaves(*weapon))
             inf.light_colour = DARKGREY;
-
         break;
     }
 
@@ -765,29 +766,35 @@ bool fill_status_info(int status, status_info& inf)
 static void _describe_zot(status_info& inf)
 {
     const int lvl = bezotting_level();
+    const bool in_death_range = zot_clock_fatal();
     if (lvl > 0)
     {
-        inf.short_text = "bezotted";
+        inf.short_text = in_death_range ? "bezotted and risking death" : "bezotted";
         inf.long_text = "Zot is approaching!";
     }
-    else if (!Options.always_show_zot || !zot_clock_active())
+    else if (!Options.always_show_zot && !you.has_mutation(MUT_SHORT_LIFESPAN)
+             || !zot_clock_active())
+    {
         return;
+    }
 
-    inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
+    // XX code dup with overview screen
+    inf.light_text = make_stringf("Zot (%d%s)", turns_until_zot(),
+        in_death_range ? ", death" : "");
     switch (lvl)
     {
         case 0:
-            inf.light_colour = WHITE;
+            inf.light_colour = in_death_range ? RED : WHITE;
             break;
         case 1:
-            inf.light_colour = YELLOW;
+            inf.light_colour = in_death_range ? RED : YELLOW;
             break;
         case 2:
             inf.light_colour = RED;
             break;
         case 3:
         default:
-            inf.light_colour = MAGENTA;
+            inf.light_colour = LIGHTMAGENTA;
             break;
     }
 }

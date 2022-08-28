@@ -266,7 +266,8 @@ wizard.o \
 worley.o \
 xom.o \
 tilepick.o \
-tileview.o
+tileview.o \
+zot.o
 
 TILES_OBJECTS = \
 tiledoll.o \
@@ -391,6 +392,7 @@ enum.h.o \
 equipment-type.h.o \
 errors.h.o \
 externs.h.o \
+explore-greedy-options.h.o \
 fight.h.o \
 filter-enum.h.o \
 fineff.h.o \
@@ -420,9 +422,11 @@ job-type.h.o \
 KeymapContext.h.o \
 kill-category.h.o \
 killer-type.h.o \
+kill-dump-options-type.h.o \
 kill-method-type.h.o \
 known-items.h.o \
 lang-t.h.o \
+level-gen-type.h.o \
 level-id.h.o \
 level-state-type.h.o \
 lev-pand.h.o \

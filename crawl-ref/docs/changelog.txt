@@ -1,3 +1,228 @@
+Stone Soup 0.29-a0 (through 0.29-a0-1033-gb6c65ffae6)
+---------------------------------------------------
+
+Highlights
+----------
+* New Meteoran species - powerful, but with heavy time pressure.
+* Ranged weapons have been extensively redesigned and streamlined.
+* Necromancy and Kikubaaqudgha have been overhauled and powered up.
+* Many backgrounds have extra consumables to handle early tricky situations.
+* The Abyss is deeper and more rewarding.
+
+Branches, Environment
+---------------------
+* The Abyss has been reworked.
+  - Piety and experience are once again awarded in the Abyss.
+  - When the abyssal rune generates, it's announced and appears on the map.
+  - New decorative 'runelight' features now indicate the rune is close by.
+  - The Abyss is now 7 levels deep, with the depths beyond A:5 continuously
+    swarming the player with dangerous foes.
+  - When entering the abyss by any means, the player is sent at least as deep
+    as their previous deepest abyss depth.
+* Dungeon shafts try not to send the player directly into monsters' sight.
+* All descents of new stairs and hatches are now fast, not just one per floor.
+* Zombies and skeletons are removed from normal Dungeon spawns.
+* Temple sizes now range from 6 to 21 altars, with a small chance of rare
+  temples with 0, 1, or 22 temple-god altars.
+* The Zot clock now only instantly kills the player if they're extremely badly
+  drained. Otherwise, it applies very heavy draining and refreshes the clock.
+* 'Hell effect' events fire on entering floors, instead of on a timer.
+
+Character
+---------
+* New species: Meteoran, stars fallen to earth in human form. Features:
+  - Strong attributes and very strong skill aptitudes.
+  - Exploration healing, regaining HP and MP when viewing new territory.
+  - Passive mapping of the dungeon around them.
+  - Hunted by darkness: only 600 turns per floor until Zot catches them
+    (instead of the usual 6,000).
+* Many backgrounds start with new consumable items:
+  - All 'mage' backgrounds now start with a potion of magic.
+  - Gladiators add a single throwing weapon (javelin, large rock, or boomerang)
+    to their starting kit.
+  - Monks start with a potion of ambrosia.
+  - Hunters gain a scroll of immolation.
+  - Brigands get an additional poisoned & curare dart.
+  - Chaos Knights start with a piece from Xom's chessboard.
+  - Artificers trade their chesspiece for five iceblast charges.
+  - Wanderers get an additional random potion or scroll.
+  - Abyssal Knights start with more piety and standing on the abyss exit.
+  - Transmuters start with a potion of lignification.
+  - Warpers start with two more dispersal boomerangs (a total of 7).
+  - Enchanters start with a second potion of invisibility.
+* Ranged weapon skills and starts are streamlined (see also "Items" below):
+  - The Bows, Crossbows, and Slings skills are combined into a single Ranged
+    Combat skill. Most species have aptitudes equal to their best previous
+    ranged aptitude.
+  - Hunters always start with a shortbow, and no longer have a short sword.
+    They have higher dexterity and lower strength and intelligence.
+  - Arcane Marksmen always start with a +1 sling.
+* Necromancers start with the new spell Necrotize instead of Animate Skeleton
+  and Pain.
+* Some species were tweaked:
+  - Merfolk polearms aptitude is decreased to +3, and long blades aptitude
+    increased to +2.
+  - Mummy necromancy enhancers now arrive at XL 3 and 13.
+  - Demonspawn demonic touch damage is doubled.
+  - Formicids' base dexterity is increased by 3.
+  - Formicids can again wield giant (spiked) clubs.
+  - Palentongas' base strength is increased by 2, and their roll attack noise
+    is reduced by two-thirds.
+  - Spriggans can no longer wield triple crossbows.
+ - Some mutations were tweaked:
+   - Positive stat mutations now give +4 to the primary stat and -1 to the
+     other two, instead of only giving +2 to the primary.
+   - The -Scroll and -Potion mutations are now regular 2-tier mutations in
+     the bad mutation pool. The Ru sacrifice corresponds to the 2nd tier.
+   - Teleportitis and Berserkitis are reduced to 2-tier mutations
+ - Deep Dwarves are removed.
+
+Gods
+----
+* Kikubaaqudgha is overhauled:
+  - Corpse Delivery is removed and replaced with Unearth Wretches, which
+    summons paralysed, 1 HP, 0 Will monsters that die in a few turns.
+    Necromantic fodder...
+  - Torment no longer requires a corpse sacrifice.
+  - The pain brand can be applied to ranged weapons.
+* Lugonu's Bend Space is adjusted. It no longer does damage, and makes a better
+  effort to blink monsters away from the destination.
+* Uskayaw grants piety for damaging enemy summons.
+* Ru's Sacrifice Experience now only takes one XL (was two).
+* Various Ru sacrifices (including Experience) have their piety values tweaked.
+
+Items
+-----
+* Ranged weapons are streamlined (see also "Character" above):
+  - Launchers no longer use ammunition.
+  - Launcher attack delay is increased by armour penalties.
+  - Fustibali are removed. Hunting slings are renamed to slings.
+  - Launchers have had their stats adjusted across the board. In particular,
+    hand crossbows are made much rarer and more powerful.
+  - Launchers all use the Ranged Combat skill.
+* Launcher, long blade, and short blade damage scale with Dex instead of Str.
+* New concept: "alternate items". Some item types are grouped into 'sets',
+  and only one type from each 'set' can generate in a game. Background
+  starting items ignore this.
+  - New item: scroll of butterflies, which summons a large cloud of
+    butterflies. Alternates with scrolls of fog.
+  - New wand: Light. Fires a damaging bolt of blinding light, blinding on hit.
+    Alternates with acid and quicksilver.
+  - New wand: Quicksilver: Fires a quicksilver bolt, dispelling magical effects
+    from targets it hits. Alternates with acid and light.
+  - New wand: Roots: Fires a 3x3 ball of roots, constricting enemies in the
+    radius. Alternates with iceblast.
+  - Wands of paralysis now alternate with wands of charming.
+* New item: scroll of poison. When read the scroll of poison fills every
+  unoccupied space on the screen with poison clouds for 10-20 turns.
+* New unrands:
+  - The +8 trishula "Condemnation" {holy, Anguish Fly rN+}. Inflicts 4-8 turns
+    of Anguish on those hit, making them take damage when dealing it.
+  - The +3 mountain boots {steadfast, rC+}. Prevents the player from being
+    involuntarily moved by physical means (trampling, shafts, harpoons, etc.).
+  - New unrand: the +5 lochaber axe, which cleaves through all foes in reaching
+    range. Uses the higher of the player's Polearms and Axes skill.
+* Items can have vault-redefined skins. Yuif now has hammers again (renamed
+  maces). Sigmund and Reapers' scythes are now renamed halberds.
+* +MP items remove MP when they are taken off.
+* Stones always mulch when thrown.
+* Unrandart tweaks:
+  - the Glaive of the Guard is reduced to +5.
+  - the arbalest "Damnation"'s explosions now do 2d14 damage (was 3d14).
+  - Gyre & Gimble are increased to +12.
+  - The Woodcutter's axe is now a battleaxe.
+  - the amulet of Vitality now gives two pips each of Regen and RegenMP, and is
+    now evil.
+* Scrolls of holy word are removed.
+
+Monsters
+--------
+* New uniques:
+  - Amaemon the Diabolical Poisoner, a poison-themed demonspawn unique
+    appearing with a band of orange demons in mid-D, early Lair, and Orc:1.
+  - Lodul the Thundrous, an ironbound thunderhulk sent to patrol outside the
+    Vaults. Appears in late D with a band of fellow ogres.
+  - Zenata, Seeker of Sheza. Summons dancing weapons and casts Resonance
+    Strike, doing extra damage when constructs are adjacent to the target.
+    Wields a valuable weapon. Appears searching Vaults:1-4, Elf, and Crypt.
+  - Parghit the Mighty, an "alt-timeline" version of Pargi with extremely high
+    regeneration and enchanted golden dragon scales. Appears in late Depths and
+    Zot.
+  - Josephina the Ice-Lich, an "alt-timeline" version of Josephine with
+    Seracfall and a band of simulacra along side Ghostly Fireball. Appears in
+    Depths, Zot, and Crypt.
+  - Grunn the Punished, an "alt-timeline" undead version of Grum, with a pack
+    of doom hounds. Appears in Depths, Crypt, and Zot.
+  - Vv the Exile, an fire/ice spellcaster with Creeping Frost, Eruption, and
+    Pyroclastic Surge. Appears in Depths, Crypt, and Zot.
+* Monster move energy is no longer randomized.
+* Monsters gain a 1/3 chance to gain a free attack on a player moving away from
+  them. Wu Jian martial attacks & rampaging give immunity, and monsters that
+  don't move fast enough to follow you can't attack.
+* New monster: starflower, a stationary plant with harpoon shot and reaching
+  distortion melee. Found guarding valuable places in the abyss.
+* Gnoll shamans are renamed gnoll bouda, and have a new spell set.
+* Animated Armour now flies.
+* Monster wand power is reduced.
+
+Spells
+------
+* Necromancy reworked:
+  - New Spell: Necrotize (L1 Necromancy). Necrotize deals damage identically to
+    the old Pain spell, but additionally gives the monster a short-lived status
+    that causes it to animate as a skeleton on death (if it has a skeleton).
+  - Animate Dead reworked: for a duration after being cast, the dead have a
+    power-dependent chance of rising as allied zombies. The zombies are
+    permanent until the player leaves the level or re-casts Animate Dead.
+  - Simulacrum is now a smite-targeted spell that gives an irresistable status.
+    Monsters that die with this status spawn a power-dependent number of
+    simulacra.
+  - Corpse Rot is now Level 4 Necromancy/Poison/Air. For a duration after being
+    cast, dead monsters have a chance of producing deadly miasma.
+  - Death Channel cannot be re-cast while active.
+* Sandblast no longer uses stones as ammo. Instead, it takes half again as long
+  to cast as a normal spell. Its range and accuracy are increased.
+* Airstrike's damage bonus from empty space around the target is doubled.
+* Irradiate now causes dangerous contamination in 3-4 casts (was 4-5).
+* Flame Wave and Sticky Flame now do roughly 25% more damage.
+* Ozocubu's Refrigeration and Freezing Ramparts now check AC, but do more
+  damage. Refrigeration also now does reduced damage to creatures adjacent to
+  others, but no longer applies -Potion to the caster.
+* Hex miscasts now only slow the player, instead of also cancelling effects.
+* Removed: Animate Skeleton, Pain, Excruciating Wounds.
+
+Tiles
+-----
+* Some mutations now have associated art.
+* Many more status effects (e.g. Dazed, rF-) now have associated icons.
+* Monsters with Reflect (e.g. from a shield) now display an icon.
+* All species now have new statue form tiles.
+* Many new alternate tiles for Djinni and Nagas.
+* The Lernaean Hydra now has unique tiles when skeletonized.
+* Borgnjor's Mausoleum and Tukima's Studio have new environmental art.
+* Runed door tiles have been reworked for greater visibility.
+
+Interface and Options
+---------------------
+* Common menu navigation commands are mapped via `CMD_MENU_...` commands, and
+  can be rebound by `bindkey` options (local tiles/console only)
+* Keycodes for rebinding keys are now the same across all builds.
+* Keybinds, macros, and keymaps now accept human-readable key names for many
+  special keys (e.g. "F1", "NP." for numpad `.`, etc.)
+* Numpad keys can now be bound separately in all builds.
+* Improvements to specific menus:
+  - The `F`ire menu now allows selecting any item with a targeter (including
+    items that don't show the targeter by default but but do have a useful
+    targeter, such as scrolls of fear).
+  - In menus for equipping and using items, a toggle allows switching between
+    item type.
+  - In most menus that list items, or allow describing a menu entry, entries can
+    be described without changing the menu mode by using the `'` key, or by
+    right clicking (tiles only).
+  - Item type hotkeys in the inventory now scroll, instead of select.
+  - The `*` menu for Firing is now used to select items to toss away.
+* The branch overview menu now shows zot clock values when they are low.
+
 Stone Soup 0.28.0 (20220203)
 ----------------------------
 

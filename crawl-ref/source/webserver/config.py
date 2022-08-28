@@ -15,15 +15,11 @@
 # webtiles.config). If something like client.html raises an exception, this
 # will trigger 500 errors across the whole server.
 
+import collections
 import logging
 import os
 
 import yaml
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict # type: ignore
 
 # directory to look for `games.d` files among other things.
 server_path = os.path.dirname(os.path.abspath(__file__))
@@ -77,7 +73,14 @@ game_data_no_cache = True
 #    by default loads games as defined in `games.d/*.yaml`).
 #
 # All options in this config are documented in games.d/base.yaml.
-games = OrderedDict([
+# the directory name can be changed with `games_config_dir`, and set to None
+# to disable yaml loading.
+# games_config_dir = None
+
+# Example of a games dictionary:
+# use of an OrderedDict (pre python 3.6) is necessary to show the lobby in
+# a stable order.
+games = collections.OrderedDict([
     ("dcss-web-trunk", dict(
         name = "Play trunk",
         crawl_binary = "./crawl",
@@ -92,6 +95,7 @@ games = OrderedDict([
         # cwd = ".",
         morgue_url = None,
         show_save_info = True,
+        allowed_with_hold = True,
         # milestone_path = "./rcs/milestones",
         send_json_options = True,
         # env = {"LANG": "en_US.UTF8"},
@@ -151,8 +155,13 @@ ssl_port = 8081
 
 # kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 
+# a nick is allowed if it matches this regex
 # nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 # max_passwd_length = 20
+
+# or you can define a function that returns true on an acceptable nick:
+# def nick_check_fun(s):
+#     return s != "plog"
 
 # Set to True to allow users to request a password reset email. Some settings
 # must be properly configured for this to work:
@@ -211,6 +220,20 @@ pidfile = None
 # For example: "http://crawl.akrasiac.org/scoring/players/%s.html"
 # Set to None to disable player page hyperlinks
 player_url = None
+
+# set one of these for various moderation modes. Disabled preempts hold. In
+# account hold mode, new accounts cannot use chat, cannot spectate, and do
+# not appear in the lobby until explicitly approved by an admin. They can still
+# play. (Of course, they can still log out and spectate as anon.)
+# new_accounts_disabled = True
+# new_accounts_hold = True
+
+# If set to True, a SIGHUP triggers an attempt to reload the config and game
+# data. Some values cannot be reloaded (including this one), and to reset a
+# value to its default, you need to explicitly set the value rather than
+# comment it out.
+# If not explicitly set, this defaults to False.
+hup_reloads_config = True
 
 # Only for development:
 # This is insecure; do not set development_mode = True in production!

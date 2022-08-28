@@ -27,6 +27,10 @@ body {
     text-align: center;
 }
 
+#account_restricted {
+    margin: 8px;
+}
+
 #prompt {
     top: 50%;
     left: 50%;

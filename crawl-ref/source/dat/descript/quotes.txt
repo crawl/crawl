@@ -149,7 +149,7 @@ A gateway back into the Dungeon
  With reason hath deep silence and demur
  Seized us, though undismayed. Long is the way
  And hard, that out of Hell leads up to light.”
-    -John Milton, _Paradise Lost_. 1674 (2nd Ed.)
+    -John Milton, _Paradise Lost_. 1674 (2nd Ed.).
 %%%%
 A gateway to Hell
 
@@ -242,7 +242,7 @@ A shaft
  arriving at the bottom it gets a slight shock and walks away, provided
  that the ground is fairly soft. A rat is killed, a man is broken, a
  horse splashes.”
-    -J.B.S. Haldane, “On Being The Right Size”. March 1926
+    -J.B.S. Haldane, “On Being The Right Size”. March 1926.
 %%%%
 A staircase leading out of the dungeon
 
@@ -250,7 +250,7 @@ A staircase leading out of the dungeon
  And the end of all our exploring
  Will be to arrive where we started
  And know the place for the first time.”
-    -T.S. Eliot, “Little Gidding”, _Four Quartets_. 1943
+    -T.S. Eliot, “Little Gidding”, _Four Quartets_. 1943.
 %%%%
 A staircase to the Ecumenical Temple
 
@@ -271,7 +271,7 @@ A staircase to the Shoals
 A staircase to the Tomb
 
 “A tomb now suffices him for whom the world was not enough.”
-    -Alexander the Great's epitaph
+    -Alexander the Great's epitaph.
 %%%%
 A stormy altar of Qazlal
 
@@ -325,10 +325,10 @@ Antaeus
     -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
     trans. Sir James George Frazer, 1913.
 
-"The head foreman in the mine, called Antaeus,
+“The head foreman in the mine, called Antaeus,
  was an obese giant with a thick black beard
- who actually seemed to draw his strength from Mother Earth."
-    -Primo Levi, "The Periodic Table". 1975.
+ who actually seemed to draw his strength from Mother Earth.”
+    -Primo Levi, “The Periodic Table”. 1975.
 %%%%
 arbalest
 
@@ -363,7 +363,7 @@ Awaken Forest spell
  — Thor: From a splinter that she got bravely fighting an elm!
  • Hel: Trees are inanimate plants, you buffoon!
  — Thor: Bravery knows no limits!
-    -Rich Burlew, Order of the Stick, #874
+    -Rich Burlew, _Order of the Stick_, #874.
 %%%%
 Azrael
 
@@ -437,7 +437,7 @@ Chain Lightning spell
 
 “The trouble ain't that there is too many fools,
  but that the lightning ain't distributed right.”
-    -traditionally attributed to Samuel Clemens
+    -traditionally attributed to Samuel Clemens.
 %%%%
 Charm spell
 
@@ -456,7 +456,7 @@ Cigotuvi's Monster
  eyes they may be called, were fixed on me. His jaws opened,
  and he muttered some inarticulate sounds, while a grin
  wrinkled his cheeks.”
-    -Mary Shelley, “Frankenstein”
+    -Mary Shelley, _Frankenstein_. 1818.
 %%%%
 Cloud Mage
 
@@ -513,7 +513,7 @@ Desolation
  voice
  a pitiful
  song.”
-    -Pablo Neruda, "Ode to Salt", 1957.
+    -Pablo Neruda, “Ode to Salt”, 1957.
      trans. Philip Levine, published 2013
 %%%%
 Dispater
@@ -556,7 +556,7 @@ Elven Halls
  want to find snakes look for them behind words that have changed their meaning.
  No one ever said elves are _nice_.
  Elves are _bad_.”
-    -Terry Pratchett, _Lords and Ladies_. 1992
+    -Terry Pratchett, _Lords and Ladies_. 1992.
 %%%%
 Edmund
 
@@ -580,7 +580,7 @@ Fire Storm spell
 
 “Some have said there is no subtlety to destruction. You know what? They're
  dead.”
-    -Jaya Ballard, task mage (Magic: the Gathering)
+    -Jaya Ballard, task mage (Magic: the Gathering).
 %%%%
 Frederick
 
@@ -620,7 +620,7 @@ Khufu
 “And then I looked farther, beyond the pallid line of the sands, and I saw a
  Pyramid of gold, the wonder Khufu had built. As a golden wonder it saluted me,
  as a golden thing it greeted me, as a golden miracle I shall remember it.”
-    -Robert Hichens, _The Spell of Egypt_
+    -Robert Hichens, _The Spell of Egypt_. 1910.
 %%%%
 Killer Klown
 
@@ -765,6 +765,14 @@ Psyche
  And darkness eke as thrall to him remain.”
     -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
     trans. William Adlington, 1566.
+%%%%
+shambling mangrove
+
+“There is unrest in the forest
+ There is trouble with the trees
+ For the maples want more sunlight
+ And the oaks ignore their pleas
+    -Rush, "The Trees". 1978.
 %%%%
 Shatter spell
 
@@ -963,6 +971,19 @@ animal skin
  Why he turned them inside outside.”
     -Anonymous, in Wells' _A Parody Anthology_, p. 120. 1904.
 %%%%
+An opulent altar of Gozag
+
+“Mother, I kneel before gold,
+ my lover and beloved;
+ and knowing I adore him,
+ he turns melancholic yellow.
+ Because he follows his every lust
+ whether doubloon or dust,
+ a mighty knight
+ is Don Dinero.”
+    -Francisco de Quevedo, _Poderoso caballero es don Dinero_. 1603.
+     trans. Christopher Johnson, 2009.
+%%%%
 Animate Dead spell
 
 “Remember, I am not recording the vision of a madman. The sun does not more
@@ -1029,35 +1050,6 @@ battlesphere
  But really I'm not actually your friend
  But I am”
     -They Might Be Giants, “Birdhouse in Your Soul”. 1989.
-%%%%
-blowgun
-
-“Along the Upper Caiary-Uaupes blow-guns are made from the stems of a variety
- of palm (Iriartea setigera Martius)... The Indian selects two stems of such
- sizes that the smaller will exactly fit within the larger. After these stems
- have been carefully dried and the pith cleared out with a long rod, the bore
- is made smooth by drawing back and forth through it a little bunch of
- tree-fern roots. The smaller stem is then inserted in the larger, so that one
- will serve to correct any crookedness that may exist in the other. The wooden
- mouth-piece is then fitted to one end, and about three and one half feet from
- it, a boar's tooth is fastened on the gun by some gummy substance, for a
- sight. Over the outside the maker winds spirally a strip of the dark shiny
- bark of a creeper which gives it an ornamental finish, and his blow-gun is
- complete.
-
- The arrows are from ten to fourteen inches long, and of the thickness of an
- ordinary lucifer match. Those of the Indians of the Caiary-Uaupes are made
- from the midrib of a palm leaf or of the spinous processes of the Patawa
- (Enocarpus Batawa) sharpened to a point at one end and wound near the other
- with a delicate sort of wild cotton which grows in a pod upon a large tree
- (Bombax ceiba). This mass of cotton is just big enough to fill the tube when
- the arrow is gently pressed into it. The point is dipped into poison, allowed
- to dry, and redipped until well coated. The exact composition of this poison
- is unknown, and probably varies in different localities; but it would seem
- that the chief ingredient is always the juice of a Strychnos plant. It is
- known among different tribes by many names; such as Curari, Ourari, Urari and
- Woorali.”
-    -C.W. Mead, _The American Museum Journal_, vol. VIII. 1908.
 %%%%
 boggart
 
@@ -1143,7 +1135,7 @@ calcifying dust cloud
  Your shadow at morning striding behind you
  Or your shadow at evening rising to meet you;
  I will show you fear in a handful of dust.”
-    -T.S. Eliot, "The Waste Land". 1922
+    -T.S. Eliot, “The Waste Land”. 1922
 %%%%
 catoblepas
 
@@ -1733,6 +1725,15 @@ halberd
     -James Clarence Mangan , _A Farewell to Patrick Sarsfield, Earl of Lucan_.
      ca. 1840.
 %%%%
+hammer
+
+“The hammah that John Henry swung,
+ It weighed over nine poun',
+ He broke a rib in his left han' side,
+ And his intrels fell on the groun',
+ And his intrels fell on the groun'.”
+    -Onah L. Spencer, _John Henry_. Early 20th cent.
+%%%%
 hand axe
 
 “Lizzie Borden took an axe
@@ -1878,6 +1879,11 @@ jelly
  And all around the wall,
  A splotch, a blotch...”
     -Burt Bacharach and Mack David, “Beware of the Blob”. 1958.
+%%%%
+kite shield
+
+“...for the shield may be as important for victory, as the sword or spear.”
+    -Charles Darwin, “The Origin of Species”. 1859.
 %%%%
 kobold
 
@@ -2038,6 +2044,19 @@ meliai
  spears in their hands, and the Nymphs whom they call Meliae all over the
  boundless earth.”
     -Hesiod, _Theogony_, 182-187, trans. H.G. Evelyn-White. 1920
+%%%%
+Mephitic Cloud spell
+
+“Seit mehreren Jahren schon hatte die indische Cholera eine verstärkte
+ Neigung zur Ausbreitung und Wanderung an den Tag gelegt. Erzeugt aus
+ den warmen Moraesten des Ganges-Deltas, aufgestiegen mit dem
+ mephitischen Odem jener üppig-untauglichen, von Menschen gemiedenen
+ Urwelt- und Inselwildnis, in deren Bambusdickichten der Tiger kauert,
+ hatte die Seuche in ganz Hindustan andauernd und ungewöhnlich heftig
+ gewütet, hatte östlich nach China, westlich nach Afghanistan und
+ Persien übergegriffen und, den Hauptstraßen des Karawanenverkehrs
+ folgend, ihre Schrecken bis Astrachan, ja selbst bis Moskau getragen.”
+    -Thomas Mann, _Der Tod in Venedig_, 1911.
 %%%%
 merfolk
 
@@ -2207,14 +2226,6 @@ Necromutation spell
  Stay dead and outta this world”
     -Norma Tanega, “You’re Dead”. 1966
 %%%%
-needle
-
-“I pray that, risen from the dead,
- I may in glory stand—
- A crown, perhaps, upon my head,
- But a needle in my hand.”
-    -Eugene Field, “Grandma's Prayer”. late 19th cent.
-%%%%
 neqoxec
 
 “If thus mutation is influenced by natural selection, it implies, that any
@@ -2310,8 +2321,8 @@ Orb Guardian
  First we gonna rock, then we gonna roll
  Then we let it pop, go, let it go
  X gon' give it to ya, he gon' give it to ya
- X gon' give it to ya, he gon' give it to ya”
-    -DMX, "X Gon' Give It To Ya". 2002
+ X gon' give it to ya, he gon' give it to ya
+    -DMX, “X Gon' Give It To Ya”. 2002
 %%%%
 orb of fire
 
@@ -2329,6 +2340,12 @@ pandemonium lord
  At Pandaemonium, the high Capital
  Of Satan and his Peers...”
     -John Milton, _Paradise Lost_, Book I, 1667.
+%%%%
+Parghit
+
+“What are you going to do with that big bat? Gonna hit me? Better make it
+ count. Better make it hurt. Better kill me in one shot.”
+   -Mr. Baseball, @MisterBaseball5 Twitter. 2017
 %%%%
 Passwall spell
 
@@ -2793,12 +2810,6 @@ scroll of fog
  impenetrable fog!”
     -Bill Watterson, _Calvin and Hobbes_. February 11th, 1993
 %%%%
-scroll of holy word
-
-“However many holy words you read, however many you speak,
- what good will they do you if you do not act on upon them?”
-    -Gautama Buddha
-%%%%
 scroll of identify
 
 “This, what is it in itself, and by itself, according to its proper
@@ -2957,11 +2968,6 @@ shapeshifter
     -Homer, _The Odyssey_, IV, 602-14.
      trans. George Chapman, 1857.
 %%%%
-shield
-
-“...for the shield may be as important for victory, as the sword or spear.”
-    -Charles Darwin, “The Origin of Species”. 1859.
-%%%%
 shortbow
 
 “You are the bows from which your children as living arrows are sent forth.”
@@ -3029,12 +3035,6 @@ sky beast
  that electricity was dripping invisibly all over the house.”
     -James Thurber, _My Life and Hard Times_. 1934.
 %%%%
-slave
-
-“Who rebels? Who rises in arms? Rarely the slave, but almost always the
- oppressor turned slave.”
-    -E.M. Cioran, _History and Utopia_. 1960.
-%%%%
 slime creature
 
 “The very deep did rot: O Christ!
@@ -3057,14 +3057,20 @@ Slimify ability
  of jelly.”
     -Airplane! 1980.
 %%%%
-hunting sling
+spriggan baker
+
+“Blood, sweat, and tea, sister! That's what it takes to achieve all great and
+ terrible things.”
+    -Emory R. Frie, _Wonderland_. 2016.
+%%%%
+sling
 
 “And David put his hand in his bag, and took thence a stone, and slang it, and
  smote the Philistine in his forehead, that the stone sunk into his forehead;
  and he fell upon his face to the earth.”
     -KJV Bible, 1 Samuel 17:49.
 %%%%
-fustibalus
+greatsling "Punk"
 
 “Thrice whirling round his head
  The whistling thong, Mezentius took his aim.
@@ -3187,7 +3193,7 @@ spellforged servitor
  Your toys have gone berserk
  It's an illusion
  You cannot shirk”
-    -Siouxsie and the Banshees, "Spellbound"
+    -Siouxsie and the Banshees, “Spellbound”
 %%%%
 Spellforged Servitor spell
 
@@ -3618,6 +3624,21 @@ vine stalker
  displaced the eyeballs.”
     -Clark Ashton Smith, “The Seed from the Sepulcher”. 1933.
 %%%%
+Vv
+
+“Beside the man stands a woman - of sorts. Her emulation of the human gender is
+ only superficial, a courtesy. Likewise the loose drapelike dress she wears is
+ not cloth. She has simply shaped a portion of her stiff substance to suit the
+ preferences of the fragile, mortal creatures among whom she currently moves.
+ From a distance the illusion would work to pass her off as a woman standing
+ still...
+
+ When she turns to the man - slowly; stone eaters are slow aboveground, except
+ when they aren't - this movement pushes her beyond artful beauty into something
+ altogether different. The man has grown used to it, but even so, he does not
+ look at her. He does not want revulsion to spoil the moment.”
+    -N.K. Jemisin, “The Fifth Season”. 2015.
+%%%%
 wand
 
 “[The principle of selection] is the magician's wand, by means of which he may
@@ -3631,13 +3652,25 @@ wand of acid
 %%%%
 wand of charming
 
-<Charm spell>
+“But it isn't charm as veneer, as facilitating ooze or unguent,
+ but charm that identifies and goes out to meet itself in others
+ wherever it may be met with.”
+    -Michael Hofmann, “Hell, he'll be frozen stiff!”, London Review of Books,
+     2022.
+
+“He held up his hand, and they all stopped, and I thought he seemed to be
+ saying, ‘All these lives will I give you, ay, and many more and greater,
+ through countless ages, if you will fall down and worship me!’ And then a red
+ cloud, like the colour of blood, seemed to close over my eyes, and before I
+ knew what I was doing, I found myself opening the sash and saying to Him,
+ ‘Come in, Lord and Master!’”
+    -Bram Stoker, _Dracula_. 1897.
 %%%%
 wand of digging
 
 “Great holes secretly are digged where earth’s pores ought to suffice, and
  things have learnt to walk that ought to crawl.”
-    -H.P. Lovecraft, "The Festival". 1925
+    -H.P. Lovecraft, “The Festival”. 1925
 %%%%
 wand of mindburst
 
@@ -3660,10 +3693,6 @@ wand of polymorph
 “Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in
  seinem Bett zu einem ungeheueren Ungeziefer verwandelt.”
     -Franz Kafka, _Die Verwandlung_. 1915
-%%%%
-wand of random effects
-
-<wand>
 %%%%
 wandering mushroom
 

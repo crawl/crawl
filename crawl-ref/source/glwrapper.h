@@ -152,7 +152,7 @@ public:
     virtual void set_scissor(int x, int y, unsigned int w, unsigned int h) = 0;
     virtual void reset_scissor() = 0;
 
-    // Texture-specific functinos
+    // Texture-specific functions
     virtual void delete_textures(size_t count, unsigned int *textures) = 0;
     virtual void generate_textures(size_t count, unsigned int *textures) = 0;
     virtual void bind_texture(unsigned int texture) = 0;

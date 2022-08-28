@@ -19,6 +19,7 @@
 #include "coordit.h"
 #include "english.h"
 #include "env.h"
+#include "fight.h"
 #include "ghost.h"
 #include "god-passive.h" // passive_t::neutral_slimes
 #include "item-prop.h"
@@ -123,6 +124,8 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_FIRE_CHAMPION,   MB_FIRE_CHAMPION },
     { ENCH_ANTIMAGIC,       MB_ANTIMAGIC },
     { ENCH_ANGUISH,         MB_ANGUISH },
+    { ENCH_SIMULACRUM,      MB_SIMULACRUM },
+    { ENCH_TP,              MB_TELEPORTING },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -618,6 +621,8 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_RES_DROWN);
     if (m->clarity())
         mb.set(MB_CLARITY);
+    if (!mons_can_be_blinded(m->type))
+        mb.set(MB_UNBLINDABLE);
 
     dam = mons_get_damage_level(*m);
 
@@ -657,6 +662,15 @@ monster_info::monster_info(const monster* m, int milev)
             mb.set(flag);
     }
 
+    if (!m->friendly())
+    {
+        const stab_type st = find_stab_type(&you, *m, false);
+        if (st == STAB_INVISIBLE && !mb[MB_BLIND])
+            mb.set(MB_CANT_SEE_YOU);
+        else if (st == STAB_DISTRACTED && !mb[MB_UNAWARE] && !mb[MB_WANDERING])
+            mb.set(MB_DISTRACTED_ONLY);
+    }
+
     if (type == MONS_SILENT_SPECTRE)
         mb.set(MB_SILENCING);
 
@@ -683,6 +697,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     if (m->is_silenced() && m->has_spells() && m->immune_to_silence())
         mb.set(MB_SILENCE_IMMUNE);
+
+    if (m->reflection()) // technically might leak info, but probably fine
+        mb.set(MB_REFLECTING);
 
     if (mons_is_pghost(type))
     {
@@ -767,11 +784,12 @@ monster_info::monster_info(const monster* m, int milev)
     constricting_name.clear();
 
     // Name of what this monster is directly constricted by, if any
-    if (m->is_directly_constricted())
+    const auto constr_typ = m->get_constrict_type();
+    if (constr_typ == CONSTRICT_MELEE)
     {
         const actor * const constrictor = actor_by_mid(m->constricted_by);
         ASSERT(constrictor);
-        constrictor_name = (constrictor->constriction_does_damage(true) ?
+        constrictor_name = (constrictor->constriction_does_damage(constr_typ) ?
                             "constricted by " : "held by ")
                            + constrictor->name(_article_for(constrictor),
                                                true);
@@ -781,12 +799,12 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->constricting)
     {
         const char *participle =
-            m->constriction_does_damage(true) ? "constricting " : "holding ";
+            m->constriction_does_damage(CONSTRICT_MELEE) ? "constricting " : "holding ";
         for (const auto &entry : *m->constricting)
         {
             const actor* const constrictee = actor_by_mid(entry.first);
 
-            if (constrictee && constrictee->is_directly_constricted())
+            if (constrictee && constrictee->get_constrict_type() == CONSTRICT_MELEE)
             {
                 constricting_name.push_back(participle
                                             + constrictee->name(
@@ -1397,7 +1415,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     case ATT_OLD_STRICT_NEUTRAL:
 #endif
         if (fellow_slime())
-            out << "(fellow slime)";
+            out << " (fellow slime)";
         colour_type = _MLC_GOOD_NEUTRAL;
         break;
     case ATT_NEUTRAL:
@@ -1425,12 +1443,23 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     desc = out.str();
 }
 
+static bool _hide_moninfo_flag(monster_info_flags f)
+{
+    if (crawl_state.game_is_arena() &&
+        (f == MB_DISTRACTED_ONLY || f == MB_CANT_SEE_YOU))
+    {
+        // the wording on these doesn't make sense in the arena, so hide.
+        return true;
+    }
+    return false;
+}
+
 vector<string> monster_info::attributes() const
 {
     vector<string> v;
     for (auto& name : monster_info_flag_names)
     {
-        if (is(name.flag))
+        if (is(name.flag) && !_hide_moninfo_flag(name.flag))
         {
             // TODO: just use `do_mon_str_replacements`?
             v.push_back(replace_all(name.long_singular,
@@ -1581,8 +1610,10 @@ reach_type monster_info::reach_range(bool items) const
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const attack_flavour fl = e->attack[i].flavour;
-        if (flavour_has_reach(fl))
-            range = REACH_TWO;
+        if (fl == AF_RIFT)
+            range = REACH_THREE;
+        else if (flavour_has_reach(fl))
+            range = max(REACH_TWO, range);
     }
 
     if (items)
@@ -1774,14 +1805,10 @@ static bool _has_polearm(const monster_info& mi)
 
 static bool _has_launcher(const monster_info& mi)
 {
-    if (mi.itemuse() >= MONUSE_STARTING_EQUIPMENT)
-    {
-        const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
-        const item_def* missile = mi.inv[MSLOT_MISSILE].get();
-        return weapon && missile && missile->launched_by(*weapon);
-    }
-    else
+    if (mi.itemuse() < MONUSE_STARTING_EQUIPMENT)
         return false;
+    const item_def* weapon = mi.inv[MSLOT_WEAPON].get();
+    return weapon && is_range_weapon(*weapon);
 }
 
 static bool _has_missile(const monster_info& mi)
@@ -1910,6 +1937,8 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
 
     for (auto& name : monster_info_flag_names)
     {
+        if (_hide_moninfo_flag(name.flag))
+            continue;
         int num = 0;
         for (int j = start; j < start+count; j++)
         {

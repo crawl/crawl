@@ -107,7 +107,8 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type grid);
 coord_def find_newmons_square(monster_type mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
-                                         int maxdistance = 3);
+                                         int maxdistance = 3,
+                                         bool levelgen=true);
 
 void spawn_random_monsters();
 

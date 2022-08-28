@@ -120,7 +120,7 @@ Warper
 Forvrængere starter med et valgfrit våben og en skriftrulle med blink. De kan
 lære besværgelser fra Bogen om spatiale translokationer.
 %%%%
-Wizard
+Hedge Wizard
 
 Troldmænd starter med Bogen om mindre magi, som indeholder et bredt udvalg af
 besværgelser. De har større magiske reserver end nogen anden baggrund.

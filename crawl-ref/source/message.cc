@@ -1548,7 +1548,10 @@ static void _mpr(string text, msg_channel_type channel, int param, bool nojoin,
     msg_colour_type colour = prepare_message(text, channel, param);
 
     string col = colour_to_str(colour_msg(colour));
-    text = "<" + col + ">" + text + "</" + col + ">"; // XXX
+    // lack of a closing tag is intentional: this is a valid color string and
+    // makes fewer assumptions about `text` this way.
+    // TODO: this doesn't override any opening color in `text`...
+    text = "<" + col + ">" + text; // XXX
 
     msg::_append_to_tees(text + "\n", channel);
 
@@ -1684,7 +1687,7 @@ int msgwin_get_line(string prompt, char *buf, int len,
 
 #ifdef USE_TILE_WEB
         tiles.json_open_object();
-        tiles.json_write_string("prompt", colour_prompt.to_colour_string());
+        tiles.json_write_string("prompt", colour_prompt.to_colour_string(colour_msg(colour)));
         tiles.push_ui_layout("msgwin-get-line", 0);
         popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
 #endif
@@ -1889,6 +1892,7 @@ static void readkey_more(bool user_forced)
         }
     }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
+           && keypress != CK_NUMPAD_ENTER
            && !key_is_escape(keypress)
            && (user_forced || keypress != CK_MOUSE_CLICK));
 
@@ -2305,6 +2309,8 @@ void set_msg_dump_file(FILE* file)
     _msg_dump_file = file;
 }
 
+// XX unclear why we have both this and an overload of mpr that takes a
+// formatted_string
 void formatted_mpr(const formatted_string& fs,
                    msg_channel_type channel, int param)
 {

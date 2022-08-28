@@ -88,11 +88,6 @@ bool job_gets_good_weapons(job_type job)
     return _job_def(job).wchoice == WCHOICE_GOOD;
 }
 
-bool job_gets_ranged_weapons(job_type job)
-{
-    return _job_def(job).wchoice == WCHOICE_RANGED;
-}
-
 void give_job_equipment(job_type job)
 {
     item_list items;
@@ -125,9 +120,6 @@ void give_job_skills(job_type job)
             //XXX: WTF?
             if (you.has_mutation(MUT_NO_GRASPING) && job == JOB_FIGHTER)
                 amount += 2;
-            // Don't give throwing hunters Short Blades skill.
-            if (job_gets_ranged_weapons(job) && !(weap && is_range_weapon(*weap)))
-                skill = SK_THROWING;
         }
         you.skills[skill] += amount;
     }

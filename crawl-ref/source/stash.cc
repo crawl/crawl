@@ -276,6 +276,8 @@ void Stash::update()
     item_def *pitem = &env.item[you.visible_igrd(pos)];
     hints_first_item(*pitem);
 
+    bool glowing_item_on_square = false;
+    bool artefact_item_on_square = false;
     // Now, grab all items on that square and fill our vector
     for (stack_iterator si(pos, true); si; ++si)
     {
@@ -283,10 +285,23 @@ void Stash::update()
         maybe_identify_base_type(*si);
         if (!(si->flags & ISFLAG_UNOBTAINABLE))
             add_item(*si);
+
+        if (si->base_type == OBJ_STAVES || si->flags & ISFLAG_COSMETIC_MASK)
+            glowing_item_on_square = true;
+
+        if (si->flags & ISFLAG_ARTEFACT_MASK)
+            artefact_item_on_square = true;
     }
 
+    const bool stack_greed      =  static_cast<int>(items.size()) > 1
+                                && (Options.explore_greedy_visit & EG_STACK);
+    const bool glowing_greed    =  glowing_item_on_square
+                                && (Options.explore_greedy_visit & EG_GLOWING);
+    const bool artefact_greed   = artefact_item_on_square
+                                && (Options.explore_greedy_visit & EG_ARTEFACT);
+
     visited = pos == you.pos()
-              || static_cast<int>(items.size()) == 1
+              || !(stack_greed || glowing_greed || artefact_greed)
               || static_cast<int>(items.size()) == previous_size && visited;
 }
 
@@ -1515,7 +1530,8 @@ public:
           request_toggle_sort_method(false),
           request_toggle_filter_useless(false),
           sort_style(sort_style_),
-          filtered(filtered_)
+          filtered(filtered_),
+          search(nullptr)
     { }
 
 public:
@@ -1523,10 +1539,12 @@ public:
     bool request_toggle_filter_useless;
     const char* sort_style;
     const char* filtered;
+    base_pattern *search;
 
 protected:
     bool process_key(int key) override;
     virtual formatted_string calc_title() override;
+    bool examine_index(int i) override;
 };
 
 class StashMenuEntry : public MenuEntry
@@ -1542,6 +1560,11 @@ public:
         here(_here), main_colour(col), alt_colour(DARKGREY)
     {
         toggle_colour(true);
+    }
+
+    stash_search_result *get_search_result() const
+    {
+        return static_cast<stash_search_result *>(data);
     }
 
     void toggle_colour(bool main)
@@ -1613,11 +1636,6 @@ bool StashSearchMenu::process_key(int key)
         request_toggle_filter_useless = true;
         return false;
     }
-    else if (key == ',')
-    {
-        cycle_headers();
-        return true;
-    }
 
     auto cur_action = menu_action;
     auto ret = Menu::process_key(key);
@@ -1636,6 +1654,39 @@ bool StashSearchMenu::process_key(int key)
 #endif
     }
     return ret;
+}
+
+bool StashSearchMenu::examine_index(int i)
+{
+    ASSERT(i >= 0 && i < static_cast<int>(items.size()));
+
+    const StashMenuEntry *sme = dynamic_cast<const StashMenuEntry *>(items[i]);
+    const stash_search_result *res = sme->get_search_result();
+
+    if (res->item.defined())
+    {
+        item_def it = res->item;
+        // pass the level as a prop, not very elegant
+        it.props["level_id"].get_string() = res->pos.id.describe();
+        if (!describe_item(it,
+            [this](string& desc)
+            {
+                if (search)
+                    desc = search->match_location(desc).annotate_string("lightcyan");
+            }))
+        {
+            return false;
+        }
+    }
+    else if (res->shop)
+        res->shop->show_menu(res->pos);
+    else
+    {
+        level_excursion le;
+        le.go_to(res->pos.id);
+        describe_feature_wide(res->pos.pos);
+    }
+    return true;
 }
 
 // Returns true to request redisplay if display method was toggled
@@ -1662,6 +1713,8 @@ bool StashTracker::display_search_results(
     stashmenu.menu_action  = default_execute ? Menu::ACT_EXECUTE
                                              : Menu::ACT_EXAMINE;
     string title = "match";
+    if (!nohl)
+        stashmenu.search = search;
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     // Abuse of the quantity field.
@@ -1777,37 +1830,11 @@ bool StashTracker::display_search_results(
     if (initial_snap > 0)
         stashmenu.set_hovered(initial_snap);
 
-    stashmenu.on_single_selection = [&stashmenu, &search, &nohl](const MenuEntry& item)
+    stashmenu.on_single_selection = [](const MenuEntry& item)
     {
         const StashMenuEntry *sme = dynamic_cast<const StashMenuEntry *>(&item);
-        stash_search_result *res = static_cast<stash_search_result *>(item.data);
-        if (stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
-        {
-            if (res->item.defined())
-            {
-                item_def it = res->item;
-                // pass the level as a prop, not very elegant
-                it.props["level_id"].get_string() = res->pos.id.describe();
-                if (!describe_item(it,
-                    [search, nohl](string& desc)
-                    {
-                        if (!nohl)
-                            desc = search->match_location(desc).annotate_string("lightcyan");
-                    }))
-                {
-                    return false;
-                }
-            }
-            else if (res->shop)
-                res->shop->show_menu(res->pos);
-            else
-            {
-                level_excursion le;
-                le.go_to(res->pos.id);
-                describe_feature_wide(res->pos.pos);
-            }
-        }
-        else if (!sme->no_travel_needed())
+        const stash_search_result *res = sme->get_search_result();
+        if (!sme->no_travel_needed())
         {
             // XX if no travel needed, do something else? show description?
             level_pos lp = res->pos;

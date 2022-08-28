@@ -30,7 +30,8 @@ game_state::game_state()
       terminal_resized(false), last_winch(0),
       seed(0),
       io_inited(false),
-      need_save(false), game_started(false), saving_game(false),
+      need_save(false), save_after_turn(false),
+      game_started(false), saving_game(false),
       updating_scores(false),
 #ifndef USE_TILE_LOCAL
       smallterm(false),
@@ -60,6 +61,7 @@ game_state::game_state()
       tiles_disabled(false),
       title_screen(true),
       invisible_targeting(false),
+      player_moving(false),
       darken_range(nullptr), unsaved_macros(false), disables(),
       minor_version(-1), save_rcs_version(),
       nonempty_buffer_flush_errors(false),

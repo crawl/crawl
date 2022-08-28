@@ -977,8 +977,7 @@ KITEM:  O = hat damaged ident:all / cloak damaged ident:all / \
         leather armour damaged ident:all / whip damaged ident:all / \
         spear damaged ident:all / short sword damaged ident:all / \
         dagger damaged ident:all / hand axe damaged ident:all / \
-        scythe damaged ident:all / club damaged ident:all / \
-        hunting sling damaged ident:all
+        club damaged ident:all / sling damaged ident:all
 KITEM:  P = robe plus:-8 randart ident:all
 # An "Oka weapon gift" using the more useful types on 'd'
 ITEM:   quick blade good_item w:5 / rapier good_item / scimitar good_item / \
@@ -1185,8 +1184,7 @@ G...@...G
 ENDMAP
 
 NAME:   ebering_ghost_funeral_grove
-# Don't place on Swamp:$ since Lerny can knock down the trees.
-DEPTH:  D:8-, Lair, Swamp, !Swamp:$
+DEPTH:  D:8-, Lair, Swamp
 ORIENT: float
 # Monsters and loot
 KITEM:  O = potion of lignification ident:all
@@ -1746,11 +1744,11 @@ KFEAT:  q = W
 KMONS:  O = player ghost
 MONS:   kobold, kobold brigand, kobold demonologist
 KMONS:  D = kobold ; dart ego:poisoned . dagger | short sword | whip
-KMONS:  E = kobold ; wand of flame | wand of acid | wand of iceblast \
+KMONS:  E = kobold ; wand of flame | any beam wand | any blast wand \
                 | wand of mindburst | wand of polymorph | wand of charming \
                 | wand of paralysis . dagger | short sword | whip
 KMONS:  F = kobold brigand ; dart ego:poisoned | dart ego:curare w:5 \
-                . wand of flame | wand of acid | wand of iceblast \
+                . wand of flame | any beam wand | any blast wand \
                 | wand of mindburst | wand of polymorph | wand of charming \
                 | wand of paralysis . dagger | short sword | whip
 # Define some kobolds with more general nasty ego weapons.
@@ -1870,10 +1868,10 @@ ITEM:    any manual
 ITEM:    any jewellery, any jewellery good_item, any jewellery randart
 KMONS:   p = plant
 KMONS:   O = player ghost
-MONS:    gnoll, gnoll shaman, gnoll sergeant, grum band
-KMONS:   D = gnoll ; wand of flame | wand of acid | wand of polymorph | \
-                wand of charming | wand of paralysis | \
-                wand of mindburst \
+MONS:    gnoll, gnoll bouda, gnoll sergeant, grum band
+KMONS:   D = gnoll ; wand of flame | any beam wand | \
+                wand of polymorph | wand of charming | \
+                wand of paralysis | wand of mindburst \
             . spear w:20 | halberd | club | whip | flail | nothing w:15
 # Define some gnolls with reach weapons.
 {{
@@ -2629,7 +2627,7 @@ NAME:   hellmonk_ghost_big_iron
 TAGS:   vaults_orient_s
 DEPTH:  D:8-13, Elf, Vaults, !Vaults:$, Crypt, Depths, Zot
 ORIENT: float
-ITEM:   randbook disc:earth spells:iron_shot, bolt q:1
+ITEM:   randbook disc:earth spells:iron_shot, javelin q:1
 KMONS:  O = player ghost
 KMONS:  p = plant
 KMONS:  - = bush

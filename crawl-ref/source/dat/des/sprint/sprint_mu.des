@@ -169,7 +169,7 @@ MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
  scroll of identify ident:all q:2/ scroll of identify q:1 / any scroll, \
- scroll of torment / scroll of holy word / scroll of immolation, \
+ scroll of torment / scroll of poison / scroll of immolation, \
  potion of mutation
 SUBST: T = t.
 
@@ -200,7 +200,7 @@ MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of mutation ident:all q:2 / potion of mutation q:1 / any potion, \
  scroll of identify ident:all q:2 / scroll of identify q:1 / any scroll, \
- scroll of torment / scroll of holy word / scroll of immolation, \
+ scroll of torment / scroll of poison / scroll of immolation, \
  potion of mutation
 
 MAP
@@ -417,7 +417,7 @@ MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | 
 MONS: deep elf death mage ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
       deep elf high priest ; robe ego:poison_resistance | robe ego:cold_resistance | robe
 MONS: deep elf blademaster ; chain mail ego:cold_resistance /\
-      deep elf master archer ; chain mail ego:poison_resistance . longbow . q:30 arrow
+      deep elf master archer ; chain mail ego:poison_resistance . longbow
 NSUBST: $ = 1:b / 1:s / *:|
 : acq_on_sight(_G, 'b', {"book","book","wand"})
 : acq_on_sight(_G, 's', {"magical staff","jewellery","jewellery"})
@@ -513,7 +513,7 @@ KMONS: q = electric eel
 KFEAT: q = shallow_water
 KMONS: r = hydra simulacrum / fire dragon simulacrum / polar bear simulacrum /\
  wolf simulacrum / black mamba simulacrum
-KITEM: r = any, any, any, any, any, superb_item / w:1 wand of acid /\
+KITEM: r = any, any, any, any, any, superb_item / w:1 any beam wand /\
  w:1 wand of mindburst
 KFEAT: _ = altar_fedhas
 KMONS: s = patrolling Urug
@@ -808,7 +808,7 @@ SUBST: P = PPPPPPPPP.
 KMONS: a = patrolling Sigmund hd:15 hp:100 \
  spells:bolt_of_fire.16.wizard;confuse.16.wizard;invisibility.16.wizard;\
         force_lance.16.wizard \
- ; scythe ego:distortion
+ ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:distortion
 KMONS: b = patrolling Edmund hp:150 ; great mace ego:freezing \
  . dart ego:curare q:7
 : elseif d2rnd == 1 then
@@ -920,7 +920,7 @@ KMONS: f = butterfly
 KMONS: U = Sojobo ; morningstar ego:vorpal . tower shield ego:reflection / \
            Frederick ; trident ego:freezing . tower shield ego:reflection
 KMONS: C = generate_awake Chuck
-KMONS: k = yaktaur captain ; arbalest ego:chaos . bolt
+KMONS: k = yaktaur captain ; arbalest ego:chaos
 KMONS: b = bush
 KMONS: D = fire dragon
 NSUBST: $ = 1:1 / *:|
@@ -941,7 +941,7 @@ KMONS: M = ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
 KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
  scroll of acquirement q:1 ident:all, wand of digging / \
- wand of iceblast, acquire gold, ring of protection from fire ident:all
+ any blast wand, acquire gold, ring of protection from fire ident:all
 
 COLOUR: #~^ = yellow
 KFEAT: # = closed_door
@@ -1150,7 +1150,7 @@ KMONS: 2 = patrolling mara
 KMONS: 3 = molten gargoyle
 KMONS: 4 = patrolling titanic slime creature
 KMONS: 5 = mummy priest
-KMONS: f = skeletal warrior ; longbow ego:flaming . arrow q:30
+KMONS: f = skeletal warrior ; longbow ego:flaming
 KMONS: 6 = shadow wraith
 KMONS: g = ball lightning / ballistomycete spore
 KMONS: 7 = patrolling storm dragon
@@ -1170,7 +1170,7 @@ KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
  titan zombie
 KMONS: s = boris
 KMONS: t = col:white generate_awake statue name:pristine name_adjective \
-           hp:100 tile:mons_statue_crossbow ; arbalest . bolt q:50 ego:silver
+           hp:100 tile:mons_statue_crossbow ; javelin ego:silver
 KMONS: u = Mennas
 KMONS: y = generate_awake roxanne
 KMONS: z = oklob plant
@@ -1190,7 +1190,7 @@ SUBST: J = Jh
 KFEAT: h = deep_water
 KMONS: h = electric eel
 KMONS: K = executioner
-KMONS: M = patrolling yaktaur ; longbow . arrow ego:dispersal q:10
+KMONS: M = patrolling yaktaur ; boomerang ego:dispersal q:10
 KMONS: N = patrolling nessos
 KFEAT: ^ = net trap
 KFEAT: " = floor

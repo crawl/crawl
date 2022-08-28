@@ -15,20 +15,33 @@
 
 struct player_save_info
 {
+    player_save_info()
+        : species(SP_UNKNOWN), job(JOB_UNKNOWN),
+          experience_level(0), class_name("Ruminator"),
+          religion(GOD_NO_GOD), wizard(false), saved_game_type(NUM_GAME_TYPE),
+          species_name("Yak"), god_name("Marduk"),
+          // non-header stuff
+          save_loadable(true)
+    { }
+
+    // data from char chunk header
     string name;
-    unsigned int experience;
-    int experience_level;
-    bool wizard;
+    string prev_save_version;
     species_type species;
-    string species_name;
+    job_type job;
+    int experience_level;
     string class_name;
     god_type religion;
-    string god_name;
     string jiyva_second_name;
+    bool wizard;
     game_type saved_game_type;
+    string species_name;
+    string god_name;
+    string map;
+    bool explore;
 
 #ifdef USE_TILE
-    dolls_data doll;
+    dolls_data doll; // not in header
 #endif
 
     bool save_loadable;

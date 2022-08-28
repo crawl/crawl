@@ -281,13 +281,18 @@ static void _post_init(bool newc)
     calc_hp();
     calc_mp();
     shopping_list.refresh();
+    populate_sets_by_obj_type();
 
     run_map_local_preludes();
 
     if (newc)
     {
-        if (Options.pregen_dungeon && crawl_state.game_standard_levelgen())
+        // n.b. temple already generated in setup_game at this point
+        if (Options.pregen_dungeon == level_gen_type::full
+            && crawl_state.game_standard_levelgen())
+        {
             pregen_dungeon(level_id(NUM_BRANCHES, -1));
+        }
 
         you.entering_level = false;
         you.transit_stair = DNGN_UNSEEN;

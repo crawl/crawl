@@ -609,7 +609,8 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
         int count_created = 0;
         for (int i = 0; i < how_many; ++i)
         {
-            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), damager->mindex());
+            const int mindex = damager->alive() ? damager->mindex() : MHITNOT;
+            mgen_data mg(mon, BEH_FRIENDLY, you.pos(), mindex);
             mg.set_summoned(&you, 2, 0, you.religion);
 
             if (create_monster(mg))
@@ -786,9 +787,10 @@ void reset_damage_counters()
     you.source_damage = 0;
 }
 
+#if TAG_MAJOR_VERSION == 34
 bool can_shave_damage()
 {
-    return you.species == SP_DEEP_DWARF;
+    return you.species == SP_DEEP_DWARF || you.species == SP_MAYFLYTAUR;
 }
 
 int do_shave_damage(int dam)
@@ -803,17 +805,21 @@ int do_shave_damage(int dam)
 
     return dam;
 }
+#endif
 
-// Determine what's threatening for purposes of sacrifice drink and reading.
-// the statuses are guaranteed not to happen if the incoming damage is less
-// than 5% max hp. Otherwise, they scale up with damage taken and with lower
-// health, becoming certain at 20% max health damage.
-static bool _is_damage_threatening (int damage_fraction_of_hp)
+// Determine what's threatening for purposes of no drink and no scroll mutation.
+// The statuses are guaranteed not to happen if the incoming damage is less
+// than 12/5% max hp and if the remaining hp is higher than 50/80% based on the
+// mutation tier. Otherwise, they scale up with damage taken and with lower
+// health, becoming certain at 50/20% max health damage.
+static bool _is_damage_threatening (int damage_fraction_of_hp, int mut_level)
 {
     const int hp_fraction = you.hp * 100 / you.hp_max;
-    return damage_fraction_of_hp > 5
-            && hp_fraction <= 85
-            && (damage_fraction_of_hp + random2(20) >= 20
+    const int safe_damage_fraction = mut_level == 1 ? 12 : 5;
+    const int scary_damage_fraction = mut_level == 1 ? 50 : 20;
+    return damage_fraction_of_hp > safe_damage_fraction
+            && hp_fraction <= 100 - scary_damage_fraction + safe_damage_fraction
+            && (damage_fraction_of_hp + random2(scary_damage_fraction) >= scary_damage_fraction
                 || random2(100) > hp_fraction);
 }
 
@@ -874,11 +880,13 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
     if (dam != INSTANT_DEATH)
         dam = _apply_extra_harm(dam, source);
 
+#if TAG_MAJOR_VERSION == 34
     if (can_shave_damage() && dam != INSTANT_DEATH
         && death_type != KILLED_BY_POISON)
     {
         dam = max(0, do_shave_damage(dam));
     }
+#endif
 
     if (dam != INSTANT_DEATH)
     {
@@ -942,7 +950,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         // don't always trigger in unison when you have both.
         if (you.get_mutation_level(MUT_READ_SAFETY))
         {
-            if (_is_damage_threatening(damage_fraction_of_hp))
+            if (_is_damage_threatening(damage_fraction_of_hp,
+                                       you.get_mutation_level(MUT_READ_SAFETY)))
             {
                 if (!you.duration[DUR_NO_SCROLLS])
                     mpr("You feel threatened and lose the ability to read scrolls!");
@@ -953,7 +962,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
         if (you.get_mutation_level(MUT_DRINK_SAFETY))
         {
-            if (_is_damage_threatening(damage_fraction_of_hp))
+            if (_is_damage_threatening(damage_fraction_of_hp,
+                                       you.get_mutation_level(MUT_DRINK_SAFETY)))
             {
                 if (!you.duration[DUR_NO_POTIONS])
                     mpr("You feel threatened and lose the ability to drink potions!");
@@ -1165,7 +1175,8 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
         xom_death_message((kill_method_type) se.get_death_type());
         more();
 
-        _place_player_corpse(death_type == KILLED_BY_DISINT);
+        if (death_type != KILLED_BY_ZOT)
+            _place_player_corpse(death_type == KILLED_BY_DISINT);
         return;
     }
 

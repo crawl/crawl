@@ -114,6 +114,34 @@ static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
+static void _CONDEMNATION_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
+{
+    if (!unmeld && you.species == SP_BARACHI)
+        _equip_mpr(show_msgs, "You feel a strange sense of familiarity.");
+}
+
+static void _CONDEMNATION_unequip(item_def */*item*/, bool *show_msgs)
+{
+    if (you.species == SP_BARACHI)
+        _equip_mpr(show_msgs, "You feel oddly sad, like being parted from an old friend.");
+}
+
+static void _CONDEMNATION_melee_effects(item_def* /*weapon*/, actor* attacker,
+                                        actor* defender, bool mondied, int dam)
+{
+    if (!dam || mondied || defender->is_player())
+        return;
+    monster *mons = defender->as_monster();
+    if (mons_intel(*mons) <= I_BRAINLESS)
+        return;
+    const int dur = random_range(40, 80);
+    const bool was_guilty = mons->has_ench(ENCH_ANGUISH);
+    if (mons->add_ench(mon_enchant(ENCH_ANGUISH, 0, attacker, dur)) && !was_guilty)
+        simple_monster_message(*mons, " is haunted by guilt!");
+}
+
+////////////////////////////////////////////////////
+
 static void _CURSES_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "A shiver runs down your spine.");
@@ -808,7 +836,7 @@ static setup_missile_type _DAMNATION_launch(item_def* /*item*/, bolt* beam,
     bolt *expl   = new bolt(*beam);
     expl->flavour = BEAM_DAMNATION;
     expl->is_explosion = true;
-    expl->damage = dice_def(3, 14);
+    expl->damage = dice_def(2, 14);
     expl->name   = "damnation";
 
     beam->special_explosion = expl;
@@ -1346,7 +1374,7 @@ static void _BATTLE_world_reacts(item_def */*item*/)
 {
     if (!find_battlesphere(&you)
         && there_are_monsters_nearby(true, true, false)
-        && rude_stop_summoning_reason().empty())
+        && stop_summoning_reason(MR_RES_POISON, M_FLIES).empty())
     {
         cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE, true),
                           GOD_NO_GOD, false);
@@ -1633,5 +1661,16 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
 
         if (!attacker->alive())
             break;
+    }
+}
+
+///////////////////////////////////////////////////
+static void _VITALITY_world_reacts(item_def */*item*/)
+{
+    // once it starts regenerating you, you're doin evil
+    if (you.props[MANA_REGEN_AMULET_ACTIVE].get_int() == 1
+        || you.activated[EQ_AMULET])
+    {
+        did_god_conduct(DID_EVIL, 1);
     }
 }

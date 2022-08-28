@@ -702,7 +702,7 @@ WEIGHT: 2
   local hellinv = util.random_subset( { "scroll of blinking q:10",
     "scroll of magic mapping q:10", "scroll of silence q:10",
     "scroll of summoning q:10", "scroll of teleportation q:10",
-    "scroll of holy word q:10", "potion of brilliance q:10",
+    "potion of brilliance q:10",
     "potion of cancellation q:10", "potion of curing q:10",
     "potion of haste q:10","potion of heal wounds q:10", "potion of magic q:10",
     "potion of experience", "potion of resistance q:10", "any weapon randart",
@@ -721,9 +721,8 @@ WEIGHT: 2
     "executioner's axe randart ego:holy_wrath",
     "trishula randart ego:holy_wrath", "sacred scourge randart ego:holy_wrath",
     "eveningstar randart ego:holy_wrath", "bardiche randart ego:holy_wrath",
-    "lajatang randart ego:holy_wrath", "fustibalus randart ego:holy_wrath",
+    "lajatang randart ego:holy_wrath", "hand crossbow randart ego:holy_wrath",
     "longbow randart ego:holy_wrath", "arbalest randart ego:holy_wrath",
-    "hand crossbow randart ego:holy_wrath",
     "triple crossbow randart ego:holy_wrath" }, 1 )
 
    local fullinv = util.join( " | ", { util.join( " | ", disinv ),

@@ -118,7 +118,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     if (one_chance_in(30) && x_chance_in_y(item_level + 3, 100))
     {
         return random_choose(WPN_LAJATANG,
-                             WPN_FUSTIBALUS,
+                             WPN_HAND_CROSSBOW,
                              WPN_TRIPLE_CROSSBOW,
                              WPN_DEMON_WHIP,
                              WPN_DEMON_BLADE,
@@ -152,7 +152,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     }
     else
     {
-        return random_choose(WPN_HUNTING_SLING,
+        return random_choose(WPN_SLING,
                              WPN_SPEAR,
                              WPN_HAND_AXE,
                              WPN_MACE,
@@ -510,9 +510,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_THROWING_NET:
     case MI_STONE:
     case MI_LARGE_ROCK:
-    case MI_SLING_BULLET:
-    case MI_ARROW:
-    case MI_BOLT:
         rc = SPMSL_NORMAL;
         break;
     case MI_DART:
@@ -545,12 +542,8 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
 bool is_missile_brand_ok(int type, int brand, bool strict)
 {
-    // Launcher ammo can never be branded.
-    if ((type == MI_STONE
-        || type == MI_LARGE_ROCK
-        || type == MI_SLING_BULLET
-        || type == MI_ARROW
-        || type == MI_BOLT)
+    // Rocks can't normally be branded.
+    if ((type == MI_STONE || type == MI_LARGE_ROCK)
         && brand != SPMSL_NORMAL
         && strict)
     {
@@ -631,9 +624,6 @@ static void _generate_missile_item(item_def& item, int force_type,
     {
         item.sub_type =
             random_choose_weighted(50, MI_STONE,
-                                   20, MI_ARROW,
-                                   12, MI_BOLT,
-                                   12, MI_SLING_BULLET,
                                    10, MI_DART,
                                    3,  MI_BOOMERANG,
                                    2,  MI_JAVELIN,
@@ -649,10 +639,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     }
     else if (item.sub_type == MI_STONE)
     {
-        item.quantity = 1 + random2(7); // sequence points for random2
-        item.quantity += random2(10);
-        item.quantity += random2(12);
-        item.quantity += random2(10);
+        item.quantity = roll_dice(2, 5) - 1;
         return;
     }
     else if (item.sub_type == MI_THROWING_NET) // no fancy nets, either
@@ -667,25 +654,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                            _determine_missile_brand(item, item_level));
     }
 
-    // Reduced quantity if thrown.
-    if (item.sub_type == MI_JAVELIN || item.sub_type == MI_BOOMERANG
-        || item.sub_type == MI_DART
-#if TAG_MAJOR_VERSION == 34
-        || get_ammo_brand(item) == SPMSL_RETURNING
-#endif
-        )
-    {
-        item.quantity = random_range(2, 6);
-    }
-    else
-    {
-        item.quantity = 1 + random2(7); // sequence points for random2
-        item.quantity += random2(10);
-        item.quantity += random2(10);
-        if (get_ammo_brand(item) == SPMSL_NORMAL)
-            item.quantity += random2(12);
-
-    }
+    item.quantity = random_range(2, 6);
 }
 
 static bool _armour_disallows_randart(int sub_type)
@@ -736,8 +705,12 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         }
 
         // On body armour, an enchantment of less than 0 is never viable.
+        // On aux armour & shields, going below -2 is likewise unviable.
+        // (You think you're better than the hat of the Alchemist?)
         if (get_armour_slot(item) == EQ_BODY_ARMOUR)
             item.plus = max(static_cast<int>(item.plus), random2(2));
+        else
+            item.plus = max(static_cast<int>(item.plus), random_range(-2, 1));
 
         // Needs to be done after the barding chance else we get randart
         // bardings named Boots of xy.
@@ -1240,15 +1213,17 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
  */
 static int _random_wand_subtype()
 {
+    const auto hex_wand_type = (wand_type)item_for_set(ITEM_SET_HEX_WANDS);
+    const auto beam_wand_type = (wand_type)item_for_set(ITEM_SET_BEAM_WANDS);
+    const auto blast_wand_type = (wand_type)item_for_set(ITEM_SET_BLAST_WANDS);
     // total weight 70 [arbitrary]
     return random_choose_weighted(14, WAND_FLAME,
-                                  14, WAND_ICEBLAST,
-                                  8, WAND_POLYMORPH,
-                                  8, WAND_PARALYSIS,
-                                  8, WAND_ACID,
-                                  6, WAND_MINDBURST,
-                                  6, WAND_DIGGING,
-                                  5, WAND_CHARMING);
+                                  14, blast_wand_type,
+                                  14, hex_wand_type,
+                                  9, beam_wand_type,
+                                  7, WAND_POLYMORPH,
+                                  7, WAND_MINDBURST,
+                                  5, WAND_DIGGING);
 }
 
 /**
@@ -1376,6 +1351,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
         for (int i = 0; i < NUM_SCROLLS; ++i)
         {
             const scroll_type scr = (scroll_type) i;
+
+            // Only generate the scroll types chosen for this game.
+            if (item_excluded_from_set(OBJ_SCROLLS, scr))
+                continue;
 
             // No teleportation or noise in Sprint.
             if (crawl_state.game_is_sprint()
@@ -1789,7 +1768,8 @@ int items(bool allow_uniques,
           int force_type,
           int item_level,
           int force_ego,
-          int agent)
+          int agent,
+          string custom_name)
 {
     rng::subgenerator item_rng;
 
@@ -1826,17 +1806,17 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
-        // Total weight: 1780
+        // Total weight: 1720
         item.base_type = random_choose_weighted(
                                     10, OBJ_STAVES,
                                     45, OBJ_JEWELLERY,
                                     45, OBJ_BOOKS,
                                     70, OBJ_WANDS,
-                                   212, OBJ_ARMOUR,
-                                   212, OBJ_WEAPONS,
-                                   176, OBJ_POTIONS,
-                                   300, OBJ_MISSILES,
-                                   270, OBJ_SCROLLS,
+                                   210, OBJ_ARMOUR,
+                                   210, OBJ_WEAPONS,
+                                   210, OBJ_POTIONS,
+                                   180, OBJ_MISSILES,
+                                   300, OBJ_SCROLLS,
                                    440, OBJ_GOLD);
 
         // misc items placement wholly dependent upon current depth {dlb}:
@@ -1875,6 +1855,9 @@ int items(bool allow_uniques,
         _setup_fallback_randart(unrand_id, item, force_type, item_level);
         allow_uniques = false;
     }
+
+    if (!custom_name.empty())
+        item.props[ITEM_NAME_KEY] = custom_name;
 
     // Determine sub_type accordingly. {dlb}
     switch (item.base_type)

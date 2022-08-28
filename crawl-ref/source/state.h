@@ -53,6 +53,7 @@ struct game_state
 
     bool io_inited;         // Is curses or the equivalent initialised?
     bool need_save;         // Set to true when game can be saved, false when the game ends.
+    bool save_after_turn;
     bool game_started;      // Set to true when a game has started.
     bool saving_game;       // Set to true while in save_game.
     bool updating_scores;   // Set to true while updating hiscores.
@@ -123,6 +124,8 @@ struct game_state
     bool title_screen; // ignored unless USE_TILE_LOCAL is defined
 
     bool invisible_targeting;
+
+    bool player_moving;
 
     // Area beyond which view should be darkened,  0 = disabled.
     targeter *darken_range;

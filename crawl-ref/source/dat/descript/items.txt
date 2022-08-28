@@ -55,11 +55,6 @@ arbalest
 A large piece of machinery used for firing bolts, braced with steel and cranked
 with a windlass. It takes some time to load and fire.
 %%%%
-arrow
-
-A long shafted projectile intended to be shot with a shortbow or longbow,
-fletched with feathers at one end and a point at the other.
-%%%%
 bardiche
 
 A long pole with an enormous, cleaving blade on one end.
@@ -71,10 +66,6 @@ Armour for the scaly midsections of nagas and palentongas.
 battleaxe
 
 A large war axe with a formidable double-sided head.
-%%%%
-bolt
-
-A metal projectile, shorter than an arrow, intended to be shot from a crossbow.
 %%%%
 book of air
 
@@ -254,13 +245,6 @@ book of party tricks
 
 A book containing a variety of fun spells guaranteed to liven up any wizarding
 party, as well as a number of toasts, jokes, and party games.
-%%%%
-book of pain
-
-A magical book said to have been written by the demon-queen Ereshkigal, who
-delights in the painful death of mortals. Some would say that it would be best
-to consider the book's origin before putting it to use, but wizards are rarely
-deterred by such concerns.
 %%%%
 book of power
 
@@ -462,7 +446,7 @@ clouds, acidic fog and clouds of negative energy become available.
 %%%%
 corpse
 
-A corpse. Useful only to practitioners of necromancy.
+A corpse. Useless and dead.
 %%%%
 crystal plate armour
 
@@ -568,12 +552,6 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
-fustibalus
-
-A length of wood with a reinforced sling at one end, able to fire projectiles
-at high velocity. It deals more damage when launching purpose-made ammunition,
-rather than stones found on the floor.
-%%%%
 giant club
 
 A giant lump of wood.
@@ -627,6 +605,10 @@ halberd
 A polearm consisting of an axe blade topped with a spike, mounted on a long
 shaft.
 %%%%
+hammer
+
+A blunt striking weapon, essentially equivalent to a mace.
+%%%%
 hand axe
 
 A small axe.
@@ -650,11 +632,10 @@ The horn belonging to Geryon, guardian of the Vestibule of Hell. It has the
 power to call forth demonic beasts. With high Evocations skill, it will call
 greater numbers of beasts, with lower chances of those beasts being hostile.
 %%%%
-hunting sling
+sling
 
 A piece of cloth and leather for launching stones, adequate for hunting small
-game like rabbits or goblins. It deals more damage when launching purpose-made
-ammunition, rather than rocks found on the floor.
+game like rabbits or goblins.
 %%%%
 ice dragon scales
 
@@ -782,11 +763,11 @@ than the creature it mirrors.
 %%%%
 phial of floods
 
-An enchanted vessel brimming over with elemental water. Removing the stopper
-unleashes a torrent of water from the phial, dealing damage to the target and
-flooding the nearby area. Any creatures hit by the wave are also engulfed in
-water, silencing them temporarily. The strength of the torrent and the duration
-of the flooding are increased with Evocations skill.
+An enchanted vessel of elemental water. Removing the stopper unleashes a torrent
+of water, smashing the target and flooding the nearby area. If any creatures
+engulfed by the wave need air to breathe, they'll be unable to cast spells until
+they recover. The strength of the torrent and the duration of the flooding
+increase with Evocations skill.
 %%%%
 piece from Xom's chessboard
 
@@ -954,7 +935,8 @@ A ring that protects its wearer from the effects of acid and corrosion.
 %%%%
 ring of magical power
 
-A ring that increases its wearer's reserves of magical power.
+A ring that increases its wearer's reserves of magical power for so long as it
+is worn.
 %%%%
 ring of poison resistance
 
@@ -1030,10 +1012,10 @@ A long sword with a wide, curved blade.
 %%%%
 scroll of acquirement
 
-A wonderful scroll which causes the creation of a valuable item, with the
-reader choosing the type of item to be created. The item produced will be
-heavily biased towards something fitting the reader's skills, and also towards
-gear that hasn't been seen yet, but, alas, nothing is guaranteed.
+A wonderful scroll which causes the creation of a valuable item, with
+the reader choosing from a small selection. The items offered will be
+often be a good match for the reader's skills; and if nothing
+recommends itself, the reader can always choose a heap of gold.
 %%%%
 scroll of amnesia
 
@@ -1057,6 +1039,10 @@ spectral, vampiric or chaos brand.
 
 Ranged weapons will commonly be branded with the vorpal, flaming, freezing or
 venom brand, and rarely with the electrocution or chaos brand.
+%%%%
+scroll of butterflies
+
+A scroll that surrounds its user with a flight of beautiful butterflies.
 %%%%
 scroll of enchant armour
 
@@ -1083,12 +1069,6 @@ scroll of fog
 
 A scroll that surrounds the reader with a dense cloud of fog.
 %%%%
-scroll of holy word
-
-A scroll that calls on the good gods to cause great damage to any nearby undead
-or demonic creature — possibly including the reader! It will briefly daze
-monsters that are affected.
-%%%%
 scroll of identify
 
 A useful magic scroll which identifies the properties of any unknown object.
@@ -1105,6 +1085,11 @@ A scroll that reveals the surroundings of the one who reads it.
 scroll of noise
 
 A prank scroll that creates a loud noise when read.
+%%%%
+scroll of poison
+
+A scroll that fills the air with poison, covering every unoccupied space in
+sight with toxic fumes.
 %%%%
 scroll of silence
 
@@ -1143,7 +1128,8 @@ those fully immune to such effects.
 %%%%
 scythe
 
-A farm implement, usually only used by untrained mobs in combat.
+A farm implement, usually only used by untrained mobs in combat. In practice,
+it's quite similar to a halberd.
 %%%%
 shortbow
 
@@ -1152,11 +1138,6 @@ A curved piece of wood and string, for shooting arrows.
 short sword
 
 A personal stabbing weapon with a short grip.
-%%%%
-sling bullet
-
-A small, heavy projectile specially shaped for use with slings. It is more
-effective as ammunition than simple stones.
 %%%%
 spear
 
@@ -1219,7 +1200,7 @@ resistance to scalding steam), but it is extremely light and supple.
 stone
 
 A small chunk of dense but otherwise unremarkable natural mineral. It can be
-thrown by hand or launched with a sling.
+thrown to cause minor damage.
 %%%%
 shadow dragon scales
 
@@ -1303,7 +1284,7 @@ One's servants.
 troll leather armour
 
 The stiff and knobbly skin of a troll. It magically regenerates its wearer's
-flesh.
+flesh, once attuned to the wearer's body at full health.
 %%%%
 the unrestrained analects
 
@@ -1333,6 +1314,11 @@ wand of iceblast
 A magical device which creates a loud explosion of ice shards, partially
 harming even creatures resistant to cold.
 %%%%
+wand of light
+
+A magical device which fires a ray of searing light, injuring and blinding
+those struck. Tougher monsters will recover their vision more quickly.
+%%%%
 wand of mindburst
 
 A magical device which launches a psychic attack on a target creature. If it
@@ -1349,6 +1335,18 @@ wand of polymorph
 
 A magical device which causes a creature to be transmogrified into another
 form. It is especially effective against shape-changing creatures.
+%%%%
+wand of quicksilver
+
+A magical device which fires a beam of destructive energy, dispelling
+enchantments on creatures struck.
+%%%%
+wand of roots
+
+A magical device which fires a magical seed, entangling its target and adjacent
+foes in quick-growing tree roots. Those entangled will be immobilized and take
+increasing damage over time until they escape or the roots wither away. The roots
+will only sprout from solid ground.
 %%%%
 war axe
 

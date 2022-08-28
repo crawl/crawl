@@ -59,6 +59,12 @@ protected:
         return "known-menu";
     }
 
+    bool examine_index(int) override
+    {
+        // disable behavior from InvMenu
+        return true;
+    }
+
     bool process_key(int key) override
     {
         bool resetting = (lastch == CONTROL('D'));
@@ -85,12 +91,14 @@ protected:
             key = ',';
             break;
 
-        case '-':
+        case '-': // TODO: assimilate to CMD_MENU_CYCLE_MODE?
         case '\\':
             if (all_items_known)
                 return true; // skip process_key for '-', it's confusing
         case CK_ENTER:
         CASE_ESCAPE
+            if (resetting)
+                return true;
             lastch = key;
             return false;
 
@@ -103,7 +111,7 @@ protected:
             {
                 lastch = CONTROL('D');
                 temp_title = title->text;
-                set_title("Select to reset item to default: ");
+                set_title("Select to reset item to default ([*] for all): ");
             }
 
             return true;
@@ -120,37 +128,35 @@ protected:
             if (scrollable)
             {
                 navigation +=
-                    "[<w>PgDn</w>|<w>></w>] page down"
-                    "  [<w>PgUp</w>|<w><<</w>] page up";
+                    menu_keyhelp_cmd(CMD_MENU_PAGE_DOWN) + " page down  "
+                    + menu_keyhelp_cmd(CMD_MENU_PAGE_UP) + " page up  ";
             }
-            // navigation += "</lightgrey>";
-            navigation += "  [<w>Esc</w>|<w>Ret</w>] close"
-                          "  [<w>-</w>] recognised"
-                          "</lightgrey>";
+            navigation += "[<w>-</w>] recognised  "
+                            + menu_keyhelp_cmd(CMD_MENU_EXIT) + " exit"
+                            "</lightgrey>";
         }
         else
         {
             // very similar to the MF_MULTISELECT case for regular Menus, but
             // various differences require an override
-            navigation = "<lightgrey>"
-                         "[<w>Up</w>|<w>Down</w>] select";
+            navigation = "<lightgrey>" + menu_keyhelp_select_keys()
+                         + " select  ";
 
             if (scrollable)
             {
                 navigation +=
-                    "  [<w>PgDn</w>|<w>></w>] page down"
-                    "  [<w>PgUp</w>|<w><<</w>] page up";
+                    menu_keyhelp_cmd(CMD_MENU_PAGE_DOWN) + " page down  "
+                    + menu_keyhelp_cmd(CMD_MENU_PAGE_UP) + " page up  ";
             }
             navigation += "</lightgrey>";
-            navigation = pad_more_with(navigation,
-                                    "[<w>Esc</w>|<w>Ret</w>] close", MIN_COLS);
+            navigation = pad_more_with_esc(navigation);
             navigation +=
                     "\n<lightgrey>"
                     "Letters toggle autopickup  ";
             if (is_set(MF_ARROWS_SELECT))
             {
-                navigation +=
-                    "[<w>.</w>|<w>Space</w>] toggle selected  ";
+                navigation += menu_keyhelp_cmd(CMD_MENU_TOGGLE_SELECTED)
+                    + " toggle selected  ";
             }
 
             if (!all_items_known)
@@ -372,7 +378,14 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (you.type_ids[i][j] != unknown_items) // logical xor
+            const bool known = you.type_ids[i][j];
+
+            // Don't show items the player knows can't generate.
+            // (unless they *have* generated, ha...)
+            if (!known && item_known_excluded_from_set((object_class_type)i, j))
+                continue;
+
+            if (known != unknown_items) // logical xor
                 _add_fake_item(i, j, selected_items, items, !unknown_items);
             else
                 all_items_known = false;
@@ -395,8 +408,14 @@ void check_item_knowledge(bool unknown_items)
         for (int i = 0; i < NUM_MISSILES; i++)
         {
 #if TAG_MAJOR_VERSION == 34
-            if (i == MI_NEEDLE)
+            switch (i)
+            {
+            case MI_NEEDLE:
+            case MI_ARROW:
+            case MI_BOLT:
+            case MI_SLING_BULLET:
                 continue;
+            }
 #endif
             _add_fake_item(OBJ_MISSILES, i, selected_items, items_missile);
         }
@@ -423,6 +442,11 @@ void check_item_knowledge(bool unknown_items)
             }
             _add_fake_item(OBJ_MISCELLANY, i, selected_items, items_misc);
         }
+
+        // N.b. NUM_BOOKS drastically exceeds MAX_SUBTYPES, but it doesn't
+        // matter for force_autopickup purposes because we only use 0 and
+        // BOOK_MANUAL
+        COMPILE_CHECK(BOOK_MANUAL < MAX_SUBTYPES);
 
         // Misc.
         static const pair<object_class_type, int> misc_list[] =

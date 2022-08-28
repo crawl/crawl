@@ -1037,23 +1037,25 @@ bool mon_special_ability(monster* mons)
 
     case MONS_WATER_NYMPH:
     {
-        if (one_chance_in(5))
+        if (!one_chance_in(5))
+            break;
+
+        actor *foe = mons->get_foe();
+        if (!foe || !mons->can_see(*foe) || feat_is_water(env.grid(foe->pos())))
+            break;
+
+        const coord_def targ = foe->pos();
+        coord_def spot;
+        if (!find_habitable_spot_near(targ, MONS_ELECTRIC_EEL, 3, false, spot)
+            || targ.distance_from(spot) >= targ.distance_from(mons->pos()))
         {
-            actor *foe = mons->get_foe();
-            if (foe && !feat_is_water(env.grid(foe->pos())))
-            {
-                coord_def spot;
-                if (find_habitable_spot_near(foe->pos(), MONS_ELECTRIC_EEL, 3, false, spot)
-                    && foe->pos().distance_from(spot)
-                     < foe->pos().distance_from(mons->pos()))
-                {
-                    if (mons->move_to_pos(spot))
-                    {
-                        simple_monster_message(*mons, " flows with the water.");
-                        used = true;
-                    }
-                }
-            }
+            break;
+        }
+
+        if (mons->move_to_pos(spot))
+        {
+            simple_monster_message(*mons, " flows with the water.");
+            used = true;
         }
     }
     break;
@@ -1064,7 +1066,7 @@ bool mon_special_ability(monster* mons)
             break;
 
         actor *foe = mons->get_foe();
-        if (!foe)
+        if (!foe || !mons->can_see(*foe))
             break;
 
         const int dist = grid_distance(foe->pos(), mons->pos());

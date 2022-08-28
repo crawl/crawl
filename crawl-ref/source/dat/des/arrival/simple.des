@@ -286,7 +286,7 @@ MAP
       x.x
       x.x
 xxxxxxx.xxxxxxx
-x.............x
+@.............@
 xxxxxxx.xxxxxxx
       x.x
       x.x
@@ -302,6 +302,7 @@ ENDMAP
 NAME:   lemuel_arrival_lava_pool
 TAGS:   arrival no_monster_gen
 ORIENT: float
+ITEM:   stone
 MAP
     xxxxxxx
    xx..{..xx
@@ -310,9 +311,9 @@ MAP
    x.......x
    x..lll..x
    x.lllll.x
-   x.ll%ll.x
+   x.lldll.x
    x.ll>ll.x
-   x.ll%ll.x
+   x.lldll.x
    x.lllll.x
    x..lll..x
   xx.......xx
@@ -2507,4 +2508,86 @@ t....t.t....t
 tt.........tt
  tt.......tt
   ttt@@@ttt
+ENDMAP
+
+NAME:     spicycebolla_green_bress_n_ham
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+SHUFFLE:  yz
+SUBST:    y : xb, z : mb
+MAP
+       zzz@
+ ....zzyyy...
+ .zzzyy...yz.
+@.yyy.....yz.
+zy........yz.
+zy.........yz
+zy....t....yz
+ zy....{....yz
+ zy.........yz
+ .zy........yz
+ .zy.....yyy.@
+ .zy...yyzzz.
+ ...yyyzz....
+   @zzz
+ENDMAP
+
+NAME:     spicycebolla_green_bress_n_ham_2
+TAGS:     arrival no_monster_gen no_trap_gen
+ORIENT:   float
+MAP
+m       c@c  m
+ m     cc.c m
+  m  ccc.ccm
+cccm c.c.cm
+@.ccmcc.cm
+cc..cmc.mccc
+ ccc..WWcc{c
+  cAccWW..ccc
+  cccm.cmc..cc
+    mc.ccmcc.@
+   mc.c.c mccc
+  mcc.ccc  m
+ m c.cc     m
+m  c@c       m
+ENDMAP
+
+NAME:   reono_arrival_forest_river
+TAGS:   arrival no_monster_gen no_trap_gen no_pool_fixup
+ORIENT: float
+SUBST:  . = t:1 w:1
+MAP
+@WtttttW@
+WW.....WW
+t.WWWWW.t
+t.WWWWW.t
+t.WWWWW.t
+t.WWWWW.t
+t.WW{WW.t
+t.WWWWW.t
+t.WWWWW.t
+t.WWWWW.t
+t.WWWWW.t
+WW.....WW
+@WtttttW@
+ENDMAP
+
+NAME:   reono_arrival_mine
+TAGS:   arrival no_monster_gen no_trap_gen
+ORIENT: float
+SUBST:  x = x:10 c:5 v:3 b:3
+MAP
+xxxxxxxx@xxxx
+xxxxxxx.xxxxx
+xxxxxxxx.xxxx
+xxxxxxx.xxxxx
+@x.x.xxx.xxxx
+x.x.x.x.xxxxx
+xxxxxx{xxxxxx
+xxxxx.x.x.x.x
+xxxx.xxx.x.x@
+xxxxx.xxxxxxx
+xxxx.xxxxxxxx
+xxxxx.xxxxxxx
+xxxx@xxxxxxxx
 ENDMAP

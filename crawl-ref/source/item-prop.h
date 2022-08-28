@@ -17,6 +17,7 @@ struct bolt;
 
 void init_properties();
 
+#define ITEM_NAME_KEY "name"
 
 typedef uint32_t armflags_t;
 #define ard(flg, lev) (armflags_t)((flg) * ((lev) & 7))
@@ -167,14 +168,12 @@ bool item_skills(const item_def &item, set<skill_type> &skills);
 
 // launcher and ammo functions:
 bool is_range_weapon(const item_def &item) PURE;
-missile_type fires_ammo_type(const item_def &item) PURE;
+bool is_crossbow(const item_def &item) PURE;
+bool is_slowed_by_armour(const item_def *item) PURE;
 const char *ammo_name(missile_type ammo) IMMUTABLE;
-const char *ammo_name(const item_def &bow) PURE;
-const char *ammo_name(const weapon_type bow) PURE;
-bool has_launcher(const item_def &ammo) PURE;
 bool is_throwable(const actor *actor, const item_def &wpn) PURE;
-launch_retval is_launched(const actor *actor, const item_def *launcher,
-                          const item_def &missile) PURE;
+bool is_launcher_ammo(const item_def &wpn) PURE;
+launch_retval is_launched(const actor *actor, const item_def &missile) PURE;
 
 bool ammo_always_destroyed(const item_def &missile) PURE;
 bool ammo_never_destroyed(const item_def &missile) PURE;
@@ -243,6 +242,16 @@ string item_base_name(object_class_type type, int sub_type);
 const char *weapon_base_name(weapon_type subtype) IMMUTABLE;
 weapon_type name_nospace_to_weapon(string name_nospace);
 
+void initialise_item_sets();
+void populate_sets_by_obj_type();
+void mark_inventory_sets_unknown();
+void maybe_mark_set_known(object_class_type type, int sub_type);
+int item_for_set(item_set_type typ);
+bool item_excluded_from_set(object_class_type type, int sub_type);
+bool item_known_excluded_from_set(object_class_type type, int sub_type);
+item_set_type item_set_by_name(string name);
+string item_name_for_set(item_set_type typ);
+
 void seen_item(item_def &item);
 
 static inline bool is_weapon(const item_def &item)
@@ -259,3 +268,5 @@ inline constexpr bool item_type_is_equipment(object_class_type base_type)
 void remove_whitespace(string &str);
 
 void auto_id_inventory();
+
+void populate_fake_projectile(const item_def &wep, item_def &fake_proj);

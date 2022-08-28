@@ -895,7 +895,8 @@ KMONS:  3 = ancient champion ; battleaxe good_item | \
           great sword good_item . plate armour / \
         hell knight ; battleaxe good_item | glaive good_item | \
           great sword good_item . plate armour / \
-        reaper ; scythe good_item / \
+        reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe \
+          good_item / \
         war gargoyle ; lajatang good_item / \
         fire giant ; great sword good_item ego:flaming / \
         frost giant ; battleaxe good_item ego:freezing / \

@@ -277,6 +277,8 @@ bool mons_self_destructs(const monster& m);
 bool mons_blows_up(const monster& m);
 bool mons_destroyed_on_impact(const monster& m);
 
+bool should_shout_at_mons(const monster &m);
+
 mon_intel_type mons_class_intel(monster_type mc);
 mon_intel_type mons_intel(const monster& mon);
 
@@ -291,7 +293,6 @@ habitat_type mons_primary_habitat(const monster& mon);
 habitat_type mons_class_secondary_habitat(monster_type mc);
 
 bool mons_skeleton(monster_type mc);
-bool mons_zombifiable(monster_type mc);
 
 int max_corpse_chunks(monster_type mc);
 int mons_class_base_speed(monster_type mc);
@@ -319,7 +320,7 @@ bool mons_class_leaves_organ(monster_type mc);
 bool mons_is_zombified(const monster& mons);
 bool mons_class_can_be_zombified(monster_type mc);
 bool mons_can_be_zombified(const monster& mon);
-bool mons_can_be_spectralised(const monster& mon);
+bool mons_can_be_spectralised(const monster& mon, bool divine = false);
 bool mons_class_can_use_stairs(monster_type mc);
 bool mons_class_can_use_transporter(monster_type mc);
 bool mons_can_use_stairs(const monster& mon,
@@ -513,7 +514,7 @@ bool mons_stores_tracking_data(const monster& mons);
 bool mons_is_player_shadow(const monster& mon);
 bool mons_is_wrath_avatar(const monster &mon);
 
-bool mons_has_attacks(const monster& mon);
+bool mons_has_attacks(const monster& mon, bool allow_damageless = false);
 
 void reset_all_monsters();
 void debug_mondata();

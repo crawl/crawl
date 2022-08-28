@@ -303,6 +303,53 @@ void wizard_blink()
 
 static const int HOP_FUZZ_RADIUS = 2;
 
+class targeter_hop : public targeter_smite
+{
+public:
+    targeter_hop(actor *a, int hop_range)
+        : targeter_smite(a, hop_range, 0, HOP_FUZZ_RADIUS, false)
+    {
+        ASSERT(agent);
+        obeys_mesmerise = true;
+    }
+
+    aff_type is_affected(coord_def p) override
+    {
+        if (!valid_aim(aim))
+            return AFF_NO;
+
+        if (is_feat_dangerous(env.grid(p), true))
+            return AFF_NO; // XX is this handled by the valid blink check?
+
+        const actor* p_act = actor_at(p);
+        if (p_act && agent && !agent->can_see(*p_act))
+            return AFF_NO;
+
+        // terrain details are cached in exp_map_max by set_aim
+        return targeter_smite::is_affected(p);
+    }
+
+    bool set_aim(coord_def a) override
+    {
+        if (!targeter::set_aim(a))
+            return false;
+
+        // targeter_smite works by filling the explosion map. Here we fill just
+        // the max explosion map leading to AFF_MAYBE for possible hop targets.
+        exp_map_min.init(INT_MAX);
+        exp_map_max.init(INT_MAX);
+        // somewhat magical value for centre that I have copied from elsewhere
+        const coord_def centre(9,9);
+        for (radius_iterator ri(a, exp_range_max, C_SQUARE, LOS_NO_TRANS);
+             ri; ++ri)
+        {
+            if (valid_blink_destination(agent, *ri))
+                exp_map_max(*ri - a + centre) = 1;
+        }
+        return true;
+    }
+};
+
 /**
  * Randomly choose one of the spaces near the given target for the player's hop
  * to land on.
@@ -314,12 +361,12 @@ static coord_def _fuzz_hop_destination(coord_def target)
 {
     coord_def chosen;
     int seen = 0;
-    for (radius_iterator ri(target, HOP_FUZZ_RADIUS, C_SQUARE, LOS_NO_TRANS);
-         ri; ++ri)
-    {
-        if (valid_blink_destination(&you, *ri) && one_chance_in(++seen))
-            chosen = *ri;
-    }
+    targeter_hop tgt(&you, frog_hop_range());
+    tgt.set_aim(target); // XX could reuse tgt from the calling function?
+    for (auto ti = tgt.affected_iterator(AFF_MAYBE); ti; ++ti)
+        if (one_chance_in(++seen))
+            chosen = *ti;
+
     return chosen;
 }
 
@@ -341,8 +388,7 @@ spret frog_hop(bool fail, dist *target)
     if (!target)
         target = &empty; // XX just convert some of these fn signatures to take dist &
     const int hop_range = frog_hop_range();
-    targeter_smite tgt(&you, hop_range, 0, HOP_FUZZ_RADIUS);
-    tgt.obeys_mesmerise = true;
+    targeter_hop tgt(&you, hop_range);
 
     while (true)
     {
@@ -596,9 +642,6 @@ spret palentonga_charge(bool fail, dist *target)
     if (fedhas_passthrough(target_mons))
         target_mons = nullptr;
     ASSERT(target_mons != nullptr);
-    // Are you actually moving forward?
-    if (grid_distance(you.pos(), target_pos) > 1 || !target_mons)
-        mpr("You roll forward with a clatter of scales!");
 
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -615,9 +658,18 @@ spret palentonga_charge(bool fail, dist *target)
     }
     const coord_def dest_pos = target_path.at(target_path.size() - 2);
 
+    // Are you actually moving forward? XXX: revisit this check
+    if (grid_distance(you.pos(), target_pos) > 1 || !target_mons)
+    {
+        if (silenced(dest_pos))
+            mpr("You roll forward in eerie silence!");
+        else
+            mpr("You roll forward with a clatter of scales!");
+    }
+
     remove_water_hold();
     move_player_to_grid(dest_pos, true);
-    noisy(12, you.pos());
+    noisy(4, you.pos());
     apply_barbs_damage();
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
@@ -840,9 +892,6 @@ static bool _teleport_player(bool wizard_tele, bool teleportitis,
 
     if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
-        if (teleportitis)
-            return false;
-
         if (!reason.empty())
             mpr(reason);
         abyss_teleport();
@@ -1601,7 +1650,7 @@ static bool _can_move_mons_to(const monster &mons, coord_def pos)
 /**
   * Attempt to pull nearby monsters toward the player.
  */
-void attract_monsters()
+void attract_monsters(int delay)
 {
     vector<monster *> targets;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1621,7 +1670,7 @@ void attract_monsters()
         if (!find_ray(mi->pos(), you.pos(), ray, opc_solid))
             continue;
 
-        const int max_move = 3;
+        const int max_move = div_rand_round(3 * delay, BASELINE_DELAY);
         for (int i = 0; i < max_move && i < orig_dist - 1; i++)
             ray.advance();
 

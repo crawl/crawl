@@ -10,16 +10,18 @@
 
 #include "enum.h"
 #include "item-prop-enum.h"
+#include "object-selector-type.h"
 #include "operation-types.h"
 
-bool use_an_item(item_def *&target, int item_type, operation_types oper,
-                 const char* prompt,
-                 function<bool ()> allowcancel = [](){ return true; });
+bool use_an_item(item_def *&target, operation_types oper,
+                int item_type=OSEL_ANY,
+                const char* prompt=nullptr,
+                function<bool ()> allowcancel = [](){ return true; });
 // Change the lambda to always_true<> when g++ 4.7 support is dropped.
 
 bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
-bool takeoff_armour(int index, bool noask = false);
+bool takeoff_armour(int index = -1, bool noask = false);
 
 void drink(item_def* potion = nullptr);
 

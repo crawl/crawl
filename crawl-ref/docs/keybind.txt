@@ -158,11 +158,12 @@ N         CMD_TARGET_DIR_DOWN_RIGHT
 U         CMD_TARGET_DIR_UP_RIGHT
 Y         CMD_TARGET_DIR_UP_LEFT
 
-x, ESCAPE      CMD_TARGET_CANCEL
+x, Esc         CMD_TARGET_CANCEL
 v              CMD_TARGET_DESCRIBE
 ?              CMD_TARGET_HELP
-SPACE, !       CMD_TARGET_SELECT
-., 5           CMD_TARGET_SELECT_ENDPOINT
+SPACE, !, Enter, NPenter
+               CMD_TARGET_SELECT
+., 5, NP.      CMD_TARGET_SELECT_ENDPOINT
 ^P             CMD_TARGET_SHOW_PROMPT
 :              CMD_TARGET_HIDE_BEAM
 ^I             CMD_TARGET_FIND_PORTAL
@@ -172,10 +173,10 @@ _              CMD_TARGET_FIND_ALTAR
 >              CMD_TARGET_FIND_DOWNSTAIR
 p              CMD_TARGET_PREV_TARGET
 f, t           CMD_TARGET_MAYBE_PREV_TARGET
--              CMD_TARGET_CYCLE_BACK,
-+, =           CMD_TARGET_CYCLE_FORWARD
-/              CMD_TARGET_OBJ_CYCLE_BACK
-*, '           CMD_TARGET_OBJ_CYCLE_FORWARD
+-,NP-          CMD_TARGET_CYCLE_BACK,
++, =, NP+, NP= CMD_TARGET_CYCLE_FORWARD
+/,NP/          CMD_TARGET_OBJ_CYCLE_BACK
+*, ',NP*       CMD_TARGET_OBJ_CYCLE_FORWARD
 )              CMD_TARGET_CYCLE_QUIVER_FORWARD  (fire interface only)
 (              CMD_TARGET_CYCLE_QUIVER_BACKWARD (fire interface only)
 Q              CMD_TARGET_SELECT_ACTION         (fire interface only)
@@ -188,11 +189,12 @@ Level-map commands
 ^W        CMD_MAP_ADD_WAYPOINT
 e         CMD_MAP_EXCLUDE_AREA (cycle through radii and toggle off/on)
 ^E        CMD_MAP_CLEAR_EXCLUDES
-+         CMD_MAP_SCROLL_DOWN
--         CMD_MAP_SCROLL_UP
-., \r, ;  CMD_MAP_GOTO_TARGET
++,NP+     CMD_MAP_SCROLL_DOWN
+-,NP-     CMD_MAP_SCROLL_UP
+., Enter, ;, NPenter, NP. 
+          CMD_MAP_GOTO_TARGET
 !         CMD_MAP_ANNOTATE_LEVEL
-ESCAPE    CMD_MAP_EXIT_MAP
+Esc       CMD_MAP_EXIT_MAP
 
 Move cursor one step in a given direction
 b         CMD_MAP_MOVE_DOWN_LEFT
@@ -218,7 +220,7 @@ Find a particular feature
 <         CMD_MAP_FIND_UPSTAIR
 >         CMD_MAP_FIND_DOWNSTAIR
 @         CMD_MAP_FIND_YOU
-\t        CMD_MAP_FIND_PORTAL
+Tab       CMD_MAP_FIND_PORTAL
 ^         CMD_MAP_FIND_TRAP
 _         CMD_MAP_FIND_ALTAR
 E         CMD_MAP_FIND_EXCLUDED

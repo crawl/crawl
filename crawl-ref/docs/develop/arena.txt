@@ -29,7 +29,7 @@ Using the arena to test problems with specific monsters is rather easy:
 
     crawl -arena "problem monster v problem monster"
 
-For specific ego items is not much harder. Say you had a problem with chaos
+For specific ego items, it's not much harder. Say you had a problem with chaos
 branded melee items. You could do
 
     crawl -arena "10 vault guard; long sword ego:chaos v

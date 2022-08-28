@@ -14,9 +14,7 @@ aptitudes:
   maces_and_flails: -2
   polearms: -2
   staves: -2
-  slings: -2
-  bows: -2
-  crossbows: -2
+  ranged weapons: -2
   throwing: -2
   armour: -2
   dodging: -2
@@ -48,17 +46,14 @@ mutations:
     MUT_TORMENT_RESISTANCE: 2
     MUT_NO_DRINK: 1
     MUT_HEAT_VULNERABILITY: 1
-  13:
+  3:
     MUT_NECRO_ENHANCER: 1
-  26:
+  13:
     MUT_NECRO_ENHANCER: 1
 recommended_jobs:
   - JOB_CINDER_ACOLYTE
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
   - JOB_CONJURER
   - JOB_NECROMANCER
   - JOB_ICE_ELEMENTALIST
   - JOB_SUMMONER
-# start TAG_MAJOR_VERSION == 34
-create_enum: false
-# end TAG_MAJOR_VERSION

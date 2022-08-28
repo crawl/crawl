@@ -212,6 +212,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             cell.fg = enums.prepare_fg_flags(cell.fg || 0);
             cell.bg = enums.prepare_bg_flags(cell.bg || 0);
             cell.cloud = enums.prepare_fg_flags(cell.cloud || 0);
+            cell.icons = cell.icons || [];
             cell.flv = cell.flv || {};
             cell.flv.f = cell.flv.f || 0;
             cell.flv.s = cell.flv.s || 0;
@@ -887,13 +888,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             if (fg.S_UNDER)
                 this.draw_icon(icons.SOMETHING_UNDER, x, y, undefined, undefined, img_scale);
 
-            if (fg.MIMIC_INEPT)
-                this.draw_icon(icons.INEPT_MIMIC, x, y, undefined, undefined, img_scale);
-            else if (fg.MIMIC)
-                this.draw_icon(icons.MIMIC, x, y, undefined, undefined, img_scale);
-            else if (fg.MIMIC_RAVEN)
-                this.draw_icon(icons.RAVENOUS_MIMIC, x, y, undefined, undefined, img_scale);
-
             // Pet mark
             if (fg.PET)
                 this.draw_icon(icons.FRIENDLY, x, y, undefined, undefined, img_scale);
@@ -901,13 +895,6 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.draw_icon(icons.GOOD_NEUTRAL, x, y, undefined, undefined, img_scale);
             else if (fg.NEUTRAL)
                 this.draw_icon(icons.NEUTRAL, x, y, undefined, undefined, img_scale);
-
-            //These icons are in the lower right, so status_shift doesn't need changing.
-            if (fg.BERSERK)
-                this.draw_icon(icons.BERSERK, x, y, undefined, undefined, img_scale);
-            if (fg.IDEALISED)
-                this.draw_icon(icons.IDEALISED, x, y, undefined, undefined, img_scale);
-
 
             var status_shift = 0;
             if (fg.STAB)
@@ -942,119 +929,10 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 status_shift += 5;
             }
 
-            if (fg.STICKY_FLAME)
+            for (var i = 0; i < cell.icons.length; ++i)
             {
-                this.draw_icon(icons.STICKY_FLAME, x, y, -status_shift, 0, img_scale);
-                status_shift += 7;
+                status_shift += this.draw_icon_type(cell.icons[i], x, y, -status_shift, 0, img_scale);
             }
-            if (fg.INNER_FLAME)
-            {
-                this.draw_icon(icons.INNER_FLAME, x, y, -status_shift, 0, img_scale);
-                status_shift += 7;
-            }
-            if (fg.CONSTRICTED)
-            {
-                this.draw_icon(icons.CONSTRICTED, x, y, -status_shift, 0, img_scale);
-                status_shift += 11;
-            }
-            if (fg.VILE_CLUTCH)
-            {
-                this.draw_icon(icons.VILE_CLUTCH, x, y, -status_shift, 0, img_scale);
-                status_shift += 11;
-            }
-            if (fg.POSSESSABLE)
-            {
-                this.draw_icon(icons.POSSESSABLE, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.ANGUISH)
-            {
-                this.draw_icon(icons.ANGUISH, x, y, -status_shift, 0, img_scale);
-                status_shift += 8;
-            }
-            if (fg.SWIFT)
-            {
-                this.draw_icon(icons.SWIFT, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.HASTED)
-            {
-                this.draw_icon(icons.HASTED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.SLOWED)
-            {
-                this.draw_icon(icons.SLOWED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.MIGHT)
-            {
-                this.draw_icon(icons.MIGHT, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.CORRODED)
-            {
-                this.draw_icon(icons.CORRODED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.DRAIN)
-            {
-                this.draw_icon(icons.DRAIN, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.PAIN_MIRROR)
-            {
-                this.draw_icon(icons.PAIN_MIRROR, x, y, -status_shift, 0, img_scale);
-                status_shift += 7;
-            }
-            if (fg.PETRIFYING)
-            {
-                this.draw_icon(icons.PETRIFYING, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.PETRIFIED)
-            {
-                this.draw_icon(icons.PETRIFIED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.BLIND)
-            {
-                this.draw_icon(icons.BLIND, x, y, -status_shift, 0, img_scale);
-                status_shift += 10;
-            }
-            if (fg.BOUND_SOUL)
-            {
-                this.draw_icon(icons.BOUND_SOUL, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.INFESTED)
-            {
-                this.draw_icon(icons.INFESTED, x, y, -status_shift, 0, img_scale);
-                status_shift += 6;
-            }
-            if (fg.RECALL)
-            {
-                this.draw_icon(icons.RECALL, x, y, -status_shift, 0, img_scale);
-                status_shift += 9;
-            }
-            if (fg.SLOWLY_DYING)
-            {
-                this.draw_icon(icons.SLOWLY_DYING, x, y, -status_shift, 0, img_scale);
-                status_shift += 10;
-            }
-            if (fg.FIRE_CHAMP)
-            {
-                this.draw_icon(icons.FIRE_CHAMP, x, y, -status_shift, 0, img_scale);
-                status_shift += 7;
-            }
-
-            // Anim. weap. and summoned might overlap, but that's okay
-            if (fg.ANIM_WEP)
-                this.draw_icon(icons.ANIMATED_WEAPON, x, y, undefined, undefined, img_scale);
-            if (fg.SUMMONED)
-                this.draw_icon(icons.SUMMONED, x, y, undefined, undefined, img_scale);
-            if (fg.PERM_SUMMON)
-                this.draw_icon(icons.PERM_SUMMON, x, y, undefined, undefined, img_scale);
 
             if (bg.UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MESH, x, y, undefined, undefined, img_scale);
@@ -1133,6 +1011,70 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
+        draw_icon_type: function(idx, x, y, ofsx, ofsy, img_scale)
+        {
+            switch (idx)
+            {
+                //These icons are in the lower right, so status_shift doesn't need changing.
+                case icons.BERSERK:
+                case icons.IDEALISED:
+                // Anim. weap. and summoned might overlap, but that's okay
+                case icons.SUMMONED:
+                case icons.PERM_SUMMON:
+                case icons.ANIMATED_WEAPON:
+                    this.draw_icon(idx, x, y, undefined, undefined, img_scale);
+                    return 0;
+                case icons.DRAIN:
+                case icons.MIGHT:
+                case icons.SWIFT:
+                case icons.DAZED:
+                case icons.HASTED:
+                case icons.SLOWED:
+                case icons.CORRODED:
+                case icons.INFESTED:
+                case icons.WEAKENED:
+                case icons.PETRIFIED:
+                case icons.PETRIFYING:
+                case icons.BOUND_SOUL:
+                case icons.POSSESSABLE:
+                case icons.PARTIALLY_CHARGED:
+                case icons.FULLY_CHARGED:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 6;
+                case icons.CONC_VENOM:
+                case icons.FIRE_CHAMP:
+                case icons.INNER_FLAME:
+                case icons.PAIN_MIRROR:
+                case icons.STICKY_FLAME:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 7;
+                case icons.ANGUISH:
+                case icons.FIRE_VULN:
+                case icons.RESISTANCE:
+                case icons.SIMULACRUM:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 8;
+                case icons.RECALL:
+                case icons.REFLECTING:
+                case icons.TELEPORTING:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 9;
+                case icons.BLIND:
+                case icons.BRILLIANCE:
+                case icons.SLOWLY_DYING:
+                case icons.WATERLOGGED:
+                case icons.STILL_WINDS:
+                case icons.ANTIMAGIC:
+                case icons.REPEL_MISSILES:
+                case icons.INJURY_BOND:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 10;
+                case icons.CONSTRICTED:
+                case icons.VILE_CLUTCH:
+                    this.draw_icon(idx, x, y, ofsx, ofsy, img_scale);
+                    return 11;
+            }
+        },
 
         // Helper functions for drawing from specific textures
         draw_tile: function(idx, x, y, mod, ofsx, ofsy, y_max, centre, img_scale)

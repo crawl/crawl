@@ -62,6 +62,7 @@ enum tiles_key_mod
     TILES_MOD_SHIFT = 0x1,
     TILES_MOD_CTRL  = 0x2,
     TILES_MOD_ALT   = 0x4,
+    TILES_MOD_CMD   = 0x8, // mac only
 };
 
 #include "windowmanager.h"

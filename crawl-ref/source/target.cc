@@ -22,6 +22,7 @@
 #include "ray.h"
 #include "spl-damage.h"
 #include "spl-goditem.h" // player_is_debuffable
+#include "spl-monench.h" // mons_simulacrum_immune_reason
 #include "spl-other.h"
 #include "spl-transloc.h"
 #include "stringutil.h"
@@ -34,13 +35,6 @@ static string _wallmsg(coord_def c)
     ASSERT(map_bounds(c)); // there'd be an information leak
     const char *wall = feat_type_name(env.grid(c));
     return "There is " + article_a(wall) + " there.";
-}
-
-static void _copy_explosion_map(explosion_map &source, explosion_map &dest)
-{
-    for (int i = 0; i < source.width(); i++)
-        for (int j = 0; j < source.height(); j++)
-            dest[i][j] = source[i][j];
 }
 
 bool targeter::set_aim(coord_def a)
@@ -83,6 +77,46 @@ bool targeter::anyone_there(coord_def loc)
 bool targeter::affects_monster(const monster_info& /*mon*/)
 {
     return true; //TODO: false
+}
+
+static inline bool _ti_should_iterate(aff_type cur_aff, aff_type threshold)
+{
+    return cur_aff == AFF_NO
+            || threshold != AFF_MAYBE && cur_aff == AFF_MAYBE;
+}
+
+targeting_iterator::targeting_iterator(targeter &t, aff_type _threshold)
+            : rectangle_iterator(t.origin, get_los_radius(), true),
+            tgt(t), threshold(_threshold)
+{
+    if (_ti_should_iterate(is_affected(), threshold))
+        operator ++();
+}
+
+void targeting_iterator::operator ++()
+{
+    // superclass will still iterate if past the end; not sure why,
+    // but mimic that behavior here
+    aff_type cur_aff;
+    do
+    {
+        rectangle_iterator::operator++();
+        cur_aff = is_affected();
+    }
+    while (operator bool() && _ti_should_iterate(cur_aff, threshold));
+}
+
+aff_type targeting_iterator::is_affected()
+{
+    return in_bounds(**this) && operator bool()
+                                        ? tgt.is_affected(**this) : AFF_NO;
+}
+
+// @param threshold AFF_YES: iterate over only AFF_YES squares. AFF_MAYBE:
+//                  iterate over both AFF_YES and AFF_MAYBE squares.
+targeting_iterator targeter::affected_iterator(aff_type threshold)
+{
+    return targeting_iterator(*this, threshold);
 }
 
 // Is the given location a valid endpoint for a Palentonga charge?
@@ -265,7 +299,7 @@ void targeter_beam::set_explosion_aim(bolt tempbeam)
     tempbeam.determine_affected_cells(exp_map_min, coord_def(), 0,
                                       min_expl_rad, true, true);
     if (max_expl_rad == min_expl_rad)
-        _copy_explosion_map(exp_map_min, exp_map_max);
+        exp_map_max = exp_map_min;
     else
     {
         exp_map_max.init(INT_MAX);
@@ -463,7 +497,7 @@ bool targeter_smite::set_aim(coord_def a)
         beam.determine_affected_cells(exp_map_min, coord_def(), 0,
                                       exp_range_min, true, true);
         if (exp_range_min == exp_range_max)
-            _copy_explosion_map(exp_map_min, exp_map_max);
+            exp_map_max = exp_map_min;
         else
         {
             exp_map_max.init(INT_MAX);
@@ -697,6 +731,30 @@ bool targeter_transference::valid_aim(coord_def a)
     return true;
 }
 
+targeter_inner_flame::targeter_inner_flame(const actor* act, int r) :
+    targeter_smite(act, r, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_inner_flame::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+    return mons_inner_flame_immune_reason(monster_at(a)).empty();
+}
+
+targeter_simulacrum::targeter_simulacrum(const actor* act, int r) :
+    targeter_smite(act, r, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_simulacrum::valid_aim(coord_def a)
+{
+    if (!targeter_smite::valid_aim(a))
+        return false;
+    return mons_simulacrum_immune_reason(monster_at(a)).empty();
+}
+
 targeter_unravelling::targeter_unravelling()
     : targeter_smite(&you, LOS_RADIUS, 1, 1, false, nullptr)
 {
@@ -762,7 +820,7 @@ bool targeter_unravelling::set_aim(coord_def a)
     exp_map_min.init(INT_MAX);
     beam.determine_affected_cells(exp_map_min, coord_def(), 0,
                                   exp_range_min, true, true);
-    _copy_explosion_map(exp_map_min, exp_map_max);
+    exp_map_max = exp_map_min;
 
     return true;
 }
@@ -880,7 +938,7 @@ bool targeter_fragment::set_aim(coord_def a)
             exp_range_min, true, true);
 
     // Min and max ranges are always identical.
-    _copy_explosion_map(exp_map_min, exp_map_max);
+    exp_map_max = exp_map_min;
 
     return true;
 }
@@ -928,17 +986,18 @@ aff_type targeter_reach::is_affected(coord_def loc)
     return AFF_NO;
 }
 
-targeter_cleave::targeter_cleave(const actor* act, coord_def target)
+targeter_cleave::targeter_cleave(const actor* act, coord_def target, int rng)
 {
     ASSERT(act);
     agent = act;
     origin = act->pos();
+    range = rng;
     set_aim(target);
 }
 
 bool targeter_cleave::valid_aim(coord_def a)
 {
-    if ((origin - a).rdist() > 1)
+    if ((origin - a).rdist() > range)
         return notify_fail("Your weapon can't reach that far!");
     return true;
 }
@@ -1549,6 +1608,36 @@ bool targeter_shadow_step::has_additional_sites(coord_def a)
 {
     get_additional_sites(a);
     return temp_sites.size();
+}
+
+aff_type targeter_refrig::is_affected(coord_def loc)
+{
+    if (!targeter_radius::is_affected(loc))
+        return AFF_NO;
+    const actor* act = actor_at(loc);
+    if (!act || act == agent || !agent->can_see(*act))
+        return AFF_NO;
+
+    int adj = 0;
+    for (adjacent_iterator ai(loc); ai; ++ai)
+    {
+        const actor* adj_act = actor_at(*ai);
+        if (adj_act
+            && agent->can_see(*adj_act)
+            && !mons_is_conjured(adj_act->type))
+        {
+            ++adj;
+        }
+    }
+    switch (adj)
+    {
+    case 0:
+        return AFF_MULTIPLE;
+    case 1:
+        return AFF_YES;
+    default:
+        return AFF_MAYBE;
+    }
 }
 
 targeter_cone::targeter_cone(const actor *act, int r)

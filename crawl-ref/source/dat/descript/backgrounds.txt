@@ -11,13 +11,13 @@ Air Magic spells provides them with the flexibility to survive.
 %%%%
 Arcane Marksman
 
-Arcane Marksmen carry ranged weapons, and use magic to make their foes more
+Arcane Marksmen carry a sling, and use magic to make their foes more
 vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers start with two wands, a magic chesspiece, and a club. They'll need
-to find better weapons and armour before their wands run out.
+Artificers start with a few magic wands and a club. They'll need to find better
+weapons and armour before their wands run out.
 %%%%
 Berserker
 
@@ -49,13 +49,13 @@ items helps them survive the dangerous journey upward.
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and carry stones to fuel the
-spell. More earthen spells are in their set of starting spells.
+Earth Elementalists know the Sandblast spell, and can later learn more earthen
+spells suitable for subtle stabbing or brute-force blasting.
 %%%%
 Enchanter
 
 Enchanters know a variety of Hexes that can incapacitate their foes, and are
-equipped with an enchanted dagger and a potion of invisibility.
+equipped with an enchanted dagger and potions of invisibility.
 %%%%
 Fighter
 
@@ -69,8 +69,8 @@ are likewise focused on fiery destruction.
 %%%%
 Gladiator
 
-Gladiators are ready for the arena with light armour, nets, and a weapon of
-their choice.
+Gladiators are ready for the arena with light armour, a weapon of their choice,
+and a few throwing weapons and nets.
 %%%%
 Hedge Wizard
 
@@ -79,8 +79,7 @@ bewildered foes.
 %%%%
 Hunter
 
-Hunters carry a ranged weapon of their choice, and are also equipped with light
-armour and a short sword.
+Hunters carry a shortbow, light armour and a scroll of immolation.
 %%%%
 Ice Elementalist
 
@@ -89,13 +88,13 @@ library are quite versatile.
 %%%%
 Monk
 
-Monks start with a simple weapon of their choice, and gain additional piety
-with the first god they worship.
+Monks start with a simple weapon of their choice and a potion of divine ambrosia,
+and gain additional piety with the first god they worship.
 %%%%
 Necromancer
 
 Necromancers are wizards specializing in the practice of death magic. They
-start out with the Pain spell.
+start out with the Necrotise spell.
 %%%%
 Summoner
 
@@ -118,6 +117,6 @@ Wanderers start with random equipment and skills.
 %%%%
 Warper
 
-Warpers start with a weapon of their choice and a scroll of blinking. They
-begin with a number of Translocations spells in their library.
+Warpers start with a weapon of their choice, a scroll of blinking, boomerangs
+of dispersal, and some Translocation spells in their library.
 %%%%

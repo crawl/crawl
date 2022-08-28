@@ -514,6 +514,8 @@ void trap_def::trigger(actor& triggerer)
             place_cloud(CLOUD_TLOC_ENERGY, p, 1 + random2(3), &triggerer);
             trap_destroyed = true;
             know_trap_destroyed = you_trigger;
+            if (you_trigger)
+                id_floor_items();
         }
         else if (you_trigger)
         {
@@ -757,9 +759,6 @@ void trap_def::trigger(actor& triggerer)
 #endif
         break;
     }
-
-    if (you_trigger)
-        learned_something_new(HINT_SEEN_TRAP, p);
 
     if (trap_destroyed)
         destroy(know_trap_destroyed);
@@ -1148,6 +1147,8 @@ void do_trap_effects()
         default:
             break;
     }
+
+    learned_something_new(HINT_MALEVOLENCE);
 }
 
 level_id generic_shaft_dest(level_id place)

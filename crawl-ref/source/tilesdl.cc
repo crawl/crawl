@@ -368,7 +368,9 @@ bool TilesFramework::initialise()
     if (!fonts_initialized())
         return false;
 
-    m_init = TileRegionInit(m_image, m_lbl_font, TILE_X, TILE_Y);
+    const auto font = tiles.is_using_small_layout() ? m_crt_font : m_lbl_font;
+    m_init = TileRegionInit(m_image, font, Options.tile_sidebar_pixels,
+                            Options.tile_sidebar_pixels);
     m_region_tile = new DungeonRegion(m_init);
     m_region_tab  = new TabbedRegion(m_init);
     m_region_inv  = new InventoryRegion(m_init);

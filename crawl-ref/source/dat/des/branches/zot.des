@@ -996,6 +996,8 @@ KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
               walk_dist = 0, spread_rate= 0 }
+# XXX: we should replace iceblast with something else when it's not
+# in this game's chosen item set.
 ITEM:    wand of iceblast, staff of cold, book of winter, \
          ozocubu's autobiography
 SUBST:   w = l
@@ -1101,16 +1103,15 @@ WEIGHT:  3
 KMONS:   1 = guardian mummy ; randart dire flail ego:chaos | \
              randart great mace ego:chaos | randart battleaxe ego:chaos| \
              randart great sword ego:chaos | randart glaive ego:chaos | \
-             randart scythe ego:chaos | randart dire flail | \
-             randart great mace | randart battleaxe | randart great sword | \
-             randart glaive | randart scythe
-KMONS:   3 = guardian mummy ; randart fustibalus ego:chaos . sling bullet / \
-             guardian mummy ; randart longbow ego:chaos . arrow / \
-             guardian mummy ; randart triple crossbow . bolt / \
-             guardian mummy ; randart fustibalus . sling bullet / \
-             guardian mummy ; randart longbow . arrow / \
-             guardian mummy ; randart arbalest . bolt
-KMONS:   5 = guardian mummy ; wand of acid | scroll of summoning
+             randart dire flail | randart great mace | randart battleaxe | \
+             randart great sword | randart glaive
+KMONS:   3 = guardian mummy ; randart hand crossbow ego:chaos / \
+             guardian mummy ; randart longbow ego:chaos / \
+             guardian mummy ; randart triple crossbow / \
+             guardian mummy ; randart hand crossbow / \
+             guardian mummy ; randart longbow / \
+             guardian mummy ; randart arbalest
+KMONS:   5 = guardian mummy ; any beam wand | scroll of summoning
 KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
              randart chain mail | randart robe . scroll of summoning
 KMONS:   2468 = killer klown
@@ -2347,7 +2348,7 @@ MONS:    very ugly thing w:20 / deep elf annihilator w:15 / \
 MONS:    curse skull w:15 / apocalypse crab / lorocyproca / acid blob
 MONS:    butterfly
 ITEM:    stone q:1 no_pickup, large rock q:1 no_pickup
-ITEM:    sling bullet q:1 no_pickup, tin of tremorstones no_pickup
+ITEM:    orb, tin of tremorstones no_pickup
 # Altars obliquely refer to those temple maps.
 KFEAT:   D = altar_lugonu / altar_jiyva / altar_beogh w:5 / C w:20
 KFEAT:   ~ = zot trap
@@ -2784,6 +2785,42 @@ MAP
 .vvvvvv%}%vvvvv%}%vvvvvv.
 .vv.G.vvvvv.G.vvvvv.G.vv.
 ............?............
+ENDMAP
+
+NAME:   dreamdust_zin_vs_xom
+TAGS:   no_monster_gen
+ORIENT: float
+DEPTH:  Zot
+COLOUR: v = white
+TILE:   v = dngn_metal_wall_white
+FTILE:  _`1 = floor_w_marble
+KFEAT:  _ = altar_zin
+TILE:   G = dngn_statue_angel
+KMONS:  s = killer klown-shaped pillar of salt
+KMONS:  f = butterfly
+MONS:   angel god:zin dbname:zin_angel
+MONS:   killer klown
+MONS:   chaos spawn
+MONS:   glowing shapeshifter
+KFEAT:  O = altar_xom
+KFEAT:  ^ = dispersal trap
+NSUBST: - = 4=s / 4=s- / -
+NSUBST: ? = O / 2=^ / 2=2 / 2=2? / 2=t / ?
+SUBST:  ? = ":400 n:30 x:40 v b ^
+SUBST:  " = ":200 W:100 O:30 f 3 4 T U V Y
+COLOUR: " = random
+MAP
+xxxxxxxxx@xxxxxxxxx
+x........."?"?"?"?x
+x.......---"?"?"?"x
+xvvvvnG.---?"?"?"?x
+xv`1`vv.---"?"?"?"x
+xv_`1`1.---?"?"?"?x
+xv`1`vv.---"?"?"?"x
+xvvvvnG.---?"?"?"?x
+x.......---"?"?"?"x
+x........."?"?"?"?x
+xxxxxxxxx@xxxxxxxxx
 ENDMAP
 
 ##############################################################################

@@ -174,6 +174,8 @@ protected:
 
     void stab_message();
 
+    void handle_noise(const coord_def & pos);
+
     string atk_name(description_level_type desc);
     string def_name(description_level_type desc);
     string wep_name(description_level_type desc = DESC_YOUR,
@@ -182,9 +184,6 @@ protected:
     attack_flavour random_chaos_attack_flavour();
     bool apply_poison_damage_brand();
 
-    virtual int  player_stat_modify_damage(int damage);
-    virtual int  player_apply_weapon_skill(int damage);
-    virtual int  player_apply_fighting_skill(int damage, bool aux);
     virtual int  player_apply_misc_modifiers(int damage);
     virtual int  player_apply_slaying_bonuses(int damage, bool aux);
     virtual int  player_apply_final_multipliers(int damage,

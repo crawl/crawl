@@ -64,6 +64,11 @@ bool is_resting();
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool feat_is_traversable_now(dungeon_feature_type feat, bool try_fallback = false);
 bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback = false);
+bool is_travelsafe_square(const coord_def& c,
+                                  bool ignore_hostile = false,
+                                  bool ignore_danger = false,
+                                  bool try_fallback = false);
+
 bool is_known_branch_id(branch_type branch);
 bool is_unknown_stair(const coord_def &p);
 bool is_unknown_transporter(const coord_def &p);
@@ -182,7 +187,7 @@ enum explore_stop_type
     ES_GREEDY_VISITED_ITEM_STACK = 0x00040,
 
     // Explored into view of a stair, shop, altar, portal, glowing
-    // item, artefact, or branch entrance.
+    // item, artefact, or branch entrance.... etc.
     ES_STAIR                     = 0x00080,
     ES_SHOP                      = 0x00100,
     ES_ALTAR                     = 0x00200,
@@ -193,6 +198,7 @@ enum explore_stop_type
     ES_BRANCH                    = 0x04000,
     ES_RUNED_DOOR                = 0x08000,
     ES_TRANSPORTER               = 0x10000,
+    ES_RUNELIGHT                 = 0x20000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -236,6 +242,7 @@ private:
     vector< named_thing<int> > altars;
     vector< named_thing<int> > runed_doors;
     vector< named_thing<int> > transporters;
+    vector< named_thing<int> > runelights;
 
     vector<string> marker_msgs;
     vector<string> marked_feats;

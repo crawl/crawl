@@ -43,14 +43,14 @@ The contents of this text are:
                 scroll_margin, always_show_exclusions
 3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
-                explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_wall_bias, travel_key_stop, travel_one_unsafe_move,
-                tc_reachable, tc_dangerous, tc_disconnected, tc_excluded,
-                tc_exclude_circle, runrest_ignore_message,
-                runrest_stop_message, interrupt_<delay>, delay_safe_poison,
-                runrest_ignore_monster, rest_wait_both, rest_wait_ancestor,
-                rest_wait_percent, explore_auto_rest, auto_exclude,
-                travel_open_doors
+                explore_greedy, explore_greedy_visit, explore_stop,
+                explore_stop_pickup_ignore, explore_wall_bias, travel_key_stop,
+                travel_one_unsafe_move, tc_reachable, tc_dangerous,
+                tc_disconnected, tc_excluded, tc_exclude_circle,
+                runrest_ignore_message, runrest_stop_message,
+                interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
+                rest_wait_both, rest_wait_ancestor, rest_wait_percent,
+                explore_auto_rest, auto_exclude, travel_open_doors
 3-g     Command Enhancements.
                 auto_switch, easy_unequip, equip_unequip, jewellery_prompt,
                 easy_confirm, simple_targeting, force_spell_targeter,
@@ -85,7 +85,7 @@ The contents of this text are:
 3-j     Quivers, firing, and ammo.
                 fire_items_start, fire_order, fire_order_spell,
                 fire_order_ability, fail_severity_to_quiver,
-                launcher_autoquiver, quiver_menu_focus
+                quiver_menu_focus
 3-k     Message Channels.
                 plain, prompt, god, duration, danger, warning, recovery,
                 talk, talk_visual, timed_portal, sound, intrinsic_gain,
@@ -114,8 +114,9 @@ The contents of this text are:
                 tile_runrest_rate, tile_key_repeat_delay, tile_tooltip_ms,
                 tile_tag_pref, tile_window_width, tile_window_height,
                 tile_map_pixels, tile_viewport_scale, tile_map_scale,
-                tile_cell_pixels, tile_filter_scaling, tile_force_overlay,
-                tile_overlay_col, tile_overlay_alpha_percent, tile_full_screen,
+                tile_cell_pixels, tile_sidebar_pixels, tile_filter_scaling,
+                tile_force_overlay, tile_overlay_col,
+                tile_overlay_alpha_percent, tile_full_screen,
                 tile_single_column_menus, tile_font_crt_file,
                 tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
                 tile_font_lbl_file, tile_font_crt_family,
@@ -380,7 +381,7 @@ species += (Human |...| Vampire | random | viable), <species>, ...
 
 background += (Fighter |...| Wanderer | random | viable), <background>, ...
         (List option)
-        Here again the abbreviations (Fi, Wz, AK, etc.) can be used. The same
+        Here again the abbreviations (Fi, HW, AK, etc.) can be used. The same
         caveat applies to "viable": it is only really meaningful if the
         species option is also set. Specifying multiple backgrounds causes
         one to be selected at random from the given species. The combo option
@@ -425,11 +426,10 @@ default_manual_training = false (persistent)
         "training".
 
 autopickup_starting_ammo = true
-        When set, at game start, autopickup is forced on (as per the \
-        menu) for the player's starting ammunition type (including stones
-        for Earth Elementalists and arrows for Transmuters). Even when this
-        option is set, autopickup of those items can be disabled from the
-        \ menu once the game has begun.
+        When set, at game start, autopickup is forced on (as per the \ menu)
+        for the player's starting ammunition type (including stones for Earth
+        Elementalists). Even when this option is set, autopickup of those items
+        can be disabled from the \ menu once the game has begun.
 
 game_seed = none
         A number indicating the seed to initialize the random number generator
@@ -440,16 +440,22 @@ game_seed = none
         unsigned 64 bit integer.
 
 pregen_dungeon = incremental
+        This setting determines the level generation mode for new games, which
+        interacts with random seeding (see the "Seeded play" section of the
+        manual). In order to generate a stable dungeon from a seed, levels need
+        to be generated in a consistent order. The recommended setting of
+        `incremental` will generate levels as needed when entering a new level
+        so that the game always generates levels in the same order, potentially
+        catching up when skipping levels in the standard order.
+
         When set to `true` or `full`, the game will pregenerate the entire
         connected dungeon when starting a new character. This leads to
-        deterministic dungeon generation relative to a particular game seed, at
-        the cost of a slow game start. If set to `incremental`, the game will
-        generate levels as needed so that it always generates them in the same
-        order, also producing a deterministic dungeon. You still may encounter
-        variation in bazaars, the abyss, pandemonium, and ziggurats, and for
-        incremental pregeneration, artefacts. When set to `false` or `classic`,
-        the game will generate all levels on level entry, as was the rule before
-        0.23. Some servers may disallow full pregeneration.
+        deterministic dungeon generation relative to a particular game seed,
+        and no load times when entering levels, but at the cost of a slow game
+        start. Some servers may disallow full pregeneration for online play.
+
+        When set to `false` or `classic`, the game will generate all levels on level entry, as was the rule before 0.23. Dungeons will not be stable
+        given a seed with this option.
 
 2-  File System.
 ================
@@ -823,6 +829,21 @@ explore_greedy = true
         otherwise identical to regular explore. Explore greed is
         disabled if autopickup is off (Ctrl-A).
 
+explore_greedy_visit = artefacts,glowing_items
+explore_greedy_visit += stacks
+        (List option)
+        Greedy exploration will visit squares with items based on
+        these conditions.
+
+        stacks: makes explore_greedy visit stacks even if they don't
+        necessarily have target auto pickup items
+
+        glowing_items: makes explore_greedy visit glowing_items,
+        even if not in a stack
+
+        artefacts: makes explore_greedy visit artefacts, even
+        if not in a stack
+
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
         (List option)
@@ -888,7 +909,9 @@ explore_wall_bias = 0
         Adjusts how much autoexplore favours attempting to discover room
         perimeters and corners. At higher values, autoexplore will more
         heavily favour visiting squares that are next to walls; at 0 it
-        will not favour them at all.
+        will not favour them at all. At negative values it will prefer
+        to stay away from walls. Note that setting this to a non-0 value
+        generally makes it slower to completely explore a level.
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
@@ -914,28 +937,33 @@ tc_exclude_circle = red
           excluded_circle: the colour for travel exclusions apart from
                            centre
 
-runrest_ignore_message += <regex>, <regex>, ...
-runrest_stop_message += <regex>, <regex>, ...
+runrest_ignore_message ^= <regex>, <regex>, ...
+runrest_stop_message ^= <regex>, <regex>, ...
         (List option)
-        Use these to force messages to interrupt travel and resting, or
-        not. These are matched against full message text. To limit a
-        substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 3-k below on Message
-        Channels). For instance, if you want travel to stop when you're
-        hit by divine retribution, you could use:
-             runrest_stop_message += god:wrath finds you
+        Use these to force messages to interrupt travel and resting, or not.
+        These are matched against full message text. To limit a substring
+        match to a message channel, prefix the substring with the channel name
+        and a colon (see section 3-k below on Message Channels). For instance,
+        if you want travel to stop when you're hit by divine retribution, you
+        could use:
+             runrest_stop_message ^= god:wrath finds you
+
         Or to remind yourself to renew expiring spells:
-             runrest_stop_message += Your transformation is almost over
-             runrest_stop_message += You are starting to lose your buoyancy
+             runrest_stop_message ^= Your transformation is almost over
+             runrest_stop_message ^= You are starting to lose your buoyancy
+
         Or you can explicitly ignore some messages:
-             runrest_ignore_message += pleased with you,exalted
+             runrest_ignore_message ^= pleased with you,exalted
 
-        Note that monster talk and dungeon noises already do not
-        interrupt running or resting, by default.
+        Note that monster talk and dungeon noises already do not interrupt
+        running or resting, by default.
 
-        Multiple lines can be used. The earliest match among both
-        ignore and stop messages overrides later lines. The file
-        runrest_messages.txt contains a number of default settings.
+        Multiple lines can be used. The earliest match among both ignore and
+        stop messages overrides later lines. The file runrest_messages.txt
+        contains a number of default settings. These options accept `^=` to
+        prepend and `+=` to add; the former is necessary in order to override
+        defaults, including overriding defaults for `ignore` matches with
+        `stop` matches and vice versa.
 
         Resetting either option has the effect of resetting both.
 
@@ -990,7 +1018,7 @@ rest_wait_percent = 100
 
 explore_auto_rest = true
         If true, auto-explore waits until your HP and MP are both at
-        rest_wait_percent before moving.
+        rest_wait_percent before moving. This is always disabled for Meteorans.
 
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
@@ -1052,11 +1080,10 @@ simple_targeting = false
         while avoiding the player. This applies to target selection when
         zapping as well as autotarget selection for quivered spells.
 
-force_spell_targeter = hailstorm, starburst, frozen ramparts, maxwell's
-                       capacitive coupling, ignition, eringya's noxious bog,
-                       cause fear, alistair's intoxication, discord, dispersal,
-                       metabolic englaciation, dazzling flash, flame wave,
-                       anguish
+force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
+                       eringya's noxious bog, cause fear, alistair's
+                       intoxication, discord, dispersal, metabolic englaciation,
+                       dazzling flash, flame wave, anguish
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
@@ -1413,7 +1440,7 @@ mp_warning = 0
         channel when the player's magic points drop below this
         percentage of their maximum (use 0 to turn off these messages).
 
-hp_colour = 50:yellow, 25:red
+hp_colour = 70:yellow, 40:red
         (List option)
         hp_colour colours your Health appropriately in the status
         display. In the default setting, your health will appear in
@@ -1607,7 +1634,7 @@ use_animations += branch_entry
         banished. All animations are enabled by default, and the categories
         that can be enabled/disabled independently are:
 
-          beam             - Animation for casting a beam spell or throwing a
+          beam             - Animation for casting a beam spell or firing a
                              ranged weapon.
           range            - Flashes the screen with an overlay indicating the
                              actual range of an attempted spell, if there are
@@ -1815,16 +1842,15 @@ fire_order  = launcher, throwing, inscribed, spell, evokable, ability
         higher priority. Absent action types are not used when cycling
         the quiver. This option also affects autoquivering on game start.
 
-        'launcher' refers to firing the appropriate missile for a
-        wielded weapon (i.e. crossbow, bow, sling). 'throwing' refers to
-        all throwing ammo. Specific throwing ammo types can be refered to
-        by name ('javelin', 'boomerang', 'stone', 'rock', 'net', 'dart'),
-        but order of these only affects order internal to throwing ammo
-        types; 'inscribed' can also be used to control the order of ammo
-        that has been inscribed with "+f". See the "Inscriptions" section of
-        Crawl's manual for more information about inscriptions. Ammo types
-        can be separated with a "/" to indicate that inventory order should
-        determine cycle order. Order within types is determined by letter
+        'launcher' refers to firing a wielded ranged weapon (i.e. crossbow,
+        bow, sling). 'throwing' refers to all throwing ammo. Specific throwing
+        ammo types can be refered to by name ('javelin', 'boomerang', 'stone',
+        'rock', 'net', 'dart'), but order of these only affects order internal
+        to throwing ammo types; 'inscribed' can also be used to control the
+        order of ammo that has been inscribed with "+f". See the "Inscriptions"
+        section of Crawl's manual for more information about inscriptions. Ammo
+        types can be separated with a "/" to indicate that inventory order
+        should determine cycle order. Order within types is determined by letter
         order in the relevant submenu (e.g. inventory for throwing, etc).
 
 fire_order_spell = all
@@ -1855,9 +1881,9 @@ fail_severity_to_quiver = 2
         miscast values.
 
 launcher_autoquiver = true
-        If set to true, change the main quiver to launcher ammo on wielding
-        that launcher; if set to false, the main quiver is unaffected by
-        wielding a launcher. (Firing via tab or `v` still work.).
+        If set to true, change the quiver to the launcher on wielding it;
+        if set to false, the quiver is unchanged on wielding a launcher.
+        (Firing via tab or `v` will still work.).
 
 quiver_menu_focus = false (persistent)
         If set to true, start the quiver menu in "focused" mode where action
@@ -1866,8 +1892,6 @@ quiver_menu_focus = false (persistent)
         from the menu, but lettering is not stable in this menu. This option
         is persistent so that the current value in the quiver menu is saved
         across games and automatically reloaded unless set explicitly.
-
-(See also pickup_thrown in 3-a, and the various autofight settings in 3-g.)
 
 3-k     Message Channels.
 -------------------------
@@ -1964,19 +1988,30 @@ macros += M \{9} za
         This options adds a macro or keymap.
 
         Each definition consists of exactly three arguments separated by
-        spaces. The first one describes whether it is a macro or a keymap:
-        "M" macro,
-        "K"  default context keymap,
-        "K1" level-map context keymap,
-        "K2" targeting context keymap
-        "K3" confirmation context keymap.
+        spaces. The first one describes whether it is a macro or a keymap.
+        Keymaps are generally most useful for renaming keys entirely and are
+        processed before macros. If you don't know which to use, you probably
+        want a macro.
+
+        "M" macros (processed when entering game commands)
+
+        Specialized keymap contexts:
+        "K1" level-map context keymap (during the `X` view only)
+        "K2" targeting context keymap (during targeting and `x` view)
+        "K3" confirmation context keymap (when responding to a y/n prompt)
+        "K4" menu context keymap (all menus, except the skill menu)
+
+        Default keymap context:
+        "K" default context keymap (any other context)
 
         The second argument describes the trigger key and consists the
         character or keycode of that key (for example 'a', 'A' or \{9} for the
         A, Shift-A or Tab keys). The third argument describes the macro or
         keymap action and consists the command sequence to be associated with
         the second argument. (for example "zap" for zapping the spell in slot a
-        at the previous target).
+        at the previous target). Function keys, numpad keys, and navigation
+        keys can be entered via text keycodes (examples: \{F2}, \{NP-},
+        \{PgUp}, \{Down}, etc).
 
         If you have any macros/keymaps in your rc file, they will automatically
         be saved to your macro.txt file on load, silently overriding any
@@ -2011,7 +2046,9 @@ bindkey = [^D] CMD_BUTCHER
         that key. You can bind several commands to the same key, as long
         as they take effect in different areas of the game, i.e. one
         targeting command and one for the main game. Likewise, you can
-        bind the same command to different keys.
+        bind the same command to different keys. You can use the \{} syntax
+        from macro binds to write keycodes, and keycodes like "F1", "NP+",
+        and "Down" can appear directly in [].
         For a full list of possible commands, see keybind.txt.
 
 3-n     Tiles Options.
@@ -2185,9 +2222,14 @@ tile_cell_pixels = 32
         (logical) pixels. This is a legacy option, and it is recommended that
         you adjust scaling via tile_viewport_scale instead.
 
+tile_sidebar_pixels = 32
+        The width and height of tiles in the local tiles sidebar view,
+        in (logical) pixels.
+
 tile_filter_scaling = false
-        Used in conjunction with tile_cell_pixels. Setting it to true filters
-        the textures resulting in a smoother but blurrier image.
+        Used in conjunction with tile_cell_pixels or tile_sidebar_pixels.
+        Setting it to true filters the textures resulting in a smoother but
+        blurrier image.
 
 tile_force_overlay = false
         Setting this option to true will force the message window to appear as
@@ -2413,8 +2455,8 @@ dump_kill_places = (none | all | single)
         In the Vanquished Creatures list, this option controls how the
         locations of each kill are displayed. Use 'none' to suppress
         place display altogether, 'all' to display all known (up to 5)
-        kill places, anything else to the default of showing kill places
-        only for single kills
+        kill places, and 'single' to use the default of showing kill
+        places only for single kills.
 
 dump_item_origins = artefacts
         The game remembers where you find items. If you want this item
@@ -3111,3 +3153,7 @@ Set a separate glyph for unvisited stairs and transporters:
     feature += stone staircase leading up {<,x25C2}
     feature += stone staircase leading down {>,x25B8}
     feature += transporter {xA9, x25CE}
+
+Visit squares with stacks of items when exploring to print all newly
+encountered items:
+    explore_greedy_visit += stacks

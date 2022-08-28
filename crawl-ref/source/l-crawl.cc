@@ -423,10 +423,10 @@ static int crawl_do_targeted_command(lua_State *ls)
     case CMD_FIRE:
         quiver::get_secondary_action()->trigger(target);
         break;
-    case CMD_THROW_ITEM_NO_QUIVER:
+    case CMD_FIRE_ITEM_NO_QUIVER:
         // This pops up an inventory menu -- maybe support taking an item
         // directly?
-        throw_item_no_quiver(&target);
+        fire_item_no_quiver(&target);
         break;
     default:
         luaL_argerror(ls, 1, ("Not a (supported) targeted command: " + command).c_str());
@@ -1420,6 +1420,30 @@ static int crawl_version(lua_State *ls)
     return 1;
 }
 
+LUAFN(crawl_hints_type)
+{
+    if (crawl_state.game_is_tutorial())
+        lua_pushstring(ls, "tutorial");
+    else if (!crawl_state.game_is_hints())
+        lua_pushstring(ls, "");
+    else
+        switch (Hints.hints_type)
+        {
+        case HINT_BERSERK_CHAR:
+            lua_pushstring(ls, "berserk");
+            break;
+        case HINT_RANGER_CHAR:
+            lua_pushstring(ls, "ranger");
+            break;
+        case HINT_MAGIC_CHAR:
+            lua_pushstring(ls, "magic");
+            break;
+        default:
+            die("invalid hints_type");
+        }
+    return 1;
+}
+
 static const struct luaL_reg crawl_clib[] =
 {
     { "mpr",                crawl_mpr },
@@ -1491,6 +1515,7 @@ static const struct luaL_reg crawl_clib[] =
 #endif
     { "version",            crawl_version },
     { "weapon_check",       crawl_weapon_check},
+    { "hints_type",         crawl_hints_type },
     { nullptr, nullptr },
 };
 
@@ -1701,30 +1726,6 @@ LUAFN(_crawl_set_max_runes)
 
 LUAWRAP(_crawl_mark_game_won, crawl_state.mark_last_game_won())
 
-LUAFN(crawl_hints_type)
-{
-    if (crawl_state.game_is_tutorial())
-        lua_pushstring(ls, "tutorial");
-    else if (!crawl_state.game_is_hints())
-        lua_pushstring(ls, "");
-    else
-        switch (Hints.hints_type)
-        {
-        case HINT_BERSERK_CHAR:
-            lua_pushstring(ls, "berserk");
-            break;
-        case HINT_RANGER_CHAR:
-            lua_pushstring(ls, "ranger");
-            break;
-        case HINT_MAGIC_CHAR:
-            lua_pushstring(ls, "magic");
-            break;
-        default:
-            die("invalid hints_type");
-        }
-    return 1;
-}
-
 LUAFN(crawl_rng_wrap)
 {
     if (!lua_isstring(ls, 2))
@@ -1786,7 +1787,6 @@ static const struct luaL_reg crawl_dlib[] =
 { "tutorial_hint",   crawl_tutorial_hint },
 { "print_hint", crawl_print_hint },
 { "mark_game_won", _crawl_mark_game_won },
-{ "hints_type", crawl_hints_type },
 { "unavailable_god", _crawl_unavailable_god },
 { "rng_wrap", crawl_rng_wrap },
 { "clear_message_store", crawl_clear_message_store },

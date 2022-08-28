@@ -22,6 +22,7 @@ struct crawl_tile_environment
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> bg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> cloud;
+    map<coord_def, set<tileidx_t>> icons;
 #endif
     tile_flavour default_flavour;
     std::vector<std::string> names;

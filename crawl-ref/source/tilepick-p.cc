@@ -35,9 +35,6 @@ static tileidx_t _mon_mod(tileidx_t tile, int offset)
 
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
-    if (item.props.exists(WORN_TILE_KEY))
-        return item.props[WORN_TILE_KEY].get_short();
-
     if (item.base_type == OBJ_STAVES)
     {
         int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
@@ -216,9 +213,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         tile = TILEP_HAND1_LAJATANG;
         break;
 
-    case WPN_SCYTHE:
-        tile = TILEP_HAND1_SCYTHE;
-        break;
     case WPN_TRIDENT:
         tile = TILEP_HAND1_TRIDENT2;
         break;
@@ -230,11 +224,8 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         break;
 
     // Ranged
-    case WPN_HUNTING_SLING:
-        tile = TILEP_HAND1_HUNTING_SLING;
-        break;
-    case WPN_FUSTIBALUS:
-        tile = TILEP_HAND1_FUSTIBALUS;
+    case WPN_SLING:
+        tile = TILEP_HAND1_SLING;
         break;
     case WPN_SHORTBOW:
         tile = TILEP_HAND1_BOW2;
@@ -259,6 +250,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 
     default: tile = 0;
     }
+
+    if (item.props.exists(WORN_TILE_KEY))
+        tile = item.props[WORN_TILE_KEY].get_short();
 
     return tile ? tileidx_enchant_equ(item, tile, true) : 0;
 }
@@ -642,6 +636,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_CENTAUR:
 #endif
         return TILEP_BASE_PALENTONGA;
+    case SP_METEORAN:
+        return TILEP_BASE_METEORAN;
     case SP_DEMIGOD:
         return TILEP_BASE_DEMIGOD;
     case SP_SPRIGGAN:
@@ -653,13 +649,14 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_GHOUL:
         return TILEP_BASE_GHOUL;
     case SP_TENGU:
+#if TAG_MAJOR_VERSION == 34
+    case SP_MAYFLYTAUR:
+#endif
         return TILEP_BASE_TENGU;
     case SP_MERFOLK:
         return TILEP_BASE_MERFOLK;
     case SP_VAMPIRE:
         return TILEP_BASE_VAMPIRE;
-    case SP_DEEP_DWARF:
-        return TILEP_BASE_DEEP_DWARF;
     case SP_GARGOYLE:
         return TILEP_BASE_GARGOYLE;
     case SP_FELID:
@@ -747,10 +744,6 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             break;
         case SP_VAMPIRE:
             hair = TILEP_HAIR_ARWEN;
-            break;
-        case SP_DEEP_DWARF:
-            hair  = TILEP_HAIR_SHORT_WHITE;
-            beard = TILEP_BEARD_GARIBALDI_WHITE;
             break;
         case SP_SPRIGGAN:
             hair = 0;
@@ -860,7 +853,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN2;
             break;
 
-        case JOB_WIZARD:
+        case JOB_HEDGE_WIZARD:
             parts[TILEP_PART_BODY]  = TILEP_BODY_GANDALF_G;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_GANDALF;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_CYAN_DIM;

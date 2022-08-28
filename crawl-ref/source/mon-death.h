@@ -45,6 +45,8 @@ item_def* monster_die(monster& mons, killer_type killer,
 item_def* mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                        int killer_index);
 
+bool mons_will_goldify(const monster &mons);
+
 item_def* place_monster_corpse(const monster& mons, bool force = false);
 
 void monster_cleanup(monster* mons);

@@ -153,7 +153,7 @@ CFWARN_L += -Wextra \
 	    -Wno-type-limits \
 	    -Wno-uninitialized \
 
-DEFINES := -DTOURNEY='"0.28"' $(EXTERNAL_DEFINES)
+DEFINES := $(EXTERNAL_DEFINES)
 
 ifndef ANDROID
 LDFLAGS :=
@@ -209,6 +209,7 @@ HOST := $(shell sh -c 'cc -dumpmachine || echo unknown')
 ARCH := $(HOST)
 
 ifdef CROSSHOST
+	# XX is there a way of integrating this with mac cross-compiling?
 	ARCH := $(CROSSHOST)
 	ifneq (,$(shell which $(ARCH)-pkg-config 2>/dev/null))
 	  PKGCONFIG = $(ARCH)-pkg-config
@@ -248,6 +249,7 @@ ifdef msys
 	NEED_LIBW32C = YesPlease
 	BUILD_PCRE = YesPlease
 	BUILD_ZLIB = YesPlease
+	BUILD_SQLITE = YesPlease
 	SOUND = YesPlease
 	DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
 	EXTRA_LIBS += -lwinmm
@@ -328,6 +330,7 @@ endif
 # Should be the first rule, but must come after $(GAME) is set.
 all: greet check-fonts $(GAME) docs webserver
 
+# XX these are set wrong on mac cross-compiling
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
 LIBSDL2 := contrib/install/$(ARCH)/lib/libSDL2.a
 LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
@@ -483,12 +486,15 @@ CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 CXX += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 endif
 
+ifdef BUILD_OLD_UNIVERSAL
+# XX remove?
 ifndef CROSSHOST
 # Don't need a universal build of host tools, so use DEPCC.
 HOSTCC = $(DEPCC)
 HOSTCXX = $(DEPCXX)
 export HOSTCC
 export HOSTCXX
+endif
 endif
 
 endif # MacOS
@@ -1960,6 +1966,9 @@ package-windows-zips: package-windows-tiles package-windows-console
 # relative to my current knowledge of how this can be done: it requires
 # building binaries for each target and then merging them with the `lipo`
 # utility.
+
+# Note: cross-compiling tiles on mac requires pkg-config and libpng to be
+# installed, e.g. via homebrew
 
 # XX parameterise these in some less dumb way
 # these two targets rely heavily on passing flags to submakes

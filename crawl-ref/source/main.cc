@@ -151,6 +151,7 @@
 #include "wiz-you.h" // FREEZE_TIME_KEY
 #include "wizard.h" // handle_wizard_command() and enter_explore_mode()
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
+#include "zot.h"
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -567,6 +568,7 @@ static void _show_commandline_options_help()
 #endif
     puts("  -playable-json   list playable species, jobs, and character combos.");
     puts("  -branches-json   list branch data.");
+    puts("  -no-player-bones do not write player's info to bones files.");
 
 #if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
     text_popup(help, L"Dungeon Crawl command line help");
@@ -598,11 +600,18 @@ static string _wanderer_spell_str()
                               });
 }
 
+static string _get_equip_str()
+{
+    if (inv_count() == 0)
+        return "";
+    if (you.char_class == JOB_WANDERER)
+        return _wanderer_equip_str();
+    return "";
+}
+
 static void _djinn_announce_spells()
 {
-    const string equip_str = (you.char_class == JOB_WANDERER
-                                 && inv_count() > 0) ? _wanderer_equip_str()
-                                                    : "";
+    const string equip_str =_get_equip_str();
     const string spell_str = you.spell_no ?
                                 "the following spells memorised: " + _wanderer_spell_str() :
                                 "";
@@ -611,6 +620,9 @@ static void _djinn_announce_spells()
 
     const string spacer = spell_str.empty() || equip_str.empty() ? "" : "; and ";
     mprf("You begin with %s%s%s.", equip_str.c_str(), spacer.c_str(), spell_str.c_str());
+
+    take_note(Note(NOTE_MESSAGE, 0, 0, you.your_name + " set off with " +
+                                       equip_str + spell_str + "."));
 }
 
 // Announce to the message log and make a note of the player's starting items,
@@ -645,7 +657,7 @@ static void _wanderer_note_equipment()
          spell_str.c_str(), library_str.c_str());
 
     const string combined_str = you.your_name + " set off with "
-                                + equip_str + spell_str + library_str;
+                                + equip_str + spell_str + library_str + ".";
     take_note(Note(NOTE_MESSAGE, 0, 0, combined_str));
 }
 
@@ -753,8 +765,12 @@ static void _start_running(int dir, int mode)
     if (Hints.hints_events[HINT_SHIFT_RUN] && mode == RMODE_START)
         Hints.hints_events[HINT_SHIFT_RUN] = false;
 
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true)
+        || !can_rest_here(true)
+            && (mode == RMODE_REST_DURATION || mode == RMODE_WAIT_DURATION))
+    {
         return;
+    }
 
     const coord_def next_pos = you.pos() + Compass[dir];
 
@@ -1225,7 +1241,7 @@ static void _input()
         // binding, your turn may be ended by the first invoke of the
         // macro.
         if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
-            process_command(cmd, real_prev_cmd);
+            ::process_command(cmd, real_prev_cmd);
 
         repeat_again_rec.paused = true;
 
@@ -1648,10 +1664,10 @@ static void _experience_check()
         perc = (you.experience - exp_needed(xl)) * 100
              / (exp_needed(xl + 1) - exp_needed(xl));
         perc = (nl - xl) * 100 - perc;
-        mprf(you.lives < 2 ?
-             "You'll get an extra life in %d.%02d levels' worth of XP." :
-             "If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
-             perc / 100, perc % 100);
+        you.lives < 2 ?
+             mprf("You'll get an extra life in %d.%02d levels' worth of XP.", perc / 100, perc % 100) :
+             mprf("If you died right now, you'd get an extra life in %d.%02d levels' worth of XP.",
+             (perc / 100) + 1 , perc % 100);
     }
 
     handle_real_time();
@@ -1680,26 +1696,6 @@ static void _experience_check()
 #endif
 }
 
-static void _do_remove_armour()
-{
-    if (you.has_mutation(MUT_NO_ARMOUR))
-    {
-        mprf("You can't remove your %s, sorry.",
-                            species::skin_name(you.species).c_str());
-        return;
-    }
-
-    if (!form_can_wear())
-    {
-        mpr("You can't wear or remove anything in your present form.");
-        return;
-    }
-
-    int index = 0;
-    if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
-        takeoff_armour(index);
-}
-
 static void _toggle_travel_speed()
 {
     you.travel_ally_pace = !you.travel_ally_pace;
@@ -1723,12 +1719,15 @@ static void _do_rest()
     }
 #endif
 
-    if (i_feel_safe())
+    if (bezotted() && !yesno("Really rest while Zot is near?", false, 'n'))
     {
-        if ((you.hp == you.hp_max || !player_regenerates_hp())
-            && (you.magic_points == you.max_magic_points
-                || !player_regenerates_mp())
-            && ancestor_full_hp())
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    if (i_feel_safe() && can_rest_here())
+    {
+        if (you.is_sufficiently_rested(true) && ancestor_full_hp())
         {
             mpr("You start waiting.");
             _start_running(RDIR_REST, RMODE_WAIT_DURATION);
@@ -1737,6 +1736,9 @@ static void _do_rest()
         else
             mpr("You start resting.");
     }
+    // intentional fallthrough for else case! Messaging is handled in
+    // _start_running, update the corresponding conditional there if you
+    // change this one.
 
     _start_running(RDIR_REST, RMODE_REST_DURATION);
 }
@@ -1767,7 +1769,6 @@ static void _do_display_map()
 static void _do_cycle_quiver(int dir)
 {
     const bool changed = you.quiver_action.cycle(dir);
-    you.launcher_action.set(you.quiver_action.get());
     quiver::set_needs_redraw();
 
     const bool valid = you.quiver_action.get()->is_valid();
@@ -1779,7 +1780,7 @@ static void _do_cycle_quiver(int dir)
         // fire_order, or setting fire_items_start, and still available from
         // the menu. This messaging still excludes stuff that requires
         // force-quivering, e.g. zigfigs
-        const bool others = !valid && quiver::anything_to_quiver(true);
+        const bool others = !valid && quiver::anything_to_quiver();
         mprf("No %squiver actions available for cycling.%s",
             valid ? "other " : "",
             others ? " Use [<white>Q</white>] to select from all actions."
@@ -1901,7 +1902,11 @@ public:
     command_type cmd;
     GameMenu()
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER),
+                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER
+#ifdef USE_TILE_LOCAL
+                | MF_SPECIAL_MINUS // doll editor (why?)
+#endif
+                ),
           cmd(CMD_NO_CMD)
     {
         set_tag("game_menu");
@@ -1919,7 +1924,7 @@ public:
                 {
                     // recurse
                     if (c->cmd != CMD_NO_CMD)
-                        process_command(c->cmd, CMD_GAME_MENU);
+                        ::process_command(c->cmd, CMD_GAME_MENU);
                     return true;
                 }
                 // otherwise, exit menu and process in the main process_command call
@@ -1928,6 +1933,13 @@ public:
             }
             return true;
         };
+    }
+
+    bool skip_process_command(int keyin) override
+    {
+        if (keyin == '?')
+            return true; // hotkeyed
+        return Menu::skip_process_command(keyin);
     }
 
     void fill_entries()
@@ -2118,7 +2130,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_SAFE_WAIT:
-        if (!i_feel_safe(true))
+        if (!i_feel_safe(true) && can_rest_here(true))
             break;
         // else fall-through
     case CMD_WAIT:
@@ -2139,16 +2151,15 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_LOOK_AROUND:          do_look_around();         break;
     case CMD_QUAFF:                drink();                  break;
     case CMD_READ:                 read();                   break;
-    case CMD_REMOVE_ARMOUR:        _do_remove_armour();      break;
+    case CMD_REMOVE_ARMOUR:        takeoff_armour();         break;
     case CMD_REMOVE_JEWELLERY:     remove_ring();            break;
     case CMD_SHOUT:                issue_orders();           break;
-    case CMD_THROW_ITEM_NO_QUIVER: throw_item_no_quiver();   break;
+    case CMD_FIRE_ITEM_NO_QUIVER:  fire_item_no_quiver();    break;
     case CMD_WEAPON_SWAP:          wield_weapon(true);       break;
     case CMD_WEAR_ARMOUR:          wear_armour();            break;
-    case CMD_WEAR_JEWELLERY:       puton_ring(-1);           break;
+    case CMD_WEAR_JEWELLERY:       puton_ring();             break;
     case CMD_WIELD_WEAPON:         wield_weapon(false);      break;
     case CMD_ZAP_WAND:             zap_wand();               break;
-
     case CMD_DROP:
         drop();
         break;
@@ -2633,12 +2644,14 @@ void world_reacts()
         update_turn_count();
         msgwin_new_turn();
         crawl_state.lua_calls_no_turn = 0;
-        if (crawl_state.game_is_sprint()
-            && !(you.num_turns % 256)
+        if ((crawl_state.game_is_sprint() && !(you.num_turns % 256)
+                || crawl_state.save_after_turn)
             && !you_are_delayed()
             && !crawl_state.disables[DIS_SAVE_CHECKPOINTS])
         {
             // Resting makes the saving quite random, but meh.
+            crawl_state.save_after_turn = false;
+            save_level(level_id::current());
             save_game(false);
         }
     }

@@ -20,6 +20,12 @@ ifdef ANDROID
 endif
 
 ifdef TILES
+	ifdef MAC_TARGET
+		# require pkg-config for this build target; we need libs that align with
+		# the host arch, and this is an easy way to get them
+	  PNG_INCLUDE := $(shell $(PKGCONFIG) libpng --cflags 2> /dev/null)
+	  PNG_LIB := $(shell $(PKGCONFIG) libpng --libs 2> /dev/null)
+	else
   ifndef NO_PKGCONFIG
     PNG_INCLUDE := $(shell $(PKGCONFIG) libpng --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include")
     PNG_LIB := $(shell $(PKGCONFIG) libpng --libs 2> /dev/null || echo "../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a")
@@ -27,6 +33,7 @@ ifdef TILES
     PNG_INCLUDE := -I../contrib/install/$(ARCH)/include
     PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
   endif
+	endif
 
   CFLAGS += $(PNG_INCLUDE)
   LDFLAGS += $(PNG_LIB)
@@ -116,7 +123,7 @@ TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for hig
 ##########################################################################
 # Dependencies
 
-gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt dc-abilities.txt dc-invocations.txt
+gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt dc-abilities.txt dc-invocations.txt dc-mutations.txt
 main.png tiledef-main.h tileinfo-main.js: dc-item.txt dc-unrand.txt dc-corpse.txt dc-misc.txt
 player.png tiledef-player.h tileinfo-player.js: dc-mon.txt dc-tentacles.txt dc-zombie.txt dc-demon.txt
 

@@ -94,6 +94,10 @@ Battlecry cast
 
 @The_monster@ roars a battlecry!
 %%%%
+Hunting Call cast
+
+@The_monster@ barks out a call to the hunt!
+%%%%
 Blinkbolt cast
 
 @The_monster@ bursts into living lightning!
@@ -128,7 +132,7 @@ Goad Beasts cast
 
 @The_monster@ goads on nearby beasts.
 %%%%
-ironbound thunderhulk cast
+Call Down Lightning cast
 
 Electricity crackles from @the_monster@'s apparatus.
 %%%%
@@ -197,6 +201,12 @@ Haste Plants cast
 Major Destruction cast
 
 @The_monster@ conjures a destructive force in the name of @possessive_God@!
+%%%%
+Sheza's Dance cast
+
+@The_monster@ sends weapons flying into battle!
+
+@The_monster@ gestures, and weapons take to the air!
 %%%%
 Druid's Call cast
 
@@ -523,6 +533,21 @@ Paralyse Xtahua cast
 @The_monster@ roars overwhelmingly @at@ @target@!
 
 @The_monster@ thunders ferociously @at@ @target@!
+%%%%
+Vv cast
+
+VISUAL:@The_monster@ gestures sharply.
+
+VISUAL:@The_monster@ stamps @possessive@ foot.
+
+VISUAL:@The_monster@ slams @possessive@ palms together.
+
+w:3
+VISUAL:@The_monster@ makes an elaborate arcing motion.
+%%%%
+unseen Vv cast
+
+You hear the sound of rock striking rock.
 %%%%
 ########################################################################
 # Individual monsters

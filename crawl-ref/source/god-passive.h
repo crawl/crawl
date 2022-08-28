@@ -231,15 +231,6 @@ enum class passive_t
     /// Enemies that inflict damage upon you will sometime receive a detrimental status effect
     upgraded_aura_of_power,
 
-    /// Pakellas prevents you from regenerating your mana reserve
-    no_mp_regen,
-
-    /// Pakellas identifies wands and rods
-    identify_devices,
-
-    /// Pakellas collects and distills extra MP from your kills
-    bottle_mp,
-
     /// Hep's transfer drains enemies adjacent to the effect's target
     transfer_drain,
 
@@ -293,7 +284,7 @@ int qazlal_sh_boost(int piety = you.piety);
 int tso_sh_boost();
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
-bool does_ru_wanna_redirect(monster* mon);
+bool does_ru_wanna_redirect(const monster &mon);
 ru_interference get_ru_attack_interference_level();
 monster* shadow_monster(bool equip = true);
 void shadow_monster_reset(monster *mon);
@@ -310,5 +301,6 @@ void wu_jian_wall_jump_effects();
 bool wu_jian_has_momentum(wu_jian_attack_type);
 bool wu_jian_post_move_effects(bool did_wall_jump,
                                const coord_def& initial_position);
+bool wu_jian_move_triggers_attacks(coord_def new_pos);
 
 void okawaru_handle_duel();

@@ -2,6 +2,7 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include "options.h"
 #include "tilereg-tab.h"
 
 #include "command-type.h"
@@ -20,7 +21,7 @@ TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     m_mouse_tab(-1),
     m_use_small_layout(false),
     m_is_deactivated(false),
-    m_buf_gui(&init.im->m_textures[TEX_GUI])
+    m_buf_gui(&init.im->get_texture(TEX_GUI))
 {
 }
 
@@ -367,8 +368,9 @@ int TabbedRegion::get_mouseover_tab(wm_mouse_event &event) const
         // x = ... only works because we have offset all the way over to the right and
         //         it's just the margin (ox) that's visible
         x = ((sx+ox)-event.px)*32/dx;
-        y = y*32/dy;
     }
+
+    y = y*32/dy;
 
     if (x < 0 || x > ox || y < 0 || y > wy)
         return -1;

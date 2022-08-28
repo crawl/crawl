@@ -64,6 +64,28 @@ int melee_confuse_chance(int HD)
 }
 
 /**
+ * What is the player's to-hit for aux attacks, before randomization?
+ */
+int aux_to_hit()
+{
+    int to_hit = 1300
+                + you.dex() * 75
+                + you.skill(SK_FIGHTING, 30);
+    to_hit /= 100;
+
+    if (you.get_mutation_level(MUT_EYEBALLS))
+        to_hit += 2 * you.get_mutation_level(MUT_EYEBALLS) + 1;
+
+    if (you.duration[DUR_VERTIGO])
+        to_hit -= 5;
+
+    to_hit += slaying_bonus();
+
+    return to_hit;
+
+}
+
+/**
  * Return the odds of an attack with the given to-hit bonus hitting a defender with the
  * given EV, rounded to the nearest percent.
  *
@@ -362,8 +384,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         melee_attack melee_attk(attacker, defender, attack_number,
                                 effective_attack_number);
 
-        if (simu)
-            melee_attk.simu = true;
+        melee_attk.simu = simu;
 
         // If the attack fails out, keep effective_attack_number up to
         // date so that we don't cause excess energy loss in monsters
@@ -555,6 +576,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_PAIN:
         case BEAM_MALIGN_OFFERING:
         case BEAM_VAMPIRIC_DRAINING:
+        case BEAM_NECROTISE:
             return defender->res_negative_energy();
         case BEAM_ACID:
             return defender->res_acid();
@@ -603,6 +625,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
         const bool immune_at_3_res = is_mon
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
+                                     || flavour == BEAM_NECROTISE
                                      || flavour == BEAM_MALIGN_OFFERING
                                      || flavour == BEAM_VAMPIRIC_DRAINING
                                      || flavour == BEAM_HOLY
@@ -622,6 +645,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG
                      || flavour == BEAM_PAIN
+                     || flavour == BEAM_NECROTISE
                      || flavour == BEAM_MALIGN_OFFERING
                      || flavour == BEAM_VAMPIRIC_DRAINING)
             {
@@ -746,7 +770,9 @@ bool force_player_cleave(coord_def target)
 
     if (!cleave_targets.empty())
     {
-        targeter_cleave hitfunc(&you, target);
+        // Rift is too funky and hence gets no special treatment.
+        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        targeter_cleave hitfunc(&you, target, range);
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
 
@@ -760,12 +786,20 @@ bool force_player_cleave(coord_def target)
 
 bool attack_cleaves(const actor &attacker, int which_attack)
 {
-    const item_def* weap = attacker.weapon(which_attack);
+    if (attacker.is_player()
+        && (you.form == transformation::storm || you.duration[DUR_CLEAVE]))
+    {
+        return true;
+    }
 
-    return weap && item_attack_skill(*weap) == SK_AXES
-        || attacker.is_player()
-            && (you.form == transformation::storm
-                || you.duration[DUR_CLEAVE]);
+    const item_def* weap = attacker.weapon(which_attack);
+    return weap && weapon_cleaves(*weap);
+}
+
+bool weapon_cleaves(const item_def &weap)
+{
+    return item_attack_skill(weap) == SK_AXES
+           || is_unrandom_artefact(weap, UNRAND_LOCHABER_AXE);
 }
 
 /**
@@ -788,25 +822,27 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
+    const item_def* weap = attacker.weapon(which_attack);
+
     if (attack_cleaves(attacker, which_attack))
     {
         const coord_def atk = attacker.pos();
-        coord_def atk_vector = def - atk;
-        const int dir = random_choose(-1, 1);
+        const int cleave_radius = weap && weapon_reach(*weap) == REACH_TWO ? 2 : 1;
 
-        for (int i = 0; i < 7; ++i)
+        for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
         {
-            atk_vector = rotate_adjacent(atk_vector, dir);
-
-            actor *target = actor_at(atk + atk_vector);
-            if (target && !_dont_harm(attacker, *target))
-                targets.push_back(target);
+            if (*di == def) continue; // no double jeopardy
+            actor *target = actor_at(*di);
+            if (!target || _dont_harm(attacker, *target))
+                continue;
+            if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
+                continue;
+            targets.push_back(target);
         }
     }
 
     // fake cleaving: gyre and gimble's extra attacks are implemented as
     // cleaving attacks on enemies already in `targets`
-    const item_def* weap = attacker.weapon(which_attack);
     if (weap && is_unrandom_artefact(*weap, UNRAND_GYRE))
     {
         list<actor*> new_targets;
@@ -832,10 +868,11 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            wu_jian_attack_type wu_jian_attack,
                            bool is_projected)
 {
+    if (!attacker.alive())
+        return;
+    const item_def* weap = attacker.weapon(attack_number);
     if (attacker.is_player())
     {
-        const item_def* weap = attacker.weapon(attack_number);
-
         if ((wu_jian_attack == WU_JIAN_ATTACK_WHIRLWIND
              || wu_jian_attack == WU_JIAN_ATTACK_WALL_JUMP
              || wu_jian_attack == WU_JIAN_ATTACK_TRIGGERED_AUX)
@@ -846,13 +883,15 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
             // worshiping Wu they'll be able to cleave their Wu attacks.
         }
     }
-
+    const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
 
         if (def && def->alive() && !_dont_harm(attacker, *def)
-            && (is_projected || adjacent(attacker.pos(), def->pos())))
+            && (is_projected
+                || adjacent(attacker.pos(), def->pos())
+                || reaching))
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
@@ -902,8 +941,12 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
         min_delay = 7;
 
     // ...except crossbows...
-    if (item_attack_skill(weapon) == SK_CROSSBOWS && min_delay < 10)
+    if (is_crossbow(weapon) && min_delay < 10)
         min_delay = 10;
+
+    // ...and longbows...
+    if (weapon.sub_type == WPN_LONGBOW)
+        min_delay = 6;
 
     // ... and unless it would take more than skill 27 to get there.
     // Round up the reduction from skill, so that min delay is rounded down.
@@ -925,46 +968,6 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
 int mons_weapon_damage_rating(const item_def &launcher)
 {
     return property(launcher, PWPN_DAMAGE) + launcher.plus;
-}
-
-// Returns a rough estimate of damage from firing/throwing missile.
-int mons_missile_damage(monster* mons, const item_def *launch,
-                        const item_def *missile)
-{
-    if (!missile || (!launch && !is_throwable(mons, *missile)))
-        return 0;
-
-    const int missile_damage = property(*missile, PWPN_DAMAGE) / 2 + 1;
-    const int launch_damage  = launch? property(*launch, PWPN_DAMAGE) : 0;
-    return max(0, launch_damage + missile_damage);
-}
-
-int mons_usable_missile(monster* mons, item_def **launcher)
-{
-    *launcher = nullptr;
-    item_def *launch = nullptr;
-    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
-    {
-        if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
-        {
-            if (is_range_weapon(*item))
-                launch = item;
-        }
-    }
-
-    const item_def *missiles = mons->missiles();
-    if (launch && missiles && !missiles->launched_by(*launch))
-        launch = nullptr;
-
-    const int fdam = mons_missile_damage(mons, launch, missiles);
-
-    if (!fdam)
-        return NON_ITEM;
-    else
-    {
-        *launcher = launch;
-        return missiles->index();
-    }
 }
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
@@ -1165,17 +1168,17 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
     }
 }
 
-string rude_stop_summoning_reason()
+string stop_summoning_reason(resists_t resists, monclass_flags_t flags)
 {
-    if (you.duration[DUR_TOXIC_RADIANCE])
+    if (get_resist(resists, MR_RES_POISON) <= 0
+        && you.duration[DUR_TOXIC_RADIANCE])
+    {
         return "toxic aura";
-
-    if (you.duration[DUR_NOXIOUS_BOG])
+    }
+    if (you.duration[DUR_NOXIOUS_BOG] && !(flags & M_FLIES))
         return "noxious bog";
-
     if (you.duration[DUR_VORTEX])
         return "polar vortex";
-
     return "";
 }
 
@@ -1186,32 +1189,31 @@ string rude_stop_summoning_reason()
  * penance prompt, because we don't cause penance when monsters enter line of
  * sight when OTR is active, regardless of how they entered LOS.
  *
- * @param verb    The verb to be used in the prompt. Defaults to "summon".
- * @return        True if the player wants to abort.
+ * @param resists   What does the summon resist?
+ * @param verb      The verb to be used in the prompt.
+ * @return          True if the player wants to abort.
  */
-bool rude_stop_summoning_prompt(string verb)
+bool stop_summoning_prompt(resists_t resists, string verb)
 {
-    string which = rude_stop_summoning_reason();
-
-    if (which.empty())
+    if (crawl_state.disables[DIS_CONFIRMATIONS]
+        || crawl_state.which_god_acting() == GOD_XOM)
+    {
         return false;
+    }
 
-    if (crawl_state.disables[DIS_CONFIRMATIONS])
-        return false;
-
-    if (crawl_state.which_god_acting() == GOD_XOM)
+    // TODO: take flags as well (or a set of monster types..?)
+    const string noun = stop_summoning_reason(resists, M_NO_FLAGS);
+    if (noun.empty())
         return false;
 
     string prompt = make_stringf("Really %s while emitting a %s?",
-                                 verb.c_str(), which.c_str());
+                                 verb.c_str(), noun.c_str());
 
     if (yesno(prompt.c_str(), false, 'n'))
         return false;
-    else
-    {
-        canned_msg(MSG_OK);
-        return true;
-    }
+
+    canned_msg(MSG_OK);
+    return true;
 }
 
 bool can_reach_attack_between(coord_def source, coord_def target,
@@ -1250,4 +1252,66 @@ dice_def spines_damage(monster_type mon)
 int archer_bonus_damage(int hd)
 {
     return hd * 4 / 3;
+}
+
+/**
+ * Do weapons that use the given skill use strength or dex to increase damage?
+ */
+bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon)
+{
+    if (!using_weapon)
+        return true;
+    switch (wpn_skill)
+    {
+    case SK_LONG_BLADES:
+    case SK_SHORT_BLADES:
+    case SK_RANGED_WEAPONS:
+        return false;
+    default:
+        return true;
+    }
+}
+
+/**
+ * Apply the player's attributes to multiply damage dealt with the given weapon skill.
+ */
+int stat_modify_damage(int damage, skill_type wpn_skill, bool using_weapon)
+{
+    // At 10 strength, damage is multiplied by 1.0
+    // Each point of strength over 10 increases this by 0.025 (2.5%),
+    // strength below 10 reduces the multiplied by the same amount.
+    // Minimum multiplier is 0.01 (1%) (reached at -30 str).
+    // Ranged weapons and short/long blades use dex instead.
+    const bool use_str = weapon_uses_strength(wpn_skill, using_weapon);
+    const int attr = use_str ? you.strength() : you.dex();
+    damage *= max(1.0, 75 + 2.5 * attr);
+    damage /= 100;
+
+    return damage;
+}
+
+int apply_weapon_skill(int damage, skill_type wpn_skill, bool random)
+{
+    const int sklvl = you.skill(wpn_skill, 100);
+    damage *= 2500 + maybe_random2(sklvl + 1, random);
+    damage /= 2500;
+    return damage;
+}
+
+int apply_fighting_skill(int damage, bool aux, bool random)
+{
+    const int base = aux? 40 : 30;
+    const int sklvl = you.skill(SK_FIGHTING, 100);
+
+    damage *= base * 100 + maybe_random2(sklvl + 1, random);
+    damage /= base * 100;
+
+    return damage;
+}
+
+int throwing_base_damage_bonus(const item_def &proj)
+{
+    // Stones get half bonus; everything else gets full bonus.
+    return div_rand_round(you.skill_rdiv(SK_THROWING)
+                          * min(4, property(proj, PWPN_DAMAGE)), 4);
 }

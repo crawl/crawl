@@ -198,16 +198,16 @@ Permanently blesses a weapon of your choice with the holy wrath of the Shining
 One. Demon weapons will be converted into a more powerful sacred weapon. This
 blessing may only be used once, and it cannot be used on artefact weapons.
 %%%%
-# Kikubaaqudgha
-Receive Corpses ability
+Unearth Wretches ability
 
-Creates one or more reanimatable monster corpses nearby. The number and
-freshness of these are dependent on Necromancy skill.
+Bring forth those near death from Kikubaaqudgha's necropolis, providing ample
+fodder for all kinds of necromancy. Their number and quality is dependent on
+Necromancy skill.
 %%%%
 Torment ability
 
-Sacrifices an adjacent cadaver to make all living creatures in sight experience
-all the pain that being suffered in its life. This damage is never directly
+Call out to the dead, making all living creatures in sight experience all the
+pain some poor soul suffered in its entire life. This damage is never directly
 lethal. Kikubaaqudgha will always at least partially shield you from the effect.
 %%%%
 Brand Weapon With Pain ability
@@ -219,7 +219,8 @@ and either gift may only be received once.
 %%%%
 Receive Forbidden Knowledge ability
 
-Grants you knowledge of the most powerful and sinister Necromancy spells.
+Grants you knowledge of the most powerful and sinister Necromancy spells:
+Haunt, Borgnjor's Revivification, Infestation, Necromutation, and Death's Door.
 You must choose between this gift or that of branding a weapon with pain, and
 either gift may only be received once.
 %%%%
@@ -370,11 +371,8 @@ entered it.
 Bend Space ability
 
 Bends the fabric of space, instantly translocating the user a short distance,
-and possibly also translocating and damaging creatures adjacent to the initial
-location or the destination. In warping the fabric of space, this ability
-ignores effects that would usually prevent translocations. Invocations skill
-increases the chance of affecting nearby creatures and the damage dealt to
-those affected.
+and possibly also translocating foes adjacent to the destination. This ignores
+effects that would usually prevent translocations.
 %%%%
 Banish ability
 
@@ -601,11 +599,11 @@ Sacrifices purity of body or mind, causing a single mutation.
 %%%%
 Sacrifice Words ability
 
-Sacrifices the ability to use magical scrolls while threatened.
+Sacrifices the ability to use magical scrolls after being badly injured.
 %%%%
 Sacrifice Drink ability
 
-Sacrifices the ability to drink potions while threatened.
+Sacrifices the ability to drink potions after being badly injured.
 %%%%
 Sacrifice Essence ability
 
@@ -663,8 +661,8 @@ Sacrifices a hand, causing you to lose the ability to use shields{{
 %%%%
 Sacrifice Experience ability
 
-Sacrifices some of your past experiences, causing you to lose two levels
-immediately and also to have the maximum level you can attain lowered by two.
+Sacrifices some of your past experiences, causing you to lose one level
+immediately and also to have the maximum level you can attain lowered by one.
 %%%%
 Sacrifice Skill ability
 
@@ -763,7 +761,7 @@ with both melee and conjurations. This choice is permanent and cannot be undone.
 %%%%
 Ancestor Life: Hexer ability
 
-Remembers your ancestor as a hexer, a cunning rogue capable of skilled
+Remembers your ancestor as a hexer, a cunning rogue capable of swift
 knifework and debilitating spellcasting. This choice is permanent and cannot be
 undone.
 %%%%

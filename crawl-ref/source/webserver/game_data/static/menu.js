@@ -48,8 +48,9 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (item_selectable(item))
         {
             elem.addClass("selectable");
-            elem.off("click.menu_item");
-            elem.on("click.menu_item", item_click_handler);
+            elem.off("click.menu_item").off("contextmenu.menu_item");
+            elem.on("click.menu_item", item_click_handler)
+                .on("contextmenu.menu_item", item_click_handler);
         }
 
         if (item.tiles && item.tiles.length > 0
@@ -221,6 +222,24 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             add_hover_class(menu.last_hovered);
     }
 
+    function prepare_hoverable_item(item)
+    {
+        // TODO: mouse movement over a menu item after hover has been moved
+        // off it by arrows isn't enough to restore hover; moving the
+        // mouse cursor in and out is needed. Worth addressing?
+        item.elem.hover(
+            function() {
+                mouse_set_hovered($(this).index());
+            }, function() {
+                // XX if this uses mouse_set_hovered, the timing seems
+                // to be extremely flaky w.r.t. a new hover.
+                if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
+                    set_hovered(-1);
+                // otherwise, keep the hover unless mousenter moves it into
+                // a new cell
+            });
+    }
+
     function prepare_item_range(start, end, container)
     {
         // Guarantees that the given (inclusive) range of item indices
@@ -267,21 +286,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             var elem = $("<li>...</li>");
             elem.data("item", item);
             elem.addClass("placeholder");
-            // TODO: mouse movement over a menu item after hover has been moved
-            // off it by arrows isn't enough to restore hover; moving the
-            // mouse cursor in and out is needed. Worth addressing?
-            elem.hover(
-                function() {
-                    mouse_set_hovered($(this).index());
-                }, function() {
-                    // XX if this uses mouse_set_hovered, the timing seems
-                    // to be extremely flaky w.r.t. a new hover.
-                    if (!(menu.flags & enums.menu_flag.ARROWS_SELECT))
-                        set_hovered(-1);
-                    // otherwise, keep the hover unless mousenter moves it into
-                    // a new cell
-                });
             item.elem = elem;
+            prepare_hoverable_item(item);
 
             if (anchor)
                 anchor.before(elem);
@@ -377,66 +383,93 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             set_hovered(next);
     }
 
-    function page_down()
+    // return a positive or negative number indicating hover relative to the
+    // current pane. Will return 0 if there is no current hover.
+    function get_relative_hover()
     {
-        var relative_hover = -1;
-        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
-            menu.last_hovered = menu.first_visible;
-        if (menu.last_hovered >= 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
-            relative_hover = menu.last_hovered - menu.first_visible;
-        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
-            menu.last_hovered = 0;
-        var next = menu.last_visible + 1;
-        if (relative_hover > 0
-            && menu.items[menu.first_visible + relative_hover - 1].level < 2)
-        {
-            // if the top element is a header, act as if we're scrolling down
-            // from there -- it's more natural this way
-            relative_hover = relative_hover - 1;
-        }
-        if (next >= menu.items.length)
-            next = menu.items.length - 1;
-        scroll_to_item(next);
-        if (relative_hover >= 0)
-        {
-            // The <= here is to handle headers
-            if (menu.first_visible + relative_hover <= menu.last_hovered)
-                relative_hover = menu.items.length - 1 - menu.first_visible;
-            set_hovered(next_hoverable_item(false,
-                            menu.first_visible + relative_hover, true), true);
-        }
+        // XX this function has some heuristics to deal with the fact that
+        // headers mess up relative hover, and they still aren't perfect
+        if (menu.last_hovered < 0 || menu.items.length == 0)
+            return 0;
+
+        // use a negative relative hover if we are on the last element, to
+        // prevent a common weird interaction with headers. XX should this be
+        // generalized?
+        if (menu.last_visible == menu.last_hovered)
+            return -1;
+
+        var relative_hover = menu.last_hovered - menu.first_visible;
+
+        var headers = 0;
+
+        // factor out headers
+        for (var i = 0; i <= relative_hover; i++)
+            if (menu.items[menu.first_visible + i].level < 2)
+                headers += 1;
+        relative_hover = Math.max(0, relative_hover - headers);
+
+        return relative_hover;
     }
 
-    function page_up()
+    // set the hover relative to the current pane. If the value is negative,
+    // index from the end. The value ignores non-hoverable items (headers).
+    function set_relative_hover(relative_hover)
     {
         if (menu.items.length == 0)
             return;
-        var relative_hover = -1;
-        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
-            menu.last_hovered = menu.first_visible;
-        if (menu.last_hovered >= 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
-            relative_hover = menu.last_hovered - menu.first_visible;
-        var pagesz = menu.elem.find(".menu_contents").innerHeight();
-        var itemsz = menu.items[menu.first_visible].elem[0].getBoundingClientRect().height;
-        var delta = Math.floor(pagesz / itemsz)
-        var previous = menu.first_visible - delta;
-        if (previous < 0)
-            previous = 0;
-        scroll_to_item(previous);
+        var hover_target = 0;
         if (relative_hover >= 0)
         {
-            var hover_target = menu.first_visible + relative_hover;
-            // if the hover didn't move, we are on a single-screen menu. Go
-            // to the first item.
-            if (hover_target == menu.last_hovered)
-                hover_target = menu.first_visible;
-            // `relative_hover` is a bit of an estimate, and gets messed up by
-            // headings. So make sure it really does end up visible.
-            // TODO: make this look visually crisper
-            if (hover_target > menu.last_visible)
-                hover_target = menu.last_visible;
-            set_hovered(next_hoverable_item(false, hover_target, true), false);
+            // skip headers
+            for (var i = 0; i <= relative_hover
+                        && menu.first_visible + i <= menu.last_visible; i++)
+            {
+                if (menu.items[menu.first_visible + i].level < 2)
+                    relative_hover += 1;
+            }
+
+            hover_target = menu.first_visible + relative_hover;
         }
+        else // XX headers not handled
+            hover_target = menu.last_visible + relative_hover + 1;
+
+        // don't scroll -- lock to whatever is currently visible
+        if (hover_target > menu.last_visible)
+            hover_target = menu.last_visible;
+        else if (hover_target < menu.first_visible)
+            hover_target = menu.first_visible;
+        set_hovered(next_hoverable_item(false, hover_target, true), true);
+    }
+
+    function paging(up)
+    {
+        if (menu.items.length == 0)
+            return;
+        if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && menu.last_hovered < 0)
+            menu.last_hovered = menu.first_visible;
+        var adjust_hover = menu.last_hovered >= 0;
+        var relative_hover = get_relative_hover();
+        if (up)
+        {
+            // if we are already at the top, don't scroll, and move any hover
+            // to the top
+            if (menu.first_visible == 0)
+                relative_hover = 0;
+            else
+                scroll_bottom_to_item(menu.first_visible);
+        }
+        else
+        {
+            // if we are already at the end, don't scroll, and move any hover
+            // to the end
+            if (menu.last_visible == menu.items.length - 1)
+                relative_hover = -1;
+            else
+                scroll_to_item(menu.last_visible);
+        }
+
+        if (adjust_hover)
+            set_relative_hover(relative_hover)
     }
 
     function line_down()
@@ -494,7 +527,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
-        // ensure that an immediately preceding heading are visible
+        // ensure that an immediately preceding heading is visible
         if (item.index > 0 && menu.items[item.index - 1].level < 2)
             item = menu.items[item.index - 1];
         if (item.index == menu.first_visible)
@@ -555,7 +588,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         {
             const item = menu.items[i];
             const item_rect = item.elem[0].getBoundingClientRect();
-            if (item_rect.top >= top)
+            // +1 here is for float issues
+            if (item_rect.top + 1.0 >= top)
             {
                 menu.first_visible = i;
                 break;
@@ -567,13 +601,16 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         {
             const item = menu.items[i];
             const item_rect = item.elem[0].getBoundingClientRect();
-            if (item_rect.bottom >= bottom)
+            // -1 here is for float issues
+            if (item_rect.bottom - 1.0 >= bottom)
             {
+                // one after the last visible item
                 if (bottom - item_rect.top > 10)
                     menu.last_part_visible = i;
-                menu.last_visible = i-1;
                 break;
             }
+            else
+                menu.last_visible = i;
         }
         if (menu.first_part_visible === -1)
             menu.first_part_visible = menu.first_visible;
@@ -616,11 +653,32 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
     function title_prompt(data)
     {
         var prompt;
+
+        var restore = function () {
+            if (!client.is_watching || !client.is_watching())
+                $("#title_prompt").blur();
+            menu.elem.find(".menu_title").removeClass("raw_input_mode");
+            update_title();
+        };
+
+        // manual close from server side: used for raw input mode
+        if (data && data.close)
+        {
+            restore();
+            return;
+        }
+
+        var title = menu.elem.find(".menu_title");
+        if (data && data.raw)
+        {
+            title.addClass("raw_input_mode")
+            return; // everything else is handled manually, including exiting
+        }
+
         if (!data || !data.prompt)
             prompt = "Select what? (regex) ";
         else
             prompt = data.prompt;
-        var title = menu.elem.find(".menu_title")
         title.html(prompt);
         var input = $("<input id='title_prompt' class='text title_prompt' type='text'>");
         title.append(input);
@@ -628,13 +686,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         // unclear to me exactly why a timeout is needed but it seems to be
         if (!client.is_watching || !client.is_watching())
             setTimeout(function () { input.focus(); }, 50);
-
-
-        var restore = function () {
-            if (!client.is_watching || !client.is_watching())
-                input.blur();
-            update_title();
-        };
 
         // escape handling: ESC is intercepted in ui.js and triggers blur(), so
         // can't be handled directly here
@@ -762,6 +813,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             container.empty();
             $.each(menu.items, function(i, item) {
                 item.elem.data("item", item);
+                prepare_hoverable_item(item);
                 container.append(item.elem);
             });
         }
@@ -815,6 +867,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             scroll_bottom_to_item(menu.last_visible, true);
         else if (menu.first_visible)
             scroll_to_item(menu.first_visible, true);
+        else
+            update_visible_indices();
 
         update_more();
     }
@@ -827,6 +881,13 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
         update_visible_indices();
         schedule_server_scroll();
+    }
+
+    function raw_arrow_keys()
+    {
+        return menu.tag == "macro_mapping"
+            && ($(".raw_input_mode").length // raw input mode is up
+                || menu.items.length == 0); // new binding input mode
     }
 
     function menu_keydown_handler(event)
@@ -844,6 +905,7 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         }
 
         // keycodes only: characters go in menu_keypress_handler
+        // TODO: this should interface somehow with key_conversion.js
         switch (event.which)
         {
         case 109: // numpad -
@@ -851,31 +913,37 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
                 break;
             // otherwise, fall through to pageup:
         case 33: // page up
-            if (menu.tag == "macro_mapping")
+            if (raw_arrow_keys())
                 break; // Treat input as raw, no need to scroll anyway
-            page_up();
+            paging(true);
             event.preventDefault();
             return false;
         case 107: // numpad +
         case 34: // page down
-            if (menu.tag == "macro_mapping")
-                break; // Treat input as raw, no need to scroll anyway
-            page_down();
+            if (raw_arrow_keys())
+                break;
+            paging();
             event.preventDefault();
             return false;
         case 35: // end
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             scroll_bottom_to_item(menu.total_items - 1);
             if (menu.total_items > 0 && (menu.flags & enums.menu_flag.ARROWS_SELECT))
                 set_hovered(next_hoverable_item(true, menu.total_items - 1, true));
             event.preventDefault();
             return false;
         case 36: // home
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             scroll_to_item(0);
             if (menu.flags & enums.menu_flag.ARROWS_SELECT)
                 set_hovered(next_hoverable_item(false, 0, true));
             event.preventDefault();
             return false;
         case 38: // up
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(true);
             else
@@ -883,6 +951,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 40: // down
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             if ((menu.flags & enums.menu_flag.ARROWS_SELECT) && !event.shiftKey)
                 cycle_hover(false);
             else
@@ -890,6 +960,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             event.preventDefault();
             return false;
         case 37: // left
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             if (event.shiftKey)
             {
                 line_up();
@@ -898,6 +970,8 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             }
             break;
         case 39: // right
+            if (raw_arrow_keys())
+                break; // Treat input as raw, no need to scroll anyway
             if (event.shiftKey)
             {
                 line_down();
@@ -945,24 +1019,16 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
             // otherwise, fall through to pageup:
         case "<":
         case ";":
-            page_up();
+            paging(true);
             event.preventDefault();
             return false;
 
         case ">":
         case "+":
         case " ":
-            page_down();
+            paging();
             event.preventDefault();
             return false;
-        case "'": // legacy thing
-            if (menu.flags & enums.menu_flag.ARROWS_SELECT)
-            {
-                cycle_hover(false);
-                event.preventDefault();
-                return false;
-            }
-            break;
         }
 
         if (update_server_scroll_timeout)
@@ -979,14 +1045,24 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (menu.flags & enums.menu_flag.ARROWS_SELECT)
         {
             set_hovered($(this).index()); // should be unnecesssary?
-            // TODO: send a select event, keycode is rather ad hoc here
+            // TODO: send a select event, keycode is very ad hoc here
             if (menu.flags & enums.menu_flag.SINGLESELECT)
-                comm.send_message("key", { keycode: 13 });
+            {
+                if (event.which == 1)
+                    comm.send_message("key", { keycode: 13 });
+                else if (event.which == 3)
+                    comm.send_message("input", { text: '\'' });
+            }
             else if (menu.flags & enums.menu_flag.MULTISELECT)
-                comm.send_message("key", { keycode: 32 });
+            {
+                if (event.which == 1)
+                    comm.send_message("key", { keycode: 32 });
+                else if (event.which == 3)
+                    comm.send_message("input", { text: '\'' });
+            }
         }
-        // TODO: it would be better not to rely on hotkeys here as well
-        else if (item.hotkeys && item.hotkeys.length)
+        // TODO: don't rely on hotkeys here
+        else if (item.hotkeys && item.hotkeys.length && event.which == 1)
             comm.send_message("key", { keycode: item.hotkeys[0] });
     }
 

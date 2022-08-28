@@ -571,6 +571,13 @@ wall_vines4
 wall_vines5
 wall_vines6
 
+studio0 WALL_STUDIO
+studio1
+studio2
+studio3
+studio4
+studio5
+
 # These 15 variants are referenced from tileview.cc
 pebble_red0 WALL_PEBBLE WALL_PEBBLE_RED
 pebble_red1
@@ -699,6 +706,16 @@ marble_wall9
 marble_wall10
 marble_wall11
 marble_wall12
+
+%weight 10
+tukima_marble_wall0 WALL_MARBLE_TUKIMA
+tukima_marble_wall1
+tukima_marble_wall2
+tukima_marble_wall3
+%weight 1
+tukima_marble_wall4
+tukima_marble_wall5
+tukima_marble_wall6
 
 %weight 5
 sandstone_wall0 WALL_SANDSTONE
@@ -1079,6 +1096,11 @@ hell10
 hell11
 
 %weight 10
+bmaus_stone_wall0 WALL_BORG_STONE
+bmaus_stone_wall1
+bmaus_stone_wall2
+bmaus_stone_wall3
+
 ice_wall0 WALL_ICE
 ice_wall1
 ice_wall2

@@ -177,7 +177,7 @@ MouseEvent::MouseEvent(Event::Type _type, const wm_mouse_event& wm_ev) : Event(_
 }
 #endif
 
-FocusEvent::FocusEvent(Event::Type type) : Event(type)
+FocusEvent::FocusEvent(Event::Type typ) : Event(typ)
 {
 }
 
@@ -1056,7 +1056,8 @@ void Image::_render()
 #ifdef USE_TILE_LOCAL
     scissor_stack.push(m_region);
     TileBuffer tb;
-    tb.set_tex(&tiles.get_image_manager()->m_textures[get_tile_texture(m_tile.tile)]);
+    tb.set_tex(&tiles.get_image_manager()->get_texture(
+                                            get_tile_texture(m_tile.tile)));
 
     for (int y = m_region.y; y < m_region.y+m_region.height; y+=m_th)
         for (int x = m_region.x; x < m_region.x+m_region.width; x+=m_tw)
@@ -1516,7 +1517,7 @@ void Scroller::_allocate_region()
     int shade_height = UI_SCROLLER_SHADE_SIZE, ds = 4;
     int shade_top = min({m_scroll/ds, shade_height, m_region.height/2});
     int shade_bot = min({(sr.nat-m_region.height-m_scroll)/ds, shade_height, m_region.height/2});
-    const VColour col_a(4, 2, 4, 0), col_b(4, 2, 4, 200);
+    const VColour col_a(4, 2, 4, 0), col_b(4, 2, 4, 150);
 
     m_shade_buf.clear();
     m_scrollbar_buf.clear();
@@ -1561,20 +1562,16 @@ bool Scroller::on_event(const Event& event)
     int delta = 0;
     if (event.type() == Event::Type::KeyDown)
     {
-        const auto key = static_cast<const KeyEvent&>(event).key();
+        const auto key = numpad_to_regular(
+                                    static_cast<const KeyEvent&>(event).key());
+        // TODO: use CMD_MENU bindings here?
         switch (key)
         {
             case ' ': case '+': case CK_PGDN: case '>': case '\'':
-#ifndef USE_TILE_LOCAL
-            case CK_NUMPAD_ADD: case CK_NUMPAD_ADD2:
-#endif
                 delta = m_region.height;
                 break;
 
             case '-': case CK_PGUP: case '<': case ';':
-#ifndef USE_TILE_LOCAL
-            case CK_NUMPAD_SUBTRACT: case CK_NUMPAD_SUBTRACT2:
-#endif
                 delta = -m_region.height;
                 break;
 
@@ -1747,7 +1744,7 @@ void Checkbox::_render()
 
     const int x = m_region.x, y = m_region.y;
     TileBuffer tb;
-    tb.set_tex(&tiles.get_image_manager()->m_textures[TEX_GUI]);
+    tb.set_tex(&tiles.get_image_manager()->get_texture(TEX_GUI));
     tb.add(tile, x, y, 0, 0, false, check_h, 1.0, 1.0);
     tb.draw();
 #else
@@ -1990,6 +1987,13 @@ bool TextEntry::on_event(const Event& event)
     case Event::Type::KeyDown:
         {
             const auto key = static_cast<const KeyEvent&>(event).key();
+#ifdef USE_TILE_LOCAL
+            // exit a popup on right click with text entry focus. XX this seems
+            // like a bad way to handle it, but I'm not sure what a better way
+            // might be.
+            if (key == CK_MOUSE_CMD)
+                return false;
+#endif
             int ret = m_line_reader.process_key_core(key);
             if (ret == CK_ESCAPE || ret == 0)
                 ui::set_focused_widget(nullptr);
@@ -2167,7 +2171,6 @@ void TextEntry::LineReader::killword()
 
     bool foundwc = false;
     char *word = cur;
-    int ew = 0;
     while (1)
     {
         char *np = prev_glyph(word, buffer);
@@ -2182,7 +2185,6 @@ void TextEntry::LineReader::killword()
             break;
 
         word = np;
-        ew += wcwidth(c);
     }
     memmove(word, cur, strlen(cur) + 1);
     length -= cur - word;
@@ -2358,8 +2360,9 @@ SizeReq Dungeon::_get_preferred_size(Direction dim, int /*prosp_width*/)
 PlayerDoll::PlayerDoll(dolls_data doll)
 {
     m_save_doll = doll;
+    const ImageManager *image = tiles.get_image_manager();
     for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].set_tex(&tiles.get_image_manager()->m_textures[i]);
+        m_tile_buf[i].set_tex(&image->get_texture(static_cast<TextureID>(i)));
     _pack_doll();
 }
 
@@ -3240,8 +3243,11 @@ void pump_events(int wait_event_timeout)
         // since these can come in faster than crawl can redraw.
         if (event.type == WME_MOUSEMOTION && wm->next_event_is(WME_MOUSEMOTION))
             continue;
-        if (event.type == WME_KEYDOWN && event.key.keysym.sym == 0)
+        if (event.type == WME_KEYDOWN
+            && (event.key.keysym.sym == 0 || event.key.keysym.sym == CK_NO_KEY))
+        {
             continue;
+        }
 
         // translate any key events with the current keymap
         if (event.type == WME_KEYDOWN)

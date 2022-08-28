@@ -145,6 +145,14 @@ def signal_handler(signum, frame):
         # through about 2020.
         stop_everything()
 
+def reload_signal_handler(signum, frame):
+    logging.info("Received signal %i, reloading config.", signum)
+    try:
+        IOLoop.current().add_callback_from_signal(config.reload)
+    except AttributeError:
+        logging.error("Incompatible Tornado version")
+
+
 def bind_server():
     settings = {
         "static_path": config.get('static_path'),
@@ -367,24 +375,56 @@ def reset_token_commands(args):
 
 
 def ban_commands(args):
-    if args.list:
-        banned = userdb.get_bans()
-        if len(banned):
-            print("Banned users: " + ", ".join(banned))
+    if args.list or args.list_holds:
+        banned, held = userdb.get_bans()
+        if args.list:
+            if len(banned):
+                print("Banned users: " + ", ".join(banned))
+            else:
+                print("No banned users!")
+        if len(held):
+            print("Account holds: " + ", ".join(held))
         else:
-            print("No banned users!")
+            print("No account holds!")
+    elif args.clear_holds:
+        banned, held = userdb.get_bans()
+        if len(held):
+            cleared = []
+            for u in held:
+                err = userdb.set_account_hold(u, False)
+                if err:
+                    print(err, file=sys.stderr)
+                else:
+                    cleared.append(u)
+            if len(cleared):
+                print("Holds cleared for: " + ", ".join(cleared))
+            else:
+                print("No holds cleared.")
+        else:
+            print("No holds to clear.")
     elif args.add:
         err = userdb.set_ban(args.add, True)
         if err:
             print(err, file=sys.stderr)
         else:
             print("'%s' is now banned." % args.add)
-    elif args.clear:
-        err = userdb.set_ban(args.clear, False)
+    elif args.hold:
+        err = userdb.set_account_hold(args.hold, True)
         if err:
             print(err, file=sys.stderr)
         else:
-            print("'%s' is no longer banned." % args.clear)
+            print("Account hold set for '%s'." % args.hold)
+    elif args.clear:
+        # XX is there any use for fine-grained clear commands?
+        err1 = userdb.set_account_hold(args.clear, False)
+        if err1:
+            err2 = userdb.set_ban(args.clear, False)
+            if err2:
+                print(err2, file=sys.stderr)
+            else:
+                print("'%s' is no longer banned." % args.clear)
+        else:
+            print("Account hold cleared for '%s'." % args.clear)
 
 
 def parse_args_util():
@@ -403,18 +443,23 @@ def parse_args_util():
     parser_pw.add_argument('--clear-reset', type=str,
         help='Clear any password reset tokens for the specified username.')
     parser_ban = subparsers.add_parser('ban',
-        help="Set and clear bans by username.",
-        description="Set and clear bans by username.")
-    parser_ban.add_argument('--add', type=str, help='Set a ban for a user.')
-    parser_ban.add_argument('--clear', type=str, help='Clear a ban for a user.')
+        help="Set and clear bans and account holds by username.",
+        description="Set and clear bans and account holds by username.")
+    parser_ban.add_argument('--add', type=str, help='Set an account ban for a user. Replaces any account holds.')
+    parser_ban.add_argument('--hold', type=str, help='Set an account hold for a user. Replaces any ban flags.')
+    parser_ban.add_argument('--clear', type=str, help='Clear a ban/hold for a user.')
     parser_ban.add_argument('--list', action='store_true',
-            help='List current banned users.')
+            help='List current banned users and account holds.')
+    parser_ban.add_argument('--list-holds', action='store_true',
+            help='List current account holds.')
+    parser_ban.add_argument ('--clear-holds', action='store_true',
+            help='Clear all current account holds')
     result = parser.parse_args()
     # XX is there a better way to do this
     if result.mode == "password" and not result.reset and not result.clear_reset:
         parser_pw.print_help()
         sys.exit()
-    elif result.mode == "ban" and not result.add and not result.clear and not result.list:
+    elif result.mode == "ban" and not result.add and not result.clear and not result.list and not result.hold and not result.clear_holds and not result.list_holds:
         parser_ban.print_help()
         sys.exit()
 
@@ -497,8 +542,11 @@ def run():
         daemonize()
 
     signal.signal(signal.SIGTERM, signal_handler)
-    signal.signal(signal.SIGHUP, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
+    if (config.get('hup_reloads_config')):
+        signal.signal(signal.SIGHUP, reload_signal_handler)
+    else:
+        signal.signal(signal.SIGHUP, signal_handler)
 
     if config.get('umask') is not None:
         os.umask(config.get('umask'))

@@ -36,26 +36,25 @@ The abbreviations used for the skills are:
 General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
 --------------------------   -----------------------     ----------------------
 Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
-Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
-Sth - Stealth                LBl - Long Blades           Hex - Hexes
-Shd - Shields                M&F - Maces & Flails        Sum - Summonings
-                             Axs - Axes                  Nec - Necromancy
-Inv - Invocations            Pla - Polearms              Trl - Translocations
-Evo - Evocations             Stv - Staves                Trm - Transmutations
-                             UC  - Unarmed Combat
+Ddg - Dodging                                            Coj - Conjurations
+Sth - Stealth                M&F - Maces & Flails        Hex - Hexes
+Shd - Shields                Axs - Axes                  Sum - Summonings
+                             Pla - Polearms              Nec - Necromancy
+Inv - Invocations            Stv - Staves                Trl - Translocations
+Evo - Evocations             UC  - Unarmed Combat        Trm - Transmutations
+Thr - Throwing
+                             SBl - Short Blades          Fir - Fire Magic
+HP  - hit points             LBl - Long Blades           Ice - Ice Magic
+MP  - magic points           Rng - Ranged Weapons        Air - Air Magic
+Exp - experience                                         Ear - Earth Magic
+WL  - willpower                                          Poi - Poison Magic
 
-HP  - hit points             Thr - Throwing              Fir - Fire Magic
-MP  - magic points           Slg - Slings                Ice - Ice Magic
-Exp - experience             Bws - Bows                  Air - Air Magic
-WL  - willpower              Crb - Crossbows             Ear - Earth Magic
-                                                         Poi - Poison Magic
 
-
-                 Arm Ddg Sth Shd     Inv Evo        HP  MP Exp  WL
+                 Arm Ddg Sth Shd     Inv Evo Thr    HP  MP Exp  WL
 ----------------------------------------------------------------------
 
 
-                 Fgt SBl LBl M&F Axs Pla Stv UC    Thr Slg Bws Crb
+                 Fgt     M&F Axs Pla Stv UC    SBl LBl Rng
 ----------------------------------------------------------------------
 
 

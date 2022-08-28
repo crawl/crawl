@@ -8,6 +8,7 @@
 {{
 -- Call this function, with the default being the top parameter,
 -- for any temple with variable altar totals.
+-- Note that it returns a string, not a number!
 function get_altar_count(e, default)
   local params = dgn.map_parameters()
   local count = "";
@@ -1016,28 +1017,34 @@ ENDMAP
 #
 # Altars are placed as B glyphs, and can (though do not need to) use
 # placement modifications with SUBST / SHUFFLE transformations (alongside
-# lua conditions or transformations) with
-# TAGS:   temple_variable temple_altars_X temple_altars_Z
-# : get_altar_count(e, Z)
+# lua conditions or transformations). All temples should have a tag
+# with the number of altars that can place. If a variable number of altars can
+# be placed, use multiple tags and place the number of B glyphs returned by
+# get_altar_count.
 #
-# The temple_altars_[X|Z] tags must correspond to potential altar counts, and
-# Z refers to the highest of those given potential altar totals. Layouts should
-# stick to the range segments suited for 21 to 24 gods guaranteed in D:
+# TAGS:   temple_altars_X temple_altars_Y temple_altars_Z
+# : local altar_count = get_altar_count(e, Z)
 #
-# <<1>> Nine to twelve altars
-# <<2>> Thirteen to fifteen altars
-# <<3>> Sixteen to twenty altars
-# <<4>> Twenty-one altars
-# <<5>> Variable altars, generic layouts
-# <<6>> Variable altars, unusual layouts
+# The temple_altars_[X|Y|Z] tags must correspond to potential altar counts, and
+# Z refers to the highest of those given potential altar totals.
 #
-# Vaults with fixed altar counts have (a visible) WEIGHT: 10, while vaults
-# with variable altar counts add 4 for every range their options fit in.
-# Off-beat vaults should halve this (weights 5 and +2), an ambigious criteria:
-# consider it for prominent tree / liquid / crystal themes, heavy tile changes,
-# particularly compact / chaotic / sprawling layouts, or evoking other vaults
-# and non-decorative concepts (such as the temples corrupted by Lugonu or
-# slimified by Jiyva).
+# Layouts should stick to the range segments suited for 21 to 23 gods
+# guaranteed in D:
+#
+# <<1>> Six to eight altars
+# <<2>> Nine to twelve altars
+# <<3>> Thirteen to fifteen altars
+# <<4>> Sixteen to twenty altars
+# <<5>> Twenty-one altars
+# <<6>> Variable altars, generic layouts
+# <<7>> Variable altars, unusual layouts
+# <<8>> Rare temples, tagged with temple_rare
+#
+# When selecting a temple, there is a 1% chance that a rare temple will be
+# used, (this is handled in ng-init.cc for temple selection, not with a CHANCE
+# group). Temples containing non-temple gods should always be rare, other
+# exceptionally abnormal temples should also be in this category. Rare temples
+# cannot place a variable number of altars.
 #
 # Gods that don't show up in the Temple due to missing the altar count will
 # instead appear in the Dungeon - see des/altar/overflow.des.
@@ -1046,24 +1053,164 @@ ENDMAP
 # a fixed altar count and existing themes in some of the other vaults until
 # one knows what they are doing. While we have many maps as stands, variety
 # in altar count and themes is still welcome.
-#
-# XXX: For future-proofing and altar count regulating services, these
-# solidified ranges could be pre-assessed and weighted in the source to
-# some given chances (see the commit history). This way, new layouts don't
-# significantly alter altar counts and change only the chances of getting
-# other layouts of the same range. This might need some more temple maps in
-# the middle ranges if they're weighed up any higher than the most-common
-# bottom range, though.
 
 ##############################################################################
-# <<1>> Nine to twelve gods.
+# <<1>> Six to eight gods.
+
+# 6 gods
+NAME:   nicolae_temple_stand_before_the_council
+TAGS:   temple_altar_6
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  `B = floor_limestone
+COLOUR: ` = yellow
+MAP
+xxxxxxxx
+x```...xxxxx
+x`B`.......xxx
+x```.........xx
+x`B`...U......xx
+x```...........x
+x`B`...........x
+x```...U.....{.x
+x`B`...........x
+x```...........x
+x`B`...U......xx
+x```.........xx
+x`B`.......xxx
+x```...xxxxx
+xxxxxxxx
+ENDMAP
+
+# 7 gods
+NAME:    nicolae_temple_little_seven
+TAGS:    temple_altars_7
+PLACE:   Temple
+ORIENT:  encompass
+: if crawl.coinflip() then
+SUBST:   DJ = G, EH = ., F = B, KLM = x
+: else
+SUBST:   DEF = x, HM = G, JL = ., K = B
+: end
+SHUFFLE: pqrs
+SUBST:   p = T, qrs = .
+MAP
+xxxxxxxxxxxxxxxxx
+xKJHFEDMLKJHFEDMx
+xL.............Lx
+xM....pqrsp....Kx
+xD...s.....q...Jx
+xE..r.......r..Hx
+xF.q.........s.Fx
+xH.p.........p.Ex
+xJ.s....{....q.Dx
+xK.r.........r.Mx
+xL.q.........s.Lx
+xM..p.......p..Kx
+xD...s.....q...Jx
+xE....rqpsr....Hx
+xF.............Fx
+xHJKLMDEFHJKLMDEx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 8 gods
+NAME:   nicolae_temple_colour_theory
+TAGS:   temple_altars_8
+PLACE:  Temple
+ORIENT: encompass
+KFEAT:  PQR = c
+{{
+  local schemes = { {"lightblue", "lightred", "lightmagenta"},
+                    {"lightgreen", "lightred", "yellow"},
+                    {"lightblue", "lightgreen", "lightcyan"},
+                    {"lightblue", "yellow", "lightgreen"},
+                    {"lightred", "yellow", "brown"} } -- no orange, sadly
+
+  local colorscheme = util.random_from( schemes )
+  ftile("p' = floor_pebble_" .. colorscheme[1])
+  ftile("q` = floor_pebble_" .. colorscheme[2])
+  ftile("r{ = floor_pebble_" .. colorscheme[3])
+  colour("Pp = " .. colorscheme[1])
+  colour("Qq = " .. colorscheme[2])
+  colour("Rr = " .. colorscheme[3])
+}}
+SUBST:  '` = B
+MAP
+ccccccccccccccccccccccccccccccccccccc
+cccccccPPPPPPPPPcccccQQQQQQQQQccccccc
+cccccPPPpppppppPPPcQQQqqqqqqqQQQccccc
+ccccPPpppppppppppPRQ.qqqqqqqqqqQQcccc
+cccPPpppppppp'ppppRqqqq`qqqqqqqqQQccc
+ccPPpppppppppppppprqqqqqqqqqqqqqqQQcc
+ccPpppppppppppppprrrqqqqqqqqqqqqqqQcc
+cPPpp'pppPPPPPppprrrqqqQQQQQqqq`qqQQc
+cPppppppPPcccPPprrrrrqQQcccQQqqqqqqQc
+cPpppppPPcccccPRrrrrrRQcccccQQqqqqqQc
+cPpppppPcccccccRrrrrrRcccccccQqqqqqQc
+cPpppppPcccccccRrr{rrRcccccccQqqqqqQc
+cPpppppPcccccccRrrrrrRcccccccQqqqqqQc
+cPpppppPPcccccPRrrrrrRQcccccQQqqqqqQc
+cPppppppPPcccPPprrrrrqQQcccQQqqqqqqQc
+cPPpp'pppPPPPPppprrrqqqQQQQQqqq`qqQQc
+ccPpppppppppppppprrrqqqqqqqqqqqqqqQcc
+ccPPpppppppppppppprqqqqqqqqqqqqqqQQcc
+cccPPpppppppp'ppppRqqqq`qqqqqqqqQQccc
+ccccPPpppppppppppPRQqqqqqqqqqqqQQcccc
+cccccPPPpppppppPPPcQQQqqqqqqqQQQccccc
+cccccccPPPPPPPPPcccccQQQQQQQQQccccccc
+ccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+# 8 gods
+NAME:   nicolae_temple_godpark
+TAGS:   temple_altars_8
+PLACE:  Temple
+ORIENT: encompass
+KMONS:  p = plant
+SUBST:  p = ttp
+LFLOORCOL: green
+LFLOORTILE: floor_grass
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xpppppppppppppppppppppppppppx
+xpWWWWWWWppWWWWWWWppWWWWWWWpx
+xpWT...TWWWWT...TWWWWT...TWpx
+xpW.......................Wpx
+xpW..B........B........B..Wpx
+xpW.......................Wpx
+xpWT...TWWWWT...TWWWWT...TWpx
+xpWW...WWppWW...WWppWW...WWpx
+xppW...WppppW...WppppW...Wppx
+xppW...WppppW...WppppW...Wppx
+xpWW...WWppWW...WWppWW...WWpx
+xpWT...TWWWWT...TWWWWT...TWpx
+xpW.......................Wpx
+xpW..B........{........B..Wpx
+xpW.......................Wpx
+xpWT...TWWWWT...TWWWWT...TWpx
+xpWW...WWppWW...WWppWW...WWpx
+xppW...WppppW...WppppW...Wppx
+xppW...WppppW...WppppW...Wppx
+xpWW...WWppWW...WWppWW...WWpx
+xpWT...TWWWWT...TWWWWT...TWpx
+xpW.......................Wpx
+xpW..B........B........B..Wpx
+xpW.......................Wpx
+xpWT...TWWWWT...TWWWWT...TWpx
+xpWWWWWWWppWWWWWWWppWWWWWWWpx
+xpppppppppppppppppppppppppppx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# <<2>> Nine to twelve gods.
 
 # 10 gods
 NAME:    jpeg_temple_alley_garden
-TAGS:    no_rotate
+TAGS:    no_rotate temple_altars_10
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 MONS:    bush, plant
 NSUBST:  . = 12:1 / 7:2 / *:.
 COLOUR:  ' : darkgrey w:3 / white w:1 / lightgrey
@@ -1100,10 +1247,9 @@ ENDMAP
 
 # 9 gods
 NAME:    jpeg_temple_island
-TAGS:    no_rotate no_pool_fixup
+TAGS:    no_rotate no_pool_fixup temple_altars_9
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 MONS:    bush, plant
 SUBST:   W = W:30 w, ~ = ':20 W
 NSUBST:  ' = 5:t / 7:1 / 4:2 / *:'
@@ -1154,10 +1300,9 @@ ENDMAP
 
 # 10 gods
 NAME:    cyrus_temple_forest
-TAGS:    no_rotate
+TAGS:    no_rotate temple_altars_10
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 MONS:    plant, bush
 NSUBST:  . = 10:X / 34:Y / *:.
 SUBST:   X : tXY., X = t., Y : Y., Y = 1112..
@@ -1192,9 +1337,9 @@ ENDMAP
 
 # 12 gods
 NAME:       minmay_temple_forest_path
+TAGS:       temple_altars_12
 PLACE:      Temple
 ORIENT:     encompass
-WEIGHT:     5
 # No plants in corners (confuses autoexplore),
 # only fringe the edge of the paths with either (no teleport closets).
 KMONS:      P = plant / bush w:1 / fungus w:1
@@ -1244,9 +1389,8 @@ ENDMAP
 
 # 11 gods
 NAME:   minmay_temple_curvy_loop
-TAGS:   no_rotate no_pool_fixup
+TAGS:   no_rotate no_pool_fixup temple_altars_11
 PLACE:  Temple
-WEIGHT: 10
 ORIENT: encompass
 MONS:   plant
 SUBST:  y : Ww, z : Ww, Y : W., Z : W.
@@ -1299,10 +1443,9 @@ ENDMAP
 
 # 12 gods
 NAME:   minmay_temple_bridge_abc
-TAGS:   no_pool_fixup
+TAGS:   no_pool_fixup temple_altars_12
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 10
 SUBST:  A : TUV
 : local wrnd = crawl.random2(9)
 : if wrnd == 0 then
@@ -1350,10 +1493,9 @@ ENDMAP
 
 # 12 gods
 NAME:    nicolae_temple_hex_pool
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup temple_altars_12
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 SHUFFLE: JK, MN
 SUBST:   JMP : GTt., KNQ : GTt.
 NSUBST:  { = 1:{ / *:.
@@ -1395,9 +1537,9 @@ ENDMAP
 
 # 9 gods
 NAME:    nicolae_temple_figure_zero
+TAGS:    temple_altars_9
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SHUFFLE: Cc / Dd
 SUBST:   cD = B, Cd = .
 MAP
@@ -1432,15 +1574,96 @@ vvvvvvvvvvvvv...vvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
+# 9 gods.
+NAME:   nicolae_temple_cloud_nine
+TAGS:   temple_altars_9
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  B.{ = floor_w_marble
+COLOUR: c. = white
+MARKER: { = lua:fog_machine{cloud_type = "white fluffiness", pow_max = 20, \
+             delay_min = 10, delay_max = 50, size = 1,    \
+             walk_dist = 5, start_clouds = 7}
+MARKER: B = lua:fog_machine{cloud_type = "white fluffiness", pow_max = 20, \
+             delay_min = 10, delay_max = 50, size = 1,    \
+             walk_dist = 5, start_clouds = 7}
+
+MAP
+ccccccccccccccccccc
+cccccc.......cccccc
+cccc...........cccc
+ccc.....B.......ccc
+cc..........B....cc
+cc..B............cc
+c.................c
+c..............B..c
+c.................c
+c..B.....{........c
+c.................c
+c..............B..c
+c.................c
+cc..B............cc
+cc..........B....cc
+ccc.....B.......ccc
+cccc...........cccc
+cccccc.......cccccc
+ccccccccccccccccccc
+ENDMAP
+
+# 12 gods
+NAME:   nicolae_temple_godzebo
+TAGS:   temple_altars_12
+PLACE:  Temple
+ORIENT: encompass
+SUBST:  - = t.
+FTILE:  `cB = floor_sandstone
+COLOUR: ` = brown
+LFLOORCOL: green
+LFLOORTILE: floor_grass
+MAP
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttt-...-ttttttttttt-.-tttttttt
+ttttttttttttttttttttt-........-tttttt-.....-tttttt
+tttttttttttttttttttt-.......................-ttttt
+tttttttttttttttttttt.........................-tttt
+tttttttttttttttttttt........```````````.......tttt
+ttttttttttttttttttt-.......``c```c```c``......-ttt
+ttttttttttttttttttt.......```````````````......ttt
+ttttttttttttttttttt......``c```B```B```c``.....ttt
+ttttt-...-ttttttttt.....```````````````````....-tt
+ttt-.......-tttttt-.....`c```````````````c`.....tt
+ttt.........-tttt-......```````````````````.....tt
+tt-..........-tt-.......```B```B```B```B```.....tt
+tt......................```````````````````....-tt
+tt-....{................`c```````````````c`....ttt
+ttt-....................```````````````````....ttt
+tttt-...................```B```B```B```B```...-ttt
+ttttt-....-tt-..........```````````````````...tttt
+ttttttt-.-tttt..........`c```````````````c`...tttt
+tttttttttttttt-.........```````````````````...tttt
+ttttttttttttttt..........``c```B```B```c``....-ttt
+ttttttttttttttt...........```````````````......ttt
+ttttttttttttttt............``c```c```c``......-ttt
+ttttttttttttttt.............```````````.......tttt
+ttttttttttttttt-.............................-tttt
+tttttttttttttttt-...........................-ttttt
+ttttttttttttttttt-.........................-tttttt
+tttttttttttttttttttttt-..................-tttttttt
+tttttttttttttttttttttttttttt-........-tttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
 ##############################################################################
-# <<2>> Thirteen to fifteen gods.
+# <<3>> Thirteen to fifteen gods.
 
 # 13 gods
 NAME:    dshaligram_water_room_temple
-TAGS:    no_pool_fixup no_rotate
+TAGS:    no_pool_fixup no_rotate temple_altars_13
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccc
 cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
@@ -1465,10 +1688,9 @@ ENDMAP
 
 # 14 gods
 NAME:    eino_temple_water
-TAGS:    no_pool_fixup no_rotate
+TAGS:    no_pool_fixup no_rotate temple_altars_14
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 : set_border_fill_type("open_sea")
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -1530,10 +1752,9 @@ ENDMAP
 
 # 13 gods
 NAME:    cyrus_circular_temple
-TAGS:    no_rotate
+TAGS:    no_rotate temple_altars_13
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SUBST:   X : xc.
 MAP
          ccccccccccccc
@@ -1561,8 +1782,8 @@ ENDMAP
 
 # 14 gods
 NAME:    minmay_temple_curvy_branch
+TAGS:    temple_altars_14
 PLACE:   Temple
-WEIGHT:  5
 ORIENT:  encompass
 SHUFFLE: GT, C'D" / D"C' / C'E` / E`C'
 SUBST:   C = B, '"D = ., E` = x
@@ -1610,10 +1831,9 @@ ENDMAP
 
 # 13 altars
 NAME:   oiseaux_autumnal_temple
-TAGS:   no_rotate no_pool_fixup
+TAGS:   no_rotate no_pool_fixup temple_altars_13
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 5
 KFEAT:  A = w
 SUBST:  c : c-""""""", " = c-
 MARKER: A = lua:fog_machine { cloud_type = "thin mist", pow_min = 2, \
@@ -1680,8 +1900,8 @@ ENDMAP
 
 # 13 gods
 NAME:   nicolae_temple_figure_eight
+TAGS:   temple_altars_13
 PLACE:  Temple
-WEIGHT: 10
 ORIENT: encompass
 NSUBST: A = 1:{ / *:B
 MAP
@@ -1718,9 +1938,9 @@ ENDMAP
 
 # 13 gods
 NAME:    nicolae_temple_god_jail
+TAGS:    temple_altars_13
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 KFEAT:   m = iron_grate
 SHUFFLE: PQR
 SUBST:   PQ = m, R = +
@@ -1740,78 +1960,11 @@ v...v...v...v...v...v...v...v
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 14 gods
-NAME:    nicolae_temple_great_sept
-PLACE:   Temple
-ORIENT:  encompass
-WEIGHT:  5
-# Sadly, console doesn't have colors for orange and indigo,
-# so brown and cyan will have to do.
-KFEAT:   roygbiv = n
-KFEAT:   ' = .
-SHUFFLE: roygbiv / vroygbi / ivroygb / bivroyg / gbivroy / ygbivro / oygbivr
-SUBST:   T = 't
-FTILE:   . = floor_hall, t' = floor_grass, !{B = floor_limestone
-COLOUR:  r = red, o = brown, y = yellow, g = green, b = blue, i = cyan, \
-         v = magenta, ' = green, . = blue, ! = lightgrey
-TILE:    r = dngn_transparent_stone_red, o = dngn_transparent_stone_brown, \
-         y = dngn_transparent_stone_yellow, g = dngn_transparent_stone_green, \
-         b = dngn_transparent_stone_blue, i = dngn_transparent_stone, \
-         v = dngn_transparent_stone_magenta
-KPROP:   't = no_tele_into
-MAP
-ttttttttttttttttttttttttttttttttttttttttttttt
-ttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttTTTTTTTTTTTTTTTttttttttttttttt
-ttttttttttttttT'''''''''''''''Ttttttttttttttt
-tttttttttttttT'''''''''''''''''Tttttttttttttt
-ttttttttttttT'''''''''''''''''''Ttttttttttttt
-tttttttTTTTTT'''''''''''''''''''TTTTTTttttttt
-ttttttT''''''''''''rrrrrrr''''''''''''Ttttttt
-tttttT''''''''''''cc.....cc''''''''''''Tttttt
-ttttT''''''''''''cc.......cc''''''''''''Ttttt
-ttttT''''''''''''c...!!!...c''''''''''''Ttttt
-ttttT''''''vvccccc..!!!!!..cccccoo''''''Ttttt
-ttttT'''''vv........!B!B!........oo'''''Ttttt
-ttttT''''vv.........!!!!!.........oo''''Ttttt
-ttttT''''v....!!!....!!!....!!!....o''''Ttttt
-ttttT''''c...!!B!...........!B!!...c''''Ttttt
-tttT'''''c..!!!!!...........!!!!!..c'''''Tttt
-ttT''''''c..!B!!.............!!B!..c''''''Ttt
-ttT''''''c..!!!...............!!!..c''''''Ttt
-ttT''''''cc.......................cc''''''Ttt
-ttT'''''cc...........!!!...........cc'''''Ttt
-ttT''''cc...........!!!!!...........cc''''Ttt
-ttT''''i..!!!.......!!{!!.......!!!..y''''Ttt
-ttT''''i..!B!!......!!!!!......!!B!..y''''Ttt
-ttT''''i..!!!!!......!!!......!!!!!..y''''Ttt
-ttT''''i...!!B!...............!B!!...y''''Ttt
-ttT''''i....!!!...............!!!....y''''Ttt
-ttT''''ii...........................yy''''Ttt
-ttT'''''cc.........................cc'''''Ttt
-ttT''''''ccccc...!!!.....!!!...ccccc''''''Ttt
-ttT''''''''''c..!!!!!...!!!!!..c''''''''''Ttt
-ttT''''''''''c..!B!B!...!B!B!..c''''''''''Ttt
-tttT'''''''''c..!!!!!...!!!!!..c'''''''''Tttt
-ttttT''''''''c...!!!.....!!!...c''''''''Ttttt
-tttttTTTT''''bb.......c.......gg''''TTTTttttt
-ttttttttT'''''bb.....ccc.....gg'''''Ttttttttt
-ttttttttT''''''bbbcccc'ccccggg''''''Ttttttttt
-ttttttttT'''''''''''''''''''''''''''Ttttttttt
-ttttttttT'''''''''''''''''''''''''''Ttttttttt
-tttttttttT'''''''''''''''''''''''''Tttttttttt
-ttttttttttT'''''''''''''''''''''''Ttttttttttt
-tttttttttttTTTTTTTTTTTTTTTTTTTTTTTttttttttttt
-ttttttttttttttttttttttttttttttttttttttttttttt
-ttttttttttttttttttttttttttttttttttttttttttttt
-ENDMAP
-
 # 15 gods
 NAME:    regret_index_temple_waves
-TAGS:    no_rotate no_pool_fixup
+TAGS:    no_rotate no_pool_fixup temple_altars_15
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SHUFFLE: {<defgh / {<defgh / <{hgfed
 SHUFFLE: def, PQRS, -' / -' / ="
 SUBST:   < = B, d : W.., e : W.ccc, fgh = c
@@ -1853,10 +2006,9 @@ ENDMAP
 
 # 15 gods
 NAME:    regret_index_temple_generic_petals
-TAGS:    no_rotate
+TAGS:    no_rotate temple_altars_15
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 KMONS:   P = plant
 KMONS:   b = bush
 SHUFFLE: de, fg, DEFGHI
@@ -1899,13 +2051,12 @@ ccccccccccccccccccccccccccccccccc
 ENDMAP
 
 ##############################################################################
-# <<3>> Sixteen to twenty gods.
+# <<4>> Sixteen to twenty gods.
 
 # 18 gods
 NAME:    dpeg_five_rooms_temple
-TAGS:    no_rotate
+TAGS:    no_rotate temple_altars_18
 PLACE:   Temple
-WEIGHT:  10
 ORIENT:  encompass
 SUBST:   X : GUT
 MAP
@@ -1944,10 +2095,9 @@ ENDMAP
 
 # 16 gods
 NAME:    eino_temple_scatter_basement
-TAGS:    no_rotate
+TAGS:    no_rotate temple_altars_16
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SHUFFLE: CD, ab, cde, fgh, ij, klm, no, pq, rs, tu, vw, yz, @&
 SUBST:   C = B, D = ., a : x., c : x., f : x., i : x., k : x.
 SUBST:   n : x., p : x., r : x., t : x., v : x., y : x., @ : x.
@@ -1990,9 +2140,9 @@ ENDMAP
 
 # 16 gods
 NAME:    eino_temple_rhombus
+TAGS:    temple_altars_16
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SHUFFLE: defghij, klmnopq, rs / rs / sr, tu / tu / ut
 SUBST:   deklrt = x, f : x.., m : x.., ghijnopqsu = .
 SUBST:   W : xx., X : xx., Y : xx., Z : xx.
@@ -2046,9 +2196,9 @@ ENDMAP
 # 17 gods
 # XXX: Too large and enclosed?
 NAME:    minmay_crystal_spiral_temple
+TAGS:    temple_altars_17
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 MAP
                   bbbbbbb
                   b.....b
@@ -2097,9 +2247,9 @@ ENDMAP
 
 # 16 gods
 NAME:    nicolae_temple_elliptical
+TAGS:    temple_altars_16
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SHUFFLE: G{
 NSUBST:  { = 1:{ / *:G
 SUBST:   G : GT, c : ccccvb, d : cccvbxm
@@ -2139,10 +2289,10 @@ ENDMAP
 
 # 16 gods
 NAME:   lightli_temple_of_artemis
+TAGS:   temple_altars_16
 TAGS:   no_pool_fixup
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 5
 KFEAT:  ~ = floor
 MARKER: d = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                               pow_max = 100, delay = 1, start_clouds = 1, \
@@ -2179,10 +2329,10 @@ ENDMAP
 
 # 18 gods
 NAME:    regret_index_temple_chain_breaker
+TAGS:    temple_altars_18
 TAGS:    no_rotate
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 SHUFFLE: hi, qrs / qrs / rqs / rsq, xyz / xyz / yxz / yzx, QR, YZ
 SUBST:   hqx = v, i : v.., j : vv., k : vv.
 SUBST:   r : v.., y : v.., szRZ = ., Q : v..., Y : v...
@@ -2216,10 +2366,9 @@ ENDMAP
 
 # 18 gods
 NAME:    regret_index_temple_mists
-TAGS:    no_rotate no_pool_fixup
+TAGS:    no_rotate no_pool_fixup temple_altars_18
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 KFEAT:   F = w
 SHUFFLE: HIJKLMN
 SUBST:   HIJKL = B, M : GTUtx, N : GTUtx, m : nwW, o : nwW
@@ -2261,10 +2410,9 @@ ENDMAP
 
 # 16 gods
 NAME:    regret_index_temple_sphere_string
-TAGS:    no_rotate
+TAGS:    no_rotate temple_altars_16
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SHUFFLE: CD / CD / DC, EF / EF / FE, HI / HI / IH, JK / JK / KJ
 SHUFFLE: defghi, jklmno
 SUBST:   CEHJLMP = c, DFIKMOQhino = .
@@ -2303,9 +2451,9 @@ ENDMAP
 
 # 18 gods
 NAME:    mainiacjoe_temple_coin_purse
+TAGS:    temple_altars_18
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SUBST:   c : cvb
 MAP
                   ccc
@@ -2349,9 +2497,9 @@ ENDMAP
 
 # 18 gods
 NAME:    mainiacjoe_temple_bowtie_tessellation
+TAGS:    temple_altars_18
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SUBST:   c : cvb
 MAP
                         ccccc
@@ -2407,9 +2555,9 @@ ENDMAP
 
 # 20 gods
 NAME:    mainiacjoe_temple_big_plus
+TAGS:    temple_altars_20
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SUBST:   c : cvb
 MAP
        ccccccccccccccccccccccccccccc
@@ -2459,9 +2607,9 @@ ENDMAP
 
 # 20 gods
 NAME:    mainiacjoe_temple_cubbyholes
+TAGS:    temple_altars_20
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SUBST:   x : cvb
 SUBST:   y : cvb
 MAP
@@ -2508,14 +2656,47 @@ y.....................................y
 yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 ENDMAP
 
-##############################################################################
-# <<4>> Twenty-one gods.
-
-NAME:    kilobyte_greek_temple
-TAGS:    no_rotate
+NAME:    sentei_temple_godly_chess
+TAGS:    temple_altars_17 no_hmirror no_vmirror no_rotate
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
+KFEAT:   PpLlNnRrQq = granite_statue
+TILE:    Pp = dngn_statue_imp
+TILE:    Nn = dngn_statue_centaur
+TILE:    Ll = dngn_statue_tengu
+TILE:    Rr = dngn_statue_orb_guardian
+TILE:    Qq = dngn_statue_ancient_evil
+: set_feature_name("granite_statue", "a statue of a chess piece")
+KFEAT:   _ = B
+SHUFFLE: ce
+SUBST:   c = -, e = B
+COLOUR:  d' = white
+COLOUR:  - = brown
+FTILE:   GD'PNLRQK_ = floor_pebble_white
+FTILE:   Hpnlrq-B = floor_pebble_brown
+SUBST:   x : cvb
+MAP
+xxxxxxxxxxxx
+x..........x
+x._B_B_B_B.x
+x.B_e_c_B_.x
+x.'-'-'-'-.x
+x{-'c'e'-'.x
+x.'-'-P-'-.x
+x.-'-'-'-'.x
+x.PpPp'pPp.x
+x.rNlQBLnR.x
+x..........x
+xxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# <<5>> Twenty-one gods.
+
+NAME:    kilobyte_greek_temple
+TAGS:    no_rotate temple_altars_21
+PLACE:   Temple
+ORIENT:  encompass
 MONS:    plant, bush
 NSUBST:  . = 15:1 / 12:2 / 2:t / *:.
 SUBST:   ' = .
@@ -2546,10 +2727,9 @@ ENDMAP
 
 # 21 gods
 NAME:    minmay_crystal_snake_temple
-TAGS:    no_rotate
+TAGS:    no_rotate temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 NSUBST:  T = 1:{ / *:T
 MAP
               bbb   bbb   bbb
@@ -2599,8 +2779,8 @@ ENDMAP
 
 # 21 gods
 NAME:   roderic_octagonal_lattice_temple
+TAGS:   temple_altars_21
 PLACE:  Temple
-WEIGHT: 5
 ORIENT: encompass
 TAGS:   no_rotate
 SUBST:  ' : ......b
@@ -2642,10 +2822,10 @@ ENDMAP
 
 # 21 gods
 NAME:    grunt_wide_crystal_templ
+TAGS:    temple_altars_21
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  5
 MAP
                 bbbbb
                 b...b
@@ -2672,10 +2852,9 @@ ENDMAP
 
 # 21 gods
 NAME:    nicolae_temple_the_god_donut
-TAGS:    no_pool_fixup
+TAGS:    no_pool_fixup temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SHUFFLE: gG
 NSUBST:  A = 1:{ / *:B
 SUBST:   g : ...cxT, G : Gccc.
@@ -2738,10 +2917,9 @@ ENDMAP
 
 # 21 gods
 NAME:    regret_index_temple_sigil_plot
-TAGS:    no_cloud_gen
+TAGS:    no_cloud_gen temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  5
 NSUBST:  A = 1:{ / *:B
 SHUFFLE: -G / -G / ~~, CDE / CDE / LLL, CDE
 SUBST:   - = ., ~ = c, ' : VGc...., ' : VGc....
@@ -2795,9 +2973,9 @@ llllllClllllllllllllllllllEllllllllDlllllllllllllll
 ENDMAP
 
 NAME:    mainiacjoe_temple_archimedes_tessellation
+TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 TAGS:    no_pool_fixup
 SUBST:   c : cvb
 NSUBST:  B = 1:{ / *:B
@@ -2855,9 +3033,9 @@ ccc.llll...........llll.ll.wwwwwwwwwww.ll.wwwwwwwwww.lllllll.cccc
 ENDMAP
 
 NAME:    mainiacjoe_temple_circle_huts
+TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 MONS:   plant, bush
 SUBST:   c : cvb
 SUBST:   x : xt12
@@ -2928,9 +3106,9 @@ cc......x.....x.......xxx............x.....x......x...x......cc
 ENDMAP
 
 NAME:    mainiacjoe_temple_hex_bubbles
+TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 NSUBST:  B = 1:{ / *:B
 SUBST:   c : cvb
 MAP
@@ -2988,9 +3166,9 @@ cc.....cccc+ccccccccccc...B...cc.....cccc+ccc
 ENDMAP
 
 NAME:    mainiacjoe_temple_starburst
+TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SUBST:   v : v b x:3 n:3
 FTILE:   '{t = floor_grass
 MAP
@@ -3066,9 +3244,9 @@ tt''''''''''ccc...........vvvvv...B...vvvvv...........ccc''''''''''tt
 ENDMAP
 
 NAME:    mainiacjoe_temple_trianglar_array
+TAGS:    temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  10
 SUBST:   t : tGT
 SUBST:   c : cvbt
 SUBST:   x : xcvb
@@ -3132,15 +3310,14 @@ cc'''''''''''''''''''''ccccc
 ENDMAP
 
 ##############################################################################
-# <<5>> Variable altars, generic layouts
+# <<6>> Variable altars, generic layouts
 
 # 10, 14, 18, 21 gods
 NAME:    compressed_dpeg_circular_temple
-TAGS:    no_rotate no_pool_fixup temple_variable
+TAGS:    no_rotate no_pool_fixup
 TAGS:    temple_altars_10 temple_altars_14 temple_altars_18 temple_altars_21
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  16
 KMONS:   1 = electric eel
 KMONS:   2 = lava snake
 KFEAT:   1 = deep_water
@@ -3211,10 +3388,9 @@ ENDMAP
 
 # 9, 18 gods
 NAME:   dpeg_three_leaves_temple
-TAGS:   no_rotate temple_variable temple_altars_9 temple_altars_18
+TAGS:   no_rotate temple_altars_9 temple_altars_18
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 8
 : local altar_count = get_altar_count(_G, 18)
 : if altar_count == "9" then
 SUBST:  C = .
@@ -3247,10 +3423,9 @@ ENDMAP
 
 # 10, 14 gods
 NAME:    dpeg_chambers_temple
-TAGS:    no_rotate temple_variable temple_altars_10 temple_altars_14
+TAGS:    no_rotate temple_altars_10 temple_altars_14
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  8
 : local altar_count = get_altar_count(_G, 14)
 : if altar_count == "14" then
 SUBST:   CDEF = B, '"-~ = .
@@ -3284,13 +3459,13 @@ vv.....vvvv~~~~~~~v-------v.......v"""""""v'''''''vvvv.....vv
          vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
 
-# 9, 13, 16, 21 gods.
+# 9, 13, 16, 19, 21 gods.
 NAME:   compressed_dpeg_triangle_lava_temple
-TAGS:   temple_variable no_rotate
-TAGS:   temple_altars_9 temple_altars_12 temple_altars_15 temple_altars_21
+TAGS:    no_rotate
+TAGS:   temple_altars_9 temple_altars_13 temple_altars_16
+TAGS:   temple_altars_19 temple_altars_21
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 16
 # Completely different altar points between each setting.
 : local altar_count = get_altar_count(_G, 21)
 : if altar_count == "9" then
@@ -3299,6 +3474,8 @@ SUBST:  c = {, C = B, `G = l, defDEFA = ., a = T
 SUBST:  d = {, D = B, `G = l, cefCEFA = ., a = T
 : elseif altar_count == "16" then
 SUBST:  e = {, E = B, `G = l, acdfCDF = ., A : TUV...
+: elseif altar_count == "19" then
+SUBST:  f = {, F = B, `acdeCDE = .
 : elseif altar_count == "21" then
 SUBST:  f = {, FG = B, `acdeCDE = .
 : else
@@ -3353,10 +3530,9 @@ ENDMAP
 
 # 10, 14 gods
 NAME:   zaba_magenta_temple
-TAGS:   no_rotate temple_variable temple_altars_10 temple_altars_14
+TAGS:   no_rotate temple_altars_10 temple_altars_14
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 8
 : local altar_count = get_altar_count(_G, 14)
 : if altar_count == "14" then
 SUBST:  T = B
@@ -3378,10 +3554,9 @@ ENDMAP
 
 # 10, 14 gods
 NAME:    eino_temple_lava
-TAGS:    temple_variable temple_altars_10 temple_altars_14
+TAGS:     temple_altars_10 temple_altars_14
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  8
 : local altar_count = get_altar_count(_G, 14)
 : if altar_count == "14" then
 SUBST:   C = B, dg = .
@@ -3420,10 +3595,9 @@ ENDMAP
 # 11, 14 gods
 NAME:    jpeg_temple_clearing
 TAGS:    no_rotate no_pool_fixup
-TAGS:    temple_variable temple_altars_11 temple_altars_14
+TAGS:     temple_altars_11 temple_altars_14
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  8
 # Stairs, tree paths, altars, decorative pillars.
 : local altar_count = get_altar_count(_G, 14)
 : if altar_count == "11" then
@@ -3471,10 +3645,9 @@ ENDMAP
 
 # 14, 18 gods
 NAME:    eino_narrow_crystal_temple
-TAGS:    temple_variable temple_altars_14 temple_altars_18
+TAGS:     temple_altars_14 temple_altars_18
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  8
 SHUFFLE: C' / D" / E` / F~ / G- / H;
 SUBST:   CDE = B, '"` = .
 : local altar_count = get_altar_count(_G, 18)
@@ -3521,10 +3694,9 @@ ENDMAP
 
 # 10, 15 gods
 NAME:    eino_wide_crystal_templ
-TAGS:    no_rotate temple_variable temple_altars_10 temple_altars_15
+TAGS:    no_rotate temple_altars_10 temple_altars_15
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  8
 SHUFFLE: a'- / A"c, += / += / =+
 SUBST:   a = b, '- = ., c = b, + = ., = = b
 CLEAR:   A"
@@ -3559,10 +3731,9 @@ ENDMAP
 # 12, 16 gods
 NAME:   nicolae_temple_x_marks_the_god
 TAGS:   no_pool_fixup
-TAGS:   temple_variable temple_altars_12 temple_altars_16
+TAGS:    temple_altars_12 temple_altars_16
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 8
 : local altar_count = get_altar_count(_G, 16)
 : if altar_count == "12" then
 SUBST:  D = B, E = ., g : Ghhh, h : tTV.....
@@ -3605,10 +3776,9 @@ ENDMAP
 # 12, 18 gods
 NAME:    hc_temple_tempest_star
 TAGS:    no_rotate no_pool_fixup no_cloud_gen
-TAGS:    temple_variable temple_altars_12 temple_altars_18
+TAGS:     temple_altars_12 temple_altars_18
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  8
 # Randomize altars versus triangles of points.
 SHUFFLE: BC, DE, FG
 # Sometimes fill in the outer star
@@ -3685,11 +3855,9 @@ ENDMAP
 
 # 9 to 12 gods
 NAME:   chequers_temple_sunken
-TAGS:   temple_variable
 TAGS:   temple_altars_9 temple_altars_10 temple_altars_11 temple_altars_12
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 4
 KFEAT:  O = altar_ecumenical
 : local altar_count = get_altar_count(_G, 12)
 : nsubst("O = " .. altar_count .. ":B / 1:O.... / *:.")
@@ -3751,61 +3919,260 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
-##############################################################################
-# <<6>> Variable altars, unusual layouts
-# Dedications and odd variations on other vaults and non-temple gods.
+# 6 through 14 gods
+NAME:    nicolae_temple_ecumenical_triangle
+TAGS:    temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9 \
+         temple_altars_10 temple_altars_11 temple_altars_12 temple_altars_13 \
+         temple_altars_14
+PLACE:   Temple
+ORIENT:  encompass
+SHUFFLE: DEFHJKLMNOPQRSZ/PQLRMHSNJEZOKFD/ZOSKNRFJMQDEHLP
+: local altar_count = get_altar_count(e, 14)
+: if     altar_count == "6" then                            -- 6
+:   if crawl.coinflip() then
+SHUFFLE: DPZ/JMN
+SUBST:   DPZ = {, JMNHKR = B, EFLOQS = a
+:   else
+SHUFFLE: DPZ/JMN/HKR
+SUBST:   DPZ = {, EFLOQS = B, JMN = a, HKR = p
+:   end
+: elseif altar_count == "7" then                            -- 7
+SUBST:   R = {, EFHJKMN = B, D = a, LO = p, PZ = q, QS = r
+: elseif altar_count == "8" then                            -- 8
+SUBST:   D = {, HJKPQRSZ = B, EF = a, LO = p, MN = q
+: elseif altar_count == "9" then                            -- 9
+SHUFFLE: DPZ/JMN
+SUBST:   DPZ = {, EHLFKOQRS = B, JMN = a
+: elseif altar_count == "10" then                           -- 10
+SUBST:   R = {, DEFHJKLMNO = B, PZ = a, QS = p
+: elseif altar_count == "11" then                           -- 11
+SHUFFLE: DR
+SUBST:   D = {, EFHKLOPQRSZ = B, JMN = a
+: elseif altar_count == "12" then                           -- 12
+SHUFFLE: DPZ/JMN
+SUBST:   DPZ = {, EFHJKLMNOQRS = B
+: elseif altar_count == "13" then                           -- 13
+SHUFFLE: DJ/KP
+SUBST:   D = {, EFHKLMNOPQRSZ = B, J = a
+: else --altar_count == "14"                                -- 14
+SHUFFLE: DR
+SUBST:   D = {, EFHJKLMNOPQRSZ = B
+: end
+SUBST:   a : GTU`, p : GTU`, q : GTU`, r : GTU`, s : GTU`
+NSUBST:  { = { / <
+FTILE:   {<BGTU` = floor_vault
+COLOUR:  ` = blue
+MAP
+ccccccccccccccccccccccc
+cccccccccc...cccccccccc
+ccccccccc.```.ccccccccc
+ccccccccc.`D`.ccccccccc
+ccccccccc.```.ccccccccc
+cccccccc.......cccccccc
+ccccccc.```.```.ccccccc
+ccccccc.`E`.`F`.ccccccc
+ccccccc.```.```.ccccccc
+cccccc...........cccccc
+ccccc.```.```.```.ccccc
+ccccc.`H`.`J`.`K`.ccccc
+ccccc.```.```.```.ccccc
+cccc...............cccc
+ccc.```.```.```.```.ccc
+ccc.`L`.`M`.`N`.`O`.ccc
+ccc.```.```.```.```.ccc
+cc...................cc
+c.```.```.```.```.```.c
+c.`P`.`Q`.`R`.`S`.`Z`.c
+c.```.```.```.```.```.c
+cc...................cc
+ccccccccccccccccccccccc
+ENDMAP
 
-# 9, 11 gods,
-# plus 6 to 12 altars to Lugonu.
-NAME:     kb_corrupted_temple
-TAGS:     no_pool_fixup temple_variable temple_altars_9 temple_altars_11
-PLACE:    Temple
-ORIENT:   encompass
-WEIGHT:   2
-KMONS:    P = demonic plant
-KFEAT:    L = altar_lugonu
-SUBST:    . = .:70 x:15 w l:5, ' = ., x = xxxcv
-: local altar_count = get_altar_count(_G, 11)
-: nsubst("O = " .. altar_count .. ":B / 6:L / * = LP")
-: local crnd = crawl.random2(4)
-: if crnd == 0 then
-LROCKCOL: magenta
-: elseif crnd == 1 then
-LROCKCOL: lightblue
-: elseif crnd == 2 then
-LROCKCOL: lightcyan
-: else
-LROCKCOL: lightred
+# 12, 16, or 20 gods
+NAME:    nicolae_temple_slightly_damp_pantheon
+TAGS:    no_pool_fixup temple_altars_12 temple_altars_16 temple_altars_20
+PLACE:   Temple
+ORIENT:  encompass
+SHUFFLE: DFHJ
+: local altar_count = get_altar_count(e, 20)
+: if altar_count == "12" then       -- 12
+:   if crawl.coinflip() then
+SUBST: DE = B, FHJ = T
+:   else
+SUBST: DFH = B, EJ = T
+:   end
+: elseif altar_count == "16" then   -- 16
+:   if crawl.coinflip() then
+SUBST: DEF = B, JH = T
+:   else
+SUBST: DFHJ = B, E = T
+:   end
+: else                              -- 20
+SUBST: DEFH = B, J = T
 : end
 MAP
-       xxxxx xxxxx xxxxx
-      xx.O.xxx.'.xxx.O.xx
-      x...'.x.'...x.'...x
-      x'.V.O''.O.''O.V.'x
-      x.'...x...'.x...'.x
-      xx.O.xxx.'.xxx.O.xx
- xxxxx xxxxxxx'..xxxxxxxxxxxxx
-xx.O.xxx.'.xxx.'.xxx.'.xxx.O.xx
-x.'...x...'...'.'.'.'...x...'.x
-x'.V.O''.O.'.'.1.'.'.O.''O.V.'x
-x...'.x.'.......'.....'.x.'...x
-xx.O.xxx.'.xxx.'.xxx.'.xxx.O.xx
- xxxxxxxx'xxxx.'.xxxx'xxxxxxxx
-      xx.O.xxx'..xxx.O.xx
-      x.'...xx.'.xx...'.x
-      xO.V.Oxx..'xxO.V.Ox
-      x...'.xx.'.xx.'...x
-      xx.'.xxx'..xxx.'.xx
-       xxxxx xP{Px xxxxx
-             xxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxwwwwwxxxxwwwwwxxxxwwwwwxxxxxxxxxxx
+xxxxxxxxxxx.....xxxx.....xxxx.....xxxxxxxxxxx
+xxxwwwwwwxx.......................xxwwwwwwxxx
+xxxw.....xx..E........F........E..xx.....wxxx
+xxxw.....................................wxxx
+xxxw..D.........xxxx.....xxxx.........D..wxxx
+xxxw...........xxxxxx...xxxxxx...........wxxx
+xxxw.....xxx...xxxxxx...xxxxxx...xxx.....wxxx
+xxxxx...xxx.....xxxxx...xxxxx.....xxx...xxxxx
+xxxxx...xxw.....wxxx.....xxxw.....wxx...xxxxx
+xw......x.........x.......x.........x......wx
+xw.........................................wx
+xw..E........H........J........H........E..wx
+xw.........................................wx
+xw.....xx.........x.......x.........xx.....wx
+xxx...xxxxw.....wxxx.....xxxw.....wxxxx...xxx
+xxx...xxxxx.....xxxxx...xxxxx.....xxxxx...xxx
+xxx...xxxxxx...xxxww.....wwxxx...xxxxxx...xxx
+xxx...xxxxx.....xxww.....wwxx.....xxxxx...xxx
+xw.....xxx.......x.........x.......xxx.....wx
+xw.........................................wx
+xw..F........J........{........J........F..wx
+xw.........................................wx
+xw.....xxx.......x.........x.......xxx.....wx
+xxx...xxxxx.....xxww.....wwxx.....xxxxx...xxx
+xxx...xxxxxx...xxxww.....wwxxx...xxxxxx...xxx
+xxx...xxxxx.....xxxxx...xxxxx.....xxxxx...xxx
+xxx...xxxxw.....wxxx.....xxxw.....wxxxx...xxx
+xw.....xx.........x.......x.........xx.....wx
+xw.........................................wx
+xw..E........H........J........H........E..wx
+xw.........................................wx
+xw......x.........x.......x.........x......wx
+xxxxx...xxw.....wxxx.....xxxw.....wxx...xxxxx
+xxxxx...xxx.....xxxxx...xxxxx.....xxx...xxxxx
+xxxw.....xxx...xxxxxx...xxxxxx...xxx.....wxxx
+xxxw...........xxxxxx...xxxxxx...........wxxx
+xxxw..D.........xxxx.....xxxx.........D..wxxx
+xxxw.....................................wxxx
+xxxw.....xx..E........F........E..xx.....wxxx
+xxxwwwwwwxx.......................xxwwwwwwxxx
+xxxxxxxxxxx.....xxxx.....xxxx.....xxxxxxxxxxx
+xxxxxxxxxxxwwwwwxxxxwwwwwxxxxwwwwwxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+# 6, 7, 8, 14, 15, or 16 gods
+NAME:    nicolae_temple_superstar
+TAGS:    no_pool_fixup temple_altars_6 temple_altars_7 temple_altars_8 \
+         temple_altars_14 temple_altars_15 temple_altars_16
+PLACE:   Temple
+ORIENT:  encompass
+SHUFFLE: DF
+: local altar_count = get_altar_count(e, 16)
+: if tonumber(altar_count) % 4 == 2 then       -- 6, 14
+NSUBST:  D = 1:{ / <
+SUBST:   !- = w
+: elseif tonumber(altar_count) % 4 == 3 then   -- 7, 15
+NSUBST:  D = 1:{ / B
+SUBST:   !- = w
+: else                                         -- 8, 16
+SUBST:   ! = {, - = `
+FTILE:   ` = floor_vault
+COLOUR:  ` = blue
+: end
+: if tonumber(altar_count) < 10 then           -- 6, 7, 8
+SUBST:   EHKM : GGGTTTUVY
+: end
+SUBST:   DEFHJKLM = B
+MAP
+ccccccccccccccccccccccccccccccc
+c.....ccccccccccccccccccc.....c
+c........ccccccccccccc........c
+c..L........ccccccc........F..c
+c..............c..............c
+c........M...........E........c
+cc...........................cc
+cc.............D.............cc
+cc......ww...........ww......cc
+ccc..K..wwwww.....wwwww..H..ccc
+ccc......wwwwww-wwwwww......ccc
+ccc......wwwww---wwwww......ccc
+cccc.....wwww-----wwww.....cccc
+cccc......ww-------ww......cccc
+cccc......w---------w......cccc
+ccccc..J..-----!-----..J..ccccc
+cccc......w---------w......cccc
+cccc......ww-------ww......cccc
+cccc.....wwww-----wwww.....cccc
+ccc......wwwww---wwwww......ccc
+ccc......wwwwww-wwwwww......ccc
+ccc..H..wwwww.....wwwww..K..ccc
+cc......ww...........ww......cc
+cc.............D.............cc
+cc...........................cc
+c........E...........M........c
+c..............c..............c
+c..F........ccccccc........L..c
+c........ccccccccccccc........c
+c.....ccccccccccccccccccc.....c
+ccccccccccccccccccccccccccccccc
+ENDMAP
+
+# 6, 8, 10, 14, or 18 gods
+NAME:   nicolae_temple_two_arcs
+TAGS:   no_pool_fixup temple_altars_6 temple_altars_8 temple_altars_10 \
+        temple_altars_14 temple_altars_18
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(e, 18)
+: if altar_count == "6" then
+SUBST:  DF = B, E : GU, HJ = .
+: elseif altar_count == "8" then
+SUBST:  HJ = B, DEF = .
+: elseif altar_count == "10" then
+SUBST:  DEF = B, HJ = .
+: elseif altar_count == "14" then
+SUBST:  DFHJ = B, E : GU
+: else
+SUBST:  DEFHJ = B
+: end
+SUBST:  Z : GU
+FTILE:  `{ = floor_vault
+COLOUR: ` = blue
+MAP
+ccccccccccccccccccccccccccccccccccc
+cc...Z...wwwwwwwwwwwwwwwww...Z...cc
+ccc.......wwwwwwwwwwwwwww.......ccc
+cccc.......wwwwwwwwwwwww.......cccc
+ccccc...D...wwwwwwwwwww...D...ccccc
+ccccc.......wwwwwwwwwww.......ccccc
+cccccc...H...wwwwwwwww...H...cccccc
+cccccc.......wwwwwwwww.......cccccc
+cccccc...E...wwwwwwwww...E...cccccc
+ccccccc.......wwwwwww.......ccccccc
+ccccccc...J...```````...J...ccccccc
+ccccccc.......```````.......ccccccc
+ccccccc...F...```{```...F...ccccccc
+ccccccc.......```````.......ccccccc
+ccccccc...J...```````...J...ccccccc
+ccccccc.......wwwwwww.......ccccccc
+cccccc...E...wwwwwwwww...E...cccccc
+cccccc.......wwwwwwwww.......cccccc
+cccccc...H...wwwwwwwww...H...cccccc
+ccccc.......wwwwwwwwwww.......ccccc
+ccccc...D...wwwwwwwwwww...D...ccccc
+cccc.......wwwwwwwwwwwww.......cccc
+ccc.......wwwwwwwwwwwwwww.......ccc
+cc...Z...wwwwwwwwwwwwwwwww...Z...cc
+ccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+##############################################################################
+# <<7>> Variable altars, unusual layouts
+# Dedications and odd variations on other vaults.
 
 # 11, 15 gods
 NAME:    minmay_freezing_vapour_temple
-TAGS:    temple_variable temple_altars_11 temple_altars_15
+TAGS:    temple_altars_11 temple_altars_15
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  4
 : local altar_count = get_altar_count(_G, 13)
 : nsubst("B = " .. altar_count .. ":B / *:'")
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
@@ -3836,10 +4203,9 @@ ENDMAP
 
 # 16, 17 gods
 NAME:   minmay_temple_bridge_d
-TAGS:   no_cloud_gen temple_variable temple_altars_16 temple_altars_17
+TAGS:   no_cloud_gen temple_altars_16 temple_altars_17
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 2
 SUBST:  A : TUV
 : local altar_count = get_altar_count(_G, 17)
 : if altar_count == "16" then
@@ -3885,10 +4251,9 @@ ENDMAP
 
 # 9, 16 gods
 NAME:       kb_temple_of_zot
-TAGS:       no_rotate temple_variable temple_altars_9 temple_altars_16
+TAGS:       no_rotate temple_altars_9 temple_altars_16
 PLACE:      Temple
 ORIENT:     encompass
-WEIGHT:     4
 : local altar_count = get_altar_count(_G, 14)
 : if altar_count == "9" then
 SUBST:      C = B, D = .
@@ -3927,10 +4292,9 @@ ENDMAP
 
 # 9, 11 gods
 NAME:   grunt_temple_mini_profane
-TAGS:   no_rotate temple_variable temple_altars_9 temple_altars_11
+TAGS:   no_rotate temple_altars_9 temple_altars_11
 PLACE:  Temple
 ORIENT: encompass
-WEIGHT: 2
 : local altar_count = get_altar_count(_G, 11)
 : if altar_count == "9" then
 SUBST:  C = .
@@ -3973,10 +4337,9 @@ ENDMAP
 # shameless.
 NAME:    bh_familiar_temple
 TAGS:    no_rotate no_hmirror no_vmirror
-TAGS:    temple_variable temple_altars_11 temple_altars_15 temple_altars_17
+TAGS:    temple_altars_11 temple_altars_15 temple_altars_17
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  2
 KFEAT:   Q : abandoned_shop
 : local altar_count = get_altar_count(_G, 17)
 : nsubst ("B = " .. altar_count .. ":B / 1:Q. / *:.")
@@ -4011,18 +4374,775 @@ x''''''''''''''''''''''''''''''x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# 9, 11 gods
+# 12, 15, or 18 gods.
+NAME:    nicolae_temple_no_exploring_needed
+TAGS:    no_pool_fixup
+TAGS:    temple_altars_12 temple_altars_15 temple_altars_18
+PLACE:   Temple
+ORIENT:  encompass
+: local altar_count = get_altar_count(_G, 18)
+: if altar_count == "12" then
+SUBST:   BCEFHIKLNOQR = _
+SUBST:   AGM = p, DJP = q
+SHUFFLE: pq / rr / rr
+SUBST:   p : TG, q : TG, r = .
+: elseif altar_count == "15" then
+SUBST:   BCDEFHIJKLNOPQR = _
+SUBST:   AGM : TG
+: elseif altar_count == "18" then
+SUBST:   ABCDEFGHIJKLMNOPQR = _
+: else
+SUBST:   ABCGHIMNO = _, DEFJKLPQR = Y
+: end
+SUBST:   _ = B
+SHUFFLE: abdefgh
+SUBST:   abd = w, e : .w, f : .w, g : .w, h : .w
+MAP
+   ccccccccc
+  ccD.E.F.Gcc
+ cc.........cc
+ccC..gh.hg..Hcc
+c...bef.feb...c
+cB.gead.daeg.Ic
+c..hfd...dfh..c
+cA.....{.....Jc
+c..hfd...dfh..c
+cR.gead.daeg.Kc
+c...bef.feb...c
+ccQ..gh.hg..Lcc
+ cc.........cc
+  ccP.O.N.Mcc
+   ccccccccc
+ENDMAP
+
+# 6, 8, or 10 gods.
+NAME:   hellmonk_temple_micro_hex
+TAGS:   temple_altars_6 temple_altars_8 temple_altars_10
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(_G, 10)
+: if altar_count == "6" then
+SUBST:  D = B, EF = G
+: elseif altar_count == "8" then
+SUBST:  DE = B, F = G
+: else
+SUBST:  DEF = B
+: end
+FTILE: 'T{ = floor_frozen
+FTILE: .BG = floor_w_marble
+COLOUR: 'T{ = blue
+COLOUR: . = white
+MAP
+    ccccccc
+   ccD...Dcc
+  cc.......cc
+ ccE...'...Fcc
+cc....'''....cc
+cD...''{''...Dc
+cc....'''....cc
+ ccF...'...Ecc
+  cc.......cc
+   ccD...Dcc
+    ccccccc
+ENDMAP
+
+# 8, 9, 12, or 13 gods.
+NAME:   hellmonk_temple_forest_ring
+TAGS:   temple_altars_8 temple_altars_9 temple_altars_12 temple_altars_13
+PLACE:  Temple
+ORIENT: encompass
+NSUBST: A = 1:{ / *:AG
+NSUBST: + = 1:+ / *:c
+: local altar_count = get_altar_count(_G, 13)
+: if altar_count == "8" then
+SUBST:  E = B
+SUBST:  +DFH = c
+: elseif altar_count == "9" then
+SUBST:  EF = B, D = ., H:AG
+: elseif altar_count == "12" then
+SUBST:  EH = B, D = ., F = AGT
+: else
+SUBST:  EFH = B, D = .
+: end
+FTILE:  .+{ABGTt = floor_grass
+COLOUR: . = green
+MAP
+   tttt         tttt
+   tE.tt       tt.Et
+   tt..tt     tt..tt
+tttttt..tt   tt..tttttt
+tEttttt..ttttt..tttttEt
+t..ttttt...A...ttttt..t
+tt..ttt........tttt..tt
+ tt..t....c+c...tt..tt
+  tt....cccDccc....tt
+   tt...cHDDDHc...tt
+    t..ccDDDDDcc..t
+    tA.+DDDFDDD+.At
+    t..ccDDDDDcc..t
+   tt...cHDDDHc...tt
+  tt....cccDccc....tt
+ tt..tt...c+c....t..tt
+tt..tttt........ttt..tt
+t..ttttt...A...ttttt..t
+tEttttt..ttttt..tttttEt
+tttttt..tt   tt..tttttt
+   tt..tt     tt..tt
+   tE.tt       tt.Et
+   tttt         tttt
+ENDMAP
+
+# 7, 8, 11, 15, or 19 gods.
+NAME:   hellmonk_temple_of_storms
+TAGS:   temple_altars_7 temple_altars_8 temple_altars_11 temple_altars_15
+TAGS:   temple_altars_19
+PLACE:  Temple
+ORIENT: encompass
+: if crawl.one_chance_in(25) then
+KMONS:  J = diamond obelisk
+: else
+MARKER: J = lua:fog_machine { cloud_type = "thunder", \
+             pow_min = 30, pow_max = 50, delay = 5, start_clouds = 3, \
+             size = 4, walk_dist = 1, spread_rate = 100, excl_rad = 0 }
+: end
+: local altar_count = get_altar_count(_G, 19)
+: if altar_count == "7" then
+SUBST:  DE = B, FHI:G.
+: elseif altar_count == "8" then
+SUBST:  FH = B, DEI:G.
+: elseif altar_count == "11" then
+SUBST:  DFH = B, EI:G.
+: elseif altar_count == "15" then
+SUBST:  DEFH = B, I:G.
+:else
+SUBST:  DEFHI = B
+: end
+KPROP:  J' = no_tele_into
+FTILE:  J' = floor_sand
+COLOUR: J' = yellow
+MAP
+        ccccc
+     cccc.{.cccc
+    ccH.......Hcc
+   cc...........cc
+  ccE...........Ecc
+  c...............c
+ cc....nnnnnnn....cc
+ cF...nn'''''nn...Fc
+cc...nn'''''''nn...cc
+cI...n'''''''''n...Ic
+c....n'''''''''n....c
+cD...n''''J''''n...Dc
+c....n'''''''''n....c
+cI...n'''''''''n...Ic
+cc...nn'''''''nn...cc
+ cF...nn'''''nn...Fc
+ cc....nnnnnnn....cc
+  c...............c
+  ccE...........Ecc
+   cc...........cc
+    ccH.......Hcc
+     cccc.D.cccc
+        ccccc
+ENDMAP
+
+# any odd number of gods from 7-19
+NAME:   hellmonk_temple_divided_pantheon
+TAGS:   temple_altars_7 temple_altars_9 temple_altars_11 temple_altars_13
+TAGS:   temple_altars_15 temple_altars_17 temple_altars_19
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  DRQ' = floor_infernal
+FTILE:  EJK- = floor_w_marble
+FTILE:  {SHGPBL. = floor_limestone
+COLOUR: ' = red
+COLOUR: - = white
+COLOUR: G. = yellow
+: local altar_count = get_altar_count(_G, 19)
+: local half_count = (altar_count - 1) / 2
+: nsubst ("D = " .. half_count .. ":B / *:'")
+: nsubst ("E = " .. half_count .. ":B / *:-")
+MARKER:  P = lua:transp_loc("pantheon_dark_entry")
+MARKER:  Q = lua:transp_dest_loc("pantheon_dark_entry")
+MARKER:  R = lua:transp_loc("pantheon_dark_exit")
+MARKER:  S = lua:transp_dest_loc("pantheon_dark_exit")
+MARKER:  H = lua:transp_loc("pantheon_light_entry")
+MARKER:  J = lua:transp_dest_loc("pantheon_light_entry")
+MARKER:  K = lua:transp_loc("pantheon_light_exit")
+MARKER:  L = lua:transp_dest_loc("pantheon_light_exit")
+MAP
+      ccccccc
+     ccc.B.ccc
+    ccDn...nEcc
+   cc''n...n--cc
+cccc'''n...n---cccc
+ccD'''Dn...nE---Ecc
+c''''''n...n------c
+c''D'''n...n--E---c
+c''''''n...n------c
+c'''''RnS.HnJ-----c
+cD'''''nG.Gn-----Ec
+c'''''QnP.LnK-----c
+c''D'''n...n--E---c
+c''''''n...n------c
+c'''''Dn...nE-----c
+ccD''''n...n----Ecc
+cccc'''n...n---cccc
+   cc''n...n--cc
+    ccDn.{.nEcc
+     ccc...ccc
+      ccccccc
+ENDMAP
+
+# 6, 8, 9, or 10 gods.
+NAME:   hellmonk_temple_rainy
+TAGS:   temple_altars_6 temple_altars_8 temple_altars_9 temple_altars_10
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(_G, 10)
+: if altar_count == "6" then
+SUBST:  DFH = B, E = T
+: elseif altar_count == "8" then
+SUBST:  DE = B, FH = T
+: elseif altar_count == "9" then
+SUBST:  DEH = B, F = T
+:else
+SUBST:  DEFH = B
+: end
+MARKER: J = lua:fog_machine { cloud_type = "rain", \
+             pow_min = 30, pow_max = 50, delay = 5, start_clouds = 3, \
+             size = 4, walk_dist = 2, spread_rate = 100, excl_rad = 0 }
+KPROP:  J- = no_tele_into
+MAP
+      ccccccc
+    ccc--J--ccc
+   cc---------cc
+cccc-----------ccc
+c-------nnnnn----cc
+c--J---nnD.DnnJ---cc
+c-----nn.....nn----cc
+cnnnnnnE.....Enn----cc
+cT.T.T.........nn----cc
+c.{.......F....Hn---J-c
+cT.T.T.........nn----cc
+cnnnnnnE.....Enn----cc
+c-----nn.....nnJ---cc
+c--J---nnD.Dnn----cc
+c-------nnnnn----cc
+cccc-----------ccc
+   cc---------cc
+    ccc--J--ccc
+      ccccccc
+ENDMAP
+
+# 6, 8, 10, or 12 gods.
+NAME:   hellmonk_temple_flake
+TAGS:   temple_altars_6 temple_altars_8 temple_altars_10 temple_altars_12
+PLACE:  Temple
+ORIENT: encompass
+: local altar_count = get_altar_count(_G, 12)
+: if altar_count == "6" then
+SUBST:  EF = B, D = .
+: elseif altar_count == "8" then
+SUBST:  DF = B, E = .
+: elseif altar_count == "10" then
+SUBST:  DE = B, F = .
+: else
+SUBST:  DEF = B
+: end
+TILE:   c = wall_icy_stone
+COLOUR:  c = white
+FTILE:  .B{ = floor_ice
+COLOUR: . = blue
+MAP
+          ccc
+         ccDcc
+    cccc c...c cccc
+    cE.c cc.cc c.Ec
+ccccc..cccc.c cc..ccccc
+cD.cccc.ccc.ccc.cccc.Dc
+c.c..ccc.cc.cc.ccc..c.c
+ccccc..cc.c.c.cc..ccccc
+    ccc.........ccc
+  ccccccc.....ccccccc
+ cc.cccc.......cccc.cc
+ cF........{........Fc
+ cc.cccc.......cccc.cc
+  ccccccc.....ccccccc
+ cccccc...c.c...ccc
+ccccc..cc.c.c.cc..ccccc
+c.c..ccc.cc.cc.ccc..c.c
+cD.cccc.ccc.ccc.cccc.Dc
+ccccc..cccc.cccc..ccccc
+    cE.c cc.cc c.Ec
+    cccc c...c cccc
+         ccDcc
+          ccc
+ENDMAP
+
+# 6 to 10 gods.
+NAME:   hellmonk_temple_beads
+TAGS:   temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
+TAGS:   temple_altars_10
+PLACE:  Temple
+ORIENT: encompass
+SUBST:  -:c........
+: local altar_count = get_altar_count(_G, 10)
+: nsubst ("D = " .. altar_count .. ":B / *:tGTbbVn")
+SUBST:  E:GG., F:G..
+MAP
+ ccccc    ccccc    ccccc
+cc...cc  cc...cc  cc...cc
+c.....cccc.....cccc.....c
+c..D........D........D..c
+c.....cccc.....cccc.....c
+cc...cccccc...cccccc...cc
+ cc.ccccccccccccccccc.cc
+  c.ccccccccccccccccc.c
+  c.ccccccccccccccccc.c
+ cc.ccccccccccccccccc.cc
+cc...cccccc...cccccc...cc
+c.....cccc.....cccc.....c
+c..D........D..cccc..D..c
+c.....cccc.....cccc.....c
+cc...cc  cc...cccccc...cc
+ ccccc    cc.cccccccc.cc
+           c.cccccccc.c
+           c.cccccccc.c
+ ccccc    cc.cccccccc.cc
+cc...cc  cc...cccccc...cc
+c.....cccc.....cccc.....c
+c..D........D..cccc..D..c
+c.....cccc.....cccc.....c
+cc...cccccc...cccccc...cc
+ cc.ccccccccccccccccc.cc
+  c.ccccccccccccccccc-c
+  c.ccccccccccccccccc-c
+ cc.cccccccccc.F.cccc-c
+cc...ccccccccE...Eccc-c
+c.....cccccc.......cc-c
+c..D...........{....--c
+c.....cccccc.......cccc
+cc...cc    ccE...Ecc
+ ccccc      cc.F.cc
+             ccccc
+ENDMAP
+
+# 6, 7, 8, 12, or 15 gods.
+NAME:   hellmonk_temple_two_chambers
+TAGS:   temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_12
+TAGS:   temple_altars_15
+PLACE:  Temple
+ORIENT: encompass
+FTILE:  ;DK = floor_limestone
+FTILE:  -FJ = floor_marble
+: local altar_count = get_altar_count(_G, 15)
+: if altar_count == "6" then
+SUBST:  D = B, F = K
+: elseif altar_count == "7" then
+SUBST:  DK = B, F = K
+: elseif altar_count == "8" then
+SUBST:  FJ = B, D = J
+: elseif altar_count == "12" then
+SUBST:  DF = B
+: else
+SUBST:  DFJK = B
+: end
+SUBST:  J:TG, K:tVGA
+MAP
+  ccccccc
+ ccD;;;Dcc
+cc;;;;;;;cc
+c;;;;;;;;;c
+cD;;;K;;;Dc
+c;;;;;;;;;c
+cc;;;;;;;cc
+ ccD;;;Dcc
+  ccc;ccc
+    c{c
+  ccc-ccc
+ ccF---Fcc
+cc-------cc
+c---------c
+cF--J-J--Fc
+c---------c
+cc-------cc
+ ccF---Fcc
+  ccccccc
+ENDMAP
+
+# 6 through 21 gods
+NAME:   nicolae_temple_bog_church
+TAGS:   temple_altars_6  temple_altars_7  temple_altars_8  temple_altars_9  \
+        temple_altars_10 temple_altars_11 temple_altars_12 temple_altars_13 \
+        temple_altars_14 temple_altars_15 temple_altars_16 temple_altars_17 \
+        temple_altars_18 temple_altars_19 temple_altars_20 temple_altars_21
+PLACE:  Temple
+ORIENT: encompass
+KFEAT:  t = mangrove
+KFEAT:  ! = w
+KFEAT:  . = . w:100 / W
+: local altar_count = get_altar_count(e, 21)
+: nsubst("B = " .. altar_count .. "=B / 1:{ / 1:` / -")
+SUBST: D : Ww, E : Wtw, F : Ww, H : tw, J : Ww, K : Ww, L : Wtw, M : tw, \
+       - = t., ' = W.
+LFLOORTILE: floor_swamp
+LFLOORCOL:  brown
+MARKER: ` = lua:fog_machine { pow_min = 3, pow_max = 5, delay = 25, \
+                               size = 1, walk_dist = 6 }
+MARKER: { = lua:fog_machine { pow_min = 3, pow_max = 5, delay = 25, \
+                               size = 1, walk_dist = 6 }
+MARKER: ! = lua:fog_machine { pow_min = 3, pow_max = 5, delay = 25, \
+                               size = 1, walk_dist = 6 }
+MAP
+ttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttttttttttttt
+ttttttttttMMMwwwwttttttttttttDwwwwttt
+ttttttMMMMwwwwwwwwwwwwwttttDDDwwwwwtt
+tttttMM....wwwwww!wwwwwwtt...DDDwwwtt
+tttttw'..B...wwwwwwwwww........DDDttt
+tttwwwWW....''WWwwww........`...DDttt
+ttwwwWWWWWWWWWWWW.....-..B.......tttt
+ttwww'...WWWWW'...B..--....-..B..tttt
+ttw!w..B..''...--.........-t....ttttt
+tttwww.......B.-ttt-.....tt-...Ettttt
+ttttwww..`.....-ttt-..B..ttt..EEEtttt
+tttttwww.......-----.....---..EEEEttt
+tttttLww...B...................Ettttt
+tttttLLww........B....`......B..ttttt
+ttttttLLw..t--.....--....B......FFttt
+tttttttLLL.-t-....tt.......WW..FFFFtt
+tttttttLLL.--...`.tt.B.'WWWWW'.FFFwtt
+tttttttLL.-...B..WWW...'WWWW'.FFwwwtt
+ttttttLLL.-.....''......'WW'..Fwwwwtt
+ttttttLL.`-...---..B.........wwwwtttt
+tttttLL..-....---.....`...B..wwwHtttt
+tttttL.....B.......tt.......wwwHttttt
+ttttLL..........B..t........wwHtttttt
+ttttL..B...--.....--.B...--..HHtttttt
+ttttL............tt......--.-HHtttttt
+ttttw...t-.`.B...--.''.....-t-HHttttt
+tttwww..-.t-.......'WW'.B..--.wHHtttt
+tttwww.....-t....B.'WW'...-....wwHttt
+ttww!ww..B...-t.....''.ttt..B..wwwttt
+ttwwwwww.......KKtttJJJ--..`...wwwwtt
+tttwwwwwww...KKKtttttJJJJ.....wwwwwtt
+ttttwwwwwwwKKKtttttttttJJJJJJww!wwttt
+tttttwwwwwKKtttttttttttttJJJwwwwwwttt
+tttttttwwwtttttttttttttttttttwwwttttt
+ttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+# 7 or 14 gods
+NAME:    nicolae_temple_great_sept
+TAGS:    temple_altars_7 temple_altars_14
+PLACE:   Temple
+ORIENT:  encompass
+# Sadly, console doesn't have colors for orange and indigo,
+# so brown and cyan will have to do.
+KFEAT:   roygbiv = n
+KFEAT:   ' = .
+SHUFFLE: roygbiv / vroygbi / ivroygb / bivroyg / gbivroy / ygbivro / oygbivr
+: local altar_count = get_altar_count(e, 14)
+: if altar_count == "7" then
+SUBST:   LO = !, M = ., N = B
+: else
+SUBST:   L = ., MN = !, O = B
+: end
+SUBST:   T = 't
+FTILE:   . = floor_hall, t' = floor_grass, !{B = floor_limestone
+COLOUR:  r = red, o = brown, y = yellow, g = green, b = blue, i = cyan, \
+         v = magenta, ' = green, . = blue, ! = lightgrey
+TILE:    r = dngn_transparent_stone_red, o = dngn_transparent_stone_brown, \
+         y = dngn_transparent_stone_yellow, g = dngn_transparent_stone_green, \
+         b = dngn_transparent_stone_blue, i = dngn_transparent_stone, \
+         v = dngn_transparent_stone_magenta
+KPROP:   't = no_tele_into
+MAP
+ttttttttttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttttttttTTTTTTTTTTTTTTTttttttttttttttt
+ttttttttttttttT'''''''''''''''Ttttttttttttttt
+tttttttttttttT'''''''''''''''''Tttttttttttttt
+ttttttttttttT'''''''''''''''''''Ttttttttttttt
+tttttttTTTTTT'''''''''''''''''''TTTTTTttttttt
+ttttttT''''''''''''rrrrrrr''''''''''''Ttttttt
+tttttT''''''''''''cc.....cc''''''''''''Tttttt
+ttttT''''''''''''cc.......cc''''''''''''Ttttt
+ttttT''''''''''''c...!!!...c''''''''''''Ttttt
+ttttT''''''vvccccc..!!!!!..cccccoo''''''Ttttt
+ttttT'''''vv........!ONO!........oo'''''Ttttt
+ttttT''''vv.........!!!!!.........oo''''Ttttt
+ttttT''''v...L!!M....!!!....M!!L...o''''Ttttt
+ttttT''''c..L!!O!...........!O!!L..c''''Ttttt
+tttT'''''c..!!N!!...........!!N!!..c'''''Tttt
+ttT''''''c..!O!!L...........L!!O!..c''''''Ttt
+ttT''''''c..M!!L.............L!!M..c''''''Ttt
+ttT''''''cc.......................cc''''''Ttt
+ttT'''''cc...........!!!...........cc'''''Ttt
+ttT''''cc...........!!!!!...........cc''''Ttt
+ttT''''i..M!!L......!!{!!......L!!M..y''''Ttt
+ttT''''i..!O!!L.....!!!!!.....L!!O!..y''''Ttt
+ttT''''i..!!N!!......!!!......!!N!!..y''''Ttt
+ttT''''i..L!!O!...............!O!!L..y''''Ttt
+ttT''''i...L!!M...............M!!L...y''''Ttt
+ttT''''ii...........................yy''''Ttt
+ttT'''''cc.........................cc'''''Ttt
+ttT''''''ccccc...!!!.....!!!...ccccc''''''Ttt
+ttT''''''''''c..!!!!!...!!!!!..c''''''''''Ttt
+ttT''''''''''c..!ONO!...!ONO!..c''''''''''Ttt
+tttT'''''''''c..!!!!!...!!!!!..c'''''''''Tttt
+ttttT''''''''c...!!!.....!!!...c''''''''Ttttt
+tttttTTTT''''bb.......c.......gg''''TTTTttttt
+ttttttttT'''''bb.....ccc.....gg'''''Ttttttttt
+ttttttttT''''''bbbcccc'ccccggg''''''Ttttttttt
+ttttttttT'''''''''''''''''''''''''''Ttttttttt
+ttttttttT'''''''''''''''''''''''''''Ttttttttt
+tttttttttT'''''''''''''''''''''''''Tttttttttt
+ttttttttttT'''''''''''''''''''''''Ttttttttttt
+tttttttttttTTTTTTTTTTTTTTTTTTTTTTTttttttttttt
+ttttttttttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+# 6, 9, 12, 15, 18, or 21 gods
+# In which assorted masses of demons trash-talk you
+# while you're trying to pick a god.
+NAME:    nicolae_temple_panitentiary
+TAGS:    no_pool_fixup temple_altars_6 temple_altars_9 temple_altars_12 \
+         temple_altars_15 temple_altars_18 temple_altars_21
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  1
+KPROP:   n1l- = no_tele_into
+KMONS:   1 = pandemonium lord
+KMONS:   - = nothing w:60 / any demon
+SUBST:   - = ----l
+SHUFFLE: PQ/SR, pq/sr
+# This was originally a {{ }} block but since you can't do multiple
+# substs in one subst() command it got super long.
+: local altar_count = get_altar_count(e, 21)
+: -- dice variable is used for picking variations later
+: local dice = crawl.roll_dice(1, 6)
+: if     altar_count == "6" then        -- 6
+SUBST:   Zz = B, PpRr = U, QqSs = .
+: elseif altar_count == "9" then        -- 9
+:   if dice <= 3 then
+SUBST:   PR = B, pr = U, QSZqsz = .
+:   else
+SUBST:   PSz = B, Zps = U, QRqr = .
+:   end
+: elseif altar_count == "12" then       -- 12
+:   if dice <= 2 then
+SUBST:   QR = B, psz = U, PSZqr = .
+:   elseif dice <= 4 then
+SUBST:   PRz = B, Zpr = U, SQsq = .
+:   else
+SUBST:   PSps = B, QRqr = U, Zz = .
+:   end
+: elseif altar_count == "15" then       -- 15
+:   if dice <= 3 then
+SUBST:   PRps = B, QSqr = U, Zz = .
+:   else
+SUBST:   QRS = B, psz = U, PZqr = .
+:   end
+: elseif altar_count == "18" then       -- 18
+:   if dice <= 2 then
+SUBST:   PRpr = B, Zz = U, QSqs = .
+:   elseif dice <= 4 then
+SUBST:   QRps = B, Zz = U, PSqr = .
+:   else
+SUBST:   PQRS = B, Zz = U, pqrs = .
+:   end
+: else                                -- 21
+:   if dice <= 3 then
+SUBST:   PQRSZ = B, pqrsz = U
+:   else
+SUBST:   QRpsz = B, PSZrq = U
+:   end
+: end
+FTILE:   n1l- = floor_infernal
+COLOUR:  n1- = red
+SUBST:   U = UUUUUV, V = VVVVVY
+MAP
+ccccccccccccccccccccccccccccccccccccccccc
+cccccccccc.....ccccccccccc.....cccccccccc
+cccccccccc.s.r.ccccccccccc.R.S.cccccccccc
+ccccccccc.......................ccccccccc
+ccccccccc.r.z.q...........Q.Z.R.ccccccccc
+ccccccccc.......................ccccccccc
+cccccccccc.q.p.nnnnnnnnnnn.P.Q.cccccccccc
+ccccccccc.......n-------n.......ccccccccc
+ccccccccc...n...nn-----nn...n...ccccccccc
+cccccccc....n....n--1--n....n....cccccccc
+cccccccc...nnn...nn---nn...nnn...cccccccc
+ccccccc....n-n....n---n....n-n....ccccccc
+ccccccc...nn-nn...nn-nn...nn-nn...ccccccc
+cccccc....n---n....n-n....n---n....cccccc
+cccccc...nn---nn...nnn...nn---nn...cccccc
+ccccc....n--1--n....n....n--1--n....ccccc
+ccccc...nn-----nn...n...nn-----nn...ccccc
+cc......n-------n.......n-------n......cc
+cc.R.Q.nnnnnnnnnnn.....nnnnnnnnnnn.q.r.cc
+c.......................................c
+c.S.Z.P.............{.............p.z.s.c
+c.......................................c
+cc.R.Q.nnnnnnnnnnn.....nnnnnnnnnnn.q.r.cc
+cc......n-------n.......n-------n......cc
+ccccc...nn-----nn...n...nn-----nn...ccccc
+ccccc....n--1--n....n....n--1--n....ccccc
+cccccc...nn---nn...nnn...nn---nn...cccccc
+cccccc....n---n....n-n....n---n....cccccc
+ccccccc...nn-nn...nn-nn...nn-nn...ccccccc
+ccccccc....n-n....n---n....n-n....ccccccc
+cccccccc...nnn...nn---nn...nnn...cccccccc
+cccccccc....n....n--1--n....n....cccccccc
+ccccccccc...n...nn-----nn...n...ccccccccc
+ccccccccc.......n-------n.......ccccccccc
+cccccccccc.q.p.nnnnnnnnnnn.P.Q.cccccccccc
+ccccccccc.......................ccccccccc
+ccccccccc.r.z.q...........Q.Z.R.ccccccccc
+ccccccccc.......................ccccccccc
+cccccccccc.s.r.ccccccccccc.R.S.cccccccccc
+cccccccccc.....ccccccccccc.....cccccccccc
+ccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+#####################################################################
+# <<8>> Rare temples, picked outside of the usual size roll framework
+# Non-temple gods, Temples not suitable for selection within the usual
+# framework.
+#
+# Each "type" of rare temple should have the same total weight, to give them
+# equal chances. Current types and counts
+# - Lugonu temple: 2 maps
+# - Jiyva temple: 2 maps
+# - Ignis temple: 2 maps
+# - Extreme altar counts: 3 maps
+
+# 9 gods
+# plus 6 to 12 altars to Lugonu.
+NAME:     kb_corrupted_temple
+TAGS:     no_pool_fixup temple_rare temple_altars_9
+PLACE:    Temple
+ORIENT:   encompass
+WEIGHT:   8
+KMONS:    P = demonic plant
+KFEAT:    L = altar_lugonu
+SUBST:    . = .:70 x:15 w l:5, ' = ., x = xxxcv
+: local altar_count = get_altar_count(_G, 11)
+: nsubst("O = " .. altar_count .. ":B / 6:L / * = LP")
+: local crnd = crawl.random2(4)
+: if crnd == 0 then
+LROCKCOL: magenta
+: elseif crnd == 1 then
+LROCKCOL: lightblue
+: elseif crnd == 2 then
+LROCKCOL: lightcyan
+: else
+LROCKCOL: lightred
+: end
+MAP
+       xxxxx xxxxx xxxxx
+      xx.O.xxx.'.xxx.O.xx
+      x...'.x.'...x.'...x
+      x'.V.O''.O.''O.V.'x
+      x.'...x...'.x...'.x
+      xx.O.xxx.'.xxx.O.xx
+ xxxxx xxxxxxx'..xxxxxxxxxxxxx
+xx.O.xxx.'.xxx.'.xxx.'.xxx.O.xx
+x.'...x...'...'.'.'.'...x...'.x
+x'.V.O''.O.'.'.1.'.'.O.''O.V.'x
+x...'.x.'.......'.....'.x.'...x
+xx.O.xxx.'.xxx.'.xxx.'.xxx.O.xx
+ xxxxxxxx'xxxx.'.xxxx'xxxxxxxx
+      xx.O.xxx'..xxx.O.xx
+      x.'...xx.'.xx...'.x
+      xO.V.Oxx..'xxO.V.Ox
+      x...'.xx.'.xx.'...x
+      xx.'.xxx'..xxx.'.xx
+       xxxxx xP{Px xxxxx
+             xxxxx
+ENDMAP
+
+# 0 temple gods
+# plus 6 to 12 altars to Lugonu.
+NAME:   nicolae_temple_total_abyssal_victory
+TAGS:   temple_rare temple_altars_0 temple_overflow_lugonu
+PLACE:  Temple
+ORIENT: encompass
+WEIGHT: 2
+KMONS:  p = demonic plant
+KFEAT:  t = demonic_tree
+KFEAT:  _ = altar_lugonu
+KFEAT:  Z = enter_abyss
+SUBST:  - = .:120 x:60 t:20 p, x = x:120 cbv
+NSUBST: _ = 6=_ / 6=_. / 1=Z.. / .
+: if crawl.one_chance_in(5) then
+SUBST:  . = '...
+KPROP:  ' = bloody
+: end
+TILE:   { = dngn_exit_abyss
+{{
+  local floor = util.random_from({"blue", "green", "red", "magenta", "brown",
+                  "lightgray", "lightblue", "lightgreen", "lightcyan",
+                  "lightred", "lightmagenta", "white"})
+  local walls = util.random_from({"blue", "green", "red", "magenta", "brown",
+                  "lightblue", "lightgreen", "lightred", "lightmagenta",
+                  "yellow", "white"})
+  colour("x = magenta w:2 / " .. walls)
+  tile("x = wall_abyss")
+  colour(". = magenta w:2 / " .. floor)
+  ftile("_xpt{. = floor_nerves_magenta w:2 / floor_nerves_" .. floor )
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx---xxxxxxxxxxxx
+xxx--xxxxxxxxxxxx-...-xxxxx--xxxx
+xx-..-xxxx-xxxxx-.._.-xxxx-..xxxx
+x-...-xx--.-xxxx-.....-x--...-xxx
+x-....-.....-xx-..--.........-xxx
+x-.._....--.......-----......-xxx
+xx-....----.._....---x---.._..-xx
+xxx-...----.........-----......-x
+xxxx-..--...--..._.....--..--..-x
+xxxx-..--..-xx-.....--.--...-..-x
+xxx-.......-xx-.....--...._...-xx
+xxx-.._.....--..-..._........-xxx
+xx-............-.......---...-xxx
+xx-.-.--.....-...----...--..-xxxx
+x-.-..--.._.......---..-....xxxxx
+x-.....-........{...-......-xxxxx
+xx-.._.------......-.._...-xxxxxx
+xxx-......-----....-.......-xxxxx
+xxxx-..-......---.-...-.---.-xxxx
+xxxxx---..._.....-...-.......-xxx
+xxxxxx-......----...---.._...-xxx
+xxxxxx-....---xx-._..---...--.-xx
+xxxxx-....--xx--......---.....-xx
+xxxxx-._..-------......-..._..-xx
+xxxxx-....-...........-.-......-x
+xxxx-.........---..._...----...-x
+xxxx-...._....--.......-xxxx-..-x
+xxxx-.--......----....-xxxxxx...x
+xxxx-.--...---xxxx-...-xxxxxx._.x
+xxxxx-...--xxxxxxxx---xxxxxxx...x
+xxxxxx---xxxxxxxxxxxxxxxxxxxxx-xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 9 gods
 # plus 4 or 5 more altars to Jiyva.
 # Layout based on zaba_magenta_temple_12.
 NAME:      pf_slimified_temple
-TAGS:      no_rotate temple_variable temple_altars_9 temple_altars_11
+TAGS:      no_rotate temple_rare temple_altars_9
 PLACE:     Temple
 ORIENT:    encompass
-WEIGHT:    2
+WEIGHT:    5
 KFEAT:     J = altar_jiyva
 KFEAT:     S = slimy_wall
-: local altar_count = get_altar_count(_G, 11)
-: nsubst("J = " .. altar_count .. ":B / *:J")
+NSUBST:    J = 9:B / *:J
 SUBST:     - = -.
 LFLOORCOL: green
 COLOUR:    - = lightgray
@@ -4041,15 +5161,14 @@ SSSS...S...SSSSSSS.......SSSSSSS...S...SSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ENDMAP
 
-# 9, 11 gods,
+# 11 gods,
 # plus 5 to 7 more altars to Jiyva.
 NAME:      pf_slime_end_temple
-TAGS:      temple_variable temple_altars_9 temple_altars_11
+TAGS:      temple_rare temple_altars_11
 PLACE:     Temple
 ORIENT:    encompass
-WEIGHT:    2
-: local altar_count = get_altar_count(_G, 11)
-: nsubst("J = " .. altar_count .. ":B / *:J")
+WEIGHT:    5
+NSUBST:    J = 11:B / *:J
 KFEAT:     J = altar_jiyva
 KFEAT:     S = slimy_wall
 SUBST:     " : " .:3,  " = .c, ' : ' .:3,  ' = .S
@@ -4089,55 +5208,13 @@ SSSSSSSS''''''''''''SSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ENDMAP
 
-# 12, 15, or 18 gods.
-NAME:    nicolae_temple_no_exploring_needed
-TAGS:    no_pool_fixup
-TAGS:    temple_variable temple_altars_12 temple_altars_15 temple_altars_18
-PLACE:   Temple
-ORIENT:  encompass
-WEIGHT:  6
-: local altar_count = get_altar_count(_G, 18)
-: if altar_count == "12" then
-SUBST:   BCEFHIKLNOQR = _
-SUBST:   AGM = p, DJP = q
-SHUFFLE: pq / rr / rr
-SUBST:   p : TG, q : TG, r = .
-: elseif altar_count == "15" then
-SUBST:   BCDEFHIJKLNOPQR = _
-SUBST:   AGM : TG
-: elseif altar_count == "18" then
-SUBST:   ABCDEFGHIJKLMNOPQR = _
-: else
-SUBST:   ABCGHIMNO = _, DEFJKLPQR = Y
-: end
-SUBST:   _ = B
-SHUFFLE: abdefgh
-SUBST:   abd = w, e : .w, f : .w, g : .w, h : .w
-MAP
-   ccccccccc
-  ccD.E.F.Gcc
- cc.........cc
-ccC..gh.hg..Hcc
-c...bef.feb...c
-cB.gead.daeg.Ic
-c..hfd...dfh..c
-cA.....{.....Jc
-c..hfd...dfh..c
-cR.gead.daeg.Kc
-c...bef.feb...c
-ccQ..gh.hg..Lcc
- cc.........cc
-  ccP.O.N.Mcc
-   ccccccccc
-ENDMAP
-
 # 12 gods
 # plus a single "untended" Ignis altar
 NAME:    pdpol_scorched_temple
-TAGS:    no_cloud_gen temple_variable temple_altars_12 no_pool_fixup
+TAGS:    no_cloud_gen temple_rare temple_altars_12 no_pool_fixup
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  2
+WEIGHT:  5
 KFEAT:   I = altar_ignis
 MARKER:  I = lua:fog_machine { cloud_type = "grey smoke", \
              pow_max = 3, delay_min = 10, delay_max = 30, \
@@ -4187,9 +5264,10 @@ ENDMAP
 # 12 gods with robust flame shrines,
 # plus sputtering smoke for Ignis and some ecumenical altars
 NAME:    ebering_untended_altars
+TAGS:    temple_rare temple_altars_12
 PLACE:   Temple
 ORIENT:  encompass
-WEIGHT:  2
+WEIGHT:  5
 SUBST:   A : GTUVt
 NSUBST:  I = 1:I / *:O
 KFEAT:   I = altar_ignis
@@ -4232,4 +5310,96 @@ ccP.....................^cc
        ccLccPBPccLcc
         cccccLccccc
             ccc
+ENDMAP
+
+# every god in the game
+NAME:   hellmonk_choose_your_character
+TAGS:   temple_rare temple_altars_22 no_rotate no_vmirror no_hmirror
+PLACE:  Temple
+ORIENT: encompass
+WEIGHT: 1
+NSUBST: B = 1:L / 1:J / 1:I / 1:O / *:B
+KFEAT:  L = altar_lugonu
+KFEAT:  J = altar_jiyva
+KFEAT:  I = altar_ignis
+KFEAT:  O = altar_beogh
+KFEAT:  E = altar_ecumenical
+KFEAT:  + = closed_clear_door
+FTILE:  .+ = floor_pebble_darkgray
+FTILE:  BLJIOE = floor_rough_red
+MAP
+ccccccccccccccccccc
+c.................c
+c.nnnnnnnnnnnnnnn.c
+c.nBnBnBnBnBnBnBn.c
+c.n+n+n+n+n+n+n+n.c
+c.................c
+c.nnnnnnnnnnnnnnn.c
+c.nBnBnBnBnBnBnBn.c
+c.n+n+n+n+n+n+n+n.c
+c.................c
+c.nnnnnnnnnnnnnnn.c
+c.nBnBnBnBnBnBnBn.c
+c.n+n+n+n+n+n+n+n.c
+c.................c
+c.nnnnnnnnnnn.nnn.c
+c.nBnBnBnBnBn.nEn.c
+c.n+n+n+n+n+n.n+n.c
+c.................c
+c..............{..c
+c.................c
+ccccccccccccccccccc
+ENDMAP
+
+# exactly one (1) god
+NAME:        ebering_the_one_and_only
+TAGS:        temple_rare temple_altars_1
+PLACE:       Temple
+ORIENT:      encompass
+WEIGHT:      7
+{{
+    local templecol = util.random_from({ "blue", "cyan", "green", "yellow",
+                                         "red", "magenta", "white", "lightblue",
+                                         "lightcyan", "lightgreen", "lightred",
+                                         "lightmagenta" })
+    lfloorcol(templecol)
+    lfloortile("floor_pebble_" .. templecol)
+    colour("Gb = " .. templecol)
+}}
+MAP
+bbbbb
+b.{.b
+b...b
+bGBGb
+bbbbb
+ENDMAP
+
+# the Temple is an important landmark, but what if it's only that, a temple
+# to GOD_NO_GOD.
+# XXX: the temple_overflow_no_god tag is so the validator accepts this map
+# without an altar, it is not an overflow.
+NAME:    ebering_the_none_and_only
+TAGS:    temple_rare temple_altars_0 temple_overflow_no_god
+PLACE:   Temple
+ORIENT:  encompass
+WEIGHT:  2
+NSUBST:  . = 2 = GG. / 8 = ^. / ._
+KFEAT:   ^ = web
+COLOUR:  G = white
+TILE:    G = dngn_crumbled_column
+COLOUR:  _ = brown
+FTILE:   _G = floor_rough_brown
+: set_feature_name("granite_statue", "broken pillar")
+: set_feature_name("stone_wall", "defaced carved stone wall")
+epilogue{{
+    crawl.mpr("The air is stale and forgotten.")
+}}
+MAP
+ ccccc
+cc...cc
+c.....c
+c..{..c
+c.....c
+cc...cc
+ ccccc
 ENDMAP

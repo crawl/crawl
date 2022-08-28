@@ -93,6 +93,7 @@ for (grep /\.des$/, `git ls-files`)
         s/"[^"]*"/LUA/g;
         s/"$//;
         s/"[^"]*$/LUA/;
+        s/\\\n *//g;
         vault_mon() for split m{/|,}; #/
     }
     for (/(?:mon_set|bs\[\d+\])\s+=\s+\{([^}]+)}/sg)
