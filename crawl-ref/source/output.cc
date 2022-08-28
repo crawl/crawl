@@ -84,7 +84,7 @@ static string _level_description_string_hud()
 
 static bool _low_vertical_space()
 {
-    return crawl_view.hudsz.y <= 32;
+    return crawl_view.hudsz.y < 30;
 }
 
 /*
@@ -116,7 +116,6 @@ static bool _low_vertical_space()
 18 1234.5
 19
 20 W: foobar
-21 (20 baz)
 22 Abil: Bes
 23
 24 XXXXXXXXX      status lights
@@ -165,7 +164,6 @@ enum touchui_states
     TOUCH_V_TIME  = 0x1909,
     TOUCH_T_WP    = 0x010A,
     TOUCH_V_WP    = 0x020A, // dummy
-    TOUCH_V_WP2   = 0x030A, // dummy
     TOUCH_T_QV    = 0x010B,
     TOUCH_V_QV    = 0x020B, // dummy
     TOUCH_V_LIGHT = 0x010C,
@@ -268,17 +266,14 @@ static void _cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
         case TOUCH_V_WP:
             x = 4; y = (super_small) ? 17 : 20;
             break;
-        case TOUCH_V_WP2:
+        case TOUCH_T_QV:
             x = 1; y = (super_small) ? 18 : 21;
             break;
-        case TOUCH_T_QV:
-            x = 1; y = (super_small) ? 19 : 22;
-            break;
         case TOUCH_V_QV:
-            x = 4; y = (super_small) ? 19 : 22;
+            x = 4; y = (super_small) ? 18 : 21;
             break;
         case TOUCH_V_LIGHT:
-            x = 1; y = (super_small) ? 20 : 24;
+            x = 1; y = (super_small) ? 19 : 23;
             break;
         case TOUCH_T_HP:
             x = 2; y = crawl_view.hudsz.y;
@@ -924,9 +919,9 @@ static void _print_stats_mp(int x, int y)
     if (_is_using_small_layout())
     {
         if (_low_vertical_space())
-            MP_Bar.vdraw(6, 20, you.magic_points, you.max_magic_points);
+            MP_Bar.vdraw(6, 19, you.magic_points, you.max_magic_points);
         else
-            MP_Bar.vdraw(6, 25, you.magic_points, you.max_magic_points);
+            MP_Bar.vdraw(6, 24, you.magic_points, you.max_magic_points);
     }
     else
 #endif
@@ -979,9 +974,9 @@ static void _print_stats_hp(int x, int y)
     if (_is_using_small_layout())
     {
         if (_low_vertical_space())
-            HP_Bar.vdraw(2, 20, you.hp, you.hp_max);
+            HP_Bar.vdraw(2, 19, you.hp, you.hp_max);
         else
-            HP_Bar.vdraw(2, 25, you.hp, you.hp_max);
+            HP_Bar.vdraw(2, 24, you.hp, you.hp_max);
     }
     else
 #endif
