@@ -4063,7 +4063,7 @@ ENDMAP
 # Little wisps of steam around the lava, and then occasionally a big
 # eruption. No warning needed here - the steam does very little damage.
 NAME:   lemuel_old_faithful
-DEPTH:  D, Depths, Lair, Geh
+DEPTH:  D:11-, Depths, Lair, Geh
 TAGS:   uniq_geyser no_monster_gen transparent
 MONS:   nothing,nothing
 MARKER: 1 = lua:fog_machine { cloud_type="steam", \
@@ -4097,7 +4097,7 @@ MAP
 ENDMAP
 
 NAME:   lemuel_another_geyser
-DEPTH:  D, Depths, Lair
+DEPTH:  D:11-, Depths, Lair
 TAGS:   uniq_geyser no_monster_gen layout_rooms transparent
 MONS:   nothing,nothing
 MARKER: 1 = lua:fog_machine { cloud_type="steam", \
