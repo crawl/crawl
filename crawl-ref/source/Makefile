@@ -2015,7 +2015,7 @@ android-project/app/build.gradle: android-project/app/build.gradle.in
 android-project/local.properties: android-project/local.properties.in
 	sed -e "s~@HOME@~${HOME}~" <android-project/local.properties.in >android-project/local.properties
 
-android: install-data .android-cflags android-project/local.properties android-project/app/build.gradle
+android: greet check-fonts docs install-data .android-cflags android-project/local.properties android-project/app/build.gradle
 ifeq ($(ANDROID),)
 	@echo Please define ANDROID to use this build.
 	@exit 1
