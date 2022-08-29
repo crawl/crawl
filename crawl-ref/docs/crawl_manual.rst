@@ -2000,7 +2000,7 @@ their travels.
 Artificers
   Artificers have built, bought or burgled an assortment of magic wands to
   help them through the early Dungeon. Wands have a limited number of uses,
-  though, so they'll want to upgrade from their short sword ASAP.
+  though, so they'll want to upgrade from their club ASAP.
 
 Wanderers
   Wanderers are "jacks-of-all-trades, masters of none". They start the game
