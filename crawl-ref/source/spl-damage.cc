@@ -713,6 +713,8 @@ static spret _cast_los_attack_spell(spell_type spell, int pow,
             prompt_verb = "refrigerate";
             vulnerable = [](const actor *caster, const actor *act) {
                 return act != caster
+                       // Players don't get immunity with rC+++.
+                       && (act->is_player() || act->res_cold() < 3)
                        && !god_protects(caster, act->as_monster());
             };
             break;
