@@ -35,18 +35,6 @@ struct job_def
 static const map<job_type, job_def> job_data =
 {
 
-{ JOB_ABYSSAL_KNIGHT, {
-    "AK", "Abyssal Knight",
-    5, 2, 5,
-    { SP_HILL_ORC, SP_PALENTONGA, SP_TROLL, SP_MERFOLK, SP_BASE_DRACONIAN,
-      SP_DEMONSPAWN, SP_METEORAN, },
-    { },
-    { "leather armour" },
-    WCHOICE_PLAIN,
-    { { SK_FIGHTING, 3 }, { SK_ARMOUR, 1 }, { SK_DODGING, 1 },
-      { SK_INVOCATIONS, 2 }, { SK_WEAPON, 2 }, },
-} },
-
 { JOB_AIR_ELEMENTALIST, {
     "AE", "Air Elementalist",
     0, 7, 5,
@@ -397,6 +385,10 @@ static const map<job_type, job_def> job_data =
       { SK_TRANSLOCATIONS, 1 }, { SK_CONJURATIONS, 1 }, { SK_SUMMONINGS, 1 }, },
 } },
 #if TAG_MAJOR_VERSION == 34
+{ JOB_ABYSSAL_KNIGHT, {
+    "AK", "Abyssal Knight",
+} },
+
 { JOB_SKALD, {
     "Sk", "Skald",
     0, 0, 0,

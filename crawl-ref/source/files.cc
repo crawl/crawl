@@ -2095,16 +2095,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 #endif
 
-    if (load_mode != LOAD_VISITOR
-        && you.chapter == CHAPTER_POCKET_ABYSS
-        && player_in_branch(BRANCH_DUNGEON))
-    {
-        // If we're leaving the Abyss for the first time as a Chaos
-        // Knight of Lugonu (who start out there), enable normal monster
-        // generation.
-        you.chapter = CHAPTER_ORB_HUNTING;
-    }
-
     // GENERATE new level(s) when the file can't be opened:
     if (pregen_dungeon(level_id::current()))
     {

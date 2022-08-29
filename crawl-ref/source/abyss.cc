@@ -1665,24 +1665,12 @@ void generate_abyss()
         ASSERT(env.grid(*ri) > DNGN_UNSEEN);
     check_map_validity();
 
-    // If we're starting out in the Abyss, make sure the starting grid is
-    // an exit, and place an altar near by for flavour.
-    // Otherwise, we start out on floor and there's a chance there's an
-    // altar near-by.
-    if (player_in_starting_abyss())
+    // Start out on floor, and there's a chance there's an  altar nearby.
+    env.grid(ABYSS_CENTRE) = DNGN_FLOOR;
+    if (one_chance_in(5))
     {
-        env.grid(ABYSS_CENTRE) = DNGN_EXIT_ABYSS;
         _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
-    }
-    else
-    {
-        env.grid(ABYSS_CENTRE) = DNGN_FLOOR;
-        if (one_chance_in(5))
-        {
-            _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
-                                DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
-        }
     }
 
     setup_environment_effects();

@@ -635,16 +635,6 @@ bool player_in_hell(bool vestibule)
                        is_hell_subbranch(you.where_are_you);
 }
 
-/**
- * Is the player in the slightly-special version of the abyss that AKs start
- * in?
- */
-bool player_in_starting_abyss()
-{
-    return you.chapter == CHAPTER_POCKET_ABYSS
-           && player_in_branch(BRANCH_ABYSS) && you.depth <= 1;
-}
-
 bool player_in_connected_branch()
 {
     return is_connected_branch(you.where_are_you);

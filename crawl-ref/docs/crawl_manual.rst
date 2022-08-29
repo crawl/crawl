@@ -1120,7 +1120,7 @@ Note that some gods are picky about who can enter their service; for example,
 good gods will not accept demonic or undead devotees.
 
 If you would like to start the game with a religion, choose your background
-from Berserker, Chaos Knight, Abyssal Knight or Cinder Acolyte.
+from Berserker, Chaos Knight, or Cinder Acolyte.
 
 ****************************************
 K. Mutations
@@ -2023,13 +2023,6 @@ Berserkers
   get the power to go berserk (as well as a number of other powers, should they
   prove worthy), but who forbids the use of spell magic. They enter the Dungeon
   with a weapon of their choice, and dressed in animal skins.
-
-Abyssal Knights
-  The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of the
-  Abyss. They are granted some power over the Abyss, and must spread death and
-  disorder in return. They are sent from the Abyss into the Dungeon to spread
-  corruption and chaos, starting with a simple weapon of their choice and
-  leather armour.
 
 Chaos Knights
   The Chaos Knight is a plaything of Xom, subject to the god's constantly

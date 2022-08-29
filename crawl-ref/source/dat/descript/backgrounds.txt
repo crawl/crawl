@@ -1,9 +1,4 @@
 %%%%
-Abyssal Knight
-
-Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to
-spread corruption and chaos.
-%%%%
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Later on, their selection of

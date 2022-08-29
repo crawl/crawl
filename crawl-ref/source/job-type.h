@@ -39,9 +39,7 @@ enum job_type
     JOB_HEXSLINGER,
 #if TAG_MAJOR_VERSION == 34
     JOB_DEATH_KNIGHT,
-#endif
     JOB_ABYSSAL_KNIGHT,
-#if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
 #endif
     JOB_DELVER,
