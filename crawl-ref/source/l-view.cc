@@ -19,6 +19,7 @@
 #include "terrain.h"
 #include "travel.h"
 #include "view.h"
+#include "coordit.h"
 
 /*** What is the feature here?
  * @tparam int x
@@ -199,6 +200,26 @@ LUAFN(view_cell_see_cell)
     return 1;
 }
 
+/*** Is there a timed portal on this level?
+ * @treturn boolean
+ * @function timed_portal
+ */
+LUAFN(timed_portal)
+{
+    for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
+    {
+        const coord_def p = *ri;
+        if (feat_is_portal_entrance(env.grid(p)))
+        {
+            PLUARET(boolean, true);
+            return 1;
+        }
+
+    }
+    PLUARET(boolean, false);
+    return 1;
+}
+
 LUAFN(view_update_monsters)
 {
     ASSERT_DLUA;
@@ -216,6 +237,7 @@ static const struct luaL_reg view_lib[] =
     { "withheld", view_withheld },
     { "invisible_monster", view_invisible_monster },
     { "cell_see_cell", view_cell_see_cell },
+    { "timed_portal", timed_portal },
 
     { "update_monsters", view_update_monsters },
 
