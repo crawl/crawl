@@ -3393,7 +3393,8 @@ void mons_felid_revive(monster* mons)
 
     monster *newmons =
         create_monster(
-            mgen_data(type, (mons->has_ench(ENCH_CHARM) ? BEH_HOSTILE
+            mgen_data(type, (mons->has_ench(ENCH_CHARM)
+                             || mons->has_ench(ENCH_INSANE) ? BEH_HOSTILE
                              : SAME_ATTITUDE(mons)), revive_place, mons->foe));
 
     if (newmons)
