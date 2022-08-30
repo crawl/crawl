@@ -115,6 +115,12 @@ class WebtilesSocketConnection(object):
             self.logger.warning("Game socket send timeout", exc_info=True)
             self.close()
             return
+        except FileNotFoundError:
+            # I *think* this may be a relatively normal thing to happen, in
+            # which case it probably doesn't need a warning...
+            self.logger.warning("Game socket closed during sendto")
+            self.close()
+            return
         end = datetime.now()
         if end - start >= timedelta(seconds=1):
             self.logger.warning("Slow socket send: " + str(end - start))
