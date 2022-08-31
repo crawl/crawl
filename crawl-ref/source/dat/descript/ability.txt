@@ -106,14 +106,6 @@ Shaft Self ability
 Sends you to a random position one to three floors down, as if you jumped into
 a shaft trap. It takes some time to dig the shaft.
 %%%%
-Rolling Charge ability
-
-Rolls at a foe with a clatter of scales, then uncurls and strikes them in melee
-with increased accuracy. The greater the distance of the roll, the more
-momentum will be added to the force of your strike. You roll with sufficient
-speed to dodge traps and harmful terrain along the way, but not at your
-destination.
-%%%%
 Evoke Blink ability
 
 Randomly translocates the user a short distance. Translocating in this way
