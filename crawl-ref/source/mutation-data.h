@@ -2374,6 +2374,18 @@ static const mutation_def mut_data[] =
   {"You feel like a homebody.", "", ""},
 },
 
+{ MUT_LONG_TONGUE, 0, 1, mutflag::good, false, "long tongue",
+  {"Your long tongue fully drains potion bottles. (2x potion effects)", "", ""},
+  {"Your tongue grows exceptionally long.", "", ""},
+  {"Your tongue shrinks into a sad, ordinary nub.", "", ""},
+},
+
+{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false, "awkward tongue",
+  {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
+  {"Your tongue begins to flop around amusingly.", "", ""},
+  {"Your tongue regains its customary placidity.", "", ""},
+},
+
 };
 
 static const mutation_category_def category_mut_data[] =

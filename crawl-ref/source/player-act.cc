@@ -778,8 +778,10 @@ bool player::go_berserk(bool intentional, bool potion)
 
     mpr("You feel mighty!");
 
-    const int berserk_duration = (20 + random2avg(19,2)) / 2;
-    you.increase_duration(DUR_BERSERK, berserk_duration);
+    int dur = 20 + random2avg(19,2);
+    if (!you.has_mutation(MUT_LONG_TONGUE))
+        dur /= 2;
+    you.increase_duration(DUR_BERSERK, dur);
 
     // Apply Berserk's +50% Current/Max HP.
     calc_hp(true, false);

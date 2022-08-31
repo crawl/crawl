@@ -1673,7 +1673,8 @@ namespace quiver
         {
             if (!is_valid())
                 return "Buggy";
-            return you.inv[item_slot].base_type == OBJ_POTIONS ? "Drink" : "Read";
+            return you.inv[item_slot].base_type == OBJ_SCROLLS ? "Read" :
+                   you.has_mutation(MUT_LONG_TONGUE) ? "Slurp" : "Drink";
         }
 
         bool use_autofight_targeting() const override { return false; }

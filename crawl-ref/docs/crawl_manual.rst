@@ -1569,11 +1569,11 @@ Armataurs (AT)
   and swinging a powerful tail behind them. Their elephant-back armies
   terrorize the lands outside the Dungeon.
 
-  Armataurs are best known for their powerful roll attack, curling up and
-  rolling into a crashing melee attack against nearby foes. They're well suited
-  to melee combat and to casting supportive spells, but they're significantly
-  worse at other forms of combat and advance quite slowly in experience levels.
-  Their body shape reduces the protection given by the body armour they wear.
+  Armataurs instinctively roll when moving toward foes, getting a free move.
+  At higher level, they also curl defensively, gaining extra AC when struck
+  more than once in a turn. Their long, nimble tongues drink every last drop
+  from potions, doubling their effects, but they're slower to read scrolls.
+  Their body shape also reduces the protection offered by body armour.
 
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are

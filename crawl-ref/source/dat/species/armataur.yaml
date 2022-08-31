@@ -49,6 +49,8 @@ mutations:
     MUT_ROLLPAGE: 1
     MUT_ARMOURED_TAIL: 1
     MUT_DEFORMED: 1
+    MUT_LONG_TONGUE: 1
+    MUT_AWKWARD_TONGUE: 1
   7:
     MUT_CURL: 1
 recommended_jobs:

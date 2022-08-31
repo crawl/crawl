@@ -801,6 +801,16 @@ roll mutation
 You instinctively roll as you move toward enemies, rampaging forward an additional
 space.
 %%%%
+long tongue mutation
+
+Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
+effects on you.
+%%%%
+awkward tongue mutation
+
+Your tongue is very floppy, giving you trouble when reading the arcane syllables
+encoded on magical scrolls. As such, scrolls take you half again as long to read.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 
@@ -937,9 +947,4 @@ Your Translocations skill is 0 and you cannot train the skill.
 no transmutations magic mutation
 
 Your Transmutations skill is 0 and you cannot train the skill.
-%%%%
-devour on kill mutation
-
-When you kill living creatures you have a chance to devour their life force
-and restore hit points.
 %%%%
