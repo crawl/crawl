@@ -1382,14 +1382,6 @@ namespace quiver
         // it from the `a` menu, just not from the quiver.
         // (What abilities are missing here?)
 
-        if (abil == ABIL_ROLLING_CHARGE)
-        {
-            // Use a version of the armataur charge range check that
-            // ignores things like butterflies, so that autofight doesn't get
-            // tripped up.
-            return armataur_charge_possible(quiet, false);
-        }
-
         if (get_dist_to_nearest_monster() > ability_range(abil)
             && (get_ability_flags(abil) & abflag::targeting_mask))
 
@@ -1406,7 +1398,6 @@ namespace quiver
         switch (ability)
         {
         case ABIL_BLINKBOLT: // TODO: disable under nomove?
-        case ABIL_ROLLING_CHARGE: // TODO: disable under nomove?
         case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
         case ABIL_SPIT_POISON:
         case ABIL_BREATHE_ACID:
@@ -1480,7 +1471,6 @@ namespace quiver
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
-            case ABIL_ROLLING_CHARGE:
             case ABIL_BREATHE_ACID:
             case ABIL_DAMNATION:
             case ABIL_ELYVILON_HEAL_OTHER:

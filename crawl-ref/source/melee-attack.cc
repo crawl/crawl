@@ -69,7 +69,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false), is_projected(false), roll_dist(0),
+    cleaving(is_cleaving), is_riposte(false), is_projected(false),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -1449,14 +1449,6 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     // martial damage modifier (wu jian)
     damage = martial_damage_mod(damage);
 
-    // Armataur rolling charge bonus
-    if (roll_dist > 0)
-    {
-        // + 1/3rd base per distance rolled, up to double at dist 3.
-        const int extra_dam = damage * roll_dist / 3;
-        damage += extra_dam > damage ? damage : extra_dam;
-    }
-
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
     if (you.form == transformation::statue)
@@ -2210,10 +2202,6 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random, bool aux)
     // Just trying to touch is easier than trying to damage.
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         modifiers += maybe_random_div(you.dex(), 2, random);
-
-    // Rolling charges feel bad when they miss, so make them miss less often.
-    if (roll_dist > 0)
-        modifiers += 5; // matching UC form to-hit bonuses
 
     if (attacker->is_player() && !weapon && get_form()->unarmed_hit_bonus)
     {

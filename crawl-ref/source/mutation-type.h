@@ -238,8 +238,8 @@ enum mutation_type
     MUT_STRONG_NOSE,
 #if TAG_MAJOR_VERSION == 34
     MUT_ACID_RESISTANCE,
-#endif
     MUT_ROLL,
+#endif
     MUT_ARMOURED_TAIL,
 #if TAG_MAJOR_VERSION == 34
     MUT_BIG_BRAIN,

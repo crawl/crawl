@@ -15,9 +15,6 @@ void wizard_blink();
 
 int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);
-bool armataur_charge_possible(bool quiet, bool ignore_safe_monsters);
-spret armataur_charge(bool fail, dist *target = nullptr);
-int armataur_charge_range();
 
 void you_teleport();
 void you_teleport_now(bool wizard_tele = false, bool teleportitis = false,

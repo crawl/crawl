@@ -939,6 +939,7 @@ static const mutation_def mut_data[] =
 
   {"", "", ""},
 },
+#if TAG_MAJOR_VERSION == 34
 
 // Armataur only
 { MUT_ROLL, 8, 3, mutflag::good, true,
@@ -956,6 +957,7 @@ static const mutation_def mut_data[] =
    "You can no longer roll as far.",
    "You can no longer roll as far."},
 },
+#endif
 
 { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
   "armoured tail",
