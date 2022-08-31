@@ -3824,6 +3824,7 @@ void read(item_def* scroll, dist *target)
         else
             dec_mitm_item_quantity(scroll->index(), 1);
         count_action(CACT_USE, OBJ_SCROLLS);
+        you.apply_nimble_tongue();
     }
 
     if (!alreadyknown

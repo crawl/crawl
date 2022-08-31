@@ -6660,6 +6660,12 @@ void player::drain_stat(stat_type s, int amount)
     lose_stat(s, amount);
 }
 
+void player::apply_nimble_tongue()
+{
+    if (you.has_mutation(MUT_NIMBLE_TONGUE))
+        you.time_taken = div_rand_round(you.time_taken * 2, 3);
+}
+
 /**
  * Checks to see whether the player can be dislodged by physical effects.
  * This only accounts for the "mountain boots" unrand, not being stationary, etc.

@@ -2087,6 +2087,8 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     case spret::success:
     {
         _apply_post_zap_effect(spell);
+        if (actual_spell || you.divine_exegesis)
+            you.apply_nimble_tongue();
 
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 
@@ -2129,6 +2131,8 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     }
     case spret::fail:
     {
+        if (actual_spell || you.divine_exegesis)
+            you.apply_nimble_tongue();
         if (actual_spell)
         {
             mprf("You miscast %s.", spell_title(spell));

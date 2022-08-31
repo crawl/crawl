@@ -717,6 +717,7 @@ public:
     void teleport(bool right_now = false,
                   bool wizard_tele = false) override;
     void drain_stat(stat_type stat, int amount) override;
+    void apply_nimble_tongue();
 
     void expose_to_element(beam_type element, int strength = 0,
                            bool slow_cold_blood = true) override;
