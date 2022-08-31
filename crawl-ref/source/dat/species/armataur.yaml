@@ -19,23 +19,23 @@ aptitudes:
   polearms: -1
   staves: 0
   ranged weapons: -2
-  throwing: -3
+  throwing: 0
   armour: -2
   dodging: -2
   stealth: -3
   shields: -1
   spellcasting: -1
-  conjurations: -1
+  conjurations: 0
   hexes: 0
-  summoning: -2
-  necromancy: 0
+  summoning: -1
+  necromancy: -1
   translocations: 0
   transmutations: 0
-  fire_magic: -2
-  ice_magic: -2
-  air_magic: -2
-  earth_magic: -1
-  poison_magic: -2
+  fire_magic: 0
+  ice_magic: 0
+  air_magic: 0
+  earth_magic: 1
+  poison_magic: 0
   invocations: 1
   evocations: 0
 size: large
