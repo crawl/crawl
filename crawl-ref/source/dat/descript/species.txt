@@ -1,4 +1,9 @@
 %%%%
+Armataur
+
+Scaled mammals the size of horses, Armataurs are fast-rolling, well-protected,
+and great potion drinkers. They lack dexterity and scroll-reading speed.
+%%%%
 Barachi
 
 Barachim are slow-moving, amphibious humanoids who can hop long distances.
@@ -101,10 +106,6 @@ Ogre
 
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 Not merely brutes, they are also quite capable spellcasters.
-%%%%
-Armataur
-
-Scaled mammals the size of horses, Armataurs can launch powerful rolling charges.
 %%%%
 Spriggan
 

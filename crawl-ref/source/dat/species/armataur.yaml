@@ -1,7 +1,7 @@
 enum: SP_ARMATAUR
 monster: MONS_ARMATAUR
 name: "Armataur"
-short_name: "AT"
+short_name: "At"
 difficulty: Simple
 difficulty_priority: 60
 species_flags:
@@ -9,34 +9,36 @@ species_flags:
   - SPF_BARDING
 aptitudes:
   xp: -1
-  hp: 0
+  hp: 1
   mp_mod: 0
   mr: 3
-  short_blades: 0
-  long_blades: 0
-  axes: 0
-  maces_and_flails: 0
-  polearms: -1
-  staves: 0
-  ranged weapons: -2
-  throwing: -3
-  armour: -2
-  dodging: -2
-  stealth: -3
-  shields: -1
-  spellcasting: -1
+  fighting: -1
+  short_blades: -1
+  long_blades: -1
+  axes: -2
+  maces_and_flails: -1
+  polearms: -2
+  staves: -1
+  unarmed_combat: -1
+  ranged weapons: -3
+  throwing: -1
+  armour: 2
+  dodging: -3
+  stealth: 2
+  shields: 1
+  spellcasting: -2
   conjurations: -1
-  hexes: 0
+  hexes: -1
   summoning: -2
-  necromancy: 0
+  necromancy: -2
   translocations: 0
-  transmutations: 0
-  fire_magic: -2
-  ice_magic: -2
-  air_magic: -2
+  transmutations: -1
+  fire_magic: -1
+  ice_magic: -1
+  air_magic: -1
   earth_magic: -1
-  poison_magic: -2
-  invocations: 1
+  poison_magic: -1
+  invocations: 0
   evocations: 0
 size: large
 str: 13
