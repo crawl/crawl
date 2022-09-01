@@ -967,6 +967,14 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
+{ MUT_ROLLPAGE, 0, 1, mutflag::good, false,
+  "roll",
+
+  {"You roll when moving toward enemies. (Rampage)", "", ""},
+  {"", "", ""},
+  {"", "", ""},
+},
+
 { MUT_CURL, 0, 1, mutflag::good, true,
   "reflexive curl",
 

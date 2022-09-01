@@ -791,6 +791,16 @@ You were embalmed with holy oils and sacred spices and bound about with blessed
 cloth. Now you have a special connection with the divine, allowing you to gain
 favor with your chosen god more quickly.
 %%%%
+devour on kill mutation
+
+When you kill living creatures you have a chance to devour their life force
+and restore hit points.
+%%%%
+roll mutation
+
+You instinctively roll as you move toward enemies, rampaging forward an additional
+space.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 

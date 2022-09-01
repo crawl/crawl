@@ -46,6 +46,7 @@ levelup_stat_frequency: 4
 mutations:
   1:
     MUT_RUGGED_BROWN_SCALES: 3
+    MUT_ROLLPAGE: 1
     MUT_ARMOURED_TAIL: 1
     MUT_DEFORMED: 1
   7:
