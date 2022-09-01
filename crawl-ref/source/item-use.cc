@@ -2578,6 +2578,12 @@ void drink(item_def* potion)
     {
         if (!use_an_item(potion, OPER_QUAFF))
             return;
+        ASSERT(potion);
+        if (potion->base_type == OBJ_SCROLLS)
+        {
+            read(potion);
+            return;
+        }
     }
 
     if (potion->base_type != OBJ_POTIONS)
@@ -3424,6 +3430,12 @@ void read(item_def* scroll, dist *target)
         // player can currently read, but no scroll was provided
         if (!use_an_item(scroll, OPER_READ))
             return;
+        ASSERT(scroll);
+        if (scroll->base_type == OBJ_POTIONS)
+        {
+            drink(scroll);
+            return;
+        }
         failure_reason = cannot_read_item_reason(scroll);
     }
 
