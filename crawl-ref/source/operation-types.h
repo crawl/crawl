@@ -19,4 +19,5 @@ enum operation_types
     OPER_ATTACK   = 'a',
     OPER_BUTCHER  = 'c',
     OPER_ANY      = 0,
+    OPER_NONE     = -1, // could this be 0?
 };
