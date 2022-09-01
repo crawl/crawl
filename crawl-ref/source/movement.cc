@@ -595,9 +595,16 @@ static spret _rampage_forward(coord_def move)
     // this would throw off our tracer_target.
     ASSERT(abs(move.x) <= 1 && abs(move.y) <= 1);
 
+    const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
+    const bool rolling = you.has_mutation(MUT_ROLLPAGE);
+    const string noun = enhanced ? "stride" :
+                         rolling ? "roll" : "rampage";
+    const string verb = enhanced ? "striding" :
+                         rolling ? "rolling" : "rampaging";
+
     if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cancel_cmd_all("You can't repeat rampage.");
+        crawl_state.cancel_cmd_all("You can't repeat " + verb + ".");
         return spret::abort;
     }
 
@@ -623,7 +630,7 @@ static spret _rampage_forward(coord_def move)
     beam.range           = LOS_RADIUS;
     beam.aimed_at_spot   = true;
     beam.target          = tracer_target;
-    beam.name            = "rampaging";
+    beam.name            = verb;
     beam.source_name     = "you";
     beam.source          = you.pos();
     beam.source_id       = MID_PLAYER;
@@ -681,7 +688,6 @@ static spret _rampage_forward(coord_def move)
     if (!valid_target)
         return spret::fail;
 
-    const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
     const int rampage_distance = enhanced
         ? grid_distance(you.pos(), valid_target->pos()) - 1
         : 1;
@@ -724,7 +730,8 @@ static spret _rampage_forward(coord_def move)
         {
             // .. and if a mons was in the way and invisible, notify the player.
             clear_messages();
-            mpr("Something unexpectedly blocked you, preventing you from rampaging!");
+            mprf("Something unexpectedly blocked you, preventing you from %s!",
+                 verb.c_str());
         }
         return spret::fail;
     }
@@ -735,9 +742,9 @@ static spret _rampage_forward(coord_def move)
     // * dangerous terrain/trap/cloud/exclusion prompt
     // * weapon check prompts;
     // messaging for this is handled by check_moveto().
-    if (!check_moveto(beam.target, "rampage")
-        || attacking && !wielded_weapon_check(you.weapon(), "rampage and attack")
-        || !attacking && !check_moveto(rampage_target, "rampage"))
+    if (!check_moveto(beam.target, noun)
+        || attacking && !wielded_weapon_check(you.weapon(), noun + " and attack")
+        || !attacking && !check_moveto(rampage_target, noun))
     {
         stop_running();
         you.turn_is_over = false;
@@ -752,14 +759,14 @@ static spret _rampage_forward(coord_def move)
     if (fedhas_move && (!current || !fedhas_passthrough(current)))
     {
         mprf("You %s quickly through the %s towards %s!",
-             enhanced ? "stride" : "rampage",
+             noun.c_str(),
              mons_genus(mons->type) == MONS_FUNGUS ? "fungus" : "plants",
              valid_target->name(DESC_THE, true).c_str());
     }
     else
     {
         mprf("You %s towards %s!",
-             enhanced ? "stride" : "rampage",
+             noun.c_str(),
              valid_target->name(DESC_THE, true).c_str());
     }
 

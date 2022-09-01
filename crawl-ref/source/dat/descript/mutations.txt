@@ -801,6 +801,11 @@ nimble tongue mutation
 Your tongue is long and dextrous, letting you cast spells and read scrolls
 more quickly.
 %%%%
+roll mutation
+
+You instinctively roll as you move toward enemies, rampaging forward an additional
+space.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 
