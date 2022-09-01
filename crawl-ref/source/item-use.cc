@@ -907,12 +907,6 @@ static bool _equip_item(item_def *to_equip, operation_types o)
 
     ASSERT(to_equip);
 
-    if (to_equip->pos != ITEM_IN_INVENTORY
-        && !_can_move_item_from_floor_to_inv(*to_equip))
-    {
-        return false;
-    }
-
     if (o == OPER_WIELD)
         return _do_wield_weapon(to_equip);
     else if (o == OPER_WEAR)
@@ -991,6 +985,12 @@ static bool _do_wield_weapon(item_def *to_wield, bool show_weff_messages,
     // provide a (slightly hacky) way to let players reset this without
     // unwielding. (TODO: better ui?)
     you.received_weapon_warning = false;
+
+    if (to_wield && to_wield->pos != ITEM_IN_INVENTORY
+        && !_can_move_item_from_floor_to_inv(*to_wield)) // does messaging
+    {
+        return false;
+    }
 
     if (to_wield && to_wield == you.weapon())
     {
@@ -1500,6 +1500,12 @@ static bool _do_wear_armour(item_def *to_wear)
     if (to_wear == you.weapon())
     {
         mpr("You are wielding that object!");
+        return false;
+    }
+
+    if (to_wear->pos != ITEM_IN_INVENTORY
+        && !_can_move_item_from_floor_to_inv(*to_wear)) // does messaging
+    {
         return false;
     }
 
@@ -2378,6 +2384,7 @@ bool puton_ring(item_def &to_puton, bool allow_prompt,
         mpr("You don't have any such object.");
         return false;
     }
+
     if (to_puton.pos != ITEM_IN_INVENTORY
         && !_can_move_item_from_floor_to_inv(to_puton))
     {
