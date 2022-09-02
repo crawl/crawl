@@ -9,7 +9,7 @@ species_flags:
   - SPF_BARDING
 aptitudes:
   xp: -1
-  hp: 0
+  hp: 1
   mp_mod: 0
   mr: 3
   short_blades: 0
@@ -20,7 +20,7 @@ aptitudes:
   staves: 0
   ranged weapons: -2
   throwing: 0
-  armour: -2
+  armour: -1
   dodging: -2
   stealth: -3
   shields: -1
@@ -50,6 +50,7 @@ mutations:
     MUT_ARMOURED_TAIL: 1
     MUT_DEFORMED: 1
     MUT_NIMBLE_TONGUE: 1
+    MUT_LOW_MAGIC: 2
   7:
     MUT_CURL: 1
 recommended_jobs:
