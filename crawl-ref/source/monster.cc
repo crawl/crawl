@@ -2723,7 +2723,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
     if (mons_is_projectile(type))
         return;
 
-    if (player_in_branch(BRANCH_ARENA))
+    if (!force && player_in_branch(BRANCH_ARENA))
     {
         string msg = make_stringf(" prevents %s banishment from the Arena!",
                                   name(DESC_ITS).c_str());

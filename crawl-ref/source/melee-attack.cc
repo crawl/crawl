@@ -69,7 +69,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false), is_projected(false),
+    cleaving(is_cleaving), is_riposte(false), is_projected(false), charge_pow(0),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -1449,6 +1449,10 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     // martial damage modifier (wu jian)
     damage = martial_damage_mod(damage);
 
+    // Electric charge bonus.
+    if (charge_pow > 0 && defender->res_elec() <= 0)
+        damage += div_rand_round(damage * charge_pow, 150);
+
     // not additive, statues are supposed to be bad with tiny toothpicks but
     // deal crushing blows with big weapons
     if (you.form == transformation::statue)
@@ -2203,6 +2207,10 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random, bool aux)
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         modifiers += maybe_random_div(you.dex(), 2, random);
 
+    // Electric charges feel bad when they miss, so make them miss less often.
+    if (charge_pow > 0)
+        modifiers += 5; // matching UC form to-hit bonuses
+
     if (attacker->is_player() && !weapon && get_form()->unarmed_hit_bonus)
     {
         // TODO: Review this later (transformations getting extra hit
@@ -2293,6 +2301,14 @@ string melee_attack::mons_attack_desc()
     return ret;
 }
 
+string melee_attack::charge_desc()
+{
+    if (!charge_pow || defender->res_elec() > 0)
+        return "";
+    const string pronoun = defender->pronoun(PRONOUN_OBJECTIVE);
+    return make_stringf(" and electrocute %s", pronoun.c_str());
+}
+
 void melee_attack::announce_hit()
 {
     if (!needs_message || attk_flavour == AF_CRUSH)
@@ -2316,10 +2332,10 @@ void melee_attack::announce_hit()
             verb_degree = " " + verb_degree;
         }
 
-        mprf("You %s %s%s%s%s",
+        mprf("You %s %s%s%s%s%s",
              attack_verb.c_str(),
-             defender->name(DESC_THE).c_str(),
-             verb_degree.c_str(), debug_damage_number().c_str(),
+             defender->name(DESC_THE).c_str(), verb_degree.c_str(),
+             charge_desc().c_str(), debug_damage_number().c_str(),
              attack_strength_punctuation(damage_done).c_str());
     }
 }

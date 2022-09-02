@@ -1277,6 +1277,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_passwall>(range);
     case SPELL_DIG:
         return make_unique<targeter_dig>(range);
+    case SPELL_ELECTRIC_CHARGE:
+        return make_unique<targeter_charge>(&you, range);
 
     // untargeted spells -- everything beyond here is a static targeter
     case SPELL_HAILSTORM:
@@ -1915,7 +1917,8 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
            && (target->fire_context // force static targeters when called in
                                     // "fire" mode
                || Options.always_use_static_spell_targeters
-               || Options.force_spell_targeter.count(spell) > 0);
+               || Options.force_spell_targeter.count(spell) > 0)
+           && spell != SPELL_ELECTRIC_CHARGE; // hack
 
     if (use_targeter)
     {
@@ -2473,6 +2476,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_BLINKBOLT:
         return blinkbolt(powc, beam, fail);
+
+    case SPELL_ELECTRIC_CHARGE:
+        return electric_charge(powc, fail); // hack - should take beam
 
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);

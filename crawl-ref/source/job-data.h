@@ -371,7 +371,7 @@ static const map<job_type, job_def> job_data =
     {
         SPELL_BLINK,
         SPELL_BECKONING,
-        SPELL_GRAVITAS,
+        SPELL_ELECTRIC_CHARGE,
         SPELL_TELEPORT_OTHER,
         SPELL_MANIFOLD_ASSAULT,
     },

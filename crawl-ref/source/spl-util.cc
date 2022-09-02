@@ -1458,6 +1458,16 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
     case SPELL_MOMENTUM_STRIKE:
         if (temp && !you.is_motile())
             return "you can't move.";
+
+    case SPELL_ELECTRIC_CHARGE:
+        if (temp)
+        {
+            const string no_move_reason = movement_impossible_reason();
+            if (!no_move_reason.empty())
+                return no_move_reason;
+            if (!electric_charge_possible(true))
+                return "you can't see anything to charge at.";
+        }
         break;
 
     default:
