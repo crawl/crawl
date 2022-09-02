@@ -517,13 +517,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # post py3.6, this can all be done with a dictionary
                 # comprehension, but before that we need to manually keep
                 # the order
-                if self.account_restricted():
-                    games = collections.OrderedDict()
-                    for g in config.games:
-                        if self.game_id_allowed(g):
-                            games[g] = config.games[g]
-                else:
-                    games = config.games
+                games = collections.OrderedDict()
+                for g in config.games:
+                    if self.game_id_allowed(g):
+                        games[g] = config.games[g]
                 play_html = to_unicode(self.render_string("game_links.html",
                                                   games = games,
                                                   save_info = self.save_info,
