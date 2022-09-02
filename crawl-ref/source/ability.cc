@@ -1412,19 +1412,12 @@ bool activate_ability()
 
 static bool _can_movement_ability(bool quiet)
 {
-    if (you.attribute[ATTR_HELD])
-    {
-        if (!quiet)
-            mprf("You cannot do that while %s.", held_status());
-        return false;
-    }
-    else if (!you.is_motile())
-    {
-        if (!quiet)
-            canned_msg(MSG_CANNOT_MOVE);
-        return false;
-    }
-    return true;
+    const string reason = movement_impossible_reason();
+    if (reason.empty())
+        return true;
+    if (!quiet)
+        mprf("%s", reason.c_str());
+    return false;
 }
 
 static bool _can_hop(bool quiet)

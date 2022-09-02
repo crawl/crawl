@@ -1145,7 +1145,12 @@ namespace quiver
             // extremely side-effect-y, and can crash if called at the wrong
             // time.
             enabled_cache = can_cast_spells(true)
-                                    && !spell_is_useless(spell, true, false);
+                            && !spell_is_useless(spell, true, false)
+            // Use a version of the charge range check that
+            // ignores things like butterflies, so that autofight doesn't get
+            // tripped up.
+                            && (spell != SPELL_ELECTRIC_CHARGE
+                                || electric_charge_possible(false));
             // this imposes excommunication colors
             if (!enabled_cache)
                 col_cache = COL_USELESS;

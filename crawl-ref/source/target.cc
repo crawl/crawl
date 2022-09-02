@@ -119,7 +119,7 @@ targeting_iterator targeter::affected_iterator(aff_type threshold)
     return targeting_iterator(*this, threshold);
 }
 
-// Is the given location a valid endpoint for a Armataur charge?
+// Is the given location a valid endpoint for an electric charge?
 // That is, is there an enemy there which is visible to the player and
 // is not firewood? If not, why not?
 // Note that this does NOT handle checking the intervening path for
@@ -145,17 +145,6 @@ static bool _ok_charge_target(coord_def a)
     return bad_charge_target(a) == "";
 }
 
-// Can a player (for targeting purposes) charge through a given grid
-// with a Armataur rolling charge?
-// We only check for monsters, not terrain.
-bool can_charge_through_mons(coord_def a)
-{
-    const monster* mons = monster_at(a);
-    return !mons
-           || !you.can_see(*mons)
-           || fedhas_passthrough(mons);
-}
-
 targeter_charge::targeter_charge(const actor *act, int r)
 {
     ASSERT(act);
@@ -171,7 +160,8 @@ bool targeter_charge::valid_aim(coord_def a)
         return notify_fail("You can't charge at yourself.");
     if (adjacent(agent->pos(), a))
         return notify_fail("You're already next to there.");
-    if (grid_distance(agent->pos(), a) > range)
+    const int dist_to_targ = grid_distance(agent->pos(), a);
+    if (dist_to_targ > range)
         return notify_fail("That's out of range!");
 
     ray_def ray;
@@ -186,18 +176,20 @@ bool targeter_charge::valid_aim(coord_def a)
                 return notify_fail(bad);
             return true;
         }
-        else if (is_feat_dangerous(env.grid(ray.pos())))
+        if (grid_distance(ray.pos(), agent->pos()) == dist_to_targ -1)
         {
-            return notify_fail("There's "
-                               + feature_description_at(ray.pos())
-                               + " in the way.");
-        }
-        else if (!can_charge_through_mons(ray.pos()))
-        {
-            return notify_fail("There's "
-                               + monster_at(ray.pos())->name(DESC_A)
-                               + " in the way.");
-
+            if (is_feat_dangerous(env.grid(ray.pos())))
+            {
+                return notify_fail("There's "
+                                   + feature_description_at(ray.pos())
+                                   + " there.");
+            }
+            const monster* mon = monster_at(ray.pos());
+            if (mon && you.can_see(*mon) && mons_class_is_stationary(mon->type))
+            {
+                return notify_fail(mon->name(DESC_THE)
+                                   + " is immovably fixed there.");
+            }
         }
     }
     die("Ray never reached the end?");
@@ -215,11 +207,6 @@ bool targeter_charge::set_aim(coord_def a)
         path_taken.push_back(ray.pos());
         if (grid_distance(agent->pos(), ray.pos()) >= range || ray.pos() == a)
             break;
-
-        if (!can_charge_through_mons(ray.pos()))
-            break;
-        if (is_feat_dangerous(env.grid(ray.pos())))
-            return false;
     }
     return true;
 }
