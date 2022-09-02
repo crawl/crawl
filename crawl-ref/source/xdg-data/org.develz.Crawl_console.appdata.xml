@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-  <id>org.develz.crawl</id>
+  <id>@XDG_NAME@</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0</project_license>
-  <name>Dungeon Crawl Stone Soup</name>
+  <name>Dungeon Crawl Stone Soup (console)</name>
   <summary>Roguelike dungeon exploration game</summary>
   <description>
     <p>
@@ -36,7 +36,7 @@
       <image>https://crawl.develz.org/wordpress/wp-content/uploads/2014/05/enchantress.png</image>
     </screenshot>
   </screenshots>
-  <launchable type="desktop-id">org.develz.crawl.desktop</launchable>
+  <launchable type="desktop-id">@XDG_NAME@.desktop</launchable>
   <url type="homepage">https://crawl.develz.org/</url>
   <content_rating type="oars-1.0">
     <content_attribute id="violence-cartoon">mild</content_attribute>

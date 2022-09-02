@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=Dungeon Crawl Stone Soup
-GenericName=Roguelike dungeon exploration game
+Name=Dungeon Crawl Stone Soup (tiles)
+GenericName=Roguelike dungeon exploration game (tiles version)
 Comment=A fun game in the grand tradition of games like Rogue, Hack, and Moria
 Type=Application
-Terminal=true
+Terminal=false
 Categories=Game;AdventureGame;RolePlaying;
