@@ -124,6 +124,22 @@ LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
  * @function base_mp
  */
 LUARET1(you_base_mp, number, get_real_mp(false))
+/*** Armour class.
+ * @treturn int
+ * @function ac
+ */
+LUARET1(you_ac, number, you.armour_class())
+/*** Evasion.
+ * @treturn int
+ * @function ev
+ */
+LUARET1(you_ev, number, you.evasion())
+/*** Shield class.
+ * @treturn int
+ * @function sh
+ */
+LUARET1(you_sh, number, player_displayed_shield_class())
+
 /*** How much drain.
  * @treturn int
  * @function drain
@@ -1254,6 +1270,9 @@ static const struct luaL_reg you_clib[] =
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "base_mp"     , you_base_mp },
+    { "ac"          , you_ac },
+    { "ev"          , you_ev },
+    { "sh"          , you_sh },
     { "drain"       , you_drain },
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
