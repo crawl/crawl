@@ -81,6 +81,8 @@ def _packages_to_install(args: argparse.Namespace) -> Set[str]:
     if args.compiler == "clang":
         # dependencies for llvm.sh
         packages.update(["lsb-release", "wget", "software-properties-common"])
+    if args.debian_packages:
+        packages.update(["cowbuilder", "debhelper"])
     return packages
 
 
@@ -142,6 +144,7 @@ if __name__ == "__main__":
     parser.add_argument("--coverage", action="store_true")
     parser.add_argument("--crosscompile", action="store_true")
     parser.add_argument("--appimage", action="store_true")
+    parser.add_argument("--debian-packages", action="store_true")
 
     args = parser.parse_args()
 
