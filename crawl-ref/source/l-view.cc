@@ -209,7 +209,8 @@ LUAFN(timed_portal)
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
         const coord_def p = *ri;
-        if (feat_is_portal_entrance(env.grid(p)))
+        dungeon_feature_type feat = env.grid(p);
+        if (feat_is_portal_entrance(feat) && feat != DNGN_ENTER_TROVE && feat != DNGN_ENTER_ZIGGURAT)
         {
             PLUARET(boolean, true);
             return 1;
