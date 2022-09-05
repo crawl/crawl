@@ -198,7 +198,8 @@ Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
   Abbreviated to "Str". Increases your damage with melee weapons (except for long
-  and short blades). Reduces penalties from wearing heavy armour.
+  and short blades), with unarmed combat, and with throwing weapons. Reduces
+  penalties from wearing heavy armour.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
