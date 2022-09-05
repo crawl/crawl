@@ -1705,7 +1705,8 @@ NAME:    Hermit's pendant
 OBJ:     OBJ_JEWELLERY/AMU_FAITH
 COLOUR:  BROWN
 TILE:    urand_hermit_pendant
-INSCRIP: invo=14, evo=0
+MP:      +5
+INSCRIP: invo=14 evo=0
 DBRAND:  It sets your invocations skill to 14 and your evocations skill to 0.
 
 # This entry must always be last.
