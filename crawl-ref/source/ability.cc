@@ -343,9 +343,9 @@ static vector<ability_def> &_get_ability_list()
 
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
-            1, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
+            0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
-            2, 0, 0, -1, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
+            0, 0, 0, -1, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
         // TODO: any way to automatically derive these from the artefact name?
         { ABIL_EVOKE_ASMODEUS, "Evoke the Sceptre of Asmodeus",
             0, 0, 0, -1, {fail_basis::evo, 80, 3}, abflag::none },
