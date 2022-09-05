@@ -39,7 +39,7 @@ TAGS:    no_item_gen no_monster_gen temple_overflow_xom temple_overflow_1
 TAGS:    transparent
 WEIGHT:  3
 KFEAT:   _ = altar_xom
-MONS:    generate_awake att:good_neutral goblin 
+MONS:    generate_awake att:good_neutral goblin
 MONS:    generate_awake jelly
 MARKER:  + = lua:props_marker({ door_restrict="veto" })
 {{
