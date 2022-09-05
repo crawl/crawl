@@ -27,6 +27,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
+#include "describe.h" // damage_rating
 #include "dgn-overview.h"
 #include "dgn-event.h"
 #include "directn.h"
@@ -3282,6 +3283,24 @@ static void _display_attack_delay()
          penalty_msg.c_str());
 }
 
+/**
+ * Print a message listing double the player's best-case damage with their current
+ * weapon (if applicable), or with unarmed combat (if not).
+ */
+static void _display_damage_rating()
+{
+    const item_def *weapon = you.weapon();
+    string weapon_name;
+    if (weapon)
+        weapon_name = weapon->name(DESC_YOUR);
+    else
+        weapon_name = "unarmed combat";
+    mprf("Your damage rating with %s is about %s",
+         weapon_name.c_str(),
+         damage_rating(weapon).c_str());
+    return;
+}
+
 // forward declaration
 static string _constriction_description();
 
@@ -3316,6 +3335,7 @@ void display_char_status()
     _display_movement_speed();
     _display_tohit();
     _display_attack_delay();
+    _display_damage_rating();
 
     // Display base attributes, if necessary.
     if (innate_stat(STAT_STR) != you.strength()

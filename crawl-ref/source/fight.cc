@@ -1315,3 +1315,25 @@ int throwing_base_damage_bonus(const item_def &proj)
     return div_rand_round(you.skill_rdiv(SK_THROWING)
                           * min(4, property(proj, PWPN_DAMAGE)), 4);
 }
+
+int unarmed_base_damage()
+{
+    int damage = get_form()->get_base_unarmed_damage();
+
+    if (you.has_usable_claws())
+        damage += you.has_claws() * 2;
+
+    if (you.form_uses_xl())
+        damage += div_rand_round(you.experience_level, 3);
+
+    return damage;
+}
+
+int unarmed_base_damage_bonus(bool random)
+{
+    if (you.form_uses_xl())
+        return 0;
+    if (random)
+        return you.skill_rdiv(SK_UNARMED_COMBAT);
+    return you.skill(SK_UNARMED_COMBAT);
+}
