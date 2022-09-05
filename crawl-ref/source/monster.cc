@@ -5691,7 +5691,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     // XXX: this might not be necessary anymore?
     if (type == MONS_SHOCK_SERPENT && damage > 4 && oppressor && oppressor != this)
     {
-        const int pow = div_rand_round(min(damage, hit_points + damage), 9);
+        const int pow = div_rand_round(min(damage, hit_points + damage), 12);
         if (pow)
         {
             // we intentionally allow harming the oppressor in this case,
