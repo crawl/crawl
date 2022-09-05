@@ -253,9 +253,8 @@ felids/cat3 SP_RECOMMENDED_FELID
 %compose body/animal_skin
 %finish SP_RECOMMENDED_DEMONSPAWN
 %start
-%compose base/draconian_f
+%compose base/draconian
 %compose body/animal_skin
-%compose drchead/drchead_brown
 %finish SP_RECOMMENDED_BASE_DRACONIAN
 %start
 %compose base/formicid

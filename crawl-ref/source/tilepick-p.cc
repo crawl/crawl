@@ -627,10 +627,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_BLACK_DRACONIAN:
     case SP_PURPLE_DRACONIAN:
     case SP_PALE_DRACONIAN:
-    {
-        const int colour_offset = _draconian_colour(sp, level);
-        return TILEP_BASE_DRACONIAN + colour_offset * 2;
-    }
+        return TILEP_BASE_DRACONIAN + _draconian_colour(sp, level);
     case SP_PALENTONGA:
 #if TAG_MAJOR_VERSION == 34
     case SP_CENTAUR:
@@ -677,12 +674,10 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_HUMAN;
     }
 }
-void tilep_draconian_init(int sp, int level, tileidx_t *base,
-                          tileidx_t *head, tileidx_t *wing)
+void tilep_draconian_init(int sp, int level, tileidx_t *base, tileidx_t *wing)
 {
     const int colour_offset = _draconian_colour(sp, level);
-    *base = TILEP_BASE_DRACONIAN + colour_offset * 2;
-    *head = tile_player_part_start[TILEP_PART_DRCHEAD] + colour_offset;
+    *base = TILEP_BASE_DRACONIAN + colour_offset;
 
     if (you.has_mutation(MUT_BIG_WINGS))
         *wing = tile_player_part_start[TILEP_PART_DRCWING] + colour_offset;
@@ -701,7 +696,6 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
     tileidx_t hair   = 0;
     tileidx_t beard  = 0;
     tileidx_t wing   = 0;
-    tileidx_t head   = 0;
 
     hair = TILEP_HAIR_SHORT_BLACK;
 
@@ -729,7 +723,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_PURPLE_DRACONIAN:
         case SP_PALE_DRACONIAN:
         {
-            tilep_draconian_init(sp, level, &result, &head, &wing);
+            tilep_draconian_init(sp, level, &result, &wing);
             hair   = 0;
             break;
         }
@@ -776,8 +770,6 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         parts[TILEP_PART_BEARD] = beard;
     if (parts[TILEP_PART_SHADOW] == TILEP_SHOW_EQUIP)
         parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
-    if (parts[TILEP_PART_DRCHEAD] == TILEP_SHOW_EQUIP)
-        parts[TILEP_PART_DRCHEAD] = head;
     if (parts[TILEP_PART_DRCWING] == TILEP_SHOW_EQUIP)
         parts[TILEP_PART_DRCWING] = wing;
 }
@@ -1022,9 +1014,6 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
     if (doll.parts[TILEP_PART_HELM] >= TILEP_HELM_FHELM_OFS)
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
-    if (doll.parts[TILEP_PART_HELM] >= TILEP_HELM_HELM_OFS)
-        flag[TILEP_PART_DRCHEAD] = TILEP_FLAG_HIDE;
-
     if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_NAGA))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
@@ -1066,7 +1055,6 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCWING]=TILEP_FLAG_HIDE;
-        flag[TILEP_PART_DRCHEAD]=TILEP_FLAG_HIDE;
     }
     else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
     {
@@ -1080,7 +1068,6 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
         flag[TILEP_PART_DRCWING]=TILEP_FLAG_HIDE;
-        flag[TILEP_PART_DRCHEAD]=TILEP_FLAG_HIDE;
     }
 
     if (doll.parts[TILEP_PART_ARM] == TILEP_ARM_OCTOPODE_SPIKE
@@ -1147,7 +1134,7 @@ const int parts_saved[TILEP_PART_MAX + 1] =
     TILEP_PART_HALO,
     TILEP_PART_ENCH,
     TILEP_PART_DRCWING,
-    TILEP_PART_DRCHEAD,
+//    TILEP_PART_DRCHEAD, // XXX: does this break save compat..?
     -1
 };
 

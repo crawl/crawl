@@ -2393,7 +2393,6 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         TILEP_PART_ARM,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
-        TILEP_PART_DRCHEAD,  // 15
         TILEP_PART_HELM,
         TILEP_PART_HAND1,   // 10
         TILEP_PART_HAND2,
