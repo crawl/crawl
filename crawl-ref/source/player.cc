@@ -536,6 +536,10 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (stepped)
         _moveto_maybe_repel_stairs();
 
+    // Reveal adjacent mimics.
+    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+        discover_mimic(*ai);
+
     bool was_running = you.running;
 
     update_monsters_in_view();
