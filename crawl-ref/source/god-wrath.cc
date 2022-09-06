@@ -1904,22 +1904,18 @@ static bool _wu_jian_retribution()
 
     if (_wu_jian_summon_weapons())
     {
-        switch (random2(4))
+        switch (random2(3))
         {
         case 0:
             wu_jian_sifu_message(" says: Die by a thousand cuts!");
             you.set_duration(DUR_BARBS, random_range(5, 10));
             break;
         case 1:
-            wu_jian_sifu_message(" whispers: Nowhere to run...");
-            you.set_duration(DUR_SLOW, random_range(5, 10));
-            break;
-        case 2:
             wu_jian_sifu_message(" whispers: These will loosen your tongue!");
-            you.increase_duration(DUR_SILENCE, 5 + random2(11), 50);
+            you.increase_duration(DUR_SILENCE, 5 + random2(26), 50);
             invalidate_agrid(true);
             break;
-        case 3:
+        case 2:
             wu_jian_sifu_message(" says: Suffer, mortal!");
             you.corrode_equipment(_god_wrath_name(god).c_str(), 2);
             break;
