@@ -209,7 +209,8 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
 static void _tso_summon_warriors()
 {
     bool success = false;
-    int how_many = 1 + random2(you.experience_level / 5) + random2(3);
+    int how_many = 1 + random2(div_rand_round(you.experience_level, 5))
+                     + random2(3);
 
     for (; how_many > 0; --how_many)
     {
@@ -223,26 +224,6 @@ static void _tso_summon_warriors()
 
 }
 
-/**
- * The Shining One shouts angrily to alert the player's foes!
- */
-static void _tso_shouts()
-{
-    simple_god_message(" booms out: "
-                       "\"Take the path of righteousness! REPENT!\"",
-                       GOD_SHINING_ONE);
-    noisy(25, you.pos()); // same as scroll of noise
-}
-
-/**
- * The Shining One silences the player!!
- */
-static void _tso_squelches()
-{
-    god_speaks(GOD_SHINING_ONE,
-               "You feel the Shining One's silent rage upon you!");
-    cast_silence(25);
-}
 
 /**
  * Call down the wrath of the Shining One upon the player!
@@ -253,24 +234,11 @@ static void _tso_squelches()
  */
 static bool _tso_retribution()
 {
-    switch (random2(7))
-    {
-    case 0:
-    case 1:
-    case 2:
+    // holy summons are very dangerous at low xl, so prefer cleansing flame.
+    if (x_chance_in_y(16 + 2 * you.experience_level, 100))
         _tso_summon_warriors();
-        break;
-    case 3:
-    case 4:
+    else
         _tso_blasts_cleansing_flame();
-        break;
-    case 5:
-        _tso_shouts();
-        break;
-    case 6:
-        _tso_squelches();
-        break;
-    }
     return true;
 }
 
@@ -2266,7 +2234,7 @@ static void _tso_blasts_cleansing_flame(const char *message)
                        GOD_SHINING_ONE);
 
     // damage is 2d(pow), *3/2 for undead and demonspawn
-    cleansing_flame(5 + (you.experience_level * 7) / 12,
+    cleansing_flame(5 + div_rand_round((you.experience_level * 7), 12),
                     cleansing_flame_source::tso, you.pos());
 }
 
