@@ -882,32 +882,33 @@ static bool _sif_muna_retribution()
     switch (random2(10))
     {
     case 0:
+        // This will set all the extendable duration spells to
+        // a duration of one round, thus potentially exposing
+        // the player to real danger. Fall through if nothing would happen.
+        if (player_is_debuffable())
+        {
+            debuff_player();
+            break;
+        }
     case 1:
     case 2:
-        lose_stat(STAT_INT, 1 + random2(you.intel() / 5));
-        break;
-
     case 3:
-    case 4:
-    case 5:
-        confuse_player(5 + random2(3));
-        break;
-
-    case 6:
-    case 7:
-    case 8:
+        // fall through if no mp to drain
         if (you.magic_points > 0)
         {
             drain_mp(you.magic_points);
             canned_msg(MSG_MAGIC_DRAIN);
+            break;
         }
+    case 4:
+    case 5:
+    case 6:
+        lose_stat(STAT_INT, 1 + random2(div_rand_round(you.intel(), 5)));
         break;
-
+    case 7:
+    case 8:
     case 9:
-        // This will set all the extendable duration spells to
-        // a duration of one round, thus potentially exposing
-        // the player to real danger.
-        debuff_player();
+        confuse_player(5 + random2(3));
         break;
     }
 
