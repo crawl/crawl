@@ -200,6 +200,11 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
         if (client.is_watching())
             menu.following_player_scroll = true;
 
+        // suppress mouseenter events on initial display. It might be nice
+        // to do this only if the cursor is currently hiddent, but I haven't
+        // been able to reliably detect that.
+        suppress_mouse_hover();
+
         ui.show_popup(menu_div, menu["ui-centred"]);
         handle_size_change();
 
