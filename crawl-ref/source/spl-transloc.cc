@@ -1167,7 +1167,8 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
     if (!real)
         return spret::success;
 
-    if (!wielded_weapon_check(you.weapon()))
+    const item_def *weapon = you.weapon();
+    if (!wielded_weapon_check(weapon))
         return spret::abort;
 
     fail_check();
@@ -1180,7 +1181,10 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
     const int initial_time = you.time_taken;
 
     shuffle_array(targets);
-    const size_t max_targets = 2 + div_rand_round(pow, 50);
+    // UC is worse at launching multiple manifold assaults, since
+    // transmuters have a much easier time casting it.
+    const size_t max_targets = weapon ? 2 + div_rand_round(pow, 50)
+                                      : 1 + div_rand_round(pow, 100);
     for (size_t i = 0; i < max_targets && i < targets.size(); i++)
     {
         // Somewhat hacky: reset attack delay before each attack so that only the final
