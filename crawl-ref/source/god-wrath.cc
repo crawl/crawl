@@ -308,50 +308,25 @@ static bool _cheibriados_retribution()
     // time god/slowness theme
     const god_type god = GOD_CHEIBRIADOS;
 
-    // Chei retribution might only make sense in combat.
-    // We can crib some Xom code for this. {bh}
-    int tension = get_tension(GOD_CHEIBRIADOS);
-    int wrath_value = random2(tension);
-
-    // Determine the level of wrath
-    int wrath_type = 0;
-    if (wrath_value < 2)
-        wrath_type = 0;
-    else if (wrath_value < 4)
-        wrath_type = 1;
-    else if (wrath_value < 8)
-        wrath_type = 2;
-    else if (wrath_value < 16)
-        wrath_type = 3;
-    else
-        wrath_type = 4;
-
     // Strip away extra speed
     dec_haste_player(10000);
 
-    switch (wrath_type)
+    switch (random2(4))
     {
-    // Very high tension wrath.
-    // Add noise then start sleeping and slow the player with 2/3 chance.
-    case 4:
-        simple_god_message(" strikes the hour.", god);
-        noisy(40, you.pos());
-        dec_penance(god, 1); // and fall-through.
-    // High tension wrath
     // Sleep the player and slow the player with 50% chance.
     case 3:
         mpr("You lose track of time.");
         you.put_to_sleep(nullptr, 30 + random2(20));
-        if (one_chance_in(wrath_type - 1))
+        if (coinflip())
             break;
         else
             dec_penance(god, 1); // and fall-through.
-    // Medium tension
+    // Slow the player only
     case 2:
         mprf(MSGCH_WARN, "You feel the world leave you behind!");
         slow_player(91 + random2(10));
         break;
-    // Low/no tension; lose stats.
+    // Lose stats
     case 1:
     case 0:
         mpr("Time shudders.");
