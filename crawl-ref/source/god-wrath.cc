@@ -126,25 +126,32 @@ static mgen_data _wrath_mon_data(monster_type mtyp, god_type god)
     return mg;
 }
 
-static bool _yred_random_zombified_hostile()
+static bool _random_zombified_hostile(int severity, god_type god)
 {
-    const bool skel = one_chance_in(4);
+    monster_type zomb = MONS_ZOMBIE;
+    if (god == GOD_KIKUBAAQUDGHA)
+    {
+        zomb = random_choose_weighted(10 + severity, MONS_SIMULACRUM,
+                                      25, MONS_SPECTRAL_THING,
+                                      65 - severity, MONS_ZOMBIE);
+    }
+    else if (one_chance_in(4))
+        zomb = MONS_SKELETON;
 
     monster_type z_base;
 
     do
-    {
-        // XXX: better zombie selection?
-        level_id place(BRANCH_DUNGEON,
-                       min(27, you.experience_level + 5));
+    {   
+        // use depths monster set if severity is high enough
+        level_id place(severity <= 27 ? BRANCH_DUNGEON : BRANCH_DEPTHS, 
+                       severity <= 27 ? severity 
+                                      : min(13, div_rand_round(severity, 3)));
         z_base = pick_local_zombifiable_monster(place, RANDOM_MONSTER,
                                                 you.pos());
     }
-    while (skel && !mons_skeleton(z_base));
+    while (zomb == MONS_SKELETON && !mons_skeleton(z_base));
 
-    mgen_data temp = _wrath_mon_data(skel ? MONS_SKELETON : MONS_ZOMBIE,
-                                     GOD_YREDELEMNUL)
-                     .set_base(z_base);
+    mgen_data temp = _wrath_mon_data(zomb, god).set_base(z_base);
 
     return create_monster(temp, false);
 }
@@ -599,7 +606,17 @@ static bool _kikubaaqudgha_retribution()
                             _god_wrath_name(god), you.experience_level);
         }
     }
-
+    
+    // always summons undead.
+    int how_many = 2 + random2(5);
+    int count = 0;
+    for (; how_many > 0; --how_many)
+    {
+        if (_random_zombified_hostile(you.experience_level, GOD_KIKUBAAQUDGHA))
+            ++count;
+    }
+    simple_god_message(count > 1 ? " raises the dead against you."
+                                 : " wastes no corpses on you this time.", god);
     return true;
 }
 
@@ -614,14 +631,16 @@ static bool _yredelemnul_retribution()
             ;
         else
         {
-            int how_many = 1 + random2avg(1 + (you.experience_level / 5), 2);
+            int how_many = 1 + random2avg(1 + div_rand_round(
+                                                you.experience_level, 5), 2);
             int count = 0;
 
             for (; how_many > 0; --how_many)
             {
                 if (one_chance_in(you.experience_level))
                 {
-                    if (_yred_random_zombified_hostile())
+                    if (_random_zombified_hostile(you.experience_level + 5,
+                                                       GOD_YREDELEMNUL))
                         ++count;
                 }
                 else
