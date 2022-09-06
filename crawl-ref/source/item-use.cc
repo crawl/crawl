@@ -503,7 +503,12 @@ bool UseItemMenu::cycle_headers(bool)
     else
         set_hovered(0);
     // XX this skips `unarmed`, should it?
-    cycle_hover(); // get to a selectable item
+    cycle_hover(); // hover is guaranteed to be a header, get to a selectable item
+#ifdef USE_TILE_WEB
+    // cycle_headers doesn't currently have a client-side
+    // implementation, so force-send the server-side scroll
+    webtiles_update_scroll_pos(true);
+#endif
     return true;
 }
 
