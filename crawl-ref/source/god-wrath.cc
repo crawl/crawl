@@ -715,7 +715,7 @@ static bool _trog_retribution()
                                      : " has no time to punish you... now.",
                            god);
     }
-    else if (!one_chance_in(3))
+    else
     {
         simple_god_message("'s voice booms out, \"Feel my wrath!\"", god);
 
@@ -728,16 +728,14 @@ static bool _trog_retribution()
         case 0:
         case 1:
         case 2:
-            lose_stat(STAT_STR, 1 + random2(you.strength() / 5));
+            lose_stat(STAT_STR, 1 + random2(div_rand_round(you.strength(), 5)));
             break;
 
         case 3:
             if (!you.duration[DUR_PARALYSIS])
             {
                 mprf(MSGCH_WARN, "You suddenly pass out!");
-                const int turns = 2 + random2(6);
-                take_note(Note(NOTE_PARALYSIS, min(turns, 13), 0, "Trog"));
-                you.increase_duration(DUR_PARALYSIS, turns, 13);
+                paralyse_player(_god_wrath_name(god));
             }
             return false;
 
@@ -747,24 +745,6 @@ static bool _trog_retribution()
             slow_player(91 + random2(10));
             break;
         }
-    }
-    else
-    {
-        // A fireball is magic when used by a mortal but just a manifestation
-        // of pure rage when used by a god. --ebering
-
-        monster* avatar = get_avatar(god);
-        // can't be const because mons_cast() doesn't accept const monster*
-
-        if (avatar == nullptr)
-        {
-            simple_god_message(" has no time to deal with you just now.", god);
-            return false; // not a very dazzling divine experience...
-        }
-
-        _spell_retribution(avatar, SPELL_FIREBALL,
-                           god, " hurls fiery rage upon you!");
-        _reset_avatar(*avatar);
     }
 
     return true;
