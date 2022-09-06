@@ -99,10 +99,7 @@ deck_archetype deck_of_summoning =
 
 deck_archetype deck_of_punishment =
 {
-    { CARD_WRAITH,     5 },
     { CARD_WRATH,      5 },
-    { CARD_SWINE,      5 },
-    { CARD_TORMENT,    5 },
 };
 
 struct deck_type_data
@@ -975,14 +972,13 @@ bool draw_three()
     return true;
 }
 
-// This is Nemelex retribution. If deal is true, use the word "deal"
-// rather than "draw" (for the Deal Four out-of-cards situation).
-void draw_from_deck_of_punishment(bool deal)
+// This is Nemelex retribution.
+void draw_from_deck_of_punishment()
 {
     card_type card = _random_card(DECK_OF_PUNISHMENT);
 
-    mprf("You %s a card...", deal ? "deal" : "draw");
-    card_effect(card, deal, true);
+    mpr("You draw a card...");
+    card_effect(card, false, true);
 }
 
 static int _get_power_level(int power)

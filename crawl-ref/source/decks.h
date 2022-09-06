@@ -81,7 +81,7 @@ bool stack_five(int slot);
 void card_effect(card_type which_card, bool dealt = false,
         bool punishment = false,
         bool tell_card = true);
-void draw_from_deck_of_punishment(bool deal = false);
+void draw_from_deck_of_punishment();
 
 string deck_status(deck_type deck);
 string deck_name(deck_type deck);
