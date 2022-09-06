@@ -55,6 +55,7 @@
 #include "mon-tentacle.h"
 #include "mon-transit.h"
 #include "religion.h"
+#include "spl-clouds.h" // explode_blastsparks_at
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -5247,6 +5248,10 @@ void monster::apply_location_effects(const coord_def &oldpos,
         else
             del_ench(ENCH_AQUATIC_LAND);
     }
+
+    cloud_struct* cloud = cloud_at(pos());
+    if (cloud && cloud->type == CLOUD_BLASTSPARKS)
+        explode_blastsparks_at(pos()); // schedules a fineff, so won't kill
 
     // Monsters stepping on traps:
     trap_def* ptrap = trap_at(pos());

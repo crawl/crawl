@@ -1394,7 +1394,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you are already reaping souls!";
         break;
 
-        // fallthrough
+        // fallthrough to cloud spells
+    case SPELL_BLASTSPARK:
     case SPELL_CONJURE_FLAME:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:

@@ -66,6 +66,7 @@
 #include "shout.h"
 #include "skills.h"
 #include "species.h" // random_starting_species
+#include "spl-clouds.h" // explode_blastsparks_at
 #include "spl-damage.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
@@ -527,11 +528,18 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (old_pos == you.pos() && stepped)
         actor_apply_toxic_bog(&you);
 
-    // Traps go off.
-    // (But not when losing flight - i.e., moving into the same tile)
-    trap_def* ptrap = trap_at(you.pos());
-    if (ptrap && old_pos != you.pos())
-        ptrap->trigger(you);
+    if (old_pos != you.pos())
+    {
+        cloud_struct* cloud = cloud_at(you.pos());
+        if (cloud && cloud->type == CLOUD_BLASTSPARKS)
+            explode_blastsparks_at(you.pos()); // schedules a fineff
+
+        // Traps go off.
+        // (But not when losing flight - i.e., moving into the same tile)
+        trap_def* ptrap = trap_at(you.pos());
+        if (ptrap)
+            ptrap->trigger(you);
+    }
 
     if (stepped)
         _moveto_maybe_repel_stairs();

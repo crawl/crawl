@@ -18,6 +18,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "fight.h"
+#include "fineff.h" // explosion_fineff, etc
 #include "items.h"
 #include "level-state-type.h"
 #include "message.h"
@@ -72,6 +73,50 @@ spret conjure_flame(int pow, bool fail)
     noisy(spell_effect_noise(SPELL_CONJURE_FLAME), you.pos());
 
     return spret::success;
+}
+
+spret kindle_blastsparks(int pow, bool fail)
+{
+    if (cloud_at(you.pos()))
+    {
+        mpr("There's already a cloud here!");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    // Really should be per-cloud, but skeptical people are changing power
+    // between successive blastspark casts that often.
+    you.props[BLASTSPARK_POWER_KEY] = pow;
+    // Longish duration to support setting up silly traps.
+    place_cloud(CLOUD_BLASTSPARKS, you.pos(), random_range(20, 30), &you);
+    mpr("A cloud of volatile blastsparks flares up around you!");
+
+    return spret::success;
+}
+
+void explode_blastsparks_at(coord_def p)
+{
+    // Assumes all blastsparks are created by the player.
+    // We could fix this in future by checking the 'killer'
+    // associated with the cloud being deleted.
+    delete_cloud(p);
+
+    bolt beam;
+    zappy(ZAP_BLASTSPARK, you.props[BLASTSPARK_POWER_KEY], false, beam);
+
+    beam.target        = p;
+    beam.source        = p;
+    beam.source_id     = MID_PLAYER;
+    beam.attitude      = ATT_FRIENDLY;
+    beam.thrower       = KILL_YOU_MISSILE;
+    beam.is_explosion  = true;
+    beam.ex_size       = 1;
+
+    const string boom  = "The cloud of blastsparks explodes!";
+    const string sanct = "By Zin's power, the fiery explosion is contained.";
+    explosion_fineff::schedule(beam, boom, sanct, EXPLOSION_FINEFF_CONCUSSION,
+                               nullptr);
 }
 
 spret cast_big_c(int pow, spell_type spl, const actor *caster, bolt &beam,

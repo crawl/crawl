@@ -263,6 +263,12 @@ protected:
     mon_attitude_type attitude;
 };
 
+enum explosion_fineff_type : int {
+    EXPLOSION_FINEFF_GENERIC,
+    EXPLOSION_FINEFF_INNER_FLAME,
+    EXPLOSION_FINEFF_CONCUSSION,
+};
+
 class explosion_fineff : public final_effect
 {
 public:
@@ -271,23 +277,23 @@ public:
     void fire() override;
 
     static void schedule(bolt &beam, string boom, string sanct,
-                         bool inner_flame, const actor* flame_agent)
+                         explosion_fineff_type typ, const actor* flame_agent)
     {
         final_effect::schedule(new explosion_fineff(beam, boom, sanct,
-                                                    inner_flame, flame_agent));
+                                                    typ, flame_agent));
     }
 protected:
     explosion_fineff(const bolt &beem, string boom, string sanct,
-                     bool flame, const actor* agent)
+                     explosion_fineff_type _typ, const actor* agent)
         : final_effect(0, 0, coord_def()), beam(beem),
           boom_message(boom), sanctuary_message(sanct),
-          inner_flame(flame), flame_agent(agent)
+          typ(_typ), flame_agent(agent)
     {
     }
     bolt beam;
     string boom_message;
     string sanctuary_message;
-    bool inner_flame;
+    explosion_fineff_type typ;
     const actor* flame_agent;
 };
 

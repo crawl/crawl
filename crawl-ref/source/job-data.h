@@ -208,7 +208,7 @@ static const map<job_type, job_def> job_data =
     {
         SPELL_FOXFIRE,
         SPELL_SCORCH,
-        SPELL_CONJURE_FLAME,
+        SPELL_BLASTSPARK,
         SPELL_INNER_FLAME,
         SPELL_FLAME_WAVE,
     },

@@ -1310,6 +1310,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_CONJURE_FLAME:
+    case SPELL_BLASTSPARK:
     case SPELL_PORTAL_PROJECTILE:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
@@ -2382,6 +2383,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_CONJURE_FLAME:
         return conjure_flame(powc, fail);
+
+    case SPELL_BLASTSPARK:
+        return kindle_blastsparks(powc, fail);
 
     case SPELL_PASSWALL:
         return cast_passwall(beam.target, powc, fail);

@@ -307,6 +307,11 @@ static const cloud_data clouds[] = {
       BEAM_NONE, {},                              // beam & damage
       false,                                      // opacity
     },
+    // CLOUD_BLASTSPARKS,
+    { "blastsparks", "volatile sparks",           // terse, verbose name
+        ETC_SMOKE,                                // colour
+      { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },        // tile
+    },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
 

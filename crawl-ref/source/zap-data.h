@@ -637,6 +637,23 @@ _mon_hex_zap(ZAP_TUKIMAS_DANCE, BEAM_TUKIMAS_DANCE, 100),
     0 // Noise comes from explosion
 },
 
+{
+    ZAP_BLASTSPARK,
+    "concussive blast",
+    50,
+    new calcdice_calculator<2, 20, 1, 3>,
+    new tohit_calculator<40>,
+    nullptr,
+    nullptr,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+    0 // Noise comes from explosion
+},
+
 
 {
     ZAP_FLAME_WAVE,

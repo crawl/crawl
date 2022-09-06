@@ -82,6 +82,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_BLASTSPARK, "Kindle Blastsparks",
+    spschool::fire | spschool::air | spschool::translocation,
+    spflag::none,
+    3,
+    50,
+    -1, -1,
+    3, 0,
+    TILEG_CONJURE_FLAME,
+},
+
+{
     SPELL_DIG, "Dig",
     spschool::earth,
     spflag::dir_or_target | spflag::not_self | spflag::neutral

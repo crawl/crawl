@@ -538,5 +538,6 @@ enum spell_type : int
     SPELL_BOLT_OF_LIGHT,
     SPELL_HUNTING_CALL,
     SPELL_FASTROOT,
+    SPELL_BLASTSPARK,
     NUM_SPELLS
 };

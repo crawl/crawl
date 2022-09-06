@@ -41,6 +41,7 @@ enum cloud_type
     CLOUD_EMBERS,
     CLOUD_FLAME,
     CLOUD_DEGENERATION,
+    CLOUD_BLASTSPARKS,
     NUM_CLOUD_TYPES,
 
     // Random per-square.
