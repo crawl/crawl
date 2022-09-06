@@ -245,7 +245,7 @@ static bool _tso_retribution()
 static bool _zin_remove_good_mutations()
 {
     if (!you.how_mutated())
-        return true; // This was checked in _zin_retribution().
+        return false;
 
     const god_type god = GOD_ZIN;
     bool success = false;
@@ -274,21 +274,17 @@ static bool _zin_remove_good_mutations()
 
 static bool _zin_retribution()
 {
-    // preaching/creeping doom theme
+    // preaching theme
     const god_type god = GOD_ZIN;
 
-    // If not mutated, do something else instead.
-    const int punishment = you.how_mutated() ? random2(6) : random2(4) + 2;
-
-    switch (punishment)
+    switch (random2(4))
     {
-    case 0:
-    case 1: // remove good mutations or deliberately fall through
+    case 0: // remove good mutations or deliberately fall through
         if (_zin_remove_good_mutations())
             break;
+    case 1:
     case 2:
-    case 3:
-    case 4: // recital
+    case 3: // recital
         simple_god_message(" recites the Axioms of Law to you!", god);
         switch (random2(3))
         {
@@ -302,10 +298,6 @@ static bool _zin_retribution()
             paralyse_player(_god_wrath_name(god));
             return false;
         }
-        break;
-    case 5: // noisiness
-        simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
-        noisy(25, you.pos()); // same as scroll of noise
         break;
     }
     return true;
