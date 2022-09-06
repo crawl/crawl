@@ -141,10 +141,10 @@ static bool _random_zombified_hostile(int severity, god_type god)
     monster_type z_base;
 
     do
-    {   
+    {
         // use depths monster set if severity is high enough
-        level_id place(severity <= 27 ? BRANCH_DUNGEON : BRANCH_DEPTHS, 
-                       severity <= 27 ? severity 
+        level_id place(severity <= 27 ? BRANCH_DUNGEON : BRANCH_DEPTHS,
+                       severity <= 27 ? severity
                                       : min(13, div_rand_round(severity, 3)));
         z_base = pick_local_zombifiable_monster(place, RANDOM_MONSTER,
                                                 you.pos());
@@ -606,7 +606,7 @@ static bool _kikubaaqudgha_retribution()
                             _god_wrath_name(god), you.experience_level);
         }
     }
-    
+
     // always summons undead.
     int how_many = 2 + random2(5);
     int count = 0;
@@ -641,7 +641,9 @@ static bool _yredelemnul_retribution()
                 {
                     if (_random_zombified_hostile(you.experience_level + 5,
                                                        GOD_YREDELEMNUL))
+                    {
                         ++count;
+                    }
                 }
                 else
                 {
