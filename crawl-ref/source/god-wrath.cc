@@ -859,7 +859,8 @@ static bool _okawaru_retribution()
     // warrior theme
     const god_type god = GOD_OKAWARU;
 
-    int how_many = 1 + (you.experience_level / 5);
+    int how_many = 1 + div_rand_round(you.experience_level, 10)
+                     + random2(1 + div_rand_round(you.experience_level, 6));
     int count = 0;
 
     for (; how_many > 0; --how_many)
