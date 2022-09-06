@@ -459,8 +459,8 @@ static bool _makhleb_call_down_destruction()
  */
 static int _makhleb_num_greater_servants()
 {
-    const int severity = 1 + you.experience_level / 2
-                           + random2(you.experience_level / 2);
+    const int severity = 1 + div_rand_round(you.experience_level, 2)
+                           + random2(div_rand_round(you.experience_level, 2));
 
     if (severity > 13)
         return 2 + random2((you.experience_level - 2) / 5); // up to 6 at XL27
@@ -491,8 +491,8 @@ static bool _makhleb_summon_servants()
 
     // up to 6 at XL25+
     const int total_servants = max(greater_servants,
-                               1 + (random2(you.experience_level)
-                                 + random2(you.experience_level)) / 10);
+                               1 + div_rand_round((random2(you.experience_level)
+                                 + random2(you.experience_level)), 10));
     const int lesser_servants = total_servants - greater_servants;
 
     int summoned = 0;
