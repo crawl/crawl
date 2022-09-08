@@ -2765,6 +2765,7 @@ static void _multidrop(vector<SelItem> tmp_items)
     for (SelItem& si : tmp_items)
     {
         const int item_quant = si.item->quantity;
+        ASSERT(item_quant > 0);
 
         // EVIL HACK: Fix item quantity to match the quantity we will drop,
         // in order to prevent misleading messages when dropping
