@@ -454,7 +454,8 @@ pregen_dungeon = incremental
         and no load times when entering levels, but at the cost of a slow game
         start. Some servers may disallow full pregeneration for online play.
 
-        When set to `false` or `classic`, the game will generate all levels on level entry, as was the rule before 0.23. Dungeons will not be stable
+        When set to `false` or `classic`, the game will generate all levels on
+        level entry, as was the rule before 0.23. Dungeons will not be stable
         given a seed with this option.
 
 2-  File System.
