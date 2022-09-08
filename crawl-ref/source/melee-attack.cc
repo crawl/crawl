@@ -527,6 +527,16 @@ bool melee_attack::handle_phase_hit()
              defender_name(true).c_str(),
              attacker->is_player() ? "do" : "does");
     }
+    
+    if (attacker->is_player())
+    {
+        const int infusion = you.infusion_amount();
+        if (infusion)
+        {
+            pay_mp(infusion);
+            finalize_mp_cost();
+        }
+    }
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
@@ -552,13 +562,6 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
-        const int infusion = you.infusion_amount();
-        if (infusion)
-        {
-            pay_mp(infusion);
-            finalize_mp_cost();
-        }
-
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
