@@ -1394,6 +1394,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you are already reaping souls!";
         break;
 
+    case SPELL_ROT:
+        {
+            const mon_holy_type holiness = you.holiness(temp);
+            if (holiness != MH_NATURAL && holiness != MH_UNDEAD)
+                return "you have no flesh to rot.";
+        }
         // fallthrough to cloud spells
     case SPELL_BLASTSPARK:
     case SPELL_CONJURE_FLAME:

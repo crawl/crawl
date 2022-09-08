@@ -308,6 +308,16 @@ Chilling Breath spell
 
 Exhales a blast of frost which may knock the target back if it deals damage.
 %%%%
+Cigotuvi's Dreadful Rot spell
+
+Rots away a part of the caster's flesh to produce a cloud of miasma around them.
+The miasma slows and powerfully poisons any living creature that lingers within -
+including the caster, if they tarry after casting. Most living creatures are
+terrified of miasma and will not willingly enter it.
+
+The rot leaves the caster's health temporarily drained. The undead can still use
+this spell, but fleshless beings (e.g., those made of stone) cannot.
+%%%%
 Cleansing Flame spell
 
 <Cleansing Flame ability>

@@ -385,10 +385,10 @@ static const map<job_type, job_def> job_data =
       SP_DJINNI, SP_METEORAN, },
     {
         SPELL_MAGIC_DART,
+        SPELL_SLOW,
         SPELL_BLINK,
         SPELL_CALL_IMP,
-        SPELL_SLOW,
-        SPELL_CONJURE_FLAME,
+        SPELL_ROT,
         SPELL_MEPHITIC_CLOUD,
     },
     { "dagger", "robe", "hat", "potion of magic" },

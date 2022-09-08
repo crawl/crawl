@@ -539,5 +539,6 @@ enum spell_type : int
     SPELL_HUNTING_CALL,
     SPELL_FASTROOT,
     SPELL_BLASTSPARK,
+    SPELL_ROT,
     NUM_SPELLS
 };

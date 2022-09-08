@@ -818,6 +818,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ROT, "Cigotuvi's Dreadful Rot",
+    spschool::necromancy | spschool::air | spschool::poison,
+    spflag::unclean,
+    2,
+    50,
+    -1, -1,
+    2, 0,
+    TILEG_CORPSE_ROT,
+},
+
+{
     SPELL_IRON_SHOT, "Iron Shot",
     spschool::conjuration | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer,

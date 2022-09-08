@@ -1307,6 +1307,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_NECROMUTATION:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_WEREBLOOD:
+    case SPELL_ROT:
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
     case SPELL_CONJURE_FLAME:
@@ -2326,6 +2327,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_CORPSE_ROT:
         return cast_corpse_rot(powc, fail);
+
+    case SPELL_ROT:
+        return cast_dreadful_rot(powc, fail);
 
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:

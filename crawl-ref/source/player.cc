@@ -6282,7 +6282,8 @@ bool player::res_miasma(bool temp) const
 {
     if (has_mutation(MUT_FOUL_STENCH)
         || is_nonliving(temp)
-        || temp && get_form()->res_miasma())
+        || temp && (get_form()->res_miasma()
+                    || you.props.exists(MIASMA_IMMUNE_KEY)))
     {
         return true;
     }

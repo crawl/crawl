@@ -9,6 +9,8 @@ class actor;
 
 spret conjure_flame(int pow, bool fail);
 
+spret cast_dreadful_rot(int pow, bool fail);
+
 spret kindle_blastsparks(int pow, bool fail);
 void explode_blastsparks_at(coord_def p);
 

@@ -136,6 +136,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Vapours
     SPELL_POISONOUS_VAPOURS,
+    SPELL_ROT,
     SPELL_CORPSE_ROT,
 },
 
@@ -334,6 +335,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of Decay
+    SPELL_ROT,
     SPELL_CORPSE_ROT,
     SPELL_DISPEL_UNDEAD,
     SPELL_DEATH_CHANNEL,

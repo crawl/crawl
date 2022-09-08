@@ -1577,6 +1577,7 @@ static bool _give_kiku_gift(bool forced)
         do
         {
             spell = random_choose(SPELL_SUBLIMATION_OF_BLOOD,
+                                  SPELL_ROT,
                                   SPELL_VAMPIRIC_DRAINING,
                                   SPELL_ANGUISH,
                                   SPELL_ANIMATE_DEAD

@@ -75,6 +75,26 @@ spret conjure_flame(int pow, bool fail)
     return spret::success;
 }
 
+spret cast_dreadful_rot(int pow, bool fail)
+{
+    if (cloud_at(you.pos()))
+    {
+        mpr("There's already a cloud here!");
+        return spret::abort;
+    }
+
+    fail_check();
+
+    const int min_dur = 3;
+    const int max_dur = min_dur + div_rand_round(pow, 5);
+    you.props[MIASMA_IMMUNE_KEY] = true;
+    place_cloud(CLOUD_MIASMA, you.pos(), random_range(min_dur, max_dur), &you);
+    mpr("A part of your flesh rots into a cloud of miasma!");
+    drain_player(65, true, true);
+
+    return spret::success;
+}
+
 spret kindle_blastsparks(int pow, bool fail)
 {
     if (cloud_at(you.pos()))
