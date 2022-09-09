@@ -1567,57 +1567,34 @@ static bool _give_kiku_gift(bool forced)
     }
 
     vector<spell_type> chosen_spells;
-    spell_type spell;
 
     // The first set should guarantee the player at least one ally spell, to
-    // complement the bonus undead passive.
+    // complement the Wretches ability.
     if (first_gift)
     {
         chosen_spells.push_back(SPELL_NECROTISE);
-        do
+        vector<spell_type> further_options = {SPELL_SUBLIMATION_OF_BLOOD,
+                                              SPELL_ROT,
+                                              SPELL_VAMPIRIC_DRAINING,
+                                              SPELL_ANGUISH,
+                                              SPELL_ANIMATE_DEAD};
+        shuffle_array(further_options);
+        for (spell_type spell : further_options)
         {
-            spell = random_choose(SPELL_SUBLIMATION_OF_BLOOD,
-                                  SPELL_ROT,
-                                  SPELL_VAMPIRIC_DRAINING,
-                                  SPELL_ANGUISH,
-                                  SPELL_ANIMATE_DEAD
-                                  );
-
-            if (!you.can_bleed(false) && spell == SPELL_SUBLIMATION_OF_BLOOD)
-                spell = SPELL_NO_SPELL;
-
-            if (find(begin(chosen_spells), end(chosen_spells), spell)
-                != end(chosen_spells))
-            {
-                spell = SPELL_NO_SPELL;
-            }
-
-            if (spell != SPELL_NO_SPELL)
-                chosen_spells.push_back(spell);
+            if (spell_is_useless(spell, false))
+                continue;
+            chosen_spells.push_back(spell);
+            if (chosen_spells.size() >= 4)
+                break;
         }
-        while (chosen_spells.size() < 4);
     }
     else
     {
-        do
-        {
-            spell = random_choose(SPELL_DISPEL_UNDEAD,
-                                  SPELL_CORPSE_ROT,
-                                  SPELL_AGONY,
-                                  SPELL_BORGNJORS_VILE_CLUTCH,
-                                  SPELL_DEATH_CHANNEL,
-                                  SPELL_SIMULACRUM);
-
-            if (find(begin(chosen_spells), end(chosen_spells), spell)
-                != end(chosen_spells))
-            {
-                spell = SPELL_NO_SPELL;
-            }
-
-            if (spell != SPELL_NO_SPELL)
-                chosen_spells.push_back(spell);
-        }
-        while (chosen_spells.size() < 5);
+        chosen_spells = {SPELL_DISPEL_UNDEAD,
+                         SPELL_AGONY,
+                         SPELL_BORGNJORS_VILE_CLUTCH,
+                         SPELL_DEATH_CHANNEL,
+                         SPELL_SIMULACRUM};
     }
 
     bool new_spell = false;

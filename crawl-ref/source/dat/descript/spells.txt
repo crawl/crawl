@@ -368,12 +368,6 @@ Causes a halo of glowing light to surround and effectively outline a creature.
 This glow offsets the dark, musty atmosphere of the dungeon, and makes the
 affected creature appreciably easier to hit.
 %%%%
-Corpse Rot spell
-
-Rapidly accelerates the decomposition of living monsters slain by the caster,
-and gathers the foul miasmic vapour around the caster. The clouds eat away at
-the life force of any creature they envelop.
-%%%%
 Corrosive Bolt spell
 
 Fires a penetrating bolt of acid.

@@ -2324,9 +2324,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BORGNJORS_VILE_CLUTCH:
         return cast_vile_clutch(powc, beam, fail);
 
-    case SPELL_CORPSE_ROT:
-        return cast_corpse_rot(powc, fail);
-
     case SPELL_ROT:
         return cast_dreadful_rot(powc, fail);
 

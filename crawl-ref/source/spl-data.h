@@ -796,17 +796,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CORPSE_ROT, "Corpse Rot",
-    spschool::necromancy | spschool::air | spschool::poison,
-    spflag::helpful | spflag::utility | spflag::selfench | spflag::unclean,
-    4,
-    100,
-    -1, -1,
-    2, 0,
-    TILEG_CORPSE_ROT,
-},
-
-{
     SPELL_ROT, "Cigotuvi's Dreadful Rot",
     spschool::necromancy | spschool::air | spschool::poison,
     spflag::unclean,
@@ -3694,6 +3683,7 @@ AXED_SPELL(SPELL_TELEPORT_SELF, "Teleport Self")
 AXED_SPELL(SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe")
 AXED_SPELL(SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds")
 AXED_SPELL(SPELL_CONJURE_FLAME, "Conjure Flame")
+AXED_SPELL(SPELL_CORPSE_ROT, "Corpse Rot")
 #endif
 
 };

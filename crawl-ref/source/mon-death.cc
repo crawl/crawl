@@ -1398,51 +1398,6 @@ static bool _reaping(monster &mons)
     return _mons_reaped(*killer, mons);
 }
 
-static bool _try_place_miasma_at(coord_def p)
-{
-    if (cell_is_solid(p))
-        return false;
-
-    cloud_struct *cl = cloud_at(p);
-    if (cl && !is_harmless_cloud(cl->type))
-        return false;
-
-    place_cloud(CLOUD_MIASMA, p, 2 + random2avg(8, 2), &you);
-    return true;
-}
-
-static void _corpse_rot(monster &mons, int pow)
-{
-    if (!mons_can_be_zombified(mons))
-        return;
-
-    coord_def center = you.pos();
-    int rot = 1 + random2(1 + div_rand_round(pow, 25));
-
-    for (fair_adjacent_iterator ai(center); ai; ++ai)
-    {
-        if (_try_place_miasma_at(*ai))
-        {
-            --rot;
-            if (!rot)
-                return;
-        }
-    }
-
-    // Continue out to radius 2 if radius 1 is full
-    for (distance_iterator di(center, true, true, 2); di; ++di)
-    {
-        if (_try_place_miasma_at(*di))
-        {
-            --rot;
-            if (!rot)
-                return;
-        }
-    }
-
-    mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
-}
-
 static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
                               bool in_los, bool corpseworthy)
 {
@@ -2496,16 +2451,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         corpse_consumed = _apply_necromancy(mons, !death_message, exploded,
                                             in_los, corpseworthy);
-
-        // currently allowing this to stack with other death effects -hm
-        if (you.duration[DUR_CORPSE_ROT]
-            && in_los
-            && corpseworthy
-            && !have_passive(passive_t::goldify_corpses))
-        {
-            const int rot_pow = you.props[CORPSE_ROT_POWER_KEY].get_int();
-            _corpse_rot(mons, rot_pow);
-        }
     }
 
     if (!wizard && !submerged && !was_banished)
