@@ -19,8 +19,8 @@ enum spell_type : int
 #if TAG_MAJOR_VERSION == 34
     SPELL_DELAYED_FIREBALL,
     SPELL_STRIKING,
-#endif
     SPELL_CONJURE_FLAME,
+#endif
     SPELL_DIG,
     SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,

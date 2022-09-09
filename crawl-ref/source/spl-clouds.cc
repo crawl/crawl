@@ -30,51 +30,6 @@
 #include "target.h"
 #include "terrain.h"
 
-spret conjure_flame(int pow, bool fail)
-{
-    cloud_struct* cloud = cloud_at(you.pos());
-
-    if (cloud && !(cloud->type == CLOUD_FIRE || cloud->type == CLOUD_EMBERS))
-    {
-        mpr("There's already a cloud here!");
-        return spret::abort;
-    }
-
-    fail_check();
-
-    if (cloud && cloud->type == CLOUD_FIRE)
-    {
-        // Reinforce the cloud - but not too much.
-        // It must be a fire cloud from a previous test.
-        mpr("The fire blazes with new energy!");
-        const int extra_dur = 2 + min(random2(pow) / 2, 20);
-        cloud->decay += extra_dur * 5;
-        cloud->source = you.mid ;
-        cloud->set_whose(KC_YOU);
-    }
-    else if (cloud && cloud->type == CLOUD_EMBERS)
-    {
-        mpr("The fire ignites!");
-        place_cloud(CLOUD_FIRE, you.pos(), min(5 + (random2(pow)/2)
-                                                 + (random2(pow)/2), 23), &you);
-    }
-    else
-    {
-        you.props[CFLAME_DUR_KEY] = min(5 + (random2(pow)/2)
-                                               + (random2(pow)/2), 23);
-        place_cloud(CLOUD_EMBERS, you.pos(), 1, &you);
-        // Create a cloud for the time it takes to cast plus 1 aut, so that no
-        // matter what happens the flame tries to ignite after the next player
-        // action.
-        cloud = cloud_at(you.pos());
-        cloud->decay = player_speed() + 1;
-        mpr("The fire begins to smoulder!");
-    }
-    noisy(spell_effect_noise(SPELL_CONJURE_FLAME), you.pos());
-
-    return spret::success;
-}
-
 spret cast_dreadful_rot(int pow, bool fail)
 {
     if (cloud_at(you.pos()))
@@ -85,8 +40,8 @@ spret cast_dreadful_rot(int pow, bool fail)
 
     fail_check();
 
-    const int min_dur = 3;
-    const int max_dur = min_dur + div_rand_round(pow, 5);
+    const int min_dur = 4;
+    const int max_dur = 7 + div_rand_round(pow, 10);
     you.props[MIASMA_IMMUNE_KEY] = true;
     place_cloud(CLOUD_MIASMA, you.pos(), random_range(min_dur, max_dur), &you);
     mpr("A part of your flesh rots into a cloud of miasma!");

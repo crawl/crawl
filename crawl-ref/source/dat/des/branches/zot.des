@@ -1682,7 +1682,7 @@ SUBST: 1 = 1.
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
 KITEM: Z = randbook numspells:4 spells:ignition&fireball&animate_dead&airstrike title:the_Zealot
-KITEM: F = randbook numspells:4 spells:starburst&fireball&sticky_flame&conjure_flame title:Fire_and_Brimstone
+KITEM: F = randbook numspells:4 spells:starburst&fireball&sticky_flame&flame_wave title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR: r = red, y = yellow, b = blue, g = green, m = magenta, q = cyan, c = magenta
 TILE: r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \

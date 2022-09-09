@@ -1402,7 +1402,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         // fallthrough to cloud spells
     case SPELL_BLASTSPARK:
-    case SPELL_CONJURE_FLAME:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:
@@ -1514,7 +1513,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     {
     // These don't target monsters or can target features.
     case SPELL_APPORTATION:
-    case SPELL_CONJURE_FLAME:
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
     // case SPELL_LRD: // TODO: LRD logic here is a bit confusing, it should error
@@ -1919,6 +1917,7 @@ const set<spell_type> removed_spells =
     SPELL_GOAD_BEASTS,
     SPELL_TELEPORT_SELF,
     SPELL_EXCRUCIATING_WOUNDS,
+    SPELL_CONJURE_FLAME,
 #endif
 };
 

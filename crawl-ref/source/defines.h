@@ -344,7 +344,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define WATER_HOLD_SUBSTANCE_KEY "water_hold_substance"
 #define CORROSION_KEY "corrosion_amount"
 #define CONFUSING_TOUCH_KEY "confusing touch power"
-#define CFLAME_DUR_KEY "cflame_dur"
 #define NUM_SACRIFICES_KEY "num_sacrifice_muts"
 #define FLAY_DAMAGE_KEY "flay_damage"
 #define POLAR_VORTEX_KEY "polar_vortex_since"

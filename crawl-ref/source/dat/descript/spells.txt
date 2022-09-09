@@ -357,13 +357,6 @@ The magic which keeps ball lightnings cohesive has limited range, so they may
 dissipate harmlessly if allowed to drift too far away from their caster before
 exploding.
 %%%%
-Conjure Flame spell
-
-Conjures burning embers at the caster's feet, which will burst into flame soon
-after. Any creature (including the caster) that stands on the embers will smother
-them, so casters are well advised to step away immediately after casting.
-Re-casting the spell will also ignite the embers, burning the caster.
-%%%%
 Conjure Living Spells spell
 
 Creates several living, autonomous spells, which cast themselves at the first foe

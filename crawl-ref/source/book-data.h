@@ -354,7 +354,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Everburning Encyclopedia
-    SPELL_CONJURE_FLAME,
     SPELL_IGNITE_POISON,
     SPELL_STICKY_FLAME,
 },
