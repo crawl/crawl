@@ -295,7 +295,7 @@ NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
 WEIGHT: 1
-MONS:   fire dragon
+MONS:   fire crab
 KFEAT:  O = enter_lair
 NSUBST: M = 1 / L
 SUBST:  L = l.
@@ -305,7 +305,7 @@ MAP
 ..llllll.
 ..llMMlL.
 .LlMOMll.
-.llMMlll.
+.ll.Mlll.
 .l.llll..
 ..lllL...
 .........
