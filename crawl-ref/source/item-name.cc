@@ -2741,7 +2741,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_VULNERABILITY:
             return true;
         case SCR_POISON:
-            return !player_res_poison(false, temp, true);
+            return player_res_poison(false, temp, true) <= 0
+                   && !you.cloud_immune();
         case SCR_TORMENT:
             return !you.res_torment();
         default:
