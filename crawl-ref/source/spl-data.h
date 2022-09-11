@@ -3600,7 +3600,7 @@ static const struct spell_desc spelldata[] =
     25,
     1, 1,
     1, 0,
-    TILEG_ERROR,
+    TILEG_KISS_OF_DEATH,
 },
 
 {
@@ -3611,7 +3611,7 @@ static const struct spell_desc spelldata[] =
     100,
     6, 6,
     3, 0,
-    TILEG_STONE_ARROW, // TODO
+    TILEG_YARAS_UNSTABLE_MISSILE,
 },
 
 {

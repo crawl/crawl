@@ -33,6 +33,7 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
+yaras_unstable_missile YARAS_UNSTABLE_MISSILE
 
 %sdir gui/spells/enchantment
 anguish ANGUISH
@@ -105,6 +106,7 @@ symbol_of_torment SYMBOL_OF_TORMENT
 vampiric_draining VAMPIRIC_DRAINING
 infestation INFESTATION
 borgnjors_vile_clutch BORGNJORS_VILE_CLUTCH
+kiss_of_death KISS_OF_DEATH
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
