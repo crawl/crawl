@@ -131,7 +131,7 @@ static const mutation_def mut_data[] =
    "You feel less cold resistant."},
 },
 
-{ MUT_HEAT_VULNERABILITY, 0, 3,
+{ MUT_HEAT_VULNERABILITY, 3, 3,
   mutflag::bad | mutflag::qazlal, true,
   "heat vulnerability",
 
@@ -148,7 +148,7 @@ static const mutation_def mut_data[] =
    "You feel less vulnerable to heat."},
 },
 
-{ MUT_COLD_VULNERABILITY, 0, 3,
+{ MUT_COLD_VULNERABILITY, 3, 3,
   mutflag::bad | mutflag::qazlal, true,
 
   "cold vulnerability",
