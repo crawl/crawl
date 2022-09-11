@@ -518,6 +518,8 @@ LUAFN(debug_check_moncasts)
         SPELL_ENFEEBLE,
         SPELL_ANGUISH,
         SPELL_NECROTISE,
+        SPELL_BLASTSPARK,
+        SPELL_ROT,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)
