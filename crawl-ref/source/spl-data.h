@@ -134,7 +134,7 @@ static const struct spell_desc spelldata[] =
     200,
     5, 5,
     5, 15,
-    TILEG_STATIC_DISCHARGE, // TODO
+    TILEG_ARCJOLT,
 },
 
 {
