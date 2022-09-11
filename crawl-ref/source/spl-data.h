@@ -78,7 +78,7 @@ static const struct spell_desc spelldata[] =
     50,
     -1, -1,
     3, 0,
-    TILEG_CONJURE_FLAME,
+    TILEG_BLASTSPARK,
 },
 
 {
