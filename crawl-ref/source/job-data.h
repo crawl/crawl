@@ -202,7 +202,7 @@ static const map<job_type, job_def> job_data =
 } },
 
 { JOB_HEXSLINGER, {
-    "HS", "Hexslinger",
+    "Hs", "Hexslinger",
     2, 5, 5,
     { SP_FORMICID, SP_DEEP_ELF, SP_KOBOLD, SP_SPRIGGAN, SP_GNOLL },
     {
