@@ -1568,6 +1568,7 @@ bool is_harmless_cloud(cloud_type type)
            && clouds[type].damage.base == 0
            && clouds[type].damage.random == 0
            && !_cloud_has_negative_side_effects(type)
+           && type != CLOUD_BLASTSPARKS // XXX: maybe should be in negative side effects?
            && type != CLOUD_VORTEX;
 }
 
