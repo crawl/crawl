@@ -1810,12 +1810,8 @@ static void _qazlal_elemental_vulnerability()
  */
 static bool _qazlal_retribution()
 {
-    if (coinflip())
-    {
-        simple_god_message(" causes a mighty clap of thunder!",
-                           GOD_QAZLAL);
+    simple_god_message(" causes a mighty clap of thunder!", GOD_QAZLAL);
         noisy(25, you.pos());
-    }
 
     if (coinflip())
         _qazlal_summon_elementals();
