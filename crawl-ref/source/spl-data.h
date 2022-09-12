@@ -3275,7 +3275,7 @@ static const struct spell_desc spelldata[] =
     SPELL_HAILSTORM, "Hailstorm",
     spschool::conjuration | spschool::ice,
     spflag::area,
-    4,
+    3,
     100,
     3, 3, // Range special-cased in describe-spells
     4, 0,
