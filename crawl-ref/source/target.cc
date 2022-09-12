@@ -1965,6 +1965,8 @@ targeter_multiposition::targeter_multiposition(const actor *a,
     : targeter(), positive(_positive)
 {
     agent = a;
+    if (agent)
+        origin = agent->pos();
     for (auto &c : seeds)
         affected_positions.insert(c);
 }
@@ -1974,6 +1976,8 @@ targeter_multiposition::targeter_multiposition(const actor *a,
     : targeter(), positive(_positive)
 {
     agent = a;
+    if (agent)
+        origin = agent->pos();
     for (monster *m : seeds)
         if (m)
             affected_positions.insert(m->pos());
@@ -1998,6 +2002,19 @@ aff_type targeter_multiposition::is_affected(coord_def loc)
 
     // is this better with maybe or yes?
     return affected_positions.count(loc) > 0 ? positive : AFF_NO;
+}
+
+targeter_scorch::targeter_scorch(const actor &a, int _range, bool affect_invis)
+    : targeter_multiposition(&a,
+                        find_near_hostiles(_range, affect_invis), AFF_MAYBE),
+      range(_range)
+{ }
+
+bool targeter_scorch::valid_aim(coord_def a)
+{
+    if ((a - origin).rdist() > range)
+        return notify_fail("Out of range.");
+    return true;
 }
 
 targeter_chain_lightning::targeter_chain_lightning()

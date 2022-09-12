@@ -1716,21 +1716,13 @@ spret cast_scorch(int pow, bool fail)
     fail_check();
 
     const int range = spell_range(SPELL_SCORCH, pow);
+    auto targeter = make_unique<targeter_scorch>(you, range, true);
     monster *targ = nullptr;
     int seen = 0;
-    for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
-    {
-        monster *mons = monster_at(*ri);
-        if (!mons
-            || mons->wont_attack()
-            || !_act_worth_targeting(you, *mons))
-        {
-            continue;
-        }
-        ++seen;
-        if (one_chance_in(seen))
-            targ = mons;
-    }
+    for (auto ti = targeter->affected_iterator(AFF_MAYBE); ti; ++ti)
+        if (one_chance_in(++seen))
+            targ = monster_at(*ti);
+
     if (!targ)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -1779,8 +1771,8 @@ spret cast_scorch(int pow, bool fail)
     return spret::success;
 }
 
-/// Mimics Scorch's target selection.
-vector<coord_def> find_near_hostiles(int range)
+/// Scorch's target selection (see targeter_scorch)
+vector<coord_def> find_near_hostiles(int range, bool affect_invis)
 {
     vector<coord_def> hostiles;
     for (radius_iterator ri(you.pos(), range, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
@@ -1789,7 +1781,7 @@ vector<coord_def> find_near_hostiles(int range)
         if (mons
             && !mons->wont_attack()
             && _act_worth_targeting(you, *mons)
-            && you.can_see(*mons))
+            && (affect_invis || you.can_see(*mons)))
         {
             hostiles.push_back(*ri);
         }

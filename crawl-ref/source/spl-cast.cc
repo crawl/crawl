@@ -1375,7 +1375,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_MANIFOLD_ASSAULT:
         return make_unique<targeter_multiposition>(&you, _simple_find_all_hostiles());
     case SPELL_SCORCH:
-        return make_unique<targeter_multiposition>(&you, find_near_hostiles(range));
+        return make_unique<targeter_scorch>(you, range, false);
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
         return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles());
     case SPELL_NOXIOUS_BOG:
