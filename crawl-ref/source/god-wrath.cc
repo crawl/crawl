@@ -199,17 +199,6 @@ static bool _okawaru_random_servant()
     return create_monster(temp, false);
 }
 
-static bool _dithmenos_random_shadow(const int count, const int tier)
-{
-    monster_type mon_type = MONS_SHADOW;
-    if (tier >= 2 && count == 0 && coinflip())
-        mon_type = MONS_TZITZIMITL;
-    else if (tier >= 1 && count < 3 && coinflip())
-        mon_type = MONS_SHADOW_DEMON;
-
-    return create_monster(_wrath_mon_data(mon_type, GOD_DITHMENOS), false);
-}
-
 /**
  * Summon divine warriors of the Shining One to punish the player.
  */
@@ -1702,25 +1691,9 @@ static bool _dithmenos_retribution()
     // shadow theme
     const god_type god = GOD_DITHMENOS;
 
-    switch (random2(4))
+    switch (random2(3))
     {
     case 0:
-    {
-        int count = 0;
-        int how_many = 3 + random2avg(div_rand_round(you.experience_level, 3),
-                                      2);
-        const int tier = div_rand_round(you.experience_level, 9);
-        while (how_many-- > 0)
-        {
-            if (_dithmenos_random_shadow(count, tier))
-                count++;
-        }
-        simple_god_message(count ? " calls forth shadows to punish you."
-                                 : " fails to incite the shadows against you.",
-                           god);
-        break;
-    }
-    case 1:
     {
         int count = 0;
         int how_many = 2 + random2avg(div_rand_round(you.experience_level, 4),
@@ -1745,14 +1718,14 @@ static bool _dithmenos_retribution()
                            god);
         break;
     }
-    case 2:
+    case 1:
     {
         // This is possibly kind of underwhelming?
         god_speaks(god, "You feel overwhelmed by the shadows around you.");
         you.put_to_sleep(nullptr, 30 + random2(20));
         break;
     }
-    case 3:
+    case 2:
         simple_god_message(" tears the shadows away from you.", god);
         you.sentinel_mark();
         break;
