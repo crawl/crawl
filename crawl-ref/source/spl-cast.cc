@@ -324,7 +324,7 @@ static void _apply_post_zap_effect(spell_type spell)
         drain_player(100, true, true);
         break;
     case SPELL_UNSTABLE_MISSILE:
-        contaminate_player(random_range(3000, 4500));
+        contaminate_player(random_range(3000, 5000));
         break;
     default:
         break;

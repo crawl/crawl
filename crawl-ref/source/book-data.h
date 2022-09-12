@@ -324,8 +324,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Armaments
-    SPELL_STONE_ARROW,
     SPELL_UNSTABLE_MISSILE,
+    SPELL_STONE_ARROW,
     SPELL_ANIMATE_ARMOUR,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
 },
