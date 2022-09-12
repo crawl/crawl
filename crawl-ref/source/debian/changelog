@@ -1,4 +1,4 @@
-crawl (2:0.29.0-1) unstable; urgency=low
+crawl (2:0.29.1-1) unstable; urgency=low
 
   * New upstream release.
   * Debian build updated to make use of the install-xdg-data target.
@@ -6,8 +6,13 @@ crawl (2:0.29.0-1) unstable; urgency=low
   * Fixed missing icon in crawl menu item if crawl-tiles is not installed.
   * Use Debian's uses machine-readable format for copyright file.
   * Remove menu files based on CTTE #741573.
- -- robertxgray <robertxgray@gmail.com>  Sun, 04 Sep 2022 16:31:49 +0200
+ -- advil <rawlins@gmail.com>  Sun, 11 Sep 2022 21:49:41 -0400
+ 
+crawl (2:0.29.0-1) unstable; urgency=low
 
+  * New upstream release.
+ -- advil <rawlins@gmail.com>  Tue, 23 Aug 20:22:47 2022 -0700
+ 
 crawl (2:0.28.0-1) unstable; urgency=low
 
   * New upstream release.
