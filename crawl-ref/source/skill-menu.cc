@@ -10,6 +10,8 @@
 
 #include "skill-menu.h"
 
+#include "artefact.h"
+#include "art-enum.h"
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
@@ -492,6 +494,27 @@ static bool _any_crosstrained()
     return false;
 }
 
+static bool _hermit_bonus()
+{
+    if (player_equip_unrand(UNRAND_HERMITS_PENDANT)
+        && you.skill(SK_INVOCATIONS, 10,  true) < 140)
+    {
+        return true;
+    }
+    return false;
+}
+
+static bool _hermit_penalty()
+{
+    if (player_equip_unrand(UNRAND_HERMITS_PENDANT))
+    {
+        if (you.skill(SK_EVOCATIONS, 10, true) > 0
+            || you.skill(SK_INVOCATIONS, 10, true) > 140)
+        return true;
+    }
+    return false;
+}
+
 string SkillMenuSwitch::get_help()
 {
     switch (m_state)
@@ -530,6 +553,8 @@ string SkillMenuSwitch::get_help()
             }
             if (_any_crosstrained())
                 causes.push_back("cross-training");
+            if (_hermit_bonus())
+                causes.push_back("the Hermit's pendant");
             result = "Skills enhanced by "
                      + comma_separated_line(causes.begin(), causes.end())
                      + " are in <green>green</green>.";
@@ -540,7 +565,8 @@ string SkillMenuSwitch::get_help()
             vector<const char *> causes;
             if (player_under_penance(GOD_ASHENZARI))
                 causes.push_back("Ashenzari's anger");
-
+            if (_hermit_penalty())
+                causes.push_back("the Hermit's pendant");
             if (!result.empty())
                 result += "\n";
             result += "Skills reduced by "

@@ -748,3 +748,10 @@ lochaber axe
 
 This brutal weapon, long thought lost to history, combines the extended reach
 of a polearm with the cleaving sharpness of an axe.
+%%%%
+Hermit's pendant
+
+An ascetic once took a sacred vow, forswearing use of magical tools and ownership
+of everything but this pendant. Which god they made this vow to remains a point of
+bitter contention among the devout, but their pendant's power - and limitations -
+are irrefutable.

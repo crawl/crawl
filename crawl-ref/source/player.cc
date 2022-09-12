@@ -5715,6 +5715,14 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
     if (real)
         return level;
 
+    if (player_equip_unrand(UNRAND_HERMITS_PENDANT))
+    {
+        if (sk == SK_INVOCATIONS)
+            return 14 * scale;
+        if (sk == SK_EVOCATIONS)
+            return 0;
+    }
+
     if (penance[GOD_ASHENZARI])
     {
         if (temp)
@@ -5725,6 +5733,7 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
 
     if (temp && duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, MAX_SKILL_LEVEL * scale);
+
     return level;
 }
 
