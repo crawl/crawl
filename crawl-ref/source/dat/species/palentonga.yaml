@@ -54,7 +54,6 @@ mutations:
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER
-  - JOB_ABYSSAL_KNIGHT
   - JOB_WARPER
   - JOB_HEDGE_WIZARD
 recommended_weapons:

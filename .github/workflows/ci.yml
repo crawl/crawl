@@ -19,6 +19,7 @@ jobs:
       - name: Unbrace
         run: util/unbrace -n
         working-directory: crawl-ref/source
+
   build_linux:
     name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
     runs-on: ubuntu-latest
@@ -139,6 +140,108 @@ jobs:
           TERM: dumb
       - name: Print ccache stats
         run: ccache -s
+
+  build_appimage:
+    name: Linux AppImage ${{ matrix.build_type }}
+    runs-on: ubuntu-latest
+    if: github.event.release.tag_name != null
+    strategy:
+      matrix:
+        build_type:
+          - console
+          - tiles
+        build_opts:
+          - LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
+          - TILES=1 LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
+        exclude:
+          - build_type: console
+            build_opts: TILES=1 LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
+          - build_type: tiles
+            build_opts: LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # all history
+          submodules: false
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Install dependencies
+        run: ./deps.py --build-opts "${{ matrix.build_opts }}" --appimage
+        working-directory: .github/workflows
+      - name: Cache compilation
+        uses: actions/cache@v3
+        with:
+          path: ~/.ccache
+          key: ccache-appimage-${{ matrix.build_type }}-${{ github.sha }}
+          restore-keys: |
+            ccache-appimage-${{ matrix.build_type }}-
+            ccache-appiamge-
+      - name: Setup ccache
+        uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: prepend path"
+        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
+      - name: "Setup ccache: update symlinks"
+        run: "/usr/sbin/update-ccache-symlinks"
+      - name: "Setup ccache: clear stats"
+        run: ccache --zero-stats
+      - run: make -j$(nproc) ${{ matrix.build_opts }} appimage
+        working-directory: crawl-ref/source
+      - name: Print ccache stats
+        run: ccache -s
+      - name: Add build to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          file: crawl-ref/source/stone_soup-latest-linux-${{ matrix.build_type }}.x86_64.AppImage
+          asset_name: dcss-$tag-linux-${{ matrix.build_type }}.x86_64.AppImage
+
+  build_debian:
+    name: Debian Packages ${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    if: github.event.release.tag_name != null
+    strategy:
+      matrix:
+        arch:
+          - i386
+          - amd64
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # all history
+          submodules: false
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Install dependencies
+        run: ./deps.py --build-opts TILES=1 --debian-packages
+        working-directory: .github/workflows
+      - run: sudo cp crawl-ref/docs/develop/release/pbuilderrc /etc/pbuilderrc
+      - name: Create chroot directory
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=${{ matrix.arch }} cowbuilder --create --basepath /var/cache/pbuilder/oldstable-${{ matrix.arch }}.cow
+      - name: Build source packages
+        run: make -j$(nproc) package-source
+        working-directory: crawl-ref/source
+      - run: mkdir -p crawl-deb
+      - run: mv stone_soup-${{ github.ref_name }}-nodeps.tar.xz crawl-deb/crawl_${{ github.ref_name }}.orig.tar.xz
+      - run: tar Jxf crawl_${{ github.ref_name }}.orig.tar.xz
+        working-directory: crawl-deb
+      - run: mv stone_soup-${{ github.ref_name }} crawl-${{ github.ref_name }}
+        working-directory: crawl-deb
+      - run: mv source/debian .
+        working-directory: crawl-deb/crawl-${{ github.ref_name }}
+      - name: Update changelog if needed
+        run: .github/workflows/debian_changelog.py crawl-deb/crawl-${{ github.ref_name }}/debian/changelog ${{ github.ref_name }}
+      - name: Build the packages
+        run: sudo DEBFULLNAME=Crawl\ bot DEBEMAIL=bot@crawl.develz.org OS=debian DIST=oldstable ARCH=${{ matrix.arch }} pdebuild
+        working-directory: crawl-deb/crawl-${{ github.ref_name }}
+      - name: Add build to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}-debian
+          release_name: ${{ github.ref_name }} Debian packages
+          body: Debian packages for Dungeon Crawl Stone Soup ${{ github.ref_name }}.
+          file: /var/cache/pbuilder/result/crawl*
+          file_glob: true
+          overwrite: true # there are common packages in i386 and amd64
 
   build_macos:
     name: macOS ${{ matrix.build_type }}

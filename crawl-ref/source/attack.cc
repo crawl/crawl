@@ -1118,21 +1118,8 @@ int attack::calc_base_unarmed_damage()
     if (!attacker->is_player())
         return 0;
 
-    int damage = get_form()->get_base_unarmed_damage();
-
-    // Claw damage only applies for bare hands.
-    if (you.has_usable_claws())
-        damage += you.has_claws() * 2;
-
-    if (you.form_uses_xl())
-        damage += div_rand_round(you.experience_level, 3);
-    else
-        damage += you.skill_rdiv(wpn_skill);
-
-    if (damage < 0)
-        damage = 0;
-
-    return damage;
+    const int dam = unarmed_base_damage() + unarmed_base_damage_bonus(true);
+    return dam > 0 ? dam : 0;
 }
 
 int attack::calc_damage()

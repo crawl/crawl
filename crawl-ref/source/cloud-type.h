@@ -38,9 +38,12 @@ enum cloud_type
     CLOUD_XOM_TRAIL,
     CLOUD_SALT,
     CLOUD_GOLD_DUST,
+#if TAG_MAJOR_VERSION == 34
     CLOUD_EMBERS,
+#endif
     CLOUD_FLAME,
     CLOUD_DEGENERATION,
+    CLOUD_BLASTSPARKS,
     NUM_CLOUD_TYPES,
 
     // Random per-square.

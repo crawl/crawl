@@ -51,7 +51,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Flames
     SPELL_FOXFIRE,
-    SPELL_CONJURE_FLAME,
+    SPELL_BLASTSPARK,
     SPELL_INNER_FLAME,
     SPELL_FLAME_WAVE,
 },
@@ -101,6 +101,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Lightning
     SPELL_DISCHARGE,
     SPELL_LIGHTNING_BOLT,
+    SPELL_ARCJOLT,
     SPELL_MAXWELLS_COUPLING,
 },
 
@@ -136,7 +137,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Vapours
     SPELL_POISONOUS_VAPOURS,
-    SPELL_CORPSE_ROT,
+    SPELL_ROT,
 },
 
 {   // Book of Necromancy
@@ -218,6 +219,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Power
     SPELL_BATTLESPHERE,
+    SPELL_ARCJOLT,
     SPELL_IRON_SHOT,
     SPELL_SPELLFORGED_SERVITOR,
 },
@@ -334,7 +336,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of Decay
-    SPELL_CORPSE_ROT,
+    SPELL_ROT,
     SPELL_DISPEL_UNDEAD,
     SPELL_DEATH_CHANNEL,
 },
@@ -352,7 +354,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Everburning Encyclopedia
-    SPELL_CONJURE_FLAME,
     SPELL_IGNITE_POISON,
     SPELL_STICKY_FLAME,
 },
@@ -381,6 +382,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Blasting
+    SPELL_BLASTSPARK,
     SPELL_FULMINANT_PRISM,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_LRD,

@@ -564,7 +564,7 @@ static void _handle_battiness(monster &mons)
 {
     if (!mons_is_batty(mons))
         return;
-    mons.behaviour = BEH_WANDER;
+    mons.behaviour = BEH_BATTY;
     set_random_target(&mons);
     mons.props[BATTY_TURNS_KEY] = 0;
 }
@@ -2225,7 +2225,7 @@ static void _post_monster_move(monster* mons)
         // TODO: implement monster spectral ego
     }
 
-    if (mons->foe != MHITNOT && mons_is_wandering(*mons) && mons_is_batty(*mons))
+    if (mons->foe != MHITNOT && mons->behaviour == BEH_BATTY)
     {
         int &bat_turns = mons->props[BATTY_TURNS_KEY].get_int();
         bat_turns++;

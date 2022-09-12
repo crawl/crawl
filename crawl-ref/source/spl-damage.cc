@@ -290,15 +290,17 @@ vector<coord_def> chain_lightning_targets()
     return targets;
 }
 
-static bool _warn_about_chain_lightning()
+static bool _warn_about_bad_targets(spell_type spell, vector<coord_def> targets)
 {
     vector<const monster*> bad_targets;
-    for (coord_def p : chain_lightning_targets())
+    for (coord_def p : targets)
     {
         const monster* mon = monster_at(p);
+        if (!mon || god_protects(&you, mon))
+            continue;
         string adj, suffix;
         bool penance;
-        if (mon && bad_attack(mon, adj, suffix, penance, you.pos()))
+        if (bad_attack(mon, adj, suffix, penance, you.pos()))
             bad_targets.push_back(mon);
     }
 
@@ -312,7 +314,8 @@ static bool _warn_about_chain_lightning()
     const string and_more = bad_targets.size() > 1 ?
             make_stringf(" (and %zu other bad targets)",
                          bad_targets.size() - 1) : "";
-    const string prompt = make_stringf("Chain Lightning might hit %s%s. Cast it anyway?",
+    const string prompt = make_stringf("%s might hit %s%s. Cast it anyway?",
+                                       spell_title(spell),
                                        ex_mon->name(DESC_THE).c_str(),
                                        and_more.c_str());
     if (!yesno(prompt.c_str(), false, 'n'))
@@ -325,7 +328,7 @@ static bool _warn_about_chain_lightning()
 
 spret cast_chain_lightning(int pow, const actor &caster, bool fail)
 {
-    if (caster.is_player() && _warn_about_chain_lightning())
+    if (caster.is_player() && _warn_about_bad_targets(SPELL_CHAIN_LIGHTNING, chain_lightning_targets()))
         return spret::abort;
     // NOTE: it's possible to hit something not in this list by arcing
     // chain lightning through an invisible enemy through an ally. Oh well...
@@ -2569,6 +2572,115 @@ int discharge_max_damage(int pow)
 {
     return FLAT_DISCHARGE_ARC_DAMAGE
            + (pow + DISCHARGE_POWER_DIV - 1) / DISCHARGE_POWER_DIV;
+}
+
+dice_def arcjolt_damage(int pow)
+{
+    return dice_def(1, 10 + pow / 2);
+}
+
+vector<coord_def> arcjolt_targets(const actor &agent, int power, bool actual)
+{
+    const int range = spell_range(SPELL_ARCJOLT, power);
+    vector<coord_def> targets;
+    set<coord_def> seen;
+    vector<coord_def> to_check;
+    to_check.push_back(agent.pos());
+    seen.insert(agent.pos());
+
+    for (adjacent_iterator ai(agent.pos()); ai; ++ai)
+    {
+        to_check.push_back(*ai);
+        seen.insert(*ai);
+    }
+
+    for (int dist = 0; dist < range && !to_check.empty(); ++dist)
+    {
+        vector<coord_def> next_frontier;
+        for (coord_def p : to_check)
+        {
+            actor* act = actor_at(p);
+            const bool seen_act = act && (actual || agent.can_see(*act));
+            if (seen_act)
+            {
+                if (act != &agent)
+                    targets.push_back(p);
+            }
+            else if (env.grid(p) != DNGN_METAL_WALL
+                     || !actual && !env.map_knowledge(p).seen())
+            {
+                continue;
+            }
+
+            for (adjacent_iterator ai(p); ai; ++ai)
+            {
+                if (!seen.count(*ai))
+                {
+                    seen.insert(*ai);
+                    next_frontier.push_back(*ai);
+                }
+            }
+        }
+        to_check = next_frontier;
+    }
+    return targets;
+}
+
+spret cast_arcjolt(int pow, const actor &agent, bool fail)
+{
+    if (agent.is_player()
+        && _warn_about_bad_targets(SPELL_ARCJOLT,
+                                   arcjolt_targets(agent, pow, false)))
+    {
+            return spret::abort;
+    }
+    // NOTE: it's possible to hit something not in this list by
+    // arcing through an invisible enemy into an ally. Oh well...
+
+    fail_check();
+
+    bolt beam;
+    beam.flavour = BEAM_ELECTRICITY;
+    beam.thrower = agent.is_player() ? KILL_YOU : KILL_MON;;
+    beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.colour     = LIGHTBLUE;
+#ifdef USE_TILE
+    beam.tile_beam  = -1;
+#endif
+    beam.draw_delay = 0;
+
+    if (agent.is_player())
+        mpr("Electricity surges outward!");
+    else
+    {
+        simple_monster_message(*agent.as_monster(),
+                               " emits a burst of electricity!");
+    }
+
+    auto targets = arcjolt_targets(agent, pow, true);
+    for (coord_def t : targets) {
+        if (Options.use_animations & UA_BEAM)
+            beam.draw(t);
+
+        actor *act = actor_at(t);
+        if (!act->alive()) // may have died midway through casting
+            continue;
+
+        monster* mon = act->as_monster();
+        if (mon && god_protects(&agent, mon, false))
+            continue;
+
+        const int rolled_dam = arcjolt_damage(pow).roll();
+        const int post_ac_dam = max(0, act->apply_ac(rolled_dam, 0, ac_type::half));
+        const int post_resist_dam = mon ? mons_adjust_flavoured(mon, beam, post_ac_dam)
+                                           : check_your_resists(post_ac_dam, beam.flavour, "arcjolt");
+        act->expose_to_element(beam.flavour, post_resist_dam);
+        act->hurt(&agent, post_resist_dam);
+        if (mon && act->alive())
+            behaviour_event(mon, ME_WHACK, &agent);
+    }
+
+    return spret::success;
 }
 
 static bool _elec_not_immune(const actor *act)

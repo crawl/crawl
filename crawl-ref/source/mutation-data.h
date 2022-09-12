@@ -131,7 +131,7 @@ static const mutation_def mut_data[] =
    "You feel less cold resistant."},
 },
 
-{ MUT_HEAT_VULNERABILITY, 0, 3,
+{ MUT_HEAT_VULNERABILITY, 3, 3,
   mutflag::bad | mutflag::qazlal, true,
   "heat vulnerability",
 
@@ -148,7 +148,7 @@ static const mutation_def mut_data[] =
    "You feel less vulnerable to heat."},
 },
 
-{ MUT_COLD_VULNERABILITY, 0, 3,
+{ MUT_COLD_VULNERABILITY, 3, 3,
   mutflag::bad | mutflag::qazlal, true,
 
   "cold vulnerability",
@@ -2178,12 +2178,20 @@ static const mutation_def mut_data[] =
   {"You grow two extra arms.", "", ""},
 },
 
-{ MUT_NO_DRINK, 0, 1, mutflag::good, false,
+{ MUT_NO_DRINK, 0, 1, mutflag::bad, false,
   "no potions",
 
   {"You do not drink.", "", ""},
   {"Your mouth dries to ashes.", "", ""},
   {"You gain the ability to drink.", "", ""},
+},
+
+{ MUT_FAITH, 0, 1, mutflag::bad, false,
+  "faith",
+
+  {"You have a special connection with the divine. (Faith)", "", ""},
+  {"You feel connected to something greater than you.", "", ""},
+  {"You feel rebellious.", "", ""},
 },
 
 { MUT_REFLEXIVE_HEADBUTT, 0, 1, mutflag::good, true,

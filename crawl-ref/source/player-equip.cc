@@ -1153,6 +1153,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mpr("You feel a surge of self-confidence.");
             break;
         }
+        if (you.has_mutation(MUT_FAITH))
+        {
+            mpr("You already have all the faith you need.");
+            break;
+        }
 
         const string ignore_reason = ignore_faith_reason();
         if (!ignore_reason.empty())

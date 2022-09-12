@@ -38,6 +38,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "prompt.h"
+#include "quiver.h"
 #include "random-var.h"
 #include "religion.h"
 #include "shopping.h"
@@ -46,6 +47,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -227,6 +229,27 @@ static bool _autoswitch_to_melee()
     return wield_weapon(true, item_slot);
 }
 
+static bool _can_shoot_with(const item_def *weapon)
+{
+    // TOOD: dedup elsewhere.
+    return weapon
+        && is_range_weapon(*weapon)
+        && !you.attribute[ATTR_HELD]
+        && !you.berserk();
+}
+
+static bool _autofire_at(actor *defender)
+{
+    if (!_can_shoot_with(you.weapon()))
+        return false;
+    dist t;
+    t.target = defender->pos();
+    shared_ptr<quiver::action> ract = quiver::find_ammo_action();
+    ract->set_target(t);
+    throw_it(*ract);
+    return true;
+}
+
 /**
  * Handle melee combat between attacker and defender.
  *
@@ -278,11 +301,12 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
         }
 
-        if (!simu && Options.auto_switch
-            && you.weapon()
-            && _autoswitch_to_melee())
+        if (!simu && you.weapon() && !you.confused())
         {
-            return true; // Is this right? We did take time, but we didn't melee
+            if (Options.auto_switch && _autoswitch_to_melee())
+                return true; // Is this right? We did take time, but we didn't melee
+            if (!simu && _autofire_at(defender))
+                return true;
         }
 
         melee_attack attk(&you, defender);
@@ -689,9 +713,9 @@ bool wielded_weapon_check(const item_def *weapon, string attack_verb)
 {
     bool penance = false;
     if (you.received_weapon_warning
-        || (weapon
-            && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
-            && is_melee_weapon(*weapon))
+        || weapon
+           && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
+           && (is_melee_weapon(*weapon) || _can_shoot_with(weapon))
         || you.confused())
     {
         return true;
@@ -1314,4 +1338,26 @@ int throwing_base_damage_bonus(const item_def &proj)
     // Stones get half bonus; everything else gets full bonus.
     return div_rand_round(you.skill_rdiv(SK_THROWING)
                           * min(4, property(proj, PWPN_DAMAGE)), 4);
+}
+
+int unarmed_base_damage()
+{
+    int damage = get_form()->get_base_unarmed_damage();
+
+    if (you.has_usable_claws())
+        damage += you.has_claws() * 2;
+
+    if (you.form_uses_xl())
+        damage += div_rand_round(you.experience_level, 3);
+
+    return damage;
+}
+
+int unarmed_base_damage_bonus(bool random)
+{
+    if (you.form_uses_xl())
+        return 0;
+    if (random)
+        return you.skill_rdiv(SK_UNARMED_COMBAT);
+    return you.skill(SK_UNARMED_COMBAT);
 }

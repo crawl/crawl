@@ -296,7 +296,11 @@ bool explode_monster(monster* mons, killer_type killer,
         flash_view_delay(UA_MONSTER, DARKGRAY, 300, &hitfunc);
     }
     else
-        explosion_fineff::schedule(beam, boom_msg, sanct_msg, inner_flame, agent);
+    {
+        const auto typ = inner_flame ? EXPLOSION_FINEFF_INNER_FLAME
+                                     : EXPLOSION_FINEFF_GENERIC;
+        explosion_fineff::schedule(beam, boom_msg, sanct_msg, typ, agent);
+    }
 
     // Monster died in explosion, so don't re-attach it to the grid.
     return true;

@@ -38,7 +38,6 @@ levelup_stat_frequency: 4
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_BERSERKER
-  - JOB_ABYSSAL_KNIGHT
   - JOB_HEDGE_WIZARD
   - JOB_NECROMANCER
   - JOB_FIRE_ELEMENTALIST

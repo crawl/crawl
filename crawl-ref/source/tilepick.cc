@@ -1245,6 +1245,10 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
         return TILEP_MONS_SIMULACRUM_KRAKEN;
     case TILEP_MONS_ZOMBIE_JELLY:
         return TILEP_MONS_SIMULACRUM_SLIME;
+    case TILEP_MONS_ZOMBIE_ORB:
+        return TILEP_MONS_SIMULACRUM_EYE;
+    case TILEP_MONS_ZOMBIE_X:
+        return TILEP_MONS_SIMULACRUM_X;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
         {
@@ -3955,8 +3959,8 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_ARTIFICER;
         case JOB_DELVER:
             return TILEG_JOB_DELVER;
-        case JOB_ARCANE_MARKSMAN:
-            return TILEG_JOB_ARCANE_MARKSMAN;
+        case JOB_HEXSLINGER:
+            return TILEG_JOB_HEXSLINGER;
         case JOB_ABYSSAL_KNIGHT:
             return TILEG_JOB_ABYSSAL_KNIGHT;
         case JOB_CINDER_ACOLYTE:

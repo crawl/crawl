@@ -55,6 +55,7 @@
 #include "mon-tentacle.h"
 #include "mon-transit.h"
 #include "religion.h"
+#include "spl-clouds.h" // explode_blastsparks_at
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -5248,6 +5249,10 @@ void monster::apply_location_effects(const coord_def &oldpos,
             del_ench(ENCH_AQUATIC_LAND);
     }
 
+    cloud_struct* cloud = cloud_at(pos());
+    if (cloud && cloud->type == CLOUD_BLASTSPARKS)
+        explode_blastsparks_at(pos()); // schedules a fineff, so won't kill
+
     // Monsters stepping on traps:
     trap_def* ptrap = trap_at(pos());
     if (ptrap)
@@ -5686,7 +5691,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     // XXX: this might not be necessary anymore?
     if (type == MONS_SHOCK_SERPENT && damage > 4 && oppressor && oppressor != this)
     {
-        const int pow = div_rand_round(min(damage, hit_points + damage), 9);
+        const int pow = div_rand_round(min(damage, hit_points + damage), 12);
         if (pow)
         {
             // we intentionally allow harming the oppressor in this case,

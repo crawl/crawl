@@ -1272,6 +1272,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
                           // all potentially affected monsters?
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
+    case SPELL_ARCJOLT:
+        return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, pow, false));
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -1307,9 +1309,10 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_NECROMUTATION:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_WEREBLOOD:
+    case SPELL_ROT:
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
-    case SPELL_CONJURE_FLAME:
+    case SPELL_BLASTSPARK:
     case SPELL_PORTAL_PROJECTILE:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
@@ -2178,6 +2181,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_DISCHARGE:
         return cast_discharge(powc, you, fail);
 
+    case SPELL_ARCJOLT:
+        return cast_arcjolt(powc, you, fail);
+
     case SPELL_CHAIN_LIGHTNING:
         return cast_chain_lightning(powc, you, fail);
 
@@ -2323,8 +2329,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BORGNJORS_VILE_CLUTCH:
         return cast_vile_clutch(powc, beam, fail);
 
-    case SPELL_CORPSE_ROT:
-        return cast_corpse_rot(powc, fail);
+    case SPELL_ROT:
+        return cast_dreadful_rot(powc, fail);
 
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:
@@ -2380,8 +2386,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BLINK:
         return cast_blink(powc, fail);
 
-    case SPELL_CONJURE_FLAME:
-        return conjure_flame(powc, fail);
+    case SPELL_BLASTSPARK:
+        return kindle_blastsparks(powc, fail);
 
     case SPELL_PASSWALL:
         return cast_passwall(beam.target, powc, fail);
@@ -2725,6 +2731,8 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
             return ramparts_damage(power, false);
         case SPELL_LRD:
             return base_fragmentation_damage(power);
+        case SPELL_ARCJOLT:
+            return arcjolt_damage(power);
         default:
             break;
     }
@@ -2740,8 +2748,6 @@ string spell_damage_string(spell_type spell, bool evoked)
     {
         case SPELL_MAXWELLS_COUPLING:
             return Options.char_set == CSET_ASCII ? "death" : "\u221e"; //"∞"
-        case SPELL_CONJURE_FLAME:
-            return desc_cloud_damage(CLOUD_FIRE, false);
         case SPELL_FREEZING_CLOUD:
             return desc_cloud_damage(CLOUD_COLD, false);
         case SPELL_DISCHARGE:

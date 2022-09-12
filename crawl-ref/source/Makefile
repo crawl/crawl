@@ -63,6 +63,7 @@
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
 #                     relative to prefix or absolute.
 #
+#    LINUXDEPLOY   -- path to linuxdeploy tool, required for AppImage builds
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
 #    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
 #
@@ -102,9 +103,9 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
-        clean-catch2 clean-plug-and-play-tests \
-		clean-coverage clean-coverage-full \
-        distclean debug debug-lite profile package-source source \
+        clean-appimage clean-catch2 clean-plug-and-play-tests \
+        clean-coverage clean-coverage-full \
+        appimage distclean debug debug-lite profile package-source source \
         build-windows package-windows-installer docs greet api api-dev android FORCE \
         monster catch2-tests plug-and-play-tests \
         crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7 clean-mac
@@ -615,6 +616,32 @@ NO_PKGCONFIG = YesPlease
 endif
 endif
 
+ifdef TILES
+  XDG_ORIG := org.develz.Crawl_tiles
+  ifndef XDG_NAME
+    XDG_NAME := org.develz.Crawl_tiles
+  endif
+else
+  XDG_ORIG := org.develz.Crawl_console
+  ifndef XDG_NAME
+    XDG_NAME := org.develz.Crawl_console
+  endif
+endif
+
+ifdef LINUXDEPLOY
+  prefix=usr
+  DESTDIR=appimage/
+  SAVEDIR=~/.crawl
+  COPY_FONTS=yes
+  export VERSION=$(SRC_VERSION)
+ifdef TILES
+  appimage_build := tiles
+else
+  appimage_build := console
+endif
+  export OUTPUT = stone_soup-$(SRC_VERSION)-linux-$(appimage_build).$(uname_M).AppImage
+endif
+
 ifdef ANDROID
   BUILD_LUA=
   BUILD_SQLITE=
@@ -951,7 +978,11 @@ ifneq ($(strip $(DATADIR)),)
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-	FONTDIR = $(strip $(DATADIR))/dat/tiles/
+        ifeq ($(LINUXDEPLOY),)
+	  FONTDIR = $(strip $(DATADIR))/dat/tiles/
+        else
+	  FONTDIR = dat/tiles/
+        endif
   else
     ifneq ($(DESTDIR)$(ANDROID),)
         FONTDIR = dat/tiles/
@@ -1592,6 +1623,26 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
+install-xdg-data:
+	[ -d $(prefix_fp)/share/applications ] || mkdir -p $(prefix_fp)/share/applications
+	[ -d $(prefix_fp)/share/metainfo ] || mkdir -p $(prefix_fp)/share/metainfo
+	[ -d $(prefix_fp)/share/icons/hicolor/32x32/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/32x32/apps
+	[ -d $(prefix_fp)/share/icons/hicolor/48x48/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/48x48/apps
+	[ -d $(prefix_fp)/share/icons/hicolor/512x512/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/512x512/apps
+	[ -d $(prefix_fp)/share/icons/hicolor/scalable/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/scalable/apps
+	$(COPY) xdg-data/$(XDG_ORIG).desktop $(prefix_fp)/share/applications/$(XDG_NAME).desktop
+	echo Icon=$(XDG_NAME) >>$(prefix_fp)/share/applications/$(XDG_NAME).desktop
+ifdef LINUXDEPLOY
+	echo Exec=$(GAME) >>$(prefix_fp)/share/applications/$(XDG_NAME).desktop
+else
+	echo Exec=$(prefix)/$(bin_prefix)/$(GAME) >>$(prefix_fp)/share/applications/$(XDG_NAME).desktop
+endif
+	sed "s/@XDG_NAME@/$(XDG_NAME)/" <xdg-data/$(XDG_ORIG).appdata.xml >$(prefix_fp)/share/metainfo/$(XDG_NAME).appdata.xml
+	$(COPY) dat/tiles/stone_soup_icon-32x32.png $(prefix_fp)/share/icons/hicolor/32x32/apps/$(XDG_NAME).png
+	$(COPY) dat/tiles/stone_soup_icon-48x48.png $(prefix_fp)/share/icons/hicolor/48x48/apps/$(XDG_NAME).png
+	$(COPY) dat/tiles/stone_soup_icon-512x512.png $(prefix_fp)/share/icons/hicolor/512x512/apps/$(XDG_NAME).png
+	$(COPY) dat/tiles/stone_soup_icon.svg $(prefix_fp)/share/icons/hicolor/scalable/apps/$(XDG_NAME).svg
+
 install: all install-data
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
@@ -1602,7 +1653,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 
 clean: clean-rltiles clean-webserver clean-android clean-monster clean-catch2 \
-       clean-plug-and-play-tests clean-coverage-full clean-mac
+       clean-plug-and-play-tests clean-coverage-full clean-mac clean-appimage
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1915,6 +1966,28 @@ package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
 removeold:
 	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
 	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
+
+#############################################################################
+# Linux AppImage
+#
+
+ifdef LINUXDEPLOY
+endif
+
+appimage: install install-xdg-data
+ifeq ($(LINUXDEPLOY),)
+	@echo Please define LINUXDEPLOY path to use this build.
+	@exit 1
+endif
+	$(LINUXDEPLOY) --appdir appimage\
+	               --desktop-file appimage/usr/share/applications/$(XDG_NAME).desktop \
+	               --icon-file appimage/usr/share/icons/hicolor/scalable/apps/$(XDG_NAME).svg \
+	               --output appimage
+	ln -sf "stone_soup-$(SRC_VERSION)-linux-$(appimage_build).$(uname_M).AppImage" "stone_soup-latest-linux-$(appimage_build).$(uname_M).AppImage"
+
+clean-appimage:
+	$(RM) stone_soup-*.AppImage
+	$(RM) -r appimage
 
 #############################################################################
 # Building the unified Windows package.

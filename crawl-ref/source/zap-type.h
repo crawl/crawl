@@ -123,5 +123,6 @@ enum zap_type
     ZAP_NECROTISE,
     ZAP_BOLT_OF_LIGHT,
     ZAP_FASTROOT,
+    ZAP_BLASTSPARK,
     NUM_ZAPS
 };

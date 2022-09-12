@@ -498,6 +498,7 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_SYMBOL_OF_TORMENT
         || spell == SPELL_SHATTER
         || spell == SPELL_DISCHARGE
+        || spell == SPELL_ARCJOLT
         || spell == SPELL_CHAIN_LIGHTNING
         || spell == SPELL_DRAIN_LIFE
         || spell == SPELL_CHAIN_OF_CHAOS
@@ -1374,11 +1375,6 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you're being held away from the wall.";
         break;
 
-    case SPELL_CORPSE_ROT:
-        if (have_passive(passive_t::goldify_corpses))
-            return "necromancy does not work on golden corpses.";
-        break;
-
     case SPELL_ANIMATE_DEAD:
     case SPELL_SIMULACRUM:
         if (have_passive(passive_t::goldify_corpses))
@@ -1394,8 +1390,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you are already reaping souls!";
         break;
 
-        // fallthrough
-    case SPELL_CONJURE_FLAME:
+    case SPELL_ROT:
+        {
+            const mon_holy_type holiness = you.holiness(temp);
+            if (holiness != MH_NATURAL && holiness != MH_UNDEAD)
+                return "you have no flesh to rot.";
+        }
+        // fallthrough to cloud spells
+    case SPELL_BLASTSPARK:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:
@@ -1507,7 +1509,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     {
     // These don't target monsters or can target features.
     case SPELL_APPORTATION:
-    case SPELL_CONJURE_FLAME:
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
     // case SPELL_LRD: // TODO: LRD logic here is a bit confusing, it should error
@@ -1912,6 +1913,8 @@ const set<spell_type> removed_spells =
     SPELL_GOAD_BEASTS,
     SPELL_TELEPORT_SELF,
     SPELL_EXCRUCIATING_WOUNDS,
+    SPELL_CONJURE_FLAME,
+    SPELL_CORPSE_ROT,
 #endif
 };
 

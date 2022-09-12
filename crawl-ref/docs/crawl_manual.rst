@@ -198,7 +198,8 @@ Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
   Abbreviated to "Str". Increases your damage with melee weapons (except for long
-  and short blades). Reduces penalties from wearing heavy armour.
+  and short blades), with unarmed combat, and with throwing weapons. Reduces
+  penalties from wearing heavy armour.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
@@ -1119,7 +1120,7 @@ Note that some gods are picky about who can enter their service; for example,
 good gods will not accept demonic or undead devotees.
 
 If you would like to start the game with a religion, choose your background
-from Berserker, Chaos Knight, Abyssal Knight or Cinder Acolyte.
+from Berserker, Chaos Knight, or Cinder Acolyte.
 
 ****************************************
 K. Mutations
@@ -1892,11 +1893,11 @@ Mummies (Mu)
   redemption, or just because they want to.
 
   Mummies progress slowly in levels, half again as slowly as Humans in all
-  skills except fighting, spellcasting and necromancy. As they increase in
-  levels, they become increasingly in touch with the powers of death, but cannot
-  use some types of necromancy which only affect living creatures. The side
-  effects of necromantic magic tend to be relatively harmless to Mummies.
-  However, their desiccated bodies are highly flammable. They also cannot drink.
+  skills except fighting, spellcasting and necromancy. The sacred embalming
+  rituals that brought them into unlife also grant them a special connection
+  with the divine, and as they increase in levels, they become increasingly
+  in touch with the powers of death. However, their desiccated bodies are
+  highly flammable. They also cannot drink.
 
   Like other undead, mummies are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not
@@ -2023,13 +2024,6 @@ Berserkers
   prove worthy), but who forbids the use of spell magic. They enter the Dungeon
   with a weapon of their choice, and dressed in animal skins.
 
-Abyssal Knights
-  The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of the
-  Abyss. They are granted some power over the Abyss, and must spread death and
-  disorder in return. They are sent from the Abyss into the Dungeon to spread
-  corruption and chaos, starting with a simple weapon of their choice and
-  leather armour.
-
 Chaos Knights
   The Chaos Knight is a plaything of Xom, subject to the god's constantly
   changing moods. Xom is a very unpredictable (and possibly psychotic) entity
@@ -2062,10 +2056,9 @@ Warpers
   of translocation spells, some dispersal boomerangs, a simple weapon of their
   choice, and leather armour.
 
-Arcane Marksmen
-  Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
-  attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with a sling, some spells to support its use, a scroll of
+Hexslinger
+  Hexslingers use debilitating spells to assist their ranged attacks. They
+  begin the game with a sling, some spells to support its use, a scroll of
   poison to keep foes at a distance, and a robe.
 
 Enchanters

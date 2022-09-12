@@ -24,7 +24,7 @@ static bool _banned_combination(job_type job, species_type species)
         && (job == JOB_GLADIATOR
             || job == JOB_BRIGAND
             || job == JOB_HUNTER
-            || job == JOB_ARCANE_MARKSMAN))
+            || job == JOB_HEXSLINGER))
     {
         return true;
     }

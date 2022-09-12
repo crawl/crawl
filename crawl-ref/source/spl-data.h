@@ -71,14 +71,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CONJURE_FLAME, "Conjure Flame",
-    spschool::conjuration | spschool::fire,
-    spflag::neutral | spflag::no_ghost,
+    SPELL_BLASTSPARK, "Kindle Blastsparks",
+    spschool::fire | spschool::air | spschool::translocation,
+    spflag::none,
     3,
-    100,
+    50,
     -1, -1,
-    3, 2,
-    TILEG_CONJURE_FLAME,
+    3, 0,
+    TILEG_BLASTSPARK,
 },
 
 {
@@ -124,6 +124,17 @@ static const struct spell_desc spelldata[] =
     4, 11, // capped at LOS, yet this 11 matters since range increases linearly
     5, 25,
     TILEG_LIGHTNING_BOLT,
+},
+
+{
+    SPELL_ARCJOLT, "Arcjolt",
+    spschool::conjuration | spschool::air,
+    spflag::area,
+    5,
+    200,
+    5, 5,
+    5, 15,
+    TILEG_ARCJOLT,
 },
 
 {
@@ -796,11 +807,11 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_CORPSE_ROT, "Corpse Rot",
+    SPELL_ROT, "Cigotuvi's Dreadful Rot",
     spschool::necromancy | spschool::air | spschool::poison,
-    spflag::helpful | spflag::utility | spflag::selfench | spflag::unclean,
-    4,
-    100,
+    spflag::unclean,
+    2,
+    50,
     -1, -1,
     2, 0,
     TILEG_CORPSE_ROT,
@@ -3397,7 +3408,7 @@ static const struct spell_desc spelldata[] =
     SPELL_MANIFOLD_ASSAULT, "Manifold Assault",
     spschool::translocation,
     spflag::no_ghost,
-    5,
+    4,
     100,
     -1, -1,
     5, 0,
@@ -3682,6 +3693,8 @@ AXED_SPELL(SPELL_GOAD_BEASTS, "Goad Beasts")
 AXED_SPELL(SPELL_TELEPORT_SELF, "Teleport Self")
 AXED_SPELL(SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe")
 AXED_SPELL(SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds")
+AXED_SPELL(SPELL_CONJURE_FLAME, "Conjure Flame")
+AXED_SPELL(SPELL_CORPSE_ROT, "Corpse Rot")
 #endif
 
 };

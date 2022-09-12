@@ -2597,6 +2597,7 @@ void bolt::affect_ground()
         return;
 
     affect_place_clouds();
+
 }
 
 bool bolt::is_fiery() const
@@ -2664,9 +2665,9 @@ void bolt::affect_place_clouds()
     // Is there already a cloud here?
     if (cloud_struct* cloud = cloud_at(p))
     {
+        const bool hot_beam = flavour == BEAM_FIRE || flavour == BEAM_LAVA;
         // fire cancelling cold & vice versa
-        if ((cloud->type == CLOUD_COLD
-             && (flavour == BEAM_FIRE || flavour == BEAM_LAVA))
+        if ((cloud->type == CLOUD_COLD && hot_beam)
             || (cloud->type == CLOUD_FIRE && flavour == BEAM_COLD))
         {
             if (player_can_hear(p))
@@ -2674,7 +2675,11 @@ void bolt::affect_place_clouds()
 
             delete_cloud(p);
             extra_range_used += 5;
+            return;
         }
+        // blastspark explosions
+        if (cloud->type == CLOUD_BLASTSPARKS && hot_beam)
+            explode_blastsparks_at(p);
         return;
     }
 
@@ -6070,6 +6075,10 @@ const map<spell_type, explosion_sfx> spell_explosions = {
     { SPELL_FASTROOT, {
         "The roots erupt in riotous growth!",
         "creaking and crackling",
+    } },
+    { SPELL_BLASTSPARK, {
+        "The cloud of blastsparks explodes!",
+        "a concussive explosion",
     } },
 };
 

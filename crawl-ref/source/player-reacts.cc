@@ -1006,6 +1006,11 @@ void player_reacts()
     abyss_maybe_spawn_xp_exit();
 
     actor_apply_cloud(&you);
+    // Miasma immunity from Dreadful Rot. Only lasts for one turn,
+    // so erase it just after we apply clouds for the turn (above).
+    if (you.props.exists(MIASMA_IMMUNE_KEY))
+        you.props.erase(MIASMA_IMMUNE_KEY);
+
     actor_apply_toxic_bog(&you);
 
     if (env.level_state & LSTATE_SLIMY_WALL)
@@ -1028,10 +1033,6 @@ void player_reacts()
 
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
-
-    // Reveal adjacent mimics.
-    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
-        discover_mimic(*ai);
 
     // Player stealth check.
     seen_monsters_react(stealth);

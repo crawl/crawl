@@ -59,6 +59,12 @@ caster's position.
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
 %%%%
+Arcjolt spell
+
+Blasts electricity through everything in range and connected to the caster,
+either by adjacency or via a chain of other creatures or metal walls. The
+damage dealt partially bypasses armour.
+%%%%
 Aura of Brilliance spell
 
 Empowers the magic of nearby wizard allies of the caster, allowing them to
@@ -308,6 +314,16 @@ Chilling Breath spell
 
 Exhales a blast of frost which may knock the target back if it deals damage.
 %%%%
+Cigotuvi's Dreadful Rot spell
+
+Rots away a part of the caster's flesh to produce a cloud of miasma around them.
+The miasma slows and powerfully poisons any living creature that lingers within -
+including the caster, if they tarry after casting. Most living creatures are
+terrified of miasma and will not willingly enter it.
+
+The rot leaves the caster's health temporarily drained. The undead can still use
+this spell, but fleshless beings (e.g., those made of stone) cannot.
+%%%%
 Cleansing Flame spell
 
 <Cleansing Flame ability>
@@ -347,13 +363,6 @@ The magic which keeps ball lightnings cohesive has limited range, so they may
 dissipate harmlessly if allowed to drift too far away from their caster before
 exploding.
 %%%%
-Conjure Flame spell
-
-Conjures burning embers at the caster's feet, which will burst into flame soon
-after. Any creature (including the caster) that stands on the embers will smother
-them, so casters are well advised to step away immediately after casting.
-Re-casting the spell will also ignite the embers, burning the caster.
-%%%%
 Conjure Living Spells spell
 
 Creates several living, autonomous spells, which cast themselves at the first foe
@@ -364,12 +373,6 @@ Corona spell
 Causes a halo of glowing light to surround and effectively outline a creature.
 This glow offsets the dark, musty atmosphere of the dungeon, and makes the
 affected creature appreciably easier to hit.
-%%%%
-Corpse Rot spell
-
-Rapidly accelerates the decomposition of living monsters slain by the caster,
-and gathers the foul miasmic vapour around the caster. The clouds eat away at
-the life force of any creature they envelop.
 %%%%
 Corrosive Bolt spell
 
@@ -847,6 +850,13 @@ Iskenderun's Mystic Blast spell
 Detonates a crackling sphere of destructive energy. The explosion will hit all
 nearby monsters with physical force, knocking them back if damage is done.
 %%%%
+Kindle Blastsparks spell
+
+Brings forth a cloud of volatile blastsparks around the caster, which explode
+when something moves into them or when they're exposed to open flames. The
+explosion is concussive, knocking adjacent creatures away. Damage done rises
+with the spell's power.
+%%%%
 Leda's Liquefaction spell
 
 Liquefies the ground around the caster, making it difficult to move through.
@@ -922,7 +932,8 @@ Manifold Assault spell
 Warps space into paradoxical configurations in order to strike many visible
 targets with one melee attack. The effect is too imprecise to allow stabbing
 unsuspecting foes. At high power, it can be used to strike more enemies at
-once.
+once. Very high power is required to launch multiple unarmed strikes in this
+fashion, since greater care must be taken when warping one's own limbs.
 %%%%
 Mara Summon spell
 

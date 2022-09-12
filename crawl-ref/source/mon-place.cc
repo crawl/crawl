@@ -282,11 +282,7 @@ static void _apply_ood(level_id &place)
 static int _get_monster_spawn_rate()
 {
     if (player_in_branch(BRANCH_ABYSS))
-    {
-        if (player_in_starting_abyss())
-            return 50;
         return 5 * (have_passive(passive_t::slow_abyss) ? 2 : 1);
-    }
 
     if (player_on_orb_run())
         return have_passive(passive_t::slow_orb_run) ? 36 : 18;

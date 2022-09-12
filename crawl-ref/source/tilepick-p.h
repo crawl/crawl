@@ -26,8 +26,7 @@ bool is_player_tile(tileidx_t tile, tileidx_t base_tile);
 
 tileidx_t tilep_species_to_base_tile(int sp, int level);
 
-void tilep_draconian_init(int sp, int level, tileidx_t *base,
-                          tileidx_t *head, tileidx_t *wing);
+void tilep_draconian_init(int sp, int level, tileidx_t *base, tileidx_t *wing);
 void tilep_race_default(int sp, int level, dolls_data *doll);
 void tilep_job_default(int job, dolls_data *doll);
 void tilep_calc_flags(const dolls_data &data, int flag[]);

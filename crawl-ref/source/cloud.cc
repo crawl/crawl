@@ -290,11 +290,13 @@ static const cloud_data clouds[] = {
       BEAM_NONE, {},                              // beam & damage
       true,                                       // opacity
     },
+#if TAG_MAJOR_VERSION == 34
     // CLOUD_EMBERS,
     { "smouldering embers", "embers",
         ETC_SMOKE,
         { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },
     },
+#endif
     // CLOUD_FLAME,
     { "wisps of flame", nullptr,                  // terse, verbose name
       ETC_FIRE,                                   // colour
@@ -306,6 +308,11 @@ static const cloud_data clouds[] = {
       { TILE_CLOUD_DEGENERATION, CTVARY_NONE },   // tile
       BEAM_NONE, {},                              // beam & damage
       false,                                      // opacity
+    },
+    // CLOUD_BLASTSPARKS,
+    { "blastsparks", "volatile sparks",           // terse, verbose name
+        ETC_SMOKE,                                // colour
+      { TILE_CLOUD_BLASTSPARKS, CTVARY_RANDOM },  // tile
     },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
@@ -502,37 +509,6 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
 }
 
 /**
- * Convert timing out embers to conjured flames.
- *
- * @param cloud     The cloud in question.
- * @return          Whether a flame cloud has been created.
- */
-static bool _handle_conjure_flame(const cloud_struct &cloud)
-{
-    if (cloud.type != CLOUD_EMBERS)
-        return false;
-
-    if (you.pos() == cloud.pos)
-    {
-        mpr("You smother the flame.");
-        return false;
-    }
-    const monster *mons = monster_at(cloud.pos);
-    if (mons && !mons_is_conjured(mons->type))
-    {
-        mprf("%s smothers the flame.",
-             monster_at(cloud.pos)->name(DESC_THE).c_str());
-        return false;
-    }
-
-    mpr("The fire ignites!");
-    const int dur = you.props[CFLAME_DUR_KEY].get_int();
-    place_cloud(CLOUD_FIRE, cloud.pos, dur, &you);
-    you.props.erase(CFLAME_DUR_KEY);
-    return true;
-}
-
-/**
  * How fast should a given cloud fade away this turn?
  *
  * @param cloud_idx     The cloud in question.
@@ -573,7 +549,7 @@ static void _dissipate_cloud(cloud_struct& cloud)
     }
 
     // Check for total dissipation and handle accordingly.
-    if (cloud.decay < 1 && !_handle_conjure_flame(cloud))
+    if (cloud.decay < 1)
         delete_cloud(cloud.pos);
 }
 
@@ -1484,10 +1460,6 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
 static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
                                bool extra_careful)
 {
-    // Friendlies avoid snuffing the player's conjured flames
-    if (mons->attitude == ATT_FRIENDLY && cloud.type == CLOUD_EMBERS)
-        return true;
-
     // clouds you're immune to are inherently safe.
     if (actor_cloud_immune(*mons, cloud))
         return false;

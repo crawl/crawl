@@ -129,6 +129,7 @@ makefile.dep
 
 # The Crawl executable.
 /source/crawl
+/source/crawl-tiles
 
 # Precompiled header
 /source/AppHdr.h.gch
@@ -250,3 +251,7 @@ icon.png
 
 # generated files for catch2-tests
 /source/catch2-tests/*.d
+
+# generated files for appimage
+/source/appimage
+/source/stone_soup-*.AppImage

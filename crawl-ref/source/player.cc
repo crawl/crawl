@@ -27,6 +27,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
+#include "describe.h" // damage_rating
 #include "dgn-overview.h"
 #include "dgn-event.h"
 #include "directn.h"
@@ -66,6 +67,7 @@
 #include "shout.h"
 #include "skills.h"
 #include "species.h" // random_starting_species
+#include "spl-clouds.h" // explode_blastsparks_at
 #include "spl-damage.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
@@ -527,14 +529,25 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (old_pos == you.pos() && stepped)
         actor_apply_toxic_bog(&you);
 
-    // Traps go off.
-    // (But not when losing flight - i.e., moving into the same tile)
-    trap_def* ptrap = trap_at(you.pos());
-    if (ptrap && old_pos != you.pos())
-        ptrap->trigger(you);
+    if (old_pos != you.pos())
+    {
+        cloud_struct* cloud = cloud_at(you.pos());
+        if (cloud && cloud->type == CLOUD_BLASTSPARKS)
+            explode_blastsparks_at(you.pos()); // schedules a fineff
+
+        // Traps go off.
+        // (But not when losing flight - i.e., moving into the same tile)
+        trap_def* ptrap = trap_at(you.pos());
+        if (ptrap)
+            ptrap->trigger(you);
+    }
 
     if (stepped)
         _moveto_maybe_repel_stairs();
+
+    // Reveal adjacent mimics.
+    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+        discover_mimic(*ai);
 
     bool was_running = you.running;
 
@@ -620,16 +633,6 @@ bool player_in_hell(bool vestibule)
 {
     return vestibule ? is_hell_branch(you.where_are_you) :
                        is_hell_subbranch(you.where_are_you);
-}
-
-/**
- * Is the player in the slightly-special version of the abyss that AKs start
- * in?
- */
-bool player_in_starting_abyss()
-{
-    return you.chapter == CHAPTER_POCKET_ABYSS
-           && player_in_branch(BRANCH_ABYSS) && you.depth <= 1;
 }
 
 bool player_in_connected_branch()
@@ -3270,6 +3273,24 @@ static void _display_attack_delay()
          penalty_msg.c_str());
 }
 
+/**
+ * Print a message listing double the player's best-case damage with their current
+ * weapon (if applicable), or with unarmed combat (if not).
+ */
+static void _display_damage_rating()
+{
+    const item_def *weapon = you.weapon();
+    string weapon_name;
+    if (weapon)
+        weapon_name = weapon->name(DESC_YOUR);
+    else
+        weapon_name = "unarmed combat";
+    mprf("Your damage rating with %s is about %s",
+         weapon_name.c_str(),
+         damage_rating(weapon).c_str());
+    return;
+}
+
 // forward declaration
 static string _constriction_description();
 
@@ -3304,6 +3325,7 @@ void display_char_status()
     _display_movement_speed();
     _display_tohit();
     _display_attack_delay();
+    _display_damage_rating();
 
     // Display base attributes, if necessary.
     if (innate_stat(STAT_STR) != you.strength()
@@ -3326,6 +3348,11 @@ bool player::clarity(bool items) const
         return true;
 
     return actor::clarity(items);
+}
+
+bool player::faith(bool items) const
+{
+    return you.has_mutation(MUT_FAITH) || actor::faith(items);
 }
 
 /// Does the player have permastasis?
@@ -6270,7 +6297,8 @@ bool player::res_miasma(bool temp) const
 {
     if (has_mutation(MUT_FOUL_STENCH)
         || is_nonliving(temp)
-        || temp && get_form()->res_miasma())
+        || temp && (get_form()->res_miasma()
+                    || you.props.exists(MIASMA_IMMUNE_KEY)))
     {
         return true;
     }

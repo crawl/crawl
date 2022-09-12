@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>@XDG_NAME@</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0</project_license>
+  <name>Dungeon Crawl Stone Soup (tiles)</name>
+  <summary>Roguelike dungeon exploration game</summary>
+  <developer_name>The Dungeon Crawl Stone Soup Devteam</developer_name>
+  <description>
+    <p>
+      Crawl is a fun game in the grand tradition of similar games like Rogue,
+      Hack and Moria. The objective is to travel deep into a subterranean cave
+      complex and retrieve the Orb of Zot, guarded by many horrible and hideous
+      creatures.
+    </p>
+    <p>
+      If you have never played Crawl (or a similar game) before, select the
+      tutorial from the starting menu. The tutorial explains the interface in
+      five easy lessons. Once you're familiar with the controls, you may want to
+      play a few games using hints mode.
+    </p>
+    <p>
+      This is the graphical (tiles) version, there is also a console version.
+    </p>
+    <p>
+      This is the Stone Soup version of Dungeon Crawl.
+    </p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://crawl.develz.org/wordpress/wp-content/uploads/2014/05/sonja.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://crawl.develz.org/wordpress/wp-content/uploads/2014/05/roxanne.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://crawl.develz.org/wordpress/wp-content/uploads/2014/05/ashenzari.png</image>
+    </screenshot>
+  </screenshots>
+  <launchable type="desktop-id">@XDG_NAME@.desktop</launchable>
+  <url type="homepage">https://crawl.develz.org/</url>
+  <content_rating type="oars-1.0">
+    <content_attribute id="violence-cartoon">mild</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">mild</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">none</content_attribute>
+    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
+</component>

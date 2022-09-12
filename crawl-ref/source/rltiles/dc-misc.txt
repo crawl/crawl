@@ -221,6 +221,10 @@ cloud_flame_trail3
 
 cloud_degeneration CLOUD_DEGENERATION
 
+cloud_blastsparks0 CLOUD_BLASTSPARKS
+cloud_blastsparks1
+cloud_blastsparks2
+
 %sdir mon
 fungi_plants/ballistomycete_spore SPORE_OVERLAY
 

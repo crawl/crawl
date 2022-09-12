@@ -2741,7 +2741,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_VULNERABILITY:
             return true;
         case SCR_POISON:
-            return !player_res_poison(false, temp, true);
+            return player_res_poison(false, temp, true) <= 0
+                   && !you.cloud_immune();
         case SCR_TORMENT:
             return !you.res_torment();
         default:
@@ -3012,6 +3013,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         case AMU_FAITH:
             return (you.has_mutation(MUT_FORLORN) && !you.religion) // ??
+                    || you.has_mutation(MUT_FAITH)
                     || !ignore_faith_reason().empty();
 
         case AMU_GUARDIAN_SPIRIT:
@@ -3188,6 +3190,8 @@ string item_prefix(const item_def &item, bool temp)
 
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
+        if (is_unrandom_artefact(item))
+            prefixes.push_back("unrand");
         if (is_artefact(item))
             prefixes.push_back("artefact");
         // fall through
