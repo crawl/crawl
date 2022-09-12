@@ -1,3 +1,11 @@
+Stone Soup 0.29.1 (20220911)
+---------------------------------------------------
+
+Bugfix release
+--------------
+* 20+ bug and documentation fixes
+* Improvements to linux packaging support infrastructure
+
 Stone Soup 0.29.0 (20220823)
 ---------------------------------------------------
 
