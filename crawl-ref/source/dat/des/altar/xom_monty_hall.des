@@ -1,15 +1,14 @@
 # This Xom vault features the "Monty Hall" problem.
 # There are three doors. The idea is to have the player pick one of the
-# doors, two have jellies, one has a iguana (the iguana is the 'win'
-# here, since it is little threat opposed to the jellies).
+# doors, two have jellies, one has a friendly goblin.
 # If the player approaches one door, Xom shows where one jelly is hidden.
 # The player then can choose to open the door or pick the third one.
 {{
-function dk_xom_monty_hall(door_char, iguana_char)
+function dk_xom_monty_hall(door_char, goblin_char)
   local str = "abc"
 
   str = str:gsub(door_char, "")
-  str = str:gsub(iguana_char, "")
+  str = str:gsub(goblin_char, "")
 
   if #str == 2 then
     local r = crawl.one_chance_in(2) and 1 or 2
@@ -29,7 +28,7 @@ function callback.dk_xom_monty_hall_move(data, triggerable, triggerer, marker, e
     return
   end
 
-  dk_xom_monty_hall(data.door, data.iguana)
+  dk_xom_monty_hall(data.door, data.goblin)
 
   dgn.persist.dk_xom_monty_hall_triggered = true
 end
@@ -40,7 +39,7 @@ TAGS:    no_item_gen no_monster_gen temple_overflow_xom temple_overflow_1
 TAGS:    transparent
 WEIGHT:  3
 KFEAT:   _ = altar_xom
-MONS:    generate_awake iguana hd:1
+MONS:    generate_awake att:good_neutral goblin
 MONS:    generate_awake jelly
 MARKER:  + = lua:props_marker({ door_restrict="veto" })
 {{
@@ -48,13 +47,13 @@ dgn.persist.dk_xom_monty_hall_triggered = false
 
 local str = "abc"
 local r = crawl.random2(2) + 1
-local iguana_char = str:sub(r, r)
+local goblin_char = str:sub(r, r)
 
 local mon = {a ='Q',
              b ='W',
              c ='E'}
-subst(mon[iguana_char] .. '=1')
-str = str:gsub(iguana_char, "")
+subst(mon[goblin_char] .. '=1')
+str = str:gsub(goblin_char, "")
 str:gsub(".", function(c)
   subst(mon[c] .. '=2')
 end)
@@ -63,7 +62,7 @@ function get_marker(char)
   local marker = TriggerableFunction:new{
     func="callback.dk_xom_monty_hall_move",
     repeated=true,
-    data={iguana=iguana_char,
+    data={goblin=goblin_char,
           door=char}
   }
 
