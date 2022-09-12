@@ -1273,7 +1273,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
 
 static void _make_simulacra(monster* mons, int pow, god_type god)
 {
-    const int count = 1 + random2(1 + div_rand_round(pow, 20));
+    const int count = 1 + random2(1 + div_rand_round(pow, 40));
     for (int i = 0; i < count; ++i)
     {
         _make_derived_undead(mons, false, MONS_SIMULACRUM, BEH_FRIENDLY,
