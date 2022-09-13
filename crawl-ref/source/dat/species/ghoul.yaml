@@ -40,9 +40,9 @@ aptitudes:
   invocations: 1
   evocations: -1
 undead_type: US_UNDEAD
-str: 13
-int: 11
-dex: 11
+str: 16
+int: 15
+dex: 15
 levelup_stat_frequency: 2
 mutations:
   1:

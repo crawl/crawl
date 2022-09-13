@@ -978,7 +978,8 @@ static void _ghoul_hunger(int delay)
 
     //Right now stat drain is applied if regen is inhibited as the conditions should be equivalent
     //this may want to be decoupled from.
-    if(regeneration_is_inhibited() && undrained_stats > 0 && x_chance_in_y(2 * delay, 3 * BASELINE_DELAY))
+    if(regeneration_is_inhibited() && undrained_stats > 0 
+        && x_chance_in_y(undrained_stats, base_stats) && x_chance_in_y(delay, 3 * BASELINE_DELAY))
     {
         int which_stat = random2(undrained_stats);
         if(which_stat < undrained_str)

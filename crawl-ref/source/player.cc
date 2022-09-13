@@ -2390,7 +2390,7 @@ static void _handle_stat_loss(int exp)
     int loss = div_rand_round(exp * 3,
                               max(1, 2 * calc_skill_cost(you.skill_cost_level) - 6));
     if (you.species == SP_GHOUL)
-        loss *= 2;
+        loss *= 4;
     you.attribute[ATTR_STAT_LOSS_XP] -= loss;
     dprf("Stat loss points: %d", you.attribute[ATTR_STAT_LOSS_XP]);
     if (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
