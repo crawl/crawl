@@ -1963,11 +1963,10 @@ item_def* monster_die(monster& mons, killer_type killer,
                             + random2(mons.get_experience_level() / 2);
                 }
                 if (you.species == SP_GHOUL
-                    && mons.holiness() & (MH_NATURAL | MH_PLANT)
-                    && grid_distance(you.pos(), mons.pos()) <= 1)
+                    && mons.holiness() & (MH_NATURAL | MH_PLANT))
                 {
                     hp_heal += 1 + random2avg(1 + you.experience_level, 3);
-                    restore_stat(STAT_INT, 1, false, true);
+                    //restore_stat(STAT_ALL, random2(3), false, true);
                 }
 
                 if (have_passive(passive_t::restore_hp_mp_vs_evil))

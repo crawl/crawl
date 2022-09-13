@@ -200,16 +200,6 @@ static void _abyss_speed(int /*time_delta*/)
         --you.abyss_speed;
 }
 
-//Drain int until at 1 base int; disregarding gear.
-//Rate of drain is proportional to potential remaining drain
-static void _ghoul_hunger(int /*time_delta*/)
-{
-    int undrained_int = you.base_stats[STAT_INT] - you.stat_loss[STAT_INT] - 1;
-    if(regeneration_is_inhibited() && x_chance_in_y(undrained_int, you.base_stats[STAT_INT]))
-    {
-        you.drain_stat(STAT_INT, 1);
-    }
-}
 
 
 static void _jiyva_effects(int /*time_delta*/)
@@ -332,7 +322,6 @@ static struct timed_effect timed_effects[] =
     { _abyss_speed,                  100,   300, false },
     { _jiyva_effects,                100,   300, false },
     { _evolve,                       100,   300, false },
-    { _ghoul_hunger,                 30,   50, false },
 #if TAG_MAJOR_VERSION == 34
     { nullptr,                         0,     0, false },
 #endif

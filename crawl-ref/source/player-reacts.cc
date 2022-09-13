@@ -966,6 +966,30 @@ static void _handle_wereblood()
     }
 }
 
+//While monsters are in LOS, drain stat until base stat - 1 has been drained.
+//Rate of drain is constant; choice of stat to drain is weighted by amount of undrained stat
+static void _ghoul_hunger(int delay)
+{    
+    int base_stats = you.base_stats[STAT_STR] + you.base_stats[STAT_INT] + you.base_stats[STAT_DEX];
+    int undrained_str = max(you.base_stats[STAT_STR] - you.stat_loss[STAT_STR] - 1, 0);
+    int undrained_int = max(you.base_stats[STAT_INT] - you.stat_loss[STAT_INT] - 1, 0);
+    int undrained_dex = max(you.base_stats[STAT_DEX] - you.stat_loss[STAT_DEX] - 1, 0);
+    int undrained_stats = undrained_str + undrained_int + undrained_dex;
+
+    //Right now stat drain is applied if regen is inhibited as the conditions should be equivalent
+    //this may want to be decoupled from.
+    if(regeneration_is_inhibited() && undrained_stats > 0 && x_chance_in_y(2 * delay, 3 * BASELINE_DELAY))
+    {
+        int which_stat = random2(undrained_stats);
+        if(which_stat < undrained_str)
+            you.drain_stat(STAT_STR, 1);
+        else if(which_stat < undrained_str + undrained_int)
+            you.drain_stat(STAT_INT, 1);
+        else 
+            you.drain_stat(STAT_DEX, 1);
+    }
+}
+
 void player_reacts()
 {
     //XXX: does this _need_ to be calculated up here?
@@ -1022,6 +1046,9 @@ void player_reacts()
     you.accum_has_constricted();
 
     _regenerate_hp_and_mp(you.time_taken);
+
+    if(you.species == SP_GHOUL)
+        _ghoul_hunger(you.time_taken);
 
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);

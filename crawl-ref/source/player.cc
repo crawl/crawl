@@ -2387,8 +2387,10 @@ static void _handle_stat_loss(int exp)
     if (!(you.attribute[ATTR_STAT_LOSS_XP] > 0))
         return;
 
-    int loss = div_rand_round(exp * 3 / 2,
-                              max(1, calc_skill_cost(you.skill_cost_level) - 3));
+    int loss = div_rand_round(exp * 3,
+                              max(1, 2 * calc_skill_cost(you.skill_cost_level) - 6));
+    if (you.species == SP_GHOUL)
+        loss *= 2;
     you.attribute[ATTR_STAT_LOSS_XP] -= loss;
     dprf("Stat loss points: %d", you.attribute[ATTR_STAT_LOSS_XP]);
     if (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
@@ -2483,6 +2485,7 @@ void apply_exp()
         skill_xp = sprint_modify_exp(skill_xp);
 
     // xp-gated effects that use sprint inflation
+    
     _handle_stat_loss(skill_xp);
     _handle_temp_mutation(skill_xp);
     _recharge_xp_evokers(skill_xp);

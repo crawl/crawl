@@ -40,12 +40,10 @@ aptitudes:
   invocations: 1
   evocations: -1
 undead_type: US_UNDEAD
-str: 11
-int: 12
-dex: 4
-levelup_stat_frequency: 5
-levelup_stats:
-  - str
+str: 13
+int: 11
+dex: 11
+levelup_stat_frequency: 2
 mutations:
   1:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 3
@@ -55,7 +53,7 @@ mutations:
     MUT_CLAWS: 1
 fake_mutations:
   - long: You thrive by killing the living.
-  - long: Your hunger consumes your thoughts.
+  - long: Your body decays without continuous sustenance.
 recommended_jobs:
   - JOB_WARPER
   - JOB_GLADIATOR
