@@ -2650,7 +2650,7 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
             beam.draw(t);
 
         actor *act = actor_at(t);
-        if (!act->alive()) // may have died midway through casting
+        if (!act || !act->alive()) // may have died midway through casting
             continue;
 
         monster* mon = act->as_monster();
