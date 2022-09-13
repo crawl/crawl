@@ -2668,7 +2668,11 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
         act->expose_to_element(beam.flavour, post_resist_dam);
         act->hurt(&agent, post_resist_dam);
         if (mon && act->alive())
+        {
             behaviour_event(mon, ME_WHACK, &agent);
+            if (post_resist_dam && you.can_see(*mon))
+                print_wounds(*mon);
+        }
     }
 
     return spret::success;
