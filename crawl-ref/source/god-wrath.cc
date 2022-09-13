@@ -2074,8 +2074,8 @@ static bool _uskayaw_retribution()
         // else we intentionally fall through
 
     case 4:
-        simple_god_message(" booms out: \"Revellers, it's time to dance!\"", god);
-        noisy(35, you.pos());
+        simple_god_message(" shines a spotlight on you.", god);
+        you.sentinel_mark();
         break;
     }
     return true;
