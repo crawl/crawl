@@ -2150,22 +2150,11 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     if (no_bonus)
         return true;
 
-    // Sometimes divine experiences are overwhelming...
-    if (do_more && one_chance_in(5) && you.experience_level < random2(37))
+    // Sometimes make a lot of noise to put the player in more danger
+    if (do_more && one_chance_in(5) && god != GOD_IGNIS)
     {
-        if (coinflip())
-        {
-            if (!you.confused())
-            {
-                mprf(MSGCH_WARN, "The divine experience confuses you!");
-                confuse_player(5 + random2(3));
-            }
-        }
-        else
-        {
-            mprf(MSGCH_WARN, "The divine experience drains your vigour!");
-            slow_player(random2(20));
-        }
+        simple_god_message(" makes the heavens roar!", god);
+        noisy(god == GOD_QAZLAL ? 35 : 25, you.pos());
     }
 
     // Just the thought of retribution mollifies the god by at least a
