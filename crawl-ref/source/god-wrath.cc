@@ -1221,8 +1221,7 @@ static bool _jiyva_retribution()
 
 /**
  * Let Fedhas call down the enmity of nature upon the player!
- * Equal chance corrosive bolt, primal wave (a throwback to rain),
- * or thorn volley
+ * Equal chance corrosive bolt or  primal wave (a throwback to rain)
  */
 static void _fedhas_nature_retribution()
 {
@@ -1238,8 +1237,7 @@ static void _fedhas_nature_retribution()
     }
 
     spell_type spell = random_choose(SPELL_CORROSIVE_BOLT,
-                                     SPELL_PRIMAL_WAVE,
-                                     SPELL_THORN_VOLLEY);
+                                     SPELL_PRIMAL_WAVE);
 
     _spell_retribution(avatar, spell, god, " invokes nature against you.");
     _reset_avatar(*avatar);
@@ -1661,11 +1659,7 @@ static bool _fedhas_retribution()
 {
     const god_type god = GOD_FEDHAS;
 
-    // We have 3 forms of retribution, but players under penance will be
-    // spared the 'you are now surrounded by oklob plants, please die' one.
-    const int retribution_options = you_worship(god) ? 2 : 3;
-
-    switch (random2(retribution_options))
+    switch (random2(3))
     {
     case 0:
         // Try and spawn some hostile ballistomycete spores, if none are created
