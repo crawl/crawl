@@ -2897,16 +2897,16 @@ static void _bindkey(string field)
         wchars.push_back(wc);
     }
 
+
+    int key;
+
     if (wchars.size() == 0)
     {
         mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
              field.c_str());
         return;
     }
-
-    int key;
-
-    if (wchars.size() == 1)
+    else if (wchars.size() == 1)
         key = wchars[0];
     else if (wchars[0] == '\\')
     {
@@ -2919,7 +2919,7 @@ static void _bindkey(string field)
         }
         key = ks[0];
     }
-    else if (wchars.size() > 1)
+    else // if (wchars.size() > 1)
     {
         // XX probably would be safe to directly check for numbers?
         // don't use the wide char version for this part
