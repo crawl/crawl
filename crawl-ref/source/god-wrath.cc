@@ -1147,7 +1147,7 @@ static void _jiyva_transform()
                                               transformation::tree,
                                               transformation::wisp);
 
-    if (transform(random2(you.penance[god]) * 2, form, true))
+    if (transform(random2(50), form, true))
         you.transform_uncancellable = true;
 }
 /**
@@ -1157,34 +1157,37 @@ static void _jiyva_contaminate()
 {
     const god_type god = GOD_JIYVA;
     god_speaks(god, "Mutagenic energy floods into your body!");
-    contaminate_player(random2(you.penance[god] * 500));
+    contaminate_player(random2(12500));
 }
+
+static const vector<pop_entry> pop_jiyva_wrath =
+{
+  {  0,  27, 10, FLAT, MONS_FLOATING_EYE },
+  {  0,   9, 50, FALL, MONS_JELLY },
+  {  0,  16, 50, SEMI, MONS_SLIME_CREATURE },
+  {  6,  20, 50, SEMI, MONS_QUICKSILVER_OOZE },
+  {  6,  27, 10, FLAT, MONS_SHINING_EYE },
+  {  6,  27, 10, FLAT, MONS_GOLDEN_EYE },
+  {  8,  18, 25, SEMI, MONS_GLOWING_ORANGE_BRAIN },
+  {  8,  18, 25, SEMI, MONS_EYE_OF_DEVASTATION },
+  {  10, 25, 25, SEMI, MONS_GREAT_ORB_OF_EYES },
+  {  10, 27, 75, RISE, MONS_AZURE_JELLY },
+  {  10, 27, 75, RISE, MONS_ACID_BLOB },
+  {  10, 27, 75, RISE, MONS_ROCKSLIME },
+};
 
 static void _jiyva_summon_slimes()
 {
     const god_type god = GOD_JIYVA;
 
-    const monster_type slimes[] =
-    {
-        MONS_FLOATING_EYE,
-        MONS_EYE_OF_DEVASTATION,
-        MONS_GREAT_ORB_OF_EYES,
-        MONS_SHINING_EYE,
-        MONS_GLOWING_ORANGE_BRAIN,
-        MONS_ROCKSLIME,
-        MONS_QUICKSILVER_OOZE,
-        MONS_ACID_BLOB,
-        MONS_AZURE_JELLY,
-        MONS_SLIME_CREATURE,
-    };
-
-    const int how_many = 1 + (you.experience_level / 10) + random2(3);
+    const int how_many = 1 + div_rand_round(you.experience_level, 10)
+                           + random2(3);
     bool success = false;
 
     for (int i = 0; i < how_many; i++)
     {
-        const monster_type slime = RANDOM_ELEMENT(slimes);
-
+        monster_type slime = pick_monster_from(pop_jiyva_wrath,
+                                             you.experience_level);
         if (create_monster(_wrath_mon_data(slime, god), false))
             success = true;
     }
@@ -1203,16 +1206,35 @@ static void _jiyva_summon_slimes()
 static bool _jiyva_retribution()
 {
     const god_type god = GOD_JIYVA;
-
-    if (you.can_safely_mutate() && one_chance_in(7))
-        _jiyva_mutate_player();
-    else if (one_chance_in(3) && !you.transform_uncancellable)
-        _jiyva_transform();
-    else if (!one_chance_in(3) || you_worship(god))
+    
+    switch (random2(7))
+    {
+    case 0: // mutate or intentionally fall through
+        if (you.can_safely_mutate())
+        {
+            _jiyva_mutate_player();
+            break;
+        }
+    case 1: // bad form or intentionally fall through
+    case 2:
+        if (!you.transform_uncancellable)
+        {
+            _jiyva_transform();
+            break;
+        }
+    case 3: // summon slimes or intentionally fall through
+    case 4:
+        if (!you_worship(god))
+        {
+            _jiyva_summon_slimes();
+            break;
+        }            
+    case 5:
+    case 6:
         _jiyva_contaminate();
-    else
-        _jiyva_summon_slimes();
-
+    }
+    
+    // always has a chance to remove a Jiyva mutation
     if (coinflip())
         _jiyva_remove_slime_mutation();
 
