@@ -2593,23 +2593,17 @@ vector<coord_def> arcjolt_targets(const actor &agent, int power, bool actual)
         {
             actor* act = actor_at(p);
             const bool seen_act = act && (actual || agent.can_see(*act));
-            if (seen_act)
+            if (seen_act && act != &agent)
             {
-                if (act != &agent)
-                    targets.push_back(p);
-            }
-            else if (env.grid(p) != DNGN_METAL_WALL
-                     || !actual && !env.map_knowledge(p).seen())
-            {
-                continue;
-            }
+                targets.push_back(p);
 
-            for (adjacent_iterator ai(p); ai; ++ai)
-            {
-                if (!seen.count(*ai))
+                for (adjacent_iterator ai(p); ai; ++ai)
                 {
-                    seen.insert(*ai);
-                    next_frontier.push_back(*ai);
+                    if (!seen.count(*ai) && agent.see_cell(*ai))
+                    {
+                        seen.insert(*ai);
+                        next_frontier.push_back(*ai);
+                    }
                 }
             }
         }
@@ -2650,7 +2644,8 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
     }
 
     auto targets = arcjolt_targets(agent, pow, true);
-    for (coord_def t : targets) {
+    for (coord_def t : targets)
+    {
         if (Options.use_animations & UA_BEAM)
             beam.draw(t);
 
@@ -2663,9 +2658,13 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
             continue;
 
         const int rolled_dam = arcjolt_damage(pow).roll();
-        const int post_ac_dam = max(0, act->apply_ac(rolled_dam, 0, ac_type::half));
-        const int post_resist_dam = mon ? mons_adjust_flavoured(mon, beam, post_ac_dam)
-                                           : check_your_resists(post_ac_dam, beam.flavour, "arcjolt");
+        const int post_ac_dam = max(0, act->apply_ac(rolled_dam, 0,
+                                                     ac_type::half));
+        const int post_resist_dam = mon ? mons_adjust_flavoured(mon, beam,
+                                                                post_ac_dam)
+                                        : check_your_resists(post_ac_dam,
+                                                             beam.flavour,
+                                                             "arcjolt");
         act->expose_to_element(beam.flavour, post_resist_dam);
         act->hurt(&agent, post_resist_dam);
         if (mon && act->alive())
