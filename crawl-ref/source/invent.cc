@@ -414,6 +414,7 @@ void InvMenu::select_item_index(int idx, int qty)
 
 bool InvMenu::examine_index(int i)
 {
+    const bool do_actions = type == menu_type::describe;
     if (on_examine)
         return Menu::examine_index(i);
     else if (type == menu_type::pickup)
@@ -423,7 +424,7 @@ bool InvMenu::examine_index(int i)
         {
             auto desc_tgt = const_cast<item_def*>(ie->item);
             ASSERT(desc_tgt);
-            return describe_item(*desc_tgt);
+            return describe_item(*desc_tgt, nullptr, do_actions);
         }
     }
     else if (i >= 0 && i < static_cast<int>(items.size()) && items[i]->hotkeys.size())
@@ -433,7 +434,7 @@ bool InvMenu::examine_index(int i)
         unsigned char select = items[i]->hotkeys[0];
         const int invidx = letter_to_index(select);
         ASSERT(you.inv[invidx].defined());
-        return describe_item(you.inv[invidx]);
+        return describe_item(you.inv[invidx], nullptr, do_actions);
     }
     return true;
 }

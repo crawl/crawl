@@ -3413,6 +3413,9 @@ command_type describe_item_popup(const item_def &item,
     if (!item.defined())
         return CMD_NO_CMD;
 
+    // Dead players use no items.
+    do_actions = do_actions && !(you.pending_revival || crawl_state.updating_scores);
+
     string name = item.name(DESC_INVENTORY_EQUIP) + ".";
     if (!in_inventory(item))
         name = uppercase_first(name);
@@ -3578,12 +3581,9 @@ command_type describe_item_popup(const item_def &item,
  *  @return whether to remain in the outer mode (inventory, `xv`) after the popup.
  *
  */
-bool describe_item(item_def &item, function<void (string&)> fixup_desc)
+bool describe_item(item_def &item, function<void (string&)> fixup_desc, bool do_actions)
 {
-    // Dead players use no items.
-    const bool do_actions = !(you.pending_revival || crawl_state.updating_scores);
     command_type action = describe_item_popup(item, fixup_desc, do_actions);
-
     return _do_action(item, action);
 }
 

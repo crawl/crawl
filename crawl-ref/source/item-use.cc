@@ -541,7 +541,7 @@ bool UseItemMenu::examine_index(int i)
         auto ie = dynamic_cast<InvEntry *>(items[i]);
         auto desc_tgt = const_cast<item_def*>(ie->item);
         ASSERT(desc_tgt);
-        return describe_item(*desc_tgt);
+        return describe_item(*desc_tgt, nullptr, false);
     }
 }
 
