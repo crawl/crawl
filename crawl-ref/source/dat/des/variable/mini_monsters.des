@@ -8552,6 +8552,40 @@ a'a'd'a'a
   a'a'a
 ENDMAP
 
+NAME:   hellmonk_guarded_unrand_hermit
+TAGS:   no_monster_gen
+DEPTH:  D:3-8
+WEIGHT: 3
+KFEAT:  _ = altar_ecumenical
+KITEM:  _ = hermit's pendant no_pickup
+NSUBST: E = 1:. / *=xxx., H = 1:. / *=xxx., I = 1:. / *=xxx., J = 1:. / *=xxx.
+NSUBST: L = 1:. / *=xxx., M = 1:. / *=xxx., ' = 1:8 / *:.
+SUBST:  D:wwlG, F = xxxxxG.
+TILE:   G = dngn_crumbled_column
+MAP
+  xxx
+ xxxxx
+xxxxxxx
+xxxxxxx
+xx'''xx
+xx'_'xx
+xx...xx
+xxD.Dxx
+xxEEExx
+xxF.Fxx
+xxHHHxx
+xxF.Fxx
+xxIIIxx
+xxF.Fxx
+xxJJJxx
+xxF.Fxx
+xxLLLxx
+xxF.Fxx
+xxMMMxx
+xxx@xxx
+ENDMAP
+
+
 ###################################################################
 #
 # <<9>> Pre-Lair vaults with monsters guarding a manual
