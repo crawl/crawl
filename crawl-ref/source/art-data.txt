@@ -1701,12 +1701,12 @@ INSCRIP:    reach-cleave, poleaxe
 DBRAND:     It can be evoked to extend its reach, and strikes at all foes within reach, dealing less damage to those not targeted.
 +It uses either Axes or Polearms skill, whichever is higher.
 
-NAME:    Hermit's pendant
+NAME:    Hermit's Pendant
 OBJ:     OBJ_JEWELLERY/AMU_FAITH
 COLOUR:  BROWN
 TILE:    urand_hermit_pendant
 MP:      +5
-INSCRIP: invo=14 evo=0
+INSCRIP: Invo=14 Evo=0
 DBRAND:  It sets your invocations skill to 14 and your evocations skill to 0.
 
 # This entry must always be last.
