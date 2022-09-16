@@ -111,7 +111,7 @@
  * @param endmsg The message to be displayed when the duration ends.
  * @param midloss A number of normal-speed turns by which to further decrement
  *                the duration if we cross the duration's midpoint.
- * @param endmsg The message to be displayed when the duration is decremented
+ * @param expmsg The message to be displayed when the duration is decremented
  *               to a value under its midpoint.
  * @param chan The channel where the endmsg will be printed if the duration
  *             ends.
@@ -250,6 +250,33 @@ static void _maybe_melt_armour()
     {
         you.props.erase(MELT_ARMOUR_KEY);
         mprf(MSGCH_DURATION, "The heat melts your icy armour.");
+    }
+}
+
+
+//Gain Hunger while monsters are in LOS. If hunger gets too high, begin losing stats.
+static void _ghoul_hunger(int delay)
+{        
+    //Right now stat drain is applied if regen is inhibited as the conditions should be equivalent
+    //this may want to be decoupled from.
+    if(threat_visible())
+    {
+        you.duration[DUR_HUNGER] += delay * 2;
+        if(you.duration[DUR_HUNGER] > 90)
+            you.duration[DUR_HUNGER] = 90;
+    }
+    else
+    {
+        _decrement_a_duration(DUR_HUNGER, delay);
+    }
+    if(you.duration[DUR_HUNGER] >= 80)
+    {            
+        you.drain_stat(STAT_RANDOM, div_rand_round(delay, 2 * BASELINE_DELAY));
+    }
+    if(you.duration[DUR_HUNGER] <= 0) 
+    {            
+        restore_stat(STAT_RANDOM, div_rand_round(delay, BASELINE_DELAY), true);
+        restore_stat(STAT_RANDOM, div_rand_round(delay, BASELINE_DELAY), true);
     }
 }
 
@@ -455,6 +482,8 @@ void player_reacts_to_monsters()
 
     _maybe_melt_armour();
     _update_cowardice();
+    if(you.species == SP_GHOUL)
+        _ghoul_hunger(you.time_taken);
     if (you_worship(GOD_USKAYAW))
         _handle_uskayaw_time(you.time_taken);
 }
@@ -966,30 +995,6 @@ static void _handle_wereblood()
     }
 }
 
-//While monsters are in LOS, drain stat until base stat - 1 has been drained.
-//Rate of drain is constant; choice of stat to drain is weighted by amount of undrained stat
-static void _ghoul_hunger(int delay)
-{    
-    int base_stats = you.base_stats[STAT_STR] + you.base_stats[STAT_INT] + you.base_stats[STAT_DEX];
-    int undrained_str = max(you.base_stats[STAT_STR] - you.stat_loss[STAT_STR] - 1, 0);
-    int undrained_int = max(you.base_stats[STAT_INT] - you.stat_loss[STAT_INT] - 1, 0);
-    int undrained_dex = max(you.base_stats[STAT_DEX] - you.stat_loss[STAT_DEX] - 1, 0);
-    int undrained_stats = undrained_str + undrained_int + undrained_dex;
-
-    //Right now stat drain is applied if regen is inhibited as the conditions should be equivalent
-    //this may want to be decoupled from.
-    if(regeneration_is_inhibited() && undrained_stats > 0 
-        && x_chance_in_y(undrained_stats, base_stats) && x_chance_in_y(delay, 3 * BASELINE_DELAY))
-    {
-        int which_stat = random2(undrained_stats);
-        if(which_stat < undrained_str)
-            you.drain_stat(STAT_STR, 1);
-        else if(which_stat < undrained_str + undrained_int)
-            you.drain_stat(STAT_INT, 1);
-        else 
-            you.drain_stat(STAT_DEX, 1);
-    }
-}
 
 void player_reacts()
 {
@@ -1048,8 +1053,6 @@ void player_reacts()
 
     _regenerate_hp_and_mp(you.time_taken);
 
-    if(you.species == SP_GHOUL)
-        _ghoul_hunger(you.time_taken);
 
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);

@@ -1124,27 +1124,28 @@ static int _player_bonus_regen()
     return rr;
 }
 
+bool threat_visible()
+{
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_is_threatening(**mi)
+            && !mi->wont_attack()
+            && !mi->neutral()
+            && !mi->submerged())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 /// Is the player's hp regeneration inhibited by nearby monsters?
 bool regeneration_is_inhibited()
 {
-    // used mainly for resting: don't add anything here that can be waited off
-    if (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
+    return threat_visible() && 
+        (you.get_mutation_level(MUT_INHIBITED_REGENERATION) == 1
         || you.duration[DUR_COLLAPSE]
-        || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive))
-    {
-        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        {
-            if (mons_is_threatening(**mi)
-                && !mi->wont_attack()
-                && !mi->neutral()
-                && !mi->submerged())
-            {
-                return true;
-            }
-        }
-    }
-
-    return false;
+        || (you.has_mutation(MUT_VAMPIRISM) && !you.vampire_alive));
 }
 
 int player_regen()
@@ -2389,8 +2390,6 @@ static void _handle_stat_loss(int exp)
 
     int loss = div_rand_round(exp * 3,
                               max(1, 2 * calc_skill_cost(you.skill_cost_level) - 6));
-    if (you.species == SP_GHOUL)
-        loss *= 4;
     you.attribute[ATTR_STAT_LOSS_XP] -= loss;
     dprf("Stat loss points: %d", you.attribute[ATTR_STAT_LOSS_XP]);
     if (you.attribute[ATTR_STAT_LOSS_XP] <= 0)
@@ -2485,8 +2484,8 @@ void apply_exp()
         skill_xp = sprint_modify_exp(skill_xp);
 
     // xp-gated effects that use sprint inflation
-    
-    _handle_stat_loss(skill_xp);
+    if(you.species != SP_GHOUL)
+        _handle_stat_loss(skill_xp);
     _handle_temp_mutation(skill_xp);
     _recharge_xp_evokers(skill_xp);
     _handle_hp_drain(skill_xp);

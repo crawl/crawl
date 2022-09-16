@@ -40,15 +40,14 @@ aptitudes:
   invocations: 1
   evocations: -1
 undead_type: US_UNDEAD
-str: 16
-int: 15
-dex: 15
+str: 12
+int: 10
+dex: 10
 levelup_stat_frequency: 2
 mutations:
   1:
     MUT_NEGATIVE_ENERGY_RESISTANCE: 3
     MUT_TORMENT_RESISTANCE: 2
-    MUT_INHIBITED_REGENERATION: 1
     MUT_COLD_RESISTANCE: 1
     MUT_CLAWS: 1
 fake_mutations:

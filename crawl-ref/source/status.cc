@@ -157,6 +157,7 @@ static bool _fill_inf_from_ddef(duration_type dur, status_info& inf)
 
 static void _describe_airborne(status_info& inf);
 static void _describe_glow(status_info& inf);
+static void _describe_hunger(status_info& inf);
 static void _describe_regen(status_info& inf);
 static void _describe_speed(status_info& inf);
 static void _describe_poison(status_info& inf);
@@ -261,6 +262,10 @@ bool fill_status_info(int status, status_info& inf)
 
     case STATUS_CONTAMINATION:
         _describe_glow(inf);
+        break;
+
+    case DUR_HUNGER:
+        _describe_hunger(inf);
         break;
 
     case STATUS_BACKLIT:
@@ -827,6 +832,20 @@ static void _describe_glow(status_info& inf)
     const int adj_i = min((size_t) cont, ARRAYSZ(contam_adjectives) - 1);
     inf.short_text = contam_adjectives[adj_i] + "contaminated";
     inf.long_text = describe_contamination(cont);
+}
+
+static void _describe_hunger(status_info& inf)
+{
+    if(you.duration[DUR_HUNGER] < 80)
+    {
+        inf.light_colour = _bad_ench_colour(you.duration[DUR_HUNGER], 27, 53);
+        inf.light_text   = "Hungry";
+    }
+    else
+    {
+        inf.light_colour = MAGENTA;
+        inf.light_text   = "Ravenous";
+    }
 }
 
 static void _describe_regen(status_info& inf)
