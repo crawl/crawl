@@ -833,7 +833,7 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
-        if (!zin && one_chance_in(pow / 3))
+        if (!zin && one_chance_in(100))
             continue;
 
         // The tile is occupied.
@@ -911,7 +911,7 @@ spret cast_tomb(int pow, actor* victim, int source, bool fail)
 
         you.update_beholders();
         you.update_fearmongers();
-        const int tomb_duration = BASELINE_DELAY * pow;
+        const int tomb_duration = BASELINE_DELAY * (pow/3);
         env.markers.add(new map_tomb_marker(where,
                                             tomb_duration,
                                             source,
