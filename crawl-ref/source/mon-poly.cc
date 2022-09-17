@@ -191,7 +191,7 @@ static bool _jiyva_slime_target(monster_type targetc)
               || targetc == MONS_AZURE_JELLY);
 }
 
-void change_monster_type(monster* mons, monster_type targetc)
+void change_monster_type(monster* mons, monster_type targetc, bool do_seen)
 {
     ASSERT(mons); // XXX: change to monster &mons
     bool could_see     = you.can_see(*mons);
@@ -380,11 +380,12 @@ void change_monster_type(monster* mons, monster_type targetc)
     // If new monster is visible to player, then we've seen it.
     if (you.can_see(*mons))
     {
-        seen_monster(mons);
         // If the player saw both the beginning and end results of a
         // shifter changing, then s/he knows it must be a shifter.
         if (could_see && shifter.ench != ENCH_NONE)
             discover_shifter(*mons);
+        if (do_seen)
+            seen_monster(mons);
     }
     // generate a new polymorph set
     mons->props.erase(POLY_SET_KEY);
@@ -597,7 +598,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (power != PPT_SLIME && !_valid_morph(mons, targetc))
         return simple_monster_message(*mons, " looks momentarily different.");
 
-    change_monster_type(mons, targetc);
+    change_monster_type(mons, targetc, false);
 
     bool can_see = you.can_see(*mons);
 
@@ -637,10 +638,11 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                                   : "something unseen";
 
         take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
-
-        if (can_see)
-            mons->flags |= MF_SEEN;
     }
+
+    // do this here, so that any "changes into" notes come first
+    if (can_see)
+        seen_monster(mons);
 
     // Xom likes watching monsters being polymorphed.
     if (can_see)
@@ -738,6 +740,11 @@ void seen_monster(monster* mons)
         {
             name += make_stringf(" (%s)",
                                  short_ghost_description(mons, true).c_str());
+        }
+        else if (mons->flags & MF_KNOWN_SHIFTER)
+        {
+            name += make_stringf(" (%sshapeshifter)",
+                mons->has_ench(ENCH_GLOWING_SHAPESHIFTER) ? "glowing " : "");
         }
         take_note(Note(NOTE_SEEN_MONSTER, mons->type, 0, name));
     }
