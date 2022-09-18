@@ -651,8 +651,9 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text = "Cloud";
             // TODO: make the colour based on the cloud's color; requires elemental
             // status lights, though.
-            inf.light_colour =
-                is_damaging_cloud(cloud, true, cloud_is_yours_at(you.pos())) ? LIGHTRED : DARKGREY;
+            const bool yours = cloud_is_yours_at(you.pos());
+            const bool danger = cloud_damages_over_time(cloud, true, yours);
+            inf.light_colour = danger ? LIGHTRED : DARKGREY;
         }
         break;
     }

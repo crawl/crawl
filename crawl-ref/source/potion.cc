@@ -666,7 +666,7 @@ public:
             }
 
             const cloud_type cloud = cloud_type_at(you.pos());
-            if (is_damaging_cloud(cloud, false)
+            if (cloud_damages_over_time(cloud, false)
                 // Tree form is immune to these two.
                 && cloud != CLOUD_MEPHITIC && cloud != CLOUD_POISON
                 && !yesno(make_stringf("Really become a tree while standing in "

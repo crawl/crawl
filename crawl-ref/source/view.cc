@@ -1049,7 +1049,7 @@ static update_flags player_view_update_at(const coord_def &gc)
         const cloud_struct &cl = *cloud;
 
         bool did_exclude = false;
-        if (!cl.temporary() && is_damaging_cloud(cl.type, false))
+        if (!cl.temporary() && cloud_damages_over_time(cl.type, false))
         {
             int size = cl.exclusion_radius();
 

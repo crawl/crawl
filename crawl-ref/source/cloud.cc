@@ -855,6 +855,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_PETRIFY:
     case CLOUD_ACID:
     case CLOUD_NEGATIVE_ENERGY:
+    case CLOUD_BLASTSPARKS:
         return true;
     default:
         return false;
@@ -1345,6 +1346,7 @@ int actor_apply_cloud(actor *act)
 
     if ((player || final_damage > 0
          || _cloud_has_negative_side_effects(cloud.type))
+        && cloud.type != CLOUD_BLASTSPARKS // no effect over time
         && cloud.type != CLOUD_STORM) // handled elsewhere
     {
         cloud.announce_actor_engulfed(act);
@@ -1445,6 +1447,12 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
         you.duration.init(0);
         return is_damaging_cloud(type, true, yours);
     }
+}
+
+bool cloud_damages_over_time(cloud_type type, bool accept_temp_resistances, bool yours)
+{
+    return type != CLOUD_BLASTSPARKS
+        && is_damaging_cloud(type, accept_temp_resistances, yours);
 }
 
 /**
@@ -1568,7 +1576,6 @@ bool is_harmless_cloud(cloud_type type)
            && clouds[type].damage.base == 0
            && clouds[type].damage.random == 0
            && !_cloud_has_negative_side_effects(type)
-           && type != CLOUD_BLASTSPARKS // XXX: maybe should be in negative side effects?
            && type != CLOUD_VORTEX;
 }
 
