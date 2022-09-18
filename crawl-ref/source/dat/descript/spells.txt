@@ -1195,8 +1195,8 @@ damage is strongly reduced by armour.
 %%%%
 Scorch spell
 
-Scorches a random foe. Those injured by this have their resistance to fire
-burned away for a short time.
+Scorches a random foe. Its damage is reduced by armour.  Those injured by this
+have their resistance to fire burned away for a short time.
 %%%%
 Seal Doors spell
 
