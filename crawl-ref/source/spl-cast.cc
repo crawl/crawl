@@ -335,6 +335,46 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     return chance * fail_reduce / 100;
 }
 
+
+
+/*
+ * Given some spellpower in centis, do a stepdown at around 50 (5000 in centis)
+ * and return a rescaled value.
+ *
+ * @param power the input spellpower in centis.
+ * @param scale a value to scale the result by, between 1 and 1000. Default is
+ *        1, which returns a regular spellpower. 1000 gives you millis, 100
+ *        centis.
+ */
+static int _stepdown_spellpower(int power)
+{
+    const int divisor = 1000;
+    int result = stepdown_value(power * 10, 50000, 50000, 150000, 200000)
+                    / divisor;
+    return result;
+}
+
+static int _skill_power(spell_type spell)
+{
+    int power = 0;
+
+    const spschools_type disciplines = get_spell_disciplines(spell);
+    const int skillcount = count_bits(disciplines);
+    if (skillcount)
+    {
+        for (const auto bit : spschools_type::range())
+            if (disciplines & bit)
+                power += you.skill(spell_type2skill(bit), 200);
+        power /= skillcount;
+    }
+
+    // Innate casters use spellcasting for every spell school.
+    const int splcast_mult = you.has_mutation(MUT_INNATE_CASTER) ? 250 : 50;
+    power += you.skill(SK_SPELLCASTING, splcast_mult);
+    return power;
+}
+
+
 /**
  * Calculate the player's failure rate with the given spell, including all
  * modifiers. (Armour, mutations, statuses effects, etc.)
@@ -416,43 +456,6 @@ int raw_spell_fail(spell_type spell)
     return min(max(chance2, 0), 100);
 }
 
-/*
- * Given some spellpower in centis, do a stepdown at around 50 (5000 in centis)
- * and return a rescaled value.
- *
- * @param power the input spellpower in centis.
- * @param scale a value to scale the result by, between 1 and 1000. Default is
- *        1, which returns a regular spellpower. 1000 gives you millis, 100
- *        centis.
- */
-static int _stepdown_spellpower(int power)
-{
-    const int divisor = 1000;
-    int result = stepdown_value(power * 10, 50000, 50000, 150000, 200000)
-                    / divisor;
-    return result;
-}
-
-static int _skill_power(spell_type spell)
-{
-    int power = 0;
-
-    const spschools_type disciplines = get_spell_disciplines(spell);
-    const int skillcount = count_bits(disciplines);
-    if (skillcount)
-    {
-        for (const auto bit : spschools_type::range())
-            if (disciplines & bit)
-                power += you.skill(spell_type2skill(bit), 200);
-        power /= skillcount;
-    }
-
-    // Innate casters use spellcasting for every spell school.
-    const int splcast_mult = you.has_mutation(MUT_INNATE_CASTER) ? 250 : 50;
-    power += you.skill(SK_SPELLCASTING, splcast_mult);
-    return power;
-}
-
 
 /*
  * Calculate spell power.
@@ -492,11 +495,11 @@ int calc_spell_power(spell_type spell)
 
     // at this point, `power` is assumed to be basically in centis.
     // apply a stepdown, and scale.
-    power = _stepdown_spellpower(power, scale);
+    power = _stepdown_spellpower(power);
 
     const int cap = spell_power_cap(spell);
     if (cap > 0)
-        power = min(power, cap * scale);
+        power = min(power, cap);
 
     return power;
 }
@@ -2680,7 +2683,7 @@ static string _wizard_spell_power_numeric_string(spell_type spell)
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return "N/A";
-    const int power = min(calc_spell_power(spell, true, false, false), cap);
+    const int power = min(calc_spell_power(spell), cap);
     return make_stringf("%d (%d)", power, cap);
 }
 #endif
