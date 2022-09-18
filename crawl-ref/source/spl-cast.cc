@@ -350,7 +350,7 @@ int raw_spell_fail(spell_type spell)
     // Don't cap power for failure rate purposes.
     // scale by 6, which I guess was chosen because it seems to work.
     // realistic range for spellpower: -6 to -366 (before scale -1 to -61)
-    chance -= calc_spell_power(spell, false, true, false, 6);
+    chance -= _skill_power(spell) * 6 / 100;
     chance -= (you.intel() * 2); // realistic range: -2 to -70
 
     const int armour_shield_penalty = player_armour_shield_spell_penalty();
@@ -425,11 +425,9 @@ int raw_spell_fail(spell_type spell)
  *        1, which returns a regular spellpower. 1000 gives you millis, 100
  *        centis.
  */
-static int _stepdown_spellpower(int power, int scale)
+static int _stepdown_spellpower(int power)
 {
-    // use millis internally
-    ASSERT_RANGE(scale, 1, 1000);
-    const int divisor = 1000 / scale;
+    const int divisor = 1000;
     int result = stepdown_value(power * 10, 50000, 50000, 150000, 200000)
                     / divisor;
     return result;
@@ -455,68 +453,49 @@ static int _skill_power(spell_type spell)
     return power;
 }
 
+
 /*
  * Calculate spell power.
  *
  * @param spell         the spell to check
- * @param apply_intel   whether to include intelligence in the calculation
- * @param fail_rate_check is this just a plain failure rate check or should it
- *                      incorporate situational facts and mutations?
- * @param cap_power     whether to apply the power cap for the spell (from
- *                      `spell_power_cap(spell)`)
- * @param scale         what scale to apply to the result internally?  This
- *                      function has higher internal resolution than the default
- *                      argument, so use this rather than dividing. This must be
- *                      between 1 and 1000.
  *
  * @return the resulting spell power.
  */
-int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
-                     bool cap_power, int scale)
+int calc_spell_power(spell_type spell)
 {
     int power = _skill_power(spell);
 
     if (you.divine_exegesis)
         power += you.skill(SK_INVOCATIONS, 300);
 
-    if (fail_rate_check)
+   
+    power = (power * you.intel()) / 10;
+
+    // [dshaligram] Enhancers don't affect fail rates any more, only spell
+    // power. Note that this does not affect Vehumet's boost in castability.
+    power = _apply_enhancement(power, _spell_enhancement(spell));
+
+    // Wild magic boosts spell power but decreases success rate.
+    power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
+    power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
+
+    // Augmentation boosts spell power at high HP.
+    power *= 10 + 4 * augmentation_amount();
+    power /= 10;
+
+    // Each level of horror reduces spellpower by 10%
+    if (you.duration[DUR_HORROR])
     {
-        // Scale appropriately.
-        // The stepdown performs this step in the else block.
-        power *= scale;
-        power /= 100;
+        power *= 10;
+        power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
     }
-    else
-    {
-        if (apply_intel)
-            power = (power * you.intel()) / 10;
 
-        // [dshaligram] Enhancers don't affect fail rates any more, only spell
-        // power. Note that this does not affect Vehumet's boost in castability.
-        power = _apply_enhancement(power, _spell_enhancement(spell));
-
-        // Wild magic boosts spell power but decreases success rate.
-        power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
-        power /= (10 + 3 * you.get_mutation_level(MUT_SUBDUED_MAGIC));
-
-        // Augmentation boosts spell power at high HP.
-        power *= 10 + 4 * augmentation_amount();
-        power /= 10;
-
-        // Each level of horror reduces spellpower by 10%
-        if (you.duration[DUR_HORROR])
-        {
-            power *= 10;
-            power /= 10 + (you.props[HORROR_PENALTY_KEY].get_int() * 3) / 2;
-        }
-
-        // at this point, `power` is assumed to be basically in centis.
-        // apply a stepdown, and scale.
-        power = _stepdown_spellpower(power, scale);
-    }
+    // at this point, `power` is assumed to be basically in centis.
+    // apply a stepdown, and scale.
+    power = _stepdown_spellpower(power, scale);
 
     const int cap = spell_power_cap(spell);
-    if (cap > 0 && cap_power)
+    if (cap > 0)
         power = min(power, cap * scale);
 
     return power;
@@ -1788,7 +1767,7 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
  **/
 string target_desc(const monster_info& mi, spell_type spell)
 {
-    int powc = calc_spell_power(spell, true);
+    int powc = calc_spell_power(spell);
     const int range = calc_spell_range(spell, powc, false);
 
     unique_ptr<targeter> hitfunc = find_spell_targeter(spell, powc, range);
@@ -1852,7 +1831,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     ASSERT(wiz_cast || !(flags & spflag::testing));
 
     if (!powc)
-        powc = calc_spell_power(spell, true);
+        powc = calc_spell_power(spell);
 
     const int range = calc_spell_range(spell, powc, actual_spell);
     beam.range = range;
@@ -2689,7 +2668,9 @@ static int _spell_power(spell_type spell, bool evoked)
     if (cap == 0)
         return -1;
     const int pow = evoked ? wand_power()
-                           : calc_spell_power(spell, true, false, false);
+                           : calc_spell_power(spell);
+    //TODO: currently applies cap twice to nonwand spells.
+    //Double check that we can safely put cap in wand_power
     return min(pow, cap);
 }
 
@@ -2802,7 +2783,7 @@ int spell_acc(spell_type spell)
 
 int spell_power_percent(spell_type spell)
 {
-    const int pow = calc_spell_power(spell, true);
+    const int pow = calc_spell_power(spell);
     const int max_pow = spell_power_cap(spell);
     if (max_pow == 0)
         return -1; // should never happen for player spells
@@ -2827,7 +2808,7 @@ int calc_spell_range(spell_type spell, int power, bool allow_bonus,
                      bool ignore_shadows)
 {
     if (power == 0)
-        power = calc_spell_power(spell, true, false, false);
+        power = calc_spell_power(spell);
     const int range = spell_range(spell, power, allow_bonus, ignore_shadows);
 
     return range;
