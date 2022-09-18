@@ -1387,7 +1387,7 @@ static void _BATTLE_world_reacts(item_def */*item*/)
         && there_are_monsters_nearby(true, true, false)
         && stop_summoning_reason(MR_RES_POISON, M_FLIES).empty())
     {
-        cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE, true),
+        cast_battlesphere(&you, calc_spell_power(SPELL_BATTLESPHERE),
                           GOD_NO_GOD, false);
         did_god_conduct(DID_WIZARDLY_ITEM, 10);
     }

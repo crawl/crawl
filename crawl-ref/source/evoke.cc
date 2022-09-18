@@ -180,10 +180,14 @@ int wand_mp_cost()
     return min(you.magic_points, cost);
 }
 
-int wand_power()
+int wand_power(spell_type wand_spell)
 {
+    const int cap = spell_power_cap(wand_spell);
+    if (cap == 0)
+        return -1;
     const int mp_cost = wand_mp_cost();
-    return (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+    const int pow = (15 + you.skill(SK_EVOCATIONS, 7) / 2) * (mp_cost + 9) / 9;
+    return min(pow, cap);
 }
 
 void zap_wand(int slot, dist *_target)
@@ -226,11 +230,11 @@ void zap_wand(int slot, dist *_target)
         you.wield_change = true;
 
     const int mp_cost = wand_mp_cost();
-    const int power = wand_power();
-    pay_mp(mp_cost);
-
     const spell_type spell =
         spell_in_wand(static_cast<wand_type>(wand.sub_type));
+    const int power = wand_power(spell);
+    pay_mp(mp_cost);
+
     if (spell == SPELL_FASTROOT)
         you.props[FASTROOT_POWER_KEY] = power; // we may cancel, but that's fine
 

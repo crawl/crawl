@@ -93,9 +93,7 @@ int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
                 const string &title = "cast");
 int raw_spell_fail(spell_type spell);
-int calc_spell_power(spell_type spell, bool apply_intel,
-                     bool fail_rate_chk = false, bool cap_power = true,
-                     int scale = 1);
+int calc_spell_power(spell_type spell);
 int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true,
                      bool ignore_shadows = false);
 
