@@ -133,7 +133,7 @@ static const struct spell_desc spelldata[] =
     5,
     200,
     5, 5,
-    5, 15,
+    15, 0,
     TILEG_ARCJOLT,
 },
 
