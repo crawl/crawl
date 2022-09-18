@@ -1355,6 +1355,7 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_AUGMENTATION:
     case UNRAND_MEEK:
     case UNRAND_ELEMENTAL_VULNERABILITY:
+    case UNRAND_MISFORTUNE:
         return 11;
     default:
         return -1;
