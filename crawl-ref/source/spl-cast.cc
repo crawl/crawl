@@ -471,7 +471,7 @@ int calc_spell_power(spell_type spell)
     if (you.divine_exegesis)
         power += you.skill(SK_INVOCATIONS, 300);
 
-   
+
     power = (power * you.intel()) / 10;
 
     // [dshaligram] Enhancers don't affect fail rates any more, only spell
