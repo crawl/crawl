@@ -1487,6 +1487,12 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         // Even the dumbest monsters will avoid miasma if they can.
         return true;
 
+    case CLOUD_BLASTSPARKS:
+        // As with traps, make friendly monsters not walk into blastsparks.
+        return mons->attitude == ATT_FRIENDLY
+        // Hack: try to avoid penance.
+            || mons->attitude == ATT_GOOD_NEUTRAL;
+
     case CLOUD_RAIN:
         // Fiery monsters dislike the rain.
         if (mons->is_fiery() && extra_careful)
