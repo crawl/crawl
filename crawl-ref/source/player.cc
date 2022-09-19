@@ -1164,10 +1164,7 @@ int player_regen()
     // Note: if some condition can set rr = 0, can't be rested off, and
     // would allow travel, please update is_sufficiently_rested.
 
-    int rr = you.hp_max / 3;
-
-    if (rr > 20)
-        rr = 20 + ((rr - 20) / 2);
+    int rr = (you.hp_max * 100) / 150;
 
     // Add in miscellaneous bonuses
     rr += _player_bonus_regen();
@@ -3859,7 +3856,7 @@ int get_real_hp(bool trans, bool drained)
 {
     int hitp;
 
-    hitp  = you.experience_level * 11 / 2 + 8;
+    hitp  = you.experience_level * 5 + 8;
     hitp += you.hp_max_adj_perm;
     // Important: we shouldn't add Heroism boosts here.
     // ^ The above is a 2011 comment from 1kb, in 2021 this isn't
