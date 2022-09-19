@@ -7,7 +7,7 @@
 
 // How many auts does the clock roll back every time the player
 // enters a new floor?
-const int ZOT_CLOCK_PER_FLOOR = 6000 * BASELINE_DELAY;
+const int ZOT_CLOCK_PER_FLOOR = 4500 * BASELINE_DELAY;
 // After how many auts without visiting new floors does the player die instantly?
 const int MAX_ZOT_CLOCK = 27000 * BASELINE_DELAY;
 
