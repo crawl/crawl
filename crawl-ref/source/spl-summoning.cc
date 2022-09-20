@@ -1064,9 +1064,12 @@ spret summon_butterflies()
     }
 
     // XXX: dedup with Xom, or change number?
-    const int how_many = random_range(10, 20);
+
+    // place some in a tight cluster, distance 2. Max 24 squares, so this is
+    // always at least 2/3 density.
+    const int how_many_inner = random_range(16, 22);
     bool success = false;
-    for (int i = 0; i < how_many; ++i)
+    for (int i = 0; i < how_many_inner; ++i)
     {
         mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
                             MG_AUTOFOE);
@@ -1075,6 +1078,24 @@ spret summon_butterflies()
         if (create_monster(butterfly))
             success = true;
     }
+    // place another set more sparsely. These will try to find a placement
+    // within range 3 of the player. If that place is already filled, they will
+    // go as far as 2 from that original spot. This can backfill the inner
+    // zone.
+    const int how_many_outer = random_range(12, 28);
+    for (int i = 0; i < how_many_outer; ++i)
+    {
+        coord_def pos(-1,-1);
+        if (!find_habitable_spot_near(you.pos(), MONS_BUTTERFLY, 3, false, pos))
+            break;
+        mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, pos, MHITYOU,
+                            MG_AUTOFOE);
+        butterfly.set_summoned(&you, 3, MON_SUMM_BUTTERFLIES);
+
+        if (create_monster(butterfly))
+            success = true;
+    }
+
 
     if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
