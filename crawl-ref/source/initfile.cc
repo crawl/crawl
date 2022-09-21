@@ -4382,6 +4382,8 @@ static set<commandline_option_type> clo_headless_ok = {
     CLO_OBJSTAT,
 #ifndef USE_TILE_LOCAL
 // TODO: not implemented for local tiles
+    CLO_ARENA,
+    CLO_RC,
     CLO_TEST,
     CLO_SCRIPT,
 #endif
