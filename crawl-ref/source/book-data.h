@@ -232,6 +232,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Party Tricks
     SPELL_APPORTATION,
+    SPELL_RAY_OF_EXOTHERMISM,
     SPELL_INTOXICATE,
 },
 
@@ -354,6 +355,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Everburning Encyclopedia
+    SPELL_RAY_OF_EXOTHERMISM,
     SPELL_IGNITE_POISON,
     SPELL_STICKY_FLAME,
 },

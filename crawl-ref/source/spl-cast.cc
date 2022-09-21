@@ -1250,6 +1250,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_THUNDERBOLT:
         return make_unique<targeter_thunderbolt>(&you, range,
                                             get_thunderbolt_last_aim(&you));
+    case SPELL_RAY_OF_EXOTHERMISM:
+        return make_unique<targeter_exothermism>(&you, pow, range);
     case SPELL_LRD:
         return make_unique<targeter_fragment>(&you, pow, range);
     case SPELL_AIRSTRIKE:
@@ -2751,6 +2753,8 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
             return base_fragmentation_damage(power);
         case SPELL_ARCJOLT:
             return arcjolt_damage(power);
+        case SPELL_RAY_OF_EXOTHERMISM:
+            return zap_damage(ZAP_EXOTHERM_BLAST, power, false, false);
         default:
             break;
     }

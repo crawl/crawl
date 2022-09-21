@@ -292,6 +292,7 @@ static const map<job_type, job_def> job_data =
       SP_HILL_ORC, },
     {
         SPELL_KISS_OF_DEATH,
+        SPELL_RAY_OF_EXOTHERMISM,
         SPELL_HAILSTORM,
     },
     { "leather armour" },

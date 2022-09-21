@@ -443,6 +443,40 @@ static const zap_info zap_data[] =
 },
 
 {
+    ZAP_EXOTHERM_RAY,
+    "heat ray",
+    50,
+    nullptr,
+    new tohit_calculator<13, 1, 10>,
+    nullptr,
+    new tohit_calculator<13, 1, 10>,
+    RED,
+    false,
+    BEAM_MISSILE,  // To avoid printing needless messages for non-damaging hits
+    DCHAR_FIRED_ZAP,
+    true,
+    false,
+    0
+},
+
+{
+    ZAP_EXOTHERM_BLAST,
+    "heat blast",
+    50,
+    new calcdice_calculator<3, 11, 1, 4>,
+    new tohit_calculator<40>,
+    new calcdice_calculator<3, 11, 1, 4>,
+    new tohit_calculator<40>,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+    0
+},
+
+{
     ZAP_SLOW,
     "",
     100,

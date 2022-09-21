@@ -228,6 +228,8 @@ private:
     void do_fire();
     void initialise_fire();
 
+    void exotherm_explode(coord_def pos);
+
     // Lots of properties of the beam.
     coord_def pos() const;
     coord_def leg_source() const;

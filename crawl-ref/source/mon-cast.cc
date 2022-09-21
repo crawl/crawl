@@ -1388,6 +1388,7 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_DISPEL_UNDEAD_RANGE:
     case SPELL_STUNNING_BURST:
     case SPELL_KISS_OF_DEATH:
+    case SPELL_RAY_OF_EXOTHERMISM:
         zappy(spell_to_zap(real_spell), power, true, beam);
         break;
 
