@@ -1393,11 +1393,15 @@ Sticky Flame Range spell
 
 Launches a glob of sticky flame, covering a targeted creature with liquid fire
 for a short time.
+
+If the target is insubstantial, the liquid fire will fail to stick.
 %%%%
 Sticky Flame spell
 
 Conjures a glob of sticky flame, covering an adjacent creature with liquid fire
 for a short time.
+
+If the target is insubstantial, the liquid fire will fail to stick.
 %%%%
 Still Winds spell
 
