@@ -865,44 +865,14 @@ int count_adjacent_slime_walls(const coord_def &pos)
     return count;
 }
 
-void slime_wall_damage(actor* act, int delay)
+int slime_wall_corrosion(actor* act)
 {
     ASSERT(act);
 
     if (actor_slime_wall_immune(act))
-        return;
+        return 0;
 
-    const int walls = count_adjacent_slime_walls(act->pos());
-    if (!walls)
-        return;
-
-    // Consider pulling out damage from splash_with_acid() into
-    // its own function and calling that.
-    const int strength = div_rand_round(3 * walls * delay, BASELINE_DELAY);
-    const int base_dam = act->is_player() ? roll_dice(4, strength) : roll_dice(2, 4);
-    const int dam = resist_adjust_damage(act, BEAM_ACID, base_dam);
-    if (act->is_player())
-    {
-        mprf("You are splashed with acid%s%s",
-             dam > 0 ? "" : " but take no damage",
-             attack_strength_punctuation(dam).c_str());
-        ouch(dam, KILLED_BY_ACID, MID_NOBODY);
-    }
-    else if (dam > 0 && you.see_cell_no_trans(act->pos()))
-    {
-        const actor *agent = you.duration[DUR_OOZEMANCY] ? &you : nullptr;
-        const char *verb = act->is_icy() ? "melt" : "burn";
-        mprf((walls > 1) ? "The walls %s %s!" : "The wall %ss %s!",
-              verb, act->name(DESC_THE).c_str());
-        act->hurt(agent, dam, BEAM_ACID);
-        if (act->alive())
-        {
-            if (agent)
-                behaviour_event(act->as_monster(), ME_WHACK, agent, agent->pos());
-            else
-                behaviour_event(act->as_monster(), ME_DISTURB, 0, act->pos());
-        }
-    }
+    return count_adjacent_slime_walls(act->pos());
 }
 
 int count_adjacent_icy_walls(const coord_def &pos)
