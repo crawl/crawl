@@ -3604,17 +3604,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_UNSTABLE_MISSILE, "Unstable Shard",
-    spschool::conjuration | spschool::earth | spschool::transmutation,
-    spflag::dir_or_target | spflag::needs_tracer,
-    2,
-    50,
-    6, 6,
-    3, 0,
-    TILEG_YARAS_UNSTABLE_MISSILE,
-},
-
-{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

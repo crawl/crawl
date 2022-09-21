@@ -2277,9 +2277,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return true;
     }
 
-    if ((flavour == BEAM_CRYSTAL
-         || real_flavour == BEAM_CRYSTAL
-         || origin_spell == SPELL_UNSTABLE_MISSILE)
+    if ((flavour == BEAM_CRYSTAL || real_flavour == BEAM_CRYSTAL)
         && feat_is_solid(feat)
         && !feat_is_tree(feat))
     {

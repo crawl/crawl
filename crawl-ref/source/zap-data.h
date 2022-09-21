@@ -1419,23 +1419,6 @@ _mon_hex_zap(ZAP_SLEEP, BEAM_SLEEP),
 },
 
 {
-    ZAP_UNSTABLE_MISSILE,
-    "crystal shard",
-    50,
-    new calcdice_calculator<3, 30, 3, 8>,
-    new tohit_calculator<11, 1, 8>,
-    new calcdice_calculator<3, 30, 3, 8>,
-    new tohit_calculator<11, 1, 8>,
-    GREEN,
-    false,
-    BEAM_MMISSILE,
-    DCHAR_FIRED_MISSILE,
-    false,
-    false,
-    3
-},
-
-{
     ZAP_CRYSTAL_BOLT,
     "crystal bolt",
     200,

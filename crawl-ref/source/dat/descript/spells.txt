@@ -1687,14 +1687,6 @@ Causes nearby corpses to begin crawling together, merging into horrible
 agglomerations of flesh. More and larger corpses result in more powerful
 creations.
 %%%%
-Unstable Shard spell
-
-Conjures a shard of magical crystal and destabilizes one side of it, sending
-it hurtling toward its victim at lethal speed while spraying magical radiation
-back onto its caster. It's safe to cast once, but repeated castings in short
-succession can leave the caster dangerously contaminated. The crystal can
-bounce off walls of any kind.
-%%%%
 Upheaval spell
 
 Calls on the forces of nature to blast a small area with magma, ice, wind,

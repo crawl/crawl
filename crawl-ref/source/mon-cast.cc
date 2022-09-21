@@ -1354,7 +1354,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_STING:
     case SPELL_IRON_SHOT:
     case SPELL_STONE_ARROW:
-    case SPELL_UNSTABLE_MISSILE:
     case SPELL_FORCE_LANCE:
     case SPELL_CORROSIVE_BOLT:
     case SPELL_HIBERNATION:
