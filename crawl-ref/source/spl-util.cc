@@ -1265,13 +1265,13 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         {
             if (you.duration[DUR_SWIFTNESS])
                 return "this spell is already in effect.";
-            int swiftness_mv = player_movement_speed(); 
+            int swiftness_mv = player_movement_speed();
             //TODO: use a constant for nimble swimmer speed, water penalty.
             if (you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
                 swiftness_mv += 4;
             else if (you.in_water() && !you.can_swim())
-                swiftness_mv -= 6; 
-            
+                swiftness_mv -= 6;
+
             if (swiftness_mv <= FASTEST_PLAYER_MOVE_SPEED)
                 return "you're already travelling as fast as you can.";
             if (you.is_stationary())
