@@ -1227,7 +1227,6 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                           pow >= 100 ? 1 : 0, 1);
     case SPELL_FIRE_STORM:
         return make_unique<targeter_smite>(&you, range, 2, pow > 76 ? 3 : 2);
-    case SPELL_FREEZING_CLOUD:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
         return make_unique<targeter_cloud>(&you, range);
@@ -1276,6 +1275,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, pow, false));
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
+    case SPELL_FREEZING_CLOUD:
     case SPELL_MAXWELLS_COUPLING:
         return make_unique<targeter_maxwells_coupling>();
     case SPELL_FROZEN_RAMPARTS:
@@ -2151,7 +2151,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // Clouds and explosions.
     case SPELL_POISONOUS_CLOUD:
     case SPELL_HOLY_BREATH:
-    case SPELL_FREEZING_CLOUD:
         return cast_big_c(powc, spell, &you, beam, fail);
 
     case SPELL_FIRE_STORM:
@@ -2433,6 +2432,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_HAILSTORM:
         return cast_hailstorm(powc, fail);
+
+    case SPELL_FREEZING_CLOUD:
+        return cast_fcloud(powc, fail);
 
     case SPELL_MAXWELLS_COUPLING:
         return cast_maxwells_coupling(powc, fail);

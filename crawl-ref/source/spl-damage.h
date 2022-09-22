@@ -127,10 +127,12 @@ spret cast_searing_ray(int pow, bolt &beam, bool fail);
 void handle_searing_ray();
 void end_searing_ray();
 
-vector<monster *> find_maxwells_possibles();
+vector<monster *> find_closest_possibles();
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer = false);
 void handle_maxwells_coupling();
 void end_maxwells_coupling(bool quiet = false);
+
+spret cast_fcloud(int pow, bool fail, bool tracer = false);
 
 spret cast_noxious_bog(int pow, bool fail);
 vector<coord_def> find_bog_locations(const coord_def &center, int pow);

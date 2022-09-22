@@ -267,3 +267,27 @@ spret scroll_of_poison(bool scroll_unknown)
     canned_msg(MSG_NOTHING_HAPPENS);
     return spret::fail;
 }
+
+// attempt to place freezing clouds between the target monster and the player
+void fcloud_bank(coord_def target, int pow)
+{
+    int dist = target.distance_from(you.pos());
+
+    for (radius_iterator ri(you.pos(), 3, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if ((grid_distance(target, *ri) > dist
+            && grid_distance(you.pos(), *ri) <= grid_distance(target, *ri))
+            || !in_bounds(*ri))
+        {
+            continue;
+        }
+
+        if (!cell_is_solid(*ri) && !cloud_at(*ri))
+        {
+            place_cloud(CLOUD_COLD, *ri, 3 + random2(div_rand_round(pow, 4))
+                                           + random2(div_rand_round(pow, 4))
+                                           + random2(div_rand_round(pow, 4)),
+                                           &you);
+        }
+    }
+}

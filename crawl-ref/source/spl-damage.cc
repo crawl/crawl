@@ -45,6 +45,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-clouds.h"
 #include "spl-goditem.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -4013,7 +4014,7 @@ bool wait_spell_active(spell_type spell)
 
 // returns the closest target to the player, choosing randomly if there are more
 // than one (see `fair` argument to distance_iterator).
-static monster* _find_maxwells_target(bool tracer)
+static monster* _find_closest_target(bool tracer)
 {
     for (distance_iterator di(you.pos(), !tracer, true, LOS_RADIUS); di; ++di)
     {
@@ -4029,10 +4030,10 @@ static monster* _find_maxwells_target(bool tracer)
 }
 
 // find all possible targets at the closest distance; used for targeting
-vector<monster *> find_maxwells_possibles()
+vector<monster *> find_closest_possibles()
 {
     vector<monster *> result;
-    monster *seed = _find_maxwells_target(true);
+    monster *seed = _find_closest_target(true);
     if (!seed)
         return result;
 
@@ -4048,7 +4049,7 @@ vector<monster *> find_maxwells_possibles()
 
 spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
 {
-    monster* const mon = _find_maxwells_target(tracer);
+    monster* const mon = _find_closest_target(tracer);
 
     if (tracer)
     {
@@ -4072,7 +4073,7 @@ spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
 
 static void _discharge_maxwells_coupling()
 {
-    monster* const mon = _find_maxwells_target(false);
+    monster* const mon = _find_closest_target(false);
 
     if (!mon)
     {
@@ -4161,6 +4162,31 @@ void end_maxwells_coupling(bool quiet)
     if (!quiet)
         mpr("The insufficient charge dissipates harmlessly.");
     you.props.erase(COUPLING_TIME_KEY);
+}
+
+spret cast_fcloud(int pow, bool fail, bool tracer)
+{
+    monster* const mon = _find_closest_target(tracer);
+
+    if (tracer)
+    {
+        if (!mon || !you.can_see(*mon))
+            return spret::abort;
+        else
+            return spret::success;
+    }
+
+    fail_check();
+
+    if (!mon)
+        canned_msg(MSG_NOTHING_HAPPENS);
+    else
+    {
+        const coord_def pos = mon->pos();
+        fcloud_bank(pos, pow);
+    }
+
+    return spret::success;
 }
 
 vector<coord_def> find_bog_locations(const coord_def &center, int pow)

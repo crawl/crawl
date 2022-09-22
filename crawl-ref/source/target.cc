@@ -2047,7 +2047,7 @@ aff_type targeter_chain_lightning::is_affected(coord_def loc)
 }
 
 targeter_maxwells_coupling::targeter_maxwells_coupling()
-    : targeter_multiposition(&you, find_maxwells_possibles())
+    : targeter_multiposition(&you, find_closest_possibles())
 {
     if (affected_positions.size() == 1)
         positive = AFF_YES;
