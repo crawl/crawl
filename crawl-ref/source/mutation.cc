@@ -94,6 +94,7 @@ static const body_facet_def _body_facets[] =
 {
     { EQ_HELMET, MUT_HORNS },
     { EQ_HELMET, MUT_ANTENNAE },
+    { EQ_HELMET, MUT_BEAK },
     { EQ_GLOVES, MUT_CLAWS },
     { EQ_GLOVES, MUT_DEMONIC_TOUCH },
     { EQ_BOOTS, MUT_HOOVES },
