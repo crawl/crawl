@@ -186,19 +186,20 @@ static void _initialize()
 #error "DEBUG must be defined if DEBUG_TESTS is defined"
 #endif
 
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
+#if !defined(DEBUG_DIAGNOSTICS) && !defined(DEBUG_TESTS)
+        if (!crawl_state.script)
+        {
+            end(1, false, "Non-debug Crawl cannot run tests. "
+                "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
+                "or DEBUG_TESTS)");
+        }
+#endif
 #ifdef USE_TILE
         init_player_doll();
 #endif
         dgn_reset_level();
         crawl_state.show_more_prompt = false;
-        run_tests();
-        // doesn't return
-#else
-        end(1, false, "Non-debug Crawl cannot run tests. "
-            "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
-            "or DEBUG_TESTS)");
-#endif
+        run_tests(); // noreturn
     }
 
     mpr(opening_screen().tostring().c_str());

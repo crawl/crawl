@@ -549,8 +549,10 @@ static void _show_commandline_options_help()
     puts("  -test               run all test cases in test/ except test/big/");
     puts("  -test foo,bar       run only tests \"foo\" and \"bar\"");
     puts("  -test list          list available tests");
-    puts("  -script <name>      run script matching <name> in ./scripts");
 #endif
+    // XX should this really be advertised outside of debug builds?
+    puts("  -headless           force headless mode (no pty)");
+    puts("  -script <name>      run script matching <name> in ./scripts");
 #ifdef DEBUG_STATISTICS
 #ifndef DEBUG_DIAGNOSTICS
     puts("");
