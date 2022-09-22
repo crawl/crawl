@@ -1,5 +1,5 @@
 #pragma once
 
-#ifdef DEBUG_TESTS
+#include "macros.h"
+
 NORETURN void run_tests();
-#endif
