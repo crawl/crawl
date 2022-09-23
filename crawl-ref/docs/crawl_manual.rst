@@ -499,9 +499,8 @@ Zot
 ========================================
 
 No one knows who or what Zot is: demon, god, wizard, something else entirely?
-But adventurers seeking the Orb will, in turn, be hunted by Zot. If it finds
-them, it will first drain their life and then, once they are sufficiently
-reduced, it will end their existence.
+But adventurers seeking the Orb will, in turn, be hunted by Zot. Even a moment's
+contact with Zot is enough to permanently damage one's health.
 
 Zot is very slow moving, and can only sense adventurers once they've spent an
 inordinately long time in one area of the dungeon. Even once this happens,

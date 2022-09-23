@@ -744,12 +744,12 @@ Zot status
 
 You have spent too much time in one branch, allowing the malevolent power of Zot
 to notice you. If you spend the indicated number of turns in the branch without
-descending to a new floor, Zot will find and consume you.
+descending to a new floor, Zot will find you, causing permanent health damage.
 %%%%
 Zot count status
 
 If you spend the indicated number of turns in this branch without descending to
-a new floor, Zot will find and consume you.
+a new floor, Zot will find you, causing permanent health damage.
 %%%%
 Curl status
 

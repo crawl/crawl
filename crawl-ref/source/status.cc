@@ -767,10 +767,9 @@ bool fill_status_info(int status, status_info& inf)
 static void _describe_zot(status_info& inf)
 {
     const int lvl = bezotting_level();
-    const bool in_death_range = zot_clock_fatal();
     if (lvl > 0)
     {
-        inf.short_text = in_death_range ? "bezotted and risking death" : "bezotted";
+        inf.short_text = "bezotted";
         inf.long_text = "Zot is approaching!";
     }
     else if (!Options.always_show_zot && !you.has_mutation(MUT_SHORT_LIFESPAN)
@@ -780,15 +779,14 @@ static void _describe_zot(status_info& inf)
     }
 
     // XX code dup with overview screen
-    inf.light_text = make_stringf("Zot (%d%s)", turns_until_zot(),
-        in_death_range ? ", death" : "");
+    inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
     switch (lvl)
     {
         case 0:
-            inf.light_colour = in_death_range ? RED : WHITE;
+            inf.light_colour = WHITE;
             break;
         case 1:
-            inf.light_colour = in_death_range ? RED : YELLOW;
+            inf.light_colour = YELLOW;
             break;
         case 2:
             inf.light_colour = RED;
