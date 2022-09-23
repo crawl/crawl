@@ -2593,17 +2593,22 @@ vector<coord_def> arcjolt_targets(const actor &agent, int power, bool actual)
         {
             actor* act = actor_at(p);
             const bool seen_act = act && (actual || agent.can_see(*act));
-            if (seen_act && act != &agent)
+            if (!seen_act
+                || act == &agent
+                || act->is_monster()
+                   && mons_is_projectile(*act->as_monster()))
             {
-                targets.push_back(p);
+                continue;
+            }
 
-                for (adjacent_iterator ai(p); ai; ++ai)
+            targets.push_back(p);
+
+            for (adjacent_iterator ai(p); ai; ++ai)
+            {
+                if (!seen.count(*ai) && agent.see_cell(*ai))
                 {
-                    if (!seen.count(*ai) && agent.see_cell(*ai))
-                    {
-                        seen.insert(*ai);
-                        next_frontier.push_back(*ai);
-                    }
+                    seen.insert(*ai);
+                    next_frontier.push_back(*ai);
                 }
             }
         }
