@@ -662,9 +662,10 @@ static spret _rampage_forward(coord_def move)
                 return spret::fail;
             continue;
         }
-        // Don't rampage if the closest mons is non-hostile or a (non-Fedhas) plant.
-        else if (mon && (mon->friendly()
-                         || mon->neutral()
+        // Don't rampage if the closest mons is non-hostile, a projectile,
+        // or a (non-Fedhas) plant.
+        else if (mon && (mon->wont_attack()
+                         || mons_is_projectile(*mon)
                          || mons_is_firewood(*mon)))
         {
             return spret::fail;
