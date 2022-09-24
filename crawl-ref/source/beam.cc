@@ -89,7 +89,6 @@ static void _ench_animation(int flavour, const monster* mon = nullptr,
                             bool force = false);
 static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
-static bool _is_exotherm(const bolt &beam);
 int _ench_pow_to_dur(int pow);
 
 tracer_info::tracer_info()
@@ -2949,9 +2948,6 @@ bool bolt::harmless_to_player() const
     if (you.cloud_immune() && is_big_cloud())
         return true;
 
-    if (_is_exotherm(*this))
-        return true;
-
     switch (flavour)
     {
     case BEAM_VISUAL:
@@ -3103,9 +3099,6 @@ void bolt::tracer_affect_player()
     }
 
     extra_range_used += range_used_on_hit();
-
-    if (_is_exotherm(*this))
-        exotherm_explode(you.pos());
 }
 
 int bolt::apply_lighting(int base_hit, const actor &targ) const
@@ -3919,7 +3912,7 @@ void bolt::affect_player()
     if (hit_verb.empty())
         hit_verb = engulfs ? "engulfs" : "hits";
 
-    if (flavour != BEAM_VISUAL && !is_enchantment() && !_is_exotherm(*this))
+    if (flavour != BEAM_VISUAL && !is_enchantment())
     {
         mprf("The %s %s %s%s%s", name.c_str(), hit_verb.c_str(),
              you.hp > 0 ? "you" : "your lifeless body",
@@ -4082,9 +4075,6 @@ void bolt::affect_player()
 
     knockback_actor(&you, final_dam);
     pull_actor(&you, final_dam);
-
-    if (_is_exotherm(*this))
-        exotherm_explode(you.pos());
 
     if (origin_spell == SPELL_FLASH_FREEZE
         || origin_spell == SPELL_CREEPING_FROST
@@ -4374,9 +4364,6 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
-
-    if (_is_exotherm(*this))
-        exotherm_explode(mon->pos());
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4604,9 +4591,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         beogh_follower_convert(mon, true);
 
     knockback_actor(mon, dmg);
-
-    if (_is_exotherm(*this))
-        exotherm_explode(mon->pos());
 
     if (origin_spell == SPELL_FLASH_FREEZE
              || name == "blast of ice"
@@ -5079,7 +5063,7 @@ void bolt::affect_monster(monster* mon)
              name.c_str(),
              hit_verb.c_str(),
              mon->name(DESC_THE).c_str(),
-             postac || _is_exotherm(*this) ? "" : " but does no damage",
+             postac ? "" : " but does no damage",
              attack_strength_punctuation(final).c_str());
 
     }
@@ -6096,10 +6080,6 @@ const map<spell_type, explosion_sfx> spell_explosions = {
         "The cloud of blastsparks explodes!",
         "a concussive explosion",
     } },
-    { SPELL_RAY_OF_EXOTHERMISM, {
-        "Fwoosh!",
-        "the sizzle of overheated air",
-    } },
 };
 
 // Takes a bolt and refines it for use in the explosion function.
@@ -6941,43 +6921,4 @@ bolt setup_targetting_beam(const monster &mons)
     beem.source_id = mons.mid;
 
     return beem;
-}
-
-static bool _is_exotherm(const bolt &beam)
-{
-    return beam.origin_spell == SPELL_RAY_OF_EXOTHERMISM
-       && !beam.in_explosion_phase;
-}
-
-void bolt::exotherm_explode(coord_def pos)
-{
-    if (!range_used())
-    {
-        // No self-zapping. We'll add some lore - the spell works by
-        // agitating tiny differences between the caster's temperature
-        // and the struck victims', so, since there's no difference
-        // between yourself and yourself, it doesn't work.
-        // Or, this.
-        if (!is_tracer && you.see_cell(pos))
-            mpr("Having gone nowhere, the ray dissipates harmlessly.");
-        return;
-    }
-
-    const actor* gent = agent();
-
-    bolt beam;
-    bolt_parent_init(*this, beam);
-    zappy(ZAP_EXOTHERM_BLAST, ench_power, gent && gent->is_monster(), beam);
-
-    beam.aux_source   = name;
-    beam.source       = pos;
-    beam.target       = pos;
-
-    beam.refine_for_explosion();
-    beam.explode(true, true);
-
-    friend_info += beam.friend_info;
-    foe_info    += beam.foe_info;
-    if (beam.is_tracer && beam.beam_cancelled)
-        beam_cancelled = true;
 }

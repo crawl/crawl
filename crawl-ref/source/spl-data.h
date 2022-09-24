@@ -3604,17 +3604,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_RAY_OF_EXOTHERMISM, "Ray of Exothermism",
-    spschool::conjuration | spschool::fire,
-    spflag::dir_or_target | spflag::needs_tracer,
-    2,
-    50,
-    5, 5,
-    2, 0,
-    TILEG_ERROR,
-},
-
-{
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
     spflag::testing,

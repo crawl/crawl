@@ -1170,12 +1170,6 @@ Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
 %%%%
-Ray of Exothermism spell
-
-Fires a ray which causes an eruption of heat around each creature struck.
-These blasts have a hollow centre, burning those adjacent while leaving the
-ray-touched creature unharmed.
-%%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them

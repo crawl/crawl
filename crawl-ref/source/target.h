@@ -225,16 +225,6 @@ public:
     aff_type is_affected(coord_def loc) override;
 };
 
-class targeter_exothermism : public targeter_beam
-{
-public:
-    targeter_exothermism(const actor *act, int pow, int range);
-    bool set_aim(coord_def a) override;
-    aff_type is_affected(coord_def loc) override;
-private:
-    set<coord_def> affected_cells;
-};
-
 class targeter_radius : public targeter
 {
 public:
