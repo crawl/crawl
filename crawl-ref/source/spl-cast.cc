@@ -749,7 +749,7 @@ static void _trigger_ghost_crab_claws()
 {
     // some conditions to limit how often this gets triggered?
     // power scales or flat?
-    big_cloud(CLOUD_SPECTRAL, &you, you.pos(), random2(6) + 5, 5);
+    big_cloud(CLOUD_SPECTRAL, &you, you.pos(), random_range(12, 20), 4 + random2(5));
 }
 
 /**
