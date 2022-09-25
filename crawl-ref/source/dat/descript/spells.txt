@@ -1704,6 +1704,13 @@ Virulence spell
 
 Makes a targeted creature more vulnerable to poison.
 %%%%
+Volcanic Tap spell
+
+Blasts a target with magma conjured through a link to the fiery depths of the
+earth. This link leaves the caster immobilized (but still able to act) and
+unable to re-cast the spell for a short time afterward. The damage done
+partially bypasses fire resistance.
+%%%%
 Volley of Thorns spell
 
 Launches a small hail of sharp thorns.

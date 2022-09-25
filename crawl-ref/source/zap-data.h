@@ -1312,6 +1312,23 @@ _mon_hex_zap(ZAP_HIBERNATION, BEAM_HIBERNATION),
 },
 
 {
+    ZAP_VOLCANIC_TAP,
+    "spray of magma",
+    50,
+    new calcdice_calculator<3, 24, 1, 3>,
+    new tohit_calculator<9, 1, 10>,
+    nullptr,
+    nullptr,
+    RED,
+    false,
+    BEAM_LAVA,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    4
+},
+
+{
     ZAP_POISON_ARROW,
     "poison arrow",
     200,

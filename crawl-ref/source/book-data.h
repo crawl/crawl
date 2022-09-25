@@ -72,7 +72,6 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_FOXFIRE,
     SPELL_FIREBALL,
     SPELL_STARBURST,
-    SPELL_IGNITION,
 },
 
 {   // Book of Ice
@@ -356,9 +355,11 @@ static const vector<spell_type> spellbook_templates[] =
 { // Everburning Encyclopedia
     SPELL_IGNITE_POISON,
     SPELL_STICKY_FLAME,
+    SPELL_IGNITION,
 },
 
 { // Book of Earth
+    SPELL_VOLCANIC_TAP,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_LRD,
     SPELL_STATUE_FORM,

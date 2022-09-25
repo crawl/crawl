@@ -1254,6 +1254,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_fragment>(&you, pow, range);
     case SPELL_AIRSTRIKE:
         return make_unique<targeter_airstrike>();
+    case SPELL_VOLCANIC_TAP:
+        return make_unique<targeter_smite>(&you, range);
     case SPELL_FULMINANT_PRISM:
         return make_unique<targeter_smite>(&you, range, 0, 2);
     case SPELL_GLACIATE:
@@ -1517,18 +1519,22 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
     return hits * 100 / iters;
 }
 
+static vector<string> _desc_hit_chance(const monster_info& mi, int acc, bool pierces)
+{
+    if (!acc)
+        return vector<string>{};
+    const int hit_pct = _to_hit_pct(mi, acc, pierces);
+    if (hit_pct == -1)
+        return vector<string>{};
+    return vector<string>{make_stringf("%d%% to hit", hit_pct)};
+}
+
 vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc)
 {
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     if (!beam_hitf)
         return vector<string>{};
-    const int acc = beam_hitf->beam.hit;
-    if (!acc)
-        return vector<string>{};
-    const int hit_pct = _to_hit_pct(mi, acc, beam_hitf->beam.pierce);
-    if (hit_pct == -1)
-        return vector<string>{};
-    return vector<string>{make_stringf("%d%% to hit", hit_pct)};
+    return _desc_hit_chance(mi, beam_hitf->beam.hit, beam_hitf->beam.pierce);
 }
 
 static vector<string> _desc_intoxicate_chance(const monster_info& mi,
@@ -1608,6 +1614,12 @@ static vector<string> _desc_hailstorm_hit_chance(const monster_info& mi, int pow
 {
     bolt beam;
     zappy(ZAP_HAILSTORM, pow, false, beam);
+}
+
+static vector<string> _desc_volcanic_tap_hit_chance(const monster_info& mi, int pow)
+{
+    bolt beam;
+    zappy(ZAP_VOLCANIC_TAP, pow, false, beam);
     return _desc_hit_chance(mi, beam.hit, false);
 }
 
@@ -1794,6 +1806,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_airstrike_bonus, placeholders::_1);
         case SPELL_HAILSTORM:
             return bind(_desc_hailstorm_hit_chance, placeholders::_1, powc);
+        case SPELL_VOLCANIC_TAP:
+            return bind(_desc_volcanic_tap_hit_chance, placeholders::_1, powc);
         default:
             break;
     }
@@ -2191,6 +2205,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
 
     case SPELL_AIRSTRIKE:
         return cast_airstrike(powc, spd.target, fail);
+
+    case SPELL_VOLCANIC_TAP:
+        return cast_volcanic_tap(powc, spd.target, fail);
 
     case SPELL_LRD:
         return cast_fragmentation(powc, &you, spd.target, fail);

@@ -959,7 +959,7 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
     {
         fail_check();
         canned_msg(MSG_SPELL_FIZZLES);
-        return spret::success; // still losing a turn
+        return spret::abort; // still losing a turn
     }
 
     if (!god_protects(mons)
@@ -967,6 +967,8 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
     {
         return spret::abort;
     }
+
+    return spret::success;
 
     fail_check();
 
@@ -1011,6 +1013,42 @@ string describe_airstrike_dam(dice_def dice)
 {
     return make_stringf("%dd(%d-%d)", dice.num, dice.size,
                         dice.size + MAX_AIRSTRIKE_BONUS);
+}
+
+spret cast_volcanic_tap(int pow, coord_def target, bool fail)
+{
+    if (cell_is_solid(target))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    monster* mons = monster_at(target);
+    if (mons
+        && !mons->submerged()
+        && !god_protects(mons)
+        && you.can_see(*mons)
+        && stop_attack_prompt(mons, false, you.pos()))
+    {
+        return spret::abort;
+    }
+
+    fail_check();
+
+    bolt beam;
+    zappy(ZAP_VOLCANIC_TAP, pow, false, beam);
+    beam.origin_spell = SPELL_VOLCANIC_TAP;
+    beam.source = beam.target = target;
+    beam.fire();
+
+    const int dur = random_range(5, 8);
+    if (you.duration[DUR_EARTHBOUND] < dur)
+    {
+        you.set_duration(DUR_EARTHBOUND, dur, dur,
+                         "You are fixed to the earth.");
+    }
+
+    return spret::success;
 }
 
 dice_def base_fragmentation_damage(int pow)

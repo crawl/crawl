@@ -3129,7 +3129,8 @@ bool bolt::misses_player()
         return true;
 
     if ((is_explosion || auto_hit || aimed_at_feet)
-        && origin_spell != SPELL_CALL_DOWN_LIGHTNING)
+        && origin_spell != SPELL_CALL_DOWN_LIGHTNING
+        && origin_spell != SPELL_VOLCANIC_TAP)
     {
         return false;
     }

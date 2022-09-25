@@ -1447,14 +1447,17 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_MANIFOLD_ASSAULT:
-    {
         if (temp)
         {
             const string unproj_reason = weapon_unprojectability_reason();
             if (unproj_reason != "")
                 return unproj_reason;
         }
-    }
+        break;
+
+    case SPELL_VOLCANIC_TAP:
+        if (temp && you.duration[DUR_EARTHBOUND])
+            return "you are already bound to the earth.";
         break;
 
     default:
