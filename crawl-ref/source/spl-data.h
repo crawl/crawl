@@ -1019,6 +1019,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_VOLCANIC_TAP, "Volcanic Tap",
+    spschool::conjuration | spschool::fire | spschool::earth,
+    spflag::target | spflag::not_self,
+    2,
+    50,
+    4, 4,
+    2, 4,
+    TILEG_BOLT_OF_MAGMA,
+},
+
+{
     SPELL_SHADOW_CREATURES, "Shadow Creatures",
     spschool::summoning,
     spflag::mons_abjure | spflag::monster,

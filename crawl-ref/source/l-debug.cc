@@ -520,6 +520,7 @@ LUAFN(debug_check_moncasts)
         SPELL_NECROTISE,
         SPELL_BLASTSPARK,
         SPELL_ROT,
+        SPELL_VOLCANIC_TAP,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)
