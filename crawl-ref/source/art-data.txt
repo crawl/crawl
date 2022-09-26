@@ -1697,6 +1697,7 @@ PLUS:       +5
 BASE_ACC:   -1
 BASE_DAM:   +1
 BASE_DELAY: +1
+BOOL:       drain
 INSCRIP:    reach-cleave, poleaxe
 DBRAND:     It can be evoked to extend its reach, and strikes at all foes within reach, dealing less damage to those not targeted.
 +It uses either Axes or Polearms skill, whichever is higher.

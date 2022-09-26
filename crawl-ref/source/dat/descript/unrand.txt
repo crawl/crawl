@@ -747,7 +747,8 @@ the wearer from their position.
 lochaber axe
 
 This brutal weapon, long thought lost to history, combines the extended reach
-of a polearm with the cleaving sharpness of an axe.
+of a polearm with the cleaving sharpness of an axe. Ghosts of ancient warriors
+linger about it, draining fickle users.
 %%%%
 Hermit's pendant
 
