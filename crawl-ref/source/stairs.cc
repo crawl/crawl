@@ -561,7 +561,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
     level_id dest;
     if (shaft)
     {
-        if (!is_valid_shaft_level())
+        if (!is_valid_shaft_level(false))
         {
             if (known_shaft)
                 mpr("The shaft disappears in a puff of logic!");

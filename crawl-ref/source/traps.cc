@@ -1022,9 +1022,10 @@ dungeon_feature_type trap_feature(trap_type type)
 /***
  * Can a shaft be placed on the current level?
  *
+ * @param respect_brflags Whether brflag::no_shafts should be factored in.
  * @returns true if such a shaft can be placed.
  */
-bool is_valid_shaft_level()
+bool is_valid_shaft_level(bool respect_brflags)
 {
     // Important: We are sometimes called before the level has been loaded
     // or generated, so should not depend on properties of the level itself,
@@ -1038,7 +1039,7 @@ bool is_valid_shaft_level()
 
     const Branch &branch = branches[place.branch];
 
-    if (branch.branch_flags & brflag::no_shafts)
+    if (respect_brflags && branch.branch_flags & brflag::no_shafts)
         return false;
 
     // Don't allow shafts from the bottom of a branch.
