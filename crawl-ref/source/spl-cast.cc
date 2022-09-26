@@ -2704,6 +2704,7 @@ static string _wizard_spell_power_numeric_string(spell_type spell)
 }
 #endif
 
+// TODO: deduplicate with the same-named function in describe-spells.cc
 static dice_def _spell_damage(spell_type spell, bool evoked)
 {
     const int power = _spell_power(spell, evoked);
