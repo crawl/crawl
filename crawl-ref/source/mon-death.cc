@@ -2475,7 +2475,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             corpse = daddy_corpse;
     }
 
-    if (!mons.is_summoned() && mons.type == MONS_PHARAOH_ANT)
+    if (mons.type == MONS_PHARAOH_ANT && !was_banished && !mons.is_summoned())
         _pharaoh_ant_bind_souls(&mons);
 
     const unsigned int player_xp = gives_player_xp
