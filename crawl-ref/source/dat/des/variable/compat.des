@@ -314,6 +314,8 @@ callback.pakellas_statue_experiment_end = make_dummy_trigger_func()
 callback.pakellas_its_alive_clouds = make_dummy_trigger_func()
 callback.pakellas_its_alive_begin = make_dummy_trigger_func()
 callback.pakellas_its_alive_end = make_dummy_trigger_func()
+callback.grunt_zot_stairs_overgrown_start = make_dummy_trigger_func()
+callback.grunt_zot_stairs_overgrown_oklobify = make_dummy_trigger_func()
 
 -- save compat for grunt_zot_stairs_overgrown
 -- let this vault still work if it exists
