@@ -3961,10 +3961,6 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_DELVER;
         case JOB_HEXSLINGER:
             return TILEG_JOB_HEXSLINGER;
-#if TAG_MAJOR_VERSION == 34
-        case JOB_ABYSSAL_KNIGHT:
-            return TILEG_JOB_ABYSSAL_KNIGHT;
-#endif
         case JOB_CINDER_ACOLYTE:
             return TILEG_JOB_CINDER_ACOLYTE;
         default:
