@@ -2025,7 +2025,7 @@ TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
 TAGS:   transparent decor
 WEIGHT: 5
 KFEAT:  _ = altar_okawaru
-KITEM:  _ = any weapon plus:0 ego:spectral ident:all
+KITEM:  ' = any weapon plus:0 ego:spectral ident:all
 : interest_check(_G)
 MAP
 vvvv vvvv
@@ -2033,7 +2033,7 @@ v..vvv..v
 v.......v
 vvv...vvv
   v._.v
-vvv...vvv
+vvv.'.vvv
 v.......v
 v..v+v..v
 vvvv@vvvv
