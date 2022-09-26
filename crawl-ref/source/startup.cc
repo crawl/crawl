@@ -56,6 +56,7 @@
  #include "tilepick.h"
 #endif
 #include "tileview.h"
+#include "traps.h" // set_shafted
 #include "viewchar.h"
 #include "view.h"
 #ifdef USE_TILE_LOCAL
@@ -295,6 +296,8 @@ static void _post_init(bool newc)
         you.transit_stair = DNGN_UNSEEN;
         you.depth = starting_absdepth() + 1;
         you.where_are_you = root_branch;
+        if (you.depth > 1)
+            set_shafted();
     }
 
     // XXX: Any invalid level_id should do.

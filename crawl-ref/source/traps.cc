@@ -1045,10 +1045,15 @@ bool is_valid_shaft_level()
     return (brdepth[place.branch] - place.depth) >= 1;
 }
 
-///
 static bool& _shafted_in(const Branch &branch)
 {
     return you.props[make_stringf("shafted_in_%s", branch.abbrevname)].get_bool();
+}
+
+/// Mark the player as having been shafted in the current branch.
+void set_shafted()
+{
+    _shafted_in(branches[you.where_are_you]) = true;
 }
 
 /**
@@ -1120,7 +1125,7 @@ void do_trap_effects()
             dprf("Attempting to shaft player.");
             _print_malev();
             if (you.do_shaft(false))
-                _shafted_in(branches[you.where_are_you]) = true;
+                set_shafted();
             break;
 
         case TRAP_ALARM:
