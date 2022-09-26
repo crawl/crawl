@@ -3244,10 +3244,10 @@ static void _display_attack_delay()
     {
         item_def fake_proj;
         populate_fake_projectile(*weapon, fake_proj);
-        delay = you.attack_delay(&fake_proj, false).expected();
+        delay = you.attack_delay(&fake_proj).expected();
     }
     else
-        delay = you.attack_delay(nullptr, false).expected();
+        delay = you.attack_delay(nullptr).expected();
 
     const bool at_min_delay = weapon
                               && you.skill(item_attack_skill(*weapon))
