@@ -2443,8 +2443,8 @@ static int _discharge_monsters(const coord_def &where, int pow,
         if (damage > 0)
             victim->expose_to_element(BEAM_ELECTRICITY, 2);
     }
-    // rEelec monsters don't allow arcs to continue.
-    else if (victim->res_elec() > 0)
+    // Elec immune monsters don't allow arcs to continue.
+    else if (victim->res_elec() >= 3)
         return 0;
     else if (god_protects(&agent, victim->as_monster(), false))
         return 0;
@@ -2459,7 +2459,6 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
         dprf("%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
-        damage = mons_adjust_flavoured(mons, beam, damage, false);
         mprf("%s is struck by an arc of lightning%s",
                 mons->name(DESC_THE).c_str(),
                 attack_strength_punctuation(damage).c_str());
@@ -2476,7 +2475,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
     {
         damage += apply_random_around_square([pow, &agent, remaining]
                                             (coord_def where2) {
-            return _discharge_monsters(where2, pow, agent, remaining -1);
+            return _discharge_monsters(where2, pow, agent, remaining - 1);
         }, where, true, 1);
     }
     else if (damage > 0)
@@ -2502,11 +2501,8 @@ bool safe_discharge(coord_def where, vector<const actor *> &exclude)
             if (act->is_monster())
             {
                 // Harmless to these monsters, so don't prompt about them.
-                if (act->res_elec() > 0
-                    || god_protects(act->as_monster()))
-                {
+                if (act->res_elec() >= 3 || god_protects(act->as_monster()))
                     continue;
-                }
 
                 if (stop_attack_prompt(act->as_monster(), false, where))
                     return false;
@@ -2530,7 +2526,7 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
 
     fail_check();
 
-    const int num_targs = 1 + random2(2 + div_rand_round(pow,25));
+    const int num_targs = 1 + random2(2 + div_rand_round(pow, 25));
     const int dam =
         apply_random_around_square([pow, &agent] (coord_def target) {
             return _discharge_monsters(target, pow, agent,
