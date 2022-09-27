@@ -70,6 +70,8 @@ void gui_init_view_params(crawl_view_geometry &geom)
 
 void putwch(char32_t chr)
 {
+    if (in_headless_mode())
+        return;
     if (!chr)
         chr = ' ';
     TextRegion::text_mode->putwch(chr);
@@ -77,12 +79,16 @@ void putwch(char32_t chr)
 
 void clear_to_end_of_line()
 {
+    if (in_headless_mode())
+        return;
     // object's method
     TextRegion::text_mode->clear_to_end_of_line();
 }
 
 void cprintf(const char *format,...)
 {
+    if (in_headless_mode())
+        return;
     char buffer[2048];          // One full screen if no control seq...
     va_list argp;
     va_start(argp, format);
@@ -94,11 +100,15 @@ void cprintf(const char *format,...)
 
 void textcolour(int colour)
 {
+    if (in_headless_mode())
+        return;
     TextRegion::textcolour(colour);
 }
 
 void textbackground(int bg)
 {
+    if (in_headless_mode())
+        return;
     TextRegion::textbackground(bg);
 }
 
@@ -119,6 +129,8 @@ lib_display_info::lib_display_info()
 
 void set_cursor_enabled(bool enabled)
 {
+    if (in_headless_mode())
+        return;
     if (enabled)
         TextRegion::_setcursortype(1);
     else
@@ -127,6 +139,8 @@ void set_cursor_enabled(bool enabled)
 
 bool is_cursor_enabled()
 {
+    if (in_headless_mode())
+        return false;
     if (TextRegion::cursor_flag)
         return true;
 
@@ -204,7 +218,8 @@ void delay(unsigned int ms)
         return;
 
     tiles.redraw();
-    wm->delay(ms);
+    if (wm)
+        wm->delay(ms);
 }
 
 void update_screen()
