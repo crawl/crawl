@@ -959,7 +959,7 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
     {
         fail_check();
         canned_msg(MSG_SPELL_FIZZLES);
-        return spret::abort; // still losing a turn
+        return spret::success; // still losing a turn
     }
 
     if (!god_protects(mons)
@@ -967,8 +967,6 @@ spret cast_airstrike(int pow, coord_def target, bool fail)
     {
         return spret::abort;
     }
-
-    return spret::success;
 
     fail_check();
 
