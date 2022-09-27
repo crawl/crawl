@@ -1614,6 +1614,7 @@ static vector<string> _desc_hailstorm_hit_chance(const monster_info& mi, int pow
 {
     bolt beam;
     zappy(ZAP_HAILSTORM, pow, false, beam);
+    return _desc_hit_chance(mi, beam.hit, false);
 }
 
 static vector<string> _desc_volcanic_tap_hit_chance(const monster_info& mi, int pow)
