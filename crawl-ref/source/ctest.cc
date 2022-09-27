@@ -122,6 +122,10 @@ static void run_test(const string &file)
     if (!_is_test_selected(file))
         return;
 
+    // halt immediately if there are HUPs. TODO: interrupt tests?
+    if (crawl_state.seen_hups)
+        end(0);
+
     ++ntests;
     if (!crawl_state.script)
         fprintf(stderr, "Running test #%d: '%s'.\n", ntests, file.c_str());

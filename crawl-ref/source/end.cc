@@ -468,7 +468,7 @@ NORETURN void end_game(scorefile_entry &se)
             crawl_state.game_type_name().c_str());
 
 #ifdef USE_TILE_LOCAL
-        const int line_height = tiles.get_crt_font()->char_height();
+        const int line_height = in_headless_mode() ? 1 : tiles.get_crt_font()->char_height();
 #else
         const int line_height = 1;
 #endif
