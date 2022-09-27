@@ -7220,7 +7220,8 @@ bool player::can_drink(bool temp) const
 bool player::is_stationary() const
 {
     return form == transformation::tree
-        || you.duration[DUR_LOCKED_DOWN];
+        || you.duration[DUR_LOCKED_DOWN]
+        || you.duration[DUR_EARTHBOUND];
 }
 
 bool player::malmutate(const string &reason)

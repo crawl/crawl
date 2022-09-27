@@ -1042,9 +1042,9 @@ spret cast_volcanic_tap(int pow, coord_def target, bool fail)
     beam.fire();
 
     const int dur = random_range(5, 8);
-    if (you.duration[DUR_LOCKED_DOWN] < dur)
+    if (you.duration[DUR_EARTHBOUND] < dur)
     {
-        you.set_duration(DUR_LOCKED_DOWN, dur, dur,
+        you.set_duration(DUR_EARTHBOUND, dur, dur,
                          "You are fixed to the earth.");
     }
 

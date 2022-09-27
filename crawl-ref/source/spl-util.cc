@@ -1456,8 +1456,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_VOLCANIC_TAP:
-        if (temp && you.duration[DUR_LOCKED_DOWN])
-            return "you are already unable to move.";
+        if (temp && you.duration[DUR_EARTHBOUND])
+            return "you are already bound to the earth.";
         break;
 
     default:

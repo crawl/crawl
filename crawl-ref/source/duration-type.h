@@ -234,5 +234,6 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_CORPSE_ROT,
 #endif
+    DUR_EARTHBOUND,
     NUM_DURATIONS
 };

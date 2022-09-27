@@ -155,10 +155,14 @@ or by breaking line of sight with them.
 
 You are prevented from teleporting or blinking.
 %%%%
--Move status
+-Go status
 
 You are prevented from moving, blinking, or teleporting. (You can still take
 other actions.)
+%%%%
+-Move status
+
+You cannot move except via translocations. (You can still take other actions.)
 %%%%
 Mark status
 
