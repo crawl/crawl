@@ -1617,6 +1617,13 @@ static vector<string> _desc_volcanic_tap_hit_chance(const monster_info& mi, int 
     return _desc_hit_chance(mi, beam.hit, false);
 }
 
+static vector<string> _desc_hailstorm_hit_chance(const monster_info& mi, int pow)
+{
+    bolt beam;
+    zappy(ZAP_HAILSTORM, pow, false, beam);
+    return _desc_hit_chance(mi, beam.hit, false);
+}
+
 static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
 {
     if (mi.mb.get(MB_CANT_DRAIN))
@@ -1800,6 +1807,8 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_airstrike_bonus, placeholders::_1);
         case SPELL_VOLCANIC_TAP:
             return bind(_desc_volcanic_tap_hit_chance, placeholders::_1, powc);
+        case SPELL_HAILSTORM:
+            return bind(_desc_hailstorm_hit_chance, placeholders::_1, powc);
         default:
             break;
     }
