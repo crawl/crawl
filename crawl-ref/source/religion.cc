@@ -297,9 +297,6 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 3, "Ashenzari will now keep your mind clear.",
                  "Ashenzari will no longer keep your mind clear.",
                  "Ashenzari keeps your mind clear." },
-            { 4, "Ashenzari will now grant you astral sight.",
-                 "Ashenzari will no longer grant you astral sight.",
-                 "Ashenzari grants you astral sight." },
         },
 
         // Dithmenos
