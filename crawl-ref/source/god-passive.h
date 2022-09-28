@@ -47,9 +47,6 @@ enum class passive_t
     /// You have innate clarity.
     clarity,
 
-    /// You have astral sight.
-    xray_vision,
-
     /// You get a boost to skills from cursed slots.
     bondage_skill_boost,
 
@@ -271,7 +268,6 @@ bool will_have_passive(passive_t passive);
 int rank_for_passive(passive_t passive);
 int chei_stat_boost(int piety = you.piety);
 void jiyva_eat_offlevel_items();
-int ash_scry_radius();
 void ash_check_bondage();
 bool god_id_item(item_def& item, bool silent = true);
 int ash_detect_portals(bool all);

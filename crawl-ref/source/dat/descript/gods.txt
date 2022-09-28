@@ -227,8 +227,7 @@ Ashenzari exhorts followers to curse their possessions, periodically offering
 these curses to worshippers as they explore. Cursed equipment cannot be enchanted
 and only be removed by shattering it forever. However, these curses do improve
 specific skills. They also please Ashenzari, who will reveal the invisible and
-grant clarity of mind. The truly devout will gain a fragment of Ashenzari's
-astral sight, letting them see through walls.
+grant clarity of mind.
 %%%%
 Beogh powers
 

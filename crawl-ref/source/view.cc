@@ -527,8 +527,7 @@ static void _maybe_gozag_incite(vector<monster*> monsters)
     for (monster* mon : monsters)
     {
         // XXX: some of this is probably redundant with interrupt_activity
-        if (!mon->see_cell(you.pos()) // xray_vision
-            || mon->wont_attack()
+        if (mon->wont_attack()
             || mon->is_stationary()
             || mons_is_object(mon->type)
             || mons_is_tentacle_or_tentacle_segment(mon->type))
