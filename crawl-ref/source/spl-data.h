@@ -1019,14 +1019,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_VOLCANIC_TAP, "Volcanic Tap",
-    spschool::conjuration | spschool::fire | spschool::earth,
+    SPELL_MOMENTUM_STRIKE, "Momentum Strike",
+    spschool::conjuration | spschool::translocation,
     spflag::target | spflag::not_self,
     2,
     50,
     4, 4,
     2, 4,
-    TILEG_BOLT_OF_MAGMA,
+    TILEG_MOMENTUM_STRIKE,
 },
 
 {

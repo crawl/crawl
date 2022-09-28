@@ -542,6 +542,6 @@ enum spell_type : int
     SPELL_ROT,
     SPELL_ARCJOLT,
     SPELL_KISS_OF_DEATH,
-    SPELL_VOLCANIC_TAP,
+    SPELL_MOMENTUM_STRIKE,
     NUM_SPELLS
 };

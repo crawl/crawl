@@ -1455,9 +1455,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         }
         break;
 
-    case SPELL_VOLCANIC_TAP:
-        if (temp && you.duration[DUR_EARTHBOUND])
-            return "you are already bound to the earth.";
+    case SPELL_MOMENTUM_STRIKE:
+        if (temp && you.is_stationary())
+            return "you are already stationary.";
         break;
 
     default:

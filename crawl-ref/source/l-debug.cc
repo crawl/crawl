@@ -520,7 +520,7 @@ LUAFN(debug_check_moncasts)
         SPELL_NECROTISE,
         SPELL_BLASTSPARK,
         SPELL_ROT,
-        SPELL_VOLCANIC_TAP,
+        SPELL_MOMENTUM_STRIKE,
         SPELL_KISS_OF_DEATH,
     };
 

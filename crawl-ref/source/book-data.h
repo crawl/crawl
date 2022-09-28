@@ -82,8 +82,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Spatial Translocations
     SPELL_BLINK,
+    SPELL_MOMENTUM_STRIKE,
     SPELL_BECKONING,
-    SPELL_MANIFOLD_ASSAULT,
 },
 
 {   // Book of Hexes
@@ -169,6 +169,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Warp
+    SPELL_MANIFOLD_ASSAULT,
     SPELL_DISPERSAL,
     SPELL_DISJUNCTION,
 },
@@ -359,7 +360,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Earth
-    SPELL_VOLCANIC_TAP,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_LRD,
     SPELL_STATUE_FORM,

@@ -1013,7 +1013,7 @@ string describe_airstrike_dam(dice_def dice)
                         dice.size + MAX_AIRSTRIKE_BONUS);
 }
 
-spret cast_volcanic_tap(int pow, coord_def target, bool fail)
+spret cast_momentum_strike(int pow, coord_def target, bool fail)
 {
     if (cell_is_solid(target))
     {
@@ -1034,16 +1034,16 @@ spret cast_volcanic_tap(int pow, coord_def target, bool fail)
     fail_check();
 
     bolt beam;
-    zappy(ZAP_VOLCANIC_TAP, pow, false, beam);
-    beam.origin_spell = SPELL_VOLCANIC_TAP;
+    zappy(ZAP_MOMENTUM_STRIKE, pow, false, beam);
+    beam.origin_spell = SPELL_MOMENTUM_STRIKE;
     beam.source = beam.target = target;
     beam.fire();
 
     const int dur = random_range(5, 8);
-    if (you.duration[DUR_EARTHBOUND] < dur)
+    if (you.duration[DUR_NO_MOMENTUM] < dur)
     {
-        you.set_duration(DUR_EARTHBOUND, dur, dur,
-                         "You are fixed to the earth.");
+        you.set_duration(DUR_NO_MOMENTUM, dur, dur,
+                         "You are unable to move.");
     }
 
     return spret::success;

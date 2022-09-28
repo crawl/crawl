@@ -1704,12 +1704,11 @@ Virulence spell
 
 Makes a targeted creature more vulnerable to poison.
 %%%%
-Volcanic Tap spell
+Momentum Strike spell
 
-Blasts a target with magma conjured through a link to the fiery depths of the
-earth. This link leaves the caster immobilized (but still able to act) and
-unable to re-cast the spell for a short time afterward. The damage done
-partially bypasses fire resistance.
+Blasts a target with energy borrowed from the caster's own movement. For a short
+time afterward, the caster will be left immobilized (but still able to act). The
+spell can only be cast by those who can at least try to move.
 %%%%
 Volley of Thorns spell
 

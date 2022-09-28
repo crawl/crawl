@@ -20,6 +20,7 @@ dazzling_spray DAZZLING_SPRAY
 force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM
 searing_ray SEARING_RAY
+momentum_strike MOMENTUM_STRIKE
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
@@ -33,7 +34,6 @@ sandblast SANDBLAST
 shatter SHATTER
 statue_form STATUE_FORM
 stone_arrow STONE_ARROW
-yaras_unstable_missile YARAS_UNSTABLE_MISSILE
 
 %sdir gui/spells/enchantment
 anguish ANGUISH

@@ -7221,7 +7221,7 @@ bool player::is_stationary() const
 {
     return form == transformation::tree
         || you.duration[DUR_LOCKED_DOWN]
-        || you.duration[DUR_EARTHBOUND];
+        || you.duration[DUR_NO_MOMENTUM];
 }
 
 bool player::malmutate(const string &reason)
