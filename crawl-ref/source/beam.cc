@@ -4447,6 +4447,10 @@ void bolt::enchantment_affect_monster(monster* mon)
                                    mon->resist_margin_phrase(res_margin).c_str()))
             {
                 msg_generated = true;
+                // Hack: assume that BEAM_BANISH comes from Lugonu's Banishment
+                // and hence causes malmutation on resist.
+                if (real_flavour == BEAM_BANISH && agent() && agent()->is_player())
+                    mon->malmutate("");
             }
             break;
         case MON_UNAFFECTED:
