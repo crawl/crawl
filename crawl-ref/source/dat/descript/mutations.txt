@@ -796,10 +796,11 @@ devour on kill mutation
 When you kill living creatures you have a chance to devour their life force
 and restore hit points.
 %%%%
-nimble tongue mutation
+long tongue mutation
 
-Your tongue is long and dextrous, letting you cast spells and read scrolls
-more quickly.
+Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
+effects on you. It also gives you tremendous trouble reading out the arcane
+syllables encoded on magical scrolls, making them take half again as long to read.
 %%%%
 roll mutation
 

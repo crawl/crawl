@@ -2374,7 +2374,7 @@ static const mutation_def mut_data[] =
   {"You feel like a homebody.", "", ""},
 },
 
-{ MUT_NIMBLE_TONGUE, 0, 1, mutflag::good, false, "nimble tongue",
+{ MUT_LONG_TONGUE, 0, 1, mutflag::good, false, "long tongue",
   {"You have a long, nimble tongue.", "", ""},
   {"Your tongue grows long and dextrous.", "", ""},
   {"Your tongue shrinks into a sad, ordinary nub.", "", ""},

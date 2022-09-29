@@ -4701,9 +4701,14 @@ void dec_ambrosia_player(int delay)
     const int mp_restoration = div_rand_round(delay*(3 + random2(3)), BASELINE_DELAY);
 
     if (!you.duration[DUR_DEATHS_DOOR])
-        inc_hp(you.scale_potion_healing(hp_restoration));
+    {
+        int heal = you.scale_potion_healing(hp_restoration);
+        if (you.has_mutation(MUT_LONG_TONGUE))
+            heal += hp_restoration;
+        inc_hp(heal);
+    }
 
-    inc_mp(mp_restoration);
+    inc_mp(mp_restoration * (you.has_mutation(MUT_LONG_TONGUE) ? 2 : 1));
 
     if (!you.duration[DUR_AMBROSIA])
         mpr("You feel less invigorated.");
@@ -6658,12 +6663,6 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
 void player::drain_stat(stat_type s, int amount)
 {
     lose_stat(s, amount);
-}
-
-void player::apply_nimble_tongue()
-{
-    if (you.has_mutation(MUT_NIMBLE_TONGUE))
-        you.time_taken = div_rand_round(you.time_taken * 2, 3);
 }
 
 /**

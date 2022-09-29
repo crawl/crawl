@@ -3824,7 +3824,8 @@ void read(item_def* scroll, dist *target)
         else
             dec_mitm_item_quantity(scroll->index(), 1);
         count_action(CACT_USE, OBJ_SCROLLS);
-        you.apply_nimble_tongue();
+        if (you.has_mutation(MUT_LONG_TONGUE))
+            you.time_taken = div_rand_round(you.time_taken * 3, 2);
     }
 
     if (!alreadyknown

@@ -1571,8 +1571,8 @@ Armataurs (AT)
 
   Armataurs instinctively roll when moving toward foes, getting a free move.
   At higher level, they also curl defensively, gaining extra AC when struck
-  more than once in a turn. Their long, nimble tongues allow them to cast
-  spells and read scrolls more quickly, but their magical reserves are limited.
+  more than once in a turn. Their long, nimble tongues drink every last drop
+  from potions, doubling their effects, but they're slower to read scrolls.
   Their body shape also reduces the protection offered by body armour.
 
 Gargoyles (Gr)
