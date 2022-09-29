@@ -330,10 +330,11 @@ imbued with pain.
 Lugonu powers
 
 Followers of Lugonu gain powers to depart the Abyss at will, to bend space
-around themselves, and to banish monsters to the Abyss. Later they will be able
-to corrupt the ordered world, opening a gate for creatures of the Abyss to pass
-through, and to gate themselves directly into this realm of chaos. Lugonu will
-protect followers from the normally harmful effects of weapons imbued with the
+around themselves, and to banish monsters to the Abyss. Lugonu will also banish
+nearby foes if any other god attempts to interfere with their followers. Later,
+followers will be able to corrupt the ordered world, opening a gate for creatures
+of the Abyss to pass through, and to gate themselves directly into this realm of
+chaos. Lugonu will protect followers who unwield weapons imbued with the
 distorting energies of the Abyss, and eventually will offer to corrupt a
 follower's weapon in that way. Lugonu expects followers to spread unceasing
 chaos in the overworld, and as such does not grant piety to worshippers while

@@ -255,6 +255,8 @@ static const vector<god_passive> god_passives[] =
     {
         { -1, passive_t::safe_distortion,
               "are NOW protected from distortion unwield effects" },
+        { -1, passive_t::wrath_banishment,
+              "GOD will NOW banish foes whenever another god meddles" },
         { -1, passive_t::map_rot_res_abyss,
               "remember the shape of the Abyss better" },
         {  5, passive_t::attract_abyssal_rune,
