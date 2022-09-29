@@ -609,12 +609,6 @@ You have big, strong legs, allowing you to hop about with
 land. The second level of this mutation allows you to hop farther. Each time
 you hop, you need to rest for a bit before you can hop again.
 %%%%
-reflexive curl mutation
-
-You curl up when struck, giving you protection against further attacks until
-your next action. This effect is guaranteed to happen in response to any
-direct damage.
-%%%%
 forlorn mutation
 
 You cannot, will not, and will never worship any god.

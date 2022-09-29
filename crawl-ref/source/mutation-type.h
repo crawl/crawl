@@ -244,9 +244,7 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 34
     MUT_BIG_BRAIN,
     MUT_SHARP_SCALES,
-#endif
     MUT_CURL,
-#if TAG_MAJOR_VERSION == 34
     MUT_CONDENSATION_SHIELD,
     MUT_DEMONIC_MAGIC,
 #endif
