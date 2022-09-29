@@ -155,14 +155,15 @@ or by breaking line of sight with them.
 
 You are prevented from teleporting or blinking.
 %%%%
--Go status
+Stuck status
 
 You are prevented from moving, blinking, or teleporting. (You can still take
 other actions.)
 %%%%
 -Move status
 
-You cannot move except via translocations. (You can still take other actions.)
+You cannot walk, fly around, slither, etc. You can still take other actions,
+and can still be moved via translocations or by being pushed, pulled, and so on.
 %%%%
 Mark status
 

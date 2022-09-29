@@ -375,7 +375,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 {
     loc = you.pos();
 
-    if (you.is_stationary())
+    if (!you.is_motile())
         return false;
 
     // Don't move onto dangerous terrain.
@@ -7220,8 +7220,11 @@ bool player::can_drink(bool temp) const
 bool player::is_stationary() const
 {
     return form == transformation::tree
-        || you.duration[DUR_LOCKED_DOWN]
-        || you.duration[DUR_NO_MOMENTUM];
+        || you.duration[DUR_LOCKED_DOWN];
+}
+
+bool player::is_motile() const {
+    return !is_stationary() && !you.duration[DUR_NO_MOMENTUM];
 }
 
 bool player::malmutate(const string &reason)

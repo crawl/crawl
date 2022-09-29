@@ -1423,7 +1423,7 @@ static bool _can_movement_ability(bool quiet)
             mprf("You cannot do that while %s.", held_status());
         return false;
     }
-    else if (you.is_stationary())
+    else if (!you.is_motile())
     {
         if (!quiet)
             canned_msg(MSG_CANNOT_MOVE);
@@ -2325,11 +2325,8 @@ static bool _acid_breath_can_hit(const actor *act)
 /// If the player is stationary, print 'You cannot move.' and return true.
 static bool _abort_if_stationary()
 {
-    if (you.form != transformation::tree
-        && !you.duration[DUR_LOCKED_DOWN])
-    {
+    if (!you.is_motile())
         return false;
-    }
 
     canned_msg(MSG_CANNOT_MOVE);
     return true;

@@ -605,7 +605,7 @@ static spret _rampage_forward(coord_def move)
     // fungusform + terrified, confusion, immobile (tree)form, or constricted.
     if (you.is_nervous()
         || you.confused()
-        || you.is_stationary()
+        || !you.is_motile()
         || you.is_constricted())
     {
         return spret::fail;
@@ -847,7 +847,7 @@ void move_player_action(coord_def move)
     // When confused, sometimes make a random move.
     if (you.confused())
     {
-        if (you.is_stationary())
+        if (!you.is_motile())
         {
             // Don't choose a random location to try to attack into - allows
             // abuse, since trying to move (not attack) takes no time, and
@@ -951,7 +951,7 @@ void move_player_action(coord_def move)
                           : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 
     monster* targ_monst = monster_at(targ);
-    if (fedhas_passthrough(targ_monst) && !you.is_stationary())
+    if (fedhas_passthrough(targ_monst) && you.is_motile())
     {
         // Moving on a plant takes 1.5 x normal move delay. We
         // will print a message about it but only when moving
@@ -970,7 +970,7 @@ void move_player_action(coord_def move)
         targ_monst = nullptr;
     }
 
-    bool targ_pass = you.can_pass_through(targ) && !you.is_stationary();
+    bool targ_pass = you.can_pass_through(targ) && you.is_motile();
 
     if (you.digging)
     {
@@ -1041,7 +1041,7 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(*targ_monst) && you.is_stationary())
+            if (!you.can_see(*targ_monst) && !you.is_motile())
             {
                 canned_msg(MSG_CANNOT_MOVE);
                 you.turn_is_over = false;
@@ -1178,7 +1178,7 @@ void move_player_action(coord_def move)
     else if (!targ_pass && !attacking)
     {
         // No rampage check here, since you can't rampage at walls
-        if (you.is_stationary())
+        if (!you.is_motile())
             canned_msg(MSG_CANNOT_MOVE);
         else if (env.grid(targ) == DNGN_OPEN_SEA)
             mpr("The ferocious winds and tides of the open sea thwart your progress.");

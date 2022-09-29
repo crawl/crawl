@@ -1706,9 +1706,9 @@ Makes a targeted creature more vulnerable to poison.
 %%%%
 Momentum Strike spell
 
-Blasts a target with energy borrowed from the caster's own movement. For a short
-time afterward, the caster will be left immobilized (but still able to act). The
-spell can only be cast by those who can at least try to move.
+Blasts a target with energy borrowed from the caster's own future movement. For
+a short time afterward, the caster will be left immotile - unable to walk, fly
+around, slither, etc. Only motile creatures can cast this spell.
 %%%%
 Volley of Thorns spell
 

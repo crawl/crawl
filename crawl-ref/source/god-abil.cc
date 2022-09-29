@@ -5603,7 +5603,7 @@ bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
 {
     if (!have_passive(passive_t::wu_jian_wall_jump)
         || !feat_can_wall_jump_against(env.grid(target))
-        || you.is_stationary()
+        || !you.is_motile()
         || you.digging)
     {
         return false;

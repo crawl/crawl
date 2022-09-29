@@ -1267,7 +1267,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
                 return "this spell is already in effect.";
             if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
                 return "you're already travelling as fast as you can.";
-            if (you.is_stationary())
+            if (!you.is_motile())
                 return "you can't move.";
         }
         break;
@@ -1367,7 +1367,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // a drastically simplified version of it
         if (!temp)
             break;
-        if (you.is_stationary())
+        if (!you.is_motile())
             return "you can't move.";
         if (!passwall_simplified_check(you))
             return "you aren't next to any passable walls.";
@@ -1456,8 +1456,8 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_MOMENTUM_STRIKE:
-        if (temp && you.is_stationary())
-            return "you are already stationary.";
+        if (temp && !you.is_motile())
+            return "you can't move.";
         break;
 
     default:

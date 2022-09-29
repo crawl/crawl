@@ -707,6 +707,7 @@ public:
     bool can_bleed(bool allow_tran = true) const override;
     bool can_drink(bool temp = true) const;
     bool is_stationary() const override;
+    bool is_motile() const;
     bool malmutate(const string &reason) override;
     bool polymorph(int pow, bool allow_immobile = true) override;
     void backlight();

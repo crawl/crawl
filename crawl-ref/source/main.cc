@@ -1325,7 +1325,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     }
 
     // Immobile
-    if (you.is_stationary())
+    if (!you.is_motile())
     {
         canned_msg(MSG_CANNOT_MOVE);
         return false;
