@@ -2627,6 +2627,7 @@ vector<coord_def> arcjolt_targets(const actor &agent, int power, bool actual)
             const bool seen_act = act && (actual || agent.can_see(*act));
             if (!seen_act
                 || act == &agent
+                || act->res_elec() >= 3
                 || act->is_monster()
                    && mons_is_projectile(*act->as_monster()))
             {
@@ -2702,8 +2703,9 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
                                         : check_your_resists(post_ac_dam,
                                                              beam.flavour,
                                                              "arcjolt");
+        if (post_resist_dam)
+            act->hurt(&agent, post_resist_dam);
         act->expose_to_element(beam.flavour, post_resist_dam);
-        act->hurt(&agent, post_resist_dam);
         if (mon && act->alive())
         {
             behaviour_event(mon, ME_WHACK, &agent);
