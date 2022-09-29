@@ -2325,7 +2325,7 @@ static bool _acid_breath_can_hit(const actor *act)
 /// If the player is stationary, print 'You cannot move.' and return true.
 static bool _abort_if_stationary()
 {
-    if (!you.is_motile())
+    if (you.is_motile())
         return false;
 
     canned_msg(MSG_CANNOT_MOVE);
