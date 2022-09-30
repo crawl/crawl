@@ -1,8 +1,8 @@
 %%%%
 Armataur
 
-Scaled mammals the size of horses, Armataurs are fast-rolling and fast-casting.
-Their defenses and magic reserves are limited, though.
+Scaled mammals the size of horses, Armataurs are fast-rolling, well-protected,
+and great potion drinkers. They lack dexterity and scroll-reading speed.
 %%%%
 Barachi
 

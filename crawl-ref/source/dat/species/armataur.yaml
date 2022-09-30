@@ -20,10 +20,10 @@ aptitudes:
   staves: 0
   ranged weapons: -2
   throwing: 0
-  armour: -1
+  armour: 2
   dodging: -2
   stealth: -3
-  shields: -1
+  shields: 2
   spellcasting: -1
   conjurations: 0
   hexes: 0

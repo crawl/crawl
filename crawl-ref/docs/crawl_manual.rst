@@ -1570,10 +1570,10 @@ Armataurs (AT)
   terrorize the lands outside the Dungeon.
 
   Armataurs instinctively roll when moving toward foes, getting a free move.
-  At higher level, they also curl defensively, gaining extra AC when struck
-  more than once in a turn. Their long, nimble tongues drink every last drop
-  from potions, doubling their effects, but they're slower to read scrolls.
-  Their body shape also reduces the protection offered by body armour.
+  Their long, nimble tongues drink every last drop from potions, doubling
+  their effects, but the strange syllables of magical scrolls slow them down.
+  They have great aptitudes with armour and shields, though their body shape
+  reduces the protection offered by body armour early on.
 
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
