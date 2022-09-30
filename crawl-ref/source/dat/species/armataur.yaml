@@ -22,7 +22,7 @@ aptitudes:
   throwing: 0
   armour: 2
   dodging: -2
-  stealth: -3
+  stealth: 1
   shields: 2
   spellcasting: -1
   conjurations: 0
