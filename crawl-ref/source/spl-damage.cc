@@ -1037,7 +1037,11 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
     zappy(ZAP_MOMENTUM_STRIKE, pow, false, beam);
     beam.origin_spell = SPELL_MOMENTUM_STRIKE;
     beam.source = beam.target = target;
+    beam.attitude = ATT_FRIENDLY;
     beam.fire();
+
+    if (!beam.foe_info.hurt) // miss!
+        return spret::success;
 
     const int dur = random_range(5, 8);
     if (you.duration[DUR_NO_MOMENTUM] < dur)
