@@ -1164,10 +1164,7 @@ int player_regen()
     // Note: if some condition can set rr = 0, can't be rested off, and
     // would allow travel, please update is_sufficiently_rested.
 
-    int rr = you.hp_max / 3;
-
-    if (rr > 20)
-        rr = 20 + ((rr - 20) / 2);
+    int rr = 20 + you.hp_max / 6;
 
     // Add in miscellaneous bonuses
     rr += _player_bonus_regen();
