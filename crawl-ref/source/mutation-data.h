@@ -2374,7 +2374,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_LONG_TONGUE, 0, 1, mutflag::good, false, "long tongue",
-  {"Your long tongue fully drains potion bottles. (2x potion effectsA)", "", ""},
+  {"Your long tongue fully drains potion bottles. (2x potion effects)", "", ""},
   {"Your tongue grows exceptionally long.", "", ""},
   {"Your tongue shrinks into a sad, ordinary nub.", "", ""},
 },
