@@ -1041,7 +1041,11 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
     beam.fire();
 
     if (!beam.foe_info.hurt) // miss!
+    {
+        if (!mons || !you.can_see(*mons))
+            mpr("The momentum dissipates harmlessly.");
         return spret::success;
+    }
 
     const int dur = random_range(5, 8);
     if (you.duration[DUR_NO_MOMENTUM] < dur)
