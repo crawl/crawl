@@ -793,8 +793,12 @@ and restore hit points.
 long tongue mutation
 
 Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
-effects on you. It also gives you tremendous trouble reading out the arcane
-syllables encoded on magical scrolls, making them take half again as long to read.
+effects on you.
+%%%%
+awkward tongue mutation
+
+Your tongue is very floppy, giving you trouble when reading the arcane syllables
+encoded on magical scrolls. As such, scrolls take you half again as long to read.
 %%%%
 roll mutation
 

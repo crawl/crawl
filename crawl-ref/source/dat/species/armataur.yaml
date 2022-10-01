@@ -49,6 +49,7 @@ mutations:
     MUT_ROLLPAGE: 1
     MUT_DEFORMED: 1
     MUT_LONG_TONGUE: 1
+    MUT_AWKWARD_TONGUE: 1
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_BERSERKER
