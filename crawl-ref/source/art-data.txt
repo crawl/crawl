@@ -530,6 +530,7 @@ TILE:     unrand_zealot_sword
 TILE_EQ:  zealot_sword
 # fallback places a randart eudemon blade!
 BRAND:    SPWPN_HOLY_WRATH
+FB_BRAND: SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    20
 LIFE:     1
@@ -1658,6 +1659,7 @@ OBJ:      OBJ_WEAPONS/WPN_TRISHULA
 PLUS:     8
 COLOUR:   ETC_HOLY
 BRAND:    SPWPN_HOLY_WRATH
+FB_BRAND: SPWPN_HOLY_WRATH
 LIFE:     1
 BOOL:     fly, noises
 INSCRIP:  anguish,
