@@ -795,7 +795,7 @@ bool force_player_cleave(coord_def target)
     if (!cleave_targets.empty())
     {
         // Rift is too funky and hence gets no special treatment.
-        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        const int range = you.reach_range();
         targeter_cleave hitfunc(&you, target, range);
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
