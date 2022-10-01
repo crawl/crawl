@@ -1603,6 +1603,15 @@ bool spell_no_hostile_in_range(spell_type spell)
          return trace_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, pow, &you)
              == spret::abort;
 
+    case SPELL_ARCJOLT:
+        for (coord_def t : arcjolt_targets(you, pow, false))
+        {
+            const monster *mon = monster_at(t);
+            if (mon != nullptr && !mon->wont_attack())
+                return false;
+        }
+        return true;
+
     case SPELL_CHAIN_LIGHTNING:
         for (coord_def t : chain_lightning_targets())
         {
