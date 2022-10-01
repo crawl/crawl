@@ -1457,7 +1457,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
 
     case SPELL_MOMENTUM_STRIKE:
         if (temp && !you.is_motile())
-            return "you can't move.";
+            return "you cannot redirect your momentum while unable to move.";
         break;
 
     default:
