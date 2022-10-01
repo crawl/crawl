@@ -135,6 +135,8 @@ static string _default_use_title(operation_types oper)
     case OPER_PUTON:
         return "Put on which piece of jewellery?";
     case OPER_QUAFF:
+        if (you.has_mutation(MUT_LONG_TONGUE))
+            return "Slurp which item?";
         return "Drink which item?";
     case OPER_READ:
         return "Read which item?";
