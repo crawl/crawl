@@ -239,9 +239,7 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 34
     MUT_ACID_RESISTANCE,
     MUT_ROLL,
-#endif
     MUT_ARMOURED_TAIL,
-#if TAG_MAJOR_VERSION == 34
     MUT_BIG_BRAIN,
     MUT_SHARP_SCALES,
     MUT_CURL,

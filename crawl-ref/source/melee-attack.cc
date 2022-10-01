@@ -986,7 +986,6 @@ public:
     int get_damage(bool /*random*/) const override
     {
         return damage + max(0, you.get_mutation_level(MUT_STINGER) * 2 - 1)
-                      + you.get_mutation_level(MUT_ARMOURED_TAIL) * 4
                       + you.get_mutation_level(MUT_WEAKNESS_STINGER);
     }
 
@@ -3502,7 +3501,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
         return you.get_mutation_level(MUT_HORNS);
 
     case UNAT_TAILSLAP:
-        // includes MUT_STINGER, MUT_ARMOURED_TAIL, MUT_WEAKNESS_STINGER, fishtail
+        // includes MUT_STINGER, MUT_WEAKNESS_STINGER, fishtail
         return you.has_tail()
                // constricting tails are too slow to slap
                && !you.has_mutation(MUT_CONSTRICTING_TAIL);
@@ -3675,7 +3674,6 @@ string aux_attack_desc(mutation_type mut)
     case MUT_HORNS:
         return AUX_HEADBUTT.describe();
     case MUT_STINGER:
-    case MUT_ARMOURED_TAIL:
     case MUT_WEAKNESS_STINGER:
     case MUT_MERTAIL:
         return AUX_TAILSLAP.describe();

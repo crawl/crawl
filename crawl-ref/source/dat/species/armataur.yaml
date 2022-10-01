@@ -47,7 +47,6 @@ mutations:
   1:
     MUT_RUGGED_BROWN_SCALES: 3
     MUT_ROLLPAGE: 1
-    MUT_ARMOURED_TAIL: 1
     MUT_DEFORMED: 1
     MUT_LONG_TONGUE: 1
 recommended_jobs:

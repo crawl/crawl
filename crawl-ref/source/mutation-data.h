@@ -965,7 +965,6 @@ static const mutation_def mut_data[] =
   {"You now curl defensively after being hit.", "", ""},
   {"", "", ""},
 },
-#endif
 
 { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
   "armoured tail",
@@ -974,6 +973,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
   {"", "", ""},
 },
+#endif
 
 { MUT_ROLLPAGE, 0, 1, mutflag::good, false,
   "roll",
