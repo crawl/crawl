@@ -100,7 +100,7 @@ bool melee_attack::bad_attempt()
 
     if (!cleave_targets.empty())
     {
-        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        const int range = you.reach_range();
         targeter_cleave hitfunc(attacker, defender->pos(), range);
         return stop_attack_prompt(hitfunc, "attack");
     }
