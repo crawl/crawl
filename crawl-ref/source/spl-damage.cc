@@ -2679,7 +2679,7 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
 #ifdef USE_TILE
     beam.tile_beam  = -1;
 #endif
-    beam.draw_delay = 0;
+    beam.draw_delay = 10;
 
     if (agent.is_player())
         mpr("Electricity surges outward!");
