@@ -6599,8 +6599,13 @@ static int _noise_level(const monster* mons, spell_type spell,
     {
         noise = 0;
     }
-    else if (mons_genus(mons->type) == MONS_DRAGON)
+    // Dragons are extra loud.
+    else if (mons_genus(mons->type) == MONS_DRAGON
+             && (slot_flags & MON_SPELL_INNATE_MASK
+                 || slot_flags & MON_SPELL_VOCAL))
+    {
         noise = get_shout_noise_level(S_LOUD_ROAR);
+    }
     else
         noise = spell_noise(spell);
 
