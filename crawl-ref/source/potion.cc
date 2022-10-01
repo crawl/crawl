@@ -115,9 +115,11 @@ public:
             const int base = 5 + random2(7);
             int amount = base;
             if (is_potion)
+            {
                 amount = you.scale_potion_healing(amount);
-            if (you.has_mutation(MUT_LONG_TONGUE))
-                amount += base;
+                if (you.has_mutation(MUT_LONG_TONGUE))
+                    amount += base;
+            }
             inc_hp(amount);
         }
 
@@ -193,9 +195,11 @@ public:
         const int base = 10 + random2avg(28, 3);
         int amount = base;
         if (is_potion)
+        {
             amount = you.scale_potion_healing(amount);
-        if (you.has_mutation(MUT_LONG_TONGUE))
-            amount += base;
+            if (you.has_mutation(MUT_LONG_TONGUE))
+                amount += base;
+        }
         inc_hp(amount);
         if (is_potion)
             print_potion_heal_message();
