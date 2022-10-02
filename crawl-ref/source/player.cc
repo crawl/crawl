@@ -7219,7 +7219,8 @@ bool player::is_stationary() const
         || you.duration[DUR_LOCKED_DOWN];
 }
 
-bool player::is_motile() const {
+bool player::is_motile() const
+{
     return !is_stationary() && !you.duration[DUR_NO_MOMENTUM];
 }
 
