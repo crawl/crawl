@@ -3268,11 +3268,35 @@ void delete_level(const level_id &level)
     _do_lost_items();
 }
 
+
+static bool &_get_excursions_allowed()
+{
+    static bool _allowed = true;
+    return _allowed;
+}
+
+bool level_excursions_allowed()
+{
+    return _get_excursions_allowed();
+}
+
+no_excursions::no_excursions()
+    : prev(level_excursions_allowed())
+{
+    _get_excursions_allowed() = false;
+}
+
+no_excursions::~no_excursions()
+{
+    _get_excursions_allowed() = prev;
+}
+
 // This class provides a way to walk the dungeon with a bit more flexibility
 // than you used to get with apply_to_all_dungeons.
 level_excursion::level_excursion()
     : original(level_id::current()), ever_changed_levels(false)
 {
+    // could put an excursions allowed check here?
 }
 
 void level_excursion::go_to(const level_id& next)
@@ -3284,10 +3308,13 @@ void level_excursion::go_to(const level_id& next)
     // the abyss purposefully does level excursions in order to pick up
     // features from other levels and place them in the abyss: this is
     // basically safe to do, and seeding isn't a concern.
+    // TODO: reimplement with no_excursions?
     ASSERT(!crawl_state.generating_level || original.branch == BRANCH_ABYSS);
 
     if (level_id::current() != next)
     {
+        ASSERT(level_excursions_allowed());
+
         if (!you.level_visited(level_id::current()))
             travel_cache.erase_level_info(level_id::current());
 
