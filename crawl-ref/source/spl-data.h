@@ -543,7 +543,7 @@ static const struct spell_desc spelldata[] =
     7,
     200,
     -1, -1,
-    0,
+    15,
     TILEG_MALIGN_GATEWAY,
 },
 
