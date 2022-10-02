@@ -350,6 +350,8 @@ spret cast_chain_lightning(int pow, const actor &caster, bool fail)
              caster.hand_name(true).c_str());
     }
 
+    noisy(spell_effect_noise(SPELL_CHAIN_LIGHTNING), caster.pos(), caster.mid);
+
     vector<arc_victim> victims;
     victims.push_back(arc_victim{caster.pos(), act});
     set<actor*> seen_set;
@@ -2832,6 +2834,8 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
                                div_rand_round(30 + pow / 6, arc + 2));
         beam.fire();
     }
+
+    noisy(spell_effect_noise(SPELL_THUNDERBOLT), caster->pos());
 
     _set_thundervolt_last_aim(caster, aim);
 

@@ -6400,7 +6400,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_WARNING_CRY:
-        return; // the entire point is the noise, handled elsewhere
+        noisy(spell_effect_noise(SPELL_WARNING_CRY), mons->pos(), mons->mid);
+        return;
 
     case SPELL_HUNTING_CALL:
         _battle_cry(*mons, SPELL_HUNTING_CALL);
@@ -7266,6 +7267,7 @@ static void _doom_howl(monster &mon)
     mprf("%s unleashes a %s howl, and it begins to echo in your mind!",
          mon.name(DESC_THE).c_str(),
          silenced(mon.pos()) ? "silent" : "terrible");
+    noisy(spell_effect_noise(SPELL_DOOM_HOWL), mon.pos(), mon.mid);
     you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
     mon.props[DOOM_HOUND_HOWLED_KEY] = true;
 }

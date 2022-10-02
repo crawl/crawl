@@ -6191,7 +6191,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         // gas leak).
         if (name == "blast of putrescent gases")
             loudness = loudness * 2 / 3;
-        // TODO: flame wave
 
         // Lee's Rapid Deconstruction can target the tiles on the map
         // boundary.
