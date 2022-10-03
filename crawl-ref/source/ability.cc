@@ -330,8 +330,6 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::delay },
         { ABIL_HOP, "Hop",
             0, 0, 0, -1, {}, abflag::none }, // range special-cased
-        { ABIL_ROLLING_CHARGE, "Rolling Charge",
-            0, 0, 0, -1, {}, abflag::none }, // range special-cased
         { ABIL_BLINKBOLT, "Blinkbolt",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::none },
 #if TAG_MAJOR_VERSION == 34
@@ -704,9 +702,6 @@ int ability_range(ability_type abil)
     {
         case ABIL_HOP:
             range = frog_hop_range();
-            break;
-        case ABIL_ROLLING_CHARGE:
-            range = palentonga_charge_range();
             break;
         case ABIL_DITHMENOS_SHADOW_STEP:
             range = you.umbra_radius();
@@ -1417,19 +1412,12 @@ bool activate_ability()
 
 static bool _can_movement_ability(bool quiet)
 {
-    if (you.attribute[ATTR_HELD])
-    {
-        if (!quiet)
-            mprf("You cannot do that while %s.", held_status());
-        return false;
-    }
-    else if (!you.is_motile())
-    {
-        if (!quiet)
-            canned_msg(MSG_CANNOT_MOVE);
-        return false;
-    }
-    return true;
+    const string reason = movement_impossible_reason();
+    if (reason.empty())
+        return true;
+    if (!quiet)
+        mprf("%s", reason.c_str());
+    return false;
 }
 
 static bool _can_hop(bool quiet)
@@ -1883,10 +1871,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
 
     case ABIL_HOP:
         return _can_hop(quiet);
-
-    case ABIL_ROLLING_CHARGE:
-        return _can_movement_ability(quiet) &&
-                                palentonga_charge_possible(quiet, true);
 
     case ABIL_WORD_OF_CHAOS:
         if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
@@ -2534,12 +2518,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_HOP:
         if (_can_hop(false))
             return frog_hop(fail, target);
-        else
-            return spret::abort;
-
-    case ABIL_ROLLING_CHARGE:
-        if (_can_movement_ability(false))
-            return palentonga_charge(fail, target);
         else
             return spret::abort;
 
@@ -3679,8 +3657,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                && (form_keeps_mutations() || include_unusable);
     case ABIL_HOP:
         return you.get_mutation_level(MUT_HOP);
-    case ABIL_ROLLING_CHARGE:
-        return you.get_mutation_level(MUT_ROLL);
     case ABIL_BREATHE_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) >= 2;
     case ABIL_SPIT_POISON:
@@ -3758,7 +3734,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_DIG,
             ABIL_SHAFT_SELF,
             ABIL_HOP,
-            ABIL_ROLLING_CHARGE,
             ABIL_SPIT_POISON,
             ABIL_BREATHE_FIRE,
             ABIL_BREATHE_FROST,

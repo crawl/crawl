@@ -4698,9 +4698,14 @@ void dec_ambrosia_player(int delay)
     const int mp_restoration = div_rand_round(delay*(3 + random2(3)), BASELINE_DELAY);
 
     if (!you.duration[DUR_DEATHS_DOOR])
-        inc_hp(you.scale_potion_healing(hp_restoration));
+    {
+        int heal = you.scale_potion_healing(hp_restoration);
+        if (you.has_mutation(MUT_LONG_TONGUE))
+            heal += hp_restoration;
+        inc_hp(heal);
+    }
 
-    inc_mp(mp_restoration);
+    inc_mp(mp_restoration * (you.has_mutation(MUT_LONG_TONGUE) ? 2 : 1));
 
     if (!you.duration[DUR_AMBROSIA])
         mpr("You feel less invigorated.");
@@ -5785,7 +5790,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
     const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
 
     // The deformed don't fit into body armour very well.
-    // (This includes nagas and palentongas.)
+    // (This includes nagas and armataurs.)
     if (get_armour_slot(armour) == EQ_BODY_ARMOUR
             && (get_mutation_level(MUT_DEFORMED)
                 || get_mutation_level(MUT_PSEUDOPODS)))
@@ -6117,12 +6122,6 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     AC -= 400 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
-
-    if (you.has_mutation(MUT_CURL)
-        && you.props[PALENTONGA_CURL_KEY].get_bool())
-    {
-        AC += 7 * scale;
-    }
 
     return AC / scale;
 }

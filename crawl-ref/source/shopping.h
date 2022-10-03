@@ -113,6 +113,8 @@ public:
     static bool items_are_same(const item_def& item_a,
                                const item_def& item_b);
 
+    void do_excursion_work();
+
 private:
     // An alias for you.props[SHOPPING_LIST_KEY], kept in sync by refresh()
     CrawlVector* list;
@@ -121,6 +123,8 @@ private:
     int min_unbuyable_idx;
     int max_buyable_cost;
     int max_buyable_idx;
+
+    vector<pair<object_class_type, int>> need_excursions;
 
 private:
     unordered_set<int> find_thing(const item_def &item, const level_pos &pos) const;

@@ -3524,8 +3524,6 @@ tileidx_t tileidx_ability(const ability_type ability)
 #endif
     case ABIL_HOP:
         return TILEG_ABILITY_HOP;
-    case ABIL_ROLLING_CHARGE:
-        return TILEG_ABILITY_ROLL;
     case ABIL_BLINKBOLT:
         return TILEG_ABILITY_BLINKBOLT;
 
@@ -3995,8 +3993,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_TROLL;
         case SP_BASE_DRACONIAN:
             return TILEG_SP_DRACONIAN;
-        case SP_PALENTONGA:
-            return TILEG_SP_PALENTONGA;
+        case SP_ARMATAUR:
+            return TILEG_SP_ARMATAUR;
         case SP_DEMIGOD:
             return TILEG_SP_DEMIGOD;
         case SP_SPRIGGAN:

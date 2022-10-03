@@ -1769,10 +1769,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (!you.has_innate_mutation(MUT_SPIT_POISON) && mutat == MUT_SPIT_POISON)
         return true;
 
-    // Only Palentonga can go on a roll.
-    if (!you.has_innate_mutation(MUT_ROLL) && mutat == MUT_ROLL)
-        return true;
-
     // Only Draconians (and gargoyles) can get wings.
     if (!species::is_draconian(you.species) && you.species != SP_GARGOYLE
         && mutat == MUT_BIG_WINGS)

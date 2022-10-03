@@ -150,6 +150,18 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_ELECTRIC_CHARGE, "Vhi's Electric Charge",
+    spschool::air | spschool::translocation,
+    spflag::noisy, // hack - should have spflag::dir_or_target | spflag::needs_tracer
+                   // and maybe spflag::hasty?
+    3,
+    50,
+    4, 4,
+    4, 0,
+    TILEG_ELECTRIC_CHARGE,
+},
+
+{
     SPELL_BOLT_OF_MAGMA, "Bolt of Magma",
     spschool::conjuration | spschool::fire | spschool::earth,
     spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
@@ -3143,8 +3155,8 @@ static const struct spell_desc spelldata[] =
     spschool::translocation,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer,
     3,
-    100,
-    2, 5,
+    50,
+    3, 5,
     2, 0,
     TILEG_BECKONING,
 },

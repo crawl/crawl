@@ -237,7 +237,7 @@ felids/cat3 SP_RECOMMENDED_FELID
 %compose base/palentonga_red_f
 %compose body/animal_skin
 %compose hair/short_black
-%finish SP_RECOMMENDED_PALENTONGA
+%finish SP_RECOMMENDED_ARMATAUR
 %start
 %compose base/deep_elf_f
 %compose body/animal_skin
@@ -350,7 +350,7 @@ base/octopode1 SP_RECOMMENDED_OCTOPODE
 %sdir gui/backgrounds
 %texture disabled-fg
 enum:SP_RECOMMENDED_FELID SP_FELID
-enum:SP_RECOMMENDED_PALENTONGA SP_PALENTONGA
+enum:SP_RECOMMENDED_ARMATAUR SP_ARMATAUR
 enum:SP_RECOMMENDED_DEEP_ELF SP_DEEP_ELF
 enum:SP_RECOMMENDED_DEMIGOD SP_DEMIGOD
 enum:SP_RECOMMENDED_DEMONSPAWN SP_DEMONSPAWN

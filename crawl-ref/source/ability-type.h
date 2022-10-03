@@ -54,9 +54,11 @@ enum ability_type
     ABIL_SHAFT_SELF,
     // Barachim
     ABIL_HOP,
-    // Palentongas
+#if TAG_MAJOR_VERSION == 34
+    // Armataurs
     ABIL_ROLLING_CHARGE,
-    // Air Walk
+#endif
+    // Storm Form
     ABIL_BLINKBOLT,
     ABIL_MAX_INTRINSIC = ABIL_BLINKBOLT,
 

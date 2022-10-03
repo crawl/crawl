@@ -100,6 +100,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Lightning
     SPELL_DISCHARGE,
+    SPELL_ELECTRIC_CHARGE,
     SPELL_LIGHTNING_BOLT,
     SPELL_ARCJOLT,
     SPELL_MAXWELLS_COUPLING,
@@ -397,6 +398,7 @@ static const vector<spell_type> spellbook_templates[] =
 
 { // Inescapable Atlas
     SPELL_BLINK,
+    SPELL_ELECTRIC_CHARGE,
     SPELL_MANIFOLD_ASSAULT,
     SPELL_STORM_FORM,
 },

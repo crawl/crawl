@@ -22,7 +22,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "english.h"
-#include "god-abil.h" // fedhas_passthrough for palentonga charge
+#include "god-abil.h" // fedhas_passthrough for armataur charge
 #include "item-prop.h"
 #include "items.h"
 #include "level-state-type.h"
@@ -30,12 +30,13 @@
 #include "los.h"
 #include "losglobal.h"
 #include "losparam.h"
-#include "melee-attack.h" // palentonga charge
+#include "melee-attack.h" // armataur charge
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
-#include "movement.h" // palentonga charge
+#include "movement.h" // armataur charge
 #include "nearby-danger.h"
 #include "orb.h"
 #include "output.h"
@@ -429,23 +430,11 @@ spret frog_hop(bool fail, dist *target)
     return spret::success; // TODO
 }
 
-static bool _check_charge_through(coord_def pos)
-{
-    if (!you.can_pass_through_feat(env.grid(pos)))
-    {
-        clear_messages();
-        mprf("You can't roll into that!");
-        return false;
-    }
-
-    return true;
-}
-
 static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
                                 targeter *hitfunc, dist *target)
 {
     // Check for unholy weapons, breadswinging, etc
-    if (!wielded_weapon_check(you.weapon(), "roll"))
+    if (!wielded_weapon_check(you.weapon(), "charge"))
         return false;
 
     const bool interactive = target && target->interactive;
@@ -461,14 +450,14 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         args.restricts = DIR_TARGET;
         args.mode = TARG_HOSTILE;
         args.prefer_farthest = true;
-        args.top_prompt = "Roll where?";
+        args.top_prompt = "Charge where?";
         args.hitfunc = hitfunc;
         direction(*target, args);
 
         // TODO: deduplicate with _find_cblink_target
         if (crawl_state.seen_hups)
         {
-            mpr("Cancelling rolling charge due to HUP.");
+            mpr("Cancelling electric charge due to HUP.");
             return false;
         }
 
@@ -481,7 +470,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         const monster* beholder = you.get_beholder(target->target);
         if (beholder)
         {
-            mprf("You cannot roll away from %s!",
+            mprf("You cannot charge away from %s!",
                 beholder->name(DESC_THE, true).c_str());
             if (interactive)
                 continue;
@@ -492,7 +481,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         const monster* fearmonger = you.get_fearmonger(target->target);
         if (fearmonger)
         {
-            mprf("You cannot roll closer to %s!",
+            mprf("You cannot charge closer to %s!",
                 fearmonger->name(DESC_THE, true).c_str());
             if (interactive)
                 continue;
@@ -525,7 +514,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         ray_def ray;
         if (!find_ray(you.pos(), target->target, ray, opc_solid))
         {
-            mpr("You can't roll through that!");
+            mpr("You can't charge through that!");
             if (interactive)
                 continue;
             else
@@ -537,22 +526,11 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         // the prompts, but...)
 
         target_path.clear();
-        bool ok = true;
         while (ray.advance())
         {
             target_path.push_back(ray.pos());
-            if (!can_charge_through_mons(ray.pos()))
+            if (ray.pos() == target->target)
                 break;
-            ok = _check_charge_through(ray.pos());
-            if (ray.pos() == target->target || !ok)
-                break;
-        }
-        if (!ok)
-        {
-            if (interactive)
-                continue;
-            else
-                return false;
         }
 
         // DON'T use beam.target here - we might have used ! targeting to
@@ -596,43 +574,85 @@ static void _charge_cloud_trail(const coord_def pos)
         place_cloud(CLOUD_DUST, pos, 2 + random2(3), &you);
 }
 
-bool palentonga_charge_possible(bool quiet, bool allow_safe_monsters)
+bool electric_charge_possible(bool allow_safe_monsters)
 {
-    // general movement conditions are checked in ability.cc:_check_ability_possible
-    targeter_charge tgt(&you, palentonga_charge_range());
+    // General movement checks are handled elsewhere.
+    targeter_charge tgt(&you, spell_range(SPELL_ELECTRIC_CHARGE, 0));
     for (monster_near_iterator mi(&you); mi; ++mi)
+    {
         if (tgt.valid_aim(mi->pos())
             && (allow_safe_monsters || !mons_is_safe(*mi, false) || mons_class_is_test(mi->type)))
         {
             return true;
         }
-    if (!quiet)
-        mpr("There's nothing you can charge at!");
+    }
     return false;
 }
 
-int palentonga_charge_range()
+string movement_impossible_reason()
 {
-    return 3 + you.get_mutation_level(MUT_ROLL);
+    if (you.attribute[ATTR_HELD])
+        return make_stringf("You cannot do that while %s.", held_status());
+    if (!you.is_motile())
+        return "You cannot move."; // MSG_CANNOT_MOVE
+    return "";
+}
+
+static void _displace_charge_blocker(monster &mon)
+{
+    const coord_def orig = mon.pos();
+    coord_def targ;
+    if (random_near_space(&mon, mon.pos(), targ, true)
+        && mon.blink_to(targ, true, false)) // XXX: should ignore constrict
+    {
+        return;
+    }
+
+    monster_teleport(&mon, true);
+    if (mon.pos() != orig)
+        return;
+
+    mon.banish(&you, "electric charge", -1, true);
+    if (!mon.alive())
+        return;
+
+    monster_die(mon, KILL_BANISHED, NON_MONSTER);
 }
 
 /**
  * Attempt to charge the player to a target of their choosing.
  *
- * @param fail          Whether this came from a mis-invoked ability (& should
+ * @param fail          Whether this came from a miscast spell (& should
  *                      therefore fail after selecting a target)
  * @return              Whether the charge succeeded, aborted, or was miscast.
  */
-spret palentonga_charge(bool fail, dist *target)
+spret electric_charge(int powc, bool fail)
 {
     const coord_def initial_pos = you.pos();
 
     vector<coord_def> target_path;
-    targeter_charge tgt(&you, palentonga_charge_range());
-    if (!_find_charge_target(target_path, palentonga_charge_range(), &tgt, target))
+    const int range = spell_range(SPELL_ELECTRIC_CHARGE, powc);
+    targeter_charge tgt(&you, range);
+    dist target;
+    if (!_find_charge_target(target_path, range, &tgt, &target))
         return spret::abort;
 
+    const coord_def dest_pos = target_path.at(target_path.size() - 2);
+    monster* dest_mon = monster_at(dest_pos);
+    const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
+    if (invalid_dest && you.can_see(*dest_mon))
+    {
+        mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
+        return spret::abort;
+    }
+
     fail_check();
+
+    if (invalid_dest)
+    {
+        mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
+        return spret::success;
+    }
 
     if (!you.attempt_escape(1)) // prints its own messages
         return spret::success;
@@ -647,27 +667,17 @@ spret palentonga_charge(bool fail, dist *target)
     crawl_state.cancel_cmd_repeat();
 
     const coord_def orig_pos = you.pos();
-    for (coord_def pos : target_path)
-    {
-        monster* sneaky_mons = monster_at(pos);
-        if (sneaky_mons && !fedhas_passthrough(sneaky_mons))
-        {
-            target_mons = sneaky_mons;
-            break;
-        }
-    }
-    const coord_def dest_pos = target_path.at(target_path.size() - 2);
 
-    // Are you actually moving forward? XXX: revisit this check
-    if (grid_distance(you.pos(), target_pos) > 1 || !target_mons)
-    {
-        if (silenced(dest_pos))
-            mpr("You roll forward in eerie silence!");
-        else
-            mpr("You roll forward with a clatter of scales!");
-    }
+    if (silenced(dest_pos))
+        mpr("You charge forward in eerie silence!");
+    else
+        mpr("You charge forward with an electric crackle!");
 
     remove_water_hold();
+
+    if (dest_mon)
+        _displace_charge_blocker(*dest_mon);
+
     move_player_to_grid(dest_pos, true);
     noisy(4, you.pos());
     apply_barbs_damage();
@@ -695,7 +705,7 @@ spret palentonga_charge(bool fail, dist *target)
         div_rand_round(you.time_taken * player_movement_speed(), 10);
 
     melee_attack charge_atk(&you, target_mons);
-    charge_atk.roll_dist = grid_distance(initial_pos, you.pos());
+    charge_atk.charge_pow = powc + 50 * grid_distance(initial_pos, you.pos());
     charge_atk.attack();
 
     // Normally this is 10 aut (times haste, chei etc), but slow weapons

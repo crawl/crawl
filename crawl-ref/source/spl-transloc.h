@@ -15,9 +15,10 @@ void wizard_blink();
 
 int frog_hop_range();
 spret frog_hop(bool fail, dist *target = nullptr);
-bool palentonga_charge_possible(bool quiet, bool ignore_safe_monsters);
-spret palentonga_charge(bool fail, dist *target = nullptr);
-int palentonga_charge_range();
+
+bool electric_charge_possible(bool allow_safe_monsters);
+spret electric_charge(int powc, bool fail);
+string movement_impossible_reason();
 
 void you_teleport();
 void you_teleport_now(bool wizard_tele = false, bool teleportitis = false,

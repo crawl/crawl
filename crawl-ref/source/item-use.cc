@@ -135,6 +135,8 @@ static string _default_use_title(operation_types oper)
     case OPER_PUTON:
         return "Put on which piece of jewellery?";
     case OPER_QUAFF:
+        if (you.has_mutation(MUT_LONG_TONGUE))
+            return "Slurp which item?";
         return "Drink which item?";
     case OPER_READ:
         return "Read which item?";
@@ -1386,7 +1388,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 if (you.has_mutation(MUT_CONSTRICTING_TAIL))
                     mpr("You have no legs!");
                 else
-                    mpr("Boots don't fit your feet!"); // palentonga
+                    mpr("Boots don't fit your feet!"); // armataur
             }
             return false;
         }
@@ -3824,6 +3826,8 @@ void read(item_def* scroll, dist *target)
         else
             dec_mitm_item_quantity(scroll->index(), 1);
         count_action(CACT_USE, OBJ_SCROLLS);
+        if (you.has_mutation(MUT_AWKWARD_TONGUE))
+            you.time_taken = div_rand_round(you.time_taken * 3, 2);
     }
 
     if (!alreadyknown

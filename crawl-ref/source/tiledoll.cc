@@ -294,7 +294,7 @@ void fill_doll_equipment(dolls_data &result)
 #if TAG_MAJOR_VERSION == 34
         case SP_CENTAUR:
 #endif
-        case SP_PALENTONGA: ch = TILEP_TRAN_STATUE_PALENTONGA;  break;
+        case SP_ARMATAUR: ch = TILEP_TRAN_STATUE_ARMATAUR;  break;
         case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_STATUE_OCTOPODE; break;
@@ -330,7 +330,7 @@ void fill_doll_equipment(dolls_data &result)
 #if TAG_MAJOR_VERSION == 34
         case SP_CENTAUR:
 #endif
-        case SP_PALENTONGA: ch = TILEP_TRAN_LICH_PALENTONGA;  break;
+        case SP_ARMATAUR: ch = TILEP_TRAN_LICH_ARMATAUR;  break;
         case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
         case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
         case SP_OCTOPODE:ch = TILEP_TRAN_LICH_OCTOPODE; break;
@@ -627,7 +627,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
     }
 
     const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_PALENTONGA);
+                                        TILEP_BASE_ARMATAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED

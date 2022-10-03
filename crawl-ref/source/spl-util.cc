@@ -1460,6 +1460,17 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you cannot redirect your momentum while unable to move.";
         break;
 
+    case SPELL_ELECTRIC_CHARGE:
+        if (temp)
+        {
+            const string no_move_reason = movement_impossible_reason();
+            if (!no_move_reason.empty())
+                return no_move_reason;
+            if (!electric_charge_possible(true))
+                return "you can't see anything to charge at.";
+        }
+        break;
+
     default:
         break;
     }

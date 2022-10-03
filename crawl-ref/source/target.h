@@ -400,7 +400,6 @@ private:
 };
 
 string bad_charge_target(coord_def a);
-bool can_charge_through_mons(coord_def a);
 
 // a fixed los targeter matching how it is called for shatter, with a custom
 // tweak to affect walls.

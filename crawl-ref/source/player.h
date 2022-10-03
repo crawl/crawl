@@ -52,7 +52,6 @@
 #define PARALYSED_BY_KEY "paralysed_by"
 #define PETRIFIED_BY_KEY "petrified_by"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
-#define PALENTONGA_CURL_KEY "palentonga_curl"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -933,6 +932,15 @@ protected:
 
 class monster;
 struct item_def;
+
+class player_vanishes
+{
+    coord_def source;
+    bool movement;
+public:
+    player_vanishes(bool _movement=false);
+    ~player_vanishes();
+};
 
 // Helper. Use move_player_to_grid or player::apply_location_effects instead.
 void moveto_location_effects(dungeon_feature_type old_feat,
