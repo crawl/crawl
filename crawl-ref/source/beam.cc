@@ -415,7 +415,6 @@ struct zap_info
     dungeon_char_type glyph;
     bool can_beam;
     bool is_explosion;
-    int hit_loudness;
 };
 
 #include "zap-data.h"
@@ -510,6 +509,26 @@ int zap_ench_power(zap_type z_type, int pow, bool is_monster)
         return pow;
 }
 
+static int _zap_loudness(zap_type zap, spell_type spell)
+{
+    const zap_info* zinfo = _seek_zap(zap);
+    const int noise = spell_effect_noise(spell);
+    const spell_flags flags = get_spell_flags(spell);
+
+    // Explosions have noise handled separately.
+    if (zinfo->is_explosion || testbits(flags, spflag::silent))
+        return 0;
+    else if (noise > 0)
+        return noise;
+    // Enchantments are (usually) silent.
+    else if (zinfo->is_enchantment)
+        return 0;
+    else if (spell != SPELL_NO_SPELL)
+        return spell_difficulty(spell);
+
+    return 0;
+}
+
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
 {
     const zap_info* zinfo = _seek_zap(z_type);
@@ -548,7 +567,7 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
         pbolt.origin_spell = zap_to_spell(z_type);
 
     if (pbolt.loudness == 0)
-        pbolt.loudness = zinfo->hit_loudness;
+        pbolt.loudness = _zap_loudness(z_type, pbolt.origin_spell);
 }
 
 bool bolt::can_affect_actor(const actor *act) const
@@ -2431,15 +2450,10 @@ void bolt::affect_endpoint()
     case SPELL_PRIMAL_WAVE:
     {
         if (you.see_cell(pos()))
-        {
             mpr("The wave splashes down.");
-            noisy(spell_effect_noise(SPELL_PRIMAL_WAVE), pos());
-        }
         else
-        {
-            noisy(spell_effect_noise(SPELL_PRIMAL_WAVE),
-                  pos(), "You hear a splash.");
-        }
+            mpr("You hear a splash.");
+
         const bool is_player = agent() && agent()->is_player();
         const int num = is_player ? div_rand_round(ench_power * 3, 20) + 3 + random2(7)
                                   : random_range(3, 12, 2);

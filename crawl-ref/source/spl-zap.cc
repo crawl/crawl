@@ -132,14 +132,16 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_SEARING_BREATH, ZAP_BREATHE_FIRE },
     { SPELL_ICEBLAST, ZAP_ICEBLAST },
     { SPELL_ACID_SPLASH, ZAP_BREATHE_ACID },
-    { SPELL_BORGNJORS_VILE_CLUTCH, ZAP_VILE_CLUTCH},
+    { SPELL_BORGNJORS_VILE_CLUTCH, ZAP_VILE_CLUTCH },
     { SPELL_FOXFIRE, ZAP_FOXFIRE },
     { SPELL_MARSHLIGHT, ZAP_FOXFIRE },
     { SPELL_HURL_SLUDGE, ZAP_HURL_SLUDGE },
+    { SPELL_POISONOUS_CLOUD, ZAP_BREATHE_POISON },
+    { SPELL_MEPHITIC_CLOUD, ZAP_BREATHE_MEPHITIC },
 };
 
 // Some player abilities are internally zaps but don't go through
-// your_spels
+// your_spells
 static pair<ability_type, zap_type> _abil_zaps[] =
 {
     { ABIL_SPIT_POISON, ZAP_SPIT_POISON },

@@ -2693,13 +2693,6 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width)
 {
     const int casting_noise = spell_noise(spell);
     int effect_noise = spell_effect_noise(spell);
-    zap_type zap = spell_to_zap(spell);
-    if (effect_noise == 0 && zap != NUM_ZAPS)
-    {
-        bolt beem;
-        zappy(zap, 0, false, beem);
-        effect_noise = beem.loudness;
-    }
 
     // A typical amount of noise.
     if (spell == SPELL_POLAR_VORTEX)

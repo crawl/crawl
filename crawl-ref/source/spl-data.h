@@ -89,7 +89,7 @@ static const struct spell_desc spelldata[] =
     4,
     200,
     LOS_RADIUS, LOS_RADIUS,
-    0,
+    4,
     TILEG_DIG,
 },
 
@@ -915,7 +915,7 @@ static const struct spell_desc spelldata[] =
     6,
     200,
     LOS_RADIUS, LOS_RADIUS,
-    0,
+    6,
     TILEG_GENERIC_MONSTER_SPELL,
 },
 
@@ -1389,7 +1389,7 @@ static const struct spell_desc spelldata[] =
     5,
     200,
     5, 5,
-    0,
+    2,
     TILEG_NOXIOUS_CLOUD,
 },
 
@@ -1512,7 +1512,7 @@ static const struct spell_desc spelldata[] =
     6,
     0,
     5, 5,
-    0,
+    2,
     TILEG_MIASMA_BREATH,
 },
 
@@ -1573,7 +1573,8 @@ static const struct spell_desc spelldata[] =
     TILEG_SPIT_ACID,
 },
 
-{ SPELL_ACID_SPLASH, "Acid Splash",
+{
+    SPELL_ACID_SPLASH, "Acid Splash",
     spschool::conjuration,
     spflag::dir_or_target | spflag::monster | spflag::noisy
         | spflag::needs_tracer,
@@ -1628,7 +1629,7 @@ static const struct spell_desc spelldata[] =
     5,
     0,
     5, 5,
-    0,
+    2,
     TILEG_GENERIC_MONSTER_SPELL,
 },
 
@@ -1947,7 +1948,7 @@ static const struct spell_desc spelldata[] =
     5,
     200,
     5, 5,
-    0,
+    2,
     TILEG_GENERIC_MONSTER_SPELL,
 },
 
@@ -2027,7 +2028,7 @@ static const struct spell_desc spelldata[] =
     5,
     0,
     LOS_RADIUS, LOS_RADIUS,
-    0,
+    2,
     TILEG_PETRIFYING_CLOUD,
 },
 
@@ -3203,7 +3204,7 @@ static const struct spell_desc spelldata[] =
     5,
     200,
     6, 6,
-    0,
+    5,
     TILEG_BORGNJORS_VILE_CLUTCH,
 },
 
