@@ -933,6 +933,15 @@ protected:
 class monster;
 struct item_def;
 
+class player_vanishes
+{
+    coord_def source;
+    bool movement;
+public:
+    player_vanishes(bool _movement=false);
+    ~player_vanishes();
+};
+
 // Helper. Use move_player_to_grid or player::apply_location_effects instead.
 void moveto_location_effects(dungeon_feature_type old_feat,
                              bool stepped=false, const coord_def& old_pos=coord_def());

@@ -33,6 +33,7 @@
 #include "spl-damage.h"
 #include "spl-monench.h"
 #include "state.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -70,21 +71,56 @@ bool player::is_summoned(int* _duration, int* summon_type) const
     return false;
 }
 
-void player::moveto(const coord_def &c, bool clear_net)
+// n.b. it might be better to use this as player::moveto's function signature
+// itself (or something more flexible), but that involves annoying refactoring
+// because of the actor/monster signature.
+static void _player_moveto(const coord_def &c, bool real_movement, bool clear_net)
 {
-    if (c != pos())
+    if (c != you.pos())
     {
         if (clear_net)
             clear_trapping_net();
+
+        // we need to do this even for fake movement -- otherwise nothing ends
+        // the dur for temporal distortion. (I'm not actually sure why?)
         end_wait_spells();
-        // Remove spells that break upon movement
-        remove_ice_movement();
+        if (real_movement)
+        {
+            // Remove spells that break upon movement
+            remove_ice_movement();
+        }
     }
 
     crawl_view.set_player_at(c);
-    set_position(c);
+    you.set_position(c);
 
-    clear_invalid_constrictions();
+    // clear invalid constrictions even with fake movement
+    you.clear_invalid_constrictions();
+}
+
+player_vanishes::player_vanishes(bool _movement)
+    : source(you.pos()), movement(_movement)
+{
+    _player_moveto(coord_def(0,0), movement, true);
+}
+
+player_vanishes::~player_vanishes()
+{
+    if (monster *mon = monster_at(source))
+    {
+        mon->props[FAKE_BLINK_KEY].get_bool() = true;
+        mon->blink();
+        mon->props.erase(FAKE_BLINK_KEY);
+        if (monster *stubborn = monster_at(source))
+            monster_teleport(stubborn, true, true);
+    }
+
+    _player_moveto(source, movement, true);
+}
+
+void player::moveto(const coord_def &c, bool clear_net)
+{
+    _player_moveto(c, true, clear_net);
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
