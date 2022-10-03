@@ -1044,7 +1044,7 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
     beam.attitude = ATT_FRIENDLY;
     beam.fire();
 
-    if (!beam.foe_info.hurt) // miss!
+    if (!beam.foe_info.hurt && !beam.friend_info.hurt) // miss!
     {
         if (!mons || !you.can_see(*mons))
             mpr("The momentum dissipates harmlessly.");
