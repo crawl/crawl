@@ -514,6 +514,7 @@ bool feat_is_trap(dungeon_feature_type feat)
  */
 bool feat_is_water(dungeon_feature_type feat)
 {
+    
     return feat == DNGN_SHALLOW_WATER
            || feat == DNGN_DEEP_WATER
            || feat == DNGN_OPEN_SEA

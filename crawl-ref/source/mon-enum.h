@@ -35,6 +35,7 @@ enum attack_type
     AT_CONSTRICT,
     AT_TRAMPLE,
     AT_TRUNK_SLAP,
+    AT_HEADBUTT,
 #if TAG_MAJOR_VERSION == 34
     AT_SNAP,
     AT_SPLASH,

@@ -2054,6 +2054,7 @@ MONS:   toadstool
 KMONS:  2 = thorn hunter
 KFEAT:  2 = W
 KFEAT:  - = .
+KFEAT:  O = shallow_water
 SUBST:  " = ---Wtt1, t = ttt-, - = -:50 .
 TILE:   x = wall_brick_vines
 FTILE:  -Wt1 = floor_sandstone
@@ -2064,7 +2065,7 @@ MAP
 ..xx"-"""-"xx..
 .xx""-t"t-""xx.
 .x"--W"W"W--"x.
-.x-"t"WWW"t"--@
+.x-"t"WWW"t"--O@
 .x"""WW2WW"""x.
 .x-"t"WWW"t"-x.
 .x"--W"W"W--"x.
