@@ -1564,7 +1564,7 @@ Merfolk (Mf)
   still remains. The instability of their own morphogenic matrix has made them
   very accomplished transmuters, but most other magic seems foreign to them.
 
-Armataurs (AT)
+Armataurs (At)
   The Armataurs are a large, scaled mammalian species, walking on four feet
   and swinging a powerful tail behind them. Their elephant-back armies
   terrorize the lands outside the Dungeon.
