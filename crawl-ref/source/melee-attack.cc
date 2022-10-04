@@ -488,6 +488,18 @@ bool melee_attack::handle_phase_hit()
     // will be checked early in player_monattack_hit_effects
     damage_done += calc_damage();
 
+    // Calculate and apply infusion costs immediately after we calculate
+    // damage, so that later events don't result in us skipping the cost.
+    if (attacker->is_player())
+    {
+        const int infusion = you.infusion_amount();
+        if (infusion)
+        {
+            pay_mp(infusion);
+            finalize_mp_cost();
+        }
+    }
+
     bool stop_hit = false;
     // Check if some hit-effect killed the monster.
     if (attacker->is_player())
@@ -552,13 +564,6 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
-        const int infusion = you.infusion_amount();
-        if (infusion)
-        {
-            pay_mp(infusion);
-            finalize_mp_cost();
-        }
-
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
