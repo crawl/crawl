@@ -2545,7 +2545,7 @@ static void _fixup_species_mutations(mutation_type mut)
 {
     // this is *not safe* to use with any mutations where there could be a
     // physiology conflict, or with mutations where there could be random
-    // upgrades on top of the innate levels (e.g. MUT_ROLL).
+    // upgrades on top of the innate levels (e.g. MUT_SPIT_POISON).
     int total = 0;
     // Don't perma_mutate since that gives messages.
     for (const auto& lum : get_species_def(you.species).level_up_mutations)

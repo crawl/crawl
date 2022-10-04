@@ -942,7 +942,7 @@ static const mutation_def mut_data[] =
 #if TAG_MAJOR_VERSION == 34
 
 // Armataur only
-{ MUT_ROLL, 8, 3, mutflag::good, true,
+{ MUT_ROLL, 0, 3, mutflag::good, true,
   "roll",
 
   {"You can roll at nearby foes to attack.",
