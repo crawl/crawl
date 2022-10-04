@@ -117,12 +117,7 @@ draconian_purple DRACONIAN_PURPLE
 draconian_red DRACONIAN_RED
 draconian_white DRACONIAN_WHITE DRACONIAN_LAST
 
-palentonga_red_f ARMATAUR
-palentonga_red_m
-palentonga_f
-palentonga_m
-palentonga_green_f
-palentonga_green_m
+armataur ARMATAUR
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN

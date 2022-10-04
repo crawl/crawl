@@ -234,7 +234,7 @@ VM JOB_VENOM_MAGE
 %texture none
 felids/cat3 SP_RECOMMENDED_FELID
 %start
-%compose base/palentonga_red_f
+%compose base/armataur
 %compose body/animal_skin
 %compose hair/short_black
 %finish SP_RECOMMENDED_ARMATAUR
