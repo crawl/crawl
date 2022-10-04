@@ -1174,6 +1174,8 @@ string sub_type_string(const item_def &item, bool known)
             return "Everburning Encyclopedia";
         case BOOK_OZOCUBU:
             return "Ozocubu's Autobiography";
+        case BOOK_MAXWELL:
+            return "Maxwell's Memoranda";
         case BOOK_YOUNG_POISONERS:
             return "Young Poisoner's Handbook";
         case BOOK_FEN:
