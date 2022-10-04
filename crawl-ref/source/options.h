@@ -271,7 +271,7 @@ public:
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
-    bool        show_blood; // wheather to show blood or not
+    bool        show_blood; // whether to show blood or not
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
