@@ -504,7 +504,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
                     mpr("You sink to the bottom.");
 
-                if (!feat_is_water(old_feat))
+                if (!feat_is_water(old_feat) && you.body_size(PSIZE_BODY) <= SIZE_MEDIUM)
                 {
                     mpr("Moving in this stuff is going to be slow.");
                     if (you.invisible())
@@ -1789,7 +1789,7 @@ int player_movement_speed(bool check_terrain)
     {
         if (you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
             mv -= 4;
-        else if (you.in_water() && !you.can_swim())
+        else if (you.in_water() && !you.can_swim() && you.body_size(PSIZE_BODY) <= SIZE_MEDIUM)
             mv += 6; // Wading through water is very slow.
     }
 
