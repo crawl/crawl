@@ -1848,23 +1848,6 @@ bool fedhas_passthrough(const monster_info* target)
                || target->attitude != ATT_HOSTILE);
 }
 
-static bool _lugonu_warp_monster(monster& mon)
-{
-    // XXX: should this ignore mon.no_tele(), as with the player?
-    if (mon.wont_attack() || mon.no_tele() || coinflip())
-        return false;
-
-    mon.blink();
-    return true;
-}
-
-void lugonu_bend_space()
-{
-    mpr("Space bends violently around you!");
-    uncontrolled_blink(true);
-    apply_monsters_around_square(_lugonu_warp_monster, you.pos());
-}
-
 void cheibriados_time_bend(int pow)
 {
     mpr("The flow of time bends around you.");

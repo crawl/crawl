@@ -360,12 +360,6 @@ Depart the Abyss ability
 Transports you out of the Abyss, returning you to the location from which you
 entered it.
 %%%%
-Bend Space ability
-
-Bends the fabric of space, instantly translocating the user a short distance,
-and possibly also translocating foes adjacent to the destination. This ignores
-effects that would usually prevent translocations.
-%%%%
 Banish ability
 
 Attempts to banish a creature into the Abyss. If the attempt succeeds, you gain

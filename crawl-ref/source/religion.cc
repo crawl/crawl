@@ -231,7 +231,6 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 1, ABIL_LUGONU_ABYSS_EXIT,
                  "depart the Abyss",
                  "depart the Abyss at will" },
-            { 2, ABIL_LUGONU_BEND_SPACE, "bend space around yourself" },
             { 3, ABIL_LUGONU_BANISH, "banish your foes" },
             { 4, ABIL_LUGONU_CORRUPT, "corrupt the fabric of space" },
             { 5, ABIL_LUGONU_ABYSS_ENTER, "gate yourself to the Abyss" },

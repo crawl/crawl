@@ -3651,8 +3651,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Lugonu
     case ABIL_LUGONU_ABYSS_EXIT:
         return TILEG_ABILITY_LUGONU_EXIT_ABYSS;
-    case ABIL_LUGONU_BEND_SPACE:
-        return TILEG_ABILITY_LUGONU_BEND_SPACE;
     case ABIL_LUGONU_BANISH:
         return TILEG_ABILITY_LUGONU_BANISH;
     case ABIL_LUGONU_CORRUPT:
