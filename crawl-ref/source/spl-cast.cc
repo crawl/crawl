@@ -1626,6 +1626,14 @@ static vector<string> _desc_momentum_strike_hit_chance(const monster_info& mi, i
     return _desc_hit_chance(mi, beam.hit, false);
 }
 
+static vector<string> _desc_insubstantial(const monster_info& mi, string desc)
+{
+    if (mons_class_flag(mi.type, M_INSUBSTANTIAL))
+        return vector<string>{desc};
+
+    return vector<string>{};
+}
+
 static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
 {
     if (mi.mb.get(MB_CANT_DRAIN))
@@ -1811,6 +1819,10 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_hailstorm_hit_chance, placeholders::_1, powc);
         case SPELL_MOMENTUM_STRIKE:
             return bind(_desc_momentum_strike_hit_chance, placeholders::_1, powc);
+        case SPELL_FASTROOT:
+            return bind(_desc_insubstantial, placeholders::_1, "immune to roots");
+        case SPELL_STICKY_FLAME:
+            return bind(_desc_insubstantial, placeholders::_1, "unstickable");
         default:
             break;
     }
