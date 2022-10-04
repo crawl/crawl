@@ -657,7 +657,6 @@ public:
                        vector<const item_def *> *matches = nullptr) const override;
 
     int infusion_amount() const;
-    int infusion_multiplier() const;
 
     item_def *weapon(int which_attack = -1) const override;
     item_def *shield() const override;

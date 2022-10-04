@@ -3540,12 +3540,6 @@ int player::infusion_amount() const
         return min(you.magic_points, cost);
 }
 
-/// How much bonus damage do you get per MP spent?
-int player::infusion_multiplier() const {
-    // Maulers are pretty fun as is, but infusion needs a buff.
-    return player_equip_unrand(UNRAND_POWER_GLOVES) ? 2 : 4;
-}
-
 void dec_hp(int hp_loss, bool fatal, const char *aux)
 {
     ASSERT(!crawl_state.game_is_arena());
