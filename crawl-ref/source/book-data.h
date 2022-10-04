@@ -50,7 +50,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Flames
-    SPELL_FOXFIRE,
     SPELL_INNER_FLAME,
     SPELL_STICKY_FLAME,
     SPELL_FLAME_WAVE,
@@ -138,6 +137,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Vapours
     SPELL_POISONOUS_VAPOURS,
     SPELL_ROT,
+    SPELL_MEPHITIC_CLOUD,
 },
 
 {   // Book of Necromancy
@@ -478,7 +478,6 @@ static const vector<spell_type> spellbook_templates[] =
 { // Trismegistus Codex
     SPELL_BLASTSPARK,
     SPELL_IGNITE_POISON,
-    SPELL_MEPHITIC_CLOUD,
     SPELL_FREEZING_CLOUD,
 },
 
