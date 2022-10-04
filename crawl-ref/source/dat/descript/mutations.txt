@@ -216,8 +216,8 @@ weakness stinger mutation
 
 You have a thin, red tail, allowing you to tail-slap foes when launching melee
 attacks. Each level of this mutation increases your tail's strength as it turns
-into a sharp stinger. The third level of this mutation causes the stinger to
-inflict brief weakness on those unfortunate enough to be struck by it.
+into a sharp stinger. The third level of this mutation prevents wearing cloaks
+or scarves, and causes the stinger to inflict brief weakness on those struck.
 %%%%
 armoured tail mutation
 
