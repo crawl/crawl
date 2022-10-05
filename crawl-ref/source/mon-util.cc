@@ -117,7 +117,7 @@ bool monster_inherently_flies(const monster &mons)
     // check both so spectral humans and zombified dragons both fly
     // checks base type to ensure draconians with a specific type can also fly
     return monster_class_flies(mons.type)
-        || mons_is_draconian_job(mons.type) ? draconian_subspecies(mons) : mons_base_type(mons)
+        || mons_base_type(mons)
         || mons_is_ghost_demon(mons.type) && mons.ghost && mons.ghost->flies
         || mons.has_facet(BF_BAT);
 }
@@ -1664,6 +1664,8 @@ monster_type mons_base_type(const monster& mon)
 {
     if (mons_class_is_zombified(mon.type))
         return mons_zombie_base(mon);
+    if (mons_is_draconian_job(mon.type))
+        return draconian_subspecies(mon);
     return mon.type;
 }
 
@@ -3245,8 +3247,7 @@ habitat_type mons_class_primary_habitat(monster_type mc)
 
 habitat_type mons_primary_habitat(const monster& mon)
 {
-    const monster_type type = mons_is_draconian_job(mon.type)
-        ? draconian_subspecies(mon) : mons_base_type(mon);
+    const monster_type type = mons_base_type(mon);
 
     return mons_class_primary_habitat(type);
 }
