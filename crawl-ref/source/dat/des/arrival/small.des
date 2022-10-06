@@ -3812,30 +3812,29 @@ MAP
 ''cc+c+c+cc''
 '''''''''''''
 ENDMAP
-
 ##############################################################################
 NAME:    roadster_arrival_rocket_small
 TAGS:    arrival no_monster_gen no_trap_gen transparent
 ORIENT:  float
 MARKER:  F = lua:fog_machine{ \
              pow_max = 32, delay_min = 20, delay_max = 200, \
-             size = 7, start_clouds = 7, cloud_type = "black smoke"}
+             size = 3, start_clouds = 3, cloud_type = "black smoke"}
 MAP
-t@.v.@t
-t.vvv.t
-tFm{mFt
-tvv+vvt
-vv...vv
-vF...Fv
-v.....v
-vF...Fv
-v.....v
-vF...Fv
-v.....v
-v.....v
-v+v+v+v
-FFlFlFF
-@.....@
+ t@.v.@t
+ t.vvv.t
+ tFm{mFt
+ tvv.vvt
+ vv...vv
+ vF...Fv
+ v.....v
+ vF...Fv
+ v.....v
+ vF...Fv
+ v.....v
+ v.....v
+vv+v+v+vv
+ FFlFlFF
+ @.....@
 ENDMAP
 
 ##############################################################################
@@ -3844,22 +3843,22 @@ TAGS:    arrival no_monster_gen no_trap_gen transparent
 ORIENT:  float
 MARKER:  F = lua:fog_machine{ \
              pow_max = 32, delay_min = 20, delay_max = 200, \
-             size = 7, start_clouds = 7, cloud_type = "black smoke"}
+             size = 5, start_clouds = 5, cloud_type = "black smoke"}
 MAP
-    v
- t@vvv@t
- t.m{m.t
- tvv+vvt
-Fvv...vvF
-vv.....vv
-vF.....Fv
-v.......v
-vF.....Fv
-v.......v
-vF.....Fv
-v.......v
-v.......v
-v+v+v+v+v
-FFlFlFlFF
-@.......@
+      v 
+   t@vvv@t
+   t.m{m.t
+   tvv.vvt
+  Fvv...vvF
+  vv.....vv
+  vF.....Fv
+  v.......v
+  vF.....Fv
+  v.......v
+  vF.....Fv
+  v.......v
+ vv.......vv
+vvv+v+v+v+vvv
+ .FFlFlFlFF.
+ @.........@
 ENDMAP
