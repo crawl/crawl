@@ -3020,6 +3020,57 @@ Ox
 xx
 ENDMAP
 
+##############################################################################
+NAME:    roadster_arrival_rocket_small
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MARKER:  F = lua:fog_machine{ \
+             pow_max = 32, delay_min = 20, delay_max = 200, \
+             size = 7, start_clouds = 7, cloud_type = "black smoke"}
+MAP
+t@.v.@t
+t.vvv.t
+tFm{mFt
+tvv.vvt
+vv...vv
+vF...Fv
+v.....v
+vF...Fv
+v.....v
+vF...Fv
+v.....v
+v.....v
+v+v+v+v
+FFlFlFF
+@.....@
+ENDMAP
+
+##############################################################################
+NAME:    roadster_arrival_rocket_large
+TAGS:    arrival no_monster_gen no_trap_gen transparent
+ORIENT:  float
+MARKER:  F = lua:fog_machine{ \
+             pow_max = 32, delay_min = 20, delay_max = 200, \
+             size = 7, start_clouds = 7, cloud_type = "black smoke"}
+MAP
+    v    
+ t@vvv@t 
+ t.m{m.t 
+ tvv.vvt 
+Fvv...vvF
+vv.....vv
+vF.....Fv
+v.......v
+vF.....Fv
+v.......v
+vF.....Fv
+v.......v
+v.......v
+v+v+v+v+v
+FFlFlFlFF
+@.......@
+ENDMAP
+
 ##############################################################
 NAME:    minmay_arrival_shattered_statue
 TAGS:    arrival no_monster_gen
@@ -3624,7 +3675,7 @@ WEIGHT:  5
 TILE:    G = dngn_statue_sigmund
 : set_feature_name("granite_statue", "a statue of a dreadful foe")
 # Bunch of player species
-KITEM:   ? = armataur skeleton / deep elf skeleton / demigod skeleton / \
+KITEM:   ? = palentonga skeleton / deep elf skeleton / demigod skeleton / \
              demonspawn skeleton / draconian skeleton / felid skeleton / \
              formicid skeleton / ghoul skeleton / gnoll skeleton / \
              orc skeleton / human skeleton / kobold skeleton / \
