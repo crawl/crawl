@@ -3812,6 +3812,7 @@ MAP
 ''cc+c+c+cc''
 '''''''''''''
 ENDMAP
+
 ##############################################################################
 NAME:    roadster_arrival_rocket_small
 TAGS:    arrival no_monster_gen no_trap_gen transparent
@@ -3845,7 +3846,7 @@ MARKER:  F = lua:fog_machine{ \
              pow_max = 32, delay_min = 20, delay_max = 200, \
              size = 5, start_clouds = 5, cloud_type = "black smoke"}
 MAP
-      v 
+      v
    t@vvv@t
    t.m{m.t
    tvv.vvt
