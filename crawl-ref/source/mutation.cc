@@ -191,6 +191,8 @@ static const int conflict[][3] =
     { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_FANGS,               MUT_BEAK,                   -1},
     { MUT_ANTENNAE,            MUT_HORNS,                  -1}, // currently overridden by physiology_mutation_conflict
+    { MUT_BEAK,                MUT_HORNS,                  -1},
+    { MUT_BEAK,                MUT_ANTENNAE,               -1},
     { MUT_HOOVES,              MUT_TALONS,                 -1},
     { MUT_CLAWS,               MUT_DEMONIC_TOUCH,          -1},
     { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
