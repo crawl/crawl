@@ -112,6 +112,11 @@ species = {"hill orc", "minotaur", "merfolk", "gargoyle", "draconian", "halfling
             "vine stalker", "vampire", "demigod", "formicid", "naga", "octopode", "felid", "barachi",
             "mummy", "gnoll"}
 
+local you_x, you_y = you.pos() -- probably out of bounds
+local place = dgn.point(20, 20)
+dgn.grid(place.x, place.y, "floor")
+you.moveto(place.x, place.y)
+
 test_random_mutations_species("demonspawn", ds_tries, ds_mut_iterations, chance_temporary, chance_clear)
 random_level_change("demonspawn", ds_tries, ds_mut_iterations, chance_temporary, chance_clear)
 test_random_mutations_slime("demonspawn", ds_tries, ds_mut_iterations, chance_temporary, chance_clear)
@@ -125,3 +130,4 @@ end
 you.delete_all_mutations("Species mutation test")
 assert(you.change_species("human")) -- should clean up any innate mutatinos
 assert(you.set_xl(1, false))
+you.moveto(you_x, you_y)
