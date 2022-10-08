@@ -2910,6 +2910,86 @@ cn+++++nc
 c@.....@c
 ENDMAP
 
+NAME:   roadster_capsule_zombie_small
+TAGS:   extra
+DEPTH:  D:6-, Crypt
+: if you.absdepth() <= 9 then
+MONS:    rat zombie / jackal zombie / adder zombie / goblin zombie / \
+         hobgoblin zombie / kobold zombie / \
+         human zombie / elf zombie / centaur zombie
+MONS:    kobold zombie / orc zombie / hobgoblin zombie
+MONS:    mummy / wraith / elephant zombie / ettin zombie / ogre zombie
+: elseif you.absdepth() <= 12 then
+MONS:    rat zombie / jackal zombie / adder zombie / goblin zombie / \
+         hobgoblin zombie / kobold zombie / \
+         human zombie / elf zombie / centaur zombie / \
+		 kobold zombie / orc zombie / hobgoblin zombie
+MONS:    mummy / wraith / elephant zombie / ettin zombie / ogre zombie
+MONS:    minotaur zombie / ettin zombie /  hydra zombie
+: else
+MONS:    mummy / wraith / elephant zombie / ettin zombie / ogre zombie
+MONS:    minotaur zombie / ettin zombie /  hydra zombie
+MONS:    dire elephant zombie / iron dragon zombie / golden dragon zombie
+: end
+KITEM:  A = any good_item
+MARKER:  F = lua:fog_machine{ \
+             pow_max = 32, delay_min = 20, delay_max = 200, \
+             size = 3, start_clouds = 3, cloud_type = "black smoke"}
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+    v
+   vvv
+   +1+
+ vmv1vmv
+vv22322vv
+vA322223v
+vvmv+vmvv
+@FFlFlFF@
+ENDMAP
+
+NAME:   roadster_capsule_zombie_large
+TAGS:   extra
+DEPTH:  D:10-, Crypt
+: if you.absdepth() <= 9 then
+MONS:    rat zombie / jackal zombie / adder zombie / goblin zombie / \
+         hobgoblin zombie / kobold zombie / \
+         human zombie / elf zombie / centaur zombie
+MONS:    kobold zombie / orc zombie / hobgoblin zombie
+MONS:    mummy / wraith / elephant zombie / ettin zombie / ogre zombie
+: elseif you.absdepth() <= 12 then
+MONS:    rat zombie / jackal zombie / adder zombie / goblin zombie / \
+         hobgoblin zombie / kobold zombie / \
+         human zombie / elf zombie / centaur zombie / \
+		 kobold zombie / orc zombie / hobgoblin zombie
+MONS:    mummy / wraith / elephant zombie / ettin zombie / ogre zombie
+MONS:    minotaur zombie / ettin zombie /  hydra zombie
+: else
+MONS:    mummy / wraith / elephant zombie / ettin zombie / ogre zombie
+MONS:    minotaur zombie / ettin zombie /  hydra zombie
+MONS:    dire elephant zombie / iron dragon zombie / golden dragon zombie
+: end
+KITEM:  A = any good_item
+KITEM:  * = star_item
+MARKER:  F = lua:fog_machine{ \
+             pow_max = 32, delay_min = 20, delay_max = 200, \
+             size = 3, start_clouds = 3, cloud_type = "black smoke"}
+MARKER:  l = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 1000, pow_max = 1000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
+MAP
+    v
+   vvv
+   +1+
+ vmv1vmv
+ v21311v
+vv21113vv
+vA12311Av
+vvmv+vmvv
+@FFlFlFF@
+ENDMAP
+
 NAME:   hangedman_blasphemy
 DEPTH:  Depths, Crypt
 MONS:   patrolling hell hog
