@@ -2923,7 +2923,7 @@ MONS:    mummy / wraith / elephant zombie / ettin zombie / ogre zombie
 MONS:    rat zombie / jackal zombie / adder zombie / goblin zombie / \
          hobgoblin zombie / kobold zombie / \
          human zombie / elf zombie / centaur zombie / \
-	 kobold zombie / orc zombie / hobgoblin zombie
+         kobold zombie / orc zombie / hobgoblin zombie
 MONS:    mummy / wraith / elephant zombie / ettin zombie / ogre zombie
 MONS:    minotaur zombie / ettin zombie /  hydra zombie
 : else
