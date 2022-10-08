@@ -1133,9 +1133,9 @@ ENDMAP
 NAME:   nicolae_hepliaklqana_ecumenical_no_more
 TAGS:   temple_overflow_hepliaklqana temple_overflow_1 transparent decor
 TAGS:   uniq_altar_hepliaklqana
-WEIGHT: 5
+WEIGHT: 3
 KMONS:  WD = plant / nothing
-NSUBST: E = - / E, H = _ / - / E, E = E / . / EEE-.., P = 4=W / WDD / D
+NSUBST: E = - / E, H = _ / - / E, E = E / . / E., P = 4=W / WDD / D
 SUBST:  ' = '''., c = ccx
 KFEAT:  WS = W
 KFEAT:  _ = altar_hepliaklqana
