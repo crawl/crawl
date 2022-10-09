@@ -1113,7 +1113,9 @@ spret cast_portal_projectile(int pow, bool fail)
         mpr("You renew your portal.");
     // Calculate the accuracy bonus based on current spellpower.
     you.attribute[ATTR_PORTAL_PROJECTILE] = pow;
-    you.increase_duration(DUR_PORTAL_PROJECTILE, 3 + random2(pow / 2) + random2(pow / 5), 50);
+    int dur = 2 + random2(1 + div_rand_round(pow, 2))
+                + random2(1 + div_rand_round(pow, 5));
+    you.increase_duration(DUR_PORTAL_PROJECTILE, dur, 50);
     return spret::success;
 }
 
