@@ -316,7 +316,8 @@ spret cast_dragon_call(int pow, bool fail)
     mpr("You call out to the draconic realm, and the dragon horde roars back!");
     noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
-    you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
+    you.duration[DUR_DRAGON_CALL] = (15 + div_rand_round(pow, 5) + random2(15))
+                                    * BASELINE_DELAY;
     you.props[DRAGON_CALL_POWER_KEY].get_int() = pow;
 
     return spret::success;
