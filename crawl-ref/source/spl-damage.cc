@@ -4252,7 +4252,7 @@ spret cast_noxious_bog(int pow, bool fail)
 
     fail_check();
 
-    const int turns = 5 + random2(pow / 10);
+    const int turns = 4 + random2(2 + div_rand_round(pow, 10));
     you.increase_duration(DUR_NOXIOUS_BOG, turns);
 
     for (auto pos : bog_locs)
