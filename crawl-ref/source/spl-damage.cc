@@ -2003,7 +2003,7 @@ static int _ignite_poison_bog(coord_def where, int pow, actor *agent)
     if (!one_chance_in(4))
         return false;
 
-    place_cloud(CLOUD_FIRE, where, 2 + random2(pow / 30), agent);
+    place_cloud(CLOUD_FIRE, where, 2 + random2(1 + div_rand_round(pow, 30)), agent);
 
     return true;
 }
