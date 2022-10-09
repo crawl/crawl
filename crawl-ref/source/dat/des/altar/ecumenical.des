@@ -16,7 +16,7 @@
 function ecumenical_altar_setup(e)
   e.depth("D:1-3")
   e.tags("uniq_ecumenical_altar chance_ecumenical_altar extra")
-  e.chance(5000)
+  e.chance(2500)
   e.kfeat("_ = altar_ecumenical")
 end
 }}
