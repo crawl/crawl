@@ -791,7 +791,7 @@ int str_to_trap(const string &s)
  * @returns a string including a description of its head, its body, its flight
  *          mode (if any), and how it smells or looks.
  */
-static string _describe_demon(const string& name, bool flying)
+static string _describe_demon(const string& name, bool flying, colour_t colour)
 {
     const uint32_t seed = hash32(&name[0], name.size());
     #define HRANDOM_ELEMENT(arr, id) arr[hash_with_seed(ARRAYSZ(arr), seed, id)]
@@ -924,6 +924,9 @@ static string _describe_demon(const string& name, bool flying)
     description << "One of the many lords of Pandemonium, " << name << " has ";
 
     description << article_a(HRANDOM_ELEMENT(body_types, 2));
+    // ETC_RANDOM is also possible, handled later
+    if (colour >= 0 && colour < NUM_TERM_COLOURS)
+        description << " " << colour_to_str(colour, true);
     description << " body ";
 
     if (flying)
@@ -940,6 +943,9 @@ static string _describe_demon(const string& name, bool flying)
 
     if (hash_with_seed(2, seed, 6)) // 50%
         description << HRANDOM_ELEMENT(misc_descs, 6);
+
+    if (colour == ETC_RANDOM)
+        description << " It changes colour whenever you look at it.";
 
     return description.str();
 }
@@ -5348,7 +5354,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
 
     case MONS_PANDEMONIUM_LORD:
-        inf.body << _describe_demon(mi.mname, mi.airborne()) << "\n";
+        inf.body << _describe_demon(mi.mname, mi.airborne(), mi.ghost_colour) << "\n";
         break;
 
     case MONS_MUTANT_BEAST:

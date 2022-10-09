@@ -232,6 +232,7 @@ struct monster_info_base
         int is_active;   ///< Whether this ballisto is active or not
     };
     int _colour;
+    int ghost_colour;
     mon_attitude_type attitude;
     mon_threat_level_type threat;
     mon_dam_level_type dam;
