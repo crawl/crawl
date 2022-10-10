@@ -2556,9 +2556,9 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
 
 void kiku_unearth_wretches()
 {
-    const int pow = you.skill(SK_NECROMANCY, 6);
-    const int min_wretches = 2;
-    const int max_wretches = min_wretches + div_rand_round(pow, 27); // 8 max
+    const int pow = you.skill(SK_NECROMANCY, 5);
+    const int min_wretches = 1 + random2(2);
+    const int max_wretches = min_wretches + div_rand_round(pow, 27); // 7 max
     const int wretches = random_range(min_wretches, max_wretches);
     bool created = false;
     for (int i = 0; i < wretches; ++i)
