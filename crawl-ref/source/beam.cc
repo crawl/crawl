@@ -2751,7 +2751,7 @@ void bolt::affect_place_explosion_clouds()
         const coord_def center = (aimed_at_feet ? source : ray.pos());
         if (p == center || x_chance_in_y(125 + ench_power, 225))
         {
-            place_cloud(CLOUD_MEPHITIC, p, roll_dice(2, 
+            place_cloud(CLOUD_MEPHITIC, p, roll_dice(2,
                         2 + div_rand_round(ench_power, 20)), agent());
         }
     }
