@@ -1260,7 +1260,11 @@ string damage_rating(const item_def *item)
     const skill_type skill = item ? _item_training_skill(*item) : SK_UNARMED_COMBAT;
     const int stat_mult = stat_modify_damage(100, skill, true);
     const bool use_str = weapon_uses_strength(skill, true);
-    const int skill_mult = apply_fighting_skill(apply_weapon_skill(100, skill, false), false, false);
+    // Throwing weapons and UC only get a damage mult from Fighting skill,
+    // not from Throwing/UC skill.
+    const bool use_weapon_skill = item && !thrown;
+    const int weapon_skill_mult = use_weapon_skill ? apply_weapon_skill(100, skill, false) : skill;
+    const int skill_mult = apply_fighting_skill(100, weapon_skill_mult, false);
 
     const int slaying = slaying_bonus(false);
     const int ench = item && item_ident(*item, ISFLAG_KNOW_PLUSES) ? item->plus : 0;
@@ -1275,7 +1279,8 @@ string damage_rating(const item_def *item)
     const int DAM_RATE_SCALE = 100;
     int rating = (base_dam + extra_base_dam) * DAM_RATE_SCALE;
     rating = stat_modify_damage(rating, skill, true);
-    rating = apply_weapon_skill(rating, skill, false);
+    if (use_weapon_skill)
+        rating = apply_weapon_skill(rating, skill, false);
     rating = apply_fighting_skill(rating, false, false);
     rating /= DAM_RATE_SCALE;
     rating += plusses;
@@ -1303,12 +1308,13 @@ string damage_rating(const item_def *item)
                    : _describe_brand(brand);
 
     return make_stringf(
-        "%d (Base %s x %d%% (%s) x %d%% (Skill)%s)%s.",
+        "%d (Base %s x %d%% (%s) x %d%% (%s)%s)%s.",
         rating,
         base_dam_desc.c_str(),
         stat_mult,
         use_str ? "Str" : "Dex",
         skill_mult,
+        use_weapon_skill ? "Skill" : "Fight",
         plusses_desc.c_str(),
         brand_desc.c_str());
 }
