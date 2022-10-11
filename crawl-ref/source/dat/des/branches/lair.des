@@ -1881,6 +1881,37 @@ xxxWWWWWxxx
   xxxxxx
 ENDMAP
 
+# Someone hasn't taken care of their garden, but occasionally it takes care of itself.
+NAME:    pdpol_lair_neglected_garden
+TAGS:    extra decor
+DEPTH:   Lair
+SHUFFLE: ac"`/pbbp
+SUBST:   ab = B, cp = P
+: if crawl.one_chance_in(5) then
+TAGS:    no_trap_gen
+MONS:    plant, bush
+SUBST:   V = T, B = 2, P = 1
+FTILE:   ' = floor_dirt, 12`" = floor_grass
+:else
+MONS:    withered plant / plant w:1, fungus
+SUBST:   P = 1, B = 1:6 2
+FTILE:   ' = floor_dirt, 12`" = none / floor_grass:2
+:end
+SUBST:   '`" = .
+MAP
+.....@.....
+..`P"'"P`..
+.`Pac'caP`.
+.``c'''c``.
+.`"''B''"`.
+@`"'BVB'"`@
+.`"''B''"`.
+.``c'''c``.
+.`Pac'caP`.
+..`P"'"P`..
+.....@.....
+ENDMAP
+
 ###############################################################################
 # Remaining non-grouped regular Lair vaults.
 
