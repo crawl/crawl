@@ -2776,7 +2776,7 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
     switch (spell)
     {
         case SPELL_FREEZE:
-            return freeze_damage(power);
+            return freeze_damage(power, false);
         case SPELL_FULMINANT_PRISM:
             return prism_damage(prism_hd(power, false), true);
         case SPELL_CONJURE_BALL_LIGHTNING:
@@ -2796,7 +2796,7 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
         case SPELL_LRD:
             return base_fragmentation_damage(power);
         case SPELL_ARCJOLT:
-            return arcjolt_damage(power);
+            return arcjolt_damage(power, false);
         default:
             break;
     }

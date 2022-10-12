@@ -2751,8 +2751,8 @@ void bolt::affect_place_explosion_clouds()
         const coord_def center = (aimed_at_feet ? source : ray.pos());
         if (p == center || x_chance_in_y(125 + ench_power, 225))
         {
-            place_cloud(CLOUD_MEPHITIC, p, roll_dice(2, 3 + ench_power / 20),
-                        agent());
+            place_cloud(CLOUD_MEPHITIC, p, roll_dice(2,
+                        2 + div_rand_round(ench_power, 20)), agent());
         }
     }
 
@@ -5606,9 +5606,12 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_UNAFFECTED;
 
     case BEAM_SLOW:
-        obvious_effect = do_slow_monster(*mon, agent(),
-                                         ench_power * BASELINE_DELAY);
+    {
+        const int dur = 1 + div_rand_round(ench_power, 2)
+                          + random2(1 + ench_power);
+        obvious_effect = do_slow_monster(*mon, agent(), dur * BASELINE_DELAY);
         return MON_AFFECTED;
+    }
 
     case BEAM_HASTE:
         if (YOU_KILL(thrower))
@@ -5938,7 +5941,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_INFESTATION:
     {
-        const int dur = (5 + random2avg(ench_power / 2, 2)) * BASELINE_DELAY;
+        const int dur = (5 + random2avg(div_rand_round(ench_power,2), 2))
+                            * BASELINE_DELAY;
         mon->add_ench(mon_enchant(ENCH_INFESTATION, 0, &you, dur));
         if (simple_monster_message(*mon, " is infested!"))
             obvious_effect = true;
@@ -6867,11 +6871,13 @@ int ench_power_stepdown(int pow)
     return stepdown(pow, 35);
 }
 
-/// Translate a given ench power to a duration, in aut.
+/// Translate a given ench power to a duration, in aut, and randomize it.
 int _ench_pow_to_dur(int pow)
 {
     // ~15 turns at 25 pow, ~21 turns at 50 pow, ~27 turns at 100 pow
-    return stepdown(pow * BASELINE_DELAY, 70);
+    int base_dur = stepdown(pow * BASELINE_DELAY, 70);
+
+    return div_rand_round(base_dur, 2) + random2(1 + base_dur);
 }
 
 // Do all beams skip past a particular monster?

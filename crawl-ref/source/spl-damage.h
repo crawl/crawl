@@ -40,7 +40,7 @@ void sonic_damage(bool scream);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
 spret cast_freeze(int pow, monster* mons, bool fail);
-dice_def freeze_damage(int pow);
+dice_def freeze_damage(int pow, bool random);
 spret cast_airstrike(int pow, coord_def target, bool fail);
 int airstrike_space_around(coord_def target, bool count_invis);
 dice_def base_airstrike_damage(int pow, bool random = false);
@@ -63,7 +63,7 @@ spret cast_discharge(int pow, const actor &agent, bool fail = false,
                           bool prompt = true);
 int discharge_max_damage(int pow);
 spret cast_arcjolt(int pow, const actor &agent, bool fail);
-dice_def arcjolt_damage(int pow);
+dice_def arcjolt_damage(int pow, bool random);
 vector<coord_def> arcjolt_targets(const actor &agent, int pow, bool actual);
 dice_def base_fragmentation_damage(int pow);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,

@@ -126,7 +126,7 @@ spret cast_fire_storm(int pow, bolt &beam, bool fail)
     setup_fire_storm(&you, pow, beam);
 
     bolt tempbeam = beam;
-    tempbeam.ex_size = (pow > 76) ? 3 : 2;
+    tempbeam.ex_size = (pow > 0) ? 3 : 2;
     tempbeam.is_tracer = true;
 
     tempbeam.explode(false);
@@ -866,9 +866,10 @@ spret fire_los_attack_spell(spell_type spell, int pow, const actor* agent,
     return _cast_los_attack_spell(spell, pow, agent, true, fail, damage_done);
 }
 
-dice_def freeze_damage(int pow)
+dice_def freeze_damage(int pow, bool random)
 {
-    return dice_def(1, 3 + pow / 3);
+    return dice_def(1, random ? 3 + div_rand_round(pow * 3, 10)
+                              : 3 + pow * 3 / 10);
 }
 
 spret cast_freeze(int pow, monster* mons, bool fail)
@@ -901,7 +902,7 @@ spret cast_freeze(int pow, monster* mons, bool fail)
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
-    const int orig_hurted = freeze_damage(pow).roll();
+    const int orig_hurted = freeze_damage(pow, true).roll();
     // calculate the resist adjustment to punctuate
     int hurted = mons_adjust_flavoured(mons, beam, orig_hurted, false);
     mprf("You freeze %s%s%s",
@@ -2002,7 +2003,7 @@ static int _ignite_poison_bog(coord_def where, int pow, actor *agent)
     if (!one_chance_in(4))
         return false;
 
-    place_cloud(CLOUD_FIRE, where, 2 + random2(pow / 30), agent);
+    place_cloud(CLOUD_FIRE, where, 2 + random2(1 + div_rand_round(pow, 30)), agent);
 
     return true;
 }
@@ -2610,9 +2611,9 @@ int discharge_max_damage(int pow)
            + (pow + DISCHARGE_POWER_DIV - 1) / DISCHARGE_POWER_DIV;
 }
 
-dice_def arcjolt_damage(int pow)
+dice_def arcjolt_damage(int pow, bool random)
 {
-    return dice_def(1, 10 + pow / 2);
+    return dice_def(1, random ? 10 + div_rand_round(pow, 2) : 10 + pow / 2);
 }
 
 vector<coord_def> arcjolt_targets(const actor &agent, int power, bool actual)
@@ -2707,7 +2708,7 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
         if (mon && god_protects(&agent, mon, false))
             continue;
 
-        const int rolled_dam = arcjolt_damage(pow).roll();
+        const int rolled_dam = arcjolt_damage(pow, true).roll();
         const int post_ac_dam = max(0, act->apply_ac(rolled_dam, 0,
                                                      ac_type::half));
         const int post_resist_dam = mon ? mons_adjust_flavoured(mon, beam,
@@ -4251,7 +4252,7 @@ spret cast_noxious_bog(int pow, bool fail)
 
     fail_check();
 
-    const int turns = 5 + random2(pow / 10);
+    const int turns = 4 + random2(2 + div_rand_round(pow, 10));
     you.increase_duration(DUR_NOXIOUS_BOG, turns);
 
     for (auto pos : bog_locs)

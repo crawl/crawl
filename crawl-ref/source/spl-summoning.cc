@@ -268,7 +268,7 @@ spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     // Power determines number of heads. Minimum 4 heads, maximum 12.
     // Rare to get more than 8.
     const int maxheads = one_chance_in(6) ? 12 : 8;
-    const int heads = max(4, min(random2(pow) / 6, maxheads));
+    const int heads = max(4, min(div_rand_round(random2(1 + pow), 6), maxheads));
 
     // Duration is always very short - just 1.
     mgen_data mg = _summon_data(*caster, MONS_HYDRA, 1, god,
@@ -316,7 +316,8 @@ spret cast_dragon_call(int pow, bool fail)
     mpr("You call out to the draconic realm, and the dragon horde roars back!");
     noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
-    you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
+    you.duration[DUR_DRAGON_CALL] = (15 + div_rand_round(pow, 5) + random2(15))
+                                    * BASELINE_DELAY;
     you.props[DRAGON_CALL_POWER_KEY].get_int() = pow;
 
     return spret::success;
@@ -2555,9 +2556,9 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
 
 void kiku_unearth_wretches()
 {
-    const int pow = you.skill(SK_NECROMANCY, 6);
-    const int min_wretches = 2;
-    const int max_wretches = min_wretches + div_rand_round(pow, 27); // 8 max
+    const int pow = you.skill(SK_NECROMANCY, 5);
+    const int min_wretches = 1 + random2(2);
+    const int max_wretches = min_wretches + div_rand_round(pow, 27); // 7 max
     const int wretches = random_range(min_wretches, max_wretches);
     bool created = false;
     for (int i = 0; i < wretches; ++i)

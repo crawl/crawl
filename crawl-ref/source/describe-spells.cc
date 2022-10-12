@@ -381,7 +381,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
     switch (spell)
     {
         case SPELL_FREEZE:
-            return freeze_damage(pow);
+            return freeze_damage(pow, false);
         case SPELL_WATERSTRIKE:
             return waterstrike_damage(hd);
         case SPELL_IOOD:
@@ -399,7 +399,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
         case SPELL_AIRSTRIKE:
             return base_airstrike_damage(pow);
         case SPELL_ARCJOLT:
-            return arcjolt_damage(pow);
+            return arcjolt_damage(pow, false);
         default:
             break;
     }

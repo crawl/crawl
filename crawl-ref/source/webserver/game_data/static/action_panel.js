@@ -343,12 +343,17 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     {
         if (item && draw_glyphs)
         {
+            // ugh, couldn't get this to work without a transform.
+            // Also, I don't know why the font size here looks
+            // different than map view, something about scaling?
+            renderer.ctx.setTransform(scale, 0, 0, scale, 0, 0);
             // XX just the glyph is not very informative. One idea might
             // be to tack on the subtype icon, but those are currently
             // baked into the item tile so this would be a lot of work.
-            renderer.render_glyph(_horizontal() ? offset : 0,
-                                  _horizontal() ? 0 : offset,
-                                  item, true, true, scale);
+            renderer.render_glyph(_horizontal() ? offset / scale : 0,
+                                  _horizontal() ? 0 : offset / scale,
+                                  item, true, true);
+            renderer.ctx.setTransform(1, 0, 0, 1, 0, 0);
         }
         else
         {
@@ -365,8 +370,6 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
 
         if (text)
         {
-            // TODO: at some scalings, this don't dodge the green highlight
-            // square very well
             renderer.draw_quantity(text,
                                    _horizontal() ? offset : 0,
                                    _horizontal() ? 0 : offset,
@@ -420,7 +423,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         // Render
         // renderer here stores unscaled values. (This is different than how
         // it is done for the dungeon rendering.)
-        var adjusted_scale = scale / 100;
+        var adjusted_scale = scale * window.devicePixelRatio / 100;
 
         var cell_width = renderer.cell_width * adjusted_scale;
         var cell_height = renderer.cell_height * adjusted_scale;
@@ -428,8 +431,8 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                                         : cell_height;
         var required_length = cell_length * (filtered_inv.length + NUM_RESERVED_BUTTONS);
         var available_length = _horizontal()
-                            ? $("#dungeon").width()
-                            : $("#dungeon").height();
+                            ? $("#dungeon").width() * window.devicePixelRatio
+                            : $("#dungeon").height() * window.devicePixelRatio;
         available_length -= borders_width;
         var max_cells = Math.floor(available_length / cell_length);
         var panel_length = Math.min(required_length, available_length);

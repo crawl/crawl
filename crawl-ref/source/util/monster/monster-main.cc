@@ -310,7 +310,7 @@ static string mi_calc_major_healing(monster* mons)
 static string mi_calc_freeze_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_FREEZE, mons->get_hit_dice());
-    return dice_def_string(freeze_damage(pow));
+    return dice_def_string(freeze_damage(pow, false));
 }
 
 static string mi_calc_irradiate_damage(const monster &mon)

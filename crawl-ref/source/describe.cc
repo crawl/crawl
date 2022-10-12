@@ -791,7 +791,7 @@ int str_to_trap(const string &s)
  * @returns a string including a description of its head, its body, its flight
  *          mode (if any), and how it smells or looks.
  */
-static string _describe_demon(const string& name, bool flying)
+static string _describe_demon(const string& name, bool flying, colour_t colour)
 {
     const uint32_t seed = hash32(&name[0], name.size());
     #define HRANDOM_ELEMENT(arr, id) arr[hash_with_seed(ARRAYSZ(arr), seed, id)]
@@ -924,6 +924,9 @@ static string _describe_demon(const string& name, bool flying)
     description << "One of the many lords of Pandemonium, " << name << " has ";
 
     description << article_a(HRANDOM_ELEMENT(body_types, 2));
+    // ETC_RANDOM is also possible, handled later
+    if (colour >= 0 && colour < NUM_TERM_COLOURS)
+        description << " " << colour_to_str(colour, true);
     description << " body ";
 
     if (flying)
@@ -940,6 +943,9 @@ static string _describe_demon(const string& name, bool flying)
 
     if (hash_with_seed(2, seed, 6)) // 50%
         description << HRANDOM_ELEMENT(misc_descs, 6);
+
+    if (colour == ETC_RANDOM)
+        description << " It changes colour whenever you look at it.";
 
     return description.str();
 }
@@ -1254,7 +1260,11 @@ string damage_rating(const item_def *item)
     const skill_type skill = item ? _item_training_skill(*item) : SK_UNARMED_COMBAT;
     const int stat_mult = stat_modify_damage(100, skill, true);
     const bool use_str = weapon_uses_strength(skill, true);
-    const int skill_mult = apply_fighting_skill(apply_weapon_skill(100, skill, false), false, false);
+    // Throwing weapons and UC only get a damage mult from Fighting skill,
+    // not from Throwing/UC skill.
+    const bool use_weapon_skill = item && !thrown;
+    const int weapon_skill_mult = use_weapon_skill ? apply_weapon_skill(100, skill, false) : skill;
+    const int skill_mult = apply_fighting_skill(100, weapon_skill_mult, false);
 
     const int slaying = slaying_bonus(false);
     const int ench = item && item_ident(*item, ISFLAG_KNOW_PLUSES) ? item->plus : 0;
@@ -1269,7 +1279,8 @@ string damage_rating(const item_def *item)
     const int DAM_RATE_SCALE = 100;
     int rating = (base_dam + extra_base_dam) * DAM_RATE_SCALE;
     rating = stat_modify_damage(rating, skill, true);
-    rating = apply_weapon_skill(rating, skill, false);
+    if (use_weapon_skill)
+        rating = apply_weapon_skill(rating, skill, false);
     rating = apply_fighting_skill(rating, false, false);
     rating /= DAM_RATE_SCALE;
     rating += plusses;
@@ -1297,12 +1308,13 @@ string damage_rating(const item_def *item)
                    : _describe_brand(brand);
 
     return make_stringf(
-        "%d (Base %s x %d%% (%s) x %d%% (Skill)%s)%s.",
+        "%d (Base %s x %d%% (%s) x %d%% (%s)%s)%s.",
         rating,
         base_dam_desc.c_str(),
         stat_mult,
         use_str ? "Str" : "Dex",
         skill_mult,
+        use_weapon_skill ? "Skill" : "Fight",
         plusses_desc.c_str(),
         brand_desc.c_str());
 }
@@ -5348,7 +5360,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
 
     case MONS_PANDEMONIUM_LORD:
-        inf.body << _describe_demon(mi.mname, mi.airborne()) << "\n";
+        inf.body << _describe_demon(mi.mname, mi.airborne(), mi.ghost_colour) << "\n";
         break;
 
     case MONS_MUTANT_BEAST:

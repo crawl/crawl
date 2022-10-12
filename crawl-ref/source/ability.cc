@@ -378,9 +378,9 @@ static vector<ability_def> &_get_ability_list()
 
         // Kikubaaqudgha
         { ABIL_KIKU_UNEARTH_WRETCHES, "Unearth Wretches",
-            3, 0, 4, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
+            3, 0, 5, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_KIKU_TORMENT, "Torment",
-            4, 0, 8, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
+            4, 0, 6, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain",

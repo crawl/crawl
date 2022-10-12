@@ -123,14 +123,11 @@ function () {
     }
 
     function init_canvas(element, w, h) {
-        const ratio = window.devicePixelRatio;
-        element.width = Math.floor(w * ratio);
-        element.height = Math.floor(h * ratio);
-        var ctx = element.getContext('2d');
-        ctx.resetTransform();
-        ctx.scale(ratio, ratio);
-        element.style.width = w + 'px';
-        element.style.height = h + 'px';
+        var ratio = window.devicePixelRatio;
+        element.width = w;
+        element.height = h;
+        element.style.width = (w / ratio) + 'px';
+        element.style.height = (h / ratio) + 'px';
     }
 
     function make_key(x, y) {
