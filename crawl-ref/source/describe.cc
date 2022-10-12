@@ -1263,8 +1263,8 @@ string damage_rating(const item_def *item)
     // Throwing weapons and UC only get a damage mult from Fighting skill,
     // not from Throwing/UC skill.
     const bool use_weapon_skill = item && !thrown;
-    const int weapon_skill_mult = use_weapon_skill ? apply_weapon_skill(100, skill, false) : skill;
-    const int skill_mult = apply_fighting_skill(100, weapon_skill_mult, false);
+    const int weapon_skill_mult = use_weapon_skill ? apply_weapon_skill(100, skill, false) : 100;
+    const int skill_mult = apply_fighting_skill(weapon_skill_mult, false, false);
 
     const int slaying = slaying_bonus(false);
     const int ench = item && item_ident(*item, ISFLAG_KNOW_PLUSES) ? item->plus : 0;
