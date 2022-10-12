@@ -6871,11 +6871,13 @@ int ench_power_stepdown(int pow)
     return stepdown(pow, 35);
 }
 
-/// Translate a given ench power to a duration, in aut.
+/// Translate a given ench power to a duration, in aut, and randomize it.
 int _ench_pow_to_dur(int pow)
 {
     // ~15 turns at 25 pow, ~21 turns at 50 pow, ~27 turns at 100 pow
-    return stepdown(pow * BASELINE_DELAY, 70);
+    int base_dur = stepdown(pow * BASELINE_DELAY, 70);
+
+    return div_rand_round(base_dur, 2) + random2(1 + base_dur);
 }
 
 // Do all beams skip past a particular monster?
