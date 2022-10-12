@@ -2796,7 +2796,7 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
         case SPELL_LRD:
             return base_fragmentation_damage(power);
         case SPELL_ARCJOLT:
-            return arcjolt_damage(power);
+            return arcjolt_damage(power, false);
         default:
             break;
     }

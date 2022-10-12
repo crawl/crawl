@@ -2611,9 +2611,9 @@ int discharge_max_damage(int pow)
            + (pow + DISCHARGE_POWER_DIV - 1) / DISCHARGE_POWER_DIV;
 }
 
-dice_def arcjolt_damage(int pow)
+dice_def arcjolt_damage(int pow, bool random)
 {
-    return dice_def(1, 10 + pow / 2);
+    return dice_def(1, random ? 10 + div_rand_round(pow, 2) : 10 + pow / 2);
 }
 
 vector<coord_def> arcjolt_targets(const actor &agent, int power, bool actual)
@@ -2708,7 +2708,7 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
         if (mon && god_protects(&agent, mon, false))
             continue;
 
-        const int rolled_dam = arcjolt_damage(pow).roll();
+        const int rolled_dam = arcjolt_damage(pow, true).roll();
         const int post_ac_dam = max(0, act->apply_ac(rolled_dam, 0,
                                                      ac_type::half));
         const int post_resist_dam = mon ? mons_adjust_flavoured(mon, beam,
