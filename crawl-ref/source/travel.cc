@@ -317,8 +317,6 @@ static const char *_run_mode_name(int runmode)
 
 uint8_t is_waypoint(const coord_def &p)
 {
-    // if (!can_travel_interlevel())
-    //     return 0;
     return curr_waypoints[p.x][p.y];
 }
 
