@@ -409,6 +409,7 @@
     Rob Young
     Zannick
     Zooko
+    Roadster Tracker
 
 The Dungeon Crawl Stone Soup development team is:
     advil
