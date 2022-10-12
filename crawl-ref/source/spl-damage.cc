@@ -126,7 +126,7 @@ spret cast_fire_storm(int pow, bolt &beam, bool fail)
     setup_fire_storm(&you, pow, beam);
 
     bolt tempbeam = beam;
-    tempbeam.ex_size = (pow > 76) ? 3 : 2;
+    tempbeam.ex_size = (pow > 0) ? 3 : 2;
     tempbeam.is_tracer = true;
 
     tempbeam.explode(false);
