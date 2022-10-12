@@ -1490,6 +1490,7 @@ static void _place_player(dungeon_feature_type stair_taken,
 }
 
 // Update the trackers after the player changed level.
+// note: also run on load for some reason in startup.cc
 void trackers_init_new_level()
 {
     travel_init_new_level();
@@ -2210,6 +2211,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         // Tell stash-tracker and travel that we've changed levels.
         trackers_init_new_level();
+        travel_cache.flush_invalid_waypoints();
         tile_new_level(just_created_level);
     }
     else if (load_mode == LOAD_RESTART_GAME)

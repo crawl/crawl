@@ -373,6 +373,10 @@ static void _post_init(bool newc)
     if (you.prev_save_version != Version::Long)
         check_if_everything_is_identified();
 
+    // XX why is this run now in addition to a related call in load_level?
+    // (There this function is only called on level change, and instead
+    // we run travel_init_load_level; this function is just a call to
+    // travel_init_new_level, which from the comments shouldn't be run on load?)
     trackers_init_new_level();
 
     if (newc) // start a new game
