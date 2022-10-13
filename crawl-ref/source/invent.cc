@@ -415,27 +415,32 @@ void InvMenu::select_item_index(int idx, int qty)
 bool InvMenu::examine_index(int i)
 {
     const bool do_actions = type == menu_type::describe;
-    if (on_examine)
+    // not entirely sure if the bounds check is necessary
+    auto ie = (i >= 0 && i < static_cast<int>(items.size()))
+                    ? dynamic_cast<InvEntry *>(items[i])
+                    : nullptr;
+
+    // superclass behavior: do nothing unless on_examine is defined, in which
+    // case call on_examine.
+    if (!ie || on_examine)
         return Menu::examine_index(i);
     else if (type == menu_type::pickup)
     {
-        auto ie = dynamic_cast<InvEntry *>(items[i]);
-        if (ie)
-        {
-            auto desc_tgt = const_cast<item_def*>(ie->item);
-            ASSERT(desc_tgt);
-            return describe_item(*desc_tgt, nullptr, do_actions);
-        }
+        // item is a floor item.
+        auto desc_tgt = const_cast<item_def*>(ie->item);
+        ASSERT(desc_tgt);
+        return describe_item(*desc_tgt, nullptr, do_actions);
     }
-    else if (i >= 0 && i < static_cast<int>(items.size()) && items[i]->hotkeys.size())
+    else if (ie->hotkeys.size())
     {
         // default behavior: examine inv item. You must override or use on_examine
         // if your items come from somewhere else, or this will cause crashes!
-        unsigned char select = items[i]->hotkeys[0];
+        unsigned char select = ie->hotkeys[0];
         const int invidx = letter_to_index(select);
         ASSERT(you.inv[invidx].defined());
         return describe_item(you.inv[invidx], nullptr, do_actions);
     }
+    // nothing to describe, ignore
     return true;
 }
 
