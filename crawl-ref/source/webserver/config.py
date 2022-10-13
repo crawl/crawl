@@ -1,8 +1,12 @@
 # ### Server Operators ###
-# If you want to customise any settings in this file, create config.yml and
-# write your overrides in there. This file is version controlled, so you'll get
-# merge conflicts if you modify this file and later attempt to pull upstream
-# updates.
+# If you want to customise any settings in this file, you'll need to work around
+# the fact that is version controlled. Some options:
+# 1. Use a local commit and always do a rebase pull on top of it. (This may
+#    affect versioning, though.)
+# 2. Create config.yml and write your overrides in there.
+# 3. Use a more complicated scripting system; for example, dgamelaunch-config
+#    supports templating this file and automatically handles merging the
+#    server config with the repository files.
 #
 # ### Developers ###
 # Warning! Servers will not update or merge with the version controlled copy of
