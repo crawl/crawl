@@ -17,7 +17,7 @@ except ImportError:
     pass
 
 
-def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
+def load_games(existing_games, reloading=False):
     """
     Load game definitions from games.d/*.yaml and merge with existing config.
 
@@ -45,7 +45,11 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
     3. Some settings affect spectators. If you modify a running game's config,
        the mismatch of settings between the player and new spectators might
        cause spectating to fail until the player restarts with new settings.
+    4. For servers that define games in config.py, this will always be called
+       in a way that overwrites the games dictionary, rather than merging.
     """
+    # XX this is very elaborate. Maybe it would be better just to always
+    # replace the existing games dictionary?
     import webtiles.config
     new_games = collections.OrderedDict()  # type: GamesConfig
     new_games.update(existing_games)
@@ -87,9 +91,17 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
                 continue
             game_id = game['id']
             if game_id in delta:
+                # XX should this skip or override? the initial implementation
+                # printed a message about skipping, but didn't have a continue
                 logging.warning(
-                  "Game %s from %s was specified in an earlier config file, skipping.",
-                  game_id, path)
+                    "Game %s from %s was specified in an earlier config file, skipping.",
+                    game_id, path)
+                continue
+            if game_id in existing_games and not reloading:
+                logging.warning(
+                    "Game %s from %s was specified in config module, skipping.",
+                    game_id, path)
+                continue
             delta[game_id] = game  # noqa
             action = "Updated" if game_id in existing_games else "Loaded"
             msg = ("%s %s (from %s).", action, game_id, file_name)

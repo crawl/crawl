@@ -22,7 +22,6 @@
 # webtiles.config). If something like client.html raises an exception, this
 # will trigger 500 errors across the whole server.
 
-import collections
 import logging
 import os
 
@@ -75,13 +74,40 @@ game_data_no_cache = True
 
 # Game configs
 # You can define game configs in two ways:
-# 1. As *.yml files in `games.d/`. (preferred)
-# 2. With a dictionary `games` in this file (for dgamelaunch-config servers).
-use_game_yaml = True # Set to False (or leave unset) to disable method 1 above.
-#    (use of an OrderedDict (pre python 3.6) is necessary to show the lobby in
-#    a stable order.)
-games = collections.OrderedDict([])
+# 1. As *.yml files in `games.d/`. (default; see games.d/base.yml)
+# 2. With a dictionary `games` in this file (not recommended except for dgamelaunch-config servers).
 
+# to override 1, simply set `games` in this file to something non-empty; see
+# the below example. To force using both, set `use_game_yaml` to True. Games
+# defined in this file will precede games defined in games.d.
+# use_game_yaml = True
+
+# Example of defining `games` directly via a dictionary.
+# This setting to be an OrderedDict pre python 3.6, so this example uses that
+# for compatibility:
+
+# import collections
+# games = collections.OrderedDict([
+#     ("dcss-web-trunk", dict(
+#         name = "Play trunk",
+#         crawl_binary = "./crawl",
+#         rcfile_path = "./rcs/",
+#         macro_path = "./rcs/",
+#         morgue_path = "./rcs/%n",
+#         inprogress_path = "./rcs/running",
+#         ttyrec_path = "./rcs/ttyrecs/%n",
+#         socket_path = "./rcs",
+#         client_path = "./webserver/game_data/",
+#         # dir_path = ".",
+#         # cwd = ".",
+#         morgue_url = None,
+#         show_save_info = True,
+#         allowed_with_hold = True,
+#         # milestone_path = "./rcs/milestones",
+#         send_json_options = True,
+#         # env = {"LANG": "en_US.UTF8"},
+#         )),
+# ])
 
 dgl_status_file = "./rcs/status"
 
