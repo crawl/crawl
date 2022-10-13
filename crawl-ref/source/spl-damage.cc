@@ -1439,9 +1439,10 @@ static int _shatter_mon_dice(const monster *mon)
         return DEFAULT_SHATTER_DICE;
 }
 
-dice_def shatter_damage(int pow, monster *mon)
+dice_def shatter_damage(int pow, monster *mon, bool random)
 {
-    return dice_def(_shatter_mon_dice(mon), 5 + pow / 3);
+    return dice_def(_shatter_mon_dice(mon), random ? 5 + div_rand_round(pow, 3)
+                                                   : 5 + pow / 3);
 }
 
 static int _shatter_monsters(coord_def where, int pow, actor *agent)
@@ -1452,7 +1453,7 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
         return 0;
 
     const dice_def dam_dice = shatter_damage(pow, mon);
-    int damage = max(0, dam_dice.roll() - random2(mon->armour_class()));
+    int damage = max(0, dam_dice.roll() - random2(1 + mon->armour_class()));
 
     if (agent->is_player())
         _player_hurt_monster(*mon, damage, BEAM_MMISSILE);
