@@ -17,7 +17,7 @@ except ImportError:
     pass
 
 
-def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
+def load_games(existing_games, reloading=False):
     """
     Load game definitions from games.d/*.yaml and merge with existing config.
 
@@ -45,15 +45,15 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
     3. Some settings affect spectators. If you modify a running game's config,
        the mismatch of settings between the player and new spectators might
        cause spectating to fail until the player restarts with new settings.
+    4. For servers that define games in config.py, this will always be called
+       in a way that overwrites the games dictionary, rather than merging.
     """
+    # XX this is very elaborate. Maybe it would be better just to always
+    # replace the existing games dictionary?
     import webtiles.config
-    conf_subdir = webtiles.config.get('games_config_dir')
     new_games = collections.OrderedDict()  # type: GamesConfig
     new_games.update(existing_games)
-    if not conf_subdir:
-        logging.info("Skipping game data directory")
-        return new_games
-    base_path = os.path.join(webtiles.config.server_path, conf_subdir)
+    base_path = os.path.join(webtiles.config.server_path, "games.d")
     if not os.path.exists(base_path):
         logging.warn("Game data directory for YAML configuration does not exist: '%s'" % base_path)
         return new_games
@@ -75,7 +75,7 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
             logging.warning("Failed to load games from %s, skipping (parse failure: %s).",
                             file_name, e)
             continue
-        if data is None or 'games' not in data:
+        if not isinstance(data, dict) or 'games' not in data:
             logging.warning("Failed to load games from %s, skipping (no 'games' key).",
                             file_name)
             continue
@@ -85,22 +85,29 @@ def load_games(existing_games):  # type: (GamesConfig) -> GamesConfig
               "Found extra top-level keys '%s' in %s, ignoring them"
               " (only 'games' key will be parsed).",
               extra_keys, file_name)
-        logging.info("Loading data from %s", file_name)
+        logging.info("Parsing %s games in %s", len(data['games']), file_name)
         for game in data['games']:  # noqa
             if not validate_game_dict(game):
                 continue
             game_id = game['id']
             if game_id in delta:
+                # XX should this skip or override? the initial implementation
+                # printed a message about skipping, but didn't have a continue
                 logging.warning(
-                  "Game %s from %s was specified in an earlier config file, skipping.",
-                  game_id, path)
+                    "Game %s from %s was specified in an earlier config file, skipping.",
+                    game_id, path)
+                continue
+            if game_id in existing_games and not reloading:
+                logging.warning(
+                    "Game %s from %s was specified in config module, skipping.",
+                    game_id, path)
+                continue
             delta[game_id] = game  # noqa
             action = "Updated" if game_id in existing_games else "Loaded"
-            msg = ("%s game config %s (from %s).", action, game_id, file_name)
+            msg = ("%s %s (from %s).", action, game_id, file_name)
             delta_messages.append(msg)
     if delta:
         assert len(delta.keys()) == len(delta_messages)
-        logging.info("Updating live games config")
         new_games.update(delta)
         for message in delta_messages:
             logging.info(*message)

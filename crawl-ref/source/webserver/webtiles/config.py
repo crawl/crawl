@@ -4,6 +4,8 @@
 import collections
 import os.path
 import logging
+import sys
+import yaml
 
 from webtiles import load_games
 
@@ -16,6 +18,22 @@ source_module = None
 class ConfigModuleWrapper(object):
     def __init__(self, module):
         self.module = module
+
+        self._load_override_file(os.path.join(
+            self.get("server_path", ""),
+            "config.yml"))
+
+    def _load_override_file(self, path):
+        if not os.path.isfile(path):
+            return
+        with open(path) as f:
+            override_data = yaml.safe_load(f)
+            if not isinstance(override_data, dict):
+                sys.exit("config.yml must be a map")
+            for key, value in override_data.items():
+                if key == 'games':
+                    sys.exit("Can't override 'games' in override_file. Use games.d/ instead.")
+                setattr(self.module, key, value)
 
     def get(self, key, default):
         return getattr(self.module, key, default)
@@ -70,7 +88,7 @@ def reload():
             init_config_from_module(source_module)
             init_config_timeouts()
             try:
-                load_game_data()
+                load_game_data(not get('games'))
             except ValueError:
                 logging.error("Game data reload failed!", exc_info=True)
                 # if you get to here, game data is probably messed up. But there's
@@ -82,6 +100,8 @@ def reload():
 
 
 server_path = None
+# note: get('games') should not be used to get this value! This gets only
+# whatever games are defined in the config module.
 games = collections.OrderedDict()
 game_modes = {}  # type: Dict[str, str]
 
@@ -94,7 +114,6 @@ defaults = {
     },
     'server_socket_path': None,
     'watch_socket_dirs': False,
-    'use_game_yaml': True,
     'milestone_file': [],
     'status_file_update_rate': 5,
     'lobby_update_rate': 2,
@@ -116,9 +135,10 @@ defaults = {
     'no_cache': False,
     'live_debug': False,
     'lobby_update_rate': 2,
-    'games_config_dir': 'games.d',
     'load_logging_rate': 0,
     'slow_callback_alert': None,
+    'games': collections.OrderedDict([]),
+    'use_game_yaml': None, # default: load games.d if games is empty
 }
 
 def get(key, default=None):
@@ -173,17 +193,51 @@ def check_game_config():
 
     return success
 
-def load_game_data():
+def using_games_dir():
+    # backwards compatibility: deprecated games_config_dir was either None to
+    # disable, or a str, but treat it now as just a bool-like. (Slightly
+    # awkward as None has a different semantics for use_game_yaml.)
+    if has_key('games_config_dir'):
+        return bool(get('games_config_dir'))
+    else:
+        return get('use_game_yaml') # True, False, or None (to ignore)
+
+def load_game_data(reloading=False):
     # TODO: should the `load_games` module be refactored into config?
     global games
-    games = get('games', collections.OrderedDict())
-    if get('use_game_yaml', False):
-        games = load_games.load_games(games)
-    # TODO: check_games here or in validate?
+
+    # note: if `games` is defined in the config module, reloading is always
+    # False here.
+    if not reloading:
+        games = get('games')
+        if len(games):
+            logging.info("Reading %d games from config module", len(games))
+
+    # now try to load games from any `games.d/` yaml files.
+    # if `games` from config is non-empty, by default do not try to load from
+    # games.d. a server that is using both can override this by setting the
+    # `use_game_yaml` option to True. Setting this option to False will also
+    # prevent games.d loading, which is a bit useless, but may be helpful for
+    # validation purposes.
+    use_gamesd = using_games_dir()
+    if use_gamesd is None and not get('games') or use_gamesd:
+        # this does not modify `games` until the assignment on return, so is
+        # exception safe.
+        # Awkward interaction: if a yaml game overrides a config module game,
+        # it is just described as "Updated". This isn't a recommended use case
+        # so I haven't figured out how to get a warning to happen.
+        games = load_games.load_games(games, reloading)
+    else:
+        logging.warn("Skipping game definitions in `games.d/` based on config")
+
+    # hopefully we've found some games by this point; do a bit of validation:
     if len(games) == 0:
         raise ValueError("No games defined!")
     if not check_game_config():
         raise ValueError("Errors in game data!")
+
+    # finally, collect info about the games we found (which will also validate
+    # the binaries, for versions that support this call at least).
     global game_modes
     game_modes = load_games.collect_game_modes()
 

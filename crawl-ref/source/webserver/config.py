@@ -1,3 +1,14 @@
+# ### Server Operators ###
+# If you want to customise any settings in this file, you'll need to work around
+# the fact that is version controlled. Some options:
+# 1. Use a local commit and always do a rebase pull on top of it. (This may
+#    affect versioning, though.)
+# 2. Create config.yml and write your overrides in there.
+# 3. Use a more complicated scripting system; for example, dgamelaunch-config
+#    supports templating this file and automatically handles merging the
+#    server config with the repository files.
+#
+# ### Developers ###
 # Warning! Servers will not update or merge with the version controlled copy of
 # this file, so any parameters here should be presented as recommendations or
 # documentation of the default, not a default value, and option name changes
@@ -15,13 +26,12 @@
 # webtiles.config). If something like client.html raises an exception, this
 # will trigger 500 errors across the whole server.
 
-import collections
 import logging
 import os
 
 import yaml
 
-# directory to look for `games.d` files among other things.
+# Where to look for `games.d/`, `config.yml`, and other things.
 server_path = os.path.dirname(os.path.abspath(__file__))
 
 # dgl_mode = True
@@ -66,45 +76,42 @@ game_data_no_cache = True
 # Watch socket dirs for games not started by the server
 # watch_socket_dirs = False
 
+# Game configs
+# You can define game configs in two ways:
+# 1. As *.yml files in `games.d/`. (default; see games.d/base.yml)
+# 2. With a dictionary `games` in this file (not recommended except for dgamelaunch-config servers).
+
+# to override 1, simply set `games` in this file to something non-empty; see
+# the below example. To force using both, set `use_game_yaml` to True. Games
+# defined in this file will precede games defined in games.d.
 # use_game_yaml = True
 
-# Game configs
-#
-# You can define game configs in two ways:
-# 1. With a static dictionary `games`
-# 2. As extra games to append to this list from `load_games.load_games` (which
-#    by default loads games as defined in `games.d/*.yaml`).
-#
-# All options in this config are documented in games.d/base.yaml.
-# the directory name can be changed with `games_config_dir`, and set to None
-# to disable yaml loading.
-# games_config_dir = None
+# Example of defining `games` directly via a dictionary.
+# This setting to be an OrderedDict pre python 3.6, so this example uses that
+# for compatibility:
 
-# Example of a games dictionary:
-# use of an OrderedDict (pre python 3.6) is necessary to show the lobby in
-# a stable order.
-games = collections.OrderedDict([
-    ("dcss-web-trunk", dict(
-        name = "Play trunk",
-        crawl_binary = "./crawl",
-        rcfile_path = "./rcs/",
-        macro_path = "./rcs/",
-        morgue_path = "./rcs/%n",
-        inprogress_path = "./rcs/running",
-        ttyrec_path = "./rcs/ttyrecs/%n",
-        socket_path = "./rcs",
-        client_path = "./webserver/game_data/",
-        # dir_path = ".",
-        # cwd = ".",
-        morgue_url = None,
-        show_save_info = True,
-        allowed_with_hold = True,
-        # milestone_path = "./rcs/milestones",
-        send_json_options = True,
-        # env = {"LANG": "en_US.UTF8"},
-        )),
-])
-
+# import collections
+# games = collections.OrderedDict([
+#     ("dcss-web-trunk", dict(
+#         name = "Play trunk",
+#         crawl_binary = "./crawl",
+#         rcfile_path = "./rcs/",
+#         macro_path = "./rcs/",
+#         morgue_path = "./rcs/%n",
+#         inprogress_path = "./rcs/running",
+#         ttyrec_path = "./rcs/ttyrecs/%n",
+#         socket_path = "./rcs",
+#         client_path = "./webserver/game_data/",
+#         # dir_path = ".",
+#         # cwd = ".",
+#         morgue_url = None,
+#         show_save_info = True,
+#         allowed_with_hold = True,
+#         # milestone_path = "./rcs/milestones",
+#         send_json_options = True,
+#         # env = {"LANG": "en_US.UTF8"},
+#         )),
+# ])
 
 dgl_status_file = "./rcs/status"
 
