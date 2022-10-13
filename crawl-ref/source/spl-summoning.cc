@@ -1674,8 +1674,9 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         battlesphere->battlecharge = min(20, (int) battlesphere->battlecharge
                                               + 4 + random2(pow + 10) / 10);
 
-        // Increase duration
+        // Increase duration and update HD
         mon_enchant abj = battlesphere->get_ench(ENCH_FAKE_ABJURATION);
+        battlesphere->set_hit_dice(_battlesphere_hd(pow));
         abj.duration = min(abj.duration + (7 + roll_dice(2, pow)) * 10, 500);
         battlesphere->update_ench(abj);
     }
