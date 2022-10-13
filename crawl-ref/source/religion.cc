@@ -1564,36 +1564,41 @@ static bool _give_kiku_gift(bool forced)
         return false;
     }
 
+    vector<spell_type> spell_options;
     vector<spell_type> chosen_spells;
+    size_t wanted_spells;
 
     // The first set should guarantee the player at least one ally spell, to
     // complement the Wretches ability.
     if (first_gift)
     {
         chosen_spells.push_back(SPELL_NECROTISE);
-        vector<spell_type> further_options = {SPELL_KISS_OF_DEATH,
-                                              SPELL_SUBLIMATION_OF_BLOOD,
-                                              SPELL_ROT,
-                                              SPELL_VAMPIRIC_DRAINING,
-                                              SPELL_ANGUISH,
-                                              SPELL_ANIMATE_DEAD};
-        shuffle_array(further_options);
-        for (spell_type spell : further_options)
-        {
-            if (spell_is_useless(spell, false))
-                continue;
-            chosen_spells.push_back(spell);
-            if (chosen_spells.size() >= 4)
-                break;
-        }
+        spell_options = {SPELL_KISS_OF_DEATH,
+                         SPELL_SUBLIMATION_OF_BLOOD,
+                         SPELL_ROT,
+                         SPELL_VAMPIRIC_DRAINING,
+                         SPELL_ANIMATE_DEAD};
+        wanted_spells = 4;
     }
     else
     {
-        chosen_spells = {SPELL_DISPEL_UNDEAD,
+        spell_options = {SPELL_ANGUISH,
+                         SPELL_DISPEL_UNDEAD,
                          SPELL_AGONY,
                          SPELL_BORGNJORS_VILE_CLUTCH,
                          SPELL_DEATH_CHANNEL,
                          SPELL_SIMULACRUM};
+        wanted_spells = 5;
+    }
+
+    shuffle_array(spell_options);
+    for (spell_type spell : spell_options)
+    {
+        if (spell_is_useless(spell, false))
+            continue;
+        chosen_spells.push_back(spell);
+        if (chosen_spells.size() >= wanted_spells)
+            break;
     }
 
     bool new_spell = false;
