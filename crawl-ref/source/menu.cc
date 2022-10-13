@@ -80,7 +80,7 @@
 // |   |                              armour, wield, scroll item selection
 // |   |                              (e.g. brand, enchant)
 // |   |\--KnownMenu (known-items.cc): known/unknown items
-// |   |\--DescMenu (directn.cc): xv and ctrl-x menus
+// |   |\--DescMenu (directn.cc): xv and ctrl-x menus, help lookup
 // |   \---ShopMenu (shopping.cc): buying in shops
 // |
 // |\--ShoppingListMenu (shopping.cc): shopping lists (`$`)
