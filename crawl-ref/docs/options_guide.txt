@@ -1634,6 +1634,11 @@ view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
         attacks and invocations with visual effects.
 
+reduce_animations = false
+        If set to true, simplify some animations so that incremental steps are
+        not drawn. For example, for casting a beam spell or firing a ranged
+        weapon, only the final beam path is shown.
+
 use_animations = beam, range, hp, monster_in_sight, pickup, monster, player
 use_animations += branch_entry
         Controls whether or not to run special animations, such as when being

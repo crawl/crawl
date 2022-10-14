@@ -2550,11 +2550,7 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
             visible_effect |= _creeping_frost_freeze(mon->pos(), beam);
     }
     if (visible_effect && Options.use_animations & UA_MONSTER)
-    {
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50);
-    }
+        animation_delay(50, true);
 }
 
 static ai_action::goodness _mons_likes_blinking(const monster &caster)
@@ -2623,11 +2619,7 @@ static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt &beam)
             visible_effect |= _pyroclastic_surge(mon->pos(), beam);
     }
     if (visible_effect)
-    {
-        viewwindow(false);
-        update_screen();
-        scaled_delay(25);
-    }
+        animation_delay(25, true);
 }
 
 /// Should the given monster cast Arcjolt?
@@ -5441,17 +5433,13 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
         for (coord_def pos : affected)
         {
             beam.draw(pos);
-            //No need to delay if we are not refreshing
-            if (!Options.reduce_beam_redraw)
-                scaled_delay(25);
+            // No need to delay if we are not refreshing
+            if (!Options.reduce_animations)
+                scaled_delay(25); // should this refresh?
         }
 
-        if (Options.reduce_beam_redraw)
-        {
-            viewwindow(false);
-            update_screen();
-            scaled_delay(25);
-        }
+        if (Options.reduce_animations)
+            animation_delay(25, true);
     }
 
     for (coord_def pos : affected)

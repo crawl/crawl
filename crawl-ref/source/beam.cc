@@ -186,9 +186,7 @@ static void _zap_animation(int colour, const monster* mon = nullptr,
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(colour)});
 #endif
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50);
+        animation_delay(50, true);
     }
 }
 
@@ -798,9 +796,9 @@ void bolt::draw(const coord_def& p, bool force_refresh)
                                              : element_colour(colour);
     view_add_glyph_overlay(p, {glyph, c});
 #endif
-    // If reduce_beam_redraw is set, the redraw is unnecesary and
+    // If reduce_animations is set, the redraw is unnecesary and
     // should be done only once outside the loop calling the bolt::draw
-    if (Options.reduce_beam_redraw)
+    if (Options.reduce_animations)
         return;
 
     // to avoid redraws, set force_refresh = false, and draw_delay = 0. This
@@ -808,11 +806,7 @@ void bolt::draw(const coord_def& p, bool force_refresh)
     // param, because a delay on drawing is pretty meaningless without a
     // redraw.
     if (force_refresh || draw_delay > 0)
-    {
-        viewwindow(false);
-        update_screen();
-        scaled_delay(draw_delay);
-    }
+        animation_delay(draw_delay, true);
 }
 
 // Bounce a bolt off a solid feature.
@@ -1350,13 +1344,6 @@ void bolt::do_fire()
         ray.advance();
     }
 
-    if (Options.reduce_beam_redraw)
-    {
-        viewwindow(false);
-        update_screen();
-        scaled_delay(15 + draw_delay);
-    }
-
     if (!map_bounds(pos()))
     {
         ASSERT(!aimed_at_spot);
@@ -1376,6 +1363,10 @@ void bolt::do_fire()
     // Tracers need nothing further.
     if (is_tracer || affects_nothing)
         return;
+
+    // final delay for any draws that happened in the above loop
+    if (animate && Options.reduce_animations)
+        animation_delay(15 + draw_delay, true);
 
     // Canned msg for enchantments that affected no-one, but only if the
     // enchantment is yours (and it wasn't a chaos beam, since with chaos
@@ -6306,11 +6297,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             // redraw for an entire explosion block, so redraw_per_cell is not
             // relevant
             if (pass_visible)
-            {
-                viewwindow(false);
-                update_screen();
-                scaled_delay(explode_delay);
-            }
+                animation_delay(explode_delay, !Options.reduce_animations);
         }
     }
 
@@ -6338,7 +6325,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
     // Delay after entire explosion has been drawn.
     if (!is_tracer && cells_seen > 0 && show_more && animate)
-        scaled_delay(explode_delay * 3);
+        animation_delay(explode_delay * 3, Options.reduce_animations);
 
     return cells_seen > 0;
 }

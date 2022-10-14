@@ -243,11 +243,7 @@ static void _chain_lightning_to(const actor &caster, int power,
     }
 
     if (beam.animate)
-    {
-        viewwindow(false);
-        update_screen();
-        scaled_delay(200);
-    }
+        animation_delay(200, true);
 
     if (!new_victims.empty())
         _chain_lightning_to(caster, power, new_victims, seen_set, arcs + 1);
@@ -1756,9 +1752,7 @@ static void _animate_scorch(coord_def p)
                                    static_cast<unsigned short>(RED)});
 #endif
 
-    viewwindow(false);
-    update_screen();
-    scaled_delay(50);
+    animation_delay(50, true);
 }
 
 spret cast_scorch(int pow, bool fail)
@@ -2426,15 +2420,13 @@ spret cast_ignition(const actor *agent, int pow, bool fail)
             if (Options.use_animations & UA_BEAM)
                 beam_visual.explosion_draw_cell(*ai);
         }
+
         if (Options.use_animations & UA_BEAM)
             beam_visual.explosion_draw_cell(pos);
     }
+
     if (Options.use_animations & UA_BEAM)
-    {
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50);
-    }
+        animation_delay(50, true);
 
     // Real explosions on each individual square.
     for (coord_def pos : blast_sources)
@@ -2588,14 +2580,7 @@ spret cast_discharge(int pow, const actor &agent, bool fail, bool prompt)
     if (dam > 0)
     {
         if (Options.use_animations & UA_BEAM)
-        {
-            if (Options.reduce_beam_redraw)
-            {
-                viewwindow(false);
-                update_screen();
-            }
-            scaled_delay(100);
-        }
+            animation_delay(100, Options.reduce_animations);
     }
     else
     {
@@ -2819,12 +2804,7 @@ spret cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
             beam.draw(entry.first);
         }
 
-        if (Options.reduce_beam_redraw)
-        {
-            viewwindow(false);
-            update_screen();
-        }
-        scaled_delay(200);
+        animation_delay(200, Options.reduce_animations);
     }
 
     beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
@@ -3622,16 +3602,13 @@ spret cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
                 beam.draw(entry.first);
             }
 
-            if (!Options.reduce_beam_redraw)
-                scaled_delay(25);
+            // Why doesn't this set beam.draw_delay instead?
+            if (!Options.reduce_animations)
+                scaled_delay(25); // beam.draw should trigger a redraw already?
         }
 
-        if (Options.reduce_beam_redraw)
-        {
-            viewwindow(false);
-            update_screen();
-            scaled_delay(100);
-        }
+        if (Options.reduce_animations)
+            animation_delay(100, true);
     }
 
     if (you.can_see(*caster) || caster->is_player())

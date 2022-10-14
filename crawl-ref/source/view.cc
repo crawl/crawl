@@ -991,6 +991,18 @@ bool view_update()
     return false;
 }
 
+void animation_delay(unsigned int ms, bool do_refresh)
+{
+    // this leaves any Options.use_animations & UA_BEAM checks to the caller;
+    // but maybe it could be refactored into here
+    if (do_refresh)
+    {
+        viewwindow(false);
+        update_screen();
+    }
+    scaled_delay(ms);
+}
+
 void flash_view(use_animation_type a, colour_t colour, targeter *where)
 {
     if (crawl_state.need_save && Options.use_animations & a)

@@ -3280,14 +3280,12 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     for (coord_def pos : affected)
         beam.draw(pos, false);
 
-    if (quiet || Options.reduce_beam_redraw)
+    // When `quiet`, refresh the view after each complete draw pass. Add a bit
+    // of delay even for this, otherwise it goes by too quickly.
+    if (quiet)
     {
-        // When `quiet`, refresh the view after each complete draw pass.
-        // why this call dance to refresh? I just copied it from bolt::draw
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50); // add some delay per upheaval draw, otherwise it all
-                          // goes by too fast.
+        if (!Options.reduce_animations)
+            animation_delay(50, true);
     }
     else
     {
@@ -3480,7 +3478,9 @@ spret qazlal_disaster_area(bool fail)
         targets.erase(targets.begin() + which);
         weights.erase(weights.begin() + which);
     }
-    scaled_delay(200);
+    // possibly this delay should be slightly increased if reduce_animations is
+    // true?
+    animation_delay(200, Options.reduce_animations);
 
     return spret::success;
 }

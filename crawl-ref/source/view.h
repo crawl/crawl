@@ -35,6 +35,8 @@ static inline void scaled_delay(unsigned int ms)
     delay(ms * Options.view_delay / DEFAULT_VIEW_DELAY);
 }
 
+void animation_delay(unsigned int ms, bool do_refresh);
+
 // beware, flash_view is broken for USE_TILE_LOCAL
 void flash_view(use_animation_type a, colour_t colour,
                 targeter *where = nullptr);
