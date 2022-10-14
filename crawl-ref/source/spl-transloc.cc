@@ -1442,7 +1442,7 @@ static int _disperse_monster(monster& mon, int pow)
 
     // Moving the monster may have killed it in apply_location_effects.
     if (mon.alive() && mon.check_willpower(&you, pow) <= 0)
-        mon.confuse(&you, 1 + random2avg(pow / 10, 2));
+        mon.confuse(&you, 1 + random2avg(1 + div_rand_round(pow, 10), 2));
 
     return true;
 }
