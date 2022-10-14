@@ -142,6 +142,7 @@ private:
 
     int  player_apply_misc_modifiers(int damage) override;
     int  player_apply_final_multipliers(int damage, bool aux = false) override;
+    int  player_apply_postac_multipliers(int damage) override;
 
     void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();

@@ -1320,6 +1320,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             aux_damage = 0;
         else
             aux_damage = apply_defender_ac(aux_damage);
+
+        aux_damage = player_apply_postac_multipliers(aux_damage);
     }
 
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
@@ -1458,11 +1460,6 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     if (charge_pow > 0 && defender->res_elec() <= 0)
         damage += div_rand_round(damage * charge_pow, 150);
 
-    // not additive, statues are supposed to be bad with tiny toothpicks but
-    // deal crushing blows with big weapons
-    if (you.form == transformation::statue)
-        damage = div_rand_round(damage * 3, 2);
-
     // Can't affect much of anything as a shadow.
     if (you.form == transformation::shadow)
         damage = div_rand_round(damage, 2);
@@ -1472,6 +1469,16 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
 
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         return 0;
+
+    return damage;
+}
+
+int melee_attack::player_apply_postac_multipliers(int damage)
+{
+    // Statue form's damage modifier is designed to exactly compensate for
+    // the slowed speed; therefore, it needs to apply after AC.
+    if (you.form == transformation::statue)
+        damage = div_rand_round(damage * 3, 2);
 
     return damage;
 }
@@ -3273,6 +3280,7 @@ void melee_attack::do_minotaur_retaliation()
     dmg = player_apply_slaying_bonuses(dmg, true);
     dmg = player_apply_final_multipliers(dmg, true);
     int hurt = attacker->apply_ac(dmg);
+    hurt = player_apply_postac_multipliers(dmg);
 
     mpr("You furiously retaliate!");
     dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);

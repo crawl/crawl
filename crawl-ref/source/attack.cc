@@ -1098,6 +1098,11 @@ int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
     return damage;
 }
 
+int attack::player_apply_postac_multipliers(int damage)
+{
+    return damage;
+}
+
 void attack::player_exercise_combat_skills()
 {
 }
@@ -1184,6 +1189,7 @@ int attack::calc_damage()
             return 0;
         damage = player_apply_final_multipliers(damage);
         damage = apply_defender_ac(damage);
+        damage = player_apply_postac_multipliers(damage);
 
         damage = max(0, damage);
         set_attack_verb(damage);
