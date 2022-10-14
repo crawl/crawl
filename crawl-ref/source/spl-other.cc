@@ -490,7 +490,7 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
     if (!tracer && monster_resists_this_poison(*mons))
         return 0;
 
-    if (!tracer && x_chance_in_y(40 + pow/3, 100))
+    if (!tracer && x_chance_in_y(40 + div_rand_round(pow, 3), 100))
     {
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
         simple_monster_message(*mons, " looks rather confused.");
