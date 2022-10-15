@@ -4553,7 +4553,7 @@ bool ru_reject_sacrifices(bool forced_rejection)
         return false;
     }
 
-    ru_reset_sacrifice_timer(false, true);
+    ru_reset_sacrifice_timer(false, forced_rejection);
     _ru_expire_sacrifices();
     simple_god_message(" will take longer to evaluate your readiness.");
     return true;
