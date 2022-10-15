@@ -1883,7 +1883,7 @@ ENDMAP
 
 # Someone hasn't taken care of their garden, but occasionally it takes care of itself.
 NAME:    pdpol_lair_neglected_garden
-TAGS:    extra decor
+TAGS:    extra decor transparent
 DEPTH:   Lair
 SHUFFLE: ac"`/pbbp
 SUBST:   ab = B, cp = P
@@ -2777,6 +2777,33 @@ MAP
 --xx'''xxxxxxxxx'''xx-
  --xxxxxxxxxxxxxxxxx--
   -------------------
+ENDMAP
+
+NAME: pdpol_lair_dawg_pound
+TAGS: no_monster_gen
+DEPTH:  Lair:3-
+KMONS:  1 = wolf / warg w:5
+KMONS:  2 = hell hound / raiju
+KITEM: 2 = *
+SUBST: ' : x .:5, _ = x _:3, S = S. %:2
+NSUBST: s = 1:S / *= . S:1, D = 2:2 / 4= 1 2:1 / *= . 1:2
+: dgn.delayed_decay(_G, 'S', "human skeleton / spriggan skeleton / elf skeleton")
+CLEAR: _
+MAP
+               _____
+            ____xxx__
+          __xxxxxDxx__
+          _xx.SS..Dxx_
+      _____x..SS...Dx_
+    ___xxxxx....xD.xx_
+ ____xxx..SS..xDxxDx__
+ _xxxx.....SxDxxxxxx_
+_xxSS...xx..xxxx_____
+_xDSS.xDxxssxxxx___
+_xS.'Dxxxssxx____
+_xxD''xxssxxx_
+__xxx''..xx_
+    xx@@xx
 ENDMAP
 
 ###############################################################################
