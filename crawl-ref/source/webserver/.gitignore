@@ -2,3 +2,5 @@
 venv/
 htmlcov/
 config.yml
+banned_players.yml
+banned_players.txt

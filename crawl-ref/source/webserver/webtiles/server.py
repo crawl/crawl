@@ -375,7 +375,22 @@ def reset_token_commands(args):
 
 
 def ban_commands(args):
-    if args.list or args.list_holds:
+    if args.check_config_bans or args.run_config_bans:
+        # potentially very heavy commands on old servers...
+        all_users = userdb.get_all_users()
+        affected = [n[1] for n in all_users if not config.check_name(n[1])]
+        if not affected:
+            print("No affected users.")
+            return
+        if args.check_config_bans:
+            print("%d existing user(s) have banned names:" % len(affected))
+        else:
+            print("Banning %d user(s)!" % len(affected))
+            for n in affected:
+                userdb.set_ban(n, True)
+        if affected:
+            print("    Affected users: %s" % ', '.join(affected))
+    elif args.list or args.list_holds:
         banned, held = userdb.get_bans()
         if args.list:
             if len(banned):
@@ -448,6 +463,10 @@ def parse_args_util():
     parser_ban.add_argument('--add', type=str, help='Set an account ban for a user. Replaces any account holds.')
     parser_ban.add_argument('--hold', type=str, help='Set an account hold for a user. Replaces any ban flags.')
     parser_ban.add_argument('--clear', type=str, help='Clear a ban/hold for a user.')
+    parser_ban.add_argument('--run-config-bans', action='store_true',
+        help='Ban any existing usernames disallowed by server config banned name options')
+    parser_ban.add_argument('--check-config-bans', action='store_true',
+        help='List any existing usernames that would be banned by --run-config-bans')
     parser_ban.add_argument('--list', action='store_true',
             help='List current banned users and account holds.')
     parser_ban.add_argument('--list-holds', action='store_true',
@@ -459,7 +478,7 @@ def parse_args_util():
     if result.mode == "password" and not result.reset and not result.clear_reset:
         parser_pw.print_help()
         sys.exit()
-    elif result.mode == "ban" and not result.add and not result.clear and not result.list and not result.hold and not result.clear_holds and not result.list_holds:
+    elif result.mode == "ban" and not result.add and not result.clear and not result.list and not result.hold and not result.clear_holds and not result.list_holds and not result.check_config_bans and not result.run_config_bans:
         parser_ban.print_help()
         sys.exit()
 
@@ -522,6 +541,7 @@ def run():
 
     init_logging(config.get('logging_config'))
     logging.info("Loaded server configuration from: %s", config.source_file)
+    config.do_early_logging()
 
     if config.get('live_debug'):
         logging.info("Starting in live-debug mode.")

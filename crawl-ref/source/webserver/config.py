@@ -165,13 +165,67 @@ ssl_port = 8081
 
 # kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 
-# a nick is allowed if it matches this regex
-# nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 # max_passwd_length = 20
 
-# or you can define a function that returns true on an acceptable nick:
+# Username management options.
+#
+# This options are used on a running webserver only for new account creation!
+# It is possible to run a ban query against an existing userdb with them as
+# well, see wtutil.py options --check-config-bans and --run-config-bans. For
+# banning offensive names, skip to `banned` below. Crawl nicknames are case
+# preserving but not case sensitive. To be an acceptable username, a string
+# must pass all three of these checks (if defined).
+#
+# 1. Use `nick_regex` to modify the basic format for valid nicknames.
+# a nick is allowed if it matches this regex. It is not recommended to modify
+# this unless you really know what you're doing, and this default should not
+# ever be modified to something less restrictive for official servers.
+# nick_regex = r"^[a-zA-Z0-9]{3,20}$"
+#
+# 2. `nick_check_fun` if defined, is a function that returns true on valid
+# nicknames. You can use this for arbitrary custom nick checks in a server
+# config. You will need to do case management manually in this funciton.
 # def nick_check_fun(s):
-#     return s != "plog"
+#     return s.lower() != "plog" and s.lower() != "muggle"
+#
+# 3. For easily excluding a larger list of usernames from account creation, you
+# can use the `banned` option. This can take a simple list of names, or some
+# more complex things. Instead of or in addition to putting banned names in
+# config, you can put them in files named `banned_players.txt` and
+# `banned_players.yml`. The latter must have a single dict entry `banned`
+# that is allowed to use the complex options below.
+#
+# Simple example:
+# banned = ['plog', 'muggle', 'muggles', 'ihatemuggles']
+#
+# Complex example. This will ban many things, for example,
+# plain 'muggle', leetspeak variants like 'mugg13s', versions of the phrase
+# embedded into other contexts with different letter repeats such as
+# 'xx1hatemugggglesxx', etc. It is recommended to be fairly cautious when using
+# these extended options, because of
+# https://en.wikipedia.org/wiki/Scunthorpe_problem; there are very few English
+# slurs where it is a good idea to turn on all three of these options.
+# You can mix plain strings with complex entries, as shown here:
+#
+# banned = ['plog',
+#           {'options': {'leet': True, 'repeats': True, 'part': True},
+#            'names': ['muggle']}]
+# it is allowed to mix in plain strings with dicts in this list, 
+
+# Example to demonstrate this same list in yml form:
+# banned:
+#   - plog
+#   - options:
+#       leet: True
+#       repeats: True
+#       part: True
+#     names:
+#       - muggle
+#
+# It is recommended to use an external file rather than defining this option
+# directly in config. (Among other reasons, this means that server admins are
+# only viewing/editing a file likely filled with slurs when they are actually
+# intending to...)
 
 # Set to True to allow users to request a password reset email. Some settings
 # must be properly configured for this to work:

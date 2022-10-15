@@ -4,6 +4,7 @@ import os.path
 import re
 import smtplib
 import time
+import itertools
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 

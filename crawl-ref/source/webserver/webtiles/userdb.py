@@ -214,9 +214,7 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
         if result:
             return result
     username = username.strip()
-    if not re.match(config.get('nick_regex'), username):
-        return "Account creation failed."
-    if config.get('nick_check_fun') and not config.get('nick_check_fun')(username):
+    if not config.check_name(username):
         return "Account creation failed."
 
     crypted_pw = encrypt_pw(passwd)
@@ -375,6 +373,20 @@ def set_account_hold(username, hold=True):
                      (result[0],))
         db.conn.commit()
     return None
+
+
+# try to avoid using this -- db on long-running servers can be extremely
+# large...
+def get_all_users():
+    with crawl_db(config.get('password_db')) as db:
+        query = """
+            SELECT id, username, flags
+            FROM dglusers
+            NOCASE
+            ORDER BY username ASC
+        """
+        db.c.execute(query)
+        return db.c.fetchall()
 
 
 def get_bans():

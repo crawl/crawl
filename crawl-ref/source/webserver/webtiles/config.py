@@ -4,14 +4,28 @@
 import collections
 import os.path
 import logging
+import re
 import sys
 import yaml
 
-from webtiles import load_games
+from webtiles import load_games, bans
 
 server_config = {}
 source_file = None
 source_module = None
+
+# rudimentary code for log msgs before server.py:init_logging is called
+# probably better just to avoid using rather than to make more sophisticated..
+_early_logging = []
+
+def early_log(s):
+    _early_logging.append(s)
+
+def do_early_logging():
+    global _early_logging
+    for s in _early_logging:
+        logging.info(s)
+    _early_logging = []
 
 # light wrapper class that maps get/set/etc to getattr/setattr/etc
 # doesn't bother to implement most of the dict interface...
@@ -19,9 +33,16 @@ class ConfigModuleWrapper(object):
     def __init__(self, module):
         self.module = module
 
+        # default override location for config settings
         self._load_override_file(os.path.join(
-            self.get("server_path", ""),
-            "config.yml"))
+                        self.get("server_path", ""), "config.yml"))
+
+        # default override locations for ban lists. This first filename
+        # is intentionally the same as the scoring db's ban list filename.
+        load_banfile(os.path.join(
+                        self.get("server_path", ""), "banned_players.yml"))
+        load_banfile(os.path.join(
+                        self.get("server_path", ""), "banned_players.txt"))
 
     def _load_override_file(self, path):
         if not os.path.isfile(path):
@@ -29,11 +50,16 @@ class ConfigModuleWrapper(object):
         with open(path) as f:
             override_data = yaml.safe_load(f)
             if not isinstance(override_data, dict):
-                sys.exit("config.yml must be a map")
+                raise ValueError("'%s' must be a map" % path)
             for key, value in override_data.items():
                 if key == 'games':
-                    sys.exit("Can't override 'games' in override_file. Use games.d/ instead.")
+                    raise ValueError("Can't override 'games' in %s. Use games.d/ instead." % path)
+                elif key == 'banned':
+                    # we probably don't want to overwrite any ban lists set
+                    # in the config module
+                    add_ban_list(value)
                 setattr(self.module, key, value)
+            early_log("Loading config overrides from: '%s'" % path)
 
     def get(self, key, default):
         return getattr(self.module, key, default)
@@ -71,6 +97,12 @@ def init_config_timeouts():
     util.set_slow_callback_logging(get('slow_callback_alert'))
     ws_handler.do_load_logging(True)
 
+
+def reload_namespace_resets():
+    # ensure that the ban list always gets rebuilt
+    set('banned', [])
+
+
 def reload():
     from webtiles import util
     with util.note_blocking("config.reload"):
@@ -83,9 +115,11 @@ def reload():
                 from imp import reload
             # major caveat: this will not reset the namespace before doing the
             # reload. So to return something to the default value requires an
-            # explicit setting. XX is there anything to do about this?
+            # explicit setting. XX is there anything better to do about this?
+            reload_namespace_resets()
             reload(source_module)
             init_config_from_module(source_module)
+            do_early_logging()
             init_config_timeouts()
             try:
                 load_game_data(not get('games'))
@@ -139,6 +173,7 @@ defaults = {
     'slow_callback_alert': None,
     'games': collections.OrderedDict([]),
     'use_game_yaml': None, # default: load games.d if games is empty
+    'banned': [],
 }
 
 def get(key, default=None):
@@ -202,6 +237,33 @@ def using_games_dir():
     else:
         return get('use_game_yaml') # True, False, or None (to ignore)
 
+
+def add_ban_list(ban_list):
+    cur = get('banned')
+    cur.extend(ban_list)
+    # explicitly set, in case we started with the default
+    set('banned', cur)
+
+
+# check a username against various config options that may disallow it
+def check_name(username):
+    if not re.match(get('nick_regex'), username):
+        return False
+    if get('nick_check_fun') and not get('nick_check_fun')(username):
+        return False
+    return not bans.do_ban_check(username, get('banned'))
+
+
+def load_banfile(path, require_exists=False):
+    if require_exists and not os.path.isfile(path):
+        raise ValueError("Webtiles config: banfile '%s' does not exist", path)
+    # otherwise, will be a noop on a non-existent file
+    l = bans.load_bans(path)
+    if l:
+        add_ban_list(l)
+        early_log("Loading ban list from: '%s'" % path)
+
+
 def load_game_data(reloading=False):
     # TODO: should the `load_games` module be refactored into config?
     global games
@@ -242,7 +304,6 @@ def load_game_data(reloading=False):
     game_modes = load_games.collect_game_modes()
 
 def validate():
-    # TODO: some way of setting defaults in this module?
     check_keys_any(['bind_nonsecure', 'ssl_options'], True)
     if has_key('bind_nonsecure') and get('bind_nonsecure'):
         check_keys_any(['bind_pairs', ['bind_address', 'bind_port']], True)
@@ -259,8 +320,19 @@ def validate():
     smpt_opts = ['smtp_host', 'smtp_port', 'smtp_from_addr']
     if check_keys_any(smpt_opts):
         check_keys_all(smpt_opts, True)
-    if (has_key('smtp_user')):
+    if has_key('smtp_user'):
         check_keys_all('smtp_password', True)
+
+    bans.validate(get('banned'))
+
+    try:
+        # simplest is just to run the ban check against a name that isn't
+        # valid and so shouldn't ever be banned, which exercises the whole
+        # thing
+        bans.do_ban_check('', get('banned'))
+    except:
+        raise ValueError("Webtiles config: malformed ban list ('%s')" %
+                                                        repr(get('banned')))
 
     # set up defaults that are conditioned on other values
     if not has_key('settings_db'):
