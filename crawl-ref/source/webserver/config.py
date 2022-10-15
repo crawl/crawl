@@ -210,7 +210,7 @@ ssl_port = 8081
 # banned = ['plog',
 #           {'options': {'leet': True, 'repeats': True, 'part': True},
 #            'names': ['muggle']}]
-# it is allowed to mix in plain strings with dicts in this list, 
+# it is allowed to mix in plain strings with dicts in this list,
 
 # Example to demonstrate this same list in yml form:
 # banned:
