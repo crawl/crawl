@@ -81,4 +81,3 @@ is roughly equivalent to
 7. Finally, the `appimage` directory is packaged into a Squashfs filesystem.
    The resulting file will be named as:
    `stone_soup-<version>-linux-<tiles/console>.<arch>.AppImage`
-

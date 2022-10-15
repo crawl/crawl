@@ -147,7 +147,7 @@ help of the `linuxdeploy` tool.
 3. Follow [the above compilation steps](#compiling) and, when running `make`,
    include the `appimage` target and the path to `linuxdeploy` in the
    `LINUXDEPLOY` parameter.
-    
+
     ```sh
     # console build
     make LINUXDEPLOY=/path/to/linuxdeploy.AppImage appimage
