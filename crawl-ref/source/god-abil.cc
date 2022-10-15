@@ -4029,7 +4029,7 @@ static void _ru_expire_sacrifices()
         you.props[key].get_vector().clear();
     }
 
-    // Clear out stored sacrfiice values.
+    // Clear out stored sacrifice values.
     for (int i = 0; i < NUM_ABILITIES; ++i)
         you.sacrifice_piety[i] = 0;
 }
@@ -4607,7 +4607,11 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
         }
     }
 
-    delay = div_rand_round((delay + added_delay) * (3 - you.faith()), 3);
+    // No faith reduction if this is due to abandoning Ru.
+    if (!you_worship(GOD_RU))
+        delay += added_delay;
+    else
+        delay = div_rand_round((delay + added_delay) * (3 - you.faith()), 3);
     if (crawl_state.game_is_sprint())
         delay /= SPRINT_MULTIPLIER;
 
