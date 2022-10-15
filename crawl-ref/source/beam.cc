@@ -6296,8 +6296,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             }
             // redraw for an entire explosion block, so redraw_per_cell is not
             // relevant
-            if (pass_visible)
-                animation_delay(explode_delay, !Options.reduce_animations);
+            if (pass_visible && !Options.reduce_animations)
+                animation_delay(explode_delay, true);
         }
     }
 
