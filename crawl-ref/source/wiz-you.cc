@@ -215,6 +215,11 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_LOCKED_DOWN] = 0;
         you.duration[DUR_NO_MOMENTUM] = 0;
         you.props[CORROSION_KEY] = 0;
+        you.duration[DUR_BARBS] = 0;
+        you.attribute[ATTR_BARBS_POW] = 0;
+        you.props.erase(BARBS_MOVE_KEY);
+        you.duration[DUR_SICKNESS]  = 0;
+        you.duration[DUR_EXHAUSTED] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
         you.duration[DUR_BLINKBOLT_COOLDOWN] = 0;
         delete_all_temp_mutations("Super heal");
@@ -226,11 +231,9 @@ void wizard_heal(bool super_heal)
     else
         mpr("Healing.");
 
-    // Clear most status ailments.
-    you.duration[DUR_SICKNESS]  = 0;
+    // Clear some status ailments.
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_POISONING] = 0;
-    you.duration[DUR_EXHAUSTED] = 0;
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
     you.redraw_hit_points = true;
