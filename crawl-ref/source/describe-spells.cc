@@ -395,7 +395,7 @@ static dice_def _spell_damage(spell_type spell, int hd)
         case SPELL_ERUPTION:
             return eruption_damage();
         case SPELL_LRD:
-            return base_fragmentation_damage(pow);
+            return base_fragmentation_damage(pow, false);
         case SPELL_AIRSTRIKE:
             return base_airstrike_damage(pow);
         case SPELL_ARCJOLT:

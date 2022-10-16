@@ -2794,7 +2794,7 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
         case SPELL_FROZEN_RAMPARTS:
             return ramparts_damage(power, false);
         case SPELL_LRD:
-            return base_fragmentation_damage(power);
+            return base_fragmentation_damage(power, false);
         case SPELL_ARCJOLT:
             return arcjolt_damage(power, false);
         default:

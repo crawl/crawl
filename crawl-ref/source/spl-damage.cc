@@ -1058,9 +1058,10 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
     return spret::success;
 }
 
-dice_def base_fragmentation_damage(int pow)
+dice_def base_fragmentation_damage(int pow, bool random)
 {
-    return dice_def(3, 5 + pow / 5);
+    return dice_def(3, random ? 4 + div_rand_round(pow, 5)
+                              : 4 + pow / 5);
 }
 
 enum class frag_damage_type
@@ -1308,7 +1309,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     else
         beam.aux_source = effect.name;
 
-    beam.damage  = base_fragmentation_damage(pow);
+    beam.damage  = base_fragmentation_damage(pow, caster->is_player());
     beam.flavour = BEAM_FRAG;
     beam.ex_size = 1;
     switch (effect.damage)
