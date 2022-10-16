@@ -3060,7 +3060,8 @@ spret cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer)
         else
             mpr("Your toxic radiance grows in intensity.");
 
-        you.increase_duration(DUR_TOXIC_RADIANCE, 2 + random2(pow/20), 15);
+        you.increase_duration(DUR_TOXIC_RADIANCE,
+                              2 + random2(1 + div_rand_round(pow, 25)), 15);
         you.props[TOXIC_RADIANCE_POWER_KEY].get_int() = pow;
         toxic_radiance_effect(&you, 10, true);
 
@@ -3128,7 +3129,8 @@ void toxic_radiance_effect(actor* agent, int mult, bool on_cast)
         if (agent->is_monster() && mons_aligned(agent, *ai))
             continue;
 
-        int dam = roll_dice(1, 1 + pow / 20) * div_rand_round(mult, BASELINE_DELAY);
+        int dam = roll_dice(1, 1 + div_rand_round(pow, 20))
+                            * div_rand_round(mult, BASELINE_DELAY);
         dam = resist_adjust_damage(*ai, BEAM_POISON, dam);
 
         if (ai->is_player())
