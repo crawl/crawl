@@ -1318,6 +1318,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                             silence_max_range(pow),
                                             0, 0,
                                             silence_min_range(pow));
+    case SPELL_POISONOUS_VAPOURS:
+        return make_unique<targeter_poisonous_vapours>(&you, range);
 
     // at player's position only but not a selfench; most transmut spells go here:
     case SPELL_SPIDER_FORM:
