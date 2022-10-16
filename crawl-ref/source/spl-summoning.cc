@@ -208,7 +208,7 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
         return spret::abort;
 
     fail_check();
-    const int dur = min(2 + (random2(pow) / 4), 4);
+    const int dur = min(2 + div_rand_round(random2(1 + pow), 4), 4);
 
     mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, dur, god,
                                     SPELL_SUMMON_ICE_BEAST);
@@ -720,7 +720,7 @@ static void _animate_weapon(int pow, actor* target)
     ASSERT(wpn);
     // If sac love, the weapon will go after you, not the target.
     const bool hostile = you.allies_forbidden();
-    const int dur = min(2 + (random2(pow) / 5), 6);
+    const int dur = min(2 + div_rand_round(random2(1 + pow), 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON,
                  hostile ? BEH_HOSTILE : BEH_FRIENDLY,
@@ -938,7 +938,7 @@ spret cast_call_imp(int pow, god_type god, bool fail)
 
     const monster_type imp_type = _get_imp_type();
 
-    const int dur = min(2 + (random2(pow) / 4), 6);
+    const int dur = min(2 + div_rand_round(random2(1 + pow), 5), 6);
 
     mgen_data imp_data = _pal_data(imp_type, dur, god, SPELL_CALL_IMP);
     if (monster *imp = create_monster(imp_data))
