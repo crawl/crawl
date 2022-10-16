@@ -2133,3 +2133,13 @@ bool targeter_anguish::affects_monster(const monster_info& mon)
         && !mons_atts_aligned(agent->temp_attitude(), mon.attitude)
         && !mon.is(MB_ANGUISH);
 }
+
+targeter_poisonous_vapours::targeter_poisonous_vapours(const actor* act, int r)
+    : targeter_smite(act, r, 0, 0, false, nullptr)
+{
+}
+
+bool targeter_poisonous_vapours::affects_monster(const monster_info& mon)
+{
+    return get_resist(mon.resists(), MR_RES_POISON) <= 0;
+}
