@@ -933,6 +933,13 @@ void bolt::burn_wall_effect()
         return;
     }
 
+    if (have_passive(passive_t::shoot_through_plants))
+    {
+        emit_message("Fedhas protects the tree from harm.");
+        finish_beam();
+        return;
+    }
+
     // Destroy the wall.
     destroy_wall(pos());
     if (you.see_cell(pos()))
@@ -982,31 +989,6 @@ void bolt::affect_wall()
     {
         if (!in_bounds(pos()) || !can_affect_wall(pos(), true))
             finish_beam();
-
-        // potentially warn about offending your god by burning trees
-        const bool god_relevant = you.religion == GOD_FEDHAS
-                                  && can_burn_trees();
-        const bool vetoed =
-            !feat_is_flammable(env.grid(pos())) &&
-            env.markers.property_at(pos(), MAT_ANY, "veto_destroy") == "veto";
-
-        if (god_relevant && feat_is_tree(env.map_knowledge(pos()).feat())
-            && !vetoed && !is_targeting && YOU_KILL(thrower)
-            && !dont_stop_trees)
-        {
-            const string prompt =
-                make_stringf("Are you sure you want to burn %s?",
-                             feature_description_at(pos(), false, DESC_THE).c_str());
-
-            if (yesno(prompt.c_str(), false, 'n'))
-                dont_stop_trees = true;
-            else
-            {
-                canned_msg(MSG_OK);
-                beam_cancelled = true;
-                finish_beam();
-            }
-        }
 
         // The only thing that doesn't stop at walls.
         if (flavour != BEAM_DIGGING)
