@@ -23,10 +23,10 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
 
     if you.in_branch("Lair") then
         e.mons("spriggan")
-        if you.absdepth() >= 14 then
-            e.mons("wolf / black bear w:4 / yak w:2")
-        else
+        if you.absdepth() >= 13 then
             e.mons("wyvern / elephant w:4 / dream sheep w:2")
+        else
+            e.mons("wolf / black bear w:4 / yak w:2")
         end
     else
         if you.absdepth() >= 12 then
