@@ -1563,6 +1563,12 @@ static bool _mc_too_slow_for_zombies(monster_type mon)
     return mons_class_zombie_base_speed(mons_species(mon)) < BASELINE_DELAY;
 }
 
+static bool _mc_bad_wretch(monster_type mon)
+{
+    // goofy on-death effect - probably other things could go here too
+    return mon == MONS_SPRIGGAN_DRUID;
+}
+
 /**
  * Pick a local monster type that's suitable for turning into a corpse.
  *
@@ -1580,7 +1586,7 @@ monster_type pick_local_corpsey_monster(level_id place)
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
                                             const coord_def& pos,
-                                            bool for_corpse)
+                                            bool for_wretch)
 {
     const bool really_in_d = place.branch == BRANCH_DUNGEON;
 
@@ -1602,8 +1608,9 @@ monster_type pick_local_zombifiable_monster(level_id place,
     place.depth = min(place.depth, branch_zombie_cap(place.branch));
     place.depth = max(1, place.depth);
 
-    const bool need_veto = really_in_d && !for_corpse;
-    mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : nullptr;
+    mon_pick_vetoer veto = for_wretch ? _mc_bad_wretch :
+                           really_in_d ? _mc_too_slow_for_zombies
+                                        : nullptr;
 
     // try to grab a proper zombifiable monster
     monster_type mt = picker.pick_with_veto(zombie_population(place.branch),
