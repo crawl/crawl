@@ -1785,7 +1785,7 @@ static string _describe_ammo(const item_def &item)
         if (below_target)
             _append_skill_target_desc(description, SK_THROWING, target_skill);
 
-        if (!is_useless_item(item))
+        if (!is_useless_item(item) && property(item, PWPN_DAMAGE))
             description += "\nDamage rating: " + damage_rating(&item);
     }
 
