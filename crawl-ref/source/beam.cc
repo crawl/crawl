@@ -1702,6 +1702,13 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // of "is unaffected" messages. --Eino
     if (mons_is_firewood(*mons))
         return true;
+    // Placeholder for J offering full protection for slimes.
+    if (mons_is_slime(*mons)
+        && have_passive(passive_t::neutral_slimes)
+        && mons->wont_attack())
+    {
+        return true;
+    }
     switch (wh_enchant)
     {
     case ENCH_FEAR:
