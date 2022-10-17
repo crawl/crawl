@@ -1402,7 +1402,8 @@ static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
                               bool in_los, bool corpseworthy)
 {
     // This is a hostile effect, and monsters are dirty cheaters. Sorry!
-    if (mons.has_ench(ENCH_BOUND_SOUL))
+    if (mons.has_ench(ENCH_BOUND_SOUL)
+        && !have_passive(passive_t::goldify_corpses))
     {
         _make_derived_undead(&mons, quiet, MONS_SIMULACRUM,
                              SAME_ATTITUDE(&mons),
