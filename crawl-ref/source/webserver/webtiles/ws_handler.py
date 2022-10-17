@@ -774,7 +774,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def shutdown(self):
         if not self.client_closed:
-            self.logger.info("Shutting down user %s id %d", self.username, self.id)
+            self.logger.info("Shutting down user %s id %d",
+                                    self.username and self.username or "[Anon]",
+                                    self.id)
             msg = to_unicode(self.render_string("shutdown.html", game=self))
             self.send_message("close", reason = msg)
             self.close()
