@@ -43,7 +43,19 @@ def update_global_status():
 # lobbies that need updating
 game_lobby_cache = set() # type: Set[CrawlProcessHandlerBase]
 
-def describe_sockets():
+def list_of_names(l):
+    result = []
+    try:
+        c = collections.Counter(l)
+        for n in sorted(c.keys()):
+            result.append(n)
+            if c[n] > 1:
+                result[-1] += " (x%d)" % c[n]
+    except:
+        pass # backwards compat, py2 doesn't have collections.Counter
+    return ", ".join(result)
+
+def describe_sockets(names=False):
     slist = list(sockets)
     lobby = [s for s in slist if s.is_in_lobby()]
     lobby_count = len(lobby)
@@ -55,8 +67,25 @@ def describe_sockets():
     idle_count = len([s for s in playing if s.process.is_idle()])
     spec_count = len([s for s in slist if s.watched_game])
 
-    return "%d connections: %d playing (%d idle), %d watching (%d anon), %d in lobby (%d anon)" % (
+    summary = "%d connections: %d playing (%d idle), %d watching (%d anon), %d in lobby (%d anon)" % (
         len(slist), player_count, idle_count, spec_count, anon_specs, lobby_count, anon_lobby)
+
+    if names:
+        # this is all a bit brute-force
+        watchers = list_of_names([s for s in slist if s.watched_game and s.username])
+        if watchers:
+            summary += "; Watchers: %s" % watchers
+        lobby_names = list_of_names([s.username for s in lobby if s.username and not s.account_restricted()])
+        if lobby_names:
+            summary += "; Lobby: %s" % lobby_names
+        restricted = list_of_names([s.username for s in playing if s.username and s.account_restricted()])
+        if restricted:
+            summary += "; Account restricted: %s" % restricted
+        restricted_lobby = list_of_names([s.username for s in lobby if s.username and s.account_restricted()])
+        if restricted_lobby:
+            summary += "; Account restricted (lobby): %s" % restricted_lobby
+    return summary
+
 
 def do_lobby_updates():
     global game_lobby_cache
@@ -217,7 +246,11 @@ def handle_new_milestone(line):
     if game and not game.receiving_direct_milestones:
         game.set_where_info(data)
 
-# decorator for admin calls
+# decorators for admin calls
+
+# for CrawlWebSocket functions that implement some admin-only user-triggered
+# action. These will log if someone tries to call them without permissions.
+# Usually for functions that are exposed via a message handler.
 def admin_required(f):
     def wrapper(self, *args, **kwargs):
         if not self.is_admin():
@@ -226,6 +259,17 @@ def admin_required(f):
             return
         return f(self, *args, **kwargs)
     return wrapper
+
+# for CrawlWebSocket functions that should do nothing for a non-admin user, but
+# aren't user-triggered. (n.b. it is in principle possible to write a fancier
+# decorator that subsumes both of these cases, but it is simpler not to.)
+def admin_only(f):
+    def wrapper(self, *args, **kwargs):
+        if not self.is_admin():
+            return
+        return f(self, *args, **kwargs)
+    return wrapper
+
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
@@ -293,6 +337,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         global_announce(text)
         self.logger.info("User '%s' sent serverwide announcement: %s", self.username, text)
         self.send_message("admin_log", text="Announcement made ('" + text + "')")
+
+    @admin_only
+    def send_socket_stats(self):
+        self.send_message("admin_log", text=describe_sockets(True))
 
     @admin_required
     def admin_pw_reset(self, username):
@@ -397,6 +445,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def send_lobby(self):
         self.send_lobby_data()
         self.send_lobby_html()
+        self.send_socket_stats() # admins only
 
     def account_restricted(self):
         return not self.username or userdb.dgl_account_hold(self.user_flags)
