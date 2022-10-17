@@ -116,8 +116,8 @@ def set_slow_callback_logging(slow_duration):
 
     def on_slow_callback(name, duration):
         logger = logging.getLogger("server.py")
-        logger.warning('Slow callback (%.3fs, %s): %s. Socket state: %s',
-            duration, last_noted_blocker(), name, ws_handler.describe_sockets())
+        logger.warning('Slow callback (%.3fs, %s): %s',
+            duration, last_noted_blocker(), name)
         global last_blocking_description
         last_blocking_description = "None"
 
