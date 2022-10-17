@@ -496,7 +496,8 @@ stab_type find_stab_type(const actor *attacker,
 
     // Distracted (but not batty); this only applies to players.
     if (attacker && attacker->is_player()
-        && def && def->foe != MHITYOU && !mons_is_batty(*def))
+        && def && def->foe != MHITYOU
+        && def->behaviour != BEH_BATTY)
     {
         return STAB_DISTRACTED;
     }
