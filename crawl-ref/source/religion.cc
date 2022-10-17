@@ -2788,14 +2788,29 @@ bool god_protects(const actor *agent, const monster *target, bool quiet)
         return true;
     }
 
-    if (agent && target && agent->is_player()
-        && mons_is_hepliaklqana_ancestor(target->type))
+    if (agent && target && agent->is_player())
     {
-        // TODO: this message does not work very well for all sorts of attacks
-        // should this be a god message?
-        if (!quiet && you.can_see(*target))
-            mprf("%s avoids your attack.", target->name(DESC_THE).c_str());
-        return true;
+        if (mons_is_hepliaklqana_ancestor(target->type))
+        {
+            // TODO: this message does not work very well for all sorts of attacks
+            // should this be a god message?
+            if (!quiet && you.can_see(*target))
+                mprf("%s avoids your attack.", target->name(DESC_THE).c_str());
+            return true;
+        }
+        if (have_passive(passive_t::neutral_slimes)
+            && mons_is_slime(*target)
+            && !target->wont_attack())
+        {
+            if (!quiet && you.can_see(*target))
+            {
+                simple_god_message(
+                            make_stringf(" absorbs the attack on %s slime.",
+                                agent->is_player() ? "your" : "a").c_str(),
+                            GOD_JIYVA);
+            }
+            return true;
+        }
     }
     return false;
 }

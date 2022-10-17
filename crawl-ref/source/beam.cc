@@ -1699,6 +1699,8 @@ static bool _monster_resists_mass_enchantment(monster* mons,
     // of "is unaffected" messages. --Eino
     if (mons_is_firewood(*mons))
         return true;
+    if (god_protects(&you, mons))
+        return true;
     switch (wh_enchant)
     {
     case ENCH_FEAR:
@@ -6898,7 +6900,8 @@ bool shoot_through_monster(const bolt& beam, const monster* victim)
     actor *originator = beam.agent();
     if (!victim || !originator)
         return false;
-    return god_protects(originator, victim)
+    // Jiyva protects, but doesn't allow shooting through.
+    return god_protects(originator, victim) && !mons_is_slime(*victim)
            || (originator->is_player()
                && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
 }
