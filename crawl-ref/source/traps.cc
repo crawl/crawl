@@ -1082,7 +1082,7 @@ void roll_trap_effects()
 {
     int trap_rate = trap_rate_for_place();
 
-    you.trapped = you.num_turns && !have_passive(passive_t::avoid_traps)
+    you.trapped = you.num_turns
         && env.density > 0 // can happen with builder in debug state
         && (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
 }
@@ -1125,6 +1125,11 @@ void do_trap_effects()
         case TRAP_SHAFT:
             dprf("Attempting to shaft player.");
             _print_malev();
+            if (have_passive(passive_t::avoid_traps))
+            {
+                simple_god_message(" reveals a hidden shaft just before you would have fallen in.");
+                return;
+            }
             if (you.do_shaft(false))
                 set_shafted();
             break;
@@ -1135,6 +1140,11 @@ void do_trap_effects()
             // XXX: improve messaging to make it clear there's a wail outside of the
             // player's silence
             _print_malev();
+            if (have_passive(passive_t::avoid_traps))
+            {
+                simple_god_message(" reveals an alarm trap just before you would have tripped it.");
+                return;
+            }
             mprf("With a horrendous wail, an alarm goes off!");
             fake_noisy(40, you.pos());
             you.sentinel_mark(true);
@@ -1144,6 +1154,12 @@ void do_trap_effects()
         {
             string msg = make_stringf("%s and a teleportation trap spontaneously manifests!",
                                       _malev_msg().c_str());
+            if (have_passive(passive_t::avoid_traps))
+            {
+                mprf("%s", msg.c_str());
+                simple_god_message(" warns you in time for you to avoid it.");
+                return;
+            }
             you_teleport_now(false, true, msg);
             break;
         }
