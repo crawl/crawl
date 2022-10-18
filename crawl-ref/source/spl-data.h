@@ -122,7 +122,7 @@ static const struct spell_desc spelldata[] =
     5,
     200,
     4, 11, // capped at LOS, yet this 11 matters since range increases linearly
-    25,
+    20,
     TILEG_LIGHTNING_BOLT,
 },
 
@@ -133,7 +133,7 @@ static const struct spell_desc spelldata[] =
     5,
     200,
     5, 5,
-    15,
+    10,
     TILEG_ARCJOLT,
 },
 

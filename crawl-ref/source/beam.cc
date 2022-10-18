@@ -261,13 +261,6 @@ spret zapping(zap_type ztype, int power, bolt &pbolt,
     if (msg)
         mpr(msg);
 
-    if (ztype == ZAP_LIGHTNING_BOLT)
-    {
-        noisy(spell_effect_noise(SPELL_LIGHTNING_BOLT),
-               you.pos(), "You hear a mighty clap of thunder!");
-        pbolt.heard = true;
-    }
-
     if (ztype == ZAP_DIG)
         pbolt.aimed_at_spot = false;
 

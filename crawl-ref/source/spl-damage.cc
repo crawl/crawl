@@ -350,8 +350,6 @@ spret cast_chain_lightning(int pow, const actor &caster, bool fail)
              caster.hand_name(true).c_str());
     }
 
-    noisy(spell_effect_noise(SPELL_CHAIN_LIGHTNING), caster.pos(), caster.mid);
-
     vector<arc_victim> victims;
     victims.push_back(arc_victim{caster.pos(), act});
     set<actor*> seen_set;
@@ -2721,6 +2719,8 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
             if (post_resist_dam && you.can_see(*mon))
                 print_wounds(*mon);
         }
+
+        noisy(spell_effect_noise(SPELL_ARCJOLT), act->pos());
     }
     if (Options.use_animations & UA_BEAM)
         animation_delay(100, Options.reduce_animations);
