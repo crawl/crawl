@@ -1044,7 +1044,7 @@ venom or protection brand, and rarely with the draining, electrocution,
 spectral, vampiric or chaos brand.
 
 Ranged weapons will commonly be branded with the vorpal, flaming, freezing or
-venom brand, and rarely with the electrocution or chaos brand.
+draining brand, and rarely with the electrocution or chaos brand.
 %%%%
 scroll of butterflies
 

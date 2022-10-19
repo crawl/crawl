@@ -350,12 +350,15 @@ static const vector<brand_weight_tuple> POLEARM_BRANDS = {
     { SPWPN_HOLY_WRATH,  1 },
 };
 
-/// brand weights for most ranged weapons.
+/// brand weights for ranged weapons.
 static const vector<brand_weight_tuple> RANGED_BRANDS = {
-    { SPWPN_NORMAL,   58 },
-    { SPWPN_FLAMING,  16 },
-    { SPWPN_FREEZING, 16 },
-    { SPWPN_VORPAL,   10 },
+    { SPWPN_NORMAL,        58 },
+    { SPWPN_FLAMING,       11 },
+    { SPWPN_FREEZING,      11 },
+    { SPWPN_VORPAL,        7 },
+    { SPWPN_DRAINING,      7 },
+    { SPWPN_ELECTROCUTION, 4 },
+    { SPWPN_ANTIMAGIC,     2 },
 };
 
 /// brand weights for holy (TSO-blessed) weapons.

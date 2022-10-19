@@ -463,20 +463,17 @@ static void _add_randart_weapon_brand(const item_def &item,
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
             2, SPWPN_SPEED,
-            4, SPWPN_VENOM,
+            2, SPWPN_ELECTROCUTION,
+            2, SPWPN_ANTIMAGIC,
+            4, SPWPN_DRAINING,
             4, SPWPN_VORPAL,
             4, SPWPN_FLAMING,
             4, SPWPN_FREEZING);
 
-        if (is_crossbow(item))
-        {
-            // Penetration and electrocution are only allowed on
-            // crossbows. This may change in future.
-            if (one_chance_in(5))
-                item_props[ARTP_BRAND] = SPWPN_ELECTROCUTION;
-            else if (one_chance_in(5))
-                item_props[ARTP_BRAND] = SPWPN_PENETRATION;
-        }
+        // Penetration is only allowed on crossbows.
+        // This may change in future.
+        if (is_crossbow(item) && one_chance_in(6))
+            item_props[ARTP_BRAND] = SPWPN_PENETRATION;
     }
     else if (is_demonic(item) && x_chance_in_y(7, 9))
     {
