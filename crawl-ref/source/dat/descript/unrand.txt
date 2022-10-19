@@ -449,6 +449,13 @@ necklace of Bloodlust
 A necklace made of bloodstained human and animal teeth, and something that
 appears to be a piece of spine.
 %%%%
+ring of Gozag's Touch
+
+An opulent ring that transforms defeated enemies into piles of gold.
+Commissioned by King Midas in pursuit of happiness and riches, this ring has
+brought great tragedy to those with too much hubris to remove it. Gozag takes
+all gold from the wearer as payment when the ring is removed.
+%%%%
 ring of the Hare
 
 An unadorned malachite ring, half of an ancient pair. Its wearer is

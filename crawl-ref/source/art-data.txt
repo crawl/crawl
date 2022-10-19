@@ -1712,6 +1712,18 @@ MP:      +5
 INSCRIP: Invo=14 Evo=0
 DBRAND:  It sets your invocations skill to 14 and your evocations skill to 0.
 
+ENUM:    GOLDTOUCH_RING
+NAME:    ring of Gozag's Touch
+INSCRIP: *GoldTouch
+OBJ:     OBJ_JEWELLERY/RING_PROTECTION
+BOOL:    fragile, special
+VALUE:   1
+COLOUR:  ETC_GOLD
+TILE:    urand_goldtouch
+DBRAND:  It turns defeated enemies into piles of gold.
++It pulls gold towards the wearer
++It leaves the wearer broke with 0 gold when removed
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

@@ -1621,7 +1621,8 @@ bool mons_will_goldify(const monster &mons)
     // Under Gozag, monsters turn into gold on death.
     // Temporary Tukima's Dance weapons stay as weapons (no free gold),
     // permanent dancing weapons turn to gold like other monsters.
-    return have_passive(passive_t::goldify_corpses) && mons_gives_xp(mons, you);
+    return (have_passive(passive_t::goldify_corpses) || (player_equip_unrand(UNRAND_GOLDTOUCH_RING)
+)) && mons_gives_xp(mons, you);
 }
 
 /**
@@ -1898,7 +1899,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             // Under Gozag, permanent dancing weapons get turned to gold.
             // Exception: Tukima'd weapons; we don't want to trickily punish Gozagites
             // for using Tukima's Dance.
-            if (have_passive(passive_t::goldify_corpses)
+            if ((have_passive(passive_t::goldify_corpses) ||  player_equip_unrand(UNRAND_GOLDTOUCH_RING))
                 && !mons.props.exists(TUKIMA_WEAPON))
             {
                 if (mons_will_goldify(mons))

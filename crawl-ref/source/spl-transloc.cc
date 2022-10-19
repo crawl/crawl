@@ -1708,6 +1708,123 @@ void attract_monsters(int delay)
     }
 }
 
+
+static void _get_gold_in_los(vector<stack_iterator> *gold_piles, vector<coord_def> *gold_piles_to_move_not_split)
+{
+    for (radius_iterator rad(you.pos(), LOS_NO_TRANS, true); rad;
+         ++rad)
+    {
+        for (stack_iterator stack_it(*rad); stack_it; ++stack_it)
+        {
+            if (gold_piles && stack_it->is_type(OBJ_GOLD, 0)){
+                // Store gold piles
+                gold_piles->push_back(stack_it);
+
+                // Store coordinates that gold piles will move into
+                ray_def ray;
+                if (find_ray(stack_it->pos, you.pos(), ray, opc_solid))
+                {
+                    ray.advance();
+                    if (ray.pos() != you.pos())
+                        gold_piles_to_move_not_split->push_back(ray.pos());
+                }
+
+            }
+        }
+    }
+}
+
+/**
+  * Attempt to pull nearby gold into the player's inventory
+  * For each gold pile:
+  *     If another gold pile will move into this gold pile's location, just move this gold pile 1 square closer to the player
+  *     Else split this gold pile into 2 piles, moving the larger of the two piles 1 square closer the player
+ */
+int previous_monster_xp;
+void attract_gold()
+{
+    int mon_kill_exp = you.global_info.mon_kill_exp;
+    short gold_picked_up = 0;
+    int attract_speed = 2;
+    // skip attract_gold() if just killed something so we can see the full dead corpse gold pile
+    if (mon_kill_exp == previous_monster_xp)
+    {
+        for (int loop = 0; loop < attract_speed; loop++)
+        {
+            vector<coord_def> gold_piles_to_move_not_split;
+            vector<stack_iterator> gold_piles;
+            _get_gold_in_los(&gold_piles, &gold_piles_to_move_not_split);
+
+
+            for (const stack_iterator &gold : gold_piles)
+            {
+                ray_def ray;
+                if (!find_ray(gold->pos, you.pos(), ray, opc_solid))
+                    continue;
+
+                coord_def keep_gold_position;
+                keep_gold_position.x = gold->pos.x;
+                keep_gold_position.y = gold->pos.y;
+
+                // Determine if there will be gold in this pile from another pile's move/split.
+                bool split_gold = true;
+                for (const coord_def &gold_location : gold_piles_to_move_not_split)
+                {
+                    if (gold_location.x == gold->pos.x && gold_location.y == gold->pos.y){
+                        split_gold = false;
+                        break;
+                    }
+                }
+
+                // Assign keep and move quantities
+                short keep_quantity = 0;
+                short move_quantity = gold->quantity;
+                if (split_gold)
+                {
+                    keep_quantity = (gold->quantity)/2;
+                    move_quantity = (gold->quantity - keep_quantity);
+                }
+
+                // Move gold respectively
+                const int orig_dist = grid_distance(you.pos(), gold->pos);
+                if (orig_dist > 0){
+                    ray.advance();
+
+                    // Move the gold pile towards the player 1 space
+                    move_top_item(gold->pos, ray.pos());
+                    gold->quantity = move_quantity;
+
+                    // This is the gold pile portion that stays
+                    copy_item_to_grid(env.item[gold->index()], keep_gold_position, keep_quantity);
+
+                }
+
+                // Pick up gold if the player is standing on it
+                if (ray.pos() == you.pos() && move_quantity > 0){
+                    get_gold(env.item[gold->index()], gold->quantity, true);
+                    gold_picked_up+= gold->quantity;
+                    item_was_destroyed(*gold);
+                    destroy_item(gold->index());
+                    continue;
+                }
+            }
+        }
+
+        // Handle case when gold was already at the player location
+        const item_def *top_item = top_item_at(you.pos());
+        if (top_item && top_item->is_type(OBJ_GOLD, 0))
+        {
+            get_gold(env.item[top_item->index()], top_item->quantity, true);
+            gold_picked_up+= top_item->quantity;
+            item_was_destroyed(*top_item);
+            destroy_item(top_item->index());
+        }
+
+    }
+    previous_monster_xp = you.global_info.mon_kill_exp;
+}
+
+
 vector<monster *> find_chaos_targets(bool just_check)
 {
     vector<monster *> targets;

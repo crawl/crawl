@@ -51,6 +51,7 @@
 #include "spl-miscast.h"   // For Spellbinder and plutonium sword miscasts
 #include "spl-monench.h"   // For Zhor's aura
 #include "spl-summoning.h" // For Zonguldrok animating dead
+#include "spl-transloc.h"  // For Ring of Gozag's Touch gold attraction
 #include "tag-version.h"
 #include "terrain.h"       // For storm bow
 #include "unwind.h"        // For autumn katana
@@ -1572,6 +1573,26 @@ static void _RCLOUDS_world_reacts(item_def */*item*/)
             place_cloud(CLOUD_STORM, *ri, random_range(4, 8), &you);
         }
     }
+}
+
+////////////////////////////////////////////////////
+
+static void _GOLDTOUCH_RING_equip(item_def * /*item*/, bool *show_msgs,
+                                      bool /*unmeld*/)
+{
+    _equip_mpr(show_msgs, "You can transform defeated enemies into gold.");
+    mprf("Gozag will want repayment for this loan.");
+}
+
+static void _GOLDTOUCH_RING_unequip(item_def * /* item */, bool * show_msgs)
+{
+    mprf("Gozag takes all your gold as repayment.");
+    _equip_mpr(show_msgs, "You feel poor.");
+    you.gold = 0;
+}
+static void _GOLDTOUCH_RING_world_reacts(item_def */*item*/)
+{
+    attract_gold();
 }
 
 ////////////////////////////////////////////////////
