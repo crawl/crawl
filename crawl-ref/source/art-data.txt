@@ -1721,8 +1721,8 @@ VALUE:   1
 COLOUR:  ETC_GOLD
 TILE:    urand_goldtouch
 DBRAND:  It turns defeated enemies into piles of gold.
-+It pulls gold towards the wearer
-+It leaves the wearer broke with 0 gold when removed
++It pulls gold towards the wearer.
++It leaves the wearer broke with 0 gold when removed.
 
 # This entry must always be last.
 ENUM:   DUMMY2
