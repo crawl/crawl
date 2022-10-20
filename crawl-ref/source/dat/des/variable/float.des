@@ -1538,6 +1538,135 @@ pp..F..pp   qq..H..qq   pp..F..pp
   ppPpp       qqQqq       ppPpp
 ENDMAP
 
+NAME:    nicolae_moon_pools
+TAGS:    transparent no_pool_fixup
+DEPTH:   D:8-, Depths
+ORIENT:  float
+KFEAT:   az`- = c
+SHUFFLE: `-, a`/z-
+COLOUR:  a` = white, z- = magenta
+TILE:    a` = dngn_stone_wall_white
+TILE:    z- = dngn_stone_dark
+CLEAR:   _
+MAP
+                   ........
+                   .wwwwww.
+                   .wwa`ww.
+                   .waaa`w.
+                   .waaa`w.
+     ........      .wwa`ww.      ........
+     .wwwwww.      .wwwwww.      .wwwwww.
+     .wwazww.      ........      .ww-aww.
+     .waa`zw.                    .w-aaaw.
+     .waa`zw.                    .w-aaaw.
+     .wwazww.                    .ww-aww.
+     .wwwwww.                    .wwwwww.
+     ........                    ........
+_
+_
+_
+_
+_
+_
+........                              ........
+.wwwwww.                              .wwwwww.
+.wwazww.                              .wwzaww.
+.wa`zzw.                              .wz-aaw.
+.wa`zzw.                              .wz-aaw.
+.wwazww.                              .wwzaww.
+.wwwwww.                              .wwwwww.
+........                              ........
+_
+_
+_
+_
+_
+_
+     ........                    ........
+     .wwwwww.                    .wwwwww.
+     .ww`zww.                    .wwzaww.
+     .w`zzzw.                    .wzz-aw.
+     .w`zzzw.                    .wzz-aw.
+     .ww`zww.      ........      .wwzaww.
+     .wwwwww.      .wwwwww.      .wwwwww.
+     ........      .wwz-ww.      ........
+                   .wzzz-w.
+                   .wzzz-w.
+                   .wwz-ww.
+                   .wwwwww.
+                   ........
+ENDMAP
+
+https://www.youtube.com/watch?v=JbfhzlMk2eY
+NAME:     nicolae_hitomezashi
+TAGS:     transparent decor
+DEPTH:    D:8-, Depths
+ORIENT:   float
+SUBVAULT: D : nico_hito
+SUBVAULT: E : nico_hito
+SUBVAULT: F : nico_hito
+SUBVAULT: H : nico_hito
+SUBVAULT: J : nico_hito
+SUBVAULT: K : nico_hito
+SUBVAULT: L : nico_hito
+SUBVAULT: M : nico_hito
+SUBVAULT: N : nico_hito
+SUBVAULT: O : nico_hito
+SUBVAULT: P : nico_hito
+SUBVAULT: Q : nico_hito
+SUBVAULT: R : nico_hito
+SUBVAULT: S : nico_hito
+SUBVAULT: Z : nico_hito
+SUBVAULT: a : nico_hito
+SUBVAULT: p : nico_hito
+SUBVAULT: q : nico_hito
+MAP
+ DDD DDD DDD DDD DDD DDD DDD DDD
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ EEE.EEE.EEE.EEE.EEE.EEE.EEE.EEE
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ FFF.FFF.FFF.FFF.FFF.FFF.FFF.FFF
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ HHH.HHH.HHH.HHH.HHH.HHH.HHH.HHH
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ JJJ.JJJ.JJJ.JJJ.JJJ.JJJ.JJJ.JJJ
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ KKK.KKK.KKK.KKK.KKK.KKK.KKK.KKK
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ LLL.LLL.LLL.LLL.LLL.LLL.LLL.LLL
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ MMM.MMM.MMM.MMM.MMM.MMM.MMM.MMM
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+O...P...Q...R...S...Z...a...p...q
+ NNN NNN NNN NNN NNN NNN NNN NNN
+ENDMAP
+
+# The row subvaults at the edges of the main vault will each have one @ glyph,
+# so that each side will have one guaranteed connection. @ glyphs not at the
+# edge of the main subvault appear to be ignored, which conveniently means we
+# don't need separate subvaults for edge rows and interior rows.
+NAME:   nicolae_hito_row
+TAGS:   unrand allow_dup nico_hito
+NSUBST: @ = @ / .
+MAP
+ccc .@. ccc .@. ccc .@. ccc .@.
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
