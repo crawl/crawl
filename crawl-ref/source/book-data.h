@@ -100,7 +100,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Lightning
     SPELL_DISCHARGE,
     SPELL_ELECTRIC_CHARGE,
-    SPELL_LIGHTNING_BOLT,
+    SPELL_PLASMA_BEAM,
     SPELL_ARCJOLT,
 },
 
@@ -409,7 +409,7 @@ static const vector<spell_type> spellbook_templates[] =
 { // Book of Storms
     SPELL_AIRSTRIKE,
     SPELL_SUMMON_LIGHTNING_SPIRE,
-    SPELL_LIGHTNING_BOLT,
+    SPELL_PLASMA_BEAM,
 },
 
 { // Book of Weapons

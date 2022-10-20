@@ -65,6 +65,9 @@ int discharge_max_damage(int pow);
 spret cast_arcjolt(int pow, const actor &agent, bool fail);
 dice_def arcjolt_damage(int pow, bool random);
 vector<coord_def> arcjolt_targets(const actor &agent, int pow, bool actual);
+spret cast_plasma_beam(int pow, const actor &agent, bool fail);
+dice_def plasma_beam_damage(int pow, bool random);
+vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual, bool all);
 dice_def base_fragmentation_damage(int pow, bool random);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,
