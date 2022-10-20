@@ -118,7 +118,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_LIGHTNING_BOLT, "Lightning Bolt",
     spschool::conjuration | spschool::air,
-    spflag::dir_or_target | spflag::needs_tracer,
+    spflag::dir_or_target | spflag::needs_tracer | spflag::monster,
     5,
     200,
     4, 11, // capped at LOS, yet this 11 matters since range increases linearly
@@ -135,6 +135,17 @@ static const struct spell_desc spelldata[] =
     1, 1,
     10,
     TILEG_ARCJOLT,
+},
+
+{
+    SPELL_PLASMA_BEAM, "Plasma Beam",
+    spschool::fire | spschool::air,
+    spflag::noisy,
+    5,
+    200,
+    3, 10, // capped at LOS
+    25,
+    TILEG_LIGHTNING_BOLT,
 },
 
 {

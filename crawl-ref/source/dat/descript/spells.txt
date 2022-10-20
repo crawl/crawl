@@ -1116,6 +1116,12 @@ Summons some of the greater threats from one of the Pits of Slime, the Elven
 Halls, the Vaults, the Crypt, the Tomb of Ancients, or the Realm of Zot; the
 specific branch varies with each cast of the spell.
 %%%%
+Plasma Beam spell
+
+Fires a penetrating beam of plasma at one of the caster's most distant foes.
+The ionized beam bypasses half of defenders' armour, and a second beam of fire
+follows in its wake.
+%%%%
 Poison Arrow spell
 
 Fires a magical arrow coated with the most vile and noxious toxin. Even those

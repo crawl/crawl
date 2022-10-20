@@ -1265,6 +1265,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
     case SPELL_ARCJOLT:
         return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, false));
+    case SPELL_PLASMA_BEAM:
+        return make_unique<targeter_multiposition>(&you, plasma_beam_targets(you, pow, false));
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -2230,6 +2232,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_ARCJOLT:
         return cast_arcjolt(powc, you, fail);
 
+    case SPELL_PLASMA_BEAM:
+        return cast_plasma_beam(powc, you, fail);
+
     case SPELL_CHAIN_LIGHTNING:
         return cast_chain_lightning(powc, you, fail);
 
@@ -2824,6 +2829,7 @@ string spell_damage_string(spell_type spell, bool evoked, int pow)
     switch (spell)
     {
         case SPELL_FOXFIRE:
+        case SPELL_PLASMA_BEAM:
             mult = "2x";
             break;
         case SPELL_CONJURE_BALL_LIGHTNING:

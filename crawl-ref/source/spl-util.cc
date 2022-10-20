@@ -492,6 +492,7 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_SHATTER
         || spell == SPELL_DISCHARGE
         || spell == SPELL_ARCJOLT
+        || spell == SPELL_PLASMA_BEAM
         || spell == SPELL_CHAIN_LIGHTNING
         || spell == SPELL_DRAIN_LIFE
         || spell == SPELL_CHAIN_OF_CHAOS
