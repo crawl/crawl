@@ -2720,6 +2720,8 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
                 print_wounds(*mon);
         }
     }
+    if (Options.use_animations & UA_BEAM)
+        animation_delay(100, Options.reduce_animations);
 
     return spret::success;
 }
