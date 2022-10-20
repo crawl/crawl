@@ -2806,6 +2806,44 @@ __xxx''..xx_
     xx@@xx
 ENDMAP
 
+# Dead by dawn!
+NAME:   pdpol_lair_cabin_in_the_woods
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  Lair
+# Trying to get some good horror move trope representation
+KMONS: M = Rupert / reaper / freezing wraith / phantasmal warrior / tentacled starspawn
+# The last survivor
+KMONS: h = human
+SHUFFLE: M/h/?
+NSUBST:  M = M / | / S / `, h = h / *%% / S / `
+NSUBST: T = 2= 0 9:5 / *= .:3 t
+NSUBST: a = a / c, b = b / c, d = d / c
+NSUBST: e = e / c, f = f / c, g = g / c
+NSUBST: abd = 2:+ / c, efg = 2:+ / c
+SUBST:  " = `:4 ., `? = `:3 ., _ = t_
+KPROP:  ` = bloody
+: dgn.delayed_decay(_G, 'S', "human skeleton")
+CLEAR:  _
+MAP
+    ______________________
+   ________________________
+   @ttttttttttttttttttttt__
+ @..ttttTttttttttttttttttt__
+ tTt.tt..ccccccccccccccctt__
+ttt.tTt..c?????d``ehhhhctt__
+ttTt.Tt..c?????d``ehhhhctt__
+ttt.ttt..caaaaac``ehhhhctt__
+ttTt..t."n`````b``cffffctt__
+tTt..T'T"=`````b``gMMMMctt__
+tt.ttt.."n`````b``gMMMMctt__
+ttT.tt...c`````b``gMMMMctt__
+ tTt.tt..ccccccccccccccctt__
+ @..ttttTttttttttttttttttt__
+   @ttttttttttttttttttttt__
+   ________________________
+    ______________________
+ENDMAP
+
 ###############################################################################
 # Lair endings - split in two types.
 ###############################################################################
