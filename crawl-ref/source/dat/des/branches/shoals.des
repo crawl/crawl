@@ -1374,6 +1374,35 @@ xxx...IHGFWYWWWYWFGHI..xxx
          xxxx@xxxx
 ENDMAP
 
+NAME:   roadster_trireme
+TAGS:   no_trap_gen no_monster_gen
+DEPTH:  Shoals, !Shoals:$
+MONS:   human
+MONS:   death_knight / wizard / vault_guard
+MONS:   Rupert / Donald
+MAP
+  ..G..
+ ..xxx..
+..xxCxx..
+.xx|3|xx.
+xx2...2xx
+xxx...xxx
+x11...11x
+xxx...xxx
+x11...11x
+xxx...xxx
+x11...11x
+xxx...xxx
+x11...11x
+xxx...xxx
+x11...11x
+xxx...xxx
+x11...11x
+xxx...xxx
+..xx+xx..
+@@@@@@@@@
+ENDMAP
+
 NAME:   argonaut_golden_fleece
 TAGS:   no_pool_fixup no_trap_gen no_monster_gen no_item_gen
 DEPTH:  Shoals, !Shoals:$
