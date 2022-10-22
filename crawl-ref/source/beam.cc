@@ -2167,7 +2167,8 @@ void bolt_parent_init(const bolt &parent, bolt &child)
     child.source_name    = parent.source_name;
     child.attitude       = parent.attitude;
 
-    child.pierce         = parent.pierce ;
+    child.loudness       = parent.loudness;
+    child.pierce         = parent.pierce;
     child.aimed_at_spot  = parent.aimed_at_spot;
     child.is_explosion   = parent.is_explosion;
     child.ex_size        = parent.ex_size;
@@ -3861,6 +3862,12 @@ void bolt::affect_player()
 
     if (misses_player())
         return;
+
+    if (!is_explosion && !noise_generated)
+    {
+        heard = noisy(loudness, pos(), source_id) || heard;
+        noise_generated = true;
+    }
 
     const bool engulfs = is_explosion || is_big_cloud();
 
