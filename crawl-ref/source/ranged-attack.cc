@@ -237,11 +237,11 @@ static bool _jelly_eat_missile(const item_def& projectile, int damage_done)
         && you.hp < you.hp_max
         && !you.duration[DUR_DEATHS_DOOR]
         && item_is_jelly_edible(projectile)
-        && coinflip())
+        && !one_chance_in(3))
     {
         mprf("Your attached jelly eats %s!",
              projectile.name(DESC_THE).c_str());
-        inc_hp(random2(damage_done / 2));
+        inc_hp(1 + random2(damage_done));
         canned_msg(MSG_GAIN_HEALTH);
         return true;
     }
