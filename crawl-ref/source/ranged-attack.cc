@@ -231,6 +231,24 @@ bool ranged_attack::handle_phase_dodged()
     return true;
 }
 
+static bool _jelly_eat_missile(const item_def& projectile, int damage_done)
+{
+    if (you.has_mutation(MUT_JELLY_MISSILE)
+        && you.hp < you.hp_max
+        && !you.duration[DUR_DEATHS_DOOR]
+        && item_is_jelly_edible(projectile)
+        && coinflip())
+    {
+        mprf("Your attached jelly eats %s!",
+             projectile.name(DESC_THE).c_str());
+        inc_hp(random2(damage_done / 2));
+        canned_msg(MSG_GAIN_HEALTH);
+        return true;
+    }
+
+    return false;
+}
+
 bool ranged_attack::handle_phase_hit()
 {
     // XXX: this kind of hijacks the shield block check
@@ -259,6 +277,15 @@ bool ranged_attack::handle_phase_hit()
         {
             if (!handle_phase_damaged())
                 return false;
+            // Jiyva mutation - piercing projectiles won't keep going if they
+            // get eaten.
+            if (attacker->is_monster()
+                && defender->is_player()
+                && !you.pending_revival
+                && _jelly_eat_missile(*projectile, damage_done))
+            {
+                range_used = BEAM_STOP;
+            }
         }
         else if (needs_message)
         {
