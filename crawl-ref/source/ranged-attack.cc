@@ -25,6 +25,7 @@
 #include "teleport.h"
 #include "throw.h"
 #include "traps.h"
+#include "xom.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
@@ -266,14 +267,18 @@ bool ranged_attack::handle_phase_hit()
         set_attack_verb(0);
         announce_hit();
         if (defender->is_player())
+        {
             player_caught_in_net();
+            if (attacker->is_monster())
+                xom_is_stimulated(50);
+        }
         else
             monster_caught_in_net(defender->as_monster());
     }
     else
     {
         damage_done = calc_damage();
-        if (damage_done > 0 || projectile->is_type(OBJ_MISSILES, MI_DART))
+        if (damage_done > 0)
         {
             if (!handle_phase_damaged())
                 return false;

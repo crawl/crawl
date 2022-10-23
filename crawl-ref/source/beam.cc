@@ -3888,10 +3888,9 @@ void bolt::affect_player()
 
     pre_res_dam = max(0, pre_res_dam);
 
-    // If the beam is an actual missile or of the MMISSILE type (Earth magic)
-    // we might bleed on the floor.
-    if (!engulfs
-        && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
+    // If the beam is of the MMISSILE type (Earth magic) we might bleed on the
+    // floor.
+    if (!engulfs && flavour == BEAM_MMISSILE)
     {
         // assumes DVORP_PIERCING, factor: 0.5
         int blood = min(you.hp, pre_res_dam / 2);
@@ -3948,28 +3947,6 @@ void bolt::affect_player()
 
     if (flavour == BEAM_UNRAVELLED_MAGIC)
         affect_player_enchantment();
-
-    // handling of missiles
-    if (item && item->base_type == OBJ_MISSILES)
-    {
-        if (item->sub_type == MI_THROWING_NET)
-        {
-            if (player_caught_in_net())
-            {
-                if (monster_by_mid(source_id))
-                    xom_is_stimulated(50);
-                was_affected = true;
-            }
-        }
-        else if (item->brand == SPMSL_CURARE)
-        {
-            if (x_chance_in_y(90 - 3 * you.armour_class(), 100))
-            {
-                curare_actor(agent(), (actor*) &you, 2, name, source_name);
-                was_affected = true;
-            }
-        }
-    }
 
     // Sticky flame.
     if (origin_spell == SPELL_STICKY_FLAME
@@ -4536,18 +4513,10 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // did no damage. Hostiles will still take umbrage.
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
     {
-        special_missile_type m_brand = SPMSL_FORBID_BRAND;
-        if (item && item->base_type == OBJ_MISSILES)
-            m_brand = get_ammo_brand(*item);
-
-        // Don't immediately turn insane monsters hostile.
-        if (m_brand != SPMSL_FRENZY)
-        {
-            behaviour_event(mon, ME_ANNOY, agent());
-            // behaviour_event can make a monster leave the level or vanish.
-            if (!mon->alive())
-                return;
-        }
+        behaviour_event(mon, ME_ANNOY, agent());
+        // behaviour_event can make a monster leave the level or vanish.
+        if (!mon->alive())
+            return;
     }
 
     if (YOU_KILL(thrower) && !mon->wont_attack() && !mons_is_firewood(*mon))
@@ -4559,13 +4528,6 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     {
         const int levels = min(4, 1 + random2(dmg) / 2);
         napalm_monster(mon, agent(), levels);
-    }
-
-    // Handle missile effects.
-    if (item && item->base_type == OBJ_MISSILES
-        && item->brand == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
-    {
-        curare_actor(agent(), mon, 2, name, source_name);
     }
 
     // purple draconian breath
@@ -5054,13 +5016,6 @@ void bolt::affect_monster(monster* mon)
     }
     else if (heard && !hit_noise_msg.empty())
         mprf(MSGCH_SOUND, "%s", hit_noise_msg.c_str());
-    // The player might hear something, if _they_ fired a missile
-    // (not magic beam).
-    else if (!silenced(you.pos()) && flavour == BEAM_MISSILE
-             && YOU_KILL(thrower))
-    {
-        mprf(MSGCH_SOUND, "The %s hits something.", name.c_str());
-    }
 
     // Spell vampirism
     if (agent() && agent()->is_player() && is_player_book_spell(origin_spell))
@@ -5072,11 +5027,9 @@ void bolt::affect_monster(monster* mon)
     // mons_adjust_flavoured may kill the monster directly.
     if (mon->alive())
     {
-        // If the beam is an actual missile or of the MMISSILE type
-        // (Earth magic) we might bleed on the floor.
-        if (!engulfs
-            && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE)
-            && !mon->is_summoned())
+        // If the beam is of the MMISSILE type (Earth magic) we might bleed on
+        // the floor.
+        if (!engulfs && flavour == BEAM_MMISSILE && !mon->is_summoned())
         {
             // Using raw_damage instead of the flavoured one!
             // assumes DVORP_PIERCING, factor: 0.5
