@@ -1689,9 +1689,9 @@ INSCRIP: steadfast,
 DBRAND:  It prevents involuntary movement, except for blinking,
  teleportation, or banishment.
 
-NAME:       lochaber axe
+NAME:       Lochaber axe
 OBJ:        OBJ_WEAPONS/WPN_BARDICHE
-TYPE:       lochaber axe
+TYPE:       Lochaber axe
 TILE:       urand_lochaber_axe
 TILE_EQ:    lochaber_axe
 COLOUR:     ETC_IRON
@@ -1700,7 +1700,7 @@ BASE_ACC:   -1
 BASE_DAM:   +1
 BASE_DELAY: +1
 BOOL:       drain
-INSCRIP:    reach-cleave, poleaxe
+INSCRIP:    reach-cleave, poleaxe,
 DBRAND:     It can be evoked to extend its reach, and strikes at all foes within reach, dealing less damage to those not targeted.
 +It uses either Axes or Polearms skill, whichever is higher.
 

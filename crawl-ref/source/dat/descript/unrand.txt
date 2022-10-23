@@ -744,7 +744,7 @@ mountain peak, as protection against the mountain's near-constant avalanches,
 rockslides, and snowstorms. No force short of translocations magic will budge
 the wearer from their position.
 %%%%
-lochaber axe
+Lochaber axe
 
 This brutal weapon, long thought lost to history, combines the extended reach
 of a polearm with the cleaving sharpness of an axe. Ghosts of ancient warriors
