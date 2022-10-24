@@ -95,6 +95,7 @@
             e.mons("titan / juggernaut / iron giant w:3")
             e.kfeat("A = granite_statue")
             e.kfeat("B = stone_arch")
+            e.subst("x = c")
         elseif set_weight == 2 then
             e.mons("deep elf zephyrmancer / deep elf knight / deep elf archer")
             e.mons("deep elf high priest / deep elf elementalist / " ..
@@ -117,13 +118,17 @@
             e.mons("lich / ancient lich / dread lich / royal mummy w:2")
             e.kfeat("A = granite_statue")
             e.subst("B = V")
+            e.tile("x = wall_catacombs")
         elseif set_weight == 5 and crawl.one_chance_in(4) then
-                e.mons("cherub / sun moth / apis")
-                e.mons("angel / daeva")
-                e.mons("ophan / pearl dragon w:5")
-                e.kfeat("A : fountain_sparkling")
-                e.kfeat("B = altar_zin / altar_the_shining_one / " ..
+            e.mons("cherub / sun moth / apis")
+            e.mons("angel / daeva")
+            e.mons("ophan / pearl dragon w:5")
+            e.kfeat("A : fountain_sparkling")
+            e.kfeat("B = altar_zin / altar_the_shining_one / " ..
                         " altar_elyvilon")
+            e.subst("x = c")
+            e.tile("c = wall_church")
+            e.ftile("c.+123AB = floor_limestone")
         elseif set_weight == 6 then
             e.mons("acid dragon / swamp dragon / fire dragon / ice dragon")
             e.mons("storm dragon / shadow dragon / bone dragon")
@@ -143,8 +148,8 @@
             e.mons("shock serpent / tengu conjurer / ironbound thunderhulk")
             e.mons("spark wasp / spriggan air mage / blizzard demon")
             e.mons("titan / spark wasp band / storm dragon")
-            e.kfeat("A = metal_wall")
-            e.kfeat("B = crystal_wall")
+            e.subst("A = v")
+            e.subst("B = b")
         elseif set_weight == 9 then
             e.mons("hell knight / hell hog / wizard / molten gargoyle")
             e.mons("fire giant / hell knight band / fire dragon / balrug / " ..
@@ -152,6 +157,9 @@
             e.mons("hellephant / brimstone fiend w:2")
             e.subst("A = ..l")
             e.subst("B = l")
+            e.tile("x = wall_pebble_red")
+            e.colour("x123.+ = red")
+            e.ftile("x123.+ = floor_volcanic")
         elseif set_weight == 10 then
             e.mons("spriggan rider")
             e.mons("spriggan air mage / spriggan berserker / spriggan defender")
@@ -160,12 +168,18 @@
             e.subst("3 = D3")
             e.subst("A = t")
             e.subst("B = tT")
+            e.subst("x:xxxxxxt")
+            e.ftile("xtT123D.+ = floor_grass")
+            e.colour("xtT123D.+ = green")
         elseif set_weight == 11 then
             e.mons("simulacrum / freezing wraith")
             e.mons("frost giant / ice dragon / blizzard demon / azure jelly")
             e.mons("walking frostbound tome / shard shrike / ice fiend")
             e.subst("A : ...W")
             e.subst("B = wT")
+            e.tile("x = wall_ice")
+            e.colour("x+.123 = white")
+            e.ftile("xT+.123 = floor_ice")
         elseif set_weight == 12 then
             e.mons("rakshasa / wizard / necromancer")
             e.mons("fenstrider witch / deep troll earth mage / sphinx w:5 / " ..
@@ -175,6 +189,8 @@
                    "ancient lich / dread lich / deep elf annihilator")
             e.subst("A = b")
             e.subst("B = b")
+            e.subst("x = c")
+            e.tile("c = wall_studio")
         elseif set_weight == 13 then
             e.mons("deep troll / deep troll earth mage / deep troll shaman")
             e.mons("iron troll / crystal guardian / war gargoyle")
@@ -182,6 +198,7 @@
                    "caustic shrike band / iron giant w:2")
             e.kfeat("A = iron_grate")
             e.kfeat("B = stone_arch")
+            e.subst("x:xc")
         else
             e.subst("3 = 8")
             e.subst("2 = 990")
@@ -1197,6 +1214,7 @@ SUBST:  D- = c, ' = +
 SUBVAULT: D : hex_subvault
 SUBST:  - = +, ': +++c
 :end
+SUBST:  c : cccccccccb
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccAAAccc.............cccBBBccccccccccccccccccccc
