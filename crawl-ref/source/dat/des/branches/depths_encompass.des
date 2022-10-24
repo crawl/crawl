@@ -1200,7 +1200,8 @@ ENDMAP
 NAME:   hellmonk_hyper_hexagons
 TAGS:   no_monster_gen no_item_gen
 ORIENT: encompass
-NSUBST: | = 4:| / 8:* / 4:$ / 32 = |*.. / .
+NSUBST: | = 4:| / 8:* / 4:H / 32 = |*.. / .
+KITEM:  H = any good_item
 SUBST: 9 = 8990....
 SUBVAULT: A : hex_subvault
 SUBVAULT: B : hex_subvault
