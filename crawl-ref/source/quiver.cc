@@ -2894,7 +2894,7 @@ namespace quiver
             else if (key == '&' && any_spells)
             {
                 const int skey = list_spells(false, false, false,
-                                                    "Select a spell to quiver");
+                                                    "quiver");
                 if (skey == 0)
                     return true;
                 if (isalpha(skey))

@@ -232,13 +232,13 @@ protected:
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
 int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
-                const string &title)
+                const string &action)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
 
     SpellMenu spell_menu;
-    string titlestring = make_stringf("%-25.25s", title.c_str());
+    string titlestring = make_stringf("%-25.25s", "Your spells");
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
@@ -254,7 +254,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE_REVERSE);
 
     string more_str = make_stringf("<lightgrey>Select a spell to %s</lightgrey>",
-        (viewing ? "describe" : "cast"));
+        (viewing ? "describe" : action.c_str()));
     string toggle_desc = menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE);
     if (toggle_with_I)
     {
