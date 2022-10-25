@@ -50,7 +50,9 @@ class NoCacheHandler(tornado.web.StaticFileHandler):
         self.set_header("Expires", "0")
 
 def err_exit(errmsg, exc_info=False):
-    logging.error(errmsg, exc_info=exc_info)
+    if config.get('logging_config').get('filename'):
+        # don't print duplicate messages on stdout
+        logging.error(errmsg, exc_info=exc_info)
     sys.exit(errmsg)
 
 def daemonize():
@@ -363,6 +365,7 @@ def reset_token_commands(args):
             err_exit("Error clearing password reset token for %s: %s" % (username, msg))
         else:
             print("Password reset token cleared for account '%s'." % username)
+            return True
     else:
         ok, msg = userdb.generate_forgot_password(username)
         if not ok:
@@ -372,6 +375,78 @@ def reset_token_commands(args):
                 logging.warning("No email set for account '%s', use caution!" % username)
             print("Setting a password reset token on account '%s'." % username)
             print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info[1], msg))
+            return True
+    return False
+
+
+def mode_to_flag(mode):
+    if mode == "admin":
+        return userdb.DGLACCT_ADMIN
+    elif mode == "ban":
+        return userdb.DGLACCT_LOGIN_LOCK
+    elif mode == "hold":
+        return userdb.DGLACCT_ACCOUNT_HOLD
+    elif mode == "wizard":
+        if not config.get('wizard_accounts'):
+            logging.warning("Wizard accounts not enabled on this server, do you want `admin`?")
+        return userdb.DGLACCT_WIZARD
+    elif mode == "bot":
+        if not config.get('bot_accounts'):
+            logging.warning("Bot accounts are not enabled on this server...")
+        return userdb.DGLACCT_BOT
+    return 0
+
+
+def show_flags(username):
+    r = userdb.get_user_info(username)
+    if not r:
+        err_exit("Unknown user '%s'!" % username)
+    # XX would be nice to normalize username
+    if not r[2]:
+        print("User '%s' (id %d) has no flags set." % (username, r[0]))
+    else:
+        print("Flags for '%s' (id %d): %s" % (username, r[0], userdb.flag_description(r[2])))
+    return True
+
+
+def flag_commands(args):
+    if args.show:
+        return show_flags(args.show)
+
+    # everything below here needs an explicit flag
+    if not args.flag:
+        print("Missing flag to query!", file=sys.stderr)
+        return False
+    flag = mode_to_flag(args.flag)
+    if not flag:
+        print("Unknown flag '%s'" % args.list, file=sys.stderr)
+        return False
+
+    if args.list:
+        l = userdb.get_users_by_flag(flag)
+        if not l:
+            print("No matching users.")
+        else:
+            print("Users with flag '%s': %s" %
+                (userdb.flag_description(flag), ", ".join([u[1] for u in l])))
+        return True
+    elif args.set:
+        r = userdb.set_flags(args.set, flag, mask=flag)
+        if r:
+            err_exit("Error when setting flag %s for '%s': %s" % (args.set, arg.flag, r))
+        else:
+            print("Flag set.")
+            show_flags(args.set)
+        return True
+    elif args.clear:
+        r = userdb.set_flags(args.clear, 0, mask=flag)
+        if r:
+            err_exit("Error when clearing flag %s for '%s': %s" % (args.clear, arg.flag, r))
+        else:
+            print("Flag cleared.")
+            show_flags(args.clear)
+        return True
+    return False
 
 
 def ban_commands(args):
@@ -381,7 +456,7 @@ def ban_commands(args):
         affected = [n[1] for n in all_users if not config.check_name(n[1])]
         if not affected:
             print("No affected users.")
-            return
+            return True
         if args.check_config_bans:
             print("%d existing user(s) have banned names:" % len(affected))
         else:
@@ -390,6 +465,7 @@ def ban_commands(args):
                 userdb.set_ban(n, True)
         if affected:
             print("    Affected users: %s" % ', '.join(affected))
+        return True
     elif args.list or args.list_holds:
         banned, held = userdb.get_bans()
         if args.list:
@@ -401,6 +477,7 @@ def ban_commands(args):
             print("Account holds: " + ", ".join(held))
         else:
             print("No account holds!")
+        return True
     elif args.clear_holds:
         banned, held = userdb.get_bans()
         if len(held):
@@ -408,7 +485,7 @@ def ban_commands(args):
             for u in held:
                 err = userdb.set_account_hold(u, False)
                 if err:
-                    print(err, file=sys.stderr)
+                    err_exit("Error when clearing hold for '%s': %s" % (u, err))
                 else:
                     cleared.append(u)
             if len(cleared):
@@ -417,29 +494,33 @@ def ban_commands(args):
                 print("No holds cleared.")
         else:
             print("No holds to clear.")
+        return True
     elif args.add:
         err = userdb.set_ban(args.add, True)
         if err:
-            print(err, file=sys.stderr)
+            err_exit("Error when trying to ban user '%s': %s" % (args.add, err))
         else:
             print("'%s' is now banned." % args.add)
+        return True
     elif args.hold:
         err = userdb.set_account_hold(args.hold, True)
         if err:
-            print(err, file=sys.stderr)
+            err_exit("Error when trying to set hold for user '%s': %s" % (args.hold, err))
         else:
             print("Account hold set for '%s'." % args.hold)
+        return True
     elif args.clear:
-        # XX is there any use for fine-grained clear commands?
         err1 = userdb.set_account_hold(args.clear, False)
         if err1:
             err2 = userdb.set_ban(args.clear, False)
             if err2:
-                print(err2, file=sys.stderr)
+                err_exit("Error when trying to clear hold for user '%s': %s" % (args.clear, err2))
             else:
                 print("'%s' is no longer banned." % args.clear)
         else:
             print("Account hold cleared for '%s'." % args.clear)
+        return True
+    return False
 
 
 def parse_args_util():
@@ -447,6 +528,7 @@ def parse_args_util():
         description='Dungeon Crawl webtiles utilities.',
         epilog='Command line options will override config settings.')
     parser.add_argument('--logfile',
+        default='-',
         help='A logfile to write to; use "-" for stdout (the default, overrides config).')
     subparsers = parser.add_subparsers(help='Mode', dest='mode')
     subparsers.required = True
@@ -473,24 +555,35 @@ def parse_args_util():
             help='List current account holds.')
     parser_ban.add_argument ('--clear-holds', action='store_true',
             help='Clear all current account holds')
+
+    parser_flag = subparsers.add_parser('flag',
+        help="Low level interface to query and set userdb flags.",
+        description="Low-level interface to query and set userdb flags. For managing bans/holds, the 'ban' command is recommended instead.")
+    parser_flag.add_argument('flag', type=str, nargs='?', default="", help='a flag to query with (ban, hold, admin, wizard, bot)')
+    parser_flag.add_argument('--list', action='store_true',
+        help='List any users with the indicated flag')
+    parser_flag.add_argument('--set', type=str, help='Set a flag on a specified user.')
+    parser_flag.add_argument('--clear', type=str, help='Clear a flag on a specified user.')
+    parser_flag.add_argument('--show', type=str, help='Show flags on a specified user (does not require [flag]).')
+
     result = parser.parse_args()
-    # XX is there a better way to do this
-    if result.mode == "password" and not result.reset and not result.clear_reset:
-        parser_pw.print_help()
-        sys.exit()
-    elif result.mode == "ban" and not result.add and not result.clear and not result.list and not result.hold and not result.clear_holds and not result.list_holds and not result.check_config_bans and not result.run_config_bans:
-        parser_ban.print_help()
-        sys.exit()
+    help_fun = parser.print_help
+    if result.mode == "password":
+        help_fun = parser_pw.print_help
+    elif result.mode == "ban":
+        help_fun = parser_ban.print_help
+    elif result.mode == "flag":
+        help_fun = parser_flag.print_help
 
     if not result.logfile:
         result.logfile = '-'
     result.daemon = False
     result.pidfile = False
-    return result
+    return result, help_fun
 
 
 def run_util():
-    args = parse_args_util()
+    args, help_fun = parse_args_util()
     if config.get('chroot'):
         os.chroot(config.get('chroot'))
 
@@ -502,9 +595,13 @@ def run_util():
     except:
         err_exit("Errors in config. Exiting.", exc_info=True)
 
-    # duplicate some minimal setup needed for this to work
-    config.get('logging_config').pop('filename', None)
-    args.logfile = "<stdout>"  # make the log message easier to read
+    # duplicate some minimal setup needed for this to work. Note that unlike
+    # the main server.py call, this arg parser sets '-' as the default for
+    # the log, overriding config.
+    if not args.logfile or args.logfile == "-":
+        config.get('logging_config').pop('filename', None)
+    else:
+        config.get('logging_config')['filename'] = args.logfile
 
     init_logging(config.get('logging_config'))
 
@@ -513,10 +610,18 @@ def run_util():
         userdb.upgrade_user_db()
     userdb.ensure_settings_db_exists()
 
+    mode_fun = None
+
     if args.mode == "password":
-        reset_token_commands(args)
+        mode_fun = reset_token_commands
     elif args.mode == "ban":
-        ban_commands(args)
+        mode_fun = ban_commands
+    elif args.mode == "flag":
+        mode_fun = flag_commands
+
+    if not mode_fun or not mode_fun(args):
+        help_fun()
+        sys.exit(1)
 
 
 # before running, this needs to have its config source set up. See

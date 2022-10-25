@@ -91,6 +91,30 @@ DGLACCT_EMAIL_LOCK = 8  # used by webtiles only for account holds
 
 # not used by dgamelaunch, used by webtiles
 DGLACCT_ACCOUNT_HOLD = 16
+DGLACCT_WIZARD = 32 # may not be in use
+DGLACCT_BOT = 64 # may not be in use
+
+
+def flag_description(flags):
+    s = []
+    if (flags & DGLACCT_ADMIN):
+        s.append("admin")
+    if (flags & DGLACCT_LOGIN_LOCK):
+        s.append("ban")
+    if (flags & DGLACCT_ACCOUNT_HOLD):
+        s.append("hold")
+    else:
+        # account is in a wierd state if it has these set...
+        if (flags & DGLACCT_PASSWD_LOCK):
+            s.append("passwd lock")
+        if (flags & DGLACCT_EMAIL_LOCK):
+            s.append("email lock")
+    if (flags & DGLACCT_WIZARD):
+        s.append("wizard")
+    if (flags & DGLACCT_BOT):
+        s.append("bot")
+    return "|".join(s)
+
 
 def dgl_is_admin(flags):  # type: (int) -> bool
     return bool(flags & DGLACCT_ADMIN)
@@ -375,6 +399,26 @@ def set_account_hold(username, hold=True):
     return None
 
 
+# lower level interface for setting arbitrary flag values
+def set_flags(username, flags, mask=~0):
+    with crawl_db(config.get('password_db')) as db:
+        query = """
+            SELECT id, flags
+            FROM dglusers
+            WHERE username=?
+            COLLATE NOCASE
+        """
+        db.c.execute(query, (username,))
+        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
+        if not result:
+            return "Invalid username!"
+        new_flags = (result[1] & ~mask) | (flags & mask)
+        db.c.execute("UPDATE dglusers SET flags=? WHERE id=?",
+                    (new_flags, result[0]))
+        db.conn.commit()
+    return None
+
+
 # try to avoid using this -- db on long-running servers can be extremely
 # large...
 def get_all_users():
@@ -389,7 +433,7 @@ def get_all_users():
         return db.c.fetchall()
 
 
-def get_bans():
+def get_users_by_flag(flag):
     with crawl_db(config.get('password_db')) as db:
         query = """
             SELECT id, username, flags
@@ -397,11 +441,15 @@ def get_bans():
             WHERE (flags & ?) <> 0
             COLLATE NOCASE
         """
-        db.c.execute(query, (DGLACCT_LOGIN_LOCK,))
-        result = db.c.fetchall()
-        bans = [x[1] for x in result if dgl_is_banned(x[2])]
-        holds = [x[1] for x in result if dgl_account_hold(x[2])]
-        return (bans, holds)
+        db.c.execute(query, (flag,))
+        return db.c.fetchall()
+
+
+def get_bans():
+    result = get_users_by_flag(DGLACCT_LOGIN_LOCK)
+    bans = [x[1] for x in result if dgl_is_banned(x[2])]
+    holds = [x[1] for x in result if dgl_account_hold(x[2])]
+    return (bans, holds)
 
 
 def find_recovery_token(token):

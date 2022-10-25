@@ -174,6 +174,8 @@ defaults = {
     'games': collections.OrderedDict([]),
     'use_game_yaml': None, # default: load games.d if games is empty
     'banned': [],
+    'bot_accounts': False,
+    'wizard_accounts': False,
 }
 
 def get(key, default=None):
