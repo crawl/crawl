@@ -349,13 +349,10 @@ bool melee_attack::handle_phase_dodged()
         if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
             do_starlight();
 
-        if (defender->is_player())
-        {
-            maybe_riposte();
-            // Retaliations can kill!
-            if (!attacker->alive())
-                return false;
-        }
+        maybe_riposte();
+        // Retaliations can kill!
+        if (!attacker->alive())
+            return false;
     }
 
     return true;
@@ -363,9 +360,13 @@ bool melee_attack::handle_phase_dodged()
 
 void melee_attack::maybe_riposte()
 {
-    const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
-        && (!defender->weapon()
-            || is_melee_weapon(*defender->weapon()));
+    // only riposte via fencer's gloves, which (I take it from this code)
+    // monsters can't use
+    const bool using_fencers =
+                defender->is_player()
+                    && player_equip_unrand(UNRAND_FENCERS)
+                    && (!defender->weapon()
+                        || is_melee_weapon(*defender->weapon()));
     if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
         riposte();
 }
@@ -3317,11 +3318,8 @@ void melee_attack::do_starlight()
 
 
 /**
- * Launch a long blade counterattack against the attacker. No sanity checks;
+ * Launch a counterattack against the attacker. No sanity checks;
  * caller beware!
- *
- * XXX: might be wrong for deep elf blademasters with a long blade in only
- * one hand
  */
 void melee_attack::riposte()
 {
