@@ -67,8 +67,9 @@ struct spell_desc
     int max_range;
 
     // Some spells have a noise at their place of effect, in addition
-    // to at the place of casting. effect_noise handles that, and is also
-    // used even if the spell is not casted directly (by Xom, for instance).
+    // to their casting noise.
+    // For zap-based spells, effect_noise is used automatically (if it exists)
+    // on hit. For all other spells, it needs to be called manually.
     int effect_noise;
 
     /// Icon for the spell in e.g. spellbooks, casting menus, etc.
