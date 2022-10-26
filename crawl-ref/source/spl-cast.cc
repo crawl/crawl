@@ -874,7 +874,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
                                        "? or * to list all spells.");
                 }
 
-                keyin = get_ch();
+                keyin = numpad_to_regular(get_ch());
             }
 
             if (keyin == '?' || keyin == '*' || Options.spell_menu)
