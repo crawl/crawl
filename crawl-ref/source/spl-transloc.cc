@@ -430,18 +430,14 @@ spret frog_hop(bool fail, dist *target)
     return spret::success; // TODO
 }
 
-static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
-                                targeter *hitfunc, dist *target)
+bool find_charge_target(vector<coord_def> &target_path, int max_range,
+                                targeter *hitfunc, dist &target)
 {
     // Check for unholy weapons, breadswinging, etc
     if (!wielded_weapon_check(you.weapon(), "charge"))
         return false;
 
-    const bool interactive = target && target->interactive;
-    dist targ_local;
-    if (!target)
-        target = &targ_local;
-
+    // TODO: move into generic spell targeting somehow?
     // TODO: can't this all be done within a single direction call?
     while (true)
     {
@@ -452,7 +448,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         args.prefer_farthest = true;
         args.top_prompt = "Charge where?";
         args.hitfunc = hitfunc;
-        direction(*target, args);
+        direction(target, args);
 
         // TODO: deduplicate with _find_cblink_target
         if (crawl_state.seen_hups)
@@ -461,61 +457,61 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
             return false;
         }
 
-        if (!target->isValid || target->target == you.pos())
+        if (!target.isValid || target.target == you.pos())
         {
             canned_msg(MSG_OK);
             return false;
         }
 
-        const monster* beholder = you.get_beholder(target->target);
+        const monster* beholder = you.get_beholder(target.target);
         if (beholder)
         {
             mprf("You cannot charge away from %s!",
                 beholder->name(DESC_THE, true).c_str());
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
         }
 
-        const monster* fearmonger = you.get_fearmonger(target->target);
+        const monster* fearmonger = you.get_fearmonger(target.target);
         if (fearmonger)
         {
             mprf("You cannot charge closer to %s!",
                 fearmonger->name(DESC_THE, true).c_str());
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
         }
 
-        if (!you.see_cell_no_trans(target->target))
+        if (!you.see_cell_no_trans(target.target))
         {
             clear_messages();
-            if (you.trans_wall_blocking(target->target))
+            if (you.trans_wall_blocking(target.target))
                 canned_msg(MSG_SOMETHING_IN_WAY);
             else
                 canned_msg(MSG_CANNOT_SEE);
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
         }
 
-        if (grid_distance(you.pos(), target->target) > max_range)
+        if (grid_distance(you.pos(), target.target) > max_range)
         {
             mpr("That's out of range!"); // ! targeting
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
         }
 
         ray_def ray;
-        if (!find_ray(you.pos(), target->target, ray, opc_solid))
+        if (!find_ray(you.pos(), target.target, ray, opc_solid))
         {
             mpr("You can't charge through that!");
-            if (interactive)
+            if (target.interactive)
                 continue;
             else
                 return false;
@@ -529,7 +525,7 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         while (ray.advance())
         {
             target_path.push_back(ray.pos());
-            if (ray.pos() == target->target)
+            if (ray.pos() == target.target)
                 break;
         }
 
@@ -547,6 +543,17 @@ static bool _find_charge_target(vector<coord_def> &target_path, int max_range,
         {
             mprf("You're already next to %s!",
                  target_mons->name(DESC_THE).c_str());
+            return false;
+        }
+
+        // adjacency check should ensure this...
+        ASSERT(target_path.size() >= 2);
+        const coord_def dest_pos = target_path.at(target_path.size() - 2);
+        monster* dest_mon = monster_at(dest_pos);
+        const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
+        if (invalid_dest && you.can_see(*dest_mon))
+        {
+            mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
             return false;
         }
 
@@ -626,28 +633,31 @@ static void _displace_charge_blocker(monster &mon)
  *                      therefore fail after selecting a target)
  * @return              Whether the charge succeeded, aborted, or was miscast.
  */
-spret electric_charge(int powc, bool fail)
+spret electric_charge(int powc, bool fail, const coord_def &target)
 {
     const coord_def initial_pos = you.pos();
 
     vector<coord_def> target_path;
     const int range = spell_range(SPELL_ELECTRIC_CHARGE, powc);
     targeter_charge tgt(&you, range);
-    dist target;
-    if (!_find_charge_target(target_path, range, &tgt, &target))
+    dist targ;
+    ASSERT(in_bounds(target));
+    targ.target = target;
+    targ.interactive = false; // target should already be provided
+
+    // re-run target finding non-interactively in order to get the full path
+    // again (ugh)
+    if (!find_charge_target(target_path, range, &tgt, targ))
         return spret::abort;
 
     const coord_def dest_pos = target_path.at(target_path.size() - 2);
     monster* dest_mon = monster_at(dest_pos);
-    const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
-    if (invalid_dest && you.can_see(*dest_mon))
-    {
-        mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());
-        return spret::abort;
-    }
 
     fail_check();
 
+    // at this point it should be an invisible monster; visible monsters get
+    // filtered at the targeting stage
+    const bool invalid_dest = dest_mon && mons_class_is_stationary(dest_mon->type);
     if (invalid_dest)
     {
         mprf("%s is immovably fixed there.", dest_mon->name(DESC_THE).c_str());

@@ -146,12 +146,12 @@ static bool _ok_charge_target(coord_def a)
 }
 
 targeter_charge::targeter_charge(const actor *act, int r)
+    : targeter(), range(r)
 {
     ASSERT(act);
     ASSERT(r > 0);
     agent = act;
-    range = r;
-    obeys_mesmerise = true;
+    obeys_mesmerise = true; // override superclass constructor
 }
 
 bool targeter_charge::valid_aim(coord_def a)

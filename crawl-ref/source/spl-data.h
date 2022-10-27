@@ -152,7 +152,7 @@ static const struct spell_desc spelldata[] =
 {
     SPELL_ELECTRIC_CHARGE, "Vhi's Electric Charge",
     spschool::air | spschool::translocation,
-    spflag::noisy, // hack - should have spflag::dir_or_target | spflag::needs_tracer
+    spflag::noisy | spflag::dir_or_target, // hack - should have spflag::needs_tracer
                    // and maybe spflag::hasty?
     3,
     50,

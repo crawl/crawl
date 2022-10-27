@@ -1929,10 +1929,21 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
            && (target->fire_context // force static targeters when called in
                                     // "fire" mode
                || Options.always_use_static_spell_targeters
-               || Options.force_spell_targeter.count(spell) > 0)
-           && spell != SPELL_ELECTRIC_CHARGE; // hack
+               || Options.force_spell_targeter.count(spell) > 0);
 
-    if (use_targeter)
+    if (use_targeter && spell == SPELL_ELECTRIC_CHARGE)
+    {
+        // would be nice to do away with this special casing, can this be
+        // rolled into more generic code?
+        vector<coord_def> target_path; // unused here
+        if (!find_charge_target(target_path, range, hitfunc.get(), *target))
+            return spret::abort;
+        ASSERT(target->isValid);
+        // code dup with spell_direction...
+        beam.set_target(*target);
+        beam.source = you.pos();
+    }
+    else if (use_targeter)
     {
         const targ_mode_type targ =
               testbits(flags, spflag::neutral)    ? TARG_ANY :
@@ -2486,7 +2497,7 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
         return blinkbolt(powc, beam, fail);
 
     case SPELL_ELECTRIC_CHARGE:
-        return electric_charge(powc, fail); // hack - should take beam
+        return electric_charge(powc, fail, beam.target); // hack - should take beam?
 
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);
