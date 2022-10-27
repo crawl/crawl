@@ -2720,7 +2720,7 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
                 print_wounds(*mon);
         }
 
-        noisy(spell_effect_noise(SPELL_ARCJOLT), act->pos());
+        noisy(spell_effect_noise(SPELL_ARCJOLT), t);
     }
     if (Options.use_animations & UA_BEAM)
         animation_delay(100, Options.reduce_animations);
