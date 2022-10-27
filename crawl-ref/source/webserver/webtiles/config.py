@@ -153,7 +153,7 @@ def dgl_format_str(s, username, game_params):  # type: (str, str, Any) -> str
     version = game_params.get('version')
     def vsub(s, code, replace):
         if s.find(code) >= 0:
-            if version is None
+            if version is None:
                 raise ValueError("Version used in config templating but not set in config: %s" % s)
             s = s.replace(code, replace)
         return s
