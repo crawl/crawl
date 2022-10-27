@@ -5,7 +5,9 @@ games:
   # id must be unique for each game
   - id: dcss-web-trunk
     # The name for this game, displayed on the webtiles HTML interface
-    name: Play trunk
+    version: trunk
+    # `%v` is replaced with the version value:
+    name: Play %v
     # Games are called with the following argv:
     # [
     #   $crawl_binary,
@@ -92,7 +94,8 @@ games:
     send_json_options: True
   # id must be unique for each game
   - id: seeded-web-trunk
-    name: Custom seed
+    version: trunk
+    name: Seeded
     crawl_binary: ./crawl
     rcfile_path: ./rcs/
     macro_path: ./rcs/
@@ -108,6 +111,7 @@ games:
     options:
       - -seed
   - id: tut-web-trunk
+    version: trunk
     name: Tutorial
     crawl_binary: ./crawl
     rcfile_path: ./rcs/
@@ -129,7 +133,8 @@ games:
     # env:
     #   LANG: en_US.UTF8
   - id: sprint-web-trunk
-    name: Sprint
+    version: trunk
+    name: Sprint %v
     crawl_binary: ./crawl
     rcfile_path: ./rcs/
     macro_path: ./rcs/

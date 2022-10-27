@@ -18,11 +18,12 @@ from tornado.ioloop import IOLoop
 from tornado.ioloop import PeriodicCallback
 
 from webtiles import config, connection, game_data_handler, inotify, terminal, util, ws_handler
+from webtiles.config import dgl_format_str
 from webtiles.connection import WebtilesSocketConnection
 from webtiles.game_data_handler import GameDataHandler
 from webtiles.inotify import DirectoryWatcher
 from webtiles.terminal import TerminalRecorder
-from webtiles.util import DynamicTemplateLoader, dgl_format_str, parse_where_data
+from webtiles.util import DynamicTemplateLoader, parse_where_data
 from webtiles.ws_handler import CrawlWebSocket, remove_in_lobbys, update_all_lobbys
 
 try:
@@ -35,18 +36,18 @@ last_game_id = 0
 processes = dict() # type: Dict[str,CrawlProcessHandler]
 unowned_process_logger = logging.LoggerAdapter(logging.getLogger(), {})
 
+# this will not template username...
 def find_game_info(socket_dir, socket_file):
     game_id = socket_file[socket_file.index(":")+1:-5]
     if (game_id in config.games and
-        os.path.abspath(config.games[game_id]["socket_path"]) == os.path.abspath(socket_dir)):
+                    os.path.abspath(config.game_param(game_id, "socket_path")) == os.path.abspath(socket_dir)):
         config.games[game_id]["id"] = game_id
-        return config.games[game_id]
+        return config.game_params(game_id)
 
     game_info = None
-    for game_id in list(config.games.keys()):
-        gi = config.games[game_id]
-        if os.path.abspath(gi["socket_path"]) == os.path.abspath(socket_dir):
-            game_info = gi
+    for game_id in config.games:
+        if os.path.abspath(config.game_param(game_id, "socket_path")) == os.path.abspath(socket_dir):
+            game_info = config.game_params(game_id)
             break
     game_info["id"] = game_id
     return game_info
@@ -93,10 +94,10 @@ def handle_new_socket(path, event):
 def watch_socket_dirs():
     watcher = DirectoryWatcher()
     added_dirs = set()
-    for game_id in list(config.games.keys()):
-        game_info = config.games[game_id]
-        socket_dir = os.path.abspath(game_info["socket_path"])
-        if socket_dir in added_dirs: continue
+    for game_id in config.games:
+        socket_dir = os.path.abspath(game_param(game_id, "socket_path"))
+        if socket_dir in added_dirs:
+            continue
         watcher.watch(socket_dir, handle_new_socket)
 
 class CrawlProcessHandlerBase(object):
@@ -962,6 +963,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             if self.game_params["morgue_url"] != None:
                 match = re.search(r"\(([^)]+)\)", line)
                 if match is not None:
+                    # XX fix templating here
                     self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username)
                     self.exit_dump_url += os.path.splitext(os.path.basename(match.group(1)))[0]
         elif line.startswith("Writing crash info to"): # before 0.15-b1-84-gded71f8
@@ -973,6 +975,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 elif line.rfind(" ") != -1:
                     url = line[line.rfind(" ") + 1:].strip()
                 if url is not None:
+                    # XX fix templating here
                     self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username) + os.path.splitext(url)[0]
 
     def _on_socket_message(self, msg): # type: (str) -> None
@@ -999,6 +1002,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 self.flush_messages_to_all()
             elif msgobj["msg"] == "dump":
                 if "morgue_url" in self.game_params and self.game_params["morgue_url"]:
+                    # XX fix templating here
                     url = self.game_params["morgue_url"].replace("%n", self.username) + msgobj["filename"]
                     if msgobj["type"] == "command":
                         self.send_to_all("dump", url = url)

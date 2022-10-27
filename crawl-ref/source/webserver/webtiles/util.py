@@ -213,12 +213,6 @@ class FileTailer(object):
         self.scheduler.stop()
 
 
-def dgl_format_str(s, username, game_params):  # type: (str, str, Any) -> str
-    s = s.replace("%n", username)
-
-    return s
-
-
 _WHERE_ENTRY_REGEX = re.compile("(?<=[^:]):(?=[^:])")
 
 

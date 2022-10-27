@@ -139,6 +139,58 @@ server_path = None
 games = collections.OrderedDict()
 game_modes = {}  # type: Dict[str, str]
 
+
+# templating for strings in game config
+def dgl_format_str(s, username, game_params):  # type: (str, str, Any) -> str
+    # XX this should probably implement %% as an escape
+
+    # sometimes this is called without a username available, so gracefully
+    # ignore if it is not provided
+    if username is not None:
+        s = s.replace("%n", username)
+
+    # provide the version info in various ways useful for constructing paths
+    version = game_params.get('version')
+    def vsub(s, code, replace):
+        if s.find(code) >= 0:
+            if version is None
+                raise ValueError("Version used in config templating but not set in config: %s" % s)
+            s = s.replace(code, replace)
+        return s
+
+    s = vsub(s, "%v", version)
+    s = vsub(s, "%V", version.capitalize())
+    # %r is the version as a string that follows a "0." (if not found, the
+    # entire version string is used). This is used for building directory
+    # names on some dgl servers.
+    s = vsub(s, "%r", version.split("0.", 1)[-1]) # XX a bit brittle
+    return s
+
+
+# use this to get templated game config values
+def game_param(game_key, param, username=None, default=""):
+    global games
+    game = games[game_key]
+    val = game.get(param, default)
+    if isinstance(val, str):
+        return dgl_format_str(val, username, game)
+    elif isinstance(val, (list, tuple)): # ugh, but we need this for pre_options
+        return [dgl_format_str(e, username, game)
+                if isinstance(e, str) else e for e in val]
+    else:
+        return val
+
+
+# return a copy with everything templated that can be templated
+# XX could make a better interface with a custom game class rather than dict
+def game_params(game_key, username=None):
+    global games
+    r = {}
+    for k in games[game_key]:
+        r[k] = game_param(game_key, k, username=username)
+    return r
+
+
 # for values not in this dict, the default is None
 defaults = {
     'dgl_mode': True,

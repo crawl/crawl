@@ -194,13 +194,13 @@ def validate_game_dict(game):
 # the one case handled here.
 def binary_key(g):
     import webtiles.config
-    k = webtiles.config.games[g]["crawl_binary"]
+    k = webtiles.config.game_param(g, "crawl_binary")
     # On dgamelaunch-config servers, `pre_options` is used to pass a
     # version to the launcher script, which underlyingly calls different
     # binaries. To accommodate this we need to also use pre_options in
     # the key for organizing binaries. (sigh...)
     if "pre_options" in webtiles.config.games[g]:
-        k += " " + " ".join(webtiles.config.games[g]["pre_options"])
+        k += " " + " ".join(webtiles.config.game_param(g, "pre_options"))
     return k
 
 
@@ -215,12 +215,13 @@ def collect_game_modes():
     # This is very much a blocking call, especially with many binaries.
     binaries = {}
     for g in webtiles.config.games:
+        key = binary_key(g)
         if not webtiles.config.games[g].get("show_save_info", False):
-            binaries[binary_key(g)] = None
+            binaries[key] = None
             continue
-        call = [webtiles.config.games[g]["crawl_binary"]]
+        call = [webtiles.config.game_param(g, "crawl_binary")]
         if "pre_options" in webtiles.config.games[g]:
-            call += webtiles.config.games[g]["pre_options"]
+            call += webtiles.config.game_param(g, "pre_options")
 
         # "dummy" is here for the sake of the dgamelaunch-config launcher
         # scripts, which choke badly if there is no second argument. The actual
@@ -229,24 +230,24 @@ def collect_game_modes():
         call += ["-gametypes-json", "dummy"]
         try:
             m_json = subprocess.check_output(call, stderr=subprocess.STDOUT)
-            binaries[binary_key(g)] = json_decode(m_json)
+            binaries[key] = json_decode(m_json)
         except subprocess.CalledProcessError:  # return value 1
-            binaries[binary_key(g)] = None
+            binaries[key] = None
         except ValueError:  # JSON decoding issue?
             logging.warn("JSON error with output '%s'", repr(m_json))
-            binaries[binary_key(g)] = None
+            binaries[key] = None
 
     game_modes = {}
     for g in webtiles.config.games:
-        game_dict = webtiles.config.games[g]
+        key = binary_key(g)
         mode_found = False
-        if binaries[binary_key(g)] is None:
+        if binaries[key] is None:
             # binary does not support game mode json
             game_modes[g] = None
             continue
-        for mode in binaries[binary_key(g)]:
-            for opt in game_dict.get("options", [""]):
-                if opt == binaries[binary_key(g)][mode]:
+        for mode in binaries[key]:
+            for opt in webtiles.config.game_param(g, "options", default=[""]):
+                if opt == binaries[key][mode]:
                     game_modes[g] = mode
                     mode_found = True
                     break

@@ -209,12 +209,13 @@ def _milestone_files():
             top_level_milestones = [top_level_milestones]
         files.update(top_level_milestones)
 
-    for game_config in config.games.values():
-        milestone_file = game_config.get('milestone_file')
-        if milestone_file is None and 'dir_path' in game_config:
+    for game in config.games:
+        milestone_file = config.game_param(game, 'milestone_file')
+        if not milestone_file and 'dir_path' in config.games[game]:
             # milestone appears in this dir by default
-            milestone_file = os.path.join(game_config['dir_path'], 'milestones')
-        if milestone_file is not None:
+            milestone_file = os.path.join(
+                        config.game_param(game, 'dir_path'), 'milestones')
+        if milestone_file:
             files.add(milestone_file)
 
     # Then, make sure for every milestone we have the -seeded and non-seeded
@@ -527,16 +528,15 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         callback = final_callback
         for g in config.games:
-            game = config.games[g]
-            if not game.get("show_save_info", False):
+            if not config.game_param(g, "show_save_info", default=False):
                 self.save_info[g] = ""
                 continue
             if self.save_info.get(g, None) is None:
                 # cache for g is invalid, add a callback for it to the callback
                 # chain
-                call = [game["crawl_binary"]]
-                if "pre_options" in game:
-                    call += game["pre_options"]
+                call = [config.game_param(g, "crawl_binary")]
+                if "pre_options" in config.games[g]:
+                    call += config.game_param(g, "pre_options")
                 call += ["-save-json", self.username]
                 callback = build_callback(g, call, callback)
 
@@ -569,7 +569,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 games = collections.OrderedDict()
                 for g in config.games:
                     if self.game_id_allowed(g):
-                        games[g] = config.games[g]
+                        games[g] = config.game_params(g, username=self.username)
                 play_html = to_unicode(self.render_string("game_links.html",
                                                   games = games,
                                                   save_info = self.save_info,
@@ -644,7 +644,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
 
         if config.get('dgl_mode'):
-            game_params = dict(config.games[game_id])
+            game_params = config.game_params(game_id, username=self.username)
             if self.username == None:
                 if self.watched_game:
                     self.stop_watching()
@@ -889,10 +889,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = True
 
     def rcfile_path(self, game_id):
-        if game_id not in config.games: return None
-        if not self.username: return None
-        path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
-                                     self.username, config.games[game_id])
+        if game_id not in config.games:
+            return None
+        if not self.username:
+            return None
+        path = config.game_param(game_id, "rcfile_path", username=self.username)
         return os.path.join(path, self.username + ".rc")
 
     def send_json_options(self, game_id, player_name):
@@ -909,7 +910,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not self.username: return
         if game_id not in config.games: return
 
-        game = config.games[game_id]
+        game = config.game_params(game_id, username=self.username)
         if not "send_json_options" in game or not game["send_json_options"]:
             return
 
@@ -1127,9 +1128,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     @util.note_blocking_fun
     def set_rc(self, game_id, contents):
-        rcfile_path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
-                                     self.username, config.games[game_id])
-        rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
+        rcfile_path = self.rcfile_path(game_id)
         try:
             with open(rcfile_path, 'wb') as f:
                 # TODO: is binary + encode necessary in py 3?

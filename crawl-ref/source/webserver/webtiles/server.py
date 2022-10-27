@@ -50,7 +50,7 @@ class NoCacheHandler(tornado.web.StaticFileHandler):
         self.set_header("Expires", "0")
 
 def err_exit(errmsg, exc_info=False):
-    if config.get('logging_config').get('filename'):
+    if exc_info or config.get('logging_config').get('filename'):
         # don't print duplicate messages on stdout
         logging.error(errmsg, exc_info=exc_info)
     sys.exit(errmsg)
@@ -661,7 +661,7 @@ def run():
         config.load_game_data()
         config.validate()
     except:
-        err_exit("Errors in config. Exiting.", exc_info=True)
+        err_exit("Errors in game data. Exiting.", exc_info=True)
 
     if config.get('daemon', False):
         daemonize()

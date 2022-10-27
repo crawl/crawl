@@ -86,6 +86,23 @@ game_data_no_cache = True
 # defined in this file will precede games defined in games.d.
 # use_game_yaml = True
 
+# Templating:
+# if the `version` key is set, most game parameters will support templating
+# with %v, %V, and %r.
+#   %v: the version value as-is
+#   %V: the capitalized version value (e.g. "trunk" -> "Trunk")
+#   %r: the 'raw' version, which strips off an initial "0.". So for example,
+#       "0.29" would give just "29". If this substring does not occur, %r
+#       is equivalent to %v. (Implementation note: characters before a "0."
+#       will be dropped as well. Not relevant for normal crawl versions of
+#       course.)
+#
+# Most fields (though not all, in particular, not any game-general ones and
+# not socket_path) also support templating with %n, which gives the player's
+# username.
+#
+# The example below illustrates basic uses of both of these.
+
 # Example of defining `games` directly via a dictionary.
 # This setting to be an OrderedDict pre python 3.6, so this example uses that
 # for compatibility:
@@ -93,7 +110,8 @@ game_data_no_cache = True
 # import collections
 # games = collections.OrderedDict([
 #     ("dcss-web-trunk", dict(
-#         name = "Play trunk",
+#         version = "trunk",
+#         name = "Play %v",
 #         crawl_binary = "./crawl",
 #         rcfile_path = "./rcs/",
 #         macro_path = "./rcs/",
