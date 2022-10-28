@@ -258,6 +258,22 @@ static const zap_info zap_data[] =
 },
 
 {
+    ZAP_ICY_FLASH_FREEZE,
+    "icy flash freeze",
+    200,
+    nullptr,
+    nullptr,
+    new dicedef_calculator<3, 7, 1, 12>,
+    new tohit_calculator<5, 1, 3>,
+    WHITE,
+    false,
+    BEAM_ICE, // rC capped at 40%, use ZAP_FLASH_FREEZE if you don't want this
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+},
+
+{
     ZAP_FLASH_FREEZE,
     "flash freeze",
     200,
@@ -267,7 +283,7 @@ static const zap_info zap_data[] =
     new tohit_calculator<5, 1, 3>,
     WHITE,
     false,
-    BEAM_ICE,
+    BEAM_COLD, // normal rC (e.g. fully resisted at rC+++)
     DCHAR_FIRED_ZAP,
     false,
     false,

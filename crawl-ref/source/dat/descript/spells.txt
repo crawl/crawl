@@ -394,7 +394,8 @@ Creeping Frost spell
 
 Calls forth freezing cold from the walls and other similarly solid terrain. Any
 enemies of the caster standing next to that terrain will be frozen and will find
-their movements slowed.
+their movements slowed. Cold resistance will reduce damage, but not prevent
+the freezing effect.
 %%%%
 Crystal Bolt spell
 
@@ -627,7 +628,8 @@ Conjures up a large cloud of roaring flames.
 Flash Freeze spell
 
 Freezes the air around a target, causing significant harm and slowing the
-target's movement. It has no effect on targets that are already frozen.
+target's movement. A portion of its damage bypasses cold resistance. It has no
+effect on targets that are already frozen.
 %%%%
 Force Lance spell
 
