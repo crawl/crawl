@@ -74,7 +74,7 @@ void setup_spore_explosion(bolt & beam, const monster& origin)
 
 dice_def ball_lightning_damage(int hd)
 {
-    return dice_def(3, 5 + hd * 5 / 4);
+    return dice_def(3, 5 + div_rand_round(hd * 5, 4));
 }
 
 static void _setup_lightning_explosion(bolt & beam, const monster& origin)
@@ -96,7 +96,7 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
 dice_def prism_damage(int hd, bool fully_powered)
 {
     const int dice = fully_powered ? 3 : 2;
-    return dice_def(dice, 6 + hd * 7 / 4);
+    return dice_def(dice, 5 + div_rand_round(hd * 7, 4));
 }
 
 static void _setup_prism_explosion(bolt& beam, const monster& origin)

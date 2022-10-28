@@ -73,7 +73,8 @@ spret cast_death_channel(int pow, god_type god, bool fail)
     fail_check();
     mpr("Malign forces permeate your being, awaiting release.");
 
-    you.increase_duration(DUR_DEATH_CHANNEL, 30 + random2(1 + 2*pow/3), 200);
+    you.increase_duration(DUR_DEATH_CHANNEL,
+                          30 + random2(1 + div_rand_round(2 * pow, 3)), 200);
 
     if (god != GOD_NO_GOD)
         you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = static_cast<int>(god);

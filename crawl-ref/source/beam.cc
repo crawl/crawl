@@ -4540,7 +4540,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (origin_spell == SPELL_STICKY_FLAME
         || origin_spell == SPELL_STICKY_FLAME_RANGE)
     {
-        const int levels = min(4, 1 + random2(dmg) / 2);
+        const int levels = min(4, 1 + div_rand_round(random2(dmg), 2));
         napalm_monster(mon, agent(), levels);
     }
 
