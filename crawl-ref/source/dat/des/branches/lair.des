@@ -1883,18 +1883,17 @@ ENDMAP
 
 # Someone hasn't taken care of their garden, but occasionally it takes care of itself.
 NAME:    pdpol_lair_neglected_garden
-TAGS:    extra decor transparent
+TAGS:    extra decor transparent no_trap_gen
 DEPTH:   Lair
-SHUFFLE: ac"`/pbbp
-SUBST:   ab = B, cp = P
+SHUFFLE: ac"` / pbbp
+SUBST:   ab = D, cp = P
 : if crawl.one_chance_in(5) then
-TAGS:    no_trap_gen
 MONS:    plant, bush
-SUBST:   V = T, B = 2, P = 1
+SUBST:   V = T, D = 2, P = 1
 FTILE:   ' = floor_dirt, 12`" = floor_grass
 :else
 MONS:    withered plant / plant w:1, fungus
-SUBST:   P = 1, B = 1:6 2
+SUBST:   P = 1, D = 1:6 2
 :end
 SUBST:   '`" = .
 MAP
@@ -1902,9 +1901,9 @@ MAP
 ..`P"'"P`..
 .`Pac'caP`.
 .``c'''c``.
-.`"''B''"`.
-@`"'BVB'"`@
-.`"''B''"`.
+.`"''D''"`.
+@`"'DVD'"`@
+.`"''D''"`.
 .``c'''c``.
 .`Pac'caP`.
 ..`P"'"P`..
@@ -2778,26 +2777,26 @@ MAP
   -------------------
 ENDMAP
 
-NAME: pdpol_lair_dawg_pound
-TAGS: no_monster_gen
+NAME:   pdpol_lair_dawg_pound
+TAGS:   no_monster_gen
 DEPTH:  Lair
 KMONS:  1 = wolf / warg w:5
 KMONS:  2 = hell hound / raiju
-KITEM: 2 = *
-SUBST: _ = x _:3, S = S:1 . %:2
+KITEM:  2 = *
+SUBST:  _ = x _:3, S = S:1 . %:2
 NSUBST: s = 1:S / *= . S:1, D = 2:2 / 4= 1 2:1 / *= . 1:2
 : dgn.delayed_decay(_G, 'S', "felid skeleton")
-CLEAR: _
+CLEAR:  _
 MAP
             ________
-          __xxxxxxx__
-          _xx.SS..x__
-      _____x..SS..x__
-    ___xxxxx....DDx__
- ____xxx..SS..DDxxx__
- _xxxx.....SxDxxxxx__
+          __xxxxxxx_
+          _xx.SS..x_
+      _____x..SS..x_
+    ___xxxxx....DDx_
+ ____xxx..SS..DDxxx_
+ _xxxx.....SxDxxxxx_
 _xxSS....x..xxxx____
-_xDSS..Dxxssxxxx__
+_xDSS..Dxxssxxxx_
 _xS..Dxxxssxx____
 _xxDxxxxssxxx_
 __xxxxx..xx_
@@ -2805,76 +2804,84 @@ __xxxxx..xx_
 ENDMAP
 
 # Dead by dawn!
-NAME:   pdpol_lair_cabin_in_the_woods
-TAGS:   no_item_gen no_monster_gen
-DEPTH:  Lair
+NAME:    pdpol_lair_cabin_in_the_woods
+TAGS:    no_item_gen no_monster_gen
+DEPTH:   Lair
 # Trying to get some good horror move trope representation
-KMONS: M = Rupert / reaper / vampire knight / phantasmal warrior / tentacled starspawn
+{{
+  local monsters = "reaper / vampire mage / phantasmal warrior / tentacled starspawn"
+  if not you.uniques("Rupert") then
+    kmons("M = Rupert / " .. monsters)
+  else
+    kmons("M = " .. monsters)
+  end
+}}
 # The last survivor
-KMONS: h = human
-SHUFFLE: M/h/?
-NSUBST:  M = M / | / S / `, h = h / *%% / S / `
-NSUBST: T = 2= 0 9:5 / *= .:3 t
-NSUBST: a = a / c, b = b / c, d = d / c
-NSUBST: e = e / c, f = f / c, g = g / c
-NSUBST: abd = 2:+ / c, efg = 2:+ / c
-SUBST:  " = `:4 ., `? = `:3 ., _ = t_
-KPROP:  ` = bloody
-MARKER: F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
-        pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
-        size_max = 3, spread_rate = 33 }
+KMONS:   H = human
+NSUBST:  a = a / c, d = d / c, e = e / c
+NSUBST:  f = f / c, g = g / c, h = h / c
+# These have to be distint because 'a' needs to be preserved for the rune door
+SHUFFLE: Hf / ?h
+SHUFFLE: Maed / ?ghf
+SHUFFLE: Hf / ?h
+NSUBST:  M = M / | / S / `, H = H / *%% / S / `
+NSUBST:  T = 2= 0 9:5 / *= .:3 t
+NSUBST:  ae = 1:= / c, d = +
+NSUBST:  fgh = 2:+ / c
+SUBST:   - = +
+SUBST:   " = `:4 ., `? = `:3 ., _ = t_
+KPROP:   ` = bloody
+MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
+         pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
+         size_max = 3, spread_rate = 33 }
 : dgn.delayed_decay(_G, 'S', "human skeleton")
-CLEAR:  _
+CLEAR:   _
 MAP
-    ______________________
+   _____________________
+   @ttttttttttttttttttttt_
+ @..ttttTttttttttttttttttt_
+ tTt.tt..ccccccccccccccctt_
+ttt.tTt..cMMMMMe``fHHHHctt_
+ttTt.TtF.cMMMMMe``fHHHHctt_
+ttt.ttt..caaaaac``fHHHHctt_
+ttTt..t."n`````d``cggggctt_
+tTt..T'T"-`````d``h????ctt_
+tt.ttt.F"n`````d``h????ctt_
+ttT.tt...c`````d``h????ctt_
+ tTt.tt..ccccccccccccccctt_
+ @..ttttTttttttttttttttttt_
+   @ttttttttttttttttttttt_
    ________________________
-   @ttttttttttttttttttttt__
- @..ttttTttttttttttttttttt__
- tTt.tt..ccccccccccccccctt__
-ttt.tTt..c?????d``ehhhhctt__
-ttTt.TtF.c?????d``ehhhhctt__
-ttt.ttt..caaaaac``ehhhhctt__
-ttTt..t."n`````b``cffffctt__
-tTt..T'T"=`````b``gMMMMctt__
-tt.ttt.F"n`````b``gMMMMctt__
-ttT.tt...c`````b``gMMMMctt__
- tTt.tt..ccccccccccccccctt__
- @..ttttTttttttttttttttttt__
-   @ttttttttttttttttttttt__
-   ________________________
-    ______________________
 ENDMAP
 
-NAME: pdpol_lair_cavern_descent
-TAGS: no_pool_fixup
+NAME:   pdpol_lair_cavern_descent
+TAGS:   no_pool_fixup
 DEPTH:  Lair
-KMONS: 1 = hydra / boulder beetle / hornet / rime drake
-KMONS: 2 = cane toad / black mamba / komodo dragon / polar bear
-KMONS: 3 = water moccasin / scorpion / black bear / wolf / bullfrog
-KMONS: 4 = basilisk / torpor snail w:5 / manticore w:3
-KMONS: 5 = electric eel
-SUBST: u = wW
-NSUBST: ' = 2:1 / 6= 1:2 2:3 3 / .
-NSUBST: W = 3:4
-NSUBST: w = 2:5
-KFEAT: 4 = W
-KFEAT: 5 = w
-KITEM: % = any
-KITEM: * = any good_item
-KFEAT: % = .
-KFEAT: * = W
+KMONS:  1 = hydra / boulder beetle / hornet / rime drake
+KMONS:  2 = cane toad / black mamba / komodo dragon / polar bear
+KMONS:  3 = water moccasin / black bear / wolf / wyvern
+KMONS:  4 = basilisk / torpor snail w:5 / manticore w:3
+KMONS:  5 = electric eel
+SUBST:  u = wW
+NSUBST: ' = 2:1 / 6= 1:3 2:5 3 / .
+NSUBST: W = 2:4 / 4= 4:5 W
+NSUBST: w = 2:5 / *= 5:1 w:20
+KFEAT:  4 = W
+KFEAT:  5 = w
+KITEM:  * = *
+KFEAT:  * = W
 MAP
    xxxxxxxxx
   xx'''x'''xx
  xx''x'''x''xx
  x''xxw'wxx''x
 xx'xxwwwwwx''x
-x''xwuuuuw'''x
+x''xwwuwuw'''x
 xx'xwwuWWwxx'x
-xx'''wuWWWx''x
-xx..wwuWWW%%xx
-x..xxuuW**Wxx
-xx..xxxw**xx
+ x'''wwuWWx''x
+xx..wwwuWW%%xx
+x..xxwwW**Wxx
+xx..xxxW**xx
  x....xxxxx
  xxxx@@x
 ENDMAP
