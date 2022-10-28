@@ -144,26 +144,27 @@ game_modes = {}  # type: Dict[str, str]
 def dgl_format_str(s, username, game_params):  # type: (str, str, Any) -> str
     # XX this should probably implement %% as an escape
 
+    def tsub(s, code, name, base, xform=lambda x: x):
+        if s.find(code) >= 0:
+            if base is None:
+                raise ValueError("%s used in config templating but not set in config: %s" % (name, s))
+            s = s.replace(code, xform(base))
+        return s
+
     # sometimes this is called without a username available, so gracefully
     # ignore if it is not provided
     if username is not None:
-        s = s.replace("%n", username)
+        tsub(s, "%n", 'username', username)
 
     # provide the version info in various ways useful for constructing paths
     version = game_params.get('version')
-    def vsub(s, code, replace):
-        if s.find(code) >= 0:
-            if version is None:
-                raise ValueError("Version used in config templating but not set in config: %s" % s)
-            s = s.replace(code, replace)
-        return s
 
-    s = vsub(s, "%v", version)
-    s = vsub(s, "%V", version.capitalize())
+    s = tsub(s, "%v", 'version', version)
+    s = tsub(s, "%V", 'version', version, lambda x: x.capitalize())
     # %r is the version as a string that follows a "0." (if not found, the
     # entire version string is used). This is used for building directory
     # names on some dgl servers.
-    s = vsub(s, "%r", version.split("0.", 1)[-1]) # XX a bit brittle
+    s = tsub(s, "%r", 'version', version, lambda x: x.split("0.", 1)[-1]) # XX a bit brittle
     return s
 
 
