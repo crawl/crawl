@@ -569,4 +569,5 @@ class targeter_poisonous_vapours : public targeter_smite
 public:
     targeter_poisonous_vapours(const actor *act, int range);
     bool affects_monster(const monster_info& mon) override;
+    bool valid_aim(coord_def a) override;
 };
