@@ -154,7 +154,7 @@ def dgl_format_str(s, username, game_params):  # type: (str, str, Any) -> str
     # sometimes this is called without a username available, so gracefully
     # ignore if it is not provided
     if username is not None:
-        tsub(s, "%n", 'username', username)
+        s = tsub(s, "%n", 'username', username)
 
     # provide the version info in various ways useful for constructing paths
     version = game_params.get('version')
