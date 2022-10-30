@@ -78,17 +78,42 @@ game_data_no_cache = True
 # Watch socket dirs for games not started by the server
 # watch_socket_dirs = False
 
+################
 # Game configs
+################
+#
+# The webtiles server needs some game modes configured in order to run. The
+# default in-repo configuration enables regular mode, seeded, tutorial, and
+# sprint for the `crawl` binary as built in the repository. (Build with
+# `WEBTILES=y`.)
+#
 # You can define game configs in two ways:
 # 1. As *.yml files in `games.d/`. (default; see games.d/base.yml)
-# 2. With a dictionary `games` in this file (not recommended except for dgamelaunch-config servers).
+# 2. With a dictionary `games` in this file
+#
+# Both of these formats are essentially the same. See the commented examples
+# below, as well as the comments and examples in games.d/base.yml for more
+# information on the format and how it is used. Examples from production
+# servers are also available in branches of the repository:
+#   https://github.com/crawl/dgamelaunch-config
+# (These are further templated using the scripts in that package.)
 
-# to override 1, simply set `games` in this file to something non-empty; see
-# the below example. To force using both, set `use_game_yaml` to True. Games
-# defined in this file will precede games defined in games.d.
+# to override yml loading, simply set `games` in this file; see the example
+# below. To force using both sources, set `use_game_yaml` to True. Games
+# defined in this file will precede games defined in games.d. Templates
+# defined in this file are always loaded.
 # use_game_yaml = True
 
-# Templating:
+# Templating game configurations:
+# You can define a set of parameters to use as a template across multiple
+# game configs. To use a template by name, use the `template` parameter.
+# Recursive templating is supported. If a template named `default` is defined,
+# it will be used as the template for any game definitions that specify no
+# template at all (see example below). If `default` is defined, it can be
+# explicitly overriden by using the template name `base` (which cannot be
+# redefined).
+
+# Templating string values:
 # if the `version` key is set, most game parameters will support templating
 # with %v, %V, and %r.
 #   %v: the version value as-is
@@ -103,13 +128,62 @@ game_data_no_cache = True
 # not socket_path) also support templating with %n, which gives the player's
 # username.
 #
+# The bare minimum necessary fields are what it takes to get the crawl binary
+# running. Games are called with the following argv; some of these fields can
+# be inferred when not set.
+# [
+#   $crawl_binary,
+#   *$pre_options,
+#   "-name", "%n",
+#   "-rc", "$rcfile_path/%n.rc",
+#   "-macro", "$macro_path/%n.macro",
+#   "-morgue", "$morgue_path,"
+#   *$options,
+#   "-dir", "$dir_path"
+#   "-webtiles-socket", "$socket_path/%n:$timestamp.sock",
+#   "-await-connection"
+# ]
+#
 # The example below illustrates basic uses of both of these.
 
-# Example of defining `games` directly via a dictionary.
-# This setting to be an OrderedDict pre python 3.6, so this example uses that
-# for compatibility:
+# Example of defining `games` directly via a default template and a dictionary,
+# and sets all the required paths:
+# templates = dict(
+#     default = dict(
+#         crawl_binary = "./crawl", # relative paths are relative to CWD from running server.py
+#         rcfile_path = "./rcs/",
+#         macro_path = "./rcs/",
+#         morgue_path = "./rcs/%n",
+#         inprogress_path = "./rcs/running",
+#         ttyrec_path = "./rcs/ttyrecs/%n",
+#         socket_path = "./rcs",
+#         client_path = "./webserver/game_data/",
+#         morgue_url = "http://crawl.akrasiac.org/rawdata/%n/",
+#         # the `dir_path` field uses local crawl defaults when unset. This
+#         # should almost always be set on a production server, but not for
+#         # development.
+#         # dir_path = ".",
+#         # cwd = ".", # override the CWD inherited when starting the server
+#         # morgue_url = None, # public-facing URL, if set
+#         show_save_info = True,
+#         allowed_with_hold = True,
+#         # milestone_path = "./rcs/milestones",
+#         send_json_options = True,
+#         # env = {"LANG": "en_US.UTF8"},
+#         ),
+#     )
 
+# `games` needs to be an OrderedDict pre python 3.6, so this example uses that
+# for compatibility. Needs the default template above.
 # import collections
+# games = collections.OrderedDict([
+#     ("dcss-web-trunk",   dict(version = "trunk", name="Play %v",)),
+#     ("seeded-web-trunk", dict(version = "trunk", name="Seeded", options=["-seed"])),
+#     ("tut-web-trunk",    dict(version = "trunk", name="Tutorial", options=["-tutorial"])),
+#     ("sprint-web-trunk", dict(version = "trunk", name="Sprint %v", options=["-sprint"])),
+# ])
+#
+# Non-templated example: it's possible just to set every field directly.
 # games = collections.OrderedDict([
 #     ("dcss-web-trunk", dict(
 #         version = "trunk",
@@ -122,14 +196,11 @@ game_data_no_cache = True
 #         ttyrec_path = "./rcs/ttyrecs/%n",
 #         socket_path = "./rcs",
 #         client_path = "./webserver/game_data/",
-#         # dir_path = ".",
-#         # cwd = ".",
 #         morgue_url = None,
 #         show_save_info = True,
 #         allowed_with_hold = True,
 #         # milestone_path = "./rcs/milestones",
 #         send_json_options = True,
-#         # env = {"LANG": "en_US.UTF8"},
 #         )),
 # ])
 

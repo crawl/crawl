@@ -41,15 +41,13 @@ def find_game_info(socket_dir, socket_file):
     game_id = socket_file[socket_file.index(":")+1:-5]
     if (game_id in config.games and
                     os.path.abspath(config.game_param(game_id, "socket_path")) == os.path.abspath(socket_dir)):
-        config.games[game_id]["id"] = game_id
-        return config.game_params(game_id)
+        return config.games[game_id]
 
     game_info = None
     for game_id in config.games:
         if os.path.abspath(config.game_param(game_id, "socket_path")) == os.path.abspath(socket_dir):
-            game_info = config.game_params(game_id)
+            game_info = config.games[game_id]
             break
-    game_info["id"] = game_id
     return game_info
 
 def handle_new_socket(path, event):
@@ -156,7 +154,7 @@ class CrawlProcessHandlerBase(object):
     def config_path(self, key):
         if key not in self.game_params:
             return None
-        base_path = self.format_path(self.game_params[key])
+        base_path = self.game_params.templated(key, username=self.username)
         if key == "socket_path" and config.get('live_debug'):
             # TODO: this is kind of brute-force given that regular paths aren't
             # validated at all...
@@ -463,7 +461,7 @@ class CrawlProcessHandlerBase(object):
         if self.client_path:
             self._send_client(watcher)
             if watcher.watched_game == self:
-                watcher.send_json_options(self.game_params["id"], self.username)
+                watcher.send_json_options(self.game_params.id, self.username)
         self._receivers.add(watcher)
         self.update_watcher_description()
 
@@ -478,7 +476,7 @@ class CrawlProcessHandlerBase(object):
         for receiver in self._receivers:
             self._send_client(receiver)
             if receiver.watched_game == self:
-                receiver.send_json_options(self.game_params["id"],
+                receiver.send_json_options(self.game_params.id,
                                            self.username)
 
     def _send_client(self, watcher):
@@ -567,7 +565,7 @@ class CrawlProcessHandlerBase(object):
             "username": u,
             "spectator_count": self.watcher_count(),
             "idle_time": (self.idle_time() if self.is_idle() else 0),
-            "game_id": self.game_params["id"],
+            "game_id": self.game_params.id,
             }
         for key in CrawlProcessHandlerBase.interesting_info:
             if key in self.where:
@@ -586,10 +584,10 @@ class CrawlProcessHandlerBase(object):
         game = self.game_params
 
 
-        call  = [game["crawl_binary"]]
+        call  = [game.templated("crawl_binary", username=self.username)]
 
         if "pre_options" in game:
-            call += game["pre_options"]
+            call += game.templated("pre_options", username=self.username)
 
         call += ["-name",   self.username,
                  "-rc",     os.path.join(self.config_path("rcfile_path"),
@@ -602,7 +600,7 @@ class CrawlProcessHandlerBase(object):
             call += ["-no-player-bones"]
 
         if "options" in game:
-            call += game["options"]
+            call += game.templated("options", username=self.username)
 
         if "dir_path" in game:
             call += ["-dir", self.config_path("dir_path")]
@@ -664,7 +662,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 if firsttime:
                     hup_wait = 10
                     self.send_to_all("stale_processes",
-                                     timeout=hup_wait, game=self.game_params["name"])
+                                     timeout=hup_wait,
+                                     # is name really correct here?
+                                     game=self.game_params.templated("name", username=self.username))
                     to = IOLoop.current().add_timeout(time.time() + hup_wait,
                                                       self._kill_stale_process)
                     self._process_hup_timeout = to
@@ -792,8 +792,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                             self._ttyrec_id_header(),
                                             self.logger,
                                             config.get('recording_term_size'),
-                                            env_vars = game.get("env", {}),
-                                            game_cwd = game.get("cwd", None),)
+                                            env_vars = game.templated("env", username=self.username, default={}),
+                                            game_cwd = game.templated("cwd", username=self.username, default=None),)
             self.process.end_callback = self._on_process_end
             self.process.output_callback = self._on_process_output
             self.process.activity_callback = self.note_activity
@@ -858,7 +858,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         ctime = time.ctime()
         return (clrscr + b"\033[1;1H" + crlf +
                  utf8("Player: %s" % self.username) + crlf +
-                 utf8("Game: %s" % self.game_params["name"]) + crlf +
+                 # odd that this uses name
+                 utf8("Game: %s" % self.game_params.templated("name", username=self.username)) + crlf +
                  utf8("Server: %s" % config.get('server_id')) + crlf +
                  utf8("Filename: %s" % self.lock_basename) + crlf +
                  utf8("Time: (%s) %s" % (tstamp, ctime)) + crlf +
@@ -954,29 +955,29 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 receiver.append_message(line, True)
 
     def _on_process_error(self, line): # type: (str) -> None
+        morgue_url = self.game_params.templated("morgue_url", username=self.username)
         if line.startswith("ERROR"):
             self.exit_reason = "crash"
             if line.rfind(":") != -1:
                 self.exit_message = line[line.rfind(":") + 1:].strip()
         elif line.startswith("We crashed!"):
             self.exit_reason = "crash"
-            if self.game_params["morgue_url"] != None:
+            if morgue_url:
                 match = re.search(r"\(([^)]+)\)", line)
                 if match is not None:
-                    # XX fix templating here
-                    self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username)
+                    self.exit_dump_url = morgue_url
                     self.exit_dump_url += os.path.splitext(os.path.basename(match.group(1)))[0]
+                    print(self.exit_dump_url)
         elif line.startswith("Writing crash info to"): # before 0.15-b1-84-gded71f8
             self.exit_reason = "crash"
-            if self.game_params["morgue_url"] != None:
+            if morgue_url:
                 url = None
                 if line.rfind("/") != -1:
                     url = line[line.rfind("/") + 1:].strip()
                 elif line.rfind(" ") != -1:
                     url = line[line.rfind(" ") + 1:].strip()
                 if url is not None:
-                    # XX fix templating here
-                    self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username) + os.path.splitext(url)[0]
+                    self.exit_dump_url = morgue_url + os.path.splitext(url)[0]
 
     def _on_socket_message(self, msg): # type: (str) -> None
         # stdout data is only used for compatibility to wrapper
@@ -991,6 +992,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             msgobj = json_decode(msg)
             if msgobj["msg"] == "client_path":
                 if self.client_path == None:
+                    # XX Why does this string from the msgobj get templated?
                     self.client_path = self.format_path(msgobj["path"])
                     if "version" in msgobj:
                         self.crawl_version = msgobj["version"]
@@ -1001,9 +1003,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 self.queue_messages = True;
                 self.flush_messages_to_all()
             elif msgobj["msg"] == "dump":
-                if "morgue_url" in self.game_params and self.game_params["morgue_url"]:
-                    # XX fix templating here
-                    url = self.game_params["morgue_url"].replace("%n", self.username) + msgobj["filename"]
+                morgue_url = self.game_params.templated("morgue_url", username=self.username)
+                if morgue_url:
+                    url = morgue_url + msgobj["filename"]
                     if msgobj["type"] == "command":
                         self.send_to_all("dump", url = url)
                     else:
@@ -1038,12 +1040,14 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
 class DGLLessCrawlProcessHandler(CrawlProcessHandler):
     def __init__(self, logger):
-        game_params = dict(
+        # used when dgl_mode = False
+        game_params = config.GameConfig(dict(
             name = "DCSS",
+            id = "dcss-webtiles",
             ttyrec_path = "./",
             inprogress_path = "./",
             socket_path = "./",
-            client_path = "./webserver/game_data")
+            client_path = "./webserver/game_data"))
         super(DGLLessCrawlProcessHandler, self).__init__(game_params,
                                                          "game",
                                                          logger)

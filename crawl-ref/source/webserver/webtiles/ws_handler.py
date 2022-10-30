@@ -569,7 +569,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 games = collections.OrderedDict()
                 for g in config.games:
                     if self.game_id_allowed(g):
-                        games[g] = config.game_params(g, username=self.username)
+                        games[g] = config.games[g].templated_dict(self.username)
                 play_html = to_unicode(self.render_string("game_links.html",
                                                   games = games,
                                                   save_info = self.save_info,
@@ -644,11 +644,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
 
         if config.get('dgl_mode'):
-            game_params = config.game_params(game_id, username=self.username)
             if self.username == None:
                 if self.watched_game:
                     self.stop_watching()
-                self.send_message("login_required", game = game_params["name"])
+                self.send_message("login_required",
+                    game=config.games[game_id].templated("name", username=self.username))
                 return
             util.annotate_blocking_note(" user: " + self.username)
 
@@ -675,9 +675,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         from webtiles import process_handler
 
         if config.get('dgl_mode'):
-            game_params["id"] = game_id
-            args = (game_params, self.username, self.logger)
-            self.process = process_handler.CrawlProcessHandler(*args)
+            self.process = process_handler.CrawlProcessHandler(
+                            config.games[game_id], self.username, self.logger)
         else:
             self.process = process_handler.DGLLessCrawlProcessHandler(self.logger)
 
@@ -910,19 +909,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not self.username: return
         if game_id not in config.games: return
 
-        game = config.game_params(game_id, username=self.username)
+        game = config.games[game_id]
         if not "send_json_options" in game or not game["send_json_options"]:
             return
 
-        call = [game["crawl_binary"]]
+        call = [game.templated("crawl_binary", username=self.username)]
 
         if "pre_options" in game:
-            call += game["pre_options"]
+            call += game.templated("pre_options", username=self.username)
 
         call += ["-name", player_name,
                  "-rc", self.rcfile_path(game_id)]
         if "options" in game:
-            call += game["options"]
+            call += game.templated("options", username=self.username)
         call.append("-print-webtiles-options")
 
         checkoutput.check_output(call, do_send)

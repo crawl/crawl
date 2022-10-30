@@ -6,18 +6,79 @@ import subprocess
 import yaml
 from tornado.escape import json_decode
 
-try:
-    import typing  # noqa
-    from typing import Dict  # OrderedDict would work in py38+
-    from typing import List
-    from typing import Union
-    GameDefinition = Dict[str, Union[str, bool, List[str], Dict[str, str]]]
-    GamesConfig = Dict[str, GameDefinition]
-except ImportError:
-    pass
+
+# TODO: consider just reintegrating all this code into webtiles.config; its
+# existence predates that module
+
+# load game/template dicts from a single yaml file
+def load_from_yaml(path):
+    # some day, turn this into a data class
+    result = dict(
+        templates = collections.OrderedDict(),
+        games = collections.OrderedDict(),
+        source = path
+        )
+
+    try:
+        with open(path) as f:
+            yaml_text = f.read()
+    except OSError as e:
+        logging.warn("Couldn't read file %s: %s", path, e)
+        yaml_text = None
+
+    try:
+        data = yaml.safe_load(yaml_text)
+    except yaml.YAMLError as e:
+        logging.warning("Failed to load games from %s, skipping (parse failure: %s).",
+                        file_name, e)
+        return result
+    if not isinstance(data, dict) or ('games' not in data and 'templates' not in data):
+        logging.warning("Failed to load games from %s, skipping (no 'games'/'templates' key).",
+                        file_name)
+        return result
+
+    extra_keys = ",".join(key for key in data.keys() if key != 'games' and key != 'templates')
+    if extra_keys:
+        logging.warning(
+            "Found extra top-level keys '%s' in %s, ignoring them"
+            " (only 'games'/'templates' keys will be parsed).",
+            extra_keys, file_name)
 
 
-def load_games(existing_games, reloading=False):
+    for t in ('templates', 'games'):
+        if t in data:
+            for game in data[t]:
+                if not 'id' in game:
+                    logging.error("Definition missing id in %s! Skipping '%s'", t, repr(game))
+                    continue
+                if game['id'] in result[t]:
+                    logging.warning(
+                        "Duplicate id %s in %s (source %s), skipping.",
+                        game['id'], t, path)
+                    continue
+                result[t][game['id']] = game
+    return result
+
+
+def merge_games(accum, new):
+    import webtiles.config
+
+    for t in ('templates', 'games'):
+        if len(new[t]):
+            logging.info("Reading %d %s from %s", len(new[t]), t, new['source'])
+        for k in new[t]:
+            if k in accum[t]:
+                logging.warning(
+                    "Duplicate id %s in %s (source %s), skipping.",
+                    k, t, new['source'])
+                continue
+            accum[t][k] = webtiles.config.GameConfig(new[t][k], game_id=k)
+            if t == 'templates' and k != 'default' and webtiles.config.is_metatemplate(k):
+                raise ValueError("Cannot redefine reserved template name `%s`" % k)
+    return accum
+
+
+def load_games(reloading=False):
     """
     Load game definitions from games.d/*.yaml and merge with existing config.
 
@@ -30,88 +91,105 @@ def load_games(existing_games, reloading=False):
     with an extra key `id` for the game's ID. Directory paths support %n as
     described above.
 
-    This function will only add or update games. It doesn't support removing or
-    reordering games. If you want to add support for either, read the caveats
-    below and please contribute the improvement as a pull request!
-
-    Dynamic update caveats:
-
-    1. The main use-case is to support adding new game modes to a running
-       server. Other uses (like modifying or removing an existing game mode, or
-       re-ordering the games list) may work, but are not well tested.
-    2. If you do modify a game entry, the changed settings only affect new game
+    Dynamic update notes and caveats:
+    1. If you do modify a game entry, the changed settings only affect new game
        sessions (including new spectators). Existing sessions use the old config
        until they close.
-    3. Some settings affect spectators. If you modify a running game's config,
+    2. Some settings affect spectators. If you modify a running game's config,
        the mismatch of settings between the player and new spectators might
        cause spectating to fail until the player restarts with new settings.
-    4. For servers that define games in config.py, this will always be called
-       in a way that overwrites the games dictionary, rather than merging.
+    3. If something breaks on the reload, everything *should* roll back to the
+       previous state. But it's going to be a lot safer not to rely on this.
     """
-    # XX this is very elaborate. Maybe it would be better just to always
-    # replace the existing games dictionary?
     import webtiles.config
-    new_games = collections.OrderedDict()  # type: GamesConfig
-    new_games.update(existing_games)
-    base_path = os.path.join(webtiles.config.server_path, "games.d")
-    if not os.path.exists(base_path):
-        logging.warn("Game data directory for YAML configuration does not exist: '%s'" % base_path)
-        return new_games
-    delta = collections.OrderedDict()  # type: GamesConfig
-    delta_messages = []
-    for file_name in sorted(os.listdir(base_path)):
-        path = os.path.join(base_path, file_name)
-        if not file_name.endswith('.yaml') and not file_name.endswith('.yml'):
-            logging.warn("Skipping non-yaml file %s", file_name)
-            continue
-        try:
-            with open(path) as f:
-                yaml_text = f.read()
-        except OSError as e:
-            logging.warn("Couldn't read file %s: %s", path, e)
-        try:
-            data = yaml.safe_load(yaml_text)
-        except yaml.YAMLError as e:
-            logging.warning("Failed to load games from %s, skipping (parse failure: %s).",
-                            file_name, e)
-            continue
-        if not isinstance(data, dict) or 'games' not in data:
-            logging.warning("Failed to load games from %s, skipping (no 'games' key).",
-                            file_name)
-            continue
-        if len(data.keys()) != 1:
-            extra_keys = ",".join(key for key in data.keys() if key != 'games')
-            logging.warning(
-              "Found extra top-level keys '%s' in %s, ignoring them"
-              " (only 'games' key will be parsed).",
-              extra_keys, file_name)
-        logging.info("Parsing %s games in %s", len(data['games']), file_name)
-        for game in data['games']:  # noqa
-            if not validate_game_dict(game):
-                continue
-            game_id = game['id']
-            if game_id in delta:
-                # XX should this skip or override? the initial implementation
-                # printed a message about skipping, but didn't have a continue
-                logging.warning(
-                    "Game %s from %s was specified in an earlier config file, skipping.",
-                    game_id, path)
-                continue
-            if game_id in existing_games and not reloading:
-                logging.warning(
-                    "Game %s from %s was specified in config module, skipping.",
-                    game_id, path)
-                continue
-            delta[game_id] = game  # noqa
-            action = "Updated" if game_id in existing_games else "Loaded"
-            msg = ("%s %s (from %s).", action, game_id, file_name)
-            delta_messages.append(msg)
-    if delta:
-        assert len(delta.keys()) == len(delta_messages)
-        new_games.update(delta)
-        for message in delta_messages:
-            logging.info(*message)
-    return new_games
+    accum = dict(
+        templates = collections.OrderedDict(),
+        games = collections.OrderedDict(),
+        )
+    try:
+        # first: load any games config info from the module
+        from_module = dict(
+            templates = webtiles.config.get('templates'),
+            games = webtiles.config.get('games'),
+            source = "config module"
+            )
+        accum = merge_games(accum, from_module)
+
+        # second: if circumstances warrant it, load games from yaml files in
+        # the games.d subdirectory. By default, this is prevented if the
+        # config module sets games.
+        use_gamesd = webtiles.config.using_games_dir()
+        if use_gamesd is None and not webtiles.config.get('games') or use_gamesd:
+            base_path = os.path.join(webtiles.config.server_path, "games.d")
+            if os.path.exists(base_path):
+                for file_name in sorted(os.listdir(base_path)):
+                    path = os.path.join(base_path, file_name)
+                    accum = merge_games(accum, load_from_yaml(path))
+            else:
+                logging.warn("Skipping non-existent YAML configuration directory: '%s'" % base_path)
+        else:
+            logging.warn("Skipping game definitions in `games.d/` based on config")
+
+    except:
+        if not reloading:
+            raise # fail on initial load
+        logging.error("Errors in game data, reverting to previous game configuration!", exc_info=True)
+        return False
+
+    old = dict(
+        templates = webtiles.config.game_templates,
+        games = webtiles.config.games)
+    old_default = webtiles.config.get_template('default')
+
+    # replace any existing config with what we have just loaded
+    webtiles.config.game_templates = accum['templates']
+    webtiles.config.games = accum['games']
+
+    # do validation. We postpone this because success may rely on having an
+    # updated `defaults` value in place.
+    ok = True
+    if ('default' in webtiles.config.game_templates and not
+                            webtiles.config.define_default(
+                                webtiles.config.game_templates.pop('default'))):
+        ok = False
+
+    for g in webtiles.config.game_templates.values():
+        ok = g.validate() and ok
+
+    if ok:
+        # only validate games if templates are ok, since the main error case
+        # leading to `not ok` here is a loop in templating (which will break
+        # games that use that template)
+        for g in webtiles.config.games.values():
+            ok = g.validate_game() and ok
+
+    if not ok:
+        if not reloading:
+            raise ValueError("Errors in game data!")
+        logging.error("Errors in game data, reverting to previous game configuration!")
+        webtiles.config.game_templates = old['templates']
+        webtiles.config.metatemplates['default'] = old_default
+        webtiles.config.games = old['games']
+        return False
+
+    # Done making changes. Print a diff message if reloading
+    if reloading:
+        # if we are reloading, print some helpful diff info
+        for t in ('templates', 'games'):
+            removed = [k for k in old[t] if k not in accum[t]]
+            added = [k for k in accum[t] if k not in old[t]]
+            # does the equality check work?
+            updated = [k for k in accum[t] if k in old[t] and old[t][k] != accum[t][k]]
+            if len(removed):
+                logging.info("Removed %s: %s", t, ", ".join(removed))
+            if len(added):
+                logging.info("Added %s: %s", t, ", ".join(added))
+            if len(updated):
+                logging.info("Updated %s: %s", t, ", ".join(updated))
+            else:
+                logging.info("No updated %s", t)
+
+    return True
 
 
 def validate_game_dict(game):
@@ -129,10 +207,14 @@ def validate_game_dict(game):
                 'socket_path', 'client_path')
     optional = ('dir_path', 'cwd', 'morgue_url', 'milestone_path',
                 'send_json_options', 'options', 'env', 'separator',
-                'show_save_info', 'allowed_with_hold', 'version')
+                'show_save_info', 'allowed_with_hold', 'version',
+                'template')
+    # XX less ad hoc typing
     boolean = ('send_json_options', 'show_save_info', 'allowed_with_hold')
     string_array = ('options',)
     string_dict = ('env', )
+
+    allow_none = {'morgue_url'}
     for prop in required:
         if prop not in game:
             found_errors = True
@@ -144,6 +226,9 @@ def validate_game_dict(game):
             # Don't count this as an error
             logging.warn("Unknown property '%s' in game '%s'",
                          prop, game['id'])
+        if value is None and prop in allow_none:
+            continue # short-circuit other checks
+
         if prop in boolean:
             if not isinstance(value, bool):
                 found_errors = True
@@ -203,7 +288,6 @@ def binary_key(g):
         k += " " + " ".join(webtiles.config.game_param(g, "pre_options"))
     return k
 
-
 def collect_game_modes():
     import webtiles.config
     # figure out what game modes are associated with which game in the config.
@@ -212,7 +296,10 @@ def collect_game_modes():
     # then the type will by `None`. This is unfortunately fairly post-hoc, and
     # there would be much better ways of doing this if I weren't aiming for
     # backwards compatibility.
+    #
     # This is very much a blocking call, especially with many binaries.
+    # XX it might be better to cache some of this across HUPs, right now it
+    # can block for >1s on CAO
     binaries = {}
     for g in webtiles.config.games:
         key = binary_key(g)

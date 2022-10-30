@@ -1,12 +1,18 @@
 # utilities for dealing with webtiles configuration. The actual configuration
 # data does *not* go in here.
 
+import builtins
 import collections
+import itertools
 import os.path
 import logging
 import re
 import sys
 import yaml
+try:
+    from collections.abc import MutableMapping
+except:
+    from collections import MutableMapping
 
 from webtiles import load_games, bans
 
@@ -122,7 +128,7 @@ def reload():
             do_early_logging()
             init_config_timeouts()
             try:
-                load_game_data(not get('games'))
+                load_game_data(True)
             except ValueError:
                 logging.error("Game data reload failed!", exc_info=True)
                 # if you get to here, game data is probably messed up. But there's
@@ -133,10 +139,176 @@ def reload():
             logging.error("Config reload failed!", exc_info=True)
 
 
+class GameConfig(MutableMapping):
+    def __init__(self, params, use_template=True, game_id=None):
+        template_name = None
+        if isinstance(params, GameConfig): # copy constructor, essentially
+            # possibly should be a deep copy?
+            self._store = params._store.copy()
+            if not game_id:
+                game_id = params.id
+            template_name = params.template if use_template else None
+            #self.template = params.template if use_template else None
+        else:
+            self._store = params
+            # note: this prevents the `template` param from being modified via
+            # the mapping interface
+            # self.template = self._store.pop('template', 'default') if use_template else None
+
+        if game_id:
+            self.id = game_id
+            self._store['id'] = game_id
+        else:
+            self.id = params['id'] # must be set
+        if use_template and template_name is None and not is_metatemplate(self.id):
+            template_name = self._store.pop('template', 'default')
+        self.template = template_name
+
+    def copy(self):
+        return GameConfig(self)
+
+    def __repr__(self):
+        params = self._store.copy()
+        extras = ""
+        if self.template:
+            params['template'] = self.template
+        else:
+            extras = ", use_template=False"
+        return "GameConfig(%s%s)" % (repr(params), extras)
+
+    def get_defaults(self):
+        if self.template:
+            return get_template(self.template)
+        else:
+            return {}
+
+    def templated(self, key, username=None, default=""):
+        val = self.get(key, default)
+        if isinstance(val, str):
+            return dgl_format_str(val, username, self)
+        elif isinstance(val, (list, tuple)): # ugh, but we need this for pre_options
+            return [dgl_format_str(e, username, self)
+                    if isinstance(e, str) else e for e in val]
+        else:
+            return val
+
+    def templated_dict(self, username):
+        r = {}
+        for k in self:
+            r[k] = self.templated(k, username=username)
+        return r
+
+    def validate(self):
+        # check for loops in templating
+        seen = builtins.set()
+        t = self.get_defaults()
+        while isinstance(t, GameConfig) and t.template:
+            if t.id in seen:
+                logging.error("Loop in tempate dependencies from game %s: %s", self.id, t.id)
+                return False
+            seen.add(t.id)
+            t = t.get_defaults()
+
+        # warn if this is a non-templatable GameConfig
+        if 'template' in self._store:
+            logging.warning("Ignoring template value '%s' in %s",
+                                            self._store['template'], self.id)
+        return True
+
+    def validate_game(self):
+        # check for templating errors in parameter values. We want to do this
+        # only for full games, not templates.
+        for k in self:
+            try:
+                self.templated(k, username="test")
+            except:
+                logging.error("Error when templating game %s, key %s: %s",
+                    self.id, k, repr(self[k]), exc_info=True)
+                return False
+
+        if not self.validate():
+            return False
+        return load_games.validate_game_dict(self)
+
+    def __getitem__(self, key):
+        # the exception handling pattern here is so that error messages are
+        # cleaner with multiple levels of templating. Otherwise, we get a bunch
+        # of hard to parse `During handling ...` traces, and a messy final
+        # trace. XX once we can 100% assume py3.3, this would be cleaner if
+        # redone using `raise from None`.
+        try:
+            return self._store[key]
+        except KeyError:
+            pass
+        try:
+            return self.get_defaults()[key]
+        except KeyError:
+            pass
+        raise KeyError(key)
+
+    def __setitem__(self, key, val):
+        self._store[key] = val
+
+    def __delitem__(self, key):
+        del self._store[key]
+
+    def clear(self):
+        # override the mixin behavior. This really does clear everything,
+        # because it clears `template`.
+        self._store.clear() # override
+
+    def __iter__(self):
+        return itertools.chain(
+            iter(self._store),
+            filter(lambda k: k not in self._store, iter(self.get_defaults())))
+
+    def __len__(self):
+        return len(self._store) + len([k for k in self.get_defaults() if not k in self._store])
+
+
 server_path = None
 # note: get('games') should not be used to get this value! This gets only
 # whatever games are defined in the config module.
 games = collections.OrderedDict()
+game_templates = collections.OrderedDict()
+
+
+# metatemplates that ground out recursion. `default` can be adjusted using
+# the `define_default` function below, `base` should be left alone.
+# outside this file, only modified in load_games.py:load_games
+metatemplates = dict(
+    base = GameConfig({}, use_template=False, game_id='base'),
+    default = GameConfig({}, use_template=False, game_id='default')
+    )
+
+
+def is_metatemplate(k):
+    global metatemplates
+    return k in metatemplates
+
+
+def define_default(params):
+    global metatemplates
+    new = GameConfig(params, use_template=False, game_id='default')
+    if not new.validate():
+        logging.warning("Ignoring invalid defaults")
+        return False
+    if len(metatemplates['default']) > 1 and new != metatemplates['default']:
+        logging.warning("Replacing existing default game template")
+    metatemplates['default'] = new
+    return True
+
+
+def get_template(k):
+    global metatemplates, game_templates
+    if k is None:
+        k = 'default'
+    if is_metatemplate(k):
+        return metatemplates[k]
+    else:
+        return game_templates[k]
+
+
 game_modes = {}  # type: Dict[str, str]
 
 
@@ -172,14 +344,7 @@ def dgl_format_str(s, username, game_params):  # type: (str, str, Any) -> str
 def game_param(game_key, param, username=None, default=""):
     global games
     game = games[game_key]
-    val = game.get(param, default)
-    if isinstance(val, str):
-        return dgl_format_str(val, username, game)
-    elif isinstance(val, (list, tuple)): # ugh, but we need this for pre_options
-        return [dgl_format_str(e, username, game)
-                if isinstance(e, str) else e for e in val]
-    else:
-        return val
+    return game.templated(param, username=username, default=default)
 
 
 # return a copy with everything templated that can be templated
@@ -225,6 +390,7 @@ defaults = {
     'load_logging_rate': 0,
     'slow_callback_alert': None,
     'games': collections.OrderedDict([]),
+    'templates': collections.OrderedDict([]),
     'use_game_yaml': None, # default: load games.d if games is empty
     'banned': [],
     'bot_accounts': False,
@@ -235,6 +401,7 @@ def get(key, default=None):
     global server_config
     return server_config.get(key, defaults.get(key, default))
 
+# use builtins.set if you need the type name
 def set(key, val):
     global server_config
     server_config[key] = val
@@ -270,15 +437,17 @@ def check_keys_any(required, raise_on_missing=False):
 
 def check_game_config():
     success = True
-    for (game_id, game_data) in get('games').items():
-        if not os.path.exists(game_data["crawl_binary"]):
-            logging.warning("Crawl executable for %s (%s) doesn't exist!",
-                            game_id, game_data["crawl_binary"])
+    global games
+    for game in games.values():
+        if not os.path.exists(game["crawl_binary"]):
+            logging.warning("Crawl executable for %s ('%s') doesn't exist!",
+                            game.id, game["crawl_binary"])
             success = False
 
-        if ("client_path" in game_data and
-                        not os.path.exists(game_data["client_path"])):
-            logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
+        if ("client_path" in game and
+                        not os.path.exists(game["client_path"])):
+            logging.warning("Client data path for %s ('%s') doesn't exist!",
+                            game.id, game["client_path"])
             success = False
 
     return success
@@ -320,34 +489,10 @@ def load_banfile(path, require_exists=False):
 
 
 def load_game_data(reloading=False):
-    # TODO: should the `load_games` module be refactored into config?
-    global games
+    if not load_games.load_games(reloading=reloading):
+        return # failed config reload
 
-    # note: if `games` is defined in the config module, reloading is always
-    # False here.
-    if not reloading:
-        games = get('games')
-        if len(games):
-            logging.info("Reading %d games from config module", len(games))
-
-    # now try to load games from any `games.d/` yaml files.
-    # if `games` from config is non-empty, by default do not try to load from
-    # games.d. a server that is using both can override this by setting the
-    # `use_game_yaml` option to True. Setting this option to False will also
-    # prevent games.d loading, which is a bit useless, but may be helpful for
-    # validation purposes.
-    use_gamesd = using_games_dir()
-    if use_gamesd is None and not get('games') or use_gamesd:
-        # this does not modify `games` until the assignment on return, so is
-        # exception safe.
-        # Awkward interaction: if a yaml game overrides a config module game,
-        # it is just described as "Updated". This isn't a recommended use case
-        # so I haven't figured out how to get a warning to happen.
-        games = load_games.load_games(games, reloading)
-    else:
-        logging.warn("Skipping game definitions in `games.d/` based on config")
-
-    # hopefully we've found some games by this point; do a bit of validation:
+    # hopefully we've found some games by this point; do a bit more validation:
     if len(games) == 0:
         raise ValueError("No games defined!")
     if not check_game_config():
