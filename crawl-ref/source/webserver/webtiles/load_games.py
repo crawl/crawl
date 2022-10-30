@@ -204,14 +204,14 @@ def validate_game_dict(game):
     found_errors = False
     required = ('id', 'name', 'crawl_binary', 'rcfile_path', 'macro_path',
                 'morgue_path', 'inprogress_path', 'ttyrec_path',
-                'socket_path', 'client_path')
+                'socket_path')
     optional = ('dir_path', 'cwd', 'morgue_url', 'milestone_path',
                 'send_json_options', 'options', 'env', 'separator',
                 'show_save_info', 'allowed_with_hold', 'version',
-                'template')
+                'template', 'pre_options', 'client_path')
     # XX less ad hoc typing
     boolean = ('send_json_options', 'show_save_info', 'allowed_with_hold')
-    string_array = ('options',)
+    string_array = ('options', 'pre_options')
     string_dict = ('env', )
 
     allow_none = {'morgue_url'}

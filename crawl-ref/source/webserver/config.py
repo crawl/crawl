@@ -172,8 +172,8 @@ game_data_no_cache = True
 #         ),
 #     )
 
-# `games` needs to be an OrderedDict pre python 3.6, so this example uses that
-# for compatibility. Needs the default template above.
+# # `games` needs to be an OrderedDict pre python 3.6, so this example uses that
+# # for compatibility. Needs the default template above.
 # import collections
 # games = collections.OrderedDict([
 #     ("dcss-web-trunk",   dict(version = "trunk", name="Play %v",)),
