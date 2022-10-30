@@ -254,12 +254,13 @@ ENDMAP
 
 NAME:   nicolae_swamp_entry_spooky
 TAGS:   swamp_entry patrolling transparent
+WEIGHT: 5
 KMONS:  s = spectral thing
-KMONS:  O = ghost crab
+KMONS:  OP = ghost crab
 KFEAT:  O = enter_swamp
 KFEAT:  t = mangrove
-NSUBST: O = O / .
-SUBST:  - = t., s = s., . = ....W
+NSUBST: O = O / P...
+SUBST:  - = t., s = s.., . = ....W
 MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
                               size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
@@ -3079,7 +3080,7 @@ RR-`DDDDDDD`-OO
 ENDMAP
 
 NAME:    nicolae_swamp_vermiculated
-TAGS:    transparent patrolling
+TAGS:    transparent
 DEPTH:   Swamp
 KMONS:   ~ = steelbarb worm w:5 / swamp worm / tyrant leech
 KFEAT:   ~ = . w:50 / W
