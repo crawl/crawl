@@ -667,7 +667,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         # update flags in case an account hold has been released or added, or
         # the player has been banned.
-        if (not self.update_db_info() # ban check happens here
+        if config.get('dgl_mode') and (not self.update_db_info() # ban check happens here
                 or not self.game_id_allowed(game_id)):
             self.go_lobby()
             return

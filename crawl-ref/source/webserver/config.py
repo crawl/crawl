@@ -34,7 +34,9 @@ import yaml
 # Where to look for `games.d/`, `config.yml`, and other things.
 server_path = os.path.dirname(os.path.abspath(__file__))
 
-# dgl_mode = True
+# Set to False to enable `local webtiles` mode: the regular webtiles lobby
+# is disabled, and opening webtiles loads the game main menu. (default: True)
+# dgl_mode = False
 
 bind_nonsecure = True # Set to false to only use SSL
 bind_address = ""
