@@ -70,9 +70,6 @@ templates:
     # # may not be supported on older versions of crawl. If unset, this defaults
     # # to True.
     allowed_with_hold: True
-    # # send_json_options is a legacy option. Always include this set to 'true'.
-    # # (Or submit a PR to remove it.)
-    send_json_options: True
   # this template doesn't specify a base template, and so inherits from
   # `default` above
   - id: trunk

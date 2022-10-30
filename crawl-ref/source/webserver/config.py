@@ -168,7 +168,6 @@ game_data_no_cache = True
 #         show_save_info = True,
 #         allowed_with_hold = True,
 #         # milestone_path = "./rcs/milestones",
-#         send_json_options = True,
 #         # env = {"LANG": "en_US.UTF8"},
 #         ),
 #     )
@@ -200,7 +199,6 @@ game_data_no_cache = True
 #         show_save_info = True,
 #         allowed_with_hold = True,
 #         # milestone_path = "./rcs/milestones",
-#         send_json_options = True,
 #         )),
 # ])
 
