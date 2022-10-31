@@ -93,7 +93,7 @@ def watch_socket_dirs():
     watcher = DirectoryWatcher()
     added_dirs = set()
     for game_id in config.games:
-        socket_dir = os.path.abspath(game_param(game_id, "socket_path"))
+        socket_dir = os.path.abspath(config.game_param(game_id, "socket_path"))
         if socket_dir in added_dirs:
             continue
         watcher.watch(socket_dir, handle_new_socket)
