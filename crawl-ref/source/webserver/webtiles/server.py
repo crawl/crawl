@@ -645,81 +645,88 @@ def run():
             config.get('logging_config')['filename'] = args.logfile
 
     init_logging(config.get('logging_config'))
-    logging.info("Loaded server configuration from: %s", config.source_file)
-    config.do_early_logging()
+    try:
+        logging.info("Loaded server configuration from: %s", config.source_file)
+        config.do_early_logging()
 
-    if config.get('live_debug'):
-        logging.info("Starting in live-debug mode.")
-        config.set('watch_socket_dirs', False)
+        if config.get('live_debug'):
+            logging.info("Starting in live-debug mode.")
+            config.set('watch_socket_dirs', False)
 
-    if args.logfile:
-        logging.info("Using command-line supplied logfile: '%s'", args.logfile)
+        if args.logfile:
+            logging.info("Using command-line supplied logfile: '%s'", args.logfile)
 
-    export_args_to_config(args)
+        export_args_to_config(args)
+
+        try:
+            config.load_game_data()
+            config.validate()
+        except:
+            err_exit("Errors in game data. Exiting.", exc_info=True)
+
+        if config.get('daemon', False):
+            daemonize()
+
+        signal.signal(signal.SIGTERM, signal_handler)
+        signal.signal(signal.SIGINT, signal_handler)
+        if (config.get('hup_reloads_config')):
+            signal.signal(signal.SIGHUP, reload_signal_handler)
+        else:
+            signal.signal(signal.SIGHUP, signal_handler)
+
+        if config.get('umask') is not None:
+            os.umask(config.get('umask'))
+    except:
+        err_exit("Server startup failed!", exc_info=True)
 
     try:
-        config.load_game_data()
-        config.validate()
+        write_pidfile()
+
+        global servers
+        servers = bind_server()
+        ensure_tornado_current()
+
+        shed_privileges()
+
+        # is this ever set to False by anyone in practice?
+        dgl_mode = config.get('dgl_mode')
+
+        if dgl_mode:
+            userdb.ensure_user_db_exists()
+            userdb.upgrade_user_db()
+        userdb.ensure_settings_db_exists()
+
+        signal.signal(signal.SIGUSR1, usr1_handler)
+
+        try:
+            IOLoop.current().set_blocking_log_threshold(0.5) # type: ignore
+            logging.info("Blocking call timeout: 500ms.")
+        except:
+            # this is the new normal; still not sure of a way to deal with this.
+            logging.info("Webserver running without a blocking call timeout.")
+
+        if dgl_mode:
+            ws_handler.status_file_timeout()
+            auth.purge_login_tokens_timeout()
+            ws_handler.start_reading_milestones()
+
+            if config.get('watch_socket_dirs'):
+                process_handler.watch_socket_dirs()
+
+        # set up various timeout loops
+        ws_handler.do_periodic_lobby_updates()
+        webtiles.config.init_config_timeouts()
+
+        logging.info("DCSS Webtiles server started with Tornado %s! (PID: %s)" %
+                                                    (tornado.version, os.getpid()))
+
+        IOLoop.current().start()
+
+        logging.info("Bye!")
     except:
-        err_exit("Errors in game data. Exiting.", exc_info=True)
-
-    if config.get('daemon', False):
-        daemonize()
-
-    signal.signal(signal.SIGTERM, signal_handler)
-    signal.signal(signal.SIGINT, signal_handler)
-    if (config.get('hup_reloads_config')):
-        signal.signal(signal.SIGHUP, reload_signal_handler)
-    else:
-        signal.signal(signal.SIGHUP, signal_handler)
-
-    if config.get('umask') is not None:
-        os.umask(config.get('umask'))
-
-    write_pidfile()
-
-    global servers
-    servers = bind_server()
-    ensure_tornado_current()
-
-    shed_privileges()
-
-    # is this ever set to False by anyone in practice?
-    dgl_mode = config.get('dgl_mode')
-
-    if dgl_mode:
-        userdb.ensure_user_db_exists()
-        userdb.upgrade_user_db()
-    userdb.ensure_settings_db_exists()
-
-    signal.signal(signal.SIGUSR1, usr1_handler)
-
-    try:
-        IOLoop.current().set_blocking_log_threshold(0.5) # type: ignore
-        logging.info("Blocking call timeout: 500ms.")
-    except:
-        # this is the new normal; still not sure of a way to deal with this.
-        logging.info("Webserver running without a blocking call timeout.")
-
-    if dgl_mode:
-        ws_handler.status_file_timeout()
-        auth.purge_login_tokens_timeout()
-        ws_handler.start_reading_milestones()
-
-        if config.get('watch_socket_dirs'):
-            process_handler.watch_socket_dirs()
-
-    # set up various timeout loops
-    ws_handler.do_periodic_lobby_updates()
-    webtiles.config.init_config_timeouts()
-
-    logging.info("DCSS Webtiles server started with Tornado %s! (PID: %s)" %
-                                                (tornado.version, os.getpid()))
-
-    IOLoop.current().start()
-
-    logging.info("Bye!")
-    remove_pidfile()
+        err_exit("Server startup failed!", exc_info=True)
+    finally:
+        remove_pidfile()
 
 
 # TODO: it might be nice to simply make this module runnable, but that would
