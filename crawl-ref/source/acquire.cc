@@ -727,6 +727,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
                 (*_subtype_finders[class_wanted])(divine, quantity, agent);
         }
 
+        // Double-check our subtype for weapons is valid
+        ASSERT(type_wanted != OBJ_WEAPONS || type_wanted <= get_max_subtype(class_wanted));
+
         item_def dummy;
         dummy.base_type = class_wanted;
         dummy.sub_type = type_wanted;
