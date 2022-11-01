@@ -413,6 +413,9 @@ static skill_type _acquirement_weapon_skill(bool divine, int agent)
          sk <= (agent == GOD_TROG ? SK_LAST_MELEE_WEAPON : SK_LAST_WEAPON);
          ++sk)
     {
+        // Don't choose a skill that's useless
+        if (is_useless_skill(sk))
+            continue;
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
         int weight = _skill_rdiv(sk) + 1;
