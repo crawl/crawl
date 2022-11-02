@@ -302,6 +302,11 @@ static const cloud_data clouds[] = {
       ETC_FIRE,                                   // colour
       { TILE_CLOUD_FLAME, CTVARY_RANDOM },        // tile
     },
+    // CLOUD_ELECTRICITY,
+    { "wisps of electric spark", nullptr,         // terse, verbose name
+      ETC_ELECTRICITY,                                   // colour
+      { TILE_CLOUD_ELECTRICITY, CTVARY_RANDOM },        // tile
+    },
     // CLOUD_DEGENERATION,
     { "degeneration",  nullptr,                   // terse, verbose name
       ETC_DARK,                                   // colour
