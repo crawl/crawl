@@ -534,9 +534,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.save_info.get(g, None) is None:
                 # cache for g is invalid, add a callback for it to the callback
                 # chain
-                call = [config.game_param(g, "crawl_binary")]
-                if "pre_options" in config.games[g]:
-                    call += config.game_param(g, "pre_options")
+                call = config.games[g].get_call_base()
                 call += ["-save-json", self.username]
                 callback = build_callback(g, call, callback)
 
@@ -913,10 +911,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if "send_json_options" in game and not game["send_json_options"]:
             return
 
-        call = [game.templated("crawl_binary", username=self.username)]
-
-        if "pre_options" in game:
-            call += game.templated("pre_options", username=self.username)
+        call = game.get_call_base()
 
         call += ["-name", player_name,
                  "-rc", self.rcfile_path(game_id)]

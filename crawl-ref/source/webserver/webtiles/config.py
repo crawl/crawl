@@ -198,6 +198,21 @@ class GameConfig(MutableMapping):
             r[k] = self.templated(k, username=username)
         return r
 
+    def get_call_base(self):
+        # these params can't be templated with a username...
+        call = [self.templated("crawl_binary")]
+        if "pre_options" in self:
+            call += self.templated("pre_options")
+        return call
+
+    def get_binary_key(self):
+        # return a value that is suitable for using as a hash key for a crawl
+        # binary. This intentionally accommodates `pre_options`, because for
+        # dgamelaunch-config setups, stable is called via a wrapper script
+        # with the version set via `pre_options`, so this is necessary to
+        # differentiate different stable versions.
+        return " ".join(self.get_call_base())
+
     def validate(self):
         # check for loops in templating
         seen = builtins.set()
@@ -217,7 +232,9 @@ class GameConfig(MutableMapping):
 
     def validate_game(self):
         # check for templating errors in parameter values. We want to do this
-        # only for full games, not templates.
+        # only for full games, not templates. Note that %n isn't validated
+        # here, but is checked against a hardcoded list of keys in the
+        # validate_game_dict call.
         for k in self:
             try:
                 self.templated(k, username="test")

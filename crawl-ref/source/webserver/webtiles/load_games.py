@@ -214,6 +214,12 @@ def validate_game_dict(game):
     string_array = ('options', 'pre_options')
     string_dict = ('env', )
 
+    # values where %n can't be expanded
+    # XX not sure this list gets everything
+    username_invalid = ('pre_options', 'crawl_binary', 'socket_path')
+    # XX should %v be validated here too? Currently handled in
+    # GameConfig.validate_game
+
     allow_none = {'morgue_url'}
     for prop in required:
         if prop not in game:
@@ -246,6 +252,11 @@ def validate_game_dict(game):
                     logging.warn(
                       "Item '%s' in property '%s' should be a string in game '%s'",
                       item, prop, game['id'])
+            if prop in username_invalid and " ".join(value).find("%n") >= 0:
+                found_errors = True
+                logging.warn(
+                    "'%%n' will not be expanded in %s (game %s): '%s'" % (
+                                    rop, game['id'], repr(value)))
         elif prop in string_dict:
             if not isinstance(value, dict):
                 found_errors = True
@@ -264,29 +275,24 @@ def validate_game_dict(game):
                     logging.warn("Item value '%s' of key '%s' in property '%s'"
                                  " should be a string in game '%s'",
                                  item_value, item_key, prop, game['id'])
+                if prop in username_invalid and item_value.find("%n") >= 0:
+                    found_errors = True
+                    logging.warn(
+                        "'%%n' will not be expanded in %s.%s (game %s): '%s'" % (
+                                    prop, item_key, game['id'], repr(value)))
         else:
             # String property
             if not isinstance(value, str):
                 found_errors = True
                 logging.warn("Property '%s' value should be string in game '%s'",
                              prop, game['id'])
+            if prop in username_invalid and value.find("%n") >= 0:
+                found_errors = True
+                logging.warn(
+                    "'%%n' will not be expanded in %s (game %s): '%s'" % (
+                                    prop, game['id'], repr(value)))
     return not found_errors
 
-
-
-# A key that uniquely determines the crawl binary called if `g` is started.
-# This can be messed up by launcher scripts if they do something other than
-# the one case handled here.
-def binary_key(g):
-    import webtiles.config
-    k = webtiles.config.games[g].templated("crawl_binary")
-    # On dgamelaunch-config servers, `pre_options` is used to pass a
-    # version to the launcher script, which underlyingly calls different
-    # binaries. To accommodate this we need to also use pre_options in
-    # the key for organizing binaries. (sigh...)
-    if "pre_options" in webtiles.config.games[g]:
-        k += " " + " ".join(webtiles.config.games[g].templated("pre_options"))
-    return k
 
 binaries = {}
 def collect_game_modes():
@@ -303,15 +309,13 @@ def collect_game_modes():
     # to get accurate save info.
     global binaries
     for g in webtiles.config.games:
-        key = binary_key(g)
+        key = webtiles.config.games[g].get_binary_key()
         if not webtiles.config.games[g].get("show_save_info", False):
             binaries[key] = None
             continue
         if key in binaries:
             continue
-        call = [webtiles.config.games[g].templated("crawl_binary")]
-        if "pre_options" in webtiles.config.games[g]:
-            call += webtiles.config.games[g].templated("pre_options")
+        call = webtiles.config.games[g].get_call_base()
 
         # "dummy" is here for the sake of the dgamelaunch-config launcher
         # scripts, which choke badly if there is no second argument. The actual
@@ -329,7 +333,7 @@ def collect_game_modes():
 
     game_modes = {}
     for g in webtiles.config.games:
-        key = binary_key(g)
+        key = webtiles.config.games[g].get_binary_key()
         mode_found = False
         if binaries[key] is None:
             # binary does not support game mode json

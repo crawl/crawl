@@ -582,12 +582,7 @@ class CrawlProcessHandlerBase(object):
 
     def _base_call(self):
         game = self.game_params
-
-
-        call  = [game.templated("crawl_binary", username=self.username)]
-
-        if "pre_options" in game:
-            call += game.templated("pre_options", username=self.username)
+        call = game.get_call_base()
 
         call += ["-name",   self.username,
                  "-rc",     os.path.join(self.config_path("rcfile_path"),
