@@ -331,20 +331,40 @@ def collect_game_modes():
             logging.warn("JSON error with output '%s'", repr(m_json))
             binaries[key] = None
 
+    # Example output of this call:
+    # {"normal":"","tutorial":"-tutorial","arena":"-arena","sprint":"-sprint","seeded":"-seed"}
+    # we want to take the options specified in this map and reconstruct the
+    # game modes as defined in the game configs.
+
     game_modes = {}
     for g in webtiles.config.games:
         key = webtiles.config.games[g].get_binary_key()
-        mode_found = False
         if binaries[key] is None:
-            # binary does not support game mode json
+            # this binary does not support -gamemode-json, so we know nothing
+            # about its game modes. (Pre-0.24 dcss.)
             game_modes[g] = None
             continue
+
+        # A gametype may specify "" as the options string (e.g. "normal"). We
+        # can't look directly for this, since there could be other options.
+        # So first find the relevant mode if any, and then use it as a fallback
+        # for any calls where no modes are found.
+        no_options_mode = None
+        for m in binaries[key]:
+            if binaries[key][m] == "":
+                no_options_mode = m
+                break
+
+        mode_found = False
         for mode in binaries[key]:
-            for opt in webtiles.config.game_param(g, "options", default=[""]):
+            for opt in webtiles.config.game_param(g, "options", default=[]):
                 if opt == binaries[key][mode]:
                     game_modes[g] = mode
                     mode_found = True
                     break
             if mode_found:
                 break
+        if not mode_found and no_options_mode is not None:
+            game_modes[g] = no_options_mode
+
     return game_modes
