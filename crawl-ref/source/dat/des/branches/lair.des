@@ -3550,3 +3550,67 @@ tttt
 tt
 t
 ENDMAP
+
+# hepliaklqana/ancestor themed lair end (rN recommended)
+NAME:	tekkud_lair_nightmare
+TAGS:	no_wall_fixup no_monster_gen no_rotate
+PLACE:	Lair:$
+ORIENT:	south
+MONS:	spectral wolf
+KMONS:	R = spectral black bear / spectral polar bear w:8
+KMONS:	Y = spectral yak / spectral death yak w:8 / spectral dream sheep w:5 / spectral catoblepas w:3
+KMONS:	y = spectral elephant / spectral dire elephant w:5
+KMONS:	F = spectral cane toad / spectral bullfrog / spectral blink frog / spectral goliath frog w:3
+KMONS:	S = spectral water moccasin / spectral black mamba / spectral mana viper w:3 / spectral sea snake w:2 / spectral anaconda w:1 / spectral ball python w:1
+KMONS:	i = spectral hornet / spectral scorpion / spectral killer bee / spectral vampire mosquito / spectral boulder beetle w:8 / spectral meliai w:1
+KMONS:	I = spectral emperor scorpion / spectral queen bee
+KMONS:	r = spectral rime drake / spectral steam dragon / spectral acid dragon / spectral wyvern / spectral lindwurm w:8 / spectral basilisk w:5
+KMONS:	Z = spectral 12-headed hydra / spectral fire dragon
+KMONS:	d = ghost crab
+KMONS:	f = fungus
+KMONS:	z = fungus
+SUBST:	? : Yy
+SUBST:	V : FS
+KFEAT:	_ = altar_hepliaklqana
+MARKER:	_ = lua:fog_machine{ \
+             pow_max = 32, delay_min = 50, delay_max = 200, \
+             size = 8, start_clouds = 4}
+KFEAT:	L = *
+FTILE:	'L|_d$ = floor_normal
+TILE:	X = wall_stone_smooth
+COLOUR:	X = white
+# the hive walls will come up as a "tree" but i wanted it to be destructible in case someone used fireball or flame wave
+KFEAT:	a = t
+COLOUR:	a = yellow
+TILE:	a = wall_wax
+KMASK:	' = no_item_gen
+FTILE:	+%*`RYyiIFSrZft = floor_grass
+MAP
+                  xxxxxxxxxxxxx
+                xxxxxxxxxxxxxxxxx
+xxxxxx@xxxxxx  xxxxxxtttttttttttxx
+xxxxxx.xxxxxxxxxxxxxtt````tt``rtxxx     xxxxxxxxxx
+xxxxxx.zxxxxxxxxxxxxt``t``````ttxxxxxxxxxxttttttxx
+xxxxx..xxxxxxtttxxxxt``ttt```ttxxxxxxxxtttt``t`ttxx
+xxxxxzxxxxxttt`tttxxtt``ttt``tttxxxxtttt*t``````ttxx
+xxxxx...xxxt```R`ttxxtt`tttt``ttxxxxt&``````ttt``ttxx
+xxxxxx.1..+``````%txxxt```ttt``ttxxxtt``Z```tttt``ttx
+ xxxxz.111+````R`Rtxxtttt``tta``aaxxt````````txtt``tx
+ xxxxx1.1.+`````R`txtt``V``taa```aaatt````r`ttxxtt`txx
+  xxxxxxxxxtt``R`tttt`V``Vtta``````att`r```ttxxxxX`Xxxxx
+         xxxt``tttttt``V`Vttaa`````aatt```ttxxxxXX+XXxxx
+  xxxxxxxxxtt```tttttt``V*`tta`i````attt``ttxxxXX'''XXxxxx
+ xxtttttxxtt``ttttttt`````V`ta``iii`aatt`f`txxXX'''''XXxxx
+xxtt```tttt```ttttttt`tt```Vtaa``iii`aatt`ttxXX'''''''XXxx
+xtt`?`ttttt``tttttttt``tt`Vttta`iiiii*at``txXX'''''''''XXxx
+xt```````ttt`tt``ttttt`tttttxxaa`iii``at`ttxXL''''d''''LXxx
+xt?``?`t````````````tt``txxxxxxa``I``a```txxXX'''''''''XXx
+xtt`?tttt`%```````t``t`ttxxxxxxaaa`````tttxxxXX'''''''XXxx
+xxt``?ttttttt`````tt```txxxxxxxxxt`tttttxxxxxxXX$$$$$XXxx
+xxt```?`?``````t`ttttfttxxxx xxxxtttxxxxxxxxxxxXX$|$XXxx
+xxt``t?t??`t````ttxxtttxxx     xxxxxxxxxxxxxxxxxXX_XXxx
+xxtt`tt`t`tttttttxxxxxxx                       xxXXXxx
+xxxttttttttxxxxxxxxx                            xxxxx
+xxxxxxxxxxxxxx
+  xxxxxxxxxx
+ENDMAP
