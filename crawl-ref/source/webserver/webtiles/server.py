@@ -676,6 +676,9 @@ def run():
 
         if config.get('umask') is not None:
             os.umask(config.get('umask'))
+    except SystemExit:
+        # logging already done, hopefully
+        raise
     except:
         err_exit("Server startup failed!", exc_info=True)
 
@@ -723,6 +726,9 @@ def run():
         IOLoop.current().start()
 
         logging.info("Bye!")
+    except SystemExit:
+        # logging already done, hopefully
+        raise
     except:
         err_exit("Server startup failed!", exc_info=True)
     finally:
