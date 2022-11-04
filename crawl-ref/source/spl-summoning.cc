@@ -5,8 +5,6 @@
 
 #include "AppHdr.h"
 
-#include "mgen-enum.h"
-#include "monster-type.h"
 #include "spl-summoning.h"
 
 #include <algorithm>
