@@ -19,12 +19,21 @@ from webtiles import load_games, bans
 server_config = {}
 source_file = None
 source_module = None
+server_path = None
+
+# "temporary" compatibility shim for config calls in templates
+allow_password_reset = False
+admin_password_reset = False
 
 # rudimentary code for log msgs before server.py:init_logging is called
-# probably better just to avoid using rather than to make more sophisticated..
+# probably better just to avoid using as much as possible rather than to make
+# it any more sophisticated. (Or, refactor early server setup so it's not
+# needed..)
 _early_logging = []
 
+
 def early_log(s):
+    global _early_logging
     _early_logging.append(s)
 
 def do_early_logging():
@@ -32,6 +41,62 @@ def do_early_logging():
     for s in _early_logging:
         logging.info(s)
     _early_logging = []
+
+
+# game definitions and configuration
+# note: get('games') should not be used to get game data! That call would get
+# only whatever games are defined in the config module.
+games = collections.OrderedDict()
+game_templates = collections.OrderedDict()
+# see also `metatemplates`, defined below
+
+# mapping of game keys to game mode names
+game_modes = {}  # type: Dict[str, str]
+
+# mapping of binary keys to game keys
+binaries_to_games = {}  # type: Dict[str, str]
+
+# default values for module-level get calls
+# for values not in this dict, the default is None
+defaults = {
+    'dgl_mode': True,
+    'logging_config': {
+        "level": logging.INFO,
+        "format": "%(asctime)s %(levelname)s: %(message)s"
+    },
+    'server_socket_path': None,
+    'watch_socket_dirs': False,
+    'milestone_file': [],
+    'status_file_update_rate': 5,
+    'lobby_update_rate': 2,
+    'recording_term_size': (80, 24),
+    'max_connections': 100,
+    'connection_timeout': 600,
+    'max_idle_time': 5 * 60 * 60,
+    'use_gzip': True,
+    'kill_timeout': 10,
+    'nick_regex': r"^[a-zA-Z0-9]{3,20}$",
+    'max_passwd_length': 20,
+    'allow_password_reset': False,
+    'admin_password_reset': False,
+    'crypt_algorithm': "broken", # should this be the default??
+    'crypt_salt_length': 16,
+    'login_token_lifetime': 7, # Days
+    'daemon': False,
+    'development_mode': False,
+    'no_cache': False,
+    'live_debug': False,
+    'lobby_update_rate': 2,
+    'load_logging_rate': 0,
+    'slow_callback_alert': None,
+    'games': collections.OrderedDict([]),
+    'templates': collections.OrderedDict([]),
+    'use_game_yaml': None, # default: load games.d if games is empty
+    'banned': [],
+    'bot_accounts': False,
+    'wizard_accounts': False,
+}
+
 
 # light wrapper class that maps get/set/etc to getattr/setattr/etc
 # doesn't bother to implement most of the dict interface...
@@ -59,12 +124,14 @@ class ConfigModuleWrapper(object):
                 raise ValueError("'%s' must be a map" % path)
             for key, value in override_data.items():
                 if key == 'games':
+                    # not sure why this should be disallowed
                     raise ValueError("Can't override 'games' in %s. Use games.d/ instead." % path)
                 elif key == 'banned':
                     # we probably don't want to overwrite any ban lists set
                     # in the config module
                     add_ban_list(value)
-                setattr(self.module, key, value)
+                else:
+                    setattr(self.module, key, value)
             early_log("Loading config overrides from: '%s'" % path)
 
     def get(self, key, default):
@@ -81,12 +148,10 @@ class ConfigModuleWrapper(object):
     def __contains__(self, key):
         return hasattr(self.module, key)
 
-# temporary compatibility shim for config calls in templates
-allow_password_reset = False
-admin_password_reset = False
 
 # classic config: everything is just done in a module
-# (TODO: add some alternative)
+# TODO: allow this to be loaded directly from yml somehow? Right now, there
+# always must be a config module, and then an override from yml is possible
 def init_config_from_module(module):
     global server_config, source_file, source_module
     source_module = module
@@ -283,13 +348,6 @@ class GameConfig(MutableMapping):
         return len(self._store) + len([k for k in self.get_defaults() if not k in self._store])
 
 
-server_path = None
-# note: get('games') should not be used to get this value! This gets only
-# whatever games are defined in the config module.
-games = collections.OrderedDict()
-game_templates = collections.OrderedDict()
-
-
 # metatemplates that ground out recursion. `default` can be adjusted using
 # the `define_default` function below, `base` should be left alone.
 # outside this file, only modified in load_games.py:load_games
@@ -324,9 +382,6 @@ def get_template(k):
         return metatemplates[k]
     else:
         return game_templates[k]
-
-
-game_modes = {}  # type: Dict[str, str]
 
 
 # templating for strings in game config
@@ -364,72 +419,26 @@ def game_param(game_key, param, username=None, default=""):
     return game.templated(param, username=username, default=default)
 
 
-# return a copy with everything templated that can be templated
-# XX could make a better interface with a custom game class rather than dict
-def game_params(game_key, username=None):
-    global games
-    r = {}
-    for k in games[game_key]:
-        r[k] = game_param(game_key, k, username=username)
-    return r
-
-
-# for values not in this dict, the default is None
-defaults = {
-    'dgl_mode': True,
-    'logging_config': {
-        "level": logging.INFO,
-        "format": "%(asctime)s %(levelname)s: %(message)s"
-    },
-    'server_socket_path': None,
-    'watch_socket_dirs': False,
-    'milestone_file': [],
-    'status_file_update_rate': 5,
-    'lobby_update_rate': 2,
-    'recording_term_size': (80, 24),
-    'max_connections': 100,
-    'connection_timeout': 600,
-    'max_idle_time': 5 * 60 * 60,
-    'use_gzip': True,
-    'kill_timeout': 10,
-    'nick_regex': r"^[a-zA-Z0-9]{3,20}$",
-    'max_passwd_length': 20,
-    'allow_password_reset': False,
-    'admin_password_reset': False,
-    'crypt_algorithm': "broken", # should this be the default??
-    'crypt_salt_length': 16,
-    'login_token_lifetime': 7, # Days
-    'daemon': False,
-    'development_mode': False,
-    'no_cache': False,
-    'live_debug': False,
-    'lobby_update_rate': 2,
-    'load_logging_rate': 0,
-    'slow_callback_alert': None,
-    'games': collections.OrderedDict([]),
-    'templates': collections.OrderedDict([]),
-    'use_game_yaml': None, # default: load games.d if games is empty
-    'banned': [],
-    'bot_accounts': False,
-    'wizard_accounts': False,
-}
-
 def get(key, default=None):
-    global server_config
+    global server_config, defaults
     return server_config.get(key, defaults.get(key, default))
 
-# use builtins.set if you need the type name
+
+# note: shadows type `set`, use `builtins.set` if you need the type name
 def set(key, val):
     global server_config
     server_config[key] = val
+
 
 def pop(key):
     global server_config
     return server_config.pop(key)
 
+
 def has_key(key):
     global server_config
     return key in server_config
+
 
 def check_keys_all(required, raise_on_missing=False):
     # accept either a single str, or an iterable for `required`
@@ -442,6 +451,7 @@ def check_keys_all(required, raise_on_missing=False):
             return False
     return True
 
+
 def check_keys_any(required, raise_on_missing=False):
     # use `has_keys`: if any member of required is itself a list, require
     # all keys in the list
@@ -451,6 +461,7 @@ def check_keys_any(required, raise_on_missing=False):
                                         ", ".join([repr(r) for r in required]))
         return False
     return True
+
 
 def check_game_config():
     success = True
@@ -469,6 +480,9 @@ def check_game_config():
 
     return success
 
+
+# aggregate check on a bunch of options values to determine whether we should
+# load yaml files from games.d/
 def using_games_dir():
     # backwards compatibility: deprecated games_config_dir was either None to
     # disable, or a str, but treat it now as just a bool-like. (Slightly
@@ -488,6 +502,9 @@ def add_ban_list(ban_list):
 
 # check a username against various config options that may disallow it
 def check_name(username):
+    # note: it's possible that nick_regex should be handled differently, since
+    # it is always set and used as a syntactic check; the others are used
+    # check for bad names of some kind
     if not re.match(get('nick_regex'), username):
         return False
     if get('nick_check_fun') and not get('nick_check_fun')(username):
@@ -505,7 +522,9 @@ def load_banfile(path, require_exists=False):
         early_log("Loading ban list from: '%s'" % path)
 
 
+# build config.games, as well as various cached bits of game data
 def load_game_data(reloading=False):
+    global games, game_modes, binaries_to_games
     if not load_games.load_games(reloading=reloading):
         return # failed config reload
 
@@ -517,8 +536,14 @@ def load_game_data(reloading=False):
 
     # finally, collect info about the games we found (which will also validate
     # the binaries, for versions that support this call at least).
-    global game_modes
     game_modes = load_games.collect_game_modes()
+    binaries_to_games = dict()
+    for g in games:
+        k = games[g].get_binary_key()
+        if k not in binaries_to_games:
+            binaries_to_games[k] = []
+        binaries_to_games[k].append(g)
+
 
 def validate():
     check_keys_any(['bind_nonsecure', 'ssl_options'], True)
