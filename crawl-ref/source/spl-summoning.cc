@@ -816,23 +816,16 @@ int mons_ball_lightning_hd(int pow, bool random)
     return ball_lightning_hd(pow, random) / 2;
 }
 
-spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
+spret cast_conjure_ball_lightning(const actor &agent, int pow, god_type god, bool fail)
 {
     fail_check();
     bool success = false;
 
-    // mgen_data cbl2 =_pal_data(MONS_BALL_LIGHTNING, 0, god,
-    //                          SPELL_CONJURE_BALL_LIGHTNING);
-
-    // == _summon_data(you, MONS_BALL_LIGHTNING, 0, god, spell);
-
-    // == mgen_data(MONS_BALL_LIGHTNING, BEH_COPY, you.pos(), _auto_autofoe(&you))
-    //      .set_summoned(&you, 0, SPELL_CONJURE_BALL_LIGHTNING, god);
-
-
-    mgen_data cbl(MONS_BALL_LIGHTNING, BEH_FRIENDLY, you.pos(), MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
-
-    cbl.set_summoned(&you, 0, SPELL_CONJURE_BALL_LIGHTNING, god);
+    const auto att = agent.is_player() ? BEH_FRIENDLY
+                                       : SAME_ATTITUDE(agent.as_monster());
+    mgen_data cbl(MONS_BALL_LIGHTNING, att,
+      agent.pos(), MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
+    cbl.set_summoned(&agent, 0, SPELL_CONJURE_BALL_LIGHTNING, god);
     cbl.hd = ball_lightning_hd(pow);
 
     for (int i = 0; i < 3; ++i)
