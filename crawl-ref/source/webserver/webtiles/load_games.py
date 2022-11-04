@@ -313,7 +313,7 @@ def collect_game_modes():
         if not webtiles.config.games[g].get("show_save_info", False):
             binaries[key] = None
             continue
-        if key in binaries:
+        if key in binaries and binaries[key]:
             continue
         call = webtiles.config.games[g].get_call_base()
 
@@ -340,8 +340,10 @@ def collect_game_modes():
     for g in webtiles.config.games:
         key = webtiles.config.games[g].get_binary_key()
         if binaries[key] is None:
-            # this binary does not support -gamemode-json, so we know nothing
-            # about its game modes. (Pre-0.24 dcss.)
+            # this binary either has no enabled save infos, opr does not
+            # support -gamemode-json, so we know nothing about its game modes.
+            # (Pre-0.24 dcss.)
+            # XX should we always try to collect game modes?
             game_modes[g] = None
             continue
 
