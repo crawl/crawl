@@ -5,6 +5,8 @@
 
 #include "AppHdr.h"
 
+#include "mgen-enum.h"
+#include "monster-type.h"
 #include "spl-summoning.h"
 
 #include <algorithm>
@@ -822,8 +824,18 @@ spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     fail_check();
     bool success = false;
 
-    mgen_data cbl =_pal_data(MONS_BALL_LIGHTNING, 0, god,
-                             SPELL_CONJURE_BALL_LIGHTNING);
+    // mgen_data cbl2 =_pal_data(MONS_BALL_LIGHTNING, 0, god,
+    //                          SPELL_CONJURE_BALL_LIGHTNING);
+
+    // == _summon_data(you, MONS_BALL_LIGHTNING, 0, god, spell);
+
+    // == mgen_data(MONS_BALL_LIGHTNING, BEH_COPY, you.pos(), _auto_autofoe(&you))
+    //      .set_summoned(&you, 0, SPELL_CONJURE_BALL_LIGHTNING, god);
+
+
+    mgen_data cbl(MONS_BALL_LIGHTNING, BEH_FRIENDLY, you.pos(), MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
+
+    cbl.set_summoned(&you, 0, SPELL_CONJURE_BALL_LIGHTNING, god);
     cbl.hd = ball_lightning_hd(pow);
 
     for (int i = 0; i < 3; ++i)
