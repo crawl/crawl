@@ -1242,7 +1242,6 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     return level_id();
 }
 
-// TODO(Zannick): Fully merge with up_stairs into take_stairs.
 void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft, bool update_travel_cache)
 {
     take_stairs(force_stair, false, force_known_shaft, update_travel_cache);
