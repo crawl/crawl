@@ -635,6 +635,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._stop_purging_stale_processes()
         self._stale_pid = None
 
+    @util.note_blocking_fun
     def _purge_locks_and_start(self, firsttime=False):
         # Purge stale locks
         lockfile = self._find_lock()
@@ -696,6 +697,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     path)
         return None
 
+    @util.note_blocking_fun
     def _kill_stale_process(self, signal=subprocess.signal.SIGHUP):
         self._process_hup_timeout = None
         if self._stale_pid == None: return
@@ -755,6 +757,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self._purge_locks_and_start(False)
 
+    @util.note_blocking_fun
     def _start_process(self):
         self.socketpath = os.path.join(self.config_path("socket_path"),
                                        self.username + ":" +
@@ -816,6 +819,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             else:
                 self._on_process_end()
 
+    @util.note_blocking_fun
     def connect(self, socketpath, primary = False):
         self.socketpath = socketpath
         self.conn = WebtilesSocketConnection(self.socketpath, self.logger)
@@ -860,6 +864,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                  utf8("Time: (%s) %s" % (tstamp, ctime)) + crlf +
                  clrscr)
 
+    @util.note_blocking_fun
     def _on_process_end(self):
         if self.process:
             self.logger.debug("Crawl PID %s terminated.", self.process.pid)
