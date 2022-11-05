@@ -351,9 +351,10 @@ def reset_token_commands(args):
         username = args.reset
 
     user_info = userdb.get_user_info(username)
-
     if not user_info:
         err_exit("Reset/clear password failed; invalid user: %s" % username)
+
+    username = user_info.username # canonicalize
 
     # don't crash on the default config
     if config.get('lobby_url') is None:
@@ -371,10 +372,10 @@ def reset_token_commands(args):
         if not ok:
             err_exit("Error generating password reset token for %s: %s" % (username, msg))
         else:
-            if not user_info[1]:
+            if not user_info.email:
                 logging.warning("No email set for account '%s', use caution!" % username)
             print("Setting a password reset token on account '%s'." % username)
-            print("Email: %s\nMessage body to send to user:\n%s\n" % (user_info[1], msg))
+            print("Email: %s\nMessage body to send to user:\n%s\n" % (username, msg))
             return True
     return False
 
@@ -402,10 +403,10 @@ def show_flags(username):
     if not r:
         err_exit("Unknown user '%s'!" % username)
     # XX would be nice to normalize username
-    if not r[2]:
-        print("User '%s' (id %d) has no flags set." % (username, r[0]))
+    if not r.flags:
+        print("User '%s' (id %d) has no flags set." % (r.username, r.id))
     else:
-        print("Flags for '%s' (id %d): %s" % (username, r[0], userdb.flag_description(r[2])))
+        print("Flags for '%s' (id %d): %s" % (r.username, r.id, userdb.flag_description(r.flags)))
     return True
 
 
@@ -428,7 +429,7 @@ def flag_commands(args):
             print("No matching users.")
         else:
             print("Users with flag '%s': %s" %
-                (userdb.flag_description(flag), ", ".join([u[1] for u in l])))
+                (userdb.flag_description(flag), ", ".join([u.username for u in l])))
         return True
     elif args.set:
         r = userdb.set_flags(args.set, flag, mask=flag)
@@ -453,7 +454,7 @@ def ban_commands(args):
     if args.check_config_bans or args.run_config_bans:
         # potentially very heavy commands on old servers...
         all_users = userdb.get_all_users()
-        affected = [n[1] for n in all_users if not config.check_name(n[1])]
+        affected = [n.username for n in all_users if not config.check_name(n.username)]
         if not affected:
             print("No affected users.")
             return True
@@ -605,10 +606,7 @@ def run_util():
 
     init_logging(config.get('logging_config'))
 
-    if config.get('dgl_mode'):
-        userdb.ensure_user_db_exists()
-        userdb.upgrade_user_db()
-    userdb.ensure_settings_db_exists()
+    userdb.init_db_connections()
 
     mode_fun = None
 
@@ -694,10 +692,7 @@ def run():
         # is this ever set to False by anyone in practice?
         dgl_mode = config.get('dgl_mode')
 
-        if dgl_mode:
-            userdb.ensure_user_db_exists()
-            userdb.upgrade_user_db()
-        userdb.ensure_settings_db_exists()
+        userdb.init_db_connections()
 
         signal.signal(signal.SIGUSR1, usr1_handler)
 

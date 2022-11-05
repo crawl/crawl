@@ -464,6 +464,9 @@ jobs:
     - name: Unit Tests (pytest)
       working-directory: crawl-ref/source/webserver
       run: pytest
+    - name: Unit Tests (unittest)
+      working-directory: crawl-ref/source/webserver
+      run: python -m unittest webtiles.userdb
 
   build_headers:
     name: Build headers ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}

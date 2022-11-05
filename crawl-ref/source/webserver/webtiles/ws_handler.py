@@ -349,12 +349,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not user_info:
             self.send_message("admin_pw_reset_done", error="Invalid user")
             return
-        ok, msg = userdb.generate_forgot_password(username)
+        ok, msg = userdb.generate_forgot_password(user_info.username)
         if not ok:
             self.send_message("admin_pw_reset_done", error=msg)
         else:
-            self.logger.info("Admin user '%s' set a password token on account '%s'", self.username, username)
-            self.send_message("admin_pw_reset_done", email_body=msg, username=username, email=user_info[1])
+            self.logger.info("Admin user '%s' set a password token on account '%s'",
+                self.username, user_info.username)
+            self.send_message("admin_pw_reset_done", email_body=msg,
+                username=user_info.username, email=user_info.email)
 
     @admin_required
     def admin_pw_reset_clear(self, username):
@@ -559,7 +561,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     # Binary doesn't support save info, print a warning so that
                     # the admin can see there is a misconfiguration
                     # XX it should be possible to check for this case on startup
-                    logging.warn("Save info check for '%s' failed" % b)
+                    logging.warning("Save info check for '%s' failed" % b)
                     data = None # force error case in update_save_info call
 
                 self.update_save_info(b, data)
@@ -648,11 +650,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def update_db_info(self):
+        """update self's user info from the user database, including updating
+        any flag changes that may have happened in the db."""
         if not self.username:
             return True # caller needs to check for anon if necessary
         # won't detect a change in hold state on first login...
         old_restriction = self.user_flags is not None and self.account_restricted()
-        self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
+        u = userdb.get_user_info(self.username)
+        self.username = u.username # canonicalize
+        self.user_id = u.id
+        self.email = u.email
+        self.user_flags = u.flags
         self.logger.extra["username"] = self.username
         if userdb.dgl_is_banned(self.user_flags):
             return False

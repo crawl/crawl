@@ -1,11 +1,14 @@
 import crypt
 import hashlib
 import logging
+import os
 import os.path
 import random
 import re
 import sqlite3
 from base64 import urlsafe_b64encode
+import contextlib
+import collections
 
 from tornado.escape import to_unicode
 from tornado.escape import utf8
@@ -19,50 +22,138 @@ try:
 except ImportError:
     pass
 
-
+# convenience wrapper to make various context manager cases a little smoother,
+# and handle error cases uniformly
 class crawl_db(object):
-    # TODO: based on userdb; why doesn't this just keep the database open?
-    # I think sqlite can handle that...
     def __init__(self, name):  # type: (str) -> None
         self.name = name
+        self.conn = sqlite3.connect(self.name) if self.name else None
 
-    def __enter__(self):  # type: () -> 'crawl_db'
-        self.conn = sqlite3.connect(self.name)
-        self.c = self.conn.cursor()
-        return self
-
-    def __exit__(self, *_):  # type: (Any) -> None
-        if self.c:
-            self.c.close()
+    # needs to be manually closed, or used with contextlib.closing. However,
+    # sqlite3 connection objects close on gc as well.
+    def close(self):
         if self.conn:
             self.conn.close()
 
+    def cursor(self):
+        """Cursor in context manager form"""
+        if not self.conn:
+            raise sqlite3.ProgrammingError("Database connection not initialized!")
+        return contextlib.closing(self.conn.cursor())
 
-def ensure_settings_db_exists():  # type: () -> None
-    if os.path.exists(config.get('settings_db')):
-        return
-    logging.warn("User settings database didn't exist at '%s'; creating it now.",
-                 config.get('settings_db'))
-    create_settings_db()
+    # when used as a context manager itself, acts like the connection context
+    # manager. In particular, if you use the db object as a context manager,
+    # it will autocommit on exiting the context.
+    def __enter__(self):
+        if not self.conn:
+            raise sqlite3.ProgrammingError("Database connection not initialized!")
+        return self.conn.__enter__()
 
+    def __exit__(self, *_):
+        # XX I think the commit that this may entail is potentially blocking...
+        # hopefully doesn't matter in practice
+        return self.conn.__exit__(*_)
 
-def create_settings_db():  # type: () -> None
+    # convenience wrapper for Connection.execute with context management
+    # signature should maybe just be: execute(sql, parameters=(), /)
+    def execute(self, *args, **kwargs):
+        if not self.conn:
+            raise sqlite3.ProgrammingError("Database connection not initialized!")
+        return contextlib.closing(self.conn.execute(*args, **kwargs))
+
+def create_settings_db(filename):  # type: () -> None
     schema = """
         CREATE TABLE mutesettings (
             username TEXT PRIMARY KEY NOT NULL UNIQUE,
             mutelist TEXT DEFAULT ''
         );
     """
-    with crawl_db(config.get('settings_db')) as db:
-        db.c.execute(schema)
-        db.conn.commit()
+    with contextlib.closing(crawl_db(filename)) as c:
+        with c:
+            c.execute(schema)
+
+
+def ensure_settings_db_exists(quiet=False):
+    dbname = config.get('settings_db')
+    if not os.path.exists(dbname):
+        if not quiet:
+            logging.warning("User settings database didn't exist at '%s'; creating it now.",
+                     dbname)
+        create_settings_db(dbname)
+    return crawl_db(dbname)
+
+
+recovery_schema = """
+    CREATE TABLE recovery_tokens (
+        token TEXT PRIMARY KEY,
+        token_time TEXT,
+        user_id INTEGER NOT NULL,
+        FOREIGN KEY(user_id) REFERENCES dglusers(id)
+    );
+"""
+
+
+def create_user_db(filename):
+    global recovery_schema
+    dglusers_schema = """
+        CREATE TABLE dglusers (
+            id INTEGER PRIMARY KEY,
+            username TEXT,
+            email TEXT,
+            env TEXT,
+            password TEXT,
+            flags INTEGER
+        );
+    """
+    with contextlib.closing(crawl_db(filename)) as c:
+        with c:
+            c.execute(dglusers_schema)
+            c.execute(recovery_schema)
+
+
+def ensure_user_db_exists(quiet=False):  # type: () -> None
+    dbname = config.get('password_db')
+    if not os.path.exists(dbname):
+        if not quiet:
+            logging.warning("User database '%s' didn't exist; creating it now.", dbname)
+        create_user_db(dbname)
+    return crawl_db(dbname)
+
+
+settings_db = crawl_db("")
+user_db = crawl_db("")
+
+
+def upgrade_user_db():  # type: () -> None
+    """Automatically upgrades the database."""
+    global user_db, recovery_schema
+    with user_db.cursor() as c:
+        query = "SELECT name FROM sqlite_master WHERE type='table';"
+        tables = [i[0] for i in c.execute(query)]
+
+    if "recovery_tokens" not in tables:
+        logging.warning("User database missing table 'recovery_tokens'; adding now")
+        # very old databases may be missing the password recovery table.
+        # XX: do any of these still exist in practice?
+        with user_db:
+            user_db.execute(recovery_schema)
+
+
+def init_db_connections(quiet=False):
+    """Ensure databases exist, and init persistent db connections"""
+    global settings_db, user_db
+    if config.get('dgl_mode'):
+        user_db = ensure_user_db_exists(quiet=quiet)
+        upgrade_user_db()
+    settings_db = ensure_settings_db_exists(quiet=quiet)
+
 
 
 def get_mutelist(username):  # type: (str) -> Optional[str]
-    with crawl_db(config.get('settings_db')) as db:
-        db.c.execute("select mutelist from mutesettings where username=? collate nocase",
-                     (username,))
-        result = db.c.fetchone()
+    with settings_db.execute(
+            "SELECT mutelist FROM mutesettings WHERE username=? COLLATE NOCASE",
+            (username,)) as c:
+        result = c.fetchone()
     return result[0] if result is not None else None
 
 
@@ -72,15 +163,14 @@ def set_mutelist(username, mutelist):  # type: (str, Optional[str]) -> None
 
     # n.b. the following will wipe out any columns not mentioned, if there
     # ever are any...
-    with crawl_db(config.get('settings_db')) as db:
-        query = """
-            INSERT OR REPLACE INTO mutesettings
-                (username, mutelist)
-            VALUES
-                (?,?);
-        """
-        db.c.execute(query, (username, mutelist))
-        db.conn.commit()
+    query = """
+        INSERT OR REPLACE INTO mutesettings
+            (username, mutelist)
+        VALUES
+            (?,?);
+    """
+    with settings_db as db:
+        db.execute(query, (username, mutelist))
 
 
 # from dgamelaunch.h
@@ -128,21 +218,42 @@ def dgl_account_hold(flags):  # type: (int) -> bool
     return bool(flags & DGLACCT_ACCOUNT_HOLD)
 
 
-def get_user_info(username):  # type: (str) -> Optional[Tuple[int, str, int]]
-    """Returns user data in a tuple (userid, email)."""
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT id, email, flags
-            FROM dglusers
-            WHERE username=?
-            COLLATE NOCASE
-        """
-        db.c.execute(query, (username,))
-        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
+UserInfo = collections.namedtuple("UserInfo", ["id", "username", "email", "flags"])
+
+
+def get_user_info(username):
+    """Returns user data in a named tuple of type UserInfo."""
+    query = """
+        SELECT id, username, email, flags
+        FROM dglusers
+        WHERE username=?
+        COLLATE NOCASE
+    """
+    with user_db.execute(query, (username,)) as c:
+        result = c.fetchone()
+
     if result:
-        return (result[0], result[1], result[2])
+        return UserInfo(*result)
     else:
         return None
+
+
+def get_user_by_id(id):  # type: (str) -> Optional[Tuple[int, str, int]]
+    """Returns user data in a tuple (userid, email)."""
+    query = """
+        SELECT id, username, email, flags
+        FROM dglusers
+        WHERE id=?
+        COLLATE NOCASE
+    """
+    with user_db.execute(query, (id,)) as c:
+        result = c.fetchone()
+
+    if result:
+        return UserInfo(*result)
+    else:
+        return None
+
 
 
 def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[str, str]]
@@ -150,18 +261,15 @@ def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[s
     reason for failure."""
     passwd = passwd[0:config.get('max_passwd_length')]
 
-    # TODO: this all gets recollected when get_user_info is called shortly
-    # after on a succesful login, consolidate? (Mostly mitigated by token
-    # logins though)
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT username, password, flags
-            FROM dglusers
-            WHERE username=?
-            COLLATE NOCASE
-        """
-        db.c.execute(query, (username,))
-        result = db.c.fetchone()  # type: Optional[Tuple[str, str, str]]
+    # XX code semi-duplication
+    query = """
+        SELECT username, password, flags
+        FROM dglusers
+        WHERE username=?
+        COLLATE NOCASE
+    """
+    with user_db.execute(query, (username,)) as c:
+        result = c.fetchone()  # type: Optional[Tuple[str, str, str]]
 
     # a banned player should never return true for the password check
     if result and dgl_is_banned(result[2]):
@@ -170,40 +278,6 @@ def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[s
         return True, result[0], None
     else:
         return False, None, None
-
-def ensure_user_db_exists():  # type: () -> None
-    if os.path.exists(config.get('password_db')):
-        return
-    logging.warn("User database didn't exist; creating it now.")
-    create_user_db()
-
-
-def create_user_db():  # type: () -> None
-    with crawl_db(config.get('password_db')) as db:
-        schema = ("CREATE TABLE dglusers (id integer primary key," +
-                  " username text, email text, env text," +
-                  " password text, flags integer);")
-        db.c.execute(schema)
-        schema = ("CREATE TABLE recovery_tokens (token text primary key,"
-                  " token_time text, user_id integer not null,"
-                  " foreign key(user_id) references dglusers(id));")
-        db.c.execute(schema)
-        db.conn.commit()
-
-
-def upgrade_user_db():  # type: () -> None
-    """Automatically upgrades the database."""
-    with crawl_db(config.get('password_db')) as db:
-        query = "SELECT name FROM sqlite_master WHERE type='table';"
-        tables = [i[0] for i in db.c.execute(query)]
-
-        if "recovery_tokens" not in tables:
-            logging.warn("User database missing table 'recovery_tokens'; adding now")
-            schema = ("CREATE TABLE recovery_tokens (token text primary key,"
-                      " token_time text, user_id integer not null,"
-                      " foreign key(user_id) references dglusers(id));")
-            db.c.execute(schema)
-            db.conn.commit()
 
 
 _SALTCHARS = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -243,12 +317,7 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
 
     crypted_pw = encrypt_pw(passwd)
 
-    with crawl_db(config.get('password_db')) as db:
-        db.c.execute("select username from dglusers where username=? collate nocase",
-                     (username,))
-        result = db.c.fetchone()
-
-    if result:
+    if get_user_info(username):
         return "User already exists!"
 
     flags = 0
@@ -256,15 +325,14 @@ def register_user(username, passwd, email):  # type: (str, str, str) -> Optional
         flags = (flags | DGLACCT_LOGIN_LOCK | DGLACCT_EMAIL_LOCK
                        | DGLACCT_PASSWD_LOCK | DGLACCT_ACCOUNT_HOLD)
 
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            INSERT INTO dglusers
-                (username, email, password, flags, env)
-            VALUES
-                (?, ?, ?, ?, '')
-        """
-        db.c.execute(query, (username, email, crypted_pw, flags))
-        db.conn.commit()
+    query = """
+        INSERT INTO dglusers
+            (username, email, password, flags, env)
+        VALUES
+            (?, ?, ?, ?, '')
+    """
+    with user_db as db:
+        db.execute(query, (username, email, crypted_pw, flags))
 
     return None
 
@@ -274,27 +342,19 @@ def change_password(user_id, passwd):
 
     crypted_pw = encrypt_pw(passwd)
 
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT flags
-            FROM dglusers
-            WHERE id=?
-            COLLATE NOCASE
-        """
-        db.c.execute(query, (user_id,))
-        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
-        if not result:
-            return "Invalid account!"
-        if (result[0] & DGLACCT_PASSWD_LOCK):
-            return "Account has a password lock!"
+    user_info = get_user_by_id(user_id)
 
-        db.c.execute("update dglusers set password=? where id=?",
-                     (crypted_pw, user_id))
+    if not user_info:
+        return "Invalid account!"
+    if (user_info.flags & DGLACCT_PASSWD_LOCK):
+        return "Account has a password lock!"
+
+    with user_db as db:
+        db.execute("UPDATE dglusers SET password=? WHERE id=?",
+                     (crypted_pw, user_info.id))
         # invalidate any recovery tokens that might exist, even for normal
         # password changes:
-        db.c.execute("delete from recovery_tokens where user_id=?",
-                     (user_id,))
-        db.conn.commit()
+        db.execute("DELETE FROM recovery_tokens WHERE user_id=?", (user_info.id,))
 
     return None
 
@@ -304,151 +364,131 @@ def change_email(user_id, email):  # type: (str, str) -> Optional[str]
     if result:
         return result
 
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT flags
-            FROM dglusers
-            WHERE id=?
-            COLLATE NOCASE
-        """
-        db.c.execute(query, (user_id,))
-        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
-        if not result:
-            return "Invalid account!"
-        if result[0] & DGLACCT_EMAIL_LOCK:
-            return "Account has an email lock!"
-        db.c.execute("update dglusers set email=? where id=?", (email, user_id))
-        db.conn.commit()
+    user_info = get_user_by_id(user_id)
+    if not user_info:
+        return "Invalid account!"
+
+    if user_info.flags & DGLACCT_EMAIL_LOCK:
+        return "Account has an email lock!"
+
+    with user_db as db:
+        db.execute("UPDATE dglusers SET email=? WHERE id=?", (email, user_info.id))
 
     return None
 
 def set_ban(username, banned=True):
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT id, flags
-            FROM dglusers
-            WHERE username=?
-            COLLATE NOCASE
-        """
-        db.c.execute(query, (username,))
-        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
-        if not result:
-            return "Invalid username!"
+    user_info = get_user_info(username)
 
-        if banned and dgl_is_banned(result[1]):
-            return "User '%s' is already banned." % username
-        elif not banned and not dgl_is_banned(result[1]):
-            return "User '%s' isn't currently banned." % username
-        if banned and dgl_is_admin(result[1]):
-            return "Remove admin flag before banning."
+    if not user_info:
+        return "Invalid username!"
 
-        # this is more of a sanity check than anything, the cli clears both
-        if not banned and (result[1] & DGLACCT_ACCOUNT_HOLD):
-            return "Clear account hold to clear ban flag"
+    if banned and dgl_is_banned(user_info.flags):
+        return "User '%s' is already banned." % username
+    elif not banned and not dgl_is_banned(user_info.flags):
+        return "User '%s' isn't currently banned." % username
+    if banned and dgl_is_admin(user_info.flags):
+        return "Remove admin flag before banning."
 
-        if banned:
-            # escalate from an account hold to a ban if necessary
-            new_flags = result[1] & ~DGLACCT_ACCOUNT_HOLD
-            new_flags = new_flags | DGLACCT_LOGIN_LOCK
-        else:
-            # clean up any lingering lock flags
-            new_flags = result[1] & ~(DGLACCT_LOGIN_LOCK
+    # this is more of a sanity check than anything, the cli clears both
+    if not banned and (user_info.flags & DGLACCT_ACCOUNT_HOLD):
+        return "Clear account hold to clear ban flag"
+
+    if banned:
+        # escalate from an account hold to a ban if necessary
+        new_flags = user_info.flags & ~DGLACCT_ACCOUNT_HOLD
+        new_flags = new_flags | DGLACCT_LOGIN_LOCK
+    else:
+        # clean up any lingering lock flags
+        new_flags = user_info.flags & ~(DGLACCT_LOGIN_LOCK
                                         | DGLACCT_EMAIL_LOCK
                                         | DGLACCT_PASSWD_LOCK)
-        db.c.execute("UPDATE dglusers SET flags=? WHERE id=?",
-                    (new_flags, result[0]))
-        db.c.execute("DELETE FROM recovery_tokens WHERE user_id=?",
-                     (result[0],))
-        db.conn.commit()
+
+    with user_db as db:
+        db.execute("UPDATE dglusers SET flags=? WHERE id=?",
+                    (new_flags, user_info.id))
+        db.execute("DELETE FROM recovery_tokens WHERE user_id=?",
+                     (user_info.id,))
+
     return None
 
 
 def set_account_hold(username, hold=True):
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT id, flags
-            FROM dglusers
-            WHERE username=?
-            COLLATE NOCASE
-        """
-        db.c.execute(query, (username,))
-        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
-        if not result:
-            return "Invalid username!"
-        # this will override bans
-        if hold and dgl_account_hold(result[1]):
-            return "User '%s' is already on hold." % username
-        elif not hold and not dgl_account_hold(result[1]):
-            return "User '%s' isn't currently on hold." % username
-        if hold and dgl_is_admin(result[1]):
-            return "Remove admin flag before setting an account hold."
+    user_info = get_user_info(username)
+    if not user_info:
+        return "Invalid username!"
+    # this will override bans
+    if hold and dgl_account_hold(user_info.flags):
+        return "User '%s' is already on hold." % username
+    elif not hold and not dgl_account_hold(user_info.flags):
+        return "User '%s' isn't currently on hold." % username
+    if hold and dgl_is_admin(user_info.flags):
+        return "Remove admin flag before setting an account hold."
 
-        # account holds set the ban flag so that dgamelaunch can't be used to
-        # get around the restrictions. XX dgamelaunch messaging wording?
-        hold_flags = (DGLACCT_LOGIN_LOCK | DGLACCT_EMAIL_LOCK
-                        | DGLACCT_PASSWD_LOCK | DGLACCT_ACCOUNT_HOLD)
-        if hold:
-            new_flags = result[1] | hold_flags
-        else:
-            new_flags = result[1] & ~hold_flags
-        db.c.execute("UPDATE dglusers SET flags=? WHERE id=?",
-                    (new_flags, result[0]))
-        db.c.execute("DELETE FROM recovery_tokens WHERE user_id=?",
-                     (result[0],))
-        db.conn.commit()
+    # account holds set the ban flag so that dgamelaunch can't be used to
+    # get around the restrictions. XX dgamelaunch messaging wording?
+    hold_flags = (DGLACCT_LOGIN_LOCK | DGLACCT_EMAIL_LOCK
+                    | DGLACCT_PASSWD_LOCK | DGLACCT_ACCOUNT_HOLD)
+    if hold:
+        new_flags = user_info.flags | hold_flags
+    else:
+        new_flags = user_info.flags & ~hold_flags
+
+    with user_db as db:
+        db.execute("UPDATE dglusers SET flags=? WHERE id=?",
+                    (new_flags, user_info.id))
+        db.execute("DELETE FROM recovery_tokens WHERE user_id=?",
+                     (user_info.id,))
+
     return None
 
 
 # lower level interface for setting arbitrary flag values
 def set_flags(username, flags, mask=~0):
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT id, flags
-            FROM dglusers
-            WHERE username=?
-            COLLATE NOCASE
-        """
-        db.c.execute(query, (username,))
-        result = db.c.fetchone()  # type: Optional[Tuple[int, str, int]]
-        if not result:
-            return "Invalid username!"
-        new_flags = (result[1] & ~mask) | (flags & mask)
-        db.c.execute("UPDATE dglusers SET flags=? WHERE id=?",
-                    (new_flags, result[0]))
-        db.conn.commit()
+    user_info = get_user_info(username)
+    if not user_info:
+        return "Invalid username!"
+
+    new_flags = (user_info.flags & ~mask) | (flags & mask)
+
+    with user_db as db:
+        db.execute("UPDATE dglusers SET flags=? WHERE id=?",
+                    (new_flags, user_info.id))
+
     return None
 
 
 # try to avoid using this -- db on long-running servers can be extremely
-# large...
+# large and it uses fetchall...
 def get_all_users():
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT id, username, flags
-            FROM dglusers
-            NOCASE
-            ORDER BY username ASC
-        """
-        db.c.execute(query)
-        return db.c.fetchall()
+    query = """
+        SELECT id, username, email, flags
+        FROM dglusers
+        NOCASE
+        ORDER BY username ASC
+    """
+    # XX refactor as generator? afaict the resulting generator might need
+    # an explicit close() call in order to finalize the cursor here (otherwise
+    # it will rely on gc...)
+    with user_db.execute(query) as c:
+        return [UserInfo(*t) for t in c.fetchall()]
 
 
 def get_users_by_flag(flag):
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT id, username, flags
-            FROM dglusers
-            WHERE (flags & ?) <> 0
-            COLLATE NOCASE
-        """
-        db.c.execute(query, (flag,))
-        return db.c.fetchall()
+    query = """
+        SELECT id, username, email, flags
+        FROM dglusers
+        WHERE (flags & ?) <> 0
+        COLLATE NOCASE
+    """
+    # XX refactor as generator?
+    with user_db.execute(query, (flag,)) as c:
+        return [UserInfo(*t) for t in c.fetchall()]
 
 
 def get_bans():
     result = get_users_by_flag(DGLACCT_LOGIN_LOCK)
-    bans = [x[1] for x in result if dgl_is_banned(x[2])]
-    holds = [x[1] for x in result if dgl_account_hold(x[2])]
+    bans = [x.username for x in result if dgl_is_banned(x.flags)]
+    holds = [x.username for x in result if dgl_account_hold(x.flags)]
     return (bans, holds)
 
 
@@ -458,22 +498,21 @@ def find_recovery_token(token):
     token_hash_obj = hashlib.sha256(utf8(token))
     token_hash = token_hash_obj.hexdigest()
 
-    with crawl_db(config.get('password_db')) as db:
-        query = """
-            SELECT
-                u.id,
-                u.username,
-                CASE
-                    WHEN t.token_time > datetime('now','-1 hour') THEN 'N'
-                    ELSE 'Y'
-                END AS Expired
-            FROM recovery_tokens t
-            JOIN dglusers u ON u.id = t.user_id
-            WHERE t.token = ?
-            COLLATE RTRIM
-        """
-        db.c.execute(query, (token_hash,))
-        result = db.c.fetchone()
+    query = """
+        SELECT
+            u.id,
+            u.username,
+            CASE
+                WHEN t.token_time > datetime('now','-1 hour') THEN 'N'
+                ELSE 'Y'
+            END AS Expired
+        FROM recovery_tokens t
+        JOIN dglusers u ON u.id = t.user_id
+        WHERE t.token = ?
+        COLLATE RTRIM
+    """
+    with user_db.execute(query, (token_hash,)) as c:
+        result = c.fetchone()
 
     if not result:
         return None, None, "Invalid token"
@@ -502,27 +541,27 @@ def update_user_password_from_token(token, passwd):
     userid, username, token_error = find_recovery_token(token)
 
     if userid and not token_error:
-        with crawl_db(config.get('password_db')) as db:
-            db.c.execute("update dglusers set password=? where id=?",
-                         (crypted_pw, userid))
-            db.c.execute("delete from recovery_tokens where user_id=?",
-                         (userid,))
-            db.conn.commit()
+        with user_db:
+            user_db.execute("UPDATE dglusers SET password=? WHERE id=?",
+                            (crypted_pw, userid))
+            user_db.execute("DELETE FROM recovery_tokens WHERE user_id=?",
+                            (userid,))
 
     return username, token_error
+
 
 def clear_password_token(username):
     if not username:
         return False, "Invalid username"
-    with crawl_db(config.get('password_db')) as db:
-        db.c.execute("select id from dglusers where username=? collate nocase", (username,))
-        result = db.c.fetchone()
-    if not result:
+
+    user_info = get_user_info(username)
+    if not user_info:
         return False, "Invalid username"
-    with crawl_db(config.get('password_db')) as db:
-        db.c.execute("delete from recovery_tokens where user_id=?",
-                     (result[0],))
-        db.conn.commit()
+
+    with user_db:
+        user_db.execute("DELETE FROM recovery_tokens WHERE user_id=?",
+                        (user_info.id,))
+
     return True, ""
 
 def create_password_token(userid):
@@ -533,10 +572,11 @@ def create_password_token(userid):
     token_hash_obj = hashlib.sha256(token)
     token_hash = token_hash_obj.hexdigest()
     # store hash in db
-    with crawl_db(config.get('password_db')) as db:
-        db.c.execute("insert into recovery_tokens(token, token_time, user_id) "
-                     "values (?,datetime('now'),?)", (token_hash, userid))
-        db.conn.commit()
+    with user_db:
+        user_db.execute("""
+            INSERT INTO recovery_tokens(token, token_time, user_id)
+            VALUES (?,datetime('now'),?)
+            """, (token_hash, userid))
     return token
 
 def generate_token_email(token):
@@ -572,14 +612,11 @@ def generate_forgot_password(username):
     if not username:
         return False, "Empty username"
 
-    with crawl_db(config.get('password_db')) as db:
-        db.c.execute("select id from dglusers where username=? collate nocase", (username,))
-        result = db.c.fetchone()
-    if not result:
+    user_info = get_user_info(username)
+    if not user_info:
         return False, "Invalid username"
 
-    userid = result[0]
-    token = create_password_token(userid)
+    token = create_password_token(user_info.id)
     msg_body_plaintext, msg_body_html = generate_token_email(token)
     return True, msg_body_plaintext
 
@@ -594,9 +631,9 @@ def send_forgot_password(email):  # type: (str) -> Tuple[bool, Optional[str]]
     if email_error:
         return False, email_error
 
-    with crawl_db(config.get('password_db')) as db:
-        db.c.execute("select id from dglusers where email=? collate nocase", (email,))
-        result = db.c.fetchone()
+    with user_db.cursor() as c:
+        c.execute("SELECT id FROM dglusers WHERE email=? COLLATE NOCASE", (email,))
+        result = c.fetchone()
     if not result:
         return False, None
 
@@ -608,3 +645,136 @@ def send_forgot_password(email):  # type: (str) -> Tuple[bool, Optional[str]]
                msg_body_plaintext, msg_body_html)
 
     return True, None
+
+
+import unittest
+
+class UserDBTest(unittest.TestCase):
+    logging_init = False
+    def setUp(self):
+        if not self.logging_init:
+            import webtiles.server as server
+            server.init_logging(config.get('logging_config'))
+            self.logging_init = True
+
+        # XX it would be nice if webtiles.config were a bit more flexible
+        # about this
+        self.config_shim = dict(
+            settings_db="./unittest_settings.db3",
+            password_db="./unittest_passwd.db3",
+            dgl_mode=True)
+        config.server_config = self.config_shim
+        # set quiet to prevent a lot of annoying logging
+        init_db_connections(quiet=True)
+
+    def test_00init_state(self):
+        # exercise basic db creation
+        self.assertFalse(get_all_users())
+        self.assertFalse(get_user_info("test"))
+        self.assertFalse(get_user_by_id(1))
+
+    def test_create_user(self):
+        # test basic user creation, as well as user info and some misc user
+        # data code
+        register_user("test", "hunter2", "test@example.com")
+        u = get_user_info("TEST")
+        self.assertEqual(u.username, "test")
+        self.assertEqual(u.email, "test@example.com")
+        self.assertEqual(get_user_by_id(u.id), u)
+        self.assertEqual(u.flags, 0)
+        self.assertEqual(get_all_users()[0], u)
+
+        change_email(u.id, "test2@example.com")
+        u2 = get_user_info("test")
+        self.assertEqual(u2.email, "test2@example.com")
+        self.assertEqual(u.id, u2.id)
+        self.assertEqual(u.username, u2.username)
+        self.assertEqual(u.flags, u2.flags)
+
+    def test_passwords(self):
+        register_user("test", "hunter2", "test@example.com")
+        u = get_user_info("test")
+
+        # basic setup
+        self.assertTrue(user_passwd_match("test", "hunter2")[0])
+        self.assertFalse(user_passwd_match("test", "hunter3")[0])
+        self.assertEqual(user_passwd_match("test", "hunter2")[1], "test")
+        self.assertFalse(user_passwd_match("test", "")[0])
+
+        # direct pw changes
+        change_password(u.id, "hunter3")
+        self.assertTrue(user_passwd_match("test", "hunter3")[0])
+        self.assertFalse(user_passwd_match("test", "hunter2")[0])
+
+        # password tokens
+        token = create_password_token(u.id)
+        r = find_recovery_token(token)
+        self.assertFalse(r[2]) # no error message set
+        self.assertEqual(r[0], u.id)
+        update_user_password_from_token(token, "hunter2")
+        self.assertTrue(user_passwd_match("test", "hunter2")[0])
+        self.assertFalse(user_passwd_match("test", "hunter3")[0])
+        r = find_recovery_token(token)
+        self.assertTrue(r[2]) # error message set
+        r = find_recovery_token("hacking")
+        self.assertTrue(r[2]) # error message set
+
+    def test_restrictions(self):
+        register_user("test", "hunter2", "test@example.com")
+        self.assertTrue(user_passwd_match("test", "hunter2")[0])
+
+        # banning
+        set_ban("test")
+        u = get_user_info("test")
+        self.assertTrue(dgl_is_banned(u.flags))
+        self.assertFalse(user_passwd_match("test", "hunter2")[0])
+        self.assertEqual(get_bans()[0][0], u.username)
+
+        # unbanning
+        set_ban("test", False)
+        u = get_user_info("test")
+        self.assertFalse(dgl_is_banned(u.flags))
+        self.assertEqual(u.flags, 0)
+        self.assertTrue(user_passwd_match("test", "hunter2")[0])
+        self.assertFalse(get_bans()[0])
+
+        # holds
+        set_account_hold("test")
+        u = get_user_info("test")
+        self.assertFalse(dgl_is_banned(u.flags))
+        self.assertTrue(dgl_account_hold(u.flags))
+        # login is still possible
+        self.assertTrue(user_passwd_match("test", "hunter2")[0])
+        self.assertEqual(get_bans()[1][0], u.username)
+
+        # clearing holds
+        set_account_hold("test", False)
+        u = get_user_info("test")
+        self.assertEqual(u.flags, 0)
+        self.assertFalse(dgl_is_banned(u.flags))
+        self.assertFalse(dgl_account_hold(u.flags))
+        self.assertTrue(user_passwd_match("test", "hunter2")[0])
+        self.assertFalse(get_bans()[0])
+
+        # hold -> ban
+        set_account_hold("test")
+        set_ban("test")
+        u = get_user_info("test")
+        self.assertTrue(dgl_is_banned(u.flags))
+        self.assertFalse(dgl_account_hold(u.flags))
+        self.assertFalse(user_passwd_match("test", "hunter2")[0])
+        self.assertEqual(get_bans()[0][0], u.username)
+        # finally, try clearing
+        set_ban(u.username, False)
+        u = get_user_info("test")
+        self.assertEqual(u.flags, 0)
+        self.assertFalse(dgl_is_banned(u.flags))
+        self.assertFalse(dgl_account_hold(u.flags))
+
+        # XX not tested: admin/wizard/bot flags
+
+    def tearDown(self):
+        if os.path.exists(self.config_shim['settings_db']):
+            os.unlink(self.config_shim['settings_db'])
+        if os.path.exists(self.config_shim['password_db']):
+            os.unlink(self.config_shim['password_db'])
