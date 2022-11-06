@@ -570,7 +570,7 @@ def clear_password_token(username):
 
     return True, ""
 
-def create_password_token(userid):
+def create_password_token(user_id):
     # userid and lifetime are not checked here, use `generate_forgot_password`
     token_bytes = os.urandom(32)
     token = urlsafe_b64encode(token_bytes)
@@ -579,10 +579,13 @@ def create_password_token(userid):
     token_hash = token_hash_obj.hexdigest()
     # store hash in db
     with user_db:
+        # clear out any existing tokens
+        user_db.execute("DELETE FROM recovery_tokens WHERE user_id=?",
+                (user_id,))
         user_db.execute("""
             INSERT INTO recovery_tokens(token, token_time, user_id)
             VALUES (?,datetime('now'),?)
-            """, (token_hash, userid))
+            """, (token_hash, user_id))
     return token
 
 def generate_token_email(token):
@@ -739,6 +742,12 @@ class UserDBTest(unittest.TestCase):
         # hard to test `generate_forgot_password` directly. But, at least
         # exercise it.
         self.assertTrue(generate_forgot_password(u.username)[0])
+        # new tokens should be possible, and replace unused tokens
+        self.assertTrue(generate_forgot_password(u.username)[0])
+        token = create_password_token(u.id)
+        t2 = create_password_token(u.id)
+        self.assertTrue(find_recovery_token(token)[2]) # error message set
+        self.assertFalse(find_recovery_token(t2)[2]) # should be ok
 
         # token expiry
         def_life = config.get('recovery_token_lifetime')
