@@ -271,6 +271,8 @@ def user_passwd_match(username, passwd):  # type: (str, str) -> Optional[Tuple[s
     with user_db.execute(query, (username,)) as c:
         result = c.fetchone()  # type: Optional[Tuple[str, str, str]]
 
+    # XX should a successful login clear any password reset tokens?
+
     # a banned player should never return true for the password check
     if result and dgl_is_banned(result[2]):
         return False, result[0], 'Account is disabled.'
@@ -495,6 +497,10 @@ def get_bans():
 def find_recovery_token(token):
     # type: (str) -> Union[Tuple[None, None, str], Tuple[int, str, Optional[str]]]
     """Returns tuple (userid, username, error)"""
+
+    lifetime = int(config.get('recovery_token_lifetime'))
+    if lifetime < 1:
+        return None, None, "Recovery tokens disabled"
     token_hash_obj = hashlib.sha256(utf8(token))
     token_hash = token_hash_obj.hexdigest()
 
@@ -503,15 +509,15 @@ def find_recovery_token(token):
             u.id,
             u.username,
             CASE
-                WHEN t.token_time > datetime('now','-1 hour') THEN 'N'
+                WHEN t.token_time > datetime('now','-%d hours') THEN 'N'
                 ELSE 'Y'
             END AS Expired
         FROM recovery_tokens t
         JOIN dglusers u ON u.id = t.user_id
         WHERE t.token = ?
         COLLATE RTRIM
-    """
-    with user_db.execute(query, (token_hash,)) as c:
+    """ % lifetime
+    with user_db.execute(query, (token_hash, )) as c:
         result = c.fetchone()
 
     if not result:
@@ -565,7 +571,7 @@ def clear_password_token(username):
     return True, ""
 
 def create_password_token(userid):
-    # userid is not checked here
+    # userid and lifetime are not checked here, use `generate_forgot_password`
     token_bytes = os.urandom(32)
     token = urlsafe_b64encode(token_bytes)
     # hash token
@@ -584,27 +590,29 @@ def generate_token_email(token):
     lobby_url = config.get('lobby_url', '')
     url_text = lobby_url + "?ResetToken=" + to_unicode(token)
 
-    msg_body_plaintext = """Someone (hopefully you) has requested to reset the password for your account at """ + lobby_url + """.
+    msg_body_plaintext = """Someone (hopefully you) has requested to reset the password for your account at %s.
 
 If you initiated this request, please use this link to reset your password:
 
-    """ + url_text + """
+    %s
 
-If you did not ask to reset your password, feel free to ignore this email.
-"""
+This link will expire in %d hour(s). If you did not ask to reset your password,
+feel free to ignore this email.
+""" % (lobby_url, url_text, config.get('recovery_token_lifetime'))
 
     msg_body_html = """<html>
   <head></head>
   <body>
     <p>Someone (hopefully you) has requested to reset the password for your
-       account at """ + lobby_url + """.<br /><br />
+       account at %s.<br /><br />
        If you initiated this request, please use this link to reset your
        password:<br /><br />
-       &emsp;<a href='""" + url_text + """'>""" + url_text + """</a><br /><br />
-       If you did not ask to reset your password, feel free to ignore this email.
+       &emsp;<a href='%s'>%s</a><br /><br />
+       This link will expire in %d hour(s). If you did not ask to reset your
+       password, feel free to ignore this email.
     </p>
   </body>
-</html>"""
+</html>""" % (lobby_url, url_text, url_text, config.get('recovery_token_lifetime'))
 
     return msg_body_plaintext, msg_body_html
 
@@ -615,6 +623,10 @@ def generate_forgot_password(username):
     user_info = get_user_info(username)
     if not user_info:
         return False, "Invalid username"
+
+    lifetime = int(config.get('recovery_token_lifetime'))
+    if lifetime < 1:
+        return False, "Recovery tokens disabled"
 
     token = create_password_token(user_info.id)
     msg_body_plaintext, msg_body_html = generate_token_email(token)
@@ -706,7 +718,12 @@ class UserDBTest(unittest.TestCase):
         self.assertTrue(user_passwd_match("test", "hunter3")[0])
         self.assertFalse(user_passwd_match("test", "hunter2")[0])
 
-        # password tokens
+
+    def test_tokens(self):
+        register_user("test", "hunter2", "test@example.com")
+        u = get_user_info("test")
+
+        # basic token functions
         token = create_password_token(u.id)
         r = find_recovery_token(token)
         self.assertFalse(r[2]) # no error message set
@@ -714,10 +731,33 @@ class UserDBTest(unittest.TestCase):
         update_user_password_from_token(token, "hunter2")
         self.assertTrue(user_passwd_match("test", "hunter2")[0])
         self.assertFalse(user_passwd_match("test", "hunter3")[0])
+        # token should now be disabled
         r = find_recovery_token(token)
         self.assertTrue(r[2]) # error message set
         r = find_recovery_token("hacking")
         self.assertTrue(r[2]) # error message set
+        # hard to test `generate_forgot_password` directly. But, at least
+        # exercise it.
+        self.assertTrue(generate_forgot_password(u.username)[0])
+
+        # token expiry
+        def_life = config.get('recovery_token_lifetime')
+        token = create_password_token(u.id)
+        config.set('recovery_token_lifetime', 1)
+        # force adjust the set time to before the lifetime
+        with user_db:
+            user_db.execute("""
+                UPDATE recovery_tokens
+                    SET token_time=datetime('now', '-2 hours')
+                    WHERE user_id=?
+                """, (u.id,))
+        self.assertTrue(find_recovery_token(token)[2]) # error message set
+        config.set('recovery_token_lifetime', 0) # disabled
+        self.assertTrue(find_recovery_token(token)[2]) # error message set
+        self.assertFalse(generate_forgot_password(u.username)[0]) # can't set
+        # restore default config, just in case:
+        config.set('recovery_token_lifetime', def_life)
+
 
     def test_restrictions(self):
         register_user("test", "hunter2", "test@example.com")

@@ -81,7 +81,8 @@ defaults = {
     'admin_password_reset': False,
     'crypt_algorithm': "broken", # should this be the default??
     'crypt_salt_length': 16,
-    'login_token_lifetime': 7, # Days
+    'login_token_lifetime': 7, # Days; set to <= 0 to disable
+    'recovery_token_lifetime': 12, # hours
     'daemon': False,
     'development_mode': False,
     'no_cache': False,
