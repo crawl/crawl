@@ -184,6 +184,9 @@ def status_file_timeout():
     write_dgl_status_file()
     IOLoop.current().add_timeout(time.time() + config.get('status_file_update_rate'),
                                  status_file_timeout)
+    # prevent false positives from janky block detection code; because this
+    # runs on a timeout it's a common source of them
+    util.last_blocking_description = "None"
 
 def find_user_sockets(username):
     for socket in list(sockets):
@@ -273,6 +276,7 @@ def admin_only(f):
 
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
+    @util.note_blocking_fun
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
