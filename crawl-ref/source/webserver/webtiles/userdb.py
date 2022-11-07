@@ -91,10 +91,11 @@ recovery_schema = """
         FOREIGN KEY(user_id) REFERENCES dglusers(id)
     );
 """
+user_index_schema = "CREATE UNIQUE INDEX index_username ON dglusers(username);"
 
 
 def create_user_db(filename):
-    global recovery_schema
+    global recovery_schema, user_index_schema
     dglusers_schema = """
         CREATE TABLE dglusers (
             id INTEGER PRIMARY KEY,
@@ -107,7 +108,9 @@ def create_user_db(filename):
     """
     with contextlib.closing(crawl_db(filename)) as c:
         with c:
+            # maybe executescript would be better?
             c.execute(dglusers_schema)
+            c.execute(user_index_schema)
             c.execute(recovery_schema)
 
 
@@ -127,8 +130,9 @@ user_db = crawl_db("")
 def upgrade_user_db():  # type: () -> None
     """Automatically upgrades the database."""
     global user_db, recovery_schema
+    # possibly CREATE .. IF NOT EXISTS would be more idiomatic sql...
     with user_db.cursor() as c:
-        query = "SELECT name FROM sqlite_master WHERE type='table';"
+        query = "SELECT name FROM sqlite_master WHERE type='table' or type='index';"
         tables = [i[0] for i in c.execute(query)]
 
     if "recovery_tokens" not in tables:
@@ -137,6 +141,18 @@ def upgrade_user_db():  # type: () -> None
         # XX: do any of these still exist in practice?
         with user_db:
             user_db.execute(recovery_schema)
+    if "index_username" not in tables:
+        logging.warning(
+            "User database missing index 'index_username'; adding now")
+        try:
+            with user_db:
+                user_db.execute(user_index_schema)
+        except sqlite3.DatabaseError:
+            # this may fail if the database fails to satisfy the uniqueness
+            # constraint (e.g. due to very old bugs)
+            logging.warning(
+                "Creation of index 'index_username' failed, manual intervention recommended",
+                exc_info=True)
 
 
 def init_db_connections(quiet=False):
@@ -680,7 +696,13 @@ class UserDBTest(unittest.TestCase):
             dgl_mode=True)
         config.server_config = self.config_shim
         # set quiet to prevent a lot of annoying logging
-        init_db_connections(quiet=True)
+        try:
+            init_db_connections(quiet=True)
+        except (sqlite3.Warning, sqlite3.Error):
+            # the testbed won't call tearDown if setUp doesn't finish, and any
+            # db files will linger
+            self.tearDown()
+            raise
 
     def test_00init_state(self):
         # exercise basic db creation
