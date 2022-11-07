@@ -91,7 +91,10 @@ recovery_schema = """
         FOREIGN KEY(user_id) REFERENCES dglusers(id)
     );
 """
-user_index_schema = "CREATE UNIQUE INDEX index_username ON dglusers(username);"
+user_index_schema = """
+    CREATE UNIQUE INDEX index_username
+    ON dglusers (username COLLATE NOCASE);
+    """
 
 
 def create_user_db(filename):
