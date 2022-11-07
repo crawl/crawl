@@ -3576,6 +3576,7 @@ static bool _can_injury_bond(const monster &protector, const monster &protectee)
         && !protectee.has_ench(ENCH_CHARM)
         && !protectee.has_ench(ENCH_HEXED)
         && !protectee.has_ench(ENCH_INJURY_BOND)
+        && !mons_is_projectile(protectee)
         && &protector != &protectee;
 }
 
