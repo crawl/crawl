@@ -5,6 +5,7 @@ import re
 import smtplib
 import time
 import itertools
+import functools
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -33,6 +34,7 @@ try:
     f.__qualname__ # for good measure..
     from asyncio.base_events import _format_handle
     import asyncio.events
+    import reprlib
 except:
     _asyncio_available = False
 
@@ -94,9 +96,26 @@ def last_noted_blocker():
     global last_blocking_description
     return last_blocking_description
 
+
+def func_repr(func):
+    # from asyncio.format_helps._format_callback, not used for rendering
+    if hasattr(func, '__qualname__') and func.__qualname__:
+        return func.__qualname__
+    elif hasattr(func, '__name__') and func.__name__:
+        return func.__name__
+    else:
+        return repr(func)
+
+def callback_arg_repr(f):
+    # strip any instances of vacuous functools.partial, for readability (there
+    # are a lot of these in practice)
+    if isinstance(f, functools.partial) and not f.args:
+        f = f.func
+    return reprlib.repr(f)
+
 _original_asyncio_run = None
 
-# this function based on code from aiodebug:
+# this function originally based on code from aiodebug:
 #   https://gitlab.com/quantlane/libs/aiodebug
 # License: Apache 2.0
 def set_slow_callback_logging(slow_duration):
@@ -114,12 +133,30 @@ def set_slow_callback_logging(slow_duration):
             _original_asyncio_run = None
         return
 
+    # the default repr call for asyncio Handles will limit argument strings
+    # substantially (default, 20 chars) via reprlib, making it impossible to
+    # get any useful info.
+    reprlib.aRepr.maxother = 1000
+
     def on_slow_callback(name, duration):
         logger = logging.getLogger("server.py")
-        logger.warning('Slow callback (%.3fs, %s): %s',
-            duration, last_noted_blocker(), name)
+        logger.warning('Slow callback (%.3fs): %s', duration, name)
         global last_blocking_description
         last_blocking_description = "None"
+
+    def format_tornado_handle(h):
+        # for IOLoop callbacks, print only the information that is actually
+        # useful, namely, the callback getting called
+        if (h._callback is not None
+                        and func_repr(h._callback).startswith("IOLoop")
+                        and h._args):
+            # based on asyncio.format_helpers._format_args_and_kwargs
+            # possibly this is always size 1 for an IOLoop callback?
+            items = [callback_arg_repr(arg) for arg in h._args]
+            return 'IOLoop callback: {}'.format(', '.join(items))
+        else:
+            # otherwise, fallback on the default (with the reprlib tweak)
+            return _format_handle(h)
 
     if not _original_asyncio_run:
         _original_asyncio_run = asyncio.events.Handle._run
@@ -130,7 +167,7 @@ def set_slow_callback_logging(slow_duration):
         return_value = _original_asyncio_run(self)
         dt = time.monotonic() - t0
         if dt >= slow_duration:
-            on_slow_callback(_format_handle(self), dt)
+            on_slow_callback(format_tornado_handle(self), dt)
         return return_value
 
     asyncio.events.Handle._run = instrumented
