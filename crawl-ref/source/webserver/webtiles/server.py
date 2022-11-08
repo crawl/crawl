@@ -339,6 +339,10 @@ def parse_args_main():
 
 # override config with any arguments supplied on the command line
 def export_args_to_config(args):
+    if config.get('live_debug'):
+        config.server_config._load_override_file(os.path.join(
+                            config.get("server_path", ""), "debug-config.yml"))
+        config.do_early_logging() # sigh
     if args.port:
         config.set('bind_nonsecure', True)
         config.set('bind_address', "")  # TODO: ??

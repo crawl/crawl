@@ -64,6 +64,8 @@ def merge_games(accum, new):
     import webtiles.config
 
     for t in ('templates', 'games'):
+        if new[t] is None: # make it easy to clear via yml
+            continue
         if len(new[t]):
             logging.info("Reading %d %s from %s", len(new[t]), t, new['source'])
         for k in new[t]:
@@ -108,10 +110,11 @@ def load_games(reloading=False):
         )
     try:
         # first: load any games config info from the module
+        # this will include any game defs in config.yml (or debug-config.yml)
         from_module = dict(
             templates = webtiles.config.get('templates'),
             games = webtiles.config.get('games'),
-            source = "config module"
+            source = "base config"
             )
         accum = merge_games(accum, from_module)
 
