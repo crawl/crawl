@@ -15,7 +15,6 @@ from tornado.escape import to_unicode
 from tornado.escape import utf8
 from tornado.escape import xhtml_escape
 from tornado.ioloop import IOLoop
-from tornado.ioloop import PeriodicCallback
 
 from webtiles import config, connection, game_data_handler, inotify, terminal, util, ws_handler
 from webtiles.config import dgl_format_str
@@ -23,7 +22,7 @@ from webtiles.connection import WebtilesSocketConnection
 from webtiles.game_data_handler import GameDataHandler
 from webtiles.inotify import DirectoryWatcher
 from webtiles.terminal import TerminalRecorder
-from webtiles.util import DynamicTemplateLoader, parse_where_data
+from webtiles.util import DynamicTemplateLoader, parse_where_data, PeriodicCallback
 from webtiles.ws_handler import CrawlWebSocket, remove_in_lobbys, update_all_lobbys
 
 try:

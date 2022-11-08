@@ -215,14 +215,25 @@ class DynamicTemplateLoader(tornado.template.Loader):  # type: ignore
             return loader
 
 
+# light subclass to improve logging for the FileTailer scheduler
+class PeriodicCallback(tornado.ioloop.PeriodicCallback):
+    def __init__(self, check, interval_ms, source_desc=None):
+        super(PeriodicCallback, self).__init__(check, interval_ms)
+        self._source_desc = source_desc if source_desc else repr(check)
+
+    def __repr__(self):
+        return "PeriodicCallback(%s)" % self._source_desc
+
+
 class FileTailer(object):
     def __init__(self, filename, callback, interval_ms=1000):
         # type: (str, Callable[[str], Any], int) -> None
         self.file = None  # type: Optional[TextIO]
         self.filename = filename
         self.callback = callback
-        self.scheduler = tornado.ioloop.PeriodicCallback(self.check,
-                                                         interval_ms)
+        self.scheduler = PeriodicCallback(self.check,
+                interval_ms,
+                "FileTailer('%s').check" % filename)
         self.scheduler.start()
 
     def check(self):  # type: () -> None
