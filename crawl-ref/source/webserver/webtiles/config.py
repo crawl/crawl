@@ -89,6 +89,7 @@ defaults = {
     'live_debug': False,
     'lobby_update_rate': 2,
     'load_logging_rate': 0,
+    'milestone_interval': 1000, # ms
     'slow_callback_alert': None,
     'games': collections.OrderedDict([]),
     'templates': collections.OrderedDict([]),

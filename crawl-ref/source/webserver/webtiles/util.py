@@ -226,13 +226,13 @@ class PeriodicCallback(tornado.ioloop.PeriodicCallback):
 
 
 class FileTailer(object):
-    def __init__(self, filename, callback, interval_ms=1000):
+    def __init__(self, filename, callback):
         # type: (str, Callable[[str], Any], int) -> None
         self.file = None  # type: Optional[TextIO]
         self.filename = filename
         self.callback = callback
         self.scheduler = PeriodicCallback(self.check,
-                interval_ms,
+                config.get('milestone_interval'),
                 "FileTailer('%s').check" % filename)
         self.scheduler.start()
 
