@@ -3727,7 +3727,14 @@ bool read(item_def* scroll, dist *target)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(*scroll, true);
         }
-        cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
+        {
+            const int old_link = link;
+            cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
+            // If we auto-swapped the ID'd item with the stack of ID scrolls,
+            // update the pointer to the new place in inventory for the ?ID.
+            if (link != old_link)
+                scroll = &you.inv[link];
+        }
         break;
 
     case SCR_ENCHANT_ARMOUR:
