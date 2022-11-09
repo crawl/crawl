@@ -3745,6 +3745,9 @@ void read(item_def* scroll, dist *target)
             set_ident_type(*scroll, true);
         }
         cancel_scroll = !_identify(alreadyknown, pre_succ_msg, link);
+
+        if (link >= 0 && link < int(you.inv.size()))
+          scroll = &you.inv[link];
         break;
 
     case SCR_ENCHANT_ARMOUR:
