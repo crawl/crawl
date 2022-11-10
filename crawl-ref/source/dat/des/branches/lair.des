@@ -287,15 +287,11 @@ MAP
 ENDMAP
 
 # Lava Lair entry
-# TODO: this vault will veto without a path to the O tile, which lowers the
-# probability below weight 1. It would be better to not use vetoes to control
-# the probability. This vault vetos around 80-85% of the time in the
-# placement.lua test script case (completely open level)
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
 WEIGHT: 1
-MONS:   fire dragon
+MONS:   fire crab
 KFEAT:  O = enter_lair
 NSUBST: M = 1 / L
 SUBST:  L = l.
@@ -305,7 +301,7 @@ MAP
 ..llllll.
 ..llMMlL.
 .LlMOMll.
-.llMMlll.
+.ll.Mlll.
 .l.llll..
 ..lllL...
 .........
@@ -476,6 +472,39 @@ MAP
 ..####c####..
 .............
 .............
+ENDMAP
+
+NAME:   hellmonk_lair_entry_icy
+TAGS:   lair_entry transparent
+ORIENT: float
+MONS:   ice beast, wolf / polar bear w:3, rime drake
+NSUBST: 3 = 3 / 2.., . = 2 / 4 = 2... / .
+SUBST:  x = xxx., - = W:5 ':25 x:20 .:15
+NSUBST: ' = 16 = 1''' / '
+KFEAT:  O = enter_lair
+TILE:   x = wall_ice_block
+FTILE:  '1 = floor_ice
+COLOUR: '1 = blue
+MAP
+       -------
+     --'''''''--
+    -'''''''''''-
+   -''''-----''''-
+  -'''.........'''-
+ -'''.x.x...x.x.'''-
+ -'''..xxx.xxx..'''-
+-'''-.xxx.3.xxx.-'''-
+-'''-..x.....x..-'''-
+-'''-...3.O.3...-'''-
+-'''-..x.....x..-'''-
+-'''-.xxx.3.xxx.-'''-
+ -'''. xxx.xxx..'''-
+ -'''.x x...x.x.'''-
+  -'''.........'''-
+   -''''-----''''-
+    -'''''''''''-
+     --'''''''--
+       ---@---
 ENDMAP
 
 ###############################################################################

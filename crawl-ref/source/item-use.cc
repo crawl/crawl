@@ -135,6 +135,8 @@ static string _default_use_title(operation_types oper)
     case OPER_PUTON:
         return "Put on which piece of jewellery?";
     case OPER_QUAFF:
+        if (you.has_mutation(MUT_LONG_TONGUE))
+            return "Slurp which item?";
         return "Drink which item?";
     case OPER_READ:
         return "Read which item?";
@@ -541,7 +543,7 @@ bool UseItemMenu::examine_index(int i)
         auto ie = dynamic_cast<InvEntry *>(items[i]);
         auto desc_tgt = const_cast<item_def*>(ie->item);
         ASSERT(desc_tgt);
-        return describe_item(*desc_tgt);
+        return describe_item(*desc_tgt, nullptr, false);
     }
 }
 
@@ -1386,7 +1388,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 if (you.has_mutation(MUT_CONSTRICTING_TAIL))
                     mpr("You have no legs!");
                 else
-                    mpr("Boots don't fit your feet!"); // palentonga
+                    mpr("Boots don't fit your feet!"); // armataur
             }
             return false;
         }
@@ -2753,7 +2755,7 @@ static void _rebrand_weapon(item_def& wpn)
         {
             new_brand = random_choose_weighted(3, SPWPN_FLAMING,
                                                3, SPWPN_FREEZING,
-                                               3, SPWPN_VENOM,
+                                               3, SPWPN_DRAINING,
                                                3, SPWPN_VORPAL,
                                                1, SPWPN_ELECTROCUTION,
                                                1, SPWPN_CHAOS);
@@ -3571,7 +3573,8 @@ void read(item_def* scroll, dist *target)
     // For cancellable scrolls leave printing this message to their
     // respective functions.
     const string pre_succ_msg =
-            make_stringf("As you read the %s, it crumbles to dust.",
+            make_stringf("As you%s read the %s, it crumbles to dust.",
+                         you.has_mutation(MUT_AWKWARD_TONGUE) ? " slowly" : "",
                           scroll->name(DESC_QUALNAME).c_str());
     if (!_is_cancellable_scroll(which_scroll))
     {
@@ -3824,6 +3827,8 @@ void read(item_def* scroll, dist *target)
         else
             dec_mitm_item_quantity(scroll->index(), 1);
         count_action(CACT_USE, OBJ_SCROLLS);
+        if (you.has_mutation(MUT_AWKWARD_TONGUE))
+            you.time_taken = div_rand_round(you.time_taken * 3, 2);
     }
 
     if (!alreadyknown

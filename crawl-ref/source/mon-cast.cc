@@ -126,6 +126,7 @@ static ai_action::goodness _foe_sleep_viable(const monster &caster);
 static ai_action::goodness _foe_tele_goodness(const monster &caster);
 static ai_action::goodness _foe_mr_lower_goodness(const monster &caster);
 static ai_action::goodness _still_winds_goodness(const monster &caster);
+static ai_action::goodness _arcjolt_goodness(const monster &caster);
 static ai_action::goodness _foe_near_wall(const monster &caster);
 static ai_action::goodness _foe_not_nearby(const monster &caster);
 static ai_action::goodness _foe_near_lava(const monster &caster);
@@ -354,6 +355,12 @@ static const map<spell_type, mons_spell_logic> spell_to_logic = {
        _cast_marshlight,
     } },
     { SPELL_STILL_WINDS, { _still_winds_goodness, _cast_still_winds } },
+    { SPELL_ARCJOLT, { _arcjolt_goodness,
+        [](monster &caster, mon_spell_slot, bolt&) {
+            const int pow = mons_spellpower(caster, SPELL_ARCJOLT);
+            cast_arcjolt(pow, caster, false);
+        },
+    } },
     { SPELL_SMITING, { _always_worthwhile, _cast_smiting, } },
     { SPELL_CALL_DOWN_LIGHTNING, { _foe_not_nearby, _cast_call_down_lightning, _zap_setup(SPELL_CALL_DOWN_LIGHTNING) } },
     { SPELL_RESONANCE_STRIKE, { _always_worthwhile, _cast_resonance_strike, } },
@@ -1105,12 +1112,12 @@ static int _mons_power_hd_factor(spell_type spell)
 
         case SPELL_OLGREBS_TOXIC_RADIANCE:
         case SPELL_IOOD:
+        case SPELL_FREEZE:
             return 8;
 
         case SPELL_MONSTROUS_MENAGERIE:
         case SPELL_BATTLESPHERE:
         case SPELL_IGNITE_POISON:
-        case SPELL_FREEZE:
         case SPELL_IRRADIATE:
             return 6;
 
@@ -1674,9 +1681,6 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AWAKEN_FOREST:
     case SPELL_DRUIDS_CALL:
     case SPELL_SUMMON_HOLIES:
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_CORPSE_ROT:
-#endif
     case SPELL_SUMMON_DRAGON:
     case SPELL_SUMMON_HYDRA:
     case SPELL_FIRE_SUMMON:
@@ -2546,11 +2550,7 @@ static void _cast_creeping_frost(monster &caster, mon_spell_slot, bolt &beam)
             visible_effect |= _creeping_frost_freeze(mon->pos(), beam);
     }
     if (visible_effect && Options.use_animations & UA_MONSTER)
-    {
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50);
-    }
+        animation_delay(50, true);
 }
 
 static ai_action::goodness _mons_likes_blinking(const monster &caster)
@@ -2619,11 +2619,40 @@ static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt &beam)
             visible_effect |= _pyroclastic_surge(mon->pos(), beam);
     }
     if (visible_effect)
+        animation_delay(25, true);
+}
+
+/// Should the given monster cast Arcjolt?
+static ai_action::goodness _arcjolt_goodness(const monster &caster)
+{
+    const int pow = mons_spellpower(caster, SPELL_ARCJOLT);
+    vector<coord_def> targets = arcjolt_targets(caster, pow, false);
+
+    bolt tracer;
+    tracer.foe_ratio = 100; // safety first
+                            // XXX: rethink this if we put this on an enemy
+
+    for (coord_def t : targets)
     {
-        viewwindow(false);
-        update_screen();
-        scaled_delay(25);
+        actor* ai = actor_at(t);
+        if (!ai) continue;
+        if (mons_aligned(&caster, ai))
+        {
+            tracer.friend_info.count++;
+            tracer.friend_info.power +=
+                    ai->is_player() ? you.experience_level
+                                    : ai->as_monster()->get_experience_level();
+        }
+        else
+        {
+            tracer.foe_info.count++;
+            tracer.foe_info.power +=
+                    ai->is_player() ? you.experience_level
+                                    : ai->as_monster()->get_experience_level();
+        }
     }
+
+    return mons_should_fire(tracer) ? ai_action::good() : ai_action::bad();
 }
 
 /// Should the given monster cast Still Winds?
@@ -4174,8 +4203,6 @@ bool handle_mon_spell(monster* mons)
     if (!(flags & MON_SPELL_INSTANT))
     {
         mons->lose_energy(EUT_SPELL);
-        if (spell_cast == SPELL_SANDBLAST)
-            mons->lose_energy(EUT_SPELL); // double slow!
         return true;
     }
 
@@ -4436,7 +4463,9 @@ static bool _mons_cast_freeze(monster* mons)
 
     const int pow = mons_spellpower(*mons, SPELL_FREEZE);
 
-    const int base_damage = freeze_damage(pow).roll();
+    // We use non-random damage for monster Freeze so that the damage display
+    // is simple to display to players without being misleading.
+    const int base_damage = freeze_damage(pow, false).roll();
     const int damage = resist_adjust_damage(target, BEAM_COLD, base_damage);
 
     if (you.can_see(*target))
@@ -5404,8 +5433,13 @@ static void _mons_upheaval(monster& mons, actor& /*foe*/, bool randomize)
         for (coord_def pos : affected)
         {
             beam.draw(pos);
-            scaled_delay(25);
+            // No need to delay if we are not refreshing
+            if (!Options.reduce_animations)
+                scaled_delay(25); // should this refresh?
         }
+
+        if (Options.reduce_animations)
+            animation_delay(25, true);
     }
 
     for (coord_def pos : affected)
@@ -6366,7 +6400,8 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_WARNING_CRY:
-        return; // the entire point is the noise, handled elsewhere
+        noisy(spell_effect_noise(SPELL_WARNING_CRY), mons->pos(), mons->mid);
+        return;
 
     case SPELL_HUNTING_CALL:
         _battle_cry(*mons, SPELL_HUNTING_CALL);
@@ -6564,8 +6599,13 @@ static int _noise_level(const monster* mons, spell_type spell,
     {
         noise = 0;
     }
-    else if (mons_genus(mons->type) == MONS_DRAGON)
+    // Dragons are extra loud.
+    else if (mons_genus(mons->type) == MONS_DRAGON
+             && (slot_flags & MON_SPELL_INNATE_MASK
+                 || slot_flags & MON_SPELL_VOCAL))
+    {
         noise = get_shout_noise_level(S_LOUD_ROAR);
+    }
     else
         noise = spell_noise(spell);
 
@@ -7232,6 +7272,7 @@ static void _doom_howl(monster &mon)
     mprf("%s unleashes a %s howl, and it begins to echo in your mind!",
          mon.name(DESC_THE).c_str(),
          silenced(mon.pos()) ? "silent" : "terrible");
+    noisy(spell_effect_noise(SPELL_DOOM_HOWL), mon.pos(), mon.mid);
     you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
     mon.props[DOOM_HOUND_HOWLED_KEY] = true;
 }

@@ -1,4 +1,9 @@
 %%%%
+Armataur
+
+Scaled mammals the size of horses, Armataurs are fast-rolling, well-protected,
+and great potion drinkers. They lack dexterity and scroll-reading speed.
+%%%%
 Barachi
 
 Barachim are slow-moving, amphibious humanoids who can hop long distances.
@@ -84,8 +89,8 @@ of close and ranged combat.
 %%%%
 Mummy
 
-Compelled to walk by an ancient curse, Mummies are adept at Necromancy but
-learn other skills very slowly. They are unable to consume potions.
+Compelled to walk by an ancient curse, Mummies have innate faith and are adept
+at Necromancy, but learn other skills very slowly. They cannot drink potions.
 %%%%
 Naga
 
@@ -101,11 +106,6 @@ Ogre
 
 Large, strong, and extremely robust, Ogres are competent at all forms of melee.
 Not merely brutes, they are also quite capable spellcasters.
-%%%%
-Palentonga
-
-Scaled mammals the size of horses, Palentongas are able to launch powerful
-rolling charges.
 %%%%
 Spriggan
 

@@ -273,14 +273,6 @@ public:
     aff_type is_affected(coord_def loc) override;
 };
 
-
-class targeter_corpse_rot : public targeter_radius
-{
-public:
-    targeter_corpse_rot();
-    aff_type is_affected(coord_def loc) override;
-};
-
 class targeter_thunderbolt : public targeter
 {
 public:
@@ -342,22 +334,6 @@ private:
 };
 
 #define CLOUD_CONE_BEAM_COUNT 11
-
-class targeter_shotgun : public targeter
-{
-public:
-    targeter_shotgun(const actor* act, size_t beam_count, int r,
-                     bool cloud = false);
-    bool valid_aim(coord_def a) override;
-    bool set_aim(coord_def a) override;
-    aff_type is_affected(coord_def loc) override;
-    vector<ray_def> rays;
-    map<coord_def, size_t> zapped;
-private:
-    size_t num_beams;
-    int range;
-    bool uses_clouds;
-};
 
 class targeter_monster_sequence : public targeter_beam
 {
@@ -424,7 +400,6 @@ private:
 };
 
 string bad_charge_target(coord_def a);
-bool can_charge_through_mons(coord_def a);
 
 // a fixed los targeter matching how it is called for shatter, with a custom
 // tweak to affect walls.
@@ -456,6 +431,16 @@ public:
 protected:
     set<coord_def> affected_positions;
     aff_type positive;
+};
+
+class targeter_scorch : public targeter_multiposition
+{
+public:
+    targeter_scorch(const actor &a, int _range, bool affect_invis);
+    bool valid_aim(coord_def c) override;
+
+protected:
+    int range;
 };
 
 class targeter_chain_lightning : public targeter
@@ -577,4 +562,12 @@ class targeter_anguish : public targeter_multimonster
 public:
     targeter_anguish();
     bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_poisonous_vapours : public targeter_smite
+{
+public:
+    targeter_poisonous_vapours(const actor *act, int range);
+    bool affects_monster(const monster_info& mon) override;
+    bool valid_aim(coord_def a) override;
 };

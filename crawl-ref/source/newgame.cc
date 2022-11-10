@@ -1098,14 +1098,14 @@ static job_group jobs_order[] =
     {
         "Zealot",
         coord_def(1, 0), 25,
-        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CINDER_ACOLYTE,
+        { JOB_BERSERKER, JOB_CINDER_ACOLYTE,
           JOB_CHAOS_KNIGHT }
     },
     {
         "Warrior-mage",
-        coord_def(1, 5), 26,
-        { JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
-          JOB_ENCHANTER }
+        coord_def(1, 4), 26,
+        { JOB_TRANSMUTER, JOB_WARPER, JOB_HEXSLINGER,
+          JOB_ENCHANTER, JOB_REAVER }
     },
     {
         "Mage",

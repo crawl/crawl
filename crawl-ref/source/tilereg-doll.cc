@@ -260,8 +260,7 @@ void DollEditRegion::render()
         "Hair",
         "Beard",
         "Helm",
-        "DrcWing",
-        "DrcHead"
+        "DrcWing"
     };
 
     // Add current doll information:
@@ -468,7 +467,6 @@ void DollEditRegion::run()
                 case TILEP_PART_HALO:
                 case TILEP_PART_ENCH:
                 case TILEP_PART_DRCWING:
-                case TILEP_PART_DRCHEAD:
                     break;
                 default:
                     m_dolls[m_doll_idx].parts[i] = 0;

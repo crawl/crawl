@@ -154,7 +154,7 @@ function species_mock(e)
     return "tentacled monstrosity"
   elseif you.race() == "Ogre" then
     return "ettin skeleton"
-  elseif you.race() == "Palentonga" then
+  elseif you.race() == "Armataur" then
     return "rat"
   elseif you.race() == "Spriggan" then
     return "unseen horror"
@@ -1133,9 +1133,9 @@ ENDMAP
 NAME:   nicolae_hepliaklqana_ecumenical_no_more
 TAGS:   temple_overflow_hepliaklqana temple_overflow_1 transparent decor
 TAGS:   uniq_altar_hepliaklqana
-WEIGHT: 5
+WEIGHT: 3
 KMONS:  WD = plant / nothing
-NSUBST: E = - / E, H = _ / - / E, E = E / . / EEE-.., P = 4=W / WDD / D
+NSUBST: E = - / E, H = _ / - / E, E = E / . / E., P = 4=W / WDD / D
 SUBST:  ' = '''., c = ccx
 KFEAT:  WS = W
 KFEAT:  _ = altar_hepliaklqana
@@ -2018,6 +2018,25 @@ MAP
 ......www.G.v
  .....w1w...v
       vvvvvvv
+ENDMAP
+
+NAME:   hellmonk_okawaru_the_only_friend_you_need
+TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
+TAGS:   transparent decor
+WEIGHT: 5
+KFEAT:  _ = altar_okawaru
+KITEM:  ' = any weapon plus:0 ego:spectral ident:all
+: interest_check(_G)
+MAP
+vvvv vvvv
+v..vvv..v
+v.......v
+vvv...vvv
+  v._.v
+vvv.'.vvv
+v.......v
+v..v+v..v
+vvvv@vvvv
 ENDMAP
 
 ### Qazlal overflow altars ####################################################

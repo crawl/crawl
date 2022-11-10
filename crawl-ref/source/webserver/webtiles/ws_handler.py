@@ -43,7 +43,19 @@ def update_global_status():
 # lobbies that need updating
 game_lobby_cache = set() # type: Set[CrawlProcessHandlerBase]
 
-def describe_sockets():
+def list_of_names(l):
+    result = []
+    try:
+        c = collections.Counter(l)
+        for n in sorted(c.keys()):
+            result.append(n)
+            if c[n] > 1:
+                result[-1] += " (x%d)" % c[n]
+    except:
+        pass # backwards compat, py2 doesn't have collections.Counter
+    return ", ".join(result)
+
+def describe_sockets(names=False):
     slist = list(sockets)
     lobby = [s for s in slist if s.is_in_lobby()]
     lobby_count = len(lobby)
@@ -55,8 +67,25 @@ def describe_sockets():
     idle_count = len([s for s in playing if s.process.is_idle()])
     spec_count = len([s for s in slist if s.watched_game])
 
-    return "%d connections: %d playing (%d idle), %d watching (%d anon), %d in lobby (%d anon)" % (
+    summary = "%d connections: %d playing (%d idle), %d watching (%d anon), %d in lobby (%d anon)" % (
         len(slist), player_count, idle_count, spec_count, anon_specs, lobby_count, anon_lobby)
+
+    if names:
+        # this is all a bit brute-force
+        watchers = list_of_names([s for s in slist if s.watched_game and s.username])
+        if watchers:
+            summary += "; Watchers: %s" % watchers
+        lobby_names = list_of_names([s.username for s in lobby if s.username and not s.account_restricted()])
+        if lobby_names:
+            summary += "; Lobby: %s" % lobby_names
+        restricted = list_of_names([s.username for s in playing if s.username and s.account_restricted()])
+        if restricted:
+            summary += "; Account restricted: %s" % restricted
+        restricted_lobby = list_of_names([s.username for s in lobby if s.username and s.account_restricted()])
+        if restricted_lobby:
+            summary += "; Account restricted (lobby): %s" % restricted_lobby
+    return summary
+
 
 def do_lobby_updates():
     global game_lobby_cache
@@ -155,6 +184,9 @@ def status_file_timeout():
     write_dgl_status_file()
     IOLoop.current().add_timeout(time.time() + config.get('status_file_update_rate'),
                                  status_file_timeout)
+    # prevent false positives from janky block detection code; because this
+    # runs on a timeout it's a common source of them
+    util.last_blocking_description = "None"
 
 def find_user_sockets(username):
     for socket in list(sockets):
@@ -180,12 +212,13 @@ def _milestone_files():
             top_level_milestones = [top_level_milestones]
         files.update(top_level_milestones)
 
-    for game_config in config.games.values():
-        milestone_file = game_config.get('milestone_file')
-        if milestone_file is None and 'dir_path' in game_config:
+    for game in config.games:
+        milestone_file = config.game_param(game, 'milestone_file')
+        if not milestone_file and 'dir_path' in config.games[game]:
             # milestone appears in this dir by default
-            milestone_file = os.path.join(game_config['dir_path'], 'milestones')
-        if milestone_file is not None:
+            milestone_file = os.path.join(
+                        config.game_param(game, 'dir_path'), 'milestones')
+        if milestone_file:
             files.add(milestone_file)
 
     # Then, make sure for every milestone we have the -seeded and non-seeded
@@ -217,7 +250,11 @@ def handle_new_milestone(line):
     if game and not game.receiving_direct_milestones:
         game.set_where_info(data)
 
-# decorator for admin calls
+# decorators for admin calls
+
+# for CrawlWebSocket functions that implement some admin-only user-triggered
+# action. These will log if someone tries to call them without permissions.
+# Usually for functions that are exposed via a message handler.
 def admin_required(f):
     def wrapper(self, *args, **kwargs):
         if not self.is_admin():
@@ -227,7 +264,19 @@ def admin_required(f):
         return f(self, *args, **kwargs)
     return wrapper
 
+# for CrawlWebSocket functions that should do nothing for a non-admin user, but
+# aren't user-triggered. (n.b. it is in principle possible to write a fancier
+# decorator that subsumes both of these cases, but it is simpler not to.)
+def admin_only(f):
+    def wrapper(self, *args, **kwargs):
+        if not self.is_admin():
+            return
+        return f(self, *args, **kwargs)
+    return wrapper
+
+
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
+    @util.note_blocking_fun
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
@@ -294,18 +343,24 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.logger.info("User '%s' sent serverwide announcement: %s", self.username, text)
         self.send_message("admin_log", text="Announcement made ('" + text + "')")
 
+    @admin_only
+    def send_socket_stats(self):
+        self.send_message("admin_log", text=describe_sockets(True))
+
     @admin_required
     def admin_pw_reset(self, username):
         user_info = userdb.get_user_info(username)
         if not user_info:
             self.send_message("admin_pw_reset_done", error="Invalid user")
             return
-        ok, msg = userdb.generate_forgot_password(username)
+        ok, msg = userdb.generate_forgot_password(user_info.username)
         if not ok:
             self.send_message("admin_pw_reset_done", error=msg)
         else:
-            self.logger.info("Admin user '%s' set a password token on account '%s'", self.username, username)
-            self.send_message("admin_pw_reset_done", email_body=msg, username=username, email=user_info[1])
+            self.logger.info("Admin user '%s' set a password token on account '%s'",
+                self.username, user_info.username)
+            self.send_message("admin_pw_reset_done", email_body=msg,
+                username=user_info.username, email=user_info.email)
 
     @admin_required
     def admin_pw_reset_clear(self, username):
@@ -397,6 +452,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def send_lobby(self):
         self.send_lobby_data()
         self.send_lobby_html()
+        self.send_socket_stats() # admins only
 
     def account_restricted(self):
         return not self.username or userdb.dgl_account_hold(self.user_flags)
@@ -428,69 +484,104 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.save_info[g] = None
         self.save_info[slot] = None
 
+    def update_save_info(self, binary_key, data):
+        try:
+            data = json_decode(data)
+        except Exception:
+            # JSON error. It can also happen under some dgamelaunch-config
+            # setups if escape codes are incorrectly inserted into
+            # the output for some calls. See:
+            # https://github.com/crawl/dgamelaunch-config/commit/6ad788ceb5614b3c83d65b61bf26a122e592b98d
+            # should this case warn? It probably means a misconfiguration.
+            for g in config.binaries_to_games[binary_key]:
+                self.save_info[g] = ""
+                return
+
+        # data is now a dict of game mode to game descriptions. If game modes
+        # share a save slot, then they will map to the same game.
+        for g in config.binaries_to_games[binary_key]:
+            if (not config.game_modes[g] in data
+                        or not config.games[g].get("show_save_info", False)):
+                self.save_info[g] = ""
+                continue
+            save_dict = data[config.game_modes[g]]
+            if not save_dict["loadable"]:
+                # the save in this slot is in use.
+                self.save_info[g] = "[playing]" # TODO: something better??
+            elif config.game_modes[g] == save_dict["game_type"]:
+                # save in the slot matches the game type we are
+                # checking.
+                self.save_info[g] = "[%s]" % save_dict["short_desc"]
+            else:
+                # There is a save, but it has a different game type.
+                # This happens if multiple game types share a slot.
+                self.save_info[g] = "[slot full]"
+
     # collect save info for the player from all binaries that support save
     # info json. Cached on self.save_info. This is asynchronously done using
-    # a somewhat involved callback chain.
+    # a somewhat involved callback chain; each check requires a subprocess
+    # call on which we don't want to block.
+    # this code would be much simpler if refactored using async
     @util.note_blocking_fun
     def collect_save_info(self, final_callback):
         if not self.username:
             return
 
-        # this code would be much simpler refactored using async
-        @util.note_blocking_fun
-        def build_callback(game_key, call, next_callback):
-            @util.note_blocking_fun
-            def update_save_info(data, returncode):
-                global sockets
-                if not self in sockets:
-                    return
-                if returncode == 0:
-                    try:
-                        save_dict = json_decode(data)[config.game_modes[game_key]]
-                        if not save_dict["loadable"]:
-                            # the save in this slot is in use.
-                            self.save_info[game_key] = "[playing]" # TODO: something better??
-                        elif config.game_modes[game_key] == save_dict["game_type"]:
-                            # save in the slot matches the game type we are
-                            # checking.
-                            self.save_info[game_key] = "[" + save_dict["short_desc"] + "]"
-                        else:
-                            # There is a save, but it has a different game type.
-                            # This happens if multiple game types share a slot.
-                            self.save_info[game_key] = "[slot full]"
-                    except Exception:
-                        # game key missing (or other error). This will mainly
-                        # happen if there are no saves at all for the player
-                        # name. It can also happen under some dgamelaunch-config
-                        # setups if escape codes are incorrectly inserted into
-                        # the output for some calls. See:
-                        # https://github.com/crawl/dgamelaunch-config/commit/6ad788ceb5614b3c83d65b61bf26a122e592b98d
-                        self.save_info[game_key] = ""
-                else:
-                    # error in the subprocess: this will happen if the binary
-                    # does not support `-save-json`. Print a warning so that
-                    # the admin can see that they have save info enabled
-                    # incorrectly for this binary.
-                    logging.warn("Save info check for '%s' failed" % game_key)
-                    self.save_info[game_key] = ""
-                next_callback()
-            return lambda: checkoutput.check_output(call, update_save_info)
-
-        callback = final_callback
-        for g in config.games:
-            game = config.games[g]
-            if not game.get("show_save_info", False):
-                self.save_info[g] = ""
+        # Tally up the calls we need in order to check relevant save info.
+        # For each distinct binary (going by binary keys, cached in
+        # `binaries_to_games`), if that binary has modes that should show and
+        # update save info, add a call to the list.
+        check_calls = []
+        for b in config.binaries_to_games:
+            games = config.binaries_to_games[b]
+            if not games:
                 continue
-            if self.save_info.get(g, None) is None:
-                # cache for g is invalid, add a callback for it to the callback
-                # chain
-                call = [game["crawl_binary"]]
-                if "pre_options" in game:
-                    call += game["pre_options"]
-                call += ["-save-json", self.username]
-                callback = build_callback(g, call, callback)
+            if not config.game_modes[games[0]]:
+                continue # no game mode info for this game
+            if not any([config.games[g].get("show_save_info", False) for g in games]):
+                # no games modes for this binary have enabled save info
+                for g in games:
+                    self.save_info[g] = ""
+                continue
+            if not any([self.save_info.get(g, None) is None for g in games]):
+                # no invalid caches for this binary
+                continue
+            # doesn't matter which element of games we use
+            call = config.games[games[0]].get_call_base()
+            call += ["-save-json", self.username]
+            check_calls.append([b, call])
 
+        # next we need to turn the list of calls into a sequence of non-blocking
+        # callbacks
+
+        def build_callback(b, call, next_callback):
+            # build a callback that:
+            # a. calls check_output with the call info (nonblocking subprocess)
+            # b. passes the output to update_save_info, and
+            # c. calls next_callback
+            @util.note_blocking_fun
+            def do_update(data, returncode):
+                if returncode != 0:
+                    # Binary doesn't support save info, print a warning so that
+                    # the admin can see there is a misconfiguration
+                    # XX it should be possible to check for this case on startup
+                    logging.warning("Save info check for '%s' failed" % b)
+                    data = None # force error case in update_save_info call
+
+                self.update_save_info(b, data)
+                next_callback()
+
+            # the check_output call is non-blocking, e.g. will yield to other
+            # IOLoop stuff:
+            return lambda: checkoutput.check_output(call, do_update)
+
+        # sequence the calls into a chain of callbacks that end with
+        # final_callback
+        callback = final_callback
+        for l in check_calls:
+            callback = build_callback(l[0], l[1], callback)
+
+        # finally, kick things off
         callback()
 
     @util.note_blocking_fun
@@ -520,7 +611,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 games = collections.OrderedDict()
                 for g in config.games:
                     if self.game_id_allowed(g):
-                        games[g] = config.games[g]
+                        games[g] = config.games[g].templated_dict(self.username)
                 play_html = to_unicode(self.render_string("game_links.html",
                                                   games = games,
                                                   save_info = self.save_info,
@@ -563,11 +654,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def update_db_info(self):
+        """update self's user info from the user database, including updating
+        any flag changes that may have happened in the db."""
         if not self.username:
             return True # caller needs to check for anon if necessary
         # won't detect a change in hold state on first login...
         old_restriction = self.user_flags is not None and self.account_restricted()
-        self.user_id, self.user_email, self.user_flags = userdb.get_user_info(self.username)
+        u = userdb.get_user_info(self.username)
+        self.username = u.username # canonicalize
+        self.user_id = u.id
+        self.email = u.email
+        self.user_flags = u.flags
         self.logger.extra["username"] = self.username
         if userdb.dgl_is_banned(self.user_flags):
             return False
@@ -595,11 +692,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             return
 
         if config.get('dgl_mode'):
-            game_params = dict(config.games[game_id])
             if self.username == None:
                 if self.watched_game:
                     self.stop_watching()
-                self.send_message("login_required", game = game_params["name"])
+                self.send_message("login_required",
+                    game=config.games[game_id].templated("name", username=self.username))
                 return
             util.annotate_blocking_note(" user: " + self.username)
 
@@ -618,7 +715,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         # update flags in case an account hold has been released or added, or
         # the player has been banned.
-        if (not self.update_db_info() # ban check happens here
+        if config.get('dgl_mode') and (not self.update_db_info() # ban check happens here
                 or not self.game_id_allowed(game_id)):
             self.go_lobby()
             return
@@ -626,9 +723,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         from webtiles import process_handler
 
         if config.get('dgl_mode'):
-            game_params["id"] = game_id
-            args = (game_params, self.username, self.logger)
-            self.process = process_handler.CrawlProcessHandler(*args)
+            self.process = process_handler.CrawlProcessHandler(
+                            config.games[game_id], self.username, self.logger)
         else:
             self.process = process_handler.DGLLessCrawlProcessHandler(self.logger)
 
@@ -725,7 +821,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def shutdown(self):
         if not self.client_closed:
-            self.logger.info("Shutting down user %s id %d", self.username, self.id)
+            self.logger.info("Shutting down user %s id %d",
+                                    self.username and self.username or "[Anon]",
+                                    self.id)
             msg = to_unicode(self.render_string("shutdown.html", game=self))
             self.send_message("close", reason = msg)
             self.close()
@@ -838,10 +936,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = True
 
     def rcfile_path(self, game_id):
-        if game_id not in config.games: return None
-        if not self.username: return None
-        path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
-                                     self.username, config.games[game_id])
+        if game_id not in config.games:
+            return None
+        if not self.username:
+            return None
+        path = config.game_param(game_id, "rcfile_path", username=self.username)
         return os.path.join(path, self.username + ".rc")
 
     def send_json_options(self, game_id, player_name):
@@ -859,18 +958,15 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if game_id not in config.games: return
 
         game = config.games[game_id]
-        if not "send_json_options" in game or not game["send_json_options"]:
+        if "send_json_options" in game and not game["send_json_options"]:
             return
 
-        call = [game["crawl_binary"]]
-
-        if "pre_options" in game:
-            call += game["pre_options"]
+        call = game.get_call_base()
 
         call += ["-name", player_name,
                  "-rc", self.rcfile_path(game_id)]
         if "options" in game:
-            call += game["options"]
+            call += game.templated("options", username=self.username)
         call.append("-print-webtiles-options")
 
         checkoutput.check_output(call, do_send)
@@ -1076,9 +1172,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     @util.note_blocking_fun
     def set_rc(self, game_id, contents):
-        rcfile_path = util.dgl_format_str(config.games[game_id]["rcfile_path"],
-                                     self.username, config.games[game_id])
-        rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
+        rcfile_path = self.rcfile_path(game_id)
         try:
             with open(rcfile_path, 'wb') as f:
                 # TODO: is binary + encode necessary in py 3?

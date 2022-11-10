@@ -35,7 +35,6 @@ ifneq ($(LTO),)
     CFOPTIMIZE += -fno-fat-lto-objects
   endif
 endif
-## XXX 
 ## Package fails to build on ubuntu with LTO unless -g is remove on my system.
 ## Doesn't build on debian testing even with -g removed. --gammafunk
 CFOPTIMIZE := $(filter-out -g,$(CFOPTIMIZE))
@@ -90,19 +89,19 @@ install: build
 	dh_prep
 	dh_installdirs
 
-	cd build-console/source && $(MAKE) $(ARGS_CONSOLE) install DESTDIR=../../debian/crawl-common
-	#cd debian/crawl-common/usr/share && mkdir -p doc/crawl-common && \
-	#	mv crawl/docs/* doc/crawl-common && \
-	#	mv doc/crawl-common/crawl_manual.txt crawl/docs
+	cd build-console/source && $(MAKE) $(ARGS_CONSOLE) install install-xdg-data DESTDIR=../../debian/crawl-common
 	rm -rf debian/crawl-common/usr/share/crawl/docs/license
-	mkdir -p debian/crawl/usr/
+	mkdir -p debian/crawl/usr/share
 	mv debian/crawl-common/usr/games debian/crawl/usr/games
-	cd build-tiles/source && $(MAKE) $(ARGS_TILES) install DESTDIR=../../debian/crawl-tiles
+	mv debian/crawl-common/usr/share/applications debian/crawl/usr/share
+	mv debian/crawl-common/usr/share/icons debian/crawl/usr/share
+	mv debian/crawl-common/usr/share/metainfo debian/crawl/usr/share
+	cd build-tiles/source && $(MAKE) $(ARGS_TILES) install install-xdg-data DESTDIR=../../debian/crawl-tiles
 	rm -rf debian/crawl-tiles/var
 	cd debian/crawl-tiles/usr/share/crawl/ && rm -rf docs settings
 	mkdir -p debian/crawl-tiles-data/usr/share/crawl/dat
 	mv debian/crawl-tiles/usr/share/crawl/dat/tiles debian/crawl-tiles-data/usr/share/crawl/dat/
-	rm -rf debian/crawl-tiles/usr/share/crawl/dat
+	rm -rf debian/crawl-tiles/usr/share/crawl
 	
 	mkdir -p debian/crawl/usr/share/man/man6
 	cp docs/crawl.6 debian/crawl/usr/share/man/man6/
@@ -120,15 +119,6 @@ install: build
 	ln -sf crawl-common debian/crawl-tiles/usr/share/doc/crawl-tiles
 	mkdir -p debian/crawl-tiles-data/usr/share/doc
 	ln -sf crawl-common debian/crawl-tiles-data/usr/share/doc/crawl-tiles-data
-	dh_install -pcrawl debian/crawl.desktop usr/share/applications/
-	dh_install -pcrawl-tiles debian/crawl-tiles.desktop usr/share/applications/
-	dh_install -pcrawl-tiles debian/crawl.png usr/share/icons/hicolor/48x48/apps/
-	dh_install -pcrawl-common debian/crawl.xpm usr/share/pixmaps/
-	dh_link -pcrawl-tiles usr/share/crawl/dat/tiles/stone_soup_icon-32x32.png \
-		usr/share/icons/hicolor/32x32/apps/crawl.png
-	mkdir -p debian/crawl-tiles/usr/share/icons/hicolor/scalable/apps
-	cp -p source/dat/tiles/stone_soup_icon.svg \
-		debian/crawl-tiles/usr/share/icons/hicolor/scalable/apps/crawl.svg
 
 # Build architecture-independent files here.
 binary-indep: install
@@ -148,7 +138,6 @@ binary-indep: install
 binary-arch: install
 	dh_testdir
 	dh_testroot
-	dh_installmenu -a
 	dh_link -a
 	dh_compress -a -Xaptitudes.txt
 	dh_strip -a

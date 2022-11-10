@@ -36,16 +36,15 @@ enum job_type
     JOB_WARPER,
     JOB_WANDERER,
     JOB_ARTIFICER,                     //   Greenberg/Bane
-    JOB_ARCANE_MARKSMAN,
+    JOB_HEXSLINGER,
 #if TAG_MAJOR_VERSION == 34
     JOB_DEATH_KNIGHT,
-#endif
     JOB_ABYSSAL_KNIGHT,
-#if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
 #endif
     JOB_DELVER,
     JOB_CINDER_ACOLYTE,
+    JOB_REAVER,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

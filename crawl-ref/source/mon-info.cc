@@ -640,7 +640,7 @@ monster_info::monster_info(const monster* m, int milev)
         // Applies to both friendlies and hostiles
         if (mons_is_fleeing(*m))
             mb.set(MB_FLEEING);
-        else if (mons_is_wandering(*m) && !mons_is_batty(*m))
+        else if (m->behaviour == BEH_WANDER)
         {
             if (m->is_stationary())
                 mb.set(MB_UNAWARE);
@@ -648,7 +648,7 @@ monster_info::monster_info(const monster* m, int milev)
                 mb.set(MB_WANDERING);
         }
         else if (m->foe == MHITNOT
-                 && !mons_is_batty(*m)
+                 && m->behaviour != BEH_BATTY
                  && m->attitude == ATT_HOSTILE)
         {
             mb.set(MB_UNAWARE);
@@ -721,6 +721,8 @@ monster_info::monster_info(const monster* m, int milev)
     }
     if (m->has_ghost_brand())
         props[SPECIAL_WEAPON_KEY] = m->ghost_brand();
+
+    ghost_colour = m->ghost ? m->ghost->colour : COLOUR_INHERIT;
 
     // book loading for player ghost and vault monsters
     spells.clear();
@@ -1326,12 +1328,14 @@ string monster_info::pluralised_name(bool fullname) const
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
         return common_name();
-    else if (mons_genus(type) == MONS_DRACONIAN)
+    else if (mons_genus(type) == MONS_DRACONIAN && !is(MB_NAME_REPLACE))
         return pluralise_monster(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
-    else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-             || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
-             || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
-             || !fullname)
+    else if ((type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
+                || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
+                || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
+                || !fullname)
+            && !is(MB_NAME_REPLACE))
+
     {
         return pluralise_monster(mons_type_name(type, DESC_PLAIN));
     }

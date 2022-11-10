@@ -31,7 +31,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Cheibriados="potion of haste ident:type q:3",
          Dithmenos="scroll of noise ident:type q:3",
          Elyvilon="book of Necromancy / book of Death / book of Unlife",
-         Gozag="randbook owner:Lugonu spells:corpse_rot&animate_dead numspells:2",
+         Gozag="randbook owner:Lugonu spells:animate_dead&simulacrum numspells:2",
          Kikubaaqudgha="rat corpse / kobold corpse",
          ["the Shining One"]="good_item " .. weapon .. " ego:pain ident:type /\
               good_item " .. weapon .. " ego:draining ident:type /\

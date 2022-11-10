@@ -66,17 +66,10 @@ struct spell_desc
     int min_range;
     int max_range;
 
-    // Noise made directly by casting this spell.
-    // Noise used to be based directly on spell level:
-    //  * for conjurations: spell level
-    //  * for non-conj pois/air: spell level / 2 (rounded up)
-    //  * for others: spell level * 3/4 (rounded up)
-    // These are probably good guidelines for new spells.
-    int noise;
-
     // Some spells have a noise at their place of effect, in addition
-    // to at the place of casting. effect_noise handles that, and is also
-    // used even if the spell is not casted directly (by Xom, for instance).
+    // to their casting noise.
+    // For zap-based spells, effect_noise is used automatically (if it exists)
+    // on hit. For all other spells, it needs to be called manually.
     int effect_noise;
 
     /// Icon for the spell in e.g. spellbooks, casting menus, etc.
@@ -498,6 +491,7 @@ bool spell_is_direct_attack(spell_type spell)
         || spell == SPELL_SYMBOL_OF_TORMENT
         || spell == SPELL_SHATTER
         || spell == SPELL_DISCHARGE
+        || spell == SPELL_ARCJOLT
         || spell == SPELL_CHAIN_LIGHTNING
         || spell == SPELL_DRAIN_LIFE
         || spell == SPELL_CHAIN_OF_CHAOS
@@ -1052,7 +1046,12 @@ int spell_range(spell_type spell, int pow,
  */
 int spell_noise(spell_type spell)
 {
-    return _seekspell(spell)->noise;
+    const spell_flags flags = get_spell_flags(spell);
+
+    if (testbits(flags, spflag::silent))
+        return 0;
+
+    return spell_difficulty(spell);
 }
 
 /**
@@ -1264,9 +1263,9 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         {
             if (you.duration[DUR_SWIFTNESS])
                 return "this spell is already in effect.";
-            if (player_movement_speed() <= FASTEST_PLAYER_MOVE_SPEED)
+            if (player_movement_speed(false) <= FASTEST_PLAYER_MOVE_SPEED)
                 return "you're already travelling as fast as you can.";
-            if (you.is_stationary())
+            if (!you.is_motile())
                 return "you can't move.";
         }
         break;
@@ -1366,17 +1365,12 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         // a drastically simplified version of it
         if (!temp)
             break;
-        if (you.is_stationary())
+        if (!you.is_motile())
             return "you can't move.";
         if (!passwall_simplified_check(you))
             return "you aren't next to any passable walls.";
         if (you.is_constricted())
             return "you're being held away from the wall.";
-        break;
-
-    case SPELL_CORPSE_ROT:
-        if (have_passive(passive_t::goldify_corpses))
-            return "necromancy does not work on golden corpses.";
         break;
 
     case SPELL_ANIMATE_DEAD:
@@ -1394,8 +1388,14 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
             return "you are already reaping souls!";
         break;
 
-        // fallthrough
-    case SPELL_CONJURE_FLAME:
+    case SPELL_ROT:
+        {
+            const mon_holy_type holiness = you.holiness(temp);
+            if (holiness != MH_NATURAL && holiness != MH_UNDEAD)
+                return "you have no flesh to rot.";
+        }
+        // fallthrough to cloud spells
+    case SPELL_BLASTSPARK:
     case SPELL_POISONOUS_CLOUD:
     case SPELL_FREEZING_CLOUD:
     case SPELL_MEPHITIC_CLOUD:
@@ -1445,14 +1445,28 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_MANIFOLD_ASSAULT:
-    {
         if (temp)
         {
             const string unproj_reason = weapon_unprojectability_reason();
             if (unproj_reason != "")
                 return unproj_reason;
         }
-    }
+        break;
+
+    case SPELL_MOMENTUM_STRIKE:
+        if (temp && !you.is_motile())
+            return "you cannot redirect your momentum while unable to move.";
+        break;
+
+    case SPELL_ELECTRIC_CHARGE:
+        if (temp)
+        {
+            const string no_move_reason = movement_impossible_reason();
+            if (!no_move_reason.empty())
+                return no_move_reason;
+            if (!electric_charge_possible(true))
+                return "you can't see anything to charge at.";
+        }
         break;
 
     default:
@@ -1507,7 +1521,6 @@ bool spell_no_hostile_in_range(spell_type spell)
     {
     // These don't target monsters or can target features.
     case SPELL_APPORTATION:
-    case SPELL_CONJURE_FLAME:
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
     // case SPELL_LRD: // TODO: LRD logic here is a bit confusing, it should error
@@ -1599,6 +1612,15 @@ bool spell_no_hostile_in_range(spell_type spell)
          return trace_los_attack_spell(SPELL_OZOCUBUS_REFRIGERATION, pow, &you)
              == spret::abort;
 
+    case SPELL_ARCJOLT:
+        for (coord_def t : arcjolt_targets(you, pow, false))
+        {
+            const monster *mon = monster_at(t);
+            if (mon != nullptr && !mon->wont_attack())
+                return false;
+        }
+        return true;
+
     case SPELL_CHAIN_LIGHTNING:
         for (coord_def t : chain_lightning_targets())
         {
@@ -1609,7 +1631,7 @@ bool spell_no_hostile_in_range(spell_type spell)
         return true;
 
     case SPELL_SCORCH:
-        return find_near_hostiles(range).empty();
+        return find_near_hostiles(range, false).empty();
 
     case SPELL_ANGUISH:
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
@@ -1912,6 +1934,8 @@ const set<spell_type> removed_spells =
     SPELL_GOAD_BEASTS,
     SPELL_TELEPORT_SELF,
     SPELL_EXCRUCIATING_WOUNDS,
+    SPELL_CONJURE_FLAME,
+    SPELL_CORPSE_ROT,
 #endif
 };
 

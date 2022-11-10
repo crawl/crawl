@@ -80,7 +80,7 @@
 // |   |                              armour, wield, scroll item selection
 // |   |                              (e.g. brand, enchant)
 // |   |\--KnownMenu (known-items.cc): known/unknown items
-// |   |\--DescMenu (directn.cc): xv and ctrl-x menus
+// |   |\--DescMenu (directn.cc): xv and ctrl-x menus, help lookup
 // |   \---ShopMenu (shopping.cc): buying in shops
 // |
 // |\--ShoppingListMenu (shopping.cc): shopping lists (`$`)
@@ -2393,7 +2393,6 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         TILEP_PART_ARM,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
-        TILEP_PART_DRCHEAD,  // 15
         TILEP_PART_HELM,
         TILEP_PART_HAND1,   // 10
         TILEP_PART_HAND2,
@@ -2418,8 +2417,8 @@ bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    bool is_ptng = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA
-                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA + 1);
+    bool is_ptng = (equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR
+                    || equip_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR + 1);
     if (equip_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && equip_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
     {

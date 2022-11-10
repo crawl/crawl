@@ -1692,7 +1692,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_POLEARMS:
-            if (species == SP_PALENTONGA && skill_rank == 5)
+            if (species == SP_ARMATAUR && skill_rank == 5)
                 result = "Prickly Pangolin";
             break;
 
@@ -1734,9 +1734,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_INVOCATIONS:
             if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
                 result = "Blood Saint";
-            else if (species == SP_PALENTONGA && skill_rank == 5 && god == GOD_QAZLAL)
+            else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
                 result = "Rolling Thunder";
-            else if (species == SP_PALENTONGA && skill_rank == 5 && is_good_god(god))
+            else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
                 result = "Holy Roller";
             else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Forbidden One";

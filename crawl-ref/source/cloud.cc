@@ -290,11 +290,13 @@ static const cloud_data clouds[] = {
       BEAM_NONE, {},                              // beam & damage
       true,                                       // opacity
     },
+#if TAG_MAJOR_VERSION == 34
     // CLOUD_EMBERS,
     { "smouldering embers", "embers",
         ETC_SMOKE,
         { TILE_CLOUD_BLACK_SMOKE, CTVARY_NONE },
     },
+#endif
     // CLOUD_FLAME,
     { "wisps of flame", nullptr,                  // terse, verbose name
       ETC_FIRE,                                   // colour
@@ -306,6 +308,11 @@ static const cloud_data clouds[] = {
       { TILE_CLOUD_DEGENERATION, CTVARY_NONE },   // tile
       BEAM_NONE, {},                              // beam & damage
       false,                                      // opacity
+    },
+    // CLOUD_BLASTSPARKS,
+    { "blastsparks", "volatile sparks",           // terse, verbose name
+        ETC_SMOKE,                                // colour
+      { TILE_CLOUD_BLASTSPARKS, CTVARY_RANDOM },  // tile
     },
 };
 COMPILE_CHECK(ARRAYSZ(clouds) == NUM_CLOUD_TYPES);
@@ -502,37 +509,6 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
 }
 
 /**
- * Convert timing out embers to conjured flames.
- *
- * @param cloud     The cloud in question.
- * @return          Whether a flame cloud has been created.
- */
-static bool _handle_conjure_flame(const cloud_struct &cloud)
-{
-    if (cloud.type != CLOUD_EMBERS)
-        return false;
-
-    if (you.pos() == cloud.pos)
-    {
-        mpr("You smother the flame.");
-        return false;
-    }
-    const monster *mons = monster_at(cloud.pos);
-    if (mons && !mons_is_conjured(mons->type))
-    {
-        mprf("%s smothers the flame.",
-             monster_at(cloud.pos)->name(DESC_THE).c_str());
-        return false;
-    }
-
-    mpr("The fire ignites!");
-    const int dur = you.props[CFLAME_DUR_KEY].get_int();
-    place_cloud(CLOUD_FIRE, cloud.pos, dur, &you);
-    you.props.erase(CFLAME_DUR_KEY);
-    return true;
-}
-
-/**
  * How fast should a given cloud fade away this turn?
  *
  * @param cloud_idx     The cloud in question.
@@ -573,7 +549,7 @@ static void _dissipate_cloud(cloud_struct& cloud)
     }
 
     // Check for total dissipation and handle accordingly.
-    if (cloud.decay < 1 && !_handle_conjure_flame(cloud))
+    if (cloud.decay < 1)
         delete_cloud(cloud.pos);
 }
 
@@ -879,6 +855,7 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_PETRIFY:
     case CLOUD_ACID:
     case CLOUD_NEGATIVE_ENERGY:
+    case CLOUD_BLASTSPARKS:
         return true;
     default:
         return false;
@@ -1369,6 +1346,7 @@ int actor_apply_cloud(actor *act)
 
     if ((player || final_damage > 0
          || _cloud_has_negative_side_effects(cloud.type))
+        && cloud.type != CLOUD_BLASTSPARKS // no effect over time
         && cloud.type != CLOUD_STORM) // handled elsewhere
     {
         cloud.announce_actor_engulfed(act);
@@ -1471,6 +1449,12 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
     }
 }
 
+bool cloud_damages_over_time(cloud_type type, bool accept_temp_resistances, bool yours)
+{
+    return type != CLOUD_BLASTSPARKS
+        && is_damaging_cloud(type, accept_temp_resistances, yours);
+}
+
 /**
  * Will the given monster refuse to walk into the given cloud?
  *
@@ -1484,10 +1468,6 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances, bool yours
 static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
                                bool extra_careful)
 {
-    // Friendlies avoid snuffing the player's conjured flames
-    if (mons->attitude == ATT_FRIENDLY && cloud.type == CLOUD_EMBERS)
-        return true;
-
     // clouds you're immune to are inherently safe.
     if (actor_cloud_immune(*mons, cloud))
         return false;
@@ -1498,7 +1478,8 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
 
     // Berserk monsters are less careful and will blindly plow through any
     // dangerous cloud, just to kill you. {due}
-    if (!extra_careful && mons->berserk_or_insane())
+    // Fleeing monsters are heedless and will make very poor life choices.
+    if (!extra_careful && (mons->berserk_or_insane() || mons_is_fleeing(*mons)))
         return false;
 
     switch (cloud.type)
@@ -1506,6 +1487,12 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
     case CLOUD_MIASMA:
         // Even the dumbest monsters will avoid miasma if they can.
         return true;
+
+    case CLOUD_BLASTSPARKS:
+        // As with traps, make friendly monsters not walk into blastsparks.
+        return mons->attitude == ATT_FRIENDLY
+        // Hack: try to avoid penance.
+            || mons->attitude == ATT_GOOD_NEUTRAL;
 
     case CLOUD_RAIN:
         // Fiery monsters dislike the rain.

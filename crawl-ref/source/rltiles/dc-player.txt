@@ -107,31 +107,17 @@ vine_stalker_f VINE_STALKER
 vine_stalker_m
 
 # draconians
-draconian_f DRACONIAN DRACONIAN_FIRST
-draconian_m
-draconian_black_f DRACONIAN_BLACK
-draconian_black_m
-draconian_gold_f DRACONIAN_GOLD
-draconian_gold_m
-draconian_gray_f DRACONIAN_GREY
-draconian_gray_m
-draconian_green_f DRACONIAN_GREEN
-draconian_green_m
-draconian_pale_f DRACONIAN_PALE
-draconian_pale_m
-draconian_purple_f DRACONIAN_PURPLE
-draconian_purple_m
-draconian_red_f DRACONIAN_RED
-draconian_red_m
-draconian_white_f DRACONIAN_WHITE
-draconian_white_m DRACONIAN_LAST
+draconian DRACONIAN DRACONIAN_FIRST
+draconian_black DRACONIAN_BLACK
+draconian_yellow DRACONIAN_YELLOW
+draconian_grey DRACONIAN_GREY
+draconian_green DRACONIAN_GREEN
+draconian_pale DRACONIAN_PALE
+draconian_purple DRACONIAN_PURPLE
+draconian_red DRACONIAN_RED
+draconian_white DRACONIAN_WHITE DRACONIAN_LAST
 
-palentonga_red_f PALENTONGA
-palentonga_red_m
-palentonga_f
-palentonga_m
-palentonga_green_f
-palentonga_green_m
+armataur ARMATAUR
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN
@@ -1190,17 +1176,4 @@ drcwing_pale PALE
 drcwing_purple PURPLE
 drcwing_red RED
 drcwing_white WHITE
-%end_ctg
-
-%parts_ctg DRCHEAD
-%sdir player/drchead
-drchead_brown BROWN
-drchead_black BLACK
-drchead_yellow YELLOW
-drchead_grey GREY
-drchead_green GREEN
-drchead_pale PALE
-drchead_purple PURPLE
-drchead_red RED
-drchead_white WHITE
 %end_ctg

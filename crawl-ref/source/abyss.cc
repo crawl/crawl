@@ -283,8 +283,15 @@ void clear_abyssal_rune_knowledge()
     cur_loc = coord_def(-1,-1);
 }
 
-static void _detect_abyssal_rune()
+static void _update_abyssal_map_knowledge()
 {
+    // reset any waypoints set while in the abyss so far.
+    // XX currently maprot doesn't clear waypoints, but they then don't show in
+    // the map view. Maybe not an issue for programmatic users.
+    travel_cache.flush_invalid_waypoints();
+
+    // Everything else here is managing rune knowledge.
+
     // Don't print misleading messages about the rune disappearing
     // after you already picked it up.
     if (you.runes[RUNE_ABYSSAL])
@@ -1477,7 +1484,7 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
 
     _ensure_player_habitable(true);
 
-    _detect_abyssal_rune();
+    _update_abyssal_map_knowledge();
 
     // Abyss has a constant density.
     env.density = 0;
@@ -1554,7 +1561,7 @@ static void abyss_area_shift()
     // TODO: should dactions be rerun at this point instead? That would cover
     // this particular case...
     gozag_detect_level_gold(false);
-    _detect_abyssal_rune();
+    _update_abyssal_map_knowledge();
 }
 
 void destroy_abyss()
@@ -1665,28 +1672,16 @@ void generate_abyss()
         ASSERT(env.grid(*ri) > DNGN_UNSEEN);
     check_map_validity();
 
-    // If we're starting out in the Abyss, make sure the starting grid is
-    // an exit, and place an altar near by for flavour.
-    // Otherwise, we start out on floor and there's a chance there's an
-    // altar near-by.
-    if (player_in_starting_abyss())
+    // Start out on floor, and there's a chance there's an  altar nearby.
+    env.grid(ABYSS_CENTRE) = DNGN_FLOOR;
+    if (one_chance_in(5))
     {
-        env.grid(ABYSS_CENTRE) = DNGN_EXIT_ABYSS;
         _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
     }
-    else
-    {
-        env.grid(ABYSS_CENTRE) = DNGN_FLOOR;
-        if (one_chance_in(5))
-        {
-            _place_feature_near(ABYSS_CENTRE, LOS_RADIUS,
-                                DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50);
-        }
-    }
 
     setup_environment_effects();
-    _detect_abyssal_rune();
+    _update_abyssal_map_knowledge();
 }
 
 static void _increase_depth()
@@ -1773,7 +1768,7 @@ void abyss_teleport(bool wizard_tele)
     vault_list.insert(vault_list.end(),
                         level_vaults.begin(), level_vaults.end());
 
-    _detect_abyssal_rune();
+    _update_abyssal_map_knowledge();
     more();
 }
 

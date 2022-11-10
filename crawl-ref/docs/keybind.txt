@@ -191,7 +191,7 @@ e         CMD_MAP_EXCLUDE_AREA (cycle through radii and toggle off/on)
 ^E        CMD_MAP_CLEAR_EXCLUDES
 +,NP+     CMD_MAP_SCROLL_DOWN
 -,NP-     CMD_MAP_SCROLL_UP
-., Enter, ;, NPenter, NP. 
+., Enter, ;, NPenter, NP.
           CMD_MAP_GOTO_TARGET
 !         CMD_MAP_ANNOTATE_LEVEL
 Esc       CMD_MAP_EXIT_MAP

@@ -815,7 +815,7 @@ void throw_it(quiver::action &a)
     if (wepClass == OBJ_MISSILES || wepClass == OBJ_WEAPONS)
         item.flags |= ISFLAG_THROWN;
 
-    pbolt.hit = teleport ? random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4)
+    pbolt.hit = teleport ? random2(1 + div_rand_round(you.attribute[ATTR_PORTAL_PROJECTILE], 4))
                          : 0;
 
     if (teleport)

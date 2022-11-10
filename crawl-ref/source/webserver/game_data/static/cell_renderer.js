@@ -95,14 +95,21 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             this.y_scale = this.cell_height / 32;
         },
 
-        glyph_mode_font_name: function ()
+        glyph_mode_font_name: function (scale, device)
         {
             var glyph_scale;
-            if (this.ui_state == enums.ui.VIEW_MAP)
-                glyph_scale = options.get("tile_map_scale");
+            if (scale)
+                glyph_scale = scale * 100;
             else
-                glyph_scale = options.get("tile_viewport_scale");
-            glyph_scale = ((glyph_scale - 100) / 2 + 100) * window.devicePixelRatio;
+            {
+                if (this.ui_state == enums.ui.VIEW_MAP)
+                    glyph_scale = options.get("tile_map_scale");
+                else
+                    glyph_scale = options.get("tile_viewport_scale");
+                glyph_scale = ((glyph_scale - 100) / 2 + 100);
+            }
+            if (device)
+                glyph_scale = glyph_scale * window.devicePixelRatio;
 
             return (Math.floor(this.glyph_mode_font_size * glyph_scale / 100)
                 + "px " + this.glyph_mode_font);
@@ -116,15 +123,15 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             // and fontBoundingBoxDescent are specific to the font whereas all
             // glyphs in a monospaced font will have the same width
             var metrics = this.ctx.measureText('@');
-            this.glyph_mode_font_width = metrics.width;
+            this.glyph_mode_font_width = Math.ceil(metrics.width);
 
-            // Currently, fontBoundingBoxAscent/Descent are still
-            // experimental for most web browsers and may be unavailable.
+            // 2022: this feature appears to still be unavailable by default
+            // in firefox
             if (metrics.fontBoundingBoxAscent)
             {
                 this.glyph_mode_baseline = metrics.fontBoundingBoxAscent;
-                this.glyph_mode_line_height = metrics.fontBoundingBoxAscent
-                                            + metrics.fontBoundingBoxDescent;
+                this.glyph_mode_line_height = (metrics.fontBoundingBoxAscent
+                                            + metrics.fontBoundingBoxDescent);
             }
             else
             {   // Inspired by https://stackoverflow.com/q/1134586/
@@ -148,11 +155,11 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 try
                 {
                     ref_block.style["vertical-align"] = "baseline";
-                    this.glyph_mode_baseline = ref_block.offsetTop
-                                                - ref_glyph.offsetTop;
+                    this.glyph_mode_baseline = (ref_block.offsetTop
+                                                - ref_glyph.offsetTop);
                     ref_block.style["vertical-align"] = "bottom";
-                    this.glyph_mode_line_height = ref_block.offsetTop
-                                                    - ref_glyph.offsetTop;
+                    this.glyph_mode_line_height = (ref_block.offsetTop
+                                                    - ref_glyph.offsetTop);
                 }
                 finally
                 {
@@ -188,10 +195,29 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             });
         },
 
-        do_render_cell: function(cx, cy, x, y, map_cell, cell)
+        scaled_size: function(w, h)
+        {
+            w = w === undefined ? this.cell_width : w;
+            h = h === undefined ? this.cell_height : h;
+            const ratio = window.devicePixelRatio;
+            const width = Math.floor(w * ratio);
+            const height = Math.floor(h * ratio);
+            return {width: width, height: height};
+        },
+
+        clear: function()
         {
             this.ctx.fillStyle = "black";
-            this.ctx.fillRect(x, y, this.cell_width, this.cell_height);
+            // element dimensions are already scaled
+            this.ctx.fillRect(0, 0, this.element.width, this.element.height);
+        },
+
+        do_render_cell: function(cx, cy, x, y, map_cell, cell)
+        {
+            let scaled = this.scaled_size();
+
+            this.ctx.fillStyle = "black";
+            this.ctx.fillRect(x, y, scaled.width, scaled.height);
 
             map_cell = map_cell || map_knowledge.get(cx, cy);
             cell = cell || map_cell.t;
@@ -427,9 +453,10 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 this.ctx.font = "12px monospace";
                 this.ctx.textAlign = "center";
                 this.ctx.textBaseline = "middle";
+                let scaled = this.scaled_size();
                 this.ctx.fillText(cell.mark,
-                                  x + 0.5 * this.cell_width,
-                                  y + 0.5 * this.cell_height);
+                                  x + 0.5 * scaled.width,
+                                  y + 0.5 * scaled.height);
             }
 
             cell.sy = this.current_sy;
@@ -447,7 +474,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 (player.mp == player.mp_max || !show_magic))
                 return;
 
-            var bar_height = Math.floor(this.cell_height/16);
+            let cell = this.scaled_size();
+            var bar_height = Math.floor(cell.height / 16);
             var hp_bar_offset = bar_height;
 
             // TODO: use different colors if heavily wounded, like in the tiles version
@@ -457,12 +485,12 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 if (mp_percent < 0) mp_percent = 0;
 
                 this.ctx.fillStyle = magic_spend;
-                this.ctx.fillRect(x, y + this.cell_height - bar_height,
-                                  this.cell_width, bar_height);
+                this.ctx.fillRect(x, y + cell.height - bar_height,
+                                  cell.width, bar_height);
 
                 this.ctx.fillStyle = magic;
-                this.ctx.fillRect(x, y + this.cell_height - bar_height,
-                                  this.cell_width * mp_percent, bar_height);
+                this.ctx.fillRect(x, y + cell.height - bar_height,
+                                  cell.width * mp_percent, bar_height);
 
                 hp_bar_offset += bar_height;
             }
@@ -473,12 +501,12 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                 if (hp_percent < 0) hp_percent = 0;
 
                 this.ctx.fillStyle = hp_spend;
-                this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
-                                  this.cell_width, bar_height);
+                this.ctx.fillRect(x, y + cell.height - hp_bar_offset,
+                                  cell.width, bar_height);
 
                 this.ctx.fillStyle = healthy;
-                this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
-                                  this.cell_width * hp_percent, bar_height);
+                this.ctx.fillRect(x, y + cell.height - hp_bar_offset,
+                                  cell.width * hp_percent, bar_height);
             }
         },
 
@@ -503,47 +531,55 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             }
         },
 
-        render_glyph: function (x, y, map_cell, omit_bg, square)
+        render_glyph: function (x, y, map_cell, omit_bg, square, scale)
         {
             // `map_cell` can be anything as long as it provides `col` and `g`
             var col = split_term_colour(map_cell.col);
             if (omit_bg && col.attr == enums.CHATTR.REVERSE)
                 col.attr = 0;
             term_colour_apply_attributes(col);
+            let cell = this.scaled_size();
+            var w = cell.width;
+            var h = cell.height;
+            if (scale)
+            {
+                // assume x and y are already scaled...
+                w = w * scale;
+                h = h * scale;
+            }
 
             var prefix = "";
             if (col.attr == enums.CHATTR.BOLD)
-            {
                 prefix = "bold ";
-            }
 
             if (!omit_bg)
             {
                 this.ctx.fillStyle = bg_term_colours[col.bg];
-                this.ctx.fillRect(x, y, this.cell_width, this.cell_height);
+                this.ctx.fillRect(x, y, w, h);
             }
             this.ctx.fillStyle = fg_term_colours[col.fg];
-            this.ctx.font = prefix + this.glyph_mode_font_name();
+            this.ctx.font = prefix + this.glyph_mode_font_name(scale, true);
 
             this.ctx.save();
 
             try
             {
                 this.ctx.beginPath();
-                this.ctx.rect(x, y, this.cell_width, this.cell_height);
+                this.ctx.rect(x, y, w, h);
                 this.ctx.clip();
 
                 if (square)
                 {
                     this.ctx.textAlign = "center";
                     this.ctx.textBaseline = "middle";
-                    this.ctx.fillText(map_cell.g, x + this.cell_width/2,
-                                        y + this.cell_height/2);
+                    this.ctx.fillText(map_cell.g,
+                                        Math.floor(x + w/2),
+                                        Math.floor(y + h/2));
                 }
                 else
                 {
                     this.ctx.fillText(map_cell.g, x,
-                                        y + this.glyph_mode_baseline);
+                        y + this.glyph_mode_baseline * window.devicePixelRatio);
                 }
             }
             finally
@@ -563,7 +599,8 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
                     this.ctx.fillStyle = "rgb(" + col.r + "," +
                         col.g + "," + col.b + ")";
                     this.ctx.globalAlpha = col.a / 255;
-                    this.ctx.fillRect(x, y, this.cell_width, this.cell_height);
+                    const cell = this.scaled_size();
+                    this.ctx.fillRect(x, y, cell.width, cell.height);
                 }
                 finally
                 {
@@ -575,16 +612,19 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
         set_submerged_clip: function(x, y, water_level)
         {
             this.ctx.beginPath();
-            this.ctx.rect(0, y + water_level * this.y_scale,
+            const scaled = this.scaled_size(null, water_level * this.y_scale);
+            // this clip is across the entire row
+            this.ctx.rect(0, y + scaled.height,
                           this.element.width,
-                          this.element.height - y - water_level);
+                          this.element.height - y - scaled.height);
             this.ctx.clip();
         },
 
         set_nonsubmerged_clip: function(x, y, water_level)
         {
             this.ctx.beginPath();
-            this.ctx.rect(0, 0, this.element.width, y + water_level * this.y_scale);
+            const scaled = this.scaled_size(null, water_level * this.y_scale);
+            this.ctx.rect(0, 0, this.element.width, y + scaled.height);
             this.ctx.clip();
         },
 
@@ -1079,6 +1119,9 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
         // Helper functions for drawing from specific textures
         draw_tile: function(idx, x, y, mod, ofsx, ofsy, y_max, centre, img_scale)
         {
+            // assumption: x and y are already appropriately scaled for the
+            // canvas. Now we just need to figure out where in the scaled
+            // cell size the tile belongs.
             var info = mod.get_tile_info(idx);
             var img = get_img(mod.get_img(idx));
             if (!info)
@@ -1108,27 +1151,45 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             if (y_max && y_max < ey)
                 ey = y_max;
 
-            if (sy >= ey) return;
+            if (sy >= ey)
+                return;
 
             var total_x_offset = ((ofsx || 0) + info.ox + size_ox);
 
+            // Offsets can be negative, in which case we are drawing overlapped
+            // with a cell either to the right or above. If so, store the
+            // overlap in cell state so that it can later be checked to trigger
+            // a redraw.
+            // These store logical pixels, but that currently doesn't matter
+            // because they are only used for a comparison vs 0
+            // See dungeon_renderer.js, render_loc.
             if (total_x_offset < this.current_left_overlap)
                 this.current_left_overlap = total_x_offset;
 
             if (sy < this.current_sy)
                 this.current_sy = sy;
 
-            var w = info.ex - info.sx;
-            var h = info.ey - info.sy;
+            // dimensions in the source (the tilesheet)
+            const w = info.ex - info.sx;
+            const h = ey - sy;
+            const ratio = window.devicePixelRatio;
+            // dimensions in the target cell. To get this right at the pixel
+            // level, we need to calculate the height/width as if it is offset
+            // relative to the cell origin. Because of differences in how x/y
+            // are treated above, these may look like they're doing something
+            // different, but they shouldn't be.
+            const scaled_w = Math.floor((total_x_offset + w) * img_xscale * ratio)
+                                - Math.floor(total_x_offset * img_xscale * ratio);
+            const scaled_h = Math.floor(ey * img_yscale * ratio)
+                                - Math.floor(sy * img_yscale * ratio);
 
             this.ctx.imageSmoothingEnabled = options.get("tile_filter_scaling");
             this.ctx.drawImage(img,
-                               info.sx, info.sy + sy - pos_sy_adjust,
-                               w, h + ey - pos_ey_adjust,
-                               x + total_x_offset * img_xscale,
-                               y + sy * img_yscale,
-                               w * img_xscale,
-                               (h + ey - pos_ey_adjust) * img_yscale)
+                           info.sx, info.sy + sy - pos_sy_adjust, w, h,
+                           x + Math.floor(total_x_offset * img_xscale * ratio),
+                           y + Math.floor(sy * img_yscale * ratio),
+                           scaled_w,
+                           scaled_h);
         },
 
         draw_dngn: function(idx, x, y, img_scale)
@@ -1179,11 +1240,7 @@ function ($, view_data, gui, main, tileinfo_player, icons, dngn, enums,
             this.ctx.shadowOffsetY = 1;
             this.ctx.textAlign = "left";
             this.ctx.textBaseline = "top";
-            // XX this way of doing device scaling is v ugly
-            var ratio = window.devicePixelRatio;
-            this.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-            this.ctx.fillText(qty, (x + 2) / ratio, (y + 2) / ratio);
-            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+            this.ctx.fillText(qty, (x + 2), (y + 2));
         },
 
         draw_from_texture: function (idx, x, y, tex, ofsx, ofsy, y_max, centre, img_scale)
