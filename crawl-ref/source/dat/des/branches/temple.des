@@ -1059,7 +1059,7 @@ ENDMAP
 
 # 6 gods
 NAME:   nicolae_temple_stand_before_the_council
-TAGS:   temple_altar_6
+TAGS:   temple_altars_6
 PLACE:  Temple
 ORIENT: encompass
 FTILE:  `B = floor_limestone

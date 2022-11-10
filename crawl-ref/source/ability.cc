@@ -330,8 +330,6 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::delay },
         { ABIL_HOP, "Hop",
             0, 0, 0, -1, {}, abflag::none }, // range special-cased
-        { ABIL_ROLLING_CHARGE, "Rolling Charge",
-            0, 0, 0, -1, {}, abflag::none }, // range special-cased
         { ABIL_BLINKBOLT, "Blinkbolt",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::none },
 #if TAG_MAJOR_VERSION == 34
@@ -343,9 +341,9 @@ static vector<ability_def> &_get_ability_list()
 
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
-            1, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
+            0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
-            2, 0, 0, -1, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
+            0, 0, 0, -1, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
         // TODO: any way to automatically derive these from the artefact name?
         { ABIL_EVOKE_ASMODEUS, "Evoke the Sceptre of Asmodeus",
             0, 0, 0, -1, {fail_basis::evo, 80, 3}, abflag::none },
@@ -380,9 +378,9 @@ static vector<ability_def> &_get_ability_list()
 
         // Kikubaaqudgha
         { ABIL_KIKU_UNEARTH_WRETCHES, "Unearth Wretches",
-            3, 0, 4, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
+            3, 0, 5, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_KIKU_TORMENT, "Torment",
-            4, 0, 8, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
+            4, 0, 6, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain",
@@ -453,9 +451,6 @@ static vector<ability_def> &_get_ability_list()
         // Lugonu
         { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
             1, 0, 10, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
-        { ABIL_LUGONU_BEND_SPACE, "Bend Space",
-            1, scaling_cost::fixed(2), 0, -1, {fail_basis::invo, 40, 5, 20},
-            abflag::none },
         { ABIL_LUGONU_BANISH, "Banish",
             4, 0, generic_cost::range(3, 4), LOS_MAX_RANGE,
             {fail_basis::invo, 85, 7, 20}, abflag::none },
@@ -704,9 +699,6 @@ int ability_range(ability_type abil)
     {
         case ABIL_HOP:
             range = frog_hop_range();
-            break;
-        case ABIL_ROLLING_CHARGE:
-            range = palentonga_charge_range();
             break;
         case ABIL_DITHMENOS_SHADOW_STEP:
             range = you.umbra_radius();
@@ -1417,19 +1409,12 @@ bool activate_ability()
 
 static bool _can_movement_ability(bool quiet)
 {
-    if (you.attribute[ATTR_HELD])
-    {
-        if (!quiet)
-            mprf("You cannot do that while %s.", held_status());
-        return false;
-    }
-    else if (you.is_stationary())
-    {
-        if (!quiet)
-            canned_msg(MSG_CANNOT_MOVE);
-        return false;
-    }
-    return true;
+    const string reason = movement_impossible_reason();
+    if (reason.empty())
+        return true;
+    if (!quiet)
+        mprf("%s", reason.c_str());
+    return false;
 }
 
 static bool _can_hop(bool quiet)
@@ -1884,10 +1869,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_HOP:
         return _can_hop(quiet);
 
-    case ABIL_ROLLING_CHARGE:
-        return _can_movement_ability(quiet) &&
-                                palentonga_charge_possible(quiet, true);
-
     case ABIL_WORD_OF_CHAOS:
         if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
         {
@@ -2099,8 +2080,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_multiposition>(&you, find_chaos_targets(true));
     case ABIL_ZIN_RECITE:
         return make_unique<targeter_multiposition>(&you, find_recite_targets());
-    case ABIL_LUGONU_BEND_SPACE:
-        return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case ABIL_FEDHAS_WALL_OF_BRIARS:
         return make_unique<targeter_multiposition>(&you, find_briar_spaces(true), AFF_YES);
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
@@ -2325,7 +2304,7 @@ static bool _acid_breath_can_hit(const actor *act)
 /// If the player is stationary, print 'You cannot move.' and return true.
 static bool _abort_if_stationary()
 {
-    if (!you.is_stationary())
+    if (you.is_motile())
         return false;
 
     canned_msg(MSG_CANNOT_MOVE);
@@ -2534,12 +2513,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_HOP:
         if (_can_hop(false))
             return frog_hop(fail, target);
-        else
-            return spret::abort;
-
-    case ABIL_ROLLING_CHARGE:
-        if (_can_movement_ability(false))
-            return palentonga_charge(fail, target);
         else
             return spret::abort;
 
@@ -3030,13 +3003,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         fail_check();
         down_stairs(DNGN_EXIT_ABYSS);
-        break;
-
-    case ABIL_LUGONU_BEND_SPACE:
-        if (cancel_harmful_move(false))
-            return spret::abort;
-        fail_check();
-        lugonu_bend_space();
         break;
 
     case ABIL_LUGONU_BANISH:
@@ -3679,8 +3645,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                && (form_keeps_mutations() || include_unusable);
     case ABIL_HOP:
         return you.get_mutation_level(MUT_HOP);
-    case ABIL_ROLLING_CHARGE:
-        return you.get_mutation_level(MUT_ROLL);
     case ABIL_BREATHE_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) >= 2;
     case ABIL_SPIT_POISON:
@@ -3758,7 +3722,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_DIG,
             ABIL_SHAFT_SELF,
             ABIL_HOP,
-            ABIL_ROLLING_CHARGE,
             ABIL_SPIT_POISON,
             ABIL_BREATHE_FIRE,
             ABIL_BREATHE_FROST,

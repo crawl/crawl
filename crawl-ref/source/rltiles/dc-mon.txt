@@ -758,7 +758,7 @@ minotaur MONS_MINOTAUR
 %rim 0
 jorogumo MONS_JOROGUMO
 fenstrider_witch MONS_FENSTRIDER_WITCH
-palentonga MONS_PALENTONGA
+armataur MONS_ARMATAUR
 %rim 1
 tengu MONS_TENGU
 tengu_conjurer MONS_TENGU_CONJURER
@@ -1230,7 +1230,7 @@ pig_form TRAN_PIG
 ice_form TRAN_ICE_BEAST
 statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
-statue_form_palentonga TRAN_STATUE_PALENTONGA
+statue_form_palentonga TRAN_STATUE_ARMATAUR
 statue_form_naga TRAN_STATUE_NAGA
 statue_form_octopode TRAN_STATUE_OCTOPODE
 statue_form_djinni TRAN_STATUE_DJINN
@@ -1247,7 +1247,7 @@ dragon_form_purple TRAN_DRAGON_PURPLE
 dragon_form_pale TRAN_DRAGON_PALE
 lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
-lich_form_palentonga TRAN_LICH_PALENTONGA
+lich_form_palentonga TRAN_LICH_ARMATAUR
 lich_form_naga TRAN_LICH_NAGA
 lich_form_octopode TRAN_LICH_OCTOPODE
 lich_form_djinn TRAN_LICH_DJINN

@@ -10,8 +10,10 @@
 #include "rltiles/tiledef-player.h"
 #include "tag-version.h"
 #include "tiledoll.h"
+#include "tilefont.h"
 #include "tilemcache.h"
 #include "tilepick.h"
+#include "options.h"
 
 DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
     m_buf_floor(&im->get_texture(TEX_FLOOR)),
@@ -24,13 +26,28 @@ DungeonCellBuffer::DungeonCellBuffer(const ImageManager *im) :
     m_buf_spells(&im->get_texture(TEX_GUI)),
     m_buf_skills(&im->get_texture(TEX_GUI)),
     m_buf_commands(&im->get_texture(TEX_GUI)),
-    m_buf_icons(&im->get_texture(TEX_ICONS))
+    m_buf_icons(&im->get_texture(TEX_ICONS)),
+    m_buf_glyphs(im->get_glyph_font())
 {
 }
 
 static bool _in_water(const packed_cell &cell)
 {
     return (cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING);
+}
+
+void DungeonCellBuffer::add_glyph(const char32_t &g, const VColour &col, int x, int y)
+{
+    float sx = x;
+    float sy = y;
+    m_buf_glyphs.get_font_wrapper().store(m_buf_glyphs, sx, sy, g, col);
+}
+
+void DungeonCellBuffer::add_glyph(const char32_t &g, const VColour &col, const VColour &bg, int x, int y)
+{
+    float sx = x;
+    float sy = y;
+    m_buf_glyphs.get_font_wrapper().store(m_buf_glyphs, sx, sy, g, col, bg);
 }
 
 void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
@@ -201,6 +218,7 @@ void DungeonCellBuffer::clear()
     m_buf_doll.clear();
     m_buf_main_trans.clear();
     m_buf_main.clear();
+    m_buf_glyphs.clear();
     m_buf_spells.clear();
     m_buf_skills.clear();
     m_buf_commands.clear();
@@ -209,6 +227,26 @@ void DungeonCellBuffer::clear()
 
 void DungeonCellBuffer::draw()
 {
+    // normal tiles draw cycle: no glyphs
+    draw_tiles();
+    draw_icons();
+}
+
+void DungeonCellBuffer::draw_glyphs()
+{
+    // this can't happen under the same transform as regular tiles, so it
+    // needs to be called separately. (Refactor somehow?)
+
+    // TODO: used only in DungeonRegion. Implement:
+    // * grid controls (items, monsters)
+    // * popups
+    // * menu icons
+    m_buf_glyphs.draw();
+}
+
+void DungeonCellBuffer::draw_tiles()
+{
+    // things that alternate with glyphs
     m_buf_floor.draw();
     m_buf_wall.draw();
     m_buf_feat.draw();
@@ -216,6 +254,11 @@ void DungeonCellBuffer::draw()
     m_buf_doll.draw();
     m_buf_main_trans.draw();
     m_buf_main.draw();
+}
+
+void DungeonCellBuffer::draw_icons()
+{
+    // things that happen after / instead of glyphs
     m_buf_skills.draw();
     m_buf_spells.draw();
     m_buf_commands.draw();
@@ -230,7 +273,7 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
         int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
         m_buf_floor.add(TILE_LIQUEFACTION + offset, x, y);
     }
-    else if (cell.is_bloody)
+    else if (cell.is_bloody && Options.show_blood)
     {
         tileidx_t basetile;
         if (is_wall)
@@ -686,4 +729,10 @@ void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
                        dinfo[i].ofs_x, dinfo[i].ofs_y);
     }
 }
+
+FontWrapper *DungeonCellBuffer::get_glyph_font()
+{
+    return &m_buf_glyphs.get_font_wrapper();
+}
+
 #endif //TILEDGNBUF.CC

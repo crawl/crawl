@@ -1022,9 +1022,10 @@ dungeon_feature_type trap_feature(trap_type type)
 /***
  * Can a shaft be placed on the current level?
  *
+ * @param respect_brflags Whether brflag::no_shafts should be factored in.
  * @returns true if such a shaft can be placed.
  */
-bool is_valid_shaft_level()
+bool is_valid_shaft_level(bool respect_brflags)
 {
     // Important: We are sometimes called before the level has been loaded
     // or generated, so should not depend on properties of the level itself,
@@ -1038,17 +1039,22 @@ bool is_valid_shaft_level()
 
     const Branch &branch = branches[place.branch];
 
-    if (branch.branch_flags & brflag::no_shafts)
+    if (respect_brflags && branch.branch_flags & brflag::no_shafts)
         return false;
 
     // Don't allow shafts from the bottom of a branch.
     return (brdepth[place.branch] - place.depth) >= 1;
 }
 
-///
 static bool& _shafted_in(const Branch &branch)
 {
     return you.props[make_stringf("shafted_in_%s", branch.abbrevname)].get_bool();
+}
+
+/// Mark the player as having been shafted in the current branch.
+void set_shafted()
+{
+    _shafted_in(branches[you.where_are_you]) = true;
 }
 
 /**
@@ -1076,7 +1082,7 @@ void roll_trap_effects()
 {
     int trap_rate = trap_rate_for_place();
 
-    you.trapped = you.num_turns && !have_passive(passive_t::avoid_traps)
+    you.trapped = you.num_turns
         && env.density > 0 // can happen with builder in debug state
         && (you.trapped || x_chance_in_y(trap_rate, 9 * env.density));
 }
@@ -1119,8 +1125,13 @@ void do_trap_effects()
         case TRAP_SHAFT:
             dprf("Attempting to shaft player.");
             _print_malev();
+            if (have_passive(passive_t::avoid_traps))
+            {
+                simple_god_message(" reveals a hidden shaft just before you would have fallen in.");
+                return;
+            }
             if (you.do_shaft(false))
-                _shafted_in(branches[you.where_are_you]) = true;
+                set_shafted();
             break;
 
         case TRAP_ALARM:
@@ -1129,6 +1140,11 @@ void do_trap_effects()
             // XXX: improve messaging to make it clear there's a wail outside of the
             // player's silence
             _print_malev();
+            if (have_passive(passive_t::avoid_traps))
+            {
+                simple_god_message(" reveals an alarm trap just before you would have tripped it.");
+                return;
+            }
             mprf("With a horrendous wail, an alarm goes off!");
             fake_noisy(40, you.pos());
             you.sentinel_mark(true);
@@ -1138,6 +1154,12 @@ void do_trap_effects()
         {
             string msg = make_stringf("%s and a teleportation trap spontaneously manifests!",
                                       _malev_msg().c_str());
+            if (have_passive(passive_t::avoid_traps))
+            {
+                mprf("%s", msg.c_str());
+                simple_god_message(" warns you in time for you to avoid it.");
+                return;
+            }
             you_teleport_now(false, true, msg);
             break;
         }

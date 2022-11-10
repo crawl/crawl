@@ -125,7 +125,6 @@ class DirectoryWatcher(object):
             self.handlers[w] = handler
             self.paths[w] = path
 
-    @util.note_blocking_fun
     def _handle_read(self, fd, event):
         if event & IOLoop.ERROR:
             return

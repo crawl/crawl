@@ -2765,6 +2765,7 @@ static void _multidrop(vector<SelItem> tmp_items)
     for (SelItem& si : tmp_items)
     {
         const int item_quant = si.item->quantity;
+        ASSERT(item_quant > 0);
 
         // EVIL HACK: Fix item quantity to match the quantity we will drop,
         // in order to prevent misleading messages when dropping
@@ -4712,7 +4713,8 @@ static void _identify_last_item(item_def &item)
 
 /**
  * Check to see if there's only one unidentified subtype left in the given
- * item's object type. If so, automatically identify it.
+ * item's object type. If so, automatically identify it. Also mark item sets
+ * known, if appropriate.
  *
  * @param item  The item in question.
  * @return      Whether the item was identified.
@@ -4721,6 +4723,9 @@ bool maybe_identify_base_type(item_def &item)
 {
     if (is_artefact(item))
         return false;
+
+    maybe_mark_set_known(item.base_type, item.sub_type);
+
     if (get_ident_type(item))
         return false;
 

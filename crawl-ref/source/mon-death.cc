@@ -1273,7 +1273,7 @@ static void _make_derived_undead(monster* mons, bool quiet,
 
 static void _make_simulacra(monster* mons, int pow, god_type god)
 {
-    const int count = 1 + random2(1 + div_rand_round(pow, 20));
+    const int count = 1 + random2(1 + div_rand_round(pow, 40));
     for (int i = 0; i < count; ++i)
     {
         _make_derived_undead(mons, false, MONS_SIMULACRUM, BEH_FRIENDLY,
@@ -1371,7 +1371,7 @@ static bool _animate_dead_reap(monster &mons)
     if (!you.duration[DUR_ANIMATE_DEAD])
         return false;
     const int pow = you.props[ANIMATE_DEAD_POWER_KEY].get_int();
-    if (!x_chance_in_y(150 + pow/2, 200))
+    if (!x_chance_in_y(150 + div_rand_round(pow, 2), 200))
         return false;
 
     _make_derived_undead(&mons, false, MONS_ZOMBIE, BEH_FRIENDLY,
@@ -1398,56 +1398,12 @@ static bool _reaping(monster &mons)
     return _mons_reaped(*killer, mons);
 }
 
-static bool _try_place_miasma_at(coord_def p)
-{
-    if (cell_is_solid(p))
-        return false;
-
-    cloud_struct *cl = cloud_at(p);
-    if (cl && !is_harmless_cloud(cl->type))
-        return false;
-
-    place_cloud(CLOUD_MIASMA, p, 2 + random2avg(8, 2), &you);
-    return true;
-}
-
-static void _corpse_rot(monster &mons, int pow)
-{
-    if (!mons_can_be_zombified(mons))
-        return;
-
-    coord_def center = you.pos();
-    int rot = 1 + random2(1 + div_rand_round(pow, 25));
-
-    for (fair_adjacent_iterator ai(center); ai; ++ai)
-    {
-        if (_try_place_miasma_at(*ai))
-        {
-            --rot;
-            if (!rot)
-                return;
-        }
-    }
-
-    // Continue out to radius 2 if radius 1 is full
-    for (distance_iterator di(center, true, true, 2); di; ++di)
-    {
-        if (_try_place_miasma_at(*di))
-        {
-            --rot;
-            if (!rot)
-                return;
-        }
-    }
-
-    mprf("You %s decay.", you.can_smell() ? "smell" : "sense");
-}
-
 static bool _apply_necromancy(monster &mons, bool quiet, bool exploded,
                               bool in_los, bool corpseworthy)
 {
     // This is a hostile effect, and monsters are dirty cheaters. Sorry!
-    if (mons.has_ench(ENCH_BOUND_SOUL))
+    if (mons.has_ench(ENCH_BOUND_SOUL)
+        && !have_passive(passive_t::goldify_corpses))
     {
         _make_derived_undead(&mons, quiet, MONS_SIMULACRUM,
                              SAME_ATTITUDE(&mons),
@@ -2496,16 +2452,6 @@ item_def* monster_die(monster& mons, killer_type killer,
 
         corpse_consumed = _apply_necromancy(mons, !death_message, exploded,
                                             in_los, corpseworthy);
-
-        // currently allowing this to stack with other death effects -hm
-        if (you.duration[DUR_CORPSE_ROT]
-            && in_los
-            && corpseworthy
-            && !have_passive(passive_t::goldify_corpses))
-        {
-            const int rot_pow = you.props[CORPSE_ROT_POWER_KEY].get_int();
-            _corpse_rot(mons, rot_pow);
-        }
     }
 
     if (!wizard && !submerged && !was_banished)
@@ -2530,7 +2476,7 @@ item_def* monster_die(monster& mons, killer_type killer,
             corpse = daddy_corpse;
     }
 
-    if (!mons.is_summoned() && mons.type == MONS_PHARAOH_ANT)
+    if (mons.type == MONS_PHARAOH_ANT && !was_banished && !mons.is_summoned())
         _pharaoh_ant_bind_souls(&mons);
 
     const unsigned int player_xp = gives_player_xp
@@ -3393,7 +3339,8 @@ void mons_felid_revive(monster* mons)
 
     monster *newmons =
         create_monster(
-            mgen_data(type, (mons->has_ench(ENCH_CHARM) ? BEH_HOSTILE
+            mgen_data(type, (mons->has_ench(ENCH_CHARM)
+                             || mons->has_ench(ENCH_INSANE) ? BEH_HOSTILE
                              : SAME_ATTITUDE(mons)), revive_place, mons->foe));
 
     if (newmons)

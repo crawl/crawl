@@ -273,7 +273,7 @@ fenstrider_witch CORPSE_FENSTRIDER_WITCH
 sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
 jorogumo CORPSE_JOROGUMO
-palentonga CORPSE_PALENTONGA
+armataur CORPSE_ARMATAUR
 mon/unique/arachne_staveless CORPSE_ARACHNE
 %sdir mon/mutantbeast
 base3 CORPSE_MUTANT_BEAST
@@ -310,56 +310,47 @@ bunyip CORPSE_BUNYIP
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 %start
 %compose drcwing/drcwing_black
-%compose base/draconian_black_m
-%compose drchead/drchead_black
+%compose base/draconian_black
 %finish CORPSE_DRACONIAN_BLACK
 
 %start
 %compose drcwing/drcwing_brown
-%compose base/draconian_f
-%compose drchead/drchead_brown
+%compose base/draconian
 %finish CORPSE_DRACONIAN_BROWN
 
 %start
 %compose drcwing/drcwing_green
-%compose base/draconian_green_m
-%compose drchead/drchead_green
+%compose base/draconian_green
 %finish CORPSE_DRACONIAN_GREEN
 
 %start
 %compose drcwing/drcwing_grey
-%compose base/draconian_gray_f
-%compose drchead/drchead_grey
+%compose base/draconian_grey
 %finish CORPSE_DRACONIAN_GREY
 
 %start
 %compose drcwing/drcwing_pale
-%compose base/draconian_pale_f
-%compose drchead/drchead_pale
+%compose base/draconian_pale
 %finish CORPSE_DRACONIAN_PALE
 
 %start
 %compose drcwing/drcwing_purple
-%compose base/draconian_purple_m
-%compose drchead/drchead_purple
+%compose base/draconian_purple
 %finish CORPSE_DRACONIAN_PURPLE
 
 %start
 %compose drcwing/drcwing_red
-%compose base/draconian_red_f
-%compose drchead/drchead_red
+%compose base/draconian_red
 %finish CORPSE_DRACONIAN_RED
 
 %start
 %compose drcwing/drcwing_white
-%compose base/draconian_white_m
-%compose drchead/drchead_white
+%compose base/draconian_white
 %finish CORPSE_DRACONIAN_WHITE
 
 %start
 %compose drcwing/drcwing_yellow
-%compose base/draconian_gold_f
-%compose drchead/drchead_yellow
+%compose base/draconian_yellow
 %finish CORPSE_DRACONIAN_YELLOW
 
 # Demonspawn ('6')

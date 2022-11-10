@@ -25,6 +25,7 @@
 #include "teleport.h"
 #include "throw.h"
 #include "traps.h"
+#include "xom.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
@@ -231,6 +232,24 @@ bool ranged_attack::handle_phase_dodged()
     return true;
 }
 
+static bool _jelly_eat_missile(const item_def& projectile, int damage_done)
+{
+    if (you.has_mutation(MUT_JELLY_MISSILE)
+        && you.hp < you.hp_max
+        && !you.duration[DUR_DEATHS_DOOR]
+        && item_is_jelly_edible(projectile)
+        && !one_chance_in(3))
+    {
+        mprf("Your attached jelly eats %s!",
+             projectile.name(DESC_THE).c_str());
+        inc_hp(1 + random2(damage_done));
+        canned_msg(MSG_GAIN_HEALTH);
+        return true;
+    }
+
+    return false;
+}
+
 bool ranged_attack::handle_phase_hit()
 {
     // XXX: this kind of hijacks the shield block check
@@ -248,17 +267,30 @@ bool ranged_attack::handle_phase_hit()
         set_attack_verb(0);
         announce_hit();
         if (defender->is_player())
+        {
             player_caught_in_net();
+            if (attacker->is_monster())
+                xom_is_stimulated(50);
+        }
         else
             monster_caught_in_net(defender->as_monster());
     }
     else
     {
         damage_done = calc_damage();
-        if (damage_done > 0 || projectile->is_type(OBJ_MISSILES, MI_DART))
+        if (damage_done > 0)
         {
             if (!handle_phase_damaged())
                 return false;
+            // Jiyva mutation - piercing projectiles won't keep going if they
+            // get eaten.
+            if (attacker->is_monster()
+                && defender->is_player()
+                && !you.pending_revival
+                && _jelly_eat_missile(*projectile, damage_done))
+            {
+                range_used = BEAM_STOP;
+            }
         }
         else if (needs_message)
         {

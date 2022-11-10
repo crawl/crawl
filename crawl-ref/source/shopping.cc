@@ -1058,6 +1058,8 @@ void ShopMenu::update_help()
 
 void ShopMenu::purchase_selected()
 {
+    no_excursions sanity;
+
     bool buying_from_list = false;
     vector<MenuEntry*> selected = selected_entries();
     int cost = selected_cost();
@@ -1389,6 +1391,8 @@ void shop()
     // If the shop is now empty, erase it from the overview.
     if (shop.stock.empty())
         destroy_shop_at(you.pos());
+    // finally it is safe to catch up on any off-level id stuff that is needed
+    shopping_list.do_excursion_work();
     redraw_screen();
     update_screen();
     if (menu.bought_something)
@@ -1896,12 +1900,29 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
     return to_del.size();
 }
 
+void ShoppingList::do_excursion_work()
+{
+    ASSERT(level_excursions_allowed());
+    // this is not (currently) automatically called, so be sure to call it
+    // manually if you trigger item_type_identified at a time where
+    // excursions are disabled. (XX autocall every once in a while?)
+    for (auto &p : need_excursions)
+        item_type_identified(p.first, p.second);
+    need_excursions.clear();
+}
+
 void ShoppingList::item_type_identified(object_class_type base_type,
                                         int sub_type)
 {
     // Dead men can't update their shopping lists.
     if (!crawl_state.need_save)
         return;
+
+    if (!level_excursions_allowed())
+    {
+        need_excursions.emplace_back(base_type, sub_type);
+        return;
+    }
 
     // Only restore the excursion at the very end.
     level_excursion le;

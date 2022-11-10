@@ -129,6 +129,8 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
+static bool _is_valid_waypoint(const level_pos &pos);
+
 // N.b. this #define only adds dprfs and so isn't very useful outside of a
 // debug build. It also makes long travel extremely slow when enabled on a
 // debug build.
@@ -315,8 +317,6 @@ static const char *_run_mode_name(int runmode)
 
 uint8_t is_waypoint(const coord_def &p)
 {
-    if (!can_travel_interlevel())
-        return 0;
     return curr_waypoints[p.x][p.y];
 }
 
@@ -4080,7 +4080,7 @@ void TravelCache::list_waypoints() const
 
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
     {
-        if (waypoints[i].id.depth == -1)
+        if (waypoints[i].id.depth == -1 || !_is_valid_waypoint(waypoints[i]))
             continue;
 
         dest = _get_trans_travel_dest(waypoints[i], false, true);
@@ -4100,10 +4100,20 @@ void TravelCache::list_waypoints() const
 uint8_t TravelCache::is_waypoint(const level_pos &lp) const
 {
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-        if (lp == waypoints[i])
+        if (lp == waypoints[i] && _is_valid_waypoint(lp))
             return '0' + i;
 
     return 0;
+}
+
+void TravelCache::flush_invalid_waypoints()
+{
+    for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
+        if (!_is_valid_waypoint(waypoints[i])
+            || !is_connected_branch(waypoints[i].id.branch))
+        {
+            waypoints[i].clear();
+        }
 }
 
 void TravelCache::update_waypoints() const
@@ -4137,7 +4147,7 @@ void TravelCache::delete_waypoint()
         if (key >= '0' && key <= '9')
         {
             key -= '0';
-            if (waypoints[key].is_valid())
+            if (_is_valid_waypoint(waypoints[key]))
             {
                 waypoints[key].clear();
                 update_waypoints();
@@ -4163,12 +4173,6 @@ void TravelCache::delete_waypoint()
 
 void TravelCache::add_waypoint(int x, int y)
 {
-    if (!can_travel_interlevel())
-    {
-        mpr("Sorry, you can't set a waypoint here.");
-        return;
-    }
-
     clear_messages();
 
     const bool waypoints_exist = get_waypoint_count();
@@ -4178,6 +4182,10 @@ void TravelCache::add_waypoint(int x, int y)
         list_waypoints();
     }
 
+    if (you.where_are_you == BRANCH_ABYSS)
+        mprf(MSGCH_PROMPT, "Waypoints on this level may disappear at any time.");
+    else if (!is_connected_branch(you.where_are_you))
+        mprf(MSGCH_PROMPT, "Waypoints will disappear once you leave this level.");
     mprf(MSGCH_PROMPT, "Assign waypoint to what number? (0-9%s) ",
          waypoints_exist? ", D - delete waypoint" : "");
 
@@ -4208,7 +4216,7 @@ void TravelCache::set_waypoint(int waynum, int x, int y)
 
     const level_id &lid = level_id::current();
 
-    const bool overwrite = waypoints[waynum].is_valid();
+    const bool overwrite = _is_valid_waypoint(waypoints[waynum]);
 
     string old_dest =
         overwrite ? _get_trans_travel_dest(waypoints[waynum], false, true) : "";
@@ -4235,11 +4243,19 @@ void TravelCache::set_waypoint(int waynum, int x, int y)
     update_waypoints();
 }
 
+static bool _is_valid_waypoint(const level_pos &pos)
+{
+    // waypoints in portal branches are only valid while you're there
+    return pos.is_valid()
+        && (is_connected_branch(pos.id.branch)
+            || you.where_are_you == pos.id.branch);
+}
+
 int TravelCache::get_waypoint_count() const
 {
     int count = 0;
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-        if (waypoints[i].is_valid())
+        if (_is_valid_waypoint(waypoints[i]))
             count++;
 
     return count;

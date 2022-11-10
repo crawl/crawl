@@ -1157,7 +1157,7 @@ static bool _merfolk_avatar_movement_effect(const monster* mons)
         || you.duration[DUR_TIME_STEP]
         || you.cannot_act()
         || you.clarity()
-        || you.is_stationary()
+        || !you.is_motile()
         || you.resists_dislodge("being lured by song"))
     {
         return true;

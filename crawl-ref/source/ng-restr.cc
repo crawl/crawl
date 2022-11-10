@@ -24,7 +24,7 @@ static bool _banned_combination(job_type job, species_type species)
         && (job == JOB_GLADIATOR
             || job == JOB_BRIGAND
             || job == JOB_HUNTER
-            || job == JOB_ARCANE_MARKSMAN))
+            || job == JOB_HEXSLINGER))
     {
         return true;
     }
@@ -32,7 +32,6 @@ static bool _banned_combination(job_type job, species_type species)
     if (species::mutation_level(species, MUT_FORLORN)
         && (job == JOB_BERSERKER
             || job == JOB_CHAOS_KNIGHT
-            || job == JOB_ABYSSAL_KNIGHT
             || job == JOB_CINDER_ACOLYTE
             || job == JOB_MONK))
     {

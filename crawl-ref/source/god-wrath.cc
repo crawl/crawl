@@ -11,6 +11,7 @@
 #include <queue>
 #include <sstream>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "attitude-change.h"
@@ -403,6 +404,31 @@ static bool _cheibriados_retribution()
     }
 
     return true;
+}
+
+static void _banish_foes_nearby()
+{
+    vector<monster*> potential_banishees;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+        monster *mon = *mi;
+        if (!mon
+            || mon->attitude != ATT_HOSTILE
+            || mons_is_conjured(mon->type)
+            || mons_is_firewood(*mon))
+        {
+            continue;
+        }
+        potential_banishees.push_back(mon);
+    }
+    if (potential_banishees.empty())
+        return;
+
+    simple_god_message(" does not welcome meddling.");
+    const int to_banish = roll_dice(2, 3);
+    shuffle_array(begin(potential_banishees), end(potential_banishees));
+    for (int i = 0; i < to_banish && i < (int)potential_banishees.size(); ++i)
+        potential_banishees[i]->banish(&you);
 }
 
 static void _spell_retribution(monster* avatar, spell_type spell, god_type god,
@@ -2227,6 +2253,9 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 #endif
         return false;
     }
+
+    if (have_passive(passive_t::wrath_banishment))
+        _banish_foes_nearby();
 
     if (no_bonus)
         return true;

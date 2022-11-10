@@ -1421,7 +1421,6 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
         TILEP_PART_ARM,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
-        TILEP_PART_DRCHEAD,
         TILEP_PART_HELM,
         TILEP_PART_HAND1,
         TILEP_PART_HAND2,
@@ -1460,7 +1459,7 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
     }
 
     const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_PALENTONGA);
+                                        TILEP_BASE_ARMATAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
@@ -1638,11 +1637,13 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.icons != current_pc.icons)
             json_write_icons(next_pc.icons);
 
-        if (next_pc.is_bloody != current_pc.is_bloody)
-            json_write_bool("bloody", next_pc.is_bloody);
+        if (Options.show_blood) {
+            if (next_pc.is_bloody != current_pc.is_bloody)
+                json_write_bool("bloody", next_pc.is_bloody);
 
-        if (next_pc.old_blood != current_pc.old_blood)
-            json_write_bool("old_blood", next_pc.old_blood);
+            if (next_pc.old_blood != current_pc.old_blood)
+                json_write_bool("old_blood", next_pc.old_blood);
+        }
 
         if (next_pc.is_silenced != current_pc.is_silenced)
             json_write_bool("silenced", next_pc.is_silenced);

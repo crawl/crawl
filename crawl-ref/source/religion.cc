@@ -231,8 +231,7 @@ const vector<vector<god_power>> & get_all_god_powers()
         {   { 1, ABIL_LUGONU_ABYSS_EXIT,
                  "depart the Abyss",
                  "depart the Abyss at will" },
-            { 2, ABIL_LUGONU_BEND_SPACE, "bend space around yourself" },
-            { 3, ABIL_LUGONU_BANISH, "banish your foes" },
+            { 2, ABIL_LUGONU_BANISH, "banish your foes" },
             { 4, ABIL_LUGONU_CORRUPT, "corrupt the fabric of space" },
             { 5, ABIL_LUGONU_ABYSS_ENTER, "gate yourself to the Abyss" },
             { 7, ABIL_LUGONU_BLESS_WEAPON,
@@ -297,9 +296,6 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 3, "Ashenzari will now keep your mind clear.",
                  "Ashenzari will no longer keep your mind clear.",
                  "Ashenzari keeps your mind clear." },
-            { 4, "Ashenzari will now grant you astral sight.",
-                 "Ashenzari will no longer grant you astral sight.",
-                 "Ashenzari grants you astral sight." },
         },
 
         // Dithmenos
@@ -768,7 +764,8 @@ bool ignis_is_dead()
 /// Is there any penalty from your god for removing an amulet of faith?
 bool faith_has_penalty()
 {
-    return ignore_faith_reason().empty()
+    return !you.has_mutation(MUT_FAITH)
+        && ignore_faith_reason().empty()
         && !you_worship(GOD_XOM)
         && !you_worship(GOD_NO_GOD);
 }
@@ -1566,57 +1563,41 @@ static bool _give_kiku_gift(bool forced)
         return false;
     }
 
+    vector<spell_type> spell_options;
     vector<spell_type> chosen_spells;
-    spell_type spell;
+    size_t wanted_spells;
 
     // The first set should guarantee the player at least one ally spell, to
-    // complement the bonus undead passive.
+    // complement the Wretches ability.
     if (first_gift)
     {
         chosen_spells.push_back(SPELL_NECROTISE);
-        do
-        {
-            spell = random_choose(SPELL_SUBLIMATION_OF_BLOOD,
-                                  SPELL_VAMPIRIC_DRAINING,
-                                  SPELL_ANGUISH,
-                                  SPELL_ANIMATE_DEAD
-                                  );
-
-            if (!you.can_bleed(false) && spell == SPELL_SUBLIMATION_OF_BLOOD)
-                spell = SPELL_NO_SPELL;
-
-            if (find(begin(chosen_spells), end(chosen_spells), spell)
-                != end(chosen_spells))
-            {
-                spell = SPELL_NO_SPELL;
-            }
-
-            if (spell != SPELL_NO_SPELL)
-                chosen_spells.push_back(spell);
-        }
-        while (chosen_spells.size() < 4);
+        spell_options = {SPELL_KISS_OF_DEATH,
+                         SPELL_SUBLIMATION_OF_BLOOD,
+                         SPELL_ROT,
+                         SPELL_VAMPIRIC_DRAINING,
+                         SPELL_ANIMATE_DEAD};
+        wanted_spells = 4;
     }
     else
     {
-        do
-        {
-            spell = random_choose(SPELL_DISPEL_UNDEAD,
-                                  SPELL_CORPSE_ROT,
-                                  SPELL_AGONY,
-                                  SPELL_BORGNJORS_VILE_CLUTCH,
-                                  SPELL_DEATH_CHANNEL,
-                                  SPELL_SIMULACRUM);
+        spell_options = {SPELL_ANGUISH,
+                         SPELL_DISPEL_UNDEAD,
+                         SPELL_AGONY,
+                         SPELL_BORGNJORS_VILE_CLUTCH,
+                         SPELL_DEATH_CHANNEL,
+                         SPELL_SIMULACRUM};
+        wanted_spells = 5;
+    }
 
-            if (find(begin(chosen_spells), end(chosen_spells), spell)
-                != end(chosen_spells))
-            {
-                spell = SPELL_NO_SPELL;
-            }
-
-            if (spell != SPELL_NO_SPELL)
-                chosen_spells.push_back(spell);
-        }
-        while (chosen_spells.size() < 5);
+    shuffle_array(spell_options);
+    for (spell_type spell : spell_options)
+    {
+        if (spell_is_useless(spell, false))
+            continue;
+        chosen_spells.push_back(spell);
+        if (chosen_spells.size() >= wanted_spells)
+            break;
     }
 
     bool new_spell = false;
@@ -3227,6 +3208,11 @@ void excommunication(bool voluntary, god_type new_god)
         }
         break;
 
+    case GOD_RU:
+        if (!you.props[AVAILABLE_SAC_KEY].get_vector().empty())
+            ru_reset_sacrifice_timer();
+        break;
+
     default:
         break;
     }
@@ -3386,6 +3372,7 @@ static void _god_welcome_handle_gear()
     // Check for amulets of faith.
     item_def *amulet = you.slot_item(EQ_AMULET, false);
     if (amulet && amulet->sub_type == AMU_FAITH
+        && !you.has_mutation(MUT_FAITH)
         && ignore_faith_reason().empty())
     {
         mprf(MSGCH_GOD, "Your amulet flashes!");
@@ -3642,13 +3629,14 @@ static void _set_initial_god_piety()
         // monk bonus...
         you.props[RU_SACRIFICE_PROGRESS_KEY] = 0;
         // offer the first sacrifice faster than normal
+        if (!you.props.exists(RU_SACRIFICE_DELAY_KEY))
         {
             int delay = 50;
             if (crawl_state.game_is_sprint())
                 delay /= SPRINT_MULTIPLIER;
             you.props[RU_SACRIFICE_DELAY_KEY] = delay;
+            you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
         }
-        you.props[RU_SACRIFICE_PENALTY_KEY] = 0;
         break;
 
     case GOD_IGNIS:
@@ -3897,8 +3885,6 @@ void god_pitch(god_type which_god)
     }
     // these are included in default force_more_message
 
-    const int fee = (which_god == GOD_GOZAG) ? gozag_service_fee() : 0;
-
     // Note: using worship we could make some gods not allow followers to
     // return, or not allow worshippers from other religions. - bwr
 
@@ -3906,39 +3892,7 @@ void god_pitch(god_type which_god)
     if (!player_can_join_god(which_god))
     {
         you.turn_is_over = false;
-        if (which_god == GOD_GOZAG)
-        {
-            simple_god_message(" does not accept service from beggars like you!",
-                               which_god);
-            if (you.gold == 0)
-            {
-                mprf("The service fee for joining is currently %d gold; you have"
-                     " none.", fee);
-            }
-            else
-            {
-                mprf("The service fee for joining is currently %d gold; you only"
-                     " have %d.", fee, you.gold);
-            }
-        }
-        else if (you.get_mutation_level(MUT_NO_LOVE)
-                 && _god_rejects_loveless(which_god))
-        {
-            simple_god_message(" does not accept worship from the loveless!",
-                               which_god);
-        }
-        else if (!_transformed_player_can_join_god(which_god))
-        {
-            simple_god_message(" says: How dare you approach in such a "
-                               "loathsome form!",
-                               which_god);
-        }
-        else
-        {
-            simple_god_message(" does not accept worship from those such as"
-                               " you!",
-                               which_god);
-        }
+        print_god_rejection(which_god);
         return;
     }
 
@@ -3957,6 +3911,43 @@ void god_pitch(god_type which_god)
         redraw_screen();
         update_screen();
     }
+}
+
+void print_god_rejection(god_type which_god)
+{
+
+    if (which_god == GOD_GOZAG)
+    {
+        simple_god_message(" does not accept service from beggars like you!",
+                           which_god);
+        const int fee = gozag_service_fee();
+        if (you.gold == 0)
+        {
+            mprf("The service fee for joining is currently %d gold; you have"
+                 " none.", fee);
+        }
+        else
+        {
+            mprf("The service fee for joining is currently %d gold; you only"
+                 " have %d.", fee, you.gold);
+        }
+        return;
+    }
+    if (you.get_mutation_level(MUT_NO_LOVE) && _god_rejects_loveless(which_god))
+    {
+        simple_god_message(" does not accept worship from the loveless!",
+                           which_god);
+        return;
+    }
+    if (!_transformed_player_can_join_god(which_god))
+    {
+        simple_god_message(" says: How dare you approach in such a loathsome "
+                           "form!", which_god);
+        return;
+    }
+
+    simple_god_message(" does not accept worship from those such as you!",
+                       which_god);
 }
 
 /** Ask the user for a god by name.
@@ -3987,6 +3978,33 @@ god_type choose_god(god_type def_god)
     return find_earliest_match(spec, GOD_NO_GOD, NUM_GODS,
                                always_true<god_type>,
                                bind(god_name, placeholders::_1, false));
+}
+
+static void _choose_ecu_gods(CrawlVector &gods)
+{
+    vector<god_type> possible_gods;
+    for (int i = GOD_NO_GOD + 1; i < NUM_GODS; ++i)
+    {
+        const god_type god = static_cast<god_type>(i);
+        if (!is_unavailable_god(god) && player_can_join_god(god, false))
+            possible_gods.push_back(god);
+    }
+    shuffle_array(possible_gods); // inefficient but who cares
+    for (int i = 0; i < 3 && i < int(possible_gods.size()); ++i)
+        gods.push_back(possible_gods[i]);
+}
+
+/// Returns a list of gods the player might get from the ecu altar at the given position.
+vector<god_type> get_ecu_gods(coord_def pos)
+{
+    const string key = make_stringf("ecu-%d,%d", pos.x, pos.y);
+    CrawlVector &saved_gods = env.properties[key].get_vector();
+    if (saved_gods.empty())
+        _choose_ecu_gods(saved_gods);
+    vector<god_type> gods;
+    for (int i = 0; i < int(saved_gods.size()); ++i)
+        gods.push_back(static_cast<god_type>(saved_gods[i].get_int()));
+    return gods;
 }
 
 int had_gods()

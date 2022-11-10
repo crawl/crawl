@@ -29,7 +29,6 @@ class WebtilesSocketConnection(object):
 
         self.msg_buffer = None
 
-    @util.note_blocking_fun
     def connect(self, primary = True):
         if not os.path.exists(self.crawl_socketpath):
             # Wait until the socket exists
@@ -80,7 +79,6 @@ class WebtilesSocketConnection(object):
 
         self.send_message(utf8(msg))
 
-    @util.note_blocking_fun
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
             data = self.socket.recv(128 * 1024, socket.MSG_DONTWAIT)
@@ -106,7 +104,6 @@ class WebtilesSocketConnection(object):
             if self.message_callback:
                 self.message_callback(to_unicode(data))
 
-    @util.note_blocking_fun
     def send_message(self, data): # type: (str) -> None
         start = datetime.now()
         try:

@@ -13,7 +13,7 @@
 #include "object-selector-type.h"
 #include "operation-types.h"
 
-bool use_an_item(item_def *&target, operation_types oper,
+operation_types use_an_item(item_def *&target, operation_types oper,
                 int item_type=OSEL_ANY,
                 const char* prompt=nullptr,
                 function<bool ()> allowcancel = [](){ return true; });
