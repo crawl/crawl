@@ -22,7 +22,6 @@ from webtiles import auth, load_games, process_handler, userdb, config
 from webtiles import game_data_handler, util, ws_handler
 
 class MainHandler(tornado.web.RequestHandler):
-    @util.note_blocking_fun
     def get(self):
         host = self.request.host
         if self.request.protocol == "https" or self.request.headers.get("x-forwarded-proto") == "https":
