@@ -18,7 +18,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     var font; // cached font name for the canvas: size (in px) + family
     var draw_glyphs;
     var selected = -1;
-    const NUM_RESERVED_BUTTONS = 2;
+    const NUM_RESERVED_BUTTONS = 4;
 
     function send_options()
     {
@@ -157,13 +157,17 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         }
         $tooltip.css({top: y + 10 + "px",
                      left: x + 10 + "px"});
-        if (slot == -2)
+        if (slot == -4)
         {
             $tooltip.html("<span>Left click: minimize</span><br />"
                           + "<span>Right click: open settings</span>");
         }
-        else if (slot == -1 && game.get_input_mode() == enums.mouse_mode.COMMAND)
+        else if (slot == -3 && game.get_input_mode() == enums.mouse_mode.COMMAND)
             $tooltip.html("<span>Left click: show main menu</span>");
+        else if (slot == -2)
+            $tooltip.html("<span>Left click: show worn armor</span>");
+        else if (slot == -1)
+            $tooltip.html("<span>Left click: show spell library</span>");
         else
         {
             var item = filtered_inv[slot];
@@ -312,10 +316,22 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                 if (selected == 0) // It should be available even in targeting mode
                     hide_panel();
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
-                         && selected == 1)
+                         && selected < NUM_RESERVED_BUTTONS)
                 {
-                    comm.send_message("main_menu_action");
+                    switch(selected) {
+                        case 1:
+                            comm.send_message("main_menu_action");
+                            break;
+                        case 2:
+                            comm.send_message("list_worn_armor");
+                            break;
+                        case 3:
+                            comm.send_message("show_spell_library");
+                            break;
+                    }
+                    
                 }
+                
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
                          && selected >= NUM_RESERVED_BUTTONS
                          && selected < filtered_inv.length + NUM_RESERVED_BUTTONS)
@@ -343,17 +359,12 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     {
         if (item && draw_glyphs)
         {
-            // ugh, couldn't get this to work without a transform.
-            // Also, I don't know why the font size here looks
-            // different than map view, something about scaling?
-            renderer.ctx.setTransform(scale, 0, 0, scale, 0, 0);
             // XX just the glyph is not very informative. One idea might
             // be to tack on the subtype icon, but those are currently
             // baked into the item tile so this would be a lot of work.
-            renderer.render_glyph(_horizontal() ? offset / scale : 0,
-                                  _horizontal() ? 0 : offset / scale,
-                                  item, true, true);
-            renderer.ctx.setTransform(1, 0, 0, 1, 0, 0);
+            renderer.render_glyph(_horizontal() ? offset : 0,
+                                  _horizontal() ? 0 : offset,
+                                  item, true, true, scale);
         }
         else
         {
@@ -370,6 +381,8 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
 
         if (text)
         {
+            // TODO: at some scalings, this don't dodge the green highlight
+            // square very well
             renderer.draw_quantity(text,
                                    _horizontal() ? offset : 0,
                                    _horizontal() ? 0 : offset,
@@ -421,9 +434,12 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         });
 
         // Render
-        // renderer here stores unscaled values. (This is different than how
-        // it is done for the dungeon rendering.)
-        var adjusted_scale = scale * window.devicePixelRatio / 100;
+        const ratio = window.devicePixelRatio;
+
+        // first we readjust the dimensions according to whether the panel
+        // should be horizontal or vertical, and how much space is available.
+        // These calculations are in logical pixels.
+        var adjusted_scale = scale / 100;
 
         var cell_width = renderer.cell_width * adjusted_scale;
         var cell_height = renderer.cell_height * adjusted_scale;
@@ -431,8 +447,8 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                                         : cell_height;
         var required_length = cell_length * (filtered_inv.length + NUM_RESERVED_BUTTONS);
         var available_length = _horizontal()
-                            ? $("#dungeon").width() * window.devicePixelRatio
-                            : $("#dungeon").height() * window.devicePixelRatio;
+                            ? $("#dungeon").width()
+                            : $("#dungeon").height();
         available_length -= borders_width;
         var max_cells = Math.floor(available_length / cell_length);
         var panel_length = Math.min(required_length, available_length);
@@ -441,17 +457,21 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                          _horizontal() ? panel_length : cell_width,
                          _horizontal() ? cell_height : panel_length);
         renderer.init($canvas[0]);
+        renderer.clear();
 
-        renderer.ctx.fillStyle = "black";
-        renderer.ctx.fillRect(0, 0,
-                              _horizontal() ? panel_length : cell_width,
-                              _horizontal() ? cell_height : panel_length);
+        // now draw the thing. From this point forward, use device pixels.
+        const cell = renderer.scaled_size();
+        const inc = (_horizontal() ? cell.width : cell.height) * adjusted_scale;
 
         // XX The "X" should definitely be a different/custom icon
         // TODO: select tile via something like c++ `tileidx_command`
         draw_action(gui, gui.PROMPT_NO, null, 0, adjusted_scale, selected == 0);
-        draw_action(gui, gui.CMD_GAME_MENU, null, cell_length, adjusted_scale,
-                    selected == 1);
+        draw_action(gui, gui.CMD_GAME_MENU, null, inc, adjusted_scale,
+            selected == 1);
+        draw_action(gui, gui.STARTUP_ARENA, null, inc*2, adjusted_scale,
+            selected == 2);
+        draw_action(main, main.BOOK_OFFSET_25, null, inc*3, adjusted_scale,
+            selected == 3);
 
         draw_glyphs = options.get("action_panel_glyphs");
 
@@ -463,14 +483,16 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             renderer.glyph_mode_update_font_metrics();
         }
 
+        filtered_inv.push()
+
         // Inventory items
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
-            var offset = cell_length * (idx + NUM_RESERVED_BUTTONS);
-            var qty_field_name = item.qty_field;
-            var qty = "";
+            let offset = inc * (idx + NUM_RESERVED_BUTTONS);
+            let qty_field_name = item.qty_field;
+            let qty = "";
             if (item.hasOwnProperty(qty_field_name))
                 qty = item[qty_field_name];
-            var cursor_required = selected == idx + NUM_RESERVED_BUTTONS;
+            let cursor_required = selected == idx + NUM_RESERVED_BUTTONS;
 
             draw_action(main, item.tile, item, offset, adjusted_scale,
                         cursor_required, qty);
@@ -478,7 +500,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
 
         if (available_length < required_length)
         {
-            var ellipsis = icons.ELLIPSIS;
+            const ellipsis = icons.ELLIPSIS;
             var x_pos = 0, y_pos = 0;
 
             if (_horizontal())
@@ -486,7 +508,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             else
                 y_pos = available_length - icons.get_tile_info(ellipsis).h * adjusted_scale;
 
-            renderer.draw_icon(ellipsis, x_pos, y_pos, -2, -2, adjusted_scale);
+            renderer.draw_icon(ellipsis, x_pos * ratio, y_pos * ratio, -2, -2, adjusted_scale);
         }
         $canvas.removeClass("hidden");
     }
