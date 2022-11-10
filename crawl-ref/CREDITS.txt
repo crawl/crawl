@@ -1,5 +1,5 @@
 ﻿The Dungeon Crawl Stone Soup team would like to thank:
-
+HEYOOOO
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
 * Brent Ross, Dungeon Crawl 4.0/4.1 maintainer. Stone Soup owes a lot to his
