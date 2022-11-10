@@ -4566,6 +4566,8 @@ static const char* _flavour_range_desc(attack_flavour flavour)
 {
     if (flavour == AF_RIFT)
         return " from a great distance";
+    else if (flavour == AF_BIG_FIRE)
+        return " in an area";
     else if (flavour_has_reach(flavour))
         return " from a distance";
     return "";
@@ -4623,6 +4625,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_SLEEP,             "induce sleep" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
+        { AF_BIG_FIRE,          "deal up to %d extra fire damage" },
     };
 
     const string* desc = map_find(base_descs, flavour);

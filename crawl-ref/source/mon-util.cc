@@ -2219,6 +2219,7 @@ int flavour_damage(attack_flavour flavour, int HD, bool random)
     switch (flavour)
     {
         case AF_FIRE:
+        case AF_BIG_FIRE:
             if (random)
                 return HD + random2(HD);
             return HD * 2;
@@ -2253,6 +2254,7 @@ bool flavour_has_reach(attack_flavour flavour)
         case AF_REACH_STING:
         case AF_REACH_TONGUE:
         case AF_RIFT:
+        case AF_BIG_FIRE:
             return true;
         default:
             return false;
