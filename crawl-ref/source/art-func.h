@@ -27,6 +27,7 @@
 #include "attack.h"        // For attack_strength_punctuation()
 #include "beam.h"          // For Lajatang of Order's silver damage
 #include "bloodspatter.h"  // For Leech
+#include "chardump.h"
 #include "cloud.h"         // For robe of clouds' thunder and salamander's flame
 #include "coordit.h"       // For distance_iterator()
 #include "death-curse.h"   // For the Scythe of Curses
@@ -84,9 +85,14 @@ static void _equip_mpr(bool* show_msgs, const char* msg,
  *******************/
 
 ////////////////////////////////////////////////////
-static void _CEREBOV_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _CEREBOV_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (dam)
     {
         if (defender->is_player()
@@ -126,9 +132,14 @@ static void _CONDEMNATION_unequip(item_def */*item*/, bool *show_msgs)
         _equip_mpr(show_msgs, "You feel oddly sad, like being parted from an old friend.");
 }
 
-static void _CONDEMNATION_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _CONDEMNATION_melee_effects(item_def* weapon, actor* attacker,
                                         actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (!dam || mondied || defender->is_player())
         return;
     monster *mons = defender->as_monster();
@@ -149,9 +160,14 @@ static void _CURSES_equip(item_def */*item*/, bool *show_msgs, bool unmeld)
         death_curse(you, nullptr, "the scythe of Curses", 0);
 }
 
-static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _CURSES_melee_effects(item_def* weapon, actor* attacker,
                                   actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (attacker->is_player())
         did_god_conduct(DID_EVIL, 3);
     if (!mondied && defender->holiness() & (MH_NATURAL | MH_PLANT))
@@ -160,9 +176,14 @@ static void _CURSES_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
-static void _FINISHER_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _FINISHER_melee_effects(item_def* weapon, actor* attacker,
                                   actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     // Can't kill a monster that's already dead.
     // Can't kill a monster if we don't do damage.
     // Don't insta-kill the player
@@ -182,9 +203,14 @@ static void _FINISHER_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ////////////////////////////////////////////////////
 
-static void _THROATCUTTER_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _THROATCUTTER_melee_effects(item_def* weapon, actor* attacker,
                                         actor* defender, bool mondied, int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     // Can't kill a monster that's already dead.
     // Don't insta-kill the player
     if (mondied || defender->is_player())
@@ -256,10 +282,15 @@ static int _calc_olgreb_damage(actor* attacker, actor* defender)
 }
 
 
-static void _OLGREB_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _OLGREB_melee_effects(item_def* weapon, actor* attacker,
                                   actor* defender, bool mondied,
                                   int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     const int bonus_dam = _calc_olgreb_damage(attacker, defender);
 
     if (!mondied && bonus_dam)
@@ -284,9 +315,14 @@ static void _POWER_equip(item_def * /* item */, bool *show_msgs,
     _equip_mpr(show_msgs, "You sense an aura of extreme power.");
 }
 
-static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _POWER_melee_effects(item_def* weapon, actor* attacker,
                                  actor* defender, bool mondied, int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (!mondied && x_chance_in_y(min(attacker->stat_hp() / 10, 27), 27))
     {
         bolt beam;
@@ -355,6 +391,11 @@ static void _SINGING_SWORD_melee_effects(item_def* weapon, actor* attacker,
                                          actor* /* defender */,
                                          bool /*mondied*/, int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     int tier;
 
     if (attacker->is_player())
@@ -425,10 +466,15 @@ static void _TORMENT_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
     _equip_mpr(show_msgs, "A terrible, searing pain shoots up your arm!");
 }
 
-static void _TORMENT_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _TORMENT_melee_effects(item_def* weapon, actor* attacker,
                                    actor* /*defender*/, bool /*mondied*/,
                                    int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (one_chance_in(5))
         torment(attacker, TORMENT_SCEPTRE, attacker->pos());
 }
@@ -465,10 +511,15 @@ static void _VAMPIRES_TOOTH_equip(item_def */*item*/, bool *show_msgs, bool /*un
 
 ///////////////////////////////////////////////////
 
-static void _VARIABILITY_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _VARIABILITY_melee_effects(item_def* weapon, actor* attacker,
                                        actor* /*defender*/, bool mondied,
                                        int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (!mondied && one_chance_in(5))
     {
         const int pow = 75 + random2avg(75, 2);
@@ -486,10 +537,15 @@ static void _ZONGULDROK_equip(item_def */*item*/, bool *show_msgs,
     _equip_mpr(show_msgs, "You sense an extremely unholy aura.");
 }
 
-static void _ZONGULDROK_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _ZONGULDROK_melee_effects(item_def* weapon, actor* attacker,
                                       actor* /*defender*/, bool /*mondied*/,
                                       int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (attacker->is_player())
         did_god_conduct(DID_EVIL, 3);
 }
@@ -500,6 +556,7 @@ static void _GONG_melee_effects(item_def* /*item*/, actor* wearer,
                                 actor* /*attacker*/, bool /*dummy*/,
                                 int /*dam*/)
 {
+    // CACT_ARMOUR
     if (silenced(wearer->pos()))
         return;
 
@@ -513,10 +570,15 @@ static void _GONG_melee_effects(item_def* /*item*/, actor* wearer,
 
 ///////////////////////////////////////////////////
 
-static void _DEMON_AXE_melee_effects(item_def* /*item*/, actor* attacker,
+static void _DEMON_AXE_melee_effects(item_def* weapon, actor* attacker,
                                      actor* /*defender*/, bool /*mondied*/,
                                      int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (one_chance_in(10))
     {
         if (monster* mons = attacker->as_monster())
@@ -605,6 +667,11 @@ static void _WYRMBANE_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/
 static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (!defender || !defender->is_dragonkind())
         return;
 
@@ -662,9 +729,14 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _UNDEADHUNTER_melee_effects(item_def* /*item*/, actor* attacker,
+static void _UNDEADHUNTER_melee_effects(item_def* weapon, actor* attacker,
                                         actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (defender->holiness() & MH_UNDEAD && !one_chance_in(3)
         && !mondied && dam)
     {
@@ -706,10 +778,15 @@ static void _DEVASTATOR_equip(item_def */*item*/, bool *show_msgs,
     _equip_mpr(show_msgs, "Time to lay down the shillelagh law.");
 }
 
-static void _DEVASTATOR_melee_effects(item_def* /*item*/, actor* attacker,
+static void _DEVASTATOR_melee_effects(item_def* weapon, actor* attacker,
                                       actor* defender, bool /*mondied*/,
                                       int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (dam)
         shillelagh(attacker, defender->pos(), dam);
 }
@@ -747,10 +824,15 @@ static void _NIGHT_unequip(item_def */*item*/, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
-static void _PLUTONIUM_SWORD_melee_effects(item_def* /*weapon*/,
+static void _PLUTONIUM_SWORD_melee_effects(item_def* weapon,
                                            actor* attacker, actor* defender,
                                            bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (!mondied && one_chance_in(5) && defender->can_mutate())
     {
         mpr("Mutagenic energy flows through the plutonium sword!");
@@ -771,9 +853,14 @@ static void _PLUTONIUM_SWORD_melee_effects(item_def* /*weapon*/,
 
 ///////////////////////////////////////////////////
 
-static void _SNAKEBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _SNAKEBITE_melee_effects(item_def* weapon, actor* attacker,
                                      actor* defender, bool mondied, int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (!mondied && x_chance_in_y(2, 5))
     {
         curare_actor(attacker, defender, 2, "curare",
@@ -783,9 +870,14 @@ static void _SNAKEBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _WOE_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _WOE_melee_effects(item_def* weapon, actor* attacker,
                                actor* defender, bool mondied, int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     const char *verb = "bugger", *adv = "";
     switch (random2(8))
     {
@@ -870,6 +962,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def*, actor* attacker,
                                            actor* defender, bool mondied,
                                            int)
 {
+    // CACT_EVOKE
     const int evoc = attacker->skill(SK_EVOCATIONS, 27);
     if (mondied || !(x_chance_in_y(evoc, 27*27) || x_chance_in_y(evoc, 27*27)))
         return;
@@ -929,10 +1022,15 @@ static void _ARC_BLADE_unequip(item_def */*item*/, bool *show_msgs)
     _equip_mpr(show_msgs, "The arc blade stops crackling.");
 }
 
-static void _ARC_BLADE_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
                                      actor* /*defender*/, bool /*mondied*/,
                                      int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (one_chance_in(3))
     {
         const int pow = 100 + random2avg(100, 2);
@@ -948,10 +1046,15 @@ static void _ARC_BLADE_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _SPELLBINDER_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
                                        actor* defender, bool mondied,
                                        int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     // Only cause miscasts if the target has magic to disrupt.
     if (defender->antimagic_susceptible()
         && !mondied)
@@ -964,9 +1067,14 @@ static void _SPELLBINDER_melee_effects(item_def* /*weapon*/, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _ORDER_melee_effects(item_def* /*item*/, actor* attacker,
+static void _ORDER_melee_effects(item_def* weapon, actor* attacker,
                                          actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (!mondied)
     {
         string msg = "";
@@ -995,9 +1103,14 @@ static void _FIRESTARTER_unequip(item_def */*item*/, bool *show_msgs)
     _equip_mpr(show_msgs, "Your inner flame fades away.");
 }
 
-static void _FIRESTARTER_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _FIRESTARTER_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (dam)
     {
         if (defender->is_monster()
@@ -1027,9 +1140,14 @@ static void _CHILLY_DEATH_unequip(item_def */*item*/, bool *show_msgs)
     _equip_mpr(show_msgs, "The dagger stops glowing.");
 }
 
-static void _CHILLY_DEATH_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _CHILLY_DEATH_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (dam)
     {
         if (defender->is_monster()
@@ -1066,9 +1184,14 @@ static void _FLAMING_DEATH_unequip(item_def */*item*/, bool *show_msgs)
     _equip_mpr(show_msgs, "The scimitar stops flaming.");
 }
 
-static void _FLAMING_DEATH_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (!mondied && (dam > 2 && one_chance_in(3)))
     {
         if (defender->is_player())
@@ -1150,9 +1273,14 @@ static void _OCTOPUS_KING_world_reacts(item_def *item)
 
 ///////////////////////////////////////////////////
 
-static void _CAPTAIN_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _CAPTAIN_melee_effects(item_def* weapon, actor* attacker,
                                 actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     // Player disarming sounds like a bad idea; monster-on-monster might
     // work but would be complicated.
     if (coinflip()
@@ -1249,10 +1377,15 @@ static void _KRYIAS_unequip(item_def */*item*/, bool *show_msgs)
 
 ///////////////////////////////////////////////////
 
-static void _FROSTBITE_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _FROSTBITE_melee_effects(item_def* weapon, actor* attacker,
                                      actor* defender, bool /*mondied*/,
                                      int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     coord_def spot = defender->pos();
     if (!cell_is_solid(spot)
         && !cloud_at(spot)
@@ -1276,9 +1409,14 @@ static void _LEECH_equip(item_def */*item*/, bool *show_msgs, bool /*unmeld*/)
 }
 
 // Big killing blows give a bloodsplosion effect sometimes
-static void _LEECH_melee_effects(item_def* /*item*/, actor* attacker,
+static void _LEECH_melee_effects(item_def* weapon, actor* attacker,
                                  actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (attacker->is_player() && defender->can_bleed()
         && mondied && x_chance_in_y(dam, 729))
     {
@@ -1306,6 +1444,11 @@ static void _THERMIC_ENGINE_unequip(item_def *item, bool *show_msgs)
 static void _THERMIC_ENGINE_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (weapon->plus < 14)
     {
         weapon->plus += 2;
@@ -1382,9 +1525,14 @@ static void _BATTLE_world_reacts(item_def */*item*/)
     }
 }
 
-static void _BATTLE_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _BATTLE_melee_effects(item_def* weapon, actor* attacker,
                                   actor* /*defender*/, bool /*mondied*/, int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     if (attacker)
     {
         aim_battlesphere(attacker, SPELL_MAGIC_DART);
@@ -1607,9 +1755,14 @@ static void _DREAMSHARD_NECKLACE_unequip(item_def * /* item */, bool * show_msgs
 
 //
 
-static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
+static void _AUTUMN_KATANA_melee_effects(item_def* weapon, actor* attacker,
     actor* defender, bool /*mondied*/, int /*dam*/)
 {
+    if (is_unrandom_artefact(*weapon)
+        && get_unrand_entry(weapon->unrand_idx)->type_name)
+    {
+        count_action(CACT_MELEE, weapon->unrand_idx);
+    }
     // HACK: yes this is in a header but it's only included once
     static bool _slicing = false;
 
@@ -1674,3 +1827,27 @@ static void _VITALITY_world_reacts(item_def */*item*/)
         did_god_conduct(DID_EVIL, 1);
     }
 }
+
+///////////////////////////////////////////////////
+/**
+ * OBJ_WEAPONS
+ * Singing Sword, Wrath of Trog, glaive of Prune, staff of Olgreb,
+ * staff of Wucad Mu, Vampire's Tooth, scythe of Curses,
+ * sceptre of Torment, sword of Zonguldrok, sword of Cerebov,
+ * staff of Dispater, sceptre of Asmodeus, demon blade "Bloodbane",
+ * scimitar of Flaming Death, eveningstar "Brilliance",
+ * demon blade "Leech", dagger of Chilly Death, dagger "Morg",
+ * scythe "Finisher", greatsling "Punk", longbow "Zephyr",
+ * giant club "Skullcrusher", glaive of the Guard, ZEALOT_SWORD,
+ * arbalest "Damnation", sword of the Doom Knight, morningstar "Eos",
+ * spear of the Botono, trident of the Octopus King,
+ * mithril axe "Arga", Elemental Staff, heavy crossbow "Sniper",
+ * longbow "Piercer", BLOWGUN_ASSASSIN, lance "Wyrmbane",
+ * Spriggan's Knife, plutonium sword, great mace "Undeadhunter",
+ * whip "Snakebite", knife of Accuracy, CRYSTAL_SPEAR,
+ * CAPTAIN, storm bow, DEMON_AXE, autumn katana, shillelagh "Devastator",
+ * WOE, dark maul, arc blade, SPELLBINDER, lajatang of Order,
+ * FIRESTARTER, MAJIN, GYRE, FROSTBITE, THERMIC_ENGINE,
+ * RIFT, BATTLE, woodcutter's axe, Throatcutter, staff of the Meek,
+ * CONDEMNATION, Lochaber axe
+**/
