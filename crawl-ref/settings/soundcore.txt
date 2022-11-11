@@ -1,0 +1,8 @@
+# Option to allow multiple sounds to play at the same time, set true to disable
+one_SDL_sound_channel = false
+
+
+## Items & Equipment
+
+# Sound to play when picking up an item
+sound ^= PICKUP:../source/sounds/itemGet.wav
