@@ -1,0 +1,16 @@
+# Option to allow multiple sounds to play at the same time, set true to disable
+one_SDL_sound_channel = false
+
+
+## Items & Equipment
+
+# Picking up an item
+sound ^= PICKUP:itemGet.wav
+
+# Wielding a weapon
+sound ^= WIELD_WEAPON:equipWeapon.wav
+sound ^= WIELD_NOTHING:sheathWeapon.wav
+
+# Interacting with armor
+sound ^= EQUIP_ARMOUR:equipArmor.wav
+sound ^= DEQUIP_ARMOUR:unequipArmor.wav
