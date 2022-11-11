@@ -654,3 +654,6 @@ public:
 };
 
 template <typename BaseType, int Scale> bool fixedp<BaseType, Scale>::rounding = true;
+
+
+//testing
