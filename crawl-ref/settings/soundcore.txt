@@ -4,5 +4,13 @@ one_SDL_sound_channel = false
 
 ## Items & Equipment
 
-# Sound to play when picking up an item
-sound ^= PICKUP:../source/sounds/itemGet.wav
+# Picking up an item
+sound ^= PICKUP:itemGet.wav
+
+# Wielding a weapon
+sound ^= WIELD_WEAPON:equipWeapon.wav
+sound ^= WIELD_NOTHING:sheathWeapon.wav
+
+# Interacting with armor
+sound ^= EQUIP_ARMOUR:equipArmor.wav
+sound ^= DEQUIP_ARMOUR:unequipArmor.wav
