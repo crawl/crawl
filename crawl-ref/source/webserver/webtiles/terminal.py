@@ -113,7 +113,6 @@ class TerminalRecorder(object):
                                      self._handle_err_read,
                                      IOLoop.READ)
 
-    @util.note_blocking_fun
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
             try:
@@ -136,7 +135,6 @@ class TerminalRecorder(object):
         if events & IOLoop.ERROR:
             self.poll()
 
-    @util.note_blocking_fun
     def _handle_err_read(self, fd, events):
         if events & IOLoop.READ:
             buf = os.read(fd, BUFSIZ)
@@ -147,13 +145,11 @@ class TerminalRecorder(object):
 
             self.poll()
 
-    @util.note_blocking_fun
     def write_ttyrec_header(self, sec, usec, l):
         if self.ttyrec is None: return
         s = struct.pack("<iii", sec, usec, l)
         self.ttyrec.write(s)
 
-    @util.note_blocking_fun
     def write_ttyrec_chunk(self, data):
         if self.ttyrec is None: return
         t = time.time()
