@@ -463,6 +463,8 @@ enum monster_type                      // env.mons[].type
     MONS_MERFOLK_AVATAR,
 #if TAG_MAJOR_VERSION > 34
     MONS_DROWNED_SOUL,
+    MONS_SICKLY_MERFOLK_SIREN,
+    MONS_MALARIOUS_MERFOLK_AVATAR,
 #endif
     MONS_MERFOLK_IMPALER,
     MONS_MERFOLK_AQUAMANCER,
@@ -1177,6 +1179,8 @@ enum monster_type                      // env.mons[].type
     MONS_METEORAN,
     MONS_GRUNN,
     MONS_STARFLOWER,
+    MONS_SICKLY_MERFOLK_SIREN,
+    MONS_MALARIOUS_MERFOLK_AVATAR,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
