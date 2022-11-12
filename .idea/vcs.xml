@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/fonts" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/freetype" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/libpng" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/lua" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/luajit" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/pcre" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/sdl2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/sdl2-image" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/sdl2-mixer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/sqlite" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/crawl-ref/source/contrib/zlib" vcs="Git" />
+  </component>
+</project>
