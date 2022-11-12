@@ -4,9 +4,14 @@ html, body, #loader {
     padding: 0;
 }
 
-body {
+body.dark{
     background: black;
     color: white;
+    font: 16px monospace;
+}
+body.light{
+    background: white;
+    color: black;
     font: 16px monospace;
 }
 
