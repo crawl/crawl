@@ -718,8 +718,7 @@ def run():
             IOLoop.current().set_blocking_log_threshold(0.5) # type: ignore
             logging.info("Blocking call timeout: 500ms.")
         except:
-            # this is the new normal; still not sure of a way to deal with this.
-            logging.info("Webserver running without a blocking call timeout.")
+            pass
 
         if dgl_mode:
             ws_handler.status_file_timeout()
