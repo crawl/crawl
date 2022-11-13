@@ -494,6 +494,7 @@ class CrawlProcessHandlerBase(object):
 
     def stop(self):
         if self.process:
+            self.process.flush_ttyrec()
             self.process.send_signal(subprocess.signal.SIGHUP)
             t = time.time() + config.get('kill_timeout')
             self.kill_timeout = IOLoop.current().add_timeout(t, self.kill)
@@ -826,22 +827,24 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def gen_inprogress_lock(self):
         self.inprogress_lock = os.path.join(self.config_path("inprogress_path"),
                                             self.username + ":" + self.lock_basename)
-        f = open(self.inprogress_lock, "w")
-        fcntl.lockf(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        self.inprogress_lock_file = f
-        cols, lines = self.process.get_terminal_size()
-        f.write("%s\n%s\n%s\n" % (self.process.pid, lines, cols))
-        f.flush()
+        with util.SlowWarning("gen_inprogress_lock '%s'" % self.inprogress_lock):
+            f = open(self.inprogress_lock, "w")
+            fcntl.lockf(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            self.inprogress_lock_file = f
+            cols, lines = self.process.get_terminal_size()
+            f.write("%s\n%s\n%s\n" % (self.process.pid, lines, cols))
+            f.flush()
 
     def remove_inprogress_lock(self):
         if self.inprogress_lock_file is None: return
-        fcntl.lockf(self.inprogress_lock_file.fileno(), fcntl.LOCK_UN)
-        self.inprogress_lock_file.close()
-        try:
-            os.remove(self.inprogress_lock)
-        except OSError:
-            # Lock already got deleted
-            pass
+        with util.SlowWarning("remove_inprogress_lock '%s'" % self.inprogress_lock):
+            fcntl.lockf(self.inprogress_lock_file.fileno(), fcntl.LOCK_UN)
+            self.inprogress_lock_file.close()
+            try:
+                os.remove(self.inprogress_lock)
+            except OSError:
+                # Lock already got deleted
+                pass
 
     def _ttyrec_id_header(self): # type: () -> bytes
         clrscr = b"\033[2J"

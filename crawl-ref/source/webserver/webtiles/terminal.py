@@ -56,9 +56,9 @@ class TerminalRecorder(object):
         if ttyrec_filename:
             self.desc = ttyrec_filename
             with util.SlowWarning("Slow IO: open '%s'" % self.desc):
-                self.ttyrec = open(ttyrec_filename, "wb", 0) # type: Optional[BinaryIO]
+                self.ttyrec = open(ttyrec_filename, "wb") # type: Optional[BinaryIO]
         if id_header:
-            self.write_ttyrec_chunk(id_header)
+            self.write_ttyrec_chunk(id_header, flush=True)
 
         self._spawn()
 
@@ -155,13 +155,19 @@ class TerminalRecorder(object):
         s = struct.pack("<iii", sec, usec, l)
         self.ttyrec.write(s)
 
-    def write_ttyrec_chunk(self, data):
+    def write_ttyrec_chunk(self, data, flush=False):
         if self.ttyrec is None:
             return
         with util.SlowWarning("Slow IO: write_ttyrec_chunk '%s'" % self.desc):
             t = time.time()
             self.write_ttyrec_header(int(t), int((t % 1) * 1000000), len(data))
             self.ttyrec.write(data)
+        if flush:
+            self.flush_ttyrec()
+
+    def flush_ttyrec(self):
+        with util.SlowWarning("Slow IO: flush '%s'" % self.desc):
+            self.ttyrec.flush()
 
     def _do_output_callback(self):
         pos = self.output_buffer.find(b"\n")
@@ -216,7 +222,8 @@ class TerminalRecorder(object):
                 os.close(self.errpipe_read)
 
                 if self.ttyrec:
-                    self.ttyrec.close()
+                    with util.SlowWarning("Slow IO: close '%s'" % self.desc):
+                        self.ttyrec.close()
 
                 if self.end_callback:
                     self.end_callback()

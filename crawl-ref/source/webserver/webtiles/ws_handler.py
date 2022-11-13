@@ -1161,7 +1161,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def set_rc(self, game_id, contents):
         rcfile_path = self.rcfile_path(game_id)
         try:
-            with util.SlowWarning("Slow IO: write rc '%s'" % path):
+            with util.SlowWarning("Slow IO: write rc '%s'" % rcfile_path):
                 with open(rcfile_path, 'wb') as f:
                     # TODO: is binary + encode necessary in py 3?
                     f.write(utf8(contents))
