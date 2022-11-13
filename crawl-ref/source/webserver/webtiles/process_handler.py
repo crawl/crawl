@@ -781,8 +781,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.logger.info("Starting game.")
 
         try:
-            self.process = TerminalRecorder(call, self.ttyrec_filename,
-                                            self._ttyrec_id_header(),
+            self.process = TerminalRecorder(call,
                                             self.logger,
                                             config.get('recording_term_size'),
                                             env_vars = game.templated("env", username=self.username, default={}),
@@ -791,6 +790,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.process.output_callback = self._on_process_output
             self.process.activity_callback = self.note_activity
             self.process.error_callback = self._on_process_error
+
+            self.process.start(self.ttyrec_filename, self._ttyrec_id_header())
 
             self.gen_inprogress_lock()
 

@@ -19,8 +19,6 @@ BUFSIZ = 2048
 class TerminalRecorder(object):
     def __init__(self,
                  command, # type: List[str]
-                 filename,
-                 id_header,
                  logger,
                  termsize,
                  env_vars, # type: Dict[str, str]
@@ -33,11 +31,7 @@ class TerminalRecorder(object):
                 COLUMNS, LINES, and TERM cannot be overriden.
         """
         self.command = command
-        if filename:
-            self.ttyrec = open(filename, "wb", 0) # type: Optional[BinaryIO]
-        else:
-            self.ttyrec = None
-        self.id = id
+        self.ttyrec = None
         self.returncode = None
         self.output_buffer = b""
         self.termsize = termsize
@@ -57,6 +51,9 @@ class TerminalRecorder(object):
 
         self.logger = logger
 
+    def start(self, ttyrec_filename, id_header):
+        if ttyrec_filename:
+            self.ttyrec = open(ttyrec_filename, "wb", 0) # type: Optional[BinaryIO]
         if id_header:
             self.write_ttyrec_chunk(id_header)
 
