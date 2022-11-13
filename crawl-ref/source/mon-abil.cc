@@ -1095,18 +1095,6 @@ bool mon_special_ability(monster* mons)
     }
     break;
 
-    case MONS_GUARDIAN_GOLEM:
-        if (mons->hit_points * 2 < mons->max_hit_points
-             && !mons->has_ench(ENCH_INNER_FLAME))
-        {
-            simple_monster_message(*mons, " overheats!");
-            mid_t act = mons->summoner == MID_PLAYER ? MID_YOU_FAULTLESS :
-                        mons->summoner;
-            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, actor_by_mid(act),
-                                       INFINITE_DURATION));
-        }
-        break;
-
     default:
         break;
     }

@@ -1517,8 +1517,8 @@ Calls forth one of the greater demons of Pandemonium to serve the caster.
 Summon Guardian Golem spell
 
 Summons a protective golem. It redirects the injuries of its allies (but not
-the caster) to itself. When sufficiently damaged, it may fill with an inner
-flame, causing it to explode if destroyed. It gains more health at high power.
+the caster) to itself. It may also heal itself or its allies, but is incapable
+of healing the caster in this way. It gains more health at high power.
 %%%%
 Summon Hell Beast spell
 

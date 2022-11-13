@@ -1540,6 +1540,13 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_GUARDIAN_GOLEM,
+      {
+       { SPELL_HEAL_OTHER, 30, MON_SPELL_MAGICAL },
+       { SPELL_MINOR_HEALING, 20, MON_SPELL_MAGICAL },
+      }
+    },
+
     {  MST_ICE_STATUE,
       {
        { SPELL_BOLT_OF_COLD, 20, MON_SPELL_MAGICAL },

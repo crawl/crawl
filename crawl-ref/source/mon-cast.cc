@@ -963,7 +963,8 @@ static bool _monster_will_buff(const monster &caster, const monster &targ)
 
     if (caster.type == MONS_IRONBOUND_CONVOKER
         || caster.type == MONS_AMAEMON
-        || mons_bound_soul(caster))
+        || mons_bound_soul(caster)
+        || caster.type == MONS_GUARDIAN_GOLEM)
     {
         return true; // will buff any ally
     }
