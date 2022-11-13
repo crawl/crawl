@@ -155,6 +155,7 @@ def global_announce(text):
 
 _dgl_dir_check = False
 
+
 def write_dgl_status_file():
     process_info = ["%s#%s#%s#0x0#%s#%s#" %
                             (socket.username, socket.game_id,
@@ -174,23 +175,24 @@ def write_dgl_status_file():
                 os.makedirs(status_dir)
                 logging.warning("Creating dgl status file location '%s'", status_dir)
             _dgl_dir_check = True
-        with open(status_target, "w") as f:
-            f.write("\n".join(process_info))
+        with util.SlowWarning("Slow IO: write '%s'" % status_target):
+            with open(status_target, "w") as f:
+                f.write("\n".join(process_info))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
+
 
 def status_file_timeout():
     write_dgl_status_file()
     IOLoop.current().add_timeout(time.time() + config.get('status_file_update_rate'),
                                  status_file_timeout)
-    # prevent false positives from janky block detection code; because this
-    # runs on a timeout it's a common source of them
-    util.last_blocking_description = "None"
+
 
 def find_user_sockets(username):
     for socket in list(sockets):
         if socket.username and socket.username.lower() == username.lower():
             yield socket
+
 
 def find_running_game(charname, start):
     from webtiles.process_handler import processes
@@ -1148,8 +1150,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if game_id not in config.games: return
         path = self.rcfile_path(game_id)
         try:
-            with open(path, 'r') as f:
-                contents = f.read()
+            with util.SlowWarning("Slow IO: read rc '%s'" % path):
+                with open(path, 'r') as f:
+                    contents = f.read()
         # Handle RC file not existing. IOError for py2, OSError for py3
         except (OSError, IOError):
             contents = ''
@@ -1158,9 +1161,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def set_rc(self, game_id, contents):
         rcfile_path = self.rcfile_path(game_id)
         try:
-            with open(rcfile_path, 'wb') as f:
-                # TODO: is binary + encode necessary in py 3?
-                f.write(utf8(contents))
+            with util.SlowWarning("Slow IO: write rc '%s'" % path):
+                with open(rcfile_path, 'wb') as f:
+                    # TODO: is binary + encode necessary in py 3?
+                    f.write(utf8(contents))
         except Exception:
             self.logger.warning(
                     "Couldn't save rcfile for %s!",

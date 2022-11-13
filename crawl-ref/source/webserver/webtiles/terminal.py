@@ -32,6 +32,7 @@ class TerminalRecorder(object):
         """
         self.command = command
         self.ttyrec = None
+        self.desc = "TerminalRecorder"
         self.returncode = None
         self.output_buffer = b""
         self.termsize = termsize
@@ -53,7 +54,9 @@ class TerminalRecorder(object):
 
     def start(self, ttyrec_filename, id_header):
         if ttyrec_filename:
-            self.ttyrec = open(ttyrec_filename, "wb", 0) # type: Optional[BinaryIO]
+            self.desc = ttyrec_filename
+            with util.SlowWarning("Slow IO: open '%s'" % self.desc):
+                self.ttyrec = open(ttyrec_filename, "wb", 0) # type: Optional[BinaryIO]
         if id_header:
             self.write_ttyrec_chunk(id_header)
 
@@ -101,6 +104,8 @@ class TerminalRecorder(object):
 
         # We're the parent
         os.close(errpipe_write)
+        if not self.ttyrec:
+            self.desc = "TerminalRecorder (fd %d)" % self.child_fd
 
         IOLoop.current().add_handler(self.child_fd,
                                      self._handle_read,
@@ -113,7 +118,8 @@ class TerminalRecorder(object):
     def _handle_read(self, fd, events):
         if events & IOLoop.READ:
             try:
-                buf = os.read(fd, BUFSIZ)
+                with util.SlowWarning("Slow IO: os.read (session '%s')" % self.desc):
+                    buf = os.read(fd, BUFSIZ)
             except (OSError, IOError):
                 self.poll() # fd probably closed?
                 return
@@ -134,7 +140,8 @@ class TerminalRecorder(object):
 
     def _handle_err_read(self, fd, events):
         if events & IOLoop.READ:
-            buf = os.read(fd, BUFSIZ)
+            with util.SlowWarning("Slow IO: os.read stderr (session '%s')" % self.desc):
+                buf = os.read(fd, BUFSIZ)
 
             if len(buf) > 0:
                 self.error_buffer += buf
@@ -143,15 +150,18 @@ class TerminalRecorder(object):
             self.poll()
 
     def write_ttyrec_header(self, sec, usec, l):
-        if self.ttyrec is None: return
+        if self.ttyrec is None:
+            return
         s = struct.pack("<iii", sec, usec, l)
         self.ttyrec.write(s)
 
     def write_ttyrec_chunk(self, data):
-        if self.ttyrec is None: return
-        t = time.time()
-        self.write_ttyrec_header(int(t), int((t % 1) * 1000000), len(data))
-        self.ttyrec.write(data)
+        if self.ttyrec is None:
+            return
+        with util.SlowWarning("Slow IO: write_ttyrec_chunk '%s'" % self.desc):
+            t = time.time()
+            self.write_ttyrec_header(int(t), int((t % 1) * 1000000), len(data))
+            self.ttyrec.write(data)
 
     def _do_output_callback(self):
         pos = self.output_buffer.find(b"\n")

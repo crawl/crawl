@@ -20,10 +20,32 @@ try:
 except ImportError:
     pass
 
+
 # utility code for explicit debugging of potentially blocking I/O. We use this
 # because while asyncio debugging is good at detecting when a blocking call
 # happens, it is terrible at identifying what tornado 6+ is actually doing at
 # the time.
+
+
+class SlowWarning(object):
+    def __init__(self, desc, time=None):
+        if time is None:
+            time = config.get('slow_io_alert')
+        self.time = time
+        self.desc = desc
+
+    def __enter__(self):
+        if self.time:
+            self.start = time.monotonic()
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        if self.time:
+            duration = time.monotonic() - self.start
+            if duration >= self.time:
+                logger = logging.getLogger("server.py")
+                logger.warning('%s: %.3fs', self.desc, duration)
+        return False
+
 
 # backwards compatibility for older python, older Tornado. Also, future-proofing
 # for internal API calls that could change. This check disables the slow
@@ -216,18 +238,21 @@ class FileTailer(object):
     def check(self):  # type: () -> None
         if self.file is None:
             try:
-                self.file = open(self.filename, "r")
+                with SlowWarning("Slow IO: open '%s'" % self.filename):
+                    self.file = open(self.filename, "r")
             except (IOError, OSError) as e:  # noqa
                 if e.errno == errno.ENOENT:
                     return
                 else:
                     raise
 
-            self.file.seek(os.path.getsize(self.filename))
+            with SlowWarning("Slow IO: seek '%s'" % self.filename):
+                self.file.seek(os.path.getsize(self.filename))
 
         while True:
             pos = self.file.tell()
-            line = self.file.readline()
+            with SlowWarning("Slow IO: readline '%s'" % self.filename):
+                line = self.file.readline()
             if line.endswith("\n"):
                 self.callback(line)
             else:
