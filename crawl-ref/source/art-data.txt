@@ -1232,7 +1232,7 @@ BOOL:     special
 COLOUR:   WHITE
 VALUE:    600
 DBRAND:   It releases a powerful concussive burst when it strikes, dealing
- extra damage to the target and all other foes adjacent to them.
+ extra damage to the target and all other creatures adjacent to them.
 
 # Worn by Tiamat.
 ENUM:     DRAGONSKIN
