@@ -494,6 +494,7 @@ class CrawlProcessHandlerBase(object):
 
     def stop(self):
         if self.process:
+            self.process.flush_ttyrec()
             self.process.send_signal(subprocess.signal.SIGHUP)
             t = time.time() + config.get('kill_timeout')
             self.kill_timeout = IOLoop.current().add_timeout(t, self.kill)
@@ -634,7 +635,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._stop_purging_stale_processes()
         self._stale_pid = None
 
-    @util.note_blocking_fun
     def _purge_locks_and_start(self, firsttime=False):
         # Purge stale locks
         lockfile = self._find_lock()
@@ -687,7 +687,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._process_hup_timeout = None
         self.handle_process_end()
 
-    @util.note_blocking_fun
     def _find_lock(self):
         for path in os.listdir(self.config_path("inprogress_path")):
             if (path.startswith(self.username + ":") and
@@ -696,7 +695,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     path)
         return None
 
-    @util.note_blocking_fun
     def _kill_stale_process(self, signal=subprocess.signal.SIGHUP):
         self._process_hup_timeout = None
         if self._stale_pid == None: return
@@ -756,7 +754,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self._purge_locks_and_start(False)
 
-    @util.note_blocking_fun
     def _start_process(self):
         self.socketpath = os.path.join(self.config_path("socket_path"),
                                        self.username + ":" +
@@ -785,8 +782,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.logger.info("Starting game.")
 
         try:
-            self.process = TerminalRecorder(call, self.ttyrec_filename,
-                                            self._ttyrec_id_header(),
+            self.process = TerminalRecorder(call,
                                             self.logger,
                                             config.get('recording_term_size'),
                                             env_vars = game.templated("env", username=self.username, default={}),
@@ -795,6 +791,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.process.output_callback = self._on_process_output
             self.process.activity_callback = self.note_activity
             self.process.error_callback = self._on_process_error
+
+            self.process.start(self.ttyrec_filename, self._ttyrec_id_header())
 
             self.gen_inprogress_lock()
 
@@ -818,7 +816,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             else:
                 self._on_process_end()
 
-    @util.note_blocking_fun
     def connect(self, socketpath, primary = False):
         self.socketpath = socketpath
         self.conn = WebtilesSocketConnection(self.socketpath, self.logger)
@@ -827,27 +824,27 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.conn.username = self.username
         self.conn.connect(primary)
 
-    @util.note_blocking_fun
     def gen_inprogress_lock(self):
         self.inprogress_lock = os.path.join(self.config_path("inprogress_path"),
                                             self.username + ":" + self.lock_basename)
-        f = open(self.inprogress_lock, "w")
-        fcntl.lockf(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        self.inprogress_lock_file = f
-        cols, lines = self.process.get_terminal_size()
-        f.write("%s\n%s\n%s\n" % (self.process.pid, lines, cols))
-        f.flush()
+        with util.SlowWarning("gen_inprogress_lock '%s'" % self.inprogress_lock):
+            f = open(self.inprogress_lock, "w")
+            fcntl.lockf(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            self.inprogress_lock_file = f
+            cols, lines = self.process.get_terminal_size()
+            f.write("%s\n%s\n%s\n" % (self.process.pid, lines, cols))
+            f.flush()
 
-    @util.note_blocking_fun
     def remove_inprogress_lock(self):
         if self.inprogress_lock_file is None: return
-        fcntl.lockf(self.inprogress_lock_file.fileno(), fcntl.LOCK_UN)
-        self.inprogress_lock_file.close()
-        try:
-            os.remove(self.inprogress_lock)
-        except OSError:
-            # Lock already got deleted
-            pass
+        with util.SlowWarning("remove_inprogress_lock '%s'" % self.inprogress_lock):
+            fcntl.lockf(self.inprogress_lock_file.fileno(), fcntl.LOCK_UN)
+            self.inprogress_lock_file.close()
+            try:
+                os.remove(self.inprogress_lock)
+            except OSError:
+                # Lock already got deleted
+                pass
 
     def _ttyrec_id_header(self): # type: () -> bytes
         clrscr = b"\033[2J"
@@ -863,7 +860,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                  utf8("Time: (%s) %s" % (tstamp, ctime)) + crlf +
                  clrscr)
 
-    @util.note_blocking_fun
     def _on_process_end(self):
         if self.process:
             self.logger.debug("Crawl PID %s terminated.", self.process.pid)

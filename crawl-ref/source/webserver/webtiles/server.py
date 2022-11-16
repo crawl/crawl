@@ -22,7 +22,6 @@ from webtiles import auth, load_games, process_handler, userdb, config
 from webtiles import game_data_handler, util, ws_handler
 
 class MainHandler(tornado.web.RequestHandler):
-    @util.note_blocking_fun
     def get(self):
         host = self.request.host
         if self.request.protocol == "https" or self.request.headers.get("x-forwarded-proto") == "https":
@@ -719,8 +718,7 @@ def run():
             IOLoop.current().set_blocking_log_threshold(0.5) # type: ignore
             logging.info("Blocking call timeout: 500ms.")
         except:
-            # this is the new normal; still not sure of a way to deal with this.
-            logging.info("Webserver running without a blocking call timeout.")
+            pass
 
         if dgl_mode:
             ws_handler.status_file_timeout()

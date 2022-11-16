@@ -91,6 +91,7 @@ defaults = {
     'load_logging_rate': 0,
     'milestone_interval': 1000, # ms
     'slow_callback_alert': None,
+    'slow_io_alert': 0.250,
     'games': collections.OrderedDict([]),
     'templates': collections.OrderedDict([]),
     'use_game_yaml': None, # default: load games.d if games is empty

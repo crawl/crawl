@@ -20,13 +20,36 @@ try:
 except ImportError:
     pass
 
+
 # utility code for explicit debugging of potentially blocking I/O. We use this
 # because while asyncio debugging is good at detecting when a blocking call
 # happens, it is terrible at identifying what tornado 6+ is actually doing at
 # the time.
 
-# backwards compatibility for python 2.7, remove this some day. Disables the
-# manual blocking diagnostic code if we are this old.
+
+class SlowWarning(object):
+    def __init__(self, desc, time=None):
+        if time is None:
+            time = config.get('slow_io_alert')
+        self.time = time
+        self.desc = desc
+
+    def __enter__(self):
+        if self.time:
+            self.start = time.monotonic()
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        if self.time:
+            duration = time.monotonic() - self.start
+            if duration >= self.time:
+                logger = logging.getLogger("server.py")
+                logger.warning('%s: %.3fs', self.desc, duration)
+        return False
+
+
+# backwards compatibility for older python, older Tornado. Also, future-proofing
+# for internal API calls that could change. This check disables the slow
+# callback diagnostic code if the tries fail.
 _asyncio_available = True
 try:
     def f():
@@ -37,64 +60,6 @@ try:
     import reprlib
 except:
     _asyncio_available = False
-
-# note: this is somewhat wacky because the slow callback logging code will
-# always run *after* this context manager has exited, but we do sometimes want
-# to nest them. TODO: could timing be done directly in this?
-blocking_description = []
-last_blocking_description = "None"
-class BlockingDescriptionCtx(object):
-    def __init__(self):
-        self.desc = "None"
-
-    def __enter__(self):
-        global blocking_description, last_blocking_description
-        blocking_description.append(self.desc)
-        last_blocking_description = self.desc
-
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        global blocking_description, last_blocking_description
-        blocking_description.pop()
-        if len(blocking_description):
-            last_blocking_description = blocking_description[-1]
-        return False
-
-# just use this as a singleton, don't want to add even *more* overhead to things
-# that may be blocking...
-cached_blocking_ctx = BlockingDescriptionCtx()
-
-# use the context manager returned by this to explicitly mark some code as
-# potentially blocking, for logging purposes. Should have minimal overhead..
-def note_blocking(desc):
-    global cached_blocking_ctx
-    cached_blocking_ctx.desc = desc
-    return cached_blocking_ctx
-
-def annotate_blocking_note(a):
-    global last_blocking_description, blocking_description, _asyncio_available
-    if not _asyncio_available:
-        return # don't bother if no asyncio
-    if last_blocking_description:
-        last_blocking_description += a
-        # sanity check: don't let this accrue infinitely if it is called wrong
-        last_blocking_description = last_blocking_description[:100]
-    for i in range(len(blocking_description)):
-        blocking_description[i] += a
-
-# corresponding decorator, automatically uses function name
-def note_blocking_fun(f):
-    global _asyncio_available
-    if not _asyncio_available:
-        return f
-
-    def wrapped(*args, **kwargs):
-        with note_blocking(f.__qualname__):
-            return f(*args, **kwargs)
-    return wrapped
-
-def last_noted_blocker():
-    global last_blocking_description
-    return last_blocking_description
 
 
 def func_repr(func):
@@ -139,24 +104,58 @@ def set_slow_callback_logging(slow_duration):
     reprlib.aRepr.maxother = 1000
 
     def on_slow_callback(name, duration):
+        if name is None:
+            return
         logger = logging.getLogger("server.py")
         logger.warning('Slow callback (%.3fs): %s', duration, name)
         global last_blocking_description
         last_blocking_description = "None"
 
     def format_tornado_handle(h):
-        # for IOLoop callbacks, print only the information that is actually
-        # useful, namely, the callback getting called
-        if (h._callback is not None
-                        and func_repr(h._callback).startswith("IOLoop")
-                        and h._args):
-            # based on asyncio.format_helpers._format_args_and_kwargs
-            # possibly this is always size 1 for an IOLoop callback?
-            items = [callback_arg_repr(arg) for arg in h._args]
-            return 'IOLoop callback: {}'.format(', '.join(items))
-        else:
-            # otherwise, fallback on the default (with the reprlib tweak)
-            return _format_handle(h)
+        from tornado.platform.asyncio import BaseAsyncIOLoop
+
+        # to see only certain callbacks when debugging, you can add a filter here.
+
+        # the code here uses a certain level of undocumented / private APIs,
+        # and ad-hoc introspection, so do try/except wrapping for future
+        # proofing
+        try:
+            if (h._callback is not None
+                            and func_repr(h._callback).startswith("IOLoop") # can this be done with introspection?
+                            and h._args):
+                # simplify down IOLoop callbacks to just the part that matters.
+                # this will typically strip off something like:
+                # `<TimerHandle when=X IOLoop._run_callback(functools.partial(...))>`
+                # based on asyncio.format_helpers._format_args_and_kwargs
+                # possibly items is always size 1 for an IOLoop callback?
+                items = [callback_arg_repr(arg) for arg in h._args]
+                s = 'IOLoop callback: {}'.format(', '.join(items))
+                if h._cancelled:
+                    s += " cancelled!"
+                return s
+            elif (h._callback is not None
+                        # check for bound instance method: I cannot for the life of
+                        # me figure out how to directly get the `method` type
+                        and getattr(h._callback, '__self__', None)
+                        and isinstance(h._callback.__self__, BaseAsyncIOLoop)
+                        and getattr(h._callback, '__func__', None)
+                        and h._callback.__func__ == BaseAsyncIOLoop._handle_events):
+                # for event handlers, h._callback is a bound method instance on
+                # BaseAsyncIOLoop, which is not very informative. Instead, find
+                # the actual callback that Tornado used by introspecting on the
+                # method object.
+                s = "BaseAsyncIOLoop handler: {}".format(
+                    repr(h._callback.__self__.handlers[h._args[0]]))
+                if h._cancelled:
+                    s += " cancelled!"
+                return s
+        except:
+            pass
+
+        # otherwise, fallback on the default (with the reprlib tweak). The
+        # existence of this asyncio.base_events internal function is already
+        # checked by a global try..except block.
+        return _format_handle(h)
 
     if not _original_asyncio_run:
         _original_asyncio_run = asyncio.events.Handle._run
@@ -239,18 +238,21 @@ class FileTailer(object):
     def check(self):  # type: () -> None
         if self.file is None:
             try:
-                self.file = open(self.filename, "r")
+                with SlowWarning("Slow IO: open '%s'" % self.filename):
+                    self.file = open(self.filename, "r")
             except (IOError, OSError) as e:  # noqa
                 if e.errno == errno.ENOENT:
                     return
                 else:
                     raise
 
-            self.file.seek(os.path.getsize(self.filename))
+            with SlowWarning("Slow IO: seek '%s'" % self.filename):
+                self.file.seek(os.path.getsize(self.filename))
 
         while True:
             pos = self.file.tell()
-            line = self.file.readline()
+            with SlowWarning("Slow IO: readline '%s'" % self.filename):
+                line = self.file.readline()
             if line.endswith("\n"):
                 self.callback(line)
             else:
