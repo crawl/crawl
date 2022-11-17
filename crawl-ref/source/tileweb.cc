@@ -619,6 +619,14 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     {
         process_command(CMD_LIST_GOLD);
     }
+    else if (msgtype == "list_player_status")
+    {
+        process_command(CMD_DISPLAY_CHARACTER_STATUS);
+    }
+    else if (msgtype == "show_skills")
+    {
+        process_command(CMD_DISPLAY_SKILLS);
+    }
     
     return c;
 }
