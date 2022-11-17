@@ -631,6 +631,10 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     {
         process_command(CMD_WIELD_WEAPON);
     }
+    else if (msgtype == "rest_100")
+    {
+        process_command(CMD_REST);
+    }
     
     return c;
 }

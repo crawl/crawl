@@ -18,7 +18,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     var font; // cached font name for the canvas: size (in px) + family
     var draw_glyphs;
     var selected = -1;
-    const NUM_RESERVED_BUTTONS = 9;
+    const NUM_RESERVED_BUTTONS = 10;
 
     function send_options()
     {
@@ -186,6 +186,9 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                 break;
             case 8:
                 $tooltip.html("<span>Left click: show wield menu</span>");
+                break;
+            case 9:
+                $tooltip.html("<span>Left click: rest 100 turns</span>");
                 break;
             default:
                 var item = filtered_inv[slot];
@@ -362,6 +365,9 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                         case 8:
                             comm.send_message("show_wield");
                             break;
+                        case 9:
+                            comm.send_message("rest_100");
+                            break;
                     }
                     
                 }
@@ -516,6 +522,8 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             selected == 7);
         draw_action(gui, gui.LONG_BLADES_ON, null, inc*8, adjusted_scale,
             selected == 8);
+        draw_action(gui, gui.SLEEP, null, inc*9, adjusted_scale,
+            selected == 9);
         
 
         draw_glyphs = options.get("action_panel_glyphs");
