@@ -603,7 +603,15 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
         // (possibly just as a string, like the lua API for this)
         process_command(CMD_GAME_MENU);
     }
-
+    else if (msgtype == "list_worn_armor")
+    {
+        process_command(CMD_LIST_ARMOUR);
+    }
+    else if (msgtype == "show_spell_library")
+    {   
+        process_command(CMD_DISPLAY_SPELLS);
+    }
+    
     return c;
 }
 

@@ -18,7 +18,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     var font; // cached font name for the canvas: size (in px) + family
     var draw_glyphs;
     var selected = -1;
-    const NUM_RESERVED_BUTTONS = 2;
+    const NUM_RESERVED_BUTTONS = 4;
 
     function send_options()
     {
@@ -157,13 +157,17 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         }
         $tooltip.css({top: y + 10 + "px",
                      left: x + 10 + "px"});
-        if (slot == -2)
+        if (slot == -4)
         {
             $tooltip.html("<span>Left click: minimize</span><br />"
                           + "<span>Right click: open settings</span>");
         }
-        else if (slot == -1 && game.get_input_mode() == enums.mouse_mode.COMMAND)
+        else if (slot == -3 && game.get_input_mode() == enums.mouse_mode.COMMAND)
             $tooltip.html("<span>Left click: show main menu</span>");
+        else if (slot == -2)
+            $tooltip.html("<span>Left click: show worn armor</span>");
+        else if (slot == -1)
+            $tooltip.html("<span>Left click: show spell library</span>");
         else
         {
             var item = filtered_inv[slot];
@@ -312,10 +316,22 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                 if (selected == 0) // It should be available even in targeting mode
                     hide_panel();
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
-                         && selected == 1)
+                         && selected < NUM_RESERVED_BUTTONS)
                 {
-                    comm.send_message("main_menu_action");
+                    switch(selected) {
+                        case 1:
+                            comm.send_message("main_menu_action");
+                            break;
+                        case 2:
+                            comm.send_message("list_worn_armor");
+                            break;
+                        case 3:
+                            comm.send_message("show_spell_library");
+                            break;
+                    }
+                    
                 }
+                
                 else if (game.get_input_mode() == enums.mouse_mode.COMMAND
                          && selected >= NUM_RESERVED_BUTTONS
                          && selected < filtered_inv.length + NUM_RESERVED_BUTTONS)
@@ -451,7 +467,11 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
         // TODO: select tile via something like c++ `tileidx_command`
         draw_action(gui, gui.PROMPT_NO, null, 0, adjusted_scale, selected == 0);
         draw_action(gui, gui.CMD_GAME_MENU, null, inc, adjusted_scale,
-                    selected == 1);
+            selected == 1);
+        draw_action(gui, gui.STARTUP_ARENA, null, inc*2, adjusted_scale,
+            selected == 2);
+        draw_action(main, main.BOOK_OFFSET_25, null, inc*3, adjusted_scale,
+            selected == 3);
 
         draw_glyphs = options.get("action_panel_glyphs");
 
@@ -462,6 +482,8 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             renderer.glyph_mode_font = options.get("glyph_mode_font");
             renderer.glyph_mode_update_font_metrics();
         }
+
+        filtered_inv.push()
 
         // Inventory items
         filtered_inv.slice(0, max_cells).forEach(function (item, idx) {
