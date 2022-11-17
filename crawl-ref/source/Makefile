@@ -1337,9 +1337,13 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
               $(TITLEIMGS:%=webserver/static/title_%.png) \
-              $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
+              $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js) \
+              webserver/webtiles/version.txt
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): build-rltiles
+
+webserver/webtiles/version.txt: .ver
+	@git describe $(MERGE_BASE) > webserver/webtiles/version.txt
 
 webserver/game_data/static/%.js: $(RLTILES)/%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/

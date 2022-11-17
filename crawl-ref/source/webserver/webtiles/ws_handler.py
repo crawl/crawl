@@ -345,6 +345,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     @admin_only
     def send_socket_stats(self):
+        import webtiles.server
+        self.send_message("admin_log", text=webtiles.server.version())
         self.send_message("admin_log", text=describe_sockets(True))
 
     @admin_required
