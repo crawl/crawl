@@ -18,7 +18,7 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
     var font; // cached font name for the canvas: size (in px) + family
     var draw_glyphs;
     var selected = -1;
-    const NUM_RESERVED_BUTTONS = 6;
+    const NUM_RESERVED_BUTTONS = 8;
 
     function send_options()
     {
@@ -177,6 +177,12 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                 break;
             case 5:
                 $tooltip.html("<span>Left click: show inventory</span>");
+                break;
+            case 6:
+                $tooltip.html("<span>Left click: show player status</span>");
+                break;
+            case 7:
+                $tooltip.html("<span>Left click: show skills</span>");
                 break;
             default:
                 var item = filtered_inv[slot];
@@ -344,6 +350,12 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
                         case 5:
                             comm.send_message("show_inventory");
                             break;
+                        case 6:
+                            comm.send_message("list_player_status");
+                            break;
+                        case 7:
+                            comm.send_message("show_skills");
+                            break;
                     }
                     
                 }
@@ -492,6 +504,11 @@ function ($, comm, client, cr, enums, options, player, icons, gui, main,
             selected == 4);
         draw_action(main, main.UNRAND_FENCERS, null, inc*5, adjusted_scale,
             selected == 5);
+        draw_action(main, main.UNSEEN_MONSTER, null, inc*6, adjusted_scale,
+            selected == 6);
+        draw_action(gui, gui.AIRSTRIKE, null, inc*7, adjusted_scale,
+            selected == 7);
+        
 
         draw_glyphs = options.get("action_panel_glyphs");
 
