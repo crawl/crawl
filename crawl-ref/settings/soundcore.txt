@@ -14,3 +14,12 @@ sound ^= WIELD_NOTHING:sheathWeapon.wav
 # Interacting with armor
 sound ^= EQUIP_ARMOUR:equipArmor.wav
 sound ^= DEQUIP_ARMOUR:unequipArmor.wav
+
+
+## Environment & Interactables
+
+# Opening a door
+sound ^= OPEN_DOOR:openDoor.wav
+
+# Shouting
+sount ^= SHOUT:shout.wav
