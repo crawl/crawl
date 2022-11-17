@@ -611,6 +611,14 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     {   
         process_command(CMD_DISPLAY_SPELLS);
     }
+    else if (msgtype == "show_inventory")
+    {
+        process_command(CMD_DISPLAY_INVENTORY);
+    }
+    else if (msgtype == "list_gold")
+    {
+        process_command(CMD_LIST_GOLD);
+    }
     
     return c;
 }
