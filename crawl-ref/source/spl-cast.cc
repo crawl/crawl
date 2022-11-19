@@ -237,8 +237,12 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
 
+    const string real_action = viewing ? "describe" : action;
+
     SpellMenu spell_menu;
-    string titlestring = make_stringf("%-25.25s", "Your spells");
+    const string titlestring = make_stringf("%-25.25s",
+            make_stringf("Your spells (%s)", real_action.c_str()).c_str());
+
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
@@ -254,7 +258,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE_REVERSE);
 
     string more_str = make_stringf("<lightgrey>Select a spell to %s</lightgrey>",
-        (viewing ? "describe" : action.c_str()));
+        real_action.c_str());
     string toggle_desc = menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE);
     if (toggle_with_I)
     {
