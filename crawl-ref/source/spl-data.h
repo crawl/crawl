@@ -2527,14 +2527,14 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_SUMMON_GUARDIAN_GOLEM, "Summon Guardian Golem",
+    SPELL_SUMMON_UNSTABLE_GOLEM, "Summon Unstable Golem",
     spschool::summoning | spschool::hexes,
     spflag::none,
     3,
     100,
     -1, -1,
     0,
-    TILEG_SUMMON_GUARDIAN_GOLEM,
+    TILEG_SUMMON_UNSTABLE_GOLEM,
 },
 
 {
