@@ -1514,11 +1514,10 @@ Summon Greater Demon spell
 
 Calls forth one of the greater demons of Pandemonium to serve the caster.
 %%%%
-Summon Guardian Golem spell
+Summon Unstable Golem spell
 
-Summons a protective golem. It redirects the injuries of its allies (but not
-the caster) to itself. When sufficiently damaged, it may fill with an inner
-flame, causing it to explode if destroyed. It gains more health at high power.
+Summons a golem filled with uncontrolled magical energy. When sufficiently damaged, it fill itself with an inner
+flame, causing it to explode if destroyed. It gains more health at high power, allowing it more time to prime its explosive blast.
 %%%%
 Summon Hell Beast spell
 
