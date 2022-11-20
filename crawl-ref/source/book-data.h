@@ -148,7 +148,7 @@ static const vector<spell_type> spellbook_templates[] =
 {   // Book of Callings
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_CALL_CANINE_FAMILIAR,
-    SPELL_SUMMON_GUARDIAN_GOLEM,
+    SPELL_SUMMON_UNSTABLE_GOLEM,
 },
 
 {   // Book of Maledictions
@@ -437,7 +437,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Dangerous Friends
-    SPELL_SUMMON_GUARDIAN_GOLEM,
+    SPELL_SUMMON_UNSTABLE_GOLEM,
     SPELL_IOOD,
     SPELL_SPELLFORGED_SERVITOR,
 },
