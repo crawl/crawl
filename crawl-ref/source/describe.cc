@@ -1619,7 +1619,7 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         case SPWPN_DISTORTION:
             description += "It warps and distorts space around it, and may "
                 "blink, banish, or inflict extra damage upon those it strikes. "
-                "Unwielding it can cause banishment or high damage.";
+                "Unwielding it can cause banishment or teleport you to foes.";
             break;
         case SPWPN_PENETRATION:
             description += "Any ammunition fired by it passes through the "
