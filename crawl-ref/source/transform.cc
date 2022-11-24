@@ -1463,6 +1463,10 @@ static bool _flying_in_new_form(transformation which_trans)
     if (!you.duration[DUR_FLIGHT] && !you.attribute[ATTR_PERM_FLIGHT])
         return false;
 
+    // tempflight (e.g. from potion) enabled, no need for equip check
+    if (you.duration[DUR_FLIGHT])
+        return true;
+
     // Finally, do the calculation about what would be melded: are there equip
     // sources left?
     int sources = you.equip_flight();
@@ -1535,7 +1539,7 @@ static bool _transformation_is_safe(transformation which_trans,
                                     dungeon_feature_type feat,
                                     string *fail_reason)
 {
-    if (!feat_dangerous_for_form(which_trans, feat) || you.duration[DUR_FLIGHT])
+    if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 
     if (fail_reason)

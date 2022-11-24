@@ -1478,8 +1478,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // dangerous.)
     if (abil.ability == ABIL_END_TRANSFORMATION)
     {
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos()))
-            && !you.duration[DUR_FLIGHT])
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
         {
             if (!quiet)
             {

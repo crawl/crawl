@@ -920,7 +920,6 @@ static monster_type _xom_random_demon(int sever)
 static bool _player_is_dead()
 {
     return you.hp <= 0
-        || is_feat_dangerous(env.grid(you.pos()))
         || you.did_escape_death();
 }
 
