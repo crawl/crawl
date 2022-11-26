@@ -879,10 +879,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         username, ok = auth.check_login_cookie(cookie)
         if ok:
             auth.forget_login_cookie(cookie)
-            self.logger.info("User %s logging in (via token).", username)
+            self.logger.info("User %s logging in from %s (via token).",
+                username, self.request.remote_ip)
             self.do_login(username)
         else:
-            self.logger.warning("Wrong login token for user %s.", username)
+            self.logger.warning("Wrong login token for user %s. (IP: %s)",
+                username, self.request.remote_ip)
             self.send_message("login_fail")
 
     def set_login_cookie(self):
