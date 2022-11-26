@@ -974,6 +974,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.go_lobby()
             return
 
+        if not self.username and not config.get('allow_anon_spectate'):
+            self.send_message("auth_error",
+                        reason="Anonymous spectating disabled")
+            self.go_lobby()
+            return
+
         from webtiles.process_handler import processes
         procs = [process for process in list(processes.values())
                  if process.username.lower() == username.lower()]

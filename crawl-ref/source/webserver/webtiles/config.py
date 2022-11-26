@@ -98,6 +98,7 @@ defaults = {
     'banned': [],
     'bot_accounts': False,
     'wizard_accounts': False,
+    'allow_anon_spectate': True,
 }
 
 
