@@ -380,13 +380,11 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
 
     if (!defend)
     {
-        // first, ranged weapons. note: this includes
+        // first, throwing weapons. note: this only includes
         // being empty-handed but having a missile quivered
         // TODO: handle non-missile quivered items?
         if (missile != -1 && you.inv[missile].base_type == OBJ_MISSILES
-            && (iweap && iweap->base_type == OBJ_WEAPONS &&
-                    is_range_weapon(*iweap)
-                || !iweap && missile != -1))
+            && !iweap)
         {
             ranged_attack attk(&you, &mon, &you.inv[missile], false);
             attk.simu = true;
@@ -397,6 +395,22 @@ static void _do_one_fsim_round(monster &mon, fight_data &fd, bool defend)
                 fd.player.hits++;
             }
             you.time_taken = you.attack_delay(&you.inv[missile]).roll();
+        }
+        // launchers
+        else if (iweap && iweap->base_type == OBJ_WEAPONS
+                && is_range_weapon(*iweap))
+        {
+            item_def fake_proj;
+            populate_fake_projectile(*iweap, fake_proj);
+            ranged_attack attk(&you, &mon, &fake_proj, false);
+            attk.simu = true;
+            attk.attack();
+            if (attk.ev_margin >= 0)
+            {
+                did_hit = true;
+                fd.player.hits++;
+            }
+            you.time_taken = you.attack_delay(&fake_proj).roll();
         }
         else // otherwise, melee combat
         {
