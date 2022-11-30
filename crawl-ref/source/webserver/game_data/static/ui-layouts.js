@@ -1071,6 +1071,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function ui_layouts_cleanup()
     {
+        ui_stack_handled = false;
         if (update_server_scroll_timeout)
         {
             clearTimeout(update_server_scroll_timeout);
