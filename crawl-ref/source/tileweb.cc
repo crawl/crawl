@@ -1065,10 +1065,14 @@ player_info::player_info()
  * @param force_full  If true, all properties will be updated in the json
  *                    regardless whether their values are the same as the
  *                    current info in m_current_player_info.
+ *
+ * Warning: `force_full` is only ever set to true when sending player info
+ * for spectators, and some details below make use of this semantics.
  */
 void TilesFramework::_send_player(bool force_full)
 {
     player_info& c = m_current_player_info;
+    const bool spectator = force_full;
     if (!c._state_ever_synced)
     {
         // force the initial sync to be full: otherwise the _update_blah
@@ -1162,7 +1166,7 @@ void TilesFramework::_send_player(bool force_full)
         // only send this for spectators; the javascript version of the time
         // indicator works somewhat differently than the local version
         // XX reconcile?
-        if (force_full)
+        if (spectator)
             tiles.json_write_int("time_last_input", you.elapsed_time_at_last_input);
 
         _update_int(force_full, c.num_turns, you.num_turns, "turn");
@@ -2120,6 +2124,9 @@ void TilesFramework::_send_messages()
  */
 void TilesFramework::_send_everything()
 {
+    // note: a player client will receive and process some of these messages,
+    // but not all. This function is currently never called except for
+    // spectators, and some of the semantics here reflect this.
     _send_version();
     send_options();
     _send_layout();
