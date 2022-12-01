@@ -861,7 +861,6 @@ function ($, comm, client, ui, enums, cr, util, options, scroller) {
 
     function handle_size_change()
     {
-        console.log(menu);
         if (!menu || menu.type == "crt")
             return;
 
