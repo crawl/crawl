@@ -1,6 +1,6 @@
-define(["jquery", "comm", "./enums", "./map_knowledge", "./messages",
+define(["jquery", "comm", "client", "./enums", "./map_knowledge", "./messages",
         "./options", "./util"],
-function ($, comm, enums, map_knowledge, messages, options, util) {
+function ($, comm, client, enums, map_knowledge, messages, options, util) {
     "use strict";
 
     var player = {}, last_time;
@@ -461,12 +461,27 @@ function ($, comm, enums, map_knowledge, messages, options, util) {
 
         $.extend(player, data);
 
-        if ("time" in data)
+        // chick if a forced player update has given us an explicit last
+        // time to show in the hud for spectators (only). Otherwise, this value
+        // is calculated on the client-side. (XX this works somewhat differently
+        // than the console/tiles view; reconcile?)
+        if ("time_last_input" in data)
+        {
+            // currently this message should *only* happen for spectators, but
+            // just to be sure..
+            // we don't want to do anything on this message to players,
+            // because the server value can get out of sync with what the js
+            // client is showing.
+            if (client.is_watching())
+                player.time_delta = player.time - player.time_last_input;
+
+            last_time = player.time;
+        }
+        else if ("time" in data)
         {
             if (last_time)
-            {
                 player.time_delta = player.time - last_time;
-            }
+
             last_time = player.time;
             messages.new_command(true);
         }

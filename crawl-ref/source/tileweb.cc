@@ -1158,6 +1158,13 @@ void TilesFramework::_send_player(bool force_full)
     if (you.running == 0) // Don't update during running/resting
     {
         _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
+
+        // only send this for spectators; the javascript version of the time
+        // indicator works somewhat differently than the local version
+        // XX reconcile?
+        if (force_full)
+            tiles.json_write_int("time_last_input", you.elapsed_time_at_last_input);
+
         _update_int(force_full, c.num_turns, you.num_turns, "turn");
     }
 
