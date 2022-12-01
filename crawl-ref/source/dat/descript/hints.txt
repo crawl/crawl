@@ -281,14 +281,14 @@ the item in your <w>$cmd[CMD_DISPLAY_INVENTORY]</w>nventory to see more
 information.
 
 {{
-    if crawl.hints_type() = "hunter" then
+    if crawl.hints_type() == "ranger" then
         return "As you're already trained in Ranged Weapons, you don't really "
                .. "need another type of ranged attack."
-    elseif crawl.hints_type() = "magic" then
+    elseif crawl.hints_type() == "magic" then
         return "However, as a spellslinger, you don't really need another type"
                .. " of ranged attack."
     else
-        return "";
+        return ""
     end
 }}
 %%%%
