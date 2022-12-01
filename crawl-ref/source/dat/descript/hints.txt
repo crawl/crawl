@@ -533,9 +533,10 @@ damage of blades and ranged weapons.
 %%%%
 HINT_MALEVOLENCE
 
-As you explore the dungeon and reveal new tiles, bad things will sometimes
-rnadomly happen to you. When this happens, pause, think carefully, and be ready
-to use consumables or abilities. Fight to survive!"
+As you explore the dungeon and reveal new tiles, the malevolent forces of the
+dungeon may randomly cause bad things to happen to you. When this happens,
+pause, think carefully, and be ready to use consumables or abilities. Fight to
+survive!"
 %%%%
 HINT_OPPORTUNITY_ATTACK
 
