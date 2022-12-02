@@ -951,19 +951,32 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def _on_process_error(self, line): # type: (str) -> None
         morgue_url = self.game_params.templated("morgue_url", username=self.username)
+        # The msg this is parsing can be found in dbg-asrt.cc:do_crash_dump
+        # this is run line-by-line, so multi-line errors (the norm) may trigger
+        # this call more than once
         if line.startswith("ERROR"):
+            # header line, e.g. `ERROR in 'wizard.cc' at line 79: Intentional crash`
             self.exit_reason = "crash"
             if line.rfind(":") != -1:
                 self.exit_message = line[line.rfind(":") + 1:].strip()
+        elif line.find("crash report: ") >= 0:
+            self.exit_reason = "crash"
+            if morgue_url:
+                match = re.search(r"crash report: (.*)", line)
+                if match is not None and match.group(1):
+                    self.exit_dump_url = morgue_url
+                    self.exit_dump_url += os.path.splitext(os.path.basename(match.group(1)))[0]
         elif line.startswith("We crashed!"):
+            # before 0.19-a0-1226-g81ff5c4599 everything was on one line; this
+            # line prefix is still present but the match below fails.
             self.exit_reason = "crash"
             if morgue_url:
                 match = re.search(r"\(([^)]+)\)", line)
                 if match is not None:
                     self.exit_dump_url = morgue_url
                     self.exit_dump_url += os.path.splitext(os.path.basename(match.group(1)))[0]
-                    print(self.exit_dump_url)
-        elif line.startswith("Writing crash info to"): # before 0.15-b1-84-gded71f8
+        elif line.startswith("Writing crash info to"):
+            # before 0.15-b1-84-gded71f8 the message was very minimal
             self.exit_reason = "crash"
             if morgue_url:
                 url = None
