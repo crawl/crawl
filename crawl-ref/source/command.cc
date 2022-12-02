@@ -51,11 +51,11 @@ static const char *features[] =
 #endif
 
 #ifdef USE_TILE_LOCAL
-    "Tile support",
+    "Tiles support",
 #endif
 
 #ifdef USE_TILE_WEB
-    "Web Tile support",
+    "Webtiles support",
 #endif
 
 #ifdef WIZARD
@@ -85,7 +85,8 @@ static const char *features[] =
 
 static string _get_version_information()
 {
-    string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>";
+    string result = string("This is <w>" CRAWL " ") + Version::Long
+        + " (" CRAWL_BUILD_NAME ")</w>";
     return result;
 }
 
@@ -110,6 +111,8 @@ static string _get_version_features()
         result += Version::history();
         result += "\n\n";
     }
+
+    result += "Report bugs to: <w>" CRAWL_BUG_REPORT "</w>\n\n";
 
     result += "<w>Features</w>\n"
                  "--------\n";

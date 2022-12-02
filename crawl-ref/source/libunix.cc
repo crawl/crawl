@@ -37,6 +37,7 @@
 #include "state.h"
 #include "tiles-build-specific.h"
 #include "unicode.h"
+#include "version.h"
 #include "view.h"
 #include "ui.h"
 
@@ -1192,15 +1193,7 @@ static bool curs_can_use_extended_colors()
 }
 
 lib_display_info::lib_display_info()
-    : type(
-#ifdef USE_TILE_WEB
-        "Console/Webtiles"
-#elif defined(USE_TILE_LOCAL)
-        "SDL Tiles"
-#else
-        "Console"
-#endif
-        ),
+    : type(CRAWL_BUILD_NAME),
     term(termname()),
     fg_colors(
         (curs_can_use_extended_colors()
