@@ -5420,7 +5420,8 @@ spret hepliaklqana_transference(bool fail)
 
     const bool victim_immovable
         = victim && (mons_is_tentacle_or_tentacle_segment(victim->type)
-                     || victim->is_stationary());
+                     || victim->is_stationary()
+                     || mons_is_projectile(victim->type));
     if (victim_visible && victim_immovable)
     {
         mpr("You can't transfer that.");
