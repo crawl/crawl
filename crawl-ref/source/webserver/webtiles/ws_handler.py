@@ -72,7 +72,7 @@ def describe_sockets(names=False):
 
     if names:
         # this is all a bit brute-force
-        watchers = list_of_names([s for s in slist if s.watched_game and s.username])
+        watchers = list_of_names([s.username for s in slist if s.watched_game and s.username])
         if watchers:
             summary += "; Watchers: %s" % watchers
         lobby_names = list_of_names([s.username for s in lobby if s.username and not s.account_restricted()])
