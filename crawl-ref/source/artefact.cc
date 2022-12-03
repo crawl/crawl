@@ -612,7 +612,7 @@ struct artefact_prop_data
 };
 
 /// Generate 'good' values for stat artps (e.g. ARTP_STRENGTH)
-static int _gen_good_stat_artp() { return 1 + random2(3); }
+static int _gen_good_stat_artp() { return 1 + coinflip() + one_chance_in(4); }
 
 /// Generate 'bad' values for stat artps (e.g. ARTP_STRENGTH)
 static int _gen_bad_stat_artp() { return -2 - random2(4); }
