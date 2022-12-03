@@ -1343,6 +1343,11 @@ static bool _accept_mutation(mutation_type mutat, bool temp, bool ignore_weight)
     if (you.get_base_mutation_level(mutat) >= mdef.levels)
         return false;
 
+    // don't let random good mutations cause stat 0. Note: various code paths,
+    // including jiyva-specific muts, and innate muts, don't include this check!
+    if (_mut_has_use(mdef, mutflag::good) && mutation_causes_stat_zero(mutat))
+        return false;
+
     if (ignore_weight)
         return true;
 

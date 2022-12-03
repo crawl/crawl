@@ -1,6 +1,7 @@
 #pragma once
 
 #include "duration-type.h"
+#include "mutation-type.h"
 #include "stat-type.h"
 
 enum stat_desc_type
@@ -31,5 +32,6 @@ bool restore_stat(stat_type which_stat, int stat_gain,
 duration_type stat_zero_duration(stat_type stat);
 bool have_stat_zero();
 void update_stat_zero(int time);
+bool mutation_causes_stat_zero(mutation_type mut);
 
 int innate_stat(stat_type s);
