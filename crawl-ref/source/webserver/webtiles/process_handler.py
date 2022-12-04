@@ -180,7 +180,7 @@ class CrawlProcessHandlerBase(object):
         for receiver in self._receivers:
             receiver.flush_messages()
 
-    def write_to_all(self, msg, send): # type: (str, bool) -> None
+    def handle_process_message(self, msg, send): # type: (str, bool) -> None
         for receiver in self._receivers:
             receiver.append_message(msg, send)
 
@@ -1008,6 +1008,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self.send_client_to_all()
             elif msgobj["msg"] == "flush_messages":
                 # only queue, once we know the crawl process asks for flushes
+                # note: every version since 0.13 supports this
                 self.queue_messages = True;
                 self.flush_messages_to_all()
             elif msgobj["msg"] == "dump":
@@ -1042,7 +1043,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 # want that to reset idle time.
                 self.note_activity()
 
-            self.write_to_all(msg, not self.queue_messages)
+            self.handle_process_message(msg, not self.queue_messages)
 
 
 

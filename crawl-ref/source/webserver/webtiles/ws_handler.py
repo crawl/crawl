@@ -276,6 +276,10 @@ def admin_only(f):
     return wrapper
 
 
+# XX add defaults when we can be sure the python version supports it
+MessageBundle = collections.namedtuple('MessageBundle', ["binmsg", "compressed"])
+MessageBundle.__bool__ = lambda self: bool(self.binmsg)
+
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
@@ -1225,30 +1229,46 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                 excerpt, trunc,
                                 exc_info=True)
 
-    def flush_messages(self):
-        # type: () -> bool
-        if self.client_closed or len(self.message_queue) == 0:
-            return False
-        msg = ("{\"msgs\":["
-                + ",".join(self.message_queue)
-                + "]}")
-        self.message_queue = []
-
+    def _encode_for_send(self, msg, deflate):
         try:
             binmsg = utf8(msg)
-            self.total_message_bytes += len(binmsg)
-            if self.deflate:
+            if deflate:
                 # Compress like in deflate-frame extension:
                 # Apply deflate, flush, then remove the 00 00 FF FF
                 # at the end
+                # note: a compressed stream is stateful, you can't use this
+                # compressobj for other sockets
                 compressed = self._compressobj.compress(binmsg)
                 compressed += self._compressobj.flush(zlib.Z_SYNC_FLUSH)
                 compressed = compressed[:-4]
-                self.compressed_bytes_sent += len(compressed)
-                f = self.write_message(compressed, binary=True)
+                return MessageBundle(binmsg, compressed)
             else:
-                self.uncompressed_bytes_sent += len(binmsg)
-                f = self.write_message(binmsg)
+                return MessageBundle(binmsg, None)
+        except:
+            # might happen with weird utf-8 stuff...can this be handled more
+            # precisely?
+            self.logger.warning("Exception trying to encode message.", exc_info = True)
+            return MessageBundle(None, None)
+
+
+    # send a single message batch, encoding and compressing it if necessary
+    def _send_raw_message(self, msg):
+        if self.client_closed or not msg:
+            return False
+
+        bundle = self._encode_for_send(msg, self.deflate)
+        if not bundle:
+            self.failed_messages += 1
+            return False
+
+        try:
+            self.total_message_bytes += len(bundle.binmsg)
+            if self.deflate:
+                self.compressed_bytes_sent += len(bundle.compressed)
+                f = self.write_message(bundle.compressed, binary=True)
+            else:
+                self.uncompressed_bytes_sent += len(bundle.binmsg)
+                f = self.write_message(bundle.binmsg)
 
             import traceback
             cur_stack = traceback.format_stack()
@@ -1295,6 +1315,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.ws_connection is not None:
                 self.ws_connection._abort()
             return False
+
+    # send anything in the per-socket queue
+    def flush_messages(self):
+        # type: () -> bool
+        if self.client_closed or len(self.message_queue) == 0:
+            return False
+
+        batch = ("{\"msgs\":["
+            + ",".join(self.message_queue)
+            + "]}")
+        self.message_queue = [] # always empty the queue
+        return self._send_raw_message(batch)
 
     # n.b. this looks a lot like superclass write_message, but has a static
     # type signature that is not compatible with it, so we do not override
