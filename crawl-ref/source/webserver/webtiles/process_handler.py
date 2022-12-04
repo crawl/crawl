@@ -315,7 +315,9 @@ class CrawlProcessHandlerBase(object):
                 watcher.send_message("game_ended", reason = self.exit_reason,
                                      message = self.exit_message,
                                      dump = self.exit_dump_url)
-                watcher.go_lobby()
+                # these are individually ok, but with a lot of spectators,
+                # doing them in a big loop can easily add up to 100s of ms
+                IOLoop.current().add_callback(watcher.go_lobby)
 
         if self.end_callback:
             self.end_callback()

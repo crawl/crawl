@@ -98,6 +98,24 @@ def set_slow_callback_logging(slow_duration):
             _original_asyncio_run = None
         return
 
+    # regular asyncio.Handle objects unfortunately delete most of their useful
+    # info when they are canceled. When debugging a blocking canceled Handle
+    # (which can definitely happen!) the best workaround I've found is to
+    # use the following fairly insane monkeypatch, adding any extra info
+    # to what is cached as needed, and printing it below. This is a huge
+    # memory leak if used for anything other than debugging. (Note that
+    # handle instances are largely read-only, hence the cache here.)
+
+    # old_cancel = asyncio.Handle.cancel
+    # canceled_handles = {}
+    # def mpcancel(self):
+    #     from tornado.platform.asyncio import BaseAsyncIOLoop
+    #     old_repr_info = ["Cancelled"] + self._repr_info()
+    #     old_cancel(self)
+    #     canceled_handles[self] = old_repr_info
+
+    # asyncio.Handle.cancel = mpcancel
+
     # the default repr call for asyncio Handles will limit argument strings
     # substantially (default, 20 chars) via reprlib, making it impossible to
     # get any useful info.
