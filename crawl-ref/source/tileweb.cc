@@ -1865,6 +1865,8 @@ void TilesFramework::_send_map(bool force_full)
     json_write_string("msg", "map");
     json_treat_as_empty();
 
+    // cautionary note: this is used in heuristic ways in process_handler.py,
+    // see `_is_full_map_msg`
     if (force_full)
         json_write_bool("clear", true);
 

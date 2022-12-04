@@ -180,7 +180,26 @@ class CrawlProcessHandlerBase(object):
         for receiver in self._receivers:
             receiver.flush_messages()
 
+    def _is_full_map_msg(self, msg):
+        # heuristic: map bundles can be very large (100k+), so we don't want to
+        # decode. But the crawl process is guaranteed to put some key info
+        # first. Use some brute force regexes to check it.
+        tocheck = msg[0:50]
+        return (re.search(r'"msg" *: *"map"', tocheck)
+                and re.search(r'"clear" *: *true', tocheck))
+
     def handle_process_message(self, msg, send): # type: (str, bool) -> None
+        # special handling for map messages on a new spectator: these can be
+        # massive, and the deflate time adds up, so only send it to new
+        # spectators. This is all a bit heuristic, and probably could use
+        # a new control message instead...
+        # TODO: if multiple spectators join at the same time, it's probably
+        # possible for this heuristic to fail and send a full map to everyone
+        if self._fresh_watchers and self._is_full_map_msg(msg):
+            for w in self._fresh_watchers:
+                w.append_message(msg, send)
+            self._fresh_watchers = set()
+            return
         for receiver in self._receivers:
             receiver.append_message(msg, send)
 
@@ -627,6 +646,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._purging_timer = None
         self._process_hup_timeout = None
 
+        self._fresh_watchers = set()
+
     def start(self):
         self._purge_locks_and_start(True)
 
@@ -894,6 +915,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         super(CrawlProcessHandler, self).add_watcher(watcher)
 
         if self.conn and self.conn.open:
+            self._fresh_watchers.add(watcher)
             self.conn.send_message('{"msg":"spectator_joined"}')
 
     def handle_input(self, msg): # type: (str) -> None
