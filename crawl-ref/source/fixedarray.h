@@ -42,9 +42,13 @@ public:
 
     FixedArray(const FixedArray &other)
     {
-        for (int i = 0; i < width(); i++)
-            for (int j = 0; j < height(); j++)
-                (*this)[i][j] = other[i][j];
+        copy(other);
+    }
+
+    FixedArray& operator = (const FixedArray &other)
+    {
+        copy(other);
+        return *this;
     }
 
 public:
@@ -93,6 +97,14 @@ public:
 
 protected:
     FixedVector<Column, WIDTH> mData;
+
+
+    void copy(const FixedArray &other)
+    {
+        for (int i = 0; i < width(); i++)
+            for (int j = 0; j < height(); j++)
+                (*this)[i][j] = other[i][j];
+    }
 };
 
 // A fixed array centered around the origin.
