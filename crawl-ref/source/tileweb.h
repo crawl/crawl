@@ -81,6 +81,7 @@ struct player_info
     vector<status_info> status;
 
     FixedVector<item_def, ENDOFPACK> inv;
+    FixedVector<bool, ENDOFPACK> inv_uselessness;
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
     string quiver_desc;
@@ -329,6 +330,7 @@ protected:
                        bool force_full);
     void _send_player(bool force_full = false);
     void _send_item(item_def& current, const item_def& next,
+                    bool& current_uselessness,
                     bool force_full);
     void _send_messages();
 };

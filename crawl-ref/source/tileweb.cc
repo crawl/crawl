@@ -1225,7 +1225,7 @@ void TilesFramework::_send_player(bool force_full)
         item_def item = get_item_known_info(you.inv[i]);
         if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.corrosion_amount())
             item.plus -= 4 * you.corrosion_amount();
-        _send_item(c.inv[i], item, force_full);
+        _send_item(c.inv[i], item, c.inv_uselessness[i], force_full);
         json_close_object(true);
     }
     json_close_object(true);
@@ -1293,6 +1293,7 @@ static string _qty_field_name(const item_def &item)
 }
 
 void TilesFramework::_send_item(item_def& current, const item_def& next,
+                                bool& current_uselessness,
                                 bool force_full)
 {
     bool changed = false;
@@ -1349,6 +1350,9 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     changed |= (current.special != next.special);
 
     // Derived stuff
+    changed |= _update_int(force_full, current_uselessness,
+                           is_useless_item(next, true), "useless");
+
     if (changed && defined)
     {
         string name = next.name(DESC_A, true, false, true);
