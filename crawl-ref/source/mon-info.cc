@@ -722,7 +722,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->has_ghost_brand())
         props[SPECIAL_WEAPON_KEY] = m->ghost_brand();
 
-    ghost_colour = m->ghost ? m->ghost->colour : COLOUR_INHERIT;
+    ghost_colour = m->ghost ? m->ghost->colour : (colour_t)COLOUR_INHERIT;
 
     // book loading for player ghost and vault monsters
     spells.clear();

@@ -194,12 +194,16 @@ const int AGILITY_BONUS = 5;
 
 #define MAX_MONSTER_HP 10000
 
+// Many, MANY places currently hard-code this to 8 bits, but we need to
+// expand it. Please use colour_t in new code.
+typedef uint8_t colour_t;
+
 // colours, such pretty colours ...
 // The order is important (IRGB bit patterns).
-enum COLOURS
+enum COLOURS : colour_t
 {
-    COLOUR_INHERIT = -1,
-    BLACK,
+    COLOUR_INHERIT = (colour_t)-1,
+    BLACK = 0,
     COLOUR_UNDEF = BLACK,
     BLUE,
     GREEN,
@@ -220,10 +224,6 @@ enum COLOURS
     WHITE,
     NUM_TERM_COLOURS
 };
-
-// Many, MANY places currently hard-code this to 8 bits, but we need to
-// expand it. Please use colour_t in new code.
-typedef uint8_t colour_t;
 
 // Colour options... these are used as bit flags along with the colour
 // value in the low byte.
