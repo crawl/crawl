@@ -3194,6 +3194,11 @@ string cannot_read_item_reason(const item_def *item)
                 return "You cannot coerce anything to answer your summons.";
             return "";
 
+        case SCR_MAGIC_MAPPING:
+            if (!is_map_persistent())
+                return "It would have no effect in this place.";
+            return "";
+
 #if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON:
             if (!you.weapon())
@@ -3663,12 +3668,6 @@ void read(item_def* scroll, dist *target)
     }
 
     case SCR_MAGIC_MAPPING:
-        if (alreadyknown && !is_map_persistent())
-        {
-            cancel_scroll = true;
-            mpr("It would have no effect in this place.");
-            break;
-        }
         mpr(pre_succ_msg);
         magic_mapping(500, 100, false);
         break;
