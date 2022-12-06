@@ -5098,6 +5098,7 @@ player::player()
     temp_mutation.init(0);
     demonic_traits.clear();
     sacrifices.init(0);
+    sacrifice_piety.init(0);
 
     magic_contamination = 0;
 
