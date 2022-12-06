@@ -3194,6 +3194,12 @@ string cannot_read_item_reason(const item_def *item)
                 return "You cannot coerce anything to answer your summons.";
             return "";
 
+        case SCR_FOG:
+        case SCR_POISON:
+            if (env.level_state & LSTATE_STILL_WINDS)
+                return "The air is too still for clouds to form.";
+            return "";
+
         case SCR_MAGIC_MAPPING:
             if (!is_map_persistent())
                 return "It would have no effect in this place.";
@@ -3655,12 +3661,6 @@ void read(item_def* scroll, dist *target)
 
     case SCR_FOG:
     {
-        if (alreadyknown && (env.level_state & LSTATE_STILL_WINDS))
-        {
-            mpr("The air is too still for clouds to form.");
-            cancel_scroll = true;
-            break;
-        }
         mpr("The scroll dissolves into smoke.");
         auto smoke = random_smoke_type();
         big_cloud(smoke, &you, you.pos(), 50, 8 + random2(8));

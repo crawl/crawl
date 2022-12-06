@@ -2927,9 +2927,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_ENCHANT_ARMOUR:
         case SCR_BRAND_WEAPON:
             return you.has_mutation(MUT_NO_GRASPING);
-        case SCR_FOG:
-        case SCR_POISON:
-            return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
             return you.props.exists(IDENTIFIED_ALL_KEY)
                    || have_passive(passive_t::identify_items);
