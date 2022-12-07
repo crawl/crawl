@@ -630,7 +630,7 @@ DESCRIP:  It enhances your fire, ice, earth and air magic.
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
 TYPE:     heavy crossbow
-PLUS:     +9
+PLUS:     +27
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
 TILE_EQ:  sniper
