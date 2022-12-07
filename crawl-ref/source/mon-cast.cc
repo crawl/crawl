@@ -5189,10 +5189,12 @@ static void _cast_resonance_strike(monster &caster, mon_spell_slot, bolt&)
     if (!target)
         return;
 
+    // base damage 3d(spell hd)
+    const int pow = caster.spell_hd(SPELL_RESONANCE_STRIKE);
+    dice_def dice = resonance_strike_base_damage(pow);
+    // + 1 die for every 2 adjacent constructs, up to a total of 7 dice when
+    // fully surrounded by 8 constructs
     const int constructs = _count_nearby_constructs(caster, target->pos());
-    // base damage 3d(spell hd) (probably 3d12)
-    // + 1 die for every 2 adjacent constructs (so at 4 constructs, 5dhd)
-    dice_def dice = resonance_strike_base_damage(caster);
     dice.num += div_rand_round(constructs, 2);
     const int dam = target->apply_ac(dice.roll());
     const string constructs_desc
@@ -5252,9 +5254,9 @@ dice_def waterstrike_damage(int spell_hd)
  * How much damage does the given monster do when casting Resonance Strike,
  * assuming no allied constructs are boosting damage?
  */
-dice_def resonance_strike_base_damage(const monster &mons)
+dice_def resonance_strike_base_damage(int spell_hd)
 {
-    return dice_def(3, mons.spell_hd(SPELL_RESONANCE_STRIKE));
+    return dice_def(3, spell_hd);
 }
 
 static const int MIN_DREAM_SUCCESS_POWER = 25;

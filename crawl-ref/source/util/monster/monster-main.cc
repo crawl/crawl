@@ -319,6 +319,13 @@ static string mi_calc_irradiate_damage(const monster &mon)
     return dice_def_string(irradiate_damage(pow));
 }
 
+static string mi_calc_resonance_strike_damage(monster* mons)
+{
+    const int pow = mons->spell_hd(SPELL_RESONANCE_STRIKE);
+    dice_def dice = resonance_strike_base_damage(pow);
+    return describe_resonance_strike_dam(dice);
+}
+
 /**
  * @return e.g.: "2d6", "5-12".
  */
@@ -350,8 +357,7 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
             break;
         case SPELL_RESONANCE_STRIKE:
-            return dice_def_string(resonance_strike_base_damage(*monster))
-                   + "+"; // could clarify further?
+            return mi_calc_resonance_strike_damage(monster);
         case SPELL_IOOD:
             spell_beam.damage = mi_calc_iood_damage(monster);
             break;

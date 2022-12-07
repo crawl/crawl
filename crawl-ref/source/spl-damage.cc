@@ -1014,6 +1014,11 @@ string describe_airstrike_dam(dice_def dice)
                         dice.size + MAX_AIRSTRIKE_BONUS);
 }
 
+string describe_resonance_strike_dam(dice_def dice)
+{
+    return make_stringf("(%d-%d)d%d", dice.num, dice.num + 4, dice.size);
+}
+
 spret cast_momentum_strike(int pow, coord_def target, bool fail)
 {
     if (cell_is_solid(target))
