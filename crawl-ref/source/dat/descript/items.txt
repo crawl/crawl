@@ -1317,8 +1317,8 @@ A magical device which throws little puffs of flame.
 %%%%
 wand of iceblast
 
-A magical device which creates a loud explosion of ice shards, partially
-harming even creatures resistant to cold.
+A magical device which creates a loud explosion of ice shards, bypassing half
+of victims' resistance to cold.
 %%%%
 wand of light
 

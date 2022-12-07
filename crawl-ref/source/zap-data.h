@@ -267,7 +267,7 @@ static const zap_info zap_data[] =
     new tohit_calculator<5, 1, 3>,
     WHITE,
     false,
-    BEAM_ICE, // rC capped at 40%, use ZAP_FLASH_FREEZE if you don't want this
+    BEAM_ICE, // rC capped at 50%, use ZAP_FLASH_FREEZE if you don't want this
     DCHAR_FIRED_ZAP,
     false,
     false,

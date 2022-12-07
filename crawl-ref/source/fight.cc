@@ -553,25 +553,13 @@ static inline int get_resistible_fraction(beam_type flavour)
 {
     switch (flavour)
     {
-    // Drowning damage from water is resistible by being a water thing, or
-    // otherwise asphyx resistant.
     case BEAM_WATER:
-        return 40;
-
-    // Assume ice storm and throw icicle are mostly solid.
     case BEAM_ICE:
-        return 40;
-
-    // 50/50 split of elec and sonic damage.
     case BEAM_THUNDER:
-        return 50;
-
     case BEAM_LAVA:
-        return 55;
-
+        return 50;
     case BEAM_POISON_ARROW:
         return 70;
-
     default:
         return 100;
     }

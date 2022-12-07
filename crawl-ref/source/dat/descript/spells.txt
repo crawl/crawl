@@ -209,8 +209,8 @@ Fires a penetrating bolt of flames.
 %%%%
 Bolt of Magma spell
 
-Fires a penetrating bolt of molten rock. A portion of its damage bypasses
-fire resistance.
+Fires a penetrating bolt of molten rock. Half of its damage bypasses fire
+resistance.
 %%%%
 Borgnjor's Revivification spell
 
@@ -600,8 +600,8 @@ Breathes a blast of fire at a targeted creature.
 Fire Storm spell
 
 Calls forth a mighty storm of roaring flame directly onto the target, dealing
-damage in a large area and leaving behind short-lived fire vortices. A portion
-of its damage bypasses fire resistance.
+damage in a large area and leaving behind short-lived fire vortices. Half of
+its damage bypasses fire resistance.
 %%%%
 Fire Summon spell
 
@@ -628,7 +628,7 @@ Conjures up a large cloud of roaring flames.
 Flash Freeze spell
 
 Freezes the air around a target, causing significant harm and slowing the
-target's movement. A portion of its damage bypasses cold resistance. It has no
+target's movement. Half of its damage bypasses cold resistance. It has no
 effect on targets that are already frozen.
 %%%%
 Force Lance spell
@@ -698,8 +698,8 @@ Glaciate spell
 Conjures forth a mighty blast of ice. Creatures within its cone-shaped area of
 effect take damage, with higher damage being dealt to those close to the
 caster. Those hit by the blast are encased in ice, slowing their movement, and
-those killed by the blast may be frozen into solid blocks of ice. A significant
-portion of its damage bypasses cold resistance.
+those killed by the blast may be frozen into solid blocks of ice. Half of its
+damage bypasses cold resistance.
 %%%%
 Grasping Roots spell
 
@@ -715,8 +715,8 @@ Hailstorm spell
 
 Conjures a cannonade of hail, battering nearby creatures that fail to dodge.
 The eye of the storm is wide enough that monsters adjacent to the caster are
-unaffected. Due to the strong impact and cutting edges, a significant portion
-of its damage bypasses cold resistance.
+unaffected. Due to the strong impact and cutting edges, half of its damage
+bypasses cold resistance.
 %%%%
 Haste Other spell
 
@@ -1135,7 +1135,7 @@ the target before dispersing.
 Polar Vortex spell
 
 Turns the air around the caster into a freezing vortex, doing tremendous damage
-to everyone caught in it that can only partially be mitigated by resistance to
+to everyone caught in it that can only be half-mitigated by resistance to
 cold. Those affected will also be swept up into the air and tossed around.
 Only the eye of the storm is a safe place, and it follows the caster. The
 vortex is unable to follow the caster through long-distance translocations.
@@ -1346,7 +1346,7 @@ Spits acid at a targeted creature.
 %%%%
 Spit Lava spell
 
-Spits lava at a targeted creature.
+Spits lava at a targeted creature. Half of its damage bypasses fire resistance.
 %%%%
 Spit Poison spell
 
@@ -1647,8 +1647,8 @@ Throws a small puff of frost.
 %%%%
 Throw Icicle spell
 
-Fires a shard of ice. Due to its strong impact and cutting edges, a
-significant portion of its damage bypasses cold resistance.
+Fires a shard of ice. Due to its strong impact and cutting edges, half of its
+damage bypasses cold resistance.
 %%%%
 Throw Klown Pie spell
 
