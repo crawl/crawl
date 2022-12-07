@@ -77,7 +77,7 @@ static const char *conducts[] =
     "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
     "Spell Practise", "Cannibalism", "Deliberate Mutation",
     "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
-    "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary",
+    "Kill Slime", "Was Hasty", "Attack In Sanctuary",
     "Kill Artificial", "Exploration", "Seen Monster",
     "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
@@ -383,10 +383,6 @@ static peeve_map divine_peeves[] =
     },
     // GOD_FEDHAS,
     {
-        { DID_KILL_PLANT, {
-            "you destroy plants", false,
-            1, 0
-        } },
         { DID_ATTACK_FRIEND, _on_attack_friend(nullptr) },
     },
     // GOD_CHEIBRIADOS,

@@ -477,10 +477,6 @@ static void _spread_fire(const cloud_struct &cloud)
         env.cloud[*ai] = cloud;
         env.cloud[*ai].pos = *ai;
         env.cloud[*ai].decay = random2(30) + 25;
-        if (cloud.whose == KC_YOU)
-            did_god_conduct(DID_KILL_PLANT, 1);
-        else if (cloud.whose == KC_FRIENDLY && !crawl_state.game_is_arena())
-            did_god_conduct(DID_KILL_PLANT, 1);
 
     }
 }
