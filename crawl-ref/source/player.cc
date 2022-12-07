@@ -455,12 +455,60 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     return swap;
 }
 
-static void _splash()
+bool player::slow_in_water() const
 {
-    if (you.can_swim())
-        noisy(4, you.pos(), "Floosh!");
-    else if (!you.can_water_walk())
-        noisy(8, you.pos(), "Splash!");
+    return !you.can_swim()
+        && you.body_size(PSIZE_BODY) <= SIZE_MEDIUM;
+}
+
+static void _maybe_sink(dungeon_feature_type old_feat,
+                        dungeon_feature_type new_grid)
+{
+    if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
+        mpr("You sink to the bottom.");
+}
+
+static void _enter_water(dungeon_feature_type old_feat,
+                         dungeon_feature_type new_grid, bool stepped)
+{
+    if (you.can_water_walk())
+        return;
+
+    // This is ridiculous.
+    if (!stepped)
+    {
+        if (you.can_swim())
+            noisy(4, you.pos(), "Floosh!");
+        else
+            noisy(8, you.pos(), "Splash!");
+    }
+
+    // Most of these messages are irrelevant when you're already in the water.
+    // Merfolk also special-case most relevant messages.
+    if (feat_is_water(old_feat) || you.fishtail)
+    {
+        _maybe_sink(old_feat, new_grid);
+        return;
+    }
+
+    if (new_grid == DNGN_TOXIC_BOG)
+        mprf("You %s the toxic bog.", stepped ? "enter" : "fall into");
+    else
+    {
+        mprf("You %s the %s water.",
+             stepped ? "enter" : "fall into",
+             new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+    }
+
+    _maybe_sink(old_feat, new_grid);
+
+    if (you.slow_in_water())
+    {
+        mpr("Moving in this stuff is going to be slow.");
+        if (you.invisible())
+            mpr("...and don't expect to remain undetected.");
+    } else if (you.invisible())
+        mpr("Don't expect to remain undetected while in the water.");
 }
 
 void moveto_location_effects(dungeon_feature_type old_feat,
@@ -479,46 +527,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (you.ground_level())
     {
         if (feat_is_water(new_grid))
-        {
-            if (!stepped)
-                _splash();
-
-            if (!you.can_swim() && !you.can_water_walk())
-            {
-                if (!feat_is_water(old_feat))
-                {
-                    if (new_grid == DNGN_TOXIC_BOG)
-                    {
-                        mprf("You %s the toxic bog.",
-                                stepped ? "enter" : "fall into");
-                    }
-                    else
-                    {
-                        mprf("You %s the %s water.",
-                             stepped ? "enter" : "fall into",
-                             new_grid == DNGN_SHALLOW_WATER ? "shallow"
-                             : "deep");
-                    }
-                }
-
-                if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
-                    mpr("You sink to the bottom.");
-
-                if (!feat_is_water(old_feat))
-                {
-                    mpr("Moving in this stuff is going to be slow.");
-                    if (you.invisible())
-                        mpr("...and don't expect to remain undetected.");
-                }
-            }
-
-            if ((you.can_swim() || you.extra_balanced())
-                && !feat_is_water(old_feat)
-                && you.invisible())
-            {
-                mpr("Don't expect to remain undetected while in the water.");
-            }
-        }
+            _enter_water(old_feat, new_grid, stepped);
         else if (you.props.exists(TEMP_WATERWALK_KEY))
             you.props.erase(TEMP_WATERWALK_KEY);
     }
@@ -1789,7 +1798,7 @@ int player_movement_speed(bool check_terrain)
     {
         if (you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
             mv -= 4;
-        else if (you.in_water() && !you.can_swim())
+        else if (you.in_water() && you.slow_in_water())
             mv += 6; // Wading through water is very slow.
     }
 
