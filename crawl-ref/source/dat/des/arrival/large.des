@@ -1168,24 +1168,25 @@ cccccccc+c+c+cccccccc
         ccccc
 ENDMAP
 
-NAME:	tekkud_arrival_beachfront_property
-TAGS:	arrival no_monster_gen no_trap_gen no_pool_fixup	
-ORIENT:	north
-FTILE:  '_t{ = floor_sand
-KFEAT:  z = open_sea
-KFEAT:	_ = abandoned_shop
+NAME:   tekkud_arrival_beachfront_property
+TAGS:   arrival no_monster_gen no_trap_gen no_pool_fixup
+ORIENT: north
 KMASK:  .T = no_item_gen
-MARKER:  W = lua:fog_machine{ \
-             pow_max = 8, delay_min = 50, delay_max = 200, \
-             size = 4, start_clouds = 1}
+KFEAT:  z = open_sea
+KFEAT:  _ = abandoned_shop
+KFEAT:  D = W
+MARKER: W = lua:fog_machine { pow_max = 8, delay_min = 50, delay_max = 200, \
+                              size = 4, start_clouds = 1 }
+FTILE:  '_t{ = floor_sand
+COLOUR: ' = yellow
 MAP
        zzzzzzzzzzzzzzzzzzzzz
-       zwwwwwwwwwwwwwwwwwwwz
-    xxxwwwwwwWWWWWWWWWwwwwwwxxx
-   xxxxwwwWWWWWWWWWWWWWWWWwwwxxxxxx
-  xxxxxwWWWWWWW'''''''WWWWWWWxxxxxxx
+      xzwwwwwwwwwwwwwwwwwwwzx
+    xxxwwwwwwDWWWDWWWDwwwwwwxxx
+   xxxxwwwWWWWWWWWWWWWWWWDwwwxxxxxx
+  xxxxxwWDWWWWW'''''''WWWWWWDxxxxxxx
  xxxxxWWWWWWW''''''''''''WWWWWxxxxxxx
- xxxxWWWW'''''''''{''t'_'''WWWWWxxxxx
+ xxxxDWWW'''''''''{''t'_'''WWWWDxxxxx
 xxxxWWW''''''_'''''''''''''''''WWWxxxx
 xxx'''''''_'''''t'''t''''_''t''''''xx
 xx''t''_''''''''''''''''''''''_''''xx
