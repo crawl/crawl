@@ -3705,6 +3705,7 @@ bool mons_has_ranged_attack(const monster& mon)
 {
     return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(&mon)
+           || mon.missiles()
            || mon.reach_range() != REACH_NONE
            || _mons_has_attack_wand(mon);
 }
