@@ -633,6 +633,7 @@ TYPE:     heavy crossbow
 PLUS:     +27
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
+VALUE:    800
 TILE_EQ:  sniper
 BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
