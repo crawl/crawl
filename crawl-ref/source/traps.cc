@@ -258,7 +258,18 @@ bool monster_caught_in_net(monster* mon)
         return false;
     }
 
-    if (mons_class_is_stationary(mon->type))
+    if (mon->is_insubstantial())
+    {
+        if (you.can_see(*mon))
+        {
+            mprf("The net passes right through %s!",
+                 mon->name(DESC_THE).c_str());
+        }
+        return false;
+    }
+
+    monster_info mi(mon);
+    if (mi.net_immune())
     {
         if (you.see_cell(mon->pos()))
         {
@@ -269,16 +280,6 @@ bool monster_caught_in_net(monster* mon)
             }
             else
                 mpr("The net is caught on something unseen!");
-        }
-        return false;
-    }
-
-    if (mon->is_insubstantial())
-    {
-        if (you.can_see(*mon))
-        {
-            mprf("The net passes right through %s!",
-                 mon->name(DESC_THE).c_str());
         }
         return false;
     }
