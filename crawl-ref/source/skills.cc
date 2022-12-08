@@ -46,8 +46,8 @@
 // Note that they don't have to be equal, but it is important to make
 // sure that they're set so that the spending limit will always allow
 // for 1 skill point to be earned.
-#define MAX_COST_LIMIT           265
-#define MAX_SPENDING_LIMIT       265
+#define MAX_COST_LIMIT           370
+#define MAX_SPENDING_LIMIT       370
 
 static int _train(skill_type exsk, int &max_exp, bool simu = false);
 static void _train_skills(int exp, const int cost, const bool simu);
@@ -149,7 +149,7 @@ static int _spec_skills[NUM_SPECIES][NUM_SKILLS];
 // it's independent of species. We try to keep close to the old system
 // and use an experience aptitude of 130 as a reference (Tengu).
 // This means that for a species with 130 exp apt, skill_cost_level should be
-// the same as XL (unless the player has been drained).
+// the same as XL.
 
 // 130 exp apt is midway between +0 and -1 now. -- elliptic
 unsigned int skill_cost_needed(int level)
@@ -164,10 +164,10 @@ int calc_skill_cost(int skill_cost_level)
 {
     const int cost[] = { 1, 2, 3, 4, 5,            // 1-5
                          7, 8, 9, 13, 22,         // 6-10
-                         37, 48, 73, 98, 125,      // 11-15
-                         145, 170, 190, 212, 225,  // 16-20
-                         240, 255, 260, 265, 265,  // 21-25
-                         265, 265 };
+                         44, 57, 87, 117, 152,     // 11-15
+                         179, 214, 243, 275, 297,  // 16-20
+                         321, 346, 358, 370, 370,  // 21-25
+                         370, 370 };
     COMPILE_CHECK(ARRAYSZ(cost) == MAX_SKILL_COST_LEVEL);
 
     ASSERT_RANGE(skill_cost_level, 1, MAX_SKILL_COST_LEVEL + 1);
