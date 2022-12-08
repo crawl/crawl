@@ -34,7 +34,7 @@ class LobbyHandler(tornado.web.RequestHandler):
                 # to appear here, e.g. the crawl process doesn't set `god` if
                 # there is none. (Maybe this is a bug?)
                 game[k] = s.process.where.get(k, "")
-            
+
             if s.process.last_milestone:
                 game["milestone"] = s.process.last_milestone.get("milestone", "")
             else:
