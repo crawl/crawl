@@ -976,7 +976,7 @@ Passage of Golubria spell
 Passwall spell
 
 这道法术调节施法者的身体，让施法者能瞬间穿过坚硬的岩石。
-施法者需要一段时间来适应岩石，在此期间他们不受保护。
+施法者需要一段时间来适应岩石，在此期间他们不受保护。 
 %%%%
 Petrify spell
 
@@ -1036,7 +1036,7 @@ Primal Wave spell
 %%%%
 Pyroclastic Surge spell
 
-从熔岩中引出灼热的火焰。任何站在熔岩旁边或上方的施法者的敌人都会被灼烧。
+从熔岩中引出灼热的火焰。任何站在熔岩旁边或上方的施法者的敌人都会被灼烧。 
 %%%%
 Quicksilver Bolt spell
 
