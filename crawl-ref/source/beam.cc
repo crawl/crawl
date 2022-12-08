@@ -721,11 +721,7 @@ void bolt::initialise_fire()
     if (reflections > 0)
         nightvision = can_see_invis = true;
     else
-    {
-        // XXX: Should non-agents count as seeing invisible?
-        nightvision = agent() && agent()->nightvision();
-        can_see_invis = agent() && agent()->can_see_invisible();
-    }
+        precalc_agent_properties();
 
 #ifdef DEBUG_DIAGNOSTICS
     // Not a "real" tracer, merely a range/reachability check.
@@ -745,6 +741,15 @@ void bolt::initialise_fire()
           hit, damage.num, damage.size,
           range);
 #endif
+}
+
+void bolt::precalc_agent_properties()
+{
+    const actor* a = agent();
+    // XXX: Should non-agents count as seeing invisible?
+    if (!a) return;
+    nightvision = a->nightvision();
+    can_see_invis = a->can_see_invisible();
 }
 
 void bolt::apply_beam_conducts()
@@ -2076,6 +2081,7 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only,
     pbolt.source        = mons->pos();
     pbolt.source_id     = mons->mid;
     pbolt.attitude      = mons_attitude(*mons);
+    pbolt.precalc_agent_properties();
 
     // Init tracer variables.
     pbolt.foe_info.reset();
