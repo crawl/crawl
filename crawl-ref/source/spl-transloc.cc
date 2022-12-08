@@ -430,6 +430,14 @@ spret frog_hop(bool fail, dist *target)
     return spret::success; // TODO
 }
 
+static vector<string> _desc_electric_charge_hit_chance(const monster_info& mi)
+{
+    melee_attack attk(&you, nullptr);
+    attk.charge_pow = 1; // to give the accuracy bonus
+    const int acc_pct = to_hit_pct(mi, attk, true);
+    return vector<string>{make_stringf("%d%% to hit", acc_pct)};
+}
+
 bool find_charge_target(vector<coord_def> &target_path, int max_range,
                                 targeter *hitfunc, dist &target)
 {
@@ -448,6 +456,7 @@ bool find_charge_target(vector<coord_def> &target_path, int max_range,
         args.prefer_farthest = true;
         args.top_prompt = "Charge where?";
         args.hitfunc = hitfunc;
+        args.get_desc_func = bind(_desc_electric_charge_hit_chance, placeholders::_1);
         direction(target, args);
 
         // TODO: deduplicate with _find_cblink_target
