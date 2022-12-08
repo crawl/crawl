@@ -19,7 +19,7 @@ from tornado.ioloop import IOLoop
 
 import webtiles
 from webtiles import auth, load_games, process_handler, userdb, config
-from webtiles import game_data_handler, util, ws_handler
+from webtiles import game_data_handler, util, ws_handler, status
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -190,7 +190,9 @@ def bind_server():
     handlers = [
             (r"/", MainHandler),
             (r"/socket", ws_handler.CrawlWebSocket),
-            (r"/gamedata/([0-9a-f]*\/.*)", game_data_handler.GameDataHandler)]
+            (r"/gamedata/([0-9a-f]*\/.*)", game_data_handler.GameDataHandler),
+            (r"/status/lobby/", status.LobbyHandler),
+            ]
 
     try:
         # this is somewhat atrocious; the point is so that tornado slow
