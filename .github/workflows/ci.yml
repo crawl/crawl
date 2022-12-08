@@ -443,7 +443,7 @@ jobs:
           fail_ci_if_error: false
 
   webserver:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04 # TODO: go back to ubuntu-latest
     strategy:
       matrix:
         python-version: [2.7, 3.6, 3.7, 3.8]
