@@ -7,8 +7,12 @@ on:
     types:
       - created
 
+permissions: {}
 jobs:
   linting:
+    permissions:
+      contents: read #  to fetch code (actions/checkout)
+
     name: Code Linting
     runs-on: ubuntu-latest
     steps:
@@ -21,6 +25,9 @@ jobs:
         working-directory: crawl-ref/source
 
   build_linux:
+    permissions:
+      contents: read #  to fetch code (actions/checkout)
+
     name: Linux ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }} ${{ matrix.build_all }} tag_upgrade=${{ matrix.tag_upgrade }}
     runs-on: ubuntu-latest
     strategy:
@@ -142,6 +149,9 @@ jobs:
         run: ccache -s
 
   build_appimage:
+    permissions:
+      contents: write #  for release creation (svenstaro/upload-release-action)
+
     name: Linux AppImage ${{ matrix.build_type }}
     runs-on: ubuntu-latest
     if: github.event.release.tag_name != null
@@ -196,6 +206,9 @@ jobs:
           asset_name: dcss-$tag-linux-${{ matrix.build_type }}.x86_64.AppImage
 
   build_debian:
+    permissions:
+      contents: write #  for release creation (svenstaro/upload-release-action)
+
     name: Debian Packages ${{ matrix.arch }}
     runs-on: ubuntu-latest
     if: github.event.release.tag_name != null
@@ -244,6 +257,9 @@ jobs:
           overwrite: true # there are common packages in i386 and amd64
 
   build_macos:
+    permissions:
+      contents: write #  for release creation (svenstaro/upload-release-action)
+
     name: macOS ${{ matrix.build_type }}
     runs-on: macos-latest
     strategy:
@@ -311,6 +327,9 @@ jobs:
           asset_name: dcss-$tag-macos-${{ matrix.build_type}}.zip
 
   build_mingw64_crosscompile:
+    permissions:
+      contents: write #  for release creation (svenstaro/upload-release-action)
+
     name: mingw64 ${{ matrix.build_type }}
     runs-on: ubuntu-latest
     strategy:
@@ -387,6 +406,9 @@ jobs:
           asset_name: ${{ steps.release-names.outputs.dest }}
 
   codecov_catch2:
+    permissions:
+      contents: read #  to fetch code (actions/checkout)
+
     name: Catch2 (GCC/Linux) + Codecov
     runs-on: ubuntu-latest
     steps:
@@ -443,6 +465,9 @@ jobs:
           fail_ci_if_error: false
 
   webserver:
+    permissions:
+      contents: read #  to fetch code (actions/checkout)
+
     runs-on: ubuntu-20.04 # TODO: go back to ubuntu-latest
     strategy:
       matrix:
@@ -469,6 +494,9 @@ jobs:
       run: python -m unittest webtiles.userdb
 
   build_headers:
+    permissions:
+      contents: read #  to fetch code (actions/checkout)
+
     name: Build headers ${{ matrix.compiler }} ${{ matrix.build_opts }} ${{ matrix.debug }}
     runs-on: ubuntu-latest
     strategy:
