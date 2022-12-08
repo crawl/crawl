@@ -513,7 +513,7 @@ static string _effect_string(spell_type spell, const monster_info *mon_owner)
 
     if (spell == SPELL_AIRSTRIKE)
         return describe_airstrike_dam(dam);
-    else if (spell == SPELL_RESONANCE_STRIKE)
+    if (spell == SPELL_RESONANCE_STRIKE)
         return describe_resonance_strike_dam(dam);
 
     string mult = "";
