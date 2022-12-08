@@ -5581,7 +5581,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_AFFECTED;
 
         if (!mon->has_ench(ENCH_HASTE)
-            && !mon->is_stationary()
             && mon->add_ench(ENCH_HASTE))
         {
             if (!mons_is_immotile(*mon)
@@ -5594,7 +5593,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_MIGHT:
         if (!mon->has_ench(ENCH_MIGHT)
-            && !mon->is_stationary()
             && mon->add_ench(ENCH_MIGHT))
         {
             if (simple_monster_message(*mon, " seems to grow stronger."))
