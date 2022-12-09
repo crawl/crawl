@@ -866,6 +866,8 @@ endif
 # Unit tests
 ifneq (,$(filter catch2-tests,$(MAKECMDGOALS)))
 	COVERAGE=YesPlease
+	# current catch2 doesn't support c++11
+	STDFLAG = -std=c++14
 endif
 
 ifdef HURRY
@@ -1355,7 +1357,7 @@ endif
 
 GAME_OBJS=$(OBJECTS) main.o $(EXTRA_OBJECTS)
 MONSTER_OBJS=$(OBJECTS) util/monster/monster-main.o $(EXTRA_OBJECTS)
-CATCH2_TEST_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) catch2-tests/test_main.o $(EXTRA_OBJECTS)
+CATCH2_TEST_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) catch2-tests/catch_amalgamated.o catch2-tests/test_main.o $(EXTRA_OBJECTS)
 
 
 ifneq (,$(filter plug-and-play-tests,$(MAKECMDGOALS)))
