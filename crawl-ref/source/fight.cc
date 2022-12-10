@@ -1011,6 +1011,11 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
     if (mon->friendly())
     {
+        // There's not really any harm in attacking your own spectral weapon.
+        // It won't share damage, and it'll go away anyway.
+        if (mon->type == MONS_SPECTRAL_WEAPON)
+            return false;
+
         if (god_hates_attacking_friend(you.religion, *mon))
         {
             adj = "your ally ";
