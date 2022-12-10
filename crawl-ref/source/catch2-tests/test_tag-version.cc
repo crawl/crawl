@@ -27,5 +27,6 @@ TEST_CASE( "Test current minor tag enums have the correct value", "[single-file]
     REQUIRE (TAG_MINOR_NEMELEX_WRATH == 178);
     REQUIRE (TAG_MINOR_FOLLOWER_TRANSIT_TIME == 193);
     REQUIRE (TAG_MINOR_SINGULAR_THEY == 208);
+    REQUIRE (TAG_MINOR_GHOST_MAGIC == 213); // keep this, or update `bones_minor_tags`
     REQUIRE (TAG_MINOR_TRACK_REGEN_ITEMS == 216);
 }

@@ -299,6 +299,12 @@ const set<int> bones_minor_tags =
 #endif
         };
 
+#if TAG_MAJOR_VERSION == 34
+// emergency sanity check -- keep minor tags from accidentally incrementing.
+// See catch2 test_tag-version.cc for a more elaborated version of this.
+COMPILE_CHECK(TAG_MINOR_GHOST_MAGIC == 213);
+#endif
+
 struct save_version
 {
     save_version(int _major, int _minor) : major{_major}, minor{_minor}
