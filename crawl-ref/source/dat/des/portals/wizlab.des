@@ -10,7 +10,7 @@
 #          |summoning OCS           |staff of Wucad Mu       |
 #--------------------------------------------------------------------
 #Cigotuvi  |uglies, abominations,   |tmut potions / books,   |16000
-#          |lump shapeshifters      |scrolls of summoning    |
+#          |lump shapeshifters      |scrolls of poison       |
 #--------------------------------------------------------------------
 #Iskenderun|DE mages, iood statues, |books, books, books,    |22000
 #          |purple draconians       |robe of the archmagi    |
@@ -1008,7 +1008,7 @@ ITEM:       potion of mutation q:1, potion of mutation
 ITEM:       any jewellery randart / w:5 hat_of_the_alchemist
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi
 ITEM:       book of transfigurations / randbook disc:transmutation
-ITEM:       staff of death, scroll of summoning
+ITEM:       staff of death, scroll of poison
 SHUFFLE:    de / h~ / j|
 NSUBST:     de = 1:e / 1:f / *:d, g = 1:g / *:$, h = 1:h / 2:i / *:., j = 1:j / *:k
 SUBST:      4 = 4 5:2, " = 6:1 .:16, |~ = .
