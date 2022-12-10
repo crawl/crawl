@@ -1849,7 +1849,7 @@ ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
 ITEM:    box of beasts
 KITEM:   % = any, any / gold / nothing, any / nothing
-KITEM:   _ = scroll of summoning ident:type , scroll of summoning ident:type / nothing
+KITEM:   _ = any ally scroll ident:type , any ally scroll ident:type / nothing
 KFEAT:   _ = altar_sif_muna
 KMASK:   "'@ = !no_monster_gen
 SHUFFLE: 12, 34, 12 / 34

@@ -4104,6 +4104,15 @@ static void _tag_read_you(reader &th)
     }
 
     initialise_item_sets();
+
+    // ?butterflies previously alternated with ?fog. If we load such a
+    // game, then make ?summoning the set choice. (Otherwise, neither
+    // ?summoning nor ?butterflies will spawn!)
+    if (th.getMinorVersion() < TAG_MINOR_BUTTERSUMMONS
+        && item_for_set(ITEM_SET_ALLY_SCROLLS) == SCR_FOG)
+    {
+        force_item_set_choice(ITEM_SET_ALLY_SCROLLS, SCR_SUMMONING);
+    }
 #endif
 }
 

@@ -745,7 +745,7 @@ static const item_set_def item_sets[] =
     { "hex wand",           OBJ_WANDS,    { WAND_CHARMING, WAND_PARALYSIS } },
     { "beam wand",          OBJ_WANDS,    { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
     { "blast wand",         OBJ_WANDS,    { WAND_ICEBLAST, WAND_ROOTS } },
-    { "concealment scroll", OBJ_SCROLLS,  { SCR_FOG, SCR_BUTTERFLIES } },
+    { "ally scroll",        OBJ_SCROLLS,  { SCR_SUMMONING, SCR_BUTTERFLIES } },
 };
 COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 
@@ -3099,9 +3099,15 @@ void initialise_item_sets()
 #endif
         const vector<int> &subtypes = item_sets[i].subtypes;
         const int chosen_idx = random2(subtypes.size());
-        _item_set_choice(iset) = subtypes[chosen_idx];
+        force_item_set_choice(iset, subtypes[chosen_idx]);
     }
     populate_sets_by_obj_type();
+}
+
+/// Force the game to generate the chosen item subtype for the given item set.
+void force_item_set_choice(item_set_type iset, int sub_type)
+{
+    _item_set_choice(iset) = sub_type;
 }
 
 /// What item for the given set is enabled for generation?

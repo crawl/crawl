@@ -100,16 +100,10 @@ function trove.get_trove_item(e, value, base_item)
   local prices = {
        {base="scroll", type="acquirement", quant=2},
        {base="scroll", type="fear", quant=2+d(3)+d(3)},
+       {base="scroll", type="fog", quant=2+d(3)+d(3)},
        {base="miscellaneous", type="rune of Zot", quant=3, name="slimy rune of Zot"},
        {base="miscellaneous", type="rune of Zot", quant=11, name="abyssal rune of Zot"},
        {base="miscellaneous", type="horn of Geryon"} }
-
-  if you.god() ~= "Okawaru"
-     or items.item_for_set("concealment scroll") ~= "butterflies" then
-    table.insert(prices,
-                 {base="scroll", type=items.item_for_set("concealment scroll"),
-                  quant=2+d(3)+d(3)})
-  end
 
   local wpn = {
        {base="weapon", type="demon whip", quant=2+d(3)+d(3)},
@@ -242,8 +236,8 @@ function trove.good_scroll (e)
              scroll of magic mapping w:8 / scroll of blinking /
              scroll of silence w:2 / scroll of acquirement w:1 /
              scroll of teleportation w:20 / scroll of vulnerability w:2 /
-             any concealment scroll w:8 / scroll of torment w:8 /
-             scroll of summoning w:1 ]])
+             scroll of fog w:8 / scroll of torment w:8 /
+             any ally scroll w:1 ]])
 end
 
 function trove.place_fog(e, type, strength)

@@ -1008,7 +1008,7 @@ KFEAT:  n = altar_qazlal
 KFEAT:  o = altar_ru
 KFEAT:  p = altar_uskayaw
 KFEAT:  q = altar_wu_jian
-KITEM:  { = scroll of blinking q:3, any concealment scroll q:3 ident:all, \
+KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             any blast wand charges:5 ident:all, \
             any beam wand charges:5 ident:all, \
@@ -1035,7 +1035,7 @@ KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:17 use_all ; \
             book of the moon | book of blasting | ozocubu's autobiography
 KFEAT:  EP = scroll shop greed:10 use_all count:14 ; \
             scroll of blinking q:3 | scroll of blinking q:4 | scroll of blinking q:5 |\
-            any concealment scroll q:3 | any concealment scroll q:4 | any concealment scroll q:5 |\
+            scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\
             scroll of silence q:3 | scroll of brand weapon | scroll of vulnerability q:3 |\
             scroll of amnesia q:5 | scroll of enchant weapon q:8 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4

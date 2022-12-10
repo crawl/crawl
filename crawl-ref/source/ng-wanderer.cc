@@ -423,9 +423,10 @@ static void _good_potion_or_scroll()
 {
     // vector of weighted {object_class_type, subtype} pairs
     // xxx: could we use is_useless_item here? (not without dummy items...?)
+    const int ally_scr_type = item_for_set(ITEM_SET_ALLY_SCROLLS);
     const vector<pair<pair<object_class_type, int>, int>> options = {
         { { OBJ_SCROLLS, SCR_FEAR }, 4 },
-        { { OBJ_SCROLLS, SCR_SUMMONING }, 1 },
+        { { OBJ_SCROLLS, ally_scr_type }, 1 },
         { { OBJ_SCROLLS, SCR_BLINKING },
             you.stasis() ? 0 : 4 },
         { { OBJ_POTIONS, POT_HEAL_WOUNDS },
@@ -460,11 +461,10 @@ static void _decent_potion_or_scroll()
 {
     // vector of weighted {object_class_type, subtype} pairs
     // xxx: could we use is_useless_item here? (not without dummy items...?)
-    const int conceal_scr_type = item_for_set(ITEM_SET_CONCEAL_SCROLLS);
     const vector<pair<pair<object_class_type, int>, int>> options = {
         { { OBJ_SCROLLS, SCR_TELEPORTATION },
             you.stasis() ? 0 : 6 },
-        { { OBJ_SCROLLS, conceal_scr_type }, 6 },
+        { { OBJ_SCROLLS, SCR_FOG }, 6 },
         { { OBJ_SCROLLS, SCR_VULNERABILITY }, 2 },
         { { OBJ_SCROLLS, SCR_SILENCE }, 2 },
         { { OBJ_POTIONS, POT_CURING },

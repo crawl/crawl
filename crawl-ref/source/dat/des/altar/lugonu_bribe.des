@@ -38,7 +38,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               good_item " .. weapon .. " ego:vampirism ident:type /\
               potion of invisibility ident:type q:3",
          Okawaru="scroll of summoning ident:type q:3 / box of beasts /\
-              phantom mirror",
+              scroll of butterflies ident:type q:3 / phantom mirror",
          Trog="manual of Spellcasting / manual of Air Magic w:5 /\
               manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
               manual of Ice Magic w:5 / manual of Poison Magic w:5 /\
