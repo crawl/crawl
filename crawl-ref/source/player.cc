@@ -464,8 +464,12 @@ bool player::slow_in_water() const
 static void _maybe_sink(dungeon_feature_type old_feat,
                         dungeon_feature_type new_grid)
 {
-    if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
+    if (!you.can_swim()
+        && new_grid == DNGN_DEEP_WATER
+        && old_feat != DNGN_DEEP_WATER)
+    {
         mpr("You sink to the bottom.");
+    }
 }
 
 static void _enter_water(dungeon_feature_type old_feat,
@@ -483,9 +487,12 @@ static void _enter_water(dungeon_feature_type old_feat,
             noisy(8, you.pos(), "Splash!");
     }
 
+    // Merfolk special-case most relevant messages.
+    if (you.fishtail)
+        return;
+
     // Most of these messages are irrelevant when you're already in the water.
-    // Merfolk also special-case most relevant messages.
-    if (feat_is_water(old_feat) || you.fishtail)
+    if (feat_is_water(old_feat))
     {
         _maybe_sink(old_feat, new_grid);
         return;
