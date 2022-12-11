@@ -117,6 +117,8 @@ bool monster_inherently_flies(const monster &mons)
     // check both so spectral humans and zombified dragons both fly
     return monster_class_flies(mons.type)
         || monster_class_flies(mons_base_type(mons))
+        || mons_is_draconian_job(mons.type)
+            && monster_class_flies(draconian_subspecies(mons))
         || mons_is_ghost_demon(mons.type) && mons.ghost && mons.ghost->flies
         || mons.has_facet(BF_BAT);
 }
