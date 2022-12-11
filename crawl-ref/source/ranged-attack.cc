@@ -306,6 +306,9 @@ bool ranged_attack::using_weapon() const
 
 bool ranged_attack::clumsy_throwing() const
 {
+    if (attacker->is_player())
+        return !is_throwable(&you, *projectile);
+    // probably unreachable?
     return projectile->base_type != OBJ_MISSILES;
 }
 
