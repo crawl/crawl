@@ -2974,6 +2974,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         switch (item.sub_type)
         {
+        case POT_CANCELLATION:
+            return temp && !player_is_cancellable();
         case POT_BERSERK_RAGE:
             return !you.can_go_berserk(true, true, true, nullptr, temp);
         case POT_HASTE:
