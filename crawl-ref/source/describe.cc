@@ -2488,23 +2488,40 @@ string get_item_description(const item_def &item,
             {
                 if (is_useless_item(item, true))
                 {
+                    // XX most perma-uselessness doesn't give a message in
+                    // this function
+                    string r;
                     if (is_useless_item(item, false))
-                        description << "\n\nThis scroll is completely useless to you.";
+                    {
+                        description << "\n\nThis scroll is completely useless to you";
+                        // sigh, this is very messy. But other scroll types
+                        // will currently print misleading stuff here.
+                        switch (item.sub_type)
+                        {
+                        case SCR_SUMMONING:
+                        case SCR_BUTTERFLIES:
+                        case SCR_BLINKING:
+                        case SCR_TELEPORTATION:
+                            r = cannot_read_item_reason(&item);
+                        default:
+                            break;
+                        }
+                    }
                     else
                     {
                         description << "\n\nReading this right now ";
-                        const string r = cannot_read_item_reason(&item);
                         // use the existence of a general problem as a heuristic
                         // for this message: currently it works for all(?) cases.
                         if (cannot_read_item_reason(nullptr).size())
                             description << "isn't possible";
                         else
                             description << "will have no effect";
-                        if (r.size())
-                            description << ": " << lowercase_first(r);
-                        else // reasons are punctuated
-                            description << ".";
+                        r = cannot_read_item_reason(&item);
                     }
+                    if (r.size())
+                        description << ": " << lowercase_first(r);
+                    else // reasons are punctuated
+                        description << ".";
                 }
             }
 

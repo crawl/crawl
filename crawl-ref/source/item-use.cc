@@ -3143,6 +3143,28 @@ static string _no_items_reason(object_selector type, bool check_floor = false)
  */
 string cannot_read_item_reason(const item_def *item)
 {
+    if (item && item->base_type == OBJ_SCROLLS)
+    {
+        // this function handles a few cases of perma-uselessness. For those,
+        // be sure to print the message first. (XX generalize)
+        switch (item->sub_type)
+        {
+        case SCR_SUMMONING:
+        case SCR_BUTTERFLIES:
+            if (you.allies_forbidden())
+                return "You cannot coerce anything to answer your summons.";
+            break;
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            // XX code duplication with you.no_tele_reason
+            if (you.stasis())
+                return you.no_tele_reason(item->sub_type == SCR_BLINKING);
+            break;
+        default:
+            break;
+        }
+    }
+
     // general checks
     if (player_in_branch(BRANCH_GEHENNA))
         return "You cannot see clearly; the smoke and ash is too thick!";
@@ -3183,6 +3205,7 @@ string cannot_read_item_reason(const item_def *item)
     {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
+            // note: stasis handled separately above
             return you.no_tele_reason(item->sub_type == SCR_BLINKING);
 
         case SCR_AMNESIA:
@@ -3198,12 +3221,6 @@ string cannot_read_item_reason(const item_def *item)
 
         case SCR_IDENTIFY:
             return _no_items_reason(OSEL_UNIDENT, true);
-
-        case SCR_SUMMONING:
-        case SCR_BUTTERFLIES:
-            if (you.allies_forbidden())
-                return "You cannot coerce anything to answer your summons.";
-            return "";
 
         case SCR_FOG:
         case SCR_POISON:

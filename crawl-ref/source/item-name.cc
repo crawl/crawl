@@ -2904,7 +2904,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return false;
 
     case OBJ_SCROLLS:
-        if (temp && cannot_read_item_reason(&item).size())
+    {
+        const string reasons = cannot_read_item_reason(&item);
+        if (temp && reasons.size())
             return true;
 
         if (!ident && !item_type_known(item))
@@ -2930,10 +2932,18 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_IDENTIFY:
             return you.props.exists(IDENTIFIED_ALL_KEY)
                    || have_passive(passive_t::identify_items);
+        case SCR_TELEPORTATION:
+        case SCR_BLINKING:
+            return you.stasis(); // XX duplicated check
+        case SCR_SUMMONING:
+        case SCR_BUTTERFLIES:
+            // XX these have a message in cannot_read_item_reasons, maybe
+            // generalize that to handle non-temp uselessness
+            return reasons.size();
         default:
             return false;
         }
-
+    }
     case OBJ_WANDS:
         if (you.get_mutation_level(MUT_NO_ARTIFICE))
             return true;

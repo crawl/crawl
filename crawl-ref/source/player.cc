@@ -6460,6 +6460,11 @@ int player_willpower(bool temp)
  */
 string player::no_tele_reason(bool blinking) const
 {
+    // XX add a temp parm; in absence of this, do the non-temp check first
+    // assumption: species is the only source of stasis
+    if (stasis())
+        return "Your stasis prevents you from teleporting.";
+
     if (!blinking)
     {
         if (crawl_state.game_is_sprint())
@@ -6470,9 +6475,6 @@ string player::no_tele_reason(bool blinking) const
                 "teleports.";
         }
     }
-
-    if (stasis())
-        return "Your stasis prevents you from teleporting.";
 
     vector<string> problems;
 
