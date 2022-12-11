@@ -247,6 +247,16 @@ bool UseItemMenu::cycle_mode(bool forward)
     return true;
 }
 
+class TempUselessnessHighlighter : public MenuHighlighter
+{
+public:
+    int entry_colour(const MenuEntry *entry) const override
+    {
+        return entry->colour != MENU_ITEM_STOCK_COLOUR ? entry->colour
+               : entry->highlight_colour(true);
+    }
+};
+
 UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
                                     const char* prompt=nullptr)
     : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_ALLOW_FORMATTING),
@@ -255,6 +265,7 @@ UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
       inv_header(nullptr), floor_header(nullptr)
 {
     set_tag("use_item");
+    set_highlighter(new TempUselessnessHighlighter()); // pointer managed by Menu
     menu_action = ACT_EXECUTE;
     if (prompt)
         set_title(prompt);

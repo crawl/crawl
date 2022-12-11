@@ -104,6 +104,13 @@ InvEntry::InvEntry(const item_def &i)
     quantity = i.quantity;
 }
 
+int InvEntry::highlight_colour(bool temp) const
+{
+    // XX this hardcodes the tag "inventory", but is used by all sorts of
+    // subclasses that aren't inv.
+    return menu_colour(get_text(), item_prefix(*item, temp), "inventory");
+}
+
 const string &InvEntry::get_basename() const
 {
     if (basename.empty())

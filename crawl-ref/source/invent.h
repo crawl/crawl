@@ -103,10 +103,7 @@ public:
     bool         is_art() const;
     bool         is_equipped() const;
 
-    virtual int highlight_colour() const override
-    {
-        return menu_colour(get_text(), item_prefix(*item), "inventory");
-    }
+    virtual int highlight_colour(bool temp=false) const override;
 
     virtual void select(int qty = -1) override;
     void set_star(bool);
