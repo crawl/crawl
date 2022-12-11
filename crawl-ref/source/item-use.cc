@@ -3213,7 +3213,7 @@ string cannot_read_item_reason(const item_def *item)
 
         case SCR_MAGIC_MAPPING:
             if (!is_map_persistent())
-                return "It would have no effect in this place.";
+                return "This place cannot be mapped!";
             return "";
 
 #if TAG_MAJOR_VERSION == 34

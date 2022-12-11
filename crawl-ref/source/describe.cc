@@ -2435,17 +2435,29 @@ string get_item_description(const item_def &item,
         {
             if (verbose)
             {
-                if (item.sub_type == POT_LIGNIFY)
+                if (is_useless_item(item, true))
+                {
+                    if (is_useless_item(item, false))
+                        description << "\n\nThis potion is completely useless to you.";
+                    else
+                    {
+                        // TODO: describe other potion temp uselessness effects
+                        // besides cancellation
+                        // TODO: for some cases, "isn't possible" is a better
+                        // wording
+                        description << "\n\nDrinking this right now will have no effect";
+                        if (item.sub_type == POT_CANCELLATION && !player_is_cancellable())
+                            description << ": there is nothing to cancel";
+                        description << ".";
+                    }
+                }
+                // anything past here is not even temp useless
+                else if (item.sub_type == POT_LIGNIFY)
                     description << "\n\n" + _describe_lignify_ac();
                 else if (item.sub_type == POT_CANCELLATION)
                 {
-                    if (player_is_cancellable())
-                    {
-                        description << "\n\nIf you drink this now, you will no longer be " <<
-                            describe_player_cancellation() << ".";
-                    }
-                    else
-                        description << "\n\nDrinking this now will have no effect.";
+                    description << "\n\nIf you drink this now, you will no longer be " <<
+                        describe_player_cancellation() << ".";
                 }
             }
             description << "\n\nIt is "
@@ -2472,6 +2484,30 @@ string get_item_description(const item_def &item,
     case OBJ_SCROLLS:
         if (item_type_known(item))
         {
+            if (verbose)
+            {
+                if (is_useless_item(item, true))
+                {
+                    if (is_useless_item(item, false))
+                        description << "\n\nThis scroll is completely useless to you.";
+                    else
+                    {
+                        description << "\n\nReading this right now ";
+                        const string r = cannot_read_item_reason(&item);
+                        // use the existence of a general problem as a heuristic
+                        // for this message: currently it works for all(?) cases.
+                        if (cannot_read_item_reason(nullptr).size())
+                            description << "isn't possible";
+                        else
+                            description << "will have no effect";
+                        if (r.size())
+                            description << ": " << lowercase_first(r);
+                        else // reasons are punctuated
+                            description << ".";
+                    }
+                }
+            }
+
             description << "\n\nIt is "
                         << article_a(describe_item_rarity(item))
                         << " scroll.";
