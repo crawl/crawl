@@ -519,7 +519,7 @@ a cloud of flame. Each level of this mutation makes this more likely.
 corrupting presence mutation
 
 When you injure a foe, your presence may intensify the damage, corroding their
-weapons and defenses. The second level of this mutation makes matters even
+weapons and defences. The second level of this mutation makes matters even
 worse, adding a chance that your wretched victims may become mutated and
 deformed.
 %%%%

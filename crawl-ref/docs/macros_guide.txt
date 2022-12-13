@@ -54,7 +54,7 @@ The macro.txt file
 
 Macros and keymaps are stored in a file called macro.txt in your
 settings/ directory. You can change where the file is read from and
-written to by specifying an alternate directory with the macro_dir
+written to by specifying a different directory with the macro_dir
 option in your init file (see options_guide.txt for details). The
 macro.txt file is human readable and editable, but you might have to
 figure out the key codes for non-alphanumeric keys through in-game
