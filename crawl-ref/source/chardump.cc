@@ -1202,33 +1202,33 @@ static string _describe_action(caction_type type)
     case CACT_MELEE:
         return "Melee";
     case CACT_FIRE:
-        return " Fire";
+        return "Fire";
     case CACT_THROW:
         return "Throw";
     case CACT_ARMOUR:
-        return "Armor"; // "Armour" is too long
+        return "Armour";
     case CACT_BLOCK:
         return "Block";
     case CACT_DODGE:
         return "Dodge";
     case CACT_CAST:
-        return " Cast";
+        return "Cast";
     case CACT_INVOKE:
-        return "Invok";
+        return "Invoke";
     case CACT_ABIL:
-        return " Abil";
+        return "Ability";
     case CACT_EVOKE:
         return "Evoke";
     case CACT_USE:
-        return "  Use";
+        return "Use";
     case CACT_STAB:
-        return " Stab";
+        return "Stab";
 #if TAG_MAJOR_VERSION == 34
     case CACT_EAT:
-        return "  Eat";
+        return "Eat";
 #endif
     case CACT_RIPOSTE:
-        return "Rpst.";
+        return "Riposte";
     default:
         return "Error";
     }
@@ -1391,11 +1391,10 @@ static void _sdump_action_counts(dump_params &par)
     if (max_lt)
         max_lt++;
 
-    par.text += make_stringf("%-24s", "Action");
+    par.text += make_stringf("%-26s", "Action");
     for (int lt = 0; lt < max_lt; lt++)
         par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
-    par.text += make_stringf(" || %5s", "total");
-    par.text += "\n-------------------------";
+    par.text += " || total\n" + string(27, '-');
     for (int lt = 0; lt < max_lt; lt++)
         par.text += "+-------";
     par.text += "++-------\n";
@@ -1422,11 +1421,11 @@ static void _sdump_action_counts(dump_params &par)
         {
             if (ac == action_vec.begin())
             {
-                par.text += _describe_action(caction_type(cact));
-                par.text += ": ";
+                const string act = _describe_action(caction_type(cact));
+                par.text += make_stringf("%7.7s: ", act.c_str());
             }
             else
-                par.text += "       ";
+                par.text.append(9, ' ');
             par.text += chop_string(_describe_action_subtype(caction_type(cact), ac->first), 17);
             for (int lt = 0; lt < max_lt; lt++)
             {
