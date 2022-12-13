@@ -172,7 +172,7 @@ _mercenary_guard_medium_
 
 @The_monster@ says @to_foe@, "Coming here was your last mistake."
 
-@The_monster@ says @to_foe@, "The best offense is a good offense."
+@The_monster@ says @to_foe@, "The best offence is a good offence."
 
 @The_monster@ shouts @at_foe@, "Return immediately or I'll kill you!"
 %%%%
@@ -6271,7 +6271,7 @@ _Sojobo_advice_
 
 @The_monster@ says @to_foe@, "Avoid what is strong, and strike at what is weak."
 
-@The_monster@ says @to_foe@, "Attack is the secret of defense."
+@The_monster@ says @to_foe@, "Attack is the secret of defence."
 
 @The_monster@ says @to_foe@, "The expert in battle moves the enemy, and is not moved by them."
 

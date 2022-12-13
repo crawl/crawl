@@ -69,7 +69,7 @@ The contents of this text are:
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_newturn_mark, show_game_time,
                 equip_bar, animate_equip_bar, item_stack_summary_minimum,
-                mlist_min_height, mlist_allow_alternate_layout,
+                mlist_min_height, mlist_allow_alternative_layout,
                 monster_item_view_coordinates, monster_item_view_features,
                 msg_min_height, msg_max_height, msg_webtiles_height,
                 messages_at_top, msg_condense_repeats, msg_condense_short,
@@ -1536,7 +1536,7 @@ mlist_min_height = 4
         before letting the message area get more.
         (Note that the monster list is only available for ASCII.)
 
-mlist_allow_alternate_layout = false
+mlist_allow_alternative_layout = false
         Display the monster list wherever Crawl may find space on
         your console display, usually to the left of the map, rather
         than using the fixed position below the stat area.
@@ -1956,14 +1956,14 @@ CHANNEL_NAME can currently be one of these:
    dgl_message     = messages from watchers (online console games only)
 
 The channel options are
-   mute      = show no messages from channel (dangerous, be careful!)
-   default   = turn channel on to its default scheme
-   alternate = turn channel on to its alternate "colourful" scheme
-   on        = same as default
-   plain     = make channel the same colour as the "plain" channel
-               (won't do anything silly like "mute" if plain == mute,
-               though)
-   off       = same as plain
+   mute        = show no messages from channel (dangerous, be careful!)
+   default     = turn channel on to its default scheme
+   alternative = turn channel on to its alternative "colourful" scheme
+   on          = same as default
+   plain       = make channel the same colour as the "plain" channel
+                 (won't do anything silly like "mute" if plain == mute,
+                 though)
+   off         = same as plain
 
 COLOUR can be any of the colours described in section 5-a (colour option).
 

@@ -1526,14 +1526,14 @@ fire dragon scales
 flail
 
 “Even after forcing their way, with great effort and loss, through this double
- defense, [the Germans] still found themselves at a disadvantage; for their
- armor scarce enabled them to contend on equal terms with the uncouth but
+ defence, [the Germans] still found themselves at a disadvantage; for their
+ armour scarce enabled them to contend on equal terms with the uncouth but
  formidable weapons of their adversaries. The Bohemians were armed with long
  iron flails, which they swung with prodigious force. They seldom failed to
  hit, and when they did so, the flail crashed through brazen helmet, skull and
  all.”
     -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
-     “Jon Huss and the Hussite Wars”. 1878.
+     “John Huss and the Hussite Wars”. 1878.
 %%%%
 flayed ghost
 
@@ -3454,7 +3454,7 @@ toenail golem
 
 “Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
  but my toes hardly notice. All they're interested in is turning out
- toenails—semitransparent, flexible sheets of a hornlike material, as defense
+ toenails—semitransparent, flexible sheets of a hornlike material, as defence
  against—whom?”
     -Jorge Luis Borges, “Toenails”. 1960.
     trans. Andrew Hurley, 1998.
