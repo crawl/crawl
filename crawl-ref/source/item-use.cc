@@ -3143,7 +3143,7 @@ static string _no_items_reason(object_selector type, bool check_floor = false)
  */
 string cannot_read_item_reason(const item_def *item)
 {
-    if (item && item->base_type == OBJ_SCROLLS)
+    if (item && item->base_type == OBJ_SCROLLS && item_type_known(*item))
     {
         // this function handles a few cases of perma-uselessness. For those,
         // be sure to print the message first. (XX generalize)
