@@ -2495,6 +2495,7 @@ namespace quiver
         tmp = wand_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = misc_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
         return actions;
     }
 
