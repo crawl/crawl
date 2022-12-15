@@ -1041,9 +1041,11 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
 
     bolt beam;
     zappy(ZAP_MOMENTUM_STRIKE, pow, false, beam);
+    beam.source_id    = MID_PLAYER;
+    beam.thrower      = KILL_YOU;
+    beam.attitude     = ATT_FRIENDLY;
     beam.origin_spell = SPELL_MOMENTUM_STRIKE;
-    beam.source = beam.target = target;
-    beam.attitude = ATT_FRIENDLY;
+    beam.source       = beam.target = target;
     beam.fire();
 
     if (!beam.foe_info.hurt && !beam.friend_info.hurt) // miss!
