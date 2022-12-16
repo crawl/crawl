@@ -1893,7 +1893,7 @@ SUBST:   V = T, D = 2, P = 1
 FTILE:   ' = floor_dirt, 12`" = floor_grass
 :else
 MONS:    withered plant / plant w:1, fungus
-SUBST:   P = 1, D = 1:6 2
+SUBST:   P = 1, D = 122
 :end
 SUBST:   '`" = .
 MAP
@@ -2781,29 +2781,25 @@ ENDMAP
 NAME:    pdpol_lair_cabin_in_the_woods
 TAGS:    no_item_gen no_monster_gen
 DEPTH:   Lair
-# Trying to get some good horror move trope representation
-{{
-  local monsters = "reaper / vampire mage / phantasmal warrior / tentacled starspawn"
-  if not you.uniques("Rupert") then
-    kmons("M = Rupert / " .. monsters)
-  else
-    kmons("M = " .. monsters)
-  end
-}}
 # The last survivor
-KMONS:   H = human
-NSUBST:  a = a / c, d = d / c, e = e / c
-NSUBST:  f = f / c, g = g / c, h = h / c
-# These have to be distint because 'a' needs to be preserved for the rune door
-SHUFFLE: Hf / ?h
-SHUFFLE: Maed / ?ghf
-SHUFFLE: Hf / ?h
-NSUBST:  M = M / | / S / `, H = H / *%% / S / `
-NSUBST:  T = 2= 0 9:5 / *= .:3 t
-NSUBST:  ae = 1:= / c, d = +
-NSUBST:  fgh = 2:+ / c
-SUBST:   - = +
-SUBST:   " = `:4 ., `? = `:3 ., _ = t_
+KMONS:   1 = human ; war axe ego:vorpal good_item \
+                       | war axe ego:flaming good_item \
+                   . leather armour good_item | ring mail good_item \
+                       | scale mail good_item
+# Trying to get some good horror move trope representation
+KMONS:   2 = Rupert / reaper / vampire mage / phantasmal warrior \
+                 / tentacled starspawn \
+             , reaper / vampire mage / phantasmal warrior / tentacled starspawn
+NSUBST:  a = a / c, p = p / c, q = q / c
+NSUBST:  r = r / c, s = s / c, u = u / c
+# These are distinct to preserve 'a' for the rune door.
+SHUFFLE: Er / ?u, Daqp / ?sur
+NSUBST:  D = 2 / | / S / `, E = 1 / *%% / S / `
+NSUBST:  T = 2=009 / * = .ttt
+NSUBST:  aq = 1:= / c, p = +
+SHUFFLE: rsu
+NSUBST:  r = + / c, s = + / c
+SUBST:   u = c, " = `.., `? = `..., _ = t_
 KPROP:   ` = bloody
 MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
          pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
@@ -2815,13 +2811,13 @@ MAP
    @ttttttttttttttttttttt_
  @..ttttTttttttttttttttttt_
  tTt.tt..ccccccccccccccctt_
-ttt.tTt..cMMMMMe``fHHHHctt_
-ttTt.TtF.cMMMMMe``fHHHHctt_
-ttt.ttt..caaaaac``fHHHHctt_
-ttTt..t."n`````d``cggggctt_
-tTt..T'T"-`````d``h????ctt_
-tt.ttt.F"n`````d``h????ctt_
-ttT.tt...c`````d``h????ctt_
+ttt.tTt..cDDDDDq``rEEEEctt_
+ttTt.TtF.cDDDDDq``rEEEEctt_
+ttt.ttt..caaaaac``rEEEEctt_
+ttTt..t."n`````p``cssssctt_
+tTt..T'T"+`````p``u????ctt_
+tt.ttt.F"n`````p``u????ctt_
+ttT.tt...c`````p``u????ctt_
  tTt.tt..ccccccccccccccctt_
  @..ttttTttttttttttttttttt_
    @ttttttttttttttttttttt_
@@ -2831,19 +2827,18 @@ ENDMAP
 NAME:   pdpol_lair_cavern_descent
 TAGS:   no_pool_fixup
 DEPTH:  Lair
-KMONS:  1 = hydra / boulder beetle / hornet / rime drake
-KMONS:  2 = cane toad / black mamba / komodo dragon / polar bear
-KMONS:  3 = water moccasin / black bear / wolf / wyvern
-KMONS:  4 = basilisk / torpor snail w:5 / manticore w:3
-KMONS:  5 = electric eel
-SUBST:  u = wW
-NSUBST: ' = 2:1 / 6= 1:3 2:5 3 / .
-NSUBST: W = 2:4 / 4= 4:5 W
-NSUBST: w = 2:5 / *= 5:1 w:20
-KFEAT:  4 = W
-KFEAT:  5 = w
 KITEM:  * = *
-KFEAT:  * = W
+KMONS:  1 = water moccasin / black bear / wolf / wyvern
+KMONS:  2 = electric eel
+KMONS:  3 = cane toad / black mamba / komodo dragon / polar bear
+KMONS:  4 = hydra / boulder beetle / hornet / rime drake
+KMONS:  5 = basilisk / torpor snail w:5 / manticore w:2
+KFEAT:  5* = W
+KFEAT:  2 = w
+SUBST:  u = wW
+NSUBST: ' = 2:1 / 2=1. / 3 / 2=3. / 4 / 4. / .
+NSUBST: W = 5 / 2=5W / W
+NSUBST: w = 2 / 2=2ww / w
 MAP
    xxxxxxxxx
   xx'''x'''xx
