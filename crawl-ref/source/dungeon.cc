@@ -4053,6 +4053,7 @@ static void _builder_monsters()
         in_shoals ? DNGN_FLOOR : DNGN_UNSEEN;
 
     dprf(DIAG_DNGN, "_builder_monsters: Generating %d monsters", mon_wanted);
+    int success = 0;
     for (int i = 0; i < mon_wanted; i++)
     {
         mgen_data mg;
@@ -4084,8 +4085,16 @@ static void _builder_monsters()
         mg.flags    |= MG_PERMIT_BANDS;
         mg.map_mask |= MMT_NO_MONS;
         mg.preferred_grid_feature = preferred_grid_feature;
-        place_monster(mg);
+        if (place_monster(mg))
+            success++;
     }
+    // 3 is the absolute minimum roll for `mon_wanted`, it's very weird from
+    // the player's perspective if we get such low numbers, but it can happen
+    // via rolling MONS_NO_MONSTER from the spawn tables.
+    // XX it might be better to retry, but that requires rebalancing of the
+    // spawn tables
+    if (success < 3 && you.where_are_you == BRANCH_ORC)
+        throw dgn_veto_exception("_builder_monsters: failed to generate enough monsters");
 
     if (!player_in_branch(BRANCH_CRYPT)) // No water creatures in the Crypt.
         _place_aquatic_monsters();
