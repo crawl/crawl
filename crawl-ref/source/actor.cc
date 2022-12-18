@@ -732,13 +732,12 @@ void actor::constriction_damage_defender(actor &defender, int duration)
     int damage = constriction_damage(typ);
 
     DIAG_ONLY(const int basedam = damage);
-    damage += div_rand_round(damage * stepdown((float)duration, 50.0),
-                             BASELINE_DELAY * 5);
+    damage += div_rand_round(damage * duration, BASELINE_DELAY * 5);
     if (is_player() && typ == CONSTRICT_MELEE)
         damage = div_rand_round(damage * (27 + 2 * you.experience_level), 81);
 
     DIAG_ONLY(const int durdam = damage);
-    damage -= random2(1 + (defender.armour_class() / 2));
+    damage -= random2(1 + (div_rand_round(defender.armour_class(), 2)));
     DIAG_ONLY(const int acdam = damage);
     damage = timescale_damage(this, damage);
     DIAG_ONLY(const int timescale_dam = damage);
