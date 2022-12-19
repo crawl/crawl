@@ -48,6 +48,9 @@ jobs:
         build_all:
           - ""
         exclude:
+          - compiler: gcc
+            build_opts: WEBTILES=1 USE_DGAMELAUNCH=1
+            debug: FULLDEBUG=1
           # Limit Clang jobs:
           # 1. Only build fulldebug
           - compiler: clang
