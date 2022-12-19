@@ -558,6 +558,9 @@ jobs:
       matrix:
         build_opts:
           - ANDROID=1
+    env:
+      USE_CCACHE: 1
+      CCACHE_EXEC: /usr/bin/ccache
     steps:
       - uses: actions/checkout@v2
         with:
