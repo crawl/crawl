@@ -198,7 +198,6 @@ static const vector<pop_entry> population[] =
 },
 
 { // Orcish Mines
-  {  1,  4,  384, FLAT, MONS_NO_MONSTER },
   {  1,  4,  192, FLAT, MONS_ORC_WARRIOR },
   {  1,  4,   25, FLAT, MONS_ORC_PRIEST },
   {  1,  4,   25, FLAT, MONS_ORC_WIZARD },
