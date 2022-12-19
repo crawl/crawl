@@ -13,6 +13,7 @@
     * [MSYS2 (Recommended)](#msys2-recommended)
     * [Windows Subsystem for Linux (WSL)](#windows-subsystem-for-linux-wsl)
     * [Visual Studio](#visual-studio)
+  * [Android](#android)
 * [Advanced](#advanced)
   * [ccache](#ccache)
   * [Installing For All Users](#installing-for-all-users)
@@ -453,6 +454,11 @@ Troubleshooting tips:
   build process, but will not stop the build from working.  `fresh.bat` inside
   the MSVC folder will clear these files, making sure `tilegen.exe` stops the
   build process if it fails.
+
+## Android
+
+The android build is done within Android Studio, or at the command line via
+gradle. See [docs/develop/android.txt](docs/develop/android.txt) for details.
 
 ## Advanced
 
