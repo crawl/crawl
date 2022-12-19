@@ -131,7 +131,7 @@ The contents of this text are:
                 tile_show_threat_levels, tile_layout_priority,
                 tile_display_mode, tile_level_map_hide_messages,
                 tile_level_map_hide_sidebar, tile_player_tile,
-                tile_weapon_offsets, tile_shield_offsets,
+                tile_weapon_offsets, tile_shield_offsets, tile_grinch,
                 tile_web_mouse_control, tile_web_mobile_input_helper
 4-  Character Dump.
 4-a     Saving.
@@ -2422,6 +2422,9 @@ tile_shield_offsets = (<x>,<y> | reset)
 
         Using the value "reset" will clear any previously defined offset, which
         is using for in-game tile changes via lua.
+
+tile_grinch = false
+        When set, disables custom holiday tiles (e.g. Santa hats).
 
 tile_web_mouse_control = true
         Whether to enable mouse control for tooltips/cursor interaction on

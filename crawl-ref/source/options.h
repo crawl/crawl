@@ -626,6 +626,7 @@ public:
     tileidx_t   tile_player_tile;
     pair<int, int> tile_weapon_offsets;
     pair<int, int> tile_shield_offsets;
+    bool        tile_grinch;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
     bool        tile_level_map_hide_messages;

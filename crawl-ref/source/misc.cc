@@ -21,6 +21,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "monster.h"
+#include "options.h" // tile_grinch
 #include "state.h"
 #include "terrain.h"
 #include "tileview.h"
@@ -202,6 +203,14 @@ bool today_is_halloween()
 /// Or Hannukah, maybe..? Who can say.
 bool december_holidays()
 {
+    // Currently, this customization only applies to tiles mode.
+    // If that changes, we should move this check to the appropriate
+    // call sites of this function, or add a wrapper.
+#ifndef USE_TILE
+    return false;
+#endif
+    if (Options.tile_grinch)
+        return false;
     const time_t curr_time = time(nullptr);
     const struct tm *date = TIME_FN(&curr_time);
     // Give em two weeks before Christmas and then until New Year's.

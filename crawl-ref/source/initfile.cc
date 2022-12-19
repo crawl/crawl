@@ -417,6 +417,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_show_minihealthbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
+        new BoolGameOption(SIMPLE_NAME(tile_grinch), false),
         new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), "nasty"),
         new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/=([)}:|"),
         // disabled by default due to performance issues
