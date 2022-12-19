@@ -149,6 +149,7 @@ lajatang2
 lajatang3
 
 staff_mummy WPN_STAFF_MUMMY
+xmas-scythe WPN_XMAS_SCYTHE
 %rim 1
 
 

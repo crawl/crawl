@@ -696,6 +696,7 @@ trishula TRISHULA
 lajatang1 LAJATANG
 lajatang2
 lajatang3
+xmas-scythe XMAS_SCYTHE
 
 ## staves
 

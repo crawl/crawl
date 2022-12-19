@@ -40,6 +40,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
+#include "misc.h"
 #include "mgen-data.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
@@ -4528,6 +4529,8 @@ mon_body_shape get_mon_shape(const monster_type mc)
 tileidx_t get_mon_base_tile(monster_type mc)
 {
     ASSERT_smc();
+    if (mc == MONS_SIGMUND && december_holidays())
+        return TILEP_MONS_XMAS_SIGMUND;
     return smc->tile.base;
 }
 

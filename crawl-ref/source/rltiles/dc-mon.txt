@@ -602,6 +602,7 @@ nikola MONS_NIKOLA
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
+xmas-sigmund MONS_XMAS_SIGMUND
 zenata MONS_ZENATA
 %rim 1
 terence MONS_TERENCE
