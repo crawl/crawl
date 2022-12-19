@@ -76,11 +76,6 @@ jobs:
             build_all: ""
           - compiler: gcc
             build_opts: TILES=1
-            debug: FULLDEBUG=1
-            tag_upgrade: true
-            build_all: ""
-          - compiler: gcc
-            build_opts: TILES=1
             debug: ""
             tag_upgrade: false
             build_all: BUILD_ALL=1
