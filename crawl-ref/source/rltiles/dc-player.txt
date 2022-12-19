@@ -1065,6 +1065,7 @@ turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
+santa_hat SANTA
 hat_archer ARCHER
 hat_archer2 ARCHER2
 hat_explorer EXPLORER

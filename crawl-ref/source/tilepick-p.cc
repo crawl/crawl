@@ -408,6 +408,8 @@ tileidx_t tilep_equ_helm(const item_def &item)
                 return TILEP_HELM_EXPLORER;
             case TILE_THELM_HAT_EXPLORER2:
                 return TILEP_HELM_EXPLORER2;
+            case TILE_THELM_HAT_SANTA:
+                return TILEP_HELM_SANTA;
             default:
                 return _modrng(item.rnd, TILEP_HELM_HAT_FIRST_NORM,
                                TILEP_HELM_HAT_LAST_NORM);

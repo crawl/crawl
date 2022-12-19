@@ -18,6 +18,7 @@
 #include "item-status-flag-type.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "misc.h" // december_holidays
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
@@ -4191,7 +4192,10 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
                 tile = _modrng(item.rnd, TILE_THELM_HAT_EGO_FIRST, TILE_THELM_HAT_EGO_LAST);
                 break;
             case 4:
-                tile = _modrng(item.rnd, TILE_THELM_HAT_ART_FIRST, TILE_THELM_HAT_ART_LAST);
+                if (item.rnd % 2 && december_holidays())
+                    tile = TILE_THELM_HAT_SANTA;
+                else
+                    tile = _modrng(item.rnd, TILE_THELM_HAT_ART_FIRST, TILE_THELM_HAT_ART_LAST);
                 break;
             default:
                 tile = _modrng(item.rnd, TILE_THELM_HAT_FIRST, TILE_THELM_HAT_LAST);
