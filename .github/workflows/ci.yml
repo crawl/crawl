@@ -584,11 +584,11 @@ jobs:
         run: ccache --zero-stats
       - run: make -j$(nproc) ${{ matrix.build_opts }} android
         working-directory: crawl-ref/source
-      - name: Print ccache stats
-        run: ccache -s
       - name: Run gradle
         run: gradle :app:assembleBuildTest
         working-directory: crawl-ref/source/android-project
+      - name: Print ccache stats
+        run: ccache -s
 
   notify_irc:
     name: "Notify #crawl-dev of build failure"
