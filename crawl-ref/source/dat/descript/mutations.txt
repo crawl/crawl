@@ -216,8 +216,8 @@ weakness stinger mutation
 
 You have a thin, red tail, allowing you to tail-slap foes when launching melee
 attacks. Each level of this mutation increases your tail's strength as it turns
-into a sharp stinger. The third level of this mutation causes the stinger to
-inflict brief weakness on those unfortunate enough to be struck by it.
+into a sharp stinger. The third level of this mutation prevents wearing cloaks
+or scarves, and causes the stinger to inflict brief weakness on those struck.
 %%%%
 armoured tail mutation
 
@@ -609,18 +609,6 @@ You have big, strong legs, allowing you to hop about with
 land. The second level of this mutation allows you to hop farther. Each time
 you hop, you need to rest for a bit before you can hop again.
 %%%%
-roll mutation
-
-You can roll at nearby foes to attack with <input>$cmd[CMD_USE_ABILITY]</input>.
-Each level of this mutation increases the distance you can roll, though not the
-damage dealt.
-%%%%
-reflexive curl mutation
-
-You curl up when struck, giving you protection against further attacks until
-your next action. This effect is guaranteed to happen in response to any
-direct damage.
-%%%%
 forlorn mutation
 
 You cannot, will not, and will never worship any god.
@@ -791,6 +779,32 @@ explore regen mutation
 
 As you explore the dungeon, your wounds will heal and your magic will replenish.
 %%%%
+faith mutation
+
+You were embalmed with holy oils and sacred spices and bound about with blessed
+cloth. Now you have a special connection with the divine, allowing you to gain
+favor with your chosen god more quickly.
+%%%%
+devour on kill mutation
+
+When you kill living creatures you have a chance to devour their life force
+and restore hit points.
+%%%%
+roll mutation
+
+You instinctively roll as you move toward enemies, rampaging forward an additional
+space.
+%%%%
+long tongue mutation
+
+Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
+effects on you.
+%%%%
+awkward tongue mutation
+
+Your tongue is very floppy, giving you trouble when reading the arcane syllables
+encoded on magical scrolls. As such, scrolls take you half again as long to read.
+%%%%
 # ------ Ru sacrifices ------
 inability to drink after injury mutation
 
@@ -927,9 +941,4 @@ Your Translocations skill is 0 and you cannot train the skill.
 no transmutations magic mutation
 
 Your Transmutations skill is 0 and you cannot train the skill.
-%%%%
-devour on kill mutation
-
-When you kill living creatures you have a chance to devour their life force
-and restore hit points.
 %%%%

@@ -256,18 +256,18 @@ struct weapon_def
 
 /// brand weights for non-dagger shortblades (short sword & rapier)
 static const vector<brand_weight_tuple> SBL_BRANDS = {
-    { SPWPN_NORMAL, 33 },
-    { SPWPN_VENOM, 17 },
-    { SPWPN_SPEED, 10 },
-    { SPWPN_DRAINING, 9 },
-    { SPWPN_PROTECTION, 6 },
-    { SPWPN_ELECTROCUTION, 6 },
-    { SPWPN_HOLY_WRATH, 5 },
-    { SPWPN_VAMPIRISM, 4 },
-    { SPWPN_FLAMING, 4 },
-    { SPWPN_FREEZING, 4 },
-    { SPWPN_DISTORTION, 1 },
-    { SPWPN_ANTIMAGIC, 1 },
+    { SPWPN_NORMAL,         33 },
+    { SPWPN_VENOM,          17 },
+    { SPWPN_SPEED,          10 },
+    { SPWPN_DRAINING,        9 },
+    { SPWPN_PROTECTION,      6 },
+    { SPWPN_ELECTROCUTION,   6 },
+    { SPWPN_HOLY_WRATH,      5 },
+    { SPWPN_VAMPIRISM,       4 },
+    { SPWPN_FLAMING,         4 },
+    { SPWPN_FREEZING,        4 },
+    { SPWPN_DISTORTION,      1 },
+    { SPWPN_ANTIMAGIC,       1 },
 };
 
 /// brand weights for most m&f weapons
@@ -350,12 +350,15 @@ static const vector<brand_weight_tuple> POLEARM_BRANDS = {
     { SPWPN_HOLY_WRATH,  1 },
 };
 
-/// brand weights for most ranged weapons.
+/// brand weights for ranged weapons.
 static const vector<brand_weight_tuple> RANGED_BRANDS = {
-    { SPWPN_NORMAL,   58 },
-    { SPWPN_FLAMING,  16 },
-    { SPWPN_FREEZING, 16 },
-    { SPWPN_VORPAL,   10 },
+    { SPWPN_NORMAL,        58 },
+    { SPWPN_FLAMING,       11 },
+    { SPWPN_FREEZING,      11 },
+    { SPWPN_VORPAL,        7 },
+    { SPWPN_DRAINING,      7 },
+    { SPWPN_ELECTROCUTION, 4 },
+    { SPWPN_ANTIMAGIC,     2 },
 };
 
 /// brand weights for holy (TSO-blessed) weapons.
@@ -473,8 +476,20 @@ static const weapon_def Weapon_prop[] =
         }},
     { WPN_QUICK_BLADE,       "quick blade",         4,  6,  7,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
-        DAMV_PIERCING, 0, 2, 150, {} },
-    { WPN_SHORT_SWORD,       "short sword",         5,  4, 11,
+        DAMV_PIERCING, 0, 2, 150, {
+            { SPWPN_NORMAL,         43 },
+            { SPWPN_VENOM,          17 },
+            { SPWPN_DRAINING,        9 },
+            { SPWPN_PROTECTION,      6 },
+            { SPWPN_ELECTROCUTION,   6 },
+            { SPWPN_HOLY_WRATH,      5 },
+            { SPWPN_VAMPIRISM,       4 },
+            { SPWPN_FLAMING,         4 },
+            { SPWPN_FREEZING,        4 },
+            { SPWPN_DISTORTION,      1 },
+            { SPWPN_ANTIMAGIC,       1 },
+        }},
+    { WPN_SHORT_SWORD,       "short sword",         5,  4, 10,
         SK_SHORT_BLADES, SIZE_LITTLE, SIZE_LITTLE, MI_NONE,
         DAMV_PIERCING, 8, 10, 30, SBL_BRANDS },
     { WPN_RAPIER,           "rapier",               7,  4, 12,
@@ -630,7 +645,7 @@ static const weapon_def Weapon_prop[] =
     { WPN_SLING,             "sling",               7,  0, 14,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_SLING_BULLET,
         DAMV_NON_MELEE, 8, 10, 15, RANGED_BRANDS },
-    { WPN_HAND_CROSSBOW,     "hand crossbow",      17,  3, 18,
+    { WPN_HAND_CROSSBOW,     "hand crossbow",      16,  3, 19,
         SK_RANGED_WEAPONS,   SIZE_LITTLE, SIZE_LITTLE, MI_BOLT,
         DAMV_NON_MELEE, 0, 10, 35, RANGED_BRANDS },
 #if TAG_MAJOR_VERSION == 34
@@ -730,7 +745,7 @@ static const item_set_def item_sets[] =
     { "hex wand",           OBJ_WANDS,    { WAND_CHARMING, WAND_PARALYSIS } },
     { "beam wand",          OBJ_WANDS,    { WAND_ACID, WAND_LIGHT, WAND_QUICKSILVER } },
     { "blast wand",         OBJ_WANDS,    { WAND_ICEBLAST, WAND_ROOTS } },
-    { "concealment scroll", OBJ_SCROLLS,  { SCR_FOG, SCR_BUTTERFLIES } },
+    { "ally scroll",        OBJ_SCROLLS,  { SCR_SUMMONING, SCR_BUTTERFLIES } },
 };
 COMPILE_CHECK(ARRAYSZ(item_sets) == NUM_ITEM_SET_TYPES);
 
@@ -1931,6 +1946,8 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
 
     const int subtype = OBJ_STAVES == item.base_type ? int{WPN_STAFF}
                                                      : item.sub_type;
+    // Check we aren't about to index with a bogus subtype for weapons
+    ASSERT(item.base_type != OBJ_WEAPONS || subtype <= get_max_subtype(item.base_type));
     return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
 }
 
@@ -2205,11 +2222,11 @@ static map<scroll_type, item_rarity_type> _scroll_rarity = {
     { SCR_MAGIC_MAPPING,  RARITY_UNCOMMON },
     { SCR_FEAR,           RARITY_UNCOMMON },
     { SCR_FOG,            RARITY_UNCOMMON },
-    { SCR_BUTTERFLIES,    RARITY_UNCOMMON },
     { SCR_BLINKING,       RARITY_UNCOMMON },
     { SCR_IMMOLATION,     RARITY_UNCOMMON },
     { SCR_POISON,         RARITY_UNCOMMON },
     { SCR_VULNERABILITY,  RARITY_UNCOMMON },
+    { SCR_BUTTERFLIES,    RARITY_RARE },
     { SCR_SUMMONING,      RARITY_RARE },
     { SCR_SILENCE,        RARITY_RARE },
     { SCR_BRAND_WEAPON,   RARITY_RARE },
@@ -3082,9 +3099,15 @@ void initialise_item_sets()
 #endif
         const vector<int> &subtypes = item_sets[i].subtypes;
         const int chosen_idx = random2(subtypes.size());
-        _item_set_choice(iset) = subtypes[chosen_idx];
+        force_item_set_choice(iset, subtypes[chosen_idx]);
     }
     populate_sets_by_obj_type();
+}
+
+/// Force the game to generate the chosen item subtype for the given item set.
+void force_item_set_choice(item_set_type iset, int sub_type)
+{
+    _item_set_choice(iset) = sub_type;
 }
 
 /// What item for the given set is enabled for generation?

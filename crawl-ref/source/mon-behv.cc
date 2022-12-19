@@ -630,6 +630,7 @@ void handle_behaviour(monster* mon)
             break;
 
         case BEH_WANDER:
+        case BEH_BATTY:
             if (isPacified)
             {
                 // If a pacified monster isn't travelling toward

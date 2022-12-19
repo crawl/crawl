@@ -888,6 +888,10 @@ void LookupType::display_keys(vector<string> &key_list) const
         return true;
     };
 
+    // for some reason DescMenu is an InvMenu, so we need to do something to
+    // prevent examine crashes. Just alias it to regular selection.
+    desc_menu.on_examine = desc_menu.on_single_selection;
+
     while (true)
     {
         desc_menu.show();

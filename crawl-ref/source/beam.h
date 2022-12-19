@@ -179,6 +179,7 @@ public:
     void set_target(const dist &targ);
     void set_agent(const actor *agent);
     void setup_retrace();
+    void precalc_agent_properties();
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
     killer_type  killer() const;

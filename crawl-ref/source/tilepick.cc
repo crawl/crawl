@@ -1245,6 +1245,10 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
         return TILEP_MONS_SIMULACRUM_KRAKEN;
     case TILEP_MONS_ZOMBIE_JELLY:
         return TILEP_MONS_SIMULACRUM_SLIME;
+    case TILEP_MONS_ZOMBIE_ORB:
+        return TILEP_MONS_SIMULACRUM_EYE;
+    case TILEP_MONS_ZOMBIE_X:
+        return TILEP_MONS_SIMULACRUM_X;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
         {
@@ -2857,7 +2861,7 @@ tileidx_t tileidx_item(const item_def &item)
 #endif
 
     case OBJ_CORPSES:
-        if (item.sub_type == CORPSE_SKELETON)
+        if (!Options.show_blood || item.sub_type == CORPSE_SKELETON)
             return _tileidx_bone(item);
         else
             return _tileidx_corpse(item);
@@ -3520,8 +3524,6 @@ tileidx_t tileidx_ability(const ability_type ability)
 #endif
     case ABIL_HOP:
         return TILEG_ABILITY_HOP;
-    case ABIL_ROLLING_CHARGE:
-        return TILEG_ABILITY_ROLL;
     case ABIL_BLINKBOLT:
         return TILEG_ABILITY_BLINKBOLT;
 
@@ -3649,8 +3651,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Lugonu
     case ABIL_LUGONU_ABYSS_EXIT:
         return TILEG_ABILITY_LUGONU_EXIT_ABYSS;
-    case ABIL_LUGONU_BEND_SPACE:
-        return TILEG_ABILITY_LUGONU_BEND_SPACE;
     case ABIL_LUGONU_BANISH:
         return TILEG_ABILITY_LUGONU_BANISH;
     case ABIL_LUGONU_CORRUPT:
@@ -3955,10 +3955,10 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_ARTIFICER;
         case JOB_DELVER:
             return TILEG_JOB_DELVER;
-        case JOB_ARCANE_MARKSMAN:
-            return TILEG_JOB_ARCANE_MARKSMAN;
-        case JOB_ABYSSAL_KNIGHT:
-            return TILEG_JOB_ABYSSAL_KNIGHT;
+        case JOB_HEXSLINGER:
+            return TILEG_JOB_HEXSLINGER;
+        case JOB_REAVER:
+            return TILEG_JOB_REAVER;
         case JOB_CINDER_ACOLYTE:
             return TILEG_JOB_CINDER_ACOLYTE;
         default:
@@ -3991,8 +3991,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_TROLL;
         case SP_BASE_DRACONIAN:
             return TILEG_SP_DRACONIAN;
-        case SP_PALENTONGA:
-            return TILEG_SP_PALENTONGA;
+        case SP_ARMATAUR:
+            return TILEG_SP_ARMATAUR;
         case SP_DEMIGOD:
             return TILEG_SP_DEMIGOD;
         case SP_SPRIGGAN:

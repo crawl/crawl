@@ -29,7 +29,6 @@ enum conduct_type
     DID_CHAOS,                            // Zin (used chaotic weapon/magic)
     DID_DESECRATE_ORCISH_REMAINS,         // Beogh
     DID_KILL_SLIME,                       // Jiyva
-    DID_KILL_PLANT,                       // Fedhas
     DID_HASTY,                            // Cheibriados
     DID_ATTACK_IN_SANCTUARY,              // Zin
     DID_KILL_NONLIVING,

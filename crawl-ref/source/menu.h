@@ -172,7 +172,7 @@ public:
     virtual string get_text() const;
     void wrap_text(int width=MIN_COLS);
 
-    virtual int highlight_colour() const
+    virtual int highlight_colour(bool /*unused in superclass*/ = false) const
     {
         return menu_colour(get_text(), "", tag);
     }

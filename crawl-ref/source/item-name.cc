@@ -1175,6 +1175,8 @@ string sub_type_string(const item_def &item, bool known)
             return "Everburning Encyclopedia";
         case BOOK_OZOCUBU:
             return "Ozocubu's Autobiography";
+        case BOOK_MAXWELL:
+            return "Maxwell's Memoranda";
         case BOOK_YOUNG_POISONERS:
             return "Young Poisoner's Handbook";
         case BOOK_FEN:
@@ -2742,7 +2744,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         case SCR_VULNERABILITY:
             return true;
         case SCR_POISON:
-            return !player_res_poison(false, temp, true);
+            return player_res_poison(false, temp, true) <= 0
+                   && !you.cloud_immune();
         case SCR_TORMENT:
             return !you.res_torment();
         default:
@@ -2823,6 +2826,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         // all cases.
     }
 
+    if (temp && you.cannot_act())
+        return true;
+
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -2899,8 +2905,10 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return false;
 
     case OBJ_SCROLLS:
-        if (temp && silenced(you.pos()))
-            return true; // can't use scrolls while silenced
+    {
+        const string reasons = cannot_read_item_reason(&item);
+        if (temp && reasons.size())
+            return true;
 
         if (!ident && !item_type_known(item))
             return false;
@@ -2911,12 +2919,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         switch (item.sub_type)
         {
-        case SCR_TELEPORTATION:
-            return you.stasis()
-                   || crawl_state.game_is_sprint()
-                   || temp && player_in_branch(BRANCH_GAUNTLET);
-        case SCR_BLINKING:
-            return you.stasis();
+        // Checks for other subtypes are in cannot_read_item_reason().
         case SCR_AMNESIA:
             return you_worship(GOD_TROG) || you.has_mutation(MUT_INNATE_CASTER);
 #if TAG_MAJOR_VERSION == 34
@@ -2927,21 +2930,26 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         case SCR_ENCHANT_ARMOUR:
         case SCR_BRAND_WEAPON:
             return you.has_mutation(MUT_NO_GRASPING);
-        case SCR_SUMMONING:
-        case SCR_BUTTERFLIES:
-            return you.allies_forbidden();
-        case SCR_FOG:
-        case SCR_POISON:
-            return temp && (env.level_state & LSTATE_STILL_WINDS);
         case SCR_IDENTIFY:
             return you.props.exists(IDENTIFIED_ALL_KEY)
                    || have_passive(passive_t::identify_items);
+        case SCR_TELEPORTATION:
+        case SCR_BLINKING:
+            return you.stasis(); // XX duplicated check
+        case SCR_SUMMONING:
+        case SCR_BUTTERFLIES:
+            // XX these have a message in cannot_read_item_reasons, maybe
+            // generalize that to handle non-temp uselessness
+            return reasons.size();
         default:
             return false;
         }
-
+    }
     case OBJ_WANDS:
         if (you.get_mutation_level(MUT_NO_ARTIFICE))
+            return true;
+
+        if (temp && (you.confused() || you.berserk()))
             return true;
 
 #if TAG_MAJOR_VERSION == 34
@@ -2962,6 +2970,12 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (!you.can_drink(temp))
             return true;
 
+        if (temp && (player_in_branch(BRANCH_COCYTUS)
+                     || you.berserk()))
+        {
+            return true;
+        }
+
         if (!ident && !item_type_known(item))
             return false;
 
@@ -2971,6 +2985,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         switch (item.sub_type)
         {
+        case POT_CANCELLATION:
+            return temp && !player_is_cancellable();
         case POT_BERSERK_RAGE:
             return !you.can_go_berserk(true, true, true, nullptr, temp);
         case POT_HASTE:
@@ -3013,6 +3029,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
         case AMU_FAITH:
             return (you.has_mutation(MUT_FORLORN) && !you.religion) // ??
+                    || you.has_mutation(MUT_FAITH)
                     || !ignore_faith_reason().empty();
 
         case AMU_GUARDIAN_SPIRIT:
@@ -3076,19 +3093,25 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return true;
 
     case OBJ_MISCELLANY:
+        // The figurine can always be used.
+        if (item.sub_type == MISC_ZIGGURAT)
+            return false;
+
+        if (temp && (you.confused() || you.berserk()))
+            return true;
+
+        if (temp && is_xp_evoker(item) && !evoker_charges(item.sub_type))
+            return true;
+
         switch (item.sub_type)
         {
 #if TAG_MAJOR_VERSION == 34
         case MISC_BUGGY_EBONY_CASKET:
             return item_type_known(item);
-#endif
-        // These can always be used.
-#if TAG_MAJOR_VERSION == 34
+        // It can always be used.
         case MISC_BUGGY_LANTERN_OF_SHADOWS:
-#endif
-        case MISC_ZIGGURAT:
             return false;
-
+#endif
         // Purely summoning misc items don't work w/ sac love
         case MISC_BOX_OF_BEASTS:
         case MISC_HORN_OF_GERYON:
@@ -3189,6 +3212,8 @@ string item_prefix(const item_def &item, bool temp)
 
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
+        if (is_unrandom_artefact(item))
+            prefixes.push_back("unrand");
         if (is_artefact(item))
             prefixes.push_back("artefact");
         // fall through
@@ -3224,7 +3249,7 @@ string item_prefix(const item_def &item, bool temp)
  */
 string menu_colour_item_name(const item_def &item, description_level_type desc)
 {
-    const string cprf      = item_prefix(item);
+    const string cprf      = item_prefix(item, false);
     const string item_name = item.name(desc);
 
     const int col = menu_colour(item_name, cprf, "pickup");

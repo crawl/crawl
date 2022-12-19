@@ -38,7 +38,7 @@ public:
     bool         cleaving;        // additional attack from cleaving
     bool         is_riposte;      // long blade retaliation attack
     bool         is_projected;    // projected weapon spell attack
-    int          roll_dist;       // palentonga rolling charge distance
+    int          charge_pow;      // electric charge bonus damage
     wu_jian_attack_type wu_jian_attack;
     int wu_jian_number_of_targets;
     coord_def attack_position;
@@ -142,6 +142,7 @@ private:
 
     int  player_apply_misc_modifiers(int damage) override;
     int  player_apply_final_multipliers(int damage, bool aux = false) override;
+    int  player_apply_postac_multipliers(int damage) override;
 
     void player_exercise_combat_skills() override;
     bool player_monattk_hit_effects();
@@ -151,6 +152,7 @@ private:
     void player_stab_check() override;
     bool player_good_stab() override;
     void player_announce_aux_hit();
+    string charge_desc();
     void player_warn_miss();
     void player_weapon_upsets_god();
     bool bad_attempt();

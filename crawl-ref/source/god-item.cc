@@ -316,7 +316,7 @@ bool is_wizardly_item(const item_def& item, bool calc_unid)
 /**
  * Do the good gods hate use of this spell?
  *
- * @param spell     The spell in question; e.g. SPELL_CORPSE_ROT.
+ * @param spell     The spell in question; e.g. SPELL_ROT.
  * @return          Whether the Good Gods hate this spell.
  */
 bool is_evil_spell(spell_type spell)

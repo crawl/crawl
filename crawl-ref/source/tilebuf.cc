@@ -104,6 +104,11 @@ void FontBuffer::add(const string &s, const VColour &col, float x, float y)
     m_font->store(*this, x, y, s, col);
 }
 
+void FontBuffer::add(const char32_t &g, const VColour &col, float x, float y)
+{
+    m_font->store(*this, x, y, g, col);
+}
+
 FontWrapper &FontBuffer::get_font_wrapper()
 {
     ASSERT(m_font);

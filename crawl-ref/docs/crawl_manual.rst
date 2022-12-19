@@ -198,7 +198,8 @@ Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
   Abbreviated to "Str". Increases your damage with melee weapons (except for long
-  and short blades). Reduces penalties from wearing heavy armour.
+  and short blades), with unarmed combat, and with throwing weapons. Reduces
+  penalties from wearing heavy armour.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
@@ -268,7 +269,7 @@ Willpower
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Kobolds are small; Ogres and Trolls are large; Nagas and Palentongas are large
+  Kobolds are small; Ogres and Trolls are large; Nagas and Armataurs are large
   with a medium torso; all other species are medium-sized. Many transmutations
   will change your size. Size affects your evasion: the smaller your character,
   the more evasive it is. On the other hand, characters of larger than medium
@@ -498,9 +499,8 @@ Zot
 ========================================
 
 No one knows who or what Zot is: demon, god, wizard, something else entirely?
-But adventurers seeking the Orb will, in turn, be hunted by Zot. If it finds
-them, it will first drain their life and then, once they are sufficiently
-reduced, it will end their existence.
+But adventurers seeking the Orb will, in turn, be hunted by Zot. Even a moment's
+contact with Zot is enough to permanently damage one's health.
 
 Zot is very slow moving, and can only sense adventurers once they've spent an
 inordinately long time in one area of the dungeon. Even once this happens,
@@ -1119,7 +1119,7 @@ Note that some gods are picky about who can enter their service; for example,
 good gods will not accept demonic or undead devotees.
 
 If you would like to start the game with a religion, choose your background
-from Berserker, Chaos Knight, Abyssal Knight or Cinder Acolyte.
+from Berserker, Chaos Knight, or Cinder Acolyte.
 
 ****************************************
 K. Mutations
@@ -1564,16 +1564,16 @@ Merfolk (Mf)
   still remains. The instability of their own morphogenic matrix has made them
   very accomplished transmuters, but most other magic seems foreign to them.
 
-Palentongas (Pa)
-  The Palentongas are a large, scaled mammalian species, walking on four feet
+Armataurs (At)
+  The Armataurs are a large, scaled mammalian species, walking on four feet
   and swinging a powerful tail behind them. Their elephant-back armies
   terrorize the lands outside the Dungeon.
 
-  Palentongas are best known for their powerful roll attack, curling up and
-  rolling into a crashing melee attack against nearby foes. They're well suited
-  to melee combat and to casting supportive spells, but they're significantly
-  worse at other forms of combat and advance quite slowly in experience levels.
-  Their body shape reduces the protection given by the body armour they wear.
+  Armataurs instinctively roll when moving toward foes, getting a free move.
+  Their long, nimble tongues drink every last drop from potions, doubling
+  their effects, but the strange syllables of magical scrolls slow them down.
+  They have great aptitudes with armour and shields, though their body shape
+  reduces the protection offered by body armour early on.
 
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
@@ -1827,7 +1827,7 @@ Nagas (Na)
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
-  Palentongas, their body shape also prevents them from gaining full protection
+  Armataurs, their body shape also prevents them from gaining full protection
   from body armour. A Naga's biggest forte is stealth: Nagas are very good at
   moving unnoticed. Their tails eventually grow strong enough to constrict
   their foes in combat.
@@ -1892,11 +1892,11 @@ Mummies (Mu)
   redemption, or just because they want to.
 
   Mummies progress slowly in levels, half again as slowly as Humans in all
-  skills except fighting, spellcasting and necromancy. As they increase in
-  levels, they become increasingly in touch with the powers of death, but cannot
-  use some types of necromancy which only affect living creatures. The side
-  effects of necromantic magic tend to be relatively harmless to Mummies.
-  However, their desiccated bodies are highly flammable. They also cannot drink.
+  skills except fighting, spellcasting and necromancy. The sacred embalming
+  rituals that brought them into unlife also grant them a special connection
+  with the divine, and as they increase in levels, they become increasingly
+  in touch with the powers of death. However, their desiccated bodies are
+  highly flammable. They also cannot drink.
 
   Like other undead, mummies are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not
@@ -2000,7 +2000,7 @@ their travels.
 Artificers
   Artificers have built, bought or burgled an assortment of magic wands to
   help them through the early Dungeon. Wands have a limited number of uses,
-  though, so they'll want to upgrade from their short sword ASAP.
+  though, so they'll want to upgrade from their club ASAP.
 
 Wanderers
   Wanderers are "jacks-of-all-trades, masters of none". They start the game
@@ -2022,13 +2022,6 @@ Berserkers
   get the power to go berserk (as well as a number of other powers, should they
   prove worthy), but who forbids the use of spell magic. They enter the Dungeon
   with a weapon of their choice, and dressed in animal skins.
-
-Abyssal Knights
-  The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of the
-  Abyss. They are granted some power over the Abyss, and must spread death and
-  disorder in return. They are sent from the Abyss into the Dungeon to spread
-  corruption and chaos, starting with a simple weapon of their choice and
-  leather armour.
 
 Chaos Knights
   The Chaos Knight is a plaything of Xom, subject to the god's constantly
@@ -2062,10 +2055,9 @@ Warpers
   of translocation spells, some dispersal boomerangs, a simple weapon of their
   choice, and leather armour.
 
-Arcane Marksmen
-  Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
-  attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with a sling, some spells to support its use, a scroll of
+Hexslinger
+  Hexslingers use debilitating spells to assist their ranged attacks. They
+  begin the game with a sling, some spells to support its use, a scroll of
   poison to keep foes at a distance, and a robe.
 
 Enchanters
@@ -2073,6 +2065,11 @@ Enchanters
   damaging foes, hexes disable and debilitate them, allowing the Enchanter to
   finish the helpless creatures in combat. The Enchanter begins with a lightly
   enchanted dagger, a robe, potions of invisibility, and a selection of hexes.
+
+Reaver
+  Reavers have an assortment of powerful, but highly situational, conjurations
+  to draw upon when their skill in melee is insufficient. They start with a
+  simple weapon of their choice and leather armour.
 
 Mage backgrounds
 ================
@@ -2186,7 +2183,7 @@ powerful attack when unarmed and also to punch with the off hand as an
 additional melee attack. The Unarmed Combat skill continues to increase your
 attack speed while unarmed until it can be raised no more.
 
-Note that auxiliary attacks (such as a Palentonga's tail-slap or a Minotaur's
+Note that auxiliary attacks (such as a Armataur's tail-slap or a Minotaur's
 headbutt) are not affected by the Unarmed Combat skill.
 
 Ranged combat skills

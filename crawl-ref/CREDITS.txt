@@ -187,6 +187,7 @@
     Gittourarmy
     Ben Goetter
     Aaron Golden
+    Gompami
     Ed Gonzalez
     Gopall
     Goratrix
@@ -338,6 +339,7 @@
     Andy Roche
     rockygargoyle
     Will Rogers
+    RollingRubic
     Nate Rook
     David Rose
     runrin

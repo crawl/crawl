@@ -264,6 +264,15 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
+        new BoolGameOption(SIMPLE_NAME(show_blood), true),
+        new BoolGameOption(SIMPLE_NAME(reduce_animations),
+#ifdef USE_TILE_WEB
+            // true
+            tiles.is_controlled_from_web()
+#else
+            false
+#endif
+            ),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
@@ -445,6 +454,13 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_wall_col), "#666666"),
         new TileColGameOption(SIMPLE_NAME(tile_water_col), "#114455"),
         new TileColGameOption(SIMPLE_NAME(tile_window_col), "#558855"),
+        new MultipleChoiceGameOption<string>(
+            SIMPLE_NAME(tile_display_mode),
+            "tiles",
+            {{"tiles", "tiles"},
+             {"glyph", "glyphs"},
+             {"glyphs", "glyphs"},
+             {"hybrid", "hybrid"}}),
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
@@ -512,13 +528,6 @@ const vector<GameOption*> game_options::build_options_list()
             {{"horizontal", "horizontal"}, {"vertical", "vertical"}}),
         new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600),
         new BoolGameOption(SIMPLE_NAME(action_panel_glyphs), false),
-        new MultipleChoiceGameOption<string>(
-            SIMPLE_NAME(tile_display_mode),
-            "tiles",
-            {{"tiles", "tiles"},
-             {"glyph", "glyphs"},
-             {"glyphs", "glyphs"},
-             {"hybrid", "hybrid"}}),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -2902,16 +2911,16 @@ static void _bindkey(string field)
         wchars.push_back(wc);
     }
 
+
+    int key;
+
     if (wchars.size() == 0)
     {
         mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
              field.c_str());
         return;
     }
-
-    int key;
-
-    if (wchars.size() == 1)
+    else if (wchars.size() == 1)
         key = wchars[0];
     else if (wchars[0] == '\\')
     {
@@ -2924,7 +2933,7 @@ static void _bindkey(string field)
         }
         key = ks[0];
     }
-    else if (wchars.size() > 1)
+    else // if (wchars.size() > 1)
     {
         // XX probably would be safe to directly check for numbers?
         // don't use the wide char version for this part

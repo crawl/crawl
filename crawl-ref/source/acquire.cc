@@ -120,7 +120,7 @@ M filtered_vector_select(vector<pair<M, int>> weights, function<bool(M)> filter)
  * For most races, even odds for all armour slots when acquiring, or 50-50
  * split between body armour/aux armour when getting god gifts.
  *
- * Nagas and Palentongas get a high extra chance for bardings, especially if they haven't
+ * Nagas and Armataurs get a high extra chance for bardings, especially if they haven't
  * seen any yet.
  *
  * Guaranteed to be wearable, in principle.
@@ -413,6 +413,9 @@ static skill_type _acquirement_weapon_skill(bool divine, int agent)
          sk <= (agent == GOD_TROG ? SK_LAST_MELEE_WEAPON : SK_LAST_WEAPON);
          ++sk)
     {
+        // Don't choose a skill that's useless
+        if (is_useless_skill(sk))
+            continue;
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
         int weight = _skill_rdiv(sk) + 1;
@@ -723,6 +726,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
             type_wanted =
                 (*_subtype_finders[class_wanted])(divine, quantity, agent);
         }
+
+        // Double-check our subtype for weapons is valid
+        ASSERT(type_wanted != OBJ_WEAPONS || type_wanted <= get_max_subtype(class_wanted));
 
         item_def dummy;
         dummy.base_type = class_wanted;

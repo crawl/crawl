@@ -233,7 +233,9 @@ static void _clear_constriction_data()
 static void _trigger_opportunity_attacks(coord_def new_pos)
 {
     if (you.attribute[ATTR_SERPENTS_LASH]          // too fast!
-        || wu_jian_move_triggers_attacks(new_pos)) // too cool!
+        || wu_jian_move_triggers_attacks(new_pos)  // too cool!
+        || is_sanctuary(you.pos())                 // Zin protects!
+        || is_sanctuary(new_pos))                  // .. very generously.
     {
         return;
     }
@@ -258,6 +260,8 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
             || !mon->can_see(you)
             // only let monsters attack if they might follow you
             || !mon->may_have_action_energy() || mon->is_stationary()
+            // Zin protects!
+            || is_sanctuary(mon->pos())
             // creates some weird bugs
             || mons_self_destructs(*mon)
             // monsters that are slower than you mayn't attack
@@ -591,9 +595,16 @@ static spret _rampage_forward(coord_def move)
     // this would throw off our tracer_target.
     ASSERT(abs(move.x) <= 1 && abs(move.y) <= 1);
 
+    const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
+    const bool rolling = you.has_mutation(MUT_ROLLPAGE);
+    const string noun = enhanced ? "stride" :
+                         rolling ? "roll" : "rampage";
+    const string verb = enhanced ? "striding" :
+                         rolling ? "rolling" : "rampaging";
+
     if (crawl_state.is_replaying_keys())
     {
-        crawl_state.cancel_cmd_all("You can't repeat rampage.");
+        crawl_state.cancel_cmd_all("You can't repeat " + verb + ".");
         return spret::abort;
     }
 
@@ -601,7 +612,7 @@ static spret _rampage_forward(coord_def move)
     // fungusform + terrified, confusion, immobile (tree)form, or constricted.
     if (you.is_nervous()
         || you.confused()
-        || you.is_stationary()
+        || !you.is_motile()
         || you.is_constricted())
     {
         return spret::fail;
@@ -619,7 +630,7 @@ static spret _rampage_forward(coord_def move)
     beam.range           = LOS_RADIUS;
     beam.aimed_at_spot   = true;
     beam.target          = tracer_target;
-    beam.name            = "rampaging";
+    beam.name            = verb;
     beam.source_name     = "you";
     beam.source          = you.pos();
     beam.source_id       = MID_PLAYER;
@@ -658,9 +669,10 @@ static spret _rampage_forward(coord_def move)
                 return spret::fail;
             continue;
         }
-        // Don't rampage if the closest mons is non-hostile or a (non-Fedhas) plant.
-        else if (mon && (mon->friendly()
-                         || mon->neutral()
+        // Don't rampage if the closest mons is non-hostile, a projectile,
+        // or a (non-Fedhas) plant.
+        else if (mon && (mon->wont_attack()
+                         || mons_is_projectile(*mon)
                          || mons_is_firewood(*mon)))
         {
             return spret::fail;
@@ -676,7 +688,6 @@ static spret _rampage_forward(coord_def move)
     if (!valid_target)
         return spret::fail;
 
-    const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
     const int rampage_distance = enhanced
         ? grid_distance(you.pos(), valid_target->pos()) - 1
         : 1;
@@ -719,7 +730,8 @@ static spret _rampage_forward(coord_def move)
         {
             // .. and if a mons was in the way and invisible, notify the player.
             clear_messages();
-            mpr("Something unexpectedly blocked you, preventing you from rampaging!");
+            mprf("Something unexpectedly blocked you, preventing you from %s!",
+                 verb.c_str());
         }
         return spret::fail;
     }
@@ -730,9 +742,9 @@ static spret _rampage_forward(coord_def move)
     // * dangerous terrain/trap/cloud/exclusion prompt
     // * weapon check prompts;
     // messaging for this is handled by check_moveto().
-    if (!check_moveto(beam.target, "rampage")
-        || attacking && !wielded_weapon_check(you.weapon(), "rampage and attack")
-        || !attacking && !check_moveto(rampage_target, "rampage"))
+    if (!check_moveto(beam.target, noun)
+        || attacking && !wielded_weapon_check(you.weapon(), noun + " and attack")
+        || !attacking && !check_moveto(rampage_target, noun))
     {
         stop_running();
         you.turn_is_over = false;
@@ -747,14 +759,14 @@ static spret _rampage_forward(coord_def move)
     if (fedhas_move && (!current || !fedhas_passthrough(current)))
     {
         mprf("You %s quickly through the %s towards %s!",
-             enhanced ? "stride" : "rampage",
+             noun.c_str(),
              mons_genus(mons->type) == MONS_FUNGUS ? "fungus" : "plants",
              valid_target->name(DESC_THE, true).c_str());
     }
     else
     {
         mprf("You %s towards %s!",
-             enhanced ? "stride" : "rampage",
+             noun.c_str(),
              valid_target->name(DESC_THE, true).c_str());
     }
 
@@ -842,7 +854,7 @@ void move_player_action(coord_def move)
     // When confused, sometimes make a random move.
     if (you.confused())
     {
-        if (you.is_stationary())
+        if (!you.is_motile())
         {
             // Don't choose a random location to try to attack into - allows
             // abuse, since trying to move (not attack) takes no time, and
@@ -946,7 +958,7 @@ void move_player_action(coord_def move)
                           : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 
     monster* targ_monst = monster_at(targ);
-    if (fedhas_passthrough(targ_monst) && !you.is_stationary())
+    if (fedhas_passthrough(targ_monst) && you.is_motile())
     {
         // Moving on a plant takes 1.5 x normal move delay. We
         // will print a message about it but only when moving
@@ -965,7 +977,7 @@ void move_player_action(coord_def move)
         targ_monst = nullptr;
     }
 
-    bool targ_pass = you.can_pass_through(targ) && !you.is_stationary();
+    bool targ_pass = you.can_pass_through(targ) && you.is_motile();
 
     if (you.digging)
     {
@@ -1036,7 +1048,7 @@ void move_player_action(coord_def move)
         {
             // Don't allow the player to freely locate invisible monsters
             // with confirmation prompts.
-            if (!you.can_see(*targ_monst) && you.is_stationary())
+            if (!you.can_see(*targ_monst) && !you.is_motile())
             {
                 canned_msg(MSG_CANNOT_MOVE);
                 you.turn_is_over = false;
@@ -1173,7 +1185,7 @@ void move_player_action(coord_def move)
     else if (!targ_pass && !attacking)
     {
         // No rampage check here, since you can't rampage at walls
-        if (you.is_stationary())
+        if (!you.is_motile())
             canned_msg(MSG_CANNOT_MOVE);
         else if (env.grid(targ) == DNGN_OPEN_SEA)
             mpr("The ferocious winds and tides of the open sea thwart your progress.");
@@ -1229,8 +1241,11 @@ void move_player_action(coord_def move)
 
     you.apply_berserk_penalty = !attacking;
 
-    if (rampaged || player_equip_unrand(UNRAND_LIGHTNING_SCALES))
+    if (rampaged && !you.has_mutation(MUT_ROLLPAGE)
+        || player_equip_unrand(UNRAND_LIGHTNING_SCALES))
+    {
         did_god_conduct(DID_HASTY, 1, true);
+    }
 
     bool did_wu_jian_attack = false;
     if (you_worship(GOD_WU_JIAN) && !attacking && !dug && !rampaged)

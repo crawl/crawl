@@ -185,21 +185,21 @@ static feature_def feat_defs[] =
     DNGN_OPEN_SEA, "the open sea", "open_sea",
     DCHAR_WALL, NUM_DCHAR_TYPES,
     COLOUR_IS(BLUE),
-    FFT_SOLID, MF_DEEP_WATER,
+    FFT_WALL | FFT_SOLID, MF_DEEP_WATER,
 },
 
 {
     DNGN_LAVA_SEA, "the endless lava", "endless_lava",
     DCHAR_WALL, NUM_DCHAR_TYPES,
     COLOUR_IS(RED),
-    FFT_SOLID, MF_LAVA,
+    FFT_WALL | FFT_SOLID, MF_LAVA,
 },
 
 {
     DNGN_ENDLESS_SALT, "endless expanse of salt", "endless_salt",
     DCHAR_WALL, NUM_DCHAR_TYPES,
     COLOUR_IS(WHITE),
-    FFT_SOLID, MF_FLOOR,
+    FFT_WALL | FFT_SOLID, MF_FLOOR,
 },
 
 {

@@ -460,6 +460,7 @@ public:
     void delete_waypoint();
     uint8_t is_waypoint(const level_pos &lp) const;
     void list_waypoints() const;
+    void flush_invalid_waypoints();
     void update_waypoints() const;
 
     void update_excludes();

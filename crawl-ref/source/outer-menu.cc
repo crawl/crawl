@@ -20,7 +20,7 @@ bool OuterMenu::focus_button_on_mouseenter = false;
 MenuButton::MenuButton()
 {
     on_hotkey_event([this](const KeyEvent& event) {
-        if (numpad_to_regular(event.key()) == hotkey)
+        if (numpad_to_regular(event.key(), true) == hotkey)
             return activate();
         return false;
     });
@@ -151,7 +151,7 @@ bool MenuButton::on_event(const Event& event)
         return activate();
     else if (event.type() == Event::Type::KeyDown)
     {
-        const auto key = static_cast<const KeyEvent&>(event).key();
+        const auto key = numpad_to_regular(static_cast<const KeyEvent&>(event).key(), true);
         if (key == CK_ENTER || key == ' ')
             return activate();
     }
@@ -390,7 +390,7 @@ bool OuterMenu::scroller_event_hook(const Event& ev)
     if (ev.type() != Event::Type::KeyDown)
         return false;
 
-    const auto key = static_cast<const KeyEvent&>(ev).key();
+    const auto key = numpad_to_regular(static_cast<const KeyEvent&>(ev).key(), true);
 
     if (key == CK_DOWN || key == CK_UP || key == CK_LEFT || key == CK_RIGHT
             || key == CK_HOME || key == CK_END || key == CK_PGUP || key == CK_PGDN)

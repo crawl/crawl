@@ -15,14 +15,14 @@ from tornado.escape import to_unicode
 from tornado.escape import utf8
 from tornado.escape import xhtml_escape
 from tornado.ioloop import IOLoop
-from tornado.ioloop import PeriodicCallback
 
 from webtiles import config, connection, game_data_handler, inotify, terminal, util, ws_handler
+from webtiles.config import dgl_format_str
 from webtiles.connection import WebtilesSocketConnection
 from webtiles.game_data_handler import GameDataHandler
 from webtiles.inotify import DirectoryWatcher
 from webtiles.terminal import TerminalRecorder
-from webtiles.util import DynamicTemplateLoader, dgl_format_str, parse_where_data
+from webtiles.util import DynamicTemplateLoader, parse_where_data, PeriodicCallback
 from webtiles.ws_handler import CrawlWebSocket, remove_in_lobbys, update_all_lobbys
 
 try:
@@ -35,20 +35,18 @@ last_game_id = 0
 processes = dict() # type: Dict[str,CrawlProcessHandler]
 unowned_process_logger = logging.LoggerAdapter(logging.getLogger(), {})
 
+# this will not template username...
 def find_game_info(socket_dir, socket_file):
     game_id = socket_file[socket_file.index(":")+1:-5]
     if (game_id in config.games and
-        os.path.abspath(config.games[game_id]["socket_path"]) == os.path.abspath(socket_dir)):
-        config.games[game_id]["id"] = game_id
+                    os.path.abspath(config.game_param(game_id, "socket_path")) == os.path.abspath(socket_dir)):
         return config.games[game_id]
 
     game_info = None
-    for game_id in list(config.games.keys()):
-        gi = config.games[game_id]
-        if os.path.abspath(gi["socket_path"]) == os.path.abspath(socket_dir):
-            game_info = gi
+    for game_id in config.games:
+        if os.path.abspath(config.game_param(game_id, "socket_path")) == os.path.abspath(socket_dir):
+            game_info = config.games[game_id]
             break
-    game_info["id"] = game_id
     return game_info
 
 def handle_new_socket(path, event):
@@ -70,7 +68,8 @@ def handle_new_socket(path, event):
         try:
             process.connect(abspath)
         except ConnectionRefusedError:
-            self.logger.error("Crawl process socket connection refused for %s, socketpath '%s'.",
+            process.logger.error(
+                "Crawl process socket connection refused for %s, socketpath '%s'.",
                 game_info["id"], abspath, exc_info=True)
             del processes[abspath]
             return
@@ -92,10 +91,10 @@ def handle_new_socket(path, event):
 def watch_socket_dirs():
     watcher = DirectoryWatcher()
     added_dirs = set()
-    for game_id in list(config.games.keys()):
-        game_info = config.games[game_id]
-        socket_dir = os.path.abspath(game_info["socket_path"])
-        if socket_dir in added_dirs: continue
+    for game_id in config.games:
+        socket_dir = os.path.abspath(config.game_param(game_id, "socket_path"))
+        if socket_dir in added_dirs:
+            continue
         watcher.watch(socket_dir, handle_new_socket)
 
 class CrawlProcessHandlerBase(object):
@@ -154,7 +153,7 @@ class CrawlProcessHandlerBase(object):
     def config_path(self, key):
         if key not in self.game_params:
             return None
-        base_path = self.format_path(self.game_params[key])
+        base_path = self.game_params.templated(key, username=self.username)
         if key == "socket_path" and config.get('live_debug'):
             # TODO: this is kind of brute-force given that regular paths aren't
             # validated at all...
@@ -181,7 +180,26 @@ class CrawlProcessHandlerBase(object):
         for receiver in self._receivers:
             receiver.flush_messages()
 
-    def write_to_all(self, msg, send): # type: (str, bool) -> None
+    def _is_full_map_msg(self, msg):
+        # heuristic: map bundles can be very large (100k+), so we don't want to
+        # decode. But the crawl process is guaranteed to put some key info
+        # first. Use some brute force regexes to check it.
+        tocheck = msg[0:50]
+        return (re.search(r'"msg" *: *"map"', tocheck)
+                and re.search(r'"clear" *: *true', tocheck))
+
+    def handle_process_message(self, msg, send): # type: (str, bool) -> None
+        # special handling for map messages on a new spectator: these can be
+        # massive, and the deflate time adds up, so only send it to new
+        # spectators. This is all a bit heuristic, and probably could use
+        # a new control message instead...
+        # TODO: if multiple spectators join at the same time, it's probably
+        # possible for this heuristic to fail and send a full map to everyone
+        if self._fresh_watchers and self._is_full_map_msg(msg):
+            for w in self._fresh_watchers:
+                w.append_message(msg, send)
+            self._fresh_watchers = set()
+            return
         for receiver in self._receivers:
             receiver.append_message(msg, send)
 
@@ -297,7 +315,9 @@ class CrawlProcessHandlerBase(object):
                 watcher.send_message("game_ended", reason = self.exit_reason,
                                      message = self.exit_message,
                                      dump = self.exit_dump_url)
-                watcher.go_lobby()
+                # these are individually ok, but with a lot of spectators,
+                # doing them in a big loop can easily add up to 100s of ms
+                IOLoop.current().add_callback(watcher.go_lobby)
 
         if self.end_callback:
             self.end_callback()
@@ -461,7 +481,7 @@ class CrawlProcessHandlerBase(object):
         if self.client_path:
             self._send_client(watcher)
             if watcher.watched_game == self:
-                watcher.send_json_options(self.game_params["id"], self.username)
+                watcher.send_json_options(self.game_params.id, self.username)
         self._receivers.add(watcher)
         self.update_watcher_description()
 
@@ -476,7 +496,7 @@ class CrawlProcessHandlerBase(object):
         for receiver in self._receivers:
             self._send_client(receiver)
             if receiver.watched_game == self:
-                receiver.send_json_options(self.game_params["id"],
+                receiver.send_json_options(self.game_params.id,
                                            self.username)
 
     def _send_client(self, watcher):
@@ -495,6 +515,7 @@ class CrawlProcessHandlerBase(object):
 
     def stop(self):
         if self.process:
+            self.process.flush_ttyrec()
             self.process.send_signal(subprocess.signal.SIGHUP)
             t = time.time() + config.get('kill_timeout')
             self.kill_timeout = IOLoop.current().add_timeout(t, self.kill)
@@ -565,7 +586,7 @@ class CrawlProcessHandlerBase(object):
             "username": u,
             "spectator_count": self.watcher_count(),
             "idle_time": (self.idle_time() if self.is_idle() else 0),
-            "game_id": self.game_params["id"],
+            "game_id": self.game_params.id,
             }
         for key in CrawlProcessHandlerBase.interesting_info:
             if key in self.where:
@@ -582,12 +603,7 @@ class CrawlProcessHandlerBase(object):
 
     def _base_call(self):
         game = self.game_params
-
-
-        call  = [game["crawl_binary"]]
-
-        if "pre_options" in game:
-            call += game["pre_options"]
+        call = game.get_call_base()
 
         call += ["-name",   self.username,
                  "-rc",     os.path.join(self.config_path("rcfile_path"),
@@ -600,7 +616,7 @@ class CrawlProcessHandlerBase(object):
             call += ["-no-player-bones"]
 
         if "options" in game:
-            call += game["options"]
+            call += game.templated("options", username=self.username)
 
         if "dir_path" in game:
             call += ["-dir", self.config_path("dir_path")]
@@ -632,6 +648,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._purging_timer = None
         self._process_hup_timeout = None
 
+        self._fresh_watchers = set()
+
     def start(self):
         self._purge_locks_and_start(True)
 
@@ -662,7 +680,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 if firsttime:
                     hup_wait = 10
                     self.send_to_all("stale_processes",
-                                     timeout=hup_wait, game=self.game_params["name"])
+                                     timeout=hup_wait,
+                                     # is name really correct here?
+                                     game=self.game_params.templated("name", username=self.username))
                     to = IOLoop.current().add_timeout(time.time() + hup_wait,
                                                       self._kill_stale_process)
                     self._process_hup_timeout = to
@@ -785,16 +805,17 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.logger.info("Starting game.")
 
         try:
-            self.process = TerminalRecorder(call, self.ttyrec_filename,
-                                            self._ttyrec_id_header(),
+            self.process = TerminalRecorder(call,
                                             self.logger,
                                             config.get('recording_term_size'),
-                                            env_vars = game.get("env", {}),
-                                            game_cwd = game.get("cwd", None),)
+                                            env_vars = game.templated("env", username=self.username, default={}),
+                                            game_cwd = game.templated("cwd", username=self.username, default=None),)
             self.process.end_callback = self._on_process_end
             self.process.output_callback = self._on_process_output
             self.process.activity_callback = self.note_activity
             self.process.error_callback = self._on_process_error
+
+            self.process.start(self.ttyrec_filename, self._ttyrec_id_header())
 
             self.gen_inprogress_lock()
 
@@ -823,27 +844,30 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.conn = WebtilesSocketConnection(self.socketpath, self.logger)
         self.conn.message_callback = self._on_socket_message
         self.conn.close_callback = self._on_socket_close
+        self.conn.username = self.username
         self.conn.connect(primary)
 
     def gen_inprogress_lock(self):
         self.inprogress_lock = os.path.join(self.config_path("inprogress_path"),
                                             self.username + ":" + self.lock_basename)
-        f = open(self.inprogress_lock, "w")
-        fcntl.lockf(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        self.inprogress_lock_file = f
-        cols, lines = self.process.get_terminal_size()
-        f.write("%s\n%s\n%s\n" % (self.process.pid, lines, cols))
-        f.flush()
+        with util.SlowWarning("gen_inprogress_lock '%s'" % self.inprogress_lock):
+            f = open(self.inprogress_lock, "w")
+            fcntl.lockf(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            self.inprogress_lock_file = f
+            cols, lines = self.process.get_terminal_size()
+            f.write("%s\n%s\n%s\n" % (self.process.pid, lines, cols))
+            f.flush()
 
     def remove_inprogress_lock(self):
         if self.inprogress_lock_file is None: return
-        fcntl.lockf(self.inprogress_lock_file.fileno(), fcntl.LOCK_UN)
-        self.inprogress_lock_file.close()
-        try:
-            os.remove(self.inprogress_lock)
-        except OSError:
-            # Lock already got deleted
-            pass
+        with util.SlowWarning("remove_inprogress_lock '%s'" % self.inprogress_lock):
+            fcntl.lockf(self.inprogress_lock_file.fileno(), fcntl.LOCK_UN)
+            self.inprogress_lock_file.close()
+            try:
+                os.remove(self.inprogress_lock)
+            except OSError:
+                # Lock already got deleted
+                pass
 
     def _ttyrec_id_header(self): # type: () -> bytes
         clrscr = b"\033[2J"
@@ -852,7 +876,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         ctime = time.ctime()
         return (clrscr + b"\033[1;1H" + crlf +
                  utf8("Player: %s" % self.username) + crlf +
-                 utf8("Game: %s" % self.game_params["name"]) + crlf +
+                 # odd that this uses name
+                 utf8("Game: %s" % self.game_params.templated("name", username=self.username)) + crlf +
                  utf8("Server: %s" % config.get('server_id')) + crlf +
                  utf8("Filename: %s" % self.lock_basename) + crlf +
                  utf8("Time: (%s) %s" % (tstamp, ctime)) + crlf +
@@ -892,6 +917,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         super(CrawlProcessHandler, self).add_watcher(watcher)
 
         if self.conn and self.conn.open:
+            self._fresh_watchers.add(watcher)
             self.conn.send_message('{"msg":"spectator_joined"}')
 
     def handle_input(self, msg): # type: (str) -> None
@@ -948,27 +974,42 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 receiver.append_message(line, True)
 
     def _on_process_error(self, line): # type: (str) -> None
+        morgue_url = self.game_params.templated("morgue_url", username=self.username)
+        # The msg this is parsing can be found in dbg-asrt.cc:do_crash_dump
+        # this is run line-by-line, so multi-line errors (the norm) may trigger
+        # this call more than once
         if line.startswith("ERROR"):
+            # header line, e.g. `ERROR in 'wizard.cc' at line 79: Intentional crash`
             self.exit_reason = "crash"
             if line.rfind(":") != -1:
                 self.exit_message = line[line.rfind(":") + 1:].strip()
-        elif line.startswith("We crashed!"):
+        elif line.find("crash report: ") >= 0:
             self.exit_reason = "crash"
-            if self.game_params["morgue_url"] != None:
+            if morgue_url:
+                match = re.search(r"crash report: (.*)", line)
+                if match is not None and match.group(1):
+                    self.exit_dump_url = morgue_url
+                    self.exit_dump_url += os.path.splitext(os.path.basename(match.group(1)))[0]
+        elif line.startswith("We crashed!"):
+            # before 0.19-a0-1226-g81ff5c4599 everything was on one line; this
+            # line prefix is still present but the match below fails.
+            self.exit_reason = "crash"
+            if morgue_url:
                 match = re.search(r"\(([^)]+)\)", line)
                 if match is not None:
-                    self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username)
+                    self.exit_dump_url = morgue_url
                     self.exit_dump_url += os.path.splitext(os.path.basename(match.group(1)))[0]
-        elif line.startswith("Writing crash info to"): # before 0.15-b1-84-gded71f8
+        elif line.startswith("Writing crash info to"):
+            # before 0.15-b1-84-gded71f8 the message was very minimal
             self.exit_reason = "crash"
-            if self.game_params["morgue_url"] != None:
+            if morgue_url:
                 url = None
                 if line.rfind("/") != -1:
                     url = line[line.rfind("/") + 1:].strip()
                 elif line.rfind(" ") != -1:
                     url = line[line.rfind(" ") + 1:].strip()
                 if url is not None:
-                    self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username) + os.path.splitext(url)[0]
+                    self.exit_dump_url = morgue_url + os.path.splitext(url)[0]
 
     def _on_socket_message(self, msg): # type: (str) -> None
         # stdout data is only used for compatibility to wrapper
@@ -983,6 +1024,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             msgobj = json_decode(msg)
             if msgobj["msg"] == "client_path":
                 if self.client_path == None:
+                    # XX Why does this string from the msgobj get templated?
                     self.client_path = self.format_path(msgobj["path"])
                     if "version" in msgobj:
                         self.crawl_version = msgobj["version"]
@@ -990,11 +1032,13 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self.send_client_to_all()
             elif msgobj["msg"] == "flush_messages":
                 # only queue, once we know the crawl process asks for flushes
+                # note: every version since 0.13 supports this
                 self.queue_messages = True;
                 self.flush_messages_to_all()
             elif msgobj["msg"] == "dump":
-                if "morgue_url" in self.game_params and self.game_params["morgue_url"]:
-                    url = self.game_params["morgue_url"].replace("%n", self.username) + msgobj["filename"]
+                morgue_url = self.game_params.templated("morgue_url", username=self.username)
+                if morgue_url:
+                    url = morgue_url + msgobj["filename"]
                     if msgobj["type"] == "command":
                         self.send_to_all("dump", url = url)
                     else:
@@ -1023,18 +1067,20 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 # want that to reset idle time.
                 self.note_activity()
 
-            self.write_to_all(msg, not self.queue_messages)
+            self.handle_process_message(msg, not self.queue_messages)
 
 
 
 class DGLLessCrawlProcessHandler(CrawlProcessHandler):
     def __init__(self, logger):
-        game_params = dict(
+        # used when dgl_mode = False
+        game_params = config.GameConfig(dict(
             name = "DCSS",
+            id = "dcss-webtiles",
             ttyrec_path = "./",
             inprogress_path = "./",
             socket_path = "./",
-            client_path = "./webserver/game_data")
+            client_path = "./webserver/game_data"))
         super(DGLLessCrawlProcessHandler, self).__init__(game_params,
                                                          "game",
                                                          logger)

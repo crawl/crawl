@@ -1563,7 +1563,7 @@ bool Scroller::on_event(const Event& event)
     if (event.type() == Event::Type::KeyDown)
     {
         const auto key = numpad_to_regular(
-                                    static_cast<const KeyEvent&>(event).key());
+                            static_cast<const KeyEvent&>(event).key(), true);
         // TODO: use CMD_MENU bindings here?
         switch (key)
         {
@@ -2390,7 +2390,6 @@ void PlayerDoll::_pack_doll()
         TILEP_PART_ARM,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
-        TILEP_PART_DRCHEAD,  // 15
         TILEP_PART_HELM,
         TILEP_PART_HAND1,   // 10
         TILEP_PART_HAND2,
@@ -2415,8 +2414,8 @@ void PlayerDoll::_pack_doll()
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    bool is_ptng = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA
-                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_PALENTONGA + 1);
+    bool is_ptng = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR
+                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_ARMATAUR + 1);
     if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
     {

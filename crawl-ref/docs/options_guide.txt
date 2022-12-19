@@ -57,7 +57,7 @@ The contents of this text are:
                 force_ability_targeter, allow_self_target, ability_menu,
                 spell_menu, easy_floor_use, sort_menus, spell_slot, item_slot,
                 ability_slot, autofight_stop, autofight_warning,
-                autofight_throw, autofight_throw_nomove, autofight_fire_stop,
+                autofight_fires, autofight_nomove_fires, autofight_fire_stop,
                 autofight_caught, autofight_wait, autofight_prompt_range,
                 automagic_enable, automagic_slot, automagic_fight,
                 automagic_stop, fail_severity_to_confirm, easy_door,
@@ -75,11 +75,12 @@ The contents of this text are:
                 messages_at_top, msg_condense_repeats, msg_condense_short,
                 show_travel_trail, skill_focus, default_show_all_skills,
                 monster_list_colour, view_delay, use_animations,
-                darken_beyond_range, force_more_message, flash_screen_message,
-                cloud_status, always_show_zot, action_panel,
-                action_panel_filter, action_panel_show_unidentified,
-                action_panel_scale, action_panel_orientation,
-                action_panel_font_family, action_panel_font_size
+                darken_beyond_range, show_blood, force_more_message,
+                flash_screen_message, cloud_status, always_show_zot,
+                action_panel, action_panel_filter,
+                action_panel_show_unidentified, action_panel_scale,
+                action_panel_orientation, action_panel_font_family,
+                action_panel_font_size
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -454,7 +455,8 @@ pregen_dungeon = incremental
         and no load times when entering levels, but at the cost of a slow game
         start. Some servers may disallow full pregeneration for online play.
 
-        When set to `false` or `classic`, the game will generate all levels on level entry, as was the rule before 0.23. Dungeons will not be stable
+        When set to `false` or `classic`, the game will generate all levels on
+        level entry, as was the rule before 0.23. Dungeons will not be stable
         given a seed with this option.
 
 2-  File System.
@@ -1310,19 +1312,22 @@ autofight_warning = 0
         recklessly!" printed to the danger channel. Any value less than
         or equal to zero disables this check.
 
-autofight_throw = false
+autofight_fires = false
         If your quiver contains contains a fireable action that does direct
-        damage to the enemy, regular CMD_AUTOFIGHT (i.e., tab on the default
+        damage to the enemy, regular CMD_AUTOFIGHT (tab on the default
         binding) will trigger it at enemies out of melee range. Without this
         option, only a wielded launcher (a bow, crossbow or sling) will be
         triggered by CMD_AUTOFIGHT. If an action that does direct damage is
         quivered but out of range, you will move towards the enemy. If an
         action is quivered that does not do direct damage, CMD_AUTOFIGHT will
-        ignore it entirely.
+        ignore it entirely. To prevent moving altogether, rebind with
+        CMD_AUTOFIGHT_NOMOVE instead of CMD_AUTOFIGHT. (Legacy name:
+        `autofight_throw`.)
 
-autofight_throw_nomove = true
-        This works same as above, except only for ===hit_closest_nomove rather
-        than ===hit_closest; this is usually bound to shift-Tab.
+autofight_nomove_fires = true
+        This option modifies the behavior of CMD_AUTOFIGHT_NOMOVE (unbound by
+        default) in a similar way to how `autofight_fires`, above, modifies
+        CMD_AUTOFIGHT. (Legacy name: `autofight_throw_nomove`.)
 
 autofight_fire_stop = false
         When firing missiles or throwing objects using autofight, if this
@@ -1628,6 +1633,11 @@ view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
         attacks and invocations with visual effects.
 
+reduce_animations = false
+        If set to true, simplify some animations so that incremental steps are
+        not drawn. For example, for casting a beam spell or firing a ranged
+        weapon, only the final beam path is shown.
+
 use_animations = beam, range, hp, monster_in_sight, pickup, monster, player
 use_animations += branch_entry
         Controls whether or not to run special animations, such as when being
@@ -1660,6 +1670,10 @@ darken_beyond_range = true
         If set to true, everything beyond range when targeting will be
         coloured grey. Setting this to false will also disable the "range"
         category of the use_animations option.
+
+show_blood = true
+        Setting this option to false will hide blood splatters in the floor
+        and on the walls. In tiles, corpses will be displayed as skeletons.
 
 force_more_message += <regex>, <regex>
         (List option)
@@ -1861,7 +1875,7 @@ fire_order_spell = all
         of spells by name, and supports += and -=. It allows two special values:
         'all' is shorthand for all spells, and 'attack' is shorthand for the
         list of spells that are considered damage spells for autofight
-        purposes; see autofight_throw for more information.
+        purposes; see autofight_fires for more information.
 
 fire_order_ability = all
 fire_order_ability -= berserk
@@ -1872,7 +1886,7 @@ fire_order_ability -= berserk
         of abilities by name, and supports += and -=. It allows two special
         values: 'all' is shorthand for all spells, and 'attack' is shorthand for
         the list of abilities that are considered damage spells for autofight
-        purposes; see autofight_throw for more information.
+        purposes; see autofight_fires for more information.
 
 fail_severity_to_quiver = 2
         Exclude spells with this miscast level or higher from quiver cycling
@@ -2363,8 +2377,10 @@ tile_layout_priority = minimap, inventory, command, spell, monster
 tile_display_mode = (tiles | glyphs | hybrid)
         Controls how the dungeon is rendered. You can use normal tiles (default)
         or make it look like the console version by using glyphs. Hybrid
-        overlays icons on top of the glyph view.
-        This option is only available on WebTiles.
+        overlays icons on top of the glyph view and uses a square tile aspect
+        ratio.
+
+        This option is only available on local tiles and webtiles.
 
 tile_level_map_hide_messages = true
 tile_level_map_hide_sidebar = false

@@ -1028,12 +1028,19 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         ui.hide_popup();
     }
 
+    var ui_stack_handled = false;
+
     function recv_ui_stack(msg)
     {
         if (!client.is_watching())
             return;
+        // only process once on load
+        if (ui_stack_handled)
+            return;
+
         for (var i = 0; i < msg.items.length; i++)
             comm.handle_message(msg.items[i]);
+        ui_stack_handled = true;
     }
 
     function recv_ui_state(msg)
@@ -1070,6 +1077,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function ui_layouts_cleanup()
     {
+        ui_stack_handled = false;
         if (update_server_scroll_timeout)
         {
             clearTimeout(update_server_scroll_timeout);

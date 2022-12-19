@@ -117,6 +117,8 @@ bool monster_inherently_flies(const monster &mons)
     // check both so spectral humans and zombified dragons both fly
     return monster_class_flies(mons.type)
         || monster_class_flies(mons_base_type(mons))
+        || mons_is_draconian_job(mons.type)
+            && monster_class_flies(draconian_subspecies(mons))
         || mons_is_ghost_demon(mons.type) && mons.ghost && mons.ghost->flies
         || mons.has_facet(BF_BAT);
 }
@@ -1672,15 +1674,17 @@ bool mons_class_can_leave_corpse(monster_type mc)
     return smc->leaves_corpse;
 }
 
-bool mons_class_can_be_zombified(monster_type mc)
+bool mons_class_can_be_zombified(monster_type mzc)
 {
-    monster_type ms = mons_species(mc);
-    return !invalid_monster_type(ms)
-            && !mons_class_flag(mc, M_NO_ZOMBIE)
-            && !mons_class_flag(mc, M_INSUBSTANTIAL)
-            && !mons_is_tentacle_or_tentacle_segment(mc)
-            && (mons_class_holiness(mc) & MH_NATURAL
-                || mons_class_can_leave_corpse(ms));
+    monster_type mc = mons_species(mzc);
+    ASSERT_smc();
+    return !invalid_monster_type(mc)
+            && !mons_class_flag(mzc, M_NO_ZOMBIE)
+            && !mons_class_flag(mzc, M_INSUBSTANTIAL)
+            && !mons_is_tentacle_or_tentacle_segment(mzc)
+            && (mons_class_holiness(mzc) & MH_NATURAL
+                || mons_class_can_leave_corpse(mc))
+            && smc->attack[0].damage; // i.e. has_attack
 }
 
 bool mons_can_be_zombified(const monster& mon)
@@ -3344,7 +3348,7 @@ bool mons_is_confused(const monster& m, bool class_too)
 
 bool mons_is_wandering(const monster& m)
 {
-    return m.behaviour == BEH_WANDER;
+    return m.behaviour == BEH_WANDER || m.behaviour == BEH_BATTY;
 }
 
 bool mons_is_seeking(const monster& m)
@@ -3703,6 +3707,7 @@ bool mons_has_ranged_attack(const monster& mon)
 {
     return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(&mon)
+           || mon.missiles()
            || mon.reach_range() != REACH_NONE
            || _mons_has_attack_wand(mon);
 }

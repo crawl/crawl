@@ -50,9 +50,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Flames
-    SPELL_FOXFIRE,
-    SPELL_CONJURE_FLAME,
     SPELL_INNER_FLAME,
+    SPELL_STICKY_FLAME,
     SPELL_FLAME_WAVE,
 },
 
@@ -69,9 +68,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Fire
+    SPELL_FOXFIRE,
     SPELL_FIREBALL,
     SPELL_STARBURST,
-    SPELL_IGNITION,
 },
 
 {   // Book of Ice
@@ -82,8 +81,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Spatial Translocations
     SPELL_BLINK,
+    SPELL_MOMENTUM_STRIKE,
     SPELL_BECKONING,
-    SPELL_MANIFOLD_ASSAULT,
 },
 
 {   // Book of Hexes
@@ -100,8 +99,9 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Lightning
     SPELL_DISCHARGE,
+    SPELL_ELECTRIC_CHARGE,
     SPELL_LIGHTNING_BOLT,
-    SPELL_MAXWELLS_COUPLING,
+    SPELL_ARCJOLT,
 },
 
 {   // Book of Death
@@ -111,7 +111,6 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of Misfortune
-    SPELL_CONFUSING_TOUCH,
     SPELL_VIOLENT_UNRAVELLING,
     SPELL_ENFEEBLE,
 },
@@ -136,7 +135,8 @@ static const vector<spell_type> spellbook_templates[] =
 
 {   // Book of Vapours
     SPELL_POISONOUS_VAPOURS,
-    SPELL_CORPSE_ROT,
+    SPELL_ROT,
+    SPELL_MEPHITIC_CLOUD,
 },
 
 {   // Book of Necromancy
@@ -169,6 +169,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 {   // Book of the Warp
+    SPELL_MANIFOLD_ASSAULT,
     SPELL_DISPERSAL,
     SPELL_DISJUNCTION,
 },
@@ -334,7 +335,7 @@ static const vector<spell_type> spellbook_templates[] =
 #endif
 
 { // Book of Decay
-    SPELL_CORPSE_ROT,
+    SPELL_ROT,
     SPELL_DISPEL_UNDEAD,
     SPELL_DEATH_CHANNEL,
 },
@@ -352,9 +353,9 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Everburning Encyclopedia
-    SPELL_CONJURE_FLAME,
     SPELL_IGNITE_POISON,
     SPELL_STICKY_FLAME,
+    SPELL_IGNITION,
 },
 
 { // Book of Earth
@@ -381,6 +382,7 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Blasting
+    SPELL_BLASTSPARK,
     SPELL_FULMINANT_PRISM,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_LRD,
@@ -441,8 +443,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Book of Touch
-    SPELL_DISCHARGE,
-    SPELL_STICKY_FLAME,
+    SPELL_KISS_OF_DEATH,
+    SPELL_CONFUSING_TOUCH,
     SPELL_DISPEL_UNDEAD,
 },
 
@@ -471,8 +473,8 @@ static const vector<spell_type> spellbook_templates[] =
 },
 
 { // Trismegistus Codex
+    SPELL_BLASTSPARK,
     SPELL_IGNITE_POISON,
-    SPELL_MEPHITIC_CLOUD,
     SPELL_FREEZING_CLOUD,
 },
 
@@ -486,6 +488,12 @@ static const vector<spell_type> spellbook_templates[] =
     SPELL_SCORCH,
     SPELL_FLAME_WAVE,
     SPELL_SUMMON_CACTUS,
+},
+
+{ // Maxwell's Memoranda
+    SPELL_ELECTRIC_CHARGE,
+    SPELL_ARCJOLT,
+    SPELL_MAXWELLS_COUPLING,
 },
 
 };

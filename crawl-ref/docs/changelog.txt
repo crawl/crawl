@@ -1,4 +1,4 @@
-Stone Soup 0.29-a0 (through 0.29-a0-1033-gb6c65ffae6)
+Stone Soup 0.29-b1 (through 0.29-b1)
 ---------------------------------------------------
 
 Highlights
@@ -21,6 +21,7 @@ Branches, Environment
     as their previous deepest abyss depth.
 * Dungeon shafts try not to send the player directly into monsters' sight.
 * All descents of new stairs and hatches are now fast, not just one per floor.
+* The Lair is now 5 levels long (was 6).
 * Zombies and skeletons are removed from normal Dungeon spawns.
 * Temple sizes now range from 6 to 21 altars, with a small chance of rare
   temples with 0, 1, or 22 temple-god altars.
@@ -90,6 +91,28 @@ Gods
 * Uskayaw grants piety for damaging enemy summons.
 * Ru's Sacrifice Experience now only takes one XL (was two).
 * Various Ru sacrifices (including Experience) have their piety values tweaked.
+
+Interface and Options
+---------------------
+* Common menu navigation commands are mapped via `CMD_MENU_...` commands, and
+  can be rebound by `bindkey` options (local tiles/console only)
+* Keycodes for rebinding keys are now the same across all builds.
+* Keybinds, macros, and keymaps now accept human-readable key names for many
+  special keys (e.g. "F1", "NP." for numpad `.`, etc.)
+* Numpad keys can now be bound separately in all builds.
+* Improvements to specific menus:
+  - The `F`ire menu now allows selecting any item with a targeter. This includes
+    items that don't show the targeter by default but do have a useful targeter,
+    such as scrolls of fear.
+  - In menus for equipping and using items, a toggle allows switching between
+    item type.
+  - In most menus that list items, or allow describing a menu entry, entries can
+    be described without changing the menu mode by using the `'` key, or by
+    right clicking (tiles only).
+  - Item type hotkeys in the inventory now scroll, instead of select.
+  - The `*` menu for Firing is now used to select items to toss away.
+* The branch overview menu now shows zot clock values when they are low.
+* `tile_sidebar_pixels` option: allows resizing local tiles sidebar icons.
 
 Items
 -----
@@ -201,27 +224,6 @@ Tiles
 * The Lernaean Hydra now has unique tiles when skeletonized.
 * Borgnjor's Mausoleum and Tukima's Studio have new environmental art.
 * Runed door tiles have been reworked for greater visibility.
-
-Interface and Options
----------------------
-* Common menu navigation commands are mapped via `CMD_MENU_...` commands, and
-  can be rebound by `bindkey` options (local tiles/console only)
-* Keycodes for rebinding keys are now the same across all builds.
-* Keybinds, macros, and keymaps now accept human-readable key names for many
-  special keys (e.g. "F1", "NP." for numpad `.`, etc.)
-* Numpad keys can now be bound separately in all builds.
-* Improvements to specific menus:
-  - The `F`ire menu now allows selecting any item with a targeter (including
-    items that don't show the targeter by default but but do have a useful
-    targeter, such as scrolls of fear).
-  - In menus for equipping and using items, a toggle allows switching between
-    item type.
-  - In most menus that list items, or allow describing a menu entry, entries can
-    be described without changing the menu mode by using the `'` key, or by
-    right clicking (tiles only).
-  - Item type hotkeys in the inventory now scroll, instead of select.
-  - The `*` menu for Firing is now used to select items to toss away.
-* The branch overview menu now shows zot clock values when they are low.
 
 Stone Soup 0.28.0 (20220203)
 ----------------------------

@@ -181,3 +181,9 @@ degeneration cloud
 
 A cloud formed from concentrated potions of degeneration. Creatures that venture
 into one will rapidly lose strength, dexterity, and intelligence.
+%%%%
+blastsparks cloud
+
+A cloud of volatile blastsparks. These explode when exposed to open flame or when
+anything disturbs them by moving into them. The explosion is concussive, knocking
+adjacent creatures away.

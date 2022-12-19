@@ -271,6 +271,8 @@ public:
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
+    bool        show_blood; // whether to show blood or not
+    bool        reduce_animations;   // if true, don't show interim steps for animations
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
@@ -559,6 +561,8 @@ public:
     VColour     tile_transporter_landing_col;
     VColour     tile_explore_horizon_col;
 
+    string      tile_display_mode;
+
     VColour     tile_window_col;
 #ifdef USE_TILE_LOCAL
     int         game_scale;
@@ -625,7 +629,6 @@ public:
     pair<int, int> tile_shield_offsets;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
-    string      tile_display_mode;
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
     bool        tile_web_mouse_control;

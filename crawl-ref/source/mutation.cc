@@ -94,6 +94,7 @@ static const body_facet_def _body_facets[] =
 {
     { EQ_HELMET, MUT_HORNS },
     { EQ_HELMET, MUT_ANTENNAE },
+    { EQ_HELMET, MUT_BEAK },
     { EQ_GLOVES, MUT_CLAWS },
     { EQ_GLOVES, MUT_DEMONIC_TOUCH },
     { EQ_BOOTS, MUT_HOOVES },
@@ -190,6 +191,8 @@ static const int conflict[][3] =
     { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,              -1},
     { MUT_FANGS,               MUT_BEAK,                   -1},
     { MUT_ANTENNAE,            MUT_HORNS,                  -1}, // currently overridden by physiology_mutation_conflict
+    { MUT_BEAK,                MUT_HORNS,                  -1},
+    { MUT_BEAK,                MUT_ANTENNAE,               -1},
     { MUT_HOOVES,              MUT_TALONS,                 -1},
     { MUT_CLAWS,               MUT_DEMONIC_TOUCH,          -1},
     { MUT_TRANSLUCENT_SKIN,    MUT_CAMOUFLAGE,             -1},
@@ -1340,6 +1343,11 @@ static bool _accept_mutation(mutation_type mutat, bool temp, bool ignore_weight)
     if (you.get_base_mutation_level(mutat) >= mdef.levels)
         return false;
 
+    // don't let random good mutations cause stat 0. Note: various code paths,
+    // including jiyva-specific muts, and innate muts, don't include this check!
+    if (_mut_has_use(mdef, mutflag::good) && mutation_causes_stat_zero(mutat))
+        return false;
+
     if (ignore_weight)
         return true;
 
@@ -1767,10 +1775,6 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // To get upgraded spit poison, you must have it innately
     if (!you.has_innate_mutation(MUT_SPIT_POISON) && mutat == MUT_SPIT_POISON)
-        return true;
-
-    // Only Palentonga can go on a roll.
-    if (!you.has_innate_mutation(MUT_ROLL) && mutat == MUT_ROLL)
         return true;
 
     // Only Draconians (and gargoyles) can get wings.

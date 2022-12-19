@@ -44,6 +44,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
+#include "viewchar.h"
 
 static VColour _flash_colours[NUM_TERM_COLOURS] =
 {
@@ -70,10 +71,12 @@ DungeonRegion::DungeonRegion(const TileRegionInit &init) :
     m_cx_to_gx(0),
     m_cy_to_gy(0),
     m_last_clicked_grid(coord_def()),
-    m_buf_dngn(init.im)
+    m_buf_dngn(init.im),
+    m_font_dx(0), m_font_dy(0)
 {
     for (int i = 0; i < CURSOR_MAX; i++)
         m_cursor[i] = NO_CURSOR;
+    config_glyph_font();
 }
 
 DungeonRegion::~DungeonRegion()
@@ -112,10 +115,76 @@ void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
     m_buf_dngn.add_icons_tile(tile, ep.x, ep.y);
 }
 
+// XX code duplication
+static unsigned _get_highlight(int col)
+{
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_highlight :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_highlight :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_highlight :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_highlight :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_highlight :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_highlight :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_highlight :
+           (col & COLFLAG_REVERSE)          ? unsigned{CHATTR_REVERSE}
+                                            : unsigned{CHATTR_NORMAL};
+}
+
+void DungeonRegion::pack_glyph_at(screen_cell_t *vbuf_cell, int vx, int vy)
+{
+    // need to do some footwork to decode glyph colours
+    const int bg = _get_highlight(vbuf_cell->colour);
+    const int fg = vbuf_cell->colour & 0xF;
+    const int advance = m_buf_dngn.get_glyph_font()->char_width(true);
+    const int real_x = vx * dx + sx + ox + (dx - advance) / 2;
+    const int real_y = vy * dy + sy + oy;
+    int tiles_bg = CHATTR_NORMAL;
+    int tiles_fg = fg;
+
+    switch (bg & CHATTR_ATTRMASK)
+    {
+        case CHATTR_REVERSE:
+            tiles_bg = fg;
+            tiles_fg = BLACK; // XX not right in general
+            break;
+        case CHATTR_STANDOUT:
+        case CHATTR_BOLD:
+            if (fg < 8)
+                tiles_fg = fg + 8;
+            break;
+        case CHATTR_DIM:
+            if (fg >= 8)
+                tiles_fg = fg - 8;
+            break;
+        case CHATTR_HILITE:
+            // hilite colour stored in high bits
+            tiles_bg = (bg & CHATTR_COLMASK) >> 8;
+            break;
+        case CHATTR_BLINK: // ignore
+        case CHATTR_UNDERLINE: // ignore
+        case CHATTR_NORMAL:
+        default:
+            break;
+    }
+    tiles_fg = macro_colour(tiles_fg);
+    if (tiles_bg != CHATTR_NORMAL)
+        tiles_bg = macro_colour(tiles_bg);
+    ASSERT(tiles_fg < NUM_TERM_COLOURS);
+    if (tiles_bg == CHATTR_NORMAL)
+        m_buf_dngn.add_glyph(vbuf_cell->glyph, term_colours[tiles_fg], real_x, real_y);
+    else
+    {
+        ASSERT(tiles_bg < NUM_TERM_COLOURS);
+        m_buf_dngn.add_glyph(vbuf_cell->glyph,
+            term_colours[tiles_fg], term_colours[tiles_bg], real_x, real_y);
+    }
+}
+
 void DungeonRegion::pack_buffers()
 {
     m_buf_dngn.clear();
     m_buf_flash.clear();
+    const bool pack_tiles = Options.tile_display_mode != "glyphs";
+    const bool pack_glyphs = Options.tile_display_mode != "tiles";
 
     if (m_vbuf.empty())
         return;
@@ -128,7 +197,10 @@ void DungeonRegion::pack_buffers()
     for (int y = 0; y < crawl_view.viewsz.y; ++y)
         for (int x = 0; x < crawl_view.viewsz.x; ++x)
         {
-            m_buf_dngn.add(vbuf_cell->tile, x, y);
+            if (pack_tiles)
+                m_buf_dngn.add(vbuf_cell->tile, x, y);
+            if (pack_glyphs)
+                pack_glyph_at(vbuf_cell, x, y);
 
             const int fcol = vbuf_cell->flash_colour;
             if (fcol)
@@ -137,6 +209,7 @@ void DungeonRegion::pack_buffers()
             vbuf_cell++;
         }
 
+    // TODO: these cursors are a bit thick for glyphs mode
     pack_cursor(CURSOR_TUTORIAL, TILEI_TUTORIAL_CURSOR);
     const bool mouse_curs_vis = you.see_cell(m_cursor[CURSOR_MOUSE]);
     pack_cursor(CURSOR_MOUSE, mouse_curs_vis ? TILEI_CURSOR : TILEI_CURSOR2);
@@ -157,9 +230,22 @@ void DungeonRegion::render()
 
     set_transform();
     glmanager->set_scissor(0, 0, tile_iw, tile_ih);
-    m_buf_dngn.draw();
-    draw_minibars();
+    if (Options.tile_display_mode == "tiles")
+        m_buf_dngn.draw_tiles();
+    else
+    {
+        glmanager->reset_transform();
+        m_buf_dngn.draw_glyphs();
+        set_transform();
+    }
+
+    // even glyph mode needs the icon layer: it is used for cursors.
+    m_buf_dngn.draw_icons();
+    if (Options.tile_display_mode != "glyphs")
+        draw_minibars();
+
     m_buf_flash.draw();
+
     glmanager->reset_scissor();
 
     unordered_set<coord_def> tag_coords;
@@ -288,9 +374,42 @@ void DungeonRegion::clear()
     m_vbuf.clear();
 }
 
+void DungeonRegion::config_glyph_font()
+{
+    if (dx != m_font_dx || dy != m_font_dy)
+    {
+        if (Options.tile_display_mode == "glyphs")
+        {
+            // we won't get the exact font size asked for (or at least, I have
+            // not figured out how), so just post facto adjust dx and dy.
+            // Cache changed dx/dy values so that successive calls don't
+            // further change this without an actual real resize.
+            m_buf_dngn.get_glyph_font()->resize(dy);
+            // grid size uses exact advances
+            dx = m_buf_dngn.get_glyph_font()->char_width(true);
+            dy = m_buf_dngn.get_glyph_font()->char_height(true);
+        }
+        else
+            m_buf_dngn.get_glyph_font()->resize(dy * 3 /4); // somewhat heuristic
+        // XX this will break if mode can be changed in-game, need to reset dx
+
+        m_font_dx = dx;
+        m_font_dy = dy;
+    }
+}
+
 void DungeonRegion::on_resize()
 {
     // TODO enne
+}
+
+void DungeonRegion::recalculate()
+{
+    // needs to happen before superclass recalculate, and therefore can't
+    // happen in on_resize
+    config_glyph_font();
+
+    Region::recalculate();
 }
 
 bool DungeonRegion::inside(int x, int y)

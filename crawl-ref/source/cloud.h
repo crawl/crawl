@@ -54,6 +54,9 @@ struct cloud_tile_info
 
 #define MEPH_HD_CAP 21
 
+#define BLASTSPARK_POWER_KEY "blastspark_power"
+#define MIASMA_IMMUNE_KEY "miasma_immune"
+
 cloud_struct* cloud_at(coord_def pos);
 
 cloud_type cloud_type_at(const coord_def &pos);
@@ -88,6 +91,7 @@ colour_t get_cloud_colour(const cloud_struct &cloud);
 coord_def get_cloud_originator(const coord_def& pos);
 
 bool is_damaging_cloud(cloud_type type, bool temp = false, bool yours = false);
+bool cloud_damages_over_time(cloud_type type, bool temp = false, bool yours = false);
 bool is_harmless_cloud(cloud_type type);
 bool is_opaque_cloud(cloud_type ctype);
 string cloud_type_name(cloud_type type, bool terse = true);

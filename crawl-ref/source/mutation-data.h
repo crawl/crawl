@@ -131,7 +131,7 @@ static const mutation_def mut_data[] =
    "You feel less cold resistant."},
 },
 
-{ MUT_HEAT_VULNERABILITY, 0, 3,
+{ MUT_HEAT_VULNERABILITY, 3, 3,
   mutflag::bad | mutflag::qazlal, true,
   "heat vulnerability",
 
@@ -148,7 +148,7 @@ static const mutation_def mut_data[] =
    "You feel less vulnerable to heat."},
 },
 
-{ MUT_COLD_VULNERABILITY, 0, 3,
+{ MUT_COLD_VULNERABILITY, 3, 3,
   mutflag::bad | mutflag::qazlal, true,
 
   "cold vulnerability",
@@ -939,9 +939,10 @@ static const mutation_def mut_data[] =
 
   {"", "", ""},
 },
+#if TAG_MAJOR_VERSION == 34
 
-// Palentonga only
-{ MUT_ROLL, 8, 3, mutflag::good, true,
+// Armataur only
+{ MUT_ROLL, 0, 3, mutflag::good, true,
   "roll",
 
   {"You can roll at nearby foes to attack.",
@@ -957,6 +958,15 @@ static const mutation_def mut_data[] =
    "You can no longer roll as far."},
 },
 
+{ MUT_CURL, 0, 1, mutflag::good, true,
+  "reflexive curl",
+
+  {"You curl defensively after being hit. (AC +7*)", "", ""},
+  {"You now curl defensively after being hit.", "", ""},
+  {"", "", ""},
+},
+#endif
+
 { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
   "armoured tail",
 
@@ -965,14 +975,13 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_CURL, 0, 1, mutflag::good, true,
-  "reflexive curl",
+{ MUT_ROLLPAGE, 0, 1, mutflag::good, false,
+  "roll",
 
-  {"You curl defensively after being hit. (AC +7*)", "", ""},
-  {"You now curl defensively after being hit.", "", ""},
+  {"You roll when moving toward enemies. (Rampage)", "", ""},
+  {"", "", ""},
   {"", "", ""},
 },
-
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::good, true,
   "shaggy fur",
@@ -2178,12 +2187,20 @@ static const mutation_def mut_data[] =
   {"You grow two extra arms.", "", ""},
 },
 
-{ MUT_NO_DRINK, 0, 1, mutflag::good, false,
+{ MUT_NO_DRINK, 0, 1, mutflag::bad, false,
   "no potions",
 
   {"You do not drink.", "", ""},
   {"Your mouth dries to ashes.", "", ""},
   {"You gain the ability to drink.", "", ""},
+},
+
+{ MUT_FAITH, 0, 1, mutflag::bad, false,
+  "faith",
+
+  {"You have a special connection with the divine. (Faith)", "", ""},
+  {"You feel connected to something greater than you.", "", ""},
+  {"You feel rebellious.", "", ""},
 },
 
 { MUT_REFLEXIVE_HEADBUTT, 0, 1, mutflag::good, true,
@@ -2354,6 +2371,18 @@ static const mutation_def mut_data[] =
   {"You regain HP and MP as you explore.", "", ""},
   {"You feel a fierce wanderlust.", "", ""},
   {"You feel like a homebody.", "", ""},
+},
+
+{ MUT_LONG_TONGUE, 0, 1, mutflag::good, false, "long tongue",
+  {"Your long tongue fully drains potion bottles. (2x potion effects)", "", ""},
+  {"Your tongue grows exceptionally long.", "", ""},
+  {"Your tongue shrinks into a sad, ordinary nub.", "", ""},
+},
+
+{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false, "awkward tongue",
+  {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
+  {"Your tongue begins to flop around amusingly.", "", ""},
+  {"Your tongue regains its customary placidity.", "", ""},
 },
 
 };

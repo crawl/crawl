@@ -3,6 +3,7 @@ airstrike AIRSTRIKE
 chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
 lightning_bolt LIGHTNING_BOLT
+arcjolt ARCJOLT
 maxwells MAXWELLS_COUPLING
 repel_missiles REPEL_MISSILES
 shock SHOCK
@@ -19,6 +20,7 @@ dazzling_spray DAZZLING_SPRAY
 force_lance FORCE_LANCE
 fulminant_prism FULMINANT_PRISM
 searing_ray SEARING_RAY
+momentum_strike MOMENTUM_STRIKE
 
 %sdir gui/spells/earth
 iron_shot IRON_SHOT
@@ -53,10 +55,10 @@ violent_unravelling VIOLENT_UNRAVELLING
 %sdir gui/spells/fire
 bolt_of_fire BOLT_OF_FIRE
 bolt_of_magma BOLT_OF_MAGMA
-conjure_flame CONJURE_FLAME
 fire_storm FIRE_STORM
 fireball FIREBALL
 flame_tongue FLAME_TONGUE
+kindle_blastsparks BLASTSPARK
 ignite_poison IGNITE_POISON
 sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
@@ -104,6 +106,7 @@ symbol_of_torment SYMBOL_OF_TORMENT
 vampiric_draining VAMPIRIC_DRAINING
 infestation INFESTATION
 borgnjors_vile_clutch BORGNJORS_VILE_CLUTCH
+kiss_of_death KISS_OF_DEATH
 
 %sdir gui/spells/poison
 alistairs_intoxication ALISTAIRS_INTOXICATION
@@ -151,6 +154,7 @@ portal_projectile PORTAL_PROJECTILE
 teleport_other TELEPORT_OTHER
 gravitas GRAVITAS
 manifold_assault MANIFOLD_ASSAULT
+electric_charge ELECTRIC_CHARGE
 
 %sdir gui/spells/transmutation
 blade_hands BLADE_HANDS

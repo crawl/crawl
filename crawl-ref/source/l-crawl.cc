@@ -294,7 +294,9 @@ static int crawl_yesno(lua_State *ls)
 
 static void crawl_sendkeys_proc(lua_State *ls, int argi)
 {
-    if (lua_isstring(ls, argi))
+    if (lua_type(ls, argi) == LUA_TNUMBER)
+        macro_sendkeys_end_add_expanded(luaL_safe_checkint(ls, argi));
+    else if (lua_isstring(ls, argi))
     {
         const char *keys = luaL_checkstring(ls, argi);
         if (!keys)
@@ -322,8 +324,6 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
             lua_pop(ls, 1);
         }
     }
-    else if (lua_isnumber(ls, argi))
-        macro_sendkeys_end_add_expanded(luaL_safe_checkint(ls, argi));
 }
 
 /*** Send keypresses to crawl.

@@ -104,6 +104,13 @@ InvEntry::InvEntry(const item_def &i)
     quantity = i.quantity;
 }
 
+int InvEntry::highlight_colour(bool temp) const
+{
+    // XX this hardcodes the tag "inventory", but is used by all sorts of
+    // subclasses that aren't inv.
+    return menu_colour(get_text(), item_prefix(*item, temp), "inventory");
+}
+
 const string &InvEntry::get_basename() const
 {
     if (basename.empty())
@@ -414,17 +421,33 @@ void InvMenu::select_item_index(int idx, int qty)
 
 bool InvMenu::examine_index(int i)
 {
-    if (on_examine)
+    const bool do_actions = type == menu_type::describe;
+    // not entirely sure if the bounds check is necessary
+    auto ie = (i >= 0 && i < static_cast<int>(items.size()))
+                    ? dynamic_cast<InvEntry *>(items[i])
+                    : nullptr;
+
+    // superclass behavior: do nothing unless on_examine is defined, in which
+    // case call on_examine.
+    if (!ie || on_examine)
         return Menu::examine_index(i);
-    // default behavior: examine inv item. You must override or use on_examine
-    // if your items come from somewhere else, or this will cause crashes!
-    if (i >= 0 && i < static_cast<int>(items.size()) && items[i]->hotkeys.size())
+    else if (type == menu_type::pickup)
     {
-        unsigned char select = items[i]->hotkeys[0];
+        // item is a floor item.
+        auto desc_tgt = const_cast<item_def*>(ie->item);
+        ASSERT(desc_tgt);
+        return describe_item(*desc_tgt, nullptr, do_actions);
+    }
+    else if (ie->hotkeys.size())
+    {
+        // default behavior: examine inv item. You must override or use on_examine
+        // if your items come from somewhere else, or this will cause crashes!
+        unsigned char select = ie->hotkeys[0];
         const int invidx = letter_to_index(select);
         ASSERT(you.inv[invidx].defined());
-        return describe_item(you.inv[invidx]);
+        return describe_item(you.inv[invidx], nullptr, do_actions);
     }
+    // nothing to describe, ignore
     return true;
 }
 

@@ -63,6 +63,7 @@
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
 #                     relative to prefix or absolute.
 #
+#    LINUXDEPLOY   -- path to linuxdeploy tool, required for AppImage builds
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
 #
 # For various mac build tricks oriented at release builds see the various
@@ -101,9 +102,9 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
-        clean-catch2 clean-plug-and-play-tests \
-		clean-coverage clean-coverage-full \
-        distclean debug debug-lite profile package-source source \
+        clean-appimage clean-catch2 clean-plug-and-play-tests \
+        clean-coverage clean-coverage-full \
+        appimage distclean debug debug-lite profile package-source source \
         build-windows package-windows-installer docs greet api api-dev android FORCE \
         monster catch2-tests plug-and-play-tests \
         crawl-universal crawl-arm64-apple-macos11 crawl-x86_64-apple-macos10.7 clean-mac
@@ -614,6 +615,32 @@ NO_PKGCONFIG = YesPlease
 endif
 endif
 
+ifdef TILES
+  XDG_ORIG := org.develz.Crawl_tiles
+  ifndef XDG_NAME
+    XDG_NAME := org.develz.Crawl_tiles
+  endif
+else
+  XDG_ORIG := org.develz.Crawl_console
+  ifndef XDG_NAME
+    XDG_NAME := org.develz.Crawl_console
+  endif
+endif
+
+ifdef LINUXDEPLOY
+  prefix=usr
+  DESTDIR=appimage/
+  SAVEDIR=~/.crawl
+  COPY_FONTS=yes
+  export VERSION=$(SRC_VERSION)
+ifdef TILES
+  appimage_build := tiles
+else
+  appimage_build := console
+endif
+  export OUTPUT = stone_soup-$(SRC_VERSION)-linux-$(appimage_build).$(uname_M).AppImage
+endif
+
 ifdef ANDROID
   BUILD_LUA=
   BUILD_SQLITE=
@@ -833,6 +860,8 @@ endif
 # Unit tests
 ifneq (,$(filter catch2-tests,$(MAKECMDGOALS)))
 	COVERAGE=YesPlease
+	# current catch2 doesn't support c++11
+	STDFLAG = -std=c++14
 endif
 
 ifdef HURRY
@@ -945,7 +974,11 @@ ifneq ($(strip $(DATADIR)),)
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-	FONTDIR = $(strip $(DATADIR))/dat/tiles/
+        ifeq ($(LINUXDEPLOY),)
+	  FONTDIR = $(strip $(DATADIR))/dat/tiles/
+        else
+	  FONTDIR = dat/tiles/
+        endif
   else
     ifneq ($(DESTDIR)$(ANDROID),)
         FONTDIR = dat/tiles/
@@ -1247,9 +1280,9 @@ GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mi-enum.h \
 
 LANGUAGES = $(filter-out en, $(notdir $(wildcard dat/descript/??)))
 SRC_PKG_BASE  := stone_soup
-SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
+SRC_VERSION   := $(shell git describe $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|$(SED) -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
-RECENT_TAG    := $(shell git describe --abbrev=0 --tags $(MERGE_BASE))
+RECENT_TAG    := $(shell git describe --abbrev=0 $(MERGE_BASE))
 WINARCH := $(shell $(GXX) -dumpmachine | grep -q x64_64 && echo win64 || echo win32)
 
 export SRC_VERSION
@@ -1294,14 +1327,19 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             froggy_natasha_and_boris froggy_jiyva_felid \
             froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
             e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu \
-            kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust
+            kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust \
+            philosopheropposite_palentonga_paladin gompami_kohu_xbow
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
               $(TITLEIMGS:%=webserver/static/title_%.png) \
-              $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
+              $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js) \
+              webserver/webtiles/version.txt
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): build-rltiles
+
+webserver/webtiles/version.txt: .ver
+	@git describe $(MERGE_BASE) > webserver/webtiles/version.txt
 
 webserver/game_data/static/%.js: $(RLTILES)/%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
@@ -1317,7 +1355,7 @@ endif
 
 GAME_OBJS=$(OBJECTS) main.o $(EXTRA_OBJECTS)
 MONSTER_OBJS=$(OBJECTS) util/monster/monster-main.o $(EXTRA_OBJECTS)
-CATCH2_TEST_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) catch2-tests/test_main.o $(EXTRA_OBJECTS)
+CATCH2_TEST_OBJECTS = $(OBJECTS) $(TEST_OBJECTS) catch2-tests/catch_amalgamated.o catch2-tests/test_main.o $(EXTRA_OBJECTS)
 
 
 ifneq (,$(filter plug-and-play-tests,$(MAKECMDGOALS)))
@@ -1585,6 +1623,26 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
+install-xdg-data:
+	[ -d $(prefix_fp)/share/applications ] || mkdir -p $(prefix_fp)/share/applications
+	[ -d $(prefix_fp)/share/metainfo ] || mkdir -p $(prefix_fp)/share/metainfo
+	[ -d $(prefix_fp)/share/icons/hicolor/32x32/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/32x32/apps
+	[ -d $(prefix_fp)/share/icons/hicolor/48x48/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/48x48/apps
+	[ -d $(prefix_fp)/share/icons/hicolor/512x512/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/512x512/apps
+	[ -d $(prefix_fp)/share/icons/hicolor/scalable/apps ] || mkdir -p $(prefix_fp)/share/icons/hicolor/scalable/apps
+	$(COPY) xdg-data/$(XDG_ORIG).desktop $(prefix_fp)/share/applications/$(XDG_NAME).desktop
+	echo Icon=$(XDG_NAME) >>$(prefix_fp)/share/applications/$(XDG_NAME).desktop
+ifdef LINUXDEPLOY
+	echo Exec=$(GAME) >>$(prefix_fp)/share/applications/$(XDG_NAME).desktop
+else
+	echo Exec=$(prefix)/$(bin_prefix)/$(GAME) >>$(prefix_fp)/share/applications/$(XDG_NAME).desktop
+endif
+	sed "s/@XDG_NAME@/$(XDG_NAME)/" <xdg-data/$(XDG_ORIG).appdata.xml >$(prefix_fp)/share/metainfo/$(XDG_NAME).appdata.xml
+	$(COPY) dat/tiles/stone_soup_icon-32x32.png $(prefix_fp)/share/icons/hicolor/32x32/apps/$(XDG_NAME).png
+	$(COPY) dat/tiles/stone_soup_icon-48x48.png $(prefix_fp)/share/icons/hicolor/48x48/apps/$(XDG_NAME).png
+	$(COPY) dat/tiles/stone_soup_icon-512x512.png $(prefix_fp)/share/icons/hicolor/512x512/apps/$(XDG_NAME).png
+	$(COPY) dat/tiles/stone_soup_icon.svg $(prefix_fp)/share/icons/hicolor/scalable/apps/$(XDG_NAME).svg
+
 install: all install-data
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
@@ -1595,7 +1653,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 
 clean: clean-rltiles clean-webserver clean-android clean-monster clean-catch2 \
-       clean-plug-and-play-tests clean-coverage-full clean-mac
+       clean-plug-and-play-tests clean-coverage-full clean-mac clean-appimage
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1881,7 +1939,7 @@ source: removeold prebuildyacc
 		tar xf - -C $(BSRC)contrib/$$x; \
 	  done
 	find build -name .gitignore -execdir rm -f '{}' +
-	git describe --tags $(MERGE_BASE) > $(BSRC)util/release_ver
+	git describe $(MERGE_BASE) > $(BSRC)util/release_ver
 	cp build/LICENSE build/crawl-ref/LICENSE
 	mv build/crawl-ref build/$(PKG_SRC_DIR)
 
@@ -1905,6 +1963,28 @@ package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
 removeold:
 	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
 	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
+
+#############################################################################
+# Linux AppImage
+#
+
+ifdef LINUXDEPLOY
+endif
+
+appimage: install install-xdg-data
+ifeq ($(LINUXDEPLOY),)
+	@echo Please define LINUXDEPLOY path to use this build.
+	@exit 1
+endif
+	$(LINUXDEPLOY) --appdir appimage\
+	               --desktop-file appimage/usr/share/applications/$(XDG_NAME).desktop \
+	               --icon-file appimage/usr/share/icons/hicolor/scalable/apps/$(XDG_NAME).svg \
+	               --output appimage
+	ln -sf "stone_soup-$(SRC_VERSION)-linux-$(appimage_build).$(uname_M).AppImage" "stone_soup-latest-linux-$(appimage_build).$(uname_M).AppImage"
+
+clean-appimage:
+	$(RM) stone_soup-*.AppImage
+	$(RM) -r appimage
 
 #############################################################################
 # Building the unified Windows package.

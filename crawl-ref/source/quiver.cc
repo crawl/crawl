@@ -526,7 +526,7 @@ namespace quiver
 
             if (you.confused())
             {
-                if (you.is_stationary())
+                if (!you.is_motile())
                 {
                     // XX duplicate code with movement.cc:move_player_action
                     if (cancel_confused_move(true))
@@ -1145,7 +1145,12 @@ namespace quiver
             // extremely side-effect-y, and can crash if called at the wrong
             // time.
             enabled_cache = can_cast_spells(true)
-                                    && !spell_is_useless(spell, true, false);
+                            && !spell_is_useless(spell, true, false)
+            // Use a version of the charge range check that
+            // ignores things like butterflies, so that autofight doesn't get
+            // tripped up.
+                            && (spell != SPELL_ELECTRIC_CHARGE
+                                || electric_charge_possible(false));
             // this imposes excommunication colors
             if (!enabled_cache)
                 col_cache = COL_USELESS;
@@ -1382,14 +1387,6 @@ namespace quiver
         // it from the `a` menu, just not from the quiver.
         // (What abilities are missing here?)
 
-        if (abil == ABIL_ROLLING_CHARGE)
-        {
-            // Use a version of the palentonga charge range check that
-            // ignores things like butterflies, so that autofight doesn't get
-            // tripped up.
-            return palentonga_charge_possible(quiet, false);
-        }
-
         if (get_dist_to_nearest_monster() > ability_range(abil)
             && (get_ability_flags(abil) & abflag::targeting_mask))
 
@@ -1406,7 +1403,6 @@ namespace quiver
         switch (ability)
         {
         case ABIL_BLINKBOLT: // TODO: disable under nomove?
-        case ABIL_ROLLING_CHARGE: // TODO: disable under nomove?
         case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
         case ABIL_SPIT_POISON:
         case ABIL_BREATHE_ACID:
@@ -1480,7 +1476,6 @@ namespace quiver
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
-            case ABIL_ROLLING_CHARGE:
             case ABIL_BREATHE_ACID:
             case ABIL_DAMNATION:
             case ABIL_ELYVILON_HEAL_OTHER:
@@ -1678,7 +1673,8 @@ namespace quiver
         {
             if (!is_valid())
                 return "Buggy";
-            return you.inv[item_slot].base_type == OBJ_POTIONS ? "Drink" : "Read";
+            return you.inv[item_slot].base_type == OBJ_SCROLLS ? "Read" :
+                   you.has_mutation(MUT_LONG_TONGUE) ? "Slurp" : "Drink";
         }
 
         bool use_autofight_targeting() const override { return false; }
@@ -2499,6 +2495,7 @@ namespace quiver
         tmp = wand_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = misc_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
         return actions;
     }
 
@@ -2898,7 +2895,7 @@ namespace quiver
             else if (key == '&' && any_spells)
             {
                 const int skey = list_spells(false, false, false,
-                                                    "Select a spell to quiver");
+                                                    "quiver");
                 if (skey == 0)
                     return true;
                 if (isalpha(skey))

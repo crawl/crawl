@@ -1,18 +1,8 @@
 %%%%
-Abyssal Knight
-
-Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to
-spread corruption and chaos.
-%%%%
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Later on, their selection of
 Air Magic spells provides them with the flexibility to survive.
-%%%%
-Arcane Marksman
-
-Arcane Marksmen carry a sling, and use magic to make their foes more
-vulnerable to attacks from afar.
 %%%%
 Artificer
 
@@ -81,6 +71,11 @@ Hunter
 
 Hunters carry a shortbow, light armour and a scroll of immolation.
 %%%%
+Hexslinger
+
+Hexslingers carry a sling, and use hex magic to make their foes more vulnerable
+to attacks from afar.
+%%%%
 Ice Elementalist
 
 Ice Elementalists begin with the Freeze spell. The spells in their starting
@@ -95,6 +90,11 @@ Necromancer
 
 Necromancers are wizards specializing in the practice of death magic. They
 start out with the Necrotise spell.
+%%%%
+Reaver
+
+Reavers start with a weapon of their choice and deadly magic to supplement it
+when in need. They start with the Kiss of Death spell.
 %%%%
 Summoner
 

@@ -6296,29 +6296,34 @@ ENDMAP
 # Oklob gauntlet
 # average of 2.2 oklobs, and at most 5 of them
 NAME:    dpeg_oklob_gauntlet
-DEPTH:   Depths, !Depths:$, Lair, Snake, Elf
+DEPTH:   Lair, Swamp
 ORIENT:  float
-MONS:    plant, oklob plant, thorn hunter, acid blob
+WEIGHT:  2
+MONS:    plant, oklob plant, thorn hunter
 SHUFFLE: ]}) / def
-NSUBST:  ' = 1:2 / 4 = 11122 / *:1
-NSUBST:  " = 1:W / * = wwW, ` = 1:W / * = wwW
-SUBST:   def = |*
-: if you.in_branch("Depths") then
-NSUBST:  3 = 1:3 / 1:4 / *:34...
+NSUBST:  ' = 2 / 4=11122 / 1, " = W / wwW, ` = W / wwW
+SUBST:   def = |*, } = }..
+: if you.in_branch("Lair") then
+SUBST:   3 = ., - = x-
+# Swamp
 : else
-SUBST:   3 = .
+NSUBST:  3 = 3 / 3.
+SUBST:   x = t, - = t-, + = .
 : end
+CLEAR:   -
 MAP
-xxxxxxxxxxxxx
-xxxxx]})xxxxx
-xxxxx.3.xxxxx
-x'ww3...3ww'x
-x'".......`'x
-x'".......`'x
-x'".......`'x
-x'".......`'x
-x'ww.....ww'x
-xxxxxx+xxxxxx
+---------------
+-xxxxxxxxxxxxx-
+-xxxxx]})xxxxx-
+-xxxxx.3.xxxxx-
+-x'ww3...3ww'x-
+-x'".......`'x-
+-x'".......`'x-
+-x'".......`'x-
+-x'".......`'x-
+-x'ww.....ww'x-
+-xxxxxx+xxxxxx-
+------- -------
 ENDMAP
 
 #############################################################################
