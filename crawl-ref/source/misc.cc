@@ -208,7 +208,7 @@ bool december_holidays()
     // call sites of this function, or add a wrapper.
 #ifndef USE_TILE
     return false;
-#endif
+#else
     if (Options.tile_grinch)
         return false;
     const time_t curr_time = time(nullptr);
@@ -216,6 +216,7 @@ bool december_holidays()
     // Give em two weeks before Christmas and then until New Year's.
     // (tm_mon is zero-based.)
     return date->tm_mon == 11 && date->tm_mday > 10;
+#endif
 }
 
 bool now_is_morning()
