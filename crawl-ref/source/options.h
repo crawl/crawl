@@ -341,7 +341,6 @@ public:
     vector<pair<int, int> > stat_colour;
     vector<int> enemy_hp_colour;
 
-    string map_file_name;   // name of mapping file to use
     vector<pair<text_pattern, bool> > force_autopickup;
     vector<text_pattern> note_monsters;  // Interesting monsters
     vector<text_pattern> note_messages;  // Interesting messages
