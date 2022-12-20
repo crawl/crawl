@@ -56,6 +56,13 @@ public:
         loadFromString(other->str(), RCFILE_LINE_EQUALS);
         loaded = real_loaded;
     }
+    void set_help(int file, int line);
+    void set_help(GameOption *other);
+    void show_help();
+    bool has_help()
+    {
+        return help_file != '&' || help_line != 0;
+    }
     virtual string loadFromString(const std::string &, rc_line_type)
     {
         loaded = true;
@@ -80,6 +87,7 @@ protected:
     bool loaded; // tracks whether the option has changed via loadFromString.
                  // will miss whether it was changed directly in c++ code. (TODO)
 
+    int help_file='&', help_line=0;
     friend struct game_options;
 };
 

@@ -30,6 +30,7 @@
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
+#include "command.h"
 #include "defines.h"
 #include "delay.h"
 #include "describe.h"
@@ -5783,12 +5784,15 @@ public:
         return "<lightgrey>[<w>Up</w>|<w>Down</w>|<w>PgUp</w>|<w><<</w>"
                "|<w>PgDn</w>|<w>></w>] select  "
                "[<w>Esc</w>] close  "
-               "[<w>Ctrl-f</w>] find</lightgrey>";
+               "[<w>Ctrl-f</w>] find  "
+               "[<w>?</w>] help</lightgrey>";
     }
     int pre_process(int key) override
     {
         if (CONTROL('F') == key)
             filter_items();
+        else if ('?' == key)
+            (static_cast<GameOption*>(items[last_hovered]->data))->show_help();
         else
             return key;
         return CK_NO_KEY;

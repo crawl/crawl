@@ -41,7 +41,7 @@ public:
     void set_title(formatted_string title) { m_title = move(title); };
 
     void scroll_to_end();
-    void set_scroll(int y);
+    void scroll_to_line(int y, bool use_shade = true);
 
     const formatted_string& get_contents() { return contents; };
 

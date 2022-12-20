@@ -6,12 +6,12 @@
 #include "AppHdr.h"
 
 #include "game-options.h"
-#include "lookup-help.h"
 #include "options.h"
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
 #include "prompt.h"
+#include "scroller.h"
 #include "tiles-build-specific.h"
 
 // Return a list of the valid field values for _curses_attribute(), excluding
@@ -95,40 +95,24 @@ bool read_bool(const string &field, bool def_value)
     return def_value;
 }
 
-/// Ask the user to choose between a set of options.
-///
-/// @param[in] prompt Text to put above the options. Typically a question.
-/// @param[in] options List of options (as strings) to choose between.
-/// @param[in] def_value Value of default option (as string).
-/// @returns The selected option if something was selected, or "" if the prompt
-///          was cancelled.
-static string _choose_one_from_list(const string prompt,
-                                    const vector<string> options,
-                                    const string def_value)
+class option_chooser : public Menu
 {
-    // The caller should remove any user-provided formatting.
-    Menu menu(MF_SINGLESELECT | MF_ARROWS_SELECT
-              | MF_ALLOW_FORMATTING | MF_INIT_HOVER);
-
-    menu.set_title(new MenuEntry(prompt, MEL_TITLE));
-
-    for (unsigned i = 0, size = options.size(); i < size; ++i)
+public:
+    option_chooser(int _flags, GameOption *_caller)
+        : Menu(_flags), caller(_caller) { }
+    int pre_process(int key) override
     {
-        const char letter = index_to_letter(i % 52);
-        MenuEntry* me = new MenuEntry(options[i], MEL_ITEM, 1, letter);
-        menu.add_entry(me);
+        if ('?' == key)
+        {
+            caller->show_help();
+            return static_cast<int>(CK_NO_KEY);
+        }
+        else
+            return key;
     }
-
-    auto it = find(options.begin(), options.end(), def_value);
-    ASSERT(options.end() != it);
-    menu.set_hovered(distance(options.begin(), it));
-
-    vector<MenuEntry*> sel = menu.show();
-    if (sel.empty())
-        return "";
-    else
-        return sel[0]->text;
-}
+private:
+    GameOption *caller;
+};
 
 /// Ask the user to choose between a set of options.
 ///
@@ -138,12 +122,44 @@ static string _choose_one_from_list(const string prompt,
 /// @returns       True if something is chosen, false otherwise.
 bool choose_option_from_UI(GameOption *caller, vector<string> choices)
 {
-    string prompt = string("Select a value for ")+caller->name()+":";
-    string selected = _choose_one_from_list(prompt, choices, caller->str());
-    if (!selected.empty())
-        caller->loadFromString(selected, RCFILE_LINE_EQUALS);
-    return !selected.empty();
+    string prompt = "Select a value for "+caller->name()+" (? for help):";
+    const string def_value = caller->str();
+    // The caller should remove any user-provided formatting.
+    option_chooser menu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_ALLOW_FORMATTING
+                        | MF_INIT_HOVER, caller);
+
+    menu.set_title(new MenuEntry(prompt, MEL_TITLE));
+
+    for (unsigned i = 0, size = choices.size(); i < size; ++i)
+    {
+        const char letter = index_to_letter(i % 52);
+        MenuEntry* me = new MenuEntry(choices[i], MEL_ITEM, 1, letter);
+        menu.add_entry(me);
+    }
+
+    auto it = find(choices.begin(), choices.end(), def_value);
+    ASSERT(choices.end() != it);
+    menu.set_hovered(distance(choices.begin(), it));
+
+    vector<MenuEntry*> selected = menu.show();
+    if (selected.empty())
+        return false;
+
+    caller->loadFromString(selected[0]->text, RCFILE_LINE_EQUALS);
+    return true;
 }
+
+static void _show_type_response(GameOption *caller, string response)
+{
+    formatted_scroller fs(FS_EASY_EXIT);
+    formatted_string msg("Press ? for help, any other key to continue.");
+    fs.set_more(msg);
+    fs.add_text(response);
+    if ('?' == fs.show())
+        caller->show_help();
+}
+
+
 
 /// Ask the user to edit a game option using a text box.
 ///
@@ -166,9 +182,20 @@ bool load_string_from_UI(GameOption *caller)
         string error = caller->loadFromString(select, RCFILE_LINE_EQUALS);
         if (error.empty())
             return true;
-        show_type_response(error);
+        _show_type_response(caller, error);
         old = select;
     }
+}
+
+void GameOption::set_help(int _file, int _line)
+{
+    help_file = _file;
+    help_line = _line;
+}
+
+void GameOption::set_help(GameOption *other)
+{
+    set_help(other->help_file, other->help_line);
 }
 
 string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)

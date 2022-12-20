@@ -19,6 +19,7 @@
 #include "describe.h"
 #include "env.h"
 #include "files.h"
+#include "game-options.h"
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -436,6 +437,10 @@ static help_file help_files[] =
     { "quickstart.txt",     '^', false },
     { "macros_guide.txt",  '~', false },
     { "options_guide.txt", '&', false },
+    { "arena.txt", CONTROL('A'), false }, // only in options menu.
+#ifdef WIZARD
+    { "fight_simulator.txt", CONTROL('F'), false }, // only in options menu.
+#endif // WIZARD
 #ifdef USE_TILE_LOCAL
     { "tiles_help.txt",    't', false },
 #endif
@@ -1347,6 +1352,14 @@ static int _get_help_section(int section, formatted_string &header_out, formatte
     return 0;
 }
 
+static formatted_string _get_help_section(int section)
+{
+    formatted_string header_ignored, text_out;
+    int scroll_ignored;
+    _get_help_section(section, header_ignored, text_out, scroll_ignored);
+    return text_out;
+}
+
 class help_popup : public formatted_scroller
 {
 public:
@@ -1358,13 +1371,6 @@ private:
     bool process_key(int ch) override
     {
         int key = toalower(ch);
-
-#ifdef USE_TILE_LOCAL
-        const int line_height = tiles.get_crt_font()->char_height();
-#else
-        const int line_height = 1;
-#endif
-
         int scroll, page;
         formatted_string header_text, help_text;
         switch (key)
@@ -1380,8 +1386,7 @@ private:
                     m_contents_dirty = true;
                     prev_page = page;
                 }
-                scroll = scroll ? (scroll-2)*line_height : 0;
-                set_scroll(scroll);
+                scroll_to_line(scroll ? scroll-2 : 0);
                 return true;
         }
 
@@ -1432,4 +1437,50 @@ void show_help(int section, string highlight_string)
     // handle the case where one of the special case help sections is triggered
     // from the help main menu.
     _show_help_special(key);
+}
+
+static void _find_help_in_file(int section, const char *pattern)
+{
+    GameOption *option;
+    char c[1];
+    int start, end, line = 0;
+    formatted_string help = _get_help_section(section);
+
+    for (auto text : help.ops)
+    {
+        auto t = text.text;
+        if (1 == sscanf(t.c_str(), pattern, &start, &end, c) && start != end
+            && (option = Options.option_from_name(t.substr(start, end-start)))
+            && !option->has_help())
+        {
+            option->set_help(section, line);
+        }
+        line++;
+    }
+}
+
+// Record in each GameOption where it appears in the help files, if needed.
+// XXX: This relies on the layout of each help file remaining unchanged.
+static void _get_option_help()
+{
+    // Don't waste time on this if the last set of values is still there.
+    if (Options.option_from_name("auto_switch")->has_help())
+        return;
+
+    _find_help_in_file('&', "%n%*s%n %*[+-^=]%*[= ] %c"); // options_guide.txt
+    _find_help_in_file(CONTROL('A'), "*%*[ ]%n%*[^ :]%n:%c"); // arena.txt
+#ifdef WIZARD
+    _find_help_in_file(CONTROL('F'), "%n%*[^ :]%n%*[ :]%c"); // fight_simulator
+#endif
+}
+
+// This is a help browser with the "offset in a text file" form of help_popup
+// and the string keys of show_specific_help().
+void GameOption::show_help()
+{
+    _get_option_help();
+    formatted_scroller scr(FS_PREWRAPPED_TEXT);
+    scr.add_raw_text(_get_help_section(help_file), false);
+    scr.scroll_to_line(help_line, false);
+    scr.show();
 }
