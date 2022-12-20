@@ -2097,6 +2097,37 @@ void game_options::write_prefs(FILE *f)
     prefs_dirty = false;
 }
 
+// Save all preferences to the default preference file.
+static void _save_preferences()
+{
+    string fn = find_crawlrc();
+    if (!yesno(make_stringf("Save to '%s'?", fn.c_str()).c_str(), true, 'y'))
+        return;
+
+    const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
+                             "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
+    FILE *f = fopen_u(fn.c_str(), "a");
+    if (f)
+    {
+        auto date0 = time(nullptr);
+        auto date = TIME_FN(&date0);
+        fprintf(f, "\n# Options saved for %s at %02d:%02d:%02d on %d %s %d.\n",
+                you.your_name.c_str(), date->tm_hour, date->tm_min,
+                date->tm_sec, date->tm_mday, mons[date->tm_mon],
+                1900+date->tm_year);
+        for (auto g : Options.get_sorted_options())
+        {
+            if (!g->name().empty()) // not GameOptionHeading
+                fprintf(f, "%s = %s\n", g->name().c_str(), g->str().c_str());
+        }
+        fputs("# End of saved options.\n", f);
+        if (!fclose(f))
+            return;
+    }
+    auto msg = make_stringf("Failed to save options to '%s'.", fn.c_str());
+    show_type_response(msg);
+}
+
 /**
  * Serialize into a format that can be read with a game_options object.
  */
@@ -5785,9 +5816,10 @@ public:
     string get_keyhelp(bool) const override
     {
         return "<lightgrey>[<w>Up</w>|<w>Down</w>|<w>PgUp</w>|<w><<</w>"
-               "|<w>PgDn</w>|<w>></w>] select  "
-               "[<w>Esc</w>] close  "
-               "[<w>Ctrl-f</w>] find  "
+               "|<w>PgDn</w>|<w>></w>] select "
+               "[<w>Esc</w>] close "
+               "[<w>Ctrl-f</w>] find "
+               "[<w>Ctrl-s</w>] save "
                "[<w>?</w>] help</lightgrey>";
     }
     int pre_process(int key) override
@@ -5796,6 +5828,8 @@ public:
             filter_items();
         else if ('?' == key)
             (static_cast<GameOption*>(items[last_hovered]->data))->show_help();
+        else if (CONTROL('S') == key)
+            _save_preferences();
         else
             return key;
         return CK_NO_KEY;
