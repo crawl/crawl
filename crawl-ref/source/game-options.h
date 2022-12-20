@@ -41,7 +41,7 @@ L& remove_matching(L& lis, const E& entry)
 class GameOption
 {
 public:
-    GameOption(std::set<std::string> _names)
+    GameOption(vector<string> _names)
         : names(_names), loaded(false) { }
     virtual ~GameOption() {};
 
@@ -63,13 +63,13 @@ public:
     }
 
 
-    const std::set<std::string> &getNames() const { return names; }
+    const vector<string> &getNames() const { return names; }
     const std::string name() const { return *names.begin(); }
 
     bool was_loaded() const { return loaded; }
 
 protected:
-    std::set<std::string> names;
+    vector<string> names;
     bool loaded; // tracks whether the option has changed via loadFromString.
                  // will miss whether it was changed directly in c++ code. (TODO)
 
@@ -82,8 +82,7 @@ void choose_option_from_UI(GameOption *caller, vector<string> choices);
 class BoolGameOption : public GameOption
 {
 public:
-    BoolGameOption(bool &val, std::set<std::string> _names,
-                   bool _default)
+    BoolGameOption(bool &val, vector<string> _names, bool _default)
         : GameOption(_names), value(val), default_value(_default) { }
 
     void reset() override
@@ -108,8 +107,8 @@ private:
 class ColourGameOption : public GameOption
 {
 public:
-    ColourGameOption(unsigned &val, std::set<std::string> _names,
-                     unsigned _default, bool _elemental = false)
+    ColourGameOption(unsigned &val, vector<string> _names, unsigned _default,
+                     bool _elemental = false)
         : GameOption(_names), value(val), default_value(_default),
           elemental(_elemental) { }
 
@@ -132,8 +131,7 @@ private:
 class CursesGameOption : public GameOption
 {
 public:
-    CursesGameOption(unsigned &val, std::set<std::string> _names,
-                     unsigned _default)
+    CursesGameOption(unsigned &val, vector<string> _names, unsigned _default)
         : GameOption(_names), value(val), default_value(_default) { }
 
     void reset() override
@@ -154,7 +152,7 @@ private:
 class IntGameOption : public GameOption
 {
 public:
-    IntGameOption(int &val, std::set<std::string> _names, int _default,
+    IntGameOption(int &val, vector<string> _names, int _default,
                   int min_val = INT_MIN, int max_val = INT_MAX)
         : GameOption(_names), value(val), default_value(_default),
           min_value(min_val), max_value(max_val) { }
@@ -177,8 +175,7 @@ private:
 class StringGameOption : public GameOption
 {
 public:
-    StringGameOption(string &val, std::set<std::string> _names,
-                     string _default)
+    StringGameOption(string &val, vector<string> _names, string _default)
         : GameOption(_names), value(val), default_value(_default) { }
 
     void reset() override
@@ -200,8 +197,7 @@ private:
 class TileColGameOption : public GameOption
 {
 public:
-    TileColGameOption(VColour &val, std::set<std::string> _names,
-                      string _default);
+    TileColGameOption(VColour &val, vector<string> _names, string _default);
 
     void reset() override
     {
@@ -227,7 +223,7 @@ typedef function<bool(const colour_threshold &l, const colour_threshold &r)>
 class ColourThresholdOption : public GameOption
 {
 public:
-    ColourThresholdOption(colour_thresholds &val, std::set<std::string> _names,
+    ColourThresholdOption(colour_thresholds &val, vector<string> _names,
                           string _default, colour_ordering ordering_func)
         : GameOption(_names), value(val), ordering_function(ordering_func),
           default_value(parse_colour_thresholds(_default)) { }
@@ -256,7 +252,7 @@ template<typename T>
 class ListGameOption : public GameOption
 {
 public:
-    ListGameOption(vector<T> &list, std::set<std::string> _names,
+    ListGameOption(vector<T> &list, vector<string> _names,
                    vector<T> _default = {})
         : GameOption(_names), value(list), default_value(_default) { }
 
@@ -311,7 +307,7 @@ template<typename T>
 class MultipleChoiceGameOption : public GameOption
 {
 public:
-    MultipleChoiceGameOption(T &_val, std::set<std::string> _names, T _default,
+    MultipleChoiceGameOption(T &_val, vector<string> _names, T _default,
                              vector<pair<string, T>> _choices,
                              bool _normalize_bools=false)
         : GameOption(_names), value(_val), default_value(_default),
