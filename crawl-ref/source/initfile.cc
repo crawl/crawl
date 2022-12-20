@@ -47,6 +47,7 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
+#include "lookup-help.h"
 #include "macro.h"
 #include "mapdef.h"
 #include "maps.h"
@@ -5696,6 +5697,110 @@ private:
     int highlight_until;
 };
 
+class EGP_Menu : public Menu
+{
+public:
+    EGP_Menu(int _flags) : Menu(_flags)
+                           { set_title(new MenuEntry(base_title, MEL_TITLE));}
+
+    ~EGP_Menu()
+    {
+        deleteAll(all_items);
+        items.clear();
+    }
+
+    void add_entry_all(MenuEntry *entry)
+    {
+        add_entry(entry);
+        all_items.push_back(entry);
+    }
+
+    void filter_items()
+    {
+        string prompt = "Search for what? (regex, leave blank to show all)";
+        char select[1024];
+        auto old_search_pat = search_pat;
+        int new_hovered = -1;
+        vector<MenuEntry*> chosen_items;
+        while (1)
+        {
+            if (msgwin_get_line(prompt, select, sizeof(select), nullptr,
+                                       search_pat.tostring())
+                || old_search_pat.tostring() == select)
+            {
+                search_pat = old_search_pat;
+                return;
+            }
+            search_pat = select;
+            MenuEntry *heading = nullptr;
+            bool found_hover = false;
+            int i = 0;
+            for (auto entry : all_items)
+            {
+                if (entry == items[last_hovered])
+                    found_hover = true;
+                auto g = static_cast<GameOption*>(entry->data);
+                if (!g)
+                    heading = entry;
+                else if (search_pat.empty() || search_pat.matches(g->name()))
+                {
+                    if (heading)
+                        chosen_items.emplace_back(heading);
+                    heading = nullptr;
+                    if (found_hover && new_hovered < 0)
+                        new_hovered = chosen_items.size();
+                    entry->hotkeys[0] = index_to_letter((i++)%52);
+                    chosen_items.emplace_back(entry);
+                }
+            }
+            if (!chosen_items.empty())
+                break;
+
+            show_type_response("No option names match.");
+        }
+
+        items = chosen_items;
+        string new_title = base_title;
+        if (!search_pat.empty())
+        {
+            string search = search_pat.tostring();
+            if (search.length() > 42)
+                search = search.substr(39)+"...";
+            search = replace_all(search, "<", "<<");
+            new_title += " <h>(Matches \""+search+"\")</h>";
+        }
+        set_title(new MenuEntry(new_title, MEL_TITLE));
+        reset();
+        update_menu(true);
+        if (new_hovered < 0)
+            set_hovered(all_items.size()-1);
+        else
+            set_hovered(new_hovered);
+    }
+
+    string get_keyhelp(bool) const override
+    {
+        return "<lightgrey>[<w>Up</w>|<w>Down</w>|<w>PgUp</w>|<w><<</w>"
+               "|<w>PgDn</w>|<w>></w>] select  "
+               "[<w>Esc</w>] close  "
+               "[<w>Ctrl-f</w>] find</lightgrey>";
+    }
+    int pre_process(int key) override
+    {
+        if (CONTROL('F') == key)
+            filter_items();
+        else
+            return key;
+        return CK_NO_KEY;
+    }
+
+private:
+
+    text_pattern search_pat;
+    vector<MenuEntry*> all_items;
+    string base_title = "<w>Select a preference to set.</w>";
+};
+
 static string _option_line(const GameOption *option, int name_len, int text_len)
 {
     auto name0 = option->name(), value0 = option->str();
@@ -5709,15 +5814,12 @@ static string _option_line(const GameOption *option, int name_len, int text_len)
 // Show (and perhaps edit) options for the game.
 void edit_game_prefs()
 {
-    string prompt = "<w>Select a preference to set</w>";
     auto list = Options.get_option_behaviour();
     string selected;
 
     // The caller should remove any user-provided formatting.
-    Menu menu(MF_SINGLESELECT | MF_ARROWS_SELECT
-              | MF_ALLOW_FORMATTING | MF_INIT_HOVER);
-
-    menu.set_title(new MenuEntry(prompt, MEL_TITLE));
+    EGP_Menu menu(MF_SINGLESELECT | MF_ARROWS_SELECT
+                  | MF_ALLOW_FORMATTING | MF_INIT_HOVER);
     menu.set_tag("option");
 
     int i = 0;
@@ -5737,7 +5839,7 @@ void edit_game_prefs()
             }
             return true;
         };
-        menu.add_entry(entry);
+        menu.add_entry_all(entry);
     }
 
     menu.set_hovered(0);
