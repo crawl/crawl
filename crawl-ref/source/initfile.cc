@@ -127,6 +127,11 @@ static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
     return l.first > r.first;
 }
 
+static void _dirty_prefs(game_options *caller)
+{
+    caller->prefs_dirty = true;
+}
+
 const vector<GameOption*> game_options::build_options_list()
 {
 #ifndef DEBUG
@@ -284,10 +289,12 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
-        new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
+        (new BoolGameOption(SIMPLE_NAME(default_manual_training), false))
+            ->set_on_change(_dirty_prefs),
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
-        new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false),
+        (new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false))
+            ->set_on_change(_dirty_prefs),
         new BoolGameOption(SIMPLE_NAME(launcher_autoquiver), true),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
@@ -524,16 +531,20 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
-        new BoolGameOption(SIMPLE_NAME(action_panel_show), true),
+        (new BoolGameOption(SIMPLE_NAME(action_panel_show), true))
+            ->set_on_change(_dirty_prefs),
         new ListGameOption<text_pattern>(SIMPLE_NAME(action_panel_filter)),
         new BoolGameOption(SIMPLE_NAME(action_panel_show_unidentified), false),
         new StringGameOption(SIMPLE_NAME(action_panel_font_family),
                              "monospace"),
-        new IntGameOption(SIMPLE_NAME(action_panel_font_size), 16),
-        new MultipleChoiceGameOption<string>(
+        (new IntGameOption(SIMPLE_NAME(action_panel_font_size), 16))
+            ->set_on_change(_dirty_prefs),
+        (new MultipleChoiceGameOption<string>(
             SIMPLE_NAME(action_panel_orientation), "horizontal",
-            {{"horizontal", "horizontal"}, {"vertical", "vertical"}}),
-        new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600),
+            {{"horizontal", "horizontal"}, {"vertical", "vertical"}}))
+            ->set_on_change(_dirty_prefs),
+        (new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600))
+            ->set_on_change(_dirty_prefs),
         new BoolGameOption(SIMPLE_NAME(action_panel_glyphs), false),
 #endif
 #ifdef USE_FT
@@ -5719,8 +5730,11 @@ void edit_game_prefs()
         entry->on_select = [entry](const MenuEntry&)
         {
             GameOption *opt = static_cast<GameOption*>(entry->data);
-            opt->load_from_UI();
-            entry->text = _option_line(opt, 36, 79-36-4);
+            if (opt->load_from_UI())
+            {
+                entry->text = _option_line(opt, 36, 79-36-4);
+                opt->on_change(&Options);
+            }
             return true;
         };
         menu.add_entry(entry);

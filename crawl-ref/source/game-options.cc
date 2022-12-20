@@ -135,19 +135,22 @@ static string _choose_one_from_list(const string prompt,
 /// @param[in,out] caller  Option to edit. Reads the name and current value.
 ///                        Writes the new value.
 /// @param[in]     choices Options to choose between.
-void choose_option_from_UI(GameOption *caller, vector<string> choices)
+/// @returns       True if something is chosen, false otherwise.
+bool choose_option_from_UI(GameOption *caller, vector<string> choices)
 {
     string prompt = string("Select a value for ")+caller->name()+":";
     string selected = _choose_one_from_list(prompt, choices, caller->str());
     if (!selected.empty())
         caller->loadFromString(selected, RCFILE_LINE_EQUALS);
+    return !selected.empty();
 }
 
 /// Ask the user to edit a game option using a text box.
 ///
 /// @param[in,out] caller Option to edit. Reads the name and current value.
 ///                       Writes the new value.
-void load_string_from_UI(GameOption *caller)
+/// @returns       True if something is chosen, false otherwise.
+bool load_string_from_UI(GameOption *caller)
 {
     string prompt = string("Enter a value for ")+caller->name()+":";
     /// XXX - shouldn't use a fixed length string here.
@@ -158,11 +161,11 @@ void load_string_from_UI(GameOption *caller)
         if (msgwin_get_line(prompt, select, sizeof(select), nullptr, old))
         {
             caller->loadFromString(caller->str(), RCFILE_LINE_EQUALS);
-            return;
+            return false;
         }
         string error = caller->loadFromString(select, RCFILE_LINE_EQUALS);
         if (error.empty())
-            return;
+            return true;
         show_type_response(error);
         old = select;
     }
@@ -182,10 +185,10 @@ string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)
     return GameOption::loadFromString(field, ltyp);
 }
 
-void BoolGameOption::load_from_UI()
+bool BoolGameOption::load_from_UI()
 {
     vector<string> choices = {"false", "true"};
-    choose_option_from_UI(this, choices);
+    return choose_option_from_UI(this, choices);
 }
 
 string ColourGameOption::loadFromString(const string &field, rc_line_type ltyp)
@@ -204,12 +207,12 @@ const string ColourGameOption::str() const
     return colour_to_str(value);
 }
 
-void ColourGameOption::load_from_UI()
+bool ColourGameOption::load_from_UI()
 {
     vector<string> choices;
     for (colour_t i = COLOUR_UNDEF; i < NUM_TERM_COLOURS; ++i)
         choices.emplace_back(colour_to_str(i));
-    choose_option_from_UI(this, choices);
+    return choose_option_from_UI(this, choices);
 }
 
 string CursesGameOption::loadFromString(const string &field, rc_line_type ltyp)
@@ -231,12 +234,12 @@ const string CursesGameOption::str() const
     return x->second;
 }
 
-void CursesGameOption::load_from_UI()
+bool CursesGameOption::load_from_UI()
 {
     vector<string> choices;
     for (auto &x : _curses_attribute_map()) // Add the names in numerical order.
         choices.emplace_back(x.second);
-    choose_option_from_UI(this, choices);
+    return choose_option_from_UI(this, choices);
 }
 
 #ifdef USE_TILE
