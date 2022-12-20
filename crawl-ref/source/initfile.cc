@@ -2214,7 +2214,10 @@ game_options::game_options()
 
 game_options::~game_options()
 {
-    deleteAll(option_behaviour);
+    if (options_sorted.size())
+        deleteAll(options_sorted);
+    else
+        deleteAll(option_behaviour);
 }
 
 void game_options::reset_aliases(bool clear)
@@ -5818,7 +5821,7 @@ static string _option_line(const GameOption *option, int name_len, int text_len)
 // Show (and perhaps edit) options for the game.
 void edit_game_prefs()
 {
-    auto list = Options.get_option_behaviour();
+    auto list = Options.get_sorted_options();
     string selected;
 
     // The caller should remove any user-provided formatting.
@@ -5829,20 +5832,26 @@ void edit_game_prefs()
     int i = 0;
     for (const auto option : list)
     {
-        string line = _option_line(option, 36, 37);
-        const char letter = index_to_letter(i++ % 52);
-        auto entry = new EGP_MenuEntry(line, MEL_ITEM, 1, letter, 36);
-        entry->data = option;
-        entry->on_select = [entry](const MenuEntry&)
+        EGP_MenuEntry *entry;
+        if (option->name().empty())
+            entry = new EGP_MenuEntry(option->str(), MEL_SUBTITLE);
+        else
         {
-            GameOption *opt = static_cast<GameOption*>(entry->data);
-            if (opt->load_from_UI())
+            string line = _option_line(option, 36, 37);
+            const char letter = index_to_letter(i++ % 52);
+            entry = new EGP_MenuEntry(line, MEL_ITEM, 1, letter, 36);
+            entry->data = option;
+            entry->on_select = [entry](const MenuEntry&)
             {
-                entry->text = _option_line(opt, 36, 79-36-4);
-                opt->on_change(&Options);
-            }
-            return true;
-        };
+                GameOption *opt = static_cast<GameOption*>(entry->data);
+                if (opt->load_from_UI())
+                {
+                    entry->text = _option_line(opt, 36, 79-36-4);
+                    opt->on_change(&Options);
+                }
+                return true;
+            };
+        }
         menu.add_entry_all(entry);
     }
 

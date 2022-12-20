@@ -91,6 +91,18 @@ protected:
     friend struct game_options;
 };
 
+// Class used by edit_game_prefs() to insert MEL_SUBTITLE lines.
+// name() returns "" and str() returns the heading.
+class GameOptionHeading : public GameOption
+{
+public:
+    GameOptionHeading(string _heading) : GameOption({""}), heading(_heading) { }
+    const string str() const override { return heading; }
+    bool load_from_UI() override { return false; }
+private:
+    const string heading;
+};
+
 bool load_string_from_UI(GameOption *option);
 bool choose_option_from_UI(GameOption *caller, vector<string> choices);
 

@@ -1439,7 +1439,8 @@ void show_help(int section, string highlight_string)
     _show_help_special(key);
 }
 
-static void _find_help_in_file(int section, const char *pattern)
+static void _find_help_in_file(game_options *opt, vector<GameOption*> &out,
+                               string subhead, int section, const char *pattern)
 {
     GameOption *option;
     char c[1];
@@ -1450,35 +1451,92 @@ static void _find_help_in_file(int section, const char *pattern)
     {
         auto t = text.text;
         if (1 == sscanf(t.c_str(), pattern, &start, &end, c) && start != end
-            && (option = Options.option_from_name(t.substr(start, end-start)))
+            && (option = opt->option_from_name(t.substr(start, end-start)))
             && !option->has_help())
         {
+            if (!subhead.empty())
+                out.push_back(new GameOptionHeading(subhead));
+            subhead = "";
             option->set_help(section, line);
+            out.push_back(option);
         }
         line++;
     }
 }
 
-// Record in each GameOption where it appears in the help files, if needed.
-// XXX: This relies on the layout of each help file remaining unchanged.
-static void _get_option_help()
+static void _find_help_in_guide(game_options *opt, vector<GameOption*> &out)
 {
-    // Don't waste time on this if the last set of values is still there.
-    if (Options.option_from_name("auto_switch")->has_help())
-        return;
+    int line = 0, section = '&', start, end;
+    GameOption* option;
+    char c[1], subsection;
+    formatted_string help = _get_help_section(section);
+    string head, subhead;
+    const char *pattern = "%n%*s%n %*[+-^=]%*[= ] %c";
+    for (auto text : help.ops)
+    {
+        auto t = text.text;
+        if (1 == sscanf(t.c_str(), pattern, &start, &end, c) && start != end
+            && (option = opt->option_from_name(t.substr(start, end-start)))
+            && !option->has_help())
+        {
+            if (!subhead.empty())
+            {
+                out.push_back(new GameOptionHeading(subhead));
+                subhead = "";
+            }
+            option->set_help(section, line);
+            out.push_back(option);
+        }
+        // Category titles start with "?-? Title"
+        else if (2 == sscanf(text.text.c_str(), "%*[01234567]-%c %n%*[^.]%n%c",
+                             &subsection, &start, &end, c))
+        {
+            if (' ' == subsection)
+                head = subhead = text.text.substr(start, end-start);
+            else
+                subhead = head + ": " + text.text.substr(start, end-start);
+        }
+        line++;
+    }
+}
 
-    _find_help_in_file('&', "%n%*s%n %*[+-^=]%*[= ] %c"); // options_guide.txt
-    _find_help_in_file(CONTROL('A'), "*%*[ ]%n%*[^ :]%n:%c"); // arena.txt
+vector<GameOption*> game_options::get_sorted_options()
+{
+    if (!options_sorted.empty())
+        return options_sorted;
+
+    _find_help_in_guide(this, options_sorted); // options_guide.txt
+    _find_help_in_file(this, options_sorted, "Testing: Arena",
+                       CONTROL('A'), "*%*[ ]%n%*[^ :]%n:%c");
 #ifdef WIZARD
-    _find_help_in_file(CONTROL('F'), "%n%*[^ :]%n%*[ :]%c"); // fight_simulator
+    _find_help_in_file(this, options_sorted, "Testing: Fight Simulator",
+                       CONTROL('F'), "%n%*[^ :]%n%*[ :]%c");
 #endif
+
+    // List options which are in none of the above documents.
+    string subhead = "Undocumented options";
+    int line = 0, section = '&'; // Default values, so set_help() does nothing.
+    for (auto option : get_option_behaviour())
+    {
+        if (option->has_help())
+            continue;
+
+        if (!subhead.empty())
+        {
+            options_sorted.push_back(new GameOptionHeading(subhead));
+            subhead = "";
+        }
+        option->set_help(section, line);
+        options_sorted.push_back(option);
+    }
+
+    return options_sorted;
 }
 
 // This is a help browser with the "offset in a text file" form of help_popup
 // and the string keys of show_specific_help().
 void GameOption::show_help()
 {
-    _get_option_help();
     formatted_scroller scr(FS_PREWRAPPED_TEXT);
     scr.add_raw_text(_get_help_section(help_file), false);
     scr.scroll_to_line(help_line, false);
