@@ -1097,7 +1097,7 @@ einer eisernen Rune
 einer dämonischen Rune
 %%%%
 {dat}a glowing rune
-einer leuchtenden runen
+einer leuchtenden Rune
 %%%%
 {dat}a magical rune
 einer magischen Rune

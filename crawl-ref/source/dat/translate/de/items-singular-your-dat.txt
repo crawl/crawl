@@ -1127,7 +1127,7 @@ Eurer eisernen Rune
 Eurer dämonischen Rune
 %%%%
 {dat}your glowing rune
-Eurer leuchtenden runen
+Eurer leuchtenden Rune
 %%%%
 {dat}your magical rune
 Eurer magischen Rune

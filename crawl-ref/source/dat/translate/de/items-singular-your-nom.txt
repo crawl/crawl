@@ -1127,7 +1127,7 @@ your demonic rune
 Eure dämonische Rune
 %%%%
 your glowing rune
-Eure leuchtende rune
+Eure leuchtende Rune
 %%%%
 your magical rune
 Eure magische Rune

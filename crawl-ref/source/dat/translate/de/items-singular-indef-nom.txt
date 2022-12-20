@@ -1127,7 +1127,7 @@ a demonic rune
 eine dämonische Rune
 %%%%
 a glowing rune
-eine leuchtende rune
+eine leuchtende Rune
 %%%%
 a magical rune
 eine magische Rune

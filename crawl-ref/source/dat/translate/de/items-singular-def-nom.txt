@@ -1127,7 +1127,7 @@ the demonic rune
 die dämonische Rune
 %%%%
 the glowing rune
-die leuchtende rune
+die leuchtende Rune
 %%%%
 the magical rune
 die magische Rune

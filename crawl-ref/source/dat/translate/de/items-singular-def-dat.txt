@@ -1127,7 +1127,7 @@ der eisernen Rune
 der dämonischen Rune
 %%%%
 {dat}the glowing rune
-der leuchtenden runen
+der leuchtenden Rune
 %%%%
 {dat}the magical rune
 der magischen Rune
