@@ -8,52 +8,52 @@ menu += darkgrey:(melded)
 menu += darkgrey:(inert)
 
 # Bad items
-menu += lightred:.*bad_item.*
+menu += lightred:.*\bbad_item\b.*
 
 # Useless items, comes here to override artefacts etc.
-menu += darkgrey:.*useless_item.*
+menu += darkgrey:.*\buseless_item\b.*
 
 # Items disliked by your god.
-menu += $forbidden:.*forbidden.*
+menu += $forbidden:.*\bforbidden\b.*
 
 # Handle cursed and equipped items early to override other colour settings.
-menu += lightred:.*equipped.* cursed
-menu += red: (a|the) cursed
-menu += inventory:lightgreen:.*equipped.*
+menu += lightred:.*\bequipped\b.* cursed\b
+menu += red: \b(a|the)\b \bcursed\b
+menu += inventory:lightgreen:.*\bequipped\b.*
 
 # Important game items
 #
-menu += lightmagenta:.*misc.*rune of Zot
-menu += lightmagenta:.*orb.*Zot
+menu += lightmagenta:.*\bmisc\b.*\brune of Zot\b
+menu += lightmagenta:.*\borb\b.*\bZot\b
 
 # Artefacts
 #
-menu += lightcyan:.*unrand.*
-menu += white:.*artefact.*
+menu += lightcyan:.*\bunrand\b.*
+menu += white:.*\bartefact\b.*
 
-#menu += white:.*identified.*artefact.*
-#menu += lightblue:.*unidentified.*artefact.*
+#menu += white:.*\bidentified\b.*\bartefact\b.*
+#menu += lightblue:.*\bunidentified\b.*\bartefact\b.*
 
 # Possible egos
-menu += lightblue:^unidentified .*weapon.*(runed|glowing)
-menu += lightblue:^unidentified .*armour.*(runed|glowing|embroidered|shiny|dyed)
+menu += lightblue:^unidentified .*\bweapon\b.*\b(runed|glowing)\b
+menu += lightblue:^unidentified .*\barmour\b.*\b(runed|glowing|embroidered|shiny|dyed)\b
 
 # Enchanté
-menu += green:enchanted
-menu += green:staff of
-menu += green:ego
+menu += green:\benchanted\b
+menu += green:\bstaff of\b
+menu += green:\bego\b
 
 # Emergency items
-menu += yellow:.*emergency_item.*
+menu += yellow:.*\bemergency_item\b.*
 
 # Good items
-menu += cyan:.*good_item.*
+menu += cyan:.*\bgood_item\b.*
 
 # Dangerous (but still useful) items
-menu += $dangerous:.*dangerous_item.*
+menu += $dangerous:.*\bdangerous_item\b.*
 
 # Defaults for normal items
-menu += lightblue:unidentified.*(potion|scroll|wand|jewellery|magical staff)
+menu += lightblue:\bunidentified\b.*(potion|scroll|wand|jewellery|magical staff)
 
 
 # Colouring of autoinscribed god gifts
@@ -66,4 +66,4 @@ menu_colour += inventory:white:\w \*\s
 
 
 # Not really menu.
-menu_colour += notes:white:Reached XP level
+menu_colour += notes:white:\bReached XP level\b
