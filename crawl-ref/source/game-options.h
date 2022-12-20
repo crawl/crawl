@@ -45,10 +45,17 @@ public:
         : names(_names), loaded(false) { }
     virtual ~GameOption() {};
 
-    // XX reset, set_from, and some other stuff could be templated for most
+    // XX reset and some other stuff could be templated for most
     // subclasses, but this is hard to reconcile with the polymorphism involved
     virtual void reset() { loaded = false; }
-    virtual void set_from(const GameOption *other) = 0;
+    virtual void load_from_UI() = 0;
+    virtual const string str() const = 0;
+    void set_from(const GameOption *other)
+    {
+        const bool real_loaded = loaded;
+        loadFromString(other->str(), RCFILE_LINE_EQUALS);
+        loaded = real_loaded;
+    }
     virtual string loadFromString(const std::string &, rc_line_type)
     {
         loaded = true;
@@ -69,6 +76,9 @@ protected:
     friend struct game_options;
 };
 
+void load_string_from_UI(GameOption *option);
+void choose_option_from_UI(GameOption *caller, vector<string> choices);
+
 class BoolGameOption : public GameOption
 {
 public:
@@ -82,15 +92,13 @@ public:
         GameOption::reset();
     }
 
-    void set_from(const GameOption *other) override
+    const string str() const override
     {
-        const auto other_casted = dynamic_cast<const BoolGameOption *>(other);
-        // ugly: I can't currently find any better way to enforce types
-        ASSERT(other_casted);
-        value = other_casted->value;
+        return value ? "true" : "false";
     }
 
     string loadFromString(const std::string &field, rc_line_type) override;
+    void load_from_UI() override;
 
 private:
     bool &value;
@@ -111,15 +119,9 @@ public:
         GameOption::reset();
     }
 
-    void set_from(const GameOption *other) override
-    {
-        const auto other_casted = dynamic_cast<const ColourGameOption *>(other);
-        // ugly: I can't currently find any better way to enforce types
-        ASSERT(other_casted);
-        value = other_casted->value;
-    }
-
     string loadFromString(const std::string &field, rc_line_type) override;
+    const string str() const override;
+    void load_from_UI() override;
 
 private:
     unsigned &value;
@@ -140,16 +142,9 @@ public:
         GameOption::reset();
     }
 
-    void set_from(const GameOption *other) override
-    {
-        const auto other_casted = dynamic_cast<const CursesGameOption *>(other);
-        // ugly: I can't currently find any better way to enforce types
-        ASSERT(other_casted);
-        value = other_casted->value;
-    }
-
-
     string loadFromString(const std::string &field, rc_line_type) override;
+    const string str() const override;
+    void load_from_UI() override;
 
 private:
     unsigned &value;
@@ -170,16 +165,9 @@ public:
         GameOption::reset();
     }
 
-    void set_from(const GameOption *other) override
-    {
-        const auto other_casted = dynamic_cast<const IntGameOption *>(other);
-        // ugly: I can't currently find any better way to enforce types
-        ASSERT(other_casted);
-        value = other_casted->value;
-    }
-
-
     string loadFromString(const std::string &field, rc_line_type) override;
+    const string str() const override;
+    void load_from_UI() override { load_string_from_UI(this); }
 
 private:
     int &value;
@@ -199,15 +187,9 @@ public:
         GameOption::reset();
     }
 
-    void set_from(const GameOption *other) override
-    {
-        const auto other_casted = dynamic_cast<const StringGameOption *>(other);
-        // ugly: I can't currently find any better way to enforce types
-        ASSERT(other_casted);
-        value = other_casted->value;
-    }
-
     string loadFromString(const std::string &field, rc_line_type) override;
+    const string str() const override;
+    void load_from_UI() override { load_string_from_UI(this); }
 
 private:
     string &value;
@@ -227,15 +209,9 @@ public:
         GameOption::reset();
     }
 
-    void set_from(const GameOption *other) override
-    {
-        const auto other_casted = dynamic_cast<const TileColGameOption *>(other);
-        // ugly: I can't currently find any better way to enforce types
-        ASSERT(other_casted);
-        value = other_casted->value;
-    }
-
     string loadFromString(const std::string &field, rc_line_type) override;
+    const string str() const override;
+    void load_from_UI() override { load_string_from_UI(this); }
 
 private:
     VColour &value;
@@ -262,16 +238,9 @@ public:
         GameOption::reset();
     }
 
-    void set_from(const GameOption *other) override
-    {
-        const auto other_casted = dynamic_cast<const ColourThresholdOption *>(other);
-        // ugly: I can't currently find any better way to enforce types
-        ASSERT(other_casted);
-        value = other_casted->value;
-    }
-
-
     string loadFromString(const string &field, rc_line_type ltyp) override;
+    const string str() const override;
+    void load_from_UI() override { load_string_from_UI(this); }
 
 private:
     colour_thresholds parse_colour_thresholds(const string &field,
@@ -282,7 +251,7 @@ private:
     colour_thresholds default_value;
 };
 
-// T must be convertible to a string.
+// T must be convertible to a string, and support the << operator.
 template<typename T>
 class ListGameOption : public GameOption
 {
@@ -295,14 +264,6 @@ public:
     {
         value = default_value;
         GameOption::reset();
-    }
-
-    void set_from(const GameOption *other) override
-    {
-        const auto other_casted = dynamic_cast<const ListGameOption<T> *>(other);
-        // ugly: I can't currently find any better way to enforce types
-        ASSERT(other_casted);
-        value = other_casted->value;
     }
 
     string loadFromString(const std::string &field, rc_line_type ltyp) override
@@ -324,6 +285,19 @@ public:
         merge_lists(value, new_entries, ltyp == RCFILE_LINE_CARET);
         return GameOption::loadFromString(field, ltyp);
     }
+    const string str() const override
+    {
+        if (!value.size())
+            return "";
+        stringstream ss;
+        for (const auto &s : value)
+            ss << ", " << s;
+        return ss.str().substr(2);
+    }
+    void load_from_UI() override
+    {
+        load_string_from_UI(this);
+    }
 
 private:
     vector<T> &value;
@@ -338,24 +312,20 @@ class MultipleChoiceGameOption : public GameOption
 {
 public:
     MultipleChoiceGameOption(T &_val, std::set<std::string> _names, T _default,
-                             map<string, T> _choices,
+                             vector<pair<string, T>> _choices,
                              bool _normalize_bools=false)
         : GameOption(_names), value(_val), default_value(_default),
-          choices(_choices), normalize_bools(_normalize_bools)
-    { }
+          normalize_bools(_normalize_bools)
+        {
+            choices = map<string, T>(_choices.begin(), _choices.end());
+            for (auto c = _choices.rbegin(); c != _choices.rend(); ++c)
+                rchoices[c->second] = c->first;
+        }
 
     void reset() override
     {
         value = default_value;
         GameOption::reset();
-    }
-
-    void set_from(const GameOption *other) override
-    {
-        const auto other_casted = dynamic_cast<const MultipleChoiceGameOption<T> *>(other);
-        // ugly: I can't currently find any better way to enforce types
-        ASSERT(other_casted);
-        value = other_casted->value;
     }
 
     string loadFromString(const std::string &field, rc_line_type ltyp) override
@@ -374,8 +344,8 @@ public:
                 normalized = "false";
         }
 
-        const T *choice = map_find(choices, normalized);
-        if (choice == 0)
+        const auto choice = choices.find(normalized);
+        if (choice == choices.end())
         {
 
             string all_choices = comma_separated_fn(choices.begin(),
@@ -387,14 +357,32 @@ public:
         }
         else
         {
-            value = *choice;
+            value = choice->second;
             return GameOption::loadFromString(normalized, ltyp);
         }
+    }
+
+    const string str() const override
+    {
+        const auto choice = rchoices.find(value);
+        ASSERT(choice != rchoices.end());
+        return choice->second;
+    }
+
+    void load_from_UI() override
+    {
+        const string prompt = string("Select a value for ")+name()+":";
+        vector<string> list;
+        for (auto c : rchoices)
+            list.emplace_back(c.second);
+
+        choose_option_from_UI(this, list);
     }
 
 private:
     T &value, default_value;
     map<string, T> choices;
+    map<T, string> rchoices; // T->string, with only the first copy of dups.
     bool normalize_bools;
 };
 

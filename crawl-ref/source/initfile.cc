@@ -541,39 +541,26 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
         // see post-processing in fixup_options that handles the interaction
         // with CLOs for the following two options:
+#if !defined(DGAMELAUNCH) && defined(WIZARD)
         new MultipleChoiceGameOption<wizard_option_type>(
             SIMPLE_NAME(wiz_mode),
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            WIZ_NEVER,
-#elif defined(DEBUG_DIAGNOSTICS)
-            WIZ_YES, // default debug build games to wizmode. Can be overridden in rc
-#else
+# ifdef DEBUG_DIAGNOSTICS
+            WIZ_YES, // default debug build games to wizmode. Can be set in rc
+# else
             WIZ_NO,
-#endif
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            {}, // setting in rc is disabled
-#else
+# endif
             {{"true", WIZ_YES},
              {"false", WIZ_NO},
              {"never", WIZ_NEVER}},
-#endif
              true),
         new MultipleChoiceGameOption<wizard_option_type>(
             SIMPLE_NAME(explore_mode),
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            WIZ_NEVER,
-#else
             WIZ_NO,
-#endif
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            {}, // setting in rc is disabled
-#else
             {{"true", WIZ_YES},
              {"false", WIZ_NO},
              {"never", WIZ_NEVER}},
-#endif
              true),
-
+#endif
 #ifdef WIZARD
         new BoolGameOption(SIMPLE_NAME(fsim_csv), false),
         new ListGameOption<string>(SIMPLE_NAME(fsim_scale)),
@@ -1388,6 +1375,14 @@ void game_options::reset_options()
     kill_map[KC_FRIENDLY] = KC_FRIENDLY;
     kill_map[KC_OTHER] = KC_OTHER;
 
+    // Some options can be changed in some builds, but not others.
+#if defined(USE_TILE_LOCAL) && !defined(TOUCH_UI)
+    tile_use_small_layout = MB_MAYBE;
+#endif
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+    explore_mode = wiz_mode = WIZ_NEVER;
+#endif
+
     // Forget any files we remembered as included.
     included.clear();
 
@@ -2068,20 +2063,22 @@ newgame_def read_startup_prefs()
  */
 void game_options::write_prefs(FILE *f)
 {
-    // TODO: generalize, probably some polymorphic functions on GameOption
-    // classes. Not worth doing until more stuff is serialized though...
-    fprintf(f, "default_manual_training = %s\n",
-                        default_manual_training ? "yes" : "no");
-    fprintf(f, "quiver_menu_focus = %s\n",
-                        quiver_menu_focus ? "true" : "false");
+    const auto list =
+    {
+        "default_manual_training", "quiver_menu_focus",
 #ifdef USE_TILE_WEB
-    fprintf(f, "action_panel_orientation = %s\n",
-                        action_panel_orientation.c_str());
-    fprintf(f, "action_panel_show = %s\n",
-                        action_panel_show ? "yes" : "no");
-    fprintf(f, "action_panel_scale = %d\n", action_panel_scale);
-    fprintf(f, "action_panel_font_size = %d\n", action_panel_font_size);
+        "action_panel_orientation", "action_panel_show",
+        "action_panel_scale", "action_panel_font_size",
 #endif
+    };
+
+    for (const auto key : list)
+    {
+        ASSERT(map_find(options_by_name, key));
+        const GameOption &option = **map_find(options_by_name, key);
+        fprintf(f, "%s = %s\n", option.name().c_str(), option.str().c_str());
+    }
+
     // TODO: this variable is extremely coarse, maybe something better? Per
     // opts setting? comparison of serializable values like for newgame_def?
     prefs_dirty = false;
@@ -5669,6 +5666,68 @@ bool parse_args(int argc, char **argv, bool rc_only)
     }
 
     return true;
+}
+
+// Like MenuEntry, but only parse menu colours for the first _highlight_until
+// characters of each line (in this case, the option name but not its value).
+class EGP_MenuEntry : public MenuEntry
+{
+public:
+    EGP_MenuEntry(const string &txt = string(), MenuEntryLevel lev = MEL_ITEM,
+                  int qty = 0, int hotk = 0, int _highlight_until = INT_MAX)
+        : MenuEntry(txt, lev, qty, hotk), highlight_until(_highlight_until) { }
+
+    int highlight_colour(bool) const override
+    {
+        return menu_colour(text.substr(0, highlight_until), "", tag);
+    }
+private:
+    int highlight_until;
+};
+
+static string _option_line(const GameOption *option, int name_len, int text_len)
+{
+    auto name0 = option->name(), value0 = option->str();
+    if (static_cast<unsigned>(text_len) < value0.size())
+        value0.erase(0, value0.size()-text_len+3).insert(0, "...");
+    value0 = replace_all(value0, "<", "<<");
+    auto name = name0.c_str(), value = value0.c_str();
+    return make_stringf("%-*.*s%s", name_len, name_len, name, value);
+}
+
+// Show (and perhaps edit) options for the game.
+void edit_game_prefs()
+{
+    string prompt = "<w>Select a preference to set</w>";
+    auto list = Options.get_option_behaviour();
+    string selected;
+
+    // The caller should remove any user-provided formatting.
+    Menu menu(MF_SINGLESELECT | MF_ARROWS_SELECT
+              | MF_ALLOW_FORMATTING | MF_INIT_HOVER);
+
+    menu.set_title(new MenuEntry(prompt, MEL_TITLE));
+    menu.set_tag("option");
+
+    int i = 0;
+    for (const auto option : list)
+    {
+        string line = _option_line(option, 36, 37);
+        const char letter = index_to_letter(i++ % 52);
+        auto entry = new EGP_MenuEntry(line, MEL_ITEM, 1, letter, 36);
+        entry->data = option;
+        entry->on_select = [entry](const MenuEntry&)
+        {
+            GameOption *opt = static_cast<GameOption*>(entry->data);
+            opt->load_from_UI();
+            entry->text = _option_line(opt, 36, 79-36-4);
+            return true;
+        };
+        menu.add_entry(entry);
+    }
+
+    menu.set_hovered(0);
+    menu.show();
 }
 
 ///////////////////////////////////////////////////////////////////////

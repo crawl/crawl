@@ -1774,6 +1774,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
            pickup        (specific to pickup menus)
            shop          (shop menus)
            notes         (the ?: screen)
+           option        (the options menu - match option names but not values)
            resists       (the % screen)
            spell         (the Z and I screens)
            stash         (the results from Ctrl-F)

@@ -1406,7 +1406,7 @@ static string _keylist_invalid_reason(const vector<string> &key_list,
     return "";
 }
 
-static void _show_type_response(string response)
+void show_type_response(string response)
 {
     // possibly overkill, but this renders very reliably
     formatted_scroller fs(FS_EASY_EXIT);
@@ -1421,7 +1421,7 @@ bool find_description_of_type(lookup_help_type lht)
     string response;
     bool done = lookup_types[lht].find_description(response);
     if (!response.empty() && response != "Okay, then.") // TODO: ...
-        _show_type_response(response);
+        show_type_response(response);
     return done;
 }
 

@@ -6,9 +6,38 @@
 #include "AppHdr.h"
 
 #include "game-options.h"
+#include "lookup-help.h"
 #include "options.h"
+#include "menu.h"
+#include "message.h"
 #include "misc.h"
+#include "prompt.h"
 #include "tiles-build-specific.h"
+
+// Return a list of the valid field values for _curses_attribute(), excluding
+// hi: and hilite: values, which are all duplicates.
+// This is called after initialisation to ensure that colour_to_str() works.
+static map<unsigned, string>& _curses_attribute_map()
+{
+    static map<unsigned, string> list;
+    if (list.empty())
+    {
+        // This is the same list as in _curses_attribute.
+        list =
+        {
+            {CHATTR_NORMAL, "none"}, {CHATTR_STANDOUT, "standout"},
+            {CHATTR_BOLD, "bold"}, {CHATTR_BLINK, "blink"},
+            {CHATTR_UNDERLINE, "underline"}, {CHATTR_REVERSE, "reverse"},
+            {CHATTR_DIM, "dim"}
+        };
+        for (colour_t i = COLOUR_UNDEF; i < NUM_TERM_COLOURS; ++i)
+        {
+            int idx = CHATTR_HILITE | i << 8;
+            list[idx] = string("highlight:")+colour_to_str(i);
+        }
+    }
+    return list;
+}
 
 static unsigned _curses_attribute(const string &field, string &error)
 {
@@ -66,6 +95,78 @@ bool read_bool(const string &field, bool def_value)
     return def_value;
 }
 
+/// Ask the user to choose between a set of options.
+///
+/// @param[in] prompt Text to put above the options. Typically a question.
+/// @param[in] options List of options (as strings) to choose between.
+/// @param[in] def_value Value of default option (as string).
+/// @returns The selected option if something was selected, or "" if the prompt
+///          was cancelled.
+static string _choose_one_from_list(const string prompt,
+                                    const vector<string> options,
+                                    const string def_value)
+{
+    // The caller should remove any user-provided formatting.
+    Menu menu(MF_SINGLESELECT | MF_ARROWS_SELECT
+              | MF_ALLOW_FORMATTING | MF_INIT_HOVER);
+
+    menu.set_title(new MenuEntry(prompt, MEL_TITLE));
+
+    for (unsigned i = 0, size = options.size(); i < size; ++i)
+    {
+        const char letter = index_to_letter(i % 52);
+        MenuEntry* me = new MenuEntry(options[i], MEL_ITEM, 1, letter);
+        menu.add_entry(me);
+    }
+
+    auto it = find(options.begin(), options.end(), def_value);
+    ASSERT(options.end() != it);
+    menu.set_hovered(distance(options.begin(), it));
+
+    vector<MenuEntry*> sel = menu.show();
+    if (sel.empty())
+        return "";
+    else
+        return sel[0]->text;
+}
+
+/// Ask the user to choose between a set of options.
+///
+/// @param[in,out] caller  Option to edit. Reads the name and current value.
+///                        Writes the new value.
+/// @param[in]     choices Options to choose between.
+void choose_option_from_UI(GameOption *caller, vector<string> choices)
+{
+    string prompt = string("Select a value for ")+caller->name()+":";
+    string selected = _choose_one_from_list(prompt, choices, caller->str());
+    if (!selected.empty())
+        caller->loadFromString(selected, RCFILE_LINE_EQUALS);
+}
+
+/// Ask the user to edit a game option using a text box.
+///
+/// @param[in,out] caller Option to edit. Reads the name and current value.
+///                       Writes the new value.
+void load_string_from_UI(GameOption *caller)
+{
+    string prompt = string("Enter a value for ")+caller->name()+":";
+    /// XXX - shouldn't use a fixed length string here.
+    char select[1024] = "";
+    string old = caller->str();
+    while (1)
+    {
+        if (msgwin_get_line(prompt, select, sizeof(select), nullptr, old))
+        {
+            caller->loadFromString(caller->str(), RCFILE_LINE_EQUALS);
+            return;
+        }
+        string error = caller->loadFromString(select, RCFILE_LINE_EQUALS);
+        if (error.empty())
+            return;
+        show_type_response(error);
+        old = select;
+    }
+}
 
 string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
@@ -81,6 +182,12 @@ string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)
     return GameOption::loadFromString(field, ltyp);
 }
 
+void BoolGameOption::load_from_UI()
+{
+    vector<string> choices = {"false", "true"};
+    choose_option_from_UI(this, choices);
+}
+
 string ColourGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     const int col = str_to_colour(field, -1, true, elemental);
@@ -89,6 +196,20 @@ string ColourGameOption::loadFromString(const string &field, rc_line_type ltyp)
 
     value = col;
     return GameOption::loadFromString(field, ltyp);
+}
+
+const string ColourGameOption::str() const
+{
+    ASSERT(!elemental); // XXX - not handled, as no option uses it.
+    return colour_to_str(value);
+}
+
+void ColourGameOption::load_from_UI()
+{
+    vector<string> choices;
+    for (colour_t i = COLOUR_UNDEF; i < NUM_TERM_COLOURS; ++i)
+        choices.emplace_back(colour_to_str(i));
+    choose_option_from_UI(this, choices);
 }
 
 string CursesGameOption::loadFromString(const string &field, rc_line_type ltyp)
@@ -102,6 +223,22 @@ string CursesGameOption::loadFromString(const string &field, rc_line_type ltyp)
     return GameOption::loadFromString(field, ltyp);
 }
 
+const string CursesGameOption::str() const
+{
+    const auto x = _curses_attribute_map().find(value);
+    if (x == _curses_attribute_map().end())
+        die("Invalid value for %s: %d", name().c_str(), value);
+    return x->second;
+}
+
+void CursesGameOption::load_from_UI()
+{
+    vector<string> choices;
+    for (auto &x : _curses_attribute_map()) // Add the names in numerical order.
+        choices.emplace_back(x.second);
+    choose_option_from_UI(this, choices);
+}
+
 #ifdef USE_TILE
 TileColGameOption::TileColGameOption(VColour &val, std::set<std::string> _names,
                     string _default)
@@ -112,6 +249,11 @@ string TileColGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     value = str_to_tile_colour(field);
     return GameOption::loadFromString(field, ltyp);
+}
+
+const string TileColGameOption::str() const
+{
+    return make_stringf("#%02x%02x%02x", value.r, value.g, value.b);
 }
 #endif
 
@@ -128,10 +270,20 @@ string IntGameOption::loadFromString(const string &field, rc_line_type ltyp)
     return GameOption::loadFromString(field, ltyp);
 }
 
+const string IntGameOption::str() const
+{
+    return to_string(value);
+}
+
 string StringGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     value = field;
     return GameOption::loadFromString(field, ltyp);
+}
+
+const string StringGameOption::str() const
+{
+    return value;
 }
 
 string ColourThresholdOption::loadFromString(const string &field,
@@ -201,4 +353,13 @@ colour_thresholds
     }
     stable_sort(result.begin(), result.end(), ordering_function);
     return result;
+}
+
+const string ColourThresholdOption::str() const
+{
+    auto f = [] (const colour_threshold &s)
+    {
+        return make_stringf("%d:%s", s.first, colour_to_str(s.second).c_str());
+    };
+    return comma_separated_fn(value.begin(), value.end(), f, ", ");
 }

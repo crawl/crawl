@@ -73,6 +73,7 @@ public:
 extern system_environment SysEnv;
 
 bool parse_args(int argc, char **argv, bool rc_only);
+void edit_game_prefs();
 
 struct newgame_def;
 void write_newgame_options_file(const newgame_def& prefs);
