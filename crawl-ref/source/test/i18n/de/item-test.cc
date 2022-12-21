@@ -13,7 +13,7 @@ using namespace std;
 
 
 const vector<string> cases = {
-    "nom"
+    "nom", "acc"
 };
 
 const vector<string> test_items = {
@@ -211,7 +211,7 @@ vector<map<string, string>> rings =
     {
         {"en", "the ring \"Cuti\" {rF+ MR+ Dex+2}"},
         {"nom", "der Ring \"Cuti\" {rF+ MR+ Ges+2}"},
-        {"acc", "der Ring \"Cuti\" {rF+ MR+ Ges+2}"}
+        {"acc", "den Ring \"Cuti\" {rF+ MR+ Ges+2}"}
     },
 };
 
@@ -347,19 +347,20 @@ int main()
     const int num_cases = cases.size();
     const int num_items = test_items.size();
 
+    for (int j = 0; j < num_items; j++)
+    {
+        test("nom", test_items[j], expected[j]);
+    }
+
+    cout << endl << "ARMOUR:" << endl;
+    for (size_t j = 0; j < armour_en.size(); j++)
+    {
+        test("nom", armour_en[j], armour_de[j]);
+    }
+
     for (int i = 0; i < num_cases; i++)
     {
         string cse = cases[i];
-        for (int j = 0; j < num_items; j++)
-        {
-            test(cse, test_items[j], expected[j]);
-        }
-
-        cout << endl << "ARMOUR:" << endl;
-        for (size_t j = 0; j < armour_en.size(); j++)
-        {
-            test(cse, armour_en[j], armour_de[j]);
-        }
 
         test_group(cse, "RINGS", rings);
         test_group(cse, "AMULETS", amulets);
