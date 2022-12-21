@@ -110,7 +110,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.ccache
+          path: ~/.cache/ccache
           key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-${{ github.sha }}
           restore-keys: |
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-
@@ -180,7 +180,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.ccache
+          path: ~/.cache/ccache
           key: ccache-appimage-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
             ccache-appimage-${{ matrix.build_type }}-
@@ -302,7 +302,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.ccache
+          path: ~/.cache/ccache
           key: ccache-macos-clang-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
             ccache-macos-clang-${{ matrix.build_type }}-
@@ -364,7 +364,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.ccache
+          path: ~/.cache/ccache
           key: ccache-key2-mingw64-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
             ccache-key2-mingw64-${{ matrix.build_type }}-
@@ -431,7 +431,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.ccache
+          path: ~/.cache/ccache
           key: ccache-catch2-${{ github.sha }}
           restore-keys: |
             ccache-catch2-
@@ -531,7 +531,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.ccache
+          path: ~/.cache/ccache
           key: ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ github.sha }}
           restore-keys: |
             ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-
@@ -572,9 +572,9 @@ jobs:
         run: ./deps.py --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
       - name: Cache compilation
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
-          path: ~/.ccache
+          path: ~/.cache/ccache
           key: ccache-android-${{ github.sha }}
           restore-keys: |
             ccache-android-
