@@ -302,7 +302,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.cache/ccache
+          path: ~/Library/Caches/ccache
           key: ccache-macos-clang-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
             ccache-macos-clang-${{ matrix.build_type }}-
