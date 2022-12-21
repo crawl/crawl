@@ -1184,7 +1184,10 @@ void game_options::reset_options()
     // XXX: do we really need to rebuild the list and map every time?
     // Will they ever change within a single execution of Crawl?
     // GameOption::value's value will change of course, but not the reference.
-    deleteAll(option_behaviour);
+    if (options_sorted.size())
+        deleteAll(options_sorted);
+    else
+        deleteAll(option_behaviour);
     option_behaviour = build_options_list();
     options_by_name = build_options_map(option_behaviour);
     for (GameOption* option : option_behaviour)
