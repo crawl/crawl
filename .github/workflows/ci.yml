@@ -561,6 +561,7 @@ jobs:
     env:
       USE_CCACHE: 1
       CCACHE_EXEC: /usr/bin/ccache
+      NDK_CCACHE: /usr/bin/ccache
     steps:
       - uses: actions/checkout@v2
         with:
