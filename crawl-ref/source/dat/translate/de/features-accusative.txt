@@ -195,7 +195,7 @@ einen verlassenen Laden
 einen leeren Bogen aus uraltem Stein
 %%%%
 {acc}a detected shop or portal
-einen entdeckten Laden oder das Portal
+einen entdeckten Laden oder ein Portal
 %%%%
 {acc}a labyrinth entrance
 einen Eingang zum Labyrinth

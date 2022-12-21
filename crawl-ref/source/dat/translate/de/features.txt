@@ -927,6 +927,9 @@ ein Baum
 an awoken tree
 ein geweckter Baum
 %%%%
+a floor
+ein Boden
+%%%%
 a metal wall
 eine Metallwand
 %%%%
