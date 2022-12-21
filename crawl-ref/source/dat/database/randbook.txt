@@ -374,6 +374,8 @@ strange
 
 tattered
 
+thrumming
+
 torn
 
 uncut
@@ -612,6 +614,8 @@ Easy @_book_magic_@
 Everyday @_book_magic_@
 
 More @_book_magic_@
+
+Performing Successful @_book_magic_@
 
 Quotidian @_book_magic_@
 
@@ -1053,6 +1057,8 @@ Clay
 
 Cleavage
 
+Detritus
+
 Earth
 
 Erosion
@@ -1446,6 +1452,8 @@ Stolen Souls
 Zombies
 
 the Autopsy
+
+the Catacomb
 
 the Cemetery
 
@@ -1992,6 +2000,8 @@ Injurious
 
 Lethal
 
+Limned
+
 Luminous
 
 Kinetic
@@ -2218,15 +2228,17 @@ Hexing
 
 Hindering
 
-Ill-Fated
+Ill-fated
 
-Ill-Starred
+Ill-starred
 
 Maledictive
 
 Spellbinding
 
-Star-Crossed
+Star-crossed
+
+Twinkling
 
 Unfortunate
 
@@ -2261,6 +2273,8 @@ Cold
 
 Congealing
 
+Crystallized
+
 Freezing
 
 Frigid
@@ -2287,6 +2301,10 @@ Hyperborean
 
 Icy
 
+Nival
+
+Niveous
+
 Numb
 
 Polar
@@ -2294,6 +2312,8 @@ Polar
 Shivering
 
 Snowy
+
+Snow-white
 
 Subzero
 
@@ -2307,6 +2327,8 @@ Necromancy adj
 Bloody
 
 Charnel
+
+Creeping
 
 Dark
 
@@ -2385,6 +2407,9 @@ Foul
 # as in the draconians
 Green
 
+w:2
+Gross
+
 Impure
 
 Infected
@@ -2412,6 +2437,8 @@ Putrid
 Rancid
 
 Rank
+
+Repulsive
 
 Septic
 
