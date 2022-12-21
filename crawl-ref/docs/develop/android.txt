@@ -34,6 +34,29 @@ complete Android project. You can use Android Studio to generate APK(s)
 or further development. Just open the project folder located in
 crawl-ref/source/android-project
 
+Command line build process
+--------------------------
+
+Prerequisites: java/jdk, gradle, android sdk and command line tools,
+other standard dcss prerequisites
+* The necessary android packages are available in many package management
+  systems, and via installing Android Studio (probably the most reliable).
+* package names may differ slightly depending on installation method. But for
+  example, `apt install default-jdk gradle android-sdk` on Ubuntu.
+* Ensure that `ANDROID_SDK_ROOT` is set properly (and perhaps `ANDROID_HOME`),
+  and that the jdk version you want to use is in your path.
+* If you install android from a package manager, the installation will be
+  minimal, and you will need to use the android sdk manager tool to install
+  further pieces and accept licenses. `sdkmanager --update` is a start. The
+  initial app configure process below will most likely install a specific
+  version of the NDK, that will need its license accepted, and if you are
+  operating entirely via the command line, `sdkmanager` is the utility for
+  doing this.
+
+Build:
+1. Build the tiles toolchain: make ANDROID=1 android
+2. change directory to `crawl-ref/source/android-project`
+3. Build the app: `gradle :app:assembleBuildTest`
 
 Technical Notes
 ---------------
