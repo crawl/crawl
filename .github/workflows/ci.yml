@@ -146,7 +146,7 @@ jobs:
         env:
           TERM: dumb
       - name: Print ccache stats
-        run: ccache -s
+        run: ccache -p -s
 
   build_appimage:
     permissions:
@@ -196,7 +196,7 @@ jobs:
       - run: make -j$(nproc) ${{ matrix.build_opts }} appimage
         working-directory: crawl-ref/source
       - name: Print ccache stats
-        run: ccache -s
+        run: ccache -p -s
       - name: Add build to release
         uses: svenstaro/upload-release-action@v2
         with:
@@ -316,7 +316,7 @@ jobs:
       - run: make -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{matrix.build_opts }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
-        run: ccache -s
+        run: ccache -p -s
       - name: Add build to release
         if: github.event.release.tag_name != null
         uses: svenstaro/upload-release-action@v2
@@ -380,7 +380,7 @@ jobs:
       - run: make -j$(nproc) CROSSHOST=i686-w64-mingw32 package-windows-${{ matrix.build_type }}
         working-directory: crawl-ref/source
       - name: Print ccache stats
-        run: ccache -s
+        run: ccache -p -s
       # The zip & installer targets create different sorts of names, so we need
       # a little shell script magic here.
       - name: Determine release file names
@@ -446,7 +446,7 @@ jobs:
       - run: make -j$(nproc) catch2-tests
         working-directory: crawl-ref/source
       - name: Print ccache stats
-        run: ccache -s
+        run: ccache -p -s
       - name: Generate LCOV data
         working-directory: crawl-ref/source
         run: >
@@ -549,7 +549,7 @@ jobs:
       - run: make -j$(nproc) header-build-tests
         working-directory: crawl-ref/source
       - name: Print ccache stats
-        run: ccache -s
+        run: ccache -p -s
 
   build_android:
     name: Android
@@ -592,7 +592,7 @@ jobs:
         run: gradle :app:assembleBuildTest
         working-directory: crawl-ref/source/android-project
       - name: Print ccache stats
-        run: ccache -s
+        run: ccache -p -s
 
   notify_irc:
     name: "Notify #crawl-dev of build failure"
