@@ -65,7 +65,6 @@
 #
 #    LINUXDEPLOY   -- path to linuxdeploy tool, required for AppImage builds
 #    ANDROID       -- perform an Android build (see docs/develop/android.txt)
-#    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
 #
 # For various mac build tricks oriented at release builds see the various
 # mac-app-* targets as well as the crawl-universal target. (For normal dev
@@ -651,10 +650,9 @@ ifdef ANDROID
   COPY_FONTS = yes
   NO_PKGCONFIG=Y
   GLES=Y
-  TOUCH_UI=Y
   TILES=Y
   SOUND=Y
-  SAVEDIR="/sdcard/Android/data/org.develz.crawl/saves/"
+  SAVEDIR=
 else
 
 ifndef BUILD_LUA
@@ -744,10 +742,6 @@ ifdef TILES
 
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_LOCAL
-
-ifdef TOUCH_UI
-DEFINES_L += -DTOUCH_UI
-endif
 
 ifdef BUILD_SDL2
 INCLUDES_L += -isystem contrib/install/$(ARCH)/include/SDL2
@@ -1539,7 +1533,7 @@ endif
 ifdef ANDROID
   # during build, data goes in a different directory to when crawl runs!
   prefix_fp = ..
-  datadir_fp = android-project/assets
+  datadir_fp = android-project/app/src/main/assets
   savedir_fp =
   shareddir_fp =
 endif
@@ -1672,11 +1666,8 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 clean-android:
-ifneq ($(ANDROID),)
 	$(RM) -r $(datadir_fp)
-	+cd android-project && ant clean && ndk-build -$(MAKEFLAGS) clean \
-	 && remove AndroidManifest.xml
-endif
+	+cd android-project && rm -f local.properties && rm -f app/build.gradle
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
@@ -2097,17 +2088,18 @@ mac-app-console: all
 # Building the Android package
 #
 
-android-project/AndroidManifest.xml: android-project/AndroidManifest.xml.in
-	sed "s/@CRAWL_VERSION@/${SRC_VERSION}/" <android-project/AndroidManifest.xml.in >android-project/AndroidManifest.xml
+NPROC := $(shell nproc)
 
-android: install-data .android-cflags android-project/AndroidManifest.xml
+android-project/app/build.gradle: android-project/app/build.gradle.in
+	sed -e "s/@CRAWL_VERSION@/${SRC_VERSION}/" -e "s/@NPROC@/${NPROC}/" <android-project/app/build.gradle.in >android-project/app/build.gradle
+android-project/local.properties: android-project/local.properties.in
+	sed -e "s~@HOME@~${HOME}~" <android-project/local.properties.in >android-project/local.properties
+
+android: greet check-fonts docs install-data .android-cflags android-project/local.properties android-project/app/build.gradle
 ifeq ($(ANDROID),)
 	@echo Please define ANDROID to use this build.
 	@exit 1
 endif
-	+cd android-project && ndk-build -$(MAKEFLAGS) && ant debug && \
-	cp bin/DungeonCrawlStoneSoup-debug.apk \
-	../../../crawl_tiles_android-$(SRC_VERSION).apk
 
 #############################################################################
 # Canned tests

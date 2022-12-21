@@ -22,6 +22,7 @@
 #include "shopping.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "view.h"
 
@@ -162,7 +163,7 @@ static bool _do_build_level()
         if (!vaults.empty())
             vaults = " (" + vaults + ")";
 
-        FILE *fp = fopen("map.dump", "w");
+        FILE *fp = fopen_u("map.dump", "w");
         fprintf(fp, "Bad (disconnected) level (%s) on %s%s.\n\n",
                 env.level_build_method.c_str(),
                 level_id::current().describe().c_str(),
@@ -334,7 +335,7 @@ static void _check_mapless(const level_id &lid, vector<level_id> &mapless)
 static void _write_map_stats()
 {
     const char *out_file = "mapstat.log";
-    FILE *outf = fopen(out_file, "w");
+    FILE *outf = fopen_u(out_file, "w");
     printf("Writing map stats to %s...", out_file);
     fflush(stdout);
     fprintf(outf, "Map Generation Stats\n\n");

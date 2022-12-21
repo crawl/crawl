@@ -63,6 +63,9 @@
  #include "windowmanager.h"
 #endif
 #include "ui.h"
+#ifdef __ANDROID__
+ #include "syscalls.h"
+#endif
 #include "version.h"
 
 using namespace ui;
@@ -963,8 +966,9 @@ static void _show_startup_menu(newgame_def& ng_choice,
 {
     unwind_bool no_more(crawl_state.show_more_prompt, false);
 
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    wm->show_keyboard();
+#if defined(USE_TILE_LOCAL) && defined(__ANDROID__)
+    jni_keyboard_control(false);
+    sleep(1); // wait for keyboard
 #elif defined(USE_TILE_WEB)
     tiles_crt_popup show_as_popup;
 #endif

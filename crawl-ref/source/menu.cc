@@ -1381,18 +1381,6 @@ void Menu::do_menu()
         done = !process_key(key);
         return true;
     });
-#ifdef TOUCH_UI
-    auto menu_wrap_click = [this, &done](const MouseEvent& ev) {
-        if (!m_filter && ev.button() == MouseEvent::Button::Left)
-        {
-            done = !process_key(CK_TOUCH_DUMMY);
-            return true;
-        }
-        return false;
-    };
-    m_ui.title->on_mousedown_event(menu_wrap_click);
-    m_ui.more->on_mousedown_event(menu_wrap_click);
-#endif
 
     update_menu();
     ui::push_layout(m_ui.popup, m_kmc);
@@ -3425,12 +3413,7 @@ void ToggleableMenu::add_toggle_from_command(command_type cmd)
 // needed?
 int ToggleableMenu::pre_process(int key)
 {
-#ifdef TOUCH_UI
-    if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end()
-        || key == CK_TOUCH_DUMMY)
-#else
     if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end())
-#endif
     {
         // Toggle all menu entries
         for (MenuEntry *item : items)
@@ -3456,11 +3439,7 @@ int ToggleableMenu::pre_process(int key)
         }
 
         // Don't further process the key
-#ifdef TOUCH_UI
-        return CK_TOUCH_DUMMY;
-#else
         return 0;
-#endif
     }
     return key;
 }

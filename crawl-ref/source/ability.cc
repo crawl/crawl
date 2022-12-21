@@ -1340,11 +1340,7 @@ bool activate_ability()
             selected = -1;
     }
 
-#ifndef TOUCH_UI
     if (Options.ability_menu && selected == -1)
-#else
-    if (selected == -1)
-#endif
     {
         selected = choose_ability_menu(talents);
         if (selected == -1)
@@ -1354,7 +1350,6 @@ bool activate_ability()
             return false;
         }
     }
-#ifndef TOUCH_UI
     else
     {
         while (selected < 0)
@@ -1403,7 +1398,6 @@ bool activate_ability()
             }
         }
     }
-#endif
     return activate_talent(talents[selected]);
 }
 

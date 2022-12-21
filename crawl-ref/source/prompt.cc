@@ -63,12 +63,8 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
-#ifdef TOUCH_UI
-    bool use_popup = true;
-#else
     bool use_popup = !crawl_state.need_save || ui::has_layout();
     use_popup = use_popup && str && allow_popup;
-#endif
 
     // MF_ANYPRINTABLE is here because we are running a loop manually
     // XX don't do this

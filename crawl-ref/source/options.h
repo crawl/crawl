@@ -596,6 +596,7 @@ public:
     int         tile_window_width;
     int         tile_window_height;
     int         tile_window_ratio;
+    bool        tile_window_limit_size;
     maybe_bool  tile_use_small_layout;
 #endif
     int         tile_sidebar_pixels;

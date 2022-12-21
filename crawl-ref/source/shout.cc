@@ -1336,7 +1336,7 @@ void noise_grid::write_noise_grid(FILE *outf) const
 
 void noise_grid::dump_noise_grid(const string &filename) const
 {
-    FILE *outf = fopen(filename.c_str(), "w");
+    FILE *outf = fopen_u(filename.c_str(), "w");
     fprintf(outf, "<!DOCTYPE html><html><head>");
     _write_noise_grid_css(outf);
     fprintf(outf, "</head>\n<body>\n");

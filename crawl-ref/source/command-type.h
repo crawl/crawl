@@ -143,9 +143,11 @@ enum command_type
     CMD_MAX_TILE = CMD_EDIT_PLAYER_TILE,
 #endif
 
-#ifdef TOUCH_UI
-    // bring up the on-screen keyboard if needed
-    CMD_SHOW_KEYBOARD,
+#ifdef __ANDROID__
+    // toggle the tab icons visibility in the small layout
+    CMD_TOGGLE_TAB_ICONS,
+    // toggle the on-screen keyboard visibility
+    CMD_TOGGLE_KEYBOARD,
 #endif
 
     // Repeat previous command

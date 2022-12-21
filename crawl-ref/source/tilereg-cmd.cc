@@ -65,12 +65,8 @@ int CommandRegion::handle_mouse(wm_mouse_event &event)
         const command_type cmd = (command_type) m_items[item_idx].idx;
         m_last_clicked_item = item_idx;
 
-        if (tiles.is_using_small_layout())
-        {
-            // close the tab that we've just successfully used a command from
-            tiles.deactivate_tab();
-        }
-
+        // this is a really horrid way to preserve the interface in viewmap.cc
+        // which expects a keypress rather than a command :(
         if (tiles.get_map_display())
             process_map_command(cmd);
         else

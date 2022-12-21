@@ -38,6 +38,7 @@
 #include "species.h"
 #include "state.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "throw.h"
 #include "unwind.h"
 #include "version.h"
@@ -703,7 +704,7 @@ void wizard_fight_sim(bool double_scale)
     // TODO: why is this a .csv file? It's not a CSV.
     const char * fightstat = Options.fsim_csv ? "fsim.csv" : "fsim.txt";
 
-    FILE * o = fopen(fightstat, "a");
+    FILE * o = fopen_u(fightstat, "a");
     if (!o)
     {
         mprf(MSGCH_ERROR, "Can't write %s: %s", fightstat, strerror(errno));
