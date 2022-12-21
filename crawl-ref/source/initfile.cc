@@ -503,19 +503,15 @@ const vector<GameOption*> game_options::build_options_list()
              {"false", SCREENMODE_WINDOW},
              {"maybe", SCREENMODE_AUTO},
              {"auto", SCREENMODE_AUTO}}, true),
+#endif
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
         new MultipleChoiceGameOption<maybe_bool>(
             SIMPLE_NAME(tile_use_small_layout),
             MB_MAYBE,
-#ifdef TOUCH_UI
             {{"true", MB_TRUE},
              {"false", MB_FALSE},
              {"maybe", MB_MAYBE},
              {"auto", MB_MAYBE}}, true
-#else
-            // this option is unsupported, undocumented, and fairly crashy.
-            // XX do something about this.
-            {}
-#endif
             ),
 #endif
 #ifdef USE_TILE_WEB
