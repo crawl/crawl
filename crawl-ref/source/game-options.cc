@@ -19,24 +19,27 @@
 // This is called after initialisation to ensure that colour_to_str() works.
 static map<unsigned, string>& _curses_attribute_map()
 {
-    static map<unsigned, string> list;
-    if (list.empty())
+    static map<unsigned, string> ret;
+    if (ret.empty())
     {
         // This is the same list as in _curses_attribute.
-        list =
+        ret =
         {
-            {CHATTR_NORMAL, "none"}, {CHATTR_STANDOUT, "standout"},
-            {CHATTR_BOLD, "bold"}, {CHATTR_BLINK, "blink"},
-            {CHATTR_UNDERLINE, "underline"}, {CHATTR_REVERSE, "reverse"},
+            {CHATTR_NORMAL, "none"},
+            {CHATTR_STANDOUT, "standout"}, // probably reverses
+            {CHATTR_BOLD, "bold"}, // probably brightens fg
+            {CHATTR_BLINK, "blink"}, // probably brightens bg
+            {CHATTR_UNDERLINE, "underline"},
+            {CHATTR_REVERSE, "reverse"},
             {CHATTR_DIM, "dim"}
         };
         for (colour_t i = COLOUR_UNDEF; i < NUM_TERM_COLOURS; ++i)
         {
             int idx = CHATTR_HILITE | i << 8;
-            list[idx] = string("highlight:")+colour_to_str(i);
+            ret[idx] = string("highlight:")+colour_to_str(i);
         }
     }
-    return list;
+    return ret;
 }
 
 static unsigned _curses_attribute(const string &field, string &error)
@@ -107,8 +110,7 @@ public:
             caller->show_help();
             return static_cast<int>(CK_NO_KEY);
         }
-        else
-            return key;
+        return key;
     }
 private:
     GameOption *caller;
@@ -172,7 +174,7 @@ bool load_string_from_UI(GameOption *caller)
     /// XXX - shouldn't use a fixed length string here.
     char select[1024] = "";
     string old = caller->str();
-    while (1)
+    while (true)
     {
         if (msgwin_get_line(prompt, select, sizeof(select), nullptr, old))
         {

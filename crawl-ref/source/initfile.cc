@@ -2114,10 +2114,9 @@ static void _save_preferences()
                 date->tm_sec, date->tm_mday, mons[date->tm_mon],
                 1900+date->tm_year);
         for (auto g : Options.get_sorted_options())
-        {
             if (!g->name().empty()) // not GameOptionHeading
                 fprintf(f, "%s = %s\n", g->name().c_str(), g->str().c_str());
-        }
+
         fputs("# End of saved options.\n", f);
         if (!fclose(f))
             return;
@@ -5755,7 +5754,7 @@ public:
         auto old_search_pat = search_pat;
         int new_hovered = -1;
         vector<MenuEntry*> chosen_items;
-        while (1)
+        do
         {
             if (msgwin_get_line(prompt, select, sizeof(select), nullptr,
                                        search_pat.tostring())
@@ -5774,23 +5773,25 @@ public:
                     found_hover = true;
                 auto g = static_cast<GameOption*>(entry->data);
                 if (!g)
-                    heading = entry;
-                else if (search_pat.empty() || search_pat.matches(g->name()))
                 {
-                    if (heading)
-                        chosen_items.emplace_back(heading);
-                    heading = nullptr;
-                    if (found_hover && new_hovered < 0)
-                        new_hovered = chosen_items.size();
-                    entry->hotkeys[0] = index_to_letter((i++)%52);
-                    chosen_items.emplace_back(entry);
+                    heading = entry;
+                    continue;
                 }
+                if (!search_pat.empty() && !search_pat.matches(g->name()))
+                    continue;
+                if (heading)
+                    chosen_items.emplace_back(heading);
+                heading = nullptr;
+                if (found_hover && new_hovered < 0)
+                    new_hovered = chosen_items.size();
+                entry->hotkeys[0] = index_to_letter(i);
+                chosen_items.emplace_back(entry);
+                i = (i+1)%52;
             }
-            if (!chosen_items.empty())
-                break;
-
-            show_type_response("No option names match.");
+            if (chosen_items.empty())
+                show_type_response("No option names match.");
         }
+        while (chosen_items.empty());
 
         items = chosen_items;
         string new_title = base_title;
@@ -5850,6 +5851,29 @@ static string _option_line(const GameOption *option, int name_len, int text_len)
     return make_stringf("%-*.*s%s", name_len, name_len, name, value);
 }
 
+static EGP_MenuEntry *_game_prefs_line(GameOption *option, int &index)
+{
+    if (option->name().empty())
+        return new EGP_MenuEntry(option->str(), MEL_SUBTITLE);
+
+    const char letter = index_to_letter(index);
+    index = (index+1)%52;
+    auto text = _option_line(option, 36, 79-36-4);
+    auto *entry = new EGP_MenuEntry(text, MEL_ITEM, 1, letter, 36);
+    entry->data = option;
+    entry->on_select = [entry](const MenuEntry&)
+    {
+        GameOption *opt = static_cast<GameOption*>(entry->data);
+        if (opt->load_from_UI())
+        {
+            entry->text = _option_line(opt, 36, 79-36-4);
+            opt->on_change(&Options);
+        }
+        return true;
+    };
+    return entry;
+}
+
 // Show (and perhaps edit) options for the game.
 void edit_game_prefs()
 {
@@ -5863,29 +5887,7 @@ void edit_game_prefs()
 
     int i = 0;
     for (const auto option : list)
-    {
-        EGP_MenuEntry *entry;
-        if (option->name().empty())
-            entry = new EGP_MenuEntry(option->str(), MEL_SUBTITLE);
-        else
-        {
-            string line = _option_line(option, 36, 37);
-            const char letter = index_to_letter(i++ % 52);
-            entry = new EGP_MenuEntry(line, MEL_ITEM, 1, letter, 36);
-            entry->data = option;
-            entry->on_select = [entry](const MenuEntry&)
-            {
-                GameOption *opt = static_cast<GameOption*>(entry->data);
-                if (opt->load_from_UI())
-                {
-                    entry->text = _option_line(opt, 36, 79-36-4);
-                    opt->on_change(&Options);
-                }
-                return true;
-            };
-        }
-        menu.add_entry_all(entry);
-    }
+        menu.add_entry_all(_game_prefs_line(option, i));
 
     menu.set_hovered(0);
     menu.show();
