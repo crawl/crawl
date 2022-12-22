@@ -1978,6 +1978,7 @@ static void _run_time_step()
         run_environment_effects();
         handle_monsters();
         manage_clouds();
+        you.duration[DUR_NOXIOUS_BOG] = 0;
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
 }
