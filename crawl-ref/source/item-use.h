@@ -36,7 +36,6 @@ bool puton_ring(item_def &to_puton, bool allow_prompt = true,
                 bool check_for_inscriptions = true, bool noask = false);
 
 bool scroll_hostile_check(scroll_type which_scroll);
-string cannot_read_item_reason(const item_def *item);
 bool scroll_has_targeter(scroll_type which_scroll);
 void read(item_def* scroll = nullptr, dist *target=nullptr);
 

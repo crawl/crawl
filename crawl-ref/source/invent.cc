@@ -507,7 +507,7 @@ string no_selectables_message(int item_selector)
             return "You aren't carrying any wearable armour.";
     }
     case OSEL_UNIDENT:
-        return "You don't have any unidentified items.";
+        return "You don't currently have any unidentified items.";
     case OSEL_ENCHANTABLE_ARMOUR:
         return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:

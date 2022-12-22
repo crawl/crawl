@@ -2787,6 +2787,181 @@ static bool _invisibility_is_useless(const bool temp)
            || you.haloed() && will_have_passive(passive_t::halo);
 }
 
+
+
+/**
+ * If the player has no items matching the given selector, give an appropriate
+ * response to print. Otherwise, if they do have such items, return the empty
+ * string.
+ */
+static string _no_items_reason(object_selector type, bool check_floor = false)
+{
+    if (!any_items_of_type(type, -1, check_floor))
+        return no_selectables_message(type);
+    return "";
+}
+
+string _general_cannot_read_reason()
+{
+    // general checks
+    if (player_in_branch(BRANCH_GEHENNA))
+        return "You cannot see clearly; the smoke and ash is too thick!";
+
+    if (you.berserk())
+        return "You are too berserk!";
+
+    if (you.confused())
+        return "You are too confused!";
+
+    // no reading while threatened (Ru/random mutation)
+    if (you.duration[DUR_NO_SCROLLS] || you.duration[DUR_BRAINLESS])
+        return "You cannot read scrolls in your current state!";
+
+    if (silenced(you.pos()))
+        return "Magic scrolls do not work when you're silenced!";
+
+    // water elementals
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+        return "You cannot read scrolls while unable to breathe!";
+
+    return "";
+}
+
+/**
+ * If the player is unable to (r)ead the item in the given slot, return the
+ * reason why. Otherwise (if they are able to read it), returns "", the empty
+ * string. If item is nullptr, do only general reading checks.
+ */
+string cannot_read_item_reason(const item_def *item, bool temp)
+{
+    // convoluted ordering is because the general checks below need to go before
+    // the item id check, but non-temp messages go before general checks
+    if (item && item->base_type == OBJ_SCROLLS && item_type_known(*item))
+    {
+        // this function handles a few cases of perma-uselessness. For those,
+        // be sure to print the message first. (XX generalize)
+        switch (item->sub_type)
+        {
+        case SCR_AMNESIA:
+            if (you.has_mutation(MUT_INNATE_CASTER))
+                return "You don't have control over your spell memory.";
+            // XX possibly amnesia should be allowed to work under Trog, despite
+            // being marked useless..
+            if (you_worship(GOD_TROG))
+                return "Trog doesn't allow you to memorise spells!";
+            break;
+        case SCR_ENCHANT_WEAPON:
+        case SCR_BRAND_WEAPON:
+            if (you.has_mutation(MUT_NO_GRASPING))
+                return "There's no point in enhancing weapons you can't use!";
+            break;
+        case SCR_ENCHANT_ARMOUR:
+            if (you.has_mutation(MUT_NO_GRASPING))
+                return "There's no point in enchanting armour you can't use!";
+            break;
+
+        case SCR_IDENTIFY:
+            if (you.props.exists(IDENTIFIED_ALL_KEY))
+                return "There is nothing left to identify.";
+            if (have_passive(passive_t::identify_items))
+                return "You have no need of identification.";
+            break;
+
+        case SCR_SUMMONING:
+        case SCR_BUTTERFLIES:
+            if (you.allies_forbidden())
+                return "You cannot coerce anything to answer your summons.";
+            break;
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            // XX code duplication with you.no_tele_reason
+            if (you.stasis())
+                return you.no_tele_reason(item->sub_type == SCR_BLINKING);
+            break;
+        default:
+            break;
+        }
+    }
+
+    if (temp)
+    {
+        const string gen = _general_cannot_read_reason();
+        if (gen.size())
+            return gen;
+    }
+
+    if (!item)
+        return "";
+
+    // item-specific checks
+
+    // still possible to use * at the `r` prompt. (Why do we allow this now?)
+    if (item->base_type != OBJ_SCROLLS)
+        return "You can't read that!";
+
+    // temp uselessness only below this check
+    if (!temp || !item_type_known(*item))
+        return "";
+
+    // don't waste the player's time reading known scrolls in situations where
+    // they'd be useless
+    switch (item->sub_type)
+    {
+        case SCR_BLINKING:
+        case SCR_TELEPORTATION:
+            // note: stasis handled separately above
+            return you.no_tele_reason(item->sub_type == SCR_BLINKING);
+
+        case SCR_AMNESIA:
+            if (you.spell_no == 0)
+                return "You have no spells to forget.";
+            return "";
+
+        case SCR_ENCHANT_ARMOUR:
+            return _no_items_reason(OSEL_ENCHANTABLE_ARMOUR, true);
+
+        case SCR_ENCHANT_WEAPON:
+            return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
+
+        case SCR_IDENTIFY:
+            return _no_items_reason(OSEL_UNIDENT, true);
+
+        case SCR_FOG:
+        case SCR_POISON:
+            if (env.level_state & LSTATE_STILL_WINDS)
+                return "The air is too still for clouds to form.";
+            return "";
+
+        case SCR_MAGIC_MAPPING:
+            if (!is_map_persistent())
+                return "This place cannot be mapped!";
+            return "";
+
+#if TAG_MAJOR_VERSION == 34
+        case SCR_CURSE_WEAPON:
+            if (!you.weapon())
+                return "This scroll only affects a wielded weapon!";
+
+            // assumption: wielded weapons always have their curse & brand known
+            if (you.weapon()->cursed())
+                return "Your weapon is already cursed!";
+
+            if (get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
+                return "Holy weapons cannot be cursed!";
+            return "";
+
+        case SCR_CURSE_ARMOUR:
+            return _no_items_reason(OSEL_UNCURSED_WORN_ARMOUR);
+
+        case SCR_CURSE_JEWELLERY:
+            return _no_items_reason(OSEL_UNCURSED_WORN_JEWELLERY);
+#endif
+
+        default:
+            return "";
+    }
+}
+
 /**
  * Is an item (more or less) useless to the player? Uselessness includes
  * but is not limited to situations such as:
@@ -2906,44 +3081,30 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
     case OBJ_SCROLLS:
     {
-        const string reasons = cannot_read_item_reason(&item);
-        if (temp && reasons.size())
+        // even unid'd items count as useless under these circumstances
+        if (temp && _general_cannot_read_reason().size())
             return true;
 
+        // otherwise, unid'd items can always be read
         if (!ident && !item_type_known(item))
             return false;
 
-        // A bad item is always useless.
+        // An (id'd) bad item is always useless.
         if (is_bad_item(item))
             return true;
 
+#if TAG_MAJOR_VERSION == 34
         switch (item.sub_type)
         {
-        // Checks for other subtypes are in cannot_read_item_reason().
-        case SCR_AMNESIA:
-            return you_worship(GOD_TROG) || you.has_mutation(MUT_INNATE_CASTER);
-#if TAG_MAJOR_VERSION == 34
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
-#endif
-        case SCR_ENCHANT_WEAPON:
-        case SCR_ENCHANT_ARMOUR:
-        case SCR_BRAND_WEAPON:
             return you.has_mutation(MUT_NO_GRASPING);
-        case SCR_IDENTIFY:
-            return you.props.exists(IDENTIFIED_ALL_KEY)
-                   || have_passive(passive_t::identify_items);
-        case SCR_TELEPORTATION:
-        case SCR_BLINKING:
-            return you.stasis(); // XX duplicated check
-        case SCR_SUMMONING:
-        case SCR_BUTTERFLIES:
-            // XX these have a message in cannot_read_item_reasons, maybe
-            // generalize that to handle non-temp uselessness
-            return reasons.size();
         default:
-            return false;
+            break;
         }
+#endif
+        const string reasons = cannot_read_item_reason(&item, temp);
+        return reasons.size();
     }
     case OBJ_WANDS:
         if (you.get_mutation_level(MUT_NO_ARTIFICE))

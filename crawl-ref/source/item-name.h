@@ -126,6 +126,7 @@ bool is_bad_item(const item_def &item);
 bool is_dangerous_item(const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false,
                      bool ident = false);
+string cannot_read_item_reason(const item_def *item, bool temp=true);
 
 string make_name(uint32_t seed = rng::get_uint32(),
                  makename_type name_type = MNAME_DEFAULT);
