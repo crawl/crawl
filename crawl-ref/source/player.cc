@@ -4757,7 +4757,7 @@ void dec_frozen_ramparts(int delay)
     }
 }
 
-bool invis_allowed(bool quiet, string *fail_reason)
+bool invis_allowed(bool quiet, string *fail_reason, bool temp)
 {
     string msg;
     bool success = true;
@@ -4771,34 +4771,36 @@ bool invis_allowed(bool quiet, string *fail_reason)
     {
         vector<string> sources;
 
-        if (player_equip_unrand(UNRAND_EOS))
+        if (temp && player_equip_unrand(UNRAND_EOS))
             sources.push_back("weapon");
 
-        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+        if (temp && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
             sources.push_back("orb");
 
-        if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
-            || you.religion == GOD_SHINING_ONE)
+        if (temp && you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
+            || you.religion == GOD_SHINING_ONE) // non-temp
         {
             sources.push_back("divine halo");
         }
 
         if (sources.empty())
-            die("haloed by an unknown source");
-
-
-        msg = "Your " + comma_separated_line(sources.begin(), sources.end())
-              + " glow" + (sources.size() == 1 ? "s" : "")
-              + " too brightly to become invisible.";
-        success = false;
+            success = true;
+        else
+        {
+            msg = "Your " + comma_separated_line(sources.begin(), sources.end())
+                  + " glow" + (sources.size() == 1 ? "s" : "")
+                  + " too brightly for you to become invisible.";
+            success = false;
+        }
     }
-    else if (you.backlit())
+    else if (you.backlit(false, temp))
     {
-        msg = "Invisibility will do you no good right now";
+        msg = "You are backlit; invisibility will do you no good right now";
         if (quiet)
             success = false;
         else if (!quiet && !yesno((msg + "; use anyway?").c_str(), false, 'n'))
         {
+            // XX this shouldn't be here. Currently used only for evoke invis.
             canned_msg(MSG_OK);
             success = false;
             quiet = true; // since we just said something
@@ -7829,17 +7831,19 @@ bool player::wear_barding() const
     return species::wears_barding(species);
 }
 
-static int _get_potion_heal_factor()
+static int _get_potion_heal_factor(bool temp=true)
 {
     // healing factor is expressed in halves, so default is 2/2 -- 100%.
     int factor = 2;
 
     // start with penalties
-    factor -= player_equip_unrand(UNRAND_VINES) ? 2 : 0;
+    if (temp)
+        factor -= player_equip_unrand(UNRAND_VINES) ? 2 : 0;
     factor -= you.mutation[MUT_NO_POTION_HEAL];
 
     // then apply bonuses - Kryia's doubles potion healing
-    factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
+    if (temp)
+        factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
 
     // make sure we don't turn healing negative.
     return max(0, factor);
@@ -7867,9 +7871,9 @@ void print_potion_heal_message()
         mpr("Your system partially rejects the healing.");
 }
 
-bool player::can_potion_heal()
+bool player::can_potion_heal(bool temp)
 {
-    return _get_potion_heal_factor() > 0;
+    return _get_potion_heal_factor(temp) > 0;
 }
 
 int player::scale_potion_healing(int healing_amount)

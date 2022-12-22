@@ -38,6 +38,7 @@
 #include "options.h"
 #include "orb-type.h"
 #include "player.h"
+#include "potion.h"
 #include "prompt.h"
 #include "religion.h"
 #include "shopping.h"
@@ -2779,16 +2780,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
     }
 }
 
-static bool _invisibility_is_useless(const bool temp)
-{
-    // Always useless if you're a Meteoran or have a halo from TSO.
-    return you.backlit(temp)
-           || you.has_mutation(MUT_GLOWING)
-           || you.haloed() && will_have_passive(passive_t::halo);
-}
-
-
-
 /**
  * If the player has no items matching the given selector, give an appropriate
  * response to print. Otherwise, if they do have such items, return the empty
@@ -2962,6 +2953,54 @@ string cannot_read_item_reason(const item_def *item, bool temp)
     }
 }
 
+string cannot_drink_item_reason(const item_def *item, bool temp, bool use_check)
+{
+    // general permanent reasons
+    if (!you.can_drink(false))
+        return "You can't drink.";
+
+    const bool valid = item && item->base_type == OBJ_POTIONS && item_type_known(*item);
+    const potion_type ptyp = valid
+        ? static_cast<potion_type>(item->sub_type)
+        : NUM_POTIONS;
+    string r;
+
+    if (valid)
+    {
+        // For id'd potions, print temp=false message before temp=true messages
+        get_potion_effect(ptyp)->can_quaff(&r, false);
+        if (!r.empty())
+            return r;
+    }
+
+    // general temp reasons
+    if (temp)
+    {
+        if (!you.can_drink(true))
+            return "You cannot drink potions in your current state!";
+
+        if (you.berserk())
+            return "You are too berserk!";
+
+        if (player_in_branch(BRANCH_COCYTUS))
+            return "It's too cold; everything's frozen solid!";
+    }
+
+    if (item && item->base_type != OBJ_POTIONS)
+        return "You can't drink that!";
+
+    // !valid now means either no item, or unid'd item.
+    if (!temp || !valid)
+        return "";
+
+    // potion of invis can be used even if temp useless, a warning is printed
+    if (use_check && ptyp == POT_INVISIBILITY)
+        return "";
+
+    get_potion_effect(ptyp)->can_quaff(&r, true);
+    return r;
+}
+
 /**
  * Is an item (more or less) useless to the player? Uselessness includes
  * but is not limited to situations such as:
@@ -3059,7 +3098,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
             case SPARM_INVISIBILITY:
                 return you.has_mutation(MUT_NO_ARTIFICE)
-                       || _invisibility_is_useless(temp);
+                       || !invis_allowed(true, nullptr, temp);
             default:
                 return false;
             }
@@ -3081,8 +3120,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
     case OBJ_SCROLLS:
     {
+        // general reasons: player is berserk, in gehenna, drowning, etc.
         // even unid'd items count as useless under these circumstances
-        if (temp && _general_cannot_read_reason().size())
+        if (cannot_read_item_reason(nullptr, temp).size())
             return true;
 
         // otherwise, unid'd items can always be read
@@ -3127,16 +3167,11 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
     case OBJ_POTIONS:
     {
-        // Mummies and liches can't use potions.
-        if (!you.can_drink(temp))
+        // general reasons: player is a mummy, player in cocytus, etc.
+        if (cannot_drink_item_reason(nullptr, temp).size())
             return true;
 
-        if (temp && (player_in_branch(BRANCH_COCYTUS)
-                     || you.berserk()))
-        {
-            return true;
-        }
-
+        // always allow drinking unid'd potions if the player can drink at all
         if (!ident && !item_type_known(item))
             return false;
 
@@ -3144,33 +3179,8 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (is_bad_item(item))
             return true;
 
-        switch (item.sub_type)
-        {
-        case POT_CANCELLATION:
-            return temp && !player_is_cancellable();
-        case POT_BERSERK_RAGE:
-            return !you.can_go_berserk(true, true, true, nullptr, temp);
-        case POT_HASTE:
-            return you.stasis();
-        case POT_MUTATION:
-            return !you.can_safely_mutate(temp);
-        case POT_LIGNIFY:
-            return you.is_lifeless_undead(temp);
-        case POT_FLIGHT:
-            return you.permanent_flight();
-        case POT_HEAL_WOUNDS:
-            return !you.can_potion_heal();
-        case POT_INVISIBILITY:
-            return _invisibility_is_useless(temp);
-        case POT_BRILLIANCE:
-            return you_worship(GOD_TROG)
-                   || temp && player_equip_unrand(UNRAND_FOLLY);
-        case POT_MAGIC:
-            return you.has_mutation(MUT_HP_CASTING);
-        CASE_REMOVED_POTIONS(item.sub_type)
-        }
-
-        return false;
+        // specific reasons
+        return cannot_drink_item_reason(&item, temp).size();
     }
     case OBJ_JEWELLERY:
         if (!ident && !item_type_known(item))

@@ -2234,6 +2234,14 @@ bool is_dumpable_artefact(const item_def &item)
     return is_known_artefact(item) && item_ident(item, ISFLAG_KNOW_PROPERTIES);
 }
 
+static string &_trogsafe_lowercase(string &s)
+{
+    // hardcoding because of amnesia and brilliance msgs
+    if (!starts_with(s, "Trog"))
+        s = lowercase_first(s);
+    return s;
+}
+
 /**
  * Describe a specified item.
  *
@@ -2437,21 +2445,30 @@ string get_item_description(const item_def &item,
             {
                 if (is_useless_item(item, true))
                 {
+                    string r;
                     if (is_useless_item(item, false))
-                        description << "\n\nThis potion is completely useless to you.";
+                    {
+                        description << "\n\nThis potion is completely useless to you";
+                        r = cannot_drink_item_reason(&item, false);
+                    }
                     else
                     {
-                        // TODO: describe other potion temp uselessness effects
-                        // besides cancellation
-                        // TODO: for some cases, "isn't possible" is a better
-                        // wording
-                        description << "\n\nDrinking this right now will have no effect";
-                        if (item.sub_type == POT_CANCELLATION && !player_is_cancellable())
-                            description << ": there is nothing to cancel";
-                        description << ".";
+                        description << "\n\nDrinking this right now";
+                        if (cannot_drink_item_reason().size())
+                            description << " isn't possible";
+                        else
+                            description << " will have no effect";
+                        r = cannot_drink_item_reason(&item, true);
                     }
+                    if (!r.empty())
+                        description << ": " << _trogsafe_lowercase(r);
+                    else
+                        description << "."; // reasons always come with punctuation
                 }
-                // anything past here is not even temp useless
+                // anything past here is useful
+                // TODO: more effect messages.
+                // heal: print heal chance
+                // curing: print heal chance and/or what would be cured
                 else if (item.sub_type == POT_LIGNIFY)
                     description << "\n\n" + _describe_lignify_ac();
                 else if (item.sub_type == POT_CANCELLATION)
@@ -2463,6 +2480,7 @@ string get_item_description(const item_def &item,
             description << "\n\nIt is "
                         << article_a(describe_item_rarity(item))
                         << " potion.";
+            need_extra_line = false;
         }
         break;
 
@@ -2506,12 +2524,7 @@ string get_item_description(const item_def &item,
                         r = cannot_read_item_reason(&item);
                     }
                     if (r.size())
-                    {
-                        // hardcoding because of amnesia msg
-                        if (!starts_with(r, "Trog"))
-                            r = lowercase_first(r);
-                        description << ": " << r;
-                    }
+                        description << ": " << _trogsafe_lowercase(r);
                     else // reasons are punctuated
                         description << ".";
                 }
@@ -2520,6 +2533,7 @@ string get_item_description(const item_def &item,
             description << "\n\nIt is "
                         << article_a(describe_item_rarity(item))
                         << " scroll.";
+            need_extra_line = false;
         }
         break;
 

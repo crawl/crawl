@@ -857,7 +857,7 @@ public:
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
 
-    bool can_potion_heal();
+    bool can_potion_heal(bool temp=true);
     int scale_potion_healing(int healing_amount);
 
     void apply_location_effects(const coord_def &oldpos,
@@ -1148,7 +1148,8 @@ void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
-bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
+bool invis_allowed(bool quiet = false, string *fail_reason = nullptr,
+                                                        bool temp = true);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);
 void float_player();

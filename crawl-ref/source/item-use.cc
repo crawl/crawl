@@ -2612,29 +2612,8 @@ void prompt_inscribe_item()
 
 void drink(item_def* potion)
 {
-    if (!you.can_drink(false))
-    {
-        mpr("You can't drink.");
-        return;
-    }
-    else if (!you.can_drink(true))
-    {
-        mpr("You cannot drink potions in your current state!");
-        return;
-    }
-    else if (player_in_branch(BRANCH_COCYTUS))
-    {
-        mpr("It's too cold; everything's frozen solid!");
-        return;
-    }
-
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return;
-    }
-
-    if (!potion)
+    string r = cannot_drink_item_reason(potion, true, true);
+    if (!potion && r.empty())
     {
         if (use_an_item(potion, OPER_QUAFF) == OPER_NONE)
             return;
@@ -2644,11 +2623,12 @@ void drink(item_def* potion)
             read(potion);
             return;
         }
+        r = cannot_drink_item_reason(potion, true, true);
     }
 
-    if (potion->base_type != OBJ_POTIONS)
+    if (!r.empty())
     {
-        mpr("You can't drink that!");
+        mpr(r);
         return;
     }
 
@@ -3394,6 +3374,7 @@ void read(item_def* scroll, dist *target)
 
     if (!failure_reason.empty())
     {
+        // why is this prompt?
         mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
         return;
     }
