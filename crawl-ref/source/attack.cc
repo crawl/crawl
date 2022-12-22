@@ -666,7 +666,7 @@ static const vector<chaos_effect> chaos_effects = {
     { "hasting", 10, _is_chaos_slowable, BEAM_HASTE },
     { "mighting", 10, nullptr, BEAM_MIGHT },
     { "agilitying", 10, nullptr, BEAM_AGILITY },
-    { "invisible", 10, nullptr, BEAM_INVISIBILITY, },
+    { "resistance", 10, nullptr, BEAM_RESISTANCE, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
     {
         "paralysis", 5, [](const actor &defender) {

@@ -613,7 +613,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
          // Weights similar to those from chaos_effects in attack.cc
          10, BEAM_SLOW,
          10, BEAM_HASTE,
-         10, BEAM_INVISIBILITY,
+         10, BEAM_AGILITY,
           5, BEAM_PARALYSIS,
           5, BEAM_PETRIFY,
           5, BEAM_BERSERK,
@@ -630,7 +630,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
          // analogous BEAM_ type.
           4, BEAM_MIGHT,
           4, BEAM_HEALING,
-          4, BEAM_AGILITY,
+          4, BEAM_RESISTANCE,
           4, BEAM_ENSNARE);
 
     return flavour;
