@@ -39,10 +39,75 @@ string cnxlate(const string &context,
 
 #include <clocale>
 #include <libintl.h>
+#include <codecvt>
+#include <regex>
 
 // markers for embedded expressions
 const string exp_start = "((";
 const string exp_end = "))";
+
+static string apply_regex_rule(const string& s, const string& rule)
+{
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+
+    // need to accept empties because replacement could be empty.
+    // However, this means "useless" tokens at start and end.
+    vector<string> tokens = split_string("/", rule, false, true);
+
+    try {
+        wstring condition, pattern, replacement;
+        if (tokens.size() == 5)
+        {
+            condition = conv.from_bytes(tokens[1]);
+            pattern = conv.from_bytes(tokens[2]);
+            replacement = conv.from_bytes(tokens[3]);
+        }
+        else if (tokens.size() == 4)
+        {
+            pattern = conv.from_bytes(tokens[1]);
+            replacement = conv.from_bytes(tokens[2]);
+        }
+        else
+        {
+            // bad rule
+            return s;
+        }
+
+        wregex re(pattern);
+        wstring swide = conv.from_bytes(s);
+        wstring result;
+        if (condition.empty())
+        {
+            result = regex_replace(swide, re, replacement);
+        }
+        else
+        {
+            wregex re_cond(condition);
+            wsmatch match;
+            if (!regex_search(swide, match, re_cond))
+                return s;
+
+            result = match.prefix();
+            result += regex_replace(match.str(), re, replacement);
+            result += match.suffix();
+        }
+        return conv.to_bytes(result);
+    }
+    catch (exception& e)
+    {
+        return s;
+    }
+}
+
+static string apply_regex_rules(string s, const string& rulesStr)
+{
+    vector<string> rules = split_string("\n", rulesStr, true, false);
+    for (string rule: rules)
+    {
+        s = apply_regex_rule(s, rule);
+    }
+    return s;
+}
 
 
 // translate with context
@@ -61,17 +126,29 @@ string cxlate(const string &context, const string &text_en, bool fallback_en)
 
     string translation;
 
-    if (!context.empty())
+    if (context.empty())
+    {
+        // check for translation in global context
+        translation = getTranslatedString(text_en);
+    }
+    else
     {
         // check for translation in specific context
         string ctx_text_en = string("{") + context + "}" + text_en;
         translation = getTranslatedString(ctx_text_en);
-    }
 
-    if (translation.empty())
-    {
-        // check for translation in global context
-        translation = getTranslatedString(text_en);
+        if (translation.empty())
+        {
+            // check for translation in global context
+            translation = getTranslatedString(text_en);
+
+            string rules = getTranslatedString(string("GENERATE:") + context);
+            if (!rules.empty())
+            {
+                // convert default string to context using rules
+                translation = apply_regex_rules(translation, rules);
+            }
+        }
     }
 
     if (translation.empty() && fallback_en)

@@ -36,7 +36,7 @@ a fire bat
 eine Feuerfledermaus
 %%%%
 a bennu
-ein Bennu
+{n}ein Bennu
 %%%%
 a caustic shrike
 ein ätzender Würger
@@ -201,7 +201,7 @@ a wolf
 ein Wolf
 %%%%
 a hog
-ein Schwein
+{n}ein Schwein
 %%%%
 a hell hound
 ein Höllenhund
@@ -219,7 +219,7 @@ a holy swine
 ein heiliges Schwein
 %%%%
 a felid
-ein Felid
+{n}ein Felid
 %%%%
 a bear
 ein Bär
@@ -288,7 +288,7 @@ a komodo dragon
 ein Komododrache
 %%%%
 a merfolk
-ein Meervolk
+{n}ein Meervolk
 %%%%
 a merfolk impaler
 ein Meervolk-Impaler
@@ -417,7 +417,7 @@ a rat
 eine Ratte
 %%%%
 a quokka
-ein Quokka
+{n}ein Quokka
 %%%%
 a river rat
 eine Flussratte
@@ -426,7 +426,7 @@ a hell rat
 eine Höllenratte
 %%%%
 a porcupine
-ein Stachelschwein
+{n}ein Stachelschwein
 %%%%
 a giant cockroach
 eine Riesenkakerlake
@@ -462,7 +462,7 @@ an orb spider
 eine Kugelspinne
 %%%%
 a crocodile
-ein Krokodil
+{n}ein Krokodil
 %%%%
 an alligator
 ein Alligator
@@ -732,22 +732,22 @@ a pearl dragon
 ein Perlendrache
 %%%%
 an elemental
-ein Elementar
+{n}ein Elementar
 %%%%
 an earth elemental
-ein Erdelementar
+{n}ein Erdelementar
 %%%%
 a fire elemental
-ein Feuerelementar
+{n}ein Feuerelementar
 %%%%
 a water elemental
-ein Wasserelementar
+{n}ein Wasserelementar
 %%%%
 an air elemental
-ein Luftelementar
+{n}ein Luftelementar
 %%%%
 an iron elemental
-ein Eisenelementar
+{n}ein Eisenelementar
 %%%%
 an elemental wellspring
 eine elementare Quelle
@@ -768,25 +768,25 @@ a barachi
 eine Barachi
 %%%%
 a floating eye
-ein schwebendes Auge
+{n}ein schwebendes Auge
 %%%%
 an eye of draining
-ein Auge des Schwächens
+{n}ein Auge des Schwächens
 %%%%
 a glowing orange brain
-ein oranges leuchtendes Gehirn
+{n}ein oranges leuchtendes Gehirn
 %%%%
 a great orb of eyes
 eine große Augenkugel
 %%%%
 a shining eye
-ein leuchtendes Auge
+{n}ein leuchtendes Auge
 %%%%
 an eye of devastation
-ein Auge der Verwüstung
+{n}ein Auge der Verwüstung
 %%%%
 a golden eye
-ein goldenes Auge
+{n}ein goldenes Auge
 %%%%
 an ophan
 ein Ophan
@@ -825,7 +825,7 @@ an ooze
 ein Schlamm
 %%%%
 a jelly
-ein Gelee
+{n}ein Gelee
 %%%%
 a %sslime creature
 ein {adj-es}%sSchleimwesen
@@ -834,7 +834,7 @@ a merged slime creature
 eine verschmolzene Schleimkreatur
 %%%%
 an azure jelly
-ein azurblaues Gelee
+{n}ein azurblaues Gelee
 %%%%
 a death ooze
 ein Todesschlamm
@@ -951,7 +951,7 @@ a tengu reaver
 ein Tengu-Häscher
 %%%%
 an efreet
-ein Efreet
+{n}ein Efreet
 %%%%
 a rakshasa
 ein Rakshasa
@@ -963,7 +963,7 @@ a snaplasher vine
 eine Peitscherrebe
 %%%%
 a snaplasher vine segment
-ein Peitscherrebesegment
+{n}ein Peitscherrebesegment
 %%%%
 a snake
 eine Schlange
@@ -1020,13 +1020,13 @@ a vampire mage
 ein Vampir-Magier
 %%%%
 a jiangshi
-ein Jiangshi
+{n}ein Jiangshi
 %%%%
 a ghost
-ein Gespenst
+{n}ein Gespenst
 %%%%
 a phantom
-ein Phantom
+{n}ein Phantom
 %%%%
 a hungry ghost
 ein hungriger Geist
@@ -1080,19 +1080,19 @@ a starspawn tentacle
 ein Sternbruttentakel
 %%%%
 a starspawn tentacle segment
-ein Sternbruttentakelsegment
+{n}ein Sternbruttentakelsegment
 %%%%
 a starcursed mass
 eine sternverfluchte Masse
 %%%%
 a dream sheep
-ein Traumschaf
+{n}ein Traumschaf
 %%%%
 a yak
-ein Yak
+{n}ein Yak
 %%%%
 a death yak
-ein Todesyak
+{n}ein Todesyak
 %%%%
 a catoblepas
 eine Catoblepas
@@ -1113,16 +1113,16 @@ an ice beast
 eine Eisbestie
 %%%%
 a sky beast
-ein Himmelstier
+{n}ein Himmelstier
 %%%%
 a zombie
 ein Zombie
 %%%%
 a skeleton
-ein Skelett
+{n}ein Skelett
 %%%%
 a simulacrum
-ein Simulacrum
+{n}ein Simulacrum
 %%%%
 a small zombie
 ein kleiner Zombie
@@ -1155,7 +1155,7 @@ a tentacle
 ein Tentakel
 %%%%
 a tentacle segment
-ein Tentakelsegment
+{n}ein Tentakelsegment
 %%%%
 an octopode
 ein Oktopod
@@ -1221,22 +1221,22 @@ a black sun
 eine schwarze Sonne
 %%%%
 a crimson imp
-ein karminrotes Teufelchen
+{n}ein karminrotes Teufelchen
 %%%%
 a quasit
-ein Quasit
+{n}ein Quasit
 %%%%
 a white imp
-ein weißes Teufelchen
+{n}ein weißes Teufelchen
 %%%%
 an ufetubus
 ein Ufetubus
 %%%%
 an iron imp
-ein Eisenteufelchen
+{n}ein Eisenteufelchen
 %%%%
 a shadow imp
-ein Schattenteufelchen
+{n}ein Schattenteufelchen
 %%%%
 a rust devil
 ein Rostteufel
@@ -1269,7 +1269,7 @@ a neqoxec
 eine Neqoxec
 %%%%
 a ynoxinul
-ein Ynoxinul
+{n}ein Ynoxinul
 %%%%
 a sixfirhy
 ein Sixfirhy
@@ -1290,7 +1290,7 @@ a cacodemon
 ein Cacodaemon
 %%%%
 a hell beast
-ein Höllentier
+{n}ein Höllentier
 %%%%
 a hellion
 ein Teufelsbraten
@@ -1311,7 +1311,7 @@ an Ice Fiend
 ein Eisunterweltler
 %%%%
 a Tzitzimitl
-ein Tzitzimitl
+{n}ein Tzitzimitl
 %%%%
 a Hell Sentinel
 ein Höllenwächter
@@ -1431,13 +1431,13 @@ a moon troll
 ein Mondtroll
 %%%%
 a foxfire
-ein Fuchsfeuer
+{n}ein Fuchsfeuer
 %%%%
 a nameless horror
 ein namenloser Horror
 %%%%
 a will-o-the-wisp
-ein Irrlicht
+{n}ein Irrlicht
 %%%%
 a bunyip
 ein Bunyip
@@ -1467,7 +1467,7 @@ a lemure
 eine Lemure
 %%%%
 an endoplasm
-ein Endoplasma
+{n}ein Endoplasma
 %%%%
 a rockslime
 ein Felsenschleim
@@ -1542,13 +1542,13 @@ ein {adj-es}%sOchsenbiest
 # "elf zombie", "orc skeleton", etc.
 %%%%
 a %s zombie
-ein %s-Zombie
+{m}ein %s-Zombie
 %%%%
 a %s skeleton
-ein %s-Skelett
+{n}ein %s-Skelett
 %%%%
 a %s simulacrum
-ein %s-Simulacrum
+{n}ein %s-Simulacrum
 %%%%
 # can result from Zin's Recite
 a %s shaped pillar of salt
@@ -1579,7 +1579,7 @@ ein geformter Eisblock
 # polymorphed uniques
 %%%%
 a %s shaped Royal Jelly
-ein %s-förmiges Gelée Royale
+{n}ein %s-förmiges Gelée Royale
 %%%%
 a %s shaped Lernaean hydra
 eine %s-förmige Lernäische Hydra

@@ -1,0 +1,243 @@
+###############################################################################
+#
+# German rules
+#
+# Rules named GENERATE:<context> are used to transform a string from the 
+# default (null) context into the version for <context>. These are only applied
+# if there is no hardcoded definition of the string for <context>.
+#
+# The bodies of the rules consist of regular expressions (regex). If you are not
+# familiar with regular expressions, consult Google.
+#
+# Expressions come in two forms:
+# /pattern/replacement/
+# /substring-pattern/pattern/replacement/
+#
+# The first type replaces all instances of pattern in the string with replacement.
+# The second type only does the replacement within the first substring matching 
+# substring-pattern.
+#
+# Expressions are applied in order. Each expression is applied to the result of
+# the previous expression (not the original string).
+#
+# German-specific notes:
+#  - We want to decline only up to the first noun. If there are subsequent nouns,
+#    they will be in their own case, and should be left alone. For example:
+#    "der {adj-e}%sRing der Schatten" - don't change the part after Ring
+#    "ein {adj-er}%sRing magischer Kraft" - ditto
+#    "ein {adj-es}%sPaar {adj-e}%sHandschuhe" - don't change the part after Paar
+#
+###############################################################################
+
+#################################
+# Adjectives
+#################################
+%%%%
+GENERATE:adj-er
+
+/e /er /
+
+#fix undeclined adjectives
+/\borange\S\b/orange/
+
+%%%%
+GENERATE:adj-es
+
+/e /es /
+
+#fix undeclined adjectives
+/\borange\S\b/orange/
+
+%%%%
+GENERATE:adj-en
+
+/e /en /
+
+#fix undeclined adjectives
+/\borange\S\b/orange/
+
+%%%%
+GENERATE:adj-em
+
+/e /em /
+
+#fix undeclined adjectives
+/\borange\S\b/orange/
+
+%%%%
+
+#################################
+# Accusative case
+#################################
+%%%%
+GENERATE:acc
+
+# Only masculine is declined in accusative.
+# Masculine and neuter can be difficult to distinguish. Since masculine nouns 
+# are more numerous, we assume masculine unless we see proof of neuter.
+
+# Neuter strings can be marked with the prefix {n} in the input file.
+# If a string is not marked, but we see proof of neuter, we mark here with {neut}.
+# We use a different marker so that we can restore neuter strings back to their
+# original state (in the end, we want only masculine strings to change).
+/^(?!\{(m|n|f|pl|neut)\})(Euer )?[^A-ZÄÖÜ]*(\{adj-es\}|es )/^/{neut}/
+
+# remove masculine gender hint, to simplify following regexps
+/^\{m\}//
+
+# determiners
+# Note that neuter will not match any of these because of the marker prefix.
+/^der /den /
+/^ein /einen /
+# temporary lowercase placeholder to make it easier to find noun
+/^Euer /bigeuren /
+
+# masc adjectives
+/^den [^A-ZÄÖÜ]+/e /en /
+/^den [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
+/^[^A-ZÄÖÜ]+/er /en /
+/^[^A-ZÄÖÜ]+/\{adj-er\}/{adj-en}/
+
+# weak nouns
+/Prinz\b/Prinzen/
+/[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet)$/$1en/
+/[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
+/[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
+# match Affe but not Waffe
+/[A-ZÄÖÜ][^ ,]+/(Affe|[^Ww]affe)$/$1n/
+
+# replace temporary placeholder
+/^bigeuren /Euren /
+
+# fix special cases
+/Blork der Ork/Blork den Ork/
+/Verrückter /Verrückten /
+/er Drakonier/en Drakonier/
+/^(den [A-ZÄÖÜ][^ ,]+)e Drakonier/$1en Drakonier/
+
+# fix undeclined adjectives
+#/\borange[mnrs]\b/orange/
+
+# Restore neuter strings back to their original state
+/^\{neut\}//
+
+%%%%
+
+#################################
+# Dative case
+#################################
+%%%%
+GENERATE:dat
+
+# remove masc/neut gender hint, to simplify following regexps
+/^\{(m|n)\}//
+
+# masc/neut determiners
+/^(der|das) /dem /
+/^ein /einem /
+/^Euer /Eurem /
+
+# masc/neut adjectives
+/^(d|ein|Eur)em [^A-ZÄÖÜ]+/e[rs]? /en /
+/^(d|ein|Eur)em [^A-ZÄÖÜ]+/\{adj-e[rs]?\}/{adj-en}/
+/^[^A-ZÄÖÜ]+/e[rs] /em /
+/^[^A-ZÄÖÜ]+/\{adj-e[rs]\}/{adj-em}/
+
+# mark plurals, if not already marked
+/^(die |Eure )?(%d|[0-9]+) /^/{pl}/
+/^(?!\{pl\}).*schuppen\b/^/{pl}/
+
+# plural determiners
+/^\{pl\}die /{pl}den /
+/^\{pl\}Eure /{pl}Euren /
+
+# fem determiners
+/^(\{f\})?die /der /
+/^(\{f\})?eine /einer /
+/^(\{f\})?Eure /Eurer /
+
+# temporary lowercase placeholder to make it easier to find noun
+/^((\{(f|pl)})?)Eur/$1bigeur/
+
+# plural adjectives
+/^\{pl\}[^A-ZÄÖÜ]+/e /en /
+
+# fem adjectives
+/^(\{f\})?(der|einer|bigeurer) [^A-ZÄÖÜ]+/e /en /
+/^(\{f\})?(der|einer|bigeurer) [^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
+/^[^A-ZÄÖÜ]+/e /er /
+/^[^A-ZÄÖÜ]+/\{adj-e\}/{adj-er}/
+
+# plural nouns
+/^\{pl\}.*?[A-ZÄÖÜ][^ ,]+/([^snai])$/$1n/
+
+# weak nouns
+/Prinz\b/Prinzen/
+/[A-ZÄÖÜ][^ ,]+/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet|herz)$/$1en/
+/[A-ZÄÖÜ][^ ,]+/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)$/$1n/
+/[A-ZÄÖÜ][^ ,]+/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)$/$1n/
+# match Affe but not Waffe
+/[A-ZÄÖÜ][^ ,]+/(Affe|[^Ww]affe)$/$1n/
+
+# remove fem/plural gender hint
+/^\{(f|pl)\}//
+
+# replace temporary placeholder
+/^bigeur/Eur/
+
+# fix special cases
+/Blork der Ork/Blork dem Ork/
+/Verrückter /Verrücktem /
+/^(der|einer|Eurer) (.*)Lernäische Hydra/$1 $2Lernäischen Hydra/
+/Lernäische Hydra/Lernäischer Hydra/
+
+# fix undeclined adjectives
+#/\borange[mnrs]\b/orange/
+
+%%%%
+
+#################################
+# Genitive case
+#################################
+%%%%
+GENERATE:gen
+
+# masc/neut determiners
+/^(der|das) /des /
+/^ein /eines /
+/^Euer /Eures /
+
+# masc/neut adjectives
+/^(d|ein|Eur)es [^A-ZÄÖÜ]+/e( \})/en$1/
+/^[^A-ZÄÖÜ]+/e[rs]( \})/en$1/
+
+# fem/pl determiners
+/^die /der /
+/^eine /einer /
+/^Eure /Eurer /
+
+# fem/pl adjectives
+/^(der|einer) [^A-ZÄÖÜ]+/e( \})/en$1/
+/^[^A-ZÄÖÜ]+/e( \})/er$1/
+
+#fix undeclined adjectives
+/\borange[^ ]\b/orange/
+
+# masc/neuter nouns and unique names
+/^(?!(Eur|\{adj\-|[a-zäöüß\-]+)er ).*?(?=( (der|des|einer|eines|von|vom) |$))/$/s/
+
+# fixup weak nouns
+/Prinz Ribbits?/Prinzen Ribbits/
+/herzs\b/herzens/
+/^.*?(?=( (der|des|einer|eines|von|vom) |$))/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet)s$/$1en/
+/^.*?(?=( (der|des|einer|eines|von|vom) |$))/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)s$/$1n/
+/^.*?(?=( (der|des|einer|eines|von|vom) |$))/[Rr]iese|[Aa]ffe|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)s$/$1n/
+
+# fixup other special cases
+/Gelée Royales/Gelée Royale/
+/(sch|[Gg]eist|ss)s$/$1es/
+/^(?!(Eur|\{adj\-|[a-zäöüß\-]+)er.*?(?=( (der|des|einer|eines|von|vom) |$))/ss$/s'/
+
+%%%%
+
+

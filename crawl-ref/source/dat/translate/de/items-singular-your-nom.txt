@@ -23,7 +23,7 @@ your launcher
 Euer Werfer
 %%%%
 your missile
-Euer Geschoss
+{n}Euer Geschoss
 %%%%
 
 #################################
@@ -225,7 +225,7 @@ your silver javelin
 Euer Silberwurfspeer
 %%%%
 your throwing net
-Euer Wurfnetz
+{n}Euer Wurfnetz
 %%%%
 your boomerang
 Euer Bumerang
@@ -862,175 +862,175 @@ Euer {adj-er}%sStecken
 
 %%%%
 your book of Minor Magic
-Euer Buch der kleinen Magie
+{n}Euer Buch der kleinen Magie
 %%%%
 your book of Conjurations
-Euer Buch der Hervorrufung
+{n}Euer Buch der Hervorrufung
 %%%%
 your book of Flames
-Euer Buch der Flammen
+{n}Euer Buch der Flammen
 %%%%
 your book of Frost
-Euer Buch des Frosts
+{n}Euer Buch des Frosts
 %%%%
 your book of the Dryads
-Euer Buch der Dryaden
+{n}Euer Buch der Dryaden
 %%%%
 your book of Fire
-Euer Buch des Feuers
+{n}Euer Buch des Feuers
 %%%%
 your book of Ice
-Euer Buch des Eises
+{n}Euer Buch des Eises
 %%%%
 your book of Spatial Translocations
-Euer Buch der räumlichen Translokationen
+{n}Euer Buch der räumlichen Translokationen
 %%%%
 your book of Hexes
-Euer Buch der Verhexungen
+{n}Euer Buch der Verhexungen
 %%%%
 your book of Lightning
-Euer Buch des Blitzes
+{n}Euer Buch des Blitzes
 %%%%
 your book of Death
-Euer Buch des Todes
+{n}Euer Buch des Todes
 %%%%
 your book of Misfortune
-Euer Buch des Unglücks
+{n}Euer Buch des Unglücks
 %%%%
 your book of Changes
-Euer Buch der Veränderungen
+{n}Euer Buch der Veränderungen
 %%%%
 your book of Transfigurations
-Euer Buch der Umgestaltungen
+{n}Euer Buch der Umgestaltungen
 %%%%
 your book of Battle
-Euer Buch der Schlacht
+{n}Euer Buch der Schlacht
 %%%%
 your book of Vapours
-Euer Buch der Dämpfe
+{n}Euer Buch der Dämpfe
 %%%%
 your book of Necromancy
-Euer Buch der Nekromantie
+{n}Euer Buch der Nekromantie
 %%%%
 your book of Callings
-Euer Buch der Rufe
+{n}Euer Buch der Rufe
 %%%%
 your book of Maledictions
-Euer Buch der Flüche
+{n}Euer Buch der Flüche
 %%%%
 your book of Air
-Euer Buch der Luft
+{n}Euer Buch der Luft
 %%%%
 your book of the Sky
-Euer Buch des Himmels
+{n}Euer Buch des Himmels
 %%%%
 your book of the Warp
-Euer Buch des Warps
+{n}Euer Buch des Warps
 %%%%
 your book of Annihilations
-Euer Buch der Vernichtung
+{n}Euer Buch der Vernichtung
 %%%%
 your book of Unlife
-Euer Buch des Unlebens
+{n}Euer Buch des Unlebens
 %%%%
 your book of Geomancy
-Euer Buch der Geomantie
+{n}Euer Buch der Geomantie
 %%%%
 your book of the Earth
-Euer Buch der Erde
+{n}Euer Buch der Erde
 %%%%
 your book of Power
-Euer Buch der Macht
+{n}Euer Buch der Macht
 %%%%
 your book of Cantrips
-Euer Buch der Schelmenstreiche
+{n}Euer Buch der Schelmenstreiche
 %%%%
 your book of Party Tricks
-Euer Buch mit Partytricks
+{n}Euer Buch mit Partytricks
 %%%%
 your book of Debilitation
-Euer Buch der Entkräftung
+{n}Euer Buch der Entkräftung
 %%%%
 your book of the Dragon
-Euer Buch des Drachen
+{n}Euer Buch des Drachen
 %%%%
 your book of Burglary
-Euer Buch des Diebstahls
+{n}Euer Buch des Diebstahls
 %%%%
 your book of Dreams
-Euer Buch der Träume
+{n}Euer Buch der Träume
 %%%%
 your book of Alchemy
-Euer Buch der Alchemie
+{n}Euer Buch der Alchemie
 %%%%
 your book of Beasts
-Euer Buch der Bestien
+{n}Euer Buch der Bestien
 %%%%
 your book of Spectacle
-Euer Buch des Spektakels
+{n}Euer Buch des Spektakels
 %%%%
 your book of Winter
-Euer Buch des Winters
+{n}Euer Buch des Winters
 %%%%
 your book of the Spheres
-Euer Buch der Sphären
+{n}Euer Buch der Sphären
 %%%%
 your book of Armaments
-Euer Buch der Bewaffnung
+{n}Euer Buch der Bewaffnung
 %%%%
 your book of Pain
-Euer Buch des Schmerzes
+{n}Euer Buch des Schmerzes
 %%%%
 your book of Decay
-Euer Buch des Verfalls
+{n}Euer Buch des Verfalls
 %%%%
 your book of Displacement
-Euer Buch der Verdrängung
+{n}Euer Buch der Verdrängung
 %%%%
 your book of Rime
-Euer Buch des Reims
+{n}Euer Buch des Reims
 %%%%
 your book of Stone
-Euer Buch des Steins
+{n}Euer Buch des Steins
 %%%%
 your book of the Senses
-Euer Buch der Sinne
+{n}Euer Buch der Sinne
 %%%%
 your book of Blasting
-Euer Buch der Sprengung
+{n}Euer Buch der Sprengung
 %%%%
 your book of Iron
-Euer Buch des Eisens
+{n}Euer Buch des Eisens
 %%%%
 your book of the Tundra
-Euer Buch der Tundra
+{n}Euer Buch der Tundra
 %%%%
 your book of the Moon
-Euer Buch des Mondes
+{n}Euer Buch des Mondes
 %%%%
 your book of Storms
-Euer Buch der Stürme
+{n}Euer Buch der Stürme
 %%%%
 your book of Weapons
-Euer Buch der Gewehre
+{n}Euer Buch der Gewehre
 %%%%
 your book of Sloth
-Euer Buch der Faulheit
+{n}Euer Buch der Faulheit
 %%%%
 your book of Blood
-Euer Buch des Blutes
+{n}Euer Buch des Blutes
 %%%%
 your book of Dangerous Friends
-Euer Buch der gefährlichen Freunde
+{n}Euer Buch der gefährlichen Freunde
 %%%%
 your book of Touch
-Euer Buch der Berührung
+{n}Euer Buch der Berührung
 %%%%
 your book of Chaos
-Euer Buch des Chaos
+{n}Euer Buch des Chaos
 %%%%
 your book of the Hunter
-Euer Buch des Jägers
+{n}Euer Buch des Jägers
 %%%%
 
 #################################

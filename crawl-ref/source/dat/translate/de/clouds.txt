@@ -100,7 +100,7 @@ thunder
 Donner
 %%%%
 a thunderstorm
-ein Gewitter
+{n}ein Gewitter
 %%%%
 negative energy
 Negativenergie

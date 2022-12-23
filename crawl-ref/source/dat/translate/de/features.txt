@@ -916,7 +916,7 @@ a %sdoor
 eine %sTür
 %%%%
 a gate
-ein Tor
+{n}ein Tor
 %%%%
 a %sgate
 ein {adj-es}%sTor
@@ -958,7 +958,7 @@ a translucent unnaturally hard rock wall
 eine durchsichtige unnatürlich harte Felswand
 %%%%
 an iron grate
-ein Eisengitter
+{n}ein Eisengitter
 %%%%
 an endless expanse of salt
 eine endlose Weite des Salzes
@@ -970,7 +970,7 @@ a granite statue
 eine Granitstatue
 %%%%
 a portal to somewhere
-ein Portal nach irgendwo
+{n}ein Portal nach irgendwo
 %%%%
 some lava
 etwas Lava
@@ -1069,61 +1069,61 @@ a labyrinth entrance
 ein Eingang zum Labyrinth
 %%%%
 a gateway to the Iron City of Dis
-ein Tor zur Eisernen Stadt Dis
+{n}ein Tor zur Eisernen Stadt Dis
 %%%%
 a gateway to the ashen valley of Gehenna
-ein Tor zum aschfahlen Tal von Gehenna
+{n}ein Tor zum aschfahlen Tal von Gehenna
 %%%%
 a gateway to the freezing wastes of Cocytus
-ein Tor zu den eisigen Wüsten von Cocytus
+{n}ein Tor zu den eisigen Wüsten von Cocytus
 %%%%
 a gateway to the decaying netherworld of Tartarus
-ein Tor zur verwesenden Unterwelt von Tartarus
+{n}ein Tor zur verwesenden Unterwelt von Tartarus
 %%%%
 a gateway to Hell
-ein Tor zur Hölle
+{n}ein Tor zur Hölle
 %%%%
 a gateway back into the Dungeon
-ein Tor zurück in den Dungeon
+{n}ein Tor zurück in den Dungeon
 %%%%
 a one-way gate to the infinite horrors of the Abyss
-ein Einwegtor zu den unendlichen Schrecken des Abgrunds
+{n}ein Einwegtor zu den unendlichen Schrecken des Abgrunds
 %%%%
 an exit through the horrors of the Abyss
 ein Ausgang durch die Schrecken des Abgrunds
 %%%%
 a gateway leading out of the Abyss
-ein Tor, das aus dem Abgrund herausführt
+{n}ein Tor, das aus dem Abgrund herausführt
 %%%%
 a one-way gate leading to the halls of Pandemonium
-ein Einwegtor, das in die Hallen des Pandämoniums führt
+{n}ein Einwegtor, das in die Hallen des Pandämoniums führt
 %%%%
 a gate leading to another region of Pandemonium
-ein Tor, das in eine andere Region von Pandemonium führt
+{n}ein Tor, das in eine andere Region von Pandemonium führt
 %%%%
 a gate leading out of Pandemonium
-ein Tor, das aus Pandemonium herausführt
+{n}ein Tor, das aus Pandemonium herausführt
 %%%%
 a gate to the Vaults
-ein Tor zu den Gewölben
+{n}ein Tor zu den Gewölben
 %%%%
 a gate leading back out of this place
-ein Tor, das wieder aus diesem Ort herausführt
+{n}ein Tor, das wieder aus diesem Ort herausführt
 %%%%
 a gate to the Realm of Zot
-ein Tor zum Reich von Zot
+{n}ein Tor zum Reich von Zot
 %%%%
 a gate leading to a distant place
-ein Tor, das zu einem weit entfernten Ort führt
+{n}ein Tor, das zu einem weit entfernten Ort führt
 %%%%
 a gateway to a ziggurat
-ein Tor zu einer Zikkurat
+{n}ein Tor zu einer Zikkurat
 %%%%
 a gateway to a bazaar
-ein Tor zu einem Basar
+{n}ein Tor zu einem Basar
 %%%%
 a portal to a secret trove of treasure
-ein Tor zu einer geheimen Fundgrube von Schätzen
+{n}ein Tor zu einer geheimen Fundgrube von Schätzen
 %%%%
 a glowing drain
 ein glühender Abfluss
@@ -1135,7 +1135,7 @@ a flagged portal
 ein beflaggtes Portal
 %%%%
 a gate leading to a gauntlet
-ein Tor, das zu einem Spießrute führt
+{n}ein Tor, das zu einem Spießrute führt
 %%%%
 a frozen archway
 ein gefrorener Torbogen
@@ -1156,7 +1156,7 @@ a rocky tunnel leading out of this place
 ein felsiger Tunnel, der aus diesem Ort herausführt
 %%%%
 a portal leading out of this place
-ein Portal, das aus diesem Ort herausführt
+{n}ein Portal, das aus diesem Ort herausführt
 %%%%
 a staircase leading out of the dungeon
 eine Treppe, die aus dem Kerker herausführt
@@ -1216,10 +1216,10 @@ a staircase to the Shoals
 eine Treppe zu den Untiefen
 %%%%
 a hole to the Spider Nest
-ein Loch zum Spinnennest
+{n}ein Loch zum Spinnennest
 %%%%
 a crawl-hole back to the Lair
-ein Krabbelloch zurück zum Versteck
+{n}ein Krabbelloch zurück zum Versteck
 %%%%
 a staircase to the Depths
 eine Treppe zu den Tiefen
@@ -1321,7 +1321,7 @@ a dry fountain
 ein trockener Brunnen
 %%%%
 a short-range portal
-ein Kurzstreckenportal
+{n}ein Kurzstreckenportal
 %%%%
 a teleporter
 ein Teleporter
@@ -1339,7 +1339,7 @@ a sealed passage leading down
 ein versiegelter Gang, der nach unten führt
 %%%%
 a gateway leading deeper into the Abyss
-ein Tor, das tiefer in den Abgrund führt
+{n}ein Tor, das tiefer in den Abgrund führt
 %%%%
 
 ################################

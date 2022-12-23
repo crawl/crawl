@@ -23,7 +23,7 @@ a launcher
 ein Werfer
 %%%%
 a missile
-ein Geschoss
+{n}ein Geschoss
 %%%%
 
 #################################
@@ -225,7 +225,7 @@ a silver javelin
 ein Silberwurfspeer
 %%%%
 a throwing net
-ein Wurfnetz
+{n}ein Wurfnetz
 %%%%
 a boomerang
 ein Bumerang
@@ -862,175 +862,175 @@ ein {adj-er}%sStecken
 
 %%%%
 a book of Minor Magic
-ein Buch der kleinen Magie
+{n}ein Buch der kleinen Magie
 %%%%
 a book of Conjurations
-ein Buch der Hervorrufung
+{n}ein Buch der Hervorrufung
 %%%%
 a book of Flames
-ein Buch der Flammen
+{n}ein Buch der Flammen
 %%%%
 a book of Frost
-ein Buch des Frosts
+{n}ein Buch des Frosts
 %%%%
 a book of the Dryads
-ein Buch der Dryaden
+{n}ein Buch der Dryaden
 %%%%
 a book of Fire
-ein Buch des Feuers
+{n}ein Buch des Feuers
 %%%%
 a book of Ice
-ein Buch des Eises
+{n}ein Buch des Eises
 %%%%
 a book of Spatial Translocations
-ein Buch der räumlichen Translokationen
+{n}ein Buch der räumlichen Translokationen
 %%%%
 a book of Hexes
-ein Buch der Verhexungen
+{n}ein Buch der Verhexungen
 %%%%
 a book of Lightning
-ein Buch des Blitzes
+{n}ein Buch des Blitzes
 %%%%
 a book of Death
-ein Buch des Todes
+{n}ein Buch des Todes
 %%%%
 a book of Misfortune
-ein Buch des Unglücks
+{n}ein Buch des Unglücks
 %%%%
 a book of Changes
-ein Buch der Veränderungen
+{n}ein Buch der Veränderungen
 %%%%
 a book of Transfigurations
-ein Buch der Umgestaltungen
+{n}ein Buch der Umgestaltungen
 %%%%
 a book of Battle
-ein Buch der Schlacht
+{n}ein Buch der Schlacht
 %%%%
 a book of Vapours
-ein Buch der Dämpfe
+{n}ein Buch der Dämpfe
 %%%%
 a book of Necromancy
-ein Buch der Nekromantie
+{n}ein Buch der Nekromantie
 %%%%
 a book of Callings
-ein Buch der Rufe
+{n}ein Buch der Rufe
 %%%%
 a book of Maledictions
-ein Buch der Flüche
+{n}ein Buch der Flüche
 %%%%
 a book of Air
-ein Buch der Luft
+{n}ein Buch der Luft
 %%%%
 a book of the Sky
-ein Buch des Himmels
+{n}ein Buch des Himmels
 %%%%
 a book of the Warp
-ein Buch des Warps
+{n}ein Buch des Warps
 %%%%
 a book of Annihilations
-ein Buch der Vernichtung
+{n}ein Buch der Vernichtung
 %%%%
 a book of Unlife
-ein Buch des Unlebens
+{n}ein Buch des Unlebens
 %%%%
 a book of Geomancy
-ein Buch der Geomantie
+{n}ein Buch der Geomantie
 %%%%
 a book of the Earth
-ein Buch der Erde
+{n}ein Buch der Erde
 %%%%
 a book of Power
-ein Buch der Macht
+{n}ein Buch der Macht
 %%%%
 a book of Cantrips
-ein Buch der Schelmenstreiche
+{n}ein Buch der Schelmenstreiche
 %%%%
 a book of Party Tricks
-ein Buch mit Partytricks
+{n}ein Buch mit Partytricks
 %%%%
 a book of Debilitation
-ein Buch der Entkräftung
+{n}ein Buch der Entkräftung
 %%%%
 a book of the Dragon
-ein Buch des Drachen
+{n}ein Buch des Drachen
 %%%%
 a book of Burglary
-ein Buch des Diebstahls
+{n}ein Buch des Diebstahls
 %%%%
 a book of Dreams
-ein Buch der Träume
+{n}ein Buch der Träume
 %%%%
 a book of Alchemy
-ein Buch der Alchemie
+{n}ein Buch der Alchemie
 %%%%
 a book of Beasts
-ein Buch der Bestien
+{n}ein Buch der Bestien
 %%%%
 a book of Spectacle
-ein Buch des Spektakels
+{n}ein Buch des Spektakels
 %%%%
 a book of Winter
-ein Buch des Winters
+{n}ein Buch des Winters
 %%%%
 a book of the Spheres
-ein Buch der Sphären
+{n}ein Buch der Sphären
 %%%%
 a book of Armaments
-ein Buch der Bewaffnung
+{n}ein Buch der Bewaffnung
 %%%%
 a book of Pain
-ein Buch des Schmerzes
+{n}ein Buch des Schmerzes
 %%%%
 a book of Decay
-ein Buch des Verfalls
+{n}ein Buch des Verfalls
 %%%%
 a book of Displacement
-ein Buch der Verdrängung
+{n}ein Buch der Verdrängung
 %%%%
 a book of Rime
-ein Buch des Reims
+{n}ein Buch des Reims
 %%%%
 a book of Stone
-ein Buch des Steins
+{n}ein Buch des Steins
 %%%%
 a book of the Senses
-ein Buch der Sinne
+{n}ein Buch der Sinne
 %%%%
 a book of Blasting
-ein Buch der Sprengung
+{n}ein Buch der Sprengung
 %%%%
 a book of Iron
-ein Buch des Eisens
+{n}ein Buch des Eisens
 %%%%
 a book of the Tundra
-ein Buch der Tundra
+{n}ein Buch der Tundra
 %%%%
 a book of the Moon
-ein Buch des Mondes
+{n}ein Buch des Mondes
 %%%%
 a book of Storms
-ein Buch der Stürme
+{n}ein Buch der Stürme
 %%%%
 a book of Weapons
-ein Buch der Gewehre
+{n}ein Buch der Gewehre
 %%%%
 a book of Sloth
-ein Buch der Faulheit
+{n}ein Buch der Faulheit
 %%%%
 a book of Blood
-ein Buch des Blutes
+{n}ein Buch des Blutes
 %%%%
 a book of Dangerous Friends
-ein Buch der gefährlichen Freunde
+{n}ein Buch der gefährlichen Freunde
 %%%%
 a book of Touch
-ein Buch der Berührung
+{n}ein Buch der Berührung
 %%%%
 a book of Chaos
-ein Buch des Chaos
+{n}ein Buch des Chaos
 %%%%
 a book of the Hunter
-ein Buch des Jägers
+{n}ein Buch des Jägers
 %%%%
 
 #################################

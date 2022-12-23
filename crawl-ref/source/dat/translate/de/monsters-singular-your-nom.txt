@@ -36,7 +36,7 @@ your fire bat
 Eure Feuerfledermaus
 %%%%
 your bennu
-Euer Bennu
+{n}Euer Bennu
 %%%%
 your caustic shrike
 Euer ätzender Würger
@@ -201,7 +201,7 @@ your wolf
 Euer Wolf
 %%%%
 your hog
-Euer Schwein
+{n}Euer Schwein
 %%%%
 your hell hound
 Euer Höllenhund
@@ -219,7 +219,7 @@ your holy swine
 Euer heiliges Schwein
 %%%%
 your felid
-Euer Felid
+{n}Euer Felid
 %%%%
 your bear
 Euer Bär
@@ -288,7 +288,7 @@ your komodo dragon
 Euer Komododrache
 %%%%
 your merfolk
-Euer Meervolk
+{n}Euer Meervolk
 %%%%
 your merfolk impaler
 Euer Meervolk-Impaler
@@ -417,7 +417,7 @@ your rat
 Eure Ratte
 %%%%
 your quokka
-Euer Quokka
+{n}Euer Quokka
 %%%%
 your river rat
 Eure Flussratte
@@ -426,7 +426,7 @@ your hell rat
 Eure Höllenratte
 %%%%
 your porcupine
-Euer Stachelschwein
+{n}Euer Stachelschwein
 %%%%
 your giant cockroach
 Eure Riesenkakerlake
@@ -462,7 +462,7 @@ your orb spider
 Eure Kugelspinne
 %%%%
 your crocodile
-Euer Krokodil
+{n}Euer Krokodil
 %%%%
 your alligator
 Euer Alligator
@@ -732,22 +732,22 @@ your pearl dragon
 Euer Perlendrache
 %%%%
 your elemental
-Euer Elementar
+{n}Euer Elementar
 %%%%
 your earth elemental
-Euer Erdelementar
+{n}Euer Erdelementar
 %%%%
 your fire elemental
-Euer Feuerelementar
+{n}Euer Feuerelementar
 %%%%
 your water elemental
-Euer Wasserelementar
+{n}Euer Wasserelementar
 %%%%
 your air elemental
-Euer Luftelementar
+{n}Euer Luftelementar
 %%%%
 your iron elemental
-Euer Eisenelementar
+{n}Euer Eisenelementar
 %%%%
 your elemental wellspring
 Eure elementare Quelle
@@ -768,25 +768,25 @@ your barachi
 Eure Barachi
 %%%%
 your floating eye
-Euer schwebendes Auge
+{n}Euer schwebendes Auge
 %%%%
 your eye of draining
-Euer Auge des Schwächens
+{n}Euer Auge des Schwächens
 %%%%
 your glowing orange brain
-Euer oranges leuchtendes Gehirn
+{n}Euer oranges leuchtendes Gehirn
 %%%%
 your great orb of eyes
-Eure große Augenkugel
+{n}Eure große Augenkugel
 %%%%
 your shining eye
-Euer leuchtendes Auge
+{n}Euer leuchtendes Auge
 %%%%
 your eye of devastation
-Euer Auge der Verwüstung
+{n}Euer Auge der Verwüstung
 %%%%
 your golden eye
-Euer goldenes Auge
+{n}Euer goldenes Auge
 %%%%
 your ophan
 Euer Ophan
@@ -825,7 +825,7 @@ your ooze
 Euer Schlamm
 %%%%
 your jelly
-Euer Gelee
+{n}Euer Gelee
 %%%%
 your %sslime creature
 Euer {adj-es}%sSchleimwesen
@@ -834,7 +834,7 @@ your merged slime creature
 Eure verschmolzene Schleimkreatur
 %%%%
 your azure jelly
-Euer azurblaues Gelee
+{n}Euer azurblaues Gelee
 %%%%
 your death ooze
 Euer Todesschlamm
@@ -951,7 +951,7 @@ your tengu reaver
 Euer Tengu-Häscher
 %%%%
 your efreet
-Euer Efreet
+{n}Euer Efreet
 %%%%
 your rakshasa
 Euer Rakshasa
@@ -963,7 +963,7 @@ your snaplasher vine
 Eure Peitscherrebe
 %%%%
 your snaplasher vine segment
-Euer Peitscherrebesegment
+{n}Euer Peitscherrebesegment
 %%%%
 your snake
 Eure Schlange
@@ -1020,13 +1020,13 @@ your vampire mage
 Euer Vampir-Magier
 %%%%
 your jiangshi
-Euer Jiangshi
+{n}Euer Jiangshi
 %%%%
 your ghost
-Euer Gespenst
+{n}Euer Gespenst
 %%%%
 your phantom
-Euer Phantom
+{n}Euer Phantom
 %%%%
 your hungry ghost
 Euer hungriger Geist
@@ -1080,19 +1080,19 @@ your starspawn tentacle
 Euer Sternbruttentakel
 %%%%
 your starspawn tentacle segment
-Euer Sternbruttentakelsegment
+{n}Euer Sternbruttentakelsegment
 %%%%
 your starcursed mass
 Eure sternverfluchte Masse
 %%%%
 your dream sheep
-Euer Traumschaf
+{n}Euer Traumschaf
 %%%%
 your yak
-Euer Yak
+{n}Euer Yak
 %%%%
 your death yak
-Euer Todesyak
+{n}Euer Todesyak
 %%%%
 your catoblepas
 Eure Catoblepas
@@ -1113,16 +1113,16 @@ your ice beast
 Eure Eisbestie
 %%%%
 your sky beast
-Euer Himmelstier
+{n}Euer Himmelstier
 %%%%
 your zombie
 Euer Zombie
 %%%%
 your skeleton
-Euer Skelett
+{n}Euer Skelett
 %%%%
 your simulacrum
-Euer Simulacrum
+{n}Euer Simulacrum
 %%%%
 your small zombie
 Euer kleiner Zombie
@@ -1155,7 +1155,7 @@ your tentacle
 Euer Tentakel
 %%%%
 your tentacle segment
-Euer Tentakelsegment
+{n}Euer Tentakelsegment
 %%%%
 your octopode
 Euer Oktopod
@@ -1224,7 +1224,7 @@ your crimson imp
 Euer karminrotes Teufelchen
 %%%%
 your quasit
-Euer Quasit
+{n}Euer Quasit
 %%%%
 your white imp
 Euer weißes Teufelchen
@@ -1233,10 +1233,10 @@ your ufetubus
 Euer Ufetubus
 %%%%
 your iron imp
-Euer Eisenteufelchen
+{n}Euer Eisenteufelchen
 %%%%
 your shadow imp
-Euer Schattenteufelchen
+{n}Euer Schattenteufelchen
 %%%%
 your rust devil
 Euer Rostteufel
@@ -1269,7 +1269,7 @@ your neqoxec
 Eure Neqoxec
 %%%%
 your ynoxinul
-Euer Ynoxinul
+{n}Euer Ynoxinul
 %%%%
 your sixfirhy
 Euer Sixfirhy
@@ -1290,7 +1290,7 @@ your cacodemon
 Euer Cacodaemon
 %%%%
 your hell beast
-Euer Höllentier
+{n}Euer Höllentier
 %%%%
 your hellion
 Euer Teufelsbraten
@@ -1311,7 +1311,7 @@ your Ice Fiend
 Euer Eisunterweltler
 %%%%
 your Tzitzimitl
-Euer Tzitzimitl
+{n}Euer Tzitzimitl
 %%%%
 your Hell Sentinel
 Euer Höllenwächter
@@ -1431,13 +1431,13 @@ your moon troll
 Euer Mondtroll
 %%%%
 your foxfire
-Euer Fuchsfeuer
+{n}Euer Fuchsfeuer
 %%%%
 your nameless horror
 Euer namenloser Horror
 %%%%
 your will-o-the-wisp
-Euer Irrlicht
+{n}Euer Irrlicht
 %%%%
 your bunyip
 Euer Bunyip
@@ -1467,7 +1467,7 @@ your lemure
 Eure Lemure
 %%%%
 your endoplasm
-Euer Endoplasma
+{n}Euer Endoplasma
 %%%%
 your rockslime
 Euer Felsenschleim
@@ -1542,13 +1542,13 @@ Euer {adj-es}%sOchsenbiest
 # "elf zombie", "orc skeleton", etc.
 %%%%
 your %s zombie
-Euer %s-Zombie
+{m}Euer %s-Zombie
 %%%%
 your %s skeleton
-Euer %s-Skelett
+{n}Euer %s-Skelett
 %%%%
 your %s simulacrum
-Euer %s-Simulacrum
+{n}Euer %s-Simulacrum
 %%%%
 # can result from Zin's Recite
 your %s shaped pillar of salt
@@ -1579,7 +1579,7 @@ Euer geformter Eisblock
 # polymorphed uniques
 %%%%
 your %s shaped Royal Jelly
-Euer %s-förmiges Gelée Royale
+{n}Euer %s-förmiges Gelée Royale
 %%%%
 your %s shaped Lernaean hydra
 Eure %s-förmige Lernäische Hydra

@@ -393,6 +393,29 @@ static void _split_tags(string s, vector<string>& results)
         results.push_back(s);
 }
 
+// if string starts with a context, remove it and set current context to that
+// TODO: Come up with a better name for this function
+static string _shift_context(const string& str)
+{
+    // Must keep context for parameters
+    if (!starts_with(str, "{") || contains(str, "%s") || contains(str, "@"))
+    {
+        return str;
+    }
+
+    bool first = true;
+    string result;
+    for (string s: _split_format(str))
+    {
+        if (first && s.length() >= 2 && s[0] == '{' && s[s.length()-1] == '}')
+            _context = s.substr(1, s.length()-2);
+        else
+            result += s;
+        first = false;
+    }
+    return result;
+}
+
 /**
  * Get arg types from format string.
  * Returns a map indexed by argument id, beginning with 1.
@@ -1516,7 +1539,9 @@ static string _localise_string(const string context, const string& value)
     string result;
     result = cxlate(context, value, false);
     if (!result.empty())
-        return result;
+    {
+        return _shift_context(result);
+    }
 
     // if value is a list separator and we didn't get a hit from cxlate(),
     // then there's no point wasting any more time - just use the English one
@@ -1845,7 +1870,7 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
 }
 
 string localise(const vector<LocalisationArg>& args)
-    {
+{
     // trivial cases
     if (args.empty())
     {
@@ -1866,7 +1891,9 @@ string localise(const vector<LocalisationArg>& args)
     // check for translation of completed english string
     string result = xlate(english, false);
     if (!result.empty())
-    return result;
+    {
+        return _shift_context(result);
+    }
 
     // translate piecemeal
     return _build_string(args, true);
