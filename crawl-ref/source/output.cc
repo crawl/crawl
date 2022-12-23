@@ -2048,7 +2048,7 @@ static string _stealth_bar(int label_length, int sw)
     const int unadjusted_pips = stealth_pips();
     const int bar_len = 10;
     const int num_high_pips = unadjusted_pips % bar_len;
-    static const vector<char> pip_tiers = { '.', '+', '*', '#', '!' };
+    static const vector<char> pip_tiers = { ' ', '+', '*', '#', '!' };
     const int max_tier = pip_tiers.size() - 1;
     const int low_tier = min(unadjusted_pips / bar_len, max_tier);
     const int high_tier = min(low_tier + 1, max_tier);
