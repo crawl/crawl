@@ -306,9 +306,16 @@ int num_fails = 0;
 
 static void test(const string& context, const string& item, const string& expect)
 {
-    string fmt = "{" + context + "}%s";
-    LocalisationArg it = LocalisationArg(item);
-    string actual = localise(fmt, it);
+    string actual;
+    if (context == "" || context == "nom")
+    {
+        actual = localise(item);
+    }
+    else
+    {
+        string fmt = "{" + context + "}%s";
+        actual = localise(fmt, item);
+    }
 
     string status;
     if (actual == expect)
