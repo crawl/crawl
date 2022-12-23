@@ -1965,6 +1965,17 @@ static void _run_time_step()
     while (--you.duration[DUR_TIME_STEP] > 0);
 }
 
+static void _cleanup_time_steps()
+{
+    you.duration[DUR_TIME_STEP] = 0;
+
+    // Noxious bog terrain gets cleaned up while stepped from time.
+    // That seems consistent with clouds, etc, so let's just make the duration
+    // match, rather than trying to persist the bog during time steps or
+    // regenerating it afterward.
+    you.duration[DUR_NOXIOUS_BOG] = 0;
+}
+
 // A low-duration step from time, allowing monsters to get closer
 // to the player safely.
 void cheibriados_temporal_distortion()
@@ -1981,7 +1992,7 @@ void cheibriados_temporal_distortion()
         you.los_noise_last_turn = 0;
     }
 
-    you.duration[DUR_TIME_STEP] = 0;
+    _cleanup_time_steps();
 
     mpr("You warp the flow of time around you!");
 }
@@ -2004,7 +2015,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 #endif
 
     }
-    you.duration[DUR_TIME_STEP] = 0;
+    _cleanup_time_steps();
 
     flash_view(UA_PLAYER, 0);
     mpr("You return to the normal time flow.");
