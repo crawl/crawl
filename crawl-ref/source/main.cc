@@ -2153,10 +2153,10 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_REMOVE_JEWELLERY:     remove_ring();            break;
     case CMD_SHOUT:                issue_orders();           break;
     case CMD_FIRE_ITEM_NO_QUIVER:  fire_item_no_quiver();    break;
-    case CMD_WEAPON_SWAP:          wield_weapon(true);       break;
+    case CMD_WEAPON_SWAP:          auto_wield();             break;
     case CMD_WEAR_ARMOUR:          wear_armour();            break;
     case CMD_WEAR_JEWELLERY:       puton_ring();             break;
-    case CMD_WIELD_WEAPON:         wield_weapon(false);      break;
+    case CMD_WIELD_WEAPON:         wield_weapon();           break;
     case CMD_ZAP_WAND:             zap_wand();               break;
     case CMD_DROP:
         drop();

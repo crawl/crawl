@@ -918,7 +918,7 @@ static bool _equip_item(item_def *to_equip, operation_types o)
 {
     // TODO: refactor this
     if (to_equip == nullptr && o == OPER_WIELD)
-        return wield_weapon(true, SLOT_BARE_HANDS);
+        return wield_weapon(SLOT_BARE_HANDS);
 
     ASSERT(to_equip);
 
@@ -932,60 +932,64 @@ static bool _equip_item(item_def *to_equip, operation_types o)
         return false; // or ASSERT?
 }
 
+bool auto_wield(bool adjust_time_taken)
+{
+    // Abort immediately if there's some condition that could prevent wielding
+    // weapons.
+    if (!can_wield(nullptr, true, false))
+        return false;
+
+    item_def *to_wield = &you.inv[0]; // default is 'a'
+
+    if (to_wield == you.weapon()
+        || you.equip[EQ_WEAPON] == -1 && !item_is_wieldable(*to_wield))
+    {
+        to_wield = &you.inv[1];      // backup is 'b'
+    }
+
+    // If the autoswap slot has a bad or invalid item in it, the
+    // swap will be to bare hands.
+    if (to_wield && (!to_wield->defined() || !item_is_wieldable(*to_wield)))
+        to_wield = nullptr;
+
+    return _do_wield_weapon(to_wield, adjust_time_taken);
+}
+
 /**
- * @param auto_wield false if this was initiated by the wield weapon command (w)
- *      true otherwise (e.g. switching between ranged and melee with the
- *      auto_switch option)
  * @param slot Index into inventory of item to equip. Or one of following
  *     special values:
  *      - -1 (default): meaning no particular weapon. We'll either prompt for a
  *        choice of weapon (if auto_wield is false) or choose one by default.
  *      - SLOT_BARE_HANDS: equip nothing (unwielding current weapon, if any)
  */
-bool wield_weapon(bool auto_wield, int slot, bool adjust_time_taken)
+bool wield_weapon(int slot, bool adjust_time_taken)
 {
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
     if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
         return false;
 
-    item_def *to_wield = &you.inv[0]; // default is 'a'
-        // we'll set this to nullptr to indicate bare hands
+    item_def *to_wield = nullptr;
 
-    if (auto_wield)
+    if (slot == SLOT_BARE_HANDS)
+        to_wield = nullptr;
+    else if (slot >= 0)
+        to_wield = &you.inv[slot];
+    else
     {
-        if (to_wield == you.weapon()
-            || you.equip[EQ_WEAPON] == -1 && !item_is_wieldable(*to_wield))
-        {
-            to_wield = &you.inv[1];      // backup is 'b'
-        }
-
-        if (slot != -1)         // allow external override
-        {
-            if (slot == SLOT_BARE_HANDS)
-                to_wield = nullptr;
-            else
-                to_wield = &you.inv[slot];
-        }
+        // no slot provided, prompt the player
+        operation_types o = use_an_item(to_wield, OPER_WIELD);
+        if (o == OPER_NONE)
+            return false;
+        else if (o != OPER_WIELD)
+            return _equip_item(to_wield, o);
     }
 
-    if (to_wield)
-    {
-    // Prompt if not using the auto swap command
-        if (!auto_wield)
-        {
-            operation_types o = use_an_item(to_wield, OPER_WIELD);
-            if (o == OPER_NONE)
-                return false;
-            else if (o != OPER_WIELD)
-                return _equip_item(to_wield, o);
-        }
-
-    // If autowielding and the swap slot has a bad or invalid item in it, the
+    // If the swap slot has a bad or invalid item in it, the
     // swap will be to bare hands.
-        else if (!to_wield->defined() || !item_is_wieldable(*to_wield))
-            to_wield = nullptr;
-    }
+    if (to_wield && (!to_wield->defined() || !item_is_wieldable(*to_wield)))
+        to_wield = nullptr;
+
     return _do_wield_weapon(to_wield, adjust_time_taken);
 }
 
@@ -3774,11 +3778,11 @@ void tile_item_use_secondary(int idx)
 
     // TODO: add quiver stuff here?
     if (you.equip[EQ_WEAPON] == idx)
-        wield_weapon(true, SLOT_BARE_HANDS);
+        wield_weapon(SLOT_BARE_HANDS);
     else if (item_is_wieldable(item))
     {
         // secondary wield for several spells and such
-        wield_weapon(true, idx); // wield
+        wield_weapon(idx); // wield
     }
 }
 
@@ -3808,7 +3812,7 @@ void tile_item_use(int idx)
         && (item.base_type == OBJ_ARMOUR
             || item.base_type == OBJ_JEWELLERY))
     {
-        wield_weapon(true, SLOT_BARE_HANDS);
+        wield_weapon(SLOT_BARE_HANDS);
         return;
     }
 
@@ -3822,9 +3826,10 @@ void tile_item_use(int idx)
     case OBJ_MISCELLANY:
     case OBJ_WANDS:
         // Wield any unwielded item of these types.
+        // XX this case looks pretty outdated
         if (!equipped && item_is_wieldable(item))
         {
-            wield_weapon(true, idx);
+            wield_weapon(idx);
             return;
         }
         // Evoke misc. items or wands.
@@ -3835,7 +3840,7 @@ void tile_item_use(int idx)
         }
         // Unwield wielded items.
         if (equipped)
-            wield_weapon(true, SLOT_BARE_HANDS);
+            wield_weapon(SLOT_BARE_HANDS);
         return;
 
     case OBJ_MISSILES:

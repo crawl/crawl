@@ -193,7 +193,7 @@ static bool _equip_weapon(const string &weapon, bool &abort)
         {
             if (i != you.equip[EQ_WEAPON])
             {
-                wield_weapon(true, i, false);
+                wield_weapon(i, false);
                 if (i != you.equip[EQ_WEAPON])
                 {
                     abort = true;

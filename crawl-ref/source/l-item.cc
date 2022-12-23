@@ -135,7 +135,7 @@ static int l_item_do_wield(lua_State *ls)
     int slot = -1;
     if (item && item->defined() && in_inventory(*item))
         slot = item->link;
-    bool res = wield_weapon(true, slot);
+    bool res = wield_weapon(slot);
     lua_pushboolean(ls, res);
     return 1;
 }
@@ -212,7 +212,7 @@ static int l_item_do_remove(lua_State *ls)
 
     bool result = false;
     if (eq == EQ_WEAPON)
-        result = wield_weapon(true, SLOT_BARE_HANDS);
+        result = wield_weapon(SLOT_BARE_HANDS);
     else if (eq >= EQ_FIRST_JEWELLERY && eq <= EQ_LAST_JEWELLERY)
         result = remove_ring(item->link);
     else

@@ -205,12 +205,15 @@ int mon_beat_sh_pct(int bypass, int sh)
 static bool _autoswitch_to_melee()
 {
     bool penance;
-    if (is_melee_weapon(*you.weapon())
-        && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
+    if (!you.weapon()
+        // don't autoswitch from a weapon that needs a warning
+        || is_melee_weapon(*you.weapon())
+            && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
     {
         return false;
     }
 
+    // don't autoswitch if a or b is not selected
     int item_slot;
     if (you.equip[EQ_WEAPON] == letter_to_index('a'))
         item_slot = letter_to_index('b');
@@ -219,6 +222,7 @@ static bool _autoswitch_to_melee()
     else
         return false;
 
+    // don't autoswitch to a weapon that needs a warning, or to a non-weapon
     if (!you.inv[item_slot].defined()
         || !is_melee_weapon(you.inv[item_slot])
         || needs_handle_warning(you.inv[item_slot], OPER_ATTACK, penance))
@@ -226,7 +230,8 @@ static bool _autoswitch_to_melee()
         return false;
     }
 
-    return wield_weapon(true, item_slot);
+    // auto_switch handles the item slots itself
+    return auto_wield();
 }
 
 static bool _can_shoot_with(const item_def *weapon)
