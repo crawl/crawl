@@ -1517,7 +1517,6 @@ static string _operation_verb(operation_types oper)
     case OPER_ZAP:            return "zap";
     case OPER_FIRE:           return "fire";
     case OPER_EVOKE:          return "evoke";
-    case OPER_DESTROY:        return "destroy";
     case OPER_QUIVER:         return "quiver";
     case OPER_ANY:
     default:
@@ -1658,12 +1657,6 @@ bool check_warning_inscriptions(const item_def& item,
     if (item.defined()
         && needs_handle_warning(item, oper, penance))
     {
-        // When it's about destroying an item, don't even ask.
-        // If the player really wants to do that, they'll have
-        // to remove the inscription.
-        if (oper == OPER_DESTROY)
-            return false;
-
         // Common pattern for wield/wear/put:
         // - if the player isn't capable of equipping it, return true
         //   immediately. No point warning, since the op is impossible.
