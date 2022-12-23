@@ -1596,11 +1596,11 @@ PLUS:     +3
 COLOUR:   ETC_MAGIC
 TILE:     urand_power_gloves
 TILE_EQ:  glove_brown
-INSCRIP:  Infuse+∞ RegenMP
-INT:      -3
+INSCRIP:  Infuse+∞ VampMP
+BOOL:     nospell
 VALUE:    400
 DESCRIP:  It empowers its wearer's blows with all of their magic.
-+It causes its wearer's magical reserves to regenerate more quickly.
++Blows struck in melee replenish the wearer's magic.
 
 NAME:     dreamshard necklace
 OBJ:      OBJ_JEWELLERY/AMU_NOTHING

@@ -592,6 +592,9 @@ bool melee_attack::handle_phase_damaged()
     if (!attack::handle_phase_damaged())
         return false;
 
+    if (attacker->is_player() && player_equip_unrand(UNRAND_POWER_GLOVES))
+        inc_mp(div_rand_round(damage_done, 8));
+
     return true;
 }
 

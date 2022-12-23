@@ -1233,9 +1233,6 @@ int player_mp_regen()
             regen_amount += 40;
     }
 
-    if (player_equip_unrand(UNRAND_POWER_GLOVES))
-        regen_amount += 40;
-
     if (have_passive(passive_t::jelly_regen))
     {
         // We use piety rank to avoid leaking piety info to the player.
