@@ -746,18 +746,6 @@ void throw_it(quiver::action &a)
 
     pbolt.is_tracer = false;
 
-    bool unwielded = false;
-    if (ammo_slot == you.equip[EQ_WEAPON] && thrown.quantity == 1)
-    {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, false, true, false))
-            return;
-
-        if (!thrown.quantity)
-            return; // destroyed when unequipped (fragile)
-
-        unwielded = true;
-    }
-
     // Now start real firing!
     origin_set_unknown(item);
 
@@ -861,8 +849,6 @@ void throw_it(quiver::action &a)
     {
         if (ammo_slot != -1)
             dec_inv_item_quantity(ammo_slot, 1);
-        if (unwielded)
-            canned_msg(MSG_EMPTY_HANDED_NOW);
     }
 
     _throw_noise(&you, thrown);

@@ -911,11 +911,8 @@ static int _get_item_slot_maybe_with_move(const item_def &item)
     return ret;
 }
 
-static bool _do_wield_weapon(item_def *to_wield, bool show_weff_messages=true,
-                  bool show_unwield_msg=true, bool show_wield_msg=true,
-                  bool adjust_time_taken=true);
+static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken=true);
 static bool _do_wear_armour(item_def *to_wear);
-
 
 static bool _equip_item(item_def *to_equip, operation_types o)
 {
@@ -945,9 +942,7 @@ static bool _equip_item(item_def *to_equip, operation_types o)
  *        choice of weapon (if auto_wield is false) or choose one by default.
  *      - SLOT_BARE_HANDS: equip nothing (unwielding current weapon, if any)
  */
-bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
-                  bool show_unwield_msg, bool show_wield_msg,
-                  bool adjust_time_taken)
+bool wield_weapon(bool auto_wield, int slot, bool adjust_time_taken)
 {
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
@@ -991,13 +986,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         else if (!to_wield->defined() || !item_is_wieldable(*to_wield))
             to_wield = nullptr;
     }
-    return _do_wield_weapon(to_wield, show_weff_messages, show_unwield_msg,
-                                            show_wield_msg, adjust_time_taken);
+    return _do_wield_weapon(to_wield, adjust_time_taken);
 }
 
-static bool _do_wield_weapon(item_def *to_wield, bool show_weff_messages,
-                  bool show_unwield_msg, bool show_wield_msg,
-                  bool adjust_time_taken)
+static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
 {
     // Reset the warning counter. We do this before the rewield check to
     // provide a (slightly hacky) way to let players reset this without
@@ -1045,16 +1037,13 @@ static bool _do_wield_weapon(item_def *to_wield, bool show_weff_messages,
             if (!_safe_to_remove_or_wear(*wpn, true))
                 return false;
 
-            if (!unwield_item(show_weff_messages))
+            if (!unwield_item())
                 return false;
 
-            if (show_unwield_msg)
-            {
 #ifdef USE_SOUND
-                parse_sound(WIELD_NOTHING_SOUND);
+            parse_sound(WIELD_NOTHING_SOUND);
 #endif
-                canned_msg(MSG_EMPTY_HANDED_NOW);
-            }
+            canned_msg(MSG_EMPTY_HANDED_NOW);
 
             // Switching to bare hands is extra fast.
             you.turn_is_over = true;
@@ -1108,7 +1097,7 @@ static bool _do_wield_weapon(item_def *to_wield, bool show_weff_messages,
     // Unwield any old weapon.
     if (you.weapon())
     {
-        if (unwield_item(show_weff_messages))
+        if (unwield_item())
         {
             // Enable skills so they can be re-disabled later
             update_can_currently_train();
@@ -1129,15 +1118,12 @@ static bool _do_wield_weapon(item_def *to_wield, bool show_weff_messages,
     // player chose something from the floor. So use item_slot from here on.
 
     // Go ahead and wield the weapon.
-    equip_item(EQ_WEAPON, item_slot, show_weff_messages);
+    equip_item(EQ_WEAPON, item_slot);
 
-    if (show_wield_msg)
-    {
 #ifdef USE_SOUND
-        parse_sound(WIELD_WEAPON_SOUND);
+    parse_sound(WIELD_WEAPON_SOUND);
 #endif
-        mprf_nocap("%s", you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
-    }
+    mprf_nocap("%s", you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
     check_item_hint(you.inv[item_slot], old_talents);
 
