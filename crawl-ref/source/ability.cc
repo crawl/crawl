@@ -399,9 +399,9 @@ static vector<ability_def> &_get_ability_list()
 
         // Okawaru
         { ABIL_OKAWARU_HEROISM, "Heroism",
-            2, 0, 1, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
+            2, 0, 3, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_OKAWARU_FINESSE, "Finesse",
-            5, 0, 3, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
+            5, 0, 5, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
         { ABIL_OKAWARU_DUEL, "Duel",
             7, 0, 10, LOS_MAX_RANGE, {fail_basis::invo, 80, 4, 20},
             abflag::target | abflag::not_self },
