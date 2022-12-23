@@ -1203,8 +1203,9 @@ static bool _is_duplicate_for_search(stash_search_result l,
 // Filter out useless results in search_stashes
 static bool _is_useless_result(const stash_search_result res)
 {
-    return res.item.defined() && is_useless_item(res.item, false) ||
-        feat_is_altar(res.feat) && !player_can_join_god(feat_altar_god(res.feat), false);
+    return res.item.defined() && is_useless_item(res.item, false)
+           || feat_is_altar(res.feat)
+              && !player_can_join_god(feat_altar_god(res.feat), false);
 }
 
 // helper for search_stashes
@@ -1462,7 +1463,8 @@ void StashTracker::search_stashes(string search_term)
     }
 
     dedup_results.erase(remove_if(dedup_results.begin(), dedup_results.end(),
-        _is_useless_result), dedup_results.end());
+                                  _is_useless_result),
+                        dedup_results.end());
 
     bool sort_by_dist = true;
     bool filter_useless = true;
