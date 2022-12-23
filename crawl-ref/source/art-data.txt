@@ -1205,7 +1205,7 @@ VALUE:    1000
 TILE:     urand_vitality
 
 NAME:     autumn katana
-INSCRIP:  vorpal, manifold assault
+INSCRIP:  manifold assault
 OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
 FALLBACK: OBJ_WEAPONS/WPN_DOUBLE_SWORD
 TYPE:     katana
