@@ -241,7 +241,6 @@
     Christopher Landry
     Lantier
     Maciej Lapinski
-    Nikolai Lavsky
     Lamil Lerran
     Jordan Lewis
     Sami Liedes
@@ -439,6 +438,7 @@ The Dungeon Crawl Stone Soup development team is:
     Pekka Lampila
     Raphaël Langella
     Nat Lanza
+    Nikolai Lavsky
     Jesse Luehrs
     Alan Malloy
     Shmuale Mark
