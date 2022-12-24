@@ -11,7 +11,9 @@
 using namespace ui;
 
 static vector<formatted_scroller*> open_scrollers;
+#ifdef USE_TILE_WEB
 static bool from_webtiles;
+#endif
 
 void formatted_scroller::add_formatted_string(const formatted_string& fs, bool new_line)
 {
@@ -176,11 +178,23 @@ bool formatted_scroller::process_key(int ch)
     }
 }
 
-void formatted_scroller::set_scroll(int y)
+// y: line to appear at top if the document is long enough. Go to bottom if not.
+// use_shade: Allow the top line to be partly shaded, where relevant.
+void formatted_scroller::scroll_to_line(int y, bool use_shade)
 {
+#ifdef USE_TILE_LOCAL
+    y *= tiles.get_crt_font()->char_height();
+    if (!use_shade)
+        y -= UI_SCROLLER_SHADE_SIZE/2; // Skip the shaded border at the top.
+#elif defined(USE_TILE_WEB)
+    if (!use_shade && y)
+        y--; // 1 line should be enough.
     if (from_webtiles)
         m_scroller->set_scroll(y);
     else
+#else
+    (void)use_shade;
+#endif
     {
         m_scroll = y;
         m_scroll_dirty = true;
@@ -194,7 +208,7 @@ void recv_formatted_scroller_scroll(int line)
         return;
     formatted_scroller *scroller = open_scrollers.back();
     from_webtiles = true;
-    scroller->set_scroll(line);
+    scroller->scroll_to_line(line);
     from_webtiles = false;
     // XXX: since the scroll event from webtiles is not delivered by the event
     // pumping loop in ui::pump_events, the UI system won't automatically draw

@@ -18,7 +18,8 @@ The contents of this text are:
                 name, remember_name, weapon, species, background, combo,
                 restart_after_game, restart_after_save, newgame_after_quit,
                 name_bypasses_menu, default_manual_training,
-                autopickup_starting_ammo, game_seed, pregen_dungeon
+                autopickup_starting_ammo, game_seed, pregen_dungeon,
+                suppress_startup_errors
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
                 sound_file_path, one_SDL_sound_channel
@@ -43,11 +44,11 @@ The contents of this text are:
                 scroll_margin, always_show_exclusions
 3-f     Travel and Exploration.
                 travel_delay, explore_delay, rest_delay, travel_avoid_terrain,
-                explore_greedy, explore_greedy_visit, explore_stop,
-                explore_stop_pickup_ignore, explore_wall_bias, travel_key_stop,
-                travel_one_unsafe_move, tc_reachable, tc_dangerous,
-                tc_disconnected, tc_excluded, tc_exclude_circle,
-                runrest_ignore_message, runrest_stop_message,
+                explore_greedy, explore_greedy_visit, explore_item_greed,
+                explore_stop, explore_stop_pickup_ignore, explore_wall_bias,
+                travel_key_stop, travel_one_unsafe_move, tc_reachable,
+                tc_dangerous, tc_disconnected, tc_excluded, tc_exclude_circle,
+                tc_forbidden, runrest_ignore_message, runrest_stop_message,
                 interrupt_<delay>, delay_safe_poison, runrest_ignore_monster,
                 rest_wait_both, rest_wait_ancestor, rest_wait_percent,
                 explore_auto_rest, auto_exclude, travel_open_doors
@@ -150,7 +151,7 @@ The contents of this text are:
                 mouse_input, wiz_mode, explore_mode, char_set, colour,
                 display_char, feature, mon_glyph, item_glyph,
                 use_fake_player_cursor, show_player_species,
-                use_modifier_prefix_keys, language, fake_lang,
+                use_modifier_prefix_keys, language, fake_lang, messaging
                 read_persist_options
 
 5-b     DOS and Windows.
@@ -459,6 +460,15 @@ pregen_dungeon = incremental
         level entry, as was the rule before 0.23. Dungeons will not be stable
         given a seed with this option.
 
+suppress_startup_errors = false
+        If this is false, and an error was detected as the game first started
+        (such as a mistake in a configuration file), bring up a screen before
+        loading to display these.
+
+        The main menu will contain a warning of errors regardless of this
+        setting, and it does not affect errors which are detected as a
+        character is loaded.
+
 2-  File System.
 ================
 
@@ -487,8 +497,11 @@ macro_dir = <path>
         It should end with the path delimiter. The default value for this
         is dependent on system and build type.
 
-sound ^= <regex>:<path to sound file>, <regex>:<path>,
+sounds_on = true
         (Requires "Sound support"; check your version info)
+        If true, plays sound effects in various situations.
+
+sound ^= <regex>:<path to sound file>, <regex>:<path>,
         (Ordered list option)
         Plays the sound file if a message contains regex. In case of
         multiple matching regexes, only the sound of the last regex
@@ -698,7 +711,7 @@ feature_item_highlight = reverse
         hidden by items. If you use this option, the item glyph(s) on the
         square are hidden by the feature symbol.
 
-trap_item_highlights = reverse
+trap_item_highlight = reverse
         Highlights traps that would otherwise be hidden by items. If you
         use this option, the item glyph(s) on the square are hidden by the trap
         symbol (^).
@@ -846,6 +859,11 @@ explore_greedy_visit += stacks
         artefacts: makes explore_greedy visit artefacts, even
         if not in a stack
 
+explore_item_greed = 10
+        Greedy exploration treats items as if they were this much closer (or
+        further away, if negative) when deciding whether to visit a square with
+        an item or to explore a new square.
+
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
         (List option)
@@ -927,7 +945,8 @@ tc_dangerous      = cyan
 tc_disconnected   = darkgrey
 tc_excluded       = lightmagenta
 tc_exclude_circle = red
-        The above five settle the colouring of the level map ('X').
+tc_forbidden      = lightcyan
+        The above six settle the colouring of the level map ('X').
         They are
           reachable: all squares safely reachable (without leaving the
                      level)
@@ -938,6 +957,8 @@ tc_exclude_circle = red
           excluded: the colour for the centre of travel exclusions ('e')
           excluded_circle: the colour for travel exclusions apart from
                            centre
+          forbidden: squares which cannot be reached without crossing excluded
+                     squares.
 
 runrest_ignore_message ^= <regex>, <regex>, ...
 runrest_stop_message ^= <regex>, <regex>, ...
@@ -1770,6 +1791,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
            pickup        (specific to pickup menus)
            shop          (shop menus)
            notes         (the ?: screen)
+           option        (the options menu - match option names but not values)
            resists       (the % screen)
            spell         (the Z and I screens)
            stash         (the results from Ctrl-F)
@@ -2888,6 +2910,10 @@ fake_lang = <lang1>[,<lang2>[,...]]
 
         Options are: (dwarven|jagerkin|kraut|runes|wide|grunt|butt:<n>)
         Experiment to find out what they do!
+
+messaging = true
+        If set to true, this allows you to receive DGL messages sent
+        by other players. (This setting only applies on the online servers).
 
 read_persist_options = false
         When set to true, the game will read additional options from

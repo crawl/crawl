@@ -19,6 +19,7 @@
 #include "describe.h"
 #include "env.h"
 #include "files.h"
+#include "game-options.h"
 #include "hints.h"
 #include "invent.h"
 #include "item-prop.h"
@@ -436,6 +437,10 @@ static help_file help_files[] =
     { "quickstart.txt",     '^', false },
     { "macros_guide.txt",  '~', false },
     { "options_guide.txt", '&', false },
+    { "arena.txt", CONTROL('A'), false }, // only in options menu.
+#ifdef WIZARD
+    { "fight_simulator.txt", CONTROL('F'), false }, // only in options menu.
+#endif // WIZARD
 #ifdef USE_TILE_LOCAL
     { "tiles_help.txt",    't', false },
 #endif
@@ -1360,6 +1365,14 @@ static int _get_help_section(int section, formatted_string &header_out, formatte
     return 0;
 }
 
+static formatted_string _get_help_section(int section)
+{
+    formatted_string header_ignored, text_out;
+    int scroll_ignored;
+    _get_help_section(section, header_ignored, text_out, scroll_ignored);
+    return text_out;
+}
+
 class help_popup : public formatted_scroller
 {
 public:
@@ -1371,13 +1384,6 @@ private:
     bool process_key(int ch) override
     {
         int key = toalower(ch);
-
-#ifdef USE_TILE_LOCAL
-        const int line_height = tiles.get_crt_font()->char_height();
-#else
-        const int line_height = 1;
-#endif
-
         int scroll, page;
         formatted_string header_text, help_text;
         switch (key)
@@ -1393,8 +1399,7 @@ private:
                     m_contents_dirty = true;
                     prev_page = page;
                 }
-                scroll = scroll ? (scroll-2)*line_height : 0;
-                set_scroll(scroll);
+                scroll_to_line(scroll ? scroll-2 : 0);
                 return true;
         }
 
@@ -1445,4 +1450,108 @@ void show_help(int section, string highlight_string)
     // handle the case where one of the special case help sections is triggered
     // from the help main menu.
     _show_help_special(key);
+}
+
+static void _find_help_in_file(game_options *opt, vector<GameOption*> &out,
+                               string subhead, int section, const char *pattern)
+{
+    GameOption *option;
+    char c[1];
+    int start, end, line = 0;
+    formatted_string help = _get_help_section(section);
+
+    for (auto text : help.ops)
+    {
+        auto t = text.text;
+        if (1 == sscanf(t.c_str(), pattern, &start, &end, c) && start != end
+            && (option = opt->option_from_name(t.substr(start, end-start)))
+            && !option->has_help())
+        {
+            if (!subhead.empty())
+                out.push_back(new GameOptionHeading(subhead));
+            subhead = "";
+            option->set_help(section, line);
+            out.push_back(option);
+        }
+        line++;
+    }
+}
+
+static void _find_help_in_guide(game_options *opt, vector<GameOption*> &out)
+{
+    int line = 0, section = '&', start, end;
+    GameOption* option;
+    char c[1], subsection;
+    formatted_string help = _get_help_section(section);
+    string head, subhead;
+    const char *pattern = "%n%*s%n %*[+-^=]%*[= ] %c";
+    for (auto text : help.ops)
+    {
+        auto t = text.text;
+        if (1 == sscanf(t.c_str(), pattern, &start, &end, c) && start != end
+            && (option = opt->option_from_name(t.substr(start, end-start)))
+            && !option->has_help())
+        {
+            if (!subhead.empty())
+            {
+                out.push_back(new GameOptionHeading(subhead));
+                subhead = "";
+            }
+            option->set_help(section, line);
+            out.push_back(option);
+        }
+        // Category titles start with "?-? Title"
+        else if (2 == sscanf(text.text.c_str(), "%*[01234567]-%c %n%*[^.]%n%c",
+                             &subsection, &start, &end, c))
+        {
+            if (' ' == subsection)
+                head = subhead = text.text.substr(start, end-start);
+            else
+                subhead = head + ": " + text.text.substr(start, end-start);
+        }
+        line++;
+    }
+}
+
+vector<GameOption*> game_options::get_sorted_options()
+{
+    if (!options_sorted.empty())
+        return options_sorted;
+
+    _find_help_in_guide(this, options_sorted); // options_guide.txt
+    _find_help_in_file(this, options_sorted, "Testing: Arena",
+                       CONTROL('A'), "*%*[ ]%n%*[^ :]%n:%c");
+#ifdef WIZARD
+    _find_help_in_file(this, options_sorted, "Testing: Fight Simulator",
+                       CONTROL('F'), "%n%*[^ :]%n%*[ :]%c");
+#endif
+
+    // List options which are in none of the above documents.
+    string subhead = "Undocumented options";
+    int line = 0, section = '&'; // Default values, so set_help() does nothing.
+    for (auto option : get_option_behaviour())
+    {
+        if (option->has_help())
+            continue;
+
+        if (!subhead.empty())
+        {
+            options_sorted.push_back(new GameOptionHeading(subhead));
+            subhead = "";
+        }
+        option->set_help(section, line);
+        options_sorted.push_back(option);
+    }
+
+    return options_sorted;
+}
+
+// This is a help browser with the "offset in a text file" form of help_popup
+// and the string keys of show_specific_help().
+void GameOption::show_help()
+{
+    formatted_scroller scr(FS_PREWRAPPED_TEXT);
+    scr.add_raw_text(_get_help_section(help_file), false);
+    scr.scroll_to_line(help_line, false);
+    scr.show();
 }

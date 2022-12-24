@@ -1956,6 +1956,8 @@ public:
             MEL_ITEM, 'S', CMD_SAVE_GAME_NOW, false));
         add_entry(new CmdMenuEntry("Generate and view character dump",
             MEL_ITEM, '#', CMD_SHOW_CHARACTER_DUMP));
+        add_entry(new CmdMenuEntry("Edit preferences",
+            MEL_ITEM, 'p', CMD_EDIT_PREFS));
 #ifdef USE_TILE_LOCAL
         add_entry(new CmdMenuEntry("Edit player tile",
             MEL_ITEM, '-', CMD_EDIT_PLAYER_TILE));
@@ -2078,6 +2080,8 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_PREV_CMD_AGAIN: _do_prev_cmd_again(); break;
     case CMD_MACRO_ADD:      macro_quick_add();    break;
     case CMD_MACRO_MENU:     macro_menu();    break;
+
+    case CMD_EDIT_PREFS:   edit_game_prefs(); break;
 
     // Toggle commands.
     case CMD_DISABLE_MORE: crawl_state.show_more_prompt = false; break;

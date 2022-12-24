@@ -341,7 +341,6 @@ public:
     vector<pair<int, int> > stat_colour;
     vector<int> enemy_hp_colour;
 
-    string map_file_name;   // name of mapping file to use
     vector<pair<text_pattern, bool> > force_autopickup;
     vector<text_pattern> note_monsters;  // Interesting monsters
     vector<text_pattern> note_messages;  // Interesting messages
@@ -659,6 +658,7 @@ public:
     {
         return option_behaviour;
     }
+    vector<GameOption*> get_sorted_options();
     void merge(const game_options &other);
     GameOption *option_from_name(string name) const
     {
@@ -726,7 +726,7 @@ private:
 
     static const string interrupt_prefix;
 
-    vector<GameOption*> option_behaviour;
+    vector<GameOption*> option_behaviour, options_sorted;
     map<string, GameOption*> options_by_name;
     const vector<GameOption*> build_options_list();
     map<string, GameOption*> build_options_map(const vector<GameOption*> &opts);

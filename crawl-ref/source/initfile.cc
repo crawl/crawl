@@ -30,6 +30,7 @@
 #include "chardump.h"
 #include "clua.h"
 #include "colour.h"
+#include "command.h"
 #include "defines.h"
 #include "delay.h"
 #include "describe.h"
@@ -47,6 +48,7 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
+#include "lookup-help.h"
 #include "macro.h"
 #include "mapdef.h"
 #include "maps.h"
@@ -127,6 +129,11 @@ static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
 {
     return l.first > r.first;
+}
+
+static void _dirty_prefs(game_options *caller)
+{
+    caller->prefs_dirty = true;
 }
 
 const vector<GameOption*> game_options::build_options_list()
@@ -276,10 +283,12 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
-        new BoolGameOption(SIMPLE_NAME(default_manual_training), false),
+        (new BoolGameOption(SIMPLE_NAME(default_manual_training), false))
+            ->set_on_change(_dirty_prefs),
         new BoolGameOption(SIMPLE_NAME(one_SDL_sound_channel), false),
         new BoolGameOption(SIMPLE_NAME(sounds_on), true),
-        new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false),
+        (new BoolGameOption(SIMPLE_NAME(quiver_menu_focus), false))
+            ->set_on_change(_dirty_prefs),
         new BoolGameOption(SIMPLE_NAME(launcher_autoquiver), true),
         new ColourGameOption(SIMPLE_NAME(tc_reachable), BLUE),
         new ColourGameOption(SIMPLE_NAME(tc_excluded), LIGHTMAGENTA),
@@ -395,7 +404,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
         new BoolGameOption(SIMPLE_NAME(restart_after_save), true),
         new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),
-        new StringGameOption(SIMPLE_NAME(map_file_name), ""),
         new StringGameOption(SIMPLE_NAME(morgue_dir),
                              _get_save_path("morgue/")),
 #endif
@@ -489,19 +497,15 @@ const vector<GameOption*> game_options::build_options_list()
              {"false", SCREENMODE_WINDOW},
              {"maybe", SCREENMODE_AUTO},
              {"auto", SCREENMODE_AUTO}}, true),
+#endif
+#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
         new MultipleChoiceGameOption<maybe_bool>(
             SIMPLE_NAME(tile_use_small_layout),
             MB_MAYBE,
-#ifdef TOUCH_UI
             {{"true", MB_TRUE},
              {"false", MB_FALSE},
              {"maybe", MB_MAYBE},
              {"auto", MB_MAYBE}}, true
-#else
-            // this option is unsupported, undocumented, and fairly crashy.
-            // XX do something about this.
-            {}
-#endif
             ),
 #endif
 #ifdef USE_TILE_WEB
@@ -518,16 +522,20 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
         new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
-        new BoolGameOption(SIMPLE_NAME(action_panel_show), true),
+        (new BoolGameOption(SIMPLE_NAME(action_panel_show), true))
+            ->set_on_change(_dirty_prefs),
         new ListGameOption<text_pattern>(SIMPLE_NAME(action_panel_filter)),
         new BoolGameOption(SIMPLE_NAME(action_panel_show_unidentified), false),
         new StringGameOption(SIMPLE_NAME(action_panel_font_family),
                              "monospace"),
-        new IntGameOption(SIMPLE_NAME(action_panel_font_size), 16),
-        new MultipleChoiceGameOption<string>(
+        (new IntGameOption(SIMPLE_NAME(action_panel_font_size), 16))
+            ->set_on_change(_dirty_prefs),
+        (new MultipleChoiceGameOption<string>(
             SIMPLE_NAME(action_panel_orientation), "horizontal",
-            {{"horizontal", "horizontal"}, {"vertical", "vertical"}}),
-        new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600),
+            {{"horizontal", "horizontal"}, {"vertical", "vertical"}}))
+            ->set_on_change(_dirty_prefs),
+        (new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600))
+            ->set_on_change(_dirty_prefs),
         new BoolGameOption(SIMPLE_NAME(action_panel_glyphs), false),
 #endif
 #ifdef USE_FT
@@ -535,39 +543,26 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
         // see post-processing in fixup_options that handles the interaction
         // with CLOs for the following two options:
+#if !defined(DGAMELAUNCH) && defined(WIZARD)
         new MultipleChoiceGameOption<wizard_option_type>(
             SIMPLE_NAME(wiz_mode),
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            WIZ_NEVER,
-#elif defined(DEBUG_DIAGNOSTICS)
-            WIZ_YES, // default debug build games to wizmode. Can be overridden in rc
-#else
+# ifdef DEBUG_DIAGNOSTICS
+            WIZ_YES, // default debug build games to wizmode. Can be set in rc
+# else
             WIZ_NO,
-#endif
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            {}, // setting in rc is disabled
-#else
+# endif
             {{"true", WIZ_YES},
              {"false", WIZ_NO},
              {"never", WIZ_NEVER}},
-#endif
              true),
         new MultipleChoiceGameOption<wizard_option_type>(
             SIMPLE_NAME(explore_mode),
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            WIZ_NEVER,
-#else
             WIZ_NO,
-#endif
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            {}, // setting in rc is disabled
-#else
             {{"true", WIZ_YES},
              {"false", WIZ_NO},
              {"never", WIZ_NEVER}},
-#endif
              true),
-
+#endif
 #ifdef WIZARD
         new BoolGameOption(SIMPLE_NAME(fsim_csv), false),
         new ListGameOption<string>(SIMPLE_NAME(fsim_scale)),
@@ -1183,7 +1178,10 @@ void game_options::reset_options()
     // XXX: do we really need to rebuild the list and map every time?
     // Will they ever change within a single execution of Crawl?
     // GameOption::value's value will change of course, but not the reference.
-    deleteAll(option_behaviour);
+    if (options_sorted.size())
+        deleteAll(options_sorted);
+    else
+        deleteAll(option_behaviour);
     option_behaviour = build_options_list();
     options_by_name = build_options_map(option_behaviour);
     for (GameOption* option : option_behaviour)
@@ -1392,6 +1390,14 @@ void game_options::reset_options()
     kill_map[KC_YOU] = KC_YOU;
     kill_map[KC_FRIENDLY] = KC_FRIENDLY;
     kill_map[KC_OTHER] = KC_OTHER;
+
+    // Some options can be changed in some builds, but not others.
+#if defined(USE_TILE_LOCAL) && !defined(TOUCH_UI)
+    tile_use_small_layout = MB_MAYBE;
+#endif
+#if defined(DGAMELAUNCH) || !defined(WIZARD)
+    explore_mode = wiz_mode = WIZ_NEVER;
+#endif
 
     // Forget any files we remembered as included.
     included.clear();
@@ -2073,23 +2079,55 @@ newgame_def read_startup_prefs()
  */
 void game_options::write_prefs(FILE *f)
 {
-    // TODO: generalize, probably some polymorphic functions on GameOption
-    // classes. Not worth doing until more stuff is serialized though...
-    fprintf(f, "default_manual_training = %s\n",
-                        default_manual_training ? "yes" : "no");
-    fprintf(f, "quiver_menu_focus = %s\n",
-                        quiver_menu_focus ? "true" : "false");
+    const auto list =
+    {
+        "default_manual_training", "quiver_menu_focus",
 #ifdef USE_TILE_WEB
-    fprintf(f, "action_panel_orientation = %s\n",
-                        action_panel_orientation.c_str());
-    fprintf(f, "action_panel_show = %s\n",
-                        action_panel_show ? "yes" : "no");
-    fprintf(f, "action_panel_scale = %d\n", action_panel_scale);
-    fprintf(f, "action_panel_font_size = %d\n", action_panel_font_size);
+        "action_panel_orientation", "action_panel_show",
+        "action_panel_scale", "action_panel_font_size",
 #endif
+    };
+
+    for (const auto key : list)
+    {
+        ASSERT(map_find(options_by_name, key));
+        const GameOption &option = **map_find(options_by_name, key);
+        fprintf(f, "%s = %s\n", option.name().c_str(), option.str().c_str());
+    }
+
     // TODO: this variable is extremely coarse, maybe something better? Per
     // opts setting? comparison of serializable values like for newgame_def?
     prefs_dirty = false;
+}
+
+// Save all preferences to the default preference file.
+static void _save_preferences()
+{
+    string fn = find_crawlrc();
+    if (!yesno(make_stringf("Save to '%s'?", fn.c_str()).c_str(), true, 'y'))
+        return;
+
+    const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
+                             "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
+    FILE *f = fopen_u(fn.c_str(), "a");
+    if (f)
+    {
+        auto date0 = time(nullptr);
+        auto date = TIME_FN(&date0);
+        fprintf(f, "\n# Options saved for %s at %02d:%02d:%02d on %d %s %d.\n",
+                you.your_name.c_str(), date->tm_hour, date->tm_min,
+                date->tm_sec, date->tm_mday, mons[date->tm_mon],
+                1900+date->tm_year);
+        for (auto g : Options.get_sorted_options())
+            if (!g->name().empty()) // not GameOptionHeading
+                fprintf(f, "%s = %s\n", g->name().c_str(), g->str().c_str());
+
+        fputs("# End of saved options.\n", f);
+        if (!fclose(f))
+            return;
+    }
+    auto msg = make_stringf("Failed to save options to '%s'.", fn.c_str());
+    show_type_response(msg);
 }
 
 /**
@@ -2209,7 +2247,10 @@ game_options::game_options()
 
 game_options::~game_options()
 {
-    deleteAll(option_behaviour);
+    if (options_sorted.size())
+        deleteAll(options_sorted);
+    else
+        deleteAll(option_behaviour);
 }
 
 void game_options::reset_aliases(bool clear)
@@ -5682,6 +5723,187 @@ bool parse_args(int argc, char **argv, bool rc_only)
     }
 
     return true;
+}
+
+// Like MenuEntry, but only parse menu colours for the first _highlight_until
+// characters of each line (in this case, the option name but not its value).
+class EGP_MenuEntry : public MenuEntry
+{
+public:
+    EGP_MenuEntry(const string &txt = string(), MenuEntryLevel lev = MEL_ITEM,
+                  int qty = 0, int hotk = 0, int _highlight_until = INT_MAX)
+        : MenuEntry(txt, lev, qty, hotk), highlight_until(_highlight_until) { }
+
+    int highlight_colour(bool) const override
+    {
+        return menu_colour(text.substr(0, highlight_until), "", tag);
+    }
+private:
+    int highlight_until;
+};
+
+class EGP_Menu : public Menu
+{
+public:
+    EGP_Menu(int _flags) : Menu(_flags)
+                           { set_title(new MenuEntry(base_title, MEL_TITLE));}
+
+    ~EGP_Menu()
+    {
+        deleteAll(all_items);
+        items.clear();
+    }
+
+    void add_entry_all(MenuEntry *entry)
+    {
+        add_entry(entry);
+        all_items.push_back(entry);
+    }
+
+    void filter_items()
+    {
+        string prompt = "Search for what? (regex, leave blank to show all)";
+        char select[1024];
+        auto old_search_pat = search_pat;
+        int new_hovered = -1;
+        vector<MenuEntry*> chosen_items;
+        do
+        {
+            if (msgwin_get_line(prompt, select, sizeof(select), nullptr,
+                                       search_pat.tostring())
+                || old_search_pat.tostring() == select)
+            {
+                search_pat = old_search_pat;
+                return;
+            }
+            search_pat = select;
+            MenuEntry *heading = nullptr;
+            bool found_hover = false;
+            int i = 0;
+            for (auto entry : all_items)
+            {
+                if (entry == items[last_hovered])
+                    found_hover = true;
+                auto g = static_cast<GameOption*>(entry->data);
+                if (!g)
+                {
+                    heading = entry;
+                    continue;
+                }
+                if (!search_pat.empty() && !search_pat.matches(g->name()))
+                    continue;
+                if (heading)
+                    chosen_items.emplace_back(heading);
+                heading = nullptr;
+                if (found_hover && new_hovered < 0)
+                    new_hovered = chosen_items.size();
+                entry->hotkeys[0] = index_to_letter(i);
+                chosen_items.emplace_back(entry);
+                i = (i+1)%52;
+            }
+            if (chosen_items.empty())
+                show_type_response("No option names match.");
+        }
+        while (chosen_items.empty());
+
+        items = chosen_items;
+        string new_title = base_title;
+        if (!search_pat.empty())
+        {
+            string search = search_pat.tostring();
+            if (search.length() > 42)
+                search = search.substr(39)+"...";
+            search = replace_all(search, "<", "<<");
+            new_title += " <h>(Matches \""+search+"\")</h>";
+        }
+        set_title(new MenuEntry(new_title, MEL_TITLE));
+        reset();
+        update_menu(true);
+        if (new_hovered < 0)
+            set_hovered(all_items.size()-1);
+        else
+            set_hovered(new_hovered);
+    }
+
+    string get_keyhelp(bool) const override
+    {
+        return "<lightgrey>[<w>Up</w>|<w>Down</w>|<w>PgUp</w>|<w><<</w>"
+               "|<w>PgDn</w>|<w>></w>] select "
+               "[<w>Esc</w>] close "
+               "[<w>Ctrl-f</w>] find "
+               "[<w>Ctrl-s</w>] save "
+               "[<w>?</w>] help</lightgrey>";
+    }
+    int pre_process(int key) override
+    {
+        if (CONTROL('F') == key)
+            filter_items();
+        else if ('?' == key)
+            (static_cast<GameOption*>(items[last_hovered]->data))->show_help();
+        else if (CONTROL('S') == key)
+            _save_preferences();
+        else
+            return key;
+        return CK_NO_KEY;
+    }
+
+private:
+
+    text_pattern search_pat;
+    vector<MenuEntry*> all_items;
+    string base_title = "<w>Select a preference to set.</w>";
+};
+
+static string _option_line(const GameOption *option, int name_len, int text_len)
+{
+    auto name0 = option->name(), value0 = option->str();
+    if (static_cast<unsigned>(text_len) < value0.size())
+        value0.erase(0, value0.size()-text_len+3).insert(0, "...");
+    value0 = replace_all(value0, "<", "<<");
+    auto name = name0.c_str(), value = value0.c_str();
+    return make_stringf("%-*.*s%s", name_len, name_len, name, value);
+}
+
+static EGP_MenuEntry *_game_prefs_line(GameOption *option, int &index)
+{
+    if (option->name().empty())
+        return new EGP_MenuEntry(option->str(), MEL_SUBTITLE);
+
+    const char letter = index_to_letter(index);
+    index = (index+1)%52;
+    auto text = _option_line(option, 36, 79-36-4);
+    auto *entry = new EGP_MenuEntry(text, MEL_ITEM, 1, letter, 36);
+    entry->data = option;
+    entry->on_select = [entry](const MenuEntry&)
+    {
+        GameOption *opt = static_cast<GameOption*>(entry->data);
+        if (opt->load_from_UI())
+        {
+            entry->text = _option_line(opt, 36, 79-36-4);
+            opt->on_change(&Options);
+        }
+        return true;
+    };
+    return entry;
+}
+
+// Show (and perhaps edit) options for the game.
+void edit_game_prefs()
+{
+    auto list = Options.get_sorted_options();
+    string selected;
+
+    // The caller should remove any user-provided formatting.
+    EGP_Menu menu(MF_SINGLESELECT | MF_ARROWS_SELECT
+                  | MF_ALLOW_FORMATTING | MF_INIT_HOVER);
+    menu.set_tag("option");
+
+    int i = 0;
+    for (const auto option : list)
+        menu.add_entry_all(_game_prefs_line(option, i));
+
+    menu.set_hovered(0);
+    menu.show();
 }
 
 ///////////////////////////////////////////////////////////////////////

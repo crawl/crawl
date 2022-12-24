@@ -161,6 +161,7 @@ enum command_type
 
     CMD_SHOW_CHARACTER_DUMP,
     CMD_GAME_MENU,
+    CMD_EDIT_PREFS,
 #ifdef TARGET_OS_MACOSX
     CMD_REVEAL_OPTIONS,
 #endif

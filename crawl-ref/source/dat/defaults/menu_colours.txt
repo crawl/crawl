@@ -8,18 +8,18 @@ menu += darkgrey:(melded)
 menu += darkgrey:(inert)
 
 # Bad items
-menu += lightred:.*bad_item.*
+menu += lightred:.* bad_item.*
 
 # Useless items, comes here to override artefacts etc.
-menu += darkgrey:.*useless_item.*
+menu += darkgrey:.* useless_item.*
 
 # Items disliked by your god.
-menu += $forbidden:.*forbidden.*
+menu += $forbidden:.* forbidden.*
 
 # Handle cursed and equipped items early to override other colour settings.
-menu += lightred:.*equipped.* cursed
+menu += lightred:.* equipped.*cursed
 menu += red: (a|the) cursed
-menu += inventory:lightgreen:.*equipped.*
+menu += inventory:lightgreen:.* equipped.*
 
 # Important game items
 #
@@ -28,32 +28,32 @@ menu += lightmagenta:.*orb.*Zot
 
 # Artefacts
 #
-menu += lightcyan:.*unrand.*
-menu += white:.*artefact.*
+menu += lightcyan:.* unrand.*
+menu += white:.* artefact.*
 
-#menu += white:.*identified.*artefact.*
-#menu += lightblue:.*unidentified.*artefact.*
+#menu += white:.*identified.* artefact.*
+#menu += lightblue:.*unidentified.* artefact.*
 
 # Possible egos
-menu += lightblue:^unidentified .*weapon.*(runed|glowing)
-menu += lightblue:^unidentified .*armour.*(runed|glowing|embroidered|shiny|dyed)
+menu += lightblue:^unidentified.* weapon.*(runed|glowing)
+menu += lightblue:^unidentified.* armour.*(runed|glowing|embroidered|shiny|dyed)
 
 # Enchanté
-menu += green:enchanted
+menu += green: enchanted
 menu += green:staff of
-menu += green:ego
+menu += green: ego
 
 # Emergency items
-menu += yellow:.*emergency_item.*
+menu += yellow:.* emergency_item.*
 
 # Good items
-menu += cyan:.*good_item.*
+menu += cyan:.* good_item.*
 
 # Dangerous (but still useful) items
-menu += $dangerous:.*dangerous_item.*
+menu += $dangerous:.* dangerous_item.*
 
 # Defaults for normal items
-menu += lightblue:unidentified.*(potion|scroll|wand|jewellery|magical staff)
+menu += lightblue:unidentified.* (potion|scroll|wand|jewellery|magical staff)
 
 
 # Colouring of autoinscribed god gifts
