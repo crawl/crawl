@@ -2792,7 +2792,7 @@ static string _no_items_reason(object_selector type, bool check_floor = false)
     return "";
 }
 
-string _general_cannot_read_reason()
+static string _general_cannot_read_reason()
 {
     // general checks
     if (player_in_branch(BRANCH_GEHENNA))
