@@ -250,3 +250,4 @@ icon.png
 
 # executable files for i18n_tests
 /source/*-test
+/source/check-regex-rules
