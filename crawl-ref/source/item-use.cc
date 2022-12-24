@@ -88,7 +88,6 @@ class UseItemMenu : public InvMenu
     bool examine_index(int i) override;
     bool cycle_mode(bool forward) override;
     string get_keyhelp(bool scrollable) const override;
-
     bool skip_process_command(int keyin) override
     {
         // override superclass behavior for everything except id menu
@@ -117,6 +116,10 @@ public:
     bool cycle_headers(bool=true) override;
 
     bool empty_check() const;
+    bool show_unarmed() const
+    {
+        return oper == OPER_WIELD || oper == OPER_EQUIP;
+    }
 
 private:
     MenuEntry *inv_header;
@@ -128,6 +131,8 @@ static string _default_use_title(operation_types oper)
 {
     switch (oper)
     {
+    case OPER_EQUIP:
+        return "Equip which item?";
     case OPER_WIELD:
         return "Wield which item (- for none)?";
     case OPER_WEAR:
@@ -145,10 +150,12 @@ static string _default_use_title(operation_types oper)
     }
 }
 
+// XX code dup with invent.cc, _operation_verb
 static string _oper_name(operation_types oper)
 {
     switch (oper)
     {
+    case OPER_EQUIP: return "equip";
     case OPER_WIELD: return "wield";
     case OPER_WEAR:  return "wear";
     case OPER_PUTON: return "put on";
@@ -174,6 +181,8 @@ static int _default_osel(operation_types oper)
         return OBJ_POTIONS;
     case OPER_READ:
         return OBJ_SCROLLS;
+    case OPER_EQUIP:
+        return OSEL_EQUIPABLE;
     default:
         return OSEL_ANY; // buggy?
     }
@@ -181,7 +190,7 @@ static int _default_osel(operation_types oper)
 
 static vector<operation_types> _oper_to_mode(operation_types o)
 {
-    static const vector<operation_types> wearables = {OPER_WIELD, OPER_WEAR, OPER_PUTON};
+    static const vector<operation_types> wearables = {OPER_EQUIP, OPER_WIELD, OPER_WEAR, OPER_PUTON};
     static const vector<operation_types> usables = {OPER_READ, OPER_QUAFF};
 
     // return a copy
@@ -278,6 +287,7 @@ UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
     init_modes();
     populate_list();
     populate_menu();
+    // for wield in particular:
     // start hover on wielded item, if there is one, otherwise on -
     if (oper == OPER_WIELD && item_inv.size() > 0 && you.weapon())
         set_hovered(1);
@@ -285,14 +295,15 @@ UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
 
 bool UseItemMenu::populate_list(bool check_only)
 {
-    if (check_only && oper == OPER_WIELD)
+    if (check_only && show_unarmed())
         return true; // any char can go unarmed
 
     // Load inv items first
     for (const auto &item : you.inv)
     {
         if (item.defined()
-            && (display_all || item_is_selected(item, item_type_filter)))
+            && (display_all && oper != OPER_EQUIP
+                || item_is_selected(item, item_type_filter)))
         {
             if (check_only)
                 return true;
@@ -312,8 +323,11 @@ bool UseItemMenu::populate_list(bool check_only)
         {
             continue;
         }
-        if (!display_all && !item_is_selected(*it, item_type_filter))
+        if ((!display_all || oper == OPER_EQUIP)
+            && !item_is_selected(*it, item_type_filter))
+        {
             continue;
+        }
         if (check_only)
             return true;
         item_floor.push_back(it);
@@ -325,7 +339,7 @@ bool UseItemMenu::populate_list(bool check_only)
 bool UseItemMenu::empty_check() const
 {
     // (if choosing weapons, then bare hands are always a possibility)
-    if (oper != OPER_WIELD && !any_items_of_type(item_type_filter, -1, true))
+    if (!show_unarmed() && !any_items_of_type(item_type_filter, -1, true))
     {
         mprf(MSGCH_PROMPT, "%s",
             no_selectables_message(item_type_filter).c_str());
@@ -355,7 +369,7 @@ void UseItemMenu::populate_menu()
 
     // Entry for unarmed. Hotkey works for either subsection, though selecting
     // it (currently) enables the inv section.
-    if (oper == OPER_WIELD)
+    if (show_unarmed())
     {
         string hands_string = you.unarmed_attack_name("Unarmed");
         if (!you.weapon())
@@ -425,7 +439,7 @@ void UseItemMenu::populate_menu()
     if (last_hovered >= 0 && !item_floor.empty() && !item_inv.empty())
     {
         if (is_inventory && last_hovered > last_inv_pos)
-            set_hovered(oper == OPER_WIELD ? 1 : 0);
+            set_hovered(show_unarmed() ? 1 : 0);
         else if (!is_inventory && last_hovered <= last_inv_pos)
             set_hovered(last_inv_pos + 1);
     }
@@ -434,7 +448,7 @@ void UseItemMenu::populate_menu()
 void UseItemMenu::update_sections()
 {
     // never disable the unwield button
-    int i = oper == OPER_WIELD ? 1 : 0;
+    int i = show_unarmed() ? 1 : 0;
     for (; i <= last_inv_pos; i++)
         if (items[i]->level == MEL_ITEM)
             items[i]->set_enabled(is_inventory);
@@ -461,9 +475,7 @@ void UseItemMenu::update_sections()
         {
             floor_header->text += make_stringf(" (%s to %s)",
                     menu_keyhelp_cmd(CMD_MENU_CYCLE_HEADERS).c_str(),
-                        (oper == OPER_WEAR ? "wear"
-                        : oper == OPER_WIELD ? "wield"
-                        : "use"));
+                        _oper_name(oper).c_str());
         }
         else if (is_inventory)
             floor_header->text += cycle_hint;
@@ -545,7 +557,7 @@ void UseItemMenu::set_hovered(int hovered, bool force)
 
 bool UseItemMenu::examine_index(int i)
 {
-    if (oper == OPER_WIELD && i == 0)
+    if (show_unarmed() && i == 0)
         return true; // no description implemented
     else if (is_inventory)
         return InvMenu::examine_index(i);
@@ -580,8 +592,11 @@ string UseItemMenu::get_keyhelp(bool) const
     }
 
     // TODO: show cycle mode information, once this feature is more baked
-    r += "[<w>*</w>] ";
-    r += (display_all ? "show appropriate" : "show all");
+    if (oper != OPER_EQUIP)
+    {
+        r += "[<w>*</w>] ";
+        r += (display_all ? "show appropriate" : "show all");
+    }
     return r;
 }
 
@@ -589,7 +604,7 @@ bool UseItemMenu::process_key(int key)
 {
     // TODO: should check inscriptions here
     if (isadigit(key)
-        || key == '-' && oper == OPER_WIELD)
+        || key == '-' && show_unarmed())
     {
         lastch = key;
         return false;
@@ -617,6 +632,127 @@ bool UseItemMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
+operation_types _item_to_oper(item_def *target)
+{
+    if (!target)
+        return OPER_WIELD; // unwield
+    switch (target->base_type)
+    {
+    case OBJ_POTIONS:   return OPER_QUAFF;
+    case OBJ_SCROLLS:   return OPER_READ;
+    case OBJ_ARMOUR:    return OPER_WEAR;
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:    return OPER_WIELD;
+    case OBJ_JEWELLERY: return OPER_PUTON;
+    default:            return OPER_NONE;
+    }
+}
+
+static bool _can_generically_use_armour(bool wear=true)
+{
+    if (you.berserk())
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return false;
+    }
+
+    if (you.has_mutation(MUT_NO_ARMOUR))
+    {
+        if (wear)
+            mprf("You can't wear anything.");
+        else
+        {
+            mprf("You can't remove your %s, sorry.",
+                species::skin_name(you.species).c_str());
+        }
+        return false;
+    }
+
+    if (!form_can_wear())
+    {
+        mprf("You can't %s anything in your present form.",
+            wear ? "wear" : "remove");
+        return false;
+    }
+
+    return true;
+}
+
+static bool _can_generically_use(operation_types oper)
+{
+    // check preconditions
+    // XX should this be part of the menu?
+    string err;
+    switch (oper)
+    {
+    case OPER_QUAFF:
+        err = cannot_drink_item_reason();
+        break;
+    case OPER_READ:
+        err = cannot_read_item_reason();
+        break;
+    case OPER_WEAR:
+        if (!_can_generically_use_armour())
+            return false;
+        break;
+    case OPER_WIELD:
+        if (!can_wield(nullptr, true, false))
+            return false;
+        break;
+    case OPER_PUTON:
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return false;
+        }
+        break;
+    default:
+        break;
+    }
+
+    if (!err.empty())
+    {
+        mpr(err);
+        return false;
+    }
+    return true;
+}
+
+static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken=true);
+static bool _do_wear_armour(item_def *to_wear);
+
+bool use_an_item(operation_types oper, item_def *target)
+{
+    if (!_can_generically_use(oper))
+        return false;
+
+    if (!target)
+    {
+        oper = use_an_item_menu(target, oper);
+        if (oper == OPER_NONE)
+            return false; // abort menu
+        if (oper == OPER_EQUIP)
+            oper = _item_to_oper(target);
+    }
+    ASSERT(oper == OPER_WIELD || target);
+    // now we have an item and an oper: what to do with the item?
+    switch (oper)
+    {
+    case OPER_QUAFF:
+        return drink(target);
+    case OPER_READ:
+        return read(target);
+    case OPER_WIELD:
+        return _do_wield_weapon(target);
+    case OPER_WEAR:
+        return _do_wear_armour(target);
+    case OPER_PUTON:
+        return puton_ring(*target);
+    default:
+        return false; // or ASSERT?
+    }
+}
+
 /**
  * Prompt use of an item from either player inventory or the floor.
  *
@@ -639,7 +775,7 @@ bool UseItemMenu::process_key(int key)
  * @return an operation to apply to the chosen item, OPER_NONE if the menu
  *         was aborted
  */
-operation_types use_an_item(item_def *&target, operation_types oper, int item_type,
+operation_types use_an_item_menu(item_def *&target, operation_types oper, int item_type,
                       const char* prompt, function<bool ()> allowcancel)
 {
     UseItemMenu menu(oper, item_type, prompt);
@@ -679,7 +815,7 @@ operation_types use_an_item(item_def *&target, operation_types oper, int item_ty
             choice_made = true;
             tmp_tgt = const_cast<item_def*>(menu.item_floor[0]);
         }
-        else if (keyin == '-' && menu.oper == OPER_WIELD)
+        else if (keyin == '-' && menu.show_unarmed())
         {
             choice_made = true;
             tmp_tgt = nullptr;
@@ -716,7 +852,7 @@ operation_types use_an_item(item_def *&target, operation_types oper, int item_ty
     if (choice_made)
         target = tmp_tgt;
 
-    ASSERT(!choice_made || target || menu.oper == OPER_WIELD);
+    ASSERT(!choice_made || target || menu.show_unarmed());
     if (choice_made)
         return menu.oper;
     else
@@ -911,27 +1047,6 @@ static int _get_item_slot_maybe_with_move(const item_def &item)
     return ret;
 }
 
-static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken=true);
-static bool _do_wear_armour(item_def *to_wear);
-
-static bool _equip_item(item_def *to_equip, operation_types o)
-{
-    // TODO: refactor this
-    if (to_equip == nullptr && o == OPER_WIELD)
-        return wield_weapon(SLOT_BARE_HANDS);
-
-    ASSERT(to_equip);
-
-    if (o == OPER_WIELD)
-        return _do_wield_weapon(to_equip);
-    else if (o == OPER_WEAR)
-        return _do_wear_armour(to_equip);
-    else if (o == OPER_PUTON)
-        return puton_ring(*to_equip);
-    else
-        return false; // or ASSERT?
-}
-
 bool auto_wield(bool adjust_time_taken)
 {
     // Abort immediately if there's some condition that could prevent wielding
@@ -964,26 +1079,14 @@ bool auto_wield(bool adjust_time_taken)
  */
 bool wield_weapon(int slot, bool adjust_time_taken)
 {
+    ASSERT(slot == SLOT_BARE_HANDS || slot >= 0 && slot < ENDOFPACK);
+
     // Abort immediately if there's some condition that could prevent wielding
     // weapons.
     if (!can_wield(nullptr, true, false, slot == SLOT_BARE_HANDS))
         return false;
 
-    item_def *to_wield = nullptr;
-
-    if (slot == SLOT_BARE_HANDS)
-        to_wield = nullptr;
-    else if (slot >= 0)
-        to_wield = &you.inv[slot];
-    else
-    {
-        // no slot provided, prompt the player
-        operation_types o = use_an_item(to_wield, OPER_WIELD);
-        if (o == OPER_NONE)
-            return false;
-        else if (o != OPER_WIELD)
-            return _equip_item(to_wield, o);
-    }
+    item_def *to_wield = slot == SLOT_BARE_HANDS ? nullptr : &you.inv[slot];
 
     // If the swap slot has a bad or invalid item in it, the
     // swap will be to bare hands.
@@ -1456,47 +1559,18 @@ static bool _can_equip_armour(const item_def &item)
 // prompt for a choice of item, then try to wear it).
 bool wear_armour(int item)
 {
-    // Before (possibly) prompting for which item to wear, check for some
-    // conditions that would make it impossible to wear any type of armour.
-    // TODO: perhaps also worth checking here whether all available armour slots
-    // are cursed. Same with jewellery.
-    if (you.has_mutation(MUT_NO_ARMOUR))
-    {
-        mpr("You can't wear anything.");
-        return false;
-    }
-
-    if (!form_can_wear())
-    {
-        mpr("You can't wear anything in your present form.");
-        return false;
-    }
-
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
-
-    item_def *to_wear = nullptr;
-
-    if (item == -1)
-    {
-        auto o = use_an_item(to_wear, OPER_WEAR);
-        if (o == OPER_NONE)
-            return false;
-        else if (o != OPER_WEAR)
-            return _equip_item(to_wear, o);
-    }
-    else
-        to_wear = &you.inv[item];
-
-    return _do_wear_armour(to_wear);
+    // TODO: remove?
+    ASSERT_RANGE(item, 0, ENDOFPACK);
+    return _do_wear_armour(&you.inv[item]);
 }
 
 static bool _do_wear_armour(item_def *to_wear)
 {
     ASSERT(to_wear);
+
+    if (!_can_generically_use_armour())
+        return false;
+
     // First, let's check for any conditions that would make it impossible to
     // equip the given item
     if (!to_wear->defined())
@@ -1572,33 +1646,9 @@ static bool _do_wear_armour(item_def *to_wear)
     return true;
 }
 
-static bool _can_generically_takeoff_armour()
-{
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
-
-    if (you.has_mutation(MUT_NO_ARMOUR))
-    {
-        mprf("You can't remove your %s, sorry.",
-             species::skin_name(you.species).c_str());
-        return false;
-    }
-
-    if (!form_can_wear())
-    {
-        mpr("You can't wear or remove anything in your present form.");
-        return false;
-    }
-
-    return true;
-}
-
 static bool _can_takeoff_armour(int item)
 {
-    if (!_can_generically_takeoff_armour())
+    if (!_can_generically_use_armour(false))
         return false;
 
     item_def& invitem = you.inv[item];
@@ -1641,7 +1691,7 @@ static bool _can_takeoff_armour(int item)
 bool takeoff_armour(int item, bool noask)
 {
     // We want to check non-item depedent stuff before prompting for the actual item
-    if (!_can_generically_takeoff_armour())
+    if (!_can_generically_use_armour(false))
         return false;
 
     if (item == -1
@@ -2380,11 +2430,9 @@ static bool _puton_ring(item_def &item, bool prompt_slot,
 bool puton_ring(item_def &to_puton, bool allow_prompt,
                 bool check_for_inscriptions, bool noask)
 {
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
+    if (!_can_generically_use(OPER_PUTON))
         return false;
-    }
+
     if (!to_puton.defined())
     {
         mpr("You don't have any such object.");
@@ -2405,27 +2453,6 @@ bool puton_ring(item_def &to_puton, bool allow_prompt,
         return _puton_amulet(to_puton, check_for_inscriptions);
     const bool prompt = allow_prompt && Options.jewellery_prompt;
     return _puton_ring(to_puton, prompt, check_for_inscriptions, noask);
-}
-
-// Wraps version of puton_ring with item_def param. If slot is -1, prompt for
-// which item to put on; otherwise, pass on the item in inventory slot
-bool puton_ring(int slot, bool allow_prompt, bool check_for_inscriptions,
-                bool noask)
-{
-    item_def *to_puton_ptr = nullptr;
-    if (slot == -1)
-    {
-        auto o = use_an_item(to_puton_ptr, OPER_PUTON);
-        if (o == OPER_NONE)
-            return false;
-        else if (o != OPER_PUTON)
-            return _equip_item(to_puton_ptr, o);
-    }
-    else
-        to_puton_ptr = &you.inv[slot];
-
-    return puton_ring(*to_puton_ptr, allow_prompt, check_for_inscriptions,
-                      noask);
 }
 
 /**
@@ -2600,34 +2627,22 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot]);
 }
 
-void drink(item_def* potion)
+bool drink(item_def* potion)
 {
     string r = cannot_drink_item_reason(potion, true, true);
-    if (!potion && r.empty())
-    {
-        if (use_an_item(potion, OPER_QUAFF) == OPER_NONE)
-            return;
-        ASSERT(potion);
-        if (potion->base_type == OBJ_SCROLLS)
-        {
-            read(potion);
-            return;
-        }
-        r = cannot_drink_item_reason(potion, true, true);
-    }
-
     if (!r.empty())
     {
         mpr(r);
-        return;
+        return false;
     }
+    ASSERT(potion);
 
     const bool alreadyknown = item_type_known(*potion);
 
     if (alreadyknown && is_bad_item(*potion))
     {
         canned_msg(MSG_UNTHINKING_ACT);
-        return;
+        return false;
     }
 
     bool penance = god_hates_item(*potion);
@@ -2640,7 +2655,7 @@ void drink(item_def* potion)
         && !yesno(prompt.c_str(), false, 'n'))
     {
         canned_msg(MSG_OK);
-        return;
+        return false;
     }
 
     // The "> 1" part is to reduce the amount of times that Xom is
@@ -2653,14 +2668,14 @@ void drink(item_def* potion)
     {
         simple_god_message(" petitions for your drink to fail.", GOD_GOZAG);
         you.turn_is_over = true;
-        return;
+        return false;
     }
 
     // Check for Delatra's gloves before potentially melding them.
     bool heal_on_id = player_equip_unrand(UNRAND_DELATRAS_GLOVES);
 
     if (!quaff_potion(*potion))
-        return;
+        return false;
 
     if (!alreadyknown)
     {
@@ -2693,6 +2708,7 @@ void drink(item_def* potion)
     // This got deferred from PotionExperience::effect to prevent SIGHUP abuse.
     if (was_exp)
         level_change();
+    return true;
 }
 
 // XXX: there's probably a nicer way of doing this.
@@ -2857,7 +2873,7 @@ static item_def* _choose_target_item_for_scroll(bool scroll_known, object_select
 {
     item_def *target = nullptr;
 
-    auto success = use_an_item(target, OPER_ANY, selector, prompt,
+    auto success = use_an_item_menu(target, OPER_ANY, selector, prompt,
                        [=]()
                        {
                            if (scroll_known
@@ -3344,29 +3360,13 @@ bool scroll_hostile_check(scroll_type which_scroll)
  * @param scroll The scroll to be read.
  * @param target targeting information, used by the quiver API
  */
-void read(item_def* scroll, dist *target)
+bool read(item_def* scroll, dist *target)
 {
     string failure_reason = cannot_read_item_reason(scroll);
-
-    if (!scroll && failure_reason.empty())
-    {
-        // player can currently read, but no scroll was provided
-        if (use_an_item(scroll, OPER_READ) == OPER_NONE)
-            return;
-        ASSERT(scroll);
-        if (scroll->base_type == OBJ_POTIONS)
-        {
-            drink(scroll);
-            return;
-        }
-        failure_reason = cannot_read_item_reason(scroll);
-    }
-
     if (!failure_reason.empty())
     {
-        // why is this prompt?
-        mprf(MSGCH_PROMPT, "%s", failure_reason.c_str());
-        return;
+        mpr(failure_reason);
+        return false;
     }
     ASSERT(scroll);
 
@@ -3397,12 +3397,12 @@ void read(item_def* scroll, dist *target)
                                },
                                nullptr, nullptr))
         {
-            return;
+            return false;
         }
         else if (penance && !yesno(penance_prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
-            return;
+            return false;
         }
         else if (bad_item
                  && !yesno(make_stringf("Really %s?%s",
@@ -3413,7 +3413,7 @@ void read(item_def* scroll, dist *target)
                            false, 'n'))
         {
             canned_msg(MSG_OK);
-            return;
+            return false;
         }
         else if (!bad_item && !hostile_check && !yesno(make_stringf(
             "You can't see any enemies this would affect, really %s?",
@@ -3422,7 +3422,7 @@ void read(item_def* scroll, dist *target)
         {
             // is this too nanny dev?
             canned_msg(MSG_OK);
-            return;
+            return false;
         }
     }
 
@@ -3441,7 +3441,7 @@ void read(item_def* scroll, dist *target)
         // a targeter can't be used for unid'd or uncancellable scrolls, so
         // we can skip the rest of the function
         you.turn_is_over = false;
-        return;
+        return false;
     }
 
     // For cancellable scrolls leave printing this message to their
@@ -3728,7 +3728,7 @@ void read(item_def* scroll, dist *target)
 
     if (!alreadyknown)
         auto_assign_item_slot(*scroll);
-
+    return true;
 }
 
 #ifdef USE_TILE
@@ -3864,7 +3864,7 @@ void tile_item_use(int idx)
         if (equipped && !equipped_weapon)
             remove_ring(idx);
         else
-            puton_ring(idx);
+            puton_ring(you.inv[idx]);
         return;
 
     case OBJ_POTIONS:

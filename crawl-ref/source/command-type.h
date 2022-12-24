@@ -134,6 +134,8 @@ enum command_type
     CMD_AUTOFIGHT_NOMOVE,
     CMD_AUTOFIRE,
 
+    CMD_EQUIP,
+
 #ifdef USE_TILE
     CMD_ZOOM_IN,
     CMD_ZOOM_OUT,

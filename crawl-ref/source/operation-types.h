@@ -16,6 +16,7 @@ enum operation_types
     OPER_EVOKE    = 'v',
     OPER_QUIVER   = 'Q',
     OPER_ATTACK   = 'a',
+    OPER_EQUIP    = 'e',
     OPER_ANY      = 0,
     OPER_NONE     = -1, // could this be 0?
 };

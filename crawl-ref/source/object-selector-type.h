@@ -31,4 +31,5 @@ enum object_selector
     OSEL_UNCURSED_WORN_RINGS     = -19,
     OSEL_QUIVER_ACTION           = -20,
     OSEL_QUIVER_ACTION_FORCE     = -21,
+    OSEL_EQUIPABLE               = -22, // armour, jewellery, weapons
 };

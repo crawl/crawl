@@ -3432,7 +3432,7 @@ static bool _do_action(item_def &item, const command_type action)
         break;
     case CMD_WEAR_ARMOUR:      wear_armour(slot);             break;
     case CMD_REMOVE_ARMOUR:    takeoff_armour(slot);          break;
-    case CMD_WEAR_JEWELLERY:   puton_ring(slot);              break;
+    case CMD_WEAR_JEWELLERY:   puton_ring(you.inv[slot]);     break;
     case CMD_REMOVE_JEWELLERY: remove_ring(slot, true);       break;
     case CMD_DROP:
         // TODO: it would be better if the inscription was checked before the

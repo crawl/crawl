@@ -2147,16 +2147,17 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_FIRE:                 you.quiver_action.target(); break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;
-    case CMD_QUAFF:                drink();                  break;
-    case CMD_READ:                 read();                   break;
+    case CMD_QUAFF:                use_an_item(OPER_QUAFF);  break;
+    case CMD_READ:                 use_an_item(OPER_READ);   break;
     case CMD_REMOVE_ARMOUR:        takeoff_armour();         break;
     case CMD_REMOVE_JEWELLERY:     remove_ring();            break;
     case CMD_SHOUT:                issue_orders();           break;
     case CMD_FIRE_ITEM_NO_QUIVER:  fire_item_no_quiver();    break;
     case CMD_WEAPON_SWAP:          auto_wield();             break;
-    case CMD_WEAR_ARMOUR:          wear_armour();            break;
-    case CMD_WEAR_JEWELLERY:       puton_ring();             break;
-    case CMD_WIELD_WEAPON:         wield_weapon();           break;
+    case CMD_EQUIP:                use_an_item(OPER_EQUIP);  break;
+    case CMD_WEAR_ARMOUR:          use_an_item(OPER_WEAR);   break;
+    case CMD_WEAR_JEWELLERY:       use_an_item(OPER_PUTON);  break;
+    case CMD_WIELD_WEAPON:         use_an_item(OPER_WIELD);  break;
     case CMD_ZAP_WAND:             zap_wand();               break;
     case CMD_DROP:
         drop();

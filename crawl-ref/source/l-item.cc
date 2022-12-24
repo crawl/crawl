@@ -132,11 +132,16 @@ static int l_item_do_wield(lua_State *ls)
 
     UDATA_ITEM(item);
 
-    int slot = -1;
-    if (item && item->defined() && in_inventory(*item))
-        slot = item->link;
-    bool res = wield_weapon(slot);
-    lua_pushboolean(ls, res);
+    if (item)
+    {
+        int slot = -1;
+        if (item && item->defined() && in_inventory(*item))
+            slot = item->link;
+        lua_pushboolean(ls, wield_weapon(slot));
+    }
+    else
+        lua_pushboolean(ls, use_an_item(OPER_WIELD));
+
     return 1;
 }
 
@@ -177,7 +182,7 @@ static int l_item_do_puton(lua_State *ls)
     if (!item || !in_inventory(*item))
         return 0;
 
-    lua_pushboolean(ls, puton_ring(item->link));
+    lua_pushboolean(ls, puton_ring(*item));
     return 1;
 }
 

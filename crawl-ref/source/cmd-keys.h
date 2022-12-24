@@ -42,6 +42,7 @@
 // other commands
 {'a', CMD_USE_ABILITY},
 {'d', CMD_DROP},
+{'e', CMD_EQUIP},
 {'f', CMD_FIRE},
 {'g', CMD_PICKUP},
 {'i', CMD_DISPLAY_INVENTORY},

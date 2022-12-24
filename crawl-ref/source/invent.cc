@@ -1116,6 +1116,13 @@ bool item_is_selected(const item_def &i, int selector)
         return true;
     }
 
+    if (selector == OSEL_EQUIPABLE)
+    {
+        return item_is_selected(i, OBJ_ARMOUR)
+            || item_is_selected(i, OSEL_WIELD)
+            || item_is_selected(i, OBJ_JEWELLERY);
+    }
+
     switch (selector)
     {
     case OBJ_ARMOUR:
@@ -1518,6 +1525,7 @@ static string _operation_verb(operation_types oper)
     case OPER_FIRE:           return "fire";
     case OPER_EVOKE:          return "evoke";
     case OPER_QUIVER:         return "quiver";
+    case OPER_EQUIP:          return "equip";
     case OPER_ANY:
     default:
         return "choose";
