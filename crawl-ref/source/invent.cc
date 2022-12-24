@@ -536,6 +536,12 @@ string no_selectables_message(int item_selector)
 #endif
     case OSEL_WORN_ARMOUR:
         return "You aren't wearing any pieces of armour.";
+    case OSEL_WORN_JEWELLERY:
+        return "You aren't wearing any rings or amulets.";
+    case OSEL_WORN_EQUIPABLE:
+        return "You aren't wearing anything.";
+    case OSEL_EQUIPABLE:
+        return "You aren't carrying anything that can be equipped.";
     case OSEL_BRANDABLE_WEAPON:
         return "You aren't carrying any weapons that can be branded.";
     case OSEL_ENCHANTABLE_WEAPON:
@@ -1116,13 +1122,6 @@ bool item_is_selected(const item_def &i, int selector)
         return true;
     }
 
-    if (selector == OSEL_EQUIPABLE)
-    {
-        return item_is_selected(i, OBJ_ARMOUR)
-            || item_is_selected(i, OSEL_WIELD)
-            || item_is_selected(i, OBJ_JEWELLERY);
-    }
-
     switch (selector)
     {
     case OBJ_ARMOUR:
@@ -1208,6 +1207,18 @@ bool item_is_selected(const item_def &i, int selector)
         return false;
     case OSEL_QUIVER_ACTION_FORCE:
         return in_inventory(i) && quiver::slot_to_action(i.link, true)->is_valid();
+
+    case OSEL_WORN_JEWELLERY:
+        return item_is_equipped(i) && item_is_selected(i, OBJ_JEWELLERY);
+
+    case OSEL_WORN_EQUIPABLE:
+        if (!item_is_equipped(i))
+            return false;
+        // fallthrough
+    case OSEL_EQUIPABLE:
+        return item_is_selected(i, OBJ_ARMOUR)
+            || item_is_selected(i, OSEL_WIELD)
+            || item_is_selected(i, OBJ_JEWELLERY);
 
     default:
         return false;
@@ -1558,6 +1569,16 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
 {
     if (_has_warning_inscription(item, oper))
         return true;
+
+    if (oper == OPER_UNEQUIP)
+    {
+        // n.b. unwielding is not handled by unequip
+        return needs_handle_warning(item,
+            (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
+            ? OPER_WIELD
+            : item.base_type == OBJ_ARMOUR ? OPER_TAKEOFF : OPER_REMOVE,
+            penance);
+    }
 
     // Curses first. Warn if something would take off (i.e. destroy) the cursed item.
     if (item.cursed()

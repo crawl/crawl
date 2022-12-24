@@ -2149,8 +2149,9 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_LOOK_AROUND:          do_look_around();         break;
     case CMD_QUAFF:                use_an_item(OPER_QUAFF);  break;
     case CMD_READ:                 use_an_item(OPER_READ);   break;
-    case CMD_REMOVE_ARMOUR:        takeoff_armour();         break;
-    case CMD_REMOVE_JEWELLERY:     remove_ring();            break;
+    case CMD_UNEQUIP:              use_an_item(OPER_UNEQUIP); break;
+    case CMD_REMOVE_ARMOUR:        use_an_item(OPER_TAKEOFF); break;
+    case CMD_REMOVE_JEWELLERY:     use_an_item(OPER_REMOVE); break;
     case CMD_SHOUT:                issue_orders();           break;
     case CMD_FIRE_ITEM_NO_QUIVER:  fire_item_no_quiver();    break;
     case CMD_WEAPON_SWAP:          auto_wield();             break;

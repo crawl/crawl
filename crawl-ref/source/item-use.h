@@ -21,7 +21,7 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper,
 
 bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
-bool takeoff_armour(int index = -1, bool noask = false);
+bool takeoff_armour(int index, bool noask = false);
 
 bool drink(item_def* potion = nullptr);
 
@@ -36,7 +36,7 @@ bool scroll_hostile_check(scroll_type which_scroll);
 bool scroll_has_targeter(scroll_type which_scroll);
 bool read(item_def* scroll = nullptr, dist *target=nullptr);
 
-bool remove_ring(int slot = -1, bool announce = false, bool noask = false);
+bool remove_ring(int slot, bool announce = false, bool noask = false);
 
 bool wear_armour(int slot);
 

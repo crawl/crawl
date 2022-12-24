@@ -135,6 +135,7 @@ enum command_type
     CMD_AUTOFIRE,
 
     CMD_EQUIP,
+    CMD_UNEQUIP,
 
 #ifdef USE_TILE
     CMD_ZOOM_IN,

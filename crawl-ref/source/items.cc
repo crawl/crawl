@@ -3298,7 +3298,7 @@ int get_max_subtype(object_class_type base_type)
 
 equipment_type item_equip_slot(const item_def& item)
 {
-    if (!in_inventory(item))
+    if (!item.defined() || !in_inventory(item))
         return EQ_NONE;
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)

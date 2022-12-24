@@ -755,6 +755,10 @@ void update_vision_range()
  */
 maybe_bool you_can_wear(equipment_type eq, bool temp)
 {
+    // EQ_NONE will crash anyways, so just make it explicit. (Would it make
+    // sense to instead return MB_FALSE?)
+    ASSERT(eq != EQ_NONE);
+
     if (temp && !get_form()->slot_available(eq))
         return MB_FALSE;
 

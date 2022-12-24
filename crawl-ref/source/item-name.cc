@@ -3183,6 +3183,9 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return cannot_drink_item_reason(&item, temp).size();
     }
     case OBJ_JEWELLERY:
+        if (temp && !you_can_wear(get_item_slot(item)))
+            return true;
+
         if (!ident && !item_type_known(item))
             return false;
 

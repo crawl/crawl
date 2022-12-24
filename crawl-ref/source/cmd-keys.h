@@ -41,6 +41,7 @@
 {'y', CMD_MOVE_UP_LEFT},
 // other commands
 {'a', CMD_USE_ABILITY},
+{'c', CMD_UNEQUIP}, // not a very good letter for this
 {'d', CMD_DROP},
 {'e', CMD_EQUIP},
 {'f', CMD_FIRE},
