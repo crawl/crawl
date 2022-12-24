@@ -76,6 +76,16 @@ int main()
     msg = localise("You hit @the_monster@.", params);
     show_result(msg, "Ihr schlagt den Ork.");
 
+    // test with %s params
+
+    msg = uppercase_first(localise("%s hits %s", "an orc", "a skeleton"));
+    expected = "Ein Ork schlägt ein Skelett";
+    show_result(msg, expected);
+
+    msg = uppercase_first(localise("%s hits %s", "a skeleton", "an orc"));
+    expected = "Ein Skelett schlägt einen Ork";
+    show_result(msg, expected);
+
     // test list with acc context
     msg = localise("You see here %s.", "a potion of lignification, a +0 short sword and a +2 arbalest");
     expected = "Ihr seht hier einen Trank der Verholzung, ein +0 Kurzschwert und eine +2 Armbrust.";

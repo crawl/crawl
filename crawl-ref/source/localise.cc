@@ -1780,6 +1780,11 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
         if (it->at(0) == '{' && it->length() > 1)
         {
             _context = it->substr(1, it->length() - 2); // strip curly brackets
+            if (!translate)
+            {
+                // don't strip context from English string
+                ss << *it;
+            }
         }
         else if (it->length() > 1 && it->at(0) == '%' && it->at(1) != '%')
         {
@@ -1871,6 +1876,8 @@ static string _build_string(const vector<LocalisationArg>& args, bool translate)
 
 string localise(const vector<LocalisationArg>& args)
 {
+    _context = "";
+
     // trivial cases
     if (args.empty())
     {
