@@ -161,6 +161,7 @@ GENERATE:dat
 
 # plural adjectives
 /^\{pl\}[^A-ZÄÖÜ]+/e /en /
+/^\{pl\}[^A-ZÄÖÜ]+/\{adj-e\}/{adj-en}/
 
 # fem adjectives
 /^(\{f\})?(der|einer|bigeurer) [^A-ZÄÖÜ]+/e /en /
@@ -188,6 +189,8 @@ GENERATE:dat
 # fix special cases
 /Blork der Ork/Blork dem Ork/
 /Verrückter /Verrücktem /
+/er Drakonier/em Drakonier/
+/^(dem [A-ZÄÖÜ][^ ,]+)e Drakonier/$1en Drakonier/
 /^(der|einer|Eurer) (.*)Lernäische Hydra/$1 $2Lernäischen Hydra/
 /Lernäische Hydra/Lernäischer Hydra/
 

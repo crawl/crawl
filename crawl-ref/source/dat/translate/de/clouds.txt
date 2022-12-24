@@ -10,7 +10,7 @@
 #Flamme
 %%%%
 blazing flames
-lodernde Flammen
+{pl}lodernde Flammen
 %%%%
 noxious fumes
 schädlicher Dunst
@@ -19,7 +19,7 @@ freezing vapour
 gefrierender Dunst
 %%%%
 freezing vapours
-gefrierende Dünste
+{pl}gefrierende Dünste
 %%%%
 poison gas
 Giftgas
@@ -40,7 +40,7 @@ translocational energy
 Translokationsenergie
 %%%%
 spreading flames
-sich ausbreitende Flammen
+{pl}sich ausbreitende Flammen
 %%%%
 a forest fire
 ein Waldbrand

@@ -13,7 +13,7 @@ using namespace std;
 
 
 const vector<string> cases = {
-    "nom", "acc"
+    "nom", "acc", "dat"
 };
 
 const vector<string> test_items = {
@@ -176,42 +176,50 @@ vector<map<string, string>> rings =
     {
         {"en", "a diamond ring"},
         {"nom", "ein Diamantring"},
-        {"acc", "einen Diamantring"}
+        {"acc", "einen Diamantring"},
+        {"dat", "einem Diamantring"},
     },
     {
         {"en", "an ivory ring"},
         {"nom", "ein Elfenbeinring"},
-        {"acc", "einen Elfenbeinring"}
+        {"acc", "einen Elfenbeinring"},
+        {"dat", "einem Elfenbeinring"},
     },
     {
         {"en", "an cursed ivory ring"},
         {"nom", "ein verfluchter Elfenbeinring"},
-        {"acc", "einen verfluchten Elfenbeinring"}
+        {"acc", "einen verfluchten Elfenbeinring"},
+        {"dat", "einem verfluchten Elfenbeinring"},
     },
     {
         {"en", "a small silver ring"},
         {"nom", "ein kleiner Silberring"},
-        {"acc", "einen kleinen Silberring"}
+        {"acc", "einen kleinen Silberring"},
+        {"dat", "einem kleinen Silberring"},
     },
     {
         {"en", "a ring of wizardry"},
         {"nom", "ein Ring der Zauberei"},
-        {"acc", "einen Ring der Zauberei"}
+        {"acc", "einen Ring der Zauberei"},
+        {"dat", "einem Ring der Zauberei"},
     },
     {
         {"en", "an cursed ring of protection from fire"},
         {"nom", "ein verfluchter Ring der Feuerresistenz"},
-        {"acc", "einen verfluchten Ring der Feuerresistenz"}
+        {"acc", "einen verfluchten Ring der Feuerresistenz"},
+        {"dat", "einem verfluchten Ring der Feuerresistenz"},
     },
     {
         {"en", "an cursed +4 ring of protection"},
         {"nom", "ein verfluchter +4 Ring des Schutzes"},
-        {"acc", "einen verfluchten +4 Ring des Schutzes"}
+        {"acc", "einen verfluchten +4 Ring des Schutzes"},
+        {"dat", "einem verfluchten +4 Ring des Schutzes"},
     },
     {
         {"en", "the ring \"Cuti\" {rF+ MR+ Dex+2}"},
         {"nom", "der Ring \"Cuti\" {rF+ MR+ Ges+2}"},
-        {"acc", "den Ring \"Cuti\" {rF+ MR+ Ges+2}"}
+        {"acc", "den Ring \"Cuti\" {rF+ MR+ Ges+2}"},
+        {"dat", "dem Ring \"Cuti\" {rF+ MR+ Ges+2}"},
     },
 };
 
@@ -249,23 +257,27 @@ vector<map<string, string>> runes =
     {
         {"en", "the demonic rune"},
         {"nom", "die dämonische Rune"},
-        {"acc", "die dämonische Rune"}
+        {"acc", "die dämonische Rune"},
+        {"dat", "der dämonischen Rune"},
     },
     {
         {"en", "the golden rune of Zot"},
         {"nom", "die goldene Rune von Zot"},
-        {"acc", "die goldene Rune von Zot"}
+        {"acc", "die goldene Rune von Zot"},
+        {"dat", "der goldenen Rune von Zot"},
     },
     {
         {"en", "an obsidian rune of Zot"},
         {"nom", "eine Obsidianrune von Zot"},
-        {"acc", "eine Obsidianrune von Zot"}
+        {"acc", "eine Obsidianrune von Zot"},
+        {"dat", "einer Obsidianrune von Zot"},
     },
     {
         {"en", "silver rune of Zot"},
         {"nom", "silberne Rune von Zot"},
-        {"acc", "silberne Rune von Zot"}
-    }
+        {"acc", "silberne Rune von Zot"},
+        {"dat", "silberner Rune von Zot"},
+    },
 };
 
 vector<map<string, string>> staves =
@@ -297,7 +309,8 @@ vector<map<string, string>> books =
     {
         {"en", "a book of Vapours"},
         {"nom", "ein Buch der Dämpfe"},
-        {"acc", "ein Buch der Dämpfe"}
+        {"acc", "ein Buch der Dämpfe"},
+        {"dat", "einem Buch der Dämpfe"},
     },
 };
 
