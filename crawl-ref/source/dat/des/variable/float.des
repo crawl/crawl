@@ -1911,7 +1911,7 @@ ENDMAP
 #
 NAME:    onia_ninara_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   Lair:4-, !Lair:$, Snake, !Snake:$
+DEPTH:   Lair:3-, !Lair:$, Snake, !Snake:$
 ORIENT:  float
 KMONS:   1 = tyrant leech / swamp worm w:50 / \
              vampire mosquito band / goliath frog / swamp drake w:15
@@ -2067,7 +2067,7 @@ ENDMAP
 # of opening the doors so animals can go for a walk, that's intended.
 #
 NAME:   slaughterhouse
-DEPTH:  Lair:5-, D:11-
+DEPTH:  Lair:3-, D:11-
 TAGS:   no_monster_gen
 ORIENT: float
 WEIGHT: 5
@@ -4957,7 +4957,7 @@ ENDMAP
 
 NAME:   nzn_motion_control
 TAGS:   no_pool_fixup no_monster_gen
-DEPTH:  D:10-, Lair:4-, Shoals:2-, !Shoals:$
+DEPTH:  D:10-, Lair:3-, Shoals:2-, !Shoals:$
 ORIENT: float
 SHUFFLE: HY / 12, $%, eE / rR
 SUBST:  ER = ., r = x, e = + .
@@ -6296,29 +6296,34 @@ ENDMAP
 # Oklob gauntlet
 # average of 2.2 oklobs, and at most 5 of them
 NAME:    dpeg_oklob_gauntlet
-DEPTH:   Depths, !Depths:$, Lair, Snake, Elf
+DEPTH:   Lair, Swamp
 ORIENT:  float
-MONS:    plant, oklob plant, thorn hunter, acid blob
+WEIGHT:  2
+MONS:    plant, oklob plant, thorn hunter
 SHUFFLE: ]}) / def
-NSUBST:  ' = 1:2 / 4 = 11122 / *:1
-NSUBST:  " = 1:W / * = wwW, ` = 1:W / * = wwW
-SUBST:   def = |*
-: if you.in_branch("Depths") then
-NSUBST:  3 = 1:3 / 1:4 / *:34...
+NSUBST:  ' = 2 / 4=11122 / 1, " = W / wwW, ` = W / wwW
+SUBST:   def = |*, } = }..
+: if you.in_branch("Lair") then
+SUBST:   3 = ., - = x-
+# Swamp
 : else
-SUBST:   3 = .
+NSUBST:  3 = 3 / 3.
+SUBST:   x = t, - = t-, + = .
 : end
+CLEAR:   -
 MAP
-xxxxxxxxxxxxx
-xxxxx]})xxxxx
-xxxxx.3.xxxxx
-x'ww3...3ww'x
-x'".......`'x
-x'".......`'x
-x'".......`'x
-x'".......`'x
-x'ww.....ww'x
-xxxxxx+xxxxxx
+---------------
+-xxxxxxxxxxxxx-
+-xxxxx]})xxxxx-
+-xxxxx.3.xxxxx-
+-x'ww3...3ww'x-
+-x'".......`'x-
+-x'".......`'x-
+-x'".......`'x-
+-x'".......`'x-
+-x'ww.....ww'x-
+-xxxxxx+xxxxxx-
+------- -------
 ENDMAP
 
 #############################################################################

@@ -36,7 +36,7 @@ enum class spflag
     unclean            = 0x00000200,      // counts as "unclean"
     chaotic            = 0x00000400,      // counts as "chaotic"
     hasty              = 0x00000800,      // counts as "hasty"
-                     //  0x00001000,
+    silent             = 0x00001000,      // makes no noise on cast
     escape             = 0x00002000,      // useful for running away
     recovery           = 0x00004000,      // healing or recovery spell
     area               = 0x00008000,      // area affect
@@ -91,9 +91,8 @@ void surge_power_wand(const int mp_cost);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
                 bool allow_preselect = true,
-                const string &title = "Your Spells");
+                const string &title = "cast");
 int raw_spell_fail(spell_type spell);
-int stepdown_spellpower(int power, int scale = 1);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
                      int scale = 1);
@@ -102,8 +101,6 @@ int calc_spell_range(spell_type spell, int power = 0, bool allow_bonus = true,
 
 spret cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL,
                    dist *_target = nullptr, bool force_failure = false);
-
-int apply_enhancement(const int initial_power, const int enhancer_levels);
 
 void inspect_spells();
 bool can_cast_spells(bool quiet = false);

@@ -238,16 +238,6 @@ bool fill_status_info(int status, status_info& inf)
         _describe_zot(inf);
         break;
 
-    case STATUS_CURL:
-        if (you.props[PALENTONGA_CURL_KEY].get_bool())
-        {
-            inf.light_text = "Curl";
-            inf.light_colour = BLUE;
-            inf.short_text = "curled up";
-            inf.long_text = "You are defensively curled.";
-        }
-        break;
-
     case STATUS_AIRBORNE:
         _describe_airborne(inf);
         break;
@@ -651,8 +641,9 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text = "Cloud";
             // TODO: make the colour based on the cloud's color; requires elemental
             // status lights, though.
-            inf.light_colour =
-                is_damaging_cloud(cloud, true, cloud_is_yours_at(you.pos())) ? LIGHTRED : DARKGREY;
+            const bool yours = cloud_is_yours_at(you.pos());
+            const bool danger = cloud_damages_over_time(cloud, true, yours);
+            inf.light_colour = danger ? LIGHTRED : DARKGREY;
         }
         break;
     }
@@ -766,10 +757,9 @@ bool fill_status_info(int status, status_info& inf)
 static void _describe_zot(status_info& inf)
 {
     const int lvl = bezotting_level();
-    const bool in_death_range = zot_clock_fatal();
     if (lvl > 0)
     {
-        inf.short_text = in_death_range ? "bezotted and risking death" : "bezotted";
+        inf.short_text = "bezotted";
         inf.long_text = "Zot is approaching!";
     }
     else if (!Options.always_show_zot && !you.has_mutation(MUT_SHORT_LIFESPAN)
@@ -779,15 +769,14 @@ static void _describe_zot(status_info& inf)
     }
 
     // XX code dup with overview screen
-    inf.light_text = make_stringf("Zot (%d%s)", turns_until_zot(),
-        in_death_range ? ", death" : "");
+    inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
     switch (lvl)
     {
         case 0:
-            inf.light_colour = in_death_range ? RED : WHITE;
+            inf.light_colour = WHITE;
             break;
         case 1:
-            inf.light_colour = in_death_range ? RED : YELLOW;
+            inf.light_colour = YELLOW;
             break;
         case 2:
             inf.light_colour = RED;

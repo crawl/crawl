@@ -103,6 +103,7 @@ enum book_type
     BOOK_TRISMEGISTUS,
     BOOK_HUNTER,
     BOOK_SCORCHING,
+    BOOK_MAXWELL,
     NUM_BOOKS
 };
 

@@ -37,7 +37,7 @@ const Branch branches[NUM_BRANCHES] =
       "Orcish Mines", "the Orcish Mines", "Orc",
       nullptr,
       BROWN, BROWN,
-      'O', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
+      'O', {}, branch_noise::normal, 6 },
 
     { BRANCH_ELF, BRANCH_ORC, 2, 2, 3, 15,
       brflag::dangerous_end,
@@ -57,7 +57,7 @@ const Branch branches[NUM_BRANCHES] =
       'K', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 #endif
 
-    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 6, 10,
+    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 5, 10,
       brflag::none,
       DNGN_ENTER_LAIR, DNGN_EXIT_LAIR, NUM_FEATURES,
       "Lair", "the Lair of Beasts", "Lair",
@@ -65,7 +65,7 @@ const Branch branches[NUM_BRANCHES] =
       GREEN, BROWN,
       'L', {}, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 
-    { BRANCH_SWAMP, BRANCH_LAIR, 2, 4, 4, 15,
+    { BRANCH_SWAMP, BRANCH_LAIR, 2, 3, 4, 15,
       brflag::dangerous_end | brflag::spotty,
       DNGN_ENTER_SWAMP, DNGN_EXIT_SWAMP, NUM_FEATURES,
       "Swamp", "the Swamp", "Swamp",
@@ -73,7 +73,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, BROWN,
       'S', { RUNE_SWAMP }, branch_noise::loud, 8 },
 
-    { BRANCH_SHOALS, BRANCH_LAIR, 2, 4, 4, 15,
+    { BRANCH_SHOALS, BRANCH_LAIR, 2, 3, 4, 15,
       brflag::dangerous_end,
       DNGN_ENTER_SHOALS, DNGN_EXIT_SHOALS, NUM_FEATURES,
       "Shoals", "the Shoals", "Shoals",
@@ -81,7 +81,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, BROWN,
       'A', { RUNE_SHOALS }, branch_noise::loud, DEFAULT_MON_DIE_SIZE },
 
-    { BRANCH_SNAKE, BRANCH_LAIR, 2, 4, 4, 15,
+    { BRANCH_SNAKE, BRANCH_LAIR, 2, 3, 4, 15,
       brflag::dangerous_end,
       DNGN_ENTER_SNAKE, DNGN_EXIT_SNAKE, NUM_FEATURES,
       "Snake Pit", "the Snake Pit", "Snake",
@@ -89,7 +89,7 @@ const Branch branches[NUM_BRANCHES] =
       LIGHTGREEN, YELLOW,
       'P', { RUNE_SNAKE }, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 
-    { BRANCH_SPIDER, BRANCH_LAIR, 2, 4, 4, 15,
+    { BRANCH_SPIDER, BRANCH_LAIR, 2, 3, 4, 15,
       brflag::dangerous_end,
       DNGN_ENTER_SPIDER, DNGN_EXIT_SPIDER, NUM_FEATURES,
       "Spider Nest", "the Spider Nest", "Spider",
@@ -97,7 +97,7 @@ const Branch branches[NUM_BRANCHES] =
       BROWN, YELLOW,
       'N', { RUNE_SPIDER }, branch_noise::normal, DEFAULT_MON_DIE_SIZE },
 
-    { BRANCH_SLIME, BRANCH_LAIR, 5, 6, 5, 17,
+    { BRANCH_SLIME, BRANCH_LAIR, 4, 5, 5, 17,
       brflag::no_items | brflag::dangerous_end | brflag::spotty,
       DNGN_ENTER_SLIME, DNGN_EXIT_SLIME, NUM_FEATURES,
       "Slime Pits", "the Pits of Slime", "Slime",

@@ -265,8 +265,8 @@ void monster_shout(monster* mons, int shout)
 
 bool check_awaken(monster* mons, int stealth)
 {
-    // Usually redundant because we iterate over player LOS,
-    // but e.g. for passive_t::xray_vision.
+    // Usually redundant because we iterate over player LOS.
+    // Maybe can be removed now that xray_vision is gone?
     if (!mons->see_cell(you.pos()))
         return false;
 
@@ -550,6 +550,17 @@ static int _issue_orders_prompt()
     return keyn;
 }
 
+/// If the monster is invisible, can at least one of your allies see them?
+static bool _allies_can_see(const monster &mon)
+{
+    if (!mon.invisible())
+        return true; // XXX: even if we have no allies?
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (_follows_orders(*mi) && mi->can_see_invisible())
+            return true;
+    return false;
+}
+
 /**
  * Issue the order specified by the given key.
  *
@@ -624,20 +635,28 @@ static bool _issue_order(int keyn, int &mons_targd)
                 return false;
             }
 
-            bool cancel = !targ.isValid;
-            if (!cancel)
-            {
-                const monster* m = monster_at(targ.target);
-                cancel = (m == nullptr || !you.can_see(*m));
-                if (!cancel)
-                    mons_targd = m->mindex();
-            }
-
-            if (cancel)
+            if (!targ.isValid)
             {
                 canned_msg(MSG_NOTHING_THERE);
                 return false;
             }
+
+            const monster* m = monster_at(targ.target);
+            if (!m || !you.can_see(*m))
+            {
+                canned_msg(MSG_NOTHING_THERE);
+                return false;
+            }
+
+            if (!_allies_can_see(*m))
+            {
+                mprf("%s is invisible, and you have no allies that can see %s.",
+                     m->name(DESC_THE).c_str(),
+                     m->pronoun(PRONOUN_OBJECTIVE).c_str());
+                return false;
+            }
+
+            mons_targd = m->mindex();
         }
             break;
 
@@ -675,6 +694,40 @@ static bool _issue_order(int keyn, int &mons_targd)
     return true;
 }
 
+static string _allies_who_cant_see_invis()
+{
+    // We assume that at least some of your allies can see the target, since we
+    // forbid giving attack orders for a target none of your allies can see.
+    monster *non_sinv_ally = nullptr;
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    {
+        if (!_follows_orders(*mi) || mi->can_see_invisible())
+            continue;
+        if (non_sinv_ally)
+            return "some of your allies";
+        non_sinv_ally = *mi;
+    }
+
+    if (non_sinv_ally)
+        return non_sinv_ally->name(DESC_YOUR);
+    return "";
+}
+
+static void _check_unseen_target(int mindex)
+{
+    const monster &target = env.mons[mindex];
+    if (!target.invisible())
+        return;
+
+    const string allies = _allies_who_cant_see_invis();
+    if (allies.empty())
+        return;
+    mprf("%s is invisible, and %s can't see %s.",
+         target.name(DESC_THE).c_str(),
+         allies.c_str(),
+         target.pronoun(PRONOUN_OBJECTIVE).c_str());
+}
+
 /**
  * Prompt the player to either change their allies' orders or to shout.
  *
@@ -709,7 +762,10 @@ void issue_orders()
     _set_friendly_foes(keyn == 's' || keyn == 'w');
 
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
+    {
         mpr("Attack!");
+        _check_unseen_target(mons_targd);
+    }
 }
 
 /**
@@ -1280,7 +1336,7 @@ void noise_grid::write_noise_grid(FILE *outf) const
 
 void noise_grid::dump_noise_grid(const string &filename) const
 {
-    FILE *outf = fopen(filename.c_str(), "w");
+    FILE *outf = fopen_u(filename.c_str(), "w");
     fprintf(outf, "<!DOCTYPE html><html><head>");
     _write_noise_grid_css(outf);
     fprintf(outf, "</head>\n<body>\n");

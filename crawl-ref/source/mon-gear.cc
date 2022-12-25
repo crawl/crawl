@@ -17,6 +17,7 @@
 #include "item-status-flag-type.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "misc.h" // december_holidays
 #include "mon-place.h"
 #include "mpr.h"
 #include "randbook.h" // roxanne, roxanne...
@@ -1221,8 +1222,16 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
     case MONS_SIGMUND:
     case MONS_REAPER:
         custom_name = "scythe";
-        floor_tile  = "wpn_scythe";
-        equip_tile  = "scythe";
+        if (type == MONS_SIGMUND && december_holidays())
+        {
+            floor_tile  = "wpn_xmas_scythe";
+            equip_tile  = "xmas_scythe";
+        }
+        else
+        {
+            floor_tile  = "wpn_scythe";
+            equip_tile  = "scythe";
+        }
         break;
 
     case MONS_ANCESTOR_HEXER:

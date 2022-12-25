@@ -611,7 +611,7 @@ SUBVAULT: Y : storerooms_room_b
 SUBVAULT: T : the_temple
 SUBVAULT: U : equipment_1
 # Initial consumables
-KITEM: b = scroll of summoning ident:all q:1, \
+KITEM: b = any ally scroll ident:all q:1, \
        scroll of amnesia q:5 ident:all, \
        scroll of vulnerability q:2 ident:all
 KITEM: c = stone q:10

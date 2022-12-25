@@ -16,6 +16,7 @@
 #include "fineff.h"
 #include "fprop.h"
 #include "god-conduct.h"
+#include "god-passive.h" // passive_t::shoot_through_plants
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -301,16 +302,17 @@ void polar_vortex_damage(actor *caster, int dur)
             bool veto =
                 env.markers.property_at(*dam_i, MAT_ANY, "veto_destroy") == "veto";
 
-            if ((feat_is_tree(env.grid(*dam_i)) && !is_temp_terrain(*dam_i))
-                && !veto && dur > 0
+            if (feat_is_tree(env.grid(*dam_i))
+                && !have_passive(passive_t::shoot_through_plants)
+                && !is_temp_terrain(*dam_i)
+                && !veto
+                && dur > 0
                 && bernoulli(rdur * 0.01, 0.05)) // 5% chance per 10 aut
             {
                 env.grid(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the furious winds!");
-                if (caster->is_player())
-                    did_god_conduct(DID_KILL_PLANT, 1);
             }
 
             if (!winds.has_wind(*dam_i))

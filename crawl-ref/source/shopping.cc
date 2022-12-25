@@ -515,6 +515,7 @@ unsigned int item_value(item_def item, bool ident)
             case SCR_POISON:
             case SCR_VULNERABILITY:
             case SCR_FOG:
+            case SCR_BUTTERFLIES:
                 valued += 40;
                 break;
 
@@ -844,9 +845,16 @@ class ShopMenu : public InvMenu
     void update_help();
     void resort();
     void purchase_selected();
-    void describe(size_t i);
+
+    bool cycle_mode(bool) override;
 
     virtual bool process_key(int keyin) override;
+    bool process_command(command_type cmd) override;
+
+protected:
+    void select_item_index(int idx, int qty = MENU_SELECT_INVERT) override;
+    bool examine_index(int i) override;
+    bool skip_process_command(int keyin) override;
 
 public:
     bool bought_something = false;
@@ -880,7 +888,7 @@ class ShopEntry : public InvEntry
                                                   YELLOW;
         const string keystr = colour_to_str(keycol);
         const string itemstr =
-            colour_to_str(menu_colour(text, item_prefix(*item), tag));
+            colour_to_str(menu_colour(text, item_prefix(*item, false), tag));
         return make_stringf(" <%s>%c %c </%s><%s>%4d gold   %s%s</%s>",
                             keystr.c_str(),
                             hotkeys[0],
@@ -911,7 +919,7 @@ public:
 
 // XX why is this MF_QUIET_SELECT?
 ShopMenu::ShopMenu(shop_struct& _shop, const level_pos& _pos, bool _can_purchase)
-    : InvMenu(MF_MULTISELECT | MF_NO_SELECT_QTY | MF_QUIET_SELECT
+    : InvMenu(MF_MULTISELECT | MF_QUIET_SELECT
                 | MF_ALLOW_FORMATTING | MF_INIT_HOVER),
       shop(_shop),
       pos(_pos),
@@ -962,7 +970,11 @@ int ShopMenu::selected_cost(bool use_shopping_list) const
 
 void ShopMenu::update_help()
 {
-    // TODO: convert to a regular keyhelp
+    // TODO: convert to a regular keyhelp, make less painful
+
+    //You have 2000 gold pieces. After the purchase, you will have 1802 gold pieces.
+    //[Esc] exit          [Tab] buy|examine items     [a-j] mark item for purchase
+    //[/] sort (type)     [Enter] buy marked items    [A-J] put item on shopping list
     string top_line = make_stringf("<yellow>You have %d gold piece%s.",
                                    you.gold,
                                    you.gold != 1 ? "s" : "");
@@ -996,39 +1008,58 @@ void ShopMenu::update_help()
                                 && (!can_purchase ||
                                     no_selection && !from_shopping_list)
                 || menu_action == ACT_EXAMINE && !is_set(MF_ARROWS_SELECT);
-    const string action_desc =
-            no_action                    ? " " "     "  "                   "
-            : menu_action == ACT_EXAMINE ? "[<w>Enter</w>] describe         "
-            : from_shopping_list         ? "[<w>Enter</w>] buy shopping list"
-                                         : "[<w>Enter</w>] buy marked items ";
+    const string action_key = no_action ? "       " // max: "[Enter]"
+        : menu_keyhelp_cmd(CMD_MENU_ACCEPT_SELECTION);
+    const string action_desc = action_key +
+            (no_action                   ? "                  "
+            : menu_action == ACT_EXAMINE ? " describe         "
+            : from_shopping_list         ? " buy shopping list"
+                                         : " buy marked items ");
 
     // XX swap shopping list / select by letter?
-    set_more(formatted_string::parse_string(top_line + make_stringf(
-        //You have 0 gold pieces.
-        //[Esc/R-Click] exit  [!] buy|examine items  [a-i] select item for purchase
-        //[/] sort (default)  [Enter] make purchase  [A-I] put item on shopping list
-#if defined(USE_TILE_LOCAL) && !defined(TOUCH_UI)
-        "[<w>Esc</w>/<w>R-Click</w>] exit  "
-#else
-        //               "/R-Click"
-        "[<w>Esc</w>] exit          "
-#endif
-        "%s      %s %s\n"
-        "[<w>/</w>] sort (%s)%s  %s  %s put item on shopping list",
-        !can_purchase ? " " " "  "  " "       "  "          " :
-        menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
-                                     "[<w>!</w>] buy|<w>examine</w> items",
+    const string mode_desc = !can_purchase ? ""
+        : menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE)
+            + (menu_action == ACT_EXECUTE ? " <w>buy</w>|examine items"
+                                          : " buy|<w>examine</w> items");
+    string m = menu_keyhelp_cmd(CMD_MENU_EXIT)+ " exit          ";
+    m += mode_desc;
+    m = pad_more_with(m, make_stringf("%s %s",
         hyphenated_hotkey_letters(item_count(), 'a').c_str(),
-        menu_action == ACT_EXECUTE ? "mark item for purchase" : "examine item",
+        menu_action == ACT_EXECUTE ? "mark item for purchase   "
+                                   : "examine item             "));
+    m += make_stringf("\n[<w>/</w>] sort (%s)%s  %s",
         shopping_order_names[order],
-        // strwidth("default")
         string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
-        action_desc.c_str(),
-        hyphenated_hotkey_letters(item_count(), 'A').c_str())));
+        action_desc.c_str());
+
+    m = pad_more_with(m, hyphenated_hotkey_letters(item_count(), 'A')
+                                  + " put item on shopping list");
+    set_more(formatted_string::parse_string(top_line + m));
+
+    // set_more(formatted_string::parse_string(top_line
+    //     + make_stringf(
+
+
+    //     "%s exit  "
+    //     "%s      %s %s\n"
+    //     "[<w>/</w>] sort (%s)%s  %s  %s put item on shopping list",
+    //     menu_keyhelp_cmd(CMD_MENU_EXIT).c_str(),
+    //     !can_purchase ?              " " " "  "  " "       "  "          " :
+    //     menu_action == ACT_EXECUTE ? "[<w>!</w>] <w>buy</w>|examine items" :
+    //                                  "[<w>!</w>] buy|<w>examine</w> items",
+    //     hyphenated_hotkey_letters(item_count(), 'a').c_str(),
+    //     menu_action == ACT_EXECUTE ? "mark item for purchase" : "examine item",
+    //     shopping_order_names[order],
+    //     // strwidth("default")
+    //     string(7 - strwidth(shopping_order_names[order]), ' ').c_str(),
+    //     action_desc.c_str(),
+    //     hyphenated_hotkey_letters(item_count(), 'A').c_str())));
 }
 
 void ShopMenu::purchase_selected()
 {
+    no_excursions sanity;
+
     bool buying_from_list = false;
     vector<MenuEntry*> selected = selected_entries();
     int cost = selected_cost();
@@ -1191,9 +1222,9 @@ void ShopMenu::resort()
         items[i]->hotkeys[0] = index_to_letter(i);
 }
 
-void ShopMenu::describe(size_t i)
+bool ShopMenu::examine_index(int i)
 {
-    ASSERT(i < items.size());
+    ASSERT(i < static_cast<int>(items.size()));
     // A hack to make the description more useful.
     // The default copy constructor is non-const for item_def,
     // so we need this violation of const hygene to tweak the flags
@@ -1207,35 +1238,55 @@ void ShopMenu::describe(size_t i)
                        | ISFLAG_NOTED_GET);
     }
     describe_item_popup(item);
+    return true;
+}
+
+bool ShopMenu::cycle_mode(bool)
+{
+    if (can_purchase)
+    {
+        if (menu_action == ACT_EXECUTE)
+            menu_action = ACT_EXAMINE;
+        else
+            menu_action = ACT_EXECUTE;
+        update_help();
+        update_more();
+        return true;
+    }
+    return false;
+}
+
+void ShopMenu::select_item_index(int idx, int qty)
+{
+    if (!can_purchase)
+        return; // do nothing
+    InvMenu::select_item_index(idx, qty);
+}
+
+bool ShopMenu::process_command(command_type cmd)
+{
+    switch (cmd)
+    {
+    case CMD_MENU_ACCEPT_SELECTION:
+        if (can_purchase)
+            purchase_selected();
+        return true;
+    default:
+        break;
+    }
+    return InvMenu::process_command(cmd);
+}
+
+bool ShopMenu::skip_process_command(int keyin)
+{
+    // Bypass InvMenu::skip_process_command, which disables ! and ?
+    return Menu::skip_process_command(keyin);
 }
 
 bool ShopMenu::process_key(int keyin)
 {
     switch (keyin)
     {
-    case '!':
-    case '?':
-        if (can_purchase)
-        {
-            if (menu_action == ACT_EXECUTE)
-                menu_action = ACT_EXAMINE;
-            else
-                menu_action = ACT_EXECUTE;
-            update_help();
-            update_more();
-        }
-        return true;
-    case CK_MOUSE_CLICK:
-    case CK_ENTER:
-        if (menu_action == ACT_EXECUTE)
-        {
-            if (can_purchase)
-                purchase_selected();
-        }
-        else if (last_hovered >= 0)
-            describe(last_hovered);
-
-        return true;
     case '$':
     {
         // XX maybe add highlighted item if no selection?
@@ -1269,21 +1320,11 @@ bool ShopMenu::process_key(int keyin)
         update_help();
         update_menu(true);
         return true;
-    case '.':
-        if (!can_purchase)
-            return true; // XX describe?
-        break;
     default:
         break;
     }
 
-    if (keyin - 'a' >= 0 && keyin - 'a' < (int)items.size()
-        && menu_action == ACT_EXAMINE)
-    {
-        describe(letter_to_index(keyin));
-        return true;
-    }
-    else if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
+    if (keyin - 'A' >= 0 && keyin - 'A' < (int)items.size())
     {
         const auto index = letter_to_index(keyin) % 26;
         auto entry = dynamic_cast<ShopEntry*>(items[index]);
@@ -1350,6 +1391,8 @@ void shop()
     // If the shop is now empty, erase it from the overview.
     if (shop.stock.empty())
         destroy_shop_at(you.pos());
+    // finally it is safe to catch up on any off-level id stuff that is needed
+    shopping_list.do_excursion_work();
     redraw_screen();
     update_screen();
     if (menu.bought_something)
@@ -1857,12 +1900,29 @@ bool ShoppingList::cull_identical_items(const item_def& item, int cost)
     return to_del.size();
 }
 
+void ShoppingList::do_excursion_work()
+{
+    ASSERT(level_excursions_allowed());
+    // this is not (currently) automatically called, so be sure to call it
+    // manually if you trigger item_type_identified at a time where
+    // excursions are disabled. (XX autocall every once in a while?)
+    for (auto &p : need_excursions)
+        item_type_identified(p.first, p.second);
+    need_excursions.clear();
+}
+
 void ShoppingList::item_type_identified(object_class_type base_type,
                                         int sub_type)
 {
     // Dead men can't update their shopping lists.
     if (!crawl_state.need_save)
         return;
+
+    if (!level_excursions_allowed())
+    {
+        need_excursions.emplace_back(base_type, sub_type);
+        return;
+    }
 
     // Only restore the excursion at the very end.
     level_excursion le;
@@ -2079,30 +2139,35 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
 class ShoppingListMenu : public Menu
 {
 public:
-    ShoppingListMenu()
+    ShoppingListMenu(ShoppingList &_list)
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
-            | MF_INIT_HOVER) {}
-    bool view_only {false};
+            | MF_INIT_HOVER),
+        view_only(false), list(_list)
+    {}
+
+    bool view_only;
+    ShoppingList &list;
 
     string get_keyhelp(bool) const override
     {
-        string s = make_stringf("<yellow>You have %d gold pieces</yellow>\n", you.gold);
+        string s = make_stringf("<yellow>You have %d gold pieces</yellow>\n"
+                                "<lightgrey>", you.gold);
 
         if (view_only)
-            s += "<lightgrey>Choose to examine item  ";
+            s += "Choose to examine item  ";
         else
         {
-            s += "<lightgrey>[<w>!</w>] ";
+            s += menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE);
             switch (menu_action)
             {
             case ACT_EXECUTE:
-                s += "<w>travel</w>|examine|delete";
+                s += " <w>travel</w>|examine|delete";
                 break;
             case ACT_EXAMINE:
-                s += "travel|<w>examine</w>|delete";
+                s += " travel|<w>examine</w>|delete";
                 break;
             default:
-                s += "travel|examine|<w>delete</w>";
+                s += " travel|examine|<w>delete</w>";
                 break;
             }
 
@@ -2114,13 +2179,14 @@ public:
             s += hyphenated_hotkey_letters(items.size(), 'a')
                     + " choose item</lightgray>";
         }
-        return pad_more_with(s, "<lightgrey>[<w>Esc</w>] exit</lightgrey>");
+        return pad_more_with_esc(s);
     }
 
     friend class ShoppingList;
 
 protected:
     virtual formatted_string calc_title() override;
+    bool examine_index(int i) override;
 };
 
 formatted_string ShoppingListMenu::calc_title()
@@ -2179,7 +2245,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             // Colour shopping list item according to menu colours.
             const item_def &item = get_thing_item(thing);
 
-            const string colprf = item_prefix(item);
+            const string colprf = item_prefix(item, false);
             const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
 
@@ -2199,12 +2265,36 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
     }
 }
 
+bool ShoppingListMenu::examine_index(int i)
+{
+    ASSERT(i >= 0 && i < static_cast<int>(items.size()));
+    const CrawlHashTable* thing =
+                        static_cast<const CrawlHashTable *>(items[i]->data);
+    const bool is_item = list.thing_is_item(*thing);
+
+    if (is_item)
+    {
+        const item_def &item = list.get_thing_item(*thing);
+        describe_item_popup(item);
+    }
+    else // not an item, so we only stored a description.
+    {
+        // HACK: Assume it's some kind of portal vault.
+        const string info = make_stringf(
+                     "%s with an entry fee of %d gold pieces.",
+                     list.describe_thing(*thing, DESC_A).c_str(),
+                     (int) list.thing_cost(*thing));
+        show_description(info.c_str());
+    }
+    return true;
+}
+
 void ShoppingList::display(bool view_only)
 {
     if (list->empty())
         return;
 
-    ShoppingListMenu shopmenu;
+    ShoppingListMenu shopmenu(*this);
     shopmenu.view_only = view_only;
     shopmenu.set_tag("shop");
     shopmenu.menu_action  = view_only ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
@@ -2222,8 +2312,6 @@ void ShoppingList::display(bool view_only)
     {
         const CrawlHashTable* thing =
             static_cast<const CrawlHashTable *>(sel.data);
-
-        const bool is_item = thing_is_item(*thing);
 
         if (shopmenu.menu_action == Menu::ACT_EXECUTE)
         {
@@ -2243,23 +2331,6 @@ void ShoppingList::display(bool view_only)
             const level_pos lp(thing_pos(*thing));
             start_translevel_travel(lp);
             return false;
-        }
-        else if (shopmenu.menu_action == Menu::ACT_EXAMINE)
-        {
-            if (is_item)
-            {
-                const item_def &item = get_thing_item(*thing);
-                describe_item_popup(item);
-            }
-            else // not an item, so we only stored a description.
-            {
-                // HACK: Assume it's some kind of portal vault.
-                const string info = make_stringf(
-                             "%s with an entry fee of %d gold pieces.",
-                             describe_thing(*thing, DESC_A).c_str(),
-                             (int) thing_cost(*thing));
-                show_description(info.c_str());
-            }
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
         {
@@ -2399,6 +2470,7 @@ unordered_set<int> ShoppingList::find_thing(const string &desc, const level_pos 
     return result;
 }
 
+// XX these don't need to be member functions
 bool ShoppingList::thing_is_item(const CrawlHashTable& thing)
 {
     return thing.exists(SHOPPING_THING_ITEM_KEY);

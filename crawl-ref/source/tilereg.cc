@@ -101,6 +101,10 @@ void Region::resize_to_fit(int _wx, int _wy)
 
     recalculate();
 
+    // update in case any of this changes in recalculate
+    // XX this logic is kind of odd, but this seems to work
+    calculate_grid_size(inner_x, inner_y);
+
     ex = sx + _wx;
     ey = sy + _wy;
 }

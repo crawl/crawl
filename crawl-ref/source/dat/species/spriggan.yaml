@@ -47,7 +47,6 @@ mutations:
 recommended_jobs:
   - JOB_BRIGAND
   - JOB_ARTIFICER
-  - JOB_ABYSSAL_KNIGHT
   - JOB_WARPER
   - JOB_ENCHANTER
   - JOB_CONJURER

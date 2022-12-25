@@ -40,8 +40,8 @@ recommended_jobs:
   - JOB_FIGHTER
   - JOB_MONK
   - JOB_BERSERKER
-  - JOB_ABYSSAL_KNIGHT
   - JOB_CINDER_ACOLYTE
+  - JOB_REAVER
   - JOB_FIRE_ELEMENTALIST
 recommended_weapons:
   - SK_MACES_FLAILS

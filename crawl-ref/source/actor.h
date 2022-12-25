@@ -297,7 +297,6 @@ public:
     virtual bool clarity(bool items = true) const;
     virtual bool faith(bool items = true) const;
     virtual int archmagi(bool items = true) const;
-    virtual int spec_evoke(bool items = true) const;
     virtual bool no_cast(bool items = true) const;
     virtual bool reflection(bool items = true) const;
     virtual bool extra_harm(bool items = true) const;

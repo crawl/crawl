@@ -57,6 +57,30 @@ naga_blue_f
 naga_blue_m
 naga_red_f
 naga_red_m
+naga_bushfire_f
+naga_bushfire_m
+naga_cave_f
+naga_cave_m
+naga_deep_f
+naga_deep_m
+naga_dune_f
+naga_dune_m
+naga_milksnake_f
+naga_milksnake_m
+naga_orange_f
+naga_orange_m
+naga_purple_f
+naga_purple_m
+naga_rattlesnake_f
+naga_rattlesnake_m
+naga_river_f
+naga_river_m
+naga_shadow_f
+naga_shadow_m
+naga_stream_f
+naga_stream_m
+naga_swamp_f
+naga_swamp_m
 ogre_m OGRE
 ogre_f
 meteoran_f METEORAN
@@ -71,37 +95,29 @@ octopode5
 %rim 0
 djinni_f DJINNI
 djinni_m
+djinni_blue_f
+djinni_blue_m
+djinni_gold_f
+djinni_gold_m
+djinni_purple_f
+djinni_purple_m
 %rim 1
 formicid FORMICID
 vine_stalker_f VINE_STALKER
 vine_stalker_m
 
 # draconians
-draconian_f DRACONIAN DRACONIAN_FIRST
-draconian_m
-draconian_black_f DRACONIAN_BLACK
-draconian_black_m
-draconian_gold_f DRACONIAN_GOLD
-draconian_gold_m
-draconian_gray_f DRACONIAN_GREY
-draconian_gray_m
-draconian_green_f DRACONIAN_GREEN
-draconian_green_m
-draconian_pale_f DRACONIAN_PALE
-draconian_pale_m
-draconian_purple_f DRACONIAN_PURPLE
-draconian_purple_m
-draconian_red_f DRACONIAN_RED
-draconian_red_m
-draconian_white_f DRACONIAN_WHITE
-draconian_white_m DRACONIAN_LAST
+draconian DRACONIAN DRACONIAN_FIRST
+draconian_black DRACONIAN_BLACK
+draconian_yellow DRACONIAN_YELLOW
+draconian_grey DRACONIAN_GREY
+draconian_green DRACONIAN_GREEN
+draconian_pale DRACONIAN_PALE
+draconian_purple DRACONIAN_PURPLE
+draconian_red DRACONIAN_RED
+draconian_white DRACONIAN_WHITE DRACONIAN_LAST
 
-palentonga_red_f PALENTONGA
-palentonga_red_m
-palentonga_f
-palentonga_m
-palentonga_green_f
-palentonga_green_m
+armataur ARMATAUR
 demigod_f DEMIGOD
 demigod_m
 spriggan_m SPRIGGAN
@@ -680,6 +696,7 @@ trishula TRISHULA
 lajatang1 LAJATANG
 lajatang2
 lajatang3
+xmas-scythe XMAS_SCYTHE
 
 ## staves
 
@@ -1048,6 +1065,7 @@ turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
 turban_purple TURBAN_PURPLE HAT_LAST_NORM
 pumpkin PUMPKIN
+santa_hat SANTA
 hat_archer ARCHER
 hat_archer2 ARCHER2
 hat_explorer EXPLORER
@@ -1160,17 +1178,4 @@ drcwing_pale PALE
 drcwing_purple PURPLE
 drcwing_red RED
 drcwing_white WHITE
-%end_ctg
-
-%parts_ctg DRCHEAD
-%sdir player/drchead
-drchead_brown BROWN
-drchead_black BLACK
-drchead_yellow YELLOW
-drchead_grey GREY
-drchead_green GREEN
-drchead_pale PALE
-drchead_purple PURPLE
-drchead_red RED
-drchead_white WHITE
 %end_ctg

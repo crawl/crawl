@@ -444,6 +444,7 @@ enum scroll_type
     SCR_CURSE_JEWELLERY,
 #endif
     SCR_POISON,
+    SCR_BUTTERFLIES,
     NUM_SCROLLS
 };
 
@@ -806,5 +807,6 @@ enum item_set_type
     ITEM_SET_HEX_WANDS,
     ITEM_SET_BEAM_WANDS,
     ITEM_SET_BLAST_WANDS,
+    ITEM_SET_ALLY_SCROLLS,
     NUM_ITEM_SET_TYPES
 };

@@ -879,9 +879,14 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
                     $button.append($canvas);
                 }
                 $.each(button.labels || [button.label], function (i, label) {
+                    // TODO: this has somewhat weird behavior if multiple spans
+                    // are produced from the formatted string...should they
+                    // really have a flex-grow property?
                     var $lbl = $(util.formatted_string_to_html(label)).css("flex-grow", "1");
                     $button.append($lbl);
                 });
+                // at least remove empty spans because of the above issue:
+                $button.find("span:empty").remove();
                 $button.attr("style", "grid-row:"+(button.y+1)+"; grid-column:"+(button.x+1)+";");
                 $descriptions.append("<span class='pane'> " + button.description + "</span>");
                 $button.attr("data-description-index", $descriptions.children().length - 1);
@@ -1023,12 +1028,19 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         ui.hide_popup();
     }
 
+    var ui_stack_handled = false;
+
     function recv_ui_stack(msg)
     {
         if (!client.is_watching())
             return;
+        // only process once on load
+        if (ui_stack_handled)
+            return;
+
         for (var i = 0; i < msg.items.length; i++)
             comm.handle_message(msg.items[i]);
+        ui_stack_handled = true;
     }
 
     function recv_ui_state(msg)
@@ -1065,6 +1077,7 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
 
     function ui_layouts_cleanup()
     {
+        ui_stack_handled = false;
         if (update_server_scroll_timeout)
         {
             clearTimeout(update_server_scroll_timeout);

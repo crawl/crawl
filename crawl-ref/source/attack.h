@@ -188,6 +188,7 @@ protected:
     virtual int  player_apply_slaying_bonuses(int damage, bool aux);
     virtual int  player_apply_final_multipliers(int damage,
                                                 bool /*aux*/ = false);
+    virtual int player_apply_postac_multipliers(int damage);
 
     virtual void player_exercise_combat_skills();
 

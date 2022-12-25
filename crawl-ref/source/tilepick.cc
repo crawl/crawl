@@ -18,6 +18,7 @@
 #include "item-status-flag-type.h"
 #include "level-state-type.h"
 #include "libutil.h"
+#include "misc.h" // december_holidays
 #include "mon-death.h"
 #include "mon-tentacle.h"
 #include "mon-util.h"
@@ -567,16 +568,10 @@ tileidx_t tileidx_feature(const coord_def &gc)
                 if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
                     return TILE_FLOOR_SLIME_ACIDIC;
 
-        if (env.level_state & LSTATE_ICY_WALL)
+        if (env.level_state & LSTATE_ICY_WALL
+            && env.map_knowledge(gc).flags & MAP_ICY)
         {
-            for (adjacent_iterator ai(gc); ai; ++ai)
-            {
-                if (feat_is_wall(env.map_knowledge(*ai).feat())
-                    && env.map_knowledge(*ai).flags & MAP_ICY)
-                {
-                    return TILE_FLOOR_ICY;
-                }
-            }
+            return TILE_FLOOR_ICY;
         }
         // deliberate fall-through
     case DNGN_ROCK_WALL:
@@ -1251,6 +1246,10 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
         return TILEP_MONS_SIMULACRUM_KRAKEN;
     case TILEP_MONS_ZOMBIE_JELLY:
         return TILEP_MONS_SIMULACRUM_SLIME;
+    case TILEP_MONS_ZOMBIE_ORB:
+        return TILEP_MONS_SIMULACRUM_EYE;
+    case TILEP_MONS_ZOMBIE_X:
+        return TILEP_MONS_SIMULACRUM_X;
     default:
         if (tile_player_basetile(z_tile) == TILEP_MONS_ZOMBIE_HYDRA)
         {
@@ -1552,16 +1551,6 @@ tileidx_t tileidx_mon_clamp(tileidx_t tile, int offset)
 }
 
 #ifdef USE_TILE
-// actually, a triangle wave, but it's up to the actual tiles
-static tileidx_t _mon_sinus(tileidx_t tile)
-{
-    int count = tile_player_count(tile);
-    ASSERT(count > 0);
-    ASSERT(count > 1); // technically, staying put would work
-    int n = you.frame_no % (2 * count - 2);
-    return (n < count) ? (tile + n) : (tile + 2 * count - 2 - n);
-}
-
 static tileidx_t _mon_cycle(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
@@ -1835,12 +1824,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         return _tileidx_monster_zombified(mon);
 
     if (mon.props.exists(MONSTER_TILE_KEY))
-    {
-        tileidx_t t = mon.props[MONSTER_TILE_KEY].get_short();
-        if (t == TILEP_MONS_HELL_WIZARD)
-            return _mon_sinus(t);
-        return t;
-    }
+        return mon.props[MONSTER_TILE_KEY].get_short();
 
     int tile_num = 0;
     if (mon.props.exists(TILE_NUM_KEY))
@@ -2206,6 +2190,9 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_REPEL_MSL, TILEI_REPEL_MISSILES },
     { MB_INJURY_BOND, TILEI_INJURY_BOND },
     { MB_REFLECTING, TILEI_REFLECTING },
+    { MB_TELEPORTING, TILEI_TELEPORTING },
+    { MB_EMPOWERED_SPELLS, TILEI_BRILLIANCE },
+    { MB_RESISTANCE, TILEI_RESISTANCE },
 };
 
 set<tileidx_t> status_icons_for(const monster_info &mons)
@@ -2875,7 +2862,7 @@ tileidx_t tileidx_item(const item_def &item)
 #endif
 
     case OBJ_CORPSES:
-        if (item.sub_type == CORPSE_SKELETON)
+        if (!Options.show_blood || item.sub_type == CORPSE_SKELETON)
             return _tileidx_bone(item);
         else
             return _tileidx_corpse(item);
@@ -3474,8 +3461,8 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_SYMBOL_OF_TORMENT;
     case CMD_GAME_MENU:
         return TILEG_CMD_GAME_MENU;
-#ifdef TOUCH_UI
-    case CMD_SHOW_KEYBOARD:
+#ifdef __ANDROID__
+    case CMD_TOGGLE_KEYBOARD:
         return TILEG_CMD_KEYBOARD;
 #endif
     default:
@@ -3538,8 +3525,6 @@ tileidx_t tileidx_ability(const ability_type ability)
 #endif
     case ABIL_HOP:
         return TILEG_ABILITY_HOP;
-    case ABIL_ROLLING_CHARGE:
-        return TILEG_ABILITY_ROLL;
     case ABIL_BLINKBOLT:
         return TILEG_ABILITY_BLINKBOLT;
 
@@ -3667,8 +3652,6 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Lugonu
     case ABIL_LUGONU_ABYSS_EXIT:
         return TILEG_ABILITY_LUGONU_EXIT_ABYSS;
-    case ABIL_LUGONU_BEND_SPACE:
-        return TILEG_ABILITY_LUGONU_BEND_SPACE;
     case ABIL_LUGONU_BANISH:
         return TILEG_ABILITY_LUGONU_BANISH;
     case ABIL_LUGONU_CORRUPT:
@@ -3973,10 +3956,10 @@ static tileidx_t _tileidx_player_job_base(const job_type job)
             return TILEG_JOB_ARTIFICER;
         case JOB_DELVER:
             return TILEG_JOB_DELVER;
-        case JOB_ARCANE_MARKSMAN:
-            return TILEG_JOB_ARCANE_MARKSMAN;
-        case JOB_ABYSSAL_KNIGHT:
-            return TILEG_JOB_ABYSSAL_KNIGHT;
+        case JOB_HEXSLINGER:
+            return TILEG_JOB_HEXSLINGER;
+        case JOB_REAVER:
+            return TILEG_JOB_REAVER;
         case JOB_CINDER_ACOLYTE:
             return TILEG_JOB_CINDER_ACOLYTE;
         default:
@@ -4009,8 +3992,8 @@ static tileidx_t _tileidx_player_species_base(const species_type species)
             return TILEG_SP_TROLL;
         case SP_BASE_DRACONIAN:
             return TILEG_SP_DRACONIAN;
-        case SP_PALENTONGA:
-            return TILEG_SP_PALENTONGA;
+        case SP_ARMATAUR:
+            return TILEG_SP_ARMATAUR;
         case SP_DEMIGOD:
             return TILEG_SP_DEMIGOD;
         case SP_SPRIGGAN:
@@ -4209,7 +4192,10 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
                 tile = _modrng(item.rnd, TILE_THELM_HAT_EGO_FIRST, TILE_THELM_HAT_EGO_LAST);
                 break;
             case 4:
-                tile = _modrng(item.rnd, TILE_THELM_HAT_ART_FIRST, TILE_THELM_HAT_ART_LAST);
+                if (item.rnd % 2 && december_holidays())
+                    tile = TILE_THELM_HAT_SANTA;
+                else
+                    tile = _modrng(item.rnd, TILE_THELM_HAT_ART_FIRST, TILE_THELM_HAT_ART_LAST);
                 break;
             default:
                 tile = _modrng(item.rnd, TILE_THELM_HAT_FIRST, TILE_THELM_HAT_LAST);

@@ -294,7 +294,9 @@ static int crawl_yesno(lua_State *ls)
 
 static void crawl_sendkeys_proc(lua_State *ls, int argi)
 {
-    if (lua_isstring(ls, argi))
+    if (lua_type(ls, argi) == LUA_TNUMBER)
+        macro_sendkeys_end_add_expanded(luaL_safe_checkint(ls, argi));
+    else if (lua_isstring(ls, argi))
     {
         const char *keys = luaL_checkstring(ls, argi);
         if (!keys)
@@ -322,8 +324,6 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
             lua_pop(ls, 1);
         }
     }
-    else if (lua_isnumber(ls, argi))
-        macro_sendkeys_end_add_expanded(luaL_safe_checkint(ls, argi));
 }
 
 /*** Send keypresses to crawl.
@@ -423,10 +423,10 @@ static int crawl_do_targeted_command(lua_State *ls)
     case CMD_FIRE:
         quiver::get_secondary_action()->trigger(target);
         break;
-    case CMD_THROW_ITEM_NO_QUIVER:
+    case CMD_FIRE_ITEM_NO_QUIVER:
         // This pops up an inventory menu -- maybe support taking an item
         // directly?
-        throw_item_no_quiver(&target);
+        fire_item_no_quiver(&target);
         break;
     default:
         luaL_argerror(ls, 1, ("Not a (supported) targeted command: " + command).c_str());
@@ -1248,21 +1248,6 @@ static int crawl_is_webtiles(lua_State *ls)
     return 1;
 }
 
-/*** Are we using the touch ui?
- * @treturn boolean
- * @function is_touch_ui
- */
-static int crawl_is_touch_ui(lua_State *ls)
-{
-#ifdef TOUCH_UI
-    lua_pushboolean(ls, true);
-#else
-    lua_pushboolean(ls, false);
-#endif
-
-    return 1;
-}
-
 /*** Look up the current key bound to a command.
  * @tparam string name Name as in cmd-name.h
  * @treturn string|nil
@@ -1520,7 +1505,6 @@ static const struct luaL_reg crawl_clib[] =
     { "stat_gain_prompt",   crawl_stat_gain_prompt },
     { "is_tiles",           crawl_is_tiles },
     { "is_webtiles",        crawl_is_webtiles },
-    { "is_touch_ui",        crawl_is_touch_ui },
     { "err_trace",          crawl_err_trace },
     { "get_command",        crawl_get_command },
     { "endgame",            crawl_endgame },

@@ -3748,6 +3748,14 @@ VISUAL:@The_monster@ shakes with grief.
 
 @The_monster@ says, "She won't be lost forever!"
 %%%%
+twin_slimified Dowan
+
+VISUAL:@The_monster@ shakes with grief.
+
+@The_monster@ says, "I will find a way to undo this!"
+
+@The_monster@ says, "Turn her back! At once!"
+%%%%
 Dowan
 
 @_Dowan_common_@
@@ -6540,7 +6548,7 @@ _Zenata_rare_
 # SHODAN!
 @The_monster@ scoffs, "How can you challenge a perfect, immortal machine?"
 
-@The_monsters@ wonders, "When I cut you open, what secrets will I find?"
+@The_monster@ wonders, "When I cut you open, what secrets will I find?"
 
 @The_monster@ mutters, "I can hear her whispering... but she's dead. She's dead!"
 

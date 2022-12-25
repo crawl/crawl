@@ -92,6 +92,9 @@ Xom lastname
 w:280
 Xom of Chaos
 
+w:20
+Xom the Chaotic
+
 w:5
 Xom the Random
 

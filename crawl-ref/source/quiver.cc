@@ -80,6 +80,8 @@ namespace quiver
         {
             return MB_FALSE;
         }
+        // n.b. here for completeness, this is actually handled by dodgy
+        // ancient fire order code...
         if (strstr(you.inv[slot].inscription.c_str(), cycling ? "+F" : "+f"))
             return MB_TRUE;
         return MB_MAYBE;
@@ -286,11 +288,9 @@ namespace quiver
                 continue;
 
             // =F prevents item from being in fire order.
-            if (!ignore_inscription_etc
-                    && _fireorder_inscription_ok(i_inv, true) == MB_FALSE)
-            {
+            const maybe_bool i_check = _fireorder_inscription_ok(i_inv, true);
+            if (!ignore_inscription_etc && i_check == MB_FALSE)
                 continue;
-            }
 
             for (unsigned int i_flags = 0; i_flags < Options.fire_order.size();
                  i_flags++)
@@ -526,7 +526,7 @@ namespace quiver
 
             if (you.confused())
             {
-                if (you.is_stationary())
+                if (!you.is_motile())
                 {
                     // XX duplicate code with movement.cc:move_player_action
                     if (cancel_confused_move(true))
@@ -1017,6 +1017,34 @@ namespace quiver
 
     };
 
+    bool toss_validate_item(int slot, string *err)
+    {
+        // misc tossing restrictions go here
+
+        // No tossing cursed weapons.
+        // this check would be safe to remove, but it's useful for
+        // messaging purposes to see that the action is invalid. (It's
+        // otherwise handled by the unwield call.)
+        if (slot == you.equip[EQ_WEAPON]
+            && is_weapon(you.inv[slot])
+            && you.inv[slot].cursed())
+        {
+            if (err)
+                *err = "That weapon is stuck to your " + you.hand_name(false) + "!";
+            return false;
+        }
+
+        // make people manually take stuff off if they want to toss it
+        // (weapons are still ok for some reason)
+        if (item_is_worn(slot))
+        {
+            if (err)
+                *err = "You are wearing that object!";
+            return false;
+        }
+        return true;
+    }
+
     // for fumble throwing / tossing
     struct fumble_action : public ammo_action
     {
@@ -1028,12 +1056,7 @@ namespace quiver
 
         bool launch_type_check() const override
         {
-            return true;
-        }
-
-        bool is_valid() const override
-        {
-            return item_action::is_valid() && !you.has_mutation(MUT_NO_GRASPING);
+            return toss_validate_item(item_slot);
         }
     };
 
@@ -1122,7 +1145,12 @@ namespace quiver
             // extremely side-effect-y, and can crash if called at the wrong
             // time.
             enabled_cache = can_cast_spells(true)
-                                    && !spell_is_useless(spell, true, false);
+                            && !spell_is_useless(spell, true, false)
+            // Use a version of the charge range check that
+            // ignores things like butterflies, so that autofight doesn't get
+            // tripped up.
+                            && (spell != SPELL_ELECTRIC_CHARGE
+                                || electric_charge_possible(false));
             // this imposes excommunication colors
             if (!enabled_cache)
                 col_cache = COL_USELESS;
@@ -1359,14 +1387,6 @@ namespace quiver
         // it from the `a` menu, just not from the quiver.
         // (What abilities are missing here?)
 
-        if (abil == ABIL_ROLLING_CHARGE)
-        {
-            // Use a version of the palentonga charge range check that
-            // ignores things like butterflies, so that autofight doesn't get
-            // tripped up.
-            return palentonga_charge_possible(quiet, false);
-        }
-
         if (get_dist_to_nearest_monster() > ability_range(abil)
             && (get_ability_flags(abil) & abflag::targeting_mask))
 
@@ -1383,7 +1403,6 @@ namespace quiver
         switch (ability)
         {
         case ABIL_BLINKBOLT: // TODO: disable under nomove?
-        case ABIL_ROLLING_CHARGE: // TODO: disable under nomove?
         case ABIL_RU_POWER_LEAP: // disable under nomove, or altogether?
         case ABIL_SPIT_POISON:
         case ABIL_BREATHE_ACID:
@@ -1457,7 +1476,6 @@ namespace quiver
             {
             case ABIL_HOP:
             case ABIL_BLINKBOLT:
-            case ABIL_ROLLING_CHARGE:
             case ABIL_BREATHE_ACID:
             case ABIL_DAMNATION:
             case ABIL_ELYVILON_HEAL_OTHER:
@@ -1655,7 +1673,8 @@ namespace quiver
         {
             if (!is_valid())
                 return "Buggy";
-            return you.inv[item_slot].base_type == OBJ_POTIONS ? "Drink" : "Read";
+            return you.inv[item_slot].base_type == OBJ_SCROLLS ? "Read" :
+                   you.has_mutation(MUT_LONG_TONGUE) ? "Slurp" : "Drink";
         }
 
         bool use_autofight_targeting() const override { return false; }
@@ -2001,8 +2020,8 @@ namespace quiver
 
     void action_cycler::save(const string key) const
     {
-        auto &target = you.props[key].get_table();
-        get()->save(target);
+        auto &targ = you.props[key].get_table();
+        get()->save(targ);
         CrawlVector &history_vec = you.props[key]["history"].get_vector();
         history_vec.clear();
         for (auto &a : history)
@@ -2025,8 +2044,8 @@ namespace quiver
             save(key);
         }
 
-        auto &target = you.props[key].get_table();
-        set(_load_action(target));
+        auto &targ = you.props[key].get_table();
+        set(_load_action(targ));
         CrawlVector &history_vec = you.props[key]["history"].get_vector();
         history.clear();
         for (auto &val : history_vec)
@@ -2045,7 +2064,12 @@ namespace quiver
         for (auto it = history.rbegin(); it != history.rend(); ++it)
         {
             if ((*it) && (*it)->is_valid())
+            {
+                if (_fireorder_inscription_ok((*it)->get_item(), false) == MB_FALSE)
+                    continue;
+
                 return *it;
+            }
         }
         return nullptr;
     }
@@ -2296,15 +2320,22 @@ namespace quiver
     {
         if (!get()->is_valid())
         {
+            // XX should find_replacement respect +f?
             auto r = get()->find_replacement();
-            if (r && r->is_valid())
+            if (r && r->is_valid()
+                && _fireorder_inscription_ok(r->get_item(), false) != MB_FALSE)
+            {
                 set(r, true);
+            }
         }
         else if (check_autoswitch && autoswitched)
         {
             auto r = ammo_to_action(you.m_quiver_history.get_last_ammo());
-            if (r && r->is_valid())
+            if (r && r->is_valid()
+                && _fireorder_inscription_ok(r->get_item(), false) != MB_FALSE)
+            {
                 set(r);
+            }
         }
         set_needs_redraw();
     }
@@ -2331,10 +2362,6 @@ namespace quiver
         if (slot < 0 || slot >= ENDOFPACK || !you.inv[slot].defined())
             return nullptr;
 
-        // is this legacy(?) check needed? Maybe only relevant for fumble throwing?
-        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
-            if (you.equip[i] == slot)
-                return make_shared<ammo_action>(-1);
 
         shared_ptr<action> a = nullptr;
         // use ammo as the fallback -- may well end up invalid
@@ -2468,6 +2495,7 @@ namespace quiver
         tmp = wand_action(-1).get_fire_order(true, true);
         actions.insert(actions.end(), tmp.begin(), tmp.end());
         tmp = misc_action(-1).get_fire_order(true, true);
+        actions.insert(actions.end(), tmp.begin(), tmp.end());
         return actions;
     }
 
@@ -2499,7 +2527,7 @@ namespace quiver
     public:
         ActionSelectMenu(action_cycler &_quiver, bool _allow_empty)
             : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                    | MF_ARROWS_SELECT | MF_WRAP),
+                    | MF_ARROWS_SELECT | MF_WRAP | MF_SPECIAL_MINUS),
               cur_quiver(_quiver), allow_empty(_allow_empty),
               any_spells(_any_spells_to_quiver()),
               any_abilities(_any_abils_to_quiver()),
@@ -2561,7 +2589,8 @@ namespace quiver
                 s += "[<w>^</w>] all abilities  ";
 
 
-            string mode = make_stringf("[<w>!</w>] focus mode: %s",
+            string mode = make_stringf("%s focus mode: %s",
+                menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE).c_str(),
                 focus_mode == Focus::NONE ? "<w>off</w>|on"
                                           : "off|<w>on</w>");;
 
@@ -2670,7 +2699,7 @@ namespace quiver
             // present
             const bool show_headers = (!actions.empty() + !spell_actions.empty()
                                         + !abil_actions.empty()) > 1;
-            const auto item_count = actions.size();
+            const auto it_count = actions.size();
             const auto spell_count = spell_actions.size();
             actions.insert(actions.end(), spell_actions.begin(), spell_actions.end());
             actions.insert(actions.end(), abil_actions.begin(), abil_actions.end());
@@ -2678,13 +2707,14 @@ namespace quiver
             // this key shortcut does still work without arrow selection, but
             // it typically doesn't do much in this menu.
             const string keyhelp =
-                            " <lightgrey>([<w>,</w>] to cycle)</lightgrey>";
+                make_stringf(" <lightgrey>(%s to cycle)</lightgrey>",
+                            menu_keyhelp_cmd(CMD_MENU_CYCLE_HEADERS).c_str());
 
             first_item = 0;
-            first_spell = item_count;
+            first_spell = it_count;
             first_abil = first_spell + spell_count;
 
-            if (item_count && show_headers)
+            if (it_count && show_headers)
             {
                 add_entry(
                     new MenuEntry("<lightcyan>Items</lightcyan>" + keyhelp,
@@ -2697,7 +2727,7 @@ namespace quiver
             {
                 if (i == 0)
                     first_item = items.size();
-                if (i == item_count && spell_count && show_headers)
+                if (i == it_count && spell_count && show_headers)
                 {
                     add_entry(
                         new MenuEntry("<lightcyan>Spells</lightcyan>" + keyhelp,
@@ -2705,7 +2735,7 @@ namespace quiver
                     first_spell += 1;
                     first_abil += 1;
                 }
-                else if (i == item_count + spell_count && show_headers)
+                else if (i == it_count + spell_count && show_headers)
                 {
                     add_entry(
                         new MenuEntry("<lightcyan>Abilities</lightcyan>" + keyhelp,
@@ -2795,6 +2825,47 @@ namespace quiver
                 || !set_to_quiver(make_shared<ability_action>(talents[selected].which));
         }
 
+        bool cycle_headers(bool forward) override
+        {
+            // TODO: implement direction
+            if (!forward)
+                return false;
+            if (!is_set(MF_ARROWS_SELECT))
+            {
+                last_hovered = -1; // suppress any mouse hover
+                // need to manually focus mode for this case
+                // can this be generalized?
+                if (focus_mode == Focus::ITEM)
+                {
+                    focus_mode = Focus::SPELL;
+                    if (!item_visible(first_spell))
+                        set_scroll(first_spell);
+                }
+                else if (focus_mode == Focus::SPELL)
+                {
+                    focus_mode = Focus::ABIL;
+                    if (!item_visible(first_abil))
+                        set_scroll(first_abil);
+                }
+                else if (focus_mode == Focus::ABIL)
+                {
+                    if (!item_visible(first_item))
+                        set_scroll(first_item);
+                    focus_mode = Focus::ITEM;
+                }
+                sync_focus();
+                return true;
+            }
+            else
+                return Menu::cycle_headers(forward);
+        }
+
+        bool cycle_mode(bool) override
+        {
+            toggle_focus_mode();
+            return true;
+        }
+
         bool process_key(int key) override
         {
             // TODO: some kind of view action option?
@@ -2804,42 +2875,6 @@ namespace quiver
                 // TODO maybe drop this messaging?
                 mprf("Clearing quiver.");
                 return false;
-            }
-            else if (key == ',')
-            {
-                if (!is_set(MF_ARROWS_SELECT))
-                {
-                    last_hovered = -1; // suppress any mouse hover
-                    // need to manually focus mode for this case
-                    // can this be generalized?
-                    if (focus_mode == Focus::ITEM)
-                    {
-                        focus_mode = Focus::SPELL;
-                        if (!item_visible(first_spell))
-                            set_scroll(first_spell);
-                    }
-                    else if (focus_mode == Focus::SPELL)
-                    {
-                        focus_mode = Focus::ABIL;
-                        if (!item_visible(first_abil))
-                            set_scroll(first_abil);
-                    }
-                    else if (focus_mode == Focus::ABIL)
-                    {
-                        if (!item_visible(first_item))
-                            set_scroll(first_item);
-                        focus_mode = Focus::ITEM;
-                    }
-                    sync_focus();
-                }
-                else
-                    cycle_headers();
-                return true;
-            }
-            else if (key == '!')
-            {
-                toggle_focus_mode();
-                return true;
             }
             else if (isadigit(key))
             {
@@ -2860,7 +2895,7 @@ namespace quiver
             else if (key == '&' && any_spells)
             {
                 const int skey = list_spells(false, false, false,
-                                                    "Select a spell to quiver");
+                                                    "quiver");
                 if (skey == 0)
                     return true;
                 if (isalpha(skey))
@@ -3129,8 +3164,12 @@ namespace quiver
 
     void on_weapon_changed()
     {
-        if (Options.launcher_autoquiver && you.weapon() && is_range_weapon(*you.weapon()))
+        if (Options.launcher_autoquiver && you.weapon()
+            && is_range_weapon(*you.weapon())
+            && _fireorder_inscription_ok(you.equip[EQ_WEAPON], false) != MB_FALSE)
+        {
             you.quiver_action.set(get_primary_action());
+        }
 
         if (!you.quiver_action.get()->is_valid())
         {
@@ -3160,6 +3199,7 @@ static bool _item_matches(const item_def &item, fire_type types, bool manual)
     // of is_valid code...
     ASSERT(item.defined());
 
+    // XX code duplication with _fireorder_inscription_ok
     if (types & FIRE_INSCRIBED)
         if (item.inscription.find(manual ? "+F" : "+f", 0) != string::npos)
             return true;

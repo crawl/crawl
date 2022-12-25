@@ -1429,9 +1429,8 @@ KPROP:    x = bloody
              entering from nearby squares.
           * "no_tele_into": Prevents teleportation from choosing to use this
              square. Also prevents this square from being the destination of
-             a shaft or hatch. Use this tag to prevent nasty situations like
-             the player ending up in a closet or an extremely dense monster
-             array (like a hellion island); or for vaults with loot where the
+             a shaft or hatch. Use this tag to prevent the player from ending
+             up trapped in an isolated area; or for vaults with loot where the
              player is not supposed to get it by teleporting alone.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.

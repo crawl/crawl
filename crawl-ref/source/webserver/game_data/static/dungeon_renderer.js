@@ -93,13 +93,12 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
             }
             else
             {
-                // The canvas is scaled by devicePixelRatio (see util.js), so the
-                // cell dimensions need to be similarly scaled for purposes of
-                // getting the selected cell.
-                var ratio = window.devicePixelRatio;
+                // convert logical mouse coordinates to device coordinates
+                let scaled = this.scaled_size(ev.clientX, ev.clientY);
+                let cell_size = this.scaled_size();
                 var loc = {
-                    x: Math.round(ev.clientX / (this.cell_width / ratio) + this.view.x - 0.5),
-                    y: Math.round(ev.clientY / (this.cell_height / ratio) + this.view.y - 0.5)
+                    x: Math.floor(scaled.width / cell_size.width) + this.view.x,
+                    y: Math.floor(scaled.height / cell_size.height) + this.view.y
                 };
 
                 view_data.place_cursor(enums.CURSOR_MOUSE, loc);
@@ -157,11 +156,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
                              c * this.cell_width,
                              r * this.cell_height);
             this.init(this.element);
-            // The canvas is completely transparent after resizing;
-            // make it opaque to prevent display errors when shifting
-            // around parts of it later.
-            this.ctx.fillStyle = "black";
-            this.ctx.fillRect(0, 0, c * this.cell_width, r * this.cell_height);
+            this.clear(); // clear the canvas and override default alpha fill
         },
 
         set_view_center: function(x, y)
@@ -174,6 +169,29 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
                 y: y - Math.floor(this.rows / 2)
             };
             this.shift(this.view.x - old_view.x, this.view.y - old_view.y);
+        },
+
+        // convert grid coordinates/dimensions to scaled canvas coordinates
+        // by default, use map grid coordinates; set screen_grid to instead
+        // use the visible grid (with 0,0 in the upper left of the screen)
+        canvas_coords: function(cx, cy, cw, ch, screen_grid)
+        {
+            let scaled_cell = this.scaled_size();
+            cw = cw || 1;
+            ch = ch || 1;
+            cx = cx || 0;
+            cy = cy || 0;
+            if (!screen_grid)
+            {
+                cx -= this.view.x;
+                cy -= this.view.y;
+            }
+            return {
+                x: cx * scaled_cell.width,
+                y: cy * scaled_cell.height,
+                width: cw * scaled_cell.width,
+                height: ch * scaled_cell.height
+            };
         },
 
         // Shifts the dungeon view by cx/cy cells.
@@ -210,49 +228,43 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
                 dy = -y;
             }
 
-            var cw = this.cell_width;
-            var ch = this.cell_height;
+            const cw = this.cols - Math.abs(x);
+            const ch = this.rows - Math.abs(y);
 
-            var w = Math.floor((this.cols - Math.abs(x)) * cw);
-            var h = Math.floor((this.rows - Math.abs(y)) * ch);
+            let source = this.canvas_coords(sx, sy, cw, ch, true);
 
-            if (w > 0 && h > 0)
+            if (source.width > 0 && source.height > 0)
             {
-                var floor = Math.floor;
+                // copy from source to dest
+                // written a bit over-generally: don't really need to
+                // recalculate destination size, unless this function is
+                // ever used for rescaling
+                let dest = this.canvas_coords(dx, dy, cw, ch, true);
                 this.ctx.drawImage(this.element,
-                                   floor(sx * cw),
-                                   floor(sy * ch),
-                                   w, h,
-                                   floor(dx * cw),
-                                   floor(dy * ch),
-                                   w, h);
+                    source.x, source.y, source.width, source.height,
+                    dest.x, dest.y, dest.width, dest.height);
             }
 
             // Render cells that came into view
             for (var cy = 0; cy < dy; cy++)
                 for (var cx = 0; cx < this.cols; cx++)
-                    this.render_cell(cx + this.view.x, cy + this.view.y,
-                                     cx * cw, cy * ch);
+                    this.render_grid_cell(cx + this.view.x, cy + this.view.y);
 
             for (var cy = dy; cy < this.rows - sy; cy++)
             {
                 for (var cx = 0; cx < dx; cx++)
-                    this.render_cell(cx + this.view.x, cy + this.view.y,
-                                     cx * cw, cy * ch);
+                    this.render_grid_cell(cx + this.view.x, cy + this.view.y);
                 for (var cx = this.cols - sx; cx < this.cols; cx++)
-                    this.render_cell(cx + this.view.x, cy + this.view.y,
-                                     cx * cw, cy * ch);
+                    this.render_grid_cell(cx + this.view.x, cy + this.view.y);
             }
 
             for (var cy = this.rows - sy; cy < this.rows; cy++)
                 for (var cx = 0; cx < this.cols; cx++)
-                    this.render_cell(cx + this.view.x, cy + this.view.y,
-                                     cx * cw, cy * ch);
+                    this.render_grid_cell(cx + this.view.x, cy + this.view.y);
         },
 
         fit_to: function(width, height, min_diameter)
         {
-            var ratio = window.devicePixelRatio;
             var scale;
             if (this.ui_state == enums.ui.VIEW_MAP)
                 scale = options.get("tile_map_scale");
@@ -261,30 +273,33 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
             var tile_size = Math.floor(options.get("tile_cell_pixels")
                                 * scale / 100);
             var cell_size = {
-                w: Math.floor(tile_size * ratio),
-                h: Math.floor(tile_size * ratio)
+                w: Math.floor(tile_size),
+                h: Math.floor(tile_size)
             };
 
             if (options.get("tile_display_mode") == "glyphs")
             {
+                // TODO: this should rescale to ensure los, similar to tiles
                 this.glyph_mode_update_font_metrics();
                 this.set_cell_size(this.glyph_mode_font_width,
                                     this.glyph_mode_line_height);
             }
-            else if ((min_diameter * cell_size.w / ratio > width)
-                || (min_diameter * cell_size.h / ratio > height))
+            else if ((min_diameter * cell_size.w > width)
+                || (min_diameter * cell_size.h > height))
             {
+                // TODO: this produces bad results in hybrid mode, because the
+                // font size isn't appropriately updated
                 // scale down if necessary, so that los is in view
-                var rescale = Math.min(width * ratio / (min_diameter * cell_size.w),
-                                     height * ratio / (min_diameter * cell_size.h));
+                var rescale = Math.min(width / (min_diameter * cell_size.w),
+                                     height / (min_diameter * cell_size.h));
                 this.set_cell_size(Math.floor(cell_size.w * rescale),
                                    Math.floor(cell_size.h * rescale));
             }
             else
                 this.set_cell_size(cell_size.w, cell_size.h);
 
-            var view_width = Math.floor(width * ratio / this.cell_width);
-            var view_height = Math.floor(height * ratio / this.cell_height);
+            var view_width = Math.floor(width / this.cell_width);
+            var view_height = Math.floor(height / this.cell_height);
             this.set_size(view_width, view_height);
         },
 
@@ -294,40 +309,38 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
                 (cy >= this.view.y) && (this.view.y + this.rows > cy);
         },
 
-        clear: function()
+        // render a single cell on the map grid
+        render_grid_cell: function(cx, cy, map_cell, cell)
         {
-            this.ctx.fillStyle = "black";
-            this.ctx.fillRect(0, 0, this.element.width, this.element.height);
+            if (!this.in_view(cx, cy))
+                return;
+            map_cell = map_cell || map_knowledge.get(cx, cy);
+            cell = cell || map_cell.t;
+            let scaled = this.canvas_coords(cx, cy);
+            this.render_cell(cx, cy, scaled.x, scaled.y, map_cell, cell);
         },
 
+        // render a cell on the map grid, recursing as necessary based on
+        // overlaps with adjacent cells below/right
         render_loc: function(cx, cy, map_cell)
         {
-            map_cell = map_cell || map_knowledge.get(cx, cy);
-            var cell = map_cell.t;
+            this.render_grid_cell(cx, cy, map_cell);
 
-            if (this.in_view(cx, cy))
+            // Redraw the cell below if it overlapped
+            if (this.in_view(cx, cy + 1))
             {
-                var x = (cx - this.view.x) * this.cell_width;
-                var y = (cy - this.view.y) * this.cell_height;
-
-                this.render_cell(cx, cy, x, y, map_cell, cell);
-
-                // Redraw the cell below if it overlapped
-                if (this.in_view(cx, cy + 1))
+                let cell_below = map_knowledge.get(cx, cy + 1);
+                if (cell_below.t && cell_below.t.sy && (cell_below.t.sy < 0))
+                    this.render_loc(cx, cy + 1, cell_below);
+            }
+            // Redraw the cell to the right if it overlapped
+            if (this.in_view(cx + 1, cy))
+            {
+                let cell_right = map_knowledge.get(cx + 1, cy);
+                if (cell_right.t && cell_right.t.left_overlap
+                    && (cell_right.t.left_overlap < 0))
                 {
-                    var cell_below = map_knowledge.get(cx, cy + 1);
-                    if (cell_below.t && cell_below.t.sy && (cell_below.t.sy < 0))
-                        this.render_loc(cx, cy + 1);
-                }
-                // Redraw the cell to the right if it overlapped
-                if (this.in_view(cx + 1, cy))
-                {
-                    var cell_right = map_knowledge.get(cx + 1, cy);
-                    if (cell_right.t && cell_right.t.left_overlap
-                        && (cell_right.t.left_overlap < 0))
-                    {
-                        this.render_loc(cx + 1, cy);
-                    }
+                    this.render_loc(cx + 1, cy, cell_right);
                 }
             }
         },
@@ -345,9 +358,7 @@ function ($, comm, cr, map_knowledge, options, dngn, util, view_data, enums,
                 if (map_knowledge.visible(map_cell) && cell_is_animated(cell))
                 {
                     animate_cell(cell);
-                    var x = (cx - this.view.x) * this.cell_width;
-                    var y = (cy - this.view.y) * this.cell_height;
-                    this.render_cell(cx, cy, x, y, map_cell, cell);
+                    this.render_grid_cell(cx, cy, map_cell, cell);
                 }
             }
         },

@@ -89,7 +89,7 @@ local function make_tagged_room(options,chosen)
   -- screw with our attempts to understand and position the vault later; and hardwire transparency because lack of it can fail a whole layout
   -- TODO: Store these tags on the room first so we can actually support them down the line ...
   local old_tags = dgn.tags(mapdef)
-  dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate transparent")
+  dgn.tags(mapdef, "no_vmirror no_hmirror no_rotate passable")
   -- Resolve the map so we can find its width / height
   local map, vplace = dgn.resolve_map(mapdef,false)
   local room,room_width,room_height
@@ -104,9 +104,9 @@ local function make_tagged_room(options,chosen)
   dgn.tags_remove(map, "no_vmirror no_hmirror no_rotate")
   -- restore the original tags to mapdef, since this state is persistent
   dgn.tags(mapdef, nil)
-  -- TODO: if a vault is not tagged transparent, this addition is permanent
-  -- and affects any later placement outside vaults
-  dgn.tags(mapdef, old_tags .. " transparent")
+  -- TODO: if a vault is not tagged passable, this addition is permanent; does
+  -- it affect anything?
+  dgn.tags(mapdef, old_tags .. " passable")
 
   local room_width,room_height = dgn.mapsize(map)
   local veto = false

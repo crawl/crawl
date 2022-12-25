@@ -260,7 +260,8 @@ void handle_behaviour(monster* mon)
     bool wontAttack = mon->wont_attack() && !mon->has_ench(ENCH_INSANE);
 
     // Whether the player position is in LOS of the monster.
-    bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos());
+    bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos())
+                      && in_bounds(you.pos());
 
     // If set, pretend the player isn't there, but only for hostile monsters.
     if (proxPlayer && crawl_state.disables[DIS_MON_SIGHT] && !mon->wont_attack())
@@ -554,13 +555,14 @@ void handle_behaviour(monster* mon)
                     // tracking foe's CURRENT position,
                     // but only for a few moves (smell and
                     // intuition only go so far).
-
-                  if (mon->pos() == mon->target)
+                    if (mon->pos() == mon->target)
                     {
                         if (mon->foe == MHITYOU)
                         {
-                            if (x_chance_in_y(50, you.stealth())
-                                || you.penance[GOD_ASHENZARI] && coinflip())
+                            if (in_bounds(you.pos())
+                                && (x_chance_in_y(50, you.stealth())
+                                    || you.penance[GOD_ASHENZARI]
+                                       && coinflip()))
                             {
                                 mon->target = you.pos();
                             }
@@ -628,6 +630,7 @@ void handle_behaviour(monster* mon)
             break;
 
         case BEH_WANDER:
+        case BEH_BATTY:
             if (isPacified)
             {
                 // If a pacified monster isn't travelling toward
@@ -684,6 +687,7 @@ void handle_behaviour(monster* mon)
             // Creatures not currently pursuing another foe are
             // alerted by a sentinel's mark
             if (mon->foe == MHITNOT && you.duration[DUR_SENTINEL_MARK]
+                && in_bounds(you.pos())
                 && (!isFriendly && !mons_is_avatar(mon->type) && !isNeutral
                     && !isPacified
                     || mon->has_ench(ENCH_INSANE)))

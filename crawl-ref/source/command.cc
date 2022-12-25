@@ -51,11 +51,11 @@ static const char *features[] =
 #endif
 
 #ifdef USE_TILE_LOCAL
-    "Tile support",
+    "Tiles support",
 #endif
 
 #ifdef USE_TILE_WEB
-    "Web Tile support",
+    "Webtiles support",
 #endif
 
 #ifdef WIZARD
@@ -85,7 +85,8 @@ static const char *features[] =
 
 static string _get_version_information()
 {
-    string result = string("This is <w>" CRAWL " ") + Version::Long + "</w>";
+    string result = string("This is <w>" CRAWL " ") + Version::Long
+        + " (" CRAWL_BUILD_NAME ")</w>";
     return result;
 }
 
@@ -110,6 +111,8 @@ static string _get_version_features()
         result += Version::history();
         result += "\n\n";
     }
+
+    result += "Report bugs to: <w>" CRAWL_BUG_REPORT "</w>\n\n";
 
     result += "<w>Features</w>\n"
                  "--------\n";
@@ -806,7 +809,20 @@ static void _add_formatted_help_menu(column_composer &cols)
 #endif
         "<w>V</w>: Version information\n"
         "<w>!</w>: Display diagnostics\n"
+#ifndef __ANDROID__
         "<w>Home</w>: This screen\n");
+#else
+        "<w>Home</w>: This screen\n"
+        "\n"
+        "<h>Android Controls\n"
+        "\n"
+        "<w>Back key</w>: Alias for escape\n"
+        "<w>Volume keys</w>: Zoom dungeon & map\n"
+        "Long press for right click.\n"
+        "Touch with two fingers for scrolling.\n"
+        "Toggle keyboard icon controls the\n"
+        "virtual keyboard visibility.\n");
+#endif
 
     // TODO: generate this from the manual somehow
     cols.add_formatted(
@@ -1068,7 +1084,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 1, CMD_INSCRIBE_ITEM, "inscribe item", 2);
     _add_command(cols, 1, CMD_FIRE, "Fire the currently quivered action", 2);
-    _add_command(cols, 1, CMD_THROW_ITEM_NO_QUIVER, "select an item and Fire it", 2);
+    _add_command(cols, 1, CMD_FIRE_ITEM_NO_QUIVER, "select an item and Fire it", 2);
     _add_command(cols, 1, CMD_QUIVER_ITEM, "select action to be Quivered", 2);
     _add_command(cols, 1, CMD_SWAP_QUIVER_RECENT, "swap between most recent quiver actions", 2);
     _add_command(cols, 1, CMD_QUAFF, "Quaff a potion", 2);

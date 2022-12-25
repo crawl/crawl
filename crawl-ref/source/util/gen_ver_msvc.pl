@@ -13,7 +13,7 @@ $mergebase or $mergebase = "";
 
 mkdir dirname($outfile);
 
-$_ = `git describe --tags $mergebase`
+$_ = `git describe $mergebase`
     || (open(IN, "<", "$scriptpath/release_ver") ? <IN>
         : die "No Git, and $scriptpath/release_ver doesn't exist.\n")
     or die "couldn't get the version information\n";

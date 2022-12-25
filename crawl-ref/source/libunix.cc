@@ -37,6 +37,7 @@
 #include "state.h"
 #include "tiles-build-specific.h"
 #include "unicode.h"
+#include "version.h"
 #include "view.h"
 #include "ui.h"
 
@@ -567,10 +568,18 @@ int getch_ck()
         }
 #endif
 
+        // TODO: what else should be added to this?
         switch (c)
         {
-        // [dshaligram] MacOS ncurses returns 127 for backspace.
         case 127:
+        // 127 is ASCII DEL, which some terminals (all mac, some linux) use for
+        // the backspace key. ncurses does not typically map this to
+        // KEY_BACKSPACE (though this may depend on TERM settings?). '\b' (^H)
+        // in contrast should be handled automatically. Note that ASCII DEL
+        // is distinct from the standard esc code for del, esc[3~, which
+        // reliably does get mapped to KEY_DC by ncurses. Some background:
+        //     https://invisible-island.net/xterm/xterm.faq.html#xterm_erase
+        // (I've never found documentation for the mac situation.)
         case -KEY_BACKSPACE: return CK_BKSP;
         case -KEY_DC:    return CK_DELETE;
         case -KEY_HOME:  return CK_HOME;
@@ -585,6 +594,13 @@ int getch_ck()
         case -KEY_RESIZE: return CK_RESIZE;
 #endif
         case -KEY_BTAB:  return CK_SHIFT_TAB;
+        case -KEY_SDC:   return CK_SHIFT_DELETE;
+#ifdef TARGET_OS_MACOSX
+        // not sure what's up with this, no ncurses constant? defining it only
+        // for mac to be cautious
+        case -515:       return CK_CTRL_DELETE;
+#endif
+
         // may or may not be defined depending on the terminal. Escape codes
         // are the xterm convention, other terminals may do different things
         // and ncurses may or may not handle them correctly.
@@ -606,6 +622,14 @@ static void unix_handle_terminal_resize()
 static void unixcurses_defkeys()
 {
 #ifdef NCURSES_VERSION
+    // To debug these on a specific terminal, you can use `cat -v` to see what
+    // escape codes are being printed. To some degree it's better to let ncurses
+    // do what it can rather than hard-coding things, but that doesn't always
+    // work.
+    // cool trick: `printf '\033[?1061h\033='; cat -v` initializes application
+    // mode if the terminal supports it. (For some terminals, it may need to
+    // be explicitly allowed, or enable via numlock.)
+
     // keypad 0-9 (only if the "application mode" was successfully initialised)
     define_key("\033Op", 1000);
     define_key("\033Oq", 1001);
@@ -619,30 +643,60 @@ static void unixcurses_defkeys()
     define_key("\033Oy", 1009);
 
     // non-arrow keypad keys (for macros)
-    define_key("\033OM", 1010); // Enter
+    define_key("\033OM", 1010); // keypad enter
 
-    // TODO: I don't know under what context these are mapped to numpad keys,
-    // but they are *much* more commonly used for F1-F4. So don't
-    // unconditionally define these. I don't trust anything else in this
-    // function either, but most of it is a bit hard to test. Possibly the
-    // conditional define here should at least be generalized?
+    // TODO: I don't know under what context these four are mapped to numpad
+    // keys, but they are *much* more commonly used for F1-F4. So don't
+    // unconditionally define these. But these mappings have been around for
+    // a while, so I'm hesitant to remove them...
 #define check_define_key(s, n) if (!key_defined(s)) define_key(s, n)
     check_define_key("\033OP", 1011); // NumLock
     check_define_key("\033OQ", 1012); // /
     check_define_key("\033OR", 1013); // *
     check_define_key("\033OS", 1014); // -
+
+    // TODO: these could probably use further verification on linux
+    // notes:
+    // * this code doesn't like to map multiple esc sequences to the same
+    //   keycode. However, doing so works fine on my testing on mac, on
+    //   current ncurses. Why would this be bad?
+    // * mac Terminal.app even in application mode does not shift =/*
+    // * historically, several comments here were wrong on my testing, but
+    //   they could be right somewhere. The current key descriptions are
+    //   accurate as far as I can tell.
+    define_key("\033Oj", 1015); // *
+    define_key("\033Ok", 1016); // + (probably everything else except mac terminal)
+    define_key("\033Ol", 1017); // + (mac terminal application mode)
+    define_key("\033Om", 1018); // -
+    define_key("\033On", 1019); // .
+    define_key("\033Oo", 1012); // / (may conflict with the above define?)
+    define_key("\033OX", 1021); // =, at least on mac console
+
+#ifdef TARGET_OS_MACOSX
+    // force some mappings for function keys that work on mac Terminal.app with
+    // the default TERM value.
+
+    // The following seem to be the rxvt escape codes, even
+    // though Terminal.app defaults to xterm-256color.
+    // TODO: would it be harmful to force this unconditionally?
+    check_define_key("\033[25~", 277); // F13
+    check_define_key("\033[26~", 278); // F14
+    check_define_key("\033[28~", 279); // F15
+    check_define_key("\033[29~", 280); // F16
+    check_define_key("\033[31~", 281); // F17
+    check_define_key("\033[32~", 282); // F18
+    check_define_key("\033[33~", 283); // F19, highest key on a magic keyboard
+
+    // not sure exactly what's up with these, but they exist by default:
+    // ctrl bindings do too, but they are intercepted by macos
+    check_define_key("\033b", -(CK_LEFT + CK_ALT_BASE));
+    check_define_key("\033f", -(CK_RIGHT + CK_ALT_BASE));
+    // (sadly, only left and right have modifiers by default on Terminal.app)
+#endif
 #undef check_define_key
 
-    // TODO: there may be codes missing here, I don't get special keycodes for
-    // *,/,= on mac console.
-    define_key("\033Oj", 1015); // *
-    define_key("\033Ok", 1016); // + // XX why don't these collapse??
-    define_key("\033Ol", 1017); // +
-    define_key("\033Om", 1018); // . // XX this is - on mac console? Also confirmed on linux as -
-    define_key("\033On", 1019); // .
-    define_key("\033Oo", 1020); // -
-
     // variants. Ugly curses won't allow us to return the same code...
+    // TODO: the above comment seems to be wrong for current ncurses?
     define_key("\033[1~", 1031); // Home
     define_key("\033[4~", 1034); // End
     define_key("\033[E",  1040); // center arrow
@@ -653,6 +707,8 @@ int unixcurses_get_vi_key(int keyin)
 {
     switch (-keyin)
     {
+    // TODO: should use cio.h constants, but I'm too scared to change this
+    // function
     // -1001..-1009: passed without change
     case 1031: return -1007;
     case 1034: return -1001;
@@ -1137,15 +1193,7 @@ static bool curs_can_use_extended_colors()
 }
 
 lib_display_info::lib_display_info()
-    : type(
-#ifdef USE_TILE_WEB
-        "Console/Webtiles"
-#elif defined(USE_TILE_LOCAL)
-        "SDL Tiles"
-#else
-        "Console"
-#endif
-        ),
+    : type(CRAWL_BUILD_NAME),
     term(termname()),
     fg_colors(
         (curs_can_use_extended_colors()

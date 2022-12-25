@@ -132,11 +132,16 @@ static int l_item_do_wield(lua_State *ls)
 
     UDATA_ITEM(item);
 
-    int slot = -1;
-    if (item && item->defined() && in_inventory(*item))
-        slot = item->link;
-    bool res = wield_weapon(true, slot);
-    lua_pushboolean(ls, res);
+    if (item)
+    {
+        int slot = -1;
+        if (item && item->defined() && in_inventory(*item))
+            slot = item->link;
+        lua_pushboolean(ls, wield_weapon(slot));
+    }
+    else
+        lua_pushboolean(ls, use_an_item(OPER_WIELD));
+
     return 1;
 }
 
@@ -177,7 +182,7 @@ static int l_item_do_puton(lua_State *ls)
     if (!item || !in_inventory(*item))
         return 0;
 
-    lua_pushboolean(ls, puton_ring(item->link));
+    lua_pushboolean(ls, puton_ring(*item));
     return 1;
 }
 
@@ -212,7 +217,7 @@ static int l_item_do_remove(lua_State *ls)
 
     bool result = false;
     if (eq == EQ_WEAPON)
-        result = wield_weapon(true, SLOT_BARE_HANDS);
+        result = wield_weapon(SLOT_BARE_HANDS);
     else if (eq >= EQ_FIRST_JEWELLERY && eq <= EQ_LAST_JEWELLERY)
         result = remove_ring(item->link);
     else
@@ -1554,9 +1559,27 @@ LUAFN(l_item_excluded_from_set)
     {
         luaL_error(ls, make_stringf("Invalid item spec '%s'.",
                                     specifier.c_str()).c_str());
+        return 0;
     }
     lua_pushboolean(ls, item_excluded_from_set(parsed_spec.base_type,
                                                parsed_spec.sub_type));
+    return 1;
+}
+
+LUAFN(l_item_for_set)
+{
+    ASSERT_DLUA;
+
+    const string &setname = luaL_checkstring(ls, 1);
+    const item_set_type iset = item_set_by_name(setname);
+    if (iset == NUM_ITEM_SET_TYPES)
+    {
+        luaL_error(ls, make_stringf("Invalid item set name '%s'.",
+                                    setname.c_str()).c_str());
+        return 0;
+    }
+
+    lua_pushstring(ls, item_name_for_set(iset).c_str());
     return 1;
 }
 
@@ -1659,7 +1682,9 @@ static const struct luaL_reg item_lib[] =
     { "shopping_list",     l_item_shopping_list },
     { "acquirement_items", l_item_acquirement_items },
     { "fire",              l_item_fire },
+
     { "excluded_from_set", l_item_excluded_from_set },
+    { "item_for_set",      l_item_for_set },
     { nullptr, nullptr },
 };
 

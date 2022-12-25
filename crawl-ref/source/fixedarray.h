@@ -40,6 +40,17 @@ public:
         init(def);
     }
 
+    FixedArray(const FixedArray &other)
+    {
+        copy_from(other);
+    }
+
+    FixedArray& operator = (const FixedArray &other)
+    {
+        copy_from(other);
+        return *this;
+    }
+
 public:
     // ----- Size -----
     bool empty() const { return WIDTH == 0 || HEIGHT == 0; }
@@ -86,6 +97,14 @@ public:
 
 protected:
     FixedVector<Column, WIDTH> mData;
+
+
+    void copy_from(const FixedArray &other)
+    {
+        for (int i = 0; i < width(); i++)
+            for (int j = 0; j < height(); j++)
+                (*this)[i][j] = other[i][j];
+    }
 };
 
 // A fixed array centered around the origin.

@@ -212,6 +212,7 @@ enum monster_info_flags
     MB_UNBLINDABLE,
     MB_SIMULACRUM,
     MB_REFLECTING,
+    MB_TELEPORTING,
     NUM_MB_FLAGS
 };
 
@@ -231,6 +232,7 @@ struct monster_info_base
         int is_active;   ///< Whether this ballisto is active or not
     };
     int _colour;
+    int ghost_colour;
     mon_attitude_type attitude;
     mon_threat_level_type threat;
     mon_dam_level_type dam;
@@ -387,6 +389,7 @@ struct monster_info : public monster_info_base
     reach_type reach_range(bool items = true) const;
 
     size_type body_size() const;
+    bool net_immune() const;
 
     // These should be kept in sync with the actor equivalents
     // (Maybe unify somehow?)

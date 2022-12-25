@@ -530,6 +530,7 @@ TILE:     unrand_zealot_sword
 TILE_EQ:  zealot_sword
 # fallback places a randart eudemon blade!
 BRAND:    SPWPN_HOLY_WRATH
+FB_BRAND: SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    20
 LIFE:     1
@@ -570,8 +571,8 @@ TILE:    urand_eos
 TILE_EQ: eos
 BRAND:   SPWPN_ELECTROCUTION
 BOOL:    elec
-DESCRIP: It grants its wielder a halo, increasing accuracy against those within
- it.
+DESCRIP: It grants its wielder a halo, revealing invisible creatures and
+ increasing accuracy against all within it other than the wielder.
 
 # start TAG_MAJOR_VERSION == 34
 # Was "spear of Voo-Doo". In the African origin, there is a distinction
@@ -629,9 +630,10 @@ DESCRIP:  It enhances your fire, ice, earth and air magic.
 NAME:     heavy crossbow "Sniper"
 OBJ:      OBJ_WEAPONS/WPN_TRIPLE_CROSSBOW
 TYPE:     heavy crossbow
-PLUS:     +9
+PLUS:     +27
 COLOUR:   ETC_DARK
 TILE:     urand_sniper
+VALUE:    800
 TILE_EQ:  sniper
 BASE_DELAY: +4
 BRAND:    SPWPN_VORPAL
@@ -1203,7 +1205,7 @@ VALUE:    1000
 TILE:     urand_vitality
 
 NAME:     autumn katana
-INSCRIP:  vorpal, manifold assault
+INSCRIP:  manifold assault
 OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
 FALLBACK: OBJ_WEAPONS/WPN_DOUBLE_SWORD
 TYPE:     katana
@@ -1231,7 +1233,7 @@ BOOL:     special
 COLOUR:   WHITE
 VALUE:    600
 DBRAND:   It releases a powerful concussive burst when it strikes, dealing
- extra damage to the target and all other foes adjacent to them.
+ extra damage to the target and all other creatures adjacent to them.
 
 # Worn by Tiamat.
 ENUM:     DRAGONSKIN
@@ -1594,11 +1596,11 @@ PLUS:     +3
 COLOUR:   ETC_MAGIC
 TILE:     urand_power_gloves
 TILE_EQ:  glove_brown
-INSCRIP:  Infuse+∞ RegenMP
-INT:      -3
+INSCRIP:  Infuse+∞ VampMP
+BOOL:     nospell
 VALUE:    400
 DESCRIP:  It empowers its wearer's blows with all of their magic.
-+It causes its wearer's magical reserves to regenerate more quickly.
++Blows struck in melee replenish the wearer's magic.
 
 NAME:     dreamshard necklace
 OBJ:      OBJ_JEWELLERY/AMU_NOTHING
@@ -1658,6 +1660,7 @@ OBJ:      OBJ_WEAPONS/WPN_TRISHULA
 PLUS:     8
 COLOUR:   ETC_HOLY
 BRAND:    SPWPN_HOLY_WRATH
+FB_BRAND: SPWPN_HOLY_WRATH
 LIFE:     1
 BOOL:     fly, noises
 INSCRIP:  anguish,
@@ -1687,9 +1690,9 @@ INSCRIP: steadfast,
 DBRAND:  It prevents involuntary movement, except for blinking,
  teleportation, or banishment.
 
-NAME:       lochaber axe
+NAME:       Lochaber axe
 OBJ:        OBJ_WEAPONS/WPN_BARDICHE
-TYPE:       lochaber axe
+TYPE:       Lochaber axe
 TILE:       urand_lochaber_axe
 TILE_EQ:    lochaber_axe
 COLOUR:     ETC_IRON
@@ -1697,9 +1700,18 @@ PLUS:       +5
 BASE_ACC:   -1
 BASE_DAM:   +1
 BASE_DELAY: +1
-INSCRIP:    reach-cleave, poleaxe
+BOOL:       drain
+INSCRIP:    reach-cleave, poleaxe,
 DBRAND:     It can be evoked to extend its reach, and strikes at all foes within reach, dealing less damage to those not targeted.
 +It uses either Axes or Polearms skill, whichever is higher.
+
+NAME:    Hermit's Pendant
+OBJ:     OBJ_JEWELLERY/AMU_FAITH
+COLOUR:  BROWN
+TILE:    urand_hermit_pendant
+MP:      +5
+INSCRIP: Invo=14 Evo=0
+DBRAND:  It sets your invocations skill to 14 and your evocations skill to 0.
 
 # This entry must always be last.
 ENUM:   DUMMY2

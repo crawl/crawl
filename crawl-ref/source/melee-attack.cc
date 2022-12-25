@@ -69,7 +69,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     ::attack(attk, defn),
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
-    cleaving(is_cleaving), is_riposte(false), is_projected(false), roll_dist(0),
+    cleaving(is_cleaving), is_riposte(false), is_projected(false), charge_pow(0),
     wu_jian_attack(WU_JIAN_ATTACK_NONE),
     wu_jian_number_of_targets(1)
 {
@@ -90,6 +90,88 @@ bool melee_attack::can_reach()
            || is_projected;
 }
 
+bool melee_attack::bad_attempt()
+{
+    if (!attacker->is_player() || !defender || !defender->is_monster())
+        return false;
+
+    if (player_unrand_bad_attempt())
+        return true;
+
+    if (!cleave_targets.empty())
+    {
+        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        targeter_cleave hitfunc(attacker, defender->pos(), range);
+        return stop_attack_prompt(hitfunc, "attack");
+    }
+
+    return stop_attack_prompt(defender->as_monster(), false, attack_position);
+}
+
+bool melee_attack::player_unrand_bad_attempt()
+{
+    // Unrands with secondary effects that can harm nearby friendlies.
+    // Don't prompt for confirmation (and leak information about the
+    // monster's position) if the player can't see the monster.
+    if (!weapon || !you.can_see(*defender))
+        return false;
+
+    if (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))
+    {
+
+        targeter_smite hitfunc(attacker, 1, 1, 1, false);
+        hitfunc.set_aim(defender->pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                                  [](const actor *act)
+                                  {
+                                      return !god_protects(act->as_monster());
+                                  }, nullptr, defender->as_monster());
+    }
+    else if (is_unrandom_artefact(*weapon, UNRAND_VARIABILITY)
+             || is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
+                && !silenced(you.pos()))
+    {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !god_protects(act->as_monster());
+                               }, nullptr, defender->as_monster());
+    }
+    if (is_unrandom_artefact(*weapon, UNRAND_TORMENT))
+    {
+        targeter_radius hitfunc(&you, LOS_NO_TRANS);
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [] (const actor *m)
+                               {
+                                   return !m->res_torment()
+                                       && !god_protects(m->as_monster());
+                               },
+                                  nullptr, defender->as_monster());
+    }
+    if (is_unrandom_artefact(*weapon, UNRAND_ARC_BLADE))
+    {
+        vector<const actor *> exclude;
+        return !safe_discharge(defender->pos(), exclude);
+    }
+    if (is_unrandom_artefact(*weapon, UNRAND_POWER))
+    {
+        targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
+        hitfunc.beam.aimed_at_spot = false;
+        hitfunc.set_aim(defender->pos());
+
+        return stop_attack_prompt(hitfunc, "attack",
+                               [](const actor *act)
+                               {
+                                   return !god_protects(act->as_monster());
+                               }, nullptr, defender->as_monster());
+    }
+    return false;
+}
+
 bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
@@ -104,102 +186,10 @@ bool melee_attack::handle_phase_attempted()
         return false;
     }
 
-    if (attacker->is_player() && defender && defender->is_monster())
+    if (bad_attempt())
     {
-        // Unrands with secondary effects that can harm nearby friendlies.
-        // Don't prompt for confirmation (and leak information about the
-        // monster's position) if the player can't see the monster.
-        if (weapon && is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR)
-            && you.can_see(*defender))
-        {
-
-            targeter_smite hitfunc(attacker, 1, 1, 1, false);
-            hitfunc.set_aim(defender->pos());
-
-            if (stop_attack_prompt(hitfunc, "attack", nullptr, nullptr,
-                                   defender->as_monster()))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (weapon &&
-                ((is_unrandom_artefact(*weapon, UNRAND_SINGING_SWORD)
-                  && !silenced(you.pos()))
-                 || is_unrandom_artefact(*weapon, UNRAND_VARIABILITY))
-                 && you.can_see(*defender))
-        {
-            targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
-            if (stop_attack_prompt(hitfunc, "attack",
-                                   [](const actor *act)
-                                   {
-                                       return !god_protects(act->as_monster());
-                                   }, nullptr, defender->as_monster()))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_TORMENT)
-                 && you.can_see(*defender))
-        {
-            targeter_radius hitfunc(&you, LOS_NO_TRANS);
-
-            if (stop_attack_prompt(hitfunc, "attack",
-                                   [] (const actor *m)
-                                   {
-                                       return !m->res_torment();
-                                   },
-                                   nullptr, defender->as_monster()))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_ARC_BLADE)
-                 && you.can_see(*defender))
-        {
-            vector<const actor *> exclude;
-            if (!safe_discharge(defender->pos(), exclude))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (weapon && is_unrandom_artefact(*weapon, UNRAND_POWER)
-                 && you.can_see(*defender))
-        {
-            targeter_beam hitfunc(&you, 4, ZAP_SWORD_BEAM, 100, 0, 0);
-            hitfunc.beam.aimed_at_spot = false;
-            hitfunc.set_aim(defender->pos());
-
-            if (stop_attack_prompt(hitfunc, "attack",
-                                   [](const actor *act)
-                                   {
-                                       return !god_protects(act->as_monster());
-                                   }, nullptr, defender->as_monster()))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (!cleave_targets.empty())
-        {
-            const int range = you.reach_range() == REACH_TWO ? 2 : 1;
-            targeter_cleave hitfunc(attacker, defender->pos(), range);
-            if (stop_attack_prompt(hitfunc, "attack"))
-            {
-                cancel_attack = true;
-                return false;
-            }
-        }
-        else if (stop_attack_prompt(defender->as_monster(), false,
-                                    attack_position))
-        {
-            cancel_attack = true;
-            return false;
-        }
+        cancel_attack = true;
+        return false;
     }
 
     if (attacker->is_player())
@@ -359,13 +349,10 @@ bool melee_attack::handle_phase_dodged()
         if (defender->is_player() && player_equip_unrand(UNRAND_STARLIGHT))
             do_starlight();
 
-        if (defender->is_player())
-        {
-            maybe_riposte();
-            // Retaliations can kill!
-            if (!attacker->alive())
-                return false;
-        }
+        maybe_riposte();
+        // Retaliations can kill!
+        if (!attacker->alive())
+            return false;
     }
 
     return true;
@@ -373,9 +360,13 @@ bool melee_attack::handle_phase_dodged()
 
 void melee_attack::maybe_riposte()
 {
-    const bool using_fencers = player_equip_unrand(UNRAND_FENCERS)
-        && (!defender->weapon()
-            || is_melee_weapon(*defender->weapon()));
+    // only riposte via fencer's gloves, which (I take it from this code)
+    // monsters can't use
+    const bool using_fencers =
+                defender->is_player()
+                    && player_equip_unrand(UNRAND_FENCERS)
+                    && (!defender->weapon()
+                        || is_melee_weapon(*defender->weapon()));
     if (using_fencers && one_chance_in(3) && !is_riposte) // no ping-pong!
         riposte();
 }
@@ -498,6 +489,18 @@ bool melee_attack::handle_phase_hit()
     // will be checked early in player_monattack_hit_effects
     damage_done += calc_damage();
 
+    // Calculate and apply infusion costs immediately after we calculate
+    // damage, so that later events don't result in us skipping the cost.
+    if (attacker->is_player())
+    {
+        const int infusion = you.infusion_amount();
+        if (infusion)
+        {
+            pay_mp(infusion);
+            finalize_mp_cost();
+        }
+    }
+
     bool stop_hit = false;
     // Check if some hit-effect killed the monster.
     if (attacker->is_player())
@@ -562,13 +565,6 @@ bool melee_attack::handle_phase_hit()
 
     if (attacker->is_player())
     {
-        const int infusion = you.infusion_amount();
-        if (infusion)
-        {
-            pay_mp(infusion);
-            finalize_mp_cost();
-        }
-
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
@@ -595,6 +591,9 @@ bool melee_attack::handle_phase_damaged()
 {
     if (!attack::handle_phase_damaged())
         return false;
+
+    if (attacker->is_player() && player_equip_unrand(UNRAND_POWER_GLOVES))
+        inc_mp(div_rand_round(damage_done, 8));
 
     return true;
 }
@@ -1325,6 +1324,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             aux_damage = 0;
         else
             aux_damage = apply_defender_ac(aux_damage);
+
+        aux_damage = player_apply_postac_multipliers(aux_damage);
     }
 
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
@@ -1376,17 +1377,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
                 antimagic_affects_defender(damage_done * 32);
 
-                // MP drain suppressed under Pakellas, but antimagic still applies.
-                if (!have_passive(passive_t::no_mp_regen) || spell_user)
-                {
-                    mprf("You %s %s %s.",
-                         have_passive(passive_t::no_mp_regen) ? "disrupt" : "drain",
-                         defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                         spell_user ? "magic" : "power");
-                }
+                mprf("You drain %s %s.",
+                     defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     spell_user ? "magic" : "power");
 
-                if (!have_passive(passive_t::no_mp_regen)
-                    && you.magic_points != you.max_magic_points
+                if (you.magic_points != you.max_magic_points
                     && !defender->as_monster()->is_summoned()
                     && !mons_is_firewood(*defender->as_monster()))
                 {
@@ -1465,18 +1460,9 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
     // martial damage modifier (wu jian)
     damage = martial_damage_mod(damage);
 
-    // Palentonga rolling charge bonus
-    if (roll_dist > 0)
-    {
-        // + 1/3rd base per distance rolled, up to double at dist 3.
-        const int extra_dam = damage * roll_dist / 3;
-        damage += extra_dam > damage ? damage : extra_dam;
-    }
-
-    // not additive, statues are supposed to be bad with tiny toothpicks but
-    // deal crushing blows with big weapons
-    if (you.form == transformation::statue)
-        damage = div_rand_round(damage * 3, 2);
+    // Electric charge bonus.
+    if (charge_pow > 0 && defender->res_elec() <= 0)
+        damage += div_rand_round(damage * charge_pow, 150);
 
     // Can't affect much of anything as a shadow.
     if (you.form == transformation::shadow)
@@ -1487,6 +1473,16 @@ int melee_attack::player_apply_final_multipliers(int damage, bool aux)
 
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         return 0;
+
+    return damage;
+}
+
+int melee_attack::player_apply_postac_multipliers(int damage)
+{
+    // Statue form's damage modifier is designed to exactly compensate for
+    // the slowed speed; therefore, it needs to apply after AC.
+    if (you.form == transformation::statue)
+        damage = div_rand_round(damage * 3, 2);
 
     return damage;
 }
@@ -2227,8 +2223,8 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random, bool aux)
     if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
         modifiers += maybe_random_div(you.dex(), 2, random);
 
-    // Rolling charges feel bad when they miss, so make them miss less often.
-    if (roll_dist > 0)
+    // Electric charges feel bad when they miss, so make them miss less often.
+    if (charge_pow > 0)
         modifiers += 5; // matching UC form to-hit bonuses
 
     if (attacker->is_player() && !weapon && get_form()->unarmed_hit_bonus)
@@ -2321,6 +2317,14 @@ string melee_attack::mons_attack_desc()
     return ret;
 }
 
+string melee_attack::charge_desc()
+{
+    if (!charge_pow || defender->res_elec() > 0)
+        return "";
+    const string pronoun = defender->pronoun(PRONOUN_OBJECTIVE);
+    return make_stringf(" and electrocute %s", pronoun.c_str());
+}
+
 void melee_attack::announce_hit()
 {
     if (!needs_message || attk_flavour == AF_CRUSH)
@@ -2344,10 +2348,10 @@ void melee_attack::announce_hit()
             verb_degree = " " + verb_degree;
         }
 
-        mprf("You %s %s%s%s%s",
+        mprf("You %s %s%s%s%s%s",
              attack_verb.c_str(),
-             defender->name(DESC_THE).c_str(),
-             verb_degree.c_str(), debug_damage_number().c_str(),
+             defender->name(DESC_THE).c_str(), verb_degree.c_str(),
+             charge_desc().c_str(), debug_damage_number().c_str(),
              attack_strength_punctuation(damage_done).c_str());
     }
 }
@@ -3280,6 +3284,7 @@ void melee_attack::do_minotaur_retaliation()
     dmg = player_apply_slaying_bonuses(dmg, true);
     dmg = player_apply_final_multipliers(dmg, true);
     int hurt = attacker->apply_ac(dmg);
+    hurt = player_apply_postac_multipliers(dmg);
 
     mpr("You furiously retaliate!");
     dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
@@ -3316,11 +3321,8 @@ void melee_attack::do_starlight()
 
 
 /**
- * Launch a long blade counterattack against the attacker. No sanity checks;
+ * Launch a counterattack against the attacker. No sanity checks;
  * caller beware!
- *
- * XXX: might be wrong for deep elf blademasters with a long blade in only
- * one hand
  */
 void melee_attack::riposte()
 {

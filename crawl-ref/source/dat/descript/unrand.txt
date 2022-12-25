@@ -420,8 +420,8 @@ it, and may scurry out to assist the wearer.
 %%%%
 shield of the Gong
 
-A heavy bronze gong that can be worn as a shield. According to some mystics,
-beating on such a gong can grant the wearer spiritual protection.
+A heavy bronze gong that can be worn as a shield. Locked away in a temple for
+many years, its bearer is shielded by decades of accumulated prayer.
 %%%%
 amulet of the Air
 
@@ -688,8 +688,8 @@ Mad Mage's Maulers
 
 A pair of gloves designed to carefully control and channel the flow of magic,
 later misused and mangled by the lunatic murderer-mages of the Fifth Circle.
-Their influence leaves the wearer of these gloves distracted by intrusive
-images, vividly aware of the death and destruction their hands could wreak.
+Their influence leaves the wearer utterly unable to cast spells - the wearer's
+magic is redirected to far bloodier purposes.
 %%%%
 dreamshard necklace
 
@@ -726,7 +726,7 @@ others, so his staff protects its wielder.
 trishula "Condemnation"
 
 A weapon to bring forth guilt from the guilty. It was first wielded by the archangel
-Lucreil, who, on seeing the suffering of the first mortals, led them as an army
+Lucriel, who, on seeing the suffering of the first mortals, led them as an army
 against the cruelty of the gods. The ragged survivors of Lucriel's army took this
 weapon with them into the wilderness, the sole remnant of an archangel's virtue.
 %%%%
@@ -744,7 +744,15 @@ mountain peak, as protection against the mountain's near-constant avalanches,
 rockslides, and snowstorms. No force short of translocations magic will budge
 the wearer from their position.
 %%%%
-lochaber axe
+Lochaber axe
 
 This brutal weapon, long thought lost to history, combines the extended reach
-of a polearm with the cleaving sharpness of an axe.
+of a polearm with the cleaving sharpness of an axe. Ghosts of ancient warriors
+linger about it, draining fickle users.
+%%%%
+Hermit's pendant
+
+An ascetic once took a sacred vow, forswearing use of magical tools and ownership
+of everything but this pendant. Which god they made this vow to remains a point of
+bitter contention among the devout, but their pendant's power - and limitations -
+are irrefutable.
