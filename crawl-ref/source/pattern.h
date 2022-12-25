@@ -49,8 +49,6 @@ public:
     virtual const string &tostring() const = 0;
 };
 
-ostream &operator<< (ostream &out, const base_pattern &t);
-
 class text_pattern : public base_pattern
 {
 public:

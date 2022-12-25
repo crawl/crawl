@@ -225,7 +225,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(menu_arrow_control), true),
         new BoolGameOption(SIMPLE_NAME(mlist_allow_alternate_layout), false),
         new BoolGameOption(SIMPLE_NAME(monster_item_view_coordinates), false),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(monster_item_view_features)),
+        new TextPatternListGameOption(SIMPLE_NAME(monster_item_view_features)),
         new BoolGameOption(SIMPLE_NAME(messages_at_top), false),
         new BoolGameOption(SIMPLE_NAME(msg_condense_repeats), true),
         new BoolGameOption(SIMPLE_NAME(msg_condense_short), true),
@@ -365,19 +365,19 @@ const vector<GameOption*> game_options::build_options_list()
              {"single", KDO_ONE_PLACE},
              {"one", KDO_ONE_PLACE},
              {"true", KDO_ONE_PLACE}}, true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
+        new TextPatternListGameOption(SIMPLE_NAME(confirm_action)),
         new MultipleChoiceGameOption<easy_confirm_type>(
             SIMPLE_NAME(easy_confirm),
             easy_confirm_type::safe,
             {{"none", easy_confirm_type::none},
              {"safe", easy_confirm_type::safe},
              {"all", easy_confirm_type::all}}),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(note_messages)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(note_items)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
+        new TextPatternListGameOption(SIMPLE_NAME(drop_filter)),
+        new TextPatternListGameOption(SIMPLE_NAME(note_monsters)),
+        new TextPatternListGameOption(SIMPLE_NAME(note_messages)),
+        new TextPatternListGameOption(SIMPLE_NAME(note_items)),
+        new TextPatternListGameOption(SIMPLE_NAME(auto_exclude)),
+        new TextPatternListGameOption(SIMPLE_NAME(explore_stop_pickup_ignore)),
         new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
                                   "70:yellow, 40:red", _first_greater),
         new ColourThresholdOption(mp_colour, {"mp_colour", "mp_color"},
@@ -474,13 +474,11 @@ const vector<GameOption*> game_options::build_options_list()
              {"glyph", "glyphs"},
              {"glyphs", "glyphs"},
              {"hybrid", "hybrid"}}),
-        new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
+        new StringListGameOption(SIMPLE_NAME(tile_layout_priority),
 #ifdef TOUCH_UI
-            split_string(",", "minimap, command, inventory, "
-                              "command2, spell, ability, monster")),
+            "minimap, command, inventory, command2, spell, ability, monster"),
 #else
-            split_string(",", "minimap, inventory, command, "
-                              "spell, ability, monster")),
+            "minimap, inventory, command, spell, ability, monster"),
 #endif
 #endif
 #ifdef USE_TILE_LOCAL
@@ -530,7 +528,7 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
         (new BoolGameOption(SIMPLE_NAME(action_panel_show), true))
             ->set_on_change(_dirty_prefs),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(action_panel_filter)),
+        new TextPatternListGameOption(SIMPLE_NAME(action_panel_filter)),
         new BoolGameOption(SIMPLE_NAME(action_panel_show_unidentified), false),
         new StringGameOption(SIMPLE_NAME(action_panel_font_family),
                              "monospace"),
@@ -571,8 +569,8 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
 #ifdef WIZARD
         new BoolGameOption(SIMPLE_NAME(fsim_csv), false),
-        new ListGameOption<string>(SIMPLE_NAME(fsim_scale)),
-        new ListGameOption<string>(SIMPLE_NAME(fsim_kit)),
+        new StringListGameOption(SIMPLE_NAME(fsim_scale)),
+        new StringListGameOption(SIMPLE_NAME(fsim_kit)),
         new StringGameOption(SIMPLE_NAME(fsim_mode), ""),
         new StringGameOption(SIMPLE_NAME(fsim_mons), ""),
         new IntGameOption(SIMPLE_NAME(fsim_rounds), 4000, 1000, 500000),
@@ -5711,23 +5709,6 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
     return true;
 }
-
-// Like MenuEntry, but only parse menu colours for the first _highlight_until
-// characters of each line (in this case, the option name but not its value).
-class EGP_MenuEntry : public MenuEntry
-{
-public:
-    EGP_MenuEntry(const string &txt = string(), MenuEntryLevel lev = MEL_ITEM,
-                  int qty = 0, int hotk = 0, int _highlight_until = INT_MAX)
-        : MenuEntry(txt, lev, qty, hotk), highlight_until(_highlight_until) { }
-
-    int highlight_colour(bool) const override
-    {
-        return menu_colour(text.substr(0, highlight_until), "", tag);
-    }
-private:
-    int highlight_until;
-};
 
 class EGP_Menu : public Menu
 {

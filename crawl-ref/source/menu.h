@@ -243,6 +243,24 @@ public:
 #endif
 };
 
+// Like MenuEntry, but only parse menu colours for the first _highlight_until
+// characters of each line (in this case, the option name but not its value).
+class EGP_MenuEntry : public MenuEntry
+{
+public:
+    EGP_MenuEntry(const string &txt = string(), MenuEntryLevel lev = MEL_ITEM,
+                  int qty = 0, int hotk = 0, int _highlight_until = INT_MAX)
+        : MenuEntry(txt, lev, qty, hotk), highlight_until(_highlight_until) { }
+
+    int highlight_colour(bool) const override
+    {
+        return menu_colour(text.substr(0, highlight_until), "", tag);
+    }
+private:
+    int highlight_until;
+};
+
+
 class MenuHighlighter
 {
 public:

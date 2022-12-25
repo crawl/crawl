@@ -103,6 +103,7 @@ private:
     const string heading;
 };
 
+bool load_list_from_UI(GameOption *caller, vector<string> &value);
 bool load_string_from_UI(GameOption *option);
 bool choose_option_from_UI(GameOption *caller, vector<string> choices);
 
@@ -279,13 +280,12 @@ template<typename T>
 class ListGameOption : public GameOption
 {
 public:
-    ListGameOption(vector<T> &list, vector<string> _names,
-                   vector<T> _default = {})
+    ListGameOption(vector<T> &list, vector<string> _names, string _default)
         : GameOption(_names), value(list), default_value(_default) { }
 
     void reset() override
     {
-        value = default_value;
+        loadFromString(default_value, RCFILE_LINE_EQUALS);
         GameOption::reset();
     }
 
@@ -308,23 +308,55 @@ public:
         merge_lists(value, new_entries, ltyp == RCFILE_LINE_CARET);
         return GameOption::loadFromString(field, ltyp);
     }
+
+protected:
+    vector<T> &value;
+    string default_value;
+};
+
+class StringListGameOption : public ListGameOption<string>
+{
+public:
+    StringListGameOption(vector<string> &_value, vector<string> _names,
+                         string _default = "")
+        : ListGameOption<string>(_value, _names, _default) { }
+
     const string str() const override
     {
-        if (!value.size())
-            return "";
-        stringstream ss;
-        for (const auto &s : value)
-            ss << ", " << s;
-        return ss.str().substr(2);
-    }
-    bool load_from_UI() override
-    {
-        return load_string_from_UI(this);
+        return join_strings(value.begin(), value.end(), ", ");
     }
 
-private:
-    vector<T> &value;
-    vector<T> default_value;
+    bool load_from_UI() override
+    {
+        return load_list_from_UI(this, value);
+    }
+};
+
+class TextPatternListGameOption : public ListGameOption<text_pattern>
+{
+public:
+    TextPatternListGameOption(vector<text_pattern> &_value,
+                              vector<string> _names, string _default = "")
+        : ListGameOption<text_pattern>(_value, _names, _default) { }
+
+    const string str() const override
+    {
+        auto func = [] (const text_pattern &t) {return t.tostring();};
+        return comma_separated_fn(value.begin(), value.end(), func, ", ");
+    }
+
+    bool load_from_UI() override // convert, load, then convert back
+    {
+        vector<string> string_value(value.size());
+        for (int i = value.size(); i; --i)
+            string_value[i-1] = value[i-1].tostring();
+        if (!load_list_from_UI(this, string_value))
+            return false;
+        for (int i = value.size(); i; --i)
+            value[i-1] = string_value[i-1];
+        value.resize(string_value.size());
+        return true;
+    }
 };
 
 // A template for an option which can take one of a fixed list of values.

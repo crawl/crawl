@@ -118,12 +118,6 @@ static pattern_match _pattern_match_location(void *compiled_pattern,
 ////////////////////////////////////////////////////////////////////
 #endif
 
-ostream &operator<< (ostream &out, const base_pattern &t)
-{
-    out << t.tostring();
-    return out;
-}
-
 string pattern_match::annotate_string(const string &color) const
 {
     string ret(text);

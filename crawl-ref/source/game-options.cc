@@ -116,6 +116,84 @@ private:
     GameOption *caller;
 };
 
+// Display formatted_string markup characters instead of using them.
+static string _disable_markup(string val)
+{
+    return replace_all(val, "<", "<<");
+}
+
+// Every MenuEntry must be selectable, and must be backed by an entry in
+// CustomListGameOption::value.
+class List_Option_Menu : public Menu
+{
+public:
+    bool changed = false;
+
+    List_Option_Menu(int _flags, GameOption *_caller, vector<string> &_list)
+        : Menu(_flags), caller(_caller), list(_list) { reset_items(); }
+
+    int pre_process(int key) override
+    {
+        if ('(' == key && last_hovered) // move item up the list
+        {
+            int other = last_hovered-1;
+            swap(list[last_hovered], list[other]);
+            reset_items();
+            changed = true;
+            return CK_UP;
+        }
+        if (')' == key && last_hovered != (int)items.size()-1) // down
+        {
+            int other = last_hovered+1;
+            swap(list[last_hovered], list[other]);
+            reset_items();
+            changed = true;
+            return CK_DOWN;
+        }
+        if ('+' == key) // add an item
+        {
+            list.insert(list.begin()+last_hovered, string());
+            reset_items();
+            changed = true;
+            return CK_ENTER;
+        }
+        if (CK_BKSP == key || CK_DELETE == key)
+            return CK_ENTER; // sorry, no 1 key delete without an undelete.
+        if ('?' == key) // help
+        {
+            caller->show_help();
+            return CK_NO_KEY;
+        }
+        return key;
+    }
+
+    void reset_items()
+    {
+        clear();
+
+        for (unsigned i = 0, size = list.size(); i < size; ++i)
+        {
+            const char letter = index_to_letter(i % 52);
+            string item_title = _disable_markup(list[i]);
+            MenuEntry* entry = new EGP_MenuEntry(item_title, MEL_ITEM, 1,
+                                                 letter, 5);
+            entry->data = &list[i];
+            add_entry(entry);
+        }
+        if (!list.size()) // Let the user add to a blank list.
+        {
+            add_entry(new MenuEntry(dummy_string, 0,
+                                    [](const MenuEntry&){return true;}));
+        }
+        update_menu(true);
+    }
+
+private:
+    const string dummy_string = "<h>Press + to set this option.</h>";
+    GameOption *caller;
+    vector<string> &list;
+};
+
 /// Ask the user to choose between a set of options.
 ///
 /// @param[in,out] caller  Option to edit. Reads the name and current value.
@@ -162,6 +240,64 @@ static void _show_type_response(GameOption *caller, string response)
 }
 
 
+
+/// Ask the user to edit a game option using a list of strings.
+///
+/// @param[in,out] caller Option to edit. Reads various things.
+///                       Writes the updated values.
+/// @param[in,out] value  value of caller, as a list of strings.
+/// @returns       True if something has been changed, false otherwise.
+bool load_list_from_UI(GameOption *caller, vector<string> &value)
+{
+    string prompt = string("Select a line to edit for \"")+caller->name()+"\":";
+
+    List_Option_Menu menu(MF_SINGLESELECT | MF_ARROWS_SELECT
+                          | MF_ALLOW_FORMATTING | MF_INIT_HOVER,
+                          caller, value);
+    menu.set_title(new MenuEntry(prompt, MEL_TITLE));
+    const string more = "<lightgrey>[<w>(</w>] move up [<w>)</w>] move down"
+                          " [<w>+</w>] add a line [<w>Enter</w>] edit line"
+                          " [<w>?</w>] help</lightgrey>";
+    menu.set_more(formatted_string::parse_string(more));
+
+    menu.on_single_selection = [caller, &menu](const MenuEntry &entry)
+    {
+        auto *option_text = static_cast<string*>(entry.data);
+        char select[1024];
+        string old = *option_text, last = old;
+        while (true)
+        {
+            if (msgwin_get_line("Enter a value.",
+                                select, sizeof(select), nullptr, last))
+            {
+                *option_text = old;
+                caller->loadFromString(caller->str(), RCFILE_LINE_EQUALS);
+                if (old.empty())
+                    menu.reset_items();
+                return true;
+            }
+            *option_text = trimmed_string(select);
+            bool blank = option_text->empty();
+            string error
+                = caller->loadFromString(caller->str(), RCFILE_LINE_EQUALS);
+            if (error.empty())
+            {
+                auto &text = const_cast<MenuEntry*>(&entry)->text;
+                if (blank)
+                    menu.reset_items();
+                else
+                    text = _disable_markup(*option_text);
+                menu.changed = true;
+                return true;
+            }
+            _show_type_response(caller, error);
+            last = select;
+        }
+    };
+
+    vector<MenuEntry*> sel = menu.show();
+    return menu.changed;
+}
 
 /// Ask the user to edit a game option using a text box.
 ///
