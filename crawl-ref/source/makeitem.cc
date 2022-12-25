@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "acquire.h"
 #include "art-enum.h" // unrand -> magic staff silliness
 #include "artefact.h"
 #include "colour.h"
@@ -2133,5 +2134,11 @@ void makeitem_tests()
                               type,
                               level);
     }
+    mpr("Running acquirement tests.");
+    // note: without char customization this won't exercise all acquirement
+    // code. But this at least gives a baseline.
+    for (i = 0; i < 500; ++i)
+        make_acquirement_items();
+
 }
 #endif

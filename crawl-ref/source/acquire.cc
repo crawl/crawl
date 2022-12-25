@@ -396,6 +396,37 @@ static armour_type _pick_unseen_armour()
     return picked;
 }
 
+static bool _regular_staves_useless()
+{
+    // stave OBJ_WEAPONS are useless to regular size chars with a missing hand,
+    // but we don't want to mark the skill as useless in general, because it
+    // also applies to OBJ_STAVES, which are one-handed. Also a bunch of
+    // unrands, which this code probably prevents from generating for this
+    // case.
+    if (!you.has_mutation(MUT_MISSING_HAND))
+        return false;
+
+    item_def item_considered;
+    item_considered.base_type = OBJ_WEAPONS;
+
+    // try to find a useful regular staff
+    for (int i = 0; i < NUM_WEAPONS; ++i)
+    {
+        // ignore non-staves
+        if (i == WPN_STAFF)
+            continue;
+
+        item_considered.sub_type = i;
+        if (item_attack_skill(OBJ_WEAPONS, i) == SK_STAVES
+            && you.hands_reqd(item_considered) != HANDS_TWO)
+        {
+            // found something!
+            return false;
+        }
+    }
+    return true;
+}
+
 /**
  * Randomly choose a class of weapons (those using a specific weapon skill)
  * for acquirement to give the player. Weight toward the player's skills.
@@ -416,6 +447,10 @@ static skill_type _acquirement_weapon_skill(bool divine, int agent)
         // Don't choose a skill that's useless
         if (is_useless_skill(sk))
             continue;
+
+        if (sk == SK_STAVES && _regular_staves_useless())
+            continue;
+
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
         int weight = _skill_rdiv(sk) + 1;
@@ -504,6 +539,7 @@ static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/, int agen
         if (x_chance_in_y(acqweight, count += acqweight))
             result = i;
     }
+    ASSERT(result != OBJ_RANDOM); // make sure loop ran at least once
     return result;
 }
 
@@ -573,6 +609,8 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
 
     stave_type staff = *random_choose_weighted(weights);
 
+    // chance to choose randomly, goes to 100% if all staves are id'd.
+    // Just brute force it.
     if (staff == NUM_STAVES)
     {
         do
@@ -1599,7 +1637,7 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
     return rand_classes;
 }
 
-static void _make_acquirement_items()
+void make_acquirement_items()
 {
     vector<object_class_type> rand_classes = shuffled_acquirement_classes(true);
     const int num_wanted = min(3, (int) rand_classes.size());
@@ -1640,7 +1678,7 @@ bool acquirement_menu()
     ASSERT(!crawl_state.game_is_arena());
 
     if (!you.props.exists(ACQUIRE_ITEMS_KEY))
-        _make_acquirement_items();
+        make_acquirement_items();
 
     auto &acq_items = you.props[ACQUIRE_ITEMS_KEY].get_vector();
 

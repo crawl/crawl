@@ -8,6 +8,7 @@
 #include "item-prop-enum.h"
 
 bool acquirement_menu();
+void make_acquirement_items();
 
 int acquirement_create_item(object_class_type class_wanted, int agent,
                             bool quiet, const coord_def &pos = coord_def());
