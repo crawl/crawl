@@ -1947,7 +1947,7 @@ bool is_weapon_wieldable(const item_def &item, size_type size)
     const int subtype = OBJ_STAVES == item.base_type ? int{WPN_STAFF}
                                                      : item.sub_type;
     // Check we aren't about to index with a bogus subtype for weapons
-    ASSERT(item.base_type != OBJ_WEAPONS || subtype <= get_max_subtype(item.base_type));
+    ASSERT(item.base_type != OBJ_WEAPONS || subtype < get_max_subtype(item.base_type));
     return Weapon_prop[Weapon_index[subtype]].min_2h_size <= size;
 }
 

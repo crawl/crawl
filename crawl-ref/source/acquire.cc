@@ -766,7 +766,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         }
 
         // Double-check our subtype for weapons is valid
-        ASSERT(class_wanted != OBJ_WEAPONS || type_wanted <= get_max_subtype(class_wanted));
+        ASSERT(class_wanted != OBJ_WEAPONS || type_wanted < get_max_subtype(class_wanted));
 
         item_def dummy;
         dummy.base_type = class_wanted;
