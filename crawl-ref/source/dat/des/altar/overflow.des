@@ -4404,7 +4404,7 @@ TAGS:   temple_overflow_2 temple_overflow_zin temple_overflow_gozag
 TAGS:   no_item_gen no_monster_gen
 KFEAT:  _ = altar_zin
 KFEAT:  O = altar_gozag
-KITEM:  O = wand of digging charges:1
+KITEM:  O = wand of digging charges:1 no_pickup
 KFEAT:  m = iron_grate
 KPROP:  $ = no_tele_into
 KITEM:  $ = gold q:1 / gold q:2
