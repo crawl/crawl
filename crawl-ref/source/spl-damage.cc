@@ -2457,7 +2457,7 @@ static int _discharge_monsters(const coord_def &where, int pow,
 
     int damage = 0;
     if (&agent == victim)
-        damage = 1 + random2(2 + div_rand_round(pow, 15));
+        damage = 1 + random2(1 + div_rand_round(pow, 18));
     else
     {
         damage = FLAT_DISCHARGE_ARC_DAMAGE
