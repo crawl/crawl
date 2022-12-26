@@ -63,8 +63,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
     needs_message = defender_visible;
 }
 
-int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random,
-                                              bool /*aux*/)
+int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
 {
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 

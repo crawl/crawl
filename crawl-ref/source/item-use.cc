@@ -714,7 +714,7 @@ bool UseItemMenu::process_key(int key)
     return Menu::process_key(key);
 }
 
-operation_types _item_to_oper(item_def *target)
+static operation_types _item_to_oper(item_def *target)
 {
     if (!target)
         return OPER_WIELD; // unwield
@@ -730,7 +730,7 @@ operation_types _item_to_oper(item_def *target)
     }
 }
 
-operation_types _item_to_removal(item_def *target)
+static operation_types _item_to_removal(item_def *target)
 {
     if (!target)
         return OPER_NONE;

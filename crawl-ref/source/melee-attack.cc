@@ -1268,7 +1268,7 @@ bool melee_attack::player_aux_unarmed()
             continue;
 
         to_hit = random2(aux_to_hit());
-        to_hit += post_roll_to_hit_modifiers(to_hit, false, true);
+        to_hit += post_roll_to_hit_modifiers(to_hit, false);
 
         handle_noise(defender->pos());
         alert_nearby_monsters();
@@ -2215,7 +2215,7 @@ int melee_attack::calc_to_hit(bool random)
     return mhit;
 }
 
-int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random, bool aux)
+int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random)
 {
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 

@@ -92,8 +92,7 @@ public:
     // To-hit is a function of attacker/defender, defined in sub-classes
     virtual int calc_to_hit(bool random);
     int calc_pre_roll_to_hit(bool random);
-    virtual int post_roll_to_hit_modifiers(int mhit, bool random,
-                                           bool /*aux*/ = false);
+    virtual int post_roll_to_hit_modifiers(int mhit, bool random);
 
     // Exact copies of their melee_attack predecessors
     string actor_name(const actor *a, description_level_type desc,

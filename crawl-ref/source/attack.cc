@@ -242,7 +242,7 @@ int attack::calc_pre_roll_to_hit(bool random)
  *
  * @param mhit The post-roll player's to-hit value.
  */
-int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/, bool /*aux*/)
+int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
 {
     int modifiers = 0;
 
