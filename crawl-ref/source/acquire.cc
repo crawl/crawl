@@ -583,9 +583,7 @@ static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/,
     return result;
 }
 
-
-static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
-                                      int /*agent*/)
+static vector<pair<stave_type, int>> _base_staff_weights()
 {
     vector<pair<stave_type, int>> weights = {
         { STAFF_FIRE,        _skill_rdiv(SK_FIRE_MAGIC) },
@@ -597,20 +595,44 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
         { STAFF_CONJURATION, _skill_rdiv(SK_CONJURATIONS) },
         { NUM_STAVES,        5 },
     };
+    return weights;
+}
 
+// return true if there are any non-id'd staves found
+static bool _remove_ided_staff_weights(vector<pair<stave_type, int>> &weights)
+{
+    bool found = false;
     for (auto &weight : weights)
     {
-        if (weight.first != NUM_STAVES
-            && get_ident_type(OBJ_STAVES, weight.first))
-        {
+        // leave random weight untouched
+        if (weight.first == NUM_STAVES)
+            continue;
+
+        if (get_ident_type(OBJ_STAVES, weight.first))
             weight.second = 0;
-        }
+        else
+            found = true;
     }
+    return found;
+}
+
+static bool _unided_acq_staves()
+{
+    vector<pair<stave_type, int>> weights = _base_staff_weights();
+    return _remove_ided_staff_weights(weights);
+}
+
+static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
+                                      int /*agent*/)
+{
+    vector<pair<stave_type, int>> weights = _base_staff_weights();
+    _remove_ided_staff_weights(weights);
 
     stave_type staff = *random_choose_weighted(weights);
 
-    // chance to choose randomly, goes to 100% if all staves are id'd.
-    // Just brute force it.
+    // chance to choose randomly, goes to 100% if all staves are id'd or 0
+    // skill. Just brute force it.
+    // should not be used in normal acquirement..
     if (staff == NUM_STAVES)
     {
         do
@@ -623,6 +645,37 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
     return staff;
 }
 
+static const vector<pair<misc_item_type, int> > _misc_base_weights()
+{
+    const bool no_allies = you.allies_forbidden();
+    vector<pair<misc_item_type, int> > choices =
+    {
+        {MISC_BOX_OF_BEASTS,       (no_allies ? 0 : 20)},
+        {MISC_PHANTOM_MIRROR,      (no_allies ? 0 : 20)},
+        // Tremorstones are better for heavily armoured characters.
+        {MISC_TIN_OF_TREMORSTONES, 5 + _skill_rdiv(SK_ARMOUR) / 3},
+        // everything else is evenly weighted
+        {MISC_LIGHTNING_ROD,       20},
+        {MISC_PHIAL_OF_FLOODS,     20},
+        {MISC_CONDENSER_VANE,      20},
+        {MISC_XOMS_CHESSBOARD,     20},
+    };
+    // The player never needs more than one of any of these.
+    for (auto &p : choices)
+        if (you.seen_misc[p.first])
+            p.second = 0;
+    return choices;
+}
+
+static bool _unided_acq_misc()
+{
+    const vector<pair<misc_item_type, int> > choices = _misc_base_weights();
+    for (auto &p : choices)
+        if (p.second > 0)
+            return true;
+    return false;
+}
+
 /**
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
@@ -630,32 +683,11 @@ static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/,
 static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/,
                                      int /*agent*/)
 {
-    const bool no_allies = you.allies_forbidden();
-
-    const vector<pair<int, int> > choices =
-    {
-        // The player never needs more than one of these.
-        {MISC_BOX_OF_BEASTS,
-            (no_allies || you.seen_misc[MISC_BOX_OF_BEASTS] ? 0 : 20)},
-        {MISC_PHANTOM_MIRROR,
-            (no_allies || you.seen_misc[MISC_PHANTOM_MIRROR] ? 0 : 20)},
-        // Tremorstones are better for heavily armoured characters.
-        {MISC_TIN_OF_TREMORSTONES,
-            (you.seen_misc[MISC_TIN_OF_TREMORSTONES]
-                ? 0 : 5 + _skill_rdiv(SK_ARMOUR) / 3)},
-        {MISC_LIGHTNING_ROD,
-            (you.seen_misc[MISC_LIGHTNING_ROD] ? 0 : 20)},
-        {MISC_PHIAL_OF_FLOODS,
-            (you.seen_misc[MISC_PHIAL_OF_FLOODS] ? 0 : 20)},
-        {MISC_CONDENSER_VANE,
-            (you.seen_misc[MISC_CONDENSER_VANE] ? 0 : 20)},
-        {MISC_XOMS_CHESSBOARD,
-            (you.seen_misc[MISC_XOMS_CHESSBOARD] ? 0 : 20)},
-    };
-
-    const int * const choice = random_choose_weighted(choices);
+    const vector<pair<misc_item_type, int> > choices = _misc_base_weights();
+    const misc_item_type * const choice = random_choose_weighted(choices);
 
     // Possible for everything to be 0 weight - if so just give a random spare.
+    // should not be used in normal acquirement..
     if (choice == nullptr)
     {
         return random_choose(MISC_BOX_OF_BEASTS,
@@ -1621,18 +1653,21 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
     if (!you.has_mutation(MUT_NO_GRASPING))
     {
         rand_classes.emplace_back(OBJ_WEAPONS);
-        rand_classes.emplace_back(OBJ_STAVES);
+        // skip staves if player has already seen all the acquirable staves
+        if (_unided_acq_staves())
+            rand_classes.emplace_back(OBJ_STAVES);
     }
 
     rand_classes.emplace_back(OBJ_JEWELLERY);
     rand_classes.emplace_back(OBJ_BOOKS);
 
+    if (_unided_acq_misc())
+        rand_classes.emplace_back(OBJ_MISCELLANY);
+
     // dungeon generation
     if (!scroll)
-    {
-        rand_classes.emplace_back(OBJ_MISCELLANY);
         rand_classes.emplace_back(OBJ_WANDS);
-    }
+
     shuffle_array(rand_classes);
     return rand_classes;
 }
