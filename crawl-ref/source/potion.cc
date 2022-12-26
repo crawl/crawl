@@ -85,6 +85,11 @@ public:
 
     bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
+        // no species that can quaff at all have permanent restrictions for
+        // curing
+        if (!temp)
+            return true;
+
         // cure status effects, allowed even in death's door
         if (you.duration[DUR_CONF]
                     || you.duration[DUR_POISONING])
@@ -92,14 +97,13 @@ public:
             return true;
         }
         // heal
-        if (temp && you.duration[DUR_DEATHS_DOOR])
+        if (you.duration[DUR_DEATHS_DOOR])
         {
             if (reason)
                 *reason = "You cannot heal while in death's door.";
             return false;
         }
-        if (!you.can_potion_heal(temp)
-            || temp && you.hp == you.hp_max)
+        if (!you.can_potion_heal(true) || temp && you.hp == you.hp_max)
         {
             if (reason)
                 *reason = "You have no ailments to cure.";
