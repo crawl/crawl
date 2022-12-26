@@ -882,10 +882,10 @@ TAGS:   no_monster_gen patrolling
 DEPTH:  Dis:2-, !Dis:$
 ORIENT: encompass
 KMONS:  1 = executioner
-KMONS:  2} = dancing weapon ; executioner's axe good_item ego:vorpal | \
-        bardiche good_item ego:vorpal | battleaxe good_item ego:vorpal | \
-        great sword good_item ego:vorpal | lajatang good_item ego:vorpal | \
-        triple sword good_item ego:vorpal | glaive good_item ego:vorpal
+KMONS:  2} = dancing weapon ; executioner's axe good_item ego:heavy | \
+        bardiche good_item ego:heavy | battleaxe good_item ego:heavy | \
+        great sword good_item ego:heavy | lajatang good_item ego:heavy | \
+        triple sword good_item ego:heavy | glaive good_item ego:heavy
 # These monsters get items from their usual gear in mon-gear.cc, but a curated
 # list of the biggest slicing/chopping weapons in their given selection.
 # The ones with armour get the best armour on their list.

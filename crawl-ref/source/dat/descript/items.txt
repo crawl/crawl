@@ -1039,11 +1039,11 @@ A scroll that imbues a weapon with a random brand. Any existing brand will be
 replaced with a different one, and any brand forbidden by your current god will
 not be chosen. Artefacts cannot be branded in this way.
 
-Melee weapons will commonly be branded with the vorpal, flaming, freezing,
+Melee weapons will commonly be branded with the flaming, freezing, heavy,
 venom or protection brand, and rarely with the draining, electrocution,
 spectral, vampiric or chaos brand.
 
-Ranged weapons will commonly be branded with the vorpal, flaming, freezing or
+Ranged weapons will commonly be branded with the flaming, freezing, heavy or
 draining brand, and rarely with the electrocution or chaos brand.
 %%%%
 scroll of butterflies

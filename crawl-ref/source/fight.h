@@ -67,6 +67,7 @@ int mon_beat_sh_pct(int shield_bypass, int shield_class);
 
 int weapon_min_delay_skill(const item_def &weapon);
 int weapon_min_delay(const item_def &weapon, bool check_speed = true);
+int weapon_adjust_delay(const item_def &weapon, int base_delay, bool random = true);
 
 int mons_weapon_damage_rating(const item_def &launcher);
 
@@ -99,6 +100,7 @@ int stat_modify_damage(int base_dam, skill_type wpn_skill, bool using_weapon);
 int apply_weapon_skill(int base_dam, skill_type wpn_skill, bool random);
 int apply_fighting_skill(int base_dam, bool aux, bool random);
 int throwing_base_damage_bonus(const item_def &projectile);
+int brand_adjust_weapon_damage(int base_dam, int brand, bool random);
 
 int unarmed_base_damage();
 int unarmed_base_damage_bonus(bool random);

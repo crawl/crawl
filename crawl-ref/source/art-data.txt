@@ -190,12 +190,12 @@ COLOUR: BLACK
 NAME:    Singing Sword
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 INSCRIP: sonic wave
-PLUS:    +7
+# Let's take it to 11.
+PLUS:    +11
 COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
 VALUE:   1000
-BRAND:   SPWPN_VORPAL
 DBRAND:  It radiates damaging sonic waves as it strikes, especially in combat
  involving dangerous or numerous foes.
 
@@ -236,13 +236,13 @@ COLOUR:  LIGHTMAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
 BOOL:    chaotic
-BRAND:   SPWPN_VORPAL
+# I have taken the plums that were in your icebox (and turned them into prunes)
+BRAND:   SPWPN_FREEZING
 DESCRIP: It halves damage taken while paralysed, petrified or unconscious.
 
 NAME:    sword of Power
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
-BRAND:   SPWPN_VORPAL
-PLUS:    +5
+PLUS:    +9
 COLOUR:  RED
 TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
@@ -388,7 +388,7 @@ PLUS:    +8
 COLOUR:  ETC_DARK
 TILE:    urand_bloodbane
 TILE_EQ: bloodbane
-BRAND:   SPWPN_VORPAL
+BRAND:   SPWPN_DRAINING
 ANGRY:   5
 BOOL:    nogen
 STEALTH: -1
@@ -635,8 +635,8 @@ COLOUR:   ETC_DARK
 TILE:     urand_sniper
 VALUE:    800
 TILE_EQ:  sniper
-BASE_DELAY: +4
-BRAND:    SPWPN_VORPAL
+BASE_DELAY: +2
+BRAND:    SPWPN_HEAVY
 BOOL:     seeinv
 INSCRIP:  Acc+∞
 DESCRIP:  Any ammunition fired from it never misses its target.
@@ -671,7 +671,7 @@ BOOL:    inv, tilerim, nogen
 NAME:    lance "Wyrmbane"
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
 FALLBACK: OBJ_WEAPONS/WPN_DEMON_TRIDENT
-FB_BRAND: SPWPN_VORPAL
+FB_BRAND: SPWPN_FLAMING
 INSCRIP: slay drac,
 TYPE:    lance
 BASE_DAM: +2
@@ -1161,11 +1161,11 @@ WILL:     1
 ENUM:     DEMON_AXE
 NAME:     obsidian axe
 OBJ:      OBJ_WEAPONS/WPN_BROAD_AXE
-PLUS:     +14
+PLUS:     +16
 COLOUR:   ETC_UNHOLY
 TILE:     spwpn_demon_axe
 TILE_EQ:  demon_axe
-BRAND:    SPWPN_VORPAL
+BRAND:    SPWPN_DRAINING
 FB_BRAND: SPWPN_PAIN
 BOOL:     evil, seeinv, fly, drain
 INSCRIP:  Mesm
@@ -1222,7 +1222,7 @@ NAME:     shillelagh "Devastator"
 INSCRIP:  shatter
 OBJ:      OBJ_WEAPONS/WPN_CLUB
 FALLBACK: OBJ_WEAPONS/WPN_EVENINGSTAR
-FB_BRAND: SPWPN_VORPAL
+FB_BRAND: SPWPN_HEAVY
 TYPE:     shillelagh
 TILE:     urand_shillelagh
 TILE_EQ:  shillelagh
@@ -1310,9 +1310,9 @@ TILE:     urand_dark_maul
 TILE_EQ:  dark_maul
 PLUS:     +10
 BASE_ACC: +2
-BASE_DAM: +35
-BASE_DELAY: +13
-BRAND:    SPWPN_VORPAL
+BASE_DAM: +20
+BASE_DELAY: +7
+BRAND:    SPWPN_HEAVY
 
 # start TAG_MAJOR_VERSION == 34
 ENUM:    HIGH_COUNCIL
@@ -1422,7 +1422,7 @@ TILE:    urand_gyre
 TILE_EQ: gyre
 PLUS:    12
 BRAND:   SPWPN_PROTECTION
-FB_BRAND: SPWPN_VORPAL
+FB_BRAND: SPWPN_FREEZING
 
 # start TAG_MAJOR_VERSION == 34
 ENUM:    ETHERIC_CAGE
@@ -1626,12 +1626,11 @@ DESCRIP:  It heals its wearer when they drink unknown potions.
 
 NAME:       woodcutter's axe
 OBJ:        OBJ_WEAPONS/WPN_BATTLEAXE
-PLUS:       3
+PLUS:       5
 BASE_DELAY: -7
 COLOUR:     BROWN
 TILE:       urand_woodcutters_axe
 TILE_EQ:    axe_short
-BRAND:      SPWPN_VORPAL
 
 NAME:       Throatcutter
 OBJ:        OBJ_WEAPONS/WPN_LONG_SWORD

@@ -1085,7 +1085,7 @@ static int _weapon_brand_quality(int brand, bool range)
         return 0;
     case SPWPN_PAIN:
         return _skill_rdiv(SK_NECROMANCY) / 2;
-    case SPWPN_VORPAL:
+    case SPWPN_HEAVY:
         return range ? 5 : 1;
     }
 }
@@ -1161,7 +1161,7 @@ static void _adjust_brand(item_def &item, bool divine, int agent)
     if (agent == GOD_TROG && item.base_type == OBJ_WEAPONS)
     {
         // 75% chance of a brand
-        item.brand = random_choose(SPWPN_NORMAL, SPWPN_VORPAL,
+        item.brand = random_choose(SPWPN_NORMAL, SPWPN_HEAVY,
                                    SPWPN_FLAMING, SPWPN_ANTIMAGIC);
         return;
     }

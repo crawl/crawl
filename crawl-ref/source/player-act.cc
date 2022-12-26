@@ -332,8 +332,8 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
             return attk_delay;
 
         attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
-        if (get_weapon_brand(*weap) == SPWPN_SPEED)
-            attk_delay = div_rand_round(attk_delay * 2, 3);
+        // XXX: is this right? I hate random_var... (pf)
+        attk_delay = attk_delay * weapon_adjust_delay(*weap, DELAY_SCALE) / DELAY_SCALE;
     }
 
     // At the moment it never gets this low anyway.

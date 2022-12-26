@@ -30,8 +30,8 @@ private:
 
     /* Combat Calculations */
     bool using_weapon() const override;
-    int weapon_damage() override;
-    int calc_base_unarmed_damage() override;
+    int weapon_damage() const override;
+    int calc_base_unarmed_damage() const override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     bool apply_damage_brand(const char *what = nullptr) override;

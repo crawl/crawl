@@ -970,17 +970,25 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
     // Round up the reduction from skill, so that min delay is rounded down.
     min_delay = max(min_delay, base - (MAX_SKILL_LEVEL + 1)/2);
 
-    if (check_speed && get_weapon_brand(weapon) == SPWPN_SPEED)
-    {
-        min_delay *= 2;
-        min_delay /= 3;
-    }
+    if (check_speed)
+        min_delay = weapon_adjust_delay(weapon, min_delay, false);
 
     // never go faster than speed 3 (ie 3.33 attacks per round)
     if (min_delay < 3)
         min_delay = 3;
 
     return min_delay;
+}
+
+/// Adjust delay based on weapon brand.
+int weapon_adjust_delay(const item_def &weapon, int base, bool random)
+{
+    const brand_type brand = get_weapon_brand(weapon);
+    if (brand == SPWPN_SPEED)
+        return random ? div_rand_round(base * 2, 3) : (base * 2) / 3;
+    if (brand == SPWPN_HEAVY)
+        return random ? div_rand_round(base * 3, 2) : (base * 3) / 2;
+    return base;
 }
 
 int mons_weapon_damage_rating(const item_def &launcher)
@@ -1337,6 +1345,15 @@ int throwing_base_damage_bonus(const item_def &proj)
     // Stones get half bonus; everything else gets full bonus.
     return div_rand_round(you.skill_rdiv(SK_THROWING)
                           * min(4, property(proj, PWPN_DAMAGE)), 4);
+}
+
+int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
+{
+    if (brand != SPWPN_HEAVY)
+        return base_dam;
+    if (random)
+        return div_rand_round(base_dam * 9, 5);
+    return base_dam * 9 / 5;
 }
 
 int unarmed_base_damage()

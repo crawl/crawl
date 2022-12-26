@@ -7844,7 +7844,7 @@ MONS:   ettin ; dark maul . great mace randart
 MONS:   stone giant w:30 / ettin w:20 / juggernaut / titan / iron giant w:5
 SUBST:  D = 222.
 : elseif you.in_branch("Orc") then
-MONS:   two-headed ogre ; dark maul . dire flail ego:vorpal
+MONS:   two-headed ogre ; dark maul . dire flail ego:heavy
 MONS:   two-headed ogre / cyclops / orc knight / orc warlord w:2 \
         / stone giant w:2 / ettin w:2
 SUBST:  D = 2..
@@ -7856,7 +7856,7 @@ MONS:   orc warrior / two-headed ogre / cyclops / orc knight w:2
 SUBST:  D = 2...
 # D:13-15
 : else
-MONS:   ettin ; dark maul . great mace ego:vorpal good_item
+MONS:   ettin ; dark maul . great mace ego:heavy good_item
 MONS:   two-headed ogre / cyclops / orc knight / orc warlord w:5 \
         / stone giant w:5 / ettin w:5
 SUBST:  D = 2.

@@ -405,7 +405,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
-    "venom", "protect", "drain", "speed", "vorpal",
+    "venom", "protect", "drain", "speed", "heavy",
 #if TAG_MAJOR_VERSION == 34
     "obsolete", "obsolete",
 #endif
@@ -417,7 +417,7 @@ static const char *weapon_brands_terse[] =
 #if TAG_MAJOR_VERSION == 34
     "evade", "confuse",
 #endif
-    "penet", "reap", "spect", "vorpal", "acid",
+    "penet", "reap", "spect", "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confuse",
 #endif
@@ -432,7 +432,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "orc slaying", "dragon slaying",
 #endif
-    "venom", "protection", "draining", "speed", "vorpality",
+    "venom", "protection", "draining", "speed", "heavy",
 #if TAG_MAJOR_VERSION == 34
     "flame", "frost",
 #endif
@@ -444,7 +444,7 @@ static const char *weapon_brands_verbose[] =
 #if TAG_MAJOR_VERSION == 34
     "evasion", "confusion",
 #endif
-    "penetration", "reaping", "spectralizing", "vorpal", "acid",
+    "penetration", "reaping", "spectralizing", "num_special", "acid",
 #if TAG_MAJOR_VERSION > 34
     "confusion",
 #endif
@@ -459,7 +459,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "orc-killing", "dragon-slaying",
 #endif
-    "venomous", "protective", "draining", "fast", "vorpal",
+    "venomous", "protective", "draining", "fast", "heavy",
 #if TAG_MAJOR_VERSION == 34
     "flaming", "freezing",
 #endif
@@ -471,7 +471,7 @@ static const char *weapon_brands_adj[] =
 #if TAG_MAJOR_VERSION == 34
     "evasive", "confusing",
 #endif
-    "penetrating", "reaping", "spectral", "vorpal", "acidic",
+    "penetrating", "reaping", "spectral", "num_special", "acidic",
 #if TAG_MAJOR_VERSION > 34
     "confusing",
 #endif
@@ -485,7 +485,7 @@ COMPILE_CHECK(ARRAYSZ(weapon_brands_verbose) == NUM_SPECIAL_WEAPONS);
 COMPILE_CHECK(ARRAYSZ(weapon_brands_adj) == NUM_SPECIAL_WEAPONS);
 
 static const set<brand_type> brand_prefers_adj =
-            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_VORPAL, SPWPN_SPECTRAL };
+            { SPWPN_VAMPIRISM, SPWPN_ANTIMAGIC, SPWPN_HEAVY, SPWPN_SPECTRAL };
 
 /**
  * What's the name of a type of weapon brand?
@@ -1234,7 +1234,7 @@ string ghost_brand_name(brand_type brand, monster_type mtype)
     const bool weapon = mtype != MONS_PANDEMONIUM_LORD;
     if (weapon)
     {
-        // n.b. vorpal only works if it is adjectival
+        // n.b. heavy only works if it is adjectival
         if (brand_prefers_adj.count(brand))
             return make_stringf("%s weapon", brand_type_adj(brand));
         else

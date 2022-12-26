@@ -67,7 +67,7 @@ private:
 
     /* Combat Calculations */
     bool using_weapon() const override;
-    int weapon_damage() override;
+    int weapon_damage() const override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
     int calc_damage() override;

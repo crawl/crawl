@@ -1093,7 +1093,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "protection",
             "draining",
             "speed",
-            "vorpal",
+            "heavy",
 #if TAG_MAJOR_VERSION == 34
             "flame",
             "frost",

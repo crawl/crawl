@@ -2872,7 +2872,7 @@ static void _rebrand_weapon(item_def& wpn)
             new_brand = random_choose_weighted(3, SPWPN_FLAMING,
                                                3, SPWPN_FREEZING,
                                                3, SPWPN_DRAINING,
-                                               3, SPWPN_VORPAL,
+                                               3, SPWPN_HEAVY,
                                                1, SPWPN_ELECTROCUTION,
                                                1, SPWPN_CHAOS);
         }
@@ -2880,7 +2880,7 @@ static void _rebrand_weapon(item_def& wpn)
         {
             new_brand = random_choose_weighted(2, SPWPN_FLAMING,
                                                2, SPWPN_FREEZING,
-                                               2, SPWPN_VORPAL,
+                                               2, SPWPN_HEAVY,
                                                2, SPWPN_VENOM,
                                                2, SPWPN_PROTECTION,
                                                1, SPWPN_DRAINING,
@@ -2913,9 +2913,9 @@ static void _brand_weapon(item_def &wpn)
 
     switch (get_weapon_brand(wpn))
     {
-    case SPWPN_VORPAL:
-        flash_colour = YELLOW;
-        mprf("%s emits a brilliant flash of light!",itname.c_str());
+    case SPWPN_HEAVY:
+        flash_colour = BROWN;
+        mprf("%s becomes incredibly heavy!",itname.c_str());
         break;
 
     case SPWPN_PROTECTION:

@@ -2782,7 +2782,7 @@ NAME:    pdpol_lair_cabin_in_the_woods
 TAGS:    no_item_gen no_monster_gen
 DEPTH:   Lair
 # The last survivor
-KMONS:   1 = human ; war axe ego:vorpal good_item \
+KMONS:   1 = human ; war axe ego:heavy good_item \
                        | war axe ego:flaming good_item \
                    . leather armour good_item | ring mail good_item \
                        | scale mail good_item

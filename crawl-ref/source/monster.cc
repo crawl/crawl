@@ -405,9 +405,7 @@ random_var monster::attack_delay(const item_def *projectile,
     if (!weap || (projectile && is_throwable(this, *projectile)))
         return random_var(10);
 
-    random_var delay(10);
-    if (get_weapon_brand(*weap) == SPWPN_SPEED)
-        delay = div_rand_round(delay * 2, 3);
+    random_var delay(weapon_adjust_delay(*weap, 10));
     return delay;
 }
 
@@ -1381,7 +1379,6 @@ static int _ego_damage_bonus(item_def &item)
     switch (get_weapon_brand(item))
     {
     case SPWPN_NORMAL:      return 0;
-    case SPWPN_VORPAL:      // deliberate fall through
     case SPWPN_PROTECTION:  return 1;
     default:                return 2;
     }

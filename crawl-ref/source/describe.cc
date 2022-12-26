@@ -1213,7 +1213,6 @@ static string _describe_brand(brand_type brand)
     case SPWPN_FLAMING:
     case SPWPN_FREEZING:
     case SPWPN_PAIN:
-    case SPWPN_VORPAL:
     case SPWPN_VENOM:
     {
         const string brand_name = uppercase_first(brand_type_name(brand, true));
@@ -1251,12 +1250,21 @@ string damage_rating(const item_def *item)
 
     const bool thrown = item && item->base_type == OBJ_MISSILES;
 
+    brand_type brand = SPWPN_NORMAL;
+    if (!item)
+        brand = get_form()->get_uc_brand();
+    else if (item_type_known(*item) && !thrown)
+        brand = get_weapon_brand(*item);
+
     // Would be great to have a breakdown of UC damage by skill, form, claws etc.
     const int base_dam = item ? property(*item, PWPN_DAMAGE)
                               : unarmed_base_damage();
+    // This is just SPWPN_HEAVY.
+    const int post_brand_dam = brand_adjust_weapon_damage(base_dam, brand, false);
+    const int heavy_dam = post_brand_dam - base_dam;
     const int extra_base_dam = thrown ? throwing_base_damage_bonus(*item) :
-                                !item ? unarmed_base_damage_bonus(false) :
-                                        0;
+                               !item ? unarmed_base_damage_bonus(false) :
+                                    heavy_dam; // 0 for non-heavy weapons
     const skill_type skill = item ? _item_training_skill(*item) : SK_UNARMED_COMBAT;
     const int stat_mult = stat_modify_damage(100, skill, true);
     const bool use_str = weapon_uses_strength(skill, true);
@@ -1270,12 +1278,6 @@ string damage_rating(const item_def *item)
     const int ench = item && item_ident(*item, ISFLAG_KNOW_PLUSES) ? item->plus : 0;
     const int plusses = slaying + ench;
 
-    brand_type brand = SPWPN_NORMAL;
-    if (!item)
-        brand = get_form()->get_uc_brand();
-    else if (item_type_known(*item) && !thrown)
-        brand = get_weapon_brand(*item);
-
     const int DAM_RATE_SCALE = 100;
     int rating = (base_dam + extra_base_dam) * DAM_RATE_SCALE;
     rating = stat_modify_damage(rating, skill, true);
@@ -1288,6 +1290,8 @@ string damage_rating(const item_def *item)
     const string base_dam_desc = thrown ? make_stringf("[%d + %d (Thrw)]",
                                                        base_dam, extra_base_dam) :
                                   !item ? make_stringf("[%d + %d (UC)]",
+                                                       base_dam, extra_base_dam) :
+                   brand == SPWPN_HEAVY ? make_stringf("[%d + %d (Heavy)]",
                                                        base_dam, extra_base_dam) :
                                           make_stringf("%d", base_dam);
 
@@ -1583,12 +1587,13 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         case SPWPN_SPEED:
             description += "Attacks with this weapon are significantly faster.";
             break;
-        case SPWPN_VORPAL:
+        case SPWPN_HEAVY:
             if (is_range_weapon(item))
                 description += "Any ammunition fired from it";
             else
                 description += "It";
-            description += " inflicts extra damage upon your enemies.";
+            description += " deals dramatically more damage, but attacks with "
+                "it are much slower.";
             break;
         case SPWPN_CHAOS:
             if (is_range_weapon(item))

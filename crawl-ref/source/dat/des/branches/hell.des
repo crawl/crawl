@@ -654,8 +654,8 @@ WEIGHT: 2
   -- the Dis inventory focuses on damage/AC increases to counteract the
   -- corrosion hell effect, rCorr for caustic shrikes, reflection for various
   -- Dis projectiles, and enchant armour/weapon scrolls in bulk
-  local disinv = util.random_subset( { "any weapon good_item ego:vorpal",
-    "any weapon randart ego:vorpal", "ring of slaying randart",
+  local disinv = util.random_subset( { "any weapon good_item ego:heavy",
+    "any weapon randart ego:heavy", "ring of slaying randart",
     "ring of protection randart", "any weapon good_item ego:protection",
     "any weapon randart ego:protection", "crystal plate armour randart",
     "gold dragon scales randart", "tower shield randart",

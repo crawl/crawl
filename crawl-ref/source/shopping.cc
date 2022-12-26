@@ -232,12 +232,9 @@ unsigned int item_value(item_def item, bool ident)
             case SPWPN_DRAINING:
             case SPWPN_FLAMING:
             case SPWPN_FREEZING:
+            case SPWPN_HEAVY:
             case SPWPN_HOLY_WRATH:
                 valued *= 18;
-                break;
-
-            case SPWPN_VORPAL:
-                valued *= 15;
                 break;
 
             case SPWPN_PROTECTION:

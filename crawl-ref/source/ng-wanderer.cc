@@ -69,11 +69,8 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
         sub_type = WPN_SPEAR;
         break;
 
-    // remaining types can't have basetype upgraded, so offer vorpal instead
     case SK_STAVES:
         sub_type = WPN_QUARTERSTAFF;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
         break;
 
     case SK_RANGED_WEAPONS:
@@ -82,18 +79,21 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
 
     default:
         sub_type = WPN_DAGGER;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
         break;
     }
 
     if (upgrade_base)
     {
+        const weapon_type old_type = sub_type;
         sub_type = starting_weapon_upgrade(sub_type, you.char_class,
                                             you.species);
+        // If we can't upgrade the type, give it a little plus.
+        if (sub_type == old_type)
+            plus = 2;
     }
     else if (good_item)
         plus = 2;
+
 
     newgame_make_item(OBJ_WEAPONS, sub_type, 1, plus, ego);
 }

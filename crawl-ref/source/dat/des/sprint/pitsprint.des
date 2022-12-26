@@ -209,7 +209,7 @@ function general_item_setup(e)
     great sword plus:7 randart ident:all /\
     lajatang plus:9 good_item ident:all /\
     lajatang plus:7 randart ident:all /\
-    longbow plus:7 ego:vorpal ident:all w:15 /\
+    longbow plus:7 ego:heavy ident:all w:15 /\
     triple crossbow plus:7 good_item ident:all w:15")
   e.kitem("] = plate armour plus:12 ident:all /\
     plate armour plus:8 good_item ident:all /\
@@ -625,16 +625,16 @@ KITEM: e = rapier plus:2 ego:electrocution ident:all /\
        rapier plus:2 ego:distortion ident:all /\
        rapier plus:2 good_item ident:all
 KITEM: f = war axe plus:2 ego:freezing ident:all /\
-       war axe plus:2 ego:vorpal ident:all /\
+       war axe plus:2 ego:heavy ident:all /\
        war axe plus:2 good_item ident:all w:5 /\
        broad axe plus:1 ego:freezing ident:all /\
-       broad axe plus:1 ego:vorpal ident:all /\
+       broad axe plus:1 ego:heavy ident:all /\
        broad axe plus:1 good_item ident:all w:5
 KITEM: g = dire flail plus:2 ego:protection ident:all /\
-       dire flail plus:2 ego:vorpal ident:all /\
+       dire flail plus:2 ego:heavy ident:all /\
        dire flail plus:2 good_item ident:all w:5 /\
        morningstar plus:2 ego:protection ident:all /\
-       morningstar plus:2 ego:vorpal ident:all /\
+       morningstar plus:2 ego:heavy ident:all /\
        morningstar plus:2 good_item ident:all w:5
 KITEM: h = halberd plus:2 ego:protection ident:all /\
        halberd plus:2 ego:venom ident:all /\
@@ -717,12 +717,12 @@ KITEM: a = dagger ego:electrocution ident:all /\
        dagger ego:draining ident:all /\
        dagger ego:venom ident:all
 KITEM: b = hand axe ego:freezing ident:all /\
-       hand axe ego:vorpal ident:all
-KITEM: c = mace ego:vorpal ident:all /\
+       hand axe ego:heavy ident:all
+KITEM: c = mace ego:heavy ident:all /\
        mace ego:protection ident:all /\
-       flail ego:vorpal ident:all /\
+       flail ego:heavy ident:all /\
        flail ego:protection ident:all
-KITEM: d = trident ego:vorpal ident:all
+KITEM: d = trident ego:heavy ident:all
 KITEM: e = quarterstaff ego:protection ident:all /\
        quarterstaff ego:speed ident:all
 KITEM: f = long sword ego:holy_wrath ident:all /\

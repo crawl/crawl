@@ -340,7 +340,7 @@ bool ranged_attack::clumsy_throwing() const
     return throwing() && !is_throwable(attacker, *projectile);
 }
 
-int ranged_attack::weapon_damage()
+int ranged_attack::weapon_damage() const
 {
     if (clumsy_throwing())
         return 0;
@@ -357,7 +357,7 @@ int ranged_attack::weapon_damage()
 /**
  * For ranged attacked, "unarmed" is throwing damage.
  */
-int ranged_attack::calc_base_unarmed_damage()
+int ranged_attack::calc_base_unarmed_damage() const
 {
     if (clumsy_throwing())
         return 0;

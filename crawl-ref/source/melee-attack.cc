@@ -3545,7 +3545,7 @@ bool melee_attack::using_weapon() const
     return weapon && is_melee_weapon(*weapon);
 }
 
-int melee_attack::weapon_damage()
+int melee_attack::weapon_damage() const
 {
     if (!using_weapon())
         return 0;

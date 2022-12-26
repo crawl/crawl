@@ -125,9 +125,10 @@ protected:
 
     /* Combat Calculations */
     virtual bool using_weapon() const = 0;
-    virtual int weapon_damage() = 0;
+    virtual int weapon_damage() const = 0;
+    int adjusted_weapon_damage() const;
     virtual int get_weapon_plus();
-    virtual int calc_base_unarmed_damage();
+    virtual int calc_base_unarmed_damage() const;
     virtual int calc_mon_to_hit_base() = 0;
     virtual int apply_damage_modifiers(int damage) = 0;
     virtual int calc_damage();

@@ -1181,7 +1181,7 @@ ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen no_pool_fixup
 : item(dgn.loot_potions .. " / " .. dgn.loot_scrolls)
 : easy_axe_fighter(_G)
-MONS:   human ; hand axe ego:vorpal | war axe . scale mail | ring mail
+MONS:   human ; hand axe ego:heavy | war axe . scale mail | ring mail
 MONS:   vault guard ; broad axe . chain mail | plate armour
 KMONS:  4 = bullfrog
 KMONS:  5 = prince ribbit, blink frog / cane toad w:1
