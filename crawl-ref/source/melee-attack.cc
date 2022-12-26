@@ -2219,10 +2219,6 @@ int melee_attack::post_roll_to_hit_modifiers(int mhit, bool random, bool aux)
 {
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 
-    // Just trying to touch is easier than trying to damage.
-    if (you.duration[DUR_CONFUSING_TOUCH] && !aux)
-        modifiers += maybe_random_div(you.dex(), 2, random);
-
     // Electric charges feel bad when they miss, so make them miss less often.
     if (charge_pow > 0)
         modifiers += 5; // matching UC form to-hit bonuses
