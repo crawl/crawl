@@ -86,8 +86,8 @@ public:
     bool can_quaff(string *reason = nullptr, bool temp = true) const override
     {
         // cure status effects, allowed even in death's door
-        if (temp && (you.duration[DUR_CONF]
-                    || you.duration[DUR_POISONING]))
+        if (you.duration[DUR_CONF]
+                    || you.duration[DUR_POISONING])
         {
             return true;
         }
