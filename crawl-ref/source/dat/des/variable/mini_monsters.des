@@ -1241,7 +1241,7 @@ SUBST:   pqrs = O
 TILE:    ! = DNGN_TRANSPARENT_STONE_WHITE
 TILE:    O = DNGN_TRANSPARENT_STONE_DARKGRAY
 COLOUR:  ! = white
-COLOUR:  O = darkgrey
+COLOUR:  O = magenta
 MAP
 .....................
 ..p.........c.c....1.

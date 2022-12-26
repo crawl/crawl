@@ -1253,9 +1253,10 @@ ENDMAP
 # would need to be maintained for every future new species, this just vetos on
 # player species, so only barding-wearing species will see it.
 NAME:    nicolae_trove_exclusive_bardings
-veto    {{ return crawl.game_started()
+veto     {{ return crawl.game_started()
            and you.race() != "Naga"
-           and you.race() != "Palentonga") }}
+           and you.race() != "Armataur"
+           and you.race() != "Palentonga" }}
 TAGS:    no_item_gen no_monster_gen allow_dup
 ORIENT:  encompass
 KITEM:   D = barding randart good_item / barding good_item / barding w:2
