@@ -512,10 +512,7 @@ spret cast_summon_mana_viper(int pow, god_type god, bool fail)
 
     mgen_data viper = _pal_data(MONS_MANA_VIPER, 2, god,
                                 SPELL_SUMMON_MANA_VIPER);
-    viper.hd = (5 + div_rand_round(pow, 12));
-
-    // Don't scale hp at the same time as their antimagic power
-    viper.hp = hit_points(495); // avg 50
+    viper.hd = (6 + div_rand_round(pow, 12));
 
     if (create_monster(viper))
         mpr("A mana viper appears with a sibilant hiss.");
