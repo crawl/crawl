@@ -1117,8 +1117,9 @@ specific branch varies with each cast of the spell.
 %%%%
 Plasma Beam spell
 
-Fires a penetrating beam of plasma at a distant foe. The ionized beam partially
-bypasses armour, and a second beam of fire follows in its wake.
+Fires a penetrating beam of plasma at one of the caster's most distant foes.
+The ionized beam partially bypasses armour, and a second beam of fire follows
+in its wake.
 %%%%
 Poison Arrow spell
 

@@ -143,7 +143,7 @@ static const struct spell_desc spelldata[] =
     spflag::noisy,
     5,
     200,
-    3, 9, // capped at LOS
+    3, 10, // capped at LOS
     25, 5,
     TILEG_LIGHTNING_BOLT,
 },

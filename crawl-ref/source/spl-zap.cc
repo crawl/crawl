@@ -136,6 +136,7 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_FOXFIRE, ZAP_FOXFIRE },
     { SPELL_MARSHLIGHT, ZAP_FOXFIRE },
     { SPELL_HURL_SLUDGE, ZAP_HURL_SLUDGE },
+    { SPELL_PLASMA_BEAM, ZAP_PLASMA },
 };
 
 // Some player abilities are internally zaps but don't go through

@@ -1295,7 +1295,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_ARCJOLT:
         return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, pow, false));
     case SPELL_PLASMA_BEAM:
-        return make_unique<targeter_multiposition>(&you, plasma_beam_targets(you, pow, false, true));
+        return make_unique<targeter_multiposition>(&you, plasma_beam_targets(you, pow, false));
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -2802,8 +2802,6 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
             return base_fragmentation_damage(power, false);
         case SPELL_ARCJOLT:
             return arcjolt_damage(power, false);
-        case SPELL_PLASMA_BEAM:
-            return plasma_beam_damage(power, false);
         default:
             break;
     }

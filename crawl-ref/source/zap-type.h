@@ -126,5 +126,6 @@ enum zap_type
     ZAP_BLASTSPARK,
     ZAP_KISS_OF_DEATH,
     ZAP_MOMENTUM_STRIKE,
+    ZAP_PLASMA,
     NUM_ZAPS
 };
