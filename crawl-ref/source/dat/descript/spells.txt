@@ -932,11 +932,13 @@ cannot affect artificial beings, and the undead will decompose if affected.
 %%%%
 Manifold Assault spell
 
-Warps space into paradoxical configurations in order to strike many visible
-targets with one melee attack. The effect is too imprecise to allow stabbing
-unsuspecting foes. At high power, it can be used to strike more enemies at
-once. Very high power is required to launch multiple unarmed strikes in this
-fashion, since greater care must be taken when warping one's own limbs.
+Warps space into paradoxical configurations to strike many visible foes with
+one melee attack. Power increases the number of foes attacked with one cast,
+but very high power is required to launch multiple unarmed attacks in this
+fashion, since great care must be taken when warping one's own limbs.
+
+The time taken for the attack is exactly the same as a normal melee attack.
+It's imprecise, so it can't do extra damage against unsuspecting foes.
 %%%%
 Mara Summon spell
 
@@ -1723,7 +1725,8 @@ melee attack on arrival. Additional electric damage will be dealt based on the
 length of the charge, the power of the spell, and the physical damage of the
 attack. The caster is wrapped in an envelope of twisted space, allowing them
 to safely pass through creatures, traps, and harmful terrain, and to displace
-creatures at their destination.
+creatures at their destination. The time taken by the spell is the greater of
+the time needed to move one step or that needed to launch one melee attack.
 %%%%
 Volley of Thorns spell
 
