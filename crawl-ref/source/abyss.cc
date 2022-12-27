@@ -526,8 +526,8 @@ static bool _abyss_check_place_feat(coord_def p,
 
 static dungeon_feature_type _abyss_pick_altar()
 {
-    // Lugonu has a flat 50% chance of corrupting the altar.
-    if (coinflip())
+    // Lugonu has a flat 90% chance of corrupting the altar.
+    if (!one_chance_in(10))
         return DNGN_ALTAR_LUGONU;
 
     god_type god;
@@ -1393,7 +1393,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 DNGN_EXIT_ABYSS,
                                 abyss_genlevel_mask)
         ||
-        _abyss_check_place_feat(p, 10000,
+        _abyss_check_place_feat(p, 3000,
                                 &altars_wanted,
                                 nullptr,
                                 _abyss_pick_altar(),

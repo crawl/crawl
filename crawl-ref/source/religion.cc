@@ -3785,8 +3785,11 @@ static const map<god_type, function<void ()>> on_join = {
     }},
     { GOD_GOZAG, _join_gozag },
     { GOD_LUGONU, []() {
-        if (you.worshipped[GOD_LUGONU] == 0)
-            gain_piety(20, 1, false);  // allow instant access to first power
+        if (!player_in_branch(BRANCH_ABYSS)) return;
+        // If this is your first time with Lucy, jump straight to 2* for a big power boost.
+        // Otherwise, give just enough for 'exit the abyss'.
+        const int bonus = you.worshipped[GOD_LUGONU] ? 20 : 40;
+        gain_piety(bonus, 1, false);
     }},
     { GOD_OKAWARU, _join_okawaru },
     { GOD_RU, _join_ru },
