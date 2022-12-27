@@ -1044,7 +1044,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
  * @returns True if this actor is moved from their initial position; false otherwise
  */
 
-bool actor::knockback(actor *cause, int distance, int strength, int pow, char* message, coord_def source)
+bool actor::knockback(actor *cause, int distance, int strength, int pow, const char* message, coord_def source)
 {
     if (is_stationary() || resists_dislodge())
         return false;
@@ -1091,7 +1091,7 @@ bool actor::knockback(actor *cause, int distance, int strength, int pow, char* m
 
     if (you.can_see(*this))
     {
-        mprf(message);
+        mpr(message);
     }
 
     if (pos() != newpos)

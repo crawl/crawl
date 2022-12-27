@@ -4625,21 +4625,15 @@ void bolt::knockback_actor(actor *act, int dam)
                      ? 7 + 0.27 * ench_power
                      : 17;
 
-    char* message;  
-    if (origin_spell == SPELL_CHILLING_BREATH)
-    {
-        sprintf(message, "%s %s blown backwards by the freezing wind.",
-                act->name(DESC_THE).c_str(),
-                act->conj_verb("are").c_str());
-    }
-    else
-    {
-        sprintf(message, "%s %s knocked back by the %s.",
-                act->name(DESC_THE).c_str(),
-                act->conj_verb("are").c_str(),
-                name.c_str());
-    }
-    
+    const char* message = origin_spell == SPELL_CHILLING_BREATH
+                ? make_stringf("%s %s blown backwards by the freezing wind.",
+                    act->name(DESC_THE).c_str(),
+                    act->conj_verb("are").c_str()).c_str()
+                : make_stringf("%s %s knocked back by the %s.",
+                    act->name(DESC_THE).c_str(),
+                    act->conj_verb("are").c_str(),
+                    name.c_str()).c_str();
+
     act->knockback(agent(), distance, roll, ench_power, message, agent()->pos());
 }
 
