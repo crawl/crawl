@@ -186,14 +186,7 @@ static void _zap_animation(int colour, const monster* mon = nullptr,
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(colour)});
 #endif
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50);
-    }
-}
-
-// Special front function for zap_animation to interpret enchantment flavours.
-static void _ench_anim        animation_delay(50, true);
+        animation_delay(50, true);
     }
 }
 
