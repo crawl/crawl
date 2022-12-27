@@ -418,6 +418,7 @@ public:
     string resist_margin_phrase(int margin) const;
 
     void collide(coord_def newpos, const actor *agent, int pow);
+    bool knockback(const actor &cause, int dist, int pow, string source_name);
 
     static const actor *ensure_valid_actor(const actor *act);
     static actor *ensure_valid_actor(actor *act);

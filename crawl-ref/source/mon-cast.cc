@@ -3959,8 +3959,9 @@ static bool _target_and_justify_spell(monster &mons,
 
     // Don't knockback something we're trying to constrict.
     const actor *victim = actor_at(beem.target);
-    if (victim &&
-        beem.can_knockback(*victim)
+    if (victim
+        && beem.can_knockback()
+        && !victim->is_stationary()
         && mons.is_constricting()
         && mons.constricting->count(victim->mid))
     {

@@ -4601,92 +4601,36 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     }
 }
 
+static int _knockback_dist(spell_type origin, int pow)
+{
+    switch (origin)
+    {
+    case SPELL_FORCE_LANCE:
+    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+        return 2 + div_rand_round(pow, 50);
+    case SPELL_CHILLING_BREATH:
+        return 2;
+    default:
+        return 1;
+    }
+}
+
 void bolt::knockback_actor(actor *act, int dam)
 {
-    if (!act
-        || !can_knockback(*act, dam)
-        || act->resists_dislodge("being knocked back"))
-    {
-        return;
-    }
+    if (!can_knockback(dam)) return;
 
-    const int distance =
-        (origin_spell == SPELL_FORCE_LANCE
-         || origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST)
-            ? 2 + div_rand_round(ench_power, 50) :
-        (origin_spell == SPELL_CHILLING_BREATH) ? 2 : 1;
-
+    const int max_dist = _knockback_dist(origin_spell, ench_power);
+    const monster_type montyp = act->is_monster() ? act->type
+                                                  : you.mons_species();
+    const int weight = max_corpse_chunks(montyp);
     const int roll = origin_spell == SPELL_FORCE_LANCE
                      ? 7 + 0.27 * ench_power
                      : 17;
-    const int weight = max_corpse_chunks(act->is_monster() ? act->type :
-                                                            you.mons_species());
+    const int dist = binomial(max_dist, weight, roll); // This is silly! -- PF
 
-    const coord_def oldpos = act->pos();
-
-    if (act->is_stationary())
-        return;
-    // We can't do knockback if the beam starts and ends on the same space
-    if (source == oldpos)
-        return;
-    ASSERT(ray.pos() == oldpos);
-
-    coord_def newpos = oldpos;
-    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
-    {
-        if (x_chance_in_y(weight, roll))
-            continue;
-
-        const ray_def oldray(ray);
-
-        ray.advance();
-
-        newpos = ray.pos();
-        if (newpos == oldray.pos()
-            || cell_is_solid(newpos)
-            || actor_at(newpos)
-            || !act->can_pass_through(newpos)
-            || !act->is_habitable(newpos))
-        {
-            ray = oldray;
-            break;
-        }
-
-        act->move_to_pos(newpos);
-        if (act->is_player())
-            stop_delay(true);
-    }
-
-    if (newpos == oldpos)
-        return;
-
-    if (you.can_see(*act))
-    {
-        if (origin_spell == SPELL_CHILLING_BREATH)
-        {
-            mprf("%s %s blown backwards by the freezing wind.",
-                 act->name(DESC_THE).c_str(),
-                 act->conj_verb("are").c_str());
-        }
-        else
-        {
-            mprf("%s %s knocked back by the %s.",
-                 act->name(DESC_THE).c_str(),
-                 act->conj_verb("are").c_str(),
-                 name.c_str());
-        }
-    }
-
-    if (act->pos() != newpos)
-        act->collide(newpos, agent(), ench_power);
-
-    // Stun the monster briefly so that it doesn't look as though it wasn't
-    // knocked back at all
-    if (act->is_monster())
-        act->as_monster()->speed_increment -= random2(6) + 4;
-
-    act->apply_location_effects(oldpos, killer(),
-                                actor_to_death_source(agent()));
+    const string push_type =
+        origin_spell == SPELL_CHILLING_BREATH ? "freezing wind" : name;
+    act->knockback(*agent(), dist, ench_power, push_type);
 }
 
 void bolt::pull_actor(actor *act, int dam)
@@ -6763,26 +6707,25 @@ string bolt::get_source_name() const
 }
 
 /**
- * Can this bolt knock back an actor?
+ * Can this bolt potentially knock back a creature it hits?
  *
- * The bolts that knockback flying actors or actors only when damage is dealt
- * will return true when conditions are met.
- *
- * @param act The target actor. Check if the actor is flying for bolts that
- *            knockback flying actors.
  * @param dam The damage dealt. If non-negative, check that dam > 0 for bolts
- *             like force bolt that only push back upon damage.
- * @return True if the bolt could knockback the actor, false otherwise.
+ *             like force lance that only push back upon damage.
+ * @return True iff the bolt could knock something back.
 */
-bool bolt::can_knockback(const actor &act, int dam) const
+bool bolt::can_knockback(int dam) const
 {
-    if (act.is_stationary())
+    switch (origin_spell)
+    {
+    case SPELL_PRIMAL_WAVE:
+        return flavour == BEAM_WATER;
+    case SPELL_CHILLING_BREATH:
+    case SPELL_FORCE_LANCE:
+    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+        return dam != 0;
+    default:
         return false;
-
-    return flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
-           || origin_spell == SPELL_CHILLING_BREATH && dam
-           || origin_spell == SPELL_FORCE_LANCE && dam
-           || origin_spell == SPELL_ISKENDERUNS_MYSTIC_BLAST && dam;
+    }
 }
 
 /**
