@@ -4624,8 +4624,6 @@ void bolt::knockback_actor(actor *act, int dam)
     const int roll = origin_spell == SPELL_FORCE_LANCE
                      ? 7 + 0.27 * ench_power
                      : 17;
-    const int weight = max_corpse_chunks(act->is_monster() ? act->type :
-                                                            you.mons_species());
 
     char* message;  
     if (origin_spell == SPELL_CHILLING_BREATH)
@@ -6784,3 +6782,54 @@ int _ench_pow_to_dur(int pow)
     int base_dur = stepdown(pow * BASELINE_DELAY, 70);
 
     return div_rand_round(base_dur, 2) + random2(1 + base_dur);
+}
+
+// Do all beams skip past a particular monster?
+// see also shoot_through_monsters
+// can these be consolidated? Some checks there don't need a bolt arg
+bool always_shoot_through_monster(const actor *originator, const monster &victim)
+{
+    return mons_is_projectile(victim)
+        || (mons_is_avatar(victim.type)
+            && originator && mons_aligned(originator, &victim));
+}
+
+// Can a particular beam go through a particular monster?
+// Fedhas worshipers can shoot through non-hostile plants,
+// and players can shoot through their demonic guardians.
+bool shoot_through_monster(const bolt& beam, const monster* victim)
+{
+    actor *originator = beam.agent();
+    if (!victim || !originator)
+        return false;
+    return god_protects(originator, victim)
+           || (originator->is_player()
+               && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
+}
+
+/**
+ * Given some shield value, what is the chance that omnireflect will activate
+ * on an AUTOMATIC_HIT attack?
+ *
+ * E.g., if 40 is returned, there is a SH in 40 chance of a given attack being
+ * reflected.
+ *
+ * @param SH        The SH (shield) value of the omnireflect user.
+ * @return          A denominator to the chance of omnireflect activating.
+ */
+int omnireflect_chance_denom(int SH)
+{
+    return SH + 20;
+}
+
+/// Set up a beam aiming from the given monster to their target.
+bolt setup_targetting_beam(const monster &mons)
+{
+    bolt beem;
+
+    beem.source    = mons.pos();
+    beem.target    = mons.target;
+    beem.source_id = mons.mid;
+
+    return beem;
+}
