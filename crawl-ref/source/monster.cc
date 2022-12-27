@@ -2052,7 +2052,11 @@ item_def *monster::mslot_item(mon_inv_type mslot) const
 
 item_def *monster::shield() const
 {
-    return mslot_item(MSLOT_SHIELD);
+    item_def *shield = mslot_item(MSLOT_SHIELD);
+
+    if (shield && shield->sub_type != ARM_ORB)
+        return shield;
+    return nullptr;
 }
 
 /**
