@@ -260,6 +260,9 @@ static void _trigger_opportunity_attacks(coord_def new_pos)
             || !mon->can_see(you)
             // only let monsters attack if they might follow you
             || !mon->may_have_action_energy() || mon->is_stationary()
+            // if you're swapping with a pal or moving off a fedhas plant,
+            // you can't be followed, so no aoops
+            || monster_at(you.pos())
             // Zin protects!
             || is_sanctuary(mon->pos())
             // creates some weird bugs
@@ -1147,8 +1150,7 @@ void move_player_action(coord_def move)
         {
             remove_water_hold();
             _clear_constriction_data();
-            if (!swap)
-                _trigger_opportunity_attacks(targ);
+            _trigger_opportunity_attacks(targ);
             // Check nothing weird happened during opportunity attacks.
             if (!you.pending_revival)
             {
