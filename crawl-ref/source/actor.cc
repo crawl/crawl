@@ -10,6 +10,7 @@
 #include "art-enum.h"
 #include "attack.h"
 #include "chardump.h"
+#include "delay.h"
 #include "directn.h"
 #include "env.h"
 #include "fight.h" // apply_chunked_ac
@@ -1030,6 +1031,81 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
         if (dam && is_monster())
             print_wounds(*as_monster());
     }
+}
+
+/** 
+ * @brief Attempts to knock this actor away from a specific tile, causing damage on collision
+ * @param cause The actor responsible for the knockback
+ * @param source The tile this actor is being knocked directly away from
+ * @param distance The number of attempts 
+ * @param strength Each attempt has probability 
+ * @param pow The damage caused on collision.
+ * @param message The message to dis
+ * @returns True if this actor is moved from their initial position; false otherwise
+ */
+
+bool actor::knockback(actor *cause, int distance, int strength, int pow, char* message, coord_def source)
+{
+    if (is_stationary() || resists_dislodge())
+        return false;
+
+    const int weight = max_corpse_chunks(is_monster() ? type : you.mons_species());
+    const coord_def oldpos = pos();
+
+    if (source == oldpos)
+        return false;
+
+    ray_def ray;
+    fallback_ray(source, oldpos, ray);
+    while(ray.pos() != oldpos)
+        ray.advance();
+    
+    coord_def newpos = oldpos;
+    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
+    {
+        if (x_chance_in_y(weight, strength))
+            continue;
+
+        const ray_def oldray(ray);
+
+        ray.advance();
+
+        newpos = ray.pos();
+        if (newpos == oldray.pos()
+            || cell_is_solid(newpos)
+            || actor_at(newpos)
+            || !can_pass_through(newpos)
+            || !is_habitable(newpos))
+        {
+            ray = oldray;
+            break;
+        }
+
+        move_to_pos(newpos);
+        if (is_player())
+            stop_delay(true);
+    }
+
+    if (newpos == oldpos)
+        return false;
+
+    if (you.can_see(*this))
+    {
+        mprf(message);
+    }
+
+    if (pos() != newpos)
+        collide(newpos, cause, pow);
+
+    // Stun the monster briefly so that it doesn't look as though it wasn't
+    // knocked back at all
+    if (is_monster())
+        as_monster()->speed_increment -= random2(6) + 4;
+
+    apply_location_effects(oldpos, cause->is_player()? KILL_YOU_MISSILE : KILL_MON_MISSILE,
+                                actor_to_death_source(cause));
+
+    return true;
 }
 
 /// Is this creature despised by the so-called 'good gods'?

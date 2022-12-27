@@ -186,7 +186,14 @@ static void _zap_animation(int colour, const monster* mon = nullptr,
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(colour)});
 #endif
-        animation_delay(50, true);
+        viewwindow(false);
+        update_screen();
+        scaled_delay(50);
+    }
+}
+
+// Special front function for zap_animation to interpret enchantment flavours.
+static void _ench_anim        animation_delay(50, true);
     }
 }
 
@@ -4607,6 +4614,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
 void bolt::knockback_actor(actor *act, int dam)
 {
+    //TODO: This should be mostly redundant; see what can be factored out
     if (!act
         || !can_knockback(*act, dam)
         || act->resists_dislodge("being knocked back"))
@@ -4626,71 +4634,22 @@ void bolt::knockback_actor(actor *act, int dam)
     const int weight = max_corpse_chunks(act->is_monster() ? act->type :
                                                             you.mons_species());
 
-    const coord_def oldpos = act->pos();
-
-    if (act->is_stationary())
-        return;
-    // We can't do knockback if the beam starts and ends on the same space
-    if (source == oldpos)
-        return;
-    ASSERT(ray.pos() == oldpos);
-
-    coord_def newpos = oldpos;
-    for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
+    char* message;  
+    if (origin_spell == SPELL_CHILLING_BREATH)
     {
-        if (x_chance_in_y(weight, roll))
-            continue;
-
-        const ray_def oldray(ray);
-
-        ray.advance();
-
-        newpos = ray.pos();
-        if (newpos == oldray.pos()
-            || cell_is_solid(newpos)
-            || actor_at(newpos)
-            || !act->can_pass_through(newpos)
-            || !act->is_habitable(newpos))
-        {
-            ray = oldray;
-            break;
-        }
-
-        act->move_to_pos(newpos);
-        if (act->is_player())
-            stop_delay(true);
+        sprintf(message, "%s %s blown backwards by the freezing wind.",
+                act->name(DESC_THE).c_str(),
+                act->conj_verb("are").c_str());
     }
-
-    if (newpos == oldpos)
-        return;
-
-    if (you.can_see(*act))
+    else
     {
-        if (origin_spell == SPELL_CHILLING_BREATH)
-        {
-            mprf("%s %s blown backwards by the freezing wind.",
-                 act->name(DESC_THE).c_str(),
-                 act->conj_verb("are").c_str());
-        }
-        else
-        {
-            mprf("%s %s knocked back by the %s.",
-                 act->name(DESC_THE).c_str(),
-                 act->conj_verb("are").c_str(),
-                 name.c_str());
-        }
+        sprintf(message, "%s %s knocked back by the %s.",
+                act->name(DESC_THE).c_str(),
+                act->conj_verb("are").c_str(),
+                name.c_str());
     }
-
-    if (act->pos() != newpos)
-        act->collide(newpos, agent(), ench_power);
-
-    // Stun the monster briefly so that it doesn't look as though it wasn't
-    // knocked back at all
-    if (act->is_monster())
-        act->as_monster()->speed_increment -= random2(6) + 4;
-
-    act->apply_location_effects(oldpos, killer(),
-                                actor_to_death_source(agent()));
+    
+    act->knockback(agent(), distance, roll, ench_power, message, agent()->pos());
 }
 
 void bolt::pull_actor(actor *act, int dam)
@@ -6832,54 +6791,3 @@ int _ench_pow_to_dur(int pow)
     int base_dur = stepdown(pow * BASELINE_DELAY, 70);
 
     return div_rand_round(base_dur, 2) + random2(1 + base_dur);
-}
-
-// Do all beams skip past a particular monster?
-// see also shoot_through_monsters
-// can these be consolidated? Some checks there don't need a bolt arg
-bool always_shoot_through_monster(const actor *originator, const monster &victim)
-{
-    return mons_is_projectile(victim)
-        || (mons_is_avatar(victim.type)
-            && originator && mons_aligned(originator, &victim));
-}
-
-// Can a particular beam go through a particular monster?
-// Fedhas worshipers can shoot through non-hostile plants,
-// and players can shoot through their demonic guardians.
-bool shoot_through_monster(const bolt& beam, const monster* victim)
-{
-    actor *originator = beam.agent();
-    if (!victim || !originator)
-        return false;
-    return god_protects(originator, victim)
-           || (originator->is_player()
-               && testbits(victim->flags, MF_DEMONIC_GUARDIAN));
-}
-
-/**
- * Given some shield value, what is the chance that omnireflect will activate
- * on an AUTOMATIC_HIT attack?
- *
- * E.g., if 40 is returned, there is a SH in 40 chance of a given attack being
- * reflected.
- *
- * @param SH        The SH (shield) value of the omnireflect user.
- * @return          A denominator to the chance of omnireflect activating.
- */
-int omnireflect_chance_denom(int SH)
-{
-    return SH + 20;
-}
-
-/// Set up a beam aiming from the given monster to their target.
-bolt setup_targetting_beam(const monster &mons)
-{
-    bolt beem;
-
-    beem.source    = mons.pos();
-    beem.target    = mons.target;
-    beem.source_id = mons.mid;
-
-    return beem;
-}
