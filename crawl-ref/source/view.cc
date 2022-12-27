@@ -1525,10 +1525,12 @@ struct glyph_overlay
 static vector<glyph_overlay> glyph_overlays;
 static unsigned int glyph_overlay_i;
 
+#ifndef USE_TILE_LOCAL
 void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph)
 {
     glyph_overlays.push_back({gc, glyph});
 }
+#endif
 
 void view_clear_overlays()
 {
