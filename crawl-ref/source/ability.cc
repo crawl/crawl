@@ -2581,8 +2581,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     {
         spret result = spret::abort;
         int cooldown = 3 + random2(10) + random2(30 - you.experience_level);
-        if (abil.ability == ABIL_BREATHE_STEAM)
-            cooldown /= 2;
 
         static map<ability_type, string> breath_message =
         {
