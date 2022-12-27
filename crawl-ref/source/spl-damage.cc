@@ -1755,10 +1755,8 @@ static void _animate_scorch(coord_def p)
 #ifdef USE_TILE
         view_add_tile_overlay(p, tileidx_zap(RED));
 #endif
-#ifndef USE_TILE_LOCAL
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(RED)});
-#endif
 
     animation_delay(50, true);
 }

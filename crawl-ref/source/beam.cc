@@ -182,10 +182,8 @@ static void _zap_animation(int colour, const monster* mon = nullptr,
 #ifdef USE_TILE
         view_add_tile_overlay(p, tileidx_zap(colour));
 #endif
-#ifndef USE_TILE_LOCAL
         view_add_glyph_overlay(p, {dchar_glyph(DCHAR_FIRED_ZAP),
                                    static_cast<unsigned short>(colour)});
-#endif
         animation_delay(50, true);
     }
 }
@@ -808,11 +806,10 @@ void bolt::draw(const coord_def& p, bool force_refresh)
         view_add_tile_overlay(p, vary_bolt_tile(tile_beam, dist));
     }
 #endif
-#ifndef USE_TILE_LOCAL
     const unsigned short c = colour == BLACK ? random_colour(true)
                                              : element_colour(colour);
     view_add_glyph_overlay(p, {glyph, c});
-#endif
+
     // If reduce_animations is set, the redraw is unnecesary and
     // should be done only once outside the loop calling the bolt::draw
     if (Options.reduce_animations)
@@ -6303,11 +6300,10 @@ bool bolt::explosion_draw_cell(const coord_def& p)
             tileidx_t tile = tileidx_bolt(*this);
             view_add_tile_overlay(p, vary_bolt_tile(tile, dist));
 #endif
-#ifndef USE_TILE_LOCAL
             const unsigned short c = colour == BLACK ?
                     random_colour(true) : element_colour(colour, false, p);
             view_add_glyph_overlay(p, {dchar_glyph(DCHAR_EXPLOSION), c});
-#endif
+
             return true;
         }
     }
