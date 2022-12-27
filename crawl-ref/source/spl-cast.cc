@@ -765,6 +765,12 @@ static bool _majin_charge_hp()
     return player_equip_unrand(UNRAND_MAJIN) && !you.duration[DUR_DEATHS_DOOR];
 }
 
+static void _trigger_ghost_crab_claws()
+{
+    // some conditions to limit how often this gets triggered?
+    // power scales or flat?
+    big_cloud(CLOUD_SPECTRAL, &you, you.pos(), random_range(12, 20), 4 + random2(5));
+}
 
 /**
  * Cast a spell.
@@ -990,6 +996,8 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
         _handle_channeling(cost);
         if (player_equip_unrand(UNRAND_MAJIN) && one_chance_in(500))
             _majin_speak(spell);
+        if (player_equip_unrand(UNRAND_GHOST_CRAB_CLAWS) && one_chance_in(3))
+            _trigger_ghost_crab_claws();
         did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
         count_action(CACT_CAST, spell);
     }

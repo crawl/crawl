@@ -1077,6 +1077,13 @@ bool can_wield(const item_def *weapon, bool say_reason,
     }
 
     if (!ignore_temporary_disability
+        && player_equip_unrand(UNRAND_GHOST_CRAB_CLAWS, true))
+    {
+        SAY(mpr("You can't possibly wield a weapon with these clunky pincers of yours!"));
+        return false;
+    }
+
+    if (!ignore_temporary_disability
         && you.weapon()
         && is_weapon(*you.weapon())
         && you.weapon()->cursed())
@@ -1657,6 +1664,25 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         bad_size = SIZE_LARGE - player_size;
     }
 #endif
+
+    // The Ghost Crab Claws are mutually exclusive with weapons and shields
+    // In lieu of auto-disrobing, we should tell the player what prevented the action
+    if (!ignore_temporary
+        && is_unrandom_artefact(item, UNRAND_GHOST_CRAB_CLAWS)
+        && (you.equip[EQ_SHIELD] != -1 || you.equip[EQ_WEAPON] != -1))
+    {
+        if (verbose)
+            mprf("You need your hands free if you want to wear the claws.");
+        return false;
+    }
+    else if (slot == EQ_SHIELD
+             && !ignore_temporary
+             && player_equip_unrand(UNRAND_GHOST_CRAB_CLAWS, true))
+    {
+        if (verbose)
+            mpr("You can't possibly hold a shield with these clunky pincers of yours!");
+        return false;
+    }
 
     if (bad_size)
     {

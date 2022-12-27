@@ -784,6 +784,7 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
         return MB_TRUE;
 
     case EQ_WEAPON:
+        return temp && player_equip_unrand(UNRAND_GHOST_CRAB_CLAWS) ? MB_FALSE : MB_TRUE;
     case EQ_STAFF:
         return you.has_mutation(MUT_NO_GRASPING) ? MB_FALSE :
                you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :

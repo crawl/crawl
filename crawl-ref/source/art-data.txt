@@ -1712,6 +1712,18 @@ MP:      +5
 INSCRIP: Invo=14 Evo=0
 DBRAND:  It sets your invocations skill to 14 and your evocations skill to 0.
 
+NAME:    ghost crab claws
+OBJ:     OBJ_ARMOUR/ARM_GLOVES
+COLOUR:  ETC_MAGIC
+TILE:    urand_ghost_crab_claws
+TILE_EQ: glove_short_green
+INSCRIP: *SpectralMist rSpectralMist∞ -Weapon -Shield
+INT:     3
+MP:      +5
+BOOL:    special
+DESCRIP: It creates spectral mist clouds around the wearer whenever they cast a spell and grants immunity to the damage from spectral mist.
++It prevents the wearer from wielding weapons or wearing shields.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
