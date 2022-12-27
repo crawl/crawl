@@ -611,7 +611,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(icon, x, y, -status_shift, 0);
         if (!size)
         {
-            dprf("unknown icon %llu", icon);
+            dprf("unknown icon %" PRIu64, icon);
             size = 7; // could maybe crash here?
         }
         status_shift += size;
