@@ -2914,6 +2914,9 @@ string cannot_read_item_reason(const item_def *item, bool temp)
         case SCR_ENCHANT_WEAPON:
             return _no_items_reason(OSEL_ENCHANTABLE_WEAPON, true);
 
+        case SCR_BRAND_WEAPON:
+            return _no_items_reason(OSEL_BRANDABLE_WEAPON, true);
+
         case SCR_IDENTIFY:
             return _no_items_reason(OSEL_UNIDENT, true);
 
