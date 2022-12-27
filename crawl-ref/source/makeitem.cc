@@ -1549,7 +1549,7 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
  * GOOD_RING_PLUS.
  *
  * @param subtype       The type of ring in question.
- * @return              4 or 6.
+ * @return              4, 5 or 6.
  *                      (minor numerical variations are boring.)
  */
 static short _good_jewellery_plus(int subtype)
@@ -1560,6 +1560,8 @@ static short _good_jewellery_plus(int subtype)
         case RING_DEXTERITY:
         case RING_INTELLIGENCE:
             return GOOD_STAT_RING_PLUS;
+        case RING_EVASION:
+            return 5;
         default:
             return GOOD_RING_PLUS;
     }

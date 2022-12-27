@@ -555,8 +555,10 @@ unsigned int item_value(item_def item, bool ident)
                     base = 3 * item.plus;
                     break;
                 case RING_PROTECTION:
-                case RING_EVASION:
                     base = 2 * item.plus;
+                    break;
+                case RING_EVASION:
+                    base = 8 * item.plus / 5;
                     break;
                 case RING_STRENGTH:
                 case RING_DEXTERITY:
