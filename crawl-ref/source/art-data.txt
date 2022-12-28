@@ -1113,7 +1113,7 @@ DESCRIP: It extends the wearer's berserk rage when killing foes.
 
 NAME:    ring of the Hare
 OBJ:     OBJ_JEWELLERY/RING_EVASION
-PLUS:    +8
+PLUS:    +10
 COLOUR:  ETC_POISON
 TILE:    urand_hare
 

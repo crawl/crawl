@@ -1221,7 +1221,7 @@ WEIGHT: 5
      "ring of dexterity    plus:" .. (crawl.roll_dice( 3, 2 ) + 4),
      "ring of intelligence plus:" .. (crawl.roll_dice( 3, 2 ) + 4),
      "ring of strength     plus:" .. (crawl.roll_dice( 3, 2 ) + 4),
-     "ring of evasion      plus:" .. (crawl.roll_dice( 1, 3 ) + 4),
+     "ring of evasion      plus:" .. (crawl.roll_dice( 1, 3 ) + 5),
      "ring of slaying      plus:" .. (crawl.roll_dice( 2, 3 ) + 3),
      "ring of protection   plus:" .. (crawl.roll_dice( 1, 3 ) + 4),
      "any ring randart", "any ring randart", "any ring randart" }
