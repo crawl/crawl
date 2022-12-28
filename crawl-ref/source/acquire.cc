@@ -1663,12 +1663,14 @@ vector<object_class_type> shuffled_acquirement_classes(bool scroll)
     rand_classes.emplace_back(OBJ_JEWELLERY);
     rand_classes.emplace_back(OBJ_BOOKS);
 
-    if (_unided_acq_misc())
-        rand_classes.emplace_back(OBJ_MISCELLANY);
-
     // dungeon generation
     if (!scroll)
+    {
+        if (_unided_acq_misc())
+            rand_classes.emplace_back(OBJ_MISCELLANY);
+
         rand_classes.emplace_back(OBJ_WANDS);
+    }
 
     shuffle_array(rand_classes);
     return rand_classes;
