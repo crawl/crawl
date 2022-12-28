@@ -1202,9 +1202,8 @@ ENDMAP
 # less useful, but cheaper, and so possibly more enticing to poor players),
 # and a ring of that type whose pluses are better than default (which will be
 # accordingly more expensive).
-# Evasion and protection are limited to +7 so as not to step on the existing
-# AC/EV+8 unrands. Stat rings go up to +10. Slaying goes up to +9.
-# Default for dex/int/str: +6, default for ev/slay/prot: +4.
+# Default for dex/int/str: +6, default for EV: +5, default for slay/prot: +4
+# EV/prot rings are capped to not step on existing unrands, rest capped at +10
 NAME:   nicolae_shop_unique_rings
 TAGS:   transparent extra
 DEPTH:  D, Depths, Elf, Snake, Shoals
@@ -1212,18 +1211,27 @@ WEIGHT: 5
 {{
   local itemcount = crawl.roll_dice( 2, 3 ) + 1
   local rings = {
-     "ring of dexterity    plus:" .. (crawl.roll_dice( 2, 3 ) - 1),
-     "ring of intelligence plus:" .. (crawl.roll_dice( 2, 3 ) - 1),
-     "ring of strength     plus:" .. (crawl.roll_dice( 2, 3 ) - 1),
-     "ring of evasion      plus:" .. (crawl.roll_dice( 2, 2 ) - 1),
+     -- Worse than usual:
+     -- +1 to +5
+     "ring of dexterity    plus:" .. (crawl.roll_dice( 4, 2 ) - 3),
+     "ring of intelligence plus:" .. (crawl.roll_dice( 4, 2 ) - 3),
+     "ring of strength     plus:" .. (crawl.roll_dice( 4, 2 ) - 3),
+     -- +1 to +4
+     "ring of evasion      plus:" .. (crawl.roll_dice( 3, 2 ) - 2),
+     -- +1 to +3
      "ring of slaying      plus:" .. (crawl.roll_dice( 2, 2 ) - 1),
      "ring of protection   plus:" .. (crawl.roll_dice( 2, 2 ) - 1),
+     -- Better than usual:
+     -- +7 to +10
      "ring of dexterity    plus:" .. (crawl.roll_dice( 3, 2 ) + 4),
      "ring of intelligence plus:" .. (crawl.roll_dice( 3, 2 ) + 4),
      "ring of strength     plus:" .. (crawl.roll_dice( 3, 2 ) + 4),
-     "ring of evasion      plus:" .. (crawl.roll_dice( 1, 3 ) + 5),
-     "ring of slaying      plus:" .. (crawl.roll_dice( 2, 3 ) + 3),
-     "ring of protection   plus:" .. (crawl.roll_dice( 1, 3 ) + 4),
+     -- +6 to +9
+     "ring of evasion      plus:" .. (crawl.roll_dice( 3, 2 ) + 3),
+     -- +5 to +10
+     "ring of slaying      plus:" .. (crawl.roll_dice( 5, 2 )),
+     -- +5 to +7
+     "ring of protection   plus:" .. (crawl.roll_dice( 2, 2 ) + 3),
      "any ring randart", "any ring randart", "any ring randart" }
   local inventory = table.concat( util.random_subset( rings, itemcount ), " | ")
   kfeat("P = jewellery shop type:One-of-a-Kind suffix:Rings count:" ..
