@@ -458,6 +458,13 @@ Cigotuvi's Monster
  wrinkled his cheeks.”
     -Mary Shelley, _Frankenstein_. 1818.
 %%%%
+cloak of the Thief
+
+"so long suckers! i rev up my motorcylce and create a huge cloud of smoke.
+when the cloud dissipates im lying completely dead on the pavement"
+   -dril, @dril Twitter. July 26, 2016
+# https://twitter.com/dril/status/757914951868485632/
+%%%%
 Cloud Mage
 
 “And when
@@ -2773,7 +2780,11 @@ scroll
 %%%%
 scroll of acquirement
 
-<scroll>
+the wise man bowed his head solemnly and spoke:
+"theres actually zero difference between good & bad things.
+ you imbecile. you fucking moron"
+   -dril, @dril Twitter. June 1, 2014
+# https://twitter.com/dril/status/473265809079693312/
 %%%%
 scroll of amnesia
 
@@ -2785,6 +2796,10 @@ scroll of blinking
 <scroll>
 %%%%
 scroll of brand weapon
+
+<scroll>
+%%%%
+scroll of butterflies
 
 <scroll>
 %%%%
