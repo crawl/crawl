@@ -1044,7 +1044,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
  * @returns True if this actor is moved from their initial position; false otherwise
  */
 
-bool actor::knockback(actor *cause, int distance, int strength, int pow, const char* message, coord_def source)
+bool actor::knockback(actor *cause, int distance, int strength, int pow, const char* message, coord_def source, bool avoid)
 {
     if (is_stationary() || resists_dislodge())
         return false;
@@ -1077,8 +1077,30 @@ bool actor::knockback(actor *cause, int distance, int strength, int pow, const c
             || !can_pass_through(newpos)
             || !is_habitable(newpos))
         {
-            ray = oldray;
-            break;
+            bool success = false;
+            if(avoid)
+            {
+                for (adjacent_iterator di(newpos); di; ++di)
+                {
+                    if (adjacent(*di, pos())
+                    && di->distance_from(pos())
+                            == newpos.distance_from(pos())
+                        && !actor_at(*di) && !cell_is_solid(*di)
+                        && can_pass_through(*di)
+                        && is_habitable(*di))
+                    {
+                        move_to_pos(*di);
+                        success = true;
+                        if (is_player())
+                            stop_delay(true);
+                    }
+                }
+            }
+            if(!success)
+            {
+                ray = oldray;
+                break;
+            }
         }
 
         move_to_pos(newpos);

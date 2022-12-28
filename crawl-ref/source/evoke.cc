@@ -415,73 +415,8 @@ void wind_blast(actor* agent, int pow, coord_def target)
 
     for (actor *act : act_list)
     {
-        wind_beam.target = act->pos();
-        wind_beam.fire();
-
         int push = _gale_push_dist(agent, act, pow);
-        bool pushed = false;
-
-        for (unsigned int j = 0; j < wind_beam.path_taken.size() - 1 && push;
-             ++j)
-        {
-            if (wind_beam.path_taken[j] == act->pos())
-            {
-                coord_def newpos = wind_beam.path_taken[j+1];
-                if (!actor_at(newpos) && !cell_is_solid(newpos)
-                    && act->can_pass_through(newpos)
-                    && act->is_habitable(newpos))
-                {
-                    act->move_to_pos(newpos);
-                    if (act->is_player())
-                        stop_delay(true);
-                    --push;
-                    pushed = true;
-                }
-                else //Try to find an alternate route to push
-                {
-                    bool success = false;
-                    for (adjacent_iterator di(newpos); di; ++di)
-                    {
-                        if (adjacent(*di, act->pos())
-                            && di->distance_from(agent->pos())
-                                == newpos.distance_from(agent->pos())
-                            && !actor_at(*di) && !cell_is_solid(*di)
-                            && act->can_pass_through(*di)
-                            && act->is_habitable(*di))
-                        {
-                            act->move_to_pos(*di);
-                            if (act->is_player())
-                                stop_delay(true);
-
-                            --push;
-                            pushed = true;
-
-                            // Adjust wind path for moved monster
-                            wind_beam.target = *di;
-                            wind_beam.fire();
-                            success = true;
-                            break;
-                        }
-                    }
-
-                    // If no luck, they slam into something.
-                    if (!success)
-                        collisions.insert(make_pair(act, newpos));
-                }
-            }
-        }
-
-        if (pushed)
-        {
-            if (act->is_monster())
-            {
-                act->as_monster()->speed_increment -= random2(6) + 4;
-                if (you.can_see(*act))
-                    affected_monsters.push_back(act->as_monster());
-            }
-            else
-                player_affected = true;
-        }
+        act->knockback(agent, push, 0, pow, "get pushed nerd", agent->pos(), true);
     }
 
     // Now move clouds
@@ -574,36 +509,6 @@ void wind_blast(actor* agent, int pow, coord_def target)
         else
             mpr("The monsters around you are blown away!");
     }
-
-    for (auto it : collisions)
-        if (it.first->alive())
-            it.first->collide(it.second, agent, pow);
-
-    bool did_disperse = false;
-    // Handle trap triggering, finally. A dispersal before we finish
-    // would lead to weird crashes and behavior in the preceeding.
-    for (auto m : affected_monsters)
-    {
-        if (!m->alive())
-            continue;
-        coord_def landing = m->pos();
-
-        // XXX: this doesn't properly fire lua position triggers
-        m->apply_location_effects(landing);
-
-        // Dispersal will fire the location effects for everything dispersed;
-        // it's still possible for something to get blown somewhere it needs
-        // a location effect and not subsequently dispersed but handling that
-        // is more trouble than this headache already is.
-        if (m->pos() != landing)
-        {
-            did_disperse = true;
-            break;
-        }
-    }
-
-    if (player_affected && !did_disperse)
-        you.apply_location_effects(you.pos());
 }
 
 static bool _phial_of_floods(dist *target)
