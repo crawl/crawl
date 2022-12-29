@@ -33,7 +33,11 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
       projectile(proj), teleport(tele), orig_to_hit(0)
 {
     if (is_launcher_ammo(*projectile))
+    {
         weapon = attacker->weapon(0); // else null
+        damage_brand = get_weapon_brand(*weapon);
+    }
+
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
 
@@ -399,30 +403,6 @@ bool ranged_attack::ignores_shield(bool verbose)
         return true;
     }
     return false;
-}
-
-bool ranged_attack::apply_damage_brand(const char *what)
-{
-    if (!weapon || !is_range_weapon(*weapon))
-        return false;
-
-    const brand_type brand = get_weapon_brand(*weapon);
-
-    // No stacking elemental brands.
-    if (projectile->base_type == OBJ_MISSILES
-        && get_ammo_brand(*projectile) != SPMSL_NORMAL
-        && (brand == SPWPN_FLAMING
-            || brand == SPWPN_FREEZING
-            || brand == SPWPN_HOLY_WRATH
-            || brand == SPWPN_ELECTROCUTION
-            || brand == SPWPN_VENOM
-            || brand == SPWPN_CHAOS))
-    {
-        return false;
-    }
-
-    damage_brand = brand;
-    return attack::apply_damage_brand(what);
 }
 
 special_missile_type ranged_attack::random_chaos_missile_brand()
