@@ -1291,7 +1291,7 @@ string damage_rating(const item_def *item)
                                                        base_dam, extra_base_dam) :
                                   !item ? make_stringf("[%d + %d (UC)]",
                                                        base_dam, extra_base_dam) :
-                   brand == SPWPN_HEAVY ? make_stringf("[%d + %d (Heavy)]",
+                   brand == SPWPN_HEAVY ? make_stringf("[%d + %d (Hvy)]",
                                                        base_dam, extra_base_dam) :
                                           make_stringf("%d", base_dam);
 
