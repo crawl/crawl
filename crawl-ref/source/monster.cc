@@ -2949,6 +2949,8 @@ int monster::off_level_regen_rate() const
 
     if (type == MONS_PARGHIT)
         return 2700; // whoosh
+    if (type == MONS_DEMONIC_CRAWLER)
+        return 900; // zoom
     if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
         return 100;
     // Capped at 0.1 hp/turn.

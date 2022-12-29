@@ -1021,8 +1021,9 @@ A human-like figure with an aura of power betraying its divine ancestry.
 %%%%
 demonic crawler
 
-A hellish insectoid creature with a long and bloated body, supported by dozens
-of short jointed legs and topped with an almost human head.
+A hellish insectoid creature, fueled by some infernal power that constantly
+regrows its chitinous segments. Nothing short of a lethal blow will stop it
+for long.
 %%%%
 demonspawn
 
