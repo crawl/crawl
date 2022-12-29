@@ -249,7 +249,7 @@ A shimmering altar of Xom
 the wise man bowed his head solemnly and spoke:
  “theres actually zero difference between good & bad things.
  you imbecile. you fucking moron”
-    -dril, @dril Twitter. June 1, 2014
+    -wint, @dril Twitter. June 1, 2014
 # https://twitter.com/dril/status/473265809079693312/
 %%%%
 A staircase leading out of the dungeon
@@ -470,7 +470,7 @@ cloak of the Thief
 
 “so long suckers! i rev up my motorcylce and create a huge cloud of smoke.
  when the cloud dissipates im lying completely dead on the pavement”
-    -dril, @dril Twitter. July 26, 2016
+    -wint, @dril Twitter. July 26, 2016
 # https://twitter.com/dril/status/757914951868485632/
 %%%%
 Cloud Mage
@@ -2802,7 +2802,17 @@ scroll
 %%%%
 scroll of acquirement
 
-<scroll>
+He had stopped trying to think. He just repeated his litany over and over:
+“I am an animal, you see that. I don’t have the words, they didn’t teach
+me the words. I don’t know how to think, the bastards didn’t let me learn
+how to think. But if you really are... all-powerful... all-knowing... then you
+figure it out! Look into my heart. I know that everything you need is in there.
+It has to be. I never sold my soul to anyone! It’s mine, it’s human! You
+take from me what it is I want... it just can’t be that I would want something
+bad! Damn it all, I can’t think of anything, except those words of his...
+‘HAPPINESS FOR EVERYBODY, FREE, AND NO ONE WILL GO AWAY UNSATISFIED!’”
+    -Arkady and Boris Strugatsky, “Roadside Picnic”. 1972.
+    trans. Antonina W. Bouis, 1977.
 %%%%
 scroll of amnesia
 
