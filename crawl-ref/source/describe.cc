@@ -4528,7 +4528,8 @@ static string _monster_attacks_description(const monster_info& mi)
         int dam = attack.damage;
         if (info.weapon)
         {
-            dam += property(*info.weapon, PWPN_DAMAGE);
+            const int base_dam = property(*info.weapon, PWPN_DAMAGE);
+            dam += brand_adjust_weapon_damage(base_dam, get_weapon_brand(*info.weapon), false);
             // Enchant is rolled separately, so doesn't change the max.
             if (info.weapon->plus > 0)
                 dam += info.weapon->plus;
