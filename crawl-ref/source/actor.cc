@@ -1033,18 +1033,18 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     }
 }
 
-/** 
- * @brief Attempts to knock this actor away from a specific tile, 
- *        using repeated one-tile knockbacks. 
+/**
+ * @brief Attempts to knock this actor away from a specific tile,
+ *        using repeated one-tile knockbacks.
  * @param cause The actor responsible for the knockback.
  * @param source The tile this actor is being knocked directly away from.
  * @param distance The number of single tile knockbacks attempted.
- * @param strength Each attempt has probability size/strength of failing. 
+ * @param strength Each attempt has probability size/strength of failing.
  *                 If strength is 0, never fail.
  * @param pow Cause 2d(pow/10 + 1) damage on collision.
- * @param message The message to display on successfully pushing this actor. 
+ * @param message The message to display on successfully pushing this actor.
  *                If message is null, display no message.
- * @param avoid If true, knockback will adjust path to avoid collisions. 
+ * @param avoid If true, knockback will adjust path to avoid collisions.
  * @returns True if this actor is moved from their initial position; false otherwise.
  */
 
@@ -1061,7 +1061,7 @@ bool actor::knockback(actor *cause, int distance, int strength, int pow, const c
 
     ray_def ray;
     fallback_ray(source, oldpos, ray);
-    while(ray.pos() != oldpos)
+    while (ray.pos() != oldpos)
         ray.advance();
 
     coord_def newpos = oldpos;
@@ -1082,7 +1082,7 @@ bool actor::knockback(actor *cause, int distance, int strength, int pow, const c
             || !is_habitable(newpos))
         {
             bool success = false;
-            if(avoid)
+            if (avoid)
             {
                 for (adjacent_iterator di(newpos); di; ++di)
                 {
@@ -1095,13 +1095,13 @@ bool actor::knockback(actor *cause, int distance, int strength, int pow, const c
                     {
                         newpos = *di;
                         fallback_ray(source, *di, ray);
-                        while(ray.pos() != *di)
+                        while (ray.pos() != *di)
                             ray.advance();
                         success = true;
                     }
                 }
             }
-            if(!success)
+            if (!success)
             {
                 ray = oldray;
                 break;
@@ -1117,9 +1117,7 @@ bool actor::knockback(actor *cause, int distance, int strength, int pow, const c
         return false;
 
     if (you.can_see(*this) && message != NULL)
-    {
         mpr(message);
-    }
 
     if (pos() != newpos)
         collide(newpos, cause, pow);
