@@ -1034,14 +1034,18 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 }
 
 /** 
- * @brief Attempts to knock this actor away from a specific tile, causing damage on collision
- * @param cause The actor responsible for the knockback
- * @param source The tile this actor is being knocked directly away from
- * @param distance The number of attempts 
- * @param strength Each attempt has probability 
- * @param pow The damage caused on collision.
- * @param message The message to dis
- * @returns True if this actor is moved from their initial position; false otherwise
+ * @brief Attempts to knock this actor away from a specific tile, 
+ *        using repeated one-tile knockbacks. 
+ * @param cause The actor responsible for the knockback.
+ * @param source The tile this actor is being knocked directly away from.
+ * @param distance The number of single tile knockbacks attempted.
+ * @param strength Each attempt has probability size/strength of failing. 
+ *                 If strength is 0, never fail.
+ * @param pow Cause 2d(pow/10 + 1) damage on collision.
+ * @param message The message to display on successfully pushing this actor. 
+ *                If message is null, display no message.
+ * @param avoid If true, knockback will adjust path to avoid collisions. 
+ * @returns True if this actor is moved from their initial position; false otherwise.
  */
 
 bool actor::knockback(actor *cause, int distance, int strength, int pow, const char* message, coord_def source, bool avoid)
@@ -1059,11 +1063,11 @@ bool actor::knockback(actor *cause, int distance, int strength, int pow, const c
     fallback_ray(source, oldpos, ray);
     while(ray.pos() != oldpos)
         ray.advance();
-    
+
     coord_def newpos = oldpos;
     for (int dist_travelled = 0; dist_travelled < distance; ++dist_travelled)
     {
-        if (x_chance_in_y(weight, strength))
+        if (strength != 0 && x_chance_in_y(weight, strength))
             continue;
 
         const ray_def oldray(ray);
@@ -1083,16 +1087,17 @@ bool actor::knockback(actor *cause, int distance, int strength, int pow, const c
                 for (adjacent_iterator di(newpos); di; ++di)
                 {
                     if (adjacent(*di, pos())
-                    && di->distance_from(pos())
-                            == newpos.distance_from(pos())
+                    && di->distance_from(source)
+                            == newpos.distance_from(source)
                         && !actor_at(*di) && !cell_is_solid(*di)
                         && can_pass_through(*di)
                         && is_habitable(*di))
                     {
-                        move_to_pos(*di);
+                        newpos = *di;
+                        fallback_ray(source, *di, ray);
+                        while(ray.pos() != *di)
+                            ray.advance();
                         success = true;
-                        if (is_player())
-                            stop_delay(true);
                     }
                 }
             }
@@ -1111,7 +1116,7 @@ bool actor::knockback(actor *cause, int distance, int strength, int pow, const c
     if (newpos == oldpos)
         return false;
 
-    if (you.can_see(*this))
+    if (you.can_see(*this) && message != NULL)
     {
         mpr(message);
     }
