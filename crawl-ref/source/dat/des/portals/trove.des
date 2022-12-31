@@ -1196,7 +1196,8 @@ E..............................S.......E
 EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 ENDMAP
 
-# Generates 16 branded weapons.
+# Generates 16 branded weapons. Half are "generic" brands, the other half are
+# more god-related brands.
 NAME:    nicolae_trove_branded_display_cases
 veto  {{ return crawl.game_started()
            and (trove.weapon_skills() < trove.spell_skills()
@@ -1204,29 +1205,54 @@ veto  {{ return crawl.game_started()
            and not crawl.one_chance_in(3) }}
 ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
-KITEM:   D = any weapon randart ego:electrocution / \
+KITEM:   a = any weapon randart ego:electrocution / \
              any useful weapon good_item ego:electrocution / \
              any weapon ego:electrocution w:2
-KITEM:   E = any weapon randart ego:flaming / \
+KITEM:   p = any weapon randart ego:flaming / \
              any useful weapon good_item ego:flaming / \
              any weapon ego:flaming w:2
-KITEM:   F = any weapon randart ego:freezing / \
+KITEM:   q = any weapon randart ego:freezing / \
              any useful weapon good_item ego:freezing / \
              any weapon ego:freezing w:2
-KITEM:   H = any weapon randart ego:speed / \
-             any useful weapon good_item ego:speed / \
-             any weapon ego:speed w:2
-KITEM:   J = any weapon randart ego:venom / \
+KITEM:   r = any weapon randart ego:heavy / \
+             any useful weapon good_item ego:heavy / \
+             any weapon ego:heavy w:2
+KITEM:   s = any weapon randart ego:protection / \
+             any useful weapon good_item ego:protection / \
+             any weapon ego:protection w:2
+KITEM:   y = any weapon randart ego:spectral / \
+             any useful weapon good_item ego:spectral / \
+             any weapon ego:spectral w:2
+KITEM:   z = any weapon randart ego:venom / \
              any useful weapon good_item ego:venom / \
              any weapon ego:venom w:2
-KITEM:   K = any weapon randart ego:vorpal / \
-             any useful weapon good_item ego:vorpal / \
-             any weapon ego:vorpal w:2
-KITEM:   L = any weapon randart ego:holy_wrath / \
+# Brands that are god-related (i.e. either forbidden or chosen by a god)
+KITEM:   D = any weapon randart ego:antimagic / \
+             any useful weapon good_item ego:antimagic / \
+             any weapon ego:antimagic w:2
+KITEM:   E = any weapon randart ego:chaos / \
+             any useful weapon good_item ego:chaos / \
+             any weapon ego:chaos w:2
+KITEM:   F = any weapon randart ego:distortion / \
+             any useful weapon good_item ego:distortion / \
+             any weapon ego:distortion w:2
+KITEM:   H = any weapon randart ego:draining / \
+             any useful weapon good_item ego:draining / \
+             any weapon ego:draining w:2
+KITEM:   J = any weapon randart ego:holy_wrath / \
              any useful weapon good_item ego:holy_wrath / \
              any weapon ego:holy_wrath w:2
+KITEM:   K = any weapon randart ego:pain / \
+             any useful weapon good_item ego:pain / \
+             any weapon ego:pain w:2
+KITEM:   L = any weapon randart ego:speed / \
+             any useful weapon good_item ego:speed / \
+             any weapon ego:speed w:2
+KITEM:   M = any weapon randart ego:vampirism / \
+             any useful weapon good_item ego:vampirism / \
+             any weapon ego:vampirism w:2
 KFEAT:   + = closed_clear_door
-SHUFFLE: DEFHJKL
+SHUFFLE: apDE, apqrsyz, DEFHJKLM
 : trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxx
@@ -1236,14 +1262,14 @@ x..G..mDDDDm..G..x
 x.....m++++m.....x
 x................x
 x.mmm........mmm.x
-x.mH+..G..<..+Em.x
-x.mH+........+Em.x
-x.mH+........+Em.x
-x.mH+..A..G..+Em.x
+x.mp+..G..<..+Em.x
+x.mp+........+Em.x
+x.mp+........+Em.x
+x.mp+..A..G..+Em.x
 x.mmm........mmm.x
 x................x
 x.....m++++m.....x
-x..G..mFFFFm..G..x
+x..G..maaaam..G..x
 x.....mmmmmm.....x
 x................x
 xxxxxxxxxxxxxxxxxx
@@ -1306,6 +1332,10 @@ ORIENT: encompass
 KITEM:  D = any useful amulet good_item / any randart amulet / any amulet w:2
 KITEM:  E = useful hat good_item / hat randart / hat w:2
 KITEM:  F = any useful ring good_item / any randart ring / any ring w:2
+KITEM:  S = buckler good_item / kite shield good_item / \
+            tower shield good_item / buckler randart / \
+            kite shield randart / tower shield randart / buckler w:2 / \
+            kite shield w:2 / tower shield w:2
 KFEAT:  ~ = open_sea
 : trove.setup_features(_G)
 : set_border_fill_type('open_sea')
@@ -1319,9 +1349,9 @@ MAP
 ~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
 ~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
 ~wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww~
-~wwwwwwwww...wwEEEEEwwF..wwwwwwwww~
+~wwwwwwwww...ww.EEE.wwF..wwwwwwwww~
 ~wwwwwwwww.w.w.......www.wwwwwwwww~
-~wwwwwwwwwFw...DDDDD.....wwwwwwwww~
+~wwwwwwwwwFw...SDDDS.....wwwwwwwww~
 ~wwwwwwwwwwwww.......wwwwwwwwwwwww~
 ~wwwwwwwwww....A...<......wwwwwwww~
 ~wwwwwwww...ww.......wwww.wwwwwwww~
@@ -1353,7 +1383,7 @@ KITEM:  R = pair of boots good_item w:40 / pair of boots
 KITEM:  S = buckler good_item w:40 / kite shield good_item w:40 / \
             tower shield good_item w:40 / orb good_item w:40 / buckler / \
             kite shield / tower shield / orb
-KITEM:  Z = cloak good_item w:160 / scarf good_item w:40 / cloak w:40 / scarf
+KITEM:  Z = cloak good_item w:160 / cloak w:40 / scarf w:50
 : trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxx

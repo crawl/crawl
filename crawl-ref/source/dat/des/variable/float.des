@@ -11559,7 +11559,7 @@ ccc++ccc
 ENDMAP
 
 NAME:   nicolae_fronds_of_death
-TAGS:   transparent patrolling
+TAGS:   transparent
 DEPTH:  D:12-, Depths
 ORIENT: float
 SUBST:  0 = ....0009, 9 = .....99998, % = %%%%***|
@@ -11594,7 +11594,7 @@ ccccc                 ccccc
 ENDMAP
 
 NAME:   nicolae_herringbone
-TAGS:   transparent patrolling
+TAGS:   transparent
 DEPTH:  Depths
 ORIENT: float
 SUBST:  T = .U V:30 T:130, - = |**%%%$$$$, \

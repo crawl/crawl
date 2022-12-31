@@ -1270,29 +1270,30 @@ NAME:   nicolae_hydra_factorization
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:12-
 veto {{
-   return (crawl.game_started() and dgn.br_exists("Swamp"))
+   return crawl.game_started() and dgn.br_exists("Swamp")
 }}
-# You can see the loot room from just outside the front door to the
-# Lernaean Hydra room (assuming you have at least 6 LOS range), so you can
-# decide if you want to go in. The loot is geared towards good stuff,
-# including a guaranteed randart, because otherwise who would go in?
-KITEM:  * = nothing / |, |, |, |, |, gold good_item, \
+# The final loot is geared towards 6-8 pieces of good stuff, including a
+# guaranteed randart, because otherwise who would go in?
+KITEM:  | = nothing / |, nothing / |, |, |, |, |, gold good_item, \
             any armour randart / any weapon randart / any jewellery randart
+KITEM:  * = *
+KITEM:  % = %
+KITEM:  $ = $
 KMONS:  P = one-headed hydra
 KMONS:  Q = three-headed hydra
 KMONS:  R = nine-headed hydra
 KMONS:  S = the Lernaean Hydra
-KFEAT:  PQRS` = . / W w:5
+KFEAT:  $%*|PQRS` = . / W w:5
 KFEAT:  t = mangrove
 SUBST:  L = tp, M = tq, N = tr, O = ts
-NSUBST: p = 27:P / `, q = 9:Q / `, r = 3:R / `, s = 1:S / `
+NSUBST: p = 27:P / 7:$ / `, q = 9:Q / 5:% / `, r = 3:R / 3:* / `, s = S / `
 MAP
 ccccccccccc
 cpppppppppccccccccc
 cppLLpLLppcMqqqqqMccccccc
 cpLLLpLLLpcqMMqMMqcrNrNrccccc
 cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
-=ppppLpppp=qqMtMqq=rNtNr=sss=*c
+=ppppLpppp=qqMtMqq=rNtNr=sss=|n@
 cpLLpppLLpcqMMMMMqcNrNrNcOsOccc
 cpLLLpLLLpcqMMqMMqcrNrNrccccc
 cppLLpLLppcMqqqqqMccccccc
@@ -2636,7 +2637,7 @@ KMONS:  2 = Ijyb, goblin / hobgoblin
 # The usual ratio of Robin's band is goblin w:30 / hobgoblin, but here it has
 # slightly more hobgoblins to compensate for the reduction in size.
 KMONS:  3 = goblin / hobgoblin
-NSUBST: ` = 5=3 / 1=3. / .
+NSUBST: ` = 5=3 / 3. / .
 MAP
 ........
 ........
@@ -2646,6 +2647,7 @@ MAP
 ..````..
 ........
 ........
+ENDMAP
 
 # A shopkeeper has learned why there are no NetHack-style shops in this dungeon.
 NAME:   nicolae_nh_ransacked_shop
