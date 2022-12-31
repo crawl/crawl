@@ -1328,7 +1328,8 @@ TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             froggy_goodgod_tengu_gold Cws_Minotauros nibiki_octopode \
             e_m_fields sastrei_chei anon_octopus_wizard arbituhhh_tesu \
             kaonedong_ignis_the_dying_flame kaonedong_menkaure_prince_of_dust \
-            philosopheropposite_palentonga_paladin gompami_kohu_xbow
+            philosopheropposite_palentonga_paladin gompami_kohu_xbow \
+            micah_c_ereshkigal
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
