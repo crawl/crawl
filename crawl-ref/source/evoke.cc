@@ -415,7 +415,7 @@ void wind_blast(actor* agent, int pow, coord_def target)
 
     for (actor *act : act_list)
     {
-        if(agent->can_see(*act))
+        if (agent->can_see(*act))
         {
             int push = _gale_push_dist(agent, act, pow);
             act->knockback(agent, push, 0, pow, NULL, agent->pos(), true);
