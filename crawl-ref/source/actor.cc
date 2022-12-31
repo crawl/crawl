@@ -1035,7 +1035,8 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
 
 /**
  * @brief Attempts to knock this actor away from a specific tile,
- *        using repeated one-tile knockbacks.
+ *        using repeated one-tile knockbacks. Any LOS requirements 
+ *        must be checked by the calling function.
  * @param cause The actor responsible for the knockback.
  * @param source The tile this actor is being knocked directly away from.
  * @param distance The number of single tile knockbacks attempted.
