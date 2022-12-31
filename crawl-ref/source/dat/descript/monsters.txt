@@ -1067,9 +1067,10 @@ An elemental spirit formed from smokeless fire.
 %%%%
 doom hound
 
-A demon lapdog of the queen of Tartarus, bound to hunt her enemies. Though it
-may appear alone, it has the terrible power to set creatures of nightmare on
-its victim's trails.
+A demon lapdog of the queen of Tartarus, bound to hunt her enemies. The first
+time a foe hears its howl, it will echo in their mind, calling nightmarish
+creatures to hunt them. Those who survive have the small consolation of being
+inoculated against that particular hound's howl.
 %%%%
 draconian
 
