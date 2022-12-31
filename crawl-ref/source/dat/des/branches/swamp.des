@@ -252,6 +252,32 @@ tt--ttt---ttt
      ttttt
 ENDMAP
 
+NAME:   nicolae_swamp_entry_spooky
+TAGS:   swamp_entry patrolling transparent
+WEIGHT: 5
+KMONS:  s = spectral thing
+KMONS:  OP = ghost crab
+KFEAT:  O = enter_swamp
+KFEAT:  t = mangrove
+NSUBST: O = O / P...
+SUBST:  - = t., s = s.., . = ....W
+MARKER: O = lua:fog_machine { pow_min = 8, pow_max = 12, delay = 25, \
+                              size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+      xxxxxx
+    xxxttttxx
+  xxxttt--tttt
+xxxttt-s..s-ttt
+xttt-.s.--.s..@
+xtO..s.-tt-.s.@
+xtO..s.-tt-.s.@
+xttt-.s.--.s..@
+xxxttt-s..s-ttt
+  xxxttt--tttt
+    xxxttttxx
+      xxxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
@@ -2856,6 +2882,65 @@ Ztt..Kttttt..ttZ
 ZtrrrrtZZtqqqqtZ
 ENDMAP
 
+NAME:    nicolae_swamp_thats_no_hydra
+TAGS:    transparent no_pool_fixup
+DEPTH:   Swamp
+KMONS:   1 = kraken
+KFEAT:   @ = . / W
+KFEAT:   1 = w
+SHUFFLE: LMN, OPQ, RSZ
+NSUBST:  `- = 2=H / 2=H. / .
+SUBST:   LOR = @, MNPQSZ = t, - = .W, ` = wW, D = tww
+: dgn.delayed_decay(_G, 'H', 'hydra skeleton')
+MAP
+     LLLLM
+   ZZLLLLMMM
+  ZZZ-----MMM
+ ZZ--`````--MM
+ ZZ-`DDDDD`-NN
+SS-`DDDDDDD`-NN
+SS-`DDwwwDD`-NN
+SS-`DDw1wDD`-NN
+SS-`DDwwwDD`-OO
+RR-`DDDDDDD`-OO
+ RR-`DDDDD`-OO
+ RR--`````--OO
+  RRQ-----PPP
+   RQQQQPPPP
+     QQQPP
+ENDMAP
+
+NAME:    nicolae_swamp_vermiculated
+TAGS:    transparent
+DEPTH:   Swamp
+KMONS:   ~ = steelbarb worm w:5 / swamp worm / tyrant leech
+KFEAT:   ~ = . w:50 / W
+SHUFFLE: DEFH
+NSUBST:  D = 1:@, E = 1:@, DEFH = 3=@. / .
+SUBST:   ~ = ~., - = t:90 ., . = .....W, a = t_
+CLEAR:   _
+MAP
+aaaaa      a   aaaaa
+atttt-D--D-t-D-tttta
+ -t--t.t-.--t.t--t-
+ H.--.t--..--t.--.E
+ --~~--t.-..t--~~t-
+at-~~--.t-.-.--~~-ta
+at-.-..t--.-t..-.-ta
+at-t.----.-----.t-ta
+ ----.--~~~~--.--tta
+ H..--..~~~~-...---
+ ---...-~~~~..--..E
+att--.--~~~~--.----
+at-t.-----.----.t-ta
+at-.-..t-.--t..-.-ta
+at-~~--.-.-t.--~~-ta
+ --~~--t..-.t--~~--
+ H.--.t--..--t.--.E
+ -t--t.t--.-t.t--t-
+atttt-F-t-F--F-tttta
+ aaaa   a      aaaaa
+ENDMAP
 
 ###############################################################################
 #

@@ -239,6 +239,21 @@ MAP
   .........
 ENDMAP
 
+NAME:  nicolae_slime_entry_field_trip
+TAGS:  slime_entry transparent
+KMONS: F = fungus
+KMONS: JO_ = jelly / nothing w:5
+KFEAT: O = enter_slime_pits
+KFEAT: _ = altar_jiyva / G w:5
+: dgn.delayed_decay(_G, 'd', 'human skeleton')
+MAP
+...J..J...
+....FF....
+.O.FddF._.
+....FF....
+...J..J...
+ENDMAP
+
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
@@ -651,6 +666,116 @@ MAP
 ...1...
 .[...(.
 .......
+ENDMAP
+
+# On average, generates the equivalent of 15 slime creatures.
+NAME:  nicolae_slime_crime_time
+TAGS:  transparent
+DEPTH: Slime:2-
+KMONS: S = nothing / slime creature / large slime creature / \
+           very large slime creature / enormous slime creature / \
+           titanic slime creature
+SUBST: - = x.., _ = _x, { = {[(
+CLEAR: _
+MAP
+ _________________
+ xxxxxxxxxxxxxxxxx
+@.---------------.@
+@.S.............S.@
+@.S......{......S.@
+@.S.............S.@
+@.---------------.@
+ xxxxxxxxxxxxxxxxx
+ _________________
+ENDMAP
+
+NAME:    nicolae_slime_getting_an_eyeful
+TAGS:    transparent patrolling
+DEPTH:   Slime
+KMONS:   1 = glowing orange brain
+KMONS:   2 = floating eye / golden eye / shining eye / eye of devastation / \
+             great orb of eyes
+SHUFFLE: DEF
+SUBST:   ` = 2..., D = @, E : @., F : @..., - = _x
+CLEAR:   _
+MAP
+   -DDDDD-
+  --.....--
+ --.......--
+--...`2`...--
+@...`...`...E
+@..`.....`..E
+@..2..1..2..E
+@..`.....`..E
+@...`...`...E
+--...`2`...--
+ --.......--
+  --.....--
+   -FFFFF-
+ENDMAP
+
+NAME:    nicolae_slime_infinislime
+TAGS:    transparent
+DEPTH:   Slime, !Slime:$
+ORIENT:  float
+SHUFFLE: Pp, Qq, Rr, Ss
+NSUBST:  y = x. / ., z = x. / .
+SUBST:   PQRS = x, pqrs- = x.., ' = x_
+CLEAR:   _
+MAP
+    '''''''''''   '''''''''''
+  ''xxxxxxxxxxx'''xxxxxxxxxxx''
+ 'xxx--PpPpP--xxxxx--QqQqQ--xxx'
+'xx--x.y.y.y.x--x--x.z.z.z.x--xx'
+'x-x.yyyyyyyyy.xxx.zzzzzzzzz.x-x'
+..xyyyyyy.yyyyyyxzzzzzz.zzzzzzx..
+@...yyy.x-x.yyy...zzz.x-x.zzz...@
+@....yx--x--xy.....zx--x--xz....@
+@....xxxxxxxxx.....xxxxxxxxx....@
+@.....x--x--x......zx--x--xz....@
+@.......x-x.......zzz.x-x.zzz...@
+..x.............xzzzzzz.zzzzzzx..
+'x-x...........x-x.zzzzzzzzz.x-x'
+'xx--x.......x--x--x.z.z.z.x--xx'
+ 'xxx--RrRrR--xxxxx--SsSsS--xxx'
+  ''xxxxxxxxxxx'''xxxxxxxxxxx''
+    '''''''''''   '''''''''''
+ENDMAP
+
+NAME:   nicolae_slime_rock_hall_of_fame
+TAGS:   transparent
+DEPTH:  Slime:2-, !Slime:$
+KMONS:  R = rockslime
+SUBST:  { = {[(, - = x_
+NSUBST: D = 1=x / 2=x. / 1=R.. / ., E = 1=x / 2=x. / 1=R.. / ., \
+        F = 1=x / 2=x. / 1=R.. / ., H = 1=x / 2=x. / 1=R.. / ., \
+        J = 1=x / 2=x. / 1=R.. / ., K = 1=x / 2=x. / 1=R.. / ., \
+        L = 1=x / 2=x. / 1=R.. / ., M = 1=x / 2=x. / 1=R.. / ., \
+        N = 1=x / 2=x. / 1=R.. / ., O = 1=x / 2=x. / 1=R.. / ., \
+        P = 1=x / 2=x. / 1=R.. / .
+CLEAR:  _
+MAP
+    ---------
+ ----xxxxxxx----
+ -xxxx.....xxxx-
+ -x....LLL....x-
+--x.KKKLLLMMM.x--
+-xx.KKKLLLMMM.xx----
+-x..KKK...MMM..xxxx-
+-x.JJJ.....NNN....x-
+-x.JJJ..{..NNNOOO.x--
+-x.JJJ.....NNNOOO.xx-
+-x..HHH.......OOO..x-
+-xx.HHHFFF.....PPP.x-
+--x.HHHFFF.....PPP.x-
+ -x....FFF.....PPP.x-
+ -xxxx..EEE........x-
+ ----xx.EEEDDD.....
+    --x.EEEDDD....@
+     -x....DDD....@
+     -xxxx......@@@
+     ----xxxxxx
+        -------
 ENDMAP
 
 ################################################################################
