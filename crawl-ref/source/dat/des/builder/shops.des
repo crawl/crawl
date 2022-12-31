@@ -1309,6 +1309,35 @@ xx'''NbWbb..xx
    xxxxxxxx
 ENDMAP
 
+# A reference to the special Oracle level from NetHack.
+# Like in NetHack, players can purchase readings from the Oracle. In a sense.
+NAME:   nicolae_nh_oracle_at_delphi
+TAGS:   transparent no_rotate
+DEPTH:  D, Depths, Elf
+WEIGHT: 5
+# In Nethack, sometimes statues can contain spellbooks if you break them open.
+# Here, for each statue, there's a 1/12 chance that it's broken, leaving
+# behind a pile of rocks and a book. With 8 statues, the odds are about 50/50
+# that at least one free spellbook will be generated. And some rocks.
+KITEM:  ` = stone, any book
+KFEAT:  O = scroll shop name:The_Oracle type:Delphic suffix:Readings ; \
+            any scroll | any book
+NSUBST: . = 2=0 / ., D = . / c, E = + / x, F = + / x
+SUBST:  G = G:11 `:1
+TILE:   G : dngn_statue_centaur
+MAP
+xxxxxxxxxxxxx
+xG.........Gx
+E.....G.....F
+E...cDcDc...F
+E...D-T-D...F
+E..GcTOTcG..F
+E...D-T-D...F
+E...cDcDc...F
+E.....G.....F
+xG.........Gx
+xxxxxxxxxxxxx
+
 # Now that most predefined books have been cut back to 3 spells,
 # there is a growing market for spellbooks with a little more thickness.
 NAME:   nicolae_shop_i_like_big_books
