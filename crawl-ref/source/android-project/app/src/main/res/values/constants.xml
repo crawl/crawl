@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dungeon Crawl Stone Soup</string>
+    <style name="CrawlTheme" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen">
+        <item name="android:textSize">16dp</item>
+    </style>
+    <dimen name="key_height">40dp</dimen>
+    <color name="key_tint1">#8d42dc</color>
+    <color name="key_tint2">#268868</color>
+    <color name="key_tint3">#0c3941</color>
+    <color name="key_tint4">#490f57</color>
+</resources>

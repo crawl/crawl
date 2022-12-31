@@ -268,18 +268,6 @@ int actor::archmagi(bool items) const
                    + scan_artefacts(ARTP_ARCHMAGI) : 0;
 }
 
-/**
- * Indicates if the actor has an active evocations enhancer.
- *
- * @param items Whether to count item powers.
- * @return The number of levels of evocations enhancement this actor has.
- */
-int actor::spec_evoke(bool items) const
-{
-    UNUSED(items);
-    return 0;
-}
-
 bool actor::no_cast(bool items) const
 {
     return items && scan_artefacts(ARTP_PREVENT_SPELLCASTING);
@@ -342,7 +330,8 @@ bool actor::rampaging(bool items) const
     return items &&
            (wearing_ego(EQ_ALL_ARMOUR, SPARM_RAMPAGING)
             || scan_artefacts(ARTP_RAMPAGING)
-            || is_player() && player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS));
+            || is_player() && (player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS)
+                               || you.has_mutation(MUT_ROLLPAGE)));
 }
 
 int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, bool for_real) const
@@ -969,7 +958,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
     if (is_monster() && !god_prot)
         behaviour_event(as_monster(), ME_WHACK, agent);
 
-    dice_def damage(2, 1 + pow / 10);
+    dice_def damage(2, 1 + div_rand_round(pow, 10));
 
     if (other && other->alive())
     {

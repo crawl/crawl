@@ -55,6 +55,7 @@
 #include "mon-tentacle.h"
 #include "mon-transit.h"
 #include "religion.h"
+#include "spl-clouds.h" // explode_blastsparks_at
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -404,9 +405,7 @@ random_var monster::attack_delay(const item_def *projectile,
     if (!weap || (projectile && is_throwable(this, *projectile)))
         return random_var(10);
 
-    random_var delay(10);
-    if (get_weapon_brand(*weap) == SPWPN_SPEED)
-        delay = div_rand_round(delay * 2, 3);
+    random_var delay(weapon_adjust_delay(*weap, 10));
     return delay;
 }
 
@@ -1380,7 +1379,6 @@ static int _ego_damage_bonus(item_def &item)
     switch (get_weapon_brand(item))
     {
     case SPWPN_NORMAL:      return 0;
-    case SPWPN_VORPAL:      // deliberate fall through
     case SPWPN_PROTECTION:  return 1;
     default:                return 2;
     }
@@ -2054,7 +2052,11 @@ item_def *monster::mslot_item(mon_inv_type mslot) const
 
 item_def *monster::shield() const
 {
-    return mslot_item(MSLOT_SHIELD);
+    item_def *shield = mslot_item(MSLOT_SHIELD);
+
+    if (shield && shield->sub_type != ARM_ORB)
+        return shield;
+    return nullptr;
 }
 
 /**
@@ -2722,7 +2724,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
     if (mons_is_projectile(type))
         return;
 
-    if (player_in_branch(BRANCH_ARENA))
+    if (!force && player_in_branch(BRANCH_ARENA))
     {
         string msg = make_stringf(" prevents %s banishment from the Arena!",
                                   name(DESC_ITS).c_str());
@@ -2947,6 +2949,8 @@ int monster::off_level_regen_rate() const
 
     if (type == MONS_PARGHIT)
         return 2700; // whoosh
+    if (type == MONS_DEMONIC_CRAWLER)
+        return 900; // zoom
     if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
         return 100;
     // Capped at 0.1 hp/turn.
@@ -5248,6 +5252,10 @@ void monster::apply_location_effects(const coord_def &oldpos,
             del_ench(ENCH_AQUATIC_LAND);
     }
 
+    cloud_struct* cloud = cloud_at(pos());
+    if (cloud && cloud->type == CLOUD_BLASTSPARKS)
+        explode_blastsparks_at(pos()); // schedules a fineff, so won't kill
+
     // Monsters stepping on traps:
     trap_def* ptrap = trap_at(pos());
     if (ptrap)
@@ -5686,7 +5694,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     // XXX: this might not be necessary anymore?
     if (type == MONS_SHOCK_SERPENT && damage > 4 && oppressor && oppressor != this)
     {
-        const int pow = div_rand_round(min(damage, hit_points + damage), 9);
+        const int pow = div_rand_round(min(damage, hit_points + damage), 12);
         if (pow)
         {
             // we intentionally allow harming the oppressor in this case,

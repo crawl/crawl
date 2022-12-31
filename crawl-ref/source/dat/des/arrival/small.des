@@ -3624,7 +3624,7 @@ WEIGHT:  5
 TILE:    G = dngn_statue_sigmund
 : set_feature_name("granite_statue", "a statue of a dreadful foe")
 # Bunch of player species
-KITEM:   ? = palentonga skeleton / deep elf skeleton / demigod skeleton / \
+KITEM:   ? = armataur skeleton / deep elf skeleton / demigod skeleton / \
              demonspawn skeleton / draconian skeleton / felid skeleton / \
              formicid skeleton / ghoul skeleton / gnoll skeleton / \
              orc skeleton / human skeleton / kobold skeleton / \

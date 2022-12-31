@@ -21,6 +21,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "monster.h"
+#include "options.h" // tile_grinch
 #include "state.h"
 #include "terrain.h"
 #include "tileview.h"
@@ -196,6 +197,26 @@ bool today_is_halloween()
     const struct tm *date = TIME_FN(&curr_time);
     // tm_mon is zero-based in case you are wondering
     return date->tm_mon == 9 && date->tm_mday == 31;
+}
+
+/// It's beginning to feel an awful lot like Christmas.
+/// Or Hannukah, maybe..? Who can say.
+bool december_holidays()
+{
+    // Currently, this customization only applies to tiles mode.
+    // If that changes, we should move this check to the appropriate
+    // call sites of this function, or add a wrapper.
+#ifndef USE_TILE
+    return false;
+#else
+    if (Options.tile_grinch)
+        return false;
+    const time_t curr_time = time(nullptr);
+    const struct tm *date = TIME_FN(&curr_time);
+    // Give em two weeks before Christmas and then until New Year's.
+    // (tm_mon is zero-based.)
+    return date->tm_mon == 11 && date->tm_mday > 10;
+#endif
 }
 
 bool now_is_morning()

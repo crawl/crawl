@@ -35,7 +35,7 @@ mutations:
 recommended_jobs:
   - JOB_BRIGAND
   - JOB_BERSERKER
-  - JOB_ARCANE_MARKSMAN
+  - JOB_HEXSLINGER
   - JOB_ENCHANTER
   - JOB_CONJURER
   - JOB_SUMMONER

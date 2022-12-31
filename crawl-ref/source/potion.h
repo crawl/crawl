@@ -14,9 +14,9 @@ private:
     DISALLOW_COPY_AND_ASSIGN(PotionEffect);
 protected:
     PotionEffect(potion_type);
-    bool check_known_quaff() const;
+    virtual bool check_known_quaff() const;
 public:
-    virtual bool can_quaff(string *reason = nullptr) const;
+    virtual bool can_quaff(string *reason = nullptr, bool temp = true) const;
 
     /**
      * Elsewhere in the code there are things that can have the effect

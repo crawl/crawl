@@ -413,7 +413,7 @@ An unusually weak troll.
 %%%%
 Parghit
 
-An unusually strong troll, his wiry frame scarred by many against-the-odds
+An unusually strong troll, his thick frame scarred by many against-the-odds
 victories. He has been wounded so many times that his body has adapted, and now
 heals almost instantly. His necklace of troll claws is a memento of those who
 underestimated him.
@@ -615,7 +615,7 @@ animated armour
 
 The sweat and toil of the armourer working leather and steel infuses a spirit
 into their creation, a unique spark within every cuirass, pauldron and vambrace.
-A skilled wizard can draw those those sparks together, allowing their armour to
+A skilled wizard can draw those sparks together, allowing their armour to
 protect its wearer in a more aggressive fashion than armour customarily does.
 %%%%
 apis
@@ -1021,8 +1021,9 @@ A human-like figure with an aura of power betraying its divine ancestry.
 %%%%
 demonic crawler
 
-A hellish insectoid creature with a long and bloated body, supported by dozens
-of short jointed legs and topped with an almost human head.
+A hellish insectoid creature, fueled by some infernal power that constantly
+regrows its chitinous segments. Nothing short of a lethal blow will stop it
+for long.
 %%%%
 demonspawn
 
@@ -3176,7 +3177,7 @@ perceived vice overshadows its goodness.
 %%%%
 zot statue
 
-An profoundly disturbing statue, hewn from a single piece of dark gabbro
+A profoundly disturbing statue, hewn from a single piece of dark gabbro
 scintillating with tiny crystals. It is impossible to tell whether it is
 intended to represent some creature or personage, or to be completely abstract.
 %%%%

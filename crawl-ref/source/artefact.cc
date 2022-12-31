@@ -122,7 +122,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_TROG:
         // Limited selection of brands.
-        if (brand != SPWPN_VORPAL
+        if (brand != SPWPN_HEAVY
             && brand != SPWPN_FLAMING
             && brand != SPWPN_ANTIMAGIC)
         {
@@ -463,20 +463,17 @@ static void _add_randart_weapon_brand(const item_def &item,
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
             2, SPWPN_SPEED,
-            4, SPWPN_VENOM,
-            4, SPWPN_VORPAL,
+            2, SPWPN_ELECTROCUTION,
+            2, SPWPN_ANTIMAGIC,
+            4, SPWPN_DRAINING,
+            4, SPWPN_HEAVY,
             4, SPWPN_FLAMING,
             4, SPWPN_FREEZING);
 
-        if (is_crossbow(item))
-        {
-            // Penetration and electrocution are only allowed on
-            // crossbows. This may change in future.
-            if (one_chance_in(5))
-                item_props[ARTP_BRAND] = SPWPN_ELECTROCUTION;
-            else if (one_chance_in(5))
-                item_props[ARTP_BRAND] = SPWPN_PENETRATION;
-        }
+        // Penetration is only allowed on crossbows.
+        // This may change in future.
+        if (is_crossbow(item) && one_chance_in(6))
+            item_props[ARTP_BRAND] = SPWPN_PENETRATION;
     }
     else if (is_demonic(item) && x_chance_in_y(7, 9))
     {
@@ -493,9 +490,9 @@ static void _add_randart_weapon_brand(const item_def &item,
     else
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
-            73, SPWPN_VORPAL,
-            34, SPWPN_FLAMING,
-            34, SPWPN_FREEZING,
+            47, SPWPN_HEAVY,
+            47, SPWPN_FLAMING,
+            47, SPWPN_FREEZING,
             26, SPWPN_VENOM,
             26, SPWPN_DRAINING,
             13, SPWPN_HOLY_WRATH,
@@ -1345,6 +1342,7 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_WOODCUTTERS_AXE:
     case UNRAND_MORG:
     case UNRAND_THROATCUTTER:
+    case UNRAND_HERMITS_PENDANT:
         return 9;
     case UNRAND_DEVASTATOR:
     case UNRAND_RATSKIN_CLOAK:
@@ -1354,6 +1352,7 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_AUGMENTATION:
     case UNRAND_MEEK:
     case UNRAND_ELEMENTAL_VULNERABILITY:
+    case UNRAND_MISFORTUNE:
         return 11;
     default:
         return -1;

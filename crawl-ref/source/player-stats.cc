@@ -12,9 +12,6 @@
 #include "hints.h"
 #include "libutil.h"
 #include "macro.h"
-#ifdef TOUCH_UI
-#include "menu.h"
-#endif
 #include "message.h"
 #include "monster.h"
 #include "notes.h"
@@ -27,10 +24,6 @@
 #include "state.h"
 #include "stringutil.h"
 #include "tag-version.h"
-#ifdef TOUCH_UI
-#include "rltiles/tiledef-gui.h"
-#include "tilepick.h"
-#endif
 #include "transform.h"
 
 int player::stat(stat_type s, bool nonneg) const
@@ -112,27 +105,6 @@ bool attribute_increase()
                                                   (statgain > 2) ?
                                                   " dramatic" : "n");
     crawl_state.stat_gain_prompt = true;
-#ifdef TOUCH_UI
-    learned_something_new(HINT_CHOOSE_STAT);
-    Menu pop(MF_SINGLESELECT | MF_ANYPRINTABLE);
-    MenuEntry * const status = new MenuEntry("", MEL_SUBTITLE);
-    MenuEntry * const s_me = new MenuEntry("Strength", MEL_ITEM, 1,
-                                                        need_caps ? 'S' : 's');
-    s_me->add_tile(tile_def(TILEG_FIGHTING_ON));
-    MenuEntry * const i_me = new MenuEntry("Intelligence", MEL_ITEM, 1,
-                                                        need_caps ? 'I' : 'i');
-    i_me->add_tile(tile_def(TILEG_SPELLCASTING_ON));
-    MenuEntry * const d_me = new MenuEntry("Dexterity", MEL_ITEM, 1,
-                                                        need_caps ? 'D' : 'd');
-    d_me->add_tile(tile_def(TILEG_DODGING_ON));
-
-    pop.set_title(new MenuEntry("Increase Attributes", MEL_TITLE));
-    pop.add_entry(new MenuEntry(stat_gain_message + " Increase:", MEL_TITLE));
-    pop.add_entry(status);
-    pop.add_entry(s_me);
-    pop.add_entry(i_me);
-    pop.add_entry(d_me);
-#else
     mprf(MSGCH_INTRINSIC_GAIN, "%s", stat_gain_message.c_str());
     learned_something_new(HINT_CHOOSE_STAT);
     if (innate_stat(STAT_STR) != you.strength()
@@ -147,7 +119,6 @@ bool attribute_increase()
     mprf(MSGCH_PROMPT, need_caps
         ? "Increase (S)trength, (I)ntelligence, or (D)exterity? "
         : "Increase (s)trength, (i)ntelligence, or (d)exterity? ");
-#endif
     mouse_control mc(MOUSE_MODE_PROMPT);
 
     bool tried_lua = false;
@@ -165,16 +136,11 @@ bool attribute_increase()
         }
         else
         {
-#ifdef TOUCH_UI
-            pop.show();
-            keyin = pop.getkey();
-#else
             while ((keyin = getchm()) == CK_REDRAW)
             {
                 redraw_screen();
                 update_screen();
             }
-#endif
         }
         tried_lua = true;
 
@@ -209,16 +175,8 @@ bool attribute_increase()
         case 's':
         case 'i':
         case 'd':
-#ifdef TOUCH_UI
-            status->text = "Uppercase letters only, please.";
-#else
             mprf(MSGCH_PROMPT, "Uppercase letters only, please.");
-#endif
             break;
-#ifdef TOUCH_UI
-        default:
-            status->text = "Please choose an option below"; // too naggy?
-#endif
         }
     }
 }
@@ -295,7 +253,60 @@ void notify_stat_change()
 
 static int _mut_level(mutation_type mut, bool innate_only)
 {
+    if (mut == MUT_NON_MUTATION)
+        return 0;
     return you.get_base_mutation_level(mut, true, !innate_only, !innate_only);
+}
+
+struct mut_stat_effect
+{
+    mutation_type mut;
+    int s;
+    int i;
+    int d;
+
+    int effect(stat_type which) const
+    {
+        switch (which)
+        {
+        case STAT_STR: return s;
+        case STAT_INT: return i;
+        case STAT_DEX: return d;
+        default: break;
+        }
+        return 0; // or ASSERT
+    }
+
+    int apply(stat_type which, bool innate_only) const
+    {
+        return _mut_level(mut, innate_only) * effect(which);
+    }
+};
+
+static const vector<mut_stat_effect> mut_stat_effects = {
+    //               s   i   d
+    { MUT_STRONG,    4, -1, -1 },
+    { MUT_AGILE,    -1, -1,  4 },
+    { MUT_CLEVER,   -1,  4, -1 },
+    { MUT_WEAK,     -2,  0,  0 },
+    { MUT_BIG_BRAIN, 0,  2,  0 },
+    { MUT_DOPEY,     0, -2,  0 },
+    { MUT_CLUMSY,    0,  0, -2 },
+    { MUT_THIN_SKELETAL_STRUCTURE,
+                     0,  0,  2 },
+#if TAG_MAJOR_VERSION == 34
+    { MUT_ROUGH_BLACK_SCALES, 0, 0, -1},
+    { MUT_STRONG_STIFF, 1, 0, -1 },
+    { MUT_FLEXIBLE_WEAK, -1, 0, 1 },
+#endif
+};
+
+static int _get_mut_effects(stat_type which_stat, bool innate_only)
+{
+    int total = 0;
+    for (const auto &e : mut_stat_effects)
+        total += e.apply(which_stat, innate_only);
+    return total;
 }
 
 static int _strength_modifier(bool innate_only)
@@ -323,14 +334,7 @@ static int _strength_modifier(bool innate_only)
     }
 
     // mutations
-    result += 4 * _mut_level(MUT_STRONG, innate_only);
-    result -= 2 * _mut_level(MUT_WEAK, innate_only);
-    result -= _mut_level(MUT_CLEVER, innate_only);
-    result -= _mut_level(MUT_AGILE, innate_only);
-#if TAG_MAJOR_VERSION == 34
-    result += _mut_level(MUT_STRONG_STIFF, innate_only)
-              - _mut_level(MUT_FLEXIBLE_WEAK, innate_only);
-#endif
+    result += _get_mut_effects(STAT_STR, innate_only);
 
     return result;
 }
@@ -357,11 +361,7 @@ static int _int_modifier(bool innate_only)
     }
 
     // mutations
-    result += 4 * _mut_level(MUT_CLEVER, innate_only);
-    result += 2 * _mut_level(MUT_BIG_BRAIN, innate_only);
-    result -= 2 * _mut_level(MUT_DOPEY, innate_only);
-    result -= _mut_level(MUT_AGILE, innate_only);
-    result -= _mut_level(MUT_STRONG, innate_only);
+    result += _get_mut_effects(STAT_INT, innate_only);
 
     return result;
 }
@@ -391,18 +391,33 @@ static int _dex_modifier(bool innate_only)
     }
 
     // mutations
-    result += 4 * _mut_level(MUT_AGILE, innate_only);
-    result -= 2 * _mut_level(MUT_CLUMSY, innate_only);
-    result -= _mut_level(MUT_CLEVER, innate_only);
-    result -= _mut_level(MUT_STRONG, innate_only);
-#if TAG_MAJOR_VERSION == 34
-    result += _mut_level(MUT_FLEXIBLE_WEAK, innate_only)
-              - _mut_level(MUT_STRONG_STIFF, innate_only);
-    result -= _mut_level(MUT_ROUGH_BLACK_SCALES, innate_only);
-#endif
-    result += 2 * _mut_level(MUT_THIN_SKELETAL_STRUCTURE, innate_only);
+    result += _get_mut_effects(STAT_DEX, innate_only);
 
     return result;
+}
+
+static int _base_stat_with_muts(stat_type s)
+{
+    // XX semi code dup (with player::max_stat)
+    return min(you.base_stats[s] + _get_mut_effects(s, false), MAX_STAT_VALUE);
+}
+
+static int _base_stat_with_new_mut(stat_type which_stat, mutation_type mut)
+{
+    int base = _base_stat_with_muts(which_stat);
+    for (const auto &e : mut_stat_effects)
+        if (e.mut == mut)
+            base += e.apply(which_stat, false);
+    return base;
+}
+
+/// whether a mutation innately causes stat zero. Does not look at equpment etc.
+bool mutation_causes_stat_zero(mutation_type mut)
+{
+    // not very elegant...
+    return _base_stat_with_new_mut(STAT_STR, mut) <= 0
+        || _base_stat_with_new_mut(STAT_INT, mut) <= 0
+        || _base_stat_with_new_mut(STAT_DEX, mut) <= 0;
 }
 
 static int _stat_modifier(stat_type stat, bool innate_only)

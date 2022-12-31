@@ -225,33 +225,6 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
         if (m_far_view)
             tiles.load_dungeon(gc);
         return 0;
-#ifdef TOUCH_UI
-    case wm_mouse_event::WHEEL:
-        // ctrl-rolley-wheel on the minimap (this ensures busting out of minimap when zooming in again on very small layouts)
-        if (event.mod & TILES_MOD_CTRL)
-        {
-            tiles.zoom_dungeon(event.button == wm_mouse_event::SCROLL_UP);
-            return CK_NO_KEY; // prevents this being handled by the dungeon underneath too(!)
-        }
-        return 0;
-    case wm_mouse_event::PRESS:
-        if (event.button == wm_mouse_event::LEFT)
-        {
-            m_far_view = true;
-            tiles.load_dungeon(gc);
-            if (!tiles.get_map_display())
-            {
-                process_command(CMD_DISPLAY_MAP);
-                m_far_view = false;
-                return CK_MOUSE_CMD;
-            }
-        }
-        return 0;
-    case wm_mouse_event::RELEASE:
-        if (event.button == wm_mouse_event::LEFT && m_far_view)
-            m_far_view = false;
-        return 0;
-#else
     case wm_mouse_event::PRESS:
         if (event.button == wm_mouse_event::LEFT)
         {
@@ -286,7 +259,6 @@ int MapRegion::handle_mouse(wm_mouse_event &event)
         if (event.button == wm_mouse_event::RIGHT && m_far_view)
             m_far_view = false;
         return 0;
-#endif
     default:
         return 0;
     }
@@ -297,13 +269,9 @@ bool MapRegion::update_tip_text(string& tip)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;
 
-#ifdef TOUCH_UI
-    tip = "[L-Click] Enable map mode";
-#else
     tip = "[L-Click] Travel / [R-Click] View";
     if (i_feel_safe())
         tip += "\n[Shift + L-Click] Autoexplore";
-#endif
     return true;
 }
 

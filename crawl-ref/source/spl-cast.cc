@@ -83,6 +83,8 @@
 #include "viewchar.h" // stringize_glyph
 
 static int _spell_enhancement(spell_type spell);
+static int _apply_enhancement(const int initial_power,
+                              const int enhancer_levels);
 static string _spell_failure_rate_description(spell_type spell);
 
 void surge_power(const int enhanced)
@@ -194,23 +196,35 @@ public:
     SpellMenu()
         : ToggleableMenu(MF_SINGLESELECT | MF_ANYPRINTABLE
             | MF_NO_WRAP_ROWS | MF_ALLOW_FORMATTING
-            | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_PRESELECTED) {}
+            | MF_ARROWS_SELECT | MF_INIT_HOVER) {}
 protected:
-    virtual void select_items(int key, int qty = -1) override
+    bool process_command(command_type c) override
     {
-        // If menu_arrow_control is false, cast the last-cast spell on <enter>
-        if (!(flags & MF_ARROWS_SELECT) && key == CK_ENTER)
+        get_selected(&sel);
+        // if there's a preselected item, and no current selection, select it.
+        // for arrow selection, the hover starts on the preselected item so no
+        // special handling is needed.
+        if (menu_action == ACT_EXECUTE && c == CMD_MENU_SELECT
+            && !(flags & MF_ARROWS_SELECT) && sel.empty())
         {
             for (size_t i = 0; i < items.size(); ++i)
             {
                 if (static_cast<SpellMenuEntry*>(items[i])->preselected)
                 {
-                    select_index(i, qty);
-                    return;
+                    select_index(i, 1);
+                    break;
                 }
             }
         }
-        ToggleableMenu::select_items(key, qty);
+        return ToggleableMenu::process_command(c);
+    }
+
+    bool examine_index(int i) override
+    {
+        ASSERT(i >= 0 && i < static_cast<int>(items.size()));
+        if (items[i]->hotkeys.size())
+            describe_spell(get_spell_by_letter(items[i]->hotkeys[0]), nullptr);
+        return true;
     }
 };
 
@@ -218,13 +232,17 @@ protected:
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
 int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
-                const string &title)
+                const string &action)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
 
+    const string real_action = viewing ? "describe" : action;
+
     SpellMenu spell_menu;
-    string titlestring = make_stringf("%-25.25s", title.c_str());
+    const string titlestring = make_stringf("%-25.25s",
+            make_stringf("Your spells (%s)", real_action.c_str()).c_str());
+
     {
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry(
@@ -235,19 +253,24 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     }
     spell_menu.set_highlighter(nullptr);
     spell_menu.set_tag("spell");
-    spell_menu.add_toggle_key('!');
+    // TODO: add toggling to describe mode with `?`, add help string, etc...
+    spell_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE);
+    spell_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE_REVERSE);
 
-    string more_str = "<lightgrey>Press '<w>!</w>' ";
+    string more_str = make_stringf("<lightgrey>Select a spell to %s</lightgrey>",
+        real_action.c_str());
+    string toggle_desc = menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE);
     if (toggle_with_I)
     {
+        // why `I`?
         spell_menu.add_toggle_key('I');
-        more_str += "or '<w>I</w>' ";
+        toggle_desc += "/[<w>I</w>]";
     }
-    // TODO: should allow toggling between execute and examine
-    if (!viewing)
-        spell_menu.menu_action = Menu::ACT_EXECUTE;
-    more_str += "to toggle spell view.</lightgrey>";
+    toggle_desc += " toggle spell headers";
+    more_str = pad_more_with(more_str, toggle_desc);
     spell_menu.set_more(formatted_string::parse_string(more_str));
+    // TODO: should allow toggling between execute and examine
+    spell_menu.menu_action = viewing ? Menu::ACT_EXAMINE : Menu::ACT_EXECUTE;
 
     int initial_hover = 0;
     for (int i = 0; i < 52; ++i)
@@ -277,19 +300,11 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.set_hovered(initial_hover);
 
     int choice = 0;
-    spell_menu.on_single_selection = [&choice, &spell_menu](const MenuEntry& item)
+    spell_menu.on_single_selection = [&choice](const MenuEntry& item)
     {
         ASSERT(item.hotkeys.size() == 1);
-        if (spell_menu.menu_action == Menu::ACT_EXAMINE)
-        {
-            describe_spell(get_spell_by_letter(item.hotkeys[0]), nullptr);
-            return true;
-        }
-        else
-        {
-            choice = item.hotkeys[0];
-            return false;
-        }
+        choice = item.hotkeys[0];
+        return false;
     };
 
     spell_menu.show();
@@ -299,6 +314,22 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
         update_screen();
     }
     return choice;
+}
+
+// Effects that happen after spells which are otherwise simple zaps.
+static void _apply_post_zap_effect(spell_type spell)
+{
+    switch (spell)
+    {
+    case SPELL_SANDBLAST:
+        you.time_taken = you.time_taken * 3 / 2;
+        break;
+    case SPELL_KISS_OF_DEATH:
+        drain_player(100, true, true);
+        break;
+    default:
+        break;
+    }
 }
 
 static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
@@ -414,7 +445,7 @@ int raw_spell_fail(spell_type spell)
  *        1, which returns a regular spellpower. 1000 gives you millis, 100
  *        centis.
  */
-int stepdown_spellpower(int power, int scale)
+static int _stepdown_spellpower(int power, int scale)
 {
     // use millis internally
     ASSERT_RANGE(scale, 1, 1000);
@@ -482,7 +513,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
         // [dshaligram] Enhancers don't affect fail rates any more, only spell
         // power. Note that this does not affect Vehumet's boost in castability.
-        power = apply_enhancement(power, _spell_enhancement(spell));
+        power = _apply_enhancement(power, _spell_enhancement(spell));
 
         // Wild magic boosts spell power but decreases success rate.
         power *= (10 + 3 * you.get_mutation_level(MUT_WILD_MAGIC));
@@ -501,7 +532,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
         // at this point, `power` is assumed to be basically in centis.
         // apply a stepdown, and scale.
-        power = stepdown_spellpower(power, scale);
+        power = _stepdown_spellpower(power, scale);
     }
 
     const int cap = spell_power_cap(spell);
@@ -566,7 +597,8 @@ static int _spell_enhancement(spell_type spell)
  * @param enhancer_levels   The number of enhancements levels to apply.
  * @return                  The power of the spell with enhancers considered.
  */
-int apply_enhancement(const int initial_power, const int enhancer_levels)
+static int _apply_enhancement(const int initial_power,
+                              const int enhancer_levels)
 {
     int power = initial_power;
 
@@ -787,24 +819,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
 
         while (true)
         {
-#ifdef TOUCH_UI
-            keyin = list_spells(true, false);
-            if (!keyin)
-                keyin = ESCAPE;
-
-            if (!crawl_state.doing_prev_cmd_again)
-            {
-                redraw_screen();
-                update_screen();
-            }
-
-            if (isaalpha(keyin) || key_is_escape(keyin))
-                break;
-            else
-                clear_messages();
-
-            keyin = 0;
-#else
             if (keyin == 0 && !Options.spell_menu)
             {
                 if (you.spell_no == 1)
@@ -846,7 +860,7 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
                                        "? or * to list all spells.");
                 }
 
-                keyin = get_ch();
+                keyin = numpad_to_regular(get_ch());
             }
 
             if (keyin == '?' || keyin == '*' || Options.spell_menu)
@@ -870,7 +884,6 @@ spret cast_a_spell(bool check_range, spell_type spell, dist *_target,
             }
             else
                 break;
-#endif
         }
 
         if (key_is_escape(keyin))
@@ -1014,9 +1027,6 @@ static void _spellcasting_god_conduct(spell_type spell)
     // not is_hasty_spell since the other ones handle the conduct themselves.
     if (spell == SPELL_SWIFTNESS)
         did_god_conduct(DID_HASTY, conduct_level);
-
-    if (spell == SPELL_SUBLIMATION_OF_BLOOD)
-        did_god_conduct(DID_CHANNEL, conduct_level);
 
     if (god_loathes_spell(spell, you.religion))
         excommunication();
@@ -1229,6 +1239,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_fragment>(&you, pow, range);
     case SPELL_AIRSTRIKE:
         return make_unique<targeter_airstrike>();
+    case SPELL_MOMENTUM_STRIKE:
+        return make_unique<targeter_smite>(&you, range);
     case SPELL_FULMINANT_PRISM:
         return make_unique<targeter_smite>(&you, range, 0, 2);
     case SPELL_GLACIATE:
@@ -1250,6 +1262,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
         return make_unique<targeter_passwall>(range);
     case SPELL_DIG:
         return make_unique<targeter_dig>(range);
+    case SPELL_ELECTRIC_CHARGE:
+        return make_unique<targeter_charge>(&you, range);
 
     // untargeted spells -- everything beyond here is a static targeter
     case SPELL_HAILSTORM:
@@ -1263,6 +1277,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_DISCHARGE: // not entirely accurate...maybe should highlight
                           // all potentially affected monsters?
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
+    case SPELL_ARCJOLT:
+        return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, pow, false));
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:
@@ -1287,6 +1303,8 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                                             silence_max_range(pow),
                                             0, 0,
                                             silence_min_range(pow));
+    case SPELL_POISONOUS_VAPOURS:
+        return make_unique<targeter_poisonous_vapours>(&you, range);
 
     // at player's position only but not a selfench; most transmut spells go here:
     case SPELL_SPIDER_FORM:
@@ -1298,14 +1316,16 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_NECROMUTATION:
     case SPELL_BEASTLY_APPENDAGE:
     case SPELL_WEREBLOOD:
+    case SPELL_ROT:
     case SPELL_SUBLIMATION_OF_BLOOD:
     case SPELL_BORGNJORS_REVIVIFICATION:
-    case SPELL_CONJURE_FLAME:
+    case SPELL_BLASTSPARK:
     case SPELL_PORTAL_PROJECTILE:
         return make_unique<targeter_radius>(&you, LOS_SOLID_SEE, 0);
 
     // LOS radius:
     case SPELL_OZOCUBUS_REFRIGERATION:
+        return make_unique<targeter_refrig>(&you);
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS,
                                                   LOS_RADIUS, 0, 1);
@@ -1341,6 +1361,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_SUMMON_HYDRA:
     case SPELL_SUMMON_MANA_VIPER:
     case SPELL_CONJURE_BALL_LIGHTNING:
+    case SPELL_SHADOW_CREATURES: // used for ?summoning
     case SPELL_SUMMON_GUARDIAN_GOLEM:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_HORRIBLE_THINGS:
@@ -1361,7 +1382,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
     case SPELL_MANIFOLD_ASSAULT:
         return make_unique<targeter_multiposition>(&you, _simple_find_all_hostiles());
     case SPELL_SCORCH:
-        return make_unique<targeter_multiposition>(&you, find_near_hostiles(range));
+        return make_unique<targeter_scorch>(you, range, false);
     case SPELL_DRAGON_CALL: // this is just convenience: you can start the spell with no enemies in sight
         return make_unique<targeter_multifireball>(&you, _simple_find_all_hostiles());
     case SPELL_NOXIOUS_BOG:
@@ -1487,18 +1508,22 @@ static int _to_hit_pct(const monster_info& mi, int acc, bool pierce)
     return hits * 100 / iters;
 }
 
+static vector<string> _desc_hit_chance(const monster_info& mi, int acc, bool pierces)
+{
+    if (!acc)
+        return vector<string>{};
+    const int hit_pct = _to_hit_pct(mi, acc, pierces);
+    if (hit_pct == -1)
+        return vector<string>{};
+    return vector<string>{make_stringf("%d%% to hit", hit_pct)};
+}
+
 vector<string> desc_beam_hit_chance(const monster_info& mi, targeter* hitfunc)
 {
     targeter_beam* beam_hitf = dynamic_cast<targeter_beam*>(hitfunc);
     if (!beam_hitf)
         return vector<string>{};
-    const int acc = beam_hitf->beam.hit;
-    if (!acc)
-        return vector<string>{};
-    const int hit_pct = _to_hit_pct(mi, acc, beam_hitf->beam.pierce);
-    if (hit_pct == -1)
-        return vector<string>{};
-    return vector<string>{make_stringf("%d%% to hit", hit_pct)};
+    return _desc_hit_chance(mi, beam_hitf->beam.hit, beam_hitf->beam.pierce);
 }
 
 static vector<string> _desc_intoxicate_chance(const monster_info& mi,
@@ -1572,6 +1597,28 @@ static vector<string> _desc_meph_chance(const monster_info& mi)
     if (mi.hd < MEPH_HD_CAP)
         pct_chance = 100 - (100 * mi.hd / MEPH_HD_CAP);
     return vector<string>{make_stringf("chance to affect: %d%%", pct_chance)};
+}
+
+static vector<string> _desc_hailstorm_hit_chance(const monster_info& mi, int pow)
+{
+    bolt beam;
+    zappy(ZAP_HAILSTORM, pow, false, beam);
+    return _desc_hit_chance(mi, beam.hit, false);
+}
+
+static vector<string> _desc_momentum_strike_hit_chance(const monster_info& mi, int pow)
+{
+    bolt beam;
+    zappy(ZAP_MOMENTUM_STRIKE, pow, false, beam);
+    return _desc_hit_chance(mi, beam.hit, false);
+}
+
+static vector<string> _desc_insubstantial(const monster_info& mi, string desc)
+{
+    if (mons_class_flag(mi.type, M_INSUBSTANTIAL))
+        return vector<string>{desc};
+
+    return vector<string>{};
 }
 
 static vector<string> _desc_vampiric_draining_valid(const monster_info& mi)
@@ -1755,6 +1802,14 @@ desc_filter targeter_addl_desc(spell_type spell, int powc, spell_flags flags,
             return bind(_desc_dispersal_chance, placeholders::_1, powc);
         case SPELL_AIRSTRIKE:
             return bind(_desc_airstrike_bonus, placeholders::_1);
+        case SPELL_HAILSTORM:
+            return bind(_desc_hailstorm_hit_chance, placeholders::_1, powc);
+        case SPELL_MOMENTUM_STRIKE:
+            return bind(_desc_momentum_strike_hit_chance, placeholders::_1, powc);
+        case SPELL_FASTROOT:
+            return bind(_desc_insubstantial, placeholders::_1, "immune to roots");
+        case SPELL_STICKY_FLAME:
+            return bind(_desc_insubstantial, placeholders::_1, "unstickable");
         default:
             break;
     }
@@ -1863,7 +1918,19 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
                || Options.always_use_static_spell_targeters
                || Options.force_spell_targeter.count(spell) > 0);
 
-    if (use_targeter)
+    if (use_targeter && spell == SPELL_ELECTRIC_CHARGE)
+    {
+        // would be nice to do away with this special casing, can this be
+        // rolled into more generic code?
+        vector<coord_def> target_path; // unused here
+        if (!find_charge_target(target_path, range, hitfunc.get(), *target))
+            return spret::abort;
+        ASSERT(target->isValid);
+        // code dup with spell_direction...
+        beam.set_target(*target);
+        beam.source = you.pos();
+    }
+    else if (use_targeter)
     {
         const targ_mode_type targ =
               testbits(flags, spflag::neutral)    ? TARG_ANY :
@@ -1950,10 +2017,7 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     }
 
     if (evoked_wand)
-    {
-        powc = player_adjust_evoc_power(powc);
         surge_power_wand(wand_mp_cost());
-    }
     else if (actual_spell)
         surge_power(_spell_enhancement(spell));
 
@@ -2035,6 +2099,8 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
     {
     case spret::success:
     {
+        _apply_post_zap_effect(spell);
+
         const int demonic_magic = you.get_mutation_level(MUT_DEMONIC_MAGIC);
 
         if ((demonic_magic == 3 && evoked_wand)
@@ -2154,6 +2220,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_AIRSTRIKE:
         return cast_airstrike(powc, spd.target, fail);
 
+    case SPELL_MOMENTUM_STRIKE:
+        return cast_momentum_strike(powc, spd.target, fail);
+
     case SPELL_LRD:
         return cast_fragmentation(powc, &you, spd.target, fail);
 
@@ -2166,6 +2235,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     // other effects
     case SPELL_DISCHARGE:
         return cast_discharge(powc, you, fail);
+
+    case SPELL_ARCJOLT:
+        return cast_arcjolt(powc, you, fail);
 
     case SPELL_CHAIN_LIGHTNING:
         return cast_chain_lightning(powc, you, fail);
@@ -2312,8 +2384,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BORGNJORS_VILE_CLUTCH:
         return cast_vile_clutch(powc, beam, fail);
 
-    case SPELL_CORPSE_ROT:
-        return cast_corpse_rot(powc, fail);
+    case SPELL_ROT:
+        return cast_dreadful_rot(powc, fail);
 
     // Transformations.
     case SPELL_BEASTLY_APPENDAGE:
@@ -2369,8 +2441,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BLINK:
         return cast_blink(powc, fail);
 
-    case SPELL_CONJURE_FLAME:
-        return conjure_flame(powc, fail);
+    case SPELL_BLASTSPARK:
+        return kindle_blastsparks(powc, fail);
 
     case SPELL_PASSWALL:
         return cast_passwall(beam.target, powc, fail);
@@ -2411,6 +2483,9 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_BLINKBOLT:
         return blinkbolt(powc, beam, fail);
 
+    case SPELL_ELECTRIC_CHARGE:
+        return electric_charge(powc, fail, beam.target); // hack - should take beam?
+
     case SPELL_STARBURST:
         return cast_starburst(powc, fail);
 
@@ -2428,10 +2503,6 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     case SPELL_DRAIN_LIFE:
         return spret::none;
 
-    case SPELL_SANDBLAST:
-        you.time_taken *= 2;
-        break; // fallthrough to zaps
-
     default:
         if (spell_removed(spell))
         {
@@ -2445,8 +2516,8 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
     zap_type zap = spell_to_zap(spell);
     if (zap != NUM_ZAPS)
     {
-        return zapping(zap, spell_zap_power(spell, powc), beam, true, nullptr,
-                       fail);
+        return zapping(zap, spell_zap_power(spell, powc),
+                       beam, true, nullptr, fail);
     }
 
     return spret::none;
@@ -2558,7 +2629,7 @@ const char *fail_severity_adjs[] =
     "dangerous",
     "quite dangerous",
     "extremely dangerous",
-    "potentially lethal",
+    "astonishingly dangerous",
 };
 COMPILE_CHECK(ARRAYSZ(fail_severity_adjs) > 3);
 
@@ -2620,13 +2691,6 @@ string spell_noise_string(spell_type spell, int chop_wiz_display_width)
 {
     const int casting_noise = spell_noise(spell);
     int effect_noise = spell_effect_noise(spell);
-    zap_type zap = spell_to_zap(spell);
-    if (effect_noise == 0 && zap != NUM_ZAPS)
-    {
-        bolt beem;
-        zappy(zap, 0, false, beem);
-        effect_noise = beem.loudness;
-    }
 
     // A typical amount of noise.
     if (spell == SPELL_POLAR_VORTEX)
@@ -2694,6 +2758,7 @@ static string _wizard_spell_power_numeric_string(spell_type spell)
 }
 #endif
 
+// TODO: deduplicate with the same-named function in describe-spells.cc
 static dice_def _spell_damage(spell_type spell, bool evoked)
 {
     const int power = _spell_power(spell, evoked);
@@ -2702,7 +2767,7 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
     switch (spell)
     {
         case SPELL_FREEZE:
-            return freeze_damage(power);
+            return freeze_damage(power, false);
         case SPELL_FULMINANT_PRISM:
             return prism_damage(prism_hd(power, false), true);
         case SPELL_CONJURE_BALL_LIGHTNING:
@@ -2720,7 +2785,9 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
         case SPELL_FROZEN_RAMPARTS:
             return ramparts_damage(power, false);
         case SPELL_LRD:
-            return base_fragmentation_damage(power);
+            return base_fragmentation_damage(power, false);
+        case SPELL_ARCJOLT:
+            return arcjolt_damage(power, false);
         default:
             break;
     }
@@ -2736,8 +2803,6 @@ string spell_damage_string(spell_type spell, bool evoked)
     {
         case SPELL_MAXWELLS_COUPLING:
             return Options.char_set == CSET_ASCII ? "death" : "\u221e"; //"∞"
-        case SPELL_CONJURE_FLAME:
-            return desc_cloud_damage(CLOUD_FIRE, false);
         case SPELL_FREEZING_CLOUD:
             return desc_cloud_damage(CLOUD_COLD, false);
         case SPELL_DISCHARGE:
@@ -2747,8 +2812,8 @@ string spell_damage_string(spell_type spell, bool evoked)
         }
         case SPELL_AIRSTRIKE:
         {
-            int max = airstrike_base_max_damage(_spell_power(spell, evoked));
-            return make_stringf("0-%d+", max);
+            dice_def dice = base_airstrike_damage(_spell_power(spell, evoked));
+            return describe_airstrike_dam(dice);
         }
         default:
             break;

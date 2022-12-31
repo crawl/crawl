@@ -56,12 +56,16 @@
  #include "tilepick.h"
 #endif
 #include "tileview.h"
+#include "traps.h" // set_shafted
 #include "viewchar.h"
 #include "view.h"
 #ifdef USE_TILE_LOCAL
  #include "windowmanager.h"
 #endif
 #include "ui.h"
+#ifdef __ANDROID__
+ #include "syscalls.h"
+#endif
 #include "version.h"
 
 using namespace ui;
@@ -278,7 +282,7 @@ static void _post_init(bool newc)
     calc_hp();
     calc_mp();
     shopping_list.refresh();
-    populate_excluded_items();
+    populate_sets_by_obj_type();
 
     run_map_local_preludes();
 
@@ -294,11 +298,9 @@ static void _post_init(bool newc)
         you.entering_level = false;
         you.transit_stair = DNGN_UNSEEN;
         you.depth = starting_absdepth() + 1;
-        // Abyssal Knights start out in the Abyss.
-        if (you.chapter == CHAPTER_POCKET_ABYSS)
-            you.where_are_you = BRANCH_ABYSS;
-        else
-            you.where_are_you = root_branch;
+        you.where_are_you = root_branch;
+        if (you.depth > 1)
+            set_shafted();
     }
 
     // XXX: Any invalid level_id should do.
@@ -315,12 +317,6 @@ static void _post_init(bool newc)
                you.entering_level ? LOAD_ENTER_LEVEL :
                newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
                old_level);
-
-    if (newc && you.chapter == CHAPTER_POCKET_ABYSS)
-    {
-        generate_abyss();
-        save_level(level_id::current());
-    }
 
 #ifdef WIZARD
     // Save-less games are pointless except for tests.
@@ -380,6 +376,10 @@ static void _post_init(bool newc)
     if (you.prev_save_version != Version::Long)
         check_if_everything_is_identified();
 
+    // XX why is this run now in addition to a related call in load_level?
+    // (There this function is only called on level change, and instead
+    // we run travel_init_load_level; this function is just a call to
+    // travel_init_new_level, which from the comments shouldn't be run on load?)
     trackers_init_new_level();
 
     if (newc) // start a new game
@@ -966,8 +966,9 @@ static void _show_startup_menu(newgame_def& ng_choice,
 {
     unwind_bool no_more(crawl_state.show_more_prompt, false);
 
-#if defined(USE_TILE_LOCAL) && defined(TOUCH_UI)
-    wm->show_keyboard();
+#if defined(USE_TILE_LOCAL) && defined(__ANDROID__)
+    jni_keyboard_control(false);
+    sleep(1); // wait for keyboard
 #elif defined(USE_TILE_WEB)
     tiles_crt_popup show_as_popup;
 #endif

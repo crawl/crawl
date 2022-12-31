@@ -242,7 +242,7 @@ int attack::calc_pre_roll_to_hit(bool random)
  *
  * @param mhit The post-roll player's to-hit value.
  */
-int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/, bool /*aux*/)
+int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
 {
     int modifiers = 0;
 
@@ -666,7 +666,7 @@ static const vector<chaos_effect> chaos_effects = {
     { "hasting", 10, _is_chaos_slowable, BEAM_HASTE },
     { "mighting", 10, nullptr, BEAM_MIGHT },
     { "agilitying", 10, nullptr, BEAM_AGILITY },
-    { "invisible", 10, nullptr, BEAM_INVISIBILITY, },
+    { "resistance", 10, nullptr, BEAM_RESISTANCE, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
     {
         "paralysis", 5, [](const actor &defender) {
@@ -1084,7 +1084,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 
     // XXX: should this also trigger on auxes?
     if (!aux && !ranged)
-        damage_plus += you.infusion_amount() * you.infusion_multiplier();
+        damage_plus += you.infusion_amount() * 4;
 
     return _core_apply_slaying(damage, damage_plus);
 }
@@ -1098,6 +1098,11 @@ int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
     return damage;
 }
 
+int attack::player_apply_postac_multipliers(int damage)
+{
+    return damage;
+}
+
 void attack::player_exercise_combat_skills()
 {
 }
@@ -1108,7 +1113,7 @@ void attack::player_exercise_combat_skills()
  * TODO: Complete symmetry for base_unarmed damage
  * between monsters and players.
  */
-int attack::calc_base_unarmed_damage()
+int attack::calc_base_unarmed_damage() const
 {
     // Should only get here if we're not wielding something that's a weapon.
     // If there's a non-weapon in hand, it has no base damage.
@@ -1118,21 +1123,13 @@ int attack::calc_base_unarmed_damage()
     if (!attacker->is_player())
         return 0;
 
-    int damage = get_form()->get_base_unarmed_damage();
+    const int dam = unarmed_base_damage() + unarmed_base_damage_bonus(true);
+    return dam > 0 ? dam : 0;
+}
 
-    // Claw damage only applies for bare hands.
-    if (you.has_usable_claws())
-        damage += you.has_claws() * 2;
-
-    if (you.form_uses_xl())
-        damage += div_rand_round(you.experience_level, 3);
-    else
-        damage += you.skill_rdiv(wpn_skill);
-
-    if (damage < 0)
-        damage = 0;
-
-    return damage;
+int attack::adjusted_weapon_damage() const
+{
+    return brand_adjust_weapon_damage(weapon_damage(), damage_brand, true);
 }
 
 int attack::calc_damage()
@@ -1143,7 +1140,7 @@ int attack::calc_damage()
         int damage_max = 0;
         if (using_weapon() || wpn_skill == SK_THROWING)
         {
-            damage_max = weapon_damage();
+            damage_max = adjusted_weapon_damage();
             damage += random2(damage_max);
 
             int wpn_damage_plus = 0;
@@ -1175,7 +1172,7 @@ int attack::calc_damage()
         int potential_damage, damage;
 
         potential_damage = using_weapon() || wpn_skill == SK_THROWING
-            ? weapon_damage() : calc_base_unarmed_damage();
+            ? adjusted_weapon_damage() : calc_base_unarmed_damage();
 
         potential_damage = stat_modify_damage(potential_damage, wpn_skill, using_weapon());
 
@@ -1197,6 +1194,7 @@ int attack::calc_damage()
             return 0;
         damage = player_apply_final_multipliers(damage);
         damage = apply_defender_ac(damage);
+        damage = player_apply_postac_multipliers(damage);
 
         damage = max(0, damage);
         set_attack_verb(damage);
@@ -1346,7 +1344,7 @@ bool attack::apply_damage_brand(const char *what)
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH || brand == SPWPN_ANTIMAGIC
-            || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRISM))
+            || brand == SPWPN_VAMPIRISM))
     {
         // These brands require some regular damage to function.
         return false;
@@ -1418,11 +1416,6 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_DRAINING:
         drain_defender();
-        break;
-
-    case SPWPN_VORPAL:
-        special_damage = 1 + random2(damage_done) / 3;
-        // Note: Leaving special_damage_message empty because there isn't one.
         break;
 
     case SPWPN_VAMPIRISM:

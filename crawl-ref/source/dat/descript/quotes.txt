@@ -244,6 +244,14 @@ A shaft
  horse splashes.”
     -J.B.S. Haldane, “On Being The Right Size”. March 1926.
 %%%%
+A shimmering altar of Xom
+
+the wise man bowed his head solemnly and spoke:
+ “theres actually zero difference between good & bad things.
+ you imbecile. you fucking moron”
+    -wint, @dril Twitter. June 1, 2014
+# https://twitter.com/dril/status/473265809079693312/
+%%%%
 A staircase leading out of the dungeon
 
 “We shall not cease from exploration
@@ -457,6 +465,13 @@ Cigotuvi's Monster
  and he muttered some inarticulate sounds, while a grin
  wrinkled his cheeks.”
     -Mary Shelley, _Frankenstein_. 1818.
+%%%%
+cloak of the Thief
+
+“so long suckers! i rev up my motorcylce and create a huge cloud of smoke.
+ when the cloud dissipates im lying completely dead on the pavement”
+    -wint, @dril Twitter. July 26, 2016
+# https://twitter.com/dril/status/757914951868485632/
 %%%%
 Cloud Mage
 
@@ -771,7 +786,7 @@ shambling mangrove
 “There is unrest in the forest
  There is trouble with the trees
  For the maples want more sunlight
- And the oaks ignore their pleas
+ And the oaks ignore their pleas”
     -Rush, "The Trees". 1978.
 %%%%
 Shatter spell
@@ -2097,7 +2112,21 @@ merfolk avatar
 %%%%
 merfolk impaler
 
-<merfolk>
+“Damn ye! Let Neptune strike ye dead, Winslow! HAAARK! Hark Triton, hark!
+ Bellow, bid our father the Sea King rise from the depths full foul in his fury!
+ Black waves teeming with salt-foam to smother this young mouth with pungent
+ slime, to choke ye, engorging your organs ‘til ye turn blue and bloated with
+ bilge and brine and can scream no more -- only when he, crowned in cockle
+ shells with slitherin’ tentacled tail and steaming beard take up his fell
+ be-finned arm, his coral-tine trident screeches banshee-like in the tempest and
+ plunges right through yer gullet, bursting ye -- a bulging bladder no more, but
+ a blasted bloody film now and nothing for the harpies and the souls of dead
+ sailors to  peck and claw and feed upon only to be lapped up and swallowed by
+ the infinite waters of the dread emperor himself -- forgotten to any man, to
+ any time, forgotten to any god or devil, forgotten even to the sea, for any
+ stuff or part of Winslow, even any scantling of your soul is Winslow no more,
+ but is now itself the sea!”
+    -Thomas Wake, _The Lighthouse_. 2019
 %%%%
 merfolk javelineer
 
@@ -2314,7 +2343,7 @@ orange demon
 Orb Guardian
 
 “X gon' give it to ya (what)
- F*** waitin' for you to get it on your own, X gon' deliver to ya
+ Fuck waitin' for you to get it on your own, X gon' deliver to ya
  Knock knock, open up the door, it's real
  With the non-stop pop-pop from stainless steel
  [...]
@@ -2773,7 +2802,17 @@ scroll
 %%%%
 scroll of acquirement
 
-<scroll>
+He had stopped trying to think. He just repeated his litany over and over:
+“I am an animal, you see that. I don’t have the words, they didn’t teach
+me the words. I don’t know how to think, the bastards didn’t let me learn
+how to think. But if you really are... all-powerful... all-knowing... then you
+figure it out! Look into my heart. I know that everything you need is in there.
+It has to be. I never sold my soul to anyone! It’s mine, it’s human! You
+take from me what it is I want... it just can’t be that I would want something
+bad! Damn it all, I can’t think of anything, except those words of his...
+‘HAPPINESS FOR EVERYBODY, FREE, AND NO ONE WILL GO AWAY UNSATISFIED!’”
+    -Arkady and Boris Strugatsky, “Roadside Picnic”. 1972.
+    trans. Antonina W. Bouis, 1977.
 %%%%
 scroll of amnesia
 
@@ -2785,6 +2824,10 @@ scroll of blinking
 <scroll>
 %%%%
 scroll of brand weapon
+
+<scroll>
+%%%%
+scroll of butterflies
 
 <scroll>
 %%%%
@@ -2876,7 +2919,23 @@ scroll of summoning
 %%%%
 scroll of teleportation
 
-<scroll>
+“Eiris sazun idisi
+ sazun hera duoder
+ suma hapt heptidun
+ suma heri lezidun
+ suma clubodun
+ umbi cuoniouuidi
+ insprinc haptbandun
+ inuar uigandun
+
+ [Once sat women,
+ they sat here then there.
+ some fastened bonds,
+ some impeded an army,
+ some unraveled fetters:
+ Escape the bonds,
+ flee the enemy!]”
+    -First Merseburg incantation, trans. Patricia Giangrosso, 2001
 %%%%
 scroll of torment
 

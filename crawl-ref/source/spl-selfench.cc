@@ -37,9 +37,9 @@ spret cast_deaths_door(int pow, bool fail)
     mprf(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
 
     you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
-                                       + (random2(pow) / 10));
+                                       + div_rand_round(random2(pow), 10));
 
-    const int hp = max(pow / 10, 1);
+    const int hp = max(div_rand_round(pow, 10), 1);
     you.attribute[ATTR_DEATHS_DOOR_HP] = hp;
     set_hp(hp);
 
@@ -78,16 +78,16 @@ void fiery_armour()
     if (you.duration[DUR_FIERY_ARMOUR])
         mpr("Your cloak of flame flares fiercely!");
     else if (you.duration[DUR_ICY_ARMOUR]
-        || you.form == transformation::ice_beast
-        || player_icemail_armour_class())
+             || you.form == transformation::ice_beast
+             || player_icemail_armour_class())
     {
         mprf("A sizzling cloak of flame settles atop your ic%s.",
              you.form == transformation::ice_beast ? "e" : "y armour");
         // TODO: add corresponding inverse message for casting ozo's etc
         // while DUR_FIERY_ARMOUR is active (maybe..?)
-    } else {
-        mpr("A protective cloak of flame settles atop you.");
     }
+    else
+        mpr("A protective cloak of flame settles atop you.");
 
     you.increase_duration(DUR_FIERY_ARMOUR, random_range(110, 140), 1500);
     you.redraw_armour_class = true;
@@ -143,7 +143,7 @@ int cast_selective_amnesia(const string &pre_msg)
     int slot;
 
     // Pick a spell to forget.
-    keyin = list_spells(false, false, false, "Forget which spell?");
+    keyin = list_spells(false, false, false, "forget");
     redraw_screen();
     update_screen();
 
@@ -192,12 +192,12 @@ spret cast_wereblood(int pow, bool fail)
 
 int silence_min_range(int pow)
 {
-    return shrinking_aoe_range((10 + pow/4) * BASELINE_DELAY);
+    return shrinking_aoe_range((20 + pow/5) * BASELINE_DELAY);
 }
 
 int silence_max_range(int pow)
 {
-    return shrinking_aoe_range((9 + pow/4 + pow/2) * BASELINE_DELAY);
+    return shrinking_aoe_range((19 + pow/5 + pow/2) * BASELINE_DELAY);
 }
 
 spret cast_silence(int pow, bool fail)
@@ -205,7 +205,8 @@ spret cast_silence(int pow, bool fail)
     fail_check();
     mpr("A profound silence engulfs you.");
 
-    you.increase_duration(DUR_SILENCE, 10 + pow/4 + random2avg(pow/2, 2), 100);
+    you.increase_duration(DUR_SILENCE, 20 + div_rand_round(pow,5)
+                            + random2avg(div_rand_round(pow,2), 2), 100);
     invalidate_agrid(true);
 
     if (you.beheld())
@@ -244,17 +245,5 @@ spret cast_transform(int pow, transformation which_trans, bool fail)
 
     fail_check();
     transform(pow, which_trans);
-    return spret::success;
-}
-
-spret cast_corpse_rot(int pow, bool fail)
-{
-    fail_check();
-    mpr("You radiate decay.");
-
-    you.increase_duration(DUR_CORPSE_ROT,
-                            10 + random2(1 + div_rand_round(pow * 3, 5)), 50);
-    you.props[CORPSE_ROT_POWER_KEY] = pow;
-
     return spret::success;
 }

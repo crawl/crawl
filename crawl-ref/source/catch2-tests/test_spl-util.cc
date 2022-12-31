@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include "AppHdr.h"
 #include "spl-util.h"
@@ -21,7 +21,7 @@ TEST_CASE("All spells are valid")
         // n.b. if a spell is invalid, it won't have a name, and so if it's very
         // far into the enum, your best bet to find out what it is is to print
         // all the names before it.
-        INFO("Testing validity for spell #" << s)
+        INFO("Testing validity for spell #" << s);
         REQUIRE(is_valid_spell(spell));
     }
 }

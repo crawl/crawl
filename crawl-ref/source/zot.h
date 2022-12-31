@@ -15,7 +15,6 @@ bool bezotted();
 bool bezotted_in(branch_type br);
 bool zot_immune();
 bool zot_clock_active();
-bool zot_clock_fatal();
 int bezotting_level();
 int bezotting_level_in(branch_type br);
 int turns_until_zot();

@@ -18,8 +18,7 @@ public:
 
     // Applies attack damage and other effects.
     bool attack();
-    int post_roll_to_hit_modifiers(int mhit, bool random,
-                                   bool /*aux*/ = false) override;
+    int post_roll_to_hit_modifiers(int mhit, bool random) override;
 
 private:
     /* Attack Phases */
@@ -31,11 +30,10 @@ private:
 
     /* Combat Calculations */
     bool using_weapon() const override;
-    int weapon_damage() override;
-    int calc_base_unarmed_damage() override;
+    int weapon_damage() const override;
+    int calc_base_unarmed_damage() const override;
     int calc_mon_to_hit_base() override;
     int apply_damage_modifiers(int damage) override;
-    bool apply_damage_brand(const char *what = nullptr) override;
     special_missile_type random_chaos_missile_brand();
     bool dart_check(special_missile_type type);
     int dart_duration_roll(special_missile_type type);

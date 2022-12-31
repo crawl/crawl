@@ -9,6 +9,7 @@
 
 #include <algorithm>
 
+#include "acquire.h"
 #include "art-enum.h" // unrand -> magic staff silliness
 #include "artefact.h"
 #include "colour.h"
@@ -118,6 +119,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     if (one_chance_in(30) && x_chance_in_y(item_level + 3, 100))
     {
         return random_choose(WPN_LAJATANG,
+                             WPN_HAND_CROSSBOW,
                              WPN_TRIPLE_CROSSBOW,
                              WPN_DEMON_WHIP,
                              WPN_DEMON_BLADE,
@@ -297,20 +299,20 @@ bool is_weapon_brand_ok(int type, int brand, bool /*strict*/)
     case SPWPN_VENOM:
     case SPWPN_PROTECTION:
     case SPWPN_SPEED:
-    case SPWPN_VORPAL:
+    case SPWPN_HEAVY:
     case SPWPN_CHAOS:
     case SPWPN_HOLY_WRATH:
     case SPWPN_ELECTROCUTION:
     case SPWPN_FLAMING:
     case SPWPN_FREEZING:
+    case SPWPN_DRAINING:
+    case SPWPN_ANTIMAGIC:
         break;
 
     // Melee-only brands.
-    case SPWPN_DRAINING:
     case SPWPN_VAMPIRISM:
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
-    case SPWPN_ANTIMAGIC:
     case SPWPN_SPECTRAL:
     case SPWPN_REAPING: // only exists on Sword of Zonguldrok
         if (is_range_weapon(item))
@@ -1351,6 +1353,10 @@ static void _generate_scroll_item(item_def& item, int force_type,
         {
             const scroll_type scr = (scroll_type) i;
 
+            // Only generate the scroll types chosen for this game.
+            if (item_excluded_from_set(OBJ_SCROLLS, scr))
+                continue;
+
             // No teleportation or noise in Sprint.
             if (crawl_state.game_is_sprint()
                 && (scr == SCR_TELEPORTATION || scr == SCR_NOISE))
@@ -1543,7 +1549,7 @@ static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
  * GOOD_RING_PLUS.
  *
  * @param subtype       The type of ring in question.
- * @return              4 or 6.
+ * @return              4, 5 or 6.
  *                      (minor numerical variations are boring.)
  */
 static short _good_jewellery_plus(int subtype)
@@ -1554,6 +1560,8 @@ static short _good_jewellery_plus(int subtype)
         case RING_DEXTERITY:
         case RING_INTELLIGENCE:
             return GOOD_STAT_RING_PLUS;
+        case RING_EVASION:
+            return 5;
         default:
             return GOOD_RING_PLUS;
     }
@@ -2128,5 +2136,11 @@ void makeitem_tests()
                               type,
                               level);
     }
+    mpr("Running acquirement tests.");
+    // note: without char customization this won't exercise all acquirement
+    // code. But this at least gives a baseline.
+    for (i = 0; i < 500; ++i)
+        make_acquirement_items();
+
 }
 #endif

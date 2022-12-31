@@ -13,6 +13,7 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "death-curse.h"
+#include "delay.h" // stop_delay
 #include "directn.h"
 #include "english.h"
 #include "env.h"
@@ -294,6 +295,9 @@ void blink_fineff::fire()
     coord_def target;
     for (fair_adjacent_iterator ai(defend->pos()); ai; ++ai)
     {
+        // No blinking into teleport closets.
+        if (testbits(env.pgrid(*ai), FPROP_NO_TELE_INTO))
+            continue;
         // XXX: allow fedhasites to be blinked into plants?
         if (actor_at(*ai) || !pal->is_habitable(*ai))
             continue;
@@ -551,14 +555,57 @@ void explosion_fineff::fire()
     }
 
     if (you.see_cell(beam.target))
-        mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
+    {
+        if (typ == EXPLOSION_FINEFF_CONCUSSION)
+            mprf("%s", boom_message.c_str());
+        else
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
+    }
 
-    if (inner_flame)
+    if (typ == EXPLOSION_FINEFF_INNER_FLAME)
         for (adjacent_iterator ai(beam.target, false); ai; ++ai)
             if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), flame_agent);
 
     beam.explode();
+
+    if (typ == EXPLOSION_FINEFF_CONCUSSION)
+    {
+        for (adjacent_iterator ai(beam.target); ai; ++ai)
+        {
+            actor *act = actor_at(*ai);
+            if (!act
+                || act->is_stationary()
+                || act->is_monster() && god_protects(act->as_monster()))
+            {
+                continue;
+            }
+            // TODO: dedup with knockback_actor in beam.cc
+
+            const coord_def newpos = (*ai - beam.target) + *ai;
+            if (newpos == *ai
+                || cell_is_solid(newpos)
+                || actor_at(newpos)
+                || !act->can_pass_through(newpos)
+                || !act->is_habitable(newpos))
+            {
+                continue;
+            }
+
+            act->move_to_pos(newpos);
+            if (act->is_player())
+                stop_delay(true);
+            if (you.can_see(*act))
+            {
+                mprf("%s %s knocked back by the blast.",
+                     act->name(DESC_THE).c_str(),
+                     act->conj_verb("are").c_str());
+            }
+
+            act->apply_location_effects(*ai, beam.killer(),
+                                        actor_to_death_source(beam.agent()));
+        }
+    }
 }
 
 void delayed_action_fineff::fire()

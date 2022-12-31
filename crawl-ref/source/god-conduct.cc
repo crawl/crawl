@@ -77,9 +77,9 @@ static const char *conducts[] =
     "Kill Fast", "Banishment", "Spell Memorise", "Spell Cast",
     "Spell Practise", "Cannibalism", "Deliberate Mutation",
     "Cause Glowing", "Use Unclean", "Use Chaos", "Desecrate Orcish Remains",
-    "Kill Slime", "Kill Plant", "Was Hasty", "Attack In Sanctuary",
+    "Kill Slime", "Was Hasty", "Attack In Sanctuary",
     "Kill Artificial", "Exploration", "Seen Monster",
-    "Sacrificed Love", "Channel", "Hurt Foe", "Use Wizardly Item",
+    "Sacrificed Love", "Hurt Foe", "Use Wizardly Item",
 };
 COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
 
@@ -383,10 +383,6 @@ static peeve_map divine_peeves[] =
     },
     // GOD_FEDHAS,
     {
-        { DID_KILL_PLANT, {
-            "you destroy plants", false,
-            1, 0
-        } },
         { DID_ATTACK_FRIEND, _on_attack_friend(nullptr) },
     },
     // GOD_CHEIBRIADOS,
@@ -409,12 +405,7 @@ static peeve_map divine_peeves[] =
     peeve_map(),
 #if TAG_MAJOR_VERSION == 34
     // GOD_PAKELLAS
-    {
-        { DID_CHANNEL, {
-            "you channel magical energy", true,
-            1, 1,
-        } },
-    },
+    peeve_map(),
 #endif
     // GOD_USKAYAW,
     peeve_map(),
@@ -1149,7 +1140,7 @@ void did_hurt_conduct(conduct_type thing_done,
 /**
  * Will this god definitely be upset if you cast this spell?
  *
- * This is as opposed to a likelihood, such as TSO's relationship with PArrow.
+ * This is as opposed to a likelihood.
  * TODO: deduplicate with spl-cast.cc:_spellcasting_god_conduct
  *
  * @param spell the spell to be cast

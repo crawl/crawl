@@ -31,4 +31,3 @@ spret cast_wereblood(int pow, bool fail);
 int liquefaction_max_range(int pow);
 spret cast_liquefaction(int pow, bool fail);
 spret cast_transform(int pow, transformation which_trans, bool fail);
-spret cast_corpse_rot(int pow, bool fail);

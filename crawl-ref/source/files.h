@@ -123,6 +123,16 @@ public:
     void go_to(const level_id &level);
 };
 
+bool level_excursions_allowed();
+
+class no_excursions
+{
+    bool prev;
+public:
+    no_excursions();
+    ~no_excursions();
+};
+
 void save_ghosts(const vector<ghost_demon> &ghosts, bool force = false,
                                                     bool use_store = true);
 bool load_ghosts(int max_ghosts, bool creating_level);

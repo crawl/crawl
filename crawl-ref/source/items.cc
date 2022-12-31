@@ -985,13 +985,7 @@ void pickup_menu(int item_link)
     auto items = const_item_list_on_square(item_link);
     ASSERT(items.size());
 
-    string prompt = "Pick up what? " + slot_description()
-#ifdef TOUCH_UI
-                  + " (<Enter> or tap header to pick up)"
-#else
-                  + " (_ for help)"
-#endif
-                  ;
+    string prompt = "Pick up what? " + slot_description() + " (_ for help)";
 
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";
@@ -2571,7 +2565,7 @@ bool drop_item(int item_dropped, int quant_drop)
     // like temporary brands. -- bwr
     if (item_dropped == you.equip[EQ_WEAPON] && quant_drop >= item.quantity)
     {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, true, true, false))
+        if (!wield_weapon(SLOT_BARE_HANDS, false))
             return false;
         // May have been destroyed by removal. Returning true because we took
         // time to swap away.
@@ -2765,6 +2759,7 @@ static void _multidrop(vector<SelItem> tmp_items)
     for (SelItem& si : tmp_items)
     {
         const int item_quant = si.item->quantity;
+        ASSERT(item_quant > 0);
 
         // EVIL HACK: Fix item quantity to match the quantity we will drop,
         // in order to prevent misleading messages when dropping
@@ -3303,7 +3298,7 @@ int get_max_subtype(object_class_type base_type)
 
 equipment_type item_equip_slot(const item_def& item)
 {
-    if (!in_inventory(item))
+    if (!item.defined() || !in_inventory(item))
         return EQ_NONE;
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
@@ -4712,7 +4707,8 @@ static void _identify_last_item(item_def &item)
 
 /**
  * Check to see if there's only one unidentified subtype left in the given
- * item's object type. If so, automatically identify it.
+ * item's object type. If so, automatically identify it. Also mark item sets
+ * known, if appropriate.
  *
  * @param item  The item in question.
  * @return      Whether the item was identified.
@@ -4721,6 +4717,9 @@ bool maybe_identify_base_type(item_def &item)
 {
     if (is_artefact(item))
         return false;
+
+    maybe_mark_set_known(item.base_type, item.sub_type);
+
     if (get_ident_type(item))
         return false;
 

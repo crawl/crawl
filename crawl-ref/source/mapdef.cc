@@ -1436,6 +1436,9 @@ map_corner_t map_lines::merge_subvault(const coord_def &mtl,
             (*overlay)(x, y).keyspec_idx = idx;
         }
 
+    dprf(DIAG_DNGN, "Merged subvault '%s' at %d,%d x %d,%d",
+        vmap.name.c_str(), vtl.x, vtl.y, vbr.x, vbr.y);
+
     return map_corner_t(vtl, vbr);
 }
 
@@ -4947,7 +4950,7 @@ int str_to_ego(object_class_type item_type, string ego_str)
         "protection",
         "draining",
         "speed",
-        "vorpal",
+        "heavy",
 #if TAG_MAJOR_VERSION == 34
         "flame",
         "frost",
@@ -5605,6 +5608,12 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
     {
         spec.base_type = OBJ_WANDS;
         spec.sub_type = item_for_set(ITEM_SET_BLAST_WANDS);
+        return;
+    }
+    if (c == "ally scroll")
+    {
+        spec.base_type = OBJ_SCROLLS;
+        spec.sub_type = item_for_set(ITEM_SET_ALLY_SCROLLS);
         return;
     }
 

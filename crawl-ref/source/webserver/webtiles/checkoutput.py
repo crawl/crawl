@@ -7,6 +7,8 @@ import tornado
 import tornado.ioloop
 from tornado.ioloop import IOLoop
 
+from webtiles import util
+
 BUFSIZ = 1024
 
 def _set_nonblocking(fd):

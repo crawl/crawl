@@ -15,7 +15,6 @@
 class input_history;
 class reader;
 class writer;
-class StashMenu;
 
 struct stash_search_result;
 class Stash

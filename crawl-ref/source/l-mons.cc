@@ -600,6 +600,7 @@ static const char *_monster_behaviour_names[] =
 #endif
     "retreat",
     "withdraw",
+    "batty",
 };
 
 static const char* _behaviour_name(beh_type beh)

@@ -59,6 +59,12 @@ caster's position.
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
 %%%%
+Arcjolt spell
+
+Blasts electricity through everything in range and connected to the caster,
+either by adjacency or via a chain of other creatures. The damage dealt
+partially bypasses armour.
+%%%%
 Aura of Brilliance spell
 
 Empowers the magic of nearby wizard allies of the caster, allowing them to
@@ -203,8 +209,8 @@ Fires a penetrating bolt of flames.
 %%%%
 Bolt of Magma spell
 
-Fires a penetrating bolt of molten rock. A portion of its damage bypasses
-fire resistance.
+Fires a penetrating bolt of molten rock. Half of its damage bypasses fire
+resistance.
 %%%%
 Borgnjor's Revivification spell
 
@@ -308,6 +314,16 @@ Chilling Breath spell
 
 Exhales a blast of frost which may knock the target back if it deals damage.
 %%%%
+Cigotuvi's Dreadful Rot spell
+
+Rots away a part of the caster's flesh to produce a cloud of miasma around them.
+The miasma slows and powerfully poisons any living creature that lingers within -
+including the caster, if they tarry after casting. Most living creatures are
+terrified of miasma and will not willingly enter it.
+
+The rot leaves the caster's health temporarily drained. The undead can still use
+this spell, but fleshless beings (e.g., those made of stone) cannot.
+%%%%
 Cleansing Flame spell
 
 <Cleansing Flame ability>
@@ -347,13 +363,6 @@ The magic which keeps ball lightnings cohesive has limited range, so they may
 dissipate harmlessly if allowed to drift too far away from their caster before
 exploding.
 %%%%
-Conjure Flame spell
-
-Conjures burning embers at the caster's feet, which will burst into flame soon
-after. Any creature (including the caster) that stands on the embers will smother
-them, so casters are well advised to step away immediately after casting.
-Re-casting the spell will also ignite the embers, burning the caster.
-%%%%
 Conjure Living Spells spell
 
 Creates several living, autonomous spells, which cast themselves at the first foe
@@ -364,12 +373,6 @@ Corona spell
 Causes a halo of glowing light to surround and effectively outline a creature.
 This glow offsets the dark, musty atmosphere of the dungeon, and makes the
 affected creature appreciably easier to hit.
-%%%%
-Corpse Rot spell
-
-Rapidly accelerates the decomposition of living monsters slain by the caster,
-and gathers the foul miasmic vapour around the caster. The clouds eat away at
-the life force of any creature they envelop.
 %%%%
 Corrosive Bolt spell
 
@@ -391,7 +394,8 @@ Creeping Frost spell
 
 Calls forth freezing cold from the walls and other similarly solid terrain. Any
 enemies of the caster standing next to that terrain will be frozen and will find
-their movements slowed.
+their movements slowed. Cold resistance will reduce damage, but not prevent
+the freezing effect.
 %%%%
 Crystal Bolt spell
 
@@ -463,9 +467,9 @@ together.
 Dispersal spell
 
 Teleports away any creatures within a short distance of the caster. Any
-creature that resists the effect will still be irresistibly blinked a shorter
-distance, and any monster it affects at all has a chance of being confused by
-the warping of space.
+creature with the Will to resist will still be irresistibly blinked a shorter
+distance, and any monster it affects at all has a separate Will-based chance
+of being confused by the warping of space.
 %%%%
 Doom Howl spell
 
@@ -596,8 +600,8 @@ Breathes a blast of fire at a targeted creature.
 Fire Storm spell
 
 Calls forth a mighty storm of roaring flame directly onto the target, dealing
-damage in a large area and leaving behind short-lived fire vortices. A portion
-of its damage bypasses fire resistance.
+damage in a large area and leaving behind short-lived fire vortices. Half of
+its damage bypasses fire resistance.
 %%%%
 Fire Summon spell
 
@@ -624,7 +628,8 @@ Conjures up a large cloud of roaring flames.
 Flash Freeze spell
 
 Freezes the air around a target, causing significant harm and slowing the
-target's movement. It has no effect on targets that are already frozen.
+target's movement. Half of its damage bypasses cold resistance. It has no
+effect on targets that are already frozen.
 %%%%
 Force Lance spell
 
@@ -654,14 +659,11 @@ Conjures up a large cloud of lethally cold vapour.
 %%%%
 Frozen Ramparts spell
 
-Encases surrounding walls with ice for a short time as long as the caster
-refrains from moving. Victims that wander near the icy walls will be damaged,
-and this may temporarily slow cold-blooded creatures. The damage dealt bypasses
-any armour the target may have. Each victim is only ever affected by one icy
-wall at a time.
+Encases surrounding walls with ice for a short time. Foes that wander near the
+icy walls will be damaged, and this may temporarily slow cold-blooded creatures.
+Each victim is only ever affected by one icy wall at a time.
 
-The caster and any allies can safely remain near icy walls. The ice will crack
-and fall away if the caster moves to a new position.
+The ice will crack and fall away if the caster moves to a new position.
 %%%%
 Fulminant Prism spell
 
@@ -696,8 +698,8 @@ Glaciate spell
 Conjures forth a mighty blast of ice. Creatures within its cone-shaped area of
 effect take damage, with higher damage being dealt to those close to the
 caster. Those hit by the blast are encased in ice, slowing their movement, and
-those killed by the blast may be frozen into solid blocks of ice. A significant
-portion of its damage bypasses cold resistance.
+those killed by the blast may be frozen into solid blocks of ice. Half of its
+damage bypasses cold resistance.
 %%%%
 Grasping Roots spell
 
@@ -711,9 +713,10 @@ Summons a major demon.
 %%%%
 Hailstorm spell
 
-Conjures a cannonade of hail. The eye of the storm is wide enough that monsters
-adjacent to the caster are unaffected. Due to the strong impact and cutting
-edges a significant portion of its damage bypasses cold resistance.
+Conjures a cannonade of hail, battering nearby creatures that fail to dodge.
+The eye of the storm is wide enough that monsters adjacent to the caster are
+unaffected. Due to the strong impact and cutting edges, half of its damage
+bypasses cold resistance.
 %%%%
 Haste Other spell
 
@@ -850,6 +853,13 @@ Iskenderun's Mystic Blast spell
 Detonates a crackling sphere of destructive energy. The explosion will hit all
 nearby monsters with physical force, knocking them back if damage is done.
 %%%%
+Kindle Blastsparks spell
+
+Brings forth a cloud of volatile blastsparks around the caster, which explode
+when something moves into them or when they're exposed to open flames. The
+explosion is concussive, knocking adjacent creatures away. Damage done rises
+with the spell's power.
+%%%%
 Leda's Liquefaction spell
 
 Liquefies the ground around the caster, making it difficult to move through.
@@ -922,10 +932,13 @@ cannot affect artificial beings, and the undead will decompose if affected.
 %%%%
 Manifold Assault spell
 
-Warps space into paradoxical configurations in order to strike many visible
-targets with one melee attack. The effect is too imprecise to allow stabbing
-unsuspecting foes. At high power, it can be used to strike more enemies at
-once.
+Warps space into paradoxical configurations to strike many visible foes with
+one melee attack. Power increases the number of foes attacked with one cast,
+but very high power is required to launch multiple unarmed attacks in this
+fashion, since great care must be taken when warping one's own limbs.
+
+The time taken for the attack is exactly the same as a normal melee attack.
+It's imprecise, so it can't do extra damage against unsuspecting foes.
 %%%%
 Mara Summon spell
 
@@ -1053,9 +1066,9 @@ higher the encumbrance rating of the caster's armour.
 %%%%
 Ozocubu's Refrigeration spell
 
-Drains heat from the caster and their surroundings, causing harm to all
-creatures not resistant to cold and bypassing any armour the targets may have.
-It prevents the caster from using potions for a brief duration.
+Turns the air bitterly cold, freezing all other creatures in line of sight.
+This is less effective against creatures packed tightly together - those
+adjacent to others will be partly insulated from the cold, taking less damage.
 %%%%
 Pain spell
 
@@ -1124,7 +1137,7 @@ the target before dispersing.
 Polar Vortex spell
 
 Turns the air around the caster into a freezing vortex, doing tremendous damage
-to everyone caught in it that can only partially be mitigated by resistance to
+to everyone caught in it that can only be half-mitigated by resistance to
 cold. Those affected will also be swept up into the air and tossed around.
 Only the eye of the storm is a safe place, and it follows the caster. The
 vortex is unable to follow the caster through long-distance translocations.
@@ -1182,8 +1195,8 @@ foe, and the beetle will always unroll after an attempted roll attack.
 Sandblast spell
 
 Blasts a target with high-velocity rock shards. Gathering the rock from ambient
-grit is slow, making this spell take twice as long to cast as most. Its damage
-is strongly reduced by armour.
+grit is slow, making this spell take half again as long to cast as most. Its
+damage is strongly reduced by armour.
 %%%%
 Sap Magic spell
 
@@ -1335,7 +1348,7 @@ Spits acid at a targeted creature.
 %%%%
 Spit Lava spell
 
-Spits lava at a targeted creature.
+Spits lava at a targeted creature. Half of its damage bypasses fire resistance.
 %%%%
 Spit Poison spell
 
@@ -1385,11 +1398,15 @@ Sticky Flame Range spell
 
 Launches a glob of sticky flame, covering a targeted creature with liquid fire
 for a short time.
+
+If the target is insubstantial, the liquid fire will fail to stick.
 %%%%
 Sticky Flame spell
 
 Conjures a glob of sticky flame, covering an adjacent creature with liquid fire
 for a short time.
+
+If the target is insubstantial, the liquid fire will fail to stick.
 %%%%
 Still Winds spell
 
@@ -1632,8 +1649,8 @@ Throws a small puff of frost.
 %%%%
 Throw Icicle spell
 
-Fires a shard of ice. Due to its strong impact and cutting edges, a
-significant portion of its damage bypasses cold resistance.
+Fires a shard of ice. Due to its strong impact and cutting edges, half of its
+damage bypasses cold resistance.
 %%%%
 Throw Klown Pie spell
 
@@ -1656,6 +1673,12 @@ are not permanent, and will expire after a period of time.
 Trog's Hand spell
 
 <Trog's Hand ability>
+%%%%
+Kiss of Death spell
+
+Conjures forth a fragment of the caster's essence and twists it into a fragment
+of death, painfully draining the victim. The caster, too, will find their health
+reduced, until they gain enough experience to recover.
 %%%%
 Tukima's Dance spell
 
@@ -1688,6 +1711,22 @@ Fires a penetrating bolt of poison.
 Virulence spell
 
 Makes a targeted creature more vulnerable to poison.
+%%%%
+Momentum Strike spell
+
+Blasts a target with energy borrowed from the caster's own future movement. For
+a short time afterward, the caster will be left immotile - unable to walk, fly
+around, slither, etc. Only motile creatures can cast this spell.
+%%%%
+Vhi's Electric Charge spell
+
+Sends the caster hurtling at a chosen nearby enemy, launching a high-accuracy
+melee attack on arrival. Additional electric damage will be dealt based on the
+length of the charge, the power of the spell, and the physical damage of the
+attack. The caster is wrapped in an envelope of twisted space, allowing them
+to safely pass through creatures, traps, and harmful terrain, and to displace
+creatures at their destination. The time taken by the spell is the greater of
+the time needed to move one step or that needed to launch one melee attack.
 %%%%
 Volley of Thorns spell
 

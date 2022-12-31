@@ -728,7 +728,7 @@ static void _DRAGONSKIN_unequip(item_def */*item*/, bool *show_msgs)
 ///////////////////////////////////////////////////
 static void _BLACK_KNIGHT_HORSE_world_reacts(item_def */*item*/)
 {
-    if (one_chance_in(10))
+    if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
         did_god_conduct(DID_EVIL, 1);
 }
 
@@ -1566,7 +1566,7 @@ static void _RCLOUDS_world_reacts(item_def */*item*/)
         monster* m = monster_at(*ri);
         if (m && !m->wont_attack() && mons_is_threatening(*m)
             && !cell_is_solid(*ri) && !cloud_at(*ri)
-            && one_chance_in(7))
+            && x_chance_in_y(you.time_taken, 7 * BASELINE_DELAY))
         {
             mprf("Storm clouds gather above %s.", m->name(DESC_THE).c_str());
             place_cloud(CLOUD_STORM, *ri, random_range(4, 8), &you);

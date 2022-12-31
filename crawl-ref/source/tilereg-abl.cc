@@ -63,10 +63,6 @@ int AbilityRegion::handle_mouse(wm_mouse_event &event)
     const ability_type ability = (ability_type) m_items[item_idx].idx;
     if (event.button == wm_mouse_event::LEFT)
     {
-        // close tab again if using small layout
-        if (tiles.is_using_small_layout())
-            tiles.deactivate_tab();
-
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         // TODO get_talent returns ABIL_NON_ABILITY if you are confused,

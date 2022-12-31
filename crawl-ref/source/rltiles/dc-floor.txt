@@ -333,6 +333,11 @@ floor_vines4
 floor_vines5
 floor_vines6
 
+bmaus_floor0 BORG_FLOOR
+bmaus_floor1
+bmaus_floor2
+bmaus_floor3
+
 rough_red0 FLOOR_ROUGH FLOOR_ROUGH_RED
 rough_red1
 rough_red2
@@ -1008,6 +1013,17 @@ woodground06
 woodground07
 woodground08
 woodground09
+
+studio0 FLOOR_STUDIO
+studio1
+studio2
+studio3
+studio4
+studio5
+studio6
+studio7
+studio8
+studio9
 
 cage0 FLOOR_CAGE
 cage1

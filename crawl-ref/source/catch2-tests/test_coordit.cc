@@ -1,7 +1,7 @@
 #include <random>
 #include <set>
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include "AppHdr.h"
 
@@ -22,7 +22,8 @@ TEST_CASE("rectangle_iterator", "[single-file]")
         for (rectangle_iterator ri(coord_def(x,y), coord_def(x+w,y+h)); ri; ++ri)
             points.insert(*ri);
 
-        REQUIRE(points.size() == (w+1)*(h+1));  // Inclusive.
+        REQUIRE((w >= 0 && h >= 0));
+        REQUIRE(points.size() == static_cast<size_t>((w+1)*(h+1)));  // Inclusive.
     }
 
     SECTION("Generates w*h unique points from centre and halfside")
@@ -37,7 +38,8 @@ TEST_CASE("rectangle_iterator", "[single-file]")
         for (rectangle_iterator ri(coord_def(x,y), halfside); ri; ++ri)
             points.insert(*ri);
 
-        const auto side_length = halfside*2 + 1;
+        REQUIRE(halfside >= 0);
+        const size_t side_length = static_cast<size_t>(halfside)*2 + 1;
         REQUIRE(points.size() == side_length*side_length);  // Inclusive.
     }
 }
@@ -57,7 +59,8 @@ TEST_CASE("random_rectangle_iterator", "[single-file]")
         for (random_rectangle_iterator ri(coord_def(x,y), coord_def(x+w,y+h)); ri; ++ri)
             points.insert(*ri);
 
-        REQUIRE(points.size() == (w+1)*(h+1));  // Inclusive.
+        REQUIRE((w >= 0 && h >= 0));
+        REQUIRE(points.size() == static_cast<size_t>((w+1)*(h+1)));  // Inclusive.
     }
 }
 

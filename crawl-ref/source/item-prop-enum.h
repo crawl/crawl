@@ -144,7 +144,7 @@ enum brand_type // item_def.special
     SPWPN_PROTECTION,
     SPWPN_DRAINING,
     SPWPN_SPEED,
-    SPWPN_VORPAL,
+    SPWPN_HEAVY,
 #if TAG_MAJOR_VERSION == 34
     SPWPN_FLAME,   // ranged, only
     SPWPN_FROST,   // ranged, only
@@ -444,6 +444,7 @@ enum scroll_type
     SCR_CURSE_JEWELLERY,
 #endif
     SCR_POISON,
+    SCR_BUTTERFLIES,
     NUM_SCROLLS
 };
 
@@ -706,8 +707,8 @@ enum vorpal_damage_type
     DAM_WHIP            = 0x0008,       // whip slashing
     DAM_MAX_TYPE        = DAM_WHIP,
 
-    // These are used for vorpal weapon descriptions. You shouldn't set
-    // more than one of these.
+    // These were used for vorpal weapon descriptions, many years ago.
+    // You shouldn't set more than one of these.
     DVORP_NONE          = 0x0000,       // used for non-melee weapons
     DVORP_CRUSHING      = 0x1000,
     DVORP_SLICING       = 0x2000,
@@ -806,5 +807,6 @@ enum item_set_type
     ITEM_SET_HEX_WANDS,
     ITEM_SET_BEAM_WANDS,
     ITEM_SET_BLAST_WANDS,
+    ITEM_SET_ALLY_SCROLLS,
     NUM_ITEM_SET_TYPES
 };

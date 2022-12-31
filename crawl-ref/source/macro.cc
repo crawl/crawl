@@ -62,6 +62,7 @@ typedef map<keyseq,keyseq> macromap;
 static macromap Keymaps[KMC_CONTEXT_COUNT];
 static macromap Macros;
 
+// does this need to have all maps for real?
 static macromap *all_maps[] =
 {
     &Keymaps[KMC_DEFAULT],
@@ -256,21 +257,128 @@ static void buf2keyseq(const char *buff, keyseq &k)
     }
 }
 
-static int read_key_code(string s)
+static int _name_to_keycode(string s)
+{
+    // brute-force partial inversion of keycode_to_name. This could probably
+    // be done much more elegantly via a map or similar..
+    // Does not handle modifier keys besides ctrl (TODO)
+    const string lower = lowercase(s);
+    if (s[0] == '^' && s.size() == 2)
+    {
+        // ^A = 1, etc.
+        return 1 + toupper_safe(s[1]) - 'A';
+    }
+    if (starts_with(lower, "np") && s.size() == 3)
+    {
+        switch (s[2])
+        {
+        case '0': return CK_NUMPAD_0;
+        case '1': return CK_NUMPAD_1;
+        case '2': return CK_NUMPAD_2;
+        case '3': return CK_NUMPAD_3;
+        case '4': return CK_NUMPAD_4;
+        case '5': return CK_NUMPAD_5;
+        case '6': return CK_NUMPAD_6;
+        case '7': return CK_NUMPAD_7;
+        case '8': return CK_NUMPAD_8;
+        case '9': return CK_NUMPAD_9;
+        case '*': return CK_NUMPAD_MULTIPLY;
+        case '+': return CK_NUMPAD_ADD;
+        case '-': return CK_NUMPAD_SUBTRACT;
+        case '.': return CK_NUMPAD_DECIMAL;
+        case '/': return CK_NUMPAD_DIVIDE;
+        case '=': return CK_NUMPAD_EQUALS;
+        default:
+            return CK_NO_KEY;
+        }
+    }
+    else if (lower == "npenter")
+        return CK_NUMPAD_ENTER;
+    else if (starts_with(lowercase(s), "f") && s.size() == 2)
+    {
+        switch (s[1])
+        {
+        case '0': return CK_F0;
+        case '1': return CK_F1;
+        case '2': return CK_F2;
+        case '3': return CK_F3;
+        case '4': return CK_F4;
+        case '5': return CK_F5;
+        case '6': return CK_F6;
+        case '7': return CK_F7;
+        case '8': return CK_F8;
+        case '9': return CK_F9;
+        default:
+            return CK_NO_KEY;
+        }
+    }
+    else if (starts_with(lower, "f1") && s.size() == 3)
+    {
+        switch (s[1])
+        {
+        case '0': return CK_F10;
+        case '1': return CK_F11;
+        case '2': return CK_F12;
+        case '3': return CK_F13;
+        case '4': return CK_F14;
+        case '5': return CK_F15;
+        case '6': return -280;
+        case '7': return -281;
+        case '8': return -282;
+        case '9': return -283;
+        default:
+            return CK_NO_KEY;
+        }
+    }
+    else if (lower == "backspace")
+        return CK_BKSP;
+    else if (lower == "tab")
+        return CK_TAB;
+    else if (lower == "esc")
+        return CK_ESCAPE;
+    else if (lower == "enter")
+        return CK_ENTER;
+    else if (lower == "del")
+        return CK_DELETE;
+    else if (lower == "up")
+        return CK_UP;
+    else if (lower == "down")
+        return CK_DOWN;
+    else if (lower == "left")
+        return CK_LEFT;
+    else if (lower == "right")
+        return CK_RIGHT;
+    else if (lower == "ins")
+        return CK_INSERT;
+    else if (lower == "home")
+        return CK_HOME;
+    else if (lower == "end")
+        return CK_END;
+    else if (lower == "clear")
+        return CK_CLEAR;
+    else if (lower == "pgup")
+        return CK_PGUP;
+    else if (lower == "pgdn")
+        return CK_PGDN;
+
+    return CK_NO_KEY;
+}
+
+int read_key_code(string s)
 {
     if (s.empty())
         return 0;
+
+    // try human-readable variants
+    int key = _name_to_keycode(s);
+    if (key != CK_NO_KEY)
+        return key;
 
     int base = 10;
     if (s[0] == 'x')
     {
         s = s.substr(1);
         base = 16;
-    }
-    else if (s[0] == '^')
-    {
-        // ^A = 1, etc.
-        return 1 + toupper_safe(s[1]) - 'A';
     }
 
     char *tail;
@@ -874,12 +982,15 @@ void flush_input_buffer(int reason)
 
 static string _keyseq_desc(const keyseq &key)
 {
-    string r = keycode_is_printable(key[0])
-                ? keycode_to_name(key[0]).c_str()
-                : make_stringf("%s (%s)",
-                    vtostr(key).c_str(), keycode_to_name(key[0], false).c_str());
-    r = replace_all(r, "<", "<<");
-    return r;
+    string r = keycode_to_name(key[0], false);
+    if (!keycode_is_printable(key[0]))
+    {
+        if (r.empty())
+            r = vtostr(key);
+        else
+            r = make_stringf("%s (%s)", vtostr(key).c_str(), r.c_str());
+    }
+    return replace_all(r, "<", "<<");
 }
 
 static string _keyseq_action_desc(keyseq &action)
@@ -918,10 +1029,11 @@ private:
 public:
     MacroEditMenu()
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP),
+                | MF_ARROWS_SELECT | MF_WRAP | MF_SPECIAL_MINUS),
           selected_new_key(false), keymc(KMC_NONE), edited_keymaps(false)
     {
         set_tag("macros");
+        remap_numpad = false;
 #ifdef USE_TILE_LOCAL
         set_min_col_width(MIN_COLS);
 #endif
@@ -943,7 +1055,7 @@ public:
                 }));
         if (get_map().size())
         {
-            add_entry(new MenuEntry("Clear all " + mode_name() + "s", '-',
+            MenuEntry *clear_entry = new MenuEntry("Clear all " + mode_name() + "s", '-',
                 [this](const MenuEntry &)
                     {
                         status_msg = "";
@@ -951,7 +1063,12 @@ public:
                         if (item_count() > 0)
                             clear_all();
                         return true;
-                    }));
+                    });
+            // manual numpad handling for this class
+            clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT);
+            clear_entry->add_hotkey(CK_NUMPAD_SUBTRACT2);
+
+            add_entry(clear_entry);
             add_entry(new MenuEntry("Current " + mode_name() + "s", MEL_SUBTITLE));
             for (auto &mapping : get_map())
             {
@@ -978,8 +1095,10 @@ public:
             cycle_hover();
     }
 
-    void cycle_mode()
+    bool cycle_mode(bool forward) override
     {
+        if (!forward) // XX implement reverse
+            return false;
         auto it = modes.begin();
         for (; it != modes.end(); it++)
             if (it->first == keymc)
@@ -997,6 +1116,7 @@ public:
         status_msg = "";
         update_title();
         fill_entries();
+        return true;
     }
 
     KeymapContext get_mode() const
@@ -1020,17 +1140,14 @@ public:
         // there's much less use-case for editing keymaps in-game, so hide the
         // details by default
         string mode_hint = edited_keymaps
-            ? "cycle mode: " + join_strings(result.begin(), result.end(), "|")
-            : "edit keymaps";
+            ? " cycle mode: " + join_strings(result.begin(), result.end(), "|")
+            : " edit keymaps";
 
         set_more(formatted_string::parse_string(
             status_msg + "\n"
             "Arrows/[<w>enter</w>] to select, [<w>bksp</w>] to clear selected, [<w>?</w>] for help\n"
-            "[<w>!</w>"
-#ifdef USE_TILE_LOCAL
-            "/<w>Right-click</w>"
-#endif
-            "] " + mode_hint));
+            + menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE)
+            + mode_hint));
 
     }
 
@@ -1115,13 +1232,14 @@ public:
     {
     public:
         MappingEditMenu(keyseq _key, keyseq _action, MacroEditMenu &_parent)
-            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT,
-                    "", KMC_MENU),
+            : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING | MF_ARROWS_SELECT
+                | MF_SHOW_EMPTY | MF_SPECIAL_MINUS, ""),
               key(_key), action(_action), abort(false),
               parent(_parent),
               doing_key_input(false), doing_raw_action_input(false)
         {
             set_tag("macro_mapping");
+            remap_numpad = false;
 #ifdef USE_TILE_LOCAL
             set_min_col_width(62); // based on `r` more width
 #endif
@@ -1232,6 +1350,14 @@ public:
             set_title(new MenuEntry(prompt, MEL_TITLE));
             set_more("Raw input: [<w>esc</w>] to abort, [<w>enter</w>] to accept.");
             update_menu(true);
+#ifdef USE_TILE_WEB
+            // put the javascript menu mode in raw input mode
+            tiles.json_open_object();
+            tiles.json_write_string("msg", "title_prompt");
+            tiles.json_write_bool("raw", true);
+            tiles.json_close_object();
+            tiles.finish_message();
+#endif
             doing_raw_action_input = true;
         }
 
@@ -1273,6 +1399,14 @@ public:
 
         bool process_key(int keyin)
         {
+            // rebinding mouse click generally won't work
+            // TODO: CK_MOUSE_Bn keys don't generally seem implemented
+            if (is_synthetic_key(keyin)
+                || keyin == CK_MOUSE_B2
+                || keyin == 0 || keyin == CK_NO_KEY)
+            {
+                return true;
+            }
             // stateful key processing:
             // * in raw action input mode, fill keys into raw_tmp
             // * in key input mode, fill exactly one key into `key`, either
@@ -1283,12 +1417,21 @@ public:
             // and so are handled in the superclass
             if (doing_raw_action_input)
             {
+                if (keyin == CK_MOUSE_CLICK || keyin == CK_MOUSE_B1 || keyin == CK_MOUSE_B2)
+                    return true;
                 if (keyin == ESCAPE || keyin == CONTROL('G'))
                 {
                     doing_raw_action_input = false;
                     raw_tmp.clear();
                     set_more("");
                     reset_key_prompt();
+#ifdef USE_TILE_WEB
+                    tiles.json_open_object();
+                    tiles.json_write_string("msg", "title_prompt");
+                    tiles.json_write_bool("close", true);
+                    tiles.json_close_object();
+                    tiles.finish_message();
+#endif
                     return true;
                 }
                 else if (keyin == '\r' || keyin == '\n')
@@ -1306,8 +1449,10 @@ public:
             }
             else if (doing_key_input)
             {
+                if (keyin == CK_MOUSE_CLICK || keyin == CK_MOUSE_B1 || keyin == CK_MOUSE_B2)
+                    return true;
                 doing_key_input = false;
-                if (keyin == ESCAPE || keyin == CONTROL('G') || keyin == CK_MOUSE_B2)
+                if (keyin == ESCAPE || keyin == CONTROL('G'))
                 {
                     abort = true;
                     return false;
@@ -1425,49 +1570,88 @@ public:
         edit_mapping(key);
     }
 
-    bool process_key(int keyin) override
+    bool process_command(command_type cmd) override
     {
-        switch (keyin)
+        switch (cmd)
         {
-        case CK_REDRAW:
-        case ' ': case CK_PGDN: case '>': case '+':
-        case CK_MOUSE_CLICK:
-        case CK_MOUSE_B1:
-        case CK_PGUP: case '<':
-        case CK_UP:
-        case CK_DOWN:
-        case CK_HOME:
-        case CK_END:
-        case CK_ENTER:
-            if (item_count() == 0)
-                return true; // override weird superclass behavior
-            //fallthrough
-        case CK_MOUSE_B2:
-        CASE_ESCAPE
-        case '-':
-        case '~':
-            return Menu::process_key(keyin);
-        case '?':
+        case CMD_MENU_HELP:
             show_specific_helps({ "macro-menu"
 #ifndef USE_TILE_LOCAL
                     , "console-keycodes"
 #endif
                     });
             return true;
-        case CK_MOUSE_CMD:
-        case '!':
-            cycle_mode();
-            return true;
-        case CK_DELETE:
-        case CK_BKSP:
-            clear_hovered();
-            return true;
-        default: // any other key -- no menu item yet
-            lastch = keyin;
-            add_mapping_from_last();
-            return true;
+        default:
+            return Menu::process_command(cmd);
         }
     }
+
+    command_type get_command(int keyin) override
+    {
+        if (keyin == '?')
+            return CMD_MENU_HELP;
+        return Menu::get_command(keyin);
+    }
+
+    bool process_key(int keyin) override
+    {
+        // this menu overrides most superclass keyhandling. First pass some
+        // special cases to the superclass unconditionally:
+        switch (keyin)
+        {
+        case 0:
+        case CK_REDRAW:
+        case CK_MOUSE_CLICK:
+        case CK_MOUSE_B1:
+        case CK_ENTER:
+        CASE_ESCAPE
+        case '-': // menu item, always present
+        // not generally remapping numpad, so have to manually handle these
+        case CK_NUMPAD_SUBTRACT:
+        case CK_NUMPAD_SUBTRACT2:
+        case '~': // menu item, always present
+            // then check for a few other special cases the superclass needs
+            // to handle
+            return Menu::process_key(keyin);
+        case CK_NUMPAD_ENTER:
+            // need to handle manually for this menu
+            return Menu::process_key(CK_ENTER);
+        case CK_DELETE:
+        case CK_BKSP:
+            // non-menu-item hotkey specific to this menu
+            clear_hovered();
+            return true;
+        default:
+            break;
+        }
+
+        // then check if the key would do an important menu control command,
+        // pass if necessary
+        command_type cmd = get_command(keyin);
+        switch (cmd)
+        {
+            case CMD_MENU_PAGE_UP:
+            case CMD_MENU_PAGE_DOWN:
+            case CMD_MENU_UP:
+            case CMD_MENU_DOWN:
+            case CMD_MENU_SCROLL_TO_TOP:
+            case CMD_MENU_SCROLL_TO_END:
+            case CMD_MENU_EXIT:
+            case CMD_MENU_HELP:
+            case CMD_MENU_CYCLE_MODE: // somewhat weird defaults in this context?
+            case CMD_MENU_CYCLE_MODE_REVERSE:
+                return process_command(cmd);
+            default:
+                break;
+        }
+
+        // finally, handle any other key. Handles opening a submenu both if
+        // a mapping exists, and if it doesn't.
+        lastch = keyin;
+        add_mapping_from_last();
+        return true;
+    }
+
     bool selected_new_key;
     string status_msg;
 protected:
@@ -1666,48 +1850,67 @@ bool keycode_is_printable(int keycode)
 
 string keycode_to_name(int keycode, bool shorten)
 {
-    // this is printable, but it's very confusing to try to use ' ' to print it
-    // in circumstances where a name is called for
-    if (keycode == ' ')
-        return "Space";
-    // TODO: handling of alt keys in SDL is generally a mess, including here
-    // (they are basically just ignored)
-    if (keycode_is_printable(keycode))
-        return string(1, keycode);
-
-    // shift/ctrl-modified keys aside from shift-tab don't seem to work on mac
-    // console, and are somewhat spotty on webtiles.
-    const bool shift = (keycode >= CK_SHIFT_UP && keycode <= CK_SHIFT_PGDN);
-    const bool ctrl  = (keycode >= CK_CTRL_UP && keycode <= CK_CTRL_PGDN);
-
     // nb both of these use string literal concatenation
     #define CTRL_DESC(x) (shorten ? ("^" x) : ("Ctrl-" x))
     #define NP_DESC(x) (shorten ? ("NP" x) : ("Numpad " x))
 
     string prefix = "";
 
+    // ugh
+    if (keycode - CK_CMD_BASE < 256)
+    {
+        // could still also have alt on top of this
+        prefix = (shorten ? "Cmd-" : "Command-");
+        keycode -= CK_CMD_BASE;
+    }
+
+    if (keycode - CK_ALT_BASE >= CK_MIN_INTERNAL && keycode - CK_ALT_BASE <= 256)
+    {
+        prefix += "Alt-";
+        keycode -= CK_ALT_BASE;
+    }
+
+    // this is printable, but it's very confusing to try to use ' ' to print it
+    // in circumstances where a name is called for
+    if (keycode == ' ')
+        return prefix + "Space";
+
+    if (keycode_is_printable(keycode))
+        return prefix + string(1, keycode);
+
+    // shift/ctrl-modified keys aside from shift-tab don't seem to work on mac
+    // console, and are somewhat spotty on webtiles.
+    const bool shift = (keycode >= CK_SHIFT_UP && keycode <= CK_SHIFT_PGDN);
+    const bool ctrl  = (keycode >= CK_CTRL_UP && keycode <= CK_CTRL_PGDN);
+    const bool ctrlshift = (keycode >= CK_CTRL_SHIFT_UP && keycode <= CK_CTRL_SHIFT_PGDN);
+
     if (shift)
     {
         keycode -= (CK_SHIFT_UP - CK_UP);
-        prefix = "Shift-";
+        prefix += "Shift-";
     }
     else if (ctrl)
     {
         keycode -= (CK_CTRL_UP - CK_UP);
-        prefix = CTRL_DESC("");
+        prefix += CTRL_DESC("");
+    }
+    else if (ctrlshift)
+    {
+        keycode -= (CK_CTRL_SHIFT_UP - CK_UP);
+        prefix += CTRL_DESC("Shift-");
     }
 
     // placeholder
     switch (keycode)
     {
     case  0: return "NULL";
-    case  8: return "Backspace"; // CK_BKSP
-    case  9: return "Tab";
-    CASE_ESCAPE return "Esc";
+    case  8: return prefix + "Backspace"; // CK_BKSP
+    case  9: return prefix + "Tab";
+    CASE_ESCAPE return prefix + "Esc";
     case '\n':
     case '\r': // CK_ENTER
-        return "Enter";
-    case CK_DELETE: return "Del";
+        return prefix + "Enter";
+    case CK_DELETE: return prefix + "Del";
     case CK_UP:     return prefix+"Up";
     case CK_DOWN:   return prefix+"Down";
     case CK_LEFT:   return prefix+"Left";
@@ -1718,59 +1921,94 @@ string keycode_to_name(int keycode, bool shorten)
     case CK_CLEAR:  return prefix+"Clear";
     case CK_PGUP:   return prefix+"PgUp";
     case CK_PGDN:   return prefix+"PgDn";
-    case CK_SHIFT_TAB:    return "Shift-Tab";
-    case CK_CTRL_TAB:     return CTRL_DESC("Tab");
-    case CK_F0:     return "F0";
-    case CK_F1:     return "F1";
-    case CK_F2:     return "F2";
-    case CK_F3:     return "F3";
-    case CK_F4:     return "F4";
-    case CK_F5:     return "F5";
-    case CK_F6:     return "F6";
-    case CK_F7:     return "F7";
-    case CK_F8:     return "F8";
-    case CK_F9:     return "F9";
-    case CK_F10:    return "F10";
-    case CK_F11:    return "F11";
-    case CK_F12:    return "F12";
-#ifndef USE_TILE_LOCAL
-    case CK_NUMPAD_0: return NP_DESC("0");
-    case CK_NUMPAD_1: return NP_DESC("1");
-    case CK_NUMPAD_2: return NP_DESC("2");
-    case CK_NUMPAD_3: return NP_DESC("3");
-    case CK_NUMPAD_4: return NP_DESC("4");
-    case CK_NUMPAD_5: return NP_DESC("5");
-    case CK_NUMPAD_6: return NP_DESC("6");
-    case CK_NUMPAD_7: return NP_DESC("7");
-    case CK_NUMPAD_8: return NP_DESC("8");
-    case CK_NUMPAD_9: return NP_DESC("9");
+    // ugly manual handling for these
+    case CK_SHIFT_TAB:         return prefix + "Shift-Tab";
+    case CK_CTRL_TAB:          return prefix + CTRL_DESC("Tab");
+    case CK_CTRL_SHIFT_TAB:    return prefix + CTRL_DESC("Shift-Tab");
+    case CK_SHIFT_ENTER:       return prefix + "Shift-Enter";
+    case CK_CTRL_ENTER:        return prefix + CTRL_DESC("Enter");
+    case CK_CTRL_SHIFT_ENTER:  return prefix + CTRL_DESC("Shift-Enter");
+    case CK_SHIFT_BKSP:        return prefix + "Shift-Backspace";
+    case CK_CTRL_BKSP:         return prefix + CTRL_DESC("Backspace");
+    case CK_CTRL_SHIFT_BKSP:   return prefix + CTRL_DESC("Shift-Backspace");
+    case CK_SHIFT_ESCAPE:      return prefix + "Shift-Esc";
+    case CK_CTRL_ESCAPE:       return prefix + CTRL_DESC("Esc");
+    case CK_CTRL_SHIFT_ESCAPE: return prefix + CTRL_DESC("Shift-Esc");
+    case CK_SHIFT_DELETE:      return prefix + "Shift-Del";
+    case CK_CTRL_DELETE:       return prefix + CTRL_DESC("Del");
+    case CK_CTRL_SHIFT_DELETE: return prefix + CTRL_DESC("Shift-Del");
+    case CK_SHIFT_SPACE:       return prefix + "Shift-Space";
+    case CK_CTRL_SPACE:        return prefix + CTRL_DESC("Space");
+    case CK_CTRL_SHIFT_SPACE:  return prefix + CTRL_DESC("Shift-Space");
+    case CK_F0:     return prefix + "F0";
+    case CK_F1:     return prefix + "F1";
+    case CK_F2:     return prefix + "F2";
+    case CK_F3:     return prefix + "F3";
+    case CK_F4:     return prefix + "F4";
+    case CK_F5:     return prefix + "F5";
+    case CK_F6:     return prefix + "F6";
+    case CK_F7:     return prefix + "F7";
+    case CK_F8:     return prefix + "F8";
+    case CK_F9:     return prefix + "F9";
+    case CK_F10:    return prefix + "F10";
+    case CK_F11:    return prefix + "F11";
+    case CK_F12:    return prefix + "F12";
+    case CK_F13:    return prefix + "F13";
+    case CK_F14:    return prefix + "F14";
+    case CK_F15:    return prefix + "F15";
+    // no keycode defined, but these are available on some terminals via
+    // shifted fn keys, e.g. on xterm and the like, shift-F1 is F13 etc.
+    // this won't necessarily match the actual key label on most keyboards/
+    // terms, but it will give some moderately useful and human readable label.
+    // TODO: define keycodes? see comments in cio.h.
+    case -280:      return prefix + "F16";
+    case -281:      return prefix + "F17";
+    case -282:      return prefix + "F18";
+    case -283:      return prefix + "F19";
+    case -284:      return prefix + "F20";
+    case -285:      return prefix + "F21";
+    case -286:      return prefix + "F22";
+    case -287:      return prefix + "F23";
+    case -288:      return prefix + "F24";
+    case CK_NUMPAD_0: return prefix + NP_DESC("0");
+    case CK_NUMPAD_1: return prefix + NP_DESC("1");
+    case CK_NUMPAD_2: return prefix + NP_DESC("2");
+    case CK_NUMPAD_3: return prefix + NP_DESC("3");
+    case CK_NUMPAD_4: return prefix + NP_DESC("4");
+    case CK_NUMPAD_5: return prefix + NP_DESC("5");
+    case CK_NUMPAD_6: return prefix + NP_DESC("6");
+    case CK_NUMPAD_7: return prefix + NP_DESC("7");
+    case CK_NUMPAD_8: return prefix + NP_DESC("8");
+    case CK_NUMPAD_9: return prefix + NP_DESC("9");
     // many of these may not actually work on any given local console:
     // TODO: confirm the names. Some stuff in libunix.cc appears to have
     // incorrect comments.
-    case CK_NUMPAD_MULTIPLY: return NP_DESC("*");
-    case CK_NUMPAD_ADD:      return NP_DESC("+");
-    case CK_NUMPAD_ADD2:     return NP_DESC("+"); // are there keyboards with both??
-    case CK_NUMPAD_SUBTRACT: return NP_DESC("-");
-    case CK_NUMPAD_SUBTRACT2: return NP_DESC("-");
-    case CK_NUMPAD_DECIMAL:  return NP_DESC(".");
-    case CK_NUMPAD_DIVIDE:   return NP_DESC("/");
-    case CK_NUMPAD_ENTER:    return NP_DESC("enter");
-#endif
+    case CK_NUMPAD_MULTIPLY: return prefix + NP_DESC("*");
+    case CK_NUMPAD_ADD:      return prefix + NP_DESC("+");
+    case CK_NUMPAD_ADD2:     return prefix + NP_DESC("+"); // are there keyboards with both??
+    case CK_NUMPAD_SUBTRACT: return prefix + NP_DESC("-");
+    case CK_NUMPAD_SUBTRACT2: return prefix + NP_DESC("-");
+    case CK_NUMPAD_DECIMAL:  return prefix + NP_DESC(".");
+    case CK_NUMPAD_DIVIDE:   return prefix + NP_DESC("/");
+    case CK_NUMPAD_ENTER:    return prefix + NP_DESC("enter");
+    case CK_NUMPAD_EQUALS:   return prefix + NP_DESC("=");
     default:
         if (keycode >= CONTROL('A') && keycode <= CONTROL('Z'))
-            return make_stringf("%s%c", CTRL_DESC(""), UNCONTROL(keycode));
+            return make_stringf("%s%s%c", prefix.c_str(), CTRL_DESC(""), UNCONTROL(keycode));
 #ifdef USE_TILE_LOCAL
         // SDL allows control modifiers for some extra punctuation
-        else if (keycode < 0 && keycode > SDLK_EXCLAIM - SDLK_a + 1)
-            return make_stringf("%s%c", CTRL_DESC(""), (char) (keycode + SDLK_a - 1));
+        else if (keycode < 0 && keycode > LC_CONTROL(SDLK_EXCLAIM))
+            return make_stringf("%s%s%c", prefix.c_str(), CTRL_DESC(""), LC_UNCONTROL(keycode));
 
         // SDL uses 1 << 30 to indicate non-printable keys, crawl uses negative
         // numbers; convert back to plain SDL form
-        if (keycode < 0)
+        if (keycode < 0 && ((-keycode) & 1<<30))
             keycode = -keycode;
+        if (keycode < 0)
+            return prefix.empty() ? "" : prefix + "\uFFFD"; // �
         // SDL_GetKeyName strips capitalization, so we don't want to use it for
         // printable keys.
-        return string(SDL_GetKeyName(keycode));
+        return prefix + string(SDL_GetKeyName(keycode));
 #else
     {
         keyseq v;
@@ -1808,10 +2046,10 @@ bool is_synthetic_key(int key)
     case KEY_MACRO_ENABLE_MORE:
     case KEY_MACRO_DISABLE_MORE:
     case KEY_MACRO_MORE_PROTECT:
-#ifdef USE_TILE
     case CK_MOUSE_CMD:
+    case CK_MOUSE_MOVE:
     case CK_REDRAW:
-#endif
+    case CK_RESIZE:
         return true;
     default:
         return false;
@@ -1977,6 +2215,20 @@ int command_to_key(command_type cmd)
     return lookup(_cmds_to_keys[context], cmd, '\0');
 }
 
+vector<int> command_to_keys(command_type cmd)
+{
+    KeymapContext context = context_for_command(cmd);
+    vector<int> result;
+
+    if (context == KMC_NONE)
+        return result;
+
+    for (auto pair : _cmds_to_keys[context])
+        if (pair.first == cmd)
+            result.push_back(pair.second);
+    return result;
+}
+
 KeymapContext context_for_command(command_type cmd)
 {
     if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
@@ -1988,12 +2240,45 @@ KeymapContext context_for_command(command_type cmd)
     if (cmd >= CMD_MIN_TARGET && cmd <= CMD_MAX_TARGET)
         return KMC_TARGETING;
 
+    if (cmd >= CMD_MIN_MENU && cmd <= CMD_MAX_MENU)
+        return KMC_MENU;
+
+    if (cmd >= CMD_MIN_MENU_MS && cmd <= CMD_MAX_MENU_MS)
+        return KMC_MENU_MULTISELECT;
+
 #ifdef USE_TILE
     if (cmd >= CMD_MIN_DOLL && cmd <= CMD_MAX_DOLL)
         return KMC_DOLL;
 #endif
 
     return KMC_NONE;
+}
+
+static bool _allow_rebinding(int key, KeymapContext context)
+{
+    // CK_REDRAW, CK_MOUSE_CMD, CK_MOUSE_MOVE are covered by `is_synthetic_key`
+    if (context == KMC_MENU || context == KMC_MENU_MULTISELECT
+        || context == KMC_TARGETING || context == KMC_LEVELMAP)
+    {
+        // prevent rebinding certain keys in popups/menus that would break
+        // the UI too much. (These can still be modified with a keymap if you
+        // really do want to break things.)
+        switch (key)
+        {
+        CASE_ESCAPE
+        case CK_MOUSE_CLICK:
+        case CK_MOUSE_B2:
+#ifdef TOUCH_UI
+        case CK_TOUCH_DUMMY:
+#endif
+            return false;
+        default:
+            break;
+        }
+        // XX possibly need to prevent removing most default KMC_MENU bindings
+        // so as to not break webtiles?
+    }
+    return true;
 }
 
 void bind_command_to_key(command_type cmd, int key)
@@ -2015,6 +2300,17 @@ void bind_command_to_key(command_type cmd, int key)
              command_name.c_str());
         return;
     }
+#ifdef USE_TILE_WEB
+    else if ((context == KMC_MENU || context == KMC_MENU_MULTISELECT)
+        && tiles.is_controlled_from_web())
+    {
+        // disable because they interact badly with webtiles client code.
+        // TODO: is there any way to get these to work on webtiles?
+        mprf(MSGCH_ERROR, "Ignoring menu bindkey of %s for webtiles client",
+            command_name.c_str());
+        return;
+    }
+#endif
 
     if (is_userfunction(key))
     {
@@ -2025,6 +2321,13 @@ void bind_command_to_key(command_type cmd, int key)
     if (is_synthetic_key(key))
     {
         mprf(MSGCH_ERROR, "Cannot bind synthetic keys to a command.");
+        return;
+    }
+
+    if (!_allow_rebinding(key, context))
+    {
+        mprf(MSGCH_ERROR, "Key %d in context %d cannot be rebound.",
+            key, (int) context);
         return;
     }
 
@@ -2047,11 +2350,6 @@ string command_to_string(command_type cmd, bool tutorial)
             result = make_stringf("uppercase %c", (char) key);
         else
             result = string(1, (char) key);
-    }
-    else if (key > 1000 && key <= 1009) // can this be removed?
-    {
-        const int numpad = (key - 1000);
-        result = make_stringf("Numpad %d", numpad);
     }
     else
         result = keycode_to_name(key, false);

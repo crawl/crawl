@@ -27,6 +27,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
+#include "describe.h" // damage_rating
 #include "dgn-overview.h"
 #include "dgn-event.h"
 #include "directn.h"
@@ -66,6 +67,7 @@
 #include "shout.h"
 #include "skills.h"
 #include "species.h" // random_starting_species
+#include "spl-clouds.h" // explode_blastsparks_at
 #include "spl-damage.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
@@ -373,7 +375,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 {
     loc = you.pos();
 
-    if (you.is_stationary())
+    if (!you.is_motile())
         return false;
 
     // Don't move onto dangerous terrain.
@@ -453,12 +455,67 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
     return swap;
 }
 
-static void _splash()
+bool player::slow_in_water() const
 {
-    if (you.can_swim())
-        noisy(4, you.pos(), "Floosh!");
-    else if (!you.can_water_walk())
-        noisy(8, you.pos(), "Splash!");
+    return !you.can_swim()
+        && you.body_size(PSIZE_BODY) <= SIZE_MEDIUM;
+}
+
+static void _maybe_sink(dungeon_feature_type old_feat,
+                        dungeon_feature_type new_grid)
+{
+    if (!you.can_swim()
+        && new_grid == DNGN_DEEP_WATER
+        && old_feat != DNGN_DEEP_WATER)
+    {
+        mpr("You sink to the bottom.");
+    }
+}
+
+static void _enter_water(dungeon_feature_type old_feat,
+                         dungeon_feature_type new_grid, bool stepped)
+{
+    if (you.can_water_walk())
+        return;
+
+    // This is ridiculous.
+    if (!stepped)
+    {
+        if (you.can_swim())
+            noisy(4, you.pos(), "Floosh!");
+        else
+            noisy(8, you.pos(), "Splash!");
+    }
+
+    // Merfolk special-case most relevant messages.
+    if (you.fishtail)
+        return;
+
+    // Most of these messages are irrelevant when you're already in the water.
+    if (feat_is_water(old_feat))
+    {
+        _maybe_sink(old_feat, new_grid);
+        return;
+    }
+
+    if (new_grid == DNGN_TOXIC_BOG)
+        mprf("You %s the toxic bog.", stepped ? "enter" : "fall into");
+    else
+    {
+        mprf("You %s the %s water.",
+             stepped ? "enter" : "fall into",
+             new_grid == DNGN_SHALLOW_WATER ? "shallow" : "deep");
+    }
+
+    _maybe_sink(old_feat, new_grid);
+
+    if (you.slow_in_water())
+    {
+        mpr("Moving in this stuff is going to be slow.");
+        if (you.invisible())
+            mpr("...and don't expect to remain undetected.");
+    } else if (you.invisible())
+        mpr("Don't expect to remain undetected while in the water.");
 }
 
 void moveto_location_effects(dungeon_feature_type old_feat,
@@ -477,46 +534,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (you.ground_level())
     {
         if (feat_is_water(new_grid))
-        {
-            if (!stepped)
-                _splash();
-
-            if (!you.can_swim() && !you.can_water_walk())
-            {
-                if (!feat_is_water(old_feat))
-                {
-                    if (new_grid == DNGN_TOXIC_BOG)
-                    {
-                        mprf("You %s the toxic bog.",
-                                stepped ? "enter" : "fall into");
-                    }
-                    else
-                    {
-                        mprf("You %s the %s water.",
-                             stepped ? "enter" : "fall into",
-                             new_grid == DNGN_SHALLOW_WATER ? "shallow"
-                             : "deep");
-                    }
-                }
-
-                if (new_grid == DNGN_DEEP_WATER && old_feat != DNGN_DEEP_WATER)
-                    mpr("You sink to the bottom.");
-
-                if (!feat_is_water(old_feat))
-                {
-                    mpr("Moving in this stuff is going to be slow.");
-                    if (you.invisible())
-                        mpr("...and don't expect to remain undetected.");
-                }
-            }
-
-            if ((you.can_swim() || you.extra_balanced())
-                && !feat_is_water(old_feat)
-                && you.invisible())
-            {
-                mpr("Don't expect to remain undetected while in the water.");
-            }
-        }
+            _enter_water(old_feat, new_grid, stepped);
         else if (you.props.exists(TEMP_WATERWALK_KEY))
             you.props.erase(TEMP_WATERWALK_KEY);
     }
@@ -527,14 +545,25 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (old_pos == you.pos() && stepped)
         actor_apply_toxic_bog(&you);
 
-    // Traps go off.
-    // (But not when losing flight - i.e., moving into the same tile)
-    trap_def* ptrap = trap_at(you.pos());
-    if (ptrap && old_pos != you.pos())
-        ptrap->trigger(you);
+    if (old_pos != you.pos())
+    {
+        cloud_struct* cloud = cloud_at(you.pos());
+        if (cloud && cloud->type == CLOUD_BLASTSPARKS)
+            explode_blastsparks_at(you.pos()); // schedules a fineff
+
+        // Traps go off.
+        // (But not when losing flight - i.e., moving into the same tile)
+        trap_def* ptrap = trap_at(you.pos());
+        if (ptrap)
+            ptrap->trigger(you);
+    }
 
     if (stepped)
         _moveto_maybe_repel_stairs();
+
+    // Reveal adjacent mimics.
+    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+        discover_mimic(*ai);
 
     bool was_running = you.running;
 
@@ -620,16 +649,6 @@ bool player_in_hell(bool vestibule)
 {
     return vestibule ? is_hell_branch(you.where_are_you) :
                        is_hell_subbranch(you.where_are_you);
-}
-
-/**
- * Is the player in the slightly-special version of the abyss that AKs start
- * in?
- */
-bool player_in_starting_abyss()
-{
-    return you.chapter == CHAPTER_POCKET_ABYSS
-           && player_in_branch(BRANCH_ABYSS) && you.depth <= 1;
 }
 
 bool player_in_connected_branch()
@@ -736,6 +755,10 @@ void update_vision_range()
  */
 maybe_bool you_can_wear(equipment_type eq, bool temp)
 {
+    // EQ_NONE will crash anyways, so just make it explicit. (Would it make
+    // sense to instead return MB_FALSE?)
+    ASSERT(eq != EQ_NONE);
+
     if (temp && !get_form()->slot_available(eq))
         return MB_FALSE;
 
@@ -1161,10 +1184,7 @@ int player_regen()
     // Note: if some condition can set rr = 0, can't be rested off, and
     // would allow travel, please update is_sufficiently_rested.
 
-    int rr = you.hp_max / 3;
-
-    if (rr > 20)
-        rr = 20 + ((rr - 20) / 2);
+    int rr = 20 + you.hp_max / 6;
 
     // Add in miscellaneous bonuses
     rr += _player_bonus_regen();
@@ -1216,9 +1236,6 @@ int player_mp_regen()
         if (player_equip_unrand(UNRAND_VITALITY))
             regen_amount += 40;
     }
-
-    if (player_equip_unrand(UNRAND_POWER_GLOVES))
-        regen_amount += 40;
 
     if (have_passive(passive_t::jelly_regen))
     {
@@ -1779,24 +1796,27 @@ int player_prot_life(bool allow_random, bool temp, bool items)
 
 // Even a slight speed advantage is very good... and we certainly don't
 // want to go past 6 (see below). -- bwr
-int player_movement_speed()
+int player_movement_speed(bool check_terrain)
 {
     int mv = you.form == transformation::none
         ? 10
         : form_base_movespeed(you.form);
 
-    if (feat_is_water(env.grid(you.pos())))
+    if (check_terrain && feat_is_water(env.grid(you.pos())))
     {
         if (you.get_mutation_level(MUT_NIMBLE_SWIMMER) >= 2)
             mv -= 4;
-        else if (you.in_water() && !you.can_swim())
+        else if (you.in_water() && you.slow_in_water())
             mv += 6; // Wading through water is very slow.
     }
 
     // moving on liquefied ground, or while maintaining the
     // effect takes longer
-    if (you.liquefied_ground() || you.duration[DUR_LIQUEFYING])
+    if (check_terrain && (you.liquefied_ground()
+                          || you.duration[DUR_LIQUEFYING]))
+    {
         mv += 3;
+    }
 
     // armour
     if (player_equip_unrand(UNRAND_LIGHTNING_SCALES))
@@ -1827,7 +1847,8 @@ int player_movement_speed()
         mv /= 10;
     }
 
-    if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_liquid())
+    if (you.duration[DUR_SWIFTNESS] > 0 && (!check_terrain
+                                            || !you.in_liquid()))
     {
         if (you.attribute[ATTR_SWIFTNESS] > 0)
           mv = div_rand_round(3*mv, 4);
@@ -1847,20 +1868,6 @@ int player_movement_speed()
         mv = FASTEST_PLAYER_MOVE_SPEED;
 
     return mv;
-}
-
-/**
- * Multiply the power of some evocation per the player's current evocations
- * enhancers.
- *
- * @param power         The base power of the evocation.
- * @param enhancers     Bonus enhancers to evocations (pak device surge).
- * @return              A modified power value.
- */
-int player_adjust_evoc_power(const int power, int enhancers)
-{
-    const int total_enhancers = you.spec_evoke() + enhancers;
-    return stepdown_spellpower(100 *apply_enhancement(power, total_enhancers));
 }
 
 // This function differs from the above in that it's used to set the
@@ -2362,11 +2369,13 @@ static void _reduce_abyss_xp_timer(int exp)
         max(min((int)exp_needed(you.experience_level+1, 0) / 7,
                 you.experience_level * 425),
             you.experience_level*2 + 15) / 5;
+    // Reduce abyss exit spawns in the Deep Abyss (J:6+) to preserve challenge.
+    const int depth_factor = max(1, you.depth - 4);
 
     if (!you.props.exists(ABYSS_STAIR_XP_KEY))
         you.props[ABYSS_STAIR_XP_KEY] = EXIT_XP_COST;
     const int reqd_xp = you.props[ABYSS_STAIR_XP_KEY].get_int();
-    const int new_req = reqd_xp - div_rand_round(exp, xp_factor);
+    const int new_req = reqd_xp - div_rand_round(exp, xp_factor * depth_factor);
     dprf("reducing xp timer from %d to %d (factor = %d)",
          reqd_xp, new_req, xp_factor);
     you.props[ABYSS_STAIR_XP_KEY].get_int() = new_req;
@@ -3253,10 +3262,10 @@ static void _display_attack_delay()
     {
         item_def fake_proj;
         populate_fake_projectile(*weapon, fake_proj);
-        delay = you.attack_delay(&fake_proj, false).expected();
+        delay = you.attack_delay(&fake_proj).expected();
     }
     else
-        delay = you.attack_delay(nullptr, false).expected();
+        delay = you.attack_delay(nullptr).expected();
 
     const bool at_min_delay = weapon
                               && you.skill(item_attack_skill(*weapon))
@@ -3280,6 +3289,24 @@ static void _display_attack_delay()
          at_min_delay ?
             " (and cannot be improved with additional weapon skill)" : "",
          penalty_msg.c_str());
+}
+
+/**
+ * Print a message listing double the player's best-case damage with their current
+ * weapon (if applicable), or with unarmed combat (if not).
+ */
+static void _display_damage_rating()
+{
+    const item_def *weapon = you.weapon();
+    string weapon_name;
+    if (weapon)
+        weapon_name = weapon->name(DESC_YOUR);
+    else
+        weapon_name = "unarmed combat";
+    mprf("Your damage rating with %s is about %s",
+         weapon_name.c_str(),
+         damage_rating(weapon).c_str());
+    return;
 }
 
 // forward declaration
@@ -3316,6 +3343,7 @@ void display_char_status()
     _display_movement_speed();
     _display_tohit();
     _display_attack_delay();
+    _display_damage_rating();
 
     // Display base attributes, if necessary.
     if (innate_stat(STAT_STR) != you.strength()
@@ -3338,6 +3366,11 @@ bool player::clarity(bool items) const
         return true;
 
     return actor::clarity(items);
+}
+
+bool player::faith(bool items) const
+{
+    return you.has_mutation(MUT_FAITH) || actor::faith(items);
 }
 
 /// Does the player have permastasis?
@@ -3526,12 +3559,6 @@ int player::infusion_amount() const
         return min(you.hp - 1, cost);
     else
         return min(you.magic_points, cost);
-}
-
-/// How much bonus damage do you get per MP spent?
-int player::infusion_multiplier() const {
-    // Maulers are pretty fun as is, but infusion needs a buff.
-    return player_equip_unrand(UNRAND_POWER_GLOVES) ? 2 : 4;
 }
 
 void dec_hp(int hp_loss, bool fatal, const char *aux)
@@ -3964,9 +3991,6 @@ bool player_regenerates_mp()
     // damage shaving is enough. (due, dpeg)
     if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
         return false;
-    // Pakellas blocks MP regeneration.
-    if (have_passive(passive_t::no_mp_regen) || player_under_penance(GOD_PAKELLAS))
-        return false;
 #endif
     return true;
 }
@@ -3985,7 +4009,7 @@ int get_contamination_level()
         return 4;
     if (glow > 5000)
         return 3;
-    if (glow > 3500) // An indicator that using another contamination-causing
+    if (glow > 3000) // An indicator that using another contamination-causing
         return 2;    // ability might risk causing yellow glow.
     if (glow > 0)
         return 1;
@@ -4689,9 +4713,14 @@ void dec_ambrosia_player(int delay)
     const int mp_restoration = div_rand_round(delay*(3 + random2(3)), BASELINE_DELAY);
 
     if (!you.duration[DUR_DEATHS_DOOR])
-        inc_hp(you.scale_potion_healing(hp_restoration));
+    {
+        int heal = you.scale_potion_healing(hp_restoration);
+        if (you.has_mutation(MUT_LONG_TONGUE))
+            heal += hp_restoration;
+        inc_hp(heal);
+    }
 
-    inc_mp(mp_restoration);
+    inc_mp(mp_restoration * (you.has_mutation(MUT_LONG_TONGUE) ? 2 : 1));
 
     if (!you.duration[DUR_AMBROSIA])
         mpr("You feel less invigorated.");
@@ -4729,7 +4758,7 @@ void dec_frozen_ramparts(int delay)
     }
 }
 
-bool invis_allowed(bool quiet, string *fail_reason)
+bool invis_allowed(bool quiet, string *fail_reason, bool temp)
 {
     string msg;
     bool success = true;
@@ -4743,34 +4772,36 @@ bool invis_allowed(bool quiet, string *fail_reason)
     {
         vector<string> sources;
 
-        if (player_equip_unrand(UNRAND_EOS))
+        if (temp && player_equip_unrand(UNRAND_EOS))
             sources.push_back("weapon");
 
-        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
+        if (temp && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_LIGHT))
             sources.push_back("orb");
 
-        if (you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
-            || you.religion == GOD_SHINING_ONE)
+        if (temp && you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
+            || you.religion == GOD_SHINING_ONE) // non-temp
         {
             sources.push_back("divine halo");
         }
 
         if (sources.empty())
-            die("haloed by an unknown source");
-
-
-        msg = "Your " + comma_separated_line(sources.begin(), sources.end())
-              + " glow" + (sources.size() == 1 ? "s" : "")
-              + " too brightly to become invisible.";
-        success = false;
+            success = true;
+        else
+        {
+            msg = "Your " + comma_separated_line(sources.begin(), sources.end())
+                  + " glow" + (sources.size() == 1 ? "s" : "")
+                  + " too brightly for you to become invisible.";
+            success = false;
+        }
     }
-    else if (you.backlit())
+    else if (you.backlit(false, temp))
     {
-        msg = "Invisibility will do you no good right now";
+        msg = "You are backlit; invisibility will do you no good right now";
         if (quiet)
             success = false;
         else if (!quiet && !yesno((msg + "; use anyway?").c_str(), false, 'n'))
         {
+            // XX this shouldn't be here. Currently used only for evoke invis.
             canned_msg(MSG_OK);
             success = false;
             quiet = true; // since we just said something
@@ -5086,6 +5117,7 @@ player::player()
     temp_mutation.init(0);
     demonic_traits.clear();
     sacrifices.init(0);
+    sacrifice_piety.init(0);
 
     magic_contamination = 0;
 
@@ -5351,16 +5383,19 @@ bool player::is_sufficiently_rested(bool starting) const
     // if someone disables all these interrupts, resting becomes impossible.)
     const bool hp_interrupts = Options.activity_interrupts["rest"][
                                 static_cast<int>(activity_interrupt::full_hp)];
+    const bool mp_interrupts = Options.activity_interrupts["rest"][
+                                static_cast<int>(activity_interrupt::full_mp)];
+    const bool can_freely_move = you.is_motile() && !you.duration[DUR_BARBS];
+
     return (!player_regenerates_hp()
                 || _should_stop_resting(hp, hp_max, !starting)
                 || !hp_interrupts
                 || you.has_mutation(MUT_EXPLORE_REGEN))
         && (!player_regenerates_mp()
                 || _should_stop_resting(magic_points, max_magic_points, !starting)
-                || !Options.activity_interrupts["rest"][
-                                static_cast<int>(activity_interrupt::full_mp)]
+                || !mp_interrupts
                 || you.has_mutation(MUT_EXPLORE_REGEN))
-        && (!you.duration[DUR_BARBS] || !hp_interrupts);
+        && (can_freely_move || !hp_interrupts);
 }
 
 bool player::in_water() const
@@ -5703,6 +5738,14 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
     if (real)
         return level;
 
+    if (player_equip_unrand(UNRAND_HERMITS_PENDANT))
+    {
+        if (sk == SK_INVOCATIONS)
+            return 14 * scale;
+        if (sk == SK_EVOCATIONS)
+            return 0;
+    }
+
     if (penance[GOD_ASHENZARI])
     {
         if (temp)
@@ -5713,6 +5756,7 @@ int player::skill(skill_type sk, int scale, bool real, bool temp) const
 
     if (temp && duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, MAX_SKILL_LEVEL * scale);
+
     return level;
 }
 
@@ -5767,7 +5811,7 @@ int player::base_ac_from(const item_def &armour, int scale) const
     const int AC = base * (440 + skill(SK_ARMOUR, 20)) / 440;
 
     // The deformed don't fit into body armour very well.
-    // (This includes nagas and palentongas.)
+    // (This includes nagas and armataurs.)
     if (get_armour_slot(armour) == EQ_BODY_ARMOUR
             && (get_mutation_level(MUT_DEFORMED)
                 || get_mutation_level(MUT_PSEUDOPODS)))
@@ -6100,12 +6144,6 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
 
     AC += sanguine_armour_bonus();
 
-    if (you.has_mutation(MUT_CURL)
-        && you.props[PALENTONGA_CURL_KEY].get_bool())
-    {
-        AC += 7 * scale;
-    }
-
     return AC / scale;
 }
 
@@ -6285,7 +6323,8 @@ bool player::res_miasma(bool temp) const
 {
     if (has_mutation(MUT_FOUL_STENCH)
         || is_nonliving(temp)
-        || temp && get_form()->res_miasma())
+        || temp && (get_form()->res_miasma()
+                    || you.props.exists(MIASMA_IMMUNE_KEY)))
     {
         return true;
     }
@@ -6427,6 +6466,11 @@ int player_willpower(bool temp)
  */
 string player::no_tele_reason(bool blinking) const
 {
+    // XX add a temp parm; in absence of this, do the non-temp check first
+    // assumption: species is the only source of stasis
+    if (stasis())
+        return "Your stasis prevents you from teleporting.";
+
     if (!blinking)
     {
         if (crawl_state.game_is_sprint())
@@ -6437,9 +6481,6 @@ string player::no_tele_reason(bool blinking) const
                 "teleports.";
         }
     }
-
-    if (stasis())
-        return "Your stasis prevents you from teleporting.";
 
     vector<string> problems;
 
@@ -7096,7 +7137,7 @@ bool player::visible_to(const actor *looker) const
 /**
  * Is the player backlit?
  *
- * @param self_halo If true, ignore the player's self-halo.
+ * @param self_halo If false, ignore the player's self-halo.
  * @param temp If true, include temporary sources of being backlit.
  * @returns True if the player is backlit.
 */
@@ -7199,6 +7240,11 @@ bool player::is_stationary() const
 {
     return form == transformation::tree
         || you.duration[DUR_LOCKED_DOWN];
+}
+
+bool player::is_motile() const
+{
+    return !is_stationary() && !you.duration[DUR_NO_MOMENTUM];
 }
 
 bool player::malmutate(const string &reason)
@@ -7423,7 +7469,7 @@ bool player::can_do_shaft_ability(bool quiet) const
 
     if (feat_is_shaftable(env.grid(pos())))
     {
-        if (!is_valid_shaft_level())
+        if (!is_valid_shaft_level(false))
         {
             if (!quiet)
                 mpr("You can't shaft yourself on this level.");
@@ -7789,17 +7835,19 @@ bool player::wear_barding() const
     return species::wears_barding(species);
 }
 
-static int _get_potion_heal_factor()
+static int _get_potion_heal_factor(bool temp=true)
 {
     // healing factor is expressed in halves, so default is 2/2 -- 100%.
     int factor = 2;
 
     // start with penalties
-    factor -= player_equip_unrand(UNRAND_VINES) ? 2 : 0;
+    if (temp)
+        factor -= player_equip_unrand(UNRAND_VINES) ? 2 : 0;
     factor -= you.mutation[MUT_NO_POTION_HEAL];
 
     // then apply bonuses - Kryia's doubles potion healing
-    factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
+    if (temp)
+        factor *= player_equip_unrand(UNRAND_KRYIAS) ? 2 : 1;
 
     // make sure we don't turn healing negative.
     return max(0, factor);
@@ -7827,9 +7875,9 @@ void print_potion_heal_message()
         mpr("Your system partially rejects the healing.");
 }
 
-bool player::can_potion_heal()
+bool player::can_potion_heal(bool temp)
 {
-    return _get_potion_heal_factor() > 0;
+    return _get_potion_heal_factor(temp) > 0;
 }
 
 int player::scale_potion_healing(int healing_amount)

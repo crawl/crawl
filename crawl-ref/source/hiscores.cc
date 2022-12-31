@@ -427,7 +427,7 @@ UIHiscoresMenu::UIHiscoresMenu()
 #endif
 
     auto title = make_shared<Text>(formatted_string(
-                "Dungeon Crawl Stone Soup: High Scores", YELLOW));
+                CRAWL ": High Scores", YELLOW));
     title->set_margin_for_sdl(0, 0, 0, 16);
     title_hbox->add_child(move(title));
 
@@ -611,7 +611,7 @@ static void _hs_close(FILE *handle)
 
 static bool _hs_read(FILE *scores, scorefile_entry &dest)
 {
-    char inbuf[1300];
+    char inbuf[1500];
     if (!scores || feof(scores))
         return false;
 

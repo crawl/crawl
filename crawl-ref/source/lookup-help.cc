@@ -846,7 +846,7 @@ static string _mons_desc_key(monster_type type)
 void LookupType::display_keys(vector<string> &key_list) const
 {
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-                | MF_NO_SELECT_QTY | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT,
+                | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT,
             toggleable_sort());
     desc_menu.set_tag("description");
 
@@ -887,6 +887,10 @@ void LookupType::display_keys(vector<string> &key_list) const
         describe(key);
         return true;
     };
+
+    // for some reason DescMenu is an InvMenu, so we need to do something to
+    // prevent examine crashes. Just alias it to regular selection.
+    desc_menu.on_examine = desc_menu.on_single_selection;
 
     while (true)
     {

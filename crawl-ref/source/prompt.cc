@@ -63,15 +63,13 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
 
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
-#ifdef TOUCH_UI
-    bool use_popup = true;
-#else
     bool use_popup = !crawl_state.need_save || ui::has_layout();
     use_popup = use_popup && str && allow_popup;
-#endif
 
+    // MF_ANYPRINTABLE is here because we are running a loop manually
+    // XX don't do this
     int flags = MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING;
-    if (allow_lowercase && use_popup)
+    if (allow_lowercase && use_popup) // why not for uppercase?
         flags |= MF_ARROWS_SELECT;
     Menu pop(flags, "", KMC_CONFIRM);
     MenuEntry *status = nullptr;
@@ -80,8 +78,11 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
     {
         status = new MenuEntry("", MEL_SUBTITLE);
         MenuEntry * const y_me = new MenuEntry("Yes", MEL_ITEM, 1, 'Y');
+        y_me->add_hotkey('y');
         MenuEntry * const n_me = new MenuEntry("No", MEL_ITEM, 1, 'N');
+        n_me->add_hotkey('n');
         MenuEntry * const a_me = new MenuEntry("Always", MEL_ITEM, 1, 'A');
+        a_me->add_hotkey('a');
         y_me->add_tile(tile_def(TILEG_PROMPT_YES));
         n_me->add_tile(tile_def(TILEG_PROMPT_NO));
 
@@ -93,18 +94,12 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
         pop.add_entry(n_me);
         if (ask_always)
             pop.add_entry(a_me);
-        if (allow_lowercase && default_answer == 'y')
+        if (allow_lowercase && default_answer == 'y' || default_answer == 'Y')
             pop.set_hovered(1);
-        else if (allow_lowercase && default_answer == 'n')
+        else if (allow_lowercase && default_answer == 'n' || default_answer == 'N')
             pop.set_hovered(2);
-        else if (ask_always && allow_lowercase && default_answer == 'a')
+        else if (ask_always && (allow_lowercase && default_answer == 'a' || default_answer == 'A'))
             pop.set_hovered(3);
-        pop.on_single_selection = [&pop](const MenuEntry& item)
-            {
-                if (item.hotkeys.size())
-                    return pop.process_key(item.hotkeys[0]);
-                return false;
-            };
     }
     mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
@@ -115,7 +110,16 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
             if (use_popup)
             {
                 pop.show();
-                tmp = pop.getkey();
+                auto answer = pop.selected_entries();
+                if (answer.size() && answer[0]->hotkeys.size())
+                    tmp = answer[0]->hotkeys[0]; // uppercase version
+
+                // sub in any alpha char if that's what the player typed, for
+                // error messaging
+                const int actual_key = pop.getkey();
+                if (isalpha(actual_key) && actual_key != tmp)
+                    tmp = actual_key;
+                // otherwise, leave as ESCAPE
             }
             else
             {
@@ -137,7 +141,7 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
             tmp = map->find(tmp)->second;
 
         if (default_answer
-            && (tmp == ' ' || key_is_escape(tmp)
+            && (tmp == ' ' || key_is_escape(tmp) // XX don't check specific keys for popup
                 || tmp == '\r' || tmp == '\n' || crawl_state.seen_hups))
         {
             tmp = default_answer;
@@ -166,6 +170,8 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
                          && (tmp == 'n' || tmp == 'y'
                              || (ask_always && tmp == 'a')
                              || crawl_state.game_is_hints_tutorial());
+            // XX this message is wrong if allow_lowercase is false but the
+            // default has been provided as lowercase
             const string pr = make_stringf("%s%s only, please.",
                                            upper ? "Uppercase " : "",
                                            ask_always ?
