@@ -99,7 +99,7 @@ static coord_def _mons_fragment_target(const monster &mons);
 static coord_def _mons_awaken_earth_target(const monster& mon);
 static void _maybe_throw_ally(const monster &mons);
 static void _siren_sing(monster* mons, bool avatar);
-static void _doom_howl(monster &mon);
+static void _doom_howl(monster &mon, int pow);
 static void _mons_awaken_earth(monster &mon, const coord_def &target);
 static void _corrupt_locale(monster &mon);
 static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot);
@@ -1091,12 +1091,10 @@ static int _mons_power_hd_factor(spell_type spell)
 
     switch (spell)
     {
-        case SPELL_CONFUSION_GAZE:
-            return 8 * ENCH_POW_FACTOR;
-
         case SPELL_CAUSE_FEAR:
             return 18 * ENCH_POW_FACTOR;
 
+        case SPELL_DOOM_HOWL:
         case SPELL_MESMERISE:
             return 10 * ENCH_POW_FACTOR;
 
@@ -1105,6 +1103,7 @@ static int _mons_power_hd_factor(spell_type spell)
             return 9 * ENCH_POW_FACTOR;
 
         case SPELL_MASS_CONFUSION:
+        case SPELL_CONFUSION_GAZE:
             return 8 * ENCH_POW_FACTOR;
 
         case SPELL_CALL_DOWN_LIGHTNING:
@@ -6484,7 +6483,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_DOOM_HOWL:
-        _doom_howl(*mons);
+        _doom_howl(*mons, splpow);
         break;
 
     case SPELL_CALL_OF_CHAOS:
@@ -7270,14 +7269,23 @@ static ai_action::goodness _siren_goodness(monster* mons, bool avatar)
  *
  * @param mon   The howling monster.
  */
-static void _doom_howl(monster &mon)
+static void _doom_howl(monster &mon, int pow)
 {
-    mprf("%s unleashes a %s howl, and it begins to echo in your mind!",
+    const int willpower = you.check_willpower(&mon, pow);
+    const string effect = willpower > 0 ?
+                            make_stringf("but you%s",
+                                         you.resist_margin_phrase(willpower).c_str()) :
+                            "and it begins to echo in your mind!";
+    mprf("%s unleashes a %s howl, %s",
          mon.name(DESC_THE).c_str(),
-         silenced(mon.pos()) ? "silent" : "terrible");
+         silenced(mon.pos()) ? "silent" : "terrible",
+         effect.c_str());
     noisy(spell_effect_noise(SPELL_DOOM_HOWL), mon.pos(), mon.mid);
-    you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
-    mon.props[DOOM_HOUND_HOWLED_KEY] = true;
+    if (willpower <= 0)
+    {
+        you.duration[DUR_DOOM_HOWL] = random_range(120, 180);
+        mon.props[DOOM_HOUND_HOWLED_KEY] = true;
+    }
 }
 
 /**
