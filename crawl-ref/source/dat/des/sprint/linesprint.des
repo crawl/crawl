@@ -218,24 +218,24 @@ KITEM:    a = potion of curing q:4 ident:all, \
               potion of magic q:2 ident:all
 KITEM:    b = scroll of blinking q:1 ident:all, \
               scroll of amnesia q:2 ident:all
-KITEM:    d = wand of iceblast charges:10 ident:all /\
-              wand of acid charges:10 ident:all, \
+KITEM:    d = any blast wand charges:10 ident:all /\
+              any beam wand charges:10 ident:all, \
 KITEM:    e = rapier plus:2 ego:electrocution ident:all /\
            rapier plus:2 ego:draining ident:all /\
            rapier plus:2 ego:venom ident:all /\
            rapier plus:2 ego:distortion ident:all /\
            rapier plus:2 good_item ident:all, \
            war axe plus:3 ego:freezing ident:all /\
-           war axe plus:3 ego:vorpal ident:all /\
+           war axe plus:3 ego:heavy ident:all /\
            war axe plus:3 good_item ident:all w:5 /\
            broad axe plus:1 ego:freezing ident:all /\
-           broad axe plus:1 ego:vorpal ident:all /\
+           broad axe plus:1 ego:heavy ident:all /\
            broad axe plus:1 good_item ident:all w:5, \
            dire flail plus:2 ego:protection ident:all /\
-           dire flail plus:2 ego:vorpal ident:all /\
+           dire flail plus:2 ego:heavy ident:all /\
            dire flail plus:2 good_item ident:all w:5 /\
            morningstar plus:2 ego:protection ident:all /\
-           morningstar plus:2 ego:vorpal ident:all /\
+           morningstar plus:2 ego:heavy ident:all /\
            morningstar plus:2 good_item ident:all w:5, \
            halberd plus:2 ego:protection ident:all /\
            halberd plus:2 ego:venom ident:all /\
@@ -325,7 +325,7 @@ SHUFFLE:  123456
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
-:           door_description_suffix=" to Lair:6",
+:           door_description_suffix=" to Lair:5",
 :           })
 MAP
 xxxxxxxxxxxxx
@@ -594,8 +594,6 @@ KITEM:    b = battleaxe plus:4 ego:none ident:all /\
     broad axe plus:3 good_item ident:all /\
     glaive plus:4 ego:none ident:all /\
     glaive plus:2 good_item ident:all /\
-    scythe plus:9 ego:none ident:all /\
-    scythe plus:6 good_item ident:all /\
     bardiche plus:2 ego:none ident:all /\
     bardiche plus:0 good_item ident:all /\
     demon trident plus:4 ego:none ident:all /\
@@ -808,8 +806,6 @@ KITEM:    b = battleaxe plus:5 good_item ident:all /\
     broad axe plus:5 randart ident:all w:5 /\
     glaive plus:5 good_item ident:all /\
     glaive plus:5 randart ident:all w:5 /\
-    scythe plus:11 good_item ident:all /\
-    scythe plus:11 randart ident:all w:5 /\
     bardiche plus:5 good_item ident:all /\
     bardiche plus:5 randart ident:all w:5 /\
     demon trident plus:5 good_item ident:all /\
@@ -830,7 +826,7 @@ KITEM:    b = battleaxe plus:5 good_item ident:all /\
     great sword plus:5 randart ident:all w:5 /\
     lajatang plus:5 good_item ident:all /\
     lajatang plus:5 randart ident:all w:5 /\
-    longbow plus:5 ego:vorpal ident:all w:15 /\
+    longbow plus:5 ego:heavy ident:all w:15 /\
     triple crossbow plus:5 good_item ident:all w:15
 KITEM:    d = plate armour plus:6 ident:all /\
     plate armour plus:4 good_item ident:all /\

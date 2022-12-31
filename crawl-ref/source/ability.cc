@@ -330,20 +330,20 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {}, abflag::delay },
         { ABIL_HOP, "Hop",
             0, 0, 0, -1, {}, abflag::none }, // range special-cased
-        { ABIL_ROLLING_CHARGE, "Rolling Charge",
-            0, 0, 0, -1, {}, abflag::none }, // range special-cased
         { ABIL_BLINKBOLT, "Blinkbolt",
             0, 0, 0, LOS_MAX_RANGE, {}, abflag::none },
+#if TAG_MAJOR_VERSION == 34
         { ABIL_HEAL_WOUNDS, "Heal Wounds",
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
+#endif
         { ABIL_END_TRANSFORMATION, "End Transformation",
             0, 0, 0, -1, {}, abflag::none },
 
         // EVOKE abilities use Evocations and come from items.
         { ABIL_EVOKE_BLINK, "Evoke Blink",
-            1, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
+            0, 0, 0, -1, {fail_basis::evo, 40, 2}, abflag::none },
         { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
-            2, 0, 0, -1, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
+            0, 0, 0, -1, {fail_basis::evo, 60, 2}, abflag::max_hp_drain },
         // TODO: any way to automatically derive these from the artefact name?
         { ABIL_EVOKE_ASMODEUS, "Evoke the Sceptre of Asmodeus",
             0, 0, 0, -1, {fail_basis::evo, 80, 3}, abflag::none },
@@ -378,9 +378,9 @@ static vector<ability_def> &_get_ability_list()
 
         // Kikubaaqudgha
         { ABIL_KIKU_UNEARTH_WRETCHES, "Unearth Wretches",
-            3, 0, 4, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
+            3, 0, 5, -1, {fail_basis::invo, 40, 5, 20}, abflag::none },
         { ABIL_KIKU_TORMENT, "Torment",
-            4, 0, 8, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
+            4, 0, 6, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_KIKU_GIFT_CAPSTONE_SPELLS, "Receive Forbidden Knowledge",
             0, 0, 0, -1, {fail_basis::invo}, abflag::none },
         { ABIL_KIKU_BLESS_WEAPON, "Brand Weapon With Pain",
@@ -399,9 +399,9 @@ static vector<ability_def> &_get_ability_list()
 
         // Okawaru
         { ABIL_OKAWARU_HEROISM, "Heroism",
-            2, 0, 1, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
+            2, 0, 3, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_OKAWARU_FINESSE, "Finesse",
-            5, 0, 3, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
+            5, 0, 5, -1, {fail_basis::invo, 60, 4, 25}, abflag::none },
         { ABIL_OKAWARU_DUEL, "Duel",
             7, 0, 10, LOS_MAX_RANGE, {fail_basis::invo, 80, 4, 20},
             abflag::target | abflag::not_self },
@@ -451,9 +451,6 @@ static vector<ability_def> &_get_ability_list()
         // Lugonu
         { ABIL_LUGONU_ABYSS_EXIT, "Depart the Abyss",
             1, 0, 10, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
-        { ABIL_LUGONU_BEND_SPACE, "Bend Space",
-            1, scaling_cost::fixed(2), 0, -1, {fail_basis::invo, 40, 5, 20},
-            abflag::none },
         { ABIL_LUGONU_BANISH, "Banish",
             4, 0, generic_cost::range(3, 4), LOS_MAX_RANGE,
             {fail_basis::invo, 85, 7, 20}, abflag::none },
@@ -703,9 +700,6 @@ int ability_range(ability_type abil)
         case ABIL_HOP:
             range = frog_hop_range();
             break;
-        case ABIL_ROLLING_CHARGE:
-            range = palentonga_charge_range();
-            break;
         case ABIL_DITHMENOS_SHADOW_STEP:
             range = you.umbra_radius();
             break;
@@ -849,8 +843,10 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & abflag::variable_mp)
         ret += ", MP";
 
+#if TAG_MAJOR_VERSION == 34
     if (ability == ABIL_HEAL_WOUNDS)
         ret += make_stringf(", Permanent MP (%d left)", get_real_mp(false));
+#endif
 
     if (ability == ABIL_TRAN_BAT)
     {
@@ -1034,12 +1030,14 @@ static const string _detailed_cost_description(ability_type ability)
         ret << ".";
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (abil.ability == ABIL_HEAL_WOUNDS)
     {
         ASSERT(!have_cost); // validate just in case this ever changes
         return "This ability has a chance of reducing your maximum magic "
                "capacity when used.";
     }
+#endif
 
     return ret.str();
 }
@@ -1297,12 +1295,6 @@ void no_ability_msg()
             mpr("Sorry, you cannot become a bat while alive.");
         }
     }
-    else if (you.get_mutation_level(MUT_TENGU_FLIGHT)
-             || you.get_mutation_level(MUT_BIG_WINGS))
-    {
-        if (you.airborne())
-            mpr("You're already flying!");
-    }
     else
         mpr("Sorry, you're not good enough to have a special ability.");
 }
@@ -1348,11 +1340,7 @@ bool activate_ability()
             selected = -1;
     }
 
-#ifndef TOUCH_UI
     if (Options.ability_menu && selected == -1)
-#else
-    if (selected == -1)
-#endif
     {
         selected = choose_ability_menu(talents);
         if (selected == -1)
@@ -1362,7 +1350,6 @@ bool activate_ability()
             return false;
         }
     }
-#ifndef TOUCH_UI
     else
     {
         while (selected < 0)
@@ -1411,25 +1398,17 @@ bool activate_ability()
             }
         }
     }
-#endif
     return activate_talent(talents[selected]);
 }
 
 static bool _can_movement_ability(bool quiet)
 {
-    if (you.attribute[ATTR_HELD])
-    {
-        if (!quiet)
-            mprf("You cannot do that while %s.", held_status());
-        return false;
-    }
-    else if (you.is_stationary())
-    {
-        if (!quiet)
-            canned_msg(MSG_CANNOT_MOVE);
-        return false;
-    }
-    return true;
+    const string reason = movement_impossible_reason();
+    if (reason.empty())
+        return true;
+    if (!quiet)
+        mprf("%s", reason.c_str());
+    return false;
 }
 
 static bool _can_hop(bool quiet)
@@ -1493,8 +1472,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     // dangerous.)
     if (abil.ability == ABIL_END_TRANSFORMATION)
     {
-        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos()))
-            && !you.duration[DUR_FLIGHT])
+        if (feat_dangerous_for_form(transformation::none, env.grid(you.pos())))
         {
             if (!quiet)
             {
@@ -1855,6 +1833,7 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         return true;
     }
 
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         if (you.hp == you.hp_max)
         {
@@ -1875,16 +1854,13 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
             return false;
         }
         return true;
+#endif
 
     case ABIL_SHAFT_SELF:
         return you.can_do_shaft_ability(quiet);
 
     case ABIL_HOP:
         return _can_hop(quiet);
-
-    case ABIL_ROLLING_CHARGE:
-        return _can_movement_ability(quiet) &&
-                                palentonga_charge_possible(quiet, true);
 
     case ABIL_WORD_OF_CHAOS:
         if (you.duration[DUR_WORD_OF_CHAOS_COOLDOWN])
@@ -2032,6 +2008,9 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
     case ABIL_IGNIS_RISING_FLAME:
         return _can_rising_flame(quiet);
 
+    case ABIL_DIG:
+        return form_keeps_mutations();
+
     default:
         return true;
     }
@@ -2094,8 +2073,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_multiposition>(&you, find_chaos_targets(true));
     case ABIL_ZIN_RECITE:
         return make_unique<targeter_multiposition>(&you, find_recite_targets());
-    case ABIL_LUGONU_BEND_SPACE:
-        return make_unique<targeter_multiposition>(&you, find_blink_targets());
     case ABIL_FEDHAS_WALL_OF_BRIARS:
         return make_unique<targeter_multiposition>(&you, find_briar_spaces(true), AFF_YES);
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
@@ -2134,7 +2111,9 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
     case ABIL_EXSANGUINATE:
     case ABIL_REVIVIFY:
     case ABIL_SHAFT_SELF:
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
+#endif
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_END_TRANSFORMATION:
     case ABIL_ZIN_VITALISATION:
@@ -2318,7 +2297,7 @@ static bool _acid_breath_can_hit(const actor *act)
 /// If the player is stationary, print 'You cannot move.' and return true.
 static bool _abort_if_stationary()
 {
-    if (!you.is_stationary())
+    if (you.is_motile())
         return false;
 
     canned_msg(MSG_CANNOT_MOVE);
@@ -2481,6 +2460,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)
     {
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         fail_check();
         if (one_chance_in(4))
@@ -2490,6 +2470,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         }
         potionlike_effect(POT_HEAL_WOUNDS, 40);
         break;
+#endif
 
     case ABIL_DIG:
         if (!you.digging)
@@ -2525,12 +2506,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_HOP:
         if (_can_hop(false))
             return frog_hop(fail, target);
-        else
-            return spret::abort;
-
-    case ABIL_ROLLING_CHARGE:
-        if (_can_movement_ability(false))
-            return palentonga_charge(fail, target);
         else
             return spret::abort;
 
@@ -2606,8 +2581,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     {
         spret result = spret::abort;
         int cooldown = 3 + random2(10) + random2(30 - you.experience_level);
-        if (abil.ability == ABIL_BREATHE_STEAM)
-            cooldown /= 2;
 
         static map<ability_type, string> breath_message =
         {
@@ -2661,9 +2634,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         if (_invis_causes_drain())
             drain_player(60, false, true); // yes, before the fail check!
         fail_check();
-        potionlike_effect(POT_INVISIBILITY,
-                          player_adjust_evoc_power(
-                              you.skill(SK_EVOCATIONS, 2) + 5));
+        potionlike_effect(POT_INVISIBILITY, you.skill(SK_EVOCATIONS, 2) + 5);
         contaminate_player(1000 + random2(500), true);
         break;
 
@@ -3023,13 +2994,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
             return spret::abort;
         fail_check();
         down_stairs(DNGN_EXIT_ABYSS);
-        break;
-
-    case ABIL_LUGONU_BEND_SPACE:
-        if (cancel_harmful_move(false))
-            return spret::abort;
-        fail_check();
-        lugonu_bend_space();
         break;
 
     case ABIL_LUGONU_BANISH:
@@ -3466,6 +3430,7 @@ static void _pay_ability_costs(const ability_def& abil)
 
 int choose_ability_menu(const vector<talent>& talents)
 {
+    // TODO: refactor this into a proper subclass
     ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
             | MF_NO_WRAP_ROWS | MF_TOGGLE_ACTION | MF_ARROWS_SELECT
             | MF_INIT_HOVER);
@@ -3492,8 +3457,10 @@ int choose_ability_menu(const vector<talent>& talents)
                                 MEL_TITLE), true, true);
 #endif
     abil_menu.set_tag("ability");
-    abil_menu.add_toggle_key('!');
-    abil_menu.add_toggle_key('?');
+    abil_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE);
+    abil_menu.add_toggle_from_command(CMD_MENU_CYCLE_MODE_REVERSE);
+    // help here amounts to describing abilities:
+    abil_menu.add_toggle_from_command(CMD_MENU_HELP);
     abil_menu.menu_action = Menu::ACT_EXECUTE;
 
     if (crawl_state.game_is_hints())
@@ -3505,8 +3472,8 @@ int choose_ability_menu(const vector<talent>& talents)
     else
     {
         abil_menu.set_more(formatted_string::parse_string(
-                           "Press '<w>!</w>' or '<w>?</w>' to toggle "
-                           "between ability selection and description."));
+            menu_keyhelp_cmd(CMD_MENU_HELP) + " toggle "
+                       "between ability selection and description."));
     }
 
     int numbers[52];
@@ -3571,16 +3538,19 @@ int choose_ability_menu(const vector<talent>& talents)
     }
 
     int ret = -1;
-    abil_menu.on_single_selection = [&abil_menu, &talents, &ret](const MenuEntry& sel)
+    abil_menu.on_examine = [&talents](const MenuEntry& sel)
     {
         ASSERT(sel.hotkeys.size() == 1);
         int selected = *(static_cast<int*>(sel.data));
 
-        if (abil_menu.menu_action == Menu::ACT_EXAMINE)
-            _print_talent_description(talents[selected]);
-        else
-            ret = *(static_cast<int*>(sel.data));
-        return abil_menu.menu_action == Menu::ACT_EXAMINE;
+        _print_talent_description(talents[selected]);
+        return true;
+    };
+    abil_menu.on_single_selection = [&ret](const MenuEntry& sel)
+    {
+        ASSERT(sel.hotkeys.size() == 1);
+        ret = *(static_cast<int*>(sel.data));
+        return false;
     };
     abil_menu.show(false);
     if (!crawl_state.doing_prev_cmd_again)
@@ -3653,8 +3623,10 @@ bool player_has_ability(ability_type abil, bool include_unusable)
 
     switch (abil)
     {
+#if TAG_MAJOR_VERSION == 34
     case ABIL_HEAL_WOUNDS:
         return you.species == SP_DEEP_DWARF;
+#endif
     case ABIL_SHAFT_SELF:
         if (crawl_state.game_is_sprint() || brdepth[you.where_are_you] == 1)
             return false;
@@ -3664,8 +3636,6 @@ bool player_has_ability(ability_type abil, bool include_unusable)
                && (form_keeps_mutations() || include_unusable);
     case ABIL_HOP:
         return you.get_mutation_level(MUT_HOP);
-    case ABIL_ROLLING_CHARGE:
-        return you.get_mutation_level(MUT_ROLL);
     case ABIL_BREATHE_POISON:
         return you.get_mutation_level(MUT_SPIT_POISON) >= 2;
     case ABIL_SPIT_POISON:
@@ -3736,11 +3706,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
 
     // TODO: can we just iterate over ability_type?
     vector<ability_type> check_order =
-        { ABIL_HEAL_WOUNDS,
+        {
+#if TAG_MAJOR_VERSION == 34
+            ABIL_HEAL_WOUNDS,
+#endif
             ABIL_DIG,
             ABIL_SHAFT_SELF,
             ABIL_HOP,
-            ABIL_ROLLING_CHARGE,
             ABIL_SPIT_POISON,
             ABIL_BREATHE_FIRE,
             ABIL_BREATHE_FROST,

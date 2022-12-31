@@ -15,14 +15,14 @@ mkdir dirname($outfile);
 
 # to build without git or with a shallow clone, you will need to generate
 # the file `release_ver` somehow with version information. This file is just
-# intended to contain the output of `git describe --tags`, and anything that
+# intended to contain the output of `git describe`, and anything that
 # conforms to the regex below is fine. For example, "0.28-a" would be safe.
 #
 # Source tarbells distributed as part of a release include this file already
 # generated with the release version.
-$_ = `git describe --tags $mergebase 2> /dev/null`
+$_ = `git describe $mergebase 2> /dev/null`
     || (open(IN, "<", "$scriptpath/release_ver") ? <IN>
-        : die "Can't get version information: `git describe --tags` failed (no git, no repository, or shallow clone), and $scriptpath/release_ver doesn't exist.\n")
+        : die "Can't get version information: `git describe` failed (no git, no repository, or shallow clone), and $scriptpath/release_ver doesn't exist.\n")
     or die "couldn't get the version information\n";
 
 chomp;

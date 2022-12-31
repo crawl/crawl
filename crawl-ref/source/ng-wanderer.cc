@@ -69,45 +69,31 @@ static void _give_wanderer_weapon(skill_type wpn_skill, bool good_item)
         sub_type = WPN_SPEAR;
         break;
 
-    // remaining types can't have basetype upgraded, so offer vorpal instead
     case SK_STAVES:
         sub_type = WPN_QUARTERSTAFF;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
         break;
 
-    case SK_BOWS:
-        sub_type = WPN_SHORTBOW;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
-        break;
-
-    case SK_CROSSBOWS:
-        sub_type = WPN_HAND_CROSSBOW;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
-        break;
-
-    case SK_SLINGS:
-        sub_type = WPN_HUNTING_SLING;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
+    case SK_RANGED_WEAPONS:
+        sub_type = WPN_SLING;
         break;
 
     default:
         sub_type = WPN_DAGGER;
-        if (upgrade_base)
-            ego = SPWPN_VORPAL;
         break;
     }
 
     if (upgrade_base)
     {
+        const weapon_type old_type = sub_type;
         sub_type = starting_weapon_upgrade(sub_type, you.char_class,
                                             you.species);
+        // If we can't upgrade the type, give it a little plus.
+        if (sub_type == old_type)
+            plus = 2;
     }
     else if (good_item)
         plus = 2;
+
 
     newgame_make_item(OBJ_WEAPONS, sub_type, 1, plus, ego);
 }
@@ -127,16 +113,14 @@ static void _assign_wanderer_stats(skill_type sk1, skill_type sk2,
         {
             case SK_AXES:
             case SK_MACES_FLAILS:
-            case SK_BOWS:
-            case SK_CROSSBOWS:
             case SK_ARMOUR:
                 str_count++;
                 break;
 
             case SK_SHORT_BLADES:
             case SK_LONG_BLADES:
+            case SK_RANGED_WEAPONS:
             case SK_STAVES:
-            case SK_SLINGS:
             case SK_DODGING:
             case SK_SHIELDS:
             case SK_STEALTH:
@@ -214,9 +198,9 @@ static skill_type _wanderer_role_skill_select(bool defense)
 {
     skill_type skill = NUM_SKILLS;
     const skill_type offense_skills[] =
-        { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS, SK_POLEARMS,
+        { SK_AXES, SK_MACES_FLAILS, SK_RANGED_WEAPONS, SK_POLEARMS,
           SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
-          SK_SLINGS, SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS,
+          SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS,
           SK_TRANSMUTATIONS, SK_POISON_MAGIC, SK_CONJURATIONS,
           SK_HEXES, SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_SPELLCASTING,
           SK_AIR_MAGIC, SK_EARTH_MAGIC, SK_FIGHTING };
@@ -224,9 +208,9 @@ static skill_type _wanderer_role_skill_select(bool defense)
     int offense_size = ARRAYSZ(offense_skills);
 
     const skill_type physical_skills[] =
-        { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS, SK_POLEARMS,
+        { SK_AXES, SK_MACES_FLAILS, SK_RANGED_WEAPONS, SK_POLEARMS,
           SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
-          SK_SLINGS, SK_FIGHTING };
+          SK_FIGHTING };
 
     int physical_size = ARRAYSZ(physical_skills);
 
@@ -439,9 +423,10 @@ static void _good_potion_or_scroll()
 {
     // vector of weighted {object_class_type, subtype} pairs
     // xxx: could we use is_useless_item here? (not without dummy items...?)
+    const int ally_scr_type = item_for_set(ITEM_SET_ALLY_SCROLLS);
     const vector<pair<pair<object_class_type, int>, int>> options = {
         { { OBJ_SCROLLS, SCR_FEAR }, 4 },
-        { { OBJ_SCROLLS, SCR_SUMMONING }, 1 },
+        { { OBJ_SCROLLS, ally_scr_type }, 1 },
         { { OBJ_SCROLLS, SCR_BLINKING },
             you.stasis() ? 0 : 4 },
         { { OBJ_POTIONS, POT_HEAL_WOUNDS },
@@ -512,16 +497,21 @@ static void _wanderer_random_evokable()
     }
     else
     {
+        const auto hex_wand_type = (wand_type)item_for_set(ITEM_SET_HEX_WANDS);
+        const auto beam_wand_type = (wand_type)item_for_set(ITEM_SET_BEAM_WANDS);
+        const auto blast_wand_type = (wand_type)item_for_set(ITEM_SET_BLAST_WANDS);
         wand_type selected_wand =
-              random_choose(WAND_CHARMING, WAND_PARALYSIS, WAND_FLAME,
-                            WAND_MINDBURST, WAND_POLYMORPH, WAND_ACID,
-                            WAND_ICEBLAST);
+              random_choose(hex_wand_type, WAND_MINDBURST, WAND_POLYMORPH,
+                            WAND_FLAME, blast_wand_type, beam_wand_type);
         int charges;
         switch (selected_wand)
         {
         // completely nuts
         case WAND_ACID:
+        case WAND_LIGHT:
+        case WAND_QUICKSILVER:
         case WAND_ICEBLAST:
+        case WAND_ROOTS:
             charges = 2 + random2(3);
         break;
 
@@ -578,9 +568,8 @@ static void _give_wanderer_aux_armour(int plus = 0)
 static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
 {
     const skill_type combined_weapon_skills[] =
-        { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
-          SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
-          SK_POLEARMS, SK_SLINGS };
+        { SK_AXES, SK_MACES_FLAILS, SK_RANGED_WEAPONS, SK_POLEARMS,
+          SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT };
 
     int total_weapons = ARRAYSZ(combined_weapon_skills);
 
@@ -603,10 +592,8 @@ static vector<spell_type> _wanderer_good_equipment(skill_type & skill)
     case SK_THROWING:
     case SK_SHORT_BLADES:
     case SK_LONG_BLADES:
-    case SK_BOWS:
+    case SK_RANGED_WEAPONS:
     case SK_STAVES:
-    case SK_CROSSBOWS:
-    case SK_SLINGS:
         _give_wanderer_weapon(skill, true);
         break;
 
@@ -703,14 +690,14 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
 {
     // don't give a shield if we filled our hands already
     if (skill == SK_SHIELDS && (!you.has_usable_offhand()
-                                || gift_skills.count(SK_BOWS)))
+                                || gift_skills.count(SK_RANGED_WEAPONS)))
     {
         skill = random_choose(SK_DODGING, SK_ARMOUR);
     }
 
     // or two handers if we have a shield (getting a 2h and a bow is ok)
     if (gift_skills.count(SK_SHIELDS)
-        && (skill == SK_STAVES || skill == SK_BOWS))
+        && (skill == SK_STAVES || skill == SK_RANGED_WEAPONS))
     {
         skill = SK_FIGHTING;
     }
@@ -741,13 +728,11 @@ static vector<spell_type> _wanderer_decent_equipment(skill_type & skill,
     case SK_MACES_FLAILS:
     case SK_AXES:
     case SK_POLEARMS:
-    case SK_BOWS:
-    case SK_CROSSBOWS:
+    case SK_RANGED_WEAPONS:
     case SK_THROWING:
     case SK_STAVES:
     case SK_SHORT_BLADES:
     case SK_LONG_BLADES:
-    case SK_SLINGS:
         _give_wanderer_weapon(skill, false);
         break;
 
@@ -857,9 +842,6 @@ static void _handle_start_spells(const vector<spell_type> &spells)
             ++lvl_1s;
             to_memorise = s;
         }
-        // give stones for use with sandblast
-        if (s == SPELL_SANDBLAST)
-            newgame_make_item(OBJ_MISSILES, MI_STONE, 10 + random2avg(41, 5));
     }
     if (lvl_1s == 1 && !spell_is_useless(to_memorise, false, true))
         add_spell_to_memory(to_memorise);

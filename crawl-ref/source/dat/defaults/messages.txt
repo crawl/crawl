@@ -69,7 +69,7 @@ msc += $warning:Beware\, you cannot shaft yourself on this level
 #
 msc += $boring:You start (resting|waiting)
 msc += $boring:Unknown command
-msc += $boring:disappears? in a puff of smoke
+msc += $boring:disappears? in a (puff of smoke|burst of colours)
 msc += $boring:dissolves? into (sparkling lights|shadows)
 msc += $boring:(crumbles|melts) away\.
 msc += $boring:returns to the deep
@@ -107,6 +107,7 @@ force_more_message += Zot draws nearer
 force_more_message += Zot has nearly found you
 force_more_message += Zot already knows
 force_more_message += Zot's attention fixes on you
+force_more_message += Zot's power touches on you
 
 ## Reduce chance of draining because flight or form runs out:
 force_more_message += ^Careful!
@@ -147,6 +148,8 @@ force_more_message += You fall asleep
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss
 force_more_message += a gateway leading .* appears
+force_more_message += You detect the abyssal rune
+force_more_message += the detected abyssal rune vanishes
 force_more_message += Found .* abyssal rune of Zot
 
 # Water nymph stair temp-drowning - people seem to miss these...
@@ -162,7 +165,7 @@ force_more_message += The gate opens wide
 force_more_message += With a soft hiss the gate opens wide
 
 # God gifts
-force_more_message += grants you (a gift|ammunition|armour|a weapon)
+force_more_message += grants you (a gift|throwing weapons|armour|a weapon)
 force_more_message += offers you knowledge of
 force_more_message += believes you are ready to make a new sacrifice
 force_more_message += may now remember your ancestor

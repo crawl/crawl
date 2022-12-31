@@ -124,8 +124,6 @@ function species_mock(e)
     return "crimson imp"
   elseif you.race():find("Draconian") then
     return "wyvern"
-  elseif you.race() == "Deep Dwarf" then
-    return "deep dwarf zombie"
   elseif you.race() == "Deep Elf" then
     return "will-o-the-wisp"
   elseif you.race() == "Gnoll" then
@@ -156,10 +154,12 @@ function species_mock(e)
     return "tentacled monstrosity"
   elseif you.race() == "Ogre" then
     return "ettin skeleton"
-  elseif you.race() == "Palentonga" then
+  elseif you.race() == "Armataur" then
     return "rat"
   elseif you.race() == "Spriggan" then
     return "unseen horror"
+  elseif you.race() == "Meteoran" then
+    return "wretched star"
   elseif you.race() == "Tengu" then
     return "caustic shrike"
   elseif you.race() == "Troll" then
@@ -1133,9 +1133,9 @@ ENDMAP
 NAME:   nicolae_hepliaklqana_ecumenical_no_more
 TAGS:   temple_overflow_hepliaklqana temple_overflow_1 transparent decor
 TAGS:   uniq_altar_hepliaklqana
-WEIGHT: 5
+WEIGHT: 3
 KMONS:  WD = plant / nothing
-NSUBST: E = - / E, H = _ / - / E, E = E / . / EEE-.., P = 4=W / WDD / D
+NSUBST: E = - / E, H = _ / - / E, E = E / . / E., P = 4=W / WDD / D
 SUBST:  ' = '''., c = ccx
 KFEAT:  WS = W
 KFEAT:  _ = altar_hepliaklqana
@@ -1258,7 +1258,7 @@ NSUBST:  123 = 2=.
 KMONS:   1 = blork the orc ; quarterstaff good_item . robe \
              / orc wizard ; quarterstaff good_item . robe \
              , orc wizard ; quarterstaff good_item . robe
-KMONS:   2 = sigmund; scythe ego:draining . robe \
+KMONS:   2 = sigmund; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:draining . robe \
              / kobold brigand ; dagger ego:draining . wand of charming \
              , kobold brigand ; dagger ego:draining . wand of charming
 KMONS:   3 = edmund ; flail good_item . kite shield . chain mail \
@@ -1339,6 +1339,13 @@ MARKER:  ` = lua:fog_machine { cloud_type = "thin mist", \
                               delay = 100, size = 2, walk_dist = 1 }
 TILE:   G = dngn_gravestone
 : interest_check(_G)
+veto {{
+  if you.depth() < 7 then
+    return items.excluded_from_set("wand of charming")
+  else
+    return items.excluded_from_set("wand of paralysis")
+  end
+}}
 MAP
     ccccc
     c...c
@@ -2011,6 +2018,25 @@ MAP
 ......www.G.v
  .....w1w...v
       vvvvvvv
+ENDMAP
+
+NAME:   hellmonk_okawaru_the_only_friend_you_need
+TAGS:   temple_overflow_1 temple_overflow_okawaru uniq_altar_okawaru
+TAGS:   transparent decor
+WEIGHT: 5
+KFEAT:  _ = altar_okawaru
+KITEM:  ' = any weapon plus:0 ego:spectral ident:all
+: interest_check(_G)
+MAP
+vvvv vvvv
+v..vvv..v
+v.......v
+vvv...vvv
+  v._.v
+vvv.'.vvv
+v.......v
+v..v+v..v
+vvvv@vvvv
 ENDMAP
 
 ### Qazlal overflow altars ####################################################
@@ -4059,7 +4085,7 @@ TAGS:    no_item_gen transparent
 KFEAT:   A = altar_kikubaaqudgha
 KFEAT:   B = altar_sif_muna
 KFEAT:   C = altar_vehumet
-ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:necrotize \
+ITEM:    randbook owner:Kikubaaqudgha disc:necromancy spells:necrotise \
          numspells:1
 # You already got a direct damage spell by looting the other gods' altars.
 ITEM:    randbook owner:Sif_Muna disc:transmutation numspells:1 slevels:1 / \
@@ -4404,7 +4430,7 @@ COLOUR:  1- = red
 COLOUR:  2' = blue
 KFEAT:   D = altar_trog
 KFEAT:   E = altar_sif_muna
-: local egos = {["antimagic"] = 1, ["vorpal"] = 2, ["flaming"] = 2}
+: local egos = {["antimagic"] = 1, ["heavy"] = 2, ["flaming"] = 2}
 : if you.absdepth() <= 3 then
 {{
 local enchant = 2 + (crawl.one_chance_in(3) and 1 or 0)
@@ -5193,6 +5219,21 @@ c.w.....wwwww.c.
 c.wwwwww......c.
 c.......ccccccc.
 cccccccc........
+ENDMAP
+
+NAME:    nicolae_overflow_two_pavilions
+TAGS:    temple_overflow_generic_2 no_pool_fixup transparent
+SHUFFLE: DEFH
+SUBST:   DE : wl, FH : wl
+KPROP:   l = no_cloud_gen
+MAP
+DDDDDDD@FFFFFFF
+DcccccD.FcccccF
+DcEEEcD.FcHHHcF
+DcEB.......BHcF
+DcEEEcD.FcHHHcF
+DcccccD.FcccccF
+DDDDDDD@FFFFFFF
 ENDMAP
 
 NAME: minmay_overflow_temple_star_quad

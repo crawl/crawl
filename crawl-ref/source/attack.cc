@@ -35,6 +35,8 @@
 #include "nearby-danger.h"
 #include "pronoun-type.h"
 #include "religion.h"
+#include "shout.h"
+#include "skills.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stepdown.h"
@@ -240,7 +242,7 @@ int attack::calc_pre_roll_to_hit(bool random)
  *
  * @param mhit The post-roll player's to-hit value.
  */
-int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/, bool /*aux*/)
+int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
 {
     int modifiers = 0;
 
@@ -375,6 +377,7 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     ASSERT(attacker);
 
     wpn_skill       = weapon ? item_attack_skill(*weapon) : unarmed_skill;
+
     if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
@@ -476,10 +479,14 @@ bool attack::distortion_affects_defender()
         NONE
     };
 
+    // Don't banish or blink the player during aoops, for sanity.
+    const int banish_weight = crawl_state.player_moving ? 0 : 5;
+    const int blink_weight = crawl_state.player_moving ? 0 : 20;
+
     const disto_effect choice = random_choose_weighted(35, SMALL_DMG,
                                                        25, BIG_DMG,
-                                                       5,  BANISH,
-                                                       20, BLINK,
+                                                       banish_weight, BANISH,
+                                                       blink_weight, BLINK,
                                                        15,  NONE);
 
     if (simu && !(choice == SMALL_DMG || choice == BIG_DMG))
@@ -659,7 +666,7 @@ static const vector<chaos_effect> chaos_effects = {
     { "hasting", 10, _is_chaos_slowable, BEAM_HASTE },
     { "mighting", 10, nullptr, BEAM_MIGHT },
     { "agilitying", 10, nullptr, BEAM_AGILITY },
-    { "invisible", 10, nullptr, BEAM_INVISIBILITY, },
+    { "resistance", 10, nullptr, BEAM_RESISTANCE, },
     { "slowing", 10, _is_chaos_slowable, BEAM_SLOW },
     {
         "paralysis", 5, [](const actor &defender) {
@@ -940,20 +947,7 @@ void attack::stab_message()
 
     switch (stab_bonus)
     {
-    case 6:     // big melee, monster surrounded/not paying attention
-        if (coinflip())
-        {
-            mprf("You %s %s from a blind spot!",
-                  you.has_mutation(MUT_PAWS) ? "pounce on" : "strike",
-                  defender->name(DESC_THE).c_str());
-        }
-        else
-        {
-            mprf("You catch %s momentarily off-guard.",
-                  defender->name(DESC_THE).c_str());
-        }
-        break;
-    case 4:     // confused/fleeing
+    case 4:     // confused/fleeing/distracted
         if (!one_chance_in(3))
         {
             mprf("You catch %s completely off-guard!",
@@ -966,7 +960,6 @@ void attack::stab_message()
                   defender->name(DESC_THE).c_str());
         }
         break;
-    case 2:
     case 1:
         if (you.has_mutation(MUT_PAWS) && coinflip())
         {
@@ -1091,7 +1084,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 
     // XXX: should this also trigger on auxes?
     if (!aux && !ranged)
-        damage_plus += you.infusion_amount() * you.infusion_multiplier();
+        damage_plus += you.infusion_amount() * 4;
 
     return _core_apply_slaying(damage, damage_plus);
 }
@@ -1105,6 +1098,11 @@ int attack::player_apply_final_multipliers(int damage, bool /*aux*/)
     return damage;
 }
 
+int attack::player_apply_postac_multipliers(int damage)
+{
+    return damage;
+}
+
 void attack::player_exercise_combat_skills()
 {
 }
@@ -1115,7 +1113,7 @@ void attack::player_exercise_combat_skills()
  * TODO: Complete symmetry for base_unarmed damage
  * between monsters and players.
  */
-int attack::calc_base_unarmed_damage()
+int attack::calc_base_unarmed_damage() const
 {
     // Should only get here if we're not wielding something that's a weapon.
     // If there's a non-weapon in hand, it has no base damage.
@@ -1125,21 +1123,13 @@ int attack::calc_base_unarmed_damage()
     if (!attacker->is_player())
         return 0;
 
-    int damage = get_form()->get_base_unarmed_damage();
+    const int dam = unarmed_base_damage() + unarmed_base_damage_bonus(true);
+    return dam > 0 ? dam : 0;
+}
 
-    // Claw damage only applies for bare hands.
-    if (you.has_usable_claws())
-        damage += you.has_claws() * 2;
-
-    if (you.form_uses_xl())
-        damage += div_rand_round(you.experience_level, 3);
-    else
-        damage += you.skill_rdiv(wpn_skill);
-
-    if (damage < 0)
-        damage = 0;
-
-    return damage;
+int attack::adjusted_weapon_damage() const
+{
+    return brand_adjust_weapon_damage(weapon_damage(), damage_brand, true);
 }
 
 int attack::calc_damage()
@@ -1150,7 +1140,7 @@ int attack::calc_damage()
         int damage_max = 0;
         if (using_weapon() || wpn_skill == SK_THROWING)
         {
-            damage_max = weapon_damage();
+            damage_max = adjusted_weapon_damage();
             damage += random2(damage_max);
 
             int wpn_damage_plus = 0;
@@ -1182,7 +1172,7 @@ int attack::calc_damage()
         int potential_damage, damage;
 
         potential_damage = using_weapon() || wpn_skill == SK_THROWING
-            ? weapon_damage() : calc_base_unarmed_damage();
+            ? adjusted_weapon_damage() : calc_base_unarmed_damage();
 
         potential_damage = stat_modify_damage(potential_damage, wpn_skill, using_weapon());
 
@@ -1204,6 +1194,7 @@ int attack::calc_damage()
             return 0;
         damage = player_apply_final_multipliers(damage);
         damage = apply_defender_ac(damage);
+        damage = player_apply_postac_multipliers(damage);
 
         damage = max(0, damage);
         set_attack_verb(damage);
@@ -1353,7 +1344,7 @@ bool attack::apply_damage_brand(const char *what)
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH || brand == SPWPN_ANTIMAGIC
-            || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRISM))
+            || brand == SPWPN_VAMPIRISM))
     {
         // These brands require some regular damage to function.
         return false;
@@ -1425,11 +1416,6 @@ bool attack::apply_damage_brand(const char *what)
 
     case SPWPN_DRAINING:
         drain_defender();
-        break;
-
-    case SPWPN_VORPAL:
-        special_damage = 1 + random2(damage_done) / 3;
-        // Note: Leaving special_damage_message empty because there isn't one.
         break;
 
     case SPWPN_VAMPIRISM:
@@ -1523,7 +1509,7 @@ bool attack::apply_damage_brand(const char *what)
                 you.duration[DUR_CONFUSING_TOUCH] = 0;
                 obvious_effect = false;
             }
-            else if (!ench_flavour_affects_monster(beam_temp.flavour, mon)
+            else if (!ench_flavour_affects_monster(attacker, beam_temp.flavour, mon)
                      || mons_invuln_will(*mon))
             {
                 mprf("%s is completely immune to your confusing touch!",
@@ -1700,12 +1686,14 @@ void attack::player_stab_check()
         return;
     }
 
-    stab_type st = find_stab_type(&you, *defender);
+    const stab_type orig_st = find_stab_type(&you, *defender);
+    stab_type st = orig_st;
     // Find stab type is also used for displaying information about monsters,
     // so upgrade the stab type for !stab and the Spriggan's Knife here
     if (using_weapon()
         && is_unrandom_artefact(*weapon, UNRAND_SPRIGGANS_KNIFE)
-        && st != STAB_NO_STAB)
+        && st != STAB_NO_STAB
+        && coinflip())
     {
         st = STAB_SLEEPING;
     }
@@ -1722,5 +1710,22 @@ void attack::player_stab_check()
     }
 
     if (stab_attempt)
-        count_action(CACT_STAB, st);
+        count_action(CACT_STAB, orig_st);
+}
+
+void attack::handle_noise(const coord_def & pos)
+{
+    // Successful stabs make no noise.
+    if (stab_attempt)
+        return;
+
+    int loudness = damage_done / 4;
+
+    // All non-stab attacks make some noise.
+    loudness = max(1, loudness);
+
+    // Cap noise at shouting volume.
+    loudness = min(12, loudness);
+
+    noisy(loudness, pos, attacker->mid);
 }

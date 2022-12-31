@@ -263,8 +263,9 @@ static string mi_calc_smiting_damage(monster* /*mons*/) { return "7-17"; }
 
 static string mi_calc_airstrike_damage(monster* mons)
 {
-    int pow = 12 * mons->get_experience_level();
-    return make_stringf("8-%d", 2 + ( 6 + pow ) / 7);
+    const int pow = mons_power_for_hd(SPELL_AIRSTRIKE, mons->get_hit_dice());
+    dice_def dice = base_airstrike_damage(pow);
+    return describe_airstrike_dam(dice);
 }
 
 static string mi_calc_glaciate_damage(monster* mons)
@@ -309,13 +310,20 @@ static string mi_calc_major_healing(monster* mons)
 static string mi_calc_freeze_damage(monster* mons)
 {
     const int pow = mons_power_for_hd(SPELL_FREEZE, mons->get_hit_dice());
-    return dice_def_string(freeze_damage(pow));
+    return dice_def_string(freeze_damage(pow, false));
 }
 
 static string mi_calc_irradiate_damage(const monster &mon)
 {
     const int pow = mons_power_for_hd(SPELL_IRRADIATE, mon.get_hit_dice());
     return dice_def_string(irradiate_damage(pow));
+}
+
+static string mi_calc_resonance_strike_damage(monster* mons)
+{
+    const int pow = mons->spell_hd(SPELL_RESONANCE_STRIKE);
+    dice_def dice = resonance_strike_base_damage(pow);
+    return describe_resonance_strike_dam(dice);
 }
 
 /**
@@ -349,8 +357,7 @@ static string mons_human_readable_spell_damage_string(monster* monster,
             spell_beam.damage = waterstrike_damage(monster->spell_hd(sp));
             break;
         case SPELL_RESONANCE_STRIKE:
-            return dice_def_string(resonance_strike_base_damage(*monster))
-                   + "+"; // could clarify further?
+            return mi_calc_resonance_strike_damage(monster);
         case SPELL_IOOD:
             spell_beam.damage = mi_calc_iood_damage(monster);
             break;
@@ -1054,6 +1061,7 @@ int main(int argc, char* argv[])
                 case AF_SCARAB:
                     monsterattacks += colour(LIGHTMAGENTA, "(scarab)");
                     break;
+                case AF_RIFT:
                 case AF_DISTORT:
                     monsterattacks += colour(LIGHTBLUE, "(distort)");
                     break;

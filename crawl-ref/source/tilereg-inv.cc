@@ -56,7 +56,7 @@ void InventoryRegion::pack_buffers()
                 tileidx_t t = tile_env.default_flavour.floor + i % num_floor;
                 m_buf.add_dngn_tile(t, x, y);
             }
-            else
+            else if (!tiles.is_using_small_layout())
                 m_buf.add_main_tile(TILE_ITEM_SLOT, x, y);
         }
     }
@@ -112,7 +112,7 @@ void InventoryRegion::pack_buffers()
             if (item.special)
                 m_buf.add_main_tile(item.special, x, y, 0, 0);
 
-            if (item.flag & TILEI_FLAG_INVALID)
+            if (item.flag & TILEI_FLAG_INVALID && !tiles.is_using_small_layout())
                 m_buf.add_icons_tile(TILEI_MESH, x, y);
         }
     }
@@ -148,12 +148,6 @@ int InventoryRegion::handle_mouse(wm_mouse_event &event)
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
 
     ASSERT(idx >= 0);
-
-    if (tiles.is_using_small_layout())
-    {
-        // close the inventory tab after successfully clicking on an item
-        tiles.deactivate_tab();
-    }
 
     // TODO enne - this is all really only valid for the on-screen inventory
     // Do we subclass InventoryRegion for the onscreen and offscreen versions?
@@ -717,6 +711,15 @@ void InventoryRegion::update()
                 }
             }
         }
+        if (tiles.is_using_small_layout())
+        {
+            // Leave only one row of floor items for small layout
+            while ((int)m_items.size() < mx * (my-1))
+            {
+                InventoryTile desc;
+                m_items.push_back(desc);
+            }
+        }
     }
 
     // Then, as many ground items as we can fit.
@@ -754,14 +757,17 @@ void InventoryRegion::update()
         }
     } while (s);
 
-    while ((int)m_items.size() < mx * my)
-        // let's not do this for p2 either
+    if (!tiles.is_using_small_layout())
     {
-        InventoryTile desc;
-        desc.flag = TILEI_FLAG_FLOOR;
-        if (disable_all)
-            desc.flag |= TILEI_FLAG_INVALID;
-        m_items.push_back(desc);
+        while ((int)m_items.size() < mx * my)
+            // let's not do this for p2 either
+        {
+            InventoryTile desc;
+            desc.flag = TILEI_FLAG_FLOOR;
+            if (disable_all)
+                desc.flag |= TILEI_FLAG_INVALID;
+            m_items.push_back(desc);
+        }
     }
 }
 

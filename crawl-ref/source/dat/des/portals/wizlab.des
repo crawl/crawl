@@ -10,7 +10,7 @@
 #          |summoning OCS           |staff of Wucad Mu       |
 #--------------------------------------------------------------------
 #Cigotuvi  |uglies, abominations,   |tmut potions / books,   |16000
-#          |lump shapeshifters      |scrolls of summoning    |
+#          |lump shapeshifters      |scrolls of poison       |
 #--------------------------------------------------------------------
 #Iskenderun|DE mages, iood statues, |books, books, books,    |22000
 #          |purple draconians       |robe of the archmagi    |
@@ -1008,7 +1008,7 @@ ITEM:       potion of mutation q:1, potion of mutation
 ITEM:       any jewellery randart / w:5 hat_of_the_alchemist
 ITEM:       randbook disc:transmutation disc2:necromancy owner:Cigotuvi
 ITEM:       book of transfigurations / randbook disc:transmutation
-ITEM:       staff of death, scroll of summoning
+ITEM:       staff of death, scroll of poison
 SHUFFLE:    de / h~ / j|
 NSUBST:     de = 1:e / 1:f / *:d, g = 1:g / *:$, h = 1:h / 2:i / *:., j = 1:j / *:k
 SUBST:      4 = 4 5:2, " = 6:1 .:16, |~ = .
@@ -1432,15 +1432,15 @@ KMONS:   2 = deep elf knight w:5 ; boomerang ego:dispersal w:20 | boomerang w:5 
              rakshasa w:5 ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing / \
              boggart ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing /  \
              wizard ; boomerang ego:dispersal w:20 | boomerang w:5 | nothing
-KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
-             ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
-             spear ego:vorpal w:6 . boomerang ego:dispersal / \
-             boggart w:5 ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
-             ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
-             spear ego:vorpal w:6 . boomerang ego:dispersal / \
-             wizard ; whip ego:distortion | whip ego:vorpal w:6 | dagger \
-             ego:distortion | dagger ego:vorpal w:6 | spear ego:distortion | \
-             spear ego:vorpal w:6 . boomerang ego:dispersal . robe
+KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
+             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
+             spear ego:heavy w:6 . boomerang ego:dispersal / \
+             boggart w:5 ; whip ego:distortion | whip ego:heavy w:6 | dagger \
+             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
+             spear ego:heavy w:6 . boomerang ego:dispersal / \
+             wizard ; whip ego:distortion | whip ego:heavy w:6 | dagger \
+             ego:distortion | dagger ego:heavy w:6 | spear ego:distortion | \
+             spear ego:heavy w:6 . boomerang ego:dispersal . robe
 KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:5 / \
               thrashing horror w:30 / skeleton w:30 / freezing wraith w:5 /  \
               hellwing / chaos spawn w:5 / orange demon / ice devil /  \
@@ -1791,8 +1791,8 @@ kmons("4 = patrolling Hellbinder dbname:Hellbinder name:"
 KITEM:      d = scroll of summoning / w:5 scroll of torment / \
                 / any scroll w:20 / potion of haste \
                 / potion of heal wounds / any potion w:20
-KITEM:      e = wand of acid / wand of iceblast / ring of fire / ring of ice \
-                / randbook disc:summoning
+KITEM:      e = any beam wand / any blast wand / \
+                ring of fire / ring of ice / randbook disc:summoning
 KITEM:      f = demon blade w:1 / demon whip w:1 / demon trident w:1 \
                 / manual of summonings w:2 / any randart jewellery w:5 \
                 / cloak good_item w:5 / star_item w:25 / superb_item
@@ -2306,8 +2306,8 @@ SHUFFLE: 12/34
 NSUBST:  7 = 3:7 / *=775., 6 = 2:6 / *=6., 2 = 2:2 / *=2.., 4 = 2:4 / *=4..
 NSUBST:  A = 1:< / *:A
 SUBST:   1 = 1.., 3 = 3.., 5 = 5.., V = VVVY
-TILE:    c = wall_cobalt_stone
-LFLOORTILE: floor_black_cobalt
+TILE:    c = wall_borg_stone
+LFLOORTILE: floor_borg
 {{
 local summon_marker = TriggerableFunction:new ({
     func="wizlab_borgnjor_call_souls",
@@ -2382,11 +2382,11 @@ ITEM:   hat good_item / pair of boots good_item / scarf good_item /\
         any book w:35 / any armour good_item w:5
 ITEM:   phantom mirror
 MONS:   rakshasa, dancing weapon
-MONS:   dancing weapon; fustibalus ego:flaming w:15 /\
-        dancing weapon; fustibalus ego:freezing w:15 /\
-        dancing weapon; fustibalus ego:venom /\
-        dancing weapon; fustibalus ego:electrocution w:2 /\
-        dancing weapon; fustibalus randart ego:speed w:1 /\
+MONS:   dancing weapon; hand crossbow ego:flaming w:15 /\
+        dancing weapon; hand crossbow ego:freezing w:15 /\
+        dancing weapon; hand crossbow ego:venom /\
+        dancing weapon; hand crossbow ego:electrocution w:2 /\
+        dancing weapon; hand crossbow randart ego:speed w:1 /\
         dancing weapon; longbow ego:flaming w:15 /\
         dancing weapon; longbow ego:freezing w:15 /\
         dancing weapon; longbow ego:venom /\
@@ -2405,7 +2405,7 @@ KFEAT:   ~ = closed_clear_door
 SUBST:      ':cc., ":cc., -:mV, 1 = 11..., 2 = 2...
 NSUBST:     d = 1:e / *:d, 3 = 2:3 / * = 3..., 4 = 1:4 / *= 42.., A = 1:< / *:A
 NSUBST:     5 = 1:5 / *:5.
-TILE:       c = wall_stone_dark
+TILE:       c = wall_marble_tukima
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_w_marble
 :           set_random_mon_list("dancing weapon / rakshasa")

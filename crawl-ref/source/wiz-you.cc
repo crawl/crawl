@@ -34,12 +34,12 @@
 #include "status.h"
 #include "stringutil.h"
 #include "tag-version.h"
-#include "timed-effects.h" // zot clock
 #include "transform.h"
 #include "ui.h"
 #include "unicode.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // zot clock
 
 #ifdef WIZARD
 
@@ -213,7 +213,13 @@ void wizard_heal(bool super_heal)
         you.duration[DUR_WEAK] = 0;
         you.duration[DUR_NO_HOP] = 0;
         you.duration[DUR_LOCKED_DOWN] = 0;
+        you.duration[DUR_NO_MOMENTUM] = 0;
         you.props[CORROSION_KEY] = 0;
+        you.duration[DUR_BARBS] = 0;
+        you.attribute[ATTR_BARBS_POW] = 0;
+        you.props.erase(BARBS_MOVE_KEY);
+        you.duration[DUR_SICKNESS]  = 0;
+        you.duration[DUR_EXHAUSTED] = 0;
         you.duration[DUR_BREATH_WEAPON] = 0;
         you.duration[DUR_BLINKBOLT_COOLDOWN] = 0;
         delete_all_temp_mutations("Super heal");
@@ -225,11 +231,9 @@ void wizard_heal(bool super_heal)
     else
         mpr("Healing.");
 
-    // Clear most status ailments.
-    you.duration[DUR_SICKNESS]  = 0;
+    // Clear some status ailments.
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_POISONING] = 0;
-    you.duration[DUR_EXHAUSTED] = 0;
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
     you.redraw_hit_points = true;
@@ -390,16 +394,23 @@ void wizard_set_skill_level(skill_type skill)
         return;
     }
 
+    if (is_useless_skill(skill))
+    {
+        mpr("Can't change a useless skill.");
+        return;
+    }
+
     mpr(skill_name(skill));
-    double amount = prompt_for_float("To what level? ");
+    const double old_amount = you.skill(skill, 10, true) * 0.1;
+    string prompt = make_stringf("To what level? (current = %.1f) ",
+                                 old_amount);
+    double amount = prompt_for_float(prompt.c_str());
 
     if (amount < 0 || amount > 27)
     {
         canned_msg(MSG_OK);
         return;
     }
-
-    const int old_amount = you.skills[skill];
 
     set_skill_level(skill, amount);
 

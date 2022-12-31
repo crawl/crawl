@@ -314,5 +314,68 @@ callback.pakellas_statue_experiment_end = make_dummy_trigger_func()
 callback.pakellas_its_alive_clouds = make_dummy_trigger_func()
 callback.pakellas_its_alive_begin = make_dummy_trigger_func()
 callback.pakellas_its_alive_end = make_dummy_trigger_func()
+callback.grunt_zot_stairs_overgrown_start = make_dummy_trigger_func()
+callback.grunt_zot_stairs_overgrown_oklobify = make_dummy_trigger_func()
+
+-- save compat for grunt_zot_stairs_overgrown
+-- let this vault still work if it exists
+function callback.grunt_zot_stairs_overgrown_start(data, triggerable,
+                                                   triggerer, marker, ev)
+  if data.triggered == true then
+    return
+  end
+
+  crawl.mpr("You have a sense of imminent foreboding.", "warning")
+  dgn.persist.grunt_zot_stairs_overgrown_started = true
+end
+
+function callback.grunt_zot_stairs_overgrown_oklobify(data, triggerable,
+                                                      triggerer, marker, ev)
+  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  if dgn.persist.grunt_zot_stairs_overgrown_started == nil then
+    return
+  end
+
+  if data.count >= 10 then
+    dgn.persist.grunt_zot_stairs_overgrown_started = nil
+    return
+  end
+
+  local possible = {}
+  local targets = dgn.find_marker_positions_by_prop("oklobify", 1)
+  for _, pos in ipairs(targets) do
+    local mons = dgn.mons_at(pos.x, pos.y)
+    if mons ~= nil and
+       (mons.name == "plant" or mons.name == "fungus"
+        or mons.name == "bush") then
+      possible[#possible + 1] = pos
+    end
+  end
+
+  if #possible == 0 then
+    dgn.persist.grunt_zot_stairs_overgrown_started = nil
+    return
+  end
+
+  data.count = data.count + 1
+
+  local pos = possible[crawl.random2(#possible) + 1]
+  local mons = dgn.mons_at(pos.x, pos.y)
+  mons.dismiss()
+
+  dgn.create_monster(pos.x, pos.y, "oklob plant")
+
+  if not you.see_cell(pos.x, pos.y) then return end
+
+  if not data.warned then
+    data.warned = true
+    crawl.mpr("One of the plants suddenly grows acid sacs!", "warning")
+  else
+    crawl.mpr("Another plant grows acid sacs!", "warning")
+  end
+end
 
 }}

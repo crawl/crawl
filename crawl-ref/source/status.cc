@@ -4,11 +4,13 @@
 
 #include "areas.h"
 #include "art-enum.h" // bearserk
+#include "artefact.h"
 #include "branch.h"
 #include "cloud.h"
 #include "duration-type.h"
 #include "env.h"
 #include "evoke.h"
+#include "fight.h" // weapon_cleaves
 #include "god-abil.h"
 #include "god-passive.h"
 #include "item-prop.h"
@@ -26,9 +28,9 @@
 #include "stairs.h" // rise_through_ceiling
 #include "stringutil.h"
 #include "throw.h"
-#include "timed-effects.h" // bezotting_level
 #include "transform.h"
 #include "traps.h"
+#include "zot.h" // bezotting_level
 
 #include "duration-data.h"
 
@@ -236,16 +238,6 @@ bool fill_status_info(int status, status_info& inf)
         _describe_zot(inf);
         break;
 
-    case STATUS_CURL:
-        if (you.props[PALENTONGA_CURL_KEY].get_bool())
-        {
-            inf.light_text = "Curl";
-            inf.light_colour = BLUE;
-            inf.short_text = "curled up";
-            inf.long_text = "You are defensively curled.";
-        }
-        break;
-
     case STATUS_AIRBORNE:
         _describe_airborne(inf);
         break;
@@ -414,7 +406,7 @@ bool fill_status_info(int status, status_info& inf)
             ASSERT(cstr);
 
             const bool damage =
-                cstr->constriction_does_damage(you.is_directly_constricted());
+                cstr->constriction_does_damage(you.get_constrict_type());
 
             inf.light_colour = YELLOW;
             inf.light_text   = damage ? "Constr"      : "Held";
@@ -649,8 +641,9 @@ bool fill_status_info(int status, status_info& inf)
             inf.light_text = "Cloud";
             // TODO: make the colour based on the cloud's color; requires elemental
             // status lights, though.
-            inf.light_colour =
-                is_damaging_cloud(cloud, true, cloud_is_yours_at(you.pos())) ? LIGHTRED : DARKGREY;
+            const bool yours = cloud_is_yours_at(you.pos());
+            const bool danger = cloud_damages_over_time(cloud, true, yours);
+            inf.light_colour = danger ? LIGHTRED : DARKGREY;
         }
         break;
     }
@@ -658,10 +651,8 @@ bool fill_status_info(int status, status_info& inf)
     case DUR_CLEAVE:
     {
         const item_def* weapon = you.weapon();
-
-        if (weapon && item_attack_skill(*weapon) == SK_AXES)
+        if (weapon && weapon_cleaves(*weapon))
             inf.light_colour = DARKGREY;
-
         break;
     }
 
@@ -771,9 +762,13 @@ static void _describe_zot(status_info& inf)
         inf.short_text = "bezotted";
         inf.long_text = "Zot is approaching!";
     }
-    else if (!Options.always_show_zot || !zot_clock_active())
+    else if (!Options.always_show_zot && !you.has_mutation(MUT_SHORT_LIFESPAN)
+             || !zot_clock_active())
+    {
         return;
+    }
 
+    // XX code dup with overview screen
     inf.light_text = make_stringf("Zot (%d)", turns_until_zot());
     switch (lvl)
     {
@@ -788,7 +783,7 @@ static void _describe_zot(status_info& inf)
             break;
         case 3:
         default:
-            inf.light_colour = MAGENTA;
+            inf.light_colour = LIGHTMAGENTA;
             break;
     }
 }

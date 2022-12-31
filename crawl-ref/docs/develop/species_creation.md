@@ -2,7 +2,7 @@
 
 DCSS uses YAML files to define species, these files can be found in [source/dat/species](../../source/dat/species).
 
-To create a new species, you put an appropriate YAML file in there and compile DCSS. For any custom species behaviour which the YAML file can't express (for example, Octopode's eight ring slots), you'll also need custom C++ code added elsewhere.
+To create a new species, you put an appropriate YAML file in there, manually add the species enum name to `util/species-gen/species-type-header.txt `, and compile DCSS. For any custom species behaviour which the YAML file can't express (for example, Octopode's eight ring slots), you'll also need custom C++ code added elsewhere, typically in the form of new (or old) mutations.
 
 ## Species Definition Format
 
@@ -12,7 +12,7 @@ You can view existing files to get a sense of the format, it's quite straightfor
 
 | key  | type | required | description |
 | ---- | ---- | -------- | ----------- |
-| enum | `string` | **Yes** | Set the species enum. Must match the pattern `SP_[A-Z_]+`. |
+| enum | `string` | **Yes** | Set the species enum. Must match the pattern `SP_[A-Z_]+`, and be present in `util/species-gen/species-type-header.txt `. |
 | monster | `string` | **Yes** | Species' corresponding monster. Must match the pattern `MONS_[A-Z_]+`. |
 | name | `string` | **Yes** | Species name, like 'Deep Dwarf' or 'Felid'. Required. Must be unique. |
 | short_name | `string` | No | Two letter species code. Must be unique (excepting special cases like Draconian sub-species). Defaults to the first two letters of the name. |
@@ -44,4 +44,4 @@ You probably don't need or want to use these.
 | key  | type | required | description |
 | ---- | ---- | -------- | ----------- |
 | TAG_MAJOR_VERSION | `int` | No | Wrap the species in `#if TAG_MAJOR_VERSION == [...]` to deprecate it. See existing deprecated species for examples. |
-| create_enum | `boolean` | No | Set `false` if the species has a hardcoded enum in species-type.h. New species should use the default value. Defaults to `true`. |
+| create_enum | `boolean` | No | Set `false` if the species has a hardcoded enum in species-type.h. New species should use the default value. Defaults to `false`. |

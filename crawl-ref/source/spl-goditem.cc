@@ -1013,7 +1013,6 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
     if (!mons || !mons->alive() || !mons->undead_or_demonic())
         return;
 
-    god_conduct_trigger conducts[3];
     int hploss = roll_dice(3, 15) + (random2(pow) / 5);
 
     if (hploss)

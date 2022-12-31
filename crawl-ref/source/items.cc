@@ -60,7 +60,6 @@
 #include "player-equip.h"
 #include "player.h"
 #include "prompt.h"
-#include "potion.h"
 #include "quiver.h"
 #include "randbook.h"
 #include "religion.h"
@@ -79,11 +78,11 @@
 #include "terrain.h"
 #include "throw.h"
 #include "tilepick.h"
-#include "timed-effects.h" // bezotted
 #include "travel.h"
 #include "viewchar.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // bezotted
 
 static int _autopickup_subtype(const item_def &item);
 static void _autoinscribe_item(item_def& item);
@@ -986,13 +985,7 @@ void pickup_menu(int item_link)
     auto items = const_item_list_on_square(item_link);
     ASSERT(items.size());
 
-    string prompt = "Pick up what? " + slot_description()
-#ifdef TOUCH_UI
-                  + " (<Enter> or tap header to pick up)"
-#else
-                  + " (_ for help)"
-#endif
-                  ;
+    string prompt = "Pick up what? " + slot_description() + " (_ for help)";
 
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";
@@ -1852,13 +1845,6 @@ void add_held_books_to_library()
     }
 }
 
-static void _give_abyssal_rune_xp()
-{
-    mpr("For a moment you glimpse the secrets of this dreadful place.");
-    potionlike_effect(POT_EXPERIENCE, 80);
-    level_change();
-}
-
 /**
  * Place a rune into the player's inventory.
  *
@@ -1875,10 +1861,6 @@ static void _get_rune(const item_def& it, bool quiet)
         flash_view_delay(UA_PICKUP, rune_colour(it.sub_type), 300);
         mprf("You pick up the %s rune and feel its power.",
              rune_type_name(it.sub_type));
-
-        if (it.sub_type == RUNE_ABYSSAL && !crawl_state.game_is_sprint())
-            _give_abyssal_rune_xp();
-
         int nrunes = runes_in_pack();
         if (nrunes >= you.obtainable_runes)
             mpr("You have collected all the runes! Now go and win!");
@@ -2583,7 +2565,7 @@ bool drop_item(int item_dropped, int quant_drop)
     // like temporary brands. -- bwr
     if (item_dropped == you.equip[EQ_WEAPON] && quant_drop >= item.quantity)
     {
-        if (!wield_weapon(true, SLOT_BARE_HANDS, true, true, true, false))
+        if (!wield_weapon(SLOT_BARE_HANDS, false))
             return false;
         // May have been destroyed by removal. Returning true because we took
         // time to swap away.
@@ -2777,6 +2759,7 @@ static void _multidrop(vector<SelItem> tmp_items)
     for (SelItem& si : tmp_items)
     {
         const int item_quant = si.item->quantity;
+        ASSERT(item_quant > 0);
 
         // EVIL HACK: Fix item quantity to match the quantity we will drop,
         // in order to prevent misleading messages when dropping
@@ -3315,7 +3298,7 @@ int get_max_subtype(object_class_type base_type)
 
 equipment_type item_equip_slot(const item_def& item)
 {
-    if (!in_inventory(item))
+    if (!item.defined() || !in_inventory(item))
         return EQ_NONE;
 
     for (int i = EQ_FIRST_EQUIP; i < NUM_EQUIP; i++)
@@ -3439,14 +3422,10 @@ colour_t item_def::weapon_colour() const
 
     switch (item_attack_skill(*this))
     {
-        case SK_BOWS:
+        case SK_RANGED_WEAPONS:
             return BLUE;
-        case SK_CROSSBOWS:
-            return LIGHTBLUE;
         case SK_THROWING:
             return WHITE;
-        case SK_SLINGS:
-            return BROWN;
         case SK_SHORT_BLADES:
             return CYAN;
         case SK_LONG_BLADES:
@@ -3480,11 +3459,11 @@ colour_t item_def::missile_colour() const
         case MI_LARGE_ROCK:
             return LIGHTGREY;
 #if TAG_MAJOR_VERSION == 34
-        case MI_ARROW:
         case MI_NEEDLE:
-        case MI_BOLT:
-        case MI_SLING_BULLET:
 #endif
+        case MI_ARROW:         // removed as an item, but don't crash
+        case MI_BOLT:          // removed as an item, but don't crash
+        case MI_SLING_BULLET:  // removed as an item, but don't crash
         case MI_DART:
             return WHITE;
         case MI_JAVELIN:
@@ -3518,10 +3497,12 @@ colour_t item_def::armour_colour() const
     {
         case ARM_CLOAK:
         case ARM_SCARF:
+        case ARM_CRYSTAL_PLATE_ARMOUR:
             return WHITE;
         case ARM_BARDING:
             return GREEN;
         case ARM_ROBE:
+        case ARM_ANIMAL_SKIN:
             return RED;
 #if TAG_MAJOR_VERSION == 34
         case ARM_CAP:
@@ -3535,15 +3516,12 @@ colour_t item_def::armour_colour() const
             return LIGHTBLUE;
         case ARM_LEATHER_ARMOUR:
             return BROWN;
-        case ARM_ANIMAL_SKIN:
-            return LIGHTGREY;
-        case ARM_CRYSTAL_PLATE_ARMOUR:
-        case ARM_ORB:
-            return WHITE;
         case ARM_KITE_SHIELD:
         case ARM_TOWER_SHIELD:
         case ARM_BUCKLER:
             return CYAN;
+        case ARM_ORB:
+            return LIGHTGREY;
         default:
             return LIGHTCYAN;
     }
@@ -4604,7 +4582,7 @@ item_def get_item_known_info(const item_def& item)
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
         CORPSE_NAME_TYPE_KEY, ITEM_TILE_KEY, ITEM_TILE_NAME_KEY,
         WORN_TILE_KEY, WORN_TILE_NAME_KEY, NEEDS_AUTOPICKUP_KEY,
-        FORCED_ITEM_COLOUR_KEY, SPELL_LIST_KEY,
+        FORCED_ITEM_COLOUR_KEY, SPELL_LIST_KEY, ITEM_NAME_KEY,
     };
     for (const char *prop : copy_props)
         if (item.props.exists(prop))
@@ -4729,7 +4707,8 @@ static void _identify_last_item(item_def &item)
 
 /**
  * Check to see if there's only one unidentified subtype left in the given
- * item's object type. If so, automatically identify it.
+ * item's object type. If so, automatically identify it. Also mark item sets
+ * known, if appropriate.
  *
  * @param item  The item in question.
  * @return      Whether the item was identified.
@@ -4738,6 +4717,9 @@ bool maybe_identify_base_type(item_def &item)
 {
     if (is_artefact(item))
         return false;
+
+    maybe_mark_set_known(item.base_type, item.sub_type);
+
     if (get_ident_type(item))
         return false;
 
@@ -4752,7 +4734,8 @@ bool maybe_identify_base_type(item_def &item)
 
     for (int i = item_base; i < item_count + item_base; i++)
     {
-        const bool identified = you.type_ids[item.base_type][i];
+        const bool identified = you.type_ids[item.base_type][i]
+                             || item_known_excluded_from_set(item.base_type, i);
         ident_count += identified ? 1 : 0;
     }
 

@@ -459,7 +459,6 @@ LUAFN(debug_check_moncasts)
     const unordered_set<int> no_monster_impl =
     {
         SPELL_APPORTATION,
-        SPELL_CONJURE_FLAME,
         SPELL_INNER_FLAME,
         SPELL_FULMINANT_PRISM,
         SPELL_DAZZLING_FLASH,
@@ -518,7 +517,12 @@ LUAFN(debug_check_moncasts)
         SPELL_FLAME_WAVE,
         SPELL_ENFEEBLE,
         SPELL_ANGUISH,
-        SPELL_NECROTIZE,
+        SPELL_NECROTISE,
+        SPELL_BLASTSPARK,
+        SPELL_ROT,
+        SPELL_MOMENTUM_STRIKE,
+        SPELL_KISS_OF_DEATH,
+        SPELL_ELECTRIC_CHARGE,
     };
 
     for (int s = SPELL_FIRST_SPELL; s < NUM_SPELLS; s++)

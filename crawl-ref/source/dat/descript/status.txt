@@ -72,6 +72,14 @@ expires you will be slowed and unable to berserk again for a short duration.
 You are recovering from your berserk rage, and are unable to berserk again for
 a short duration.
 %%%%
+Bearserk status
+
+You are filled with barbearic rage! You are hasted, deal grizzly damage, and
+have greatly increased health, but find it impawsible to do much other than
+move and maul foes. You'll bid furwell to this status very quickly unless you
+are attacking, and when it expires you will be slowed and unable to bearserk
+again for a short duration.
+%%%%
 Pois status
 
 You are poisoned and will continually lose health. While poisoned, your current
@@ -147,10 +155,15 @@ or by breaking line of sight with them.
 
 You are prevented from teleporting or blinking.
 %%%%
--Move status
+Stuck status
 
 You are prevented from moving, blinking, or teleporting. (You can still take
 other actions.)
+%%%%
+-Move status
+
+You cannot walk, fly around, slither, etc. You can still take other actions,
+and can still be moved via translocations or by being pushed, pulled, and so on.
 %%%%
 Mark status
 
@@ -736,12 +749,12 @@ Zot status
 
 You have spent too much time in one branch, allowing the malevolent power of Zot
 to notice you. If you spend the indicated number of turns in the branch without
-descending to a new floor, Zot will find and consume you.
+descending to a new floor, Zot will find you, causing permanent health damage.
 %%%%
 Zot count status
 
 If you spend the indicated number of turns in this branch without descending to
-a new floor, Zot will find and consume you.
+a new floor, Zot will find you, causing permanent health damage.
 %%%%
 Curl status
 
@@ -794,13 +807,13 @@ Wave+ status
 
 <Wave status>
 %%%%
-Ramparts
+Ramparts status
 
 You are encasing nearby walls in ice. The ice will crack and fall away if you
 move to a new position.
 %%%%
-Bog
+Bog status
 
-You are creating a toxic bog in the nearby area. You cannot sustain this
-transformation in areas out of your line of sight.
+You are creating a toxic bog in the nearby area, and are immune to its effects.
+You cannot sustain this transformation in areas out of your line of sight.
 %%%%

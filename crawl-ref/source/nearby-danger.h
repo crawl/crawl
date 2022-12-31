@@ -33,6 +33,8 @@ bool i_feel_safe(bool announce = false, bool want_move = false,
                  bool just_monsters = false, bool check_dist = true,
                  int range = -1);
 
+bool can_rest_here(bool announce = false);
+
 bool there_are_monsters_nearby(bool dangerous_only = false,
                                bool require_visible = true,
                                bool consider_user_options = false);

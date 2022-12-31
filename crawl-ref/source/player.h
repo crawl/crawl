@@ -52,7 +52,6 @@
 #define PARALYSED_BY_KEY "paralysed_by"
 #define PETRIFIED_BY_KEY "petrified_by"
 #define FROZEN_RAMPARTS_KEY "frozen_ramparts_position"
-#define PALENTONGA_CURL_KEY "palentonga_curl"
 
 // display/messaging breakpoints for penalties from Ru's MUT_HORROR
 #define HORROR_LVL_EXTREME  3
@@ -213,11 +212,7 @@ public:
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> training_targets; ///< Training targets, scaled by 10 (so [0,270]).  0 means no target.
     int experience_pool; ///< XP waiting to be applied.
-
-    /// track skill points gained by crosstraining
-    FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
     FixedVector<uint8_t, NUM_SKILLS>  skill_order;
-
     /// manuals
     FixedVector<unsigned int, NUM_SKILLS>  skill_manual_points;
 
@@ -604,6 +599,7 @@ public:
     bool        submerged() const override;
     bool        floundering() const override;
     bool        extra_balanced() const override;
+    bool        slow_in_water() const;
     bool        shove(const char* feat_name = "") override;
     bool        can_pass_through_feat(dungeon_feature_type grid) const override;
     bool        can_burrow() const override;
@@ -617,8 +613,8 @@ public:
                              bool rescale = true) const override;
     random_var  attack_delay_with(const item_def *projectile, bool rescale,
                                   const item_def *weapon) const;
-    int         constriction_damage(bool direct) const override;
-    bool        constriction_does_damage(bool /* direct */) const override
+    int         constriction_damage(constrict_type typ) const override;
+    bool        constriction_does_damage(constrict_type /* typ */) const override
                     { return true; };
 
     int       has_claws(bool allow_tran = true) const override;
@@ -662,7 +658,6 @@ public:
                        vector<const item_def *> *matches = nullptr) const override;
 
     int infusion_amount() const;
-    int infusion_multiplier() const;
 
     item_def *weapon(int which_attack = -1) const override;
     item_def *shield() const override;
@@ -711,6 +706,7 @@ public:
     bool can_bleed(bool allow_tran = true) const override;
     bool can_drink(bool temp = true) const;
     bool is_stationary() const override;
+    bool is_motile() const;
     bool malmutate(const string &reason) override;
     bool polymorph(int pow, bool allow_immobile = true) override;
     void backlight();
@@ -785,6 +781,7 @@ public:
 
     bool res_corr(bool allow_random = true, bool temp = true) const override;
     bool clarity(bool items = true) const override;
+    bool faith(bool items = true) const override;
     bool stasis() const override;
     bool cloud_immune(bool items = true) const override;
 
@@ -798,7 +795,7 @@ public:
     bool cannot_act() const override;
     bool confused() const override;
     bool caught() const override;
-    bool backlit(bool self_halo = true) const override;
+    bool backlit(bool self_halo = true, bool temp = true) const override;
     bool umbra() const override;
     int halo_radius() const override;
     int silence_radius() const override;
@@ -821,6 +818,7 @@ public:
     int beam_resists(bolt &beam, int hurted, bool doEffects, string source)
         override;
     bool can_feel_fear(bool include_unknown) const override;
+    bool resists_dislodge(string event = "") const override;
 
     bool can_throw_large_rocks() const override;
     bool can_smell() const;
@@ -859,7 +857,7 @@ public:
     bool can_do_shaft_ability(bool quiet = false) const;
     bool do_shaft_ability();
 
-    bool can_potion_heal();
+    bool can_potion_heal(bool temp=true);
     int scale_potion_healing(int healing_amount);
 
     void apply_location_effects(const coord_def &oldpos,
@@ -935,6 +933,15 @@ protected:
 class monster;
 struct item_def;
 
+class player_vanishes
+{
+    coord_def source;
+    bool movement;
+public:
+    player_vanishes(bool _movement=false);
+    ~player_vanishes();
+};
+
 // Helper. Use move_player_to_grid or player::apply_location_effects instead.
 void moveto_location_effects(dungeon_feature_type old_feat,
                              bool stepped=false, const coord_def& old_pos=coord_def());
@@ -961,7 +968,6 @@ void move_player_to_grid(const coord_def& p, bool stepped);
 bool is_map_persistent();
 bool player_in_connected_branch();
 bool player_in_hell(bool vestibule=false);
-bool player_in_starting_abyss();
 
 static inline bool player_in_branch(int branch)
 {
@@ -982,7 +988,7 @@ bool player_effectively_in_light_armour();
 int player_shield_racial_factor();
 int player_armour_shield_spell_penalty();
 
-int player_movement_speed();
+int player_movement_speed(bool check_terrain = true);
 
 int player_icemail_armour_class();
 int player_condensation_shield_class();
@@ -1029,14 +1035,12 @@ int player_spec_hex();
 int player_spec_poison();
 int player_spec_summ();
 
-int player_adjust_evoc_power(const int power, int enhancers = 0);
-
 int player_speed();
 
 int player_spell_levels(bool floored = true);
 int player_total_spell_levels();
 
-int player_teleport();
+int get_teleportitis_level();
 
 int player_monster_detect_radius();
 
@@ -1144,7 +1148,8 @@ void dec_elixir_player(int delay);
 void dec_ambrosia_player(int delay);
 void dec_channel_player(int delay);
 void dec_frozen_ramparts(int delay);
-bool invis_allowed(bool quiet = false, string *fail_reason = nullptr);
+bool invis_allowed(bool quiet = false, string *fail_reason = nullptr,
+                                                        bool temp = true);
 bool flight_allowed(bool quiet = false, string *fail_reason = nullptr);
 void fly_player(int pow, bool already_flying = false);
 void float_player();

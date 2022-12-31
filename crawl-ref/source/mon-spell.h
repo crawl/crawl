@@ -218,12 +218,12 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('g') Small humanoids.
-    {  MST_GNOLL_SHAMAN,
+    {  MST_BOUDA,
       {
-       { SPELL_CORONA, 11, MON_SPELL_PRIEST },
-       { SPELL_HEAL_OTHER, 21, MON_SPELL_PRIEST },
-       { SPELL_HASTE_OTHER, 11, MON_SPELL_PRIEST },
-       { SPELL_MINOR_HEALING, 11, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
+       { SPELL_HEAL_OTHER, 20, MON_SPELL_PRIEST },
+       { SPELL_MINOR_HEALING, 20, MON_SPELL_PRIEST | MON_SPELL_EMERGENCY },
+       { SPELL_WEAKENING_GAZE, 20, MON_SPELL_PRIEST | MON_SPELL_INSTANT },
+       { SPELL_HUNTING_CALL, 50, MON_SPELL_VOCAL },
       }
     },
 
@@ -1133,6 +1133,12 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    { MST_STARFLOWER,
+      {
+       { SPELL_HARPOON_SHOT, 80, MON_SPELL_NATURAL },
+      }
+    },
+
     // ('Q') Tengu.
     {  MST_TENGU_CONJURER,
       {
@@ -1590,7 +1596,7 @@ static const mon_spellbook mspell_list[] =
     {  MST_WRETCHED_STAR,
       {
        { SPELL_FORCE_LANCE, 60, MON_SPELL_MAGICAL },
-       { SPELL_CORRUPTING_PULSE, 15, MON_SPELL_MAGICAL },
+       { SPELL_CORRUPTING_PULSE, 40, MON_SPELL_MAGICAL },
       }
     },
 
@@ -1605,7 +1611,7 @@ static const mon_spellbook mspell_list[] =
     // (';') Walking Tomes.
     { MST_WALKING_TOME,
       {
-       { SPELL_CONJURE_LIVING_SPELLS, 60, MON_SPELL_MAGICAL },
+       { SPELL_CONJURE_LIVING_SPELLS, 60, MON_SPELL_WIZARD },
       }
     },
 
@@ -1779,7 +1785,8 @@ static const mon_spellbook mspell_list[] =
 
     { MST_BAI_SUZHEN_DRAGON,
       {
-        { SPELL_PRIMAL_WAVE, 60, MON_SPELL_NATURAL | MON_SPELL_BREATH },
+        { SPELL_PRIMAL_WAVE, 60, MON_SPELL_NATURAL | MON_SPELL_BREATH
+                                  | MON_SPELL_NOISY },
       }
     },
 
@@ -1787,7 +1794,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SERPENT_OF_HELL_GEH_BREATH, 35,
            MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
-       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
       }
     },
 
@@ -1795,7 +1802,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SERPENT_OF_HELL_COC_BREATH, 35,
          MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
-       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
       }
     },
 
@@ -1803,7 +1810,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SERPENT_OF_HELL_DIS_BREATH, 35,
          MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
-       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
       }
     },
 
@@ -1811,7 +1818,7 @@ static const mon_spellbook mspell_list[] =
       {
        { SPELL_SERPENT_OF_HELL_TAR_BREATH, 35,
          MON_SPELL_NATURAL | MON_SPELL_BREATH | MON_SPELL_NOISY },
-       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL },
+       { SPELL_SUMMON_DRAGON, 35, MON_SPELL_MAGICAL | MON_SPELL_NOISY },
       }
     },
 

@@ -23,10 +23,10 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
 
     if you.in_branch("Lair") then
         e.mons("spriggan")
-        if you.absdepth() >= 14 then
-            e.mons("wolf / black bear w:4 / yak w:2")
-        else
+        if you.absdepth() >= 13 then
             e.mons("wyvern / elephant w:4 / dream sheep w:2")
+        else
+            e.mons("wolf / black bear w:4 / yak w:2")
         end
     else
         if you.absdepth() >= 12 then
@@ -287,15 +287,11 @@ MAP
 ENDMAP
 
 # Lava Lair entry
-# TODO: this vault will veto without a path to the O tile, which lowers the
-# probability below weight 1. It would be better to not use vetoes to control
-# the probability. This vault vetos around 80-85% of the time in the
-# placement.lua test script case (completely open level)
 NAME:   minmay_lair_entry_lava
 TAGS:   lair_entry no_monster_gen transparent
 ORIENT: float
 WEIGHT: 1
-MONS:   fire dragon
+MONS:   fire crab
 KFEAT:  O = enter_lair
 NSUBST: M = 1 / L
 SUBST:  L = l.
@@ -305,7 +301,7 @@ MAP
 ..llllll.
 ..llMMlL.
 .LlMOMll.
-.llMMlll.
+.ll.Mlll.
 .l.llll..
 ..lllL...
 .........
@@ -476,6 +472,39 @@ MAP
 ..####c####..
 .............
 .............
+ENDMAP
+
+NAME:   hellmonk_lair_entry_icy
+TAGS:   lair_entry transparent
+ORIENT: float
+MONS:   ice beast, wolf / polar bear w:3, rime drake
+NSUBST: 3 = 3 / 2.., . = 2 / 4 = 2... / .
+SUBST:  x = xxx., - = W:5 ':25 x:20 .:15
+NSUBST: ' = 16 = 1''' / '
+KFEAT:  O = enter_lair
+TILE:   x = wall_ice_block
+FTILE:  '1 = floor_ice
+COLOUR: '1 = blue
+MAP
+       -------
+     --'''''''--
+    -'''''''''''-
+   -''''-----''''-
+  -'''.........'''-
+ -'''.x.x...x.x.'''-
+ -'''..xxx.xxx..'''-
+-'''-.xxx.3.xxx.-'''-
+-'''-..x.....x..-'''-
+-'''-...3.O.3...-'''-
+-'''-..x.....x..-'''-
+-'''-.xxx.3.xxx.-'''-
+ -'''. xxx.xxx..'''-
+ -'''.x x...x.x.'''-
+  -'''.........'''-
+   -''''-----''''-
+    -'''''''''''-
+     --'''''''--
+       ---@---
 ENDMAP
 
 ###############################################################################
@@ -1852,6 +1881,35 @@ xxxWWWWWxxx
   xxxxxx
 ENDMAP
 
+# Someone hasn't taken care of their garden, but occasionally it takes care of itself.
+NAME:    pdpol_lair_neglected_garden
+TAGS:    extra decor transparent no_trap_gen
+DEPTH:   Lair
+SHUFFLE: ac"` / pbbp
+SUBST:   ab = D, cp = P
+: if crawl.one_chance_in(5) then
+MONS:    plant, bush
+SUBST:   V = T, D = 2, P = 1
+FTILE:   ' = floor_dirt, 12`" = floor_grass
+:else
+MONS:    withered plant / plant w:1, fungus
+SUBST:   P = 1, D = 122
+:end
+SUBST:   '`" = .
+MAP
+.....@.....
+..`P"'"P`..
+.`Pac'caP`.
+.``c'''c``.
+.`"''D''"`.
+@`"'DVD'"`@
+.`"''D''"`.
+.``c'''c``.
+.`Pac'caP`.
+..`P"'"P`..
+.....@.....
+ENDMAP
+
 ###############################################################################
 # Remaining non-grouped regular Lair vaults.
 
@@ -2717,6 +2775,84 @@ MAP
 --xx'''xxxxxxxxx'''xx-
  --xxxxxxxxxxxxxxxxx--
   -------------------
+ENDMAP
+
+# Dead by dawn!
+NAME:    pdpol_lair_cabin_in_the_woods
+TAGS:    no_item_gen no_monster_gen
+DEPTH:   Lair
+# The last survivor
+KMONS:   1 = human ; war axe ego:heavy good_item \
+                       | war axe ego:flaming good_item \
+                   . leather armour good_item | ring mail good_item \
+                       | scale mail good_item
+# Trying to get some good horror move trope representation
+KMONS:   2 = Rupert / reaper / vampire mage / phantasmal warrior \
+                 / tentacled starspawn \
+             , reaper / vampire mage / phantasmal warrior / tentacled starspawn
+NSUBST:  a = a / c, p = p / c, q = q / c
+NSUBST:  r = r / c, s = s / c, u = u / c
+# These are distinct to preserve 'a' for the rune door.
+SHUFFLE: Er / ?u, Daqp / ?sur
+NSUBST:  D = 2 / | / S / `, E = 1 / *%% / S / `
+NSUBST:  T = 2=009 / * = .ttt
+NSUBST:  aq = 1:= / c, p = +
+SHUFFLE: rsu
+NSUBST:  r = + / c, s = + / c
+SUBST:   u = c, " = `.., `? = `..., _ = t_
+KPROP:   ` = bloody
+MARKER:  F = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
+         pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
+         size_max = 3, spread_rate = 33 }
+: dgn.delayed_decay(_G, 'S', "human skeleton")
+CLEAR:   _
+MAP
+   _____________________
+   @ttttttttttttttttttttt_
+ @..ttttTttttttttttttttttt_
+ tTt.tt..ccccccccccccccctt_
+ttt.tTt..cDDDDDq``rEEEEctt_
+ttTt.TtF.cDDDDDq``rEEEEctt_
+ttt.ttt..caaaaac``rEEEEctt_
+ttTt..t."n`````p``cssssctt_
+tTt..T'T"+`````p``u????ctt_
+tt.ttt.F"n`````p``u????ctt_
+ttT.tt...c`````p``u????ctt_
+ tTt.tt..ccccccccccccccctt_
+ @..ttttTttttttttttttttttt_
+   @ttttttttttttttttttttt_
+   ________________________
+ENDMAP
+
+NAME:   pdpol_lair_cavern_descent
+TAGS:   no_pool_fixup
+DEPTH:  Lair
+KITEM:  * = *
+KMONS:  1 = water moccasin / black bear / wolf / wyvern
+KMONS:  2 = electric eel
+KMONS:  3 = cane toad / black mamba / komodo dragon / polar bear
+KMONS:  4 = hydra / boulder beetle / hornet / rime drake
+KMONS:  5 = basilisk / torpor snail w:5 / manticore w:2
+KFEAT:  5* = W
+KFEAT:  2 = w
+SUBST:  u = wW
+NSUBST: ' = 2:1 / 2=1. / 3 / 2=3. / 4 / 4. / .
+NSUBST: W = 5 / 2=5W / W
+NSUBST: w = 2 / 2=2ww / w
+MAP
+   xxxxxxxxx
+  xx'''x'''xx
+ xx''x'''x''xx
+ x''xxw'wxx''x
+xx'xxwwwwwx''x
+x''xwwuwuw'''x
+xx'xwwuWWwxx'x
+ x'''wwuWWx''x
+xx..wwwuWW%%xx
+x..xxwwW**Wxx
+xx..xxxW**xx
+ x....xxxxx
+ xxxx@@x
 ENDMAP
 
 ###############################################################################

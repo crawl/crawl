@@ -565,6 +565,12 @@ ignis DNGN_ALTAR_IGNIS
 ecumenical DNGN_ALTAR_ECUMENICAL
 unknown DNGN_UNKNOWN_ALTAR
 
+%sdir dngn/floor
+runelight0 DNGN_RUNELIGHT
+runelight1
+runelight2
+runelight3
+
 %sdir dngn
 blue_fountain DNGN_FOUNTAIN DNGN_BLUE_FOUNTAIN
 blue_fountain2

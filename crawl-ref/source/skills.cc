@@ -26,6 +26,7 @@
 #include "item-prop.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h" // now_is_morning
 #include "notes.h"
 #include "output.h"
 #include "random.h"
@@ -66,16 +67,20 @@ static int _training_target_skill_point_diff(skill_type exsk, int training_targe
 static const char *skill_titles[NUM_SKILLS][7] =
 {
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27       skill abbr
-    {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror",    "Fgt"},
+    {"Fighting",       "Trooper",       "Fighter",         "Warrior",         "Slayer",         "Conqueror",    "Fgt"},
     {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Cutthroat",      "Politician",   "SBl"},
     {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster",  "LBl"},
     {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac",   "Axs"},
     {"Maces & Flails", "Cudgeller",     "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher", "M&F"},
     {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine", "Pla"},
     {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff", "Stv"},
+#if TAG_MAJOR_VERSION == 34
     {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult", "Slg"},
-    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@",  "Bws"},
+#endif
+    {"Ranged Weapons", "Shooter",       "Skirmisher",      "Marks@genus@",    "Crack Shot",     "Merry @Genus@",  "Rng"},
+#if TAG_MAJOR_VERSION == 34
     {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest", "Crb"},
+#endif
     {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Adj@ Ballista", "Thr"},
     {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable", "Arm"},
     {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible",   "Ddg"},
@@ -1466,8 +1471,6 @@ void set_skill_level(skill_type skill, double amount)
     double level;
     modf(amount, &level);
 
-    you.ct_skill_points[skill] = 0;
-
     skill_diff diffs = skill_level_to_diffs(skill, amount);
 
     you.skills[skill] = level;
@@ -1689,8 +1692,13 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_POLEARMS:
-            if (species == SP_PALENTONGA && skill_rank == 5)
+            if (species == SP_ARMATAUR && skill_rank == 5)
                 result = "Prickly Pangolin";
+            break;
+
+        case SK_MACES_FLAILS:
+            if (species == SP_METEORAN && skill_rank == 5)
+                result = now_is_morning() ? "Morning Star" : "Evening Star";
             break;
 
         case SK_UNARMED_COMBAT:
@@ -1726,9 +1734,9 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_INVOCATIONS:
             if (species == SP_DEMONSPAWN && skill_rank == 5 && is_evil_god(god))
                 result = "Blood Saint";
-            else if (species == SP_PALENTONGA && skill_rank == 5 && god == GOD_QAZLAL)
+            else if (species == SP_ARMATAUR && skill_rank == 5 && god == GOD_QAZLAL)
                 result = "Rolling Thunder";
-            else if (species == SP_PALENTONGA && skill_rank == 5 && is_good_god(god))
+            else if (species == SP_ARMATAUR && skill_rank == 5 && is_good_god(god))
                 result = "Holy Roller";
             else if (species == SP_MUMMY && skill_rank == 5 && god == GOD_NEMELEX_XOBEH)
                 result = "Forbidden One";
@@ -1736,6 +1744,10 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
                 result = "Black Lotus";
             else if (species == SP_GARGOYLE && skill_rank == 5 && god == GOD_JIYVA)
                 result = "Rockslime";
+            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_ZIN)
+                result = "Silver Star"; // removed dc6d6fabc (0.15), ha!
+            else if (species == SP_METEORAN && skill_rank == 5 && god == GOD_DITHMENOS)
+                result = "Starry Night"; // what a miserable god choice... challenge!
             else if (god != GOD_NO_GOD)
                 result = god_title(god, species, piety);
             else if (species == SP_BARACHI)
@@ -1745,12 +1757,11 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             }
             break;
 
-        case SK_BOWS:
+        case SK_RANGED_WEAPONS:
             if (species::is_elven(species) && skill_rank == 5)
-            {
                 result = "Master Archer";
-                break;
-            }
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Shooting Star";
             break;
 
         case SK_SPELLCASTING:
@@ -1781,11 +1792,15 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_EARTH_MAGIC:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Iron Dragon";
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Rock Star";
             break;
 
         case SK_AIR_MAGIC:
             if (species::is_draconian(species) && skill_rank == 5)
                 result = "Storm Dragon";
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Meteorite"; // meteorologist / star, ha
             break;
 
         case SK_POISON_MAGIC:
@@ -1801,6 +1816,8 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         case SK_TRANSLOCATIONS:
             if (species == SP_FORMICID && skill_rank == 5)
                 result = "Teletunneler";
+            else if (species == SP_METEORAN && skill_rank == 5)
+                result = "Black Hole";
             break;
 
         case SK_NECROMANCY:
@@ -1930,8 +1947,17 @@ void init_skill_order()
 bool is_removed_skill(skill_type skill)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (skill == SK_STABBING || skill == SK_TRAPS || skill == SK_CHARMS)
+    switch (skill)
+    {
+    case SK_STABBING:
+    case SK_TRAPS:
+    case SK_CHARMS:
+    case SK_SLINGS:
+    case SK_CROSSBOWS:
         return true;
+    default:
+        break;
+    }
 #else
     UNUSED(skill);
 #endif
@@ -1976,10 +2002,7 @@ bool is_useless_skill(skill_type skill)
     // imply that missing hand is meaningless. likewise for summoning magic
     // vs. ability to have friendlies at all.
     if (skill == SK_SHIELDS && you.get_mutation_level(MUT_MISSING_HAND)
-        || skill == SK_BOWS && you.get_mutation_level(MUT_MISSING_HAND)
-                            && !you.has_innate_mutation(MUT_QUADRUMANOUS)
-        || skill == SK_SUMMONINGS && you.get_mutation_level(MUT_NO_LOVE)
-    )
+        || skill == SK_SUMMONINGS && you.get_mutation_level(MUT_NO_LOVE))
     {
         return true;
     }
@@ -2108,10 +2131,6 @@ vector<skill_type> get_crosstrain_skills(skill_type sk)
     case SK_MACES_FLAILS:
     case SK_POLEARMS:
         return { SK_AXES, SK_STAVES };
-    case SK_SLINGS:
-        return { SK_THROWING };
-    case SK_THROWING:
-        return { SK_SLINGS };
     default:
         return {};
     }
@@ -2199,7 +2218,6 @@ void skill_state::save()
     training            = you.training;
     skill_points        = you.skill_points;
     training_targets    = you.training_targets;
-    ct_skill_points     = you.ct_skill_points;
     skill_cost_level    = you.skill_cost_level;
     skill_order         = you.skill_order;
     auto_training       = you.auto_training;
@@ -2223,7 +2241,6 @@ void skill_state::restore_levels()
 {
     you.skills                      = skills;
     you.skill_points                = skill_points;
-    you.ct_skill_points             = ct_skill_points;
     you.skill_cost_level            = skill_cost_level;
     you.skill_order                 = skill_order;
     you.exp_available               = exp_available;

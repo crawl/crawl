@@ -274,26 +274,38 @@ static void _apply_ood(level_id &place)
     }
 }
 
+/**
+ * Rate at which random monsters spawn, with lower numbers making
+ * them spawn more often (5 or less causes one to spawn about every
+ * 5 turns). 0 stops random generation.
+ */
+static int _get_monster_spawn_rate()
+{
+    if (player_in_branch(BRANCH_ABYSS))
+        return 5 * (have_passive(passive_t::slow_abyss) ? 2 : 1);
+
+    if (player_on_orb_run())
+        return have_passive(passive_t::slow_orb_run) ? 36 : 18;
+
+    return 50;
+}
+
 //#define DEBUG_MON_CREATION
 
 /**
  * Spawn random monsters.
-
- * The spawn rate defaults to the current env.spawn_random_rate for the branch,
- * but is modified by whether the player is in the abyss and on what level, as
- * well as whether the player has the orb.
  */
 void spawn_random_monsters()
 {
     if (crawl_state.disables[DIS_SPAWNS])
         return;
 
-    if (crawl_state.game_is_arena()
-        || (crawl_state.game_is_sprint()
-            && player_in_connected_branch()
-            && you.chapter == CHAPTER_ORB_HUNTING)
-        // Spawns no longer occur outside the Orb run in connected branches.
-        || !player_on_orb_run() && player_in_connected_branch())
+    if (crawl_state.game_is_arena())
+        return;
+
+    if (!player_on_orb_run()
+        && !player_in_branch(BRANCH_ABYSS)
+        && !player_in_branch(BRANCH_PANDEMONIUM))
     {
         return;
     }
@@ -301,46 +313,10 @@ void spawn_random_monsters()
 #ifdef DEBUG_MON_CREATION
     mprf(MSGCH_DIAGNOSTICS, "in spawn_random_monsters()");
 #endif
-    int rate = env.spawn_random_rate;
-    if (!rate)
-    {
-#ifdef DEBUG_MON_CREATION
-        mprf(MSGCH_DIAGNOSTICS, "random monster gen turned off");
-#endif
-        return;
-    }
 
-    if (player_on_orb_run())
-        rate = have_passive(passive_t::slow_orb_run) ? 36 : 18;
-
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        if (!player_in_starting_abyss())
-            rate = 5;
-        if (have_passive(passive_t::slow_abyss))
-            rate *= 2;
-    }
-
+    const int rate = _get_monster_spawn_rate();
     if (!x_chance_in_y(5, rate))
         return;
-
-    // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
-    // players that get banished there on the orb run.
-    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS))
-    {
-        dprf(DIAG_MONPLACE, "Placing monster, rate: %d, turns here: %d",
-             rate, env.turns_on_level);
-
-        mgen_data mg(WANDERING_MONSTER);
-        mg.proximity = PROX_CLOSE_TO_PLAYER;
-        mg.foe = MHITYOU;
-        // Don't count orb run spawns in the xp_by_level dump
-        mg.xp_tracking = XP_UNTRACKED;
-        mons_place(mg);
-        viewwindow();
-        update_screen();
-        return;
-    }
 
     mgen_data mg(WANDERING_MONSTER);
     if (player_in_branch(BRANCH_PANDEMONIUM)
@@ -349,6 +325,25 @@ void spawn_random_monsters()
     {
         mg.cls = env.mons_alloc[random2(PAN_MONS_ALLOC)];
         mg.flags |= MG_PERMIT_BANDS;
+    }
+
+    // Orb spawns. Don't generate orb spawns in Abyss to show some mercy to
+    // players that get banished there on the orb run.
+    if (player_on_orb_run() && !player_in_branch(BRANCH_ABYSS))
+    {
+        mg.proximity = PROX_CLOSE_TO_PLAYER;
+        mg.foe = MHITYOU;
+        // Don't count orb run spawns in the xp_by_level dump
+        mg.xp_tracking = XP_UNTRACKED;
+    }
+
+    // Deep Abyss can also do orbrun-style spawns in LOS.
+    if (player_in_branch(BRANCH_ABYSS)
+        && you.depth > 5
+        && one_chance_in(10 / (you.depth - 5)))
+    {
+        mg.proximity = PROX_CLOSE_TO_PLAYER;
+        mg.foe = MHITYOU;
     }
 
     mons_place(mg);
@@ -740,9 +735,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (chose_ood_monster)
         mon->props[MON_OOD_KEY].get_bool() = true;
 
-    if (mg.needs_patrol_point()
-        || (mon->type == MONS_ALLIGATOR
-            && !testbits(mon->flags, MF_BAND_MEMBER)))
+    if (mg.needs_patrol_point())
     {
         mon->patrol_point = mon->pos();
 #ifdef DEBUG_PATHFIND
@@ -751,21 +744,19 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 #endif
     }
 
-    if (player_in_branch(BRANCH_ABYSS) && !mg.summoner
-        && in_bounds(mon->pos())
-        && !(mg.extra_flags & MF_WAS_IN_VIEW)
-        && !cell_is_solid(mon->pos()))
+    if (player_in_branch(BRANCH_ABYSS)
+        && !mg.summoner
+        && !(mg.extra_flags & MF_WAS_IN_VIEW))
     {
-        big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
-    }
+        if (in_bounds(mon->pos()) && !cell_is_solid(mon->pos()))
+            big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
 
-    if (player_in_branch(BRANCH_ABYSS) && you.can_see(*mon)
+        if (you.can_see(*mon)
              && !crawl_state.generating_level
-             && !mg.summoner
-             && !crawl_state.is_god_acting()
-             && !(mon->flags & MF_WAS_IN_VIEW)) // is this possible?
-    {
-        mon->seen_context = SC_ABYSS;
+             && !crawl_state.is_god_acting())
+        {
+            mon->seen_context = SC_ABYSS;
+        }
     }
 
     // Now, forget about banding if the first placement failed, or there are
@@ -1533,7 +1524,7 @@ static bool _good_zombie(monster_type base, monster_type cs,
         return false;
 
     // If zombie, monster must have a corpse.
-    if (cs == MONS_ZOMBIE && !mons_zombifiable(base))
+    if (cs == MONS_ZOMBIE && !mons_class_can_be_zombified(base))
         return false;
 
     return true;
@@ -1549,7 +1540,7 @@ bool zombie_picker::veto(monster_type mt)
         corpse_type = random_draconian_monster_species();
 
     // Zombifiability in general.
-    if (!mons_class_can_leave_corpse(corpse_type))
+    if (!mons_class_can_be_zombified(corpse_type))
         return true;
     // Monsters that don't really exist
     if (mons_class_flag(mt, M_UNFINISHED))
@@ -1572,6 +1563,12 @@ static bool _mc_too_slow_for_zombies(monster_type mon)
     return mons_class_zombie_base_speed(mons_species(mon)) < BASELINE_DELAY;
 }
 
+static bool _mc_bad_wretch(monster_type mon)
+{
+    // goofy on-death effect - probably other things could go here too
+    return mon == MONS_SPRIGGAN_DRUID;
+}
+
 /**
  * Pick a local monster type that's suitable for turning into a corpse.
  *
@@ -1589,7 +1586,7 @@ monster_type pick_local_corpsey_monster(level_id place)
 monster_type pick_local_zombifiable_monster(level_id place,
                                             monster_type cs,
                                             const coord_def& pos,
-                                            bool for_corpse)
+                                            bool for_wretch)
 {
     const bool really_in_d = place.branch == BRANCH_DUNGEON;
 
@@ -1611,8 +1608,9 @@ monster_type pick_local_zombifiable_monster(level_id place,
     place.depth = min(place.depth, branch_zombie_cap(place.branch));
     place.depth = max(1, place.depth);
 
-    const bool need_veto = really_in_d && !for_corpse;
-    mon_pick_vetoer veto = need_veto ? _mc_too_slow_for_zombies : nullptr;
+    mon_pick_vetoer veto = for_wretch ? _mc_bad_wretch :
+                           really_in_d ? _mc_too_slow_for_zombies
+                                        : nullptr;
 
     // try to grab a proper zombifiable monster
     monster_type mt = picker.pick_with_veto(zombie_population(place.branch),
@@ -1790,7 +1788,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_VAMPIRE_MAGE,    { {3}, {{ BAND_JIANGSHI, {2, 4}, true }}}},
     { MONS_JIANGSHI,        { {}, {{ BAND_JIANGSHI, {0, 2} }}}},
     { MONS_GNOLL,           { {0, 1}, {{ BAND_GNOLLS, {2, 4} }}}},
-    { MONS_GNOLL_SHAMAN,    { {}, {{ BAND_GNOLLS, {3, 6}, true }}}},
+    { MONS_GNOLL_BOUDA,     { {}, {{ BAND_GNOLLS, {3, 6}, true }}}},
     { MONS_GNOLL_SERGEANT,  { {}, {{ BAND_GNOLLS, {3, 6}, true }}}},
     { MONS_DEATH_KNIGHT,    { {0, 0, []() { return x_chance_in_y(2, 3); }},
                                   {{ BAND_DEATH_KNIGHT, {3, 5}, true }}}},
@@ -1954,6 +1952,7 @@ static const map<monster_type, band_set> bands_by_leader = {
                                    {{ BAND_BONE_DRAGONS, {1, 2}} }}},
     { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_SPECTRALS, {2, 6}, true} }}},
+    { MONS_GRUNN,            { {}, {{ BAND_DOOM_HOUNDS, {2, 4}, true }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
@@ -2412,7 +2411,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_DEMONSPAWN_WARMONGER, 1},
                                   {MONS_DEMONSPAWN_CORRUPTER, 1},
                                   {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
-
+    // for Grunn
+    { BAND_DOOM_HOUNDS,         {{{MONS_DOOM_HOUND, 1}}}},
 };
 
 /**
@@ -2667,11 +2667,11 @@ static dungeon_feature_type _monster_secondary_habitat_feature(monster_type mc)
     return habitat2grid(mons_class_secondary_habitat(mc));
 }
 
-static bool _valid_spot(coord_def pos)
+static bool _valid_spot(coord_def pos, bool check_mask=true)
 {
     if (actor_at(pos))
         return false;
-    if (env.level_map_mask(pos) & MMT_NO_MONS)
+    if (check_mask && env.level_map_mask(pos) & MMT_NO_MONS)
         return false;
     return true;
 }
@@ -2684,15 +2684,17 @@ private:
 
     int best_distance;
     int nfound;
+    bool levelgen;
 public:
     // Terrain that we can't spawn on, but that we can skip through.
     set<dungeon_feature_type> passable;
 public:
     newmons_square_find(dungeon_feature_type grdw,
                         const coord_def &pos,
-                        int maxdist = 0)
+                        int maxdist = 0,
+                        bool _levelgen=true)
         :  feat_wanted(grdw), maxdistance(maxdist),
-           best_distance(0), nfound(0)
+           best_distance(0), nfound(0), levelgen(_levelgen)
     {
         start = pos;
     }
@@ -2720,7 +2722,7 @@ public:
                 good_square(dc);
             return false;
         }
-        if (_valid_spot(dc) && one_chance_in(++nfound))
+        if (_valid_spot(dc, levelgen) && one_chance_in(++nfound))
         {
             greedy_dist = traveled_distance;
             greedy_place = dc;
@@ -2736,7 +2738,8 @@ public:
 // through only contiguous squares of habitable terrain.
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
-                                         int distance)
+                                         int distance,
+                                         bool levelgen)
 {
     coord_def p;
 
@@ -2745,7 +2748,7 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
     const dungeon_feature_type feat_nonpreferred =
         _monster_secondary_habitat_feature(mons_class);
 
-    newmons_square_find nmpfind(feat_preferred, start, distance);
+    newmons_square_find nmpfind(feat_preferred, start, distance, levelgen);
     const coord_def pp = nmpfind.pathfind();
     p = pp;
 

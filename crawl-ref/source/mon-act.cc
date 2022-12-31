@@ -153,6 +153,8 @@ static void _monster_regenerate(monster* mons)
 
     if (mons->type == MONS_PARGHIT)
         mons->heal(27); // go whoosh
+    else if (mons->type == MONS_DEMONIC_CRAWLER)
+        mons->heal(9); // go zoom
     else if (mons_class_fast_regen(mons->type)
         || mons->has_ench(ENCH_REGENERATION)
         || _mons_natural_regen_roll(mons))
@@ -564,7 +566,7 @@ static void _handle_battiness(monster &mons)
 {
     if (!mons_is_batty(mons))
         return;
-    mons.behaviour = BEH_WANDER;
+    mons.behaviour = BEH_BATTY;
     set_random_target(&mons);
     mons.props[BATTY_TURNS_KEY] = 0;
 }
@@ -838,6 +840,21 @@ static void _handle_movement(monster* mons)
         mmov.reset();
 }
 
+static void _update_item_knowledge(object_class_type base_type, int sub_type)
+{
+    // Identify a scroll or potion and apply inscriptions if necessary.
+    if (set_ident_type(base_type, sub_type, true))
+    {
+        // Assign the inventory letter according to the item_slot option.
+        for (auto &item : you.inv)
+            if (item.base_type == base_type && item.sub_type == sub_type)
+            {
+                auto_assign_item_slot(item);
+                break;
+            }
+    }
+}
+
 static bool _handle_potion(monster& mons)
 {
     item_def* potion = mons.mslot_item(MSLOT_POTION);
@@ -865,7 +882,7 @@ static bool _handle_potion(monster& mons)
 
         // Drink the potion, and identify it.
         if (mons.drink_potion_effect(ptype) && was_visible)
-            set_ident_type(OBJ_POTIONS, ptype, true);
+            _update_item_knowledge(OBJ_POTIONS, ptype);
 
         // Remove it from inventory.
         if (dec_mitm_item_quantity(potion->index(), 1))
@@ -1037,7 +1054,7 @@ static bool _handle_scroll(monster& mons)
             mons.inv[MSLOT_SCROLL] = NON_ITEM;
 
         if (was_visible)
-            set_ident_type(OBJ_SCROLLS, scroll_type, true);
+            _update_item_knowledge(OBJ_SCROLLS, scroll_type);
 
         mons.lose_energy(EUT_ITEM);
     }
@@ -2112,15 +2129,12 @@ static void _torpor_snail_slow(monster* mons)
     // XXX: might be nice to refactor together with _ancient_zyme_sicken().
     // XXX: also with torpor_slowed().... so many duplicated checks :(
 
-    if (is_sanctuary(mons->pos())
-        || mons->attitude != ATT_HOSTILE
-        || mons->has_ench(ENCH_CHARM))
-    {
+    if (is_sanctuary(mons->pos()))
         return;
-    }
 
     if (!is_sanctuary(you.pos())
         && !you.stasis()
+        && !mons->wont_attack()
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
         if (!you.duration[DUR_SLOW])
@@ -2213,7 +2227,7 @@ static void _post_monster_move(monster* mons)
         // TODO: implement monster spectral ego
     }
 
-    if (mons->foe != MHITNOT && mons_is_wandering(*mons) && mons_is_batty(*mons))
+    if (mons->foe != MHITNOT && mons->behaviour == BEH_BATTY)
     {
         int &bat_turns = mons->props[BATTY_TURNS_KEY].get_int();
         bat_turns++;

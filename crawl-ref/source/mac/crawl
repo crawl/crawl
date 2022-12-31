@@ -7,14 +7,23 @@ $script= $0;
 $script =~ /(.*)\/MacOS\/(\w+)/;
 $scriptdir = $1;
 $resdir = $scriptdir . "/Resources/";
+if (! -e $resdir)
+{
+    $resdir = "./"; # for running in place in the repo, not very general
+}
 $executable = $resdir . "crawl";
-if (-e "/Applications/Utilities/Terminal.app")
+if (! -e $executable)
 {
-	system "/usr/bin/open -a /Applications/Utilities/Terminal.app '$executable'";
+    die "Couldn't open '$executable'!";
 }
-else
+$app_name = "/Applications/Utilities/Terminal.app";
+if (! -e $app_name)
 {
-	# moved in catalina, and it's connected using a "firmlink" that isn't visible in
-	# the file system.
-	system "/usr/bin/open -a /System/Applications/Utilities/Terminal.app '$executable'";
+    # moved in catalina, and it's connected using a "firmlink" that isn't
+    # visible in the file system.
+    $app_name = "/System/Applications/Utilities/Terminal.app";
 }
+# override $app_name here to to use something else, e.g.:
+# $app_name = "iTerm.app";
+
+system "/usr/bin/open -a '$app_name' '$executable'"

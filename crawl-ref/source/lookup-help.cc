@@ -35,6 +35,7 @@
 #include "message.h"
 #include "mon-info.h"
 #include "mon-tentacle.h"
+#include "mutation.h"
 #include "output.h"
 #include "prompt.h"
 #include "religion.h"
@@ -472,6 +473,11 @@ static bool _status_filter(string key, string /*body*/)
     return !strip_suffix(lowercase(key), " status");
 }
 
+static bool _mutation_filter(string key, string /*body*/)
+{
+    return !strip_suffix(lowercase(key), " mutation");
+}
+
 
 static void _recap_mon_keys(vector<string> &keys)
 {
@@ -755,6 +761,24 @@ static MenuEntry* _cloud_menu_gen(char letter, const string &str, string &key)
     return me;
 }
 
+/**
+ * Generate a ?/U menu entry. (ref. _simple_menu_gen()).
+ */
+static MenuEntry* _mut_menu_gen(char letter, const string &str, string &key)
+{
+    MenuEntry* me = _simple_menu_gen(letter, str, key);
+
+    const mutation_type mut = mutation_from_name(str, false);
+    if (mut == NUM_MUTATIONS)
+        return me;
+
+    const tileidx_t tile = get_mutation_tile(mut);
+    if (tile)
+        me->add_tile(tile_def(tile + mutation_max_levels(mut) - 1));
+
+    return me;
+}
+
 
 /**
  * How should this type be expressed in the prompt string?
@@ -822,7 +846,7 @@ static string _mons_desc_key(monster_type type)
 void LookupType::display_keys(vector<string> &key_list) const
 {
     DescMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-                | MF_NO_SELECT_QTY | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT,
+                | MF_USE_TWO_COLUMNS | MF_ARROWS_SELECT,
             toggleable_sort());
     desc_menu.set_tag("description");
 
@@ -863,6 +887,10 @@ void LookupType::display_keys(vector<string> &key_list) const
         describe(key);
         return true;
     };
+
+    // for some reason DescMenu is an InvMenu, so we need to do something to
+    // prevent examine crashes. Just alias it to regular selection.
+    desc_menu.on_examine = desc_menu.on_single_selection;
 
     while (true)
     {
@@ -1268,6 +1296,9 @@ static const vector<LookupType> lookup_types = {
                _describe_cloud, lookup_type::db_suffix),
     LookupType('T', "status", nullptr, _status_filter,
                nullptr, nullptr, _simple_menu_gen,
+               _describe_generic, lookup_type::db_suffix),
+    LookupType('U', "mutation", nullptr, _mutation_filter,
+               nullptr, nullptr, _mut_menu_gen,
                _describe_generic, lookup_type::db_suffix),
 };
 

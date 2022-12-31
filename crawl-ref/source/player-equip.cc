@@ -319,7 +319,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
     if (proprt[ARTP_CONTAM] && msg && !unmeld)
         mpr("You feel a build-up of mutagenic energy.");
 
-    if (proprt[ARTP_RAMPAGING] && msg && !unmeld)
+    if (proprt[ARTP_RAMPAGING] && msg && !unmeld && !you.has_mutation(MUT_ROLLPAGE))
         mpr("You feel ready to rampage towards enemies.");
 
     if (proprt[ARTP_ARCHMAGI] && msg && !unmeld)
@@ -718,9 +718,7 @@ static void _spirit_shield_message(bool unmeld)
     {
         mpr("You feel your power drawn to a protective spirit.");
 #if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DEEP_DWARF
-            && !(have_passive(passive_t::no_mp_regen)
-                 || player_under_penance(GOD_PAKELLAS)))
+        if (you.species == SP_DEEP_DWARF)
         {
             drain_mp(you.magic_points);
             mpr("Now linked to your health, your magic stops regenerating.");
@@ -833,7 +831,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld,
             break;
 
         case SPARM_RAMPAGING:
-            mpr("You feel ready to rampage towards enemies.");
+            if (!you.has_mutation(MUT_ROLLPAGE))
+                mpr("You feel ready to rampage towards enemies.");
             break;
 
         case SPARM_INFUSION:
@@ -954,8 +953,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
         if (!you.spirit_shield())
         {
             mpr("You feel strangely alone.");
+#if TAG_MAJOR_VERSION == 34
             if (you.species == SP_DEEP_DWARF)
                 mpr("Your magic begins regenerating once more.");
+#endif
         }
         break;
 
@@ -1153,6 +1154,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             mpr("You feel a surge of self-confidence.");
             break;
         }
+        if (you.has_mutation(MUT_FAITH))
+        {
+            mpr("You already have all the faith you need.");
+            break;
+        }
 
         const string ignore_reason = ignore_faith_reason();
         if (!ignore_reason.empty())
@@ -1277,10 +1283,12 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
             _remove_amulet_of_faith(item);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case AMU_GUARDIAN_SPIRIT:
         if (you.species == SP_DEEP_DWARF && player_regenerates_mp())
             mpr("Your magic begins regenerating once more.");
         break;
+#endif
 
     case AMU_MANA_REGENERATION:
         if (!meld)

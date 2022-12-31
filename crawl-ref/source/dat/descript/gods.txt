@@ -86,8 +86,8 @@ Kikubaaqudgha is a terrible Demon-God, served by those who wish to indulge in
 the powers of death. An evil god, Kikubaaqudgha requires worshippers to cause
 the death and destruction of as many creatures as possible. In exchange,
 Kikubaaqudgha offers great assistance to the aspiring necromancer: a supply of
-useful corpses, knowledge of dark magic, protection against necromantic backlash,
-and multiplication of the newly undead.
+useful bodies, knowledge of dark magic, and protection against necromantic
+backlash.
 %%%%
 Lugonu
 
@@ -227,8 +227,7 @@ Ashenzari exhorts followers to curse their possessions, periodically offering
 these curses to worshippers as they explore. Cursed equipment cannot be enchanted
 and only be removed by shattering it forever. However, these curses do improve
 specific skills. They also please Ashenzari, who will reveal the invisible and
-grant clarity of mind. The truly devout will gain a fragment of Ashenzari's
-astral sight, letting them see through walls.
+grant clarity of mind.
 %%%%
 Beogh powers
 
@@ -320,23 +319,26 @@ touch.
 %%%%
 Kikubaaqudgha powers
 
-Kikubaaqudgha will enhance servants' necromantic prowess with gifts of Necromancy
-spells, and may cause their spells which raise undead servants to create more
-minions. Kikubaaqudgha will protect followers from the effects of necromantic
-miscasts, death curses, and may even shield them from unholy torment. Followers
-can unearth dying wretches as necromantic fodder, and may invoke torment.
-Kikubaaqudgha will eventually allow followers to either receive knowledge of the
-most forbidden necromantic magic, or to have their weapon imbued with pain.
+Kikubaaqudgha will enhance servants' necromantic prowess with gifts of
+Necromancy spells. Kikubaaqudgha will protect followers from the effects of
+necromantic miscasts and death curses, and may even shield them from unholy
+torment. Followers can unearth dying wretches as necromantic fodder, and may
+invoke torment. Kikubaaqudgha will eventually allow followers to either receive
+knowledge of the most forbidden necromantic magic, or to have their weapon
+imbued with pain.
 %%%%
 Lugonu powers
 
-Followers of Lugonu gain powers to depart the Abyss at will, to bend space
-around themselves, and to banish monsters to the Abyss. Later they will be able
-to corrupt the ordered world, opening a gate for creatures of the Abyss to pass
-through, and to gate themselves directly into this realm of chaos. Lugonu will
-protect followers from the normally harmful effects of weapons imbued with the
+Followers of Lugonu gain powers to depart the Abyss at will, to banish monsters
+there, and to flee back inside when needed. Lugonu will also banish nearby foes
+if any other god attempts to interfere with their followers. Later, followers
+will be able to corrupt the ordered world, opening a gate for creatures
+of the Abyss to pass through, and to gate themselves directly into this realm of
+chaos. Lugonu will protect followers who unwield weapons imbued with the
 distorting energies of the Abyss, and eventually will offer to corrupt a
-follower's weapon in that way.
+follower's weapon in that way. Lugonu expects followers to spread unceasing
+chaos in the overworld, and as such does not grant piety to worshippers while
+they remain in the Abyss itself.
 %%%%
 Makhleb powers
 
@@ -475,8 +477,8 @@ Zin grants followers the ability to preach to the unenlightened masses, and
 powers to vitalise their bodies, protecting them from various afflictions.
 Later, followers gain the ability to imprison their foes temporarily. Followers
 can eventually find temporary safety in a divine refuge. As piety grows,
-followers will be protected from mutation, and Zin may even occasionally
-directly intervene to save a follower's life.
+followers will be protected from mutation and the Hells, and Zin may even
+occasionally directly intervene to save a follower's life.
 %%%%
 Ashenzari wrath
 
@@ -498,9 +500,8 @@ Cheibriados wrath
 
 Offenders against Cheibriados will find their movements remain slow while
 the attention of Cheibriados remains upon them, and will frequently have any
-magical hasting stripped away. They may also become further slowed and
-exhausted, be put to sleep, or have wild and unpredictable magical effects from
-the depths of time unleashed upon them.
+magical hasting stripped away. They may also become further slowed, be put
+to sleep, or have their bodies decay.
 %%%%
 Dithmenos wrath
 
@@ -513,7 +514,8 @@ to hide; or find themselves smothered in shadow and sleeping, perhaps forever.
 Elyvilon wrath
 
 Elyvilon is not a god known for wrath. Still, those earning Elyvilon's ire will
-find the Healer occasionally protecting their foes from death.
+find the Healer occasionally protecting their foes from their attacks, and even
+from death.
 %%%%
 Fedhas wrath
 
@@ -559,9 +561,10 @@ of slime mutations stripped away from them.
 Kikubaaqudgha wrath
 
 Kikubaaqudgha's wrath brings forth all the dread powers of necromancy. Victims
-are wracked with torment and afflicted with a host of other necromantic ailments.
-Further, Kikubaaqudgha's gifts become tainted; those that attempt to use necromantic
-magic to fend off wrath will find it backfiring on them when least expected.
+are wracked with torment and afflicted with a host of other necromantic
+ailments. Further, Kikubaaqudgha's gifts become tainted; those that attempt to
+use necromantic magic to fend off wrath will find it backfiring on them when
+least expected.
 %%%%
 Lugonu wrath
 
@@ -661,10 +664,10 @@ remains; the unfaithful are rewarded just as the faithful are punished.
 Yredelemnul wrath
 
 Those who anger Yredelemnul find themselves beset by legions of the dead.
-Novice adventurers will be assaulted by zombies and skeletons; veterans by
-the strongest of Yredelemnul's undead servants. The victims' own undead
-servants desert them and crumble into dust. A variety of necromantic maladies
-also afflict those stricken by Yredelemnul's wrath.
+Novice adventurers will be assaulted by zombies and skeletons; veterans by the
+strongest of Yredelemnul's undead servants. The victims' own undead servants
+desert them and crumble into dust. Yredelemnul's ire may instead drain the lives
+of the unfaithful.
 %%%%
 Zin wrath
 
@@ -673,17 +676,19 @@ their enemies alerted, and their senses confounded by the
 axioms of Law; confusion, fainting and complete paralysis will be their lot.
 %%%%
 Wu Jian extra
-  .......       ....... (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
-  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O.. extra damage.
+# any god extra screens need :nowrap
+:nowrap
+  .......       .......  (.) <lightred>Lunge</lightred>: Move directly towards an enemy to deal
+  ..<lightred>@</lightred>.O..  -->  ...<lightred>@</lightred>O..  extra damage.
   .......       .......
 
-  .......       ...<lightred>@</lightred>... (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
-  ...<lightred>@</lightred>O..  -->  ....O.. an enemy to strike them lightly. Multiple adjacent
-  .......       ....... foes can be attacked simultaneously this way.
+  .......       ...<lightred>@</lightred>...  (*) <lightred>Whirlwind</lightred>: Move between two tiles adjacent to
+  ...<lightred>@</lightred>O..  -->  ....O..  an enemy to strike them lightly. Multiple adjacent
+  .......       .......  foes can be attacked simultaneously this way.
 
-  ..#....       ..#.... (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and
-  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>. strike enemies adjacent to the landing spot. Vaulting
-  ..#....       ..#.... takes two turns. Activated via the (a)bility menu.
+  ..#....       ..#....  (**) <lightred>Wall Jump</lightred>: Vault off a nearby wall and strike
+  ..#<lightred>@</lightred>O..  -->  ..#.O<lightred>@</lightred>.  enemies adjacent to the landing spot. Vaulting takes
+  ..#....       ..#....  two turns. Activated via the (a)bility menu.
 
 These prevent enemies from getting free attacks on you while you move away.
 You cannot launch martial attacks while digging, rampaging or rolling.

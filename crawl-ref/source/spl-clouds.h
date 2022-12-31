@@ -7,7 +7,10 @@ struct bolt;
 class dist;
 class actor;
 
-spret conjure_flame(int pow, bool fail);
+spret cast_dreadful_rot(int pow, bool fail);
+
+spret kindle_blastsparks(int pow, bool fail);
+void explode_blastsparks_at(coord_def p);
 
 void big_cloud(cloud_type cl_type, const actor *agent, const coord_def& where,
                int pow, int size, int spread_rate = -1);

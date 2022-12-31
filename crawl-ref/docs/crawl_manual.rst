@@ -198,7 +198,8 @@ Your character's primary attributes are Strength, Intelligence and Dexterity:
 
 Strength
   Abbreviated to "Str". Increases your damage with melee weapons (except for long
-  and short blades). Reduces penalties from wearing heavy armour.
+  and short blades), with unarmed combat, and with throwing weapons. Reduces
+  penalties from wearing heavy armour.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
@@ -268,7 +269,7 @@ Willpower
 
 Size
   Different species have different sizes: Spriggans and Felids are very small;
-  Kobolds are small; Ogres and Trolls are large; Nagas and Palentongas are large
+  Kobolds are small; Ogres and Trolls are large; Nagas and Armataurs are large
   with a medium torso; all other species are medium-sized. Many transmutations
   will change your size. Size affects your evasion: the smaller your character,
   the more evasive it is. On the other hand, characters of larger than medium
@@ -498,8 +499,8 @@ Zot
 ========================================
 
 No one knows who or what Zot is: demon, god, wizard, something else entirely?
-But adventurers seeking the Orb will, in turn, be hunted by Zot, and if it
-finds them, their existence will end.
+But adventurers seeking the Orb will, in turn, be hunted by Zot. Even a moment's
+contact with Zot is enough to permanently damage one's health.
 
 Zot is very slow moving, and can only sense adventurers once they've spent an
 inordinately long time in one area of the dungeon. Even once this happens,
@@ -522,7 +523,7 @@ which is scored separately. Playing games with the same seed value, as long as
 the game version is constant, should (within certain parameters) lead to the
 same dungeon. The entire connected dungeon will be determined by the game
 seed, including dungeon layout, monster placement, and items. Portal vaults
-and chaotic zones such as the abyss are not guaranteed to be the same, and the
+and chaotic zones such as the Abyss are not guaranteed to be the same, and the
 placement of rare unique artefacts may vary depending on certain player
 actions.
 
@@ -1118,7 +1119,7 @@ Note that some gods are picky about who can enter their service; for example,
 good gods will not accept demonic or undead devotees.
 
 If you would like to start the game with a religion, choose your background
-from Berserker, Chaos Knight, Abyssal Knight or Cinder Acolyte.
+from Berserker, Chaos Knight, or Cinder Acolyte.
 
 ****************************************
 K. Mutations
@@ -1473,9 +1474,9 @@ learn how to play, into three categories: *Simple*, *Intermediate*, and
 *Advanced*. These categories do not necessarily align with difficulty for an
 experienced Crawl player, but rather are intended as an indication of to what
 degree a species has unusual or complex mechanics, or requires deeper/wider
-knowledge of how the game works. (For example, Deep Dwarves have one of the
-higher win rates of all species, but are classified as "Intermediate" because
-their no-healing mechanic takes some adapting to, and has non-trivial
+knowledge of how the game works. (For example, Djinn have one of the higher
+win rates of all species, but are classified as "Intermediate" because
+their no-mp/no-books mechanic takes some adapting to, and has non-trivial
 interactions with background and god choice.) Despite being the outcome of a
 discussion among many players, these categorizations definitely have a
 subjective element to them, and you shouldn't take them to be limiting!
@@ -1563,16 +1564,16 @@ Merfolk (Mf)
   still remains. The instability of their own morphogenic matrix has made them
   very accomplished transmuters, but most other magic seems foreign to them.
 
-Palentongas (Pa)
-  The Palentongas are a large, scaled mammalian species, walking on four feet
+Armataurs (At)
+  The Armataurs are a large, scaled mammalian species, walking on four feet
   and swinging a powerful tail behind them. Their elephant-back armies
   terrorize the lands outside the Dungeon.
 
-  Palentongas are best known for their powerful roll attack, curling up and
-  rolling into a crashing melee attack against nearby foes. They're well suited
-  to melee combat and to casting supportive spells, but they're significantly
-  worse at other forms of combat and advance quite slowly in experience levels.
-  Their body shape reduces the protection given by the body armour they wear.
+  Armataurs instinctively roll when moving toward foes, getting a free move.
+  Their long, nimble tongues drink every last drop from potions, doubling
+  their effects, but the strange syllables of magical scrolls slow them down.
+  They have great aptitudes with armour and shields, though their body shape
+  reduces the protection offered by body armour early on.
 
 Gargoyles (Gr)
   A cross between ordinary stone gargoyles and living beings, Gargoyles are
@@ -1665,8 +1666,8 @@ Kobolds (Ko)
   suited to lurking in the darkness of the Dungeon, and have a reduced range of
   vision which also reduces the range at which they can be seen by enemies.
 
-  They are competent in combat, especially with short blades, maces or
-  crossbows, and are comfortable with all forms of magic. They are also very
+  They are competent in combat, especially with short blades, maces or ranged
+  weapons, and are comfortable with all forms of magic. They are also very
   adept at using magical devices. Their small size makes them unable to wield
   large weapons, but they are agile and stealthy, and advance in levels as
   quickly as Humans.
@@ -1731,8 +1732,8 @@ Deep Elves (DE)
    in darkness underground. There, they developed their mental powers, evolving
    a natural gift for all forms of magic, and adapted physically to their new
    environment, becoming weaker and losing all colouration. They are poor at
-   melee combat and physical defense, although they are capable at using bows in
-   ranged combat.
+   melee combat and physical defense, although they are capable at using bows
+   and other ranged weapons.
 
 Ogres (Og)
   Ogres are huge, chunky creatures who are very strong and robust, but are not
@@ -1744,25 +1745,6 @@ Ogres (Og)
   Ogres are proficient at using all types of melee weapons, but all
   sophisticated forms of missile combat are awkward for them. They are, however,
   good at throwing things, in particular boulders.
-
-Deep Dwarves (DD)
-  Deep Dwarves are short, hardy people who, unlike their extinct surface
-  relatives, never left the underground homelands. Living there for countless
-  generations made them turn pale and lose all ability to regenerate health
-  over time, or to have their rate of regeneration hastened by any effects.
-  Deep Dwarves can instead draw on their magical essence to heal, but doing so
-  will gradually deplete their maximum reserves of magic. They are passively
-  able to reduce all incoming damage, and their empathy with the earth allows
-  them to sense their surroundings; these abilities increase in power as they
-  gain experience levels.
-
-  Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
-  damage. Offensively, they are skilled users of axes, crossbows, and slings.
-  Deep Dwarves are highly spiritual beings, often portrayed as actual spirits
-  by outsiders; because of this, their skill with Invocations is great, and
-  they often rely on divine assistance for healing. They are most at home with
-  the magic of earth and death, eventually gaining some resistance to the dark
-  powers of necromancy.
 
 Advanced Species
 ================
@@ -1845,7 +1827,7 @@ Nagas (Na)
   invisible creatures, and have tough skin, but their tails are relatively slow
   and cannot move them around as quickly as can other creatures' legs (this only
   affects their movement rate; all other actions are at normal speed). Like
-  Palentongas, their body shape also prevents them from gaining full protection
+  Armataurs, their body shape also prevents them from gaining full protection
   from body armour. A Naga's biggest forte is stealth: Nagas are very good at
   moving unnoticed. Their tails eventually grow strong enough to constrict
   their foes in combat.
@@ -1897,16 +1879,24 @@ Barachim (Ba)
   slow-moving, and the long sight-lines that their heritage creates can be a
   major disadvantage, but they can master almost any skill.
 
+Meteorae (Me)
+  Meteorae are the people of the heavens, fallen to earth. They possess exceptional
+  skills, an uncanny sense for the space around them, and the ability to recover
+  health and magic as they explore the dungeon. However, as creatures clearly not
+  native to the world, they are easy prey for the dark forces that hunt adventurers
+  - they have one-tenth as much time as normal before Zot finds them. (See the
+  section on 'Zot' for more.)
+
 Mummies (Mu)
   These are undead creatures who travel into the depths in search of revenge,
   redemption, or just because they want to.
 
   Mummies progress slowly in levels, half again as slowly as Humans in all
-  skills except fighting, spellcasting and necromancy. As they increase in
-  levels, they become increasingly in touch with the powers of death, but cannot
-  use some types of necromancy which only affect living creatures. The side
-  effects of necromantic magic tend to be relatively harmless to Mummies.
-  However, their desiccated bodies are highly flammable. They also cannot drink.
+  skills except fighting, spellcasting and necromancy. The sacred embalming
+  rituals that brought them into unlife also grant them a special connection
+  with the divine, and as they increase in levels, they become increasingly
+  in touch with the powers of death. However, their desiccated bodies are
+  highly flammable. They also cannot drink.
 
   Like other undead, mummies are naturally immune to poisons, negative energy
   and torment; have little warmth left to be affected by cold; and are not
@@ -1994,8 +1984,7 @@ Monks
 
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
-  starts with a ranged weapon of their choice, a scroll of immolation, and a
-  set of leathers.
+  starts with a shortbow, a scroll of immolation, and a set of leathers.
 
 Brigands
   A Brigand is a shady character who is especially good at killing, using
@@ -2011,7 +2000,7 @@ their travels.
 Artificers
   Artificers have built, bought or burgled an assortment of magic wands to
   help them through the early Dungeon. Wands have a limited number of uses,
-  though, so they'll want to upgrade from their short sword ASAP.
+  though, so they'll want to upgrade from their club ASAP.
 
 Wanderers
   Wanderers are "jacks-of-all-trades, masters of none". They start the game
@@ -2033,13 +2022,6 @@ Berserkers
   get the power to go berserk (as well as a number of other powers, should they
   prove worthy), but who forbids the use of spell magic. They enter the Dungeon
   with a weapon of their choice, and dressed in animal skins.
-
-Abyssal Knights
-  The Abyssal Knight is a fighter serving Lugonu the Unformed, ruler of the
-  Abyss. They are granted some power over the Abyss, and must spread death and
-  disorder in return. They are sent from the Abyss into the Dungeon to spread
-  corruption and chaos, starting with a simple weapon of their choice and
-  leather armour.
 
 Chaos Knights
   The Chaos Knight is a plaything of Xom, subject to the god's constantly
@@ -2073,17 +2055,21 @@ Warpers
   of translocation spells, some dispersal boomerangs, a simple weapon of their
   choice, and leather armour.
 
-Arcane Marksmen
-  Arcane Marksmen are Hunters who use debilitating spells to assist their ranged
-  attacks. They are particularly good at keeping their enemies at a distance.
-  They begin the game with a ranged weapon of their choice, some spells to
-  support its use, a scroll of vulnerability to help those spells, and a robe.
+Hexslinger
+  Hexslingers use debilitating spells to assist their ranged attacks. They
+  begin the game with a sling, some spells to support its use, a scroll of
+  poison to keep foes at a distance, and a robe.
 
 Enchanters
   The Enchanter specialises in the subtle art of hexes. Instead of directly
   damaging foes, hexes disable and debilitate them, allowing the Enchanter to
   finish the helpless creatures in combat. The Enchanter begins with a lightly
   enchanted dagger, a robe, potions of invisibility, and a selection of hexes.
+
+Reaver
+  Reavers have an assortment of powerful, but highly situational, conjurations
+  to draw upon when their skill in melee is insufficient. They start with a
+  simple weapon of their choice and leather armour.
 
 Mage backgrounds
 ================
@@ -2131,9 +2117,7 @@ Elementalists
     provides powerful but difficult to direct spells.
 
   Earth Magic
-    is a versatile school, with destructive, debilitating and utility spells
-    available. Earth Elementalists start with the Sandblast spell, and some
-    stones to use with it.
+    offers direct effects, some destructive and some debilitating.
 
 Venom Mages
   Venom Mages specialise in poison magic, which is extremely useful in the
@@ -2199,33 +2183,21 @@ powerful attack when unarmed and also to punch with the off hand as an
 additional melee attack. The Unarmed Combat skill continues to increase your
 attack speed while unarmed until it can be raised no more.
 
-Note that auxiliary attacks (such as a Palentonga's tail-slap or a Minotaur's
+Note that auxiliary attacks (such as a Armataur's tail-slap or a Minotaur's
 headbutt) are not affected by the Unarmed Combat skill.
 
 Ranged combat skills
 ========================================
 
-There are a number of individual weapon skills for missile weapons:
-
-  * Throwing
-  * Bows
-  * Crossbows
-  * Slings
-
-Throwing is the skill for all things hurled without a launcher: boomerangs,
-javelins, nets, darts, etc. The other skills refer to various types of ranged
-weapons.
+Ranged Weapons is the skill for bows, crossbows, and slings, whereas Throwing
+governs all things hurled without a launcher: boomerangs, javelins, nets,
+darts, etc.
 
 Just as with melee weapons, ranged weapon skills and throwing skills increase
 the speed at which you attack, along with slightly increasing your accuracy
 and damage. Missile weapons, unlike melee or throwing weapons, are slowed by
 wearing heavy armour. Increasing your Strength and Armour skill will partially
 mitigate this.
-
-Since the motion of using a sling and throwing a stone are somewhat similar,
-these skills crosstrain:
-
-  * Throwing and Slings
 
 Magic skills
 ========================================

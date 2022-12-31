@@ -1065,10 +1065,14 @@ player_info::player_info()
  * @param force_full  If true, all properties will be updated in the json
  *                    regardless whether their values are the same as the
  *                    current info in m_current_player_info.
+ *
+ * Warning: `force_full` is only ever set to true when sending player info
+ * for spectators, and some details below make use of this semantics.
  */
 void TilesFramework::_send_player(bool force_full)
 {
     player_info& c = m_current_player_info;
+    const bool spectator = force_full;
     if (!c._state_ever_synced)
     {
         // force the initial sync to be full: otherwise the _update_blah
@@ -1097,9 +1101,9 @@ void TilesFramework::_send_player(bool force_full)
         god = god_name(you.religion);
     _update_string(force_full, c.god, god, "god");
     _update_int(force_full, c.under_penance, (bool) player_under_penance(), "penance");
-    uint8_t prank = 0;
+    int prank = 0;
     if (you_worship(GOD_XOM))
-        prank = max(0, xom_favour_rank() - 1);
+        prank = xom_favour_rank() - 1;
     else if (!you_worship(GOD_NO_GOD))
         prank = max(0, piety_rank());
     else if (you.char_class == JOB_MONK && !you.has_mutation(MUT_FORLORN)
@@ -1118,9 +1122,14 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.real_hp_max, max_max_hp, "real_hp_max");
     _update_int(force_full, c.mp, you.magic_points, "mp");
     _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
+#if TAG_MAJOR_VERSION == 34
     _update_int(force_full, c.dd_real_mp_max,
                 you.species == SP_DEEP_DWARF ? get_real_mp(false) : 0,
                 "dd_real_mp_max");
+#else
+    // TODO: clean up the JS that uses this
+    _update_int(force_full, c.dd_real_mp_max, 0, "dd_real_mp_max");
+#endif
 
     _update_int(force_full, c.poison_survival, max(0, poison_survival()),
                 "poison_survival");
@@ -1153,6 +1162,13 @@ void TilesFramework::_send_player(bool force_full)
     if (you.running == 0) // Don't update during running/resting
     {
         _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
+
+        // only send this for spectators; the javascript version of the time
+        // indicator works somewhat differently than the local version
+        // XX reconcile?
+        if (spectator)
+            tiles.json_write_int("time_last_input", you.elapsed_time_at_last_input);
+
         _update_int(force_full, c.num_turns, you.num_turns, "turn");
     }
 
@@ -1220,7 +1236,7 @@ void TilesFramework::_send_player(bool force_full)
         item_def item = get_item_known_info(you.inv[i]);
         if ((char)i == you.equip[EQ_WEAPON] && is_weapon(item) && you.corrosion_amount())
             item.plus -= 4 * you.corrosion_amount();
-        _send_item(c.inv[i], item, force_full);
+        _send_item(c.inv[i], item, c.inv_uselessness[i], force_full);
         json_close_object(true);
     }
     json_close_object(true);
@@ -1237,7 +1253,7 @@ void TilesFramework::_send_player(bool force_full)
                 (int8_t) you.quiver_action.get()->get_item(), "quiver_item");
 
     _update_string(force_full, c.quiver_desc,
-                you.quiver_action.get()->quiver_description().to_colour_string(),
+                you.quiver_action.get()->quiver_description().to_colour_string(LIGHTGRAY),
                 "quiver_desc");
 
     _update_string(force_full, c.unarmed_attack,
@@ -1288,6 +1304,7 @@ static string _qty_field_name(const item_def &item)
 }
 
 void TilesFramework::_send_item(item_def& current, const item_def& next,
+                                bool& current_uselessness,
                                 bool force_full)
 {
     bool changed = false;
@@ -1344,6 +1361,9 @@ void TilesFramework::_send_item(item_def& current, const item_def& next,
     changed |= (current.special != next.special);
 
     // Derived stuff
+    changed |= _update_int(force_full, current_uselessness,
+                           is_useless_item(next, true), "useless");
+
     if (changed && defined)
     {
         string name = next.name(DESC_A, true, false, true);
@@ -1416,7 +1436,6 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
         TILEP_PART_ARM,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
-        TILEP_PART_DRCHEAD,
         TILEP_PART_HELM,
         TILEP_PART_HAND1,
         TILEP_PART_HAND2,
@@ -1455,7 +1474,7 @@ void TilesFramework::send_doll(const dolls_data &doll, bool submerged, bool ghos
     }
 
     const bool is_ptng = is_player_tile(doll.parts[TILEP_PART_BASE],
-                                        TILEP_BASE_PALENTONGA);
+                                        TILEP_BASE_ARMATAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
@@ -1630,11 +1649,16 @@ void TilesFramework::_send_cell(const coord_def &gc,
             write_tileidx(next_pc.cloud);
         }
 
-        if (next_pc.is_bloody != current_pc.is_bloody)
-            json_write_bool("bloody", next_pc.is_bloody);
+        if (next_pc.icons != current_pc.icons)
+            json_write_icons(next_pc.icons);
 
-        if (next_pc.old_blood != current_pc.old_blood)
-            json_write_bool("old_blood", next_pc.old_blood);
+        if (Options.show_blood) {
+            if (next_pc.is_bloody != current_pc.is_bloody)
+                json_write_bool("bloody", next_pc.is_bloody);
+
+            if (next_pc.old_blood != current_pc.old_blood)
+                json_write_bool("old_blood", next_pc.old_blood);
+        }
 
         if (next_pc.is_silenced != current_pc.is_silenced)
             json_write_bool("silenced", next_pc.is_silenced);
@@ -1845,6 +1869,8 @@ void TilesFramework::_send_map(bool force_full)
     json_write_string("msg", "map");
     json_treat_as_empty();
 
+    // cautionary note: this is used in heuristic ways in process_handler.py,
+    // see `_is_full_map_msg`
     if (force_full)
         json_write_bool("clear", true);
 
@@ -2104,6 +2130,9 @@ void TilesFramework::_send_messages()
  */
 void TilesFramework::_send_everything()
 {
+    // note: a player client will receive and process some of these messages,
+    // but not all. This function is currently never called except for
+    // spectators, and some of the semantics here reflect this.
     _send_version();
     send_options();
     _send_layout();
@@ -2523,6 +2552,17 @@ void TilesFramework::json_write_comma()
     if (last == '{' || last == '[' || last == ',' || last == ':')
         return;
     write_message(",");
+}
+
+void TilesFramework::json_write_icons(const set<tileidx_t> &icons)
+{
+    json_open_array("icons");
+    for (const tileidx_t icon : icons)
+    {
+        json_write_comma(); // skipped for the first one
+        write_tileidx(icon);
+    }
+    json_close_array();
 }
 
 void TilesFramework::json_write_name(const string& name)

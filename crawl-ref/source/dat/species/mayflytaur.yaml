@@ -16,9 +16,7 @@ aptitudes:
   axes: 1
   polearms: 3
   staves: 3
-  slings: 3
-  bows: 2
-  crossbows: 2
+  ranged weapons: 2
   throwing: 2
   armour: 1
   dodging: 1
@@ -70,7 +68,3 @@ recommended_weapons:
   - SK_POLEARMS
   - SK_STAVES
   - SK_LONG_BLADES
-  - SK_CROSSBOWS
-  - SK_SLINGS
-  - SK_BOWS
-  - SK_THROWING

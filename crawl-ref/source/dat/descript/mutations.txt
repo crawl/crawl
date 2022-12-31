@@ -75,18 +75,21 @@ Dexterity and Stealth+.
 %%%%
 strong mutation
 
-Your muscles have grown unnaturally strong. Each level of this mutation
-provides +2 Strength.
+Your muscles have grown unnaturally strong. Each level of this mutation provides
++4 Strength, but the extra muscles slow your movements and thoughts, giving -1 to
+both your Intelligence and Dexterity for each level.
 %%%%
 clever mutation
 
-Your mind has become unnaturally acute. Each level of this mutation provides +2
-Intelligence.
+Your mind has become unnaturally acute. Each level of this mutation provides +4
+Intelligence, but all the blood flowing to your head weakens your constitution,
+giving -1 to both your Strength and Dexterity for each level.
 %%%%
 agile mutation
 
 Your reflexes have become unnaturally fast. Each level of this mutation
-provides +2 Dexterity.
+provides +4 Dexterity, but the rest of your body can't keep up with your speed,
+giving -1 to both your Strength and Intelligence for each level.
 %%%%
 weak mutation
 
@@ -213,8 +216,8 @@ weakness stinger mutation
 
 You have a thin, red tail, allowing you to tail-slap foes when launching melee
 attacks. Each level of this mutation increases your tail's strength as it turns
-into a sharp stinger. The third level of this mutation causes the stinger to
-inflict brief weakness on those unfortunate enough to be struck by it.
+into a sharp stinger. The third level of this mutation prevents wearing cloaks
+or scarves, and causes the stinger to inflict brief weakness on those struck.
 %%%%
 armoured tail mutation
 
@@ -606,18 +609,6 @@ You have big, strong legs, allowing you to hop about with
 land. The second level of this mutation allows you to hop farther. Each time
 you hop, you need to rest for a bit before you can hop again.
 %%%%
-roll mutation
-
-You can roll at nearby foes to attack with <input>$cmd[CMD_USE_ABILITY]</input>.
-Each level of this mutation increases the distance you can roll, though not the
-damage dealt.
-%%%%
-reflexive curl mutation
-
-You curl up when struck, giving you protection against further attacks until
-your next action. This effect is guaranteed to happen in response to any
-direct damage.
-%%%%
 forlorn mutation
 
 You cannot, will not, and will never worship any god.
@@ -649,8 +640,10 @@ damage in the same way as a human with a short blade might.
 four strong arms mutation
 
 You have two pairs of two arms, allowing you to wield two-handed weapons with
-one pair and a shield with the other. The secondary arms in each pair are oddly
-shaped, preventing you from wearing an extra set of gloves or magical rings.
+one pair and a shield with the other. You can even wield extremely large
+weapons like giant clubs, though this takes both arm-pairs. The secondary arms
+in each pair are oddly shaped, preventing you from wearing an extra set of
+gloves or magical rings.
 %%%%
 retaliatory headbutt mutation
 
@@ -772,18 +765,58 @@ engulf mutation
 Your melee attacks may engulf living foes that are your size or smaller.
 Those foes will be silenced and unable to breathe.
 %%%%
-# ------ Ru sacrifices ------
-inability to drink while threatened mutation
+otherworldly mutation
 
-When you are harmed, there is a chance that you will become temporarily unable
-to drink potions. The greater the damage done and the closer you are to death,
-the greater the odds.
+You are foreign to this world, easily perceived by dark forces. You have only
+one-tenth the normal time on each dungeon floor before Zot finds and ends you.
 %%%%
-inability to read while threatened mutation
+glowing mutation
+
+You glow in the dark. Foes hit you more often, your stealth is badly impaired,
+and your outline is easily seen even while you are otherwise invisible.
+%%%%
+explore regen mutation
+
+As you explore the dungeon, your wounds will heal and your magic will replenish.
+%%%%
+faith mutation
+
+You were embalmed with holy oils and sacred spices and bound about with blessed
+cloth. Now you have a special connection with the divine, allowing you to gain
+favor with your chosen god more quickly.
+%%%%
+devour on kill mutation
+
+When you kill living creatures you have a chance to devour their life force
+and restore hit points.
+%%%%
+roll mutation
+
+You instinctively roll as you move toward enemies, rampaging forward an additional
+space.
+%%%%
+long tongue mutation
+
+Your tongue is extremely long. This lets you lick potion bottles dry, doubling their
+effects on you.
+%%%%
+awkward tongue mutation
+
+Your tongue is very floppy, giving you trouble when reading the arcane syllables
+encoded on magical scrolls. As such, scrolls take you half again as long to read.
+%%%%
+# ------ Ru sacrifices ------
+inability to drink after injury mutation
 
 When you are harmed, there is a chance that you will become temporarily unable
-to read. The greater the damage done and the closer you are to death, the
-greater the odds.
+to drink potions. The greater the mutation level, damage done and the closer
+you are to death, the greater the odds.
+%%%%
+inability to read after injury mutation
+
+When you are harmed, there is a chance that you will become temporarily unable
+to read. The greater the mutation level, damage done and the closer you are to
+death, the greater the odds.
 %%%%
 missing a hand mutation
 
@@ -908,9 +941,4 @@ Your Translocations skill is 0 and you cannot train the skill.
 no transmutations magic mutation
 
 Your Transmutations skill is 0 and you cannot train the skill.
-%%%%
-devour on kill mutation
-
-When you kill living creatures you have a chance to devour their life force
-and restore hit points.
 %%%%

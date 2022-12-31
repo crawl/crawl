@@ -211,6 +211,12 @@ Grum
 
 A tough-looking gnoll, wearing the pelt of one of his former war dogs.
 %%%%
+Grunn
+
+A brutally twisted undead gnoll in the eternal service of Ereshkigal, lord of
+Tartarus. Legend has it that he sold his soul to return his most beloved hunting
+dog to life. Whether that hound is a member of his current pack, none can say.
+%%%%
 Harold
 
 A middle-aged bounty hunter, anxious to retire after one final job. He hopes to
@@ -407,7 +413,7 @@ An unusually weak troll.
 %%%%
 Parghit
 
-An unusually strong troll, his wiry frame scarred by many against-the-odds
+An unusually strong troll, his thick frame scarred by many against-the-odds
 victories. He has been wounded so many times that his body has adapted, and now
 heals almost instantly. His necklace of troll claws is a memento of those who
 underestimated him.
@@ -609,7 +615,7 @@ animated armour
 
 The sweat and toil of the armourer working leather and steel infuses a spirit
 into their creation, a unique spark within every cuirass, pauldron and vambrace.
-A skilled wizard can draw those those sparks together, allowing their armour to
+A skilled wizard can draw those sparks together, allowing their armour to
 protect its wearer in a more aggressive fashion than armour customarily does.
 %%%%
 apis
@@ -731,6 +737,12 @@ A mighty undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. Fortunately, whatever organ produces a
 dragon's fearsome breath was lost in the process.
 %%%%
+gnoll bouda
+
+A gnoll witch possessed by a spirit of spite which flashes out from behind
+their eyes. Its strange chants and ululations send other gnolls into a wild
+frenzy.
+%%%%
 boulder beetle
 
 A grey beetle with an almost impenetrable rocky carapace. When at some distance
@@ -757,7 +769,7 @@ one of the most fearsome denizens of any of the Hells.
 %%%%
 broodmother
 
-A massive spider swollen with eggs. Its innumerable offspring are always at its
+A giant spider swollen with eggs. Its innumerable offspring are always at its
 call.
 %%%%
 burning bush
@@ -1009,8 +1021,9 @@ A human-like figure with an aura of power betraying its divine ancestry.
 %%%%
 demonic crawler
 
-A hellish insectoid creature with a long and bloated body, supported by dozens
-of short jointed legs and topped with an almost human head.
+A hellish insectoid creature, fueled by some infernal power that constantly
+regrows its chitinous segments. Nothing short of a lethal blow will stop it
+for long.
 %%%%
 demonspawn
 
@@ -1176,7 +1189,7 @@ An elf, a member of an ancient fey race.
 emperor scorpion
 
 A giant scorpion with a massive barb on its tail dripping deadly venom. It is
-one of the largest arachnids known to exist.
+one of the largest arachnids known.
 %%%%
 endoplasm
 
@@ -1344,11 +1357,6 @@ gnoll sergeant
 
 A commander of a pack of gnolls. Scars on its stout body give evidence of how
 it earned its rank.
-%%%%
-gnoll shaman
-
-A haggard old gnoll, wise and wicked. Its strange chants and ululations send
-other gnolls into a wild frenzy.
 %%%%
 goblin
 
@@ -2397,6 +2405,10 @@ spriggan rider
 A spriggan that has tamed a hornet as its mount, and is tasked with protecting
 the spriggan fens and cairns from intruders.
 %%%%
+meteoran
+
+A celestial being, descended to this earth for a brief time.
+%%%%
 starcursed mass
 
 A mass of stellar detritus that glows with the sickly putrescence of a dying
@@ -2404,6 +2416,12 @@ star, forever shrieking soundlessly in a voice beyond mortal grasp. Its form
 undulates constantly, dividing spontaneously and then withdrawing when
 threatened. When divided, its deafening chorus of screams can overwhelm the
 minds of even the bravest warriors, leaving them stunned and helpless.
+%%%%
+starflower
+
+A mass of lashing vines and tentacles growing out of the husk of a dead star.
+Space itself runs through the xylem and phloem of its branches, which appear to
+be in many places at once.
 %%%%
 starspawn tentacle
 
@@ -2771,8 +2789,8 @@ A strong wild canine, with sharp teeth and a healthy appetite.
 %%%%
 wolf spider
 
-A hairy fast-moving hunting spider with vicious mandibles. It roams the dungeon
-in search of prey, which it kills with its deadly venom.
+A hairy fast-moving hunting spider with vicious mandibles, the size of a wolf.
+It roams the dungeon in search of prey, which it kills with its deadly venom.
 %%%%
 worldbinder
 
@@ -3130,9 +3148,9 @@ skeletal bat
 A bat skeleton without the decency to lie unmoving like dead bats are supposed
 to.
 %%%%
-spriggan baker
+spriggan hatter
 
-A spriggan that has mastered the culinary arts.
+A spriggan who is going slightly mad from the toxic fumes of their craft.
 %%%%
 water elementalist statue
 
@@ -3159,7 +3177,7 @@ perceived vice overshadows its goodness.
 %%%%
 zot statue
 
-An profoundly disturbing statue, hewn from a single piece of dark gabbro
+A profoundly disturbing statue, hewn from a single piece of dark gabbro
 scintillating with tiny crystals. It is impossible to tell whether it is
 intended to represent some creature or personage, or to be completely abstract.
 %%%%

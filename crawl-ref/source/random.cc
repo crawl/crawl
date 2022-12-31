@@ -337,6 +337,24 @@ int random2avg(int max, int rolls)
     return sum / rolls;
 }
 
+int random2min(int max, int rolls)
+{
+    int res = random2(max);
+    for (int i = 0; i < (rolls -1); i++)
+        res = min(res, random2(max));
+
+    return res;
+}
+
+int random2max(int ran, int rolls)
+{
+    int res = random2(ran);
+    for (int i = 0; i < (rolls -1); i++)
+        res = max(res, random2(ran));
+
+    return res;
+}
+
 // biased_random2() takes values in the same range [0, max) as random2() but
 // with mean value (max - 1)/(n + 1) biased towards the bottom end.
 // This can be thought of as the smallest of n _distinct_ random integers

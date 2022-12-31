@@ -1205,8 +1205,7 @@ ORIENT:  float
 SHUFFLE: 1Ww / 2DD
 MONS:    merfolk, faun
 MONS:    merfolk impaler ; demon trident good_item | trident good_item . gold
-MONS:    satyr ; fustibalus good_item . gold / \
-         satyr ; longbow good_item . gold
+MONS:    satyr ; longbow good_item . gold
 COLOUR:  c = white
 COLOUR:  1234'D = cyan
 FTILE:   1234'D+WwG = floor_pebble_cyan
@@ -1352,7 +1351,7 @@ MONS:    faun, satyr, meliai, minotaur
 KMONS:   _ = merfolk javelineer
 KMONS:   b = bush
 KMONS:   p = plant
-ITEM:    any potion, longbow good_item, fustibalus good_item
+ITEM:    any potion, longbow good_item, arbalest good_item
 # Bacchus-approved.
 KFEAT:   _ = altar_uskayaw
 SHUFFLE: 35, ABC, FGHI
@@ -1703,7 +1702,7 @@ TAGS:    no_tide no_pool_fixup water_ok
 ITEM:    * / |
 ITEM:    book of hexes / book of misfortune / book of debilitation / \
          randbook disc:hexes / shortbow good_item / longbow good_item / \
-         hunting sling good_item / fustibalus good_item
+         sling good_item
 ITEM:    wand of charming / wand of paralysis / phial of floods / any wand
 ITEM:    scroll of vulnerability / scroll of fear / any scroll / any potion
 KMONS:   1 = eleionoma
@@ -1846,7 +1845,7 @@ KMONS:   3 = merfolk avatar / merfolk javelineer / merfolk impaler / \
 -- They're all owned by the same person.
 local owner = string.gsub(crawl.make_name(), " ", "_")
 kfeat("D = weapon shop name:" .. owner .. " type:Merfolk suffix:Weapons ; \
-      spear | trident | halberd | scythe | demon trident | bardiche | glaive | \
+      spear | trident | halberd | demon trident | bardiche | glaive | \
       dagger | quick blade | short sword | rapier | dart | javelin | \
       throwing net | boomerang" )
 kfeat("E = armour shop name:" .. owner .. " type:Merfolk suffix:Armours ; \
@@ -1858,7 +1857,7 @@ kfeat("F = general shop name:" .. owner .. " type:Merfolk suffix:Magic ; \
       amulet of the acrobat | randbook disc:poison | randbook disc:hexes | \
       randbook disc:ice | randbook disc:summoning | phial of floods | \
       condenser vane | lightning rod | wand of charming | wand of iceblast | \
-      randbook disc:transmutation" )
+      wand of roots | randbook disc:transmutation" )
 -- If you're not a merfolk and can't get to the shops on your own, the owner
 -- will be more than happy to help make arrangements. With an additional
 -- convenience fee, of course. (The scroll is for if you get stuck.)

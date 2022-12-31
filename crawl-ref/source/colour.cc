@@ -617,14 +617,12 @@ void init_element_colours()
                             { {60,  MAGENTA},
                               {60,  RED},
                             }));
-#if TAG_MAJOR_VERSION == 34
     add_element_colour(new random_element_colour_calc(
-                            ETC_PAKELLAS, "pakellas",
+                            ETC_MOUNTAIN, "mountain",
                             { {40,  LIGHTGREEN},
                               {40,  LIGHTMAGENTA},
                               {40,  LIGHTCYAN},
                             }));
-#endif
     add_element_colour(new random_element_colour_calc(
                             ETC_AWOKEN_FOREST, "awoken_forest",
                             { {40, RED},
@@ -734,14 +732,21 @@ static const char* const cols[16] =
     "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
     "lightred", "lightmagenta", "yellow", "white"
 };
+static const char* const readable_cols[16] =
+{
+    "black", "blue", "green", "cyan", "red", "magenta", "brown",
+    "light grey", "dark grey", "light blue", "light green", "light cyan",
+    "light red", "light magenta", "yellow", "white"
+};
 COMPILE_CHECK(ARRAYSZ(cols) == NUM_TERM_COLOURS);
+COMPILE_CHECK(ARRAYSZ(readable_cols) == NUM_TERM_COLOURS);
 
-const string colour_to_str(colour_t colour)
+const string colour_to_str(colour_t colour, bool human_readable)
 {
     if (colour >= NUM_TERM_COLOURS)
         return "lightgrey";
     else
-        return cols[colour];
+        return human_readable ? readable_cols[colour] : cols[colour];
 }
 
 // Returns default_colour (default -1) if unmatched else returns 0-15.

@@ -129,6 +129,8 @@ static bool ignore_player_traversability = false;
 // Map of terrain types that are forbidden.
 static FixedVector<int8_t,NUM_FEATURES> forbidden_terrain;
 
+static bool _is_valid_waypoint(const level_pos &pos);
+
 // N.b. this #define only adds dprfs and so isn't very useful outside of a
 // debug build. It also makes long travel extremely slow when enabled on a
 // debug build.
@@ -189,10 +191,6 @@ static bool _loadlev_populate_stair_distances(const level_pos &target);
 static void _populate_stair_distances(const level_pos &target);
 static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c, bool autopickup);
-static bool _is_travelsafe_square(const coord_def& c,
-                                  bool ignore_hostile = false,
-                                  bool ignore_danger = false,
-                                  bool try_fallback = false);
 
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
 // squares as also for undiscovered traps.
@@ -319,8 +317,6 @@ static const char *_run_mode_name(int runmode)
 
 uint8_t is_waypoint(const coord_def &p)
 {
-    if (!can_travel_interlevel())
-        return 0;
     return curr_waypoints[p.x][p.y];
 }
 
@@ -433,9 +429,9 @@ public:
             {
                 const coord_def p(*ri);
                 cell_travel_safety &ts(safegrid(p));
-                ts.safe = _is_travelsafe_square(p, false);
+                ts.safe = is_travelsafe_square(p, false);
                 ts.safe_if_ignoring_hostile_terrain =
-                    _is_travelsafe_square(p, true);
+                    is_travelsafe_square(p, true);
             }
             _travel_safe_grid = move(tsgrid);
         }
@@ -459,7 +455,7 @@ bool is_stair_exclusion(const coord_def &p)
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
-static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
+bool is_travelsafe_square(const coord_def& c, bool ignore_hostile,
                                   bool ignore_danger, bool try_fallback)
 {
     if (!in_bounds(c))
@@ -1001,7 +997,7 @@ static void _find_travel_pos(const coord_def& youpos, int *move_x, int *move_y)
             // that autoexplore will still sometimes move you next to a
             // previously unseen monster but the same would happen by manual
             // movement, so I don't think we need to worry about this. (jpeg)
-            if (!_is_travelsafe_square(new_dest)
+            if (!is_travelsafe_square(new_dest)
                 || !feat_is_traversable_now(env.map_knowledge(new_dest).feat()))
             {
                 new_dest = dest;
@@ -1118,6 +1114,22 @@ command_type travel()
                 return CMD_GO_UPSTAIRS;
             }
         }
+
+// #define DEBUG_EXPLORE
+#ifdef DEBUG_EXPLORE
+        if (you.running.pos == you.pos())
+        {
+            mprf("Stopping explore at target %d,%d", you.running.pos.x, you.running.pos.y);
+            stop_running();
+            return CMD_NO_CMD;
+        }
+        else if (!_is_valid_explore_target(you.running.pos))
+        {
+            mprf("Stopping explore; everything in los of %d,%d is mapped", you.running.pos.x, you.running.pos.y);
+            stop_running();
+            return CMD_NO_CMD;
+        }
+#endif
 
         // Speed up explore by not doing a double-floodfill if we have
         // a valid target.
@@ -1390,7 +1402,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode, bool fallback_explore)
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
     if (!floodout
-        && !_is_travelsafe_square(start, false, ignore_danger, true)
+        && !is_travelsafe_square(start, false, ignore_danger, true)
         && !is_trap(start))          // player likes pain
     {
         return coord_def();
@@ -1577,7 +1589,7 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 {
     if (greedy_dist == UNFOUND_DIST
         && is_greed_inducing_square(c)
-        && _is_travelsafe_square(c, ignore_hostile, ignore_danger))
+        && is_travelsafe_square(c, ignore_hostile, ignore_danger))
     {
         int dist = traveled_distance;
 
@@ -1587,7 +1599,8 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 
         // The addition of explore_wall_bias makes items as interesting
         // as a room's perimeter (with one of four known adjacent walls).
-        if (Options.explore_wall_bias)
+        // XX why?
+        if (Options.explore_wall_bias > 0)
             dist += Options.explore_wall_bias * 3;
 
         greedy_dist = dist;
@@ -1647,22 +1660,39 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
                 if (Options.explore_wall_bias)
                 {
-                    dist += Options.explore_wall_bias * 4;
+                    // if we are penalizing open space, introduce a default
+                    // penalty of 4 walls and then downweight that. If we are
+                    // penalizing walls, just add on for each wall.
+                    if (Options.explore_wall_bias > 0)
+                        dist += Options.explore_wall_bias * 8;
 
                     // Favour squares directly adjacent to walls
-                    for (int dir = 0; dir < 8; dir += 2)
+                    // XX for some reason, historically this only looked at
+                    // cardinal directions. Why?
+                    for (int dir = 0; dir < 8; dir++)
                     {
                         const coord_def ddc = dc + Compass[dir];
 
                         if (feat_is_wall(env.map_knowledge(ddc).feat()))
                             dist -= Options.explore_wall_bias;
                     }
+
+                    if (Options.explore_wall_bias < 0 &&
+                        feat_is_wall(env.map_knowledge(dc).feat()))
+                    {
+                        // further penalize cases where the unseen square dc
+                        // is itself a wall
+                        dist -= Options.explore_wall_bias;
+                    }
                 }
 
                 // Replace old target if nearer (or less penalized)
+                // don't let dist get < 0
                 if (dist < unexplored_dist || unexplored_dist < 0)
                 {
                     unexplored_dist = dist;
+                    // somewhat confusing: `c` is probably actually explored,
+                    // but is adjacent to the good place we just found.
                     unexplored_place = c;
                 }
             }
@@ -1716,7 +1746,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
 
         return true;
     }
-    else if (!_is_travelsafe_square(dc, ignore_hostile, ignore_danger, try_fallback))
+    else if (!is_travelsafe_square(dc, ignore_hostile, ignore_danger, try_fallback))
     {
         // This point is not okay to travel on, but if this is a
         // trap, we'll want to put it on the feature vector anyway.
@@ -1871,17 +1901,17 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 // This uses data provided by pathfind(), so that needs to be called first.
 int travel_pathfind::explore_status()
 {
-    int explore_status = 0;
+    int status = 0;
 
     const coord_def greed = greedy_place;
     if (greed.x || greed.y)
-        explore_status |= EST_GREED_UNFULFILLED;
+        status |= EST_GREED_UNFULFILLED;
 
     const coord_def unexplored = unexplored_place;
     if (unexplored.x || unexplored.y || !unreachables.empty())
-        explore_status |= EST_PARTLY_EXPLORED;
+        status |= EST_PARTLY_EXPLORED;
 
-    return explore_status;
+    return status;
 }
 
 
@@ -2215,7 +2245,7 @@ static int _prompt_travel_branch(int prompt_flags)
         mprf(MSGCH_PROMPT, "Where to? %s",
              shortcuts.c_str());
 
-        int keyin = get_ch();
+        int keyin = numpad_to_regular(get_ch());
         switch (keyin)
         {
         CASE_ESCAPE
@@ -3203,7 +3233,7 @@ void start_travel(const coord_def& p)
     if (!in_bounds(p))
         return;
 
-    if (!_is_travelsafe_square(p, true))
+    if (!is_travelsafe_square(p, true))
         return;
 
     you.travel_x = p.x;
@@ -4050,7 +4080,7 @@ void TravelCache::list_waypoints() const
 
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
     {
-        if (waypoints[i].id.depth == -1)
+        if (waypoints[i].id.depth == -1 || !_is_valid_waypoint(waypoints[i]))
             continue;
 
         dest = _get_trans_travel_dest(waypoints[i], false, true);
@@ -4070,10 +4100,20 @@ void TravelCache::list_waypoints() const
 uint8_t TravelCache::is_waypoint(const level_pos &lp) const
 {
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-        if (lp == waypoints[i])
+        if (lp == waypoints[i] && _is_valid_waypoint(lp))
             return '0' + i;
 
     return 0;
+}
+
+void TravelCache::flush_invalid_waypoints()
+{
+    for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
+        if (!_is_valid_waypoint(waypoints[i])
+            || !is_connected_branch(waypoints[i].id.branch))
+        {
+            waypoints[i].clear();
+        }
 }
 
 void TravelCache::update_waypoints() const
@@ -4107,7 +4147,7 @@ void TravelCache::delete_waypoint()
         if (key >= '0' && key <= '9')
         {
             key -= '0';
-            if (waypoints[key].is_valid())
+            if (_is_valid_waypoint(waypoints[key]))
             {
                 waypoints[key].clear();
                 update_waypoints();
@@ -4133,12 +4173,6 @@ void TravelCache::delete_waypoint()
 
 void TravelCache::add_waypoint(int x, int y)
 {
-    if (!can_travel_interlevel())
-    {
-        mpr("Sorry, you can't set a waypoint here.");
-        return;
-    }
-
     clear_messages();
 
     const bool waypoints_exist = get_waypoint_count();
@@ -4148,6 +4182,10 @@ void TravelCache::add_waypoint(int x, int y)
         list_waypoints();
     }
 
+    if (you.where_are_you == BRANCH_ABYSS)
+        mprf(MSGCH_PROMPT, "Waypoints on this level may disappear at any time.");
+    else if (!is_connected_branch(you.where_are_you))
+        mprf(MSGCH_PROMPT, "Waypoints will disappear once you leave this level.");
     mprf(MSGCH_PROMPT, "Assign waypoint to what number? (0-9%s) ",
          waypoints_exist? ", D - delete waypoint" : "");
 
@@ -4178,7 +4216,7 @@ void TravelCache::set_waypoint(int waynum, int x, int y)
 
     const level_id &lid = level_id::current();
 
-    const bool overwrite = waypoints[waynum].is_valid();
+    const bool overwrite = _is_valid_waypoint(waypoints[waynum]);
 
     string old_dest =
         overwrite ? _get_trans_travel_dest(waypoints[waynum], false, true) : "";
@@ -4205,11 +4243,19 @@ void TravelCache::set_waypoint(int waynum, int x, int y)
     update_waypoints();
 }
 
+static bool _is_valid_waypoint(const level_pos &pos)
+{
+    // waypoints in portal branches are only valid while you're there
+    return pos.is_valid()
+        && (is_connected_branch(pos.id.branch)
+            || you.where_are_you == pos.id.branch);
+}
+
 int TravelCache::get_waypoint_count() const
 {
     int count = 0;
     for (int i = 0; i < TRAVEL_WAYPOINT_COUNT; ++i)
-        if (waypoints[i].is_valid())
+        if (_is_valid_waypoint(waypoints[i]))
             count++;
 
     return count;
@@ -4740,6 +4786,11 @@ void explore_discoveries::found_feature(const coord_def &pos,
             return;
         }
     }
+    else if (feat == DNGN_RUNELIGHT)
+    {
+        runelights.emplace_back(cleaned_feature_description(pos), 1);
+        es_flags |= ES_RUNELIGHT;
+    }
 }
 
 void explore_discoveries::add_stair(
@@ -4860,10 +4911,10 @@ template <class C> void explore_discoveries::say_any(
         return;
     }
 
-    const auto message = formatted_string::parse_string("Found " +
-                           comma_separated_line(coll.begin(), coll.end()) + ".");
+    const auto message = "Found " +
+                           comma_separated_line(coll.begin(), coll.end()) + ".";
 
-    if (message.width() >= get_number_of_cols())
+    if (formatted_string::parse_string(message).width() >= get_number_of_cols())
         mprf("Found %s %s.", number_in_words(size).c_str(), category);
     else
         mpr(message);
@@ -4913,6 +4964,7 @@ bool explore_discoveries::stop_explore() const
     say_any(apply_quantities(stairs), "stair");
     say_any(apply_quantities(transporters), "transporter");
     say_any(apply_quantities(runed_doors), "runed door");
+    say_any(apply_quantities(runelights), "runelights");
 
     return true;
 }

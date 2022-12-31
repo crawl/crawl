@@ -5,8 +5,8 @@
 enum timed_effect_type
 {
     TIMER_CORPSES,
-    TIMER_HELL_EFFECTS,
 #if TAG_MAJOR_VERSION == 34
+    TIMER_HELL_EFFECTS,
     TIMER_SICKNESS,
 #endif
     TIMER_CONTAM,

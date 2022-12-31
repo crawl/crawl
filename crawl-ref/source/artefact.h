@@ -141,7 +141,7 @@ enum artp_value_type
 {
     ARTP_VAL_BOOL,  ///< bool (e.g. Fly)
     ARTP_VAL_POS,   ///< Positive integer (e.g. x% chance to get angry)
-    ARTP_VAL_BRAND, ///< Brand (e.g. flaming, vorpal).
+    ARTP_VAL_BRAND, ///< Brand (e.g. flaming, heavy).
                     ///      See \ref brand_type in item-prop-enum.h
     ARTP_VAL_ANY,   ///< int (e.g. dex-4, AC+4, SH+8)
 };

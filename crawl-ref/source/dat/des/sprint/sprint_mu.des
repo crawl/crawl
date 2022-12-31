@@ -513,7 +513,7 @@ KMONS: q = electric eel
 KFEAT: q = shallow_water
 KMONS: r = hydra simulacrum / fire dragon simulacrum / polar bear simulacrum /\
  wolf simulacrum / black mamba simulacrum
-KITEM: r = any, any, any, any, any, superb_item / w:1 wand of acid /\
+KITEM: r = any, any, any, any, any, superb_item / w:1 any beam wand /\
  w:1 wand of mindburst
 KFEAT: _ = altar_fedhas
 KMONS: s = patrolling Urug
@@ -808,7 +808,7 @@ SUBST: P = PPPPPPPPP.
 KMONS: a = patrolling Sigmund hd:15 hp:100 \
  spells:bolt_of_fire.16.wizard;confuse.16.wizard;invisibility.16.wizard;\
         force_lance.16.wizard \
- ; scythe ego:distortion
+ ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:distortion
 KMONS: b = patrolling Edmund hp:150 ; great mace ego:freezing \
  . dart ego:curare q:7
 : elseif d2rnd == 1 then
@@ -906,7 +906,7 @@ NAME: sprint_mu_vaults_butterflies
 TAGS: sprint_mu_vaults no_rotate no_hmirror no_vmirror
 MONS: centaur warrior, lich, shadow dragon, ogre mage
 MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
-      dire flail ego:vampirism | war axe ego:freezing | spear ego:vorpal |\
+      dire flail ego:vampirism | war axe ego:freezing | spear ego:heavy |\
       great mace ego:pain | great sword ego:venom .\
       chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
       scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
@@ -917,7 +917,7 @@ MONS: stone giant / shadow dragon / quicksilver dragon / golden dragon /\
 MONS: skeletal warrior
 KMONS: 8 = obsidian statue
 KMONS: f = butterfly
-KMONS: U = Sojobo ; morningstar ego:vorpal . tower shield ego:reflection / \
+KMONS: U = Sojobo ; morningstar ego:heavy . tower shield ego:reflection / \
            Frederick ; trident ego:freezing . tower shield ego:reflection
 KMONS: C = generate_awake Chuck
 KMONS: k = yaktaur captain ; arbalest ego:chaos
@@ -941,7 +941,7 @@ KMONS: M = ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
 KITEM: " = ring of flight ident:all, potion of flight ident:all q:3, \
  scroll of acquirement q:1 ident:all, wand of digging / \
- wand of iceblast, acquire gold, ring of protection from fire ident:all
+ any blast wand, acquire gold, ring of protection from fire ident:all
 
 COLOUR: #~^ = yellow
 KFEAT: # = closed_door
@@ -1141,8 +1141,8 @@ KMONS: d = col:lightgrey generate_awake statue name:air_elementalist name_adject
 KMONS: e = ancient champion \
        spells:venom_bolt.21.wizard;haste.21.wizard;haunt.21.wizard \
        ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
-       battleaxe ego:vorpal | battleaxe ego:pain | \
-       w:3 executioner's axe ego:vorpal
+       battleaxe ego:heavy | battleaxe ego:pain | \
+       w:3 executioner's axe ego:heavy
 KITEM: e = superb_item, superb_item
 KMONS: p = plant
 KMONS: 1 = patrolling vampire knight

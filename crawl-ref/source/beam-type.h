@@ -7,12 +7,14 @@ enum beam_type                  // bolt::flavour
     BEAM_MISSILE,
     BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
+    BEAM_FIRST_RANDOM = BEAM_FIRE,
     BEAM_COLD,
     BEAM_MAGIC,
     BEAM_ELECTRICITY,
     BEAM_POISON,
     BEAM_NEG,
     BEAM_ACID,
+    BEAM_LAST_RANDOM = BEAM_ACID,
     BEAM_MIASMA,
     BEAM_WATER,
 
@@ -32,6 +34,7 @@ enum beam_type                  // bolt::flavour
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
     BEAM_UNRAVELLED_MAGIC,
+    BEAM_LIGHT,
 
     // Enchantments
     BEAM_SLOW,
@@ -77,11 +80,12 @@ enum beam_type                  // bolt::flavour
     BEAM_INFESTATION,
     BEAM_AGONY,
     BEAM_VILE_CLUTCH,
+    BEAM_ROOTS,
     BEAM_VAMPIRIC_DRAINING,
     BEAM_CONCENTRATE_VENOM,
     BEAM_ENFEEBLE,
-    BEAM_NECROTIZE,
-    BEAM_LAST_ENCHANTMENT = BEAM_NECROTIZE,
+    BEAM_NECROTISE,
+    BEAM_LAST_ENCHANTMENT = BEAM_NECROTISE,
 
     BEAM_MEPHITIC,
     BEAM_AIR,

@@ -30,6 +30,7 @@
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
+#include "mon-pick.h"
 #include "mon-util.h"
 #include "ng-init.h"
 #include "shopping.h"
@@ -37,6 +38,7 @@
 #include "state.h"
 #include "stepdown.h"
 #include "stringutil.h"
+#include "syscalls.h"
 #include "tag-version.h"
 #include "version.h"
 
@@ -45,7 +47,7 @@
 #define STAT_PRECISION 2
 
 const static char *stat_out_prefix = "objstat_";
-const static char *stat_out_ext = ".txt";
+const static char *stat_out_ext = ".tsv";
 static FILE *stat_outf;
 
 enum item_base_type
@@ -170,8 +172,9 @@ static set<monster_type> objstat_monsters;
 // Ex: monster_recs[level][mc]["Num"]
 static map<level_id, map<monster_type, map <string, int> > > monster_recs;
 static const vector<string> monster_fields = {
-    "Num", "NumVault", "NumMin", "NumMax", "NumSD", "MonsHD", "MonsHP",
-    "MonsXP", "TotalXP", "TotalXPVault"
+    "Num", "NumVault", "NumInBranch", "NumMin", "NumMax", "NumSD", "NumOOD",
+    "MonsHD", "MonsHP", "MonsXP", "TotalXP", "TotalXPVault",
+    "RelativeDepth", "DistanceOOD",
 };
 
 static set<dungeon_feature_type> objstat_features;
@@ -899,6 +902,22 @@ void objstat_record_monster(const monster *mons)
         _record_monster_stat(type, "NumVault", 1);
         _record_monster_stat(type, "TotalXPVault", exper_value(*mons));
     }
+
+    const level_id cur_lev = level_id::current();
+    const int avg_depth = monster_pop_depth_avg(cur_lev.branch, type);
+    if (avg_depth >= 0)
+    {
+        _record_monster_stat(type, "NumInBranch", 1);
+        // Relative depth from average placement. This doesn't directly provide
+        // OoD info,because you'd also need the ranges for that, but it gives
+        // a reasonably close guide. Higher values are more under depth.
+        // Don't record if monster is not a branch native.
+        _record_monster_stat(type, "RelativeDepth", cur_lev.depth - avg_depth);
+        const int ood = monster_how_ood(cur_lev.branch, cur_lev.depth, type);
+        _record_monster_stat(type, "DistanceOOD", ood);
+        if (ood > 0)
+            _record_monster_stat(type, "NumOOD", 1);
+    }
 }
 
 static void _record_feature_stat(dungeon_feature_type feat_type, string field,
@@ -1027,7 +1046,7 @@ void objstat_iteration_stats()
 static FILE * _open_stat_file(string stat_file)
 {
     FILE *stat_fh = nullptr;
-    stat_fh = fopen(stat_file.c_str(), "w");
+    stat_fh = fopen_u(stat_file.c_str(), "w");
 
     if (!stat_fh)
     {
@@ -1083,7 +1102,9 @@ static void _write_stat(map<string, int> &stats, const string &field)
     ostringstream output;
     bool is_chance = false;
 
-    output.precision(STAT_PRECISION);
+    // NumOOD is by its nature reporting events rare enough that some more
+    // precision is helpful
+    output.precision(field == "NumOOD" ? STAT_PRECISION + 1 : STAT_PRECISION);
     output.setf(ios_base::fixed);
 
     // These fields want a per-instance average.
@@ -1091,7 +1112,9 @@ static void _write_stat(map<string, int> &stats, const string &field)
         || starts_with(field, "Chrg")
         || field == "MonsHD"
         || field == "MonsHP"
-        || field == "MonsXP")
+        || field == "MonsXP"
+        || field == "RelativeDepth"
+        || field == "DistanceOOD")
     {
         string num_field = "Num";
         // The classed fields need to be average relative to the right count.
@@ -1101,7 +1124,12 @@ static void _write_stat(map<string, int> &stats, const string &field)
             num_field = "NumShop";
         else if (ends_with(field, "Mons"))
             num_field = "NumMons";
-        out_val = field_val / stats[num_field.c_str()];
+        else if (field == "RelativeDepth" || field == "DistanceOOD")
+            num_field = "NumInBranch";
+        if (stats[num_field.c_str()] == 0)
+            out_val = 0.0; // XX some kind of `NA` value?
+        else
+            out_val = field_val / stats[num_field.c_str()];
     }
     // Turn the sum of squares into the standard deviation.
     else if (field == "NumSD")

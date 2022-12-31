@@ -125,6 +125,7 @@ static map<enchant_type, monster_info_flags> trivial_ench_mb_mappings = {
     { ENCH_ANTIMAGIC,       MB_ANTIMAGIC },
     { ENCH_ANGUISH,         MB_ANGUISH },
     { ENCH_SIMULACRUM,      MB_SIMULACRUM },
+    { ENCH_TP,              MB_TELEPORTING },
 };
 
 static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
@@ -639,7 +640,7 @@ monster_info::monster_info(const monster* m, int milev)
         // Applies to both friendlies and hostiles
         if (mons_is_fleeing(*m))
             mb.set(MB_FLEEING);
-        else if (mons_is_wandering(*m) && !mons_is_batty(*m))
+        else if (m->behaviour == BEH_WANDER)
         {
             if (m->is_stationary())
                 mb.set(MB_UNAWARE);
@@ -647,7 +648,7 @@ monster_info::monster_info(const monster* m, int milev)
                 mb.set(MB_WANDERING);
         }
         else if (m->foe == MHITNOT
-                 && !mons_is_batty(*m)
+                 && m->behaviour != BEH_BATTY
                  && m->attitude == ATT_HOSTILE)
         {
             mb.set(MB_UNAWARE);
@@ -697,6 +698,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->is_silenced() && m->has_spells() && m->immune_to_silence())
         mb.set(MB_SILENCE_IMMUNE);
 
+    if (m->reflection()) // technically might leak info, but probably fine
+        mb.set(MB_REFLECTING);
+
     if (mons_is_pghost(type))
     {
         ASSERT(m->ghost);
@@ -717,6 +721,11 @@ monster_info::monster_info(const monster* m, int milev)
     }
     if (m->has_ghost_brand())
         props[SPECIAL_WEAPON_KEY] = m->ghost_brand();
+
+    // m->ghost->colour is unsigned (8 bit), but COLOUR_INHERIT is -1 and
+    // ghost_colour is an int. (...why)
+    ghost_colour = m->ghost ? static_cast<int>(m->ghost->colour)
+                            : static_cast<int>(COLOUR_INHERIT);
 
     // book loading for player ghost and vault monsters
     spells.clear();
@@ -780,11 +789,12 @@ monster_info::monster_info(const monster* m, int milev)
     constricting_name.clear();
 
     // Name of what this monster is directly constricted by, if any
-    if (m->is_directly_constricted())
+    const auto constr_typ = m->get_constrict_type();
+    if (constr_typ == CONSTRICT_MELEE)
     {
         const actor * const constrictor = actor_by_mid(m->constricted_by);
         ASSERT(constrictor);
-        constrictor_name = (constrictor->constriction_does_damage(true) ?
+        constrictor_name = (constrictor->constriction_does_damage(constr_typ) ?
                             "constricted by " : "held by ")
                            + constrictor->name(_article_for(constrictor),
                                                true);
@@ -794,12 +804,12 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->constricting)
     {
         const char *participle =
-            m->constriction_does_damage(true) ? "constricting " : "holding ";
+            m->constriction_does_damage(CONSTRICT_MELEE) ? "constricting " : "holding ";
         for (const auto &entry : *m->constricting)
         {
             const actor* const constrictee = actor_by_mid(entry.first);
 
-            if (constrictee && constrictee->is_directly_constricted())
+            if (constrictee && constrictee->get_constrict_type() == CONSTRICT_MELEE)
             {
                 constricting_name.push_back(participle
                                             + constrictee->name(
@@ -961,7 +971,7 @@ string monster_info::_core_name() const
         switch (type)
         {
         case MONS_SLIME_CREATURE:
-            ASSERT((size_t) slime_size <= ARRAYSZ(slime_sizes));
+            ASSERT((size_t) slime_size < ARRAYSZ(slime_sizes));
             s = slime_sizes[slime_size] + s;
             break;
         case MONS_UGLY_THING:
@@ -1321,12 +1331,14 @@ string monster_info::pluralised_name(bool fullname) const
     // Unless it's Mara, who summons illusions of himself.
     if (mons_is_unique(type) && type != MONS_MARA)
         return common_name();
-    else if (mons_genus(type) == MONS_DRACONIAN)
+    else if (mons_genus(type) == MONS_DRACONIAN && !is(MB_NAME_REPLACE))
         return pluralise_monster(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
-    else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-             || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
-             || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
-             || !fullname)
+    else if ((type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
+                || type == MONS_DANCING_WEAPON || type == MONS_SPECTRAL_WEAPON
+                || type == MONS_ANIMATED_ARMOUR || type == MONS_MUTANT_BEAST
+                || !fullname)
+            && !is(MB_NAME_REPLACE))
+
     {
         return pluralise_monster(mons_type_name(type, DESC_PLAIN));
     }
@@ -1438,12 +1450,23 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     desc = out.str();
 }
 
+static bool _hide_moninfo_flag(monster_info_flags f)
+{
+    if (crawl_state.game_is_arena() &&
+        (f == MB_DISTRACTED_ONLY || f == MB_CANT_SEE_YOU))
+    {
+        // the wording on these doesn't make sense in the arena, so hide.
+        return true;
+    }
+    return false;
+}
+
 vector<string> monster_info::attributes() const
 {
     vector<string> v;
     for (auto& name : monster_info_flag_names)
     {
-        if (is(name.flag))
+        if (is(name.flag) && !_hide_moninfo_flag(name.flag))
         {
             // TODO: just use `do_mon_str_replacements`?
             v.push_back(replace_all(name.long_singular,
@@ -1594,8 +1617,10 @@ reach_type monster_info::reach_range(bool items) const
     for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
     {
         const attack_flavour fl = e->attack[i].flavour;
-        if (flavour_has_reach(fl))
-            range = REACH_TWO;
+        if (fl == AF_RIFT)
+            range = REACH_THREE;
+        else if (flavour_has_reach(fl))
+            range = max(REACH_TWO, range);
     }
 
     if (items)
@@ -1624,6 +1649,20 @@ size_type monster_info::body_size() const
     }
 
     return class_size;
+}
+
+bool monster_info::net_immune() const
+{
+    // too big
+    return body_size() >= SIZE_GIANT
+    // nets go right through (but weapons don't..?)
+        || mons_class_flag(type, M_INSUBSTANTIAL)
+    // tentacles are too weird. don't mess with em
+        || mons_is_tentacle_or_tentacle_segment(type)
+    // if you net something that doesn't move (positionally or attacking),
+    // it seems like that does nothing, right? the net just hangs there
+        || attack[0].type == AT_NONE
+           && mons_class_is_stationary(base_type);
 }
 
 bool monster_info::cannot_move() const
@@ -1919,6 +1958,8 @@ void mons_conditions_string(string& desc, const vector<monster_info>& mi,
 
     for (auto& name : monster_info_flag_names)
     {
+        if (_hide_moninfo_flag(name.flag))
+            continue;
         int num = 0;
         for (int j = start; j < start+count; j++)
         {

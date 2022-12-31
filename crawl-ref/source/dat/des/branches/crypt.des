@@ -552,8 +552,8 @@ NAME:  weyrava_ghost_lake
 DEPTH: Crypt
 TAGS:  no_monster_gen no_item_gen
 MONS:  flying skull
-MONS:  skeletal warrior ; long sword . kite shield . w:6 wand of acid | nothing /\
-       skeletal warrior ; battleaxe | halberd . w:7 wand of acid | nothing
+MONS:  skeletal warrior ; long sword . kite shield . w:6 any beam wand | nothing /\
+       skeletal warrior ; battleaxe | halberd . w:7 any beam wand | nothing
 SUBST: y = .:8 c
 SUBST: v = z .
 SUBST: w = w z:6
@@ -1329,7 +1329,8 @@ ORIENT: float
 MONS: fire dragon skeleton / quicksilver dragon skeleton w:5 \
       / golden dragon skeleton w:2
 MONS: flayed ghost w:5 / phantasmal warrior, skeletal warrior
-MONS: hell knight / necromancer w:2, bone dragon, reaper ; scythe ego:flaming
+MONS: hell knight / necromancer w:2, bone dragon, \
+      reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:flaming
 MONS: lich
 KMONS: A = fire dragon skeleton / quicksilver dragon skeleton w:5 \
            / golden dragon skeleton w:2

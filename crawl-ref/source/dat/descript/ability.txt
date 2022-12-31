@@ -106,14 +106,6 @@ Shaft Self ability
 Sends you to a random position one to three floors down, as if you jumped into
 a shaft trap. It takes some time to dig the shaft.
 %%%%
-Rolling Charge ability
-
-Rolls at a foe with a clatter of scales, then uncurls and strikes them in melee
-with increased accuracy. The greater the distance of the roll, the more
-momentum will be added to the force of your strike. You roll with sufficient
-speed to dodge traps and harmful terrain along the way, but not at your
-destination.
-%%%%
 Evoke Blink ability
 
 Randomly translocates the user a short distance. Translocating in this way
@@ -219,7 +211,8 @@ and either gift may only be received once.
 %%%%
 Receive Forbidden Knowledge ability
 
-Grants you knowledge of the most powerful and sinister Necromancy spells.
+Grants you knowledge of the most powerful and sinister Necromancy spells:
+Haunt, Borgnjor's Revivification, Infestation, Necromutation, and Death's Door.
 You must choose between this gift or that of branding a weapon with pain, and
 either gift may only be received once.
 %%%%
@@ -367,17 +360,12 @@ Depart the Abyss ability
 Transports you out of the Abyss, returning you to the location from which you
 entered it.
 %%%%
-Bend Space ability
-
-Bends the fabric of space, instantly translocating the user a short distance,
-and possibly also translocating foes adjacent to the destination. This ignores
-effects that would usually prevent translocations.
-%%%%
 Banish ability
 
 Attempts to banish a creature into the Abyss. If the attempt succeeds, you gain
-some piety and the creature's full experience value. Invocations skill makes it
-harder to resist.
+some piety and the creature's full experience value. Even creatures that resist
+are left malmutated and weakened by the brush with the Abyss. Invocations skill
+makes Banishment harder to resist.
 %%%%
 Corrupt ability
 
@@ -598,11 +586,11 @@ Sacrifices purity of body or mind, causing a single mutation.
 %%%%
 Sacrifice Words ability
 
-Sacrifices the ability to use magical scrolls while threatened.
+Sacrifices the ability to use magical scrolls after being badly injured.
 %%%%
 Sacrifice Drink ability
 
-Sacrifices the ability to drink potions while threatened.
+Sacrifices the ability to drink potions after being badly injured.
 %%%%
 Sacrifice Essence ability
 
@@ -660,8 +648,8 @@ Sacrifices a hand, causing you to lose the ability to use shields{{
 %%%%
 Sacrifice Experience ability
 
-Sacrifices some of your past experiences, causing you to lose two levels
-immediately and also to have the maximum level you can attain lowered by two.
+Sacrifices some of your past experiences, causing you to lose one level
+immediately and also to have the maximum level you can attain lowered by one.
 %%%%
 Sacrifice Skill ability
 

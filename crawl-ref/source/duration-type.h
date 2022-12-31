@@ -231,6 +231,9 @@ enum duration_type
     DUR_OOZEMANCY,
     DUR_FIERY_ARMOUR,
     DUR_ANIMATE_DEAD,
+#if TAG_MAJOR_VERSION == 34
     DUR_CORPSE_ROT,
+#endif
+    DUR_NO_MOMENTUM,
     NUM_DURATIONS
 };

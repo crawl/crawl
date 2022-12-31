@@ -20,17 +20,8 @@ bool OuterMenu::focus_button_on_mouseenter = false;
 MenuButton::MenuButton()
 {
     on_hotkey_event([this](const KeyEvent& event) {
-        if (event.key() == hotkey)
+        if (numpad_to_regular(event.key(), true) == hotkey)
             return activate();
-#ifndef USE_TILE_LOCAL
-        // This sucks!
-        if (event.key() == CK_NUMPAD_MULTIPLY && hotkey == '*')
-            return activate();
-        if (event.key() == CK_NUMPAD_ADD && hotkey == '+')
-            return activate();
-        if (event.key() == CK_NUMPAD_ADD2 && hotkey == '+')
-            return activate();
-#endif
         return false;
     });
 }
@@ -160,7 +151,7 @@ bool MenuButton::on_event(const Event& event)
         return activate();
     else if (event.type() == Event::Type::KeyDown)
     {
-        const auto key = static_cast<const KeyEvent&>(event).key();
+        const auto key = numpad_to_regular(static_cast<const KeyEvent&>(event).key(), true);
         if (key == CK_ENTER || key == ' ')
             return activate();
     }
@@ -186,7 +177,7 @@ void MenuButton::serialize()
     tiles.json_write_int("hotkey", hotkey);
     tiles.json_write_int("highlight_colour", highlight_colour);
     if (auto text = dynamic_cast<Text*>(m_child.get()))
-        tiles.json_write_string("label", text->get_text().to_colour_string());
+        tiles.json_write_string("label", text->get_text().to_colour_string(LIGHTGREY));
     else if (auto box = dynamic_cast<Box*>(m_child.get()))
     {
         if (box->num_children() <= 1)
@@ -205,7 +196,7 @@ void MenuButton::serialize()
         tiles.json_open_array("labels");
         for (size_t i = 1; i < box->num_children(); i++)
             if (auto text2 = dynamic_cast<Text*>((*box)[i].get()))
-                tiles.json_write_string(text2->get_text().to_colour_string());
+                tiles.json_write_string(text2->get_text().to_colour_string(LIGHTGREY));
         tiles.json_close_array();
     }
 }
@@ -399,7 +390,7 @@ bool OuterMenu::scroller_event_hook(const Event& ev)
     if (ev.type() != Event::Type::KeyDown)
         return false;
 
-    const auto key = static_cast<const KeyEvent&>(ev).key();
+    const auto key = numpad_to_regular(static_cast<const KeyEvent&>(ev).key(), true);
 
     if (key == CK_DOWN || key == CK_UP || key == CK_LEFT || key == CK_RIGHT
             || key == CK_HOME || key == CK_END || key == CK_PGUP || key == CK_PGDN)
@@ -470,7 +461,7 @@ void OuterMenu::serialize(string name)
         tiles.json_open_object();
         tiles.json_write_int("x", label.second.x);
         tiles.json_write_int("y", label.second.y);
-        tiles.json_write_string("label", label.first.to_colour_string());
+        tiles.json_write_string("label", label.first.to_colour_string(LIGHTGREY));
         tiles.json_close_object();
     }
     tiles.json_close_array();

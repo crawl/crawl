@@ -101,6 +101,7 @@
     Max Bane
     G. Bailey
     Alexei Barnes
+    Spencer Baugh
     Beargit
     Bill Beher
     Alexander Beisig
@@ -186,6 +187,7 @@
     Gittourarmy
     Ben Goetter
     Aaron Golden
+    Gompami
     Ed Gonzalez
     Gopall
     Goratrix
@@ -193,6 +195,7 @@
     John Greenberg
     GreyKnight
     Joshua Gross
+    Pat '4Hooves2Appendages' H
     Brian Haase
     Sophie Hamilton
     Chris Hamons
@@ -238,12 +241,13 @@
     Christopher Landry
     Lantier
     Maciej Lapinski
-    Nikolai Lavsky
     Lamil Lerran
     Jordan Lewis
     Sami Liedes
     Dom 'Bodrick' Light
     Lightli
+    Lewis R. Liu
+    Lyre
     Kiëd Llaentenn
     Mark Lodato
     Matthew Ludivico
@@ -277,6 +281,7 @@
     Muffindrake
     Akinori Musha
     Mushboom
+    Rosstin Murphy
     Eva Myers
     nagdon
     Naruni
@@ -305,6 +310,7 @@
     William Parker
     Pedro
     Pekkekke
+    Rytis Petronis
     Arlen Phillips
     pikaro
     Lemuel Pitkin
@@ -324,6 +330,7 @@
     Tobias Rehbein
     Remsleep
     Chris Rendle-Short
+    Reono
     Ryan Riegel
     riverfiend
     RjY
@@ -331,6 +338,7 @@
     Andy Roche
     rockygargoyle
     Will Rogers
+    RollingRubic
     Nate Rook
     David Rose
     runrin
@@ -338,7 +346,6 @@
     Sebastian Salman
     Petri Salminen
     Sandman25
-    Sastreii
     Brett Scarborough
     Roderick Schertler
     sdynet
@@ -431,6 +438,7 @@ The Dungeon Crawl Stone Soup development team is:
     Pekka Lampila
     Raphaël Langella
     Nat Lanza
+    Nikolai Lavsky
     Jesse Luehrs
     Alan Malloy
     Shmuale Mark

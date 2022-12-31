@@ -153,6 +153,8 @@ struct bolt
     bool beam_cancelled = false;  // stop_attack_prompt() returned true
     bool dont_stop_player = false; // player answered self target prompt with 'y'
     bool dont_stop_trees = false; // player answered tree-burning prompt with 'y'
+    bool overshoot_prompt = true; // warn when an ally is past the target
+    bool friendly_past_target = false; // we fired and found something past the target
 
     int       bounces = 0;        // # times beam bounced off walls
     coord_def bounce_pos = {0,0}; // position of latest wall bounce,
@@ -177,6 +179,7 @@ public:
     void set_target(const dist &targ);
     void set_agent(const actor *agent);
     void setup_retrace();
+    void precalc_agent_properties();
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
     killer_type  killer() const;
@@ -324,8 +327,8 @@ bool enchant_actor_with_flavour(actor* victim, const actor *atk,
 
 bool enchant_monster_invisible(monster* mon, const string &how);
 
-bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
-                                                  bool intrinsic_only = false);
+bool ench_flavour_affects_monster(actor *agent, beam_type flavour,
+                                  const monster* mon, bool intrinsic_only = false);
 spret mass_enchantment(enchant_type wh_enchant, int pow,
                             bool fail = false);
 int ench_power_stepdown(int pow);

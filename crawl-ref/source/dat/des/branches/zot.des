@@ -43,67 +43,6 @@ end
 }}
 
 {{
-function callback.grunt_zot_stairs_overgrown_start(data, triggerable,
-                                                   triggerer, marker, ev)
-  if data.triggered == true then
-    return
-  end
-
-  crawl.mpr("You have a sense of imminent foreboding.", "warning")
-  dgn.persist.grunt_zot_stairs_overgrown_started = true
-end
-
-function callback.grunt_zot_stairs_overgrown_oklobify(data, triggerable,
-                                                      triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  if dgn.persist.grunt_zot_stairs_overgrown_started == nil then
-    return
-  end
-
-  if data.count >= 10 then
-    dgn.persist.grunt_zot_stairs_overgrown_started = nil
-    return
-  end
-
-  local possible = {}
-  local targets = dgn.find_marker_positions_by_prop("oklobify", 1)
-  for _, pos in ipairs(targets) do
-    local mons = dgn.mons_at(pos.x, pos.y)
-    if mons ~= nil and
-       (mons.name == "plant" or mons.name == "fungus"
-        or mons.name == "bush") then
-      possible[#possible + 1] = pos
-    end
-  end
-
-  if #possible == 0 then
-    dgn.persist.grunt_zot_stairs_overgrown_started = nil
-    return
-  end
-
-  data.count = data.count + 1
-
-  local pos = possible[crawl.random2(#possible) + 1]
-  local mons = dgn.mons_at(pos.x, pos.y)
-  mons.dismiss()
-
-  dgn.create_monster(pos.x, pos.y, "oklob plant")
-
-  if not you.see_cell(pos.x, pos.y) then return end
-
-  if not data.warned then
-    data.warned = true
-    crawl.mpr("One of the plants suddenly grows acid sacs!", "warning")
-  else
-    crawl.mpr("Another plant grows acid sacs!", "warning")
-  end
-end
-}}
-
-{{
 -- Create colourful Zot glass
 function coloured_glass(e)
   e.shuffle('roygbiv')
@@ -996,6 +935,8 @@ KMONS:   F = shard shrike
 MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 15, delay = 10, size = 2, \
               walk_dist = 0, spread_rate= 0 }
+# XXX: we should replace iceblast with something else when it's not
+# in this game's chosen item set.
 ITEM:    wand of iceblast, staff of cold, book of winter, \
          ozocubu's autobiography
 SUBST:   w = l
@@ -1101,18 +1042,17 @@ WEIGHT:  3
 KMONS:   1 = guardian mummy ; randart dire flail ego:chaos | \
              randart great mace ego:chaos | randart battleaxe ego:chaos| \
              randart great sword ego:chaos | randart glaive ego:chaos | \
-             randart scythe ego:chaos | randart dire flail | \
-             randart great mace | randart battleaxe | randart great sword | \
-             randart glaive | randart scythe
-KMONS:   3 = guardian mummy ; randart fustibalus ego:chaos / \
+             randart dire flail | randart great mace | randart battleaxe | \
+             randart great sword | randart glaive
+KMONS:   3 = guardian mummy ; randart hand crossbow ego:chaos / \
              guardian mummy ; randart longbow ego:chaos / \
              guardian mummy ; randart triple crossbow / \
-             guardian mummy ; randart fustibalus / \
+             guardian mummy ; randart hand crossbow / \
              guardian mummy ; randart longbow / \
              guardian mummy ; randart arbalest
-KMONS:   5 = guardian mummy ; wand of acid | scroll of summoning
+KMONS:   5 = guardian mummy ; any beam wand | any ally scroll
 KMONS:   7 = guardian mummy ; randart ring mail | randart scale mail | \
-             randart chain mail | randart robe . scroll of summoning
+             randart chain mail | randart robe . any ally scroll
 KMONS:   2468 = killer klown
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
@@ -1681,7 +1621,7 @@ SUBST: 1 = 1.
 # What kind of holy books would draconians have?
 KITEM: D = book of the Dragon
 KITEM: Z = randbook numspells:4 spells:ignition&fireball&animate_dead&airstrike title:the_Zealot
-KITEM: F = randbook numspells:4 spells:starburst&fireball&sticky_flame&conjure_flame title:Fire_and_Brimstone
+KITEM: F = randbook numspells:4 spells:starburst&fireball&sticky_flame&flame_wave title:Fire_and_Brimstone
 KITEM: _ = manual of invocations
 COLOUR: r = red, y = yellow, b = blue, g = green, m = magenta, q = cyan, c = magenta
 TILE: r = dngn_transparent_stone_red, y = dngn_transparent_stone_yellow, \
@@ -1823,55 +1763,6 @@ xx...G...vv4$v$4vv...G...xx
       x..vvv6v6vvv..x
       xx..vvvvvvv..xx
        xx@@vvvvv@@xx
-ENDMAP
-
-####
-# Revenge of the oklobs!!!
-NAME:   grunt_zot_stairs_overgrown
-DEPTH:  Zot, !Zot:$
-ORIENT: float
-MONS:   oklob plant, plant, bush, fungus
-SUBST:  2 = 23
-SUBST:  . = .:30 2 3 4
-SUBST:  : = .
-{{
-local sm = TriggerableFunction:new {
-  func="callback.grunt_zot_stairs_overgrown_start", triggered=false }
-sm:add_triggerer(DgnTriggerer:new { type = "player_los" })
-lua_marker('1', sm)
-
-local tm = TriggerableFunction:new {
-  func="callback.grunt_zot_stairs_overgrown_oklobify",
-  repeated=true,
-  data={warned = false, count = 0} }
-tm:add_triggerer(DgnTriggerer:new { type="turn", delay_min=30, delay_max=100 })
-lua_marker('}', tm)
-}}
-MARKER: 2 = lua:props_marker { oklobify=1 }
-SHUFFLE: }])
-SUBST: ] = ]>, ) = )>
-MAP
-      xxxxxxxxx
-    xxxcccccccxxx
-  xxxccc.....cccxxx
-  xccc.........cccx
- xxc....:.:......cxx
- xcc...:.:.:.....ccx
-xxc...:.222:2.....cx
-xcc....:2:::2.....ccx
-xc....:.2:222......cx
-xc.....:2:}:2......cx
-xc....:.2:1:2......cx
-xc.....:2]:)2......cx
-xc....:.22222......cx
-xcc....:..........ccx
-xxc.....:.........cxx
- xcc.....:.......ccx
- xxc......:......cxx
-  xccc....:....cccx
-  xxxccc:::::cccxxx
-    xxccc+++cccxx
-     xxxx@@@xxxx
 ENDMAP
 
 NAME:    hangedman_zot_gyre

@@ -9,6 +9,7 @@
 #include "char-set-type.h"
 #include "confirm-prompt-type.h"
 #include "easy-confirm-type.h"
+#include "explore-greedy-options.h"
 #include "feature.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
@@ -270,6 +271,8 @@ public:
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
+    bool        show_blood; // whether to show blood or not
+    bool        reduce_animations;   // if true, don't show interim steps for animations
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
@@ -407,6 +410,8 @@ public:
     vector<text_pattern> explore_stop_pickup_ignore;
 
     bool        explore_greedy;    // Explore goes after items as well.
+
+    int explore_greedy_visit; // Set what type of items explore_greedy visits.
 
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
@@ -556,6 +561,8 @@ public:
     VColour     tile_transporter_landing_col;
     VColour     tile_explore_horizon_col;
 
+    string      tile_display_mode;
+
     VColour     tile_window_col;
 #ifdef USE_TILE_LOCAL
     int         game_scale;
@@ -589,6 +596,7 @@ public:
     int         tile_window_width;
     int         tile_window_height;
     int         tile_window_ratio;
+    bool        tile_window_limit_size;
     maybe_bool  tile_use_small_layout;
 #endif
     int         tile_sidebar_pixels;
@@ -619,9 +627,9 @@ public:
     tileidx_t   tile_player_tile;
     pair<int, int> tile_weapon_offsets;
     pair<int, int> tile_shield_offsets;
+    bool        tile_grinch;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
-    string      tile_display_mode;
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
     bool        tile_web_mouse_control;
@@ -695,6 +703,7 @@ private:
                          bool prepend = false);
     void do_kill_map(const string &from, const string &to);
     int  read_explore_stop_conditions(const string &) const;
+    int  read_explore_greedy_visit_conditions(const string &) const;
     use_animations_type read_use_animations(const string &) const;
 
     void split_parse(const string &s, const string &separator,

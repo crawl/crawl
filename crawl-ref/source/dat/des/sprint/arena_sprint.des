@@ -225,7 +225,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "rat / quokka / river rat / w:2 hell rat / w:6 pargi",
                 "ball python / adder w:15 / water moccasin w:5",
                 "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
-                "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf",
+                "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll bouda / crazy yiuf",
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "scorpion / water moccasin w:2 / redback w:1 / killer bee w:2",
@@ -272,7 +272,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "jackal w:1 / hound w:5 / wolf w:20 / hell hound w:7 / w:3 grum",
                 "ogre w:35 / two-headed ogre / ogre mage w:5 / w:2 erolcha",
                 "bullfrog w:20 / blink frog w:6 / cane toad w:6 / prince ribbit w:2",
-                "gnoll / gnoll shaman / gnoll sergeant / hound / wolf",
+                "gnoll / gnoll bouda / gnoll sergeant / hound / wolf",
                 -- Gimmicks
                 "neqoxec", "orc priest", "vampire bat",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame"
@@ -287,7 +287,7 @@ function arena_sprint_get_monster_set(round, boss)
                     orc priest / orc high priest w:3 / orc sorcerer w:2 /\
                     orc warlord w:1 / urug w:2",
                 "place:Elf",
-                "place:Lair:4 w:30 / rupert w:1",
+                "place:Lair:3 w:30 / rupert w:1",
                 "place:Shoals",
                 "place:Swamp",
                 "place:Spider",
@@ -1010,8 +1010,8 @@ KFEAT:  p = altar_uskayaw
 KFEAT:  q = altar_wu_jian
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
-            wand of iceblast charges:5 ident:all, \
-            wand of acid charges:5 ident:all, \
+            any blast wand charges:5 ident:all, \
+            any beam wand charges:5 ident:all, \
             potion of resistance ident:all, gold q:200
 KFEAT:  { = {
 
@@ -1079,7 +1079,7 @@ KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane great mace | mundane giant spiked club |\
             mundane demon trident | mundane bardiche |\
             mundane lajatang | mundane longbow |\
-            mundane fustibalus | mundane triple crossbow
+            mundane hand crossbow | mundane triple crossbow
 KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ; \
             potion of experience q:1 | potion of experience q:1 |\
             potion of experience q:2 | potion of experience q:3 |\

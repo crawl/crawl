@@ -46,17 +46,19 @@ enum ability_type
     ABIL_REVIVIFY,
 #if TAG_MAJOR_VERSION == 34
     ABIL_BOTTLE_BLOOD,
-#endif
     // Deep Dwarves
     ABIL_HEAL_WOUNDS,
+#endif
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
     // Barachim
     ABIL_HOP,
-    // Palentongas
+#if TAG_MAJOR_VERSION == 34
+    // Armataurs
     ABIL_ROLLING_CHARGE,
-    // Air Walk
+#endif
+    // Storm Form
     ABIL_BLINKBOLT,
     ABIL_MAX_INTRINSIC = ABIL_BLINKBOLT,
 
@@ -165,7 +167,9 @@ enum ability_type
     ABIL_ELYVILON_DIVINE_VIGOUR,
     // Lugonu
     ABIL_LUGONU_ABYSS_EXIT = 1100,
+#if TAG_MAJOR_VERSION == 34
     ABIL_LUGONU_BEND_SPACE,
+#endif
     ABIL_LUGONU_BANISH,
     ABIL_LUGONU_CORRUPT,
     ABIL_LUGONU_ABYSS_ENTER,

@@ -15,6 +15,7 @@ struct mutation_def
     const char* have[3];    ///< What appears on the 'A' screen.
     const char* gain[3];    ///< Message when you gain the mutation.
     const char* lose[3];    ///< Message when you lose the mutation.
+    tileidx_t   tile;       ///< Icon for the mutation.
 };
 
 struct mutation_category_def
@@ -45,8 +46,8 @@ static const mutation_def mut_data[] =
 { MUT_STRONG, 7, 2, mutflag::good, false,
   "strong",
 
-  {"Your muscles are strong. (Str +2)",
-   "Your muscles are very strong. (Str +4)", ""},
+  {"Your muscles are strong. (Str +4, Int/Dex -1)",
+   "Your muscles are very strong. (Str +8, Int/Dex -2)", ""},
   {"", "", ""},
   {"", "", ""},
 },
@@ -54,8 +55,8 @@ static const mutation_def mut_data[] =
 { MUT_CLEVER, 7, 2, mutflag::good, false,
   "clever",
 
-  {"Your mind is acute. (Int +2)",
-   "Your mind is very acute. (Int +4)", ""},
+  {"Your mind is acute. (Int +4, Str/Dex -1)",
+   "Your mind is very acute. (Int +8, Str/Dex -2)", ""},
   {"", "", ""},
   {"", "", ""},
 },
@@ -63,8 +64,8 @@ static const mutation_def mut_data[] =
 { MUT_AGILE, 7, 2, mutflag::good, false,
   "agile",
 
-  {"You are agile. (Dex +2)",
-   "You are very agile. (Dex +4)", ""},
+  {"You are agile. (Dex +4, Str/Int -1)",
+   "You are very agile. (Dex +8, Str/Int -2)", ""},
   {"", "", ""},
   {"", "", ""},
 },
@@ -130,7 +131,7 @@ static const mutation_def mut_data[] =
    "You feel less cold resistant."},
 },
 
-{ MUT_HEAT_VULNERABILITY, 0, 3,
+{ MUT_HEAT_VULNERABILITY, 3, 3,
   mutflag::bad | mutflag::qazlal, true,
   "heat vulnerability",
 
@@ -147,7 +148,7 @@ static const mutation_def mut_data[] =
    "You feel less vulnerable to heat."},
 },
 
-{ MUT_COLD_VULNERABILITY, 0, 3,
+{ MUT_COLD_VULNERABILITY, 3, 3,
   mutflag::bad | mutflag::qazlal, true,
 
   "cold vulnerability",
@@ -294,20 +295,20 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_TELEPORT, 3, 3, mutflag::bad, false,
+{ MUT_TELEPORT, 3, 2, mutflag::bad, false,
   "teleportitis",
 
   {"You are occasionally teleported next to monsters.",
-   "You are sometimes teleported next to monsters.",
-   "You are often teleported next to monsters."},
+   "You are often teleported next to monsters.",
+   ""},
 
   {"You feel weirdly uncertain.",
    "You feel even more weirdly uncertain.",
-   "You feel even more weirdly uncertain."},
+   ""},
 
   {"You feel stable.",
    "You feel stable.",
-   "You feel stable."},
+   ""},
 },
 
 { MUT_STRONG_WILLED, 5, 3, mutflag::good, false,
@@ -364,6 +365,8 @@ static const mutation_def mut_data[] =
   {"You have supernaturally acute eyesight. (SInv)", "", ""},
   {"Your vision sharpens.", "", ""},
   {"Your vision seems duller.", "", ""},
+
+  TILEG_MUT_ACUTE_VISION,
 },
 
 { MUT_DEFORMED, 8, 1,
@@ -499,22 +502,24 @@ static const mutation_def mut_data[] =
   {"You possess an exceptional clarity of mind.", "", ""},
   {"Your thoughts seem clearer.", "", ""},
   {"Your thinking seems confused.", "", ""},
+
+    TILEG_MUT_CLARITY
 },
 
-{ MUT_BERSERK, 7, 3, mutflag::bad, false,
+{ MUT_BERSERK, 7, 2, mutflag::bad, false,
   "berserk",
 
-  {"You tend to lose your temper in combat.",
-   "You often lose your temper in combat.",
-   "You have an uncontrollable temper."},
+  {"You sometimes lose your temper in combat.",
+   "You have an uncontrollable temper.",
+   ""},
 
   {"You feel a little pissed off.",
-   "You feel angry.",
-   "You feel extremely angry at everything!"},
+   "You feel extremely angry at everything!",
+   ""},
 
   {"You feel a little more calm.",
    "You feel a little less angry.",
-   "You feel a little less angry."},
+   ""},
 },
 
 { MUT_DETERIORATION, 10, 2, mutflag::bad | mutflag::xom, false,
@@ -630,6 +635,8 @@ static const mutation_def mut_data[] =
   {"You feel frail.",
    "You feel frail.",
    "You feel frail."},
+
+    TILEG_MUT_ROBUST,
 },
 
 #if TAG_MAJOR_VERSION == 34
@@ -728,6 +735,8 @@ static const mutation_def mut_data[] =
   {"The horns on your head shrink away.",
    "The horns on your head shrink a bit.",
    "The horns on your head shrink a bit."},
+
+  TILEG_MUT_HORNS,
 },
 
 { MUT_BEAK, 1, 1, mutflag::good, true,
@@ -768,6 +777,8 @@ static const mutation_def mut_data[] =
   {"Your teeth shrink to normal size.",
    "Your teeth shrink and become duller.",
    "Your teeth shrink and become duller."},
+
+    TILEG_MUT_FANGS
 },
 
 { MUT_HOOVES, 5, 3, mutflag::good, true,
@@ -800,6 +811,8 @@ static const mutation_def mut_data[] =
   {"The antennae on your head shrink away.",
    "The antennae on your head shrink a bit.",
    "The antennae on your head shrink a bit."},
+
+  TILEG_MUT_ANTENNAE,
 },
 
 { MUT_TALONS, 5, 3, mutflag::good, true,
@@ -926,9 +939,10 @@ static const mutation_def mut_data[] =
 
   {"", "", ""},
 },
+#if TAG_MAJOR_VERSION == 34
 
-// Palentonga only
-{ MUT_ROLL, 8, 3, mutflag::good, true,
+// Armataur only
+{ MUT_ROLL, 0, 3, mutflag::good, true,
   "roll",
 
   {"You can roll at nearby foes to attack.",
@@ -944,6 +958,15 @@ static const mutation_def mut_data[] =
    "You can no longer roll as far."},
 },
 
+{ MUT_CURL, 0, 1, mutflag::good, true,
+  "reflexive curl",
+
+  {"You curl defensively after being hit. (AC +7*)", "", ""},
+  {"You now curl defensively after being hit.", "", ""},
+  {"", "", ""},
+},
+#endif
+
 { MUT_ARMOURED_TAIL, 0, 1, mutflag::good, true,
   "armoured tail",
 
@@ -952,14 +975,13 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 },
 
-{ MUT_CURL, 0, 1, mutflag::good, true,
-  "reflexive curl",
+{ MUT_ROLLPAGE, 0, 1, mutflag::good, false,
+  "roll",
 
-  {"You curl defensively after being hit. (AC +7*)", "", ""},
-  {"You now curl defensively after being hit.", "", ""},
+  {"You roll when moving toward enemies. (Rampage)", "", ""},
+  {"", "", ""},
   {"", "", ""},
 },
-
 
 { MUT_SHAGGY_FUR, 2, 3, mutflag::good, true,
   "shaggy fur",
@@ -1087,6 +1109,8 @@ static const mutation_def mut_data[] =
   {"You feel slightly disoriented.",
    "You feel slightly disoriented.",
    "You feel slightly disoriented."},
+
+  TILEG_MUT_PASSIVE_MAPPING,
 },
 
 { MUT_ICEMAIL, 0, 2, mutflag::good, false,
@@ -1371,6 +1395,8 @@ static const mutation_def mut_data[] =
   {"Your icy blue scales disappear.",
    "Your icy blue scales recede somewhat.",
    "Your icy blue scales recede somewhat."},
+
+    TILEG_MUT_ICY_BLUE_SCALES
 },
 
 { MUT_IRIDESCENT_SCALES, 10, 3, mutflag::good, true,
@@ -1387,6 +1413,8 @@ static const mutation_def mut_data[] =
   {"Your iridescent scales disappear.",
    "Your iridescent scales recede somewhat.",
    "Your iridescent scales recede somewhat."},
+
+    TILEG_MUT_IRIDESCENT_SCALES
 },
 
 { MUT_LARGE_BONE_PLATES, 2, 3, mutflag::good, true,
@@ -1403,6 +1431,8 @@ static const mutation_def mut_data[] =
   {"Your large bone plates disappear.",
    "Your large bone plates recede somewhat.",
    "Your large bone plates recede somewhat."},
+
+    TILEG_MUT_LARGE_BONE_PLATES,
 },
 
 { MUT_MOLTEN_SCALES, 0, 3, mutflag::good, true,
@@ -1419,6 +1449,8 @@ static const mutation_def mut_data[] =
   {"Your molten scales disappear.",
    "Your molten scales recede somewhat.",
    "Your molten scales recede somewhat."},
+
+    TILEG_MUT_MOLTEN_SCALES
 },
 #if TAG_MAJOR_VERSION == 34
 
@@ -1453,6 +1485,8 @@ static const mutation_def mut_data[] =
   {"Your rugged brown scales disappear.",
    "Your rugged brown scales recede somewhat.",
    "Your rugged brown scales recede somewhat."},
+
+    TILEG_MUT_RUGGED_BROWN_SCALES,
 },
 
 { MUT_SLIMY_GREEN_SCALES, 0, 3, mutflag::good, true,
@@ -1469,6 +1503,8 @@ static const mutation_def mut_data[] =
   {"Your slimy green scales disappear.",
    "Your slimy green scales recede somewhat.",
    "Your slimy green scales recede somewhat."},
+
+    TILEG_MUT_SLIMY_GREEN_SCALES
 },
 
 { MUT_THIN_METALLIC_SCALES, 0, 3, mutflag::good, true,
@@ -1485,6 +1521,8 @@ static const mutation_def mut_data[] =
   {"Your thin metallic scales disappear.",
    "Your thin metallic scales recede somewhat.",
    "Your thin metallic scales recede somewhat."},
+
+    TILEG_MUT_THIN_METALLIC_SCALES
 },
 
 { MUT_THIN_SKELETAL_STRUCTURE, 2, 3, mutflag::good, false,
@@ -1501,6 +1539,8 @@ static const mutation_def mut_data[] =
   {"Your skeletal structure returns to normal.",
    "Your skeletal structure densifies.",
    "Your skeletal structure densifies."},
+
+    TILEG_MUT_THIN_SKELETAL_STRUCTURE,
 },
 
 { MUT_YELLOW_SCALES, 0, 3, mutflag::good, true,
@@ -1517,6 +1557,8 @@ static const mutation_def mut_data[] =
   {"Your yellow scales disappear.",
    "Your yellow scales recede somewhat.",
    "Your yellow scales recede somewhat."},
+
+    TILEG_MUT_YELLOW_SCALES
 },
 
 { MUT_SHARP_SCALES, 0, 3, mutflag::good, true,
@@ -1533,6 +1575,8 @@ static const mutation_def mut_data[] =
   {"Your sharp scales disappear.",
    "Your sharp scales recede somewhat.",
    "Your sharp scales recede somewhat."},
+
+    TILEG_MUT_SHARP_SCALES,
 },
 
 { MUT_STURDY_FRAME, 2, 3, mutflag::good, true,
@@ -1581,6 +1625,8 @@ static const mutation_def mut_data[] =
   {"Your brain returns to normal size.",
    "Your brain shrinks.",
    "Your brain shrinks."},
+
+    TILEG_MUT_BIG_BRAIN,
 },
 
 { MUT_CAMOUFLAGE, 1, 3, mutflag::good, true,
@@ -1811,20 +1857,32 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_DRINK_SAFETY, 0, 1, mutflag::bad, false,
-  "inability to drink while threatened",
+{ MUT_DRINK_SAFETY, 7, 2, mutflag::bad | mutflag::xom, false,
+  "inability to drink after injury",
 
-  {"You sometimes lose the ability to drink potions when taking damage.", "", ""},
-  {"You lose the ability to drink potions when threatened.", "", ""},
-  {"You can once more drink potions while threatened.", "", ""},
+  {"You occasionally lose the ability to drink potions when taking damage.",
+   "You sometimes lose the ability to drink potions when taking damage.",
+   ""},
+  {"You occasionally lose the ability to drink potions when taking damage.",
+   "You lose the ability to drink potions when taking damage more often.",
+   ""},
+  {"You no longer become unable to drink potions after taking damage.",
+   "You lose the ability to drink potions when taking damage less often.",
+   ""},
 },
 
-{ MUT_READ_SAFETY, 10, 1, mutflag::bad | mutflag::xom, false,
-  "inability to read while threatened",
+{ MUT_READ_SAFETY, 7, 2, mutflag::bad | mutflag::xom, false,
+  "inability to read after injury",
 
-  {"You sometimes lose the ability to read scrolls when taking damage.", "", ""},
-  {"You lose the ability to read scrolls when threatened.", "", ""},
-  {"You can once more read scrolls while threatened.", "", ""},
+  {"You occasionally lose the ability to read scrolls when taking damage.",
+   "You sometimes lose the ability to read scrolls when taking damage.",
+   ""},
+  {"You occasionally lose the ability to read scrolls when taking damage.",
+   "You lose the ability to read scrolls when taking damage more often.",
+   ""},
+  {"You no longer become unable to read scrolls after taking damage.",
+   "You lose the ability to read scrolls when taking damage less often.",
+   ""},
 },
 
 { MUT_MISSING_HAND, 0, 1, mutflag::bad, false,
@@ -2062,9 +2120,9 @@ static const mutation_def mut_data[] =
 { MUT_INEXPERIENCED, 0, 3, mutflag::bad, false,
     "inexperienced",
 
-    {"You are somewhat inexperienced. (-2 XL)",
-     "You are inexperienced. (-4 XL)",
-     "You are extremely inexperienced. (-6 XL)"},
+    {"You are somewhat inexperienced. (-1 XL)",
+     "You are inexperienced. (-2 XL)",
+     "You are extremely inexperienced. (-3 XL)"},
     {"You feel less experienced.",
      "You feel less experienced.",
      "You feel less experienced."},
@@ -2129,12 +2187,20 @@ static const mutation_def mut_data[] =
   {"You grow two extra arms.", "", ""},
 },
 
-{ MUT_NO_DRINK, 0, 1, mutflag::good, false,
+{ MUT_NO_DRINK, 0, 1, mutflag::bad, false,
   "no potions",
 
   {"You do not drink.", "", ""},
   {"Your mouth dries to ashes.", "", ""},
   {"You gain the ability to drink.", "", ""},
+},
+
+{ MUT_FAITH, 0, 1, mutflag::bad, false,
+  "faith",
+
+  {"You have a special connection with the divine. (Faith)", "", ""},
+  {"You feel connected to something greater than you.", "", ""},
+  {"You feel rebellious.", "", ""},
 },
 
 { MUT_REFLEXIVE_HEADBUTT, 0, 1, mutflag::good, true,
@@ -2289,10 +2355,34 @@ static const mutation_def mut_data[] =
   {"You feel less hungry for flesh.", "", ""},
 },
 
-{ MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false, "short lifespan",
+{ MUT_SHORT_LIFESPAN, 0, 1, mutflag::bad, false, "otherworldly",
   {"You are easily found by Zot.", "", ""},
   {"You feel your time running out.", "", ""},
   {"You feel long-lived.", "", ""},
+},
+
+{ MUT_GLOWING, 0, 1, mutflag::bad, false, "glowing",
+  {"You glow in the dark.", "", ""},
+  {"Your body begins glowing.", "", ""},
+  {"You feel a bit dim.", "", ""},
+},
+
+{ MUT_EXPLORE_REGEN, 0, 1, mutflag::good, false, "explore regen",
+  {"You regain HP and MP as you explore.", "", ""},
+  {"You feel a fierce wanderlust.", "", ""},
+  {"You feel like a homebody.", "", ""},
+},
+
+{ MUT_LONG_TONGUE, 0, 1, mutflag::good, false, "long tongue",
+  {"Your long tongue fully drains potion bottles. (2x potion effects)", "", ""},
+  {"Your tongue grows exceptionally long.", "", ""},
+  {"Your tongue shrinks into a sad, ordinary nub.", "", ""},
+},
+
+{ MUT_AWKWARD_TONGUE, 0, 1, mutflag::bad, false, "awkward tongue",
+  {"Your tongue gives you trouble enunciating. (1.5x scroll delay)", "", ""},
+  {"Your tongue begins to flop around amusingly.", "", ""},
+  {"Your tongue regains its customary placidity.", "", ""},
 },
 
 };

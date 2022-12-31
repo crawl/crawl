@@ -33,6 +33,7 @@
 #include "spl-damage.h"
 #include "spl-monench.h"
 #include "state.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -70,21 +71,56 @@ bool player::is_summoned(int* _duration, int* summon_type) const
     return false;
 }
 
-void player::moveto(const coord_def &c, bool clear_net)
+// n.b. it might be better to use this as player::moveto's function signature
+// itself (or something more flexible), but that involves annoying refactoring
+// because of the actor/monster signature.
+static void _player_moveto(const coord_def &c, bool real_movement, bool clear_net)
 {
-    if (c != pos())
+    if (c != you.pos())
     {
         if (clear_net)
             clear_trapping_net();
+
+        // we need to do this even for fake movement -- otherwise nothing ends
+        // the dur for temporal distortion. (I'm not actually sure why?)
         end_wait_spells();
-        // Remove spells that break upon movement
-        remove_ice_movement();
+        if (real_movement)
+        {
+            // Remove spells that break upon movement
+            remove_ice_movement();
+        }
     }
 
     crawl_view.set_player_at(c);
-    set_position(c);
+    you.set_position(c);
 
-    clear_invalid_constrictions();
+    // clear invalid constrictions even with fake movement
+    you.clear_invalid_constrictions();
+}
+
+player_vanishes::player_vanishes(bool _movement)
+    : source(you.pos()), movement(_movement)
+{
+    _player_moveto(coord_def(0,0), movement, true);
+}
+
+player_vanishes::~player_vanishes()
+{
+    if (monster *mon = monster_at(source))
+    {
+        mon->props[FAKE_BLINK_KEY].get_bool() = true;
+        mon->blink();
+        mon->props.erase(FAKE_BLINK_KEY);
+        if (monster *stubborn = monster_at(source))
+            monster_teleport(stubborn, true, true);
+    }
+
+    _player_moveto(source, movement, true);
+}
+
+void player::moveto(const coord_def &c, bool clear_net)
+{
+    _player_moveto(c, true, clear_net);
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net, bool /*force*/)
@@ -149,14 +185,13 @@ bool player::floundering() const
  */
 bool player::extra_balanced() const
 {
-    const dungeon_feature_type grid = env.grid(pos());
     // trees are balanced everywhere they can inhabit.
     return form == transformation::tree
-        // Species or forms with large bodies (e.g. nagas) are ok in shallow
-        // water. (N.b. all large form sizes can swim anyways, and also
-        // giant sized creatures can automatically swim, so the form part is a
-        // bit academic at the moment.)
-        || grid == DNGN_SHALLOW_WATER && body_size(PSIZE_BODY) >= SIZE_LARGE;
+        // Species or forms with large bodies (e.g. nagas) are ok in water.
+        // (N.b. all large form sizes can swim anyways, and also giant sized
+        // creatures can automatically swim, so the form part is a bit
+        // academic at the moment.)
+        || body_size(PSIZE_BODY) >= SIZE_LARGE;
 }
 
 int player::get_hit_dice() const
@@ -297,8 +332,8 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
             return attk_delay;
 
         attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
-        if (get_weapon_brand(*weap) == SPWPN_SPEED)
-            attk_delay = div_rand_round(attk_delay * 2, 3);
+        // XXX: is this right? I hate random_var... (pf)
+        attk_delay = attk_delay * weapon_adjust_delay(*weap, DELAY_SCALE) / DELAY_SCALE;
     }
 
     // At the moment it never gets this low anyway.
@@ -360,10 +395,12 @@ item_def *player::weapon(int /* which_attack */) const
 // Give hands required to wield weapon.
 hands_reqd_type player::hands_reqd(const item_def &item, bool base) const
 {
-    if (you.has_mutation(MUT_QUADRUMANOUS))
+    if (you.has_mutation(MUT_QUADRUMANOUS)
+        && (!is_weapon(item) || is_weapon_wieldable(item, SIZE_MEDIUM)))
+    {
         return HANDS_ONE;
-    else
-        return actor::hands_reqd(item, base);
+    }
+    return actor::hands_reqd(item, base);
 }
 
 bool player::can_wield(const item_def& item, bool ignore_curse,
@@ -439,7 +476,8 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
     const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
     // Small species wielding large weapons...
-    if (!is_weapon_wieldable(item, bsize))
+    if (!is_weapon_wieldable(item, bsize)
+        && !you.has_mutation(MUT_QUADRUMANOUS))
     {
         if (!quiet)
             mpr("That's too large for you to wield.");
@@ -511,7 +549,9 @@ static string _hand_name_singular(bool temp)
     if (you.has_usable_claws())
         return "claw";
 
-    if (you.has_usable_tentacles())
+    // Storm Form inactivates tentacle constriction, but an octopode's
+    // electric body still maintains similar anatomy.
+    if (you.has_usable_tentacles(you.form != transformation::storm))
         return "tentacle";
 
     // Storm Form inactivates the paws mutation, but graphically, a Felid's
@@ -774,8 +814,10 @@ bool player::go_berserk(bool intentional, bool potion)
 
     mpr("You feel mighty!");
 
-    const int berserk_duration = (20 + random2avg(19,2)) / 2;
-    you.increase_duration(DUR_BERSERK, berserk_duration);
+    int dur = 20 + random2avg(19,2);
+    if (!you.has_mutation(MUT_LONG_TONGUE))
+        dur /= 2;
+    you.increase_duration(DUR_BERSERK, dur);
 
     // Apply Berserk's +50% Current/Max HP.
     calc_hp(true, false);
@@ -868,17 +910,26 @@ bool player::shove(const char* feat_name)
 /*
  * Calculate base constriction damage.
  *
- * @param direct True if this is for direct constriction, false otherwise (e.g.
- *               Borg's Vile Clutch), false otherwise.
+ * @param typ   The type of constriction the player is doing -
+ *              direct (ala Naga/Octopode), BVC, etc.
  * @returns The base damage.
  */
-int player::constriction_damage(bool direct) const
+int player::constriction_damage(constrict_type typ) const
 {
-    if (direct)
+    switch (typ)
+    {
+    case CONSTRICT_BVC:
+        return roll_dice(2, div_rand_round(70 +
+                   you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
+    case CONSTRICT_ROOTS:
+        // Assume we're using the wand.
+        // Min power 2d4, max power ~2d14 (also ramps over time)
+        return roll_dice(2, div_rand_round(25 +
+                    you.props[FASTROOT_POWER_KEY].get_int(), 10));
+    default:
         return roll_dice(2, div_rand_round(strength(), 5));
+    }
 
-    return roll_dice(2, div_rand_round(70 +
-               you.props[VILE_CLUTCH_POWER_KEY].get_int(), 20));
 }
 
 bool player::is_dragonkind() const

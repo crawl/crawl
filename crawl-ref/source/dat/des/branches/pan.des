@@ -2598,8 +2598,8 @@ FTILE:   HJKLMNOPQRSTUYZcx-+_. = floor_limestone
 epilogue {{
 if not you.have_rune("demonic") then
     crawl.mpr("A powerful Pandemonium lord resides here.", "warning")
-    crawl.mpr("<yellow>It is willing to " ..
-              "make a deal for the demonic rune of Zot.</yellow>")
+    crawl.mpr("<yellow>A demonic rune of Zot can be found here... " ..
+              "for a price.</yellow>")
 end
 }}
 MAP

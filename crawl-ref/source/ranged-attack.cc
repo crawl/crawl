@@ -25,15 +25,19 @@
 #include "teleport.h"
 #include "throw.h"
 #include "traps.h"
+#include "xom.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele, actor *blame)
     : ::attack(attk, defn, blame), range_used(0), reflected(false),
-      projectile(proj), teleport(tele), orig_to_hit(0),
-      should_alert_defender(true)
+      projectile(proj), teleport(tele), orig_to_hit(0)
 {
     if (is_launcher_ammo(*projectile))
+    {
         weapon = attacker->weapon(0); // else null
+        damage_brand = get_weapon_brand(*weapon);
+    }
+
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
 
@@ -63,8 +67,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
     needs_message = defender_visible;
 }
 
-int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random,
-                                              bool /*aux*/)
+int ranged_attack::post_roll_to_hit_modifiers(int mhit, bool random)
 {
     int modifiers = attack::post_roll_to_hit_modifiers(mhit, random);
 
@@ -126,8 +129,11 @@ bool ranged_attack::attack()
             handle_phase_dodged();
     }
 
-    if (should_alert_defender)
-        alert_defender();
+    // Don't crash on banishment (from eg chaos).
+    if (!defender->pos().origin())
+        handle_noise(defender->pos());
+
+    alert_defender();
 
     if (!defender->alive())
         handle_phase_killed();
@@ -229,6 +235,24 @@ bool ranged_attack::handle_phase_dodged()
     return true;
 }
 
+static bool _jelly_eat_missile(const item_def& projectile, int damage_done)
+{
+    if (you.has_mutation(MUT_JELLY_MISSILE)
+        && you.hp < you.hp_max
+        && !you.duration[DUR_DEATHS_DOOR]
+        && item_is_jelly_edible(projectile)
+        && !one_chance_in(3))
+    {
+        mprf("Your attached jelly eats %s!",
+             projectile.name(DESC_THE).c_str());
+        inc_hp(1 + random2(damage_done));
+        canned_msg(MSG_GAIN_HEALTH);
+        return true;
+    }
+
+    return false;
+}
+
 bool ranged_attack::handle_phase_hit()
 {
     // XXX: this kind of hijacks the shield block check
@@ -246,17 +270,30 @@ bool ranged_attack::handle_phase_hit()
         set_attack_verb(0);
         announce_hit();
         if (defender->is_player())
+        {
             player_caught_in_net();
+            if (attacker->is_monster())
+                xom_is_stimulated(50);
+        }
         else
             monster_caught_in_net(defender->as_monster());
     }
     else
     {
         damage_done = calc_damage();
-        if (damage_done > 0 || projectile->is_type(OBJ_MISSILES, MI_DART))
+        if (damage_done > 0)
         {
             if (!handle_phase_damaged())
                 return false;
+            // Jiyva mutation - piercing projectiles won't keep going if they
+            // get eaten.
+            if (attacker->is_monster()
+                && defender->is_player()
+                && !you.pending_revival
+                && _jelly_eat_missile(*projectile, damage_done))
+            {
+                range_used = BEAM_STOP;
+            }
         }
         else if (needs_message)
         {
@@ -283,8 +320,7 @@ bool ranged_attack::handle_phase_hit()
     }
 
     // XXX: unify this with melee_attack's code
-    if (attacker->is_player() && defender->is_monster()
-        && should_alert_defender)
+    if (attacker->is_player() && defender->is_monster())
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
                         coord_def());
@@ -305,10 +341,10 @@ bool ranged_attack::using_weapon() const
 
 bool ranged_attack::clumsy_throwing() const
 {
-    return projectile->base_type != OBJ_MISSILES;
+    return throwing() && !is_throwable(attacker, *projectile);
 }
 
-int ranged_attack::weapon_damage()
+int ranged_attack::weapon_damage() const
 {
     if (clumsy_throwing())
         return 0;
@@ -325,14 +361,11 @@ int ranged_attack::weapon_damage()
 /**
  * For ranged attacked, "unarmed" is throwing damage.
  */
-int ranged_attack::calc_base_unarmed_damage()
+int ranged_attack::calc_base_unarmed_damage() const
 {
     if (clumsy_throwing())
         return 0;
-
-    // Stones get half bonus; everything else gets full bonus.
-    return div_rand_round(you.skill_rdiv(wpn_skill)
-                          * min(4, property(*projectile, PWPN_DAMAGE)), 4);
+    return throwing_base_damage_bonus(*projectile);
 }
 
 int ranged_attack::calc_mon_to_hit_base()
@@ -370,30 +403,6 @@ bool ranged_attack::ignores_shield(bool verbose)
         return true;
     }
     return false;
-}
-
-bool ranged_attack::apply_damage_brand(const char *what)
-{
-    if (!weapon || !is_range_weapon(*weapon))
-        return false;
-
-    const brand_type brand = get_weapon_brand(*weapon);
-
-    // No stacking elemental brands.
-    if (projectile->base_type == OBJ_MISSILES
-        && get_ammo_brand(*projectile) != SPMSL_NORMAL
-        && (brand == SPWPN_FLAMING
-            || brand == SPWPN_FREEZING
-            || brand == SPWPN_HOLY_WRATH
-            || brand == SPWPN_ELECTROCUTION
-            || brand == SPWPN_VENOM
-            || brand == SPWPN_CHAOS))
-    {
-        return false;
-    }
-
-    damage_brand = brand;
-    return attack::apply_damage_brand(what);
 }
 
 special_missile_type ranged_attack::random_chaos_missile_brand()

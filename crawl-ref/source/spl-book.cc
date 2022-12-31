@@ -95,7 +95,10 @@ static const map<wand_type, spell_type> _wand_spells =
     { WAND_POLYMORPH, SPELL_POLYMORPH },
     { WAND_CHARMING, SPELL_CHARMING },
     { WAND_ACID, SPELL_CORROSIVE_BOLT },
+    { WAND_LIGHT, SPELL_BOLT_OF_LIGHT },
+    { WAND_QUICKSILVER, SPELL_QUICKSILVER_BOLT },
     { WAND_MINDBURST, SPELL_MINDBURST },
+    { WAND_ROOTS, SPELL_FASTROOT },
 };
 
 
@@ -559,7 +562,7 @@ private:
 
         const string act = you.divine_exegesis ? "Cast" : "Memorise";
         // line 2
-        desc << "[<w>!</w>] ";
+        desc << menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) << " ";
         desc << ( current_action == action::cast
                             ? "<w>Cast</w>|Describe|Hide|Show"
                  : current_action == action::memorise
@@ -569,51 +572,21 @@ private:
                  : current_action == action::hide
                             ? act + "|Describe|<w>Hide</w>|Show"
                  : act + "|Describe|Hide|<w>Show</w>");
-        desc << "   [<w>Ctrl-f</w>] search"
-                "   [<w>?</w>] help";
+        desc << "   " << menu_keyhelp_cmd(CMD_MENU_SEARCH) << " search"
+                "   [<w>?</w>] help"; // XX hardcoded for this menu
 
         if (search_text.size())
-            return pad_more_with(desc.str(), "[<w>Esc</w>] clear");
+            return pad_more_with(desc.str(), "[<w>Esc</w>] clear"); // esc is harcoded for this case
         else
             return pad_more_with_esc(desc.str());
     }
 
-    virtual bool process_key(int keyin) override
+    bool cycle_mode(bool forward) override
     {
         bool entries_changed = false;
-        switch (keyin)
+        // completely replace superclass mode implementation
+        if (forward)
         {
-        case CK_LEFT:
-            switch (current_action)
-            {
-                case action::cast:
-                case action::memorise:
-                    current_action = action::unhide;
-                    entries_changed = true;
-                    break;
-                case action::describe:
-                    current_action = you.divine_exegesis ? action::cast
-                                                         : action::memorise;
-                    entries_changed = true; // may need to remove hotkeys
-                    break;
-                case action::hide:
-                    current_action = action::describe;
-                    break;
-                case action::unhide:
-                    current_action = action::hide;
-                    entries_changed = true;
-                    break;
-            }
-            update_title();
-            update_more();
-            break;
-
-            break;
-        case CK_RIGHT:
-        case '!':
-#ifdef TOUCH_UI
-        case CK_TOUCH_DUMMY:
-#endif
             switch (current_action)
             {
                 case action::cast:
@@ -627,18 +600,65 @@ private:
                 case action::hide:
                     current_action = action::unhide;
                     entries_changed = true;
+                    if (last_hovered >= 0 && is_set(MF_ARROWS_SELECT))
+                        last_hovered = 0;
                     break;
                 case action::unhide:
                     current_action = you.divine_exegesis ? action::cast
                                                           : action::memorise;
                     entries_changed = true;
+                    if (last_hovered >= 0 && is_set(MF_ARROWS_SELECT))
+                        last_hovered = 0;
                     break;
             }
-            update_title();
-            update_more();
-            break;
+        }
+        else
+        {
+            switch (current_action)
+            {
+                case action::cast:
+                case action::memorise:
+                    current_action = action::unhide;
+                    entries_changed = true;
+                    if (last_hovered >= 0 && is_set(MF_ARROWS_SELECT))
+                        last_hovered = 0;
+                    break;
+                case action::describe:
+                    current_action = you.divine_exegesis ? action::cast
+                                                         : action::memorise;
+                    entries_changed = true; // may need to remove hotkeys
+                    break;
+                case action::hide:
+                    current_action = action::describe;
+                    break;
+                case action::unhide:
+                    current_action = action::hide;
+                    entries_changed = true;
+                    if (last_hovered >= 0 && is_set(MF_ARROWS_SELECT))
+                        last_hovered = 0;
+                    break;
+            }
+        }
+        update_title();
+        if (entries_changed)
+            update_entries();
+        update_more();
+        return true;
+    }
 
-        case CONTROL('F'):
+    command_type get_command(int keyin) override
+    {
+        if (keyin == '?')
+            return CMD_MENU_HELP;
+        return Menu::get_command(keyin);
+    }
+
+    virtual bool process_command(command_type cmd) override
+    {
+        bool entries_changed = false;
+        switch (cmd)
+        {
+        case CMD_MENU_SEARCH:
         {
             char linebuf[80] = "";
             const bool validline = title_prompt(linebuf, sizeof linebuf,
@@ -651,22 +671,21 @@ private:
             entries_changed = old_search != search_text;
             break;
         }
-
-        case '?':
+        case CMD_MENU_HELP:
             show_spell_library_help();
             break;
-        case CK_MOUSE_B2:
-        case CK_MOUSE_CMD:
-        CASE_ESCAPE
+        case CMD_MENU_EXIT:
+            // if we are in a search, exit the search, not the menu
+            // TODO: can this be generalized to the superclass?
             if (search_text.size())
             {
                 search_text = "";
                 entries_changed = true;
                 break;
             }
-            // intentional fallthrough if search is empty
+            // otherwise, fallthrough to default handling
         default:
-            return Menu::process_key(keyin);
+            return Menu::process_command(cmd);
         }
 
         if (entries_changed)
@@ -694,6 +713,8 @@ private:
     {
         // try to keep the hover on the current spell. (Maybe this is too
         // complicated?)
+        ASSERT(last_hovered < static_cast<int>(items.size()));
+        int new_hover = last_hovered;
         const spell_type hovered_spell =
             last_hovered >= 0 && items[last_hovered]->data
                 ? *static_cast<spell_type *>(items[last_hovered]->data)
@@ -703,7 +724,6 @@ private:
         const bool show_hidden = current_action == action::unhide;
         menu_letter hotkey;
         text_pattern pat(search_text, true);
-        int new_hover = 0;
         for (auto& spell : spells)
         {
             if (!search_text.empty()
@@ -780,8 +800,8 @@ private:
 
 public:
     SpellLibraryMenu(spell_list& list)
-        : Menu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_INIT_HOVER
+        : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
+                | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_SHOW_EMPTY
                 // To have the ctrl-f menu show up in webtiles
                 | MF_ALLOW_FILTER, "spell"),
         current_action(you.divine_exegesis ? action::cast : action::memorise),
@@ -817,6 +837,15 @@ public:
 
         update_entries();
         update_more();
+
+        on_examine = [](const MenuEntry& item)
+        {
+            const spell_type spell = *static_cast<spell_type*>(item.data);
+            ASSERT(is_valid_spell(spell));
+            describe_spell(spell, nullptr);
+            return true;
+        };
+
         on_single_selection = [this](const MenuEntry& item)
         {
             const spell_type spell = *static_cast<spell_type*>(item.data);
@@ -828,8 +857,12 @@ public:
             case action::cast:
                 return false;
             case action::describe:
-                describe_spell(spell, nullptr);
-                break;
+                // n.b. skip superclass handling of ACT_EXAMINE, since we
+                // do not use `menu_action` in this class
+                // hacky: call this by hotkey in order to trigger some side
+                // effects...
+                if (item.hotkeys.size())
+                    return examine_by_key(item.hotkeys[0]);
             case action::hide:
             case action::unhide:
                 you.hidden_spells.set(spell, !you.hidden_spells.get(spell));
@@ -1048,6 +1081,7 @@ bool book_has_title(const item_def &book)
     if (book.sub_type == BOOK_BIOGRAPHIES_II
         || book.sub_type == BOOK_BIOGRAPHIES_VII
         || book.sub_type == BOOK_OZOCUBU
+        || book.sub_type == BOOK_MAXWELL
         || book.sub_type == BOOK_UNRESTRAINED)
     {
         return true;

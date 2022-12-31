@@ -47,9 +47,6 @@ enum class passive_t
     /// You have innate clarity.
     clarity,
 
-    /// You have astral sight.
-    xray_vision,
-
     /// You get a boost to skills from cursed slots.
     bondage_skill_boost,
 
@@ -106,6 +103,9 @@ enum class passive_t
 
     /// No distortion unwield effects.
     safe_distortion,
+
+    /// After god wrath, enemies nearby are banished.
+    wrath_banishment,
 
     /// Less map rot in the abyss.
     map_rot_res_abyss,
@@ -231,15 +231,6 @@ enum class passive_t
     /// Enemies that inflict damage upon you will sometime receive a detrimental status effect
     upgraded_aura_of_power,
 
-    /// Pakellas prevents you from regenerating your mana reserve
-    no_mp_regen,
-
-    /// Pakellas identifies wands and rods
-    identify_devices,
-
-    /// Pakellas collects and distills extra MP from your kills
-    bottle_mp,
-
     /// Hep's transfer drains enemies adjacent to the effect's target
     transfer_drain,
 
@@ -265,9 +256,6 @@ enum class passive_t
 
     // Immunity to spectral mist clouds
     r_spectral_mist,
-
-    /// Kiku grants bonus undead
-    bonus_undead,
 };
 
 enum ru_interference
@@ -283,7 +271,6 @@ bool will_have_passive(passive_t passive);
 int rank_for_passive(passive_t passive);
 int chei_stat_boost(int piety = you.piety);
 void jiyva_eat_offlevel_items();
-int ash_scry_radius();
 void ash_check_bondage();
 bool god_id_item(item_def& item, bool silent = true);
 int ash_detect_portals(bool all);

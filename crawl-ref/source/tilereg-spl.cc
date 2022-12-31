@@ -65,10 +65,6 @@ int SpellRegion::handle_mouse(wm_mouse_event &event)
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == wm_mouse_event::LEFT)
     {
-        // close tab again if using small layout
-        if (tiles.is_using_small_layout())
-            tiles.deactivate_tab();
-
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (cast_a_spell(false, spell) == spret::abort)

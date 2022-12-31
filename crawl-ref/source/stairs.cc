@@ -14,6 +14,7 @@
 #include "chardump.h"
 #include "colour.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
@@ -33,11 +34,14 @@
 #include "mon-death.h"
 #include "mon-transit.h" // untag_followers
 #include "movement.h"
+#include "mutation.h"
 #include "notes.h"
 #include "orb-type.h"
 #include "output.h"
+#include "player-stats.h"
 #include "prompt.h"
 #include "religion.h"
+#include "shout.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-other.h"
@@ -49,11 +53,11 @@
  #include "tilepick.h"
 #endif
 #include "tiles-build-specific.h"
-#include "timed-effects.h" // bezotted
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // bezotted
 
 static string _annotation_exclusion_warning(level_id next_level_id)
 {
@@ -276,6 +280,7 @@ void leaving_level_now(dungeon_feature_type stair_used)
         auto &vault_list =  you.vault_list[level_id::current()];
         vault_list.push_back("[exit]");
 #endif
+        clear_abyssal_rune_knowledge();
     }
 
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
@@ -456,8 +461,45 @@ static void _gauntlet_effect()
 
     mprf(MSGCH_WARN, "The nature of this place prevents you from teleporting.");
 
-    if (player_teleport())
+    if (you.get_base_mutation_level(MUT_TELEPORT))
         mpr("You feel stable on this floor.");
+}
+
+static void _hell_effects()
+{
+
+    // 50% chance at max piety
+    if (have_passive(passive_t::resist_hell_effects)
+        && x_chance_in_y(you.piety, MAX_PIETY * 2) || is_sanctuary(you.pos()))
+    {
+        simple_god_message("'s power protects you from the chaos of Hell!");
+        return;
+    }
+
+    const bool loud = one_chance_in(6) && !silenced(you.pos());
+    string msg = getMiscString(loud ? "hell_effect_noisy"
+                                    : "hell_effect_quiet");
+    if (msg.empty())
+        msg = "Something hellishly buggy happens.";
+
+    mprf(MSGCH_HELL_EFFECT, "%s", msg.c_str());
+    if (loud)
+        noisy(15, you.pos());
+
+    switch (random2(4))
+    {
+        case 0:
+            temp_mutate(RANDOM_BAD_MUTATION, "hell effect");
+            break;
+        case 1:
+            drain_player(100, true, true);
+            break;
+        case 2:
+            lose_stat(STAT_RANDOM, roll_dice(1, 5));
+            break;
+        default:
+            break;
+    }
 }
 
 static void _new_level_amuses_xom(dungeon_feature_type feat,
@@ -519,7 +561,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
     level_id dest;
     if (shaft)
     {
-        if (!is_valid_shaft_level())
+        if (!is_valid_shaft_level(false))
         {
             if (known_shaft)
                 mpr("The shaft disappears in a puff of logic!");
@@ -720,6 +762,18 @@ void floor_transition(dungeon_feature_type how,
     // Fire level-leaving trigger.
     leaving_level_now(how);
 
+    // Fix this up now so the milestones and notes report the correct
+    // destination floor.
+    if (whither.branch == BRANCH_ABYSS)
+    {
+        if (!you.props.exists(ABYSS_MIN_DEPTH_KEY))
+            you.props[ABYSS_MIN_DEPTH_KEY] = 1;
+
+        whither.depth = max(you.props[ABYSS_MIN_DEPTH_KEY].get_int(),
+                            whither.depth);
+        you.props[ABYSS_MIN_DEPTH_KEY] = whither.depth;
+    }
+
     // Not entirely accurate - the player could die before
     // reaching the Abyss.
     if (!forced && whence == DNGN_ENTER_ABYSS)
@@ -732,8 +786,7 @@ void floor_transition(dungeon_feature_type how,
         mark_milestone("abyss.enter", "escaped (hah) into the Abyss!");
         take_note(Note(NOTE_MESSAGE, 0, 0, "Took an exit into the Abyss."), true);
     }
-    else if (how == DNGN_EXIT_ABYSS
-             && you.chapter != CHAPTER_POCKET_ABYSS)
+    else if (how == DNGN_EXIT_ABYSS)
     {
         mark_milestone("abyss.exit", "escaped from the Abyss!");
         you.attribute[ATTR_BANISHMENT_IMMUNITY] = you.elapsed_time + 100
@@ -880,6 +933,8 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot already knows this place too well. Descend or flee this branch!");
             else
                 mpr("Zot's attention fixes on you again. Descend or flee this branch!");
+            if (you.species == SP_METEORAN)
+                update_vision_range();
         }
         else if (was_bezotted)
         {
@@ -887,6 +942,8 @@ void floor_transition(dungeon_feature_type how,
                 mpr("Zot has no power in the Abyss.");
             else
                 mpr("You feel Zot lose track of you.");
+            if (you.species == SP_METEORAN)
+                update_vision_range();
         }
 
         if (branch == BRANCH_GAUNTLET)
@@ -948,11 +1005,18 @@ void floor_transition(dungeon_feature_type how,
 
     you.turn_is_over = true;
 
+    // This save point is somewhat odd, in that it corresponds to
+    // a time when the player didn't have control. So, force a save after the
+    // next world_reacts. XX should this be later in this function? Or not
+    // here at all? (the hup check in save_game_state should be, though)
+    crawl_state.save_after_turn = true;
     save_game_state();
 
     new_level();
 
     moveto_location_effects(whence);
+    if (is_hell_subbranch(you.where_are_you))
+        _hell_effects();
 
     trackers_init_new_level();
 
@@ -1142,8 +1206,6 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         return level_id(BRANCH_VESTIBULE);
 
     case DNGN_EXIT_ABYSS:
-        if (you.chapter == CHAPTER_POCKET_ABYSS)
-            return level_id(BRANCH_DUNGEON, 1);
 #if TAG_MAJOR_VERSION == 34
     case DNGN_EXIT_PORTAL_VAULT:
 #endif
@@ -1180,7 +1242,6 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     return level_id();
 }
 
-// TODO(Zannick): Fully merge with up_stairs into take_stairs.
 void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft, bool update_travel_cache)
 {
     take_stairs(force_stair, false, force_known_shaft, update_travel_cache);

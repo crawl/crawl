@@ -61,7 +61,7 @@ A long pole with an enormous, cleaving blade on one end.
 %%%%
 barding
 
-Armour for the scaly midsections of nagas and palentongas.
+Armour for the scaly midsections of nagas and armataurs.
 %%%%
 battleaxe
 
@@ -552,11 +552,6 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
-fustibalus
-
-A length of wood with a reinforced sling at one end, able to fire projectiles
-at high velocity.
-%%%%
 giant club
 
 A giant lump of wood.
@@ -610,6 +605,10 @@ halberd
 A polearm consisting of an axe blade topped with a spike, mounted on a long
 shaft.
 %%%%
+hammer
+
+A blunt striking weapon, essentially equivalent to a mace.
+%%%%
 hand axe
 
 A small axe.
@@ -633,7 +632,7 @@ The horn belonging to Geryon, guardian of the Vestibule of Hell. It has the
 power to call forth demonic beasts. With high Evocations skill, it will call
 greater numbers of beasts, with lower chances of those beasts being hostile.
 %%%%
-hunting sling
+sling
 
 A piece of cloth and leather for launching stones, adequate for hunting small
 game like rabbits or goblins.
@@ -712,6 +711,12 @@ A short club with a metal head.
 manual
 
 A valuable book which allows one to learn a certain skill faster.
+%%%%
+maxwell's memoranda
+
+A loosely bound collection of the infamous Maxwell's schemes, diagrams and plans.
+Amidst messages written to and by his many minions, allies of convenience and
+hated rivals, a patient reader can discover spells of electrifying power.
 %%%%
 morningstar
 
@@ -1013,10 +1018,10 @@ A long sword with a wide, curved blade.
 %%%%
 scroll of acquirement
 
-A wonderful scroll which causes the creation of a valuable item, with the
-reader choosing the type of item to be created. The item produced will be
-heavily biased towards something fitting the reader's skills, and also towards
-gear that hasn't been seen yet, but, alas, nothing is guaranteed.
+A wonderful scroll which causes the creation of a valuable item, with
+the reader choosing from a small selection. The items offered will be
+often be a good match for the reader's skills; and if nothing
+recommends itself, the reader can always choose a heap of gold.
 %%%%
 scroll of amnesia
 
@@ -1034,12 +1039,16 @@ A scroll that imbues a weapon with a random brand. Any existing brand will be
 replaced with a different one, and any brand forbidden by your current god will
 not be chosen. Artefacts cannot be branded in this way.
 
-Melee weapons will commonly be branded with the vorpal, flaming, freezing,
+Melee weapons will commonly be branded with the flaming, freezing, heavy,
 venom or protection brand, and rarely with the draining, electrocution,
 spectral, vampiric or chaos brand.
 
-Ranged weapons will commonly be branded with the vorpal, flaming, freezing or
-venom brand, and rarely with the electrocution or chaos brand.
+Ranged weapons will commonly be branded with the flaming, freezing, heavy or
+draining brand, and rarely with the electrocution or chaos brand.
+%%%%
+scroll of butterflies
+
+A scroll that surrounds its user with a flight of beautiful butterflies.
 %%%%
 scroll of enchant armour
 
@@ -1125,7 +1134,8 @@ those fully immune to such effects.
 %%%%
 scythe
 
-A farm implement, usually only used by untrained mobs in combat.
+A farm implement, usually only used by untrained mobs in combat. In practice,
+it's quite similar to a halberd.
 %%%%
 shortbow
 
@@ -1280,7 +1290,7 @@ One's servants.
 troll leather armour
 
 The stiff and knobbly skin of a troll. It magically regenerates its wearer's
-flesh.
+flesh, once attuned to the wearer's body at full health.
 %%%%
 the unrestrained analects
 
@@ -1307,8 +1317,13 @@ A magical device which throws little puffs of flame.
 %%%%
 wand of iceblast
 
-A magical device which creates a loud explosion of ice shards, partially
-harming even creatures resistant to cold.
+A magical device which creates a loud explosion of ice shards, bypassing half
+of victims' resistance to cold.
+%%%%
+wand of light
+
+A magical device which fires a ray of searing light, injuring and blinding
+those struck. Tougher monsters will recover their vision more quickly.
 %%%%
 wand of mindburst
 
@@ -1326,6 +1341,18 @@ wand of polymorph
 
 A magical device which causes a creature to be transmogrified into another
 form. It is especially effective against shape-changing creatures.
+%%%%
+wand of quicksilver
+
+A magical device which fires a beam of destructive energy, dispelling
+enchantments on creatures struck.
+%%%%
+wand of roots
+
+A magical device which fires a magical seed, entangling its target and adjacent
+foes in quick-growing tree roots. Those entangled will be immobilized and take
+increasing damage over time until they escape or the roots wither away. The roots
+will only sprout from solid ground.
 %%%%
 war axe
 

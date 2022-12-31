@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "beam.h"
+#include "coordit.h"
 #include "los-type.h"
 #include "reach-type.h"
 
@@ -20,6 +21,22 @@ enum aff_type // sign and non-zeroness matters
     // just keep AFF_YES the minimal "bright" value.
     AFF_LANDING,     // Valid shadow step landing site
     AFF_MULTIPLE,    // Passes through multiple times
+};
+
+class targeter;
+
+// radius_iterator might be better, but the code is too incomprehensible
+// to subclass
+class targeting_iterator : public rectangle_iterator
+{
+public:
+    targeting_iterator(targeter &t, aff_type _threshold);
+    void operator ++() override;
+    aff_type is_affected();
+
+private:
+    targeter &tgt;
+    aff_type threshold;
 };
 
 class targeter
@@ -42,6 +59,8 @@ public:
     virtual aff_type is_affected(coord_def loc) = 0;
     virtual bool can_affect_unseen();
     virtual bool affects_monster(const monster_info& mon);
+
+    targeting_iterator affected_iterator(aff_type threshold = AFF_YES);
 protected:
     bool anyone_there(coord_def loc);
 };
@@ -112,6 +131,20 @@ public:
     bool valid_aim(coord_def a) override;
 };
 
+class targeter_inner_flame : public targeter_smite
+{
+public:
+    targeter_inner_flame(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+};
+
+class targeter_simulacrum : public targeter_smite
+{
+public:
+    targeter_simulacrum(const actor *act, int range);
+    bool valid_aim(coord_def a) override;
+};
+
 class targeter_unravelling : public targeter_smite
 {
 public:
@@ -160,12 +193,13 @@ public:
 class targeter_cleave : public targeter
 {
 public:
-    targeter_cleave(const actor* act, coord_def target);
+    targeter_cleave(const actor* act, coord_def target, int range);
     aff_type is_affected(coord_def loc) override;
     bool valid_aim(coord_def) override;
     bool set_aim(coord_def a) override;
 private:
     set<coord_def> targets;
+    int range;
 };
 
 class targeter_cloud : public targeter
@@ -222,18 +256,20 @@ public:
     }
 };
 
+class targeter_refrig : public targeter_radius
+{
+public:
+    targeter_refrig(actor *act)
+        : targeter_radius(act, LOS_NO_TRANS, LOS_RADIUS, 0, 1)
+    { }
+
+    aff_type is_affected(coord_def loc) override;
+};
+
 class targeter_flame_wave : public targeter_radius
 {
 public:
     targeter_flame_wave(int _range);
-    aff_type is_affected(coord_def loc) override;
-};
-
-
-class targeter_corpse_rot : public targeter_radius
-{
-public:
-    targeter_corpse_rot();
     aff_type is_affected(coord_def loc) override;
 };
 
@@ -298,22 +334,6 @@ private:
 };
 
 #define CLOUD_CONE_BEAM_COUNT 11
-
-class targeter_shotgun : public targeter
-{
-public:
-    targeter_shotgun(const actor* act, size_t beam_count, int r,
-                     bool cloud = false);
-    bool valid_aim(coord_def a) override;
-    bool set_aim(coord_def a) override;
-    aff_type is_affected(coord_def loc) override;
-    vector<ray_def> rays;
-    map<coord_def, size_t> zapped;
-private:
-    size_t num_beams;
-    int range;
-    bool uses_clouds;
-};
 
 class targeter_monster_sequence : public targeter_beam
 {
@@ -380,7 +400,6 @@ private:
 };
 
 string bad_charge_target(coord_def a);
-bool can_charge_through_mons(coord_def a);
 
 // a fixed los targeter matching how it is called for shatter, with a custom
 // tweak to affect walls.
@@ -412,6 +431,16 @@ public:
 protected:
     set<coord_def> affected_positions;
     aff_type positive;
+};
+
+class targeter_scorch : public targeter_multiposition
+{
+public:
+    targeter_scorch(const actor &a, int _range, bool affect_invis);
+    bool valid_aim(coord_def c) override;
+
+protected:
+    int range;
 };
 
 class targeter_chain_lightning : public targeter
@@ -533,4 +562,12 @@ class targeter_anguish : public targeter_multimonster
 public:
     targeter_anguish();
     bool affects_monster(const monster_info& mon) override;
+};
+
+class targeter_poisonous_vapours : public targeter_smite
+{
+public:
+    targeter_poisonous_vapours(const actor *act, int range);
+    bool affects_monster(const monster_info& mon) override;
+    bool valid_aim(coord_def a) override;
 };

@@ -12,8 +12,6 @@ aptitudes:
   mp_mod: 0
   mr: 4
   fighting: 1
-  slings: 1
-  bows: -2
   armour: 1
   dodging: -1
   stealth: 3
@@ -29,7 +27,7 @@ aptitudes:
   evocations: 1
 str: 12
 int: 7
-dex: 6
+dex: 9
 levelup_stat_frequency: 4
 levelup_stats:
   - str
@@ -46,8 +44,7 @@ fake_mutations:
 recommended_jobs:
   - JOB_FIGHTER
   - JOB_HUNTER
-  - JOB_ABYSSAL_KNIGHT
-  - JOB_ARCANE_MARKSMAN
+  - JOB_HEXSLINGER
   - JOB_EARTH_ELEMENTALIST
   - JOB_VENOM_MAGE
 recommended_weapons:
@@ -55,8 +52,3 @@ recommended_weapons:
   - SK_AXES
   - SK_POLEARMS
   - SK_STAVES
-  - SK_CROSSBOWS
-  - SK_SLINGS
-# start TAG_MAJOR_VERSION == 34
-create_enum: false
-# end TAG_MAJOR_VERSION

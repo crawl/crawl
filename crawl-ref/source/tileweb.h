@@ -48,7 +48,7 @@ struct player_info
     string species;
     string god;
     bool under_penance;
-    uint8_t piety_rank;
+    int piety_rank;
 
     uint8_t form;
 
@@ -81,6 +81,7 @@ struct player_info
     vector<status_info> status;
 
     FixedVector<item_def, ENDOFPACK> inv;
+    FixedVector<bool, ENDOFPACK> inv_uselessness;
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
     string quiver_desc;
@@ -191,6 +192,7 @@ public:
     void json_write_null(const string& name);
     void json_write_string(const string& value);
     void json_write_string(const string& name, const string& value);
+    void json_write_icons(const set<tileidx_t> &icons);
     /* Causes the current object/array to be erased if it is closed
        with erase_if_empty without writing any other content after
        this call */
@@ -328,6 +330,7 @@ protected:
                        bool force_full);
     void _send_player(bool force_full = false);
     void _send_item(item_def& current, const item_def& next,
+                    bool& current_uselessness,
                     bool force_full);
     void _send_messages();
 };

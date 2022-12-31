@@ -31,6 +31,7 @@ stop += Zot draws nearer
 stop += Zot has nearly found you
 stop += Zot already knows
 stop += Zot's attention fixes on you
+stop += Zot's power touches on you
 
 # Announcements of timed portal vaults:
 stop += interdimensional caravan

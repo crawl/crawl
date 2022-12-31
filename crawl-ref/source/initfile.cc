@@ -37,6 +37,7 @@
 #include "dlua.h"
 #include "end.h"
 #include "errors.h"
+#include "explore-greedy-options.h"
 #include "files.h"
 #include "game-options.h"
 #include "ghost.h"
@@ -79,8 +80,6 @@
 #endif
 #include "tiles-build-specific.h"
 
-
-
 // For finding the executable's path
 #ifdef TARGET_OS_WINDOWS
 #define WIN32_LEAN_AND_MEAN
@@ -94,6 +93,10 @@ extern char **NXArgv;
 #endif
 #elif defined(UNIX) || defined(TARGET_COMPILER_MINGW)
 #include <unistd.h>
+#endif
+
+#ifdef __ANDROID__
+#include "SDL_system.h"
 #endif
 
 #ifdef __HAIKU__
@@ -128,14 +131,6 @@ static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
 
 const vector<GameOption*> game_options::build_options_list()
 {
-#ifndef DEBUG
-    const bool USING_TOUCH =
-#if defined(TOUCH_UI)
-        true;
-#else
-        false;
-#endif
-#endif
     const bool USING_DGL =
 #if defined(DGAMELAUNCH)
         true;
@@ -234,8 +229,6 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(clear_messages), false),
 #ifdef DEBUG
         new BoolGameOption(SIMPLE_NAME(show_more), false),
-#else
-        new BoolGameOption(SIMPLE_NAME(show_more), !USING_TOUCH),
 #endif
         new BoolGameOption(SIMPLE_NAME(small_more), false),
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
@@ -271,6 +264,15 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(cloud_status), !is_tiles()),
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
+        new BoolGameOption(SIMPLE_NAME(show_blood), true),
+        new BoolGameOption(SIMPLE_NAME(reduce_animations),
+#ifdef USE_TILE_WEB
+            // true
+            tiles.is_controlled_from_web()
+#else
+            false
+#endif
+            ),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs), false),
         new BoolGameOption(SIMPLE_NAME(arena_dump_msgs_all), false),
         new BoolGameOption(SIMPLE_NAME(arena_list_eq), false),
@@ -330,7 +332,7 @@ const vector<GameOption*> game_options::build_options_list()
                           -1, 2000),
         new IntGameOption(SIMPLE_NAME(explore_delay), -1, -1, 2000),
         new IntGameOption(SIMPLE_NAME(explore_item_greed), 10, -1000, 1000),
-        new IntGameOption(SIMPLE_NAME(explore_wall_bias), 0, 0, 1000),
+        new IntGameOption(SIMPLE_NAME(explore_wall_bias), 0, -1000, 1000),
         new IntGameOption(SIMPLE_NAME(scroll_margin_x), 2, 0),
         new IntGameOption(SIMPLE_NAME(scroll_margin_y), 2, 0),
         new IntGameOption(SIMPLE_NAME(item_stack_summary_minimum), 4),
@@ -360,7 +362,7 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
         new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
         new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
-                                  "50:yellow, 25:red", _first_greater),
+                                  "70:yellow, 40:red", _first_greater),
         new ColourThresholdOption(mp_colour, {"mp_colour", "mp_color"},
                                   "50:yellow, 25:red", _first_greater),
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
@@ -407,7 +409,8 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(tile_show_minihealthbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_minimagicbar), true),
         new BoolGameOption(SIMPLE_NAME(tile_show_demon_tier), false),
-        new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), ""),
+        new BoolGameOption(SIMPLE_NAME(tile_grinch), false),
+        new StringGameOption(SIMPLE_NAME(tile_show_threat_levels), "nasty"),
         new StringGameOption(SIMPLE_NAME(tile_show_items), "!?/=([)}:|"),
         // disabled by default due to performance issues
         new BoolGameOption(SIMPLE_NAME(tile_water_anim), !USING_WEB_TILES),
@@ -419,7 +422,11 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_font_lbl_size), 0, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_cell_pixels), 32, 1, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_map_pixels), 0, 0, INT_MAX),
+#ifndef __ANDROID__
         new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 500, 0, INT_MAX),
+#else
+        new IntGameOption(SIMPLE_NAME(tile_tooltip_ms), 0, 0, INT_MAX),
+#endif
         new IntGameOption(SIMPLE_NAME(tile_update_rate), 1000, 50, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_runrest_rate), 100, 0, INT_MAX),
         // minimap colours
@@ -448,21 +455,26 @@ const vector<GameOption*> game_options::build_options_list()
         new TileColGameOption(SIMPLE_NAME(tile_wall_col), "#666666"),
         new TileColGameOption(SIMPLE_NAME(tile_water_col), "#114455"),
         new TileColGameOption(SIMPLE_NAME(tile_window_col), "#558855"),
+        new MultipleChoiceGameOption<string>(
+            SIMPLE_NAME(tile_display_mode),
+            "tiles",
+            {{"tiles", "tiles"},
+             {"glyph", "glyphs"},
+             {"glyphs", "glyphs"},
+             {"hybrid", "hybrid"}}),
         new ListGameOption<string>(SIMPLE_NAME(tile_layout_priority),
-#ifdef TOUCH_UI
-            split_string(",", "minimap, command, inventory, "
-                              "command2, spell, ability, monster")),
-#else
             split_string(",", "minimap, inventory, command, "
                               "spell, ability, monster")),
 #endif
-#endif
 #ifdef USE_TILE_LOCAL
+# ifndef __ANDROID__
         new IntGameOption(SIMPLE_NAME(game_scale), 1, 1, 8),
+# endif
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_width), -90, INT_MIN, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_height), -90, INT_MIN, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_ratio), 1618, INT_MIN, INT_MAX),
+        new BoolGameOption(SIMPLE_NAME(tile_window_limit_size), true),
         new StringGameOption(SIMPLE_NAME(tile_font_crt_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_msg_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT),
@@ -517,13 +529,6 @@ const vector<GameOption*> game_options::build_options_list()
             {{"horizontal", "horizontal"}, {"vertical", "vertical"}}),
         new IntGameOption(SIMPLE_NAME(action_panel_scale), 100, 20, 1600),
         new BoolGameOption(SIMPLE_NAME(action_panel_glyphs), false),
-        new MultipleChoiceGameOption<string>(
-            SIMPLE_NAME(tile_display_mode),
-            "tiles",
-            {{"tiles", "tiles"},
-             {"glyph", "glyphs"},
-             {"glyphs", "glyphs"},
-             {"hybrid", "hybrid"}}),
 #endif
 #ifdef USE_FT
         new BoolGameOption(SIMPLE_NAME(tile_font_ft_light), false),
@@ -711,11 +716,6 @@ static map<string, weapon_type> _special_weapon_map = {
     // "staff" normally refers to a magical staff, but here we want to
     // interpret it as a quarterstaff.
     {"staff",       WPN_QUARTERSTAFF},
-
-    // These weapons' base names have changed; we want to interpret the old
-    // names correctly.
-    {"sling",       WPN_HUNTING_SLING},
-    {"crossbow",    WPN_HAND_CROSSBOW},
 
     // Pseudo-weapons.
     {"unarmed",     WPN_UNARMED},
@@ -1189,6 +1189,8 @@ void game_options::reset_options()
     for (GameOption* option : option_behaviour)
         option->reset();
 
+    // some option default values set in dat/defaults
+
     filename     = "unknown";
     basefilename = "unknown";
     line_num     = -1;
@@ -1227,11 +1229,14 @@ void game_options::reset_options()
     // Sort only pickup menus by default.
     sort_menus.clear();
     set_menu_sort("pickup: true");
+    set_menu_sort("inv: true : equipped, charged");
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_TRANSPORTER | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK);
+
+    explore_greedy_visit    = (EG_GLOWING | EG_ARTEFACT);
 
     dump_item_origins      = IODS_ARTEFACTS;
 
@@ -1291,6 +1296,11 @@ void game_options::reset_options()
 
     terp_files.clear();
 
+#ifdef USE_TILE_LOCAL
+    // window layout
+    tile_use_small_layout = MB_MAYBE;
+#endif
+
 #ifdef USE_TILE
     // XXX: arena may now be chosen after options are read.
     tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED
@@ -1302,8 +1312,14 @@ void game_options::reset_options()
     tile_weapon_offsets.second = INT_MAX;
     tile_shield_offsets.first  = INT_MAX;
     tile_shield_offsets.second = INT_MAX;
+# ifndef __ANDROID__
     tile_viewport_scale = 100;
     tile_map_scale      = 60;
+# else
+    tile_viewport_scale = 0;
+    tile_map_scale      = 0;
+# endif
+
 #endif
 
 #ifdef USE_TILE_WEB
@@ -2503,6 +2519,12 @@ void game_options::set_player_tile(const string &field)
         const monster_type m = _mons_class_by_string(fields[1]);
         if (m == MONS_0)
             report_error("Unknown monster: \"%s\"", fields[1].c_str());
+        else if (mons_class_is_animated_object(m) || mons_is_sensed(m))
+        {
+            report_error(
+                "Can't use that monster as a mons: player tile, sorry: \"%s\"",
+                fields[1].c_str());
+        }
         else
         {
             tile_use_monster = m;
@@ -2630,6 +2652,28 @@ int game_options::read_explore_stop_conditions(const string &field) const
             conditions |= ES_ARTEFACT;
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
+    }
+    return conditions;
+}
+
+int game_options::read_explore_greedy_visit_conditions(const string &field) const
+{
+    int conditions = 0;
+    vector<string> stops = split_string(",", field);
+    for (const string &stop : stops)
+    {
+        const string c = replace_all_of(stop, " ", "_");
+        if (c == "glowing" || c == "glowing_item"
+                 || c == "glowing_items")
+        {
+            conditions |= EG_GLOWING;
+        }
+        else if (c == "artefact" || c == "artefacts"
+                 || c == "artifact" || c == "artifacts")
+            conditions |= EG_ARTEFACT;
+        else if (c == "stack" || c == "stacks"
+                 || c == "pile" || c == "piles")
+            conditions |= EG_STACK;
     }
     return conditions;
 }
@@ -2868,9 +2912,9 @@ static void _bindkey(string field)
         wchars.push_back(wc);
     }
 
+
     int key;
 
-    // TODO: Function keys.
     if (wchars.size() == 0)
     {
         mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
@@ -2879,18 +2923,6 @@ static void _bindkey(string field)
     }
     else if (wchars.size() == 1)
         key = wchars[0];
-    else if (wchars.size() == 2)
-    {
-        // Ctrl + non-ascii is meaningless here.
-        if (wchars[0] != '^' || wchars[1] > 127)
-        {
-            mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
-                 key_str.c_str(), field.c_str());
-            return;
-        }
-
-        key = CONTROL(wchars[1]);
-    }
     else if (wchars[0] == '\\')
     {
         // does this need to validate non-widechars?
@@ -2902,11 +2934,18 @@ static void _bindkey(string field)
         }
         key = ks[0];
     }
-    else
+    else // if (wchars.size() > 1)
     {
-        mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
-             key_str.c_str(), field.c_str());
-        return;
+        // XX probably would be safe to directly check for numbers?
+        // don't use the wide char version for this part
+        // Try to read a human-readable keycode. `^` sequences handled here.
+        key = read_key_code(key_str);
+        if (key == CK_NO_KEY)
+        {
+            mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
+                 key_str.c_str(), field.c_str());
+            return;
+        }
     }
 
     const size_t start_name = field.find_first_not_of(' ', end_bracket + 1);
@@ -3616,6 +3655,17 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             explore_stop |= new_conditions;
     }
+    else if (key == "explore_greedy_visit")
+    {
+        if (plain)
+            explore_greedy_visit = EG_NONE;
+
+        const int new_conditions = read_explore_greedy_visit_conditions(field);
+        if (minus_equal)
+            explore_greedy_visit &= ~new_conditions;
+        else
+            explore_greedy_visit |= new_conditions;
+    }
     else if (key == "sound" || key == "hold_sound")
     {
         if (plain)
@@ -3782,10 +3832,10 @@ void game_options::read_option_line(const string &str, bool runscript)
             report_error(possible_error.c_str(), orig_field.c_str());
     }
 #ifdef USE_TILE
-#ifdef TOUCH_UI
+#ifdef USE_TILE_LOCAL
     else if (key == "tile_use_small_layout")
         tile_use_small_layout = read_maybe_bool(field);
-#endif
+#endif // USE_TILE_LOCAL
     else if (key == "tile_show_player_species" && field == "true")
     {
         field = "playermons";
@@ -3801,7 +3851,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_tag_pref = _str_to_tag_pref(field.c_str());
 #endif // USE_TILE
 
-    else if (key == "bindkey")
+    else if (key == "bindkey" && runscript)
         _bindkey(field);
     else if (key == "constant")
     {
@@ -4217,6 +4267,14 @@ void get_system_environment()
 #ifdef SAVE_DIR_PATH
     if (SysEnv.crawl_dir.empty())
         SysEnv.crawl_dir = SAVE_DIR_PATH;
+#endif
+
+#ifdef __ANDROID__
+    if (SysEnv.crawl_dir.empty())
+    {
+        SysEnv.crawl_dir = SDL_AndroidGetExternalStoragePath();
+        chdir(SysEnv.crawl_dir.c_str());
+    }
 #endif
 
 #ifdef DGL_SIMPLE_MESSAGING

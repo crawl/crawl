@@ -12,7 +12,7 @@ function base_monster_setup(e)
   e.kmons("A = goblin / frilled lizard / giant cockroach / endoplasm / ball python /\
            bat / kobold / rat / gnoll band /\
            hobgoblin / jackal band / worm / adder / quokka /\
-           gnoll shaman band / orc band / orc priest band /\
+           gnoll bouda band / orc band / orc priest band /\
            floating eye / hound / iguana / ogre / orc wizard band /\
            phantom / scorpion / skeleton / gnoll sergeant band /\
            centaur / jelly / water moccasin / ice beast / crimson imp /\
@@ -189,8 +189,6 @@ function general_item_setup(e)
     broad axe plus:9 randart ident:all /\
     glaive plus:9 good_item ident:all /\
     glaive plus:7 randart ident:all /\
-    scythe plus:11 good_item ident:all /\
-    scythe plus:9 randart ident:all /\
     bardiche plus:7 good_item ident:all /\
     bardiche plus:5 randart ident:all /\
     demon trident plus:9 good_item ident:all /\
@@ -211,7 +209,7 @@ function general_item_setup(e)
     great sword plus:7 randart ident:all /\
     lajatang plus:9 good_item ident:all /\
     lajatang plus:7 randart ident:all /\
-    longbow plus:7 ego:vorpal ident:all w:15 /\
+    longbow plus:7 ego:heavy ident:all w:15 /\
     triple crossbow plus:7 good_item ident:all w:15")
   e.kitem("] = plate armour plus:12 ident:all /\
     plate armour plus:8 good_item ident:all /\
@@ -252,8 +250,6 @@ function general_item_setup(e)
     broad axe plus:6 good_item ident:all /\
     glaive plus:6 ego:none ident:all /\
     glaive plus:3 good_item ident:all /\
-    scythe plus:9 ego:none ident:all /\
-    scythe plus:6 good_item ident:all /\
     bardiche plus:3 ego:none ident:all /\
     bardiche plus:0 good_item ident:all /\
     demon trident plus:6 ego:none ident:all /\
@@ -615,7 +611,7 @@ SUBVAULT: Y : storerooms_room_b
 SUBVAULT: T : the_temple
 SUBVAULT: U : equipment_1
 # Initial consumables
-KITEM: b = scroll of summoning ident:all q:1, \
+KITEM: b = any ally scroll ident:all q:1, \
        scroll of amnesia q:5 ident:all, \
        scroll of vulnerability q:2 ident:all
 KITEM: c = stone q:10
@@ -629,16 +625,16 @@ KITEM: e = rapier plus:2 ego:electrocution ident:all /\
        rapier plus:2 ego:distortion ident:all /\
        rapier plus:2 good_item ident:all
 KITEM: f = war axe plus:2 ego:freezing ident:all /\
-       war axe plus:2 ego:vorpal ident:all /\
+       war axe plus:2 ego:heavy ident:all /\
        war axe plus:2 good_item ident:all w:5 /\
        broad axe plus:1 ego:freezing ident:all /\
-       broad axe plus:1 ego:vorpal ident:all /\
+       broad axe plus:1 ego:heavy ident:all /\
        broad axe plus:1 good_item ident:all w:5
 KITEM: g = dire flail plus:2 ego:protection ident:all /\
-       dire flail plus:2 ego:vorpal ident:all /\
+       dire flail plus:2 ego:heavy ident:all /\
        dire flail plus:2 good_item ident:all w:5 /\
        morningstar plus:2 ego:protection ident:all /\
-       morningstar plus:2 ego:vorpal ident:all /\
+       morningstar plus:2 ego:heavy ident:all /\
        morningstar plus:2 good_item ident:all w:5
 KITEM: h = halberd plus:2 ego:protection ident:all /\
        halberd plus:2 ego:venom ident:all /\
@@ -721,12 +717,12 @@ KITEM: a = dagger ego:electrocution ident:all /\
        dagger ego:draining ident:all /\
        dagger ego:venom ident:all
 KITEM: b = hand axe ego:freezing ident:all /\
-       hand axe ego:vorpal ident:all
-KITEM: c = mace ego:vorpal ident:all /\
+       hand axe ego:heavy ident:all
+KITEM: c = mace ego:heavy ident:all /\
        mace ego:protection ident:all /\
-       flail ego:vorpal ident:all /\
+       flail ego:heavy ident:all /\
        flail ego:protection ident:all
-KITEM: d = trident ego:vorpal ident:all
+KITEM: d = trident ego:heavy ident:all
 KITEM: e = quarterstaff ego:protection ident:all /\
        quarterstaff ego:speed ident:all
 KITEM: f = long sword ego:holy_wrath ident:all /\

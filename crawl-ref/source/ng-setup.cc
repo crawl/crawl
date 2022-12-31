@@ -173,22 +173,6 @@ item_def* newgame_make_item(object_class_type base,
     return &item;
 }
 
-static void _give_ranged_weapon(weapon_type weapon, int plus)
-{
-    ASSERT(weapon != NUM_WEAPONS);
-
-    switch (weapon)
-    {
-    case WPN_SHORTBOW:
-    case WPN_HAND_CROSSBOW:
-    case WPN_HUNTING_SLING:
-        newgame_make_item(OBJ_WEAPONS, weapon, 1, plus);
-        break;
-    default:
-        break;
-    }
-}
-
 static void _give_throwing_ammo()
 {
     if (species::can_throw_large_rocks(you.species))
@@ -281,18 +265,6 @@ void give_items_skills(const newgame_def& ng)
             you.skills[SK_ARMOUR]++;
         break;
     }
-    case JOB_ABYSSAL_KNIGHT:
-        you.religion = GOD_LUGONU;
-        if (!crawl_state.game_is_sprint())
-            you.chapter = CHAPTER_POCKET_ABYSS;
-        you.piety = 60;
-
-        if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
-            you.skills[SK_DODGING]++;
-        else
-            you.skills[SK_ARMOUR]++;
-
-        break;
 
     case JOB_CINDER_ACOLYTE:
         you.religion = GOD_IGNIS;
@@ -303,14 +275,10 @@ void give_items_skills(const newgame_def& ng)
         break;
     }
 
-    if (you.char_class == JOB_ABYSSAL_KNIGHT)
-        newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, +1);
-    else if (you.char_class == JOB_CHAOS_KNIGHT)
+    if (you.char_class == JOB_CHAOS_KNIGHT)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, 0, SPWPN_CHAOS);
     else if (you.char_class == JOB_CINDER_ACOLYTE)
         newgame_make_item(OBJ_WEAPONS, ng.weapon, 1, -1, SPWPN_FLAMING);
-    else if (job_gets_ranged_weapons(you.char_class))
-        _give_ranged_weapon(ng.weapon, you.char_class == JOB_HUNTER ? 1 : 0);
     else if (job_has_weapon_choice(you.char_class))
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
@@ -363,6 +331,7 @@ static void _setup_tutorial_miscs()
 static void _give_basic_knowledge()
 {
     identify_inventory();
+    mark_inventory_sets_unknown();
 
     // Removed item types are handled in _set_removed_types_as_identified.
 }
@@ -510,6 +479,10 @@ static void _setup_generic(const newgame_def& ng,
     // ShoppingList::item_type_identified().
     you.props[REMOVED_DEAD_SHOPS_KEY] = true;
 #endif
+
+    // Needs to happen before we give the player items, so that item specs
+    // in job descriptions can be parsed safely.
+    initialise_item_sets();
 
     // Needs to happen before we give the player items, so that it's safe to
     // check whether those items need to be removed from their shopping list.

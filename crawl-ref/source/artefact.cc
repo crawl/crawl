@@ -122,7 +122,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     case GOD_TROG:
         // Limited selection of brands.
-        if (brand != SPWPN_VORPAL
+        if (brand != SPWPN_HEAVY
             && brand != SPWPN_FLAMING
             && brand != SPWPN_ANTIMAGIC)
         {
@@ -463,20 +463,17 @@ static void _add_randart_weapon_brand(const item_def &item,
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
             2, SPWPN_SPEED,
-            4, SPWPN_VENOM,
-            4, SPWPN_VORPAL,
+            2, SPWPN_ELECTROCUTION,
+            2, SPWPN_ANTIMAGIC,
+            4, SPWPN_DRAINING,
+            4, SPWPN_HEAVY,
             4, SPWPN_FLAMING,
             4, SPWPN_FREEZING);
 
-        if (item_attack_skill(item) == SK_CROSSBOWS)
-        {
-            // Penetration and electrocution are only allowed on
-            // crossbows. This may change in future.
-            if (one_chance_in(5))
-                item_props[ARTP_BRAND] = SPWPN_ELECTROCUTION;
-            else if (one_chance_in(5))
-                item_props[ARTP_BRAND] = SPWPN_PENETRATION;
-        }
+        // Penetration is only allowed on crossbows.
+        // This may change in future.
+        if (is_crossbow(item) && one_chance_in(6))
+            item_props[ARTP_BRAND] = SPWPN_PENETRATION;
     }
     else if (is_demonic(item) && x_chance_in_y(7, 9))
     {
@@ -493,9 +490,9 @@ static void _add_randart_weapon_brand(const item_def &item,
     else
     {
         item_props[ARTP_BRAND] = random_choose_weighted(
-            73, SPWPN_VORPAL,
-            34, SPWPN_FLAMING,
-            34, SPWPN_FREEZING,
+            47, SPWPN_HEAVY,
+            47, SPWPN_FLAMING,
+            47, SPWPN_FREEZING,
             26, SPWPN_VENOM,
             26, SPWPN_DRAINING,
             13, SPWPN_HOLY_WRATH,
@@ -552,8 +549,7 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         // weapons already have slaying
         case ARTP_SLAYING:
             return item_class != OBJ_WEAPONS;
-        // prevent properties that conflict with naga innates
-        case ARTP_POISON:
+        // prevent properties that barding-wearers already have
         case ARTP_SEE_INVISIBLE:
             return !item.is_type(OBJ_ARMOUR, ARM_BARDING);
         case ARTP_RAMPAGING:
@@ -1346,6 +1342,7 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_WOODCUTTERS_AXE:
     case UNRAND_MORG:
     case UNRAND_THROATCUTTER:
+    case UNRAND_HERMITS_PENDANT:
         return 9;
     case UNRAND_DEVASTATOR:
     case UNRAND_RATSKIN_CLOAK:
@@ -1354,6 +1351,8 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_OCTOPUS_KING:
     case UNRAND_AUGMENTATION:
     case UNRAND_MEEK:
+    case UNRAND_ELEMENTAL_VULNERABILITY:
+    case UNRAND_MISFORTUNE:
         return 11;
     default:
         return -1;
@@ -1748,14 +1747,14 @@ void make_ashenzari_randart(item_def &item)
     if (item.flags & ISFLAG_UNRANDART)
         return;
 
-    const int brand = item.brand;
+    const auto brand = item.brand;
 
     // Ash randarts get no props
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
     item.flags |= ISFLAG_KNOW_PROPERTIES;
 
-    if (item.brand != SPWPN_NORMAL)
+    if (brand != SPWPN_NORMAL)
         set_artefact_brand(item, brand);
 
     set_artefact_name(item, _ashenzari_artefact_name(item));

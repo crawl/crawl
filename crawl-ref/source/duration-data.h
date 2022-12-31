@@ -394,10 +394,15 @@ static const duration_def duration_data[] =
       "You are firmly anchored to this plane.", D_DISPELLABLE,
       {{ "You are no longer firmly anchored in space." }}},
     { DUR_LOCKED_DOWN,
-      RED, "-Move",
-      "immobile", "",
+      RED, "Stuck",
+      "stuck", "",
       "You are magically locked in place.", D_DISPELLABLE,
       {{ "You are no longer locked in place." }}},
+    { DUR_NO_MOMENTUM,
+      RED, "-Move",
+      "immotile", "",
+      "You are unable to move around.", D_DISPELLABLE,
+      {{ "You are no longer robbed of momentum." }}},
     { DUR_TOXIC_RADIANCE,
       MAGENTA, "Toxic",
       "radiating poison", "toxic radiance",
@@ -584,12 +589,6 @@ static const duration_def duration_data[] =
       "You are reanimating the dead.", D_DISPELLABLE | D_EXPIRES,
       {{ "Your reaping aura expires.", _end_animate_dead },
       { "Your reaping aura is weakening.", 1 }}, 6},
-    { DUR_CORPSE_ROT,
-      MAGENTA, "Rot",
-      "producing miasma", "corpse rot",
-      "You are producing miasma from the slain.", D_DISPELLABLE | D_EXPIRES,
-      {{ "Your miasmic aura fades." },
-      { "Your miasmic aura is weakening.", 1 }}, 6},
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
@@ -701,5 +700,6 @@ static const duration_def duration_data[] =
     { DUR_MIRROR_DAMAGE, 0, "", "", "old injury mirror", "", D_NO_FLAGS},
     { DUR_SHAFT_IMMUNITY, 0, "", "", "old shaft immunity", "", D_NO_FLAGS, {{""}}},
     { DUR_EXCRUCIATING_WOUNDS, 0, "", "", "old excruciating wounds", "", D_NO_FLAGS },
+    { DUR_CORPSE_ROT, 0, "", "", "old corpse rot", "", D_NO_FLAGS },
 #endif
 };

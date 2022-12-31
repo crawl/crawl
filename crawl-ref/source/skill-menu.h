@@ -37,19 +37,20 @@ enum skill_menu_flags
 // skill selection buttons.
 enum skill_menu_button
 {
-    SKM_HELP = -1,
-    SKM_CLEAR_TARGETS = -2,
-    SKM_SET_TARGET = -3,
+    // skip -1: it's the default value for MenuItem::m_item_id
+    SKM_HELP = -2,
+    SKM_CLEAR_TARGETS = -3,
+    SKM_SET_TARGET = -4,
 };
 
 enum skill_menu_switch
 {
-    SKM_SWITCH_FIRST = -4,
+    SKM_SWITCH_FIRST = -5,
     SKM_MODE  = SKM_SWITCH_FIRST,
-    SKM_DO    = -5,
-    SKM_SHOW  = -6,
-    SKM_LEVEL = -7,
-    SKM_VIEW  = -8,
+    SKM_DO    = -6,
+    SKM_SHOW  = -7,
+    SKM_LEVEL = -8,
+    SKM_VIEW  = -9,
 };
 
 class SkillMenu;

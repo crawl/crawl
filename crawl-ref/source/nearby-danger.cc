@@ -30,10 +30,10 @@
 #include "stringutil.h"
 #include "state.h"
 #include "terrain.h"
-#include "timed-effects.h" // decr_zot_clock
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "zot.h" // decr_zot_clock
 
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.
@@ -148,10 +148,6 @@ bool mons_is_safe(const monster* mon, const bool want_move,
                            // monsters capable of throwing or zapping wands.
                            || !mons_can_hurt_player(mon)));
 
-    // is this overkill? The main goal here is to disable or interrupt rests
-    // and waits when there is an inhibiting monster in view
-    is_safe = is_safe && !regeneration_is_inhibited(mon);
-
     if (consider_user_options)
     {
         bool moving = you_are_delayed()
@@ -172,6 +168,42 @@ bool mons_is_safe(const monster* mon, const bool want_move,
     }
 
     return is_safe;
+}
+
+static string _seen_monsters_announcement(const vector<monster*> &visible,
+                                          bool sensed_monster)
+{
+    // Announce the presence of monsters (Eidolos).
+    if (visible.size() == 1)
+    {
+        const monster& m = *visible[0];
+        return make_stringf("%s is nearby!", m.name(DESC_A).c_str());
+    }
+    if (visible.size() > 1)
+        return "There are monsters nearby!";
+    if (sensed_monster)
+        return "There is a strange disturbance nearby!";
+    return "";
+}
+
+static void _announce_monsters(string announcement, vector<monster*> &visible)
+{
+    mprf(MSGCH_WARN, "%s", announcement.c_str());
+
+    if (Options.use_animations & UA_MONSTER_IN_SIGHT)
+    {
+        static bool tried = false; // !!??!!
+
+        if (visible.size() && tried)
+        {
+            monster_view_annotator flasher(&visible);
+            delay(100);
+        }
+        else if (visible.size())
+            tried = true;
+        else
+            tried = false;
+    }
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
@@ -235,7 +267,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             // Temporary immunity allows travelling through a cloud but not
             // resting in it.
             // Qazlal immunity will allow for it, however.
-            if (is_damaging_cloud(type, want_move, cloud_is_yours_at(you.pos())))
+            if (cloud_damages_over_time(type, want_move, cloud_is_yours_at(you.pos())))
             {
                 if (announce)
                 {
@@ -292,46 +324,40 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     vector<monster* > visible;
     copy_if(monsters.begin(), monsters.end(), back_inserter(visible),
             [](const monster *mon){ return mon->visible_to(&you); });
+    const bool sensed = any_of(monsters.begin(), monsters.end(),
+                   [](const monster *mon){
+                       return env.map_knowledge(mon->pos()).flags & MAP_INVISIBLE_MONSTER;
+                   });
 
-    const bool sensed_monster = any_of(monsters.begin(), monsters.end(),
-            [](const monster *mon){
-                return env.map_knowledge(mon->pos()).flags & MAP_INVISIBLE_MONSTER;
-            });
+    const string announcement = _seen_monsters_announcement(visible, sensed);
+    if (!announce || announcement.empty())
+        return announcement.empty();
+    _announce_monsters(announcement, visible);
+    return false;
+}
 
-    // Announce the presence of monsters (Eidolos).
-    string msg;
-    if (visible.size() == 1)
+bool can_rest_here(bool announce)
+{
+    // XXX: consider doing a check for whether your regen is *ever* inhibited
+    // before iterating over each monster.
+    vector<monster*> visible;
+    bool sensed = false;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        const monster& m = *visible[0];
-        msg = make_stringf("%s is nearby!", m.name(DESC_A).c_str());
+        if (!regeneration_is_inhibited(*mi))
+            continue;
+        if (mi->visible_to(&you))
+            visible.push_back(*mi);
+        else if (env.map_knowledge(mi->pos()).flags & MAP_INVISIBLE_MONSTER)
+            sensed = true;
     }
-    else if (visible.size() > 1)
-        msg = "There are monsters nearby!";
-    else if (sensed_monster)
-        msg = "There is a strange disturbance nearby!";
-    else
+
+    const string announcement = _seen_monsters_announcement(visible, sensed);
+    if (announcement.empty())
         return true;
 
     if (announce)
-    {
-        mprf(MSGCH_WARN, "%s", msg.c_str());
-
-        if (Options.use_animations & UA_MONSTER_IN_SIGHT)
-        {
-            static bool tried = false;
-
-            if (visible.size() && tried)
-            {
-                monster_view_annotator flasher(&visible);
-                delay(100);
-            }
-            else if (visible.size())
-                tried = true;
-            else
-                tried = false;
-        }
-    }
-
+        _announce_monsters(announcement, visible);
     return false;
 }
 
@@ -454,7 +480,7 @@ void revive()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
     if (you.form != transformation::none)
-        untransform();
+        untransform(true);
     you.clear_beholders();
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;

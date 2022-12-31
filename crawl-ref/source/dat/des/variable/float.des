@@ -1411,6 +1411,133 @@ MAP
      ...                             ...
 ENDMAP
 
+NAME:    nicolae_integral_box
+TAGS:    transparent extra decor
+DEPTH:   D, Depths, Snake
+ORIENT:  float
+SHUFFLE: Pp/Pp/Pp/Qq, Rr/Rr/Rr/Ss
+SUBST:   PR : c, pr : _, QS : G, qs : c, H : cccG, F : TTT., T = TTTTTTVVVU
+CLEAR:   _
+MAP
+              ccc
+             cc..
+            cc..@
+           rc....  ppp
+           rR...HcccPcccccc
+           rc.............cc
+            cc......F......cc
+       rrr   cc.............cr
+      ccRcc   ccccccPcccH...Rr
+     cc...cc       ppp  ....cr
+    cc.....cc           @..cc
+    c.......c           ..cc   rrr
+    c...H.@.c           ccc   ccRcc
+    c...c                    cc...cc
+    c...c                   cc.....cc
+   pc...cp                  c.......c
+   pP.F.Pp                  c...H.@.c
+   pc...cp                  c...c
+    c...c                   c...c
+    c...c                  pc...cp
+c.@.H...c                  pP.F.Pp
+c.......c                  pc...cp
+cc.....cc                   c...c
+ cc...cc                    c...c
+  ccRcc   ccc           c.@.H...c
+   rrr   cc..           c.......c
+        cc..@           cc.....cc
+       rc....  ppp       cc...cc
+       rR...HcccPcccccc   ccRcc
+       rc.............cc   rrr
+        cc......F......cc
+         cc.............cr
+          ccccccPcccH...Rr
+               ppp  ....cr
+                    @..cc
+                    ..cc
+                    ccc
+ENDMAP
+
+NAME:   nicolae_kite_square_tiling_large
+TAGS:   transparent extra decor
+DEPTH:  D:4-, Depths
+ORIENT: float
+SUBST:  + : +++.
+MAP
+          xxc   cxx           xxc
+          +.x   x.+           +.x
+      xxcxx.x+x+x.xxcxx   xxcxx.x+x
+      +.......x.......+   +.......x
+  xxcxx.......c.......xxcxx.......c
+  +...+.......x.......+...+.......x
+cxx...xxcxx.x+x+x.xxcxx...xxcxx.x+x+x
+x.......x.+.x...x.+.x.......x.+.x...x
+x+x...x+x.xxc...cxx.x+x...x+x.xxc...c
+  x...x.....x...x.....x...x.....x...x
+  c...cxx.x+x...x+x.xxc...cxx.x+x...x+x
+  x...x.+.x.......x.+.x...x.+.x.......x
+  x+x+x.xxcxx...xxcxx.x+x+x.xxcxx...xxc
+    x.......+...+.......x.......+...+
+    c.......xxcxx.......c.......xxcxx
+    x.......+...+.......x.......+...+
+  x+x+x.xxcxx...xxcxx.x+x+x.xxcxx...xxc
+  x...x.+.x.......x.+.x...x.+.x.......x
+  c...cxx.x+x...x+x.xxc...cxx.x+x...x+x
+  x...x.....x...x.....x...x.....x...x
+x+x...x+x.xxc...cxx.x+x...x+x.xxc...c
+x.......x.+.x...x.+.x.......x.+.x...x
+cxx...xxcxx.x+x+x.xxcxx...xxcxx.x+x+x
+  +...+.......x.......+...+.......x
+  xxcxx.......c.......xxcxx.......c
+  +...+.......x.......+...+.......x
+cxx...xxcxx.x+x+x.xxcxx...xxcxx.x+x+x
+x.......x.+.x...x.+.x.......x.+.x...x
+x+x...x+x.xxc...cxx.x+x...x+x.xxc...c
+  x...x.....x...x.....x...x.....x...x
+  c...cxx.x+x...x+x.xxc...cxx.x+x...x+x
+  x...x.+.x.......x.+.x...x.+.x.......x
+  x+x+x.xxcxx...xxcxx.x+x+x.xxcxx...xxc
+    x.......+...+.......x.......+...+
+    c.......xxcxx.......c.......xxcxx
+    x.......+   +.......x.......+
+    x+x.xxcxx   xxcxx.x+x+x.xxcxx
+      x.+           +.x   x.+
+      cxx           xxc   cxx
+ENDMAP
+
+NAME:    nicolae_triple_integral
+TAGS:    transparent extra decor
+DEPTH:   D, Depths, Snake
+ORIENT:  float
+SHUFFLE: DE
+: if crawl.one_chance_in(3) and you.depth() > 1 then
+SUBST:   D = ({[
+: end
+: if crawl.one_chance_in(3) and you.depth_fraction() < 1 then
+SUBST:   E = )}]
+: end
+SUBST:   D : ..TTV, E : ..TTV, F : ..TTV, H : ..TTV, P : pppqq c:5 x:5, \
+         Q : qqqpp c:5 x:5, p : xxxc, q : xxxc
+MAP
+      ppPpp       qqQqq       ppPpp
+     pp...pp     qq...qq     pp...pp
+    pp..F..pp   qq..H..qq   pp..F..pp
+    p.......p   q.......q   p.......p
+    P...P.@.P   Q...Q.@.Q   P...P.@.P
+    p...p       q...q       p...p
+    p...p       q...q       p...p
+    p...p       q...q       p...p
+    P.D.P       Q.E.Q       P.D.P
+    p...p       q...q       p...p
+    p...p       q...q       p...p
+    p...p       q...q       p...p
+P.@.P...P   Q.@.Q...Q   P.@.P...P
+p.......p   q.......q   p.......p
+pp..F..pp   qq..H..qq   pp..F..pp
+ pp...pp     qq...qq     pp...pp
+  ppPpp       qqQqq       ppPpp
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Themed threat vaults.
@@ -1784,7 +1911,7 @@ ENDMAP
 #
 NAME:    onia_ninara_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   Lair:4-, !Lair:$, Snake, !Snake:$
+DEPTH:   Lair:3-, !Lair:$, Snake, !Snake:$
 ORIENT:  float
 KMONS:   1 = tyrant leech / swamp worm w:50 / \
              vampire mosquito band / goliath frog / swamp drake w:15
@@ -1940,7 +2067,7 @@ ENDMAP
 # of opening the doors so animals can go for a walk, that's intended.
 #
 NAME:   slaughterhouse
-DEPTH:  Lair:5-, D:11-
+DEPTH:  Lair:3-, D:11-
 TAGS:   no_monster_gen
 ORIENT: float
 WEIGHT: 5
@@ -3333,9 +3460,9 @@ MONS: emperor scorpion / w:8 green death / w:3 ghost moth
 : else
 MONS: skeletal warrior ; long sword ego:venom | broad axe ego:venom \
       | halberd ego:venom
-MONS: reaper ; scythe ego:venom / w:8 green death \
-      / ancient champion ; great mace ego:venom | battleaxe ego:venom \
-      | glaive ego:venom
+MONS: reaper ; halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:venom /\
+      w:8 green death / ancient champion ; great mace ego:venom | \
+      battleaxe ego:venom | glaive ego:venom
 : end
 KMONS: A = lich
 KFEAT: A = stone_arch
@@ -3492,7 +3619,7 @@ KMONS:  1 = red very ugly thing / white very ugly thing / \
             cyan very ugly thing w:15
 KMONS:  2 = fire dragon / ice dragon
 KMONS:  3 = dancing weapon ; broad axe ego:flaming | scimitar ego:freezing | \
-                             trident ego:electrocution | flail ego:vorpal
+                             trident ego:electrocution | flail ego:heavy
 KMONS:  4 = stone giant w:15 / fire giant / frost giant
 KMONS:  5 = spark wasp / catoblepas
 KMONS:  6 = storm dragon / iron dragon / titan / war gargoyle
@@ -3500,7 +3627,7 @@ KMONS:  7 = spriggan defender ; staff of fire | staff of cold | \
                                 staff of air | staff of earth . \
                                 robe ego:resistance good_item ident:type
 KMONS:  8 = tengu reaver ; battleaxe ego:flaming | great sword ego:freezing | \
-                           halberd ego:electrocution | lajatang ego:vorpal . \
+                           halberd ego:electrocution | lajatang ego:heavy . \
                            fire dragon scales | ice dragon scales
 KMONS:  9 = red draconian / white draconian / black draconian
 KMONS:  0 = red draconian monk / white draconian monk / black draconian monk
@@ -3579,7 +3706,7 @@ DEPTH:   Depths:2-, !Depths:$
 ORIENT:  float
 # The dances of angels and devils, of blessed birds and antagonist serpents...
 # and perhaps the stinger plunging into the poor toro de lidia?
-MONS:    dancing weapon ; scythe ego:antimagic
+MONS:    dancing weapon ; glaive ego:antimagic
 MONS:    cherub, rakshasa, angel / daeva, balrug / blizzard demon
 MONS:    caustic shrike, shadow dragon
 KMONS:   8 = tengu reaver
@@ -3671,7 +3798,7 @@ ITEM:   book of geomancy / book of the earth / book of iron \
         / manual of earth magic / staff of earth ident:all \
         / ring of protection ident:all / tin of tremorstones \
         / crystal plate armour w:5
-KITEM:  2 = devastator / eveningstar ego:vorpal randart ident:all \
+KITEM:  2 = devastator / eveningstar ego:heavy randart ident:all \
         / dark maul
 : if you.in_branch("D") then
 :     if you.depth() < 13 then
@@ -4476,17 +4603,18 @@ txxxq'''.m....s....m.```qxxxt
 ENDMAP
 
 NAME:    gammafunk_sealed_library
-TAGS:    no_monster_gen no_trap_gen
+TAGS:    no_monster_gen no_trap_gen transparent
 # Allow placement in Vaults as a room.
 TAGS:    vaults_hard preserve_wall passable
 DEPTH:   Crypt, D:12-, Depths, Elf, Snake, Vaults, Zot
 ORIENT:  float
+KMASK:   -UT_QR12345defg|*$+ = opaque
 ITEM:    any book, any manual, any jewellery good_item
 ITEM:    robe good_item / cloak good_item / scarf good_item \
          / pair of boots good_item / pair of gloves good_item / hat good_item
 # Do this nsubst now so some branches can adjust monster placement.
-NSUBST:  4 = 1:4 / 2=433 / 2=53 / 3, 3 = 3:3 / 3=3222 / 2
-NSUBST:  ' = 1=d2 / 2, 2 = 2=211. / 6=2 / 4=2... / .
+NSUBST:  4 = 4 / 2=433 / 2=53 / 3, 3 = 3=3 / 3=3222 / 2
+NSUBST:  ' = d2 / 2, 2 = 2=211- / 6=2 / 4=2--- / -
 # Monster glyph counts after these nsubst:
 # 1:0-2 (ave 1.0), 2:6-12 (ave 7.5), 3:3-6 (ave 3.75), 4:1-3 (ave 1.66)
 # 5:0-2 (ave 1)
@@ -4528,7 +4656,8 @@ MONS:    glowing shapeshifter
 SUBST:   4 = 23, 5 = 4
 : elseif you.in_branch("Snake") then
 MONS:    mana viper / guardian serpent
-MONS:    naga mage / naga ritualist / salamander mystic, nagaraja
+MONS:    naga mage / naga ritualist / salamander mystic
+MONS:    nagaraja / salamander tyrant
 SUBST:   5 = 4, 4 = 23
 : elseif you.in_branch("Zot") then
 MONS:    ghost moth / death cob / curse toe
@@ -4546,21 +4675,21 @@ MARKER:  S = lua:transp_dest_loc("sealed_library_exit")
 MAP
 .........................
 .cccccccccncncnccccccccc.
-.cG.3c'c'c'c'c'c'c3..$Rc.
-.n.4...............b4$*c.
-.nT..bb2bb2bb2..2..bb..c.
-.n.4..........bbb.....Gn.
-.cG.3.Gc...bbbb...2.b3.c.
-.ccc+cccc+ccT...bbbbb..c.
-...nedUnG..c.....G.G.$tn..
-@.Pnfd_nQ..+........4|UnS@
-...ngdUnG..c.....G.G.$tn..
-.ccc+cccc+ccT...bbbbb..c.
-.cG.3.Gc...bbbb...2.b3.c.
-.n.4..........bbb.....Gn.
-.nT..bb2bb2bb2..2..bb..c.
-.n.4...............b4$*c.
-.cG.3c'c'c'c'c'c'c3..$Rc.
+.cG-3c'c'c'c'c'c'c3--$Rc.
+.n-4---------------b4$*c.
+.nT--bb2bb2bb2--2--bb--c.
+.n-4----------bbb-----Gn.
+.cG-3-Gc---bbbb---2-b3-c.
+.ccc+cccc+ccT---bbbbb--c.
+...nedUnG--c-----G-G-$tn..
+@.Pnfd_nQ--+--------4|UnS@
+...ngdUnG--c-----G-G-$tn..
+.ccc+cccc+ccT---bbbbb--c.
+.cG-3-Gc---bbbb---2-b3-c.
+.n-4----------bbb-----Gn.
+.nT--bb2bb2bb2--2--bb--c.
+.n-4---------------b4$*c.
+.cG-3c'c'c'c'c'c'c3--$Rc.
 .cccccccccncncnccccccccc.
 .........................
 ENDMAP
@@ -4781,7 +4910,7 @@ DEPTH:  D:3-13
 ORIENT: float
 KMASK:  LM = no_item_gen
 ITEM:   wand of flame
-ITEM:   wand of iceblast / wand of acid
+ITEM:   any blast wand / any beam wand
 ITEM:   wand of mindburst / wand of paralysis \
         / wand of charming / wand of polymorph w:5
 MONS: shadow imp, orc priest, kobold demonologist
@@ -4828,7 +4957,7 @@ ENDMAP
 
 NAME:   nzn_motion_control
 TAGS:   no_pool_fixup no_monster_gen
-DEPTH:  D:10-, Lair:4-, Shoals:2-, !Shoals:$
+DEPTH:  D:10-, Lair:3-, Shoals:2-, !Shoals:$
 ORIENT: float
 SHUFFLE: HY / 12, $%, eE / rR
 SUBST:  ER = ., r = x, e = + .
@@ -5566,7 +5695,8 @@ DEPTH:  D:10-, Orc, Depths, Zot
 ORIENT: float
 MONS:   hornet, orc sorcerer / ogre mage, fenstrider witch / great orb of eyes
 MONS:   sphinx / vampire knight, dread lich, floating eye
-ITEM:   wand of paralysis
+# scroll of vulnerability as fallback if paralysis isn't generated this game
+ITEM:   wand of paralysis w:9999 / scroll of vulnerability w:1
 NSUBST: 6 = 1:6 / *:6.
 : if you.in_branch("D") and you.absdepth() < 13 then
 NSUBST:  - = 20 = 1... / 1:2 / *:.
@@ -6166,29 +6296,34 @@ ENDMAP
 # Oklob gauntlet
 # average of 2.2 oklobs, and at most 5 of them
 NAME:    dpeg_oklob_gauntlet
-DEPTH:   Depths, !Depths:$, Lair, Snake, Elf
+DEPTH:   Lair, Swamp
 ORIENT:  float
-MONS:    plant, oklob plant, thorn hunter, acid blob
+WEIGHT:  2
+MONS:    plant, oklob plant, thorn hunter
 SHUFFLE: ]}) / def
-NSUBST:  ' = 1:2 / 4 = 11122 / *:1
-NSUBST:  " = 1:W / * = wwW, ` = 1:W / * = wwW
-SUBST:   def = |*
-: if you.in_branch("Depths") then
-NSUBST:  3 = 1:3 / 1:4 / *:34...
+NSUBST:  ' = 2 / 4=11122 / 1, " = W / wwW, ` = W / wwW
+SUBST:   def = |*, } = }..
+: if you.in_branch("Lair") then
+SUBST:   3 = ., - = x-
+# Swamp
 : else
-SUBST:   3 = .
+NSUBST:  3 = 3 / 3.
+SUBST:   x = t, - = t-, + = .
 : end
+CLEAR:   -
 MAP
-xxxxxxxxxxxxx
-xxxxx]})xxxxx
-xxxxx.3.xxxxx
-x'ww3...3ww'x
-x'".......`'x
-x'".......`'x
-x'".......`'x
-x'".......`'x
-x'ww.....ww'x
-xxxxxx+xxxxxx
+---------------
+-xxxxxxxxxxxxx-
+-xxxxx]})xxxxx-
+-xxxxx.3.xxxxx-
+-x'ww3...3ww'x-
+-x'".......`'x-
+-x'".......`'x-
+-x'".......`'x-
+-x'".......`'x-
+-x'ww.....ww'x-
+-xxxxxx+xxxxxx-
+------- -------
 ENDMAP
 
 #############################################################################
@@ -10165,11 +10300,12 @@ x.___x-;x..x;.``xw
 ENDMAP
 
 NAME:   gammafunk_sealed_arena
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen transparent
 # Allow placement in Vaults as a room.
 TAGS:   vaults_hard preserve_wall passable
 DEPTH:  Crypt, D:8-, Depths, Elf, Shoals, Snake, Spider, Swamp, Vaults, Zot
 ORIENT: float
+KMASK:  -QR189de|*$ = opaque
 ITEM:   any jewellery good_item
 ITEM:   cloak good_item / scarf good_item / helmet good_item / hat good_item \
         / pair of gloves good_item / pair of boots good_item
@@ -10183,11 +10319,11 @@ MONS:   orange crystal statue / obsidian statue
 # on-average.  Elsewhere place one d item and one e item and don't reduce the 9
 # spawns.
 : if you.in_branch("D") and you.depth() < 12 then
-SUBST: 1 = 1..., 9 = 99., " = d, ' = $
+SUBST: 1 = 1---, 9 = 99-, " = d, ' = $
 : elseif you.in_branch("D") then
-SUBST: 1 = 1.
+SUBST: 1 = 1-
 : end
-SUBST:  " = $, h : b., i : b.
+SUBST:  " = $, h : b-, i : b-
 : if you.in_branch("Spider") or you.in_branch("Swamp") then
 SUBST:  b : cx
 : else
@@ -10201,15 +10337,15 @@ MARKER: S = lua:transp_dest_loc("sealed_arena_exit")
 MAP
   ...........
  ..nnnnnnnnn..
- .nn9......nn.
- .nG.hi9ih.Gn.
- .n..ih.hi$*n.
-..n9.....8'|n..
-@Pn..Q.1.."RnS@
-..n9.....8'|n..
- .n..ih.hi$*n.
- .nG.hi9ih.Gn.
- .nn9......nn.
+ .nn9------nn.
+ .nG-hi9ih-Gn.
+ .n--ih-hi$*n.
+..n9-----8'|n..
+@Pn--Q-1--"RnS@
+..n9-----8'|n..
+ .n--ih-hi$*n.
+ .nG-hi9ih-Gn.
+ .nn9------nn.
  ..nnnnnnnnn..
   ...........
 ENDMAP

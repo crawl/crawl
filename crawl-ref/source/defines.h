@@ -269,6 +269,12 @@ enum CHAR_ATTRIBUTES
 // it wants to be used in case labels.
 #define CONTROL(xxx)          ((xxx) - 'A' + 1)
 #define UNCONTROL(xxx)        ((xxx) + 'A' - 1)
+// our standard CONTROL macros are defined relative to capital letters, but
+// for SDL it is useful to be more general. For [a-z] these produce the same
+// result as CONTROL on [A-Z].
+// 'a' == SDLK_a
+#define LC_CONTROL(x) (x - 'a' + 1)
+#define LC_UNCONTROL(x) (x + 'a' - 1)
 
 #define ARRAYSZ(x) (sizeof(x) / sizeof(x[0]))
 #define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])
@@ -338,7 +344,6 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define WATER_HOLD_SUBSTANCE_KEY "water_hold_substance"
 #define CORROSION_KEY "corrosion_amount"
 #define CONFUSING_TOUCH_KEY "confusing touch power"
-#define CFLAME_DUR_KEY "cflame_dur"
 #define NUM_SACRIFICES_KEY "num_sacrifice_muts"
 #define FLAY_DAMAGE_KEY "flay_damage"
 #define POLAR_VORTEX_KEY "polar_vortex_since"
@@ -354,6 +359,7 @@ const char * const THUNDERBOLT_AIM_KEY     = "thunderbolt_aim";
 #define IDENT_KEY "ident"
 #define USEFUL_KEY "useful"
 #define UNOBTAINABLE_KEY "unobtainable"
+#define NO_EXCLUDE_KEY "no_exclude"
 #define NO_PICKUP_KEY "no_pickup"
 #define DBNAME_KEY "dbname"
 #define ITEM_TILE_NAME_KEY "item_tile_name"

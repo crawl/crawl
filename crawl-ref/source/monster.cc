@@ -55,6 +55,7 @@
 #include "mon-tentacle.h"
 #include "mon-transit.h"
 #include "religion.h"
+#include "spl-clouds.h" // explode_blastsparks_at
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -404,9 +405,7 @@ random_var monster::attack_delay(const item_def *projectile,
     if (!weap || (projectile && is_throwable(this, *projectile)))
         return random_var(10);
 
-    random_var delay(10);
-    if (get_weapon_brand(*weap) == SPWPN_SPEED)
-        delay = div_rand_round(delay * 2, 3);
+    random_var delay(weapon_adjust_delay(*weap, 10));
     return delay;
 }
 
@@ -678,6 +677,7 @@ bool monster::can_throw_large_rocks() const
            || species == MONS_STONE_GIANT
            || species == MONS_CYCLOPS
            || species == MONS_OGRE
+           || type == MONS_PARGHIT // he's stronger than your average troll
            || mons_bound_soul(*this);
 }
 
@@ -1266,11 +1266,6 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
         weapon_type wtype = (weapon.base_type == OBJ_WEAPONS) ?
             (weapon_type)weapon.sub_type : NUM_WEAPONS;
 
-        // We might allow Sigmund to pick up a better scythe if he finds
-        // one...
-        if (mons->type == MONS_SIGMUND)
-            return wtype == WPN_SCYTHE;
-
         // Crazy Yiuf's got MONUSE_STARTING_EQUIPMENT right now, but
         // in case that ever changes we don't want him to switch away
         // from his quarterstaff of chaos.
@@ -1384,7 +1379,6 @@ static int _ego_damage_bonus(item_def &item)
     switch (get_weapon_brand(item))
     {
     case SPWPN_NORMAL:      return 0;
-    case SPWPN_VORPAL:      // deliberate fall through
     case SPWPN_PROTECTION:  return 1;
     default:                return 2;
     }
@@ -1432,6 +1426,9 @@ bool monster::pickup_melee_weapon(item_def &item, bool msg)
         {
             if (is_range_weapon(*weap))
                 continue;
+
+            if (type == MONS_SIGMUND)
+                continue; // The scythe is a classic. Stick with it.
 
             // Don't swap from a signature weapon to a non-signature one.
             if (!_is_signature_weapon(this, item)
@@ -2055,7 +2052,11 @@ item_def *monster::mslot_item(mon_inv_type mslot) const
 
 item_def *monster::shield() const
 {
-    return mslot_item(MSLOT_SHIELD);
+    item_def *shield = mslot_item(MSLOT_SHIELD);
+
+    if (shield && shield->sub_type != ARM_ORB)
+        return shield;
+    return nullptr;
 }
 
 /**
@@ -2723,7 +2724,7 @@ void monster::banish(const actor *agent, const string &, const int, bool force)
     if (mons_is_projectile(type))
         return;
 
-    if (player_in_branch(BRANCH_ARENA))
+    if (!force && player_in_branch(BRANCH_ARENA))
     {
         string msg = make_stringf(" prevents %s banishment from the Arena!",
                                   name(DESC_ITS).c_str());
@@ -2832,10 +2833,11 @@ bool monster::has_damage_type(int dam_type)
     return false;
 }
 
-int monster::constriction_damage(bool direct) const
+int monster::constriction_damage(constrict_type typ) const
 {
-    if (direct)
+    switch (typ)
     {
+    case CONSTRICT_MELEE:
         for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
         {
             const mon_attack_def attack = mons_attack_spec(*this, i);
@@ -2843,16 +2845,12 @@ int monster::constriction_damage(bool direct) const
                 return attack.damage;
         }
         return -1;
+    case CONSTRICT_ROOTS:
+        return roll_dice(2, div_rand_round(40 +
+                    mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
+    default:
+        return 0;
     }
-
-    // The only monster spell that's a source of indirect constriction.
-    return roll_dice(2, div_rand_round(40 +
-                mons_spellpower(*this, SPELL_GRASPING_ROOTS), 20));
-}
-
-bool monster::constriction_does_damage(bool direct) const
-{
-    return constriction_damage(direct) > 0;
 }
 
 /** Return true if the monster temporarily confused. False for butterflies, or
@@ -2896,7 +2894,7 @@ bool monster::asleep() const
     return behaviour == BEH_SLEEP;
 }
 
-bool monster::backlit(bool self_halo) const
+bool monster::backlit(bool self_halo, bool /*temp*/) const
 {
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
         || has_ench(ENCH_SILVER_CORONA))
@@ -2951,6 +2949,8 @@ int monster::off_level_regen_rate() const
 
     if (type == MONS_PARGHIT)
         return 2700; // whoosh
+    if (type == MONS_DEMONIC_CRAWLER)
+        return 900; // zoom
     if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
         return 100;
     // Capped at 0.1 hp/turn.
@@ -5180,7 +5180,7 @@ bool monster::may_have_action_energy() const
 /// At the player's current movement speed, will they eventually outpace this monster?
 bool monster::outpaced_by_player() const
 {
-    return speed * you.time_taken < action_energy(EUT_MOVE) * BASELINE_DELAY;
+    return speed * you.time_taken < energy_cost(EUT_MOVE, 1, BASELINE_DELAY);
 }
 
 /// If a monster had enough energy to act this turn, change it so it doesn't.
@@ -5251,6 +5251,10 @@ void monster::apply_location_effects(const coord_def &oldpos,
         else
             del_ench(ENCH_AQUATIC_LAND);
     }
+
+    cloud_struct* cloud = cloud_at(pos());
+    if (cloud && cloud->type == CLOUD_BLASTSPARKS)
+        explode_blastsparks_at(pos()); // schedules a fineff, so won't kill
 
     // Monsters stepping on traps:
     trap_def* ptrap = trap_at(pos());
@@ -5498,7 +5502,7 @@ int monster::action_energy(energy_use_type et) const
     return max(move_cost, 1);
 }
 
-int monster::energy_cost(energy_use_type et, int div, int mult)
+int monster::energy_cost(energy_use_type et, int div, int mult) const
 {
     int energy_loss  = div_round_up(mult * action_energy(et), div);
     if (has_ench(ENCH_PETRIFYING))
@@ -5690,7 +5694,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     // XXX: this might not be necessary anymore?
     if (type == MONS_SHOCK_SERPENT && damage > 4 && oppressor && oppressor != this)
     {
-        const int pow = div_rand_round(min(damage, hit_points + damage), 9);
+        const int pow = div_rand_round(min(damage, hit_points + damage), 12);
         if (pow)
         {
             // we intentionally allow harming the oppressor in this case,
@@ -5886,7 +5890,12 @@ reach_type monster::reach_range() const
     {
         const mon_attack_def attk(mons_attack_spec(*this, i));
         if (flavour_has_reach(attk.flavour) && attk.damage)
-            range = REACH_TWO;
+        {
+            if (attk.flavour == AF_RIFT)
+                range = REACH_THREE;
+            else
+                range = max(REACH_TWO, range);
+        }
     }
 
     const item_def *wpn = primary_weapon();

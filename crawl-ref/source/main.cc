@@ -23,9 +23,7 @@
 #endif
 
 #ifndef TARGET_OS_WINDOWS
-# ifndef __ANDROID__
-#  include <langinfo.h>
-# endif
+# include <langinfo.h>
 #endif
 #ifdef USE_UNIX_SIGNALS
 #include <csignal>
@@ -147,12 +145,13 @@
 #include "viewgeom.h"
 #include "view.h"
 #include "viewmap.h"
-#ifdef TOUCH_UI
-#include "windowmanager.h"
+#ifdef __ANDROID__
+#include "syscalls.h"
 #endif
 #include "wiz-you.h" // FREEZE_TIME_KEY
 #include "wizard.h" // handle_wizard_command() and enter_explore_mode()
 #include "xom.h" // XOM_CLOUD_TRAIL_TYPE_KEY
+#include "zot.h"
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -193,7 +192,7 @@ NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty();
 static void _do_wait_spells();
-static void _uncurl();
+
 static void _input();
 
 static void _safe_move_player(coord_def move);
@@ -237,13 +236,11 @@ __attribute__((externally_visible))
 #endif
 int main(int argc, char *argv[])
 {
-#ifndef __ANDROID__
-# ifdef DGAMELAUNCH
+#ifdef DGAMELAUNCH
     // avoid commas instead of dots, etc, on CDO
     setlocale(LC_CTYPE, "");
-# else
+#else
     setlocale(LC_ALL, "");
-# endif
 #endif
 #ifdef USE_TILE_WEB
     if (strcasecmp(nl_langinfo(CODESET), "UTF-8"))
@@ -603,11 +600,18 @@ static string _wanderer_spell_str()
                               });
 }
 
+static string _get_equip_str()
+{
+    if (inv_count() == 0)
+        return "";
+    if (you.char_class == JOB_WANDERER)
+        return _wanderer_equip_str();
+    return "";
+}
+
 static void _djinn_announce_spells()
 {
-    const string equip_str = (you.char_class == JOB_WANDERER
-                                 && inv_count() > 0) ? _wanderer_equip_str()
-                                                    : "";
+    const string equip_str =_get_equip_str();
     const string spell_str = you.spell_no ?
                                 "the following spells memorised: " + _wanderer_spell_str() :
                                 "";
@@ -616,6 +620,9 @@ static void _djinn_announce_spells()
 
     const string spacer = spell_str.empty() || equip_str.empty() ? "" : "; and ";
     mprf("You begin with %s%s%s.", equip_str.c_str(), spacer.c_str(), spell_str.c_str());
+
+    take_note(Note(NOTE_MESSAGE, 0, 0, you.your_name + " set off with " +
+                                       equip_str + spell_str + "."));
 }
 
 // Announce to the message log and make a note of the player's starting items,
@@ -650,7 +657,7 @@ static void _wanderer_note_equipment()
          spell_str.c_str(), library_str.c_str());
 
     const string combined_str = you.your_name + " set off with "
-                                + equip_str + spell_str + library_str;
+                                + equip_str + spell_str + library_str + ".";
     take_note(Note(NOTE_MESSAGE, 0, 0, combined_str));
 }
 
@@ -758,8 +765,12 @@ static void _start_running(int dir, int mode)
     if (Hints.hints_events[HINT_SHIFT_RUN] && mode == RMODE_START)
         Hints.hints_events[HINT_SHIFT_RUN] = false;
 
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true)
+        || !can_rest_here(true)
+            && (mode == RMODE_REST_DURATION || mode == RMODE_WAIT_DURATION))
+    {
         return;
+    }
 
     const coord_def next_pos = you.pos() + Compass[dir];
 
@@ -1131,7 +1142,6 @@ static void _input()
         {
             if (you.berserk())
                 _do_berserk_no_combat_penalty();
-            _uncurl();
             world_reacts();
         }
 
@@ -1230,7 +1240,7 @@ static void _input()
         // binding, your turn may be ended by the first invoke of the
         // macro.
         if (!you.turn_is_over && cmd != CMD_NEXT_CMD)
-            process_command(cmd, real_prev_cmd);
+            ::process_command(cmd, real_prev_cmd);
 
         repeat_again_rec.paused = true;
 
@@ -1265,7 +1275,6 @@ static void _input()
             _do_berserk_no_combat_penalty();
 
         _do_wait_spells();
-        _uncurl();
 
         world_reacts();
     }
@@ -1310,7 +1319,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
     }
 
     // Immobile
-    if (you.is_stationary())
+    if (!you.is_motile())
     {
         canned_msg(MSG_CANNOT_MOVE);
         return false;
@@ -1685,26 +1694,6 @@ static void _experience_check()
 #endif
 }
 
-static void _do_remove_armour()
-{
-    if (you.has_mutation(MUT_NO_ARMOUR))
-    {
-        mprf("You can't remove your %s, sorry.",
-                            species::skin_name(you.species).c_str());
-        return;
-    }
-
-    if (!form_can_wear())
-    {
-        mpr("You can't wear or remove anything in your present form.");
-        return;
-    }
-
-    int index = 0;
-    if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
-        takeoff_armour(index);
-}
-
 static void _toggle_travel_speed()
 {
     you.travel_ally_pace = !you.travel_ally_pace;
@@ -1734,7 +1723,7 @@ static void _do_rest()
         return;
     }
 
-    if (i_feel_safe())
+    if (i_feel_safe() && can_rest_here())
     {
         if (you.is_sufficiently_rested(true) && ancestor_full_hp())
         {
@@ -1745,6 +1734,9 @@ static void _do_rest()
         else
             mpr("You start resting.");
     }
+    // intentional fallthrough for else case! Messaging is handled in
+    // _start_running, update the corresponding conditional there if you
+    // change this one.
 
     _start_running(RDIR_REST, RMODE_REST_DURATION);
 }
@@ -1908,7 +1900,11 @@ public:
     command_type cmd;
     GameMenu()
         : Menu(MF_SINGLESELECT | MF_ALLOW_FORMATTING
-                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER),
+                | MF_ARROWS_SELECT | MF_WRAP | MF_INIT_HOVER
+#ifdef USE_TILE_LOCAL
+                | MF_SPECIAL_MINUS // doll editor (why?)
+#endif
+                ),
           cmd(CMD_NO_CMD)
     {
         set_tag("game_menu");
@@ -1926,7 +1922,7 @@ public:
                 {
                     // recurse
                     if (c->cmd != CMD_NO_CMD)
-                        process_command(c->cmd, CMD_GAME_MENU);
+                        ::process_command(c->cmd, CMD_GAME_MENU);
                     return true;
                 }
                 // otherwise, exit menu and process in the main process_command call
@@ -1935,6 +1931,13 @@ public:
             }
             return true;
         };
+    }
+
+    bool skip_process_command(int keyin) override
+    {
+        if (keyin == '?')
+            return true; // hotkeyed
+        return Menu::skip_process_command(keyin);
     }
 
     void fill_entries()
@@ -1966,6 +1969,10 @@ public:
 #ifdef TARGET_OS_MACOSX
         add_entry(new CmdMenuEntry("Show options file in finder",
             MEL_ITEM, 'O', CMD_REVEAL_OPTIONS));
+#endif
+#ifdef __ANDROID__
+        add_entry(new CmdMenuEntry("Toggle on-screen keyboard",
+            MEL_ITEM, CK_F12, CMD_TOGGLE_KEYBOARD));
 #endif
         add_entry(new CmdMenuEntry("", MEL_SUBTITLE));
         add_entry(new CmdMenuEntry(
@@ -2121,7 +2128,7 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_SAFE_WAIT:
-        if (!i_feel_safe(true))
+        if (!i_feel_safe(true) && can_rest_here(true))
             break;
         // else fall-through
     case CMD_WAIT:
@@ -2140,18 +2147,19 @@ void process_command(command_type cmd, command_type prev_cmd)
     case CMD_FIRE:                 you.quiver_action.target(); break;
     case CMD_FORCE_CAST_SPELL:     do_cast_spell_cmd(true);  break;
     case CMD_LOOK_AROUND:          do_look_around();         break;
-    case CMD_QUAFF:                drink();                  break;
-    case CMD_READ:                 read();                   break;
-    case CMD_REMOVE_ARMOUR:        _do_remove_armour();      break;
-    case CMD_REMOVE_JEWELLERY:     remove_ring();            break;
+    case CMD_QUAFF:                use_an_item(OPER_QUAFF);  break;
+    case CMD_READ:                 use_an_item(OPER_READ);   break;
+    case CMD_UNEQUIP:              use_an_item(OPER_UNEQUIP); break;
+    case CMD_REMOVE_ARMOUR:        use_an_item(OPER_TAKEOFF); break;
+    case CMD_REMOVE_JEWELLERY:     use_an_item(OPER_REMOVE); break;
     case CMD_SHOUT:                issue_orders();           break;
-    case CMD_THROW_ITEM_NO_QUIVER: throw_item_no_quiver();   break;
-    case CMD_WEAPON_SWAP:          wield_weapon(true);       break;
-    case CMD_WEAR_ARMOUR:          wear_armour();            break;
-    case CMD_WEAR_JEWELLERY:       puton_ring(-1);           break;
-    case CMD_WIELD_WEAPON:         wield_weapon(false);      break;
+    case CMD_FIRE_ITEM_NO_QUIVER:  fire_item_no_quiver();    break;
+    case CMD_WEAPON_SWAP:          auto_wield();             break;
+    case CMD_EQUIP:                use_an_item(OPER_EQUIP);  break;
+    case CMD_WEAR_ARMOUR:          use_an_item(OPER_WEAR);   break;
+    case CMD_WEAR_JEWELLERY:       use_an_item(OPER_PUTON);  break;
+    case CMD_WIELD_WEAPON:         use_an_item(OPER_WIELD);  break;
     case CMD_ZAP_WAND:             zap_wand();               break;
-
     case CMD_DROP:
         drop();
         break;
@@ -2383,10 +2391,13 @@ void process_command(command_type cmd, command_type prev_cmd)
         debug_terp_dlua(clua);
         break;
 
-#ifdef TOUCH_UI
-    case CMD_SHOW_KEYBOARD:
-        ASSERT(wm);
-        wm->show_keyboard();
+#ifdef __ANDROID__
+    case CMD_TOGGLE_TAB_ICONS:
+        tiles.toggle_tab_icons();
+        break;
+
+    case CMD_TOGGLE_KEYBOARD:
+        jni_keyboard_control(true);
         break;
 #endif
 
@@ -2633,12 +2644,14 @@ void world_reacts()
         update_turn_count();
         msgwin_new_turn();
         crawl_state.lua_calls_no_turn = 0;
-        if (crawl_state.game_is_sprint()
-            && !(you.num_turns % 256)
+        if ((crawl_state.game_is_sprint() && !(you.num_turns % 256)
+                || crawl_state.save_after_turn)
             && !you_are_delayed()
             && !crawl_state.disables[DIS_SAVE_CHECKPOINTS])
         {
             // Resting makes the saving quite random, but meh.
+            crawl_state.save_after_turn = false;
+            save_level(level_id::current());
             save_game(false);
         }
     }
@@ -2787,16 +2800,6 @@ static void _do_wait_spells()
     handle_searing_ray();
     handle_maxwells_coupling();
     handle_flame_wave();
-}
-
-// palentongas uncurl at the start of the turn
-static void _uncurl()
-{
-    if (you.props[PALENTONGA_CURL_KEY].get_bool())
-    {
-        you.props[PALENTONGA_CURL_KEY] = false;
-        you.redraw_armour_class = true;
-    }
 }
 
 static void _safe_move_player(coord_def move)

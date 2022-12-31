@@ -75,6 +75,9 @@ zombie_golden_dragon MONS_ZOMBIE_GOLDEN_DRAGON
 zombie_iron_dragon MONS_ZOMBIE_IRON_DRAGON
 zombie_yak MONS_ZOMBIE_YAK
 zombie_bear MONS_ZOMBIE_BEAR
+zombie_jelly MONS_ZOMBIE_JELLY
+zombie_orb MONS_ZOMBIE_ORB
+zombie_x MONS_ZOMBIE_X
 
 %sdir mon/undead/skeletons
 ## Skeletons
@@ -119,6 +122,9 @@ simulacrum_naga MONS_SIMULACRUM_NAGA
 simulacrum_snake MONS_SIMULACRUM_SNAKE
 simulacrum_lizard MONS_SIMULACRUM_LIZARD
 simulacrum_spider MONS_SIMULACRUM_SPIDER
+simulacrum_slime MONS_SIMULACRUM_SLIME
+simulacrum_eye MONS_SIMULACRUM_EYE
+simulacrum_x MONS_SIMULACRUM_X
 simulacrum_dragon MONS_SIMULACRUM_DRAGON
 simulacrum_kraken MONS_SIMULACRUM_KRAKEN
 simulacrum_drake MONS_SIMULACRUM_DRAKE

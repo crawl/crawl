@@ -98,9 +98,11 @@
 #include "version.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>
+#define VERSIONED_CACHE_DIR
 #endif
 
 #ifndef F_OK // MSVC for example
@@ -422,8 +424,7 @@ static vector<string> _get_base_dirs()
         SysEnv.crawl_base + "../Resources/",
 #endif
 #ifdef __ANDROID__
-        ANDROID_ASSETS,
-        "/sdcard/Android/data/org.develz.crawl/files/",
+        ANDROID_ASSETS
 #endif
 #ifdef __HAIKU__
         std::string(path),
@@ -558,9 +559,6 @@ string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
     for (const string &basedir : _get_base_dirs())
     {
         string name = basedir + basename;
-#ifdef __ANDROID__
-        __android_log_print(ANDROID_LOG_INFO,"Crawl","Looking for %s as '%s'",basename.c_str(),name.c_str());
-#endif
         if (thing_exists(name))
             return name;
     }
@@ -1489,6 +1487,7 @@ static void _place_player(dungeon_feature_type stair_taken,
 }
 
 // Update the trackers after the player changed level.
+// note: also run on load for some reason in startup.cc
 void trackers_init_new_level()
 {
     travel_init_new_level();
@@ -2094,16 +2093,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 #endif
 
-    if (load_mode != LOAD_VISITOR
-        && you.chapter == CHAPTER_POCKET_ABYSS
-        && player_in_branch(BRANCH_DUNGEON))
-    {
-        // If we're leaving the Abyss for the first time as a Chaos
-        // Knight of Lugonu (who start out there), enable normal monster
-        // generation.
-        you.chapter = CHAPTER_ORB_HUNTING;
-    }
-
     // GENERATE new level(s) when the file can't be opened:
     if (pregen_dungeon(level_id::current()))
     {
@@ -2219,6 +2208,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         // Tell stash-tracker and travel that we've changed levels.
         trackers_init_new_level();
+        travel_cache.flush_invalid_waypoints();
         tile_new_level(just_created_level);
     }
     else if (load_mode == LOAD_RESTART_GAME)
@@ -2542,6 +2532,14 @@ void save_game(bool leave_game, const char *farewellmsg)
     // If just save, early out.
     if (!leave_game)
     {
+#ifdef __ANDROID__
+        // Save everything before pause
+        clua.save_persist();
+        if (crawl_state.unsaved_macros)
+            macro_save();
+        if (!you.entering_level)
+            save_level(level_id::current());
+#endif
         if (!crawl_state.disables[DIS_SAVE_CHECKPOINTS])
         {
             you.save->commit();
@@ -2606,7 +2604,7 @@ static string _bones_permastore_file()
     // no matching permastore is in the player's bones file, but one exists in
     // the crawl distribution. Install it.
 
-    FILE *src = fopen(dist_full_path.c_str(), "rb");
+    FILE *src = fopen_u(dist_full_path.c_str(), "rb");
     if (!src)
     {
         mprf(MSGCH_ERROR, "Bones file exists but can't be opened: %s",
@@ -3277,11 +3275,35 @@ void delete_level(const level_id &level)
     _do_lost_items();
 }
 
+
+static bool &_get_excursions_allowed()
+{
+    static bool _allowed = true;
+    return _allowed;
+}
+
+bool level_excursions_allowed()
+{
+    return _get_excursions_allowed();
+}
+
+no_excursions::no_excursions()
+    : prev(level_excursions_allowed())
+{
+    _get_excursions_allowed() = false;
+}
+
+no_excursions::~no_excursions()
+{
+    _get_excursions_allowed() = prev;
+}
+
 // This class provides a way to walk the dungeon with a bit more flexibility
 // than you used to get with apply_to_all_dungeons.
 level_excursion::level_excursion()
     : original(level_id::current()), ever_changed_levels(false)
 {
+    // could put an excursions allowed check here?
 }
 
 void level_excursion::go_to(const level_id& next)
@@ -3293,10 +3315,13 @@ void level_excursion::go_to(const level_id& next)
     // the abyss purposefully does level excursions in order to pick up
     // features from other levels and place them in the abyss: this is
     // basically safe to do, and seeding isn't a concern.
+    // TODO: reimplement with no_excursions?
     ASSERT(!crawl_state.generating_level || original.branch == BRANCH_ABYSS);
 
     if (level_id::current() != next)
     {
+        ASSERT(level_excursions_allowed());
+
         if (!you.level_visited(level_id::current()))
             travel_cache.erase_level_info(level_id::current());
 

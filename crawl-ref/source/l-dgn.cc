@@ -429,16 +429,7 @@ static int dgn_item(lua_State *ls)
         return 0;
     }
 
-    if (lua_isstring(ls, 2))
-    {
-        string err = map->items.add_item(luaL_checkstring(ls, 2));
-        if (!err.empty())
-            luaL_error(ls, err.c_str());
-        return 0;
-    }
-
-    const int index = luaL_safe_checkint(ls, 2);
-    string err = map->items.set_item(index, luaL_checkstring(ls, 3));
+    string err = map->items.add_item(luaL_checkstring(ls, 2));
     if (!err.empty())
         luaL_error(ls, err.c_str());
     return 0;

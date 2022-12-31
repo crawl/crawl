@@ -590,12 +590,13 @@ public:
      */
     string transform_message(transformation previous_trans) const override
     {
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             return "You inwardly fear your resemblance to a lawn ornament.";
-        else if (you.species == SP_GARGOYLE)
+#endif
+        if (you.species == SP_GARGOYLE)
             return "Your body stiffens and grows slower.";
-        else
-            return Form::transform_message(previous_trans);
+        return Form::transform_message(previous_trans);
     }
 
     /**
@@ -1462,6 +1463,10 @@ static bool _flying_in_new_form(transformation which_trans)
     if (!you.duration[DUR_FLIGHT] && !you.attribute[ATTR_PERM_FLIGHT])
         return false;
 
+    // tempflight (e.g. from potion) enabled, no need for equip check
+    if (you.duration[DUR_FLIGHT])
+        return true;
+
     // Finally, do the calculation about what would be melded: are there equip
     // sources left?
     int sources = you.equip_flight();
@@ -1534,7 +1539,7 @@ static bool _transformation_is_safe(transformation which_trans,
                                     dungeon_feature_type feat,
                                     string *fail_reason)
 {
-    if (!feat_dangerous_for_form(which_trans, feat) || you.duration[DUR_FLIGHT])
+    if (!feat_dangerous_for_form(which_trans, feat))
         return true;
 
     if (fail_reason)
@@ -1857,25 +1862,31 @@ bool transform(int pow, transformation which_trans, bool involuntary,
             mpr("You feel strangely stable.");
         }
         you.duration[DUR_FLIGHT] = 0;
-        // break out of webs/nets as well
+
+        if (you.attribute[ATTR_HELD])
+        {
+            const trap_def *trap = trap_at(you.pos());
+            if (trap && trap->type == TRAP_WEB)
+            {
+                leave_web(true);
+                if (trap_at(you.pos()))
+                    mpr("Your branches slip out of the web.");
+                else
+                    mpr("Your branches shred the web that entangled you.");
+            }
+        }
+        // Fall through to dragon form to leave nets.
 
     case transformation::dragon:
         if (you.attribute[ATTR_HELD])
         {
-            trap_def *trap = trap_at(you.pos());
-            if (trap && trap->type == TRAP_WEB)
-            {
-                mpr("You shred the web into pieces!");
-                destroy_trap(you.pos());
-            }
             int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
             {
                 mpr("The net rips apart!");
                 destroy_item(net);
+                stop_being_held();
             }
-
-            stop_being_held();
         }
         break;
 
@@ -1901,6 +1912,9 @@ bool transform(int pow, transformation which_trans, bool involuntary,
 
     case transformation::shadow:
         drain_player(25, true, true);
+        if (you.duration[DUR_CORONA])
+            you.duration[DUR_CORONA] = 0;
+
         if (you.invisible())
             mpr("You fade into the shadows.");
         else
@@ -1920,7 +1934,7 @@ bool transform(int pow, transformation which_trans, bool involuntary,
         you.stop_directly_constricting_all(false);
 
     // Stop being constricted if we are now too large, or are now immune.
-    if (you.is_directly_constricted())
+    if (you.get_constrict_type() == CONSTRICT_MELEE)
     {
         actor* const constrictor = actor_by_mid(you.constricted_by);
         ASSERT(constrictor);
@@ -2116,7 +2130,7 @@ void untransform(bool skip_move)
     }
 
     // Stop being constricted if we are now too large.
-    if (you.is_directly_constricted())
+    if (you.get_constrict_type() == CONSTRICT_MELEE)
     {
         actor* const constrictor = actor_by_mid(you.constricted_by);
         if (you.body_size(PSIZE_BODY) > constrictor->body_size(PSIZE_BODY))
@@ -2172,10 +2186,13 @@ void merfolk_start_swimming(bool stepped)
         mpr("...but don't expect to remain undetected.");
 
     you.fishtail = true;
-    remove_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
-    ash_check_bondage();
+    if (!you.melded[EQ_BOOTS])
+    {
+        remove_one_equip(EQ_BOOTS);
+        ash_check_bondage();
+    }
 
 #ifdef USE_TILE
     init_player_doll();
@@ -2186,11 +2203,15 @@ void merfolk_stop_swimming()
 {
     if (!you.fishtail)
         return;
+
     you.fishtail = false;
-    unmeld_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 
-    ash_check_bondage();
+    if (!_init_equipment_removal(you.form).count(EQ_BOOTS))
+    {
+        unmeld_one_equip(EQ_BOOTS);
+        ash_check_bondage();
+    }
 
 #ifdef USE_TILE
     init_player_doll();

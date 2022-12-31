@@ -1240,7 +1240,7 @@ ENDMAP
 NAME:    minmay_goblin_outpost
 TAGS:    no_pool_fixup transparent
 DEPTH:   D:2-4
-MONS:    goblin / hobgoblin w:5, goblin ; hunting sling
+MONS:    goblin / hobgoblin w:5, goblin ; sling
 KMASK:   >_"+2 = opaque
 SUBST:   y = .WWw, Y = ...W, . = .....1
 SHUFFLE: >X/_"
@@ -1283,7 +1283,7 @@ TAGS:   patrolling transparent
 DEPTH:  D:8-
 WEIGHT: 5
 KMONS:  1 = Joseph / cyclops, \
-            yaktaur ; quarterstaff . hunting sling / cyclops
+            yaktaur ; quarterstaff . sling / cyclops
 ITEM:   stone / club w:5 / large rock w:3 / quarterstaff w:1
 NSUBST: . = 4:d / 4:. / * = d:30 .:150
 MAP
@@ -1301,10 +1301,13 @@ ENDMAP
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
 DEPTH:   D:4-8
-MONS:    gnoll ; scythe . robe, hobgoblin ; scythe . robe, orc ; scythe . robe
+MONS:    gnoll ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe, \
+         hobgoblin ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe, \
+         orc ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe
 SUBST:   n = 1:20 n:5
-KMONS:   n = Sigmund, gnoll ; scythe . robe / \
-             hobgoblin ; scythe . robe / orc ; scythe . robe
+KMONS:   n = Sigmund, gnoll ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe / \
+             hobgoblin ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe / \
+             orc ; halberd itemname:scythe tile:wpn_scythe wtile:scythe . robe
 SHUFFLE: x+1 / x+1 / x+1 / y-5
 SUBST:   - = y , y = 5, 5 = 1..
 SUBST:   1 : 123444, 4 = 1223.., 1 = 1., 3 = 33.
@@ -1422,7 +1425,7 @@ NAME:   minmay_ruffians
 TAGS:   transparent
 DEPTH:  D:6-10
 MONS:   human; club | mace w:3 . animal skin | leather armour
-MONS:   human; hunting sling . animal skin | \
+MONS:   human; sling . animal skin | \
         leather armour
 SUBST:  1 = 112.
 KMONS:  3 = human; flail . ring mail | scale mail
@@ -1663,7 +1666,7 @@ ENDMAP
 
 NAME:   kilobyte_rumbling_trees
 TAGS:   transparent
-DEPTH:  Depths, Elf, Lair:4-
+DEPTH:  Depths, Elf, Lair:3-
 MONS:   black bear / polar bear w:20 / wolf w:20
 MONS:   patrolling boggart, patrolling spriggan druid
 : if you.in_branch("Lair") then
@@ -1846,7 +1849,7 @@ ITEM:    amulet of magic regeneration w:5 ident:type / \
             amulet of magic regeneration randart
 ITEM:    box of beasts
 KITEM:   % = any, any / gold / nothing, any / nothing
-KITEM:   _ = scroll of summoning ident:type , scroll of summoning ident:type / nothing
+KITEM:   _ = any ally scroll ident:type , any ally scroll ident:type / nothing
 KFEAT:   _ = altar_sif_muna
 KMASK:   "'@ = !no_monster_gen
 SHUFFLE: 12, 34, 12 / 34
@@ -2119,7 +2122,7 @@ NAME: sigmund_edmund_badplayer
 TAGS: no_item_gen no_monster_gen no_pool_fixup no_trap_gen transparent
 DEPTH: D:4-7
 KITEM: ( = flail / any armour
-KITEM: s = scythe / robe
+KITEM: s = halberd itemname:scythe tile:wpn_scythe wtile:scythe / robe
 KMONS: S = Sigmund
 KMONS: E = Edmund
 MONS: plant w:25 / bush w:25 / nothing w:50
@@ -2439,12 +2442,12 @@ KMONS:  1 = gnoll
 : elseif you.depth() == 2 then
 KMONS:  1 = gnoll band
 : elseif you.depth() == 3 then
-KMONS:  1 = gnoll shaman band / gnoll band
+KMONS:  1 = gnoll bouda band / gnoll band
 : elseif you.depth() == 4 then
-KMONS:  1 = gnoll sergeant band / gnoll shaman band / gnoll band
+KMONS:  1 = gnoll sergeant band / gnoll bouda band / gnoll band
 : else
-KMONS:  1 = gnoll shaman band / gnoll sergeant band / gnoll band
-KMONS:  2 = gnoll shaman / gnoll sergeant
+KMONS:  1 = gnoll bouda band / gnoll sergeant band / gnoll band
+KMONS:  2 = gnoll bouda / gnoll sergeant
 NSUBST: - = 2 / -
 : end
 NSUBST: - = 1 / p```
@@ -2497,7 +2500,7 @@ DEPTH:  D:4-7
 COLOUR: pc = brown
 FTILE:  p = floor_mud
 KMONS:  p = fungus / nothing
-MONS:   gnoll ; scythe, hound
+MONS:   gnoll ; halberd, hound
 NSUBST: . = 2=1 / 3=1. / 2 / 1=2. / .
 ITEM:   any potion no_pickup
 MARKER: ! = lua:fog_machine { cloud_type='flame', pow_min = 10, pow_max = 10, \
@@ -2515,7 +2518,7 @@ ENDMAP
 NAME:   dreamdust_gnoll_shepherd
 TAGS:   no_monster_gen no_item_gen transparent
 DEPTH:  D:7-11, Lair
-KMONS:  1 = gnoll shaman ; quarterstaff
+KMONS:  1 = gnoll bouda ; quarterstaff
 KMONS:  2 : yak / dream sheep
 NSUBST: . = 5=2. / .
 MAP
@@ -3246,7 +3249,7 @@ ENDMAP
 # Oklob assault; statistically, three oklobs
 NAME:    dpeg_oklob_1
 TAGS:    transparent
-DEPTH:   Lair:4-
+DEPTH:   Lair:3-
 MONS:    plant, oklob plant, bush
 SUBST:   ? = 1 2:5 '
 SHUFFLE: '"
@@ -7895,7 +7898,7 @@ MONS:   ettin ; dark maul . great mace randart
 MONS:   stone giant w:30 / ettin w:20 / juggernaut / titan / iron giant w:5
 SUBST:  D = 222.
 : elseif you.in_branch("Orc") then
-MONS:   two-headed ogre ; dark maul . dire flail ego:vorpal
+MONS:   two-headed ogre ; dark maul . dire flail ego:heavy
 MONS:   two-headed ogre / cyclops / orc knight / orc warlord w:2 \
         / stone giant w:2 / ettin w:2
 SUBST:  D = 2..
@@ -7907,7 +7910,7 @@ MONS:   orc warrior / two-headed ogre / cyclops / orc knight w:2
 SUBST:  D = 2...
 # D:13-15
 : else
-MONS:   ettin ; dark maul . great mace ego:vorpal good_item
+MONS:   ettin ; dark maul . great mace ego:heavy good_item
 MONS:   two-headed ogre / cyclops / orc knight / orc warlord w:5 \
         / stone giant w:5 / ettin w:5
 SUBST:  D = 2.
@@ -8437,7 +8440,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:2-8
 WEIGHT: 3
 ITEM:   woodcutter's axe, hand axe
-MONS:   gnoll, gnoll shaman, gnoll sergeant
+MONS:   gnoll, gnoll bouda, gnoll sergeant
 : if you.depth() < 4 then
 SUBST:  2 = 1
 SUBST:  1 = 1..
@@ -8602,6 +8605,40 @@ a'a'd'a'a
  '''''''
   a'a'a
 ENDMAP
+
+NAME:   hellmonk_guarded_unrand_hermit
+TAGS:   no_monster_gen
+DEPTH:  D:3-8
+WEIGHT: 3
+KFEAT:  _ = altar_ecumenical
+KITEM:  _ = hermit's pendant no_pickup
+NSUBST: E = . / xxx., H = . / xxx., J = . / xxx., L = . / xxx., M = . / xxx.
+NSUBST: N = . / xxx., ' = 8 / .
+SUBST:  D:wWlG, F = xxxxxG.
+TILE:   G = dngn_crumbled_column
+MAP
+  xxx
+ xxxxx
+xxxxxxx
+xx'''xx
+x'''''x
+x.._..x
+xx...xx
+xxD.Dxx
+xxEEExx
+xxF.Fxx
+xxHHHxx
+xxF.Fxx
+xxJJJxx
+xxF.Fxx
+xxLLLxx
+xxF.Fxx
+xxMMMxx
+xxF.Fxx
+xxNNNxx
+xxx@xxx
+ENDMAP
+
 
 ###################################################################
 #

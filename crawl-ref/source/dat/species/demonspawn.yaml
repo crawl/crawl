@@ -16,9 +16,7 @@ aptitudes:
   maces_and_flails: -1
   polearms: -1
   staves: -1
-  slings: -1
-  bows: -1
-  crossbows: -1
+  ranged weapons: -1
   throwing: -1
   armour: -1
   dodging: -1
@@ -40,12 +38,8 @@ levelup_stat_frequency: 4
 recommended_jobs:
   - JOB_GLADIATOR
   - JOB_BERSERKER
-  - JOB_ABYSSAL_KNIGHT
-  - JOB_WIZARD
+  - JOB_HEDGE_WIZARD
   - JOB_NECROMANCER
   - JOB_FIRE_ELEMENTALIST
   - JOB_ICE_ELEMENTALIST
   - JOB_VENOM_MAGE
-# start TAG_MAJOR_VERSION == 34
-create_enum: false
-# end TAG_MAJOR_VERSION

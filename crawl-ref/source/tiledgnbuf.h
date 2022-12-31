@@ -8,6 +8,7 @@ struct dolls_data;
 class mcache_entry;
 
 class ImageManager;
+class FontWrapper;
 
 // A set of buffers that takes as input the foreground/background pair
 // of tiles from tile_fg/tile_bg and populates a set of tile buffers
@@ -31,10 +32,15 @@ public:
     void add_command_tile(int tileidx, int x, int y);
     void add_icons_tile(int tileidx, int x, int y);
     void add_icons_tile(int tileidx, int x, int y, int ox, int oy);
+    void add_glyph(const char32_t &g, const VColour &col, int x, int y);
+    void add_glyph(const char32_t &g, const VColour &col, const VColour &bg, int x, int y);
+    FontWrapper *get_glyph_font();
 
     void clear();
     void draw();
-
+    void draw_glyphs();
+    void draw_tiles();
+    void draw_icons();
 protected:
     void add_blood_overlay(int x, int y, const packed_cell &cell,
                            bool is_wall = false);
@@ -57,6 +63,7 @@ protected:
     TileBuffer m_buf_skills;
     TileBuffer m_buf_commands;
     TileBuffer m_buf_icons;
+    FontBuffer m_buf_glyphs;
 };
 
 #endif

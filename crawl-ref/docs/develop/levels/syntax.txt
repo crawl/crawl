@@ -550,7 +550,7 @@ ITEM:     (list of items, separated by comma)
           * "ego:ego_name", where "ego_name" is something like "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego. The item must be fully specified, so
-            trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
+            trying "any weapon ego:heavy" or "any armour ego:positive_energy"
             will result in an error. Trying to give an ego to something which
             can't accept an ego will also result in an error. The full lists
             are in the str_to_ego() function in mapdef.cc.
@@ -576,6 +576,10 @@ ITEM:     (list of items, separated by comma)
           * "tile:" and "wtile:" will set the item's inventory/ground and
             worn (player/monster doll) tiles. Generally you'd want to set
             both to ensure they match.
+          * "itemname:" will override the item's type name (e.g. 'scythe' or
+            'ring'). You will need to add a new description. This feature is
+            intended to support only legacy flavour, i.e. scythes & hammers -
+            don't use this.
 
           WARNING: While checks are done to make sure that an armour ego
           isn't given to a weapon, a weapon ego to a missile, and so on, and
@@ -1425,9 +1429,8 @@ KPROP:    x = bloody
              entering from nearby squares.
           * "no_tele_into": Prevents teleportation from choosing to use this
              square. Also prevents this square from being the destination of
-             a shaft or hatch. Use this tag to prevent nasty situations like
-             the player ending up in a closet or an extremely dense monster
-             array (like a hellion island); or for vaults with loot where the
+             a shaft or hatch. Use this tag to prevent the player from ending
+             up trapped in an isolated area; or for vaults with loot where the
              player is not supposed to get it by teleporting alone.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.

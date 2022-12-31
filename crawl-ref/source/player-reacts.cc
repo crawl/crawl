@@ -18,9 +18,7 @@
 #include <string>
 
 #ifndef TARGET_OS_WINDOWS
-# ifndef __ANDROID__
-#  include <langinfo.h>
-# endif
+# include <langinfo.h>
 #endif
 #include <fcntl.h>
 #ifdef USE_UNIX_SIGNALS
@@ -91,12 +89,12 @@
 #include "rltiles/tiledef-dngn.h"
 #include "tilepick.h"
 #endif
-#include "timed-effects.h" // bezotting
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "xom.h"
+#include "zot.h" // bezotting
 
 /**
  * Decrement a duration by the given delay.
@@ -211,7 +209,7 @@ static void _decrement_attraction(int delay)
     if (!you.duration[DUR_ATTRACTIVE])
         return;
 
-    attract_monsters();
+    attract_monsters(delay);
     if (_decrement_a_duration(DUR_ATTRACTIVE, delay))
         mpr("You feel less attractive to monsters.");
 }
@@ -659,10 +657,8 @@ static void _decrement_durations()
     // (killing monsters, offering items, ...) might be confusing for characters
     // of other religions.
     // For now, though, keep information about what happened hidden.
-    if (you.piety < MAX_PIETY
-        && you.duration[DUR_PIETY_POOL] > 0
-        && one_chance_in(5)
-        && !player_in_branch(BRANCH_ABYSS))
+    if (you.piety < MAX_PIETY && you.duration[DUR_PIETY_POOL] > 0
+        && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;
         gain_piety(1, 1);
@@ -859,8 +855,11 @@ static void _update_equipment_attunement_by_health()
                     item_slot_name(static_cast<equipment_type>(slot)) :
                     "armour");
 
-            if (slot == EQ_GLOVES || slot == EQ_BOOTS)
+            if (slot == EQ_BOOTS && arm.sub_type != ARM_BARDING
+                || slot == EQ_GLOVES)
+            {
                 plural = true;
+            }
             you.activated.set(slot);
         }
     }
@@ -951,10 +950,12 @@ static void _regenerate_hp_and_mp(int delay)
     _update_mana_regen_amulet_attunement();
 }
 
-static void _handle_wereblood()
+static void _handle_wereblood(int delay)
 {
     if (you.duration[DUR_WEREBLOOD]
-        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int(), 9))
+        && x_chance_in_y(you.props[WEREBLOOD_KEY].get_int() * delay,
+                         9 * BASELINE_DELAY)
+        && !silenced(you.pos()))
     {
         // Keep the spam down
         if (you.props[WEREBLOOD_KEY].get_int() < 3 || one_chance_in(5))
@@ -979,11 +980,11 @@ void player_reacts()
     if (you.unrand_reacts.any())
         unrand_reacts();
 
-    _handle_wereblood();
+    _handle_wereblood(you.time_taken);
 
     if (x_chance_in_y(you.time_taken, 10 * BASELINE_DELAY))
     {
-        const int teleportitis_level = player_teleport();
+        const int teleportitis_level = get_teleportitis_level();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(false, true, "You feel strangely unstable.");
@@ -1003,6 +1004,11 @@ void player_reacts()
     abyss_maybe_spawn_xp_exit();
 
     actor_apply_cloud(&you);
+    // Miasma immunity from Dreadful Rot. Only lasts for one turn,
+    // so erase it just after we apply clouds for the turn (above).
+    if (you.props.exists(MIASMA_IMMUNE_KEY))
+        you.props.erase(MIASMA_IMMUNE_KEY);
+
     actor_apply_toxic_bog(&you);
 
     if (env.level_state & LSTATE_SLIMY_WALL)
@@ -1025,10 +1031,6 @@ void player_reacts()
 
     if (you.duration[DUR_POISONING])
         handle_player_poison(you.time_taken);
-
-    // Reveal adjacent mimics.
-    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
-        discover_mimic(*ai);
 
     // Player stealth check.
     seen_monsters_react(stealth);

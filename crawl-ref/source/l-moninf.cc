@@ -399,18 +399,20 @@ LUAFN(moninf_get_holiness)
 {
     MONINF(ls, 1, mi);
 
-    string holi = luaL_checkstring(ls, 2);
-    lowercase(holi);
-    mon_holy_type arg = holiness_by_name(holi);
-    if (!holi.empty() && arg == MH_NONE)
+    if (lua_gettop(ls) >= 2)
     {
-        luaL_argerror(ls, 2, (string("no such holiness: '")
-                              + holi + "'").c_str());
-        return 0;
+        string holi = luaL_checkstring(ls, 2);
+        lowercase(holi);
+        mon_holy_type arg = holiness_by_name(holi);
+        if (arg == MH_NONE)
+        {
+            luaL_argerror(ls, 2, (string("no such holiness: '")
+                                  + holi + "'").c_str());
+            return 0;
+        }
+        else
+            PLUARET(boolean, bool(mi->holi & arg));
     }
-
-    if (!holi.empty())
-        PLUARET(boolean, bool(mi->holi & arg));
     else
         PLUARET(string, holiness_description(mi->holi).c_str());
 }

@@ -40,6 +40,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"
+#include "misc.h"
 #include "mgen-data.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
@@ -117,6 +118,8 @@ bool monster_inherently_flies(const monster &mons)
     // check both so spectral humans and zombified dragons both fly
     return monster_class_flies(mons.type)
         || monster_class_flies(mons_base_type(mons))
+        || mons_is_draconian_job(mons.type)
+            && monster_class_flies(draconian_subspecies(mons))
         || mons_is_ghost_demon(mons.type) && mons.ghost && mons.ghost->flies
         || mons.has_facet(BF_BAT);
 }
@@ -631,8 +634,8 @@ mon_holy_type holiness_by_name(string name)
     lowercase(name);
     for (const auto bit : mon_holy_type::range())
     {
-        if (name == holiness_name(mon_holy_type::exponent(bit)))
-            return mon_holy_type::exponent(bit);
+        if (name == holiness_name(bit))
+            return bit;
     }
     return MH_NONE;
 }
@@ -1340,6 +1343,8 @@ int get_shout_noise_level(const shout_type shout)
     case S_SILENT:
         return 0;
     case S_HISS:
+    case S_SKITTER:
+    case S_FAINT_SKITTER:
     case S_VERY_SOFT:
         return 4;
     case S_SOFT:
@@ -1670,25 +1675,39 @@ bool mons_class_can_leave_corpse(monster_type mc)
     return smc->leaves_corpse;
 }
 
-bool mons_class_can_be_zombified(monster_type mc)
+bool mons_class_can_be_zombified(monster_type mzc)
 {
-    monster_type ms = mons_species(mc);
-    return !invalid_monster_type(ms)
-           && mons_class_can_leave_corpse(ms);
+    monster_type mc = mons_species(mzc);
+    ASSERT_smc();
+    return !invalid_monster_type(mc)
+            && !mons_class_flag(mzc, M_NO_ZOMBIE)
+            && !mons_class_flag(mzc, M_INSUBSTANTIAL)
+            && !mons_is_tentacle_or_tentacle_segment(mzc)
+            && (mons_class_holiness(mzc) & MH_NATURAL
+                || mons_class_can_leave_corpse(mc))
+            && smc->attack[0].damage; // i.e. has_attack
 }
 
 bool mons_can_be_zombified(const monster& mon)
 {
     return mons_class_can_be_zombified(mon.type)
            && !mon.is_summoned()
-           && !mons_bound_body_and_soul(mon);
+           && !mons_bound_body_and_soul(mon)
+           && mons_has_attacks(mon, true);
 }
 
-bool mons_can_be_spectralised(const monster& mon)
+// Does this monster have a soul that can be used for necromancy (Death
+// Channel, Simulacrum, Yredelemnul's Bind Soul)? For Bind Soul, allow
+// monsters with no attacks if they have some spells to use.
+bool mons_can_be_spectralised(const monster& mon, bool divine)
 {
     return mon.holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY)
            && !mon.is_summoned()
-           && mon.type != MONS_PANDEMONIUM_LORD;
+           && (!testbits(mon.flags, MF_NO_REWARD)
+               || mon.props.exists(KIKU_WRETCH_KEY))
+           && mon.type != MONS_PANDEMONIUM_LORD
+           && (mons_has_attacks(mon, true)
+               || divine && mon.has_spells());
 }
 
 bool mons_class_can_use_stairs(monster_type mc)
@@ -2187,6 +2206,7 @@ bool flavour_has_reach(attack_flavour flavour)
         case AF_REACH:
         case AF_REACH_STING:
         case AF_REACH_TONGUE:
+        case AF_RIFT:
             return true;
         default:
             return false;
@@ -2201,11 +2221,6 @@ bool mons_invuln_will(const monster& mon)
 bool mons_skeleton(monster_type mc)
 {
     return !mons_class_flag(mc, M_NO_SKELETON);
-}
-
-bool mons_zombifiable(monster_type mc)
-{
-    return !mons_class_flag(mc, M_NO_ZOMBIE) && mons_zombie_size(mc);
 }
 
 bool mons_flattens_trees(const monster& mon)
@@ -3334,7 +3349,7 @@ bool mons_is_confused(const monster& m, bool class_too)
 
 bool mons_is_wandering(const monster& m)
 {
-    return m.behaviour == BEH_WANDER;
+    return m.behaviour == BEH_WANDER || m.behaviour == BEH_BATTY;
 }
 
 bool mons_is_seeking(const monster& m)
@@ -3664,8 +3679,15 @@ bool mons_has_ranged_spell(const monster& mon, bool attack_only,
         return true;
 
     for (const mon_spell_slot &slot : mon.spells)
-        if (_ms_ranged_spell(slot.spell, attack_only, ench_too) && mons_spell_range(mon, slot.spell) > 1)
+    {
+        if (slot.spell == SPELL_CREATE_TENTACLES)
             return true;
+        if (_ms_ranged_spell(slot.spell, attack_only, ench_too)
+            && mons_spell_range(mon, slot.spell) > 1)
+        {
+            return true;
+        }
+    }
 
     return false;
 }
@@ -3686,6 +3708,7 @@ bool mons_has_ranged_attack(const monster& mon)
 {
     return mons_has_ranged_spell(mon, true)
            || _mons_has_usable_ranged_weapon(&mon)
+           || mon.missiles()
            || mon.reach_range() != REACH_NONE
            || _mons_has_attack_wand(mon);
 }
@@ -4433,6 +4456,8 @@ string do_mon_str_replacements(const string &in_msg, const monster& mons,
         "croaks",
         "growls",
         "hisses",
+        "skitters",
+        "skitters faintly",
         "sneers",       // S_DEMON_TAUNT
         "says",         // S_CHERUB -- they just speak normally.
         "squeals",
@@ -4504,6 +4529,8 @@ mon_body_shape get_mon_shape(const monster_type mc)
 tileidx_t get_mon_base_tile(monster_type mc)
 {
     ASSERT_smc();
+    if (mc == MONS_SIGMUND && december_holidays())
+        return TILEP_MONS_XMAS_SIGMUND;
     return smc->tile.base;
 }
 
@@ -4712,7 +4739,7 @@ mon_threat_level_type mons_threat_level(const monster &mon, bool real)
 bool mons_foe_is_marked(const monster& mon)
 {
     if (mon.foe == MHITYOU)
-        return you.duration[DUR_SENTINEL_MARK];
+        return you.duration[DUR_SENTINEL_MARK] && in_bounds(you.pos());
     else
         return false;
 }
@@ -5017,13 +5044,13 @@ bool mons_is_player_shadow(const monster& mon)
 }
 
 // Zero-damage attacks with special effects (constriction, drowning, pure fire,
-// etc.) aren't counted, since this is used to decide whether the monster can
-// go berserk or be weakened, both of which require an attack with non-zero
-// base damage.
-bool mons_has_attacks(const monster& mon)
+// etc.) aren't counted by default, since this is used to decide whether the
+// monster can go berserk or be weakened, both of which require an attack with
+// non-zero base damage.
+bool mons_has_attacks(const monster& mon, bool allow_damageless)
 {
     const mon_attack_def attk = mons_attack_spec(mon, 0);
-    return attk.type != AT_NONE && attk.damage > 0;
+    return attk.type != AT_NONE && (allow_damageless || attk.damage > 0);
 }
 
 // The default suitable() function for choose_random_nearby_monster().

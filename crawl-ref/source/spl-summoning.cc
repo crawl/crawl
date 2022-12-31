@@ -71,12 +71,19 @@ static void _monster_greeting(monster *mons, const string &key)
     mons_speaks_msg(mons, msg, MSGCH_TALK, silenced(mons->pos()));
 }
 
+// combine with MG_AUTOFOE
+static int _auto_autofoe(const actor *caster)
+{
+    return (!caster || caster->is_player())
+        ? int{MHITYOU}
+        : caster->as_monster()->foe;
+}
+
 static mgen_data _summon_data(const actor &caster, monster_type mtyp,
                               int dur, god_type god, spell_type spell)
 {
     return mgen_data(mtyp, BEH_COPY, caster.pos(),
-                     caster.is_player() ? int{MHITYOU}
-                                        : caster.as_monster()->foe,
+                     _auto_autofoe(&caster),
                      MG_AUTOFOE)
                      .set_summoned(&caster, dur, spell, god);
 }
@@ -201,7 +208,7 @@ spret cast_summon_ice_beast(int pow, god_type god, bool fail)
         return spret::abort;
 
     fail_check();
-    const int dur = min(2 + (random2(pow) / 4), 4);
+    const int dur = min(2 + div_rand_round(random2(1 + pow), 4), 4);
 
     mgen_data ice_beast = _pal_data(MONS_ICE_BEAST, dur, god,
                                     SPELL_SUMMON_ICE_BEAST);
@@ -261,7 +268,7 @@ spret cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     // Power determines number of heads. Minimum 4 heads, maximum 12.
     // Rare to get more than 8.
     const int maxheads = one_chance_in(6) ? 12 : 8;
-    const int heads = max(4, min(random2(pow) / 6, maxheads));
+    const int heads = max(4, min(div_rand_round(random2(1 + pow), 6), maxheads));
 
     // Duration is always very short - just 1.
     mgen_data mg = _summon_data(*caster, MONS_HYDRA, 1, god,
@@ -309,7 +316,8 @@ spret cast_dragon_call(int pow, bool fail)
     mpr("You call out to the draconic realm, and the dragon horde roars back!");
     noisy(spell_effect_noise(SPELL_DRAGON_CALL), you.pos());
 
-    you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
+    you.duration[DUR_DRAGON_CALL] = (15 + div_rand_round(pow, 5) + random2(15))
+                                    * BASELINE_DELAY;
     you.props[DRAGON_CALL_POWER_KEY].get_int() = pow;
 
     return spret::success;
@@ -504,10 +512,7 @@ spret cast_summon_mana_viper(int pow, god_type god, bool fail)
 
     mgen_data viper = _pal_data(MONS_MANA_VIPER, 2, god,
                                 SPELL_SUMMON_MANA_VIPER);
-    viper.hd = (5 + div_rand_round(pow, 12));
-
-    // Don't scale hp at the same time as their antimagic power
-    viper.hp = hit_points(495); // avg 50
+    viper.hd = (6 + div_rand_round(pow, 12));
 
     if (create_monster(viper))
         mpr("A mana viper appears with a sibilant hiss.");
@@ -570,8 +575,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 
     mgen_data mg(mon, caster ? BEH_COPY : BEH_HOSTILE,
                  caster ? caster->pos() : you.pos(),
-                 (caster && caster->is_monster()) ? ((monster*)caster)->foe
-                                                  : int{MHITYOU},
+                 _auto_autofoe(caster),
                  MG_AUTOFOE);
     mg.set_summoned(caster, caster ? dur : 0, SPELL_NO_SPELL, GOD_TROG);
 
@@ -713,7 +717,7 @@ static void _animate_weapon(int pow, actor* target)
     ASSERT(wpn);
     // If sac love, the weapon will go after you, not the target.
     const bool hostile = you.allies_forbidden();
-    const int dur = min(2 + (random2(pow) / 5), 6);
+    const int dur = min(2 + div_rand_round(random2(1 + pow), 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON,
                  hostile ? BEH_HOSTILE : BEH_FRIENDLY,
@@ -931,7 +935,7 @@ spret cast_call_imp(int pow, god_type god, bool fail)
 
     const monster_type imp_type = _get_imp_type();
 
-    const int dur = min(2 + (random2(pow) / 4), 6);
+    const int dur = min(2 + div_rand_round(random2(1 + pow), 5), 6);
 
     mgen_data imp_data = _pal_data(imp_type, dur, god, SPELL_CALL_IMP);
     if (monster *imp = create_monster(imp_data))
@@ -1031,6 +1035,72 @@ spret cast_summon_demon(int pow)
 
     if (!_summon_common_demon(pow, GOD_NO_GOD, SPELL_SUMMON_DEMON))
         canned_msg(MSG_NOTHING_HAPPENS);
+
+    return spret::success;
+}
+
+spret summon_butterflies()
+{
+    // Just fizzle instead of creating hostile butterflies.
+    if (you.allies_forbidden())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return spret::success;
+    }
+
+    const string reason = stop_summoning_reason(MR_NO_FLAGS, M_FLIES);
+    if (reason != "")
+    {
+        string prompt = make_stringf("Really summon butterflies while emitting a %s?",
+                                     reason.c_str());
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+    }
+
+    // XXX: dedup with Xom, or change number?
+
+    // place some in a tight cluster, distance 2. Max 24 squares, so this is
+    // always at least 2/3 density.
+    const int how_many_inner = random_range(16, 22);
+    bool success = false;
+    for (int i = 0; i < how_many_inner; ++i)
+    {
+        mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
+                            MG_AUTOFOE);
+        butterfly.set_summoned(&you, 3, MON_SUMM_BUTTERFLIES);
+
+        if (create_monster(butterfly))
+            success = true;
+    }
+    // place another set more sparsely. These will try to find a placement
+    // within range 3 of the player. If that place is already filled, they will
+    // go as far as 2 from that original spot. This can backfill the inner
+    // zone.
+    const int how_many_outer = random_range(12, 28);
+    for (int i = 0; i < how_many_outer; ++i)
+    {
+        coord_def pos(-1,-1);
+        if (!find_habitable_spot_near(you.pos(), MONS_BUTTERFLY, 3, false, pos))
+            break;
+        mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, pos, MHITYOU,
+                            MG_AUTOFOE);
+        butterfly.set_summoned(&you, 3, MON_SUMM_BUTTERFLIES);
+
+        if (create_monster(butterfly))
+            success = true;
+    }
+
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
+    else if (silenced(you.pos()))
+        mpr("The fluttering of tiny wings stirs the air.");
+    else
+        mpr("You hear the tinkle of a tiny bell.");
 
     return spret::success;
 }
@@ -1263,7 +1333,8 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
     if (test)
         return spret::success;
 
-    const int duration = random_range(120 + pow, 200 + pow * 3 / 2);
+    const int duration = random_range(120 + pow,
+                                      200 + div_rand_round(pow * 3, 2));
 
     // Hm, should dryads have rPois?
     if (stop_summoning_prompt(MR_NO_FLAGS, "summon a forest"))
@@ -1375,8 +1446,7 @@ spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 
     bool friendly = true;
     int success = 0;
-    int to_summon = stepdown_value(2 + (random2(pow) / 10) + (random2(pow) / 10),
-                                   2, 2, 6, -1);
+    int to_summon = min(6, 2 + random2avg(1 + div_rand_round(pow, 18), 2));
 
     while (to_summon--)
     {
@@ -1420,6 +1490,7 @@ static spell_type servitor_spells[] =
     SPELL_BOLT_OF_COLD, // left in for frederick
     SPELL_LIGHTNING_BOLT,
     SPELL_FIREBALL,
+    SPELL_ARCJOLT,
     SPELL_STONE_ARROW,
     SPELL_LRD,
     SPELL_AIRSTRIKE,
@@ -1600,8 +1671,9 @@ spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
         battlesphere->battlecharge = min(20, (int) battlesphere->battlecharge
                                               + 4 + random2(pow + 10) / 10);
 
-        // Increase duration
+        // Increase duration and update HD
         mon_enchant abj = battlesphere->get_ench(ENCH_FAKE_ABJURATION);
+        battlesphere->set_hit_dice(_battlesphere_hd(pow));
         abj.duration = min(abj.duration + (7 + roll_dice(2, pow)) * 10, 500);
         battlesphere->update_ench(abj);
     }
@@ -2482,9 +2554,9 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
 
 void kiku_unearth_wretches()
 {
-    const int pow = you.skill(SK_NECROMANCY, 6);
-    const int min_wretches = 2;
-    const int max_wretches = min_wretches + div_rand_round(pow, 27); // 8 max
+    const int pow = you.skill(SK_NECROMANCY, 5);
+    const int min_wretches = 1 + random2(2);
+    const int max_wretches = min_wretches + div_rand_round(pow, 27); // 7 max
     const int wretches = random_range(min_wretches, max_wretches);
     bool created = false;
     for (int i = 0; i < wretches; ++i)
@@ -2640,7 +2712,7 @@ bool summon_spider(const actor &agent, coord_def pos, god_type god,
                                                pow / 2, MONS_WOLF_SPIDER);
 
     monster *mons = create_monster(
-            mgen_data(mon, BEH_COPY, pos, MHITYOU, MG_AUTOFOE)
+            mgen_data(mon, BEH_COPY, pos, _auto_autofoe(&agent), MG_AUTOFOE)
                       .set_summoned(&agent, 3, spell, god));
     if (mons)
         return true;

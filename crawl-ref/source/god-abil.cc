@@ -1410,6 +1410,7 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_OLGREBS_TOXIC_RADIANCE
         || spell == SPELL_VIOLENT_UNRAVELLING
         || spell == SPELL_INNER_FLAME
+        || spell == SPELL_BLASTSPARK
         || spell == SPELL_IGNITION
         || spell == SPELL_FROZEN_RAMPARTS
         || spell == SPELL_MAXWELLS_COUPLING
@@ -1680,7 +1681,7 @@ bool beogh_resurrect()
 
 bool yred_can_bind_soul(monster* mon)
 {
-    return mons_can_be_spectralised(*mon)
+    return mons_can_be_spectralised(*mon, true)
            && !mons_bound_body_and_soul(*mon)
            && mon->attitude != ATT_FRIENDLY;
 }
@@ -1780,11 +1781,22 @@ bool kiku_gift_capstone_spells()
 {
     ASSERT(can_do_capstone_ability(you.religion));
 
-    vector<spell_type> spells = { SPELL_HAUNT,
-                                  SPELL_BORGNJORS_REVIVIFICATION,
-                                  SPELL_INFESTATION,
-                                  SPELL_NECROMUTATION,
-                                  SPELL_DEATHS_DOOR };
+    vector<spell_type> spells;
+    vector<spell_type> candidates = { SPELL_HAUNT,
+                                      SPELL_BORGNJORS_REVIVIFICATION,
+                                      SPELL_INFESTATION,
+                                      SPELL_NECROMUTATION,
+                                      SPELL_DEATHS_DOOR };
+
+    for (auto spell : candidates)
+        if (!spell_is_useless(spell, false))
+            spells.push_back(spell);
+
+    if (spells.empty())
+    {
+        simple_god_message(" has no more spells that you can make use of!");
+        return false;
+    }
 
     string msg = "Do you wish to receive knowledge of "
                  + comma_separated_fn(spells.begin(), spells.end(), spell_title)
@@ -1834,23 +1846,6 @@ bool fedhas_passthrough(const monster_info* target)
            && fedhas_passthrough_class(target->type)
            && (mons_species(target->type) != MONS_OKLOB_PLANT
                || target->attitude != ATT_HOSTILE);
-}
-
-static bool _lugonu_warp_monster(monster& mon)
-{
-    // XXX: should this ignore mon.no_tele(), as with the player?
-    if (mon.wont_attack() || mon.no_tele() || coinflip())
-        return false;
-
-    mon.blink();
-    return true;
-}
-
-void lugonu_bend_space()
-{
-    mpr("Space bends violently around you!");
-    uncontrolled_blink(true);
-    apply_monsters_around_square(_lugonu_warp_monster, you.pos());
 }
 
 void cheibriados_time_bend(int pow)
@@ -1970,65 +1965,57 @@ static void _run_time_step()
     while (--you.duration[DUR_TIME_STEP] > 0);
 }
 
+static void _cleanup_time_steps()
+{
+    you.duration[DUR_TIME_STEP] = 0;
+
+    // Noxious bog terrain gets cleaned up while stepped from time.
+    // That seems consistent with clouds, etc, so let's just make the duration
+    // match, rather than trying to persist the bog during time steps or
+    // regenerating it afterward.
+    you.duration[DUR_NOXIOUS_BOG] = 0;
+}
+
 // A low-duration step from time, allowing monsters to get closer
 // to the player safely.
 void cheibriados_temporal_distortion()
 {
-    const coord_def old_pos = you.pos();
-
     you.duration[DUR_TIME_STEP] = 3 + random2(3);
-    you.moveto(coord_def(0, 0));
 
-    _run_time_step();
-
-    you.los_noise_level = 0;
-    you.los_noise_last_turn = 0;
-
-    if (monster *mon = monster_at(old_pos))
     {
-        mon->props[FAKE_BLINK_KEY].get_bool() = true;
-        mon->blink();
-        mon->props.erase(FAKE_BLINK_KEY);
-        if (monster *stubborn = monster_at(old_pos))
-            monster_teleport(stubborn, true, true);
+        player_vanishes absent;
+
+        _run_time_step();
+
+        // why only here and not for step from time?
+        you.los_noise_level = 0;
+        you.los_noise_last_turn = 0;
     }
 
-    you.moveto(old_pos);
-    you.duration[DUR_TIME_STEP] = 0;
+    _cleanup_time_steps();
 
     mpr("You warp the flow of time around you!");
 }
 
 void cheibriados_time_step(int pow) // pow is the number of turns to skip
 {
-    const coord_def old_pos = you.pos();
-
     mpr("You step out of the flow of time.");
     flash_view(UA_PLAYER, LIGHTBLUE);
     you.duration[DUR_TIME_STEP] = pow;
-    you.moveto(coord_def(0, 0));
+    {
+        player_vanishes absent(true);
 
-    you.time_taken = 10;
-    _run_time_step();
-    // Update corpses, etc. This does also shift monsters, but only by
-    // a tiny bit.
-    update_level(pow * 10);
+        you.time_taken = 10;
+        _run_time_step();
+        // Update corpses, etc.
+        update_level(pow * 10);
 
 #ifndef USE_TILE_LOCAL
-    scaled_delay(1000);
+        scaled_delay(1000);
 #endif
 
-    if (monster *mon = monster_at(old_pos))
-    {
-        mon->props[FAKE_BLINK_KEY].get_bool() = true;
-        mon->blink();
-        mon->props.erase(FAKE_BLINK_KEY);
-        if (monster *stubborn = monster_at(old_pos))
-            monster_teleport(stubborn, true, true);
     }
-
-    you.moveto(old_pos);
-    you.duration[DUR_TIME_STEP] = 0;
+    _cleanup_time_steps();
 
     flash_view(UA_PLAYER, 0);
     mpr("You return to the normal time flow.");
@@ -2049,8 +2036,9 @@ static map<curse_type, curse_data> _ashenzari_curses =
             SK_POLEARMS, SK_STAVES, SK_UNARMED_COMBAT },
     } },
     { CURSE_RANGED, {
+        // XXX: merge with evocations..?
         "Ranged Combat", "Range",
-        { SK_SLINGS, SK_BOWS, SK_CROSSBOWS, SK_THROWING },
+        { SK_RANGED_WEAPONS, SK_THROWING },
     } },
     { CURSE_ELEMENTS, {
         "Elements", "Elem",
@@ -2539,6 +2527,8 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
         if (*which == POT_HASTE && you.stasis())
             continue;
         if (*which == POT_MAGIC && you.has_mutation(MUT_HP_CASTING))
+            continue;
+        if (*which == POT_INVISIBILITY && you.has_mutation(MUT_GLOWING))
             continue;
         if (*which == POT_LIGNIFY && you.undead_state(false) == US_UNDEAD)
             continue;
@@ -3284,14 +3274,12 @@ spret qazlal_upheaval(coord_def target, bool quiet, bool fail, dist *player_targ
     for (coord_def pos : affected)
         beam.draw(pos, false);
 
+    // When `quiet`, refresh the view after each complete draw pass. Add a bit
+    // of delay even for this, otherwise it goes by too quickly.
     if (quiet)
     {
-        // When `quiet`, refresh the view after each complete draw pass.
-        // why this call dance to refresh? I just copied it from bolt::draw
-        viewwindow(false);
-        update_screen();
-        scaled_delay(50); // add some delay per upheaval draw, otherwise it all
-                          // goes by too fast.
+        if (!Options.reduce_animations)
+            animation_delay(50, true);
     }
     else
     {
@@ -3484,7 +3472,9 @@ spret qazlal_disaster_area(bool fail)
         targets.erase(targets.begin() + which);
         weights.erase(weights.begin() + which);
     }
-    scaled_delay(200);
+    // possibly this delay should be slightly increased if reduce_animations is
+    // true?
+    animation_delay(200, Options.reduce_animations);
 
     return spret::success;
 }
@@ -3594,12 +3584,8 @@ static bool _sac_mut_maybe_valid(mutation_type mut)
 
     // Vampires can't get inhibited regeneration for some reason related
     // to their existing regen silliness.
-    // Neither can deep dwarf, for obvious reasons.
-    if (mut == MUT_INHIBITED_REGENERATION
-        && you.has_mutation(MUT_VAMPIRISM))
-    {
+    if (mut == MUT_INHIBITED_REGENERATION && you.has_mutation(MUT_VAMPIRISM))
         return false;
-    }
 
     // demonspawn can't get frail if they have a robust facet
     if (you.species == SP_DEMONSPAWN && mut == MUT_FRAIL
@@ -3816,14 +3802,11 @@ static int _piety_for_skill_by_sacrifice(ability_type sacrifice)
     const sacrifice_def &sac_def = _get_sacrifice_def(sacrifice);
 
     piety_gain += _piety_for_skill(sac_def.sacrifice_skill);
-    if (sacrifice == ABIL_RU_SACRIFICE_HAND)
+    if (sacrifice == ABIL_RU_SACRIFICE_HAND
+        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
     {
         // No one-handed staves for small races.
-        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-            piety_gain += _piety_for_skill(SK_STAVES);
-        // No one-handed bows.
-        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
-            piety_gain += _piety_for_skill(SK_BOWS);
+        piety_gain += _piety_for_skill(SK_STAVES);
     }
     return piety_gain;
 }
@@ -3896,7 +3879,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
     {
         case ABIL_RU_SACRIFICE_HEALTH:
             if (mut == MUT_FRAIL)
-                piety_gain += 20; // -health is pretty much always quite bad.
+                piety_gain += 10; // -health is pretty much always quite bad.
             else if (mut == MUT_PHYSICAL_VULNERABILITY)
                 piety_gain += 5; // -AC is a bit worse than -EV
             break;
@@ -3907,7 +3890,7 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
                                        you.skill_rdiv(SK_SPELLCASTING, 1, 2));
             }
             else if (mut == MUT_WEAK_WILLED)
-                piety_gain += 38;
+                piety_gain += 35;
             else
                 piety_gain += 2 + _get_stat_piety(STAT_INT, 6)
                                 + you.skill_rdiv(SK_SPELLCASTING, 1, 2);
@@ -3950,11 +3933,16 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         // words and drink cut off a lot of options if taken together
         case ABIL_RU_SACRIFICE_DRINK:
-            if (you.get_mutation_level(MUT_READ_SAFETY))
+            // less value if you already have some levels of the mutation
+            piety_gain -= 10 * you.get_mutation_level(MUT_DRINK_SAFETY);
+            // check innate mutation level to see if reading was sacrificed
+            if (you.get_innate_mutation_level(MUT_READ_SAFETY) == 2)
                 piety_gain += 10;
             break;
         case ABIL_RU_SACRIFICE_WORDS:
-            if (you.get_mutation_level(MUT_DRINK_SAFETY))
+            // less value if you already have some levels of the mutation
+            piety_gain -= 10 * you.get_mutation_level(MUT_READ_SAFETY);
+            if (you.get_innate_mutation_level(MUT_DRINK_SAFETY) == 2)
                 piety_gain += 10;
             else if (you.get_mutation_level(MUT_NO_DRINK))
                 piety_gain += 15; // extra bad for mummies
@@ -3978,17 +3966,21 @@ int get_sacrifice_piety(ability_type sac, bool include_skill)
             break;
         case ABIL_RU_SACRIFICE_EXPERIENCE:
             if (you.get_mutation_level(MUT_COWARDICE))
-                piety_gain += 12;
+                piety_gain += 6;
             // Ds are highly likely to miss at least one mutation. This isn't
             // absolutely certain, but it's very likely and they should still
             // get a bonus for the risk. Could check the exact mutation
             // schedule, but this seems too leaky.
-            // Dj are guaranteed to lose a spell each time, which is pretty sad too.
-            if (you.species == SP_DEMONSPAWN || you.species == SP_DJINNI)
-                piety_gain += 16;
+            // Dj are guaranteed to lose a spell for the first and third sac,
+            // which is pretty sad too.
+            if (you.species == SP_DEMONSPAWN
+                || you.species == SP_DJINNI && (you.get_mutation_level(MUT_INEXPERIENCED) % 2 == 0))
+            {
+                piety_gain += 10;
+            }
             break;
         case ABIL_RU_SACRIFICE_COURAGE:
-            piety_gain += 12 * you.get_mutation_level(MUT_INEXPERIENCED);
+            piety_gain += 6 * you.get_mutation_level(MUT_INEXPERIENCED);
             break;
 
         default:
@@ -4031,7 +4023,7 @@ static void _ru_expire_sacrifices()
         you.props[key].get_vector().clear();
     }
 
-    // Clear out stored sacrfiice values.
+    // Clear out stored sacrifice values.
     for (int i = 0; i < NUM_ABILITIES; ++i)
         you.sacrifice_piety[i] = 0;
 }
@@ -4197,7 +4189,7 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
     else if (piety_gain >= 29)
         return "a major";
     else if (piety_gain >= 21)
-        return "a significant";
+        return "a medium";
     else if (piety_gain >= 13)
         return "a modest";
     else
@@ -4212,7 +4204,18 @@ static const string _piety_asterisks(int piety)
 
 static void _apply_ru_sacrifice(mutation_type sacrifice)
 {
-    perma_mutate(sacrifice, 1, "Ru sacrifice");
+    if (sacrifice == MUT_READ_SAFETY || sacrifice == MUT_DRINK_SAFETY)
+    {
+        // get the safety mutation to the cap instead of 1 level higher
+        perma_mutate(sacrifice,
+                    3 - you.get_mutation_level(sacrifice),
+                    "Ru sacrifice");
+    }
+    else
+    {
+        // regular case for other sacrifices
+        perma_mutate(sacrifice, 1, "Ru sacrifice");
+    }
     you.sacrifices[sacrifice] += 1;
 }
 
@@ -4487,14 +4490,11 @@ bool ru_do_sacrifice(ability_type sac)
     // Maybe this should go in _extra_sacrifice_code, but it would be
     // inconsistent for the milestone to have reduced Shields skill
     // but not the others.
-    if (sac == ABIL_RU_SACRIFICE_HAND)
+    if (sac == ABIL_RU_SACRIFICE_HAND
+        && species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
     {
         // No one-handed staves for small races.
-        if (species::size(you.species, PSIZE_TORSO) <= SIZE_SMALL)
-            _ru_kill_skill(SK_STAVES);
-        // No one-handed bows.
-        if (!you.has_innate_mutation(MUT_QUADRUMANOUS))
-            _ru_kill_skill(SK_BOWS);
+        _ru_kill_skill(SK_STAVES);
     }
 
     mark_milestone("sacrifice", mile_text);
@@ -4547,7 +4547,7 @@ bool ru_reject_sacrifices(bool forced_rejection)
         return false;
     }
 
-    ru_reset_sacrifice_timer(false, true);
+    ru_reset_sacrifice_timer(false, forced_rejection);
     _ru_expire_sacrifices();
     simple_god_message(" will take longer to evaluate your readiness.");
     return true;
@@ -4601,7 +4601,11 @@ void ru_reset_sacrifice_timer(bool clear_timer, bool faith_penalty)
         }
     }
 
-    delay = div_rand_round((delay + added_delay) * (3 - you.faith()), 3);
+    // No faith reduction if this is due to abandoning Ru.
+    if (!you_worship(GOD_RU))
+        delay += added_delay;
+    else
+        delay = div_rand_round((delay + added_delay) * (3 - you.faith()), 3);
     if (crawl_state.game_is_sprint())
         delay /= SPRINT_MULTIPLIER;
 
@@ -5427,7 +5431,8 @@ spret hepliaklqana_transference(bool fail)
 
     const bool victim_immovable
         = victim && (mons_is_tentacle_or_tentacle_segment(victim->type)
-                     || victim->is_stationary());
+                     || victim->is_stationary()
+                     || mons_is_projectile(victim->type));
     if (victim_visible && victim_immovable)
     {
         mpr("You can't transfer that.");
@@ -5579,7 +5584,7 @@ bool wu_jian_can_wall_jump_in_principle(const coord_def& target)
 {
     if (!have_passive(passive_t::wu_jian_wall_jump)
         || !feat_can_wall_jump_against(env.grid(target))
-        || you.is_stationary()
+        || !you.is_motile()
         || you.digging)
     {
         return false;
@@ -5864,10 +5869,11 @@ spret okawaru_duel(const coord_def& target, bool fail)
     behaviour_event(mons, ME_ALERT, &you);
     mons->props[OKAWARU_DUEL_TARGET_KEY] = true;
     mons->props[OKAWARU_DUEL_CURRENT_KEY] = true;
+    mons->stop_being_constricted();
     mons->set_transit(level_id(BRANCH_ARENA));
     mons->destroy_inventory();
     if (mons_is_elven_twin(mons))
-        elven_twin_died(mons, true, KILL_YOU, MID_PLAYER);
+        elven_twin_died(mons, false, KILL_YOU, MID_PLAYER);
     monster_cleanup(mons);
 
     stop_delay(true);
@@ -5903,6 +5909,7 @@ void okawaru_end_duel()
             {
                 mi->props.erase(OKAWARU_DUEL_CURRENT_KEY);
                 mi->props[OKAWARU_DUEL_ABANDONED_KEY] = true;
+                mi->stop_being_constricted();
                 mi->set_transit(current_level_parent());
                 mi->destroy_inventory();
                 monster_cleanup(*mi);

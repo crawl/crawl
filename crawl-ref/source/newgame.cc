@@ -374,7 +374,7 @@ static bool _reroll_random(newgame_def& ng)
 
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
-    tiles.json_write_string("prompt", prompt.to_colour_string());
+    tiles.json_write_string("prompt", prompt.to_colour_string(LIGHTGREY));
     tiles.send_doll(doll, false, false);
     tiles.push_ui_layout("newgame-random-combo", 0);
     popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
@@ -1098,19 +1098,19 @@ static job_group jobs_order[] =
     {
         "Zealot",
         coord_def(1, 0), 25,
-        { JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CINDER_ACOLYTE,
+        { JOB_BERSERKER, JOB_CINDER_ACOLYTE,
           JOB_CHAOS_KNIGHT }
     },
     {
         "Warrior-mage",
-        coord_def(1, 5), 26,
-        { JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
-          JOB_ENCHANTER }
+        coord_def(1, 4), 26,
+        { JOB_TRANSMUTER, JOB_WARPER, JOB_HEXSLINGER,
+          JOB_ENCHANTER, JOB_REAVER }
     },
     {
         "Mage",
         coord_def(2, 0), 22,
-        { JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
+        { JOB_HEDGE_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
           JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
           JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE }
     }
@@ -1433,7 +1433,7 @@ void UINewGameMenu::_allocate_region()
 #ifdef USE_TILE_WEB
 void UINewGameMenu::serialize()
 {
-    tiles.json_write_string("title", welcome.to_colour_string());
+    tiles.json_write_string("title", welcome.to_colour_string(LIGHTGREY));
     m_main_items->serialize("main-items");
     m_sub_items->serialize("sub-items");
 }
@@ -1522,6 +1522,9 @@ void job_group::attach(const newgame_def& ng, const newgame_def& defaults,
         if (job == JOB_UNKNOWN)
             break;
 
+        if (job == JOB_DELVER && ng.type == GAME_TYPE_SPRINT)
+            continue;
+
         if (ng.species != SP_UNKNOWN
             && _job_allowed(ng.species, job) == CC_BANNED)
         {
@@ -1566,6 +1569,9 @@ void species_group::attach(const newgame_def& ng, const newgame_def& defaults,
     {
         if (this_species == SP_UNKNOWN)
             break;
+
+        if (this_species == SP_METEORAN && ng.type == GAME_TYPE_SPRINT)
+            continue;
 
         if (ng.job == JOB_UNKNOWN && !species::is_starting_species(this_species))
             continue;
@@ -1885,8 +1891,8 @@ static bool _prompt_weapon(const newgame_def& ng, newgame_def& ng_choice,
 
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
-    tiles.json_write_string("title", title->get_text().to_colour_string());
-    tiles.json_write_string("prompt", prompt->get_text().to_colour_string());
+    tiles.json_write_string("title", title->get_text().to_colour_string(LIGHTGREY));
+    tiles.json_write_string("prompt", prompt->get_text().to_colour_string(LIGHTGREY));
     main_items->serialize("main-items");
     sub_items->serialize("sub-items");
     tiles.send_doll(doll, false, false);
@@ -1918,6 +1924,8 @@ weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
         return fighter && size <= SIZE_SMALL  ? wp : WPN_TRIDENT;
     case WPN_FALCHION:
         return WPN_LONG_SWORD;
+    case WPN_SLING:
+        return WPN_SHORTBOW;
     default:
         return wp;
     }
@@ -1926,41 +1934,22 @@ weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
 static vector<weapon_choice> _get_weapons(const newgame_def& ng)
 {
     vector<weapon_choice> weapons;
-    if (job_gets_ranged_weapons(ng.job))
+    weapon_type startwep[7] = { WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE,
+                                WPN_SPEAR, WPN_FALCHION, WPN_QUARTERSTAFF,
+                                WPN_UNARMED };
+    for (int i = 0; i < 7; ++i)
     {
-        weapon_type startwep[3] = { WPN_HUNTING_SLING,
-                                    WPN_SHORTBOW,
-                                    WPN_HAND_CROSSBOW };
-
-        for (int i = 0; i < 3; i++)
+        weapon_choice wp;
+        wp.first = startwep[i];
+        if (job_gets_good_weapons(ng.job))
         {
-            weapon_choice wp;
-            wp.first = startwep[i];
-
-            wp.second = weapon_restriction(wp.first, ng);
-            if (wp.second != CC_BANNED)
-                weapons.push_back(wp);
+            wp.first = starting_weapon_upgrade(wp.first, ng.job,
+                                                ng.species);
         }
-    }
-    else
-    {
-        weapon_type startwep[7] = { WPN_SHORT_SWORD, WPN_MACE, WPN_HAND_AXE,
-                                    WPN_SPEAR, WPN_FALCHION, WPN_QUARTERSTAFF,
-                                    WPN_UNARMED };
-        for (int i = 0; i < 7; ++i)
-        {
-            weapon_choice wp;
-            wp.first = startwep[i];
-            if (job_gets_good_weapons(ng.job))
-            {
-                wp.first = starting_weapon_upgrade(wp.first, ng.job,
-                                                    ng.species);
-            }
 
-            wp.second = weapon_restriction(wp.first, ng);
-            if (wp.second != CC_BANNED)
-                weapons.push_back(wp);
-        }
+        wp.second = weapon_restriction(wp.first, ng);
+        if (wp.second != CC_BANNED)
+            weapons.push_back(wp);
     }
     return weapons;
 }
@@ -2270,7 +2259,7 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     });
 #ifdef USE_TILE_WEB
     tiles.json_open_object();
-    tiles.json_write_string("title", welcome.to_colour_string());
+    tiles.json_write_string("title", welcome.to_colour_string(LIGHTGREY));
     main_items->serialize("main-items");
     sub_items->serialize("sub-items");
     tiles.push_ui_layout("newgame-choice", 1);

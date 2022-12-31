@@ -60,8 +60,8 @@ enum element_type
     ETC_INCARNADINE,    // Draining clouds coloured like raw flesh
 #if TAG_MAJOR_VERSION == 34
     ETC_SHINING,        // shining gold (Gozag)
-    ETC_PAKELLAS,       // Pakellas altar colours
 #endif
+    ETC_MOUNTAIN,       // Mountain boots
     ETC_WU_JIAN,        // Wu Jian Chinese-inspired colours
     ETC_AWOKEN_FOREST,  // Angry trees.
     ETC_CANDLES,        // Ignis flickering candles
@@ -108,7 +108,7 @@ protected:
 
 int str_to_colour(const string &str, int default_colour = -1,
                   bool accept_number = true, bool accept_elemental = false);
-const string colour_to_str(colour_t colour);
+const string colour_to_str(colour_t colour, bool human_readable=false);
 
 void init_element_colours();
 void add_element_colour(base_colour_calc *colour);

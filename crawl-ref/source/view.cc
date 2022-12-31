@@ -135,7 +135,7 @@ void seen_monsters_react(int stealth)
 
     for (monster_near_iterator mi(you.pos()); mi; ++mi)
     {
-        if ((mi->asleep() || mons_is_wandering(**mi))
+        if ((mi->asleep() || mi->behaviour == BEH_WANDER)
             && check_awaken(*mi, stealth))
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
@@ -527,8 +527,7 @@ static void _maybe_gozag_incite(vector<monster*> monsters)
     for (monster* mon : monsters)
     {
         // XXX: some of this is probably redundant with interrupt_activity
-        if (!mon->see_cell(you.pos()) // xray_vision
-            || mon->wont_attack()
+        if (mon->wont_attack()
             || mon->is_stationary()
             || mons_is_object(mon->type)
             || mons_is_tentacle_or_tentacle_segment(mon->type))
@@ -992,6 +991,18 @@ bool view_update()
     return false;
 }
 
+void animation_delay(unsigned int ms, bool do_refresh)
+{
+    // this leaves any Options.use_animations & UA_BEAM checks to the caller;
+    // but maybe it could be refactored into here
+    if (do_refresh)
+    {
+        viewwindow(false);
+        update_screen();
+    }
+    scaled_delay(ms);
+}
+
 void flash_view(use_animation_type a, colour_t colour, targeter *where)
 {
     if (crawl_state.need_save && Options.use_animations & a)
@@ -1018,6 +1029,15 @@ void flash_view_delay(use_animation_type a, colour_t colour, int flash_delay,
     }
 }
 
+static void _do_explore_healing()
+{
+    // Full heal in, on average, 420 tiles. (270 for MP.)
+    const int healing = div_rand_round(random2(you.hp_max), 210);
+    inc_hp(healing);
+    const int mp = div_rand_round(random2(you.max_magic_points), 135);
+    inc_mp(mp);
+}
+
 enum class update_flag
 {
     affect_excludes = (1 << 0),
@@ -1040,7 +1060,7 @@ static update_flags player_view_update_at(const coord_def &gc)
         const cloud_struct &cl = *cloud;
 
         bool did_exclude = false;
-        if (!cl.temporary() && is_damaging_cloud(cl.type, false))
+        if (!cl.temporary() && cloud_damages_over_time(cl.type, false))
         {
             int size = cl.exclusion_radius();
 
@@ -1068,9 +1088,13 @@ static update_flags player_view_update_at(const coord_def &gc)
     if (!(env.pgrid(gc) & FPROP_SEEN_OR_NOEXP))
     {
         if (!crawl_state.game_is_arena()
+            && you.has_mutation(MUT_EXPLORE_REGEN))
+        {
+            _do_explore_healing();
+        }
+        if (!crawl_state.game_is_arena()
             && cell_triggers_conduct(gc)
             && !player_in_branch(BRANCH_TEMPLE)
-            && !player_in_branch(BRANCH_ABYSS)
             && !(player_in_branch(BRANCH_SLIME) && you_worship(GOD_JIYVA)))
         {
             did_god_conduct(DID_EXPLORATION, 2500);
@@ -1124,10 +1148,8 @@ static void player_view_update()
 
 static void _draw_out_of_bounds(screen_cell_t *cell)
 {
-#ifndef USE_TILE_LOCAL
     cell->glyph  = ' ';
     cell->colour = DARKGREY;
-#endif
 #ifdef USE_TILE
     cell->tile.fg = 0;
     cell->tile.bg = tileidx_out_of_bounds(you.where_are_you);
@@ -1137,12 +1159,10 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc,
                                     const coord_def &ep)
 {
-#ifndef USE_TILE_LOCAL
     // Outside the env.show area.
     cglyph_t g = get_cell_glyph(gc);
     cell->glyph  = g.ch;
     cell->colour = g.col;
-#endif
 
 #ifdef USE_TILE
     // this is just for out-of-los rays, but I don't see a more efficient way..
@@ -1159,7 +1179,6 @@ static void _draw_player(screen_cell_t *cell,
                          const coord_def &gc, const coord_def &ep,
                          bool anim_updates)
 {
-#ifndef USE_TILE_LOCAL
     // Player overrides everything in cell.
     cell->glyph  = mons_char(you.symbol);
     cell->colour = mons_class_colour(you.symbol);
@@ -1170,16 +1189,18 @@ static void _draw_player(screen_cell_t *cell,
         else
             cell->colour = CYAN;
     }
+#ifndef USE_TILE_LOCAL
     if (Options.use_fake_player_cursor)
+#endif
         cell->colour |= COLFLAG_REVERSE;
 
     cell->colour = real_colour(cell->colour);
-#endif
 
 #ifdef USE_TILE
     cell->tile.fg = tile_env.fg(ep) = tileidx_player();
     cell->tile.bg = tile_env.bg(ep);
     cell->tile.cloud = tile_env.cloud(ep);
+    cell->tile.icons = tile_env.icons[ep];
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else
@@ -1191,16 +1212,15 @@ static void _draw_los(screen_cell_t *cell,
                       const coord_def &gc, const coord_def &ep,
                       bool anim_updates)
 {
-#ifndef USE_TILE_LOCAL
     cglyph_t g = get_cell_glyph(gc);
     cell->glyph  = g.ch;
     cell->colour = g.col;
-#endif
 
 #ifdef USE_TILE
     cell->tile.fg = tile_env.fg(ep);
     cell->tile.bg = tile_env.bg(ep);
     cell->tile.cloud = tile_env.cloud(ep);
+    cell->tile.icons = tile_env.icons[ep];
     if (anim_updates)
         tile_apply_animations(cell->tile.bg, &tile_env.flv(gc));
 #else
@@ -1497,7 +1517,6 @@ void view_add_tile_overlay(const coord_def &gc, tileidx_t tile)
 }
 #endif
 
-#ifndef USE_TILE_LOCAL
 struct glyph_overlay
 {
     coord_def gc;
@@ -1510,16 +1529,13 @@ void view_add_glyph_overlay(const coord_def &gc, cglyph_t glyph)
 {
     glyph_overlays.push_back({gc, glyph});
 }
-#endif
 
 void view_clear_overlays()
 {
 #ifdef USE_TILE
     tile_overlays.clear();
 #endif
-#ifndef USE_TILE_LOCAL
     glyph_overlays.clear();
-#endif
 }
 
 /**
@@ -1541,13 +1557,11 @@ static void _sort_overlays()
                 });
     tile_overlay_i = 0;
 #endif
-#ifndef USE_TILE_LOCAL
     stable_sort(begin(glyph_overlays), end(glyph_overlays),
                 [](const glyph_overlay &left, const glyph_overlay &right) {
                     return _coord_def_cmp(left.gc, right.gc);
                 });
     glyph_overlay_i = 0;
-#endif
 }
 
 static void add_overlays(const coord_def& gc, screen_cell_t* cell)
@@ -1571,7 +1585,6 @@ static void add_overlays(const coord_def& gc, screen_cell_t* cell)
         tile_overlay_i++;
     }
 #endif
-#ifndef USE_TILE_LOCAL
     while (glyph_overlay_i < glyph_overlays.size()
            && _coord_def_cmp(glyph_overlays[glyph_overlay_i].gc, gc))
     {
@@ -1585,7 +1598,6 @@ static void add_overlays(const coord_def& gc, screen_cell_t* cell)
         cell->colour = overlay.glyph.col;
         glyph_overlay_i++;
     }
-#endif
 }
 
 /**
@@ -1660,12 +1672,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     cell->flash_colour = BLACK;
 #endif
 
-#ifndef USE_TILE_LOCAL
     // Don't hide important information by recolouring monsters.
     bool allow_mon_recolour = query_map_knowledge(true, gc, [](const map_cell& m) {
         return m.monster() == MONS_NO_MONSTER || mons_class_is_firewood(m.monster());
     });
-#endif
 
     // Is this cell excluded from movement by mesmerise-related statuses?
     // MAP_WITHHELD is set in `show.cc:_update_feat_at`.
@@ -1678,12 +1688,10 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
-#ifndef USE_TILE_LOCAL
         if (!you.see_cell(gc))
             cell->colour = DARKGREY;
         else if (gc != you.pos() && allow_mon_recolour)
             cell->colour = real_colour(flash_colour);
-#endif
 #ifdef USE_TILE
         if (you.see_cell(gc))
             cell->flash_colour = real_colour(flash_colour);
@@ -1694,10 +1702,8 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         if ((crawl_state.darken_range->obeys_mesmerise && mesmerise_excluded)
             || (!crawl_state.darken_range->valid_aim(gc)))
         {
-#ifndef USE_TILE_LOCAL
             if (allow_mon_recolour)
                 cell->colour = DARKGREY;
-#endif
 #ifdef USE_TILE
             if (you.see_cell(gc))
                 cell->tile.bg |= TILE_FLAG_OOR;
@@ -1706,7 +1712,6 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     }
     else if (crawl_state.flash_monsters)
     {
-#ifndef USE_TILE_LOCAL
         bool found = gc == you.pos();
 
         if (!found)
@@ -1721,14 +1726,11 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
 
         if (!found)
             cell->colour = DARKGREY;
-#endif
     }
     else if (mesmerise_excluded) // but no range limits in place
     {
-#ifndef USE_TILE_LOCAL
         if (allow_mon_recolour)
             cell->colour = DARKGREY;
-#endif
 
 #ifdef USE_TILE
         // Only grey out tiles within LOS; out-of-LOS tiles are already
@@ -1742,7 +1744,6 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     tile_apply_properties(gc, cell->tile);
 #endif
 
-#ifndef USE_TILE_LOCAL
     if ((_layers != LAYERS_ALL || Options.always_show_exclusions)
         && you.on_current_level
         && map_bounds(gc)
@@ -1757,7 +1758,6 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
         else if (is_excluded(gc))
             cell->colour = Options.tc_exclude_circle;
     }
-#endif
 
     add_overlays(gc, cell);
 }

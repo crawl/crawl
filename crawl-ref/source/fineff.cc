@@ -13,12 +13,12 @@
 #include "coordit.h"
 #include "dactions.h"
 #include "death-curse.h"
+#include "delay.h" // stop_delay
 #include "directn.h"
 #include "english.h"
 #include "env.h"
 #include "fight.h"
 #include "god-abil.h"
-#include "god-passive.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "melee-attack.h"
@@ -295,6 +295,9 @@ void blink_fineff::fire()
     coord_def target;
     for (fair_adjacent_iterator ai(defend->pos()); ai; ++ai)
     {
+        // No blinking into teleport closets.
+        if (testbits(env.pgrid(*ai), FPROP_NO_TELE_INTO))
+            continue;
         // XXX: allow fedhasites to be blinked into plants?
         if (actor_at(*ai) || !pal->is_habitable(*ai))
             continue;
@@ -346,7 +349,7 @@ void trj_spawn_fineff::fire()
     for (int i = 0; i < tospawn; ++i)
     {
         const monster_type jelly = royal_jelly_ejectable_monster();
-        coord_def jpos = find_newmons_square_contiguous(jelly, posn);
+        coord_def jpos = find_newmons_square_contiguous(jelly, posn, 3, false);
         if (!in_bounds(jpos))
             continue;
 
@@ -552,14 +555,57 @@ void explosion_fineff::fire()
     }
 
     if (you.see_cell(beam.target))
-        mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
+    {
+        if (typ == EXPLOSION_FINEFF_CONCUSSION)
+            mprf("%s", boom_message.c_str());
+        else
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s", boom_message.c_str());
+    }
 
-    if (inner_flame)
+    if (typ == EXPLOSION_FINEFF_INNER_FLAME)
         for (adjacent_iterator ai(beam.target, false); ai; ++ai)
             if (!cell_is_solid(*ai) && !cloud_at(*ai) && !one_chance_in(5))
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), flame_agent);
 
     beam.explode();
+
+    if (typ == EXPLOSION_FINEFF_CONCUSSION)
+    {
+        for (adjacent_iterator ai(beam.target); ai; ++ai)
+        {
+            actor *act = actor_at(*ai);
+            if (!act
+                || act->is_stationary()
+                || act->is_monster() && god_protects(act->as_monster()))
+            {
+                continue;
+            }
+            // TODO: dedup with knockback_actor in beam.cc
+
+            const coord_def newpos = (*ai - beam.target) + *ai;
+            if (newpos == *ai
+                || cell_is_solid(newpos)
+                || actor_at(newpos)
+                || !act->can_pass_through(newpos)
+                || !act->is_habitable(newpos))
+            {
+                continue;
+            }
+
+            act->move_to_pos(newpos);
+            if (act->is_player())
+                stop_delay(true);
+            if (you.can_see(*act))
+            {
+                mprf("%s %s knocked back by the blast.",
+                     act->name(DESC_THE).c_str(),
+                     act->conj_verb("are").c_str());
+            }
+
+            act->apply_location_effects(*ai, beam.killer(),
+                                        actor_to_death_source(beam.agent()));
+        }
+    }
 }
 
 void delayed_action_fineff::fire()
@@ -632,55 +678,29 @@ void avoided_death_fineff::fire()
 
 void infestation_death_fineff::fire()
 {
-    mgen_data bug = mgen_data(MONS_DEATH_SCARAB,
-                              BEH_FRIENDLY, posn,
-                              MHITYOU, MG_AUTOFOE);
-    bug.set_summoned(&you, 0, SPELL_INFESTATION);
-
-    int num_scarabs = 1;
-    if (have_passive(passive_t::bonus_undead)
-        && x_chance_in_y(200 + you.piety, 1600))
+    if (monster *scarab = create_monster(mgen_data(MONS_DEATH_SCARAB,
+                                                   BEH_FRIENDLY, posn,
+                                                   MHITYOU, MG_AUTOFOE)
+                                         .set_summoned(&you, 0,
+                                                       SPELL_INFESTATION),
+                                         false))
     {
-        ++num_scarabs;
-    }
+        scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
 
-    int seen = 0;
-    for (int i = 0; i < num_scarabs; ++i)
-    {
-        if (monster *scarab = create_monster(bug, false))
+        if (you.see_cell(posn) || you.can_see(*scarab))
         {
-            scarab->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 5));
-            if (you.see_cell(posn) || you.can_see(*scarab))
-                seen++;
+            mprf("%s bursts from %s!", scarab->name(DESC_A, true).c_str(),
+                                       name.c_str());
         }
-    }
-
-    if (seen > 0)
-    {
-        mprf("%s %s from %s!",
-             seen == 1 ? "A scarab" : "Scarabs",
-             conjugate_verb("burst", seen > 1).c_str(),
-             name.c_str());
     }
 }
 
 void make_derived_undead_fineff::fire()
 {
-    int num_undead = have_passive(passive_t::bonus_undead)
-                     && mg.behaviour == BEH_FRIENDLY
-                     && x_chance_in_y(200 + you.piety, 1600) ? 2 : 1;
-    bool messaged = false;
-    for (int i = 0; i < num_undead; ++i)
+    if (monster *undead = create_monster(mg))
     {
-        monster *undead = create_monster(mg);
-        if (!undead)
-            continue;
-
-        if (!message.empty() && !messaged)
-        {
+        if (!message.empty() && you.can_see(*undead))
             mpr(message);
-            messaged = true;
-        }
 
         // If the original monster has been levelled up, its HD might be
         // different from its class HD, in which case its HP should be
@@ -701,11 +721,10 @@ void make_derived_undead_fineff::fire()
                 undead->props[ANIMATE_DEAD_KEY] = true;
             else
             {
-                int dur = undead->type == MONS_SKELETON ? 2 : 5;
+                int dur = undead->type == MONS_SKELETON ? 3 : 5;
                 undead->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
             }
         }
-
         if (!agent.empty())
             mons_add_blame(undead, "animated by " + agent);
     }

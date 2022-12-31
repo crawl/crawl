@@ -354,10 +354,18 @@ string formatted_string::tostring(int s, int e) const
     return st;
 }
 
-string formatted_string::to_colour_string() const
+string formatted_string::to_colour_string(int default_colour) const
 {
-    string st;
+    // Setting a default colour is sometimes necessary because of the implicit
+    // default of LIGHTGRAY in various places for the first text op.
     const int size = ops.size();
+    string st;
+    if (default_colour != COLOUR_INHERIT && size > 0 && ops[0].type == FSOP_TEXT)
+    {
+        st += "<";
+        st += colour_to_str(default_colour);
+        st += ">";
+    }
     for (int i = 0; i < size; ++i)
     {
         switch (ops[i].type)
@@ -381,6 +389,7 @@ string formatted_string::to_colour_string() const
         }
         // apparently don't write any closing tags (which the parser can handle)
         case FSOP_COLOUR:
+            // XX is this really the best way to do this?
             st += "<";
             st += colour_to_str(ops[i].colour);
             st += ">";
@@ -483,7 +492,14 @@ formatted_string formatted_string::substr_bytes(int pos, int length) const
 
 formatted_string formatted_string::trim() const
 {
-    return parse_string(trimmed_string(to_colour_string()));
+    string nocolor = tostring();
+    auto left_trim = nocolor.find_first_not_of(" \t\n\r");
+    // in principle this should preserve the colors I guess, but it's a lot
+    // easier not to do that...
+    if (left_trim == string::npos)
+        return formatted_string();
+    auto right_trim = nocolor.find_last_not_of(" \t\n\r");
+    return substr_bytes(left_trim, right_trim - left_trim + 1);
 }
 
 void formatted_string::del_char()

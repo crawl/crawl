@@ -38,6 +38,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "prompt.h"
+#include "quiver.h"
 #include "random-var.h"
 #include "religion.h"
 #include "shopping.h"
@@ -46,6 +47,7 @@
 #include "stringutil.h"
 #include "target.h"
 #include "terrain.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -203,12 +205,15 @@ int mon_beat_sh_pct(int bypass, int sh)
 static bool _autoswitch_to_melee()
 {
     bool penance;
-    if (is_melee_weapon(*you.weapon())
-        && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
+    if (!you.weapon()
+        // don't autoswitch from a weapon that needs a warning
+        || is_melee_weapon(*you.weapon())
+            && !needs_handle_warning(*you.weapon(), OPER_ATTACK, penance))
     {
         return false;
     }
 
+    // don't autoswitch if a or b is not selected
     int item_slot;
     if (you.equip[EQ_WEAPON] == letter_to_index('a'))
         item_slot = letter_to_index('b');
@@ -217,6 +222,7 @@ static bool _autoswitch_to_melee()
     else
         return false;
 
+    // don't autoswitch to a weapon that needs a warning, or to a non-weapon
     if (!you.inv[item_slot].defined()
         || !is_melee_weapon(you.inv[item_slot])
         || needs_handle_warning(you.inv[item_slot], OPER_ATTACK, penance))
@@ -224,7 +230,29 @@ static bool _autoswitch_to_melee()
         return false;
     }
 
-    return wield_weapon(true, item_slot);
+    // auto_switch handles the item slots itself
+    return auto_wield();
+}
+
+static bool _can_shoot_with(const item_def *weapon)
+{
+    // TOOD: dedup elsewhere.
+    return weapon
+        && is_range_weapon(*weapon)
+        && !you.attribute[ATTR_HELD]
+        && !you.berserk();
+}
+
+static bool _autofire_at(actor *defender)
+{
+    if (!_can_shoot_with(you.weapon()))
+        return false;
+    dist t;
+    t.target = defender->pos();
+    shared_ptr<quiver::action> ract = quiver::find_ammo_action();
+    ract->set_target(t);
+    throw_it(*ract);
+    return true;
 }
 
 /**
@@ -278,11 +306,12 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             return false;
         }
 
-        if (!simu && Options.auto_switch
-            && you.weapon()
-            && _autoswitch_to_melee())
+        if (!simu && you.weapon() && !you.confused())
         {
-            return true; // Is this right? We did take time, but we didn't melee
+            if (Options.auto_switch && _autoswitch_to_melee())
+                return true; // Is this right? We did take time, but we didn't melee
+            if (!simu && _autofire_at(defender))
+                return true;
         }
 
         melee_attack attk(&you, defender);
@@ -472,7 +501,8 @@ stab_type find_stab_type(const actor *attacker,
 
     // Distracted (but not batty); this only applies to players.
     if (attacker && attacker->is_player()
-        && def && def->foe != MHITYOU && !mons_is_batty(*def))
+        && def && def->foe != MHITYOU
+        && def->behaviour != BEH_BATTY)
     {
         return STAB_DISTRACTED;
     }
@@ -528,25 +558,13 @@ static inline int get_resistible_fraction(beam_type flavour)
 {
     switch (flavour)
     {
-    // Drowning damage from water is resistible by being a water thing, or
-    // otherwise asphyx resistant.
     case BEAM_WATER:
-        return 40;
-
-    // Assume ice storm and throw icicle are mostly solid.
     case BEAM_ICE:
-        return 40;
-
-    // 50/50 split of elec and sonic damage.
     case BEAM_THUNDER:
-        return 50;
-
     case BEAM_LAVA:
-        return 55;
-
+        return 50;
     case BEAM_POISON_ARROW:
         return 70;
-
     default:
         return 100;
     }
@@ -576,7 +594,7 @@ static int _beam_to_resist(const actor* defender, beam_type flavour)
         case BEAM_PAIN:
         case BEAM_MALIGN_OFFERING:
         case BEAM_VAMPIRIC_DRAINING:
-        case BEAM_NECROTIZE:
+        case BEAM_NECROTISE:
             return defender->res_negative_energy();
         case BEAM_ACID:
             return defender->res_acid();
@@ -625,7 +643,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
         const bool immune_at_3_res = is_mon
                                      || flavour == BEAM_NEG
                                      || flavour == BEAM_PAIN
-                                     || flavour == BEAM_NECROTIZE
+                                     || flavour == BEAM_NECROTISE
                                      || flavour == BEAM_MALIGN_OFFERING
                                      || flavour == BEAM_VAMPIRIC_DRAINING
                                      || flavour == BEAM_HOLY
@@ -645,7 +663,7 @@ int resist_adjust_damage(const actor* defender, beam_type flavour, int rawdamage
                 resistible /= 1 + bonus_res + res * res;
             else if (flavour == BEAM_NEG
                      || flavour == BEAM_PAIN
-                     || flavour == BEAM_NECROTIZE
+                     || flavour == BEAM_NECROTISE
                      || flavour == BEAM_MALIGN_OFFERING
                      || flavour == BEAM_VAMPIRIC_DRAINING)
             {
@@ -689,9 +707,9 @@ bool wielded_weapon_check(const item_def *weapon, string attack_verb)
 {
     bool penance = false;
     if (you.received_weapon_warning
-        || (weapon
-            && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
-            && is_melee_weapon(*weapon))
+        || weapon
+           && !needs_handle_warning(*weapon, OPER_ATTACK, penance)
+           && (is_melee_weapon(*weapon) || _can_shoot_with(weapon))
         || you.confused())
     {
         return true;
@@ -770,7 +788,9 @@ bool force_player_cleave(coord_def target)
 
     if (!cleave_targets.empty())
     {
-        targeter_cleave hitfunc(&you, target);
+        // Rift is too funky and hence gets no special treatment.
+        const int range = you.reach_range() == REACH_TWO ? 2 : 1;
+        targeter_cleave hitfunc(&you, target, range);
         if (stop_attack_prompt(hitfunc, "attack"))
             return true;
 
@@ -784,12 +804,20 @@ bool force_player_cleave(coord_def target)
 
 bool attack_cleaves(const actor &attacker, int which_attack)
 {
-    const item_def* weap = attacker.weapon(which_attack);
+    if (attacker.is_player()
+        && (you.form == transformation::storm || you.duration[DUR_CLEAVE]))
+    {
+        return true;
+    }
 
-    return weap && item_attack_skill(*weap) == SK_AXES
-        || attacker.is_player()
-            && (you.form == transformation::storm
-                || you.duration[DUR_CLEAVE]);
+    const item_def* weap = attacker.weapon(which_attack);
+    return weap && weapon_cleaves(*weap);
+}
+
+bool weapon_cleaves(const item_def &weap)
+{
+    return item_attack_skill(weap) == SK_AXES
+           || is_unrandom_artefact(weap, UNRAND_LOCHABER_AXE);
 }
 
 /**
@@ -812,25 +840,27 @@ void get_cleave_targets(const actor &attacker, const coord_def& def,
     if (actor_at(def))
         targets.push_back(actor_at(def));
 
+    const item_def* weap = attacker.weapon(which_attack);
+
     if (attack_cleaves(attacker, which_attack))
     {
         const coord_def atk = attacker.pos();
-        coord_def atk_vector = def - atk;
-        const int dir = random_choose(-1, 1);
+        const int cleave_radius = weap && weapon_reach(*weap) == REACH_TWO ? 2 : 1;
 
-        for (int i = 0; i < 7; ++i)
+        for (distance_iterator di(atk, true, true, cleave_radius); di; ++di)
         {
-            atk_vector = rotate_adjacent(atk_vector, dir);
-
-            actor *target = actor_at(atk + atk_vector);
-            if (target && !_dont_harm(attacker, *target))
-                targets.push_back(target);
+            if (*di == def) continue; // no double jeopardy
+            actor *target = actor_at(*di);
+            if (!target || _dont_harm(attacker, *target))
+                continue;
+            if (di.radius() == 2 && !can_reach_attack_between(atk, *di, REACH_TWO))
+                continue;
+            targets.push_back(target);
         }
     }
 
     // fake cleaving: gyre and gimble's extra attacks are implemented as
     // cleaving attacks on enemies already in `targets`
-    const item_def* weap = attacker.weapon(which_attack);
     if (weap && is_unrandom_artefact(*weap, UNRAND_GYRE))
     {
         list<actor*> new_targets;
@@ -856,10 +886,11 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                            wu_jian_attack_type wu_jian_attack,
                            bool is_projected)
 {
+    if (!attacker.alive())
+        return;
+    const item_def* weap = attacker.weapon(attack_number);
     if (attacker.is_player())
     {
-        const item_def* weap = attacker.weapon(attack_number);
-
         if ((wu_jian_attack == WU_JIAN_ATTACK_WHIRLWIND
              || wu_jian_attack == WU_JIAN_ATTACK_WALL_JUMP
              || wu_jian_attack == WU_JIAN_ATTACK_TRIGGERED_AUX)
@@ -870,13 +901,15 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
             // worshiping Wu they'll be able to cleave their Wu attacks.
         }
     }
-
+    const bool reaching = weap && weapon_reach(*weap) > REACH_NONE;
     while (attacker.alive() && !targets.empty())
     {
         actor* def = targets.front();
 
         if (def && def->alive() && !_dont_harm(attacker, *def)
-            && (is_projected || adjacent(attacker.pos(), def->pos())))
+            && (is_projected
+                || adjacent(attacker.pos(), def->pos())
+                || reaching))
         {
             melee_attack attck(&attacker, def, attack_number,
                                ++effective_attack_number, true);
@@ -926,24 +959,36 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
         min_delay = 7;
 
     // ...except crossbows...
-    if (item_attack_skill(weapon) == SK_CROSSBOWS && min_delay < 10)
+    if (is_crossbow(weapon) && min_delay < 10)
         min_delay = 10;
+
+    // ...and longbows...
+    if (weapon.sub_type == WPN_LONGBOW)
+        min_delay = 6;
 
     // ... and unless it would take more than skill 27 to get there.
     // Round up the reduction from skill, so that min delay is rounded down.
     min_delay = max(min_delay, base - (MAX_SKILL_LEVEL + 1)/2);
 
-    if (check_speed && get_weapon_brand(weapon) == SPWPN_SPEED)
-    {
-        min_delay *= 2;
-        min_delay /= 3;
-    }
+    if (check_speed)
+        min_delay = weapon_adjust_delay(weapon, min_delay, false);
 
     // never go faster than speed 3 (ie 3.33 attacks per round)
     if (min_delay < 3)
         min_delay = 3;
 
     return min_delay;
+}
+
+/// Adjust delay based on weapon brand.
+int weapon_adjust_delay(const item_def &weapon, int base, bool random)
+{
+    const brand_type brand = get_weapon_brand(weapon);
+    if (brand == SPWPN_SPEED)
+        return random ? div_rand_round(base * 2, 3) : (base * 2) / 3;
+    if (brand == SPWPN_HEAVY)
+        return random ? div_rand_round(base * 3, 2) : (base * 3) / 2;
+    return base;
 }
 
 int mons_weapon_damage_rating(const item_def &launcher)
@@ -979,6 +1024,11 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
 
     if (mon->friendly())
     {
+        // There's not really any harm in attacking your own spectral weapon.
+        // It won't share damage, and it'll go away anyway.
+        if (mon->type == MONS_SPECTRAL_WEAPON)
+            return false;
+
         if (god_hates_attacking_friend(you.religion, *mon))
         {
             adj = "your ally ";
@@ -1246,9 +1296,7 @@ bool weapon_uses_strength(skill_type wpn_skill, bool using_weapon)
     {
     case SK_LONG_BLADES:
     case SK_SHORT_BLADES:
-    case SK_CROSSBOWS:
-    case SK_BOWS:
-    case SK_SLINGS:
+    case SK_RANGED_WEAPONS:
         return false;
     default:
         return true;
@@ -1290,4 +1338,42 @@ int apply_fighting_skill(int damage, bool aux, bool random)
     damage /= base * 100;
 
     return damage;
+}
+
+int throwing_base_damage_bonus(const item_def &proj)
+{
+    // Stones get half bonus; everything else gets full bonus.
+    return div_rand_round(you.skill_rdiv(SK_THROWING)
+                          * min(4, property(proj, PWPN_DAMAGE)), 4);
+}
+
+int brand_adjust_weapon_damage(int base_dam, int brand, bool random)
+{
+    if (brand != SPWPN_HEAVY)
+        return base_dam;
+    if (random)
+        return div_rand_round(base_dam * 9, 5);
+    return base_dam * 9 / 5;
+}
+
+int unarmed_base_damage()
+{
+    int damage = get_form()->get_base_unarmed_damage();
+
+    if (you.has_usable_claws())
+        damage += you.has_claws() * 2;
+
+    if (you.form_uses_xl())
+        damage += div_rand_round(you.experience_level, 3);
+
+    return damage;
+}
+
+int unarmed_base_damage_bonus(bool random)
+{
+    if (you.form_uses_xl())
+        return 0;
+    if (random)
+        return you.skill_rdiv(SK_UNARMED_COMBAT);
+    return you.skill(SK_UNARMED_COMBAT);
 }

@@ -1,0 +1,325 @@
+###############################################################################
+# 怪物称号。
+# 在他们第一次出现时、在他们的描述界面中进行显示。
+#########
+%%%%
+Agnes title
+
+漫游者艾格尼丝
+%%%%
+Aizul title
+
+被忽视的守卫艾祖
+%%%%
+Amaemon title
+
+恶魔投毒者亚麦依蒙
+%%%%
+Antaeus title
+
+安泰俄斯，悲叹河的守卫
+%%%%
+Arachne title
+
+编织者阿拉克尼
+%%%%
+Asmodeus title
+
+阿斯莫德，欣嫩谷的王子
+%%%%
+Asterion title
+
+堕落之王阿斯忒里翁
+%%%%
+Azrael title
+
+无边烈焰亚兹拉尔
+%%%%
+Bai Suzhen title
+
+白素贞，白蛇夫人
+%%%%
+Boris title
+
+鲍里斯，生死大师
+%%%%
+Cerebov title
+
+赛里鲍夫，火与钢之恶魔领主
+%%%%
+Chuck title
+
+收集者查克
+%%%%
+Crazy Yiuf title
+
+开悟者疯狂的伊夫
+%%%%
+Dispater title
+
+迪斯帕特，铁城领主
+%%%%
+Dissolution title
+
+分解者，吉瓦的高级祭司
+%%%%
+Donald title
+
+冒险者唐纳德
+%%%%
+Dowan title
+
+多万，多维莎的哥哥
+%%%%
+Duvessa title
+
+多维莎，多万的妹妹
+%%%%
+Edmund title
+
+年少者埃德蒙
+%%%%
+Ereshkigal title
+
+埃列什基伽勒，塔尔塔罗斯的女王
+%%%%
+Erica title
+
+暴躁的埃里卡
+%%%%
+Erolcha title
+
+狡猾的厄洛卡
+%%%%
+Eustachio title
+
+奇伟的埃乌斯塔乔
+%%%%
+Fannar title
+
+冷酷的范纳尔
+%%%%
+Frances title
+
+弗朗西丝，魔窟的女公爵
+%%%%
+Frederick title
+
+完美的弗雷德里克
+%%%%
+Gastronok title
+
+沉重的加斯特罗克
+%%%%
+Geryon title
+
+吉里昂，地狱的守门人
+%%%%
+Gloorx Vloq title
+
+克罗克斯·弗拉克，暗之恶魔领主
+%%%%
+Grum title
+
+猎手格鲁姆
+%%%%
+Grunn title
+
+被惩罚的格鲁
+%%%%
+Harold title
+
+饱经风霜的哈罗德
+%%%%
+Ignacio title
+
+伊格纳西欧，剧痛大师
+%%%%
+Ilsuiw title
+
+伊尔斯，潮汐女巫
+%%%%
+Ijyb title
+
+扭曲的地精伊吉布
+%%%%
+Jessica title
+
+见习女术师杰西卡
+%%%%
+Jorgrun title
+
+撼地者约格伦
+%%%%
+Jory title
+
+血腥伯爵乔里
+%%%%
+Joseph title
+
+约瑟夫，雇佣兵
+%%%%
+Josephina title
+
+冰巫妖约瑟芬娜
+%%%%
+Josephine title
+
+腐朽的死灵法师约瑟芬
+%%%%
+Khufu title
+
+不朽的法老胡夫
+%%%%
+Kirke title
+
+喀耳刻，神话编织者
+%%%%
+Lodul title
+
+雷霆洛杜尔
+%%%%
+Lom Lobon title
+
+洛姆·洛邦，禁忌知识之恶魔领主
+%%%%
+Louise title
+
+腐化的路易丝
+%%%%
+Maggie title
+
+自负的玛吉
+%%%%
+Mara title
+
+玛拉，幻象领主
+%%%%
+Margery title
+
+屠龙者玛杰丽
+%%%%
+Maurice title
+
+盗贼莫里斯
+%%%%
+Menkaure title
+
+孟卡拉，尘土王子
+%%%%
+Mennas title
+
+梅纳斯，辛的代言人
+%%%%
+Mlioglotl title
+
+姆利格洛特，无形的恐怖
+%%%%
+Mnoleg title
+
+姆诺莱格，混沌之恶魔领主
+%%%%
+Murray title
+
+会说话的恶魔头骨默里
+%%%%
+Natasha title
+
+娜塔莎，生死仆从
+%%%%
+Nellie title
+
+内莉，演出明星
+%%%%
+Nergalle title
+
+缚魂者内尔伽莉
+%%%%
+Nessos title
+
+精英半人马内萨斯
+%%%%
+Nikola title
+
+疯狂的发明家尼古拉
+%%%%
+Parghit title
+
+强大的帕吉特
+%%%%
+Pargi title
+
+柔弱的帕吉
+%%%%
+Pikel title
+
+皮克尔，灵魂商人
+%%%%
+Polyphemus title
+
+警惕的牧羊人波吕斐摩斯
+%%%%
+Psyche title
+
+疯狂的女法师普赛克
+%%%%
+Robin title
+
+强臂罗宾
+%%%%
+Roxanne title
+
+罗克珊，名誉堪舆师
+%%%%
+Rupert title
+
+野人鲁珀特
+%%%%
+Saint Roka title
+
+弥赛亚圣罗卡
+%%%%
+Sigmund title
+
+可怕的西格蒙德
+%%%%
+Snorg title
+
+饕餮的史诺格
+%%%%
+Sojobo title
+
+僧正坊，天狗女王
+%%%%
+Sonja title
+
+索尼娅，优雅的刺客
+%%%%
+Terence title
+
+鲁莽的泰伦斯
+%%%%
+Tiamat title
+
+提亚玛特，龙神的化身
+%%%%
+Urug title
+
+兽人弩炮尤鲁格
+%%%%
+Vashnia title
+
+上层精英纳迦瓦什妮亚
+%%%%
+Vv title
+
+流亡的薇薇
+%%%%
+Xtahua title
+
+古老的西泰华
+%%%%
+Zenata title
+
+塞奈达，西泽的追寻者
+%%%%
