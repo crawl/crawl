@@ -576,6 +576,89 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
+//Returns the first valid target found if the player attempts to rampage in the
+//given direction. If the player cannot rampage or no target exists, return nullptr.
+monster* get_rampage_target(coord_def move)
+{
+    // Don't rampage if the player has status effects that should prevent it:
+    // fungusform + terrified, confusion, immobile (tree)form, or constricted.
+    if (you.is_nervous()
+        || you.confused()
+        || !you.is_motile()
+        || you.is_constricted())
+    {
+        return nullptr;
+    }
+
+
+    // This logic assumes that the relative coord_def move is from [-1,1].
+    // If the move_player_action() calls are ever rewritten in a way that
+    // breaks this assumption, these targeters will need to be updated.
+    const int tracer_range = you.current_vision;
+    const coord_def tracer_target = you.pos() + (move * tracer_range);
+
+    // Setup the rampage tracer beam.
+    bolt beam;
+    beam.range           = LOS_RADIUS;
+    beam.aimed_at_spot   = true;
+    beam.target          = tracer_target;
+    beam.name            = "verb"; //this is a dummy beam
+    beam.source_name     = "you";
+    beam.source          = you.pos();
+    beam.source_id       = MID_PLAYER;
+    beam.thrower         = KILL_YOU;
+    // The rampage reposition is explicitly noiseless for stab synergy.
+    // Its ensuing move or attack action will generate a normal amount of noise.
+    beam.loudness        = 0;
+    beam.pierce          = true;
+    beam.affects_nothing = true;
+    beam.is_tracer       = true;
+    // is_targeting prevents bolt::do_fire() from interrupting with a prompt,
+    // if our tracer crosses something that blocks line of fire.
+    beam.is_targeting    = true;
+    beam.fire();
+
+    // Iterate the tracer to see if the first visible target is a hostile mons.
+    for (coord_def p : beam.path_taken)
+    {
+        // Don't rampage without direct visibility to the target tile.
+        if (!you.see_cell_no_trans(p))
+            return nullptr;
+
+        monster* mon = monster_at(p);
+        // Check for a plausible target at this cell.
+        // If there's no monster, a Fedhas ally, or an invis monster,
+        // perform terrain checks and if they pass keep going.
+        if (!mon
+            || fedhas_passthrough(mon)
+            || !you.can_see(*mon))
+        {
+            // Don't rampage if our tracer path is broken by something we can't
+            // safely pass through before it reaches a monster.
+            if (!you.can_pass_through(p) || is_feat_dangerous(env.grid(p)))
+                return nullptr;
+            continue;
+        }
+        // Don't rampage if the closest mons is non-hostile, a projectile,
+        // adjacent, or a (non-Fedhas) plant.
+        else if (mon && (mon->wont_attack()
+                         || mons_is_projectile(*mon)
+                         || mons_is_firewood(*mon)
+                         || adjacent(you.pos(), mon->pos())))
+        {
+            return nullptr;
+        }
+        // Okay, the first mons along the tracer is a valid target.
+        // Don't need terrain checks because we'll attack the mons.
+        else if (mon)
+        {
+            return mon;
+        }
+    }
+    //While this should be unreachable, if for some reason the beam has an empty path
+    return nullptr;
+}
+
 /**
  * Rampages the player toward a hostile monster, if one exists in the direction
  * of the move input. Invalid things along the rampage path cancel the rampage.
@@ -608,84 +691,8 @@ static spret _rampage_forward(coord_def move)
         return spret::abort;
     }
 
-    // Don't rampage if the player has status effects that should prevent it:
-    // fungusform + terrified, confusion, immobile (tree)form, or constricted.
-    if (you.is_nervous()
-        || you.confused()
-        || !you.is_motile()
-        || you.is_constricted())
-    {
-        return spret::fail;
-    }
-
-
-    // This logic assumes that the relative coord_def move is from [-1,1].
-    // If the move_player_action() calls are ever rewritten in a way that
-    // breaks this assumption, these targeters will need to be updated.
-    const int tracer_range = you.current_vision;
-    const coord_def tracer_target = you.pos() + (move * tracer_range);
-
-    // Setup the rampage tracer beam.
-    bolt beam;
-    beam.range           = LOS_RADIUS;
-    beam.aimed_at_spot   = true;
-    beam.target          = tracer_target;
-    beam.name            = verb;
-    beam.source_name     = "you";
-    beam.source          = you.pos();
-    beam.source_id       = MID_PLAYER;
-    beam.thrower         = KILL_YOU;
-    // The rampage reposition is explicitly noiseless for stab synergy.
-    // Its ensuing move or attack action will generate a normal amount of noise.
-    beam.loudness        = 0;
-    beam.pierce          = true;
-    beam.affects_nothing = true;
-    beam.is_tracer       = true;
-    // is_targeting prevents bolt::do_fire() from interrupting with a prompt,
-    // if our tracer crosses something that blocks line of fire.
-    beam.is_targeting    = true;
-    beam.fire();
-
-    monster* valid_target = nullptr;
-
-    // Iterate the tracer to see if the first visible target is a hostile mons.
-    for (coord_def p : beam.path_taken)
-    {
-        // Don't rampage without direct visibility to the target tile.
-        if (!you.see_cell_no_trans(p))
-            return spret::fail;
-
-        monster* mon = monster_at(p);
-        // Check for a plausible target at this cell.
-        // If there's no monster, a Fedhas ally, or an invis monster,
-        // perform terrain checks and if they pass keep going.
-        if (!mon
-            || fedhas_passthrough(mon)
-            || !you.can_see(*mon))
-        {
-            // Don't rampage if our tracer path is broken by something we can't
-            // safely pass through before it reaches a monster.
-            if (!you.can_pass_through(p) || is_feat_dangerous(env.grid(p)))
-                return spret::fail;
-            continue;
-        }
-        // Don't rampage if the closest mons is non-hostile, a projectile,
-        // or a (non-Fedhas) plant.
-        else if (mon && (mon->wont_attack()
-                         || mons_is_projectile(*mon)
-                         || mons_is_firewood(*mon)))
-        {
-            return spret::fail;
-        }
-        // Okay, the first mons along the tracer is a valid target.
-        // Don't need terrain checks because we'll attack the mons.
-        else if (mon)
-        {
-            valid_target = mon;
-            break;
-        }
-    }
-    if (!valid_target)
+    monster* valid_target = get_rampage_target(move);
+    if(valid_target == nullptr)
         return spret::fail;
 
     const int rampage_distance = enhanced
@@ -695,31 +702,28 @@ static spret _rampage_forward(coord_def move)
     const coord_def rampage_destination = you.pos() + (move * rampage_distance);
     const coord_def rampage_target = you.pos() + (move * (rampage_distance + 1));
 
-    // Reset the beam target to the actual rampage_destination distance.
-    beam.target = rampage_destination;
-
     // Will the second move be an attack?
     const bool attacking = valid_target->pos() == rampage_target;
 
     // Don't rampage if the player's tile is being targeted, somehow.
-    if (beam.target == you.pos())
+    if (rampage_destination == you.pos())
         return spret::fail;
 
     // Beholder/fearmonger messaging is handled by the movement code,
     // so we return fail even though the move will ultimately be aborted.
     // Rampaging within (up to the edge) of the allowed range is permitted.
     // Don't rampage if it would take us away from a beholder.
-    const monster* beholder = you.get_beholder(beam.target);
+    const monster* beholder = you.get_beholder(rampage_destination);
     if (beholder)
         return spret::fail;
 
     // Don't rampage if it would take us toward a fearmonger.
-    const monster* fearmonger = you.get_fearmonger(beam.target);
+    const monster* fearmonger = you.get_fearmonger(rampage_destination);
     if (fearmonger)
         return spret::fail;
 
     // Do allow rampaging on top of Fedhas plants,
-    const monster* mons = monster_at(beam.target);
+    const monster* mons = monster_at(rampage_destination);
     bool fedhas_move = false;
     if (mons && fedhas_passthrough(mons))
         fedhas_move = true;
@@ -742,7 +746,7 @@ static spret _rampage_forward(coord_def move)
     // * dangerous terrain/trap/cloud/exclusion prompt
     // * weapon check prompts;
     // messaging for this is handled by check_moveto().
-    if (!check_moveto(beam.target, noun)
+    if (!check_moveto(rampage_destination, noun)
         || attacking && !wielded_weapon_check(you.weapon(), noun + " and attack")
         || !attacking && !check_moveto(rampage_target, noun))
     {
@@ -776,7 +780,7 @@ static spret _rampage_forward(coord_def move)
     // (But not opportunity attacks - messy codewise, and no design benefit.)
 
     // stepped = true, we're flavouring this as movement, not a blink.
-    move_player_to_grid(beam.target, true);
+    move_player_to_grid(rampage_destination, true);
 
     // No full-LOS stabbing.
     if (enhanced)
