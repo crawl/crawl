@@ -6444,6 +6444,10 @@ int player_willpower(bool temp)
     if (you.duration[DUR_TROGS_HAND] && temp)
         rm += WL_PIP * 2;
 
+    const int max_will = MAX_WILL_PIPS * WL_PIP;
+    if (rm > max_will)
+        rm = max_will;
+
     // Enchantment/environment effect
     if ((you.duration[DUR_LOWERED_WL]
          || player_in_branch(BRANCH_TARTARUS)) && temp)

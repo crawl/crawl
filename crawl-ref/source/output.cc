@@ -2538,7 +2538,7 @@ static vector<formatted_string> _get_overview_resistances(
         out += _resist_composer("rMut", cwidth, rmuta) + "\n";
 
     const int rmagi = player_willpower() / WL_PIP;
-    out += _resist_composer("Will", cwidth, rmagi, 5, true,
+    out += _resist_composer("Will", cwidth, rmagi, MAX_WILL_PIPS, true,
                             player_willpower() == WILL_INVULN) + "\n";
 
     out += _stealth_bar(cwidth, 20) + "\n";

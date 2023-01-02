@@ -65,6 +65,8 @@ static const int MAX_STAT_VALUE = 125;
 static const int REGEN_PIP = 80;
 /// The standard unit of WL; one level in %/@ screens
 static const int WL_PIP = 40;
+/// The cap for the player's Will, in units of WL\_PIP.
+static const int MAX_WILL_PIPS = 5;
 /// The standard unit of stealth; one level in %/@ screens
 static const int STEALTH_PIP = 50;
 
