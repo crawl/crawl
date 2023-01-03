@@ -1513,8 +1513,8 @@ static string _describe_weapon_brand(const item_def &item)
     case SPWPN_DRAINING:
         return "It sometimes drains living victims (1/2 chance). This deals "
                "an additional one-quarter of any damage that pierces "
-               "defenders' armour by one-quarter as well as a flat 2-4 damage,"
-               " and weakens them slightly. A truly terrible weapon...";
+               "defenders' armour as well as a flat 2-4 damage, and also "
+               "weakens them slightly. A truly terrible weapon...";
     case SPWPN_SPEED:
         return "Attacks with this weapon are significantly faster.";
     case SPWPN_HEAVY:
@@ -1543,7 +1543,8 @@ static string _describe_weapon_brand(const item_def &item)
                "can teleport you to foes or banish you to the Abyss.";
     case SPWPN_PENETRATION:
         return "Any ammunition fired by it continues flying after striking "
-               "targets, potentially hitting everything in sight in its path.";
+               "targets, potentially hitting everything in its path until it "
+               "leaves sight.";
     case SPWPN_REAPING:
         return "Any living foe damaged by it may be reanimated upon death as a "
                "zombie friendly to the wielder, with an increasing chance as "
