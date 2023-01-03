@@ -222,11 +222,8 @@ COLOUR:  ETC_RANDOM
 TILE:    spwpn_mace_of_variability
 TILE_EQ: mace_of_variability
 VALUE:   600
-BOOL:    skip_ego
 BRAND:   SPWPN_CHAOS
-DBRAND:  Each time it hits an enemy it has a different, random effect.
-+
-+It occasionally unleashes arcs of chaos on nearby creatures upon striking a
+DBRAND:  It occasionally unleashes arcs of chaos on nearby creatures upon striking a
  foe.
 
 NAME:    glaive of Prune
@@ -1379,10 +1376,7 @@ TILE_EQ:  firestarter
 PLUS:     +7
 BRAND:    SPWPN_FLAMING
 FIRE:     2
-BOOL:     skip_ego
-DBRAND:   It burns those it strikes, dealing additional fire damage.
-+
-+It fills those it strikes with an explosive inner flame.
+DBRAND:   It fills those it strikes with an explosive inner flame.
 DESCRIP:  It grants immunity to clouds of flame.
 
 NAME:     orange crystal plate armour
@@ -1485,11 +1479,8 @@ TILE:    urand_frostbite
 TILE_EQ: frostbite
 BRAND:   SPWPN_FREEZING
 COLD:    1
-BOOL:    skip_ego, fly, noises
-DBRAND:  It freezes those it strikes, dealing additional cold damage. It can
- also slow down cold-blooded creatures.
-+
-+It occasionally leaves clouds of freezing vapour upon striking a foe.
+BOOL:    fly, noises
+DBRAND:  It occasionally leaves clouds of freezing vapour upon striking a foe.
 DESCRIP: It grants immunity to clouds of freezing vapour.
 
 # start TAG_MAJOR_VERSION == 34
