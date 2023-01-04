@@ -2759,9 +2759,8 @@ static string _wizard_spell_power_numeric_string(spell_type spell)
 #endif
 
 // TODO: deduplicate with the same-named function in describe-spells.cc
-static dice_def _spell_damage(spell_type spell, bool evoked)
+static dice_def _spell_damage(spell_type spell, int power)
 {
-    const int power = _spell_power(spell, evoked);
     if (power < 0)
         return dice_def(0,0);
     switch (spell)
@@ -2797,8 +2796,30 @@ static dice_def _spell_damage(spell_type spell, bool evoked)
     return zap_damage(zap, power, false, false);
 }
 
-string spell_damage_string(spell_type spell, bool evoked)
+string spell_max_damage_string(spell_type spell)
 {
+    switch (spell)
+    {
+    case SPELL_MAXWELLS_COUPLING:
+    case SPELL_FREEZING_CLOUD:
+        // These have damage strings, but don't scale with power.
+        return "";
+    default:
+        break;
+    }
+    // Only show a distinct max damage string if we're not at max power
+    // already. Otherwise, it's redundant!
+    const int pow = calc_spell_power(spell, true);
+    const int max_pow = spell_power_cap(spell);
+    if (pow >= max_pow)
+        return "";
+    return spell_damage_string(spell, false, max_pow);
+}
+
+string spell_damage_string(spell_type spell, bool evoked, int pow)
+{
+    if (pow == -1)
+        pow = _spell_power(spell, evoked);
     switch (spell)
     {
         case SPELL_MAXWELLS_COUPLING:
@@ -2807,18 +2828,15 @@ string spell_damage_string(spell_type spell, bool evoked)
             return desc_cloud_damage(CLOUD_COLD, false);
         case SPELL_DISCHARGE:
         {
-            int max = discharge_max_damage(_spell_power(spell, evoked));
+            const int max = discharge_max_damage(pow);
             return make_stringf("%d-%d/arc", FLAT_DISCHARGE_ARC_DAMAGE, max);
         }
         case SPELL_AIRSTRIKE:
-        {
-            dice_def dice = base_airstrike_damage(_spell_power(spell, evoked));
-            return describe_airstrike_dam(dice);
-        }
+            return describe_airstrike_dam(base_airstrike_damage(pow));
         default:
             break;
     }
-    const dice_def dam = _spell_damage(spell, evoked);
+    const dice_def dam = _spell_damage(spell, pow);
     if (dam.num == 0 || dam.size == 0)
         return "";
     string mult = "";
