@@ -453,7 +453,7 @@ static vector<ability_def> &_get_ability_list()
             1, 0, 10, -1, {fail_basis::invo, 30, 6, 20}, abflag::none },
         { ABIL_LUGONU_BANISH, "Banish",
             4, 0, generic_cost::range(3, 4), LOS_MAX_RANGE,
-            {fail_basis::invo, 85, 7, 20}, abflag::none },
+            {fail_basis::invo, 65, 7, 20}, abflag::none },
         { ABIL_LUGONU_CORRUPT, "Corrupt",
             7, scaling_cost::fixed(5), 10, -1, {fail_basis::invo, 70, 4, 25},
             abflag::none },
