@@ -5937,10 +5937,10 @@ string extra_cloud_info(cloud_type cloud_type)
     const bool opaque = is_opaque_cloud(cloud_type);
     const string opacity_info = !opaque ? "" :
         "\nThis cloud is opaque; one tile will not block vision, but "
-        "multiple will.";
+        "multiple will.\n";
     const string vanish_info
-        = make_stringf("\n\nClouds of this kind an adventurer makes will vanish"
-                       " %s once outside their sight.",
+        = make_stringf("\nClouds of this kind an adventurer makes will vanish"
+                       " %s once outside their sight.\n",
                        opaque ? "quickly" : "almost instantly");
     return opacity_info + vanish_info;
 }
