@@ -2638,9 +2638,6 @@ will deselect it (except for ',' and '-', obviously).
 ?
   Select all scrolls.
 
-:
-  Select all books.
-
 /
   Select all wands.
 
