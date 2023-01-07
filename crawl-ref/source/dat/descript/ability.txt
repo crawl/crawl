@@ -398,7 +398,7 @@ discarding the other two.
 %%%%
 Deal Four ability
 
-Deals four cards from a deck in the time it normally takes to draw a
+Plays four cards from a deck in the time it normally takes to draw a
 single card.
 %%%%
 Stack Five ability
