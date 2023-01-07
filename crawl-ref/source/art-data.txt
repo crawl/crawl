@@ -1707,7 +1707,7 @@ NAME:    slick slippers
 OBJ:     OBJ_ARMOUR/ARM_BOOTS
 TILE:    urand_slippers
 TILE_EQ: short_blue
-PLUS:    +0
+PLUS:    +1
 COLOUR:  ETC_DITHMENOS
 EV:      3
 INSCRIP: slick, slippery,
