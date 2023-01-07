@@ -1800,6 +1800,28 @@ spret blinkbolt(int power, bolt &beam, bool fail)
         return spret::abort;
     }
 
+    if (mons_aligned(mons, &you) || mons_is_firewood(*mons))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return spret::abort;
+    }
+
+    const monster* beholder = you.get_beholder(beam.target);
+    if (beholder)
+    {
+        mprf("You cannot blinkbolt away from %s!",
+            beholder->name(DESC_THE, true).c_str());
+        return spret::abort;
+    }
+
+    const monster* fearmonger = you.get_fearmonger(beam.target);
+    if (fearmonger)
+    {
+        mprf("You cannot blinkbolt closer to %s!",
+            fearmonger->name(DESC_THE, true).c_str());
+        return spret::abort;
+    }
+
     if (!player_tracer(ZAP_BLINKBOLT, power, beam))
         return spret::abort;
 
