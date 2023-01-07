@@ -1827,6 +1827,11 @@ spret blinkbolt(int power, bolt &beam, bool fail)
 
     fail_check();
 
+    // Storm Form is immune to constriction, but check for it anyway in
+    // case casting Blinkbolt becomes possible in some other way!
+    if (!you.attempt_escape(2))
+        return spret::success;
+
     beam.thrower = KILL_YOU_MISSILE;
     zappy(ZAP_BLINKBOLT, power, false, beam);
     beam.name = "shock of your passage";

@@ -2471,6 +2471,9 @@ spret dithmenos_shadow_step(bool fail)
 
     fail_check();
 
+    if (!you.attempt_escape(2))
+        return spret::success;
+
     const coord_def old_pos = you.pos();
     // XXX: This only ever fails if something's on the landing site;
     // perhaps this should be handled more gracefully.
