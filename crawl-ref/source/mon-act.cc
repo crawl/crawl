@@ -154,7 +154,7 @@ static void _monster_regenerate(monster* mons)
     if (mons->type == MONS_PARGHIT)
         mons->heal(27); // go whoosh
     else if (mons->type == MONS_DEMONIC_CRAWLER)
-        mons->heal(9); // go zoom
+        mons->heal(6); // go zoom
     else if (mons_class_fast_regen(mons->type)
         || mons->has_ench(ENCH_REGENERATION)
         || _mons_natural_regen_roll(mons))
