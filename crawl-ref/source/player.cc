@@ -6397,6 +6397,9 @@ int player::res_constrict() const
     if (get_mutation_level(MUT_SPINY))
         return 3;
 
+    if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
+        return 3;
+
     return 0;
 }
 

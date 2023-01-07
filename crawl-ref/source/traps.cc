@@ -12,6 +12,7 @@
 #include <cmath>
 
 #include "areas.h"
+#include "art-enum.h"
 #include "bloodspatter.h"
 #include "branch.h"
 #include "cloud.h"
@@ -302,6 +303,9 @@ bool monster_caught_in_net(monster* mon)
 bool player_caught_in_net()
 {
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
+        return false;
+
+    if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
         return false;
 
     if (!you.attribute[ATTR_HELD])
@@ -628,7 +632,10 @@ void trap_def::trigger(actor& triggerer)
 
         if (!player_caught_in_net())
         {
-            mpr("The net is torn apart by your bulk.");
+            if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
+                mpr("You slip through the net.");
+            else
+                mpr("The net is torn apart by your bulk.");
             break;
         }
 

@@ -220,6 +220,7 @@ short_red SHORT_RED FIRST_NORM
 short_purple SHORT_PURPLE
 short_brown SHORT_BROWN
 short_brown2 SHORT_BROWN2
+short_blue SHORT_BLUE
 pj PJ
 middle_brown MIDDLE_BROWN
 middle_gray MIDDLE_GRAY

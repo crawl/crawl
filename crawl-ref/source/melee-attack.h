@@ -112,7 +112,7 @@ private:
     void do_starlight();
 
     /* Brand / Attack Effects */
-    bool do_knockback(bool trample = true);
+    bool do_knockback(bool slippery);
 
     /* Output methods */
     void set_attack_verb(int damage) override;

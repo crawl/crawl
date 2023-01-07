@@ -2541,6 +2541,11 @@ int property(const item_def &item, int prop_type)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
+        if (prop_type == PARM_AC
+            && is_unrandom_artefact(item, UNRAND_SLICK_SLIPPERS))
+        {
+            return 0;
+        }
         return armour_prop(item.sub_type, prop_type);
 
     case OBJ_WEAPONS:

@@ -888,7 +888,9 @@ bool player::antimagic_susceptible() const
 
 bool player::is_web_immune() const
 {
-    return form == transformation::spider || is_insubstantial();
+    return form == transformation::spider
+        || is_insubstantial()
+        || player_equip_unrand(UNRAND_SLICK_SLIPPERS);
 }
 
 bool player::shove(const char* feat_name)
