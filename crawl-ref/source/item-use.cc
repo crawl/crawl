@@ -510,7 +510,8 @@ static bool _enable_equip_check(operation_types o, MenuEntry *entry)
     auto ie = dynamic_cast<InvEntry *>(entry);
     if (o != OPER_EQUIP && o != OPER_WIELD && o != OPER_PUTON && o != OPER_WEAR)
         return true;
-    return !ie || !ie->item || !item_is_equipped(*(ie->item));
+    return !ie || !ie->item || !item_is_equipped(*(ie->item))
+           || (item_is_equipped(*(ie->item)) && Options.equip_unequip);
 }
 
 static bool _disable_item(const MenuEntry &)
