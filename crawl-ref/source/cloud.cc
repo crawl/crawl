@@ -315,7 +315,7 @@ static const cloud_data clouds[] = {
       { TILE_CLOUD_BLASTSPARKS, CTVARY_RANDOM },  // tile
     },
     // CLOUD_ELECTRICITY,
-    { "wisps of electric spark", nullptr,         // terse, verbose name
+    { "sparks", nullptr,         // terse, verbose name
       ETC_ELECTRICITY,                                   // colour
       { TILE_CLOUD_ELECTRICITY, CTVARY_RANDOM },        // tile
     },
