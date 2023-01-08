@@ -1018,11 +1018,10 @@ static void _FORCE_LANCE_melee_effects(item_def* /*weapon*/, actor* attacker,
                                        actor* defender, bool mondied, int dam)
 {
     if (mondied || !dam || !one_chance_in(3)) return;
-    const int dist = random_range(1, 2);
     // max power around a !!! hit (ie ~2d11 on collide from a 34+ damage hit)
     // no real justification for this, just vibes
     const int collide_power = min(100, dam * 3);
-    defender->knockback(*attacker, dist, collide_power, "blow");
+    defender->knockback(*attacker, 1, collide_power, "blow");
 }
 
 ///////////////////////////////////////////////////
