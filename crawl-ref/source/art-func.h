@@ -1722,9 +1722,7 @@ static void _VICTORY_death_effects(item_def *item, monster* mons, killer_type ki
 
     // Increased chance of victory bonus from more dangerous mons.
     // Using threat for this is kludgy, but easily visible to players.
-    if (threat == MTHRT_NASTY
-        || (threat == MTHRT_TOUGH && x_chance_in_y(1, 4))
-        || (threat == MTHRT_EASY && x_chance_in_y(1, 10)))
+    if (threat == MTHRT_NASTY || (threat == MTHRT_TOUGH && x_chance_in_y(1, 4)))
     {
         int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
         if (bonus_stats < VICTORY_STAT_CAP)

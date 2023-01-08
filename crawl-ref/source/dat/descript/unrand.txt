@@ -772,6 +772,6 @@ the wielder.
 toga "Victory"
 
 An ancient artefact of Okawaru, these woolen robes were lost when a former
-champion failed a duel. Its defense and damage sometimes increase when the
-wearer emerges victorious from threatening combat -- but beware! Its bonuses
-reset to zero if the wearer reads any scrolls, or quaffs any potions.
+champion failed a duel. Its bonuses sometimes increase when the wearer emerges
+victorious from threatening combat -- but beware! Its bonuses reset to zero if
+the wearer reads any scrolls, or quaffs any potions, while in combat.

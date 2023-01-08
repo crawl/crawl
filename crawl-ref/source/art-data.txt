@@ -1741,8 +1741,8 @@ VALUE:    600
 DBRAND:   When the wearer kills a threatening monster, it has a chance to gain
  +1 AC, +1 Slay, and +1 Int, capping at +7.
 +
-+When the wearer uses a scroll or a potion, its bonuses reset to +0.
- Unequipping it also resets its bonuses to +0.
++When the wearer uses a scroll or a potion with a hostile monster in sight, its
+ bonuses reset to +0. Unequipping it also resets its bonuses to +0.
 
 # This entry must always be last.
 ENUM:   DUMMY2
