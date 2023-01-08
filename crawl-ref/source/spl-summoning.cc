@@ -814,13 +814,11 @@ int mons_ball_lightning_hd(int pow, bool random)
     return ball_lightning_hd(pow, random) / 2;
 }
 
-spret cast_conjure_ball_lightning(const actor &agent, int pow, god_type god, bool fail)
+spret cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 {
     fail_check();
     bool success = false;
 
-    const auto att = agent.is_player() ? BEH_FRIENDLY
-                                       : SAME_ATTITUDE(agent.as_monster());
     mgen_data cbl = _pal_data(MONS_BALL_LIGHTNING, 0, god,
                              SPELL_CONJURE_BALL_LIGHTNING);
     cbl.foe = MHITNOT;
