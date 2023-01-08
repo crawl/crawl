@@ -1714,6 +1714,19 @@ INSCRIP: slick, slippery,
 DBRAND:  Its wearer cannot be constricted, engulfed, netted or webbed.
 +It slips away from damaging melee attacks, pulling the attacker onward.
 
+NAME:     Force Lance
+OBJ:      OBJ_WEAPONS/WPN_SPEAR
+FALLBACK: OBJ_WEAPONS/WPN_DEMON_TRIDENT
+INSCRIP:  knockback,
+TYPE:     lance
+BASE_DAM: +2
+PLUS:     +5
+COLOUR:   ETC_DISJUNCTION
+BRAND:    SPWPN_HEAVY
+TILE:     urand_force_lance
+TILE_EQ:  force_lance
+DBRAND:   It sometimes knocks back enemies it hits.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

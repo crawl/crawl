@@ -762,3 +762,9 @@ slick slippers
 Crafted from the tanned, smooth hide of a Western Skyshark, these slippers are
 astonishingly comfortable. They lack the protective benefits of a good pair of
 boots, but they can get their wearers out of almost any bind.
+%%%%
+Force Lance
+
+A plain iron lance, imbued with supernatural gravitas via the artifice of the
+mage Gell. It strikes with a force many times stronger than that imparted by
+the wielder.
