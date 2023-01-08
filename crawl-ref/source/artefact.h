@@ -76,6 +76,7 @@ struct unrandart_entry
                           actor* defender, bool mondied, int damage);
     setup_missile_type (*launch)(item_def* item, bolt* beam,
                                  string* ammo_name, bool* returning);
+    void (*death_effects)(item_def* item, monster* mons, killer_type killer);
 };
 
 bool is_known_artefact(const item_def &item);

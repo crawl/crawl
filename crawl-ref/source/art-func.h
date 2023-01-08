@@ -1699,6 +1699,7 @@ static void _reset_victory_stats(item_def *item)
         bonus_stats = 0;
         item->plus = get_unrand_entry(item->unrand_idx)->plus;
         artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
+        artefact_set_property(*item, ARTP_INTELLIGENCE, bonus_stats);
     }
 
     you.redraw_armour_class = true;
@@ -1709,41 +1710,32 @@ static void _VICTORY_unequip(item_def *item, bool */*show_msgs*/)
     _reset_victory_stats(item);
 }
 
-#define VICTORY_STAT_CAP 10
+#define VICTORY_STAT_CAP 7
 
-static void _VICTORY_melee_effects(item_def *item, actor* attacker,
-                                 actor* defender, bool mondied, int /*dam*/)
+static void _VICTORY_death_effects(item_def *item, monster* mons, killer_type killer)
 {
-    if (!defender || !mondied)
+    // No bonus for killing friendlies, neutrals, summons, etc.
+    if (!(killer == KILL_YOU || killer == KILL_YOU_MISSILE) && mons_gives_xp(*mons, you))
         return;
 
-    // No bonuses for killing friendlies, neutrals, or summons.
-    if (attacker->is_player()
-        && defender->is_monster()
-        && mondied
-        && !mons_aligned(attacker, defender)
-        && !defender->as_monster()->neutral()
-        && !defender->is_summoned())
+    const mon_threat_level_type threat = mons_threat_level(*mons);
+
+    // Increased chance of victory bonus from more dangerous mons.
+    // Using threat for this is kludgy, but easily visible to players.
+    if (threat == MTHRT_NASTY
+        || (threat == MTHRT_TOUGH && x_chance_in_y(1, 4))
+        || (threat == MTHRT_EASY && x_chance_in_y(1, 10)))
     {
-        const mon_threat_level_type threat = mons_threat_level(*defender->as_monster());
-
-        // Increased chance of victory bonus from more dangerous mons:
-        // 100% from nasties, 25% from tough, 10% from easy, 0% from trivial.
-        // Remember, the player is fighting them without potions or scrolls!
-        if (threat == MTHRT_NASTY
-            || (threat == MTHRT_TOUGH && x_chance_in_y(1, 4))
-            || (threat == MTHRT_EASY && x_chance_in_y(1, 10)))
+        int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
+        if (bonus_stats < VICTORY_STAT_CAP)
         {
-            int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
-            if (bonus_stats < VICTORY_STAT_CAP)
-            {
-                bonus_stats++;
-                item->plus = bonus_stats;
-                artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
-                mprf("<yellow>Your toga \"victory\" glows.</yellow>");
+            bonus_stats++;
+            item->plus = bonus_stats;
+            artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
+            artefact_set_property(*item, ARTP_INTELLIGENCE, bonus_stats);
+            mprf("<yellow>Your toga \"victory\" glows.</yellow>");
 
-                you.redraw_armour_class = true;
-            }
+            you.redraw_armour_class = true;
         }
     }
 }

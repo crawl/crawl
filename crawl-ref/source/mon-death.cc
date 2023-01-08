@@ -2009,6 +2009,14 @@ item_def* monster_die(monster& mons, killer_type killer,
         }
     }
 
+    // Adjust unrand toga "Victory" bonus.
+    if (player_equip_unrand(UNRAND_VICTORY))
+    {
+        item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        const unrandart_entry* body_unrand_entry = get_unrand_entry(body_armour->unrand_idx);
+        body_unrand_entry->death_effects(body_armour, &mons, killer);
+    }
+
     switch (killer)
     {
         case KILL_YOU:          // You kill in combat.

@@ -645,17 +645,6 @@ bool melee_attack::handle_phase_killed()
                                                true, special_damage);
     }
 
-    // Victory also needs to be notified of deaths, but at time of writing,
-    // armour unrands are not setup to call melee_effects().
-    // Calling it manually here for the single use seems easiest, for now.
-    if (attacker->is_player() && player_equip_unrand(UNRAND_VICTORY))
-    {
-        item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
-        const unrandart_entry* body_unrand_entry = get_unrand_entry(body_armour->unrand_idx);
-        body_unrand_entry->melee_effects(body_armour, attacker, defender,
-                                               true, special_damage);
-    }
-
     return attack::handle_phase_killed();
 }
 
