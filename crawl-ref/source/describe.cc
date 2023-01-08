@@ -4994,7 +4994,7 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     }
 
     if (mi.is(MB_UNBLINDABLE))
-        base_resists.emplace_back("blinding");
+        extreme_resists.emplace_back("blinding");
     // Resists engulfing/waterlogging but still dies on falling into deep water.
     if (mi.is(MB_RES_DROWN))
         base_resists.emplace_back("drowning");
@@ -5076,14 +5076,6 @@ static string _monster_stat_description(const monster_info& mi, bool mark_spells
     // Seeing invisible.
     if (mi.can_see_invisible())
         result << uppercase_first(pronoun) << " can see invisible.\n";
-
-    // Echolocation, wolf noses, jellies, etc
-    if (!mons_can_be_blinded(mi.type))
-    {
-        result << uppercase_first(pronoun) << " "
-               << conjugate_verb("are", plural)
-               << " immune to blinding.\n";
-    }
 
     if (mons_class_flag(mi.type, M_INSUBSTANTIAL))
     {
