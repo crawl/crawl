@@ -187,3 +187,8 @@ blastsparks cloud
 A cloud of volatile blastsparks. These explode when exposed to open flame or when
 anything disturbs them by moving into them. The explosion is concussive, knocking
 adjacent creatures away.
+%%%%
+sparks cloud
+
+A trail of electric spark. Harmless, but touching it would give you a twinge.
+When listened closely, you can hear it crackling.
