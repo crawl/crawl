@@ -821,9 +821,9 @@ spret cast_conjure_ball_lightning(const actor &agent, int pow, god_type god, boo
 
     const auto att = agent.is_player() ? BEH_FRIENDLY
                                        : SAME_ATTITUDE(agent.as_monster());
-    mgen_data cbl(MONS_BALL_LIGHTNING, att,
-      agent.pos(), MHITNOT, MG_FORCE_PLACE | MG_AUTOFOE);
-    cbl.set_summoned(&agent, 0, SPELL_CONJURE_BALL_LIGHTNING, god);
+    mgen_data cbl = _pal_data(MONS_BALL_LIGHTNING, 0, god,
+                             SPELL_CONJURE_BALL_LIGHTNING);
+    cbl.foe = MHITNOT;
     cbl.hd = ball_lightning_hd(pow);
 
     for (int i = 0; i < 3; ++i)
