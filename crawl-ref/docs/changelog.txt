@@ -1,5 +1,144 @@
-Stone Soup 0.29-b1 (through 0.29-b1)
+Stone Soup 0.30-a0 (through 0.30-a0-g120588e8e2)
 ---------------------------------------------------
+
+Character
+---------
+* New background: Reaver.
+  - Reavers are warrior-mages, primarily focused on melee combat but with
+    situational Conjurations for tough situations.
+  - Reavers begin with two new spells, Kiss of Death and Momentum Strike,
+    as well as a revised version of the Hailstorm spell.
+* Species rework: Palentonga -> Armataur.
+  - Like Palentongas, Armataurs are large, scaled mammals, wearing bardings
+    instead of boots.
+  - Armataurs lose the Rolling Charge and Curl abilities. They gain Rollpage
+    (innate Rampage) and long tongues, which double the effects of potions but
+    slow down scroll reading.
+  - Armataurs' aptitudes have been adjusted.
+* Background changes:
+  - Warpers replace Gell's Gravitas with Vhi's Electric Charge.
+  - Hedge Wizards have Conjure Flame replaced by Cigotuvi's Dreadful Rot.
+  - Fire Elementalists have Conjure Flame replaced by Kindle Blastsparks.
+  - Ice Elementalists have Hailstorm replaced by Summon Ice Beast.
+  - The 'Arcane Marksman' background has been renamed to 'Hexslinger'.
+* All players regenerate an extra 0.2 HP/turn.
+* Mummies have innate Faith, giving them extra piety gain.
+* Formicids can now shaft themselves in the Tomb of the Ancients.
+* Reaching the end of the Zot clock now causes a smaller amount of permanent
+  max HP loss (similar to Borgnjor's Revivication), rather than temp HP drain.
+* Species size no longer affects SH.
+* rF- and rC- are added to the 'bad mutations' pool.
+* Pale draconians' breath is no longer usable twice as often as others'.
+* Will is now capped at +++++.
+* Removed the Abyssal Knight background.
+
+Gods
+----
+* Lugonu:
+  - Banishment is now available at ** piety (from ***), has a lower failure
+    chance, and causes malmutation when resisted.
+  - When the player suffers the wrath of another god, Lugonu now responds by
+    banishing some number of hostile monsters nearby.
+  - Lugonu's altars are more common in the Abyss, and the piety bonus for
+    converting to Lugonu in the Abyss has been increased.
+  - The Bend Space ability has been removed.
+* When worshipping at a faded altar, the player is given a preview of three
+  gods the altar might belong to.
+* Gozag's corpse-to-gold effect now blocks enemies from creating simulacrulae.
+* Fedhas protects trees from being set on fire by the player.
+* Okawaru's Heroism and Finesse abilities cost more piety.
+* Removed Ashenzari's Astral Vision (automatically seeing through walls).
+
+Interface and Options
+---------------------
+* Damage ratings are now shown via @, including those for unarmed combat.
+* Bumping a foe while holding a ranged weapon shoots instead of bashing.
+* Unrands (pre-defined artefacts) have a distinct colour by default.
+* The % screen no longer shows .s for low Stealth values.
+* Spells' maximum damage is now displayed in their descriptions.
+* Many weapon brands now provide more quantitative damage information.
+* New show_blood option allows disabling blood spatters and bloody corpses.
+
+Items
+-----
+* New brand: Heavy.
+  - Heavy weapons have +80% base damage and +50% attack delay.
+  - Both melee and ranged weapons can be Heavy.
+* New unrands:
+  - The Hermit's Pendant, an amulet of faith that sets the wearer's Invocations
+    skill to 14 and their Evocations skill to 0.
+  - The Slick Slippers, which make all damaging melee attacks trample their
+    wearer backward. They provide immunity to constriction, engulfing, etc.
+  - The Force Lance, a Heavy +5 lance (ala Wyrmbane) which has a 1/3 chance of
+    knocking back foes when landing a damaging blow.
+* Unrand changes:
+  - The Mad Mage's Maulers lose Int-3 and RegenMP, gain -Cast and MPVamp (gain
+    MP from damage dealt), and deal twice as much damage when spending MP.
+  - The Ring of the Hare is now +10 (was +8).
+  - Majin-Bo is now one-handed.
+  - Sniper is now +27 and Heavy (was +9 and Vorpal).
+  - The Dark Maul is now Heavy (was Vorpal), and has its base stats adjusted.
+  - The Singing Sword is now +11 (was +7 and Vorpal).
+  - The Glaive of Prune is now Freezing (was Vorpal).
+  - Bloodbane is now Draining (was Vorpal).
+  - The Obsidian Axe is now +16 and Draining (was +14 and Vorpal).
+  - The Woodcutter's Axe is now +5 (was +3 and Vorpal).
+  - The Lochaber Axe now causes HP Drain on unequip.
+* Scrolls of butterflies now create dramatically more butterflies. They now
+  alternate with scrolls of summoning instead of scrolls of fog.
+* Rings of evasion are now +5 (were +4).
+* All ranged weapons can now generate with electrocution, antimagic, and
+  draining brands. Venom ranged weapons no longer appear.
+* Short sword attack delay reduced.
+* Evocable invisibilty and blink no longer have an MP cost.
+* Spells have been reshuffled between books, and a new Maxwell's Memoranda book
+  has been added.
+* Hand crossbows are slightly weaker and slower.
+* Removed the 'vorpal' brand.
+
+Monsters
+--------
+* Demonic Crawlers lose the Warning Cry ability and elemental resistances in
+  exchange for higher damage and very fast regeneration.
+* Doom Hounds' Howl is now resistable by Will.
+* Many monsters do somewhat less damage.
+* Walking Tomes are now unable to cast while silenced.
+* Ironbound Frosthearts' Creeping Frost spell is now fully resistable by rC.
+* Fleeing monsters will no longer avoid harmful clouds.
+
+Spells
+------
+* New spells:
+  - Kiss of Death (L1 Conj/Necro): does high draining damage to an adjacent
+    enemy, at the cost of significant max HP drain to the caster.
+  - Momentum Strike (L2 Conj/Tloc). Redirects the caster's momentum for a
+    damaging attack that doesn't require line of fire, but locks the caster in
+    place for some turns after a hit (and cannot be recast until this expires).
+  - Cigotuvi's Dreadful Rot (L2 Necro/Air/Pois). Rots away the caster's flesh
+    to create a cloud of deadly miasma on their tile.
+  - Kindle Blastsparks (L3 Fire/Air/Tloc). Creates an explosive cloud on the
+    caster's tile, usable as a land mine or tricky tool.
+  - Vhi's Electric Charge (L3 Tloc/Air). Launches the caster at a nearby foe
+    and launches a crackling melee attack, phasing through creatures en route.
+  - Arcjolt (L5 Air/Conj). Electrocutes everything adjacent to the caster,
+    everything adjacent to those creatures, etc, etc, in a chain.
+* Hailstorm moved to L3 (from L4) and can now miss.
+* Manifold Assault moved to L4 (from L5) and does half as many attacks with
+  UC as with a weapon.
+* Ozocubu's Refrigeration's damage has been increased.
+* Lesser Beckoning is now better at low power.
+* Slow no longer has bonus hex power.
+* The Simulacrum and Static Discharge spells have been weakened.
+* Removed: Conjure Flame and Corpse Rot.
+
+Tiles
+-----
+* New tiles for player draconians.
+* New art for X-shaped and orb-shaped simulacrae.
+* New holiday-exclusive tiles for Sigmund and hats.
+
+Stone Soup 0.29.0 (20220825)
+----------------------------
 
 Highlights
 ----------
