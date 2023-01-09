@@ -1537,6 +1537,7 @@ static string _operation_verb(operation_types oper)
     case OPER_EVOKE:          return "evoke";
     case OPER_QUIVER:         return "quiver";
     case OPER_EQUIP:          return "equip";
+    case OPER_UNEQUIP:        return "unequip";
     case OPER_ANY:
     default:
         return "choose";
