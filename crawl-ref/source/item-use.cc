@@ -1019,8 +1019,9 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
         update_screen();
         // For weapons, armour, and jewellery this is handled in wield_weapon,
         // wear_armour, and _puton_item after selection
+        // TODO: cleanup
         if (menu.oper != OPER_WIELD && menu.oper != OPER_WEAR
-            && menu.oper != OPER_PUTON
+            && menu.oper != OPER_PUTON && menu.oper != OPER_REMOVE
             && choice_made && tmp_tgt
             && !check_warning_inscriptions(*tmp_tgt, oper))
         {
