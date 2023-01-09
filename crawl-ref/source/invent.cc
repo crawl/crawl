@@ -1419,6 +1419,25 @@ item_def *digit_inscription_to_item(char digit, operation_types oper)
     return nullptr;
 }
 
+static operation_types _generalize_oper(operation_types oper)
+{
+    switch (oper)
+    {
+    case OPER_EQUIP:
+    case OPER_WIELD:
+    case OPER_WEAR:
+    case OPER_PUTON:
+        return OPER_EQUIP;
+    case OPER_UNEQUIP:
+    case OPER_REMOVE:
+    case OPER_TAKEOFF:
+        return OPER_UNEQUIP;
+    default:
+        return OPER_NONE;
+    }
+}
+
+
 static bool _has_warning_inscription(const item_def& item,
                              operation_types oper)
 {
@@ -1440,6 +1459,11 @@ static bool _has_warning_inscription(const item_def& item,
             }
         }
     }
+
+    // if the inscription is wear/takeoff (etc), check equip/unequip
+    const auto gen = _generalize_oper(oper);
+    if (gen != OPER_NONE && gen != oper)
+        return _has_warning_inscription(item, gen);
 
     return false;
 }
@@ -1571,15 +1595,8 @@ bool needs_handle_warning(const item_def &item, operation_types oper,
     if (_has_warning_inscription(item, oper))
         return true;
 
-    if (oper == OPER_UNEQUIP)
-    {
-        // n.b. unwielding is not handled by unequip
-        return needs_handle_warning(item,
-            (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
-            ? OPER_WIELD
-            : item.base_type == OBJ_ARMOUR ? OPER_TAKEOFF : OPER_REMOVE,
-            penance);
-    }
+    // note: equip/unequip are not handled be the following code; they should
+    // be converted to their specific oper beforehand.
 
     // Curses first. Warn if something would take off (i.e. destroy) the cursed item.
     if (item.cursed()

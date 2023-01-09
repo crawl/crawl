@@ -2602,6 +2602,12 @@ P
 R
   Remove jewellery.
 
+e
+  Equip actions (wield, wear, put on)
+
+u
+  Unequip actions (unwield, take off, remove)
+
 Item interaction (floor)
 ========================================
 

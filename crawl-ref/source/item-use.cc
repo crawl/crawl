@@ -743,7 +743,23 @@ static operation_types _item_to_removal(item_def *target)
     case OBJ_JEWELLERY: return OPER_REMOVE;
     default:            return OPER_NONE;
     }
+}
 
+static bool _equip_oper(operation_types oper)
+{
+    switch (oper)
+    {
+    case OPER_EQUIP:
+    case OPER_UNEQUIP:
+    case OPER_WIELD:
+    case OPER_WEAR:
+    case OPER_PUTON:
+    case OPER_REMOVE:
+    case OPER_TAKEOFF:
+        return true;
+    default:
+        return false;
+    }
 }
 
 static bool _can_generically_use_armour(bool wear=true)
@@ -902,22 +918,22 @@ bool use_an_item(operation_types oper, item_def *target)
     }
 
     if (!target)
-    {
         oper = use_an_item_menu(target, oper);
-        if (oper == OPER_EQUIP)
-            oper = _item_to_oper(target);
-        else if (oper == OPER_UNEQUIP)
-        {
-            oper = _item_to_removal(target);
-            if (oper == OPER_WIELD)
-                target = nullptr; // unwield
-        }
 
-        if (oper == OPER_NONE)
-            return false; // abort menu
+    if (oper == OPER_NONE)
+        return false; // abort menu
+
+    if (oper == OPER_EQUIP)
+        oper = _item_to_oper(target);
+    else if (oper == OPER_UNEQUIP)
+    {
+        oper = _item_to_removal(target);
+        if (oper == OPER_WIELD)
+            target = nullptr; // unwield
     }
+
     ASSERT(oper == OPER_WIELD || target);
-    // now we have an item and an oper: what to do with the item?
+    // now we have an item and a specific oper: what to do with the item?
     switch (oper)
     {
     case OPER_QUAFF:
@@ -1017,13 +1033,12 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
 
         redraw_screen();
         update_screen();
-        // For weapons, armour, and jewellery this is handled in wield_weapon,
-        // wear_armour, and _puton_item after selection
+
+        // equip cases are handled in followup calls
         // TODO: cleanup
-        if (menu.oper != OPER_WIELD && menu.oper != OPER_WEAR
-            && menu.oper != OPER_PUTON && menu.oper != OPER_REMOVE
+        if (!_equip_oper(menu.oper)
             && choice_made && tmp_tgt
-            && !check_warning_inscriptions(*tmp_tgt, oper))
+            && !check_warning_inscriptions(*tmp_tgt, menu.oper))
         {
             choice_made = false;
         }
@@ -1036,14 +1051,13 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
         }
         break;
     }
+
     if (choice_made)
         target = tmp_tgt;
 
     ASSERT(!choice_made || target || menu.show_unarmed());
-    if (choice_made)
-        return menu.oper;
-    else
-        return OPER_NONE;
+
+    return choice_made ? menu.oper : OPER_NONE;
 }
 
 static bool _safe_to_remove_or_wear(const item_def &item, const item_def
@@ -1313,7 +1327,10 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
         {
             bool penance = false;
             // Can we safely unwield this item?
-            if (needs_handle_warning(*wpn, OPER_WIELD, penance))
+            // XX possible code dup with `check_old_item_warning`?
+            if (needs_handle_warning(*wpn, OPER_WIELD, penance)
+                // check specifically for !u inscriptions:
+                || needs_handle_warning(*wpn, OPER_UNEQUIP, penance))
             {
                 string prompt =
                     "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
@@ -1889,6 +1906,9 @@ bool takeoff_armour(int item, bool noask)
         return false;
 
     item_def& invitem = you.inv[item];
+
+    if (!noask && !check_warning_inscriptions(invitem, OPER_TAKEOFF))
+        return false;
 
     // It's possible to take this thing off, but if it would drop a stat
     // below 0, we should get confirmation.
@@ -2678,7 +2698,7 @@ bool remove_ring(int slot, bool announce, bool noask)
         return false;
     }
 
-    if (!check_warning_inscriptions(you.inv[you.equip[hand_used]],
+    if (!noask && !check_warning_inscriptions(you.inv[you.equip[hand_used]],
                                     OPER_REMOVE))
     {
         canned_msg(MSG_OK);
