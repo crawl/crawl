@@ -2150,9 +2150,7 @@ static int _sh_from_shield(const item_def &item)
     if (item.sub_type == ARM_ORB)
         return 0;
 
-    int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
-                    * (item.sub_type - ARM_TOWER_SHIELD);
-    int base_shield = property(item, PARM_AC) * 2 + size_factor;
+    const int base_shield = property(item, PARM_AC) * 2;
 
     // bonus applied only to base, see above for effect:
     int shield = base_shield * 50;
