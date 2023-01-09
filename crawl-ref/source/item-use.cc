@@ -153,13 +153,21 @@ static string _default_use_title(operation_types oper)
     switch (oper)
     {
     case OPER_EQUIP:
-        return "Equip which item?";
+        return Options.equip_unequip
+            ? "Equip or unequip which item?"
+            : "Equip which item?";
     case OPER_WIELD:
-        return "Wield which item (- for none)?";
+        return Options.equip_unequip
+            ? "Wield or unwield which item (- for none)?"
+            : "Wield which item (- for none)?";
     case OPER_WEAR:
-        return "Wear which item?";
+        return Options.equip_unequip
+            ? "Wear or take off which item?"
+            : "Wear which item?";
     case OPER_PUTON:
-        return "Put on which piece of jewellery?";
+        return Options.equip_unequip
+            ? "Put on or remove which piece of jewellery?"
+            : "Put on which piece of jewellery?";
     case OPER_QUAFF:
         if (you.has_mutation(MUT_LONG_TONGUE))
             return "Slurp which item?";
@@ -522,7 +530,9 @@ static bool _disable_item(const MenuEntry &)
 
 void UseItemMenu::update_sections()
 {
-    // never disable the unwield button
+    // disable unarmed on equip menus if player is unarmed
+    if (show_unarmed() && !you.weapon())
+        items[0]->on_select = _disable_item;
     int i = show_unarmed() ? 1 : 0;
     for (; i <= last_inv_pos; i++)
         if (items[i]->level == MEL_ITEM)
