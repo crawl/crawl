@@ -3097,11 +3097,13 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             case SPARM_SPIRIT_SHIELD:
                 return you.spirit_shield(false);
             case SPARM_REPULSION:
-                return temp && have_passive(passive_t::upgraded_storm_shield)
+                return temp && have_passive(passive_t::storm_shield)
                        || you.get_mutation_level(MUT_DISTORTION_FIELD) == 3;
             case SPARM_INVISIBILITY:
                 return you.has_mutation(MUT_NO_ARTIFICE)
                        || !invis_allowed(true, nullptr, temp);
+            case SPARM_HARM:
+                return have_passive(passive_t::storm_shield);
             default:
                 return false;
             }
