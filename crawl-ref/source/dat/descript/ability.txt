@@ -549,12 +549,6 @@ Upheaval ability
 Calls on the forces of nature to blast a small area with magma, ice, wind,
 or rubble. Invocations skill increases both damage and area affected.
 %%%%
-Elemental Force ability
-
-Causes your elemental clouds to coalesce into friendly elementals. Your
-Invocations skill increases the maximum number of elementals that can be
-created with one use of the ability.
-%%%%
 Disaster Area ability
 
 Blasts the entire area around you with powerful natural forces. Invocations

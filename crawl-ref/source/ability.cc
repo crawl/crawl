@@ -590,8 +590,6 @@ static vector<ability_def> &_get_ability_list()
             3, 0, generic_cost::range(3, 4), LOS_MAX_RANGE,
             {fail_basis::invo, 40, 5, 20},
             abflag::none },
-        { ABIL_QAZLAL_ELEMENTAL_FORCE, "Elemental Force",
-            5, 0, 6, -1, {fail_basis::invo, 60, 5, 20}, abflag::none },
         { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area",
             8, 0, 10, -1, {fail_basis::invo, 70, 4, 25}, abflag::none },
 
@@ -1091,7 +1089,6 @@ ability_type fixup_ability(ability_type ability)
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_TROG_BROTHERS_IN_ARMS:
     case ABIL_GOZAG_BRIBE_BRANCH:
-    case ABIL_QAZLAL_ELEMENTAL_FORCE:
         if (you.allies_forbidden())
             return ABIL_NON_ABILITY;
         else
@@ -1792,18 +1789,6 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
         return true;
 
-    case ABIL_QAZLAL_ELEMENTAL_FORCE:
-    {
-        vector<coord_def> clouds = find_elemental_targets();
-        if (clouds.empty())
-        {
-            if (!quiet)
-                mpr("You can't see any clouds you can empower.");
-            return false;
-        }
-        return true;
-    }
-
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
@@ -2075,8 +2060,6 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_multiposition>(&you, find_recite_targets());
     case ABIL_FEDHAS_WALL_OF_BRIARS:
         return make_unique<targeter_multiposition>(&you, find_briar_spaces(true), AFF_YES);
-    case ABIL_QAZLAL_ELEMENTAL_FORCE:
-        return make_unique<targeter_multiposition>(&you, find_elemental_targets());
     case ABIL_JIYVA_OOZEMANCY:
         return make_unique<targeter_walls>(&you, find_slimeable_walls());
 
@@ -3198,9 +3181,6 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
 
     case ABIL_QAZLAL_UPHEAVAL:
         return qazlal_upheaval(coord_def(), false, fail, target);
-
-    case ABIL_QAZLAL_ELEMENTAL_FORCE:
-        return qazlal_elemental_force(fail);
 
     case ABIL_QAZLAL_DISASTER_AREA:
         return qazlal_disaster_area(fail);

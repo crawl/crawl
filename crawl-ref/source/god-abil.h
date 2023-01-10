@@ -157,8 +157,6 @@ bool gozag_bribe_branch();
 
 spret qazlal_upheaval(coord_def target, bool quiet = false,
                            bool fail = false, dist *player_target=nullptr);
-vector<coord_def> find_elemental_targets();
-spret qazlal_elemental_force(bool fail);
 spret qazlal_disaster_area(bool fail);
 
 void init_sac_index();

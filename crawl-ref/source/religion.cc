@@ -326,7 +326,6 @@ const vector<vector<god_power>> & get_all_god_powers()
                  "Your storm dissipates completely.",
                  "You are surrounded by a storm." },
             { 2, ABIL_QAZLAL_UPHEAVAL, "call upon nature to destroy your foes" },
-            { 3, ABIL_QAZLAL_ELEMENTAL_FORCE, "give life to nearby clouds" },
             { 4, "The storm surrounding you is now powerful enough to repel missiles.",
                  "The storm surrounding you is now too weak to repel missiles.",
                  "The storm surrounding you is powerful enough to repel missiles." },
