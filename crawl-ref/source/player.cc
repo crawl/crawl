@@ -3890,7 +3890,6 @@ int get_real_hp(bool trans, bool drained)
 
     // Mutations that increase HP by a percentage
     hitp *= 100 + (you.get_mutation_level(MUT_ROBUST) * 10)
-                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                 + (you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (you.get_mutation_level(MUT_FRAIL) * 10)
@@ -3913,6 +3912,9 @@ int get_real_hp(bool trans, bool drained)
         else
             hitp = hitp * 3 / 2;
     }
+
+    hitp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
+    hitp /= 100;
 
     // Some transformations give you extra hp.
     if (trans)
@@ -3946,7 +3948,6 @@ int get_real_mp(bool include_items)
 
     // Analogous to ROBUST/FRAIL
     enp *= 100 + (you.get_mutation_level(MUT_HIGH_MAGIC) * 10)
-               + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                - (you.get_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100 * scale;
 //    enp = stepdown_value(enp, 9, 18, 45, 100)
@@ -3961,6 +3962,9 @@ int get_real_mp(bool include_items)
         enp += 9 * you.wearing(EQ_RINGS, RING_MAGICAL_POWER);
         enp +=     you.scan_artefacts(ARTP_MAGICAL_POWER);
     }
+
+    enp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
+    enp /= 100;
 
     if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
         enp /= 3;
