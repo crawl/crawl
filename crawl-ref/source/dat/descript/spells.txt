@@ -1072,8 +1072,7 @@ adjacent to others will be partly insulated from the cold, taking less damage.
 %%%%
 Pain spell
 
-Inflicts an extremely painful injury upon one living creature. The caster
-suffers minor damage from the backlash.
+Inflicts an extremely painful injury upon one living creature.
 %%%%
 Paralyse spell
 
