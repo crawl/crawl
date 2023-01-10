@@ -284,7 +284,9 @@ bool actor::reflection(bool items) const
 bool actor::extra_harm(bool items) const
 {
     return items &&
-           (wearing_ego(EQ_CLOAK, SPARM_HARM) || scan_artefacts(ARTP_HARM));
+            (wearing_ego(EQ_CLOAK, SPARM_HARM)
+            || scan_artefacts(ARTP_HARM)
+            || is_player() && (have_passive(passive_t::storm_shield)));
 }
 
 bool actor::rmut_from_item() const
