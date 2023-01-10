@@ -364,15 +364,15 @@ static const vector<god_passive> god_passives[] =
 
     // Qazlal
     {
-        {  0, passive_t::cloud_immunity, "and your divine allies are ADV immune to clouds" },
+        {  0, passive_t::cloud_immunity,
+              "and your divine allies are ADV immune to clouds" },
         {  1, passive_t::storm_shield,
               "Your chances to be struck by projectiles are NOW reduced" },
         {  4, passive_t::upgraded_storm_shield,
               "generate elemental clouds to protect yourself" },
-        {  5, passive_t::elemental_adaptation,
+        {  4, passive_t::elemental_adaptation,
               "Elemental attacks NOW leave you somewhat more resistant"
-              " to them"
-        }
+              " to them" },
     },
 
     // Ru
@@ -829,8 +829,7 @@ void gozag_detect_level_gold(bool count)
     }
 }
 
-// Not actually passive, but placing it here so that it can be easily compared
-// with Qazlal's boost.
+// Not actually passive, but placing it here so that it can be easily compared.
 int tso_sh_boost()
 {
     if (!you.duration[DUR_DIVINE_SHIELD])
@@ -839,26 +838,52 @@ int tso_sh_boost()
     return you.attribute[ATTR_DIVINE_SHIELD];
 }
 
-void qazlal_storm_clouds()
+int qazlal_ac_boost()
 {
     if (!have_passive(passive_t::storm_shield))
+        return 0;
+
+    return 3;
+}
+
+int qazlal_upgade_ac_boost()
+{
+    if (!have_passive(passive_t::upgraded_storm_shield))
+        return 0;
+
+    int qaz_storm = you.props[QAZLAL_STORM_KEY].get_int();
+    const int q_ac = qaz_storm / 5;
+
+    return min(q_ac, 6);
+}
+
+void qazlal_storm_clouds()
+{
+    if (!have_passive(passive_t::upgraded_storm_shield))
         return;
 
-    // You are a *storm*. You are pretty loud!
-    noisy(min((int)you.piety, piety_breakpoint(5)) / 10, you.pos());
+    int qaz_storm = you.props[QAZLAL_STORM_KEY].get_int();
+    const int q_noise = qaz_storm * 5;
+    const int q_speed = qaz_storm * 6;
 
-    const int radius = you.piety >= piety_breakpoint(3) ? 2 : 1;
+    if (qaz_storm > 0)
+    {
+        // You are a *storm*. You are pretty loud!
+        noisy(min((int)q_noise, 150) / 10, you.pos());
+    }
+
+    const int radius = qaz_storm > 15 ? 2 : 1;
 
     vector<coord_def> candidates;
     for (radius_iterator ri(you.pos(), radius, C_SQUARE, LOS_SOLID, true);
-         ri; ++ri)
+        ri; ++ri)
     {
         int count = 0;
         if (cell_is_solid(*ri) || cloud_at(*ri))
             continue;
 
         // Don't create clouds over firewood
-        const monster * mon = monster_at(*ri);
+        const monster* mon = monster_at(*ri);
         if (mon != nullptr && mons_is_firewood(*mon))
             continue;
 
@@ -870,10 +895,11 @@ void qazlal_storm_clouds()
         if (count >= 5)
             candidates.push_back(*ri);
     }
+
     const int count =
-        div_rand_round(min((int)you.piety, piety_breakpoint(5))
-                       * candidates.size() * you.time_taken,
-                       piety_breakpoint(5) * 7 * BASELINE_DELAY);
+        div_rand_round(min((int)q_speed, 180)
+            * candidates.size() * you.time_taken,
+            piety_breakpoint(4) * 5 * BASELINE_DELAY);
     if (count < 0)
         return;
     shuffle_array(candidates);
@@ -892,7 +918,7 @@ void qazlal_storm_clouds()
         do
         {
             ctype = random_choose(CLOUD_FIRE, CLOUD_COLD, CLOUD_STORM,
-                                  CLOUD_DUST);
+                                  CLOUD_ROUGH_DUST);
         } while (water && ctype == CLOUD_FIRE);
 
         place_cloud(ctype, candidates[i], random_range(3, 5), &you);
@@ -906,13 +932,15 @@ void qazlal_storm_clouds()
  * Right now, it is called only from expose_player_to_element. This may merit refactoring.
  *
  * @param flavour the beam type.
- * @param strength The adaptations will trigger strength in (11 - piety_rank()) times. In practice, this is mostly called with a value of 2.
+ * @param strength The adaptations will trigger strength in 14 - (qaz storm buff/3) times.
+ * In practice, this is mostly called with a value of 2.
  */
 void qazlal_element_adapt(beam_type flavour, int strength)
 {
+    const int qaz_storm = you.props[QAZLAL_STORM_KEY].get_int();
     if (strength <= 0
         || !have_passive(passive_t::elemental_adaptation)
-        || !x_chance_in_y(strength, 11 - piety_rank()))
+        || !x_chance_in_y(strength, 14 - (qaz_storm / 3)))
     {
         return;
     }

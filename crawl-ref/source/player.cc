@@ -6052,6 +6052,8 @@ int player::base_ac_with_specific_items(int scale,
 
     AC += ac_changes_from_mutations();
 
+    AC += qazlal_ac_boost() * 100;
+
     return AC * scale / 100;
 }
 /**
@@ -6139,6 +6141,8 @@ int player::armour_class_with_specific_items(vector<const item_def *> items) con
     AC -= 400 * corrosion_amount();
 
     AC += sanguine_armour_bonus();
+
+    AC += qazlal_upgade_ac_boost() * scale;
 
     return AC / scale;
 }

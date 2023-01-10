@@ -652,6 +652,9 @@ static const duration_def duration_data[] =
           if (!you.duration[DUR_BRAINLESS] && !player_in_branch(BRANCH_GEHENNA))
               mprf(MSGCH_RECOVERY, "You can read scrolls again.");
       }}}},
+      { DUR_QAZ_STORM, 0, "", "in a storm", "storm",
+        "Your clouds increase, power increases.", D_NO_FLAGS,
+        {{ "", []() { you.props[QAZLAL_STORM_KEY] = 0; }}} },
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

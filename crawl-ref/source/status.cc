@@ -739,6 +739,18 @@ bool fill_status_info(int status, status_info& inf)
             _fill_inf_from_ddef(DUR_LOWERED_WL, inf);
         break;
 
+    case STATUS_QAZ_STORM:
+        if (!have_passive(passive_t::upgraded_storm_shield))
+            break;
+        if (you.props.exists(QAZLAL_STORM_KEY))
+        {
+            inf.light_colour = LIGHTCYAN;
+            inf.light_text
+                = make_stringf("Storm (%d)",
+                    you.props[QAZLAL_STORM_KEY].get_int());
+        }
+        break;
+
     default:
         if (!found)
         {

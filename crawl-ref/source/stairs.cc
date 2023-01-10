@@ -465,6 +465,13 @@ static void _gauntlet_effect()
         mpr("You feel stable on this floor.");
 }
 
+static void qazlal_end_storm()
+{
+    you.props.erase(QAZLAL_STORM_KEY);
+    if (have_passive(passive_t::upgraded_storm_shield))
+        mpr("The storm settles.");
+}
+
 static void _hell_effects()
 {
 
@@ -1015,6 +1022,9 @@ void floor_transition(dungeon_feature_type how,
     new_level();
 
     moveto_location_effects(whence);
+    if ((have_passive(passive_t::storm_shield)))
+        qazlal_end_storm();
+
     if (is_hell_subbranch(you.where_are_you))
         _hell_effects();
 

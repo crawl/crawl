@@ -1619,6 +1619,15 @@ bool mons_will_goldify(const monster &mons)
     return have_passive(passive_t::goldify_corpses) && mons_gives_xp(mons, you);
 }
 
+static void _qazlal_increment_storm()
+{
+    const int qaz_storm = you.props[QAZLAL_STORM_KEY].get_int();
+    if (qaz_storm < QAZLAL_STORM_MAX)
+    {
+        you.props[QAZLAL_STORM_KEY].get_int()++;
+    }
+}
+
 /**
  * Kill off a monster.
  *
@@ -2007,6 +2016,14 @@ item_def* monster_die(monster& mons, killer_type killer,
             if (you.hp > hp)
                 mpr("You feel a bit better.");
         }
+    }
+
+    if (have_passive(passive_t::upgraded_storm_shield)
+        && you.props.exists(QAZLAL_STORM_KEY)
+        && (killer == KILL_YOU || killer == KILL_YOU_MISSILE)
+        && gives_player_xp)
+    {
+        _qazlal_increment_storm();
     }
 
     switch (killer)

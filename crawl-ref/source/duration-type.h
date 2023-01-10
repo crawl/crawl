@@ -235,5 +235,6 @@ enum duration_type
     DUR_CORPSE_ROT,
 #endif
     DUR_NO_MOMENTUM,
+    DUR_QAZ_STORM,
     NUM_DURATIONS
 };

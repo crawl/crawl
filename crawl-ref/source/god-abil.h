@@ -73,6 +73,9 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 #define ASHENZARI_BASE_PIETY 2
 #define ASHENZARI_PIETY_SCALE 168
 
+#define QAZLAL_STORM_KEY "qazlal_storm_amount"
+#define QAZLAL_STORM_MAX 30
+
 struct bolt;
 class stack_iterator;
 
