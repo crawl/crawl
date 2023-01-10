@@ -2193,7 +2193,6 @@ int player_shield_class()
         shield += ICEMAIL_MAX * 100;
     }
 
-    shield += qazlal_sh_boost() * 100;
     shield += tso_sh_boost() * 100;
     shield += you.wearing(EQ_AMULET, AMU_REFLECTION) * AMU_REFLECT_SH * 100;
     shield += you.scan_artefacts(ARTP_SHIELDING) * 200;
@@ -5610,7 +5609,6 @@ bool player::shielded() const
     return shield()
            || duration[DUR_DIVINE_SHIELD]
            || get_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-           || qazlal_sh_boost() > 0
            || you.wearing(EQ_AMULET, AMU_REFLECTION)
            || you.scan_artefacts(ARTP_SHIELDING)
            || (get_mutation_level(MUT_CONDENSATION_SHIELD)

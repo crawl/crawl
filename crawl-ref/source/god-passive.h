@@ -279,7 +279,6 @@ unsigned int ash_skill_point_boost(skill_type sk, int scaled_skill);
 int ash_skill_boost(skill_type sk, int scale);
 bool ash_has_skill_boost(skill_type sk);
 void gozag_detect_level_gold(bool count);
-int qazlal_sh_boost(int piety = you.piety);
 int tso_sh_boost();
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);

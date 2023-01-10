@@ -2558,12 +2558,6 @@ static void _gain_piety_point()
         notify_stat_change();
     }
 
-    if (you_worship(GOD_QAZLAL)
-        && qazlal_sh_boost(old_piety) != qazlal_sh_boost())
-    {
-        you.redraw_armour_class = true;
-    }
-
     if (have_passive(passive_t::halo) || have_passive(passive_t::umbra))
     {
         // Piety change affects halo / umbra radius.
@@ -2709,12 +2703,6 @@ void lose_piety(int pgn)
         msg += ".";
         simple_god_message(msg.c_str());
         notify_stat_change();
-    }
-
-    if (you_worship(GOD_QAZLAL)
-        && qazlal_sh_boost(old_piety) != qazlal_sh_boost())
-    {
-        you.redraw_armour_class = true;
     }
 
     if (will_have_passive(passive_t::halo)

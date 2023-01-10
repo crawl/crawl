@@ -829,14 +829,6 @@ void gozag_detect_level_gold(bool count)
     }
 }
 
-int qazlal_sh_boost(int piety)
-{
-    if (!have_passive(passive_t::storm_shield))
-        return 0;
-
-    return min(piety, piety_breakpoint(5)) / 10;
-}
-
 // Not actually passive, but placing it here so that it can be easily compared
 // with Qazlal's boost.
 int tso_sh_boost()
