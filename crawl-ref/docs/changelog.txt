@@ -78,11 +78,7 @@ Items
   - Majin-Bo is now one-handed.
   - Sniper is now +27 and Heavy (was +9 and Vorpal).
   - The Dark Maul is now Heavy (was Vorpal), and has its base stats adjusted.
-  - The Singing Sword is now +11 (was +7 and Vorpal).
-  - The Glaive of Prune is now Freezing (was Vorpal).
-  - Bloodbane is now Draining (was Vorpal).
-  - The Obsidian Axe is now +16 and Draining (was +14 and Vorpal).
-  - The Woodcutter's Axe is now +5 (was +3 and Vorpal).
+  - Other formerly Vorpal unrands have been adjusted individually.
   - The Lochaber Axe now causes HP Drain on unequip.
 * Scrolls of butterflies now create dramatically more butterflies. They now
   alternate with scrolls of summoning instead of scrolls of fog.
