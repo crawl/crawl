@@ -322,13 +322,13 @@ const vector<vector<god_power>> & get_all_god_powers()
         // Qazlal
         {
             { 0, "Qazlal grants you and your divine allies immunity to clouds." },
-            { 1, "You are now surrounded by a storm.",
+            { 1, "Qazlal now injects you with storm power.",
+                 "The power of the storm has gone away from you.",
+                 "Qazlal injects you with storm power(Harm, RMsl, AC +3)." },
+            { 2, ABIL_QAZLAL_UPHEAVAL, "call upon nature to destroy your foes" },
+            { 4, "You are now surrounded by a storm.",
                  "Your storm dissipates completely.",
                  "You are surrounded by a storm." },
-            { 2, ABIL_QAZLAL_UPHEAVAL, "call upon nature to destroy your foes" },
-            { 4, "You will now adapt resistances upon receiving elemental damage.",
-                 "You will no longer adapt resistances upon receiving elemental damage.",
-                 "You adapt resistances upon receiving elemental damage." },
             { 5, ABIL_QAZLAL_DISASTER_AREA,
                  "call upon nature's wrath in a wide area around you" },
         },
