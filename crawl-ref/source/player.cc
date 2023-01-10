@@ -3135,13 +3135,6 @@ int player_stealth()
     if (you.form == transformation::shadow)
         stealth *= 2;
 
-    // If you're surrounded by a storm, you're inherently pretty conspicuous.
-    if (have_passive(passive_t::storm_shield))
-    {
-        stealth = stealth
-                  * (MAX_PIETY - min((int)you.piety, piety_breakpoint(5)))
-                  / (MAX_PIETY - piety_breakpoint(0));
-    }
     // The shifting glow from the Orb, while too unstable to negate invis
     // or affect to-hit, affects stealth even more than regular glow.
     if (player_has_orb())
