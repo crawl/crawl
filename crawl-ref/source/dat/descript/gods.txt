@@ -377,14 +377,14 @@ its normal limits.
 Qazlal powers
 
 Followers of Qazlal are protected from all clouds. As a follower of Qazlal
-gains divine favour, inject storm's power(Harm) to followers, and deflects
-incoming projectiles. Qazlal allows followers to incite nature against their
-foes, causing a localised natural disturbance or, a more widespread disaster.
-particularly devout followers of Qazlal eventually gain slowly surrounded by
-a loud storm. The storm is accompanied by noise and will cause the elemental
-cloud to appear nearby. Storms will also reduce damage and provide temporary
-resistance after damage. The storm will grow as its followers continue destroy
-all.
+gains divine favour, they will be imbued with the ferocity of the storm: 
+both dealing and receiving more damage (Harm) and deflecting missiles and
+attacks. Qazlal allows followers to incite nature against their foes, causing
+a localised natural disturbance or a more widespread disaster.
+Particularly devout followers of Qazlal will eventually find their destruction
+draws a (very noisy) storm of its own, spawning elemental clouds, reducing
+damage, and providing reactive elemental resistances. This storm will grow
+as long as an adherent continues to wreak havoc.
 %%%%
 Ru powers
 
