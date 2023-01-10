@@ -3917,7 +3917,7 @@ int get_real_hp(bool trans, bool drained)
 
     //Divine vigour should apply multiplicatively with all other effects
     hitp *= 100 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5);
-    hitp /= 100; 
+    hitp /= 100;
 
     // Some transformations give you extra hp.
     if (trans)
