@@ -1933,6 +1933,34 @@ xxxG*%1'2'+...3.3Gxxx
           x
 ENDMAP
 
+NAME:   hellmonk_elf_help
+TAGS:   transparent no_item_gen
+DEPTH:  Elf
+KITEM:  ' = randbook title:Changing_Your_Life! disc:Transmutation /\
+            randbook title:Seven_Elven_Habits numspells:7 /\
+            randbook title:Passive_Income disc:Summoning \
+                disc2:Necromancy /\
+            randbook title:Big_Dreams_And_Success numspells:2 slevels:18 /\
+            randbook title:The_Trick_To_Life numspells:1 /\
+            manual of invocations w:3
+KMONS:  ' = deep elf death mage / deep elf sorcerer / deep elf annihilator /\
+            deep elf demonologist
+SUBST:  8 = 80, 0 = 0., A : GccT
+TILE:   c = wall_studio
+MAP
+  xxxxx
+ xxcccxx
+xxc.'.cxx
+xc8.A.8cx
+xc..0..cx
+xcA.A.Acx
+xc..0..cx
+xc0.A.0cx
+xxc...cxx
+ xx+++xx
+   @@@
+ENDMAP
+
 ##############################################################################
 #
 # <<4>> Elf:2 Hall of Blades entry vaults.
