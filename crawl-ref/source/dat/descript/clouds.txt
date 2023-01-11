@@ -188,6 +188,7 @@ A cloud of volatile blastsparks. These explode when exposed to open flame or whe
 anything disturbs them by moving into them. The explosion is concussive, knocking
 adjacent creatures away.
 %%%%
-rough dust cloud
+sand storm cloud
 
-A rough clouds of dust. Sharply polished dust are violence hard.
+A cloud of violently whirling sand. Creatures within will be injured, though its
+damage is sharply reduced by armor.
