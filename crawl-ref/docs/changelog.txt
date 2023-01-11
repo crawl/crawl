@@ -22,6 +22,7 @@ Character
   - Ice Elementalists have Hailstorm replaced by Summon Ice Beast.
   - The 'Arcane Marksman' background has been renamed to 'Hexslinger'.
 * All players regenerate an extra 0.2 HP/turn.
+* Large species move at normal speed through shallow water.
 * Mummies have innate Faith, giving them extra piety gain.
 * Formicids can now shaft themselves in the Tomb of the Ancients.
 * Reaching the end of the Zot clock now causes a smaller amount of permanent
@@ -44,7 +45,7 @@ Gods
   - The Bend Space ability has been removed.
 * When worshipping at a faded altar, the player is given a preview of three
   gods the altar might belong to.
-* Gozag's corpse-to-gold effect now blocks enemies from creating simulacrulae.
+* Gozag's corpse-to-gold effect now blocks enemies from creating simulacra.
 * Fedhas protects trees from being set on fire by the player.
 * Okawaru's Heroism and Finesse abilities cost more piety.
 * Removed Ashenzari's Astral Vision (automatically seeing through walls).
@@ -130,7 +131,7 @@ Spells
 Tiles
 -----
 * New tiles for player draconians.
-* New art for X-shaped and orb-shaped simulacrae.
+* New art for X-shaped and orb-shaped simulacra.
 * New holiday-exclusive tiles for Sigmund and hats.
 
 Stone Soup 0.29.0 (20220825)
