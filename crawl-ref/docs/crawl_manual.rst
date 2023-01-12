@@ -2605,7 +2605,7 @@ R
 e
   Equip actions (wield, wear, put on)
 
-u
+c
   Unequip actions (unwield, take off, remove)
 
 Item interaction (floor)

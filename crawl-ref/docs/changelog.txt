@@ -52,6 +52,11 @@ Gods
 
 Interface and Options
 ---------------------
+* Two new menus that unify all equip and unequip actions:
+  - The Equip menu (`e`) combines wield, wear, and put on commands for equipping
+    weapons, armour, and jewellery, respectively.
+  - The Unequip menu (`c`) allows to unwield, take off, or remove any equipped
+    item.
 * Damage ratings are now shown via @, including those for unarmed combat.
 * Bumping a foe while holding a ranged weapon shoots instead of bashing.
 * Unrands (pre-defined artefacts) have a distinct colour by default.

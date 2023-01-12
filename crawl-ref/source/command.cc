@@ -1098,6 +1098,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_PRIMARY_ATTACK, "attack with wielded item", 2);
     _add_command(cols, 1, CMD_EVOKE, "eVoke wand and miscellaneous item", 2);
 
+    _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Equip or Unequip an item",
+                         { CMD_EQUIP, CMD_UNEQUIP });
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Wear or Take off armour",
                          { CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR });
     _add_insert_commands(cols, 1, "<w>%</w>/<w>%</w> : Put on or Remove jewellery",
