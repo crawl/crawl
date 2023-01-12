@@ -691,7 +691,10 @@ static string _artefact_descrip(const item_def &item)
     {
         bool need_newline = false;
         auto entry = get_unrand_entry(item.unrand_idx);
-        if (entry->dbrand)
+        // Weapons have brands added earlier.
+        if (entry->dbrand
+            && item.base_type != OBJ_WEAPONS
+            && item.base_type != OBJ_STAVES)
         {
             out << entry->dbrand;
             need_newline = true;
@@ -1409,9 +1412,26 @@ static void _append_weapon_stats(string &description, const item_def &item)
     {
         description += _desc_attack_delay(item);
         description += "\nDamage rating: " + damage_rating(&item);
-        const string brand_desc = _describe_weapon_brand(item);
-        if (!brand_desc.empty())
-            description += "\n\n" + brand_desc;
+    }
+
+    const string brand_desc = _describe_weapon_brand(item);
+    if (!brand_desc.empty())
+    {
+        const brand_type brand = get_weapon_brand(item);
+        string brand_name = uppercase_first(brand_type_name(brand, true));
+        // Hack to match artefact formatting.
+        string divider = ":";
+        divider.append(MAX_ARTP_NAME_LEN - brand_name.length(), ' ');
+        description += make_stringf("\n\n%s%s%s",
+                                    brand_name.c_str(),
+                                    divider.c_str(),
+                                    brand_desc.c_str());
+    }
+    if (is_unrandom_artefact(item))
+    {
+        auto entry = get_unrand_entry(item.unrand_idx);
+        if (entry->dbrand)
+            description += string("\n") + (brand_desc.empty() ? "\n" : "") + entry->dbrand;
     }
 }
 

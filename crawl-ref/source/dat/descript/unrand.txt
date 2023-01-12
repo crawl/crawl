@@ -647,8 +647,7 @@ huge body can wear it.
 warlock's mirror
 
 A handheld array of hexagonal mirrors, synthesized from a truly exotic
-substance and polished to a blinding sheen. It is capable of reflecting almost
-any attack.
+substance and polished to a blinding sheen.
 %%%%
 amulet of invisibility
 
