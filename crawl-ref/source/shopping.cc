@@ -278,11 +278,10 @@ unsigned int item_value(item_def item, bool ident)
             {
             case SPMSL_NORMAL:
             default:
-                valued *= 10;
                 break;
 
             case SPMSL_CHAOS:
-                valued *= 40;
+                valued *= 4;
                 break;
 
             case SPMSL_CURARE:
@@ -294,15 +293,12 @@ unsigned int item_value(item_def item, bool ident)
             case SPMSL_STEEL:
 #endif
             case SPMSL_DISPERSAL:
-                valued *= 30;
-                break;
-
 #if TAG_MAJOR_VERSION == 34
             case SPMSL_FLAME:
             case SPMSL_FROST:
             case SPMSL_SLEEP:
             case SPMSL_CONFUSION:
-                valued *= 25;
+                valued *= 3;
                 break;
 #endif
 
@@ -314,11 +310,9 @@ unsigned int item_value(item_def item, bool ident)
             case SPMSL_SICKNESS:
 #endif
             case SPMSL_FRENZY:
-                valued *= 20;
+                valued *= 2;
                 break;
             }
-
-            valued /= 10;
         }
         break;
 
