@@ -1464,7 +1464,10 @@ int extant_unrandart_by_exact_name(string name)
         {
             const int id = UNRAND_START + i;
             if (unranddata[i].flags & UNRAND_FLAG_NOGEN
-                && id != UNRAND_DRAGONSKIN /* ew */)
+                && id != UNRAND_DRAGONSKIN
+                && id != UNRAND_CEREBOV
+                && id != UNRAND_DISPATER
+                && id != UNRAND_ASMODEUS /* ew */)
             {
                 continue;
             }
