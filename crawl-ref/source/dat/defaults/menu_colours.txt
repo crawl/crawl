@@ -28,7 +28,8 @@ menu += lightmagenta:.*orb.*Zot
 
 # Artefacts
 #
-menu += lightcyan:.*unrand.*
+menu += lightcyan:unrand.*artefact
+
 menu += white:.*artefact.*
 
 #menu += white:.*identified.*artefact.*
