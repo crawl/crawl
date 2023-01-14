@@ -1708,9 +1708,9 @@ NAME:    slick slippers
 OBJ:     OBJ_ARMOUR/ARM_BOOTS
 TILE:    urand_slippers
 TILE_EQ: short_blue
-PLUS:    +1
+PLUS:    +2
 COLOUR:  ETC_DITHMENOS
-EV:      3
+EV:      5
 INSCRIP: slick, slippery,
 DBRAND:  Slick:     Its wearer cannot be constricted, engulfed, netted or webbed.
 +Slippery:  It slips away from damaging melee attacks, pulling the attacker onward.
