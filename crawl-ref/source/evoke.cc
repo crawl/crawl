@@ -685,20 +685,7 @@ static int _tremorstone_count(int pow)
 static spret _tremorstone()
 {
     bool see_target;
-    bolt beam;
-
-    static const int RADIUS = 2;
-    static const int SPREAD = 1;
-    static const int RANGE = RADIUS + SPREAD;
-    const int pow = 15 + you.skill(SK_EVOCATIONS);
-    const int num_explosions = _tremorstone_count(pow);
-
-    beam.source_id  = MID_PLAYER;
-    beam.thrower    = KILL_YOU;
-    zappy(ZAP_TREMORSTONE, pow, false, beam);
-    beam.range = RANGE;
-    beam.ex_size = RADIUS;
-    beam.target = _find_tremorstone_target(see_target);
+    const coord_def center = _find_tremorstone_target(see_target);
 
     targeter_radius hitfunc(&you, LOS_NO_TRANS);
     auto vulnerable = [](const actor *act) -> bool
@@ -714,7 +701,20 @@ static spret _tremorstone()
     }
 
     mpr("The tremorstone explodes into fragments!");
-    const coord_def center = beam.target;
+
+    static const int RADIUS = 2;
+    static const int SPREAD = 1;
+    static const int RANGE = RADIUS + SPREAD;
+    const int pow = 15 + you.skill(SK_EVOCATIONS);
+    const int num_explosions = _tremorstone_count(pow);
+
+    bolt beam;
+    beam.source_id  = MID_PLAYER;
+    beam.thrower    = KILL_YOU;
+    zappy(ZAP_TREMORSTONE, pow, false, beam);
+    beam.range = RANGE;
+    beam.ex_size = RADIUS;
+    beam.target = center;
 
     for (int i = 0; i < num_explosions; i++)
     {
