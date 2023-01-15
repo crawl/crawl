@@ -3156,7 +3156,7 @@ static const struct spell_desc spelldata[] =
     SPELL_BECKONING, "Lesser Beckoning",
     spschool::translocation,
     spflag::dir_or_target | spflag::not_self | spflag::needs_tracer,
-    3,
+    2,
     50,
     3, 5,
     0,
