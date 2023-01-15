@@ -1565,7 +1565,6 @@ static bool _give_kiku_gift(bool forced)
 
     vector<spell_type> spell_options;
     vector<spell_type> chosen_spells;
-    size_t wanted_spells;
 
     // The first set should guarantee the player at least one ally spell, to
     // complement the Wretches ability.
@@ -1577,7 +1576,6 @@ static bool _give_kiku_gift(bool forced)
                          SPELL_ROT,
                          SPELL_VAMPIRIC_DRAINING,
                          SPELL_ANIMATE_DEAD};
-        wanted_spells = 4;
     }
     else
     {
@@ -1587,7 +1585,6 @@ static bool _give_kiku_gift(bool forced)
                          SPELL_BORGNJORS_VILE_CLUTCH,
                          SPELL_DEATH_CHANNEL,
                          SPELL_SIMULACRUM};
-        wanted_spells = 5;
     }
 
     shuffle_array(spell_options);
@@ -1596,7 +1593,7 @@ static bool _give_kiku_gift(bool forced)
         if (spell_is_useless(spell, false))
             continue;
         chosen_spells.push_back(spell);
-        if (chosen_spells.size() >= wanted_spells)
+        if (chosen_spells.size() >= 4)
             break;
     }
 
