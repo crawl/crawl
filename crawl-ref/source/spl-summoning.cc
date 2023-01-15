@@ -1040,6 +1040,20 @@ spret cast_summon_demon(int pow)
     return spret::success;
 }
 
+static bool _butterfly_knockback(coord_def p)
+{
+    monster* mon = monster_at(p);
+    if (!mon)
+        return false;
+
+    const int dist = random_range(2, 4);
+    if (!mon->knockback(you, dist, -1, "sudden gust"))
+        return false;
+
+    behaviour_event(mon, ME_ALERT, &you);
+    return true;
+}
+
 spret summon_butterflies()
 {
     // Just fizzle instead of creating hostile butterflies.
@@ -1062,12 +1076,24 @@ spret summon_butterflies()
         }
     }
 
-    // XXX: dedup with Xom, or change number?
+    if (silenced(you.pos()))
+        mpr("Somewhere, a butterfly flaps its wings.");
+    else
+        mpr("You hear the flapping of tiny wings.");
+
+    bool success = false;
+    // push away further-away things first, so middle ones don't get stuck
+    // XXX: this is weird if a dispersal trap gets hit.
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+        if (grid_distance(*ri, you.pos()) == 2 && _butterfly_knockback(*ri))
+            success = true;
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (_butterfly_knockback(*ai))
+            success = true;
 
     // place some in a tight cluster, distance 2. Max 24 squares, so this is
     // always at least 2/3 density.
     const int how_many_inner = random_range(16, 22);
-    bool success = false;
     for (int i = 0; i < how_many_inner; ++i)
     {
         mgen_data butterfly(MONS_BUTTERFLY, BEH_FRIENDLY, you.pos(), MHITYOU,
@@ -1098,11 +1124,6 @@ spret summon_butterflies()
 
     if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
-    else if (silenced(you.pos()))
-        mpr("The fluttering of tiny wings stirs the air.");
-    else
-        mpr("You hear the tinkle of a tiny bell.");
-
     return spret::success;
 }
 

@@ -2829,7 +2829,16 @@ scroll of brand weapon
 %%%%
 scroll of butterflies
 
-<scroll>
+“It used to be thought that the events that changed the world were things like
+ big bombs, maniac politicians, huge earthquakes, or vast population movements,
+ but it has now been realized that this is a very old-fashioned view held by
+ people totally out of touch with modern thought. The things that really change
+ the world, according to Chaos theory, are the tiny things. A butterfly flaps
+ its wings in the Amazonian jungle, and subsequently a storm ravages half of
+ Europe...”
+    -Neil Gaiman and Terry Pratchett, _Good Omens: The Nice And Accurate
+     Prophecies of Agnes Nutter, Witch_. 1990.
+
 %%%%
 scroll of enchant armour
 

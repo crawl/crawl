@@ -1039,7 +1039,7 @@ void actor::collide(coord_def newpos, const actor *agent, int pow)
  *        must be checked by the calling function.
  * @param cause The actor responsible for the knockback.
  * @param dist How far back to try to push this actor.
- * @param pow Determines damage done to us if we hit something.
+ * @param pow Determines damage done to us if we hit something. If -1, don't do damage.
  * @param source_name The name of the thing that's pushing this actor.
  * @returns True if this actor is moved from their initial position; false otherwise.
  */
@@ -1094,7 +1094,7 @@ bool actor::knockback(const actor &cause, int dist, int pow, string source_name)
              source_name.c_str());
     }
 
-    if (pos() != newpos)
+    if (pow != -1 && pos() != newpos)
         collide(newpos, &cause, pow);
 
     // Stun the monster briefly so that it doesn't look as though it wasn't
