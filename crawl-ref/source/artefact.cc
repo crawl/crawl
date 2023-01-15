@@ -1340,7 +1340,6 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_DELATRAS_GLOVES:
         return 6;
     case UNRAND_WOODCUTTERS_AXE:
-    case UNRAND_MORG:
     case UNRAND_THROATCUTTER:
     case UNRAND_HERMITS_PENDANT:
         return 9;

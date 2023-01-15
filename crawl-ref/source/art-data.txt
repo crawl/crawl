@@ -452,6 +452,7 @@ WILL:    1
 BOOL:    poison, skip_ego, nogen
 # end TAG_MAJOR_VERSION
 
+# TAG_MAJOR_VERSION == 34
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
 PLUS:     +4
@@ -461,6 +462,8 @@ TILE_EQ:  morg
 BRAND:    SPWPN_PAIN
 INT:      5
 WILL:     1
+BOOL:     nogen
+# end TAG_MAJOR_VERSION
 
 NAME:    scythe "Finisher"
 OBJ:     OBJ_WEAPONS/WPN_HALBERD

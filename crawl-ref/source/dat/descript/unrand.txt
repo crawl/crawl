@@ -123,6 +123,7 @@ dagger of Chilly Death
 A dagger made of one huge shard of sapphire. It covers opponents in ice,
 slowing down their movement somewhat.
 %%%%
+# TAG_MAJOR_VERSION == 34
 dagger "Morg"
 
 An ugly rusty dagger. Many years ago it was the property of a powerful mage
