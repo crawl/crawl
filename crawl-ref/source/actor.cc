@@ -1069,6 +1069,7 @@ bool actor::knockback(const actor &cause, int dist, int pow, string source_name)
 
         newpos = ray.pos();
         if (newpos == oldray.pos()
+            || !in_bounds(newpos)
             || cell_is_solid(newpos)
             || actor_at(newpos)
             || !can_pass_through(newpos)
