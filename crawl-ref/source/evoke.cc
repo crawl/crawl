@@ -643,6 +643,27 @@ static coord_def _find_tremorstone_target(bool& see_targets)
             target = *ri;
     }
 
+    // It's possible to not find any targets at radius 3 if e.g. we're in fog.
+    if (!target.origin())
+        return target;
+
+    // Be very careless for this rare case.
+    for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS, true); ri; ++ri)
+    {
+        if (ri->distance_from(you.pos()) == 2
+            && !cell_is_solid(*ri)
+            && one_chance_in(++ties))
+        {
+            target = *ri;
+        }
+    }
+
+    if (!target.origin())
+        return target;
+
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        if (!cell_is_solid(*ai) && one_chance_in(++ties))
+            target = *ai;
     return target;
 }
 
