@@ -1710,7 +1710,7 @@ DBRAND:  Invo=14:   It sets your Invocations skill to 14.
 NAME:    slick slippers
 OBJ:     OBJ_ARMOUR/ARM_BOOTS
 TILE:    urand_slippers
-TILE_EQ: short_blue
+TILE_EQ: slippers
 PLUS:    +2
 COLOUR:  ETC_DITHMENOS
 EV:      5

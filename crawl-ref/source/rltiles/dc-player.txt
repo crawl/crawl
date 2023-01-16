@@ -239,6 +239,7 @@ mesh_white MESH_WHITE
 mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
 seven_league_boots SEVEN_LEAGUE_BOOTS
+slippers SLIPPERS
 
 ## Mutations
 hooves HOOVES
