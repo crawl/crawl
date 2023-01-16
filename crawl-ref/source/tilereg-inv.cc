@@ -7,6 +7,7 @@
 #include "cio.h"
 #include "describe.h"
 #include "env.h"
+#include "evoke.h"
 #include "tile-env.h"
 #include "invent.h"
 #include "item-name.h"
