@@ -1419,7 +1419,7 @@ item_def *digit_inscription_to_item(char digit, operation_types oper)
     return nullptr;
 }
 
-static operation_types _generalize_oper(operation_types oper)
+operation_types generalize_oper(operation_types oper)
 {
     switch (oper)
     {
@@ -1461,7 +1461,7 @@ static bool _has_warning_inscription(const item_def& item,
     }
 
     // if the inscription is wear/takeoff (etc), check equip/unequip
-    const auto gen = _generalize_oper(oper);
+    const auto gen = generalize_oper(oper);
     if (gen != OPER_NONE && gen != oper)
         return _has_warning_inscription(item, gen);
 

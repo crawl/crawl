@@ -544,6 +544,11 @@ public:
         m_text += fs;
         _expose();
         m_wrapped_size = Size(-1);
+        // XX this doesn't handle height changes. I think it's partly a
+        // sequencing issue: previous code will correctly invalidate on a
+        // height change, but m_region isn't updated until later, so you get
+        // the wrong wrapping behavior + a lack of reflowing until the next
+        // update.
         wrap_text_to_size(m_region.width, m_region.height);
     }
 

@@ -79,6 +79,7 @@
 
 class UseItemMenu : public InvMenu
 {
+    void reset(operation_types oper, const char* prompt_override=nullptr);
     bool init_modes();
     bool populate_list(bool check_only=false);
     void populate_menu();
@@ -87,6 +88,8 @@ class UseItemMenu : public InvMenu
     void clear() override;
     bool examine_index(int i) override;
     bool cycle_mode(bool forward) override;
+    void save_hover();
+    void restore_hover(bool preserve_pos);
     string get_keyhelp(bool scrollable) const override;
     bool skip_process_command(int keyin) override
     {
@@ -103,7 +106,6 @@ class UseItemMenu : public InvMenu
         return InvMenu::get_command(keyin);
     }
 
-
 public:
     UseItemMenu(operation_types oper, int selector, const char* prompt);
 
@@ -112,6 +114,8 @@ public:
     int item_type_filter;
     operation_types oper;
 
+    int saved_inv_item;
+    int saved_hover;
     int last_inv_pos;
 
     // XX these probably shouldn't be const...
@@ -259,14 +263,17 @@ bool UseItemMenu::init_modes()
     if (available_modes.empty())
         return false;
 
-    unwind_var<operation_types> cur_oper(oper);
-    unwind_var<int> cur_filter(item_type_filter);
+    {
+        unwind_var<operation_types> cur_oper(oper);
+        unwind_var<int> cur_filter(item_type_filter);
 
-    erase_if(available_modes, [this](operation_types o) {
-        oper = o;
-        item_type_filter = _default_osel(oper);
-        return !populate_list(true);
-    });
+        erase_if(available_modes, [cur_oper, this](operation_types o) {
+            oper = o;
+            item_type_filter = _default_osel(oper);
+            return !populate_list(true);
+        });
+    }
+
     if (available_modes.size() == 0)
         return false;
 
@@ -283,7 +290,16 @@ bool UseItemMenu::init_modes()
         });
     }
 
-    return available_modes.size() > 0;
+    if (available_modes.size() == 0)
+        return false;
+
+    // the originally requested oper did not survive (e.g. because there are no
+    // items that match it, or it was removed above); fall back on whatever is
+    // first. Except for the hardcoded case above, this should be equip/unequip.
+    if (find(available_modes.begin(), available_modes.end(), oper) == available_modes.end())
+        oper = available_modes[0];
+
+    return true;
 }
 
 bool UseItemMenu::cycle_mode(bool forward)
@@ -303,7 +319,7 @@ bool UseItemMenu::cycle_mode(bool forward)
 
     oper = *it;
 
-    auto starting_hover = last_hovered;
+    save_hover();
     item_type_filter = _default_osel(oper);
 
     // always reset display all on mode change
@@ -314,13 +330,7 @@ bool UseItemMenu::cycle_mode(bool forward)
     populate_menu();
     update_sections();
     set_title(_default_use_title(oper));
-    set_hovered(starting_hover);
-    // fixup hover in case headings have moved
-    if (last_hovered >= 0 && items[last_hovered]->level != MEL_ITEM)
-        if (is_set(MF_ARROWS_SELECT))
-            cycle_hover();
-        else
-            set_hovered(-1);
+    restore_hover(true);
     return true;
 }
 
@@ -334,31 +344,46 @@ public:
     }
 };
 
-UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
-                                    const char* prompt=nullptr)
-    : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER | MF_ALLOW_FORMATTING),
-                            display_all(false), is_inventory(true),
-      item_type_filter(item_type), oper(_oper), last_inv_pos(-1),
-      inv_header(nullptr), floor_header(nullptr)
+void UseItemMenu::reset(operation_types _oper, const char* prompt_override)
 {
-    set_tag("use_item");
-    set_highlighter(new TempUselessnessHighlighter()); // pointer managed by Menu
-    menu_action = ACT_EXECUTE;
-    if (prompt)
-        set_title(prompt);
+    oper = _oper;
+
+    display_all = false;
+
+    clear();
+    // init_modes may change oper
+    init_modes();
+    if (prompt_override)
+        set_title(prompt_override);
     else
         set_title(_default_use_title(oper));
     // see `item_is_selected` for more on what can be used for item_type.
     if (item_type_filter == OSEL_ANY)
         item_type_filter = _default_osel(oper);
 
-    init_modes();
     populate_list();
     populate_menu();
     // for wield in particular:
     // start hover on wielded item, if there is one, otherwise on -
     if (oper == OPER_WIELD && item_inv.size() > 0 && you.weapon())
         set_hovered(1);
+    update_title();
+    update_more();
+}
+
+UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
+                                    const char* prompt=nullptr)
+    : InvMenu(MF_SINGLESELECT | MF_ARROWS_SELECT
+                | MF_INIT_HOVER | MF_ALLOW_FORMATTING),
+        display_all(false), is_inventory(true),
+        item_type_filter(item_type), oper(_oper), saved_inv_item(NON_ITEM),
+        saved_hover(-1), last_inv_pos(-1), inv_header(nullptr),
+        floor_header(nullptr)
+{
+    set_tag("use_item");
+    set_highlighter(new TempUselessnessHighlighter()); // pointer managed by Menu
+    menu_action = ACT_EXECUTE;
+    reset(oper, prompt);
 }
 
 bool UseItemMenu::populate_list(bool check_only)
@@ -528,6 +553,69 @@ static bool _disable_item(const MenuEntry &)
     return true;
 }
 
+static item_def *_entry_to_item(MenuEntry *me)
+{
+    if (!me)
+        return nullptr;
+    auto ie = dynamic_cast<InvEntry *>(me);
+    if (!ie)
+        return nullptr;
+    auto tgt = const_cast<item_def*>(ie->item);
+    return tgt;
+}
+
+void UseItemMenu::save_hover()
+{
+    // when switch modes, we want to keep hover on the currently selected item
+    // even if it moves around, or failing that, in a similar position in the
+    // menu. This code accomplishes that.
+    saved_hover = last_hovered;
+    if (last_hovered < 0)
+    {
+        saved_inv_item = NON_ITEM;
+        return;
+    }
+
+    auto tgt = _entry_to_item(items[last_hovered]);
+    if (!tgt || !in_inventory(*tgt))
+    {
+        saved_inv_item = NON_ITEM;
+        return;
+    }
+    saved_inv_item = tgt->link;
+}
+
+void UseItemMenu::restore_hover(bool preserve_pos)
+{
+    // if there is a saved hovered item, look for that first
+    if (saved_inv_item != NON_ITEM)
+        for (int i = 0; i < static_cast<int>(items.size()); i++)
+            if (auto tgt = _entry_to_item(items[i]))
+                if (tgt->link == saved_inv_item)
+                {
+                    set_hovered(i);
+                    saved_inv_item = NON_ITEM;
+                    saved_hover = -1;
+                    return;
+                }
+
+    // nothing found
+    saved_inv_item = NON_ITEM;
+    const bool use_hover = is_set(MF_ARROWS_SELECT);
+    if (!preserve_pos || !use_hover)
+        set_hovered(use_hover ? 0 : -1);
+    else
+    {
+        // if preserve_pos is set, try to keep an existing saved hover position
+        set_hovered(saved_hover);
+    }
+    saved_hover = -1;
+
+    // fixup hover in case headings have moved
+    if (last_hovered >= 0 && items[last_hovered]->level != MEL_ITEM)
+        cycle_hover();
+}
+
 void UseItemMenu::update_sections()
 {
     // disable unarmed on equip menus if player is unarmed
@@ -589,12 +677,14 @@ void UseItemMenu::toggle_display_all()
     if (!allow_full_inv())
         return;
 
+    save_hover();
     clear();
     display_all = !display_all;
     populate_list();
     populate_menu();
     update_sections();
     update_more();
+    restore_hover(true);
 }
 
 void UseItemMenu::toggle_inv_or_floor()
@@ -653,44 +743,78 @@ bool UseItemMenu::examine_index(int i)
         return InvMenu::examine_index(i);
     else // floor item
     {
-        auto ie = dynamic_cast<InvEntry *>(items[i]);
-        auto desc_tgt = const_cast<item_def*>(ie->item);
+        auto desc_tgt = _entry_to_item(items[i]);
         ASSERT(desc_tgt);
         return describe_item(*desc_tgt, nullptr, false);
     }
 }
 
+static bool _equip_oper(operation_types oper);
+
 string UseItemMenu::get_keyhelp(bool) const
 {
     string r;
-    if (oper == OPER_ANY)
-        return r; // `*` is disabled for identify, enchant
 
-    if (available_modes.size() > 1)
-    {
-        vector<string> mode_names;
-        for (const auto &o : available_modes)
-        {
-            string n = _oper_name(o);
-            if (o == oper)
-                n = "<w>" + n + "</w>";
-            mode_names.push_back(n);
-        }
-        r += menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) + " "
-            + join_strings(mode_names.begin(), mode_names.end(), "|")
-            + "   ";
-    }
-
-    // TODO: show cycle mode information, once this feature is more baked
+    // OPER_ANY menus are identify, enchant, brand; they disable most of these
+    // key shortcuts
+    // XX the logic here is getting convoluted, if only these were widgets...
+    const string desc_key = is_set(MF_ARROWS_SELECT)
+                                    ? "[<w>?</w>] describe selected" : "";
+    string full;
+    string eu_modes;
+    string modes;
     if (allow_full_inv())
     {
-        r += "[<w>*</w>] ";
-        r += (display_all ? "show appropriate" : "show all");
+        full = "[<w>*</w>] ";
+        full += (display_all ? "show appropriate" : "show all");
     }
+    if (oper != OPER_ANY)
+    {
+        if (_equip_oper(oper))
+        {
+            eu_modes = "[<w>tab</w>] ";
+            eu_modes += (generalize_oper(oper) == OPER_EQUIP)
+                ? "<w>equip</w>|unequip  " : "equip|<w>unequip</w>  ";
+        }
 
-    return is_set(MF_ARROWS_SELECT)
-        ? pad_more_with(r, "[<w>?</w>] describe selected item")
-        : r;
+        if (available_modes.size() > 1)
+        {
+            vector<string> mode_names;
+            for (const auto &o : available_modes)
+            {
+                string n = _oper_name(o);
+                if (o == oper)
+                    n = "<w>" + n + "</w>";
+                mode_names.push_back(n);
+            }
+            modes = menu_keyhelp_cmd(CMD_MENU_CYCLE_MODE) + " "
+                + join_strings(mode_names.begin(), mode_names.end(), "|")
+                + "   ";
+        }
+    }
+    if (eu_modes.size() && desc_key.size() && modes.size() && full.size())
+    {
+        // too much stuff to fit in one row
+        r = pad_more_with(full, desc_key) + "\n";
+        r += pad_more_with(modes, eu_modes);
+        return r;
+    }
+    else
+    {
+        // if both of these are shown, always keep them in a stable position
+        if (eu_modes.size() && desc_key.size())
+            r = pad_more_with("", desc_key);
+
+        // annoying: I cannot get more height changes to work correctly. So as
+        // a workaround, this will always produce a two line more, potentially
+        // with one blank line.
+        r += "\n";
+        r += modes + full;
+        if (eu_modes.size() && desc_key.size())
+            return pad_more_with(r, eu_modes); // desc_key on prev line
+        else // at most one of these is shown
+            return pad_more_with(r, desc_key.size() ? desc_key : eu_modes);
+    }
 }
 
 bool UseItemMenu::process_key(int key)
@@ -720,6 +844,24 @@ bool UseItemMenu::process_key(int key)
         // TODO: should this go with CMD_MENU_CYCLE_HEADERS instead of `,`?
         lastch = ','; // XX don't use keycode for this
         return false;
+    }
+    else if (key == CK_TAB && _equip_oper(oper))
+    {
+        item_type_filter = OSEL_ANY;
+        save_hover();
+        switch (oper)
+        {
+        case OPER_EQUIP:
+        case OPER_WIELD:   reset(OPER_UNEQUIP); break;
+        case OPER_WEAR:    reset(OPER_TAKEOFF); break;
+        case OPER_PUTON:   reset(OPER_REMOVE); break;
+        case OPER_UNEQUIP: reset(OPER_EQUIP); break;
+        case OPER_REMOVE:  reset(OPER_PUTON); break;
+        case OPER_TAKEOFF: reset(OPER_WEAR); break;
+        default: break;
+        }
+        restore_hover(false);
+        return true;
     }
 
     return Menu::process_key(key);
@@ -757,19 +899,8 @@ static operation_types _item_to_removal(item_def *target)
 
 static bool _equip_oper(operation_types oper)
 {
-    switch (oper)
-    {
-    case OPER_EQUIP:
-    case OPER_UNEQUIP:
-    case OPER_WIELD:
-    case OPER_WEAR:
-    case OPER_PUTON:
-    case OPER_REMOVE:
-    case OPER_TAKEOFF:
-        return true;
-    default:
-        return false;
-    }
+    const auto gen = generalize_oper(oper);
+    return gen == OPER_EQUIP || gen == OPER_UNEQUIP;
 }
 
 static bool _can_generically_use_armour(bool wear=true)
@@ -1037,8 +1168,7 @@ operation_types use_an_item_menu(item_def *&target, operation_types oper, int it
             ASSERT(sel.size() == 1);
 
             choice_made = true;
-            auto ie = dynamic_cast<InvEntry *>(sel[0]);
-            tmp_tgt = const_cast<item_def*>(ie->item);
+            tmp_tgt = _entry_to_item(sel[0]);
         }
 
         redraw_screen();
@@ -1462,11 +1592,6 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
 bool item_is_worn(int inv_slot)
 {
     return item_is_equipped(you.inv[inv_slot]);
-    // for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
-    //     if (inv_slot == you.equip[i])
-    //         return true;
-
-    // return false;
 }
 
 /**
