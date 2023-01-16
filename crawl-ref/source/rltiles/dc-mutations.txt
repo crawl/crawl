@@ -85,6 +85,6 @@ passive_mapping_3
 
 clarity MUT_CLARITY
 acute_vision MUT_ACUTE_VISION
-mutres MUT_MUTATION_RESISTANCE
-mutres
-mutres
+mutres_1 MUT_MUTATION_RESISTANCE
+mutres_2
+mutres_3
