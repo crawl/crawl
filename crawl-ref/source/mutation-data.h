@@ -50,6 +50,7 @@ static const mutation_def mut_data[] =
    "Your muscles are very strong. (Str +8, Int/Dex -2)", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_STRONG,
 },
 
 { MUT_CLEVER, 7, 2, mutflag::good, false,
@@ -59,6 +60,7 @@ static const mutation_def mut_data[] =
    "Your mind is very acute. (Int +8, Str/Dex -2)", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_CLEVER,
 },
 
 { MUT_AGILE, 7, 2, mutflag::good, false,
@@ -68,6 +70,7 @@ static const mutation_def mut_data[] =
    "You are very agile. (Dex +8, Str/Int -2)", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_AGILE,
 },
 
 { MUT_POISON_RESISTANCE, 4, 1, mutflag::good, true,
@@ -76,6 +79,7 @@ static const mutation_def mut_data[] =
   {"Your system is resistant to poisons. (rPois)", "", ""},
   {"You feel resistant to poisons.", "",  ""},
   {"You feel less resistant to poisons.", "", ""},
+  TILEG_MUT_POISON_RESISTANCE,
 },
 #if TAG_MAJOR_VERSION == 34
 
@@ -113,6 +117,7 @@ static const mutation_def mut_data[] =
   {"You no longer feel heat resistant.",
    "You feel less heat resistant.",
    "You feel less heat resistant."},
+  TILEG_MUT_HEAT_RESISTANCE,
 },
 
 { MUT_COLD_RESISTANCE, 4, 3, mutflag::good, true,
@@ -129,6 +134,7 @@ static const mutation_def mut_data[] =
   {"You no longer feel cold resistant.",
    "You feel less cold resistant.",
    "You feel less cold resistant."},
+  TILEG_MUT_COLD_RESISTANCE,
 },
 
 { MUT_HEAT_VULNERABILITY, 3, 3,
@@ -146,6 +152,7 @@ static const mutation_def mut_data[] =
   {"You no longer feel vulnerable to heat.",
    "You feel less vulnerable to heat.",
    "You feel less vulnerable to heat."},
+  TILEG_MUT_HEAT_VULNERABILITY,
 },
 
 { MUT_COLD_VULNERABILITY, 3, 3,
@@ -164,6 +171,7 @@ static const mutation_def mut_data[] =
   {"You no longer feel vulnerable to cold.",
    "You feel less vulnerable to cold.",
    "You feel less vulnerable to cold."},
+  TILEG_MUT_COLD_VULNERABILITY,
 },
 
 { MUT_DEMONIC_GUARDIAN, 0, 3, mutflag::good, false,
@@ -188,6 +196,7 @@ static const mutation_def mut_data[] =
   {"You are resistant to electric shocks. (rElec)", "", ""},
   {"You feel insulated.", "", ""},
   {"You feel conductive.", "", ""},
+  TILEG_MUT_SHOCK_RESISTANCE,
 },
 
 { MUT_SHOCK_VULNERABILITY, 0, 1, mutflag::bad | mutflag::qazlal, true,
@@ -196,6 +205,7 @@ static const mutation_def mut_data[] =
   {"You are vulnerable to electric shocks.", "", ""},
   {"You feel vulnerable to electricity.", "", ""},
   {"You feel less vulnerable to electricity.", "", ""},
+  TILEG_MUT_SHOCK_VULNERABILITY,
 },
 
 { MUT_REGENERATION, 2, 3, mutflag::good, false,
@@ -265,6 +275,7 @@ static const mutation_def mut_data[] =
    "You are very weak. (Str -4)", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_WEAK,
 },
 
 { MUT_DOPEY, 8, 2, mutflag::bad | mutflag::xom, false,
@@ -274,6 +285,7 @@ static const mutation_def mut_data[] =
    "You are very dopey. (Int -4)", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_DOPEY,
 },
 
 { MUT_CLUMSY, 8, 2, mutflag::bad | mutflag::xom, false,
@@ -283,6 +295,7 @@ static const mutation_def mut_data[] =
    "You are very clumsy. (Dex -4)", ""},
   {"", "", ""},
   {"", "", ""},
+  TILEG_MUT_CLUMSY,
 },
 #if TAG_MAJOR_VERSION == 34
 
@@ -570,6 +583,7 @@ static const mutation_def mut_data[] =
   {"You feel genetically unstable.",
    "You feel genetically unstable.",
    "You feel genetically unstable."},
+  TILEG_MUT_MUTATION_RESISTANCE,
 },
 
 { MUT_EVOLUTION, 4, 2, mutflag::good, false,
@@ -672,6 +686,7 @@ static const mutation_def mut_data[] =
    "You feel more resistant to negative energy."},
 
   {"", "", ""},
+  TILEG_MUT_NEGATIVE_ENERGY_RESISTANCE,
 },
 #if TAG_MAJOR_VERSION == 34
 
