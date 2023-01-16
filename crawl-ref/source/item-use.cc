@@ -74,6 +74,8 @@
 #include "view.h"
 #include "xom.h"
 
+static bool _equip_oper(operation_types oper);
+
 // The menu class for using items from either inv or floor.
 // Derivative of InvMenu
 
@@ -133,6 +135,11 @@ public:
         return oper == OPER_WIELD || oper == OPER_EQUIP;
     }
 
+    bool show_floor() const
+    {
+        return oper != OPER_EVOKE;
+    }
+
     bool allow_full_inv() const
     {
         switch (oper)
@@ -178,6 +185,8 @@ static string _default_use_title(operation_types oper)
         return "Drink which item?";
     case OPER_READ:
         return "Read which item?";
+    case OPER_EVOKE:
+        return "Evoke which item?";
     case OPER_TAKEOFF:
         return "Take off which piece of armour?";
     case OPER_REMOVE:
@@ -200,6 +209,7 @@ static string _oper_name(operation_types oper)
     case OPER_PUTON: return "put on";
     case OPER_QUAFF: return "quaff";
     case OPER_READ:  return "read";
+    case OPER_EVOKE: return "evoke";
     case OPER_TAKEOFF: return "take off";
     case OPER_REMOVE:  return "remove";
     case OPER_UNEQUIP: return "unequip";
@@ -223,6 +233,8 @@ static int _default_osel(operation_types oper)
         return OBJ_POTIONS;
     case OPER_READ:
         return OBJ_SCROLLS;
+    case OPER_EVOKE:
+        return OSEL_EVOKABLE;
     case OPER_EQUIP:
         return OSEL_EQUIPABLE;
     case OPER_TAKEOFF:
@@ -243,7 +255,7 @@ static vector<operation_types> _oper_to_mode(operation_types o)
     static const vector<operation_types> removables
         = {OPER_UNEQUIP, OPER_TAKEOFF, OPER_REMOVE};
     static const vector<operation_types> usables
-        = {OPER_READ, OPER_QUAFF};
+        = {OPER_READ, OPER_QUAFF, OPER_EVOKE};
 
     // return a copy
     vector<operation_types> result;
@@ -296,8 +308,12 @@ bool UseItemMenu::init_modes()
     // the originally requested oper did not survive (e.g. because there are no
     // items that match it, or it was removed above); fall back on whatever is
     // first. Except for the hardcoded case above, this should be equip/unequip.
-    if (find(available_modes.begin(), available_modes.end(), oper) == available_modes.end())
+    if (_equip_oper(oper)
+        && find(available_modes.begin(), available_modes.end(), oper)
+                                                    == available_modes.end())
+    {
         oper = available_modes[0];
+    }
 
     return true;
 }
@@ -403,27 +419,30 @@ bool UseItemMenu::populate_list(bool check_only)
             item_inv.push_back(&item);
         }
     }
-    // Load floor items...
-    vector<const item_def*> floor = const_item_list_on_square(
+    if (show_floor())
+    {
+        // Load floor items...
+        vector<const item_def*> floor = const_item_list_on_square(
                                                 you.visible_igrd(you.pos()));
 
-    for (const auto *it : floor)
-    {
-        // ...only stuff that can go into your inventory though
-        if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
-            || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
-            || it->base_type == OBJ_RUNES)
+        for (const auto *it : floor)
         {
-            continue;
+            // ...only stuff that can go into your inventory though
+            if (!it->defined() || item_is_stationary(*it) || item_is_orb(*it)
+                || item_is_spellbook(*it) || it->base_type == OBJ_GOLD
+                || it->base_type == OBJ_RUNES)
+            {
+                continue;
+            }
+
+            // even with display_all, only show matching floor items.
+            if (!item_is_selected(*it, item_type_filter))
+                continue;
+
+            if (check_only)
+                return true;
+            item_floor.push_back(it);
         }
-
-        // even with display_all, only show matching floor items.
-        if (!item_is_selected(*it, item_type_filter))
-            continue;
-
-        if (check_only)
-            return true;
-        item_floor.push_back(it);
     }
 
     return !check_only && (item_inv.size() > 0 || item_floor.size() > 0);
@@ -432,7 +451,8 @@ bool UseItemMenu::populate_list(bool check_only)
 bool UseItemMenu::empty_check() const
 {
     // (if choosing weapons, then bare hands are always a possibility)
-    if (!show_unarmed() && !any_items_of_type(item_type_filter, -1, true))
+    if (!show_unarmed()
+        && !any_items_of_type(item_type_filter, -1, show_floor()))
     {
         mprf(MSGCH_PROMPT, "%s",
             no_selectables_message(item_type_filter).c_str());
@@ -749,8 +769,6 @@ bool UseItemMenu::examine_index(int i)
     }
 }
 
-static bool _equip_oper(operation_types oper);
-
 string UseItemMenu::get_keyhelp(bool) const
 {
     string r;
@@ -873,13 +891,15 @@ static operation_types _item_to_oper(item_def *target)
         return OPER_WIELD; // unwield
     switch (target->base_type)
     {
-    case OBJ_POTIONS:   return OPER_QUAFF;
-    case OBJ_SCROLLS:   return OPER_READ;
-    case OBJ_ARMOUR:    return OPER_WEAR;
+    case OBJ_WANDS:
+    case OBJ_MISCELLANY: return OPER_EVOKE;
+    case OBJ_POTIONS:    return OPER_QUAFF;
+    case OBJ_SCROLLS:    return OPER_READ;
+    case OBJ_ARMOUR:     return OPER_WEAR;
     case OBJ_WEAPONS:
-    case OBJ_STAVES:    return OPER_WIELD;
-    case OBJ_JEWELLERY: return OPER_PUTON;
-    default:            return OPER_NONE;
+    case OBJ_STAVES:     return OPER_WIELD;
+    case OBJ_JEWELLERY:  return OPER_PUTON;
+    default:             return OPER_NONE;
     }
 }
 
@@ -946,6 +966,9 @@ static bool _can_generically_use(operation_types oper)
     case OPER_READ:
         err = cannot_read_item_reason();
         break;
+    case OPER_EVOKE:
+        err = cannot_evoke_item_reason();
+        break;
     case OPER_WEAR:
         if (!_can_generically_use_armour())
             return false;
@@ -993,6 +1016,7 @@ static bool _do_wear_armour(item_def *to_wear);
 
 static bool _unequip_item(item_def &i)
 {
+    ASSERT(i.defined());
     // wrapper for compatibility with old api that takes slots
     if (!in_inventory(i))
     {
@@ -1003,6 +1027,19 @@ static bool _unequip_item(item_def &i)
         return remove_ring(i.link);
     else
         return takeoff_armour(i.link);
+}
+
+static bool _evoke_item(item_def &i)
+{
+    ASSERT(i.defined());
+    // wrapper for compatibility with old api that takes slots
+    if (!in_inventory(i))
+    {
+        mprf(MSGCH_PROMPT, "You aren't carrying that!");
+        return false;
+    }
+
+    return evoke_item(i.link);
 }
 
 static vector<equipment_type> _current_ring_types();
@@ -1081,6 +1118,8 @@ bool use_an_item(operation_types oper, item_def *target)
         return drink(target);
     case OPER_READ:
         return read(target);
+    case OPER_EVOKE:
+        return _evoke_item(*target);
     case OPER_WIELD:
         return _do_wield_weapon(target);
     case OPER_WEAR:

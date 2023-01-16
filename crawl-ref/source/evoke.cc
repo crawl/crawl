@@ -206,6 +206,8 @@ void zap_wand(int slot, dist *_target)
         item_slot = slot;
     else
     {
+        // TODO: move to UseItemMenu? This code path is currently unbound and
+        // it's unclear to me if anyone ever uses it
         item_slot = prompt_invent_item("Zap which item?",
                                        menu_type::invlist,
                                        OBJ_WANDS,
@@ -879,79 +881,113 @@ static bool _xoms_chessboard()
     return zapping(zap, power, beam, false) == spret::success;
 }
 
+static bool _player_has_zigfig()
+{
+    // does the player have a zigfig? used to override sac artiface
+    // a bit ugly...this thing could probably be goldified or converted to an
+    // ability trigger
+    for (const item_def &s : you.inv)
+        if (s.defined() && s.base_type == OBJ_MISCELLANY
+                                 && s.sub_type == MISC_ZIGGURAT)
+        {
+            return true;
+        }
+    return false;
+}
+
+/// Does the item only serve to produce summons or allies?
+static bool _evoke_ally_only(const item_def &item)
+{
+    if (item.base_type == OBJ_WANDS)
+        return item.sub_type == WAND_CHARMING;
+    else if (item.base_type == OBJ_MISCELLANY)
+    {
+        switch (item.sub_type)
+        {
+        case MISC_PHANTOM_MIRROR:
+        case MISC_HORN_OF_GERYON:
+        case MISC_BOX_OF_BEASTS:
+            return true;
+        default:
+            return false;
+        }
+    }
+    return false;
+}
+
+string cannot_evoke_item_reason(const item_def *item, bool temp)
+{
+    // id is not at issue here
+    if (temp && you.berserk())
+        return "You are too berserk!";
+
+    if (temp && you.confused())
+        return "You are too confused!";
+
+    if (item && item->base_type == OBJ_MISCELLANY
+                                            && item->sub_type == MISC_ZIGGURAT
+        || !item && _player_has_zigfig())
+    {
+        // override sac artifice for zigfigs, including a general check
+        return "";
+    }
+
+    if (you.get_mutation_level(MUT_NO_ARTIFICE))
+        return "You cannot evoke magical items.";
+
+    // all generic checks passed
+    if (!item)
+        return "";
+
+    // is this really necessary?
+    if (item_type_removed(item->base_type, item->sub_type))
+        return "Sorry, this item was removed!";
+    if (item->base_type != OBJ_WANDS && item->base_type != OBJ_MISCELLANY)
+        return "You can't evoke that!";
+
+    // I think this case should be obsolete? Maybe still could happen with
+    // an upgrade
+    if (item->base_type == OBJ_WANDS && item->charges <= 0)
+        return "This wand has no charges.";
+
+    if (_evoke_ally_only(*item) && you.allies_forbidden())
+        return "That item cannot be used by those who cannot gain allies!";
+
+    if (temp && is_xp_evoker(*item) && evoker_charges(item->sub_type) <= 0)
+    {
+        // DESC_THE prints "The tin of tremorstones (inert) is presently inert."
+        return make_stringf("The %s is presently inert.",
+                                            item->name(DESC_DBNAME).c_str());
+    }
+
+    return "";
+}
+
+// for historical reasons, we have both item_is_evokable and evoke_check. They
+// are now both interfaces on cannot_evoke_item_reason.
+// TODO: unify the api?
+bool item_is_evokable(const item_def &item, bool msg)
+{
+    const string err = cannot_evoke_item_reason(&item, true);
+    if (!err.empty() && msg)
+        mpr(err);
+    return err.empty();
+}
 
 // Is there anything that would prevent a player from evoking?
 // If slot == -1, it asks this question in general.
-// If slot is a particular item, it asks this question for that item. This
-// wierdly does not check whether an item is actually evokable! (TODO)
+// If slot is a particular item, it asks this question for that item.
 bool evoke_check(int slot, bool quiet)
 {
     item_def *i = nullptr;
     if (slot >= 0 && slot < ENDOFPACK && you.inv[slot].defined())
         i = &you.inv[slot];
 
-    if (i && item_type_removed(i->base_type, i->sub_type))
-    {
-        if (!quiet)
-            mpr("Sorry, this item was removed!");
-        return false;
-    }
-
-    // is this supposed to be allowed under confusion?
-    if (i && i->base_type == OBJ_MISCELLANY && i->sub_type == MISC_ZIGGURAT)
-        return true;
-
-    if (!i)
-    {
-        // does the player have a zigfig? overrides sac artiface
-        // this is ugly...this thing should probably be goldified
-        for (const item_def &s : you.inv)
-            if (s.defined() && s.base_type == OBJ_MISCELLANY
-                                     && s.sub_type == MISC_ZIGGURAT)
-            {
-                return true;
-            }
-    }
-
-    if (you.get_mutation_level(MUT_NO_ARTIFICE))
-    {
-        if (!quiet)
-            mpr("You cannot evoke magical items.");
-        return false;
-    }
-
-    if (you.confused())
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_CONFUSED);
-        return false;
-    }
-
-    if (you.berserk())
-    {
-        if (!quiet)
-            canned_msg(MSG_TOO_BERSERK);
-        return false;
-    }
-
-    if (i && i->base_type == OBJ_WANDS && i->charges <= 0)
-    {
-        // I think this case should be obsolete? Maybe still could happen with
-        // an upgrade
-        if (!quiet)
-            mpr("This wand has no charges.");
-        return false;
-    }
-
-    if (i && is_xp_evoker(*i) && evoker_charges(i->sub_type) <= 0)
-    {
-        // DESC_THE prints "The tin of tremorstones (inert) is presently inert."
-        if (!quiet)
-            mprf("The %s is presently inert.", i->name(DESC_DBNAME).c_str());
-        return false;
-    }
-
-    return true;
+    // TODO: menu for zigfig under sac artiface
+    const string err = cannot_evoke_item_reason(i, true);
+    if (!err.empty() && !quiet)
+        mpr(err);
+    return err.empty();
 }
 
 bool evoke_item(int slot, dist *preselect)

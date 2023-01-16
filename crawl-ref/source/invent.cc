@@ -1147,8 +1147,7 @@ bool item_is_selected(const item_def &i, int selector)
         return item_is_wieldable(i);
 
     case OSEL_EVOKABLE:
-        // assumes valid link...would break with evoking from floor?
-        return item_is_evokable(i);//evoke_check(i.link, true);
+        return item_is_evokable(i);
 
     case OSEL_ENCHANTABLE_ARMOUR:
         return is_enchantable_armour(i, true);
@@ -2024,82 +2023,6 @@ bool prompt_failed(int retval)
 bool item_is_wieldable(const item_def &item)
 {
     return is_weapon(item) && !you.has_mutation(MUT_NO_GRASPING);
-}
-
-/// Does the item only serve to produce summons or allies?
-static bool _item_ally_only(const item_def &item)
-{
-    if (item.base_type == OBJ_WANDS)
-        return item.sub_type == WAND_CHARMING;
-    else if (item.base_type == OBJ_MISCELLANY)
-    {
-        switch (item.sub_type)
-        {
-        case MISC_PHANTOM_MIRROR:
-        case MISC_HORN_OF_GERYON:
-        case MISC_BOX_OF_BEASTS:
-            return true;
-        default:
-            return false;
-        }
-    }
-    return false;
-}
-
-/**
- * Return whether an item can be evoked.
- *
- * @param item      The item to check
- * @param msg       Whether we need to print a message.
- */
-bool item_is_evokable(const item_def &item, bool msg)
-{
-    // XX unify with evoke_check?
-    const string error = item_is_melded(item)
-            ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
-            : "That item can only be evoked when wielded.";
-
-    const bool no_evocables = you.get_mutation_level(MUT_NO_ARTIFICE);
-    const char* const no_evocable_error = "You cannot evoke magical items.";
-
-    if (no_evocables
-        && !(item.base_type == OBJ_MISCELLANY
-             && item.sub_type == MISC_ZIGGURAT)) // zigfigs are OK.
-    {
-        // the rest are forbidden under sac evocables.
-        if (msg)
-            mpr(no_evocable_error);
-        return false;
-    }
-
-    // TODO: check other summoning constraints here?
-    if (_item_ally_only(item) && you.allies_forbidden())
-    {
-        if (msg)
-            mpr("That item cannot be used by those who cannot gain allies!");
-        return false;
-    }
-
-    switch (item.base_type)
-    {
-    case OBJ_WANDS:
-        return true;
-
-    case OBJ_MISCELLANY:
-#if TAG_MAJOR_VERSION == 34
-        if (item.sub_type != MISC_BUGGY_LANTERN_OF_SHADOWS
-            && item.sub_type != MISC_BUGGY_EBONY_CASKET)
-#endif
-        {
-            return true;
-        }
-        // removed items fallthrough to failure
-
-    default:
-        if (msg)
-            mpr("That item cannot be evoked!");
-        return false;
-    }
 }
 
 /**

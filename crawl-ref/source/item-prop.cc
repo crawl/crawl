@@ -16,6 +16,7 @@
 #include "artefact.h"
 #include "art-enum.h"
 #include "describe.h"
+#include "evoke.h"
 #include "god-passive.h"
 #include "invent.h"
 #include "items.h"
