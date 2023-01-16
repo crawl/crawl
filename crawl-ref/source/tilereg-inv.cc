@@ -347,9 +347,9 @@ bool InventoryRegion::update_tip_text(string& tip)
             string tmp = "";
             if (equipped)
             {
-                if (wielded && !item_is_evokable(item))
+                if (wielded)
                 {
-                    if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
+                    if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR // ???
                         || is_weapon(item))
                     {
                         type = OBJ_WEAPONS + EQUIP_OFFSET;
@@ -383,8 +383,11 @@ bool InventoryRegion::update_tip_text(string& tip)
                 }
                 break;
             case OBJ_MISCELLANY:
-                tmp += "Evoke (V)";
+            case OBJ_WANDS:
+                tmp += "Evoke (%)";
                 cmd.push_back(CMD_EVOKE);
+                if (wielded)
+                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_ARMOUR:
                 if (!you.has_mutation(MUT_NO_ARMOUR))
@@ -414,12 +417,6 @@ bool InventoryRegion::update_tip_text(string& tip)
                     if (wielded || you.can_wield(item))
                         _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", wielded);
                 }
-                break;
-            case OBJ_WANDS:
-                tmp += "Evoke (%)";
-                cmd.push_back(CMD_EVOKE);
-                if (wielded)
-                    _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_BOOKS:
                 if (item_type_known(item) && item_is_spellbook(item)
