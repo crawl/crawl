@@ -277,6 +277,7 @@ enum tag_minor_version
     TAG_MINOR_SPAWN_RATE,          // Remove the env.spawn_random_rate field.
     TAG_MINOR_REMOVE_AK,           // Remove Abyssal Knight.
     TAG_MINOR_BUTTERSUMMONS,       // Alternate ?butt with ?summ, not ?fog.
+    TAG_MINOR_WU_ABILITIES,        // Make Lunge and Whirlwind Abil, not Invok
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

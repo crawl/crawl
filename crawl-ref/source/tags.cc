@@ -2555,6 +2555,24 @@ static void _fixup_species_mutations(mutation_type mut)
     you.innate_mutation[mut] = you.mutation[mut] = total;
 }
 
+#if TAG_MAJOR_VERSION == 34
+// Copy action counts from one action to another, keeping the sub-action the
+// same. Retain any counts which were already against the "new" action.
+static void _move_action_count(caction_type old_action, caction_type new_action,
+                               int subtype)
+{
+    pair<caction_type, int> oldkey(old_action, caction_compound(subtype)),
+        newkey(new_action, caction_compound(subtype));
+    if (!you.action_count.count(oldkey))
+        return;
+    if (!you.action_count.count(newkey))
+        you.action_count[newkey].init(0);
+    for (int i = 0; i < 27; i++)
+        you.action_count[newkey][i] += you.action_count[oldkey][i];
+    you.action_count.erase(oldkey);
+}
+#endif
+
 static void _tag_read_you(reader &th)
 {
     int count;
@@ -3848,6 +3866,11 @@ static void _tag_read_you(reader &th)
     }
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_WU_ABILITIES)
+    {
+        _move_action_count(CACT_INVOKE, CACT_ABIL, ABIL_WU_JIAN_LUNGE);
+        _move_action_count(CACT_INVOKE, CACT_ABIL, ABIL_WU_JIAN_WHIRLWIND);
+    }
     if (th.getMinorVersion() >= TAG_MINOR_BRANCHES_LEFT) // 33:17 has it
     {
 #endif
