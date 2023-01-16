@@ -24,6 +24,7 @@
 #include "english.h"
 #include "env.h" // LSTATE_STILL_WINDS
 #include "errors.h" // sysfail
+#include "evoke.h"
 #include "god-item.h"
 #include "god-passive.h" // passive_t::want_curses, no_haste
 #include "invent.h"
@@ -3149,24 +3150,10 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         const string reasons = cannot_read_item_reason(&item, temp);
         return reasons.size();
     }
+
+    case OBJ_MISCELLANY:
     case OBJ_WANDS:
-        if (you.get_mutation_level(MUT_NO_ARTIFICE))
-            return true;
-
-        if (temp && (you.confused() || you.berserk()))
-            return true;
-
-#if TAG_MAJOR_VERSION == 34
-        if (is_known_empty_wand(item))
-            return true;
-#endif
-        if (!ident && !item_type_known(item))
-            return false;
-
-        if (item.sub_type == WAND_CHARMING)
-            return you.allies_forbidden();
-
-        return false;
+        return cannot_evoke_item_reason(&item, temp).size();
 
     case OBJ_POTIONS:
     {
@@ -3268,42 +3255,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
 
     case OBJ_CORPSES:
         return true;
-
-    case OBJ_MISCELLANY:
-        // The figurine can always be used.
-        if (item.sub_type == MISC_ZIGGURAT)
-            return false;
-
-        if (temp && (you.confused() || you.berserk()))
-            return true;
-
-        if (temp && is_xp_evoker(item) && !evoker_charges(item.sub_type))
-            return true;
-
-        switch (item.sub_type)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case MISC_BUGGY_EBONY_CASKET:
-            return item_type_known(item);
-        // It can always be used.
-        case MISC_BUGGY_LANTERN_OF_SHADOWS:
-            return false;
-#endif
-        // Purely summoning misc items don't work w/ sac love
-        case MISC_BOX_OF_BEASTS:
-        case MISC_HORN_OF_GERYON:
-        case MISC_PHANTOM_MIRROR:
-            return you.allies_forbidden()
-                   || you.get_mutation_level(MUT_NO_ARTIFICE);
-
-        case MISC_CONDENSER_VANE:
-            if (temp && (env.level_state & LSTATE_STILL_WINDS))
-                return true;
-            // Intentional fallthrough to check artifice
-
-        default:
-            return you.get_mutation_level(MUT_NO_ARTIFICE);
-        }
 
     case OBJ_BOOKS:
         if (you.has_mutation(MUT_INNATE_CASTER) && item.sub_type != BOOK_MANUAL)

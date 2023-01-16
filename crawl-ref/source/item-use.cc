@@ -218,7 +218,6 @@ static string _oper_name(operation_types oper)
     }
 }
 
-
 static int _default_osel(operation_types oper)
 {
     switch (oper)

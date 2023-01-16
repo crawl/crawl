@@ -34,6 +34,7 @@
 #include "directn.h"
 #include "english.h"
 #include "env.h"
+#include "evoke.h"
 #include "tile-env.h"
 #include "evoke.h"
 #include "fight.h"
@@ -2221,6 +2222,72 @@ static string &_trogsafe_lowercase(string &s)
     return s;
 }
 
+static string _cannot_use_reason(const item_def &item, bool temp=true)
+{
+    // right now, description uselessness reasons only work for these four
+    // item types..
+    switch (item.base_type)
+    {
+    case OBJ_SCROLLS: return cannot_read_item_reason(&item, temp);
+    case OBJ_POTIONS: return cannot_drink_item_reason(&item, temp);
+    case OBJ_MISCELLANY:
+    case OBJ_WANDS:   return cannot_evoke_item_reason(&item, temp);
+    default: return "";
+    }
+}
+
+static void _uselessness_desc(ostringstream &description, const item_def &item)
+{
+    if (!item_type_known(item))
+        return;
+    if (is_useless_item(item, true))
+    {
+        description << "\n\n"; // always needed for inv descriptions
+        string r;
+        if (is_useless_item(item, false))
+        {
+            description << "This " << base_type_string(item.base_type)
+                        << "is completely useless to you";
+            r = _cannot_use_reason(item, false);
+        }
+        else
+        {
+            switch (item.base_type)
+            {
+            case OBJ_SCROLLS:
+                description << "Reading this right now";
+                // this is somewhat heuristic:
+                if (cannot_read_item_reason().size())
+                    description << " isn't possible";
+                else
+                    description << " will have no effect";
+                break;
+            case OBJ_POTIONS:
+                // XX code dup
+                description << "Drinking this right now";
+                if (cannot_drink_item_reason().size())
+                    description << " isn't possible";
+                else
+                    description << " will have no effect";
+                break;
+            case OBJ_MISCELLANY:
+            case OBJ_WANDS:
+                description << "You can't evoke this right now";
+                break;
+            default:
+                description << "This " << base_type_string(item.base_type)
+                            << "is useless to you right now";
+                break;
+            }
+            r = _cannot_use_reason(item, true);
+        }
+        if (!r.empty())
+            description << ": " << _trogsafe_lowercase(r);
+        else
+            description << "."; // reasons always come with punctuation
+    }
+}
+
 /**
  * Describe a specified item.
  *
@@ -2400,21 +2467,30 @@ string get_item_description(const item_def &item,
                                          "gentle ")
                         << "glow.";
         }
-        if (is_xp_evoker(item))
+
+        if (verbose)
         {
-            description << "\n\nOnce "
-                        << (item.sub_type == MISC_LIGHTNING_ROD
-                            ? "all charges have been used"
-                            : "activated")
-                        << ", this device "
-                        << (!item_is_horn_of_geryon(item) ?
-                           "and all other devices of its kind are " : "is ")
-                        << "rendered temporarily inert. However, "
-                        << (!item_is_horn_of_geryon(item) ? "they recharge " : "it recharges ")
-                        << "as you gain experience."
-                        << (!evoker_charges(item.sub_type) ?
-                           " The device is presently inert." : "");
+            _uselessness_desc(description, item);
+
+            if (is_xp_evoker(item))
+            {
+                description << "\n\n";
+                // slightly redundant with uselessness desc..
+                description << "Charges: "
+                            << evoker_charges(item.sub_type) << ". "
+                            << "Once "
+                            << (item.sub_type == MISC_LIGHTNING_ROD
+                                ? "all charges have been used"
+                                : "activated")
+                            << ", this device "
+                            << (!item_is_horn_of_geryon(item) ?
+                               "and all other devices of its kind are " : "is ")
+                            << "rendered temporarily inert. However, "
+                            << (!item_is_horn_of_geryon(item) ? "they recharge " : "it recharges ")
+                            << "as you gain experience.";
+            }
         }
+
         break;
 
     case OBJ_POTIONS:
@@ -2423,27 +2499,7 @@ string get_item_description(const item_def &item,
             if (verbose)
             {
                 if (is_useless_item(item, true))
-                {
-                    string r;
-                    if (is_useless_item(item, false))
-                    {
-                        description << "\n\nThis potion is completely useless to you";
-                        r = cannot_drink_item_reason(&item, false);
-                    }
-                    else
-                    {
-                        description << "\n\nDrinking this right now";
-                        if (cannot_drink_item_reason().size())
-                            description << " isn't possible";
-                        else
-                            description << " will have no effect";
-                        r = cannot_drink_item_reason(&item, true);
-                    }
-                    if (!r.empty())
-                        description << ": " << _trogsafe_lowercase(r);
-                    else
-                        description << "."; // reasons always come with punctuation
-                }
+                    _uselessness_desc(description, item);
                 // anything past here is useful
                 // TODO: more effect messages.
                 // heal: print heal chance
@@ -2475,6 +2531,9 @@ string get_item_description(const item_def &item,
                 description << "\nDamage: " << damage_str;
 
             description << "\nNoise: " << spell_noise_string(spell);
+
+            if (verbose)
+                _uselessness_desc(description, item);
         }
         break;
 
@@ -2482,32 +2541,7 @@ string get_item_description(const item_def &item,
         if (item_type_known(item))
         {
             if (verbose)
-            {
-                if (is_useless_item(item, true))
-                {
-                    string r;
-                    if (is_useless_item(item, false))
-                    {
-                        description << "\n\nThis scroll is completely useless to you";
-                        r = cannot_read_item_reason(&item);
-                    }
-                    else
-                    {
-                        description << "\n\nReading this right now ";
-                        // use the existence of a general problem as a heuristic
-                        // for this message: currently it works for all(?) cases.
-                        if (cannot_read_item_reason(nullptr).size())
-                            description << "isn't possible";
-                        else
-                            description << "will have no effect";
-                        r = cannot_read_item_reason(&item);
-                    }
-                    if (r.size())
-                        description << ": " << _trogsafe_lowercase(r);
-                    else // reasons are punctuated
-                        description << ".";
-                }
-            }
+                _uselessness_desc(description, item);
 
             description << "\n\nIt is "
                         << article_a(describe_item_rarity(item))
@@ -3188,10 +3222,11 @@ static vector<command_type> _allowed_actions(const item_def& item)
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
-        actions.push_back(CMD_READ);
+        if (cannot_read_item_reason(&item, true).empty())
+            actions.push_back(CMD_READ);
         break;
     case OBJ_POTIONS:
-        if (you.can_drink()) // mummies and lich form forbidden
+        if (cannot_drink_item_reason(&item, true).empty())
             actions.push_back(CMD_QUAFF);
         break;
     default:
@@ -3206,7 +3241,8 @@ static vector<command_type> _allowed_actions(const item_def& item)
         return actions;
     }
 
-    if (item_is_evokable(item))
+    // evoking from inventory only
+    if (cannot_evoke_item_reason(&item, true).empty())
         actions.push_back(CMD_EVOKE);
 
     if (quiver::slot_to_action(item.link)->is_valid())

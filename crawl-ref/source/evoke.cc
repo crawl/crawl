@@ -75,12 +75,6 @@ static bool _evoke_horn_of_geryon()
 {
     bool created = false;
 
-    if (silenced(you.pos()))
-    {
-        mpr("You can't produce a sound!");
-        return false;
-    }
-
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
     noisy(15, you.pos()); // same as hell effect noise
     did_god_conduct(DID_EVIL, 3);
@@ -762,12 +756,6 @@ static const vector<random_pick_entry<cloud_type>> condenser_clouds =
 
 static spret _condenser()
 {
-    if (env.level_state & LSTATE_STILL_WINDS)
-    {
-        mpr("The air is too still to form clouds.");
-        return spret::abort;
-    }
-
     const int pow = 15 + you.skill(SK_EVOCATIONS, 7) / 2;
 
     random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
@@ -924,11 +912,14 @@ string cannot_evoke_item_reason(const item_def *item, bool temp)
     if (temp && you.confused())
         return "You are too confused!";
 
+    // historically allowed under confusion/berserk, but why?
     if (item && item->base_type == OBJ_MISCELLANY
                                             && item->sub_type == MISC_ZIGGURAT
         || !item && _player_has_zigfig())
     {
         // override sac artifice for zigfigs, including a general check
+        // TODO: zigfig has some terrain/level constraints that aren't handled
+        // here
         return "";
     }
 
@@ -945,13 +936,30 @@ string cannot_evoke_item_reason(const item_def *item, bool temp)
     if (item->base_type != OBJ_WANDS && item->base_type != OBJ_MISCELLANY)
         return "You can't evoke that!";
 
-    // I think this case should be obsolete? Maybe still could happen with
-    // an upgrade
-    if (item->base_type == OBJ_WANDS && item->charges <= 0)
+#if TAG_MAJOR_VERSION == 34
+    if (is_known_empty_wand(*item))
         return "This wand has no charges.";
+#endif
 
     if (_evoke_ally_only(*item) && you.allies_forbidden())
         return "That item cannot be used by those who cannot gain allies!";
+
+    if (temp
+        && item->base_type == OBJ_MISCELLANY
+        && item->sub_type == MISC_CONDENSER_VANE
+        && (env.level_state & LSTATE_STILL_WINDS))
+    {
+        return "The air is too still for clouds to form.";
+    }
+
+    if (temp
+        && item->base_type == OBJ_MISCELLANY
+        && item->sub_type == MISC_HORN_OF_GERYON
+        && silenced(you.pos()))
+    {
+        return "You can't produce a sound!";
+
+    }
 
     if (temp && is_xp_evoker(*item) && evoker_charges(item->sub_type) <= 0)
     {
@@ -968,7 +976,7 @@ string cannot_evoke_item_reason(const item_def *item, bool temp)
 // TODO: unify the api?
 bool item_is_evokable(const item_def &item, bool msg)
 {
-    const string err = cannot_evoke_item_reason(&item, true);
+    const string err = cannot_evoke_item_reason(&item, false);
     if (!err.empty() && msg)
         mpr(err);
     return err.empty();
@@ -992,22 +1000,12 @@ bool evoke_check(int slot, bool quiet)
 
 bool evoke_item(int slot, dist *preselect)
 {
+    ASSERT_RANGE(slot, 0, ENDOFPACK);
     if (!evoke_check(slot))
         return false;
 
-    if (slot == -1)
-    {
-        slot = prompt_invent_item("Evoke which item? (* to show all)",
-                                   menu_type::invlist,
-                                   OSEL_EVOKABLE, OPER_EVOKE);
-
-        if (prompt_failed(slot))
-            return false;
-    }
-    else if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
+    if (!check_warning_inscriptions(you.inv[slot], OPER_EVOKE))
         return false;
-
-    ASSERT(slot >= 0);
 
 #ifdef ASSERTS // Used only by an assert
     const bool wielded = (you.equip[EQ_WEAPON] == slot);
