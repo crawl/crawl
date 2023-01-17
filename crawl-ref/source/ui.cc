@@ -44,6 +44,25 @@ namespace ui {
 static void clear_text_region(Region region, COLOURS bg);
 #endif
 
+// helper functions for instantiating ui classes
+command_type get_action(int keyin)
+{
+    // TODO: support other menu commands (perhaps at the ui level?)
+    static const unordered_set<command_type, std::hash<int>> handled =
+        { CMD_MENU_EXIT };
+    command_type c = key_to_command(keyin, KMC_MENU);
+    if (handled.count(c))
+        return c;
+    return CMD_NO_CMD;
+}
+
+bool key_exits_popup(int keyin, bool extended)
+{
+    return get_action(keyin) == CMD_MENU_EXIT
+        || extended && keyin == CK_ENTER; // ugh
+}
+
+
 static struct UIRoot
 {
 public:
@@ -2243,7 +2262,7 @@ int TextEntry::LineReader::process_key(int ch)
     switch (ch)
     {
     CASE_ESCAPE
-        return CK_ESCAPE;
+        return CK_ESCAPE; // triggers focusout, not close
     case CK_UP:
     case CONTROL('P'):
     case CK_DOWN:

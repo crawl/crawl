@@ -57,6 +57,7 @@
 #include "tiles-build-specific.h"
 #include "traps.h"
 #include "travel-open-doors-type.h"
+#include "ui.h"
 #include "unicode.h"
 #include "unwind.h"
 #include "view.h"
@@ -2246,10 +2247,10 @@ static int _prompt_travel_branch(int prompt_flags)
              shortcuts.c_str());
 
         int keyin = numpad_to_regular(get_ch());
+        if (ui::key_exits_popup(keyin, false))
+            return ID_CANCEL;
         switch (keyin)
         {
-        CASE_ESCAPE
-            return ID_CANCEL;
         case '?':
             show_interlevel_travel_branch_help();
             redraw_screen();
@@ -2425,10 +2426,10 @@ static level_pos _prompt_travel_altar()
         mprf(MSGCH_PROMPT, "Go to which altar? (? - help) ");
 
         int keyin = get_ch();
+        if (ui::key_exits_popup(keyin, false))
+            return level_pos();
         switch (keyin)
         {
-            CASE_ESCAPE
-                return level_pos();
             case '?':
                 show_interlevel_travel_altar_help();
                 redraw_screen();

@@ -263,8 +263,7 @@ void pick_hints(newgame_def& choice)
     auto popup = make_shared<ui::Popup>(vbox);
 
     popup->on_keydown_event([&](const KeyEvent& ev) {
-        auto key = ev.key();
-        if (key == CK_MOUSE_CMD)
+        if (ui::key_exits_popup(ev.key(), false))
             return done = cancelled = true;
         return false;
     });
