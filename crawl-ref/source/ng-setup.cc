@@ -192,10 +192,8 @@ static void _give_job_spells(job_type job)
     if (you.has_mutation(MUT_INNATE_CASTER))
     {
         for (spell_type s : spells)
-        {
-            if (you.spell_no < MAX_DJINN_SPELLS)
+            if (you.spell_no < MAX_DJINN_SPELLS && !spell_is_useless(s, false))
                 add_spell_to_memory(s);
-        }
         return;
     }
 
