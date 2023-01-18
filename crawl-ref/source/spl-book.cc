@@ -279,6 +279,13 @@ static void _list_available_spells(spell_set &available_spells)
         available_spells.insert(gift);
 }
 
+bool spell_available_to_memorize(spell_type which_spell)
+{
+    spell_set available_spells;
+    _list_available_spells(available_spells);
+    return available_spells.count(which_spell) > 0;
+}
+
 bool player_has_available_spells()
 {
     spell_set available_spells;
