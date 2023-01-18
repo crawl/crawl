@@ -3114,7 +3114,7 @@ TAGS:    no_pool_fixup no_wall_fixup no_monster_gen
 PLACE:   Lair:$
 ORIENT:  north
 # A necromancy-themed loot item behind the obsidian statue.
-ITEM:    morg w:1 / rapier ego:pain w:5 / rapier ego:draining w:5 \
+ITEM:    rapier ego:pain w:5 / rapier ego:draining w:5 \
          / quickblade ego:pain w:5 / quickblade ego:draining w:5 \
          / demon blade ego:draining / sword of zonguldruk w:1 \
          / great sword ego:draining / triple sword ego:draining \
