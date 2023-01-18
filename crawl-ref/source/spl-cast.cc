@@ -2166,6 +2166,9 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 static spret _do_cast(spell_type spell, int powc, const dist& spd,
                            bolt& beam, god_type god, bool fail)
 {
+    if (!you.wizard && (get_spell_flags(spell) & spflag::monster))
+        return spret::none;
+
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
     if (spell == SPELL_FREEZE)
     {
