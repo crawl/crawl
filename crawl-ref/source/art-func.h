@@ -43,6 +43,7 @@
 #include "nearby-danger.h" // For Zhor
 #include "output.h"
 #include "player.h"
+#include "player-reacts.h" // For the consecrated labrys
 #include "player-stats.h"
 #include "showsymb.h"      // For Cigotuvi's Embrace
 #include "spl-cast.h"      // For evokes
@@ -299,6 +300,19 @@ static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
         zappy(ZAP_SWORD_BEAM, 100, false, beam);
         beam.fire();
     }
+}
+
+////////////////////////////////////////////////////
+
+static void _HOLY_AXE_world_reacts(item_def *item)
+{
+    const int horror_level = current_horror_level();
+    const int plus = min(horror_level + 5, 27);
+    if (item->plus == plus)
+        return;
+
+    item->plus = plus;
+    you.wield_change = true;
 }
 
 ////////////////////////////////////////////////////
