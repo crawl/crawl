@@ -772,8 +772,6 @@ string UseItemMenu::get_keyhelp(bool) const
 {
     string r;
 
-    // OPER_ANY menus are identify, enchant, brand; they disable most of these
-    // key shortcuts
     // XX the logic here is getting convoluted, if only these were widgets...
     const string desc_key = is_set(MF_ARROWS_SELECT)
                                     ? "[<w>?</w>] describe selected" : "";
@@ -785,6 +783,8 @@ string UseItemMenu::get_keyhelp(bool) const
         full = "[<w>*</w>] ";
         full += (display_all ? "show appropriate" : "show all");
     }
+    // OPER_ANY menus are identify, enchant, brand; they disable most of these
+    // key shortcuts
     if (oper != OPER_ANY)
     {
         if (_equip_oper(oper))
@@ -823,9 +823,10 @@ string UseItemMenu::get_keyhelp(bool) const
             r = pad_more_with("", desc_key);
 
         // annoying: I cannot get more height changes to work correctly. So as
-        // a workaround, this will always produce a two line more, potentially
-        // with one blank line.
-        r += "\n";
+        // a workaround, this will produce a two line more, potentially
+        // with one blank line (except on menus where mode never changes).
+        if (oper != OPER_ANY)
+            r += "\n";
         r += modes + full;
         if (eu_modes.size() && desc_key.size())
             return pad_more_with(r, eu_modes); // desc_key on prev line
