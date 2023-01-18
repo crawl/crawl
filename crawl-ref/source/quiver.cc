@@ -1202,6 +1202,7 @@ namespace quiver
             {
                 crawl_state.prev_cmd = CMD_WAIT; // hackiness, but easy
                 update_acrobat_status();
+                update_acrospider_status();
                 you.turn_is_over = true;
                 return true;
             }

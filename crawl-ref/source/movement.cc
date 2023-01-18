@@ -830,6 +830,7 @@ static void _finalize_cancelled_rampage_move()
     // Rampaging prevents Wu Jian attacks, so we do not process them
     // here
     update_acrobat_status();
+    update_acrospider_status();
 }
 
 // Called when the player moves by walking/running. Also calls attack
