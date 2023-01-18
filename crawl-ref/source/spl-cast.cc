@@ -1872,8 +1872,6 @@ spret your_spells(spell_type spell, int powc, bool actual_spell,
 
     const spell_flags flags = get_spell_flags(spell);
 
-    ASSERT(wiz_cast || !(flags & spflag::testing));
-
     if (!powc)
         powc = calc_spell_power(spell);
 
@@ -2168,8 +2166,11 @@ static spret _do_cast(spell_type spell, int powc, const dist& spd,
                            bolt& beam, god_type god, bool fail,
                            bool actual_spell)
 {
-    if (actual_spell && !you.wizard && (get_spell_flags(spell) & spflag::monster))
+    if (actual_spell && !you.wizard
+        && (get_spell_flags(spell) & (spflag::monster | spflag::testing)))
+    {
         return spret::none;
+    }
 
     const coord_def target = spd.isTarget ? beam.target : you.pos() + spd.delta;
     if (spell == SPELL_FREEZE)
