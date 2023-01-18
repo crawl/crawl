@@ -4217,7 +4217,9 @@ void describe_mutation(mutation_type mut)
     // TODO: mutation_name was not designed for use as a title, sometimes has
     // the wrong casing, is often cryptic
     inf.title = uppercase_first(mutation_name(mut)).c_str();
-    if (you.has_mutation(mut) && mutation_max_levels(mut) > 1)
+
+    const bool has_mutation = you.has_mutation(mut);
+    if (has_mutation && mutation_max_levels(mut) > 1)
     {
         inf.title += make_stringf(" (level %d/%d)",
                                   you.get_mutation_level(mut),
@@ -4225,7 +4227,18 @@ void describe_mutation(mutation_type mut)
     }
     inf.body << get_mutation_desc(mut);
 
-    show_description(inf);
+    const tileidx_t base_tile_idx = get_mutation_tile(mut);
+    if (base_tile_idx)
+    {
+        const int offset = (has_mutation
+                            ? you.get_mutation_level(mut, false)
+                            : mutation_max_levels(mut))
+                           - 1;
+        const tile_def tile = tile_def(base_tile_idx + offset);
+        show_description(inf, &tile);
+    }
+    else
+        show_description(inf);
 }
 
 static string _describe_draconian(const monster_info& mi)
