@@ -1003,7 +1003,8 @@ bool TilesFramework::is_using_small_layout()
         //   - width > stats font width * 45 + msg font width * 45
         //   - height > tabs area size (192) + stats font height * 11
         // Not using Options.tile_font_xxx_size because it's reset on new game
-        return m_windowsz.x < m_stat_font->char_width()*45+m_msg_font->char_width()*45 || m_windowsz.y < 192+m_stat_font->char_height()*11;
+        return m_windowsz.x < (int)(m_stat_font->char_width()*45+m_msg_font->char_width()*45)
+            || m_windowsz.y < (int)(192+m_stat_font->char_height()*11);
 #else
         return true;
 #endif
