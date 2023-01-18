@@ -188,7 +188,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
         if (!inf.quote.empty() && (lastch == '!' || lastch == '^'))
             desc_sw->current() = more_sw->current() = 1 - desc_sw->current();
         else
-            done = ui::key_exits_popup(lastch);
+            done = ui::key_exits_popup(lastch, true);
         return true;
     });
 
@@ -3132,7 +3132,7 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
     popup->on_hotkey_event([&](const KeyEvent& ev) {
         int lastch = ev.key();
         action = _get_action(lastch, actions);
-        done = action != CMD_NO_CMD || ui::key_exits_popup(lastch);
+        done = action != CMD_NO_CMD || ui::key_exits_popup(lastch, true);
         return true;
     });
 
@@ -3602,7 +3602,7 @@ command_type describe_item_popup(const item_def &item,
         const auto key = ev.key() == '{' ? 'i' : ev.key();
         lastch = key;
         action = _get_action(key, actions);
-        if (action != CMD_NO_CMD || ui::key_exits_popup(key))
+        if (action != CMD_NO_CMD || ui::key_exits_popup(key, true))
             done = true;
         else if (scroller->on_event(ev))
             return true;
@@ -4153,7 +4153,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     int lastch;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         lastch = ev.key();
-        done = ui::key_exits_popup(lastch);
+        done = ui::key_exits_popup(lastch, true);
         if (scroller->on_event(ev))
             return true;
         return done;
@@ -5770,7 +5770,7 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key();
         lastch = key;
-        done = ui::key_exits_popup(key);
+        done = ui::key_exits_popup(key, true);
         if (!inf.quote.empty() && key == '!')
         {
             int n = (desc_sw->current() + 1) % 2;
