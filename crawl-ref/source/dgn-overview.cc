@@ -1156,10 +1156,10 @@ static int _prompt_annotate_branch(level_id lid)
     while (true)
     {
         int keyin = get_ch();
+        if (ui::key_exits_popup(keyin, false))
+            return ID_CANCEL;
         switch (keyin)
         {
-        CASE_ESCAPE
-            return ID_CANCEL;
         case '?':
             show_annotate_help();
             break;
