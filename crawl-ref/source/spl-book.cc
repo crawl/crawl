@@ -1012,7 +1012,7 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
         return false;
     }
 
-    if (!_spell_available_to_memorize(specspell))
+    if (!wizard && !_spell_available_to_memorize(specspell))
     {
         mpr("You haven't found that spell!");
         return false;
