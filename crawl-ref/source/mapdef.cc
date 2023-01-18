@@ -5616,6 +5616,12 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
         spec.sub_type = item_for_set(ITEM_SET_ALLY_SCROLLS);
         return;
     }
+    if (c == "area misc")
+    {
+        spec.base_type = OBJ_MISCELLANY;
+        spec.sub_type = item_for_set(ITEM_SET_AREA_MISCELLANY);
+        return;
+    }
 
     error = make_stringf("Bad item class: '%s'", c.c_str());
 }

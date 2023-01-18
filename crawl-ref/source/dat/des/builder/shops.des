@@ -676,7 +676,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    book of blasting |\
    randbook disc:conjuration | book of storms | book of lightning | \
    any blast wand | wand of flame | wand of mindburst | \
-   condenser vane | staff of conjuration | any beam wand | \
+   any area misc | staff of conjuration | any beam wand | \
    lightning rod | phial of floods | scroll of immolation | \
    book of flames | book of fire | book of air | manual of conjurations | \
    manual of evocations

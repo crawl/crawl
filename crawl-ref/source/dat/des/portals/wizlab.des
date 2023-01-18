@@ -50,7 +50,7 @@
 #          |tomes, rakshashas       |phantom mirror          |
 #--------------------------------------------------------------------
 #Alistair  |Lots of wizards, invited|consumables, books,     |
-#          |guests, ds corrupters   |condenser vane          |
+#          |guests, ds corrupters   |any area misc          |
 ##
 
 
@@ -1628,7 +1628,7 @@ MARKER:     ! = lua:fog_machine { \
 # player complete the rest of the map.
 ITEM:       potion of haste / potion of resistance w:5 / any potion w:20 \
             / scroll of silence w:5 / scroll of fog w:5 / any scroll w:20
-ITEM:       scarf ego:repulsion / book of vapours / condenser vane \
+ITEM:       scarf ego:repulsion / book of vapours / any area misc \
             / staff of air
 # Main loot, including some thematic items that are good even if you don't care
 # about flight.
@@ -2459,7 +2459,7 @@ ITEM:       potion of degeneration ident:all
 :item(dgn.loot_scrolls .. " / " .. dgn.loot_potions)
 ITEM:   scroll of acquirement ident:all q:1
 ITEM:   any book w:30 / randbook disc:poison disc2:transmutation /\
-        condenser vane w:1
+        any area misc w:1
 KITEM:  " = gold q:1 no_pickup
 KITEM:  H = any magical staff no_pickup
 KITEM:  Q = star_item

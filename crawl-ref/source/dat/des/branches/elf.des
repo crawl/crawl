@@ -1805,7 +1805,7 @@ KITEM:   R = staff of cold / randbook disc:ice / wand of iceblast \
          / ring of ice / ring of protection from cold / phial of floods \
          / any weapon ego:freezing / any armour ego:cold_resistance
 KITEM:   S = staff of air / randbook disc:air / ring of flight \
-         / ring of evasion / condenser vane / lightning rod \
+         / ring of evasion / any area misc / lightning rod \
          / any weapon ego:electrocution
 KMONS:   1P = fire elemental
 KMONS:   2Q = earth elemental
