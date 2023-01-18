@@ -148,10 +148,15 @@ int show_description(const describe_info &inf, const tile_def *tile)
         trimmed_string(inf.quote),
     };
 
-    // TODO: maybe use CMD_MENU_CYCLE_MODE
+#ifdef USE_TILE_LOCAL
+# define MORE_PREFIX "[<w>!</w>" "|<w>Right-click</w>" "]: "
+#else
+# define MORE_PREFIX "[<w>!</w>" "]: "
+#endif
+
     const char* mores[2] = {
-        "[<w>!</w>]: <w>Description</w>|Quote",
-        "[<w>!</w>]: Description|<w>Quote</w>",
+        MORE_PREFIX "<w>Description</w>|Quote",
+        MORE_PREFIX "Description|<w>Quote</w>",
     };
 
     for (int i = 0; i < (inf.quote.empty() ? 1 : 2); i++)
@@ -185,10 +190,10 @@ int show_description(const describe_info &inf, const tile_def *tile)
     int lastch;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         lastch = ev.key();
-        if (!inf.quote.empty() && (lastch == '!' || lastch == '^'))
+        if (!inf.quote.empty() && (lastch == '!' || lastch == CK_MOUSE_CMD || lastch == '^'))
             desc_sw->current() = more_sw->current() = 1 - desc_sw->current();
         else
-            done = ui::key_exits_popup(lastch);
+            done = !desc_sw->current_widget()->on_event(ev);
         return true;
     });
 
@@ -3130,9 +3135,11 @@ bool describe_feature_wide(const coord_def& pos, bool do_actions)
 
     // use on_hotkey_event, not on_event, to preempt the scroller key handling
     popup->on_hotkey_event([&](const KeyEvent& ev) {
-        int lastch = ev.key();
-        action = _get_action(lastch, actions);
-        done = action != CMD_NO_CMD || ui::key_exits_popup(lastch);
+        action = _get_action(ev.key(), actions);
+        if (action != CMD_NO_CMD)
+            done = true;
+        else
+            done = !scroller->on_event(ev);
         return true;
     });
 
@@ -3602,11 +3609,12 @@ command_type describe_item_popup(const item_def &item,
         const auto key = ev.key() == '{' ? 'i' : ev.key();
         lastch = key;
         action = _get_action(key, actions);
-        if (action != CMD_NO_CMD || ui::key_exits_popup(key))
+        if (action != CMD_NO_CMD)
+            done = true;
+        else if (key == ' ' || key == CK_ESCAPE)
             done = true;
         else if (scroller->on_event(ev))
             return true;
-
         const vector<pair<spell_type,char>> spell_map = map_chars_to_spells(spells, &item);
         auto entry = find_if(spell_map.begin(), spell_map.end(),
                 [key](const pair<spell_type,char>& e) { return e.second == key; });
@@ -4153,7 +4161,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     int lastch;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         lastch = ev.key();
-        done = ui::key_exits_popup(lastch);
+        done = (lastch == CK_ESCAPE || lastch == CK_ENTER || lastch == ' ');
         if (scroller->on_event(ev))
             return true;
         return done;
@@ -5733,9 +5741,15 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
     desc_sw->current() = 0;
     more_sw->current() = 0;
 
+#ifdef USE_TILE_LOCAL
+# define MORE_PREFIX "[<w>!</w>" "|<w>Right-click</w>" "]: "
+#else
+# define MORE_PREFIX "[<w>!</w>" "]: "
+#endif
+
     const char* mores[2] = {
-        "[<w>!</w>]: <w>Description</w>|Quote",
-        "[<w>!</w>]: Description|<w>Quote</w>",
+        MORE_PREFIX "<w>Description</w>|Quote",
+        MORE_PREFIX "Description|<w>Quote</w>",
     };
 
     for (int i = 0; i < (inf.quote.empty() ? 1 : 2); i++)
@@ -5770,8 +5784,8 @@ int describe_monsters(const monster_info &mi, const string& /*footer*/)
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key();
         lastch = key;
-        done = ui::key_exits_popup(key);
-        if (!inf.quote.empty() && key == '!')
+        done = key == CK_ESCAPE;
+        if (!inf.quote.empty() && (key == '!' || key == CK_MOUSE_CMD))
         {
             int n = (desc_sw->current() + 1) % 2;
             desc_sw->current() = more_sw->current() = n;

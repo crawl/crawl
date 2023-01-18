@@ -166,7 +166,14 @@ int formatted_scroller::show()
 
 bool formatted_scroller::process_key(int ch)
 {
-    return !ui::key_exits_popup(ch);
+    switch (ch)
+    {
+        case CK_MOUSE_CMD:
+        CASE_ESCAPE
+            return false;
+        default:
+            return true;
+    }
 }
 
 void formatted_scroller::set_scroll(int y)

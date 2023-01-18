@@ -1672,14 +1672,11 @@ int msgwin_get_line(string prompt, char *buf, int len,
         vbox->add_child(input);
 
         popup->on_hotkey_event([&](const ui::KeyEvent& ev) {
-            const int lastch = ev.key();
-            if (ui::key_exits_popup(lastch, false))
+            switch (ev.key())
             {
-                ret = CK_ESCAPE; // XX hardcoding
+            CASE_ESCAPE
+                ret = CK_ESCAPE;
                 return done = true;
-            }
-            switch (lastch)
-            {
             case CK_ENTER:
                 ret = 0;
                 return done = true;

@@ -80,14 +80,6 @@ protected:
         else
             num = -1;
 
-        if (ui::key_exits_popup(key))
-        {
-            if (resetting)
-                return true;
-            lastch = key;
-            return false;
-        }
-
         switch (key)
         {
         case ',':
@@ -103,6 +95,12 @@ protected:
         case '\\':
             if (all_items_known)
                 return true; // skip process_key for '-', it's confusing
+        case CK_ENTER:
+        CASE_ESCAPE
+            if (resetting)
+                return true;
+            lastch = key;
+            return false;
 
         case CONTROL('D'):
             // If we cannot select anything (e.g. on the unknown items

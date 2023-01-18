@@ -1084,20 +1084,26 @@ static void build_partial_god_ui(god_type which_god, shared_ptr<ui::Popup>& popu
         _god_extra_description(which_god)
     };
 
+#ifdef USE_TILE_LOCAL
+# define MORE_PREFIX "[<w>!</w>/<w>^</w>" "|<w>Right-click</w>" "]: "
+#else
+# define MORE_PREFIX "[<w>!</w>/<w>^</w>" "]: "
+#endif
+
     int mores_index = descs[3].empty() ? 0 : 1;
     const char* mores[2][4] =
     {
         {
-            "[<w>!</w>]: <w>Overview</w>|Powers|Wrath",
-            "[<w>!</w>]: Overview|<w>Powers</w>|Wrath",
-            "[<w>!</w>]: Overview|Powers|<w>Wrath</w>",
-            "[<w>!</w>]: Overview|Powers|Wrath"
+            MORE_PREFIX "<w>Overview</w>|Powers|Wrath",
+            MORE_PREFIX "Overview|<w>Powers</w>|Wrath",
+            MORE_PREFIX "Overview|Powers|<w>Wrath</w>",
+            MORE_PREFIX "Overview|Powers|Wrath"
         },
         {
-            "[<w>!</w>]: <w>Overview</w>|Powers|Wrath|Extra",
-            "[<w>!</w>]: Overview|<w>Powers</w>|Wrath|Extra",
-            "[<w>!</w>]: Overview|Powers|<w>Wrath</w>|Extra",
-            "[<w>!</w>]: Overview|Powers|Wrath|<w>Extra</w>"
+            MORE_PREFIX "<w>Overview</w>|Powers|Wrath|Extra",
+            MORE_PREFIX "Overview|<w>Powers</w>|Wrath|Extra",
+            MORE_PREFIX "Overview|Powers|<w>Wrath</w>|Extra",
+            MORE_PREFIX "Overview|Powers|Wrath|<w>Extra</w>"
         }
     };
 
@@ -1200,7 +1206,7 @@ void describe_god(god_type which_god)
     bool done = false;
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key();
-        if (key == '!' || key == '^')
+        if (key == '!' || key == CK_MOUSE_CMD || key == '^')
         {
             int n = (desc_sw->current() + 1) % desc_sw->num_children();
             desc_sw->current() = more_sw->current() = n;
@@ -1211,7 +1217,7 @@ void describe_god(god_type which_god)
 #endif
             return true;
         }
-        return done = ui::key_exits_popup(key);
+        return done = !desc_sw->current_widget()->on_event(ev);
     });
 
 #ifdef USE_TILE_WEB
@@ -1277,9 +1283,9 @@ bool describe_god_with_join(god_type which_god)
         const auto keyin = ev.key();
 
         // Always handle escape and pane-switching keys the same way
-        if (ui::key_exits_popup(keyin))
+        if (keyin == CK_ESCAPE)
             return done = true;
-        if (keyin == '!' || keyin == '^')
+        if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
         {
             int n = (desc_sw->current() + 1) % desc_sw->num_children();
             desc_sw->current() = n;
