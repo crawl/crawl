@@ -754,7 +754,7 @@ static int l_you_memorise(lua_State *ls)
 {
     string spellname = luaL_checkstring(ls, 1);
     spell_type s = spell_by_name(spellname, true);
-    if (!is_valid_spell(s))
+    if (!is_valid_spell(s) || !is_player_spell(s))
     {
         const string err = make_stringf("Invalid spell: '%s'.", spellname.c_str());
         return luaL_argerror(ls, 1, err.c_str());
