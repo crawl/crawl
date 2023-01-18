@@ -1942,6 +1942,16 @@ void update_acrobat_status()
     you.redraw_evasion = true;
 }
 
+void update_acrospider_status()
+{
+    if (!you.form == transformation::spider)
+        return;
+
+    // As acrobat, but for spider form. Hacky implementation.
+    you.duration[DUR_ACROSPIDER] = you.time_taken+1;
+    you.redraw_evasion = true;
+}
+
 // An evasion factor based on the player's body size, smaller == higher
 // evasion size factor.
 static int _player_evasion_size_factor(bool base = false)
@@ -2017,6 +2027,10 @@ static int _player_evasion_bonuses()
     // get a massive EV bonus.
     if (acrobat_boost_active())
         evbonus += 15;
+
+    // Acrobat-like boost for Spider Form.
+    if (acrospider_boost_active())
+        evbonus += you.props[SPIDER_POW_KEY].get_int() / 5;
 
     return evbonus;
 }

@@ -1336,7 +1336,9 @@ increases with spell power.
 Spider Form spell
 
 Transforms the caster into a venomous, spider-like creature. The caster becomes
-highly evasive and gains a poisonous bite, but gains vulnerability to poison.
+highly evasive and gains a poisonous bite, but gains vulnerability to poison. 
+The caster becomes even more evasive while moving and waiting, but not while
+doing any other action (including climbing stairs).
 
 While transformed, any equipped weapons and armour are melded, and casting
 spells becomes slightly more difficult.

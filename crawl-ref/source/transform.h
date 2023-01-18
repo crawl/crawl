@@ -16,6 +16,7 @@
 #define APPENDAGE_LEVEL 2
 
 #define AIRFORM_POWER_KEY "airform_power"
+#define SPIDER_POWER_KEY "spider_power"
 
 enum form_capability
 {
@@ -311,3 +312,5 @@ void merfolk_stop_swimming();
 void vampire_update_transformations();
 int form_base_movespeed(transformation tran);
 bool draconian_dragon_exception();
+
+bool acrospider_boost_active();

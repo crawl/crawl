@@ -505,6 +505,11 @@ public:
     string get_transform_description() const override { return "your old self."; }
 };
 
+void set_spider_power(int pow)
+{
+    you.props[SPIDER_POWER_KEY] = pow;
+}
+
 class FormSpider : public Form
 {
 private:
@@ -2249,4 +2254,12 @@ bool draconian_dragon_exception()
     return species::is_draconian(you.species)
            && (you.form == transformation::dragon
                || !form_changed_physiology());
+}
+
+bool acrospider_boost_active()
+{
+    return you.form == transformation::spider
+           && you.duration[DUR_ACROSPIDER]
+           && (!you.caught())
+           && (!you.is_constricted());
 }

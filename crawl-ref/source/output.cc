@@ -626,6 +626,7 @@ static bool _boosted_ev()
     return you.duration[DUR_AGILITY]
            || you.props.exists(WU_JIAN_HEAVENLY_STORM_KEY)
            || acrobat_boost_active();
+           || acrospider_boost_active();
 }
 
 static bool _boosted_sh()
