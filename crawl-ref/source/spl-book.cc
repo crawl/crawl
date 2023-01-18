@@ -279,7 +279,7 @@ static void _list_available_spells(spell_set &available_spells)
         available_spells.insert(gift);
 }
 
-bool spell_available_to_memorize(spell_type which_spell)
+static bool _spell_available_to_memorize(spell_type which_spell)
 {
     spell_set available_spells;
     _list_available_spells(available_spells);
@@ -1009,6 +1009,12 @@ static bool _learn_spell_checks(spell_type specspell, bool wizard = false)
     if (player_spell_levels() < spell_levels_required(specspell) && !wizard)
     {
         mpr("You can't memorise that many levels of magic yet!");
+        return false;
+    }
+
+    if (!_spell_available_to_memorize(specspell))
+    {
+        mpr("You haven't found that spell!");
         return false;
     }
 

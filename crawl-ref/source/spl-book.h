@@ -31,7 +31,6 @@ bool is_wand_spell(spell_type spell);
 bool book_has_title(const item_def &book);
 
 bool can_learn_spell(bool silent = false);
-bool spell_available_to_memorize(spell_type which_spell);
 bool player_has_available_spells();
 bool learn_spell();
 bool learn_spell(spell_type spell, bool wizard = false, bool interactive = true);
