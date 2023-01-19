@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <memory.h>
 #include <algorithm>
+#include <cstring>
 
 #ifdef USE_TILE
  #include <png.h>
