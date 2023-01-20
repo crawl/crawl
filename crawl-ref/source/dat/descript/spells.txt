@@ -108,16 +108,16 @@ Beastly Appendage spell
         return "Causes a vicious spike to grow from one of the caster's " ..
                "tentacles, increasing the damage of their extra tentacle " ..
                "attacks. It is not powerful enough to affect tentacles " ..
-               "which are already mutated."
+               "which are already mutated. While transformed, the caster's " ..
+               "mutated and misshapen form causes headwear to be melded."
     else
         return "Causes monstrous horns and talons to grow from the caster's " ..
                "body, granting them a chance of making an extra attack in " ..
                "melee. It is not powerful enough to enhance " ..
-               "appendages that are already nonhuman."
+               "appendages that are already nonhuman. While transformed, " ..
+               "auxiliary armour on the affected body parts is melded."
     end
 }}
-
-While transformed, auxiliary armour on the affected body parts is melded.
 %%%%
 Berserker Rage spell
 
