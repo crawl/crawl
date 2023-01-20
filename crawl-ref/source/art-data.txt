@@ -356,7 +356,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 BOOL:    evil, nogen
-DESCRIP: It can be evoked to hurl damnation at the cost of health and magic,
+DESCRIP: It grants the ability to hurl damnation at the cost of health and magic,
  with strength depending on Evocations skill.
 
 NAME:    sceptre of Asmodeus
@@ -367,7 +367,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 BOOL:    evil, nogen
-DESCRIP: It can be evoked to summon fiery demons, with success rate depending
+DESCRIP: It grants the ability to summon fiery demons, with success rate depending
  on Evocations skill. Those summoned this way will remain friendly only for a
  limited time.
 
