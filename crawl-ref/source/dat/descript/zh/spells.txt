@@ -544,10 +544,6 @@ Fireball spell
 
 掷出一个爆炸性的火球。
 %%%%
-Flame Tongue spell
-
-生成一个短距离爆发的火焰。
-%%%%
 Flame Wave spell
 
 用一波火焰冲击施法者的周围。

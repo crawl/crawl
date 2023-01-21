@@ -299,10 +299,6 @@ Fireball spell
 Ce sort expédie un missile de feu explosif. Ce sortilège n'a aucune coût
 additionnel de niveaux de sorts si le sorcier connait Boule de Feu Retardée.
 %%%%
-Flame Tongue spell
-
-Ce sort crée une courte rafale de flammes.
-%%%%
 Flight spell
 
 Ce sort accorde au sorcier la faculté de voler dans les airs.

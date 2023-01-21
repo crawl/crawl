@@ -611,10 +611,6 @@ Fireball spell
 
 Hurls an explosive ball of fire.
 %%%%
-Flame Tongue spell
-
-Creates a short burst of flame.
-%%%%
 Flame Wave spell
 
 Blasts the caster's surroundings with a wave of fire. If the caster maintains

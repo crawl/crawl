@@ -13,7 +13,6 @@ static pair<spell_type, zap_type> _spl_zaps[] =
     { SPELL_THROW_FLAME, ZAP_THROW_FLAME },
     { SPELL_THROW_FROST, ZAP_THROW_FROST },
     { SPELL_PAIN, ZAP_PAIN },
-    { SPELL_FLAME_TONGUE, ZAP_FLAME_TONGUE },
     { SPELL_SHOCK, ZAP_SHOCK },
     { SPELL_STING, ZAP_STING },
     { SPELL_BOLT_OF_FIRE, ZAP_BOLT_OF_FIRE },

@@ -1064,18 +1064,6 @@ static const struct spell_desc spelldata[] =
 },
 
 {
-    SPELL_FLAME_TONGUE, "Flame Tongue",
-    spschool::conjuration | spschool::fire,
-    spflag::dir_or_target | spflag::not_self | spflag::needs_tracer
-        | spflag::monster,
-    1,
-    40, // cap for range; damage cap is at 25
-    2, 5,
-    0,
-    TILEG_FLAME_TONGUE,
-},
-
-{
     SPELL_PASSWALL, "Passwall",
     spschool::transmutation | spschool::earth,
     spflag::target | spflag::escape | spflag::not_self | spflag::utility
@@ -3731,6 +3719,7 @@ AXED_SPELL(SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe")
 AXED_SPELL(SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds")
 AXED_SPELL(SPELL_CONJURE_FLAME, "Conjure Flame")
 AXED_SPELL(SPELL_CORPSE_ROT, "Corpse Rot")
+AXED_SPELL(SPELL_FLAME_TONGUE, "Flame Tongue")
 #endif
 
 };
