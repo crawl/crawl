@@ -2975,6 +2975,23 @@ bool drink(item_def* potion)
         return false;
     }
 
+    if (player_equip_unrand(UNRAND_VICTORY))
+    {
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR);
+        string unrand_prompt = make_stringf("Really quaff with monsters nearby "
+                                            "while wearing %s?",
+                                            item->name(DESC_THE, false, true,
+                                                       false).c_str());
+
+        if (item->props[VICTORY_STAT_KEY].get_int() > 0
+            && there_are_monsters_nearby(true, true, false)
+            && !yesno(unrand_prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.
@@ -3745,6 +3762,23 @@ bool read(item_def* scroll, dist *target)
                                                 false, 'n'))
         {
             // is this too nanny dev?
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
+    if (player_equip_unrand(UNRAND_VICTORY))
+    {
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR);
+        string unrand_prompt = make_stringf("Really read with monsters nearby "
+                                            "while wearing %s?",
+                                            item->name(DESC_THE, false, true,
+                                                       false).c_str());
+
+        if (item->props[VICTORY_STAT_KEY].get_int() > 0
+            && there_are_monsters_nearby(true, true, false)
+            && !yesno(unrand_prompt.c_str(), false, 'n'))
+        {
             canned_msg(MSG_OK);
             return false;
         }
