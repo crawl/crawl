@@ -158,3 +158,4 @@ int get_unrandart_num(const char *name);
 int extant_unrandart_by_exact_name(string name);
 
 void unrand_reacts();
+void unrand_death_effects(monster* mons, killer_type killer);

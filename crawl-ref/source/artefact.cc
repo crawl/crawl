@@ -1897,9 +1897,23 @@ void unrand_reacts()
         you.wield_change = true;
 }
 
-void artefact_set_property(item_def          &item,
-                            artefact_prop_type prop,
-                            int                val)
+void unrand_death_effects(monster* mons, killer_type killer)
+{
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        item_def* item = you.slot_item(static_cast<equipment_type>(i));
+
+        if (item && is_unrandom_artefact(*item))
+        {
+            const unrandart_entry* entry = get_unrand_entry(item->unrand_idx);
+
+            if (entry->death_effects)
+                entry->death_effects(item, mons, killer);
+        }
+    }
+}
+
+void artefact_set_property(item_def &item, artefact_prop_type prop, int val)
 {
     ASSERT(is_artefact(item));
     ASSERT(item.props.exists(ARTEFACT_PROPS_KEY));
