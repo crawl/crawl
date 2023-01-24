@@ -278,6 +278,26 @@ xxxttt-s..s-ttt
       xxxxxx
 ENDMAP
 
+NAME:   alex1729_swamp_entry_worm_eleionoma
+TAGS:   swamp_entry patrolling transparent
+KFEAT:  O = enter_swamp
+KMONS:  O = eleionoma
+SUBST:  t = tt.
+NSUBST: 1 = 1:1 / 1=1t / .
+SUBST:  . = .....WW
+MARKER: O = lua:fog_machine { \
+             pow_min = 8, pow_max = 12, delay = 25, \
+             size = 2, walk_dist = 1, spread_rate= 33 }
+MAP
+  t.t
+ t.t.t
+ttttt.t
+.t.O.t.
+t.t.ttt
+ ttt.t
+  t.t
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.

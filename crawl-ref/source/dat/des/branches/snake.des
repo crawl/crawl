@@ -200,6 +200,32 @@ xx`l--llxx
   xxxxxx
 ENDMAP
 
+NAME:   alex1729_snake_entry_snake
+TAGS:   snake_entry patrolling no_monster_gen transparent
+ORIENT: float
+MONS:   naga / w:3 nothing, w:20 plant / bush
+KFEAT:  O = enter_snake_pit
+KFEAT:  L = l
+KMONS:  L = salamander ; longbow | shortbow
+SUBST:  - = W2..
+MAP
+      xxxxxxx
+    xxx-.---xx
+   xx-....-.-x
+xxxx..O..t...x
+xlLl....xx..-x
+xxlxxxxxx-..xx
+ xxxx xx1..xx
+     xx-..tx
+ xxx x-.-ttxxxx@
+@.-xxx..t-----.x
+ x..1-..t-ttt-.x
+ xx-.....---t-.x
+  xxxx-..-1--.-x
+     xx-..-..-xx
+      xxxxxxxxx
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Decorative vaults.
