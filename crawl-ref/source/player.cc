@@ -4930,17 +4930,31 @@ static void _end_water_hold()
     you.props.erase(WATER_HOLD_SUBSTANCE_KEY);
 }
 
-bool player::clear_far_engulf(bool force)
+static string _water_hold_substance()
+{
+    return you.props[WATER_HOLD_SUBSTANCE_KEY].get_string();
+}
+
+bool player::clear_far_engulf(bool force, bool moved)
 {
     if (!you.duration[DUR_WATER_HOLD])
         return false;
 
-    monster * const mons = monster_by_mid(you.props[WATER_HOLDER_KEY].get_int());
+    monster* const mons = monster_by_mid(you.props[WATER_HOLDER_KEY].get_int());
     if (force || !mons || !mons->alive() || !adjacent(mons->pos(), you.pos()))
     {
-        if (you.res_water_drowning())
-            mprf("The %s engulfing you falls away.", water_hold_substance().c_str());
+        if (moved)
+        {
+            mprf("You slip free of the %s engulfing you.",
+                 _water_hold_substance().c_str());
+        }
         else
+        {
+            mprf("The %s engulfing you falls away.",
+                 _water_hold_substance().c_str());
+        }
+
+        if (!you.res_water_drowning())
             mpr("You gasp with relief as air once again reaches your lungs.");
 
         _end_water_hold();

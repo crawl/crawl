@@ -208,21 +208,6 @@ void remove_ice_movement()
     }
 }
 
-string water_hold_substance()
-{
-    return you.props[WATER_HOLD_SUBSTANCE_KEY].get_string();
-}
-
-void remove_water_hold()
-{
-    if (you.duration[DUR_WATER_HOLD])
-    {
-        mprf("You slip free of the %s engulfing you.",
-             water_hold_substance().c_str());
-        you.clear_far_engulf();
-    }
-}
-
 static void _clear_constriction_data()
 {
     you.stop_directly_constricting_all(true);
@@ -774,13 +759,13 @@ static spret _rampage_forward(coord_def move)
     }
 
     // First, apply any necessary pre-move effects:
-    remove_water_hold();
     _clear_constriction_data();
     // (But not opportunity attacks - messy codewise, and no design benefit.)
 
     // stepped = true, we're flavouring this as movement, not a blink.
     move_player_to_grid(beam.target, true);
 
+    you.clear_far_engulf(false, true);
     // No full-LOS stabbing.
     if (enhanced)
         behaviour_event(valid_target, ME_ALERT, &you, you.pos());
@@ -788,6 +773,7 @@ static spret _rampage_forward(coord_def move)
     // Lastly, apply post-move effects unhandled by move_player_to_grid().
     apply_barbs_damage(true);
     remove_ice_movement();
+    you.clear_far_engulf(false, true);
     apply_cloud_trail(old_pos);
 
     // If there is somehow an active run delay here, update the travel trail.
@@ -1148,7 +1134,6 @@ void move_player_action(coord_def move)
         // when confusion causes no move.
         if (you.pos() != targ && targ_pass)
         {
-            remove_water_hold();
             _clear_constriction_data();
             _trigger_opportunity_attacks(targ);
             // Check nothing weird happened during opportunity attacks.
@@ -1157,6 +1142,7 @@ void move_player_action(coord_def move)
                 move_player_to_grid(targ, true);
                 apply_barbs_damage();
                 remove_ice_movement();
+                you.clear_far_engulf(false, true);
                 apply_cloud_trail(old_pos);
             }
         }

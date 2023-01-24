@@ -408,7 +408,7 @@ public:
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage(constrict_type typ) const = 0;
     virtual bool constriction_does_damage(constrict_type typ) const;
-    virtual bool clear_far_engulf(bool force = false) = 0;
+    virtual bool clear_far_engulf(bool force = false, bool moved = false) = 0;
 
     // Be careful using this, as it doesn't keep the constrictor in sync.
     void clear_constricted();
