@@ -237,6 +237,8 @@ static unordered_set<int> _player_nonbook_spells =
     SPELL_SMITING,
     // Ds powers
     SPELL_HURL_DAMNATION,
+    // Green Draconian breath
+    SPELL_MEPHITIC_BREATH,
 };
 
 bool is_player_spell(spell_type which_spell)

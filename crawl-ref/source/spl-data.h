@@ -3616,6 +3616,18 @@ static const struct spell_desc spelldata[] =
     TILEG_KISS_OF_DEATH,
 },
 
+// Not an actual spell - dummy entry for (player) Green Draconian breath.
+{
+    SPELL_MEPHITIC_BREATH, "Mephitic Breath",
+    spschool::conjuration | spschool::air | spschool:: poison,
+    spflag::dir_or_target | spflag::noisy | spflag::needs_tracer,
+    5,
+    0,
+    6, 6,
+    0,
+    TILEG_ERROR,
+},
+
 {
     SPELL_NO_SPELL, "nonexistent spell",
     spschool::none,
