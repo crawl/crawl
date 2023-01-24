@@ -283,8 +283,8 @@ TAGS:   swamp_entry transparent
 MONS:   bush
 KFEAT:  O = enter_swamp
 KMONS:  O = eleionoma
-KFEAT:  w = deep_water 
-KMONS:  w = swamp worm / nothing 
+KFEAT:  w = deep_water
+KMONS:  w = swamp worm / nothing
 SHUFFLE: Ww
 SUBST:  . = .....WW
 SUBST:  2 = 1tt
