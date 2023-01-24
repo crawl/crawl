@@ -209,21 +209,21 @@ KFEAT: L = l
 KMONS: L = salamander; longbow | shortbow | longbow ego:flaming | shortbow ego:flaming
 SUBST:  - = W2.
 MAP
-      xxxxxxx    
-    xxx-.---xx   
-   xx-....-.-x   
-xxxx..O..t...x   
-xlLl....xx..-x   
-xxlxxxxxx-..xx   
- xxxx xx1..xx    
-     xx-..tx    
+      xxxxxxx
+    xxx-.---xx
+   xx-....-.-x
+xxxx..O..t...x
+xlLl....xx..-x
+xxlxxxxxx-..xx
+ xxxx xx1..xx
+     xx-..tx
  xxx x-.-ttxxxx@
 @.-xxx..t-----.x
  x..1-..t-ttt-.x
  xx-.....---t-.x
-  xxxx-..-1--.-x 
-     xx-..-..-xx 
-      xxxxxxxxx  
+  xxxx-..-1--.-x
+     xx-..-..-xx
+      xxxxxxxxx
 ENDMAP
 
 ###############################################################################
