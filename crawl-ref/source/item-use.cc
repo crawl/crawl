@@ -2579,7 +2579,8 @@ static bool _can_puton_ring(const item_def &item)
 {
     if (!_can_puton_jewellery(item))
         return false;
-    if (!you_can_wear(EQ_RINGS, true))
+    if (!you_can_wear(EQ_RINGS, true)
+        && !player_equip_unrand(UNRAND_FINGER_AMULET))
     {
         mprf(MSGCH_PROMPT, "You can't wear that in your present form.");
         return false;
