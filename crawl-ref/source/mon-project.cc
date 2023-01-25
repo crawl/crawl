@@ -254,8 +254,9 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
     float tan = (random2(31) - 15) * 0.019; // approx from degrees
     tan *= 75.0 / pow;
     const int inaccuracy = caster ? caster->inaccuracy() : 0;
+    //TODO this is kind of terrible
     if (inaccuracy > 0)
-        tan *= 2 * inaccuracy;
+        tan *= 2 * inaccuracy / 5;
 
     // Cast either from left or right hand.
     mon.props[IOOD_X] = x + vy*off;

@@ -247,7 +247,7 @@ int attack::post_roll_to_hit_modifiers(int mhit, bool /*random*/)
     int modifiers = 0;
 
     // Penalties for both players and monsters:
-    modifiers -= 5 * attacker->inaccuracy();
+    modifiers -= attacker->inaccuracy();
 
     if (attacker->confused())
         modifiers += CONFUSION_TO_HIT_MALUS;

@@ -207,8 +207,11 @@ void actor::shield_block_succeeded()
 
 int actor::inaccuracy() const
 {
+    int degree = 0;
     const item_def *amu = slot_item(EQ_AMULET);
-    return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
+    if (amu && is_unrandom_artefact(*amu, UNRAND_AIR))
+        degree += 5;
+    return degree;
 }
 
 bool actor::res_corr(bool /*allow_random*/, bool temp) const
