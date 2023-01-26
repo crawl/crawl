@@ -750,7 +750,7 @@ DEPTH:  Depths, !Depths:$
 MONS:   crystal guardian, orange crystal statue
 ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:20 / \
         potion of magic ident:type / potion of brilliance ident:type / \
-        phial of floods w:3 / tin of tremorstones w:5 / gold w:30
+        phial of floods w:3 / any area misc w:5 / gold w:30
 KFEAT:  _ = altar_sif_muna
 MAP
             bbbbb
@@ -2336,7 +2336,7 @@ item("any weapon good_item w:100" .. ego .. " / cloak" .. coldres ..
      " / book of ice / book of the tundra / ozocubu's autobiography" ..
      " / randbook disc:ice / manual of ice magic / staff of cold ident:type" ..
      " / ring of ice ident:type / ring of protection from cold ident:type" ..
-     " / wand of iceblast ident:type / phial of floods / condenser vane")
+     " / wand of iceblast ident:type / phial of floods / any area misc")
 }}
 : if you.in_branch("D") and you.depth() < 14 or you.in_branch("Lair") then
 MONS:   two-headed ogre simulacrum / troll simulacrum / naga simulacrum \

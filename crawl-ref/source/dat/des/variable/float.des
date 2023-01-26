@@ -3926,7 +3926,7 @@ DEPTH:  D:10-, Elf, Depths
 ORIENT: float
 ITEM:   book of geomancy / book of the earth / book of iron \
         / manual of earth magic / staff of earth ident:all \
-        / ring of protection ident:all / tin of tremorstones \
+        / ring of protection ident:all / any area misc \
         / crystal plate armour w:5
 KITEM:  2 = devastator / eveningstar ego:heavy randart ident:all \
         / dark maul

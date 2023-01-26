@@ -2343,7 +2343,7 @@ ENDMAP
 NAME:    nzn_swamp_blast_mining
 TAGS:    no_pool_fixup
 WEIGHT:  5
-ITEM:    stone, tin of tremorstones
+ITEM:    stone, any area misc
 MONS:    bloated husk, earth elemental
 SHUFFLE: HJ / 12
 # Averages 2 husks, 1.5 earth elementals, and ~1/3 chance of a tin

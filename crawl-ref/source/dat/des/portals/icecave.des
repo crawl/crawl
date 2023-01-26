@@ -367,7 +367,7 @@ end
 --[[
 Define one item slot containing ice or water themed magical items, including
 spellbooks, manual, staff of cold, rC jewellery (good_item quality for hard ice
-caves), wand of iceblast, phial of floods, and condenser vane.
+caves), wand of iceblast, phial of floods, and any area misc.
 
 @tab e The map environment.
 @string[opt="i"] glyphs A string of glyphs to use for the single KITEM
@@ -386,7 +386,7 @@ function ice_cave_magic_loot(e, glyphs)
         " / ozocubu's autobiography / randbook disc:ice" ..
         " / manual of ice magic / staff of cold / ring of ice" .. quality ..
         " / ring of protection from cold" .. quality ..
-        " / wand of iceblast / phial of floods / condenser vane")
+        " / wand of iceblast / phial of floods / any area misc")
 end
 
 --[[
