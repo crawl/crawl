@@ -118,8 +118,9 @@ Evoke Berserk Rage ability
 %%%%
 Evoke Invisibility ability
 
-Turns the user invisible. Turning invisible causes magical contamination and
-may eventually cause glowing, nullifying the invisibility.
+Turns the user invisible. Turning invisible in this way causes magical
+contamination. Reaching high levels of contamination will cause you to glow
+brightly, nullifying the invisibility.
 %%%%
 Evoke Thunderclouds ability
 
