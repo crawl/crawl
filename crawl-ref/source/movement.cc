@@ -1093,6 +1093,13 @@ void move_player_action(coord_def move)
             return;
         }
 
+        // Allow (e.g.) "Really move and attack while wielding nothing?" abort.
+        if (!rampaged && wu_jian_move_triggers_attacks(targ)
+            && !wielded_weapon_check(you.weapon(), "move and attack"))
+        {
+            return;
+        }
+
         // If confused, we've already been prompted (in case of stumbling into
         // a monster and attacking instead).
         // If rampaging we've already been prompted.
