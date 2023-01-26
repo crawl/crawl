@@ -5673,7 +5673,9 @@ bool wu_jian_do_wall_jump(coord_def targ)
     auto wall_jump_direction = (you.pos() - targ).sgn();
     auto wall_jump_landing_spot = (you.pos() + wall_jump_direction
                                    + wall_jump_direction);
-    if (!check_moveto(wall_jump_landing_spot, "wall jump"))
+    if ((wu_jian_wall_jump_triggers_attacks(wall_jump_landing_spot)
+         && !wielded_weapon_check(you.weapon())
+        || !check_moveto(wall_jump_landing_spot, "wall jump")))
     {
         you.turn_is_over = false;
         return false;

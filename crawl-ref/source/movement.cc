@@ -939,6 +939,12 @@ void move_player_action(coord_def move)
         return;
     }
 
+    if (!rampaged && wu_jian_move_triggers_attacks(targ)
+        && !wielded_weapon_check(you.weapon()))
+    {
+        return;
+    }
+
     // XX generalize?
     const string walkverb = you.airborne()                     ? "fly"
                           : you.swimming()                     ? "swim"

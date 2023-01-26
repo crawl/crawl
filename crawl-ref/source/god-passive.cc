@@ -1508,19 +1508,32 @@ static bool _wu_jian_trigger_martial_arts(coord_def old_pos,
     return attacked;
 }
 
-void wu_jian_wall_jump_effects()
+static vector<monster*> _wu_jian_wall_jump_monsters(const coord_def &pos)
 {
     vector<monster*> targets;
-    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
+    for (adjacent_iterator ai(pos, true); ai; ++ai)
     {
-        monster* target = monster_at(*ai);
+        monster *target = monster_at(*ai);
         if (target && _can_attack_martial(target) && target->alive())
             targets.push_back(target);
+    }
+    return targets;
+}
 
+// Return true if wu_jian_wall_jump_effects() would attack a monster when
+// called with you.pos() as pos.
+bool wu_jian_wall_jump_triggers_attacks(const coord_def &pos)
+{
+    return !_wu_jian_wall_jump_monsters(pos).empty();
+}
+
+void wu_jian_wall_jump_effects()
+{
+    for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
         if (!cell_is_solid(*ai))
             check_place_cloud(CLOUD_DUST, *ai, 1 + random2(3) , &you, 0, -1);
-    }
 
+    vector<monster*> targets = _wu_jian_wall_jump_monsters(you.pos());
     for (auto target : targets)
     {
         if (!target->alive())
