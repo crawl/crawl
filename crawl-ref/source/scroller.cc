@@ -166,7 +166,8 @@ int formatted_scroller::show()
 
 bool formatted_scroller::process_key(int ch)
 {
-    return !ui::key_exits_popup(ch);
+    // most keyhandling is in the scroller event handling, not here
+    return !ui::key_exits_popup(ch, true);
 }
 
 void formatted_scroller::set_scroll(int y)

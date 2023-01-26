@@ -1217,16 +1217,6 @@ int mons_spell_range(const monster &mons, spell_type spell)
  */
 int mons_spell_range_for_hd(spell_type spell, int hd)
 {
-    switch (spell)
-    {
-        case SPELL_FLAME_TONGUE:
-            // HD:1 monsters would get range 2, HD:2 -- 3, other 4, let's
-            // use the mighty Throw Flame for big ranges.
-            return min(2, hd);
-        default:
-            break;
-    }
-
     const int power = mons_power_for_hd(spell, hd);
     return spell_range(spell, power, false);
 }
@@ -1335,7 +1325,6 @@ bolt mons_spell_beam(const monster* mons, spell_type spell_cast, int power,
     case SPELL_MAGIC_DART:
     case SPELL_THROW_FLAME:
     case SPELL_THROW_FROST:
-    case SPELL_FLAME_TONGUE:
     case SPELL_VENOM_BOLT:
     case SPELL_POISON_ARROW:
     case SPELL_BOLT_OF_MAGMA:

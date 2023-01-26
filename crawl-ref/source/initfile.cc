@@ -210,7 +210,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(animate_equip_bar), false),
         new BoolGameOption(SIMPLE_NAME(mouse_input), false),
         new BoolGameOption(SIMPLE_NAME(menu_arrow_control), true),
-        new BoolGameOption(SIMPLE_NAME(mlist_allow_alternate_layout), false),
+        new BoolGameOption(mlist_allow_alternate_layout,
+                           {"mlist_allow_alternative_layout",
+                            "mlist_allow_alternate_layout"}, false),
         new BoolGameOption(SIMPLE_NAME(monster_item_view_coordinates), false),
         new ListGameOption<text_pattern>(SIMPLE_NAME(monster_item_view_features)),
         new BoolGameOption(SIMPLE_NAME(messages_at_top), false),
@@ -492,17 +494,10 @@ const vector<GameOption*> game_options::build_options_list()
         new MultipleChoiceGameOption<maybe_bool>(
             SIMPLE_NAME(tile_use_small_layout),
             MB_MAYBE,
-#ifdef TOUCH_UI
             {{"true", MB_TRUE},
              {"false", MB_FALSE},
              {"maybe", MB_MAYBE},
-             {"auto", MB_MAYBE}}, true
-#else
-            // this option is unsupported, undocumented, and fairly crashy.
-            // XX do something about this.
-            {}
-#endif
-            ),
+             {"auto", MB_MAYBE}}, true),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
@@ -658,7 +653,7 @@ static msg_colour_type _str_to_channel_colour(const string &str)
             ret = MSGCOL_PLAIN;
         else if (str == "default" || str == "on")
             ret = MSGCOL_DEFAULT;
-        else if (str == "alternate")
+        else if (str == "alternative" || str == "alternate")
             ret = MSGCOL_ALTERNATE;
     }
     else

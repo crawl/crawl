@@ -3769,7 +3769,8 @@ static void _hailstorm_cell(coord_def where, int pow, actor *agent)
 #ifdef USE_TILE
     beam.tile_beam  = -1;
 #endif
-    beam.draw_delay = 10;
+    beam.draw_delay = 0;
+    beam.redraw_per_cell = false;
     beam.source     = where;
     beam.target     = where;
     beam.hit_verb   = "pelts";
@@ -3829,6 +3830,9 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
 
         _hailstorm_cell(*ri, pow, &you);
     }
+
+    if (Options.use_animations & UA_BEAM)
+        animation_delay(200, true);
 
     return spret::success;
 }

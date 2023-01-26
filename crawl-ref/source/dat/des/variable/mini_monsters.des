@@ -8639,7 +8639,7 @@ NAME:   dilly_guarded_unrand_morg
 TAGS:   no_monster_gen
 DEPTH:  D:2-9
 WEIGHT: 3
-ITEM:   morg no_pickup, w:30 book of necromancy / w:5 book of decay \
+ITEM:   dagger randart ego:pain ident:type no_pickup, w:30 book of necromancy / w:5 book of decay \
         / w:5 book of death
 KMONS:  p = withered plant
 MONS:   skeleton / zombie, spectral thing / simulacrum, necrophage, phantom

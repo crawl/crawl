@@ -230,8 +230,8 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         if (_weapon_disallows_randart(item.sub_type))
             return false;
 
-        // Mean enchantment +6.
-        item.plus = 12 - biased_random2(7,2);
+        // Mean enchantment +5.
+        item.plus = 12 - biased_random2(10,2);
         item.plus -= biased_random2(7,2);
         item.plus -= biased_random2(7,2);
 

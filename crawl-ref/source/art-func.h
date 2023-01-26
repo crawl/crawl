@@ -43,6 +43,7 @@
 #include "nearby-danger.h" // For Zhor
 #include "output.h"
 #include "player.h"
+#include "player-reacts.h" // For the consecrated labrys
 #include "player-stats.h"
 #include "showsymb.h"      // For Cigotuvi's Embrace
 #include "spl-cast.h"      // For evokes
@@ -299,6 +300,19 @@ static void _POWER_melee_effects(item_def* /*weapon*/, actor* attacker,
         zappy(ZAP_SWORD_BEAM, 100, false, beam);
         beam.fire();
     }
+}
+
+////////////////////////////////////////////////////
+
+static void _HOLY_AXE_world_reacts(item_def *item)
+{
+    const int horror_level = current_horror_level();
+    const int plus = min(horror_level + 5, 27);
+    if (item->plus == plus)
+        return;
+
+    item->plus = plus;
+    you.wield_change = true;
 }
 
 ////////////////////////////////////////////////////
@@ -1676,6 +1690,7 @@ static void _AUTUMN_KATANA_melee_effects(item_def* /*weapon*/, actor* attacker,
 }
 
 ///////////////////////////////////////////////////
+
 static void _VITALITY_world_reacts(item_def */*item*/)
 {
     // once it starts regenerating you, you're doin evil
@@ -1683,5 +1698,73 @@ static void _VITALITY_world_reacts(item_def */*item*/)
         || you.activated[EQ_AMULET])
     {
         did_god_conduct(DID_EVIL, 1);
+    }
+}
+
+///////////////////////////////////////////////////
+
+static void _reset_victory_stats(item_def *item)
+{
+    int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
+    if (bonus_stats > 0)
+    {
+        bonus_stats = 0;
+        item->plus = get_unrand_entry(item->unrand_idx)->plus;
+        artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
+        artefact_set_property(*item, ARTP_INTELLIGENCE, bonus_stats);
+        mprf(MSGCH_WARN, "%s stops glowing.", item->name(DESC_THE, false, true,
+                                                         false).c_str());
+
+        you.redraw_armour_class = true;
+        notify_stat_change();
+    }
+}
+
+static void _VICTORY_unequip(item_def *item, bool */*show_msgs*/)
+{
+    _reset_victory_stats(item);
+}
+
+#define VICTORY_STAT_CAP 7
+
+static void _VICTORY_death_effects(item_def *item, monster* mons,
+                                   killer_type killer)
+{
+    // No bonus for killing friendlies, neutrals, summons, etc.
+    if (killer != KILL_YOU && killer != KILL_YOU_MISSILE
+        || !mons_gives_xp(*mons, you))
+    {
+        return;
+    }
+
+    const mon_threat_level_type threat = mons_threat_level(*mons);
+
+    // Increased chance of victory bonus from more dangerous mons.
+    // Using threat for this is kludgy, but easily visible to players.
+    if (threat == MTHRT_NASTY || (threat == MTHRT_TOUGH && x_chance_in_y(1, 4)))
+    {
+        int &bonus_stats = item->props[VICTORY_STAT_KEY].get_int();
+        if (bonus_stats < VICTORY_STAT_CAP)
+        {
+            bonus_stats++;
+            item->plus = bonus_stats;
+            artefact_set_property(*item, ARTP_SLAYING, bonus_stats);
+            artefact_set_property(*item, ARTP_INTELLIGENCE, bonus_stats);
+            mprf(MSGCH_GOD, GOD_OKAWARU, "%s glows%s.",
+                 item->name(DESC_THE, false, true, false).c_str(),
+                 bonus_stats == VICTORY_STAT_CAP ? " brightly" : "");
+
+            you.redraw_armour_class = true;
+            notify_stat_change();
+        }
+    }
+}
+
+static void _VICTORY_world_reacts(item_def *item)
+{
+    if (you.props.exists(VICTORY_CONDUCT_KEY))
+    {
+        _reset_victory_stats(item);
+        you.props.erase(VICTORY_CONDUCT_KEY);
     }
 }

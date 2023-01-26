@@ -488,6 +488,12 @@ An axe with a powerful curse placed on it by one of the lords of Pandemonium,
 so that unsuspecting adventurers would unleash demons into this world. Beware,
 for it has ways of taking its wielder under its command...
 %%%%
+consecrated labrys
+
+An axe with a delicate blessing placed on it by one of the sacred Seraphim,
+so that worthy adventurers would rid this world of demons. Rejoice, for it has
+ways of bringing courage to its wielder in even the darkest places...
+%%%%
 lightning scales
 
 A set of armoured plates assembled to protect a creature with a long, scaly
@@ -768,3 +774,10 @@ Force Lance
 A plain iron lance, imbued with supernatural gravitas via the artifice of the
 mage Gell. It strikes with a force many times stronger than that imparted by
 the wielder.
+%%%%
+toga "Victory"
+
+An ancient artefact of Okawaru, these woolen robes were lost when a former
+champion failed a duel. Its enchantments increase in power when the wearer
+emerges victorious from threatening combat, but resorting to the use of scrolls
+or potions for assistance causes them to fade away again.

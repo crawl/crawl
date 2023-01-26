@@ -553,6 +553,7 @@ battle_staff BATTLE_STAFF
 axe_trog AXE_TROG
 arga ARGA
 demon_axe DEMON_AXE
+holy_axe HOLY_AXE
 axe_of_woe AXE_OF_WOE
 frostbite FROSTBITE
 ## launchers

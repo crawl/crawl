@@ -612,7 +612,7 @@ struct artefact_prop_data
 };
 
 /// Generate 'good' values for stat artps (e.g. ARTP_STRENGTH)
-static int _gen_good_stat_artp() { return 1 + random2(3); }
+static int _gen_good_stat_artp() { return 1 + coinflip() + one_chance_in(4); }
 
 /// Generate 'bad' values for stat artps (e.g. ARTP_STRENGTH)
 static int _gen_bad_stat_artp() { return -2 - random2(4); }
@@ -1353,6 +1353,7 @@ static int _preferred_max_level(int unrand_index)
     case UNRAND_ELEMENTAL_VULNERABILITY:
     case UNRAND_MISFORTUNE:
     case UNRAND_FORCE_LANCE:
+    case UNRAND_VICTORY:
         return 11;
     default:
         return -1;
@@ -1896,9 +1897,23 @@ void unrand_reacts()
         you.wield_change = true;
 }
 
-void artefact_set_property(item_def          &item,
-                            artefact_prop_type prop,
-                            int                val)
+void unrand_death_effects(monster* mons, killer_type killer)
+{
+    for (int i = 0; i < NUM_EQUIP; i++)
+    {
+        item_def* item = you.slot_item(static_cast<equipment_type>(i));
+
+        if (item && is_unrandom_artefact(*item))
+        {
+            const unrandart_entry* entry = get_unrand_entry(item->unrand_idx);
+
+            if (entry->death_effects)
+                entry->death_effects(item, mons, killer);
+        }
+    }
+}
+
+void artefact_set_property(item_def &item, artefact_prop_type prop, int val)
 {
     ASSERT(is_artefact(item));
     ASSERT(item.props.exists(ARTEFACT_PROPS_KEY));

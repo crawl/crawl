@@ -1211,7 +1211,7 @@ void describe_god(god_type which_god)
 #endif
             return true;
         }
-        return done = ui::key_exits_popup(key);
+        return done = ui::key_exits_popup(key, false);
     });
 
 #ifdef USE_TILE_WEB
@@ -1277,7 +1277,7 @@ bool describe_god_with_join(god_type which_god)
         const auto keyin = ev.key();
 
         // Always handle escape and pane-switching keys the same way
-        if (ui::key_exits_popup(keyin))
+        if (ui::key_exits_popup(keyin, false))
             return done = true;
         if (keyin == '!' || keyin == '^')
         {
@@ -1300,8 +1300,8 @@ bool describe_god_with_join(god_type which_god)
         // Next, allow child widgets to handle scrolling keys
         // NOTE: these key exceptions are also specified in ui-layouts.js
         if (keyin != 'J' && keyin != CK_ENTER)
-        if (desc_sw->current_widget()->on_event(ev))
-            return true;
+            if (desc_sw->current_widget()->on_event(ev))
+                return true;
 
         if (step == ABANDON)
         {

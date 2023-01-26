@@ -605,6 +605,14 @@ Frederick
  him.”
     -Mark Twain, _Autobiography of Mark Twain_. 1924.
 %%%%
+Frozen Ramparts spell
+
+”And as you cross the circle line
+ Well, the ice wall creaks behind
+ You're a rabbit on the run”
+
+    -Jethro Tull, “Skating Away (on the Thin Ice of a New Day)”.  1974.
+%%%%
 Geryon
 
 “Khrysaor, married to Kallirhoe, daughter of glorious Okeanos, was father to
@@ -1541,14 +1549,14 @@ fire dragon scales
 flail
 
 “Even after forcing their way, with great effort and loss, through this double
- defense, [the Germans] still found themselves at a disadvantage; for their
- armor scarce enabled them to contend on equal terms with the uncouth but
+ defence, [the Germans] still found themselves at a disadvantage; for their
+ armour scarce enabled them to contend on equal terms with the uncouth but
  formidable weapons of their adversaries. The Bohemians were armed with long
  iron flails, which they swung with prodigious force. They seldom failed to
  hit, and when they did so, the flail crashed through brazen helmet, skull and
  all.”
     -James A. Wylie, _The History of Protestantism_, vol. I, book 3, ch. 15
-     “Jon Huss and the Hussite Wars”. 1878.
+     “John Huss and the Hussite Wars”. 1878.
 %%%%
 flayed ghost
 
@@ -2241,6 +2249,16 @@ nameless horror
  misshapen breach clambered something like a clot of black shadow, quick and
  hideous, and it leaped straight out at Ged's face.”
     -Ursula K. Le Guin, _A Wizard Of Earthsea_. 1968.
+%%%%
+necromancer
+
+“Even now the intensity of his dread power can be felt
+ Weakening the body and saddening the heart
+ Ultimately they will become empty, mindless spectres
+ Stripped of will and soul
+ Only their thirst for freedom
+ Gives them hunger for vengeance...”
+    -Rush, “The Necromancer”. 1975.
 %%%%
 Necromutation spell
 
@@ -3522,7 +3540,7 @@ toenail golem
 
 “Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
  but my toes hardly notice. All they're interested in is turning out
- toenails—semitransparent, flexible sheets of a hornlike material, as defense
+ toenails—semitransparent, flexible sheets of a hornlike material, as defence
  against—whom?”
     -Jorge Luis Borges, “Toenails”. 1960.
     trans. Andrew Hurley, 1998.

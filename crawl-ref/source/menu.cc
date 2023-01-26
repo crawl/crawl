@@ -1824,22 +1824,11 @@ bool Menu::process_key(int keyin)
     case CK_REDRAW:
     case CK_RESIZE:
         return true;
-#ifndef TOUCH_UI
     case 0:
         return true;
-#endif
     case CK_MOUSE_CLICK:
         // click event from ui.cc
         break;
-
-#ifdef TOUCH_UI
-    case CK_TOUCH_DUMMY:  // mouse click in top/bottom region of menu
-    case 0:               // do the same as <enter> key
-        if (!(flags & MF_MULTISELECT)) // bail out if not a multi-select
-            return true;
-        return process_command(CMD_MENU_SELECT); // TODO: is this right??
-        // seemingly intentional fallthrough
-#endif
     default:
         // Even if we do return early, lastch needs to be set first,
         // as it's sometimes checked when leaving a menu.

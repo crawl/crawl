@@ -1000,10 +1000,11 @@ bool TilesFramework::is_using_small_layout()
     if (Options.tile_use_small_layout == MB_MAYBE)
 #ifndef __ANDROID__
         // Rough estimation of the minimum usable window size
-        //   - width > stats font size * 28 + msg font size * 30
-        //   - height > tabs area size (192) + stats font size * 14
+        //   - width > stats font width * 45 + msg font width * 45
+        //   - height > tabs area size (192) + stats font height * 11
         // Not using Options.tile_font_xxx_size because it's reset on new game
-        return m_windowsz.x < m_fonts[2].size*28+m_fonts[1].size*30 || m_windowsz.y < 192+m_fonts[2].size*14;
+        return m_windowsz.x < (int)(m_stat_font->char_width()*45+m_msg_font->char_width()*45)
+            || m_windowsz.y < (int)(192+m_stat_font->char_height()*11);
 #else
         return true;
 #endif

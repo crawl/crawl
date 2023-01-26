@@ -545,6 +545,12 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (old_pos == you.pos() && stepped)
         actor_apply_toxic_bog(&you);
 
+    if (slime_wall_neighbour(old_pos) || slime_wall_neighbour(you.pos()))
+    {
+        you.redraw_armour_class = true;
+        you.wield_change = true;
+    }
+
     if (old_pos != you.pos())
     {
         cloud_struct* cloud = cloud_at(you.pos());
@@ -3890,7 +3896,6 @@ int get_real_hp(bool trans, bool drained)
 
     // Mutations that increase HP by a percentage
     hitp *= 100 + (you.get_mutation_level(MUT_ROBUST) * 10)
-                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                 + (you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
                    you.get_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (you.get_mutation_level(MUT_FRAIL) * 10)
@@ -3913,6 +3918,9 @@ int get_real_hp(bool trans, bool drained)
         else
             hitp = hitp * 3 / 2;
     }
+
+    hitp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
+    hitp /= 100;
 
     // Some transformations give you extra hp.
     if (trans)
@@ -3946,7 +3954,6 @@ int get_real_mp(bool include_items)
 
     // Analogous to ROBUST/FRAIL
     enp *= 100 + (you.get_mutation_level(MUT_HIGH_MAGIC) * 10)
-               + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                - (you.get_mutation_level(MUT_LOW_MAGIC) * 10);
     enp /= 100 * scale;
 //    enp = stepdown_value(enp, 9, 18, 45, 100)
@@ -3961,6 +3968,9 @@ int get_real_mp(bool include_items)
         enp += 9 * you.wearing(EQ_RINGS, RING_MAGICAL_POWER);
         enp +=     you.scan_artefacts(ARTP_MAGICAL_POWER);
     }
+
+    enp *= 100 + you.attribute[ATTR_DIVINE_VIGOUR] * 5;
+    enp /= 100;
 
     if (include_items && you.wearing_ego(EQ_WEAPON, SPWPN_ANTIMAGIC))
         enp /= 3;
@@ -4920,17 +4930,31 @@ static void _end_water_hold()
     you.props.erase(WATER_HOLD_SUBSTANCE_KEY);
 }
 
-bool player::clear_far_engulf(bool force)
+static string _water_hold_substance()
+{
+    return you.props[WATER_HOLD_SUBSTANCE_KEY].get_string();
+}
+
+bool player::clear_far_engulf(bool force, bool moved)
 {
     if (!you.duration[DUR_WATER_HOLD])
         return false;
 
-    monster * const mons = monster_by_mid(you.props[WATER_HOLDER_KEY].get_int());
+    monster* const mons = monster_by_mid(you.props[WATER_HOLDER_KEY].get_int());
     if (force || !mons || !mons->alive() || !adjacent(mons->pos(), you.pos()))
     {
-        if (you.res_water_drowning())
-            mprf("The %s engulfing you falls away.", water_hold_substance().c_str());
+        if (moved)
+        {
+            mprf("You slip free of the %s engulfing you.",
+                 _water_hold_substance().c_str());
+        }
         else
+        {
+            mprf("The %s engulfing you falls away.",
+                 _water_hold_substance().c_str());
+        }
+
+        if (!you.res_water_drowning())
             mpr("You gasp with relief as air once again reaches your lungs.");
 
         _end_water_hold();
@@ -6095,6 +6119,9 @@ int player::corrosion_amount() const
 
     if (duration[DUR_CORROSION])
         corrosion += you.props[CORROSION_KEY].get_int();
+
+    if (env.level_state & LSTATE_SLIMY_WALL)
+        corrosion += slime_wall_corrosion(&you);
 
     if (player_in_branch(BRANCH_DIS))
         corrosion += 2;

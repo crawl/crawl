@@ -1262,6 +1262,16 @@ static int _describe_branch(const string &key, const string &suffix,
     return _describe_key(key, suffix, footer, info, &tile);
 }
 
+static int _describe_mutation(const string &key, const string &suffix,
+                              string /*footer*/)
+{
+    const string mutation_name = key.substr(0, key.size() - suffix.size());
+    const mutation_type mutation = mutation_from_name(mutation_name.c_str(),
+                                                      false);
+    describe_mutation(mutation);
+    return 0;
+}
+
 /// All types of ?/ queries the player can enter.
 static const vector<LookupType> lookup_types = {
     LookupType('M', "monster", _recap_mon_keys, _monster_filter,
@@ -1299,7 +1309,7 @@ static const vector<LookupType> lookup_types = {
                _describe_generic, lookup_type::db_suffix),
     LookupType('U', "mutation", nullptr, _mutation_filter,
                nullptr, nullptr, _mut_menu_gen,
-               _describe_generic, lookup_type::db_suffix),
+               _describe_mutation, lookup_type::db_suffix),
 };
 
 /**

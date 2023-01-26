@@ -356,7 +356,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 BOOL:    evil, nogen
-DESCRIP: It can be evoked to hurl damnation at the cost of health and magic,
+DESCRIP: Wielding it grants the ability to hurl damnation at the cost of health and magic,
  with strength depending on Evocations skill.
 
 NAME:    sceptre of Asmodeus
@@ -367,7 +367,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 BOOL:    evil, nogen
-DESCRIP: It can be evoked to summon fiery demons, with success rate depending
+DESCRIP: Wielding it grants the ability to summon fiery demons, with success rate depending
  on Evocations skill. Those summoned this way will remain friendly only for a
  limited time.
 
@@ -1730,6 +1730,36 @@ BRAND:    SPWPN_HEAVY
 TILE:     urand_force_lance
 TILE_EQ:  force_lance
 DBRAND:   Knockback: It sometimes drives back enemies it hits.
+
+ENUM:     HOLY_AXE
+NAME:     consecrated labrys
+OBJ:      OBJ_WEAPONS/WPN_BROAD_AXE
+TYPE:     labrys
+BASE_DAM: +1
+PLUS:     +5
+COLOUR:   ETC_HOLY
+TILE:     spwpn_holy_axe
+TILE_EQ:  holy_axe
+BRAND:    SPWPN_HOLY_WRATH
+BOOL:     no_upgrade, fly, seeinv, fragile
+INSCRIP:  Valiant
+DESCRIP:  Valiant:   It becomes more powerful as more dangerous foes come into view.
+
+NAME:     toga "Victory"
+OBJ:      OBJ_ARMOUR/ARM_ROBE
+PLUS:     +0 # varies with kills and consumable use
+SLAY:     +0 # varies
+INT:      +0 # varies
+COLOUR:   LIGHTCYAN
+TILE:     urand_victor
+TILE_EQ:  arwen
+INSCRIP:  *Victory
+BOOL:     clarity, no_upgrade
+VALUE:    600
+DESCRIP:  *Victory:  When the wearer kills a threatening monster, it has a
+ chance to gain +1 AC, +1 Slay, and +1 Int, capping at +7. When the wearer uses
+ a scroll or a potion with a hostile monster in sight, its bonuses reset to +0.
+ Unequipping it also resets its bonuses to +0.
 
 # This entry must always be last.
 ENUM:   DUMMY2

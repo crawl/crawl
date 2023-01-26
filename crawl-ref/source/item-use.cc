@@ -772,8 +772,6 @@ string UseItemMenu::get_keyhelp(bool) const
 {
     string r;
 
-    // OPER_ANY menus are identify, enchant, brand; they disable most of these
-    // key shortcuts
     // XX the logic here is getting convoluted, if only these were widgets...
     const string desc_key = is_set(MF_ARROWS_SELECT)
                                     ? "[<w>?</w>] describe selected" : "";
@@ -785,6 +783,8 @@ string UseItemMenu::get_keyhelp(bool) const
         full = "[<w>*</w>] ";
         full += (display_all ? "show appropriate" : "show all");
     }
+    // OPER_ANY menus are identify, enchant, brand; they disable most of these
+    // key shortcuts
     if (oper != OPER_ANY)
     {
         if (_equip_oper(oper))
@@ -823,9 +823,10 @@ string UseItemMenu::get_keyhelp(bool) const
             r = pad_more_with("", desc_key);
 
         // annoying: I cannot get more height changes to work correctly. So as
-        // a workaround, this will always produce a two line more, potentially
-        // with one blank line.
-        r += "\n";
+        // a workaround, this will produce a two line more, potentially
+        // with one blank line (except on menus where mode never changes).
+        if (oper != OPER_ANY)
+            r += "\n";
         r += modes + full;
         if (eu_modes.size() && desc_key.size())
             return pad_more_with(r, eu_modes); // desc_key on prev line
@@ -2578,7 +2579,8 @@ static bool _can_puton_ring(const item_def &item)
 {
     if (!_can_puton_jewellery(item))
         return false;
-    if (!you_can_wear(EQ_RINGS, true))
+    if (!you_can_wear(EQ_RINGS, true)
+        && !player_equip_unrand(UNRAND_FINGER_AMULET))
     {
         mprf(MSGCH_PROMPT, "You can't wear that in your present form.");
         return false;
@@ -2974,6 +2976,23 @@ bool drink(item_def* potion)
         return false;
     }
 
+    if (player_equip_unrand(UNRAND_VICTORY))
+    {
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR);
+        string unrand_prompt = make_stringf("Really quaff with monsters nearby "
+                                            "while wearing %s?",
+                                            item->name(DESC_THE, false, true,
+                                                       false).c_str());
+
+        if (item->props[VICTORY_STAT_KEY].get_int() > 0
+            && there_are_monsters_nearby(true, true, false)
+            && !yesno(unrand_prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.
@@ -3007,6 +3026,13 @@ bool drink(item_def* potion)
             // a dangerous monster nearby...
             xom_is_stimulated(200);
         }
+    }
+
+    // Drinking with hostile visible mons nearby resets unrand "Victory" stats.
+    if (player_equip_unrand(UNRAND_VICTORY)
+        && there_are_monsters_nearby(true, true, false))
+    {
+        you.props[VICTORY_CONDUCT_KEY] = true;
     }
 
     // We'll need this later, after destroying the item.
@@ -3742,6 +3768,23 @@ bool read(item_def* scroll, dist *target)
         }
     }
 
+    if (player_equip_unrand(UNRAND_VICTORY))
+    {
+        item_def *item = you.slot_item(EQ_BODY_ARMOUR);
+        string unrand_prompt = make_stringf("Really read with monsters nearby "
+                                            "while wearing %s?",
+                                            item->name(DESC_THE, false, true,
+                                                       false).c_str());
+
+        if (item->props[VICTORY_STAT_KEY].get_int() > 0
+            && there_are_monsters_nearby(true, true, false)
+            && !yesno(unrand_prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // Ok - now we FINALLY get to read a scroll !!! {dlb}
     you.turn_is_over = true;
 
@@ -4047,6 +4090,13 @@ bool read(item_def* scroll, dist *target)
             // since there are no *really* bad scrolls, merely useless ones).
             xom_is_stimulated(bad_effect ? 100 : 50);
         }
+    }
+
+    // Reading with hostile visible mons nearby resets unrand "Victory" stats.
+    if (player_equip_unrand(UNRAND_VICTORY)
+        && there_are_monsters_nearby(true, true, false))
+    {
+        you.props[VICTORY_CONDUCT_KEY] = true;
     }
 
     if (!alreadyknown)

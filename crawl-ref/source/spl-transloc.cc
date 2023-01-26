@@ -692,14 +692,13 @@ spret electric_charge(int powc, bool fail, const coord_def &target)
     else
         mpr("You charge forward with an electric crackle!");
 
-    remove_water_hold();
-
     if (dest_mon)
         _displace_charge_blocker(*dest_mon);
 
     move_player_to_grid(dest_pos, true);
     noisy(4, you.pos());
     apply_barbs_damage();
+    you.clear_far_engulf(false, true);
     _charge_cloud_trail(orig_pos);
     for (auto it = target_path.begin(); it != target_path.end() - 2; ++it)
         _charge_cloud_trail(*it);

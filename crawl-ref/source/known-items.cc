@@ -103,6 +103,8 @@ protected:
         case '\\':
             if (all_items_known)
                 return true; // skip process_key for '-', it's confusing
+            lastch = key;
+            return false;
 
         case CONTROL('D'):
             // If we cannot select anything (e.g. on the unknown items

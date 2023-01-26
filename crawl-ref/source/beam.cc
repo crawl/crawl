@@ -520,6 +520,23 @@ static int _zap_loudness(zap_type zap, spell_type spell)
     return 0;
 }
 
+#ifdef WIZARD
+static bool _needs_monster_zap(const zap_info &zinfo)
+{
+    // for enchantments we can't know from this data
+    if (zinfo.is_enchantment)
+        return false;
+    // if player tohit is missing from a non-enchantment, then it has to use
+    // a fake monster cast
+    if (!zinfo.player_tohit)
+        return true;
+
+    // otherwise, it should be possible to use a player zap (damage may or may
+    // not be defined)
+    return false;
+}
+#endif
+
 void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
 {
     const zap_info* zinfo = _seek_zap(z_type);
@@ -530,6 +547,13 @@ void zappy(zap_type z_type, int power, bool is_monster, bolt &pbolt)
         dprf("Couldn't find zap type %d", z_type);
         return;
     }
+
+#ifdef WIZARD
+    // we are in a wizmode cast scenario: use monster zap data to avoid crashes.
+    // N.b. this suppresses some player effects, such as inaccuracy.
+    if (!is_monster && you.wizard && _needs_monster_zap(*zinfo))
+        is_monster = true;
+#endif
 
     // Fill
     pbolt.name           = zinfo->name;

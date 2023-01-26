@@ -493,7 +493,7 @@ corporeal undead monster hit into a neutral slime.
 Oozemancy ability
 
 Calls forth acidic ooze from the walls of the dungeon around you, damaging foes
-depending on the number of affected walls they remain adjacent to.
+depending on the number of slimy walls they remain adjacent to.
 %%%%
 # Ashenzari
 Curse Item ability
@@ -739,11 +739,11 @@ on Invocations skill.
 Ancestor Life: Knight ability
 
 Remembers your ancestor as a knight, a strong melee combatant with superior
-defenses. This choice is permanent and cannot be undone.
+defences. This choice is permanent and cannot be undone.
 %%%%
 Ancestor Life: Battlemage ability
 
-Remembers your ancestor as a battlemage, a warrior capable of relentless offense
+Remembers your ancestor as a battlemage, a warrior capable of relentless offence
 with both melee and conjurations. This choice is permanent and cannot be undone.
 %%%%
 Ancestor Life: Hexer ability

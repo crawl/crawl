@@ -1937,6 +1937,7 @@ const set<spell_type> removed_spells =
     SPELL_EXCRUCIATING_WOUNDS,
     SPELL_CONJURE_FLAME,
     SPELL_CORPSE_ROT,
+    SPELL_FLAME_TONGUE,
 #endif
 };
 

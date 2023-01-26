@@ -93,9 +93,9 @@ on to his ears with hooks?
 %%%%
 Dispater
 
-Greatest of the Lords of Hell, Dispater was born when first an iron sword drank
-mortal blood. They despise mortal vanities, the pursuit of ‘reason’ and
-‘beauty’ - the only art they enjoy is the art of war.
+Greatest and most ruthless of the Lords of Hell, Dispater was born when first an
+iron sword drank mortal blood. They despise mortal vanities, the pursuit of
+‘reason’ and ‘beauty’ - the only art they enjoy is the art of war.
 %%%%
 Dissolution
 
@@ -1551,7 +1551,7 @@ A green lizard with strong jaws and sharp teeth, prized for its flesh.
 imperial myrmidon
 
 A warrior initiated in the mysteries of a dying cult, dedicated to serve
-thrones long-fallen. Its blows strip away magical defenses, leaving its foes
+thrones long-fallen. Its blows strip away magical defences, leaving its foes
 vulnerable to even the simplest hexes.
 %%%%
 iron dragon
