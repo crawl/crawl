@@ -694,7 +694,9 @@ ENDMAP
 
 #####################################################
 # Contains only four items: two evocable items/wands, a staff, and a randbook,
-# associated with one of each of the four elemental schools.
+# associated with one of each of the four elemental schools. Falls back to
+# generating additional books if the evocable in question is excluded due to
+# item sets.
 NAME: nicolae_elemental_shop
 TAGS: no_monster_gen no_item_gen no_pool_fixup transparent extra
 DEPTH: D:4-, Depths
@@ -705,11 +707,15 @@ KPROP: l = no_cloud_gen
 MARKER: a = lua:fog_machine { cloud_type = "thin mist", \
             pow_min = 100, pow_max = 100, delay = 1, \
             size = 1, walk_dist = 0, start_clouds = 1 }
-# XXX: we should replace iceblast with something else when it's not
-# in this game's chosen item set.
 {{
   local evocables = {"wand of flame","wand of iceblast",
                      "lightning rod","tin of tremorstones"}
+  if items.excluded_from_set("wand of iceblast") then
+    evocables[2] = "randbook disc:ice"
+  end
+  if items.excluded_from_set("tin of tremorstones") then
+    evocables[4] = "randbook disc:earth"
+  end
   local staffs    = {"staff of fire","staff of cold",
                      "staff of air","staff of earth"}
   local randbooks = {"randbook disc:fire","randbook disc:ice",
