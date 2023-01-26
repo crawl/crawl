@@ -529,7 +529,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     // called after fall_into_a_pool, in case of emergency untransform
     if (you.has_innate_mutation(MUT_MERTAIL))
-        merfolk_check_swimming(stepped);
+        merfolk_check_swimming(old_feat, stepped);
 
     if (you.ground_level())
     {
