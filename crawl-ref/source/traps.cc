@@ -51,6 +51,15 @@
 #include "travel.h"
 #include "xom.h"
 
+static string _net_immune_reason()
+{
+    if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
+        return "You slip through the net.";
+    if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
+        return "The net is torn apart by your bulk.";
+    return "";
+}
+
 static const string TRAP_PROJECTILE_KEY = "trap_projectile";
 
 bool trap_def::active() const
@@ -154,6 +163,9 @@ bool trap_def::is_safe(actor* act) const
     }
 
     if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT)
+        return true;
+
+    if (type == TRAP_NET && !_net_immune_reason().empty())
         return true;
 
     // Let players specify traps as safe via lua.
@@ -302,26 +314,22 @@ bool monster_caught_in_net(monster* mon)
 
 bool player_caught_in_net()
 {
-    if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
+    if (!_net_immune_reason().empty())
         return false;
 
-    if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
+    if (you.attribute[ATTR_HELD])
         return false;
 
-    if (!you.attribute[ATTR_HELD])
-    {
-        mpr("You become entangled in the net!");
-        stop_running();
+    mpr("You become entangled in the net!");
+    stop_running();
 
-        // Set the attribute after the mpr, otherwise the screen updates
-        // and we get a glimpse of a web because there isn't a trapping net
-        // item yet
-        you.attribute[ATTR_HELD] = 1;
+    // Set the attribute after the mpr, otherwise the screen updates
+    // and we get a glimpse of a web because there isn't a trapping net
+    // item yet
+    you.attribute[ATTR_HELD] = 1;
 
-        stop_delay(true); // even stair delays
-        return true;
-    }
-    return false;
+    stop_delay(true); // even stair delays
+    return true;
 }
 
 void check_net_will_hold_monster(monster* mons)
@@ -632,10 +640,11 @@ void trap_def::trigger(actor& triggerer)
 
         if (!player_caught_in_net())
         {
-            if (player_equip_unrand(UNRAND_SLICK_SLIPPERS))
-                mpr("You slip through the net.");
-            else
-                mpr("The net is torn apart by your bulk.");
+            if (!m) // no message already printed
+                mpr("You trigger the net trap.");
+            const string reason = _net_immune_reason();
+            if (!reason.empty())
+                mprf("%s", reason.c_str());
             break;
         }
 
