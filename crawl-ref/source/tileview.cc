@@ -18,7 +18,6 @@
 #include "kills.h"
 #include "level-state-type.h"
 #include "mon-util.h"
-#include "movement.h"
 #include "options.h"
 #include "pcg.h"
 #include "player.h"
@@ -1391,12 +1390,6 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             cell.bg |= TILE_FLAG_EXCL_CTR;
         else
             cell.bg |= TILE_FLAG_TRAV_EXCL;
-    }
-
-    if(you.rampaging() && adjacent(you.pos(), gc) && Options.show_rampage_indicator
-       && get_rampage_target(gc - you.pos()) != nullptr)
-    {
-        cell.bg |= TILE_FLAG_RAMPAGE;
     }
 
     if (!map_bounds(gc))
