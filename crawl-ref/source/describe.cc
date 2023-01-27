@@ -1276,7 +1276,10 @@ string damage_rating(const item_def *item)
 
     const int slaying = slaying_bonus(thrown);
     const int ench = item && item_ident(*item, ISFLAG_KNOW_PLUSES) ? item->plus : 0;
-    const int plusses = slaying + ench;
+    int plusses = slaying + ench;
+
+    if (item && is_unrandom_artefact(*item, UNRAND_FORTUNE))
+        plusses *= 3;
 
     const int DAM_RATE_SCALE = 100;
     int rating = (base_dam + extra_base_dam) * DAM_RATE_SCALE;

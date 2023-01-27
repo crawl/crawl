@@ -781,3 +781,9 @@ An ancient artefact of Okawaru, these woolen robes were lost when a former
 champion failed a duel. Its enchantments increase in power when the wearer
 emerges victorious from threatening combat, but resorting to the use of scrolls
 or potions for assistance causes them to fade away again.
+%%%%
+Sling of Outrageous Fortune
+
+A sling designed by a madman that launches arrows instead of traditional sling
+bullets. Magical enchantments provide no aid in hitting with this unwieldy
+weapon, but are startlingly effective in making it hurt.

@@ -211,6 +211,9 @@ int actor::inaccuracy() const
     const item_def *amu = slot_item(EQ_AMULET);
     if (amu && is_unrandom_artefact(*amu, UNRAND_AIR))
         degree += 5;
+    const item_def *weap = slot_item(EQ_WEAPON);
+    if (weap && is_unrandom_artefact(*weap, UNRAND_FORTUNE))
+        degree += 5;
     return degree;
 }
 

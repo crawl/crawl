@@ -1761,6 +1761,23 @@ DESCRIP:  *Victory:  When the wearer kills a threatening monster, it has a
  a scroll or a potion with a hostile monster in sight, its bonuses reset to +0.
  Unequipping it also resets its bonuses to +0.
 
+ENUM:       FORTUNE
+NAME:       Sling of Outrageous Fortune
+OBJ:        OBJ_WEAPONS/WPN_HAND_CROSSBOW
+TYPE:       sling
+PLUS:       +7
+BASE_ACC:   -8
+BASE_DAM:   -9
+BASE_DELAY: -5
+COLOUR:     WHITE
+TILE:       urand_punk
+TILE_EQ:    punk
+BRAND:      SPWPN_HEAVY
+BOOL:       no_upgrade
+INSCRIP:    Fortune
+DESCRIP:    Fortune:    Slaying and Enchantment bonuses apply thrice to damage, 
+ but do not apply to accuracy.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

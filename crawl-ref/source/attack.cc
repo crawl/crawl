@@ -197,7 +197,7 @@ int attack::calc_pre_roll_to_hit(bool random)
         }
 
         // weapon bonus contribution
-        if (using_weapon())
+        if (using_weapon() && !is_unrandom_artefact(*weapon, UNRAND_FORTUNE))
         {
             if (weapon->base_type == OBJ_WEAPONS)
             {
@@ -209,7 +209,9 @@ int attack::calc_pre_roll_to_hit(bool random)
         }
 
         // slaying bonus
-        mhit += slaying_bonus(wpn_skill == SK_THROWING);
+        if (!using_weapon()
+            || !is_unrandom_artefact(*weapon, UNRAND_FORTUNE))
+            mhit += slaying_bonus(wpn_skill == SK_THROWING);
 
         // vertigo penalty
         if (you.duration[DUR_VERTIGO])
@@ -1080,6 +1082,8 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
                         || (weapon && is_range_weapon(*weapon)
                                    && using_weapon());
     damage_plus += slaying_bonus(throwing);
+    if(weapon && is_unrandom_artefact(*weapon, UNRAND_FORTUNE))
+        damage_plus *= 3;
     damage_plus -= 4 * you.corrosion_amount();
 
     // XXX: should this also trigger on auxes?
