@@ -161,7 +161,7 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&);
 static int _monster_abjuration(const monster& caster, bool actual);
 static ai_action::goodness _mons_will_abjure(const monster& mons);
 static ai_action::goodness _should_irradiate(const monster& mons);
-static void _whack(caster &actor, victim &actor);
+static void _whack(const actor &caster, actor &victim);
 
 enum spell_logic_flag
 {
