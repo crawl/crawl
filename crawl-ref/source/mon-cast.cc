@@ -161,6 +161,7 @@ static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&);
 static int _monster_abjuration(const monster& caster, bool actual);
 static ai_action::goodness _mons_will_abjure(const monster& mons);
 static ai_action::goodness _should_irradiate(const monster& mons);
+static void _whack(caster &actor, victim &actor);
 
 enum spell_logic_flag
 {
@@ -811,6 +812,7 @@ static void _cast_smiting(monster &caster, mon_spell_slot slot, bolt&)
 
     foe->hurt(&caster, 7 + random2avg(11, 2), BEAM_MISSILE, KILLED_BY_BEAM,
               "", "by divine providence");
+    _whack(caster, *foe);
 }
 
 static void _cast_grasping_roots(monster &caster, mon_spell_slot, bolt&)
@@ -1071,6 +1073,12 @@ static bool _set_hex_target(monster* caster, bolt& pbolt)
 
     // Didn't find a target.
     return false;
+}
+
+static void _whack(const actor &caster, actor &target)
+{
+    if (target.alive() && target.is_monster())
+        behaviour_event(target.as_monster(), ME_WHACK, &caster);
 }
 
 /**
@@ -4479,7 +4487,10 @@ static bool _mons_cast_freeze(monster* mons)
     target->hurt(mons, damage, BEAM_COLD, KILLED_BY_FREEZING);
 
     if (target->alive())
+    {
         target->expose_to_element(BEAM_COLD, damage);
+        _whack(*mons, *target);
+    }
 
     return true;
 }
@@ -5197,6 +5208,7 @@ static void _cast_resonance_strike(monster &caster, mon_spell_slot, bolt&)
     }
     target->hurt(&caster, dam, BEAM_MISSILE, KILLED_BY_BEAM,
                  "", "by a resonance strike");
+    _whack(caster, *target);
 }
 
 static bool _spell_charged(monster *mons)
@@ -5621,6 +5633,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         foe->hurt(mons, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
                       "", "by the raging water");
+        _whack(*mons, *foe);
         return;
     }
 
@@ -5649,6 +5662,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
         foe->hurt(mons, damage_taken, BEAM_MISSILE, KILLED_BY_BEAM,
                   "", "by the air");
+        _whack(*mons, *foe);
         return;
     }
 
@@ -7177,6 +7191,7 @@ static void _throw_ally_to(const monster &thrower, monster &throwee,
                                           thrower.name(DESC_PLAIN, true).c_str());
     const int dam = foe->apply_ac(random2(thrower.get_hit_dice() * 2));
     foe->hurt(&thrower, dam, BEAM_NONE, KILLED_BY_BEAM, "", killed_by, true);
+    _whack(thrower, *foe);
 
     // wake sleepy goblins
     behaviour_event(&throwee, ME_DISTURB, &thrower, throwee.pos());
