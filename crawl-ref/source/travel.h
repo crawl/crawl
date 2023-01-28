@@ -413,7 +413,7 @@ private:
     void resize_stair_distances();
 };
 
-const int TRAVEL_WAYPOINT_COUNT = 10;
+const int TRAVEL_WAYPOINT_COUNT = 100;
 // Tracks all levels that the player has seen.
 class TravelCache
 {

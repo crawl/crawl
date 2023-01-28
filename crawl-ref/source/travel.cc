@@ -4317,8 +4317,20 @@ void TravelCache::load(reader& inf, int minorVersion)
         levels[id] = linfo;
     }
 
-    for (int wp = 0; wp < TRAVEL_WAYPOINT_COUNT; ++wp)
-        waypoints[wp].load(inf);
+#if TAG_MAJOR_VERSION == 34
+    if (minor < TAG_MINOR_MORE_WAYPOINTS)
+    {
+        for (int wp = 0; wp < 10; ++wp)
+            waypoints[wp].load(inf);
+    }
+    else
+    {
+#endif
+        for (int wp = 0; wp < TRAVEL_WAYPOINT_COUNT; ++wp)
+            waypoints[wp].load(inf);
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     fixup_levels();
 }
