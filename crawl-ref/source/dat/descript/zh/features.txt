@@ -205,7 +205,7 @@ A stone wall
 %%%%
 A slime covered rock wall
 
-这面岩墙附着着亮绿色的黏液。触摸的话会被酸腐蚀。
+这面岩墙附着着亮绿色的黏液。它摸起来是酸性的；站在它附近就会被暂时腐蚀。
 %%%%
 A metal wall
 
