@@ -956,7 +956,8 @@ scroll of brand weapon
 %%%%
 scroll of butterflies
 
-这张卷轴，能让使用者被一群美丽的蝴蝶环绕。
+这张卷轴，能让使用者周围环绕着一群美丽的蝴蝶，
+它们扇动翅膀，把附近的其他生物吹打回去。
 %%%%
 scroll of enchant armour
 
@@ -1188,8 +1189,7 @@ wand of flame
 %%%%
 wand of iceblast
 
-一支能造成轰鸣作响的碎冰爆炸的魔法道具，
-甚至对具有寒抗的生物都能造成一定伤害。
+这支魔法道具，能造成轰鸣作响的碎冰爆炸，这能穿透受击者的一半寒抗。
 %%%%
 wand of light
 
