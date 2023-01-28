@@ -106,7 +106,7 @@ Evoke Berserk Rage ability
 %%%%
 Evoke Invisibility ability
 
-使用者隐形。隐形时会产生魔法污染，时间长了身体会发光，从而使隐形无效。
+使用者隐形。隐形时会造成魔法污染。污染程度高了身体会发光，从而使隐形无效。
 %%%%
 Evoke Thunderclouds ability
 
@@ -351,7 +351,7 @@ Triple Draw ability
 %%%%
 Deal Four ability
 
-在通常抽一张牌的时间内，从一副牌中发出四张牌。
+在通常抽一张牌的时间内，从一副牌中打出四张牌。
 %%%%
 Stack Five ability
 
@@ -435,7 +435,7 @@ Slimify ability
 Oozemancy ability
 
 从你周围的地牢墙壁中召唤出酸性软泥，对敌人造成伤害，
-伤害取决于他们所相邻的受影响墙壁的数量。
+伤害取决于他们所相邻的黏性墙壁的数量。
 %%%%
 # 艾申扎利
 Curse Item ability
@@ -445,7 +445,7 @@ Curse Item ability
 %%%%
 Shatter The Chains ability
 
- 摧毁一个选定的诅咒装备，解除佩戴者的诅咒。
+摧毁一个选定的诅咒装备，解除佩戴者的诅咒。
 %%%%
 # 迪斯姆诺
 Shadow Step ability
