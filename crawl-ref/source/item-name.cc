@@ -2730,6 +2730,10 @@ bool is_bad_item(const item_def &item)
  */
 bool is_dangerous_item(const item_def &item, bool temp)
 {
+    // can't assume there is a sensible `you` for various checks here
+    if (crawl_state.game_is_arena())
+        return false;
+
     if (!item_type_known(item))
         return false;
 
@@ -3029,8 +3033,13 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
     // During game startup, no item is useless. If someone re-glyphs an item
     // based on its uselessness, the glyph-to-item cache will use the useless
     // value even if your god or species can make use of it.
-    if (you.species == SP_UNKNOWN)
+    // similarly for arena: bugs will ensue if the game tries to check any of
+    // this
+    if (you.species == SP_UNKNOWN // is this really the best way to check this?
+        || crawl_state.game_is_arena())
+    {
         return false;
+    }
 
     // An ash item that is already being worn and is cursed, counts as useful
     // even if it would otherwise be useless.
