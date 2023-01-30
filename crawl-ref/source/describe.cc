@@ -2242,7 +2242,7 @@ static void _uselessness_desc(ostringstream &description, const item_def &item)
         if (is_useless_item(item, false))
         {
             description << "This " << base_type_string(item.base_type)
-                        << "is completely useless to you";
+                        << " is completely useless to you";
             r = _cannot_use_reason(item, false);
         }
         else
@@ -2271,7 +2271,7 @@ static void _uselessness_desc(ostringstream &description, const item_def &item)
                 break;
             default:
                 description << "This " << base_type_string(item.base_type)
-                            << "is useless to you right now";
+                            << " is useless to you right now";
                 break;
             }
             r = _cannot_use_reason(item, true);
