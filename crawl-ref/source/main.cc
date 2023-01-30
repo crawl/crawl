@@ -2804,8 +2804,11 @@ static void _do_wait_spells()
 
 static void _safe_move_player(coord_def move)
 {
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true)) {
+        unwind_bool save_more(crawl_state.show_more_prompt);
+        macro_clear_buffers();
         return;
+    }
     move_player_action(move);
 }
 
