@@ -676,8 +676,6 @@ void macro_clear_buffers()
     SendKeysBuffer.clear();
     expanded_keys_left = 0;
     macro_keys_left = -1;
-
-    crawl_state.show_more_prompt = true;
 }
 
 bool is_processing_macro()

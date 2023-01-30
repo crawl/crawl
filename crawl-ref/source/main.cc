@@ -348,6 +348,7 @@ static void _reset_game()
     crawl_state.reset_game();
     clear_message_store();
     macro_clear_buffers();
+    crawl_state.show_more_prompt = true;
     the_lost_ones.clear();
     shopping_list = ShoppingList();
     you = player();
@@ -2802,8 +2803,11 @@ static void _do_wait_spells()
 
 static void _safe_move_player(coord_def move)
 {
-    if (!i_feel_safe(true))
+    if (!i_feel_safe(true)) {
+        // Clear out other queued up commands.
+        macro_clear_buffers();
         return;
+    }
     move_player_action(move);
 }
 
