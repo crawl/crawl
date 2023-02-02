@@ -2714,6 +2714,155 @@ xxxxxxxxx@xxxxxxxxx
 ENDMAP
 
 ##############################################################################
+# some more fun and exciting stair vaults
+
+NAME:   hellmonk_body_bag
+TAGS:   no_monster_gen transparent
+DEPTH:  Zot:1-4
+MONS:   toenail golem w:1 / glowing orange brain / golden eye band
+MONS:   shining eye / floating eye w:5, bone dragon, curse toe / curse skull
+SUBST:  ' = c., V:VYY
+NSUBST: - = 16 = 1... / 16 = 2... / 16 = 3... / 16 = 4... / .
+NSUBST:  > = 1 = ):80 . / 1 = ]:80 . / 1 = }:80 >
+MAP
+  ccccccc
+ ccc>>>ccc
+ cc-----cc
+ c'--c--'c
+ c-'-c-'-c
+cc--ccc--cc
+c----c----c
+c--c-'-c--c
+c'cc'V'cc'c
+c--c-'-c--c
+c-'--c--'-c
+c---ccc---c
+c--'-c-'--c
+c-'--'--'-c
+cc-ccccc-cc
+ c--ccc--c
+ c..ccc..c
+ c.'.c.'.c
+ c'..c..'c
+ c...c...c
+ cc.....cc
+ cc.....cc
+  ccc+ccc
+     @
+ENDMAP
+
+NAME:   hellmonk_formless_pools
+TAGS:   no_monster_gen transparent no_pool_fixup
+DEPTH:  Zot:1-4
+MONS:   glowing shapeshifter hd:20 / glowing shapeshifter hd:18
+SUBST:  -: Ac, A:lw
+NSUBST: ' = 4:1 / 12 = 1... / .
+NSUBST:  < = 1 = }. / 1 = ). / 1 = ]<
+TILE:   G = dngn_statue_tentacles
+MAP
+   @@@@@
+ cc+++++cc
+ cG..-..Gc
+ c...-...c
+ c...-...c
+ c'''''''c
+cc''''''Gc
+cG''ccccccc
+cA'ccc'<'ccc
+cA'cG''G''Gc
+cA'cc<'''<cc
+cG''ccc''cc
+cc'''''''c
+ ccGAAAGcc
+  ccccccc
+ENDMAP
+
+NAME:   hellmonk_crystal_mountain
+TAGS:   transparent ruin
+ORIENT: north
+DEPTH:  Zot:1-4
+MONS:   lich , ancient lich / dread lich
+NSUBST: . = 4 = 2. / 16 = 1... / 12 = 8... / 12 = 0...
+NSUBST:  < = 1 = {([. / 1 = )}].
+TILE:   G = dngn_gravestone
+MAP
+bbbbbbbbbbbbbbbbbbbbb
+bbbbbbbbbbbbbbbbbbbbb
+bb.......bbb.......bb
+b......<.bbb.<......b
+b..bbb...bbb...bbb..b
+b.bbbbbbbbbbbbbbbbb.b
+b..bbb...bbb...bbb..b
+b......G..b..G......b
+bb........b........bb
+bbbb..bbb.b.bbb..bbbb
+ bbb.bbbbbbbbbbb.bbb
+  bb..bbb.b.bbb..bb
+  bb......b......bb
+   bb.....b.....bb
+   bbbb..bbb..bbbb
+    bbb..bbb..bbb
+     bb..bbb..bb
+     bb...b...bb
+      bb.....bb
+      bbbb.bbbb
+       bb@@@bb
+ENDMAP
+
+NAME:   hellmonk_zot_clocked
+TAGS:   transparent no_monster_gen
+DEPTH:  Zot:2-4
+MONS:   death cob, iron golem
+SHUFFLE:    DEFH
+SUBST:  D = v, EFH = ., -: B:1 G:26, > = ({[)}]
+NSUBST: '  = 1:1 / 1:2 / 16 = 1... / 16 = 2.....
+KFEAT:  B = altar_cheibriados
+TILE:   G = dngn_statue_snail
+MAP
+         @
+       cc+cc
+     ccc'-'ccc
+    cc-'''''-cc
+   cc'H''n''''cc
+  cc''HH'n'''''cc
+  c-'''Hcnc''DD-c
+ cc''''ccnccDD''cc
+ c''''ccHnDcc''''c
+@+-FFF+FF>..+'''-+@
+ c''''cc..Ecc''''c
+ cc''''cc.cc''''cc
+  c-''''c+cE'''-c
+  cc'''''''EE''cc
+   cc'''''''E'cc
+    cc-'''''-cc
+     ccc'-'ccc
+       cc+cc
+         @
+ENDMAP
+
+NAME:   hellmonk_greenhouse_of_terror
+TAGS:   no_monster_gen
+DEPTH:  Zot:2-4
+MONS:   orb of fire, bush
+NSUBST: . = 1:1 / .
+SUBST:  > = )}], < = ({[
+MAP
+  ttttt
+  t.>.t
+  t.t.t
+ tt.t.tt
+tt..t..tt
+t...t...t
+t.tt2tt.t
+t...t...t
+tt..t..tt
+ tt.t.tt
+  t.t.t
+  t.<.t
+  ttttt
+ENDMAP
+
+##############################################################################
 ##############################################################################
 #
 # hall_of_Zot_5
