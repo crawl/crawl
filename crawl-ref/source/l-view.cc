@@ -205,8 +205,8 @@ LUAFN(view_cell_see_cell)
 /*** Returns the entire known map as a table of cell objects.
  * Cells have x, y, feature; optional monster (object);
  * optional cloud (name); and optional flags [visible, mapped,
- * traversable, solid, door, undiggable, frontier, excluded, item, unsafe,
- * invisible_monster, detected_item, detected_monster].
+ * traversable, solid, door, undiggable, frontier, excluded, item,
+ * unvisited, unsafe, invisible_monster, detected_item, detected_monster].
  * The frontier flag indicates that the cell is adjacent to an unknown cell.
  * The key for each cell is 40000*(100+x) + (100+y), which is
  * a reversible composition of the x,y coordinates (much more efficient
@@ -257,9 +257,15 @@ LUAFN(view_get_map)
         {
             if (is_excluded(p))
                 LUA_PUSHBOOL("excluded", true);
+            if (feat == DNGN_ENTER_SHOP)
+            {
+                LevelStashes *lev = StashTrack.find_current_level();
+                if (lev && lev->shop_needs_visit(p))
+                    LUA_PUSHBOOL("unvisited", true);
+            }
             if (cell.item() && cell.item()->defined())
                 LUA_PUSHBOOL("item", true)
-            if (cell.monsterinfo() )
+            if (cell.monsterinfo())
             {
                 lua_push_moninf(ls, cell.monsterinfo());
                 lua_setfield(ls, -2, "monster");
