@@ -356,8 +356,9 @@ direct line of fire required.
 Conjure Ball Lightning spell
 
 Creates a pack of ball lightnings, which seek out the nearest enemy before
-exploding in a huge blast of electricity. Casters are advised to use caution;
-the lightning is not mindful of what it may hit.
+exploding in a huge blast of electricity. The damage dealt partially bypasses
+armour. Casters are advised to use caution; the lightning is not mindful of
+what it may hit.
 
 The magic which keeps ball lightnings cohesive has limited range, so they may
 dissipate harmlessly if allowed to drift too far away from their caster before
