@@ -169,7 +169,7 @@ level-map
 <w>Ctrl-E</w>     : Erase all travel exclusions on the level.
 
 <h>Waypoints</h>
-<w>Ctrl-W</w>     : Set waypoint to current position.
+<w>w</w>          : Set waypoint to current position.
 <w>W</w>          : Cycle through all waypoints on the level.
 
 <h>Cycle through features</h>
