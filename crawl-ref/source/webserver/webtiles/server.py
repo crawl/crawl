@@ -301,15 +301,18 @@ def monkeypatch_tornado24():
     IOLoop.current = staticmethod(IOLoop.instance)
 
 
-def ensure_tornado_current():
+def ensure_tornado_current(exit=True):
     try:
         tornado.ioloop.IOLoop.current()
     except AttributeError:
         monkeypatch_tornado24()
         tornado.ioloop.IOLoop.current()
-        logging.error(
-            "You are running a deprecated version of tornado; please update"
-            " to at least version 4.")
+        err = ("You are running a deprecated version of tornado; please update"
+               " to a current version.")
+        if exit:
+            sys.err(err)
+        else:
+            logging.error(err)
 
 
 def usr1_handler(signum, frame):
