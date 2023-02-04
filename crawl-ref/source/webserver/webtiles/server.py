@@ -16,6 +16,7 @@ import tornado.ioloop
 import tornado.template
 import tornado.web
 from tornado.ioloop import IOLoop
+# do not add tornado.platform here without changing do_chroot()
 
 import webtiles
 from webtiles import auth, load_games, process_handler, userdb, config
@@ -628,10 +629,28 @@ def parse_args_util():
     return result, help_fun
 
 
-def run_util():
-    args, help_fun = parse_args_util()
+def do_chroot():
     if config.get('chroot'):
         os.chroot(config.get('chroot'))
+        try:
+            # try to fail early, with an informative message, if this is not
+            # going to work
+            # the choice of tornado.platform is a bit heuristic, but it is
+            # currently where the webserver seems to fail on import after a chroot.
+            # If it is ever imported at the top of this file, something else would
+            # be needed.
+            import tornado.platform
+        except:
+            # no logging available yet
+            print("Error: can't import `tornado.platform` in chroot. Did you copy"
+                " the python library for this version of python into the chroot?",
+                file=sys.stderr)
+            raise
+
+
+def run_util():
+    args, help_fun = parse_args_util()
+    do_chroot()
 
     if config.source_file is None:
         sys.exit("No configuration provided!")
@@ -671,8 +690,7 @@ def run_util():
 # ../server.py in the official repository for an example.
 def run():
     args = parse_args_main()
-    if config.get('chroot'):
-        os.chroot(config.get('chroot'))
+    do_chroot()
 
     if config.source_file is None:
         # we could try to automatically figure this out from server_path, if
