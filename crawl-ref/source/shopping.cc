@@ -811,9 +811,9 @@ enum shopping_order
 {
     ORDER_ORIGINAL,
     ORDER_DEFAULT = ORDER_ORIGINAL,
+    ORDER_TYPE,
     ORDER_PRICE,
     ORDER_ALPHABETICAL,
-    ORDER_TYPE,
     NUM_ORDERS
 };
 
