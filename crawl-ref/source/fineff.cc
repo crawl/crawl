@@ -118,9 +118,9 @@ bool starcursed_merge_fineff::mergeable(const final_effect &fe) const
     return o && def == o->def;
 }
 
-bool shock_serpent_discharge_fineff::mergeable(const final_effect &fe) const
+bool shock_discharge_fineff::mergeable(const final_effect &fe) const
 {
-    const shock_serpent_discharge_fineff *o = dynamic_cast<const shock_serpent_discharge_fineff *>(&fe);
+    const shock_discharge_fineff *o = dynamic_cast<const shock_discharge_fineff *>(&fe);
     return o && def == o->def;
 }
 
@@ -195,10 +195,10 @@ void deferred_damage_fineff::merge(const final_effect &fe)
     damage += ddamfe->damage;
 }
 
-void shock_serpent_discharge_fineff::merge(const final_effect &fe)
+void shock_discharge_fineff::merge(const final_effect &fe)
 {
-    const shock_serpent_discharge_fineff *ssdfe =
-        dynamic_cast<const shock_serpent_discharge_fineff *>(&fe);
+    const shock_discharge_fineff *ssdfe =
+        dynamic_cast<const shock_discharge_fineff *>(&fe);
     power += ssdfe->power;
 }
 
@@ -508,7 +508,7 @@ void starcursed_merge_fineff::fire()
     }
 }
 
-void shock_serpent_discharge_fineff::fire()
+void shock_discharge_fineff::fire()
 {
     if (!oppressor.alive())
         return;
@@ -520,11 +520,12 @@ void shock_serpent_discharge_fineff::fire()
         return;
     }
 
-    const monster* serpent = defender() ? defender()->as_monster() : nullptr;
+    const actor *serpent = defender();
     if (serpent && you.can_see(*serpent))
     {
-        mprf("%s electric aura discharges%s, shocking %s!",
+        mprf("%s %s discharges%s, shocking %s!",
              serpent->name(DESC_ITS).c_str(),
+             shock_source.c_str(),
              power < 4 ? "" : " violently",
              oppressor.name(DESC_THE).c_str());
     }
@@ -539,8 +540,11 @@ void shock_serpent_discharge_fineff::fire()
     int amount = roll_dice(3, 4 + power * 3 / 2);
     amount = oppressor.apply_ac(oppressor.beam_resists(beam, amount, true),
                                 0, ac_type::half);
+    const string name = serpent && serpent->alive() ?
+                        serpent->name(DESC_A, true) :
+                        "a shock serpent"; // dubious
     oppressor.hurt(serpent, amount, beam.flavour, KILLED_BY_BEAM,
-                                        "a shock serpent", "electric aura");
+                   name.c_str(), shock_source.c_str());
     if (amount)
         oppressor.expose_to_element(beam.flavour, amount);
 }
