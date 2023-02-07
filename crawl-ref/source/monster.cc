@@ -3025,9 +3025,9 @@ int monster::shield_block_penalty() const
     return 4 * shield_blocks * shield_blocks;
 }
 
-void monster::shield_block_succeeded()
+void monster::shield_block_succeeded(actor *attacker)
 {
-    actor::shield_block_succeeded();
+    actor::shield_block_succeeded(attacker);
 
     ++shield_blocks;
 }

@@ -248,7 +248,7 @@ public:
     virtual int shield_bonus() const = 0;
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
-    virtual void shield_block_succeeded();
+    virtual void shield_block_succeeded(actor *attacker);
     virtual bool missile_repulsion() const = 0;
 
     // Combat-related virtual class methods

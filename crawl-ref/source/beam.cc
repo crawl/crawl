@@ -3221,7 +3221,7 @@ bool bolt::misses_player()
                 mprf("You block the %s.", name.c_str());
                 finish_beam();
             }
-            you.shield_block_succeeded();
+            you.shield_block_succeeded(agent());
             return true;
         }
 
@@ -4758,7 +4758,7 @@ bool bolt::attempt_block(monster* mon)
         finish_beam();
     }
 
-    mon->shield_block_succeeded();
+    mon->shield_block_succeeded(agent());
     return true;
 }
 

@@ -5655,9 +5655,9 @@ int player::shield_bypass_ability(int tohit) const
     return 15 + tohit / 2;
 }
 
-void player::shield_block_succeeded()
+void player::shield_block_succeeded(actor *attacker)
 {
-    actor::shield_block_succeeded();
+    actor::shield_block_succeeded(attacker);
 
     shield_blocks++;
     practise_shield_block();

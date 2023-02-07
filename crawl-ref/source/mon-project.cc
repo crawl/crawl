@@ -532,7 +532,7 @@ move_again:
                     simple_monster_message(*mons, (" blocks "
                         + mon.name(DESC_THE, true) + ".").c_str());
                 }
-                victim->shield_block_succeeded();
+                victim->shield_block_succeeded(&mon);
                 _iood_stop(mon);
                 return true;
             }
@@ -577,7 +577,7 @@ move_again:
                          mon.name(DESC_THE, true).c_str());
                 }
             }
-            victim->shield_block_succeeded();
+            victim->shield_block_succeeded(&mon);
 
             // mid_t is unsigned so won't fit in a plain int
             mon.props[IOOD_REFLECTOR] = (int64_t) victim->mid;
