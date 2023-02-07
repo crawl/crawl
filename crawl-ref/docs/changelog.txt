@@ -77,6 +77,8 @@ Items
     wearer backward. They provide immunity to constriction, engulfing, etc.
   - The Force Lance, a Heavy +5 lance (ala Wyrmbane) which has a 1/3 chance of
     knocking back foes when landing a damaging blow.
+  - The Storm Queen's Shield, a +5 kite shield of rElec and flight which
+    fires electrical retaliation at those it blocks.
 * Unrand changes:
   - The Mad Mage's Maulers lose Int-3 and RegenMP, gain -Cast and MPVamp (gain
     MP from damage dealt), and deal twice as much damage when spending MP.

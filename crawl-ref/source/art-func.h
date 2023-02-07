@@ -33,6 +33,7 @@
 #include "english.h"       // For apostrophise
 #include "exercise.h"      // For practise_evoking
 #include "fight.h"
+#include "fineff.h"        // For the Storm Queen's Shield
 #include "god-conduct.h"   // did_god_conduct
 #include "mgen-data.h"     // For Sceptre of Asmodeus evoke
 #include "melee-attack.h"  // For autumn katana
@@ -523,6 +524,24 @@ static void _GONG_melee_effects(item_def* /*item*/, actor* wearer,
     mprf(MSGCH_SOUND, "%s", msg.c_str());
 
     noisy(40, wearer->pos());
+}
+
+///////////////////////////////////////////////////
+
+static void _STORM_QUEEN_melee_effects(item_def* /*item*/, actor* wearer,
+                                       actor* attacker, bool /*dummy*/,
+                                       int /*dam*/)
+{
+    // Discharge does 3d(4 + pow*3/2) damage, so each point of power does
+    // an average of another 9/4 points of retaliation damage (~2).
+    // Let's try 3d7 damage at 1/4 chance. This is broadly comparable to
+    // elec brand - same average damage per trigger, higher trigger chance,
+    // but checks (half) AC - and triggers on block instead of attack :)
+    if (!attacker || !one_chance_in(3)) return;
+    shock_discharge_fineff::schedule(wearer, *attacker,
+                                     wearer->pos(), 3,
+                                     "shield");
+
 }
 
 ///////////////////////////////////////////////////

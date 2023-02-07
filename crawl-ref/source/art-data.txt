@@ -1062,7 +1062,7 @@ TILE_EQ:  kite_shield_gong
 EV:       -5
 WILL:     1
 LIFE:     1
-BOOL:     elec
+BOOL:     rcorr
 DESCRIP:  Loud:      It is deafeningly noisy when blocking attacks.
 
 NAME:    amulet of the Air
@@ -1760,6 +1760,18 @@ DESCRIP:  *Victory:  When the wearer kills a threatening monster, it has a
  chance to gain +1 AC, +1 Slay, and +1 Int, capping at +7. When the wearer uses
  a scroll or a potion with a hostile monster in sight, its bonuses reset to +0.
  Unequipping it also resets its bonuses to +0.
+
+ENUM:     STORM_QUEEN
+NAME:     Storm Queen's Shield
+OBJ:      OBJ_ARMOUR/ARM_KITE_SHIELD
+FALLBACK: OBJ_ARMOUR/ARM_TOWER_SHIELD
+PLUS:     +5
+COLOUR:   BLUE
+TILE:     urand_storm_queen
+TILE_EQ:  kite_shield_storm_queen
+BOOL:     elec, fly
+INSCRIP:  shock,
+DBRAND:   Shock:     When it blocks an attack, it may electrocute the attacker. This works even against foes who are a short distance away.
 
 # This entry must always be last.
 ENUM:   DUMMY2

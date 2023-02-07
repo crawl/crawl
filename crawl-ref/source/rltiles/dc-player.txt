@@ -852,6 +852,7 @@ kite_shield_donald KITE_SHIELD_DONALD
 kite_shield_bullseye KITE_SHIELD_BULLSEYE
 kite_shield_gong KITE_SHIELD_GONG
 kite_shield_of_resistance KITE_SHIELD_OF_RESISTANCE
+kite_shield_storm_queen KITE_SHIELD_STORM_QUEEN
 
 tower_shield_of_ignorance TOWER_SHIELD_OF_IGNORANCE
 tower_shield_louise TOWER_SHIELD_LOUISE

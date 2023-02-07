@@ -781,3 +781,10 @@ An ancient artefact of Okawaru, these woolen robes were lost when a former
 champion failed a duel. Its enchantments increase in power when the wearer
 emerges victorious from threatening combat, but resorting to the use of scrolls
 or potions for assistance causes them to fade away again.
+%%%%
+Storm Queen's Shield
+
+A disc of crackling metal, created by a woman whose cunning artifice and
+crafty politics once united a continent. Most of her surviving inventions are
+closely guarded by various royals, ostensible proof of their claim to be her
+true successor, but this early prototype slipped through their fingers.
