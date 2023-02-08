@@ -4256,6 +4256,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         if (agent && agent->is_player()
             && mons_class_gives_xp(type)
             && (temp_attitude() == ATT_HOSTILE || has_ench(ENCH_INSANE))
+            && type != MONS_NAMELESS // hack - no usk piety for miscasts
             && flavour != BEAM_SHARED_PAIN
             && flavour != BEAM_STICKY_FLAME
             && kill_type != KILLED_BY_POISON
