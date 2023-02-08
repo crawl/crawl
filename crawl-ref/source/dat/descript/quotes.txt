@@ -3285,6 +3285,17 @@ Spellforged Servitor spell
 
 <spellforged servitor>
 %%%%
+sphinx
+
+“The Second Coming! Hardly are those words out
+ When a vast image out of Spiritus Mundi
+ Troubles my sight: somewhere in sands of the desert
+ A shape with lion body and the head of a man,
+ A gaze blank and pitiless as the sun,
+ Is moving its slow thighs, while all about it
+ Reel shadows of the indignant desert birds.”
+    -W. B. Yeats, "The Second Coming". 1920.
+%%%%
 staff
 
 “Bashō Osho said to his disciples, ‘If you have a staff, I will give you a
