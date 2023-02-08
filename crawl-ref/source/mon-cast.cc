@@ -2872,6 +2872,7 @@ bool mons_word_of_recall(monster* mons, int recall_target)
     for (monster *mon : mon_list)
     {
         coord_def empty;
+        const bool could_see = you.can_see(*mon);
         if (find_habitable_spot_near(target, mons_base_type(*mon),
                                      3, false, empty)
             && mon->move_to_pos(empty))
@@ -2879,7 +2880,10 @@ bool mons_word_of_recall(monster* mons, int recall_target)
             mon->behaviour = BEH_SEEK;
             mon->foe = foe;
             ++num_recalled;
-            simple_monster_message(*mon, " is recalled.");
+            if (you.can_see(*mon))
+                simple_monster_message(*mon, " is recalled.");
+            else if (could_see)
+                mprf("%s is recalled away.", mon->name(DESC_THE, true).c_str());
         }
         // Can only recall a couple things at once
         if (num_recalled == recall_target)
