@@ -629,8 +629,7 @@ You are immune to petrification.
 %%%%
 cold-blooded mutation
 
-You are endothermic. When struck by a cold attack, you may be slowed until your
-blood warms again.
+When struck by a cold attack, you may be slowed until your blood warms again.
 %%%%
 stealthy paws mutation
 
