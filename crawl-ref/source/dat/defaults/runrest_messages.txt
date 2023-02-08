@@ -17,6 +17,7 @@ ignore += (crumbles|melts) away\.
 
 stop += You feel you are being watched
 stop += [Ss]omething.* misses you.
+stop += from outside your range of vision
 stop += emerges from the mists of memory
 
 # Traps and doors
