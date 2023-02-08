@@ -1886,7 +1886,7 @@ static int _irradiate_cell(coord_def where, int pow, const actor &agent)
         // be nice and "only" contaminate the player a lot
         if (hitting_player)
             contaminate_player(2000 + random2(1000));
-        else
+        else if (coinflip())
             act->malmutate("");
     }
 
