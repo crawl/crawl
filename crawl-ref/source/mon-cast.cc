@@ -99,7 +99,7 @@ static coord_def _mons_fragment_target(const monster &mons);
 static coord_def _mons_awaken_earth_target(const monster& mon);
 static void _maybe_throw_ally(const monster &mons);
 static void _siren_sing(monster* mons, bool avatar);
-static void _doom_howl(monster &mon, int pow);
+static void _doom_howl(monster &mon);
 static void _mons_awaken_earth(monster &mon, const coord_def &target);
 static void _corrupt_locale(monster &mon);
 static ai_action::goodness _monster_spell_goodness(monster* mon, mon_spell_slot slot);
@@ -6491,7 +6491,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     }
 
     case SPELL_DOOM_HOWL:
-        _doom_howl(*mons, splpow);
+        _doom_howl(*mons);
         break;
 
     case SPELL_CALL_OF_CHAOS:
@@ -7278,8 +7278,9 @@ static ai_action::goodness _siren_goodness(monster* mons, bool avatar)
  *
  * @param mon   The howling monster.
  */
-static void _doom_howl(monster &mon, int pow)
+static void _doom_howl(monster &mon)
 {
+    const int pow = _ench_power(SPELL_DOOM_HOWL, mon);
     const int willpower = you.check_willpower(&mon, pow);
     const string effect = willpower > 0 ?
                             make_stringf("but you%s",
