@@ -141,6 +141,7 @@ enum attack_flavour
     AF_BARBS,
     AF_SPIDER,
     AF_RIFT,
+    AF_BLOODZERK,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or

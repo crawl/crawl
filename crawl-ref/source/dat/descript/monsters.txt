@@ -2301,6 +2301,11 @@ sky beast
 A strange aerial creature formed of clouds and tortured flesh that sparkles
 with electricity and, every so often, slips entirely from view.
 %%%%
+skyshark
+
+Skysharks cut through the air with a thoughtless ease. Just a taste of blood
+gives them an enraged strength, and further morsels drive them into a frenzy.
+%%%%
 slime creature
 
 An icky glob of slime that slithers along the ground. It can merge with other

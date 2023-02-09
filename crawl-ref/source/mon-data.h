@@ -1464,6 +1464,22 @@ DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard", TILEP_MONS_IGUANA)
     {TILEP_MONS_BASILISK}, TILE_CORPSE_BASILISK
 },
 
+// A skyshark goes into a battle frenzy when it tastes blood.
+{
+    MONS_SKYSHARK, 'l', WHITE, "skyshark",
+    // Technically they have skeletons, but Crawl needs skeletons made
+    // of bone or similar materials (e.g. chitin)
+    M_NO_SKELETON | M_COLD_BLOOD | M_FLIES,
+    MR_NO_FLAGS,
+    10, MONS_SKYSHARK, MONS_SKYSHARK, MH_NATURAL, 40,
+    { {AT_BITE, AF_BLOODZERK, 20}, {AT_TAIL_SLAP, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK },
+    10, 500,
+    5, 12, MST_NO_SPELLS, true, S_SILENT /*?*/,
+    I_ANIMAL, HT_LAND, 15, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_FISH,
+    {TILEP_MONS_SKYSHARK}, TILE_CORPSE_SKYSHARK
+},
+
 {
     MONS_WYVERN, 'l', LIGHTGREEN, "wyvern",
     M_WARM_BLOOD | M_FLIES,

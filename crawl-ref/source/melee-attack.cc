@@ -3040,6 +3040,26 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
     }
+    case AF_BLOODZERK:
+    {
+        if (!defender->can_bleed() || !attacker->can_go_berserk())
+            break;
+
+        monster* mon = attacker->as_monster();
+        if (mon->has_ench(ENCH_MIGHT))
+        {
+            mon->del_ench(ENCH_MIGHT, true);
+            mon->add_ench(mon_enchant(ENCH_BERSERK, 1, mon,
+                                      random_range(100, 200)));
+            simple_monster_message(*mon, " enters a blood-rage!");
+        }
+        else
+        {
+            mon->add_ench(mon_enchant(ENCH_MIGHT, 1, mon,
+                                      random_range(100, 200)));
+            simple_monster_message(*mon, " tastes blood and grows stronger!");
+        }
+    }
 
     }
 }

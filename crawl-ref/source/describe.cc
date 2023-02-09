@@ -4420,6 +4420,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_WEAKNESS,          "cause weakness" },
         { AF_BARBS,             "embed barbs" },
         { AF_SPIDER,            "summon a spider" },
+        { AF_BLOODZERK,         "become enraged" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
     };

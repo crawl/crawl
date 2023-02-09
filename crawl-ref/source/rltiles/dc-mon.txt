@@ -149,6 +149,7 @@ iguana MONS_IGUANA
 basilisk MONS_BASILISK
 %rim 1
 komodo_dragon MONS_KOMODO_DRAGON
+skyshark MONS_SKYSHARK
 
 ## Slugs ('w')
 %sdir mon/unique
