@@ -2621,7 +2621,6 @@ static void _cast_pyroclastic_surge(monster &caster, mon_spell_slot, bolt &beam)
 /// Should the given monster cast Arcjolt?
 static ai_action::goodness _arcjolt_goodness(const monster &caster)
 {
-    const int pow = mons_spellpower(caster, SPELL_ARCJOLT);
     vector<coord_def> targets = arcjolt_targets(caster, false);
 
     bolt tracer;
