@@ -135,34 +135,32 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
     if (ignite_blood && you.see_cell(where))
         amount *= 2;
 
-    if (x_chance_in_y(amount, 20))
+    if (!x_chance_in_y(amount, 20))
+        return;
+
+    dprf("might bleed now; square: (%d, %d); amount = %d",
+         where.x, where.y, amount);
+
+    if (may_bleed)
     {
-        dprf("might bleed now; square: (%d, %d); amount = %d",
-             where.x, where.y, amount);
-        if (may_bleed)
-        {
-            env.pgrid(where) |= FPROP_BLOODY;
-            _orient_wall_blood(where, from, old_blood);
+        env.pgrid(where) |= FPROP_BLOODY;
+        _orient_wall_blood(where, from, old_blood);
 
-            // Don't apply penance for involuntary cloud placement.
-            if (x_chance_in_y(ignite_blood, 3)
-                && you.see_cell(where)
-                && !cell_is_solid(where)
-                && !cloud_at(where))
-            {
-                int dur = 2 + ignite_blood + random2(2 * ignite_blood);
-                place_cloud(CLOUD_FIRE, where, dur, &you, -1, -1,
-                            false);
-            }
-        }
-
-        if (spatter)
+        if (x_chance_in_y(ignite_blood, 3)
+            && you.see_cell(where)
+            && !cell_is_solid(where)
+            && !cloud_at(where))
         {
-            // Smaller chance of spattering surrounding squares.
-            for (adjacent_iterator ai(where); ai; ++ai)
-                _maybe_bloodify_square(*ai, amount/15, false, from, old_blood);
+            int dur = 2 + ignite_blood + random2(2 * ignite_blood);
+            place_cloud(CLOUD_FIRE, where, dur, &you, -1, -1,
+                        false); // Don't give penance.
         }
     }
+
+    // Smaller chance of spattering surrounding squares.
+    if (spatter)
+        for (adjacent_iterator ai(where); ai; ++ai)
+            _maybe_bloodify_square(*ai, amount/15, false, from, old_blood);
 }
 
 // Colour ground (and possibly adjacent squares) red. "damage" depends on damage
