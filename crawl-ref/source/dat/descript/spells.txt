@@ -61,8 +61,8 @@ the pull of this spell.
 %%%%
 Arcjolt spell
 
-Blasts electricity through everything in range and connected to the caster,
-either by adjacency or via a chain of other creatures. The damage dealt
+Blasts electricity through everything connected to the caster within a long
+range, either by adjacency or via a chain of other creatures. The damage dealt
 partially bypasses armour.
 %%%%
 Aura of Brilliance spell

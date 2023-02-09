@@ -132,7 +132,7 @@ static const struct spell_desc spelldata[] =
     spflag::area,
     5,
     200,
-    5, 5,
+    1, 1,
     10,
     TILEG_ARCJOLT,
 },

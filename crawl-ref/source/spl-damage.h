@@ -16,6 +16,7 @@ const int DEFAULT_SHATTER_DICE = 3;
 const int FLAT_DISCHARGE_ARC_DAMAGE = 2;
 const int AIRSTRIKE_PER_SPACE_BONUS = 2;
 const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
+const int MAX_ARCJOLT_DISTANCE = 5;
 
 #define COUPLING_TIME_KEY "maxwells_charge_time"
 #define FLAME_WAVE_KEY "flame_waves"
@@ -65,7 +66,7 @@ spret cast_discharge(int pow, const actor &agent, bool fail = false,
 int discharge_max_damage(int pow);
 spret cast_arcjolt(int pow, const actor &agent, bool fail);
 dice_def arcjolt_damage(int pow, bool random);
-vector<coord_def> arcjolt_targets(const actor &agent, int pow, bool actual);
+vector<coord_def> arcjolt_targets(const actor &agent, bool actual);
 dice_def base_fragmentation_damage(int pow, bool random);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool quiet,

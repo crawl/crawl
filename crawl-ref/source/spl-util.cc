@@ -1614,7 +1614,7 @@ bool spell_no_hostile_in_range(spell_type spell)
              == spret::abort;
 
     case SPELL_ARCJOLT:
-        for (coord_def t : arcjolt_targets(you, pow, false))
+        for (coord_def t : arcjolt_targets(you, false))
         {
             const monster *mon = monster_at(t);
             if (mon != nullptr && !mon->wont_attack())

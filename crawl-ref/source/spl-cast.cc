@@ -1260,7 +1260,7 @@ unique_ptr<targeter> find_spell_targeter(spell_type spell, int pow, int range)
                           // all potentially affected monsters?
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1);
     case SPELL_ARCJOLT:
-        return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, pow, false));
+        return make_unique<targeter_multiposition>(&you, arcjolt_targets(you, false));
     case SPELL_CHAIN_LIGHTNING:
         return make_unique<targeter_chain_lightning>();
     case SPELL_MAXWELLS_COUPLING:

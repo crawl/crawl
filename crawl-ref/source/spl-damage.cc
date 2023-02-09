@@ -2615,9 +2615,8 @@ dice_def arcjolt_damage(int pow, bool random)
     return dice_def(1, random ? 10 + div_rand_round(pow, 2) : 10 + pow / 2);
 }
 
-vector<coord_def> arcjolt_targets(const actor &agent, int power, bool actual)
+vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
 {
-    const int range = spell_range(SPELL_ARCJOLT, power);
     vector<coord_def> targets;
     set<coord_def> seen;
     vector<coord_def> to_check;
@@ -2630,7 +2629,7 @@ vector<coord_def> arcjolt_targets(const actor &agent, int power, bool actual)
         seen.insert(*ai);
     }
 
-    for (int dist = 0; dist < range && !to_check.empty(); ++dist)
+    for (int dist = 0; dist < MAX_ARCJOLT_DISTANCE && !to_check.empty(); ++dist)
     {
         vector<coord_def> next_frontier;
         for (coord_def p : to_check)
@@ -2666,7 +2665,7 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
 {
     if (agent.is_player()
         && _warn_about_bad_targets(SPELL_ARCJOLT,
-                                   arcjolt_targets(agent, pow, false)))
+                                   arcjolt_targets(agent, false)))
     {
             return spret::abort;
     }
@@ -2693,7 +2692,7 @@ spret cast_arcjolt(int pow, const actor &agent, bool fail)
                                " emits a burst of electricity!");
     }
 
-    auto targets = arcjolt_targets(agent, pow, true);
+    auto targets = arcjolt_targets(agent, true);
     for (coord_def t : targets)
     {
         if (Options.use_animations & UA_BEAM)
