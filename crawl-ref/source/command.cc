@@ -796,9 +796,20 @@ static void _add_formatted_help_menu(column_composer &cols)
         "aspect of Dungeon Crawl.\n"
 
         "<w>?</w>: List of commands\n"
-        "<w>^</w>: Quickstart Guide\n"
-        "<w>:</w>: Browse character notes\n"
-        "<w>#</w>: Browse character dump\n"
+        "<w>^</w>: Quickstart Guide");
+    if (!crawl_state.game_started)
+    {
+        cols.add_formatted(0,
+            "<darkgrey>:: Browse character notes</darkgrey>\n"
+            "<darkgrey>#: Browse character dump</darkgrey>", false);
+    }
+    else
+    {
+        cols.add_formatted(0,
+            "<w>:</w>: Browse character notes\n"
+            "<w>#</w>: Browse character dump", false);
+    }
+    cols.add_formatted(0,
         "<w>~</w>: Macros help\n"
         "<w>&</w>: Options help\n"
         "<w>%</w>: Table of aptitudes\n"
@@ -809,10 +820,10 @@ static void _add_formatted_help_menu(column_composer &cols)
 #endif
         "<w>V</w>: Version information\n"
         "<w>!</w>: Display diagnostics\n"
-#ifndef __ANDROID__
-        "<w>Home</w>: This screen\n");
-#else
         "<w>Home</w>: This screen\n"
+#ifdef __ANDROID__
+        // XX is this the bet place for this? It should at least be duplicated
+        // in `??`.
         "\n"
         "<h>Android Controls\n"
         "\n"
@@ -821,8 +832,9 @@ static void _add_formatted_help_menu(column_composer &cols)
         "Long press for right click.\n"
         "Touch with two fingers for scrolling.\n"
         "Toggle keyboard icon controls the\n"
-        "virtual keyboard visibility.\n");
+        "virtual keyboard visibility.\n"
 #endif
+        , false);
 
     // TODO: generate this from the manual somehow
     cols.add_formatted(
@@ -1384,7 +1396,13 @@ private:
         formatted_string header_text, help_text;
         switch (key)
         {
-            case CK_ESCAPE: case ':': case '#': case '/': case 'q': case 'v': case '!':
+            case ':':
+            case '#':
+                // disable these if there's no character to view
+                if (!crawl_state.game_started)
+                    return MB_MAYBE;
+                // falltrough
+            case CK_ESCAPE: case '/': case 'q': case 'v': case '!':
                 // exit the UI, these help screens are activated outside of
                 // the scroller popup
                 return MB_FALSE;
