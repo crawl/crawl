@@ -2632,7 +2632,7 @@ vector<coord_def> arcjolt_targets(const actor &agent, bool actual)
         seen.insert(*ai);
     }
 
-    for (int dist = 0; dist < MAX_ARCJOLT_DISTANCE && !to_check.empty(); ++dist)
+    while (!to_check.empty())
     {
         vector<coord_def> next_frontier;
         for (coord_def p : to_check)
