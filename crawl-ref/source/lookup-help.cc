@@ -1118,7 +1118,10 @@ static int _describe_item(const string &key, const string &suffix,
     {
         const int unrand_idx = extant_unrandart_by_exact_name(item_name);
         if (!unrand_idx)
-            die("Unable to get item %s by name", key.c_str());
+        {
+            mprf(MSGCH_ERROR, "Unable to get item %s by name", key.c_str());
+            return 0;
+        }
         _make_item_fake_unrandart(item, unrand_idx);
     }
     describe_item_popup(item);
