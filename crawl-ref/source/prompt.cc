@@ -14,6 +14,7 @@
 #include "menu.h"
 #include "message.h"
 #include "options.h"
+#include "scroller.h"
 #include "state.h"
 #include "stringutil.h"
 #ifdef USE_TILE
@@ -21,6 +22,83 @@
 #endif
 #include "viewchar.h"
 #include "ui.h"
+
+namespace ui
+{
+    class message_scroller : public formatted_scroller
+    {
+    public:
+        message_scroller()
+            : formatted_scroller(FS_EASY_EXIT)
+        { }
+
+        message_scroller(string text, string title="", string prompt="")
+            : message_scroller()
+        {
+            if (title.size())
+                set_title(formatted_string::parse_string(title));
+
+            if (prompt.size())
+                set_more(formatted_string::parse_string(prompt));
+
+            add_formatted_string(formatted_string::parse_string(text));
+        }
+
+    protected:
+        maybe_bool process_key(int ch) override
+        {
+            // general keycode that is not hinted by default; it is mostly
+            // useful for debugging. If you want it to be apparent to players,
+            // just set a different `more`. (See e.g. the arena call to
+            // the wrapper functions for an example.)
+            if (ch == CONTROL('P'))
+            {
+                if (crawl_state.game_started)
+                    replay_messages();
+                else
+                    replay_messages_during_startup(); // show a title; less cryptic for this case
+                return MB_TRUE;
+            }
+            return formatted_scroller::process_key(ch);
+        }
+    };
+
+    // Convenience wrapper for `message_scroller`.
+    // somewhat general popup code for short messages. This accepts color
+    // formatting for the optional `title` and `prompt`, but not `msg`.
+    int message(string msg, string title, string prompt)
+    {
+        message_scroller ms(replace_all(msg, "<", "<<"), // XX probably ok to relax?
+            title, prompt);
+        ms.show();
+        return ms.get_lastch();
+    }
+
+    // slightly smarter error msging than just `mprf(MSGCH_ERROR, ...)`: if
+    // there are ui elements on the stack, show a popup on top of them; either
+    // way, log the error to MSGCH_ERROR.
+    int error(string err, string title, bool force_popup)
+    {
+        // unlike `message` above, does not accept color formatting in title,
+        // so that it can auto-wrap it in an angry red
+        // XX direct errorf version of this fn?
+        mprf(MSGCH_ERROR, "%s", err.c_str());
+        // assumes UI init! See end.cc::fatal_error_notification for a wrapped
+        // version that does not.
+        // XX unify the two?
+        if (force_popup || has_layout())
+        {
+            if (title.size())
+            {
+                title = string("<lightred>")
+                        + replace_all(title, "<", "<<")
+                        + "</lightred>";
+            }
+            return message(err, title);
+        }
+        return 0; // no popup used
+    }
+};
 
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.

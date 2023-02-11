@@ -2624,14 +2624,12 @@ public:
     overview_popup() {};
     vector<char> equip_chars;
 private:
-    bool process_key(int ch) override
+    maybe_bool process_key(int ch) override
     {
         if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
         {
             item_def& item = you.inv[letter_to_index(ch)];
-            if (!describe_item(item))
-                return false;
-            return true;
+            return frombool(describe_item(item));
         }
         return formatted_scroller::process_key(ch);
     };

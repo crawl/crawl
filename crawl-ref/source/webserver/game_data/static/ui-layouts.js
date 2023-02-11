@@ -1,6 +1,7 @@
 define(["jquery", "comm", "client", "./ui", "./enums", "./cell_renderer",
-    "./util", "./scroller", "./tileinfo-main", "./tileinfo-gui", "./tileinfo-player"],
-function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
+    "./util", "./scroller", "./tileinfo-main", "./tileinfo-gui",
+    "./tileinfo-player", "./options"],
+function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player, options) {
     "use strict";
 
     var describe_scale = 2.0;
@@ -764,7 +765,6 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
     {
         var $popup = $(".templates > .formatted-scroller").clone();
         var $body = $popup.children(".body");
-        var $more = $popup.children(".more");
         var body_html = util.formatted_string_to_html(desc.text);
         if (desc.highlight !== "")
         {
@@ -776,7 +776,20 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
         }
         $popup.attr("data-tag", desc.tag);
         $body.html(body_html);
-        $more.html(util.formatted_string_to_html(desc.more));
+        if (desc.more)
+            $popup.children(".more").html(util.formatted_string_to_html(desc.more));
+        else
+            $popup.children(".more").remove();
+
+        // XX why do some layouts use a span inside of a div, some just use
+        // the div? (Answer remains unclear to me, but something about
+        // preformatting + nested spans did mess this up when I tried to use
+        // a template span here)
+        if (desc.title)
+            $popup.children(".header").html(util.formatted_string_to_html(desc.title));
+        else
+            $popup.children(".header").remove();
+
         var s = scroller($body[0]);
         var scroll_elem = s.scrollElement;
         scroll_elem.addEventListener("scroll", scroller_onscroll);
@@ -784,6 +797,13 @@ function ($, comm, client, ui, enums, cr, util, scroller, main, gui, player) {
             if (event.which !== 36 || desc.tag !== "help")
                 scroller_handle_key(s, event);
         });
+        if (desc.easy_exit && options.get("tile_web_mouse_control"))
+        {
+            $popup.on("click", function () {
+                // XX a bit ad hoc
+                comm.send_message("key", { keycode: 27 });
+            });
+        }
         return $popup;
     }
 

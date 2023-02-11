@@ -1370,7 +1370,7 @@ public:
         process_key(key);
     };
 private:
-    bool process_key(int ch) override
+    maybe_bool process_key(int ch) override
     {
         int key = toalower(ch);
 
@@ -1385,8 +1385,11 @@ private:
         switch (key)
         {
             case CK_ESCAPE: case ':': case '#': case '/': case 'q': case 'v': case '!':
-                return false;
+                // exit the UI, these help screens are activated outside of
+                // the scroller popup
+                return MB_FALSE;
             default:
+                // try to process help section hotkeys
                 if (!(page = _get_help_section(key, header_text, help_text, scroll)))
                     break;
                 if (page != prev_page)
@@ -1397,7 +1400,7 @@ private:
                 }
                 scroll = scroll ? (scroll-2)*line_height : 0;
                 set_scroll(scroll);
-                return true;
+                return MB_TRUE;
         }
 
         return formatted_scroller::process_key(ch);

@@ -5,6 +5,13 @@
 
 #pragma once
 
+namespace ui
+{
+    int error(string err, string title="Error!", bool force_popup=false);
+    int message(string msg,
+        string title="", string prompt="<cyan>Hit any key to continue...</cyan>");
+}
+
 bool yes_or_no(PRINTF(0, ));
 typedef map<int, int> explicit_keymap;
 int yesno(const char * str, bool allow_lowercase, int default_answer,
