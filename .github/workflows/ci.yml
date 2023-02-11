@@ -284,62 +284,6 @@ jobs:
           file: ${{ steps.release-names.outputs.source }}
           asset_name: ${{ steps.release-names.outputs.dest }}
 
-  codecov_catch2:
-    name: Catch2 (GCC/Linux) + Codecov
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 # all history
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
-      - name: Install requirements.txt
-        run: |
-            python -m pip install --upgrade pip
-            pip install -r webserver/requirements/dev.py3.txt # use this until we have a repo-wide requirements.txt
-        working-directory: crawl-ref/source
-      - name: Install dependencies
-        run: ./deps.py --coverage
-        working-directory: .github/workflows
-      - name: Cache compilation
-        uses: actions/cache@v2
-        with:
-          path: ~/.ccache
-          key: ccache-catch2-${{ github.sha }}
-          restore-keys: |
-            ccache-catch2-
-      - name: Setup ccache
-        uses: alexjurkiewicz/setup-ccache@master
-      - name: "Setup ccache: prepend path"
-        run: "echo /usr/lib/ccache >> $GITHUB_PATH"
-      - name: "Setup ccache: update symlinks"
-        run: "/usr/sbin/update-ccache-symlinks"
-      - name: "Setup ccache: clear stats"
-        run: ccache --zero-stats
-      - run: make -j$(nproc) catch2-tests
-        working-directory: crawl-ref/source
-      - name: Print ccache stats
-        run: ccache -s
-      - name: Generate LCOV data
-        working-directory: crawl-ref/source
-        run: >
-          lcov
-          --capture
-          --directory .
-          --output-file ../../coverage.info
-          --ignore-errors source
-          --rc lcov_branch_coverage=1
-      - name: Send coverage data to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.info
-          flags: catch2
-          fail_ci_if_error: false
-
   webserver:
     runs-on: ubuntu-20.04 # TODO: go back to ubuntu-latest
     strategy:
