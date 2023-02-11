@@ -853,19 +853,20 @@ void LookupType::display_keys(vector<string> &key_list) const
     // XXX: ugh
     const bool doing_mons = type == "monster";
     vector<monster_info> monster_list(key_list.size());
+    int letter_i = 0;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
-        const char letter = index_to_letter(i % 52);
+        const char letter = index_to_letter(letter_i % 52);
         string &key = key_list[i];
         // XXX: double ugh
-        if (doing_mons)
-        {
-            desc_menu.add_entry(_monster_menu_gen(letter,
-                                                  key_to_menu_str(key),
-                                                  monster_list[i]));
-        }
-        else
-            desc_menu.add_entry(make_menu_entry(letter, key));
+        auto *entry = doing_mons
+            ? _monster_menu_gen(letter, key_to_menu_str(key), monster_list[i])
+            : make_menu_entry(letter, key);
+
+        if (!entry)
+            continue;
+        desc_menu.add_entry(entry);
+        letter_i++;
     }
 
     desc_menu.sort();

@@ -4384,6 +4384,24 @@ bool get_item_by_name(item_def *item, const char* specs,
     return true;
 }
 
+static bool _get_manual_by_exact_name(item_def &item, const char *lc_name)
+{
+    if (item.base_type != OBJ_BOOKS || item.sub_type != BOOK_MANUAL)
+        return false;
+    // lookup manual names. We need to line up pluses with names to get this
+    // right; in contrast to the regular strategy for exact name lookup, this
+    // call just checks the item name cache directly.
+
+    // XX can/should any other name lookups be done via the item name cache?
+    // any mismatch between the name cache and the exact name lookup will lead
+    // to errors when querying by glyph.
+    auto item_kind = item_kind_by_name(lc_name);
+    if (item_kind.base_type == OBJ_UNASSIGNED)
+        return false;
+    item.plus = item_kind.plus;
+    return true;
+}
+
 bool get_item_by_exact_name(item_def &item, const char* name)
 {
     item.clear();
@@ -4407,6 +4425,8 @@ bool get_item_by_exact_name(item_def &item, const char* name)
             {
                 item.sub_type = j;
                 if (lowercase_string(item.name(DESC_DBNAME)) == name_lc)
+                    return true;
+                if (_get_manual_by_exact_name(item, name_lc.c_str()))
                     return true;
             }
         }

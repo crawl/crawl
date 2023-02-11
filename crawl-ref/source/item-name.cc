@@ -3426,6 +3426,8 @@ void init_item_name_cache()
             }
 
             int npluses = 0;
+            // this iterates through all skills for manuals, caching the
+            // resulting names. Weird.
             if (base_type == OBJ_BOOKS && sub_type == BOOK_MANUAL)
                 npluses = NUM_SKILLS;
 
@@ -3434,6 +3436,8 @@ void init_item_name_cache()
             item.sub_type = sub_type;
             for (int plus = 0; plus <= npluses; plus++)
             {
+                // strange logic: this seems to be designed to put both "Manual"
+                // and "Manual of fighting" in the cache for item.plus == 0
                 if (plus > 0)
                     item.plus = max(0, plus - 1);
                 string name = item.name(plus || item.base_type == OBJ_RUNES ? DESC_PLAIN : DESC_DBNAME,
