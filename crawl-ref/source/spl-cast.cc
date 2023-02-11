@@ -700,7 +700,13 @@ static void _handle_channeling(int cost)
 
     did_god_conduct(DID_WIZARDLY_ITEM, 10);
 
-    const int skillcheck = you.skill(SK_EVOCATIONS) - cost;
+    const int skillcheck = 3 + you.skill(SK_EVOCATIONS) - cost;
+
+    if (skillcheck <= 1)
+    {
+        mprf(MSGCH_WARN, "You lack the skill to channel this much energy!");
+        return;
+    }
 
     // The chance of backfiring goes down with evo skill and up with cost.
     if (!one_chance_in(max(skillcheck, 1)))
@@ -710,16 +716,14 @@ static void _handle_channeling(int cost)
         return;
     }
 
-    if (skillcheck <= 1)
-        mprf(MSGCH_WARN, "You lack the skill to channel this much energy!");
-
     mpr(random_choose("Weird images run through your mind.",
                       "Your head hurts.",
                       "You feel a strange surge of energy.",
                       "You feel uncomfortable."));
+
+    you.increase_duration(DUR_NO_CAST, 4 + random2(4));
+
     if (coinflip())
-        confuse_player(2 + random2(4));
-    else
         lose_stat(STAT_INT, 1 + random2avg(5, 2));
 }
 
