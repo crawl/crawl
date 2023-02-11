@@ -61,6 +61,7 @@
 #include "mutation.h" // mutation_name, get_mutation_desc
 #include "output.h"
 #include "potion.h"
+#include "prompt.h"
 #include "ranged-attack.h" // describe_to_hit
 #include "religion.h"
 #include "rltiles/tiledef-feat.h"
@@ -3452,7 +3453,7 @@ static bool _do_action(item_def &item, const command_type action)
     case CMD_ADJUST_INVENTORY: adjust_item(slot);             break;
     case CMD_EVOKE:            evoke_item(slot);              break;
     default:
-        die("illegal inventory cmd %d", action);
+        ui::error(make_stringf("illegal inventory cmd '%d'", action));
     }
     return false;
 }

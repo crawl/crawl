@@ -157,6 +157,7 @@ string ColourThresholdOption::loadFromString(const string &field,
                 remove_matching(value, entry);
             break;
         default:
+            // XX should this really be a die?
             die("Unknown rc line type for %s: %d!", name().c_str(), ltyp);
     }
     return GameOption::loadFromString(field, ltyp);
@@ -176,6 +177,8 @@ colour_thresholds
             const string failure = make_stringf("Bad %s pair: '%s'",
                                                 name().c_str(),
                                                 pair_str.c_str());
+            // XX should this really be a `die`? I *think* it can only be
+            // triggered by someone setting a bad default in this file...
             if (!error)
                 die("%s", failure.c_str());
             *error = failure;
@@ -191,6 +194,7 @@ colour_thresholds
             const string failure = make_stringf("Bad %s: '%s'",
                                                 name().c_str(),
                                                 colstr.c_str());
+            // see note above
             if (!error)
                 die("%s", failure.c_str());
             *error = failure;

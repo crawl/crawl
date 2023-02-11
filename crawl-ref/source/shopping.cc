@@ -1623,8 +1623,8 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     if (!find_thing(item, pos).empty()) // TODO: this check isn't working?
     {
-        mprf(MSGCH_ERROR, "%s is already on the shopping list.",
-             item.name(DESC_THE).c_str());
+        ui::error(make_stringf("%s is already on the shopping list.",
+             item.name(DESC_THE).c_str()));
         return false;
     }
 
@@ -1693,8 +1693,8 @@ bool ShoppingList::del_thing(const item_def &item,
 
     if (indices.empty())
     {
-        mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
-             item.name(DESC_THE).c_str());
+        ui::error(make_stringf("%s isn't on shopping list, can't delete it.",
+             item.name(DESC_THE).c_str()));
         return false;
     }
 
@@ -1710,8 +1710,8 @@ bool ShoppingList::del_thing(string desc, const level_pos* _pos)
 
     if (indices.empty())
     {
-        mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
-             desc.c_str());
+        ui::error(make_stringf("%s isn't on shopping list, can't delete it.",
+             desc.c_str()));
         return false;
     }
 
@@ -2328,8 +2328,7 @@ void ShoppingList::display(bool view_only)
             const int index = shopmenu.get_entry_index(&sel);
             if (index == -1)
             {
-                mprf(MSGCH_ERROR, "ERROR: Unable to delete thing from shopping list!");
-                more();
+                ui::error("ERROR: Unable to delete thing from shopping list!");
                 return true;
             }
 
