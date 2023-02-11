@@ -3456,12 +3456,19 @@ void init_item_name_cache()
                                                                 name.c_str());
                     continue;
                 }
+                const bool removed = item_type_removed(base_type, sub_type)
+                    || base_type == OBJ_BOOKS && sub_type == BOOK_MANUAL
+                        && is_removed_skill(static_cast<skill_type>(item.plus));
 
                 if (!item_names_cache.count(name))
                 {
+                    // what would happen if we don't put removed items in the
+                    // item name cache?
                     item_names_cache[name] = { base_type, (uint8_t)sub_type,
                                                (int8_t)item.plus, 0 };
-                    if (g.ch)
+
+                    // only used for help lookup, skip removed items
+                    if (g.ch && !removed)
                         item_names_by_glyph_cache[g.ch].push_back(name);
                 }
             }
