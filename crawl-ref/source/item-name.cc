@@ -2666,23 +2666,7 @@ bool is_bad_item(const item_def &item)
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
-        switch (item.sub_type)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case SCR_CURSE_ARMOUR:
-            if (you.has_mutation(MUT_NO_ARMOUR))
-                return false;
-        case SCR_CURSE_WEAPON:
-            if (you.has_mutation(MUT_NO_GRASPING))
-                return false;
-        case SCR_CURSE_JEWELLERY:
-            return !have_passive(passive_t::want_curses);
-#endif
-        case SCR_NOISE:
-            return true;
-        default:
-            return false;
-        }
+        return item.sub_type == SCR_NOISE;
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
         if (!you.can_drink(false))
@@ -2937,26 +2921,6 @@ string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
                 return "This place cannot be mapped!";
             return "";
 
-#if TAG_MAJOR_VERSION == 34
-        case SCR_CURSE_WEAPON:
-            if (!you.weapon())
-                return "This scroll only affects a wielded weapon!";
-
-            // assumption: wielded weapons always have their curse & brand known
-            if (you.weapon()->cursed())
-                return "Your weapon is already cursed!";
-
-            if (get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
-                return "Holy weapons cannot be cursed!";
-            return "";
-
-        case SCR_CURSE_ARMOUR:
-            return _no_items_reason(OSEL_UNCURSED_WORN_ARMOUR);
-
-        case SCR_CURSE_JEWELLERY:
-            return _no_items_reason(OSEL_UNCURSED_WORN_JEWELLERY);
-#endif
-
         default:
             return "";
     }
@@ -3149,16 +3113,6 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         if (is_bad_item(item))
             return true;
 
-#if TAG_MAJOR_VERSION == 34
-        switch (item.sub_type)
-        {
-        case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
-        case SCR_CURSE_ARMOUR:
-            return you.has_mutation(MUT_NO_GRASPING);
-        default:
-            break;
-        }
-#endif
         const string reasons = cannot_read_item_reason(&item, temp, ident);
         return reasons.size();
     }

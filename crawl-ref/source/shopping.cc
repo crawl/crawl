@@ -712,18 +712,7 @@ bool is_worthless_consumable(const item_def &item)
         CASE_REMOVED_POTIONS(item.sub_type)
         }
     case OBJ_SCROLLS:
-        switch (item.sub_type)
-        {
-#if TAG_MAJOR_VERSION == 34
-        case SCR_CURSE_ARMOUR:
-        case SCR_CURSE_WEAPON:
-        case SCR_CURSE_JEWELLERY:
-#endif
-        case SCR_NOISE:
-            return true;
-        default:
-            return false;
-        }
+        return item.sub_type == SCR_NOISE;
 
     // Only consumables are worthless.
     default:
