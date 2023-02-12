@@ -147,9 +147,9 @@ frilled_lizard MONS_FRILLED_LIZARD
 iguana MONS_IGUANA
 %rim 0
 basilisk MONS_BASILISK
+skyshark MONS_SKYSHARK
 %rim 1
 komodo_dragon MONS_KOMODO_DRAGON
-skyshark MONS_SKYSHARK
 
 ## Slugs ('w')
 %sdir mon/unique

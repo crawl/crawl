@@ -2165,6 +2165,7 @@ static const map<monster_info_flags, tileidx_t> status_icons = {
     { MB_LIGHTLY_DRAINED, TILEI_DRAIN },
     { MB_HEAVILY_DRAINED, TILEI_DRAIN },
     { MB_IDEALISED, TILEI_IDEALISED },
+    { MB_WRETCHED, TILEI_MALMUTATED },
     { MB_BOUND_SOUL, TILEI_BOUND_SOUL },
     { MB_SIMULACRUM, TILEI_BOUND_SOUL }, //for now
     { MB_INFESTATION, TILEI_INFESTED },
