@@ -72,9 +72,12 @@ static bool _act_worth_targeting(const actor &caster, const actor &a)
     if (a.is_player())
         return true;
     const monster &m = *a.as_monster();
-    return !mons_is_firewood(m)
-        && !mons_is_conjured(m.type)
-        && (!caster.is_player() || !god_protects(&you, &m, true));
+    if (mons_is_firewood(m) || mons_is_conjured(m.type))
+        return false;
+    if (!caster.is_player())
+        return true;
+    return !god_protects(&you, &m, true)
+           && !testbits(m.flags, MF_DEMONIC_GUARDIAN);
 }
 
 // returns the closest target to the caster, choosing randomly if there are more
