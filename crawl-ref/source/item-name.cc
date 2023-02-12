@@ -2589,9 +2589,10 @@ bool is_emergency_item(const item_def &item)
                 && !you.stasis();
         case POT_HEAL_WOUNDS:
             return you.can_potion_heal();
+        case POT_MAGIC:
+            return !you.has_mutation(MUT_HP_CASTING);
         case POT_CURING:
         case POT_RESISTANCE:
-        case POT_MAGIC:
             return true;
         default:
             return false;
@@ -2961,13 +2962,15 @@ string cannot_read_item_reason(const item_def *item, bool temp)
     }
 }
 
-string cannot_drink_item_reason(const item_def *item, bool temp, bool use_check)
+string cannot_drink_item_reason(const item_def *item, bool temp,
+                                bool use_check, bool ident)
 {
     // general permanent reasons
     if (!you.can_drink(false))
         return "You can't drink.";
 
-    const bool valid = item && item->base_type == OBJ_POTIONS && item_type_known(*item);
+    const bool valid = item && item->base_type == OBJ_POTIONS
+                            && (item_type_known(*item) || ident);
     const potion_type ptyp = valid
         ? static_cast<potion_type>(item->sub_type)
         : NUM_POTIONS;
@@ -3179,7 +3182,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             return true;
 
         // specific reasons
-        return cannot_drink_item_reason(&item, temp).size();
+        return cannot_drink_item_reason(&item, temp, false, ident).size();
     }
     case OBJ_JEWELLERY:
         if (temp && !you_can_wear(get_item_slot(item)))
