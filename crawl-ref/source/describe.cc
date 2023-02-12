@@ -4449,6 +4449,9 @@ static string _flavour_effect(attack_flavour flavour, int HD)
     const int flavour_dam = flavour_damage(flavour, HD, false);
     const string flavour_desc = make_stringf(base_desc.c_str(), flavour_dam);
 
+    if (flavour == AF_BLOODZERK)
+        return " to " + flavour_desc + " if blood is drawn"; // 🩸
+
     if (!flavour_triggers_damageless(flavour) && flavour != AF_SWOOP)
         return " to " + flavour_desc + " if any damage is dealt";
 
