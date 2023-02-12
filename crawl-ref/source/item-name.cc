@@ -2829,7 +2829,7 @@ static string _general_cannot_read_reason()
  * reason why. Otherwise (if they are able to read it), returns "", the empty
  * string. If item is nullptr, do only general reading checks.
  */
-string cannot_read_item_reason(const item_def *item, bool temp)
+string cannot_read_item_reason(const item_def *item, bool temp, bool ident)
 {
     // convoluted ordering is because the general checks below need to go before
     // the item id check, but non-temp messages go before general checks
@@ -2897,7 +2897,7 @@ string cannot_read_item_reason(const item_def *item, bool temp)
         return "You can't read that!";
 
     // temp uselessness only below this check
-    if (!temp || !item_type_known(*item))
+    if (!temp || (!ident && !item_type_known(*item)))
         return "";
 
     // don't waste the player's time reading known scrolls in situations where
@@ -3159,7 +3159,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
             break;
         }
 #endif
-        const string reasons = cannot_read_item_reason(&item, temp);
+        const string reasons = cannot_read_item_reason(&item, temp, ident);
         return reasons.size();
     }
 

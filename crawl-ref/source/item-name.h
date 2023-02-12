@@ -126,7 +126,7 @@ bool is_bad_item(const item_def &item);
 bool is_dangerous_item(const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false,
                      bool ident = false);
-string cannot_read_item_reason(const item_def *item=nullptr, bool temp=true);
+string cannot_read_item_reason(const item_def *item=nullptr, bool temp=true, bool ident=false);
 string cannot_drink_item_reason(const item_def *item=nullptr,
                                 bool temp=true, bool use_check=false, bool ident = false);
 
