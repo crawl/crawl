@@ -147,7 +147,9 @@ static equipment_type _acquirement_armour_slot(bool divine)
 
     return filtered_vector_select<equipment_type>(weights,
         [] (equipment_type etyp) {
-            return you_can_wear(etyp); // evading template nonsense
+            // return true if the player can wear at least something in this
+            // equipment type
+            return you_can_wear(etyp) != MB_FALSE;
         });
 }
 
@@ -332,7 +334,7 @@ static armour_type _useless_armour_type()
         case EQ_GLOVES:
             return ARM_GLOVES;
         case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET))
+            if (you_can_wear(EQ_HELMET) != MB_FALSE)
                 return ARM_HELMET;
             return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
@@ -353,7 +355,7 @@ static armour_type _useless_armour_type()
         }
         case EQ_BODY_ARMOUR:
             // only the rarest & most precious of unwearable armours for Xom
-            if (you_can_wear(EQ_BODY_ARMOUR))
+            if (you_can_wear(EQ_BODY_ARMOUR) != MB_FALSE)
                 return ARM_CRYSTAL_PLATE_ARMOUR;
             // arbitrary selection of [unwearable] dragon armours
             return random_choose(ARM_FIRE_DRAGON_ARMOUR,
@@ -383,7 +385,7 @@ static armour_type _pick_unseen_armour()
     int count = 0;
     for (auto &slot : armour_slots)
     {
-        if (!you_can_wear(slot))
+        if (you_can_wear(slot) == MB_FALSE)
             continue;
 
         const armour_type sub_type = _acquirement_armour_for_slot(slot, false);

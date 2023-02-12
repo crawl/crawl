@@ -78,9 +78,9 @@ string Form::melding_description() const
     else if ((blocked_slots & EQF_PHYSICAL) == EQF_PHYSICAL)
         return "Your equipment is almost entirely melded.";
     else if ((blocked_slots & EQF_STATUE) == EQF_STATUE
-             && (you_can_wear(EQ_GLOVES, false)
-                 || you_can_wear(EQ_BOOTS, false)
-                 || you_can_wear(EQ_BODY_ARMOUR, false)))
+             && (you_can_wear(EQ_GLOVES, false) != MB_FALSE
+                 || you_can_wear(EQ_BOOTS, false) != MB_FALSE
+                 || you_can_wear(EQ_BODY_ARMOUR, false) != MB_FALSE))
     {
         return "Your equipment is partially melded.";
     }

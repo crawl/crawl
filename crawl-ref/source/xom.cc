@@ -1956,7 +1956,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     // Body, player species, transformations, etc.
 
     if (starts_with(species::skin_name(you.species), "bandage")
-        && you_can_wear(EQ_BODY_ARMOUR, true))
+        && you_can_wear(EQ_BODY_ARMOUR, true) != MB_FALSE)
     {
         messages.emplace_back("You briefly get tangled in your bandages.");
         if (!you.airborne() && !you.swimming())
@@ -1992,7 +1992,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     ///////////////////////////
     // Equipment related stuff.
 
-    if (you_can_wear(EQ_WEAPON, true)
+    if (you_can_wear(EQ_WEAPON, true) != MB_FALSE
         && !you.slot_item(EQ_WEAPON))
     {
         string str = "A fancy cane briefly appears in your ";

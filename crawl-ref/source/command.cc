@@ -305,7 +305,7 @@ void list_jewellery()
     for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
     {
         const equipment_type i = static_cast<equipment_type>(j);
-        if (!you_can_wear(i))
+        if (you_can_wear(i) == MB_FALSE)
             continue;
 
         const int jewellery_id = you.equip[i];

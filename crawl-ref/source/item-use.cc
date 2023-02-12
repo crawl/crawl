@@ -988,8 +988,8 @@ static bool _can_generically_use(operation_types oper)
             return false;
         }
         // can't differentiate between these two at this point
-        if (!you_can_wear(EQ_RINGS, true)
-            && !you_can_wear(EQ_AMULET, true))
+        if (you_can_wear(EQ_RINGS, true) == MB_FALSE
+            && you_can_wear(EQ_AMULET, true) == MB_FALSE)
         {
             mprf(MSGCH_PROMPT, "You can't %s jewellery in your present form.",
                 oper == OPER_PUTON ? "wear" : "remove");
@@ -2397,7 +2397,7 @@ static bool _swap_rings(item_def& to_puton)
     for (auto eq : ring_types)
     {
         item_def* ring = you.slot_item(eq, true);
-        if (!you_can_wear(eq, true) || you.melded[eq])
+        if (you_can_wear(eq, true) == MB_FALSE || you.melded[eq])
             melded++;
         else if (ring != nullptr)
         {
@@ -2582,7 +2582,7 @@ static bool _can_puton_ring(const item_def &item)
 {
     if (!_can_puton_jewellery(item))
         return false;
-    if (!you_can_wear(EQ_RINGS, true)
+    if (you_can_wear(EQ_RINGS, true) == MB_FALSE
         && !player_equip_unrand(UNRAND_FINGER_AMULET))
     {
         mprf(MSGCH_PROMPT, "You can't wear that in your present form.");
@@ -2594,7 +2594,7 @@ static bool _can_puton_ring(const item_def &item)
     int cursed = 0;
     for (auto eq : slots)
     {
-        if (!you_can_wear(eq, true) || you.melded[eq])
+        if (you_can_wear(eq, true) == MB_FALSE || you.melded[eq])
         {
             melded++;
             continue;
@@ -2622,7 +2622,7 @@ static bool _can_puton_amulet(const item_def &item)
     if (!_can_puton_jewellery(item))
         return false;
 
-    if (!you_can_wear(EQ_AMULET, true))
+    if (you_can_wear(EQ_AMULET, true) == MB_FALSE)
     {
         mprf(MSGCH_PROMPT, "You can't wear that in your present form.");
         return false;

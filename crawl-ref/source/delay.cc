@@ -922,15 +922,9 @@ static bool _should_stop_activity(Delay* delay,
                                   activity_interrupt ai,
                                   const activity_interrupt_data &at)
 {
-    switch (_userdef_interrupt_activity(delay, ai, at))
-    {
-    case MB_TRUE:
-        return true;
-    case MB_FALSE:
-        return false;
-    case MB_MAYBE:
-        break;
-    }
+    const maybe_bool user_stop = _userdef_interrupt_activity(delay, ai, at);
+    if (user_stop.is_bool())
+        return user_stop.to_bool();
 
     // Don't interrupt player on monster's turn, they might wander off.
     if (you.turn_is_over
