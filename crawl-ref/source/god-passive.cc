@@ -582,7 +582,7 @@ void ash_check_bondage()
 
         // handles missing hand, octopode ring slots, finger necklace, species
         // armour restrictions, etc. Finger necklace slot counts.
-        if (you_can_wear(i) == MB_FALSE)
+        if (!you_can_wear(i))
             continue;
 
         // transformed away slots are still considered to be possibly bound

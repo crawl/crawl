@@ -231,7 +231,7 @@ void give_items_skills(const newgame_def& ng)
         you.religion = GOD_TROG;
         you.piety = 35;
 
-        if (you_can_wear(EQ_BODY_ARMOUR) != MB_FALSE)
+        if (you_can_wear(EQ_BODY_ARMOUR) != false)
             you.skills[SK_ARMOUR] += 2;
         else
         {

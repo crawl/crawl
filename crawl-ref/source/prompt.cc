@@ -58,7 +58,7 @@ namespace ui
                     replay_messages();
                 else
                     replay_messages_during_startup(); // show a title; less cryptic for this case
-                return MB_TRUE;
+                return true;
             }
             return formatted_scroller::process_key(ch);
         }
@@ -135,10 +135,8 @@ int yesno(const char *str, bool allow_lowercase, int default_answer, bool clear_
     // Allow players to answer prompts via clua.
     // XXX: always not currently supported
     maybe_bool res = clua.callmaybefn("c_answer_prompt", "s", str);
-    if (res == MB_TRUE)
-        return true;
-    if (res == MB_FALSE)
-        return false;
+    if (res.is_bool())
+        return bool(res);
 
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 

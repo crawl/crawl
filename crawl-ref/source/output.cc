@@ -719,7 +719,7 @@ static void _print_stats_equip(int x, int y)
     textcolour(LIGHTGREY);
     for (equipment_type eqslot : e_order)
     {
-        if (you_can_wear(eqslot) != MB_FALSE)
+        if (you_can_wear(eqslot) != false)
         {
             if (you.slot_item(eqslot))
             {
@@ -727,7 +727,7 @@ static void _print_stats_equip(int x, int y)
                 g.col = element_colour(g.col, !Options.animate_equip_bar);
                 formatted_string::parse_string(glyph_to_tagstr(g)).display();
             }
-            else if (you_can_wear(eqslot, true) == MB_FALSE)
+            else if (!you_can_wear(eqslot, true))
                 cprintf(" ");
             else
                 cprintf(".");
@@ -2073,7 +2073,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         // leave space for all the ring slots
         if (species::arm_count(you.species) > 2
             && eqslot != EQ_WEAPON
-            && you_can_wear(eqslot) == MB_FALSE)
+            && bool(!you_can_wear(eqslot)))
         {
             continue;
         }
@@ -2084,7 +2084,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             continue;
         }
 
-        if (eqslot == EQ_RING_AMULET && you_can_wear(eqslot) == MB_FALSE)
+        if (eqslot == EQ_RING_AMULET && bool(!you_can_wear(eqslot)))
             continue;
 
         const string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
@@ -2129,16 +2129,16 @@ static void _print_overview_screen_equip(column_composer& cols,
         }
         else if (eqslot == EQ_BOOTS && you.wear_barding())
             str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
-        else if (you_can_wear(eqslot) == MB_FALSE)
+        else if (!you_can_wear(eqslot))
             str = "<darkgrey>(" + slot_name_lwr + " unavailable)</darkgrey>";
-        else if (you_can_wear(eqslot, true) == MB_FALSE)
+        else if (!you_can_wear(eqslot, true))
         {
             str = "<darkgrey>(" + slot_name_lwr +
                                " currently unavailable)</darkgrey>";
         }
-        else if (you_can_wear(eqslot) == MB_MAYBE)
+        else if (you_can_wear(eqslot) == maybe_bool::maybe)
             str = "<darkgrey>(" + slot_name_lwr + " restricted)</darkgrey>";
-        else // MB_TRUE
+        else // maybe_bool::t
             str = "<darkgrey>(no " + slot_name_lwr + ")</darkgrey>";
         cols.add_formatted(2, str.c_str(), false);
     }
@@ -2630,7 +2630,7 @@ private:
         if (find(equip_chars.begin(), equip_chars.end(), ch) != equip_chars.end())
         {
             item_def& item = you.inv[letter_to_index(ch)];
-            return frombool(describe_item(item));
+            return describe_item(item);
         }
         return formatted_scroller::process_key(ch);
     };

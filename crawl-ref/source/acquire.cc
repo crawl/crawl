@@ -149,7 +149,7 @@ static equipment_type _acquirement_armour_slot(bool divine)
         [] (equipment_type etyp) {
             // return true if the player can wear at least something in this
             // equipment type
-            return you_can_wear(etyp) != MB_FALSE;
+            return you_can_wear(etyp) != false;
         });
 }
 
@@ -171,7 +171,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
     switch (slot_type)
     {
         case EQ_CLOAK:
-            if (you_can_wear(EQ_CLOAK) == MB_TRUE)
+            if (you_can_wear(EQ_CLOAK))
                 return random_choose(ARM_CLOAK, ARM_SCARF);
             return ARM_SCARF;
         case EQ_GLOVES:
@@ -182,7 +182,7 @@ static armour_type _acquirement_armour_for_slot(equipment_type slot_type,
             else
                 return ARM_BOOTS;
         case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET) == MB_TRUE)
+            if (you_can_wear(EQ_HELMET))
                 return random_choose(ARM_HELMET, ARM_HAT);
             return ARM_HAT;
         case EQ_SHIELD:
@@ -318,7 +318,7 @@ static armour_type _useless_armour_type()
     // everyone has some kind of boot-slot item they can't wear, regardless
     // of what you_can_wear() claims
     for (auto &weight : weights)
-        if (you_can_wear(weight.first) == MB_TRUE && weight.first != EQ_BOOTS)
+        if (bool(you_can_wear(weight.first)) && weight.first != EQ_BOOTS)
             weight.second = 0;
 
     const equipment_type* slot_ptr = random_choose_weighted(weights);
@@ -328,13 +328,13 @@ static armour_type _useless_armour_type()
     {
         case EQ_BOOTS:
             // Boots-wearers get bardings, everyone else gets boots.
-            if (you_can_wear(EQ_BOOTS) == MB_TRUE)
+            if (you_can_wear(EQ_BOOTS))
                 return ARM_BARDING;
             return ARM_BOOTS;
         case EQ_GLOVES:
             return ARM_GLOVES;
         case EQ_HELMET:
-            if (you_can_wear(EQ_HELMET) != MB_FALSE)
+            if (you_can_wear(EQ_HELMET) != false)
                 return ARM_HELMET;
             return random_choose(ARM_HELMET, ARM_HAT);
         case EQ_CLOAK:
@@ -355,7 +355,7 @@ static armour_type _useless_armour_type()
         }
         case EQ_BODY_ARMOUR:
             // only the rarest & most precious of unwearable armours for Xom
-            if (you_can_wear(EQ_BODY_ARMOUR) != MB_FALSE)
+            if (you_can_wear(EQ_BODY_ARMOUR) != false)
                 return ARM_CRYSTAL_PLATE_ARMOUR;
             // arbitrary selection of [unwearable] dragon armours
             return random_choose(ARM_FIRE_DRAGON_ARMOUR,
@@ -385,7 +385,7 @@ static armour_type _pick_unseen_armour()
     int count = 0;
     for (auto &slot : armour_slots)
     {
-        if (you_can_wear(slot) == MB_FALSE)
+        if (!you_can_wear(slot))
             continue;
 
         const armour_type sub_type = _acquirement_armour_for_slot(slot, false);

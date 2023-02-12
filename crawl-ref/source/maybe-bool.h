@@ -2,13 +2,6 @@
 
 #include <string>
 
-// enum maybe_bool
-// {
-//     MB_FALSE,
-//     MB_MAYBE,
-//     MB_TRUE,
-// };
-
 // inspired by boost's logic::tribool, but with a much simpler implementaiton
 //    (https://github.com/boostorg/logic/blob/develop/include/boost/logic/tribool.hpp)
 // This essentially is a Kleene strong three-valued boolean, that requires an
@@ -114,6 +107,7 @@ public:
     // of maybe_bool to bool comparisons as well
     friend inline bool operator== (const maybe_bool &b1, const maybe_bool &b2);
     friend inline bool operator!= (const maybe_bool &b1, const maybe_bool &b2);
+    // TODO: maybe > etc?
 
     friend inline maybe_bool operator&& (const maybe_bool &b1, const maybe_bool &b2);
     friend inline maybe_bool operator|| (const maybe_bool &b1, const maybe_bool &b2);
@@ -150,14 +144,3 @@ inline maybe_bool operator! (const maybe_bool &b)
     return b == maybe_bool::maybe ? b
                                   : !(static_cast<bool>(b));
 }
-
-
-// backwards compatibility
-#define MB_FALSE (maybe_bool::f)
-#define MB_TRUE  (maybe_bool::t)
-#define MB_MAYBE (maybe_bool::maybe)
-
-bool tobool(maybe_bool mb, bool def);
-maybe_bool frombool(bool b);
-const std::string maybe_to_string(const maybe_bool mb);
-

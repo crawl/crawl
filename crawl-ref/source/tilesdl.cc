@@ -997,7 +997,7 @@ void TilesFramework::do_layout()
 
 bool TilesFramework::is_using_small_layout()
 {
-    if (Options.tile_use_small_layout == MB_MAYBE)
+    if (Options.tile_use_small_layout == maybe_bool::maybe)
 #ifndef __ANDROID__
         // Rough estimation of the minimum usable window size
         //   - width > stats font width * 45 + msg font width * 45
@@ -1009,7 +1009,7 @@ bool TilesFramework::is_using_small_layout()
         return true;
 #endif
     else
-        return Options.tile_use_small_layout;
+        return bool(Options.tile_use_small_layout);
 }
 
 #define ZOOM_INC 10

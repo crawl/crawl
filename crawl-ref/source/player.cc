@@ -762,29 +762,29 @@ void update_vision_range()
  *
  * @param eq   The slot in question.
  * @param temp Whether to consider forms.
- * @return   MB_FALSE if the player can never use the slot;
- *           MB_MAYBE if the player can only use some items for the slot;
- *           MB_TRUE  if the player can use any (fsvo any) item for the slot.
+ * @return   false             if the player can never use the slot;
+ *           maybe_bool::maybe if the player can only use some items for the slot;
+ *           true              if the player can use any (fsvo any) item for the slot.
  */
 maybe_bool you_can_wear(equipment_type eq, bool temp)
 {
     // EQ_NONE will crash anyways, so just make it explicit. (Would it make
-    // sense to instead return MB_FALSE?)
+    // sense to instead return false?)
     ASSERT(eq != EQ_NONE);
 
     if (temp && !get_form()->slot_available(eq))
-        return MB_FALSE;
+        return false;
 
     // handles incorrect ring slots vs species
     if (species::bans_eq(you.species, eq))
-        return MB_FALSE;
+        return false;
 
     switch (eq)
     {
     case EQ_RING_EIGHT:
     case EQ_LEFT_RING:
         if (you.get_mutation_level(MUT_MISSING_HAND))
-            return MB_FALSE;
+            return false;
         // intentional fallthrough
     case EQ_RIGHT_RING:
     case EQ_RING_ONE:
@@ -794,22 +794,23 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     case EQ_RING_FIVE:
     case EQ_RING_SIX:
     case EQ_RING_SEVEN:
-        return MB_TRUE;
+        return true;
 
     case EQ_WEAPON:
     case EQ_STAFF:
-        return you.has_mutation(MUT_NO_GRASPING) ? MB_FALSE :
-               you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM ? MB_MAYBE :
-                                         MB_TRUE;
+        return you.has_mutation(MUT_NO_GRASPING)
+            ? false : you.body_size(PSIZE_TORSO, !temp) < SIZE_MEDIUM
+            ? maybe_bool::maybe
+            : true;
 
     // You can always wear at least one ring (forms were already handled).
     case EQ_RINGS:
     case EQ_ALL_ARMOUR:
     case EQ_AMULET:
-        return MB_TRUE;
+        return true;
 
     case EQ_RING_AMULET:
-        return player_equip_unrand(UNRAND_FINGER_AMULET) ? MB_TRUE : MB_FALSE;
+        return player_equip_unrand(UNRAND_FINGER_AMULET);
 
     default:
         break;
@@ -864,14 +865,14 @@ maybe_bool you_can_wear(equipment_type eq, bool temp)
     ASSERT(dummy.sub_type != NUM_ARMOURS);
 
     if (can_wear_armour(dummy, false, !temp))
-        return MB_TRUE;
+        return true;
     else if (alternate.sub_type != NUM_ARMOURS
              && can_wear_armour(alternate, false, !temp))
     {
-        return MB_MAYBE;
+        return maybe_bool::maybe;
     }
     else
-        return MB_FALSE;
+        return false;
 }
 
 bool player_has_feet(bool temp, bool include_mutations)

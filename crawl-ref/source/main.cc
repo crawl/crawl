@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
 #endif
     // do this explicitly so that static initialization order woes can be
     // ignored.
-    msg::force_stderr echo(MB_MAYBE);
+    msg::force_stderr echo(maybe_bool::maybe);
 
     init_crash_handler();
 
@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
 
         // TODO: would be simpler to just never echo? Do other builds really
         // need this outside of debugging contexts?
-        msg::force_stderr suppress_log_stderr(MB_FALSE);
+        msg::force_stderr suppress_log_stderr(false);
 #endif
         read_init_file();
     }

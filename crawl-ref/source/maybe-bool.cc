@@ -3,21 +3,6 @@
 
 #include "maybe-bool.h"
 
-bool tobool(maybe_bool mb, bool def)
-{
-    return mb.to_bool(def);
-}
-
-maybe_bool frombool(bool b)
-{
-    return maybe_bool(b);
-}
-
-const std::string maybe_to_string(const maybe_bool mb)
-{
-    return mb.to_string();
-}
-
 // probably would be safe to move to header and inline?
 const std::string maybe_bool::to_string() const
 {

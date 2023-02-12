@@ -191,9 +191,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(blink_brightens_background), false),
         new MultipleChoiceGameOption<maybe_bool>(
             SIMPLE_NAME(bold_brightens_foreground),
-            MB_FALSE, {{"false", MB_FALSE},
-                       {"true", MB_MAYBE},
-                       {"force", MB_TRUE}}, true),
+            false, {{"false", false},
+                    {"true", maybe_bool::maybe},
+                    {"force", true}}, true),
         new MultipleChoiceGameOption<char_set_type>(
             SIMPLE_NAME(char_set),
             CSET_DEFAULT,
@@ -238,11 +238,11 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
         new MultipleChoiceGameOption<maybe_bool>(
             SIMPLE_NAME(show_god_gift),
-            MB_MAYBE, {{"false", MB_FALSE},
-                       {"unid", MB_MAYBE},
-                       {"unident", MB_MAYBE},
-                       {"unidentified", MB_MAYBE},
-                       {"true", MB_TRUE}}, true),
+            maybe_bool::maybe, {{"false", false},
+                                {"unid", maybe_bool::maybe},
+                                {"unident", maybe_bool::maybe},
+                                {"unidentified", maybe_bool::maybe},
+                                {"true", true}}, true),
         new BoolGameOption(SIMPLE_NAME(show_travel_trail), USING_DGL),
         new BoolGameOption(SIMPLE_NAME(use_fake_cursor), USING_UNIX ),
         new BoolGameOption(SIMPLE_NAME(use_fake_player_cursor), true),
@@ -495,11 +495,11 @@ const vector<GameOption*> game_options::build_options_list()
              {"auto", SCREENMODE_AUTO}}, true),
         new MultipleChoiceGameOption<maybe_bool>(
             SIMPLE_NAME(tile_use_small_layout),
-            MB_MAYBE,
-            {{"true", MB_TRUE},
-             {"false", MB_FALSE},
-             {"maybe", MB_MAYBE},
-             {"auto", MB_MAYBE}}, true),
+            maybe_bool::maybe,
+            {{"true", true},
+             {"false", false},
+             {"maybe", maybe_bool::maybe},
+             {"auto", maybe_bool::maybe}}, true),
 #endif
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
@@ -1279,15 +1279,15 @@ void game_options::reset_options()
 
 #ifdef DGAMELAUNCH
     // not settable via rc on DGL, so no Options object to initialize them
-    restart_after_game = MB_FALSE;
+    restart_after_game = false;
     restart_after_save = false;
     newgame_after_quit = false;
     name_bypasses_menu = true;
 #else
 #ifdef USE_TILE_LOCAL
-    restart_after_game = MB_TRUE;
+    restart_after_game = true;
 #else
-    restart_after_game = MB_MAYBE;
+    restart_after_game = maybe_bool::maybe;
 #endif
 #endif
 
@@ -1295,7 +1295,7 @@ void game_options::reset_options()
 
 #ifdef USE_TILE_LOCAL
     // window layout
-    tile_use_small_layout = MB_MAYBE;
+    tile_use_small_layout = maybe_bool::maybe;
 #endif
 
 #ifdef USE_TILE
@@ -5369,7 +5369,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!rc_only)
             {
                 Options.game.type = GAME_TYPE_ARENA;
-                Options.restart_after_game = MB_FALSE;
+                Options.restart_after_game = false;
             }
             if (next_is_param)
             {

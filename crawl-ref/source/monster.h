@@ -313,8 +313,8 @@ public:
                           bool ignore_transform = false,
                           bool quiet = true) const override;
 
-    void      wield_melee_weapon(maybe_bool msg = MB_MAYBE);
-    void      swap_weapons(maybe_bool msg = MB_MAYBE);
+    void      wield_melee_weapon(maybe_bool msg = maybe_bool::maybe);
+    void      swap_weapons(maybe_bool msg = maybe_bool::maybe);
     bool      pickup_item(item_def &item, bool msg, bool force);
     bool      drop_item(mon_inv_type eslot, bool msg);
     bool      unequip(item_def &item, bool msg, bool force = false);

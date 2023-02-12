@@ -1439,7 +1439,7 @@ string spell_uselessness_reason(spell_type spell, bool temp, bool prevent,
         break;
 
     case SPELL_ANIMATE_ARMOUR:
-        if (you_can_wear(EQ_BODY_ARMOUR, temp) == MB_FALSE)
+        if (!you_can_wear(EQ_BODY_ARMOUR, temp))
             return "you cannot wear body armour.";
         if (temp && !you.slot_item(EQ_BODY_ARMOUR))
             return "you have no body armour to summon the spirit of.";

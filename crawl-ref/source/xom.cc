@@ -378,7 +378,7 @@ void xom_tick()
         // If Xom is bored, the chances for Xom acting are sort of reversed.
         if (!you.gift_timeout && x_chance_in_y(25 - chance*chance, 100))
         {
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
+            xom_acts(abs(you.piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
             return;
         }
         else if (you.gift_timeout <= 1 && chance > 0
@@ -405,7 +405,7 @@ void xom_tick()
         }
 
         if (x_chance_in_y(chance*chance, 100))
-            xom_acts(abs(you.piety - HALF_MAX_PIETY), MB_MAYBE, tension);
+            xom_acts(abs(you.piety - HALF_MAX_PIETY), maybe_bool::maybe, tension);
     }
 }
 
@@ -1956,7 +1956,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     // Body, player species, transformations, etc.
 
     if (starts_with(species::skin_name(you.species), "bandage")
-        && you_can_wear(EQ_BODY_ARMOUR, true) != MB_FALSE)
+        && you_can_wear(EQ_BODY_ARMOUR, true) != false)
     {
         messages.emplace_back("You briefly get tangled in your bandages.");
         if (!you.airborne() && !you.swimming())
@@ -1992,7 +1992,7 @@ static void _xom_pseudo_miscast(int /*sever*/)
     ///////////////////////////
     // Equipment related stuff.
 
-    if (you_can_wear(EQ_WEAPON, true) != MB_FALSE
+    if (you_can_wear(EQ_WEAPON, true) != false
         && !you.slot_item(EQ_WEAPON))
     {
         string str = "A fancy cane briefly appears in your ";
@@ -3174,14 +3174,14 @@ void xom_take_action(xom_event_type action, int sever)
  *
  * @param sever         The intended magnitude of the action.
  * @param nice          Whether the action should be 'good' for the player.
- *                      If MB_MAYBE, determined by xom's whim.
+ *                      If maybe_bool::maybe, determined by xom's whim.
  *                      May be overridden.
  * @param tension       How much danger we think the player's currently in.
  * @return              Whichever action Xom took, or XOM_DID_NOTHING.
  */
 xom_event_type xom_acts(int sever, maybe_bool nice, int tension, bool debug)
 {
-    bool niceness = tobool(nice, xom_is_nice(tension));
+    bool niceness = nice.to_bool(xom_is_nice(tension));
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
     if (!debug)
@@ -3714,7 +3714,7 @@ void debug_xom_effects()
         // Repeat N times.
         for (int i = 0; i < N; ++i)
         {
-            const xom_event_type result = xom_acts(sever, MB_MAYBE, tension,
+            const xom_event_type result = xom_acts(sever, maybe_bool::maybe, tension,
                                                    true);
 
             mood_effects.push_back(result);

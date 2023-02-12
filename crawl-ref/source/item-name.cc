@@ -104,8 +104,9 @@ static string _item_inscription(const item_def &item)
 
     if (const char *orig = _interesting_origin(item))
     {
-        if (Options.show_god_gift == MB_TRUE
-            || Options.show_god_gift == MB_MAYBE && !fully_identified(item))
+        if (bool(Options.show_god_gift)
+            || Options.show_god_gift == maybe_bool::maybe
+                && !fully_identified(item))
         {
             insparts.push_back(orig);
         }
@@ -3139,7 +3140,7 @@ bool is_useless_item(const item_def &item, bool temp, bool ident)
         return cannot_drink_item_reason(&item, temp, false, ident).size();
     }
     case OBJ_JEWELLERY:
-        if (temp && you_can_wear(get_item_slot(item)) == MB_FALSE)
+        if (temp && bool(!you_can_wear(get_item_slot(item))))
             return true;
 
         if (!ident && !item_type_known(item))

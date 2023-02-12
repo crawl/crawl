@@ -1022,7 +1022,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
         // curses typically uses WA_BOLD to give bright foreground colour,
         // but various termcaps may disagree
         if ((fg_curses & COLFLAG_CURSES_BRIGHTEN)
-            && (Options.bold_brightens_foreground != MB_FALSE
+            && (Options.bold_brightens_foreground != false
                 || Options.best_effort_brighten_foreground))
         {
             style.attr |= WA_BOLD;
@@ -1037,7 +1037,7 @@ static curses_style curs_attr(COLOURS fg, COLOURS bg, bool adjust_background)
             style.attr |= WA_BLINK;
         }
     }
-    else if (Options.bold_brightens_foreground == MB_TRUE
+    else if (bool(Options.bold_brightens_foreground)
                 && (fg_curses & COLFLAG_CURSES_BRIGHTEN))
     {
         style.attr |= WA_BOLD;
@@ -1197,7 +1197,7 @@ lib_display_info::lib_display_info()
     term(termname()),
     fg_colors(
         (curs_can_use_extended_colors()
-                || Options.bold_brightens_foreground != MB_FALSE)
+                || Options.bold_brightens_foreground != false)
         ? 16 : 8),
     bg_colors(
         (curs_can_use_extended_colors() || Options.blink_brightens_background)
@@ -1248,7 +1248,7 @@ static void curs_adjust_color_pair_to_non_identical(short &fg, short &bg,
     // sets one of these options.
     if (!curs_can_use_extended_colors())
     {
-        if (Options.bold_brightens_foreground == MB_FALSE)
+        if (!Options.bold_brightens_foreground)
         {
             fg_to_compare = fg & ~COLFLAG_CURSES_BRIGHTEN;
             fg_default_to_compare = fg_default & ~COLFLAG_CURSES_BRIGHTEN;
@@ -1629,7 +1629,7 @@ static curses_style flip_colour(curses_style style)
             // XX I don't *think* this logic should apply for
             // bold_brightens_foreground = force...
             if ((bg & COLFLAG_CURSES_BRIGHTEN)
-                && (Options.bold_brightens_foreground != MB_FALSE
+                && (Options.bold_brightens_foreground != false
                     || Options.best_effort_brighten_foreground))
             {
                 style.attr |= WA_BOLD;

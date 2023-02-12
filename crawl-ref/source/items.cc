@@ -2933,11 +2933,8 @@ static bool _is_option_autopickup(const item_def &item, bool ignore_force)
              clua.error.c_str());
     }
 
-    if (res == MB_TRUE)
-        return true;
-
-    if (res == MB_FALSE)
-        return false;
+    if (res.is_bool())
+        return bool(res);
 
     // Check for initial settings
     for (const pair<text_pattern, bool>& option : Options.force_autopickup)

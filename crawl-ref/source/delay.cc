@@ -888,7 +888,7 @@ static maybe_bool _userdef_interrupt_activity(Delay* delay,
 {
     lua_State *ls = clua.state();
     if (!ls || ai == activity_interrupt::force)
-        return MB_TRUE;
+        return true;
 
     const char *interrupt_name = _activity_interrupt_name(ai);
 
@@ -900,21 +900,21 @@ static maybe_bool _userdef_interrupt_activity(Delay* delay,
         if (lua_isnil(ls, -1))
         {
             lua_pop(ls, 1);
-            return MB_FALSE;
+            return false;
         }
 
         bool stopact = lua_toboolean(ls, -1);
         lua_pop(ls, 1);
         if (stopact)
-            return MB_TRUE;
+            return true;
     }
 
     if (delay->is_macro() && clua.callbooleanfn(true, "c_interrupt_macro",
                                                 "sA", interrupt_name, &at))
     {
-        return MB_TRUE;
+        return true;
     }
-    return MB_MAYBE;
+    return maybe_bool::maybe;
 }
 
 // Returns true if the activity should be interrupted, false otherwise.

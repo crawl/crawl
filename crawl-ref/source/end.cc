@@ -67,7 +67,7 @@ bool crawl_should_restart(game_exit exit)
     if (exit == game_exit::abort || exit == game_exit::unknown)
         return true; // always restart on aborting out of a menu
     bool ret =
-        tobool(Options.restart_after_game, !crawl_state.bypassed_startup_menu);
+        Options.restart_after_game.to_bool(!crawl_state.bypassed_startup_menu);
     if (exit == game_exit::save)
         ret = ret && Options.restart_after_save;
     return ret;

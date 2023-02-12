@@ -274,9 +274,9 @@ void list_armour()
                                        : "unknown")
              << " : ";
 
-        if (you_can_wear(i) == MB_FALSE)
+        if (!you_can_wear(i))
             estr << "    (unavailable)";
-        else if (you_can_wear(i, true) == MB_FALSE)
+        else if (!you_can_wear(i, true))
             estr << "    (currently unavailable)";
         else if (armour_id != -1)
         {
@@ -284,7 +284,7 @@ void list_armour()
             colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
                                  "equip");
         }
-        else if (you_can_wear(i) == MB_MAYBE)
+        else if (you_can_wear(i) == maybe_bool::maybe)
             estr << "    (restricted)";
         else
             estr << "    none";
@@ -305,7 +305,7 @@ void list_jewellery()
     for (int j = EQ_LEFT_RING; j < NUM_EQUIP; j++)
     {
         const equipment_type i = static_cast<equipment_type>(j);
-        if (you_can_wear(i) == MB_FALSE)
+        if (!you_can_wear(i))
             continue;
 
         const int jewellery_id = you.equip[i];
@@ -327,7 +327,7 @@ void list_jewellery()
                                        : "unknown";
 
         string item;
-        if (you_can_wear(i, true) == MB_FALSE)
+        if (!you_can_wear(i, true))
             item = "    (currently unavailable)";
         else if (jewellery_id != -1)
         {
@@ -734,7 +734,7 @@ static void _display_diag()
             "  `<w>best_effort_brighten_background</w>`: %d\n\n",
             (int) Options.allow_extended_colours,
             Options.allow_extended_colours ? " (overridden by TERM)" : "",
-            Options.bold_brightens_foreground == MB_FALSE ? 0 : 1,
+            (int) Options.bold_brightens_foreground.to_bool(true),
             (int) Options.blink_brightens_background,
             (int) Options.best_effort_brighten_foreground,
             (int) Options.best_effort_brighten_background);
@@ -753,7 +753,7 @@ static void _display_diag()
             // 80x25 when these diagnostics are shown
         }
     }
-    else if (!suppress_unix_stuff && Options.bold_brightens_foreground == MB_TRUE)
+    else if (!suppress_unix_stuff && bool(Options.bold_brightens_foreground))
         s += "Option `bold_brightens_foreground`: force\n\n";
 
 #ifndef USE_TILE_LOCAL
@@ -1400,12 +1400,12 @@ private:
             case '#':
                 // disable these if there's no character to view
                 if (!crawl_state.game_started)
-                    return MB_MAYBE;
+                    return maybe_bool::maybe;
                 // falltrough
             case CK_ESCAPE: case '/': case 'q': case 'v': case '!':
                 // exit the UI, these help screens are activated outside of
                 // the scroller popup
-                return MB_FALSE;
+                return false;
             default:
                 // try to process help section hotkeys
                 if (!(page = _get_help_section(key, header_text, help_text, scroll)))
@@ -1418,7 +1418,7 @@ private:
                 }
                 scroll = scroll ? (scroll-2)*line_height : 0;
                 set_scroll(scroll);
-                return MB_TRUE;
+                return true;
         }
 
         return formatted_scroller::process_key(ch);

@@ -973,7 +973,7 @@ namespace msg
 {
     static bool suppress_messages = false;
     static unordered_set<tee *> current_message_tees;
-    static maybe_bool _msgs_to_stderr = MB_MAYBE;
+    static maybe_bool _msgs_to_stderr = maybe_bool::maybe;
 
     static bool _suppressed()
     {
@@ -983,9 +983,9 @@ namespace msg
     /**
      * RAII logic for controlling echoing to stderr.
      * @param f the new state:
-     *   MB_TRUE: always echo to stderr (mainly used for debugging)
-     *   MB_MAYBE: use default logic, based on mode, io state, etc
-     *   MB_FALSE: never echo to stderr (for suppressing error echoing during
+     *   true: always echo to stderr (mainly used for debugging)
+     *   maybe_bool::maybe: use default logic, based on mode, io state, etc
+     *   false: never echo to stderr (for suppressing error echoing during
      *             startup, e.g. for first-pass initfile processing)
      */
     force_stderr::force_stderr(maybe_bool f)
@@ -1002,11 +1002,10 @@ namespace msg
 
     bool uses_stderr(msg_channel_type channel)
     {
-        if (_msgs_to_stderr == MB_TRUE)
-            return true;
-        else if (_msgs_to_stderr == MB_FALSE)
-            return false;
-        // else, MB_MAYBE:
+        if (_msgs_to_stderr.is_bool())
+            return bool(_msgs_to_stderr);
+
+        // else, maybe_bool::maybe:
 
         if (channel == MSGCH_ERROR)
         {

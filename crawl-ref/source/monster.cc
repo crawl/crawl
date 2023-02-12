@@ -1999,7 +1999,7 @@ bool monster::pickup_item(item_def &item, bool msg, bool force)
 
 void monster::swap_weapons(maybe_bool maybe_msg)
 {
-    const bool msg = tobool(maybe_msg, observable());
+    const bool msg = maybe_msg.to_bool(observable());
 
     item_def *weap = mslot_item(MSLOT_WEAPON);
     item_def *alt  = mslot_item(MSLOT_ALT_WEAPON);

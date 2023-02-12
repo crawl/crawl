@@ -1288,7 +1288,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             give_weapon(mon, place.absdepth());
 
         unwind_var<int> save_speedinc(mon->speed_increment);
-        mon->wield_melee_weapon(MB_FALSE);
+        mon->wield_melee_weapon(false);
     }
 
     if (mon->type == MONS_SLIME_CREATURE && mon->blob_size > 1)

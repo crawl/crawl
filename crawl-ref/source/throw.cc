@@ -75,7 +75,7 @@ public:
         if (!targeted()
             || is_pproj_active() && action.affected_by_pproj())
         {
-            needs_path = MB_FALSE;
+            needs_path = false;
         }
     }
 
