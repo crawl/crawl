@@ -4828,10 +4828,7 @@ int monster::foe_distance() const
                 : INFINITE_DISTANCE;
 }
 
-/**
- * Can the monster suffer ENCH_INSANE?
- */
-bool monster::can_go_frenzy() const
+bool monster::can_get_mad() const
 {
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
@@ -4847,8 +4844,15 @@ bool monster::can_go_frenzy() const
     if (berserk_or_insane() || has_ench(ENCH_FATIGUE))
         return false;
 
-    // If we have no melee attack, going berserk is pointless.
-    if (!mons_has_attacks(*this))
+    return true;
+}
+
+/**
+ * Can the monster suffer ENCH_INSANE?
+ */
+bool monster::can_go_frenzy() const
+{
+    if (!can_get_mad())
         return false;
 
     // These allies have a special loyalty
@@ -4864,7 +4868,8 @@ bool monster::can_go_frenzy() const
 bool monster::can_go_berserk() const
 {
     return bool(holiness() & (MH_NATURAL | MH_DEMONIC | MH_HOLY))
-           && can_go_frenzy();
+           && mons_has_attacks(*this)
+           && can_get_mad();
 }
 
 bool monster::berserk() const

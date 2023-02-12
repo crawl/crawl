@@ -352,6 +352,7 @@ public:
     void attacking(actor *other) override;
     bool can_go_frenzy() const;
     bool can_go_berserk() const override;
+    bool can_get_mad() const;
     bool go_berserk(bool intentional, bool potion = false) override;
     bool go_frenzy(actor *source);
     bool berserk() const override;
