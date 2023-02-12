@@ -4384,20 +4384,27 @@ bool get_item_by_name(item_def *item, const char* specs,
     return true;
 }
 
-static bool _get_manual_by_exact_name(item_def &item, const char *lc_name)
+static bool _locate_manual_by_exact_name(item_def &item, const char *lc_name)
 {
-    if (item.base_type != OBJ_BOOKS || item.sub_type != BOOK_MANUAL)
-        return false;
     // lookup manual names. We need to line up pluses with names to get this
     // right; in contrast to the regular strategy for exact name lookup, this
     // call just checks the item name cache directly.
+
+    // preconditions: we already have a manual, just need to find the right
+    // plus value
+    if (item.base_type != OBJ_BOOKS || item.sub_type != BOOK_MANUAL)
+        return false;
 
     // XX can/should any other name lookups be done via the item name cache?
     // any mismatch between the name cache and the exact name lookup will lead
     // to errors when querying by glyph.
     auto item_kind = item_kind_by_name(lc_name);
-    if (item_kind.base_type == OBJ_UNASSIGNED)
+    if (item_kind.base_type == OBJ_UNASSIGNED // not found (here for clarity, 2nd disjunct covers this)
+        || item_kind.base_type != item.base_type // not a book
+        || item_kind.sub_type != item.sub_type) // not a manual
+    {
         return false;
+    }
     item.plus = item_kind.plus;
     return true;
 }
@@ -4411,6 +4418,8 @@ bool get_item_by_exact_name(item_def &item, const char* name)
 
     string name_lc = lowercase_string(string(name));
 
+    // XX could we just use the item name cache instead of iterating through
+    // every name?
     for (int i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
         if (i == OBJ_RUNES) // runes aren't shown in ?/I
@@ -4426,7 +4435,8 @@ bool get_item_by_exact_name(item_def &item, const char* name)
                 item.sub_type = j;
                 if (lowercase_string(item.name(DESC_DBNAME)) == name_lc)
                     return true;
-                if (_get_manual_by_exact_name(item, name_lc.c_str()))
+                // if it's a manual, we also need to find the plus value:
+                if (_locate_manual_by_exact_name(item, name_lc.c_str()))
                     return true;
             }
         }
