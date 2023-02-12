@@ -16,7 +16,6 @@ const int DEFAULT_SHATTER_DICE = 3;
 const int FLAT_DISCHARGE_ARC_DAMAGE = 2;
 const int AIRSTRIKE_PER_SPACE_BONUS = 2;
 const int MAX_AIRSTRIKE_BONUS = 8 * AIRSTRIKE_PER_SPACE_BONUS;
-const int MAX_ARCJOLT_DISTANCE = 5;
 
 #define COUPLING_TIME_KEY "maxwells_charge_time"
 #define FLAME_WAVE_KEY "flame_waves"
