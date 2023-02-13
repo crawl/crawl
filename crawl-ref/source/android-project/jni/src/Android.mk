@@ -158,6 +158,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
     $(CRAWL_PATH)/mapdef.cc \
     $(CRAWL_PATH)/mapmark.cc \
     $(CRAWL_PATH)/maps.cc \
+    $(CRAWL_PATH)/maybe-bool.cc \
     $(CRAWL_PATH)/melee-attack.cc \
     $(CRAWL_PATH)/menu.cc \
     $(CRAWL_PATH)/message-stream.cc \
