@@ -112,6 +112,8 @@ public:
     friend inline maybe_bool operator&& (const maybe_bool &b1, const maybe_bool &b2);
     friend inline maybe_bool operator|| (const maybe_bool &b1, const maybe_bool &b2);
     friend inline maybe_bool operator! (const maybe_bool &b);
+
+    static void test_cases();
 };
 
 inline bool operator== (const maybe_bool &b1, const maybe_bool &b2)
