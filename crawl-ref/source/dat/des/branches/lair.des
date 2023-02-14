@@ -1919,7 +1919,7 @@ DEPTH:  Lair:2-5
 MONS:   komodo dragon band, skyshark band, Grum, Snorg
 SUBST:  1 = 111122222234
 KPROP:   ` = bloody
-SUBST: . = ..`
+SUBST:  . = ..`
 : if crawl.coinflip()
 : dgn.delayed_decay(_G, 'a', "dire elephant skeleton")
 : else
