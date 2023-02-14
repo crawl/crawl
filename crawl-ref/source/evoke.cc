@@ -420,8 +420,12 @@ void wind_blast(actor* agent, int pow, coord_def target)
 
     for (actor *act : act_list)
     {
-        const int push = _gale_push_dist(agent, act, pow);
-        act->knockback(*agent, push, pow, "gust of wind");
+        // May have died to a previous collision.
+        if (act->alive())
+        {
+            const int push = _gale_push_dist(agent, act, pow);
+            act->knockback(*agent, push, pow, "gust of wind");
+        }
     }
 
     // Now move clouds
