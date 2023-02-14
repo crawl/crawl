@@ -1913,6 +1913,25 @@ ENDMAP
 ###############################################################################
 # Remaining non-grouped regular Lair vaults.
 
+NAME:   beargit_carnivore_pack
+ORIENT: float
+DEPTH:  Lair:2-5
+MONS:   komodo dragon band, skyshark band, Grum, Snorg
+SUBST:  1 = 111122222234
+KPROP:   ` = bloody
+SUBST:  . = ..`
+: if crawl.coinflip()
+: dgn.delayed_decay(_G, 'a', "dire elephant skeleton")
+: else
+: dgn.delayed_decay(_G, 'a', "dire elephant corpse")
+: end
+MAP
+.....
+.....
+..a1.
+.....
+END MAP
+
 # Rats! (Lemuel) [combined both Lair and D versions]
 NAME:    lemuel_ratsnest
 ORIENT:  northeast
@@ -3247,7 +3266,7 @@ PLACE:   Lair:$
 ORIENT:  float
 KMONS:   1 = bullfrog
 KMONS:   2 = cane toad
-KMONS:   3 = vampire mosquito
+KMONS:   3 = vampire mosquito / skyshark w:4
 KMONS:   4 = blink frog
 KMONS:   5 = komodo dragon / hydra
 KMONS:   6 = patrolling tyrant leech
@@ -3471,7 +3490,7 @@ KITEM:   e = throwing net q:3 / rapier good_item / captain's cutlass w:2 \
 KMONS:   p = plant
 KMONS:   1 = hornet / wyvern / blink frog / cane toad / steam dragon
 KMONS:   2 = elephant / komodo dragon / polar bear / rime drake
-KMONS:   3 = snapping turtle / sea snake / manticore / wind drake / harpy
+KMONS:   3 = snapping turtle / sea snake / manticore / wind drake / harpy / skyshark
 KMONS:   4 = dire elephant / hydra / torpor snail
 KMONS:   5 = patrolling merfolk avatar
 KFEAT:   p12345de%*| = W
