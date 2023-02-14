@@ -1,13 +1,13 @@
 ###############################################################################
 #
-# German rules
+# German grammar
 #
-# Rules named GENERATE:<context> are used to transform a string from the 
+# Entries named GENERATE:<context> are used to transform a string from the 
 # default (null) context into the version for <context>. These are only applied
 # if there is no hardcoded definition of the string for <context>.
 #
-# The bodies of the rules consist of regular expressions (regex). If you are not
-# familiar with regular expressions, consult Google.
+# The bodies of the entries consist of a sequence of regular expressions (regex).
+# If you are not familiar with regular expressions, consult Google.
 #
 # Expressions come in two forms:
 # /pattern/replacement/
@@ -26,6 +26,8 @@
 #    "der {adj-e}%sRing der Schatten" - don't change the part after Ring
 #    "ein {adj-er}%sRing magischer Kraft" - ditto
 #    "ein {adj-es}%sPaar {adj-e}%sHandschuhe" - don't change the part after Paar
+#  - The default form (null context) for nouns is nominative
+#  - The default form (null context) for adjectives is the -e form
 #
 ###############################################################################
 
