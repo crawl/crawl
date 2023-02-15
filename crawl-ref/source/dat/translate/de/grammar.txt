@@ -207,14 +207,27 @@ GENERATE:dat
 %%%%
 GENERATE:gen
 
+# mark genitive/dative suffix so we can exclude it from later expressions
+/ (der|des|einer|eines|von|vom) /# $1 /
+
+# remove gender hints, to simplify following regexps
+/^\{(m|n|f|pl)\}//
+
+# adjectives ending in -es
+# (must do before adding -es to determiners)
+/^(Euer )?[^A-ZÄÖÜ]+/es\b/en/
+
 # masc/neut determiners
 /^(der|das) /des /
 /^ein /eines /
 /^Euer /Eures /
 
-# masc/neut adjectives
-/^(d|ein|Eur)es [^A-ZÄÖÜ]+/e( \})/en$1/
-/^[^A-ZÄÖÜ]+/e[rs]( \})/en$1/
+# adjectives ending in -er
+# (must do after removing -er from determiners)
+/^(Eures )?[^A-ZÄÖÜ]+/er\b/en/
+
+# masc/neut adjectives ending in -e
+/^des [^A-ZÄÖÜ]+/e\b/en/
 
 # fem/pl determiners
 /^die /der /
@@ -222,26 +235,36 @@ GENERATE:gen
 /^Eure /Eurer /
 
 # fem/pl adjectives
-/^(der|einer) [^A-ZÄÖÜ]+/e( \})/en$1/
-/^[^A-ZÄÖÜ]+/e( \})/er$1/
+/^(der|einer|Eurer) [^A-ZÄÖÜ]+/e\b/en/
+/^[^A-ZÄÖÜ]+/e\b/er/
 
 #fix undeclined adjectives
-/\borange[^ ]\b/orange/
+#/\borangen\b/orange/
 
 # masc/neuter nouns and unique names
-/^(?!(Eur|\{adj\-|[a-zäöüß\-]+)er ).*?(?=( (der|des|einer|eines|von|vom) |$))/$/s/
+/^(?!(Eurer |\{adj\-er\}|[a-zäöüß\-]+er )).*?(?=(#|$))/$/s/
+
+# fix up (single-word) unique names ending in s
+/^([A-ZÄÖÜ]\S+s)s$/$1'/
 
 # fixup weak nouns
-/Prinz Ribbits?/Prinzen Ribbits/
 /herzs\b/herzens/
-/^.*?(?=( (der|des|einer|eines|von|vom) |$))/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet)s$/$1en/
-/^.*?(?=( (der|des|einer|eines|von|vom) |$))/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)s$/$1n/
-/^.*?(?=( (der|des|einer|eines|von|vom) |$))/[Rr]iese|[Aa]ffe|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)s$/$1n/
+/^.*?(?=(#|$))/(Mensch|[Bb]är|[^e]ist|ant|taur|myzet)s$/$1en/
+/^.*?(?=(#|$))/([Ss]chamane|[Ss]chütze|Sklave|[Hh]err|loge|mycete)s$/$1n/
+/^.*?(?=(#|$))/([Rr]iese|[Dd]rache|[Dd]ruide|[Hh]eilige|Ahne)s$/$1n/
+# match Affe but not Waffe
+/^.*?(?=(#|$))/(Affe|[^Ww]affe)s$/$1n/
 
 # fixup other special cases
 /Gelée Royales/Gelée Royale/
-/(sch|[Gg]eist|ss)s$/$1es/
-/^(?!(Eur|\{adj\-|[a-zäöüß\-]+)er.*?(?=( (der|des|einer|eines|von|vom) |$))/ss$/s'/
+/uss\b/us/
+/(ss|sch|[Gg]eist)s?(?=(#|$))/$1es/
+/^(?!(Eurer |\{adj\-er\}|[a-zäöüß\-]+er ).*?(?=(#|$))/ss$/s'/
+/^(der|einer|Eurer) (.*)Lernäische Hydras?/$1 $2Lernäischen Hydra/
+/Lernäische Hydras?/Lernäischer Hydra/
+
+# remove mark we added
+/# / /
 
 %%%%
 
