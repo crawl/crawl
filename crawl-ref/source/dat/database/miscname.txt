@@ -136,6 +136,14 @@ The Orb of Zot is coveted for many reasons. Will you seize it for your own?
 A smirking vizier told you that the Orb of Zot is just within this dungeon.
 
 If you return without finding the Orb of Zot, so far below, it's all over!
+
+One, two, three... Ready or not, find the Orb of Zot!
+
+Far below lies the Orb of Zot. Hopefully nothing unpleasant happens on the way there.
+
+It's time to claim the Orb of Zot, or maybe just get slain and rot!
+
+The @_great_adj_@ Orb of Zot should be around here somewhere.
 %%%%
 # things that surround us on Halloween
 _halloween_things_
