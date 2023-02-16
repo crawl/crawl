@@ -9426,19 +9426,19 @@ Press <w>?</w> for a list of commands and other information.
 <w>?</w> drücken, um eine Liste der Befehle und anderer Informationen anzuzeigen.
 %%%%
 You begin with the following spells memorised: %s
-Ihr beginnt mit den folgenden Zaubersprüchen memoriert: {acc}%s
+Ihr beginnt mit den folgenden Zaubersprüchen memoriert: {dat}%s
 %%%%
 You begin with the following equipment: %s
-Ihr beginnt mit der folgenden Ausrüstung: {acc}%s
+Ihr beginnt mit der folgenden Ausrüstung: {dat}%s
 %%%%
 ; and the following spells memorised: %s
-; und die folgenden Zaubersprüche memoriert: {acc}%s
+; und den folgenden Zaubersprüche memoriert: {dat}%s
 %%%%
 ; and the following spell memorised: %s
-; und den folgenden Zauberspruch memoriert: {acc}%s
+; und den folgenden Zauberspruch memoriert: {dat}%s
 %%%%
 ; and the following spells available to memorise: %s
-; und die folgenden Zaubersprüche zum Memorieren verfügbar: {acc}%s
+; und den folgenden Zaubersprüche zum Memorieren verfügbar: {dat}%s
 %%%%
 You're about to run into a slime covered wall!
 Ihr seid dabei, gegen eine mit Schleim bedeckte Wand zu rennen!
