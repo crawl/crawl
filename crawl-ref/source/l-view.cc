@@ -63,9 +63,13 @@ LUAFN(view_cloud_at)
     return 1;
 }
 
-/*** Is it safe here?
+/*** Is it safe here? A square is considered unsafe if it has a harmful cloud,
+ * harmful trap, untraversable terrain, a runed door, or is excluded. The
+ * untraversable terrain check is the same as travel.feature_is_traversable().
  * @tparam int x
  * @tparam int y
+ * @tparam boolean assume_flight If true, assume the player has permanent
+ *                               flight.
  * @treturn boolean
  * @function is_safe_square
  */
@@ -79,7 +83,8 @@ LUAFN(view_is_safe_square)
     }
     cloud_type c = env.map_knowledge(p).cloud();
     if (c != CLOUD_NONE
-        && is_damaging_cloud(c, true, YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
+        && is_damaging_cloud(c, true,
+            YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
     {
         PLUARET(boolean, false);
         return 1;
@@ -94,7 +99,10 @@ LUAFN(view_is_safe_square)
         return 1;
     }
     dungeon_feature_type f = env.map_knowledge(p).feat();
-    if (f != DNGN_UNSEEN && !feat_is_traversable_now(f) || feat_is_runed(f))
+    const bool assume_flight = lua_isboolean(ls, 1) ? lua_toboolean(ls, 1)
+                                                    : false;
+    if (f != DNGN_UNSEEN && !feat_is_traversable_now(f, false, assume_flight)
+        || feat_is_runed(f))
     {
         PLUARET(boolean, false);
         return 1;
