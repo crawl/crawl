@@ -15,6 +15,26 @@
 
 using namespace std;
 
+static bool is_changed(const string& old_value, const string& new_value)
+{
+    if (new_value == old_value)
+    {
+        return false;
+    }
+    else if (starts_with(old_value, "{")) 
+    {
+        // remove gender hint from old value
+        size_t pos = old_value.find('}');
+        if (pos != string::npos)
+        {
+            string trimmed_old_value = old_value.substr(pos+1);
+            if (new_value == trimmed_old_value)
+                return false;
+        }
+    }
+    return true;
+}
+
 static void _process_input_file(const string& context, const string& filename, bool show_all)
 {
 
@@ -40,8 +60,7 @@ static void _process_input_file(const string& context, const string& filename, b
         else if (line == "%%%%")
         {
             string value = localise_contextual(context, key);
-            bool changed = (value != old_value);
-            if (!key.empty() && (show_all || changed))
+            if (!key.empty() && (show_all || is_changed(old_value, value)))
             {
                 if (!show_all)
                     cout << context_prefix;
@@ -75,8 +94,7 @@ static void _process_input_file(const string& context, const string& filename, b
     if (!key.empty())
     {
         string value = localise_contextual(context, key);
-        bool changed = (value != old_value);
-        if (show_all || changed)
+        if (show_all || is_changed(old_value, value))
         {
             if (!show_all)
                 cout << context_prefix;
