@@ -1506,6 +1506,8 @@ static bool _do_wield_weapon(item_def *to_wield, bool adjust_time_taken)
         {
             bool penance = false;
             // Can we safely unwield this item?
+            if (!can_wield(wpn, true, false, true))
+                return false;
             // XX possible code dup with `check_old_item_warning`?
             if (needs_handle_warning(*wpn, OPER_WIELD, penance)
                 // check specifically for !u inscriptions:
