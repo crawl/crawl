@@ -81,16 +81,22 @@ LUAFN(l_is_excluded)
     return 1;
 }
 
-/*** Can we get across this without swimming or flying?
+/*** Can we move onto this feature? Considers player properties like
+ * amphibiousness and permanent (but not temporary) flight, and also considers
+ * travel_avoid_terrain.
  * @tparam string featurename
+ * @tparam boolean assume_flight If true, assume the player has permanent
+ *                               flight.
  * @treturn boolean
  * @function feature_traversable
  */
 LUAFN(l_feature_is_traversable)
 {
     const string &name = luaL_checkstring(ls, 1);
+    const bool assume_flight = lua_isboolean(ls, 1) ? lua_toboolean(ls, 1)
+                                                    : false;
     const dungeon_feature_type feat = dungeon_feature_by_name(name);
-    PLUARET(boolean, feat_is_traversable_now(feat));
+    PLUARET(boolean, feat_is_traversable_now(feat, false, assume_flight));
 }
 
 /*** Is this feature solid?
