@@ -14,13 +14,13 @@
 
 %%%%
 polearms
-Stangenwaffen
+{pl}Stangenwaffen
 %%%%
 launchers
-Werfer
+{pl}Werfer
 %%%%
 missiles
-Geschosse
+{pl}Geschosse
 %%%%
 
 #################################
@@ -37,49 +37,49 @@ Geschosse
 
 %%%%
 arrows
-Pfeile
+{pl}Pfeile
 %%%%
 bolts
-Bolzen
+{pl}Bolzen
 %%%%
 darts
-Wurfpfeile
+{pl}Wurfpfeile
 %%%%
 poisoned darts
-vergiftete Wurfpfeile
+{pl}vergiftete Wurfpfeile
 %%%%
 curare-tipped darts
-Kurare-Wurfpfeile
+{pl}Kurare-Wurfpfeile
 %%%%
 atropa-tipped darts
-Atropa-Wurfpfeile
+{pl}Atropa-Wurfpfeile
 %%%%
 datura-tipped darts
-Datura-Wurfpfeile
+{pl}Datura-Wurfpfeile
 %%%%
 stones
-Steine
+{pl}Steine
 %%%%
 large rocks
-Felsblöcke
+{pl}Felsblöcke
 %%%%
 sling bullets
-Schleuderkugeln
+{pl}Schleuderkugeln
 %%%%
 javelins
-Wurfspeere
+{pl}Wurfspeere
 %%%%
 silver javelins
-Silberwurfspeere
+{pl}Silberwurfspeere
 %%%%
 throwing nets
-Wurfnetze
+{pl}Wurfnetze
 %%%%
 boomerangs
-Bumerangs
+{pl}Bumerangs
 %%%%
 silver boomerangs
-Silberbumerangs
+{pl}Silberbumerangs
 %%%%
 
 #################################
@@ -173,62 +173,62 @@ Schriftrollen der Obsoleszenz
 
 %%%%
 potions of ambrosia
-Tränke der Ambrosia
+{pl}Tränke der Ambrosia
 %%%%
 potions of attraction
-Tränke der Anziehung
+{pl}Tränke der Anziehung
 %%%%
 potions of berserk rage
-Tränke der Berserker-Wut
+{pl}Tränke der Berserker-Wut
 %%%%
 potions of brilliance
-Tränke der Brillanz
+{pl}Tränke der Brillanz
 %%%%
 potions of cancellation
-Tränke der Aufhebung
+{pl}Tränke der Aufhebung
 %%%%
 potions of curing
-Tränke des Gegenmittels
+{pl}Tränke des Gegenmittels
 %%%%
 potions of degeneration
-Tränke der Degeneration
+{pl}Tränke der Degeneration
 %%%%
 potions of experience
-Tränke der Erfahrung
+{pl}Tränke der Erfahrung
 %%%%
 potions of flight
-Tränke des Fliegens
+{pl}Tränke des Fliegens
 %%%%
 potions of haste
-Tränke der Geschwindigkeit
+{pl}Tränke der Geschwindigkeit
 %%%%
 potions of heal wounds
-Heiltränke
+{pl}Heiltränke
 %%%%
 potions of invisibility
-Tränke der Unsichtbarkeit
+{pl}Tränke der Unsichtbarkeit
 %%%%
 potions of lignification
-Tränke der Verholzung
+{pl}Tränke der Verholzung
 %%%%
 potions of magic
-Tränke der Magie
+{pl}Tränke der Magie
 %%%%
 potions of might
-Tränke der Macht
+{pl}Tränke der Macht
 %%%%
 potions of mutation
-Tränke der Mutation
+{pl}Tränke der Mutation
 %%%%
 potions of resistance
-Tränke des Widerstands
+{pl}Tränke des Widerstands
 %%%%
 
 # unidentified potions are named "<colour> <potion>"
 # or "<qualifier> <colour> potion"
 %%%%
 %spotions
-{adj-e}%sZaubertränke
+{pl}{adj-e}%sZaubertränke
 %%%%
 
 #################################
@@ -258,7 +258,7 @@ phials of floods
 Phiolen der Fluten
 %%%%
 phantom mirrors
-Phantomspiegel
+{pl}Phantomspiegel
 %%%%
 figurines of a ziggurat
 Figuren einer Zikkurat
