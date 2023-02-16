@@ -1542,7 +1542,7 @@ Euer {adj-es}%sOchsenbiest
 # "elf zombie", "orc skeleton", etc.
 %%%%
 your %s zombie
-{m}Euer %s-Zombie
+Euer %s-Zombie
 %%%%
 your %s skeleton
 {n}Euer %s-Skelett

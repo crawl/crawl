@@ -1542,7 +1542,7 @@ ein {adj-es}%sOchsenbiest
 # "elf zombie", "orc skeleton", etc.
 %%%%
 a %s zombie
-{m}ein %s-Zombie
+ein %s-Zombie
 %%%%
 a %s skeleton
 {n}ein %s-Skelett
