@@ -51,7 +51,7 @@ int main()
     string result = localise("%-34.34s", "Your Spells");
     show_result(result, "Eure Zaubersprüche                ");
 
-    string msg;
+    string msg, expected;
 
     msg = localise("%s is %s.", "a gray horse", "happy");
     msg = uppercase_first(msg);
@@ -76,9 +76,14 @@ int main()
     msg = localise("You hit @the_monster@.", params);
     show_result(msg, "Ihr schlagt den Ork.");
 
-    // test list with context
-    msg = localise("You begin with the following equipment: %s", "a potion of lignification, a +0 buckler, a +2 spear");
-    string expected = "Ihr beginnt mit der folgenden Ausrüstung: einem Trank der Verholzung, einem +0 Buckler, einem +2 Speer";
+    // test list with acc context
+    msg = localise("You see here %s.", "a +2 arbalest, a potion of lignification, a +0 short sword");
+    expected = "Ihr seht hier eine +2 Armbrust, einen Trank der Verholzung, ein +0 Kurzschwert.";
+    show_result(msg, expected);
+
+    // test list with dat context
+    msg = localise("You begin with the following equipment: %s", "a +2 arbalest, a potion of lignification, a +0 short sword");
+    expected = "Ihr beginnt mit der folgenden Ausrüstung: einer +2 Armbrust, einem Trank der Verholzung, einem +0 Kurzschwert";
     show_result(msg, expected);
 
     // test mutant beasts
