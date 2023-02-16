@@ -14,6 +14,12 @@
 #include <cstring>
 using namespace std;
 
+#if 0
+# define dprintf(...) printf(__VA_ARGS__)
+#else
+# define dprintf(...) (void)0
+#endif
+
 #ifdef NO_TRANSLATE
 //// compile without translation logic ////
 
@@ -69,9 +75,15 @@ string cxlate(const string &context, const string &text_en, bool fallback_en)
     }
 
     if (translation.empty() && fallback_en)
+    {
+        dprintf("cxlate (fallback): \"%s\" (\"%s\") -> \"%s\"\n", text_en.c_str(), context.c_str(), text_en.c_str());
         return text_en;
+    }
     else
+    {
+        dprintf("cxlate: \"%s\" (\"%s\") -> \"%s\"\n", text_en.c_str(), context.c_str(), translation.c_str());
         return translation;
+    }
 }
 
 // translate with context and number
