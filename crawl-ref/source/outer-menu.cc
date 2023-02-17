@@ -311,9 +311,10 @@ void OuterMenu::add_button(shared_ptr<MenuButton> btn, int x, int y)
         m_description_indexes[y*m_width + x] = descriptions->num_children()-1;
     }
 
-    Widget *r;
+    Widget *r = nullptr;
     for (Widget *p = btn.get(); p; p = p->_get_parent())
         r = p;
+    ASSERT(r);
     m_grid->add_child(r->get_shared(), x, y);
 }
 

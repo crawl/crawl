@@ -98,7 +98,7 @@ namespace ui
         }
         return 0; // no popup used
     }
-};
+}
 
 // Like yesno, but requires a full typed answer.
 // Unlike yesno, prompt should have no trailing space.
