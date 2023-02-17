@@ -1100,7 +1100,7 @@ static int dgn_random_walk(lua_State *ls)
     if (!in_bounds(x, y))
     {
         char buf[80];
-        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        snprintf(buf, sizeof(buf), "Point (%d,%d) isn't in bounds.", x, y);
         luaL_argerror(ls, 1, buf);
         return 0;
     }
@@ -1151,7 +1151,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
     if (!in_bounds(x, y))
     {
         char buf[80];
-        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        snprintf(buf, sizeof(buf), "Point (%d,%d) isn't in bounds.", x, y);
         luaL_argerror(ls, 1, buf);
         return 0;
     }
@@ -1251,7 +1251,7 @@ static int dgn_place_cloud(lua_State *ls)
     if (!in_bounds(x, y))
     {
         char buf[80];
-        sprintf(buf, "Point (%d,%d) isn't in bounds.", x, y);
+        snprintf(buf, sizeof(buf), "Point (%d,%d) isn't in bounds.", x, y);
         luaL_argerror(ls, 1, buf);
         return 0;
     }

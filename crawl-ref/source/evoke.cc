@@ -279,11 +279,7 @@ string manual_skill_names(bool short_text)
             skills.insert(sk);
 
     if (short_text && skills.size() > 1)
-    {
-        char buf[40];
-        sprintf(buf, "%lu skills", (unsigned long) skills.size());
-        return string(buf);
-    }
+        return make_stringf("%d skills", static_cast<int>(skills.size()));
     else
         return skill_names(skills);
 }

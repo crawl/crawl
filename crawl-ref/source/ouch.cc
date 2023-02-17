@@ -345,10 +345,9 @@ void lose_level()
     calc_hp();
     calc_mp();
 
-    char buf[200];
-    sprintf(buf, "HP: %d/%d MP: %d/%d",
-            you.hp, you.hp_max, you.magic_points, you.max_magic_points);
-    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
+    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
+        make_stringf("HP: %d/%d MP: %d/%d",
+                you.hp, you.hp_max, you.magic_points, you.max_magic_points)));
 
     you.redraw_title = true;
     you.redraw_experience = true;

@@ -1290,7 +1290,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
     // Now output the sub types.
     char format_str[80];
-    sprintf(format_str, "%%%ds: %%6.2f\n", max_width);
+    snprintf(format_str, sizeof(format_str), "%%%ds: %%6.2f\n", max_width);
 
     for (int i = 0; i < 256; ++i)
     {

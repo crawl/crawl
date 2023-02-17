@@ -2580,11 +2580,10 @@ static void _gain_and_note_hp_mp()
     const int note_maxhp = get_real_hp(false, true);
     const int note_maxmp = get_real_mp(false);
 
-    char buf[200];
-    sprintf(buf, "HP: %d/%d MP: %d/%d",
+    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0,
+        make_stringf("HP: %d/%d MP: %d/%d",
             min(you.hp, note_maxhp), note_maxhp,
-            min(you.magic_points, note_maxmp), note_maxmp);
-    take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
+            min(you.magic_points, note_maxmp), note_maxmp)));
 }
 
 static int _rest_trigger_level(int max)

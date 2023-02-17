@@ -557,27 +557,27 @@ bool make_book_level_randart(item_def &book, int level, bool sif)
     {
         if (level > 1)
             return make_book_level_randart(book, level - 1);
-        char buf[80];
+        string err;
 
         if (god_discard > 0 && uncastable_discard == 0)
         {
-            snprintf(buf, sizeof(buf), "%s disliked all level %d spells",
+            err = make_stringf("%s disliked all level %d spells",
                      god_name(god).c_str(), level);
         }
         else if (god_discard == 0 && uncastable_discard > 0)
-            sprintf(buf, "No level %d spells can be cast by you", level);
+            err = make_stringf("No level %d spells can be cast by you", level);
         else if (god_discard > 0 && uncastable_discard > 0)
         {
-            snprintf(buf, sizeof(buf),
+            err = make_stringf(
                      "All level %d spells are either disliked by %s "
                      "or cannot be cast by you.",
                      level, god_name(god).c_str());
         }
         else
-            sprintf(buf, "No level %d spells?!?!?!", level);
+            err = make_stringf("No level %d spells?!?!?!", level);
 
         mprf(MSGCH_ERROR, "Could not create fixed level randart spellbook: %s",
-             buf);
+             err.c_str());
 
         return false;
     }

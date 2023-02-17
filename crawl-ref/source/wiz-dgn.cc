@@ -804,24 +804,18 @@ void wizard_list_levels()
         const LevelInfo* lv = travel_cache.find_level_info(levs[i]);
         ASSERT(lv);
 
-        string cnts = "";
+        string cnts;
         for (int j = 0; j < NUM_DACTION_COUNTERS; j++)
-        {
-            char num[20];
-            sprintf(num, "%d/", lv->daction_counters[j]);
-            cnts += num;
-        }
+            cnts += make_stringf("%d/", lv->daction_counters[j]);
+
         mprf(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
              "%-10s : %s", levs[i].describe().c_str(), cnts.c_str());
     }
 
     string cnts = "";
     for (int j = 0; j < NUM_DACTION_COUNTERS; j++)
-    {
-        char num[20];
-        sprintf(num, "%d/", query_daction_counter((daction_type)j));
-        cnts += num;
-    }
+        cnts += make_stringf("%d/", query_daction_counter((daction_type)j));
+
     mprf("%-10s : %s", "`- total", cnts.c_str());
 }
 
