@@ -1291,6 +1291,8 @@ static void _split_list(string s, vector<string>& result)
 // returns empty string if input is not a list
 static string _localise_list(const string context, const string& s)
 {
+    static const text_pattern determiner_patt("^(a|an|the|your|[0-9]+) ", true);
+
     vector<string> substrings;
     _split_list(s, substrings);
     if (substrings.size() < 2)
@@ -1301,9 +1303,9 @@ static string _localise_list(const string context, const string& s)
     string result;
     for (string sub: substrings)
     {
-        // If we were called with a non-empty context, we want to make sure it persists.
-        // (e.g. German cases - the whole list should be in the same case)
-        if (!context.empty())
+        // Make sure the "higher-level" context persists (e.g. in German, the whole list should be in the same case).
+        // Also, if it's a list of substantives, we don't want the gender to carry over to the next item.
+        if (!context.empty() || determiner_patt.matches(sub))
             _context = context;
 
         result += _localise_string(_context, sub);
