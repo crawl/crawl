@@ -36,36 +36,16 @@
 #################################
 %%%%
 GENERATE:adj-er
-
 /e /er /
-
-#fix undeclined adjectives
-/\borange\S\b/orange/
-
 %%%%
 GENERATE:adj-es
-
 /e /es /
-
-#fix undeclined adjectives
-/\borange\S\b/orange/
-
 %%%%
 GENERATE:adj-en
-
 /e /en /
-
-#fix undeclined adjectives
-/\borange\S\b/orange/
-
 %%%%
 GENERATE:adj-em
-
 /e /em /
-
-#fix undeclined adjectives
-/\borange\S\b/orange/
-
 %%%%
 
 #################################
@@ -116,9 +96,6 @@ GENERATE:acc
 /Verrückter /Verrückten /
 /er Drakonier/en Drakonier/
 /^(den [A-ZÄÖÜ][^ ,]+)e Drakonier/$1en Drakonier/
-
-# fix undeclined adjectives
-#/\borange[mnrs]\b/orange/
 
 # Restore neuter strings back to their original state
 /^\{neut\}//
@@ -196,9 +173,6 @@ GENERATE:dat
 /^(der|einer|Eurer) (.*)Lernäische Hydra/$1 $2Lernäischen Hydra/
 /Lernäische Hydra/Lernäischer Hydra/
 
-# fix undeclined adjectives
-#/\borange[mnrs]\b/orange/
-
 %%%%
 
 #################################
@@ -237,9 +211,6 @@ GENERATE:gen
 # fem/pl adjectives
 /^(der|einer|Eurer) [^A-ZÄÖÜ]+/e\b/en/
 /^[^A-ZÄÖÜ]+/e\b/er/
-
-#fix undeclined adjectives
-#/\borangen\b/orange/
 
 # masc/neuter nouns and unique names
 /^(?!(Eurer |\{adj\-er\}|[a-zäöüß\-]+er )).*?(?=(#|$))/$/s/
