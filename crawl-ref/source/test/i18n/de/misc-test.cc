@@ -77,13 +77,13 @@ int main()
     show_result(msg, "Ihr schlagt den Ork.");
 
     // test list with acc context
-    msg = localise("You see here %s.", "a +2 arbalest, a potion of lignification, a +0 short sword");
-    expected = "Ihr seht hier eine +2 Armbrust, einen Trank der Verholzung, ein +0 Kurzschwert.";
+    msg = localise("You see here %s.", "a potion of lignification, a +0 short sword and a +2 arbalest");
+    expected = "Ihr seht hier einen Trank der Verholzung, ein +0 Kurzschwert und eine +2 Armbrust.";
     show_result(msg, expected);
 
     // test list with dat context
-    msg = localise("You begin with the following equipment: %s", "a +2 arbalest, a potion of lignification, a +0 short sword");
-    expected = "Ihr beginnt mit der folgenden Ausrüstung: einer +2 Armbrust, einem Trank der Verholzung, einem +0 Kurzschwert";
+    msg = localise("You begin with the following equipment: %s", "a potion of lignification, a +0 short sword and a +2 arbalest");
+    expected = "Ihr beginnt mit der folgenden Ausrüstung: einem Trank der Verholzung, einem +0 Kurzschwert und einer +2 Armbrust";
     show_result(msg, expected);
 
     // test mutant beasts
