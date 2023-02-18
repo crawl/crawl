@@ -670,10 +670,7 @@ void dec_penance(god_type god, int val)
                 invalidate_agrid(true);
             }
             if (have_passive(passive_t::sinv))
-            {
                 mprf(MSGCH_GOD, "Your vision regains its divine sight.");
-                autotoggle_autopickup(false);
-            }
             if (have_passive(passive_t::stat_boost))
             {
                 simple_god_message(" restores the support of your attributes.");
@@ -2511,8 +2508,6 @@ static void _gain_piety_point()
             simple_god_message(" begins accelerating your health and magic "
                                "regeneration.");
         }
-        if (rank == rank_for_passive(passive_t::sinv))
-            autotoggle_autopickup(false);
         if (rank == rank_for_passive(passive_t::clarity))
         {
             // Inconsistent with donning amulets, but matches the

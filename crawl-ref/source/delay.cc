@@ -1175,34 +1175,6 @@ static inline bool _monster_warning(activity_interrupt ai,
     return true;
 }
 
-// Turns autopickup off if we ran into an invisible monster or saw a monster
-// turn invisible.
-// Turns autopickup on if we saw an invisible monster become visible or
-// killed an invisible monster.
-void autotoggle_autopickup(bool off)
-{
-    if (off)
-    {
-        if (Options.autopickup_on > 0)
-        {
-            Options.autopickup_on = -1;
-            mprf(MSGCH_WARN,
-                 "Deactivating autopickup; reactivate with <w>%s</w>.",
-                 command_to_string(CMD_TOGGLE_AUTOPICKUP).c_str());
-        }
-        if (crawl_state.game_is_hints())
-        {
-            learned_something_new(HINT_INVISIBLE_DANGER);
-            Hints.hints_seen_invisible = you.num_turns;
-        }
-    }
-    else if (Options.autopickup_on < 0) // was turned off automatically
-    {
-        Options.autopickup_on = 1;
-        mprf(MSGCH_WARN, "Reactivating autopickup.");
-    }
-}
-
 // Returns true if any activity was stopped. Not reentrant.
 bool interrupt_activity(activity_interrupt ai,
                         const activity_interrupt_data &at,
@@ -1212,13 +1184,6 @@ bool interrupt_activity(activity_interrupt ai,
         return false;
 
     const interrupt_block block_recursive_interrupts;
-    if (ai == activity_interrupt::hit_monster
-        || ai == activity_interrupt::monster_attacks)
-    {
-        const monster* mon = at.mons_data;
-        if (mon && !mon->visible_to(&you) && !mon->submerged())
-            autotoggle_autopickup(true);
-    }
 
     if (crawl_state.is_repeating_cmd())
         return interrupt_cmd_repeat(ai, at);

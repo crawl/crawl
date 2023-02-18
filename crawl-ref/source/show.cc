@@ -454,38 +454,12 @@ static void _update_monster(monster* mons)
 
     // Being submerged is not the same as invisibility.
     if (mons->submerged())
+    {
         return;
 
-    // Ripple effect?
-    // Should match directn.cc's _mon_exposed
-    if (env.grid(gp) == DNGN_SHALLOW_WATER
-            && !mons->airborne()
-            && !cloud_at(gp)
-        || cloud_at(gp) && is_opaque_cloud(cloud_at(gp)->type)
-            && !mons->is_insubstantial())
-    {
-        _mark_invisible_at(gp);
-        mons->unseen_pos = gp;
-        return;
+    _mark_invisible_at(gp);
     }
-
-    int range = player_monster_detect_radius();
-    if (mons->constricted_by == MID_PLAYER
-        || (range > 0 && (you.pos() - mons->pos()).rdist() <= range))
-    {
-        _mark_invisible_at(gp);
-        mons->unseen_pos = gp;
-        return;
-    }
-
-    // 1/7 chance to leave an invis indicator at the real position.
-    if (!_hashed_rand(mons, 0, 7))
-    {
-        _mark_invisible_at(gp);
-        mons->unseen_pos = gp;
-    }
-    else
-        _handle_unseen_mons(mons, 2);
+    mons->unseen_pos = gp;
 }
 
 /**

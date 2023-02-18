@@ -306,7 +306,6 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
                      name(DESC_PLAIN, true).c_str());
             }
 
-            autotoggle_autopickup(!friendly());
             handle_seen_interrupt(this);
         }
 
@@ -597,7 +596,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!quiet)
                 mprf("%s appears from thin air!", name(DESC_A, true).c_str());
 
-            autotoggle_autopickup(false);
             handle_seen_interrupt(this);
         }
         break;
@@ -627,7 +625,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                      name(DESC_THE, true).c_str());
             }
 
-            autotoggle_autopickup(friendly());
         }
         else
         {

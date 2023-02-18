@@ -881,8 +881,6 @@ LUAFN(mi_get_monster_at)
     if (env.mgrid(p) == NON_MONSTER)
         return 0;
     monster* m = &env.mons[env.mgrid(p)];
-    if (!m->visible_to(&you))
-        return 0;
     monster_info mi(m);
     lua_push_moninf(ls, &mi);
     return 1;

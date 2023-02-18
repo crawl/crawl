@@ -725,7 +725,6 @@ activity_interrupt get_activity_interrupt(const string &);
 
 void run_macro(const char *macroname = nullptr);
 
-void autotoggle_autopickup(bool off);
 bool interrupt_activity(activity_interrupt ai,
                         const activity_interrupt_data &a
                             = activity_interrupt_data(),

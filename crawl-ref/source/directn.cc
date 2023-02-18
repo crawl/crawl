@@ -1603,7 +1603,7 @@ string direction_chooser::target_description() const
 
     const bool visible = you.can_see(*mon);
     const bool exposed = _mon_exposed(mon);
-    if (!visible && !exposed)
+    if (!visible)
         return "";
 
     // OK, now we know that we have something to describe.
@@ -1618,8 +1618,10 @@ string direction_chooser::target_description() const
         _append_container(suffixes, monster_description_suffixes(mi));
         text = get_monster_equipment_desc(mi);
     }
-    else
+    else if (exposed)
         text = "Disturbance";
+    else
+        text = "Something";
 
     // Build the final description string.
     if (!suffixes.empty())
@@ -2755,16 +2757,6 @@ static bool _mons_is_valid_target(const monster* mon, targ_mode_type mode,
     // Don't target submerged monsters.
     if (mon->submerged())
         return false;
-
-    // Don't usually target unseen monsters...
-    if (!mon->visible_to(&you))
-    {
-        // ...unless it creates a "disturbance in the water".
-        // Since you can't see the monster, assume it's not a friend.
-        return mode != TARG_FRIEND
-               && _mon_exposed(mon)
-               && i_feel_safe(false, false, true, true, range);
-    }
 
     return true;
 }
