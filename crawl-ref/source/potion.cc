@@ -926,8 +926,8 @@ bool quaff_potion(item_def &potion)
 {
     if (you.has_mutation(MUT_LONG_TONGUE))
     {
-        mprf("You slurp down every last drop of %s!",
-             potion.name(DESC_THE).c_str());
+        mprf("You slurp down every last drop of the %s!",
+             potion.name(DESC_QUALNAME).c_str());
     }
 
     const bool was_known = item_type_known(potion);
