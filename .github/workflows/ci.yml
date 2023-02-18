@@ -569,6 +569,10 @@ jobs:
       - name: Install dependencies
         run: ./deps.py --build-opts "${{ matrix.build_opts }}"
         working-directory: .github/workflows
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 7.6 # known to work
       - name: Cache compilation
         uses: actions/cache@v3
         with:
