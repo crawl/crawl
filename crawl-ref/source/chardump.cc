@@ -862,28 +862,31 @@ static void _sdump_spells(dump_params &par)
 {
     string &text(par.text);
 
-    int spell_levels = player_spell_levels();
-
     string verb = par.se? "had" : "have";
 
-    if (spell_levels == 1)
-        text += "You " + verb + " one spell level left.";
-    else if (spell_levels == 0)
+    if (!you.has_mutation(MUT_INNATE_CASTER))
     {
-        verb = par.se? "couldn't" : "cannot";
+        int spell_levels = player_spell_levels();
 
-        text += "You " + verb + " memorise any spells.";
-    }
-    else
-    {
-        if (par.se)
-            text += "You had ";
+        if (spell_levels == 1)
+            text += "You " + verb + " one spell level left.";
+        else if (spell_levels == 0)
+        {
+            verb = par.se? "couldn't" : "cannot";
+
+            text += "You " + verb + " memorise any spells.";
+        }
         else
-            text += "You have ";
-        text += make_stringf("%d spell levels left.", spell_levels);
-    }
+        {
+            if (par.se)
+                text += "You had ";
+            else
+                text += "You have ";
+            text += make_stringf("%d spell levels left.", spell_levels);
+        }
 
-    text += "\n";
+        text += "\n";
+    }
 
     if (!you.spell_no)
     {
