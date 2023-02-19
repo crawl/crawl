@@ -11894,10 +11894,10 @@ Ihr hört eine laute magische Explosion!
 ##################
 %%%%
 The vine drags %s backwards!
-Die Rebe zieht%s nach hinten!
+Die Rebe zieht {acc}%s nach hinten!
 %%%%
 The tentacle pulls %s backwards!
-Der Tentakel zieht%s nach hinten!
+Der Tentakel zieht {acc}%s nach hinten!
 %%%%
 A tentacle rises from the water!
 Ein Tentakel erhebt sich aus dem Wasser!
