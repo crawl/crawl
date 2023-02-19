@@ -1110,14 +1110,12 @@ bool check_training_target(skill_type sk)
     if (you.training_targets[sk] && target_met(sk))
     {
         bool base = you.skill(sk, 10, false, false) != you.skill(sk, 10);
-        mprf("%sraining target %d.%d for %s reached!",
-            base ? "Base t" : "T",
-            you.training_targets[sk] / 10,
-            you.training_targets[sk] % 10, skill_name(sk));
-
+        auto targ = you.training_targets[sk];
         you.training_targets[sk] = 0;
         you.train[sk] = TRAINING_DISABLED;
         you.train_alt[sk] = TRAINING_DISABLED;
+        mprf("%sraining target %d.%d for %s reached!",
+            base ? "Base t" : "T", targ / 10, targ % 10, skill_name(sk));
         return true;
     }
     return false;
