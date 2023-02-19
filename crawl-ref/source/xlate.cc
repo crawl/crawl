@@ -142,11 +142,14 @@ string cxlate(const string &context, const string &text_en, bool fallback_en)
             // check for translation in global context
             translation = getTranslatedString(text_en);
 
-            string rules = getTranslatedString(string("GENERATE:") + context);
-            if (!rules.empty())
+            if (!translation.empty())
             {
-                // convert default string to context using rules
-                translation = apply_regex_rules(translation, rules);
+                string rules = getTranslatedString(string("GENERATE:") + context);
+                if (!rules.empty())
+                {
+                    // convert default string to context using rules
+                    translation = apply_regex_rules(translation, rules);
+                }
             }
         }
     }
