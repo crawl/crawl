@@ -14,6 +14,7 @@
 #include "monster.h"
 #include "output.h"
 #include "describe.h"
+#include "localise.h"
 #include "tile-inventory-flags.h"
 #include "rltiles/tiledef-dngn.h"
 #include "rltiles/tiledef-icons.h"
@@ -212,7 +213,7 @@ void MonsterRegion::draw_tag()
     if (!mon)
         return;
 
-    string desc = mon->proper_name(DESC_A);
+    string desc = localise(mon->proper_name(DESC_A));
     draw_desc(desc);
 }
 

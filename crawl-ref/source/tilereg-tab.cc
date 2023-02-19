@@ -8,6 +8,7 @@
 #include "cio.h"
 #include "english.h"
 #include "libutil.h"
+#include "localise.h"
 #include "macro.h"
 #include "state.h"
 #include "stringutil.h"
@@ -299,7 +300,7 @@ void TabbedRegion::draw_tag()
     if (!tab)
         return;
 
-    draw_desc(tab->name());
+    draw_desc(localise(tab->name()));
 }
 
 int TabbedRegion::min_height_for_items() const
