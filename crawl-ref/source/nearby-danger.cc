@@ -299,14 +299,6 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
             return false;
         }
 
-        if (!actor_slime_wall_immune(&you) && count_adjacent_slime_walls(you.pos()) > 0)
-        {
-            if (announce)
-                mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
-
-            return false;
-        }
-
         if (you.props[EMERGENCY_FLIGHT_KEY])
         {
             if (announce)

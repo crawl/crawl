@@ -773,15 +773,6 @@ static void _start_running(int dir, int mode)
     }
 
     const coord_def next_pos = you.pos() + Compass[dir];
-
-    if (!have_passive(passive_t::slime_wall_immune)
-        && (dir == RDIR_REST || you.is_habitable_feat(env.grid(next_pos)))
-        && count_adjacent_slime_walls(next_pos))
-    {
-        mprf(MSGCH_WARN, "You're about to run into a slime covered wall!");
-        return;
-    }
-
     string wall_jump_err;
     if (wu_jian_can_wall_jump(next_pos, wall_jump_err))
        return; // Do not wall jump while running.
