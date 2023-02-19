@@ -545,14 +545,17 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     if (old_pos == you.pos() && stepped)
         actor_apply_toxic_bog(&you);
 
-    const bool was_slimy = slime_wall_neighbour(old_pos);
-    const bool is_slimy = slime_wall_neighbour(you.pos());
-    if (was_slimy || is_slimy)
+    if (!actor_slime_wall_immune(&you))
     {
-        you.redraw_armour_class = true;
-        you.wield_change = true;
-        if (!was_slimy)
-            mpr("Acid dripping from the walls corrodes you.");
+        const bool was_slimy = slime_wall_neighbour(old_pos);
+        const bool is_slimy = slime_wall_neighbour(you.pos());
+        if (was_slimy || is_slimy)
+       {
+           you.redraw_armour_class = true;
+           you.wield_change = true;
+           if (!was_slimy)
+               mpr("Acid dripping from the walls corrodes you.");
+       }
     }
 
     if (old_pos != you.pos())
