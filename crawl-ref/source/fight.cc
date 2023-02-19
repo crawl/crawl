@@ -962,10 +962,6 @@ int weapon_min_delay(const item_def &weapon, bool check_speed)
     if (is_crossbow(weapon) && min_delay < 10)
         min_delay = 10;
 
-    // ...and longbows...
-    if (weapon.sub_type == WPN_LONGBOW)
-        min_delay = 6;
-
     // ... and unless it would take more than skill 27 to get there.
     // Round up the reduction from skill, so that min delay is rounded down.
     min_delay = max(min_delay, base - (MAX_SKILL_LEVEL + 1)/2);
