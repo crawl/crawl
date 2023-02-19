@@ -346,6 +346,10 @@ die 27-köpfige Lernäische Hydra
 something
 etwas
 %%%%
+# avoid "etwas, das Ihr nicht sehn könnt" because it would require a following komma in some situations and not others
+something you cannot see
+etwas Unsichtbares
+%%%%
 %s's ghost
 %ss Geist
 %%%%

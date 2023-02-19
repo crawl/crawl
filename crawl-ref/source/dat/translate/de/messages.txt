@@ -11839,34 +11839,31 @@ mit Zauberstäben
 ##################
 %%%%
 %s's form twists and warps, and jellies spill out!
-
+Die Form {gen}%s verdreht und verformt sich, und Gelees quellen heraus!
 %%%%
 %s's appearance momentarily alters.
-
+Das Aussehen {gen}%s ändert sich kurzzeitig.
 %%%%
 %s looks momentarily different.
-
-%%%%
-something you cannot see
-
+%s sieht kurzzeitig anders aus.
 %%%%
 %s grows a second head!
-
+{dat}%s wächst ein zweiter Kopf!
 %%%%
 %s changes into %s!
-
+%s verwandelt sich in {acc}%s!
 %%%%
 %s quivers uncontrollably and liquefies into %s!
-
+%s zittert unkontrolliert und verflüssigt sich zu {dat}%s!
 %%%%
 %s evaporates and reforms as %s!
-
+%s verflüchtigt sich und verwandelt sich in {acc}%s!
 %%%%
 %s quivers momentarily.
-
+%s zittert einen Augenblick.
 %%%%
 Wyrmbane glows as a worthy foe approaches.
-
+Wyrmbane leuchtet, als sich ein würdiger Feind nähert.
 %%%%
 
 ##################

@@ -172,6 +172,8 @@ GENERATE:dat
 /^(dem [A-ZÄÖÜ][^ ,]+)e Drakonier/$1en Drakonier/
 /^(der|einer|Eurer) (.*)Lernäische Hydra/$1 $2Lernäischen Hydra/
 /Lernäische Hydra/Lernäischer Hydra/
+# nominalised adjective
+/Unsichtbares\b/Unsichtbarem/
 
 %%%%
 
