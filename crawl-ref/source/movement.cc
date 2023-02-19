@@ -576,7 +576,15 @@ bool prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
-//Returns the first valid target found if the player attempts to rampage in the
+coord_def get_rampage_destination(coord_def move, monster* target){
+    const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
+    const int rampage_distance = enhanced
+        ? grid_distance(you.pos(), target->pos()) - 1
+        : 1;
+    return you.pos() + (move * (rampage_distance));
+}
+
+//Returns the first target the player could rampage towards in the
 //given direction. If the player cannot rampage or no target exists, return nullptr.
 monster* get_rampage_target(coord_def move)
 {
@@ -590,10 +598,10 @@ monster* get_rampage_target(coord_def move)
         return nullptr;
     }
 
+    // Assert if the requested move is not a move delta
+    // this would throw off our tracer_target.
+    ASSERT(abs(move.x) <= 1 && abs(move.y) <= 1);
 
-    // This logic assumes that the relative coord_def move is from [-1,1].
-    // If the move_player_action() calls are ever rewritten in a way that
-    // breaks this assumption, these targeters will need to be updated.
     const int tracer_range = you.current_vision;
     const coord_def tracer_target = you.pos() + (move * tracer_range);
 
@@ -648,14 +656,24 @@ monster* get_rampage_target(coord_def move)
         {
             return nullptr;
         }
-        // Okay, the first mons along the tracer is a valid target.
-        // Don't need terrain checks because we'll attack the mons.
+        //Finally do the more expensive fear/mesmerize checks
         else if (mon)
         {
+            //Ensure mesmerize/fear don't render the monster invalid for rampaging.
+            //Messaging for these occurs in the movement code when relevant.
+            coord_def rampage_destination = get_rampage_destination(move, mon);
+            const monster* beholder = you.get_beholder(rampage_destination);
+            if (beholder)
+                return nullptr;
+
+            const monster* fearmonger = you.get_fearmonger(rampage_destination);
+            if (fearmonger)
+                return nullptr;
+
             return mon;
         }
     }
-    //While this should be unreachable, if for some reason the beam has an empty path
+    //If the loop exits without returning, no monsters are in the path.
     return nullptr;
 }
 
@@ -674,10 +692,6 @@ static spret _rampage_forward(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    // Assert if the requested move is not a move delta
-    // this would throw off our tracer_target.
-    ASSERT(abs(move.x) <= 1 && abs(move.y) <= 1);
-
     const bool enhanced = player_equip_unrand(UNRAND_SEVEN_LEAGUE_BOOTS);
     const bool rolling = you.has_mutation(MUT_ROLLPAGE);
     const string noun = enhanced ? "stride" :
@@ -695,31 +709,14 @@ static spret _rampage_forward(coord_def move)
     if(valid_target == nullptr)
         return spret::fail;
 
-    const int rampage_distance = enhanced
-        ? grid_distance(you.pos(), valid_target->pos()) - 1
-        : 1;
-
-    const coord_def rampage_destination = you.pos() + (move * rampage_distance);
-    const coord_def rampage_target = you.pos() + (move * (rampage_distance + 1));
+    const coord_def rampage_destination = get_rampage_destination(move, valid_target);
+    const coord_def rampage_target = rampage_destination + move;
 
     // Will the second move be an attack?
     const bool attacking = valid_target->pos() == rampage_target;
 
     // Don't rampage if the player's tile is being targeted, somehow.
     if (rampage_destination == you.pos())
-        return spret::fail;
-
-    // Beholder/fearmonger messaging is handled by the movement code,
-    // so we return fail even though the move will ultimately be aborted.
-    // Rampaging within (up to the edge) of the allowed range is permitted.
-    // Don't rampage if it would take us away from a beholder.
-    const monster* beholder = you.get_beholder(rampage_destination);
-    if (beholder)
-        return spret::fail;
-
-    // Don't rampage if it would take us toward a fearmonger.
-    const monster* fearmonger = you.get_fearmonger(rampage_destination);
-    if (fearmonger)
         return spret::fail;
 
     // Do allow rampaging on top of Fedhas plants,
