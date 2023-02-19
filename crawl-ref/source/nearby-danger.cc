@@ -436,7 +436,6 @@ bool bring_to_safety()
             || cloud_at(pos)
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
-            || slime_wall_neighbour(pos)
             || crawl_state.game_is_sprint()
                && grid_distance(pos, you.pos()) > 8)
         {

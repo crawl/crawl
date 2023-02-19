@@ -1149,7 +1149,6 @@ static bool _shaft_safely()
             || cloud_at(pos) // XXX: ignore if is_harmless_cloud?
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
-            || slime_wall_neighbour(pos)
             || _nonfriendly_nearby(pos))
         {
             continue;
