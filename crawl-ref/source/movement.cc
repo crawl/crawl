@@ -939,12 +939,6 @@ void move_player_action(coord_def move)
         return;
     }
 
-    if (!rampaged && wu_jian_move_triggers_attacks(targ)
-        && !wielded_weapon_check(you.weapon()))
-    {
-        return;
-    }
-
     // XX generalize?
     const string walkverb = you.airborne()                     ? "fly"
                           : you.swimming()                     ? "swim"
@@ -1096,6 +1090,13 @@ void move_player_action(coord_def move)
                  feature_description_at(targ, false, DESC_THE).c_str());
             you.apply_berserk_penalty = true;
             you.turn_is_over = true;
+            return;
+        }
+
+        // Allow (e.g.) "Really move and attack while wielding nothing?" abort.
+        if (!rampaged && wu_jian_move_triggers_attacks(targ)
+            && !wielded_weapon_check(you.weapon(), "move and attack"))
+        {
             return;
         }
 
