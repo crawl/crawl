@@ -11871,13 +11871,13 @@ Wyrmbane leuchtet, als sich ein würdiger Feind nähert.
 ##################
 %%%%
 %s dissipates.
-
+%s löst sich auf.
 %%%%
 %s hits %s.
 %s trifft %s.
 %%%%
 The orb fizzles.
-Die Kugel sprudelt.
+Die Kugel verpufft.
 %%%%
 The orbs collide in a blinding explosion!
 Die Kugeln kollidieren in einer blendenden Explosion!
@@ -11886,7 +11886,7 @@ You hear a loud magical explosion!
 Ihr hört eine laute magische Explosion!
 %%%%
 %s's %s reflects %s!
-
+{gen}%s {nom}%s reflektiert {acc}%s!
 %%%%
 
 ##################
