@@ -772,11 +772,6 @@ static void _start_running(int dir, int mode)
         return;
     }
 
-    const coord_def next_pos = you.pos() + Compass[dir];
-    string wall_jump_err;
-    if (wu_jian_can_wall_jump(next_pos, wall_jump_err))
-       return; // Do not wall jump while running.
-
     you.running.initialise(dir, mode);
 }
 
