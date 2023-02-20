@@ -170,6 +170,14 @@ int main()
     expected = "7 Mal beißen für bis zu 10 Schaden pro Mal";
     show_result(msg, expected);
 
+    msg = localise("The barbs in your skin will harm you if you move."
+                   " Rampaging like this could really hurt!"
+                   " Continue?");
+    expected = "Die Widerhaken in Eurer Haut werden Euch verletzen, wenn Ihr Euch bewegt."
+               " So eine Randale könnte wirklich wehtun!"
+               " Weitermachen?";
+    show_result(msg, expected);
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);

@@ -2966,7 +2966,7 @@ void melee_attack::mons_apply_attack_flavour()
             {
                 you.duration[DUR_WATER_HOLD] = 10;
                 you.props["water_holder"].get_int() = attacker->as_monster()->mid;
-                you.props["water_hold_substance"].get_string() = watery ? "water" : "ooze";
+                you.props["water_hold_substance"].get_string() = watery ? "the water" : "the ooze";
             }
             else if (defender->is_monster()
                      && !defender->as_monster()->has_ench(ENCH_WATER_HOLD))

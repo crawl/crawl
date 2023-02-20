@@ -4813,7 +4813,7 @@ bool player::clear_far_engulf(bool force)
     if (force || !mons || !mons->alive() || !adjacent(mons->pos(), you.pos()))
     {
         if (you.res_water_drowning())
-            mprf("The %s engulfing you falls away.", water_hold_substance().c_str());
+            mprf("%s engulfing you falls away.", water_hold_substance().c_str());
         else
             mpr("You gasp with relief as air once again reaches your lungs.");
 

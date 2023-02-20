@@ -411,7 +411,7 @@ Ihr versagt, Eure Fähigkeit einzusetzen.
 
 %%%%
 Continue?
-
+Weitermachen?
 %%%%
 Your magical essence is drained by the effort!
 Eure magische Essenz wird durch die Anstrengung erschöpft!
@@ -8666,7 +8666,7 @@ your dexterity
 Eure Geschicklichkeit
 %%%%
 " Continue?"
-" Weiter?"
+" Weitermachen?"
 %%%%
 Losing flight right now would be extremely painful!
 Den Flug jetzt zu verlieren, wäre äußerst schmerzhaft!
@@ -10395,6 +10395,9 @@ Eure göttliche Ausdauer schützt Euch vor Gift!
 %s grabs %s.
 %s umschlingt {acc}%s.
 %%%%
+the water
+das Wasser
+%%%%
 %s engulfs you in water!
 %s überflutet Euch!
 %%%%
@@ -12077,9 +12080,6 @@ haucht
 whispers
 flüstert
 %%%%
-the water
-das Wasser
-%%%%
 the altar
 der Altar
 %%%%
@@ -12307,53 +12307,53 @@ Etwas hindert Euch daran, Plätze zu tauschen.
 You swap places.
 Ihr tauscht Plätze.
 %%%%
-%s %s twisted violently and ejected from the portal!
-%s%s hat sich heftig verdreht und aus dem Portal ausgeworfen!
+You are twisted violently and ejected from the portal!
+Ihr werdet heftig verdreht und aus dem Portal geschleudert!
 %%%%
-be
-
+%s is twisted violently and ejected from the portal!
+%s wird heftig verdreht und aus dem Portal geschleudert!
 %%%%
 The barbs in your skin will harm you if you move.
-
+Die Widerhaken in Eurer Haut werden Euch verletzen, wenn Ihr Euch bewegt.
 %%%%
 " Rampaging like this could really hurt!"
-
+" So eine Randale könnte wirklich wehtun!"
 %%%%
 The barbed spikes dig painfully into your body as you move.
-
+Die Stacheln graben sich schmerzhaft in Euren Körper, wenn Ihr Euch bewegt.
 %%%%
 The barbed spikes snap loose.
-
+Die Stacheln reißen ab.
 %%%%
-" will break if you move. Continue?"
-
+Your icy armour and frozen ramparts will break if you move.
+Eure eisige Rüstung und gefrorenen Wälle werden brechen, wenn Ihr Euch bewegt.
+%%%%
+Your icy armour will break if you move.
+Eure eisige Rüstung werden brechen, wenn Ihr Euch bewegt.
+%%%%
+Your frozen ramparts will break if you move.
+Eure gefrorenen Wälle werden brechen, wenn Ihr Euch bewegt.
 %%%%
 Your icy armour cracks and falls away as you move.
-
+Eure eisige Rüstung knackt und fällt weg, als Ihr Euch bewegt.
 %%%%
 The frozen ramparts melt away as you move.
-
+Die gefrorenen Wälle schmelzen, als Ihr Euch bewegt.
 %%%%
-You slip free of the %s engulfing you.
-
+You slip free of %s engulfing you.
+Ihr befreit Euch von {dat}%s, das Euch verschlingt.
 %%%%
-"Are you sure you want to "
-
+Are you sure you want to swing wildly while confused and next to %s%s?
+Seid Ihr sicher, dass Ihr wild herumschwingen wollt, während Ihr verwirrt seid und neben %s%s?
 %%%%
-stumble around
-
-%%%%
-swing wildly
-
-%%%%
-" while confused and next to "
-
+Are you sure you want to stumble around while confused and next to %s%s?
+Seid Ihr sicher, dass Ihr herumstolpern wollt, während Ihr verwirrt seid und neben %s%s?
 %%%%
 " while you are losing your buoyancy"
-
+, während Ihr Euren Auftrieb verliert
 %%%%
 " while your transformation is expiring"
-
+, während Eure Verwandlung abläuft
 %%%%
 There's nothing to open nearby.
 In der Nähe gibt es nichts zu öffnen.
@@ -12371,7 +12371,7 @@ There isn't anything that you can open there!
 Es gibt nichts, was Ihr dort öffnen könnt!
 %%%%
 You can't close doors while %s.
-Ihr könnt keine Türen schließen, solange%s.
+Ihr könnt keine Türen schließen, solange Ihr %s seid.
 %%%%
 There's nothing to close nearby.
 In der Nähe gibt es nichts zu schließen.
@@ -12383,73 +12383,77 @@ There isn't anything that you can close there!
 Es gibt nichts, was Ihr dort schließen könnt!
 %%%%
 If you enter this portal you might not be able to return immediately. Continue?
-
+Wenn Ihr dieses Portal betretet, könnt Ihr möglicherweise nicht sofort zurückkehren. Weitermachen?
 %%%%
 Are you sure you wish to approach this portal? There's no telling what its forces would wreak upon your fragile self.
-
+Seid Ihr sicher, dass Ihr Euch an dieses Portal wenden möchtet? Man kann nicht sagen, was seine Kräfte mit Eurem zerbrechlichen Selbst anstellen würden.
 %%%%
 You can't repeat rampage.
-
+Ihr könnt Randale nicht wiederholen.
 %%%%
 Something unexpectedly blocked you, preventing you from rampaging!
-
+Etwas hat Euch unerwartet blockiert und Euch daran gehindert, zu randalieren!
 %%%%
-You %s quickly through the %s towards %s!
-
+# note: through the fungus or through the plants
+You stride quickly through %s towards %s!
+Ihr schreitet schnell durch {acc}%s auf {acc}%s zu!
 %%%%
-stride
-
+You rampage quickly through %s towards %s!
+Ihr randaliert schnell durch {acc}%s auf {acc}%s zu!
 %%%%
-plants
-
+the plants
+die Pflanzen
 %%%%
-You %s towards %s!
-
+You stride towards %s!
+Ihr schreitet auf {acc}%s zu!
+%%%%
+You rampage towards %s!
+Ihr randaliert auf {acc}%s zu!
 %%%%
 You cannot move. (Use ctrl+direction or * direction to attack without moving.)
-
+Ihr könnt Euch nicht bewegen. (Strg+Richtung oder * Richtung verwenden, um ohne Bewegung anzugreifen).
 %%%%
 You're too confused to move!
 Ihr seid zu verwirrt, um Euch zu bewegen!
 %%%%
 Your mandibles retract as you bump into %s.
-Eure Mandibeln ziehen sich zurück, als Ihr auf %s stößt.
+Eure Mandibeln ziehen sich zurück, als Ihr an {acc}%s stößt.
 %%%%
 You bump into %s.
-Ihr trifft auf%s.
+Ihr stößt an {acc}%s.
 %%%%
 This wall is too hard to dig through.
 Diese Wand ist zu schwer zum Durchgraben.
 %%%%
 fly
-
+fliegt
 %%%%
 swim
-
+schwimmt
 %%%%
 crawl
-
+kriecht
 %%%%
 walk
-
+geht
 %%%%
-You %s carefully through the %s.
-Ihr %s sorgfältig durch die {acc}%s.
+You %s carefully through %s.
+Ihr %s vorsichtig ducrh {acc}%s.
 %%%%
 You can't dig through that.
 Das könnt Ihr nicht durchgraben.
 %%%%
 %s refuses to make way for you. (Use ctrl+direction or * direction to attack.)
-
+%s weigert sich, Euch Platz zu machen. (Strg+Richtung oder * Richtung verwenden, um zu angreifen.)
 %%%%
 You're too terrified to move while being watched!
 Ihr seid zu verängstigt, um Euch zu bewegen, während Ihr beobachtet werdet!
 %%%%
 You nearly stumble into %s!
-Ihr stolpert fast in%s!
+Ihr stolpert fast in {acc}%s!
 %%%%
 You dig through %s.
-Ihr grabt durch%s.
+Ihr grabt durch {acc}%s.
 %%%%
 The ferocious winds and tides of the open sea thwart your progress.
 Die wilden Winde und Gezeiten des offenen Meeres vereiteln Euren Fortschritt.
@@ -16518,6 +16522,9 @@ into
 You cannot enter water in your current form.
 Ihr könnt in Eurer jetzigen Form nicht in Wasser eintreten.
 %%%%
+"Are you sure you want to "
+
+%%%%
 " into a toxic bog?"
 
 %%%%
@@ -16881,7 +16888,7 @@ more
 You can't survive in this terrain! You fly above the %s, but the process is draining.
 
 %%%%
-The %s engulfing you falls away.
+%s engulfing you falls away.
 
 %%%%
 You gasp with relief as air once again reaches your lungs.
@@ -20207,6 +20214,9 @@ Die %s-Bögen befinden sich außerhalb Ihrer Sichtlinie!
 %%%%
 The %s suddenly appears!
 Das%s erscheint plötzlich!
+%%%%
+be
+
 %%%%
 The monsters around %s are %s!
 Die Monster um%s sind%s!

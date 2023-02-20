@@ -29,6 +29,7 @@
 #include "god-conduct.h"
 #include "god-passive.h"
 #include "items.h"
+#include "localise.h"
 #include "message.h"
 #include "mon-act.h"
 #include "mon-behv.h"
@@ -123,8 +124,13 @@ static void _entered_malign_portal(actor* act)
     ASSERT(act); // XXX: change to actor &act
     if (you.can_see(*act))
     {
-        mprf("%s %s twisted violently and ejected from the portal!",
-             act->name(DESC_THE).c_str(), act->conj_verb("be").c_str());
+        if (act->is_player())
+            mpr("You are twisted violently and ejected from the portal!");
+        else
+        {
+            mprf("%s is twisted violently and ejected from the portal!",
+                 act->name(DESC_THE).c_str());
+        }
     }
 
     act->blink();
@@ -175,17 +181,20 @@ static bool _cancel_ice_move()
     if (i_feel_safe(false, true, true))
         return false;
 
-    if (you.duration[DUR_ICY_ARMOUR])
-        effects.push_back("icy armour");
+    bool icy_armour = (you.duration[DUR_ICY_ARMOUR] != 0);
+    bool frozen_ramparts = (you.duration[DUR_FROZEN_RAMPARTS] != 0);
 
-    if (you.duration[DUR_FROZEN_RAMPARTS])
-        effects.push_back("frozen ramparts");
+    string prompt;
+    if (icy_armour && frozen_ramparts)
+        prompt = "Your icy armour and frozen ramparts will break if you move.";
+    else if (icy_armour)
+        prompt = "Your icy armour will break if you move.";
+    else if (frozen_ramparts)
+        prompt = "Your frozen ramparts will break if you move.";
 
-    if (!effects.empty())
+    if (!prompt.empty())
     {
-        string prompt = "Your "
-                        + comma_separated_line(effects.begin(), effects.end())
-                        + " will break if you move. Continue?";
+        prompt += " Continue?";
 
         if (!yesno(prompt.c_str(), false, 'n'))
         {
@@ -230,7 +239,7 @@ void remove_water_hold()
 {
     if (you.duration[DUR_WATER_HOLD])
     {
-        mprf("You slip free of the %s engulfing you.",
+        mprf("You slip free of %s engulfing you.",
              water_hold_substance().c_str());
         you.clear_far_engulf();
     }
@@ -303,27 +312,30 @@ bool cancel_confused_move(bool stationary)
 
     if (dangerous != DNGN_FLOOR || bad_mons)
     {
-        string prompt = "";
-        prompt += "Are you sure you want to ";
-        prompt += !stationary ? "stumble around" : "swing wildly";
-        prompt += " while confused and next to ";
+        string fmt;
+        if (stationary)
+            fmt = "Are you sure you want to swing wildly while confused and next to %s%s?";
+        else
+            fmt = "Are you sure you want to stumble around while confused and next to %s%s?";
+        string name, suffix;
 
         if (dangerous != DNGN_FLOOR)
         {
-            prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
-            prompt += flight ? " while you are losing your buoyancy"
+            name = (dangerous == DNGN_LAVA ? "lava" : "deep water");
+            suffix = flight ? " while you are losing your buoyancy"
                              : " while your transformation is expiring";
         }
         else
         {
-            string name = bad_mons->name(DESC_PLAIN);
+            name = bad_mons->name(DESC_PLAIN);
             if (starts_with(name, "the "))
                name.erase(0, 4);
             if (!starts_with(bad_adj, "your"))
                bad_adj = "the " + bad_adj;
-            prompt += bad_adj + name + bad_suff;
+            name += bad_adj + name;
+            suffix = bad_suff;
         }
-        prompt += "?";
+        string prompt = localise(fmt, name, suffix);
 
         if (penance)
             prompt += " This could place you under penance!";
@@ -706,15 +718,15 @@ static spret _rampage_forward(coord_def move)
     const monster* current = monster_at(you.pos());
     if (fedhas_move && (!current || !fedhas_passthrough(current)))
     {
-        mprf("You %s quickly through the %s towards %s!",
-             enhanced ? "stride" : "rampage",
-             mons_genus(mons->type) == MONS_FUNGUS ? "fungus" : "plants",
+        // locnote: through the fungus or through the plants
+        mprf(enhanced ? "You stride quickly through %s towards %s!"
+                      : "You rampage quickly through %s towards %s!",
+             mons_genus(mons->type) == MONS_FUNGUS ? "the fungus" : "the plants",
              valid_target->name(DESC_THE, true).c_str());
     }
     else
     {
-        mprf("You %s towards %s!",
-             enhanced ? "stride" : "rampage",
+        mprf(enhanced ? "You stride towards %s!" : "You rampage towards %s!",
              valid_target->name(DESC_THE, true).c_str());
     }
 
@@ -916,9 +928,9 @@ void move_player_action(coord_def move)
         if (!current || !fedhas_passthrough(current))
         {
             // Probably need a better message. -cao
-            mprf("You %s carefully through the %s.", walkverb.c_str(),
-                 mons_genus(targ_monst->type) == MONS_FUNGUS ? "fungus"
-                                                             : "plants");
+            mprf("You %s carefully through %s.", walkverb.c_str(),
+                 mons_genus(targ_monst->type) == MONS_FUNGUS ? "the fungus"
+                                                             : "the plants");
         }
         targ_monst = nullptr;
     }
