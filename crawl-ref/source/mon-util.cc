@@ -1124,26 +1124,25 @@ static void _mimic_vanish(const coord_def& pos, const string& name)
     if (!you.see_cell(pos))
         return;
 
-    const string mimic = "the " + name + " mimic"; // noloc
     const bool can_cackle = !silenced(pos) && !silenced(you.pos());
     const string cackle = can_cackle ? getSpeakString("_laughs_") : "";
 
     if (can_place_smoke && can_cackle)
     {
-        mprf("%s %s and vanishes in a puff of smoke!",
-             mimic.c_str(), cackle.c_str());
+        mprf("The %s mimic %s and vanishes in a puff of smoke!",
+             name.c_str(), cackle.c_str());
     }
     else if (can_cackle)
     {
-        mprf("%s %s and vanishes!", mimic.c_str(), cackle.c_str());
+        mprf("The %s mimic %s and vanishes!", name.c_str(), cackle.c_str());
     }
     else if (can_place_smoke)
     {
-        mprf("%s vanishes in a puff of smoke!", mimic.c_str());
+        mprf("The %s mimic vanishes in a puff of smoke!", name.c_str());
     }
     else
     {
-        mprf("%s vanishes!", mimic.c_str());
+        mprf("The %s mimic vanishes!", name.c_str());
     }
 
     interrupt_activity(activity_interrupt::mimic);
@@ -2128,7 +2127,6 @@ static int _mons_damage(monster_type mc, int rt)
  */
 string mon_attack_name(attack_type attack, bool with_object)
 {
-    // noloc section start (we do localise these, but not as standalone verbs like this)
     static const char *attack_types[] =
     {
         "hit",         // including weapon attacks
@@ -2171,6 +2169,7 @@ string mon_attack_name(attack_type attack, bool with_object)
     const int verb_index = attack - AT_FIRST_ATTACK;
     ASSERT(verb_index < (int)ARRAYSZ(attack_types));
 
+    // noloc section start
     if (with_object)
         return attack_types[verb_index];
     else

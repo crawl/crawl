@@ -4575,34 +4575,34 @@ This monster looks extremely dangerous.
 
 %%%%
 %s for up to %d fire damage
-
+%s für bis zu %d Feuer-Schaden.
 %%%%
 %s %d times for up to %d damage each
-
+%2$d Mal %1$s für bis zu %3$d Schaden pro Mal
 %%%%
 %s for up to %d damage
-
+%s für bis zu %d Schaden
 %%%%
 %s %d times for up to %d damage each plus %s
-
+%s %d Mal für bis zu %d Schaden pro Mal plus %s
 %%%%
 %s for up to %d damage plus %s
-
+%s für bis zu %d Schaden plus %s
 %%%%
 %s from a distance %d times for up to %d damage each
-
+%2$d Mal aus der Ferne %1$s für bis zu %3$d Schaden pro Mal
 %%%%
 %s from a distance for up to %d damage
-
+aus der Ferne %s für bis zu %d Schaden
 %%%%
 %s from a distance %d times for up to %d damage each plus %s
-
+%2$d Mal aus der Ferne %1$s für bis zu %3$d Schaden pro Mal plus %$4s
 %%%%
 %s from a distance for up to %d damage plus %s
-
+aus der Ferne %s für bis zu %d Schaden plus %s
 %%%%
 It can %s.
-
+Dieses Monster kann %s.
 %%%%
 It will release varied jellies when damaged or killed, with the number of jellies proportional to the amount of damage.
 
@@ -4641,7 +4641,7 @@ about %d%% to evade %s
 
 %%%%
 " (about %d%% to hit you)"
-
+" (gegen %d%% Chance Euch zu treffen)"
 %%%%
 none (normally %s)
 
@@ -11916,47 +11916,44 @@ Tentakel platzen aus dem Körper der Sternbrut!
 # mon-util.cc
 ##################
 %%%%
-%s %s and vanishes in a puff of smoke!
-
+The %s mimic %s and vanishes in a puff of smoke!
+Der %s-Mimiker %s und verschwindet in einer Rauchwolke!
 %%%%
-%s %s and vanishes!
-
+The %s mimic %s and vanishes!
+Der %s-Mimiker %s und verschwindet!
 %%%%
-%s vanishes in a puff of smoke!
-
+The %s mimic vanishes in a puff of smoke!
+Der %s-Mimiker verschwindet in einer Rauchwolke!
 %%%%
-%s vanishes!
-
+The %s mimic vanishes!
+Der %s-Mimiker verschwindet!
 %%%%
 %s are a mimic!
-
+%s ist ein Mimiker!
 %%%%
 %s is a mimic!
-
+%s ist ein Mimiker!
 %%%%
 Lernaean
-
+Lernäisch
 %%%%
 pale
-
+blass
 %%%%
 monstrous
-
+monströs
 %%%%
 gelid
-
+gelid
 %%%%
 infernal
-
+höllisch
 %%%%
 torturous
-
+qualend
 %%%%
 Geryon discards his horn.
-
-%%%%
-your god
-
+Geryon wirft sein Horn ab.
 %%%%
 says to @foe@
 sagt zu {dat}@foe@
@@ -12084,16 +12081,10 @@ the water
 das Wasser
 %%%%
 the altar
-den Altar
+der Altar
 %%%%
 the ground
-den Boden
-%%%%
-a god
-ein Gott
-%%%%
-my god
-mein Gott
+der Boden
 %%%%
 %s is %s.
 %s ist %s.
@@ -15120,9 +15111,6 @@ You feel less vital.
 You feel more vital.
 
 %%%%
-engulf
-
-%%%%
 Your melee attacks may engulf your foes in ooze.
 
 %%%%
@@ -17424,25 +17412,10 @@ Leer
 , <w>%</w> - select action, <w>%</w>/<w>%</w> - cycle
 
 %%%%
-bite
-
-%%%%
-touch
-
-%%%%
-release spores
-
-%%%%
 slash
 
 %%%%
 smack
-
-%%%%
-hit
-
-%%%%
-punch
 
 %%%%
 shoot

@@ -166,6 +166,10 @@ int main()
     expected = "Ihr seht hier ein höllisches Dämonenbrut-Simulacrum.";
     show_result(msg, expected);
 
+    msg = localise("%s %d times for up to %d damage each", "bite", 7, 10);
+    expected = "7 Mal beißen für bis zu 10 Schaden pro Mal";
+    show_result(msg, expected);
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);

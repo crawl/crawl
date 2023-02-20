@@ -116,6 +116,7 @@ static int _get_arg_id(const string& fmt)
         return 0;
     }
     string pos_str = fmt.substr(1, pos_len);
+    errno = 0;
     int result = atoi(pos_str.c_str());
     if (errno != 0)
     {

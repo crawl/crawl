@@ -94,6 +94,24 @@ das Wu Jian Konzil
 The Council
 Das Konzil
 %%%%
+a god
+ein Gott
+%%%%
+my god
+mein Gott
+%%%%
+your god
+Euer Gott
+%%%%
+its god
+sein Gott
+%%%%
+his god
+sein Gott
+%%%%
+her god
+ihr Gott
+%%%%
 
 ########################
 # God names - genitive
@@ -174,6 +192,24 @@ des Glänzenden
 {gen}the Wu Jian Council
 des Wu Jian Konzils
 %%%%
+{gen}a god
+eines Gottes
+%%%%
+{gen}my god
+meines Gottes
+%%%%
+{gen}your god
+Eures Gottes
+%%%%
+{gen}its god
+seines Gottes
+%%%%
+{gen}his god
+seines Gottes
+%%%%
+{gen}her god
+ihres Gottes
+%%%%
 
 ########################
 # God names - accusative
@@ -181,6 +217,24 @@ des Wu Jian Konzils
 %%%%
 {acc}the Shining One
 den Glänzenden
+%%%%
+{acc}a god
+einen Gott
+%%%%
+{acc}my god
+meinen Gott
+%%%%
+{acc}your god
+Euren Gott
+%%%%
+{acc}its god
+seinen Gott
+%%%%
+{acc}his god
+seinen Gott
+%%%%
+{acc}her god
+ihren Gott
 %%%%
 
 ########################
@@ -192,6 +246,24 @@ dem Glänzenden
 %%%%
 {dat}the Wu Jian Council
 dem Wu Jian Konzil
+%%%%
+{dat}a god
+einem Gott
+%%%%
+{dat}my god
+meinem Gott
+%%%%
+{dat}your god
+Eurem Gott
+%%%%
+{dat}its god
+seinem Gott
+%%%%
+{dat}his god
+seinem Gott
+%%%%
+{dat}her god
+ihrem Gott
 %%%%
 
 ########################
