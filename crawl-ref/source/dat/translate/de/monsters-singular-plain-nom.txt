@@ -1519,7 +1519,7 @@ furchtbares gespürtes Monster
 %sdemonspawn skeleton
 {adj-es}%sDämonenbrut-Skelett
 %%%%
-a %sdemonspawn simulacrum
+%sdemonspawn simulacrum
 {adj-es}%sDämonenbrut-Simulacrum
 %%%%
 
