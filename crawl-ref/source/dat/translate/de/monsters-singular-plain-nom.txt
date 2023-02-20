@@ -635,68 +635,8 @@ Drache
 fire dragon
 Feuerdrache
 %%%%
-hydra
-Hydra
-%%%%
-one-headed hydra
-einköpfige Hydra
-%%%%
-two-headed hydra
-zweiköpfige Hydra
-%%%%
-three-headed hydra
-dreiköpfige Hydra
-%%%%
-four-headed hydra
-vierköpfige Hydra
-%%%%
-five-headed hydra
-fünfköpfige Hydra
-%%%%
-six-headed hydra
-sechsköpfige Hydra
-%%%%
-seven-headed hydra
-siebenköpfige Hydra
-%%%%
-eight-headed hydra
-achtköpfige Hydra
-%%%%
-nine-headed hydra
-neunköpfige Hydra
-%%%%
-ten-headed hydra
-zehnköpfige Hydra
-%%%%
-11-headed hydra
-11-köpfige Hydra
-%%%%
-12-headed hydra
-12-köpfige Hydra
-%%%%
-13-headed hydra
-13-köpfige Hydra
-%%%%
-14-headed hydra
-14-köpfige Hydra
-%%%%
-15-headed hydra
-15-köpfige Hydra
-%%%%
-16-headed hydra
-16-köpfige Hydra
-%%%%
-17-headed hydra
-17-köpfige Hydra
-%%%%
-18-headed hydra
-18-köpfige Hydra
-%%%%
-19-headed hydra
-19-köpfige Hydra
-%%%%
-20-headed hydra
-20-köpfige Hydra
+%shydra
+{adj-e}%sHydra
 %%%%
 ice dragon
 Eisdrache
@@ -1560,6 +1500,27 @@ furchtbares gespürtes Monster
 %%%%
 %s shaped shifter
 %s-förmiger Gestaltwandler
+%%%%
+
+# irregular derived monsters
+%%%%
+%shydra zombie
+{adj-er}%sHydra-Zombie
+%%%%
+%shydra skeleton
+{adj-es}%sHydra-Skelett
+%%%%
+%shydra simulacrum
+{adj-es}%sHydra-Simulacrum
+%%%%
+%sdemonspawn zombie
+{adj-er}%sDämonenbrut-Zombie
+%%%%
+%sdemonspawn skeleton
+{adj-es}%sDämonenbrut-Skelett
+%%%%
+a %sdemonspawn simulacrum
+{adj-es}%sDämonenbrut-Simulacrum
 %%%%
 
 # derived monsters without the name of the original monster

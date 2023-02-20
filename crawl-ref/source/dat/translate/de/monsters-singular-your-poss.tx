@@ -635,68 +635,9 @@ Eures Drachen
 your fire dragon's
 Eures Feuerdrachen
 %%%%
-your hydra's
-Eurer Hydra
+your %shydra's
+Eurer {adj-en}%sHydra
 %%%%
-your one-headed hydra's
-Eurer einköpfigen Hydra
-%%%%
-your two-headed hydra's
-Eurer zweiköpfigen Hydra
-%%%%
-your three-headed hydra's
-Eurer dreiköpfigen Hydra
-%%%%
-your four-headed hydra's
-Eurer vierköpfigen Hydra
-%%%%
-your five-headed hydra's
-Eurer fünfköpfigen Hydra
-%%%%
-your six-headed hydra's
-Eurer sechsköpfigen Hydra
-%%%%
-your seven-headed hydra's
-Eurer siebenköpfigen Hydra
-%%%%
-your eight-headed hydra's
-Eurer achtköpfigen Hydra
-%%%%
-your nine-headed hydra's
-Eurer neunköpfigen Hydra
-%%%%
-your ten-headed hydra's
-Eurer zehnköpfigen Hydra
-%%%%
-your 11-headed hydra's
-Eurer 11-köpfigen Hydra
-%%%%
-your 12-headed hydra's
-Eurer 12-köpfigen Hydra
-%%%%
-your 13-headed hydra's
-Eurer 13-köpfigen Hydra
-%%%%
-your 14-headed hydra's
-Eurer 14-köpfigen Hydra
-%%%%
-your 15-headed hydra's
-Eurer 15-köpfigen Hydra
-%%%%
-your 16-headed hydra's
-Eurer 16-köpfigen Hydra
-%%%%
-your 17-headed hydra's
-Eurer 17-köpfigen Hydra
-%%%%
-your 18-headed hydra's
-Eurer 18-köpfigen Hydra
-%%%%
-your 19-headed hydra's
-Eurer 19-köpfigen Hydra
-%%%%
-your 20-headed hydra's
-Eurer 20-köpfigen Hydra
 %%%%
 your ice dragon's
 Eures Eisdrachen
@@ -1560,6 +1501,27 @@ Eures %s-förmigen Eisblocks
 %%%%
 your %s shaped shifter's
 Eures %s-förmigen Gestaltwandlers
+%%%%
+
+# irregular derived monsters
+%%%%
+your %shydra zombie's
+Eures {adj-en}%sHydra-Zombies
+%%%%
+your %shydra skeleton's
+Eures {adj-en}%sHydra-Skeletts
+%%%%
+your %shydra simulacrum's
+Eures {adj-en}%sHydra-Simulacrums
+%%%%
+your %sdemonspawn zombie's
+Eures {adj-en}%sDämonenbrut-Zombies
+%%%%
+your %sdemonspawn skeleton's
+Eures {adj-en}%sDämonenbrut-Skeletts
+%%%%
+your %sdemonspawn simulacrum's
+Eures {adj-en}%sDämonenbrut-Simulacrums
 %%%%
 
 # derived monsters without the name of the original monster

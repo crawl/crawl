@@ -635,68 +635,8 @@ ein Drache
 a fire dragon
 ein Feuerdrache
 %%%%
-a hydra
-eine Hydra
-%%%%
-a one-headed hydra
-eine einköpfige Hydra
-%%%%
-a two-headed hydra
-eine zweiköpfige Hydra
-%%%%
-a three-headed hydra
-eine dreiköpfige Hydra
-%%%%
-a four-headed hydra
-eine vierköpfige Hydra
-%%%%
-a five-headed hydra
-eine fünfköpfige Hydra
-%%%%
-a six-headed hydra
-eine sechsköpfige Hydra
-%%%%
-a seven-headed hydra
-eine siebenköpfige Hydra
-%%%%
-an eight-headed hydra
-eine achtköpfige Hydra
-%%%%
-a nine-headed hydra
-eine neunköpfige Hydra
-%%%%
-a ten-headed hydra
-eine zehnköpfige Hydra
-%%%%
-a 11-headed hydra
-eine 11-köpfige Hydra
-%%%%
-a 12-headed hydra
-eine 12-köpfige Hydra
-%%%%
-a 13-headed hydra
-eine 13-köpfige Hydra
-%%%%
-a 14-headed hydra
-eine 14-köpfige Hydra
-%%%%
-a 15-headed hydra
-eine 15-köpfige Hydra
-%%%%
-a 16-headed hydra
-eine 16-köpfige Hydra
-%%%%
-a 17-headed hydra
-eine 17-köpfige Hydra
-%%%%
-a 18-headed hydra
-eine 18-köpfige Hydra
-%%%%
-a 19-headed hydra
-eine 19-köpfige Hydra
-%%%%
-a 20-headed hydra
-eine 20-köpfige Hydra
+a %shydra
+eine {adj-e}%sHydra
 %%%%
 an ice dragon
 ein Eisdrache
@@ -1562,6 +1502,27 @@ a %s shaped shifter
 ein %s-förmiger Gestaltwandler
 %%%%
 
+# irregular derived monsters
+%%%%
+a %shydra zombie
+ein {adj-er}%sHydra-Zombie
+%%%%
+a %shydra skeleton
+{n}ein {adj-es}%sHydra-Skelett
+%%%%
+a %shydra simulacrum
+{n}ein {adj-es}%sHydra-Simulacrum
+%%%%
+a %sdemonspawn zombie
+ein {adj-er}%sDämonenbrut-Zombie
+%%%%
+a %sdemonspawn skeleton
+{n}ein {adj-es}%sDämonenbrut-Skelett
+%%%%
+a %sdemonspawn simulacrum
+{n}ein {adj-es}%sDämonenbrut-Simulacrum
+%%%%
+
 # derived monsters without the name of the original monster
 # (and not already covered above)
 # "zombie", "skeleton", etc.
@@ -1587,4 +1548,3 @@ eine %s-förmige Lernäische Hydra
 a %s shaped Serpent of Hell
 eine %s-förmige Höllenschlange
 %%%%
-

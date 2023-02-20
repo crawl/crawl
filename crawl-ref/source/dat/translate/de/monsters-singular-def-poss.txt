@@ -635,68 +635,8 @@ des Drachen
 the fire dragon's
 des Feuerdrachen
 %%%%
-the hydra's
-der Hydra
-%%%%
-the one-headed hydra's
-der einköpfigen Hydra
-%%%%
-the two-headed hydra's
-der zweiköpfigen Hydra
-%%%%
-the three-headed hydra's
-der dreiköpfigen Hydra
-%%%%
-the four-headed hydra's
-der vierköpfigen Hydra
-%%%%
-the five-headed hydra's
-der fünfköpfigen Hydra
-%%%%
-the six-headed hydra's
-der sechsköpfigen Hydra
-%%%%
-the seven-headed hydra's
-der siebenköpfigen Hydra
-%%%%
-the eight-headed hydra's
-der achtköpfigen Hydra
-%%%%
-the nine-headed hydra's
-der neunköpfigen Hydra
-%%%%
-the ten-headed hydra's
-der zehnköpfigen Hydra
-%%%%
-the 11-headed hydra's
-der 11-köpfigen Hydra
-%%%%
-the 12-headed hydra's
-der 12-köpfigen Hydra
-%%%%
-the 13-headed hydra's
-der 13-köpfigen Hydra
-%%%%
-the 14-headed hydra's
-der 14-köpfigen Hydra
-%%%%
-the 15-headed hydra's
-der 15-köpfigen Hydra
-%%%%
-the 16-headed hydra's
-der 16-köpfigen Hydra
-%%%%
-the 17-headed hydra's
-der 17-köpfigen Hydra
-%%%%
-the 18-headed hydra's
-der 18-köpfigen Hydra
-%%%%
-the 19-headed hydra's
-der 19-köpfigen Hydra
-%%%%
-the 20-headed hydra's
-der 20-köpfigen Hydra
+the %shydra's
+der {adj-en}%sHydra
 %%%%
 the ice dragon's
 des Eisdrachen
@@ -1560,6 +1500,27 @@ des %s-förmigen Eisblocks
 %%%%
 the %s shaped shifter's
 des %s-förmigen Gestaltwandlers
+%%%%
+
+# irregular derived monsters
+%%%%
+the %shydra zombie's
+des {adj-en}%sHydra-Zombies
+%%%%
+the %shydra skeleton's
+des {adj-en}%sHydra-Skeletts
+%%%%
+the %shydra simulacrum's
+des {adj-en}%sHydra-Simulacrums
+%%%%
+the %sdemonspawn zombie's
+des {adj-en}%sDämonenbrut-Zombies
+%%%%
+the %sdemonspawn skeleton's
+des {adj-en}%sDämonenbrut-Skeletts
+%%%%
+the %sdemonspawn simulacrum's
+des {adj-en}%sDämonenbrut-Simulacrums
 %%%%
 
 # derived monsters without the name of the original monster

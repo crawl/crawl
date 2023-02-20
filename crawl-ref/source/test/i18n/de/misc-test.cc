@@ -130,6 +130,42 @@ int main()
     expected = "Boghold der Ork-Warlord (stark)";
     show_result(msg, expected);
 
+    msg = localise("hydra");
+    expected = "Hydra";
+    show_result(msg, expected);
+
+    msg = localise("a hydra");
+    expected = "eine Hydra";
+    show_result(msg, expected);
+
+    msg = localise("a seven-headed hydra (sleeping)");
+    expected = "eine siebenköpfige Hydra (schlafend)";
+    show_result(msg, expected);
+
+    msg = localise("the 27-headed Lernaean hydra (sleeping)");
+    expected = "die 27-köpfige Lernäische Hydra (schlafend)";
+    show_result(msg, expected);
+
+    msg = localise("a seven-headed hydra zombie (dormant)");
+    expected = "ein siebenköpfiger Hydra-Zombie (ruhend)";
+    show_result(msg, expected);
+
+    msg = localise("a 27-headed Lernaean hydra zombie (dormant)");
+    expected = "ein 27-köpfiger Lernäischer Hydra-Zombie (ruhend)";
+    show_result(msg, expected);
+
+    msg = localise("You hit %s", "the 27-headed Lernaean hydra zombie");
+    expected = "Ihr schlagt den 27-köpfigen Lernäischen Hydra-Zombie";
+    show_result(msg, expected);
+
+    msg = localise("an infernal demonspawn simulacrum (dormant)");
+    expected = "ein höllisches Dämonenbrut-Simulacrum (ruhend)";
+    show_result(msg, expected);
+
+    msg = localise("You see here %s.", "an infernal demonspawn simulacrum");
+    expected = "Ihr seht hier ein höllisches Dämonenbrut-Simulacrum.";
+    show_result(msg, expected);
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);

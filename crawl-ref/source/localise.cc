@@ -398,7 +398,7 @@ static void _split_tags(string s, vector<string>& results)
 static string _shift_context(const string& str)
 {
     // Must keep context for parameters
-    if (!starts_with(str, "{") || contains(str, "%s") || contains(str, "@"))
+    if (!starts_with(str, "{"))
     {
         return str;
     }
@@ -1151,6 +1151,9 @@ static string _localise_item_name(const string& context, const string& item)
 
         if (success)
         {
+            result = _shift_context(result);
+            string new_context = _context;
+
             if (!owner.empty())
             {
                 owner = cxlate(context, owner);
@@ -1162,7 +1165,6 @@ static string _localise_item_name(const string& context, const string& item)
             if (pos != string:: npos)
             {
                 // find the context for the adjectives
-                string new_context = context;
                 size_t ctx_pos = result.rfind("{", pos);
                 if (ctx_pos != string::npos)
                 {

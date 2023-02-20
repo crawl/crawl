@@ -448,3 +448,104 @@
 "legendäre "
 %%%%
 
+# demonspawn
+%%%%
+"monstrous "
+"monströse "
+%%%%
+"gelid "
+"gelide "
+%%%%
+"infernal "
+"höllische "
+%%%%
+"torturous "
+"quälende "
+%%%%
+
+# hydras
+%%%%
+"Lernaean "
+"Lernäische "
+%%%%
+"one-headed "
+"einköpfige "
+%%%%
+"two-headed "
+"zweiköpfige "
+%%%%
+"three-headed "
+"dreiköpfige "
+%%%%
+"four-headed "
+"vierköpfige "
+%%%%
+"five-headed "
+"fünfköpfige "
+%%%%
+"six-headed "
+"sechsköpfige "
+%%%%
+"seven-headed "
+"siebenköpfige "
+%%%%
+an eight-headed "
+"achtköpfige "
+%%%%
+"nine-headed "
+"neunköpfige "
+%%%%
+"ten-headed "
+"zehnköpfige "
+%%%%
+"11-headed "
+"11-köpfige "
+%%%%
+"12-headed "
+"12-köpfige "
+%%%%
+"13-headed "
+"13-köpfige "
+%%%%
+"14-headed "
+"14-köpfige "
+%%%%
+"15-headed "
+"15-köpfige "
+%%%%
+"16-headed "
+"16-köpfige "
+%%%%
+"17-headed "
+"17-köpfige "
+%%%%
+"18-headed "
+"18-köpfige "
+%%%%
+"19-headed "
+"19-köpfige "
+%%%%
+"20-headed "
+"20-köpfige "
+%%%%
+"21-headed "
+"21-köpfige "
+%%%%
+"22-headed "
+"22-köpfige "
+%%%%
+"23-headed "
+"23-köpfige "
+%%%%
+"24-headed "
+"24-köpfige "
+%%%%
+"25-headed "
+"25-köpfige "
+%%%%
+"26-headed "
+"26-köpfige "
+%%%%
+"27-headed "
+"27-köpfige "
+%%%%

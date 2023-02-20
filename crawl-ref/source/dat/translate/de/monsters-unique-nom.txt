@@ -254,89 +254,11 @@ Höllenschlange
 Lernaean hydra
 Lernäische Hydra
 %%%%
-the Lernaean hydra
-die Lernäische Hydra
+%sLernaean hydra
+{adj-e}%sLernäische Hydra
 %%%%
-the one-headed Lernaean hydra
-die einköpfige Lernäische Hydra
-%%%%
-the two-headed Lernaean hydra
-die zweiköpfige Lernäische Hydra
-%%%%
-the three-headed Lernaean hydra
-die dreiköpfige Lernäische Hydra
-%%%%
-the four-headed Lernaean hydra
-die vierköpfige Lernäische Hydra
-%%%%
-the five-headed Lernaean hydra
-die fünfköpfige Lernäische Hydra
-%%%%
-the six-headed Lernaean hydra
-die sechsköpfige Lernäische Hydra
-%%%%
-the seven-headed Lernaean hydra
-die siebenköpfige Lernäische Hydra
-%%%%
-the eight-headed Lernaean hydra
-die achtköpfige Lernäische Hydra
-%%%%
-the nine-headed Lernaean hydra
-die neunköpfige Lernäische Hydra
-%%%%
-the ten-headed Lernaean hydra
-die zehnköpfige Lernäische Hydra
-%%%%
-the 11-headed Lernaean hydra
-die 11-köpfige Lernäische Hydra
-%%%%
-the 12-headed Lernaean hydra
-die 12-köpfige Lernäische Hydra
-%%%%
-the 13-headed Lernaean hydra
-die 13-köpfige Lernäische Hydra
-%%%%
-the 14-headed Lernaean hydra
-die 14-köpfige Lernäische Hydra
-%%%%
-the 15-headed Lernaean hydra
-die 15-köpfige Lernäische Hydra
-%%%%
-the 16-headed Lernaean hydra
-die 16-köpfige Lernäische Hydra
-%%%%
-the 17-headed Lernaean hydra
-die 17-köpfige Lernäische Hydra
-%%%%
-the 18-headed Lernaean hydra
-die 18-köpfige Lernäische Hydra
-%%%%
-the 19-headed Lernaean hydra
-die 19-köpfige Lernäische Hydra
-%%%%
-the 20-headed Lernaean hydra
-die 20-köpfige Lernäische Hydra
-%%%%
-the 21-headed Lernaean hydra
-die 21-köpfige Lernäische Hydra
-%%%%
-the 22-headed Lernaean hydra
-die 22-köpfige Lernäische Hydra
-%%%%
-the 23-headed Lernaean hydra
-die 23-köpfige Lernäische Hydra
-%%%%
-the 24-headed Lernaean hydra
-die 24-köpfige Lernäische Hydra
-%%%%
-the 25-headed Lernaean hydra
-die 25-köpfige Lernäische Hydra
-%%%%
-the 26-headed Lernaean hydra
-die 26-köpfige Lernäische Hydra
-%%%%
-the 27-headed Lernaean hydra
-die 27-köpfige Lernäische Hydra
+the %sLernaean hydra
+die {adj-e}%sLernäische Hydra
 %%%%
 
 # not really uniques, but gramatically similar
