@@ -1155,6 +1155,48 @@ xxllxx
  xxxx
 ENDMAP
 
+NAME:   monkooky_mail_order_shop
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:8-, Orc, Depths
+{{
+local kstr = "S = general shop type:Mail Order suffix:Catalogue ; " ..
+             "ring mail | " ..
+             "chain mail | " ..
+             "scale mail "
+
+-- Stealing nicolae's methodology from Mayhem Merchandise
+-- Again, could but probably won't result in an inappropriate lajatang appearing
+if not you.unrands("lajatang of order") then
+      kstr = kstr .. "| lajatang of order w:2"
+end
+
+kfeat(kstr)
+}}
+MAPMAP
+S
+ENDMAP
+
+
+NAME:   monkooky_alliterative
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:8-, Snake, Depths
+{{
+local name =  A .. string.sub(string.lower(crawl.make_name()), 2)
+name = string.gsub(name, " ", "")
+
+local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
+             "suffix:Arms and Armor ; short sword ego:speed | "..
+             "short sword ego:spectral | falchion ego:flaming | scimitar ego:speed"
+
+kfeat(kstr)
+}}
+MAPMAP
+S
+ENDMAP
+
+
 # Q: Why is the shop across from your fire supplies store burned down?
 # A: Don't worry about it. Are you going to buy something or not?
 NAME:     nicolae_shop_fire_sale
