@@ -116,6 +116,8 @@ def strip_uncompiled(lines):
     return result
 
 SKIP_FILES = [ 
+    # covered in a way that doesn't use the literal strings from the file
+    'mutant-beast.h',
     # these just contain a bunch of compile flags, etc.
     'AppHdr.h', 'AppHdr.cc',
     'build.h', 'compflag.h',

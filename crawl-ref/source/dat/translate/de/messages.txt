@@ -12466,35 +12466,6 @@ Ihr könnt nicht durch die dichten Bäume gehen.
 %%%%
 
 ##################
-# mutant-beast.h
-##################
-%%%%
-weird
-
-%%%%
-shock
-
-%%%%
-ox
-
-%%%%
-larval
-
-%%%%
-juvenile
-
-%%%%
-mature
-
-%%%%
-elder
-
-%%%%
-primal
-
-%%%%
-
-##################
 # mutation-data.h
 ##################
 %%%%
