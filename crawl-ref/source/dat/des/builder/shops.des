@@ -1526,6 +1526,70 @@ xxllxx
  xxxx
 ENDMAP
 
+NAME:   monkooky_shop_mail_order
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:6-, Vaults, Depths
+{{
+local count = crawl.roll_dice(2, 2) + 3
+local kstr = "S = general shop type:Mail-Order suffix:Catalogue " ..
+             "count:" .. count .. " ; " ..
+             "w:5 ring mail | " ..
+             "ring mail good_item| " ..
+             "w:5 scale mail | " ..
+             "scale mail good_item| " ..
+             "w:5 chain mail | " ..
+             "chain mail good_item"
+
+-- Stealing nicolae's methodology from Mayhem Merchandise
+-- Again, could but probably won't result in an inappropriate lajatang appearing
+if not you.unrands("lajatang of order") then
+      kstr = kstr .. "|lajatang of order w:6"
+end
+
+kfeat(kstr)
+}}
+MAP
+S
+ENDMAP
+
+NAME:   monkooky_shop_alliterative
+TAGS:   transparent
+WEIGHT: 3
+DEPTH:  D:8-, Orc, Elf, Depths
+{{
+local count = crawl.roll_dice(2, 3) + 5
+local name = "A" .. string.sub(string.lower(crawl.make_name()), 2)
+
+--Weights of equally rare weapons are divided by two for types with
+--two alliterative egos
+local weaponnames = {"dagger", "short sword", "falchion", "scimitar",
+                    "w:3 demon blade", "double sword w:3",
+                    "hand axe", "executioner's axe w:6",
+                    "club w:20", "flail", "demon whip w:3",
+                    "dire flail", "eveningstar w:6",
+                    "spear", "halberd", "demon trident w:3"}
+local egos = {"chaos", "draining", "distortion", "electrocution", "flaming",
+              "freezing", "heavy", "speed", "spectral"}
+local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
+             "suffix:Armaments count:" .. count .. " ; " ..
+             "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:speed | " ..
+             "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:spectral"
+--add any weapon-ego pair with matching first letter
+for _, weapon in ipairs(weaponnames) do
+  for _, ego in ipairs(egos) do
+    if weapon:sub(1, 1) == ego:sub(1, 1) then
+      kstr = kstr .. " | " .. weapon .. " ego:" .. ego
+    end
+  end
+end
+kfeat(kstr)
+}}
+MAP
+S
+ENDMAP
+
+
 # Q: Why is the shop across from your fire supplies store burned down?
 # A: Don't worry about it. Are you going to buy something or not?
 NAME:     nicolae_shop_fire_sale
