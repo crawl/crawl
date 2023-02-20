@@ -1187,7 +1187,7 @@ TAGS:   transparent
 WEIGHT: 3
 DEPTH:  D:8-, Orc, Elf, Depths
 {{
-local count = crawl.roll_dice(2, 3) + 3
+local count = crawl.roll_dice(2, 3) + 5
 local name = "A" .. string.sub(string.lower(crawl.make_name()), 2)
 local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
              "suffix:Armaments count:" .. count .. " ; " ..
@@ -1195,11 +1195,20 @@ local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
              "short sword ego:speed | short sword ego:spectral | " ..
              "falchion ego:flaming | falchion ego:freezing | " ..
              "scimitar ego:speed | scimitar ego:spectral |" .. 
-             "club ego:chaos |" ..
+             "w:3 demon blade ego:draining | w:3 demon blade ego:distortion | "..
+             "w:2 eudemon blade ego:electrocution |" ..
+             "w:3 double sword ego:draining | w:3 double sword ego:distortion | "..
+             "w:6 executioner's axe ego:electrocution |" ..
+             "w:20 club ego:chaos |" ..
              "flail ego:flaming | flail ego:freezing |" ..
-             "sacred scourge ego:speed | sacred scourge ego:spectral |" ..
-             "eveningstar ego:electrocution |" ..
-             "spear ego:speed | spear ego:spectral"
+             "w:3 demon whip ego:draining | w:3 demon whip ego:distortion | " ..
+             "w:1 sacred scourge ego:speed | w:1 sacred scourge ego:spectral |" ..
+             "dire flail ego:draining | dire flail ego:distortion | " ..
+             "w:6 eveningstar ego:electrocution |" ..
+             "spear ego:speed | spear ego:spectral | " ..
+             "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:speed | " ..
+             "halberd itemname:scythe tile:wpn_scythe wtile:scythe ego:spectral | " ..
+             "w:3 demon trident ego:draining | w:3 demon trident ego:distortion"
 kfeat(kstr)
 }}
 MAP
