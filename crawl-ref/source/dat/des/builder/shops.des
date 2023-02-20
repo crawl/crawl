@@ -1155,44 +1155,53 @@ xxllxx
  xxxx
 ENDMAP
 
-NAME:   monkooky_mail_order_shop
+NAME:   monkooky_shop_mail_order
 TAGS:   transparent
 WEIGHT: 3
-DEPTH:  D:8-, Orc, Depths
+DEPTH:  D:6-, Vaults, Depths
 {{
-local kstr = "S = general shop type:Mail Order suffix:Catalogue ; " ..
-             "ring mail | " ..
-             "chain mail | " ..
-             "scale mail "
+local count = crawl.roll_dice(2, 2) + 3
+local kstr = "S = general shop type:Mail-Order suffix:Catalogue " ..
+             "count:" .. count .. " ; " ..
+             "w:5 ring mail | " ..
+             "ring mail good_item| " ..
+             "w:5 scale mail | " ..
+             "scale mail good_item| " ..
+             "w:5 chain mail | " ..
+             "chain mail good_item"
 
 -- Stealing nicolae's methodology from Mayhem Merchandise
 -- Again, could but probably won't result in an inappropriate lajatang appearing
 if not you.unrands("lajatang of order") then
-      kstr = kstr .. "| lajatang of order w:2"
+      kstr = kstr .. "|lajatang of order w:6"
 end
 
 kfeat(kstr)
 }}
-MAPMAP
+MAP
 S
 ENDMAP
 
-
-NAME:   monkooky_alliterative
+NAME:   monkooky_shop_alliterative
 TAGS:   transparent
 WEIGHT: 3
-DEPTH:  D:8-, Snake, Depths
+DEPTH:  D:8-, Orc, Elf, Depths
 {{
-local name =  A .. string.sub(string.lower(crawl.make_name()), 2)
-name = string.gsub(name, " ", "")
-
+local name = "A" .. string.sub(string.lower(crawl.make_name()), 2)
 local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
-             "suffix:Arms and Armor ; short sword ego:speed | "..
-             "short sword ego:spectral | falchion ego:flaming | scimitar ego:speed"
-
+             "suffix:Armaments ; " ..
+             "dagger ego:draining | dagger ego:distortion | " ..
+             "short sword ego:speed | short sword ego:spectral | " ..
+             "falchion ego:flaming | falchion ego:freezing | " ..
+             "scimitar ego:speed | scimitar ego:spectral |" .. 
+             "club ego:chaos |" ..
+             "flail ego:flaming | flail ego:freezing |" ..
+             "sacred scourge ego:speed | sacred scourge ego:spectral |" ..
+             "eveningstar ego:electrocution |" ..
+             "spear ego:speed | spear ego:spectral"
 kfeat(kstr)
 }}
-MAPMAP
+MAP
 S
 ENDMAP
 
