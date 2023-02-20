@@ -1194,7 +1194,7 @@ local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
              "dagger ego:draining | dagger ego:distortion | " ..
              "short sword ego:speed | short sword ego:spectral | " ..
              "falchion ego:flaming | falchion ego:freezing | " ..
-             "scimitar ego:speed | scimitar ego:spectral |" .. 
+             "scimitar ego:speed | scimitar ego:spectral |" ..
              "w:3 demon blade ego:draining | w:3 demon blade ego:distortion | "..
              "w:2 eudemon blade ego:electrocution |" ..
              "w:3 double sword ego:draining | w:3 double sword ego:distortion | "..
