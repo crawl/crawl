@@ -2410,10 +2410,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
         if (mons_genus(type) == MONS_SCORPION || rand && one_chance_in(4))
             str = "pincer";
         else
-        {
-            str = "front ";
-            return str + foot_name(plural, can_plural);
-        }
+            str = "front leg";
         break;
 
     case MON_SHAPE_BLOB:
@@ -2483,7 +2480,7 @@ string monster::hand_name(bool plural, bool *can_plural) const
         break;
 
     case MON_SHAPE_BUGGY:
-        str = "handbug";
+        str = "handbug"; // noloc
         break;
     }
 
@@ -2610,7 +2607,7 @@ string monster::foot_name(bool plural, bool *can_plural) const
         break;
 
     case MON_SHAPE_BUGGY:
-        str = "footbug";
+        str = "footbug"; // noloc
         break;
     }
 
@@ -2639,7 +2636,6 @@ string monster::arm_name(bool plural, bool *can_plural) const
     if (can_plural != nullptr)
         *can_plural = true;
 
-    string adj;
     string str = "arm";
 
     // TODO: shared code with species::skin_name for player species
@@ -2647,15 +2643,15 @@ string monster::arm_name(bool plural, bool *can_plural) const
     {
     case MONS_DRACONIAN:
     case MONS_NAGA:
-        adj = "scaled";
+        str = "scaled arm";
         break;
 
     case MONS_TENGU:
-        adj = "feathered";
+        str = "feathered arm";
         break;
 
     case MONS_MUMMY:
-        adj = "bandage-wrapped";
+        str = "bandage-wrapped arm";
         break;
 
     case MONS_OCTOPODE:
@@ -2667,15 +2663,12 @@ string monster::arm_name(bool plural, bool *can_plural) const
     case MONS_SKELETAL_WARRIOR:
     case MONS_ANCIENT_CHAMPION:
     case MONS_REVENANT:
-        adj = "bony";
+        str = "bony arm";
         break;
 
     default:
         break;
     }
-
-    if (!adj.empty())
-        str = adj + " " + str;
 
     if (plural)
         str = pluralise(str);

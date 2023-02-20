@@ -12182,81 +12182,6 @@ etwas Gold
 %s drops %s.
 %s lässt {acc}%s fallen.
 %%%%
-pincer
-
-%%%%
-"front "
-
-%%%%
-wing
-
-%%%%
-antenna
-
-%%%%
-eye-stalk
-
-%%%%
-leaf
-
-%%%%
-body
-
-%%%%
-rhizome
-
-%%%%
-pupil
-
-%%%%
-handbug
-
-%%%%
-leg
-
-%%%%
-hoof
-
-%%%%
-tail
-
-%%%%
-talon
-
-%%%%
-stem
-
-%%%%
-pseudopod
-
-%%%%
-underside
-
-%%%%
-footbug
-
-%%%%
-feet
-
-%%%%
-foot
-
-%%%%
-arm
-
-%%%%
-scaled
-
-%%%%
-feathered
-
-%%%%
-bandage-wrapped
-
-%%%%
-bony
-
-%%%%
 %s becomes momentarily stuck in the liquid earth.
 %s bleibt kurzzeitig in der flüssigen Erde stecken.
 %%%%
@@ -13208,9 +13133,6 @@ Your teeth shrink to normal size.
 Your teeth shrink and become duller.
 
 %%%%
-hooves
-
-%%%%
 You have large cloven feet.
 
 %%%%
@@ -13232,9 +13154,6 @@ Your hooves expand and flesh out into feet!
 Your hooves look more like feet.
 
 %%%%
-antennae
-
-%%%%
 You have a pair of small antennae on your head.
 
 %%%%
@@ -13254,9 +13173,6 @@ The antennae on your head shrink away.
 
 %%%%
 The antennae on your head shrink a bit.
-
-%%%%
-talons
 
 %%%%
 You have sharp toenails.
@@ -13845,9 +13761,6 @@ Your skin's translucency fades.
 
 %%%%
 Your skin's transparency fades.
-
-%%%%
-pseudopods
 
 %%%%
 Armour fits poorly on your pseudopods.
@@ -16026,6 +15939,9 @@ fist
 
 %%%%
 underbelly
+
+%%%%
+bony
 
 %%%%
 shadowy
@@ -19815,7 +19731,13 @@ screech
 growl
 
 %%%%
+scaled
+
+%%%%
 scales
+
+%%%%
+feathered
 
 %%%%
 feathers
@@ -19825,6 +19747,9 @@ furry
 
 %%%%
 fur
+
+%%%%
+bandage-wrapped
 
 %%%%
 bandages
@@ -23346,6 +23271,9 @@ Ihr tretet aus den Schatten hervor.
 %%%%
 %s unmelds from your body.
 %s löst sich von Eurem Körper.
+%%%%
+"front "
+
 %%%%
 "main "
 

@@ -1,0 +1,135 @@
+###############################################################################
+#
+# Body parts (see also transforms.txt)
+#
+###############################################################################
+
+################################
+# singular
+################################
+
+%%%%
+pincer
+Schere
+%%%%
+wing
+Flügel
+%%%%
+antenna
+Antenne
+%%%%
+eye-stalk
+Augenstiel
+%%%%
+leaf
+Blat
+%%%%
+rhizome
+Rhizom
+%%%%
+pupil
+Pupille
+%%%%
+leg
+Bein
+%%%%
+hoof
+Huf
+%%%%
+talon
+Klaue
+%%%%
+pseudopod
+Pseudopodium
+%%%%
+foot
+Fuß
+%%%%
+arm
+Arm
+%%%%
+scaled arm
+geschuppter Arm
+%%%%
+feathered arm
+gefiederter Arm
+%%%%
+bandage-wrapped arm
+bandagierter Arm
+%%%%
+bony arm
+knochiger Arm
+%%%%
+
+# these ones only used in singular
+%%%%
+body
+Leib
+%%%%
+tail
+Schwanz
+%%%%
+underside
+Unterseite
+%%%%
+stem
+Stiel
+%%%%
+
+################################
+# plural
+################################
+
+%%%%
+pincers
+{pl}Scheren
+%%%%
+wings
+{pl}Flügel
+%%%%
+antennae
+{pl}Antennen
+%%%%
+eye-stalks
+{pl}Augenstiele
+%%%%
+leaves
+{pl}Blätter
+%%%%
+rhizomes
+{pl}Rhizome
+%%%%
+pupils
+{pl}Pupillen
+%%%%
+legs
+{pl}Beine
+%%%%
+hooves
+{pl}Hufe
+%%%%
+talons
+{pl}Klauen
+%%%%
+pseudopods
+{pl}Pseudopodien
+%%%%
+feet
+{pl}Füße
+%%%%
+arms
+{pl}Arme
+%%%%
+scaled arms
+{pl}geschuppte Arme
+%%%%
+feathered arms
+{pl}gefiederte Arme
+%%%%
+bandage-wrapped arms
+{pl}bandagierte Arme
+%%%%
+bony arms
+{pl}knochige Arme
+%%%%
+
