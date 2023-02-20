@@ -921,6 +921,7 @@ int monster::armour_bonus(const item_def &item, bool calc_unid) const
 
 void monster::equip_armour_message(item_def &item)
 {
+    // locnote: equip armour
     string str = localise("%s wears %s.", this->name(DESC_THE),
                           item.name(DESC_A));
     simple_monster_message(*this, str.c_str());
@@ -930,6 +931,7 @@ void monster::equip_jewellery_message(item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
+    // locnote: equip ring/amulet
     string str = localise("%s puts on %s.", this->name(DESC_THE),
                           item.name(DESC_A));
     simple_monster_message(*this, str.c_str());
@@ -1013,6 +1015,7 @@ void monster::unequip_armour(item_def &item, bool msg)
 {
     if (msg)
     {
+        // locnote: unequip armour
         const string str = localise("%s takes off %s.", name(DESC_THE),
                                     item.name(DESC_A));
         simple_monster_message(*this, str.c_str());
@@ -1025,7 +1028,8 @@ void monster::unequip_jewellery(item_def &item, bool msg)
 
     if (msg)
     {
-        const string str = localise("%s takes off %s.", name(DESC_THE),
+        // locnote: unequip ring/amulet
+        const string str = localise("%s removes %s.", name(DESC_THE),
                                     item.name(DESC_A));
         simple_monster_message(*this, str.c_str());
     }
@@ -2210,6 +2214,7 @@ bool monster::has_base_name() const
     return !mname.empty() && !ghost;
 }
 
+// noloc section start
 static string _invalid_monster_str(monster_type type)
 {
     string str = "INVALID MONSTER ";
@@ -2262,6 +2267,7 @@ static string _invalid_monster_str(monster_type type)
 
     return str;
 }
+// noloc section end
 
 static string _mon_special_name(const monster& mon, description_level_type desc,
                                 bool force_seen)
@@ -2273,7 +2279,7 @@ static string _mon_special_name(const monster& mon, description_level_type desc,
                                      && mon.submerged();
 
     if (mon.type == MONS_NO_MONSTER)
-        return "DEAD MONSTER";
+        return "DEAD_MONSTER";
     else if (mon.mid == MID_YOU_FAULTLESS)
         return "INVALID YOU_FAULTLESS";
     else if (invalid_monster_type(mon.type) && mon.type != MONS_PROGRAM_BUG)
@@ -2730,11 +2736,21 @@ bool monster::fumbles_attack()
     {
         if (you.can_see(*this))
         {
-            mprf("%s %s", name(DESC_THE).c_str(), liquefied(pos())
-                 ? "becomes momentarily stuck in the liquid earth."
-                 : env.grid(pos()) == DNGN_TOXIC_BOG
-                 ? "becomes momentarily stuck in the toxic bog."
-                 : "splashes around in the water.");
+            if (liquefied(pos()))
+            {
+                mprf("%s becomes momentarily stuck in the liquid earth.",
+                     name(DESC_THE).c_str());
+            }
+            else if (env.grid(pos()) == DNGN_TOXIC_BOG)
+            {
+                mprf("%s becomes momentarily stuck in the toxic bog.",
+                     name(DESC_THE).c_str());
+            }
+            else
+            {
+                mprf("%s splashes around in the water.",
+                     name(DESC_THE).c_str());
+            }
         }
         else if (player_can_hear(pos(), LOS_RADIUS))
             mprf(MSGCH_SOUND, "You hear a splashing noise.");
@@ -4517,7 +4533,7 @@ void monster::petrify(const actor *atk, bool /*force*/)
 bool monster::fully_petrify(bool quiet)
 {
     bool msg = !quiet && simple_monster_message(*this, mons_is_immotile(*this) ?
-                         "%s turns to stone!" : "%s stops moving altogether!");
+                         " turns to stone!" : " stops moving altogether!");
 
     add_ench(ENCH_PETRIFIED);
     return msg;
@@ -5462,8 +5478,9 @@ void monster::apply_location_effects(const coord_def &oldpos,
         {
             if (you.can_see(*this))
             {
-                mprf("%s dives back into the %s!", name(DESC_THE).c_str(),
-                                                   feat_type_name(env.grid(pos())));
+                string the_feat = string("the ") + feat_type_name(env.grid(pos()));
+                mprf("%s dives back into %s!", name(DESC_THE).c_str(),
+                                                   the_feat.c_str());
             }
             del_ench(ENCH_AQUATIC_LAND);
         }
@@ -6034,19 +6051,22 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 hit_points = 0;
                 if (observable())
                 {
-                    mprf("As %s mount dies, %s plunges down into %s!",
-                         pronoun(PRONOUN_POSSESSIVE).c_str(),
-                         name(DESC_THE).c_str(),
-                         env.grid(pos()) == DNGN_LAVA ?
-                             "lava and is incinerated" :
-                             "deep water and drowns");
+                    string msg;
+                    if (env.grid(pos()) == DNGN_LAVA)
+                    {
+                        mpr("As its mount dies, the spriggan plunges down "
+                            "into lava and is incinerated!");
+                    }
+                    else
+                    {
+                        mpr("As its mount dies, the spriggan plunges down "
+                            "into deep water and drowns!");
+                    }
                 }
             }
             else if (fly_died && observable())
             {
-                mprf("%s falls from %s now dead mount.",
-                     name(DESC_THE).c_str(),
-                     pronoun(PRONOUN_POSSESSIVE).c_str());
+                mpr("The spriggan falls from its now dead mount.");
             }
         }
     }
@@ -6249,16 +6269,23 @@ void monster::steal_item_from_player()
             inv[MSLOT_GOLD] = idx;
             new_item.set_holding_monster(*this);
         }
-        mprf("%s steals %d gold piece%s!",
-             name(DESC_THE).c_str(),
-             stolen_amount,
-             stolen_amount != 1 ? "s" : "");
+        if (stolen_amount == 1)
+        {
+            mprf("%s steals 1 gold piece!", name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("%s steals %d gold pieces!", name(DESC_THE).c_str(),
+                                              stolen_amount);
+        }
 
         you.attribute[ATTR_GOLD_FOUND] -= stolen_amount;
 
         you.del_gold(stolen_amount);
-        mprf("You now have %d gold piece%s.",
-             you.gold, you.gold != 1 ? "s" : "");
+        if (you.gold == 1)
+            mpr("You now have 1 gold piece.");
+        else
+            mprf("You now have %d gold pieces.", you.gold);
 
         return;
     }

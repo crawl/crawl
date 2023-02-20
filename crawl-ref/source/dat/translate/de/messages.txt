@@ -12101,34 +12101,34 @@ der Boden
 ##################
 %%%%
 %s wields %s.
-
+%s handhabt {acc}%s.
 %%%%
 It bursts into flame!
-Es geht in Flammen auf!
+Die Waffe geht in Flammen auf!
 %%%%
 It is covered in frost.
-Es ist mit Frost bedeckt.
+Die Waffe ist mit Frost bedeckt.
 %%%%
 It glows with a cold blue light!
-
+Die Waffe glüht mit einem kalten blauen Licht!
 %%%%
 It softly glows with a divine radiance!
-Es leuchtet sanft mit einer göttlichen Ausstrahlung!
+Die Waffe leuchtet sanft mit einer göttlichen Ausstrahlung!
 %%%%
 It begins to drip with poison!
-Es beginnt vor Gift zu tropfen!
+Die Waffe beginnt vor Gift zu tropfen!
 %%%%
 You sense an unholy aura.
 Ihr spürt eine unheilige Aura.
 %%%%
 Its appearance distorts for a moment.
-Sein Aussehen verzerrt für einen Moment.
+Das Aussehen der Waffe verzerrt für einen Moment.
 %%%%
 It is briefly surrounded by a scintillating aura of random colours.
-
+Die Waffe ist kurzzeitig von einer schillernden Aura aus zufälligen Farben umgeben.
 %%%%
 %s %s briefly %s through it before %s %s to get a firm grip on it.
-
+Die Hand des Monsters geht kurz durch die Waffe, bevor es sie fest in den Griff bekommt.
 %%%%
 pass
 
@@ -12137,49 +12137,50 @@ manage
 
 %%%%
 It is briefly surrounded by shifting shadows.
-Es ist kurz von wechselnden Schatten umgeben.
+Die Waffe ist kurz von wechselnden Schatten umgeben.
 %%%%
 It begins to drip corrosive slime!
-Es beginnt ätzenden Schleim zu tropfen!
+Die Waffe beginnt ätzenden Schleim zu tropfen!
 %%%%
+# note: equip armour
 %s wears %s.
-
+%s zieht {acc}%s an.
 %%%%
+# note: equip ring/amulet
 %s puts on %s.
-
+%s setzt {acc}%s an.
 %%%%
 %s unwields %s.
-
+%s stellt {acc}%s weg.
 %%%%
 It stops flaming.
-Es hört auf zu flammen.
+Die Waffe hört auf zu flammen.
 %%%%
 It stops glowing.
-Es hört auf zu leuchten.
+Die Waffe hört auf zu leuchten.
 %%%%
 It stops crackling.
-Es hört auf zu knistern.
+Die Waffe hört auf zu knistern.
 %%%%
 It stops dripping with poison.
-Es hört auf, von Gift zu tropfen.
+Die Waffe hört auf, von Gift zu tropfen.
 %%%%
+# note: unequip armour
 %s takes off %s.
-
+%s nimmt {acc}%s ab.
+%%%%
+# note: unequip ring/amulet
+%s removes %s.
+%s nimmt {acc}%s ab.
 %%%%
 %s picks up %s.
 %s nimmt %s auf.
 %%%%
 some gold
-
+etwas Gold
 %%%%
 %s drops %s.
-%s lässt %s fallen.
-%%%%
-" (NUM_MONSTERS + %d)"
-
-%%%%
-DEAD MONSTER
-
+%s lässt {acc}%s fallen.
 %%%%
 pincer
 
@@ -12256,122 +12257,119 @@ bandage-wrapped
 bony
 
 %%%%
-becomes momentarily stuck in the liquid earth.
-
+%s becomes momentarily stuck in the liquid earth.
+%s bleibt kurzzeitig in der flüssigen Erde stecken.
 %%%%
-becomes momentarily stuck in the toxic bog.
-
+%s becomes momentarily stuck in the toxic bog.
+%s bleibt kurzzeitig im giftigen Sumpf stecken.
 %%%%
-splashes around in the water.
-
+%s splashes around in the water.
+%s plätschert im Wasser herum.
 %%%%
 You hear a splashing noise.
 Ihr hört ein plätscherndes Geräusch.
 %%%%
 %s seems less lethargic.
-
+%s scheint weniger lethargisch.
 %%%%
 %s flies into a frenzy!
-
+%s gerät in einen Rausch!
 %%%%
 %s goes berserk!
-
+%s läuft Amok!
 %%%%
 %s wobbles for a moment.
-
+%s schwankt einen Moment.
 %%%%
 %s is devoured by a tear in reality.
-
+%s wird von einem Riss in der Realität verschlungen.
 %%%%
 %s is drained!
-%s ist entleert!
+%s wird entleert!
 %%%%
 %s corrodes %s!
-%s korrodiert%s!
+%s korrodiert {acc}%s!
 %%%%
 %s seems to be corroded for longer.
 %s scheint länger korrodiert zu sein.
 %%%%
 %s is splashed with acid
-%s ist mit Säure%s besprit
+%s wird mit Säure bespritzt
 %%%%
 %s begins to crumble.
-
+%s beginnt zu bröckeln.
 %%%%
 %s begins to die.
-
+%s fängt an zu sterben.
 %%%%
 %s turns to stone!
-
+%s wird zu Stein!
 %%%%
 %s stops moving altogether!
-
+%s bewegt sich gar nicht mehr!
 %%%%
 %s looks sick.
 %s sieht krank aus.
 %%%%
 %s twists and deforms.
-
+%s verdreht und deformiert sich.
 %%%%
-%s dives back into the %s!
-%s taucht zurück in die%s!
+%s dives back into %s!
+%s taucht zurück in {acc}%s!
 %%%%
 The bloodstain on %s disappears!
-Der Blutfleck auf%s verschwindet!
+Der Blutfleck auf {dat}%s verschwindet!
 %%%%
 %s falls through a shaft!
-
+%s fällt durch einen Schacht!
 %%%%
 %s is sucked into a shaft!
-
+%s wird in einen Schacht hineingesaugt!
 %%%%
 %s looks weaker.
-
+%s sieht schwächer aus.
 %%%%
 %s drinks a potion.
-
+%s trinkt einen Zaubertrank.
 %%%%
 %s is healed!
-
+%s wird geheilt!
 %%%%
 Your spectral weapon shares its damage with you!
 Eure Spektralwaffe teilt ihren Schaden mit Euch!
 %%%%
 %s shares the spectral weapon's damage!
-
+%s teilt den Schaden der Spektralwaffe!
 %%%%
 Flame seeps out of %s.
-Flamme sickert aus%s.
+Flamme sickert aus {dat}%s.
 %%%%
-As %s mount dies, %s plunges down into %s!
-Wenn%s Reittier stirbt, fällt%s in%s!
+As its mount dies, the spriggan plunges down into lava and is incinerated!
+Als sein Reittier stirbt, stürzt der Spriggan in die Lava und wird verbrannt!
 %%%%
-lava and is incinerated
-
+As its mount dies, the spriggan plunges down into deep water and drowns!
+Als sein Reittier stirbt, stürzt der Spriggan ins tiefe Wasser und ertrinkt!
 %%%%
-deep water and drowns
-
-%%%%
-%s falls from %s now dead mount.
-%s fällt von%s jetzt totem Berg.
+The spriggan falls from its now dead mount.
+Der Spriggan fällt von seinem nun toten Reittier.
 %%%%
 %s roars in fury and transforms into a fierce dragon!
-
+%s brüllt vor Wut und verwandelt sich in einen wilden Drachen!
 %%%%
-%s steals %d gold piece%s!
-%s stiehlt%d Goldstück%s!
+%s steals 1 gold piece!
+%s stiehlt 1 Goldstück!
 %%%%
-You now have %d gold piece%s.
-Ihr habt jetzt%d Goldstück%s.
+%s steals %d gold pieces!
+%s stiehlt %d Goldstücke!
 %%%%
 %s steals %d of %s!
-%s stiehlt%d von%s!
+%s stiehlt %d {gen}%s!
 %%%%
 %s steals %s!
-%s stiehlt%s!
+%s stiehlt {acc}%s!
 %%%%
 %s is pushed out of the way.
-
+%s wird zur Seite geschoben.
 %%%%
 
 ##################
@@ -24836,6 +24834,9 @@ Frömmigkeit wird auf %d gesetzt.
 %%%%
 "Enter new gold value (current = %d, Enter for %d): "
 Neuen Goldwert eingeben (aktuell =%d, Eingabe für%d):
+%%%%
+You now have %d gold piece%s.
+Ihr habt jetzt%d Goldstück%s.
 %%%%
 You are not religious!
 Ihr seid nicht religiös!
