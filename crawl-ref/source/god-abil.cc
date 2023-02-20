@@ -2387,9 +2387,9 @@ bool ashenzari_curse_item()
 
     item_def& item(you.inv[item_slot]);
 
-    if (!item_is_cursable(item))
+    if (!item_is_selected(item, OSEL_CURSABLE))
     {
-        mpr("You can't curse that!");
+        mprf(MSGCH_PROMPT, "You cannot curse that!");
         return false;
     }
 
@@ -2420,6 +2420,12 @@ bool ashenzari_uncurse_item()
         return false;
 
     item_def& item(you.inv[item_slot]);
+
+    if (!item_is_selected(item, OSEL_CURSED_WORN))
+    {
+        mprf(MSGCH_PROMPT, "You cannot uncurse and destroy that!");
+        return false;
+    }
 
     if (is_unrandom_artefact(item, UNRAND_FINGER_AMULET)
         && you.equip[EQ_RING_AMULET] != -1)
