@@ -1187,9 +1187,10 @@ TAGS:   transparent
 WEIGHT: 3
 DEPTH:  D:8-, Orc, Elf, Depths
 {{
+local count = crawl.roll_dice(2, 3) + 3
 local name = "A" .. string.sub(string.lower(crawl.make_name()), 2)
 local kstr = "S = general shop name:" .. name .. " type:Alliterative " ..
-             "suffix:Armaments ; " ..
+             "suffix:Armaments count:" .. count .. " ; " ..
              "dagger ego:draining | dagger ego:distortion | " ..
              "short sword ego:speed | short sword ego:spectral | " ..
              "falchion ego:flaming | falchion ego:freezing | " ..
