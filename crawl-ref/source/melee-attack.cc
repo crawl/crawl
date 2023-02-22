@@ -1073,6 +1073,9 @@ public:
             return fang_damage + (random ? div_rand_round(hd, denom) : hd / denom);
         }
 
+        if (you.get_mutation_level(MUT_ACIDIC_BITE))
+            return fang_damage + (random ? roll_dice(2, 4) : 4);
+
         return fang_damage;
     }
 
@@ -1341,7 +1344,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             player_announce_aux_hit();
 
             if (damage_brand == SPWPN_ACID)
-                defender->splash_with_acid(&you);
+                defender->acid_corrode(3);
 
             if (damage_brand == SPWPN_VENOM && coinflip())
                 poison_monster(defender->as_monster(), &you);
