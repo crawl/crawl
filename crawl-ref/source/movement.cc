@@ -645,11 +645,10 @@ static spret _rampage_forward(coord_def move)
 
         monster* mon = monster_at(p);
         // Check for a plausible target at this cell.
-        // If there's no monster, a Fedhas ally, or an invis monster,
+        // If there's no monster or a Fedhas ally,
         // perform terrain checks and if they pass keep going.
         if (!mon
-            || fedhas_passthrough(mon)
-            || !you.can_see(*mon))
+            || fedhas_passthrough(mon))
         {
             // Don't rampage if our tracer path is broken by something we can't
             // safely pass through before it reaches a monster.
@@ -1035,9 +1034,7 @@ void move_player_action(coord_def move)
         }
         else if (!try_to_swap) // attack!
         {
-            // Don't allow the player to freely locate invisible monsters
-            // with confirmation prompts.
-            if (!you.can_see(*targ_monst) && !you.is_motile())
+            if (!you.is_motile())
             {
                 canned_msg(MSG_CANNOT_MOVE);
                 you.turn_is_over = false;
@@ -1045,7 +1042,7 @@ void move_player_action(coord_def move)
             }
             // Rampaging forcibly initiates the attack, but the attack
             // can still be cancelled.
-            if (!rampaged && !you.can_see(*targ_monst)
+            if (!rampaged
                 && !you.confused()
                 && !check_moveto(targ, walkverb)
                 // Attack cancelled by fight_melee

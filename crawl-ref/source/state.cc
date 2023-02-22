@@ -225,8 +225,6 @@ bool interrupt_cmd_repeat(activity_interrupt ai,
     {
         const monster* mon = at.mons_data;
         ASSERT(mon);
-        if (!you.can_see(*mon))
-            return false;
 
         if (crawl_state.cmd_repeat_started_unsafe
             && at.context != SC_NEWLY_SEEN)

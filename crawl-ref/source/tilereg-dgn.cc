@@ -623,7 +623,7 @@ int DungeonRegion::handle_mouse(wm_mouse_event &event)
 int tile_click_cell(const coord_def &gc, unsigned char mod)
 {
     monster* mon = monster_at(gc);
-    if (mon && you.can_see(*mon))
+    if (mon)
     {
         if (_handle_distant_monster(mon, mod))
             return CK_MOUSE_CMD;
@@ -824,7 +824,7 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     else // non-player squares
     {
         const monster* mon = monster_at(gc);
-        if (mon && you.can_see(*mon))
+        if (mon)
         {
             has_monster = true;
             // TODO: is see_cell_no_trans too strong?

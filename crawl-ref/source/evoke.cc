@@ -772,8 +772,7 @@ static spret _condenser()
         if (!mons || mons->wont_attack() || !mons_is_threatening(*mons))
             continue;
 
-        if (you.can_see(*mons))
-            see_targets = true;
+        see_targets = true;
 
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
         {
@@ -823,8 +822,7 @@ static bool _xoms_chessboard()
             continue;
         if (mons_is_firewood(**mi))
             continue;
-        if (you.can_see(**mi))
-            see_target = true;
+        see_target = true;
 
         targets.emplace_back(*mi);
     }

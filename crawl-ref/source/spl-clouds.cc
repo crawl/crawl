@@ -236,7 +236,6 @@ void holy_flames(monster* caster, actor* defender)
 spret scroll_of_poison(bool scroll_unknown)
 {
     int created = 0;
-    bool unknown_unseen = false;
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
         if (cell_is_solid(*ri))
@@ -245,10 +244,7 @@ spret scroll_of_poison(bool scroll_unknown)
             continue;
         const actor* act = actor_at(*ri);
         if (act != nullptr)
-        {
-            unknown_unseen = unknown_unseen || !you.can_see(*act);
             continue;
-        }
 
         place_cloud(CLOUD_POISON, *ri, 10 + random2(11), &you);
         ++created;
@@ -259,7 +255,7 @@ spret scroll_of_poison(bool scroll_unknown)
         mpr("The air fills with toxic fumes!");
         return spret::success;
     }
-    if (!scroll_unknown && !unknown_unseen)
+    if (!scroll_unknown)
     {
         mpr("There's no open space to fill with poison.");
         return spret::abort;

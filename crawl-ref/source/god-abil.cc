@@ -1258,7 +1258,7 @@ void zin_remove_divine_stamina()
 spret zin_imprison(const coord_def& target, bool fail)
 {
     monster* mons = monster_at(target);
-    if (mons == nullptr || !you.can_see(*mons))
+    if (mons == nullptr)
     {
         mpr("You can see no monster there to imprison!");
         return spret::abort;
@@ -4770,7 +4770,7 @@ bool ru_power_leap()
         }
 
         monster* mons = monster_at(beam.target);
-        if (mons && you.can_see(*mons))
+        if (mons)
         {
             clear_messages();
             mpr("You can't leap on top of the monster!");
@@ -5072,7 +5072,7 @@ bool uskayaw_line_pass()
         }
 
         monster* mons = monster_at(beam.target);
-        if (mons && you.can_see(*mons))
+        if (mons)
         {
             clear_messages();
             mpr("You can't stand on top of the monster!");
@@ -5173,7 +5173,7 @@ spret uskayaw_grand_finale(bool fail)
         }
 
         mons = monster_at(beam.target);
-        if (!mons || !you.can_see(*mons))
+        if (!mons)
         {
             clear_messages();
             mpr("You can't perceive a target there!");
@@ -5417,11 +5417,9 @@ spret hepliaklqana_transference(bool fail)
 
     actor* victim = actor_at(target);
     const bool victim_visible = victim && you.can_see(*victim);
-    if ((!victim || !victim_visible)
-        && !yesno("You can't see anything there. Try transferring anyway?",
-                  true, 'n'))
+    if (!victim)
     {
-        canned_msg(MSG_OK);
+        mpr("There is nothing there to transfer!");
         return spret::abort;
     }
 
@@ -5824,9 +5822,15 @@ bool okawaru_duel_active()
 spret okawaru_duel(const coord_def& target, bool fail)
 {
     monster* mons = monster_at(target);
-    if (!mons || !you.can_see(*mons))
+    if (!mons)
     {
-        mpr("You can see no monster there to duel!");
+        mpr("There is no monster there to duel!");
+        return spret::abort;
+    }
+
+    if (!you.can_see(*mons))
+    {
+        mpr("You cannot tell if that monster is a worthy foe!");
         return spret::abort;
     }
 

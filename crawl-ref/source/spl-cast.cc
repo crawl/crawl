@@ -1186,8 +1186,7 @@ static vector<coord_def> _simple_find_all_hostiles()
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_aligned(&you, *mi)
-            && mons_is_threatening(**mi)
-            && you.can_see(**mi))
+            && mons_is_threatening(**mi))
         {
             result.push_back((*mi)->pos());
         }

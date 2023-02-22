@@ -2497,17 +2497,8 @@ spret fedhas_grow_ballistomycete(const coord_def& target, bool fail)
     monster* mons = monster_at(target);
     if (mons)
     {
-        if (you.can_see(*mons))
-        {
-            mpr("That space is already occupied.");
-            return spret::abort;
-        }
-
-        fail_check();
-
-        // invisible monster
-        mpr("Something you can't see occupies that space!");
-        return spret::success;
+        mpr("That space is already occupied.");
+        return spret::abort;
     }
 
     fail_check();
@@ -2544,17 +2535,8 @@ spret fedhas_grow_oklob(const coord_def& target, bool fail)
     monster* mons = monster_at(target);
     if (mons)
     {
-        if (you.can_see(*mons))
-        {
-            mpr("That space is already occupied.");
-            return spret::abort;
-        }
-
-        fail_check();
-
-        // invisible monster
-        mpr("Something you can't see is occupying that space!");
-        return spret::success;
+        mpr("That space is already occupied.");
+        return spret::abort;
     }
 
     fail_check();
@@ -2697,7 +2679,6 @@ spret cast_foxfire(actor &agent, int pow, god_type god, bool fail)
 spret foxfire_swarm()
 {
     bool created = false;
-    bool unknown_unseen = false;
     for (radius_iterator ri(you.pos(), 2, C_SQUARE, LOS_NO_TRANS); ri; ++ri)
     {
         if (_create_foxfire(you, *ri, GOD_NO_GOD, 10))
@@ -2705,22 +2686,14 @@ spret foxfire_swarm()
             created = true;
             continue;
         }
-        const actor* agent = actor_at(*ri);
-        if (agent && !you.can_see(*agent))
-            unknown_unseen = true;
     }
     if (created)
     {
         mpr("Flames leap up around you!");
         return spret::success;
     }
-    if (!unknown_unseen)
-    {
-        mpr("There's no space to create foxfire here.");
-        return spret::abort;
-    }
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return spret::fail; // don't spend piety, do spend a turn
+    mpr("There's no space to create foxfire here.");
+    return spret::abort;
 }
 
 bool summon_spider(const actor &agent, coord_def pos, god_type god,

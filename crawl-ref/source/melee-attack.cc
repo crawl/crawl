@@ -111,9 +111,7 @@ bool melee_attack::bad_attempt()
 bool melee_attack::player_unrand_bad_attempt()
 {
     // Unrands with secondary effects that can harm nearby friendlies.
-    // Don't prompt for confirmation (and leak information about the
-    // monster's position) if the player can't see the monster.
-    if (!weapon || !you.can_see(*defender))
+    if (!weapon)
         return false;
 
     if (is_unrandom_artefact(*weapon, UNRAND_DEVASTATOR))

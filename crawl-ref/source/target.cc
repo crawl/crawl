@@ -130,7 +130,7 @@ string bad_charge_target(coord_def a)
     // You can only charge at monsters.
     // Specifically, monsters you can see. (No guessing!)
     // You can't charge at plants you walk right through.
-    if (!mons || !you.can_see(*mons) || fedhas_passthrough(mons))
+    if (!mons || fedhas_passthrough(mons))
         return "You can't see anything there to charge at.";
 
     // You can't charge at friends. (Also, rude.)
@@ -1250,7 +1250,7 @@ aff_type targeter_shatter::is_affected(coord_def loc)
         return AFF_NO; // No shattering through glass... without work.
 
     monster* mons = monster_at(loc);
-    if (!mons || !you.can_see(*mons))
+    if (!mons)
     {
         const int terrain_chance = terrain_shatter_chance(loc, you);
         if (terrain_chance == 100)

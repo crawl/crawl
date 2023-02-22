@@ -221,10 +221,11 @@ static bool _find_cblink_target(dist &target, bool safe_cancel,
         }
 
         monster* target_mons = monster_at(target.target);
-        if (target_mons && you.can_see(*target_mons))
+        if (target_mons)
         {
             mprf("You can't %s onto %s!", verb.c_str(),
-                 target_mons->name(DESC_THE).c_str());
+                 you.can_see(*target_mons) ? target_mons->name(DESC_THE).c_str()
+                                           : "something invisible");
             continue;
         }
 
@@ -1172,8 +1173,6 @@ spret cast_manifold_assault(int pow, bool fail, bool real)
             continue; // this should be enough to avoid penance?
         if (mons_is_firewood(**mi) || mons_is_projectile(**mi))
             continue;
-        if (!you.can_see(**mi))
-            continue;
         targets.emplace_back(*mi);
     }
 
@@ -1736,7 +1735,7 @@ vector<monster *> find_chaos_targets(bool just_check)
             && !mons_is_conjured(mi->type)
             && !mi->friendly())
         {
-            if (!just_check || you.can_see(**mi))
+            if (!just_check)
                 targets.push_back(*mi);
         }
     }
@@ -1793,7 +1792,7 @@ spret blinkbolt(int power, bolt &beam, bool fail)
     }
 
     monster* mons = monster_at(beam.target);
-    if (!mons || !you.can_see(*mons))
+    if (!mons)
     {
         mpr("You see nothing there to target!");
         return spret::abort;

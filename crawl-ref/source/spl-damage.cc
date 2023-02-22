@@ -253,7 +253,6 @@ static void _chain_lightning_to(const actor &caster, int power,
 }
 
 // Assuming the player casts Chain Lightning, who *might* get hit?
-// Doesn't include monsters the player can't see.
 vector<coord_def> chain_lightning_targets()
 {
     vector<coord_def> targets;
@@ -274,7 +273,6 @@ vector<coord_def> chain_lightning_targets()
         {
             actor *new_victim = actor_at(*di);
             if (new_victim
-                && you.can_see(*new_victim)
                 && seen.find(new_victim) == seen.end()
                 && cell_see_cell(*di, you.pos(), LOS_SOLID)
                 && _act_worth_targeting(you, *new_victim))
@@ -1034,7 +1032,6 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
     if (mons
         && !mons->submerged()
         && !god_protects(mons)
-        && you.can_see(*mons)
         && stop_attack_prompt(mons, false, you.pos()))
     {
         return spret::abort;
@@ -1053,7 +1050,7 @@ spret cast_momentum_strike(int pow, coord_def target, bool fail)
 
     if (!beam.foe_info.hurt && !beam.friend_info.hurt) // miss!
     {
-        if (!mons || !you.can_see(*mons))
+        if (!mons)
             mpr("The momentum dissipates harmlessly.");
         return spret::success;
     }
@@ -1717,7 +1714,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     {
         monster *mon = monster_at(*ai);
         if (!mon || !mon->alive() || mon->submerged()
-            || mon->is_insubstantial() || !you.can_see(*mon)
+            || mon->is_insubstantial()
             || mon == wielder)
         {
             continue;
@@ -3005,7 +3002,7 @@ spret cast_dazzling_flash(int pow, bool fail, bool tracer)
 
             const monster* mon = monster_at(*ri);
 
-            if (!mon || !you.can_see(*mon))
+            if (!mon)
                 continue;
 
             if (!mon->friendly() && (*vulnerable)(mon))
@@ -3203,7 +3200,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
     }
 
     const actor* victim = actor_at(target);
-    if ((!victim || !you.can_see(*victim))
+    if ((!victim)
         && !yesno("You can't see anything there. Cast anyway?", false, 'n'))
     {
         canned_msg(MSG_OK);
@@ -3256,7 +3253,7 @@ spret cast_unravelling(coord_def target, int pow, bool fail)
 // XXX: this should take a monster_info.
 string mons_inner_flame_immune_reason(const monster *mons)
 {
-    if (!mons || !you.can_see(*mons))
+    if (!mons)
         return "You can't see anything there.";
 
     if (mons->has_ench(ENCH_INNER_FLAME))
@@ -3308,7 +3305,7 @@ spret cast_poisonous_vapours(int pow, const dist &beam, bool fail, bool test)
     }
 
     monster* mons = monster_at(beam.target);
-    if (!mons || !you.can_see(*mons))
+    if (!mons)
     {
         if (test)
             return spret::abort;
@@ -3506,7 +3503,7 @@ void handle_searing_ray()
         mons = monster_by_mid(you.props[SEARING_RAY_MID_KEY].get_int());
         // homing targeting, save the target location in case it dies or
         // disappears
-        if (mons && mons->alive() && you.can_see(*mons))
+        if (mons && mons->alive())
             you.props[SEARING_RAY_TARGET_KEY].get_coord() = mons->pos();
         else
             you.props[SEARING_RAY_AIM_SPOT_KEY] = true;
@@ -3807,7 +3804,7 @@ spret cast_hailstorm(int pow, bool fail, bool tracer)
 
             const monster* mon = monster_at(*ri);
 
-            if (!mon || !you.can_see(*mon))
+            if (!mon)
                 continue;
 
             if (!mon->friendly() && (*vulnerable)(mon))
@@ -4089,7 +4086,7 @@ static monster* _find_maxwells_target(bool tracer)
     {
         monster *mon = monster_at(*di);
         if (mon && _maxwells_target_check(*mon)
-            && (!tracer || you.can_see(*mon)))
+            && (!tracer))
         {
             return mon;
         }
@@ -4110,7 +4107,7 @@ vector<monster *> find_maxwells_possibles()
     for (distance_iterator di(you.pos(), true, true, distance); di; ++di)
     {
         monster *mon = monster_at(*di);
-        if (mon && _maxwells_target_check(*mon) && you.can_see(*mon))
+        if (mon && _maxwells_target_check(*mon))
             result.push_back(mon);
     }
     return result;
@@ -4122,7 +4119,7 @@ spret cast_maxwells_coupling(int pow, bool fail, bool tracer)
 
     if (tracer)
     {
-        if (!mon || !you.can_see(*mon))
+        if (!mon)
             return spret::abort;
         else
             return spret::success;

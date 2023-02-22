@@ -485,16 +485,14 @@ static int _intoxicate_monsters(coord_def where, int pow, bool tracer)
         return 0;
     }
 
-    if (tracer && !you.can_see(*mons))
-        return 0;
-
     if (!tracer && monster_resists_this_poison(*mons))
         return 0;
 
     if (!tracer && x_chance_in_y(40 + div_rand_round(pow, 3), 100))
     {
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
-        simple_monster_message(*mons, " looks rather confused.");
+        if (you.can_see(*mons))
+            simple_monster_message(*mons, " looks rather confused.");
         return 1;
     }
     // Just count affectable monsters for the tracer

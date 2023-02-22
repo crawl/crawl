@@ -119,11 +119,8 @@ void flush_comes_into_view()
 
     monster* mon = crawl_state.which_mon_acting();
 
-    if (!mon || !mon->alive() || (mon->flags & MF_WAS_IN_VIEW)
-        || !you.can_see(*mon))
-    {
+    if (!mon || !mon->alive() || (mon->flags & MF_WAS_IN_VIEW))
         return;
-    }
 
     handle_seen_interrupt(mon);
 }

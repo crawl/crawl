@@ -325,8 +325,7 @@ bool check_awaken(monster* mons, int stealth)
         return true; // Oops, the monster wakes up!
 
     // You didn't wake the monster!
-    if (you.can_see(*mons) // to avoid leaking information
-        && !mons->wont_attack()
+    if (!mons->wont_attack()
         && !mons->neutral() // include pacified monsters
         && mons_class_gives_xp(mons->type))
     {
