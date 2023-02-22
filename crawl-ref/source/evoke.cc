@@ -800,6 +800,12 @@ static spret _condenser()
         return spret::fail;
     }
 
+    if (is_good_god(you.religion) && cloud == CLOUD_NEGATIVE_ENERGY)
+    {
+        mprf("%s suppresses the foul vapours!", god_name(you.religion).c_str());
+        return spret::fail;
+    }
+
     for (auto p : target_cells)
     {
         const int cloud_power = 5
