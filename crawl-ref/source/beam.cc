@@ -4531,7 +4531,7 @@ static void _acid_splash_monsters(const bolt& beam, monster* mon, actor* agent)
                      victim->name(DESC_THE).c_str());
             }
 
-            victim->splash_with_acid(agent, 3);
+            victim->splash_with_acid(agent);
         }
     }
 }

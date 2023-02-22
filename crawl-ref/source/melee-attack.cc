@@ -1341,7 +1341,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             player_announce_aux_hit();
 
             if (damage_brand == SPWPN_ACID)
-                defender->splash_with_acid(&you, 3);
+                defender->splash_with_acid(&you);
 
             if (damage_brand == SPWPN_VENOM && coinflip())
                 poison_monster(defender->as_monster(), &you);
@@ -2761,7 +2761,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_REACH_TONGUE:
     case AF_ACID:
-        defender->splash_with_acid(attacker, 3);
+        defender->splash_with_acid(attacker);
         break;
 
     case AF_CORRODE:

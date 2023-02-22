@@ -1538,7 +1538,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_ACID:
-        defender->splash_with_acid(attacker, 3);
+        defender->splash_with_acid(attacker);
         break;
 
 

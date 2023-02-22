@@ -4142,7 +4142,7 @@ bool monster::corrode_equipment(const char* corrosion_source, int degree)
 /**
  * Attempts to apply corrosion to a monster.
  */
-void monster::splash_with_acid(actor* evildoer, int acid_strength)
+void monster::splash_with_acid(actor* evildoer)
 {
     // Splashing with acid shouldn't do anything to immune targets
     if (res_acid() == 3)
@@ -4157,7 +4157,7 @@ void monster::splash_with_acid(actor* evildoer, int acid_strength)
              attack_strength_punctuation(post_res_dam).c_str());
     }
 
-    acid_corrode(acid_strength);
+    acid_corrode(3);
 
     if (post_res_dam > 0)
         hurt(evildoer, post_res_dam, BEAM_ACID, KILLED_BY_ACID);
