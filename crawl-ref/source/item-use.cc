@@ -3668,7 +3668,6 @@ bool scroll_hostile_check(scroll_type which_scroll)
     {
         const monster* mon = monster_at(*ri);
         if (!mon
-            || !mon->visible_to(&you)
             // Plants/fungi don't count.
             || (!mons_is_threatening(*mon) || mon->wont_attack())
                 && !mons_class_is_test(mon->type))

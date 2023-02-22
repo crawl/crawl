@@ -1030,12 +1030,12 @@ static inline bool _monster_warning(activity_interrupt ai,
     ASSERT(at.apt == ai_payload::monster);
     monster* mon = at.mons_data;
     ASSERT(mon);
-    if (!you.can_see(*mon))
-        return false;
 
     // Disable message for summons.
     if (mon->is_summoned() && !delay)
         return false;
+
+    const bool visible = you.can_see(*mon);
 
     if (at.context == SC_ALREADY_SEEN || at.context == SC_UNCHARM)
     {
@@ -1044,7 +1044,8 @@ static inline bool _monster_warning(activity_interrupt ai,
         if (testbits(mon->flags, MF_WAS_IN_VIEW) && delay)
         {
             mprf(MSGCH_WARN, "%s is too close now for your liking.",
-                 mon->name(DESC_THE).c_str());
+                 visible ? mon->name(DESC_THE).c_str()
+                                   : "something");
         }
     }
     else if (mon->seen_context == SC_JUST_SEEN)
@@ -1057,26 +1058,41 @@ static inline bool _monster_warning(activity_interrupt ai,
         view_monster_equipment(mon);
 
         string text;
-        if (mon->has_base_name())
-            text = getMiscString(mon->mname + " title");
-        else
-            text = getMiscString(mon->name(DESC_DBNAME) + " title");
-        if (text.empty())
-            text = mon->full_name(DESC_A);
-        if (mon->type == MONS_PLAYER_GHOST)
+        if (visible)
         {
-            text += make_stringf(" (%s)",
-                                 short_ghost_description(mon).c_str());
+            if (mon->has_base_name())
+                text = getMiscString(mon->mname + " title");
+            else
+                text = getMiscString(mon->name(DESC_DBNAME) + " title");
+            if (text.empty())
+                text = mon->full_name(DESC_A);
+            if (mon->type == MONS_PLAYER_GHOST)
+            {
+                text += make_stringf(" (%s)",
+                                    short_ghost_description(mon).c_str());
+            }
         }
+        else
+            text = "something";
 
         if (at.context == SC_DOOR)
             text += " opens the door.";
         else if (at.context == SC_GATE)
             text += " opens the gate.";
         else if (at.context == SC_TELEPORT_IN)
-            text += " appears from thin air!";
+        {
+            if (visible)
+                text += " appears from thin air!";
+            else
+                text += " suddenly disturbs the air!";
+        }
         else if (at.context == SC_LEAP_IN)
-            text += " leaps into view!";
+        {
+            if (visible)
+                text += " leaps into view!";
+            else
+                text += " leaps nearby!";
+        }
         else if (at.context == SC_FISH_SURFACES)
         {
             text += " bursts forth from the ";
@@ -1099,16 +1115,24 @@ static inline bool _monster_warning(activity_interrupt ai,
         else if (at.context == SC_ABYSS)
             text += _abyss_monster_creation_message(mon);
         else if (at.context == SC_THROWN_IN)
-            text += " is thrown into view!";
-        else
+        {
+            if (visible)
+                text += " is thrown into view!";
+            else
+                text += " is thrown close by!";
+        }
+        else if (visible)
             text += " comes into view.";
+        else
+            text += " draws near.";
 
         bool zin_id = false;
         string god_warning;
 
         if (have_passive(passive_t::warn_shapeshifter)
             && mon->is_shapeshifter()
-            && !(mon->flags & MF_KNOWN_SHIFTER))
+            && !(mon->flags & MF_KNOWN_SHIFTER)
+            && visible)
         {
             zin_id = true;
             mon->props[ZIN_ID_KEY] = true;
@@ -1129,7 +1153,7 @@ static inline bool _monster_warning(activity_interrupt ai,
         const string mweap = get_monster_equipment_desc(mi, DESC_IDENTIFIED,
                                                         DESC_NONE);
 
-        if (!mweap.empty())
+        if (!mweap.empty() && visible)
         {
             text += " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))
                 + " " + conjugate_verb("are", mi.pronoun_plurality())
@@ -1159,7 +1183,7 @@ static inline bool _monster_warning(activity_interrupt ai,
                        random2(you.experience_level))
                 {
                     mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
-                         mon->name(DESC_THE).c_str());
+                         visible ? mon->name(DESC_THE).c_str() : "something");
                     gozag_incite(mon);
                 }
             }
