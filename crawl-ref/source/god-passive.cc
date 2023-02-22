@@ -1508,15 +1508,21 @@ static bool _wu_jian_trigger_martial_arts(coord_def old_pos,
     return attacked;
 }
 
+// Return a monster at pos which a wall jump could attack, nullptr if none.
+monster *wu_jian_wall_jump_monster_at(const coord_def &pos)
+{
+    monster *target = monster_at(pos);
+    if (target && target->alive() && _can_attack_martial(target))
+        return target;
+    return nullptr;
+}
+
 static vector<monster*> _wu_jian_wall_jump_monsters(const coord_def &pos)
 {
     vector<monster*> targets;
     for (adjacent_iterator ai(pos, true); ai; ++ai)
-    {
-        monster *target = monster_at(*ai);
-        if (target && _can_attack_martial(target) && target->alive())
+        if (monster *target = wu_jian_wall_jump_monster_at(*ai))
             targets.push_back(target);
-    }
     return targets;
 }
 
