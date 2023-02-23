@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "env.h"
 #include "l-defs.h"
+#include "map-knowledge.h"
 #include "mon-death.h"
 #include "player.h"
 #include "religion.h"
@@ -207,6 +208,21 @@ LUAFN(view_cell_see_cell)
     return 1;
 }
 
+/**
+ * @brief Are the given coordinates in the minimal bounding box of the known
+ * map?
+ * @tparam int x
+ * @tparam int y
+ * @treturn boolean
+ * @function in_known_map_bounds
+ */
+LUAFN(view_in_known_map_bounds)
+{
+    PLAYERCOORDS(p, 1, 2)
+    PLUARET(boolean, in_known_map_bounds(p));
+    return 1;
+}
+
 LUAFN(view_update_monsters)
 {
     ASSERT_DLUA;
@@ -224,6 +240,7 @@ static const struct luaL_reg view_lib[] =
     { "withheld", view_withheld },
     { "invisible_monster", view_invisible_monster },
     { "cell_see_cell", view_cell_see_cell },
+    { "in_known_map_bounds", view_in_known_map_bounds },
 
     { "update_monsters", view_update_monsters },
 
