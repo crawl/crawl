@@ -1631,7 +1631,8 @@ default_show_all_skills = false
         trainable mode. This option does not affect hints and tutorial games.
 
 monster_list_colour = friendly:green, neutral:brown, good_neutral:brown
-monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow, nasty:lightred
+monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow,
+                       nasty:lightred
         (List option)
         Change the colours used to display monster names in the monster list.
         Valid keys, and their default colours, are:
