@@ -400,7 +400,8 @@ Branches, Environment
   - The Abyss no longer generates random items, and kills in the abyss grant no
     experience or conventional piety. (Uskayaw and Yredelemnul continue to
     grant their special kinds of piety).
-  - Collecting the abyssal rune of zot grants two XP potions worth of experience.
+  - Collecting the abyssal rune of zot grants two XP potions worth of
+    experience.
   - The chance of an Abyss teleport sending the player deeper is increased, as
     are the rune, stair, and exit generation rates.
 * Sewer maps have been re-balanced and randomized, and two new sewers added.
@@ -459,7 +460,8 @@ Gods
     - 'Rising Flame': After 2-4 turns, sends the player through the ceiling (up
       one floor). Can only be used once.
 * Yredelemnul:
-  - Piety now solely based on the number and strength of allied zombies in sight.
+  - Piety now solely based on the number and strength of allied zombies in
+    sight.
   - Passive reaping: slain living, demonic, and holy monsters have a chance to
     automatically rise from the dead as undead allies.
   - Zombies cannot leave the level and expire when the player leaves the level.
@@ -681,8 +683,8 @@ Spells
   antimagic to a single foe. Targets that fail a Willpower check are also dazed
   and blinded.
 * New spell: Anguish (L4 Hexes/Necromancy). All enemies in sight must pass a
-  Will check or gain the new Anguished status effect. Whenever Anguished monsters
-  deal damage, they take the same amount of damage right back.
+  Will check or gain the new Anguished status effect. Whenever Anguished
+  monsters deal damage, they take the same amount of damage right back.
 * Yara's Violent Unravelling can now unravel summons, killing them immediately
   and turning them into explosions. It is now smite targeted.
 * Inner Flame is now smite targeted.
@@ -2319,7 +2321,8 @@ Character
   permanently reducing their MP. Their old recharge ability has been removed.
 * Loud noises no longer break mesmerization or fear.
 * Various 'badform' (e.g. wispform) special cases have been removed.
-* Several abilities that triggered exhaustion now have their own cooldown timers.
+* Several abilities that triggered exhaustion now have their own cooldown
+  timers.
 * Removed:
   - High elves.
   - Mottled draconians.
@@ -2386,8 +2389,8 @@ Items
   - Sword of Jihad: renamed to Zealot's Sword.
   - Sceptre of Torment only torments on-hit, rather than randomly.
   - The Captain's Cutlass no longer chops off hydra heads.
-  - The Ring of Shaolin is renamed to the Ring of Phasing, and the bow of Krishna
-    "Sharnga" is renamed to the longbow "Zephyr".
+  - The Ring of Shaolin is renamed to the Ring of Phasing, and the bow of
+    Krishna "Sharnga" is renamed to the longbow "Zephyr".
 * Potions of cure mutation, beneficial mutation, and mutation have been merged.
 * All types of food take one turn to eat.
 * All types of manuals are pre-identified.
@@ -2442,10 +2445,10 @@ Modding/contribution support
 * A number of guides from contributor Cerol on how to change key components
   of the game (first debuted in r/dcss and r/roguelikes) have been added to
   the documentation. These can be found at:
-    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/background_creation.txt
-    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/god_creation.txt
-    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/mutation_creation.txt
-    - https://github.com/crawl/crawl/blob/master/crawl-ref/docs/develop/species_creation.txt
+    - crawl-ref/docs/develop/background_creation.txt
+    - crawl-ref/docs/develop/god_creation.txt
+    - crawl-ref/docs/develop/mutation_creation.txt
+    - crawl-ref/docs/develop/species_creation.txt
 
 Stone Soup 0.19.5 (20170228)
 --------------------------------------------
@@ -3917,7 +3920,8 @@ Items
 * Sustain abilities effects no longer stack.
 * Amulets of resist corrosion now give only 50% corrosion resistance, from 90%.
 * Potions of resistance now grant corrosion resistance.
-* Staves of air now activate extra melee damage as often as other elemental staves.
+* Staves of air now activate extra melee damage as often as other elemental
+  staves.
 * Flying creatures no longer have a 2/3rds chance of dodging thrown nets.
 * Weapons and armour which aren't visibly enchanted no longer have enchantments
   higher than +0.
