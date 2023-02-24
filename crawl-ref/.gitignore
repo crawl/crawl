@@ -239,6 +239,7 @@ source/.tx/config
 /source/android-project/app/release/
 /source/android-project/app/src/main/assets/
 /source/android-project/build/
+/source/android-project/app/src/main/res/drawable/
 
 # generated files for monster
 /source/util/monster/monster
