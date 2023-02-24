@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Dungeon Crawl Stone Soup</string>
     <style name="CrawlTheme" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen">
         <item name="android:textSize">16dp</item>
     </style>
