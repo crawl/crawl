@@ -228,8 +228,9 @@ break free.
 %%%%
 Brain Feed spell
 
-Drains a portion of a visible enemy's intelligence. Such a loss is only
-temporary, and can be recovered by gaining experience.
+Drains a portion of a visible enemy's intelligence, with no direct line of fire
+required. Such a loss is only temporary, and can be recovered by gaining
+experience.
 %%%%
 Brothers in Arms spell
 
