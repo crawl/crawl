@@ -347,7 +347,7 @@ static vector<ability_def> &_get_ability_list()
         // TODO: any way to automatically derive these from the artefact name?
         { ABIL_EVOKE_ASMODEUS, "Evoke the Sceptre of Asmodeus",
             0, 0, 0, -1, {fail_basis::evo, 80, 3}, abflag::none },
-        { ABIL_EVOKE_DISPATER, "Evoke the Staff of Dispater",
+        { ABIL_EVOKE_DISPATER, "Evoke Damnation",
             4, 100, 0, 6, {}, abflag::none },
         { ABIL_EVOKE_OLGREB, "Evoke the Staff of Olgreb",
             4, 0, 0, -1, {}, abflag::none },
@@ -2418,7 +2418,7 @@ static void _evoke_sceptre_of_asmodeus()
         mpr("The air shimmers briefly.");
 }
 
-static bool _evoke_staff_of_dispater(dist *target)
+static bool _evoke_orb_of_dispater(dist *target)
 {
     int power = you.skill(SK_EVOCATIONS, 8);
 
@@ -2427,7 +2427,7 @@ static bool _evoke_staff_of_dispater(dist *target)
     {
         return false;
     }
-    mpr("You feel the staff feeding on your energy!");
+    mpr("You feel the orb feeding on your energy!");
     return true;
 }
 
@@ -2611,7 +2611,7 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
         break;
 
     case ABIL_EVOKE_DISPATER:
-        if (!_evoke_staff_of_dispater(target))
+        if (!_evoke_orb_of_dispater(target))
             return spret::abort;
         break;
 
@@ -3678,8 +3678,7 @@ bool player_has_ability(ability_type abil, bool include_unusable)
         return you.weapon()
                && is_unrandom_artefact(*you.weapon(), UNRAND_ASMODEUS);
     case ABIL_EVOKE_DISPATER:
-        return you.weapon()
-               && is_unrandom_artefact(*you.weapon(), UNRAND_DISPATER);
+        return player_equip_unrand(UNRAND_DISPATER);
     case ABIL_EVOKE_OLGREB:
         return you.weapon()
                && is_unrandom_artefact(*you.weapon(), UNRAND_OLGREB);

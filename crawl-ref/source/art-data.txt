@@ -348,16 +348,15 @@ BRAND:   SPWPN_FLAMING
 BOOL:    evil, nogen
 DBRAND:  Hellfire:  It temporarily reduces the fire resistance of those it strikes.
 
-NAME:    staff of Dispater
-APPEAR:  golden staff
-OBJ:     OBJ_WEAPONS/WPN_STAFF
-PLUS:    +4
+NAME:    orb of Dispater
+APPEAR:  golden orb
+OBJ:     OBJ_ARMOUR/ARM_ORB
 COLOUR:  ETC_GOLD
-TILE:    spwpn_staff_of_dispater
-TILE_EQ: dispater
-BOOL:    evil, nogen
-DESCRIP: Wielding it grants the ability to hurl damnation at the cost of health and magic,
- with strength depending on Evocations skill.
+# XXX - no tiles yet!
+BOOL:    evil, nogen, corrode
+AC:      5
+INSCRIP: +Damnation
+DESCRIP: +Damnation: It grants the ability to hurl damnation at the cost of health and magic, with strength depending on Evocations skill.
 
 NAME:    sceptre of Asmodeus
 APPEAR:  ruby sceptre

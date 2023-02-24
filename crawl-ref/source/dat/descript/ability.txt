@@ -815,14 +815,13 @@ hostile before vanishing. The success of the ability scales with the Evocations
 skill, and this ability is available only while wielding the Sceptre of
 Asmodeus.
 %%%%
-Evoke the Staff of Dispater ability
+Evoke Damnation ability
 
 Blasts a targeted enemy with damnation. These unholy forces harm the victim and
 anyone adjacent, and are not affected by any means of protection, such as armour
 or resistances. However, certain creatures, usually those able to invoke
 damnation themselves, are entirely unscathed by damnation. The power of this
-ability scales with the Evocations skill, and this ability is available only
-while wielding the Staff of Dispater.
+ability scales with the Evocations skill.
 %%%%
 Evoke the Staff of Olgreb ability
 

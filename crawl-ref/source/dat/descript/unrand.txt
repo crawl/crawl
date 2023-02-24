@@ -74,10 +74,11 @@ sword of Cerebov
 A twisted blade, covered in eerie flames. Its demonic power burns away at the
 very essence of those it is wielded against.
 %%%%
-staff of Dispater
+orb of Dispater
 
-A legendary staff, granting the power to unleash damnation — although not
-without draining the wielder's vitality in the process.
+A golden orb, granting the power to unleash damnation when held — although not
+without draining the wielder's vitality in the process. It carries with it some
+of the corrosive malice of the Iron City of Dis.
 %%%%
 sceptre of Asmodeus
 
