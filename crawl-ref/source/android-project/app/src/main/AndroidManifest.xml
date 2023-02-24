@@ -3,20 +3,27 @@
     package="org.develz.crawl"
     android:installLocation="auto">
 
-    <application android:label="@string/app_name"
-        android:icon="@drawable/ic_launcher"
+    <application
         android:allowBackup="true"
-        android:theme="@style/CrawlTheme"
-        android:hardwareAccelerated="true" >
-        <activity android:name="org.develz.crawl.DungeonCrawlStoneSoup"
-            android:label="@string/app_name"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:theme="@style/CrawlTheme">
+        <activity
+            android:name=".DCSSLauncher"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustResize"
-            >
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".DungeonCrawlStoneSoup"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize">
         </activity>
     </application>
 
