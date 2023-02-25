@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
+    android:background="@color/black"
     tools:context=".DCSSLauncher">
 
     <LinearLayout
@@ -25,11 +27,8 @@
             android:id="@+id/startButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/key_tint2"
-            android:backgroundTintMode="src_in"
-            android:onClick="startGame"
             android:text="@string/start_game"
-            android:textSize="16sp" />
+            android:theme="@style/ButtonColor2" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

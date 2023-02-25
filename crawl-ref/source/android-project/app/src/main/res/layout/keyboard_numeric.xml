@@ -1,4 +1,5 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/keyboard_numeric"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -85,8 +86,7 @@
             android:layout_weight="1"
             android:text=" 7\u2196\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_num_8"
@@ -96,8 +96,7 @@
             android:layout_weight="1"
             android:text=" 8\u2191\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_num_9"
@@ -107,8 +106,7 @@
             android:layout_weight="1"
             android:text=" 9\u2197\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
     </LinearLayout>
 
@@ -189,8 +187,7 @@
             android:layout_weight="1"
             android:text=" 4\u2190\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_num_5"
@@ -200,8 +197,7 @@
             android:layout_weight="1"
             android:text="5"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_num_6"
@@ -211,8 +207,7 @@
             android:layout_weight="1"
             android:text=" 6\u2192\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
     </LinearLayout>
 
@@ -293,8 +288,7 @@
             android:layout_weight="1"
             android:text=" 1\u2199\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_num_2"
@@ -304,8 +298,7 @@
             android:layout_weight="1"
             android:text=" 2\u2193\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_num_3"
@@ -315,8 +308,7 @@
             android:layout_weight="1"
             android:text=" 3\u2198\ufe0e"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
     </LinearLayout>
 
@@ -397,8 +389,7 @@
             android:layout_weight="1.5"
             android:text="0"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint3"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor3"/>
 
         <Button
             android:id="@+id/key_abc"
@@ -408,8 +399,7 @@
             android:layout_weight="1.5"
             android:text="abc"
             android:padding="0dp"
-            android:backgroundTint="@color/key_tint1"
-            android:backgroundTintMode="src_in"/>
+            android:theme="@style/ButtonColor1"/>
 
     </LinearLayout>
 

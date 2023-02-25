@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CrawlTheme" parent="@android:style/Theme.Holo.NoActionBar.Fullscreen">
-        <item name="android:textSize">16dp</item>
+    <style name="CrawlTheme" parent="@style/Theme.AppCompat.NoActionBar">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+    <style name="ButtonColor1" parent="CrawlTheme">
+        <item name="colorButtonNormal">#8d42dc</item>
+    </style>
+    <style name="ButtonColor2" parent="CrawlTheme">
+        <item name="colorButtonNormal">#268868</item>
+    </style>
+    <style name="ButtonColor3" parent="CrawlTheme">
+        <item name="colorButtonNormal">#0c3941</item>
+    </style>
+    <style name="ButtonColor4" parent="CrawlTheme">
+        <item name="colorButtonNormal">#490f57</item>
     </style>
     <dimen name="key_height">40dp</dimen>
-    <color name="key_tint1">#8d42dc</color>
-    <color name="key_tint2">#268868</color>
-    <color name="key_tint3">#0c3941</color>
-    <color name="key_tint4">#490f57</color>
+    <color name="black">#000000</color>
 </resources>
