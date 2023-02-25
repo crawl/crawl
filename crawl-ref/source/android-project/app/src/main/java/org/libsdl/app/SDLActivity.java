@@ -26,6 +26,8 @@ import android.graphics.drawable.Drawable;
 import android.hardware.*;
 import android.content.pm.ActivityInfo;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 // CRAWL HACK: Custom keyboard
 import org.develz.crawl.DCSSKeyboard;
 
@@ -33,7 +35,7 @@ import org.develz.crawl.DCSSKeyboard;
 /**
     SDL Activity
 */
-public class SDLActivity extends Activity {
+public class SDLActivity extends AppCompatActivity {
 
     private static final String TAG = "SDL";
 
