@@ -337,9 +337,9 @@ static const vector<god_passive> god_passives[] =
         {  0, passive_t::bondage_skill_boost,
               "get a skill boost from cursed items" },
         {  1, passive_t::identify_items, "sense the properties of items" },
-        {  1, passive_t::avoid_traps, "avoid traps" },
         {  2, passive_t::sinv, "are NOW clear of vision" },
         {  3, passive_t::clarity, "are NOW clear of mind" },
+        {  4, passive_t::avoid_traps, "avoid traps" },
     },
 
     // Dithmenos
