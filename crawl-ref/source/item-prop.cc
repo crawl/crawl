@@ -793,6 +793,7 @@ const set<pair<object_class_type, int> > removed_items =
     { OBJ_JEWELLERY, RING_TELEPORTATION },
     { OBJ_JEWELLERY, RING_ATTENTION },
     { OBJ_JEWELLERY, RING_STEALTH },
+    { OBJ_JEWELLERY, RING_SEE_INVISIBLE },
     { OBJ_STAVES,    STAFF_ENCHANTMENT },
     { OBJ_STAVES,    STAFF_CHANNELING },
     { OBJ_STAVES,    STAFF_POWER },
@@ -2525,9 +2526,6 @@ int get_jewellery_willpower(const item_def &ring, bool check_artp)
 bool get_jewellery_see_invisible(const item_def &ring, bool check_artp)
 {
     ASSERT(ring.base_type == OBJ_JEWELLERY);
-
-    if (ring.sub_type == RING_SEE_INVISIBLE)
-        return true;
 
     if (check_artp && is_artefact(ring))
         return artefact_property(ring, ARTP_SEE_INVISIBLE);

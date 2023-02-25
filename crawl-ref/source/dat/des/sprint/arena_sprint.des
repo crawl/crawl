@@ -1092,8 +1092,7 @@ KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15
             ring of poison resistance |\
             ring of protection from fire | ring of protection from cold |\
             ring of willpower | amulet of regeneration |\
-            amulet of reflection |\
-            ring of see invisible
+            amulet of reflection
 SUBST:  b : cb
 TILE:   c = wall_marble
 KFEAT:  TUVWYZ!? = dry_fountain

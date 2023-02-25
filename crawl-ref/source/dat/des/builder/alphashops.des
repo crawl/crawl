@@ -155,7 +155,7 @@
 
       elseif s == "S" then i = { "scarf", "scimitar", "short sword",
        "scale mail", "book of storms", "book of the sky",
-       "ring of see invisible", "ring of slaying", "spear",
+       "ring of slaying", "spear",
        "ring of strength", "manual of stealth", "scroll of summoning",
        "book of spatial translocations", "scroll of silence",
        "shortbow", "manual of staves", "steam dragon scales",

@@ -1106,9 +1106,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         mpr("You feel more attuned to ice.");
         break;
 
-    case RING_SEE_INVISIBLE:
-        break;
-
     case RING_FLIGHT:
         _flight_equip();
         break;
@@ -1232,10 +1229,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
 
     case AMU_REGENERATION:
         _deactivate_regeneration_item(item, meld);
-        break;
-
-    case RING_SEE_INVISIBLE:
-        _mark_unseen_monsters();
         break;
 
     case RING_PROTECTION:

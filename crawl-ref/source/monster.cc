@@ -4927,8 +4927,6 @@ bool monster::can_see_invisible() const
 
     if (scan_artefacts(ARTP_SEE_INVISIBLE) > 0)
         return true;
-    else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
-        return true;
     else if (wearing_ego(EQ_ALL_ARMOUR, SPARM_SEE_INVISIBLE))
         return true;
 

@@ -407,7 +407,6 @@ KITEM:    a = ring of protection from fire ident:all /\
           ring of willpower ident:all /\
           ring of fire ident:all /\
           ring of ice ident:all /\
-          ring of see invisible ident:all /\
           ring of poison resistance ident:all /\
           any jewellery ident:all
 KITEM:    b = any weapon level:27 ident:all /\
@@ -788,7 +787,6 @@ KITEM:    a = amulet of faith randart ident:all /\
     ring of willpower randart ident:all /\
     ring of fire randart ident:all /\
     ring of ice randart ident:all /\
-    ring of see invisible randart ident:all /\
     ring of poison resistance randart ident:all /\
     ring of slaying plus:3 ident:all /\
     ring of resist corrosion randart ident:all /\

@@ -94,9 +94,9 @@ static uint8_t _jewellery_type_from_artefact_prop(const string &s
 #endif
     if (s == "Wiz")
         return RING_WIZARDRY;
+#if TAG_MAJOR_VERSION == 34
     if (s == "SInv")
         return RING_SEE_INVISIBLE;
-#if TAG_MAJOR_VERSION == 34
     if (s == "Noisy" || s == "Stlth-")
         return RING_ATTENTION;
 #endif

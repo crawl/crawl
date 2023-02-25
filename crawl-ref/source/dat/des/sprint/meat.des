@@ -404,7 +404,7 @@ NSUBST:    ' = 1:& / *:.
     "</red>")
 
 }}
-KITEM:     + = ring of see invisible
+KITEM:     + = ring of positive energy
 KITEM:     * = ring of protection from fire
 SUBST:     1 = 1.
 KPROP:     - = no_tele_into

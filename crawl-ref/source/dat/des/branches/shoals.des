@@ -1950,7 +1950,7 @@ kfeat("E = armour shop name:" .. owner .. " type:Merfolk suffix:Armours ; \
       pair of gloves | buckler" )
 kfeat("F = general shop name:" .. owner .. " type:Merfolk suffix:Magic ; \
       ring of dexterity | ring of evasion | ring of ice | ring of protection | \
-      ring of see invisible | ring of willpower | amulet of reflection | \
+      ring of willpower | amulet of reflection | \
       amulet of the acrobat | randbook disc:poison | randbook disc:hexes | \
       randbook disc:ice | randbook disc:summoning | phial of floods | \
       condenser vane | lightning rod | wand of charming | wand of iceblast | \
