@@ -1521,7 +1521,7 @@ bool check_old_item_warning(const item_def& item,
                 return true;
 
             old_item = you.inv[equip];
-            if (!needs_handle_warning(old_item, OPER_TAKEOFF, penance))
+            if (!needs_handle_warning(old_item, OPER_REMOVE, penance))
                 return true;
 
             prompt += "Really remove ";
