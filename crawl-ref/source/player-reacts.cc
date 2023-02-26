@@ -254,7 +254,7 @@ static void _maybe_melt_armour()
 /**
  * How much horror does the player character feel in the current situation?
  *
- * (For Ru's MUT_COWARDICE and for the Sacred Labrys.)
+ * (For Ru's `MUT_COWARDICE` and for the Sacred Labrys.)
  *
  * Penalties are based on the "scariness" (threat level) of monsters currently
  * visible.

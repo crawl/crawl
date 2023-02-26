@@ -1735,7 +1735,7 @@ NAME:     consecrated labrys
 OBJ:      OBJ_WEAPONS/WPN_BROAD_AXE
 TYPE:     labrys
 BASE_DAM: +1
-PLUS:     +5
+PLUS:     +4
 COLOUR:   ETC_HOLY
 TILE:     spwpn_holy_axe
 TILE_EQ:  holy_axe
