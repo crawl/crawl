@@ -778,8 +778,11 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
     COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
-    if (class_wanted == OBJ_ARMOUR && you.has_mutation(MUT_NO_ARMOUR))
+    if (class_wanted == OBJ_ARMOUR && you.has_mutation(MUT_NO_ARMOUR)
+        || class_wanted == OBJ_WEAPONS && you.has_mutation(MUT_NO_GRASPING))
+    {
         return OBJ_RANDOM;
+    }
 
     int type_wanted = OBJ_RANDOM;
 
