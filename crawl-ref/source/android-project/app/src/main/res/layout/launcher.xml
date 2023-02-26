@@ -9,10 +9,8 @@
     tools:context=".DCSSLauncher">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
         android:layout_marginHorizontal="50dp"
         android:orientation="vertical">
 
@@ -29,6 +27,12 @@
             android:layout_height="wrap_content"
             android:text="@string/start_game"
             android:theme="@style/ButtonColor2" />
+
+        <Button
+            android:id="@+id/editInitFile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_rc"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

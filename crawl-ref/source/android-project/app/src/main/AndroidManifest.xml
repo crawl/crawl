@@ -23,8 +23,17 @@
             android:name=".DungeonCrawlStoneSoup"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".DCSSTextViewer"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".DCSSTextEditor"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
     <!-- OpenGL ES 1.0 -->
