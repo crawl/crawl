@@ -396,6 +396,7 @@ UseItemMenu::UseItemMenu(operation_types _oper, int item_type=OSEL_ANY,
         floor_header(nullptr)
 {
     set_tag("use_item");
+    set_flags(get_flags() & ~MF_USE_TWO_COLUMNS);
     set_highlighter(new TempUselessnessHighlighter()); // pointer managed by Menu
     menu_action = ACT_EXECUTE;
     reset(oper, prompt);

@@ -346,7 +346,7 @@ public:
     bool set_scroll(int index);
     bool in_page(int index, bool strict=false) const;
     bool snap_in_page(int index);
-    int get_first_visible(bool skip_init_headers=false) const;
+    int get_first_visible(bool skip_init_headers=false, int col=-1) const;
     bool item_visible(int index);
     MenuEntry *get_cur_title() const;
 
@@ -374,7 +374,7 @@ public:
 
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
-    void cycle_hover(bool reverse=false);
+    void cycle_hover(bool reverse=false, bool preserve_row=false, bool preserve_col=false);
     virtual bool page_down();
     virtual bool line_down();
     virtual bool page_up();

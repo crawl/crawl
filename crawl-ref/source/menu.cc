@@ -130,13 +130,15 @@ public:
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
 #ifdef USE_TILE_LOCAL
-    virtual bool on_event(const Event& event) override;
     int get_num_columns() const { return m_num_columns; };
+    virtual bool on_event(const Event& event) override;
     void set_num_columns(int n) {
         m_num_columns = n;
         _invalidate_sizereq();
         _queue_allocation();
     };
+#else
+    int get_num_columns() const { return 1; };
 #endif
     void set_min_col_width(int w) { m_min_col_width = w; } // XX min height?
     int get_min_col_width() { return m_min_col_width; }
@@ -151,6 +153,7 @@ public:
 
     void is_visible_item_range(int *vis_min, int *vis_max);
     void get_item_region(int index, int *y1, int *y2);
+    void get_item_gridpos(int index, int *row, int *col);
 
 #ifndef USE_TILE_LOCAL
     void set_showable_height(int h)
@@ -170,13 +173,13 @@ protected:
     int m_force_scroll = -1; // in rows, no pixels
     bool m_initial_hover_snap = false;
     int m_scroll_context = 0;
-
 #ifdef USE_TILE_LOCAL
+    int m_num_columns = 1;
+
     void do_layout(int mw, int num_columns);
 
     int get_max_viewport_height();
     int m_nat_column_width; // set by do_layout()
-    int m_num_columns = 1;
 
     struct MenuItemInfo {
         int x, y, row, column;
@@ -266,9 +269,27 @@ void UIMenu::is_visible_item_range(int *vis_min, int *vis_max)
         *vis_max = v_max;
 }
 
+void UIMenu::get_item_gridpos(int index, int *row, int *col)
+{
+    ASSERT_RANGE(index, 0, (int)m_menu->items.size());
+#ifdef USE_TILE_LOCAL
+    // XX why not just expose MenuItemInfo
+    if (row)
+        *row = item_info[index].row;
+    if (col)
+        *col = item_info[index].column;
+#else
+    if (row)
+        *row = index;
+    if (col)
+        *col = 0;
+#endif
+}
+
 void UIMenu::get_item_region(int index, int *y1, int *y2)
 {
     ASSERT_RANGE(index, 0, (int)m_menu->items.size());
+
 #ifdef USE_TILE_LOCAL
     int row = item_info[index].row;
     if (static_cast<size_t>(row + 1) >= row_heights.size())
@@ -1550,20 +1571,37 @@ bool Menu::process_command(command_type cmd)
     const int old_vis_first = get_first_visible();
 #endif
 
+    // note -- MF_USE_TWO_COLUMNS doesn't guarantee two cols!
+    // currently guaranteed to be false except on local tiles
+    const bool multicol = m_ui.menu->get_num_columns() > 1;
+
     switch (cmd)
     {
     case CMD_MENU_UP:
         if (is_set(MF_ARROWS_SELECT))
-            cycle_hover(true);
+            cycle_hover(true, false, true);
         else
             line_up();
         break;
     case CMD_MENU_DOWN:
         if (is_set(MF_ARROWS_SELECT))
-            cycle_hover();
+            cycle_hover(false, false, true);
         else
             line_down();
         break;
+    case CMD_MENU_RIGHT:
+        if (multicol && is_set(MF_ARROWS_SELECT))
+            cycle_hover(false, true, false);
+        else
+            cycle_mode(true);
+        break;
+    case CMD_MENU_LEFT:
+        if (multicol && is_set(MF_ARROWS_SELECT))
+            cycle_hover(true, true, false);
+        else
+            cycle_mode(false);
+        break;
+
     case CMD_MENU_LINE_UP:
         line_up();
         break;
@@ -1948,9 +1986,7 @@ void Menu::deselect_all(bool update_view)
     sel.clear();
 }
 
-
-
-int Menu::get_first_visible(bool skip_init_headers) const
+int Menu::get_first_visible(bool skip_init_headers, int col) const
 {
     int y = m_ui.scroller->get_scroll();
     for (int i = 0; i < static_cast<int>(items.size()); i++)
@@ -1966,6 +2002,13 @@ int Menu::get_first_visible(bool skip_init_headers) const
                 // when using this to determine e.g. scroll position, it is
                 // useful to ignore visible headers
                 continue;
+            }
+            if (col >= 0)
+            {
+                int cur_col;
+                m_ui.menu->get_item_gridpos(i, nullptr, &cur_col);
+                if (cur_col != col)
+                    continue;
             }
             return i;
         }
@@ -2843,8 +2886,13 @@ bool Menu::page_down()
     if (is_set(MF_ARROWS_SELECT) && last_hovered < 0 && items.size() > 0)
         last_hovered = 0;
     // preserve relative position
+
+    int col = 0;
+    if (last_hovered >= 0 && m_ui.menu)
+        m_ui.menu->get_item_gridpos(last_hovered, nullptr, &col);
+
     if (last_hovered >= 0 && in_page(last_hovered))
-        new_hover = last_hovered - get_first_visible(true);
+        new_hover = last_hovered - get_first_visible(true, col);
     int dy = m_ui.scroller->get_region().height - m_ui.menu->get_scroll_context();
     int y = m_ui.scroller->get_scroll();
     bool at_bottom = y+dy >= m_ui.menu->get_region().height;
@@ -2857,10 +2905,10 @@ bool Menu::page_down()
     if (new_hover >= 0)
     {
         // if pgdn wouldn't change the hover, move it to the last element
-        if (is_set(MF_ARROWS_SELECT) && get_first_visible(true) + new_hover == last_hovered)
+        if (is_set(MF_ARROWS_SELECT) && get_first_visible(true, col) + new_hover == last_hovered)
             set_hovered(items.size() - 1);
         else
-            set_hovered(get_first_visible(true) + new_hover);
+            set_hovered(get_first_visible(true, col) + new_hover);
         if (items[last_hovered]->level != MEL_ITEM)
             cycle_hover(true); // reverse so we don't overshoot
     }
@@ -2918,7 +2966,7 @@ bool Menu::line_down()
     return false;
 }
 
-void Menu::cycle_hover(bool reverse)
+void Menu::cycle_hover(bool reverse, bool preserve_row, bool preserve_col)
 {
     if (!is_set(MF_ARROWS_SELECT))
         return;
@@ -2930,6 +2978,10 @@ void Menu::cycle_hover(bool reverse)
     int new_hover = last_hovered;
     if (reverse && last_hovered < 0)
         new_hover = 0;
+    int row = 0;
+    int col = 0;
+    if (last_hovered >= 0 && m_ui.menu)
+        m_ui.menu->get_item_gridpos(last_hovered, &row, &col);
     bool found = false;
     while (items_tried < max_items)
     {
@@ -2940,6 +2992,14 @@ void Menu::cycle_hover(bool reverse)
         if (is_set(MF_WRAP) && sz > 0)
             new_hover = (new_hover + sz) % sz;
         new_hover = max(0, min(new_hover, sz - 1));
+
+        int cur_row, cur_col;
+        if (m_ui.menu && (preserve_row || preserve_col))
+        {
+            m_ui.menu->get_item_gridpos(new_hover, &cur_row, &cur_col);
+            if (preserve_row && cur_row != row || preserve_col && cur_col != col)
+                continue;
+        }
 
         if (items[new_hover]->level == MEL_ITEM)
         {
