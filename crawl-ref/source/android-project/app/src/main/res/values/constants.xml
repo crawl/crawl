@@ -16,6 +16,9 @@
     <style name="ButtonColor4" parent="CrawlTheme">
         <item name="colorButtonNormal">#490f57</item>
     </style>
+    <style name="ButtonLink" parent="Widget.AppCompat.ButtonBar.AlertDialog">
+        <item name="android:textColor">#A0A0FF</item>
+    </style>
     <dimen name="key_height">40dp</dimen>
     <color name="black">#000000</color>
 </resources>
