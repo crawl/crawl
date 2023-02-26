@@ -201,7 +201,7 @@ interlevel-travel.branch.prompt
  Once you select a branch, you will be prompted for a depth in that
  branch (more help is available there).
 
- <w>Enter</w>  : Repeat last interlevel travel.
+ <w>Tab</w>    : Repeat last interlevel travel.
  <w>.</w>      : Travel to a level in the current branch.
  <w><<</w>      : Go up the nearest stairs.
  <w>></w>      : Go down the nearest stairs.

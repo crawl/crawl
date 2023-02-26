@@ -72,6 +72,9 @@
 // | \-ToggleableMenu (menu.cc/h): ability menu, various deck menus
 // |   \-SpellMenu (spl-cast.cc): spell casting / spell view menu
 // |
+// |\--PromptMenu (prompt.h): menus that can show in both the message pane
+//                            prompt channel, and as a regular menu
+// |
 // |\--InvMenu (invent.cc/h): most inventory/inv selection menus aside from
 // |   |                      what the subclasses do. (Including take off
 // |   |                      jewellery and remove armour.)
@@ -644,6 +647,7 @@ void UIMenuPopup::_allocate_region()
     int more_height = m_menu->m_ui.more->get_region().height;
     // switch number of columns
     int num_cols = m_menu->m_ui.menu->get_num_columns();
+    // XX why is this conditioned on m_draw_tiles??
     if (m_menu->m_ui.menu->m_draw_tiles && m_menu->is_set(MF_USE_TWO_COLUMNS)
         && !Options.tile_single_column_menus)
     {
@@ -1301,6 +1305,11 @@ void Menu::set_title(MenuEntry *e, bool first, bool indent)
     }
     m_indent_title = indent;
     update_title();
+}
+
+void Menu::set_title(const string &t, bool first, bool indent)
+{
+    set_title(new MenuEntry(t, MEL_TITLE), first, indent);
 }
 
 void Menu::add_entry(MenuEntry *entry)
@@ -1973,7 +1982,8 @@ bool Menu::is_hotkey(int i, int key)
 /// find the first item (if any) that has hotkey `key`.
 int Menu::hotkey_to_index(int key, bool primary_only)
 {
-    const int first_entry = get_first_visible();
+    // when called without a ui, just check from the beginning
+    const int first_entry = ui_is_initialized() ? get_first_visible() : 0;
     const int final = items.size();
 
     // Process all items, in case user hits hotkey for an
@@ -2094,10 +2104,7 @@ void MenuEntry::select(int qty)
 string MenuEntry::_get_text_preface() const
 {
     if (level == MEL_ITEM && hotkeys_count())
-    {
-        return make_stringf(" %s - ",
-            keycode_to_name(hotkeys[0]).c_str());
-    }
+        return make_stringf(" %s - ", keycode_to_name(hotkeys[0]).c_str());
     else if (level == MEL_ITEM && indent_no_hotkeys)
         return "     ";
     else
@@ -2607,6 +2614,17 @@ int Menu::item_colour(const MenuEntry *entry) const
 
 formatted_string Menu::calc_title() { return formatted_string(); }
 
+MenuEntry *Menu::get_cur_title() const
+{
+    const bool first = (action_cycle == CYCLE_NONE
+                        || menu_action == ACT_EXECUTE);
+
+    // if title2 is set, use it as an alt title; otherwise don't change
+    // titles
+    return first ? title
+                 : title2 ? title2 : title;
+}
+
 void Menu::update_title()
 {
     if (!title || crawl_state.doing_prev_cmd_again)
@@ -2626,14 +2644,8 @@ void Menu::update_title()
 
     if (fs.empty())
     {
-        const bool first = (action_cycle == CYCLE_NONE
-                            || menu_action == ACT_EXECUTE);
-
-        // if title2 is set, use it as an alt title; otherwise don't change
-        // titles
-        const auto *t = first ? title
-                              : title2 ? title2 : title;
-
+        const auto *t = get_cur_title();
+        ASSERT(t);
         auto col = item_colour(t);
         string text = t->get_text();
 
@@ -2704,15 +2716,17 @@ bool Menu::in_page(int index, bool strict) const
 
 bool Menu::set_scroll(int index)
 {
-    // TODO: code duplication, maybe could be refactored into lower-level code
-    const int vph = m_ui.scroller->get_region().height;
-    if (vph == 0)
+    // ui not yet set up. Setting this value now will force a
+    // `set_scroll` call with the same index on first render.
+    if (!ui_is_initialized())
     {
-        // ui not yet set up. Setting this value now will force a
-        // `set_scroll` call with the same index on first render.
         m_ui.menu->set_initial_scroll(index);
         return false;
     }
+
+    // TODO: code duplication, maybe could be refactored into lower-level code
+    const int vph = m_ui.scroller->get_region().height;
+    ASSERT(vph > 0);
     if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
 
@@ -2740,16 +2754,23 @@ bool Menu::set_scroll(int index)
     return vpy != y1;
 }
 
+bool Menu::ui_is_initialized() const
+{
+    // is this really the best way to do this?? I arrived at this by
+    // generalizing some code that used this specific check, but maybe it
+    // should be done in some more general fashion...
+    return m_ui.scroller && m_ui.scroller->get_region().height > 0;
+}
+
 bool Menu::item_visible(int index)
 {
+    // ui not yet set up. Use `set_scroll` for this case, or a hover will
+    // be automatically snapped.
+    if (!ui_is_initialized())
+        return false;
     // TODO: code duplication, maybe could be refactored into lower-level code
     const int vph = m_ui.scroller->get_region().height;
-    if (vph == 0)
-    {
-        // ui not yet set up. Use `set_scroll` for this case, or a hover will
-        // be automatically snapped.
-        return false;
-    }
+    ASSERT(vph > 0);
     if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
 
@@ -2772,14 +2793,13 @@ bool Menu::item_visible(int index)
 /// relative to the current scroll.
 bool Menu::snap_in_page(int index)
 {
+    // ui not yet set up. Use `set_scroll` for this case, or a hover will
+    // be automatically snapped.
+    if (!ui_is_initialized())
+        return false;
     // TODO: code duplication, maybe could be refactored into lower-level code
     const int vph = m_ui.scroller->get_region().height;
-    if (vph == 0)
-    {
-        // ui not yet set up. Use `set_scroll` for this case, or a hover will
-        // be automatically snapped.
-        return false;
-    }
+    ASSERT(vph > 0);
     if (index < 0 || index >= static_cast<int>(items.size()))
         return false;
 

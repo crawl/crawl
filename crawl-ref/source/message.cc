@@ -1860,6 +1860,7 @@ void clear_messages(bool force)
 
     msgwin.got_input(); // Consider old messages as read.
 
+    // TODO: this doesn't seem to be implemented on webtiles?
     if (Options.clear_messages || force)
         msgwin.clear();
 

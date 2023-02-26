@@ -103,6 +103,7 @@ public:
     vector<int> hotkeys;
     MenuEntryLevel level;
     bool indent_no_hotkeys;
+    string preface_format;
     void *data;
     function<bool(const MenuEntry&)> on_select;
 
@@ -325,6 +326,7 @@ public:
 
     void set_highlighter(MenuHighlighter *h);
     void set_title(MenuEntry *e, bool first = true, bool indent = false);
+    void set_title(const string &t, bool first = true, bool indent = false);
     void add_entry(MenuEntry *entry);
     void add_entry(unique_ptr<MenuEntry> entry)
     {
@@ -337,13 +339,16 @@ public:
         select_filter = filter;
     }
 
-    void update_menu(bool update_entries = false);
+    bool ui_is_initialized() const;
+
+    virtual void update_menu(bool update_entries = false);
     virtual void set_hovered(int index, bool force=false);
     bool set_scroll(int index);
     bool in_page(int index, bool strict=false) const;
     bool snap_in_page(int index);
     int get_first_visible(bool skip_init_headers=false) const;
     bool item_visible(int index);
+    MenuEntry *get_cur_title() const;
 
     virtual int getkey() const { return lastch; }
 
