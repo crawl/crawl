@@ -440,6 +440,14 @@ Psyche
 
 A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
 %%%%
+Regal
+
+The youngest princeling of the Octopode realm,Regal is blinded by his
+lust for power. He travels the depths of the Dungeon with his faithful
+entourage in the hopes the Orb will secure his legitimacy for the throne.
+His charming demeanor is so powerful that all but your most trusted allies
+might be swayed to his cause.
+%%%%
 Robin
 
 A mountain hobgoblin, recently come in search of the legendary Orb. Not

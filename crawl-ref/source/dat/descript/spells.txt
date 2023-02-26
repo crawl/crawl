@@ -1170,6 +1170,10 @@ Quicksilver Bolt spell
 
 <Breathe Dispelling Energy ability>
 %%%%
+Charming Aura spell
+
+Causes all otherwise hostile creature in direct Line of Fire to fight on the caster's side for a while.
+%%%%
 Repel Missiles spell
 
 Reduces the chance of projectile attacks striking the caster, making them

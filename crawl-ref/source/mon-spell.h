@@ -1295,6 +1295,11 @@ static const mon_spellbook mspell_list[] =
     },
 
     // ('X') Greater horrors and tentacled things.
+    {  MST_REGAL,
+      {
+       { SPELL_CHARMING_AURA, 13, MON_SPELL_NATURAL },
+      }
+    },
     {  MST_KRAKEN,
       {
        { SPELL_CREATE_TENTACLES, 44, MON_SPELL_NATURAL },

@@ -94,6 +94,7 @@ static void _fire_simple_beam(monster &caster, mon_spell_slot, bolt &beam);
 static void _fire_direct_explosion(monster &caster, mon_spell_slot, bolt &beam);
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
+static int  _mons_charming_aura(monster* mons, bool actual = true);
 static int  _mons_mass_confuse(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(const monster &mons);
 static coord_def _mons_awaken_earth_target(const monster& mon);
@@ -1659,6 +1660,7 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_MALIGN_GATEWAY:
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_CAUSE_FEAR:
+    case SPELL_CHARMING_AURA:
     case SPELL_MESMERISE:
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_BROTHERS_IN_ARMS:
@@ -4699,6 +4701,109 @@ static int _mons_cause_fear(monster* mons, bool actual)
     return retval;
 }
 
+static int _mons_charming_aura(monster* mons, bool actual)
+{
+    if (actual)
+    {
+        if (you.can_see(*mons))
+            simple_monster_message(*mons, " radiates an aura of charm!");
+        else if (you.see_cell(mons->pos()))
+            mpr("A charming aura fills the air!");
+    }
+
+    int retval = -1;
+
+    const int pow = _ench_power(SPELL_CHARMING_AURA, *mons);
+
+    if (mons->see_cell_no_trans(you.pos())
+        && mons->can_see(you)
+        && !mons->wont_attack())
+    {
+        retval = 0;
+
+        //duplicates the player effects of _mons_mass_confuse
+        if (actual)
+        {
+            const int willpower = you.check_willpower(mons, pow);
+            if (willpower > 0)
+                mprf("You%s", you.resist_margin_phrase(willpower).c_str());
+            else
+            {
+                you.confuse(mons, 5 + random2(3));
+                retval = 1;
+            }
+        }
+    }
+
+    for (monster_near_iterator mi(mons->pos(), LOS_NO_TRANS); mi; ++mi)
+    {
+      bolt tracer;
+      tracer.source    = mons->pos();
+      tracer.ench_power = pow;
+      tracer.animate   = false;
+      tracer.target    = mi->pos();
+      tracer.range     = grid_distance(mi->pos(), mons->pos());;
+      tracer.is_tracer = false;
+      tracer.flavour   = BEAM_CHARM;
+      tracer.pierce    = false;
+      fire_tracer(mons, tracer);
+
+      if (!mons_should_fire(tracer)
+          || tracer.path_taken.back() != tracer.target)
+      {
+        continue;
+      }
+      tracer.fire();
+
+
+      enchant_type good = (mons->wont_attack()) ? ENCH_CHARM
+                                                : ENCH_HEXED;
+      enchant_type bad  = (mons->wont_attack()) ? ENCH_HEXED
+                                                : ENCH_CHARM;
+      if (mons_invuln_will(**mi)
+          || !(mi->holiness() & MH_NATURAL)
+          || mons_is_firewood(**mi)
+          || mons_atts_aligned(mi->attitude, mons->attitude)
+          || testbits(mi->flags, MF_DEMONIC_GUARDIAN))
+      {
+          continue;
+      }
+
+      if (mi->has_ench(bad))
+      {
+          mi->del_ench(bad);
+          continue;
+      }
+      retval = max(retval, 0);
+
+      if (!actual)
+          continue;
+
+      int res_margin = mi->check_willpower(mons, pow);
+      if (res_margin > 0)
+      {
+          simple_monster_message(**mi,
+              mi->resist_margin_phrase(res_margin).c_str());
+          continue;
+      }
+
+      if (mi->add_ench(mon_enchant(good, 0, mons)))
+      {
+          retval = 1;
+          mi->attitude = ATT_HOSTILE;
+
+          if (you.can_see(**mi))
+              simple_monster_message(**mi, " is charmed!");
+
+      }
+    }
+
+    if (actual && retval == 1 && you.see_cell(mons->pos()))
+        flash_view_delay(UA_MONSTER, YELLOW, 300);
+
+    return retval;
+}
+
 static int _mons_mass_confuse(monster* mons, bool actual)
 {
     int retval = -1;
@@ -6041,6 +6146,10 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
 
     case SPELL_CAUSE_FEAR:
         _mons_cause_fear(mons);
+        return;
+
+    case SPELL_CHARMING_AURA:
+        _mons_charming_aura(mons);
         return;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
@@ -7706,6 +7815,9 @@ ai_action::goodness monster_spell_goodness(monster* mon, spell_type spell)
 
     case SPELL_CAUSE_FEAR:
         return ai_action::good_or_bad(_mons_cause_fear(mon, false) >= 0);
+
+    case SPELL_CHARMING_AURA:
+        return ai_action::good_or_bad(_mons_charming_aura(mon, false) >= 0);
 
     case SPELL_MASS_CONFUSION:
         return ai_action::good_or_bad(_mons_mass_confuse(mon, false) >= 0);

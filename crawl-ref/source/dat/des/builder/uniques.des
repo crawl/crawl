@@ -331,6 +331,10 @@ WEIGHT: 20
 DEPTH:  Depths:3-, Vaults:2-, Crypt
 : place_unique(_G, "Margery band")
 
+NAME:   uniq_regal
+DEPTH:  Depths:3-, Vaults:3-, !Vaults:$, Crypt, Zot
+: place_unique(_G, "Regal band")
+
 NAME:   uniq_mara
 DEPTH:  Depths, !Depths:$, Elf:$, Swamp:3-, Snake:3-, Shoals:3-, Spider:3-
 DEPTH:  Vaults:2-
