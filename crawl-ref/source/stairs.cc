@@ -408,49 +408,45 @@ static bool _check_fall_down_stairs(const dungeon_feature_type ftype, bool going
 
 static void _rune_effect(dungeon_feature_type ftype)
 {
-    // Nothing even remotely flashy for Zig.
-    if (ftype != DNGN_ENTER_ZIGGURAT)
+    vector<int> runes;
+    for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        if (you.runes[i])
+            runes.push_back(i);
+
+    ASSERT(runes.size() >= 1);
+    shuffle_array(runes);
+
+    // Zot is extra flashy.
+    if (ftype == DNGN_ENTER_ZOT)
     {
-        vector<int> runes;
-        for (int i = 0; i < NUM_RUNE_TYPES; i++)
-            if (you.runes[i])
-                runes.push_back(i);
+        ASSERT(runes.size() >= 3);
 
-        ASSERT(runes.size() >= 1);
-        shuffle_array(runes);
-
-        // Zot is extra flashy.
-        if (ftype == DNGN_ENTER_ZOT)
-        {
-            ASSERT(runes.size() >= 3);
-
-            mprf("You insert the %s rune into the lock.", rune_type_name(runes[2]));
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[2]));
 #ifdef USE_TILE_LOCAL
-            view_add_tile_overlay(you.pos(), tileidx_zap(rune_colour(runes[2])));
-            viewwindow(false);
-            update_screen();
+        view_add_tile_overlay(you.pos(), tileidx_zap(rune_colour(runes[2])));
+        viewwindow(false);
+        update_screen();
 #else
-            flash_view(UA_BRANCH_ENTRY, rune_colour(runes[2]));
+        flash_view(UA_BRANCH_ENTRY, rune_colour(runes[2]));
 #endif
-            mpr("The lock glows eerily!");
-            // included in default force_more_message
+        mpr("The lock glows eerily!");
+        // included in default force_more_message
 
-            mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
-            big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
-            viewwindow();
-            update_screen();
-            mpr("Heavy smoke blows from the lock!");
-            // included in default force_more_message
-        }
-
-        mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
-
-        if (silenced(you.pos()))
-            mpr("The gate opens wide!");
-        else
-            mpr("With a soft hiss the gate opens wide!");
-        // these are included in default force_more_message
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
+        big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
+        viewwindow();
+        update_screen();
+        mpr("Heavy smoke blows from the lock!");
+        // included in default force_more_message
     }
+
+    mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
+
+    if (silenced(you.pos()))
+        mpr("The gate opens wide!");
+    else
+        mpr("With a soft hiss the gate opens wide!");
+    // these are included in default force_more_message
 }
 
 static void _gauntlet_effect()

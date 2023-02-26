@@ -1161,9 +1161,8 @@ static string _branch_entry_runes(branch_type br)
 
     if (num_runes > 0)
     {
-        desc = make_stringf("\n\nThis %s can only be entered while carrying "
+        desc = make_stringf("\n\nThis branch can only be entered while carrying "
                             "at least %d rune%s of Zot.",
-                            br == BRANCH_ZIGGURAT ? "portal" : "branch",
                             num_runes, num_runes > 1 ? "s" : "");
     }
 
