@@ -433,6 +433,8 @@ public:
 
     vector<menu_sort_condition> sort_menus;
 
+    bool        single_column_item_menus;
+
     bool        dump_on_save;       // Automatically dump character when saving.
     kill_dump_options dump_kill_places;   // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
@@ -573,7 +575,6 @@ public:
     string      tile_font_lbl_file;
     string      tile_font_tip_file;
 #endif
-    bool        single_column_item_menus;
 #ifdef USE_TILE_WEB
     string      tile_font_crt_family;
     string      tile_font_msg_family;
