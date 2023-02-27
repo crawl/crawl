@@ -423,6 +423,7 @@ void UIMenu::do_layout(int mw, int num_columns)
 
             // Split menu entries that don't fit into a single line into two lines.
             if (!m_menu->is_set(MF_NO_WRAP_ROWS))
+            {
                 if ((text_width > max_column_width-entry.x-pad_right))
                 {
                     formatted_string text;
@@ -445,6 +446,7 @@ void UIMenu::do_layout(int mw, int num_columns)
                     string_height = min(string_height, text_height*2);
                     item_height = max(item_height, string_height);
                 }
+            }
 
             column_width = max(column_width, text_sx + text_width + pad_right);
             row_height = max(row_height, item_height);
@@ -583,7 +585,7 @@ SizeReq UIMenu::_get_preferred_size(Direction dim, int prosp_width)
     if (!dim)
     {
         do_layout(INT_MAX, m_num_columns);
-        const int em = Options.tile_font_crt_size;
+        const int em = tiles.get_crt_font()->char_width();
         int max_menu_width = min(93*em, m_nat_column_width * m_num_columns);
         return {0, max_menu_width};
     }
@@ -701,11 +703,50 @@ public:
     UIMenuPopup(shared_ptr<Widget> child, Menu *menu) : ui::Popup(child), m_menu(menu) {};
     virtual ~UIMenuPopup() {};
 
+    int _calc_columns(int mw) const;
     virtual void _allocate_region() override;
 
 private:
     Menu *m_menu;
 };
+
+/// What is the max number of columns that will fit into mw, given the current
+/// items?
+int UIMenuPopup::_calc_columns(int mw) const
+{
+    int min_column_width = m_menu->m_ui.menu->get_min_col_width();
+    if (min_column_width <= 0)
+#ifdef USE_TILE_LOCAL
+        min_column_width = m_menu->m_ui.menu->m_font_entry->char_width() * 10;
+#else
+        min_column_width = 10;
+#endif
+
+#ifdef USE_TILE_LOCAL
+    // TODO: some code overlap with do_layout
+    int max_entry_text = min_column_width;
+    for (size_t i = 0; i < m_menu->items.size(); ++i)
+    {
+        auto& entry = m_menu->m_ui.menu->item_info[i];
+        const int text_width = entry.x
+                    + m_menu->m_ui.menu->m_font_entry->string_width(entry.text)
+                    + m_menu->m_ui.menu->pad_right;
+        max_entry_text = max(max_entry_text, text_width);
+    }
+#else
+    int max_entry_text = min_column_width;
+    for (size_t i = 0; i < m_menu->items.size(); ++i)
+    {
+        max_entry_text = max(max_entry_text,
+                static_cast<int>(m_menu->items[i]->get_text().size())
+                + m_menu->m_ui.menu->pad_right);
+    }
+#endif
+
+    // the 6 here is somewhat heuristic, but menus with more columns than
+    // around this, in my testing, become harder to parse
+    return max(1, min(6, mw / max_entry_text));
+}
 
 void UIMenuPopup::_allocate_region()
 {
@@ -723,7 +764,19 @@ void UIMenuPopup::_allocate_region()
     int m_height = m_menu->m_ui.menu->m_height;
     int more_height = m_menu->m_ui.more->get_region().height;
     int num_cols = m_menu->m_ui.menu->get_num_columns();
-    if (m_menu->is_set(MF_USE_TWO_COLUMNS))
+    if (m_menu->is_set(MF_GRID_LAYOUT))
+    {
+        const int max_columns = _calc_columns(menu_w);
+        if (num_cols != max_columns)
+        {
+            // TODO: it might be good to horizontally shrink grid layout
+            // menus a bit if the calculated column count would add too much
+            // whitespace. But I'm not quite sure how to do this...
+            m_menu->m_ui.menu->set_num_columns(max_columns);
+            ui::restart_layout();
+        }
+    }
+    else if (m_menu->is_set(MF_USE_TWO_COLUMNS))
     {
         // XX should this be smarter about width for console?
         if ((num_cols == 1 && m_height+more_height > max_height)

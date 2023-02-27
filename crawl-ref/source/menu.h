@@ -273,11 +273,12 @@ enum MenuFlag
     MF_SECONDARY_SCROLL = 0x02000,   ///< Secondary hotkeys scroll, rather than select
     MF_QUIET_SELECT     = 0x04000,   ///< No selection box and no count.
 
-    MF_USE_TWO_COLUMNS  = 0x08000,   ///< Only valid for tiles menus
+    MF_USE_TWO_COLUMNS  = 0x08000,   ///< Use two columns for long menus
     MF_UNCANCEL         = 0x10000,   ///< Menu is uncancellable
     MF_SPECIAL_MINUS    = 0x20000,   ///< '-' isn't PGUP or clear multiselect
     MF_ARROWS_SELECT    = 0x40000,   ///< arrow keys select, rather than scroll
     MF_SHOW_EMPTY       = 0x80000,   ///< don't auto-exit empty menus
+    MF_GRID_LAYOUT     = 0x100000,   ///< use a grid-style layout, filling by width first
 };
 
 class UIMenu;

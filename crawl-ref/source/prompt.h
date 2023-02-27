@@ -40,7 +40,8 @@ int letter_to_index(int the_letter);
 class PromptMenu : public Menu
 {
 public:
-    PromptMenu(int _flags = MF_SINGLESELECT | MF_ARROWS_SELECT | MF_INIT_HOVER)
+    PromptMenu(int _flags = MF_SINGLESELECT | MF_ARROWS_SELECT
+                            | MF_INIT_HOVER | MF_GRID_LAYOUT)
         : Menu(_flags), columns(0), col_width(0)
     {
         // no other mode is supported
