@@ -2242,7 +2242,7 @@ public:
             vector<string> wdescs = travel_cache.get_waypoint_descs();
             // if this ever shows >10 waypoints, hotkeys would need some
             // work
-            for (size_t i = 0; i < min(10UL, wdescs.size()); i++)
+            for (int i = 0; i < min(10, static_cast<int>(wdescs.size())); i++)
             {
                 if (wdescs[i].size() == 0)
                     continue;
