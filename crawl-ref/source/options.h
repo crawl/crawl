@@ -572,8 +572,8 @@ public:
     string      tile_font_stat_file;
     string      tile_font_lbl_file;
     string      tile_font_tip_file;
-    bool        tile_single_column_menus;
 #endif
+    bool        single_column_item_menus;
 #ifdef USE_TILE_WEB
     string      tile_font_crt_family;
     string      tile_font_msg_family;

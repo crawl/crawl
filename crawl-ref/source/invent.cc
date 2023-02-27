@@ -314,10 +314,8 @@ InvMenu::InvMenu(int mflags)
         title_annotate(nullptr), _mode_special_drop(false)
 {
     menu_action = ACT_EXAMINE; // default
-#ifdef USE_TILE_LOCAL
-    if (Options.tile_menu_icons)
+    if (!Options.single_column_item_menus)
         set_flags(get_flags() | MF_USE_TWO_COLUMNS);
-#endif
 }
 
 bool InvMenu::mode_special_drop() const
@@ -1105,7 +1103,8 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
             new_flags |= MF_SELECT_QTY;
 
         new_flags |= MF_ALLOW_FORMATTING | MF_ARROWS_SELECT;
-        new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
+        if (!Options.single_column_item_menus)
+            new_flags |= menu.get_flags() & MF_USE_TWO_COLUMNS;
         menu.set_flags(new_flags);
         menu.show();
         selected = menu.get_selitems();

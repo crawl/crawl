@@ -389,6 +389,7 @@ const vector<GameOption*> game_options::build_options_list()
              {"classic", level_gen_type::classic},
              {"false", level_gen_type::classic}
             }, true),
+        new BoolGameOption(SIMPLE_NAME(single_column_item_menus), true),
 
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), true),
@@ -482,7 +483,6 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_tip_file), MONOSPACED_FONT),
         new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT),
-        new BoolGameOption(SIMPLE_NAME(tile_single_column_menus), true),
         new IntGameOption(SIMPLE_NAME(tile_sidebar_pixels), 32, 1, INT_MAX),
         new MultipleChoiceGameOption<screen_mode>(
             SIMPLE_NAME(tile_full_screen),
@@ -2221,6 +2221,7 @@ void game_options::reset_aliases(bool clear)
     Options.add_alias("heap_brand", "heap_highlight");
     Options.add_alias("feature_item_brand", "feature_item_highlight");
     Options.add_alias("trap_item_brand", "trap_item_highlight");
+    Options.add_alias("tile_single_column_menus", "single_column_item_menus");
 
 }
 

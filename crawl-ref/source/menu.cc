@@ -108,10 +108,10 @@ class UIMenu : public Widget
 {
     friend class UIMenuPopup;
 public:
-    UIMenu(Menu *menu) : m_menu(menu)
+    UIMenu(Menu *menu) : m_menu(menu), m_num_columns(1)
 
 #ifdef USE_TILE_LOCAL
-    , m_num_columns(1), m_font_entry(tiles.get_crt_font()), m_text_buf(m_font_entry)
+    , m_font_entry(tiles.get_crt_font()), m_text_buf(m_font_entry)
 #endif
     {
 #ifdef USE_TILE_LOCAL
@@ -129,16 +129,14 @@ public:
     virtual void _render() override;
     virtual SizeReq _get_preferred_size(Direction dim, int prosp_width) override;
     virtual void _allocate_region() override;
-#ifdef USE_TILE_LOCAL
     int get_num_columns() const { return m_num_columns; };
-    virtual bool on_event(const Event& event) override;
     void set_num_columns(int n) {
         m_num_columns = n;
         _invalidate_sizereq();
         _queue_allocation();
     };
-#else
-    int get_num_columns() const { return 1; };
+#ifdef USE_TILE_LOCAL
+    virtual bool on_event(const Event& event) override;
 #endif
     void set_min_col_width(int w) { m_min_col_width = w; } // XX min height?
     int get_min_col_width() { return m_min_col_width; }
@@ -173,21 +171,24 @@ protected:
     int m_force_scroll = -1; // in rows, no pixels
     bool m_initial_hover_snap = false;
     int m_scroll_context = 0;
-#ifdef USE_TILE_LOCAL
+
     int m_num_columns = 1;
-
-    void do_layout(int mw, int num_columns);
-
-    int get_max_viewport_height();
     int m_nat_column_width; // set by do_layout()
-
+    void do_layout(int mw, int num_columns);
     struct MenuItemInfo {
         int x, y, row, column;
         formatted_string text;
+#ifdef USE_TILE_LOCAL
         vector<tile_def> tiles;
+#endif
         bool heading;
     };
     vector<MenuItemInfo> item_info;
+
+#ifdef USE_TILE_LOCAL
+
+    int get_max_viewport_height();
+
     vector<int> row_heights;
 
     bool m_mouse_pressed = false;
@@ -209,6 +210,8 @@ public:
     static constexpr int item_pad = 2;
     static constexpr int pad_right = 10;
 #else
+    static constexpr int pad_right = 2; // no vertical padding for console
+
     int m_shown_height {0};
 #endif
 };
@@ -217,9 +220,7 @@ void UIMenu::update_items()
 {
     _invalidate_sizereq();
 
-#ifdef USE_TILE_LOCAL
     item_info.resize(m_menu->items.size());
-#endif
     for (unsigned int i = 0; i < m_menu->items.size(); ++i)
         update_item(i);
 
@@ -240,8 +241,8 @@ void UIMenu::is_visible_item_range(int *vis_min, int *vis_max)
     const int viewport_height = m_menu->m_ui.scroller->get_region().height;
     const int scroll = m_menu->m_ui.scroller->get_scroll();
 
-#ifdef USE_TILE_LOCAL
     int v_min = 0, v_max = item_info.size(), i;
+#ifdef USE_TILE_LOCAL
     for (i = 0; i < (int)item_info.size(); ++i)
     {
         if (row_heights[item_info[i].row + 1] > scroll)
@@ -259,10 +260,24 @@ void UIMenu::is_visible_item_range(int *vis_min, int *vis_max)
         }
     }
 #else
-    int v_min = scroll;
-    int v_max = scroll + viewport_height;
+    for (i = 0; i < (int)item_info.size(); ++i)
+    {
+        if (item_info[i].row >= scroll)
+        {
+            v_min = i;
+            break;
+        }
+    }
+    for (; i < (int)item_info.size(); ++i)
+    {
+        if (item_info[i].row > scroll + viewport_height)
+        {
+            v_max = i;
+            break;
+        }
+    }
 #endif
-    v_max = min(v_max, (int)m_menu->items.size());
+    v_max = min(v_max, (int)m_menu->items.size()); // ??
     if (vis_min)
         *vis_min = v_min;
     if (vis_max)
@@ -272,18 +287,11 @@ void UIMenu::is_visible_item_range(int *vis_min, int *vis_max)
 void UIMenu::get_item_gridpos(int index, int *row, int *col)
 {
     ASSERT_RANGE(index, 0, (int)m_menu->items.size());
-#ifdef USE_TILE_LOCAL
     // XX why not just expose MenuItemInfo
     if (row)
         *row = item_info[index].row;
     if (col)
         *col = item_info[index].column;
-#else
-    if (row)
-        *row = index;
-    if (col)
-        *col = 0;
-#endif
 }
 
 void UIMenu::get_item_region(int index, int *y1, int *y2)
@@ -291,7 +299,7 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
     ASSERT_RANGE(index, 0, (int)m_menu->items.size());
 
 #ifdef USE_TILE_LOCAL
-    int row = item_info[index].row;
+    int row = item_info[index].row; // XX this seems unsafe before layout? but it doesn't crash...
     if (static_cast<size_t>(row + 1) >= row_heights.size())
     {
         // call before UIMenu has been laid out
@@ -306,10 +314,16 @@ void UIMenu::get_item_region(int index, int *y1, int *y2)
     if (y2)
         *y2 = row_heights[row+1];
 #else
+    // for console, use just the index in an uninitialized menu
+    int row = -1;
+    if (item_info.size() != m_menu->items.size())
+        row = index;
+    else
+        row = item_info[index].row;
     if (y1)
-        *y1 = index;
+        *y1 = row;
     if (y2)
-        *y2 = index+1;
+        *y2 = row+1;
 #endif
 }
 
@@ -317,7 +331,7 @@ void UIMenu::update_item(int index)
 {
     _invalidate_sizereq();
     _queue_allocation();
-#ifdef USE_TILE_LOCAL
+
     ASSERT(index < static_cast<int>(m_menu->items.size()));
     const MenuEntry *me = m_menu->items[index];
     int colour = m_menu->item_colour(me);
@@ -330,10 +344,9 @@ void UIMenu::update_item(int index)
     entry.text.textcolour(colour);
     entry.text += formatted_string::parse_string(text);
     entry.heading = me->level == MEL_TITLE || me->level == MEL_SUBTITLE;
+#ifdef USE_TILE_LOCAL
     entry.tiles.clear();
     me->get_tiles(entry.tiles);
-#else
-    UNUSED(index);
 #endif
 }
 
@@ -346,9 +359,11 @@ static bool _has_hotkey_prefix(const string &s)
     bool plus = (s[3] == '-' || s[3] == '+' || s[3] == '#');
     return let && plus && s[0] == ' ' && s[2] == ' ' && s[4] == ' ';
 }
+#endif
 
 void UIMenu::do_layout(int mw, int num_columns)
 {
+#ifdef USE_TILE_LOCAL
     const int min_column_width = m_min_col_width > 0 ? m_min_col_width : 400;
     const int max_column_width = mw / num_columns;
     const int text_height = m_font_entry->char_height();
@@ -443,8 +458,46 @@ void UIMenu::do_layout(int mw, int num_columns)
 
     m_height = height;
     m_nat_column_width = max(min_column_width, min(column_width, max_column_width));
+#else
+    // TODO: this code is not dissimilar to the tiles code, could they be
+    // further unified?
+    const int min_column_width = m_min_col_width > 0 ? m_min_col_width : 10;
+    const int max_column_width = mw / num_columns;
+
+    int row = -1;
+    int column = -1; // an initial increment makes these 0
+    int column_width = 0;
+
+    for (size_t i = 0; i < m_menu->items.size(); ++i)
+    {
+        auto& entry = item_info[i];
+
+        column = entry.heading ? 0 : (column+1) % num_columns;
+        if (column == 0)
+            row++;
+
+        const int text_width = static_cast<int>(entry.text.width());
+
+        entry.x = 0;
+        entry.y = row;
+        entry.row = row;
+        entry.column = column;
+
+        if (entry.heading)
+            column = num_columns-1; // occupy the entire row
+        else
+        {
+            // TODO(?): tiles will wrap menu entries that don't fit in a single
+            // row, should that be implemented for console?
+            column_width = max(column_width, text_width + pad_right);
+        }
+    }
+    m_height = row + 1;
+    m_nat_column_width = max(min_column_width, min(column_width, max_column_width));
+#endif
 }
 
+#ifdef USE_TILE_LOCAL
 int UIMenu::get_max_viewport_height()
 {
     // Limit page size to ensure <= 52 items visible
@@ -493,8 +546,10 @@ void UIMenu::_render()
     for (int i = vis_min; i < vis_max; i++)
     {
         const MenuEntry *me = m_menu->items[i];
-        int y = i - vis_min + 1;
-        cgotoxy(m_region.x+1, m_region.y+scroll+y);
+        // int y = i - vis_min + 1;
+        int y = item_info[i].y - item_info[vis_min].y + 1;
+        int x = item_info[i].x + item_info[i].column * m_nat_column_width;
+        cgotoxy(m_region.x + x + 1, m_region.y + scroll + y);
         const int col = m_menu->item_colour(me);
         textcolour(col);
 
@@ -507,12 +562,14 @@ void UIMenu::_render()
         {
             formatted_string s = formatted_string::parse_string(
                 me->get_text(), col);
-            s.chop(m_region.width).display();
+            // s.chop(m_region.width).display();
+            s.chop(m_nat_column_width).display();
         }
         else
         {
             string text = me->get_text();
-            text = chop_string(text, m_region.width);
+            // text = chop_string(text, m_region.width);
+            text = chop_string(text, m_nat_column_width);
             cprintf("%s", text.c_str());
         }
         textbackground(BLACK);
@@ -659,19 +716,16 @@ void UIMenuPopup::_allocate_region()
     max_height -= m_menu->m_ui.title->get_margin().bottom;
     max_height -= m_menu->m_ui.more->get_region().height;
     int viewport_height = m_menu->m_ui.scroller->get_region().height;
-
-#ifdef USE_TILE_LOCAL
     int menu_w = m_menu->m_ui.menu->get_region().width;
     m_menu->m_ui.menu->do_layout(menu_w, 1);
-    int m_height = m_menu->m_ui.menu->m_height;
 
+    // see if we should try a two-column layout
+    int m_height = m_menu->m_ui.menu->m_height;
     int more_height = m_menu->m_ui.more->get_region().height;
-    // switch number of columns
     int num_cols = m_menu->m_ui.menu->get_num_columns();
-    // XX why is this conditioned on m_draw_tiles??
-    if (m_menu->m_ui.menu->m_draw_tiles && m_menu->is_set(MF_USE_TWO_COLUMNS)
-        && !Options.tile_single_column_menus)
+    if (m_menu->is_set(MF_USE_TWO_COLUMNS))
     {
+        // XX should this be smarter about width for console?
         if ((num_cols == 1 && m_height+more_height > max_height)
          || (num_cols == 2 && m_height+more_height <= max_height))
         {
@@ -680,7 +734,6 @@ void UIMenuPopup::_allocate_region()
         }
     }
     m_menu->m_ui.menu->do_layout(menu_w, num_cols);
-#endif
 
     const int menu_height = m_menu->m_ui.menu->get_region().height;
     if (m_menu->m_keyhelp_more)
@@ -748,11 +801,8 @@ void UIMenu::_allocate_region()
         m_initial_hover_snap = true;
     }
 
-#ifndef USE_TILE_LOCAL
-    // XXX: is this needed?
-    m_height = m_menu->items.size();
-#else
     do_layout(m_region.width, m_num_columns);
+#ifdef USE_TILE_LOCAL
     if (!(m_menu->flags & MF_ARROWS_SELECT) || m_menu->last_hovered < 0)
         update_hovered_entry();
     else

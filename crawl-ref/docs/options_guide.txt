@@ -64,7 +64,7 @@ The contents of this text are:
                 automagic_stop, fail_severity_to_confirm, easy_door,
                 warn_hatches, enable_recast_spell, confirm_action,
                 regex_search, autopickup_search, bad_item_prompt,
-                auto_hide_spells, menu_arrow_control
+                auto_hide_spells, menu_arrow_control, single_column_item_menus
 3-h     Message and Display Enhancements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
@@ -119,9 +119,8 @@ The contents of this text are:
                 tile_cell_pixels, tile_sidebar_pixels, tile_filter_scaling,
                 tile_force_overlay, tile_overlay_col,
                 tile_overlay_alpha_percent, tile_full_screen,
-                tile_single_column_menus, tile_font_crt_file,
-                tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
-                tile_font_lbl_file, tile_font_crt_family,
+                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
+                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_family,
                 tile_font_stat_family, tile_font_msg_family,
                 tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
@@ -1452,6 +1451,13 @@ menu_arrow_control = true
         menus that use hotkeys for selection. (E.g. the main menu for local
         play is not affected.)
 
+single_column_item_menus = true
+        If set to false, certain item menus will list items in two columns,
+        as long as the menu is too long to fit in the current screen. If set
+        to true, all menus will use a single column under any circumstances.
+        This option is only available on local tiles and console; on WebTiles
+        all menus are single-column regardless of the value of this option.
+
 3-h     Message and Display Enhancements.
 ------------------------------------------
 
@@ -2291,14 +2297,6 @@ tile_full_screen = auto
         on or off. Setting it to anything else will put it in auto mode, which
         enables full screen mode only if the screen resolution is smaller than
         width 1200, or height 800.
-
-tile_single_column_menus = true
-        If enabled, all in-game menus will list items in a single column,
-        regardless of the current screen size or the number of items in the
-        menu. If disabled, some in-game menus will use two columns if there is
-        insufficient space to show all items in a single column. This option
-        is only available on local tiles; all menus on console and on WebTiles
-        always list items in a single column, as if this option were enabled.
 
 tile_use_small_layout = auto
         Alternative layout designed for very small screens. It is enabled by
