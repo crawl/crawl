@@ -287,6 +287,16 @@ void UIMenu::is_visible_item_range(int *vis_min, int *vis_max)
 void UIMenu::get_item_gridpos(int index, int *row, int *col)
 {
     ASSERT_RANGE(index, 0, (int)m_menu->items.size());
+    if (item_info.empty())
+    {
+        // no layout yet
+        if (row)
+            *row = index;
+        if (col)
+            *col = 0;
+        return;
+    }
+    ASSERT_RANGE(index, 0, (int)item_info.size());
     // XX why not just expose MenuItemInfo
     if (row)
         *row = item_info[index].row;
