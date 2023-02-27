@@ -63,7 +63,7 @@ Arcjolt spell
 
 Blasts electricity through everything connected to the caster within sight,
 either by adjacency or via a chain of other creatures. The damage dealt
-partially bypasses armour.
+bypasses half of defenders' armour.
 %%%%
 Aura of Brilliance spell
 
@@ -301,7 +301,7 @@ Chain Lightning spell
 Releases a massive electrical discharge that arcs to the creature nearest the
 caster and then outward from it. The further it travels, the less damage it
 does. Secondary arcs have limited range and do little damage to the caster.
-The spell's damage partially bypasses armour and resistance to electricity.
+The spell bypasses half of defenders' armour and resistance to electricity.
 %%%%
 Charm spell
 
@@ -357,9 +357,9 @@ direct line of fire required.
 Conjure Ball Lightning spell
 
 Creates a pack of ball lightnings, which seek out the nearest enemy before
-exploding in a huge blast of electricity. The damage dealt partially bypasses
-armour. Casters are advised to use caution; the lightning is not mindful of
-what it may hit.
+exploding in a huge blast of electricity. The damage dealt bypasses half of
+defenders' armour. Casters are advised to use caution; the lightning is not
+mindful of what it may hit.
 
 The magic which keeps ball lightnings cohesive has limited range, so they may
 dissipate harmlessly if allowed to drift too far away from their caster before
@@ -895,8 +895,8 @@ Beckons the target forward, attempting to place them adjacent to the caster.
 %%%%
 Lightning Bolt spell
 
-Fires a mighty bolt of lightning. Its damage partially bypasses armour and
-it can be bounced off walls to hit targets twice.
+Fires a mighty bolt of lightning. Its damage bypasses half of defenders'
+armour, and it can be bounced off walls to hit targets twice.
 %%%%
 Magic Dart spell
 
@@ -1052,7 +1052,7 @@ sight.
 Orb of Electricity spell
 
 Hurls a crackling orb of electrical energy, creating a huge explosion on
-impact. Its damage partially bypasses armour.
+impact. Its damage bypasses half of defenders' armour.
 %%%%
 Ozocubu's Armour spell
 
@@ -1271,7 +1271,7 @@ animating them and sending them out to attack.
 %%%%
 Shock spell
 
-Throws a bouncing bolt of electricity. It partially bypasses armour.
+Throws a bouncing bolt of electricity. It bypasses half of defenders' armour.
 %%%%
 Silence spell
 
