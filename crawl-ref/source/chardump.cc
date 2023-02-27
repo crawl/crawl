@@ -1078,7 +1078,7 @@ static void _sdump_kills_by_place(dump_params &par)
 
     string header =
     "Table legend:\n"
-    " A = Kills in this place as a percentage of kills in entire the game.\n"
+    " A = Kills in this place as a percentage of kills in the entire game.\n"
     " B = Kills by you in this place as a percentage of kills by you in\n"
     "     the entire game.\n"
     " C = Kills by friends in this place as a percentage of kills by\n"
