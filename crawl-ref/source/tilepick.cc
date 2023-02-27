@@ -4,6 +4,7 @@
 
 #include "artefact.h"
 #include "art-enum.h"
+#include "branch.h" // vaults_is_locked
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
@@ -366,8 +367,7 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_DEPTHS:
         return TILE_DNGN_ENTER_DEPTHS;
     case DNGN_ENTER_VAULTS:
-        return you.level_visited(level_id(BRANCH_VAULTS, 1)) ? TILE_DNGN_ENTER_VAULTS_OPEN
-                              : TILE_DNGN_ENTER_VAULTS_CLOSED;
+        return TILE_DNGN_ENTER_VAULTS;
     case DNGN_ENTER_CRYPT:
         return TILE_DNGN_ENTER_CRYPT;
     case DNGN_ENTER_TOMB:
@@ -424,7 +424,8 @@ tileidx_t tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_EXIT_DEPTHS:
         return TILE_DNGN_RETURN_DEPTHS;
     case DNGN_EXIT_VAULTS:
-        return TILE_DNGN_EXIT_VAULTS;
+        return vaults_is_locked() ? TILE_DNGN_EXIT_VAULTS_CLOSED
+                                  : TILE_DNGN_EXIT_VAULTS_OPEN;
     case DNGN_EXIT_CRYPT:
         return TILE_DNGN_EXIT_CRYPT;
     case DNGN_EXIT_TOMB:
@@ -3858,7 +3859,7 @@ tileidx_t tileidx_branch(const branch_type br)
     case BRANCH_SLIME:
         return TILE_DNGN_ENTER_SLIME;
     case BRANCH_VAULTS:
-        return TILE_DNGN_ENTER_VAULTS_OPEN;
+        return TILE_DNGN_ENTER_VAULTS;
     case BRANCH_CRYPT:
         return TILE_DNGN_ENTER_CRYPT;
     case BRANCH_TOMB:

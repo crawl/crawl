@@ -449,6 +449,26 @@ static void _rune_effect(dungeon_feature_type ftype)
     // these are included in default force_more_message
 }
 
+static void _maybe_use_runes(dungeon_feature_type ftype)
+{
+    switch (ftype)
+    {
+    case DNGN_ENTER_ZOT:
+        if (!you.level_visited(level_id(BRANCH_ZOT, 1)))
+            _rune_effect(ftype);
+        break;
+    case DNGN_EXIT_VAULTS:
+        if (vaults_is_locked())
+        {
+            unlock_vaults();
+            _rune_effect(ftype);
+        }
+        break;
+    default:
+        break;
+    }
+}
+
 static void _gauntlet_effect()
 {
     // already doomed
@@ -634,19 +654,7 @@ static level_id _travel_destination(const dungeon_feature_type how,
 
     // Maybe perform the entry sequence (we check that they have enough runes
     // in main.cc: _can_take_stairs())
-    for (branch_iterator it; it; ++it)
-    {
-        if (how != it->entry_stairs)
-            continue;
-
-        if (!you.level_visited(level_id(it->id, 1))
-            && runes_for_branch(it->id) > 0)
-        {
-            _rune_effect(how);
-        }
-
-        break;
-    }
+    _maybe_use_runes(how);
 
     // Markers might be deleted when removing portals.
     const string dst = env.markers.property_at(you.pos(), MAT_ANY, "dst");
@@ -940,6 +948,12 @@ void floor_transition(dungeon_feature_type how,
                 mpr("You feel Zot lose track of you.");
             if (you.species == SP_METEORAN)
                 update_vision_range();
+        }
+
+        if (how == DNGN_ENTER_VAULTS && !runes_in_pack())
+        {
+            lock_vaults();
+            mpr("The door slams shut behind you.");
         }
 
         if (branch == BRANCH_GAUNTLET)
