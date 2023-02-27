@@ -1509,7 +1509,7 @@ kobold
 %%%%
 kobold brigand
 
-这个狗头人比普通的狗头人更大、更强壮，喜欢卑鄙的战术。
+这个狗头人比普通的狗头人更大、更强壮，并且喜欢卑鄙的战术。
 %%%%
 kobold demonologist
 
@@ -1623,7 +1623,7 @@ molten gargoyle
 %%%%
 moth of wrath
 
-一种飞蛾，以其通过触摸它的敌人或仅仅凝视它的友方就能激发狂怒的能力而闻名。
+一种飞蛾，以其通过触碰它的敌人或仅仅凝视它的友方就能激发狂怒的能力而闻名。
 由于某些莫名其妙的原因，几个世纪前它就从地表消失了。
 %%%%
 mummy
@@ -2086,6 +2086,11 @@ sky beast
 
 这个奇怪的飞行生物由云层和扭曲的血肉构成，它时不时爆出电火花，
 偶尔还会从视野中完全消失。
+%%%%
+skyshark
+
+天鲨自在地划过天空。
+哪怕只有一丝血也能激起它们愤怒的力量，更多的鲜血会使其陷入疯狂。
 %%%%
 slime creature
 
@@ -2834,8 +2839,8 @@ phase spider
 %%%%
 pristine statue
 
-一尊雕刻得很完美的斑岩雕像，一名弓箭手正准备释放一颗箭，
-臀部有一个装满了的箭筒。
+一尊雕刻得很完美的斑岩雕像，其形象是一名正要放箭的弓箭手，
+他的臀部有一个装满了的箭筒。
 %%%%
 rotten bat
 
@@ -2865,8 +2870,7 @@ witch
 withered plant
 
 这株植物的生命力已被吸干，然而它的躯壳仍然完好。看上去它已经死了好几个{{ if you.branch("Crypt") or
-you.branch("Tomb") then return "世纪"; else return "年"; end }}
-了。
+you.branch("Tomb") then return "世纪"; else return "年"; end }}了。
 %%%%
 zin angel
 
