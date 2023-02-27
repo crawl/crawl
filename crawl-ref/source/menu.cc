@@ -174,7 +174,7 @@ protected:
 
     int m_num_columns = 1;
     int m_nat_column_width; // set by do_layout()
-    void do_layout(int mw, int num_columns);
+    void do_layout(int mw, int num_columns, bool just_checking=false);
     struct MenuItemInfo {
         int x, y, row, column;
         formatted_string text;
@@ -361,7 +361,7 @@ static bool _has_hotkey_prefix(const string &s)
 }
 #endif
 
-void UIMenu::do_layout(int mw, int num_columns)
+void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
 {
 #ifdef USE_TILE_LOCAL
     const int min_column_width = m_min_col_width > 0 ? m_min_col_width : 400;
@@ -372,9 +372,17 @@ void UIMenu::do_layout(int mw, int num_columns)
     int column_width = 0;
     int row_height = 0;
     int height = 0;
+    int row_count = 0;
 
-    row_heights.clear();
-    row_heights.reserve(m_menu->items.size()+1);
+    // if the row heights are completely uninitialized, we should put something
+    // in there
+    just_checking = just_checking && !row_heights.empty();
+
+    if (!just_checking)
+    {
+        row_heights.clear();
+        row_heights.reserve(m_menu->items.size()+1);
+    }
 
     for (size_t i = 0; i < m_menu->items.size(); ++i)
     {
@@ -387,14 +395,17 @@ void UIMenu::do_layout(int mw, int num_columns)
             row_height += row_height == 0 ? 0 : 2*item_pad;
             m_scroll_context = max(m_scroll_context, row_height);
             height += row_height;
-            row_heights.push_back(height);
+            if (!just_checking)
+                row_heights.push_back(height);
+            row_count++;
             row_height = 0;
         }
 
         const int text_width = m_font_entry->string_width(entry.text);
 
-        entry.y = height;
-        entry.row = row_heights.size() - 1;
+        if (!just_checking)
+            entry.y = height;
+        entry.row = row_count - 1;
         entry.column = column;
 
         if (entry.heading)
@@ -455,12 +466,14 @@ void UIMenu::do_layout(int mw, int num_columns)
     row_height += row_height == 0 ? 0 : 2*item_pad;
     m_scroll_context = max(m_scroll_context, row_height);
     height += row_height;
-    row_heights.push_back(height);
+    if (!just_checking)
+        row_heights.push_back(height);
     column_width += 2*item_pad;
 
     m_height = height;
     m_nat_column_width = max(min_column_width, min(column_width, max_column_width));
 #else
+    UNUSED(just_checking);
     // TODO: this code is not dissimilar to the tiles code, could they be
     // further unified?
     const int min_column_width = m_min_col_width > 0 ? m_min_col_width : 10;
@@ -584,14 +597,14 @@ SizeReq UIMenu::_get_preferred_size(Direction dim, int prosp_width)
 #ifdef USE_TILE_LOCAL
     if (!dim)
     {
-        do_layout(INT_MAX, m_num_columns);
+        do_layout(INT_MAX, m_num_columns, true);
         const int em = tiles.get_crt_font()->char_width();
         int max_menu_width = min(93*em, m_nat_column_width * m_num_columns);
         return {0, max_menu_width};
     }
     else
     {
-        do_layout(prosp_width, m_num_columns);
+        do_layout(prosp_width, m_num_columns, true);
         return {0, m_height};
     }
 #else
