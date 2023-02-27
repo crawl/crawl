@@ -2409,8 +2409,17 @@ void bolt::affect_endpoint()
     }
 
     // Leave an object, if applicable.
-    if (drop_item && item)
-        drop_object();
+    if (item && !is_tracer && was_missile)
+    {
+        ASSERT(item->defined());
+        // Hack: we use hit_verb to determine whether a ranged attack hit.
+        const bool damned = item->props.exists(DAMNATION_BOLT_KEY)
+                            && !hit_verb.empty(); // hack!
+        if (item->flags & ISFLAG_SUMMONED || item_mulches || damned)
+            item_was_destroyed(*item);
+        else if (drop_item)
+            drop_object();
+    }
 
     if (is_explosion)
     {
@@ -2546,52 +2555,27 @@ bool bolt::stop_at_target() const
             (aimed_at_spot && (pos() == source || flavour != BEAM_DIGGING));
 }
 
-void bolt::drop_object(bool allow_mulch)
+void bolt::drop_object()
 {
     ASSERT(item != nullptr);
     ASSERT(item->defined());
 
-    // Conditions: beam is missile and not tracer.
-    if (is_tracer || !was_missile)
-        return;
-
-    // Summoned creatures' thrown items disappear.
-    if (item->flags & ISFLAG_SUMMONED)
+    if (item->sub_type == MI_THROWING_NET)
     {
-        if (you.see_cell(pos()))
+        monster* m = monster_at(pos());
+        // Player or monster at position is caught in net.
+        if (you.pos() == pos() && you.attribute[ATTR_HELD]
+            || m && m->caught())
         {
-            mprf("%s %s!",
-                 item->name(DESC_THE).c_str(),
-                 summoned_poof_msg(agent() ? agent()->as_monster() : nullptr,
-                                   *item).c_str());
+            // If no trapping net found mark this one.
+            if (get_trapping_net(pos(), true) == NON_ITEM)
+                set_net_stationary(*item);
         }
-        item_was_destroyed(*item);
-        return;
     }
 
-    // Hack alert: we use hit_verb to determine whether a ranged attack hit.
-    const bool damned = item->props.exists(DAMNATION_BOLT_KEY) && !hit_verb.empty();
-    if (!allow_mulch || (!damned && !thrown_object_destroyed(item)))
-    {
-        if (item->sub_type == MI_THROWING_NET)
-        {
-            monster* m = monster_at(pos());
-            // Player or monster at position is caught in net.
-            if (you.pos() == pos() && you.attribute[ATTR_HELD]
-                || m && m->caught())
-            {
-                // If no trapping net found mark this one.
-                if (get_trapping_net(pos(), true) == NON_ITEM)
-                    set_net_stationary(*item);
-            }
-        }
-
-        if (item->props.exists(DAMNATION_BOLT_KEY))
-            item->props.erase(DAMNATION_BOLT_KEY);
-        copy_item_to_grid(*item, pos(), 1);
-    }
-    else
-        item_was_destroyed(*item);
+    if (item->props.exists(DAMNATION_BOLT_KEY))
+        item->props.erase(DAMNATION_BOLT_KEY);
+    copy_item_to_grid(*item, pos(), 1);
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
@@ -3858,7 +3842,8 @@ void bolt::affect_player()
 
     if (flavour == BEAM_MISSILE && item)
     {
-        ranged_attack attk(agent(true), &you, item, use_target_as_pos, agent());
+        ranged_attack attk(agent(true), &you, item, use_target_as_pos,
+                           agent(), item_mulches);
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb
@@ -4839,7 +4824,7 @@ void bolt::affect_monster(monster* mon)
         if (!ag)
             ag = &env.mons[YOU_FAULTLESS];
         ASSERT(ag);
-        ranged_attack attk(ag, mon, item, use_target_as_pos, agent());
+        ranged_attack attk(ag, mon, item, use_target_as_pos, agent(), item_mulches);
         attk.attack();
         // fsim purposes - throw_it detects if an attack connected through
         // hit_verb
