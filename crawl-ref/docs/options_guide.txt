@@ -81,7 +81,7 @@ The contents of this text are:
                 action_panel, action_panel_filter,
                 action_panel_show_unidentified, action_panel_scale,
                 action_panel_orientation, action_panel_font_family,
-                action_panel_font_size
+                action_panel_font_size, menu_item_pad
 3-i     Colours (messages and menus).
                 menu_colour, message_colour
 3-j     Quivers, firing, and ammo.
@@ -1774,6 +1774,11 @@ action_panel_font_size = 16 (persistent)
 action_panel_glyphs = false
         If set to true, show glyphs instead of tiles in the action panel. This
         option is only available on webtiles.
+
+menu_item_pad = true
+        If set to false, disables padding between items in the ui menu.
+        Allows to fit more menu content on the screen, useful for
+        game_scale > 1 and/or smaller screens.
 
 3-i     Colours (messages and menus)
 -----------------

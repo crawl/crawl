@@ -267,6 +267,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
         new BoolGameOption(SIMPLE_NAME(show_blood), true),
+#ifdef USE_TILE_LOCAL
+        new BoolGameOption(SIMPLE_NAME(menu_item_pad), true),
+#endif
         new BoolGameOption(SIMPLE_NAME(reduce_animations),
 #ifdef USE_TILE_WEB
             // true

@@ -293,6 +293,10 @@ public:
     bool        cloud_status;     // Whether to show a cloud status light
     bool        always_show_zot;  // Whether to always show the Zot timer
 
+ #ifdef USE_TILE_LOCAL
+    bool        menu_item_pad; // enable/disable item pad in UI Menu.
+ #endif
+
 #ifdef USE_TILE_WEB
     vector<object_class_type> action_panel;   // types of items to show on the panel
     vector<text_pattern> action_panel_filter; // what should be filtered out

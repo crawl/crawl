@@ -402,7 +402,7 @@ void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
 
         if (column == 0)
         {
-            row_height += row_height == 0 ? 0 : 2*item_pad;
+            row_height += (row_height == 0 || !Options.menu_item_pad) ? 0 : 2*item_pad;
             m_scroll_context = max(m_scroll_context, row_height);
             height += row_height;
             if (!just_checking)
@@ -473,12 +473,13 @@ void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
             row_height = max(row_height, item_height);
         }
     }
-    row_height += row_height == 0 ? 0 : 2*item_pad;
+
+    row_height += (row_height == 0 || !Options.menu_item_pad) ? 0 : 2*item_pad;
     m_scroll_context = max(m_scroll_context, row_height);
     height += row_height;
     if (!just_checking)
         row_heights.push_back(height);
-    column_width += 2*item_pad;
+    column_width += Options.menu_item_pad ? 2*item_pad : 0;
 
     m_height = height;
     m_nat_column_width = max(min_column_width, min(column_width, max_column_width));
@@ -1061,7 +1062,7 @@ void UIMenu::pack_buffers()
         {
             formatted_string split = m_font_entry->split(entry.text, m_region.width, entry_h);
             // see corresponding section in do_layout()
-            int line_y = entry.y  + (i == 0 ? 0 : 5) + item_pad;
+            int line_y = entry.y  + (i == 0 ? 0 : 5) + (Options.menu_item_pad ? item_pad : 0);
             if (i < (int)item_info.size()-1 && !item_info[i+1].heading)
             {
                 m_div_line_buf.add_square(entry.x, line_y,
@@ -1078,11 +1079,13 @@ void UIMenu::pack_buffers()
                 // sorted by texture first, e.g. you can never draw
                 // a dungeon tile over a monster tile.
                 const auto tex = get_tile_texture(tile.tile);
-                m_tile_buf[tex].add(tile.tile, entry_x + item_pad, ty, 0, 0, false, tile.ymax, 1, 1);
+                m_tile_buf[tex].add(tile.tile,
+                    entry_x + (Options.menu_item_pad ? item_pad : 0),
+                    ty, 0, 0, false, tile.ymax, 1, 1);
             }
 
             const int text_indent = m_draw_tiles ? 38 : 0;
-            int text_sx = entry_x + text_indent + item_pad;
+            int text_sx = entry_x + text_indent + (Options.menu_item_pad ? item_pad : 0);
             int text_sy = entry.y + (entry_h - m_font_entry->char_height())/2;
 
             // Split off and render any hotkey prefix first
@@ -2836,12 +2839,15 @@ void Menu::update_title()
         fs = indented;
     }
 
+
 #ifdef USE_TILE_LOCAL
     const bool tile_indent = m_indent_title && Options.tile_menu_icons;
-    m_ui.title->set_margin_for_sdl(0, UIMenu::item_pad+UIMenu::pad_right, 10,
-            UIMenu::item_pad + (tile_indent ? 38 : 0));
-    m_ui.more->set_margin_for_sdl(10, UIMenu::item_pad+UIMenu::pad_right, 0,
-            tile_indent ? UIMenu::item_pad + 38 : 0);
+    m_ui.title->set_margin_for_sdl(0,
+        (Options.menu_item_pad ? UIMenu::item_pad : 0 )+UIMenu::pad_right, 10,
+        (Options.menu_item_pad ? 2 : 0 ) + (tile_indent ? 38 : 0));
+    m_ui.more->set_margin_for_sdl(10,
+        (Options.menu_item_pad ? UIMenu::item_pad : 0 )+UIMenu::pad_right, 0,
+        tile_indent ? (Options.menu_item_pad ? UIMenu::item_pad : 0 ) + 38 : 0);
 #endif
     m_ui.title->set_text(fs);
 #ifdef USE_TILE_WEB
