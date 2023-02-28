@@ -2528,3 +2528,35 @@ MAP
 xxxxxxxxxxxxxcccxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+NAME:	tekkud_aviary
+DEPTH:	Depths
+ORIENT:	float
+TAGS:   no_trap_gen no_monster_gen
+DEPTH:	Depths
+MONS:	caustic shrike
+MONS:	shard shrike
+MONS:	spriggan druid
+KMONS:	h = harpy
+MONS:	tengu
+MONS:	tengu conjurer
+MONS:	tengu warrior
+MONS:	tengu reaver
+KMONS:	p = plant / bush
+SUBST:	' = t:2 p:3 _
+KFEAT:	u = +
+KFEAT:	_ = .
+FTILE:	_'t+1234567hp = floor_grass
+MAP
+..........     .........
+.xxxmmmxx..   ..xxmmmxx..
+.xh'''''xx.. ..xx'''''xx..
+.x'_6'4''xx. .xx''121'hxx.
+.m''_'_'''xxuxx''''_'_''x.
+.m'7______+...+_______3'm.
+.m''_'_'''xxuxx''''_'_''x.
+.x'_5'4''xx. .xx''121'hxx.
+.xh'''''xx.. ..xx'''''xx..
+.xxxmmmxx..   ..xxmmmxx..
+..........     .........
+ENDMAP
