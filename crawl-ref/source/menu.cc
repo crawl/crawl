@@ -3028,8 +3028,12 @@ bool Menu::page_down()
     if (last_hovered >= 0 && m_ui.menu)
         m_ui.menu->get_item_gridpos(last_hovered, nullptr, &col);
 
-    if (last_hovered >= 0 && in_page(last_hovered))
-        new_hover = last_hovered - get_first_visible(true, col);
+    if (last_hovered >= 0)
+    {
+        new_hover = in_page(last_hovered)
+                        ? max(0, last_hovered - get_first_visible(true, col))
+                        : 0;
+    }
     int dy = m_ui.scroller->get_region().height - m_ui.menu->get_scroll_context();
     int y = m_ui.scroller->get_scroll();
     bool at_bottom = y+dy >= m_ui.menu->get_region().height;
@@ -3062,8 +3066,14 @@ bool Menu::page_up()
     int new_hover = -1;
     if (is_set(MF_ARROWS_SELECT) && last_hovered < 0 && items.size() > 0)
         last_hovered = 0;
-    if (last_hovered >= 0 && in_page(last_hovered))
-        new_hover = last_hovered - get_first_visible(true);
+
+    if (last_hovered >= 0)
+    {
+        new_hover = in_page(last_hovered)
+                        ? max(0, last_hovered - get_first_visible(true))
+                        : 0;
+    }
+
     int dy = m_ui.scroller->get_region().height - m_ui.menu->get_scroll_context();
     int y = m_ui.scroller->get_scroll();
     m_ui.scroller->set_scroll(y-dy);
