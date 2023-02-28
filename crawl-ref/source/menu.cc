@@ -1702,18 +1702,27 @@ bool Menu::process_command(command_type cmd)
     // note -- MF_USE_TWO_COLUMNS doesn't guarantee two cols!
     // currently guaranteed to be false except on local tiles
     const bool multicol = m_ui.menu->get_num_columns() > 1;
+    const int old_hover = last_hovered;
 
     switch (cmd)
     {
     case CMD_MENU_UP:
         if (is_set(MF_ARROWS_SELECT))
+        {
             cycle_hover(true, false, true);
+            if (last_hovered >= 0 && old_hover == last_hovered)
+                line_up();
+        }
         else
             line_up();
         break;
     case CMD_MENU_DOWN:
         if (is_set(MF_ARROWS_SELECT))
+        {
             cycle_hover(false, false, true);
+            if (last_hovered >= 0 && old_hover == last_hovered)
+                line_down();
+        }
         else
             line_down();
         break;
