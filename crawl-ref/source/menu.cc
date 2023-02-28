@@ -3095,6 +3095,11 @@ bool Menu::page_up()
 
 bool Menu::line_down()
 {
+    // check if we are already at the end.
+    // (why is this necessary?)
+    if (items.size() && in_page(static_cast<int>(items.size()) - 1, true))
+        return false;
+
     int index = get_first_visible();
     int first_vis_y;
     m_ui.menu->get_item_region(index, &first_vis_y, nullptr);
