@@ -270,7 +270,7 @@ void UIMenu::is_visible_item_range(int *vis_min, int *vis_max)
     }
     for (; i < (int)item_info.size(); ++i)
     {
-        if (item_info[i].row > scroll + viewport_height)
+        if (item_info[i].row >= scroll + viewport_height)
         {
             v_max = i;
             break;
@@ -571,7 +571,6 @@ void UIMenu::_render()
     for (int i = vis_min; i < vis_max; i++)
     {
         const MenuEntry *me = m_menu->items[i];
-        // int y = i - vis_min + 1;
         int y = item_info[i].y - item_info[vis_min].y + 1;
         int x = item_info[i].x + item_info[i].column * m_nat_column_width;
         cgotoxy(m_region.x + x + 1, m_region.y + scroll + y);
