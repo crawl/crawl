@@ -2533,7 +2533,6 @@ NAME:	tekkud_aviary
 DEPTH:	Depths
 ORIENT:	float
 TAGS:   no_trap_gen no_monster_gen
-DEPTH:	Depths
 MONS:	caustic shrike
 MONS:	shard shrike
 MONS:	spriggan druid
