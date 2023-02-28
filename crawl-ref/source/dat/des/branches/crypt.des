@@ -1463,6 +1463,63 @@ cG.MGM.GcG.1.GcG.1.GcG.1.Gc
 ccccccccccccccccccccccccccc
 ENDMAP
 
+# A very specific game reference makes for a strange ambush bubble.
+NAME:    tekkud_devil_daggers
+TAGS:    no_monster_gen no_item_gen no_trap_gen no_pool_fixup no_descent
+DEPTH:   Crypt
+ORIENT:  float
+WEIGHT:  5
+ITEM:    scroll of enchant weapon ident:type, blade talisman
+ITEM:    mundane dagger, dagger good_item
+: local q = "quick blade randart ego:"
+: item(q .. "draining / " .. q .. "vampirism / " .. q .. "pain / " ..
+:      q .. "distortion / damaged quick blade")
+MONS:    flying skull, curse skull
+MONS:    spectral demonic crawler, wolf spider zombie
+MONS:    culicivora zombie / redback zombie / \
+         jumping spider zombie / tarantella zombie
+MONS:    spectral tentacled monstrosity
+KMONS:   7 = kraken zombie
+KFEAT:   7 = w
+NSUBST:  2 = 1:2 / 1:1112 / *:1
+SHUFFLE: {e
+: if you.depth() == 1 then
+SUBST:  { = })]
+: elseif you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  { = {([
+: else
+SUBST:  { = {([})]
+: end
+KPROP:  7g = bloody
+MAP
+    ccccccccccccccccc
+   ccccccccccccccccccc
+  cccc..g.......g..cccc
+ cccc...............cccc
+cccc..1...f...f...1..cccc
+ccc...................ccc
+cc...4......{......3...cc
+ccg.f.f.f.f...f.f.f.f.gcc
+cc..........e..........cc
+cc.2..7..5........7..2.cc
+cc........f...f........cc
+cc.....................cc
+cc......f.......f......cc
+cc.....................cc
+cc....f...........f....cc
+cc.2...........5.....2.cc
+cc..f...............f..cc
+cc.....................cc
+ccg..3.............4..gcc
+ccc.........6.........ccc
+cccc..2...d...d...2..cccc
+ cccc.......h.......cccc
+  cccc.............cccc
+   cccccccccnccccccccc
+    ccccccccncccccccc
+            @
+ENDMAP
+
 ##############################################################################
 # Crypt ends
 ##############################################################################

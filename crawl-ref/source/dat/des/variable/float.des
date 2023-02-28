@@ -6102,6 +6102,32 @@ MAP
 ..........
 ENDMAP
 
+NAME:    tekkud_shrikecote
+TAGS:    no_trap_gen no_monster_gen
+DEPTH:   Depths
+ORIENT:  float
+MONS:    harpy, caustic shrike, spriggan druid
+MONS:    tengu warrior, tengu conjurer, tengu reaver
+KMONS:   p = plant / bush
+KFEAT:   - = +
+SHUFFLE: mno
+SUBST:   n : xxm, o = x, ' = t:2 p:3 `
+NSUBST:  2 = 2 = 112 / 1:_ / *:2
+FTILE:   _`%*|t-1234567p = floor_grass
+MAP
+  .........     ..........
+ ..xxmmmxx..   ..xxnnnxxx.
+..xx%''''xx.. ..xx''''%1x.
+.xx1'222''xx. .xx''4'5`'x.
+.x*'`'`''''xx+xx'''`'`'|o.
+.o'````'`'`-..x-``````6'o.
+.o'3```````-x..-`'`'```'o.
+.x|'`'`''''xx+xx'''`'`'*o.
+.xx1'222''xx. .xx''4'5`'x.
+..xx%''''xx.. ..xx''''%1x.
+ ..xxnnnxx..   ..xxmmmxxx.
+  .........     ..........
+ENDMAP
 
 ###############################################################################
 #
