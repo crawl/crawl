@@ -29,6 +29,7 @@
 
 #ifdef __ANDROID__
 #define HAVE_STAT
+#include "player.h"
 #include <errno.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
@@ -46,7 +47,8 @@ extern "C" JNIEXPORT void JNICALL
 Java_org_libsdl_app_SDLActivity_nativeSaveGame(
     JNIEnv* env, jclass thiz)
 {
-    save_game(false);
+    if (you.save)
+        save_game(false);
 }
 
 bool jni_keyboard_control(bool toggle)

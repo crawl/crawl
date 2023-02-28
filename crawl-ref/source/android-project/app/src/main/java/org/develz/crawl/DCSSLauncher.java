@@ -105,7 +105,6 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
         intent.putExtra("extra_keyboard", extraKeyboardOption);
         intent.putExtra("keyboard_size", Math.round(keyboardSizePx));
         startActivity(intent);
-        finish();
     }
 
     // Reset the init file
