@@ -518,6 +518,7 @@ void UIMenu::do_layout(int mw, int num_columns, bool just_checking)
         }
     }
     m_height = row + 1;
+    // should this update the region??
     m_nat_column_width = max(min_column_width, min(column_width, max_column_width));
 #endif
 }
@@ -795,7 +796,7 @@ void UIMenuPopup::_allocate_region()
             // menus a bit if the calculated column count would add too much
             // whitespace. But I'm not quite sure how to do this...
             m_menu->m_ui.menu->set_num_columns(max_columns);
-            ui::restart_layout();
+            ui::restart_layout(); // NORETURN
         }
     }
     else if (m_menu->is_set(MF_USE_TWO_COLUMNS))
@@ -805,14 +806,16 @@ void UIMenuPopup::_allocate_region()
          || (num_cols == 2 && m_height+more_height <= max_height))
         {
             m_menu->m_ui.menu->set_num_columns(3 - num_cols);
-            ui::restart_layout();
+            ui::restart_layout(); // NORETURN
         }
     }
     m_menu->m_ui.menu->do_layout(menu_w, num_cols);
 
-    const int menu_height = m_menu->m_ui.menu->get_region().height;
     if (m_menu->m_keyhelp_more)
     {
+        // note: m_menu->m_ui.menu->get_region().height seems to be inaccurate
+        // on console (ok on tiles) -- is this a problem?
+        const int menu_height = m_menu->m_ui.menu->m_height;
         const int scroll_percent = (menu_height - viewport_height == 0)
                     ? 0
                     : m_menu->m_ui.scroller->get_scroll() * 100
