@@ -406,7 +406,7 @@ static int _banished_depth(const int power)
     // Ancient Liches are sending you to A:5 and there's nothing
     // you can do about that.
     const int maxdepth = div_rand_round((power + 5), 6);
-    const int mindepth = (4 * power + 7) / 23;
+    const int mindepth = min(maxdepth, (4 * power + 7) / 23);
     const int bottom = brdepth[BRANCH_ABYSS];
     return min(bottom, max(1, random_range(mindepth, maxdepth)));
 }
