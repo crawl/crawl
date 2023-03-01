@@ -2678,7 +2678,7 @@ void melee_attack::mons_apply_attack_flavour()
 
             if (defender_visible)
             {
-                mprf("%s %s engulfed in a cloud of spores!",
+                mprf("%s %s engulfed in a cloud of dizzying spores!",
                      defender->name(DESC_THE).c_str(),
                      defender->conj_verb("are").c_str());
             }
@@ -3063,7 +3063,23 @@ void melee_attack::mons_apply_attack_flavour()
             simple_monster_message(*mon, " tastes blood and grows stronger!");
         }
     }
+    case AF_SLEEP:
+        if (crawl_state.player_moving)
+            break; // looks too weird to fall asleep while still in motion
+        if (attk_type == AT_SPORE)
+        {
+            if (defender->is_unbreathing())
+                break;
 
+            if (defender_visible)
+            {
+                mprf("%s %s engulfed in a cloud of soporific spores!",
+                     defender->name(DESC_THE).c_str(),
+                     defender->conj_verb("are").c_str());
+            }
+        }
+        if (coinflip())
+            defender->put_to_sleep(attacker, attacker->get_experience_level() * 3);
     }
 }
 

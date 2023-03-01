@@ -1049,6 +1049,7 @@ fungus9
 ballistomycete MONS_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
 deathcap MONS_DEATHCAP
+sleepcap MONS_SLEEPCAP
 %rim 1
 
 ## Goblins ('g')

@@ -916,6 +916,19 @@ static monsterentry mondata[] =
 
 // Mobile plants and fungi ('f')
 {
+    MONS_SLEEPCAP, 'f', BLUE, "sleepcap",
+    M_NO_FLAGS,
+    MR_RES_POISON,
+    10, MONS_FUNGUS, MONS_SLEEPCAP, MH_PLANT, 10,
+    { {AT_SPORE, AF_SLEEP, 9}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    3, 270,
+    5, 0, MST_NO_SPELLS, false, S_SILENT,
+    I_BRAINLESS, HT_LAND, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, SIZE_TINY, MON_SHAPE_FUNGUS,
+    {TILEP_MONS_SLEEPCAP}, TILE_ERROR
+},
+
+{
     MONS_WANDERING_MUSHROOM, 'f', BROWN, "wandering mushroom",
     M_NO_FLAGS,
     MR_RES_POISON,

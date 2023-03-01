@@ -4421,6 +4421,7 @@ static string _flavour_base_desc(attack_flavour flavour)
         { AF_BARBS,             "embed barbs" },
         { AF_SPIDER,            "summon a spider" },
         { AF_BLOODZERK,         "become enraged" },
+        { AF_SLEEP,             "induce sleep" },
         { AF_SWOOP,             "" },
         { AF_PLAIN,             "" },
     };
