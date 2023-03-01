@@ -2091,10 +2091,10 @@ static void _print_overview_screen_equip(column_composer& cols,
 
         string str;
 
-        if (you.slot_item(eqslot))
+        if (you.slot_item(eqslot, true))
         {
             // The player has something equipped.
-            const item_def& item = *you.slot_item(eqslot);
+            const item_def& item = *you.slot_item(eqslot, true);
             const bool melded    = you.melded[eqslot];
             const string prefix = item_prefix(item);
             const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
