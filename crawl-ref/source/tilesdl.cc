@@ -796,9 +796,6 @@ static const int min_inv_height  = 4;
 static const int max_inv_height  = 6;
 static const int max_mon_height  = 3;
 
-// Width of status area in characters.
-static const int stat_width      = 42;
-
 static int round_up_to_multiple(int a, int b)
 {
     int m = a % b;
@@ -883,7 +880,7 @@ void TilesFramework::do_layout()
         m_region_tab->resize_to_fit(m_windowsz.x, m_windowsz.y);
 
         const int sidebar_min_pw = m_region_stat->grid_width_to_pixels(
-                                                                stat_width);
+                                                        Options.tile_min_stat_width_characters);
         sidebar_pw = m_region_tab->grid_width_to_pixels(14) - 10;
         if (sidebar_pw > m_windowsz.x / 3)
             sidebar_pw = m_region_tab->grid_width_to_pixels(7) - 10;

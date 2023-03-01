@@ -120,22 +120,23 @@ The contents of this text are:
                 tile_map_pixels, tile_viewport_scale, tile_map_scale,
                 tile_cell_pixels, tile_sidebar_pixels, tile_filter_scaling,
                 tile_force_overlay, tile_overlay_col,
-                tile_overlay_alpha_percent, tile_full_screen,
-                tile_use_small_layout, tile_font_crt_file, tile_font_stat_file,
-                tile_font_msg_file, tile_font_tip_file, tile_font_lbl_file,
-                tile_font_crt_family, tile_font_stat_family,
-                tile_font_msg_family, tile_font_lbl_family, tile_font_crt_size,
-                tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
-                tile_font_lbl_size, tile_font_ft_light, glyph_mode_font,
-                glyph_mode_font_size, tile_show_minihealthbar,
-                tile_show_minimagicbar, tile_show_demon_tier, tile_water_anim,
-                tile_misc_anim, tile_realtime_anim, tile_show_player_species,
-                tile_player_status_icons,
-                tile_show_threat_levels, tile_layout_priority,
-                tile_display_mode, tile_level_map_hide_messages,
-                tile_level_map_hide_sidebar, tile_player_tile,
-                tile_weapon_offsets, tile_shield_offsets, tile_grinch,
-                tile_web_mouse_control, tile_web_mobile_input_helper
+                tile_min_stat_width_characters, tile_overlay_alpha_percent,
+                tile_full_screen, tile_use_small_layout, tile_font_crt_file,
+                tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
+                tile_font_lbl_file, tile_font_crt_family,
+                tile_font_stat_family, tile_font_msg_family,
+                tile_font_lbl_family, tile_font_crt_size, tile_font_stat_size,
+                tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
+                tile_font_ft_light, glyph_mode_font, glyph_mode_font_size,
+                tile_show_minihealthbar, tile_show_minimagicbar,
+                tile_show_demon_tier, tile_water_anim, tile_misc_anim,
+                tile_realtime_anim, tile_show_player_species,
+                tile_player_status_icons, tile_show_threat_levels,
+                tile_layout_priority, tile_display_mode,
+                tile_level_map_hide_messages, tile_level_map_hide_sidebar,
+                tile_player_tile, tile_weapon_offsets, tile_shield_offsets,
+                tile_grinch, tile_web_mouse_control,
+                tile_web_mobile_input_helper
 4-  Character Dump.
 4-a     Saving.
                 dump_on_save
@@ -2380,6 +2381,9 @@ tile_cell_pixels = 32
         The width and height of tiles in the dungeon view at 1.0 scale, in
         (logical) pixels. This is a legacy option, and it is recommended that
         you adjust scaling via tile_viewport_scale instead.
+
+tile_min_stat_width_characters = 42
+        Minimal width of the stats sidebar in characters.
 
 tile_sidebar_pixels = 32
         The width and height of tiles in the local tiles sidebar view,
