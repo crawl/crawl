@@ -9,8 +9,7 @@ import java.io.File;
 
 public class DCSSTextEditor extends DCSSTextBase {
 
-    private static final String
-            OPTIONS_GUIDE = "docs/options_guide.txt";
+    private static final String OPTIONS_GUIDE = "docs/options_guide.txt";
 
     private File file;
 

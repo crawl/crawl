@@ -15,6 +15,8 @@ public class DCSSLauncher extends AppCompatActivity {
 
     public final static String TAG = "LAUNCHER";
 
+    private static final String INIT_FILE = "/init.txt";
+
     private File initFile;
 
     @Override
@@ -24,8 +26,9 @@ public class DCSSLauncher extends AppCompatActivity {
 
         findViewById(R.id.startButton).setOnClickListener(this::startGame);
         findViewById(R.id.editInitFile).setOnClickListener(this::editInitFile);
+        findViewById(R.id.morgueButton).setOnClickListener(this::openMorgue);
 
-        initFile = new File(getExternalFilesDir(null)+"/init.txt");
+        initFile = new File(getExternalFilesDir(null)+INIT_FILE);
         resetInitFile(false);
     }
 
@@ -52,6 +55,12 @@ public class DCSSLauncher extends AppCompatActivity {
     private void editInitFile(View v) {
         Intent intent = new Intent(getBaseContext(), DCSSTextEditor.class);
         intent.putExtra("file", initFile);
+        startActivity(intent);
+    }
+
+    // Open morgue
+    private void openMorgue(View v) {
+        Intent intent = new Intent(getBaseContext(), DCSSMorgue.class);
         startActivity(intent);
     }
 

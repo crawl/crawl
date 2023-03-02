@@ -3,10 +3,17 @@
     <string name="app_name">Dungeon Crawl Stone Soup</string>
     <string name="start_game">Start Game</string>
     <string name="edit_rc">Edit Init File</string>
+    <string name="morgue">Morgue Files</string>
     <string name="rc_hint">Enter your custom configuration here.</string>
-    <string name="text_editor">Text Editor</string>
     <string name="help">Options Guide</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
+    <string name="sort_by">Sort By</string>
+    <string-array name="sort_options">
+        <item>Name asc.</item>
+        <item>Name desc.</item>
+        <item>Date asc.</item>
+        <item>Date desc.</item>
+    </string-array>
 </resources>
