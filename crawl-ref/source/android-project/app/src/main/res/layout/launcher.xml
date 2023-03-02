@@ -4,35 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerInParent="true"
     android:background="@color/black"
     tools:context=".DCSSLauncher">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="50dp"
-        android:orientation="vertical">
+        android:scrollbars="vertical">
 
-        <ImageView
-            android:id="@+id/logoView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/logo" />
-
-        <Button
-            android:id="@+id/startButton"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/start_game"
-            android:theme="@style/ButtonColor2" />
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="50dp"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/editInitFile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/edit_rc"/>
+            <ImageView
+                android:id="@+id/logoView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/logo" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/start_game"
+                android:theme="@style/ButtonColor2"/>
+
+            <Button
+                android:id="@+id/editInitFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_rc"/>
+
+            <Button
+                android:id="@+id/morgueButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/morgue"/>
+
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
