@@ -1125,7 +1125,7 @@ int main(int argc, char* argv[])
                 case AF_BLOODZERK:
                     monsterattacks += colour(RED, "(bloodzerk)");
                     break;
-                case AF_BLOODZERK:
+                case AF_SLEEP:
                     monsterattacks += colour(BLUE, "(sleep)");
                     break;
                 case AF_CRUSH:
