@@ -1076,8 +1076,8 @@ static const mutation_def mut_data[] =
 { MUT_ICEMAIL, 0, 2, mutflag::good, false,
   "icemail",
 
-  {"A meltable icy envelope protects you from harm. (AC +",
-   "A thick, meltable icy envelope protects you from harm. (AC +", ""},
+  {"A meltable icy envelope protects you from harm. (AC +%d)",
+   "A thick, meltable icy envelope protects you from harm. (AC +%d)", ""},
   {"An icy envelope takes form around you.",
    "Your icy envelope grows thicker.", ""},
   {"", "", ""},
@@ -1086,7 +1086,7 @@ static const mutation_def mut_data[] =
 { MUT_CONDENSATION_SHIELD, 0, 1, mutflag::good, false,
   "condensation shield",
 
-  {"A meltable shield of frost defends you. (SH +", "", ""},
+  {"A meltable shield of frost defends you. (SH +%d)", "", ""},
   {"Frost condenses into a shield before you.","", ""},
   {"", "", ""},
 },
@@ -1538,9 +1538,9 @@ static const mutation_def mut_data[] =
 { MUT_SANGUINE_ARMOUR, 0, 3, mutflag::good, false,
   "sanguine armour",
 
-  {"When seriously injured, your bleeding wounds create armour. (AC +",
-   "When seriously injured, your bleeding wounds create thick armour. (AC +",
-   "When seriously injured, your bleeding wounds create very thick armour. (AC +"},
+  {"When seriously injured, your bleeding wounds create armour. (AC +%d)",
+   "When seriously injured, your bleeding wounds create thick armour. (AC +%d)",
+   "When seriously injured, your bleeding wounds create very thick armour. (AC +%d)"},
 
   {"You feel your blood ready itself to protect you.",
    "You feel your blood thicken.",

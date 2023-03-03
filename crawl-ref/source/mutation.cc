@@ -29,6 +29,7 @@
 #include "item-prop.h"
 #include "items.h"
 #include "libutil.h"
+#include "localise.h"
 #include "menu.h"
 #include "message.h"
 #include "mon-place.h"
@@ -428,25 +429,33 @@ static int _num_full_suppressed = 0;
 static int _num_part_suppressed = 0;
 static int _num_transient = 0;
 
+// noloc section start
+
 static string _suppressedmut(string desc, bool terse=false)
 {
+    desc = localise(desc);
     return terse ? "(" + desc + ")" : "<darkgrey>((" + desc + "))</darkgrey>";
 }
 
 static string _innatemut(string desc, bool terse=false)
 {
+    desc = localise(desc);
     return terse ? desc : "<lightblue>" + desc + "</lightblue>";
 }
 
 static string _formmut(string desc, bool terse=false)
 {
+    desc = localise(desc);
     return terse ? desc : "<green>" + desc + "</green>";
 }
 
 static string _badmut(string desc, bool terse=false)
 {
+    desc = localise(desc);
     return terse ? desc : "<lightred>" + desc + "</lightred>";
 }
+
+// noloc section end
 
 static string _annotate_form_based(string desc, bool suppressed, bool terse=false)
 {
@@ -645,7 +654,7 @@ static string _terse_mut_name(mutation_type mut)
 
     const int max_levels = mutation_max_levels(mut);
 
-    string current = mutation_name(mut);
+    string current = localise(mutation_name(mut));
 
     if (max_levels > 1)
     {
@@ -726,8 +735,10 @@ static vector<string> _get_mutations(bool terse)
             if (!species::is_draconian(you.species)
                 || you.species == SP_BASE_DRACONIAN) // ugh
             {
-                result.push_back(terse
-                    ? "breathe fire" : _formmut("You can breathe fire."));
+                if (terse)
+                    result.push_back(localise("breathe fire"));
+                else
+                    result.push_back(_formmut("You can breathe fire."));
             }
             else if (!terse
                 && species::draconian_breath(you.species) != ABIL_NON_ABILITY)
@@ -738,22 +749,39 @@ static vector<string> _get_mutations(bool terse)
         }
 
         if (form_base_movespeed(you.form) < 10)
-            result.push_back(terse ? "fast" : _formmut("You move quickly."));
+        {
+            result.push_back(terse ? localise("fast")
+                                   : _formmut("You move quickly."));
+        }
 
         // form-based flying can't be stopped, so don't print amphibiousness
         if (form->player_can_fly())
-            result.push_back(terse ? "flying" : _formmut("You are flying."));
+        {
+            result.push_back(terse ? localise("flying")
+                                   : _formmut("You are flying."));
+        }
         else if (form->player_can_swim() && !you.can_swim(true)) // n.b. this could cause issues for non-dragon giant forms if they exist
-            result.push_back(terse ? "amphibious" : _formmut("You are amphibious."));
+        {
+            result.push_back(terse ? localise("amphibious")
+                                   : _formmut("You are amphibious."));
+        }
 
         if (form->hp_mod > 10)
         {
-            result.push_back(terse ? "boosted hp"
-                : _formmut(make_stringf("Your maximum health is %sincreased.",
-                    form->hp_mod < 13 ? "" : "greatly ")));
+            string desc;
+            if (terse)
+                desc = localise("boosted hp");
+            else if (form->hp_mod < 13)
+                desc = localise("Your maximum health is increased.");
+            else
+                desc = localise("Your maximum health is greatly increased.");
+            result.push_back(desc);
         }
         else if (form->hp_mod < 10)
-            result.push_back(terse ? "reduced hp" : _badmut("Your maximum health is decreased."));
+        {
+            result.push_back(terse ? localise("reduced hp") 
+                                   : _badmut("Your maximum health is decreased."));
+        }
 
         // immunity comes from form
         if (!terse && player_res_poison(false, true, false) == 3
@@ -791,13 +819,19 @@ static vector<string> _get_mutations(bool terse)
         }
 
         if (!form->can_cast)
-            result.push_back(terse ? "no casting" : _badmut("You cannot cast spells."));
+        {
+            result.push_back(terse ? localise("no casting") 
+                                   : _badmut("You cannot cast spells."));
+        }
 
     }
 
     // This gets DUR_NO_POTIONS as well as necromutation, is that good?
     if (!you.can_drink(true) && you.can_drink(false))
-        result.push_back(terse ? "no potions" : _badmut("You cannot drink.")); // same as MUT_NO_DRINK
+    {
+        result.push_back(terse ? localise("no potions")
+                               : _badmut("You cannot drink.")); // same as MUT_NO_DRINK
+    }
 
     //pseudo-forms that come from species
 
@@ -805,11 +839,11 @@ static vector<string> _get_mutations(bool terse)
     {
         if (you.vampire_alive)
         {
-            result.push_back(terse ? "alive" :
+            result.push_back(terse ? localise("alive") :
                 _formmut("Your natural rate of healing is accelerated."));
         }
         else if (terse)
-            result.push_back("bloodless");
+            result.push_back(localise("bloodless"));
         else
         {
             result.push_back(
@@ -829,7 +863,7 @@ static vector<string> _get_mutations(bool terse)
     if (you.can_water_walk())
     {
         if (terse)
-            result.push_back("walk on water");
+            result.push_back(localise("walk on water"));
         else
         {
             if (have_passive(passive_t::water_walk))
@@ -843,7 +877,7 @@ static vector<string> _get_mutations(bool terse)
         || player_under_penance(GOD_HEPLIAKLQANA))
     {
         if (terse)
-            result.push_back("reduced essence");
+            result.push_back(localise("reduced essence"));
         else
         {
             // XX message is probably wrong for penance?
@@ -865,21 +899,27 @@ static vector<string> _get_mutations(bool terse)
     {
         const int ac = you.racial_ac(false) / 100;
         if (terse)
-            result.push_back("AC +" + to_string(ac));
+            result.push_back(localise("AC +%d", ac));
         else
         {
-            // XX generalize this code somehow?
-            const string scale_clause = string(species::scale_type(you.species))
-                  + " scales are "
-                  + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard";
+            string desc;
+            if (you.species == SP_NAGA)
+                desc = localise("Your serpentine skin is tough. (AC +%d)", ac);
+            else if (you.species == SP_GARGOYLE)
+                desc = localise("Your stone body is resilient. (AC +%d)", ac);
+            else
+            {
+                if (you.species == SP_GREY_DRACONIAN)
+                    desc = "Your %s scales are very hard. (AC +%d)";
+                else
+                    desc = "Your %s scales are hard. (AC +%d)";
+
+                const string adjective = string(species::scale_type(you.species));
+                desc = localise(desc, adjective, ac);
+            }
 
             result.push_back(_annotate_form_based(
-                        make_stringf("Your %s. (AC +%d)", you.species == SP_NAGA
-                                            ? "serpentine skin is tough"
-                                            : you.species == SP_GARGOYLE
-                                            ? "stone body is resilient"
-                                            : scale_clause.c_str(),
-                           ac),
+                        desc,
                         player_is_shapechanged()
                         && !(species::is_draconian(you.species)
                              && you.form == transformation::dragon)));
@@ -903,13 +943,13 @@ static vector<string> _get_mutations(bool terse)
         if (terse)
         {
             result.push_back(_annotate_form_based(
-                make_stringf("%d rings", arms), rings_melded, true));
+                localise("%d rings", arms), rings_melded, true));
         }
         else
         {
             result.push_back(_annotate_form_based(
-                make_stringf("You can wear up to %s rings at the same time.",
-                         number_in_words(arms).c_str()), rings_melded));
+                localise("You can wear up to %d rings at the same time.",
+                        arms), rings_melded));
         }
     }
 
@@ -1013,7 +1053,7 @@ string terse_mutation_list()
     const vector<string> mutations = _get_mutations(true);
 
     if (mutations.empty())
-        return "no striking features";
+        return localise("no striking features");
     else
     {
         return comma_separated_line(mutations.begin(), mutations.end(),
@@ -1034,14 +1074,14 @@ string describe_mutations(bool drop_title)
     if (!drop_title)
     {
         result += "<white>";
-        result += "Innate Abilities, Weirdness & Mutations";
+        result += localise("Innate Abilities, Weirdness & Mutations");
         result += "</white>\n\n";
     }
 
     const vector<string> mutations = _get_mutations(false);
 
     if (mutations.empty())
-        result += "You are rather mundane.\n";
+        result += localise("You are rather mundane.") + "\n";
     else
         result += join_strings(mutations.begin(), mutations.end(), "\n");
 
@@ -1050,13 +1090,23 @@ string describe_mutations(bool drop_title)
 
 static formatted_string _vampire_Ascreen_footer(bool first_page)
 {
-    const char *text = first_page ? "<w>Mutations</w>|Blood properties"
-                                  : "Mutations|<w>Blood properties</w>";
-    const string fmt = make_stringf("[<w>!</w>/<w>^</w>"
+    string mutations = localise("Mutations");
+    string blood_props = localise("Blood properties");
+    string right_click = localise("Right-click");
+
+    // noloc section start
+    if (first_page)
+        mutations = "<w>" + mutations + "</w>";
+    else
+        blood_props = "<w>" + blood_props + "</w>";
+
+    string fmt = "[<w>!</w>/<w>^</w>";
 #ifdef USE_TILE_LOCAL
-            "|<w>Right-click</w>"
+    fmt += "|<w>" + right_click + "</w>";
 #endif
-            "]: %s", text);
+    fmt += "]: " + mutations + "|" + blood_props;
+    // noloc section end
+
     return formatted_string::parse_string(fmt);
 }
 
@@ -1066,52 +1116,84 @@ static string _display_vampire_attributes()
 
     string result;
 
-    const int lines = 13;
+    const int lines = 15;
     string column[lines][3] =
     {
-        {"                     ", "<green>Alive</green>      ", "<lightred>Bloodless</lightred>"},
+        {"",                     "Alive",     "Bloodless"},
                                  //Full       Bloodless
-        {"Regeneration         ", "fast       ", "none with monsters in sight"},
+        {"Regeneration",          "fast",     "none with monsters in sight"},
 
-        {"HP modifier          ", "none       ", "-20%"},
+        {"HP modifier",           "none",     "-20%"},
 
-        {"Stealth boost        ", "none       ", "major "},
+        {"Stealth boost",         "none",     "major"},
 
-        {"Heal on bite         ", "no         ", "yes "},
+        {"Heal on bite",          "no",       "yes"},
 
-        {"\n<w>Resistances</w>\n"
-         "Poison resistance    ", "           ", "immune"},
+        {"Resistances",           "",         ""},
 
-        {"Cold resistance      ", "           ", "++    "},
+        {"Poison resistance",     "",         "immune"},
 
-        {"Negative resistance  ", "           ", "+++   "},
+        {"Cold resistance",       "",         "++"},
 
-        {"Miasma resistance    ", "           ", "immune"},
+        {"Negative resistance",   "",         "+++"},
 
-        {"Torment resistance   ", "           ", "immune"},
+        {"Miasma resistance",     "",         "immune"},
 
-        {"\n<w>Transformations</w>\n"
-         "Bat form (XL 3+)     ", "no         ", "yes   "},
+        {"Torment resistance",    "",         "immune"},
 
-        {"Other forms          ", "yes        ", "no    "},
+        {"Transformations",       "",         ""},
 
-        {"Berserk              ", "yes        ", "no    "}
+        {"Bat form (XL 3+)",      "no",       "yes"},
+
+        {"Other forms",           "yes",      "no"},
+
+        {"Berserk",               "yes",      "no"}
     };
+
+    int col_width[3] = {35, 15, -1};
 
     const int highlight_col = you.vampire_alive ? 1 : 2;
 
+    // noloc section start
     for (int y = 0; y < lines; y++)  // lines   (properties)
     {
         for (int x = 0; x < 3; x++)  // columns (states)
         {
-            if (y > 0 && x == highlight_col)
-                result += "<w>";
-            result += column[y][x];
-            if (y > 0 && x == highlight_col)
-                result += "</w>";
-        }
+            string fmt_tag;
+            if (y == 0)
+            {
+                if (x == 1)
+                    fmt_tag = "green";
+                else if (x == 2)
+                    fmt_tag = "lightred";
+            }
+            else if (x == 0)
+            {
+                if (column[y][1].empty() && column[y][2].empty())
+                {
+                    // section header
+                    result += "\n";
+                    fmt_tag = "w";
+                }
+            }
+            else if (x == highlight_col)
+                fmt_tag = "w";
+
+            if (!fmt_tag.empty())
+                result += "<" + fmt_tag + ">";
+
+            string text = localise(column[y][x]);
+            int width = col_width[x];
+            if (width > 0)
+                text = chop_string(text, width);
+            result += text;
+
+            if (!fmt_tag.empty())
+                result += "</" + fmt_tag + ">";
+         }
         result += "\n";
     }
+    // noloc section end
 
     trim_string_right(result);
     return result;
@@ -1123,11 +1205,22 @@ void display_mutations()
 
     string extra = "";
     if (_num_part_suppressed)
-        extra += "<brown>()</brown>  : Partially suppressed.\n";
+    {
+        extra += "<brown>()</brown>  : "; // noloc
+        extra += localise("Partially suppressed.");
+        extra += "\n";
+    }
     if (_num_full_suppressed)
-        extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
+    {
+        extra += "<darkgrey>(())</darkgrey>: "; // noloc
+        extra += localise("Completely suppressed.");
+        extra += "\n";
+    }
     if (_num_transient)
-        extra += "<magenta>[]</magenta>   : Transient mutations.";
+    {
+        extra += "<magenta>[]</magenta>   : "; // noloc
+        extra += localise("Transient mutations.");
+    }
 
     if (!extra.empty())
     {
@@ -1139,7 +1232,7 @@ void display_mutations()
     auto vbox = make_shared<Box>(Widget::VERT);
     vbox->set_cross_alignment(Widget::STRETCH);
 
-    const char *title_text = "Innate Abilities, Weirdness & Mutations";
+    const string title_text = localise("Innate Abilities, Weirdness & Mutations");
     auto title = make_shared<Text>(formatted_string(title_text, WHITE));
     auto title_hbox = make_shared<Box>(Widget::HORZ);
     title_hbox->add_child(move(title));
@@ -1150,7 +1243,7 @@ void display_mutations()
 
     const string vamp_s = you.has_mutation(MUT_VAMPIRISM)
                                         ?_display_vampire_attributes()
-                                        : "N/A";
+                                        : "N/A"; // noloc
     const string descs[3] =  { mutation_s, vamp_s };
     for (int i = 0; i < 2; i++)
     {
@@ -1881,10 +1974,14 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
         case MUT_LARGE_BONE_PLATES:
             {
-                const string arms = pluralise(species::arm_name(you.species));
-                mprf(MSGCH_MUTATION, "%s",
-                     replace_all(mdef.gain[cur_base_level - 1], "arms",
-                                 arms).c_str());
+                string msg = mdef.gain[cur_base_level - 1];
+                // TODO: i18n: Fix this
+                if (!localisation_active())
+                {
+                    const string arms = pluralise(species::arm_name(you.species));
+                    msg = replace_all(msg, "arms", arms);
+                }
+                mpr(MSGCH_MUTATION, msg);
                 gain_msg = false;
             }
             break;
@@ -1894,10 +1991,14 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
                 // n.b. we cannot use the built in pluralisation, because at
                 // this point the mut has already applied, and hand_name takes
                 // it into account.
-                const string hands = pluralise(you.hand_name(false));
-                mprf(MSGCH_MUTATION, "%s",
-                     replace_all(mdef.gain[cur_base_level - 1], "hands",
-                                 hands).c_str());
+                string msg = mdef.gain[cur_base_level - 1];
+                // TODO: i18n: Fix this
+                if (!localisation_active())
+                {
+                    const string hands = pluralise(you.hand_name(false));
+                    msg = replace_all(msg, "hands", hands);
+                }
+                mpr(MSGCH_MUTATION, msg);
                 gain_msg = false;
             }
             break;
@@ -2337,7 +2438,7 @@ bool delete_temp_mutation()
                                         you.attribute[ATTR_TEMP_MUTATIONS]);
 #endif
 
-        if (_delete_single_mutation_level(mutat, "temp mutation expiry", true))
+        if (_delete_single_mutation_level(mutat, "temp mutation expiry", true)) // noloc
             return true;
     }
 
@@ -2394,6 +2495,20 @@ mutation_type mutation_from_name(string name, bool allow_category, vector<mutati
             if (spec == mut_name)
                 return mut; // note, won't fully populate partial_matches
 
+            if (localisation_active())
+            {
+                // try to match on the translated name
+                string mut_local_name = lowercase_string(localise(mut_name_c));
+                if (spec == mut_local_name)
+                    return mut;
+
+                if (partial_matches && contains(mut_local_name, spec))
+                {
+                    partial_matches->push_back(mut);
+                    continue;
+                }
+            }
+
             if (partial_matches && strstr(mut_name.c_str(), spec.c_str()))
                 partial_matches->push_back(mut);
         }
@@ -2411,6 +2526,20 @@ mutation_type mutation_from_name(string name, bool allow_category, vector<mutati
         {
             mutat = mut;
             break;
+        }
+
+        if (localisation_active())
+        {
+            // try to match on the translated name
+            string mut_local_name = lowercase_string(localise(mut_name_c));
+            if (spec == mut_local_name)
+                return mut;
+
+            if (partial_matches && contains(mut_local_name, spec))
+            {
+                partial_matches->push_back(mut);
+                continue;
+            }
         }
 
         if (partial_matches && strstr(mut_name.c_str(), spec.c_str()))
@@ -2484,38 +2613,32 @@ string mutation_desc(mutation_type mut, int level, bool colour,
     }
     if (mut == MUT_ICEMAIL)
     {
-        ostringstream ostr;
-        ostr << mdef.have[0] << player_icemail_armour_class() << ")";
-        result = ostr.str();
+        result = localise(mdef.have[0], player_icemail_armour_class());
     }
     else if (mut == MUT_CONDENSATION_SHIELD)
     {
-        ostringstream ostr;
-        ostr << mdef.have[0] << player_condensation_shield_class() << ")";
-        result = ostr.str();
+        result = localise(mdef.have[0], player_condensation_shield_class());
     }
     else if (mut == MUT_SANGUINE_ARMOUR)
     {
-        ostringstream ostr;
-        ostr << mdef.have[level - 1] << sanguine_armour_bonus() / 100 << ")";
-        result = ostr.str();
+        result = localise(mdef.have[level - 1], sanguine_armour_bonus() / 100);
     }
     else if (mut == MUT_MP_WANDS && you.has_mutation(MUT_HP_CASTING))
-        result = "You expend health (3 HP) to strengthen your wands.";
+        result = localise("You expend health (3 HP) to strengthen your wands.");
     else if (!ignore_player && mut == MUT_TENTACLE_ARMS)
     {
-        const string num_tentacles = number_in_words(you.has_tentacles(false));
-        result = make_stringf(
-            "You have tentacles for arms and can constrict up to %s enemies at once.",
-            num_tentacles.c_str());
+        result = localise(
+            "You have tentacles for arms and can constrict up to %d enemies at once.",
+            you.has_tentacles(false));
     }
     else if (!ignore_player && you.has_innate_mutation(MUT_PAWS) && mut == MUT_CLAWS)
-        result = "You have sharp claws."; // XX ugly override
+        result = localise("You have sharp claws."); // XX ugly override
     else if (have_passive(passive_t::no_mp_regen) && mut == MUT_ANTIMAGIC_BITE)
-        result = "Your bite disrupts the magic of your enemies.";
+        result = localise("Your bite disrupts the magic of your enemies.");
     else if (result.empty() && level > 0)
-        result = mdef.have[level - 1];
+        result = localise(mdef.have[level - 1]);
 
+    // noloc section start
     if (!ignore_player)
     {
         if (fully_inactive)
@@ -2575,6 +2698,7 @@ string mutation_desc(mutation_type mut, int level, bool colour,
              << "</" << colourname << '>';
         result = ostr.str();
     }
+    // noloc section end
 
     return result;
 }
@@ -2906,8 +3030,10 @@ bool temp_mutation_wanes()
         max(starting_tmuts * 5 / 12 - random2(3),
         1 + random2(3)));
 
-    mprf(MSGCH_DURATION, "You feel the corruption within you wane %s.",
-        (num_remove >= starting_tmuts ? "completely" : "somewhat"));
+    if (num_remove >= starting_tmuts)
+        mpr(MSGCH_DURATION, "You feel the corruption within you wane completely.");
+    else
+        mpr(MSGCH_DURATION, "You feel the corruption within you wane somewhat.");
 
     for (int i = 0; i < num_remove; ++i)
         delete_temp_mutation(); // chooses randomly

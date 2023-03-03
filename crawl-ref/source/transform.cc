@@ -895,7 +895,7 @@ public:
             if (mut == MUT_TENTACLE_SPIKE)
                 spike = true;
             else
-                muts.push_back(mutation_name(mut));
+                muts.push_back(localise(mutation_name(mut)));
         }
 
         if (spike)
