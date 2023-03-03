@@ -3062,6 +3062,7 @@ void melee_attack::mons_apply_attack_flavour()
                                       random_range(100, 200)));
             simple_monster_message(*mon, " tastes blood and grows stronger!");
         }
+        break;
     }
     case AF_SLEEP:
         if (crawl_state.player_moving)
@@ -3080,6 +3081,7 @@ void melee_attack::mons_apply_attack_flavour()
         }
         if (coinflip())
             defender->put_to_sleep(attacker, attacker->get_experience_level() * 3);
+        break;
     }
 }
 
