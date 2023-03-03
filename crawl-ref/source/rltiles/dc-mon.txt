@@ -1287,4 +1287,5 @@ polymoth MONS_POLYMOTH
 %rim 0
 jack_o_lantern MONS_JACK_O_LANTERN
 gastronaut MONS_GASTRONAUT
+crawling_zombie_skyshark MONS_SKYSHARK_CRAWLING
 anubis_guard MONS_ANUBIS_GUARD
