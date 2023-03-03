@@ -583,8 +583,9 @@ for filename in files:
         if re.match(r'^[!\.\?]+$', string):
             continue
 
-        # ignore buggy stuff
+        # ignore bug-catching stuff
         if 'INVALID' in string or re.search(r'bugg(il)?y', string, re.I) or \
+           'DUMMY' in string or 'eggplant' in string or \
            re.search(r'bugginess', string, re.I):
             continue
 

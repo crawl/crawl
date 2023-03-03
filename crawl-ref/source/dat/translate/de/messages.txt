@@ -4079,9 +4079,6 @@ it reduces the distance the wearer can be seen at and can see.
 its wearer takes one free step when moving towards enemies.
 
 %%%%
-it makes the wearer crave the taste of eggplant.
-
-%%%%
 Base shield rating: %d
 
 %%%%
