@@ -924,6 +924,63 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
 }
 
 /**
+ * List potential reach targets (hostile creatures in the given direction), including the
+ * defender itself.
+ *
+ * @param attacker[in]   The attacking creature.
+ * @param def[in]        The location of the targeted defender.
+ * @param targets[out]   A list to be populated with targets.
+ */
+void get_reach_targets(const actor &attacker, const coord_def& def,
+                       vector<actor*> &targets)
+{
+    // Just in case.
+    if (!attacker.alive())
+        return;
+
+    ASSERT(adjacent(attacker.pos(), def));
+    const coord_def dir = def - attacker.pos();
+
+    set<coord_def> positions;
+    const coord_def far_target = def + dir;
+    positions.insert(far_target);
+
+    // knight's moves
+    if (dir.x == 0) {
+        // we're reaching vertically. add horizontal targets
+        positions.insert(far_target + coord_def(1,0));
+        positions.insert(far_target + coord_def(-1,0));
+    } else if (dir.y == 0) {
+        // we're reaching horizontally, add vertical targets
+        positions.insert(far_target + coord_def(0,1));
+        positions.insert(far_target + coord_def(0,-1));
+    } else {
+        // we're reaching diagonally
+        positions.insert(def + coord_def(dir.x, 0));
+        positions.insert(def + coord_def(0, dir.y));
+    }
+
+    for (auto p : positions) {
+        actor* targ = actor_at(p);
+        if (!targ || !attacker.can_see(*targ))
+            continue;
+        if (_dont_harm(attacker, *targ))
+            continue;
+        if (!adjacent(p, attacker.pos())
+            && !can_reach_attack_between(attacker.pos(), p, REACH_TWO))
+        {
+            continue;
+        }
+        const monster *mon = targ->as_monster();
+        if (mon && mons_is_firewood(*mon))
+            continue;
+        if (mons_is_conjured(mon->type) && !mons_is_avatar(mon->type))
+            continue;
+        targets.push_back(targ);
+    }
+}
+
+/**
  * What skill is required to reach mindelay with a weapon? May be >27.
  * @param weapon The weapon to be considered.
  * @returns The level of the relevant skill you must reach.

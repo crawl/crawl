@@ -751,6 +751,9 @@ bool melee_attack::attack()
         return attack_occurred;
     }
 
+    if (attacker->is_player() && !adjacent(attacker->pos(), defender->pos()))
+        mpr("You reach to attack!");
+
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
 

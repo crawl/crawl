@@ -186,8 +186,11 @@ class targeter_reach : public targeter
 public:
     targeter_reach(const actor* act, reach_type ran = REACH_NONE);
     reach_type range;
+    bool set_aim(coord_def a) override;
     bool valid_aim(coord_def a) override;
     aff_type is_affected(coord_def loc) override;
+private:
+    set<coord_def> targets;
 };
 
 class targeter_cleave : public targeter

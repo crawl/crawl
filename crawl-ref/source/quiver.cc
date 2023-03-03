@@ -697,40 +697,58 @@ namespace quiver
                 }
 
                 // Choose one of the two middle squares (which might be the same).
-                const coord_def middle =
+                coord_def middle =
                     !feat_is_reachable_past(env.grid(first_middle)) ? second_middle :
                     !feat_is_reachable_past(env.grid(second_middle)) ? first_middle :
+                    // prefer empty spaces if possible, since otherwise we'll never
+                    // get to hit whatever we're really after.
+                    !monster_at(first_middle) ? first_middle :
+                    !monster_at(second_middle) ? second_middle :
                 random_choose(first_middle, second_middle);
 
-                bool success = true;
-                monster *midmons;
-                if ((midmons = monster_at(middle))
-                    && !midmons->submerged()
-                    && !god_protects(&you, midmons, true)
-                    && coinflip())
+                monster *midmons = monster_at(middle);
+                const bool friendly = midmons && midmons->wont_attack();
+                // Reaching attacks prefer adjacent foes when possible.
+
+                if (midmons && !midmons->submerged() && !friendly)
                 {
-                    success = false;
                     target.target = middle;
                     mons = midmons;
                     targ_mid = true;
                     t = target;
-                    if (mons->wont_attack())
+                }
+                else
+                {
+                    vector<actor*> targets;
+                    get_reach_targets(you, middle, targets);
+                    if (targets.empty())
                     {
-                        // Let's assume friendlies cooperate.
+                        middle = (middle == first_middle) ? second_middle : first_middle;
+                        get_reach_targets(you, middle, targets);
+                        if (targets.empty())
+                        {
+                            mpr("You can't see anything to attack.");
+                            you.time_taken = attack_delay;
+                            // have to use time, since we could scout for adj
+                            // invis enemies otherwise
+                            you.turn_is_over = true;
+                            return;
+                        }
+                    }
+
+                    if (friendly
+                        && !god_protects(&you, midmons, true)
+                        && coinflip())
+                    {
                         mpr("You could not reach far enough!");
                         you.time_taken = attack_delay;
                         you.turn_is_over = true;
                         return;
                     }
-                }
 
-                if (success)
-                    mpr("You reach to attack!");
-                else
-                {
-                    mprf("%s is in the way.",
-                         mons->observable() ? mons->name(DESC_THE).c_str()
-                                            : "Something you can't see");
+                    mons = targets[random2(targets.size())]->as_monster();
+                    target.target = mons->pos();
+                    t = target;
                 }
             }
 

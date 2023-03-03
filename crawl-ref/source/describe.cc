@@ -1601,7 +1601,9 @@ static string _describe_weapon(const item_def &item, bool verbose, bool monster)
         switch (item_attack_skill(item))
         {
         case SK_POLEARMS:
-            description += "\n\nIt can be evoked to extend its reach.";
+            description += "\n\nIt hits enemies two spaces away, either in a "
+                           "straight line or offset by one space, if there are "
+                           "no intervening foes.";
             break;
         case SK_AXES:
             description += "\n\nIt hits all enemies adjacent to the wielder";

@@ -954,9 +954,29 @@ bool targeter_reach::valid_aim(coord_def a)
         return notify_fail("You can't get through.");
 
     int dist = (origin - a).rdist();
-
     if (dist > range)
         return notify_fail("Your weapon can't reach that far!");
+
+    return true;
+}
+
+
+bool targeter_reach::set_aim(coord_def a)
+{
+    if (!targeter::set_aim(a))
+        return false;
+    if (range == REACH_THREE)
+        return true;
+
+    targets.clear();
+    vector<actor*> foes;
+    if (adjacent(you.pos(), a))
+        get_reach_targets(you, a, foes);
+    else
+        get_reach_targets(you, you.pos() + (a - you.pos()) / 2, foes);
+
+    for (actor *act : foes)
+        targets.insert(act->pos());
 
     return true;
 }
@@ -966,8 +986,8 @@ aff_type targeter_reach::is_affected(coord_def loc)
     if (!valid_aim(loc))
         return AFF_NO;
 
-    if (loc == aim)
-        return AFF_YES;
+    if (targets.count(loc))
+        return targets.size() > 1 ? AFF_MAYBE : AFF_YES;
 
     // hacks: REACH_THREE entails smite targeting, because it exists entirely
     // for the sake of UNRAND_RIFT. So, don't show the tracer.

@@ -2173,10 +2173,9 @@ looking at the number in parentheses next to your turncount.
 
 Some weapon types have special abilities. Axes are able to cleave through
 multiple enemies in a single swing, hitting enemies in an arc around the
-wielder with every attack. Polearms can reach farther and allow the wielder to
-attack an opponent two squares away, and even reach over monsters. Use the 'v'
-command to target a specific monster with a reaching attack, or use Autofight
-('tab') to reach automatically.
+wielder with every attack. Polearms can reach. When you move or attack, if
+there's no adjacent foe in that direction, they can hit enemies that are two
+squares away instead, in a straight line or just to the side.
 
 Unarmed Combat is a special fighting skill. It allows your character to make a
 powerful attack when unarmed and also to punch with the off hand as an

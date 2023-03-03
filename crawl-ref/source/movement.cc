@@ -606,6 +606,11 @@ static spret _rampage_forward(coord_def move)
         return spret::fail;
     }
 
+    // if you can reach attack, just do that.
+    vector<actor*> reach_targets;
+    get_reach_targets(you, you.pos() + move, reach_targets);
+    if (!reach_targets.empty())
+        return spret::fail;
 
     // This logic assumes that the relative coord_def move is from [-1,1].
     // If the move_player_action() calls are ever rewritten in a way that
@@ -947,6 +952,31 @@ void move_player_action(coord_def move)
                           : walk_verb_to_present(lowercase_first(species::walking_verb(you.species)));
 
     monster* targ_monst = monster_at(targ);
+
+    // You can swap places with a friendly or good neutral monster if
+    // you're not confused, or even with hostiles if both of you are inside
+    // a sanctuary.
+    bool try_to_swap = targ_monst
+                         && (targ_monst->wont_attack()
+                                && !you.confused()
+                             || is_sanctuary(you.pos())
+                                && is_sanctuary(targ));
+
+    // If you're not hitting an adjacent foe,
+    // try a reach attack instead.
+    if ((!targ_monst || try_to_swap)
+        && you.reach_range() > REACH_NONE
+        && !you.confused()
+        && !is_sanctuary(you.pos()))
+    {
+        vector<actor*> reach_targets;
+        get_reach_targets(you, targ, reach_targets);
+        if (!reach_targets.empty())
+        {
+            targ_monst = reach_targets[random2(reach_targets.size())]->as_monster();
+            try_to_swap = false;
+        }
+    }
     if (fedhas_passthrough(targ_monst) && you.is_motile())
     {
         // Moving on a plant takes 1.5 x normal move delay. We
@@ -981,16 +1011,6 @@ void move_player_action(coord_def move)
                 mpr("You retract your mandibles.");
         }
     }
-
-    // You can swap places with a friendly or good neutral monster if
-    // you're not confused, or even with hostiles if both of you are inside
-    // a sanctuary.
-    const bool try_to_swap = targ_monst
-                             && (targ_monst->wont_attack()
-                                    && !you.confused()
-                                 || is_sanctuary(you.pos())
-                                    && is_sanctuary(targ));
-
     // You cannot move away from a siren but you CAN fight monsters on
     // neighbouring squares.
     monster* beholder = nullptr;

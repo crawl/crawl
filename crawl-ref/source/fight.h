@@ -58,6 +58,9 @@ void attack_cleave_targets(actor &attacker, list<actor*> &targets,
                                = WU_JIAN_ATTACK_NONE,
                            bool is_projected = false);
 
+void get_reach_targets(const actor &attacker, const coord_def& def,
+                       vector<actor*> &targets);
+
 class attack;
 int to_hit_pct(const monster_info& mi, attack &atk, bool melee);
 int mon_to_hit_base(int hd, bool skilled);
