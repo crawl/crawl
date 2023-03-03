@@ -15252,7 +15252,7 @@ Ein dämonischer Wächter erscheint!
 ##################
 %%%%
 You're standing in a cloud of %s!
-Ihr steht in einer Wolke von%s!
+Ihr steht in einer Wolke {dat}%s!
 %%%%
 There is a lethal amount of poison in your body!
 Es gibt eine tödliche Menge an Gift in Eurem Körper!
@@ -15267,13 +15267,13 @@ You are being drained by your emergency flight!
 Ihr werdet von Eurem Notflug ausgelaugt!
 %%%%
 %s is nearby!
-
+%s ist in der Nähe!
 %%%%
 There are monsters nearby!
-
+Es sind Monster in der Nähe!
 %%%%
 There is a strange disturbance nearby!
-
+In der Nähe ist eine seltsame Störung!
 %%%%
 You are too frail to live.
 Ihr seid zu gebrechlich, um zu leben.
