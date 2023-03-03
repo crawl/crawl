@@ -1572,8 +1572,8 @@ static string _describe_weapon_brand(const item_def &item)
                "abilities and divine invocations are not affected.";
     case SPWPN_SPECTRAL:
         return "When its wielder attacks, the weapon's spirit leaps out and "
-               "strikes again. The spirit shares a part of any damage it takes "
-               "with its wielder.";
+               "launches a second, slightly weaker strike. The spirit shares "
+               "part of any damage it takes with its wielder.";
     case SPWPN_ACID:
         return "It splashes victims with acid (2d4 damage, Corrosion).";
     default:

@@ -196,6 +196,9 @@ protected:
     virtual int  player_stab_weapon_bonus(int damage);
     virtual int  player_stab(int damage);
     virtual void player_stab_check();
+
+private:
+    actor &stat_source() const;
 };
 
 string attack_strength_punctuation(int dmg);
