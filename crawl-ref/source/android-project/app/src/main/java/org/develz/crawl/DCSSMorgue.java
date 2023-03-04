@@ -75,6 +75,7 @@ public class DCSSMorgue extends AppCompatActivity
         if (morgue != null) {
             Intent intent = new Intent(getBaseContext(), DCSSTextViewer.class);
             intent.putExtra("file", morgue);
+            intent.putExtra("download", true);
             startActivity(intent);
         }
     }
