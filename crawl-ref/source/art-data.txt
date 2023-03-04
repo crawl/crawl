@@ -349,10 +349,10 @@ BOOL:    evil, nogen
 DBRAND:  Hellfire:  It temporarily reduces the fire resistance of those it strikes.
 
 NAME:    orb of Dispater
-APPEAR:  golden orb
 OBJ:     OBJ_ARMOUR/ARM_ORB
-COLOUR:  ETC_GOLD
-# XXX - no tiles yet!
+COLOUR:  LIGHTRED
+TILE:    urand_dispater
+TILE_EQ: orb_of_dispater
 BOOL:    evil, nogen, corrode
 AC:      5
 INSCRIP: +Damnation
