@@ -228,7 +228,7 @@ const vector<GameOption*> game_options::build_options_list()
                            {"mlist_allow_alternative_layout",
                             "mlist_allow_alternate_layout"}, false),
         new BoolGameOption(SIMPLE_NAME(monster_item_view_coordinates), false),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(monster_item_view_features)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(monster_item_view_features), {}, true),
         new BoolGameOption(SIMPLE_NAME(messages_at_top), false),
         new BoolGameOption(SIMPLE_NAME(msg_condense_repeats), true),
         new BoolGameOption(SIMPLE_NAME(msg_condense_short), true),
@@ -242,6 +242,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(note_xom_effects), true),
         new BoolGameOption(SIMPLE_NAME(note_chat_messages), false),
         new BoolGameOption(SIMPLE_NAME(note_dgl_messages), true),
+        new StringGameOption(SIMPLE_NAME(user_note_prefix), "", true),
         new BoolGameOption(SIMPLE_NAME(clear_messages), false),
 #ifdef DEBUG
         new BoolGameOption(SIMPLE_NAME(show_more), false),
@@ -366,26 +367,26 @@ const vector<GameOption*> game_options::build_options_list()
              {"single", KDO_ONE_PLACE},
              {"one", KDO_ONE_PLACE},
              {"true", KDO_ONE_PLACE}}, true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action), {}, true),
         new MultipleChoiceGameOption<easy_confirm_type>(
             SIMPLE_NAME(easy_confirm),
             easy_confirm_type::safe,
             {{"none", easy_confirm_type::none},
              {"safe", easy_confirm_type::safe},
              {"all", easy_confirm_type::all}}),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(note_messages)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(note_items)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude)),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(drop_filter), {}, true),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(note_monsters), {}, true),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(note_messages), {}, true),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(note_items), {}, true),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude), {}, true),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore), {}, true),
         new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
                                   "70:yellow, 40:red", _first_greater),
         new ColourThresholdOption(mp_colour, {"mp_colour", "mp_color"},
                                   "50:yellow, 25:red", _first_greater),
         new ColourThresholdOption(stat_colour, {"stat_colour", "stat_color"},
                                   "3:red", _first_less),
-        new StringGameOption(SIMPLE_NAME(sound_file_path), ""),
+        new StringGameOption(SIMPLE_NAME(sound_file_path), "", true),
         new MultipleChoiceGameOption<travel_open_doors_type>(
             SIMPLE_NAME(travel_open_doors), travel_open_doors_type::open,
             {{"avoid", travel_open_doors_type::avoid},
@@ -414,9 +415,9 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
         new BoolGameOption(SIMPLE_NAME(restart_after_save), true),
         new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),
-        new StringGameOption(SIMPLE_NAME(map_file_name), ""),
+        new StringGameOption(SIMPLE_NAME(map_file_name), "", true),
         new StringGameOption(SIMPLE_NAME(morgue_dir),
-                             _get_save_path("morgue/")),
+                             _get_save_path("morgue/"), true),
 #endif
 #ifdef USE_TILE
         new BoolGameOption(SIMPLE_NAME(tile_skip_title), false),
@@ -494,11 +495,11 @@ const vector<GameOption*> game_options::build_options_list()
         new IntGameOption(SIMPLE_NAME(tile_window_height), -90, INT_MIN, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_ratio), 1618, INT_MIN, INT_MAX),
         new BoolGameOption(SIMPLE_NAME(tile_window_limit_size), true),
-        new StringGameOption(SIMPLE_NAME(tile_font_crt_file), MONOSPACED_FONT),
-        new StringGameOption(SIMPLE_NAME(tile_font_msg_file), MONOSPACED_FONT),
-        new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT),
-        new StringGameOption(SIMPLE_NAME(tile_font_tip_file), MONOSPACED_FONT),
-        new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT),
+        new StringGameOption(SIMPLE_NAME(tile_font_crt_file), MONOSPACED_FONT, true),
+        new StringGameOption(SIMPLE_NAME(tile_font_msg_file), MONOSPACED_FONT, true),
+        new StringGameOption(SIMPLE_NAME(tile_font_stat_file), MONOSPACED_FONT, true),
+        new StringGameOption(SIMPLE_NAME(tile_font_tip_file), MONOSPACED_FONT, true),
+        new StringGameOption(SIMPLE_NAME(tile_font_lbl_file), PROPORTIONAL_FONT, true),
         new IntGameOption(SIMPLE_NAME(tile_sidebar_pixels), 32, 1, INT_MAX),
         new MultipleChoiceGameOption<screen_mode>(
             SIMPLE_NAME(tile_full_screen),
@@ -523,17 +524,17 @@ const vector<GameOption*> game_options::build_options_list()
         new MultipleChoiceGameOption<string>(
             SIMPLE_NAME(tile_web_mobile_input_helper), "auto",
             {{"auto", "auto"}, {"true", "true"}, {"false", "false"}}),
-        new StringGameOption(SIMPLE_NAME(tile_font_crt_family), "monospace"),
-        new StringGameOption(SIMPLE_NAME(tile_font_msg_family), "monospace"),
-        new StringGameOption(SIMPLE_NAME(tile_font_stat_family), "monospace"),
-        new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace"),
-        new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace"),
+        new StringGameOption(SIMPLE_NAME(tile_font_crt_family), "monospace", true),
+        new StringGameOption(SIMPLE_NAME(tile_font_msg_family), "monospace", true),
+        new StringGameOption(SIMPLE_NAME(tile_font_stat_family), "monospace", true),
+        new StringGameOption(SIMPLE_NAME(tile_font_lbl_family), "monospace", true),
+        new StringGameOption(SIMPLE_NAME(glyph_mode_font), "monospace", true),
         new IntGameOption(SIMPLE_NAME(glyph_mode_font_size), 24, 8, 144),
         new BoolGameOption(SIMPLE_NAME(action_panel_show), true),
-        new ListGameOption<text_pattern>(SIMPLE_NAME(action_panel_filter)),
+        new ListGameOption<text_pattern>(SIMPLE_NAME(action_panel_filter), {}, true),
         new BoolGameOption(SIMPLE_NAME(action_panel_show_unidentified), false),
         new StringGameOption(SIMPLE_NAME(action_panel_font_family),
-                             "monospace"),
+                             "monospace", true),
         new IntGameOption(SIMPLE_NAME(action_panel_font_size), 16),
         new MultipleChoiceGameOption<string>(
             SIMPLE_NAME(action_panel_orientation), "horizontal",
@@ -3087,28 +3088,6 @@ opt_parse_state base_game_options::parse_option_line(const string &str)
     return state;
 }
 
-opt_parse_state game_options::parse_option_line(const string &str)
-{
-    opt_parse_state state = base_game_options::parse_option_line(str);
-
-    // small list of things that are hardcoded to be case insensitive. This
-    // list should be reduced further. Currently it consists of GameOption
-    // options that are either regexes or paths.
-    if (state.key == "explore_stop_pickup_ignore"
-        || state.key == "confirm_action"
-        || state.key == "drop_filter"
-        || state.key == "note_items"
-        || state.key == "note_monsters"
-        || state.key == "note_messages"
-        || state.key == "levels"
-        || state.key == "sound_file_path"
-        || state.key.find("font") == string::npos)
-    {
-        state.field = state.raw_field;
-    }
-    return state;
-}
-
 // ugh, this is still very messy. Calling this is quite verbose, hence the
 // wrapper below.
 static void _base_split_parse(const string &s, const string &separator,
@@ -3197,9 +3176,7 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
     GameOption *const *option = map_find(options_by_name, state.key);
     if (option)
     {
-        // TODO: might simplify other code to give options access to the full
-        // parsing state
-        const string error = (*option)->loadFromString(state.field, state.line_type);
+        const string error = (*option)->loadFromParseState(state);
         if (!error.empty())
             report_error("%s", error.c_str());
         return;
@@ -3515,12 +3492,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         if (scrollmarg < 0)
             scrollmarg = 0;
         scroll_margin_x = scroll_margin_y = scrollmarg;
-        return true;
-    }
-    else if (key == "user_note_prefix")
-    {
-        // field is already cleaned up from trim_string()
-        user_note_prefix = state.raw_field;
         return true;
     }
     else if (key == "flush")
