@@ -45,7 +45,9 @@ Staves, and vice versa.
 %%%%
 Polearms
 
-Polearms can be evoked with ‘v’ to attack enemies from two spaces away.
+Polearms can attack enemies from two spaces away, if there are no intervening
+foes. A 'Walk Without Reaching' ability in the (a) menu can be used to walk
+toward enemies instead.
 
 Being skilled with Polearms will allow you to attack more quickly with all
 weapons of this type, as well as increasing your accuracy and damage with them.

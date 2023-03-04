@@ -1694,7 +1694,7 @@ BASE_DAM:   +1
 BASE_DELAY: +1
 BOOL:       drain
 INSCRIP:    reach-cleave, Poleaxe
-DBRAND:     Reach-Cleave: It can be evoked to extend its reach, and strikes at all foes within reach, dealing less damage to those not targeted.
+DBRAND:     Reach-Cleave: It strikes at all foes within two spaces, dealing less damage to those not targeted.
 DESCRIP:    Poleaxe:   It uses either Axes or Polearms skill, whichever is higher.
 
 NAME:    Hermit's Pendant
