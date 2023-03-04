@@ -209,7 +209,7 @@ struct base_game_options
                       bool clear_aliases = true);
     void read_option_line(const string &s, bool runscripts = false);
     virtual bool read_custom_option(opt_parse_state &state, bool runscripts);
-    virtual opt_parse_state parse_option_line(const string &str);
+    opt_parse_state parse_option_line(const string &str);
 
     // store for option settings that do not match a defined option value, and
     // are not handled by `c_process_lua_option`. They are still stored, and
@@ -276,7 +276,6 @@ public:
     const vector<GameOption*> build_options_list() override;
 
     bool read_custom_option(opt_parse_state &state, bool runscripts) override;
-    opt_parse_state parse_option_line(const string &str) override;
 
     void split_parse(const string &s, const string &separator,
                     void (game_options::*add)(const string &, bool),

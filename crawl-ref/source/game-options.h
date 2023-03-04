@@ -17,6 +17,7 @@
 
 using std::vector;
 struct game_options;
+struct opt_parse_state;
 
 template<class A, class B> void merge_lists(A &dest, const B &src, bool prepend)
 {
@@ -33,20 +34,16 @@ L& remove_matching(L& lis, const E& entry)
 class GameOption
 {
 public:
-    GameOption(std::set<std::string> _names)
-        : names(_names), loaded(false) { }
+    GameOption(std::set<std::string> _names, bool _case_sensitive=false)
+        : names(_names), case_sensitive(_case_sensitive), loaded(false) { }
     virtual ~GameOption() {};
 
     // XX reset, set_from, and some other stuff could be templated for most
     // subclasses, but this is hard to reconcile with the polymorphism involved
     virtual void reset() { loaded = false; }
     virtual void set_from(const GameOption *other) = 0;
-    virtual string loadFromString(const std::string &, rc_line_type)
-    {
-        loaded = true;
-        return "";
-    }
-
+    virtual string loadFromString(const std::string &, rc_line_type);
+    virtual string loadFromParseState(const opt_parse_state &state);
 
     const std::set<std::string> &getNames() const { return names; }
     const std::string name() const { return *names.begin(); }
@@ -55,6 +52,7 @@ public:
 
 protected:
     std::set<std::string> names;
+    bool case_sensitive;
     bool loaded; // tracks whether the option has changed via loadFromString.
                  // will miss whether it was changed directly in c++ code. (TODO)
 
@@ -183,8 +181,8 @@ class StringGameOption : public GameOption
 {
 public:
     StringGameOption(string &val, std::set<std::string> _names,
-                     string _default)
-        : GameOption(_names), value(val), default_value(_default) { }
+                     string _default, bool _case_sensitive=false)
+        : GameOption(_names, _case_sensitive), value(val), default_value(_default) { }
 
     void reset() override
     {
@@ -281,8 +279,9 @@ class ListGameOption : public GameOption
 {
 public:
     ListGameOption(vector<T> &list, std::set<std::string> _names,
-                   vector<T> _default = {})
-        : GameOption(_names), value(list), default_value(_default) { }
+                   vector<T> _default = {},
+                   bool _case_sensitive = false)
+        : GameOption(_names, _case_sensitive), value(list), default_value(_default) { }
 
     void reset() override
     {

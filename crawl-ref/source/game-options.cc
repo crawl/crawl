@@ -66,6 +66,19 @@ bool read_bool(const string &field, bool def_value)
     return def_value;
 }
 
+string GameOption::loadFromString(const std::string &, rc_line_type)
+{
+    loaded = true;
+    return "";
+}
+
+string GameOption::loadFromParseState(const opt_parse_state &state)
+{
+    return loadFromString(
+        case_sensitive ? state.raw_field : state.field,
+        state.line_type);
+}
+
 
 string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
