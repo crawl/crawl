@@ -1871,7 +1871,7 @@ static int _irradiate_cell(coord_def where, int pow, const actor &agent)
     const int base_dam = dam_dice.roll();
     const int dam = act->apply_ac(base_dam);
 
-    if (god_protects(act->as_monster(), false))
+    if (god_protects(&agent, act->as_monster(), false))
         return 0;
 
     mprf("%s %s blasted with magical radiation%s",
