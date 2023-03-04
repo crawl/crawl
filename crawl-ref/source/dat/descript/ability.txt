@@ -829,3 +829,8 @@ Causes the caster to radiate toxic energy, continuously inflicting poison on
 everything in line of sight for as long as the aura lasts. The power of this
 ability scales with the Evocations skill, and this ability is available only
 while wielding the Staff of Olgreb.
+%%%%
+Move Without Reaching ability
+
+Take a step without launching a reaching attack. This allows a polearm
+wielder to walk toward foes that they would otherwise attack.

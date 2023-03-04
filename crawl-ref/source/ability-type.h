@@ -84,6 +84,7 @@ enum ability_type
     ABIL_EVOKE_ASMODEUS,
     ABIL_EVOKE_DISPATER,
     ABIL_EVOKE_OLGREB,
+    ABIL_WALK_NO_REACHING,
 
     // Divine abilities
     // Zin

@@ -825,7 +825,7 @@ static void _finalize_cancelled_rampage_move()
 
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
-void move_player_action(coord_def move)
+void move_player_action(coord_def move, bool allow_reaching)
 {
     ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
 
@@ -964,7 +964,8 @@ void move_player_action(coord_def move)
 
     // If you're not hitting an adjacent foe,
     // try a reach attack instead.
-    if ((!targ_monst || try_to_swap)
+    if (allow_reaching
+        && (!targ_monst || try_to_swap)
         && you.reach_range() > REACH_NONE
         && !you.confused()
         && !is_sanctuary(you.pos()))

@@ -78,6 +78,7 @@
 #include "stringutil.h"
 #include "tag-version.h"
 #include "target.h"
+#include "target-compass.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "tilepick.h"
@@ -337,6 +338,8 @@ static vector<ability_def> &_get_ability_list()
             0, 0, 0, -1, {fail_basis::xl, 45, 2}, abflag::none },
 #endif
         { ABIL_END_TRANSFORMATION, "End Transformation",
+            0, 0, 0, -1, {}, abflag::none },
+        { ABIL_WALK_NO_REACHING, "Move Without Reaching",
             0, 0, 0, -1, {}, abflag::none },
 
         // EVOKE abilities use Evocations and come from items.
@@ -1500,6 +1503,13 @@ static bool _check_ability_possible(const ability_def& abil, bool quiet = false)
         }
     }
 
+    if (abil.ability == ABIL_WALK_NO_REACHING && !you.is_motile())
+    {
+        if (!quiet)
+            canned_msg(MSG_CANNOT_MOVE);
+        return false;
+    }
+
     if (abil.ability == ABIL_TROG_BERSERK
         && !you.can_go_berserk(true, false, quiet))
     {
@@ -2064,6 +2074,7 @@ unique_ptr<targeter> find_ability_targeter(ability_type ability)
         return make_unique<targeter_radius>(&you, LOS_SOLID, 2);
     case ABIL_CHEIBRIADOS_TIME_BEND:
     case ABIL_USKAYAW_STOMP:
+    case ABIL_WALK_NO_REACHING:
         return make_unique<targeter_maybe_radius>(&you, LOS_NO_TRANS, 1, 0, 1);
 
     // Multiposition:
@@ -2641,6 +2652,20 @@ static spret _do_ability(const ability_def& abil, bool fail, dist *target,
     case ABIL_END_TRANSFORMATION:
         untransform();
         break;
+
+    case ABIL_WALK_NO_REACHING:
+    {
+        coord_def delta = prompt_compass_direction();
+        if (delta.origin())
+        {
+            canned_msg(MSG_OK);
+            return spret::abort;
+        }
+        move_player_action(delta, false);
+        if (!you.turn_is_over)
+            return spret::abort;
+        break;
+    }
 
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
@@ -3682,6 +3707,8 @@ bool player_has_ability(ability_type abil, bool include_unusable)
     case ABIL_EVOKE_OLGREB:
         return you.weapon()
                && is_unrandom_artefact(*you.weapon(), UNRAND_OLGREB);
+    case ABIL_WALK_NO_REACHING:
+        return you.reach_range() > REACH_NONE;
     default:
         // removed abilities handled here
         return false;
@@ -3735,6 +3762,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable, bool ign
             ABIL_EVOKE_ASMODEUS,
             ABIL_EVOKE_DISPATER,
             ABIL_EVOKE_OLGREB,
+            ABIL_WALK_NO_REACHING,
 #ifdef WIZARD
             ABIL_WIZ_BUILD_TERRAIN,
             ABIL_WIZ_SET_TERRAIN,
