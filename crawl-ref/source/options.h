@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <unordered_set>
 #include <vector>
+#include <functional>
 
 #include "ability-type.h"
 #include "activity-interrupt-type.h"
@@ -20,6 +21,7 @@
 #include "mpr.h"
 #include "newgame-def.h"
 #include "pattern.h"
+#include "rc-line-type.h"
 #include "screen-mode.h"
 #include "skill-focus-mode.h"
 #include "slot-select-mode.h"
@@ -133,37 +135,160 @@ DEF_BITFIELD(use_animations_type, use_animation_type);
 
 class LineInput;
 class GameOption;
-struct game_options
-{
-public:
-    game_options();
-    ~game_options();
-    void reset_options();
-    void reset_paths();
 
-    void read_option_line(const string &s, bool runscripts = false);
+struct opt_parse_state
+{
+    string raw; // raw input line
+    bool valid = false;
+
+    string key;
+    string subkey;
+    string raw_field; // keeps case
+    string field; // normalized for case
+
+    rc_line_type line_type = RCFILE_LINE_EQUALS;
+
+    constexpr bool plus_equal() const
+    {
+        return line_type == RCFILE_LINE_PLUS;
+    }
+
+    constexpr bool caret_equal() const
+    {
+        return line_type == RCFILE_LINE_CARET;
+    }
+
+    constexpr bool add_equal() const
+    {
+        return line_type == RCFILE_LINE_PLUS || line_type == RCFILE_LINE_CARET;
+    }
+
+    constexpr bool minus_equal() const
+    {
+        return line_type == RCFILE_LINE_MINUS;
+    }
+
+    constexpr bool plain() const
+    {
+        return line_type == RCFILE_LINE_EQUALS;
+    }
+
+    constexpr bool is_valid_option_line() const
+    {
+        return valid && line_type != RCFILE_LINE_DIRECTIVE;
+    }
+
+    // for some reason lua uses a completely distinct set of enum values, I've
+    // just pasted this slightly weird code in mostly unmodified
+    int lua_mode() const
+    {
+        int setmode = 0;
+        if (plus_equal())
+            setmode = 1;
+        if (minus_equal())
+            setmode = -1;
+        if (caret_equal())
+            setmode = 2;
+        return setmode;
+    }
+};
+
+struct base_game_options
+{
+    // actual game state goes in game_options, option parsing and state here
+
+    base_game_options();
+    ~base_game_options();
+    virtual void reset_options();
+
+    base_game_options(base_game_options const& other);
+    base_game_options(base_game_options &&other) noexcept;
+    base_game_options& operator=(base_game_options const& other);
+
     void read_options(LineInput &, bool runscripts,
                       bool clear_aliases = true);
+    void read_option_line(const string &s, bool runscripts = false);
+    virtual bool read_custom_option(opt_parse_state &state, bool runscripts);
+    virtual opt_parse_state parse_option_line(const string &str);
 
-    void include(const string &file, bool resolve, bool runscript);
-    void report_error(PRINTF(1, ));
+    // store for option settings that do not match a defined option value, and
+    // are not handled by `c_process_lua_option`. They are still stored, and
+    // can be used by lua scripts.
+    map<string, string> named_options;
 
-    string resolve_include(const string &file, const char *type = "");
-
-    bool was_included(const string &file) const;
-
-    static string resolve_include(string including_file, string included_file,
-                            const vector<string> *rcdirs = nullptr);
-
-#ifdef USE_TILE_WEB
-    void write_webtiles_options(const string &name);
-#endif
-
-public:
+    bool prefs_dirty;
     string      filename;     // The name of the file containing options.
     string      basefilename; // Base (pathless) file name
     int         line_num;     // Current line number being processed.
 
+    // Fix option values if necessary, specifically file paths.
+    void reset_loaded_state();
+    vector<GameOption*> get_option_behaviour() const
+    {
+        return option_behaviour;
+    }
+    void merge(const base_game_options &other);
+    GameOption *option_from_name(string name) const
+    {
+        auto o = options_by_name.find(name);
+        if (o == options_by_name.end())
+            return nullptr;
+        return o->second;
+    }
+
+    virtual void reset_aliases(bool clear=true);
+    void include(const string &file, bool resolve, bool runscripts);
+    string resolve_include(const string &file, const char *type = "");
+    bool was_included(const string &file) const;
+    static string resolve_include(string including_file, string included_file,
+                            const vector<string> *rcdirs = nullptr);
+
+    void report_error(PRINTF(1, ));
+
+    // arguable which class this should be on
+    vector<string> terp_files; // Lua files to load for luaterp
+
+protected:
+    map<string, string> aliases;
+    map<string, string> variables;
+    set<string> constants; // Variables that can't be changed
+    set<string> included;  // Files we've included already.
+
+    vector<GameOption*> option_behaviour;
+    map<string, GameOption*> options_by_name;
+    virtual const vector<GameOption*> build_options_list();
+    map<string, GameOption*> build_options_map(const vector<GameOption*> &opts);
+
+    string unalias(const string &key) const;
+    string expand_vars(const string &field) const;
+    void add_alias(const string &alias, const string &name);
+    void set_option_fragment(const string &s, bool prepend);
+};
+
+struct game_options : public base_game_options
+{
+public:
+    game_options();
+    void reset_options() override;
+    void reset_paths();
+    void reset_aliases(bool clear=true) override;
+    void fixup_options();
+    const vector<GameOption*> build_options_list() override;
+
+    bool read_custom_option(opt_parse_state &state, bool runscripts) override;
+    opt_parse_state parse_option_line(const string &str) override;
+
+    void split_parse(const string &s, const string &separator,
+                    void (game_options::*add)(const string &, bool),
+                    bool prepend=false);
+
+
+#ifdef USE_TILE_WEB
+    void write_webtiles_options(const string &name);
+#endif
+    void write_prefs(FILE *f); // should be in superclass
+
+public:
     // View options
     map<dungeon_feature_type, feature_def> feature_colour_overrides;
     map<dungeon_feature_type, FixedVector<char32_t, 2> > feature_symbol_overrides;
@@ -328,7 +453,6 @@ public:
     wizard_option_type wiz_mode;      // no, never, start in wiz mode
     wizard_option_type explore_mode;  // no, never, start in explore mode
 
-    vector<string> terp_files; // Lua files to load for luaterp
     bool           no_save;    // don't use persistent save files
     bool           no_player_bones;   // don't save player's info in bones files
 
@@ -638,45 +762,9 @@ public:
 #endif
 #endif // USE_TILE
 
-    typedef map<string, string> opt_map;
-    opt_map     named_options;          // All options not caught above are
-                                        // recorded here.
-
     newgame_def game;      // Choices for new game.
 
 private:
-    typedef map<string, string> string_map;
-    string_map     aliases;
-    string_map     variables;
-    set<string>    constants; // Variables that can't be changed
-    set<string>    included;  // Files we've included already.
-
-public:
-    bool prefs_dirty;
-    // Fix option values if necessary, specifically file paths.
-    void fixup_options();
-    void reset_loaded_state();
-    vector<GameOption*> get_option_behaviour() const
-    {
-        return option_behaviour;
-    }
-    void merge(const game_options &other);
-    GameOption *option_from_name(string name) const
-    {
-        auto o = options_by_name.find(name);
-        if (o == options_by_name.end())
-            return nullptr;
-        return o->second;
-    }
-
-    void write_prefs(FILE *f);
-
-    void reset_aliases(bool clear=true);
-private:
-    string unalias(const string &key) const;
-    string expand_vars(const string &field) const;
-    void add_alias(const string &alias, const string &name);
-
     void clear_feature_overrides();
     void clear_cset_overrides();
     void add_cset_override(dungeon_char_type dc, int symbol);
@@ -707,15 +795,11 @@ private:
     int  read_explore_greedy_visit_conditions(const string &) const;
     use_animations_type read_use_animations(const string &) const;
 
-    void split_parse(const string &s, const string &separator,
-                     void (game_options::*add)(const string &, bool),
-                     bool prepend = false);
     void add_mon_glyph_override(const string &, bool prepend);
     void remove_mon_glyph_override(const string &, bool prepend);
     cglyph_t parse_mon_glyph(const string &s) const;
     void add_item_glyph_override(const string &, bool prepend);
     void remove_item_glyph_override(const string &, bool prepend);
-    void set_option_fragment(const string &s, bool prepend);
     bool set_lang(const char *s);
     void set_fake_langs(const string &input);
     void set_player_tile(const string &s);
@@ -727,10 +811,6 @@ private:
 
     static const string interrupt_prefix;
 
-    vector<GameOption*> option_behaviour;
-    map<string, GameOption*> options_by_name;
-    const vector<GameOption*> build_options_list();
-    map<string, GameOption*> build_options_map(const vector<GameOption*> &opts);
 };
 
 char32_t get_glyph_override(int c);
@@ -740,6 +820,8 @@ object_class_type item_class_by_sym(char32_t c);
 #define Options (*real_Options)
 #endif
 extern game_options  Options;
+
+game_options &get_default_options();
 
 static inline short macro_colour(short col)
 {

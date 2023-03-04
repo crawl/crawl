@@ -13,18 +13,10 @@
 #include "colour.h"
 #include "stringutil.h"
 #include "maybe-bool.h"
+#include "rc-line-type.h"
 
 using std::vector;
 struct game_options;
-
-enum rc_line_type
-{
-    RCFILE_LINE_EQUALS, ///< foo = bar
-    RCFILE_LINE_PLUS,   ///< foo += bar
-    RCFILE_LINE_MINUS,  ///< foo -= bar
-    RCFILE_LINE_CARET,  ///< foo ^= bar
-    NUM_RCFILE_LINE_TYPES,
-};
 
 template<class A, class B> void merge_lists(A &dest, const B &src, bool prepend)
 {
@@ -66,6 +58,7 @@ protected:
     bool loaded; // tracks whether the option has changed via loadFromString.
                  // will miss whether it was changed directly in c++ code. (TODO)
 
+    friend struct base_game_options;
     friend struct game_options;
 };
 
