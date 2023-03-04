@@ -108,9 +108,15 @@ system_environment SysEnv;
 
 // TODO:
 // because reset_options is called in the constructor, it's a magnet for
-// static initialization order issues.wrap this in a function per
+// static initialization order issues. We should wrap this in a function per
 // https://isocpp.org/wiki/faq/ctors#construct-on-first-use-v2
 game_options Options;
+
+game_options &get_default_options()
+{
+    static game_options default_options;
+    return default_options;
+}
 
 static string _get_save_path(string subdir);
 static string _supported_language_listing();
@@ -127,6 +133,12 @@ static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
 {
     return l.first > r.first;
+}
+
+const vector<GameOption*> base_game_options::build_options_list()
+{
+    vector<GameOption*> options;
+    return options; // ignored by subclass...
 }
 
 const vector<GameOption*> game_options::build_options_list()
@@ -153,7 +165,9 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
 #endif
 
-// TODO: better organize this list somehow?
+    // TODO: better organize this list somehow?
+
+    // ignores superclass stub for this function
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
     vector<GameOption*> options = {
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
@@ -574,7 +588,7 @@ const vector<GameOption*> game_options::build_options_list()
     return options;
 }
 
-map<string, GameOption*> game_options::build_options_map(
+map<string, GameOption*> base_game_options::build_options_map(
     const vector<GameOption*> &options)
 {
     map<string, GameOption*> option_map;
@@ -1172,18 +1186,14 @@ void game_options::reset_options()
     // XXX: do we really need to rebuild the list and map every time?
     // Will they ever change within a single execution of Crawl?
     // GameOption::value's value will change of course, but not the reference.
-    deleteAll(option_behaviour);
+    base_game_options::reset_options();
+
     option_behaviour = build_options_list();
     options_by_name = build_options_map(option_behaviour);
     for (GameOption* option : option_behaviour)
         option->reset();
 
     // some option default values set in dat/defaults
-
-    filename     = "unknown";
-    basefilename = "unknown";
-    line_num     = -1;
-    prefs_dirty  = false;
 
     set_default_activity_interrupts();
 
@@ -1382,14 +1392,6 @@ void game_options::reset_options()
     kill_map[KC_YOU] = KC_YOU;
     kill_map[KC_FRIENDLY] = KC_FRIENDLY;
     kill_map[KC_OTHER] = KC_OTHER;
-
-    // Forget any files we remembered as included.
-    included.clear();
-
-    // Forget variables and such.
-    aliases.clear();
-    variables.clear();
-    constants.clear();
 }
 
 void game_options::clear_cset_overrides()
@@ -1895,13 +1897,13 @@ static const char* config_defaults[] =
     "defaults/misc.txt",
 };
 
-void game_options::reset_loaded_state()
+void base_game_options::reset_loaded_state()
 {
     for (auto *o : option_behaviour)
         o->loaded = false;
 }
 
-void game_options::merge(const game_options &other)
+void base_game_options::merge(const base_game_options &other)
 {
     for (auto *o : option_behaviour)
     {
@@ -1919,14 +1921,14 @@ void game_options::merge(const game_options &other)
 }
 
 
-void read_init_file(bool runscript)
+void read_init_file(bool runscripts)
 {
     Options.reset_options();
     // XX why didn't this clear first
     Options.reset_aliases(false);
 
     // Load Lua builtins.
-    if (runscript)
+    if (runscripts)
     {
         for (const char *builtin : lua_builtins)
         {
@@ -1938,10 +1940,13 @@ void read_init_file(bool runscript)
 
     // Load default options.
     for (const char *def_file : config_defaults)
-        Options.include(datafile_path(def_file), false, runscript);
+        Options.include(datafile_path(def_file), false, runscripts);
 
     // don't count anything up to here as customized
     Options.reset_loaded_state();
+    // save the default state for everything
+    // TODO: handle lua options here
+    get_default_options() = Options;
 
     // Load early binding extra options from the command line BEFORE init.txt.
     Options.filename     = "extra opts first";
@@ -1992,7 +1997,7 @@ void read_init_file(bool runscript)
 
     if (f.error())
         return;
-    Options.read_options(f, runscript);
+    Options.read_options(f, runscripts);
 
     if (Options.read_persist_options)
     {
@@ -2000,7 +2005,7 @@ void read_init_file(bool runscript)
         clua.load_persist();
         clua.pushglobal("c_persist.options");
         if (lua_isstring(clua, -1))
-            read_options(lua_tostring(clua, -1), runscript);
+            read_options(lua_tostring(clua, -1), runscripts);
         lua_pop(clua, 1);
     }
 
@@ -2180,32 +2185,91 @@ void save_game_prefs()
         write_newgame_options_file(ng_prefs);
 }
 
-void read_options(const string &s, bool runscript, bool clear_aliases)
+void read_options(const string &s, bool runscripts, bool clear_aliases)
 {
     StringLineInput st(s);
-    Options.read_options(st, runscript, clear_aliases);
+    Options.read_options(st, runscripts, clear_aliases);
 }
 
-game_options::game_options()
-    : seed(0), seed_from_rc(0),
-    no_save(false), no_player_bones(false),
-    sc_entries(0), sc_format(-1),
-    language(lang_t::EN),
-    lang_name(nullptr),
-    prefs_dirty(false)
+base_game_options::base_game_options()
+    : prefs_dirty(false),
+      filename("unknown"),
+      basefilename("unknown"),
+      line_num(-1)
 {
-    reset_options();
+    // no explicit reset_options call in base class
 }
 
-game_options::~game_options()
+void base_game_options::reset_options()
+{
+    deleteAll(option_behaviour);
+    options_by_name.clear();
+    aliases.clear();
+    variables.clear();
+    constants.clear();
+    included.clear();
+    prefs_dirty = false;
+    filename = "unknown";
+    basefilename = "unknown";
+    line_num = -1;
+
+}
+
+base_game_options::base_game_options(base_game_options const& other)
+{
+    *this = other;
+}
+
+base_game_options::base_game_options(base_game_options &&other) noexcept
+    : base_game_options()
+{
+    swap(*this, other);
+}
+
+base_game_options& base_game_options::operator=(base_game_options const& other)
+{
+    if (this != &other)
+    {
+        // note: simply don't mess with option_behaviour. If there's ever
+        // more than one subclass, this could matter.
+
+        aliases = other.aliases;
+        variables = other.variables;
+        constants = other.constants;
+        included = other.included;
+        filename = other.filename;
+        basefilename = other.basefilename;
+        line_num = other.line_num;
+        prefs_dirty = other.prefs_dirty; // ??
+    }
+    return *this;
+}
+
+base_game_options::~base_game_options()
 {
     deleteAll(option_behaviour);
 }
 
-void game_options::reset_aliases(bool clear)
+game_options::game_options()
+    : base_game_options(),
+    seed(0), seed_from_rc(0),
+    no_save(false), no_player_bones(false),
+    sc_entries(0), sc_format(-1),
+    language(lang_t::EN),
+    lang_name(nullptr)
+{
+    reset_options();
+}
+
+void base_game_options::reset_aliases(bool clear)
 {
     if (clear)
         aliases.clear();
+}
+
+void game_options::reset_aliases(bool clear)
+{
+    base_game_options::reset_aliases(clear);
     // Aus compatibility:
     Options.add_alias("center_on_scroll", "centre_on_scroll");
     // Backwards compatibility:
@@ -2220,7 +2284,7 @@ void game_options::reset_aliases(bool clear)
 
 }
 
-void game_options::read_options(LineInput &il, bool runscript,
+void base_game_options::read_options(LineInput &il, bool runscripts,
                                 bool clear_aliases)
 {
     unsigned int line = 0;
@@ -2259,7 +2323,7 @@ void game_options::read_options(LineInput &il, bool runscript,
             // The init file is now forced into isconditional mode.
             isconditional = true;
             str = str.substr(1);
-            if (!str.empty() && runscript)
+            if (!str.empty() && runscripts)
             {
                 // If we're in the middle of an option block, close it.
                 if (!luacond.empty() && l_init)
@@ -2285,7 +2349,7 @@ void game_options::read_options(LineInput &il, bool runscript,
                 str = str.substr(0, str.length() - 1);
             }
 
-            if (!str.empty() && runscript)
+            if (!str.empty() && runscripts)
             {
                 // If we're in the middle of an option block, close it.
                 if (!luacond.empty() && l_init)
@@ -2302,13 +2366,13 @@ void game_options::read_options(LineInput &il, bool runscript,
         {
             inscriptcond = false;
             str = str.substr(0, str.length() - 1);
-            if (!str.empty() && runscript)
+            if (!str.empty() && runscripts)
                 luacond.add(line, str);
             continue;
         }
         else if (inscriptcond)
         {
-            if (runscript)
+            if (runscripts)
                 luacond.add(line, s);
             continue;
         }
@@ -2333,7 +2397,7 @@ void game_options::read_options(LineInput &il, bool runscript,
             if (!str.empty())
                 luacode.add(line, str);
 
-            if (!inscriptblock && runscript)
+            if (!inscriptblock && runscripts)
             {
 #ifdef CLUA_BINDINGS
                 if (luacode.run(clua))
@@ -2357,7 +2421,7 @@ void game_options::read_options(LineInput &il, bool runscript,
         {
             inscriptblock = false;
 #ifdef CLUA_BINDINGS
-            if (runscript)
+            if (runscripts)
             {
                 if (luacode.run(clua))
                 {
@@ -2381,7 +2445,7 @@ void game_options::read_options(LineInput &il, bool runscript,
             continue;
         }
 
-        if (isconditional && runscript)
+        if (isconditional && runscripts)
         {
             if (!l_init)
             {
@@ -2393,10 +2457,10 @@ void game_options::read_options(LineInput &il, bool runscript,
             continue;
         }
 
-        read_option_line(str, runscript);
+        read_option_line(str, runscripts);
     }
 
-    if (runscript && !luacond.empty())
+    if (runscripts && !luacond.empty())
     {
 #ifdef CLUA_BINDINGS
         if (l_init)
@@ -2412,6 +2476,85 @@ void game_options::read_options(LineInput &il, bool runscript,
 #endif
     }
 }
+
+// Note the distinction between:
+// 1. aliases "ae := autopickup_exception" "ae += useless_item"
+//    stored in game_options.aliases.
+// 2. variables "$slots := abc" "spell_slots += Dispel undead:$slots"
+//    stored in game_options.variables.
+// 3. constant variables "$slots = abc", "constant = slots".
+//    stored in game_options.variables, but with an extra entry in
+//    game_options.constants.
+void base_game_options::add_alias(const string &key, const string &val)
+{
+    if (key[0] == '$')
+    {
+        string name = key.substr(1);
+        // Don't alter if it's a constant.
+        if (constants.count(name))
+            return;
+        variables[name] = val;
+    }
+    else
+        aliases[key] = val;
+}
+
+string base_game_options::unalias(const string &key) const
+{
+    return lookup(aliases, key, key);
+}
+
+#define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
+
+string base_game_options::expand_vars(const string &field) const
+{
+    string field_out = field;
+
+    string::size_type curr_pos = 0;
+
+    // Only try 100 times, so as to not get stuck in infinite recursion.
+    for (int i = 0; i < 100; i++)
+    {
+        string::size_type dollar_pos = field_out.find("$", curr_pos);
+
+        if (dollar_pos == string::npos || field_out.size() == (dollar_pos + 1))
+            break;
+
+        string::size_type start_pos = dollar_pos + 1;
+
+        if (!IS_VAR_CHAR(field_out[start_pos]))
+            continue;
+
+        string::size_type end_pos;
+        for (end_pos = start_pos; end_pos + 1 < field_out.size(); end_pos++)
+        {
+            if (!IS_VAR_CHAR(field_out[end_pos + 1]))
+                break;
+        }
+
+        string var_name = field_out.substr(start_pos, end_pos - start_pos + 1);
+
+        auto x = variables.find(var_name);
+
+        if (x == variables.end())
+        {
+            curr_pos = end_pos + 1;
+            continue;
+        }
+
+        string dollar_plus_name = "$";
+        dollar_plus_name += var_name;
+
+        field_out = replace_all(field_out, dollar_plus_name, x->second);
+
+        // Start over at beginning
+        curr_pos = 0;
+    }
+
+    return field_out;
+}
+
+
 
 void game_options::fixup_options()
 {
@@ -2669,83 +2812,6 @@ int game_options::read_explore_greedy_visit_conditions(const string &field) cons
     return conditions;
 }
 
-// Note the distinction between:
-// 1. aliases "ae := autopickup_exception" "ae += useless_item"
-//    stored in game_options.aliases.
-// 2. variables "$slots := abc" "spell_slots += Dispel undead:$slots"
-//    stored in game_options.variables.
-// 3. constant variables "$slots = abc", "constant = slots".
-//    stored in game_options.variables, but with an extra entry in
-//    game_options.constants.
-void game_options::add_alias(const string &key, const string &val)
-{
-    if (key[0] == '$')
-    {
-        string name = key.substr(1);
-        // Don't alter if it's a constant.
-        if (constants.count(name))
-            return;
-        variables[name] = val;
-    }
-    else
-        aliases[key] = val;
-}
-
-string game_options::unalias(const string &key) const
-{
-    return lookup(aliases, key, key);
-}
-
-#define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
-
-string game_options::expand_vars(const string &field) const
-{
-    string field_out = field;
-
-    string::size_type curr_pos = 0;
-
-    // Only try 100 times, so as to not get stuck in infinite recursion.
-    for (int i = 0; i < 100; i++)
-    {
-        string::size_type dollar_pos = field_out.find("$", curr_pos);
-
-        if (dollar_pos == string::npos || field_out.size() == (dollar_pos + 1))
-            break;
-
-        string::size_type start_pos = dollar_pos + 1;
-
-        if (!IS_VAR_CHAR(field_out[start_pos]))
-            continue;
-
-        string::size_type end_pos;
-        for (end_pos = start_pos; end_pos + 1 < field_out.size(); end_pos++)
-        {
-            if (!IS_VAR_CHAR(field_out[end_pos + 1]))
-                break;
-        }
-
-        string var_name = field_out.substr(start_pos, end_pos - start_pos + 1);
-
-        auto x = variables.find(var_name);
-
-        if (x == variables.end())
-        {
-            curr_pos = end_pos + 1;
-            continue;
-        }
-
-        string dollar_plus_name = "$";
-        dollar_plus_name += var_name;
-
-        field_out = replace_all(field_out, dollar_plus_name, x->second);
-
-        // Start over at beginning
-        curr_pos = 0;
-    }
-
-    return field_out;
-}
-
 void game_options::add_message_colour_mappings(const string &field,
                                                bool prepend, bool subtract)
 {
@@ -2825,26 +2891,7 @@ void game_options::set_menu_sort(string field)
     sort_menus.push_back(cond);
 }
 
-// Lots of things use split parse, for some ^= and += should do different things,
-// for others they should not. Split parse just pases them along.
-void game_options::split_parse(const string &s, const string &separator,
-                               void (game_options::*add)(const string &, bool),
-                               bool prepend)
-{
-    const vector<string> defs = split_string(separator, s);
-    if (prepend)
-    {
-        for ( auto it = defs.rbegin() ; it != defs.rend(); ++it)
-            (this->*add)(*it, prepend);
-    }
-    else
-    {
-        for ( auto it = defs.begin() ; it != defs.end(); ++it)
-            (this->*add)(*it, prepend);
-    }
-}
-
-void game_options::set_option_fragment(const string &s, bool /*prepend*/)
+void base_game_options::set_option_fragment(const string &s, bool /*prepend*/)
 {
     if (s.empty())
         return;
@@ -2963,14 +3010,233 @@ static bool _is_autopickup_ban(pair<text_pattern, bool> entry)
     return !entry.second;
 }
 
-void game_options::read_option_line(const string &str, bool runscript)
+opt_parse_state base_game_options::parse_option_line(const string &str)
 {
+    opt_parse_state state;
+
+    const int first_equals = str.find('=');
+
+    // all lines with no equal-signs we ignore
+    if (first_equals < 0)
+        return state;
+
+    state.raw = str;
+    state.field = str.substr(first_equals + 1);
+    state.field = expand_vars(state.field);
+
+    string prequal = trimmed_string(str.substr(0, first_equals));
+
+    // Is this a case of key += val?
+    if (prequal.length() && prequal[prequal.length() - 1] == '+')
+    {
+        state.line_type = RCFILE_LINE_PLUS;
+        prequal = prequal.substr(0, prequal.length() - 1);
+        trim_string(prequal);
+    }
+    else if (prequal.length() && prequal[prequal.length() - 1] == '-')
+    {
+        state.line_type = RCFILE_LINE_MINUS;
+        prequal = prequal.substr(0, prequal.length() - 1);
+        trim_string(prequal);
+    }
+    else if (prequal.length() && prequal[prequal.length() - 1] == '^')
+    {
+        state.line_type = RCFILE_LINE_CARET;
+        prequal = prequal.substr(0, prequal.length() - 1);
+        trim_string(prequal);
+    }
+    else if (prequal.length() && prequal[prequal.length() - 1] == ':')
+    {
+        prequal = prequal.substr(0, prequal.length() - 1);
+        trim_string(prequal);
+        trim_string(state.field);
+
+        add_alias(prequal, state.field);
+        state.line_type = RCFILE_LINE_DIRECTIVE;
+        // done, no need for further parsing
+        state.valid = true;
+        return state;
+    }
+
+    prequal = unalias(prequal);
+
+    const string::size_type first_dot = prequal.find('.');
+    if (first_dot != string::npos)
+    {
+        state.key    = prequal.substr(0, first_dot);
+        state.subkey = prequal.substr(first_dot + 1);
+    }
+    else
+    {
+        // no subkey (dots are okay in value field)
+        state.key    = prequal;
+    }
+
+    // Clean up our data...
+    lowercase(trim_string(state.key));
+    lowercase(trim_string(state.subkey));
+
+    // some fields want capitals... none care about external spaces
+    trim_string(state.field);
+
+    // Keep cased version of `field`, some options need it
+    state.raw_field = state.field;
+    lowercase(state.field);
+
+    state.valid = true;
+    return state;
+}
+
+opt_parse_state game_options::parse_option_line(const string &str)
+{
+    opt_parse_state state = base_game_options::parse_option_line(str);
+
+    // small list of things that are hardcoded to be case insensitive. This
+    // list should be reduced further. Currently it consists of GameOption
+    // options that are either regexes or paths.
+    if (state.key == "explore_stop_pickup_ignore"
+        || state.key == "confirm_action"
+        || state.key == "drop_filter"
+        || state.key == "note_items"
+        || state.key == "note_monsters"
+        || state.key == "note_messages"
+        || state.key == "levels"
+        || state.key == "sound_file_path"
+        || state.key.find("font") == string::npos)
+    {
+        state.field = state.raw_field;
+    }
+    return state;
+}
+
+// ugh, this is still very messy. Calling this is quite verbose, hence the
+// wrapper below.
+static void _base_split_parse(const string &s, const string &separator,
+                    function<void(const string &, bool)> add,
+                    bool prepend=false)
+{
+    const vector<string> defs = split_string(separator, s);
+    if (prepend)
+    {
+        for ( auto it = defs.rbegin() ; it != defs.rend(); ++it)
+            add(*it, prepend);
+    }
+    else
+    {
+        for ( auto it = defs.begin() ; it != defs.end(); ++it)
+            add(*it, prepend);
+    }
+}
+
+// Lots of things use split parse, for some ^= and += should do different things,
+// for others they should not. Split parse just passes them along.
+void game_options::split_parse(const string &s, const string &separator,
+                    void (game_options::*add)(const string &, bool),
+                    bool prepend)
+{
+    // wrapper that basically just binds `this`, so that we can write shorter
+    // calls to the generic function above in game_options code.
+    _base_split_parse(s, separator, [this, add](const string &s, bool b)
+        {
+            (this->*add)(s, b);
+        },
+        prepend);
+}
+
+void base_game_options::read_option_line(const string &str, bool runscripts)
+{
+    opt_parse_state state = parse_option_line(str);
+    if (!state.is_valid_option_line())
+        return; // either invalid, or already handled directive
+
+    // handle a bunch of option parsing directives that use an `=` syntax
+    // should macro file loading be here?
+    if (state.key == "include")
+    {
+        include(state.raw_field, true, runscripts);
+        return;
+    }
+    else if (state.key == "opt" || state.key == "option")
+    {
+        _base_split_parse(state.raw_field, ",",
+                [this](const string & s, bool b) { set_option_fragment(s, b); });
+        return;
+    }
+    else if (state.key == "lua_file")
+    {
+#ifdef CLUA_BINDINGS
+        if (runscripts)
+        {
+            clua.execfile(state.raw_field.c_str(), false, false);
+            if (!clua.error.empty())
+                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        }
+#else
+        mprf(MSGCH_ERROR, "lua_file failed: clua not enabled on this build!");
+#endif
+        return;
+    }
+    else if (state.key == "terp_file")
+    {
+        if (runscripts)
+            terp_files.push_back(state.raw_field);
+        return;
+    }
+    else if (state.key == "constant")
+    {
+        // should this really be case insensitive?
+        if (!variables.count(state.field))
+            report_error("No variable named '%s' to make constant", state.field.c_str());
+        else if (constants.count(state.field))
+            report_error("'%s' is already a constant", state.field.c_str());
+        else
+            constants.insert(state.field);
+        return;
+    }
+
+    GameOption *const *option = map_find(options_by_name, state.key);
+    if (option)
+    {
+        // TODO: might simplify other code to give options access to the full
+        // parsing state
+        const string error = (*option)->loadFromString(state.field, state.line_type);
+        if (!error.empty())
+            report_error("%s", error.c_str());
+        return;
+    }
+
+    if (read_custom_option(state, runscripts))
+        return;
+
+    // Catch-all else, copies option into map
+    if (runscripts)
+    {
+        if (!clua.callbooleanfn(false, "c_process_lua_option", "ssd",
+                state.key.c_str(), state.raw_field.c_str(), state.lua_mode()))
+        {
+            if (!clua.error.empty())
+                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            named_options[state.key] = state.raw_field;
+        }
+    }
+}
+
+bool base_game_options::read_custom_option(opt_parse_state &, bool)
+{
+    return false;
+}
+
+// Handle options that have custom parsing code
+// return true if we should stop processing the line
+bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
+{
+    // TODO: convert this to a function somewhere, or merge with split_parse
 #define NEWGAME_OPTION(_opt, _conv, _type)                                     \
-    if (plain)                                                                 \
+    if (state.plain())                                                         \
         _opt.clear();                                                          \
-    for (const auto &part : split_string(",", field))                          \
+    for (const auto &part : split_string(",", state.raw_field))                \
     {                                                                          \
-        if (minus_equal)                                                       \
+        if (state.minus_equal())                                               \
         {                                                                      \
             auto it2 = find(_opt.begin(), _opt.end(), _conv(part));            \
             if (it2 != _opt.end())                                             \
@@ -2979,136 +3245,15 @@ void game_options::read_option_line(const string &str, bool runscript)
         else                                                                   \
             _opt.push_back(_conv(part));                                       \
     }
-    string key    = "";
-    string subkey = "";
-    string field  = "";
 
-    bool plus_equal  = false;
-    bool caret_equal = false;
-    bool minus_equal = false;
-    rc_line_type line_type = RCFILE_LINE_EQUALS;
-
-    const int first_equals = str.find('=');
-
-    // all lines with no equal-signs we ignore
-    if (first_equals < 0)
-        return;
-
-    field = str.substr(first_equals + 1);
-    field = expand_vars(field);
-
-    string prequal = trimmed_string(str.substr(0, first_equals));
-
-    // Is this a case of key += val?
-    if (prequal.length() && prequal[prequal.length() - 1] == '+')
-    {
-        plus_equal = true;
-        line_type = RCFILE_LINE_PLUS;
-        prequal = prequal.substr(0, prequal.length() - 1);
-        trim_string(prequal);
-    }
-    else if (prequal.length() && prequal[prequal.length() - 1] == '-')
-    {
-        minus_equal = true;
-        line_type = RCFILE_LINE_MINUS;
-        prequal = prequal.substr(0, prequal.length() - 1);
-        trim_string(prequal);
-    }
-    else if (prequal.length() && prequal[prequal.length() - 1] == '^')
-    {
-        caret_equal = true;
-        line_type = RCFILE_LINE_CARET;
-        prequal = prequal.substr(0, prequal.length() - 1);
-        trim_string(prequal);
-    }
-    else if (prequal.length() && prequal[prequal.length() - 1] == ':')
-    {
-        prequal = prequal.substr(0, prequal.length() - 1);
-        trim_string(prequal);
-        trim_string(field);
-
-        add_alias(prequal, field);
-        return;
-    }
-
-    bool plain = !plus_equal && !minus_equal && !caret_equal;
-
-    prequal = unalias(prequal);
-
-    const string::size_type first_dot = prequal.find('.');
-    if (first_dot != string::npos)
-    {
-        key    = prequal.substr(0, first_dot);
-        subkey = prequal.substr(first_dot + 1);
-    }
-    else
-    {
-        // no subkey (dots are okay in value field)
-        key    = prequal;
-    }
-
-    // Clean up our data...
-    lowercase(trim_string(key));
-    lowercase(trim_string(subkey));
-
-    // some fields want capitals... none care about external spaces
-    trim_string(field);
-
-    // Keep unlowercased field around
-    const string orig_field = field;
-
-    if (key != "name" && key != "crawl_dir" && key != "macro_dir"
-        && key != "combo"
-        && key != "species" && key != "background" && key != "job"
-        && key != "race" && key != "class" && key != "ban_pickup"
-        && key != "autopickup_exceptions"
-        && key != "explore_stop_pickup_ignore"
-        && key != "stop_travel"
-        && key != "force_more_message"
-        && key != "flash_screen_message"
-        && key != "confirm_action"
-        && key != "drop_filter" && key != "lua_file" && key != "terp_file"
-        && key != "note_items" && key != "autoinscribe"
-        && key != "note_monsters" && key != "note_messages"
-        && key != "display_char" && !starts_with(key, "cset") // compatibility
-        && key != "dungeon" && key != "feature"
-        && key != "mon_glyph" && key != "item_glyph"
-        && key != "fire_items_start"
-        && key != "opt" && key != "option"
-        && key != "menu_colour" && key != "menu_color"
-        && key != "message_colour" && key != "message_color"
-        && key != "levels" && key != "level" && key != "entries"
-        && key != "include" && key != "bindkey"
-        && key != "spell_slot"
-        && key != "item_slot"
-        && key != "ability_slot"
-        && key != "sound" && key != "hold_sound" && key != "sound_file_path"
-#ifdef USE_TILE_WEB
-        && key != "action_panel_filter"
-#endif
-        && key.find("font") == string::npos)
-    {
-        lowercase(field);
-    }
-
-    GameOption *const *option = map_find(options_by_name, key);
-    if (option)
-    {
-        const string error = (*option)->loadFromString(field, line_type);
-        if (!error.empty())
-            report_error("%s", error.c_str());
-    }
-    else if (key == "include")
-        include(field, true, runscript);
-    else if (key == "opt" || key == "option")
-        split_parse(field, ",", &game_options::set_option_fragment);
-    else if (key == "autopickup")
+    const string key = state.key; // weak
+    if (key == "autopickup")
     {
         // clear out autopickup
         autopickups.reset();
 
         char32_t c;
-        for (const char* tp = field.c_str(); int s = utf8towc(&c, tp); tp += s)
+        for (const char* tp = state.field.c_str(); int s = utf8towc(&c, tp); tp += s)
         {
             object_class_type type = item_class_by_sym(c);
 
@@ -3117,84 +3262,79 @@ void game_options::read_option_line(const string &str, bool runscript)
             else
                 report_error("Bad object type '%*s' for autopickup.\n", s, tp);
         }
+        return true;
     }
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else if (key == "name")
     {
         // field is already cleaned up from trim_string()
-        game.name = field;
+        game.name = state.raw_field;
+        return true;
     }
 #endif
     else if (key == "language")
     {
-        if (!set_lang(field.c_str()))
+        if (!set_lang(state.field.c_str()))
         {
             report_error("No translations for language '%s'.\n"
                          "Languages with at least partial translation: %s",
-                         field.c_str(), _supported_language_listing().c_str());
+                         state.field.c_str(), _supported_language_listing().c_str());
         }
+        return true;
     }
     else if (key == "fake_lang")
-        set_fake_langs(field);
-    else if (key == "lua_file" && runscript)
-    {
-#ifdef CLUA_BINDINGS
-        clua.execfile(field.c_str(), false, false);
-        if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-#else
-        mprf(MSGCH_ERROR, "lua_file failed: clua not enabled on this build!");
-#endif
-    }
-    else if (key == "terp_file" && runscript)
-        terp_files.push_back(field);
+        set_fake_langs(state.field);
     else if (key == "colour" || key == "color")
     {
-        const int orig_col   = str_to_colour(subkey);
-        const int result_col = str_to_colour(field);
+        const int orig_col   = str_to_colour(state.subkey);
+        const int result_col = str_to_colour(state.field);
 
         if (orig_col != -1 && result_col != -1)
             colour[orig_col] = result_col;
         else
         {
             report_error("Bad colour -- %s=%d or %s=%d\n",
-                     subkey.c_str(), orig_col, field.c_str(), result_col);
+                     state.subkey.c_str(), orig_col, state.field.c_str(), result_col);
         }
+        return true;
     }
     else if (key == "channel")
     {
-        const int chnl = str_to_channel(subkey);
-        const msg_colour_type col  = _str_to_channel_colour(field);
+        const int chnl = str_to_channel(state.subkey);
+        const msg_colour_type col  = _str_to_channel_colour(state.field);
 
         if (chnl != -1 && col != MSGCOL_NONE)
             channels[chnl] = col;
         else if (chnl == -1)
-            report_error("Bad channel -- %s", subkey.c_str());
+            report_error("Bad channel -- %s", state.subkey.c_str());
         else if (col == MSGCOL_NONE)
-            report_error("Bad colour -- %s", field.c_str());
+            report_error("Bad colour -- %s", state.field.c_str());
+        return true;
     }
     else if (key == "use_animations")
     {
-        if (plain)
+        if (state.plain())
             use_animations = UA_ALWAYS_ON;
 
-        const auto new_animations = read_use_animations(field);
-        if (minus_equal)
+        const auto new_animations = read_use_animations(state.field);
+        if (state.minus_equal())
             use_animations &= ~new_animations;
         else
             use_animations |= new_animations;
+        return true;
     }
     else if (starts_with(key, interrupt_prefix))
     {
         set_activity_interrupt(key.substr(interrupt_prefix.length()),
-                               field,
-                               plus_equal || caret_equal,
-                               minus_equal);
+                               state.field,
+                               state.add_equal(),
+                               state.minus_equal());
+        return true;
     }
     else if (key == "display_char"
              || starts_with(key, "cset")) // compatibility with old rcfiles
     {
-        for (const string &over : split_string(",", field))
+        for (const string &over : split_string(",", state.raw_field))
         {
             vector<string> mapping = split_string(":", over);
             if (mapping.size() != 2)
@@ -3206,46 +3346,56 @@ void game_options::read_option_line(const string &str, bool runscript)
 
             add_cset_override(dc, read_symbol(mapping[1]));
         }
+        return true;
     }
     else if (key == "feature" || key == "dungeon")
     {
-        if (plain)
+        if (state.plain())
            clear_feature_overrides();
 
-        if (minus_equal)
-            split_parse(field, ";", &game_options::remove_feature_override);
+        if (state.minus_equal())
+            split_parse(state.raw_field, ";", &game_options::remove_feature_override);
         else
-            split_parse(field, ";", &game_options::add_feature_override);
+            split_parse(state.raw_field, ";", &game_options::add_feature_override);
+        return true;
     }
     else if (key == "mon_glyph")
     {
-        if (plain)
+        if (state.plain())
            mon_glyph_overrides.clear();
 
-        if (minus_equal)
-            split_parse(field, ",", &game_options::remove_mon_glyph_override);
+        if (state.minus_equal())
+            split_parse(state.raw_field, ",", &game_options::remove_mon_glyph_override);
         else
-            split_parse(field, ",", &game_options::add_mon_glyph_override);
+            split_parse(state.raw_field, ",", &game_options::add_mon_glyph_override);
+        return true;
     }
     else if (key == "item_glyph")
     {
-        if (plain)
+        if (state.plain())
         {
             item_glyph_overrides.clear();
             item_glyph_cache.clear();
         }
 
-        if (minus_equal)
-            split_parse(field, ",", &game_options::remove_item_glyph_override);
+        if (state.minus_equal())
+            split_parse(state.raw_field, ",", &game_options::remove_item_glyph_override);
         else
-            split_parse(field, ",", &game_options::add_item_glyph_override, caret_equal);
+            split_parse(state.raw_field, ",", &game_options::add_item_glyph_override, state.caret_equal());
+        return true;
     }
     else if (key == "arena_teams")
-        game.arena_teams = field;
+    {
+        game.arena_teams = state.field;
+        return true;
+    }
     // [ds] Allow changing map only if the map hasn't been set on the
     // command-line.
     else if (key == "map" && crawl_state.sprint_map.empty())
-        game.map = field;
+    {
+        game.map = state.field;
+        return true;
+    }
     // [ds] For dgamelaunch setups, the player should *not* be able to
     // set game type in their rc; the only way to set game type for
     // DGL builds should be the command-line options.
@@ -3254,8 +3404,9 @@ void game_options::read_option_line(const string &str, bool runscript)
 #if defined(DGAMELAUNCH)
         game.type = Options.game.type;
 #else
-        game.type = _str_to_gametype(field);
+        game.type = _str_to_gametype(state.field);
 #endif
+        return true;
     }
     else if (key == "combo")
     {
@@ -3263,49 +3414,69 @@ void game_options::read_option_line(const string &str, bool runscript)
         game.allowed_jobs.clear();
         game.allowed_weapons.clear();
         NEWGAME_OPTION(game.allowed_combos, string, string);
+        return true;
     }
     else if (key == "fully_random")
-        game.fully_random = read_bool(field, game.fully_random);
+    {
+        game.fully_random = read_bool(state.field, game.fully_random);
+        return true;
+    }
     else if (key == "species" || key == "race")
     {
         game.allowed_combos.clear();
         NEWGAME_OPTION(game.allowed_species, _str_to_species,
                        species_type);
+        return true;
     }
     else if (key == "background" || key == "job" || key == "class")
     {
         game.allowed_combos.clear();
         NEWGAME_OPTION(game.allowed_jobs, str_to_job, job_type);
+        return true;
     }
     else if (key == "weapon")
     {
         // Choose this weapon for backgrounds that get choice.
         game.allowed_combos.clear();
         NEWGAME_OPTION(game.allowed_weapons, str_to_weapon, weapon_type);
+        return true;
     }
     else if (key == "fire_items_start")
     {
-        if (isaalpha(field[0]))
-            fire_items_start = letter_to_index(field[0]);
+        if (isaalpha(state.raw_field[0]))
+            fire_items_start = letter_to_index(state.raw_field[0]);
         else
-            report_error("Bad fire item start index: %s\n", field.c_str());
+            report_error("Bad fire item start index: %s\n", state.raw_field.c_str());
+        return true;
     }
 #ifndef DGAMELAUNCH
     else if (key == "restart_after_game")
-        restart_after_game = read_maybe_bool(field);
+    {
+        restart_after_game = read_maybe_bool(state.field);
+        return true;
+    }
 #endif
     else if (key == "fire_order")
-        set_fire_order(field, plus_equal, caret_equal);
-    else if (key == "fire_order_spell" && runscript)
-        set_fire_order_spell(field, plus_equal || caret_equal, minus_equal);
-    else if (key == "fire_order_ability" && runscript)
-        set_fire_order_ability(field, plus_equal || caret_equal, minus_equal);
+    {
+        set_fire_order(state.field, state.plus_equal(), state.caret_equal());
+        return true;
+    }
+    else if (key == "fire_order_spell" && runscripts)
+    {
+        set_fire_order_spell(state.field, state.add_equal(), state.minus_equal());
+        return true;
+    }
+    else if (key == "fire_order_ability" && runscripts)
+    {
+        set_fire_order_ability(state.field, state.add_equal(), state.minus_equal());
+        return true;
+    }
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
 #ifndef DATA_DIR_PATH
     else if (key == "crawl_dir")
     {
-        _set_crawl_dir(field);
+        _set_crawl_dir(state.raw_field);
 
         // reset all paths in the current options object, so that save_dir
         // and so on will now default to being in `crawl_dir`. If this isn't
@@ -3313,88 +3484,98 @@ void game_options::read_option_line(const string &str, bool runscript)
         // is still the default for part of initialization, and the des cache
         // ends up in the wrong place.
         reset_paths();
+        return true;
     }
 #endif
 #ifndef SAVE_DIR_PATH
     else if (key == "save_dir")
     {
-        save_dir = _resolve_dir(field, "");
+        save_dir = _resolve_dir(state.field, "");
 #ifndef SHARED_DIR_PATH
         shared_dir = save_dir;
 #endif
+        return true;
     }
     else if (key == "macro_dir")
-        macro_dir = _resolve_dir(field, "");
+    {
+        macro_dir = _resolve_dir(state.raw_field, "");
+        return true;
+    }
 #endif
 #endif
     else if (key == "view_lock")
     {
-        const bool lock = read_bool(field, true);
+        const bool lock = read_bool(state.field, true);
         view_lock_x = view_lock_y = lock;
+        return true;
     }
     else if (key == "scroll_margin")
     {
-        int scrollmarg = atoi(field.c_str());
+        int scrollmarg = atoi(state.field.c_str());
         if (scrollmarg < 0)
             scrollmarg = 0;
         scroll_margin_x = scroll_margin_y = scrollmarg;
+        return true;
     }
     else if (key == "user_note_prefix")
     {
         // field is already cleaned up from trim_string()
-        user_note_prefix = orig_field;
+        user_note_prefix = state.raw_field;
+        return true;
     }
     else if (key == "flush")
     {
-        if (subkey == "failure")
+        if (state.subkey == "failure")
         {
             flush_input[FLUSH_ON_FAILURE]
-                = read_bool(field, flush_input[FLUSH_ON_FAILURE]);
+                = read_bool(state.field, flush_input[FLUSH_ON_FAILURE]);
         }
-        else if (subkey == "command")
+        else if (state.subkey == "command")
         {
             flush_input[FLUSH_BEFORE_COMMAND]
-                = read_bool(field, flush_input[FLUSH_BEFORE_COMMAND]);
+                = read_bool(state.field, flush_input[FLUSH_BEFORE_COMMAND]);
         }
-        else if (subkey == "message")
+        else if (state.subkey == "message")
         {
             flush_input[FLUSH_ON_MESSAGE]
-                = read_bool(field, flush_input[FLUSH_ON_MESSAGE]);
+                = read_bool(state.field, flush_input[FLUSH_ON_MESSAGE]);
         }
-        else if (subkey == "lua")
+        else if (state.subkey == "lua")
         {
             flush_input[FLUSH_LUA]
-                = read_bool(field, flush_input[FLUSH_LUA]);
+                = read_bool(state.field, flush_input[FLUSH_LUA]);
         }
+        return true;
     }
     else if (key == "ban_pickup")
     {
         // Only remove negative, not positive, exceptions.
-        if (plain)
+        if (state.plain())
             erase_if(force_autopickup, _is_autopickup_ban);
 
         vector<pair<text_pattern, bool> > new_entries;
-        for (const string &s : split_string(",", field))
+        for (const string &s : split_string(",", state.raw_field))
         {
             if (s.empty())
                 continue;
 
             const pair<text_pattern, bool> f_a(s, false);
 
-            if (minus_equal)
+            if (state.minus_equal())
                 remove_matching(force_autopickup, f_a);
             else
                 new_entries.push_back(f_a);
         }
-        merge_lists(force_autopickup, new_entries, caret_equal);
+        merge_lists(force_autopickup, new_entries, state.caret_equal());
+        return true;
     }
     else if (key == "autopickup_exceptions")
     {
-        if (plain)
+        if (state.plain())
             force_autopickup.clear();
 
         vector<pair<text_pattern, bool> > new_entries;
-        for (const string &s : split_string(",", field))
+        for (const string &s : split_string(",", state.raw_field))
         {
             if (s.empty())
                 continue;
@@ -3408,12 +3589,13 @@ void game_options::read_option_line(const string &str, bool runscript)
             else
                 f_a = make_pair(s, false);
 
-            if (minus_equal)
+            if (state.minus_equal())
                 remove_matching(force_autopickup, f_a);
             else
                 new_entries.push_back(f_a);
         }
-        merge_lists(force_autopickup, new_entries, caret_equal);
+        merge_lists(force_autopickup, new_entries, state.caret_equal());
+        return true;
     }
 #ifndef _MSC_VER
     // break if-else chain on broken Microsoft compilers with stupid nesting limits
@@ -3422,99 +3604,104 @@ void game_options::read_option_line(const string &str, bool runscript)
 
     if (key == "autoinscribe")
     {
-        if (plain)
+        if (state.plain())
             autoinscriptions.clear();
 
-        const size_t first = field.find_first_of(':');
-        const size_t last  = field.find_last_of(':');
+        const size_t first = state.raw_field.find_first_of(':');
+        const size_t last  = state.raw_field.find_last_of(':');
         if (first == string::npos || first != last)
         {
-            return report_error("Autoinscribe string must have exactly "
-                                "one colon: %s\n", field.c_str());
+            report_error("Autoinscribe string must have exactly "
+                                "one colon: %s\n", state.raw_field.c_str());
+            return true;
         }
 
         if (first == 0)
         {
-            report_error("Autoinscribe pattern is empty: %s\n", field.c_str());
-            return;
+            report_error("Autoinscribe pattern is empty: %s\n",
+                state.raw_field.c_str());
+            return true;
         }
 
-        if (last == field.length() - 1)
+        if (last == state.raw_field.length() - 1)
         {
-            report_error("Autoinscribe result is empty: %s\n", field.c_str());
-            return;
+            report_error("Autoinscribe result is empty: %s\n",
+                state.raw_field.c_str());
+            return true;
         }
 
-        vector<string> thesplit = split_string(":", field);
+        vector<string> thesplit = split_string(":", state.raw_field);
 
         if (thesplit.size() != 2)
         {
             report_error("Error parsing autoinscribe string: %s\n",
-                         field.c_str());
-            return;
+                         state.raw_field.c_str());
+            return true;
         }
 
         pair<text_pattern,string> entry(thesplit[0], thesplit[1]);
 
-        if (minus_equal)
+        if (state.minus_equal())
             remove_matching(autoinscriptions, entry);
-        else if (caret_equal)
+        else if (state.caret_equal())
             autoinscriptions.insert(autoinscriptions.begin(), entry);
         else
             autoinscriptions.push_back(entry);
+        return true;
     }
     else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
     {
-        if (plain)
+        if (state.plain())
             enemy_hp_colour.clear();
-        str_to_enemy_hp_colour(field, caret_equal);
+        str_to_enemy_hp_colour(state.field, state.caret_equal());
+        return true;
     }
     else if (key == "monster_list_colour" || key == "monster_list_color")
     {
-        if (plain)
+        if (state.plain())
             clear_monster_list_colours();
 
-        vector<string> thesplit = split_string(",", field);
+        vector<string> thesplit = split_string(",", state.field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
             vector<string> insplit = split_string(":", thesplit[i]);
 
             if (insplit.empty() || insplit.size() > 2
-                 || insplit.size() == 1 && !minus_equal
-                 || insplit.size() == 2 && minus_equal)
+                 || insplit.size() == 1 && !state.minus_equal()
+                 || insplit.size() == 2 && state.minus_equal())
             {
                 report_error("Bad monster_list_colour string: %s\n",
-                             field.c_str());
-                break;
+                             state.raw_field.c_str());
+                return true;
             }
 
-            const int scolour = minus_equal ? -1 : str_to_colour(insplit[1]);
+            const int scolour = state.minus_equal() ? -1 : str_to_colour(insplit[1]);
 
             // No elemental colours!
-            if (scolour >= 16 || scolour < 0 && !minus_equal)
+            if (scolour >= 16 || scolour < 0 && !state.minus_equal())
             {
                 report_error("Bad monster_list_colour: %s", insplit[1].c_str());
-                break;
+                return true;
             }
             if (!set_monster_list_colour(insplit[0], scolour))
             {
                 report_error("Bad monster_list_colour key: %s\n",
                              insplit[0].c_str());
-                break;
+                return true;
             }
         }
+        return true;
     }
-
     else if (key == "note_skill_levels")
     {
-        if (plain)
+        if (state.plain())
             note_skill_levels.reset();
-        vector<string> thesplit = split_string(",", field);
+        vector<string> thesplit = split_string(",", state.field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
             int num = atoi(thesplit[i].c_str());
             if (num > 0 && num <= 27)
-                note_skill_levels.set(num, !minus_equal);
+                note_skill_levels.set(num, !state.minus_equal());
             else
             {
                 report_error("Bad skill level to note -- %s\n",
@@ -3522,6 +3709,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                 continue;
             }
         }
+        return true;
     }
     else if (key == "force_spell_targeter")
     {
@@ -3529,39 +3717,41 @@ void game_options::read_option_line(const string &str, bool runscript)
         // is initialized, just skip it
         if (spell_data_initialized())
         {
-            if (plain)
+            if (state.plain())
             {
                 always_use_static_spell_targeters = false;
                 force_spell_targeter.clear();
             }
 
-            if (minus_equal)
+            if (state.minus_equal())
             {
-                split_parse(field, ",",
+                split_parse(state.field, ",",
                             &game_options::remove_force_spell_targeter);
             }
             else
             {
-                split_parse(field, ",",
+                split_parse(state.field, ",",
                             &game_options::add_force_spell_targeter);
             }
         }
+        return true;
     }
     else if (key == "force_ability_targeter")
     {
-        if (plain)
+        if (state.plain())
         {
             always_use_static_ability_targeters = false;
             force_ability_targeter.clear();
         }
 
-        if (minus_equal)
+        if (state.minus_equal())
         {
-            split_parse(field, ",",
+            split_parse(state.field, ",",
                         &game_options::remove_force_ability_targeter);
         }
         else
-            split_parse(field, ",", &game_options::add_force_ability_targeter);
+            split_parse(state.field, ",", &game_options::add_force_ability_targeter);
+        return true;
     }
     else if (key == "spell_slot"
              || key == "item_slot"
@@ -3571,39 +3761,43 @@ void game_options::read_option_line(const string &str, bool runscript)
         auto& auto_letters = (key == "item_slot"  ? auto_item_letters
                            : (key == "spell_slot" ? auto_spell_letters
                                                   : auto_ability_letters));
-        if (plain)
+        if (state.plain())
             auto_letters.clear();
 
-        vector<string> thesplit = split_string(":", field);
+        vector<string> thesplit = split_string(":", state.raw_field);
         if (thesplit.size() != 2)
         {
-            return report_error("Error parsing %s string: %s\n",
-                                key.c_str(), field.c_str());
+            report_error("Error parsing %s string: %s\n",
+                                key.c_str(), state.raw_field.c_str());
+            return false;
         }
         pair<text_pattern,string> entry(text_pattern(thesplit[0], true),
                                         thesplit[1]);
 
-        if (minus_equal)
+        if (state.minus_equal())
             remove_matching(auto_letters, entry);
-        else if (caret_equal)
+        else if (state.caret_equal())
             auto_letters.insert(auto_letters.begin(), entry);
         else
             auto_letters.push_back(entry);
+        return true;
     }
     else if (key == "sort_menus")
     {
-        for (const string &frag : split_string(";", field))
+        for (const string &frag : split_string(";", state.field))
             if (!frag.empty())
                 set_menu_sort(frag);
+        return true;
     }
     else if (key == "force_more_message" || key == "flash_screen_message")
     {
-        vector<message_filter> &filters = (key == "force_more_message" ? force_more_message : flash_screen_message);
-        if (plain)
+        vector<message_filter> &filters = (key == "force_more_message"
+                                ? force_more_message : flash_screen_message);
+        if (state.plain())
             filters.clear();
 
         vector<message_filter> new_entries;
-        for (const string &fragment : split_string(",", field))
+        for (const string &fragment : split_string(",", state.raw_field))
         {
             if (fragment.empty())
                 continue;
@@ -3622,48 +3816,52 @@ void game_options::read_option_line(const string &str, bool runscript)
                 }
             }
 
-            if (minus_equal)
+            if (state.minus_equal())
                 remove_matching(filters, mf);
             else
                 new_entries.push_back(mf);
         }
-        merge_lists(filters, new_entries, caret_equal);
+        merge_lists(filters, new_entries, state.caret_equal());
+        return true;
     }
     else if (key == "travel_avoid_terrain")
     {
         // TODO: allow resetting (need reset_forbidden_terrain())
-        for (const string &seg : split_string(",", field))
+        for (const string &seg : split_string(",", state.field))
             prevent_travel_to(seg);
+        return true;
     }
     else if (key == "explore_stop")
     {
-        if (plain)
+        if (state.plain())
             explore_stop = ES_NONE;
 
-        const int new_conditions = read_explore_stop_conditions(field);
-        if (minus_equal)
+        const int new_conditions = read_explore_stop_conditions(state.field);
+        if (state.minus_equal())
             explore_stop &= ~new_conditions;
         else
             explore_stop |= new_conditions;
+        return true;
     }
     else if (key == "explore_greedy_visit")
     {
-        if (plain)
+        if (state.plain())
             explore_greedy_visit = EG_NONE;
 
-        const int new_conditions = read_explore_greedy_visit_conditions(field);
-        if (minus_equal)
+        const int new_conditions = read_explore_greedy_visit_conditions(state.field);
+        if (state.minus_equal())
             explore_greedy_visit &= ~new_conditions;
         else
             explore_greedy_visit |= new_conditions;
+        return true;
     }
     else if (key == "sound" || key == "hold_sound")
     {
-        if (plain)
+        if (state.plain())
             sound_mappings.clear();
 
         vector<sound_mapping> new_entries;
-        for (const string &sub : split_string(",", field))
+        for (const string &sub : split_string(",", state.raw_field))
         {
             string::size_type cpos = sub.find(":", 0);
             if (cpos != string::npos)
@@ -3676,13 +3874,14 @@ void game_options::read_option_line(const string &str, bool runscript)
                 else
                     entry.interrupt_game = false;
 
-                if (minus_equal)
+                if (state.minus_equal())
                     remove_matching(sound_mappings, entry);
                 else
                     new_entries.push_back(entry);
             }
         }
-        merge_lists(sound_mappings, new_entries, caret_equal);
+        merge_lists(sound_mappings, new_entries, state.caret_equal());
+        return true;
     }
 #ifndef TARGET_COMPILER_VC
     // MSVC has a limit on how many if/else if can be chained together.
@@ -3690,11 +3889,11 @@ void game_options::read_option_line(const string &str, bool runscript)
 #endif
     if (key == "menu_colour" || key == "menu_color")
     {
-        if (plain)
+        if (state.plain())
             menu_colour_mappings.clear();
 
         vector<colour_mapping> new_entries;
-        for (const string &seg : split_string(",", field))
+        for (const string &seg : split_string(",", state.raw_field))
         {
             // Format is "tag:colour:pattern" or "colour:pattern" (default tag).
             // FIXME: arrange so that you can use ':' inside a pattern
@@ -3722,42 +3921,44 @@ void game_options::read_option_line(const string &str, bool runscript)
 
             if (col == -1)
                 continue;
-            else if (minus_equal)
+            else if (state.minus_equal())
                 remove_matching(menu_colour_mappings, mapping);
             else
                 new_entries.push_back(mapping);
         }
-        merge_lists(menu_colour_mappings, new_entries, caret_equal);
+        merge_lists(menu_colour_mappings, new_entries, state.caret_equal());
+        return true;
     }
     else if (key == "message_colour" || key == "message_color")
     {
-        // TODO: support -= here.
-        if (plain)
+        // TODO: support -= here. (XX it looks supported below?)
+        if (state.plain())
             message_colour_mappings.clear();
 
-        add_message_colour_mappings(field, caret_equal, minus_equal);
+        add_message_colour_mappings(state.raw_field, state.caret_equal(), state.minus_equal());
     }
     else if (key == "dump_order")
     {
-        if (plain)
+        if (state.plain())
         {
             dump_fields.clear();
             dump_order.clear();
         }
 
-        new_dump_fields(field, !minus_equal, caret_equal);
+        new_dump_fields(state.field, !state.minus_equal(), state.caret_equal());
+        return true;
     }
     else if (key == "kill_map")
     {
         // TODO: treat this as a map option (e.g. kill_map.you = friendly)
-        if (plain && field.empty())
+        if (state.plain() && state.field.empty())
         {
             kill_map[KC_YOU] = KC_YOU;
             kill_map[KC_FRIENDLY] = KC_FRIENDLY;
             kill_map[KC_OTHER] = KC_OTHER;
         }
 
-        for (const string &s : split_string(",", field))
+        for (const string &s : split_string(",", state.field))
         {
             string::size_type cpos = s.find(":", 0);
             if (cpos != string::npos)
@@ -3767,13 +3968,14 @@ void game_options::read_option_line(const string &str, bool runscript)
                 do_kill_map(from, to);
             }
         }
+        return true;
     }
     else if (key == "dump_item_origins")
     {
-        if (plain)
+        if (state.plain())
             dump_item_origins = IODS_PRICE;
 
-        for (const string &ch : split_string(",", field))
+        for (const string &ch : split_string(",", state.field))
         {
             if (ch == "artefacts" || ch == "artifacts"
                 || ch == "artefact" || ch == "artifact")
@@ -3803,6 +4005,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             else if (ch == "all" || ch == "everything")
                 dump_item_origins = IODS_EVERYTHING;
         }
+        return true;
     }
     else if (key == "additional_macro_file")
     {
@@ -3810,67 +4013,81 @@ void game_options::read_option_line(const string &str, bool runscript)
         // "= means append" behaviour, and don't allow clearing the list;
         // if we rename to "additional_macro_files" then it could work like
         // other list options.
-        const string resolved = resolve_include(orig_field, "macro ");
+        const string resolved = resolve_include(state.raw_field, "macro ");
         if (!resolved.empty())
             additional_macro_files.push_back(resolved);
+        return true;
     }
     else if (key == "macros")
     {
         // orig_field because this function wants capitals
-        const string possible_error = read_rc_file_macro(orig_field);
+        const string possible_error = read_rc_file_macro(state.raw_field);
 
         if (!possible_error.empty())
-            report_error(possible_error.c_str(), orig_field.c_str());
+            report_error(possible_error.c_str(), state.raw_field.c_str());
+        return true;
     }
 #ifdef USE_TILE
 #ifdef USE_TILE_LOCAL
     else if (key == "tile_use_small_layout")
-        tile_use_small_layout = read_maybe_bool(field);
-#endif // USE_TILE_LOCAL
-    else if (key == "tile_show_player_species" && field == "true")
     {
-        field = "playermons";
-        set_player_tile(field);
+        tile_use_small_layout = read_maybe_bool(state.field);
+        return true;
+    }
+#endif // USE_TILE_LOCAL
+    else if (key == "tile_show_player_species" && state.field == "true") // XX bool parsing
+    {
+        // do we really need to set state?
+        state.field = "playermons";
+        set_player_tile(state.field);
+        return true;
     }
     else if (key == "tile_player_tile")
-        set_player_tile(field);
+    {
+        set_player_tile(state.field);
+        return true;
+    }
     else if (key == "tile_weapon_offsets")
-        set_tile_offsets(field, false);
+    {
+        set_tile_offsets(state.field, false);
+        return true;
+    }
     else if (key == "tile_shield_offsets")
-        set_tile_offsets(field, true);
+    {
+        set_tile_offsets(state.field, true);
+        return true;
+    }
     else if (key == "tile_tag_pref")
-        tile_tag_pref = _str_to_tag_pref(field.c_str());
+    {
+        tile_tag_pref = _str_to_tag_pref(state.field.c_str());
+        return true;
+    }
 #endif // USE_TILE
 
-    else if (key == "bindkey" && runscript)
-        _bindkey(field);
-    else if (key == "constant")
+    else if (key == "bindkey" && runscripts)
     {
-        if (!variables.count(field))
-            report_error("No variable named '%s' to make constant", field.c_str());
-        else if (constants.count(field))
-            report_error("'%s' is already a constant", field.c_str());
-        else
-            constants.insert(field);
+        _bindkey(state.raw_field);
+        return true;
     }
     else if (key == "game_seed")
     {
         // special handling because of the large type.
         uint64_t tmp_seed = 0;
-        if (sscanf(field.c_str(), "%" SCNu64, &tmp_seed))
+        if (sscanf(state.field.c_str(), "%" SCNu64, &tmp_seed))
         {
             // seed_from_rc is only ever set here, or by the CLO. The CLO gets
             // first crack, so don't overwrite it here.
             if (!seed_from_rc)
                 seed_from_rc = tmp_seed;
         }
+        return true;
     }
 #ifdef USE_TILE
     // TODO: generalize these to an option type?
     else if (key == "tile_viewport_scale")
     {
         float tmp_scale;
-        if (sscanf(field.c_str(), "%f", &tmp_scale))
+        if (sscanf(state.field.c_str(), "%f", &tmp_scale))
         {
             tile_viewport_scale = min(1600, max(20,
                                         static_cast<int>(tmp_scale * 100)));
@@ -3878,13 +4095,14 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
         {
             report_error("Expected a decimal value for tile_viewport_scale,"
-                " but got '%s'.", field.c_str());
+                " but got '%s'.", state.field.c_str());
         }
+        return true;
     }
     else if (key == "tile_map_scale")
     {
         float tmp_scale;
-        if (sscanf(field.c_str(), "%f", &tmp_scale))
+        if (sscanf(state.field.c_str(), "%f", &tmp_scale))
         {
             tile_map_scale = min(1600, max(20,
                                         static_cast<int>(tmp_scale * 100)));
@@ -3892,8 +4110,9 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
         {
             report_error("Expected a decimal value for tile_map_scale,"
-                " but got '%s'.", field.c_str());
+                " but got '%s'.", state.field.c_str());
         }
+        return true;
     }
 #endif
 #ifdef USE_TILE_WEB
@@ -3903,7 +4122,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         action_panel.clear();
 
         char32_t c;
-        for (const char* tp = field.c_str(); int s = utf8towc(&c, tp); tp += s)
+        for (const char* tp = state.raw_field.c_str(); int s = utf8towc(&c, tp); tp += s)
         {
             object_class_type type = item_class_by_sym(c);
 
@@ -3920,65 +4139,53 @@ void game_options::read_option_line(const string &str, bool runscript)
                              s, tp);
             }
         }
+        return true;
     }
 #endif
 
-    // Catch-all else, copies option into map
-    else if (runscript)
-    {
-        int setmode = 0;
-        if (plus_equal)
-            setmode = 1;
-        if (minus_equal)
-            setmode = -1;
-        if (caret_equal)
-            setmode = 2;
-
-        if (!clua.callbooleanfn(false, "c_process_lua_option", "ssd",
-                        key.c_str(), orig_field.c_str(), setmode))
-        {
-            if (!clua.error.empty())
-                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
-            named_options[key] = orig_field;
-        }
-    }
+    return false;
 }
 
-static const map<string, flang_t> fake_lang_names = {
-    { "dwarven", flang_t::dwarven },
-    { "dwarf", flang_t::dwarven },
+static const flang_t *_get_fake_lang(const string &name)
+{
+    static const map<string, flang_t> fake_lang_names = {
+        { "dwarven", flang_t::dwarven },
+        { "dwarf", flang_t::dwarven },
 
-    { "jäger", flang_t::jagerkin },
-    { "jägerkin", flang_t::jagerkin },
-    { "jager", flang_t::jagerkin },
-    { "jagerkin", flang_t::jagerkin },
-    { "jaeger", flang_t::jagerkin },
-    { "jaegerkin", flang_t::jagerkin },
+        { "jäger", flang_t::jagerkin },
+        { "jägerkin", flang_t::jagerkin },
+        { "jager", flang_t::jagerkin },
+        { "jagerkin", flang_t::jagerkin },
+        { "jaeger", flang_t::jagerkin },
+        { "jaegerkin", flang_t::jagerkin },
 
-    // Due to a historical conflict with actual german, slang names are
-    // supported. Not the really rude ones, though.
-    { "de", flang_t::kraut },
-    { "german", flang_t::kraut },
-    { "kraut", flang_t::kraut },
-    { "jerry", flang_t::kraut },
-    { "fritz", flang_t::kraut },
+        // Due to a historical conflict with actual german, slang names are
+        // supported. Not the really rude ones, though.
+        { "de", flang_t::kraut },
+        { "german", flang_t::kraut },
+        { "kraut", flang_t::kraut },
+        { "jerry", flang_t::kraut },
+        { "fritz", flang_t::kraut },
 
-    { "futhark", flang_t::futhark },
-    { "runes", flang_t::futhark },
-    { "runic", flang_t::futhark },
+        { "futhark", flang_t::futhark },
+        { "runes", flang_t::futhark },
+        { "runic", flang_t::futhark },
 
-    { "wide", flang_t::wide },
-    { "doublewidth", flang_t::wide },
-    { "fullwidth", flang_t::wide },
+        { "wide", flang_t::wide },
+        { "doublewidth", flang_t::wide },
+        { "fullwidth", flang_t::wide },
 
-    { "grunt", flang_t::grunt },
-    { "sgrunt", flang_t::grunt },
-    { "!!!", flang_t::grunt },
+        { "grunt", flang_t::grunt },
+        { "sgrunt", flang_t::grunt },
+        { "!!!", flang_t::grunt },
 
-    { "butt", flang_t::butt },
-    { "buttbot", flang_t::butt },
-    { "tef", flang_t::butt },
-};
+        { "butt", flang_t::butt },
+        { "buttbot", flang_t::butt },
+        { "tef", flang_t::butt },
+    };
+
+    return map_find(fake_lang_names, name);
+}
 
 struct language_def
 {
@@ -3987,37 +4194,42 @@ struct language_def
     set<string> names;
 };
 
-static const language_def lang_data[] =
+static const vector<language_def> get_lang_data()
 {
-    // Use null, not "en", for English so we don't try to look up translations.
-    { lang_t::EN, nullptr, { "english", "en", "c" } },
-    { lang_t::CS, "cs", { "czech", "český", "cesky" } },
-    { lang_t::DA, "da", { "danish", "dansk" } },
-    { lang_t::DE, "de", { "german", "deutsch" } },
-    { lang_t::EL, "el", { "greek", "ελληνικά", "ελληνικα" } },
-    { lang_t::ES, "es", { "spanish", "español", "espanol" } },
-    { lang_t::FI, "fi", { "finnish", "suomi" } },
-    { lang_t::FR, "fr", { "french", "français", "francais" } },
-    { lang_t::HU, "hu", { "hungarian", "magyar" } },
-    { lang_t::IT, "it", { "italian", "italiano" } },
-    // The last of these for compatibility, since it has been accepted ever
-    // since Japanese support was added.
-    { lang_t::JA, "ja", { "japanese", "日本語", "日本人" } },
-    { lang_t::KO, "ko", { "korean", "한국의" } },
-    { lang_t::LT, "lt", { "lithuanian", "lietuvos" } },
-    { lang_t::LV, "lv", { "latvian", "lettish", "latvijas", "latviešu",
-                          "latvieshu", "latviesu" } },
-    { lang_t::NL, "nl", { "dutch", "nederlands" } },
-    { lang_t::PL, "pl", { "polish", "polski" } },
-    { lang_t::PT, "pt", { "portuguese", "português", "portugues" } },
-    { lang_t::RU, "ru", { "russian", "русский", "русскии" } },
-    { lang_t::SV, "sv", { "swedish", "svenska" } },
-    { lang_t::ZH, "zh", { "chinese", "中国的", "中國的" } },
-};
+    static const vector<language_def> lang_data =
+    {
+        // Use null, not "en", for English so we don't try to look up translations.
+        { lang_t::EN, nullptr, { "english", "en", "c" } },
+        { lang_t::CS, "cs", { "czech", "český", "cesky" } },
+        { lang_t::DA, "da", { "danish", "dansk" } },
+        { lang_t::DE, "de", { "german", "deutsch" } },
+        { lang_t::EL, "el", { "greek", "ελληνικά", "ελληνικα" } },
+        { lang_t::ES, "es", { "spanish", "español", "espanol" } },
+        { lang_t::FI, "fi", { "finnish", "suomi" } },
+        { lang_t::FR, "fr", { "french", "français", "francais" } },
+        { lang_t::HU, "hu", { "hungarian", "magyar" } },
+        { lang_t::IT, "it", { "italian", "italiano" } },
+        // The last of these for compatibility, since it has been accepted ever
+        // since Japanese support was added.
+        { lang_t::JA, "ja", { "japanese", "日本語", "日本人" } },
+        { lang_t::KO, "ko", { "korean", "한국의" } },
+        { lang_t::LT, "lt", { "lithuanian", "lietuvos" } },
+        { lang_t::LV, "lv", { "latvian", "lettish", "latvijas", "latviešu",
+                              "latvieshu", "latviesu" } },
+        { lang_t::NL, "nl", { "dutch", "nederlands" } },
+        { lang_t::PL, "pl", { "polish", "polski" } },
+        { lang_t::PT, "pt", { "portuguese", "português", "portugues" } },
+        { lang_t::RU, "ru", { "russian", "русский", "русскии" } },
+        { lang_t::SV, "sv", { "swedish", "svenska" } },
+        { lang_t::ZH, "zh", { "chinese", "中国的", "中國的" } },
+    };
+    return lang_data;
+}
 
 static string _supported_language_listing()
 {
-    return comma_separated_fn(&lang_data[0], &lang_data[ARRAYSZ(lang_data)],
+    const auto &data = get_lang_data();
+    return comma_separated_fn(&data[0], &data[data.size()],
                               [](language_def ld){return ld.code ? ld.code : "en";},
                               ",", ",",
                               [](language_def){return true;});
@@ -4032,7 +4244,7 @@ bool game_options::set_lang(const char *lc)
         return set_lang(string(lc, 2).c_str());
 
     const string l = lowercase_string(lc); // Windows returns it capitalized.
-    for (const auto &ldef : lang_data)
+    for (const auto &ldef : get_lang_data())
     {
         if ((ldef.code && l == ldef.code) || ldef.names.count(l))
         {
@@ -4042,7 +4254,7 @@ bool game_options::set_lang(const char *lc)
         }
     }
 
-    if (const flang_t * const flang = map_find(fake_lang_names, l))
+    if (const flang_t * const flang = _get_fake_lang(l))
     {
         // Handle fake languages for backwards-compatibility with old rcs.
         // Override rather than stack, because that's how it used to work.
@@ -4082,7 +4294,7 @@ void game_options::set_fake_langs(const string &input)
         const int value = split_flang.size() >= 2
                           && parse_int(split_flang[1].c_str(), tval) ? tval : -1;
 
-        const flang_t *flang = map_find(fake_lang_names, flang_name);
+        const flang_t *flang = _get_fake_lang(flang_name);
         if (flang)
         {
             if (split_flang.size() >= 2)
@@ -4114,7 +4326,7 @@ void game_options::set_fake_langs(const string &input)
 // If file cannot be resolved, returns the empty string (this does not throw!)
 // If file can be resolved, returns the resolved path.
 /// @throws unsafe_path if included_file fails the safety check.
-string game_options::resolve_include(string parent_file, string included_file,
+string base_game_options::resolve_include(string parent_file, string included_file,
                                      const vector<string> *rcdirs)
 {
     // Before we start, make sure we convert forward slashes to the platform's
@@ -4160,7 +4372,7 @@ string game_options::resolve_include(string parent_file, string included_file,
     return datafile_path(included_file, false, true);
 }
 
-string game_options::resolve_include(const string &file, const char *type)
+string base_game_options::resolve_include(const string &file, const char *type)
 {
     try
     {
@@ -4177,13 +4389,13 @@ string game_options::resolve_include(const string &file, const char *type)
     }
 }
 
-bool game_options::was_included(const string &file) const
+bool base_game_options::was_included(const string &file) const
 {
     return included.count(file);
 }
 
-void game_options::include(const string &rawfilename, bool resolve,
-                           bool runscript)
+void base_game_options::include(const string &rawfilename, bool resolve,
+                           bool runscripts)
 {
     const string include_file = resolve ? resolve_include(rawfilename)
                                         : rawfilename;
@@ -4201,14 +4413,14 @@ void game_options::include(const string &rawfilename, bool resolve,
     unwind_var<int> currlinenum(line_num, 0);
 
     // Also unwind any aliases defined in included files.
-    unwind_var<string_map> unwalias(aliases);
+    unwind_var<map<string, string>> unalias(aliases);
 
     FileLineInput fl(include_file.c_str());
     if (!fl.error())
-        read_options(fl, runscript, false);
+        read_options(fl, runscripts, false);
 }
 
-void game_options::report_error(const char* format, ...)
+void base_game_options::report_error(const char* format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -5023,69 +5235,69 @@ void game_options::write_webtiles_options(const string& name)
 {
     tiles.json_open_object(name);
 
-    _write_colour_list(Options.hp_colour, "hp_colour");
-    _write_colour_list(Options.mp_colour, "mp_colour");
-    _write_colour_list(Options.stat_colour, "stat_colour");
+    _write_colour_list(hp_colour, "hp_colour");
+    _write_colour_list(mp_colour, "mp_colour");
+    _write_colour_list(stat_colour, "stat_colour");
 
     tiles.json_write_bool("tile_show_minihealthbar",
-                          Options.tile_show_minihealthbar);
+                          tile_show_minihealthbar);
     tiles.json_write_bool("tile_show_minimagicbar",
-                          Options.tile_show_minimagicbar);
+                          tile_show_minimagicbar);
     tiles.json_write_bool("tile_show_demon_tier",
-                          Options.tile_show_demon_tier);
+                          tile_show_demon_tier);
 
-    tiles.json_write_int("tile_map_pixels", Options.tile_map_pixels);
+    tiles.json_write_int("tile_map_pixels", tile_map_pixels);
 
-    tiles.json_write_string("tile_display_mode", Options.tile_display_mode);
-    tiles.json_write_int("tile_cell_pixels", Options.tile_cell_pixels);
-    tiles.json_write_int("tile_viewport_scale", Options.tile_viewport_scale);
-    tiles.json_write_int("tile_map_scale", Options.tile_map_scale);
-    tiles.json_write_bool("tile_filter_scaling", Options.tile_filter_scaling);
-    tiles.json_write_bool("tile_water_anim", Options.tile_water_anim);
-    tiles.json_write_bool("tile_misc_anim", Options.tile_misc_anim);
-    tiles.json_write_bool("tile_realtime_anim", Options.tile_realtime_anim);
+    tiles.json_write_string("tile_display_mode", tile_display_mode);
+    tiles.json_write_int("tile_cell_pixels", tile_cell_pixels);
+    tiles.json_write_int("tile_viewport_scale", tile_viewport_scale);
+    tiles.json_write_int("tile_map_scale", tile_map_scale);
+    tiles.json_write_bool("tile_filter_scaling", tile_filter_scaling);
+    tiles.json_write_bool("tile_water_anim", tile_water_anim);
+    tiles.json_write_bool("tile_misc_anim", tile_misc_anim);
+    tiles.json_write_bool("tile_realtime_anim", tile_realtime_anim);
     tiles.json_write_bool("tile_level_map_hide_messages",
-            Options.tile_level_map_hide_messages);
+            tile_level_map_hide_messages);
     tiles.json_write_bool("tile_level_map_hide_sidebar",
-            Options.tile_level_map_hide_sidebar);
-    tiles.json_write_bool("tile_web_mouse_control", Options.tile_web_mouse_control);
-    tiles.json_write_string("tile_web_mobile_input_helper", Options.tile_web_mobile_input_helper);
-    tiles.json_write_bool("tile_menu_icons", Options.tile_menu_icons);
+            tile_level_map_hide_sidebar);
+    tiles.json_write_bool("tile_web_mouse_control", tile_web_mouse_control);
+    tiles.json_write_string("tile_web_mobile_input_helper", tile_web_mobile_input_helper);
+    tiles.json_write_bool("tile_menu_icons", tile_menu_icons);
 
     tiles.json_write_string("tile_font_crt_family",
-            Options.tile_font_crt_family);
+            tile_font_crt_family);
     tiles.json_write_string("tile_font_stat_family",
-            Options.tile_font_stat_family);
+            tile_font_stat_family);
     tiles.json_write_string("tile_font_msg_family",
-            Options.tile_font_msg_family);
+            tile_font_msg_family);
     tiles.json_write_string("tile_font_lbl_family",
-            Options.tile_font_lbl_family);
-    tiles.json_write_int("tile_font_crt_size", Options.tile_font_crt_size);
-    tiles.json_write_int("tile_font_stat_size", Options.tile_font_stat_size);
-    tiles.json_write_int("tile_font_msg_size", Options.tile_font_msg_size);
-    tiles.json_write_int("tile_font_lbl_size", Options.tile_font_lbl_size);
+            tile_font_lbl_family);
+    tiles.json_write_int("tile_font_crt_size", tile_font_crt_size);
+    tiles.json_write_int("tile_font_stat_size", tile_font_stat_size);
+    tiles.json_write_int("tile_font_msg_size", tile_font_msg_size);
+    tiles.json_write_int("tile_font_lbl_size", tile_font_lbl_size);
 
-    tiles.json_write_string("glyph_mode_font", Options.glyph_mode_font);
-    tiles.json_write_int("glyph_mode_font_size", Options.glyph_mode_font_size);
+    tiles.json_write_string("glyph_mode_font", glyph_mode_font);
+    tiles.json_write_int("glyph_mode_font_size", glyph_mode_font_size);
 
-    tiles.json_write_bool("show_game_time", Options.show_game_time);
+    tiles.json_write_bool("show_game_time", show_game_time);
 
     // TODO: convert action_panel_show into a yes/no/never option. It would be
     // better to have a more straightforward way of disabling the panel
     // completely
     tiles.json_write_bool("action_panel_disabled",
-            Options.action_panel.empty());
+            action_panel.empty());
     tiles.json_write_bool("action_panel_show",
-            Options.action_panel_show);
+            action_panel_show);
     tiles.json_write_int("action_panel_scale",
-            Options.action_panel_scale);
+            action_panel_scale);
     tiles.json_write_string("action_panel_orientation",
-            Options.action_panel_orientation);
+            action_panel_orientation);
     tiles.json_write_string("action_panel_font_family",
-            Options.action_panel_font_family);
+            action_panel_font_family);
     tiles.json_write_int("action_panel_font_size",
-            Options.action_panel_font_size);
-    tiles.json_write_bool("action_panel_glyphs", Options.action_panel_glyphs);
+            action_panel_font_size);
+    tiles.json_write_bool("action_panel_glyphs", action_panel_glyphs);
 
     _write_minimap_colours();
 
