@@ -15286,155 +15286,47 @@ Ihr kommt wieder in das Land der Lebenden ...
 # newgame.cc
 ##################
 %%%%
-Recommended character
-
-%%%%
-Random character
-
-%%%%
-"Random "
-
-%%%%
-"Recommended "
-
-%%%%
-Trunk games don't count for the tournament, you want %s.
-
-%%%%
-" Play trunk anyway? (Y/N)"
-
-%%%%
-%Y%m%d
-
-%%%%
 Press [p] or [ctrl-v] to paste a seed from the clipboard
-
+[p] oder [ctrl-v] drücken, um eine Seed aus dem Clipboard einzufügen
 %%%%
 (overwriting the current value).
-
+(überschreibt den aktuellen Wert).
 %%%%
 The seed will determine the dungeon layout, monsters, and items
-
+Die Seed bestimmt den Aufbau des Dungeons, die Monster und die Gegenstände,
 %%%%
 that you discover, relative to this version of crawl. Upgrading
-
+die Ihr entdeckt, bezogen auf diese Version von Crawl. Upgraden
 %%%%
 mid-game may affect seeding. (See the manual for more details.)
-
+mitten im Spiel kann Seeding beeinflussen. (Sieht die Anleitung für Details.)
 %%%%
 Warning: your build of crawl does not support stable seeding!
-
+Warnung: Eure Version von Crawl eignet sich nicht für stabiles Seeding!
 %%%%
 Levels may differ from 'official' seeded games.
-
+Levels können von den "offiziellen" Seed-Spielen abweichen.
 %%%%
 Seeded play
-
+Seed-Spielen
 %%%%
 No player name specified.
-
-%%%%
-background-main
-
-%%%%
-species-main
-
-%%%%
-background-sub
-
-%%%%
-species-sub
-
-%%%%
-background
-
-%%%%
-species
-
-%%%%
-"+ - Recommended "
-
-%%%%
-"Picks a random recommended "
-
-%%%%
-" based on your current "
-
-%%%%
-" choice."
-
-%%%%
-# - Recommended character
-
-%%%%
-"    * - Random "
-
-%%%%
-"Picks a random "
-
-%%%%
-"Space - Change "
-
-%%%%
-"Lets you change your "
-
-%%%%
-"Space - Pick "
-
-%%%%
-" first"
-
-%%%%
-"Lets you pick your "
-
-%%%%
-" first."
-
-%%%%
-main-items
-
-%%%%
-sub-items
-
-%%%%
-" and throwing nets"
-
+Keinen Spielername gegeben.
 %%%%
 Lists the numerical skill train aptitudes for all races
-
+Auflistung der numerischen Fertigkeitsbegaben für alle Rassen
 %%%%
 Opens the help screen
-
+Öffnet die Hilfsseite
 %%%%
 Random
-
+Zufällig
 %%%%
 Recommended
-
-%%%%
-weapon-main
-
-%%%%
-weapon-sub
-
-%%%%
-"You have a choice of "
-
-%%%%
-lessons
-
-%%%%
-maps
-
-%%%%
-map-main
-
-%%%%
-map-sub
-
+Vorgeschlagen
 %%%%
 No %s maps found.
-
+Kene %s-Karten gefunden.
 %%%%
 
 ##################

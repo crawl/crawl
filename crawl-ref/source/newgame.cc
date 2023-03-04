@@ -390,7 +390,8 @@ static bool _reroll_random(newgame_def& ng)
 
     auto vbox = make_shared<Box>(Box::VERT);
     vbox->add_child(move(title_hbox));
-    vbox->add_child(make_shared<Text>("Do you want to play this combination? [Y/n/q]"));
+    string text = localise("Do you want to play this combination? [Y/n/q]");
+    vbox->add_child(make_shared<Text>(text));
     auto popup = make_shared<ui::Popup>(move(vbox));
 
     bool done = false;
@@ -438,9 +439,9 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
     // Apologies to non-public servers.
     if (ng.type == GAME_TYPE_NORMAL)
     {
-        string text = "Trunk games don't count for the tournament, you want %s.";
-        text += " Play trunk anyway? (Y/N)";
-        text = localise(text, TOURNEY);
+        string text = localise(
+            "Trunk games don't count for the tournament, you want %s."
+            " Play trunk anyway? (Y/N)", TOURNEY);
         if (!yesno(text, false, 'n'))
         {
             game_ended(game_exit::abort);
@@ -894,7 +895,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
         time(&now);
         struct tm * timeinfo = localtime(&now);
         char timebuf[9];
-        strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo);
+        strftime(timebuf, sizeof(timebuf), "%Y%m%d", timeinfo); // noloc
         seed_input->set_text(string(timebuf));
         ui::set_focused_widget(seed_input.get());
         return true;
@@ -963,7 +964,7 @@ static void _choose_seed(newgame_def& ng, newgame_def& choice,
     popup->on_keydown_event([&](const KeyEvent& ev) {
         const auto key = ev.key();
         if (key == '?') // TODO: text box absorbs this still
-            show_help('D', "Seeded play"); // TODO: scroll to section
+            show_help('D', localise("Seeded play")); // TODO: scroll to section
 #ifdef USE_TILE_LOCAL
         else if ((key == 'p' || key == 'P' || key == CONTROL('V')))
         {
@@ -1187,6 +1188,7 @@ public:
 
         descriptions = make_shared<Switcher>();
 
+        // noloc section start
         m_main_items = make_shared<OuterMenu>(true, 3, 20);
         m_main_items->menu_id = m_choice_type == C_JOB ?
             "background-main" : "species-main";
@@ -1248,6 +1250,7 @@ public:
             default:
                 return false;
             }
+            // noloc section end
         });
     };
 
@@ -1321,7 +1324,7 @@ protected:
 
         string text;
         text += letter;
-        text += " - ";
+        text += localise(" - ");
         text += localise(item_name);
         label->set_text(formatted_string(text, fg));
 
@@ -1364,9 +1367,6 @@ protected:
                                         const newgame_def& ng,
                                         const newgame_def& defaults)
     {
-        string choice_name = choice_type == C_JOB ? "background" : "species";
-        string other_choice_name = choice_type == C_JOB ? "species" : "background";
-
         string text, desc;
 
         int id;
@@ -1379,10 +1379,14 @@ protected:
         else
             id = M_RANDOM;
 
-        text = localise("+ - Recommended " + choice_name);
-        desc = localise("Picks a random recommended " + choice_name
-                        + " based on your current " + other_choice_name
-                        + " choice.");
+        text = localise(choice_type == C_JOB
+                        ? "+ - Recommended background"
+                        : "+ - Recommended species");
+        desc = localise(choice_type == C_JOB
+                        ? "Picks a random recommended background"
+                          " based on your current species choice."
+                        : "Picks a random recommended species"
+                          " based on your current background choice.");
 
         _add_choice_menu_option(0, 0,
                 text, '+', id, desc);
@@ -1400,8 +1404,12 @@ protected:
                 localise("? - Help"), '?', M_HELP,
                 localise("Opens the help screen."));
 
-        text = localise("    * - Random " + choice_name);
-        desc = localise("Picks a random " + choice_name + ".");
+        text = localise(choice_type == C_JOB
+                        ? "    * - Random background"
+                        : "    * - Random species");
+        desc = localise(choice_type == C_JOB
+                        ? "Picks a random background."
+                        : "Picks a random species.");
         _add_choice_menu_option(1, 0,
                 text, '*', M_RANDOM,
                 desc);
@@ -1413,16 +1421,25 @@ protected:
                 text, '!', M_RANDOM_CHAR,
                 desc);
 
-        if ((choice_type == C_JOB && ng.species != SP_UNKNOWN)
-            || (choice_type == C_SPECIES && ng.job != JOB_UNKNOWN))
+        if (choice_type == C_JOB && ng.species != SP_UNKNOWN)
         {
-            text = localise("Space - Change " + other_choice_name);
-            desc = localise("Lets you change your " + other_choice_name + " choice.");
+            text = localise("Space - Change species");
+            desc = localise("Lets you change your species choice.");
+        }
+        else if (choice_type == C_SPECIES && ng.job != JOB_UNKNOWN)
+        {
+            text = localise("Space - Change background");
+            desc = localise("Lets you change your background choice.");
+        }
+        else if (choice_type == C_JOB)
+        {
+            text = localise("Space - Pick species first");
+            desc = localise("Lets you pick your species first.");
         }
         else
         {
-            text = localise("Space - Pick " + other_choice_name + " first");
-            desc = localise("Lets you pick your " + other_choice_name + " first.");
+            text = localise("Space - Pick background first");
+            desc = localise("Lets you pick your background first.");
         }
         _add_choice_menu_option(1, 2,
                 text, ' ', M_ABORT, desc);
@@ -1430,7 +1447,7 @@ protected:
         if (_char_defined(defaults))
         {
             _add_choice_menu_option(1, 3,
-                    localise("  Tab - ") + newgame_char_description(defaults), '\t',
+                    localise("  Tab - ") + localise(newgame_char_description(defaults)), '\t',
                     M_DEFAULT_CHOICE,
                     localise("Play a new game with your previous choice."));
         }
@@ -1715,26 +1732,26 @@ static void _construct_weapon_menu(const newgame_def& ng,
             tileidx_t tile = 0;
             if (species::can_throw_large_rocks(ng.species))
             {
-                thrown_name = "large rocks";
+                thrown_name = "large rocks and throwing nets";
 #ifdef USE_TILE
                 tile = TILE_MI_LARGE_ROCK;
 #endif
             }
             else if (species::size(ng.species, PSIZE_TORSO) <= SIZE_SMALL)
             {
-                thrown_name = "boomerangs";
+                thrown_name = "boomerangs and throwing nets";
 #ifdef USE_TILE
                 tile = TILE_MI_BOOMERANG;
 #endif
             }
             else
             {
-                thrown_name = "javelins";
+                thrown_name = "javelins and throwing nets";
 #ifdef USE_TILE
                 tile = TILE_MI_JAVELIN;
 #endif
             }
-            thrown_name = localise(thrown_name + " and throwing nets");
+            thrown_name = localise(thrown_name);
             choices.emplace_back(SK_THROWING, thrown_name, tile);
             break;
         }
@@ -2277,9 +2294,11 @@ static void _prompt_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
     }
     welcome.textcolour(CYAN);
 
-    string text = "You have a choice of ";
-    text += (ng_choice.type == GAME_TYPE_TUTORIAL ? "lessons" : "maps");
-    text = string("\n") + localise(text + ":");
+    string text = "\n";
+    if (ng_choice.type == GAME_TYPE_TUTORIAL)
+        text += localise("You have a choice of lessons:");
+    else
+        text += localise("You have a choice of maps:");
     welcome.cprintf(text);
 
     auto vbox = make_shared<Box>(Box::VERT);

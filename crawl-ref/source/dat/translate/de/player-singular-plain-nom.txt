@@ -109,6 +109,110 @@ Lava-Ork
 %%%%
 
 ##############################################
+# Player species with adjective
+##############################################
+%%%%
+%sBarachi
+{adj-er}%sBarachi
+%%%%
+%sDeep Dwarf
+{adj-er}%sTiefenzwerg
+%%%%
+%sDeep Elf
+{adj-er}%sTiefenelf
+%%%%
+%sDemigod
+{adj-er}%sHalbgott
+%%%%
+%sDemonspawn
+{adj-e}%sDämonenbrut
+%%%%
+%sDjinni
+{adj-er}%sDschinn
+%%%%
+%sDraconian
+{adj-er}%sDrakonier
+%%%%
+%sFelid
+{adj-er}%sFelid
+%%%%
+%sFormicid
+{adj-er}%sFormicid
+%%%%
+%sGargoyle
+{adj-er}%sGargoyle
+%%%%
+%sGhoul
+{adj-er}%sGhul
+%%%%
+%sGnoll
+{adj-er}%sGnoll
+%%%%
+%sHill Orc
+{adj-er}%sHügelork
+%%%%
+%sHuman
+{adj-er}%sMensch
+%%%%
+%sKobold
+{adj-er}%sKobold
+%%%%
+%sMerfolk
+{adj-es}%sMeervolk
+%%%%
+%sMinotaur
+{adj-er}%sMinotaur
+%%%%
+%sMummy
+{adj-e}%sMumie
+%%%%
+%sNaga
+{adj-er}%sNaga
+%%%%
+%sOctopode
+{adj-er}%sOktopode
+%%%%
+%sOgre
+{adj-er}%sOger
+%%%%
+%sPalentonga
+{adj-er}%sPalentonga
+%%%%
+%sSpriggan
+{adj-er}%sSpriggan
+%%%%
+%sTengu
+{adj-er}%sTengu
+%%%%
+%sTroll
+{adj-er}%sTroll
+%%%%
+%sVampire
+{adj-er}%sVampir
+%%%%
+%sVine Stalker
+{adj-er}%sRebpirscher
+%%%%
+
+# obsolete (can you still get player ghosts of these species?)
+%%%%
+%sHalfling
+{adj-er}%sHalbling
+%%%%
+%sCentaur
+{adj-er}%sZentaur
+%%%%
+%sSludge Elf
+{adj-er}%sSchlammelf
+%%%%
+%sHigh Elf
+{adj-er}%sHochelf
+%%%%
+%sLava Orc
+{adj-er}%sLava-Ork
+%%%%
+
+##############################################
 # Draconian subspecies
 ##############################################
 %%%%

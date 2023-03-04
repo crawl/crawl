@@ -409,6 +409,10 @@ for filename in files:
                     continue
                 if 'json_' in line:
                     continue
+                if 'serialize' in line:
+                    continue
+                if '_id =' in line:
+                    continue
                 if 'push_ui_layout' in line:
                     continue
                 if re.search(r'\bprops\.erase *\(', line):

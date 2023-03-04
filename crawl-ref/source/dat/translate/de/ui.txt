@@ -198,8 +198,8 @@ Abenteurer
 + - Recommended background
 + - Vorgeschlagener Hintergrund
 %%%%
-# - Recommended character
-# - Vorgeschlagener Charakter
+"# - Recommended character"
+"# - Vorgeschlagener Charakter"
 %%%%
 % - List aptitudes
 % - Begabungen-Liste
@@ -285,8 +285,40 @@ Incompatible species and background (%s) selected.
 Inkompatible Spezies und Hintergrund (%s) ausgewählt.
 %%%%
 Do you want to play this combination? [Y/n/q]
-Spiele diese Kombnation? [Y/n/q]
+Spiele diese Kombnation? [J/n/q]
 %%%%
+
+%%%%
+Recommended character
+Vorgeschlangener Charakter
+%%%%
+Random character
+Zufälliger Charakter
+
+# random <species/background>
+# most are masculine
+%%%%
+"Random "
+"Zufälliger "
+%%%%
+"Recommended "
+"Vorgeschlagener "
+%%%%
+# but a few aren't
+%%%%
+Random Mummy
+Zufällige Mumie
+%%%%
+Random Merfolk
+Zufälliges Meervolk
+%%%%
+Recommended Mummy
+Vorgeschlagene Mumie
+%%%%
+Recommended Merfolk
+Vorgeschlagenes Meervolk
+%%%%
+
 # weapon selection
 %%%%
 You have a choice of weapons.
@@ -359,7 +391,7 @@ That's a silly name!
 Das ist ein alberner Name!
 %%%%
 You have an existing game under this name; really overwrite? [Y/n]
-Ihr habt schon ein Spiel mit dieser Name; Wirklich überschreiben? [Y/n]
+Ihr habt schon ein Spiel mit dieser Name; Wirklich überschreiben? [J/n]
 %%%%
 # seeded games
 %%%%
@@ -451,7 +483,7 @@ Lektion 5: Götter und Göttliche Fähigkeiten
 # other
 %%%%
 Trunk games don't count for the tournament, you want %s. Play trunk anyway? (Y/N)
-Trunk-Spiele gelten nicht für das Turnier. Ihr wollt veilleicht %s. Trunk trotzdem spielen? (Y/N)
+Trunk-Spiele gelten nicht für das Turnier. Ihr wollt veilleicht %s. Trunk trotzdem spielen? (J/N)
 %%%%
 
 ###############################################################

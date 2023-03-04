@@ -675,12 +675,13 @@ public:
             string game_desc = newgame_char_description(defaults);
             if (!defaults.name.empty())
             {
-                game_desc = localise("%s the %s", defaults.name.c_str(), game_desc.c_str());
+                game_desc = defaults.name + " ";
+                game_desc += localise("the " + game_desc);
             }
             instructions_text +=
                     string("<white>[") + localise("tab") + "]</white> "
                     + localise("quick-start last combo: ")
-                    + game_desc + "\n";
+                    + localise(game_desc) + "\n";
         }
         instructions_text +=
             string("<white>[") +localise("ctrl-p") + "]</white> "

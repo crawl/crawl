@@ -91,6 +91,93 @@ Skalde
 %%%%
 
 ##############################################
+# "<species> <background>"
+# Used for character selection menu
+##############################################
+%%%%
+%s Fighter
+%s Kämpfer
+%%%%
+%s Gladiator
+%s Gladiator
+%%%%
+%s Monk
+%s Mönch
+%%%%
+%s Hunter
+%s Jäger
+%%%%
+%s Berserker
+%s Berserker
+%%%%
+%s Brigand
+%s Brigant
+%%%%
+%s Abyssal Knight
+%s Abgrundritter
+%%%%
+%s Chaos Knight
+%s Chaosritter
+%%%%
+%s Enchanter
+%s Verzauberer
+%%%%
+%s Transmuter
+%s Verwandler
+%%%%
+%s Arcane Marksman
+%s Arkane Scharfschütze
+%%%%
+%s Warper
+%s Warper
+%%%%
+%s Hedge Wizard
+%s Heckenzauberer
+%%%%
+%s Conjurer
+%s Beschwörer
+%%%%
+%s Summoner
+%s Herbeirufer
+%%%%
+%s Necromancer
+%s Nekromant
+%%%%
+%s Fire Elementalist
+%s Feuermagier
+%%%%
+%s Ice Elementalist
+%s Eismagier
+%%%%
+%s Air Elementalist
+%s Luftmagier
+%%%%
+%s Earth Elementalist
+%s Erdmagier
+%%%%
+%s Venom Mage
+%s Giftmagier
+%%%%
+%s Artificer
+%s Artificer
+%%%%
+%s Delver
+%s Gräber
+%%%%
+%s Wanderer
+%s Wanderer
+%%%%
+
+# obsolete
+%%%%
+%s Assassin
+%s Assassine
+%%%%
+%s Skald
+%s Skalde
+%%%%
+
+##############################################
 # "the <species> <background>"
 # (as in "Welcome, Bob the Minotaur Berserker")
 ##############################################
