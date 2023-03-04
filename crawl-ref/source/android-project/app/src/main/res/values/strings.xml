@@ -10,6 +10,9 @@
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
     <string name="sort_by">Sort By</string>
+    <string name="download">Download</string>
+    <string name="download_ok">Download complete</string>
+    <string name="download_error">Download failed</string>
     <string-array name="sort_options">
         <item>Name asc.</item>
         <item>Name desc.</item>

@@ -1,5 +1,8 @@
 package org.develz.crawl;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -12,9 +15,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.CharBuffer;
 
 public class DCSSTextBase extends AppCompatActivity {
+
+    private static final int CREATE_FILE = 1;
+
+    private TextView textToDownload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +72,45 @@ public class DCSSTextBase extends AppCompatActivity {
             Log.e(DCSSLauncher.TAG, "Can't open asset: " + e.getMessage());
         }
     }
+
+    // Download the file
+    // Actually show a file picker to save the file
+    protected void downloadFile(TextView text, String fileName) {
+        Log.i(DCSSLauncher.TAG, "Downloading file: " + fileName);
+        textToDownload = text;
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+        startActivityForResult(intent, CREATE_FILE);
+    }
+
+    // Handling the download
+    // Save the file in the destination chosen by the user
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        super.onActivityResult(requestCode, resultCode, resultData);
+        try {
+            if (requestCode == CREATE_FILE && resultCode == Activity.RESULT_OK) {
+                if (resultData != null) {
+                    Uri uri = resultData.getData();
+                    Log.i(DCSSLauncher.TAG, "Destination: " + uri.toString());
+                    OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                    OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+                    writer.append(textToDownload.getText());
+                    writer.close();
+                    onDownloadOk();
+                }
+            }
+        } catch (IOException e) {
+            Log.e(DCSSLauncher.TAG, "Can't download file: " + e.getMessage());
+            onDownloadError();
+        }
+    }
+
+    // Overridden by children to show download results
+    protected void onDownloadOk() {};
+    protected void onDownloadError() {};
 
     // Close the activity without saving
     protected void close() {
