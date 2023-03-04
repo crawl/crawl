@@ -672,12 +672,9 @@ namespace quiver
                 }
             }
 
-            // Check for a monster in the way. If there is one, it blocks the reaching
-            // attack 50% of the time, and the attack tries to hit it if it is hostile.
-            // REACH_THREE entails smite targeting; this is a bit hacky in that
-            // this is entirely for the sake of UNRAND_RIFT.
-            // Cleaving reaches also will never fail to miss, since the player can
-            // just attack another target in most cases to hit both.
+            // This reimplements a bunch of the logic in movement.cc and fight.cc.
+            // TODO(pf): remove the ability to target a space more than 1 tile away
+            // with anything but Rift, then axe all this.
             if (reach_range < REACH_THREE
                 && !attack_cleaves(you)
                 && (x_distance > 1 || y_distance > 1))
@@ -707,10 +704,8 @@ namespace quiver
                 random_choose(first_middle, second_middle);
 
                 monster *midmons = monster_at(middle);
-                const bool friendly = midmons && midmons->wont_attack();
                 // Reaching attacks prefer adjacent foes when possible.
-
-                if (midmons && !midmons->submerged() && !friendly)
+                if (midmons && !midmons->submerged() && !midmons->wont_attack())
                 {
                     target.target = middle;
                     mons = midmons;
@@ -734,16 +729,6 @@ namespace quiver
                             you.turn_is_over = true;
                             return;
                         }
-                    }
-
-                    if (friendly
-                        && !god_protects(&you, midmons, true)
-                        && coinflip())
-                    {
-                        mpr("You could not reach far enough!");
-                        you.time_taken = attack_delay;
-                        you.turn_is_over = true;
-                        return;
                     }
 
                     mons = targets[random2(targets.size())]->as_monster();
