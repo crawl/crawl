@@ -307,8 +307,7 @@ static monster_type _choose_dragon_type(int pow, god_type /*god*/, bool player)
 
 spret cast_dragon_call(int pow, bool fail)
 {
-    // Quicksilver and storm dragons don't have rPois, but that's fine.
-    if (stop_summoning_prompt(MR_RES_POISON, "call dragons"))
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "call dragons"))
         return spret::abort;
 
     fail_check();
@@ -1063,18 +1062,8 @@ spret summon_butterflies()
         return spret::success;
     }
 
-    const string reason = stop_summoning_reason(MR_NO_FLAGS, M_FLIES);
-    if (reason != "")
-    {
-        string prompt = make_stringf("Really summon butterflies while emitting a %s?",
-                                     reason.c_str());
-
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return spret::abort;
-        }
-    }
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_FLIES))
+        return spret::abort;
 
     if (silenced(you.pos()))
         mpr("Somewhere, a butterfly flaps its wings.");
@@ -1241,8 +1230,11 @@ void create_malign_gateway(coord_def point, beh_type beh, string cause,
 spret cast_malign_gateway(actor * caster, int pow, god_type god,
                           bool fail, bool test)
 {
-    if (!test && caster->is_player() && stop_summoning_prompt(MR_RES_POISON))
+    if (!test && caster->is_player()
+        && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
+    {
         return spret::abort;
+    }
 
     coord_def point = find_gateway_location(caster);
     bool success = point != coord_def(0, 0);
@@ -1359,7 +1351,7 @@ spret cast_summon_forest(actor* caster, int pow, god_type god, bool fail, bool t
                                       200 + div_rand_round(pow * 3, 2));
 
     // Hm, should dryads have rPois?
-    if (stop_summoning_prompt(MR_NO_FLAGS, "summon a forest"))
+    if (stop_summoning_prompt(MR_NO_FLAGS, M_NO_FLAGS, "summon a forest"))
         return spret::abort;
 
     fail_check();
@@ -1441,7 +1433,7 @@ monster_type pick_random_wraith()
 
 spret cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
-    if (stop_summoning_prompt(MR_RES_POISON, "haunt your foes"))
+    if (stop_summoning_prompt(MR_RES_POISON, M_FLIES, "haunt your foe"))
         return spret::abort;
 
     monster* m = monster_at(where);
@@ -1619,7 +1611,7 @@ void init_servitor(monster* servitor, actor* caster, int pow)
 
 spret cast_spellforged_servitor(int pow, god_type god, bool fail)
 {
-    if (stop_summoning_prompt(MR_RES_POISON))
+    if (stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();
@@ -1662,7 +1654,7 @@ dice_def battlesphere_damage(int pow)
 
 spret cast_battlesphere(actor* agent, int pow, god_type god, bool fail)
 {
-    if (agent->is_player() && stop_summoning_prompt(MR_RES_POISON))
+    if (agent->is_player() && stop_summoning_prompt(MR_RES_POISON, M_FLIES))
         return spret::abort;
 
     fail_check();

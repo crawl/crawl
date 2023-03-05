@@ -86,6 +86,7 @@ bool stop_attack_prompt(targeter &hitfunc, const char* verb,
 
 string stop_summoning_reason(resists_t resists, monclass_flags_t flags);
 bool stop_summoning_prompt(resists_t resists = MR_NO_FLAGS,
+                           monclass_flags_t flags = M_NO_FLAGS,
                            string verb = "summon");
 
 bool can_reach_attack_between(coord_def source, coord_def target,
