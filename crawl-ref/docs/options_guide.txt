@@ -15,11 +15,11 @@ The contents of this text are:
 0-d     List options.
 0-e     Aliases and variables.
 1-  Starting Screen.
-                name, remember_name, weapon, species, background, combo,
+                name, type, remember_name, weapon, species, background, combo,
                 restart_after_game, restart_after_save, newgame_after_quit,
                 name_bypasses_menu, default_manual_training,
                 autopickup_starting_ammo, game_seed, pregen_dungeon,
-                suppress_startup_errors
+                suppress_startup_errors, map, fully_random, arena_teams
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound, hold_sound,
                 sound_file_path, one_SDL_sound_channel
@@ -349,6 +349,11 @@ command line.
 name = Delilah
         If set, that's the name all your Crawl characters will get.
 
+type = normal
+        Choose a game type. Valid values are "normal", "seeded", "tutorial",
+        "arena", "sprint", and "hints". In combination with other options,
+        this can let you bypass the main menu.
+
 remember_name = true
         Crawl remembers the options (species, background etc.) you used
         to create your last character. You may recycle them in the
@@ -467,6 +472,24 @@ suppress_startup_errors = false
         The main menu will contain a warning of errors regardless of this
         setting, and it does not affect what happens with errors detected as a
         character is loaded.
+
+map = ""
+        This can be used to choose a sprint map. If set in an rc file, this
+        value skips the sprint map selection submenu. Valid options are:
+        dungeon_sprint_1, the_violet_keep_of_menkaure, dungeon_sprint_mu,
+        dungeon_sprint_fedhas, sprint_v, arena_sprint, pitsprint, meatsprint,
+        and linesprint.
+
+fully_random = false
+        Set to true to choose a combo randomly. If either species or job is
+        set to `viable`, this will choose a combo from "recommended"
+        characters, otherwise, it will choose combos entirely randomly. When
+        set, the character selection menus are replaced with a prompt that
+        offers you a combo, and allows you to accept or reroll.
+
+arena_teams = ""
+        Set to preselect teams in arena mode. When set, arena mode goes directly
+        to the competition.
 
 2-  File System.
 ================
