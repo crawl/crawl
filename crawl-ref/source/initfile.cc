@@ -169,7 +169,15 @@ const vector<GameOption*> game_options::build_options_list()
 
     // ignores superclass stub for this function
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
+    #define NEWGAME_NAME(_opt) game._opt, {#_opt}
     vector<GameOption*> options = {
+#if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
+        new StringGameOption(NEWGAME_NAME(name), "", true),
+#endif
+        new BoolGameOption(NEWGAME_NAME(fully_random), false),
+        new StringGameOption(NEWGAME_NAME(arena_teams), ""),
+        new StringGameOption(NEWGAME_NAME(map), ""),
+
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
         new MultipleChoiceGameOption<int>(
             autopickup_on, {"default_autopickup"},
@@ -1215,6 +1223,14 @@ void game_options::reset_options()
 
     game = newgame_def();
 
+#ifdef DGAMELAUNCH
+    // somewhat weird looking, but: if the reset object is Options, this just
+    // sets it to the default value for newgame_def, and lets CLO override
+    // the value. If it's *not* Options, this then inherits whatever was set
+    // at CLO.
+    game.type = Options.game.type;
+#endif
+
     // set it to the .crawlrc default
     autopickups.reset();
     autopickups.set(OBJ_GOLD);
@@ -2040,15 +2056,30 @@ void read_init_file(bool runscripts)
 
 newgame_def read_startup_prefs()
 {
-    FileLineInput fl(get_prefs_filename().c_str());
+    // see `write_newgame_options_file` for a long comment that attempts to
+    // explain why this needs to be here, but the short answer is that without
+    // it, crawl will read from the wrong file some of the time.
+    unwind_var<game_type> gt(crawl_state.type, Options.game.type);
+
+    const string filename = get_prefs_filename();
+    FileLineInput fl(filename.c_str());
     if (fl.error())
         return newgame_def();
 
     game_options temp;
+    temp.filename = filename;
+    temp.basefilename = filename;
     temp.read_options(fl, false);
 
     // !!side effect warning!!
-    Options.merge(temp);
+    {
+        // don't overwrite whatever is currently in Options with anything from
+        // the prefs file; these are handled unlike regular options in this
+        // file. Instead, we want to return temp.game and let the caller handle
+        // them as needed. (This is not very elegant..)
+        unwind_var<newgame_def> cur_game_opts(Options.game);
+        Options.merge(temp);
+    }
 
     if (!temp.game.allowed_species.empty())
         temp.game.species = temp.game.allowed_species[0];
@@ -2135,6 +2166,9 @@ void write_newgame_options_file(const newgame_def& prefs)
     //
     // Yes, this is unnecessarily complex. Better ideas welcome.
     //
+
+    // TODO: this is probably worse now that more than simple newgame char
+    // prefs are stored in this file
     unwind_var<game_type> gt(crawl_state.type, Options.game.type);
 
     if (Options.no_save)
@@ -3257,14 +3291,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         }
         return true;
     }
-#if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
-    else if (key == "name")
-    {
-        // field is already cleaned up from trim_string()
-        game.name = state.raw_field;
-        return true;
-    }
-#endif
     else if (key == "language")
     {
         if (!set_lang(state.field.c_str()))
@@ -3381,26 +3407,12 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             true);
         return true;
     }
-    else if (key == "arena_teams")
-    {
-        game.arena_teams = state.field;
-        return true;
-    }
-    // [ds] Allow changing map only if the map hasn't been set on the
-    // command-line.
-    else if (key == "map" && crawl_state.sprint_map.empty())
-    {
-        game.map = state.field;
-        return true;
-    }
     // [ds] For dgamelaunch setups, the player should *not* be able to
     // set game type in their rc; the only way to set game type for
     // DGL builds should be the command-line options.
     else if (key == "type")
     {
-#if defined(DGAMELAUNCH)
-        game.type = Options.game.type;
-#else
+#ifndef DGAMELAUNCH
         game.type = _str_to_gametype(state.field);
 #endif
         return true;
@@ -3411,11 +3423,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         game.allowed_jobs.clear();
         game.allowed_weapons.clear();
         NEWGAME_OPTION(game.allowed_combos, string, string);
-        return true;
-    }
-    else if (key == "fully_random")
-    {
-        game.fully_random = read_bool(state.field, game.fully_random);
         return true;
     }
     else if (key == "species" || key == "race")

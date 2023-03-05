@@ -242,6 +242,19 @@ struct base_game_options
         return o->second;
     }
 
+    // silly c++ standard approach to has_key
+    int count(const string &name) const
+    {
+        return options_by_name.count(name);
+    }
+
+    GameOption &operator[] (const string &name) const
+    {
+        auto o = option_from_name(name);
+        ASSERT(o);
+        return *o;
+    }
+
     virtual void reset_aliases(bool clear=true);
     void include(const string &file, bool resolve, bool runscripts);
     string resolve_include(const string &file, const char *type = "");
