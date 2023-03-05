@@ -1570,7 +1570,7 @@ void game_options::add_force_spell_targeter(const string &s, bool)
         report_error("Unknown spell '%s'\n", s.c_str());
 }
 
-void game_options::remove_force_spell_targeter(const string &s, bool)
+void game_options::remove_force_spell_targeter(const string &s)
 {
     if (lowercase_string(s) == "all")
     {
@@ -1598,7 +1598,7 @@ void game_options::add_force_ability_targeter(const string &s, bool)
         force_ability_targeter.insert(abil);
 }
 
-void game_options::remove_force_ability_targeter(const string &s, bool)
+void game_options::remove_force_ability_targeter(const string &s)
 {
     if (lowercase_string(s) == "all")
     {
@@ -1658,7 +1658,7 @@ cglyph_t game_options::parse_mon_glyph(const string &s) const
     return md;
 }
 
-void game_options::remove_mon_glyph_override(const string &text, bool /*prepend*/)
+void game_options::remove_mon_glyph_override(const string &text)
 {
     vector<string> override = split_string(":", text);
 
@@ -1717,7 +1717,7 @@ void game_options::add_mon_glyph_override(const string &text, bool /*prepend*/)
             mon_glyph_overrides[m] = mdisp;
 }
 
-void game_options::remove_item_glyph_override(const string &text, bool /*prepend*/)
+void game_options::remove_item_glyph_override(const string &text)
 {
     string key = text;
     trim_string(key);
@@ -1746,7 +1746,7 @@ void game_options::add_item_glyph_override(const string &text, bool prepend)
     }
 }
 
-void game_options::remove_feature_override(const string &text, bool /*prepend*/)
+void game_options::remove_feature_override(const string &text)
 {
     string fname;
     string::size_type epos = text.rfind("}");
@@ -3090,36 +3090,52 @@ opt_parse_state base_game_options::parse_option_line(const string &str)
 
 // ugh, this is still very messy. Calling this is quite verbose, hence the
 // wrapper below.
-static void _base_split_parse(const string &s, const string &separator,
-                    function<void(const string &, bool)> add,
+static void _base_split_parse(const string &s,
+                    const string &separator,
+                    function<void(const string &, bool)> modify,
                     bool prepend=false)
 {
+    // Lots of things use split parse, for some ^= and += should do different things,
+    // for others they should not. Split parse just passes them along.
     const vector<string> defs = split_string(separator, s);
     if (prepend)
     {
-        for ( auto it = defs.rbegin() ; it != defs.rend(); ++it)
-            add(*it, prepend);
+        for (auto it = defs.rbegin(); it != defs.rend(); ++it)
+            modify(*it, prepend);
     }
     else
     {
-        for ( auto it = defs.begin() ; it != defs.end(); ++it)
-            add(*it, prepend);
+        for (auto it = defs.begin(); it != defs.end(); ++it)
+            modify(*it, prepend);
     }
 }
 
-// Lots of things use split parse, for some ^= and += should do different things,
-// for others they should not. Split parse just passes them along.
-void game_options::split_parse(const string &s, const string &separator,
+void game_options::split_parse(const opt_parse_state &state,
+                    const string &separator,
                     void (game_options::*add)(const string &, bool),
-                    bool prepend)
+                    void (game_options::*remove)(const string &),
+                    bool case_sensitive)
 {
-    // wrapper that basically just binds `this`, so that we can write shorter
-    // calls to the generic function above in game_options code.
-    _base_split_parse(s, separator, [this, add](const string &s, bool b)
-        {
-            (this->*add)(s, b);
-        },
-        prepend);
+    const string &s = case_sensitive ? state.raw_field : state.field;
+
+    if (remove && state.minus_equal())
+    {
+        _base_split_parse(s, separator,
+            [this, remove](const string &s, bool)
+            {
+                (this->*remove)(s);
+            });
+    }
+
+    if (add && (state.add_equal() || state.plain()))
+    {
+        _base_split_parse(s, separator,
+            [this, add](const string &s, bool b)
+            {
+                (this->*add)(s, b);
+            },
+            state.caret_equal());
+    }
 }
 
 void base_game_options::read_option_line(const string &str, bool runscripts)
@@ -3328,23 +3344,26 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
     else if (key == "feature" || key == "dungeon")
     {
         if (state.plain())
-           clear_feature_overrides();
+            clear_feature_overrides();
 
-        if (state.minus_equal())
-            split_parse(state.raw_field, ";", &game_options::remove_feature_override);
-        else
-            split_parse(state.raw_field, ";", &game_options::add_feature_override);
+        state.ignore_prepend();
+        split_parse(state, ";",
+            &game_options::add_feature_override,
+            &game_options::remove_feature_override,
+            true);
         return true;
     }
     else if (key == "mon_glyph")
     {
         if (state.plain())
-           mon_glyph_overrides.clear();
+            mon_glyph_overrides.clear();
 
-        if (state.minus_equal())
-            split_parse(state.raw_field, ",", &game_options::remove_mon_glyph_override);
-        else
-            split_parse(state.raw_field, ",", &game_options::add_mon_glyph_override);
+        state.ignore_prepend();
+        split_parse(state, ",",
+            &game_options::add_mon_glyph_override,
+            &game_options::remove_mon_glyph_override,
+            true);
+
         return true;
     }
     else if (key == "item_glyph")
@@ -3355,10 +3374,11 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             item_glyph_cache.clear();
         }
 
-        if (state.minus_equal())
-            split_parse(state.raw_field, ",", &game_options::remove_item_glyph_override);
-        else
-            split_parse(state.raw_field, ",", &game_options::add_item_glyph_override, state.caret_equal());
+        // supports ^=
+        split_parse(state, ",",
+            &game_options::add_item_glyph_override,
+            &game_options::remove_item_glyph_override,
+            true);
         return true;
     }
     else if (key == "arena_teams")
@@ -3694,16 +3714,11 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
                 force_spell_targeter.clear();
             }
 
-            if (state.minus_equal())
-            {
-                split_parse(state.field, ",",
-                            &game_options::remove_force_spell_targeter);
-            }
-            else
-            {
-                split_parse(state.field, ",",
-                            &game_options::add_force_spell_targeter);
-            }
+            state.ignore_prepend();
+            split_parse(state, ",",
+                &game_options::add_force_spell_targeter,
+                &game_options::remove_force_spell_targeter,
+                false);
         }
         return true;
     }
@@ -3715,13 +3730,11 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             force_ability_targeter.clear();
         }
 
-        if (state.minus_equal())
-        {
-            split_parse(state.field, ",",
-                        &game_options::remove_force_ability_targeter);
-        }
-        else
-            split_parse(state.field, ",", &game_options::add_force_ability_targeter);
+        state.ignore_prepend();
+        split_parse(state, ",",
+            &game_options::add_force_ability_targeter,
+            &game_options::remove_force_ability_targeter,
+            false);
         return true;
     }
     else if (key == "spell_slot"

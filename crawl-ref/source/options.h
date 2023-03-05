@@ -158,6 +158,12 @@ struct opt_parse_state
         return line_type == RCFILE_LINE_CARET;
     }
 
+    void ignore_prepend()
+    {
+        if (line_type == RCFILE_LINE_CARET)
+            line_type = RCFILE_LINE_PLUS;
+    }
+
     constexpr bool add_equal() const
     {
         return line_type == RCFILE_LINE_PLUS || line_type == RCFILE_LINE_CARET;
@@ -277,10 +283,11 @@ public:
 
     bool read_custom_option(opt_parse_state &state, bool runscripts) override;
 
-    void split_parse(const string &s, const string &separator,
+    void split_parse(const opt_parse_state &state,
+                    const string &separator,
                     void (game_options::*add)(const string &, bool),
-                    bool prepend=false);
-
+                    void (game_options::*remove)(const string &),
+                    bool case_sensitive);
 
 #ifdef USE_TILE_WEB
     void write_webtiles_options(const string &name);
@@ -768,7 +775,7 @@ private:
     void clear_cset_overrides();
     void add_cset_override(dungeon_char_type dc, int symbol);
     void add_feature_override(const string &, bool prepend);
-    void remove_feature_override(const string &, bool prepend);
+    void remove_feature_override(const string &);
 
     void add_message_colour_mappings(const string &, bool, bool);
     void add_message_colour_mapping(const string &, bool, bool);
@@ -795,18 +802,18 @@ private:
     use_animations_type read_use_animations(const string &) const;
 
     void add_mon_glyph_override(const string &, bool prepend);
-    void remove_mon_glyph_override(const string &, bool prepend);
+    void remove_mon_glyph_override(const string &);
     cglyph_t parse_mon_glyph(const string &s) const;
     void add_item_glyph_override(const string &, bool prepend);
-    void remove_item_glyph_override(const string &, bool prepend);
+    void remove_item_glyph_override(const string &);
     bool set_lang(const char *s);
     void set_fake_langs(const string &input);
     void set_player_tile(const string &s);
     void set_tile_offsets(const string &s, bool set_shield);
     void add_force_spell_targeter(const string &s, bool prepend);
-    void remove_force_spell_targeter(const string &s, bool prepend);
+    void remove_force_spell_targeter(const string &s);
     void add_force_ability_targeter(const string &s, bool prepend);
-    void remove_force_ability_targeter(const string &s, bool prepend);
+    void remove_force_ability_targeter(const string &s);
 
     static const string interrupt_prefix;
 
