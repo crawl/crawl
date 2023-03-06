@@ -1171,8 +1171,8 @@ static string _localise_item_name(const string& context, const string& item)
 
             if (!result.empty() && !suffix.empty())
             {
-                string loc_brand = cxlate(context, suffix);
-                if (loc_brand != suffix)
+                string loc_brand = cxlate(context, suffix, false);
+                if (!loc_brand.empty())
                     result += loc_brand;
                 else
                 {
