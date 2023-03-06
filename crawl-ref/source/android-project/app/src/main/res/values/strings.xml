@@ -13,10 +13,17 @@
     <string name="download">Download</string>
     <string name="download_ok">Download complete</string>
     <string name="download_error">Download failed</string>
+    <string name="keyboard">Keyboard</string>
     <string-array name="sort_options">
         <item>Name asc.</item>
         <item>Name desc.</item>
         <item>Date asc.</item>
         <item>Date desc.</item>
+    </string-array>
+    <string-array name="keyboard_options">
+        <item>Classic Keyboard</item>
+        <item>Transparent Keyboard</item>
+        <item>Android Keyboard</item>
+        <item>No Keyboard</item>
     </string-array>
 </resources>

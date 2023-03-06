@@ -63,7 +63,7 @@
             <Spinner
                 android:id="@+id/sortSpinner"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="36dp"
                 android:layout_weight="1"
                 android:background="@color/dark_green"
                 android:popupBackground="@color/dark_green"
