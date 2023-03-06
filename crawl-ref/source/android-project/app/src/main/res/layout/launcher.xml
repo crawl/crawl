@@ -36,14 +36,42 @@
                 android:id="@+id/editInitFile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:text="@string/edit_rc"/>
 
             <Button
                 android:id="@+id/morgueButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:text="@string/morgue"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginHorizontal="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginRight="6dp"
+                    android:text="@string/keyboard"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/keyboardSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_weight="1"
+                    android:background="@color/dark_green"
+                    android:popupBackground="@color/dark_green"
+                    android:spinnerMode="dropdown" />
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

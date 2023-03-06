@@ -62,12 +62,12 @@ public class SDLActivity extends AppCompatActivity {
     protected static SDLActivity mSingleton;
     protected static SDLSurface mSurface;
     protected static DCSSKeyboard mKeyboard;
+    protected static int keyboardOption;
     protected static View mTextEdit;
     protected static boolean mScreenKeyboardShown;
     protected static boolean mScreenKeyboardFirstShown;
     protected static ViewGroup mLayout;
     protected static SDLClipboardHandler mClipboardHandler;
-
 
     // This is what SDL runs in. It invokes SDL_main(), eventually
     protected static Thread mSDLThread;
@@ -137,6 +137,7 @@ public class SDLActivity extends AppCompatActivity {
         mSingleton = null;
         mSurface = null;
         mKeyboard = null;
+        keyboardOption = 0;
         mTextEdit = null;
         mLayout = null;
         mClipboardHandler = null;
@@ -215,9 +216,16 @@ public class SDLActivity extends AppCompatActivity {
         }
 
         // CRAWK HACK: Custom keyboard (START)
+        Intent intent = getIntent();
+        keyboardOption = intent.getIntExtra("keyboard", 0);
+        Log.i(TAG, "Keyboard option: " + keyboardOption);
+
         mLayout = new RelativeLayout(this);
         mSurface = new SDLSurface(getApplication());
         mKeyboard = new DCSSKeyboard(this);
+        if (keyboardOption == 1) {
+            mKeyboard.transparentKeyboard();
+        }
 
         // SDLSurface aligned top
         RelativeLayout.LayoutParams sdlLParams = new RelativeLayout.LayoutParams(
@@ -243,7 +251,11 @@ public class SDLActivity extends AppCompatActivity {
                 if (mKeyboard.getVisibility() != View.VISIBLE || oldBottom != mLayout.getHeight()) {
                     mKeyboard.setVisibility(View.VISIBLE);
                     ViewGroup.LayoutParams lParams = mSurface.getLayoutParams();
-                    lParams.height = mLayout.getHeight() - mKeyboard.getHeight();
+                    if (keyboardOption == 0) {
+                        lParams.height = mLayout.getHeight() - mKeyboard.getHeight();
+                    } else {
+                        lParams.height = mLayout.getHeight();
+                    }
                     mSurface.setLayoutParams(lParams);
                 }
             }
@@ -258,12 +270,14 @@ public class SDLActivity extends AppCompatActivity {
 
             // Init the TextEdit
             // Transfer the task to the main thread as a Runnable
-            mSingleton.commandHandler.post(new ShowTextInputTask(left, top, right, bottom));
+            // Delay the initialization if using the soft keyboard
+            if (keyboardOption != 2) {
+                mSingleton.commandHandler.post(new ShowTextInputTask(left, top, right, bottom));
+            }
         });
         // CRAWK HACK: Custom keyboard (END)
 
         // Get filename from "Open with" of another application
-        Intent intent = getIntent();
         if (intent != null && intent.getData() != null) {
             String filename = intent.getData().getPath();
             if (filename != null) {
@@ -690,7 +704,6 @@ public class SDLActivity extends AppCompatActivity {
 
         InputMethodManager imm = (InputMethodManager) SDL.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         return imm.isAcceptingText();
-
     }
 
     /**
@@ -734,7 +747,7 @@ public class SDLActivity extends AppCompatActivity {
             params.topMargin = y;
 
             if (mTextEdit == null) {
-                mTextEdit = new DummyEdit(SDL.getContext());
+                mTextEdit = new DummyEdit(SDL.getContext(), keyboardOption);
 
                 mLayout.addView(mTextEdit, params);
             } else {
@@ -743,6 +756,9 @@ public class SDLActivity extends AppCompatActivity {
 
             mTextEdit.setVisibility(View.VISIBLE);
             mTextEdit.requestFocus();
+
+            InputMethodManager imm = (InputMethodManager) SDL.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mTextEdit, 0);
 
             // CRAWL HACK: Custom keyboard
             InputConnection ic = mTextEdit.onCreateInputConnection(new EditorInfo());
@@ -763,12 +779,28 @@ public class SDLActivity extends AppCompatActivity {
     // CRAWL HACK: Function used to toggle the keyboard
     // This method is called using JNI
     public static boolean jniKeyboardControl(boolean toggle) {
-        if (toggle) {
-            mScreenKeyboardShown = !mScreenKeyboardShown;
-        } else if (!mScreenKeyboardFirstShown) {
-            mScreenKeyboardShown = true;
+        Log.i(TAG, "jniKeyboardControl. Toggle = " + toggle);
+        // Custom keyboards
+        if (keyboardOption == 0 || keyboardOption == 1) {
+            if (toggle) {
+                mScreenKeyboardShown = !mScreenKeyboardShown;
+            } else if (!mScreenKeyboardFirstShown) {
+                mScreenKeyboardShown = true;
+            }
+            return mScreenKeyboardShown;
         }
-        return mScreenKeyboardShown;
+        // System keyboard
+        if (keyboardOption == 2) {
+            if (mTextEdit == null) {
+                mSingleton.commandHandler.post(new ShowTextInputTask((int)mSurface.getX(), (int)mSurface.getY(), mSurface.getWidth(), mSurface.getHeight()));
+            }
+            else if (mTextEdit.requestFocus()) {
+                InputMethodManager imm = (InputMethodManager) SDL.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(mTextEdit, InputMethodManager.SHOW_IMPLICIT);
+                return true;
+            }
+        }
+        return false;
     }
 
     // CRAWL HACK: Function to force a screen update
@@ -1526,11 +1558,16 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
 class DummyEdit extends View implements View.OnKeyListener {
     InputConnection ic;
 
-    public DummyEdit(Context context) {
+    public DummyEdit(Context context, int keyboardOption) {
         super(context);
         // CRAWL HACK: Focusable=false disables the soft keyboard
-        setFocusableInTouchMode(false);
-        setFocusable(false);
+        if (keyboardOption != 2) {
+            setFocusableInTouchMode(false);
+            setFocusable(false);
+        } else {
+            setFocusableInTouchMode(true);
+            setFocusable(true);
+        }
         setOnKeyListener(this);
     }
 
@@ -1566,11 +1603,12 @@ class DummyEdit extends View implements View.OnKeyListener {
         // FIXME: A more effective solution would be to assume our Layout to be RelativeLayout or LinearLayout
         // FIXME: And determine the keyboard presence doing this: http://stackoverflow.com/questions/2150078/how-to-check-visibility-of-software-keyboard-in-android
         // FIXME: An even more effective way would be if Android provided this out of the box, but where would the fun be in that :)
-        if (event.getAction()==KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+        // CRAWL HACK: This breaks the input
+        /*if (event.getAction()==KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
             if (SDLActivity.mTextEdit != null && SDLActivity.mTextEdit.getVisibility() == View.VISIBLE) {
                 SDLActivity.onNativeKeyboardFocusLost();
             }
-        }
+        }*/
         return super.onKeyPreIme(keyCode, event);
     }
 
