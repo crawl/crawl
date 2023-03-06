@@ -15324,29 +15324,6 @@ Kene %s-Karten gefunden.
 %%%%
 
 ##################
-# ng-init.cc
-##################
-%%%%
-No temples?!
-
-%%%%
-temple_altars_%d
-
-%%%%
-Failed to load map, reloading all maps (%s).
-
-%%%%
-No valid temples.
-
-%%%%
-Main temple '%s' has no altars
-
-%%%%
-temple_overflow_generic_%d
-
-%%%%
-
-##################
 # ng-input.cc
 ##################
 %%%%

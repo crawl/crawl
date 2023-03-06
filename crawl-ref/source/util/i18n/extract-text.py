@@ -149,7 +149,7 @@ SKIP_FILES = [
     # internal logic
     'domino.h', 'domino.cc', 'dungeon.h', 'dungeon.cc', 'mapdef.h', 'mapdef.cc',
     'mapmark.h', 'mapmark.cc', 'maps.h', 'maps.cc', 'mon-gear.h', 'mon-gear.cc',
-    'mon-pathfind.cc',
+    'mon-pathfind.cc', 'ng-init.cc',
     # error messages that probably aren't worth translating
     'fontwrapper-ft.cc', 'game-options.h', 'game-options.cc', 'glwrapper-ogl.cc',
     'libw32c.h', 'libw32c.cc',
