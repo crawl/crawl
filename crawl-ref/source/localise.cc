@@ -37,10 +37,6 @@ static string _context;
 
 // forward declarations
 static string _localise_string(const string context, const string& value);
-static string _localise_counted_string(const string& context, const string& singular,
-                                       const string& plural, const int count);
-// localise counted string when you only have the plural
-static string _localise_counted_string(const string& context, const string& value);
 static string _localise_list(const string context, const string& value);
 
 // check if string contains the char
@@ -477,6 +473,98 @@ static void _resolve_escapes(string& str)
     _replace_all(str, "\\}", "}");
 }
 
+/*
+ * Does it start with a count (number followed by space)
+ */
+static bool _starts_with_count(const string& s)
+{
+    for (size_t i = 0; i < s.length(); i++)
+    {
+        char ch = s[i];
+        if (ch == ' ' && i > 0)
+            return true;
+        else if (!isdigit(ch))
+            return false;
+    }
+
+    return false;
+}
+
+/*
+ * Strip count from a string like "27 arrows"
+ *
+ * @param  s      the string
+ * @param  count  the count will be returned here
+ * @return the string with the count and following spaces removed
+ */
+static string _strip_count(const string& s, int& count)
+{
+    if (s.empty() || !_starts_with_count(s))
+    {
+        return s;
+    }
+
+    size_t pos;
+    count = stoi(s, &pos);
+
+    if (s[pos] != ' ')
+        return s;
+
+    string rest = s.substr(pos);
+    return trim_string_left(rest);
+}
+
+// localise a string with count
+static string _localise_counted_string(const string& context, const string& singular,
+                                       const string& plural, const int count)
+{
+    DEBUG("context='%s', singular='%s', plural='%s', count=%d", \
+          context.c_str(), singular.c_str(), plural.c_str(), count);
+
+    string result;
+    result = cnxlate(context, singular, plural, count);
+    result = replace_first(result, "%d", to_string(count));
+    return result;
+}
+
+// localise counted string when you only have the plural
+static string _localise_counted_string(const string& context, const string& value)
+{
+    if (value.empty() || !_starts_with_count(value))
+    {
+        return value;
+    }
+
+    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
+
+    int count;
+    string plural = _strip_count(value, count);
+    plural = "%d " + plural;
+
+    string singular;
+    if (plural == "%d gold" || plural == "%d Gold")
+        singular = plural; // "1 gold", not "a gold"
+    else
+        singular = article_a(singularise(plural));
+
+    return _localise_counted_string(context, singular, plural, count);
+}
+
+// localise counted string when you only have the plural
+// does NOT fall back to English
+static string _localise_possibly_counted_string(const string& context, const string& value)
+{
+    if (_starts_with_count(value))
+    {
+        string result = _localise_counted_string(context, value);
+        return (result == value ? "" : result);
+    }
+    else
+    {
+        return cxlate(context, value, false);
+    }
+}
+
 static string _localise_annotation_element(const string& s)
 {
     if (s.empty())
@@ -672,47 +760,6 @@ static string _add_annotations(const string& s, const list<string>& annotations)
     }
 
     return result;
-}
-
-/*
- * Does it start with a count (number followed by space)
- */
-static bool _starts_with_count(const string& s)
-{
-    for (size_t i = 0; i < s.length(); i++)
-    {
-        char ch = s[i];
-        if (ch == ' ' && i > 0)
-            return true;
-        else if (!isdigit(ch))
-            return false;
-    }
-
-    return false;
-}
-
-/*
- * Strip count from a string like "27 arrows"
- *
- * @param  s      the string
- * @param  count  the count will be returned here
- * @return the string with the count and following spaces removed
- */
-static string _strip_count(const string& s, int& count)
-{
-    if (s.empty() || !_starts_with_count(s))
-    {
-        return s;
-    }
-
-    size_t pos;
-    count = stoi(s, &pos);
-
-    if (s[pos] != ' ')
-        return s;
-
-    string rest = s.substr(pos);
-    return trim_string_left(rest);
 }
 
 // search for context in curly braces before pos and strip it out
@@ -1054,8 +1101,6 @@ static string _localise_item_name(const string& context, const string& item)
     int count = 0;
     base = _strip_count(base, count);
 
-    bool success = false;
-
     // change his/her/its/their to a/an for ease of translation
     // (owner may not have the same gender in other languages)
     if (determiner == "his" || determiner == "her" || determiner == "its" || determiner == "their")
@@ -1098,46 +1143,33 @@ static string _localise_item_name(const string& context, const string& item)
         if (!suffix.empty())
         {
             string branded_item = item_en + suffix;
+            result = _localise_possibly_counted_string(context, branded_item);
 
-            result = count > 0
-                     ? _localise_counted_string(context, branded_item)
-                     :cxlate(context, branded_item);
-            success = (result != branded_item);
-
-            if (!success)
+            if (result.empty())
             {
                 // try with space after adjective
                 branded_item = replace_first(branded_item, "%s", "%s ");
-                result = count > 0
-                         ? _localise_counted_string(context, branded_item)
-                         :cxlate(context, branded_item);
-                success = (result != branded_item);
-                if (success)
+                result = _localise_possibly_counted_string(context, branded_item);
+                if (!result.empty())
                     space_with_adjective = false;
             }
         }
 
-        if (!success)
+        if (result.empty())
         {
             // now try without suffix attached
-            result = count > 0
-                     ? _localise_counted_string(context, item_en)
-                     : cxlate(context, item_en);
-            success = (result != item_en);
+            result = _localise_possibly_counted_string(context, item_en);
 
-            if (!success)
+            if (result.empty())
             {
                 // try with space after adjective
                 item_en = replace_first(item_en, "%s", "%s ");
-                result = count > 0
-                         ? _localise_counted_string(context, item_en)
-                         : cxlate(context, item_en);
-                success = (result != item_en);
-                if (success)
+                result = _localise_possibly_counted_string(context, item_en);
+                if (!result.empty())
                     space_with_adjective = false;
             }
 
-            if (success && !suffix.empty())
+            if (!result.empty() && !suffix.empty())
             {
                 string loc_brand = cxlate(context, suffix);
                 if (loc_brand != suffix)
@@ -1150,7 +1182,7 @@ static string _localise_item_name(const string& context, const string& item)
             }
         }
 
-        if (success)
+        if (!result.empty())
         {
             result = _shift_context(result);
             string new_context = _context;
@@ -1180,19 +1212,33 @@ static string _localise_item_name(const string& context, const string& item)
                     }
                 }
                 // localise adjectives
-                vector<string> adjectives = split_string(" ", part1);
                 string prefix_adjs;
                 string postfix_adjs;
-                for (size_t k = 0; k < adjs; k++)
+                if (!space_with_adjective && ends_with(part1, " "))
+                    part1 = part1.substr(0, part1.length()-1);
+                // first, try to localise adjectives as a block
+                prefix_adjs = cxlate(new_context, part1, false);
+                if (prefix_adjs.empty() && ends_with(part1, " "))
                 {
-                    string adj_en = adjectives[k];
-                    if (space_with_adjective)
-                        adj_en += " ";
-                    string adj = cxlate(new_context, adj_en);
-                    if (!adj.empty() && adj[0] == ' ')
-                        postfix_adjs += adj;
-                    else
-                        prefix_adjs += adj;
+                    prefix_adjs = cxlate(new_context, part1.substr(0, part1.length()-1), false);
+                    if (!prefix_adjs.empty())
+                        prefix_adjs += " ";
+                }
+                if (prefix_adjs.empty())
+                {
+                    // localise one-by-one
+                    vector<string> adjectives = split_string(" ", part1);
+                    for (size_t k = 0; k < adjs; k++)
+                    {
+                        string adj_en = adjectives[k];
+                        if (space_with_adjective)
+                            adj_en += " ";
+                        string adj = cxlate(new_context, adj_en);
+                        if (!adj.empty() && adj[0] == ' ')
+                            postfix_adjs += adj;
+                        else
+                            prefix_adjs += adj;
+                    }
                 }
                 if (count_occurrences(result, "%s") == 1)
                 {
@@ -1393,42 +1439,6 @@ static string _localise_multiple_sentences(const string& context, const string& 
         count++;
     }
     return result;
-}
-
-// localise a string with count
-static string _localise_counted_string(const string& context, const string& singular,
-                                       const string& plural, const int count)
-{
-    DEBUG("context='%s', singular='%s', plural='%s', count=%d", \
-          context.c_str(), singular.c_str(), plural.c_str(), count);
-
-    string result;
-    result = cnxlate(context, singular, plural, count);
-    result = replace_first(result, "%d", to_string(count));
-    return result;
-}
-
-// localise counted string when you only have the plural
-static string _localise_counted_string(const string& context, const string& value)
-{
-    if (value.empty() || !_starts_with_count(value))
-    {
-        return value;
-    }
-
-    DEBUG("context='%s', value='%s'", context.c_str(), value.c_str());
-
-    int count;
-    string plural = _strip_count(value, count);
-    plural = "%d " + plural;
-
-    string singular;
-    if (plural == "%d gold" || plural == "%d Gold")
-        singular = plural; // "1 gold", not "a gold"
-    else
-        singular = article_a(singularise(plural));
-
-    return _localise_counted_string(context, singular, plural, count);
 }
 
 // localise ghost/illusion name

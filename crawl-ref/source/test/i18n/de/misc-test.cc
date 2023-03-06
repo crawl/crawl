@@ -178,6 +178,16 @@ int main()
                " Weitermachen?";
     show_result(msg, expected);
 
+    // player character selections
+    show_result(localise("Hill Orc Fighter"), "Hügelork Kämpfer");
+    show_result(localise("the Hill Orc Fighter"), "der Hügelork Kämpfer");
+    show_result(localise("Hill Orc Gladiator"), "Hügelork Gladiator");
+    show_result(localise("Deep Elf Ice Elementalist"), "Tiefenelf Eismagier");
+    show_result(localise("Random Earth Elementalist"), "Zufälliger Erdmagier");
+    show_result(localise("Recommended Hill Orc"), "Vorgeschlagener Hügelork");
+    show_result(localise("Recommended Mummy"), "Vorgeschlagene Mumie");
+    show_result(localise("Recommended Merfolk"), "Vorgeschlagenes Meervolk");
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);
