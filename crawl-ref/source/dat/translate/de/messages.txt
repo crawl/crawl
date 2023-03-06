@@ -15319,12 +15319,6 @@ Auflistung der numerischen Fertigkeitsbegaben für alle Rassen
 Opens the help screen
 Öffnet die Hilfsseite
 %%%%
-Random
-Zufällig
-%%%%
-Recommended
-Vorgeschlagen
-%%%%
 No %s maps found.
 Kene %s-Karten gefunden.
 %%%%

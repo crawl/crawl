@@ -34,10 +34,10 @@ Dungeon Crawl: The main game: full of monsters, items, gods and danger!
 Dungeon Crawl: Das Hauptspiel: voller Monster, Gegstände, Götter und Gefahr!
 %%%%
 Choose Game Seed
-Spielsamen wählen
+Spiel-Seed wählen
 %%%%
 Play with a chosen custom dungeon seed.
-Spielen mit einem gewählten Samen für Erzeugung des Dungeons
+Spielen mit einer gewählten Seed für Erzeugung des Dungeons
 %%%%
 Tutorial for Dungeon Crawl
 Tutorial für Dungeon Crawl
@@ -304,6 +304,12 @@ Zufälliger Charakter
 "Recommended "
 "Vorgeschlagener "
 %%%%
+Random
+Zufälliger
+%%%%
+Recommended
+Vorgeschlagener
+%%%%
 # but a few aren't
 %%%%
 Random Mummy
@@ -396,13 +402,13 @@ Ihr habt schon ein Spiel mit dieser Name; Wirklich überschreiben? [J/n]
 # seeded games
 %%%%
 Play a game with a custom seed for version %s.
-Spiel ein Spiel mit einem spezifischen Samen für version %s.
+Spiel ein Spiel mit einer spezifischen Seed für version %s.
 %%%%
 Choose 0 for a random seed. [Tab]/[Shift-Tab] to cycle input focus.
-Wähle 0 für einen zufälligen Samen. [Tab]/[Shift-Tab] um Fokus zu verwechseln.
+Wähle 0 für eine zufällige Seed. [Tab]/[Shift-Tab] um Fokus zu verwechseln.
 %%%%
 "Seed: "
-"Samen: "
+"Seed: "
 %%%%
 [-] Clear
 [-] Löschen
@@ -411,7 +417,7 @@ Wähle 0 für einen zufälligen Samen. [Tab]/[Shift-Tab] um Fokus zu verwechseln
 [Enter] Beginnen!
 %%%%
 [d] Today's daily seed
-[d] Samen des Tages
+[d] Seed des Tages
 %%%%
 Fully pregenerate the dungeon
 Ganzes Dungeon am Anfang bauen
@@ -455,7 +461,7 @@ Select your previous sprint map and character
 Wähle Eure letzte Dungeon-Pan and Charakter
 %%%%
 Custom seed:
-Benutzerdefinierter Samen:
+Benutzerdefinierte Seed:
 %%%%
 You have a choice of lessons:
 Die folgende Lektionen sind wählbar:
