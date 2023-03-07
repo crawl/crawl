@@ -15320,36 +15320,7 @@ Opens the help screen
 Öffnet die Hilfsseite
 %%%%
 No %s maps found.
-Kene %s-Karten gefunden.
-%%%%
-
-##################
-# ng-input.cc
-##################
-%%%%
-<brown>(c) Copyright 1997-2002 Linley Henzell, 2002-2021 Crawl DevTeam
-
-%%%%
-<lightgrey>Options read from "
-
-%%%%
-".</lightgrey>
-
-%%%%
-"<lightred>Options file "
-
-%%%%
-"%s" is not readable
-
-%%%%
-not found
-
-%%%%
-; using defaults.</lightred>
-
-%%%%
-LPT
-
+Keine %s-Karten gefunden.
 %%%%
 
 ##################
@@ -22575,9 +22546,6 @@ toss away
 ##################
 # tiledoll.cc
 ##################
-%%%%
-NUM=
-
 %%%%
 NUM=%d
 

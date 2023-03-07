@@ -149,7 +149,7 @@ SKIP_FILES = [
     # internal logic
     'domino.h', 'domino.cc', 'dungeon.h', 'dungeon.cc', 'mapdef.h', 'mapdef.cc',
     'mapmark.h', 'mapmark.cc', 'maps.h', 'maps.cc', 'mon-gear.h', 'mon-gear.cc',
-    'mon-pathfind.cc', 'ng-init.cc',
+    'mon-pathfind.cc', 'ng-init.cc', 'ng-input.cc',
     # error messages that probably aren't worth translating
     'fontwrapper-ft.cc', 'game-options.h', 'game-options.cc', 'glwrapper-ogl.cc',
     'libw32c.h', 'libw32c.cc',
@@ -432,10 +432,12 @@ for filename in files:
                 if re.search(r'compare_item', line):
                     continue
 
-                # just a find
+                # just a find or compare
                 if re.search(r'\bstrstr\s*\(', line):
                     continue
                 if 'search_stashes' in line:
+                    continue
+                if re.search(r'\bstrn?i?cmp\b', line):
                     continue
 
                 if re.search(r'\bstrlen\s*\(', line):

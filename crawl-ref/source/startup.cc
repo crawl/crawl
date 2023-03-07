@@ -132,6 +132,11 @@ static void _initialize()
         loading_screen_open();
 #endif
 
+    if (Options.lang_name != nullptr && strlen(Options.lang_name) > 0)
+    {
+        mprf_nolocalise("Language: %s", Options.lang_name);
+    }
+
     // Initialise internal databases.
     _loading_message("Loading databases...");
     databaseSystemInit();
@@ -202,7 +207,7 @@ static void _initialize()
     }
 
     mpr(opening_screen().tostring().c_str());
-    mpr(options_read_status().tostring().c_str());
+    mpr_nolocalise(options_read_status().tostring());
 }
 
 /** KILL_RESETs all monsters in LOS.
