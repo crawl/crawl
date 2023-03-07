@@ -1037,6 +1037,7 @@ bool mon_special_ability(monster* mons)
     break;
 
     case MONS_WATER_NYMPH:
+    case MONS_NORRIS:
     {
         if (!one_chance_in(5))
             break;

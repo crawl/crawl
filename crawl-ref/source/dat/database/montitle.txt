@@ -243,6 +243,10 @@ Nikola title
 
 Nikola the Mad Inventor
 %%%%
+Norris title
+
+Norris the Philosopher
+%%%%
 Parghit title
 
 Parghit the Mighty

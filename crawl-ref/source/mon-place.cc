@@ -1953,6 +1953,7 @@ static const map<monster_type, band_set> bands_by_leader = {
     { MONS_EIDOLON, { {0, 0, []() { return player_in_hell(); }},
                                    {{ BAND_SPECTRALS, {2, 6}, true} }}},
     { MONS_GRUNN,            { {}, {{ BAND_DOOM_HOUNDS, {2, 4}, true }}}},
+    { MONS_NORRIS,         { {}, {{ BAND_SKYSHARKS, {2, 5}, true }}}},
 
     // special-cased band-sizes
     { MONS_SPRIGGAN_DRUID,  { {3}, {{ BAND_SPRIGGAN_DRUID, {0, 1}, true }}}},
@@ -2413,6 +2414,8 @@ static const map<band_type, vector<member_possibilites>> band_membership = {
                                   {MONS_DEMONSPAWN_BLACK_SUN, 1}}}},
     // for Grunn
     { BAND_DOOM_HOUNDS,         {{{MONS_DOOM_HOUND, 1}}}},
+    // for Norris
+    { BAND_SKYSHARKS,           {{{MONS_SKYSHARK, 1}}}},
 };
 
 /**

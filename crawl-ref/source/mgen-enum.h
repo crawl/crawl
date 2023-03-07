@@ -121,6 +121,7 @@ enum band_type
     BAND_MIXED_SPIDERS,
     BAND_ORANGE_DEMONS,
     BAND_DOOM_HOUNDS,
+    BAND_SKYSHARKS,
     NUM_BANDS                   // always last
 };
 

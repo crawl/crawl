@@ -599,6 +599,8 @@ margery MONS_MARGERY
 maurice MONS_MAURICE
 %rim 0
 nikola MONS_NIKOLA
+%rim 1
+norris MONS_NORRIS
 %rim 0
 psyche MONS_PSYCHE
 rupert MONS_RUPERT

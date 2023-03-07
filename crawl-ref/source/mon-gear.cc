@@ -775,6 +775,7 @@ int make_mons_weapon(monster_type type, int level, bool melee_only)
               HELL_KNIGHT_BRANDS
         } },
         { MONS_URUG,                    { URUG_WEAPONS } },
+        { MONS_NORRIS,                  { URUG_WEAPONS } },
         { MONS_FREDERICK,               { URUG_WEAPONS } },
         { MONS_FIRE_GIANT, {
             { { WPN_GREAT_SWORD,        1 } }, {},

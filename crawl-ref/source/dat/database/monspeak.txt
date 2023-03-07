@@ -5675,6 +5675,92 @@ Nikola
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
 %%%%
+############ NORRIS ### An enlightened but crazy man
+Norris
+
+@_Norris_common_@
+
+w:5
+@_Norris_rare_@
+%%%%
+_Norris_common_
+
+@The_monster@ mumbles some mantras.
+
+VISUAL:@The_monster@ is surrounded with an aura of peace.
+
+VISUAL:@The_monster@ smiles @at_foe@.
+
+VISUAL:@The_monster@ looks relaxed.
+
+@The_monster@ sings, "Peace now, freedom now! Peace now, freedom now!"
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Life is just suffering. I'll help you."
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Rejoin the cosmic current!"
+
+@The_monster@ says @to_foe@, "Sometimes it's better to sink than to swim."
+
+@The_monster@ says @to_foe@, "Breathe deeply."
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Peace! I bring you eternal peace!"
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Let the waves take you."
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Just go with the flow."
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Why delay the inevitable?"
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Catch the small wave before chasing the big one."
+%%%%
+_Norris_rare_
+
+VISUAL:@The_monster@ looks very balanced.
+
+@The_monster@ asks, "Have you seen my surfboard?"
+
+@The_monster@ @_Norris_verb_@, "I think I should really try dying once."
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Aren't you the least bit curious about what happens next?"
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "The universe is like a big fish."
+
+@The_monster@ @_Norris_verb_@, "Wisdom is knowing when to give up."
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Only fools fear death. I embrace it."
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "After death you'll find inner peace."
+
+@The_monster@ wonders, "Can you step in the same river twice?"
+
+@The_monster@ says @to_foe@, "Everything is water in the end."
+
+@The_monster@ sighs @at_foe@, "Enlightenment is such responsibility."
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "Let's feed the skysharks together."
+
+@The_monster@ @_Norris_verb_@ @to_foe@, "We're all made of gods."
+%%%%
+_Norris_verb_
+
+hums
+
+laughs
+
+murmurs
+
+softly says
+
+sighs
+
+mumbles
+
+absently says
+
+whispers
+
+## END Norris ##
+%%%%
 ############ Pikel ######## A big kobold trading souls of the damned
 Pikel
 

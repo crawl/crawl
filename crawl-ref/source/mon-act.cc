@@ -2182,7 +2182,8 @@ static void _post_monster_move(monster* mons)
         _torpor_snail_slow(mons);
 
     if (mons->type == MONS_WATER_NYMPH
-        || mons->type == MONS_ELEMENTAL_WELLSPRING)
+        || mons->type == MONS_ELEMENTAL_WELLSPRING
+        || mons->type == MONS_NORRIS)
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
             if (feat_has_solid_floor(env.grid(*ai))

@@ -839,9 +839,7 @@ enum monster_type                      // env.mons[].type
     MONS_WIGLAF,
 #endif
     MONS_XTAHUA,
-#if TAG_MAJOR_VERSION == 34
     MONS_NORRIS,
-#endif
     MONS_FREDERICK,
     MONS_MARGERY,
     MONS_BORIS,
