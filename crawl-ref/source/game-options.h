@@ -60,6 +60,37 @@ protected:
     friend struct game_options;
 };
 
+// warning: if you use this, and a value needs initialized, be sure to do that
+// somehow! This class won't do it for you.
+class DisabledGameOption : public GameOption
+{
+public:
+    DisabledGameOption(std::set<std::string> _names)
+        : GameOption(_names)
+    {
+    }
+
+    void reset() override
+    {
+        GameOption::reset();
+    }
+
+    void set_from(const GameOption *other) override
+    {
+        const auto other_casted = dynamic_cast<const DisabledGameOption *>(other);
+        // ugly: I can't currently find any better way to enforce types
+        ASSERT(other_casted);
+    }
+
+    string loadFromString(const std::string &, rc_line_type) override
+    {
+        // not actually called
+        return make_stringf("disabled");
+    }
+
+    virtual string loadFromParseState(const opt_parse_state &state) override;
+};
+
 class BoolGameOption : public GameOption
 {
 public:
@@ -355,7 +386,7 @@ public:
         string normalized = field;
         if (!choices.size())
         {
-            return make_stringf("Option %s is disabled in this build.",
+            return make_stringf("Option '%s' is disabled in this build.",
                 name().c_str());
         }
         if (normalize_bools)
