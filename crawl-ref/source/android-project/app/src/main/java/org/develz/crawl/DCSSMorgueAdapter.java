@@ -20,7 +20,11 @@ public class DCSSMorgueAdapter extends RecyclerView.Adapter<DCSSMorgueAdapter.Vi
 
     // Constructor
     public DCSSMorgueAdapter(File morgueDir, OnMorgueListener morgueListener) {
-        this.morgueFiles = morgueDir.listFiles();
+        if (morgueDir.isDirectory()) {
+            this.morgueFiles = morgueDir.listFiles();
+        } else {
+            this.morgueFiles = new File[0];
+        }
         this.morgueListener = morgueListener;
     }
 
