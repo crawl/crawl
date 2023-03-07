@@ -2164,6 +2164,14 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    {  MST_NORRIS,
+      {
+       { SPELL_BRAIN_FEED, 16, MON_SPELL_PRIEST },
+       { SPELL_PRIMAL_WAVE, 16, MON_SPELL_PRIEST },
+       { SPELL_DRAIN_MAGIC, 16, MON_SPELL_PRIEST },
+      }
+    },
+
     {  MST_FREDERICK,
       {
        { SPELL_FORCE_LANCE, 12, MON_SPELL_WIZARD },

@@ -772,6 +772,12 @@ Nikola
     -Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
 Means for Furthering Peace”, _Electrical World and Engineer_. January 7, 1905.
 %%%%
+Norris
+
+“Death and death alone gives meaning to life and this meaning is entirely
+negative.”
+    -Georges Poulet
+%%%%
 Orcish Mines
 
 “You load sixteen tons, what do you get
