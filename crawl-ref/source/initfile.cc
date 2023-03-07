@@ -167,12 +167,14 @@ const vector<GameOption*> game_options::build_options_list()
 
     // TODO: better organize this list somehow?
 
-    // ignores superclass stub for this function
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
     #define NEWGAME_NAME(_opt) game._opt, {#_opt}
+    // ignores superclass stub for this function
     vector<GameOption*> options = {
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
         new StringGameOption(NEWGAME_NAME(name), "", true),
+#else
+        new DisabledGameOption({"name"}),
 #endif
         new BoolGameOption(NEWGAME_NAME(fully_random), false),
         new StringGameOption(NEWGAME_NAME(arena_teams), ""),
@@ -418,8 +420,14 @@ const vector<GameOption*> game_options::build_options_list()
 
 #ifdef DGL_SIMPLE_MESSAGING
         new BoolGameOption(SIMPLE_NAME(messaging), true),
+#else
+        new DisabledGameOption({"messaging"}),
 #endif
-#ifndef DGAMELAUNCH
+#ifdef DGAMELAUNCH
+        new DisabledGameOption(
+            {"name_bypasses_menu", "restart_after_save", "newgame_after_quit",
+             "map_file_name", "morgue_dir"}),
+#else
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
         new BoolGameOption(SIMPLE_NAME(restart_after_save), true),
         new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),
@@ -427,6 +435,9 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(morgue_dir),
                              _get_save_path("morgue/"), true),
 #endif
+        // the following intentionally lack a DisabledGameOption counterpart;
+        // make it easier to past between tiles / non-tiles builds, and also
+        // it'd be a pain to maintain without further macros
 #ifdef USE_TILE
         new BoolGameOption(SIMPLE_NAME(tile_skip_title), false),
         new BoolGameOption(SIMPLE_NAME(tile_menu_icons), true),
@@ -497,6 +508,10 @@ const vector<GameOption*> game_options::build_options_list()
 #ifdef USE_TILE_LOCAL
 # ifndef __ANDROID__
         new IntGameOption(SIMPLE_NAME(game_scale), 1, 1, 8),
+# else
+        // I'm not entirely sure why this is disabled, but mark it as disabled
+        // so that android users get feedback if they do try to use it
+        new DisabledGameOption({"game_scale"}),
 # endif
         new IntGameOption(SIMPLE_NAME(tile_key_repeat_delay), 200, 0, INT_MAX),
         new IntGameOption(SIMPLE_NAME(tile_window_width), -90, INT_MIN, INT_MAX),
@@ -524,6 +539,9 @@ const vector<GameOption*> game_options::build_options_list()
              {"maybe", maybe_bool::maybe},
              {"auto", maybe_bool::maybe}}, true),
 #endif
+        // the following intentionally lack a DisabledGameOption counterpart;
+        // make it easier to past between tiles / non-tiles builds, and also
+        // it'd be a pain to maintain without further macros
 #ifdef USE_TILE_WEB
         new BoolGameOption(SIMPLE_NAME(tile_realtime_anim), false),
         new BoolGameOption(SIMPLE_NAME(tile_level_map_hide_messages), true),

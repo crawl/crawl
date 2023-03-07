@@ -79,6 +79,13 @@ string GameOption::loadFromParseState(const opt_parse_state &state)
         state.line_type);
 }
 
+string DisabledGameOption::loadFromParseState(const opt_parse_state &state)
+{
+    // use the parse state key: this lets this class group together
+    // multiple unrelated options for convenience
+    return make_stringf("Option '%s' is disabled in this build.",
+            state.key.c_str());
+}
 
 string BoolGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
