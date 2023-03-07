@@ -15331,13 +15331,13 @@ The Orb lets out a hideous shriek!
 Die Kugel stößt einen schrecklichen Schrei aus!
 %%%%
 The Orb lets out a furious burst of light!
-Die Kugel stößt einen wütenden Lichtblitz aus!
+Die Kugel stößt einen wilden Lichtblitz aus!
 %%%%
 The lords of Pandemonium are not amused. Beware!
 Die Herren von Pandemonium sind nicht amüsiert. Vorsicht!
 %%%%
 %s tells them not to hurry.
-
+%s sagt ihnen, sie sollen sich nicht beeilen.
 %%%%
 
 ##################
