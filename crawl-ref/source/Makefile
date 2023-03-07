@@ -1668,7 +1668,7 @@ clean-contrib:
 
 clean-android:
 	$(RM) -r android-project/app/src/main/assets
-	$(RM) -r android-project/app/src/main/res/drawable
+	$(RM) android-project/app/src/main/res/drawable/*.png
 	$(RM) android-project/local.properties
 	$(RM) android-project/app/build.gradle
 
