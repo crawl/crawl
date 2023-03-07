@@ -2163,7 +2163,7 @@ static const mon_spellbook mspell_list[] =
        { SPELL_FIREBALL, 36, MON_SPELL_WIZARD },
       }
     },
-    
+
     {  MST_NORRIS,
       {
        { SPELL_BRAIN_FEED, 16, MON_SPELL_PRIEST },
