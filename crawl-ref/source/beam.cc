@@ -4639,7 +4639,7 @@ void bolt::knockback_actor(actor *act, int dam)
     const int roll = origin_spell == SPELL_FORCE_LANCE
                      ? 7 + 0.27 * ench_power
                      : 17;
-    const int dist = binomial(max_dist, weight, roll); // This is silly! -- PF
+    const int dist = binomial(max_dist, roll - weight, roll); // This is silly! -- PF
 
     const string push_type =
         origin_spell == SPELL_CHILLING_BREATH ? "freezing wind" : name;
