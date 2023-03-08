@@ -3876,6 +3876,25 @@ cc..T.).T..cc
  ccccccccccc
 ENDMAP
 
+NAME:   hellmonk_no_cap
+TAGS:   transparent no_monster_gen
+DEPTH:  D:3-7
+MONS:   sleepcap
+ITEM:   hat / nothing
+NSUBST: - = 1:1 / 4 = 10.. / *:.
+SUBST:  c : cxt, + : +.
+MAP
+   c
+  ccc
+  cdc
+ cc-cc
+ c---c
+cc---cc
+c-----c
+c.....c
+cc+++cc
+ENDMAP
+
 ###################################################################
 #
 # <<7>> Random monsters
