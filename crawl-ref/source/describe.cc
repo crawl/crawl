@@ -4493,6 +4493,11 @@ static const item_def* _weapon_for_attack(const monster_info& mi, int atk)
 
 static string _monster_attacks_description(const monster_info& mi)
 {
+    // Spectral weapons use the player's stats to attack, so displaying
+    // their 'monster' damage here is just misleading.
+    if (mi.type == MONS_SPECTRAL_WEAPON)
+        return "";
+
     ostringstream result;
     map<mon_attack_info, int> attack_counts;
     brand_type special_flavour = SPWPN_NORMAL;
