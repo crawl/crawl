@@ -426,8 +426,16 @@ const vector<GameOption*> game_options::build_options_list()
 #ifdef DGAMELAUNCH
         new DisabledGameOption(
             {"name_bypasses_menu", "restart_after_save", "newgame_after_quit",
-             "map_file_name", "morgue_dir"}),
+             "map_file_name", "morgue_dir", "type"}),
 #else
+        new MultipleChoiceGameOption<game_type>(NEWGAME_NAME(type),
+            GAME_TYPE_NORMAL,
+            {{"normal", GAME_TYPE_NORMAL},
+             {"seeded", GAME_TYPE_CUSTOM_SEED},
+             {"arena", GAME_TYPE_ARENA},
+             {"sprint", GAME_TYPE_SPRINT},
+             {"tutorial", GAME_TYPE_TUTORIAL},
+             {"hints", GAME_TYPE_HINTS}}),
         new BoolGameOption(SIMPLE_NAME(name_bypasses_menu), true),
         new BoolGameOption(SIMPLE_NAME(restart_after_save), true),
         new BoolGameOption(SIMPLE_NAME(newgame_after_quit), false),
@@ -2089,6 +2097,8 @@ newgame_def read_startup_prefs()
     temp.basefilename = filename;
     temp.read_options(fl, false);
 
+    const bool manual_game_type = Options["type"].was_loaded();
+
     // !!side effect warning!!
     {
         // don't overwrite whatever is currently in Options with anything from
@@ -2098,6 +2108,10 @@ newgame_def read_startup_prefs()
         unwind_var<newgame_def> cur_game_opts(Options.game);
         Options.merge(temp);
     }
+
+    // override the startup prefs file with this
+    if (manual_game_type)
+        temp.game.type = Options.game.type;
 
     if (!temp.game.allowed_species.empty())
         temp.game.species = temp.game.allowed_species[0];
@@ -3423,16 +3437,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             &game_options::add_item_glyph_override,
             &game_options::remove_item_glyph_override,
             true);
-        return true;
-    }
-    // [ds] For dgamelaunch setups, the player should *not* be able to
-    // set game type in their rc; the only way to set game type for
-    // DGL builds should be the command-line options.
-    else if (key == "type")
-    {
-#ifndef DGAMELAUNCH
-        game.type = _str_to_gametype(state.field);
-#endif
         return true;
     }
     else if (key == "combo")
