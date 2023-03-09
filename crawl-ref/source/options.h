@@ -148,12 +148,12 @@ struct opt_parse_state
 
     rc_line_type line_type = RCFILE_LINE_EQUALS;
 
-    constexpr bool plus_equal() const
+    bool plus_equal() const
     {
         return line_type == RCFILE_LINE_PLUS;
     }
 
-    constexpr bool caret_equal() const
+    bool caret_equal() const
     {
         return line_type == RCFILE_LINE_CARET;
     }
@@ -164,22 +164,22 @@ struct opt_parse_state
             line_type = RCFILE_LINE_PLUS;
     }
 
-    constexpr bool add_equal() const
+    bool add_equal() const
     {
         return line_type == RCFILE_LINE_PLUS || line_type == RCFILE_LINE_CARET;
     }
 
-    constexpr bool minus_equal() const
+    bool minus_equal() const
     {
         return line_type == RCFILE_LINE_MINUS;
     }
 
-    constexpr bool plain() const
+    bool plain() const
     {
         return line_type == RCFILE_LINE_EQUALS;
     }
 
-    constexpr bool is_valid_option_line() const
+    bool is_valid_option_line() const
     {
         return valid && line_type != RCFILE_LINE_DIRECTIVE;
     }

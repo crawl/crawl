@@ -3193,18 +3193,18 @@ void game_options::split_parse(const opt_parse_state &state,
     if (remove && state.minus_equal())
     {
         _base_split_parse(s, separator,
-            [this, remove](const string &s, bool)
+            [this, remove](const string &x, bool)
             {
-                (this->*remove)(s);
+                (this->*remove)(x);
             });
     }
 
     if (add && (state.add_equal() || state.plain()))
     {
         _base_split_parse(s, separator,
-            [this, add](const string &s, bool b)
+            [this, add](const string &x, bool b)
             {
-                (this->*add)(s, b);
+                (this->*add)(x, b);
             },
             state.caret_equal());
     }
