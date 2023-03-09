@@ -235,7 +235,7 @@ const vector<GameOption*> game_options::build_options_list()
         new MultipleChoiceGameOption<maybe_bool>(
             SIMPLE_NAME(bold_brightens_foreground),
             false, {{"false", false},
-                    {"true", maybe_bool::maybe},
+                    {"true", maybe_bool::maybe}, // kind of weird
                     {"force", true}}, true),
         new MultipleChoiceGameOption<char_set_type>(
             SIMPLE_NAME(char_set),
@@ -280,13 +280,8 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
         new BoolGameOption(SIMPLE_NAME(small_more), false),
         new BoolGameOption(SIMPLE_NAME(pickup_thrown), true),
-        new MultipleChoiceGameOption<maybe_bool>(
-            SIMPLE_NAME(show_god_gift),
-            maybe_bool::maybe, {{"false", false},
-                                {"unid", maybe_bool::maybe},
-                                {"unident", maybe_bool::maybe},
-                                {"unidentified", maybe_bool::maybe},
-                                {"true", true}}, true),
+        new MaybeBoolGameOption(SIMPLE_NAME(show_god_gift), maybe_bool::maybe,
+            {"unid", "unident", "unidentified"}),
         new BoolGameOption(SIMPLE_NAME(show_travel_trail), USING_DGL),
         new BoolGameOption(SIMPLE_NAME(use_fake_cursor), USING_UNIX ),
         new BoolGameOption(SIMPLE_NAME(use_fake_player_cursor), true),
@@ -461,6 +456,14 @@ const vector<GameOption*> game_options::build_options_list()
         new StringGameOption(SIMPLE_NAME(map_file_name), "", true),
         new StringGameOption(SIMPLE_NAME(morgue_dir),
                              _get_save_path("morgue/"), true),
+        new MaybeBoolGameOption(SIMPLE_NAME(restart_after_game),
+#ifdef USE_TILE
+            // not sure this ifdef makes a lot of sense
+            true
+#else
+            maybe_bool::maybe
+#endif
+            ),
 #endif
         // the following intentionally lack a DisabledGameOption counterpart;
         // make it easier to past between tiles / non-tiles builds, and also
@@ -558,13 +561,8 @@ const vector<GameOption*> game_options::build_options_list()
              {"false", SCREENMODE_WINDOW},
              {"maybe", SCREENMODE_AUTO},
              {"auto", SCREENMODE_AUTO}}, true),
-        new MultipleChoiceGameOption<maybe_bool>(
-            SIMPLE_NAME(tile_use_small_layout),
-            maybe_bool::maybe,
-            {{"true", true},
-             {"false", false},
-             {"maybe", maybe_bool::maybe},
-             {"auto", maybe_bool::maybe}}, true),
+        new MaybeBoolGameOption(SIMPLE_NAME(tile_use_small_layout),
+                                                maybe_bool::maybe, {"auto"}),
 #endif
         // the following intentionally lack a DisabledGameOption counterpart;
         // make it easier to past between tiles / non-tiles builds, and also
@@ -1335,20 +1333,9 @@ void game_options::reset_options()
     restart_after_save = false;
     newgame_after_quit = false;
     name_bypasses_menu = true;
-#else
-#ifdef USE_TILE_LOCAL
-    restart_after_game = true;
-#else
-    restart_after_game = maybe_bool::maybe;
-#endif
 #endif
 
     terp_files.clear();
-
-#ifdef USE_TILE_LOCAL
-    // window layout
-    tile_use_small_layout = maybe_bool::maybe;
-#endif
 
 #ifdef USE_TILE
     // XXX: arena may now be chosen after options are read.
@@ -3437,13 +3424,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             report_error("Bad fire item start index: %s\n", state.raw_field.c_str());
         return true;
     }
-#ifndef DGAMELAUNCH
-    else if (key == "restart_after_game")
-    {
-        restart_after_game = read_maybe_bool(state.field);
-        return true;
-    }
-#endif
     else if (key == "fire_order")
     {
         set_fire_order(state.field, state.plus_equal(), state.caret_equal());
@@ -4003,13 +3983,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         return true;
     }
 #ifdef USE_TILE
-#ifdef USE_TILE_LOCAL
-    else if (key == "tile_use_small_layout")
-    {
-        tile_use_small_layout = read_maybe_bool(state.field);
-        return true;
-    }
-#endif // USE_TILE_LOCAL
     else if (key == "tile_show_player_species" && state.field == "true") // XX bool parsing
     {
         // do we really need to set state?

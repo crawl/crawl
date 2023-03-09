@@ -348,7 +348,7 @@ command line.
 
 name = Delilah
         If set, that's the name all your Crawl characters will get. Setting
-        this will bypass the main menu.
+        this will bypass the main menu by default; see `name_bypasses_menu`.
 
 type = normal
         Choose a game type. Valid values are "normal", "seeded", "tutorial",
