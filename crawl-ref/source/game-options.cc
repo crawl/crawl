@@ -77,6 +77,8 @@ string GameOption::loadFromParseState(const opt_parse_state &state)
     return loadFromString(
         case_sensitive ? state.raw_field : state.field,
         state.line_type);
+    if (on_set)
+        on_set();
 }
 
 string DisabledGameOption::loadFromParseState(const opt_parse_state &state)

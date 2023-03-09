@@ -124,6 +124,7 @@ static string _supported_language_listing();
 static bool _force_allow_wizard();
 static bool _force_allow_explore();
 
+static species_type _str_to_species(const string &str);
 
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
@@ -179,6 +180,24 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(NEWGAME_NAME(fully_random), false),
         new StringGameOption(NEWGAME_NAME(arena_teams), ""),
         new StringGameOption(NEWGAME_NAME(map), ""),
+        new ListGameOption<string>(game.allowed_combos, {"combo"}, {}, true,
+            [this]() {
+                game.allowed_species.clear();
+                game.allowed_jobs.clear();
+                game.allowed_weapons.clear();
+            }),
+        new ListGameOption<species_type, OPTFUN(_str_to_species)>(
+            game.allowed_species, {"species", "race"}, {}, true,
+            [this]() { game.allowed_combos.clear(); }
+            ),
+        new ListGameOption<job_type, OPTFUN(str_to_job)>(
+            game.allowed_jobs, {"background", "job", "class"}, {}, true,
+            [this]() { game.allowed_combos.clear(); }
+            ),
+        new ListGameOption<weapon_type, OPTFUN(str_to_weapon)>(
+            game.allowed_weapons, {"weapon"}, {}, true,
+            [this]() { game.allowed_combos.clear(); }
+            ),
 
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
         new MultipleChoiceGameOption<int>(
@@ -872,19 +891,6 @@ string gametype_to_str(game_type type)
         return "none";
     }
 }
-
-#ifndef DGAMELAUNCH
-static game_type _str_to_gametype(const string& s)
-{
-    for (int i = 0; i < NUM_GAME_TYPE; ++i)
-    {
-        game_type t = static_cast<game_type>(i);
-        if (s == gametype_to_str(t))
-            return t;
-    }
-    return NUM_GAME_TYPE;
-}
-#endif
 
 // XX move to species.cc?
 static string _species_to_str(species_type sp)
@@ -3289,22 +3295,6 @@ bool base_game_options::read_custom_option(opt_parse_state &, bool)
 // return true if we should stop processing the line
 bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
 {
-    // TODO: convert this to a function somewhere, or merge with split_parse
-#define NEWGAME_OPTION(_opt, _conv, _type)                                     \
-    if (state.plain())                                                         \
-        _opt.clear();                                                          \
-    for (const auto &part : split_string(",", state.raw_field))                \
-    {                                                                          \
-        if (state.minus_equal())                                               \
-        {                                                                      \
-            auto it2 = find(_opt.begin(), _opt.end(), _conv(part));            \
-            if (it2 != _opt.end())                                             \
-                _opt.erase(it2);                                               \
-        }                                                                      \
-        else                                                                   \
-            _opt.push_back(_conv(part));                                       \
-    }
-
     const string key = state.key; // weak
     if (key == "autopickup")
     {
@@ -3437,34 +3427,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             &game_options::add_item_glyph_override,
             &game_options::remove_item_glyph_override,
             true);
-        return true;
-    }
-    else if (key == "combo")
-    {
-        game.allowed_species.clear();
-        game.allowed_jobs.clear();
-        game.allowed_weapons.clear();
-        NEWGAME_OPTION(game.allowed_combos, string, string);
-        return true;
-    }
-    else if (key == "species" || key == "race")
-    {
-        game.allowed_combos.clear();
-        NEWGAME_OPTION(game.allowed_species, _str_to_species,
-                       species_type);
-        return true;
-    }
-    else if (key == "background" || key == "job" || key == "class")
-    {
-        game.allowed_combos.clear();
-        NEWGAME_OPTION(game.allowed_jobs, str_to_job, job_type);
-        return true;
-    }
-    else if (key == "weapon")
-    {
-        // Choose this weapon for backgrounds that get choice.
-        game.allowed_combos.clear();
-        NEWGAME_OPTION(game.allowed_weapons, str_to_weapon, weapon_type);
         return true;
     }
     else if (key == "fire_items_start")
