@@ -34,8 +34,10 @@ L& remove_matching(L& lis, const E& entry)
 class GameOption
 {
 public:
-    GameOption(std::set<std::string> _names, bool _case_sensitive=false)
-        : names(_names), case_sensitive(_case_sensitive), loaded(false) { }
+    GameOption(std::set<std::string> _names,
+               bool _case_sensitive=false,
+               function<void()> _on_set=nullptr)
+        : on_set(_on_set), names(_names), case_sensitive(_case_sensitive), loaded(false) { }
     virtual ~GameOption() {};
 
     // XX reset, set_from, and some other stuff could be templated for most
@@ -49,6 +51,8 @@ public:
     const std::string name() const { return *names.begin(); }
 
     bool was_loaded() const { return loaded; }
+
+    function<void()> on_set;
 
 protected:
     std::set<std::string> names;
@@ -304,15 +308,48 @@ private:
     colour_thresholds default_value;
 };
 
-// T must be convertible to a string.
-template<typename T>
+// the following is overall a bit silly, but the point is to let you use an
+// arbitrary string -> T function as a typename in ListGameOption. There's
+// probably a much cleverer way to do it, but I didn't find it (at least not
+// for c++11).
+
+// https://stackoverflow.com/questions/41301536/get-function-return-type-in-template/41301717#41301717
+// wrap `funret(X)` with `decltype` (as below) to get the return type of an
+// arbitrary function X.
+template<typename R, typename... A>
+R funret(R(*)(A...));
+
+template<typename C, typename R, typename... A>
+R funret(R(C::*)(A...));
+
+// functor class for use in ListGameOption calls where a function does the
+// type conversion. Is there a way to do this passing a function directly
+// to the template?
+template <typename T, T F>
+struct OptFunctor
+{
+    decltype(funret(F)) operator() (const string &s) { return F(s); }
+};
+
+// syntactic sugar to simplify the template call.
+// in c++17 and on, the template could simply be `template <auto F>` instead.
+#define OPTFUN(a) OptFunctor<decltype(a), a>
+
+// T must be convertible from a string, or a typename that does it must be
+// supplied. You can use OPTFUN above on a function to get something that will
+// work.
+template<typename T, typename U = T>
 class ListGameOption : public GameOption
 {
 public:
     ListGameOption(vector<T> &list, std::set<std::string> _names,
                    vector<T> _default = {},
-                   bool _case_sensitive = false)
-        : GameOption(_names, _case_sensitive), value(list), default_value(_default) { }
+                   bool _case_sensitive = false,
+                   function<void()> _on_set = nullptr)
+        : GameOption(_names, _case_sensitive, _on_set),
+          value(list), default_value(_default)
+    {
+    }
 
     void reset() override
     {
@@ -322,10 +359,33 @@ public:
 
     void set_from(const GameOption *other) override
     {
-        const auto other_casted = dynamic_cast<const ListGameOption<T> *>(other);
+        const auto other_casted = dynamic_cast<const ListGameOption<T, U> *>(other);
         // ugly: I can't currently find any better way to enforce types
         ASSERT(other_casted);
         value = other_casted->value;
+    }
+
+    // template nonsense follows. We choose between these calls using SFINAE
+    // based on whether V is constructible from a string, or not. If not, V is
+    // assumed to be a functor (e.g. OptFunctor above) and called.
+    // other notes:
+    // * the `typename V = U` is present because SFINAE resolution will not
+    //   trigger unless there is some kind of inference.
+    // * the `bool` in the second one is in order to keep the two from having
+    //   the same type signature, and believe it or not, is the right way to
+    //   do this, at least in c++11.
+    template <typename V = U,
+        typename = typename std::enable_if<std::is_constructible<V, std::string>::value>::type>
+    T element_from_string(const string &s)
+    {
+        return V(s);
+    }
+
+    template <typename V = U,
+        typename std::enable_if<!std::is_constructible<V, std::string>::value, bool>::type = true>
+    T element_from_string(const string &s)
+    {
+        return V()(s);
     }
 
     string loadFromString(const std::string &field, rc_line_type ltyp) override
@@ -339,10 +399,12 @@ public:
             if (part.empty())
                 continue;
 
+            T element = element_from_string(part);
+
             if (ltyp == RCFILE_LINE_MINUS)
-                remove_matching(value, T(part));
+                remove_matching(value, element);
             else
-                new_entries.emplace_back(part);
+                new_entries.push_back(move(element));
         }
         merge_lists(value, new_entries, ltyp == RCFILE_LINE_CARET);
         return GameOption::loadFromString(field, ltyp);
