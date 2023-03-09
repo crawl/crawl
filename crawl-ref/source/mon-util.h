@@ -220,6 +220,8 @@ mon_itemuse_type mons_itemuse(const monster& mon);
 bool mons_can_be_blinded(monster_type mc);
 bool mons_can_be_dazzled(monster_type mc);
 
+bool mons_resists_drowning(monster_type type, monster_type base);
+
 int get_shout_noise_level(const shout_type shout);
 shout_type mons_shouts(monster_type mclass, bool demon_shout = false);
 bool mons_can_shout(monster_type mclass);

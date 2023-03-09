@@ -1531,6 +1531,23 @@ bool mons_can_be_dazzled(monster_type mc)
         && mons_can_be_blinded(mc);
 }
 
+/**
+ * Can this type of monster survive in deep water?
+ *
+ * @param type  The monster type in question.
+ * @param base  The base type of the monster. (For e.g. draconians.)
+ * @return      Whether monsters of this type can survive falling into deep
+ *              water.
+ *
+ * XXX: Duplicates monster::res_water_drowning().
+ */
+bool mons_resists_drowning(monster_type type, monster_type base)
+{
+    const habitat_type ht = mons_habitat_type(type, base, true);
+
+    return mons_is_unbreathing(type) || ht == HT_WATER || ht == HT_AMPHIBIOUS;
+}
+
 char32_t mons_char(monster_type mc)
 {
     if (Options.mon_glyph_overrides.count(mc)

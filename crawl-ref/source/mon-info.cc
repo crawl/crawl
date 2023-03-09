@@ -358,6 +358,11 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mr = mons_class_willpower(type, base_type);
     can_see_invis = mons_class_sees_invis(type, base_type);
 
+    if (mons_resists_drowning(type, base_type))
+        mb.set(MB_RES_DROWN);
+    if (!mons_can_be_blinded(type))
+        mb.set(MB_UNBLINDABLE);
+
     mitemuse = mons_class_itemuse(type);
 
     mbase_speed = mons_class_base_speed(type);
