@@ -333,7 +333,13 @@ struct OptFunctor
 
 // syntactic sugar to simplify the template call.
 // in c++17 and on, the template could simply be `template <auto F>` instead.
-#define OPTFUN(a) OptFunctor<decltype(a), a>
+// Note that, at least in c++11, gcc (but not clang) chokes badly if there is
+// not an explicit `&` on the function used for OptFunctor. I believe clang
+// must be treating the function name as a pointer or ref automatically, and
+// gcc is not (based on the CI errors)? To keep incomprehensible errors from
+// being spat out for other people, I've just put the & in the macro for now.
+// Maybe there's a way of defining the functor template that heads this off.
+#define OPTFUN(a) OptFunctor<decltype(&a), &a>
 
 // T must be convertible from a string, or a typename that does it must be
 // supplied. You can use OPTFUN above on a function to get something that will
