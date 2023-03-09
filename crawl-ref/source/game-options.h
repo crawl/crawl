@@ -483,10 +483,39 @@ public:
         }
     }
 
-private:
+protected:
     T &value, default_value;
     map<string, T> choices;
     bool normalize_bools;
+};
+
+// Convenience specialization of the multiple choice case for maybe_bool.
+// use this if want you want is a straightforward mapping of "true"->true,
+// "maybe"->maybe_bool::maybe, and "false"->false. (Also handles 0,1,yes,no).
+// You can add extra words for "maybe". Otherwise, use a more general
+// MultipleChoiceGameOption invocation.
+class MaybeBoolGameOption : public MultipleChoiceGameOption<maybe_bool>
+{
+public:
+    MaybeBoolGameOption(maybe_bool &_val, std::set<std::string> _names,
+                maybe_bool _default, vector<string> extra_maybe = {})
+        : MultipleChoiceGameOption(_val, _names, _default,
+            {{"true", true},
+             {"false", false},
+             {"maybe", maybe_bool::maybe}},
+            true)
+    {
+        for (const auto &s : extra_maybe)
+            choices[s] = maybe_bool::maybe;
+    }
+
+    void set_from(const GameOption *other) override
+    {
+        const auto other_casted = dynamic_cast<const MaybeBoolGameOption *>(other);
+        // ugly: I can't currently find any better way to enforce types
+        ASSERT(other_casted);
+        value = other_casted->value;
+    }
 };
 
 bool read_bool(const std::string &field, bool def_value);
