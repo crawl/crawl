@@ -1667,7 +1667,7 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 clean-android:
-# 	$(RM) -r $(datadir_fp)
+	$(RM) -r android-project/app/src/main/assets
 	+cd android-project && rm -f local.properties && rm -f app/build.gradle
 
 distclean: clean clean-contrib clean-rltiles
