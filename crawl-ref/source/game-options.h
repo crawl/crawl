@@ -37,12 +37,22 @@ public:
     GameOption(std::set<std::string> _names,
                bool _case_sensitive=false,
                function<void()> _on_set=nullptr)
-        : on_set(_on_set), names(_names), case_sensitive(_case_sensitive), loaded(false) { }
+        : on_set(_on_set), names(_names), case_sensitive(_case_sensitive), loaded(false)
+    {
+        // does on_set ever need to be called from here? for currently
+        // relevant subclasses, default values are handled in reset(), not in
+        // the constructor
+    }
     virtual ~GameOption() {};
 
     // XX reset, set_from, and some other stuff could be templated for most
     // subclasses, but this is hard to reconcile with the polymorphism involved
-    virtual void reset() { loaded = false; }
+    virtual void reset()
+    {
+        loaded = false;
+        if (on_set)
+            on_set();
+    }
     virtual void set_from(const GameOption *other) = 0;
     virtual string loadFromString(const std::string &, rc_line_type);
     virtual string loadFromParseState(const opt_parse_state &state);
@@ -88,8 +98,10 @@ public:
 
     string loadFromString(const std::string &, rc_line_type) override
     {
-        // not actually called
-        return make_stringf("disabled");
+        // not actually called in automatic code
+        if (on_set)
+            on_set();
+        return make_stringf("disabled option");
     }
 
     virtual string loadFromParseState(const opt_parse_state &state) override;

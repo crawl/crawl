@@ -300,6 +300,16 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
+        new ListGameOption<string>(explore_stop_option, {"explore_stop"},
+            {"item", "stair", "portal", "branch", "shop", "altar",
+             "runed_door", "transporter", "greedy_pickup_smart",
+             "greedy_visited_item_stack"},
+            false,
+            [this]() { update_explore_stop_conditions(); }),
+        new ListGameOption<string>(explore_greedy_visit_option, {"explore_greedy_visit"},
+            {"glowing", "artefact"},
+            false,
+            [this]() {update_explore_greedy_visit_conditions(); }),
         new BoolGameOption(SIMPLE_NAME(travel_one_unsafe_move), false),
         new BoolGameOption(SIMPLE_NAME(dump_on_save), true),
         new BoolGameOption(SIMPLE_NAME(rest_wait_both), false),
@@ -308,6 +318,12 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
         new BoolGameOption(SIMPLE_NAME(show_blood), true),
+        new ListGameOption<string>(use_animations_option, {"use_animations"},
+            {"beam", "range", "hp", "monster_in_sight", "pickup", "monster",
+             "player", "branch_entry"},
+            false,
+            [this]() { update_use_animations(); }),
+
         new BoolGameOption(SIMPLE_NAME(reduce_animations),
 #ifdef USE_TILE_WEB
             // true
@@ -1276,13 +1292,6 @@ void game_options::reset_options()
     sort_menus.clear();
     set_menu_sort("pickup: true");
     set_menu_sort("inv: true : equipped, charged");
-
-    explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
-                              | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
-                              | ES_TRANSPORTER | ES_GREEDY_PICKUP_SMART
-                              | ES_GREEDY_VISITED_ITEM_STACK);
-
-    explore_greedy_visit    = (EG_GLOWING | EG_ARTEFACT);
 
     dump_item_origins      = IODS_ARTEFACTS;
 
@@ -2776,12 +2785,12 @@ void game_options::do_kill_map(const string &from, const string &to)
         kill_map[ifrom] = ito;
 }
 
-use_animations_type game_options::read_use_animations(const string &field) const
+void game_options::update_use_animations()
 {
-    use_animations_type animations;
-    vector<string> types = split_string(",", field);
-    for (const auto &type : types)
+    use_animations_type animations = UA_ALWAYS_ON; // not 0!
+    for (const string &type : use_animations_option)
     {
+        // TODO: dataify into a map
         if (type == "beam")
             animations |= UA_BEAM;
         else if (type == "range")
@@ -2798,17 +2807,22 @@ use_animations_type game_options::read_use_animations(const string &field) const
             animations |= UA_PLAYER;
         else if (type == "branch_entry")
             animations |= UA_BRANCH_ENTRY;
+        else
+            report_error("Unknown animation type '%s'", type.c_str());
     }
 
-    return animations;
+    use_animations = animations;
 }
 
-int game_options::read_explore_stop_conditions(const string &field) const
+void game_options::update_explore_stop_conditions()
 {
-    int conditions = 0;
-    vector<string> stops = split_string(",", field);
-    for (const string &stop : stops)
+    // convert the options list into a bitfield, and save it by side-effect
+    // into game_options::explore_stop. List processing is handled by the
+    // option update code, and we can ignore it here.
+    int conditions = ES_NONE;
+    for (const string &stop : explore_stop_option)
     {
+        // TODO: dataify into a map
         const string c = replace_all_of(stop, " ", "_");
         if (c == "item" || c == "items")
             conditions |= ES_ITEM;
@@ -2846,16 +2860,18 @@ int game_options::read_explore_stop_conditions(const string &field) const
             conditions |= ES_ARTEFACT;
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
+        else
+            report_error("Unknown explore stop condition '%s'", c.c_str());
     }
-    return conditions;
+    explore_stop = conditions;
 }
 
-int game_options::read_explore_greedy_visit_conditions(const string &field) const
+void game_options::update_explore_greedy_visit_conditions()
 {
-    int conditions = 0;
-    vector<string> stops = split_string(",", field);
-    for (const string &stop : stops)
+    int conditions = EG_NONE;
+    for (const string &stop : explore_greedy_visit_option)
     {
+        // TODO: dataify into a map
         const string c = replace_all_of(stop, " ", "_");
         if (c == "glowing" || c == "glowing_item"
                  || c == "glowing_items")
@@ -2868,8 +2884,10 @@ int game_options::read_explore_greedy_visit_conditions(const string &field) cons
         else if (c == "stack" || c == "stacks"
                  || c == "pile" || c == "piles")
             conditions |= EG_STACK;
+        else
+            report_error("Unknown greedy visit condition '%s'", c.c_str());
     }
-    return conditions;
+    explore_greedy_visit = conditions;
 }
 
 void game_options::add_message_colour_mappings(const string &field,
@@ -3339,18 +3357,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             report_error("Bad colour -- %s", state.field.c_str());
         return true;
     }
-    else if (key == "use_animations")
-    {
-        if (state.plain())
-            use_animations = UA_ALWAYS_ON;
-
-        const auto new_animations = read_use_animations(state.field);
-        if (state.minus_equal())
-            use_animations &= ~new_animations;
-        else
-            use_animations |= new_animations;
-        return true;
-    }
     else if (starts_with(key, interrupt_prefix))
     {
         set_activity_interrupt(key.substr(interrupt_prefix.length()),
@@ -3784,30 +3790,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         // TODO: allow resetting (need reset_forbidden_terrain())
         for (const string &seg : split_string(",", state.field))
             prevent_travel_to(seg);
-        return true;
-    }
-    else if (key == "explore_stop")
-    {
-        if (state.plain())
-            explore_stop = ES_NONE;
-
-        const int new_conditions = read_explore_stop_conditions(state.field);
-        if (state.minus_equal())
-            explore_stop &= ~new_conditions;
-        else
-            explore_stop |= new_conditions;
-        return true;
-    }
-    else if (key == "explore_greedy_visit")
-    {
-        if (state.plain())
-            explore_greedy_visit = EG_NONE;
-
-        const int new_conditions = read_explore_greedy_visit_conditions(state.field);
-        if (state.minus_equal())
-            explore_greedy_visit &= ~new_conditions;
-        else
-            explore_greedy_visit |= new_conditions;
         return true;
     }
     else if (key == "sound" || key == "hold_sound")
