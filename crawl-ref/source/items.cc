@@ -1897,6 +1897,9 @@ static void _get_orb()
 
     start_orb_run(CHAPTER_ESCAPING, "Now all you have to do is get back out "
                                     "of the dungeon!");
+
+    if (you.species == SP_METEORAN)
+        update_vision_range();
 }
 
 /**
