@@ -413,6 +413,7 @@ public:
     unsigned    background_colour; // select default background colour
     unsigned    foreground_colour; // select default foreground colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
+    vector<string> use_animations_option;
     use_animations_type use_animations; // which animations to show
     bool        darken_beyond_range; // whether to darken squares out of range
     bool        show_blood; // whether to show blood or not
@@ -545,16 +546,19 @@ public:
     // you show summary (one-line) information
     int         item_stack_summary_minimum;
 
+    // explore_stop etc is stored as a simple vector of strings, and on updating
+    // is parsed down into a bitfield
+    vector<string> explore_stop_option;
     int         explore_stop;      // Stop exploring if a previously unseen
                                    // item comes into view
+    vector<string> explore_greedy_visit_option;
+    int explore_greedy_visit; // Set what type of items explore_greedy visits.
 
     // Don't stop greedy explore when picking up an item which matches
     // any of these patterns.
     vector<text_pattern> explore_stop_pickup_ignore;
 
     bool        explore_greedy;    // Explore goes after items as well.
-
-    int explore_greedy_visit; // Set what type of items explore_greedy visits.
 
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
@@ -810,9 +814,10 @@ private:
     void new_dump_fields(const string &text, bool add = true,
                          bool prepend = false);
     void do_kill_map(const string &from, const string &to);
-    int  read_explore_stop_conditions(const string &) const;
-    int  read_explore_greedy_visit_conditions(const string &) const;
-    use_animations_type read_use_animations(const string &) const;
+
+    void update_explore_stop_conditions();
+    void update_explore_greedy_visit_conditions();
+    void update_use_animations();
 
     void add_mon_glyph_override(const string &, bool prepend);
     void remove_mon_glyph_override(const string &);
