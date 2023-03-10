@@ -1021,11 +1021,21 @@ runrest_stop_message ^= <regex>, <regex>, ...
 interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
         (List option)
         Use this option to not interrupt a delayed action on a certain trigger.
-        To find the name of a delay type, look for the name() function in
-        delay.h. The list of interruption types is in activity_interrupt_names.
         For example, use
             interrupt_travel -= sense_monster
         to not interrupt autotravel when a monster is sensed but not seen.
+
+        Possible delay types are: armour_on, armour_off, ascending_stairs,
+        descending_stairs, drop_item, exsanguinate, jewellery_on, macro,
+        macro_process_key, memorise, multidrop, passwall, rest, revivify,
+        run, shaft_self, travel. (These are derived from the `name()`
+        functions in delay.h.)
+
+        Possible interrupt types are: ancestor_hp, force, full_hp, full_mp,
+        hp_loss, hit_monster, keypress, message, mimic, monster,
+        monster_attack, stat, sense_monster, teleport. (These are derived
+        from the `activity_interrupt_names` array in delay.cc.)
+
 
 delay_safe_poison = <% of hp>:<% of mhp>
         Poison damage will be ignored if it is projected to drop your hp
@@ -2767,7 +2777,9 @@ feature -= <regex> , <regex>
         where <regex> is a regular expression describing a dungeon
         feature. This regex should match the description when using the
         'x' command. In case the regex matches several descriptions, all
-        such features are affected.
+        such features are affected. The set of possible features in a
+        given version of crawl can be found by searching for `.*` in the
+        lookup feature menu (`?/f`).
 
         The list in {...} specifies the appearance of the dungeon
         feature(s), and should be self-explanatory. <symbol> can be used
@@ -2815,7 +2827,10 @@ mon_glyph += <monster name or symbol> : (<colour> <glyph> | <monster name>) ,
 mon_glyph -= <monster name or symbol>
         (List option)
         The mon_glyph option allows you to customise the symbol and
-        colour used to display a monster.
+        colour used to display a monster. The full list of default glyphs
+        can be most reliably found by looking at the source code (mon-data.h),
+        but glyph information can be checked in the lookup monster menu
+        (`?/m`), as can the list of monsters.
 
         You can customise symbols based on monster names or their
         existing symbols. For instance, if you want to put elves on E
