@@ -87,6 +87,8 @@ jobs:
             debug: ""
             tag_upgrade: false
             build_all: BUILD_ALL=1
+    env:
+      CCACHE_DIR: /home/runner/.cache/ccache
     steps:
       - uses: actions/checkout@v2
         with:
@@ -108,7 +110,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.cache/ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-${{ github.sha }}
           restore-keys: |
             ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-
@@ -118,6 +120,8 @@ jobs:
             ccache-linux-${{ matrix.compiler }}-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: place config file"
+        run: "mkdir -p $CCACHE_DIR && mv ~/.ccache.conf $CCACHE_DIR/ccache.conf"
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -166,6 +170,8 @@ jobs:
             build_opts: TILES=1 LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
           - build_type: tiles
             build_opts: LINUXDEPLOY=/tmp/linuxdeploy-x86_64.AppImage
+    env:
+      CCACHE_DIR: /home/runner/.cache/ccache
     steps:
       - uses: actions/checkout@v2
         with:
@@ -178,13 +184,15 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.cache/ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ccache-appimage-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
             ccache-appimage-${{ matrix.build_type }}-
-            ccache-appiamge-
+            ccache-appimage-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: place config file"
+        run: "mkdir -p $CCACHE_DIR && mv ~/.ccache.conf $CCACHE_DIR/ccache.conf"
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -279,6 +287,8 @@ jobs:
             build_opts: ""
           - build_type: console-universal
             build_opts: TILES=y
+    env:
+      CCACHE_DIR: /Users/runner/Library/Caches/ccache
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -300,13 +310,15 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/Library/Caches/ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ccache-macos-clang-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
             ccache-macos-clang-${{ matrix.build_type }}-
             ccache-macos-clang-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: place config file"
+        run: "mkdir -p $CCACHE_DIR && mv ~/.ccache.conf $CCACHE_DIR/ccache.conf"
       - name: "Setup ccache: prepend path"
         run: "echo $(brew --prefix)/opt/ccache/libexec >> $GITHUB_PATH"
       - name: "Setup ccache: clear stats"
@@ -336,6 +348,8 @@ jobs:
           - tiles
           - console
           - installer
+    env:
+      CCACHE_DIR: /home/runner/.cache/ccache
     steps:
       - uses: actions/checkout@v2
         with:
@@ -362,13 +376,15 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.cache/ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ccache-key2-mingw64-${{ matrix.build_type }}-${{ github.sha }}
           restore-keys: |
             ccache-key2-mingw64-${{ matrix.build_type }}-
             ccache-key2-mingw64-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: place config file"
+        run: "mkdir -p $CCACHE_DIR && mv ~/.ccache.conf $CCACHE_DIR/ccache.conf"
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -409,6 +425,8 @@ jobs:
 
     name: Catch2 (GCC/Linux) + Codecov
     runs-on: ubuntu-latest
+    env:
+      CCACHE_DIR: /home/runner/.cache/ccache
     steps:
       - uses: actions/checkout@v2
         with:
@@ -429,12 +447,14 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.cache/ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ccache-catch2-${{ github.sha }}
           restore-keys: |
             ccache-catch2-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: place config file"
+        run: "mkdir -p $CCACHE_DIR && mv ~/.ccache.conf $CCACHE_DIR/ccache.conf"
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -509,6 +529,8 @@ jobs:
         debug:
           - ""
           - FULLDEBUG=1
+    env:
+      CCACHE_DIR: /home/runner/.cache/ccache
     steps:
       - uses: actions/checkout@v2
         with:
@@ -529,7 +551,7 @@ jobs:
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.cache/ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ github.sha }}
           restore-keys: |
             ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-
@@ -538,6 +560,8 @@ jobs:
             ccache-build-headers-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+      - name: "Setup ccache: place config file"
+        run: "mkdir -p $CCACHE_DIR && mv ~/.ccache.conf $CCACHE_DIR/ccache.conf"
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -557,9 +581,8 @@ jobs:
         build_opts:
           - ANDROID=1
     env:
-      USE_CCACHE: 1
-      CCACHE_EXEC: /usr/bin/ccache
-      NDK_CCACHE: /usr/bin/ccache
+      CCACHE_DIR: /home/runner/.cache/ccache
+      NDK_CCACHE: ccache
     steps:
       - uses: actions/checkout@v2
         with:
@@ -572,25 +595,31 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 7.6 # known to work
+          gradle-version: 7.5 # known to work
       - name: Cache compilation
         uses: actions/cache@v3
         with:
-          path: ~/.cache/ccache
+          path: ${{ env.CCACHE_DIR }}
           key: ccache-android-${{ github.sha }}
           restore-keys: |
             ccache-android-
       - name: Setup ccache
         uses: alexjurkiewicz/setup-ccache@master
+        with:
+          extra-config: |
+            compiler_check = content
+      - name: "Setup ccache: place config file"
+        run: "mkdir -p $CCACHE_DIR && mv ~/.ccache.conf $CCACHE_DIR/ccache.conf"
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
         run: "/usr/sbin/update-ccache-symlinks"
       - name: "Setup ccache: clear stats"
         run: ccache --zero-stats
-      - run: make -j$(nproc) ${{ matrix.build_opts }} android
+      - name: Prepare Android build
+        run: make -j$(nproc) ${{ matrix.build_opts }} android
         working-directory: crawl-ref/source
-      - name: Run gradle
+      - name: Build with Gradle
         run: gradle :app:assembleBuildTest
         working-directory: crawl-ref/source/android-project
       - name: Print ccache stats
