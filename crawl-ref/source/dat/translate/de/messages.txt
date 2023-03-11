@@ -15345,10 +15345,10 @@ Die Herren von Pandemonium sind nicht amüsiert. Vorsicht!
 ##################
 %%%%
 Your icy defenses dissipate!
-
+Eure eisigen Verteidigungen lösen sich auf!
 %%%%
 Your condensation shield dissipates!
-
+Euer Kondensationsschild löst sich auf!
 %%%%
 You shrug off the wave.
 Ihr schüttelt die Welle ab.
@@ -15372,79 +15372,67 @@ You writhe in agony!
 Ihr krümmt Euch in Qual!
 %%%%
 The flames go out!
-Die Flammen gehen aus!
+Die Flammen verlöschen!
 %%%%
 You are now level %d!
-
-%%%%
-HP: %d/%d MP: %d/%d
-
+Ihr seid jetzt auf Stufe %d!
 %%%%
 You feel drained.
 Ihr fühlt Euch ausgelaugt.
 %%%%
 %s scurries out from under your cloak.
-
+%s krabbelt unter Eurem Mantel hervor.
 %%%%
 A shower of butterflies erupts from you!
 Ein Schauer von Schmetterlingen bricht von Euch aus!
 %%%%
-You shudder from the %s and a %s!
-Ihr schaudert vorden %s und ein %s!
+You shudder from the blow and a flood of jellies pours out from you!
+Ihr zittert vor dem Schlag und eine Flut von Gelees strömt aus Euch heraus!
 %%%%
-blow
-
+You shudder from the blast and a flood of jellies pours out from you!
+Ihr zittert vor dem Stoß und eine Flut von Gelees strömt aus Euch heraus!
 %%%%
-blast
-
+You shudder from the blow and a jelly pops out!
+Ihr zittert vor dem Schlag und ein Gelee springt heraus!
 %%%%
-flood of jellies pours out from you
-
-%%%%
-jelly pops out
-
+You shudder from the blast and a jelly pops out!
+Ihr zittert vor dem Stoß und ein Gelee springt heraus!
 %%%%
 You focus on the pain.
 Ihr konzentriert Euch auf den Schmerz.
 %%%%
 You emit a cloud of dark smoke.
-Ihr strahlt eine dunkle Rauchwolke aus.
+Ihr stoßt eine dunkle Rauchwolke aus.
 %%%%
 With a swish of your cloak, you release a cloud of fog.
 Mit einem Ruck Eures Umhangs gebt Ihr eine Nebelwolke frei.
 %%%%
 You emit a cloud of colourful smoke!
-Ihr strahlt eine bunte Rauchwolke aus!
+Ihr stoßt eine bunte Rauchwolke aus!
 %%%%
 Your body deteriorates!
-Euer Körper verschlechtert sich!
+Euer Körper baut sich ab!
 %%%%
 Your shape twists and changes as you die.
 Eure Form dreht sich und verändert sich, als Ihr sterbt.
 %%%%
 You feel threatened and lose the ability to read scrolls!
-Ihr fühlt Euch bedroht und verlierst die Fähigkeit, Schriftrollen zu lesen!
+Ihr fühlt Euch bedroht und verliert die Fähigkeit, Schriftrollen zu lesen!
 %%%%
 You feel threatened and lose the ability to drink potions!
-Ihr fühlt Euch bedroht und verlierst die Fähigkeit, Tränke zu trinken!
+Ihr fühlt Euch bedroht und verliert die Fähigkeit, Tränke zu trinken!
 %%%%
 %s protects you from harm!
-
+%s schützt Euch vor Schaden!
 %%%%
 Ouch! That really hurt!
 Autsch! Das hat wirklich wehgetan!
 %%%%
-something (%d)
-
-%%%%
 Die?
-
+Sterben?
 %%%%
 Thought so.
 Hab ich mir gedacht.
-%%%%
-morgue-
-
 %%%%
 
 ##################
@@ -16356,6 +16344,9 @@ Eure Lebenskraft fühlt sich wiederhergestellt.
 %%%%
 Extra life!
 Extra Leben!
+%%%%
+HP: %d/%d MP: %d/%d
+
 %%%%
 Your capacity for spells is full, and you lose access to an earlier spell.
 
@@ -20280,6 +20271,9 @@ hailstorm
 %%%%
 A cannonade of hail descends around you!
 Eine Kanonade von Hagel steigt um Euch herab!
+%%%%
+blast
+
 %%%%
 You erupt in a blast of force!
 Ihr braucht in einer Explosion von Gewalt aus!

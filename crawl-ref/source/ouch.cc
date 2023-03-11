@@ -344,7 +344,7 @@ void lose_level()
     calc_mp();
 
     char buf[200];
-    sprintf(buf, "HP: %d/%d MP: %d/%d",
+    sprintf(buf, "HP: %d/%d MP: %d/%d", // noloc
             you.hp, you.hp_max, you.magic_points, you.max_magic_points);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
@@ -614,12 +614,19 @@ static void _maybe_spawn_monsters(int dam, kill_method_type death_type,
                 mprf(MSGCH_GOD, "A shower of butterflies erupts from you!");
                 take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "butterfly on damage"), true);
             }
+            else if (count_created > 1)
+            {
+                if (death_type == KILLED_BY_MONSTER)
+                    mpr("You shudder from the blow and a flood of jellies pours out from you!");
+                else
+                    mpr("You shudder from the blast and a flood of jellies pours out from you!");
+            }
             else
             {
-                mprf("You shudder from the %s and a %s!",
-                     death_type == KILLED_BY_MONSTER ? "blow" : "blast",
-                     count_created > 1 ? "flood of jellies pours out from you"
-                                       : "jelly pops out");
+                if (death_type == KILLED_BY_MONSTER)
+                    mpr("You shudder from the blow and a jelly pops out!");
+                else
+                    mpr("You shudder from the blast and a jelly pops out!");
             }
         }
     }
@@ -1000,7 +1007,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
             // for note taking
             string damage_desc;
             if (!see_source)
-                damage_desc = make_stringf("something (%d)", dam);
+                damage_desc = make_stringf("something (%d)", dam); // noloc
             else
             {
                 damage_desc = scorefile_entry(dam, source,
@@ -1153,6 +1160,7 @@ void ouch(int dam, kill_method_type death_type, mid_t source, const char *aux,
 
 string morgue_name(string char_name, time_t when_crawl_got_even)
 {
+    // noloc section start
     string name = "morgue-" + char_name;
 
     string time = make_file_time(when_crawl_got_even);
@@ -1160,6 +1168,7 @@ string morgue_name(string char_name, time_t when_crawl_got_even)
         name += "-" + time;
 
     return name;
+    // noloc section end
 }
 
 int actor_to_death_source(const actor* agent)
