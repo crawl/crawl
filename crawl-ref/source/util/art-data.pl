@@ -885,7 +885,8 @@ HEADER_END
             next;
         }
         elsif ($artefact->{sub_type} =~ /_SHIELD/
-               || $artefact->{sub_type} =~ /_BUCKLER/)
+               || $artefact->{sub_type} =~ /_BUCKLER/
+               || $artefact->{sub_type} =~ /_ORB/)
         {
             $part = "HAND2";
         }
