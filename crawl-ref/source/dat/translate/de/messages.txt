@@ -3184,9 +3184,6 @@ no fee if you join today
 You are not religious.
 Ihr seid nicht religiös.
 %%%%
-describe-god
-
-%%%%
 "  [<w>J</w>/<w>Enter</w>]: "
 
 %%%%
@@ -4824,9 +4821,6 @@ If it is slain, it may be possible to recover its hide, which can be used as arm
 
 %%%%
 You have summoned too many monsters of this kind to sustain them all, and thus this one will shortly expire.
-
-%%%%
-describe-monster
 
 %%%%
 "doll":[[%d,%d]]
@@ -15204,9 +15198,6 @@ Völlig unterdrückt.
 Transient mutations.
 Flüchtige Mutationen.
 %%%%
-mutations
-Mutationen
-%%%%
 You feel odd for a moment.
 Ihr fühlt Euch für einen Moment seltsam.
 %%%%
@@ -15433,14 +15424,6 @@ Sterben?
 %%%%
 Thought so.
 Hab ich mir gedacht.
-%%%%
-
-##################
-# outer-menu.cc
-##################
-%%%%
-newgame-choice
-
 %%%%
 
 ##################
@@ -18719,14 +18702,6 @@ Ru asks you to sacrifice your resistance to extreme temperatures.
 Ru fordert Euch auf, Eure Widerstandsfähigkeit gegen extreme Temperaturen zu opfern.
 %%%%
 sacrificed resistance
-
-%%%%
-
-##################
-# scroller.cc
-##################
-%%%%
-formatted-scroller
 
 %%%%
 
@@ -23536,9 +23511,6 @@ w=
 ##################
 %%%%
 X
-
-%%%%
-progress-bar
 
 %%%%
 /o/

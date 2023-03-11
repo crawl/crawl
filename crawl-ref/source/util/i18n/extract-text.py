@@ -413,7 +413,7 @@ for filename in files:
                     continue
                 if '_id =' in line:
                     continue
-                if 'push_ui_layout' in line:
+                if 'push_ui_layout' in line or 'ui_state_change' in line:
                     continue
                 if re.search(r'\bprops\.erase *\(', line):
                     continue
