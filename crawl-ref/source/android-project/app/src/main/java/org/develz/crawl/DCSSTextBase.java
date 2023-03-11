@@ -19,7 +19,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.CharBuffer;
 
-public class DCSSTextBase extends AppCompatActivity {
+public abstract class DCSSTextBase extends AppCompatActivity {
 
     private static final int CREATE_FILE = 1;
 
@@ -109,8 +109,8 @@ public class DCSSTextBase extends AppCompatActivity {
     }
 
     // Overridden by children to show download results
-    protected void onDownloadOk() {};
-    protected void onDownloadError() {};
+    protected abstract void onDownloadOk();
+    protected abstract void onDownloadError();
 
     // Close the activity without saving
     protected void close() {

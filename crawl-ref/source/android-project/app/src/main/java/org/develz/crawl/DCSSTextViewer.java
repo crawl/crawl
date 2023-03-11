@@ -64,14 +64,12 @@ public class DCSSTextViewer extends DCSSTextBase {
 
     @Override
     protected void onDownloadOk() {
-        super.onDownloadOk();
         downloadStatus.setText(R.string.download_ok);
         downloadStatus.setTextColor(getResources().getColor(R.color.light_green));
     }
 
     @Override
     protected void onDownloadError() {
-        super.onDownloadError();
         downloadStatus.setText(R.string.download_error);
         downloadStatus.setTextColor(getResources().getColor(R.color.error));
     }
