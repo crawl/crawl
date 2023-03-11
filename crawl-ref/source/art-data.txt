@@ -506,7 +506,7 @@ OBJ:     OBJ_WEAPONS/WPN_GIANT_CLUB
 PLUS:    +3
 COLOUR:  BROWN
 TILE:    urand_skullcrusher
-TILE_EQ: giant_club_slant
+TILE_EQ: skullcrusher
 BRAND:   SPWPN_SPEED
 STR:     7
 

@@ -569,6 +569,7 @@ chilly_death CHILLY_DEATH
 crystal_spear CRYSTAL_SPEAR
 flaming_death FLAMING_DEATH
 # end TAG_MAJOR_VERSION
+skullcrusher SKULLCRUSHER
 
 %sdir player/hand1
 # blades
