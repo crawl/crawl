@@ -309,7 +309,9 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<string>(explore_greedy_visit_option, {"explore_greedy_visit"},
             {"glowing", "artefact"},
             false,
-            [this]() {update_explore_greedy_visit_conditions(); }),
+            [this]() { update_explore_greedy_visit_conditions(); }),
+        new ListGameOption<string>(SIMPLE_NAME(travel_avoid_terrain), {}, false,
+            [this]() { update_travel_terrain(); }),
         new BoolGameOption(SIMPLE_NAME(travel_one_unsafe_move), false),
         new BoolGameOption(SIMPLE_NAME(dump_on_save), true),
         new BoolGameOption(SIMPLE_NAME(rest_wait_both), false),
@@ -2785,6 +2787,16 @@ void game_options::do_kill_map(const string &from, const string &to)
         kill_map[ifrom] = ito;
 }
 
+void game_options::update_travel_terrain()
+{
+    reset_travel_terrain();
+    for (const string &t : travel_avoid_terrain)
+    {
+        if (prevent_travel_to(t) < 0)
+            report_error("Unknown terrain type '%s'", t.c_str());
+    }
+}
+
 void game_options::update_use_animations()
 {
     use_animations_type animations = UA_ALWAYS_ON; // not 0!
@@ -3783,13 +3795,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
                 new_entries.push_back(mf);
         }
         merge_lists(filters, new_entries, state.caret_equal());
-        return true;
-    }
-    else if (key == "travel_avoid_terrain")
-    {
-        // TODO: allow resetting (need reset_forbidden_terrain())
-        for (const string &seg : split_string(",", state.field))
-            prevent_travel_to(seg);
         return true;
     }
     else if (key == "sound" || key == "hold_sound")

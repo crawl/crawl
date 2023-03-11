@@ -101,7 +101,8 @@ void start_travel(const coord_def& p);
 
 command_type travel();
 
-void prevent_travel_to(const string &dungeon_feature_name);
+int prevent_travel_to(const string &dungeon_feature_name);
+void reset_travel_terrain();
 
 // Sort dungeon features as appropriate.
 int level_distance(level_id first, level_id second);

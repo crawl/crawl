@@ -856,12 +856,11 @@ rest_delay = 0 (defaults to -1 for online servers)
 
 travel_avoid_terrain = (shallow water | deep water)
         Prevent travel from routing through shallow water. By default,
-        this option is disabled. For merfolk and/or characters with
+        no terrain is avoided. For merfolk and/or characters with
         permanent flight,
              travel_avoid_terrain = shallow water, deep water
         will prevent travel or explore from going through any water.
-        This option is not a true list option; in particular, it is not
-        possible to reset the option or to remove terrain types.
+        This option supports list syntax.
 
 explore_greedy = true
         Greedy explore travels to items that are eligible for
