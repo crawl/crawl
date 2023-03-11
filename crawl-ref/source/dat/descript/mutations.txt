@@ -513,7 +513,8 @@ miscast spells.
 ignite blood mutation
 
 Whenever you see blood spilled (yours or others'), it may ignite, bursting into
-a cloud of flame. Each level of this mutation makes this more likely.
+a cloud of flame. Each level of this mutation makes this more likely. This
+mutation also grants you immunity to clouds of flame.
 # XXX: also mention that this makes people more likely to bleed?
 %%%%
 corrupting presence mutation
