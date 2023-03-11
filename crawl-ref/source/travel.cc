@@ -601,11 +601,17 @@ static int _get_feature_type(const string &feature)
 
 // Given a feature description, prevents travel to locations of that feature
 // type.
-void prevent_travel_to(const string &feature)
+int prevent_travel_to(const string &feature)
 {
     int feature_type = _get_feature_type(feature);
     if (feature_type != -1)
         forbidden_terrain[feature_type] = 1;
+    return feature_type;
+}
+
+void reset_travel_terrain()
+{
+    forbidden_terrain.init(0);
 }
 
 static bool _is_branch_stair(const coord_def& pos)

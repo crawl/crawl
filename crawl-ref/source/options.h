@@ -502,6 +502,8 @@ public:
     int         explore_delay;  // How long to pause between explore moves
     int         rest_delay;     // How long to pause between rest moves
 
+    vector<string> travel_avoid_terrain;
+
     bool        show_travel_trail;
 
     int         view_delay;
@@ -818,6 +820,7 @@ private:
     void update_explore_stop_conditions();
     void update_explore_greedy_visit_conditions();
     void update_use_animations();
+    void update_travel_terrain();
 
     void add_mon_glyph_override(const string &, bool prepend);
     void remove_mon_glyph_override(const string &);
