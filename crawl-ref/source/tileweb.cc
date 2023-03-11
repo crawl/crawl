@@ -733,14 +733,14 @@ void TilesFramework::send_options()
     finish_message();
 }
 
-#define ZOOM_INC 10
+#define ZOOM_INC 0.1
 
-static void _set_option_int(string name, int value)
+static void _set_option_fixedp(string name, fixedp<int,100> value)
 {
     tiles.json_open_object();
     tiles.json_write_string("msg", "set_option");
     tiles.json_write_string("name", name);
-    tiles.json_write_int("value", value);
+    tiles.json_write_int("value", value.to_scaled());
     tiles.json_close_object();
     tiles.finish_message();
 }
@@ -749,17 +749,17 @@ void TilesFramework::zoom_dungeon(bool in)
 {
     if (m_ui_state == UI_VIEW_MAP)
     {
-        Options.tile_map_scale = min(300, max(20,
+        Options.tile_map_scale = min(3.0, max(0.2,
                     Options.tile_map_scale + (in ? ZOOM_INC : -ZOOM_INC)));
-        _set_option_int("tile_map_scale", Options.tile_map_scale);
-        dprf("Zooming map to %d", Options.tile_map_scale);
+        _set_option_fixedp("tile_map_scale", Options.tile_map_scale);
+        dprf("Zooming map to %g", (float) Options.tile_map_scale);
     }
     else
     {
         Options.tile_viewport_scale = min(300, max(20,
                     Options.tile_viewport_scale + (in ? ZOOM_INC : -ZOOM_INC)));
-        _set_option_int("tile_viewport_scale", Options.tile_viewport_scale);
-        dprf("Zooming to %d", Options.tile_viewport_scale);
+        _set_option_fixedp("tile_viewport_scale", Options.tile_viewport_scale);
+        dprf("Zooming to %g", (float) Options.tile_viewport_scale);
     }
     // calling redraw explicitly is not needed here: it triggers from a
     // listener on the webtiles side.

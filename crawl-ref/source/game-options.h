@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "colour.h"
+#include "fixedp.h"
 #include "stringutil.h"
 #include "maybe-bool.h"
 #include "rc-line-type.h"
@@ -222,6 +223,38 @@ public:
 private:
     int &value;
     int default_value, min_value, max_value;
+};
+
+// could template this for fixedp settings, but it's probably better not to
+class FixedpGameOption : public GameOption
+{
+public:
+    FixedpGameOption(fixedp<> &val, std::set<std::string> _names, fixedp<> _default,
+                  fixedp<> min_val = numeric_limits<fixedp<>>::min(),
+                  fixedp<> max_val = numeric_limits<fixedp<>>::max())
+        : GameOption(_names), value(val), default_value(_default),
+          min_value(min_val), max_value(max_val)
+    { }
+
+    void reset() override
+    {
+        value = default_value;
+        GameOption::reset();
+    }
+
+    void set_from(const GameOption *other) override
+    {
+        const auto other_casted = dynamic_cast<const FixedpGameOption *>(other);
+        // ugly: I can't currently find any better way to enforce types
+        ASSERT(other_casted);
+        value = other_casted->value;
+    }
+
+    string loadFromString(const std::string &field, rc_line_type) override;
+
+private:
+    fixedp<> &value;
+    fixedp<> default_value, min_value, max_value;
 };
 
 class StringGameOption : public GameOption
