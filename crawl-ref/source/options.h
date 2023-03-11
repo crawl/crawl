@@ -12,6 +12,7 @@
 #include "easy-confirm-type.h"
 #include "explore-greedy-options.h"
 #include "feature.h"
+#include "fixedp.h"
 #include "flang-t.h"
 #include "flush-reason-type.h"
 #include "kill-dump-options-type.h"
@@ -751,8 +752,8 @@ public:
 #endif
     int         tile_sidebar_pixels;
     int         tile_cell_pixels;
-    int         tile_viewport_scale;
-    int         tile_map_scale;
+    fixedp<>    tile_viewport_scale;
+    fixedp<>    tile_map_scale;
     bool        tile_filter_scaling;
     int         tile_map_pixels;
 

@@ -487,6 +487,15 @@ const vector<GameOption*> game_options::build_options_list()
         // make it easier to past between tiles / non-tiles builds, and also
         // it'd be a pain to maintain without further macros
 #ifdef USE_TILE
+#ifdef ANDROID
+        // android auto-sets these based on resolution, so we initialize them
+        // to 0 (an invalid value!)
+        new FixedpGameOption(SIMPLE_NAME(tile_viewport_scale), 0.0, 0.2, 16.0),
+        new FixedpGameOption(SIMPLE_NAME(tile_map_scale), 0.0, 0.2, 16.0),
+#else
+        new FixedpGameOption(SIMPLE_NAME(tile_viewport_scale), 1.0, 0.2, 16.0),
+        new FixedpGameOption(SIMPLE_NAME(tile_map_scale), 0.6, 0.2, 16.0),
+#endif
         new BoolGameOption(SIMPLE_NAME(tile_skip_title), false),
         new BoolGameOption(SIMPLE_NAME(tile_menu_icons), true),
         new BoolGameOption(SIMPLE_NAME(tile_filter_scaling), false),
@@ -1359,13 +1368,6 @@ void game_options::reset_options()
     tile_weapon_offsets.second = INT_MAX;
     tile_shield_offsets.first  = INT_MAX;
     tile_shield_offsets.second = INT_MAX;
-# ifndef __ANDROID__
-    tile_viewport_scale = 100;
-    tile_map_scale      = 60;
-# else
-    tile_viewport_scale = 0;
-    tile_map_scale      = 0;
-# endif
 
 #endif
 
@@ -4017,39 +4019,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         }
         return true;
     }
-#ifdef USE_TILE
-    // TODO: generalize these to an option type?
-    else if (key == "tile_viewport_scale")
-    {
-        float tmp_scale;
-        if (sscanf(state.field.c_str(), "%f", &tmp_scale))
-        {
-            tile_viewport_scale = min(1600, max(20,
-                                        static_cast<int>(tmp_scale * 100)));
-        }
-        else
-        {
-            report_error("Expected a decimal value for tile_viewport_scale,"
-                " but got '%s'.", state.field.c_str());
-        }
-        return true;
-    }
-    else if (key == "tile_map_scale")
-    {
-        float tmp_scale;
-        if (sscanf(state.field.c_str(), "%f", &tmp_scale))
-        {
-            tile_map_scale = min(1600, max(20,
-                                        static_cast<int>(tmp_scale * 100)));
-        }
-        else
-        {
-            report_error("Expected a decimal value for tile_map_scale,"
-                " but got '%s'.", state.field.c_str());
-        }
-        return true;
-    }
-#endif
 #ifdef USE_TILE_WEB
     else if (key == "action_panel")
     {
@@ -5185,8 +5154,10 @@ void game_options::write_webtiles_options(const string& name)
 
     tiles.json_write_string("tile_display_mode", tile_display_mode);
     tiles.json_write_int("tile_cell_pixels", tile_cell_pixels);
-    tiles.json_write_int("tile_viewport_scale", tile_viewport_scale);
-    tiles.json_write_int("tile_map_scale", tile_map_scale);
+    // 100 is the default scale, but make the cast explicit for clarity about
+    // what is happening, and for future-proofing
+    tiles.json_write_int("tile_viewport_scale", fixedp<int,100>(tile_viewport_scale).to_scaled());
+    tiles.json_write_int("tile_map_scale", fixedp<int,100>(tile_map_scale).to_scaled());
     tiles.json_write_bool("tile_filter_scaling", tile_filter_scaling);
     tiles.json_write_bool("tile_water_anim", tile_water_anim);
     tiles.json_write_bool("tile_misc_anim", tile_misc_anim);

@@ -145,11 +145,28 @@ string IntGameOption::loadFromString(const string &field, rc_line_type ltyp)
 {
     int val = default_value;
     if (!parse_int(field.c_str(), val))
-        return make_stringf("Bad %s: \"%s\"", name().c_str(), field.c_str());
+        return make_stringf("Couldn't parse integer option %s: \"%s\"", name().c_str(), field.c_str());
     if (val < min_value)
         return make_stringf("Bad %s: %d should be >= %d", name().c_str(), val, min_value);
     if (val > max_value)
-        return make_stringf("Bad %s: %d should be <<= %d", name().c_str(), val, max_value);
+        return make_stringf("Bad %s: %d should be <= %d", name().c_str(), val, max_value);
+    value = val;
+    return GameOption::loadFromString(field, ltyp);
+}
+
+string FixedpGameOption::loadFromString(const string &field, rc_line_type ltyp)
+{
+    // is this still the best way to handle this with error checking in 2023??
+    // strtod doesn't give good error checking, maybe std::stod?
+    float tmp_float;
+    if (!sscanf(field.c_str(), "%f", &tmp_float))
+        return make_stringf("Couldn't parse decimal option %s: \"%s\"", name().c_str(), field.c_str());
+    fixedp<> val = tmp_float; // implicit cast
+    if (val < min_value)
+        return make_stringf("Bad %s: %g should be >= %g", name().c_str(), (float) val, (float) min_value);
+    if (val > max_value)
+        return make_stringf("Bad %s: %g should be <= %g", name().c_str(), (float) val, (float) max_value);
+
     value = val;
     return GameOption::loadFromString(field, ltyp);
 }
