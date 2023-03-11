@@ -224,6 +224,11 @@ armoured tail mutation
 You have a large armoured tail, allowing you to tail-slap foes when launching
 melee attacks.
 %%%%
+whippy tail mutation
+
+You have a strong sinuous tail, allowing you to tail-slap foes when launching
+melee attacks.
+%%%%
 pseudopods mutation
 
 You are covered in pseudopods, allowing you to slap your foes when launching

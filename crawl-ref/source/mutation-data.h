@@ -2400,6 +2400,11 @@ static const mutation_def mut_data[] =
   {"Your tongue regains its customary placidity.", "", ""},
 },
 
+{ MUT_WHIPPY_TAIL, 0, 1, mutflag::good, false, "whippy tail",
+  {"Your tail is long and whippy", "", ""},
+  {"A whip-crack goes your whippy tail.", "", ""},
+  {"Your tail recedes into nothing.", "", ""},
+},
 };
 
 static const mutation_category_def category_mut_data[] =

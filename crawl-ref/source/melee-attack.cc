@@ -3712,6 +3712,10 @@ string aux_attack_desc(mutation_type mut)
         return AUX_PECK.describe();
     case MUT_HORNS:
         return AUX_HEADBUTT.describe();
+    case MUT_WHIPPY_TAIL:
+        if(you.has_mutation(MUT_STINGER))
+            return "\nOverridden by the Stinger mutation.";
+        //intentional fallthrough
     case MUT_STINGER:
     case MUT_ARMOURED_TAIL:
     case MUT_WEAKNESS_STINGER:
