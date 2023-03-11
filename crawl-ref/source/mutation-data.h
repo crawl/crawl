@@ -2404,7 +2404,7 @@ static const mutation_def mut_data[] =
   {"Your tail is long and whippy", "", ""},
   {"A whip-crack goes your whippy tail.", "", ""},
   {"Your tail recedes into nothing.", "", ""},
-},
+}
 };
 
 static const mutation_category_def category_mut_data[] =
