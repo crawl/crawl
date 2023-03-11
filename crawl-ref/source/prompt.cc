@@ -415,14 +415,18 @@ void PromptMenu::build_prompt_menu()
     menu_text.clear();
     update_columns();
     int c = 0;
+    formatted_string line;
     for (MenuEntry *item : items)
     {
         if (item->level != MEL_ITEM && c != 0)
-            menu_text += "\n";
+        {
+            menu_text.push_back(line);
+            line.clear();
+        }
 
-        menu_text.textcolour(item_colour(item));
+        line.textcolour(item_colour(item));
         // TODO: support MF_ALLOW_FORMATTING
-        menu_text.cprintf("%-*s",
+        line.cprintf("%-*s",
             col_width,
             _prompt_text(*item).c_str()); // _prompt_text handles the hotkey
 
@@ -430,9 +434,12 @@ void PromptMenu::build_prompt_menu()
         if (c >= columns || item->level != MEL_ITEM)
         {
             c = 0;
-            menu_text += "\n";
+            menu_text.push_back(line);
+            line.clear();
         }
     }
+    if (!line.empty())
+        menu_text.push_back(line);
 }
 
 void PromptMenu::update_menu(bool update_entries)
@@ -474,7 +481,11 @@ vector<MenuEntry *> PromptMenu::show_in_msgpane()
         // default prompt color is appropriate...
         const string prompt_text = t_entry ? t_entry->text : "? ";
 
-        formatted_mpr(menu_text, MSGCH_PROMPT);
+        // We do this line-by-line so that webtiles formatting comes out
+        // correctly. (Unfortunately, webtiles does not add a prefix to every
+        // line of a multi-line mpr, whereas console/tiles builds do.)
+        for (const auto &line : menu_text)
+            formatted_mpr(line, MSGCH_PROMPT);
         mprf(MSGCH_PROMPT, "%s", prompt_text.c_str());
 
         int key = get_ch();

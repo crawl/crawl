@@ -58,7 +58,7 @@ public:
     void build_prompt_menu();
 
 protected:
-    formatted_string menu_text;
+    vector<formatted_string> menu_text;
     int columns;
     int col_width;
     bool in_prompt_mode;
