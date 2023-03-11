@@ -3,36 +3,20 @@ package org.develz.crawl;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputConnection;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener {
+public class DCSSKeyboard extends DCSSKeyboardBase implements View.OnClickListener {
 
     // Keyboards
     private final View keyboardLower;
     private final View keyboardUpper;
     private final View keyboardCtrl;
     private final View keyboardNumeric;
-
-    // Our communication link to the EditText
-    private InputConnection inputConnection;
-
-    // Action keys
-    private HashSet<Integer> actionKeys;
-
-    // All buttons
-    private List<Button> buttonList;
 
     // Constructors
     public DCSSKeyboard(Context context) {
@@ -46,30 +30,6 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
     public DCSSKeyboard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        // Define action keys
-        actionKeys = new HashSet<>();
-        actionKeys.add(KeyEvent.KEYCODE_TAB);
-        actionKeys.add(KeyEvent.KEYCODE_ENTER);
-        actionKeys.add(KeyEvent.KEYCODE_ESCAPE);
-        actionKeys.add(KeyEvent.KEYCODE_DEL);
-        actionKeys.add(KeyEvent.KEYCODE_FORWARD_DEL);
-        actionKeys.add(KeyEvent.KEYCODE_SHIFT_LEFT);
-        actionKeys.add(KeyEvent.KEYCODE_SHIFT_RIGHT);
-        actionKeys.add(KeyEvent.KEYCODE_CTRL_LEFT);
-        actionKeys.add(KeyEvent.KEYCODE_CTRL_RIGHT);
-        actionKeys.add(KeyEvent.KEYCODE_F1);
-        actionKeys.add(KeyEvent.KEYCODE_F2);
-        actionKeys.add(KeyEvent.KEYCODE_F3);
-        actionKeys.add(KeyEvent.KEYCODE_F4);
-        actionKeys.add(KeyEvent.KEYCODE_F5);
-        actionKeys.add(KeyEvent.KEYCODE_F6);
-        actionKeys.add(KeyEvent.KEYCODE_F7);
-        actionKeys.add(KeyEvent.KEYCODE_F8);
-        actionKeys.add(KeyEvent.KEYCODE_F9);
-        actionKeys.add(KeyEvent.KEYCODE_F10);
-        actionKeys.add(KeyEvent.KEYCODE_F11);
-        actionKeys.add(KeyEvent.KEYCODE_F12);
-
         // Load layout
         LayoutInflater.from(context).inflate(R.layout.keyboard, this, true);
 
@@ -80,7 +40,6 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         keyboardNumeric = findViewById(R.id.keyboard_numeric);
 
         // Initialize key buttons - lower keyboard
-        buttonList = new ArrayList<>();
         initKey(R.id.key_q);
         initKey(R.id.key_w);
         initKey(R.id.key_e);
@@ -254,8 +213,17 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         initKey(R.id.key_abc);
     }
 
+    // Extra init settings
+    @Override
+    public void initKeyboard(int keyboardOption, int size) {
+        if (keyboardOption == 1) {
+            transparentKeyboard();
+        }
+    }
+
     // Swap keyboards
-    private void updateLayout(View v) {
+    @Override
+    protected void updateLayout(View v) {
         if ((v.getId() == R.id.key_shift_lower) ||
                 (v.getId() == R.id.key_shift_ctrl)) {
             keyboardLower.setVisibility(View.INVISIBLE);
@@ -285,87 +253,8 @@ public class DCSSKeyboard extends RelativeLayout implements View.OnClickListener
         }
     }
 
-    // Init a single key
-    private void initKey(int id) {
-        Button button = findViewById(id);
-        button.setOnClickListener(this);
-        buttonList.add(button);
-    }
-
-    // Identify action events
-    private boolean isActionEvent(KeyEvent event) {
-        return (actionKeys.contains(event.getKeyCode()) ||
-                ((event.getMetaState() & KeyEvent.META_CTRL_ON) == KeyEvent.META_CTRL_ON));
-    }
-
-    // Process software keyboard events
-    @Override
-    public void onClick(View v) {
-        String tag = v.getTag().toString();
-        if (!"layout".equals(tag)) {
-            String[] keyList = tag.split(",");
-            ArrayList<Integer> keycodes = new ArrayList<>();
-            for (int i = 0; i < keyList.length; i++) {
-                try {
-                    int keycode = Integer.parseInt(keyList[i]);
-                    keycodes.add(keycode);
-                } catch (NumberFormatException e) {
-                    Log.e("KEY", "Invalid key code: " + keyList[i]);
-                }
-            }
-            // Press keys
-            int metaState = 0;
-            for (int i = 0; i < keycodes.size(); i++) {
-                if (keycodes.get(i) == KeyEvent.KEYCODE_SHIFT_LEFT ||
-                        keycodes.get(i) == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-                    metaState |= KeyEvent.META_SHIFT_ON | KeyEvent.META_SHIFT_LEFT_ON;
-                }
-                if (keycodes.get(i) == KeyEvent.KEYCODE_CTRL_LEFT ||
-                        keycodes.get(i) == KeyEvent.KEYCODE_CTRL_RIGHT) {
-                    metaState |= KeyEvent.META_CTRL_ON | KeyEvent.META_CTRL_LEFT_ON;
-                }
-                KeyEvent eventDown = new KeyEvent(0, 0, KeyEvent.ACTION_DOWN,
-                        keycodes.get(i), 0, metaState);
-                dispatchKeyEvent(eventDown);
-            }
-            // Release keys
-            for (int i = keycodes.size() - 1; i >= 0; i--) {
-                if (keycodes.get(i) == KeyEvent.KEYCODE_SHIFT_LEFT ||
-                        keycodes.get(i) == KeyEvent.KEYCODE_SHIFT_RIGHT) {
-                    metaState &= ~KeyEvent.META_SHIFT_ON & ~KeyEvent.META_SHIFT_LEFT_ON;
-                }
-                if (keycodes.get(i) == KeyEvent.KEYCODE_CTRL_LEFT ||
-                        keycodes.get(i) == KeyEvent.KEYCODE_CTRL_RIGHT) {
-                    metaState &= ~KeyEvent.META_CTRL_ON & ~KeyEvent.META_CTRL_LEFT_ON;
-                }
-                KeyEvent eventUp = new KeyEvent(0, 0, KeyEvent.ACTION_UP,
-                        keycodes.get(i), 0, metaState);
-                dispatchKeyEvent(eventUp);
-            }
-        }
-        // Update keyboard
-        updateLayout(v);
-    }
-
-    // Process all keyboard events
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        Log.v("KEY", "KeyEvent: " + event.toString());
-        if (isActionEvent(event)) {
-            inputConnection.sendKeyEvent(event);
-        } else if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            inputConnection.commitText(String.valueOf((char) event.getUnicodeChar()), 1);
-        }
-        return true;
-    }
-
-    // The activity must connect with the DummyEdit's InputConnection
-    public void setInputConnection(InputConnection ic) {
-        this.inputConnection = ic;
-    }
-
     // Turn keyboard transparent
-    public void transparentKeyboard() {
+    private void transparentKeyboard() {
         RelativeLayout mainLayout = findViewById(R.id.main_layout);
         mainLayout.setBackgroundColor(Color.TRANSPARENT);
         for (Button button : buttonList) {

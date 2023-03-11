@@ -33,6 +33,9 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
     // Current keyboard type
     private int keyboardOption;
 
+    // Extra keyboard options
+    private int extraKeyboardOption;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -45,6 +48,7 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
 
         preferences = getPreferences(Context.MODE_PRIVATE);
         keyboardOption = preferences.getInt("keyboard", DEFAULT_KEYBOARD);
+        extraKeyboardOption = preferences.getInt("extra_keyboard", DEFAULT_KEYBOARD);
 
         Spinner keyboardSpinner = findViewById(R.id.keyboardSpinner);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
@@ -54,6 +58,14 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
         keyboardSpinner.setOnItemSelectedListener(this);
         keyboardSpinner.setSelection(keyboardOption);
 
+        Spinner extraKeyboardSpinner = findViewById(R.id.extraKeyboardSpinner);
+        ArrayAdapter<CharSequence> extraArrayAdapter = ArrayAdapter.createFromResource(
+                this, R.array.extra_keyboard_options, android.R.layout.simple_spinner_item);
+        extraArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        extraKeyboardSpinner.setAdapter(extraArrayAdapter);
+        extraKeyboardSpinner.setOnItemSelectedListener(this);
+        extraKeyboardSpinner.setSelection(extraKeyboardOption);
+
         initFile = new File(getExternalFilesDir(null)+INIT_FILE);
         resetInitFile(false);
     }
@@ -62,6 +74,7 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
     private void startGame(View v) {
         Intent intent = new Intent(getBaseContext(), DungeonCrawlStoneSoup.class);
         intent.putExtra("keyboard", keyboardOption);
+        intent.putExtra("extra_keyboard", extraKeyboardOption);
         startActivity(intent);
         finish();
     }
@@ -94,8 +107,13 @@ public class DCSSLauncher extends AppCompatActivity implements AdapterView.OnIte
     // Keyboard changed
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        keyboardOption = position;
-        preferences.edit().putInt("keyboard", position).apply();
+        if (parent.getId() == R.id.keyboardSpinner) {
+            keyboardOption = position;
+            preferences.edit().putInt("keyboard", position).apply();
+        } else if (parent.getId() == R.id.extraKeyboardSpinner) {
+            extraKeyboardOption = position;
+            preferences.edit().putInt("extra_keyboard", position).apply();
+        }
     }
 
     @Override

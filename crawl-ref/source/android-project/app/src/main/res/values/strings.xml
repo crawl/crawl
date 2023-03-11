@@ -14,6 +14,7 @@
     <string name="download_ok">Download complete</string>
     <string name="download_error">Download failed</string>
     <string name="keyboard">Keyboard</string>
+    <string name="extra_keyboard">Extra directional pad</string>
     <string-array name="sort_options">
         <item>Name asc.</item>
         <item>Name desc.</item>
@@ -21,9 +22,16 @@
         <item>Date desc.</item>
     </string-array>
     <string-array name="keyboard_options">
-        <item>Classic Keyboard</item>
-        <item>Transparent Keyboard</item>
-        <item>Android Keyboard</item>
-        <item>No Keyboard</item>
+        <item>Classic keyboard</item>
+        <item>Transparent keyboard</item>
+        <item>Android keyboard</item>
+        <item>No keyboard</item>
+    </string-array>
+    <string-array name="extra_keyboard_options">
+        <item>Disabled</item>
+        <item>Top left</item>
+        <item>Top right</item>
+        <item>Bottom left</item>
+        <item>Bottom right</item>
     </string-array>
 </resources>

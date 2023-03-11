@@ -48,4 +48,11 @@ public class DCSSTextEditor extends DCSSTextBase {
         intent.putExtra("asset", OPTIONS_GUIDE);
         startActivity(intent);
     }
+
+    @Override
+    protected void onDownloadOk() {}
+
+    @Override
+    protected void onDownloadError() {}
+
 }
