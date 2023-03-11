@@ -3067,6 +3067,8 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_SLEEP:
         if (crawl_state.player_moving)
             break; // looks too weird to fall asleep while still in motion
+        if (!coinflip())
+            break;
         if (attk_type == AT_SPORE)
         {
             if (defender->is_unbreathing())
@@ -3079,8 +3081,7 @@ void melee_attack::mons_apply_attack_flavour()
                      defender->conj_verb("are").c_str());
             }
         }
-        if (coinflip())
-            defender->put_to_sleep(attacker, attacker->get_experience_level() * 3);
+        defender->put_to_sleep(attacker, attacker->get_experience_level() * 3);
         break;
     }
 }
