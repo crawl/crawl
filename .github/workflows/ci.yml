@@ -108,13 +108,13 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-${{ github.sha }}
+          key: linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}
           restore-keys: |
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}-
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-
-            ccache-linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-
-            ccache-linux-${{ matrix.compiler }}-
+            linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ matrix.build_all }}
+            linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+            linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}-${{ matrix.build_opts }}
+            linux-${{ matrix.compiler }}-${{ matrix.tag_upgrade }}
+            linux-${{ matrix.compiler }}
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -171,10 +171,10 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ccache-appimage-${{ matrix.build_type }}-${{ github.sha }}
+          key: appimage-${{ matrix.build_type }}
           restore-keys: |
-            ccache-appimage-${{ matrix.build_type }}-
-            ccache-appimage-
+            appimage-${{ matrix.build_type }}
+            appimage
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -286,10 +286,10 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ccache-macos-clang-${{ matrix.build_type }}-${{ github.sha }}
+          key: macos-clang-${{ matrix.build_type }}
           restore-keys: |
-            ccache-macos-clang-${{ matrix.build_type }}-
-            ccache-macos-clang-
+            macos-clang-${{ matrix.build_type }}
+            macos-clang
       - name: "Setup ccache: prepend path"
         run: "echo $(brew --prefix)/opt/ccache/libexec >> $GITHUB_PATH"
       - run: make -j$(sysctl -n hw.ncpu) mac-app-${{ matrix.build_type }} ${{matrix.build_opts }}
@@ -341,10 +341,10 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ccache-key2-mingw64-${{ matrix.build_type }}-${{ github.sha }}
+          key: key2-mingw64-${{ matrix.build_type }}
           restore-keys: |
-            ccache-key2-mingw64-${{ matrix.build_type }}-
-            ccache-key2-mingw64-
+            key2-mingw64-${{ matrix.build_type }}
+            key2-mingw64
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -401,9 +401,9 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ccache-catch2-${{ github.sha }}
+          key: catch2
           restore-keys: |
-            ccache-catch2-
+            catch2
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -494,12 +494,12 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-${{ github.sha }}
+          key: build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
           restore-keys: |
-            ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}-
-            ccache-build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-
-            ccache-build-headers-${{ matrix.compiler }}-
-            ccache-build-headers-
+            build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}-${{ matrix.debug }}
+            build-headers-${{ matrix.compiler }}-${{ matrix.build_opts }}
+            build-headers-${{ matrix.compiler }}
+            build-headers
       - name: "Setup ccache: prepend path"
         run: "echo /usr/lib/ccache >> $GITHUB_PATH"
       - name: "Setup ccache: update symlinks"
@@ -532,9 +532,9 @@ jobs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ccache-android-${{ github.sha }}
+          key: android
           restore-keys: |
-            ccache-android-
+            android
       - name: "Setup ccache: extra configuration"
         run: "ccache --set-config compiler_check=content"
       - name: "Setup ccache: prepend path"
