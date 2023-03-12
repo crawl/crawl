@@ -119,6 +119,8 @@ game_options &get_default_options()
 }
 
 static string _get_save_path(string subdir);
+static bool _set_crawl_dir(const string &d);
+static string _resolve_dir(string path, string suffix);
 static string _supported_language_listing();
 
 static bool _force_allow_wizard();
@@ -211,6 +213,79 @@ const vector<GameOption*> game_options::build_options_list()
             }),
         new StringGameOption(SIMPLE_NAME(fake_lang), "", false,
             [this]() { set_fake_langs(fake_lang); }),
+
+#ifdef DGAMELAUNCH
+        // for DGL builds, determined from server config / command line only
+        new DisabledGameOption({"crawl_dir", "save_dir", "macro_dir"}),
+#else
+        // Data/save directories
+
+        // initialization is primarily handled in get_system_environment() and
+        // reset_paths(), which are both used regardless of builds. For local
+        // builds, these options can be used to override the default/env values
+        // via the rc file. Initialization order is quite delicate.
+
+        // possibly the directory options should be part of the superclass?
+
+        // If DATA_DIR_PATH is set (e.g. by a downstream packager), don't allow
+        // setting crawl_dir from .crawlrc.
+#ifdef DATA_DIR_PATH
+        new DisabledGameOption({"crawl_dir"}),
+#else
+        // default determined by system, see get_system_environment()
+        new StringGameOption(crawl_dir_option, {"crawl_dir"}, "", true,
+            [this]() {
+                if (crawl_dir_option.empty()) // set from SysEnv or CLO
+                    return;
+                if (!_set_crawl_dir(crawl_dir_option))
+                {
+                    // _set_crawl_dir will attempt to initialize a directory
+                    // that isn't currently set as crawl_dir, but the directory
+                    // must exist.
+                    // if the directory exists but is incomplete / can't be
+                    // initialized for some reason, the above call will call
+                    // end().
+                    report_error("Can't find crawl_dir: '%s'", crawl_dir_option.c_str());
+                    crawl_dir_option = "";
+                    return;
+                }
+
+                // reset all paths in the current options object, so that save_dir
+                // and so on will now default to being in `crawl_dir`. If this isn't
+                // done immediately, we get a fairly confused situation where save_dir
+                // is still the default for part of initialization, and the des cache
+                // ends up in the wrong place.
+                // XX: should this be done in _set_crawl_dir?
+                reset_paths();
+            }),
+#endif
+#ifdef SAVE_DIR_PATH
+        new DisabledGameOption({"save_dir", "macro_dir"}),
+#else
+        // effective default of "saves/", but handled by reset_paths
+
+        new StringGameOption(save_dir_option, {"save_dir"}, "", true,
+            [this]() {
+                if (save_dir_option.empty()) // set by reset_paths
+                    return;
+                // this will create a new directory if it doesn't exist!
+                save_dir = _resolve_dir(save_dir_option, "");
+#ifndef SHARED_DIR_PATH
+                shared_dir = save_dir;
+#endif
+            }),
+        // system-dependent default: see reset_paths
+        new StringGameOption(macro_dir_option, {"macro_dir"}, "", true,
+            [this]() {
+                if (macro_dir_option.empty()) // set by reset_paths
+                    return;
+                // if this directory doesn't exist, it'll be created if/when
+                // the game needs to save macros.txt
+                macro_dir = _resolve_dir(macro_dir_option, "");
+            }),
+#endif // else case of defined(SAVE_DIR_PATH)
+#endif // else case of defined(DGAMELAUNCH)
+
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
         new MultipleChoiceGameOption<int>(
             autopickup_on, {"default_autopickup"},
@@ -1228,9 +1303,12 @@ void game_options::reset_paths()
     save_dir = _get_save_path("saves/");
     morgue_dir = _get_save_path("morgue/");
 
+
 #ifndef DGAMELAUNCH
+    save_dir_option = "";
     if (macro_dir.empty())
     {
+        macro_dir_option = ""; // maybe unnecessary?
 #ifdef UNIX
         macro_dir = _user_home_subpath(".crawl");
 #else
@@ -1241,7 +1319,10 @@ void game_options::reset_paths()
 
 #if defined(TARGET_OS_MACOSX)
     if (SysEnv.macro_dir.empty())
+    {
+        macro_dir_option = "";
         macro_dir  = _get_save_path("");
+    }
 #endif
 
 #if defined(SHARED_DIR_PATH)
@@ -1258,6 +1339,12 @@ void game_options::reset_options()
     // Will they ever change within a single execution of Crawl?
     // GameOption::value's value will change of course, but not the reference.
     base_game_options::reset_options();
+
+    // reset save_dir, morgue_dir, and macro_dir base on the current crawl_dir
+    // do this before building the options list, so that any directory-related
+    // options have the right base paths to work with, and don't get
+    // overwritten
+    reset_paths();
 
     option_behaviour = build_options_list();
     options_by_name = build_options_map(option_behaviour);
@@ -1278,8 +1365,6 @@ void game_options::reset_options()
     quiet_debug_messages.set(DIAG_MONINDEX);
 # endif
 #endif
-
-    reset_paths();
 
     game = newgame_def();
 
@@ -2994,14 +3079,19 @@ void base_game_options::set_option_fragment(const string &s, bool /*prepend*/)
     }
 }
 
-static void _set_crawl_dir(const string &d)
+static bool _set_crawl_dir(const string &d)
 {
     const string new_crawl_dir = _resolve_dir(d, "");
-    mprf("Setting crawl_dir to `%s`.", d.c_str());
-    SysEnv.crawl_dir = _resolve_dir(d, "");
+    if (!dir_exists(new_crawl_dir))
+        return false;
+    mprf("Setting crawl_dir to `%s`.", new_crawl_dir.c_str());
+    SysEnv.crawl_dir = new_crawl_dir;
     // need to double check that a valid data directory can still be found,so
     // revalidate.
+    // note: this will end on failure. (Can this be made more friendly for the
+    // rc file case?)
     validate_basedirs();
+    return true;
 }
 
 // Not a method of the game_options class since keybindings aren't
@@ -3462,38 +3552,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         set_fire_order_ability(state.field, state.add_equal(), state.minus_equal());
         return true;
     }
-#ifndef DGAMELAUNCH
-    // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
-#ifndef DATA_DIR_PATH
-    else if (key == "crawl_dir")
-    {
-        _set_crawl_dir(state.raw_field);
-
-        // reset all paths in the current options object, so that save_dir
-        // and so on will now default to being in `crawl_dir`. If this isn't
-        // done immediately, we get a fairly confused situation where save_dir
-        // is still the default for part of initialization, and the des cache
-        // ends up in the wrong place.
-        reset_paths();
-        return true;
-    }
-#endif
-#ifndef SAVE_DIR_PATH
-    else if (key == "save_dir")
-    {
-        save_dir = _resolve_dir(state.field, "");
-#ifndef SHARED_DIR_PATH
-        shared_dir = save_dir;
-#endif
-        return true;
-    }
-    else if (key == "macro_dir")
-    {
-        macro_dir = _resolve_dir(state.raw_field, "");
-        return true;
-    }
-#endif
-#endif
     else if (key == "view_lock")
     {
         const bool lock = read_bool(state.field, true);

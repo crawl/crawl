@@ -319,6 +319,10 @@ public:
     vector<item_glyph_override_type > item_glyph_overrides;
     map<string, cglyph_t> item_glyph_cache;
 
+
+    string crawl_dir_option;
+    string save_dir_option;
+    string macro_dir_option;
     string      save_dir;       // Directory where saves and bones go.
     string      macro_dir;      // Directory containing macro.txt
     string      morgue_dir;     // Directory where character dumps and morgue
