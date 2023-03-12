@@ -5,8 +5,8 @@
  * most of the work though. Read through read_init_file to get an overview of
  * how Crawl loads options. This file also contains a large number of utility
  * functions for setting particular options and converting between human
- * readable strings and internal values. (E.g. str_to_enemy_hp_colour,
- * _weapon_to_str). There is also some code dealing with sorting menus.
+ * readable strings and internal values. (E.g. _weapon_to_str). There is also
+ * some code dealing with sorting menus.
 **/
 
 #include "AppHdr.h"
@@ -367,6 +367,9 @@ const vector<GameOption*> game_options::build_options_list()
         new ColourGameOption(SIMPLE_NAME(status_caption_colour), BROWN),
         new ColourGameOption(SIMPLE_NAME(background_colour), BLACK),
         new ColourGameOption(SIMPLE_NAME(foreground_colour), LIGHTGREY),
+        new StringGameOption(enemy_hp_colour_option,
+            {"enemy_hp_colour", "enemy_hp_color"}, "default", false,
+            [this]() { update_enemy_hp_colour(); }),
         new CursesGameOption(SIMPLE_NAME(friend_highlight),
                              CHATTR_HILITE | (GREEN << 8)),
         new CursesGameOption(SIMPLE_NAME(neutral_highlight),
@@ -1020,23 +1023,28 @@ static int _read_bool_or_number(const string &field, int def_value,
     return ret;
 }
 
-void game_options::str_to_enemy_hp_colour(const string &colours, bool prepend)
+void game_options::update_enemy_hp_colour()
 {
-    vector<string> colour_list = split_string(" ", colours, true, true);
-    if (prepend)
-        reverse(colour_list.begin(), colour_list.end());
-    for (const string &colstr : colour_list)
+    // this is: full health, lightly, moderately, heavily, severely, almost dead
+    enemy_hp_colour = { GREEN, GREEN, BROWN, BROWN, MAGENTA, RED };
+
+    vector<string> colour_list = split_string(" ", enemy_hp_colour_option, true, true);
+    for (size_t i = 0; i < min(colour_list.size(), enemy_hp_colour.size()); i++)
     {
-        const int col = str_to_colour(colstr);
+        if (colour_list[i] == "default")
+            continue;
+        const int col = str_to_colour(colour_list[i]);
         if (col < 0)
         {
-            Options.report_error("Bad enemy_hp_colour: %s\n", colstr.c_str());
-            return;
+            report_error("Bad enemy_hp_colour: %s\n", colour_list[i].c_str());
+            continue;
         }
-        else if (prepend)
-            enemy_hp_colour.insert(enemy_hp_colour.begin(), col);
-        else
-            enemy_hp_colour.push_back(col);
+        enemy_hp_colour[i] = col;
+    }
+    if (colour_list.size() > enemy_hp_colour.size())
+    {
+        report_error("Extraneous enemy hp color values ignored in '%s'",
+            enemy_hp_colour_option.c_str());
     }
 }
 
@@ -1413,16 +1421,6 @@ void game_options::reset_options()
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
                       | UA_ALWAYS_ON);
-
-    enemy_hp_colour.clear();
-    // I think these defaults are pretty ugly but apparently OS X has problems
-    // with lighter colours
-    enemy_hp_colour.push_back(GREEN);
-    enemy_hp_colour.push_back(GREEN);
-    enemy_hp_colour.push_back(BROWN);
-    enemy_hp_colour.push_back(BROWN);
-    enemy_hp_colour.push_back(MAGENTA);
-    enemy_hp_colour.push_back(RED);
 
     force_autopickup.clear();
     autoinscriptions.clear();
@@ -3629,13 +3627,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             autoinscriptions.insert(autoinscriptions.begin(), entry);
         else
             autoinscriptions.push_back(entry);
-        return true;
-    }
-    else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
-    {
-        if (state.plain())
-            enemy_hp_colour.clear();
-        str_to_enemy_hp_colour(state.field, state.caret_equal());
         return true;
     }
     else if (key == "monster_list_colour" || key == "monster_list_color")
