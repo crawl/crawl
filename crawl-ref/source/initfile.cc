@@ -424,6 +424,11 @@ const vector<GameOption*> game_options::build_options_list()
              {"single", KDO_ONE_PLACE},
              {"one", KDO_ONE_PLACE},
              {"true", KDO_ONE_PLACE}}, true),
+        new ListGameOption<string>(SIMPLE_NAME(dump_order),
+            {"header", "hiscore", "stats", "misc", "inventory", "skills",
+             "spells", "overview", "mutations", "messages", "screenshot",
+             "monlist", "kills", "notes", "screenshots", "vaults",
+             "skill_gains", "action_counts"}),
         new ListGameOption<text_pattern>(SIMPLE_NAME(confirm_action), {}, true),
         new MultipleChoiceGameOption<easy_confirm_type>(
             SIMPLE_NAME(easy_confirm),
@@ -1064,26 +1069,6 @@ static tag_pref _str_to_tag_pref(const char *opt)
 }
 #endif
 
-void game_options::new_dump_fields(const string &text, bool add, bool prepend)
-{
-    // Easy; chardump.cc has most of the intelligence.
-    vector<string> fields = split_string(",", text, true, true);
-    if (add)
-    {
-        erase_if(fields, [this](const string &x) { return dump_fields.count(x) > 0; });
-        dump_fields.insert(fields.begin(), fields.end());
-        merge_lists(dump_order, fields, prepend);
-    }
-    else
-    {
-        for (const string &field : fields)
-        {
-            dump_fields.erase(field);
-            erase_val(dump_order, field);
-        }
-    }
-}
-
 static string _correct_spelling(const string& str)
 {
     if (str == "armor_on")
@@ -1407,16 +1392,9 @@ void game_options::reset_options()
     for (int i = 0; i < NUM_MESSAGE_CHANNELS; ++i)
         channels[i] = MSGCOL_DEFAULT;
 
-    // Clear vector options.
-    dump_order.clear();
-    dump_fields.clear();
-    new_dump_fields("header,hiscore,stats,misc,inventory,"
-                    "skills,spells,overview,mutations,messages,"
-                    "screenshot,monlist,kills,notes,screenshots,vaults,"
-                    "skill_gains,action_counts");
     // Currently enabled by default for testing in trunk.
     if (Version::ReleaseType == VER_ALPHA)
-        new_dump_fields("turns_by_place");
+        dump_order.push_back("turns_by_place");
 
     use_animations = (UA_BEAM | UA_RANGE | UA_HP | UA_MONSTER_IN_SIGHT
                       | UA_PICKUP | UA_MONSTER | UA_PLAYER | UA_BRANCH_ENTRY
@@ -3871,17 +3849,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             message_colour_mappings.clear();
 
         add_message_colour_mappings(state.raw_field, state.caret_equal(), state.minus_equal());
-    }
-    else if (key == "dump_order")
-    {
-        if (state.plain())
-        {
-            dump_fields.clear();
-            dump_order.clear();
-        }
-
-        new_dump_fields(state.field, !state.minus_equal(), state.caret_equal());
-        return true;
     }
     else if (key == "kill_map")
     {
