@@ -20,6 +20,7 @@
 #include "env.h"
 #include "files.h"
 #include "hints.h"
+#include "initfile.h"
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
@@ -123,6 +124,22 @@ static string _get_version_features()
         result += feature;
         result += "\n";
     }
+
+#ifdef DEBUG
+    // this might be useful on a regular build too?
+    result += "\n<w>Paths</w>\n"
+                   "-----";
+    result += make_stringf("\n<w>crawl_dir</w>: '%s'", SysEnv.crawl_dir.c_str());
+    if (!Options.crawl_dir_option.empty())
+        result += make_stringf(" (option '%s')", Options.crawl_dir_option.c_str());
+    result += make_stringf("\n<w>save_dir</w>:  '%s'", Options.save_dir.c_str());
+    if (!Options.save_dir_option.empty())
+        result += make_stringf(" (option '%s')", Options.save_dir_option.c_str());
+    result += make_stringf("\n<w>macro_dir</w>: '%s'", Options.macro_dir.c_str());
+    if (!Options.macro_dir_option.empty())
+        result += make_stringf(" (option '%s')", Options.macro_dir_option.c_str());
+    result += "\n";
+#endif
 
     return result;
 }
