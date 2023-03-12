@@ -2146,13 +2146,17 @@ void game_options::write_prefs(FILE *f)
 void newgame_def::write_prefs(FILE *f) const
 {
     // TODO: generalize whatever of this writing code can be generalized
+#ifndef DGAMELAUNCH
     if (type != NUM_GAME_TYPE)
         fprintf(f, "type = %s\n", gametype_to_str(type).c_str());
+#endif
     if (!map.empty())
         fprintf(f, "map = %s\n", map.c_str());
     if (!arena_teams.empty())
         fprintf(f, "arena_teams = %s\n", arena_teams.c_str());
+#ifndef DGAMELAUNCH
     fprintf(f, "name = %s\n", name.c_str());
+#endif
     if (species != SP_UNKNOWN)
         fprintf(f, "species = %s\n", _species_to_str(species).c_str());
     if (job != JOB_UNKNOWN)
