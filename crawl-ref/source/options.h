@@ -658,8 +658,10 @@ public:
     bool        autopickup_search; // whether to annotate stash items with
                                    // autopickup status
 
+    string language_option;
     lang_t              language;         // Translation to use.
     const char*         lang_name;        // Database name of the language.
+    string fake_lang;
     vector<flang_entry> fake_langs;       // The fake language(s) in use.
     bool has_fake_lang(flang_t flang)
     {

@@ -198,7 +198,19 @@ const vector<GameOption*> game_options::build_options_list()
             game.allowed_weapons, {"weapon"}, {}, true,
             [this]() { game.allowed_combos.clear(); }
             ),
-
+        new StringGameOption(language_option, {"language"}, "", true,
+            [this]()
+            {
+                if (!set_lang(language_option.c_str()))
+                {
+                    report_error("No translations for language '%s'.\n"
+                                 "Languages with at least partial translation: %s",
+                                 language_option.c_str(),
+                                 _supported_language_listing().c_str());
+                }
+            }),
+        new StringGameOption(SIMPLE_NAME(fake_lang), "", false,
+            [this]() { set_fake_langs(fake_lang); }),
         new BoolGameOption(SIMPLE_NAME(autopickup_starting_ammo), true),
         new MultipleChoiceGameOption<int>(
             autopickup_on, {"default_autopickup"},
@@ -3332,18 +3344,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         }
         return true;
     }
-    else if (key == "language")
-    {
-        if (!set_lang(state.field.c_str()))
-        {
-            report_error("No translations for language '%s'.\n"
-                         "Languages with at least partial translation: %s",
-                         state.field.c_str(), _supported_language_listing().c_str());
-        }
-        return true;
-    }
-    else if (key == "fake_lang")
-        set_fake_langs(state.field);
     else if (key == "colour" || key == "color")
     {
         const int orig_col   = str_to_colour(state.subkey);
@@ -4143,6 +4143,9 @@ bool game_options::set_lang(const char *lc)
 {
     if (!lc)
         return false;
+
+    if (!lc[0])
+        return true; // do nothing
 
     if (lc[0] && lc[1] && (lc[2] == '_' || lc[2] == '-'))
         return set_lang(string(lc, 2).c_str());

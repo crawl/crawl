@@ -261,8 +261,9 @@ class StringGameOption : public GameOption
 {
 public:
     StringGameOption(string &val, std::set<std::string> _names,
-                     string _default, bool _case_sensitive=false)
-        : GameOption(_names, _case_sensitive), value(val), default_value(_default) { }
+                     string _default, bool _case_sensitive=false,
+                     function<void()> _on_set=nullptr)
+        : GameOption(_names, _case_sensitive, _on_set), value(val), default_value(_default) { }
 
     void reset() override
     {
