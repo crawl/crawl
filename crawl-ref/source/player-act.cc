@@ -332,8 +332,13 @@ random_var player::attack_delay_with(const item_def *projectile, bool rescale,
             return attk_delay;
 
         attk_delay -= div_rand_round(random_var(wpn_sklev), DELAY_SCALE);
-        // XXX: is this right? I hate random_var... (pf)
-        attk_delay = attk_delay * weapon_adjust_delay(*weap, DELAY_SCALE) / DELAY_SCALE;
+        // we should really use weapon_adjust_delay here,
+        // but we'd need to support random_var
+        const brand_type brand = get_weapon_brand(*weap);
+        if (brand == SPWPN_SPEED)
+            attk_delay = div_rand_round(attk_delay * 2, 3);
+        else if (brand == SPWPN_HEAVY)
+            attk_delay = div_rand_round(attk_delay * 3, 2);
     }
 
     // At the moment it never gets this low anyway.
