@@ -484,6 +484,7 @@ public:
     vector<pair<int, int> > hp_colour;
     vector<pair<int, int> > mp_colour;
     vector<pair<int, int> > stat_colour;
+    string enemy_hp_colour_option;
     vector<int> enemy_hp_colour;
 
     string map_file_name;   // name of mapping file to use
@@ -815,7 +816,7 @@ private:
     void set_fire_order_spell(const string &s, bool append, bool remove);
     void set_fire_order_ability(const string &s, bool append, bool remove);
     void set_menu_sort(string field);
-    void str_to_enemy_hp_colour(const string &, bool);
+    void update_enemy_hp_colour();
     void new_dump_fields(const string &text, bool add = true,
                          bool prepend = false);
     void do_kill_map(const string &from, const string &to);

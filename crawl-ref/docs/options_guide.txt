@@ -1533,7 +1533,9 @@ status_caption_colour = brown
 enemy_hp_colour = green green brown brown magenta red
         Colours enemy health appropriately in the monster pane. The
         colourings correspond to full health, lightly wounded, moderately
-        wounded, heavily wounded, severely wounded, and almost dead.
+        wounded, heavily wounded, severely wounded, and almost dead. In
+        addition to colour names, "default" can be used in this list, and
+        omitted colour slots will be set to the default.
 
 clear_messages = false
         Setting this option to true will cause messages to cleared
