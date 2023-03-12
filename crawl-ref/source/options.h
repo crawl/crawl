@@ -267,6 +267,7 @@ struct base_game_options
 
     // arguable which class this should be on
     vector<string> terp_files; // Lua files to load for luaterp
+    vector<string> additional_macro_files;
 
 protected:
     map<string, string> aliases;
@@ -325,7 +326,6 @@ public:
     string      shared_dir;     // Directory where the logfile, scores and bones
                                 // are stored. On a multi-user system, this dir
                                 // should be accessible by different people.
-    vector<string> additional_macro_files;
 
     uint64_t    seed;           // Non-random games.
     uint64_t    seed_from_rc;

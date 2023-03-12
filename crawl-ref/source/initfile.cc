@@ -1281,8 +1281,6 @@ void game_options::reset_options()
 
     reset_paths();
 
-    additional_macro_files.clear();
-
     game = newgame_def();
 
 #ifdef DGAMELAUNCH
@@ -1360,8 +1358,6 @@ void game_options::reset_options()
     name_bypasses_menu = true;
 #endif
 
-    terp_files.clear();
-
 #ifdef USE_TILE
     // XXX: arena may now be chosen after options are read.
     tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED
@@ -1416,7 +1412,6 @@ void game_options::reset_options()
     sound_mappings.clear();
     menu_colour_mappings.clear();
     message_colour_mappings.clear();
-    named_options.clear();
 
     clear_cset_overrides();
 
@@ -2269,6 +2264,9 @@ void base_game_options::reset_options()
     variables.clear();
     constants.clear();
     included.clear();
+    terp_files.clear();
+    additional_macro_files.clear();
+    named_options.clear();
     prefs_dirty = false;
     filename = "unknown";
     basefilename = "unknown";
@@ -3267,6 +3265,31 @@ void base_game_options::read_option_line(const string &str, bool runscripts)
             constants.insert(state.field);
         return;
     }
+    else if (state.key == "additional_macro_file")
+    {
+        // TODO: this option could probably be improved. For now, keep the
+        // "= means append" behaviour, and don't allow clearing the list;
+        // if we rename to "additional_macro_files" then it could work like
+        // other list options.
+        const string resolved = resolve_include(state.raw_field, "macro ");
+        if (!resolved.empty())
+            additional_macro_files.push_back(resolved);
+        return;
+    }
+    else if (state.key == "macros")
+    {
+        // orig_field because this function wants capitals
+        const string possible_error = read_rc_file_macro(state.raw_field);
+
+        if (!possible_error.empty())
+            report_error(possible_error.c_str(), state.raw_field.c_str());
+        return;
+    }
+    else if (state.key == "bindkey" && runscripts)
+    {
+        _bindkey(state.raw_field);
+        return;
+    }
 
     GameOption *const *option = map_find(options_by_name, state.key);
     if (option)
@@ -3909,26 +3932,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
         }
         return true;
     }
-    else if (key == "additional_macro_file")
-    {
-        // TODO: this option could probably be improved. For now, keep the
-        // "= means append" behaviour, and don't allow clearing the list;
-        // if we rename to "additional_macro_files" then it could work like
-        // other list options.
-        const string resolved = resolve_include(state.raw_field, "macro ");
-        if (!resolved.empty())
-            additional_macro_files.push_back(resolved);
-        return true;
-    }
-    else if (key == "macros")
-    {
-        // orig_field because this function wants capitals
-        const string possible_error = read_rc_file_macro(state.raw_field);
-
-        if (!possible_error.empty())
-            report_error(possible_error.c_str(), state.raw_field.c_str());
-        return true;
-    }
 #ifdef USE_TILE
     else if (key == "tile_show_player_species" && state.field == "true") // XX bool parsing
     {
@@ -3959,11 +3962,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
     }
 #endif // USE_TILE
 
-    else if (key == "bindkey" && runscripts)
-    {
-        _bindkey(state.raw_field);
-        return true;
-    }
     else if (key == "game_seed")
     {
         // special handling because of the large type.
