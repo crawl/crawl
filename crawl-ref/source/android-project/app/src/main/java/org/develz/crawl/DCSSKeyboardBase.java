@@ -65,7 +65,11 @@ public abstract class DCSSKeyboardBase extends RelativeLayout implements View.On
     }
 
     // Extra init settings
-    public abstract void initKeyboard(int keyboardOption, int size);
+    public void initKeyboard(int keyboardOption, int size) {
+        for (Button button : buttonList) {
+            button.getLayoutParams().height = size;
+        }
+    }
 
     // Init a single key
     protected void initKey(int id) {

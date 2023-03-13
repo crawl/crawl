@@ -62,6 +62,7 @@ public class DCSSKeyboardExtra extends DCSSKeyboardBase implements View.OnClickL
     // Extra init settings
     @Override
     public void initKeyboard(int keyboardOption, int size) {
+        super.initKeyboard(keyboardOption, size);
         if (keyboardOption == 1 || keyboardOption == 3) {
             moveLeft();
         } else if (keyboardOption == 2 || keyboardOption == 4) {

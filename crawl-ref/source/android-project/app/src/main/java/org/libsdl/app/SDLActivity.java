@@ -68,6 +68,7 @@ public class SDLActivity extends AppCompatActivity {
     protected static DCSSKeyboardExtra mKeyboardExtra;
     protected static int keyboardOption;
     protected static int extraKeyboardOption;
+    protected static int keyboardSize;
     protected static View mTextEdit;
     protected static boolean mScreenKeyboardShown;
     protected static boolean mScreenExtraKeyboardShown;
@@ -145,6 +146,7 @@ public class SDLActivity extends AppCompatActivity {
         mKeyboardExtra = null;
         keyboardOption = 0;
         extraKeyboardOption = 0;
+        keyboardSize = 0;
         mTextEdit = null;
         mLayout = null;
         mClipboardHandler = null;
@@ -228,14 +230,16 @@ public class SDLActivity extends AppCompatActivity {
         Log.i(TAG, "Keyboard option: " + keyboardOption);
         extraKeyboardOption = intent.getIntExtra("extra_keyboard", 0);
         Log.i(TAG, "Extra keyboard option: " + extraKeyboardOption);
+        keyboardSize = intent.getIntExtra("keyboard_size", 0);
+        Log.i(TAG, "Extra keyboard option: " + keyboardSize);
 
         mLayout = new RelativeLayout(this);
         mLayout.setBackgroundColor(getResources().getColor(R.color.black));
         mSurface = new SDLSurface(getApplication());
         mKeyboard = new DCSSKeyboard(this);
-        mKeyboard.initKeyboard(keyboardOption, 40);
+        mKeyboard.initKeyboard(keyboardOption, keyboardSize);
         mKeyboardExtra = new DCSSKeyboardExtra(this);
-        mKeyboardExtra.initKeyboard(extraKeyboardOption, 40);
+        mKeyboardExtra.initKeyboard(extraKeyboardOption, keyboardSize);
 
         // Add the SDLSurface to the main layout aligned top
         RelativeLayout.LayoutParams sdlLParams = new RelativeLayout.LayoutParams(
