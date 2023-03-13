@@ -70,7 +70,6 @@
                     android:background="@color/dark_green"
                     android:popupBackground="@color/dark_green"
                     android:spinnerMode="dropdown" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -97,7 +96,32 @@
                     android:background="@color/dark_green"
                     android:popupBackground="@color/dark_green"
                     android:spinnerMode="dropdown" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginHorizontal="6dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:layout_marginRight="6dp"
+                    android:text="@string/keyboard_size"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/keyboardSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -16,7 +16,7 @@
         <Space
             android:id="@+id/space_top_left"
             android:layout_width="0dp"
-            android:layout_height="@dimen/key_height"
+            android:layout_height="0dp"
             android:layout_weight="0"/>
 
         <Button
@@ -52,7 +52,7 @@
         <Space
             android:id="@+id/space_top_right"
             android:layout_width="0dp"
-            android:layout_height="@dimen/key_height"
+            android:layout_height="0dp"
             android:layout_weight="0"/>
 
     </LinearLayout>
@@ -66,7 +66,7 @@
         <Space
             android:id="@+id/space_middle_left"
             android:layout_width="0dp"
-            android:layout_height="@dimen/key_height"
+            android:layout_height="0dp"
             android:layout_weight="0"/>
 
         <Button
@@ -102,7 +102,7 @@
         <Space
             android:id="@+id/space_middle_right"
             android:layout_width="0dp"
-            android:layout_height="@dimen/key_height"
+            android:layout_height="0dp"
             android:layout_weight="0"/>
 
     </LinearLayout>
@@ -116,7 +116,7 @@
         <Space
             android:id="@+id/space_bottom_left"
             android:layout_width="0dp"
-            android:layout_height="@dimen/key_height"
+            android:layout_height="0dp"
             android:layout_weight="0"/>
 
         <Button
@@ -152,7 +152,7 @@
         <Space
             android:id="@+id/space_bottom_right"
             android:layout_width="0dp"
-            android:layout_height="@dimen/key_height"
+            android:layout_height="0dp"
             android:layout_weight="0"/>
 
     </LinearLayout>
