@@ -112,8 +112,9 @@ class BoolGameOption : public GameOption
 {
 public:
     BoolGameOption(bool &val, std::set<std::string> _names,
-                   bool _default)
-        : GameOption(_names), value(val), default_value(_default) { }
+                   bool _default,
+                   function<void()> _on_set = nullptr)
+        : GameOption(_names, false, _on_set), value(val), default_value(_default) { }
 
     void reset() override
     {

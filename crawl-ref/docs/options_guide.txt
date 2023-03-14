@@ -275,8 +275,6 @@ get overwritten to facilitate the explanations. This concerns the following
 options, and their enforced setting for tutorial games are as follows:
    clear_messages      = true
    weapon              = hand axe, for Berserkers in hints mode
-and, for Tiles,
-   tile_tag_pref       = tutorial
 
 0-d     List options.
 ---------------------
@@ -2238,14 +2236,18 @@ tile_tooltip_ms = 500
         deactivate the tooltips entirely.
 
 tile_tag_pref = (none| named | enemy | tutorial )
-        This option defaults to "enemy" normally and "tutorial" in tutorial
-        modes. This setting determines which monsters receive text tag
-            none     - turns off all tags.
+        This setting determines which monsters receive a text tag in the local
+        tiles dungeon view.
+            auto     - choses depending on game mode
+            none     - turns off all tags
+            all      - shows tags for all enemies
             named    - shows names of all named monsters, ally or enemy
             enemy    - shows names of named enemy monsters
             tutorial - shows names of all monsters not yet killed this game
                        and of named enemy monsters
-        Examples for named monsters are uniques and ghosts.
+        Examples of "named monsters" are uniques and ghosts. In auto mode,
+        regular games use "enemy", arena mode uses "named", and tutorial/hints
+        modes use "tutorial".
 
 tile_window_height = -90
 tile_window_width  = -90
@@ -2484,7 +2486,7 @@ tile_shield_offsets = (<x>,<y> | reset)
         used to swap locations of weapon and shield.
 
         Using the value "reset" will clear any previously defined offset, which
-        is using for in-game tile changes via lua.
+        is useful for in-game tile changes via lua.
 
 tile_grinch = false
         When set, disables custom holiday tiles (e.g. Santa hats).
