@@ -188,6 +188,12 @@ int main()
     show_result(localise("Recommended Mummy"), "Vorgeschlagene Mumie");
     show_result(localise("Recommended Merfolk"), "Vorgeschlagenes Meervolk");
 
+    msg = localise("You found it @in_location@", {{"in_location", "on level 3 of the Dungeon"}});
+    show_result (msg, "Ihr habt diesen Gegenstand auf Ebene 3 des Dungeons gefunden");
+
+    msg = localise("You found it @in_location@", {{"in_location", "in a volcano"}});
+    show_result (msg, "Ihr habt diesen Gegenstand in einem Vulkan gefunden");
+
     you.position = coord_def(10, 10);
     env.grid.init(DNGN_FLOOR);
     env.pgrid.init(FPROP_NONE);
