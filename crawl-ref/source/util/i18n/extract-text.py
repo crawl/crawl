@@ -415,6 +415,8 @@ for filename in files:
                     continue
                 if 'push_ui_layout' in line or 'ui_state_change' in line:
                     continue
+                if re.search(r'\bmenu_colour *\(', line):
+                    continue
                 if re.search(r'\bprops\.erase *\(', line):
                     continue
                 if '_print_converted_orc_speech' in line:

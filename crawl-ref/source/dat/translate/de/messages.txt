@@ -15433,9 +15433,6 @@ Hab ich mir gedacht.
 (Hit _)
 
 %%%%
-stats
-
-%%%%
 Turn:
 
 %%%%

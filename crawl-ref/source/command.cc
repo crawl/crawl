@@ -286,7 +286,7 @@ void list_armour()
         {
             estr << localise(you.inv[armour_id].name(DESC_INVENTORY));
             colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
-                                 "equip"); // noloc
+                                 "equip");
         }
         else if (you_can_wear(i) == MB_MAYBE)
             estr << _indent << localise("(restricted)");
@@ -294,7 +294,7 @@ void list_armour()
             estr << _indent << localise("none");
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(estr.str(), "", "equip"); // noloc
+            colour = menu_colour(estr.str(), "", "equip");
 
         mpr_nolocalise(MSGCH_EQUIPMENT, colour, estr.str());
     }
@@ -338,13 +338,13 @@ void list_jewellery()
         {
             item = localise(you.inv[jewellery_id].name(DESC_INVENTORY));
             string prefix = item_prefix(you.inv[jewellery_id]);
-            colour = menu_colour(item, prefix, "equip"); // noloc
+            colour = menu_colour(item, prefix, "equip");
         }
         else
             item = _indent + localise("none");
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(item, "", "equip"); // noloc
+            colour = menu_colour(item, "", "equip");
 
         item = chop_string(make_stringf("%-*s: %s", // noloc
                                         split ? cols > 96 ? 9 : 8 : 11,
