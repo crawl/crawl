@@ -658,12 +658,6 @@ static void _generate_missile_item(item_def& item, int force_type,
     item.quantity = random_range(2, 6);
 }
 
-static bool _armour_disallows_randart(int sub_type)
-{
-    // Scarves and orbs are never randarts.
-    return sub_type == ARM_SCARF || sub_type == ARM_ORB;
-}
-
 static bool _try_make_armour_artefact(item_def& item, int force_type,
                                       int item_level, bool force_randart,
                                       int agent)
@@ -680,9 +674,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             if (_try_make_item_unrand(item, force_type, item_level, agent))
                 return true;
         }
-
-        if (_armour_disallows_randart(item.sub_type))
-            return false;
 
         // The rest are normal randarts.
 
@@ -1096,10 +1087,10 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         }
     }
 
-
-    // Fall back to an ordinary item if artefacts not allowed for this type.
-    if (item_level == ISPEC_RANDART && _armour_disallows_randart(item.sub_type))
-        item_level = ISPEC_GOOD_ITEM;
+    // Scarves and orbs always get an ego, and are never enchanted.
+    const bool scarflike = item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB;
+    if (scarflike)
+        set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
 
     // Forced randart.
     if (item_level == ISPEC_RANDART)
@@ -1158,9 +1149,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
         item.plus -= 1 + random2(3);
     }
-    // Scarves and orbs always get an ego.
-    else if (item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB)
-        set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
     else if ((forced_ego || item.sub_type == ARM_HAT
                     || x_chance_in_y(51 + item_level, 250))
                 && !item.is_mundane() || force_good)
