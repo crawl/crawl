@@ -931,41 +931,6 @@ Amulett
 ring
 Ring
 %%%%
-left ring
-linker Ring
-%%%%
-right ring
-rechter Ring
-%%%%
-# octopodes have 8 ring slots
-first ring
-erster Ring
-%%%%
-second ring
-zweiter Ring
-%%%%
-third ring
-dritter Ring
-%%%%
-fourth ring
-vierter Ring
-%%%%
-fifth ring
-fünfter Ring
-%%%%
-sixth ring
-sechster Ring
-%%%%
-seventh ring
-sibter Ring
-%%%%
-eighth ring
-achter Ring
-%%%%
-# ring on amulet (macabre finger necklace)
-amulet ring
-Amulett-Ring
-%%%%
 no weapon
 keine Waffe
 %%%%

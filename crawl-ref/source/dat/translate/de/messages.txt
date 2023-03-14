@@ -15436,9 +15436,6 @@ Hab ich mir gedacht.
 Turn:
 Runde:
 %%%%
-Ring
-Ring
-%%%%
 
 ##################
 # package.cc

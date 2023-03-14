@@ -1863,7 +1863,7 @@ static string _itosym(int level, int max = 1, bool immune = false)
 }
 
 // noloc section start
-// (only translated in lowercase form)
+// (only translated in lowercase form, and the specific ring slots aren't translated at all)
 static const char *s_equip_slot_names[] =
 {
     "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
@@ -1872,7 +1872,6 @@ static const char *s_equip_slot_names[] =
     "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
     "Amulet Ring"
 };
-// noloc section end
 
 const char *equip_slot_to_name(int equip)
 {
@@ -1892,6 +1891,7 @@ const char *equip_slot_to_name(int equip)
 
     return s_equip_slot_names[equip];
 }
+// noloc section end
 
 int equip_name_to_slot(const char *s)
 {
