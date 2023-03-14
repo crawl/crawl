@@ -128,6 +128,20 @@ static bool _force_allow_explore();
 
 static species_type _str_to_species(const string &str);
 
+#ifdef USE_TILE
+static tag_pref _str_to_tag_pref(const string &opt)
+{
+    static vector<string> tag_prefs = { "none", "tutorial", "named", "enemy", "auto", "all" };
+    ASSERT(tag_prefs.size() == TAGPREF_MAX);
+    for (int i = 0; i < TAGPREF_MAX; i++)
+    {
+        if (opt == tag_prefs[i])
+            return (tag_pref)i;
+    }
+    return TAGPREF_ENEMY;
+}
+#endif
+
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
     return l.first < r.first;
@@ -172,6 +186,10 @@ const vector<GameOption*> game_options::build_options_list()
 
     #define SIMPLE_NAME(_opt) _opt, {#_opt}
     #define NEWGAME_NAME(_opt) game._opt, {#_opt}
+    // for use where an option has a real value named X with the option name,
+    // and a string counterpart that is used by an on_set function,
+    // conventionally called X_option:
+    #define ON_SET_NAME(_opt) _opt ## _option, {#_opt}
     // ignores superclass stub for this function
     vector<GameOption*> options = {
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
@@ -233,7 +251,7 @@ const vector<GameOption*> game_options::build_options_list()
         new DisabledGameOption({"crawl_dir"}),
 #else
         // default determined by system, see get_system_environment()
-        new StringGameOption(crawl_dir_option, {"crawl_dir"}, "", true,
+        new StringGameOption(ON_SET_NAME(crawl_dir), "", true,
             [this]() {
                 if (crawl_dir_option.empty()) // set from SysEnv or CLO
                     return;
@@ -264,7 +282,7 @@ const vector<GameOption*> game_options::build_options_list()
 #else
         // effective default of "saves/", but handled by reset_paths
 
-        new StringGameOption(save_dir_option, {"save_dir"}, "", true,
+        new StringGameOption(ON_SET_NAME(save_dir), "", true,
             [this]() {
                 if (save_dir_option.empty()) // set by reset_paths
                     return;
@@ -275,7 +293,7 @@ const vector<GameOption*> game_options::build_options_list()
 #endif
             }),
         // system-dependent default: see reset_paths
-        new StringGameOption(macro_dir_option, {"macro_dir"}, "", true,
+        new StringGameOption(ON_SET_NAME(macro_dir), "", true,
             [this]() {
                 if (macro_dir_option.empty()) // set by reset_paths
                     return;
@@ -292,6 +310,20 @@ const vector<GameOption*> game_options::build_options_list()
             1,
             {{"true", 1}, // XX this would be better as an enum
              {"false", 0}}, true),
+        new StringGameOption(SIMPLE_NAME(game_seed), "", false,
+            [this]() {
+                // special handling because of the large type.
+                if (game_seed.empty())
+                    return; // for once, seed_from_rc is initialized in the constructor
+                uint64_t tmp_seed = 0;
+                if (sscanf(game_seed.c_str(), "%" SCNu64, &tmp_seed))
+                {
+                    // seed_from_rc is only ever set here, or by the CLO. The CLO gets
+                    // first crack, so don't overwrite it here.
+                    if (!seed_from_rc)
+                        seed_from_rc = tmp_seed;
+                }
+            }),
         new BoolGameOption(SIMPLE_NAME(default_show_all_skills), false),
         new MultipleChoiceGameOption<skill_focus_mode>(
             SIMPLE_NAME(skill_focus),
@@ -377,6 +409,12 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(ability_menu), true),
         new BoolGameOption(SIMPLE_NAME(spell_menu), false),
         new BoolGameOption(SIMPLE_NAME(easy_floor_use), false),
+        new StringGameOption(ON_SET_NAME(sort_menus), "default", false,
+            [this]() {
+                for (const string &frag : split_string(";", sort_menus_option))
+                    if (!frag.empty())
+                        set_menu_sort(frag);
+            }),
         new BoolGameOption(SIMPLE_NAME(bad_item_prompt), true),
         new MultipleChoiceGameOption<slot_select_mode>(
             SIMPLE_NAME(assign_item_slot),
@@ -387,13 +425,13 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(explore_greedy), true),
         new BoolGameOption(SIMPLE_NAME(explore_auto_rest), true),
         new BoolGameOption(SIMPLE_NAME(travel_key_stop), true),
-        new ListGameOption<string>(explore_stop_option, {"explore_stop"},
+        new ListGameOption<string>(ON_SET_NAME(explore_stop),
             {"item", "stair", "portal", "branch", "shop", "altar",
              "runed_door", "transporter", "greedy_pickup_smart",
              "greedy_visited_item_stack"},
             false,
             [this]() { update_explore_stop_conditions(); }),
-        new ListGameOption<string>(explore_greedy_visit_option, {"explore_greedy_visit"},
+        new ListGameOption<string>(ON_SET_NAME(explore_greedy_visit),
             {"glowing", "artefact"},
             false,
             [this]() { update_explore_greedy_visit_conditions(); }),
@@ -407,7 +445,7 @@ const vector<GameOption*> game_options::build_options_list()
         new BoolGameOption(SIMPLE_NAME(always_show_zot), false),
         new BoolGameOption(SIMPLE_NAME(darken_beyond_range), true),
         new BoolGameOption(SIMPLE_NAME(show_blood), true),
-        new ListGameOption<string>(use_animations_option, {"use_animations"},
+        new ListGameOption<string>(ON_SET_NAME(use_animations),
             {"beam", "range", "hp", "monster_in_sight", "pickup", "monster",
              "player", "branch_entry"},
             false,
@@ -579,7 +617,7 @@ const vector<GameOption*> game_options::build_options_list()
             ),
 #endif
         // the following intentionally lack a DisabledGameOption counterpart;
-        // make it easier to past between tiles / non-tiles builds, and also
+        // make it easier to paste between tiles / non-tiles builds, and also
         // it'd be a pain to maintain without further macros
 #ifdef USE_TILE
 #ifdef ANDROID
@@ -591,6 +629,21 @@ const vector<GameOption*> game_options::build_options_list()
         new FixedpGameOption(SIMPLE_NAME(tile_viewport_scale), 1.0, 0.2, 16.0),
         new FixedpGameOption(SIMPLE_NAME(tile_map_scale), 0.6, 0.2, 16.0),
 #endif
+        new BoolGameOption(SIMPLE_NAME(tile_show_player_species), false,
+            [this]() {
+                if (tile_show_player_species)
+                    set_player_tile("playermons");
+                // else, do nothing...should this reset?
+            }),
+        new StringGameOption(ON_SET_NAME(tile_player_tile), "normal", false,
+            [this]() { set_player_tile(tile_player_tile_option); }),
+        new StringGameOption(ON_SET_NAME(tile_weapon_offsets), "reset", false,
+            [this]() { set_tile_offsets(tile_weapon_offsets_option, false); }),
+        new StringGameOption(ON_SET_NAME(tile_shield_offsets), "reset", false,
+            [this]() { set_tile_offsets(tile_weapon_offsets_option, true); }),
+        new StringGameOption(ON_SET_NAME(tile_tag_pref), "auto", false,
+            [this]() { tile_tag_pref = _str_to_tag_pref(tile_tag_pref_option); }),
+
         new BoolGameOption(SIMPLE_NAME(tile_skip_title), false),
         new BoolGameOption(SIMPLE_NAME(tile_menu_icons), true),
         new BoolGameOption(SIMPLE_NAME(tile_filter_scaling), false),
@@ -1128,22 +1181,6 @@ void game_options::update_enemy_hp_colour()
     }
 }
 
-#ifdef USE_TILE
-static FixedVector<const char*, TAGPREF_MAX>
-    tag_prefs("none", "tutorial", "named", "enemy");
-
-static tag_pref _str_to_tag_pref(const char *opt)
-{
-    for (int i = 0; i < TAGPREF_MAX; i++)
-    {
-        if (!strcasecmp(opt, tag_prefs[i]))
-            return (tag_pref)i;
-    }
-
-    return TAGPREF_ENEMY;
-}
-#endif
-
 static string _correct_spelling(const string& str)
 {
     if (str == "armor_on")
@@ -1385,13 +1422,6 @@ void game_options::reset_options()
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
 
-    user_note_prefix       = "";
-
-    // Sort only pickup menus by default.
-    sort_menus.clear();
-    set_menu_sort("pickup: true");
-    set_menu_sort("inv: true : equipped, charged");
-
     dump_item_origins      = IODS_ARTEFACTS;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
@@ -1441,20 +1471,6 @@ void game_options::reset_options()
     restart_after_save = false;
     newgame_after_quit = false;
     name_bypasses_menu = true;
-#endif
-
-#ifdef USE_TILE
-    // XXX: arena may now be chosen after options are read.
-    tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED
-                                                        : TAGPREF_ENEMY;
-
-    tile_use_monster         = MONS_PROGRAM_BUG;
-    tile_player_tile         = 0;
-    tile_weapon_offsets.first  = INT_MAX;
-    tile_weapon_offsets.second = INT_MAX;
-    tile_shield_offsets.first  = INT_MAX;
-    tile_shield_offsets.second = INT_MAX;
-
 #endif
 
 #ifdef USE_TILE_WEB
@@ -3035,10 +3051,18 @@ void game_options::add_message_colour_mapping(const string &field,
 
 // Option syntax is:
 // sort_menu = [menu_type:]yes|no|auto:n[:sort_conditions]
-void game_options::set_menu_sort(string field)
+void game_options::set_menu_sort(const string &field)
 {
     if (field.empty())
         return;
+
+    if (field == "default")
+    {
+        sort_menus.clear();
+        set_menu_sort("pickup: true");
+        set_menu_sort("inv: true : equipped, charged");
+        return;
+    }
 
     menu_sort_condition cond(field);
 
@@ -3554,15 +3578,15 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
     }
     else if (key == "view_lock")
     {
+        // alias, not a true option
         const bool lock = read_bool(state.field, true);
         view_lock_x = view_lock_y = lock;
         return true;
     }
     else if (key == "scroll_margin")
     {
-        int scrollmarg = atoi(state.field.c_str());
-        if (scrollmarg < 0)
-            scrollmarg = 0;
+        // alias, not a true option
+        const int scrollmarg = max(0, atoi(state.field.c_str()));
         scroll_margin_x = scroll_margin_y = scrollmarg;
         return true;
     }
@@ -3811,13 +3835,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             auto_letters.push_back(entry);
         return true;
     }
-    else if (key == "sort_menus")
-    {
-        for (const string &frag : split_string(";", state.field))
-            if (!frag.empty())
-                set_menu_sort(frag);
-        return true;
-    }
     else if (key == "force_more_message" || key == "flash_screen_message")
     {
         vector<message_filter> &filters = (key == "force_more_message"
@@ -3991,49 +4008,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
                 dump_item_origins |= IODS_BOOKS;
             else if (ch == "all" || ch == "everything")
                 dump_item_origins = IODS_EVERYTHING;
-        }
-        return true;
-    }
-#ifdef USE_TILE
-    else if (key == "tile_show_player_species" && state.field == "true") // XX bool parsing
-    {
-        // do we really need to set state?
-        state.field = "playermons";
-        set_player_tile(state.field);
-        return true;
-    }
-    else if (key == "tile_player_tile")
-    {
-        set_player_tile(state.field);
-        return true;
-    }
-    else if (key == "tile_weapon_offsets")
-    {
-        set_tile_offsets(state.field, false);
-        return true;
-    }
-    else if (key == "tile_shield_offsets")
-    {
-        set_tile_offsets(state.field, true);
-        return true;
-    }
-    else if (key == "tile_tag_pref")
-    {
-        tile_tag_pref = _str_to_tag_pref(state.field.c_str());
-        return true;
-    }
-#endif // USE_TILE
-
-    else if (key == "game_seed")
-    {
-        // special handling because of the large type.
-        uint64_t tmp_seed = 0;
-        if (sscanf(state.field.c_str(), "%" SCNu64, &tmp_seed))
-        {
-            // seed_from_rc is only ever set here, or by the CLO. The CLO gets
-            // first crack, so don't overwrite it here.
-            if (!seed_from_rc)
-                seed_from_rc = tmp_seed;
         }
         return true;
     }

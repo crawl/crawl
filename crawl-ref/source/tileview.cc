@@ -1029,7 +1029,14 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
     if (!mons_class_gives_xp(mon.type))
         return;
 
-    const tag_pref pref = Options.tile_tag_pref;
+    const tag_pref pref =
+        Options.tile_tag_pref == TAGPREF_AUTO
+            ? ((crawl_state.game_is_tutorial() || crawl_state.game_is_hints())
+                    ? TAGPREF_TUTORIAL
+                    : crawl_state.game_is_arena()
+                    ? TAGPREF_NAMED
+                    : TAGPREF_ENEMY)
+            : Options.tile_tag_pref;
     if (pref == TAGPREF_NONE)
         return;
     else if (pref == TAGPREF_TUTORIAL)
@@ -1040,10 +1047,10 @@ static void _tile_place_monster(const coord_def &gc, const monster_info& mon)
         if (!mon.is_named() && kills > limit)
             return;
     }
-    else if (!mon.is_named())
+    else if (pref != TAGPREF_ALL && !mon.is_named())
         return;
 
-    if (pref != TAGPREF_NAMED && mon.attitude == ATT_FRIENDLY)
+    if (pref != TAGPREF_NAMED && pref != TAGPREF_ALL &&  mon.attitude == ATT_FRIENDLY)
         return;
 
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);

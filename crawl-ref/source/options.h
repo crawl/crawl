@@ -332,6 +332,7 @@ public:
                                 // should be accessible by different people.
 
     uint64_t    seed;           // Non-random games.
+    string game_seed; // string version of the rc option
     uint64_t    seed_from_rc;
     level_gen_type pregen_dungeon;
 
@@ -586,6 +587,7 @@ public:
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
 
+    string sort_menus_option;
     vector<menu_sort_condition> sort_menus;
 
     bool        single_column_item_menus;
@@ -721,6 +723,16 @@ public:
 
     string      tile_display_mode;
 
+    bool tile_show_player_species;
+    tileidx_t   tile_player_tile;
+    string tile_player_tile_option;
+    pair<int, int> tile_weapon_offsets;
+    pair<int, int> tile_shield_offsets;
+    string tile_weapon_offsets_option;
+    string tile_shield_offsets_option;
+    string tile_tag_pref_option;
+    tag_pref tile_tag_pref;
+
     VColour     tile_window_col;
 #ifdef USE_TILE_LOCAL
     int         game_scale;
@@ -771,7 +783,6 @@ public:
     int         tile_runrest_rate;
     int         tile_key_repeat_delay;
     int         tile_tooltip_ms;
-    tag_pref    tile_tag_pref;
 
     bool        tile_show_minihealthbar;
     bool        tile_show_minimagicbar;
@@ -781,9 +792,6 @@ public:
     bool        tile_misc_anim;
     vector<string> tile_layout_priority;
     monster_type tile_use_monster;
-    tileidx_t   tile_player_tile;
-    pair<int, int> tile_weapon_offsets;
-    pair<int, int> tile_shield_offsets;
     bool        tile_grinch;
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
@@ -818,7 +826,7 @@ private:
     void add_fire_order_slot(const string &s, bool prepend);
     void set_fire_order_spell(const string &s, bool append, bool remove);
     void set_fire_order_ability(const string &s, bool append, bool remove);
-    void set_menu_sort(string field);
+    void set_menu_sort(const string &field);
     void update_enemy_hp_colour();
     void new_dump_fields(const string &text, bool add = true,
                          bool prepend = false);
