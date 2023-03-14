@@ -423,6 +423,15 @@ static void _populate_item_intrinsic_artps(const item_def &item,
         case OBJ_ARMOUR:
             _populate_armour_intrinsic_artps((armour_type)item.sub_type,
                                              proprt);
+            if (get_armour_ego_type(item) == SPARM_RESISTANCE)
+            {
+                proprt[ARTP_FIRE] = proprt[ARTP_COLD] = true;
+                if (item_ident(item, ISFLAG_KNOW_PROPERTIES)
+                    || item_ident(item, ISFLAG_KNOW_TYPE))
+                {
+                    known[ARTP_FIRE] = known[ARTP_COLD] = true;
+                }
+            }
             break;
         case OBJ_JEWELLERY:
             _populate_jewel_intrinsic_artps(item, proprt, known);
@@ -570,12 +579,14 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_ANGRY:
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
+        case ARTP_HARM:
+            // Double harm on an item would need some UI and functional work.
+            return non_swappable && !item.is_type(OBJ_ARMOUR, ARM_SCARF);
         case ARTP_PREVENT_SPELLCASTING:
             if (item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION))
                 return false;
             // fallthrough
         case ARTP_REGENERATION:
-        case ARTP_HARM:
         case ARTP_INVISIBLE:
             // only on items that can't be quickly swapped
             return non_swappable;

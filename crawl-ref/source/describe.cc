@@ -419,6 +419,14 @@ static vector<string> _randart_propnames(const item_def& item,
                 }
             }
 
+            // Don't show the rF+ rC+ twice.
+            if (get_armour_ego_type(item) == SPARM_RESISTANCE
+                && (ann.prop == ARTP_COLD && val == 1
+                    || ann.prop == ARTP_FIRE && val == 1))
+            {
+                continue;
+            }
+
             ostringstream work;
             switch (ann.spell_out)
             {
