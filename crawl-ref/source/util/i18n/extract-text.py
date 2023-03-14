@@ -152,7 +152,7 @@ SKIP_FILES = [
     'mon-pathfind.cc', 'ng-init.cc', 'ng-input.cc',
     # error messages that probably aren't worth translating
     'fontwrapper-ft.cc', 'game-options.h', 'game-options.cc', 'glwrapper-ogl.cc',
-    'libw32c.h', 'libw32c.cc',
+    'libw32c.h', 'libw32c.cc', 'package.cc',
     # nonsense
     'lang-fake.h', 'lang-fake.cc'
 ]
