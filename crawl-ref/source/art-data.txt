@@ -1524,11 +1524,10 @@ BOOL:     inv, nogen
 ENUM:     THERMIC_ENGINE
 NAME:     Maxwell's thermic engine
 OBJ:      OBJ_WEAPONS/WPN_DOUBLE_SWORD
-INSCRIP:  freeze,
-DBRAND:  It freezes those it strikes, dealing additional cold damage. It can
+INSCRIP:  freeze, rev,
+DBRAND:  Freeze:    It freezes those it strikes, dealing additional cold damage. It can
  also slow down cold-blooded creatures.
-DESCRIP:  It becomes more effective when it hits something. This effect fades
- over time.
++Rev:       It becomes more effective when it hits something. This effect fades over time.
 PLUS:     +2
 COLOUR:   ETC_VEHUMET
 TILE:     urand_thermic_engine
