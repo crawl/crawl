@@ -83,8 +83,8 @@ static string _format_utf8_string(const string& fmt, const string& arg)
     if (precision >= 0)
         result = chop_string(result, precision, false);
 
-    if (width >= 0)
-        result = chop_string(result, width, true, right_justify);
+    if (width > 0)
+        result = pad_string(result, width, right_justify);
 
     return result;
 }

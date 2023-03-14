@@ -2264,16 +2264,16 @@ Amulet ring
 Amulett-Ring
 %%%%
 No questions found in FAQ! Please submit a bug report!
-Keine Fragen in den FAQ gefunden! Bitte einen Fehlerbericht senden!
+Keine Fragen in den FAQ gefunden! Bitte einen Fehlerbericht schicken!
 %%%%
 Frequently Asked Questions
-
+Häufig gestellte Fragen
 %%%%
 No answer found in the FAQ! Please submit a bug report!
-
+Keine Antwort in der FAQ gefunden! Bitte einen Fehlerbericht schicken!
 %%%%
 "Q: "
-
+"F: "
 %%%%
 
 ##################
@@ -15431,79 +15431,13 @@ Hab ich mir gedacht.
 ##################
 %%%%
 (Hit _)
-
+(_ drücken)
 %%%%
 Turn:
-
-%%%%
-x
-
-%%%%
-Weapon
-
-%%%%
-Left Ring
-
-%%%%
-Right Ring
-
-%%%%
-First Ring
-
-%%%%
-Second Ring
-
-%%%%
-Third Ring
-
-%%%%
-Fourth Ring
-
-%%%%
-Fifth Ring
-
-%%%%
-Sixth Ring
-
-%%%%
-Seventh Ring
-
-%%%%
-Eighth Ring
-
-%%%%
-Amulet Ring
-
+Runde:
 %%%%
 Ring
-
-%%%%
-darkgrey
-
-%%%%
-<w>%c</w> - <%s>%s%s</%s>
-
-%%%%
-<darkgrey>(
-
-%%%%
-"no "
-
-%%%%
-)</darkgrey>
-
-%%%%
-"<w>@:</w> "
-
-%%%%
-"<w>A:</w> "
-
-%%%%
-"<w>0:</w> "
-
-%%%%
-"<w>%s:</w> "
-
+Ring
 %%%%
 
 ##################
@@ -18793,6 +18727,9 @@ Antique Weapon
 Antique Armour
 
 %%%%
+Weapon
+Waffe
+%%%%
 Book
 
 %%%%
@@ -19110,6 +19047,9 @@ cost
 
 %%%%
 " [<yellow>%c</yellow>] "
+
+%%%%
+darkgrey
 
 %%%%
 freeform

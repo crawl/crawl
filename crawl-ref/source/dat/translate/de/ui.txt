@@ -566,10 +566,10 @@ Komm:
 "Noise: "
 "Lärm: "
 %%%%
-# If silenced, this shows instead of noise bar
+# If silenced, this shows instead of noise bar (must be 10 chars)
 %%%%
 "Silenced  "
-"Stumm     "
+"Stille    "
 %%%%
 # There is an option to show equipment instaed of noise
 # equipment = Ausrüstung
@@ -637,7 +637,7 @@ Gold:
 ###############################################################
 %%%%
 " Turns: %d, Time: "
-" Wend: %d, Zeit: "
+" Runde: %d, Zeit: "
 %%%%
 # Health changes to HP if player rotted
 %%%%
@@ -857,18 +857,6 @@ ERKUNDEN
 Your terminal window is too small; please resize to at least %d,%d
 Euer Terminalfenster ist zu klein; Bitte ändere die Größe auf mindestens %d,%d
 %%%%
-There were no monsters in sight!
-Es gab keine Monster im Sicht!
-%%%%
-There are no monsters in sight!
-Es gibt keine Monster im Sicht!
-%%%%
-You could see %s.
-Ihr saht %s.
-%%%%
-You can see %s.
-Ihr seht %s.
-%%%%
 # some items become "melded" when you change form
 %%%%
 "melded "
@@ -942,6 +930,41 @@ Amulett
 %%%%
 ring
 Ring
+%%%%
+left ring
+linker Ring
+%%%%
+right ring
+rechter Ring
+%%%%
+# octopodes have 8 ring slots
+first ring
+erster Ring
+%%%%
+second ring
+zweiter Ring
+%%%%
+third ring
+dritter Ring
+%%%%
+fourth ring
+vierter Ring
+%%%%
+fifth ring
+fünfter Ring
+%%%%
+sixth ring
+sechster Ring
+%%%%
+seventh ring
+sibter Ring
+%%%%
+eighth ring
+achter Ring
+%%%%
+# ring on amulet (macabre finger necklace)
+amulet ring
+Amulett-Ring
 %%%%
 no weapon
 keine Waffe
