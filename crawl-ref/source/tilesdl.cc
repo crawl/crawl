@@ -72,12 +72,11 @@ static int _screen_sizes[4][8] =
 // Extra values for viewport and map scale
 static int _screen_sizes[6][10] =
 {
-    {960, 960, 2, 18, 20, 18, 18, 18, 180, 130},
-    {800, 800, 2, 15, 17, 15, 15, 15, 150, 100},
-    {720, 720, 2, 13, 15, 13, 13, 13, 130, 80},
-    {640, 640, 1, 12, 14, 12, 12, 12, 120, 70},
-    {540, 540, 1, 10, 12, 10, 10, 10, 100, 50},
-    {480, 480, 1, 9, 11, 9, 9, 9, 90, 40}
+    {800, 800, 1, 15, 17, 17, 15, 15, 150, 100},
+    {720, 720, 1, 13, 15, 15, 13, 13, 130, 80},
+    {640, 640, 1, 12, 14, 14, 12, 12, 120, 70},
+    {540, 540, 1, 10, 12, 12, 10, 10, 100, 50},
+    {480, 480, 1, 9, 11, 11, 9, 9, 90, 40}
 };
 #endif
 
@@ -277,7 +276,7 @@ void TilesFramework::calculate_default_options()
             && m_windowsz.y >= _screen_sizes[auto_size][1])
 #else
         int adjust_scale = 1;
-        if (Options.game_scale == min(m_windowsz.x, m_windowsz.y)/1080+1)
+        if (Options.game_scale == min(m_windowsz.x, m_windowsz.y)/960+1)
             adjust_scale = Options.game_scale;
         if (m_windowsz.x >= (_screen_sizes[auto_size][0]*adjust_scale)
             && m_windowsz.y >= (_screen_sizes[auto_size][1])*adjust_scale)
