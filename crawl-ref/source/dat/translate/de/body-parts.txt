@@ -9,6 +9,9 @@
 ################################
 
 %%%%
+fist
+Faust
+%%%%
 pincer
 Schere
 %%%%
@@ -72,6 +75,9 @@ Schwanz
 underside
 Unterseite
 %%%%
+underbelly
+Unterbauch
+%%%%
 stem
 Stiel
 %%%%
@@ -80,6 +86,9 @@ Stiel
 # plural
 ################################
 
+%%%%
+fists
+Fäuste
 %%%%
 pincers
 {pl}Scheren

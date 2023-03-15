@@ -356,6 +356,36 @@
 %%%%
 
 ################################
+# body parts
+################################
+%%%%
+"bony "
+"knochige "
+%%%%
+"shadowy "
+"schattige "
+%%%%
+"scaled "
+"geschuppte "
+%%%%
+"feathered "
+"gefiederte "
+%%%%
+"furry "
+"pelzige "
+%%%%
+"bandage-wrapped "
+"bandagierte "
+%%%%
+"fleshy "
+"fleischige "
+%%%%
+# blade hands/paws/etc.
+"blade "
+"Klingen-"
+%%%%
+
+################################
 # monsters
 ################################
 %%%%

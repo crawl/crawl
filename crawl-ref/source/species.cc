@@ -389,13 +389,13 @@ namespace species
         // here. TODO: should some of these be species flags a la hair?
         // Also, some skin mutations should have a way of overriding these perhaps
         if (is_draconian(species) || species == SP_NAGA)
-            return adj ? "scaled" : "scales";
+            return adj ? "scaled " : "scales";
         else if (species == SP_TENGU)
-            return adj ? "feathered" : "feathers";
+            return adj ? "feathered " : "feathers";
         else if (species == SP_FELID)
-            return adj ? "furry" : "fur";
+            return adj ? "furry " : "fur";
         else if (species == SP_MUMMY)
-            return adj ? "bandage-wrapped" : "bandages";
+            return adj ? "bandage-wrapped " : "bandages";
         else
             return adj ? "fleshy" : "skin";
     }

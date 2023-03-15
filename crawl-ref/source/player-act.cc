@@ -621,14 +621,14 @@ string player::arm_name(bool plural, bool *can_plural) const
 
     string adj;
     if (form == transformation::lich)
-        adj = "bony";
+        adj = "bony ";
     else if (form == transformation::shadow)
-        adj = "shadowy";
+        adj = "shadowy ";
     else
         adj = species::skin_name(species, true);
 
-    if (adj != "fleshy")
-        str = adj + " " + str;
+    if (adj != "fleshy ")
+        str = adj + str;
 
     if (plural)
         str = pluralise(str);
@@ -850,7 +850,10 @@ bool player::shove(const char* feat_name)
         {
             moveto(*di);
             if (*feat_name)
-                mprf("You are pushed out of the %s.", feat_name);
+            {
+                string feat = string("the ") + *feat_name;
+                mprf("You are pushed out of %s.", feat.c_str());
+            }
             dprf("Moved to (%d, %d).", pos().x, pos().y);
             return true;
         }

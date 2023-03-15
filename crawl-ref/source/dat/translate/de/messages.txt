@@ -15454,40 +15454,25 @@ You can't use weapons.
 Ihr könnt keine Waffen benutzen.
 %%%%
 You can't use weapons in this form.
-
+In dieser Form könnt Ihr keine Waffen benutzen.
 %%%%
 That's too large for you to wield.
-Das ist zu groß für Euch.
-%%%%
-fist
-
-%%%%
-"blade "
-
-%%%%
-underbelly
-
-%%%%
-bony
-
-%%%%
-shadowy
-
+Das ist zu groß für Euch, um es zu führen.
 %%%%
 Nothing wielded
-
+Nichts gehandhabt
 %%%%
 Claws
-
+Krallen
 %%%%
 Tentacles
-
+Tentakel
 %%%%
 Your unstable footing causes you to fumble your attack.
 Euer instabiler Stand lässt Euch Euren Angriff fummeln.
 %%%%
 %s forces you to slow down.
-
+%s zwingt Euch dazu, langsamer zu werden.
 %%%%
 A red film seems to cover your vision as you go berserk!
 Ein roter Film scheint Eure Vision zu verdecken, als Ihr wütend werdet!
@@ -15502,31 +15487,31 @@ You feel mighty!
 Ihr fühlt Euch mächtig!
 %%%%
 You're already berserk!
-
+Ihr berserkt schon!
 %%%%
 You're still recovering from your berserk rage.
-
+Ihr erholt Euch immer noch von eurer Berserkerwut.
 %%%%
 You can't enter a blood rage from death's door.
-
+Von der Tür des Todes aus kann man nicht in einen Blutrausch geraten.
 %%%%
 You are too mesmerised to rage.
-
+Ihr seid zu gebannt, um zu wüten.
 %%%%
 You are too terrified to rage.
-
+Ihr seid zu erschrocken, um zu wüten.
 %%%%
 You're too calm and focused to rage.
-
+Ihr seid zu ruhig und konzentriert, um zu wüten.
 %%%%
 You cannot raise a blood rage in your lifeless body.
-
+Ihr könnt in eurem leblosen Körper keinen Blutrausch auslösen.
 %%%%
 Your stasis prevents you from going berserk.
-
+Eure Stasis verhindert, dass Ihr wütet.
 %%%%
-You are pushed out of the %s.
-Ihr werdet aus den%s gedrängt.
+You are pushed out of %s.
+Ihr werdet aus {dat}%s gestoßen.
 %%%%
 
 ##################
@@ -19265,25 +19250,13 @@ screech
 growl
 
 %%%%
-scaled
-
-%%%%
 scales
-
-%%%%
-feathered
 
 %%%%
 feathers
 
 %%%%
-furry
-
-%%%%
 fur
-
-%%%%
-bandage-wrapped
 
 %%%%
 bandages
