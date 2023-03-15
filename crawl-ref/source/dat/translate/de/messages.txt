@@ -15525,7 +15525,7 @@ You feel a build-up of mutagenic energy.
 Ihr fühlt einen Aufbau mutagener Energie.
 %%%%
 You feel ready to rampage towards enemies.
-
+Ihr fühlt Euch bereit, auf Eure Feinde zu randalieren.
 %%%%
 You feel strangely lacking in power.
 Ihr fühlt Euch seltsamerweise kraftlos.
@@ -15540,10 +15540,10 @@ Mutagenic energies flood into your body!
 Mutagene Energien fluten in Euren Körper!
 %%%%
 You no longer feel able to rampage towards enemies.
-
+Ihr fühlt Euch nicht mehr in der Lage, auf Eure Feinde zu randalieren.
 %%%%
 You feel strangely numb.
-Ihr fühlt Euch seltsam taub.
+Ihr fühlt Euch seltsam betäubt.
 %%%%
 You really shouldn't be using a holy item like this.
 Ihr sollt wirklich keinen heiligen Gegenstand wie diesen benutzen.
@@ -15558,19 +15558,19 @@ You really shouldn't be using a chaotic item like this.
 Ihr sollt wirklich keinen chaotischen Gegenstand wie diesen benutzen.
 %%%%
 You really shouldn't be using a hasty item like this.
-Ihr sollt wirklich keinen hastigen Gegenstand wie diesen benutzen.
+Ihr sollt so einen hastigen Gegenstand wirklich nicht benutzen.
 %%%%
 You really shouldn't be using a wizardly item like this.
-Ihr sollt wirklich keinen Zauber wie diesen benutzen.
+Ihr sollt so einen Zauberer-Gegenstand wirklich nicht benutzen.
 %%%%
 %s bursts into flame!
 %s geht in Flammen auf!
 %%%%
-is covered in frost.
-
+%s is covered in frost.
+%s ist mit Frost bedeckt.
 %%%%
-glows with a cold blue light!
-
+%s glows with a cold blue light!
+%s leuchtet mit einem kalten blauen Licht!
 %%%%
 %s softly glows with a divine radiance!
 %s leuchtet sanft mit einer göttlichen Ausstrahlung!
@@ -15584,12 +15584,6 @@ Ihr seht Funken fliegen.
 %s hums with potential!
 %s summt vor Potenzial!
 %%%%
-%s tingles!
-
-%%%%
-%s tingle!
-
-%%%%
 You feel a bloodthirsty glee!
 Ihr fühlt eine blutrünstige Freude!
 %%%%
@@ -15599,35 +15593,38 @@ Ihr fühlt ein Gefühl der Angst.
 You have a feeling of ineptitude.
 Ihr habt ein Gefühl der Unfähigkeit.
 %%%%
-Pain shudders through your %s!
-Schmerz schaudert durch Eure %s!
+Pain shudders through %s!
+Schmerz schüttelt durch {acc}%s!
 %%%%
-A searing pain shoots up your %s!
-Ein brennender Schmerz schießt Eure %s hoch!
+A searing pain shoots up %s!
+Ein brennender Schmerz schießt durch {acc}%s!
 %%%%
 %s is briefly surrounded by a scintillating aura of random colours.
-
+%s ist kurz von einer schillernden Aura aus zufälligen Farben umgeben.
 %%%%
-Your %s briefly %s through it before you manage to get a firm grip on it.
-
+%s briefly pass through it before you manage to get a firm grip on it.
+%s laufen kurz das Objekt durch, bevor Ihr es fest in den Griff bekommt.
+%%%%
+%s briefly passes through it before you manage to get a firm grip on it.
+%s läuft kurz das Objekt durch, bevor Ihr es fest in den Griff bekommt.
 %%%%
 %s is briefly surrounded by shifting shadows.
 %s ist kurz von wechselnden Schatten umgeben.
 %%%%
 You feel a force failing to suppress your magic.
-
+Ihr spürt eine Kraft, die scheitert, Eure Magie unterzudrücken.
 %%%%
 You feel magic leave you.
 Ihr fühlt, wie Magie Euch verlässt.
 %%%%
 Space warps around you for a moment!
-Der Weltraum verzieht sich für einen Moment um Euch!
+Der Raum verzieht sich für einen Moment um Euch!
 %%%%
 %s begins to ooze corrosive slime!
 %s beginnt ätzenden Schleim zu sickern!
 %%%%
-You feel a bond with your %s.
-
+You feel a bond with %s.
+Ihr fühlt euch mit {dat}%s verbunden.
 %%%%
 %s stops flaming.
 %s hört auf zu flammen.
@@ -15636,10 +15633,10 @@ You feel a bond with your %s.
 %s hört auf zu knistern.
 %%%%
 %s stops dripping with poison.
-%s hört auf, von Gift zu tropfen.
+%s hört auf, vor Gift zu tropfen.
 %%%%
 %s goes still.
-%s geht still.
+%s wird still.
 %%%%
 You feel your glee subside.
 Ihr fühlt, wie Eure Freude nachlässt.
@@ -15650,14 +15647,8 @@ Ihr fühlt, wie das schreckliche Gefühl nachlässt.
 You feel magic returning to you.
 Ihr fühlt, wie Magie zu Euch zurückkehrt.
 %%%%
-Your spectral weapon disappears as %s.
-Eure Spektralwaffe verschwindet als%s.
-%%%%
-your weapon melds
-
-%%%%
-you unwield
-
+Your spectral weapon disappears as your weapon melds.
+Eure Spektralwaffe verschwindet, als eure Waffe verschmilzt.
 %%%%
 %s stops oozing corrosive slime.
 %s hört auf, ätzenden Schleim zu sickern.
@@ -15672,7 +15663,7 @@ You feel spirits watching over you.
 Ihr fühlt Geister, die über Euch wachen.
 %%%%
 You feel resistant to fire.
-Ihr fühlt Euch feuerbeständig.
+Ihr fühlt Euch feuerresistent.
 %%%%
 You feel resistant to poison.
 Ihr fühlt Euch resistent gegen Gift.
@@ -15719,14 +15710,11 @@ Ihr fühlt Euch nicht länger resistent gegen Gift.
 You feel less perceptive.
 Ihr fühlt Euch weniger scharfsinnig.
 %%%%
-slither
-
+That put a bit of spring back into your step.
+Das hat Euch wieder ein bisschen Schwung gegeben.
 %%%%
-step
-
-%%%%
-That put a bit of spring back into your %s.
-
+That put a bit of spring back into your slither.
+Das hat Euch wieder ein bisschen Schwung gegeben.
 %%%%
 You feel less protected.
 Ihr fühlt Euch weniger beschützt.
@@ -15750,40 +15738,37 @@ The haze of the repulsion field disappears.
 Der Dunst des Abstoßungsfeldes verschwindet.
 %%%%
 The dungeon's light returns to normal.
-
+Das Licht im Verlies wird wieder normal.
 %%%%
 %s seems less interested in you.
-
+%s scheint weniger an Euch interessiert zu sein.
 %%%%
 You feel less pious.
 Ihr fühlt Euch weniger fromm.
 %%%%
-The %s feel%s cold and inert.
-Die %s fühl%s sich kalt und träge an.
+%s feel cold and inert.
+%s fühlen sich kalt und träge an.
 %%%%
-The %s throb%s to your uninjured body.
-Die%s pochen%s zu Eurem unverletzten Körper.
+%s feels cold and inert.
+%s fühlt sich kalt und träge an.
 %%%%
-" as they attune themselves"
-
+%s throb as they attune themselves to your uninjured body.
+%s pochen, während sie sich auf Euren unverletzten Körper einstellen.
 %%%%
-s as it attunes itself
-
+%s throb as it attunes itself to your uninjured body.
+%s pocht, und einstellt sich auf Euren unverletzten Körper.
 %%%%
-The %s cannot attune %s to your injured body.
-Die%s können%s nicht auf Euren verletzten Körper abstimmen.
+%s cannot attune themselves to your injured body.
+%s können sich nicht auf Euren verletzten Körper einstellen.
 %%%%
-themselves
-
-%%%%
-itself
-
+%s cannot attune itself to your injured body.
+%s kann sich nicht auf Euren verletzten Körper einstellen.
 %%%%
 The amulet feels cold and inert.
 Das Amulett fühlt sich kalt und träge an.
 %%%%
 The amulet cannot attune itself to your exhausted body.
-
+Das Amulett kann sich nicht auf Euren erschöpften Körper einstellen.
 %%%%
 You feel a shielding aura gather around you.
 Ihr fühlt, wie sich eine schützende Aura um Euch sammelt.
@@ -15795,37 +15780,37 @@ You feel more attuned to ice.
 Ihr fühlt Euch mehr auf Eis eingestellt.
 %%%%
 You repel a surge of foreign magic.
-
+Ihr wehrt eine Welle fremder Magie ab.
 %%%%
 You feel a surge of self-confidence.
 Ihr fühlt eine Welle des Selbstbewusstseins.
 %%%%
 %s says: An ascetic of your devotion has no use for such trinkets.
-
+Sagt %s: Ein Asket mit Eurer Hingabe hat keine Verwendung für solchen Plunder.
 %%%%
 %s cares nothing for such trivial demonstrations of your faith.
-
+%s kümmert sich nicht um solche trivialen Glaubensbekundungen.
 %%%%
 %s cares for nothing but gold!
-
+%s interessiert sich für nichts anderes als für Gold!
 %%%%
-You feel a %ssurge of divine interest.
-Ihr fühlt einen %sAnstieg des göttlichen Interesses.
+You feel a strange surge of divine interest.
+Ihr spürt einen seltsamen Anflug göttlichen Interesses.
 %%%%
-"strange "
-
+You feel a surge of divine interest.
+Ihr spürt einen Anflug göttlichen Interesses.
 %%%%
 You feel ready to tumble and roll out of harm's way.
-Ihr fühlt Euch bereit zu stürzen und aus dem Weg zu rollen.
+Ihr fühlt Euch bereit aus dem Weg zu springen und rollen.
 %%%%
 %s absorbs the residual spatial distortion as you rebrand your weapon.
-
+s absorbiert die restliche räumliche Verzerrung, als Ihr Eure Waffe neu markiert.
 %%%%
 %s absorbs the residual spatial distortion as you unwield your weapon.
-
+%s absorbiert die restliche räumliche Verzerrung, als Ihr Eure Waffe wegsteckt.
 %%%%
 Space warps into you!
-Der Weltraum verzieht sich in Euch!
+Der Raum verzieht sich in Euch!
 %%%%
 
 ##################
@@ -16002,6 +15987,9 @@ Ihr habt Eure %s verloren.
 ##################
 %%%%
 ozocubu's_armour_pow
+
+%%%%
+step
 
 %%%%
 

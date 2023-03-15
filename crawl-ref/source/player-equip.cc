@@ -477,10 +477,10 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_FREEZING:
-                   mprf("%s %s", item_name.c_str(),
-                        is_range_weapon(item) ?
-                            "is covered in frost." :
-                            "glows with a cold blue light!");
+                    if (is_range_weapon(item))
+                        mprf("%s is covered in frost.", item_name.c_str());
+                    else
+                        mprf("%s glows with a cold blue light!", item_name.c_str());
                     break;
 
                 case SPWPN_HOLY_WRATH:
@@ -511,7 +511,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_SPEED:
-                    mpr(you.hand_act("%s tingles!", "%s tingle!"));
+                    mpr_nolocalise(you.hand_act("%s tingles!", "%s tingle!"));
                     break;
 
                 case SPWPN_VAMPIRISM:
@@ -523,17 +523,17 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
                 case SPWPN_PAIN:
                 {
-                    const string your_arm = you.arm_name(false);
+                    const string your_arm = "your " + you.arm_name(false);
                     if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
                     {
-                        mprf("Pain shudders through your %s!",
+                        mprf("Pain shudders through %s!",
                              your_arm.c_str());
                     }
                     else
                     {
-                        mprf("A searing pain shoots up your %s!",
+                        mprf("A searing pain shoots up %s!",
                              your_arm.c_str());
                     }
                     break;
@@ -549,11 +549,18 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     // FIXME: make hand_act take a pre-verb adverb so we can
                     // use it here.
                     bool plural = true;
-                    string hand = you.hand_name(true, &plural);
+                    string hand = "your " + you.hand_name(true, &plural);
 
-                    mprf("Your %s briefly %s through it before you manage "
-                         "to get a firm grip on it.",
-                         hand.c_str(), conjugate_verb("pass", plural).c_str());
+                    if (plural)
+                    {
+                        mprf("%s briefly pass through it before you manage "
+                             "to get a firm grip on it.", hand.c_str());
+                    }
+                    else
+                    {
+                        mprf("%s briefly passes through it before you manage "
+                             "to get a firm grip on it.", hand.c_str());
+                    }
                     break;
                 }
 
@@ -581,7 +588,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_SPECTRAL:
-                    mprf("You feel a bond with your %s.", item_name.c_str());
+                    mprf("You feel a bond with %s.", item_name.c_str());
                     break;
 
                 default:
@@ -685,8 +692,10 @@ static void _unequip_weapon_effect(item_def& real_item, bool showMsgs,
                     monster *spectral_weapon = find_spectral_weapon(&you);
                     if (spectral_weapon)
                     {
-                        mprf("Your spectral weapon disappears as %s.",
-                             meld ? "your weapon melds" : "you unwield");
+                        if (meld)
+                            mpr("Your spectral weapon disappears as your weapon melds.");
+                        else
+                            mpr("Your spectral weapon disappears as you unwield.");
                         end_spectral_weapon(spectral_weapon, false, true);
                     }
                 }
@@ -895,8 +904,10 @@ static void _unequip_armour_effect(item_def& item, bool meld,
     case SPARM_PONDEROUSNESS:
     {
         // XX can the noun here be derived from the species walking verb?
-        const string noun = you.species == SP_NAGA ? "slither" : "step";
-        mprf("That put a bit of spring back into your %s.", noun.c_str());
+        if (you.species != SP_NAGA)
+            mpr("That put a bit of spring back into your step.");
+        else
+            mpr("That put a bit of spring back into your slither.");
         break;
     }
 
@@ -1015,22 +1026,27 @@ static void _equip_regeneration_item(const item_def &item)
                                          : eq_slot == EQ_BODY_ARMOUR
                                          ? "armour"
                                          : item_slot_name(eq_slot);
+    item_name = "the " + item_name;
 
     if (you.get_mutation_level(MUT_NO_REGENERATION))
     {
-        mprf("The %s feel%s cold and inert.", item_name.c_str(),
-             plural ? "" : "s");
+        if (plural)
+            mprf("%s feel cold and inert.", item_name.c_str());
+        else
+            mprf("%s feels cold and inert.", item_name.c_str());
         return;
     }
     if (you.hp == you.hp_max)
     {
-        mprf("The %s throb%s to your uninjured body.", item_name.c_str(),
-             plural ? " as they attune themselves" : "s as it attunes itself");
+       mprf(plural ? "%s throb as they attune themselves to your uninjured body."
+                   : "%s throb as it attunes itself to your uninjured body.",
+            item_name.c_str());
         you.activated.set(eq_slot);
         return;
     }
-    mprf("The %s cannot attune %s to your injured body.", item_name.c_str(),
-         plural ? "themselves" : "itself");
+    mprf(plural ? "%s cannot attune themselves to your injured body."
+                : "%s cannot attune itself to your injured body.",
+         item_name.c_str());
     you.activated.set(eq_slot, false);
     return;
 }
@@ -1128,11 +1144,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
             simple_god_message(" cares nothing for such trivial demonstrations of your faith.");
         else if (you_worship(GOD_GOZAG))
             simple_god_message(" cares for nothing but gold!");
+        else if (you_worship(GOD_NO_GOD))
+            mpr(MSGCH_GOD, "You feel a strange surge of divine interest.");
         else
-        {
-            mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
-                            you_worship(GOD_NO_GOD) ? "strange " : "");
-        }
+           mpr(MSGCH_GOD, "You feel a surge of divine interest.");
 
         break;
 
