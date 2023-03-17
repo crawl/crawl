@@ -664,7 +664,9 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
     const bool force_randart = item_level == ISPEC_RANDART;
     if (!force_randart && (item_level <= 0
                            || !x_chance_in_y(101 + item_level * 3, 4000)))
+    {
         return false;
+    }
     // Make a randart or unrandart.
 
     // 1 in 20 randarts are unrandarts.
@@ -712,109 +714,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 }
 
 /**
- * Generate an appropriate ego for a type of armour.
- *
- * @param item          The type of armour in question.
- * @return              An ego appropriate to the item type.
- *                      May be SPARM_NORMAL.
- */
-static special_armour_type _generate_armour_type_ego(armour_type type)
-{
-    // TODO: move this into data
-    switch (type)
-    {
-    case ARM_KITE_SHIELD:
-    case ARM_TOWER_SHIELD:
-    case ARM_BUCKLER:
-        return random_choose_weighted(1, SPARM_RESISTANCE,
-                                      3, SPARM_FIRE_RESISTANCE,
-                                      3, SPARM_COLD_RESISTANCE,
-                                      3, SPARM_POISON_RESISTANCE,
-                                      3, SPARM_POSITIVE_ENERGY,
-                                      6, SPARM_REFLECTION,
-                                      12, SPARM_PROTECTION);
-
-    case ARM_ORB:
-        return random_choose_weighted(1, SPARM_LIGHT,
-                                      1, SPARM_RAGE,
-                                      1, SPARM_MAYHEM,
-                                      1, SPARM_GUILE,
-                                      1, SPARM_ENERGY);
-
-    case ARM_SCARF:
-        return random_choose_weighted(1, SPARM_RESISTANCE,
-                                      1, SPARM_REPULSION,
-                                      1, SPARM_INVISIBILITY,
-                                      1, SPARM_HARM,
-                                      1, SPARM_SHADOWS);
-
-    case ARM_CLOAK:
-        return random_choose(SPARM_POISON_RESISTANCE,
-                             SPARM_WILLPOWER,
-                             SPARM_STEALTH,
-                             SPARM_PRESERVATION);
-
-    case ARM_HAT:
-        return random_choose_weighted(10, SPARM_NORMAL,
-                                      3, SPARM_STEALTH,
-                                      3, SPARM_WILLPOWER,
-                                      2, SPARM_INTELLIGENCE,
-                                      2, SPARM_SEE_INVISIBLE);
-
-    case ARM_HELMET:
-        return random_choose(SPARM_SEE_INVISIBLE, SPARM_INTELLIGENCE);
-
-    case ARM_GLOVES:
-        return random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_HURLING,
-                             SPARM_STEALTH, SPARM_INFUSION);
-
-    case ARM_BOOTS:
-        return random_choose(SPARM_FLYING, SPARM_STEALTH, SPARM_RAMPAGING);
-
-    case ARM_BARDING:
-        return random_choose(SPARM_FLYING, SPARM_STEALTH,
-                             SPARM_COLD_RESISTANCE, SPARM_FIRE_RESISTANCE);
-
-    case ARM_ROBE:
-        return random_choose_weighted(1, SPARM_RESISTANCE,
-                                      1, SPARM_ARCHMAGI,
-                                      2, SPARM_NORMAL,
-                                      2, SPARM_COLD_RESISTANCE,
-                                      2, SPARM_FIRE_RESISTANCE,
-                                      2, SPARM_POSITIVE_ENERGY,
-                                      4, SPARM_WILLPOWER);
-
-    case ARM_PLATE_ARMOUR:
-        return random_choose_weighted(26, SPARM_FIRE_RESISTANCE,
-                                      26, SPARM_COLD_RESISTANCE,
-                                      19, SPARM_POISON_RESISTANCE,
-                                      15, SPARM_WILLPOWER,
-                                       7, SPARM_POSITIVE_ENERGY,
-                                       7, SPARM_PONDEROUSNESS);
-
-    // other body armour
-    default:
-        break;
-    }
-
-    // dragon/troll armour, animal hides, and crystal plate are never generated
-    // with egos. (unless they're artefacts, but those aren't handled here.)
-    // TODO: deduplicate with armour_is_special() (same except for animal skin)
-    if (armour_type_is_hide(type)
-        || type == ARM_ANIMAL_SKIN
-        || type == ARM_CRYSTAL_PLATE_ARMOUR)
-    {
-        return SPARM_NORMAL;
-    }
-
-    return random_choose_weighted(7, SPARM_FIRE_RESISTANCE,
-                                  7, SPARM_COLD_RESISTANCE,
-                                  5, SPARM_POISON_RESISTANCE,
-                                  4, SPARM_WILLPOWER,
-                                  2, SPARM_POSITIVE_ENERGY);
-}
-
-/**
  * Generate an appropriate ego for a piece of armour.
  *
  * @param item          The item in question.
@@ -827,11 +726,9 @@ static special_armour_type _generate_armour_ego(const item_def& item)
     if (item.brand != SPARM_NORMAL)
         return static_cast<special_armour_type>(item.brand);
 
-    const special_armour_type ego
-        = _generate_armour_type_ego(static_cast<armour_type>(item.sub_type));
-
-    ASSERT(is_armour_brand_ok(item.sub_type, ego, true));
-    return ego;
+    const auto e = choose_armour_ego(static_cast<armour_type>(item.sub_type));
+    ASSERT(is_armour_brand_ok(item.sub_type, e, true));
+    return e;
 }
 
 bool is_armour_brand_ok(int type, int brand, bool strict)

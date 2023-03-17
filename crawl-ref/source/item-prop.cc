@@ -39,6 +39,8 @@
 
 static iflags_t _full_ident_mask(const item_def& item);
 
+typedef pair<special_armour_type, int> ego_weight_tuple;
+
 // XXX: Name strings in most of the following are currently unused!
 struct armour_def
 {
@@ -61,10 +63,30 @@ struct armour_def
     size_type           fit_max;
     /// Whether this armour is mundane or inherently 'special', for acq.
     bool                mundane; // (special armour doesn't need egos etc)
-    /// The resists, vulns, &c that this armour type gives when worn.
-    armflags_t          flags;
     /// Used in body armour 'acquirement' code; higher = generated more.
     int                 acquire_weight;
+    /// Used in non-artefact ego item generation. If empty, default to NORMAL.
+    vector<ego_weight_tuple> ego_weights;
+    /// The resists, vulns, &c that this armour type gives when worn.
+    armflags_t          flags;
+};
+
+static const vector<ego_weight_tuple> BASIC_BODY_EGOS = {
+    { SPARM_FIRE_RESISTANCE,   7 },
+    { SPARM_COLD_RESISTANCE,   7 },
+    { SPARM_POISON_RESISTANCE, 5 },
+    { SPARM_WILLPOWER,         4 },
+    { SPARM_POSITIVE_ENERGY,   2 },
+};
+
+static const vector<ego_weight_tuple> SHIELD_EGOS = {
+    { SPARM_RESISTANCE,        1 },
+    { SPARM_FIRE_RESISTANCE,   3 },
+    { SPARM_COLD_RESISTANCE,   3 },
+    { SPARM_POISON_RESISTANCE, 3 },
+    { SPARM_POSITIVE_ENERGY,   3 },
+    { SPARM_REFLECTION,        6 },
+    { SPARM_PROTECTION,       12 },
 };
 
 // would be nice to lookup the name from monster_for_armour, but that
@@ -72,13 +94,13 @@ struct armour_def
 #if TAG_MAJOR_VERSION == 34
 #define DRAGON_ARMOUR(id, name, ac, evp, prc, res)                          \
     { ARM_ ## id ## _DRAGON_HIDE, "removed " name " dragon hide", 0, 0, 0,  \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 0 },             \
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 0, {}, res },             \
     { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 25 }
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 25, {}, res }
 #else
 #define DRAGON_ARMOUR(id, name, ac, evp, prc, res)                          \
     { ARM_ ## id ## _DRAGON_ARMOUR, name " dragon scales",  ac, evp, prc,   \
-      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, res, 25 }
+      EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 25, {}, res }
 #endif
 
 // Note: the Little-Giant range is used to make armours which are very
@@ -88,40 +110,76 @@ static int Armour_index[NUM_ARMOURS];
 static const armour_def Armour_prop[] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,     3,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, ARMF_NO_FLAGS, 333 },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, true, 333 },
     { ARM_ROBE,                 "robe",                   2,   0,     7,
-        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_LARGE, true, ARMF_NO_FLAGS, 1000 },
+        EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_LARGE, true, 1000, {
+            { SPARM_RESISTANCE,      1 },
+            { SPARM_ARCHMAGI,        1 },
+            { SPARM_NORMAL,          2 },
+            { SPARM_COLD_RESISTANCE, 2 },
+            { SPARM_FIRE_RESISTANCE, 2 },
+            { SPARM_POSITIVE_ENERGY, 2 },
+            { SPARM_WILLPOWER,       4 },
+    }},
     { ARM_LEATHER_ARMOUR,       "leather armour",         3,  -40,   20,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true },
-
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 0, BASIC_BODY_EGOS },
     { ARM_RING_MAIL,            "ring mail",              5,  -70,   40,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, BASIC_BODY_EGOS },
     { ARM_SCALE_MAIL,           "scale mail",             6, -100,   40,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, BASIC_BODY_EGOS },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -150,   45,
-        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
+        EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM, true, 1000, BASIC_BODY_EGOS },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -180,   230,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, ARMF_NO_FLAGS, 1000 },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, true, 1000, {
+            { SPARM_FIRE_RESISTANCE,    26 },
+            { SPARM_COLD_RESISTANCE,    26 },
+            { SPARM_POISON_RESISTANCE,  19 },
+            { SPARM_WILLPOWER,          15 },
+            { SPARM_POSITIVE_ENERGY,    7 },
+            { SPARM_PONDEROUSNESS,      7 },
+    }},
     { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -230,   800,
-        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, ARMF_NO_FLAGS, 500 },
+        EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM, false, 500 },
 
 #if TAG_MAJOR_VERSION == 34
     { ARM_TROLL_HIDE, "removed troll hide",              0,    0,      0,
-       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, ARMF_REGENERATION, 0 },
+       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 0, BASIC_BODY_EGOS,
+       ARMF_REGENERATION, },
 #endif
     { ARM_TROLL_LEATHER_ARMOUR, "troll leather armour",  4,  -40,    150,
-       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, ARMF_REGENERATION, 50 },
+       EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT, false, 50, BASIC_BODY_EGOS,
+       ARMF_REGENERATION },
 
     { ARM_CLOAK,                "cloak",                  1,   0,   45,
-        EQ_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true },
+        EQ_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
+            { SPARM_POISON_RESISTANCE, 1 },
+            { SPARM_WILLPOWER,         1 },
+            { SPARM_STEALTH,           1 },
+            { SPARM_PRESERVATION,      1 },
+    }},
     { ARM_SCARF,                "scarf",                  0,   0,   50,
-        EQ_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true },
+        EQ_CLOAK,       SIZE_LITTLE, SIZE_LARGE, true, 0, {
+            { SPARM_RESISTANCE,   1 },
+            { SPARM_REPULSION,    1 },
+            { SPARM_INVISIBILITY, 1 },
+            { SPARM_HARM,         1 },
+            { SPARM_SHADOWS,      1 },
+    }},
 
     { ARM_GLOVES,               "gloves",                 1,   0,   45,
-        EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_GLOVES,      SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
+            { SPARM_DEXTERITY, 1 },
+            { SPARM_STRENGTH,  1 },
+            { SPARM_HURLING,   1 },
+            { SPARM_STEALTH,   1 },
+            { SPARM_INFUSION,  1 },
+    }},
 
     { ARM_HELMET,               "helmet",                 1,   0,   45,
-        EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
+            { SPARM_SEE_INVISIBLE, 1 },
+            { SPARM_INTELLIGENCE,  1 },
+    }},
 
 #if TAG_MAJOR_VERSION == 34
     { ARM_CAP,                  "cap",                    0,   0,   45,
@@ -129,13 +187,23 @@ static const armour_def Armour_prop[] =
 #endif
 
     { ARM_HAT,                  "hat",                    0,   0,   40,
-        EQ_HELMET,      SIZE_TINY, SIZE_LARGE, true },
+        EQ_HELMET,      SIZE_TINY, SIZE_LARGE, true, 0, {
+            { SPARM_NORMAL,        10 },
+            { SPARM_STEALTH,       3 },
+            { SPARM_WILLPOWER,     3 },
+            { SPARM_INTELLIGENCE,  2 },
+            { SPARM_SEE_INVISIBLE, 2 },
+    }},
 
     // Note that barding size is compared against torso so it currently
     // needs to fit medium, but that doesn't matter as much as race
     // and shapeshift status.
     { ARM_BOOTS,                "boots",                  1,   0,   45,
-        EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM, true },
+        EQ_BOOTS,       SIZE_SMALL,  SIZE_MEDIUM, true, 0, {
+            { SPARM_FLYING,    1 },
+            { SPARM_STEALTH,   1 },
+            { SPARM_RAMPAGING, 1 },
+    }},
     // Changed max. barding size to large to allow for the appropriate
     // monster types (monsters don't differentiate between torso and general).
 #if TAG_MAJOR_VERSION == 34
@@ -143,18 +211,29 @@ static const armour_def Armour_prop[] =
         EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
 #endif
     { ARM_BARDING,         "barding",           4,  -60,  230,
-        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true },
+        EQ_BOOTS,       SIZE_MEDIUM, SIZE_LARGE, true, 0, {
+            { SPARM_FLYING,          1 },
+            { SPARM_COLD_RESISTANCE, 1 },
+            { SPARM_FIRE_RESISTANCE, 1 },
+            { SPARM_STEALTH,         1 },
+    }},
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
     { ARM_ORB,                 "orb",                     0,   0,   90,
-        EQ_SHIELD,      SIZE_LITTLE, SIZE_GIANT, true },
+        EQ_SHIELD,      SIZE_LITTLE, SIZE_GIANT, true, 0, {
+            { SPARM_LIGHT,  1 },
+            { SPARM_RAGE,   1 },
+            { SPARM_MAYHEM, 1 },
+            { SPARM_GUILE,  1 },
+            { SPARM_ENERGY, 1 },
+    }},
     { ARM_BUCKLER,             "buckler",                 3,  -50,  45,
-        EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true },
+        EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM, true, 0, SHIELD_EGOS },
     { ARM_KITE_SHIELD,         "kite shield",             8, -100,  45,
-        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true },
+        EQ_SHIELD,      SIZE_SMALL,  SIZE_LARGE, true, 0, SHIELD_EGOS },
     { ARM_TOWER_SHIELD,        "tower shield",           13, -150,  45,
-        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true },
+        EQ_SHIELD,      SIZE_MEDIUM, SIZE_GIANT, true, 0, SHIELD_EGOS },
 
     // Following all ARM_ entries for the benefit of util/gather_items
     DRAGON_ARMOUR(STEAM,       "steam",                   5,   0,   400,
@@ -1111,7 +1190,7 @@ bool is_hard_helmet(const item_def &item)
  *
  * @param wpn_type  The type of weapon in question.
  * @return          An appropriate brand. (e.g. fire, pain, venom, etc)
- *                  May be SPWPN_NORMAL.
+ *                  May be `SPWPN_NORMAL`.
  */
 brand_type choose_weapon_brand(weapon_type wpn_type)
 {
@@ -1123,6 +1202,26 @@ brand_type choose_weapon_brand(weapon_type wpn_type)
     const brand_type *brand = random_choose_weighted(weights);
     ASSERT(brand);
     return *brand;
+}
+
+
+/**
+ * For a given armour type, randomly choose an appropriate ego.
+ *
+ * @param arm_type  The type of armour in question.
+ * @return          An appropriate ego. (e.g. rF, reflection, rage, etc)
+ *                  May be `SPARM_NORMAL`.
+ */
+special_armour_type choose_armour_ego(armour_type arm_type)
+{
+    const vector<ego_weight_tuple> weights
+        = Armour_prop[ Armour_index[arm_type] ].ego_weights;
+    if (!weights.size())
+        return SPARM_NORMAL;
+
+    const special_armour_type *ego = random_choose_weighted(weights);
+    ASSERT(ego);
+    return *ego;
 }
 
 bool set_item_ego_type(item_def &item, object_class_type item_type,
