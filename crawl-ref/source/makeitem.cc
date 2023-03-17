@@ -659,42 +659,41 @@ static void _generate_missile_item(item_def& item, int force_type,
 }
 
 static bool _try_make_armour_artefact(item_def& item, int force_type,
-                                      int item_level, bool force_randart,
-                                      int agent)
+                                      int item_level, int agent)
 {
-    if (item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000)
-        || force_randart)
+    const bool force_randart = item_level == ISPEC_RANDART;
+    if (!force_randart && (item_level <= 0
+                           || !x_chance_in_y(101 + item_level * 3, 4000)))
+        return false;
+    // Make a randart or unrandart.
+
+    // 1 in 20 randarts are unrandarts.
+    if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
+        && !force_randart)
     {
-        // Make a randart or unrandart.
+        if (_try_make_item_unrand(item, force_type, item_level, agent))
+            return true;
+    }
 
-        // 1 in 20 randarts are unrandarts.
-        if (one_chance_in(item_level == ISPEC_GOOD_ITEM ? 7 : 20)
-            && !force_randart)
-        {
-            if (_try_make_item_unrand(item, force_type, item_level, agent))
-                return true;
-        }
+    // The rest are normal randarts.
 
-        // The rest are normal randarts.
+    // 5% of boots become barding.
+    if (item.sub_type == ARM_BOOTS && one_chance_in(20))
+        item.sub_type = ARM_BARDING;
 
-        // 5% of boots become barding.
-        if (item.sub_type == ARM_BOOTS && one_chance_in(20))
-            item.sub_type = ARM_BARDING;
+    // Determine enchantment.
+    if (!armour_is_enchantable(item) || one_chance_in(5))
+        item.plus = 0;
+    else
+    {
+        int max_plus = armour_max_enchant(item);
+        item.plus = random2(max_plus + 1);
 
-        // Determine enchantment.
         if (one_chance_in(5))
-            item.plus = 0;
-        else
-        {
-            int max_plus = armour_max_enchant(item);
-            item.plus = random2(max_plus + 1);
+            item.plus += random2(max_plus + 6) / 2;
 
-            if (one_chance_in(5))
-                item.plus += random2(max_plus + 6) / 2;
-
-            if (one_chance_in(6))
-                item.plus -= random2(max_plus + 6);
-        }
+        if (one_chance_in(6))
+            item.plus -= random2(max_plus + 6);
 
         // On body armour, an enchantment of less than 0 is never viable.
         // On aux armour & shields, going below -2 is likewise unviable.
@@ -703,19 +702,13 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             item.plus = max(static_cast<int>(item.plus), random2(2));
         else
             item.plus = max(static_cast<int>(item.plus), random_range(-2, 1));
-
-        // Needs to be done after the barding chance else we get randart
-        // bardings named Boots of xy.
-        make_item_randart(item);
-
-        // Don't let unenchantable armour get minuses.
-        if (!armour_is_enchantable(item))
-            item.plus = 0;
-
-        return true;
     }
 
-    return false;
+    // Needs to be done after the barding chance else we get randart
+    // bardings named Boots of xy.
+    make_item_randart(item);
+
+    return true;
 }
 
 /**
@@ -1087,9 +1080,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         }
     }
 
-    // Scarves and orbs always get an ego, and are never enchanted.
-    const bool scarflike = item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB;
-    if (scarflike)
+    if (item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB)
         set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
 
     // Forced randart.
@@ -1097,7 +1088,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     {
         int ego = item.brand;
         for (int i = 0; i < 100; ++i)
-            if (_try_make_armour_artefact(item, force_type, 0, true, agent)
+            if (_try_make_armour_artefact(item, force_type, item_level, agent)
                 && is_artefact(item))
             {
                 // borrowed from similar code for weapons -- is this really the
@@ -1123,7 +1114,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     }
 
     if (allow_uniques
-        && _try_make_armour_artefact(item, force_type, item_level, false, agent))
+        && _try_make_armour_artefact(item, force_type, item_level, agent))
     {
         return;
     }
