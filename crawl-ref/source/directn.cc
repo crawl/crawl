@@ -749,11 +749,15 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
     {
         target = coord_def(-1, -1);
         // HACK: quantity == 1: monsters, quantity == 2: items
+        // TODO: fix this, maybe better to just use dynamic cast?
         const int quant = sel.quantity;
         if (quant == 1)
         {
             // Get selected monster.
-            monster_info* m = static_cast<monster_info* >(sel.data);
+            const MonsterMenuEntry *mme = dynamic_cast<const MonsterMenuEntry *>(&sel);
+            ASSERT(mme);
+            monster_info* m = static_cast<monster_info* >(mme->data);
+            ASSERT(m);
 
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
@@ -773,7 +777,10 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         else if (quant == 2)
         {
             // Get selected item.
-            item_def* i = static_cast<item_def*>(sel.data);
+            const InvEntry *ie = dynamic_cast<const InvEntry *>(&sel);
+            ASSERT(ie);
+            item_def* i = static_cast<item_def*>(ie->data);
+            ASSERT(i);
             if (!describe_item(*i))
             {
                 target = coord_def(-1, -1);
@@ -782,6 +789,8 @@ static coord_def _full_describe_menu(vector<monster_info> const &list_mons,
         }
         else
         {
+            const FeatureMenuEntry *fme = dynamic_cast<const FeatureMenuEntry *>(&sel);
+            ASSERT(fme);
             const int num = quant - 3;
             const int y = num % 100;
             const int x = (num - y)/100;
