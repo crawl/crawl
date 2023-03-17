@@ -1137,6 +1137,16 @@ bool set_item_ego_type(item_def &item, object_class_type item_type,
     return false;
 }
 
+/**
+ * Should this type of item always generate with an ego?
+ */
+bool item_always_has_ego(const item_def &item)
+{
+    if (item.base_type != OBJ_ARMOUR)
+        return false;
+    return item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB;
+}
+
 brand_type get_weapon_brand(const item_def &item)
 {
     // Weapon ego types are "brands", so we do the randart lookup here.

@@ -1080,9 +1080,6 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         }
     }
 
-    if (item.sub_type == ARM_SCARF || item.sub_type == ARM_ORB)
-        set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
-
     // Forced randart.
     if (item_level == ISPEC_RANDART)
     {
@@ -1126,7 +1123,9 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     const bool forced_ego = (item.brand > 0);
     const bool no_ego     = (item.brand == SPARM_FORBID_EGO);
 
-    if (no_ego)
+    if (item_always_has_ego(item))
+        set_item_ego_type(item, OBJ_ARMOUR, _generate_armour_ego(item));
+    else if (no_ego)
         item.brand = SPARM_NORMAL;
 
     if (item_level < 0)

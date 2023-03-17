@@ -521,6 +521,29 @@ static void _add_randart_weapon_brand(const item_def &item,
         item_props[ARTP_BRAND] = SPWPN_NORMAL;
 }
 
+static special_armour_type _randart_armour_brand(const item_def &item)
+{
+    // TODO: dedup with _generate_armour_type_ego
+    switch (item.sub_type)
+    {
+    case ARM_ORB:
+        return random_choose_weighted(1, SPARM_LIGHT,
+                                      1, SPARM_RAGE,
+                                      1, SPARM_MAYHEM,
+                                      1, SPARM_GUILE,
+                                      1, SPARM_ENERGY);
+
+    case ARM_SCARF:
+        return random_choose_weighted(1, SPARM_RESISTANCE,
+                                      1, SPARM_REPULSION,
+                                      1, SPARM_INVISIBILITY,
+                                      1, SPARM_HARM,
+                                      1, SPARM_SHADOWS);
+    default:
+        return SPARM_NORMAL;
+    }
+}
+
 /**
  * Can the given artefact property be placed on the given item?
  *
@@ -889,6 +912,12 @@ static void _get_randart_properties(const item_def &item,
     // make sure all weapons have a brand
     if (item_class == OBJ_WEAPONS)
         _add_randart_weapon_brand(item, item_props);
+    else if (item_class == OBJ_ARMOUR
+             && item_always_has_ego(item)
+             && item_props[ARTP_BRAND] == SPARM_NORMAL)
+    {
+        item_props[ARTP_BRAND] = _randart_armour_brand(item);
+    }
 
     // randomly pick properties from the list, choose an appropriate value,
     // then subtract them from the good/bad/enhance count as needed
