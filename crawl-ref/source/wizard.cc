@@ -364,10 +364,7 @@ void handle_wizard_command()
 void enter_explore_mode()
 {
     // WIZ_NEVER gives protection for those who have wiz compiles,
-    // and don't want to risk their characters. Also, and hackishly,
-    // it's used to prevent access for non-authorised users to wizard
-    // builds in dgamelaunch builds unless the game is started with the
-    // -wizard flag.
+    // and don't want to risk their characters.
     if (Options.explore_mode == WIZ_NEVER)
         return;
 

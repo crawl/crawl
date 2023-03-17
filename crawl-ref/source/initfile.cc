@@ -551,18 +551,10 @@ const vector<GameOption*> game_options::build_options_list()
              true),
         new MultipleChoiceGameOption<wizard_option_type>(
             SIMPLE_NAME(explore_mode),
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            WIZ_NEVER,
-#else
             WIZ_NO,
-#endif
-#if defined(DGAMELAUNCH) || !defined(WIZARD)
-            {}, // setting in rc is disabled
-#else
             {{"true", WIZ_YES},
              {"false", WIZ_NO},
              {"never", WIZ_NEVER}},
-#endif
              true),
 
 #ifdef WIZARD
