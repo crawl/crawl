@@ -423,15 +423,6 @@ static void _populate_item_intrinsic_artps(const item_def &item,
         case OBJ_ARMOUR:
             _populate_armour_intrinsic_artps((armour_type)item.sub_type,
                                              proprt);
-            if (get_armour_ego_type(item) == SPARM_RESISTANCE)
-            {
-                proprt[ARTP_FIRE] = proprt[ARTP_COLD] = true;
-                if (item_ident(item, ISFLAG_KNOW_PROPERTIES)
-                    || item_ident(item, ISFLAG_KNOW_TYPE))
-                {
-                    known[ARTP_FIRE] = known[ARTP_COLD] = true;
-                }
-            }
             break;
         case OBJ_JEWELLERY:
             _populate_jewel_intrinsic_artps(item, proprt, known);
@@ -579,15 +570,13 @@ static bool _artp_can_go_on_item(artefact_prop_type prop, const item_def &item,
         case ARTP_ANGRY:
         case ARTP_NOISE:
             return item_class == OBJ_WEAPONS && !is_range_weapon(item);
-        case ARTP_HARM:
-            // Double harm on an item would need some UI and functional work.
-            return non_swappable && !item.is_type(OBJ_ARMOUR, ARM_SCARF);
         case ARTP_PREVENT_SPELLCASTING:
             if (item.is_type(OBJ_JEWELLERY, AMU_MANA_REGENERATION))
                 return false;
             // fallthrough
         case ARTP_REGENERATION:
         case ARTP_INVISIBLE:
+    case ARTP_HARM:
             // only on items that can't be quickly swapped
             return non_swappable;
         // prevent on armour (since it's swapped infrequently) and rings (since
@@ -1589,6 +1578,27 @@ static bool _randart_is_redundant(const item_def &item,
     return false;
 }
 
+static bool _armour_ego_conflicts(artefact_properties_t &proprt)
+{
+    switch (proprt[ARTP_BRAND])
+    {
+    case SPARM_HARM:
+        return proprt[ARTP_HARM];
+    case SPARM_RESISTANCE:
+        return proprt[ARTP_FIRE] || proprt[ARTP_COLD];
+    case SPARM_LIGHT:
+        return proprt[ARTP_INVISIBLE];
+    case SPARM_RAGE:
+        return proprt[ARTP_ANGRY];
+    case SPARM_GUILE:
+        return proprt[ARTP_WILLPOWER];
+    case SPARM_ENERGY:
+        return proprt[ARTP_PREVENT_SPELLCASTING];
+    default:
+        return false;
+    }
+}
+
 static bool _randart_is_conflicting(const item_def &item,
                                      artefact_properties_t &proprt)
 {
@@ -1614,6 +1624,9 @@ static bool _randart_is_conflicting(const item_def &item,
     {
         return true;
     }
+
+    if (item.base_type == OBJ_ARMOUR && _armour_ego_conflicts(proprt))
+        return true;
 
     return false;
 }
