@@ -392,7 +392,8 @@ void enter_explore_mode()
         take_note(Note(NOTE_MESSAGE, 0, 0, "Entered explore mode."));
 
 #ifndef SCORE_WIZARD_CHARACTERS
-        _log_wizmode_entrance();
+        scorefile_entry se(INSTANT_DEATH, MID_NOBODY, KILLED_BY_EXPLORING, nullptr);
+        logfile_new_entry(se);
 #endif
 
         you.explore = true;
