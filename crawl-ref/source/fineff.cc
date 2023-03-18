@@ -816,6 +816,8 @@ void spectral_weapon_fineff::fire()
     monster* sw = find_spectral_weapon(atkr);
     if (sw)
     {
+        if (sw == defend)
+            return; // don't attack yourself. too silly.
         // Is it already in range?
         const reach_type sw_range = sw->reach_range();
         if (sw_range > REACH_NONE
