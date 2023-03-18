@@ -1484,100 +1484,6 @@ int extant_unrandart_by_exact_name(string name)
     return lookup(cache, lowercase(name), 0);
 }
 
-static bool _randart_is_redundant(const item_def &item,
-                                   artefact_properties_t &proprt)
-{
-    if (item.base_type != OBJ_JEWELLERY)
-        return false;
-
-    artefact_prop_type provides  = ARTP_NUM_PROPERTIES;
-
-    switch (item.sub_type)
-    {
-    case RING_PROTECTION:
-        provides = ARTP_AC;
-        break;
-
-    case RING_FIRE:
-    case RING_PROTECTION_FROM_FIRE:
-        provides = ARTP_FIRE;
-        break;
-
-    case RING_POISON_RESISTANCE:
-        provides = ARTP_POISON;
-        break;
-
-    case RING_ICE:
-    case RING_PROTECTION_FROM_COLD:
-        provides = ARTP_COLD;
-        break;
-
-    case RING_STRENGTH:
-        provides = ARTP_STRENGTH;
-        break;
-
-    case RING_SLAYING:
-        provides = ARTP_SLAYING;
-        break;
-
-    case RING_SEE_INVISIBLE:
-        provides = ARTP_SEE_INVISIBLE;
-        break;
-
-    case RING_STEALTH:
-        provides = ARTP_STEALTH;
-        break;
-
-    case RING_EVASION:
-        provides = ARTP_EVASION;
-        break;
-
-    case RING_DEXTERITY:
-        provides = ARTP_DEXTERITY;
-        break;
-
-    case RING_INTELLIGENCE:
-        provides = ARTP_INTELLIGENCE;
-        break;
-
-    case RING_MAGICAL_POWER:
-        provides = ARTP_MAGICAL_POWER;
-        break;
-
-    case RING_FLIGHT:
-        provides = ARTP_FLY;
-        break;
-
-    case RING_LIFE_PROTECTION:
-        provides = ARTP_NEGATIVE_ENERGY;
-        break;
-
-    case RING_WILLPOWER:
-        provides = ARTP_WILLPOWER;
-        break;
-
-    case RING_RESIST_CORROSION:
-        provides = ARTP_RCORR;
-        break;
-
-    case AMU_REGENERATION:
-        provides = ARTP_REGENERATION;
-        break;
-
-    case AMU_REFLECTION:
-        provides = ARTP_SHIELDING;
-        break;
-    }
-
-    if (provides == ARTP_NUM_PROPERTIES)
-        return false;
-
-    if (proprt[provides] != 0)
-        return true;
-
-    return false;
-}
-
 static bool _armour_ego_conflicts(artefact_properties_t &proprt)
 {
     switch (proprt[ARTP_BRAND])
@@ -1647,8 +1553,7 @@ bool randart_is_bad(const item_def &item, artefact_properties_t &proprt)
         return true;
     }
 
-    return _randart_is_redundant(item, proprt)
-           || _randart_is_conflicting(item, proprt);
+    return _randart_is_conflicting(item, proprt);
 }
 
 bool randart_is_bad(const item_def &item)
