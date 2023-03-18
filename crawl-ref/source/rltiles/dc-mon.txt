@@ -603,6 +603,7 @@ nikola MONS_NIKOLA
 psyche MONS_PSYCHE
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
+sigmund_scytheless MONS_SIGMUND_SCYTHELESS
 xmas-sigmund MONS_XMAS_SIGMUND
 zenata MONS_ZENATA
 %rim 1
@@ -987,6 +988,7 @@ orb_guardian MONS_ORB_GUARDIAN
 %rim 1
 %sdir mon/unique
 nessos MONS_NESSOS
+nessos_bowless MONS_NESSOS_BOWLESS
 %sdir mon/demihumanoids/taurs
 %rim 0
 # 'melee' tiles must be immediately following the normal ones

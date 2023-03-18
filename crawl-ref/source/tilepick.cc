@@ -1919,6 +1919,26 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                 return TILEP_MONS_ERICA_SWORDLESS;
         }
 
+        case MONS_SIGMUND:
+        {
+            const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();
+            if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_HALBERD)) // scythe
+            {
+                if (december_holidays())
+                    return TILEP_MONS_XMAS_SIGMUND;
+                return TILEP_MONS_SIGMUND;
+            }
+            return TILEP_MONS_SIGMUND_SCYTHELESS;
+        }
+
+        case MONS_NESSOS:
+        {
+            const item_def * const weapon = mon.inv[MSLOT_WEAPON].get();
+            if (weapon && weapon->is_type(OBJ_WEAPONS, WPN_LONGBOW))
+                return TILEP_MONS_NESSOS;
+            return TILEP_MONS_NESSOS_BOWLESS;
+        }
+
         case MONS_BUSH:
             if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
                 return TILEP_MONS_BUSH_BURNING;
