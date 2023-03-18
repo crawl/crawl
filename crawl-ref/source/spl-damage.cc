@@ -2779,8 +2779,7 @@ vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
 
             while (ray.advance())
             {
-                if (!actual && actor_at(ray.pos()))
-                    targets.push_back(ray.pos());
+                targets.push_back(ray.pos());
 
                 if (ray.pos() == mi->pos())
                     break;
