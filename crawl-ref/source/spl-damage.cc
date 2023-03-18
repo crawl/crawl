@@ -2743,7 +2743,7 @@ vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
     coord_def source = agent.pos();
 
     // find the "actual" range of the spell
-    for (monster_near_iterator mi(source, LOS_SOLID); mi; ++mi)
+    for (monster_near_iterator mi(source, LOS_SOLID_SEE); mi; ++mi)
     {
         if (mons_is_firewood(**mi))
             continue;
@@ -2760,7 +2760,7 @@ vector<coord_def> plasma_beam_targets(const actor &agent, int pow, bool actual)
     if (maxdist == 0)
         return targets;
 
-    for (monster_near_iterator mi(source, LOS_SOLID); mi; ++mi)
+    for (monster_near_iterator mi(source, LOS_SOLID_SEE); mi; ++mi)
     {
         // look only at the maximum found range
         int dist = grid_distance(source, mi->pos());
