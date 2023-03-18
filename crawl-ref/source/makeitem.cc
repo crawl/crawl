@@ -1350,36 +1350,44 @@ static stave_type _get_random_stave_type()
     return r;
 }
 
-static void _generate_staff_item(item_def& item, bool allow_uniques,
-                                 int force_type, int item_level, int agent)
+static void _try_make_staff_artefact(item_def& item, bool allow_uniques,
+                                     int item_level, int agent)
 {
-    // If we make the unique roll, no further generation necessary.
-    // Copied unrand code from _try_make_weapon_artefact since randart enhancer staves
-    // can't happen.
+    const bool force_randart = item_level == ISPEC_RANDART;
+
     if (allow_uniques
+        && !force_randart
         && one_chance_in(item_level == ISPEC_GOOD_ITEM ? 27 : 100))
     {
         // Temporarily fix the base_type to get enhancer staves
         // TODO: ???
         item.base_type = OBJ_WEAPONS;
-        // need to use force_type here, because _try_make_item_unrand can set
-        // it for fallback randarts.
-        force_type = WPN_STAFF;
-        if (_try_make_item_unrand(item, force_type, item_level, agent))
+        int fake_force_type = WPN_STAFF;
+        if (_try_make_item_unrand(item, fake_force_type, item_level, agent))
             return;
-        if (item.base_type != OBJ_STAVES)
-        {
-            // this will happen if an unrand staff requests a real weapon as
-            // a fallback. TODO: can this be accommodated in this code path?
-            item.base_type = OBJ_STAVES;
-            force_type = OBJ_RANDOM;
-        }
+        // We failed. Go back to trying a staff.
+        // TODO: support hypothetical fallback to a specific staff type
+        item.base_type = OBJ_STAVES;
     }
 
+    if (force_randart
+        // These odds are taken uncritically from _try_make_weapon_artifact.
+        // We should probably revisit them.
+        || item_level > 0 && x_chance_in_y(101 + item_level * 3, 4000))
+    {
+        make_item_randart(item);
+    }
+}
+
+static void _generate_staff_item(item_def& item, bool allow_uniques,
+                                 int force_type, int item_level, int agent)
+{
     if (force_type == OBJ_RANDOM)
         item.sub_type = _get_random_stave_type();
     else
         item.sub_type = force_type;
+
+    _try_make_staff_artefact(item, allow_uniques, item_level, agent);
 }
 
 static void _generate_rune_item(item_def& item, int force_type)

@@ -456,6 +456,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     {
     case OBJ_STAVES:
     {
+        if (artefact)
+            _equip_artefact_effect(item, &showMsgs, unmeld, EQ_STAFF);
         break;
     }
 

@@ -3536,8 +3536,12 @@ int player::scan_artefacts(artefact_prop_type which_property,
         const item_def &item = inv[eq];
 
         // Only weapons give their effects when in our hands.
-        if (i == EQ_WEAPON && item.base_type != OBJ_WEAPONS)
+        if (i == EQ_WEAPON
+            && item.base_type != OBJ_WEAPONS
+            && item.base_type != OBJ_STAVES)
+        {
             continue;
+        }
 
         int val = 0;
 
