@@ -372,7 +372,9 @@ const vector<vector<god_power>> & get_all_god_powers()
             { 1, ABIL_HEPLIAKLQANA_IDENTITY, "remember your ancestor's identity" },
             { 3, ABIL_HEPLIAKLQANA_TRANSFERENCE, "swap creatures with your ancestor" },
             { 4, ABIL_HEPLIAKLQANA_IDEALISE, "heal and protect your ancestor" },
-            { 5, "drain nearby creatures when transferring your ancestor"},
+            { 5, "You now drain nearby creatures when transferring your ancestor.",
+                 "You no longer drain nearby creatures when transferring your ancestor.",
+                 "You drain nearby creatures when transferring your ancestor." },
         },
 
         // Wu Jian
