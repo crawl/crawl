@@ -10,7 +10,7 @@ android {
         applicationId "org.develz.crawl"
         minSdkVersion 16
         targetSdkVersion 33
-        versionCode 1
+        versionCode @ANDROID_VERSION@
         versionName "@CRAWL_VERSION@"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

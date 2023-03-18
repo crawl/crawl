@@ -27,7 +27,7 @@ Build Process
      - ia32-libs
      - build-essential
      - libpng-dev
- * Run "make ANDROID=1 android"
+ * Run "make ANDROID=1 android" where 1 is the Android version code.
 
 The previous step will generate all the files and folders required for a
 complete Android project. You can use Android Studio to generate APK(s)
