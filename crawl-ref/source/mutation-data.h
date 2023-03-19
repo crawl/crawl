@@ -268,7 +268,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_WEAK, 8, 2, mutflag::bad | mutflag::xom, false,
+{ MUT_WEAK, 8, 2, mutflag::bad, false,
   "weak",
 
   {"You are weak. (Str -2)",
@@ -278,7 +278,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_WEAK,
 },
 
-{ MUT_DOPEY, 8, 2, mutflag::bad | mutflag::xom, false,
+{ MUT_DOPEY, 8, 2, mutflag::bad, false,
   "dopey",
 
   {"You are dopey. (Int -2)",
@@ -288,7 +288,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_DOPEY,
 },
 
-{ MUT_CLUMSY, 8, 2, mutflag::bad | mutflag::xom, false,
+{ MUT_CLUMSY, 8, 2, mutflag::bad, false,
   "clumsy",
 
   {"You are clumsy. (Dex -2)",
@@ -382,9 +382,7 @@ static const mutation_def mut_data[] =
   TILEG_MUT_ACUTE_VISION,
 },
 
-{ MUT_DEFORMED, 8, 1,
-  mutflag::bad | mutflag::xom,
-  true,
+{ MUT_DEFORMED, 8, 1, mutflag::bad, true,
   "deformed body",
 
   {"Armour fits poorly on your strangely shaped body.", "", ""},
@@ -483,7 +481,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_SCREAM, 6, 2, mutflag::bad | mutflag::xom, false,
+{ MUT_SCREAM, 6, 2, mutflag::bad, false,
   "screaming",
 
   {"You occasionally shout uncontrollably at your foes.",
@@ -535,7 +533,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_DETERIORATION, 10, 2, mutflag::bad | mutflag::xom, false,
+{ MUT_DETERIORATION, 10, 2, mutflag::bad, false,
   "deterioration",
 
   {"Your body sometimes deteriorates upon taking damage.",
@@ -618,8 +616,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_FRAIL, 10, 3,
-  mutflag::bad | mutflag::xom, false,
+{ MUT_FRAIL, 10, 3, mutflag::bad, false,
   "frail",
 
   {"You are frail. (-10% HP)",
@@ -1872,7 +1869,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_DRINK_SAFETY, 7, 2, mutflag::bad | mutflag::xom, false,
+{ MUT_DRINK_SAFETY, 7, 2, mutflag::bad, false,
   "inability to drink after injury",
 
   {"You occasionally lose the ability to drink potions when taking damage.",
@@ -1886,7 +1883,7 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_READ_SAFETY, 7, 2, mutflag::bad | mutflag::xom, false,
+{ MUT_READ_SAFETY, 7, 2, mutflag::bad, false,
   "inability to read after injury",
 
   {"You occasionally lose the ability to read scrolls when taking damage.",
