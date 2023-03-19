@@ -1772,9 +1772,21 @@ void end_battlesphere(monster* mons, bool killed)
 
 bool battlesphere_can_mirror(spell_type spell)
 {
-    return spell_typematch(spell, spschool::conjuration)
+    return (spell_typematch(spell, spschool::conjuration)
+            || (get_spell_flags(spell) & spflag::destructive))
            && spell != SPELL_BATTLESPHERE
            && spell != SPELL_SPELLFORGED_SERVITOR;
+}
+
+vector<spell_type> player_battlesphere_spells()
+{
+    vector<spell_type> results;
+
+    for (const spell_type spell : you.spells)
+        if (battlesphere_can_mirror(spell))
+            results.push_back(spell);
+
+    return results;
 }
 
 bool aim_battlesphere(actor* agent, spell_type spell)

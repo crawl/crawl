@@ -841,10 +841,10 @@ dangerously contaminated after a few castings.
 Iskenderun's Battlesphere spell
 
 Conjures a small globe of magical energy. Each time its creator casts a
-spell from the Conjuration school (other than Battlesphere itself or Spellforged
-Servitor), the battlesphere will launch its own volley of energy at a random
-foe. With increasing power, the battlesphere lasts longer and deals more damage
-per volley.
+destructive spell (other than Battlesphere itself or Spellforged Servitor), the
+battlesphere will launch its own volley of energy at a random foe. With
+increasing power, the battlesphere lasts longer and deals more damage per
+volley.
 %%%%
 Iskenderun's Mystic Blast spell
 

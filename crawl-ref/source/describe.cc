@@ -3911,17 +3911,31 @@ static string _player_spell_desc(spell_type spell)
                     " and also " + _miscast_damage_string(spell) : "")
                 << ".\n";
 
+    if (spell == SPELL_BATTLESPHERE)
+    {
+        vector<spell_type> battlesphere_spells = player_battlesphere_spells();
+        description << "Your battlesphere";
+        if (battlesphere_spells.empty())
+            description << " is not activated by any of your spells";
+        else
+        {
+            description << " fires when you cast "
+                        << comma_separated_fn(battlesphere_spells.begin(),
+                                              battlesphere_spells.end(),
+                                              spell_title,
+                                              " or ");
+        }
+        description << ".\n";
+    }
+
     if (spell == SPELL_SPELLFORGED_SERVITOR)
     {
         spell_type servitor_spell = player_servitor_spell();
         description << "Your servitor";
         if (servitor_spell == SPELL_NO_SPELL)
-            description << " would be unable to mimic any of your spells";
+            description << " is unable to mimic any of your spells";
         else
-        {
-            description << " casts "
-                        << spell_title(player_servitor_spell());
-        }
+            description << " casts " << spell_title(player_servitor_spell());
         description << ".\n";
     }
 
