@@ -1105,7 +1105,7 @@ simple_targeting = false
 force_spell_targeter = hailstorm, starburst, frozen ramparts, ignition,
                        eringya's noxious bog, cause fear, alistair's
                        intoxication, discord, dispersal, metabolic englaciation,
-                       dazzling flash, flame wave, anguish
+                       dazzling flash, flame wave, anguish, plasma beam
         Force showing a targeter for the listed spells when casting normally,
         even if the spell isn't targeted. This for practical purposes only has
         an effect on statically targeted spells, such as the ones in the
