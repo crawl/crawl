@@ -1399,6 +1399,7 @@ bool vehumet_supports_spell(spell_type spell)
     // propelling it towards the victim. This is the most popular way, but
     // by no means it has a monopoly for being destructive.
     // Vehumet loves all direct physical destruction.
+    // TODO: turn this into a spell flag
     if (spell == SPELL_SHATTER
         || spell == SPELL_LRD
         || spell == SPELL_SANDBLAST
@@ -1416,7 +1417,8 @@ bool vehumet_supports_spell(spell_type spell)
         || spell == SPELL_MAXWELLS_COUPLING
         || spell == SPELL_NOXIOUS_BOG
         || spell == SPELL_POISONOUS_VAPOURS
-        || spell == SPELL_SCORCH)
+        || spell == SPELL_SCORCH
+        || spell == SPELL_PLASMA_BEAM)
     {
         return true;
     }
