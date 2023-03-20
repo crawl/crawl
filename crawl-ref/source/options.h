@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <unordered_set>
 #include <vector>
 #include <functional>
@@ -42,17 +43,36 @@ enum autosac_type
     AS_PROMPT_IGNORE,
 };
 
+enum monster_list_colour_type
+{
+    MLC_FRIENDLY,
+    MLC_NEUTRAL,
+    MLC_GOOD_NEUTRAL,
+    MLC_TRIVIAL,
+    MLC_EASY,
+    MLC_TOUGH,
+    MLC_NASTY,
+    NUM_MLC
+};
+
 struct message_filter
 {
     int             channel;        // Use -1 to match any channel.
     text_pattern    pattern;        // Empty pattern matches any message
+
+    message_filter()
+        : channel(-1), pattern("")
+    {
+    }
 
     message_filter(int ch, const string &s)
         : channel(ch), pattern(s)
     {
     }
 
-    message_filter(const string &s) : channel(-1), pattern(s, true) { }
+    message_filter(const text_pattern &p) : channel(-1), pattern(p) { }
+
+    message_filter(const string &s);
 
     bool operator== (const message_filter &mf) const
     {
@@ -70,6 +90,13 @@ struct message_filter
 
 struct sound_mapping
 {
+    sound_mapping()
+        : interrupt_game(false)
+    {
+    }
+
+    sound_mapping(const string &s);
+
     text_pattern pattern;
     string       soundfile;
     bool         interrupt_game;
@@ -84,6 +111,13 @@ struct sound_mapping
 
 struct colour_mapping
 {
+    colour_mapping()
+        : tag("none"), colour(WHITE)
+    {
+    }
+
+    colour_mapping(const string &s);
+
     string tag;
     text_pattern pattern;
     colour_t colour;
@@ -95,12 +129,55 @@ struct colour_mapping
 
 struct message_colour_mapping
 {
+    message_colour_mapping()
+        : colour(MSGCOL_NONE)
+    {
+    }
+
+    message_colour_mapping(const message_filter &f, msg_colour_type c)
+        : message(f), colour(c)
+    {
+    }
+
+    constexpr bool valid() const { return colour != MSGCOL_NONE; }
+
+    message_colour_mapping(const string &s);
+
     message_filter message;
     msg_colour_type colour;
     bool operator== (const message_colour_mapping &o) const
     {
         return message == o.message && colour == o.colour;
     }
+};
+
+struct mlc_mapping
+{
+    mlc_mapping()
+        : category(NUM_MLC), colour(-1)
+    {
+    }
+
+    mlc_mapping(monster_list_colour_type t, int c)
+        : category(t), colour(c)
+    {
+    }
+
+    mlc_mapping(const string &s);
+
+    bool operator== (const mlc_mapping &o) const
+    {
+        return category == o.category
+            && (colour == o.colour
+                // match -1 to make `-=` work a little more smoothly
+                || o.colour == -1
+                || colour == -1);
+    }
+
+    constexpr bool valid() const { return category >= 0 && category < NUM_MLC; }
+
+    monster_list_colour_type category;
+    int colour;
 };
 
 struct flang_entry
@@ -586,6 +663,8 @@ public:
     string sound_file_path;
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
+    vector<mlc_mapping> monster_list_colours_option;
+    array<int, NUM_MLC> monster_list_colours;
 
     string sort_menus_option;
     vector<menu_sort_condition> sort_menus;
@@ -813,7 +892,6 @@ private:
 
     void add_message_colour_mappings(const string &, bool, bool);
     void add_message_colour_mapping(const string &, bool, bool);
-    message_filter parse_message_filter(const string &s);
 
     void set_default_activity_interrupts();
     void set_activity_interrupt(FixedBitVector<NUM_ACTIVITY_INTERRUPTS> &eints,

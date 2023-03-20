@@ -1831,7 +1831,7 @@ static msg_colour_type prepare_message(const string& imsg,
     {
         for (const message_colour_mapping &mcm : Options.message_colour_mappings)
         {
-            if (mcm.message.is_filtered(channel, imsg))
+            if (mcm.valid() && mcm.message.is_filtered(channel, imsg))
             {
                 colour = mcm.colour;
                 break;

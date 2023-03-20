@@ -3779,6 +3779,7 @@ int auto_assign_ability_slot(int slot)
     // check to see whether we've chosen an automatic label:
     for (auto& mapping : Options.auto_ability_letters)
     {
+        // `matches` has a validity check
         if (!mapping.first.matches(abilname))
             continue;
         for (char i : mapping.second)

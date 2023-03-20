@@ -2011,6 +2011,7 @@ item_def *auto_assign_item_slot(item_def& item)
     // check to see whether we've chosen an automatic label:
     for (auto& mapping : Options.auto_item_letters)
     {
+        // `matches` has a validity check
         if (!mapping.first.matches(item.name(DESC_QUALNAME))
             && !mapping.first.matches(item_prefix(item)
                                       + " " + item.name(DESC_A)))

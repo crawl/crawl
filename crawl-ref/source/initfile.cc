@@ -127,6 +127,8 @@ static bool _force_allow_wizard();
 static bool _force_allow_explore();
 
 static species_type _str_to_species(const string &str);
+static sound_mapping _interrupt_sound_mapping(const string &s);
+static pair<text_pattern,string> _slot_mapping(const string &s);
 
 #ifdef USE_TILE
 static tag_pref _str_to_tag_pref(const string &opt)
@@ -141,6 +143,40 @@ static tag_pref _str_to_tag_pref(const string &opt)
     return TAGPREF_ENEMY;
 }
 #endif
+
+static monster_list_colour_type _str_to_mlc(const string &s)
+{
+    static const char * const _monster_list_colour_names[NUM_MLC] =
+    {
+        "friendly", "neutral", "good_neutral",
+        "trivial", "easy", "tough", "nasty",
+    };
+    for (int i = 0; i < NUM_MLC; ++i)
+        if (s == _monster_list_colour_names[i])
+            return static_cast<monster_list_colour_type>(i);
+    return NUM_MLC;
+}
+
+mlc_mapping::mlc_mapping(const string &s)
+{
+    vector<string> thesplit = split_string(":", s, true, true, 1);
+    const int scolour = thesplit.size() == 1 ? -1 : str_to_colour(thesplit[1]);
+
+    // let -1 for "" through
+    if ((scolour >= 16 || scolour < 0) && (thesplit.size() > 1 && !thesplit[1].empty()))
+    {
+        mprf(MSGCH_ERROR, "Options error: Bad monster_list_colour: '%s'",
+            thesplit[1].c_str());
+        return;
+    }
+    colour = scolour;
+    category = _str_to_mlc(thesplit[0]);
+    if (category == NUM_MLC)
+    {
+        mprf(MSGCH_ERROR, "Bad monster_list_colour key: %s\n",
+                     thesplit[0].c_str());
+    }
+}
 
 static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
 {
@@ -555,6 +591,50 @@ const vector<GameOption*> game_options::build_options_list()
         new ListGameOption<text_pattern>(SIMPLE_NAME(note_items), {}, true),
         new ListGameOption<text_pattern>(SIMPLE_NAME(auto_exclude), {}, true),
         new ListGameOption<text_pattern>(SIMPLE_NAME(explore_stop_pickup_ignore), {}, true),
+
+        // defaults handled in dat/defaults/messages.txt:
+        new ListGameOption<message_filter>(SIMPLE_NAME(force_more_message), {}, true),
+        new ListGameOption<message_filter>(SIMPLE_NAME(flash_screen_message), {}, true),
+        new ListGameOption<message_colour_mapping>(message_colour_mappings,
+            {"message_colour", "message_color"}, {}, true),
+        new ListGameOption<colour_mapping>(menu_colour_mappings,
+            {"menu_colour", "menu_color"}, {}, true),
+        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_item_letters,
+            {"item_slot"}, {}, true),
+        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_spell_letters,
+            {"spell_slot"}, {}, true),
+        new ListGameOption<pair<text_pattern,string>, OPTFUN(_slot_mapping)>(auto_ability_letters,
+            {"ability_slot"}, {}, true),
+        new ListGameOption<mlc_mapping>(monster_list_colours_option,
+            {"monster_list_colour", "monster_list_color"},
+            {{MLC_FRIENDLY, GREEN},
+             {MLC_NEUTRAL, BROWN},
+             {MLC_GOOD_NEUTRAL, BROWN},
+             {MLC_TRIVIAL, DARKGREY},
+             {MLC_EASY, LIGHTGREY},
+             {MLC_TOUGH, YELLOW},
+             {MLC_NASTY, LIGHTRED}
+            },
+            false,
+            [this]()
+            {
+                // convert the mappings list into a fixed length array for
+                // actual use (see mon-info.cc).
+                // this doesn't care if there are multiple instances of an MLC
+                // around, but later ones simply override earlier ones. A value
+                // that isn't set here defaults to LIGHTGRAY.
+                monster_list_colours.fill(-1);
+                for (const auto &m : monster_list_colours_option)
+                    if (m.valid())
+                        monster_list_colours[m.category] = m.colour;
+            }),
+
+        // these use the same options variable, so their reset functions will
+        // interact if they are ever different:
+        new ListGameOption<sound_mapping>(sound_mappings, {"sound"}, {}, true),
+        new ListGameOption<sound_mapping, OPTFUN(_interrupt_sound_mapping)>(
+            sound_mappings, {"hold_sound"}, {}, true),
+
         new ColourThresholdOption(hp_colour, {"hp_colour", "hp_color"},
                                   "70:yellow, 40:red", _first_greater),
         new ColourThresholdOption(mp_colour, {"mp_colour", "mp_color"},
@@ -1096,7 +1176,7 @@ static species_type _str_to_species(const string &str)
         ret = SP_UNKNOWN;
 
     if (ret == SP_UNKNOWN)
-        fprintf(stderr, "Unknown species choice: %s\n", str.c_str());
+        mprf(MSGCH_ERROR, "Unknown species choice: %s\n", str.c_str());
 
     return ret;
 }
@@ -1131,7 +1211,7 @@ job_type str_to_job(const string &str)
         job = JOB_UNKNOWN;
 
     if (job == JOB_UNKNOWN)
-        fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
+        mprf(MSGCH_ERROR, "Unknown background choice: %s\n", str.c_str());
 
     return job;
 }
@@ -1505,14 +1585,6 @@ void game_options::reset_options()
     note_skill_levels.set(10);
     note_skill_levels.set(15);
     note_skill_levels.set(27);
-    auto_spell_letters.clear();
-    auto_item_letters.clear();
-    auto_ability_letters.clear();
-    force_more_message.clear();
-    flash_screen_message.clear();
-    sound_mappings.clear();
-    menu_colour_mappings.clear();
-    message_colour_mappings.clear();
 
     clear_cset_overrides();
 
@@ -2995,58 +3067,129 @@ void game_options::update_explore_greedy_visit_conditions()
     explore_greedy_visit = conditions;
 }
 
-void game_options::add_message_colour_mappings(const string &field,
-                                               bool prepend, bool subtract)
-{
-    vector<string> fragments = split_string(",", field);
-    if (prepend)
-        reverse(fragments.begin(), fragments.end());
-    for (const string &fragment : fragments)
-        add_message_colour_mapping(fragment, prepend, subtract);
-}
-
-message_filter game_options::parse_message_filter(const string &filter)
+message_filter::message_filter(const string &filter)
+    : message_filter()
 {
     string::size_type pos = filter.find(":");
     if (pos && pos != string::npos)
     {
         string prefix = filter.substr(0, pos);
-        int channel = str_to_channel(prefix);
-        if (channel != -1 || prefix == "any")
+        int ch = str_to_channel(prefix);
+        if (ch != -1 || prefix == "any")
         {
             string s = filter.substr(pos + 1);
             trim_string(s);
-            return message_filter(channel, s);
+            pattern = text_pattern(s, true);
+            channel = ch;
+            return;
         }
     }
-
-    return message_filter(filter);
+    pattern = text_pattern(filter, true);    
 }
 
-void game_options::add_message_colour_mapping(const string &field,
-                                              bool prepend, bool subtract)
+message_colour_mapping::message_colour_mapping(const string &s)
+    : message_colour_mapping()
 {
-    vector<string> cmap = split_string(":", field, true, true, 1);
+    vector<string> cmap = split_string(":", s, true, true, 1);
 
     if (cmap.size() != 2)
-        return;
+    {
+        mprf(MSGCH_ERROR, "Options error: Missing colour in message_colour line: '%s'", s.c_str());
+        return; // XX better error handling??
+    }
 
     const int col = str_to_colour(cmap[0]);
-    msg_colour_type mcol;
     if (cmap[0] == "mute")
-        mcol = MSGCOL_MUTED;
-    else if (col == -1)
+        colour = MSGCOL_MUTED;
+    else if (col < 0 || col >= NUM_TERM_COLOURS)
+    {
+        mprf(MSGCH_ERROR, "Options error: Bad colour in message_colour line: '%s'", s.c_str());
         return;
+    }
     else
-        mcol = msg_colour(col);
+        colour = msg_colour(col);
+    message = message_filter(cmap[1]);
+}
 
-    message_colour_mapping m = { parse_message_filter(cmap[1]), mcol };
-    if (subtract)
-        remove_matching(message_colour_mappings, m);
-    else if (prepend)
-        message_colour_mappings.insert(message_colour_mappings.begin(), m);
-    else
-        message_colour_mappings.push_back(m);
+colour_mapping::colour_mapping(const string &s)
+    : colour_mapping()
+{
+    // Format is "tag:colour:pattern" or "colour:pattern" (default tag).
+    vector<string> subseg = split_string(":", s, false, false, 2);
+    string tagname, colname;
+    if (subseg.size() < 2)
+    {
+        mprf(MSGCH_ERROR, "Options error: Missing tag/color in colour mapping: '%s'", s.c_str());
+        return;
+    }
+    else if (subseg.size() == 3)
+    {
+        tagname = subseg[0];
+        colname = subseg[1];
+        pattern = subseg[2];
+    }
+    else // length 2
+    {
+        // no tag, treat as "any"
+        tagname = "";
+        colname = subseg[0];
+        pattern = subseg[1];
+    }
+    const int col = str_to_colour(colname);
+    if (col < 0 || col > NUM_TERM_COLOURS)
+    {
+        mprf(MSGCH_ERROR, "Options error: Unknown color in colour mapping: '%s'", s.c_str());
+        return;
+    }
+
+    // valid, so now we can actually set the remaining member variables
+    tag = tagname;
+    colour = col;
+}
+
+static sound_mapping _interrupt_sound_mapping(const string &s)
+{
+    sound_mapping m(s);
+    m.interrupt_game = true;
+    return m;
+}
+
+sound_mapping::sound_mapping(const string &s)
+    : sound_mapping()
+{
+    string::size_type cpos = s.find(":", 0);
+    if (cpos == string::npos)
+    {
+        mprf(MSGCH_ERROR, "Options error: invalid sound mapping '%s'", s.c_str());
+        return;
+    }
+#if !defined(USE_SOUND) || !defined(WINMM_PLAY_SOUNDS) || !defined(SOUND_PLAY_COMMAND) || !defined(USE_SDL)
+    static bool _sound_warning_issued = false;
+    if (!_sound_warning_issued)
+    {
+        // an rc with sound mappings will have a lot, so only say this once.
+        // This might be a bit non-ideal, as it only shows up in the main menu
+        // message log...
+        _sound_warning_issued = true;
+        mprf(MSGCH_PLAIN, "Options warning: `sound` will have no effect on this build.");
+    }
+#endif
+
+    pattern = s.substr(0, cpos);
+    // path resolution is handled when it's time to play the sound, not now
+    soundfile = s.substr(cpos + 1);
+}
+
+static pair<text_pattern,string> _slot_mapping(const string &s)
+{
+    vector<string> thesplit = split_string(":", s, true, false, 1);
+    if (thesplit.size() != 2)
+    {
+        mprf(MSGCH_ERROR, "Error parsing slot mapping: '%s'\n",
+                            s.c_str());
+        return make_pair(text_pattern(), ""); // pattern is marked as invalid
+    }
+    return make_pair(text_pattern(thesplit[0], true), thesplit[1]);
 }
 
 // Option syntax is:
@@ -3716,42 +3859,6 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             autoinscriptions.push_back(entry);
         return true;
     }
-    else if (key == "monster_list_colour" || key == "monster_list_color")
-    {
-        if (state.plain())
-            clear_monster_list_colours();
-
-        vector<string> thesplit = split_string(",", state.field);
-        for (unsigned i = 0; i < thesplit.size(); ++i)
-        {
-            vector<string> insplit = split_string(":", thesplit[i]);
-
-            if (insplit.empty() || insplit.size() > 2
-                 || insplit.size() == 1 && !state.minus_equal()
-                 || insplit.size() == 2 && state.minus_equal())
-            {
-                report_error("Bad monster_list_colour string: %s\n",
-                             state.raw_field.c_str());
-                return true;
-            }
-
-            const int scolour = state.minus_equal() ? -1 : str_to_colour(insplit[1]);
-
-            // No elemental colours!
-            if (scolour >= 16 || scolour < 0 && !state.minus_equal())
-            {
-                report_error("Bad monster_list_colour: %s", insplit[1].c_str());
-                return true;
-            }
-            if (!set_monster_list_colour(insplit[0], scolour))
-            {
-                report_error("Bad monster_list_colour key: %s\n",
-                             insplit[0].c_str());
-                return true;
-            }
-        }
-        return true;
-    }
     else if (key == "note_skill_levels")
     {
         if (state.plain())
@@ -3806,153 +3913,11 @@ bool game_options::read_custom_option(opt_parse_state &state, bool runscripts)
             false);
         return true;
     }
-    else if (key == "spell_slot"
-             || key == "item_slot"
-             || key == "ability_slot")
-
-    {
-        auto& auto_letters = (key == "item_slot"  ? auto_item_letters
-                           : (key == "spell_slot" ? auto_spell_letters
-                                                  : auto_ability_letters));
-        if (state.plain())
-            auto_letters.clear();
-
-        vector<string> thesplit = split_string(":", state.raw_field);
-        if (thesplit.size() != 2)
-        {
-            report_error("Error parsing %s string: %s\n",
-                                key.c_str(), state.raw_field.c_str());
-            return false;
-        }
-        pair<text_pattern,string> entry(text_pattern(thesplit[0], true),
-                                        thesplit[1]);
-
-        if (state.minus_equal())
-            remove_matching(auto_letters, entry);
-        else if (state.caret_equal())
-            auto_letters.insert(auto_letters.begin(), entry);
-        else
-            auto_letters.push_back(entry);
-        return true;
-    }
-    else if (key == "force_more_message" || key == "flash_screen_message")
-    {
-        vector<message_filter> &filters = (key == "force_more_message"
-                                ? force_more_message : flash_screen_message);
-        if (state.plain())
-            filters.clear();
-
-        vector<message_filter> new_entries;
-        for (const string &fragment : split_string(",", state.raw_field))
-        {
-            if (fragment.empty())
-                continue;
-
-            message_filter mf(fragment);
-
-            string::size_type pos = fragment.find(":");
-            if (pos && pos != string::npos)
-            {
-                string prefix = fragment.substr(0, pos);
-                int channel = str_to_channel(prefix);
-                if (channel != -1 || prefix == "any")
-                {
-                    string s = fragment.substr(pos + 1);
-                    mf = message_filter(channel, trim_string(s));
-                }
-            }
-
-            if (state.minus_equal())
-                remove_matching(filters, mf);
-            else
-                new_entries.push_back(mf);
-        }
-        merge_lists(filters, new_entries, state.caret_equal());
-        return true;
-    }
-    else if (key == "sound" || key == "hold_sound")
-    {
-        if (state.plain())
-            sound_mappings.clear();
-
-        vector<sound_mapping> new_entries;
-        for (const string &sub : split_string(",", state.raw_field))
-        {
-            string::size_type cpos = sub.find(":", 0);
-            if (cpos != string::npos)
-            {
-                sound_mapping entry;
-                entry.pattern = sub.substr(0, cpos);
-                entry.soundfile = sound_file_path + sub.substr(cpos + 1);
-                if (key == "hold_sound")
-                    entry.interrupt_game = true;
-                else
-                    entry.interrupt_game = false;
-
-                if (state.minus_equal())
-                    remove_matching(sound_mappings, entry);
-                else
-                    new_entries.push_back(entry);
-            }
-        }
-        merge_lists(sound_mappings, new_entries, state.caret_equal());
-        return true;
-    }
 #ifndef TARGET_COMPILER_VC
     // MSVC has a limit on how many if/else if can be chained together.
     else
 #endif
-    if (key == "menu_colour" || key == "menu_color")
-    {
-        if (state.plain())
-            menu_colour_mappings.clear();
-
-        vector<colour_mapping> new_entries;
-        for (const string &seg : split_string(",", state.raw_field))
-        {
-            // Format is "tag:colour:pattern" or "colour:pattern" (default tag).
-            // FIXME: arrange so that you can use ':' inside a pattern
-            vector<string> subseg = split_string(":", seg, false);
-            string tagname, patname, colname;
-            if (subseg.size() < 2)
-                continue;
-            if (subseg.size() >= 3)
-            {
-                tagname = subseg[0];
-                colname = subseg[1];
-                patname = subseg[2];
-            }
-            else
-            {
-                colname = subseg[0];
-                patname = subseg[1];
-            }
-
-            colour_mapping mapping;
-            mapping.tag     = tagname;
-            mapping.pattern = patname;
-            const int col = str_to_colour(colname);
-            mapping.colour = col;
-
-            if (col == -1)
-                continue;
-            else if (state.minus_equal())
-                remove_matching(menu_colour_mappings, mapping);
-            else
-                new_entries.push_back(mapping);
-        }
-        merge_lists(menu_colour_mappings, new_entries, state.caret_equal());
-        return true;
-    }
-    else if (key == "message_colour" || key == "message_color")
-    {
-        // TODO: support -= here. (XX it looks supported below?)
-        if (state.plain())
-            message_colour_mappings.clear();
-
-        add_message_colour_mappings(state.raw_field, state.caret_equal(), state.minus_equal());
-    }
-    else if (key == "kill_map")
+    if (key == "kill_map")
     {
         // TODO: treat this as a map option (e.g. kill_map.you = friendly)
         if (state.plain() && state.field.empty())
@@ -4332,7 +4297,7 @@ void base_game_options::report_error(const char* format, ...)
 
 static string check_string(const char *s)
 {
-    return s? s : "";
+    return s ? s : "";
 }
 
 void get_system_environment()
