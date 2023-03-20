@@ -447,6 +447,7 @@ public:
             value.clear();
 
         vector<T> new_entries;
+        // XX a way to escape `,`?
         for (const auto &part : split_string(",", field))
         {
             if (part.empty())

@@ -1351,50 +1351,12 @@ string monster_info::pluralised_name(bool fullname) const
         return pluralise_monster(common_name());
 }
 
-enum _monster_list_colour_type
-{
-    _MLC_FRIENDLY, _MLC_NEUTRAL, _MLC_GOOD_NEUTRAL,
-    _MLC_TRIVIAL, _MLC_EASY, _MLC_TOUGH, _MLC_NASTY,
-    _NUM_MLC
-};
-
-static const char * const _monster_list_colour_names[_NUM_MLC] =
-{
-    "friendly", "neutral", "good_neutral",
-    "trivial", "easy", "tough", "nasty"
-};
-
-static int _monster_list_colours[_NUM_MLC] =
-{
-    GREEN, BROWN, BROWN,
-    DARKGREY, LIGHTGREY, YELLOW, LIGHTRED,
-};
-
-bool set_monster_list_colour(string key, int colour)
-{
-    for (int i = 0; i < _NUM_MLC; ++i)
-    {
-        if (key == _monster_list_colour_names[i])
-        {
-            _monster_list_colours[i] = colour;
-            return true;
-        }
-    }
-    return false;
-}
-
-void clear_monster_list_colours()
-{
-    for (int i = 0; i < _NUM_MLC; ++i)
-        _monster_list_colours[i] = -1;
-}
-
 void monster_info::to_string(int count, string& desc, int& desc_colour,
                              bool fullname, const char *adj,
                              bool verbose) const
 {
     ostringstream out;
-    _monster_list_colour_type colour_type = _NUM_MLC;
+    monster_list_colour_type colour_type = NUM_MLC;
 
     string full = count == 1 ? full_name() : pluralised_name(fullname);
 
@@ -1420,7 +1382,7 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
     switch (attitude)
     {
     case ATT_FRIENDLY:
-        colour_type = _MLC_FRIENDLY;
+        colour_type = MLC_FRIENDLY;
         break;
     case ATT_GOOD_NEUTRAL:
 #if TAG_MAJOR_VERSION == 34
@@ -1428,25 +1390,25 @@ void monster_info::to_string(int count, string& desc, int& desc_colour,
 #endif
         if (fellow_slime())
             out << " (fellow slime)";
-        colour_type = _MLC_GOOD_NEUTRAL;
+        colour_type = MLC_GOOD_NEUTRAL;
         break;
     case ATT_NEUTRAL:
-        colour_type = _MLC_NEUTRAL;
+        colour_type = MLC_NEUTRAL;
         break;
     case ATT_HOSTILE:
         switch (threat)
         {
-        case MTHRT_TRIVIAL: colour_type = _MLC_TRIVIAL; break;
-        case MTHRT_EASY:    colour_type = _MLC_EASY;    break;
-        case MTHRT_TOUGH:   colour_type = _MLC_TOUGH;   break;
-        case MTHRT_NASTY:   colour_type = _MLC_NASTY;   break;
+        case MTHRT_TRIVIAL: colour_type = MLC_TRIVIAL; break;
+        case MTHRT_EASY:    colour_type = MLC_EASY;    break;
+        case MTHRT_TOUGH:   colour_type = MLC_TOUGH;   break;
+        case MTHRT_NASTY:   colour_type = MLC_NASTY;   break;
         default:;
         }
         break;
     }
 
-    if (colour_type < _NUM_MLC)
-        desc_colour = _monster_list_colours[colour_type];
+    if (colour_type < NUM_MLC)
+        desc_colour = Options.monster_list_colours[colour_type];
 
     // We still need something, or we'd get the last entry's colour.
     if (desc_colour < 0)

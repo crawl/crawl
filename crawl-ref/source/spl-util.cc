@@ -301,6 +301,7 @@ bool add_spell_to_memory(spell_type spell)
     bool overwrite = false;
     for (const auto &entry : Options.auto_spell_letters)
     {
+        // `matches` has a validity check
         if (!entry.first.matches(sname))
             continue;
         for (char ch : entry.second)

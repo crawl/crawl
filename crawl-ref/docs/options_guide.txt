@@ -1676,7 +1676,7 @@ monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow,
                        nasty:lightred
         (List option)
         Change the colours used to display monster names in the monster list.
-        Valid keys, and their default colours, are:
+        Valid keys, and their initial colours, are:
 
            Monster attitudes:
              friendly       - green
@@ -1689,8 +1689,9 @@ monster_list_colour += trivial:darkgrey, easy:lightgrey, tough:yellow,
              tough          - yellow
              nasty          - lightred
 
-         Removing a key with -= currently has the same effect as setting its
-         colour to lightgrey.
+        If a category is unset or has a missing colour, its colour defaults to
+        lightgrey. For removal with `-=`, the category name can be used alone,
+        and will clear any mapping for that category (setting it to lightgrey).
 
 view_delay = 600
         Controls the speed of animations from, e.g., ranged and magical
