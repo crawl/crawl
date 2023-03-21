@@ -1954,8 +1954,9 @@ static int _player_evasion_size_factor(bool base = false)
     return 2 * (SIZE_MEDIUM - size);
 }
 
-// Determines racial shield penalties (formicids get a bonus compared to
-// other medium-sized races)
+// Determines racial shield preferences for acquirement. (Formicids get a
+// bonus for larger shields compared to other medium-sized races).
+// TODO: rethink this
 int player_shield_racial_factor()
 {
     return you.has_mutation(MUT_QUADRUMANOUS) ? -2 // Same as trolls, etc.
@@ -5738,7 +5739,7 @@ int player::adjusted_shield_penalty(int scale) const
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION) / 10;
     return 2 * base_shield_penalty * base_shield_penalty
            * (270 - skill(SK_SHIELDS, 10)) * scale
-           / (5 * (20 - 3 * player_shield_racial_factor())) / 270;
+           / (25 + 5 * strength()) / 270;
 }
 
 /**

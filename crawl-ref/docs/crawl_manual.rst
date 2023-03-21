@@ -199,7 +199,7 @@ Your character's primary attributes are Strength, Intelligence and Dexterity:
 Strength
   Abbreviated to "Str". Increases your damage with melee weapons (except for long
   and short blades), with unarmed combat, and with throwing weapons. Reduces
-  penalties from wearing heavy armour.
+  penalties from wearing shields or heavy armour.
 
 Intelligence
   Abbreviated to "Int". Affects your odds of successfully casting spells and how
@@ -848,13 +848,12 @@ if you have low Strength.
 A shield normally increases neither your AC nor your evasion, but it lets you
 attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
 shield (especially larger shields) slows your attacks, hampers your ability to
-cast spells, and lowers your evasion. Small species are more strongly affected
-by these penalties, and large species are less affected, but all species can
-reduce and eventually eliminate these penalties by mastering the Shields skill.
-You also obviously cannot wield a two-handed weapon while wearing a shield.
-Shields are most effective against the first attack on you each turn and become
-less useful for every one after that. There are three types: bucklers, kite
-shields, and tower shields, going from smallest to largest.
+cast spells, and lowers your evasion. Weaker characters are more affected by
+these penalties, but all characters can reduce and eventually eliminate these
+penalties by mastering the Shields skill. You also obviously cannot wield a
+two-handed weapon while wearing a shield. Shields are most effective against
+the first attack on you each turn, and become less useful for every one after
+that.
 
 Some magical armours have special powers. These powers are sometimes automatic,
 affecting you whenever you wear the armour, and sometimes must be activated with
