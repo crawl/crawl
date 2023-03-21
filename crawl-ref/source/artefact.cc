@@ -1192,15 +1192,26 @@ static bool _artefact_name_lookup(string &result, const item_def &item,
     return !result.empty();
 }
 
+bool item_type_can_be_artefact(object_class_type typ)
+{
+    switch (typ)
+    {
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+    case OBJ_ARMOUR:
+    case OBJ_JEWELLERY:
+    case OBJ_BOOKS:
+        return true;
+    default:
+        return false;
+    }
+}
+
 string make_artefact_name(const item_def &item, bool appearance)
 {
     ASSERT(is_artefact(item));
 
-    ASSERT(item.base_type == OBJ_WEAPONS
-           || item.base_type == OBJ_STAVES
-           || item.base_type == OBJ_ARMOUR
-           || item.base_type == OBJ_JEWELLERY
-           || item.base_type == OBJ_BOOKS);
+    ASSERT(item_type_can_be_artefact(item.base_type));
 
     if (is_unrandom_artefact(item))
     {

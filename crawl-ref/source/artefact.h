@@ -159,3 +159,5 @@ int extant_unrandart_by_exact_name(string name);
 
 void unrand_reacts();
 void unrand_death_effects(monster* mons, killer_type killer);
+
+bool item_type_can_be_artefact(object_class_type typ);
