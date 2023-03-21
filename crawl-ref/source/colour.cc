@@ -305,7 +305,6 @@ static int _etc_orb_glow(int, const coord_def& loc)
 
 int dam_colour(const monster_info& mi)
 {
-    ASSERT(Options.enemy_hp_colour.size() == 6);
     switch (mi.dam)
     {
         case MDAM_OKAY:                 return Options.enemy_hp_colour[0];

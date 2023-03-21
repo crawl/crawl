@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <array>
 #include <unordered_set>
 #include <vector>
 #include <functional>
@@ -20,6 +19,7 @@
 #include "lang-t.h"
 #include "level-gen-type.h"
 #include "maybe-bool.h"
+#include "mon-util.h"
 #include "mpr.h"
 #include "newgame-def.h"
 #include "pattern.h"
@@ -567,7 +567,7 @@ public:
     vector<pair<int, int> > mp_colour;
     vector<pair<int, int> > stat_colour;
     string enemy_hp_colour_option;
-    vector<int> enemy_hp_colour;
+    FixedVector<int, MDAM_DEAD> enemy_hp_colour;
 
     string map_file_name;   // name of mapping file to use
     vector<pair<text_pattern, bool> > force_autopickup;
@@ -664,7 +664,7 @@ public:
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
     vector<mlc_mapping> monster_list_colours_option;
-    array<int, NUM_MLC> monster_list_colours;
+    FixedVector<int, NUM_MLC> monster_list_colours;
 
     string sort_menus_option;
     vector<menu_sort_condition> sort_menus;

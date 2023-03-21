@@ -289,6 +289,8 @@ const vector<GameOption*> game_options::build_options_list()
         // default determined by system, see get_system_environment()
         new StringGameOption(ON_SET_NAME(crawl_dir), "", true,
             [this]() {
+                // side effect warning! If this is non-default, it will have
+                // side effects outside of the options object.
                 if (crawl_dir_option.empty()) // set from SysEnv or CLO
                     return;
                 if (!_set_crawl_dir(crawl_dir_option))
@@ -320,6 +322,8 @@ const vector<GameOption*> game_options::build_options_list()
 
         new StringGameOption(ON_SET_NAME(save_dir), "", true,
             [this]() {
+                // side effect warning! If this is non-default, it will have
+                // side effects outside of the options object.
                 if (save_dir_option.empty()) // set by reset_paths
                     return;
                 // this will create a new directory if it doesn't exist!
@@ -331,6 +335,8 @@ const vector<GameOption*> game_options::build_options_list()
         // system-dependent default: see reset_paths
         new StringGameOption(ON_SET_NAME(macro_dir), "", true,
             [this]() {
+                // side effect warning! If this is non-default, it will have
+                // side effects outside of the options object.
                 if (macro_dir_option.empty()) // set by reset_paths
                     return;
                 // if this directory doesn't exist, it'll be created if/when
@@ -3084,7 +3090,7 @@ message_filter::message_filter(const string &filter)
             return;
         }
     }
-    pattern = text_pattern(filter, true);    
+    pattern = text_pattern(filter, true);
 }
 
 message_colour_mapping::message_colour_mapping(const string &s)
