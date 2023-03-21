@@ -538,6 +538,8 @@ monster *choose_random_monster_on_level(
 int spell_freq_for_hd(int hd);
 void normalize_spell_freq(monster_spells &spells, int total_freq);
 
+// this enum needs to align with the option values for enemy_hp_colour, see
+// game_options::update_enemy_hp_colour
 enum mon_dam_level_type
 {
     MDAM_OKAY,
