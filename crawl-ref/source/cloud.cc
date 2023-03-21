@@ -1324,13 +1324,12 @@ static int _actor_cloud_damage(const actor *act,
     return timescale_damage(act, final_damage);
 }
 
-// Applies damage and side effects for an actor in a cloud and returns
-// the damage dealt.
-int actor_apply_cloud(actor *act)
+// Applies damage and side effects for an actor in a cloud.
+void actor_apply_cloud(actor *act)
 {
     const cloud_struct* cl = cloud_at(act->pos());
     if (!cl)
-        return 0;
+        return;
 
     const cloud_struct &cloud(*cl);
     const bool player = act->is_player();
@@ -1338,7 +1337,7 @@ int actor_apply_cloud(actor *act)
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (actor_cloud_immune(*act, cloud))
-        return 0;
+        return;
 
     const int resist = _actor_cloud_resist(act, cloud);
     const int cloud_max_base_damage =
@@ -1383,8 +1382,6 @@ int actor_apply_cloud(actor *act)
         act->hurt(oppressor, final_damage, BEAM_MISSILE,
                   KILLED_BY_CLOUD, "", cloud.cloud_name(true));
     }
-
-    return final_damage;
 }
 
 // Describe cloud damage in the form "3-18". If vs_player is set,
