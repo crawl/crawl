@@ -721,6 +721,14 @@ staff_ring_blue STAFF_RING_BLUE
 staff_mummy STAFF_MUMMY
 staff_fork STAFF_FORK
 
+staff-artefact1 STAFF_RANDART_OFFSET
+staff-artefact2
+staff-artefact3
+staff-artefact4
+staff-artefact5
+staff-artefact6
+staff-artefact7
+
 # start TAG_MAJOR_VERSION == 34
 ## rods
 # These 10 rods correspond to the same order as item/rod/

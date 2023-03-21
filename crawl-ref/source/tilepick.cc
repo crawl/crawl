@@ -2881,6 +2881,12 @@ tileidx_t tileidx_item(const item_def &item)
                + rnd % tile_main_count(TILE_BOOK_OFFSET);
 
     case OBJ_STAVES:
+        if (is_artefact(item))
+        {
+            const int off = rnd % tile_main_count(TILE_STAFF_RANDART_OFFSET);
+            return TILE_STAFF_RANDART_OFFSET + off;
+        }
+
         if (item.flags & ISFLAG_KNOW_TYPE)
             return TILE_STAFF_ID_FIRST + type;
 

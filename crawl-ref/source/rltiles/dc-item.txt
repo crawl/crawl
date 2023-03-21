@@ -1024,6 +1024,13 @@ staff06
 staff07
 staff08
 staff09
+staff-artefact1 STAFF_RANDART_OFFSET
+staff-artefact2
+staff-artefact3
+staff-artefact4
+staff-artefact5
+staff-artefact6
+staff-artefact7
 
 # These must be in the same order as the enum in item-prop-enum.h!
 # start TAG_MAJOR_VERSION == 34
