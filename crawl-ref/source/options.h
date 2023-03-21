@@ -19,7 +19,7 @@
 #include "lang-t.h"
 #include "level-gen-type.h"
 #include "maybe-bool.h"
-#include "mon-util.h"
+#include "mon-dam-level-type.h"
 #include "mpr.h"
 #include "newgame-def.h"
 #include "pattern.h"
@@ -139,7 +139,7 @@ struct message_colour_mapping
     {
     }
 
-    constexpr bool valid() const { return colour != MSGCOL_NONE; }
+    bool valid() const { return colour != MSGCOL_NONE; }
 
     message_colour_mapping(const string &s);
 
@@ -174,7 +174,7 @@ struct mlc_mapping
                 || colour == -1);
     }
 
-    constexpr bool valid() const { return category >= 0 && category < NUM_MLC; }
+    bool valid() const { return category >= 0 && category < NUM_MLC; }
 
     monster_list_colour_type category;
     int colour;
