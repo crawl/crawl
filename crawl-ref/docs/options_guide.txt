@@ -1804,7 +1804,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         part, then all listings are used. Possible values for match are:
             ability       (the A screen)
             description   (the \ screen)
-            equip         (the [, (, ), " screens)
+            equip         (the [ and " screens)
             help          (the manual)
             inventory     (inventory and pickup menus)
             pickup        (specific to pickup menus)
@@ -1830,7 +1830,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
             ego             (Items with an offensive/defensive magical brand.)
             artefact        (For artefacts, whether identified or not.)
             unrand          (For non-random artefacts.)
-            melee           (Melee weapons, including rods and magical staves.)
+            melee           (Melee weapons, including magical staves.)
             ranged          (Ranged weapons.)
             identified      (The item is fully identified.)
             known           (You recognize the item's subtype.)
