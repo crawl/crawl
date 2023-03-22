@@ -23,7 +23,7 @@ menu += inventory:lightgreen:.*equipped.*
 
 # Important game items
 #
-menu += lightmagenta:.*misc.*rune of Zot
+menu += lightmagenta:rune of Zot
 menu += lightmagenta:.*orb.*Zot
 
 # Artefacts
@@ -61,6 +61,7 @@ menu += lightblue:unidentified.*(potion|scroll|wand|jewellery|magical staff)
 menu_colour += pickup:green:god gift
 
 # Highlight (partly) selected items
+# XX this shouldn't be done this way!
 menu_colour += inventory:white:\w \+\s
 menu_colour += inventory:white:\w \#\s
 menu_colour += inventory:white:\w \*\s

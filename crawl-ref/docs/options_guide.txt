@@ -1780,84 +1780,82 @@ action_panel_glyphs = false
 
 menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         (Ordered list option)
-        This prints a line (of the inventory, a menu, or the discoveries
-        screen) containing regex in the stated colour. There can be
-        several statements in a list, and also several menu_colour
-        lines. When using several menu_colour lines, the colour of the
-        _first_ matching regex is applied. For a list of colours, check
-        the colour option in 5-a.
+        For menus and other screens that print items, spells (etc; see list
+        below) this option allows you to control the colour that is used to
+        display a line by using a regular expression. For example, the default
+        options use the following line:
+            menu_colour += lightmagenta:.*orb.*Zot
+        to highlight the orb of Zot as purple in the item pickup menu. For
+        items, the regular expression is also checked against various item
+        annotations as described below. For example, the following line:
+            menu_colour += yellow:.*emergency_item.*
+        causes items that get the `emergency_item` annotation (such as scrolls
+        of teleportation) to be highlighted in yellow in inventory and other
+        item menus.
 
-        The match specifies which listings are affected by the
+        There can be several statements in a list, and also several menu_colour
+        lines. When using several menu_colour lines, the colour of the _first_
+        matching regex is applied; the option supports `^=`, which is useful
+        for overriding default settings without building the list from scratch.
+        For a list of colours, check the colour option in 5-a.
+
+        The `match` part specifies which listings are affected by the
         colouring. If you specify 'any', or completely skip the <match>:
         part, then all listings are used. Possible values for match are:
-           ability       (the A screen)
-           description   (the \ screen)
-           equip         (the [, (, ), " screens)
-           help          (the manual)
-           inventory     (inventory and pickup menus)
-           pickup        (specific to pickup menus)
-           shop          (shop menus)
-           notes         (the ?: screen)
-           resists       (the % screen)
-           spell         (the Z and I screens)
-           stash         (the results from Ctrl-F)
-           stats         (the player stats panel)
+            ability       (the A screen)
+            description   (the \ screen)
+            equip         (the [, (, ), " screens)
+            help          (the manual)
+            inventory     (inventory and pickup menus)
+            pickup        (specific to pickup menus)
+            shop          (shop menus)
+            notes         (the ?: screen)
+            resists       (the % screen)
+            spell         (the Z and I screens)
+            stash         (the results from Ctrl-F)
+            stats         (the player stats panel)
 
-        Crawl has a couple of prefixes defined to make inventory colouring
-        easier. These are, in order of definition:
-           identified      (The item is fully identified.)
-           known           (You recognize the item's subtype.)
-           unidentified    (You don't recognize the item's subtype.)
+        Items are annotated with many useful tags that make controlling colour
+        easier. Items are annotated with their base type (armour, weapon, wand,
+        etc.) They are also annotated with certain tags indicating usefulness:
+            forbidden       (Your god would hate it if you used this item.)
+            emergency_item  (This item is invaluable in emergencies.)
+            good_item       (This item is generally a good item.)
+            dangerous_item  (Using this item can be dangerous.)
+            bad_item        (This item is generally a bad item.)
+            useless_item    (This item is of no use to you.)
 
-        Items are also prefixed with their base type (armour, weapon, wand,
-        etc.)
+        as well as a range of other properties:
+            equipped        (Equipped items.)
+            ego             (Items with an offensive/defensive magical brand.)
+            artefact        (For artefacts, whether identified or not.)
+            unrand          (For non-random artefacts.)
+            melee           (Melee weapons, including rods and magical staves.)
+            ranged          (Ranged weapons.)
+            identified      (The item is fully identified.)
+            known           (You recognize the item's subtype.)
+            unidentified    (You don't recognize the item's subtype.)
+            god gift        (an item gifted to you by a god.)
+            cursed          (Cursed by Ashenzari.)
 
-        The following only apply to items whose subtype is known.
-           forbidden       (Your god would hate it if you used this item.)
-           emergency_item  (This item is invaluable in emergencies.)
-           good_item       (This item is generally a good item.)
-           dangerous_item  (Using this item can be dangerous.)
-           bad_item        (This item is generally a bad item.)
-           useless_item    (This item is of no use to you.)
+        (Of course, some of these will only apply to some menus inherently: only
+        carried items can be equipped, only non-carried items can be
+        unidentified, etc.)
 
-        The following apply only to items of certain base types, whether
-        identified or not:
-           inedible        (You cannot eat this, or get no nutrition from it.)
-           equipped        (Equipped items.)
-           artefact        (For artefacts, whether identified or not.)
-           melee           (Melee weapons, including rods and magical staves.)
-           ranged          (Ranged weapons.)
-
-        When looking for menu_colour matches, these prefixes are prepended to
-        the actual item name, e.g. in the form of
-           identified forbidden wand of random effects (4)
+        When looking for menu_colour matches, these prefixes are treated as if
+        they are prepended to the actual item name, for example:
+            identified evil_item forbidden misc a piece from Xom's chessboard (15/15
 
         The same prefixes can also be used for highlighting prompts pertaining
         to items matching the description, or to define autopickup_exceptions.
 
-        If you want to colour all items that contain a certain prefix, use
-          menu_colour ^= lightgreen:poisonous
+        For more examples, see the default settings in
+        `dat/defaults/menu_colours.txt`.
 
-        To colour worn stuff and highlight cursed items (except where other,
-        presumably more important, message colours match), use
-          menu_colour += inventory:lightred:equipped.* cursed
-          menu_colour += inventory:green:equipped
-          menu_colour += inventory:red: cursed
-
-        To colour identified artefacts, try
-          menu_colour ^= inventory:white:( [-+] the)
-        or
-          menu_colour ^= inventory:white:identified.*artefact
-
-        If you frequently die because you forget to use emergency items,
-        try
-          menu_colour ^= inventory:cyan:emergency_item
-          menu_colour ^= inventory:lightcyan:wand of (acid|iceblast)
-
-        menu_colour can also be applied to colour the in-game notes (to
-        be read with '?:'). The following line will show level ups in
-        white:
-          menu_colour ^= notes:white:Reached XP level
+        menu_colour can also be used to colour in-game morgue notes (readable
+        in colour with `?:`), by using the `notes` match. For example, the
+        following line will show level ups in white:
+            menu_colour ^= notes:white:Reached XP level
 
 message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
         (Ordered list option)
