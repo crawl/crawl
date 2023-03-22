@@ -610,6 +610,7 @@ sword_three SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
 demonblade DEMON_BLADE
+randart_demon_blade
 enchantress_dagger ENCHANTRESS_DAGGER
 
 ## blunt
@@ -643,6 +644,7 @@ hammer_one HAMMER1
 hammer_two HAMMER2
 large_mace LARGE_MACE
 black_whip BLACK_WHIP
+randart_demon_whip
 sacred_scourge SACRED_SCOURGE
 sacred_scourge_two SACRED_SCOURGE2
 flail_stick FLAIL_STICK
@@ -670,6 +672,7 @@ halberd2
 pick_axe PICK_AXE
 trident TRIDENT
 trident_demon DEMON_TRIDENT
+randart_demon_trident
 trident_elec TRIDENT_ELEC
 trident_two TRIDENT2
 trident_two2
