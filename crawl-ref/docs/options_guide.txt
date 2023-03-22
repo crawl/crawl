@@ -428,9 +428,9 @@ default_manual_training = false (persistent)
 
 autopickup_starting_ammo = true
         When set, at game start, autopickup is forced on (as per the \ menu)
-        for the player's starting ammunition type (including stones for Earth
-        Elementalists). Even when this option is set, autopickup of those items
-        can be disabled from the \ menu once the game has begun.
+        for the player's starting ammunition type. Even when this option is
+        set, autopickup of those items can be disabled from the \ menu once
+        the game has begun.
 
 game_seed = none
         A number indicating the seed to initialize the random number generator
