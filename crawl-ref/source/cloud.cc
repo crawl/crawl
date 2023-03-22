@@ -1253,7 +1253,7 @@ static int _actor_cloud_damage(const actor *act,
     return timescale_damage(act, final_damage);
 }
 
-void _actor_apply_cloud(actor *act, cloud_struct cloud)
+void _actor_apply_cloud(actor *act, cloud_struct &cloud)
 {
     const bool player = act->is_player();
     monster *mons = act->as_monster();
