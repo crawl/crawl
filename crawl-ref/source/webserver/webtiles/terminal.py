@@ -166,6 +166,8 @@ class TerminalRecorder(object):
             self.flush_ttyrec()
 
     def flush_ttyrec(self):
+        if self.ttyrec is None:
+            return
         with util.SlowWarning("Slow IO: flush '%s'" % self.desc):
             self.ttyrec.flush()
 
