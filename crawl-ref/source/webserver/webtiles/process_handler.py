@@ -486,8 +486,11 @@ class CrawlProcessHandlerBase(object):
         self.update_watcher_description()
 
     def remove_watcher(self, watcher):
-        self._receivers.remove(watcher)
-        self.update_watcher_description()
+        # if both users quit around the same time, this can get out of sync;
+        # don't crash in that case
+        if watcher in self._receivers:
+            self._receivers.remove(watcher)
+            self.update_watcher_description()
 
     def watcher_count(self):
         return len([w for w in self._receivers if w.watched_game and not w.chat_hidden])
