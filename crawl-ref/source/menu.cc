@@ -3477,14 +3477,16 @@ void Menu::webtiles_write_item(const MenuEntry* me) const
 // Menu colouring
 //
 
-int menu_colour(const string &text, const string &prefix, const string &tag)
+int menu_colour(const string &text, const string &prefix, const string &tag, bool strict)
 {
     const string tmp_text = prefix + text;
 
     for (const colour_mapping &cm : Options.menu_colour_mappings)
     {
-        if ((cm.tag.empty() || cm.tag == "any" || cm.tag == tag
-               || cm.tag == "inventory" && tag == "pickup")
+        const bool match_any = !strict &&
+            (cm.tag.empty() || cm.tag == "item" || cm.tag == "any");
+        if ((match_any
+                || cm.tag == tag || cm.tag == "inventory" && tag == "pickup")
             && cm.pattern.matches(tmp_text))
         {
             return cm.colour;

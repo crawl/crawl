@@ -1800,20 +1800,22 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         For a list of colours, check the colour option in 5-a.
 
         The `match` part specifies which listings are affected by the
-        colouring. If you specify 'any', or completely skip the <match>:
-        part, then all listings are used. Possible values for match are:
-            ability       (the A screen)
-            description   (the \ screen)
-            equip         (the [ and " screens)
-            help          (the manual)
-            inventory     (inventory and pickup menus)
+        colouring. If you specify 'item', or completely skip the <match>:
+        part, then the pattern will apply to all item-related categories.
+        Possible item-related values for match are:
+            inventory     (inventory and pickup/drop menus)
             pickup        (specific to pickup menus)
+            equip         (the [ and " screens)
             shop          (shop menus)
-            notes         (the ?: screen)
-            resists       (the % screen)
-            spell         (the Z and I screens)
             stash         (the results from Ctrl-F)
-            stats         (the player stats panel)
+            description   (the \ screen)
+            stats         (wielded/quivered items on the main screen stats panel)
+            resists       (items on the % screen)
+
+        Possible non-item-related values are as follows; these require an
+        explicit `match`:
+            help          (the manual)
+            notes         (the ?: screen)
 
         Items are annotated with many useful tags that make controlling colour
         easier. Items are annotated with their base type (armour, weapon, wand,

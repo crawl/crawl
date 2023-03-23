@@ -398,7 +398,7 @@ namespace quiver
 
             const string prefix = item_prefix(weapon);
             const int prefcol =
-                menu_colour(weapon.name(DESC_PLAIN), prefix, "stats");
+                menu_colour(weapon.name(DESC_PLAIN), prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
             else if (prefcol != -1)
@@ -503,7 +503,7 @@ namespace quiver
             const string prefix = weapon ? item_prefix(*weapon) : "";
 
             const int prefcol =
-                menu_colour(weapon ? weapon->name(DESC_PLAIN) : "", prefix, "stats");
+                menu_colour(weapon ? weapon->name(DESC_PLAIN) : "", prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
             else if (prefcol != -1)
@@ -964,7 +964,7 @@ namespace quiver
             const string prefix = item_prefix(quiver);
 
             const int prefcol =
-                menu_colour(quiver.name(DESC_PLAIN), prefix, "stats");
+                menu_colour(quiver.name(DESC_PLAIN), prefix, "stats", false);
             if (!is_enabled())
                 qdesc.textcolour(DARKGREY);
             else if (prefcol != -1)

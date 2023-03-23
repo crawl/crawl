@@ -282,7 +282,7 @@ void list_armour()
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
             colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
-                                 "equip");
+                                 "equip", false);
         }
         else if (you_can_wear(i) == maybe_bool::maybe)
             estr << "    (restricted)";
@@ -290,7 +290,7 @@ void list_armour()
             estr << "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(estr.str(), "", "equip");
+            colour = menu_colour(estr.str(), "", "equip", false);
 
         mprf(MSGCH_EQUIPMENT, colour, "%s", estr.str().c_str());
     }
@@ -333,13 +333,13 @@ void list_jewellery()
         {
             item = you.inv[jewellery_id].name(DESC_INVENTORY);
             string prefix = item_prefix(you.inv[jewellery_id]);
-            colour = menu_colour(item, prefix, "equip");
+            colour = menu_colour(item, prefix, "equip", false);
         }
         else
             item = "    none";
 
         if (colour == MSGCOL_BLACK)
-            colour = menu_colour(item, "", "equip");
+            colour = menu_colour(item, "", "equip", false);
 
         item = chop_string(make_stringf("%-*s: %s",
                                         split ? cols > 96 ? 9 : 8 : 11,

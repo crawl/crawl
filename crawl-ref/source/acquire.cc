@@ -1475,7 +1475,7 @@ class AcquireEntry : public InvEntry
         const colour_t keycol = LIGHTCYAN;
         const string keystr = colour_to_str(keycol);
         const string itemstr =
-            colour_to_str(menu_colour(text, item_prefix(*item), tag));
+            colour_to_str(menu_colour(text, item_prefix(*item), tag, false));
         const string gold_text = item->base_type == OBJ_GOLD
             ? make_stringf(" (you have %d gold)", you.gold) : "";
         return make_stringf(" <%s>%c %c </%s><%s>%s%s</%s>",

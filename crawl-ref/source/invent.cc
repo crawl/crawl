@@ -71,6 +71,8 @@ InvEntry::InvEntry(const item_def &i)
     : MenuEntry("", MEL_ITEM), item(&i), _has_star(false)
 {
     indent_no_hotkeys = true;
+    // This gets the inventory coloring rules to apply by default:
+    tag = "inventory";
 
     // Data is an inherited void *. When using InvEntry in menus
     // use the const item in this class whenever possible
@@ -106,9 +108,7 @@ InvEntry::InvEntry(const item_def &i)
 
 int InvEntry::highlight_colour(bool temp) const
 {
-    // XX this hardcodes the tag "inventory", but is used by all sorts of
-    // subclasses that aren't inv.
-    return menu_colour(get_text(), item_prefix(*item, temp), "inventory");
+    return menu_colour(get_text(), item_prefix(*item, temp), tag, false);
 }
 
 const string &InvEntry::get_basename() const

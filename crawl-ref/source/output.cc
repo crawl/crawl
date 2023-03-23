@@ -1083,7 +1083,7 @@ static int _wpn_name_colour()
         const item_def& wpn = *you.weapon();
 
         const string prefix = item_prefix(wpn);
-        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats");
+        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats", false);
         if (prefcol != -1)
             return prefcol;
         return LIGHTGREY;
@@ -2097,7 +2097,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             const item_def& item = *you.slot_item(eqslot, true);
             const bool melded    = you.melded[eqslot];
             const string prefix = item_prefix(item);
-            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
+            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix, "resists", false);
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
