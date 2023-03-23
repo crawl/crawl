@@ -794,7 +794,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     "-await-connection"]
 
         ttyrec_path = self.config_path("ttyrec_path")
-        if ttyrec_path:
+        if ttyrec_path and config.get('enable_ttyrecs'):
             self.ttyrec_filename = os.path.join(ttyrec_path, self.lock_basename)
 
         processes[os.path.abspath(self.socketpath)] = self
