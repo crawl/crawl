@@ -19,7 +19,7 @@ menu += $forbidden:.*forbidden.*
 # Handle cursed and equipped items early to override other colour settings.
 menu += lightred:.*equipped.* cursed
 menu += red: (a|the) cursed
-menu += inventory:lightgreen:.*equipped.*
+menu += lightgreen:.*equipped.*
 
 # Important game items
 #

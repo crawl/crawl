@@ -1780,8 +1780,8 @@ action_panel_glyphs = false
 
 menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         (Ordered list option)
-        For menus and other screens that print items, spells (etc; see list
-        below) this option allows you to control the colour that is used to
+        For menus and other screens that print items (and a few other cases; see
+        list below) this option allows you to control the colour that is used to
         display a line by using a regular expression. For example, the default
         options use the following line:
             menu_colour += lightmagenta:.*orb.*Zot
@@ -1804,8 +1804,9 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         part, then the pattern will apply to all item-related categories.
         Possible item-related values for match are:
             inventory     (inventory and pickup/drop menus)
-            pickup        (specific to pickup menus)
+            pickup        (pickup menus, and items on the floor)
             equip         (the [ and " screens)
+            use_item      (equip, unequip, read, quaff, etc)
             shop          (shop menus)
             stash         (the results from Ctrl-F)
             description   (the \ screen)
@@ -1846,7 +1847,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
 
         When looking for menu_colour matches, these prefixes are treated as if
         they are prepended to the actual item name, for example:
-            identified evil_item forbidden misc a piece from Xom's chessboard (15/15
+            identified evil_item forbidden misc a piece from Xom's chessboard (15/15)
 
         The same prefixes can also be used for highlighting prompts pertaining
         to items matching the description, or to define autopickup_exceptions.
@@ -1856,8 +1857,8 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
 
         menu_colour can also be used to colour in-game morgue notes (readable
         in colour with `?:`), by using the `notes` match. For example, the
-        following line will show level ups in white:
-            menu_colour ^= notes:white:Reached XP level
+        following line will show level-ups in green:
+            menu_colour ^= notes:green:Reached XP level
 
 message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
         (Ordered list option)
