@@ -789,6 +789,10 @@ def run():
     except:
         err_exit("Server startup failed!", exc_info=True)
     finally:
+        # warning: need to be careful what appears in this finally block, since
+        # it may be called by child processes on fork in terminal.py in the
+        # event of rare bad timing or bugs. (So any global state that may be
+        # used here should be reset in the child process...)
         remove_pidfile()
 
 

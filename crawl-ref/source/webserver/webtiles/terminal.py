@@ -12,7 +12,7 @@ import tornado.ioloop
 from tornado.escape import to_unicode
 from tornado.ioloop import IOLoop
 
-from webtiles import util
+from webtiles import util, config
 
 BUFSIZ = 2048
 
@@ -69,6 +69,14 @@ class TerminalRecorder(object):
 
         if self.pid == 0:
             # We're the child
+            # Warning! There are potential race conditions if a signal is
+            # received (or maybe other things happen) before the execvpe call
+            # replaces python state...
+
+            # prevent server's finally block from running in the event of an
+            # early signal:
+            config.set("pidfile", None)
+            # replace server's signal handling:
             def handle_signal(signal, f):
                 sys.exit(0)
             signal.signal(1, handle_signal)
