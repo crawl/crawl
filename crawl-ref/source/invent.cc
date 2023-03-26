@@ -632,7 +632,7 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         }
     }
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_MISSILES
-        || item.base_type == OBJ_ARMOUR
+        || item.base_type == OBJ_ARMOUR || item.base_type == OBJ_STAVES
 #if TAG_MAJOR_VERSION == 34
         || item.base_type == OBJ_RODS
 #endif

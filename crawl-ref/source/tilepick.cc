@@ -4095,20 +4095,23 @@ tileidx_t tileidx_known_brand(const item_def &item)
     if (!item_type_known(item))
         return 0;
 
-    if (item.base_type == OBJ_WEAPONS)
+    switch (item.base_type)
     {
-        const int brand = get_weapon_brand(item);
-        if (brand != SPWPN_NORMAL)
-            return TILE_BRAND_WEP_FIRST + get_weapon_brand(item) - 1;
-    }
-    else if (item.base_type == OBJ_ARMOUR)
-    {
-        const int brand = get_armour_ego_type(item);
-        if (brand != SPARM_NORMAL)
-            return TILE_BRAND_ARM_FIRST + get_armour_ego_type(item) - 1;
-    }
-    else if (item.base_type == OBJ_MISSILES)
-    {
+    case OBJ_WEAPONS:
+        {
+            const int brand = get_weapon_brand(item);
+            if (brand != SPWPN_NORMAL)
+                return TILE_BRAND_WEP_FIRST + get_weapon_brand(item) - 1;
+            break;
+        }
+    case OBJ_ARMOUR:
+        {
+            const int brand = get_armour_ego_type(item);
+            if (brand != SPARM_NORMAL)
+                return TILE_BRAND_ARM_FIRST + get_armour_ego_type(item) - 1;
+            break;
+        }
+    case OBJ_MISSILES:
         switch (get_ammo_brand(item))
         {
 #if TAG_MAJOR_VERSION == 34
@@ -4154,14 +4157,19 @@ tileidx_t tileidx_known_brand(const item_def &item)
         default:
             break;
         }
-    }
-#if TAG_MAJOR_VERSION == 34
-    else if (item.base_type == OBJ_RODS)
-    {
+        break;
+    case OBJ_STAVES:
+        if (is_random_artefact(item)) // normal staff brands handled elsewhere
+            return TILE_STAFF_ID_FIRST + item.sub_type;
+        break;
+    #if TAG_MAJOR_VERSION == 34
+    case OBJ_RODS:
         // Technically not a brand, but still handled here
         return TILE_ROD_ID_FIRST + item.sub_type;
+    #endif
+    default:
+        break;
     }
-#endif
     return 0;
 }
 

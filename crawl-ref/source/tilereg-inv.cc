@@ -569,7 +569,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.quantity = -1;
 
     if (type == OBJ_WEAPONS || type == OBJ_MISSILES
-        || type == OBJ_ARMOUR
+        || type == OBJ_ARMOUR || item.base_type == OBJ_STAVES
 #if TAG_MAJOR_VERSION == 34
         || type == OBJ_RODS
 #endif
