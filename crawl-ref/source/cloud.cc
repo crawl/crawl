@@ -254,7 +254,7 @@ static const cloud_data clouds[] = {
       ETC_DARK,                                 // colour
       { TILE_CLOUD_STORM, CTVARY_RANDOM },      // tile
       BEAM_ELECTRICITY,                         // beam_effect
-      {19, 18},
+      { 23, 27 },
     },
     // CLOUD_NEGATIVE_ENERGY,
     { "negative energy", nullptr,               // terse, verbose name
