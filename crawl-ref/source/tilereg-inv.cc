@@ -577,8 +577,6 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     {
         desc.special = tileidx_known_brand(item);
     }
-    else if (type == OBJ_CORPSES)
-        desc.special = tileidx_corpse_brand(item);
 
     desc.flag = 0;
     if (item.cursed())

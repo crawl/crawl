@@ -4173,14 +4173,6 @@ tileidx_t tileidx_known_brand(const item_def &item)
     return 0;
 }
 
-tileidx_t tileidx_corpse_brand(const item_def &item)
-{
-    if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-        return 0;
-
-    return 0;
-}
-
 #ifdef USE_TILE
 tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {

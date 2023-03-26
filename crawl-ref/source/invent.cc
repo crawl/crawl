@@ -642,12 +642,6 @@ bool get_tiles_for_item(const item_def &item, vector<tile_def>& tileset, bool sh
         if (brand)
             tileset.emplace_back(brand);
     }
-    else if (item.base_type == OBJ_CORPSES)
-    {
-        tileidx_t brand = tileidx_corpse_brand(item);
-        if (brand)
-            tileset.emplace_back(brand);
-    }
 
     return true;
 }
