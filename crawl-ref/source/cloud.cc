@@ -1053,6 +1053,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_STEAM:
         if (player)
             maybe_melt_player_enchantments(BEAM_FIRE, final_damage);
+        break;
     case CLOUD_MEPHITIC:
     {
         if (player)
