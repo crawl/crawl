@@ -1060,6 +1060,7 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_ADDER:
     case TILEP_MONS_ZOMBIE_WORM:
     case TILEP_MONS_ZOMBIE_LINDWURM:
+    case TILEP_MONS_ZOMBIE_SNAIL:
         return TILEP_MONS_SPECTRAL_SNAKE;
     case TILEP_MONS_ZOMBIE_LIZARD:
         return TILEP_MONS_SPECTRAL_LIZARD;
@@ -1145,6 +1146,7 @@ static tileidx_t _zombie_tile_to_bound_soul(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_DRAKE:
     case TILEP_MONS_ZOMBIE_WYVERN:
     case TILEP_MONS_ZOMBIE_KRAKEN:
+    case TILEP_MONS_ZOMBIE_SNAIL:
         return TILEP_MONS_BOUND_ANIMAL;
     case TILEP_MONS_ZOMBIE_UGLY_THING:
     case TILEP_MONS_ZOMBIE_BEE:
@@ -1233,6 +1235,7 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_ADDER:
     case TILEP_MONS_ZOMBIE_WORM:
     case TILEP_MONS_ZOMBIE_LINDWURM:
+    case TILEP_MONS_ZOMBIE_SNAIL:
         return TILEP_MONS_SIMULACRUM_SNAKE;
     case TILEP_MONS_ZOMBIE_LIZARD:
         return TILEP_MONS_SIMULACRUM_LIZARD;
@@ -1334,6 +1337,7 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_ADDER:
     case TILEP_MONS_ZOMBIE_WORM:
     case TILEP_MONS_ZOMBIE_LINDWURM:
+    case TILEP_MONS_ZOMBIE_SNAIL: // but they have no skeletons...
         return TILEP_MONS_SKELETON_SNAKE;
     case TILEP_MONS_ZOMBIE_DRAGON:
     case TILEP_MONS_ZOMBIE_IRON_DRAGON:
@@ -1444,14 +1448,15 @@ static tileidx_t _mon_to_zombie_tile(const monster_info &mon)
         { MONS_ELF,                     TILEP_MONS_ZOMBIE_ELF },
         { MONS_FAUN,                    TILEP_MONS_ZOMBIE_FAUN },
         { MONS_SATYR,                   TILEP_MONS_ZOMBIE_FAUN },
-        { MONS_GUARDIAN_SERPENT,        TILEP_MONS_ZOMBIE_GUARDIAN_SERPENT, },
-        { MONS_MERFOLK,                 TILEP_MONS_ZOMBIE_MERFOLK, },
-        { MONS_MINOTAUR,                TILEP_MONS_ZOMBIE_MINOTAUR, },
-        { MONS_SALAMANDER,              TILEP_MONS_ZOMBIE_SALAMANDER, },
-        { MONS_SPRIGGAN,                TILEP_MONS_ZOMBIE_SPRIGGAN, },
-        { MONS_YAKTAUR,                 TILEP_MONS_ZOMBIE_YAKTAUR, },
-        { MONS_YAK,                     TILEP_MONS_ZOMBIE_YAK, },
-        { MONS_BEAR,                    TILEP_MONS_ZOMBIE_BEAR, },
+        { MONS_GUARDIAN_SERPENT,        TILEP_MONS_ZOMBIE_GUARDIAN_SERPENT },
+        { MONS_MERFOLK,                 TILEP_MONS_ZOMBIE_MERFOLK },
+        { MONS_MINOTAUR,                TILEP_MONS_ZOMBIE_MINOTAUR },
+        { MONS_SALAMANDER,              TILEP_MONS_ZOMBIE_SALAMANDER },
+        { MONS_SPRIGGAN,                TILEP_MONS_ZOMBIE_SPRIGGAN },
+        { MONS_YAKTAUR,                 TILEP_MONS_ZOMBIE_YAKTAUR },
+        { MONS_YAK,                     TILEP_MONS_ZOMBIE_YAK },
+        { MONS_BEAR,                    TILEP_MONS_ZOMBIE_BEAR },
+        { MONS_ELEPHANT_SLUG,           TILEP_MONS_ZOMBIE_SNAIL },
     };
 
     struct shape_size_tiles
