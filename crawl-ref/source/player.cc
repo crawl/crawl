@@ -8311,9 +8311,7 @@ string player::hands_act(const string &plural_verb,
 
 int player::inaccuracy() const
 {
-    int degree = 0;
-    if (player_equip_unrand(UNRAND_AIR))
-        degree++;
+    int degree = actor::inaccuracy();
     if (get_mutation_level(MUT_MISSING_EYE))
         degree++;
     return degree;

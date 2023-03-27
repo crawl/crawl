@@ -205,10 +205,17 @@ void actor::shield_block_succeeded(actor *attacker)
     }
 }
 
+/// How many levels of penalties does this actor have from inaccuracy-conferring effects?
 int actor::inaccuracy() const
 {
     const item_def *amu = slot_item(EQ_AMULET);
     return amu && is_unrandom_artefact(*amu, UNRAND_AIR);
+}
+
+/// How great are the penalties to this actor's to-hit from any inaccuracy effects they have?
+int actor::inaccuracy_penalty() const
+{
+    return inaccuracy() * 5;
 }
 
 bool actor::res_corr(bool /*allow_random*/, bool temp) const

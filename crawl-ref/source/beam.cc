@@ -454,7 +454,7 @@ int zap_to_hit(zap_type z_type, int power, bool is_monster)
     ASSERT(hit_calc);
     const int hit = (*hit_calc)(power);
     if (hit != AUTOMATIC_HIT && !is_monster && crawl_state.need_save)
-        return max(0, hit - 5 * you.inaccuracy());
+        return max(0, hit - you.inaccuracy_penalty());
     return hit;
 }
 
