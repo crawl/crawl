@@ -5646,7 +5646,7 @@ _Nessos_rare_
 
 @The_monster@ says, "Even if you were a mare, I'd kill you!"
 
-@The_monster@ shouts, "I'm half human! Half horse! And all stone-cold KILLER!"
+@The_monster@ shouts, "I'm half man! Half horse! And all stone-cold KILLER!"
 
 w:1
 @The_monster@ says, "Hold still for a moment, will you? I've got a trick shot I want to try here."
